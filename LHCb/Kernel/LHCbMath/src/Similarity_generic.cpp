@@ -1,3 +1,6 @@
+#include "GaudiKernel/GenericVectorTypes.h"
+#include "GaudiKernel/GenericMatrixTypes.h"
+#include "GaudiKernel/SymmetricMatrixTypes.h"
 
 namespace LHCb {
 namespace Math {
@@ -123,6 +126,87 @@ void similarity_5_7(const double* Ci, const double* Fi, double* ti)  {
       _4 = Ci[10]*Fi[30]+Ci[11]*Fi[31]+Ci[12]*Fi[32]+Ci[13]*Fi[33]+Ci[14]*Fi[34];
       ti[27] = Fi[30]*_0 + Fi[31]*_1 + Fi[32]*_2 + Fi[33]*_3 + Fi[34]*_4;
 }
+
+}
+
+namespace average_generic {
+
+bool average( const double* X1, const double* C1,
+              const double* X2, const double* C2,
+              double* X, double* C ) {
+      // compute the inverse of the covariance (i.e. weight) of the difference: R=(C1+C2)
+      static Gaudi::SymMatrix5x5 invRM;
+      auto invR = invRM.Array();
+      for (int i=0;i<15;++i) invR[i]=C1[i]+C2[i];
+      bool success = invRM.InvertChol() ;
+      // compute the gain matrix
+
+      // K <- C1*inverse(C1+C2) = C1*invR
+      double K[25];
+      K[ 0] = C1[ 0]*invR[ 0] + C1[ 1]*invR[ 1] + C1[ 3]*invR[ 3] + C1[ 6]*invR[ 6] + C1[10]*invR[10];
+      K[ 1] = C1[ 0]*invR[ 1] + C1[ 1]*invR[ 2] + C1[ 3]*invR[ 4] + C1[ 6]*invR[ 7] + C1[10]*invR[11];
+      K[ 2] = C1[ 0]*invR[ 3] + C1[ 1]*invR[ 4] + C1[ 3]*invR[ 5] + C1[ 6]*invR[ 8] + C1[10]*invR[12];
+      K[ 3] = C1[ 0]*invR[ 6] + C1[ 1]*invR[ 7] + C1[ 3]*invR[ 8] + C1[ 6]*invR[ 9] + C1[10]*invR[13];
+      K[ 4] = C1[ 0]*invR[10] + C1[ 1]*invR[11] + C1[ 3]*invR[12] + C1[ 6]*invR[13] + C1[10]*invR[14];
+
+      K[ 5] = C1[ 1]*invR[ 0] + C1[ 2]*invR[ 1] + C1[ 4]*invR[ 3] + C1[ 7]*invR[ 6] + C1[11]*invR[10];
+      K[ 6] = C1[ 1]*invR[ 1] + C1[ 2]*invR[ 2] + C1[ 4]*invR[ 4] + C1[ 7]*invR[ 7] + C1[11]*invR[11];
+      K[ 7] = C1[ 1]*invR[ 3] + C1[ 2]*invR[ 4] + C1[ 4]*invR[ 5] + C1[ 7]*invR[ 8] + C1[11]*invR[12];
+      K[ 8] = C1[ 1]*invR[ 6] + C1[ 2]*invR[ 7] + C1[ 4]*invR[ 8] + C1[ 7]*invR[ 9] + C1[11]*invR[13];
+      K[ 9] = C1[ 1]*invR[10] + C1[ 2]*invR[11] + C1[ 4]*invR[12] + C1[ 7]*invR[13] + C1[11]*invR[14];
+
+      K[10] = C1[ 3]*invR[ 0] + C1[ 4]*invR[ 1] + C1[ 5]*invR[ 3] + C1[ 8]*invR[ 6] + C1[12]*invR[10];
+      K[11] = C1[ 3]*invR[ 1] + C1[ 4]*invR[ 2] + C1[ 5]*invR[ 4] + C1[ 8]*invR[ 7] + C1[12]*invR[11];
+      K[12] = C1[ 3]*invR[ 3] + C1[ 4]*invR[ 4] + C1[ 5]*invR[ 5] + C1[ 8]*invR[ 8] + C1[12]*invR[12];
+      K[13] = C1[ 3]*invR[ 6] + C1[ 4]*invR[ 7] + C1[ 5]*invR[ 8] + C1[ 8]*invR[ 9] + C1[12]*invR[13];
+      K[14] = C1[ 3]*invR[10] + C1[ 4]*invR[11] + C1[ 5]*invR[12] + C1[ 8]*invR[13] + C1[12]*invR[14];
+
+      K[15] = C1[ 6]*invR[ 0] + C1[ 7]*invR[ 1] + C1[ 8]*invR[ 3] + C1[ 9]*invR[ 6] + C1[13]*invR[10];
+      K[16] = C1[ 6]*invR[ 1] + C1[ 7]*invR[ 2] + C1[ 8]*invR[ 4] + C1[ 9]*invR[ 7] + C1[13]*invR[11];
+      K[17] = C1[ 6]*invR[ 3] + C1[ 7]*invR[ 4] + C1[ 8]*invR[ 5] + C1[ 9]*invR[ 8] + C1[13]*invR[12];
+      K[18] = C1[ 6]*invR[ 6] + C1[ 7]*invR[ 7] + C1[ 8]*invR[ 8] + C1[ 9]*invR[ 9] + C1[13]*invR[13];
+      K[19] = C1[ 6]*invR[10] + C1[ 7]*invR[11] + C1[ 8]*invR[12] + C1[ 9]*invR[13] + C1[13]*invR[14];
+
+      K[20] = C1[10]*invR[ 0] + C1[11]*invR[ 1] + C1[12]*invR[ 3] + C1[13]*invR[ 6] + C1[14]*invR[10];
+      K[21] = C1[10]*invR[ 1] + C1[11]*invR[ 2] + C1[12]*invR[ 4] + C1[13]*invR[ 7] + C1[14]*invR[11];
+      K[22] = C1[10]*invR[ 3] + C1[11]*invR[ 4] + C1[12]*invR[ 5] + C1[13]*invR[ 8] + C1[14]*invR[12];
+      K[23] = C1[10]*invR[ 6] + C1[11]*invR[ 7] + C1[12]*invR[ 8] + C1[13]*invR[ 9] + C1[14]*invR[13];
+      K[24] = C1[10]*invR[10] + C1[11]*invR[11] + C1[12]*invR[12] + C1[13]*invR[13] + C1[14]*invR[14];
+
+      // X <- X1 + C1*inverse(C1+C2)*(X2-X1) =  X1 + K*(X2-X1) = X1 + K*d
+      double d[5] { X2[0]-X1[0], X2[1]-X1[1], X2[2]-X1[2], X2[3]-X1[3], X2[4]-X1[4] };
+      X[0] = X1[0] + K[ 0]*d[0] + K[ 1]*d[1] + K[ 2]*d[2] + K[ 3]*d[3] + K[ 4]*d[4];
+      X[1] = X1[1] + K[ 5]*d[0] + K[ 6]*d[1] + K[ 7]*d[2] + K[ 8]*d[3] + K[ 9]*d[4];
+      X[2] = X1[2] + K[10]*d[0] + K[11]*d[1] + K[12]*d[2] + K[13]*d[3] + K[14]*d[4];
+      X[3] = X1[3] + K[15]*d[0] + K[16]*d[1] + K[17]*d[2] + K[18]*d[3] + K[19]*d[4];
+      X[4] = X1[4] + K[20]*d[0] + K[21]*d[1] + K[22]*d[2] + K[23]*d[3] + K[24]*d[4];
+    
+      // C <-  C1 * inverse(C1+C2)  * C2 =  K * C2
+      C[ 0] = K[ 0]*C2[ 0] + K[ 1]*C2[ 1] + K[ 2]*C2[ 3] + K[ 3]*C2[ 6] + K[ 4]*C2[10];
+      C[ 1] = K[ 5]*C2[ 0] + K[ 6]*C2[ 1] + K[ 7]*C2[ 3] + K[ 8]*C2[ 6] + K[ 9]*C2[10];
+      C[ 3] = K[10]*C2[ 0] + K[11]*C2[ 1] + K[12]*C2[ 3] + K[13]*C2[ 6] + K[14]*C2[10];
+      C[ 6] = K[15]*C2[ 0] + K[16]*C2[ 1] + K[17]*C2[ 3] + K[18]*C2[ 6] + K[19]*C2[10];
+      C[10] = K[20]*C2[ 0] + K[21]*C2[ 1] + K[22]*C2[ 3] + K[23]*C2[ 6] + K[24]*C2[10]; 
+
+      C[ 2] = K[ 5]*C2[ 1] + K[ 6]*C2[ 2] + K[ 7]*C2[ 4] + K[ 8]*C2[ 7] + K[ 9]*C2[11];
+      C[ 4] = K[10]*C2[ 1] + K[11]*C2[ 2] + K[12]*C2[ 4] + K[13]*C2[ 7] + K[14]*C2[11];
+      C[ 7] = K[15]*C2[ 1] + K[16]*C2[ 2] + K[17]*C2[ 4] + K[18]*C2[ 7] + K[19]*C2[11];
+      C[11] = K[20]*C2[ 1] + K[21]*C2[ 2] + K[22]*C2[ 4] + K[23]*C2[ 7] + K[24]*C2[11]; 
+
+      C[ 5] = K[10]*C2[ 3] + K[11]*C2[ 4] + K[12]*C2[ 5] + K[13]*C2[ 8] + K[14]*C2[12];
+      C[ 8] = K[15]*C2[ 3] + K[16]*C2[ 4] + K[17]*C2[ 5] + K[18]*C2[ 8] + K[19]*C2[12];
+      C[12] = K[20]*C2[ 3] + K[21]*C2[ 4] + K[22]*C2[ 5] + K[23]*C2[ 8] + K[24]*C2[12]; 
+
+      C[ 9] = K[15]*C2[ 6] + K[16]*C2[ 7] + K[17]*C2[ 8] + K[18]*C2[ 9] + K[19]*C2[13];
+      C[13] = K[20]*C2[ 6] + K[21]*C2[ 7] + K[22]*C2[ 8] + K[23]*C2[ 9] + K[24]*C2[13]; 
+
+      C[14] = K[20]*C2[10] + K[21]*C2[11] + K[22]*C2[12] + K[23]*C2[13] + K[24]*C2[14]; 
+      // the following used to be more stable, but isn't any longer, it seems:
+      //ROOT::Math::AssignSym::Evaluate(C, -2 * K * C1) ;
+      //C += C1 + ROOT::Math::Similarity(K,R) ;
+      return success;
+}
+
 
 
 }}}

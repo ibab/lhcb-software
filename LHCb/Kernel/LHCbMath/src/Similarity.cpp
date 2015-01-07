@@ -1,11 +1,15 @@
 #pragma GCC optimize "O3"
+
 #include "LHCbMath/Similarity.h"
 #include  <stdexcept>
+#include  <type_traits>
 #include "instrset.h"
 
 namespace {
 template <typename Vtbl, typename Trampoline, typename... Args>
-void dispatch( const Vtbl& vtbl, Trampoline& t, Args&&... args ) {
+auto dispatch_fn( const Vtbl& vtbl, Trampoline& t, Args&&... args ) 
+-> typename std::result_of<Trampoline(Args...)>::type
+{
 
     // Get supported instruction set
     int level = instrset_detect();
@@ -21,7 +25,12 @@ void dispatch( const Vtbl& vtbl, Trampoline& t, Args&&... args ) {
     }
 
     t = i->second;
-    (*t)(std::forward<Args>(args)...);
+    using Return_t = typename std::result_of<Trampoline(Args...)>::type;
+    if (std::is_void<Return_t>::value) {
+        (*t)(std::forward<Args>(args)...);
+    } else {
+        return (*t)(std::forward<Args>(args)...);
+    }
 }
 }
 
@@ -53,33 +62,55 @@ namespace similarity_5_generic {
     extern void similarity_5_7(const double* Ci, const double* Fi, double* Ti);
 }
 
-namespace similarity_5_dispatch {
+namespace average_generic {
+    extern bool average(const double* X1, const double* C1,
+                       const double* X2, const double* C2,
+                       double *X, double *C );
+}
+
+namespace average_avx {
+    extern bool average(const double* X1, const double* C1,
+                       const double* X2, const double* C2,
+                       double *X, double *C );
+}
+
+namespace dispatch {
 
 void similarity_5_1(const double* Ci, const double* Fi, double* ti) {
     auto vtbl = { std::make_pair( 7, similarity_5_avx::similarity_5_1 ),
                   std::make_pair( 3, similarity_5_sse3::similarity_5_1 ),
                   std::make_pair( 0, similarity_5_generic::similarity_5_1 ) };
-    dispatch( vtbl, LHCb::Math::similarity_5_1, Ci, Fi, ti );
+    dispatch_fn( vtbl, LHCb::Math::similarity_5_1, Ci, Fi, ti );
 }
 
 void similarity_5_5(const double* Ci, const double* Fi, double* ti) {
     auto vtbl = { std::make_pair( 7, similarity_5_avx::similarity_5_5 ),
                   std::make_pair( 3, similarity_5_sse3::similarity_5_5  ),
                   std::make_pair( 0, similarity_5_generic::similarity_5_5 ) };
-    dispatch( vtbl, LHCb::Math::similarity_5_5, Ci, Fi, ti );
+    dispatch_fn( vtbl, LHCb::Math::similarity_5_5, Ci, Fi, ti );
 }
 
 void similarity_5_7(const double* Ci, const double* Fi, double* ti) {
     auto vtbl = { std::make_pair( 7, similarity_5_avx::similarity_5_7 ),
                   std::make_pair( 3, similarity_5_sse3::similarity_5_7 ),
                   std::make_pair( 0, similarity_5_generic::similarity_5_7 ) };
-    dispatch( vtbl, LHCb::Math::similarity_5_7, Ci, Fi, ti );
+    dispatch_fn( vtbl, LHCb::Math::similarity_5_7, Ci, Fi, ti );
+}
+
+bool average(const double* X1, const double* C1,
+             const double* X2, const double* C2,
+             double *X, double *C ) {
+    auto vtbl = { std::make_pair( 7, average_avx::average ),
+                  std::make_pair( 0, average_generic::average ) };
+    return dispatch_fn( vtbl, LHCb::Math::average, X1, C1, X2, C2, X, C );
 }
 
 }
 
-similarity_t similarity_5_1 = &similarity_5_dispatch::similarity_5_1;
-similarity_t similarity_5_5 = &similarity_5_dispatch::similarity_5_5;
-similarity_t similarity_5_7 = &similarity_5_dispatch::similarity_5_7;
+similarity_t similarity_5_1 = &dispatch::similarity_5_1;
+similarity_t similarity_5_5 = &dispatch::similarity_5_5;
+similarity_t similarity_5_7 = &dispatch::similarity_5_7;
+
+average_t average = &dispatch::average;
 
 } }
