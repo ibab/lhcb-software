@@ -43,6 +43,7 @@ struct alignas(16) sse_t {
 
 namespace LHCb {
 namespace Math {
+namespace sse3 {
 
 // origin: 5x5 input symmetric matrix, in row-major version,i.e.
 //  1
@@ -53,7 +54,6 @@ namespace Math {
 // F: transformation, row-major
 // ti: output 5x5 matrix: F * origin * Transpose(F)
 
-namespace similarity_5_sse3 {
     void similarity_5_1(const double* Ci, const double* Fi, double* ti)  {
         sse_t m { Ci };
         *ti = dot5_sse3(Fi   ,m.g0(Fi),m.g2(Fi),m.g4(Fi));
@@ -157,6 +157,4 @@ namespace similarity_5_sse3 {
       _4 = m.g4(Fi+30);
       Ti[27] = dot5_sse3(Fi+30,_0,_2,_4);
     }
-}
-}
-}
+} } }

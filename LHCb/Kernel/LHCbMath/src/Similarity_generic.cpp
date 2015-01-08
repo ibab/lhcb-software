@@ -4,7 +4,7 @@
 
 namespace LHCb {
 namespace Math {
-namespace similarity_5_generic {
+namespace generic {
 
 void  similarity_5_1(const double* Ci, const double* Fi, double* ti)  {
       auto _0 = Ci[ 0]*Fi[0]+Ci[ 1]*Fi[1]+Ci[ 3]*Fi[2]+Ci[ 6]*Fi[3]+Ci[10]*Fi[4];
@@ -59,6 +59,7 @@ void similarity_5_5(const double* Ci, const double* Fi, double* ti)  {
       _4 = Ci[10]*Fi[20]+Ci[11]*Fi[21]+Ci[12]*Fi[22]+Ci[13]*Fi[23]+Ci[14]*Fi[24];
       ti[14]= Fi[20]*_0 + Fi[21]*_1 + Fi[22]*_2 + Fi[23]*_3 + Fi[24]*_4;
 }
+
 void similarity_5_7(const double* Ci, const double* Fi, double* ti)  {
       if (Ci == ti ) throw "target and source overlap -- do not do that";
       // std::cout << "using similarity_5_7_generic" << std::endl;
@@ -127,9 +128,6 @@ void similarity_5_7(const double* Ci, const double* Fi, double* ti)  {
       ti[27] = Fi[30]*_0 + Fi[31]*_1 + Fi[32]*_2 + Fi[33]*_3 + Fi[34]*_4;
 }
 
-}
-
-namespace average_generic {
 
 bool average( const double* X1, const double* C1,
               const double* X2, const double* C2,
@@ -207,6 +205,60 @@ bool average( const double* X1, const double* C1,
       return success;
 }
 
+double filter( double* X, double* C,
+               const double* Xref, const double* H,
+               double refResidual, double errorMeas2 )
+{
+      // The ugly code below makes the filter step about 20% faster
+      // than SMatrix would do it.
+      auto  res = refResidual +  H[0] * (Xref[0] - X[0]) 
+                              +  H[1] * (Xref[1] - X[1])
+                              +  H[2] * (Xref[2] - X[2])
+                              +  H[3] * (Xref[3] - X[3]) 
+                              +  H[4] * (Xref[4] - X[4]);
+      double CHT[5] = {
+       C[ 0]*H[0] + C[ 1]*H[1] + C[ 3]*H[2] + C[ 6]*H[3] + C[10]*H[4] ,
+       C[ 1]*H[0] + C[ 2]*H[1] + C[ 4]*H[2] + C[ 7]*H[3] + C[11]*H[4] ,
+       C[ 3]*H[0] + C[ 4]*H[1] + C[ 5]*H[2] + C[ 8]*H[3] + C[12]*H[4] ,
+       C[ 6]*H[0] + C[ 7]*H[1] + C[ 8]*H[2] + C[ 9]*H[3] + C[13]*H[4] ,
+       C[10]*H[0] + C[11]*H[1] + C[12]*H[2] + C[13]*H[3] + C[14]*H[4] 
+      };
+      auto  errorRes2  = errorMeas2 + H[0]*CHT[0] 
+                                    + H[1]*CHT[1] 
+                                    + H[2]*CHT[2]
+                                    + H[3]*CHT[3] 
+                                    + H[4]*CHT[4] ;
 
+      // update the state vector and cov matrix
+      auto w = res/errorRes2;
+      X[0] += CHT[0] * w ;
+      X[1] += CHT[1] * w ;
+      X[2] += CHT[2] * w ;
+      X[3] += CHT[3] * w ;
+      X[4] += CHT[4] * w ;
+
+      w = 1./errorRes2;
+      C[ 0] -= w * CHT[0] * CHT[0] ;
+      C[ 1] -= w * CHT[1] * CHT[0] ;
+      C[ 3] -= w * CHT[2] * CHT[0] ;
+      C[ 6] -= w * CHT[3] * CHT[0] ;
+      C[10] -= w * CHT[4] * CHT[0] ;
+
+      C[ 2] -= w * CHT[1] * CHT[1] ;
+      C[ 4] -= w * CHT[2] * CHT[1] ;
+      C[ 7] -= w * CHT[3] * CHT[1] ;
+      C[11] -= w * CHT[4] * CHT[1] ;
+
+      C[ 5] -= w * CHT[2] * CHT[2] ;
+      C[ 8] -= w * CHT[3] * CHT[2] ;
+      C[12] -= w * CHT[4] * CHT[2] ;
+
+      C[ 9] -= w * CHT[3] * CHT[3] ;
+      C[13] -= w * CHT[4] * CHT[3] ;
+
+      C[14] -= w * CHT[4] * CHT[4] ;
+
+      return res*res/errorRes2;
+}
 
 }}}

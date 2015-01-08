@@ -65,7 +65,7 @@ struct alignas(16) avx_5_t {
 
 namespace LHCb {
 namespace Math {
-namespace similarity_5_avx {
+namespace avx {
 
     void similarity_5_1(const double* Ci, const double* Fi, double* Ti)  {
       avx_5_t m { Ci };
@@ -152,123 +152,158 @@ namespace similarity_5_avx {
       _0 = m.c0i(Fi+30); _4 = m.c4i(Fi+30);
       Ti[27] = dot5_avx(Fi+30,_0,_4);
     }
-}
-
-namespace average_avx {
-
-bool average( const double* X1, const double* C1,
-              const double* X2, const double* C2,
-              double* X, double* C ) 
-{
-      static int i=-1;
-      // compute the inverse of the covariance (i.e. weight) of the difference: R=(C1+C2)
-      static Gaudi::SymMatrix5x5 invRM;
-      auto invR = invRM.Array();
-      _mm256_storeu_pd(invR,    _mm256_loadu_pd(C1)   + _mm256_loadu_pd(C2));
-      _mm256_storeu_pd(invR+4,  _mm256_loadu_pd(C1+4) + _mm256_loadu_pd(C2+4));
-      _mm256_storeu_pd(invR+8,  _mm256_loadu_pd(C1+8) + _mm256_loadu_pd(C2+8));
-      _mm_storeu_pd(   invR+12, _mm_loadu_pd(C1+12)   + _mm_loadu_pd(C2+12));
-      invR[14] = C1[14]+C2[14];
-
-      bool success = invRM.InvertChol() ;
-      // compute the gain matrix
-
-      // K <- C1*inverse(C1+C2) = C1*invR
-      avx_5_t _invR(invR); 
-
-      double K[25];
-      auto _1 = _invR.c0i<0,1,3,6,10>(C1);
-      auto _2 = _invR.c0i<1,2,4,7,11>(C1);
-      auto _3 = _invR.c0i<3,4,5,8,12>(C1);
-      auto _4 = _invR.c0i<6,7,8,9,13>(C1);
-      K[ 0] = _1[0];
-      K[ 1] = _1[1];
-      K[ 2] = _1[2];
-      K[ 3] = _1[3];
-
-      K[ 5] = _2[0];
-      K[ 6] = _2[1];
-      K[ 7] = _2[2];
-      K[ 8] = _2[3];
-
-      K[10] = _3[0];
-      K[11] = _3[1];
-      K[12] = _3[2];
-      K[13] = _3[3];
-
-      K[15] = _4[0];
-      K[16] = _4[1];
-      K[17] = _4[2];
-      K[18] = _4[3];
-
-      // TODO: blend&permute it! (4x2 instructions)
-      // 0 1 2 3 | 0 4 2 6 | 0 4 8 c | 0 4 8 c |
-      // 4 5 6 7 | 1 5 3 7 | 2 6 a e | 1 5 9 d |
-      // 8 9 a b | 8 c a e | 1 5 b f | 2 6 a e |
-      // c d e f | 9 d b f | 3 7 9 d | 3 7 b f |
-
-      auto kc0 = __m256d{_1[0],_2[0],_3[0],_4[0]};
-      auto kc1 = __m256d{_1[1],_2[1],_3[1],_4[1]};
-      auto kc2 = __m256d{_1[2],_2[2],_3[2],_4[2]};
-      auto kc3 = __m256d{_1[3],_2[3],_3[3],_4[3]};
-
-      auto _ = _invR.c0i<10,11,12,13,14>(C1);
-      K[20] = _[0];
-      K[21] = _[1];
-      K[22] = _[2];
-      K[23] = _[3];
-
-      avx_5_t _C1(C1);
-      auto kc4 = _C1.c0i<10,11,12,13,14>(invR);
-      K[ 4] = kc4[0];
-      K[ 9] = kc4[1];
-      K[14] = kc4[2];
-      K[19] = kc4[3];
-
-      K[24] = C1[10]*invR[10] + C1[11]*invR[11] + C1[12]*invR[12] + C1[13]*invR[13] + C1[14]*invR[14];
-
-      // X <- X1 + C1*inverse(C1+C2)*(X2-X1) =  X1 + K*(X2-X1) = X1 + K*d
-      auto _x20 = _mm256_loadu_pd(X2); 
-      auto _x10 = _mm256_loadu_pd(X1); 
-      auto d0 = _x20-_x10; double d4 = X2[4]-X1[4];
-
-      _ = _x10 + kc0*d0[0]+kc1*d0[1]+kc2*d0[2]+kc3*d0[3]+kc4*d4 ;
-      X[0] = _[0];
-      X[1] = _[1];
-      X[2] = _[2];
-      X[3] = _[3];
-      X[4] = X1[4] + K[20]*d0[0] + K[21]*d0[1] + K[22]*d0[2] + K[23]*d0[3] + K[24]*d4;
-
-      // C <-  C1 * inverse(C1+C2)  * C2 =  K * C2
-      avx_5_t _C2(C2);
-      _ = kc0*_C2.c0 + kc1*_C2.c1 + kc2*_C2.c2+kc3*_C2.c3+kc4*_C2.c4;
-      C[ 0] = _[0];
-      C[ 2] = _[1];
-      C[ 5] = _[2];
-      C[ 9] = _[3];
-
-      C[10] = K[20]*C2[ 0] + K[21]*C2[ 1] + K[22]*C2[ 3] + K[23]*C2[ 6] + K[24]*C2[10]; 
-      C[ 1] = K[ 5]*C2[ 0] + K[ 6]*C2[ 1] + K[ 7]*C2[ 3] + K[ 8]*C2[ 6] + K[ 9]*C2[10];
-      C[ 3] = K[10]*C2[ 0] + K[11]*C2[ 1] + K[12]*C2[ 3] + K[13]*C2[ 6] + K[14]*C2[10];
-      C[ 6] = K[15]*C2[ 0] + K[16]*C2[ 1] + K[17]*C2[ 3] + K[18]*C2[ 6] + K[19]*C2[10];
-
-      C[ 8] = K[15]*C2[ 3] + K[16]*C2[ 4] + K[17]*C2[ 5] + K[18]*C2[ 8] + K[19]*C2[12];
-      C[12] = K[20]*C2[ 3] + K[21]*C2[ 4] + K[22]*C2[ 5] + K[23]*C2[ 8] + K[24]*C2[12]; 
-      C[13] = K[20]*C2[ 6] + K[21]*C2[ 7] + K[22]*C2[ 8] + K[23]*C2[ 9] + K[24]*C2[13]; 
-      C[14] = K[20]*C2[10] + K[21]*C2[11] + K[22]*C2[12] + K[23]*C2[13] + K[24]*C2[14]; 
-
-      C[ 4] = K[10]*C2[ 1] + K[11]*C2[ 2] + K[12]*C2[ 4] + K[13]*C2[ 7] + K[14]*C2[11];
-      C[ 7] = K[15]*C2[ 1] + K[16]*C2[ 2] + K[17]*C2[ 4] + K[18]*C2[ 7] + K[19]*C2[11];
-      C[11] = K[20]*C2[ 1] + K[21]*C2[ 2] + K[22]*C2[ 4] + K[23]*C2[ 7] + K[24]*C2[11]; 
-
-      // the following used to be more stable, but isn't any longer, it seems:
-      //ROOT::Math::AssignSym::Evaluate(C, -2 * K * C1) ;
-      //C += C1 + ROOT::Math::Similarity(K,R) ;
-      return success;
-}
 
 
+    bool average( const double* X1, const double* C1,
+                  const double* X2, const double* C2,
+                  double* X, double* C ) 
+    {
+          // compute the inverse of the covariance (i.e. weight) of the difference: R=(C1+C2)
+          static Gaudi::SymMatrix5x5 invRM;
+          auto invR = invRM.Array();
+          _mm256_storeu_pd(invR,    _mm256_loadu_pd(C1)   + _mm256_loadu_pd(C2));
+          _mm256_storeu_pd(invR+4,  _mm256_loadu_pd(C1+4) + _mm256_loadu_pd(C2+4));
+          _mm256_storeu_pd(invR+8,  _mm256_loadu_pd(C1+8) + _mm256_loadu_pd(C2+8));
+          _mm_storeu_pd(   invR+12, _mm_loadu_pd(C1+12)   + _mm_loadu_pd(C2+12));
+          invR[14] = C1[14]+C2[14];
 
-}
-}
-}
+          bool success = invRM.InvertChol() ;
+          // compute the gain matrix
+
+          // K <- C1*inverse(C1+C2) = C1*invR
+          avx_5_t _invR(invR); 
+
+          double K[25];
+          auto _1 = _invR.c0i<0,1,3,6,10>(C1);
+          auto _2 = _invR.c0i<1,2,4,7,11>(C1);
+          auto _3 = _invR.c0i<3,4,5,8,12>(C1);
+          auto _4 = _invR.c0i<6,7,8,9,13>(C1);
+          K[ 0] = _1[0];
+          K[ 1] = _1[1];
+          K[ 2] = _1[2];
+          K[ 3] = _1[3];
+
+          K[ 5] = _2[0];
+          K[ 6] = _2[1];
+          K[ 7] = _2[2];
+          K[ 8] = _2[3];
+
+          K[10] = _3[0];
+          K[11] = _3[1];
+          K[12] = _3[2];
+          K[13] = _3[3];
+
+          K[15] = _4[0];
+          K[16] = _4[1];
+          K[17] = _4[2];
+          K[18] = _4[3];
+
+          // TODO: blend&permute it! (4x2 instructions)
+          // 0 1 2 3 | 0 4 2 6 | 0 4 8 c | 0 4 8 c |
+          // 4 5 6 7 | 1 5 3 7 | 2 6 a e | 1 5 9 d |
+          // 8 9 a b | 8 c a e | 1 5 b f | 2 6 a e |
+          // c d e f | 9 d b f | 3 7 9 d | 3 7 b f |
+
+          auto kc0 = __m256d{_1[0],_2[0],_3[0],_4[0]};
+          auto kc1 = __m256d{_1[1],_2[1],_3[1],_4[1]};
+          auto kc2 = __m256d{_1[2],_2[2],_3[2],_4[2]};
+          auto kc3 = __m256d{_1[3],_2[3],_3[3],_4[3]};
+
+          auto _ = _invR.c0i<10,11,12,13,14>(C1);
+          K[20] = _[0];
+          K[21] = _[1];
+          K[22] = _[2];
+          K[23] = _[3];
+
+          avx_5_t _C1(C1);
+          auto kc4 = _C1.c0i<10,11,12,13,14>(invR);
+          K[ 4] = kc4[0];
+          K[ 9] = kc4[1];
+          K[14] = kc4[2];
+          K[19] = kc4[3];
+
+          K[24] = C1[10]*invR[10] + C1[11]*invR[11] + C1[12]*invR[12] + C1[13]*invR[13] + C1[14]*invR[14];
+
+          // X <- X1 + C1*inverse(C1+C2)*(X2-X1) =  X1 + K*(X2-X1) = X1 + K*d
+          auto _x20 = _mm256_loadu_pd(X2); 
+          auto _x10 = _mm256_loadu_pd(X1); 
+          auto d0 = _x20-_x10; double d4 = X2[4]-X1[4];
+
+          _ = _x10 + kc0*d0[0]+kc1*d0[1]+kc2*d0[2]+kc3*d0[3]+kc4*d4 ;
+          X[0] = _[0];
+          X[1] = _[1];
+          X[2] = _[2];
+          X[3] = _[3];
+          X[4] = X1[4] + K[20]*d0[0] + K[21]*d0[1] + K[22]*d0[2] + K[23]*d0[3] + K[24]*d4;
+
+          // C <-  C1 * inverse(C1+C2)  * C2 =  K * C2
+          avx_5_t _C2(C2);
+          _ = kc0*_C2.c0 + kc1*_C2.c1 + kc2*_C2.c2+kc3*_C2.c3+kc4*_C2.c4;
+          C[ 0] = _[0];
+          C[ 2] = _[1];
+          C[ 5] = _[2];
+          C[ 9] = _[3];
+
+          C[10] = K[20]*C2[ 0] + K[21]*C2[ 1] + K[22]*C2[ 3] + K[23]*C2[ 6] + K[24]*C2[10]; 
+          C[ 1] = K[ 5]*C2[ 0] + K[ 6]*C2[ 1] + K[ 7]*C2[ 3] + K[ 8]*C2[ 6] + K[ 9]*C2[10];
+          C[ 3] = K[10]*C2[ 0] + K[11]*C2[ 1] + K[12]*C2[ 3] + K[13]*C2[ 6] + K[14]*C2[10];
+          C[ 6] = K[15]*C2[ 0] + K[16]*C2[ 1] + K[17]*C2[ 3] + K[18]*C2[ 6] + K[19]*C2[10];
+
+          C[ 8] = K[15]*C2[ 3] + K[16]*C2[ 4] + K[17]*C2[ 5] + K[18]*C2[ 8] + K[19]*C2[12];
+          C[12] = K[20]*C2[ 3] + K[21]*C2[ 4] + K[22]*C2[ 5] + K[23]*C2[ 8] + K[24]*C2[12]; 
+          C[13] = K[20]*C2[ 6] + K[21]*C2[ 7] + K[22]*C2[ 8] + K[23]*C2[ 9] + K[24]*C2[13]; 
+          C[14] = K[20]*C2[10] + K[21]*C2[11] + K[22]*C2[12] + K[23]*C2[13] + K[24]*C2[14]; 
+
+          C[ 4] = K[10]*C2[ 1] + K[11]*C2[ 2] + K[12]*C2[ 4] + K[13]*C2[ 7] + K[14]*C2[11];
+          C[ 7] = K[15]*C2[ 1] + K[16]*C2[ 2] + K[17]*C2[ 4] + K[18]*C2[ 7] + K[19]*C2[11];
+          C[11] = K[20]*C2[ 1] + K[21]*C2[ 2] + K[22]*C2[ 4] + K[23]*C2[ 7] + K[24]*C2[11]; 
+
+          return success;
+    }
+
+    double filter( double* X, double* C,
+                   const double* Xref, const double* H,
+                   double refResidual, double errorMeas2 )
+    {
+          auto  res = refResidual + dot5_avx(H,_mm256_loadu_pd(Xref)-_mm256_loadu_pd(X),Xref[4] - X[4]);
+          avx_5_t c(C);
+          auto cht0 = c.c0i(H);
+          auto cht4 = c.c4i(H);
+          auto  errorRes2  = errorMeas2 + dot5_avx(H,cht0,cht4);
+
+          // update the state vector and cov matrix
+          auto w = res/errorRes2;
+          auto x = _mm256_loadu_pd(X) + cht0*w;
+          _mm256_storeu_pd(X,x);
+          X[4] += cht4 * w;
+
+          w = 1./errorRes2;
+          auto _ = c.c0-cht0*cht0[0]*w;
+          C[ 0] = _[0];
+          C[ 1] = _[1];
+          C[ 3] = _[2];
+          C[ 6] = _[3];
+
+          C[10] = c.c4[0] - w * cht4 * cht0[0];
+
+          _ = _mm256_blend_pd( c.c1, _mm256_permute_pd(c.c4,1), 1 ) - __m256d{cht4, cht0[1],cht0[2],cht0[3]} *cht0[1]*w;
+          C[11] = _[0];
+          C[ 2] = _[1];
+          C[ 4] = _[2];
+          C[ 7] = _[3];
+
+          _ = __m256d{c.c2[2],c.c2[3],c.c4[2],0.}-__m256d{cht0[2],cht0[3],cht4,0.}*cht0[2]*w;
+          C[ 5] = _[0];
+          C[ 8] = _[1];
+          C[12] = _[2];
+
+          _ = __m256d{c.c3[3],c.c4[3],c.c44,0. } - __m256d{cht0[3],cht4,cht4,0.}*__m256d{cht0[3],cht0[3],cht4,0.}*w;
+          C[ 9] = _[0];
+          C[13] = _[1];
+          C[14] = _[2];
+
+          return res*res/errorRes2;
+    }
+
+
+} } }

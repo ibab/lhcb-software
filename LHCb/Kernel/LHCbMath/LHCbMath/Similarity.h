@@ -115,5 +115,44 @@ inline bool Average( const Gaudi::Vector5& X1, const Gaudi::SymMatrix5x5& C1,
                        X.Array(),  C.Array() );
 }
 
+// Forward declare pointer-to-worker-function type
+using filter_t = double (*)( double* X, double* C,
+                             const double* Xref, const double* H,
+                             double refResidual, double errorMeas2 );
+
+
+extern filter_t filter;
+
+// compute a filter step in a Kalman filter
+// updates X and C in situ, and returns the chisquared
+inline double Filter( Gaudi::Vector5& X, Gaudi::SymMatrix5x5& C,
+                      const Gaudi::Vector5& Xref, 
+                      const Gaudi::Matrix1x5& H,
+                      double refResidual, double errorMeas2 )
+{
+//      // calculate the linearized residual of the prediction and its error
+//      double res = refResidual + ( H * (Xref - X) ) (0) ;
+//
+//      static SMatrix<double,5,1> CHT, K ;
+//      CHT = C * Transpose(H) ;
+//      double errorRes2  = errorMeas2 + (H*CHT)(0,0) ;  
+//      // calculate gain matrix K
+//      K = CHT / errorRes2;
+//      
+//      // update the state vector
+//      X += K.Col(0) * res ;
+//      
+//      // update the covariance matrix
+//      static TrackSymMatrix tmp ;
+//      ROOT::Math::AssignSym::Evaluate(tmp, K * Transpose(CHT) ) ;
+//      C -= tmp ;
+//      return res*res / errorRes2;
+
+    return (*filter)(X.Array(),C.Array(),
+                     Xref.Array(),H.Array(),
+                     refResidual,errorMeas2);
+}
+
+
 } }
 #endif

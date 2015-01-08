@@ -5,6 +5,8 @@
 !               for geometry and matrix algebra
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
+! 2015-01-08 - Gerhard Raven
+ - cleanup namespace convention & dispatcher, add 'LHCb::Math::Filter'
 
 ! 2015-01-07 - Marco Cattaneo
  - Fix gcc49 unused function warning in Hesse.cpp

@@ -23,15 +23,15 @@
 // ============================================================================
 namespace LHCb {
 namespace Math {
-  namespace similarity_5_generic 
+  namespace generic 
   {
     extern void similarity_5_5(const double* Ci, const double* Fi, double* ti);
   }
-  namespace similarity_5_sse3
+  namespace sse3
   {
     extern void similarity_5_5(const double* Ci, const double* Fi, double* ti);
   }
-  namespace similarity_5_avx
+  namespace avx
   {
     extern void similarity_5_5(const double* Ci, const double* Fi, double* ti);
   }
@@ -60,7 +60,7 @@ int compareInstructionSets(Gaudi::Matrix5x5 &F, Gaudi::SymMatrix5x5 &origin,
   Gaudi::SymMatrix5x5 target, targetSSE3, targetAVX;
 
   // Running the transform for the generic method
-  LHCb::Math::similarity_5_generic::similarity_5_5( origin.Array(), F.Array(), target.Array() );
+  LHCb::Math::generic::similarity_5_5( origin.Array(), F.Array(), target.Array() );
   if (printResults) 
   {  
     std::cout << "Generic similarity transform result" << std::endl;
@@ -72,7 +72,7 @@ int compareInstructionSets(Gaudi::Matrix5x5 &F, Gaudi::SymMatrix5x5 &origin,
     // Checking SSE3
 
 
-    LHCb::Math::similarity_5_sse3::similarity_5_5( origin.Array(), F.Array(), targetSSE3.Array() );
+    LHCb::Math::sse3::similarity_5_5( origin.Array(), F.Array(), targetSSE3.Array() );
     if (printResults) 
     {  
       std::cout << "SSE3 similarity transform result" << std::endl;    
@@ -97,7 +97,7 @@ int compareInstructionSets(Gaudi::Matrix5x5 &F, Gaudi::SymMatrix5x5 &origin,
   // Checking AVX
   if (hasAVX) 
   {
-    LHCb::Math::similarity_5_avx::similarity_5_5( origin.Array(), F.Array(), targetAVX.Array() );
+    LHCb::Math::avx::similarity_5_5( origin.Array(), F.Array(), targetAVX.Array() );
     if (printResults) 
     {  
       std::cout << "AVX similarity transform result" << std::endl;      
