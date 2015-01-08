@@ -5,6 +5,9 @@
 !               for geometry and matrix algebra
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
+! 2015-01-08 - Ben Couturier 
+ - Fix CMakeLists.txt to build Similarity test 
+
 ! 2015-01-08 - Gerhard Raven
  - cleanup namespace convention & dispatcher, add 'LHCb::Math::Filter'
 
