@@ -3,9 +3,17 @@ Package     : MooreSys
 Package Coordinator : R. Aaij
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v23r3p1>2015-01-08 MooreSys v23r3p1</A></H1><PRE>
+
+Patch Release on stack v38r3 for Turbo MC production.
+Depends on Hlt v23r3.
+
+Main changes:
+    Fixes to HltRawData and HltDAQ
+
 </PRE><H1><A NAME=v23r3>2014-12-15 MooreSys v23r3</A></H1><PRE>
 
-Release on stack v38r3. Depends on Moore v23r3.
+Release on stack v38r3. Depends on Hlt v23r3.
 
 Main changes:
     En'block used up front by default.
