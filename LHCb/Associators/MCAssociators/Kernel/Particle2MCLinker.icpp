@@ -71,14 +71,12 @@ Object2MCLinker<SOURCE>::locateAlgorithm( const std::string& algType,
     NULL != m_myGaudiTool? m_myGaudiTool->Error("Could not locate IAlgManager " ) :
     StatusCode::FAILURE;
   // check the existence of the algorithm
-  typedef std::list<IAlgorithm*> Algs;
-  const Algs& algs = algMgr->getAlgorithms() ;
-  for( Algs::const_iterator ia = algs.begin() ; algs.end() != ia ; ++ia )
+  for( const auto& ia : algMgr->getAlgorithms() )
   {
-    if( 0 == *ia              ) { continue ; }
-    if( (*ia)->name() != algName ) { continue ; }
+    if( 0 == ia              ) { continue ; }
+    if( ia->name() != algName ) { continue ; }
     // algorithm is found ! 
-    alg = *ia ;
+    alg = ia ;
     alg -> addRef() ;
     // Set its jobOptions
     return setAlgInputData( alg, inputData) ; 

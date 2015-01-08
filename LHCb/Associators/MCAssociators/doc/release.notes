@@ -3,6 +3,8 @@
 ! Responsible : Vladimir Gligorov
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2015-01-08 - Gerhard Raven
+ - make code neutral wrt. return type of algMgr->getAlgorithms()
 
 !========================= MCAssociators v1r4p1 2013-09-30 =========================
 ! 2013-09-16 - Marco Cattaneo
