@@ -225,7 +225,6 @@ StatusCode TeslaReportAlgo::execute()
     debug() << "LHCbIDs.size() = " << LHCbIDs.size() << endmsg;
     SmartRefVector <LHCb::HltObjectSummary> substructure = MotherRep->substructure();
     debug() << "Number of triggered candidates = " << substructure.size() << endmsg;
-    debug() << substructure << endmsg;
     //
     
     
