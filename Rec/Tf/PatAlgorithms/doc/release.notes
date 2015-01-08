@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-01-08 - Michel De Cian
+ - Make Tool in PatMatch a configurable name, add 'getIfExists' and some doxygen comments.
+
 ! 2014-12-22 - Michel De Cian
  - Fix bug in PatAddTTCoord in 'returnTTClusters' which caused wrong chi2 to be returned. 
  Calculate part of the bending parameter only once per event. Add some doxygen comments.

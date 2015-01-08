@@ -26,6 +26,7 @@ PatMatch::PatMatch( const std::string& name,
   declareProperty( "VeloInput"       , m_veloLocation  = LHCb::TrackLocation::Velo );
   declareProperty( "SeedInput"       , m_seedLocation  = LHCb::TrackLocation::Seed );
   declareProperty( "MatchOutput"     , m_matchLocation = LHCb::TrackLocation::Match );
+  declareProperty( "ToolName"        , m_matchToolName = "PatMatchTool" );
 }
 //=============================================================================
 // Destructor
@@ -41,7 +42,7 @@ StatusCode PatMatch::initialize() {
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
-  m_matchTool = tool<IMatchTool>("PatMatchTool", this);
+  m_matchTool = tool<IMatchTool>( m_matchToolName, this);
   return StatusCode::SUCCESS;
 }
 
@@ -54,9 +55,20 @@ StatusCode PatMatch::execute()
   put(matchs, m_matchLocation);
   matchs->reserve(200);
  
-  LHCb::Tracks* velos  = get<LHCb::Tracks>( m_veloLocation );
-  LHCb::Tracks* seeds  = get<LHCb::Tracks>( m_seedLocation ); 
+  LHCb::Tracks* velos  = getIfExists<LHCb::Tracks>( m_veloLocation );
+  LHCb::Tracks* seeds  = getIfExists<LHCb::Tracks>( m_seedLocation ); 
   
+  if( velos == nullptr ){
+    error() << "Could not find Velo tracks at: " << m_veloLocation << endmsg;
+    return StatusCode::SUCCESS;
+  }
+  
+  if( seeds == nullptr ){
+    error() << "Could not find Seed tracks at: " << m_seedLocation << endmsg;
+    return StatusCode::SUCCESS;
+  }
+
+
   StatusCode sc = m_matchTool->match( *velos , *seeds , *matchs);
   
   if(sc.isFailure()) Warning("PatMatchTool failed",sc).ignore();
