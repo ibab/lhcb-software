@@ -20,13 +20,12 @@ Gaudi::AlgorithmMenu::AlgorithmMenu(ISvcLocator* svc, Interactor* par)
 {
   SmartIF<IAlgManager> mgr(svc);
   if ( mgr )  {
-    const list<IAlgorithm*>& algs = mgr->getAlgorithms();
+    const auto& algs = mgr->getAlgorithms();
     if ( !algs.empty() )  {
       const char* fmt = "%-32s %-32s  %-5s%-5s%-5s";
       int cmd = CMD_SHOW;
       m_window->addCOM(cmd, fmt, "Name","Type","Init","Fini","Exec");
-      for(list<IAlgorithm*>::const_iterator i=algs.begin(); i != algs.end(); ++i )  {
-        const IAlgorithm* ia = *i;
+      for(const auto& ia : algs ) { 
         string typ = System::typeinfoName(typeid(*ia));
         m_lines.insert(make_pair(++cmd,const_cast<IAlgorithm*>(ia)));
         m_window->addCMD(cmd, fmt,ia->name().c_str(),typ.c_str(),
