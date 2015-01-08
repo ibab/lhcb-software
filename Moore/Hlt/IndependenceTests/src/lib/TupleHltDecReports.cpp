@@ -26,7 +26,7 @@ using LHCb::HltDecReports;
 using LHCb::HltDecReport;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TupleHltDecReports );
+DECLARE_ALGORITHM_FACTORY( TupleHltDecReports )
 
 //=============================================================================
 TupleHltDecReports::TupleHltDecReports(const std::string& name,

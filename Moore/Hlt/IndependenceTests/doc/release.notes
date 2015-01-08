@@ -2,6 +2,9 @@ Package     : Hlt/IndepenceTests
 Package Coordinator : Mika Vesterinen
 Purpose     : HLT application to test indepence of Hlt lines
 
+! 2015-01-08 - Roel Aaij
+ - Fix warnig caused by extra semicolon at the end of a factory declaration.
+
 !========================= IndependenceTests v1r9 2014-08-17 =========================
 
 ! 2014-07-17 - Sean Benson
