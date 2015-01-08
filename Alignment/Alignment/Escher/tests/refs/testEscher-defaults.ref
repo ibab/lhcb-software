@@ -1,14 +1,14 @@
 # setting LC_ALL to "C"
-# --> Including file '/afs/cern.ch/user/m/mamartin/cmtuser/Alignment_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
-# <-- End of file '/afs/cern.ch/user/m/mamartin/cmtuser/Alignment_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Thu/ALIGNMENT/ALIGNMENT_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Thu/ALIGNMENT/ALIGNMENT_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
 # skipping configuration of RawEventFormatConf
 # applying configuration of Escher
 # Initializing sequences!
 # Defining options!
 # Setting up alignment sequence
-# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v38r3p1/GaudiConf/options/RootHist.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Thu/LHCB/LHCB_HEAD/GaudiConf/options/RootHist.opts'
 # ApplicationMgr.HistogramPersistency = "ROOT";
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v38r3p1/GaudiConf/options/RootHist.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Thu/LHCB/LHCB_HEAD/GaudiConf/options/RootHist.opts'
 # /***** User Escher/Escher **************************************************************************
 # |-Persistency         = None
 # |-SkipEvents          = 0
@@ -17,7 +17,7 @@
 # |-Kalman              = True
 # |-DDDBtag             = ''
 # |-Millepede           = False
-# |-MainSequence        = ['ProcessPhase/Init', <GaudiSequencer/HltFilterSeq at 0x1e4f540>, 'ProcessPhase/Reco', 'ProcessPhase/Moni', <GaudiSequencer/AlignSequence at 0x1e395a0>]
+# |-MainSequence        = ['ProcessPhase/Init', <GaudiSequencer/HltFilterSeq at 0x2ef2200>, 'ProcessPhase/Reco', 'ProcessPhase/Moni', <GaudiSequencer/AlignSequence at 0x2edc350>]
 # |                     (default: [])
 # |-OutputType          = 'NONE'
 # |-Incident            = ''
@@ -116,8 +116,8 @@
 # |-PVSelection                  = None
 # |-LogFile                      = 'alignlog.txt'
 # |-ParticleSelections           = []  (default: [])
-# |-TrackSelections              = [<TAlignment.TrackSelections.GoodLongTracks instance at 0x1d726c8>]
-# |                              (default: [<TAlignment.TrackSelections.GoodLongTracks instance at 0x1d726c8>])
+# |-TrackSelections              = [<TAlignment.TrackSelections.GoodLongTracks instance at 0x2de5f80>]
+# |                              (default: [<TAlignment.TrackSelections.GoodLongTracks instance at 0x2de5f80>])
 # |-SolvTool                     = 'DiagSolvTool'
 # |-MinNumberOfHits              = 10
 # |-Precision                    = 10
@@ -143,8 +143,8 @@
 # |-TrackLocation                = ''
 # |-ElementsToAlign              = []  (default: [])
 # |-UseCorrelations              = True
-# |-Sequencer                    = <GaudiSequencer/AlignSequence at 0x1e395a0>
-# |                              (default: <GaudiSequencer/TAlignmentSequencer at 0x1121df0>)
+# |-Sequencer                    = <GaudiSequencer/AlignSequence at 0x2edc350>
+# |                              (default: <GaudiSequencer/TAlignmentSequencer at 0x2d5baa0>)
 # |-UsePreconditioning           = True
 # |-OnlineAligWorkDir            = '/group/online/AligWork/running'
 # \----- (End of User TAlignment/TAlignment) ---------------------------------------------------------
@@ -180,7 +180,7 @@ Warning in <TInterpreter::ReadRootmapFile>: class  pair<const int,int> found in 
 ApplicationMgr    SUCCESS 
 ====================================================================================================================================
                                                    Welcome to Escher version v5r2
-                                          running on lxplus0061.cern.ch on Wed Dec 17 09:16:48 2014
+                                          running on lxplus0040.cern.ch on Thu Jan  8 14:23:04 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -188,7 +188,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   3.37 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.92 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 EscherSequencer      INFO Member list: ProcessPhase/Init, GaudiSequencer/HltFilterSeq, ProcessPhase/Reco, ProcessPhase/Moni, GaudiSequencer/AlignSequence
@@ -370,7 +370,7 @@ ITClusterMonitor  SUCCESS Booked 13 Histogram(s) : 1D=8 2D=4 1DProf=1
 Alignment            INFO Total number of tracks: 0
 Alignment            INFO Number of covariance calculation failures: 0
 ToolSvc.Al::Ali...WARNING ==> No elements to align.
-ToolSvc.WriteMu...   INFO 0x7fff82fa6328
+ToolSvc.WriteMu...   INFO 0x7fff54a1a208
 GoodLongTracksI...SUCCESS Booked 2 Histogram(s) : 1D=2 
 EventLoopMgr         INFO Histograms converted successfully according to request.
 LoKiSvc           SUCCESS 
@@ -413,7 +413,7 @@ ToolSvc.FastVel...   INFO Maximum number of Velo hits 0
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   3.37 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.92 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
