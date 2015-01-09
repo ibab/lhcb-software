@@ -11,9 +11,9 @@ version v1r0
 branches cmt doc
 
 # Lovell core packages
-use VeloAnalysisFramework 	v1r0   .   # S Ali, L Bell
-use VeloOfflineGUI 		v1r0   .   # D Saunders
-use VeloWebGUI		 	v1r0   .   # A Pearce
+use VeloAnalysisFramework 	v1r0   # S Ali, L Bell
+use VeloOfflineGUI 		v1r0   # D Saunders
+use VeloWebGUI		 	v1r0   # A Pearce
 
 # Declare this as a container package
 apply_pattern container_package
