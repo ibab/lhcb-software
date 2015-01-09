@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-01-09 - Michel De Cian
+ - New parametrisations in 'PatMatchTool', lower ghost right and higher efficiency, mostly for low p tracks.
+
 ! 2015-01-08 - Michel De Cian
  - Make Tool in PatMatch a configurable name, add 'getIfExists' and some doxygen comments.
 
