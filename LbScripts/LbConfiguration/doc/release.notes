@@ -1,5 +1,9 @@
 2015-01-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* lb-run: fixes to correctly fall back on SetupProject for ROOT (LBCORE-521)
+
+2015-01-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* SetupProject.py: added MANPATH to the variables to strip
 
 2015-01-09  Marco Clemencic  <Marco.Clemencic@cern.ch>

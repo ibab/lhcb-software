@@ -61,7 +61,7 @@ import LbConfiguration.Project
 # LHCb projects without container
 import LbConfiguration.Package
 # LCGCMT is not an LHCb project but we know about it
-nocontainer_project_names = LbConfiguration.Package.project_names + ["LCGCMT"]
+nocontainer_project_names = LbConfiguration.Package.project_names + ["LCGCMT", "ROOT"]
 project_names = LbConfiguration.Project.project_names + nocontainer_project_names # Add the projects without container to the full list
 
 # List of pairs (project,[packages]) to automatically select for override

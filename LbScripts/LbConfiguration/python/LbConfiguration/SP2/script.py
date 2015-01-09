@@ -140,7 +140,7 @@ class SP2(EnvConfig.Script):
             if rargs and isValidVersion(p_name, rargs[0]):
                 v = rargs.pop(0)
             else:
-                v = 'latest'
+                v = 'prod'
             return p_name, v
 
         def runtime_project_option(_option, opt_str, _value, parser):

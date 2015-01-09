@@ -6,9 +6,10 @@ def isValidVersion(project, version):
     specified project.
     '''
     # FIXME: for the moment we accept only some simple values, but we should look for aliases too
-    return (version.lower() in ('latest', 'head')
-            or re.match(r"^v[0-9]+r[0-9]+(p[0-9]+)?(g[0-9]+)?$", version)
-            or (project == 'LCGCMT' and re.match(r"^[0-9]+([a-z]?|rc[0-9]+)$", version))
+    return (version.lower() in ('prod', 'latest', 'head')
+            or re.match(r'^v[0-9]+r[0-9]+(p[0-9]+)?(g[0-9]+)?$', version)
+            or (project == 'LCGCMT' and re.match(r'^[0-9]+([a-z]?|rc[0-9]+)$', version))
+            or (project == 'ROOT' and re.match(r'\d+\.\d+\.\d+', version))
             )
 
 def expandVersionAlias(project, version):
