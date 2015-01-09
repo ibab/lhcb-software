@@ -1,5 +1,9 @@
 2015-01-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* SetupProject.py: added MANPATH to the variables to strip
+
+2015-01-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* SetupProject.py: fixed LBCORE-521 (at least the CMT part)
 	* tests/SetupProjectTest.py: added simple test to check if SetupProject ROOT works
 

@@ -1454,7 +1454,7 @@ class SetupProject(object):
         root_dir_local = root_dir
         if self.opts.shell == "bat":
             root_dir_local = root_dir_local.replace('/','\\')
-        for v in ["PATH", "PYTHONPATH", "LD_LIBRARY_PATH", "HPATH"]:
+        for v in ["PATH", "PYTHONPATH", "LD_LIBRARY_PATH", "HPATH", "MANPATH"]:
             if v in new_env:
                 # Keep the entries that do not refer to the local temporary directory,
                 # do exist and are not empty
