@@ -1,5 +1,10 @@
 2015-01-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* SetupProject.py: fixed LBCORE-521 (at least the CMT part)
+	* tests/SetupProjectTest.py: added simple test to check if SetupProject ROOT works
+
+2015-01-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* tests/SetupProjectTest.py: fixed some tests
 
 2014-12-13  Marco Clemencic  <Marco.Clemencic@cern.ch>

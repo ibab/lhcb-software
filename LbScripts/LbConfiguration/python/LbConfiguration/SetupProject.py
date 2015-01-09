@@ -354,6 +354,28 @@ def FindProjectVersions(project, search_path, user_area = None,
                                if isProject(os.path.join(p,v), ignore_not_ready, cvmfs) ]
     return versions
 
+def FindLCGForROOT(version, versions):
+    '''
+    Return the version of LCGCMT for the required version of ROOT.
+
+    @param versions: list of tuples like the one returned by FindProjectVersions
+    '''
+    from os.path import join, exists
+    root_version = re.compile(r'^\s*macro\s+ROOT_config_version\s+"([^"]*)"')
+    for req, vers in [(join(base, name,
+                           'LCG_Configuration', 'cmt', 'requirements'),
+                       vers)
+                      for _, vers, name, base in versions]:
+        if exists(req):
+            for l in open(req):
+                m = root_version.match(l)
+                if m:
+                    if m.group(1) == version:
+                        return vers # got it
+                    else:
+                        break # we found the declaration of ROOT, but we do not like it
+    return None
+
 def SortVersions(versions, reverse = False):
     """Give a list of version numbers, return a list with only unique elements
     ordered by version.
@@ -389,6 +411,12 @@ def SortVersions(versions, reverse = False):
     if reverse: sortable_list.reverse()
     return [ v[1] for v in sortable_list ]
 
+def SortVersionTuples(versions, reverse = False):
+    '''
+    Similar to SortVersions, but take the list of versions returned by FindVersions.
+    '''
+    vers_map = dict([(t[1], t) for t in versions[::-1]])
+    return [vers_map[k] for k in SortVersions(vers_map, reverse)]
 
 def LatestVersion(versions):
     """Extract the latest version from a list of version tuples
@@ -1251,13 +1279,9 @@ class SetupProject(object):
 
     def _print_versions(self, versions):
         output = ''
-        vers_locs = {}
-        for _p,v,_n,d in versions:
-            if v not in vers_locs:
-                vers_locs[v] = d
-        if not self.opts.quiet :
-            for v in SortVersions(vers_locs.keys()):
-                output += 'echo %s in %s\n' % (v,vers_locs[v])
+        if not self.opts.quiet:
+            for _p,v,_n,d in SortVersionTuples(versions):
+                output += 'echo %s in %s\n' % (v, d)
         self._write_script(output)
 
     def _ask_version(self, versions):
@@ -1529,19 +1553,24 @@ class SetupProject(object):
             self._error("You have to specify a project")
             return 1
 
+        required_root_version = None
         if self.args[0].lower() == "root":
+            if self.list_versions:
+                self._error('cannot list the versions of ROOT')
+                return 1
             # ROOT is not a CMT project, instead of
-            #   SetupProject ROOT 5.34.00
+            #   SetupProject ROOT 5.34.10
             # we should do
-            #   SetupProject LCGCMT ROOT -v 5.34.00
+            #   SetupProject LCGCMT 66 ROOT
             self.project_name = "LCGCMT"
             # let's see if the user actually passed us a version for ROOT
             if len(self.args) > 1 and re.match(r"\d+\.\d+\.\d+", self.args[1]):
-                # yes, so we pretend we got "ROOT -v <version>"
-                self.opts.ext_versions["ROOT"] = self.args[1]
-                # and remove the already digested arguments
-                del self.args[0:2]
+                # yes, record it for later (when we have the search path ready)
+                required_root_version = self.args[1]
+                # fix the arguments
+                self.args[0:2] = ['ROOT']
             else:
+                self._debug('Using the latest version of LCGCMT to provide ROOT')
                 # if the version is not given, we do not need to do anything
                 # special on the arguments, just ensure that the case is correct
                 self.args[0] = "ROOT"
@@ -1597,6 +1626,20 @@ class SetupProject(object):
         if self.list_versions:
             self._print_versions(versions)
             return 0
+
+        if required_root_version:
+            # now we can look for the version of LCGCMT that matches the required
+            # version of ROOT
+            self._debug('Looking for the LCGCMT version providing ROOT %s' %
+                        required_root_version)
+            lcg_version = FindLCGForROOT(required_root_version,
+                                         SortVersionTuples(versions, reverse=True))
+            if lcg_version:
+                # we need the version in the args because it's processed later
+                self.args.insert(0, lcg_version)
+            else:
+                self._error("Cannot find ROOT %s" % required_root_version)
+                return 1
 
         #------------- project version
         if self.args:

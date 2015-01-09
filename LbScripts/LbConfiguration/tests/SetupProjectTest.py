@@ -797,6 +797,16 @@ version v999r999
         finally:
             SetupProject.removeall(tmp_dir)
 
+    def test_500_root(self):
+        '''prepare environment for ROOT'''
+        x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s ROOT") % (_shell))
+        s = x[1].read()
+        self.assert_('ROOTSYS=' in s)
+
+        for v in ['6.00.02', '5.34.10']:
+            x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s ROOT %s") % (_shell, v))
+            s = x[1].read()
+            self.assert_(re.search('ROOTSYS=[^=]*' + v, s))
 
 if __name__ == '__main__':
     unittest.main()
