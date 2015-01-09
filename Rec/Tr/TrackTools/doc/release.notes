@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-01-09 - Michel De Cian
+ - Update parameters for 'ParamsVeloTCubic' for 2015 in FastMomentumEstimate
+
 ! 2015-01-06 - Paul Seyfert
  - fixed unchecked StatusCode in UpgradeGhostInfo
 
