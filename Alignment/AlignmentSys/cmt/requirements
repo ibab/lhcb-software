@@ -31,7 +31,7 @@ use CommonParticles     v8r19    Phys
 use OTCalibration	v1r7   Calibration # Wouter Hulsbergen
 
 #temporary segfault fix, from Rec
-use TrackUtils v1r56 Tr
+#use TrackUtils v1r56 Tr
 
 # Declare this as a container package
 apply_pattern container_package
