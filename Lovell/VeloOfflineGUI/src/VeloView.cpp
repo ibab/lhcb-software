@@ -1,4 +1,4 @@
-#include "../headers/VeloView.h"
+#include "VeloView.h"
 #include "ui_VeloView.h"
 
 //_____________________________________________________________________________

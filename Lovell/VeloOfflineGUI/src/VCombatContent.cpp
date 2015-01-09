@@ -1,7 +1,7 @@
 #ifndef VCOMBATCONTENT_CPP
 #define VCOMBATCONTENT_CPP
 
-#include "../headers/VCombatContent.h"
+#include "VCombatContent.h"
 //_____________________________________________________________________________
 //_____________________________________________________________________________
 

@@ -1,4 +1,4 @@
-#include "../headers/VPlottable.h"
+#include "VPlottable.h"
 
 //_____________________________________________________________________________
 VPlottable::VPlottable() : m_plottableDimension(),

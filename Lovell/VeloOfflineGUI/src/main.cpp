@@ -1,4 +1,4 @@
-#include "headers/VeloView.h"
+#include "VeloView.h"
 #include <QApplication>
 #include <sstream>
 

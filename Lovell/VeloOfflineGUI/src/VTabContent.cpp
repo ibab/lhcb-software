@@ -1,4 +1,4 @@
-#include "../headers/VTabContent.h"
+#include "VTabContent.h"
 
 //_____________________________________________________________________________
 void VTabContent::drawPlots() {

@@ -1,4 +1,4 @@
-#include "../headers/VContentGetter.h"
+#include "VContentGetter.h"
 
 //_____________________________________________________________________________
 

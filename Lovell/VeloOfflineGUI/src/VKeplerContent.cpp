@@ -1,7 +1,7 @@
 #ifndef VKEPLERCONTENT_CPP
 #define VKEPLERCONTENT_CPP
 
-#include "../headers/VKeplerContent.h"
+#include "VKeplerContent.h"
 //_____________________________________________________________________________
 //_____________________________________________________________________________
 
