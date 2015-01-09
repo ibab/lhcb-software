@@ -2,7 +2,7 @@
 
 from sys import stdout
 from os import pathsep, listdir, environ, fdopen
-from os.path import exists, isdir, realpath
+from os.path import exists, isdir, realpath, normpath
 from optparse import OptionParser, OptionValueError
 from tempfile import mkstemp
 from zipfile import is_zipfile
@@ -11,11 +11,12 @@ def StripPath(path):
     collected = []
     for p in path.split(pathsep):
         rp = realpath(p)
+        np = normpath(p)
         # We keep the entry if it is a directory not empty or a zipfile
         try :
-            if exists(rp) and ((isdir(rp) and listdir(rp)) 
-                          or is_zipfile(rp)) and p not in collected:
-                collected.append(p)
+            if exists(rp) and ((isdir(rp) and listdir(rp))
+                          or is_zipfile(rp)) and np not in collected:
+                collected.append(np)
         except OSError :
             pass
     return pathsep.join(collected)
@@ -29,13 +30,13 @@ def CleanVariable(varname, shell, out):
             out.write("export %s=%s\n" % (varname, pth))
         elif shell == "bat" :
             out.write("set %s=%s\n" % (varname, pth))
-    
+
 
 def _check_output_options_cb(option, opt_str, value, parser):
     if opt_str == "--mktemp" :
         if parser.values.output != stdout :
             raise OptionValueError("--mktemp cannot be used at the same time as --output")
-        else : 
+        else :
             parser.values.mktemp = True
             fd, outname = mkstemp()
             parser.values.output = fdopen(fd, "w")
@@ -48,7 +49,7 @@ def _check_output_options_cb(option, opt_str, value, parser):
 
 
 if __name__ == '__main__':
-    
+
     script_parser = OptionParser()
 
     script_parser.add_option("-e", "--env",
@@ -59,7 +60,7 @@ if __name__ == '__main__':
     script_parser.add_option("--shell", action="store", dest="shell", type="choice", metavar="SHELL",
                       choices = ['csh','sh','bat'],
                       help="select the type of shell to use")
-    
+
     script_parser.set_defaults(output=stdout)
     script_parser.add_option("-o", "--output", action="callback", metavar="FILE",
                       type = "string", callback = _check_output_options_cb,
@@ -68,12 +69,12 @@ if __name__ == '__main__':
                       dest="mktemp",
                       callback = _check_output_options_cb,
                       help="(internal) send the output to a temporary file and print on stdout the file name (like mktemp)")
-    
+
     options, args = script_parser.parse_args()
 
     if not options.shell and environ.has_key("SHELL"):
         options.shell = environ["SHELL"]
-        
+
 
     if options.envlist:
         for v in options.envlist :
@@ -82,4 +83,4 @@ if __name__ == '__main__':
     for a in args:
         print StripPath(a)
 
-        
+
