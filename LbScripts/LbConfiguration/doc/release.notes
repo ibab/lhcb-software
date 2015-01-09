@@ -1,3 +1,7 @@
+2015-01-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* tests/SetupProjectTest.py: fixed some tests
+
 2014-12-13  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* lb-dev: fixed a few problems

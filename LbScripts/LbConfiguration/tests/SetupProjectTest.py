@@ -42,6 +42,8 @@ if os.environ["CMTCONFIG"][0:3] == "win":
 else:
     _shell = "sh"
 
+os.environ['User_release_area'] = '/no/dir'
+
 class SetupProjectTestCase(unittest.TestCase):
     def _check_env(self, output, project, version, withsys=True, main=True):
         if "SPTESTCASE_DEBUG" in os.environ:
@@ -237,9 +239,9 @@ class SetupProjectTestCase(unittest.TestCase):
                        '--runtime-project', 'Other', 'v7r6p5',
                        '--runtime-project', 'NoVers', 'argument'
                        ])
-        self.assertEquals(sp.runtime_projects,[ ("Test","v1r1"),
-                                                ('Other', 'v7r6p5'),
-                                                ('NoVers', None) ])
+        self.assertEquals(sp.opts.runtime_projects,[ ("Test","v1r1"),
+                                                     ('Other', 'v7r6p5'),
+                                                     ('NoVers', None) ])
 
     def test_060_main(self):
         """main (wrong options)
@@ -648,21 +650,20 @@ class SetupProjectTestCase(unittest.TestCase):
         try:
             # prepare fake dev area
             dsys = os.path.join(tmp_dir,'BRUNEL','BRUNEL_v999r999','BrunelSys','v999r999','cmt')
-            d = tmp_dir
-            for x in ['BRUNEL','BRUNEL_v999r999','BrunelSys','v999r999','cmt']:
-                d = os.path.join(d,x)
-                os.mkdir(d)
-            open(os.path.join(d,"requirements"),"w").write("""
+            os.makedirs(dsys)
+            open(os.path.join(dsys, "requirements"), "w").write("""
 package BrunelSys
 version v999r999
 """)
             os.mkdir(os.path.join(tmp_dir,'BRUNEL','BRUNEL_v999r999','cmt'))
+            os.makedirs(os.path.join(tmp_dir,'BRUNEL','BRUNEL_v999r999','InstallArea', os.environ['CMTCONFIG']))
             open(os.path.join(tmp_dir,'BRUNEL','BRUNEL_v999r999','cmt','project.cmt'),"w").write("project Brunel\n")
 
             env['LHCBDEV'] = tmp_dir
             # get it from LHCBDEV
-            x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s --ignore-missing --dev Brunel") % _shell)
+            x = os.popen4((launcher + " LbConfiguration.SetupProject --debug --shell=%s --ignore-missing --dev Brunel") % _shell)
             s = x[1].read()
+            #print s
             self.assert_(project_configured(s,"Brunel","v999r999"))
 
             # get it from offical releases
