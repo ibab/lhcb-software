@@ -33,27 +33,6 @@ const CLID& Hlt::Stage::classID()
     return CLID_Stage;
 }
 // ============================================================================
-// Default Destructor
-// ============================================================================
-Hlt::Stage::~Stage()
-{
-}
-// ============================================================================
-Hlt::Stage::Lock::Lock( Stage* stage, const INamedInterface* locker )
-    : m_locker(locker), m_stage(stage)
-{
-    if ( !m_stage || !m_locker ) {
-        throw GaudiException( "Stage or locker is null", "Stage::Lock::Lock",
-                              StatusCode::FAILURE );
-    }
-    stage->_lock( m_locker );
-}
-// ============================================================================
-Hlt::Stage::Lock::~Lock()
-{
-    m_stage->_unlock( m_locker );
-}
-// ============================================================================
 const Hlt::Stage::History& Hlt::Stage::Lock::addToHistory( std::string entry )
 {
     History& history = m_stage->m_history;
@@ -75,14 +54,6 @@ Hlt::Stage::Lock::addToHistory( const Hlt::Stage::History& history )
     History& _history = m_stage->m_history;
     _history.insert( std::end(_history), std::begin(history), std::end(history) );
     return m_stage->history();
-}
-// ============================================================================
-void Hlt::Stage::_checkLock() const
-{
-    if ( !locked() ) {
-        throw GaudiException( "Not locked", "Stage::_checkLock",
-                              StatusCode::FAILURE );
-    }
 }
 // ============================================================================
 struct getContainedObjectPtr_ : boost::static_visitor<const ContainedObject*> {
@@ -157,24 +128,6 @@ std::ostream& Hlt::Stage::fillStream( std::ostream& s ) const
     Gaudi::Utils::toStream( m_history, s );
     //
     return s;
-}
-// ============================================================================
-// set own candidate
-// ============================================================================
-void Hlt::Stage::setOwner( const Hlt::Candidate* c )
-{
-    //
-    if ( !c ) {
-        throw GaudiException( "Invalid Hlt::Candidate", "Stage::setOwner",
-                              StatusCode::FAILURE );
-    }
-    //
-    if ( m_owner && c != m_owner ) {
-        throw GaudiException( "Owner is already set", "Stage::setOwner",
-                              StatusCode::FAILURE );
-    }
-    //
-    m_owner = c;
 }
 // ============================================================================
 // printout

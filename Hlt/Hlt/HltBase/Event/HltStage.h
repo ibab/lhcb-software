@@ -169,9 +169,17 @@ class GAUDI_API Stage : public ContainedObject
       public:
         // ======================================================================
         /// constructor
-        Lock( Stage* stage, const INamedInterface* locker );
+        Lock( Stage* stage, const INamedInterface* locker )
+            : m_locker(locker), m_stage(stage)
+        {
+            if ( UNLIKELY( !m_stage || !m_locker ) ) {
+                throw GaudiException( "Stage or locker is null", "Stage::Lock::Lock",
+                              StatusCode::FAILURE );
+            }
+            stage->_lock( m_locker );
+        }
         /// destructor
-        ~Lock();
+        ~Lock() { m_stage->_unlock(m_locker); }
         // ======================================================================
       public:
         // ======================================================================
@@ -197,7 +205,7 @@ class GAUDI_API Stage : public ContainedObject
   public:
     // ========================================================================
     /// Default Destructor
-    virtual ~Stage();
+    virtual ~Stage() = default;
     // ========================================================================
   public:
     // ========================================================================
@@ -370,7 +378,18 @@ class GAUDI_API Stage : public ContainedObject
   protected:
     // ========================================================================
     /// set own candidate
-    void setOwner( const Hlt::Candidate* c ); // set own candidate
+    void setOwner( const Hlt::Candidate* c ) // set own candidate
+    {
+        if ( UNLIKELY( !c ) ) {
+            throw GaudiException( "Invalid Hlt::Candidate", "Stage::setOwner",
+                                  StatusCode::FAILURE );
+        }
+        if ( UNLIKELY( m_owner && c != m_owner ) ) {
+            throw GaudiException( "Owner is already set", "Stage::setOwner",
+                                  StatusCode::FAILURE );
+        }
+        m_owner = c;
+    }
     // ========================================================================
   public:
     // ========================================================================
@@ -391,7 +410,13 @@ class GAUDI_API Stage : public ContainedObject
     //
     void _lock( const INamedInterface* locker );
     void _unlock( const INamedInterface* locker );
-    void _checkLock() const;
+    void _checkLock() const 
+    {
+        if ( UNLIKELY( !locked() ) ) {
+            throw GaudiException( "Not locked", "Stage::_checkLock",
+                              StatusCode::FAILURE );
+        }
+    }
     //
     template <typename T>
     bool _insertInfo( const KeyType& key, const T& value );
