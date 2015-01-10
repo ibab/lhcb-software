@@ -46,6 +46,7 @@ PrPlotFTHits::PrPlotFTHits( const std::string& name,
   declareProperty( "PlotFTHitsOnTrack", m_plotFTHitsOnTrack = true);
   declareProperty( "PlotTrackingEfficiency", m_plotTrackingEfficiency = true);
   declareProperty( "PlotMCHits", m_plotMCHits = true);
+  declareProperty( "OnlyLongAndDownForMCHits", m_onlyLongDownForMCHits = true );
 
 }
 //=============================================================================
@@ -593,75 +594,46 @@ void PrPlotFTHits::plotTrackingEfficiency(){
 //  Plot MC hits belonging to a cluster/hit
 //=============================================================================
 void PrPlotFTHits::plotMCHits () {
-
+  
   m_ghtool->setHistoDir("Track/PrPlotFTHits/MCHits") ;
   
-  LHCb::MCParticles* mcParts = getIfExists<LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
-  if ( msgLevel( MSG::ERROR ) && !mcParts ) error() << "Could not find MCParticles at: " <<  LHCb::MCParticleLocation::Default << endmsg;
   
-  // -- MC linking 
+  // -- MC linking
+  LinkedTo<LHCb::MCHit, LHCb::FTCluster> myMCHitLink ( evtSvc(), msgSvc(), LHCb::FTClusterLocation::Default + "2MCHits");
   LinkedTo<LHCb::MCParticle, LHCb::FTCluster> myClusterLink ( evtSvc(), msgSvc(), LHCb::FTClusterLocation::Default );
-  LinkedFrom<LHCb::MCHit,LHCb::MCParticle> myMCHitLink( evtSvc(), msgSvc(), LHCb::MCParticleLocation::Default + "2MC" + "FT" + "Hits");
 
-  // -- The association between clusters/hits and MCHits is done in a bit a cumbersome way:
-  // -- As there exists not direct link (for the moment), the cluster is associated to an MCParticle, the MCHit to an MCParticle
-  // -- and then the MCHit closest in z to the MCParticle is chosen.
-  // -- Ideally a LinkerTable would be created between MCHits and FT clusters.
-  
-    
   MCTrackInfo trackInfo( evtSvc(), msgSvc() );
-  
 
-  for(LHCb::MCParticle* mcPart : *mcParts){
+  for(unsigned int i = 0; i < m_zone; i++){
     
-    // -- Protect against super low momentum tracks.
-    if( mcPart->p() < 500) continue;
+    const int layer = i/2;
     
-    if(m_excludeElectrons){
-      if( abs(mcPart->particleID().pid()) == 11 ) continue; // No electrons!
-    }
+    char layerName[100];
+    sprintf(layerName, "Layer%i",layer);
 
-
-    bool isOK  = trackInfo.hasT( mcPart ) && (trackInfo.hasTT( mcPart ) || trackInfo.hasVelo( mcPart ));
-    if( !isOK ) continue;
-    
-    for(unsigned int i = 0; i < m_zone; i++){
-    
-      PrHitZone*  hitZone = m_ftHitManager->zone( i );
+    HitRange range = m_ftHitManager->hits(i);
+    for( HitRange::const_iterator it = range.begin(); it != range.end(); ++it ){
+      PrHit* hit = *it;
       
-      for( const PrHit* hit : hitZone->hits()){
+      const LHCb::MCParticle* mcPartHit = myClusterLink.first( hit->id().ftID() );
 
-        // -- Get the MCParticle matched to the cluster/hit
-        const LHCb::MCParticle* mcPartHit = myClusterLink.first( hit->id().ftID() ); 
-        if( mcPart != mcPartHit) continue;
-        
-        // -- Get the (first) MCHit matched to the MCParticle
-        LHCb::MCHit* mcHit = myMCHitLink.first( mcPart );
-        if(mcHit == nullptr) continue;
-        
-        char zoneName[100];
-        sprintf(zoneName, "Zone%i",i);
-        
-        LHCb::MCHit* bestMCHit = mcHit;
-        
-        // -- Get the MCHit which is closest to the cluster in z (at maximum 10mm away).
-        double dist = 10.0;
-        while( mcHit != nullptr){
-        
-          if( fabs( mcHit->midPoint().Z() - hit->z(mcHit->midPoint().Y()) ) < dist ){
-            dist =  fabs(mcHit->midPoint().Z() - hit->z(mcHit->midPoint().Y()));
-            bestMCHit = mcHit;
-          }
-          mcHit =  myMCHitLink.next();
-        }
-        
+      // -- only care about MCHits that belong to long or downstream reconstructible tracks
+      const bool isOK  = trackInfo.hasT( mcPartHit ) && (trackInfo.hasTT( mcPartHit ) || trackInfo.hasVelo( mcPartHit ));
+      if( m_onlyLongDownForMCHits && !isOK ) continue;
 
-        m_histoTool->plot2D(  bestMCHit->midPoint().X(), bestMCHit->midPoint().Y(), zoneName,
-                              "mc hits in zones",-3000,3000,-500,500, 6000, 1000);
-        
+      // -- Get the (first) MCHit matched to the MCParticle
+      LHCb::MCHit* mcHit = myMCHitLink.first( hit->id().ftID() );
+      
+
+      while(mcHit != nullptr){
+        m_histoTool->plot2D(  mcHit->midPoint().X(),mcHit->midPoint().Y(), layerName,
+                              "mc hits in layer",-3200,3200,-3200,3200, 6400, 6400);
+        mcHit = myMCHitLink.next();
       }
+
     }
   }
+  
 }
 //=============================================================================
 //  Get the PrHit corresponding to the LHCbID

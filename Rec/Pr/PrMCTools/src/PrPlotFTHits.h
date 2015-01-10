@@ -35,6 +35,7 @@
  *  - PlotFTHitsOnTrack: Plot all FT hits which belong to a track.
  *  - PlotTrackingEfficiency: Plot the tracking efficiency in 2D.
  *  - PlotMCHits: Plot the MC hits belonging to FT hits
+ *  - OnlyLongAndDownForMCHits: Only plot MCHits that belong to long and downstream reconstructible tracks?
  *
  *  Note that this tool needs MCHits and may therfore not run on all input files.
  *  Furthermore note that the location of MCHits has to be mapped correctly, like:
@@ -144,6 +145,7 @@ private:
   bool m_plotFTHitsOnTrack;
   bool m_plotTrackingEfficiency;
   bool m_plotMCHits;
+  bool m_onlyLongDownForMCHits;
   
   
   

@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2015-01-10 - Michel De Cian
+- Rewrite method "plotMCHits" in PrPlotFTHits to use MCHit<->FTCluster linker.
+
 !========================= PrMCTools v2r5 2014-12-11 =========================
 ! 2014-12-10 - Michel De Cian
 - Fix LiteCluster locations for STDetectors in PrLHCbID2MCParticle
