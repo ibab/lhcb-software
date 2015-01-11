@@ -10,12 +10,12 @@
 #include "Event/RawEvent.h"
 
 // bank structure
-#include "HltSelRepRawBank.h"
-#include "HltSelRepRBHits.h"
-#include "HltSelRepRBSubstr.h"
-#include "HltSelRepRBObjTyp.h"
-#include "HltSelRepRBExtraInfo.h"
-#include "HltSelRepRBStdInfo.h"
+#include "HltDAQ/HltSelRepRawBank.h"
+#include "HltDAQ/HltSelRepRBHits.h"
+#include "HltDAQ/HltSelRepRBSubstr.h"
+#include "HltDAQ/HltSelRepRBObjTyp.h"
+#include "HltDAQ/HltSelRepRBExtraInfo.h"
+#include "HltDAQ/HltSelRepRBStdInfo.h"
 
 // local
 #include "HltSelReportsDecoder.h"
@@ -54,10 +54,11 @@ DECLARE_ALGORITHM_FACTORY( HltSelReportsDecoder )
 //=============================================================================
 HltSelReportsDecoder::HltSelReportsDecoder( const std::string& name,
                                           ISvcLocator* pSvcLocator)
-: HltRawBankDecoderBase( name, pSvcLocator )
+: HltRawBankDecoderBase( name, pSvcLocator ) 
+,m_conv(NULL)
 {
   declareProperty("OutputHltSelReportsLocation",
-    m_outputHltSelReportsLocation= LHCb::HltSelReportsLocation::Default);  
+  m_outputHltSelReportsLocation= LHCb::HltSelReportsLocation::Default);  
 }
 
 //=============================================================================
@@ -65,7 +66,12 @@ HltSelReportsDecoder::HltSelReportsDecoder( const std::string& name,
 //=============================================================================
 StatusCode HltSelReportsDecoder::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-
+  // Initialise the converter tool
+  m_conv = tool<IReportConvert>("ReportConvertTool", this );
+  if ( !m_conv ){
+    return Error("Unable to retrieve the Report converter tool");
+  }
+  
   // ----------------------------------------------------------
   // get the bank(s) from RawEvent
   // ----------------------------------------------------------
@@ -75,6 +81,10 @@ StatusCode HltSelReportsDecoder::execute() {
   }
 
   const RawBank* hltselreportsRawBank0 = *(hltselreportsRawBanks.begin());
+
+  // Tell the converter the version from the raw bank
+  m_conv->setReportVersion( hltselreportsRawBank0->version() );
+ 
   if( hltselreportsRawBank0->version() > kVersionNumber ){
     Warning( " HltSelReports RawBank version is higher than expected. Will try to decode it anyway." ,StatusCode::SUCCESS, 20 );
   }
@@ -266,251 +276,43 @@ StatusCode HltSelReportsDecoder::execute() {
     switch( hos->summarizedObjectCLID() )
       {
       case LHCb::CLID_Track:
-        {      
-         if( (stdInfo.size()>=6) && (stdInfo.size()<9) ){
-
-            infoPersistent.insert( "0#Track.firstState.z", floatFromInt(stdInfo[0]) );
-            infoPersistent.insert( "1#Track.firstState.x", floatFromInt(stdInfo[1]) );
-            infoPersistent.insert( "2#Track.firstState.y", floatFromInt(stdInfo[2]) );
-            infoPersistent.insert( "3#Track.firstState.tx", floatFromInt(stdInfo[3]) );
-            infoPersistent.insert( "4#Track.firstState.ty", floatFromInt(stdInfo[4]) );
-            infoPersistent.insert( "5#Track.firstState.qOverP", floatFromInt(stdInfo[5]) ); 
-            if( stdInfo.size()==8 ){
-              infoPersistent.insert( "6#Track.chi2PerDoF", floatFromInt( stdInfo[6] ) );
-              infoPersistent.insert( "7#Track.nDoF", floatFromInt( stdInfo[7] ) );
-            }
-         }
-         else if (stdInfo.size()>8) {
-              infoPersistent.insert( "0#Track.firstState.z", floatFromInt(stdInfo[0]) );
-              infoPersistent.insert( "1#Track.firstState.x", floatFromInt(stdInfo[1]) );
-              infoPersistent.insert( "2#Track.firstState.y", floatFromInt(stdInfo[9]) );
-              infoPersistent.insert( "3#Track.firstState.tx", floatFromInt(stdInfo[10]) );
-              infoPersistent.insert( "4#Track.firstState.ty", floatFromInt(stdInfo[11]) );
-              infoPersistent.insert( "5#Track.firstState.qOverP", floatFromInt(stdInfo[12]) );  
-              infoPersistent.insert( "6#Track.chi2PerDoF", floatFromInt( stdInfo[13] ) );
-              infoPersistent.insert( "7#Track.nDoF", floatFromInt( stdInfo[14] ) );
-              infoPersistent.insert( "8#Track.Likelihood", floatFromInt(stdInfo[15] ) );
-              infoPersistent.insert( "9#Track.GhostProb", floatFromInt(stdInfo[16] ) );
-              infoPersistent.insert( "10#Track.flags", floatFromInt(stdInfo[2] ) );
-              infoPersistent.insert( "11#Track.lastState.z", floatFromInt(stdInfo[3] ) );
-              infoPersistent.insert( "12#Track.lastState.x", floatFromInt(stdInfo[4] ) );
-              infoPersistent.insert( "13#Track.lastState.y", floatFromInt(stdInfo[5] ) );
-              infoPersistent.insert( "14#Track.lastState.tx", floatFromInt(stdInfo[6] ) );
-              infoPersistent.insert( "15#Track.lastState.ty", floatFromInt(stdInfo[7] ) );
-              infoPersistent.insert( "16#Track.lastState.qOverP", floatFromInt(stdInfo[8] ) );
-         } 
-         else {
-            Warning( std::string{ " wrong number of StdInfo on Track "} + std::to_string( stdInfo.size() ),
-                    StatusCode::SUCCESS, 20 );
-            int e = 0;
-            for(const auto& i : stdInfo ) { 
-              infoPersistent.insert( std::string{ "z#Track.unknown" } + std::to_string(e++),
-                                     floatFromInt(i) );        
-            }      
-          }
+        {     
+            m_conv->SummaryFromRaw(&infoPersistent, &stdInfo, LHCb::CLID_Track);
         }
         break;
       case LHCb::CLID_RecVertex:
         {  
-          if( stdInfo.size()>=3 ){    
- 
-            infoPersistent.insert( "0#RecVertex.position.x", floatFromInt(stdInfo[0]) ); 
-            infoPersistent.insert( "1#RecVertex.position.y", floatFromInt(stdInfo[1]) ); 
-            infoPersistent.insert( "2#RecVertex.position.z", floatFromInt(stdInfo[2]) ); 
-            if (stdInfo.size()>=4) {
-                infoPersistent.insert( "3#RecVertex.chi2", floatFromInt(stdInfo[3]) ); 
-            }
-           } 
-          else {
-            Warning( std::string{  " wrong number of StdInfo on RecVertex " } + std::to_string( stdInfo.size() ),
-                    StatusCode::SUCCESS, 20 );
-            int e = 0;
-            for(const auto& i : stdInfo ) {
-              infoPersistent.insert( std::string{ "z#RecVertex.unknown" } + std::to_string( e++ ),
-                                     floatFromInt(i) );        
-            }
-          } 
+            m_conv->SummaryFromRaw(&infoPersistent, &stdInfo, LHCb::CLID_RecVertex);
         }
 	break;
       case LHCb::CLID_Vertex:
         {  
-          if( stdInfo.size()>=12 ){    
- 
-            infoPersistent.insert( "0#Vertex.chi2", floatFromInt(stdInfo[0]) ); 
-            infoPersistent.insert( "1#Vertex.ndf", floatFromInt(stdInfo[1]) ); 
-            infoPersistent.insert( "2#Vertex.position.x", floatFromInt(stdInfo[4]) ); 
-            infoPersistent.insert( "3#Vertex.position.y", floatFromInt(stdInfo[5]) ); 
-            infoPersistent.insert( "4#Vertex.position.z", floatFromInt(stdInfo[6]) ); 
-            infoPersistent.insert( "5#Vertex.technique", floatFromInt(stdInfo[7]) ); 
-            infoPersistent.insert( "6#Vertex.cov00", floatFromInt(stdInfo[8]) ); 
-            infoPersistent.insert( "7#Vertex.cov11", floatFromInt(stdInfo[9]) ); 
-            infoPersistent.insert( "8#Vertex.cov22", floatFromInt(stdInfo[10]) ); 
-            infoPersistent.insert( "9#Vertex.cov10", floatFromInt(stdInfo[11]) ); 
-            infoPersistent.insert( "10#Vertex.cov20", floatFromInt(stdInfo[2]) ); 
-            infoPersistent.insert( "11#Vertex.cov21", floatFromInt(stdInfo[3]) ); 
-
-          } else {
-            
-            Warning( std::string{ " wrong number of StdInfo on Vertex " } + std::to_string(stdInfo.size()),
-                    StatusCode::SUCCESS, 20 );
-            int e = 0;
-            for(const auto& i : stdInfo ) { 
-              infoPersistent.insert( std::string{ "z#Vertex.unknown" } + std::to_string(e++),
-                                     floatFromInt(i) );        
-            }
-          }
+            m_conv->SummaryFromRaw(&infoPersistent, &stdInfo, LHCb::CLID_Vertex);
         }
 	break;
       case LHCb::CLID_RichPID:
         {  
-          if( stdInfo.size()>=6 ){    
- 
-            infoPersistent.insert( "0#Rich.pidResultCode", floatFromInt(stdInfo[0] ) );
-            infoPersistent.insert( "1#Rich.DLLe", floatFromInt(stdInfo[1] ) );
-            infoPersistent.insert( "2#Rich.DLLmu", floatFromInt(stdInfo[2] ) );
-            infoPersistent.insert( "3#Rich.DLLpi", floatFromInt(stdInfo[3] ) );
-            infoPersistent.insert( "4#Rich.DLLK", floatFromInt(stdInfo[4] ) );
-            infoPersistent.insert( "5#Rich.DLLp", floatFromInt(stdInfo[5] ) );
-
-          } else {
-            
-            Warning( std::string{ " wrong number of StdInfo on RichPID " } + std::to_string(stdInfo.size()),
-                    StatusCode::SUCCESS, 20 );
-            int e = 0;
-            for(const auto& i : stdInfo ) { 
-              infoPersistent.insert( std::string{ "z#Rich.unknown" } + std::to_string(e++),
-                                     floatFromInt(i) );        
-            }
-            
-          }
+            m_conv->SummaryFromRaw(&infoPersistent, &stdInfo, LHCb::CLID_RichPID);
         }
 	break;
       case LHCb::CLID_MuonPID:
         {  
-          if( stdInfo.size()>=7 ){    
- 
-            infoPersistent.insert( "0#Muon.MuonLLMu", floatFromInt(stdInfo[0] ) );
-            infoPersistent.insert( "1#Muon.MuonLLBg", floatFromInt(stdInfo[1] ) );
-            infoPersistent.insert( "2#Muon.NShared", floatFromInt(stdInfo[2] ) );
-            infoPersistent.insert( "3#Muon.Status", floatFromInt(stdInfo[3] ) );
-            infoPersistent.insert( "4#Muon.IsMuon", floatFromInt(stdInfo[4] ) );
-            infoPersistent.insert( "5#Muon.IsMuonLoose", floatFromInt(stdInfo[5] ) );
-            infoPersistent.insert( "6#Muon.IsMuonTight", floatFromInt(stdInfo[6] ) );
-
-          } else {
-            
-            Warning( std::string{ " wrong number of StdInfo on MuonPID " } + std::to_string(stdInfo.size()),
-                    StatusCode::SUCCESS, 20 );
-            int e = 0;
-            for(const auto& i : stdInfo ) { 
-              infoPersistent.insert( std::string{ "z#Muon.unknown" } + std::to_string(e++),
-                                     floatFromInt(i) );        
-            }
-            
-          }
+            m_conv->SummaryFromRaw(&infoPersistent, &stdInfo, LHCb::CLID_MuonPID);
         }
 	break;
       case LHCb::CLID_ProtoParticle:
         {  
-          if( stdInfo.size()>=1 ){    
- 
-            infoPersistent.insert( "0#Proto.extraInfo.IsPhoton", floatFromInt(stdInfo[0]) ); 
-
-          } else {
-            
-            Warning( std::string{ " wrong number of StdInfo on ProtoParticle " } + std::to_string(stdInfo.size()),
-                    StatusCode::SUCCESS, 20 );
-            int e = 0;
-            for(const auto& i : stdInfo ) { 
-              infoPersistent.insert( std::string{ "z#Proto.unknown" } + std::to_string(e++),
-                                     floatFromInt(i) );        
-            }
-          }
+            m_conv->SummaryFromRaw(&infoPersistent, &stdInfo, LHCb::CLID_ProtoParticle);
         }
 	break;
       case LHCb::CLID_Particle:
         {      
-          if( stdInfo.size()==8 ){    
-            
-            infoPersistent.insert( "0#Particle.particleID.pid", floatFromInt(stdInfo[0]) ); 
-            infoPersistent.insert( "1#Particle.measuredMass", floatFromInt(stdInfo[1]) ); 
-            infoPersistent.insert( "2#Particle.referencePoint.z", floatFromInt(stdInfo[2]) ); 
-            infoPersistent.insert( "3#Particle.referencePoint.x", floatFromInt(stdInfo[3]) ); 
-            infoPersistent.insert( "4#Particle.referencePoint.y", floatFromInt(stdInfo[4]) );
-            infoPersistent.insert( "5#Particle.slopes.x", floatFromInt(stdInfo[5]) );
-            infoPersistent.insert( "6#Particle.slopes.y", floatFromInt(stdInfo[6]) );
-            infoPersistent.insert( "7#Particle.1/p", floatFromInt(stdInfo[7]) );
-          }
-          else if( stdInfo.size()>8 ){
-              infoPersistent.insert( "0#Particle.particleID.pid", floatFromInt(stdInfo[0]) ); 
-              infoPersistent.insert( "1#Particle.measuredMass", floatFromInt(stdInfo[1]) ); 
-              infoPersistent.insert( "2#Particle.referencePoint.z", floatFromInt(stdInfo[12]) ); 
-              infoPersistent.insert( "3#Particle.referencePoint.x", floatFromInt(stdInfo[23]) ); 
-              infoPersistent.insert( "4#Particle.referencePoint.y", floatFromInt(stdInfo[32]) );
-              infoPersistent.insert( "5#Particle.slopes.x", floatFromInt(stdInfo[33]) );
-              infoPersistent.insert( "6#Particle.slopes.y", floatFromInt(stdInfo[34]) );
-              infoPersistent.insert( "7#Particle.1/p", floatFromInt(stdInfo[35]) );
-              infoPersistent.insert( "8#Particle.conflevel", floatFromInt(stdInfo[36]) );
-              infoPersistent.insert( "9#Particle.massErr", floatFromInt(stdInfo[37] ) );
-              infoPersistent.insert( "10#Particle.momCov00", floatFromInt(stdInfo[2]) );
-              infoPersistent.insert( "11#Particle.momCov11", floatFromInt(stdInfo[3] ) );
-              infoPersistent.insert( "12#Particle.momCov22", floatFromInt(stdInfo[4] ) );
-              infoPersistent.insert( "13#Particle.momCov33", floatFromInt(stdInfo[5] ) );
-              infoPersistent.insert( "14#Particle.momCov10", floatFromInt(stdInfo[6] ) );
-              infoPersistent.insert( "15#Particle.momCov20", floatFromInt(stdInfo[7] ) );
-              infoPersistent.insert( "16#Particle.momCov21", floatFromInt(stdInfo[8] ) );
-              infoPersistent.insert( "17#Particle.momCov30", floatFromInt(stdInfo[9] ) );
-              infoPersistent.insert( "18#Particle.momCov31", floatFromInt(stdInfo[10] ) );
-              infoPersistent.insert( "19#Particle.momCov32", floatFromInt(stdInfo[11] ) );
-              infoPersistent.insert( "20#Particle.posmomCov00", floatFromInt(stdInfo[13] ) );
-              infoPersistent.insert( "21#Particle.posmomCov11", floatFromInt(stdInfo[14] ) );
-              infoPersistent.insert( "22#Particle.posmomCov22", floatFromInt(stdInfo[15] ) );
-              infoPersistent.insert( "23#Particle.posmomCov10", floatFromInt(stdInfo[16] ) );
-              infoPersistent.insert( "24#Particle.posmomCov01", floatFromInt(stdInfo[17] ) );
-              infoPersistent.insert( "25#Particle.posmomCov20", floatFromInt(stdInfo[18] ) );
-              infoPersistent.insert( "26#Particle.posmomCov02", floatFromInt(stdInfo[19] ) );
-              infoPersistent.insert( "27#Particle.posmomCov21", floatFromInt(stdInfo[20] ) );
-              infoPersistent.insert( "28#Particle.posmomCov12", floatFromInt(stdInfo[21] ) );
-              infoPersistent.insert( "29#Particle.posmomCov30", floatFromInt(stdInfo[22] ) );
-              infoPersistent.insert( "30#Particle.posmomCov31", floatFromInt(stdInfo[24] ) );
-              infoPersistent.insert( "31#Particle.posmomCov32", floatFromInt(stdInfo[25] ) );
-              infoPersistent.insert( "32#Particle.posCov00", floatFromInt(stdInfo[26] ) );
-              infoPersistent.insert( "33#Particle.posCov11", floatFromInt(stdInfo[27] ) );
-              infoPersistent.insert( "34#Particle.posCov22", floatFromInt(stdInfo[28] ) );
-              infoPersistent.insert( "35#Particle.posCov10", floatFromInt(stdInfo[29] ) );
-              infoPersistent.insert( "36#Particle.posCov20", floatFromInt(stdInfo[30] ) );
-              infoPersistent.insert( "37#Particle.posCov21", floatFromInt(stdInfo[31] ) );
-            } 
-          else {
-            Warning( std::string{ " wrong number of StdInfo on Particle " } + std::to_string(stdInfo.size()),
-                     StatusCode::SUCCESS, 20 );
-            int e = 0;
-            for( const auto& i : stdInfo ) {
-              infoPersistent.insert( std::string{ "z#Particle.unknown" } + std::to_string(e++),
-                                     floatFromInt(i) );
-            }
-          }
+            m_conv->SummaryFromRaw(&infoPersistent, &stdInfo, LHCb::CLID_Particle);
         }
         break;
       case LHCb::CLID_CaloCluster:
         {      
-          
-          if( stdInfo.size()>=4 ){    
- 
-            infoPersistent.insert( "0#CaloCluster.e", floatFromInt(stdInfo[0]) );
-            infoPersistent.insert( "1#CaloCluster.position.x", floatFromInt(stdInfo[1]) );
-            infoPersistent.insert( "2#CaloCluster.position.y", floatFromInt(stdInfo[2]) );
-            infoPersistent.insert( "3#CaloCluster.position.z", floatFromInt(stdInfo[3]) );
-          } 
-          else {
-            Warning( std::string{ " wrong number of StdInfo on CaloCluster " } + std::to_string(stdInfo.size()),
-                    StatusCode::SUCCESS, 20 );
-            int e = 0;
-            for(const auto& i : stdInfo ) { 
-              infoPersistent.insert( std::string{ "z#CaloCluster.unknown" } + std::to_string(e++),
-                                     floatFromInt(i) );        
-            }
-          }
+            m_conv->SummaryFromRaw(&infoPersistent, &stdInfo, LHCb::CLID_CaloCluster);
         }
         break;
       case 1:

@@ -8,7 +8,7 @@ version           v4r11
 #=====================================================================
 # Structure, i.e. directories to process.
 #=====================================================================
-branches          cmt doc src tests xml
+branches          cmt doc src tests xml HltDAQ
 #=====================================================================
 # Used packages
 #=====================================================================
@@ -45,20 +45,25 @@ use HltTCK              v*    TCK         -no_auto_imports
 #=====================================================================
 apply_pattern god_headers files=../xml/*.xml
 
-macro HltDAQObj2Doth_GODflags " -s ../src/ " \
-      WIN32                   " -s ..\src\ "
-
-
-#=====================================================================
-# Component library building rule
-#=====================================================================
-library          HltDAQ    ../src/*.cpp -import=AIDA
+macro HltDAQObj2Doth_GODflags " -s ../HltDAQ/ " \
+      WIN32                   " -s ..\HltDAQ\ "
 
 #=====================================================================
 # define component library link options
 #=====================================================================
 apply_pattern    component_library library=HltDAQ
 
+#=====================================================================
+# Component library building rule
+#=====================================================================
+library          HltDAQ    ../src/*.cpp 
+
+#=====================================================================
+# define component library link options for use in HltDAQ and outside
+#=====================================================================
+apply_pattern install_more_includes more=HltDAQ
+library          ReportLib       ../src/Lib/*.cpp
+apply_pattern    component_library   library=ReportLib
 
 #=====================================================================
 # unit test application building rule

@@ -6,6 +6,9 @@
 // from Gaudi
 #include "HltRawBankDecoderBase.h"
 
+#include "HltDAQ/IReportConvert.h"
+#include "HltDAQ/ReportConvertTool.h"
+
 /** @class HltSelReportsDecoder HltSelReportsDecoder.h
  *  
  *
@@ -26,7 +29,8 @@ private:
   enum HeaderIDs { kVersionNumber=3 };
   /// location of output
   StringProperty m_outputHltSelReportsLocation;
-
+  /// for converting objects in to summaries
+  IReportConvert* m_conv;
 };
 
 #endif // HLTSELREPORTSDECODER_H

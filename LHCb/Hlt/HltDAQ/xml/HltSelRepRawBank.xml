@@ -27,7 +27,7 @@ Next 8 words are the first relative location in the bank body beyond given sub-b
 Sub-banks immediately follow the header.'
       >
 
-     <import name='HltSelRepRBEnums' />
+      <import name='HltDAQ/HltSelRepRBEnums' />
     <import name='GaudiKernel/GaudiException' />
 
       <enum 

@@ -7,12 +7,12 @@
 #include "Event/RawEvent.h"
 
 // bank structure
-#include "HltSelRepRawBank.h"
-#include "HltSelRepRBHits.h"
-#include "HltSelRepRBSubstr.h"
-#include "HltSelRepRBObjTyp.h"
-#include "HltSelRepRBExtraInfo.h"
-#include "HltSelRepRBStdInfo.h"
+#include "HltDAQ/HltSelRepRawBank.h"
+#include "HltDAQ/HltSelRepRBHits.h"
+#include "HltDAQ/HltSelRepRBSubstr.h"
+#include "HltDAQ/HltSelRepRBObjTyp.h"
+#include "HltDAQ/HltSelRepRBExtraInfo.h"
+#include "HltDAQ/HltSelRepRBStdInfo.h"
 
 // local
 #include "HltSelReportsWriter.h"

@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2015-01-11 - Sean Benson
+ - Major change to accommodate ReportConvert tool (needed for versioning).
+
 ! 2015-01-08 - Marco Cattaneo
  - Fix hltdaq.b_dumpafterreformat test to follow SelReports bank version change
 
