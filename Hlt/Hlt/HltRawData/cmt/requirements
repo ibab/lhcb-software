@@ -24,6 +24,7 @@ end_private
 
 use GaudiAlg            v*
 use HltBase             v*    Hlt
+use HltDAQ              v*    Hlt
 use HltInterfaces       v*    Kernel
 use Relations           v*    Kernel
 use HltEvent            v*    Event

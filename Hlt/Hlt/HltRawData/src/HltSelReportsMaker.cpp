@@ -65,6 +65,7 @@ DECLARE_ALGORITHM_FACTORY( HltSelReportsMaker )
 HltSelReportsMaker::HltSelReportsMaker( const std::string& name,
                                                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_conv(NULL)
   , m_hltANNSvc {nullptr}
   , m_hltSvc{nullptr}
   , m_regSvc{nullptr}
@@ -161,6 +162,12 @@ StatusCode HltSelReportsMaker::initialize() {
     svc<IIncidentSvc>("IncidentSvc")->addListener(this,m_debugIncidentName);
   }
 
+  // Initialise the converter tool
+  m_conv = tool<IReportConvert>("ReportConvertTool", this );
+  if ( !m_conv ){
+    return Error("Unable to retrieve the report converter tool");
+  }
+  m_conv->setReportVersionLatest();
 
  // get string-to-int selection ID map
   std::map<IANNSvc::minor_key_type,IANNSvc::minor_mapped_type> selectionNameToIntMap;
@@ -244,7 +251,6 @@ StatusCode HltSelReportsMaker::execute() {
     Warning( " No HltDecReports at " + m_inputHltDecReportsLocation.value(), StatusCode::SUCCESS, 10 );
   }
 
-
 #ifdef DEBUGCODE
   if ( msgLevel(MSG::VERBOSE) ){
     verbose() <<" Selection Names Found =" ;
@@ -252,7 +258,6 @@ StatusCode HltSelReportsMaker::execute() {
     verbose() << endmsg;
   }
 #endif  
- 
 
   // data compression requires that we store objects from early processing stages first
   // order selections accordingly 
@@ -273,10 +278,11 @@ StatusCode HltSelReportsMaker::execute() {
      const Hlt::Selection* sel = i.selection;
 
 #ifdef DEBUGCODE
-     if ( msgLevel(MSG::VERBOSE) ){
-       verbose() << " Selection " << selname <<  " found in dataSvc decison=" << sel->decision() << endmsg;          
-     }
+  if ( msgLevel(MSG::VERBOSE) ){
+    verbose() << " Selection " << selname <<  " found in dataSvc decison=" << sel->decision() << endmsg;          
+  }
 #endif
+
      // unsuccessful selections can't save candidates
      if( !sel->decision() )continue;
 
@@ -1073,53 +1079,27 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary& h
     const Track* candi = dynamic_cast<const Track*>(hos.summarizedObject());
     if( !candi ) return infoPersistent; 
     if( kExtraInfoLevel &  m_presentInfoLevelTrack & m_presentInfoLevel ){ 
-        for( const auto& ei : candi->extraInfo() ) {
-            if( ( 0<= ei.first ) && ( ei.first<=65535 ) ){
-                auto i=m_infoIntToName.find(ei.first);
-                if( i!=std::end(m_infoIntToName) ){
-                    infoPersistent.insert( i->second, float( ei.second ) );
-                }
-            }
-        }
-    }
-    if( kStandardInfoLevel &  m_presentInfoLevelTrack & m_presentInfoLevel ){
-        if( candi->nStates() ){
-          const State & firstState = candi->firstState();
-          infoPersistent.insert( "0#Track.firstState.z", float( firstState.z() ) ); debug() << "0#Track.firstState.z = " << float( firstState.z() ) << endmsg;
-          infoPersistent.insert( "1#Track.firstState.x", float( firstState.x() ) ); debug() << "1#Track.firstState.x = " << float( firstState.x() ) << endmsg;
-          infoPersistent.insert( "2#Track.firstState.y", float( firstState.y() ) ); debug() << "2#Track.firstState.y = " << float( firstState.y() ) << endmsg;
-          infoPersistent.insert( "3#Track.firstState.tx", float( firstState.tx() ) ); debug() << "3#Track.firstState.tx = " << float( firstState.tx() ) << endmsg;
-          infoPersistent.insert( "4#Track.firstState.ty", float( firstState.ty() ) ); debug() << "4#Track.firstState.ty = " << float( firstState.ty() ) << endmsg; 
-          infoPersistent.insert( "5#Track.firstState.qOverP", float( firstState.qOverP() ) ); debug() << "5#Track.firstState.qOverP = " << float( firstState.qOverP() ) << endmsg;
-          infoPersistent.insert( "6#Track.chi2PerDoF", float( candi->chi2PerDoF() ) ); debug() << "6#Track.chi2PerDoF = " << float( candi->chi2PerDoF() ) << endmsg;
-          infoPersistent.insert( "7#Track.nDoF", float( candi->nDoF() ) ); debug() << "7#Track.nDoF = " << float( candi->nDoF() ) << endmsg;
-          if(m_Turbo){ // SB additions
-            infoPersistent.insert( "8#Track.Likelihood", float( candi->likelihood() ) ); debug() << "8#Track.Likelihood = " << float( candi->likelihood() ) << endmsg;
-            infoPersistent.insert( "9#Track.GhostProb", float( candi->ghostProbability() ) ); debug() << "9#Track.GhostProb = " << float( candi->ghostProbability() ) << endmsg;
-            infoPersistent.insert( "10#Track.flags", float( candi->flags() ) ); debug() << "10#Track.flags = " << float( candi->flags() ) << endmsg;
-            const State* lastState = candi->states().back();
-            infoPersistent.insert( "11#Track.lastState.z", float( lastState->z() ) ); debug() << "11#Track.lastState.z = " << float( lastState->z() ) << endmsg;
-            infoPersistent.insert( "12#Track.lastState.x", float( lastState->x() ) ); debug() << "12#Track.lastState.x = " << float( lastState->x() ) << endmsg;
-            infoPersistent.insert( "13#Track.lastState.y", float( lastState->y() ) ); debug() << "13#Track.lastState.y = " << float( lastState->y() ) << endmsg;
-            infoPersistent.insert( "14#Track.lastState.tx", float( lastState->tx() ) ); debug() << "14#Track.lastState.tx = " << float( lastState->tx() ) << endmsg;
-            infoPersistent.insert( "15#Track.lastState.ty", float( lastState->ty() ) ); debug() << "15#Track.lastState.ty = " << float( lastState->ty() ) << endmsg;
-            infoPersistent.insert( "16#Track.lastState.qOverP", float( lastState->qOverP() ) ); debug() << "16#Track.lastState.qOverP = " << float( lastState->qOverP() ) << endmsg;
+      for( const auto& ei : candi->extraInfo() ) {
+        if( ( 0<= ei.first ) && ( ei.first<=65535 ) ){
+          auto i=m_infoIntToName.find(ei.first);
+          if( i!=std::end(m_infoIntToName) ){
+            infoPersistent.insert( i->second, float( ei.second ) );
           }
         }
       }
     }
-    break;
+    if( kStandardInfoLevel &  m_presentInfoLevelTrack & m_presentInfoLevel ){
+      if( candi->nStates() ) m_conv->TrackObject2Summary(&infoPersistent, candi, m_Turbo);
+    }
+  }
+  break;
+  
   case LHCb::CLID_RichPID: // SB add RichPID
     {      
       const RichPID* candi = dynamic_cast<const RichPID*>(hos.summarizedObject());
       if( !candi )return infoPersistent; 
       if( kStandardInfoLevel & m_presentInfoLevel ){ 
-          infoPersistent.insert( "0#Rich.pidResultCode", float( candi->pidResultCode() ) );
-          infoPersistent.insert( "1#Rich.DLLe", float( candi->particleDeltaLL( Rich::ParticleIDType::Electron ) ) );
-          infoPersistent.insert( "2#Rich.DLLmu", float( candi->particleDeltaLL( Rich::ParticleIDType::Muon ) ) );
-          infoPersistent.insert( "3#Rich.DLLpi", float( candi->particleDeltaLL( Rich::ParticleIDType::Pion ) ) );
-          infoPersistent.insert( "4#Rich.DLLK", float( candi->particleDeltaLL( Rich::ParticleIDType::Kaon ) ) ); debug() << "4#Rich.DLLK = " << float( candi->particleDeltaLL( Rich::ParticleIDType::Kaon ) ) << endmsg;
-          infoPersistent.insert( "5#Rich.DLLp", float( candi->particleDeltaLL( Rich::ParticleIDType::Proton ) ) );
+        m_conv->RichPIDObject2Summary(&infoPersistent, candi, m_Turbo);  
       }    
     }    
     break;
@@ -1128,13 +1108,7 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary& h
       const MuonPID* candi = dynamic_cast<const MuonPID*>(hos.summarizedObject());
       if( !candi )return infoPersistent; 
       if( kStandardInfoLevel & m_presentInfoLevel ){ 
-          infoPersistent.insert( "0#Muon.MuonLLMu", float( candi->MuonLLMu() ) ); debug() << "0#Muon.MuonLLMu = " << float( candi->MuonLLMu() ) << endmsg;
-          infoPersistent.insert( "1#Muon.MuonLLBg", float( candi->MuonLLBg() ) );
-          infoPersistent.insert( "2#Muon.NShared", float( candi->nShared() ) );
-          infoPersistent.insert( "3#Muon.Status", float( candi->Status() ) );
-          infoPersistent.insert( "4#Muon.IsMuon", float( candi->IsMuon() ) );
-          infoPersistent.insert( "5#Muon.IsMuonLoose", float( candi->IsMuonLoose() ) );
-          infoPersistent.insert( "6#Muon.IsMuonTight", float( candi->IsMuonTight() ) );
+        m_conv->MuonPIDObject2Summary(&infoPersistent, candi, m_Turbo);  
       }    
     }
     break;
@@ -1143,7 +1117,7 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary& h
       const ProtoParticle* candi = dynamic_cast<const ProtoParticle*>(hos.summarizedObject());
       if( !candi )return infoPersistent; 
       if( kStandardInfoLevel & m_presentInfoLevel ){ 
-          infoPersistent.insert( "0#Proto.extraInfo.IsPhoton", float( candi->info( 381, -1000 ) ) ); debug() << "0#Proto.extraInfo.IsPhoton = " << float( candi->info( 381, -1000 ) ) << endmsg;
+        m_conv->ProtoParticleObject2Summary(&infoPersistent, candi, m_Turbo);  
       }    
     }    
     break;
@@ -1152,21 +1126,7 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary& h
       const Vertex* candi = dynamic_cast<const Vertex*>(hos.summarizedObject());
       if( !candi )return infoPersistent; 
       if( kStandardInfoLevel & m_presentInfoLevel ){ 
-          infoPersistent.insert( "0#Vertex.chi2", float( candi->chi2() ) ); debug() << "0#Vertex.chi2 = " << float( candi->chi2() ) << endmsg;
-          infoPersistent.insert( "1#Vertex.ndf", float( candi->nDoF() ) );
-          const auto &position = candi->position();
-          infoPersistent.insert( "2#Vertex.position.x", float( position.x() ) );
-          infoPersistent.insert( "3#Vertex.position.y", float( position.y() ) );
-          infoPersistent.insert( "4#Vertex.position.z", float( position.z() ) );
-          infoPersistent.insert( "5#Vertex.technique", float( candi->technique() ) );
-          // TODO: normalize off-diagonal elements wrt. diagonal ones, so in range[-1,1]
-          const auto& covMatrix = candi->covMatrix();
-          infoPersistent.insert( "6#Vertex.cov00", float( covMatrix(0,0) ) );
-          infoPersistent.insert( "7#Vertex.cov11", float( covMatrix(1,1) ) );
-          infoPersistent.insert( "8#Vertex.cov22", float( covMatrix(2,2) ) );
-          infoPersistent.insert( "9#Vertex.cov10", float( covMatrix(1,0) ) );
-          infoPersistent.insert( "10#Vertex.cov20", float( covMatrix(2,0) ) );
-          infoPersistent.insert( "11#Vertex.cov21", float( covMatrix(2,1) ) );
+        m_conv->VertexObject2Summary(&infoPersistent, candi, m_Turbo);  
       }    
     }    
     break;
@@ -1185,11 +1145,7 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary& h
 	}
       }
       if( kStandardInfoLevel &  m_presentInfoLevelRecVertex & m_presentInfoLevel ){ 
-        const auto& position = candi->position();
-        infoPersistent.insert( "0#RecVertex.position.x", float( position.x() ) );
-        infoPersistent.insert( "1#RecVertex.position.y", float( position.y() ) );
-        infoPersistent.insert( "2#RecVertex.position.z", float( position.z() ) );
-        infoPersistent.insert( "3#RecVertex.chi2", float( candi->chi2() ) );
+        m_conv->RecVertexObject2Summary(&infoPersistent, candi, m_Turbo);
       }      
     }    
     break;
@@ -1206,56 +1162,7 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary& h
         }
       }
       if( kStandardInfoLevel &  m_presentInfoLevelParticle & m_presentInfoLevel ){ 
-        infoPersistent.insert( "0#Particle.particleID.pid", float( candi->particleID().pid() ) );
-        infoPersistent.insert( "1#Particle.measuredMass", float( candi->measuredMass() ) );
-        const auto& referencePoint = candi->referencePoint();
-        infoPersistent.insert( "2#Particle.referencePoint.z", float( referencePoint.z() ) );
-        infoPersistent.insert( "3#Particle.referencePoint.x", float( referencePoint.x() ) );
-        infoPersistent.insert( "4#Particle.referencePoint.y", float( referencePoint.y() ) );
-        const auto& slopes = candi->slopes();
-        infoPersistent.insert( "5#Particle.slopes.x", float( slopes.x() ) );
-        infoPersistent.insert( "6#Particle.slopes.y", float( slopes.y() ) );
-        double p = candi->p();
-        if( p < 1E-9 )p=1E-9;        // Note: p is _not_ signed for a Particle. Charge is part of pid...
-        infoPersistent.insert( "7#Particle.1/p", float( 1.0/p ) );
-        // SB additions
-        if(m_Turbo){
-          infoPersistent.insert( "8#Particle.conflevel", float( candi->confLevel() ) );
-          infoPersistent.insert( "9#Particle.massErr", float( candi->measuredMassErr() ) );
-          // TODO: normalize off-diagonal elements to on-diagional ones, and use that they are in [-1,+1] 
-          //       to pack them better...
-          const auto& momCov = candi->momCovMatrix();
-          infoPersistent.insert( "10#Particle.momCov00", float( momCov(0,0) ) );
-          infoPersistent.insert( "11#Particle.momCov11", float( momCov(1,1) ) );
-          infoPersistent.insert( "12#Particle.momCov22", float( momCov(2,2) ) );
-          infoPersistent.insert( "13#Particle.momCov33", float( momCov(3,3) ) );
-          infoPersistent.insert( "14#Particle.momCov10", float( momCov(1,0) ) );
-          infoPersistent.insert( "15#Particle.momCov20", float( momCov(2,0) ) );
-          infoPersistent.insert( "16#Particle.momCov21", float( momCov(2,1) ) );
-          infoPersistent.insert( "17#Particle.momCov30", float( momCov(3,0) ) );
-          infoPersistent.insert( "18#Particle.momCov31", float( momCov(3,1) ) );
-          infoPersistent.insert( "19#Particle.momCov32", float( momCov(3,2) ) );
-          const auto& posMomCov = candi->posMomCovMatrix();
-          infoPersistent.insert( "20#Particle.posmomCov00", float( posMomCov(0,0) ) );
-          infoPersistent.insert( "21#Particle.posmomCov11", float( posMomCov(1,1) ) );
-          infoPersistent.insert( "22#Particle.posmomCov22", float( posMomCov(2,2) ) );
-          infoPersistent.insert( "23#Particle.posmomCov10", float( posMomCov(1,0) ) );
-          infoPersistent.insert( "24#Particle.posmomCov01", float( posMomCov(0,1) ) );
-          infoPersistent.insert( "25#Particle.posmomCov20", float( posMomCov(2,0) ) );
-          infoPersistent.insert( "26#Particle.posmomCov02", float( posMomCov(0,2) ) );
-          infoPersistent.insert( "27#Particle.posmomCov21", float( posMomCov(2,1) ) );
-          infoPersistent.insert( "28#Particle.posmomCov12", float( posMomCov(1,2) ) );
-          infoPersistent.insert( "29#Particle.posmomCov30", float( posMomCov(3,0) ) );
-          infoPersistent.insert( "30#Particle.posmomCov31", float( posMomCov(3,1) ) );
-          infoPersistent.insert( "31#Particle.posmomCov32", float( posMomCov(3,2) ) );
-          const auto& posCov = candi->posCovMatrix();
-          infoPersistent.insert( "32#Particle.posCov00", float( posCov(0,0) ) );
-          infoPersistent.insert( "33#Particle.posCov11", float( posCov(1,1) ) );
-          infoPersistent.insert( "34#Particle.posCov22", float( posCov(2,2) ) );
-          infoPersistent.insert( "35#Particle.posCov10", float( posCov(1,0) ) );
-          infoPersistent.insert( "36#Particle.posCov20", float( posCov(2,0) ) );
-          infoPersistent.insert( "37#Particle.posCov21", float( posCov(2,1) ) );
-        }
+        m_conv->ParticleObject2Summary(&infoPersistent, candi, m_Turbo);
       }      
     }
     break;
@@ -1264,11 +1171,7 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary& h
       const CaloCluster* candi = dynamic_cast<const CaloCluster*>(hos.summarizedObject());
       if( !candi )return infoPersistent; 
       if( kStandardInfoLevel &  m_presentInfoLevelCaloCluster & m_presentInfoLevel ){ 
-        infoPersistent.insert( "0#CaloCluster.e", float( candi->e() ) );
-        const auto& position = candi->position();
-        infoPersistent.insert( "1#CaloCluster.position.x", float( position.x() ) );
-        infoPersistent.insert( "2#CaloCluster.position.y", float( position.y() ) );
-        infoPersistent.insert( "3#CaloCluster.position.z", float( position.z() ) );
+        m_conv->CaloClusterObject2Summary(&infoPersistent, candi, m_Turbo);
       }      
     }
     break;

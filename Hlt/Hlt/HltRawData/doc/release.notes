@@ -5,9 +5,12 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+! 2015-1-11 - Sean Benson
+ - Major change to accommodate ReportConvert tool (needed for versioning).
+
 !========================= HltRawData v5r1p1 2015-01-08 =========================
 
-! 2015-1-67 - Sean Benson
+! 2015-1-7 - Sean Benson
  - For Turbo track reports, always ensure a new object summary is made (style change)
  - Fix to allow for identical turbo and non-turbo lines.
 

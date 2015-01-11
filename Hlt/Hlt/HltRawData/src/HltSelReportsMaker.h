@@ -17,6 +17,8 @@
 #include "HltBase/IHltRegister.h"
 #include "HltBase/IHltData.h"
 #include "HltBase/IHltInspector.h"
+#include "HltDAQ/IReportConvert.h"
+#include "HltDAQ/ReportConvertTool.h"
 
 namespace LHCb {
   class CaloCluster;  
@@ -62,7 +64,9 @@ private:
 
   /// for producing numerical info to be saved on the object
   LHCb::HltObjectSummary::Info infoToSave( const LHCb::HltObjectSummary& hos ) const;
-  
+ 
+  /// for converting objects in to summaries
+  IReportConvert* m_conv;
 
   /// store Track in HltObjectSummary store
   const LHCb::HltObjectSummary* store_(const LHCb::Track& object);
