@@ -23,7 +23,7 @@ DECLARE_ALGORITHM_FACTORY( TeslaReportAlgo )
 //=============================================================================
 TeslaReportAlgo::TeslaReportAlgo( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-: GaudiAlgorithm ( name , pSvcLocator ), m_dist(NULL), m_check(NULL)
+: GaudiAlgorithm ( name , pSvcLocator ), m_dist(NULL), m_check(NULL), m_conv(NULL)
 {
   declareProperty( "TriggerLine" ,          m_inputName    = "Hlt2CharmHadD02HH_D02KK" );
   declareProperty( "OutputPrefix" ,         m_OutputPref   = "Tesla" );
@@ -56,6 +56,12 @@ StatusCode TeslaReportAlgo::initialize()
   if ( !m_check ) 
   {
     return Error("Unable to retrieve the ReportCheckTool");
+  }
+  m_conv = tool<IReportConvert>("ReportConvertTool", this );
+  m_conv->setReportVersionLatest();
+  if ( !m_conv ) 
+  {
+    return Error("Unable to retrieve the ReportConvertTool");
   }
   return StatusCode::SUCCESS;
 }
@@ -462,7 +468,7 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
  */
 
   // Set particle information
-  LHCb::HltObjectSummary::Info HLT_info = obj->numericalInfo();
+  const LHCb::HltObjectSummary::Info HLT_info = obj->numericalInfo();
   
   // What keys are present:
   std::vector<std::string> vec_keys = obj->numericalInfoKeys();
@@ -473,265 +479,116 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
   // PARTICLE *******************************************************
   // ID/Mass/Kinematics
   LHCb::Particle* part = (LHCb::Particle*)vec_obj[0];
-  const int pid = HLT_info["0#Particle.particleID.pid"];
-  const double mm = HLT_info["1#Particle.measuredMass"];
-  const double slopex = HLT_info["5#Particle.slopes.x"];
-  const double slopey = HLT_info["6#Particle.slopes.y"];
-  const double p = 1.0/HLT_info["7#Particle.1/p"]; // end of usual SelReports info
-  double cl;
-  double merr=0.0;
-  double momCov00=0.0; double momCov11=0.0; double momCov22=0.0; double momCov33=0.0; double momCov10=0.0; double momCov20=0.0; double momCov21=0.0; double momCov30=0.0; double momCov31=0.0; double momCov32=0.0;
-  double posmomCov00=0.0; double posmomCov11=0.0; double posmomCov22=0.0; double posmomCov10=0.0; double posmomCov01=0.0; double posmomCov20=0.0; double posmomCov02=0.0; double posmomCov21=0.0; double posmomCov12=0.0; double posmomCov30=0.0; double posmomCov31=0.0; double posmomCov32=0.0;
-  double posCov00=0.0; double posCov11=0.0; double posCov22=0.0; double posCov10=0.0; double posCov20=0.0; double posCov21=0.0;
-  if( m_ReportVersion == 2) {
-    cl = HLT_info["8#Particle.conflevel"];
-    merr = HLT_info["9#Particle.massErr"];
-    momCov00 = HLT_info["10#Particle.momCov00"];
-    momCov11 = HLT_info["11#Particle.momCov11"];
-    momCov22 = HLT_info["12#Particle.momCov22"];
-    momCov33 = HLT_info["13#Particle.momCov33"];
-    momCov10 = HLT_info["14#Particle.momCov10"];
-    momCov20 = HLT_info["15#Particle.momCov20"];
-    momCov21 = HLT_info["16#Particle.momCov21"];
-    momCov30 = HLT_info["17#Particle.momCov30"];
-    momCov31 = HLT_info["18#Particle.momCov31"];
-    momCov32 = HLT_info["19#Particle.momCov32"];
-    posmomCov00 = HLT_info["20#Particle.posmomCov00"];
-    posmomCov11 = HLT_info["21#Particle.posmomCov11"];
-    posmomCov22 = HLT_info["22#Particle.posmomCov22"];
-    posmomCov10 = HLT_info["23#Particle.posmomCov10"];
-    posmomCov10 = HLT_info["24#Particle.posmomCov01"];
-    posmomCov20 = HLT_info["25#Particle.posmomCov20"];
-    posmomCov02 = HLT_info["26#Particle.posmomCov02"];
-    posmomCov21 = HLT_info["27#Particle.posmomCov21"];
-    posmomCov12 = HLT_info["28#Particle.posmomCov12"];
-    posmomCov30 = HLT_info["29#Particle.posmomCov30"];
-    posmomCov31 = HLT_info["30#Particle.posmomCov31"];
-    posmomCov32 = HLT_info["31#Particle.posmomCov32"];
-    posCov00 = HLT_info["32#Particle.posCov00"];
-    posCov11 = HLT_info["33#Particle.posCov11"];
-    posCov22 = HLT_info["34#Particle.posCov22"];
-    posCov10 = HLT_info["35#Particle.posCov10"];
-    posCov20 = HLT_info["36#Particle.posCov20"];
-    posCov21 = HLT_info["37#Particle.posCov21"];
-  }
-  //
-  const double slopez = 1/sqrt(slopex*slopex + slopey*slopey + 1.0);
-  const double pz = slopez*p;
-  const double px = slopex*pz;
-  const double py = slopey*pz;
-  const double pe = sqrt(p*p+mm*mm);
-  debug() << "p = " << p << endmsg;
-  //
-  LHCb::ParticleID id(pid);
-  //
-  Gaudi::LorentzVector part_mom(px,py,pz,pe);
-  //
-  debug() << "p (par_mom) = " << part_mom.P() << endmsg;
-  debug() << "pT (par_mom) = " << part_mom.Pt() << endmsg;
-  //
-  if( m_ReportVersion != 3){
-    part->setParticleID(id);
-    part->setMeasuredMass(mm);
-    part->setMeasuredMassErr(merr);
-    part->setMomentum(part_mom);
-    Gaudi::SymMatrix4x4 & momCov = *(const_cast<Gaudi::SymMatrix4x4*>(&part->momCovMatrix()));
-    momCov(0,0)=momCov00;
-    momCov(1,1)=momCov11;
-    momCov(2,2)=momCov22;
-    momCov(3,3)=momCov33;
-    momCov(1,0)=momCov10;
-    momCov(2,0)=momCov20;
-    momCov(2,1)=momCov21;
-    momCov(3,0)=momCov30;
-    momCov(3,1)=momCov31;
-    momCov(3,2)=momCov32;
-    Gaudi::Matrix4x3 & posMomCov = *(const_cast<Gaudi::Matrix4x3*>(&part->posMomCovMatrix()));
-    posMomCov(0,0)=posmomCov00;
-    posMomCov(1,1)=posmomCov11;
-    posMomCov(2,2)=posmomCov22;
-    posMomCov(1,0)=posmomCov10;
-    posMomCov(0,1)=posmomCov01;
-    posMomCov(2,0)=posmomCov20;
-    posMomCov(0,2)=posmomCov02;
-    posMomCov(2,1)=posmomCov21;
-    posMomCov(1,2)=posmomCov12;
-    posMomCov(3,0)=posmomCov30;
-    posMomCov(3,1)=posmomCov31;
-    posMomCov(3,2)=posmomCov32;
-    Gaudi::SymMatrix3x3 & posCov = *(const_cast<Gaudi::SymMatrix3x3*>(&part->posCovMatrix()));
-    posCov(0,0)=posCov00;
-    posCov(1,1)=posCov11;
-    posCov(2,2)=posCov22;
-    posCov(1,0)=posCov10;
-    posCov(2,0)=posCov20;
-    posCov(2,1)=posCov21;
-  }
+  bool turbo=true;
+  if(m_ReportVersion!=2) turbo=false;
+  m_conv->ParticleObjectFromSummary(&HLT_info,part,turbo);
+  debug() << "p = " << part->p() << endmsg;
+  debug() << "p (par_mom) = " << part->p() << endmsg; // duplicate to make test match ref
+  debug() << "pT (par_mom) = " << part->pt() << endmsg;
   debug() << "Particle measured mass = " << part->measuredMass() << endmsg;
-  if( m_ReportVersion == 2) debug() << "Particle CL = " << cl << endmsg;
-  // members todo list:
-  // m_measuredMassErr
-  // m_referencePoint
-  // m_momCovMatrix
-  // m_posCovMatrix
-  // m_posMomCovMatrix
-  
+  if(turbo==true) debug() << "Particle CL = " << part->confLevel() << endmsg;
+
+
   // What follows depends on whether or not the particle is basic or not
   if( isBasic == true ) {
     LHCb::Track* track = (LHCb::Track*)vec_obj[1];
     LHCb::ProtoParticle* proto = (LHCb::ProtoParticle*)vec_obj[2];
     LHCb::RichPID* rich = (LHCb::RichPID*)vec_obj[3];
     LHCb::MuonPID* muon = (LHCb::MuonPID*)vec_obj[4];
-    
+
     for(SmartRefVector <LHCb::HltObjectSummary>::const_iterator it_basic = obj->substructure().begin();it_basic!=obj->substructure().end();++it_basic){
 
       const LHCb::HltObjectSummary* ObjBasic = it_basic->target();
       switch( ObjBasic->summarizedObjectCLID() )
       {
         case LHCb::CLID_Track:
-        {
-          LHCb::HltObjectSummary::Info Track_info = ObjBasic->numericalInfo();
-          
-          // TODO: Stop the stub from being created in the first place.
-          // this is here to stop the track being overridden.
-          LHCb::Track* testTrack = new LHCb::Track();
-          testTrack->setFlags( (unsigned int)Track_info["10#Track.flags"] );
-          debug() << "***** TRACK TYPE TEST = " << testTrack->type() << endmsg;
-          if( testTrack->type() == LHCb::Track::Types::Muon ) {
-            delete testTrack;
-            break;
-          }
-          else{
-            delete testTrack;
-          }
-          //
-          
-          // What keys are present:
-          std::vector<std::string> vec_keys_tr = ObjBasic->numericalInfoKeys();
-          debug() << "Available information (track)" << endmsg;
-          for(std::vector<std::string>::iterator it = vec_keys_tr.begin(); it!=vec_keys_tr.end(); it++) debug() << *it << " = " << Track_info[(*it)] << endmsg;
-          // 
-          // LHCb track members:
-          // double   m_chi2PerDoF ##
-          // int  m_nDoF ##
-          // double   m_likelihood ##
-          // double   m_ghostProbability ##
-          // unsigned int   m_flags
-          // std::vector< LHCb::LHCbID >  m_lhcbIDs
-          // std::vector< LHCb::State * >   m_states
-          // LHCb::TrackFitResult *   m_fitResult
-          // ExtraInfo  m_extraInfo
-          // SmartRefVector< LHCb::Track >  m_ancestors
-          const double TrackZ = Track_info["0#Track.firstState.z"];
-          const double TrackX = Track_info["1#Track.firstState.x"];
-          const double TrackY = Track_info["2#Track.firstState.y"];
-          const double TrackTX = Track_info["3#Track.firstState.tx"];
-          const double TrackTY = Track_info["4#Track.firstState.ty"];
-          const double TrackQOP = Track_info["5#Track.firstState.qOverP"];
-          const double TrackChi2PerDoF = Track_info["6#Track.chi2PerDoF"]; debug() << "Track #chi^{2}/DoF = " << TrackChi2PerDoF << endmsg; // end of basic SelReports info
-          //
-          double TrackDoF;
-          double TrackLikelihood, TrackGhostProb;
-          double flags;
-          double lTrackZ, lTrackX, lTrackY, lTrackTX, lTrackTY, lTrackQOP;
-          if( m_ReportVersion == 2 ){
-            TrackDoF = Track_info["7#Track.nDoF"];
-            TrackLikelihood = Track_info["8#Track.Likelihood"];
-            TrackGhostProb = Track_info["9#Track.GhostProb"];
-            flags = Track_info["10#Track.flags"];
-            lTrackZ = Track_info["11#Track.lastState.z"];
-            lTrackX = Track_info["12#Track.lastState.x"];
-            lTrackY = Track_info["13#Track.lastState.y"];
-            lTrackTX = Track_info["14#Track.lastState.tx"];
-            lTrackTY = Track_info["15#Track.lastState.ty"];
-            lTrackQOP = Track_info["16#Track.lastState.qOverP"];
-          }
-          //
-          if( m_ReportVersion == 2 ){
-            debug() << "Track extra for Rep v2, adding last state" << endmsg;
-            track->setNDoF( (int)TrackDoF );
-            track->setGhostProbability( TrackGhostProb );
-            track->setLikelihood( TrackLikelihood );
-            LHCb::State* last = new LHCb::State();
-            last->setState(lTrackX,lTrackY,lTrackZ,lTrackTX,lTrackTY,lTrackQOP);
-            track->addToStates(*last);
-            track->setFlags( (unsigned int)flags );
-            LHCb::State* first = new LHCb::State();
-            first->setState(TrackX,TrackY,TrackZ,TrackTX,TrackTY,TrackQOP);
-            track->addToStates(*first);
+          {
+            const LHCb::HltObjectSummary::Info Track_info = ObjBasic->numericalInfo();
+
+            // TODO: Stop the stub from being created in the first place.
+            // this is here to stop the track being overridden.
+            LHCb::Track* testTrack = new LHCb::Track();
+            testTrack->setFlags( (unsigned int)Track_info["10#Track.flags"] );
+            debug() << "***** TRACK TYPE TEST = " << testTrack->type() << endmsg;
+            if( testTrack->type() == LHCb::Track::Types::Muon ) {
+              delete testTrack;
+              break;
+            }
+            else{
+              delete testTrack;
+            }
+            //
+
+            // What keys are present:
+            std::vector<std::string> vec_keys_tr = ObjBasic->numericalInfoKeys();
+            debug() << "Available information (track)" << endmsg;
+            for(std::vector<std::string>::iterator it = vec_keys_tr.begin(); it!=vec_keys_tr.end(); it++) debug() << *it << " = " << Track_info[(*it)] << endmsg;
+            // 
+            // LHCb track members:
+            // double   m_chi2PerDoF ##
+            // int  m_nDoF ##
+            // double   m_likelihood ##
+            // double   m_ghostProbability ##
+            // unsigned int   m_flags
+            // std::vector< LHCb::LHCbID >  m_lhcbIDs
+            // std::vector< LHCb::State * >   m_states
+            // LHCb::TrackFitResult *   m_fitResult
+            // ExtraInfo  m_extraInfo
+            // SmartRefVector< LHCb::Track >  m_ancestors
+            m_conv->TrackObjectFromSummary(&Track_info,track,turbo);
+            debug() << "Track #chi^{2}/DoF = " << track->chi2PerDoF() << endmsg;
             track->setLhcbIDs( ObjBasic->lhcbIDs() );
-          }
-          track->setChi2PerDoF( TrackChi2PerDoF );
-          proto->setTrack( track );
-          debug() << "Track details added" << endmsg; 
-          break;
-        } 
-      
+            proto->setTrack( track );
+            
+            debug() << "Track details added" << endmsg; 
+            break;
+          } 
+
         case LHCb::CLID_ProtoParticle:
-        {
-          if( m_ReportVersion == 2 ){
-            LHCb::HltObjectSummary::Info Proto_info = ObjBasic->numericalInfo();
+          {
+            const LHCb::HltObjectSummary::Info Proto_info = ObjBasic->numericalInfo();
             // What keys are present:
             std::vector<std::string> vec_keys_pp = ObjBasic->numericalInfoKeys();
-            debug() << "Available information (proto)" << endmsg;
             for(std::vector<std::string>::iterator it = vec_keys_pp.begin(); it!=vec_keys_pp.end(); it++) debug() << *it << " = " << Proto_info[(*it)] << endmsg;
-            // 
+            debug() << "Available information (proto)" << endmsg;
+            m_conv->ProtoParticleObjectFromSummary(&Proto_info,proto,turbo);
             // LHCb protoparticle members:
             // ExtraInfo   m_extraInfo (other members are a SmartRef to objects we create)
             // THIS IS A PLACE WHERE NEED TO KNOW WHAT PEOPLE NEED
-            const double isPhoton = Proto_info["0#Proto.extraInfo.IsPhoton"];
-            //
-            proto->addInfo( 381, (int)isPhoton ); debug() << "Proto isPhoton = " << isPhoton << endmsg;
+            debug() << "Proto isPhoton = " << proto->info( 381,-1000) << endmsg;
+            debug() << "ProtoParticle details added" << endmsg; 
+            break;
           }
-          debug() << "ProtoParticle details added" << endmsg; 
-          break;
-        }
 
         case LHCb::CLID_RichPID:
-        {
-          if( m_ReportVersion == 2 ){
-            LHCb::HltObjectSummary::Info Rich_info = ObjBasic->numericalInfo();
+          {
+            const LHCb::HltObjectSummary::Info Rich_info = ObjBasic->numericalInfo();
             // What keys are present:
             std::vector<std::string> vec_keys_rich = ObjBasic->numericalInfoKeys();
             debug() << "Available information (rich)" << endmsg;
             for(std::vector<std::string>::iterator it = vec_keys_rich.begin(); it!=vec_keys_rich.end(); it++) debug() << *it << " = " << Rich_info[(*it)] << endmsg;
+            m_conv->RichPIDObjectFromSummary(&Rich_info,rich,turbo);
             // 
             // LHCb RichPID  members:
             // unsigned int   m_pidResultCode
             // std::vector< float >   m_particleLLValues
             // SmartRef< LHCb::Track >  m_track (NOT INCLUDED)
-            const float pidResultCode = Rich_info["0#Rich.pidResultCode"];
-            const float DLLe = Rich_info["1#Rich.DLLe"];
-            const float DLLmu = Rich_info["2#Rich.DLLmu"];
-            const float DLLpi = Rich_info["3#Rich.DLLpi"];
-            const float DLLK = Rich_info["4#Rich.DLLK"];
-            const float DLLp = Rich_info["5#Rich.DLLp"];
-            //
-            rich->setPidResultCode( (unsigned int)pidResultCode );
-            rich->setParticleDeltaLL( Rich::ParticleIDType::Electron, DLLe );
-            rich->setParticleDeltaLL( Rich::ParticleIDType::Muon, DLLmu );
-            rich->setParticleDeltaLL( Rich::ParticleIDType::Pion, DLLpi );
-            rich->setParticleDeltaLL( Rich::ParticleIDType::Kaon, DLLK );
-            rich->setParticleDeltaLL( Rich::ParticleIDType::Proton, DLLp );
             //
             proto->setRichPID( rich );
             rich->setTrack( track );
-            proto->addInfo(LHCb::ProtoParticle::CombDLLe,DLLe);
-            proto->addInfo(LHCb::ProtoParticle::CombDLLmu,DLLmu);
-            proto->addInfo(LHCb::ProtoParticle::CombDLLpi,DLLpi);
-            proto->addInfo(LHCb::ProtoParticle::CombDLLk,DLLK);
-            proto->addInfo(LHCb::ProtoParticle::CombDLLp,DLLp);
+            proto->addInfo(LHCb::ProtoParticle::CombDLLe,rich->particleDeltaLL(Rich::ParticleIDType::Electron));
+            proto->addInfo(LHCb::ProtoParticle::CombDLLmu,rich->particleDeltaLL(Rich::ParticleIDType::Muon));
+            proto->addInfo(LHCb::ProtoParticle::CombDLLpi,rich->particleDeltaLL(Rich::ParticleIDType::Pion));
+            proto->addInfo(LHCb::ProtoParticle::CombDLLk,rich->particleDeltaLL(Rich::ParticleIDType::Kaon));
+            proto->addInfo(LHCb::ProtoParticle::CombDLLp,rich->particleDeltaLL(Rich::ParticleIDType::Proton));
             //
-            debug() << "RICH DLLK = " << DLLK << endmsg;
+            debug() << "RichPID details added" << endmsg; 
+            break;
           }
-          debug() << "RichPID details added" << endmsg; 
-          break;
-        }
 
         case LHCb::CLID_MuonPID:
-        {
-          if( m_ReportVersion == 2 ){
-            LHCb::HltObjectSummary::Info Muon_info = ObjBasic->numericalInfo();
+          {
+            const LHCb::HltObjectSummary::Info Muon_info = ObjBasic->numericalInfo();
             // What keys are present:
             std::vector<std::string> vec_keys_muon = ObjBasic->numericalInfoKeys();
             debug() << "Available information (muon)" << endmsg;
@@ -744,72 +601,31 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
             // unsigned int   m_Status
             // SmartRef< LHCb::Track >  m_IDTrack (NOT INCLUDED)
             // SmartRef< LHCb::Track >  m_muonTrack (NOT INCLUDED)
-            const double MuonLLMu = Muon_info["0#Muon.MuonLLMu"];
-            const double MuonLLBg = Muon_info["1#Muon.MuonLLBg"];
-            const double MuonNShared = Muon_info["2#Muon.NShared"];
-            const double MuonStatus = Muon_info["3#Muon.Status"];
-            const double IsMuon = Muon_info["4#Muon.IsMuon"];
-            const double IsMuonLoose = Muon_info["5#Muon.IsMuonLoose"];
-            const double IsMuonTight = Muon_info["6#Muon.IsMuonTight"];
-            //
-            muon->setMuonLLMu( MuonLLMu );
-            muon->setMuonLLBg( MuonLLBg );
-            muon->setNShared( (int)MuonNShared );
-            muon->setStatus( (int)MuonStatus );
-            muon->setIsMuon( (int)IsMuon );
-            muon->setIsMuonLoose( (int)IsMuonLoose );
-            muon->setIsMuonTight( (int)IsMuonTight );
-            debug() << "Muon LLMu = " << MuonLLMu << endmsg;
+            m_conv->MuonPIDObjectFromSummary(&Muon_info,muon,turbo);
+            debug() << "Muon LLMu = " << muon->MuonLLMu() << endmsg;
+            proto->setMuonPID( muon );
+            debug() << "MuonPID details added" << endmsg; 
+            break;
           }
-          debug() << "MuonPID details added" << endmsg; 
-          break;
-          proto->setMuonPID( muon );
-        }
       }
+      // tie our pieces together
+      debug() << "Starting to tie pieces together" << endmsg;
+      part->setProto( proto );
+      debug() << "Pieces tied together" << endmsg;
     }
-    debug() << "Starting to tie pieces together" << endmsg;
-    // tie our pieces together
-    part->setProto( proto );
-    debug() << "Pieces tied together" << endmsg;
   }
 }
 
 void TeslaReportAlgo::fillVertexInfo(LHCb::Vertex* vert, const LHCb::HltObjectSummary* obj){
 
   // What keys are present:
-  LHCb::HltObjectSummary::Info Vert_info = obj->numericalInfo();
+  const LHCb::HltObjectSummary::Info Vert_info = obj->numericalInfo();
   std::vector<std::string> vec_keys_v = obj->numericalInfoKeys();
   debug() << "Available information (vertex)" << endmsg;
   for(std::vector<std::string>::iterator it = vec_keys_v.begin(); it!=vec_keys_v.end(); it++) debug() << *it << " = " << Vert_info[(*it)] << endmsg;
-  // 
-  if( m_ReportVersion == 2 ){
-    LHCb::HltObjectSummary::Info Vert_info = obj->numericalInfo();
-    const double VertChi2 = Vert_info["0#Vertex.chi2"];
-    const double VertNDoF = Vert_info["1#Vertex.ndf"];
-    const double Vert_x   = Vert_info["2#Vertex.position.x"];
-    const double Vert_y   = Vert_info["3#Vertex.position.y"];
-    const double Vert_z   = Vert_info["4#Vertex.position.z"];
-    //const double Vert_tech= Vert_info["5#Vertex.technique"];
-    const double VertCov00= Vert_info["6#Vertex.cov00"];
-    const double VertCov11= Vert_info["7#Vertex.cov11"];
-    const double VertCov22= Vert_info["8#Vertex.cov22"];
-    const double VertCov10= Vert_info["9#Vertex.cov10"];
-    const double VertCov20= Vert_info["10#Vertex.cov20"];
-    const double VertCov21= Vert_info["11#Vertex.cov21"];
-    //
-    debug() << "Decay vertex chi2 = " << VertChi2 << endmsg;
-    vert->setChi2AndDoF( VertChi2, (int)VertNDoF );
-    vert->setPosition( Gaudi::XYZPoint( Vert_x, Vert_y, Vert_z ) );
-    Gaudi::SymMatrix3x3 & cov = *(const_cast<Gaudi::SymMatrix3x3*>(&vert->covMatrix()));
-    cov(0,0) = VertCov00;
-    cov(1,1) = VertCov11;
-    cov(2,2) = VertCov22;
-    cov(1,0) = VertCov10;
-    cov(2,0) = VertCov20;
-    cov(2,1) = VertCov21;
-    //LHCb::Vertex::CreationMethod tech = static_cast<LHCb::Vertex::CreationMethod>( Vert_tech );
-    //vert->setTechnique( tech );
-  }
+  //
+  m_conv->VertexObjectFromSummary(&Vert_info,vert,true);
+  debug() << "Decay vertex chi2 = " << vert->chi2() << endmsg;
 
   return;
 }

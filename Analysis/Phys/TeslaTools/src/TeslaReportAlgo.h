@@ -27,6 +27,9 @@
 #include "Kernel/Particle2Vertex.h"
 //
 #include "ReportCheckTool.h"
+//
+#include "HltDAQ/IReportConvert.h"
+#include "HltDAQ/ReportConvertTool.h"
 
 /** @class TeslaReportAlgo TeslaReportAlgo.h
  * 
@@ -64,5 +67,6 @@ private:
 	int m_ReportVersion; // 1=OldSelReports, 2=Extended (GaudiMap)
         IDistanceCalculator *   m_dist;
         IReportCheck*   m_check;
+        IReportConvert* m_conv;
 };
 #endif // TESLAREPORTALGO_H

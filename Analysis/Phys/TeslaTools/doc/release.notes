@@ -4,6 +4,9 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-1-11 - Sean Benson
+ - Major change to accommodate the ReportConvert tool (for versioning)..
+
 ! 2015-1-8 - Sean Benson
  - Remove unnecessary debug.
  - Remove version.cmt
