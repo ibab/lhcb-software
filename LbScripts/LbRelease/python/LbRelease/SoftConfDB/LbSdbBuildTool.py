@@ -11,8 +11,8 @@ from LbUtils.Script import Script
 from LbRelease.SoftConfDB.SoftConfDB import SoftConfDB
 
 
-class LbSdbCMake(Script):
-    """ Update information about a project / version to say whether it was built with CMake"""
+class LbSdbBuildTool(Script):
+    """ Update information about a project / version to say whether it was built with CMake or CMT"""
 
     def defineOpts(self):
         """ Script specific options """
@@ -22,12 +22,21 @@ class LbSdbCMake(Script):
                           action = "store_true",
                           help = "Display debug output")
 
-        parser.add_option("-r",
+        parser.add_option("-r", "--remove",
                           dest = "remove",
                           action = "store_true",
                           default = False,
                           help = "Remove the link to the CMake node")
-
+        parser.add_option("--cmt",
+                          dest = "usecmt",
+                          action = "store_true",
+                          default = False,
+                          help = "Set the build tool to be CMT")
+        parser.add_option("--cmake",
+                          dest = "usecmake",
+                          action = "store_true",
+                          default = False,
+                          help = "Set the build tool to be CMT")
 
     def main(self):
         """ Main method for bootstrap and parsing the options.
@@ -50,16 +59,22 @@ class LbSdbCMake(Script):
         # Connect to the ConfDB to update the platform
         self.mConfDB = SoftConfDB()
 
+        buildtool = "cmake"
+        if self.options.usecmt:
+            if self.options.usecmake:
+                raise Exception("Please specify one build system only")
+            buildtool = "cmt"
+        
         if self.options.remove:
-            self.mConfDB.unsetBuildTool(project, version)
+            self.mConfDB.unsetTool(project, version)
         else:
-            self.mConfDB.setBuildTool(project, version, "cmake")
+            self.mConfDB.setBuildTool(project, version, buildtool)
 
 
 if __name__=='__main__':
     sUsage = """%prog [-r] project
-    Sets the flag indicating that the project was built with CMake"""
-    s = LbSdbCMake(usage=sUsage)
+    Sets the flag indicating which buildtool is used for the build"""
+    s = LbSdbBuildTool(usage=sUsage)
     sys.exit(s.run())
 
 

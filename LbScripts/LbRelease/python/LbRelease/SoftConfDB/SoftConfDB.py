@@ -96,6 +96,13 @@ class SoftConfDB(object):
         self.runCypher(query, lambda x: projects.append((x[0], x[1])))
         return projects
 
+    def listCMTBuiltProjects(self):
+        ''' List the applications to be released '''
+        
+        query = 'start n=node:Lbadmin(Type="CMT") match n-[:BUILDTOOL]-m  return distinct m.project, m.version'
+        projects = []
+        self.runCypher(query, lambda x: projects.append((x[0], x[1])))
+        return projects
 
     def listReleaseStackFromPV(self, project, version):
         query = 'start n=node:Lbadmin(Type="RELEASE"), m=node:ProjectVersion(ProjectVersion="%s_%s")  '  % (project, version)
@@ -104,7 +111,6 @@ class SoftConfDB(object):
 
         paths = []
         self.runCypher(query, lambda x: paths.append(x))
-        
         stack = set()
 
         # If no deps are found the stack consists of the project only
@@ -140,7 +146,6 @@ class SoftConfDB(object):
         # First, find the top of the various stacks
         stackTops = self.listReleaseStackTops()
         stacks = []
-        
         for (stp, stv) in stackTops:
             self.log.debug("Listing projects in stack for %s %s" % (stp, stv))
             stack = self.listReleaseStackFromPV(stp, stv)
@@ -385,6 +390,24 @@ class SoftConfDB(object):
             print "Unused = Active - Used - AppUsed"
         return [ n for n in activec if n not in usedc and n not in appusedc ]
 
+    def getBuildTools(self, project, version):
+        """ Check which buildtool should used to build this project """
+
+        # First checking whether we're directly connected to the node
+        query = 'start n=node:ProjectVersion(ProjectVersion="%s_%s") match n-[:BUILDTOOL]-q return q.type' \
+        % (project, version)
+        plist = []
+        self.runCypher(query, lambda x: plist.append((x[0])))
+        if len(plist) > 0:
+            return plist
+    
+        # Or if one of the ancestors
+        query = 'start n=node:ProjectVersion(ProjectVersion="%s_%s") match p=n-[:REQUIRES*]->m-[:BUILDTOOL]-q  return q.type' \
+        % (project, version)
+        plist = []
+        self.runCypher(query, lambda x: plist.append(( x[0] )))
+        return plist
+
 
     # Methods to add/update nodes
     ###########################################################################
@@ -433,6 +456,10 @@ class SoftConfDB(object):
                                                                       "Type",
                                                                       "CMAKE",
                                                                       {"type": "CMAKE"})
+            self.node_cmt =  self.mNeoDB.get_or_create_indexed_node("Lbadmin",
+                                                                    "Type",
+                                                                    "CMT",
+                                                                    {"type": "CMT"})
 
             self.setupDone = True
 
@@ -636,22 +663,26 @@ class SoftConfDB(object):
                     r.delete()
 
 
-    def setCMakeBuild(self, project, version):
+    def setBuildTool(self, project, version, buildTool):
         ''' Set the link to indicate that a project was built with CMake '''
         self.setupDB()
         node_pv =  self.mNeoDB.get_indexed_node("ProjectVersion",
                                                 "ProjectVersion",
                                                 project + "_" + version)
+        
+        self.nodebuildtool =  self.node_cmake
+        if buildTool != None and buildTool.upper() == "CMT":
+            self.nodebuildtool = self.node_cmt
 
-        if not self.node_cmake.has_relationship_with(node_pv):
-            rels = self.mNeoDB.get_or_create_relationships((self.node_cmake, "BUILDTOOL", node_pv))
+        if not self.nodebuildtool.has_relationship_with(node_pv):
+            rels = self.mNeoDB.get_or_create_relationships((self.nodebuildtool, "BUILDTOOL", node_pv))
             for r in rels:
                 props = r.get_properties()
                 import datetime
                 props["DATE"] = str(datetime.datetime.now())
                 r.set_properties(props)
                 
-    def unsetCMakeBuild(self, project, version):
+    def unsetBuildTool(self, project, version):
         ''' Unset the link to indicate that a project was built with CMake '''
         self.setupDB()
         node_pv =  self.mNeoDB.get_indexed_node("ProjectVersion",
@@ -662,6 +693,12 @@ class SoftConfDB(object):
             for r in node_pv.get_relationships():
                 if r.is_type("BUILDTOOL"):
                     r.delete()
+
+        if self.node_cmt.has_relationship_with(node_pv):
+            for r in node_pv.get_relationships():
+                if r.is_type("BUILDTOOL"):
+                    r.delete()
+
 
     def setReleaseFlag(self, project, version):
         ''' Set the link to indicate that a release was requested '''

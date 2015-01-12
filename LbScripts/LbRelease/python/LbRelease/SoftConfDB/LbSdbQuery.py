@@ -110,6 +110,26 @@ class LbSdbQuery(Script):
         for p in sorted(self.mConfDB.listCMakeBuiltProjects()):
             print "%s\t%s" % tuple(p)
 
+    def cmdlistCMT(self, args):
+        ''' List the projects built with CMT '''
+        for p in sorted(self.mConfDB.listCMTBuiltProjects()):
+            print "%s\t%s" % tuple(p)
+
+    def cmdGetBuildTool(self, args):
+        ''' List the projects built with CMT '''
+
+        if (len(args) < 2):
+            self.log.error("Please specify a project and version")
+            sys.exit(1)
+
+        pname = args[0].upper()
+        pversion =  args[1]
+        if not self.cmdProjectExists(args):
+            self.log.error("Could not find %s %s" % (pname, pversion))
+            sys.exit(1)
+
+        for p in self.mConfDB.getBuildTools(pname, pversion):
+            print "%s" %  p
 
     def _sanitizeProjectName(sel, pname):
         ''' Puts back the correct case in display '''
@@ -134,6 +154,12 @@ class LbSdbQuery(Script):
             stackdict = {}
             stackdict["projects"] = [ (self._sanitizeProjectName(p2), v2) for (p2, v2) in s ]
             stackdict["platforms"] = list(platforms)
+            # Rather dodgy, we justtake the first one for the moment.
+            # That doesn not sound right but only solution at short notice
+            # We need to check the consistency of this in the future
+            btools = self.mConfDB.getBuildTools(p, v)
+            if len(btools) > 0:
+                stackdict["build_tool"] = btools[0]
             stackdicts.append(stackdict)
                 
         if self.options.json:
@@ -141,7 +167,10 @@ class LbSdbQuery(Script):
             print json.dumps(stackdicts, indent=2)
         else:
             for (i, sd) in enumerate(stackdicts):
-                print ">>>>>>>>> Stack %d Platforms: %s" % (i, ",".join(sd["platforms"]))
+                tmp =  ">>>>>>>>> Stack %d " %i
+                if "build_tool" in sd:
+                    tmp += " build_tool: %s " % sd["build_tool"]
+                print "%s Platforms: %s" % (tmp, ",".join(sd["platforms"]))
                 for (p, v) in sd["projects"]:
                     print "%d\t%s\t%s" % (i, p, v)
 
@@ -357,6 +386,8 @@ if __name__=='__main__':
   %prog listReleases                                       : List projects flagged to be RELEASED
   %prog listReleaseStacks                                  : List projects flagged to be RELEASED grouping by stack with platforms
   %prog listCMake                                          : List projects built with CMake
+  %prog listCMT                                            : List projects built with CMT
+  %prog getBuildTool                                       : Get the build tool to use for this project
   %prog listDatapkgs                                       : List known Data packages
   %prog listDatapkgVersions <datapkg>                      : List known versions for the specified Data package
       """

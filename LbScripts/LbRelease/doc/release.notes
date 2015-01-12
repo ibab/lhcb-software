@@ -1,3 +1,11 @@
+2015-01-12 Ben Couturier <Ben.Couturier@cern.ch>
+
+	LBCORE-709: Added functionality to specify tif projects are build with CMT or CMake.
+	* python/LbRelease/SoftConfDB/LbSdbBuildTool.py
+	* python/LbRelease/SoftConfDB/LbSdbQuery.py
+	* python/LbRelease/SoftConfDB/SoftConfDB.py
+	* python/LbRelease/SoftConfDB/LbSdbCMake.py
+
 2014-12-19  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* lb-deployment-checklist: script to check the status of a release
