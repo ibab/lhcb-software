@@ -3,7 +3,6 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
     <text>$BRUNELROOT/tests/options/test-big.py</text>
-    <text>$BRUNELROOT/tests/options/enableANNPrintout.py</text>
     <text>--option</text>
     <text>from Brunel.Configuration import *; Brunel().Monitors=["SC","FPE"]; Brunel().PackType="NONE" </text>
   </set></argument>
