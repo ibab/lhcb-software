@@ -1,0 +1,38 @@
+#============================================================================
+# Created    : 2015-01-12
+# Maintainer : Lucia Grillo
+#============================================================================
+package           OTOnlineCalibration
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src python
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use   Package      v1r*    Hat
+use GSL               v*    LCG_Interfaces
+use GaudiAlg          v*
+use TrackEvent        v*    Event
+use ROOT              v*    LCG_Interfaces -no_auto_imports
+use TrackFitEvent     v*    Tr
+
+include_path      none
+#============================================================================
+# Component library building rule
+#============================================================================
+library          OTOnlineCalibration    ../src/*.cpp  -import=ROOT
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=OTOnlineCalibration
+macro_append ROOT_linkopts " -lHist -lTree -lMatrix -lGraf -lMinuit"
+
+#============================================================================
+# python modules
+#============================================================================
+apply_pattern install_python_modules
