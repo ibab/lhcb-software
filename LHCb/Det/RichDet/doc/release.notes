@@ -4,6 +4,11 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2015-01-12 - Antonis Papanestis
+ - Found a bug related to the new InactiveHPDList condition (not yet
+   active) that prevented the reading of the new inactive HPD list from
+   the ONLINE partition.
+
 !========================= RichDet v17r0 2014-12-11 =========================
 ! 2014-11-22 - Antonis Papanestis
  - Protected debug output with 

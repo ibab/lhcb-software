@@ -294,10 +294,18 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Loading Conditions from " <<  m_detNumConds[rich] << endmsg;
   const SmartRef<Condition> numbers = condition(m_detNumConds[rich]);
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << m_detNumConds[rich] << " since:" << numbers->validSince().format(true)
+            << " till:" << numbers->validTill().format(true) << endmsg;
 
   SmartRef<Condition> inactives;
   if ( systemVersion() == 1 )
+  {
     inactives = condition(m_inactivePDConds[rich]);
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Inactive list since:" << inactives->validSince().format(true)
+              << " till:" << inactives->validTill().format(true) << endmsg;
+  }
 
   // local typedefs for vector from Conditions
   typedef std::vector<int> CondData;
@@ -340,11 +348,12 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
 
   // inactive PDs
   CondData inacts;
-  const bool inactivePDListInSmartIDs( numbers->exists(str_InactivePDListInSmartIDs) );
+  const bool inactivePDListInSmartIDs( numbers->exists(str_InactivePDListInSmartIDs) ||
+                                       systemVersion() == 1 );
   if ( msgLevel(MSG::VERBOSE) )
     verbose() << "Condition " << str_InactivePDListInSmartIDs
               << " exists = " << inactivePDListInSmartIDs << endmsg;
-  if ( inactivePDListInSmartIDs || systemVersion() == 1 )
+  if ( inactivePDListInSmartIDs )
   {
     // smartIDs
     if ( msgLevel(MSG::DEBUG) )
