@@ -66,7 +66,7 @@ class LbSdbBuildTool(Script):
             buildtool = "cmt"
         
         if self.options.remove:
-            self.mConfDB.unsetTool(project, version)
+            self.mConfDB.unsetBuildTool(project, version)
         else:
             self.mConfDB.setBuildTool(project, version, buildtool)
 
