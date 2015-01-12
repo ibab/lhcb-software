@@ -230,11 +230,10 @@ StatusCode OnlineBaseEvtSelector::finalize()    {
   m_suspendLock = 0;
   // Initialize base class
   m_evtCount = 0;
+  m_reqCount = 0;
   m_nreqs = 0;
   undeclareInfo("EventsIn");
   undeclareInfo("EventsReq");
-  m_evtCount = 0;
-  m_reqCount = 0;
   return OnlineService::finalize();
 }
 
@@ -379,7 +378,6 @@ OnlineBaseEvtSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr
     pA->setFileOffset(0);
     pAddr = pA;
     m_context = const_cast<OnlineContext*>(pctxt);
-    //return pA->data().first ? StatusCode::SUCCESS : StatusCode::FAILURE;
     return StatusCode::SUCCESS;
   }
   return StatusCode::FAILURE;

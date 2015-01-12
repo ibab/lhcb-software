@@ -1,4 +1,4 @@
-from OnlineEnvBase import CondDBTag as condDBTag
+from OnlineEnvBase import CondDBTag as CondDBTag
 from OnlineEnvBase import DDDBTag   as DDDBTag
 from OnlineEnvBase import ConditionsMapping as ConditionsMapping
 

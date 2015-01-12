@@ -68,6 +68,8 @@ namespace LHCb
     int                      m_maxConsWait;
     /// Property: Time for initial sleep before starting to process files (default: 10 sec)
     int                      m_initialSleep;
+    /// Property: Inhibit rescan of the source directory
+    int                      m_rescan;
     /// Monitoring quantity: Number of events processed
     int                      m_evtCount;
     /// Flag to indicate if files should be deleted
@@ -178,6 +180,7 @@ HltBufferedIOReader::HltBufferedIOReader(const string& nam, ISvcLocator* svcLoc)
   declareProperty("ConsumerWait",m_maxConsWait     = 20);
   declareProperty("AllowedRuns", m_allowedRuns);
   declareProperty("InitialSleep",m_initialSleep    = 10);
+  declareProperty("Rescan",      m_rescan          = 1);
   m_allowedRuns.push_back("*");
   ::lib_rtl_create_lock(0, &m_lock);
 }
@@ -340,6 +343,7 @@ size_t HltBufferedIOReader::scanFiles()   {
         m_files.insert(m_directory + "/" + entry->d_name);
       }
       ::closedir(dir);
+      if ( !m_rescan ) m_disabled = true;
       return m_files.size();
     }
     const char* err = RTL::errorString();
