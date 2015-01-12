@@ -40,7 +40,7 @@ from TAlignment.TrackSelections import *
 from TAlignment.AlignmentScenarios import *
 from TrAlignCommon import *
 
-def patchEscher(true_online_version):
+def patchEscher(true_online_version, n = -1):
   import GaudiConf.DstConf
   import Escher.Configuration
   import OnlineEnv as Online
@@ -53,8 +53,14 @@ def patchEscher(true_online_version):
   escher.InputType  = "MDF"
   escher.PrintFreq = 10000
 #   escher.EvtMax=300
-  TAlignment().OutputDataFile = "/group/online/alignment/EscherOut/"+hostname+"_Escher.out"
-# specify the input to the alignment
+  asddir = Online.ASDDir + "/" if hasattr(Online, "ASDDir") else "/group/online/alignment/EscherOut/"
+  if n == -1:
+    suffix = "_Escher.out"
+  else:
+    suffix = ("_%02d_Escher.out" % n)
+  TAlignment().OutputDataFile = asddir + hostname + suffix
+
+  # specify the input to the alignment
   #from TAlignment.ParticleSelections import defaultHLTD0Selection
 # specify what we actually align for
   configure2012DataAlignment()
@@ -71,10 +77,10 @@ def patchEscher(true_online_version):
 # specify what we actually align for
   configureVeloHalfAlignment()
 #   print TAlignment()
-  print escher
+  # print escher
   return escher
 
-def setupOnline():
+def setupOnline(directory, prefix, filename):
   """
         Setup the online environment: Buffer managers, event serialisation, etc.
 
@@ -84,16 +90,20 @@ def setupOnline():
   from Configurables import LHCb__FILEEvtSelector as es
   app=Gaudi.ApplicationMgr()
   app.AppName = ''
-  app.HistogramPersistency = 'ROOT'
+  HistogramPersistencySvc().OutputFile = ""
+  app.HistogramPersistency = ''
   app.SvcOptMapping.append('LHCb::FILEEvtSelector/EventSelector')
   app.SvcOptMapping.append('LHCb::FmcMessageSvc/MessageSvc')
   sel = es("EventSelector")
-  sel.Input = "/localdisk/Run_112181_0000000182.raw"
+  sel.Input = filename
+  sel.Directory = directory
+  sel.OutputLevel = MSG_INFO
   sel.DeleteFiles = False;
+  sel.FilePrefix = prefix
   sel.Decode=False
   sel.Pause = True
   app.EvtSel  = sel
-  app.EvtMax = 100
+  app.EvtMax = 400
   Online.rawPersistencySvc()
   evtloop = Configs.EventLoopMgr('EventLoopMgr')
   evtloop.Warnings = False
@@ -107,7 +117,7 @@ def setupOnline():
   Configs.MonitorSvc().UniqueServiceNames = 1
   Configs.RootHistCnv__PersSvc("RootHistSvc").OutputLevel = MSG_ERROR
   app.OutputLevel = MSG_INFO
-  print sel
+  # print sel
 
 #============================================================================================================
 def patchMessages():
@@ -152,7 +162,7 @@ def getProcessingType():
     return 'Reprocessing'
   return 'DataTaking'
 
-def doIt():
+def doIt(filename = "/localdisk/Run_112181_0000000182.raw", n = -1):
   true_online = os.environ.has_key('LOGFIFO') and os.environ.has_key('PARTITION')
   debug = not true_online
 
@@ -160,8 +170,10 @@ def doIt():
     print '\n            Running terminal version 1.1 of ESCHER ONLINE\n\n'
     requirement = "EvType=2;TriggerMask=0x0,0x4,0x0,0x0;VetoMask=0,0,0,0x300;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 
-  br = patchEscher(true_online)
-  setupOnline()
+  br = patchEscher(true_online, n)
+  directory = os.path.dirname(filename)
+  prefix = os.path.basename(filename)[:4]
+
+  setupOnline(directory, prefix, filename)
   if true_online: patchMessages()
   start()
-doIt()

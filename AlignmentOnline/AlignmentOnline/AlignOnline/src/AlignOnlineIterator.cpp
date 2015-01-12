@@ -138,7 +138,7 @@ StatusCode AlignOnlineIterator::initialize()
     m_condmap.insert(std::make_pair(i, s));
     auto j = m_condmap.find(i);
     AlignOnlineXMLCopier* acpy = new AlignOnlineXMLCopier(m_onlinexmldir,
-        runningdir, i);
+        runningdir, i, &info());
     m_PubSvc->declarePubItem(m_ServInfix + j->first, *s);
     m_xmlcopiers.push_back(acpy);
   }
@@ -301,8 +301,7 @@ StatusCode AlignOnlineIterator::i_start()
     StatusCode thissc = i->copyFromOnlineArea();
     if (!thissc.isSuccess())
     {
-      error() << "Cannot find input xml file \'" << i->onlinefilename() << "\'"
-          << endmsg;
+      warning() << "Cannot find input xml file \'" << i->onlinefilename() << "\'" << endmsg;
       sc = StatusCode::FAILURE;
     }
   }

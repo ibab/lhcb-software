@@ -3,6 +3,17 @@ Package: AlignOnline
 Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
 
+! 2015-01-12 - Roel Aaij
+ - Use MsgStream in AlignOnlineXMLCopier to print warnings
+ - Downgrade non-error messages from ERROR to WARNING.
+ - Temporary solution of propagatig directory properties to the iterator
+   using OnlineEnvBase attributes.
+ - Pick conditions handled by the RunChangeHandler up from the correct
+   location.
+ - Add arguments to doIt functions, which start the Iterator and Analyzers,
+   to pass in needed information in case of standalone online testing.
+ - Disable histogram file writing in the Analyzer
+
  2014-11-21 - Marco Clemencic
  - Fixed CMake configuration.
 

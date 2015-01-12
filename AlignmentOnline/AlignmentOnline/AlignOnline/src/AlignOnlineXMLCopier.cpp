@@ -1,3 +1,5 @@
+#include "GaudiKernel/MsgStream.h"
+
 #include "AlignOnlineXMLCopier.h"
 #include <boost/filesystem.hpp>
 #include <fstream>
@@ -19,17 +21,17 @@ namespace {
       bool ready = false ;
       std::string line1,line2;
       while(identical && !ready) {
-	getline(file1,line1) ;
-	getline(file2,line2) ;
-	// flag ready when both files are finished
-	ready = file1.eof() && file2.eof() ;
-	if(!ready) {
-	  identical = 
-	    // flag false if we have reached the end of one of the two files
-	    !file1.eof() && !file2.eof() 
-	    // flag false if lines differ
-	    && (++numlines <= numlinestoskip || line1==line2) ;
-	}
+        getline(file1,line1) ;
+        getline(file2,line2) ;
+        // flag ready when both files are finished
+        ready = file1.eof() && file2.eof() ;
+        if(!ready) {
+          identical = 
+            // flag false if we have reached the end of one of the two files
+            !file1.eof() && !file2.eof() 
+            // flag false if lines differ
+            && (++numlines <= numlinestoskip || line1==line2) ;
+        }
       }
     }
     return identical ;
@@ -37,11 +39,13 @@ namespace {
 }
 
 AlignOnlineXMLCopier::AlignOnlineXMLCopier( const std::string& onlinedir,
-					    const std::string& aligndir,
-					    const std::string& condname)
+                                            const std::string& aligndir,
+                                            const std::string& condname,
+                                            MsgStream* msg_stream)
   : m_condname(condname),
     m_onlinedir(onlinedir),
     m_aligndir(aligndir),
+    m_msg_stream(msg_stream),
     m_version(0)
 {}
 
@@ -80,11 +84,14 @@ StatusCode AlignOnlineXMLCopier::copyFromOnlineArea()
     boost::filesystem::path target(alignfilename()) ;
     boost::filesystem::path aligndir(aligndirname());
     boost::filesystem::create_directories(aligndir);
-    boost::filesystem::copy_file(origin,target, boost::filesystem::copy_option::overwrite_if_exists) ;
+    boost::filesystem::copy_file(origin, target, boost::filesystem::copy_option::overwrite_if_exists) ;
     if( boost::filesystem::exists(target) ){
       m_time = boost::filesystem::last_write_time(target) ;
-      printf("+++++++++++++++++++++++++++ AlignOnlineXMLCopier: copied %s to %s\n",origin.c_str(),target.c_str());
+      msg(MSG::INFO) << "AlignOnlineXMLCopier: copied " << origin.native()
+                     << " to " << target.native() << endmsg;
     } else {
+      msg(MSG::WARNING) << "AlignOnlineXMLCopier: failed to copy " << origin.native()
+                        << " to " << target.native() << endmsg;
       sc = StatusCode::FAILURE ;
     }
   }
@@ -106,8 +113,8 @@ StatusCode AlignOnlineXMLCopier::copyToOnlineArea()
       printf("++++++++++++++++++++++++++++ AlignOnlineXMLCopier: copying %s to %s\n",origin.c_str(),target.c_str());
       boost::filesystem::copy( origin, target ) ;
       if( !boost::filesystem::exists(target) ) {
-	sc = StatusCode::FAILURE ;
-	m_version -= 1 ;
+        sc = StatusCode::FAILURE ;
+        m_version -= 1 ;
       } 
     }
     m_newfilename = onlinefilename(m_version) ;

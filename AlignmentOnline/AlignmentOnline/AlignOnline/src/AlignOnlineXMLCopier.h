@@ -4,14 +4,16 @@
 #include <string>
 #include <ctime>
 #include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/MsgStream.h"
 
 class AlignOnlineXMLCopier
 {
 public:
   typedef int FileVersion ;
   AlignOnlineXMLCopier( const std::string& onlinedir,
-			const std::string& aligndir,
-			const std::string& condname ) ;
+                        const std::string& aligndir,
+                        const std::string& condname,
+                        MsgStream* msg_stream) ;
   StatusCode copyFromOnlineArea() ;
   StatusCode copyToOnlineArea() ;
 
@@ -25,9 +27,15 @@ private:
   std::string onlinefilename( FileVersion v ) const ;
 
 private:
+
+  MsgStream& msg(const MSG::Level level) const {
+    return *m_msg_stream << level ;
+  }
+   
   std::string m_condname ;  // e.g. "Velo/VeloGlobal"
   std::string m_onlinedir ;
   std::string m_aligndir ;
+  MsgStream* m_msg_stream;
   FileVersion m_version ;
   std::time_t m_time ;
   std::string m_newfilename;

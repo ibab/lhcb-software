@@ -47,35 +47,31 @@ def EscherCommon(true_online_version):
   from TAlignment.VertexSelections import configuredPVSelection
   from Configurables import RunChangeHandlerSvc
   escher = Escher.Configuration.Escher()
-  try:
-    escher.DDDBtag    = "dddb-20120831"#Online.DDDBTag
-  except:
-    print "DDDBTag not found, use default"
+  import ConditionsMap
+  escher.DDDBtag   = ConditionsMap.DDDBTag
+  escher.CondDBtag = ConditionsMap.CondDBTag
+  escher.OnlineMode = True
+  if hasattr(Online, "AlignXmlDir"):
+    escher.OnlineAligWorkDir = os.path.join(Online.AlignXmlDir, 'running')
 
-  try:
-    escher.CondDBtag = "cond-20120831"#Online.CondDBTag
-  except:
-    print "CondDBTag not found, use default"
   conddb = CondDB()
-  k = conddb.RunChangeHandlerConditions.keys()[0]
-  v = conddb.RunChangeHandlerConditions.pop(k)
-  k = "LHCb/"+k
-  conddb.RunChangeHandlerConditions[k]=v
+  conddb.RunChangeHandlerConditions = ConditionsMap.RunChangeHandlerConditions
   conddb.IgnoreHeartBeat = True
   conddb.setProp('EnableRunChangeHandler', True)
   conddb.UseDBSnapshot=True
   conddb.DBSnapshotDirectory = "/group/online/hlt/conditions/"
 #  conddb.PartitionName = "LHCb"
-  conddb.Tags = { "DDDB" : escher.DDDBtag,
-                  "LHCBCOND" : escher.CondDBtag,
+  conddb.Tags = { "DDDB" : ConditionsMap.DDDBTag,
+                  "LHCBCOND" : ConditionsMap.CondDBTag,
                   "ONLINE" : 'fake'}
   MagneticFieldSvc().UseSetCurrent = True
   escher.UseDBSnapshot = True
   configure2012DataAlignment()
   configureVeloHalfAlignment()
-  TAlignment().OnlineMode = True
+  ## TAlignment().OnlineMode = True
   print conddb
   return escher
+
 def HostName():
   import socket
   hostname = socket.gethostname()

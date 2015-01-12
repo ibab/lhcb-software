@@ -15,7 +15,7 @@ from Configurables import CondDB, GaudiSequencer, EventPersistencySvc, \
     HistogramPersistencySvc, EventLoopMgr, OutputStream, Gaudi__SerializeCnvSvc, \
     DstConf
 
-#PrintOff(999)
+PrintOff(999)
 InstallRootLoggingHandler(level=logging.CRITICAL)
 
 processingType ='DataTaking'
@@ -83,18 +83,27 @@ def setupOnline():
   Configs.MonitorSvc().UniqueServiceNames = 1
   Configs.RootHistCnv__PersSvc("RootHistSvc").OutputLevel = MSG_ERROR
   app.OutputLevel = MSG_INFO
+
+  def __propAtt(att, fr, to):
+    if hasattr(fr, att):
+      setattr(to, att, getattr(fr, att))
+
   from Configurables import AlignOnlineIterator as Aiter
   ad = Adrv("AlignDrv")
   ad.PartitionName     = Online.PartitionName
   ad.FitterClass       = "AlignOnlineIterator"
   ad.FitterName        = "AlIterator"
+  __propAtt('RefFileName', Online, ad)
+
   ad.addTool( Aiter, ad.FitterName )
   ai = ad.AlIterator
 #   ai = ad.Aiter(AlIterator)
   ai.PartitionName     = Online.PartitionName
-  ai.ASDDir      = "/group/online/alignment/EscherOut"
   ai.ASDFilePattern        = "_Escher.out"
-  ai.OutputLevel      =2
+  ai.OutputLevel      = 2
+
+  for attr in ['ASDDir', 'OnlineXmlDir', 'AlignXmlDir']:
+    __propAtt(attr, Online, ai)
   evtclk().EventTimeDecoder = "FakeEventTime"
   app.Runable = ad.getType()+"/"+ad.getName()
   import time
@@ -147,7 +156,7 @@ def getProcessingType():
     return 'Reprocessing'
   return 'DataTaking'
 
-def doIt():
+def doIt(n = -1):
   true_online = os.environ.has_key('LOGFIFO') and os.environ.has_key('PARTITION')
   debug = not true_online
 
@@ -159,4 +168,4 @@ def doIt():
   setupOnline()
   if true_online: patchMessages()
   start()
-doIt()
+
