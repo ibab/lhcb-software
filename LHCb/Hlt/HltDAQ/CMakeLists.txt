@@ -25,11 +25,6 @@ include(GaudiObjDesc)
 god_build_headers(xml/*.xml
                   DESTINATION HltDAQ)
 
-gaudi_add_module(ReportLib
-                 src/Lib/*.cpp
-                 INCLUDE_DIRS Boost AIDA HltDAQ
-                 LINK_LIBRARIES Boost DetCondLib DetDescLib DAQEventLib DAQKernelLib HltEvent GaudiAlgLib GaudiKernel HltInterfaces LoKiHltLib)
-
 gaudi_add_module(HltDAQ
                  src/*.cpp
                  INCLUDE_DIRS Boost AIDA HLTDAQ

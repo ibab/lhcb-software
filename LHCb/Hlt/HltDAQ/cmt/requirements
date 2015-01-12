@@ -62,8 +62,6 @@ library          HltDAQ    ../src/*.cpp
 # define component library link options for use in HltDAQ and outside
 #=====================================================================
 apply_pattern install_more_includes more=HltDAQ
-library          ReportLib       ../src/Lib/*.cpp
-apply_pattern    component_library   library=ReportLib
 
 #=====================================================================
 # unit test application building rule
