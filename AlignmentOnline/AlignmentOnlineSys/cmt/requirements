@@ -8,6 +8,8 @@ branches cmt doc tests
 #=======================================================
 
 use AlignOnline v1r0 AlignmentOnline
+use PRConfig    v*
+use OMAlib      v*   Online
 
 # Declare this as a container package
 apply_pattern container_package

@@ -4,6 +4,9 @@ Package Coordinator: Maurizio Martinelli
 Purpose: Running and testing Alignment in the online environment
 
 
+! 2014-12-17 - Roel Aaij
+ - Add use statements for OMAlib and PRConfig
+
 ! 2014-12-17 - Maurizio Martinelli
  - Fixed QMtest reference
 
