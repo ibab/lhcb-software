@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2015-1-12 - Sean Benson
+ - Turbo stream related routing bits (87 & 88).
+
 !========================= HltConf v12r4 2014-12-15 =========================
 
 ! 2014-12-12 - Sebastian Neubert
