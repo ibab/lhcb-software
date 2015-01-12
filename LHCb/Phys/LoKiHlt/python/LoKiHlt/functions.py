@@ -301,6 +301,10 @@ HLT_PASS        =    LoKi.HLT.PassDecision
 HLT_PASS_SUBSTR =    LoKi.HLT.PassDecisionSubString
 ## @see LoKi::Cuts::HLT_PASS_RE
 HLT_PASS_RE     =    LoKi.HLT.PassDecisionRegex
+## @see LoKi::Cuts::HLT_TURBOPASS_RE
+HLT_TURBOPASS_RE     =    LoKi.HLT.TurboPass
+## @see LoKi::Cuts::HLT_NONTURBOPASS_RE
+HLT_NONTURBOPASS_RE     =    LoKi.HLT.NonTurboPass
 
 ## @see LoKi::Cuts::HLT_PASSIGNORING 
 HLT_PASSIGNORING         =    LoKi.HLT.DecisionBut

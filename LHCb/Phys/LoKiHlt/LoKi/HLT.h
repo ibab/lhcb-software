@@ -538,6 +538,62 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class NonTurboPass
+     *  Simple functor to determine whether a non-Turbo stream line has fired
+     *  @see LoKi::Cuts::HLT_NONTURBOPASS_RE
+     *  @author Sean Benson sean.benson@cern.ch
+     *  @date 2015-01-12
+     */
+    class GAUDI_API NonTurboPass : public HasDecisionRegex
+    {
+    public:
+      // ======================================================================
+      /// constructor from the channel name
+      NonTurboPass ( const std::string&      name ) ;
+      /// constructor from the channel name
+      NonTurboPass ( const Gaudi::StringKey& name ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~NonTurboPass() ;
+      /// MANDATORY: clone method ( "virtual constructor")
+      virtual  NonTurboPass* clone () const ;
+      /// MANDATORY: the only one essential methor
+      result_type operator() ( argument a ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled
+      NonTurboPass () ;                // the default constructor is disabled
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class TurboPass
+     *  Simple functor to determine whether a Turbo stream line has fired
+     *  @see LoKi::Cuts::HLT_TURBOPASS_RE
+     *  @author Sean Benson sean.benson@cern.ch
+     *  @date 2015-01-12
+     */
+    class GAUDI_API TurboPass : public HasDecisionRegex
+    {
+    public:
+      // ======================================================================
+      /// constructor from the channel name
+      TurboPass ( const std::string&      name ) ;
+      /// constructor from the channel name
+      TurboPass ( const Gaudi::StringKey& name ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~TurboPass() ;
+      /// MANDATORY: clone method ( "virtual constructor")
+      virtual  TurboPass* clone () const ;
+      /// MANDATORY: the only one essential methor
+      result_type operator() ( argument a ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled
+      TurboPass () ;                // the default constructor is disabled
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class ExecutionStage
      *  Simple functor to extract the execution stage for the given channel
      *  @see LoKi::Cuts::HLT_EXECUTIONSTAGE

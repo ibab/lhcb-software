@@ -573,6 +573,81 @@ LoKi::HLT::ErrorBits::fillStream ( std::ostream& s ) const
 // ============================================================================
 
 
+// ============================================================================
+// constructor from the channel name 
+// ============================================================================
+LoKi::HLT::NonTurboPass::NonTurboPass ( const std::string& name ) 
+  : LoKi::HLT::HasDecisionRegex ( name ) 
+{}
+// ============================================================================
+// constructor from the channel name 
+// ============================================================================
+LoKi::HLT::NonTurboPass::NonTurboPass ( const Gaudi::StringKey& name ) 
+  : LoKi::HLT::HasDecisionRegex ( name ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::HLT::NonTurboPass::~NonTurboPass () {}
+// ============================================================================
+// MANDATORY: clone method ( "virtual constructor")
+// ============================================================================ 
+LoKi::HLT::NonTurboPass* LoKi::HLT::NonTurboPass::clone () const 
+{ return new LoKi::HLT::NonTurboPass ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::HLT::NonTurboPass::result_type
+LoKi::HLT::NonTurboPass::operator() 
+  ( LoKi::HLT::NonTurboPass::argument a ) const 
+{
+  Assert ( a , "const LHCb::HltDecReports* points to NULL!" ) ;
+  // loop over all selections and match the names 
+  return std::any_of( std::begin(*a), std::end(*a),
+                      [&](LHCb::HltDecReports::Container::const_reference i) {
+            return  ( (i.second.executionStage()!=135) && (i.second.decision()) ) && 
+                    boost::regex_match ( i.first , expression() );
+  } );
+  //
+}
+
+// ============================================================================
+// constructor from the channel name 
+// ============================================================================
+LoKi::HLT::TurboPass::TurboPass ( const std::string& name ) 
+  : LoKi::HLT::HasDecisionRegex ( name ) 
+{}
+// ============================================================================
+// constructor from the channel name 
+// ============================================================================
+LoKi::HLT::TurboPass::TurboPass ( const Gaudi::StringKey& name ) 
+  : LoKi::HLT::HasDecisionRegex ( name ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::HLT::TurboPass::~TurboPass () {}
+// ============================================================================
+// MANDATORY: clone method ( "virtual constructor")
+// ============================================================================ 
+LoKi::HLT::TurboPass* LoKi::HLT::TurboPass::clone () const 
+{ return new LoKi::HLT::TurboPass ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::HLT::TurboPass::result_type
+LoKi::HLT::TurboPass::operator() 
+  ( LoKi::HLT::TurboPass::argument a ) const 
+{
+  Assert ( a , "const LHCb::HltDecReports* points to NULL!" ) ;
+  // loop over all selections and match the names 
+  return std::any_of( std::begin(*a), std::end(*a),
+                      [&](LHCb::HltDecReports::Container::const_reference i) {
+            return  (i.second.executionStage()==135) && 
+                    boost::regex_match ( i.first , expression() );
+  } );
+  //
+}
 
 // ============================================================================
 // constructor from the channel name 

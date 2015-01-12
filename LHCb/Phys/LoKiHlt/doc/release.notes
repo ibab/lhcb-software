@@ -4,6 +4,9 @@
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-1-12 - Sean Benson
+ - New HLT_TURBOPASS_RE and HLT_NONTURBOPASS_RE functor.
+
 !========================= LoKiHlt v3r17 2014-12-13 =========================
 ! 2014-12-13 - Marco Clemencic
  - Ensure that L0Event dictionary is loaded before trying to use

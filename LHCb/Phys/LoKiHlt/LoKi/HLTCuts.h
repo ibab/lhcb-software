@@ -87,6 +87,44 @@ namespace LoKi
      */
     typedef LoKi::HLT::ExecutionStage                      HLT_EXECUTIONSTAGE ;
     // ========================================================================
+    /** @typedef HLT_NONTURBOPASS_RE
+     *  Simple predicate to check a non-Turbo stream line has fired
+     *
+     *  @code
+     *
+     *   const LHCb::HtlDecReports* hlt = ... ;
+     *
+     *   const HLT_EXECUTIONSTAGE h = HLT_EXECUTIONSTAGE ( "some decision from a turbo line" ) ;
+     *
+     *   const bool ok = 135 !=  h ( hlt ) ;
+     *
+     *  @endcode
+     *
+     *  @see LoKi::HLT::NonTurboPass
+     *  @author Sean Benson sean.benson@cern.ch
+     *  @date 2015-01-12
+     */
+    typedef LoKi::HLT::NonTurboPass                      HLT_NONTURBOPASS_RE ;
+    // ========================================================================
+    /** @typedef HLT_TURBOPASS_RE
+     *  Simple predicate to check a Turbo stream line has fired
+     *
+     *  @code
+     *
+     *   const LHCb::HtlDecReports* hlt = ... ;
+     *
+     *   const HLT_EXECUTIONSTAGE h = HLT_EXECUTIONSTAGE ( "some decision from a turbo line" ) ;
+     *
+     *   const bool ok = 135 ==  h ( hlt ) ;
+     *
+     *  @endcode
+     *
+     *  @see LoKi::HLT::TurboPass
+     *  @author Sean Benson sean.benson@cern.ch
+     *  @date 2015-01-12
+     */
+    typedef LoKi::HLT::TurboPass                      HLT_TURBOPASS_RE ;
+    // ========================================================================
     /** @typedef HLT_HAS
      *  Simple predicate to check the certain decisions
      *
