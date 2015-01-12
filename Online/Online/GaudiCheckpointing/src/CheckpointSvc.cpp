@@ -486,6 +486,9 @@ string CheckpointSvc::buildChildUTGID(int which) const {
   string n = m_utgid;
   if ( !n.empty() ) {
     char txt[1024];
+    string utgid = RTL::processName();
+    if ( utgid.length()>2 ) utgid = utgid.substr(0,utgid.length()-2);
+    string_replace(n,"%UTGID",utgid);
     string_replace(n,"%PP",upper(m_partition));
     string_replace(n,"%P",m_partition);
     string_replace(n,"%p",lower(m_partition));
