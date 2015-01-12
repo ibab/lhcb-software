@@ -4,6 +4,9 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2015-01-12 - Chris Jones
+ - Update default tunes to use MC12TuneV2 for all data types.
+
 ! 2015-01-09 - Chris Jones
  - Completely disable the use of NeuroBayes in the requirements and CMake files,
    such that the package no longer links against the NB libraries.

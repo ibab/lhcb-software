@@ -24,10 +24,10 @@ class ChargedProtoANNPIDConf(LHCbConfigurableUser):
                   ,"NetworkVersions" : { "2013"    : "MC12TuneV2",
                                          "2012"    : "MC12TuneV2", 
                                          "2011"    : "MC12TuneV2", 
-                                         "2010"    : "MC12TuneV1",
-                                         "2009"    : "MC12TuneV1",
-                                         "2008"    : "MC12TuneV1",
-                                         "MC09"    : "MC12TuneV1",
+                                         "2010"    : "MC12TuneV2",
+                                         "2009"    : "MC12TuneV2",
+                                         "2008"    : "MC12TuneV2",
+                                         "MC09"    : "MC12TuneV2",
                                          "DEFAULT" : "MC12TuneV2" }
                   ,"DataType"   : "" # Type of data, propagated from application
                   ,"TrackTypes" : ["Long","Downstream","Upstream"]
