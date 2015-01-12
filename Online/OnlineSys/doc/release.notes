@@ -6,6 +6,26 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v5r13>2015-01-12 OnlineSys v5r14</A></H1>
+<PRE>
+  Use Gaudi v25r6p1
+  Updated/new packages:	
+     Controller          v0r14    Online
+     EventBuilder        v0r5     Online
+     FarmConfig          v0r10    Online
+     GauchoAppl          v1r18    Online
+     GaudiCheckpointing  v0r20    Online
+     GaudiOnline         v2r75    Online
+     GaudiUPI            v1r18    Online
+     OnlineAlign         v0r3     Online
+     OnlineBase          v1r26    Online
+     OnlineKernel        v2r16    Online
+     RootCnv             v1r24    Online
+     ROMon               v1r49    Online
+     ROLogger            v0r28    Online
+     UPI                 v1r27    Online
+</PRE>
+
 <H1><A NAME=v5r13>2014-11-08 OnlineSys v5r13</A></H1>
 <PRE>
   Use Gaudi v25r5
