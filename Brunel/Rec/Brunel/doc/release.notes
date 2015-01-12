@@ -10,6 +10,8 @@ Purpose: LHCb reconstruction program
     single precision (DetDesc, Magnet)
   . Fix bug in PatAddTTCoord in 'returnTTClusters' which caused wrong chi2 to be
     returned (PatAlgorithms)
+  . New parametrisations in 'PatMatchTool', lower ghost rate and higher
+    efficiency, mostly for low p tracks (PatAlgorithms)
 
 </PRE><H1><A NAME=v47r3p1>2014-12-15 Brunel v47r3</A></H1><PRE>
 This version uses projects LHCb v38r3p1, Lbcom v16r2p1, Rec v17r3p1
