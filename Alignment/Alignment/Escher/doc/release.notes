@@ -4,6 +4,9 @@ Package Coordinator : Johan Blouw and Rob Lambert
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+! 2015-01-12 - Roel Aaij
+ - Fix configuration of HLT{1,2} decreports decoders.
+
 ! 2014-01-08 - Maurizio Martinelli
  - Updated references QM tests
 

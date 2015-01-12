@@ -146,23 +146,28 @@ class Escher(LHCbConfigurableUser):
         from Configurables import HltCompositionMonitor
         from Configurables import LoKi__HDRFilter as HDRFilter
         hltFilterSeq = GaudiSequencer( "HltFilterSeq" )
-        # identifies events that are not of type Hlt1ErrorEvent or Hlt2ErrorEvent
-        hltErrCode = "HLT_PASS_RE('Hlt1(?!ErrorEvent).*Decision') & HLT_PASS_RE('Hlt2(?!ErrorEvent).*Decision')"
-        hltErrorFilter = HDRFilter('HltErrorFilter', Code = hltErrCode )   # the filter
 
-        ## TODO: Watch out for the HLT1/2 Split here!!
-        ## probably the decoder DB will take care of it for you...
         from DAQSys.Decoders import DecoderDB
         from DAQSys.DecoderClass import decodersForBank
-        hltdecs=decodersForBank(DecoderDB,"HltDecReports")
+        from itertools import chain
+        hltdecs = [DecoderDB.get("HltDecReportsDecoder/Hlt1DecReportsDecoder")]
+        if not self.getProp("OnlineMode"):
+            ## HLT2 decreports are only used offline.
+            hltdecs += [DecoderDB.get("HltDecReportsDecoder/Hlt2DecReportsDecoder")]
         hltFilterSeq.Members = [d.setup() for d in hltdecs]
-        hltFilterSeq.Members += [ HltCompositionMonitor(), hltErrorFilter ]
-        # add more hlt filters, if requested
-        if hasattr(self,"HltFilterCode") and len(self.getProp("HltFilterCode"))>0:
-            hltfilter = HDRFilter ( 'HLTFilter',
-                                    Code = self.getProp("HltFilterCode"))
-            hltfilter.Preambulo += [ "from LoKiCore.functions import *" ]
-            hltFilterSeq.Members += [ hltfilter ]
+
+        ## FIXME: These lines should go back in as soon as an easy to use filter
+        ## FIXME: is available that works for HLT1 and HLT2 decreports at the same time.
+        ## identifies events that are not of type Hlt1ErrorEvent or Hlt2ErrorEvent
+        ## hltErrCode = "HLT_PASS_RE('Hlt1(?!ErrorEvent).*Decision') & HLT_PASS_RE('Hlt2(?!ErrorEvent).*Decision')"
+        ## hltErrorFilter = HDRFilter('HltErrorFilter', Code = hltErrCode )   # the filter
+        ## hltFilterSeq.Members += [ HltCompositionMonitor(), hltErrorFilter ]
+        ## add more hlt filters, if requested
+        ## if hasattr(self,"HltFilterCode") and len(self.getProp("HltFilterCode"))>0:
+        ##     hltfilter = HDRFilter ( 'HLTFilter',
+        ##                             Code = self.getProp("HltFilterCode"))
+        ##     hltfilter.Preambulo += [ "from LoKiCore.functions import *" ]
+        ##     hltFilterSeq.Members += [ hltfilter ]
 
         # in Escher we'll always use the DOD
         ApplicationMgr().ExtSvc += [ "DataOnDemandSvc" ]
@@ -172,7 +177,7 @@ class Escher(LHCbConfigurableUser):
         # if the patter reco is not run, we need the DataOnDemand svc
         # so that e.g. the track container(s) is unpacked:
         if not GaudiSequencer("RecoTrSeq").getProp("Enable"):
-	    DstConf( EnableUnpack = True )
+        DstConf( EnableUnpack = True )
 
         TrackSys().ExpertTracking = self.getProp("ExpertTracking")
 
