@@ -1,3 +1,7 @@
+2015-01-12  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v5r3
+
 2015-01-12 Ben Couturier <Ben.Couturier@cern.ch>
 
 	LBCORE-709: Added functionality to specify tif projects are build with CMT or CMake.
