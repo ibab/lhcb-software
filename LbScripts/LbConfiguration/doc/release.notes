@@ -1,3 +1,11 @@
+2015-01-12  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v8r3
+
+2015-01-09  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbConfiguration/Project.py: Added project Calibration (LBCORE-705)
+
 2015-01-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* lb-run: fixes to correctly fall back on SetupProject for ROOT (LBCORE-521)
