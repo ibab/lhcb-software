@@ -23,11 +23,16 @@ find_package(Boost COMPONENTS iostreams filesystem)
 include(GaudiObjDesc)
 
 god_build_headers(xml/*.xml
-                  PRIVATE)
+                  DESTINATION HltDAQ)
+
+gaudi_add_module(ReportLib
+                 src/Lib/*.cpp
+                 INCLUDE_DIRS Boost AIDA HltDAQ
+                 LINK_LIBRARIES Boost DetCondLib DetDescLib DAQEventLib DAQKernelLib HltEvent GaudiAlgLib GaudiKernel HltInterfaces LoKiHltLib)
 
 gaudi_add_module(HltDAQ
                  src/*.cpp
-                 INCLUDE_DIRS Boost AIDA
+                 INCLUDE_DIRS Boost AIDA HLTDAQ
                  LINK_LIBRARIES Boost DetCondLib DetDescLib DAQEventLib DAQKernelLib HltEvent GaudiAlgLib GaudiKernel HltInterfaces LoKiHltLib)
 
 gaudi_add_unit_test(utestTrackingCoder

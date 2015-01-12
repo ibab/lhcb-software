@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2015-01-12 - Sean Benson
+ - Fix CMake config.
+
 ! 2015-01-11 - Sean Benson
  - Major change to accommodate ReportConvert tool (needed for versioning).
 
