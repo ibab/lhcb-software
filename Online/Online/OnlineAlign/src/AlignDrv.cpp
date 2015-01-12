@@ -78,7 +78,9 @@ StatusCode AlignDrv::initialize()
 
 //  m_fitter = new Fitter(this);
   m_incidentSvc->addListener(this,"DAQ_PAUSE");
-  m_RefFileName = "/group/online/dataflow/options/"+m_PartitionName+"/Alignement_Reference_File.txt";
+  if (m_RefFileName.empty()) {
+     m_RefFileName = "/group/online/dataflow/options/"+m_PartitionName+"/Alignement_Reference_File.txt";
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -133,9 +135,10 @@ void AlignDrv::writeReference()
 
 AlignDrv::AlignDrv(const std::string& name, ISvcLocator* sl) : base_class(name,sl),m_MonSvc(0),m_fitter(0),m_ToolSvc(0)
 {
-  declareProperty("PartitionName",   m_PartitionName= "LHCbA");
-  declareProperty("FitterClass",   m_FitterClass);
-  declareProperty("FitterName",   m_FitterName);
+  declareProperty("PartitionName", m_PartitionName = "LHCbA");
+  declareProperty("FitterClass", m_FitterClass);
+  declareProperty("FitterName", m_FitterName);
+  declareProperty("RefFileName", m_RefFileName = "");
   m_runonce = false;
   DrvInstance = this;
 }
