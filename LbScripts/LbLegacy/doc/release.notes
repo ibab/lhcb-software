@@ -1,6 +1,11 @@
+2015-01-12 Ben Couturier  <Ben.Couturier@cern.ch>
+
+        * cmt/requirements: release of version v6r3
+        * python/LbLegacy/install_project.py:  release of LbScripts version v8r3
+
 2014-12-04 Ben Couturier  <Ben.Couturier@cern.ch>
 
-	* LBCORE-680: Fix mkexternaltar to take all subdirectories of resources.
+			  * LBCORE-680: Fix mkexternaltar to take all subdirectories of resources.
 
 2014-12-01 Ben Couturier  <Ben.Couturier@cern.ch>
 
