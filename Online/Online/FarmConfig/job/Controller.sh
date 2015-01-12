@@ -21,4 +21,5 @@ exec -a ${UTGID} fsm_ctrl.exe \
     -runinfo=${RUNINFO} \
     -mode=${MOORESTARTUP_MODE} \
     -taskconfig=${ARCH_FILE} \
+    -bindcpu=1 \
     -count=${NBOFSLAVES}

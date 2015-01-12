@@ -4,6 +4,7 @@ CheckpointSvc.FirstChild          = 0;
 CheckpointSvc.ChildSleep          = 100;
 CheckpointSvc.TaskType            = "$TASK_TYPE";
 CheckpointSvc.UtgidPattern        = "%P_%NN_%T_%02d";
+CheckpointSvc.UtgidPattern        = "%UTGID%02d";
 CheckpointSvc.UseCores            = false;
 CheckpointSvc.DumpFiles           = false;
 CheckpointSvc.PrintLevel          = 4;
