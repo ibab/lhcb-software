@@ -167,10 +167,6 @@ StatusCode OTMonoLayerAlignment::initialize() {
 StatusCode OTMonoLayerAlignment::finalize()
 {
   if ( m_updateInFinalize ) update() ;
-
-  //for( std::vector<AlElementHistos*>::iterator ielem = m_elemHistos.begin() ;
-  //ielem != m_elemHistos.end(); ++ielem) delete *ielem ;
-
   return GaudiHistoAlg::finalize();
 }
 
@@ -179,10 +175,6 @@ StatusCode OTMonoLayerAlignment::finalize()
 //=============================================================================
 StatusCode OTMonoLayerAlignment::execute()
 {
-
-  // Reset histograms if required
-  //if(m_resetHistos) resetHistos() ;
-
   const std::string iterprefix = "Iter" + std::to_string(m_iteration) + "/" ;
 
   // Get tracks. 
@@ -271,16 +263,6 @@ StatusCode OTMonoLayerAlignment::execute()
 	      // 	std::cout << "mu: " << state.y() << " " << muMeas << std::endl ;
 	      // }
 
-
-	      // this should actually be in the local frame: so still needs to be corrected for stereoangle ...
-	      // the sign is also wrong: it should somehow have to do with the direction of the trajectory
-	      //const double ymid = 0.5*( traj->endPoint().y() - traj->beginPoint().y() ) ;
-	      // this one is wrong: it should be signed 
-	      //double dy = state.y() - ymid ;
-	      // I think that this will work better. to correct it for stereo we actually need arclength ...
-	      //dy *= ( traj->endPoint().y() > traj->beginPoint().y() ) ? 1 : -1 ;
-	      //dy *= -1 ;
-
 	      // assume three segments!
 	      unsigned int trajindex ;
 	      double betaprime ;
@@ -311,7 +293,7 @@ StatusCode OTMonoLayerAlignment::execute()
 
 	      // I hope I got this right :-)
 	      int monosign = otmod.first->mono( node->measurement().lhcbID().otID().straw() ) ==0 ? +1 : -1 ;
-	      // we can axtually get this right by rotating the
+	      // we can actually get this right by rotating the
 	      // pocavector to the module frame. difference is
 	      // extremely small.
 	      Gaudi::XYZVector pocaVectorLocal = otmod.first->geometry()->toLocal( node->pocaVector() ) ;
@@ -399,11 +381,6 @@ StatusCode OTMonoLayerAlignment::execute()
 	    
 	    for( size_t ihit = 0; ihit != residuals.size(); ++ihit) 
 	      for( size_t jhit = 0; jhit < ihit; ++jhit ) {
-		// FIXME: need to add the correlation between the
-		// residuals to the first derivative ... That would't
-		// be needed if we would have all residuals, but it is
-		// once you ignore correlations between modules ...
-
 		const ModuleData::Parameters& ideriv = residuals[ihit].derivative ;
 		const ModuleData::Parameters& jderiv = residuals[jhit].derivative ;
 		// assume 100% correlation to compute HCH
@@ -620,9 +597,6 @@ void OTMonoLayerAlignment::reset() {
   
   // clear derivatives and counters
   m_moduledata->reset() ;
-
-  // clear the histograms on the next execute call
-  // m_resetHistos = true ;
 }
 
 void OTMonoLayerAlignment::handle(const Incident& incident)
