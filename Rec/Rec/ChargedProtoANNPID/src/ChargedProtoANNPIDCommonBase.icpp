@@ -534,7 +534,8 @@ NetConfig( const std::string & tkType,
                             << " -> Reverting to XML Reader"
                             << endmsg;
         delete m_netHelper;
-        m_netHelper = new TMVAReaderANN( paramFileName, inputs, parent );
+        m_netHelper = new TMVAReaderANN( paramFileName, inputs, parent,
+                                         suppressANNPrintout );
       }
     }
 #ifdef _ENABLE_NEUROBAYES

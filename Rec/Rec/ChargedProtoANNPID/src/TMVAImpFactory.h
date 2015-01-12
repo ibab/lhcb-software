@@ -11,30 +11,11 @@
 #include <vector>
 #include <cmath>
 
+// TMVA IClassifierReader interface
+#include "TMVAIClassifierReader.h"
+
 namespace ANNGlobalPID
 {
-
-#ifndef IClassifierReader__def
-#define IClassifierReader__def
-  /** @class IClassifierReader TMVAImpFactory.h
-   *
-   *  Interface class for TMVA C++ implementation of MVAs
-   */
-  class IClassifierReader
-  {
-  public:
-    /// constructor
-    IClassifierReader() : fStatusIsClean( true ) { }
-    /// Destructor
-    virtual ~IClassifierReader() { }
-    /// return classifier response
-    virtual double GetMvaValue( const std::vector<double>& inputValues ) const = 0;
-    /// returns classifier status
-    bool IsStatusClean() const { return fStatusIsClean; }
-  protected:
-    bool fStatusIsClean; ///< Status flag
-  };
-#endif
 
   /** @class TMVAImpFactory TMVAImpFactory.h
    *
@@ -98,6 +79,20 @@ namespace ANNGlobalPID
     /// Destructor
     ~TMVAImpFactory( );
 
+  private:
+
+    /// Add MC12TuneV2 networks
+    void addMC12TuneV2( );
+
+    /// Add MC12TuneV3 networks
+    void addMC12TuneV3( );
+
+    /// Add Bs->MuMu Developmental V1 networks
+    void addBs2MuMuDev1( );
+
+    /// Add Bs->MuMu Developmental V2 networks
+    void addBs2MuMuDev2( );
+    
   private:
 
     /// Returns the id string for a given configuration

@@ -598,7 +598,7 @@ namespace ANNGlobalPID
       NeuroBayesANN( const std::string & paramFileName,
                      const StringInputs& inputs,
                      const ChargedProtoANNPIDCommonBase<PBASE> * parent,
-                     const bool suppressPrintout = true )
+                     const bool suppressPrintout )
         : ANNHelper ( inputs, parent ),
           m_expert  ( new Expert(paramFileName.c_str(),-2) ),
           m_inArray ( new float[inputs.size()]             ),
@@ -638,7 +638,8 @@ namespace ANNGlobalPID
        */
       TMVAReaderANN( const std::string & paramFileName,
                      const StringInputs& inputs,
-                     const ChargedProtoANNPIDCommonBase<PBASE> * parent )
+                     const ChargedProtoANNPIDCommonBase<PBASE> * parent,
+                     const bool /* suppressPrintout */ )
         : ANNHelper ( inputs, parent ),
           m_reader  ( new TMVA::Reader( parent->msgLevel(MSG::DEBUG) ?
                                         "!Color:!Silent" : "!Color:Silent" ) ),

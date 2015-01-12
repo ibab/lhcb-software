@@ -4,6 +4,11 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2015-01-09 - Chris Jones
+ - Completely disable the use of NeuroBayes in the requirements and CMake files,
+   such that the package no longer links against the NB libraries.
+ - Break up TMVAImpFactory.cpp into multiple smaller compilation units.
+
 !========================= ChargedProtoANNPID v2r8 2014-12-11 =======================
 ! 2014-12-08 - Chris Jones
  - Add Kaon and Pion networks for the MLP and BDT 'Dev1' (IsMuon as input)
