@@ -1,3 +1,59 @@
+2014-01-12 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v8r3
+
+	LbConfiguration
+	* python/LbConfiguration/Project.py: Added project Calibration (LBCORE-705)
+	* lb-run: fixes to correctly fall back on SetupProject for ROOT (LBCORE-521)
+	* SetupProject.py: added MANPATH to the variables to strip
+	* SetupProject.py: fixed LBCORE-521 (at least the CMT part)
+	* tests/SetupProjectTest.py: added simple test to check if SetupProject ROOT works
+	* tests/SetupProjectTest.py: fixed some tests
+	* lb-dev: fixed a few problems
+	* Added gcc49 to the known compilers in Platform.py
+	* lb-dev: fixes
+		- fixed a problem in the Makefile template
+		- resurrected build_env.*sh (needed if we want to use directly CMT as in 'run')
+		  but modified to use build.conf
+	* lb-dev: improvements to generated CMT projects:
+		- automatically set the build time environment when calling make
+		- declare the contanier package in project.cmt
+		- modified the 'run' script to work in CMT projects too
+	* lb-dev: common improvements
+		- added the file 'build.conf' to set build options (nightlies) for both
+		  CMT and CMake (removed build_env.*sh and nightly.cmake)
+		- use "Today" as default day for building against the nightlies
+		  (requires that the symlink "Today" is present and up-to-date)
+	* data/Makefile-cmt.mk: use the target 'test' to run the tests in CMT projects
+		(for consistecy with CMake)
+	* python/LbConfiguration/Project.py: Added project L0MuonTools (LBCORE-685)
+
+	LbRelease
+	LBCORE-709: Added functionality to specify tif projects are build with CMT or CMake.
+	* python/LbRelease/SoftConfDB/LbSdbBuildTool.py
+	* python/LbRelease/SoftConfDB/LbSdbQuery.py
+	* python/LbRelease/SoftConfDB/SoftConfDB.py
+	* python/LbRelease/SoftConfDB/LbSdbCMake.py
+
+	* lb-deployment-checklist: script to check the status of a release
+	* lb-deployment-oldtarballs: script to create the old-style tarballs
+	* lb-deployment-updatesdb: script to update the sdb during the release
+
+	LBCORE-686 : Added option --nonatives to mkLCGCMTtarFromRPM that installs the LHCbDirac RPM
+	and packages the lcg part of the install area instead of listing the dependencies with
+	"cmt show_macros native"
+	* python/LbRelease/LbYum/LHCbConfig.py
+	* python/LbRelease/CMTNativeTools.py
+	* python/LbRelease/LCGYumInstaller.py
+	* scripts/mkLCGCMTtarFromRPM
+
+	LbScriptsPolicy
+	* python/LbScriptsPolicy/PathStripper.py: use the normpath of directories in the returned list
+
+	LbLegacy
+	* LBCORE-680: Fix mkexternaltar to take all subdirectories of resources.
+
+
 2014-12-01 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v8r2p1
