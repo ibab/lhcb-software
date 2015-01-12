@@ -4,6 +4,9 @@
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-1-12 - Gerhard Raven
+ - stylistic change of check for turbo bit
+
 ! 2015-1-12 - Sean Benson
  - New HLT_TURBOPASS_RE and HLT_NONTURBOPASS_RE functor.
 

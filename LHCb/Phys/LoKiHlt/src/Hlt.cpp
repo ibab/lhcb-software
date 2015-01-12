@@ -17,6 +17,12 @@
  *  @date 2008-09-19 
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  */
+
+namespace {
+    inline bool isTurbo(const LHCb::HltDecReport& rep) {
+        return rep.executionStage()&0x80u;
+    }
+}
 // ============================================================================
 // constructor from the decision name 
 // ============================================================================
@@ -605,7 +611,7 @@ LoKi::HLT::NonTurboPass::operator()
   // loop over all selections and match the names 
   return std::any_of( std::begin(*a), std::end(*a),
                       [&](LHCb::HltDecReports::Container::const_reference i) {
-            return  ( (i.second.executionStage()!=135) && (i.second.decision()) ) && 
+            return  ( !isTurbo(i.second) ) && i.second.decision()  && 
                     boost::regex_match ( i.first , expression() );
   } );
   //
@@ -643,7 +649,7 @@ LoKi::HLT::TurboPass::operator()
   // loop over all selections and match the names 
   return std::any_of( std::begin(*a), std::end(*a),
                       [&](LHCb::HltDecReports::Container::const_reference i) {
-            return  (i.second.executionStage()==135) && 
+            return  isTurbo(i.second) && i.second.decision() &&
                     boost::regex_match ( i.first , expression() );
   } );
   //
