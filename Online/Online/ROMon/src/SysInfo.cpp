@@ -49,7 +49,7 @@ SysInfo::SysInfo(NodeStats* buff, size_t len, int nbuffs)
   m_procInfo = new char*[m_nBuffs];
   for(j=0; j<m_nBuffs; ++j) m_procInfo[j] = new char[PROCINFO_SIZE];
   // Setup the object
-  read(m_mem);
+  RTL::read(m_mem);
   statistics()->reset();
 }
 

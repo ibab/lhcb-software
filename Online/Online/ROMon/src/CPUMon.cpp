@@ -11,14 +11,14 @@ using namespace std;
 ostream& ROMon::operator<<(ostream& os, const ROMon::Memory& m) {
   char text[132];
   ::snprintf(text,sizeof(text),"Memory:%d Free:%d Cache:%5d Active:%d Inactive:%d",
-          m.memTotal,m.memFree,m.cached,m.active,m.inactive);
+	     m.memTotal,m.memFree,m.cached,m.active,m.inactive);
   return os << text;
 }
 
 ostream& ROMon::operator<<(ostream& os, const ROMon::CPU::Stat& s) {
   char text[132];
   ::snprintf(text,sizeof(text),"User:%4.1f%% Sys:%4.1f%% IO:%4.1f%% irq:%4.1f%% sirq:%4.1f%%",
-          s.user,s.system,s.iowait,s.IRQ,s.softIRQ);
+	     s.user,s.system,s.iowait,s.IRQ,s.softIRQ);
   return os << text;
 }
 ostream& ROMon::operator<<(ostream& os, const ROMon::CPU& c) {
@@ -92,17 +92,6 @@ ostream& ROMon::operator<<(ostream& os, const ROMon::DeferredHLTStats& n) {
 ostream& ROMon::operator<<(ostream& os, const ROMon::DeferredHLTSubfarmStats& n) {
   os << n.name << endl << "  " << endl;
   return os;
-}
-
-/// Empty constructor
-Memory::Memory() {
-  reset();
-}
-
-/// Reset data content
-Memory* Memory::reset() {
-  ::memset(this,0,sizeof(Memory));
-  return this;
 }
 
 /// Empty constructor

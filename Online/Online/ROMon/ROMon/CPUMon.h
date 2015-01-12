@@ -21,6 +21,7 @@
 #include <vector>
 #include <string>
 #include "ROMon/Collections.h"
+#include "RTL/Sys.h"
 #include "RTL/Pack.h"
 
 /*
@@ -30,47 +31,8 @@ namespace ROMon {
 
   void ro_get_node_name(char* name, size_t len);
 
-  /**@class Memory CPUMon.h ROMon/CPUMon.h
-   *
-   * Class which represents the memory information of a single node.
-   * Note: All numbers are in KB!
-   *
-   * @author M.Frank
-   */
-  PACK_DATA(class) Memory {
-  public:
-    int memTotal;     // 1
-    int memFree;      // 2
-    int buffers;      // 3
-    int cached;       // 4
-    int swapCached;   // 5
-    int active;       // 6
-    int inactive;     // 7
-    int highTotal;    // 8
-    int highFree;     // 9
-    int lowTotal;     // 10
-    int lowFree;      // 11
-    int swapTotal;    // 12
-    int swapFree;     // 13
-    int dirty;        // 14
-    int writeback;    // 15
-    int mapped;       // 16
-    int slab;         // 17
-    int commitLimit;  // 18
-    int committed_AS; // 19
-    int pageTables;   // 20
-    int vmallocTotal; // 21
-    int vmallocUsed;  // 22
-    int vmallocChunk; // 23
-    int _last;        // 24 ... padding
-    /// Empty constructor
-    Memory();
-    /// Reset data content
-    Memory*          reset();
-    /// Size of the object
-    long   sizeOf() const {  return sizeof(Memory); }
-  };
-
+  typedef RTL::SystemMemory Memory;
+  
   /**@class Memory CPUMon.h ROMon/CPUMon.h
    *
    * Class which represents the Diskspace information of a single node.
