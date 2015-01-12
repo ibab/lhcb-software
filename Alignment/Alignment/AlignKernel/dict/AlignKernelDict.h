@@ -9,5 +9,6 @@
 #include "AlignKernel/AlSymMat.h"
 #include "AlignKernel/AlVec.h"
 #include "AlignKernel/AlEquations.h"
+#include "AlignKernel/OTMonoLayerAlignData.h"
 
 #endif // DICT_SOLVKERNELDICT_H

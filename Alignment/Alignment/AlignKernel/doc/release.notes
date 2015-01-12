@@ -3,6 +3,9 @@
 ! Responsible : Adlene Hicheur en Wouter Hulsbergen
 !-------------------------------------------------------------------------------
 
+! 2015-01-12 - Wouter Hulsbergen
+ - Added class to hold otmonolayer alignment data
+
 !========================= AlignKernel v3r6 2014-08-23 =========================
 ! 2014-08-14 - Maurizio Martinelli
  - Solved a CMake compilation warning.
