@@ -3,6 +3,9 @@
 ! Package Coordinator : R. Lambert, G. Raven
 ! Purpose     : LHCb HLT application
 !============================================
+! 2015-01-12 Gerhard Raven
+ - explicitly disable EventDataSvc faulthandler if no data-on-demand 
+   service is configured
 
 !========================= Moore v23r3 2014-12-15 =========================
 

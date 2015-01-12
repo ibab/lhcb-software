@@ -226,12 +226,16 @@ class Moore(LHCbConfigurableUser):
         if not self.getProp("EnableDataOnDemand") :
             if 'DataOnDemandSvc' in ApplicationMgr().ExtSvc : 
                 ApplicationMgr().ExtSvc.pop('DataOnDemandSvc')
+            from Gaudi.Configuration import appendPostConfigAction
+            def disableFaultHandler() :
+                from Configurables import EventDataSvc
+                EventDataSvc().EnableFaultHandler = False
+            appendPostConfigAction(  disableFaultHandler )
         else: 
             from Configurables import DataOnDemandSvc
             dod = DataOnDemandSvc()
             if dod not in ApplicationMgr().ExtSvc :
                 ApplicationMgr().ExtSvc.append( dod ) 
-    #        importOptions('$STDOPTS/DecodeRawEvent.py')
     
     def _configureDQTags(self):
         from Configurables import CondDB
