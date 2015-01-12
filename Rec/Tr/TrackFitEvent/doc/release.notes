@@ -3,8 +3,11 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
+! 2015-01-12 - Gerhard Raven
+ - FitNode: use vectorized filter in computeFilteredState
+
 ! 2015-01-07 - Gerhard Raven
- - FitNode: use vectorized average in smoother
+ - FitNode: use vectorized average in computeBiSmoothedState
 
 ! 2015-01-06 - Gerhard Raven
  - FitNode: use vectorized similarity to compute residual.

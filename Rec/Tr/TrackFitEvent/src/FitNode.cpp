@@ -382,61 +382,18 @@ namespace LHCb {
 
       const TrackProjectionMatrix& H = this->projectionMatrix();
       if( !( std::abs(H(0,0)) + std::abs(H(0,1))>0) ) {
-	KalmanFitResult* kfr = this->getParent();
+        KalmanFitResult* kfr = this->getParent();
         if (!kfr->inError())
           kfr->setErrorFlag(direction,KalmanFitResult::Filter ,KalmanFitResult::Initialization ) ;
       }
+      double chi2 = LHCb::Math::Filter( state.stateVector(), state.covariance(),
+                                        this->refVector().parameters(),
+                                        this->projectionMatrix(),
+                                        this->refResidual(), 
+                                        this->errMeasure2() );
 
-
-      // X,C,H, refResidual, errMeasure2 -> X,C, chisq
-
-      // get reference to the state vector and cov
-      TrackVector&    X = state.stateVector();
-      TrackSymMatrix& C = state.covariance();
-      
-      // calculate the linearized residual of the prediction and its error
-      const double errorMeas2 = this->errMeasure2();
-      double res = this->refResidual() + ( H * (this->refVector().parameters() - X) ) (0) ;
-#ifdef SLOW_BUT_SAFE
-      static SMatrix<double,5,1> CHT, K ;
-      CHT = C * Transpose(H) ;
-      double errorRes2  = errorMeas2 + (H*CHT)(0,0) ;  
-      
-      // calculate gain matrix K
-      K = CHT / errorRes2;
-      
-      // update the state vector
-      X += K.Col(0) * res ;
-      
-      // update the covariance matrix
-      static TrackSymMatrix tmp ;
-      ROOT::Math::AssignSym::Evaluate(tmp, K * Transpose(CHT) ) ;
-      C -= tmp ;
-#else
-      // The ugly code below makes the filter step about 20% faster
-      // than SMatrix would do it.
-      double* Cp = C.Array();
-      const double* Hp = H.Array();
-      double CHTp[5] =  {
-       Cp[ 0]*Hp[0] + Cp[ 1]*Hp[1] + Cp[ 3]*Hp[2] + Cp[ 6]*Hp[3] + Cp[10]*Hp[4] ,
-       Cp[ 1]*Hp[0] + Cp[ 2]*Hp[1] + Cp[ 4]*Hp[2] + Cp[ 7]*Hp[3] + Cp[11]*Hp[4] ,
-       Cp[ 3]*Hp[0] + Cp[ 4]*Hp[1] + Cp[ 5]*Hp[2] + Cp[ 8]*Hp[3] + Cp[12]*Hp[4] ,
-       Cp[ 6]*Hp[0] + Cp[ 7]*Hp[1] + Cp[ 8]*Hp[2] + Cp[ 9]*Hp[3] + Cp[13]*Hp[4] ,
-       Cp[10]*Hp[0] + Cp[11]*Hp[1] + Cp[12]*Hp[2] + Cp[13]*Hp[3] + Cp[14]*Hp[4] 
-      };
-      double errorRes2  = errorMeas2 + Hp[0]*CHTp[0] + Hp[1]*CHTp[1] + Hp[2]*CHTp[2] + Hp[3]*CHTp[3] + Hp[4]*CHTp[4]  ;
-
-      // update the state vector and cov matrix
-      double* Xp = X.Array();
-      for(int i=0; i<5; ++i) {
-        Xp[i] += CHTp[i] / errorRes2 * res ;
-        for(int j=0; j<=i; ++j) 
-            Cp[i*(i+1)/2+j] -= CHTp[i] * CHTp[j] / errorRes2;
-      }
-#endif  
-    
       // set the chisquare contribution
-      m_deltaChi2[direction] = LHCb::ChiSquare(res*res / errorRes2,1) ;
+      m_deltaChi2[direction] = LHCb::ChiSquare(chi2,1);
     }
     
     m_totalChi2[direction] += m_deltaChi2[direction]  ;
