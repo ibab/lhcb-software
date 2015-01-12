@@ -2,7 +2,7 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           ROLogger
-version           v0r27
+version           v0r28
 #============================================================================
 branches          cmt doc src ROLogger
 # dependency list
