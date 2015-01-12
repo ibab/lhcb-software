@@ -5,6 +5,9 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit 
 ! -----------------------------------------------------------------------------
 
+! 2015-01-12 - Vanya Belyaev
+ - fix compilations warnings 
+
 ========================= KalmanFilter v1r8 2014-12-15 =========================
 
 ! 2014-12-01 - Vanya Belyaev

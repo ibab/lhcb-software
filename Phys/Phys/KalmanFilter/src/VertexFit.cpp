@@ -793,7 +793,6 @@ StatusCode LoKi::KalmanFilter::seed
     seed += it->m_vxi * it -> m_parx ;
   }
   //
-  int ifail =  0  ;
   Gaudi::SymMatrix3x3  c ; 
   if ( 0 != inverse ( ci , c ) ) 
   { 
