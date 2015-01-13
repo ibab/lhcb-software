@@ -167,6 +167,8 @@ namespace LoKi
     virtual std::size_t   id () const { return m_fun->id() ; }
     /// OPTIONAL: delegate the object type
     virtual std::string   objType () const { return m_fun -> objType() ; }
+    /// C++ printout: delegate
+    virtual std::string   toCpp   () const { return m_fun -> toCpp  () ; }
     // ========================================================================
   public:
     // ========================================================================
@@ -238,7 +240,8 @@ namespace LoKi
     // ========================================================================
     /// constructor
     Constant ( T2 value )
-      : LoKi::Functor<TYPE,TYPE2>()
+      : LoKi::AuxFunBase ( std::tie( value ) ) 
+      , LoKi::Functor<TYPE,TYPE2>()
       , m_value ( value )
     {}
     /// copy constructor
@@ -392,6 +395,8 @@ namespace LoKi
     virtual std::size_t   id () const { return m_fun->id() ; }
     /// OPTIONAL: delegate the object type
     virtual std::string   objType () const { return m_fun -> objType() ; }
+    /// C++ printout: delegate
+    virtual std::string   toCpp   () const { return m_fun -> toCpp  () ; }
     // ========================================================================
   public:
     // ========================================================================
@@ -457,7 +462,8 @@ namespace LoKi
     // ========================================================================
     /// constructor
     Constant ( T2 value )
-      : LoKi::Functor<void,TYPE2>()
+      : LoKi::AuxFunBase ( std::tie( value ) ) 
+      , LoKi::Functor<void,TYPE2>()
       , m_value ( value )
     {}
     /// copy constructor

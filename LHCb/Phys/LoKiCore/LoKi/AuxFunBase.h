@@ -10,6 +10,7 @@
 #include <vector>
 #include <string>
 #include <ostream>
+#include <tuple>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -20,6 +21,7 @@
 // ============================================================================
 #include "LoKi/Interface.h"
 #include "LoKi/ILoKiSvc.h"
+#include "LoKi/ToCpp.h"
 // ============================================================================
 // forward declaration
 // ============================================================================
@@ -50,17 +52,23 @@ namespace LoKi
   class GAUDI_API AuxFunBase
   {
   protected:
-  public:    // to please Visual C++ compiler
+    // public:    // to please Visual C++ compiler
     // ========================================================================
-    /// constructor from LoKi Service
-    AuxFunBase  () ;
+    /// default constructor 
+    AuxFunBase  () ; 
+    /// constructor with arguments : 
+    template <typename ... ARGS>
+      AuxFunBase ( const std::tuple<ARGS...>& tup ) : AuxFunBase ()
+    { m_cargs = Gaudi::Utils::toCpp ( tup ) ; }
+    // ,  m_cargs ( Gaudi::Utils::toCpp ( tup ) ) 
+    // {}
+    // ========================================================================
     /// copy consructor
-    AuxFunBase  ( const AuxFunBase& right ) ;                // copy consructor
+    AuxFunBase  ( const AuxFunBase&  right      ) ;          // copy consructor
     /// destructor
-    virtual ~AuxFunBase ();                                       // destructor
+    virtual ~AuxFunBase ();                                   // destructor
     // ========================================================================
-  protected:
-  public:    // to please Visual C++ compiler
+  public:  
     // ========================================================================
     /** print error message
      *  @param msg  error message
@@ -122,6 +130,10 @@ namespace LoKi
     virtual std::string   objType   () const ;
     /// unique function ID (hash); see LoKi::genericID
     virtual std::size_t   id        () const ;
+    /** (virtual) printout in form of std::string
+     *  @return string representation (must be valid C++)
+     */ 
+    virtual std::string   toCpp     () const ;
     // ========================================================================
   public:
     // ========================================================================
@@ -136,6 +148,8 @@ namespace LoKi
     // ========================================================================
     /// check the data for the same event
     bool sameEvent() const ;
+    /// get constructor arguments 
+    const std::string& cargs() const { return m_cargs ; }
     // ========================================================================
   public:
     // ========================================================================
@@ -150,6 +164,8 @@ namespace LoKi
     // ========================================================================
     /// the event ID
     mutable unsigned long long m_event ;                        // the event ID
+    /// constructor arguments 
+    std::string                m_cargs ;   // constructor arguments 
     /// =======================================================================
   };
   // ==========================================================================
@@ -188,7 +204,7 @@ namespace Gaudi
   namespace Utils
   {
     // ========================================================================
-    /** string represenatation of the object
+    /** string representation of the object
      */
     GAUDI_API
     std::string toString ( const LoKi::AuxFunBase& o ) ;
@@ -198,6 +214,11 @@ namespace Gaudi
     GAUDI_API
     std::ostream&
     toStream ( const LoKi::AuxFunBase& o , std::ostream& s ) ;
+    // ========================================================================    
+    /** string representation of the object (valid C++ code) 
+     */
+    GAUDI_API
+    std::string toCpp    ( const LoKi::AuxFunBase& o ) ;
     // ========================================================================
   } //                                            end of namespace Gaudi::Utils
   // ==========================================================================

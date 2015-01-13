@@ -66,7 +66,7 @@ namespace LoKi
   }; //                                               end of class LoKi::FirstN
   // ==========================================================================
   /** @class FirstN
-   *  helper class to implement the selection of first N-elements in Hybdrids
+   *  helper class to implement the selection of first N-elements in Hybrids
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
    *  @date 2011-10-20
    */
@@ -136,6 +136,20 @@ namespace LoKi
 } //                                                      end of namespace LoKi
 // ============================================================================
 //                                                                      The END
+namespace Gaudi
+{
+  // ==========================================================================
+  namespace Utils 
+  {
+    // ========================================================================
+    // Dump as C++ objects
+    GAUDI_API std::string toCpp ( const LoKi::FirstN&  f ) ;
+    GAUDI_API std::string toCpp ( const LoKi::Sort&    s ) ;
+    GAUDI_API std::string toCpp ( const LoKi::Reverse& r ) ;
+    // ========================================================================
+  } 
+  // ==========================================================================
+}
 // ============================================================================
 #endif // LOKI_FIRSTN_H
 // ============================================================================

@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-01-13 - Vanya Belyaev
+ - make few steps towards autogenertaion of C++ code from functors 
+
 !========================= LoKiCore v11r21 2014-12-11 =========================
 ! 2014-12-11 - Marco Clemencic
  - Fixed the mane of the macro to hide code from gccxml.

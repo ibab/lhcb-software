@@ -59,7 +59,8 @@ namespace LoKi
       Source 
       ( IDataProviderSvc*  svc   , 
         const std::string& path  )
-        : Self() 
+        : LoKi::AuxFunBase ( std::tie ( path ) ) 
+        , Self   () 
         , m_svc  ( svc   ) 
         , m_path ( path  )
       {}
@@ -67,7 +68,8 @@ namespace LoKi
       Source 
       ( const std::string& path     , 
         IDataProviderSvc*  svc  = 0 )
-        : Self() 
+        : LoKi::AuxFunBase ( std::tie ( path ) ) 
+        , Self() 
         , m_svc  ( svc   ) 
         , m_path ( path  )
       {}

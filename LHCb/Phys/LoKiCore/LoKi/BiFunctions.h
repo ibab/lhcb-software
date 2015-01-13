@@ -170,6 +170,7 @@ namespace LoKi
     virtual std::size_t   id () const { return m_fun->id() ; }
     /// OPTIONAL: delegate the object type
     virtual std::string   objType () const { return m_fun -> objType() ; }
+    virtual std::string   toCpp   () const { return m_fun -> toCpp  () ; }
     // ========================================================================
   public:
     // ========================================================================

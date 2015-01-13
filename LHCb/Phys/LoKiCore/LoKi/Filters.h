@@ -101,7 +101,8 @@ namespace LoKi
       // ======================================================================
       /// constructor form the basic predicate:
       Select ( const LoKi::Functor<TYPE2,bool>& fun ) 
-        : uBase       (     ) 
+        : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+        , uBase       (     ) 
         , m_predicate ( fun ) 
       {}
       /// copy constructor 
@@ -180,7 +181,8 @@ namespace LoKi
       // ======================================================================
       /// contructor from the basic functor 
       Yields ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
-        : uBase       (     ) 
+        : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+        , uBase       (     ) 
         , m_functor   ( fun ) 
       {}
       /// copy constriuctor 
@@ -260,7 +262,8 @@ namespace LoKi
       // ======================================================================
       /// constructor form the basic predicate:
       Process ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
-        : uBase     (     ) 
+        : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+        , uBase     (     ) 
         , m_functor ( fun ) 
       {}
       /// copy constructor 
@@ -334,7 +337,8 @@ namespace LoKi
       // ======================================================================
       /// constructor form the basic predicate:
       Tee ( const uFunctor& fun ) 
-        : uBase     (     ) 
+        : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+        , uBase     (     ) 
         , m_functor ( fun ) 
       {}
       /// copy constriuctor 
@@ -392,7 +396,8 @@ namespace LoKi
       /// constructor 
       Max ( const LoKi::Functor<TYPE2,TYPE1>& fun , 
             const TYPE1 val = -std::numeric_limits<TYPE1>::max() )
-        : uBase     (     ) 
+        : LoKi::AuxFunBase ( std::tie ( fun , val ) ) 
+        , uBase     (     ) 
         , m_functor ( fun )
         , m_value   ( val )
       {
@@ -472,7 +477,8 @@ namespace LoKi
       AbsMax 
       ( const LoKi::Functor<TYPE2,TYPE1>& fun      , 
         const TYPE1                       val = -1 )
-        : LoKi::Functors::Max<TYPE,TYPE2,TYPE1>  ( fun , val ) 
+        : LoKi::AuxFunBase ( std::tie ( fun , val ) ) 
+        , LoKi::Functors::Max<TYPE,TYPE2,TYPE1>  ( fun , val ) 
       {}
       /// MANDATORY: virtual destructor 
       virtual ~AbsMax() {}
@@ -530,7 +536,8 @@ namespace LoKi
       /// constructor 
       Min ( const LoKi::Functor<TYPE2,TYPE1>& fun , 
             const TYPE1 val = std::numeric_limits<TYPE1>::max() )
-        : LoKi::Functors::AbsMax<TYPE,TYPE2,TYPE1> ( fun , val )  
+        : LoKi::AuxFunBase ( std::tie ( fun , val ) ) 
+        , LoKi::Functors::AbsMax<TYPE,TYPE2,TYPE1> ( fun , val )  
       {
         BOOST_STATIC_ASSERT( std::numeric_limits<TYPE1>::is_specialized ) ;
       }
@@ -593,7 +600,8 @@ namespace LoKi
       AbsMin
       ( const LoKi::Functor<TYPE2,TYPE1>& fun ,
         const TYPE1                       val = std::numeric_limits<TYPE1>::max() )
-        : LoKi::Functors::Min<TYPE,TYPE2,TYPE1> ( fun , val ) 
+        : LoKi::AuxFunBase ( std::tie ( fun , val ) ) 
+        , LoKi::Functors::Min<TYPE,TYPE2,TYPE1> ( fun , val ) 
       {
         BOOST_STATIC_ASSERT( std::numeric_limits<TYPE1>::is_specialized ) ;
       }
@@ -655,7 +663,8 @@ namespace LoKi
       // ======================================================================
       /// constructor 
       MaxElement ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
-        : uBase     (     ) 
+        : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+        , uBase     (     ) 
         , m_functor ( fun ) 
       {}
       /// MANDATORY: virtual destructor 
@@ -718,7 +727,8 @@ namespace LoKi
       // ======================================================================
       /// constructor 
       MinElement ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
-        : LoKi::Functors::MaxElement<TYPE,TYPE2,TYPE1> ( fun ) 
+        : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+        , LoKi::Functors::MaxElement<TYPE,TYPE2,TYPE1> ( fun ) 
       {}
       /// MANDATORY: virtual destructor 
       virtual ~MinElement() {}
@@ -771,7 +781,8 @@ namespace LoKi
       // ======================================================================
       /// constructor 
       AbsMaxElement ( const LoKi::Functor<TYPE2,TYPE1>& fun )
-        : LoKi::Functors::MinElement<TYPE,TYPE2,TYPE1> ( fun ) 
+        : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+        , LoKi::Functors::MinElement<TYPE,TYPE2,TYPE1> ( fun ) 
       {}
       /// MANDATORY: virtual destructor 
       virtual ~AbsMaxElement() {}
@@ -827,7 +838,8 @@ namespace LoKi
       // ======================================================================
       /// constructor 
       AbsMinElement ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
-        : LoKi::Functors::AbsMaxElement<TYPE,TYPE2,TYPE1> ( fun ) 
+        : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+        , LoKi::Functors::AbsMaxElement<TYPE,TYPE2,TYPE1> ( fun ) 
       {}
       /// MANDATORY: virtual destructor 
       virtual ~AbsMinElement() {}
@@ -875,7 +887,8 @@ namespace LoKi
       // ======================================================================
       /// constructor from the predicate 
       Count ( const LoKi::Functor<TYPE1,TYPE2>& cut ) 
-        :  LoKi::Functor<std::vector<TYPE>,double> () 
+        : LoKi::AuxFunBase ( std::tie ( cut ) ) 
+        , LoKi::Functor<std::vector<TYPE>,double> () 
         , m_cut ( cut ) 
       {}
       /// MANDATORY: virtual destructor 
@@ -933,7 +946,8 @@ namespace LoKi
        */
       Sum ( const LoKi::Functor<TYPE,double>& fun      , 
             const double                      init = 0 ) 
-        :  LoKi::Functor<std::vector<TYPE>,double> () 
+        : LoKi::AuxFunBase ( std::tie ( fun , init ) ) 
+        , LoKi::Functor<std::vector<TYPE>,double> () 
         , m_fun      ( fun  ) 
         , m_cut      ( LoKi::Constant<TYPE,bool>( true ) )
         , m_trivCut  ( true ) 
@@ -946,7 +960,8 @@ namespace LoKi
       Sum ( const LoKi::Functor<TYPE,double>& fun      , 
             const LoKi::Functor<TYPE,bool>&   cut      , 
             const double                      init = 0 ) 
-        :  LoKi::Functor<std::vector<TYPE>,double> () 
+        : LoKi::AuxFunBase ( std::tie ( fun , cut , init ) ) 
+        , LoKi::Functor<std::vector<TYPE>,double> () 
         , m_fun      ( fun   ) 
         , m_cut      ( cut   )
         , m_trivCut  ( false ) 
@@ -1037,15 +1052,16 @@ namespace LoKi
       /// constructor from the function 
       Product ( const LoKi::Functor<TYPE,double>& fun      , 
                 const double                      init = 1 ) 
-        : LoKi::Functors::Sum <TYPE> ( fun , init ) 
+        : LoKi::AuxFunBase ( std::tie ( fun , init ) ) 
+        , LoKi::Functors::Sum <TYPE> ( fun , init ) 
       {}
       /// constructor from the function and  predicate 
       Product ( const LoKi::Functor<TYPE,double>& fun      , 
                 const LoKi::Functor<TYPE,bool>&   cut      , 
                 const double                      init = 1 ) 
-        : LoKi::Functors::Sum <TYPE> ( fun , cut , init ) 
-      {}
-      
+        : LoKi::AuxFunBase ( std::tie ( fun , cut , init ) ) 
+        , LoKi::Functors::Sum <TYPE> ( fun , cut , init ) 
+      {}      
       /// MANDATORY: virtual destructor 
       virtual ~Product () {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -1079,7 +1095,8 @@ namespace LoKi
       Fetch  ( const LoKi::Functor<TYPE,TYPE2>& fun   , 
                const unsigned int               index ,
                const TYPE2                      bad   ) 
-        : LoKi::Functor<std::vector<TYPE>,TYPE2> () 
+        : LoKi::AuxFunBase ( std::tie ( fun , index , bad ) ) 
+        , LoKi::Functor<std::vector<TYPE>,TYPE2> () 
         , m_fun   ( fun   ) 
         , m_index ( index )
         , m_bad   ( bad   ) 
@@ -1133,7 +1150,8 @@ namespace LoKi
       // ======================================================================
       /// constructor from the predicate 
       Has ( const LoKi::Functor<TYPE1,TYPE2>& cut ) 
-        :  LoKi::Functor<std::vector<TYPE>,bool> () 
+        : LoKi::AuxFunBase ( std::tie ( cut ) ) 
+        , LoKi::Functor<std::vector<TYPE>,bool> () 
         , m_cut ( cut ) 
       {}
       /// MANDATORY: virtual destructor 
@@ -1237,7 +1255,8 @@ namespace LoKi
       Union 
       ( const LoKi::Functor <TYPE,std::vector<TYPE2> >& fun1 , 
         const LoKi::Functor <TYPE,std::vector<TYPE2> >& fun2 ) 
-        : LoKi::Functor     <TYPE,std::vector<TYPE2> > () 
+        : LoKi::AuxFunBase ( std::tie ( fun1 , fun2 ) ) 
+        , LoKi::Functor     <TYPE,std::vector<TYPE2> > () 
         , m_two ( fun1 , fun2 )  
       {}
       /// MANDATORY: virtual destructor 
@@ -1294,7 +1313,8 @@ namespace LoKi
       Union 
       ( const LoKi::Functor <void,std::vector<TYPE2> >& fun1 , 
         const LoKi::Functor <void,std::vector<TYPE2> >& fun2 ) 
-        : LoKi::Functor     <void,std::vector<TYPE2> > () 
+        : LoKi::AuxFunBase ( std::tie ( fun1 , fun2 ) ) 
+        , LoKi::Functor     <void,std::vector<TYPE2> > () 
         , m_two ( fun1 , fun2 )  
       {}
       /// MANDATORY: virtual destructor 
@@ -1357,7 +1377,8 @@ namespace LoKi
       Difference
       ( const LoKi::Functor <TYPE,std::vector<TYPE2> >& fun1 , 
         const LoKi::Functor <TYPE,std::vector<TYPE2> >& fun2 ) 
-        : LoKi::Functors::Union <TYPE,TYPE2> ( fun1 , fun2 ) 
+        : LoKi::AuxFunBase ( std::tie ( fun1 , fun2 ) ) 
+        , LoKi::Functors::Union <TYPE,TYPE2> ( fun1 , fun2 ) 
       {}
       /// MANDATORY: virtual destructor 
       virtual ~Difference() {}
@@ -1396,7 +1417,8 @@ namespace LoKi
       Difference
       ( const LoKi::Functor <void,std::vector<TYPE2> >& fun1 , 
         const LoKi::Functor <void,std::vector<TYPE2> >& fun2 ) 
-        : LoKi::Functors::Union <void,TYPE2> ( fun1 , fun2 ) 
+        : LoKi::AuxFunBase ( std::tie ( fun1 , fun2 ) ) 
+        , LoKi::Functors::Union <void,TYPE2> ( fun1 , fun2 ) 
       {}
       /// MANDATORY: virtual destructor 
       virtual ~Difference() {}
@@ -1441,7 +1463,8 @@ namespace LoKi
       Intersection
       ( const LoKi::Functor <TYPE,std::vector<TYPE2> >& fun1 , 
         const LoKi::Functor <TYPE,std::vector<TYPE2> >& fun2 ) 
-        : LoKi::Functors::Difference <TYPE,TYPE2> ( fun1 , fun2 ) 
+        : LoKi::AuxFunBase ( std::tie ( fun1 , fun2 ) ) 
+        , LoKi::Functors::Difference <TYPE,TYPE2> ( fun1 , fun2 ) 
       {}
       /// MANDATORY: virtual destructor 
       virtual ~Intersection () {}
@@ -1476,7 +1499,8 @@ namespace LoKi
       Intersection
       ( const LoKi::Functor <void,std::vector<TYPE2> >& fun1 , 
         const LoKi::Functor <void,std::vector<TYPE2> >& fun2 ) 
-        : LoKi::Functors::Difference  <void,TYPE2> ( fun1 , fun2 ) 
+        : LoKi::AuxFunBase ( std::tie ( fun1 , fun2 ) ) 
+        , LoKi::Functors::Difference  <void,TYPE2> ( fun1 , fun2 ) 
       {}
       /// MANDATORY: virtual destructor 
       virtual ~Intersection () {}
@@ -1517,7 +1541,8 @@ namespace LoKi
       SymDifference
       ( const LoKi::Functor <TYPE,std::vector<TYPE2> >& fun1 , 
         const LoKi::Functor <TYPE,std::vector<TYPE2> >& fun2 ) 
-        : LoKi::Functors::Intersection <TYPE,TYPE2> ( fun1 , fun2 ) 
+        : LoKi::AuxFunBase ( std::tie ( fun1 , fun2 ) ) 
+        , LoKi::Functors::Intersection <TYPE,TYPE2> ( fun1 , fun2 ) 
       {}
       /// MANDATORY: virtual destructor 
       virtual ~SymDifference () {}
@@ -1552,7 +1577,8 @@ namespace LoKi
       SymDifference
       ( const LoKi::Functor  <void,std::vector<TYPE2> >& fun1 , 
         const LoKi::Functor  <void,std::vector<TYPE2> >& fun2 ) 
-        : LoKi::Functors::Intersection <void,TYPE2> ( fun1 , fun2 ) 
+        : LoKi::AuxFunBase ( std::tie ( fun1 , fun2 ) ) 
+        , LoKi::Functors::Intersection <void,TYPE2> ( fun1 , fun2 ) 
       {}
       /// MANDATORY: virtual destructor 
       virtual ~SymDifference () {}
@@ -1593,7 +1619,8 @@ namespace LoKi
       Includes 
       ( const LoKi::Functor <TYPE,std::vector<TYPE2> >& fun1 , 
         const LoKi::Functor <TYPE,std::vector<TYPE2> >& fun2 ) 
-        : LoKi::Functor<TYPE,bool> () 
+        : LoKi::AuxFunBase ( std::tie ( fun1 , fun2 ) ) 
+        , LoKi::Functor<TYPE,bool> () 
         , m_two  ( fun1 , fun2 )  
       {}
       /// MANDATORY: virtual destructor 
@@ -1634,7 +1661,8 @@ namespace LoKi
       Includes 
       ( const LoKi::Functor <void,std::vector<TYPE2> >& fun1 , 
         const LoKi::Functor <void,std::vector<TYPE2> >& fun2 ) 
-        : LoKi::Functor     <void,bool> () 
+        : LoKi::AuxFunBase ( std::tie ( fun1 , fun2 ) ) 
+        , LoKi::Functor     <void,bool> () 
         , m_two  ( fun1 , fun2 )  
       {}
       /// MANDATORY: virtual destructor 
@@ -1716,7 +1744,8 @@ namespace LoKi
       // =====================================================================
       /// the constructor from the stopper 
       Gate ( const LoKi::Functor<void,bool>& gate ) 
-        : LoKi::Functor<std::vector<TYPE> , std::vector<TYPE> >() 
+        : LoKi::AuxFunBase ( std::tie ( gate ) ) 
+        , LoKi::Functor<std::vector<TYPE> , std::vector<TYPE> >() 
         , m_gate ( gate )
       {}
       /// MANDATORY: virtual destructor 
@@ -1767,7 +1796,8 @@ namespace LoKi
       Cause
       ( const LoKi::Functor< void , bool              >& start  , 
         const LoKi::Functor< void , std::vector<TYPE> >& source ) 
-        :     LoKi::Functor< void , std::vector<TYPE> >() 
+        : LoKi::AuxFunBase ( std::tie ( start , source  ) ) 
+        , LoKi::Functor< void , std::vector<TYPE> >() 
         , m_start  ( start  ) 
         , m_source ( source ) 
       {}
@@ -1775,7 +1805,8 @@ namespace LoKi
       Cause
       ( const LoKi::Functor< void , std::vector<TYPE> >& source , 
         const LoKi::Functor< void , bool              >& start  ) 
-        :     LoKi::Functor< void , std::vector<TYPE> >() 
+        : LoKi::AuxFunBase ( std::tie ( source , start ) ) 
+        , LoKi::Functor< void , std::vector<TYPE> >() 
         , m_start  ( start  ) 
         , m_source ( source ) 
       {}
@@ -1822,12 +1853,14 @@ namespace LoKi
       // =====================================================================
       /// the constructor
       FirstN_ ( const unsigned int N )
-        : LoKi::Functor< std::vector<TYPE> , std::vector<TYPE> > ()
+        : LoKi::AuxFunBase ( std::tie ( N ) ) 
+        , LoKi::Functor< std::vector<TYPE> , std::vector<TYPE> > ()
         , m_N ( N ) 
       {}
       /// the constructor
       FirstN_ ( const LoKi::FirstN& N  )
-        : LoKi::Functor< std::vector<TYPE> , std::vector<TYPE> > ()
+        : LoKi::AuxFunBase ( std::tie ( N ) ) 
+        , LoKi::Functor< std::vector<TYPE> , std::vector<TYPE> > ()
         , m_N ( N ) 
       {}
       /// MANDATORY: virtual destructor 
@@ -1913,7 +1946,8 @@ namespace LoKi
        */
       Sort_ ( const LoKi::Functor<TYPE,TYPE2>& fun        ,
               const int                        N   = -1   )
-        : LoKi::Functor< std::vector<TYPE>,std::vector<TYPE> > () 
+        : LoKi::AuxFunBase ( std::tie ( fun , N  ) )  
+        , LoKi::Functor< std::vector<TYPE>,std::vector<TYPE> > () 
         , m_cmp  ( fun )
         , m_sort ( N , ASCENDING ) 
       {}
@@ -1993,7 +2027,8 @@ namespace LoKi
       Dump_ ( const std::string& open   = ""        ,
               const std::string& close  = "\n"      , 
               std::ostream&      stream = std::cout ) 
-        : LoKi::Functor<std::vector<TYPE> , std::vector<TYPE> >() 
+        : LoKi::AuxFunBase ( std::tie ( open , close ) )  
+        , LoKi::Functor<std::vector<TYPE> , std::vector<TYPE> >() 
         , m_stream ( stream )
         , m_dump   ( open , close ) 
       {}
@@ -2001,21 +2036,24 @@ namespace LoKi
       Dump_ ( std::ostream&      stream        ,
               const std::string& open   = ""   ,
               const std::string& close  = "\n" )  
-        : LoKi::Functor<std::vector<TYPE> , std::vector<TYPE> >() 
+        : LoKi::AuxFunBase ( std::tie ( open , close ) )  
+        , LoKi::Functor<std::vector<TYPE> , std::vector<TYPE> >() 
         , m_stream ( stream )
         , m_dump   ( open , close ) 
       {}
       /// the constructor from the stopper 
       Dump_ ( std::ostream&      stream   ,
               const LoKi::Dump&  dump     )  
-        : LoKi::Functor<std::vector<TYPE> , std::vector<TYPE> >() 
+        : LoKi::AuxFunBase ( std::tie ( dump ) )  
+        , LoKi::Functor<std::vector<TYPE> , std::vector<TYPE> >() 
         , m_stream ( stream )
         , m_dump   ( dump   ) 
       {}
       /// the constructor from the stopper 
       Dump_ ( const LoKi::Dump&  dump               , 
               std::ostream&      stream = std::cout ) 
-        : LoKi::Functor<std::vector<TYPE> , std::vector<TYPE> >() 
+        : LoKi::AuxFunBase ( std::tie ( dump ) )  
+        , LoKi::Functor<std::vector<TYPE> , std::vector<TYPE> >() 
         , m_stream ( stream )
         , m_dump   ( dump   ) 
       {}

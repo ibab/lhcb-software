@@ -85,10 +85,11 @@ bool LoKi::AuxFunBase::setLoKiSvc
   return s_lokiSvc.validPointer() ;
 }
 // ============================================================================
-// constructor from LoKi Service
+// constructor from arguments string
 // ============================================================================
-LoKi::AuxFunBase::AuxFunBase ()
-  : m_event   ( 0 )
+LoKi::AuxFunBase::AuxFunBase ( )
+  : m_event   ( 0     )
+  , m_cargs   (       )  
 {
 #ifdef LOKI_DEBUG
   // increment the instance counter
@@ -99,7 +100,8 @@ LoKi::AuxFunBase::AuxFunBase ()
 // copy constructor
 // ============================================================================
 LoKi::AuxFunBase::AuxFunBase( const AuxFunBase& func  )
-  : m_event   ( func.m_event   )
+  : m_event ( func.m_event )
+  , m_cargs ( func.m_cargs )
 {
 #ifdef LOKI_DEBUG
   // increment the instance counter
@@ -236,6 +238,13 @@ bool LoKi::AuxFunBase::sameEvent () const
   return svc->event() == m_event ;
 }
 // ============================================================================
+/* (virtual) printout in form of std::string
+ *  @return string representation (must be valid C++)
+ */ 
+// ============================================================================
+std::string LoKi::AuxFunBase::toCpp() const 
+{ return objType() + "(" + m_cargs + ")" ; }
+// ============================================================================
 /*  output operator of function objects to std::ostream
  *  @param stream reference to the stream
  *  @param obj object to be printed
@@ -264,6 +273,11 @@ MsgStream& LoKi::operator<<
 // ============================================================================
 std::string Gaudi::Utils::toString ( const LoKi::AuxFunBase& o )
 { return o.printOut () ; }
+// ============================================================================
+// print it as C++ object
+// ============================================================================
+std::string Gaudi::Utils::toCpp    ( const LoKi::AuxFunBase& o )
+{ return o.toCpp    () ; }
 // ============================================================================
 // print it!
 // ============================================================================

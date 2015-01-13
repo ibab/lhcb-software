@@ -38,7 +38,8 @@ LoKi::TES::HasRecSummary::HasRecSummary
 ( const int          key          , 
   const std::string& location     , 
   const bool         useRootInTES ) 
-  : LoKi::TES::Exists ( location , useRootInTES ) 
+  : LoKi::AuxFunBase ( std::tie ( key , location , useRootInTES ) )
+  , LoKi::TES::Exists ( location , useRootInTES ) 
   , m_key ( key )
 {
   if  ( location.empty () ) 
@@ -100,7 +101,8 @@ LoKi::TES::RecSummary::RecSummary
   const int          bad         , 
   const std::string& location     , 
   const bool         useRootInTES ) 
-  : LoKi::TES::Contains ( location , useRootInTES ) 
+  : LoKi::AuxFunBase ( std::tie ( key , bad , location , useRootInTES ) ) 
+  , LoKi::TES::Contains ( location , useRootInTES ) 
   , m_key ( key )
   , m_bad ( bad )
 {

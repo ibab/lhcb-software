@@ -112,7 +112,8 @@ const std::string& LoKi::TES::Get::algName() const
 LoKi::TES::Exists::Exists
 ( const std::string& location  ,
   const bool         rootInTes )
-  : LoKi::Functor<void,bool> ()
+  : LoKi::AuxFunBase ( std::tie ( location , rootInTes ) )  
+  , LoKi::Functor<void,bool> ()
   , LoKi::TES::Get ( location , rootInTes ) 
 {}
 // ============================================================================
@@ -149,7 +150,8 @@ LoKi::TES::Exists::fillStream ( std::ostream& s ) const
 LoKi::TES::Contains::Contains
 ( const std::string& location     ,
   const bool         useRootInTes )
-  : LoKi::Functor<void,double> ()
+  : LoKi::AuxFunBase ( std::tie ( location , useRootInTes ) )  
+  , LoKi::Functor<void,double> ()
   , LoKi::TES::Get ( location , useRootInTes ) 
 {}
 // ============================================================================
@@ -196,7 +198,8 @@ LoKi::TES::Counter::Counter
   const std::string& counter      ,
   const double       bad          ,
   const bool         useRootInTes )
-  : LoKi::TES::Contains ( location , useRootInTes )
+  : LoKi::AuxFunBase ( std::tie ( location , counter , bad , useRootInTes ) )  
+  , LoKi::TES::Contains ( location , useRootInTes )
   , m_counter ( counter )
   , m_bad     ( bad     )
 {}
@@ -206,7 +209,8 @@ LoKi::TES::Counter::Counter
 LoKi::TES::Counter::Counter
 ( const std::string& location     ,
   const std::string& counter      )
-  : LoKi::TES::Contains ( location )
+  : LoKi::AuxFunBase ( std::tie ( location , counter ) )  
+  , LoKi::TES::Contains ( location )
   , m_counter ( counter )
   , m_bad     ( LoKi::Constants::NegativeInfinity )
 {}
@@ -459,7 +463,8 @@ LoKi::TES::Stat::Stat
   const std::string&            function     ,
   const double                  bad          ,
   const bool                    useRootInTes )
-  : LoKi::TES::Counter ( location , counter , bad , useRootInTes )
+  : LoKi::AuxFunBase (  std::tie ( location , counter , function , bad , useRootInTes ) ) 
+  , LoKi::TES::Counter ( location , counter , bad , useRootInTes )
   , m_getter  ( new StatEntityGetter(function) )
 {}
 // ============================================================================
@@ -469,7 +474,8 @@ LoKi::TES::Stat::Stat
 ( const std::string&            location     ,
   const std::string&            counter      ,
   const std::string&            function          )
-  : LoKi::TES::Counter ( location , counter )
+  : LoKi::AuxFunBase (  std::tie ( location , counter , function ) ) 
+  , LoKi::TES::Counter ( location , counter )
   , m_getter  ( new StatEntityGetter(function) )
 {}
 

@@ -9,6 +9,7 @@
 // local
 // ============================================================================
 #include "LoKi/FirstN.h"
+#include "LoKi/ToCpp.h"
 // ============================================================================
 /** @file
  *  Implementation file for class LoKi::FirstN
@@ -98,6 +99,19 @@ std::ostream&
 LoKi::operator<< ( std::ostream& s , const LoKi::Sort& o )
 { return o.fillStream  ( s ) ; }
 // ============================================================================
+
+
+// ============================================================================
+std::string Gaudi::Utils::toCpp ( const LoKi::FirstN&  f ) 
+{ return "LoKi::FirstN(" + Gaudi::Utils::toCpp ( f.N() ) + ")" ; }
+// ============================================================================
+std::string Gaudi::Utils::toCpp ( const LoKi::Sort&    s ) 
+{ return "LoKi::Sort(" + Gaudi::Utils::toCpp ( s.N() ) + "," 
+    + (   s.ascending() ? "true" : "false" ) + ") " ; }
+std::string Gaudi::Utils::toCpp ( const LoKi::Reverse& /* r */ )
+{ return "LoKi::Reverse()" ; }
+// ========================================================================
+
 
 // ============================================================================
 // The EN
