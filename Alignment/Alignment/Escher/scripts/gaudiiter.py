@@ -8,6 +8,7 @@ parser.add_option("-e","--numevents",type="int", dest="numevents",help="number o
 parser.add_option("-d", "--aligndb", action = 'append', dest="aligndb",help="path to file with LHCBCOND database layer")
 parser.add_option("--dddb", action = 'append', dest="dddb",help="path to file with DDDB database layer")
 parser.add_option("--skipprintsequence", action="store_true",help="skip printing the sequence")
+parser.add_option("--do_not_rewind",action="store_true",help="do not rewind after each iteration")
 (opts, args) = parser.parse_args()
 
 # Prepare the "configuration script" to parse (like this it is easier than
@@ -82,9 +83,10 @@ print evtSel.Input
 for i in range( opts.numiter ) :
     print "Iteration nr: ", i
     # rewind
-    mainSeq.Enable = False
-    evtSel.rewind()
-    mainSeq.Enable = True
+    if not opts.do_not_rewind:
+        mainSeq.Enable = False
+        evtSel.rewind()
+        mainSeq.Enable = True
 
     # steer the monitor sequence depending on the iteration
     appMgr.algorithm('AlignMonitorSeq').Enable = ( i == 0 )
