@@ -8,9 +8,11 @@ parser.add_option("-f","--firstiter",type="int", dest="firstiter",help="first it
 parser.add_option("-e","--numevents",type="int", dest="numevents",help="number of events", default=-1)
 parser.add_option("-p","--numprocesses",type="int", dest="numprocs",help="number of processes", default=8)
 parser.add_option("-b","--baseDir", type='string', dest="basedir",help="directory to store output", default='AlignmentResults')
-parser.add_option("-d","--aligndb", action = 'append', dest="aligndb",help="path to file with LHCBCOND database layer")
+parser.add_option("-d","--aligndb", action = 'append', dest="aligndb",help="path to file with LHCBCOND database layer that will only be used in first iter")
+parser.add_option("--conddb", action = 'append', dest="conddb",help="path to file with LHCBCOND database layer that will be used in all iterations")
 parser.add_option("--dddb", action = 'append', dest="dddb",help="path to file with DDDB database layer")
 parser.add_option("-r", "--roothistofile",dest="histofile",help="name of histogram file",default = "histograms.root")
+parser.add_option("--dryrun", action="store_true",help="dont do anything")
 (opts, args) = parser.parse_args()
 
 import os
@@ -27,23 +29,26 @@ for i in range(opts.firstiter,opts.numiter) :
     if os.path.isdir( iterdir ) :
         print "Directory exists. Will skip this iteration."
         continue
-    
+
     os.mkdir ( iterdir )
     os.chdir ( iterdir )
 
     # beyond the first iteration, add the input database as an option
     theseoptions = ' --numevents ' + str(opts.numevents) + ' --numprocesses ' + str(opts.numprocs) + ' --iter ' + str(i) + ' -r ' + opts.histofile + ' '
+    if opts.dddb :
+        for db in opts.dddb :
+            theseoptions += ' --dddb ' + db
+    if opts.conddb :
+        for db in opts.conddb :
+            theseoptions += ' --aligndb ' + db
     if i>0 :
         previterdb = '../Iter' + str( i-1 ) + '/Alignment.db'
         theseoptions += ' --aligndb ' + previterdb
     else :
         if opts.aligndb :
             for db in opts.aligndb :
-                theseoptions += ' -d ' + db
-    if opts.dddb :
-        for db in opts.dddb :
-            theseoptions += ' --dddb ' + db
-
+                theseoptions += ' --aligndb ' + db
+ 
     # add the remaining options
     for a in args:
         theseoptions += ' ' + a
@@ -52,10 +57,11 @@ for i in range(opts.firstiter,opts.numiter) :
     # run the job
     thiscommand = 'gaudipar.py' + theseoptions + '>& logfile.txt'
     print 'command: %s\n' % thiscommand
-    os.system( thiscommand )
-    os.system( 'gzip logfile.txt' )
-    # keep only the last version of the derivatives. they take too much space.
-    # os.system( 'mv -f myderivatives.dat ..')
+    if not opts.dryrun:
+        os.system( thiscommand )
+        os.system( 'gzip logfile.txt' )
+        # keep only the last version of the derivatives. they take too much space.
+        # os.system( 'mv -f myderivatives.dat ..')
     os.chdir(rundir+'/'+opts.basedir)
 
 # create a single alignlog file
