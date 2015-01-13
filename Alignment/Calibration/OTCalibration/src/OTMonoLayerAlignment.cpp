@@ -116,7 +116,7 @@ OTMonoLayerAlignment::OTMonoLayerAlignment( const std::string& name,
   m_pocatool("TrajPoca"),
   m_iteration(0)
 {
-  declareProperty("TracksLocation"   , m_trackContainer = LHCb::TrackLocation::Default  );
+  declareProperty("TrackLocation"   , m_trackContainer = LHCb::TrackLocation::Default  );
   declareProperty("UpdateInFinalize", m_updateInFinalize = true ) ;
   declareProperty("AlignMode", m_mode = DiscontinuousSegments ) ;
   declareProperty("UseWeighting", m_useweighting = false ) ;
