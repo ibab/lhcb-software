@@ -3,7 +3,11 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Algorithm for OT rt and t0 calibration
 
-!2015-01-06 - Lucia Grillo
+
+! 2015-01-12 - Wouter Hulsbergen
+ - Added OTWriteMonoAlignmentToXml, OTMonoLayerAlignment and OTHitMultiplicityFilter
+
+! 2015-01-06 - Lucia Grillo
 - Added functin to write the single xml file to be used for the online condition database. Todo on this: agree on format, location.
 Todo: - implement the condition to update the database t0> 0.3ns?
       - check the timing, optimizing, can the full implementation go in Brunel online or we have to change completely?
