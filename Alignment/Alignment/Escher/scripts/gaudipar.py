@@ -132,6 +132,7 @@ class AlignmentTask(Task):
   def initializeLocal(self):
      from GaudiPython.Bindings import gbl
      self.output = { 'derivatives' : gbl.LHCb.AlignSummaryData(),
+                     'otmonodata' : gbl.Al.OTMonoLayerAlignData(),
                      'histograms' : HistStore() }
      #print 'INFO: initializeLocal'
 
@@ -164,6 +165,10 @@ class AlignmentTask(Task):
      alignderivatives = det['AlignDerivativeData']
      #self.output['derivatives'] = copy.deepcopy(alignderivatives)
      if alignderivatives : self.output['derivatives'].add( alignderivatives )
+     otmonodata = det['OTMonoLayerAlignData']
+     if otmonodata :
+         self.output['otmonodata'].add( otmonodata )
+             
      histsvc = appMgr.histsvc()
      self.output['histograms'].collect( histsvc )
                 
@@ -194,6 +199,10 @@ class AlignmentTask(Task):
         writertool = appMgr.toolsvc().create( "WriteMultiAlignmentConditionsTool", interface = "IWriteAlignmentConditionsTool" )
         writertool.write()
         # now call finalize to write the conditions. there must be a better way.
+        if self.output['otmonodata']:
+            det = appMgr.detsvc()
+            det['OTMonoLayerAlignData'].add( self.output['otmonodata'] )
+            
         appMgr.finalize()
         # finally create a database layer
         import os
