@@ -7,13 +7,17 @@
 
 namespace {
 
-inline double dot5_avx(const double* f, __m256d  r0,  double r2) {
-    auto t = r0*_mm256_loadu_pd(f);
+inline double dot5_avx(__m256d f0, double f1, __m256d  r0,  double r1) {
+    auto t = r0*f0;
     t = _mm256_hadd_pd( t, t ); 
-    return t[0]+t[2]+r2*f[4];
+    return t[0]+t[2]+r1*f1;
     // auto s = _mm256_permute2f128_pd(t,t,0x01);
     // auto s = _mm256d{ t[2],t[3],t[0],t[1] } ; 
-    // return (s+t)[0] + r2*f[4];
+    // return (s+t)[0] + r1*f1;
+}
+
+inline double dot5_avx(const double* f, __m256d  r0,  double r2) {
+    return dot5_avx( _mm256_loadu_pd(f), f[4], r0, r2 );
 }
 
 inline __m128d dots2_5_avx(const double* f, __m256d r0, double r2) {
@@ -173,30 +177,11 @@ namespace avx {
           // K <- C1*inverse(C1+C2) = C1*invR
           avx_5_t _invR(invR); 
 
-          double K[25];
-          auto _1 = _invR.c0i<0,1,3,6,10>(C1);
-          auto _2 = _invR.c0i<1,2,4,7,11>(C1);
-          auto _3 = _invR.c0i<3,4,5,8,12>(C1);
-          auto _4 = _invR.c0i<6,7,8,9,13>(C1);
-          K[ 0] = _1[0];
-          K[ 1] = _1[1];
-          K[ 2] = _1[2];
-          K[ 3] = _1[3];
-
-          K[ 5] = _2[0];
-          K[ 6] = _2[1];
-          K[ 7] = _2[2];
-          K[ 8] = _2[3];
-
-          K[10] = _3[0];
-          K[11] = _3[1];
-          K[12] = _3[2];
-          K[13] = _3[3];
-
-          K[15] = _4[0];
-          K[16] = _4[1];
-          K[17] = _4[2];
-          K[18] = _4[3];
+          auto kr0 = _invR.c0i<0,1,3,6,10>(C1);
+          auto kr1 = _invR.c0i<1,2,4,7,11>(C1);
+          auto kr2 = _invR.c0i<3,4,5,8,12>(C1);
+          auto kr3 = _invR.c0i<6,7,8,9,13>(C1);
+          auto kr4 = _invR.c0i<10,11,12,13,14>(C1);
 
           // TODO: blend&permute it! (4x2 instructions)
           // 0 1 2 3 | 0 4 2 6 | 0 4 8 c | 0 4 8 c |
@@ -204,37 +189,34 @@ namespace avx {
           // 8 9 a b | 8 c a e | 1 5 b f | 2 6 a e |
           // c d e f | 9 d b f | 3 7 9 d | 3 7 b f |
 
-          auto kc0 = __m256d{_1[0],_2[0],_3[0],_4[0]};
-          auto kc1 = __m256d{_1[1],_2[1],_3[1],_4[1]};
-          auto kc2 = __m256d{_1[2],_2[2],_3[2],_4[2]};
-          auto kc3 = __m256d{_1[3],_2[3],_3[3],_4[3]};
-
-          auto _ = _invR.c0i<10,11,12,13,14>(C1);
-          K[20] = _[0];
-          K[21] = _[1];
-          K[22] = _[2];
-          K[23] = _[3];
+          auto kc0 = __m256d{kr0[0],kr1[0],kr2[0],kr3[0]};
+          auto kc1 = __m256d{kr0[1],kr1[1],kr2[1],kr3[1]};
+          auto kc2 = __m256d{kr0[2],kr1[2],kr2[2],kr3[2]};
+          auto kc3 = __m256d{kr0[3],kr1[3],kr2[3],kr3[3]};
 
           avx_5_t _C1(C1);
           auto kc4 = _C1.c0i<10,11,12,13,14>(invR);
-          K[ 4] = kc4[0];
-          K[ 9] = kc4[1];
-          K[14] = kc4[2];
-          K[19] = kc4[3];
 
-          K[24] = C1[10]*invR[10] + C1[11]*invR[11] + C1[12]*invR[12] + C1[13]*invR[13] + C1[14]*invR[14];
+          auto k44 = C1[10]*invR[10] + C1[11]*invR[11] + C1[12]*invR[12] + C1[13]*invR[13] + C1[14]*invR[14];
+
+          //       kc0[0] kc1[0] kc2[0] kc3[0]  kc4[0]     kr0[0] kr0[1] kr0[2] kr0[3]  .         0  1  2  3  4
+          //       kc0[1] kc1[1] kc2[1] kc3[1]  kc4[1]     kr1[0] kr1[1] kr1[2] kr1[3]  .         5  6  7  8  9
+          //  K =  kc0[2] kc1[2] kc2[2] kc3[2]  kc4[2]  =  kr2[0] kr2[1] kr2[2] kr2[3]  .    =   10 11 12 13 14
+          //       kc0[3] kc1[3] kc2[3] kc3[3]  kc4[3]     kr3[0] kr3[1] kr3[2] kr3[3]  .        15 16 17 18 19
+          //        .      .      .      .      k44        kr4[0] kr4[1] kr4[2] kr4[3]  k44      20 21 22 23 24
+
 
           // X <- X1 + C1*inverse(C1+C2)*(X2-X1) =  X1 + K*(X2-X1) = X1 + K*d
           auto _x20 = _mm256_loadu_pd(X2); 
           auto _x10 = _mm256_loadu_pd(X1); 
           auto d0 = _x20-_x10; double d4 = X2[4]-X1[4];
 
-          _ = _x10 + kc0*d0[0]+kc1*d0[1]+kc2*d0[2]+kc3*d0[3]+kc4*d4 ;
+          auto _ = _x10 + kc0*d0[0]+kc1*d0[1]+kc2*d0[2]+kc3*d0[3]+kc4*d4 ;
           X[0] = _[0];
           X[1] = _[1];
           X[2] = _[2];
           X[3] = _[3];
-          X[4] = X1[4] + K[20]*d0[0] + K[21]*d0[1] + K[22]*d0[2] + K[23]*d0[3] + K[24]*d4;
+          X[4] = X1[4] + dot5_avx(kr4,k44,d0,d4);
 
           // C <-  C1 * inverse(C1+C2)  * C2 =  K * C2
           avx_5_t _C2(C2);
@@ -244,19 +226,25 @@ namespace avx {
           C[ 5] = _[2];
           C[ 9] = _[3];
 
-          C[10] = K[20]*C2[ 0] + K[21]*C2[ 1] + K[22]*C2[ 3] + K[23]*C2[ 6] + K[24]*C2[10]; 
-          C[ 1] = K[ 5]*C2[ 0] + K[ 6]*C2[ 1] + K[ 7]*C2[ 3] + K[ 8]*C2[ 6] + K[ 9]*C2[10];
-          C[ 3] = K[10]*C2[ 0] + K[11]*C2[ 1] + K[12]*C2[ 3] + K[13]*C2[ 6] + K[14]*C2[10];
-          C[ 6] = K[15]*C2[ 0] + K[16]*C2[ 1] + K[17]*C2[ 3] + K[18]*C2[ 6] + K[19]*C2[10];
+          //TODO: combine the next two...
+          C[10] = kr4[0]*C2[ 0] + kr4[1]*C2[ 1] + kr4[2]*C2[ 3] + kr4[3]*C2[ 6] + k44*C2[10]; 
+          _     = kc0   *C2[ 0] + kc1   *C2[ 1] + kc2   *C2[ 3] + kc3   *C2[ 6] + kc4*C2[10];
+          C[ 1] = _[1];
+          C[ 3] = _[2];
+          C[ 6] = _[3];
 
-          C[ 8] = K[15]*C2[ 3] + K[16]*C2[ 4] + K[17]*C2[ 5] + K[18]*C2[ 8] + K[19]*C2[12];
-          C[12] = K[20]*C2[ 3] + K[21]*C2[ 4] + K[22]*C2[ 5] + K[23]*C2[ 8] + K[24]*C2[12]; 
-          C[13] = K[20]*C2[ 6] + K[21]*C2[ 7] + K[22]*C2[ 8] + K[23]*C2[ 9] + K[24]*C2[13]; 
-          C[14] = K[20]*C2[10] + K[21]*C2[11] + K[22]*C2[12] + K[23]*C2[13] + K[24]*C2[14]; 
+          //TODO: combine the next two...
+          C[14] = kr4[0]*C2[10] + kr4[1]*C2[11] + kr4[2]*C2[12] + kr4[3]*C2[13] + k44*C2[14]; 
+          _     = kr4[0]*_C2.c0 + kr4[1]*_C2.c1 + kr4[2]*_C2.c2 + kr4[3]*_C2.c3 + k44*_C2.c4;
+          C[11] = _[1];
+          C[12] = _[2];
+          C[13] = _[3];
 
-          C[ 4] = K[10]*C2[ 1] + K[11]*C2[ 2] + K[12]*C2[ 4] + K[13]*C2[ 7] + K[14]*C2[11];
-          C[ 7] = K[15]*C2[ 1] + K[16]*C2[ 2] + K[17]*C2[ 4] + K[18]*C2[ 7] + K[19]*C2[11];
-          C[11] = K[20]*C2[ 1] + K[21]*C2[ 2] + K[22]*C2[ 4] + K[23]*C2[ 7] + K[24]*C2[11]; 
+          _     = kc0*C2[1]+kc1*C2[2]+kc2*C2[4]+kc3*C2[7]+kc4*C2[11];
+          C[ 4] = _[2];
+          C[ 7] = _[3];
+
+          C[ 8] = kr3[0]*C2[ 3] + kr3[1]*C2[ 4] + kr3[2]*C2[ 5] + kr3[3]*C2[ 8] + kc4[3]*C2[12];
 
           return success;
     }
@@ -278,26 +266,28 @@ namespace avx {
           X[4] += cht4 * w;
 
           w = 1./errorRes2;
-          auto _ = c.c0-cht0*cht0[0]*w;
+          auto chtw0 = cht0*w;
+          auto chtw4 = cht4*w;
+          auto _ = c.c0-cht0*chtw0[0];
           C[ 0] = _[0];
           C[ 1] = _[1];
           C[ 3] = _[2];
           C[ 6] = _[3];
 
-          C[10] = c.c4[0] - w * cht4 * cht0[0];
+          C[10] = c.c4[0] - cht4 * chtw0[0];
 
-          _ = _mm256_blend_pd( c.c1, _mm256_permute_pd(c.c4,1), 1 ) - __m256d{cht4, cht0[1],cht0[2],cht0[3]} *cht0[1]*w;
+          _ = _mm256_blend_pd( c.c1, _mm256_permute_pd(c.c4,1), 1 ) - __m256d{cht4, cht0[1],cht0[2],cht0[3]} *chtw0[1];
           C[11] = _[0];
           C[ 2] = _[1];
           C[ 4] = _[2];
           C[ 7] = _[3];
 
-          _ = __m256d{c.c2[2],c.c2[3],c.c4[2],0.}-__m256d{cht0[2],cht0[3],cht4,0.}*cht0[2]*w;
+          _ = __m256d{c.c2[2],c.c2[3],c.c4[2],0.}-__m256d{cht0[2],cht0[3],cht4,0.}*chtw0[2];
           C[ 5] = _[0];
           C[ 8] = _[1];
           C[12] = _[2];
 
-          _ = __m256d{c.c3[3],c.c4[3],c.c44,0. } - __m256d{cht0[3],cht4,cht4,0.}*__m256d{cht0[3],cht0[3],cht4,0.}*w;
+          _ = __m256d{c.c3[3],c.c4[3],c.c44,0. } - __m256d{cht0[3],cht4,cht4,0.}*__m256d{chtw0[3],chtw0[3],chtw4,0.};
           C[ 9] = _[0];
           C[13] = _[1];
           C[14] = _[2];

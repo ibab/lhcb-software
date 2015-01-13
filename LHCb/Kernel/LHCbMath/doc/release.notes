@@ -5,6 +5,9 @@
 !               for geometry and matrix algebra
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
+! 2015-01-13 - Gerhard Raven
+ - optimize AVX versions of 'average' and 'filter'
+
 ! 2015-01-09 - Ben Couturier 
  - Add test for Similarity_5_7 and 5_1 
 
