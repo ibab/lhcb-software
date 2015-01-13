@@ -9,6 +9,7 @@ gaudi_depends_on_subdirs(Event/MicroDst
                          Phys/DaVinciKernel
                          Phys/DaVinciInterfaces
                          Event/HltEvent
+                         Hlt/HltDAQ
                          GaudiConf)
 
 gaudi_add_module(TeslaTools
