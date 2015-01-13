@@ -12,6 +12,9 @@ Purpose: LHCb reconstruction program
     returned (PatAlgorithms)
   . New parametrisations in 'PatMatchTool', lower ghost rate and higher
     efficiency, mostly for low p tracks (PatAlgorithms)
+  . Update default tunes to use MC12TuneV2 for all data types (removes 
+    dependency on NeuroBayes, previously used for pre-2011 data and MC)
+    (ChargedProtoANNPID)
 
 - Changes to QMTests
   . Remove enableANNPrintout.py and all use of it, was needed to print
