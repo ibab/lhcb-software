@@ -183,28 +183,25 @@ namespace avx {
           auto kr3 = _invR.c0i<6,7,8,9,13>(C1);
           auto kr4 = _invR.c0i<10,11,12,13,14>(C1);
 
-          // TODO: blend&permute it! (4x2 instructions)
-          // 0 1 2 3 | 0 4 2 6 | 0 4 8 c | 0 4 8 c |
-          // 4 5 6 7 | 1 5 3 7 | 2 6 a e | 1 5 9 d |
-          // 8 9 a b | 8 c a e | 1 5 b f | 2 6 a e |
-          // c d e f | 9 d b f | 3 7 9 d | 3 7 b f |
+          auto _0 = _mm256_permute2f128_pd(kr0,kr2,0x20);
+          auto _1 = _mm256_permute2f128_pd(kr1,kr3,0x20);
+          auto kc0 = _mm256_shuffle_pd(_0,_1,0x0);   
+          auto kc1 = _mm256_shuffle_pd(_0,_1,0xf);   
 
-          auto kc0 = __m256d{kr0[0],kr1[0],kr2[0],kr3[0]};
-          auto kc1 = __m256d{kr0[1],kr1[1],kr2[1],kr3[1]};
-          auto kc2 = __m256d{kr0[2],kr1[2],kr2[2],kr3[2]};
-          auto kc3 = __m256d{kr0[3],kr1[3],kr2[3],kr3[3]};
+          auto _2 = _mm256_permute2f128_pd(kr0,kr2,0x31);
+          auto _3 = _mm256_permute2f128_pd(kr1,kr3,0x31);
+          auto kc2 = _mm256_shuffle_pd(_2,_3,0x0);
+          auto kc3 = _mm256_shuffle_pd(_2,_3,0xf);   
 
           avx_5_t _C1(C1);
           auto kc4 = _C1.c0i<10,11,12,13,14>(invR);
-
-          auto k44 = C1[10]*invR[10] + C1[11]*invR[11] + C1[12]*invR[12] + C1[13]*invR[13] + C1[14]*invR[14];
+          auto k44 = _C1.c4i(invR+10);
 
           //       kc0[0] kc1[0] kc2[0] kc3[0]  kc4[0]     kr0[0] kr0[1] kr0[2] kr0[3]  .         0  1  2  3  4
           //       kc0[1] kc1[1] kc2[1] kc3[1]  kc4[1]     kr1[0] kr1[1] kr1[2] kr1[3]  .         5  6  7  8  9
           //  K =  kc0[2] kc1[2] kc2[2] kc3[2]  kc4[2]  =  kr2[0] kr2[1] kr2[2] kr2[3]  .    =   10 11 12 13 14
           //       kc0[3] kc1[3] kc2[3] kc3[3]  kc4[3]     kr3[0] kr3[1] kr3[2] kr3[3]  .        15 16 17 18 19
           //        .      .      .      .      k44        kr4[0] kr4[1] kr4[2] kr4[3]  k44      20 21 22 23 24
-
 
           // X <- X1 + C1*inverse(C1+C2)*(X2-X1) =  X1 + K*(X2-X1) = X1 + K*d
           auto _x20 = _mm256_loadu_pd(X2); 
@@ -240,11 +237,12 @@ namespace avx {
           C[12] = _[2];
           C[13] = _[3];
 
-          _     = kc0*C2[1]+kc1*C2[2]+kc2*C2[4]+kc3*C2[7]+kc4*C2[11];
+          //TODO: combine the next two...
+          C[ 8] = kr3[0]*C2[3] + kr3[1]*C2[4] + kr3[2]*C2[5] + kr3[3]*C2[8] + kc4[3]*C2[12];
+          _     = kc0*   C2[1] + kc1*   C2[2] + kc2*   C2[4] + kc3*   C2[7] + kc4*   C2[11];
           C[ 4] = _[2];
           C[ 7] = _[3];
 
-          C[ 8] = kr3[0]*C2[ 3] + kr3[1]*C2[ 4] + kr3[2]*C2[ 5] + kr3[3]*C2[ 8] + kc4[3]*C2[12];
 
           return success;
     }
