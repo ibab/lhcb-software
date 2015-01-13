@@ -10,6 +10,7 @@ gaudi_depends_on_subdirs(Event/DAQEvent
                          GaudiKernel
                          GaudiObjDesc
                          Hlt/HltBase
+                         Hlt/HltDAQ
                          Kernel/HltInterfaces
                          Kernel/Relations)
 
