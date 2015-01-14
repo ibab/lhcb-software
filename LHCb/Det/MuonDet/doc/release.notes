@@ -2,6 +2,8 @@
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
+
+!========================= MuonDet v9r17 2015-01-14 =========================
 ! 2014-12-15 - Gerhard Raven
  - reduce the number of local-to-global transformations
 
