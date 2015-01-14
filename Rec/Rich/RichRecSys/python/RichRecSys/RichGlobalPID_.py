@@ -59,7 +59,7 @@ class RichGlobalPIDConfig(RichConfigurableUser):
     def initialize(self):
         # default values
         self.setRichDefaults( "SingleTrackMode", { "Offline" : False, "HLT" : False } )
-        self.setRichDefaults( "NIterations", { "Offline" : 2, "HLT" : 2 } )
+        self.setRichDefaults( "NIterations",     { "Offline" : 2,     "HLT" : 2     } )
         self.setRichDefaults("TrackFreezeOutDLL",
                              { "Offline" : [ 2, 4, 5, 6 ],
                                "HLT"     : [ 2, 4, 5, 6 ] } )
@@ -71,7 +71,7 @@ class RichGlobalPIDConfig(RichConfigurableUser):
                                "HLT"     : [ -1e-2, -1e-3, -1e-4, -1e-5 ] } )
         self.setRichDefaults("MaxTrackChangesPerIt",
                              { "Offline" : [ 5, 5, 4, 3 ],
-                               "HLT"     : [ 5, 5, 5, 5 ] } )
+                               "HLT"     : [ 5, 5, 4, 3 ] } )
         self.setRichDefaults("MinSignalForNoLLCalc",
                              { "Offline" : [ 1e-3, 1e-3, 1e-3, 1e-3 ],
                                "HLT"     : [ 1e-3, 1e-3, 1e-3, 1e-3 ] } )
@@ -82,11 +82,11 @@ class RichGlobalPIDConfig(RichConfigurableUser):
                                 "VeloTT"  : { "Chi2Cut" : [0,5], "PCut" : [1,9999999] },
                                 "KsTrack" : { "Chi2Cut" : [0,5], "PCut" : [1,9999999] } } )
         self.setRichDefault ( "TrackCuts", "HLT",
-                              { "Forward" : { "Chi2Cut" : [0,4], "PCut" : [1,9999999] },
-                                "Match"   : { "Chi2Cut" : [0,4], "PCut" : [1,9999999] },
-                                "Seed"    : { "Chi2Cut" : [0,4], "PCut" : [1,9999999] },
-                                "VeloTT"  : { "Chi2Cut" : [0,4], "PCut" : [1,9999999] },
-                                "KsTrack" : { "Chi2Cut" : [0,4], "PCut" : [1,9999999] } } )
+                              { "Forward" : { "Chi2Cut" : [0,5], "PCut" : [0,9999999] },
+                                "Match"   : { "Chi2Cut" : [0,5], "PCut" : [0,9999999] },
+                                "Seed"    : { "Chi2Cut" : [0,5], "PCut" : [1,9999999] },
+                                "VeloTT"  : { "Chi2Cut" : [0,5], "PCut" : [1,9999999] },
+                                "KsTrack" : { "Chi2Cut" : [0,5], "PCut" : [1,9999999] } } )
         self.setRichDefaults("HPDBackIgnoreExpSignals",
                              { "Offline" : [ True, False, False, False ],
                                "HLT"     : [ True, False, False, False ] } )

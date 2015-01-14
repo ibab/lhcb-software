@@ -41,7 +41,7 @@ class RichTrackCreatorConfig(RichConfigurableUser):
         self.setRichDefaults ( "MaxInputTracks", { "Offline" : 99999, 
                                                    "HLT"     : 99999 } )
         self.setRichDefaults ( "MaxUsedTracks",  { "Offline" : 1000, 
-                                                   "HLT"     : 500 } )
+                                                   "HLT"     : 1000 } )
         self.setRichDefault ( "TrackCuts", "Offline",
                               { "Forward" : { "Chi2Cut" : [0,5], "PCut" : [0,9999999] },
                                 "Match"   : { "Chi2Cut" : [0,5], "PCut" : [0,9999999] },
@@ -49,13 +49,12 @@ class RichTrackCreatorConfig(RichConfigurableUser):
                                 "VeloTT"  : { "Chi2Cut" : [0,5], "PCut" : [1,9999999] },
                                 "KsTrack" : { "Chi2Cut" : [0,5], "PCut" : [1,9999999] } } )
         # If a ghost prob cut is needed, add "GhostProbCut" : [-999,0.5]
-        
         self.setRichDefault ( "TrackCuts", "HLT",
-                              { "Forward" : { "Chi2Cut" : [0,4], "PCut" : [1,9999999] },
-                                "Match"   : { "Chi2Cut" : [0,4], "PCut" : [1,9999999] },
-                                "Seed"    : { "Chi2Cut" : [0,4], "PCut" : [1,9999999] },
-                                "VeloTT"  : { "Chi2Cut" : [0,4], "PCut" : [1,9999999] },
-                                "KsTrack" : { "Chi2Cut" : [0,4], "PCut" : [1,9999999] } } )
+                              { "Forward" : { "Chi2Cut" : [0,5], "PCut" : [0,9999999] },
+                                "Match"   : { "Chi2Cut" : [0,5], "PCut" : [0,9999999] },
+                                "Seed"    : { "Chi2Cut" : [0,5], "PCut" : [1,9999999] },
+                                "VeloTT"  : { "Chi2Cut" : [0,5], "PCut" : [1,9999999] },
+                                "KsTrack" : { "Chi2Cut" : [0,5], "PCut" : [1,9999999] } } )
 
     ## @brief Set OutputLevel 
     def setOutputLevel(self,conponent):

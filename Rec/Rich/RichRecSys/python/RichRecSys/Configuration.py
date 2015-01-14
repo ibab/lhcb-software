@@ -66,10 +66,10 @@ class RichRecSysConf(RichConfigurableUser):
     def initialize(self):
         
         # default values
-        self.setRichDefault("Particles","Offline",["electron","muon","pion","kaon",
-                                                   "proton","belowThreshold"])
-        self.setRichDefault("Particles","HLT",    ["pion","kaon"] )
-        self.setRichDefault("Radiators","Offline", ["Aerogel","Rich1Gas","Rich2Gas"] )
+        self.setRichDefault("Particles","Offline",["electron","muon","pion","kaon","proton","belowThreshold"] )
+        #self.setRichDefault("Particles","HLT",    ["pion","kaon"] )
+        self.setRichDefault("Particles","HLT",    ["electron","muon","pion","kaon","proton","belowThreshold"] )
+        self.setRichDefault("Radiators","Offline", ["Rich1Gas","Rich2Gas"] )
         self.setRichDefault("Radiators","HLT",     ["Rich1Gas","Rich2Gas"] )
 
     ## Shortcut to the cosmics option
@@ -113,21 +113,19 @@ class RichRecSysConf(RichConfigurableUser):
         # Get the DataType
         dataType = self.getProp("DataType")
 
-        # For Run II
-        if ( dataType == "2015" or
-             dataType == "2016" or
-             dataType == "2017" ) :
-            
-            # No Aerogel in Run II
-            if not self.isPropertySet("Radiators") :
-                self.setProp( "Radiators", ["Rich1Gas","Rich2Gas"] )
+        # For Run I and eariler use Aerogel as well as gas radiators
+        if ( dataType == "2008" or
+             dataType == "2009" or
+             dataType == "2010" or
+             dataType == "2011" or
+             dataType == "2012" or
+             dataType == "2013" or
+             dataType == "MC09" ) :
+            if not self.isPropertySet("Radiators") and self.getProp("Context") != "HLT" :
+                self.setProp( "Radiators", ["Aerogel","Rich1Gas","Rich2Gas"] )
 
         # Tweaks for the Upgrade
         if dataType == "Upgrade" :
-
-            # No Aerogel in the upgrade
-            if not self.isPropertySet("Radiators") :
-                self.setProp( "Radiators", ["Rich1Gas","Rich2Gas"] )
 
             # Fudge factors for the photon reconstruction.
             # Need to understand why these are required, as they indicate

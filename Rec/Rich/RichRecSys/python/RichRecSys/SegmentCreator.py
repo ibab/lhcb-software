@@ -30,7 +30,7 @@ class RichSegmentCreatorConf(RichConfigurableUser):
         
         ## Default number of energy bins for each radiator
         self.setRichDefaults( "EnergyBins", { "Offline" : [ 5, 5, 5 ],
-                                              "HLT"     : [ 2, 2, 2 ] } )
+                                              "HLT"     : [ 5, 5, 5 ] } )
 
     ## @brief Apply the configuration
     def applyConf(self):

@@ -166,4 +166,3 @@ class RichPixelCreatorConfig(RichConfigurableUser):
         pixmaker.PixelClusteringRich2.AllowDiagonalsInClusters = False
         pixmaker.PixelClusteringRich1.MaxClusterSize = 9999
         pixmaker.PixelClusteringRich2.MaxClusterSize = 9999
-        

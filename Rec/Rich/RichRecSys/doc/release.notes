@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2015-01-14 - Chris Jones
+ - Make all defaults for HLT Context the same as Offline.
+
 !========================= RichRecSys v5r3 2014-07-14 =========================
 ! 2014-06-20 - Chris Jones
  - Disable Aerogel for Run II DataTypes (2015 onwards).
