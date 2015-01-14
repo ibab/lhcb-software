@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+
+!========================= TsaKernel v3r8 2015-01-14 =========================
 ! 2014-12-26 - Gerhard Raven
  - remove unused virtual functions which allows hit customization after creation
    of every single hit
