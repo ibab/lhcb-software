@@ -2,6 +2,7 @@
 ! Responsible : Alexandr Kozlinskiy, Lucia Grillo
 !--------------------------------------------------------------------------
 
+!========================= OTDet v8r14 2015-01-14 =========================
 ! 2015-01-02 - Wouter Hulsbergen
  - Create separate condition for mono layer alignment in geometry
  - Fix position of wire locators for short modules
