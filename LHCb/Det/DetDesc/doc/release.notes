@@ -2,6 +2,8 @@
 ! package DetDesc
 ! package manager : Marco Clemencic
 ! =====================================================================
+
+!========================= DetDesc v18r35 2015-01-14 =========================
 ! 2014-12-18 - Gerhard Raven
  - switch the internal representation of the magnetic field to single precision
    (which has 24 bits of precision, i.e. about 1 part in 10^7) which is sufficient 
