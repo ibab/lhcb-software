@@ -4,6 +4,7 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!========================= DetCond v12r40p1 2015-01-14 =========================
 ! 2015-01-07 - Marco Cattaneo
  - Fix gcc49 unused function warning in DQScanTest.cpp
 
