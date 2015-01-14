@@ -3,6 +3,8 @@
 ! Responsible : 
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+
+!========================= TfTools v1r20 2015-01-14 =========================
 ! 2014-12-26 - Gerhard Raven
  - remove unused virtual function for hit customization during hit creation
 
