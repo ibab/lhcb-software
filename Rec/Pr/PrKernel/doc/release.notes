@@ -3,6 +3,8 @@
 ! Responsible : 
 ! Purpose     : Basic tools for Pattern for the Upgrade
 !-----------------------------------------------------------------------------
+
+!========================= PrKernel v1r7 2015-01-14 =========================
 ! 2014-12-23 - Svende Braun
 - Add modified version of IPrTTCounter for efficiency studies.
 
