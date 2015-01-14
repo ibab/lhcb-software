@@ -1,5 +1,5 @@
 package LHCbSys
-version v38r3p1
+version v38r4
 
 branches doc cmt tests
 
@@ -8,7 +8,7 @@ branches doc cmt tests
 #===============================================================
 
 #                                         Maintainer
-use MCAssociators         v1r4p1  Associators # V. Gligorov
+use MCAssociators         v1r5    Associators # V. Gligorov
 
 use CaloDAQ               v4r38   Calo    # Olivier Deschamps
 use CaloInterfaces        v8r9    Calo    # Olivier Deschamps
@@ -29,16 +29,16 @@ use BcmDet                v1r4    Det     # Magnus Lieng
 use CaloDet               v10r20  Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r3    Det     # Olivier Deschamps
 use DDDB                  v1r73   Det     # Marco Cattaneo
-use DetCond               v12r40  Det     # Marco Clemencic
-use DetDesc               v18r34  Det     # Marco Clemencic
+use DetCond               v12r40p1 Det     # Marco Clemencic
+use DetDesc               v18r35  Det     # Marco Clemencic
 use DetDescChecks         v5r11   Det     # Marco Clemencic, Ivan Belyaev
 use DetDescCnv            v4r18   Det     # Marco Clemencic
 use DetDescSvc            v3r8    Det     # Marco Clemencic
 use FTDet                 v2r8    Det     # Diego Milanes
-use Magnet                v7r7    Det     # Marco Cattaneo
-use MuonDet               v9r16   Det     # Giovanni Passaleva
-use OTDet                 v8r13   Det     # Lucia Grillo
-use RichDet               v17r0   Det     # Chris Jones
+use Magnet                v7r8    Det     # Marco Cattaneo
+use MuonDet               v9r17   Det     # Giovanni Passaleva
+use OTDet                 v8r14   Det     # Lucia Grillo
+use RichDet               v17r1   Det     # Chris Jones
 use STDet                 v4r30   Det     # J. van Tilburg
 use VeloDet               v13r20  Det     # Mark Tobin, Kurt Rinnert
 use VPDet                 v3r2    Det     # Pawel Jalocha
@@ -88,7 +88,7 @@ use GaudiObjDesc          v11r20
 use HCDAQ                 v1r1    HC      # Heinrich Schindler 
 
 # Hlt packages
-use HltDAQ                v4r10   Hlt     # Gerhard Raven
+use HltDAQ                v4r12   Hlt     # Gerhard Raven
 use HltServices           v2r6    Hlt     # Gerhard Raven
 
 # Kernel packages
@@ -96,8 +96,8 @@ use FSRAlgs               v1r7    Kernel  # Jaap Panman
 use HltInterfaces         v5r3    Kernel  # Gerhard Raven
 use KernelSys             v12r3   Kernel  # Marco Cattaneo
 use LHCbAlgs              v3r4    Kernel  # Marco Cattaneo
-use LHCbKernel            v15r6   Kernel  # Marco Cattaneo
-use LHCbMath              v3r52   Kernel  # Ivan Belyaev
+use LHCbKernel            v15r7   Kernel  # Marco Cattaneo
+use LHCbMath              v3r53   Kernel  # Ivan Belyaev
 use MCInterfaces          v1r18   Kernel  # Marco Cattaneo et al.
 use PartProp              v1r19   Kernel  # Ivan Belyaev
 use Relations             v6r3    Kernel  # Ivan Belyaev
@@ -117,16 +117,16 @@ use MuonKernel            v4r1    Muon    # Andrei Tsaregorodtsev
 
 #use RootCnv               v1r18   Online  # (also in GAUDI and ONLINE projects)
 
-use OTDAQ                 v7r17   OT      # Wouter Hulsbergen
+use OTDAQ                 v7r18   OT      # Wouter Hulsbergen
 
 use LoKiCore              v11r21  Phys   # Ivan Belyaev
 use LoKiGen               v10r19  Phys    # Ivan Belyaev
-use LoKiHlt               v3r17   Phys    # Ivan Belyaev
+use LoKiHlt               v3r18   Phys    # Ivan Belyaev
 use LoKiMC                v10r15  Phys    # Ivan Belyaev
 use LoKiNumbers           v10r7   Phys    # Ivan Belyaev
 
 use RichDAQ               v3r42   Rich    # Chris Jones
-use RichKernel            v7r56   Rich    # Chris Jones
+use RichKernel            v7r57   Rich    # Chris Jones
 
 use SiDAQ                 v2r3    Si      # Matt Needham
 

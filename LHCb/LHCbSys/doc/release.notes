@@ -5,6 +5,92 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v38r4>2015-01-15 LHCbSys v38r4</A></H1><PRE>
+This version uses Gaudi v26r0 and LCG_72root6 with ROOT 6.02.03.
+
+- Packages modified: Associators/MCAssociators v1r5, Det/DetCond v12r40p1,
+    Det/DetDesc v18r35, Det/Magnet v7r8, Det/MuonDet v9r17, Det/OTDet v8r14,
+    Det/RichDet v17r1, Hlt/HltDAQ v4r12, Kernel/LHCbKernel v15r7,
+    Kernel/LHCbMath v3r53, OT/OTDAQ v7r18, Phys/LoKiHlt v3r18,
+    Rich/RichKernel v7r57
+
+- In Associators/MCAssociators v1r5
+  . Make code neutral wrt. return type of algMgr->getAlgorithms()
+
+- In Det/DetCond v12r40p1
+  . Fix gcc49 unused function warning in DQScanTest.cpp
+
+- In Det/DetDesc v18r35
+  . Switch the internal representation of the magnetic field to single precision
+    This significantly reduces the memory (and cache) requirements
+
+- In Det/Magnet v7r8
+  . Make the MagneticFieldReader code (at source level) independent of the
+    internal storage type of the MagneticFieldGrid
+  . Speed up the MagneticFieldGrid initialization by _not_ thrashing the
+    cache maximally...
+
+- In Det/MuonDet v9r17
+  . Reduce the number of local-to-global transformations
+
+- In Det/OTDet v8r14
+  . Create separate condition for mono layer alignment in geometry
+  . Fix position of wire locators for short modules
+  . Modify approximation of 3-segment wire for pattern reco
+
+- In Det/RichDet v17r1
+  . Fix a bug related to the new InactiveHPDList condition (not yet
+    active) that prevented the reading of the new inactive HPD list from
+    the ONLINE partition.
+
+- In Hlt/HltDAQ v4r11, v4r12
+  . Add ReportConvert tool (needed for versioning).
+  . Fix hltdaq.b_dumpafterreformat test to follow SelReports bank version change
+  . Increase SelReport bank version to 3 (for productions with Turbo reports).
+
+- In Kernel/LHCbKernel v15r7
+  . MemPoolAlloc: remove pass-through placement new, add template parameters
+    which allow one to enable/disable the use of a mutex to 'protect' the
+    singleton managing the pool, and set the size of the underlying memory 
+    requests. Defaults are such that the behavious is backwards compatible.
+
+- In Kernel/LHCbMath v3r53
+  . Fix gcc49 unused function warning in Hesse.cpp
+  . Fix gcc49 unused local typedef warning in BSpline.cpp
+  . Add vectorized (5x5) -> (5x5) and (5x5) -> (7x7) symmetric matrix
+    similarity transforms -- these come in three flavours 'generic',
+    'SSE3' and 'AVX'; the relevant version is choosen dynamically
+    at runtime, on its first invocation.
+  . Add generic & initial AVX version of 'average' used in Kalman Bi-Smoother.
+    Generalize dispatcher to be able to deal with both void and non-void functions
+  . Cleanup namespace convention & dispatcher, add 'LHCb::Math::Filter'
+  . Added Unit test that checks the 5x5 similarity calculation in LHCbMath is
+    identical when done on the various instruction sets (SSE3, AVX).
+  . Add test for Similarity_5_7 and 5_1 
+
+- In OT/OTDAQ v7r18
+  . OTRawBankDecoder:
+    o add option to veto hit pairs in OT for which one hit falls outside the OT
+      readoutwindow. Hits outside the time window are discarded. If a hit pair
+      in neighbouring straws exists for which both hits are inside the window,
+      both hits survive. If one hit is inside and one outside the time window,
+      and both hits are either in early, or both are late in the readout
+      window, both hits are killed (if vetoing is activated).  In all other
+      cases, the hit inside the readout window survives. For now, the default
+      is to have this new option disabled.
+    o cosmetic change: rewrite the memory management inside the helper classes
+      so that one memory allocation is enough (instead of one per module),
+      modules are now packed in a consecutive stretch of RAM (which is likely
+      helping with caching)
+
+- In Phys/LoKiHlt v3r18
+  . Stylistic change of check for turbo bit
+  . New HLT_TURBOPASS_RE and HLT_NONTURBOPASS_RE functor.
+
+- In Rich/RichKernel v7r57
+  . Update the default tool types in RichTools Configurable to make the HLT 
+    defaults the same as Offline.
+
 </PRE><H1><A NAME=v38r3p1>2014-12-15 LHCbSys v38r3p1</A></H1><PRE>
 This version uses Gaudi v25r6p1 and LCG_71root6 with ROOT 6.02.02.
 
