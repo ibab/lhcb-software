@@ -4,6 +4,7 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+!========================= HltDAQ v4r12 2015-01-14 =========================
 ! 2015-01-12 - Sean Benson
  - Fix CMake config.
  - Move ReportConvertTool to src.
