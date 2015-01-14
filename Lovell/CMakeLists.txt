@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.5)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.1.0)
 
 #---------------------------------------------------------------
 # Load macros and functions for Gaudi-based projects
