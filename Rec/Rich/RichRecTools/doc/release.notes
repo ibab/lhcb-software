@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!========================= RichRecTools v4r26 2015-01-14 =========================
 ! 2015-01-14 - Chris Jones
  - Make the default options for the HLT context in RichMassHypothesisRingCreator
    and RichRayTraceCherenkovCone the same as Offline.
