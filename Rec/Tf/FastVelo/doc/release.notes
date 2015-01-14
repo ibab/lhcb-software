@@ -4,6 +4,7 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+!========================= FastVelo v1r18 2015-01-14 =========================
 ! 2015-01-04 - Gerhard Raven
  - Faster conversion to LHCb::Track
 
