@@ -48,6 +48,14 @@ namespace LoKi
     GAUDI_API 
     LHCb::ParticleID pidFromName ( const std::string& name ) ;
     // ========================================================================    
+    /** retrieve particle ID from Particle name 
+     *  @param names particle names 
+     *  @return particle IDs 
+     */
+    GAUDI_API 
+    std::vector<LHCb::ParticleID> 
+    pidsFromNames ( const std::vector<std::string>& names ) ;
+    // ========================================================================    
     /** retrieve particle name for given PID 
      *  @param pid particle PID 
      *  @return particle name 
@@ -154,6 +162,15 @@ namespace LoKi
   } //                                         end of namespace LoKi::Particles
   // ==========================================================================
 } //                                                      end of namespace LoKi
+// ============================================================================
+namespace std 
+{
+  //
+  GAUDI_API 
+  std::vector<LHCb::ParticleID> 
+  abs ( const std::vector<LHCb::ParticleID>& pid ) ;
+  //
+}
 // ============================================================================
 //                                                                      The END 
 // ============================================================================

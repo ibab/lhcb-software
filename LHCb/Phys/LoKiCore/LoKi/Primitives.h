@@ -1703,7 +1703,7 @@ namespace LoKi
     { return s << " " << m_desc << "("  << m_fun << ") " ; };
     // to C++
     virtual std::string   toCpp() const 
-    { return m_desc + "("  + Gaudi::Utils::toCpp ( m_fun ) + ") " ; }
+    { return "LoKi::" + m_desc + "("  + Gaudi::Utils::toCpp ( m_fun ) + ") " ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -1836,8 +1836,8 @@ namespace LoKi
                << m_two.func2 () << ") " ; }
     /// to C++
     virtual std::string toCpp() const 
-    { return m_desc + "("  
-        + Gaudi::Utils::toCpp ( m_two.func1 () ) + "," 
+    { return "LoKi::" + m_desc + "("  
+        + Gaudi::Utils::toCpp ( m_two.func1 () ) + ", " 
         + Gaudi::Utils::toCpp ( m_two.func2 () ) + ") " ; }
     // ========================================================================
   private:
@@ -1902,11 +1902,6 @@ namespace LoKi
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " (" << m_fun1 << ">>" << m_fun2  << ") " ; }   
-    /// to C++ 
-    virtual std::string toCpp() const 
-    { return 
-        " ("  + Gaudi::Utils::toCpp ( m_fun1 ) +
-        ">>"  + Gaudi::Utils::toCpp ( m_fun2 ) + ") " ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -1963,6 +1958,7 @@ namespace LoKi
    *  is equal to some predefined value. 
    *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
    *  @date 2004-02-11
+   *  @warning this functor has not valid <c>toCpp</c> method 
    */
   template <class TYPE>
   class TheSame : public LoKi::Functor<TYPE,bool>
@@ -2696,7 +2692,7 @@ namespace LoKi
      */
     NotEqualToList
     ( const LoKi::Functor<TYPE,double>&  fun , 
-      const std::vector<unsigned int>&            vct ) 
+      const std::vector<unsigned int>&   vct ) 
       : LoKi::AuxFunBase ( std::tie ( fun , vct ) ) 
       , LoKi::EqualToList<TYPE>( fun , vct ) 
     {}
@@ -2987,7 +2983,7 @@ namespace LoKi
   };  
   // ==========================================================================
   /** @class JBits
-   *  get the content between j1 andj2  bit of value.
+   *  get the content between j1 and j2  bit of value.
    *  The action :  
    *   - 1. f -> round ( f ) 
    *   - 2. f -> abs   ( f ) 

@@ -50,12 +50,15 @@ namespace LoKi
     class GetInfo : public LoKi::Functor<TYPE,TYPE2>
     {
     public:
+      // ======================================================================
       typedef typename LoKi::Constant<TYPE,TYPE2>::T2 T2 ;
+      // ======================================================================
     public:
       // ======================================================================
       /// constructor from the index and the default value 
       GetInfo ( const int index , T2 value = defaultValue ) 
-        : LoKi::Functor<TYPE,TYPE2>() 
+        : LoKi::AuxFunBase ( std::tie ( index , value ) ) 
+        , LoKi::Functor<TYPE,TYPE2>() 
         , m_index   ( index )  
         , m_default ( value ) 
       {} 
@@ -115,7 +118,8 @@ namespace LoKi
       // ======================================================================
       /// constructor fomr the index and default value 
       CheckInfo ( const int    index ) 
-        : LoKi::Functor<TYPE,bool>() 
+        : LoKi::AuxFunBase ( std::tie ( index ) ) 
+        , LoKi::Functor<TYPE,bool>() 
         , m_index   ( index )  
       {} 
       /// copy constructor 
@@ -175,10 +179,11 @@ namespace LoKi
       // ======================================================================
       /// contructor from ID, function and the flag 
       GetSmartInfo 
-      ( const int                        index ,
-        const LoKi::Functor<TYPE,TYPE2>& fun   , 
-        const bool                  update = false ) 
-        : LoKi::Functor<TYPE,TYPE2> () 
+      ( const int                        index          ,
+        const LoKi::Functor<TYPE,TYPE2>& fun            , 
+        const bool                       update = false ) 
+        : LoKi::AuxFunBase ( std::tie ( index , fun , update ) ) 
+        , LoKi::Functor<TYPE,TYPE2> () 
         , m_fun    ( fun    ) 
         , m_index  ( index  )
         , m_update ( update ) 
@@ -271,7 +276,8 @@ namespace LoKi
       LogInfo 
       ( const LoKi::Functor<TYPE,TYPE2>& fun   , 
         const int                        index ) 
-        : LoKi::Functor<TYPE,TYPE2>() 
+        : LoKi::AuxFunBase ( std::tie ( fun , index ) ) 
+        , LoKi::Functor<TYPE,TYPE2>() 
         , m_fun     ( fun   ) 
         , m_index   ( index )  
       {} 

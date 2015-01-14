@@ -44,6 +44,8 @@
   <class name    = "LoKi::Timer"           />
   <class name    = "LoKi::DecayChainBase"  />
   <class name    = "LoKi::Param"           />
+  <class name    = "LoKi::Histo"           />
+  <class name    = "LoKi::CounterDef"      />
 
   <class name    = "Bender::Welcome"       />
 

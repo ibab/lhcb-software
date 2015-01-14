@@ -36,9 +36,11 @@ namespace LoKi
     class FuncCast : public LoKi::Functor<TYPE1,TYPE3>
     {
     public: 
+      // ======================================================================
       /// Standard constructor
       FuncCast ( const LoKi::Functor<TYPE2,TYPE3>& fun ) 
-        : LoKi::Functor<TYPE1,TYPE3>()
+        : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+        , LoKi::Functor<TYPE1,TYPE3>()
         , m_fun ( fun ) 
       {} 
       /// copy constructor 
@@ -66,10 +68,14 @@ namespace LoKi
       operator() ( typename LoKi::Functor<TYPE2,TYPE3>::argument a ) const
       { return m_fun ( a ) ; } ;      
     private:
+      // ======================================================================
       /// default constructor is disabled 
       FuncCast();
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::FunctorFromFunctor<TYPE2,TYPE3> m_fun ;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class FuncStaticCast FuncCast.h LoKi/FuncCast.h
@@ -81,9 +87,11 @@ namespace LoKi
     class FuncStaticCast : public LoKi::Functor<TYPE1,TYPE3>
     {
     public: 
+      // ======================================================================
       /// Standard constructor
       FuncStaticCast ( const LoKi::Functor<TYPE2,TYPE3>& fun ) 
-        : LoKi::Functor<TYPE1,TYPE3>()
+        : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+        , LoKi::Functor<TYPE1,TYPE3>()
         , m_fun ( fun ) 
       {} 
       /// copy constructor 
@@ -111,11 +119,16 @@ namespace LoKi
       typename LoKi::Functor<TYPE2,TYPE3>::result_type 
       operator() ( typename LoKi::Functor<TYPE2,TYPE3>::argument a ) const
       { return m_fun.fun ( a ) ; } 
+      // ======================================================================
     private:
+      // ======================================================================
       /// default constructor is disabled 
       FuncStaticCast();
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::FunctorFromFunctor<TYPE2,TYPE3> m_fun ;
+      // ======================================================================
     } ;
     // ========================================================================
   } // end of the namespace LoKi::Adapters

@@ -20,6 +20,7 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   /** @namespace LoKi::Helpers Helpers.h LoKi/Helpers.h
    *  Namespace with pure technical ("private") helper functions 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -61,6 +62,7 @@ namespace LoKi
     }
     // ========================================================================    
   } // end of namespace LoKi::Helpers 
+  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
 // The END 

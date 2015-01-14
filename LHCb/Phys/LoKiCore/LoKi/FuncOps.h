@@ -12,6 +12,7 @@
 #include  "LoKi/Operators.h"
 #include  "LoKi/Funcs.h"
 #include  "LoKi/Monitoring.h"
+#include  "LoKi/Monitor.h"
 #include  "LoKi/MoreFunctions.h"
 #include  "LoKi/BasicFunctors.h"
 #include  "LoKi/Filters.h"
@@ -591,14 +592,14 @@ namespace LoKi
         const std::string&           n ,
         const LoKi::Monitoring::Flag f )
       { return LoKi::monitor 
-          ( c , LoKi::Monitoring::getCounter ( f , n ) ) ; }
+          ( c , LoKi::CounterDef ( n , f ) ) ; }
       static Fun __monitor__ 
       ( const Func&                  c ,
         const std::string&           g ,
         const std::string&           n , 
         const LoKi::Monitoring::Flag f )
       { return LoKi::monitor 
-          ( c , LoKi::Monitoring::getCounter ( f , g , n ) ) ; }
+          ( c , LoKi::CounterDef ( g, n , f ) ) ; }
       // monitoring with histograms:
       static Fun __monitor__ ( const Func&              c , 
                                AIDA::IHistogram1D*      h ) 
@@ -609,36 +610,36 @@ namespace LoKi
                                const Gaudi::Histo1DDef& h )
       {
         IHistogramSvc* const hsvc = 0 ;
-        return LoKi::plot    ( c , p , h , hsvc ) ; 
+        return LoKi::plot    ( c , LoKi::Histo ( p , h , hsvc )  ) ; 
       }
       static Fun __monitor__ ( const Func&              c , 
                                const std::string&       d , 
                                const std::string&       i , 
                                const Gaudi::Histo1DDef& h )
-      { return LoKi::plot    ( c , d , i , h ) ; }
+      { return LoKi::plot    ( c , LoKi::Histo ( d , i , h ) ) ; }
       static Fun __monitor__ ( const Func&              c , 
                                const std::string&       d , 
                                const int                i , 
                                const Gaudi::Histo1DDef& h )
-      { return LoKi::plot    ( c , d , i , h ) ; }
+      { return LoKi::plot    ( c , LoKi::Histo ( d , i , h ) ) ; }
       static Fun __monitor__ ( const Func&              c , 
                                const std::string&       d ,
                                const GaudiAlg::ID&      i , 
                                const Gaudi::Histo1DDef& h )
-      { return LoKi::plot    ( c , d , i , h ) ; }
+      { return LoKi::plot    ( c , LoKi::Histo ( d , i , h ) ) ; }
       // book the historgams using IAlgContextSvc 
       static Fun __monitor__ ( const Func&              c , 
                                const Gaudi::Histo1DDef& h ,
                                const GaudiAlg::ID&      i ) 
-      { return LoKi::plot    ( c , h , i ) ; }
+      { return LoKi::plot    ( c , LoKi::Histo ( h , i ) ) ; }
       static Fun __monitor__ ( const Func&              c , 
                                const Gaudi::Histo1DDef& h ,
                                const std::string&       i ) 
-      { return LoKi::plot    ( c , h , i ) ; }
+      { return LoKi::plot    ( c , LoKi::Histo ( h , i ) ) ; }
       static Fun __monitor__ ( const Func&              c , 
                                const Gaudi::Histo1DDef& h ,
                                const int                i ) 
-      { return LoKi::plot    ( c , h , i ) ; }
+      { return LoKi::plot    ( c , LoKi::Histo ( h , i ) )  ; }
       // ======================================================================
       // timing
       // ======================================================================

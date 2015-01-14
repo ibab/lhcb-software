@@ -6,6 +6,7 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
+#include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/HistoDef.h"
 // ============================================================================
 // GaudiAlg 
@@ -36,6 +37,8 @@ class IAlgContextSvc ;
 // ============================================================================
 namespace LoKi 
 {
+  // forward decalration
+  class Histo ;
   // ==========================================================================
   namespace HistoBook
   {
@@ -47,6 +50,7 @@ namespace LoKi
      *  @param svc  histogram service 
      *  @return booked histogram 
      */ 
+    GAUDI_API 
     AIDA::IHistogram1D* book
     ( const std::string&       path  ,
       const Gaudi::Histo1DDef& hist  , 
@@ -60,6 +64,7 @@ namespace LoKi
      *  @param svc  histogram service 
      *  @return booked histogram 
      */ 
+    GAUDI_API 
     AIDA::IHistogram1D* book
     ( const std::string&       dir      ,
       const std::string&       id       ,
@@ -70,10 +75,11 @@ namespace LoKi
      *  @attention it books the histogram through IHistogramSvc 
      *  @param dir  directory path in Histogram Data Store 
      *  @param id   histogram identifier 
-     *  @param hist histogram desctription
+     *  @param hist histogram description
      *  @param svc  histogram service 
      *  @return booked histogram 
      */ 
+    GAUDI_API 
     AIDA::IHistogram1D* book
     ( const std::string&       dir      ,
       const int                id       ,
@@ -84,10 +90,11 @@ namespace LoKi
      *  @attention it books the histogram through IHistogramSvc 
      *  @param dir  directory path in Histogram Data Store 
      *  @param id   histogram identifier 
-     *  @param hist histogram desctription
+     *  @param hist histogram description
      *  @param svc  histogram service 
      *  @return booked histogram 
      */ 
+    GAUDI_API 
     AIDA::IHistogram1D* book
     ( const std::string&       dir      ,
       const GaudiAlg::ID&      id       ,
@@ -100,6 +107,7 @@ namespace LoKi
      *  @param hist histogram desctription
      *  @return booked histogram 
      */ 
+    GAUDI_API 
     AIDA::IHistogram1D* book
     ( const GaudiHistoAlg*     alg      , 
       const std::string&       id       ,
@@ -111,6 +119,7 @@ namespace LoKi
      *  @param id   histogram identifier 
      *  @param hist histogram desctription
      */ 
+    GAUDI_API 
     AIDA::IHistogram1D* book
     ( const GaudiHistoTool*    tool , 
       const std::string&       id   ,
@@ -122,6 +131,7 @@ namespace LoKi
      *  @param id   histogram identifier 
      *  @param hist histogram desctription
      */ 
+    GAUDI_API 
     AIDA::IHistogram1D* book
     ( const IHistoTool*        tool , 
       const std::string&       id   ,
@@ -132,6 +142,7 @@ namespace LoKi
      *  @param id   histogram identifier 
      *  @param hist histogram desctription
      */ 
+    GAUDI_API 
     AIDA::IHistogram1D* book
     ( const GaudiHistoAlg*     alg  , 
       const GaudiAlg::ID&      id   ,
@@ -142,6 +153,7 @@ namespace LoKi
      *  @param id   histogram identifier 
      *  @param hist histogram desctription
      */ 
+    GAUDI_API 
     AIDA::IHistogram1D* book
     ( const GaudiHistoTool*    tool , 
       const GaudiAlg::ID&      id   ,
@@ -153,6 +165,7 @@ namespace LoKi
      *  @param id   histogram identifier 
      *  @param hist histogram desctription
      */ 
+    GAUDI_API 
     AIDA::IHistogram1D* book
     ( const IHistoTool*        tool , 
       const GaudiAlg::ID&      id   ,
@@ -163,6 +176,7 @@ namespace LoKi
      *  @param id   histogram identifier 
      *  @param hist histogram desctription
      */ 
+    GAUDI_API 
     AIDA::IHistogram1D* book
     ( const IAlgContextSvc*    svc  , 
       const GaudiAlg::ID&      id   ,
@@ -173,6 +187,7 @@ namespace LoKi
      *  @param id   histogram identifier 
      *  @param hist histogram desctription
      */ 
+    GAUDI_API 
     AIDA::IHistogram1D* book
     ( const IAlgContextSvc*    svc  , 
       const std::string&       id   ,
@@ -186,6 +201,7 @@ namespace LoKi
      *  @param svc context service 
      *  @return booked histogram 
      */ 
+    GAUDI_API 
     AIDA::IHistogram1D* book
     ( const Gaudi::Histo1DDef& hist     ,
       const std::string&       id       , 
@@ -199,6 +215,7 @@ namespace LoKi
      *  @param svc context service 
      *  @return booked histogram 
      */ 
+    GAUDI_API 
     AIDA::IHistogram1D* book
     ( const Gaudi::Histo1DDef& hist     ,
       const int                id       , 
@@ -212,10 +229,18 @@ namespace LoKi
      *  @param svc context service 
      *  @return booked histogram 
      */ 
+    GAUDI_API 
     AIDA::IHistogram1D* book
     ( const Gaudi::Histo1DDef& hist     ,
       const GaudiAlg::ID&      id       ,
       const IAlgContextSvc*    svc  = 0 ) ;
+    // ========================================================================
+    /** helper function to book 1D-histogram
+     *  @param hist histogram desctription
+     *  @return booked histogram 
+     */ 
+    GAUDI_API 
+    AIDA::IHistogram1D* book ( const LoKi::Histo& histo ) ;
     // ========================================================================
   } // end of namespace LoKi::HistoBook
   // ==========================================================================

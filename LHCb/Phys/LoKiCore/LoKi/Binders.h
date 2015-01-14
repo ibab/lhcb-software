@@ -59,7 +59,8 @@ namespace LoKi
       Binder1st 
       ( typename Fun_::first_argument_type value , 
         const    Fun_&                     fun   ) 
-        : LoKi::Functor<TYPE2,TYPE3> () 
+        : LoKi::AuxFunBase ( std::tie ( value , fun ) ) 
+        , LoKi::Functor<TYPE2,TYPE3> () 
         , m_first ( value ) 
         , m_fun   ( fun   ) 
       {}
@@ -67,7 +68,8 @@ namespace LoKi
       Binder1st 
       ( const    Fun_&                     fun   ,
         typename Fun_::first_argument_type value )
-        : LoKi::Functor<TYPE2,TYPE3> () 
+        : LoKi::AuxFunBase ( std::tie ( fun , value ) ) 
+        , LoKi::Functor<TYPE2,TYPE3> () 
         , m_first ( value ) 
         , m_fun   ( fun   )  
       {}
@@ -90,13 +92,17 @@ namespace LoKi
       virtual std::ostream& fillStream ( std::ostream& s ) const 
       { return s << "Bind1st(" << m_fun << ")" ; }
     private:
+      // ======================================================================
       // the default constructor is disabled 
       Binder1st() ; ///< the default constructor is disabled      
+      // ======================================================================
     private:
+      // ======================================================================
       // the fixed argument 
       typename Holder_::First m_first ;  ///< the fixed argument 
       /// the actual function 
       LoKi::FunctorFromFunctor<LoKi::Holder<TYPE1,TYPE2>,TYPE3> m_fun ; ///< function 
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class Binder2nd
@@ -112,16 +118,20 @@ namespace LoKi
     class Binder2nd: public LoKi::Functor<TYPE1,TYPE3>
     {
     private:
+      // ======================================================================
       /// the actual type for data-holder 
       typedef typename LoKi::Holder<TYPE1,TYPE2>   Holder_ ;
       /// the actual type of
       typedef typename LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>  Fun_ ;
+      // ======================================================================
     public:
+      // ======================================================================
       /// contructor from the function and argument
       Binder2nd 
       ( typename Fun_::second_argument_type value , 
         const    Fun_&                      fun   ) 
-        : LoKi::Functor<TYPE1,TYPE3> () 
+        : LoKi::AuxFunBase ( std::tie ( value , fun ) ) 
+        , LoKi::Functor<TYPE1,TYPE3> () 
         , m_second ( value ) 
         , m_fun    ( fun   ) 
       {}
@@ -129,7 +139,8 @@ namespace LoKi
       Binder2nd 
       ( const    Fun_&                      fun   ,
         typename Fun_::second_argument_type value )
-        : LoKi::Functor<TYPE1,TYPE3> () 
+        : LoKi::AuxFunBase ( std::tie ( fun , value ) ) 
+        , LoKi::Functor<TYPE1,TYPE3> () 
         , m_second ( value ) 
         , m_fun    ( fun   )  
       {}
@@ -151,17 +162,23 @@ namespace LoKi
       /// OPTIONAL :: nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const 
       { return s << "Bind2nd(" << m_fun << ")" ; }
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled 
       Binder2nd() ; ///< the default constructor is disabled      
+      // ======================================================================
     private:
+      // ======================================================================
       // the fixed argument 
       typename Holder_::Second m_second ;  ///< the fixed argument 
       /// the actual function 
-      LoKi::FunctorFromFunctor<LoKi::Holder<TYPE1,TYPE2>,TYPE3> m_fun ; ///< function 
+      LoKi::FunctorFromFunctor<LoKi::Holder<TYPE1,TYPE2>,TYPE3> m_fun ; 
+      // ======================================================================
     } ;
     // ========================================================================
   } // end of namespace LoKi::Binders 
+  // ==========================================================================
 } // end of namespace LoKi 
 // ============================================================================
 // The END 

@@ -27,6 +27,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   // the actual type of Lorentz vector  
   typedef Gaudi::LorentzVector LorentzVector ;  // the vector in 4D 
   // the actual type of Lorentz vector 

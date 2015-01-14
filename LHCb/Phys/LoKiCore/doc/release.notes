@@ -13,8 +13,11 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-01-14 - Vanya Belyaev
+ - few more steps towards autogeneration of C++ code from functors 
+
 ! 2015-01-13 - Vanya Belyaev
- - make few steps towards autogenertaion of C++ code from functors 
+ - make few steps towards autogeneration of C++ code from functors 
 
 !========================= LoKiCore v11r21 2014-12-11 =========================
 ! 2014-12-11 - Marco Clemencic

@@ -34,6 +34,7 @@
 #include "LoKi/RecStat.h"
 #include "LoKi/Tensors.h"
 #include "LoKi/Param.h"
+#include "LoKi/Monitor.h"
 // ============================================================================
 // Stefan Roiser's trick to allow compilation on Win32
 // ============================================================================

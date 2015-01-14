@@ -17,9 +17,21 @@
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/ToStream.h"
 // ============================================================================
+// Local
+// ============================================================================
+#include "LoKi/KinTypes.h"
+// ============================================================================
 namespace LoKi 
 { 
   class AuxFunBase ; 
+  class Dump       ; 
+  class FirstN     ; 
+  class Sort       ; 
+  class Param      ; 
+}
+namespace LHCb 
+{
+  class ParticleID ;
 }
 // ============================================================================
 namespace Gaudi
@@ -28,7 +40,27 @@ namespace Gaudi
   namespace Utils 
   {
     // ========================================================================
-    inline std::string toCpp ( const char          s ) { return "'" + std::string( 1 , s )  + "'"; }
+    GAUDI_API std::string toCpp ( const LoKi::AuxFunBase&    o ) ;
+    GAUDI_API std::string toCpp ( const LoKi::Dump&          o ) ;
+    GAUDI_API std::string toCpp ( const LoKi::FirstN&        o ) ;
+    GAUDI_API std::string toCpp ( const LoKi::Sort&          o ) ;
+    GAUDI_API std::string toCpp ( const LoKi::Param&         o ) ;
+    GAUDI_API std::string toCpp ( const LoKi::LorentzVector& o ) ;
+    GAUDI_API std::string toCpp ( const LoKi::ThreeVector&   o ) ;
+    GAUDI_API std::string toCpp ( const LoKi::Point3D&       o ) ;
+    GAUDI_API std::string toCpp ( const LHCb::ParticleID&    o ) ;
+    // ========================================================================
+  }
+  // ==========================================================================
+}
+// ============================================================================
+namespace Gaudi
+{
+  // ==========================================================================
+  namespace Utils 
+  {
+    // ========================================================================
+    inline std::string toCpp ( const char s ) { return "'" + std::string( 1 , s )  + "'"; }
     inline std::string toCpp ( const std::string&  s ) { return '"' + s + '"'; }
     template <unsigned N>
     inline std::string toCpp ( const char (&s)[N]    ) { return '"' + s + '"'; }
@@ -48,9 +80,6 @@ namespace Gaudi
     inline std::string toCpp ( const std::vector<TYPE>&     v ) ;
     template <class TYPE1, class TYPE2>
     inline std::string toCpp ( const std::map<TYPE1,TYPE2>& v ) ;
-    // ========================================================================
-    GAUDI_API 
-    std::string toCpp ( const LoKi::AuxFunBase&           o );
     // ========================================================================
     // declarations 
     // ========================================================================

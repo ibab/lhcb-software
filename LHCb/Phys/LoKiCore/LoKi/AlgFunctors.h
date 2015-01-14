@@ -282,22 +282,18 @@ namespace LoKi
       // ======================================================================
       /// constructor from the algorithm name 
       AllPassed ( const std::string& name1 , 
-                  const std::string& name2 ) 
-        : AnyPassed ( name1 , name2 ) {}
+                  const std::string& name2 ) ;
       /// constructor from the algorithm name      
       AllPassed ( const std::string& name1 , 
                   const std::string& name2 ,
-                  const std::string& name3 ) 
-        : AnyPassed ( name1 , name2 , name3 ) {}
+                  const std::string& name3 ) ;
       /// constructor from the algorithm name      
       AllPassed ( const std::string& name1 , 
                   const std::string& name2 ,
                   const std::string& name3 ,
-                  const std::string& name4 ) 
-        : AnyPassed ( name1 , name2 , name3 , name4 ) {}
+                  const std::string& name4 ) ;
       /// constructor from the algorithm name      
-      AllPassed ( const std::vector<std::string>& name ) 
-        : AnyPassed ( name ) {}
+      AllPassed ( const std::vector<std::string>& name ) ;
       /// MANDATORY: virtual destructor 
       virtual ~AllPassed ()  {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -328,22 +324,18 @@ namespace LoKi
       // ======================================================================
       /// constructor from the algorithm name 
       AnyEnabled ( const std::string& name1 , 
-                   const std::string& name2 ) 
-        : AnyPassed ( name1 , name2 ) {}
+                   const std::string& name2 ) ;
       /// constructor from the algorithm name 
       AnyEnabled ( const std::string& name1 , 
                    const std::string& name2 ,
-                   const std::string& name3 ) 
-        : AnyPassed ( name1 , name2 , name3 ) {}
+                   const std::string& name3 ) ;
       /// constructor from the algorithm name 
       AnyEnabled ( const std::string& name1 , 
                    const std::string& name2 ,
                    const std::string& name3 ,
-                   const std::string& name4 ) 
-        : AnyPassed ( name1 , name2 , name3 , name4 ) {}
+                   const std::string& name4 ) ;
       /// constructor from the algorithm name 
-      AnyEnabled ( const std::vector<std::string>& name ) 
-        : AnyPassed ( name ) {}
+      AnyEnabled ( const std::vector<std::string>& name ) ;
       /// MANDATORY: virtual destructor 
       virtual ~AnyEnabled () {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -374,22 +366,18 @@ namespace LoKi
       // ======================================================================
       /// constructor from the algorithm name 
       AllEnabled ( const std::string& name1 , 
-                   const std::string& name2 ) 
-        : AnyPassed ( name1 , name2 ) {}
+                   const std::string& name2 ) ;
       /// constructor from the algorithm name 
       AllEnabled ( const std::string& name1 , 
                    const std::string& name2 ,
-                   const std::string& name3 ) 
-        : AnyPassed ( name1 , name2 , name3 ) {}
+                   const std::string& name3 ) ;
       /// constructor from the algorithm name 
       AllEnabled ( const std::string& name1 , 
                    const std::string& name2 ,
                    const std::string& name3 ,
-                   const std::string& name4 ) 
-        : AnyPassed ( name1 , name2 , name3 , name4 ) {}
+                   const std::string& name4 ) ;
       /// constructor from the algorithm name 
-      AllEnabled ( const std::vector<std::string>& name ) 
-        : AnyPassed ( name ) {}
+      AllEnabled ( const std::vector<std::string>& name ) ;
       /// MANDATORY: virtual destructor 
       virtual ~AllEnabled () {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -420,22 +408,18 @@ namespace LoKi
       // ======================================================================
       /// constructor from the algorithm name 
       AnyExecuted ( const std::string& name1 , 
-                    const std::string& name2 ) 
-        : AnyPassed ( name1 , name2 ) {}
+                    const std::string& name2 ) ;
       /// constructor from the algorithm name 
       AnyExecuted ( const std::string& name1 , 
                     const std::string& name2 ,
-                    const std::string& name3 ) 
-        : AnyPassed ( name1 , name2 , name3 ) {}
+                    const std::string& name3 ) ;
       /// constructor from the algorithm name 
       AnyExecuted ( const std::string& name1 , 
                     const std::string& name2 ,
                     const std::string& name3 ,
-                    const std::string& name4 ) 
-        : AnyPassed ( name1 , name2 , name3 , name4 ) {}
+                    const std::string& name4 ) ;
       /// constructor from the algorithm name 
-      AnyExecuted ( const std::vector<std::string>& name ) 
-        : AnyPassed ( name ) {}
+      AnyExecuted ( const std::vector<std::string>& name ) ;
       /// MANDATORY: virtual destructor 
       virtual ~AnyExecuted () {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -466,22 +450,18 @@ namespace LoKi
       // ======================================================================
       /// constructor from the algorithm name 
       AllExecuted ( const std::string& name1 , 
-                    const std::string& name2 ) 
-        : AnyPassed ( name1 , name2 ) {}
+                    const std::string& name2 ) ;
       /// constructor from the algorithm name 
       AllExecuted ( const std::string& name1 , 
                     const std::string& name2 ,
-                    const std::string& name3 ) 
-        : AnyPassed ( name1 , name2 , name3 ) {}
+                    const std::string& name3 ) ;
       /// constructor from the algorithm name 
       AllExecuted ( const std::string& name1 , 
                     const std::string& name2 ,
                     const std::string& name3 ,
-                    const std::string& name4 ) 
-        : AnyPassed ( name1 , name2 , name3 , name4 ) {}
+                    const std::string& name4 ) ;
       /// constructor from the algorithm name 
-      AllExecuted ( const std::vector<std::string>& name ) 
-        : AnyPassed ( name ) {}
+      AllExecuted ( const std::vector<std::string>& name ) ;
       /// MANDATORY: virtual destructor 
       virtual ~AllExecuted () {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -620,22 +600,18 @@ namespace LoKi
       // ======================================================================
       /// constructor from the algorithm name 
       NumEnabled ( const std::string& name1 , 
-                   const std::string& name2 ) 
-        : NumPassed ( name1 , name2 ) {}
+                   const std::string& name2 ) ;
       /// constructor from the algorithm name 
       NumEnabled ( const std::string& name1 , 
                    const std::string& name2 ,
-                   const std::string& name3 ) 
-        : NumPassed ( name1 , name2 , name3 ) {}
+                   const std::string& name3 ) ;
       /// constructor from the algorithm name 
       NumEnabled ( const std::string& name1 , 
                    const std::string& name2 ,
                    const std::string& name3 ,
-                   const std::string& name4 ) 
-        : NumPassed ( name1 , name2 , name3 , name4 ) {}
+                   const std::string& name4 ) ;
       /// constructor from the algorithm name 
-      NumEnabled ( const std::vector<std::string>& name ) 
-        : NumPassed ( name ) {}
+      NumEnabled ( const std::vector<std::string>& name ) ;
       // ======================================================================      
       /// MANDATORY: virtual destructor 
       virtual ~NumEnabled () {}
@@ -666,22 +642,18 @@ namespace LoKi
       // ======================================================================
       /// constructor from the algorithm name 
       NumExecuted ( const std::string& name1 , 
-                    const std::string& name2 ) 
-        : NumPassed ( name1 , name2 ) {}
+                    const std::string& name2 ) ;
       /// constructor from the algorithm name 
       NumExecuted ( const std::string& name1 , 
                     const std::string& name2 ,
-                    const std::string& name3 ) 
-        : NumPassed ( name1 , name2 , name3 ) {}
+                    const std::string& name3 ) ;
       /// constructor from the algorithm name 
       NumExecuted ( const std::string& name1 , 
                     const std::string& name2 ,
                     const std::string& name3 ,
-                    const std::string& name4 ) 
-        : NumPassed ( name1 , name2 , name3 , name4 ) {}
+                    const std::string& name4 ) ;
       /// constructor from the algorithm name 
-      NumExecuted ( const std::vector<std::string>& name ) 
-        : NumPassed ( name ) {}
+      NumExecuted ( const std::vector<std::string>& name ) ;
       // ======================================================================      
       /// MANDATORY: virtual destructor 
       virtual ~NumExecuted () {}

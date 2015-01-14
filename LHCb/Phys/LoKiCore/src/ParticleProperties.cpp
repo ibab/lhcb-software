@@ -1,6 +1,10 @@
 // ============================================================================
 // Include files
 // ============================================================================
+// STD&STL
+// ============================================================================
+#include <algorithm>
+// ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/PhysicalConstants.h"
@@ -90,6 +94,21 @@ LHCb::ParticleID LoKi::Particles::pidFromName( const std::string& name )
   // update the map:
   s_map.insert ( name , pp->particleID() ) ;
   return pp -> particleID() ;
+}
+// ============================================================================
+/* retrieve particle ID from Particle name 
+ *  @param names particle names 
+ *  @return particle IDs 
+ */
+// ============================================================================
+std::vector<LHCb::ParticleID> 
+LoKi::Particles::pidsFromNames ( const std::vector<std::string>& names ) 
+{
+  std::vector<LHCb::ParticleID> res ( names.size() ) ;
+  std::transform ( names.begin() , 
+                   names.end  () , 
+                   res.begin  () , &pidFromName ) ;
+  return res ;
 }
 // ============================================================================
 /*  retrieve particle ID from Particle name 
@@ -417,7 +436,28 @@ double LoKi::Particles::ctau
   return pp -> ctau () ;
 } 
 // ============================================================================
+namespace 
+{
+  struct _ABS_: 
+    public std::unary_function<LHCb::ParticleID,LHCb::ParticleID>
+  {
+    inline 
+    LHCb::ParticleID operator() 
+    ( const LHCb::ParticleID& i ) const { return std::abs ( i ) ; }
+  } ;
+}
+// ============================================================================
+std::vector<LHCb::ParticleID> 
+std::abs ( const std::vector<LHCb::ParticleID>& pids ) 
+{
+  std::vector<LHCb::ParticleID> res ( pids.size() ) ;
+  std::transform ( pids.begin() , 
+                   pids.end  () , 
+                   res.begin () , _ABS_() ) ;
+  return res ;
+}
 
+ 
 
 // ============================================================================
 // The END 

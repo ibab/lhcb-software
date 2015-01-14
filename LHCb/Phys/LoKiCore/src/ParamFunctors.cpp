@@ -196,7 +196,8 @@ LoKi::Parameters::ParamBase::~ParamBase() { m_property = 0 ; }
 // ============================================================================
 LoKi::Parameters::Parameter::Parameter  
 ( const LoKi::Param& param ) 
-  : LoKi::Functor<void,double> () 
+  : LoKi::AuxFunBase ( std::tie ( param ) )  
+  , LoKi::Functor<void,double> () 
   , LoKi::Parameters::ParamBase ( param ) 
   , m_map_d     ( false ) 
   , m_map_f     ( false ) 
@@ -225,7 +226,8 @@ LoKi::Parameters::Parameter::Parameter
 // ============================================================================
 LoKi::Parameters::Parameter::Parameter  
 ( const std::string& param ) 
-  : LoKi::Functor<void,double> () 
+  : LoKi::AuxFunBase ( std::tie ( param ) )  
+  , LoKi::Functor<void,double> () 
   , LoKi::Parameters::ParamBase ( param ) 
   , m_map_d     ( false ) 
   , m_map_f     ( false ) 
@@ -319,12 +321,6 @@ LoKi::Parameters::Parameter::operator ()( /* argument */ ) const
   //
   return 0 ;
 }
-
- 
-
-     
- 
-
 // ============================================================================
 // The END 
 // ============================================================================

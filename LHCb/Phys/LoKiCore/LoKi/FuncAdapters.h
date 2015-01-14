@@ -59,15 +59,20 @@ namespace LoKi
     template <class TYPE, class TYPE2=double>
     class FunAdapter : public LoKi::Functor<TYPE,TYPE2>
     {
+      // ======================================================================
     protected:
+      // ======================================================================
       // base type 
       typedef LoKi::Functor<TYPE,TYPE2> MyBase  ;
+      // ======================================================================
     public:
+      // ======================================================================
       /// the actual type of the function
       typedef typename MyBase::result_type (*function)
         ( typename MyBase::argument_type ) ;
-      /// 
+      // ======================================================================
     public:
+      // ======================================================================
       /// contructor from the function 
       FunAdapter ( function fun ) 
         : MyBase () 
@@ -88,12 +93,16 @@ namespace LoKi
         ( typename MyBase::argument arg ) const 
       { return m_fun ( arg ) ; }
     private:
+      // ======================================================================
       // default constructor is private 
       FunAdapter();
       // assignement operator is disabled 
       FunAdapter& operator=( const FunAdapter& right ) ;
+      // ======================================================================
     private:
+      // ======================================================================
       function m_fun ;
+      // ======================================================================
     };
     // ========================================================================    
   } // end of namespace Adapters

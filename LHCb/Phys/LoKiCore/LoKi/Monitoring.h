@@ -19,6 +19,7 @@
 // ============================================================================
 #include "LoKi/Functions.h"
 #include "LoKi/HistoBook.h"
+#include "LoKi/Monitor.h"
 // ============================================================================
 /// forward declarations 
 // ============================================================================
@@ -31,6 +32,7 @@ namespace GaudiAlg { class ID ; }
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   /** @namespace LoKi::Monitoring Monitoring.h LoKi/Monitoring.h
    *  Collection of  useful smart "self-monitoring" meta-functors
    *
@@ -65,6 +67,7 @@ namespace LoKi
      *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-14
+     *  @warning This class has no proper <c>toCpp</c> method 
      */
     template <class TYPE, class TYPE2> 
     class Counter : public LoKi::Functor<TYPE,TYPE2>
@@ -75,15 +78,26 @@ namespace LoKi
       Counter ( const LoKi::Functor<TYPE,TYPE2>& cut  , 
                 StatEntity*                      stat )
         : LoKi::Functor<TYPE,TYPE2>() 
-        , m_cut  ( cut  ) 
-        , m_stat ( stat ) 
+        , m_cut    ( cut  ) 
+        , m_stat   ( stat ) 
+        , m_cntdef (      ) 
+      {} 
+      /// constructor from the predicate and the generic counter 
+      Counter ( const LoKi::Functor<TYPE,TYPE2>& cut  , 
+                const LoKi::CounterDef&          cnt )
+        : LoKi::AuxFunBase ( std::tie ( cut , cnt ) ) 
+        , LoKi::Functor<TYPE,TYPE2>() 
+        , m_cut    ( cut  ) 
+        , m_stat   ( 0    ) 
+        , m_cntdef ( cnt  ) 
       {} 
       /// copy constructor 
       Counter ( const Counter& right )
-        : LoKi::AuxFunBase          ( right        ) 
-        , LoKi::Functor<TYPE,TYPE2> ( right        ) 
-        , m_cut                     ( right.m_cut  ) 
-        , m_stat                    ( right.m_stat ) 
+        : LoKi::AuxFunBase          ( right          ) 
+        , LoKi::Functor<TYPE,TYPE2> ( right          ) 
+        , m_cut                     ( right.m_cut    ) 
+        , m_stat                    ( right.m_stat   ) 
+        , m_cntdef                  ( right.m_cntdef ) 
       {} 
       /// MANDATORY: virtual constructor
       virtual ~Counter() { m_stat = 0 ; }
@@ -95,6 +109,9 @@ namespace LoKi
       {
         const typename LoKi::Functor<TYPE,TYPE2>::result_type result = 
           m_cut.fun ( a ) ;
+        /// get counter if needed 
+        if ( 0 == m_stat &&  m_cntdef.valid() ) 
+        { m_stat = LoKi::Monitoring::getCounter ( m_cntdef ) ; }
         ///  perform monitoring
         if ( 0 != m_stat ){ (*m_stat) += result ; }       // perform monitoring
         return result ;                                               // RETURN 
@@ -116,6 +133,8 @@ namespace LoKi
       LoKi::FunctorFromFunctor<TYPE,TYPE2> m_cut ;      // the "main" predicate
       /// generic counter used for monitoring:
       StatEntity* m_stat ;               // generic counter used for monitoring
+      /// counter description 
+      LoKi::CounterDef m_cntdef ;       // counter description 
       // ======================================================================
     };
     // ========================================================================
@@ -194,6 +213,7 @@ namespace LoKi
      *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-14
+     *  @warning This class has no proper <c>toCpp</c> method 
      */
     template <class TYPE, class TYPE2=double> 
     class Plot: public LoKi::Functor<TYPE,TYPE2>
@@ -206,6 +226,24 @@ namespace LoKi
         : LoKi::Functor<TYPE,TYPE2>() 
         , m_fun     ( fun   ) 
         , m_histo   ( histo ) 
+      {} 
+      /// constructor from the function and the histogram  description 
+      Plot ( const LoKi::Functor<TYPE,TYPE2>& fun   , 
+             const LoKi::Histo&               hdef  )
+        : LoKi::AuxFunBase ( std::tie ( fun , hdef ) ) 
+        , LoKi::Functor<TYPE,TYPE2>() 
+        , m_fun     ( fun   ) 
+        , m_histo   ( 0     ) 
+        , m_hdef    ( hdef  )
+      {} 
+      /// constructor from the function and the histogram  description 
+      Plot ( const LoKi::Histo&               hdef  , 
+             const LoKi::Functor<TYPE,TYPE2>& fun   ) 
+        : LoKi::AuxFunBase ( std::tie ( hdef , fun ) ) 
+        , LoKi::Functor<TYPE,TYPE2>() 
+        , m_fun     ( fun   ) 
+        , m_histo   ( 0     ) 
+        , m_hdef    ( hdef  )
       {} 
       /// constructor from the function and the histogram  
       Plot ( AIDA::IHistogram1D*              histo ,
@@ -229,8 +267,13 @@ namespace LoKi
       virtual typename LoKi::Functor<TYPE,TYPE2>::result_type operator() 
         ( typename LoKi::Functor<TYPE,TYPE2>::argument a ) const 
       {
+        // evaluate the functor 
         const typename LoKi::Functor<TYPE,TYPE2>::result_type result = 
           m_fun.fun ( a ) ;
+        // try to load the histo 
+        if ( 0 == m_histo && m_hdef.valid() ) 
+        { m_histo = LoKi::HistoBook::book ( m_hdef ) ; }
+        //
         // perform monitoring
         if ( 0 != m_histo ) { m_histo -> fill ( result ) ;  } ///< perform monitoring
         return result ;
@@ -252,6 +295,8 @@ namespace LoKi
       LoKi::FunctorFromFunctor<TYPE,TYPE2> m_fun ; // the "main" function
       /// the histogram for monitoring 
       AIDA::IHistogram1D*              m_histo ; // the histogram for monitoring 
+      /// histogram description for lazy instantiation 
+      LoKi::Histo                      m_hdef  ; // histogram description
       // ======================================================================
     };
     // ========================================================================
@@ -350,7 +395,8 @@ namespace LoKi
         std::ostream&                    stream = std::cout ,
         const std::string&               suffix = "\n"      , 
         const std::string&               prefix = ""        ) 
-        : LoKi::Functor<TYPE,TYPE2>() 
+        : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+        , LoKi::Functor<TYPE,TYPE2>() 
         , m_fun    ( fun    ) 
         , m_stream ( stream )
         , m_suffix ( suffix ) 
@@ -367,7 +413,8 @@ namespace LoKi
         const LoKi::Functor<TYPE,TYPE2>& fun           , 
         const std::string&               suffix = "\n" , 
         const std::string&               prefix = ""   ) 
-        : LoKi::Functor<TYPE,TYPE2>() 
+        : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+        , LoKi::Functor<TYPE,TYPE2>() 
         , m_fun    ( fun    ) 
         , m_stream ( stream )
         , m_suffix ( suffix ) 
@@ -430,7 +477,8 @@ namespace LoKi
         std::ostream&                    stream = std::cout ,
         const std::string&               suffix = "\n"      , 
         const std::string&               prefix = ""        ) 
-        : LoKi::Functor<void,TYPE2>() 
+        : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+        , LoKi::Functor<void,TYPE2>() 
         , m_fun    ( fun    ) 
         , m_stream ( stream )
         , m_suffix ( suffix ) 
@@ -447,7 +495,8 @@ namespace LoKi
         const LoKi::Functor<void,TYPE2>& fun           , 
         const std::string&               suffix = "\n" , 
         const std::string&               prefix = ""   ) 
-        : LoKi::Functor<void,TYPE2>() 
+        : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+        , LoKi::Functor<void,TYPE2>() 
         , m_fun    ( fun    ) 
         , m_stream ( stream )
         , m_suffix ( suffix ) 
@@ -494,98 +543,7 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
-    /** helper enumerator to indicate the mode for creation of counters:
-     *
-     *   - ContextSvc : the counter is retrieved from the corresponding 
-     *                  GauidiAlgorithm using Context Service      
-     *   - StatSvc    : the counter is retrieved from Stat Service 
-     *   - CounterSvc : the counter is retrieved from Counter Service 
-     *
-     *  @see StatEntity
-     *  @see Stat
-     *  @see IAlgContextSvc 
-     *  @see GaudiAlgorithm
-     *  @see GaudiCommon
-     *  @see IStatSvc 
-     *  @see ICounterSvc 
-     */
-    enum Flag 
-      {
-        ContextSvc = 0 , //  local counter through IAlgContext -> GaudiAlgorithm  ,
-        StatSvc        , // global counter through IStatSvc  ,
-        CounterSvc       // global counter through ICounterSvc  
-      };
-    // ========================================================================
-    /** get the (global) counter by name using IStatSvc 
-     *  @param IStatSvc 
-     *  @param ssvc service of statistics 
-     *  @param name the counter name 
-     *  @return the counter 
-     */
-    StatEntity* getCounter 
-    ( IStatSvc*          csvc , 
-      const std::string& name ) ;
-    /** get the (local) counter by name using GaudiAlgorithm
-     *  @param alg the algorithm 
-     *  @param name the counter name 
-     *  @return the counter 
-     */
-    StatEntity* getCounter 
-    ( GaudiAlgorithm*    alg  , 
-      const std::string& name ) ; 
-    /** get the (local) counter by name using GaudiTool
-     *  @param tool the tool 
-     *  @param name the counter name 
-     *  @return the counter 
-     */
-    StatEntity* getCounter 
-    ( GaudiTool*         tool , 
-      const std::string& name ) ; 
-    /** get the counter by name using ICounterSvc 
-     *  @see ICounterSvc 
-     *  @param csvc the counter service 
-     *  @param group the counter group
-     *  @param name the counter name 
-     *  @return the counter 
-     */
-    StatEntity* getCounter 
-    ( ICounterSvc*       csvc     ,
-      const std::string& group    ,
-      const std::string& name     ) ;
-    /** get the counter by name using IAlgContextSvc 
-     *  @param name the counter name 
-     *  @param csvc context service 
-     *  @return the counter 
-     */
-    StatEntity* getCounter 
-    ( const IAlgContextSvc* csvc , 
-      const std::string&    name ) ;
-    /** get the counter by name using IStatSvc/ICounter or IAlgContextSvc
-     *  @param ICounterSvc      
-     *  @param IStatSvc      
-     *  @param IAlgContextSvc 
-     *  @param flag  local/global flag 
-     *  @param group the counter grop
-     *  @param name  the counter name
-     *  @return the counter 
-     */
-    StatEntity* getCounter 
-    ( const Flag         flag  , 
-      const std::string& group , 
-      const std::string& name  ) ;
-    /** get the counter by name using IStatSvc/ICounter or IAlgContextSvc
-     *  @param ICounterSvc      
-     *  @param IStatSvc      
-     *  @param IAlgContextSvc 
-     *  @param flag  local/global flag 
-     *  @param name  the counter name
-     *  @return the counter 
-     */
-    StatEntity* getCounter 
-    ( const Flag         flag  , 
-      const std::string& name  ) ;
-    // ========================================================================
-  } // end of namespace LoKi::Monitoring
+ } // end of namespace LoKi::Monitoring
   // ==========================================================================
   /** helper function for creation of monitored predicate
    *
@@ -635,6 +593,13 @@ namespace LoKi
   monitor ( const LoKi::Functor<TYPE,TYPE2>& cut , StatEntity& entity )
   { return LoKi::Monitoring::Counter<TYPE,TYPE2>( cut , &entity ) ; }
   // ==========================================================================
+  template <class TYPE, class TYPE2> 
+  inline 
+  LoKi::Monitoring::Counter<TYPE,TYPE2>
+  monitor ( const LoKi::Functor<TYPE,TYPE2>& cut , 
+            const LoKi::CounterDef&          cnt )
+  { return LoKi::Monitoring::Counter<TYPE,TYPE2>( cut , cnt ) ; }
+  // ==========================================================================
   /** helper function for creation of monitored function  
    *
    *  @code 
@@ -660,6 +625,33 @@ namespace LoKi
   LoKi::Monitoring::Plot<TYPE,TYPE2>
   monitor ( const LoKi::Functor<TYPE,TYPE2>& cut    , 
             AIDA::IHistogram1D*              histo  )
+  { return LoKi::Monitoring::Plot<TYPE,TYPE2>( cut , histo ) ; }
+  // ==========================================================================
+  /** helper function for creation of monitored function  
+   *
+   *  @code 
+   * 
+   *  // some function
+   *  Fun fun = ... ;
+   * 
+   *  // for monitoring mode, decorate it with self-monitoring abilities:
+   *  if ( monitoring ) 
+   *   { 
+   *     AIDA::IHistogram1D* histo = ... ;
+   *     fun = monitor ( fun , histo ) ; ;
+   *   }
+   *
+   * 
+   *  @endcode 
+   * 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2007-06-14
+   */
+  template <class TYPE, class TYPE2> 
+  inline 
+  LoKi::Monitoring::Plot<TYPE,TYPE2>
+  monitor ( const LoKi::Functor<TYPE,TYPE2>& cut   , 
+            const LoKi::Histo&               histo )
   { return LoKi::Monitoring::Plot<TYPE,TYPE2>( cut , histo ) ; }
   // ==========================================================================
   /** helper function for creation of monitored function  

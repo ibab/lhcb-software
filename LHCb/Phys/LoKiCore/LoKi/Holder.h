@@ -33,10 +33,13 @@ namespace LoKi
                         typename LoKi::Field<const TYPE2>::Type>
   {
   public:
+    // ========================================================================
     typedef typename  LoKi::Field<const TYPE1>::Type         First  ;
     typedef typename  LoKi::Field<const TYPE2>::Type         Second ;
     typedef std::pair<First,Second>                          Pair   ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// constructor from data fields (including the default) 
     Holder ( const TYPE1& f , const TYPE2& s  ) 
       : Pair ( First ( f ) , Second ( s ) ) {}
@@ -46,6 +49,7 @@ namespace LoKi
     Holder ( )                     : Pair ( )      {}
     /// copy constuctor 
     Holder ( const Holder& copy  ) : Pair ( copy ) {}
+    // ========================================================================
   };
   // ==========================================================================
 } // end of namespace LoKi

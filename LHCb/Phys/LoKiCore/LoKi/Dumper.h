@@ -62,7 +62,8 @@ namespace LoKi
                const std::string&                close  = "\n"      ,
                const bool                        right  = true      ,
                std::ostream&                     stream = std::cout ) 
-        : LoKi::Functor<TYPE1,TYPE2>() 
+        : LoKi::AuxFunBase ( std::tie ( fun , open , close , right ) ) 
+        , LoKi::Functor<TYPE1,TYPE2>() 
         , m_fun    ( fun    )
         , m_right  ( right  ) 
         , m_stream ( stream ) 
@@ -77,7 +78,8 @@ namespace LoKi
                const LoKi::Dump&                 dump               ,
                const bool                        right  = true      ,
                std::ostream&                     stream = std::cout ) 
-        : LoKi::Functor<TYPE1,TYPE2>() 
+        : LoKi::AuxFunBase ( std::tie ( fun , dump , right ) ) 
+        , LoKi::Functor<TYPE1,TYPE2>() 
         , m_fun    ( fun    )
         , m_right  ( right  ) 
         , m_stream ( stream ) 
