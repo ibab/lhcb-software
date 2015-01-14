@@ -32,38 +32,19 @@ MassHypothesisRingCreator( const std::string& type,
     m_traceModeRad  ( Rich::NRadiatorTypes ),
     m_nPointScale   ( Rich::NRadiatorTypes ),
     m_maxPoint      ( Rich::NRadiatorTypes, 100 ),
-    m_minPoint      ( Rich::NRadiatorTypes, 10  )
+    m_minPoint      ( Rich::NRadiatorTypes, 100 )
 {
-  using namespace boost::assign;
-
   // tool interface
   declareInterface<IMassHypothesisRingCreator>(this);
 
-  // Define job option parameters
-  // context specific defaults
-  if ( contextContains("HLT") )
-  {
-    //               Aero   R1Gas  R2Gas
-    std::vector<unsigned int>
-      tmp = list_of  (50)   (50)   (50);
-    m_maxPoint = tmp;
-    m_minPoint = tmp;
-  }
-  else // offline
-  {
-    //               Aero   R1Gas  R2Gas
-    std::vector<unsigned int>
-      tmp = list_of  (100)  (100)  (100);
-    m_maxPoint = tmp;
-    m_minPoint = tmp;
-  }
-  declareProperty( "RingsLocation",
-                   m_ringLocation = contextSpecificTES(LHCb::RichRecRingLocation::SegmentHypoRings) );
+  // Job Options
   declareProperty( "MaxRingPoints", m_maxPoint  );
   declareProperty( "MinRingPoints", m_minPoint  );
   declareProperty( "CheckBeamPipe", m_checkBeamPipe = true );
   declareProperty( "UseDetailedHPDsInRayTracing", m_useDetailedHPDsForRayT = false );
-
+  declareProperty( "RingsLocation", m_ringLocation = 
+                   contextSpecificTES(LHCb::RichRecRingLocation::SegmentHypoRings) );
+  
 }
 
 StatusCode MassHypothesisRingCreator::initialize()

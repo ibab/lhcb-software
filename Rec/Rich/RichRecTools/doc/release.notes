@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2015-01-14 - Chris Jones
+ - Make the default options for the HLT context in RichMassHypothesisRingCreator
+   and RichRayTraceCherenkovCone the same as Offline.
+
 !========================= RichRecTools v4r25 2014-06-10 =======================
 ! 2014-05-24 - Chris Jones
  - Use VDT for various math functions.

@@ -37,16 +37,8 @@ RayTraceCherenkovCone::RayTraceCherenkovCone( const std::string& type,
   // Define interface for this tool
   declareInterface<IRayTraceCherenkovCone>(this);
   // JOs
-  if ( contextContains("HLT") )
-  {
-    //               Aero   R1Gas  R2Gas
-    m_nBailout = {   10,    15,    20    };
-  }
-  else
-  {
-    //               Aero   R1Gas  R2Gas
-    m_nBailout = {   50,    50,    50    };
-  }
+  //               Aero   R1Gas  R2Gas
+  m_nBailout = {   50,    50,    50    };
   declareProperty( "BailoutTries", m_nBailout );
 }
 

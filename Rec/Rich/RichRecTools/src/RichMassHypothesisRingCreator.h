@@ -30,9 +30,6 @@
 #include "Event/RichRecRing.h"
 #include "Event/RichRecSegment.h"
 
-// boost
-#include "boost/assign/list_of.hpp"
-
 namespace Rich
 {
   namespace Rec
