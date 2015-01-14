@@ -141,15 +141,18 @@ class RichTools(RichConfigurableUser):
         # default values
         self.setRichDefaults( "PixelCreatorType",    { "Offline" : "RawBuffer",      "HLT" : "RawBuffer"   } )
         self.setRichDefaults( "PhotonCreatorType",   { "Offline" : "RecoPhotons",    "HLT" : "RecoPhotons" } )
-        self.setRichDefaults( "PhotonRecoType",      { "Offline" : "Quartic",        "HLT" : "EstiFromRadius" } )
+        #self.setRichDefaults( "PhotonRecoType",      { "Offline" : "Quartic",        "HLT" : "EstiFromRadius" } )
+        self.setRichDefaults( "PhotonRecoType",      { "Offline" : "Quartic",        "HLT" : "Quartic" } )
         self.setRichDefaults( "PhotonPredictorType", { "Offline" : "CKthetaBands",   "HLT" : "CKthetaBands" } )
         self.setRichDefaults( "TrackCreatorType",    { "Offline" : "RecoTracks",     "HLT" : "RecoTracks" } )
         self.setRichDefaults( "TrackSelectorType",   { "Offline" : "Reco",           "HLT" : "Reco" } )
         self.setRichDefaults( "TrSegMakerType",      { "Offline" : "Detailed",       "HLT" : "Detailed" } )
         self.setRichDefaults( "GeomEffType",         { "Offline" : "CKMassRing",     "HLT" : "CKMassRing" } )
-        self.setRichDefaults( "CkResType",           { "Offline" : "Functional",     "HLT" : "Binned" } )
-        self.setRichDefaults( "SignalDetEffType",    { "Offline" : "Tabulated",      "HLT" : "NominalTabulated" } )
-               
+        #self.setRichDefaults( "CkResType",           { "Offline" : "Functional",     "HLT" : "Binned" } )
+        self.setRichDefaults( "CkResType",           { "Offline" : "Functional",     "HLT" : "Functional" } )
+        #self.setRichDefaults( "SignalDetEffType",    { "Offline" : "Tabulated",      "HLT" : "NominalTabulated" } )
+        self.setRichDefaults( "SignalDetEffType",    { "Offline" : "Tabulated",      "HLT" : "Tabulated" } )
+
     ## @brief Make an instance of the given configurable and configure this
     #         tool in the RichToolRegistry
     #  @param tooltype The tool type to instanciate

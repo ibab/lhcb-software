@@ -4,6 +4,10 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2015-01-14 - Chris Jones
+ - Update the default tool types in RichTools Configurable to make the HLT 
+   defaults the same as Offline.
+
 !========================= RichKernel v7r56 2014-09-08 =========================
 ! 2014-08-03 - Chris Jones
  - Remove support for depreciated DetailedTrSegMakerFromRecoTracksStateProvider
