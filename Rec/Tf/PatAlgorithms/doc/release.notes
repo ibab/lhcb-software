@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r38 2015-01-14 =========================
 ! 2015-01-09 - Michel De Cian
  - New parametrisations in 'PatMatchTool', lower ghost right and higher efficiency, mostly for low p tracks.
 
