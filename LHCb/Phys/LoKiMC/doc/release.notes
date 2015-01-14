@@ -14,6 +14,9 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2015-01-14 - Vanya Belyaev
+ - few more steps towards autogeneration of C++ code from functors 
+
 !========================= LoKiMC v10r15 2014-12-11 =========================
 ! 2014-11-26 - Marco Clemencic
  - Reverted work around for spurious entries in the rootmap files.
