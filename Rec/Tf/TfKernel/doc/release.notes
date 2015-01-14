@@ -4,6 +4,7 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!========================= TfKernel v2r29 2015-01-14 =========================
 ! 2014-12-26 - Gerhard Raven
  - Tf::TStationHitManager: remove virtual function which allows tweaking of hit 
    creation -- which isn't actually used, but does imply  a virtual function call 
