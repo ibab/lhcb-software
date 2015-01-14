@@ -40,23 +40,23 @@ DetailedTrSegMakerFromRecoTracks( const std::string& type,
 {
   using namespace Gaudi::Units;
 
-  // context specific defaults
-  if ( contextContains("HLT") )
-  {
-    m_trExt1Name   = "TrackParabolicExtrapolator";
-    m_trExt2Name   = "TrackLinearExtrapolator";
-    // Rads            Aerogel   Rich1Gas  Rich2Gas
-    m_zTolerance   = { 3000*mm , 3000*mm , 4000*mm } ;
-    m_minRadLength = { 0*mm    , 500*mm  , 1500*mm } ;
-  }
-  else // offline
-  {
-    m_trExt1Name   = "TrackRungeKuttaExtrapolator";
-    m_trExt2Name   = "TrackParabolicExtrapolator";
-    // Rads            Aerogel   Rich1Gas  Rich2Gas
-    m_zTolerance   = { 800*mm  , 2000*mm , 3000*mm } ;
-    m_minRadLength = { 0*mm    , 500*mm  , 1500*mm } ;
-  }
+  // // context specific defaults
+  // if ( contextContains("HLT") )
+  // {
+  //   m_trExt1Name   = "TrackParabolicExtrapolator";
+  //   m_trExt2Name   = "TrackLinearExtrapolator";
+  //   // Rads            Aerogel   Rich1Gas  Rich2Gas
+  //   m_zTolerance   = { 3000*mm , 3000*mm , 4000*mm } ;
+  //   m_minRadLength = { 0*mm    , 500*mm  , 1500*mm } ;
+  // }
+  // else // offline
+  // {
+  m_trExt1Name   = "TrackRungeKuttaExtrapolator";
+  m_trExt2Name   = "TrackParabolicExtrapolator";
+  // Rads            Aerogel   Rich1Gas  Rich2Gas
+  m_zTolerance   = { 800*mm  , 2000*mm , 3000*mm } ;
+  m_minRadLength = { 0*mm    , 500*mm  , 1500*mm } ;
+  // }
 
   // job options
 
