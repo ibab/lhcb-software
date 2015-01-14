@@ -3,6 +3,8 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+
+!========================= PatKernel v2r8 2015-01-14 =========================
 ! 2014-12-15 - Gerhard Raven
  - PatForwardHit, PatTTHit: bypass mutex of static memory pool.
    WARNING: when the reconstruction becomes really multithreaded, this will
