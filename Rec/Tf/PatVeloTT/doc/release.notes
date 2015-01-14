@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= PatVeloTT v4r4 2015-01-14 =========================
 ! 2014-12-12 - Sebastian Neubert 
  - adapt the check for an empty input to explicitely query the size of the Range
    move the corresponding message-level from warning to debug 
