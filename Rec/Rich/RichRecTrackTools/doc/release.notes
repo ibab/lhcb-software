@@ -4,6 +4,7 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RichRecTrackTools v1r38 2015-01-14 =========================
 ! 2015-01-14 - Chris Jones
  - Make the HLT defaults in RichDetailedTrSegMakerFromRecoTracks the same as
    for Offline.
