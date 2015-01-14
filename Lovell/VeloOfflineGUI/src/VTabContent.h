@@ -3,8 +3,8 @@
 
 #include <vector>
 #include "VPlot.h"
-#include <qwidget.h>
-#include <QGridLayout>
+#include <QtGui/qwidget.h>
+#include <QtGui/QGridLayout>
 #include "VTable.h"
 
 // VTabContent - an object containing one tabs worth of content (be it plots or 

@@ -26,32 +26,32 @@
 #ifndef QCUSTOMPLOT_H
 #define QCUSTOMPLOT_H
 
-#include <QObject>
-#include <QPointer>
-#include <QWidget>
-#include <QPainter>
-#include <QPaintEvent>
-#include <QMouseEvent>
-#include <QPixmap>
-#include <QVector>
-#include <QString>
-#include <QDateTime>
-#include <QMultiMap>
-#include <QFlags>
-#include <QDebug>
-#include <QVector2D>
-#include <QStack>
-#include <QCache>
-#include <QMargins>
-#include <qmath.h>
+#include <QtCore/QObject>
+#include <QtCore/QPointer>
+#include <QtGui/QWidget>
+#include <QtGui/QPainter>
+#include <QtGui/QPaintEvent>
+#include <QtGui/QMouseEvent>
+#include <QtGui/QPixmap>
+#include <QtCore/QVector>
+#include <QtCore/QString>
+#include <QtCore/QDateTime>
+#include <QtCore/QMultiMap>
+#include <QtCore/QFlags>
+#include <QtCore/QDebug>
+#include <QtGui/QVector2D>
+#include <QtCore/QStack>
+#include <QtCore/QCache>
+#include <QtCore/QMargins>
+#include <QtCore/qmath.h>
 #include <limits>
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-#  include <qnumeric.h>
-#  include <QPrinter>
-#  include <QPrintEngine>
+#  include <QtCore/qnumeric.h>
+#  include <QtGui/QPrinter>
+#  include <QtGui/QPrintEngine>
 #else
-#  include <QtNumeric>
-#  include <QtPrintSupport>
+#  include <QtCore/QtNumeric>
+#  include <QtCore/QtPrintSupport>
 #endif
 
 class QCPPainter;

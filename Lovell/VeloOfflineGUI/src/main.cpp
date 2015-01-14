@@ -1,5 +1,5 @@
 #include "VeloView.h"
-#include <QApplication>
+#include <QtGui/QApplication>
 #include <sstream>
 
 int main(int argc, char *argv[]) {

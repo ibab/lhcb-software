@@ -1,13 +1,13 @@
 #ifndef VPLOTOPS_H
 #define VPLOTOPS_H
 
-#include <QGroupBox>
+#include <QtGui/QGroupBox>
 #include "VPlot.h"
-#include <QCheckBox>
-#include <QPushButton>
-#include <QComboBox>
-#include <QSpinBox>
-#include <QGridLayout>
+#include <QtGui/QCheckBox>
+#include <QtGui/QPushButton>
+#include <QtGui/QComboBox>
+#include <QtGui/QSpinBox>
+#include <QtGui/QGridLayout>
 
 class VPlot;
 

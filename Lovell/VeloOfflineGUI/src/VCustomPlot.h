@@ -2,14 +2,14 @@
 #define VCUSTOMPLOT_H
 
 #include "qcustomplot.h"
-#include <QWidget>
+#include <QtGui/QWidget>
 #include <iostream>
-#include <QRubberBand>
-#include <QPoint>
+#include <QtGui/QRubberBand>
+#include <QtCore/QPoint>
 #include "VPlotOps.h"
-#include <QGridLayout>
-#include <QMenu>
-#include <QAction>
+#include <QtGui/QGridLayout>
+#include <QtGui/QMenu>
+#include <QtGui/QAction>
 
 class VPlot;
 class VPlotOps;

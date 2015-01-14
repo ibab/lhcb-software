@@ -15,13 +15,18 @@ include_path	none
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
 use VeloAnalysisFramework	v*
+use ROOT            v*      LCG_Interfaces
+use Qt 		    v* 	    LCG_Interfaces -no_auto_imports
+
 #============================================================================
 # Component library building rule
 #============================================================================
-library		VeloOfflineGUI	../src/*.cpp 
+application		VeloOfflineGUI	../src/*.cpp -import=Qt 
+
+
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern    component_library library=VeloOfflineGUI
+#apply_pattern    component_library library=VeloOfflineGUI
 #Below needs to be modified as necessary
 apply_pattern install_python_modules

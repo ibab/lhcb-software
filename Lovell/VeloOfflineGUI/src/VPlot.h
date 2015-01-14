@@ -3,14 +3,14 @@
 
 #include <vector>
 #include "VPlottable.h"
-#include <qwidget.h>
+#include <QtGui/qwidget.h>
 #include "VCustomPlot.h"
-#include <QGridLayout>
+#include <QtGui/QGridLayout>
 #include "VTabContent.h"
 #include "VPlotOps.h"
-#include <QComboBox>
-#include <QSpinBox>
-#include <QLabel>
+#include <QtGui/QComboBox>
+#include <QtGui/QSpinBox>
+#include <QtGui/QLabel>
 
 
 // Author: Daniel Saunders

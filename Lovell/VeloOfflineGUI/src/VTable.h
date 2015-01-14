@@ -1,9 +1,9 @@
 #ifndef VTABLE_H
 #define VTABLE_H
 
-#include <QWidget>
-#include <QTableWidget>
-#include <QGridLayout>
+#include <QtGui/QWidget>
+#include <QtGui/QTableWidget>
+#include <QtGui/QGridLayout>
 #include "VTabContent.h"
 #include <fstream>
 

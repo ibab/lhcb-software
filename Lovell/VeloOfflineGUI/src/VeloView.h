@@ -1,21 +1,21 @@
 #ifndef VELOVIEW_H
 #define VELOVIEW_H
 
-#include <QMainWindow>
+#include <QtGui/QMainWindow>
 #include <iostream>
-#include <QLabel>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QStringListModel>
-#include <QSortFilterProxyModel>
-#include <QStringListModel>
+#include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
+#include <QtGui/QPushButton>
+#include <QtGui/QStringListModel>
+#include <QtGui/QSortFilterProxyModel>
+#include <QtGui/QStringListModel>
 
 #include "TFile.h"
 #include "VCombatContent.h"
 #include "VKeplerContent.h"
 #include "VContentGetter.h"
 #include "VPlotOps.h"
-#include <QCompleter>
+#include <QtGui/QCompleter>
 
 
 namespace Ui {

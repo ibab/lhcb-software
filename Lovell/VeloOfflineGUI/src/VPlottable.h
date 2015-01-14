@@ -3,7 +3,7 @@
 
 #include <functional> // Lambdas.
 #include <iostream>
-#include <QVector>
+#include <QtCore/QVector>
 #include "qcustomplot.h"
 #include "sstream"
 #include <iomanip>
