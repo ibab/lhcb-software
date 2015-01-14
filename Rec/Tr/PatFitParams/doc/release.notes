@@ -4,6 +4,7 @@
 ! Purpose     : Fit MC tracks to compute the PatForward parameters
 !-----------------------------------------------------------------------------
 
+!========================= PatFitParams v4r3 2015-01-14 =========================
 ! 2015-01-02 - Michel De Cian
  - Fix bug in 'MatchFitParams', which lead to wrong momentum estimate.
 
