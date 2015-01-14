@@ -5,6 +5,109 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v17r4>2015-01-15 RecSys v17r4</A></H1><PRE>
+This version uses Gaudi v26r0, LHCb v38r4 and Lbcom v16r3 (and ROOT 6.02.03)
+
+- Packaged modified: Pr/PrKernel v1r7, Pr/PrMCTools v2r6,
+    Rec/ChargedProtoANNPID v2r9, Rich/RichRecSys v5r4, Rich/RichRecTools v4r26,
+    Rich/RichRecTrackTools v1r38, Tf/FastVelo v1r18, Tf/PatAlgorithms v4r38,
+    Tf/PatKernel v2r8, Tf/PatVeloTT v4r4, Tf/TfKernel v2r29, Tf/TfTools v1r20,
+    Tf/TrackSys v9r4, Tf/TsaKernel v3r8, Tr/PatFitParams v4r3,
+    Tr/TrackExtrapolators v2r35, Tr/TrackFitEvent v6r5, Tr/TrackTools v5r6
+
+- In Pr/PrKernel v1r7
+  . Add IPrTTCounter and modified IPrCounter for efficiency studies.
+
+- In Pr/PrMCTools v2r6
+  . Rewrite method "plotMCHits" in PrPlotFTHits to use MCHit<->FTCluster linker.
+
+- In Rec/ChargedProtoANNPID v2r9
+  . Update default tunes to use MC12TuneV2 for all data types.
+  . Completely disable the use of NeuroBayes in the requirements and CMake files,
+    such that the package no longer links against the NB libraries.
+  . Break up TMVAImpFactory.cpp into multiple smaller compilation units.
+
+- In Rich/RichRecSys v5r4
+  . Make all defaults for HLT Context the same as Offline.
+
+- In Rich/RichRecTools v4r26
+  . Make the default options for the HLT context in RichMassHypothesisRingCreator
+    and RichRayTraceCherenkovCone the same as Offline.
+
+- In Rich/RichRecTrackTools v1r38
+  . Make the HLT defaults in RichDetailedTrSegMakerFromRecoTracks the same as
+    for Offline.
+
+- In Tf/FastVelo v1r18
+  . Faster conversion to LHCb::Track
+
+- In Tf/PatAlgorithms v4r38
+  . New parametrisations in 'PatMatchTool', lower ghost right and higher
+    efficiency, mostly for low p tracks.
+  . Make Tool in PatMatch a configurable name, add 'getIfExists' and some doxygen
+    comments.
+  . Fix bug in PatAddTTCoord in 'returnTTClusters' which caused wrong chi2 to be
+    returned. Calculate part of the bending parameter only once per event.
+    Add some doxygen comments.
+  . PatFwdTool: use new PatForwardHit methods to speed things up 
+
+- In Tf/PatKernel v2r8
+  . PatForwardHit, PatTTHit: bypass mutex of static memory pool.
+  . PatForwardHit: 
+     o use the already present 'planeCode' to get the layer info, and 
+       'isStereo' -- this saves both a pointer dereference + if statement
+     o add a fast 'isOT' method to help avoid virtual function calls
+
+- In Tf/PatVeloTT v4r4
+  . Adapt the check for an empty input to explicitely query the size of the Range
+    move the corresponding message-level from warning to debug 
+
+- In Tf/TfKernel v2r29
+  . Tf::TStationHitManager: remove virtual function which allows tweaking of hit 
+    creation -- which isn't actually used, but does imply a virtual function call 
+    overhead for the creation of every single hit...
+
+- In Tf/TfTools v1r20
+  . Remove unused virtual function for hit customization during hit creation
+
+- In Tf/TrackSys v9r4
+  . Change GhostClassification tools in PatChecking.py
+
+- In Tf/TsaKernel v3r8
+  . Remove unused virtual functions which allows hit customization after creation
+    of every single hit
+
+- In Tr/PatFitParams v4r3
+  . Add 'MatchFitParams' which produces the parameters for the matching (PatMatch)
+
+- In Tr/TrackExtrapolators v2r35
+  . TrackRungeKuttaExtrapolator use boost::optional (instead of new/delete)
+    to keep the (optional) jacobian on the stack instead of the heap; eliminate
+    two divisions and one loop
+  . SimplifiedMaterialLocator: simplify memory management with std::unique_ptr
+
+- In Tr/TrackFitEvent v6r5
+  . FitNode:
+    o use vectorized filter in computeFilteredState
+    o use vectorized average in computeBiSmoothedState
+    o use vectorized similarity to compute residual.
+    o speed up transport of covariance matrix by a factor of 2 by 
+      just spelling out the entire 5x5 similarity transform....
+    o speed up transport by a further factor of 2 by using vectorized
+      version of the similarity transforms from LHCbMath.
+  . KalmanFitResult: introduce covariant return type on clone,
+                     clean up loop
+
+- In Tr/TrackTools v5r6
+  . Update parameters for 'ParamsVeloTCubic' for 2015 in FastMomentumEstimate
+  . UpgradeGhostInfo: track ghost probability for the upgrade
+  . Another check that the cluster size is always set in VeloClusterPosition
+  . StateDetailedBetheBlochEnergyCorrectionTool: cache mass, rewrite math to
+    reduce the # of operations
+  . OTMeasurementProvider: use std::transform instead of for loop, flag virtual
+    functions with 'override'
+  . changed TrackMasterFitter use of VeloMuonBuild to private
+
 </PRE><H1><A NAME=v17r3p1>2014-12-15 RecSys v17r3p1</A></H1><PRE>
 This version uses Gaudi v25r6p1, LHCb v38r3p1 and Lbcom v16r2p1 (and ROOT 6.02.02)
 
