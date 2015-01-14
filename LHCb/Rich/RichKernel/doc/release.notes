@@ -4,6 +4,7 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+!========================= RichKernel v7r57 2015-01-14 =========================
 ! 2015-01-14 - Chris Jones
  - Update the default tool types in RichTools Configurable to make the HLT 
    defaults the same as Offline.
