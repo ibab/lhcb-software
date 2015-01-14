@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LHCbKernel
 ################################################################################
-gaudi_subdir(LHCbKernel v15r6)
+gaudi_subdir(LHCbKernel v15r7)
 
 gaudi_depends_on_subdirs(GaudiAlg
                          GaudiKernel
