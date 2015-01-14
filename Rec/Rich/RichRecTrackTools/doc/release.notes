@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-01-14 - Chris Jones
- - Make HLT defaults in RichDetailedTrSegMakerFromRecoTracks the same as
+ - Make the HLT defaults in RichDetailedTrSegMakerFromRecoTracks the same as
    for Offline.
 
 !========================= RichRecTrackTools v1r37 2014-07-14 ====================
