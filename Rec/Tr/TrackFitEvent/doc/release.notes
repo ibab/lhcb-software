@@ -3,6 +3,8 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
+
+!========================= TrackFitEvent v6r5 2015-01-14 =========================
 ! 2015-01-12 - Gerhard Raven
  - FitNode: use vectorized filter in computeFilteredState
 
