@@ -1,4 +1,6 @@
 project LOVELL
 
+use GAUDI GAUDI_v25r6p1
+
 build_strategy with_installarea
 setup_strategy root
