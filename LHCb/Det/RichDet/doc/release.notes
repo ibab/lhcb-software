@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v17r1 2015-01-14 =========================
 ! 2015-01-12 - Antonis Papanestis
  - Found a bug related to the new InactiveHPDList condition (not yet
    active) that prevented the reading of the new inactive HPD list from
