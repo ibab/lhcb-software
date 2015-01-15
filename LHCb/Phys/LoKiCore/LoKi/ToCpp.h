@@ -32,6 +32,7 @@ namespace LoKi
 namespace LHCb 
 {
   class ParticleID ;
+  class LHCbID     ;
 }
 namespace Decays
 {
@@ -59,6 +60,7 @@ namespace Gaudi
     GAUDI_API std::string toCpp ( const LoKi::ThreeVector&   o ) ;
     GAUDI_API std::string toCpp ( const LoKi::Point3D&       o ) ;
     GAUDI_API std::string toCpp ( const LHCb::ParticleID&    o ) ;
+    GAUDI_API std::string toCpp ( const LHCb::LHCbID&        o ) ;
     GAUDI_API std::string toCpp ( const Decays::iNode&       o ) ;
     GAUDI_API std::string toCpp ( const Gaudi::Time&         o ) ;
     GAUDI_API std::string toCpp ( const Gaudi::TimeSpan&     o ) ;
