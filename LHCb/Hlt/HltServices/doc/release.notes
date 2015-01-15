@@ -4,6 +4,11 @@
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
 
+! 2015-01-15 - Marco Cattaneo
+ - In cmt/requirements, add a dependency to avoid compiling the
+   hlttck_cdb_listkeys .cpp files twice in separate threads, that can interfere
+   with each other
+
 !========================= HltServices v2r6 2014-12-11 =========================
 ! 2014-11-19 - Gerhard Raven
  - C++11 cleanup
