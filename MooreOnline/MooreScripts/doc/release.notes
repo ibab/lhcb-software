@@ -4,6 +4,10 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+! 2015-01-06 - Roel Aaij
+ - Update MooreOnline.ForceMDF to ForceMDFInput
+ - Fix printing of timing table in runOfflineOnline.py
+ 
 ! 2015-01-05 - Roel Aaij
  - Remove default database tags from runOnline.py and force presence of CondDB
    and DDDTag in module ConditionsMap.
