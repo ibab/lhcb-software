@@ -1,3 +1,5 @@
+#This used to live in: VeloAnalysisFramework/python/veloview
+
 ## Makefile with targets to run tests.
 #
 # Although sourcing sourceme.sh is required for running interactively
