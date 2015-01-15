@@ -315,18 +315,22 @@ namespace LoKi
       // ======================================================================
       /// conversion operator to the tool
       operator const LoKi::Interface<ITrackSelector>&() const { return m_tool ;}    
+      const LoKi::Interface<ITrackSelector>& selector() const { return m_tool ;}    
+      // ======================================================================
+      /// the only one essential method 
+      bool eval ( const LHCb::Track* t ) const ;
       // ======================================================================
     protected:
       // ======================================================================
       /// the default constructor is protected
       Selector () ;                     // the default constructor is protected
       /// set new selector tool 
-      void setSelector ( const ITrackSelector* selector ) ;
+      void setSelector ( const ITrackSelector* selector ) const ;
       // ======================================================================
-    private:
+    protected:
       // ======================================================================
       /// the tool itself 
-      LoKi::Interface<ITrackSelector> m_tool ;            // the tool itself 
+      mutable LoKi::Interface<ITrackSelector> m_tool ;            // the tool itself 
       // ======================================================================
     } ;
     // ========================================================================
@@ -347,6 +351,8 @@ namespace LoKi
       virtual ~Filter () ;
       /// MANDATORY: clone method ("virtual constructor")  
       virtual  Filter* clone() const { return new Filter(*this) ; }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument t ) const ;
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
@@ -354,6 +360,11 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled 
       Filter () ;                        // the default constructor is disabled 
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// set new selector tool 
+      void getSelector () const ;
       // ======================================================================
     private:
       // ======================================================================

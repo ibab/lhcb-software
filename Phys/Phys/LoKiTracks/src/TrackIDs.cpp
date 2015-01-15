@@ -80,7 +80,8 @@ LoKi::Tracks::CountIDs::CountIDs
 // ============================================================================
 LoKi::Tracks::CountIDs::CountIDs
 ( const std::string& nick ) 
-  : LoKi::BasicFunctors<const LHCb::Track*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( nick ) ) 
+  , LoKi::BasicFunctors<const LHCb::Track*>::Function ()
   , m_pmf  ( 0    ) 
   , m_nick ( nick ) 
 {
@@ -229,7 +230,8 @@ void LoKi::Tracks::CountOTIDs::setNick ( LoKi::Tracks::CountOTIDs::PMF pmf )
 LoKi::Tracks::CountOTIDs::CountOTIDs
 ( const std::string&               nick , 
   const std::vector<unsigned int>& i    ) 
-  : LoKi::BasicFunctors<const LHCb::Track*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( nick , i ) ) 
+  , LoKi::BasicFunctors<const LHCb::Track*>::Function ()
   , m_pmf   ( 0     ) 
   , m_uints ( i     )
   , m_imin  ( boost::integer_traits<unsigned int>::const_max ) 
@@ -250,7 +252,8 @@ LoKi::Tracks::CountOTIDs::CountOTIDs
 LoKi::Tracks::CountOTIDs::CountOTIDs
 ( const std::string&  nick , 
   const unsigned int  i    ) 
-  : LoKi::BasicFunctors<const LHCb::Track*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( nick , i ) ) 
+  , LoKi::BasicFunctors<const LHCb::Track*>::Function ()
   , m_pmf   ( 0     ) 
   , m_uints ( 1 , i )
   , m_imin  ( boost::integer_traits<unsigned int>::const_max ) 
@@ -271,7 +274,8 @@ LoKi::Tracks::CountOTIDs::CountOTIDs
 ( const unsigned int  imin , 
   const std::string&  nick , 
   const unsigned int  imax ) 
-  : LoKi::BasicFunctors<const LHCb::Track*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( imin , nick , imax  ) ) 
+  , LoKi::BasicFunctors<const LHCb::Track*>::Function ()
   , m_pmf   ( 0     ) 
   , m_uints ( )
   , m_imin  ( imin  ) 
@@ -455,9 +459,10 @@ void LoKi::Tracks::CountSTIDs::setNick ( LoKi::Tracks::CountSTIDs::PMF pmf )
 // constructor
 // ============================================================================
 LoKi::Tracks::CountSTIDs::CountSTIDs
-( const std::string&                   nick , 
+( const std::string&               nick , 
   const std::vector<unsigned int>& i    ) 
-  : LoKi::BasicFunctors<const LHCb::Track*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( nick , i  ) ) 
+  , LoKi::BasicFunctors<const LHCb::Track*>::Function ()
   , m_pmf   ( 0     ) 
   , m_uints ( i     )
   , m_imin  ( boost::integer_traits<unsigned int>::const_max ) 
@@ -478,7 +483,8 @@ LoKi::Tracks::CountSTIDs::CountSTIDs
 LoKi::Tracks::CountSTIDs::CountSTIDs
 ( const std::string&  nick , 
   const unsigned int  i    ) 
-  : LoKi::BasicFunctors<const LHCb::Track*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( nick , i  ) ) 
+  , LoKi::BasicFunctors<const LHCb::Track*>::Function ()
   , m_pmf   ( 0     ) 
   , m_uints ( 1 , i )
   , m_imin  ( boost::integer_traits<unsigned int>::const_max ) 
@@ -499,7 +505,8 @@ LoKi::Tracks::CountSTIDs::CountSTIDs
 ( const unsigned int  imin , 
   const std::string&  nick , 
   const unsigned int  imax ) 
-  : LoKi::BasicFunctors<const LHCb::Track*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( imin, nick , imax ) ) 
+  , LoKi::BasicFunctors<const LHCb::Track*>::Function ()
   , m_pmf   ( 0     ) 
   , m_uints ( )
   , m_imin  ( imin  ) 
@@ -676,7 +683,8 @@ void LoKi::Tracks::CountVeloIDs::setNick ( LoKi::Tracks::CountVeloIDs::PMF2 pmf 
 LoKi::Tracks::CountVeloIDs::CountVeloIDs
 ( const std::string&               nick , 
   const std::vector<unsigned int>& i    ) 
-  : LoKi::BasicFunctors<const LHCb::Track*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( nick , i ) ) 
+  , LoKi::BasicFunctors<const LHCb::Track*>::Function ()
   , m_pmf1  ( 0     ) 
   , m_pmf2  ( 0     ) 
   , m_uints ( i     )
@@ -698,7 +706,8 @@ LoKi::Tracks::CountVeloIDs::CountVeloIDs
 LoKi::Tracks::CountVeloIDs::CountVeloIDs
 ( const std::string&  nick , 
   const unsigned int  i    ) 
-  : LoKi::BasicFunctors<const LHCb::Track*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( nick , i ) ) 
+  , LoKi::BasicFunctors<const LHCb::Track*>::Function ()
   , m_pmf1  ( 0     ) 
   , m_pmf2  ( 0     ) 
   , m_uints ( 1 , i )
@@ -720,7 +729,8 @@ LoKi::Tracks::CountVeloIDs::CountVeloIDs
 ( const unsigned int  imin , 
   const std::string&  nick , 
   const unsigned int  imax ) 
-  : LoKi::BasicFunctors<const LHCb::Track*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( imin , nick , imax ) ) 
+  , LoKi::BasicFunctors<const LHCb::Track*>::Function ()
   , m_pmf1  ( 0     ) 
   , m_pmf2  ( 0     ) 
   , m_uints (       )
@@ -775,7 +785,8 @@ LoKi::Tracks::CountVeloIDs::CountVeloIDs
 // ============================================================================
 LoKi::Tracks::CountVeloIDs::CountVeloIDs
 ( const std::string& nick  ) 
-  : LoKi::BasicFunctors<const LHCb::Track*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( nick ) ) 
+  , LoKi::BasicFunctors<const LHCb::Track*>::Function ()
   , m_pmf1  ( 0     ) 
   , m_pmf2  ( 0     ) 
   , m_uints (       )

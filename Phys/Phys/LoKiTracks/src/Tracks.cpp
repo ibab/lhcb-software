@@ -151,7 +151,8 @@ LoKi::Tracks::Momentum::operator()
 // ============================================================================
 LoKi::Tracks::CheckFlag::CheckFlag 
 ( LHCb::Track::Flags flag ) 
-  : LoKi::BasicFunctors<const LHCb::Track*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( flag ) ) 
+  , LoKi::BasicFunctors<const LHCb::Track*>::Predicate() 
   , m_flag ( flag ) 
 {}
 // ============================================================================
@@ -238,6 +239,13 @@ LoKi::Tracks::Selector::operator()
     Error ("LHCb::Track* points to NULL, return 'false'") ;
     return false ;
   }
+  return eval ( t ) ;
+}
+// ============================================================================
+// The only one essential method 
+// ============================================================================
+bool LoKi::Tracks::Selector::eval ( const LHCb::Track* t ) const 
+{
   //
   Assert ( m_tool.validPointer() , "ITrackSelector* points to NULL" );  
   // use the tool 
@@ -246,7 +254,7 @@ LoKi::Tracks::Selector::operator()
 // ============================================================================
 // set new selector tool 
 // ============================================================================
-void LoKi::Tracks::Selector::setSelector ( const ITrackSelector* selector ) 
+void LoKi::Tracks::Selector::setSelector ( const ITrackSelector* selector ) const 
 { m_tool = const_cast<ITrackSelector*> ( selector ) ; }
 // ============================================================================
 // OPTIONAL: the nice printout 
@@ -257,9 +265,15 @@ std::ostream& LoKi::Tracks::Selector::fillStream( std::ostream& s ) const
 // constructor from the tool name 
 // ============================================================================
 LoKi::Tracks::Filter::Filter ( const std::string& nick ) 
-  : LoKi::Tracks::Selector () 
+  : LoKi::AuxFunBase ( std::tie ( nick ) ) 
+  , LoKi::Tracks::Selector () 
   , m_nick ( nick ) 
 {
+  if ( gaudi() ) { getSelector() ; }
+}
+// ============================================================================
+void LoKi::Tracks::Filter::getSelector() const 
+{   
   const ITrackSelector* s = LoKi::GetTools::trackSelector ( *this , m_nick ) ;
   setSelector ( s ) ;
   Assert ( 0 != s , "ITrackSelector* points to NULL" );
@@ -268,6 +282,24 @@ LoKi::Tracks::Filter::Filter ( const std::string& nick )
 // MANDATORY: virtual destructor 
 // ============================================================================
 LoKi::Tracks::Filter::~Filter(){}
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Tracks::Filter::result_type 
+LoKi::Tracks::Filter::operator() 
+  ( LoKi::Tracks::Filter::argument t ) const 
+{
+  //
+  if ( 0 == t ) 
+  {
+    Error ("LHCb::Track* points to NULL, return 'false'") ;
+    return false ;
+  }
+  //
+  if ( !selector() ) { getSelector() ; }
+  //
+  return eval ( t ) ; 
+}
 // ============================================================================
 // OPTIONAL: the nice printout 
 // ============================================================================
@@ -284,7 +316,8 @@ std::ostream& LoKi::Tracks::Filter::fillStream( std::ostream& s ) const
 // ============================================================================
 LoKi::Tracks::HasInfo:: HasInfo 
 ( const int key ) 
-  : LoKi::ExtraInfo::CheckInfo<const LHCb::Track*> ( key ) 
+  : LoKi::AuxFunBase ( std::tie ( key ) ) 
+  , LoKi::ExtraInfo::CheckInfo<const LHCb::Track*> ( key ) 
 {}
 // ============================================================================
 // the specific printout 
@@ -297,9 +330,11 @@ LoKi::Tracks::HasInfo::fillStream( std::ostream& s ) const
  *  @param key info index/mark/key
  *  @param def default value for missing key/invalid object 
  */
+// ============================================================================
 LoKi::Tracks::Info::Info
 ( const int    key , const double def )
-  : LoKi::ExtraInfo::GetInfo<const LHCb::Track*> ( key , def ) 
+  : LoKi::AuxFunBase ( std::tie ( key , def ) ) 
+  , LoKi::ExtraInfo::GetInfo<const LHCb::Track*> ( key , def ) 
 {}
 // ============================================================================
 // the specific printout 
@@ -317,7 +352,8 @@ LoKi::Tracks::SmartInfo::SmartInfo
 ( const int                                                index  , 
   const LoKi::BasicFunctors<const LHCb::Track*>::Function& fun    , 
   const bool                                               update ) 
-  : LoKi::ExtraInfo::GetSmartInfo<const LHCb::Track*> ( index , fun , update )
+  : LoKi::AuxFunBase ( std::tie ( index , fun , update  ) ) 
+  , LoKi::ExtraInfo::GetSmartInfo<const LHCb::Track*> ( index , fun , update )
 {}
 // ============================================================================
 // the specific printout 
@@ -334,7 +370,8 @@ std::ostream& LoKi::Tracks::SmartInfo::fillStream( std::ostream& s ) const
 // ============================================================================
 LoKi::Tracks::StateZ::StateZ 
 ( const LHCb::State::Location location )
-  : LoKi::BasicFunctors<const LHCb::Track*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( location ) )  
+  , LoKi::BasicFunctors<const LHCb::Track*>::Function () 
   , m_state ( location ) 
   , m_bad   ( LoKi::Constants::InvalidDistance ) 
 {}
@@ -344,7 +381,8 @@ LoKi::Tracks::StateZ::StateZ
 LoKi::Tracks::StateZ::StateZ 
 ( const LHCb::State::Location location , 
   const double                bad      )
-  : LoKi::BasicFunctors<const LHCb::Track*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( location , bad ) )  
+  , LoKi::BasicFunctors<const LHCb::Track*>::Function () 
   , m_state ( location ) 
   , m_bad   ( bad      ) 
 {}
@@ -452,7 +490,8 @@ LoKi::Tracks::ProbChi2::operator()
 // ============================================================================
 LoKi::Tracks::HasStateAt::HasStateAt
 ( const LHCb::State::Location& loc )
-  : LoKi::BasicFunctors<const LHCb::Track*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( loc ) )
+  , LoKi::BasicFunctors<const LHCb::Track*>::Predicate () 
   , m_loc ( loc ) 
 {}
 // ============================================================================
@@ -475,7 +514,8 @@ LoKi::Tracks::HasStateAt::operator()
 // ============================================================================
 LoKi::Tracks::IsOnTrack::IsOnTrack
 ( const LHCb::LHCbID& id ) 
-  : LoKi::BasicFunctors<const LHCb::Track*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::BasicFunctors<const LHCb::Track*>::Predicate () 
   , m_id ( id ) 
 {}
 // ============================================================================
@@ -517,7 +557,8 @@ LoKi::Tracks::Type::operator()
 LoKi::Tracks::Cov2::Cov2 
 ( const unsigned short i , 
   const unsigned short j ) 
-  : LoKi::BasicFunctors<const LHCb::Track*>::Function() 
+  : LoKi::AuxFunBase ( std::tie ( i, j ) ) 
+  , LoKi::BasicFunctors<const LHCb::Track*>::Function() 
   , m_case ( _First                        ) 
   , m_z    ( -1 * Gaudi::Units::km         ) 
   , m_loc  ( LHCb::State::FirstMeasurement ) 
@@ -533,7 +574,8 @@ LoKi::Tracks::Cov2::Cov2
 ( const LHCb::State::Location location , 
   const unsigned short        i        , 
   const unsigned short        j        ) 
-  : LoKi::BasicFunctors<const LHCb::Track*>::Function() 
+  : LoKi::AuxFunBase ( std::tie ( location , i, j ) ) 
+  , LoKi::BasicFunctors<const LHCb::Track*>::Function() 
   , m_case ( _Location  ) 
   , m_z    ( -1 * Gaudi::Units::km         ) 
   , m_loc  ( location   ) 
@@ -549,7 +591,8 @@ LoKi::Tracks::Cov2::Cov2
 ( const double                z , 
   const unsigned short        i , 
   const unsigned short        j ) 
-  : LoKi::BasicFunctors<const LHCb::Track*>::Function() 
+  : LoKi::AuxFunBase ( std::tie ( z , i, j ) ) 
+  , LoKi::BasicFunctors<const LHCb::Track*>::Function() 
   , m_case ( _Z   ) 
   , m_z    (  z   ) 
   , m_loc  ( LHCb::State::FirstMeasurement ) 
@@ -812,12 +855,12 @@ std::ostream& LoKi::Tracks::HasTT::fillStream( std::ostream& s ) const
 { return s << "TrHASTT" ; }
 // ============================================================================
 
-
 // ============================================================================
 // Constructor from bound
 // ============================================================================
 LoKi::Tracks::FastDOCAToBeamLine::FastDOCAToBeamLine ( const double bound )
-  : LoKi::BeamSpot( bound )
+  : LoKi::AuxFunBase  ( std::tie ( bound ) ) 
+  , LoKi::BeamSpot    ( bound )
   , LoKi::BasicFunctors<const LHCb::Track*>::Function ()
   , m_beamLine ()
 {}
@@ -827,7 +870,8 @@ LoKi::Tracks::FastDOCAToBeamLine::FastDOCAToBeamLine ( const double bound )
 LoKi::Tracks::FastDOCAToBeamLine::FastDOCAToBeamLine
 ( const double       bound    ,
   const std::string& condname )
-  : LoKi::BeamSpot( bound , condname )
+  : LoKi::AuxFunBase  ( std::tie ( bound , condname ) ) 
+  , LoKi::BeamSpot( bound , condname )
   , LoKi::BasicFunctors<const LHCb::Track*>::Function ()
   , m_beamLine ()
 {}

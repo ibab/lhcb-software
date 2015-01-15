@@ -50,7 +50,8 @@ LoKi::Tracks::SourceTES::SourceTES
 ( const std::string&              path , 
   IDataProviderSvc*               svc  , 
   const LoKi::TrackTypes::TrCuts& cuts ) 
-  : LoKi::Tracks::SourceTES::_Source () 
+  : LoKi::AuxFunBase ( std::tie ( path , cuts ) ) 
+  , LoKi::Tracks::SourceTES::_Source () 
   , m_path    ( 1 , path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )
@@ -62,7 +63,8 @@ LoKi::Tracks::SourceTES::SourceTES
 ( const std::vector<std::string>& path , 
   IDataProviderSvc*               svc  , 
   const LoKi::TrackTypes::TrCuts& cuts ) 
-  : LoKi::Tracks::SourceTES::_Source () 
+  : LoKi::AuxFunBase ( std::tie ( path , cuts ) ) 
+  , LoKi::Tracks::SourceTES::_Source () 
   , m_path    ( path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )
@@ -74,7 +76,8 @@ LoKi::Tracks::SourceTES::SourceTES
 ( const std::string&              path , 
   const LoKi::TrackTypes::TrCuts& cuts , 
   IDataProviderSvc*               svc  ) 
-  : LoKi::Tracks::SourceTES::_Source () 
+  : LoKi::AuxFunBase ( std::tie ( path , cuts ) ) 
+  , LoKi::Tracks::SourceTES::_Source () 
   , m_path    ( 1 , path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )
@@ -86,7 +89,8 @@ LoKi::Tracks::SourceTES::SourceTES
 ( const std::vector<std::string>& path , 
   const LoKi::TrackTypes::TrCuts& cuts , 
   IDataProviderSvc*               svc  ) 
-  : LoKi::Tracks::SourceTES::_Source () 
+  : LoKi::AuxFunBase ( std::tie ( path , cuts ) ) 
+  , LoKi::Tracks::SourceTES::_Source () 
   , m_path    ( path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )
@@ -98,7 +102,8 @@ LoKi::Tracks::SourceTES::SourceTES
 ( const LoKi::TrackTypes::TrCuts& cuts ,
   const std::string&              path , 
   IDataProviderSvc*               svc  ) 
-  : LoKi::Tracks::SourceTES::_Source () 
+  : LoKi::AuxFunBase ( std::tie (  cuts , path ) ) 
+  , LoKi::Tracks::SourceTES::_Source () 
   , m_path    ( 1 , path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )
@@ -110,7 +115,8 @@ LoKi::Tracks::SourceTES::SourceTES
 ( const LoKi::TrackTypes::TrCuts& cuts ,
   const std::vector<std::string>& path , 
   IDataProviderSvc*               svc  ) 
-  : LoKi::Tracks::SourceTES::_Source () 
+  : LoKi::AuxFunBase ( std::tie (  cuts , path ) ) 
+  , LoKi::Tracks::SourceTES::_Source () 
   , m_path    ( path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )
@@ -122,7 +128,8 @@ LoKi::Tracks::SourceTES::SourceTES
 ( const LoKi::TrackTypes::TrCuts& cuts ,
   IDataProviderSvc*               svc  ,
   const std::string&              path ) 
-  : LoKi::Tracks::SourceTES::_Source () 
+  : LoKi::AuxFunBase ( std::tie (  cuts , path ) ) 
+  , LoKi::Tracks::SourceTES::_Source () 
   , m_path    ( 1 , path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )
@@ -134,7 +141,8 @@ LoKi::Tracks::SourceTES::SourceTES
 ( const LoKi::TrackTypes::TrCuts& cuts ,
   IDataProviderSvc*               svc  ,
   const std::vector<std::string>& path ) 
-  : LoKi::Tracks::SourceTES::_Source () 
+  : LoKi::AuxFunBase ( std::tie (  cuts , path ) ) 
+  , LoKi::Tracks::SourceTES::_Source () 
   , m_path    ( path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )
@@ -237,7 +245,8 @@ LoKi::Tracks::SourceTES::fillStream ( std::ostream& o ) const
 LoKi::Tracks::TESCounter::TESCounter 
 ( const std::string&              path , 
   const LoKi::TrackTypes::TrCuts& cuts )
-  : LoKi::Functor<void,double> () 
+  : LoKi::AuxFunBase ( std::tie (  path , cuts ) ) 
+  , LoKi::Functor<void,double> () 
   , m_source ( path , cuts ) 
 {}
 // ============================================================================
@@ -246,7 +255,8 @@ LoKi::Tracks::TESCounter::TESCounter
 LoKi::Tracks::TESCounter::TESCounter 
 ( const std::vector<std::string>& path                    , 
   const LoKi::TrackTypes::TrCuts& cuts )
-  : LoKi::Functor<void,double> () 
+  : LoKi::AuxFunBase ( std::tie ( path , cuts ) ) 
+  , LoKi::Functor<void,double> () 
   , m_source ( path , cuts ) 
 {}
 // ============================================================================
