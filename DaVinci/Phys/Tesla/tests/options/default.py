@@ -3,18 +3,33 @@
 from Configurables import Tesla 
 from Gaudi.Configuration import *
 
-from Configurables import RecombineRawEvent, DecodeRawEvent
-RecombineRawEvent()
-DecodeRawEvent().DataOnDemand = True
+from Configurables import HltANNSvc
+Hlt2ID = HltANNSvc().Hlt2SelectionID
+if "Hlt2Global" not in Hlt2ID : Hlt2ID.update( {  "Hlt2Global" : 2 } )
+HltANNSvc().Hlt1SelectionID = { 'PV3D' : 10103
+        ,'ProtoPV3D' : 10117
+}
+Hlt2ID.update(  { 'Hlt2IncPhiDecision'           : 50000
+    ,'Hlt2IncPhiSidebandsDecision'  : 50003
+    ,'Hlt2IncPhiTrackFitDecision'   : 50002
+    } )
+HltANNSvc().InfoID = {
+        "FastTTValidationTool/ValidateWithTT"        : 6350,
+        "MatchVeloMuon"                              : 6400,
+        "IsMuonTool"                                 : 6401,
+        "PatForwardTool/LooseForward"                : 6299,
+        "PatForwardTool/TightForward"                : 6300,
+        'Hlt2Topo2BodyBBDTResponse'                  : 6502,
+        'Hlt2Topo3BodyBBDTResponse'                  : 6303,
+        'Hlt2Topo4BodyBBDTResponse'                  : 6304
+        }
 
-from Configurables import ConfigTarFileAccessSvc
-ConfigTarFileAccessSvc().File='../../options/config.tar'
+prefix = "Hlt2IncPhi"
 
 Tesla().TriggerLines = ["Hlt2IncPhi"]
 Tesla().ReportVersion = 2
 Tesla().OutputLevel = 4
 Tesla().EvtMax = -1
-Tesla().PreSplit = True
 
 from GaudiConf.IOHelper import IOHelper
-IOHelper().inputFiles( [ "PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/s/sbenson/TempTestFiles/RemadeSel_phiphi_1k_Tutorial_0044.dst" ] ) 
+IOHelper().inputFiles( [ "PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/s/sbenson/TempTestFiles/RemadeReports_HEAD_14-1-15_Bsphiphi_1k.dst" ] ) 

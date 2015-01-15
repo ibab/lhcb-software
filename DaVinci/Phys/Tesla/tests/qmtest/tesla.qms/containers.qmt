@@ -22,17 +22,17 @@
   <argument name="validator"><text>
 block = """
 Particle Check ***********************************
-Average mass = 669.2
-Average container size = 3.5
+Average mass = 669.3
+Average container size = 3.6
 Track Check **************************************
-Average chi2 = 1.24
-Average container size = 2.3
+Average chi2 = 1.21
+Average container size = 2.4
 Vertex Check *************************************
-Average chi2 = 1.468
+Average chi2 = 1.613
 Average container size = 1.2
 Proto Check **************************************
-Average DLLK = 29.727
-Average container size = 2.3
+Average DLLK = 31.237
+Average container size = 2.4
 """
 findReferenceBlock(block, signature_offset = 3)
   </text></argument>

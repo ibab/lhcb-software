@@ -20,14 +20,10 @@
     <text>../options/default.py</text>
   </set></argument>
   <argument name="validator"><text>
-#countErrorLines({"FATAL":0, "ERROR":0, "WARNING" :2616})
-countErrorLines({"FATAL":0, "ERROR":0, "WARNING" :0})
+countErrorLines({"FATAL":0, "ERROR":50, "WARNING" :0})
 findReferenceBlock("""
-TeslaReportAlgo...WARNING Requested version number does not equal checker response
+Hlt2SelReportsD...  ERROR HltSelReportsDecoder::  Did not find string key for trigger selection in storage
 """, id = "AllowResp" )
-findReferenceBlock("""
-TeslaReportAlgo...WARNING Sel. reports do not exist!!!
-""", id = "AllowNoExist" )
 </text></argument>
 </extension>
 
