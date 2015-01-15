@@ -4,6 +4,9 @@ Package Coordinator : Sean Benson
 Purpose             : Turbo Stream Analysis
 !-----------------------------------------------------------------------------
 
+! 2015-01-15 - Eduardo Rodrigues
+ - Added python/Tesla/__init__.py to please CMake
+
 !========================= Tesla v1r1 2014-12-17 =========================
 
 ! 2014-12-08 - Sean Benson
