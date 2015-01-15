@@ -47,8 +47,7 @@ def start(**kwargs) :
     fwdOnlineEnv( 'DDDBTag',   moore, 'DDDBtag' )
     fwdOnlineEnv( 'RunChangeHandlerConditions', mooreOnline )
 
-    #default is OK moore.UseDBSnapshot = True
-    #default is OK moore.IgnoreDBHeartBeat = True
+    ## Enable RunChangeHandlerSvc
     mooreOnline.EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough', 'Commissioning_OTCosmics'] )
     
     if OnlineEnv.PartitionName == 'TEST' : mooreOnline.CheckOdin = False
@@ -70,7 +69,6 @@ def start(**kwargs) :
         if not found:
             print "# WARNING: skipping setting '"+k+":"+v+"' because no configurable has that option"
     
-
     # Forward all attributes of 'OnlineEnv' python module to the job options service (using the OnlineEnv configurable)...
     from GaudiKernel.Proxy.Configurable import ConfigurableGeneric
     c = ConfigurableGeneric("OnlineEnv")
@@ -84,6 +82,8 @@ def start(**kwargs) :
             from MooreHacks.MooreHacksConf import HackRunNrAndGPSSvc
             ApplicationMgr().ExtSvc.append( HackRunNrAndGPSSvc() )
         elif HltLevel == 'Hlt2' :     
+            mooreOnline.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
+    elif OnlineEnv.PartitionName == 'TEST' and HltLevel == 'Hlt2' :     
             mooreOnline.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
 
     OnlineEnv.end_config(False)
