@@ -117,7 +117,7 @@ class MooreOnline(LHCbConfigurableUser):
             m = re.match("(.*)_(?:\\d+)$", task_type)
             if m:
                 task_type = m.group(1)
-
+            
             input_buffer  = mbm_setup.__getattribute__(task_type + '_Input')   #'Events' 
             output_buffer = mbm_setup.__getattribute__(task_type + '_Output')  #'Send'
 
@@ -131,12 +131,17 @@ class MooreOnline(LHCbConfigurableUser):
             
             app.Runable = OnlineEnv.evtRunable(mepMgr)
             app.ExtSvc.append(mepMgr)
-            evtMerger = OnlineEnv.evtMerger(name='Output',buffer=output,location='DAQ/RawEvent',datatype=OnlineEnv.MDF_NONE,routing=1)
+            evtMerger = OnlineEnv.evtMerger(name = 'Output', buffer = output_buffer,
+                                            location = 'DAQ/RawEvent', datatype = OnlineEnv.MDF_NONE,
+                                            routing = 1)
             evtMerger.DataType = OnlineEnv.MDF_BANKS
 	    
-            if TAE : eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE, decode=False)
-            elif self.getProp('HltLevel') == "Hlt2" or self.getProp('ForceMDFInput') : eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE, decode=False)  # decode=False for HLT2 ONLY!!!!!
-            else   : eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE, decode=True)  
+            if TAE:
+                 eventSelector = OnlineEnv.mbmSelector(input = input_buffer, TAE = TAE, decode = False)
+            elif self.getProp('HltLevel') == "Hlt2" or self.getProp('ForceMDFInput'):
+                 eventSelector = OnlineEnv.mbmSelector(input = input_buffer, TAE = TAE, decode = False)  # decode=False for HLT2 ONLY!!!!!
+            else:
+                 eventSelector = OnlineEnv.mbmSelector(input = input_buffer, TAE = TAE, decode = True)  
             app.ExtSvc.append(eventSelector)
 
             OnlineEnv.evtDataSvc()
@@ -193,7 +198,7 @@ class MooreOnline(LHCbConfigurableUser):
         forker.FirstChild          = 0
         # Sleep in [ms] for each child in batches of 10:
         forker.ChildSleep          = 500;
-        forker.UtgidPattern        = "%P_%NN_%T_%02d";
+        forker.UtgidPattern        = "%UTGID%02d" #"%P_%NN_%T_%02d";
         forker.PrintLevel          = 3  # 1=MTCP_DEBUG 2=MTCP_INFO 3=MTCP_WARNING 4=MTCP_ERROR
         forker.OutputLevel         = 4  # 1=VERBOSE 2=DEBUG 3=INFO 4=WARNING 5=ERROR 6=FATAL
         ApplicationMgr().ExtSvc.insert(0,forker)
