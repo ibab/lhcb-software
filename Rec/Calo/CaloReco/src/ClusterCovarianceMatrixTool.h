@@ -59,7 +59,7 @@ public:
 
   virtual void handle(const Incident&  ) { 
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) )debug() << "IIncident Svc reset" << endmsg; 
-    setEstimatorParams();
+    setEstimatorParams(); // reset estimator when parameters change
   } 
 
   
@@ -67,7 +67,7 @@ protected:
 
   StatusCode getParamsFromOptions();
   StatusCode getParamsFromDB();
-  void setEstimatorParams();
+  void setEstimatorParams(bool init=false);
 
   ClusterCovarianceMatrixTool( const std::string& type   ,
                                const std::string& name   ,

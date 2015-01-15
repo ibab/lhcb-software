@@ -140,12 +140,14 @@ StatusCode ClusterCovarianceMatrixTool::getParamsFromDB(){
 }
 
 //-------
-void ClusterCovarianceMatrixTool::setEstimatorParams(){  
+void ClusterCovarianceMatrixTool::setEstimatorParams(bool init){  
 
   // update DB parameters
+  if( !init && !m_useDB)return; // estimator setting via options :  at initialization only
+  if( !init && !m_dbAccessor-> hasConditionChanged())return; // estimator setting via DB : no need to update - condition has not changed
   if( m_useDB && getParamsFromDB().isFailure() ){
     Error("Failed updating the covariance parameters from DB",StatusCode::FAILURE).ignore(); // update DB parameters
-    return;
+    return; // failed to update parameters from DB
   }
   using namespace CaloCovariance;
   m_estimator.setStochastic      ( m_parameters[ParameterName[Stochastic]]      ) ;
@@ -155,6 +157,8 @@ void ClusterCovarianceMatrixTool::setEstimatorParams(){
   m_estimator.setConstantE       ( m_parameters[ParameterName[ConstantE]]       ) ;
   m_estimator.setConstantX       ( m_parameters[ParameterName[ConstantX]]       ) ;
   m_estimator.setConstantY       ( m_parameters[ParameterName[ConstantY]]       ) ;  
+  counter("Parameter update") += 1;
+  //info() << "ESTIMATOR HAS BEEN UPDATED (" << m_conditionName << ") : init = " << init <<  endmsg;
 }
 
 //---------
@@ -175,10 +179,10 @@ StatusCode ClusterCovarianceMatrixTool::initialize (){
   if( m_useDB && (m_conditionName == "" || m_dbAccessor->setConditionParams(m_conditionName,true).isFailure()) )
     return Error("Cannot access DB",StatusCode::FAILURE);
 
-  // always set default parameters from options (will be updated by DB when requested)
+  // always set default parameters from options (will be updated by DB if requested)
   sc= getParamsFromOptions();
 
-  // check the consistency
+  // check the parameters consistency
   for(CaloCovariance::ParameterMap::const_iterator imap = m_parameters.begin() ; m_parameters.end() != imap ; ++imap){
     std::string name = imap->first;
     bool ok = false;
@@ -187,13 +191,10 @@ StatusCode ClusterCovarianceMatrixTool::initialize (){
     }
     if( !ok )return Error("Parameter type '"+name+"' is unknown",StatusCode::FAILURE);
   }
-  
 
-
-  // configure estimator (will update parameters from DB when requested)
+  // configure estimator (possibly from DB if requested)
   m_estimator.setDetector( m_det ) ;
-  setEstimatorParams();
-
+  setEstimatorParams(true); // force initialization 
   info()      << " Has initialized with parameters: "              << endmsg 
               << " \t 'Detector'         = '" << m_detData << "'"  << endmsg 
     //            << " \t Estimator is          " << m_estimator       << endmsg;

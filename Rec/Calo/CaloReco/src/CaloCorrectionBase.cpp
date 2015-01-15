@@ -38,6 +38,7 @@ CaloCorrectionBase::CaloCorrectionBase( const std::string& type   ,
   , m_useCondDB( true )
   , m_cond    ( NULL )
   , m_tables  ( NULL )
+  , m_update  (false )
 {
 
   declareInterface<CaloCorrectionBase>(this);
@@ -71,6 +72,10 @@ StatusCode CaloCorrectionBase::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiTool
 
   if ( UNLIKELY (msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
+
+  // register to incident service
+  IIncidentSvc* inc = incSvc() ;
+  if ( 0 != inc )inc -> addListener  ( this , IncidentType::EndEvent ) ;
 
   // check the setting
 
@@ -185,7 +190,7 @@ StatusCode CaloCorrectionBase::updParams(){
       if( accept( paramName ) ) m_params[ paramName ] = params;
     }
   }
-  
+  m_update = true;
   checkParams(); 
   return StatusCode::SUCCESS;
 }

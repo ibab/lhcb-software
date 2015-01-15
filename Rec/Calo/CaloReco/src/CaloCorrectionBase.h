@@ -21,6 +21,8 @@
 #include "Event/Track.h"
 #include "CaloCorrectionBase.h"
 #include "CaloInterfaces/ICaloRelationsGetter.h"
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IIncidentSvc.h" 
 
 
 static const InterfaceID IID_CaloCorrectionBase ( "CaloCorrectionBase", 1, 0 );
@@ -123,7 +125,7 @@ namespace CaloCorrection {
                                             ,"Sshape","ShowerProfile","SshapeMod","Sinusoidal","ParamList","GlobalParamList","Unknown"};  
 }
 
-class CaloCorrectionBase : public GaudiTool {
+class CaloCorrectionBase : public GaudiTool, virtual public IIncidentListener {
 public: 
 
   // Return the interface ID
@@ -189,7 +191,11 @@ public:
   }
 
   ICaloDigitFilterTool* pileup(){ return m_pileup;}
+
+  bool hasConditionChanged(){return m_update;}
+  virtual void handle(const Incident&  ) { m_update = false; }// reset update flag 
   
+    
   
   
 protected:
@@ -233,5 +239,6 @@ private:
   Condition* m_cond;
   std::string m_cmLoc;
   ICaloRelationsGetter*    m_tables;
+  bool m_update;
 };
 #endif // CALOCORRECTIONBASE_H
