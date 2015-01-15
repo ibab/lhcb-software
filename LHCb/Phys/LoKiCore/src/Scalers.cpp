@@ -33,7 +33,8 @@ namespace
 LoKi::Scalers::RandomScaleV::RandomScaleV 
 ( const double prob    , 
   IRndmGenSvc* service ) 
-  : LoKi::Functor<void,bool> () 
+  : LoKi::AuxFunBase ( std::tie ( prob ) )
+  , LoKi::Functor<void,bool> () 
   , m_uniform ( 0.0 , 1.0 , service ) 
   , m_prob    ( prob ) 
 {}
@@ -74,7 +75,8 @@ std::ostream& LoKi::Scalers::RandomScaleV::fillStream( std::ostream& s ) const
 LoKi::Scalers::RandomScale::RandomScale 
 ( const double prob    , 
   IRndmGenSvc* service ) 
-  : LoKi::Functor<double,bool> () 
+  : LoKi::AuxFunBase ( std::tie ( prob ) )
+  , LoKi::Functor<double,bool> () 
   , m_scaler ( prob , service ) 
 {}
 // ============================================================================
@@ -112,7 +114,8 @@ std::ostream& LoKi::Scalers::RandomScale::fillStream( std::ostream& s ) const
  */
 // ===========================================================================
 LoKi::Scalers::SkipperV::SkipperV ( const size_t skip )
-  : LoKi::Functor<void,bool> ()
+  : LoKi::AuxFunBase ( std::tie ( skip ) )
+  , LoKi::Functor<void,bool> ()
   , m_skip ( skip ) 
   , m_curr ( 0    )
 {}
@@ -153,7 +156,8 @@ std::ostream& LoKi::Scalers::SkipperV::fillStream( std::ostream& s ) const
  */
 // ===========================================================================
 LoKi::Scalers::Skipper::Skipper ( const size_t skip )
-  : LoKi::Functor<double,bool> ()
+  : LoKi::AuxFunBase ( std::tie ( skip ) )
+  , LoKi::Functor<double,bool> ()
   , m_skipper ( skip )  
 {}
 // ===========================================================================
@@ -184,8 +188,6 @@ std::ostream& LoKi::Scalers::Skipper::fillStream( std::ostream& s ) const
 { return s << " XSKIP ( " << m_skipper.skip() << " ) " ; }
 // ===========================================================================
 
-
-
 // ============================================================================
 /*  constructor from rate and "random" flag 
  *  @param maxRate the maximal rate 
@@ -195,17 +197,20 @@ std::ostream& LoKi::Scalers::Skipper::fillStream( std::ostream& s ) const
 LoKi::Scalers::RateLimitV::RateLimitV
 ( const double                       maxRate ,
   const LoKi::Scalers::RateLimitType flag    )
-  : LoKi::Functor<void,bool> ()
+  : LoKi::AuxFunBase ( std::tie ( maxRate , flag ) )
+  , LoKi::Functor<void,bool> ()
   , LoKi::Listener           ()
-  , m_rateSvc   ()
-  , m_uniform   ( 0.0 , 1.0 )
-  , m_rate      ( maxRate   )
-  , m_limitType ( flag      )
-  , m_interval  ( 1 )
-  , m_next      ( 1 )
-  , m_previous  ( 1 )
+  , m_rateSvc     ()
+  , m_uniform     ( 0.0 , 1.0 )
+  , m_rate        ( maxRate   )
+  , m_limitType   ( flag      )
+  , m_interval    ( 1 )
+  , m_next        ( 1 )
+  , m_previous    ( 1 )
+  , m_initialized ( false     )
+  , m_service     ( s_RATESVC )
 {
-  initialize_ ( s_RATESVC ) ;
+  if ( gaudi() ) { initialize_ ( s_RATESVC ) ; }
 }
 // ============================================================================
 /*  constructor from the service , rate and "random" flag 
@@ -220,15 +225,17 @@ LoKi::Scalers::RateLimitV::RateLimitV
   const LoKi::Scalers::RateLimitType flag    ) 
   : LoKi::Functor<void,bool> ()  
   , LoKi::Listener           () 
-  , m_rateSvc   ( service   )
-  , m_uniform   ( 0.0 , 1.0 ) 
-  , m_rate      ( maxRate   ) 
-  , m_limitType ( flag      ) 
-  , m_interval  ( 1 ) 
-  , m_next      ( 1 )
-  , m_previous  ( 1 )
+  , m_rateSvc     ( service   )
+  , m_uniform     ( 0.0 , 1.0 ) 
+  , m_rate        ( maxRate   ) 
+  , m_limitType   ( flag      ) 
+  , m_interval    ( 1 ) 
+  , m_next        ( 1 )
+  , m_previous    ( 1 )
+  , m_initialized ( false  )
+  , m_service     ( s_RATESVC )
 {
-  initialize_ ( s_RATESVC ) ;
+  if ( gaudi() ) { initialize_ ( s_RATESVC ) ; }
 }
 // ============================================================================
 /*  constructor from the service , rate and "random" flag 
@@ -241,53 +248,72 @@ LoKi::Scalers::RateLimitV::RateLimitV
 ( const std::string&                 service ,  
   const double                       maxRate , 
   const LoKi::Scalers::RateLimitType flag    ) 
-  : LoKi::Functor<void,bool> ()  
+  : LoKi::AuxFunBase ( std::tie ( service , maxRate , flag ) )
+  , LoKi::Functor<void,bool> ()  
   , LoKi::Listener           () 
-  , m_rateSvc   (  )
-  , m_uniform   ( 0.0 , 1.0 ) 
-  , m_rate      ( maxRate   ) 
-  , m_limitType ( flag      ) 
-  , m_interval  ( 1 ) 
-  , m_next      ( 1 ) 
-  , m_previous  ( 1 )
+  , m_rateSvc     (  )
+  , m_uniform     ( 0.0 , 1.0 ) 
+  , m_rate        ( maxRate   ) 
+  , m_limitType   ( flag      ) 
+  , m_interval    ( 1 ) 
+  , m_next        ( 1 ) 
+  , m_previous    ( 1 )
+  , m_initialized ( false     )
+  , m_service     ( service   )
 {
-  initialize_ ( service ) ;
+  if ( gaudi() ) { initialize_ ( service ) ; }
+}
+// ============================================================================
+// randomize initial phase in case of periodic limiter
+// ============================================================================
+void LoKi::Scalers::RateLimitV::randomize_ () const
+{
+  //
+  // randomize initial phase in case of periodic limiter
+  //
+  double offset = 0.;
+  switch ( limitType() ) 
+  {
+  case LoKi::Scalers::RandomPhasePeriodicLimiter : 
+    offset =     m_interval *             m_uniform ( 0 )   ; break ;
+  case LoKi::Scalers::RandomLimiter : 
+    offset = 1 + m_interval * -std::log ( m_uniform ( 0 ) ) ; break ;
+  default:
+    offset = 1 ; // wait at least one tick
+  }
+  //
+  m_next = m_previous + offset ;
 }
 // ============================================================================
 // perform the initialization
 // ============================================================================
-void LoKi::Scalers::RateLimitV::initialize_ ( const std::string& svc ) 
+void LoKi::Scalers::RateLimitV::initialize_ ( const std::string& svc ) const 
 {
+  //
+  m_initialized = false ;
+  //
   if ( !m_rateSvc ) 
   {  
     StatusCode sc = getService  ( svc ) ;
-    Assert ( sc.isSuccess() , "Unable to locate the service" , sc );
+    Assert ( sc.isSuccess() , "Unable to locate the service" , sc ) ;
+    Assert ( !(!m_rateSvc)  , "IReferenceRate* is invalid"        ) ;
+    //
+    if ( 0 < m_rate ) { m_interval = m_rateSvc->rate() / m_rate ; }
+    m_previous = m_rateSvc -> tick () ;
   }
-  Assert ( !(!m_rateSvc) , "IReferenceRate* is invalid" ) ;
   //
-  if ( 0 < m_rate ) { m_interval = m_rateSvc->rate() / m_rate ; }
-  m_previous = m_rateSvc -> tick () ;
-  //
-  // randomize initial phase in case of perioding limiter
-  double offset = 0;
-  switch ( limitType() ) 
-  {
-  case LoKi::Scalers::RandomPhasePeriodicLimiter : 
-    offset = m_interval * m_uniform ( m_previous ) ;  break ;
-  default:
-    offset = 1 ; // wait at least one tick..
-  }
-  m_next = m_previous + offset;
+  randomize_ () ;
   //
   // subscribe the incident:
   //
   subscribe (              "RunChange", std::numeric_limits<long>::min() ).ignore() ;
-  subscribe ( IncidentType::BeginRun,   std::numeric_limits<long>::min() ).ignore() ;
+  subscribe ( IncidentType::BeginRun  , std::numeric_limits<long>::min() ).ignore() ;
   //
+  m_initialized = true ;
 }
 // ============================================================================
 /* copy constructor
- *  take care abotu rundomization of initial phase 
+ *  take care about randomization of initial phase 
  */
 // ============================================================================
 LoKi::Scalers::RateLimitV::RateLimitV 
@@ -299,25 +325,16 @@ LoKi::Scalers::RateLimitV::RateLimitV
   , implements1<IIncidentListener>        ( right ) 
   , LoKi::Functor<void,bool>   ( right ) 
   , LoKi::Listener             ( right ) 
-  , m_rateSvc   ( right.m_rateSvc   )
-  , m_uniform   ( right.m_uniform   ) 
-  , m_rate      ( right.m_rate      ) 
-  , m_limitType ( right.m_limitType ) 
-  , m_interval  ( right.m_interval  )
-  , m_previous  ( right.m_previous  )
+  , m_rateSvc     ( right.m_rateSvc   )
+  , m_uniform     ( right.m_uniform   ) 
+  , m_rate        ( right.m_rate      ) 
+  , m_limitType   ( right.m_limitType ) 
+  , m_interval    ( right.m_interval  )
+  , m_previous    ( right.m_previous  )
+  , m_initialized ( false             )
+  , m_service     ( right.m_service   )
 {
-  // randomize initial phase in case of periodic limiter
-  double offset = 0.;
-  switch ( limitType() ) 
-  {
-  case LoKi::Scalers::RandomPhasePeriodicLimiter : 
-    offset = m_interval * m_uniform ( 0 ) ; break ;
-  case LoKi::Scalers::RandomLimiter : 
-    offset = 1 + m_interval * -std::log ( m_uniform ( 0 ) ) ; break ;
-  default:
-    offset = 1 ; // wait at least one tick
-  }
-  m_next = m_previous + offset;
+  if ( gaudi() ) { initialize_ ( m_service ) ; }
 }
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -343,6 +360,8 @@ bool LoKi::Scalers::RateLimitV::eval
 ( /* LoKi::Scalers::RateLimitV::argument v */ ) const 
 {
   //
+  if ( !m_rateSvc || !m_initialized ) { initialize_ ( m_service ) ; }
+  //
   if ( m_rate <= 0 ) { return false ; }
   
   // get the current tick form the service 
@@ -356,7 +375,7 @@ bool LoKi::Scalers::RateLimitV::eval
   {
     // recompute interval -- the rate of the rateSvc may have changed!
     m_interval = m_rateSvc->rate() / m_rate ; 
-
+    
     m_previous = m_next;
     switch ( limitType() ) 
     {
@@ -383,8 +402,7 @@ LoKi::Scalers::RateLimitV::getService
   Assert ( !(!svcloc ) , "Unable to access ISvcLocator*" );
   //
   m_rateSvc = svcloc->service<IReferenceRate> ( name , true ) ;
-  Assert ( !(!m_rateSvc) , "Unable to locate IReferenceRate* \"" + 
-           name + "\"");
+  Assert ( !(!m_rateSvc) , "Unable to locate IReferenceRate* '" + name + "'");
   //
   return !m_rateSvc ? StatusCode::FAILURE : StatusCode::SUCCESS ;
   //
@@ -402,17 +420,7 @@ void LoKi::Scalers::RateLimitV::handle( const Incident& /* incident */ )
   if ( 0 < m_rate ) { m_interval = m_rateSvc->rate() / m_rate ; }
   m_previous = m_rateSvc -> tick () ;
   //
-  // randomize initial phase in case of perioding limiter
-  double offset = 0;
-  switch ( limitType() ) 
-  {
-  case LoKi::Scalers::RandomPhasePeriodicLimiter : 
-    offset = m_interval * m_uniform ( 0 ) ; break ;
-  default:
-    offset = 1 ; // wait at least one tick...
-  }
-  //
-  m_next = m_previous + offset;
+  randomize_ () ;
 }
 // ===========================================================================
 std::ostream& LoKi::Scalers::RateLimitV::fillStream( std::ostream& s ) const 
@@ -516,14 +524,6 @@ std::ostream& LoKi::Scalers::RateLimit::fillStream( std::ostream& s ) const
   return s << ") ";
 }
 // ===========================================================================
-
-
-
-
- 
-
-
-
 
 
 // ============================================================================

@@ -263,10 +263,10 @@ LoKi::Algorithms::Passed::Passed
 ( const std::string& name )
   : LoKi::AuxFunBase ( std::tie ( name ) ) 
   , LoKi::BasicFunctors<void>::Predicate () 
-  , m_name       ( name ) 
+  , m_name       ( name        ) 
   , m_algorithm  ( s_ALGORITHM ) 
 {
-  this->getAlgorithm ( algName() ) ;
+  if ( gaudi() ) { this->getAlgorithm ( algName() ) ; }
 }
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -419,7 +419,7 @@ LoKi::Algorithms::AnyPassed::AnyPassed
   m_names.push_back ( name1 ) ;
   m_names.push_back ( name2 ) ;
   //
-  getAlgorithms() ;
+  if ( gaudi() ) { getAlgorithms() ; }
 }
 // ============================================================================
 // constructor from the algorithm name 
@@ -437,7 +437,7 @@ LoKi::Algorithms::AnyPassed::AnyPassed
   m_names.push_back ( name2 ) ;
   m_names.push_back ( name3 ) ;
   //
-  getAlgorithms() ;
+  if ( gaudi() ) { getAlgorithms() ; }
 }
 // ============================================================================
 // constructor from the algorithm name 
@@ -457,7 +457,7 @@ LoKi::Algorithms::AnyPassed::AnyPassed
   m_names.push_back ( name3 ) ;
   m_names.push_back ( name4 ) ;
   //
-  getAlgorithms() ;
+  if ( gaudi() ) { getAlgorithms() ; }
 }
 // ============================================================================
 // constructor from the algorithm name 
@@ -469,7 +469,7 @@ LoKi::Algorithms::AnyPassed::AnyPassed
   , m_names     ( names ) 
   , m_algorithms ( ) 
 {
-  getAlgorithms() ;
+  if ( gaudi() ) { getAlgorithms() ; }
 }
 // ============================================================================
 // MANDATORY: the only one essential method 

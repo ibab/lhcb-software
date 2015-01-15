@@ -37,7 +37,7 @@ namespace LoKi
 {
   // ==========================================================================
   /** @class Value LoKi/Value.h
-   *  Simple adaptor from void->TYPE2 to ant TYPE->TYPE2 functor  
+   *  Simple adaptor from void->TYPE2 to TYPE->TYPE2 functor  
    *  
    *  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
    *  @date   2014-02-01
@@ -51,7 +51,7 @@ namespace LoKi
      *  @param fun  void-functor 
      */
     Value ( const LoKi::Functor<void,TYPE2>& fun ) 
-      : LoKi::AuxFunBase         ()  
+      : LoKi::AuxFunBase         ( std::tie( fun ) )  
       , LoKi::Functor<TYPE,TYPE2>() 
       , m_void ( fun )
     {}
@@ -95,7 +95,7 @@ namespace LoKi
      *  @param fun  void-functor 
      */
     Value ( const LoKi::Functor<void,TYPE2>& fun ) 
-      : LoKi::AuxFunBase         ()  
+      : LoKi::AuxFunBase         ( std::tie ( fun ) )  
       , LoKi::Functor<void,TYPE2>() 
       , m_void ( fun )
     {}

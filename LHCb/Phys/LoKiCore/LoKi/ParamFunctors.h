@@ -72,12 +72,16 @@ namespace LoKi
       /// get the parameters  
       const LoKi::Param& param    () const { return  m_param    ; }
       // ======================================================================
+    protected:
+      // ======================================================================
+      void getProp () const ;
+      // ======================================================================
     private:
       // ======================================================================
       /// the property as parameter
       LoKi::Param     m_param    ;  // the property as parameter
       /// the property 
-      const Property* m_property ;  // the property itself 
+      mutable const Property* m_property ;  // the property itself 
       // ======================================================================
     } ;
     // ========================================================================
@@ -105,16 +109,20 @@ namespace LoKi
       /// default constructor is disabled  
       Parameter () ; // default constructor is disabled  
       // ======================================================================
+    protected:
+      // ======================================================================
+      void getParams () const ;
+      // ======================================================================
     private: 
       // ======================================================================
       /// map-like property ? 
-      bool            m_map_d    ;  // map-like property? 
-      bool            m_map_f    ;  // map-like property? 
-      bool            m_map_i    ;  // map-like property? 
+      mutable bool            m_map_d    ;  // map-like property? 
+      mutable bool            m_map_f    ;  // map-like property? 
+      mutable bool            m_map_i    ;  // map-like property? 
       /// scalar   property ?
-      bool            m_scalar_d ;  // scalar   property? 
-      bool            m_scalar_f ;  // scalar   property? 
-      bool            m_scalar_i ;  // scalar   property? 
+      mutable bool            m_scalar_d ;  // scalar   property? 
+      mutable bool            m_scalar_f ;  // scalar   property? 
+      mutable bool            m_scalar_i ;  // scalar   property? 
       // ======================================================================
     };
     // ========================================================================
@@ -126,3 +134,4 @@ namespace LoKi
 // ============================================================================
 #endif // LOKI_PARAMFUNCTORS_H
 // ============================================================================
+

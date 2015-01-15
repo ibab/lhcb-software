@@ -151,6 +151,15 @@ namespace LoKi
       /// OPTIONAL: the basic printout method 
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return this -> _print_      ( s , this->m_nam , 0 ) ; }
+      /// print as C++
+      virtual std::string   toCpp () const 
+      {
+        return 
+          "LoKi::" 
+          + this->m_nam          + "( " 
+          + this->m_fun.toCpp () + ", "
+          + this->m_cut.toCpp () + ") " ;
+      }
       // ======================================================================
     private:
       // ======================================================================

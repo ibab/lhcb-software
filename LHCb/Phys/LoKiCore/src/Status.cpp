@@ -29,22 +29,12 @@
 // ============================================================================
 LoKi::Status::Check::Check
 ( const std::string& nickname ) 
-  : LoKi::Functor<void,bool>()
+  : LoKi::AuxFunBase ( std::tie ( nickname ) )
+  , LoKi::Functor<void,bool>()
   , m_nickname ( nickname ) 
   , m_tool     () 
 {
-  //
-  ILoKiSvc* l = lokiSvc() ;
-  Assert ( 0 != l   , "ILoKiSvc* points to NULL!" ) ;
-  SmartIF<IToolSvc> tsvc ( l ) ;
-  Assert ( !(!tsvc) , "IToolSvc* points to NULL!" ) ;
-  // aquire tool 
-  ICheckTool*       ctool  = 0  ;
-  const IInterface* parent = 0 ;
-  StatusCode sc = tsvc->retrieveTool ( nickname , ctool , parent , true ) ;
-  Assert ( sc.isSuccess() , "Unable to aquire the tool '" + nickname + "'" , sc );
-  m_tool = ctool ;
-  Assert ( !(!m_tool)     , "Unable to aquire the tool '" + nickname + "'" );
+  if ( gaudi() ) { getTool() ; }
 }
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -61,9 +51,25 @@ LoKi::Status::Check* LoKi::Status::Check::clone() const
 LoKi::Status::Check::result_type 
 LoKi::Status::Check::operator() ( /* LoKi::Status::Check::argument */ ) const 
 {
+  if ( !m_tool ) { getTool() ; }
   Assert ( !(!m_tool) , "Invalid ICheckTool-interface" ) ;
   //
   return m_tool->check().isSuccess() ;
+}
+// ============================================================================
+void LoKi::Status::Check::getTool() const 
+{
+  ILoKiSvc* l = lokiSvc() ;
+  Assert ( 0 != l   , "ILoKiSvc* points to NULL!" ) ;
+  SmartIF<IToolSvc> tsvc ( l ) ;
+  Assert ( !(!tsvc) , "IToolSvc* points to NULL!" ) ;
+  // aquire tool 
+  ICheckTool*       ctool  = 0  ;
+  const IInterface* parent = 0 ;
+  StatusCode sc = tsvc->retrieveTool ( m_nickname , ctool , parent , true ) ;
+  Assert ( sc.isSuccess() , "Unable to acquire the tool '" + m_nickname + "'" , sc );
+  m_tool = ctool ;
+  Assert ( !(!m_tool)     , "Unable to acquire the tool '" + m_nickname + "'" );
 }
 // ============================================================================
 // OPTIONAL: nice printout 
@@ -82,22 +88,12 @@ LoKi::Status::Check::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Status::Accept::Accept
 ( const std::string& nickname ) 
-  : LoKi::Functor<void,bool>()
+  : LoKi::AuxFunBase ( std::tie ( nickname ) )
+  , LoKi::Functor<void,bool>()
   , m_nickname ( nickname ) 
   , m_tool     () 
 {
-  //
-  ILoKiSvc* l = lokiSvc() ;
-  Assert ( 0 != l   , "ILoKiSvc* points to NULL!" ) ;
-  SmartIF<IToolSvc> tsvc ( l ) ;
-  Assert ( !(!tsvc) , "IToolSvc* points to NULL!" ) ;
-  // aquire tool 
-  IAccept*       ctool  = 0  ;
-  const IInterface* parent = 0 ;
-  StatusCode sc = tsvc->retrieveTool ( nickname , ctool , parent , true ) ;
-  Assert ( sc.isSuccess() , "Unable to aquire the tool '" + nickname + "'" , sc );
-  m_tool = ctool ;
-  Assert ( !(!m_tool)     , "Unable to aquire the tool '" + nickname + "'" );
+  if ( gaudi() ) { getTool() ; }
 }
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -114,6 +110,7 @@ LoKi::Status::Accept* LoKi::Status::Accept::clone() const
 LoKi::Status::Accept::result_type 
 LoKi::Status::Accept::operator() ( /* LoKi::Status::Check::argument */ ) const 
 {
+  if ( !m_tool ) { getTool() ; }
   Assert ( !(!m_tool) , "Invalid IAccept-interface" ) ;
   //
   return m_tool->accept() ;
@@ -129,6 +126,20 @@ LoKi::Status::Accept::fillStream ( std::ostream& s ) const
   return s << ") " ;
 }
 // ============================================================================
+void LoKi::Status::Accept::getTool() const 
+{
+  ILoKiSvc* l = lokiSvc() ;
+  Assert ( 0 != l   , "ILoKiSvc* points to NULL!" ) ;
+  SmartIF<IToolSvc> tsvc ( l ) ;
+  Assert ( !(!tsvc) , "IToolSvc* points to NULL!" ) ;
+  // aquire tool 
+  IAccept*       ctool  = 0  ;
+  const IInterface* parent = 0 ;
+  StatusCode sc = tsvc->retrieveTool ( m_nickname , ctool , parent , true ) ;
+  Assert ( sc.isSuccess() , "Unable to aquire the tool '" + m_nickname + "'" , sc );
+  m_tool = ctool ;
+  Assert ( !(!m_tool)     , "Unable to aquire the tool '" + m_nickname + "'" );  
+}
 
 
 // ============================================================================

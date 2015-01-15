@@ -33,6 +33,10 @@ namespace LHCb
 {
   class ParticleID ;
 }
+namespace Decays
+{
+  class iNode ;
+}
 // ============================================================================
 namespace Gaudi
 {
@@ -49,6 +53,7 @@ namespace Gaudi
     GAUDI_API std::string toCpp ( const LoKi::ThreeVector&   o ) ;
     GAUDI_API std::string toCpp ( const LoKi::Point3D&       o ) ;
     GAUDI_API std::string toCpp ( const LHCb::ParticleID&    o ) ;
+    GAUDI_API std::string toCpp ( const Decays::iNode&       o ) ;
     // ========================================================================
   }
   // ==========================================================================
@@ -98,7 +103,7 @@ namespace Gaudi
     template <class TYPE>
     inline std::string toCpp ( const std::vector<TYPE>& v )
     {
-      std::string o = "std::string<" + System::typeinfoName ( typeid(TYPE) ) + ">{" ;
+      std::string o = "std::vector<" + System::typeinfoName ( typeid(TYPE) ) + ">{" ;
       for ( typename std::vector<TYPE>::const_iterator it = v.begin() ; v.end() != it ; ++it ) 
       { o.append ( toCpp ( *it ) + ", " ) ; }
       //

@@ -90,15 +90,10 @@ namespace LoKi
         , m_cut    ( cut  ) 
         , m_stat   ( 0    ) 
         , m_cntdef ( cnt  ) 
-      {} 
-      /// copy constructor 
-      Counter ( const Counter& right )
-        : LoKi::AuxFunBase          ( right          ) 
-        , LoKi::Functor<TYPE,TYPE2> ( right          ) 
-        , m_cut                     ( right.m_cut    ) 
-        , m_stat                    ( right.m_stat   ) 
-        , m_cntdef                  ( right.m_cntdef ) 
-      {} 
+      {
+        if ( this->gaudi() && m_cntdef.valid() )
+        { m_stat = LoKi::Monitoring::getCounter ( m_cntdef ) ; }
+      } 
       /// MANDATORY: virtual constructor
       virtual ~Counter() { m_stat = 0 ; }
       /// MANDATORY: clone method ("virtual constructor")
@@ -147,16 +142,21 @@ namespace LoKi
       Counter ( const LoKi::Functor<void,TYPE2>& cut  , 
                 StatEntity*                      stat )
         : LoKi::Functor<void,TYPE2>() 
-        , m_cut  ( cut  ) 
-        , m_stat ( stat ) 
+        , m_cut     ( cut  ) 
+        , m_stat    ( stat ) 
+        , m_cntdef  () 
       {} 
-      /// copy constructor 
-      Counter ( const Counter& right )
-        : LoKi::AuxFunBase          ( right        ) 
-        , LoKi::Functor<void,TYPE2> ( right        ) 
-        , m_cut                     ( right.m_cut  ) 
-        , m_stat                    ( right.m_stat ) 
-      {} 
+      Counter ( const LoKi::Functor<void,TYPE2>& cut  , 
+                const LoKi::CounterDef&          cnt  )
+        : LoKi::AuxFunBase ( std::tie ( cut , cnt ) ) 
+        , LoKi::Functor<void,TYPE2>() 
+        , m_cut     ( cut  ) 
+        , m_stat    ( 0    ) 
+        , m_cntdef  ( cnt  ) 
+      {
+        if ( this->gaudi() && m_cntdef.valid() )
+        { m_stat = LoKi::Monitoring::getCounter ( m_cntdef ) ; }
+      } 
       /// MANDATORY: virtual constructor
       virtual ~Counter() { m_stat = 0 ; }
       /// MANDATORY: clone method ("virtual constructor")
@@ -167,6 +167,9 @@ namespace LoKi
       {
         const typename LoKi::Functor<void,TYPE2>::result_type result = 
           m_cut.fun ( /* a */ ) ;
+        /// get counter if needed 
+        if ( 0 == m_stat &&  m_cntdef.valid() ) 
+        { m_stat = LoKi::Monitoring::getCounter ( m_cntdef ) ; }
         /// perform monitoring
         if ( 0 != m_stat ){ (*m_stat) += result ; } // perform monitoring
         return result ;                                           // RETURN 
@@ -188,6 +191,8 @@ namespace LoKi
       LoKi::FunctorFromFunctor<void,TYPE2> m_cut ;      // the "main" predicate
       /// generic counter used for monitoring:
       StatEntity* m_stat ;               // generic counter used for monitoring
+      /// counter description 
+      LoKi::CounterDef m_cntdef ;       // counter description 
       // ======================================================================
     };
     // ========================================================================
@@ -226,6 +231,7 @@ namespace LoKi
         : LoKi::Functor<TYPE,TYPE2>() 
         , m_fun     ( fun   ) 
         , m_histo   ( histo ) 
+        , m_hdef    () 
       {} 
       /// constructor from the function and the histogram  description 
       Plot ( const LoKi::Functor<TYPE,TYPE2>& fun   , 
@@ -235,7 +241,11 @@ namespace LoKi
         , m_fun     ( fun   ) 
         , m_histo   ( 0     ) 
         , m_hdef    ( hdef  )
-      {} 
+      {
+        // try to load the histo 
+        if ( this->gaudi() && m_hdef.valid() ) 
+        { m_histo = LoKi::HistoBook::book ( m_hdef ) ; }
+      } 
       /// constructor from the function and the histogram  description 
       Plot ( const LoKi::Histo&               hdef  , 
              const LoKi::Functor<TYPE,TYPE2>& fun   ) 
@@ -244,20 +254,18 @@ namespace LoKi
         , m_fun     ( fun   ) 
         , m_histo   ( 0     ) 
         , m_hdef    ( hdef  )
-      {} 
+      {
+        // try to load the histo 
+        if ( this->gaudi() && m_hdef.valid() ) 
+        { m_histo = LoKi::HistoBook::book ( m_hdef ) ; }
+      } 
       /// constructor from the function and the histogram  
       Plot ( AIDA::IHistogram1D*              histo ,
              const LoKi::Functor<TYPE,TYPE2>& fun   ) 
         : LoKi::Functor<TYPE,TYPE2>() 
         , m_fun     ( fun   ) 
         , m_histo   ( histo ) 
-      {} 
-      /// copy constructor 
-      Plot ( const Plot& right )
-        : LoKi::AuxFunBase          ( right ) 
-        , LoKi::Functor<TYPE,TYPE2> ( right ) 
-        , m_fun                 ( right.m_fun   ) 
-        , m_histo               ( right.m_histo ) 
+        , m_hdef    () 
       {} 
       /// MANDATORY: virtual constructor
       virtual ~Plot () { m_histo = 0 ; }
@@ -311,21 +319,29 @@ namespace LoKi
         : LoKi::Functor<void,TYPE2>() 
         , m_fun     ( fun   ) 
         , m_histo   ( histo ) 
+        , m_hdef    () 
       {} 
+      /// constructor from the function and the histogram  
+      Plot ( const LoKi::Functor<void,TYPE2>& fun   , 
+             const LoKi::Histo&               hdef  )
+        : LoKi::AuxFunBase ( std::tie ( fun , hdef ) ) 
+        , LoKi::Functor<void,TYPE2>() 
+        , m_fun     ( fun   ) 
+        , m_histo   ( 0     ) 
+        , m_hdef    ( hdef  ) 
+      {
+        // try to load the histo 
+        if ( this->gaudi() && m_hdef.valid() ) 
+        { m_histo = LoKi::HistoBook::book ( m_hdef ) ; }
+      } 
       /// constructor from the function and the histogram  
       Plot ( AIDA::IHistogram1D*              histo ,
              const LoKi::Functor<void,TYPE2>& fun   ) 
         : LoKi::Functor<void,TYPE2>() 
         , m_fun     ( fun   ) 
         , m_histo   ( histo ) 
-      {} 
-      /// copy constructor 
-      Plot ( const Plot& right )
-        : LoKi::AuxFunBase          ( right ) 
-        , LoKi::Functor<void,TYPE2> ( right ) 
-        , m_fun                 ( right.m_fun   ) 
-        , m_histo               ( right.m_histo ) 
-      {} 
+        , m_hdef    () 
+      {}
       /// MANDATORY: virtual constructor
       virtual ~Plot () { m_histo = 0 ; }
       /// MANDATORY: clone method ("virtual constructor")
@@ -336,6 +352,9 @@ namespace LoKi
       {
         const typename LoKi::Functor<void,TYPE2>::result_type result = 
           m_fun.fun ( /* a */ ) ;
+        // try to load the histo 
+        if ( 0 == m_histo () && m_hdef.valid() ) 
+        { m_histo = LoKi::HistoBook::book ( m_hdef ) ; }
         // perform monitoring
         if ( 0 != m_histo ) { m_histo -> fill ( result ) ;  } ///< perform monitoring
         return result ;
@@ -357,6 +376,8 @@ namespace LoKi
       LoKi::FunctorFromFunctor<void,TYPE2> m_fun ; // the "main" function
       /// the histogram for monitoring 
       AIDA::IHistogram1D*              m_histo ; // the histogram for monitoring 
+      /// histogram description for lazy instantiation 
+      LoKi::Histo                      m_hdef  ; // histogram description
       // ======================================================================
     };
     // ========================================================================

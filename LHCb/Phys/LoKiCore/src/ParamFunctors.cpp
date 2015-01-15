@@ -183,13 +183,16 @@ LoKi::Parameters::ParamBase::ParamBase
   , m_param          ( property )
   , m_property       ( 0 )
 {
-  m_property  = ::getProperty ( *this , m_param ) ;
-  Assert ( 0 != m_property , "Unable to get property" ) ;
+  if ( gaudi() ) { getProp() ; }
 }
 // ============================================================================
 LoKi::Parameters::ParamBase::~ParamBase() { m_property = 0 ; }
 // ============================================================================
-
+void LoKi::Parameters::ParamBase::getProp() const
+{ 
+  m_property  = ::getProperty ( *this , m_param ) ;
+  Assert ( 0 != m_property , "Unable to get property" ) ;
+}
 
 // ============================================================================
 // constructor from parameter 
@@ -206,20 +209,7 @@ LoKi::Parameters::Parameter::Parameter
   , m_scalar_f  ( false ) 
   , m_scalar_i  ( false ) 
 {
-  //
-  m_map_d     = dynamic_cast<const PropertyWithValue<MAP_D>*>   ( property() ) ;
-  m_map_f     = dynamic_cast<const PropertyWithValue<MAP_F>*>   ( property() ) ;
-  m_map_i     = dynamic_cast<const PropertyWithValue<MAP_I>*>   ( property() ) ;
-  m_scalar_d  = dynamic_cast<const PropertyWithValue<double>*>  ( property() ) ;
-  m_scalar_f  = dynamic_cast<const PropertyWithValue<float>*>   ( property() ) ;
-  m_scalar_i  = dynamic_cast<const PropertyWithValue<int>*>     ( property() ) ;
-  //
-  Assert ( m_map_d    ||
-           m_map_f    || 
-           m_map_i    || 
-           m_scalar_d || 
-           m_scalar_f || 
-           m_scalar_i  , "Invalid property type" ) ;
+  if ( gaudi() ) { getProp() ; }
 }
 // ============================================================================
 // constructor from parameter 
@@ -236,19 +226,7 @@ LoKi::Parameters::Parameter::Parameter
   , m_scalar_f  ( false ) 
   , m_scalar_i  ( false ) 
 {
-  m_map_d     = dynamic_cast<const PropertyWithValue<MAP_D>*>   ( property() ) ;
-  m_map_f     = dynamic_cast<const PropertyWithValue<MAP_F>*>   ( property() ) ;
-  m_map_i     = dynamic_cast<const PropertyWithValue<MAP_I>*>   ( property() ) ;
-  m_scalar_d  = dynamic_cast<const PropertyWithValue<double>*>  ( property() ) ;
-  m_scalar_f  = dynamic_cast<const PropertyWithValue<float>*>   ( property() ) ;
-  m_scalar_i  = dynamic_cast<const PropertyWithValue<int>*>     ( property() ) ;
-  //
-  Assert ( m_map_d    ||
-           m_map_f    || 
-           m_map_i    || 
-           m_scalar_d || 
-           m_scalar_f || 
-           m_scalar_i  , "Invalid property type" ) ;
+  if ( gaudi() ) { getProp() ; }
 }
 // ============================================================================
 // virtual destructor 
@@ -260,6 +238,26 @@ LoKi::Parameters::Parameter::~Parameter () {}
 LoKi::Parameters::Parameter*
 LoKi::Parameters::Parameter::clone() const 
 { return new LoKi::Parameters::Parameter ( *this ) ; }
+// ============================================================================
+void LoKi::Parameters::Parameter::getParams() const 
+{
+  const Property* p = property() ;
+  if ( 0 == p ) { getProp() ; }
+  //
+  m_map_d     = dynamic_cast<const PropertyWithValue<MAP_D>*>   ( p ) ;
+  m_map_f     = dynamic_cast<const PropertyWithValue<MAP_F>*>   ( p ) ;
+  m_map_i     = dynamic_cast<const PropertyWithValue<MAP_I>*>   ( p ) ;
+  m_scalar_d  = dynamic_cast<const PropertyWithValue<double>*>  ( p ) ;
+  m_scalar_f  = dynamic_cast<const PropertyWithValue<float>*>   ( p ) ;
+  m_scalar_i  = dynamic_cast<const PropertyWithValue<int>*>     ( p ) ;
+  //
+  Assert ( m_map_d    ||
+           m_map_f    || 
+           m_map_i    || 
+           m_scalar_d || 
+           m_scalar_f || 
+           m_scalar_i  , "Invalid property type" ) ;  
+}
 // ============================================================================
 // optional: nice printout 
 // ============================================================================

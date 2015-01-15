@@ -126,6 +126,10 @@
       <method name="=" />
     </class>
 
+    <class pattern="LoKi::TES::Stat">
+      <field name="m_getter" />
+    </class>
+
     <class pattern="LoKi::Listener">
       <method name="release"  />
       <method name="addRef"   />

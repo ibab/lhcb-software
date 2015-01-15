@@ -81,6 +81,8 @@ namespace LoKi
     protected:
       // ======================================================================
       void setLocation ( const std::string& value ) { m_location = value ; }
+      /// acquire algorithm or service 
+      void getAlgSvc   () const ;
       // ======================================================================
     private:
       // ======================================================================

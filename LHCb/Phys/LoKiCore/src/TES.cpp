@@ -66,6 +66,17 @@ LoKi::TES::Get::Get
   , m_algorithm () 
   , m_datasvc   () 
 {
+  if ( gaudi() ) { getAlgSvc() ; }
+}
+// ============================================================================
+// virtual destructor 
+// ============================================================================
+LoKi::TES::Get::~Get(){}
+// ============================================================================
+void LoKi::TES::Get::getAlgSvc() const
+{
+  //
+  if ( !(!m_algorithm) || !(!m_datasvc)) { return ; }
   //
   // 1. locate algorithm 
   //
@@ -87,10 +98,6 @@ LoKi::TES::Get::Get
            "Neither algorithm nor service is located" ) ;
 }
 // ============================================================================
-// virtual destructor 
-// ============================================================================
-LoKi::TES::Get::~Get(){}
-// ============================================================================
 // OPTIONAL: nice printout
 // ============================================================================
 std::ostream& LoKi::TES::Get::fillStream ( std::ostream& s ) const 
@@ -104,8 +111,6 @@ std::ostream& LoKi::TES::Get::fillStream ( std::ostream& s ) const
 // ============================================================================
 const std::string& LoKi::TES::Get::algName() const
 { return !algorithm() ? s_INVALID : algorithm()->name() ; }
-
-
 // ============================================================================
 // constructor from TES location
 // ============================================================================
