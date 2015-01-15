@@ -2167,13 +2167,12 @@ StatusCode MuonIDAlg::setCoords(LHCb::MuonPID *pMuid){
       if (msgLevel(MSG::VERBOSE) ) verbose()  << "           station " << station << " region " << region
                                           << " mapInRegion: " << m_mudet->mapInRegion(station,region ) << endmsg;
 
-      double foiXDim = 0.0;
-      double foiYDim = 0.0;
-      double last_dx = 0.0;
-      double last_dy = 0.0;
+      //TODO: compute this once, build lookup table...
+      double sr_foiX = 0.; // foiX for this station, region... upto factor 'dx'
+      double sr_foiY = 0.; // foiY for this station, region... upto factor 'dy'
+	  std::tie(sr_foiX,sr_foiY) = foiXY( station, region, m_MomentumPre );
 
-        std::vector<coordExtent_>::const_iterator itPos;
-        for(itPos = m_coordPos[i].begin();
+        for(auto itPos = m_coordPos[i].begin();
             itPos != m_coordPos[i].end();
             itPos++){
 
@@ -2182,13 +2181,8 @@ StatusCode MuonIDAlg::setCoords(LHCb::MuonPID *pMuid){
           double y = itPos->m_y;
           double dy = itPos->m_dy;
 
-	  if (last_dx != dx || last_dy != dy)
-	    {
-	      //ideally want to call this only once per station, region
-	      std::tie(foiXDim,foiYDim) = foiXY( station, region, m_MomentumPre, m_foifactor*dx, m_foifactor*dy);
-	      last_dx = dx;
-	      last_dy = dy;
-	    }
+          double foiXDim = sr_foiX * dx * m_foifactor;
+          double foiYDim = sr_foiY * dy * m_foifactor;
 
           // check if the hit is in the window
           if(  ( fabs( x - m_trackX[station] ) < foiXDim ) &&
@@ -2281,7 +2275,9 @@ StatusCode MuonIDAlg::get_closest(LHCb::MuonPID *pMuid, double *closest_x,
 
     int station = (*iCoord)->key().station();
     int region = (*iCoord)->key().region();
-    std::tie(foiXDim,foiYDim) = foiXY( station, region, m_MomentumPre, dx*m_foifactor, dy*m_foifactor);
+    std::tie(foiXDim,foiYDim) = foiXY( station, region, m_MomentumPre );
+    foiXDim *= dx*m_foifactor;
+    foiYDim *= dx*m_foifactor;
 
     // only for M2-M3-M4-M5:
     if (station >= m_iM2 ) {  // JHL: station == 0 is OK in the case of no M1  12/Oct./2013
@@ -2787,23 +2783,19 @@ StatusCode MuonIDAlg::trackExtrapolate(const LHCb::Track *pTrack){
 // this is a simpler version of the parameterization:
 // foi = par0 + par2*exp(-par3*p)
 //=============================================================================
-std::pair<double,double> MuonIDAlg::foiXY(const int &station, const int &region, const double &p,
-                                          const double &dx, const double& dy){
+std::pair<double,double> MuonIDAlg::foiXY(int station, int region, double p) const
+{
   int i  = station * m_NRegion + region;
   if (p < 1000000. ){
     auto pGeV = p/Gaudi::Units::GeV;
-    std::array<double,2> pp = { -m_xfoiParam3[ i ]*pGeV , -m_yfoiParam3[ i ]*pGeV };
-    
-    return { ( m_xfoiParam1[ i ] +
-               m_xfoiParam2[ i ]*
-               vdt::fast_exp(pp[0]) ) *dx, 
-             ( m_yfoiParam1[ i ] +
-               m_yfoiParam2[ i ]*
-               vdt::fast_exp(pp[1]) )*dy };
+    std::array<double,2> pp = { -m_xfoiParam3[ i ]*pGeV , 
+                                -m_yfoiParam3[ i ]*pGeV };
+    return { ( m_xfoiParam1[ i ] + m_xfoiParam2[ i ]* vdt::fast_exp(pp[0]) ), 
+             ( m_yfoiParam1[ i ] + m_yfoiParam2[ i ]* vdt::fast_exp(pp[1]) ) };
 
   }else{
-    return { m_xfoiParam1[ i ] * dx,
-             m_yfoiParam1[ i ] * dy } ;
+    return { m_xfoiParam1[ i ],
+             m_yfoiParam1[ i ]  } ;
   }
 
   //in the future optimize this checking that 2*dx =m_padSizeX[station * m_NRegion + region]

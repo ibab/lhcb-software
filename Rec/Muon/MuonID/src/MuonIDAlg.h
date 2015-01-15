@@ -99,8 +99,7 @@ private:
   double calcMuProb(LHCb::MuonPID * pMuid);
 
   /// return the FOI in (x,y) in a station and region for momentum (in MeV/c)
-  std::pair<double,double> foiXY(const int &station, const int &region, const double &p, 
-                                 const double &dx, const double &dy);
+  std::pair<double,double> foiXY(int station, int region, double p) const;
 
   /// clear track based local variables
   void resetTrackLocals();

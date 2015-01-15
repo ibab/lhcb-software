@@ -3,6 +3,11 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2015-01-15 - Gerhard Raven
+ - speed up MuonIDAlg by a factor of 1.8 by only computing the FOI once per
+   station/region/candidate momentum, and factorizing out the hit (i.e. 'dx' 
+   and 'dy') dependence
+
 !========================= MuonID v9r12 2014-12-12 =========================
 ! 2014-12-12 - Marco Clemencic
  - Added dependency on VDT in CMake configuration.
