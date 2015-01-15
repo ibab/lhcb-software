@@ -20,7 +20,6 @@
 #endif
 #endif
 #include "GaudiKernel/boost_allocator.h"
-#include <type_traits>
 
 #if __cplusplus < 201100L
 namespace LHCb_MemPoolAlloc_details {
@@ -28,6 +27,8 @@ namespace LHCb_MemPoolAlloc_details {
     template<bool B, class T, class F> struct conditional { typedef T type; };
     template<class T, class F> struct conditional<false, T, F> { typedef F type; };
 }
+#else
+#include <type_traits>
 #endif
 
 namespace LHCb
