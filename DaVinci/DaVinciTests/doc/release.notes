@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2015-01-15 - Eduardo Rodrigues
+ - Added python/DaVinciTests/__init__.py to please CMake
+
 !========================= DaVinciTests v2r28 2014-12-17 =========================
 
 ! 2014-11-10 - Chris Jones
