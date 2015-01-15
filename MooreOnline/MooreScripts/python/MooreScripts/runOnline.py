@@ -51,10 +51,6 @@ def start(**kwargs) :
     #default is OK moore.IgnoreDBHeartBeat = True
     mooreOnline.EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough', 'Commissioning_OTCosmics'] )
     
-    ## is this still needed??? YES -- the run_XYZ.xml files are not generated for FEST...
-    if OnlineEnv.PartitionName == 'FEST' : mooreOnline.EnableRunChangeHandler = False
-    ### TODO: pick up which calibrations to 'register' for the run change handler
-
     if OnlineEnv.PartitionName == 'TEST' : mooreOnline.CheckOdin = False
     if OnlineEnv.PartitionName == 'LHCb1' : mooreOnline.CheckOdin = False # TODO: push into Hack, but that doesn't seem to pick up its properties???
 
