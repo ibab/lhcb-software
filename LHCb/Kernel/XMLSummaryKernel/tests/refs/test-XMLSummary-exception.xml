@@ -4,13 +4,13 @@
 	<success>False</success>
 	<step>finalize</step>
 	<usage>
-		<stat unit="KB" useOf="MemoryMaximum">540644.0</stat>
+		<stat unit="KB" useOf="MemoryMaximum">1178208.0</stat>
 	</usage>
 	<input>
-		<file GUID="96219CE3-0330-DE11-9662-00304879EE40" name="PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Brunel/v34r5/00001820_00000001.dst?svcClass=default" status="part">4</file>
+		<file GUID="28B6CE68-6E10-E211-87CF-003048C5F645" name="PFN:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/swtest/lhcb/LHCb/Collision12/FULL.DST/00020330/0004/00020330_00042960_1.full.dst" status="part">4</file>
 	</input>
 	<output>
-		<file GUID="96E7B1D9-9AC5-DF11-96BF-003048673256" name="PFN:RootDst.root" status="full">4</file>
+		<file GUID="087070A9-9A9C-E411-AE12-02163E010E0C" name="PFN:RootDst.root" status="full">4</file>
 	</output>
 	<counters>
 		<counter name="Counter/executed">4</counter>
