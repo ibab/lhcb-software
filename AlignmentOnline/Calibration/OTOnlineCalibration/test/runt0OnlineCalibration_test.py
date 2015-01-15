@@ -7,15 +7,20 @@ gaudirun.py runt0OnlineCalibration_test.py
 from Configurables import GaudiSequencer
 from Configurables import OTt0OnlineClbr
 
+simulation = True 
+
+
 OTGaudiSeq = GaudiSequencer("OTt0OnlineClbrSeq")
 
 OTt0OnlineClbrAlg = OTt0OnlineClbr("OTt0OnlineClbrAlg")
 
-myFiles1 = [ "/afs/cern.ch/work/f/fdettori/Brunel-107577-20120228T184550-EOR.root" ]
+myFiles1 = [ "clbr_hists.root" ]
 
 OTt0OnlineClbrAlg.InputFiles  = myFiles1
-OTt0OnlineClbrAlg.xmlFilePath = "/tmp/fdettori"
+OTt0OnlineClbrAlg.xmlFilePath = "/tmp/fdettori/"
 OTt0OnlineClbrAlg.OutputLevel = 2
+OTt0OnlineClbrAlg.Simulation = True 
+
 
 
 OTGaudiSeq.Members += [
@@ -32,5 +37,12 @@ ApplicationMgr().TopAlg            += [ OTGaudiSeq ]
 from Configurables import LHCbApp
 #LHCbApp().DDDBtag   = "head-20120413"
 #LHCbApp().CondDBtag = "cond-20120730"
-LHCbApp().DDDBtag   = "default"                                                                                                           
-LHCbApp().CondDBtag = "default"
+
+LHCbApp().Simulation = simulation
+if simulation : 
+    LHCbApp().DDDBtag   = "dddb-20120831"
+    LHCbApp().CondDBtag = "sim-20121025-vc-md100"
+else : 
+    LHCbApp().DDDBtag   = "default"                                                                                                           
+    LHCbApp().CondDBtag = "default"
+        

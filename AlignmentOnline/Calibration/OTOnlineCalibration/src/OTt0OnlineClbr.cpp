@@ -68,7 +68,7 @@ OTt0OnlineClbr::OTt0OnlineClbr( const std::string& name, ISvcLocator* pSvcLocato
   declareProperty("Verbose", verbose = false, " Verbose, for debugging (default false,)");
   //  declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/group/online/alignment/" );                               
   // declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/afs/cern.ch/user/l/lgrillo/databases_for_online" );   
-  declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/afs/cern.ch/user/l/lgrillo/databases_for_online/OT/results.xml" );
+  declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/afs/cern.ch/user/l/lgrillo/databases_for_online/OT/" );
   declareProperty("xmlFileName"   ,  m_xmlFileName  = "results.xml" );
 
   /*
@@ -438,7 +438,7 @@ StatusCode OTt0OnlineClbr::readCondDB(double read_t0s[3][4][4][9])
 {
   std::string subDet = "OT";
 
-  double Module_t0;
+  double Module_t0(0);
 
   for(int s = 0; s < 3; s++) 
     for(int l = 0; l < 4; l++) 
@@ -448,16 +448,22 @@ StatusCode OTt0OnlineClbr::readCondDB(double read_t0s[3][4][4][9])
 	    
 	    std::string quarterId = stationNames[s] + layerNames[l] + quarterNames[q];
 
-	    std::string alignLoc ="/dd/Conditions/Calibration/OT/CalibrationModules"+stationNames[s]+layerNames[l]+quarterNames[q]+"/"+stationNames[s]+layerNames[l]+ quarterNames[q]+moduleNames[m];
+	    std::string alignLoc ="/dd/Conditions/Calibration/OT/CalibrationModules"+stationNames[s]+
+        layerNames[l]+quarterNames[q]+"/"+stationNames[s]+layerNames[l]+ quarterNames[q]+moduleNames[m];
 	    
 	    Condition *myCond = get<Condition>( detSvc(), alignLoc );
 	    if(simulation){
+        debug() << "CAFFE : requiring doublevect " << endmsg;
+        
 	      std::vector<double> TZeroVec = myCond->paramAsDoubleVect( "TZero" );
-	      for(int i = 0; i<TZeroVec.size();i++){
-		//std::cout << "t0 per straw = "<<TZeroVec.at(i)<<std::endl; // for check     
-		Module_t0 +=TZeroVec.at(i);
+        
+        Module_t0 = 0; // Reset 
+        for(int i = 0; i<TZeroVec.size();i++){
+          debug() << "t0 per straw = "<<TZeroVec.at(i)<< endmsg; // for check     
+          Module_t0 +=TZeroVec.at(i);
 	      }
-	      read_t0s[s][l][q][m] = Module_t0/(TZeroVec.size()*1.0);//in simcond the t0 are on straw bases, I make an average - for now - to make it module basis   
+	      read_t0s[s][l][q][m] = Module_t0/(TZeroVec.size()*1.0);
+        //in simcond the t0 are on straw bases, I make an average - for now - to make it module basis   
 	    }
 	    else{
 	      read_t0s[s][l][q][m] = myCond->paramAsDouble( "TZero" );
@@ -684,7 +690,7 @@ StatusCode OTt0OnlineClbr::writeCondDBXMLs(double t0s[3][4][4][9])
 {
 
   std::string prefix = "CalibrationModules";
-  boost::filesystem::path full_path(m_xmlFilePath);
+  boost::filesystem::path full_path(m_xmlFilePath+m_xmlFileName);
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "Writing new XML for online to " << full_path << endmsg ;
 
