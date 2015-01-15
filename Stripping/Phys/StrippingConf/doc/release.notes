@@ -4,6 +4,9 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2015-01-15 - Eduardo Rodrigues
+ - Added python/StrippingConf/__init__.py to please CMake
+
 !========================= StrippingConf v4r13 2014-11-25 =========================
 
 ! 2014-11-24 - Stefano Perazzini
