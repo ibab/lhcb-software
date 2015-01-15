@@ -3,6 +3,13 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v29r3>2015-01-15 Boole v29r3</A></H1><PRE>
+This version uses projects:
+ LCG_72root6 (ROOT 6.02.03), Gaudi v26r0, LHCb v38r4, Lbcom v16r3
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Identical to v29r2p1 but with Gaudi v26r0, LHCb v38r4 dependency
+
 </PRE><H1><A NAME=v29r2p1>2014-12-15 Boole v29r2p1</A></H1><PRE>
 This version uses projects:
  LCG_71root6 (ROOT 6.02.02), Gaudi v25r6, LHCb v38r3p1, Lbcom v16r2p1
