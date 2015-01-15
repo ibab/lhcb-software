@@ -59,11 +59,11 @@ namespace LoKi
     // ========================================================================
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
     operator==( const LoKi::MCParticles::Identifier& /* id */ ,
-                const int                               pid   ) ;
+                const long                              pid   ) ;
     // ========================================================================
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
     operator==( const LoKi::MCParticles::Identifier& /* id */ ,
-                const unsigned int                      pid   ) ;
+                const unsigned long                     pid   ) ;
     // ========================================================================
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
     operator==( const LoKi::MCParticles::Identifier& /* id */ ,
@@ -83,6 +83,14 @@ namespace LoKi
     // ========================================================================
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
     operator==( const LoKi::MCParticles::Identifier& /* id */ ,
+                const std::vector<long>&                 pid   ) ;
+    // ========================================================================
+    LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
+    operator==( const LoKi::MCParticles::Identifier& /* id */ ,
+                const std::vector<unsigned long>&       pid   ) ;
+    // ========================================================================
+    LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
+    operator==( const LoKi::MCParticles::Identifier& /* id */ ,
                 const std::vector<std::string>&         pid   ) ;
     // ========================================================================
     // MCABSID ==
@@ -93,11 +101,11 @@ namespace LoKi
     // ========================================================================
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
     operator==( const LoKi::MCParticles::AbsIdentifier& /* id */ ,
-                const int                                  pid   ) ;
+                const long                                 pid   ) ;
     // ========================================================================
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
     operator==( const LoKi::MCParticles::AbsIdentifier& /* id */ ,
-                const unsigned int                         pid   ) ;
+                const unsigned long                        pid   ) ;
     // ========================================================================
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
     operator==( const LoKi::MCParticles::AbsIdentifier& /* id */ ,
@@ -117,6 +125,14 @@ namespace LoKi
     // ========================================================================
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
     operator==( const LoKi::MCParticles::AbsIdentifier& /* id */ ,
+                const std::vector<long>&                    pid   ) ;
+    // ========================================================================
+    LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
+    operator==( const LoKi::MCParticles::AbsIdentifier& /* id */ ,
+                const std::vector<unsigned long>&          pid   ) ;
+    // ========================================================================
+    LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
+    operator==( const LoKi::MCParticles::AbsIdentifier& /* id */ ,
                 const std::vector<std::string>&            pid   ) ;
     // ========================================================================
 
@@ -130,11 +146,11 @@ namespace LoKi
     // ========================================================================
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
     operator!=( const LoKi::MCParticles::Identifier& /* id */ ,
-                const int                               pid   ) ;
+                const long                              pid   ) ;
     // ========================================================================
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
     operator!=( const LoKi::MCParticles::Identifier& /* id */ ,
-                const unsigned int                      pid   ) ;
+                const unsigned long                     pid   ) ;
     // ========================================================================
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
     operator!=( const LoKi::MCParticles::Identifier& /* id */ ,
@@ -154,6 +170,14 @@ namespace LoKi
     // ========================================================================
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
     operator!=( const LoKi::MCParticles::Identifier& /* id */ ,
+                const std::vector<long>&                pid   ) ;
+    // ========================================================================
+    LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
+    operator!=( const LoKi::MCParticles::Identifier& /* id */ ,
+                const std::vector<unsigned long>&       pid   ) ;
+    // ========================================================================
+    LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
+    operator!=( const LoKi::MCParticles::Identifier& /* id */ ,
                 const std::vector<std::string>&         pid   ) ;
     // ========================================================================
     // MCABSID !=
@@ -164,11 +188,11 @@ namespace LoKi
     // ========================================================================
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
     operator!=( const LoKi::MCParticles::AbsIdentifier& /* id */ ,
-                const int                                  pid   ) ;
+                const long                                 pid   ) ;
     // ========================================================================
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
     operator!=( const LoKi::MCParticles::AbsIdentifier& /* id */ ,
-                const unsigned int                         pid   ) ;
+                const unsigned long                        pid   ) ;
     // ========================================================================
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
     operator!=( const LoKi::MCParticles::AbsIdentifier& /* id */ ,
@@ -185,6 +209,14 @@ namespace LoKi
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
     operator!=( const LoKi::MCParticles::AbsIdentifier& /* id */ ,
                 const std::vector<unsigned int>&           pid   ) ;
+    // ========================================================================
+    LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
+    operator!=( const LoKi::MCParticles::AbsIdentifier& /* id */ ,
+                const std::vector<long>&                   pid   ) ;
+    // ========================================================================
+    LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
+    operator!=( const LoKi::MCParticles::AbsIdentifier& /* id */ ,
+                const std::vector<unsigned long>&          pid   ) ;
     // ========================================================================
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
     operator!=( const LoKi::MCParticles::AbsIdentifier& /* id */ ,
@@ -205,13 +237,13 @@ namespace LoKi
     // ========================================================================
     inline 
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
-    operator==( const int                               pid   ,
+    operator==( const long                              pid   ,
                 const LoKi::MCParticles::Identifier&    id    ) 
     { return id == pid ; }
     // ========================================================================
     inline 
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
-    operator==( const unsigned int                      pid   ,
+    operator==( const unsigned long                     pid   ,
                 const LoKi::MCParticles::Identifier&    id    )
     { return id == pid ; }
     // ========================================================================
@@ -241,6 +273,18 @@ namespace LoKi
     // ========================================================================
     inline 
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
+    operator==( const std::vector<long>&               pid   ,
+                const LoKi::MCParticles::Identifier&   id     )
+    { return id == pid ; }      
+    // ========================================================================
+    inline 
+    LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
+    operator==( const std::vector<unsigned long>&       pid   ,
+                const LoKi::MCParticles::Identifier&    id    )
+    { return id == pid ; }
+    // ========================================================================
+    inline 
+    LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
     operator==( const std::vector<std::string>&         pid   ,
                 const LoKi::MCParticles::Identifier&    id    ) 
     { return id == pid ; }
@@ -256,13 +300,13 @@ namespace LoKi
     // ========================================================================
     inline 
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
-    operator==( const int                                  pid   ,
+    operator==( const long                                 pid   ,
                 const LoKi::MCParticles::AbsIdentifier&    id    )
     { return id == pid ; }
     // ========================================================================
     inline 
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
-    operator==( const unsigned int                         pid   ,
+    operator==( const unsigned long                        pid   ,
                 const LoKi::MCParticles::AbsIdentifier&    id    ) 
     { return id == pid ; }
     // ========================================================================
@@ -292,6 +336,18 @@ namespace LoKi
     // ========================================================================
     inline 
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
+    operator==( const std::vector<long>&                   pid   ,
+                const LoKi::MCParticles::AbsIdentifier&    id    ) 
+    { return id == pid ; }
+    // ========================================================================
+    inline 
+    LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
+    operator==( const std::vector<unsigned long>&          pid   ,
+                const LoKi::MCParticles::AbsIdentifier&    id    ) 
+    { return id == pid ; }
+    // ========================================================================
+    inline 
+    LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
     operator==( const std::vector<std::string>&            pid   ,
                 const LoKi::MCParticles::AbsIdentifier&    id    ) 
     { return id == pid ; }
@@ -311,13 +367,13 @@ namespace LoKi
     // ========================================================================
     inline 
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
-    operator!=( const int                               pid   ,
+    operator!=( const long                              pid   ,
                 const LoKi::MCParticles::Identifier&    id    ) 
     { return id != pid ; }
     // ========================================================================
     inline 
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
-    operator!=( const unsigned int                      pid   ,
+    operator!=( const unsigned long                     pid   ,
                 const LoKi::MCParticles::Identifier&    id    )
     { return id != pid ; }
     // ========================================================================
@@ -347,6 +403,18 @@ namespace LoKi
     // ========================================================================
     inline 
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
+    operator!=( const std::vector<long>&               pid   ,
+                const LoKi::MCParticles::Identifier&   id     )
+    { return id != pid ; }      
+    // ========================================================================
+    inline 
+    LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
+    operator!=( const std::vector<unsigned long>&       pid   ,
+                const LoKi::MCParticles::Identifier&    id    )
+    { return id != pid ; }
+    // ========================================================================
+    inline 
+    LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
     operator!=( const std::vector<std::string>&         pid   ,
                 const LoKi::MCParticles::Identifier&    id    ) 
     { return id != pid ; }
@@ -362,13 +430,13 @@ namespace LoKi
     // ========================================================================
     inline 
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
-    operator!=( const int                                  pid   ,
+    operator!=( const long                                 pid   ,
                 const LoKi::MCParticles::AbsIdentifier&    id    )
     { return id != pid ; }
     // ========================================================================
     inline 
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
-    operator!=( const unsigned int                         pid   ,
+    operator!=( const unsigned long                        pid   ,
                 const LoKi::MCParticles::AbsIdentifier&    id    ) 
     { return id != pid ; }
     // ========================================================================
@@ -393,6 +461,18 @@ namespace LoKi
     inline 
     LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
     operator!=( const std::vector<unsigned int>&           pid   ,
+                const LoKi::MCParticles::AbsIdentifier&    id    ) 
+    { return id != pid ; }
+    // ========================================================================
+    inline 
+    LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
+    operator!=( const std::vector<long>&                   pid   ,
+                const LoKi::MCParticles::AbsIdentifier&    id    ) 
+    { return id != pid ; }
+    // ========================================================================
+    inline 
+    LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate
+    operator!=( const std::vector<unsigned long>&          pid   ,
                 const LoKi::MCParticles::AbsIdentifier&    id    ) 
     { return id != pid ; }
     // ========================================================================

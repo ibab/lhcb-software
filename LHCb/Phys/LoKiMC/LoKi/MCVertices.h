@@ -250,8 +250,6 @@ namespace LoKi
        *  @param point 3D-point
        */
       MCVertexDistance ( const LHCb::MCVertex*   point ) ;
-      /// copy constructor
-      MCVertexDistance ( const MCVertexDistance& ) ;
       /// virtual descructor
       virtual ~MCVertexDistance() ;
       /// clone method (mandatory!)

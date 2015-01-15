@@ -323,7 +323,9 @@ LoKi::MCParticles::AbsIdentifier::operator()
 // ============================================================================
 // IsID 
 // ============================================================================
-LoKi::MCParticles::IsID::IsID ( const int                      id  ) 
+// IsID 
+// ============================================================================
+LoKi::MCParticles::IsID::IsID ( const long                      id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
   , m_ints  ( 1 , id ) 
@@ -331,7 +333,7 @@ LoKi::MCParticles::IsID::IsID ( const int                      id  )
   , m_names ()
 {}
 // ============================================================================
-LoKi::MCParticles::IsID::IsID( const unsigned int  id  ) 
+LoKi::MCParticles::IsID::IsID( const unsigned long  id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
   , m_ints  ( 1 , id ) 
@@ -342,8 +344,8 @@ LoKi::MCParticles::IsID::IsID( const unsigned int  id  )
 LoKi::MCParticles::IsID::IsID( const LHCb::ParticleID&         id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_ints  () 
-  , m_pids  ( 1 , id ) 
+  , m_ints  ( 1 , id.pid() ) 
+  , m_pids  ( 1 , id       ) 
   , m_names ()
 {}
 // ============================================================================
@@ -353,9 +355,27 @@ LoKi::MCParticles::IsID::IsID( const std::string& id  )
   , m_ints  () 
   , m_pids  () 
   , m_names ( 1 , id )
-{}
+{
+  if ( gaudi() ) { getData() ; } 
+}
 // ============================================================================
 LoKi::MCParticles::IsID::IsID( const std::vector<int>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
+  , m_ints  ( id.begin() , id.end() ) 
+  , m_pids  () 
+  , m_names ()
+{}
+// ============================================================================
+LoKi::MCParticles::IsID::IsID( const std::vector<unsigned int>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
+  , m_ints  ( id.begin() , id.end() ) 
+  , m_pids  () 
+  , m_names ()
+{}
+// ============================================================================
+LoKi::MCParticles::IsID::IsID( const std::vector<long>& id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
   , m_ints  ( id ) 
@@ -363,7 +383,7 @@ LoKi::MCParticles::IsID::IsID( const std::vector<int>& id  )
   , m_names ()
 {}
 // ============================================================================
-LoKi::MCParticles::IsID::IsID( const std::vector<unsigned int>& id  ) 
+LoKi::MCParticles::IsID::IsID( const std::vector<unsigned long>& id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
   , m_ints  ( id.begin() , id.end() ) 
@@ -377,7 +397,9 @@ LoKi::MCParticles::IsID::IsID( const std::vector<LHCb::ParticleID>& id  )
   , m_ints  () 
   , m_pids  ( id ) 
   , m_names ()
-{}
+{
+  getData() ;
+}
 // ============================================================================
 LoKi::MCParticles::IsID::IsID( const std::vector<std::string>& id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
@@ -385,7 +407,9 @@ LoKi::MCParticles::IsID::IsID( const std::vector<std::string>& id  )
   , m_ints  () 
   , m_pids  () 
   , m_names ( id )
-{}
+{
+  if ( gaudi() ) { getData() ; }
+}
 // ============================================================================
 LoKi::MCParticles::IsID*
 LoKi::MCParticles::IsID::clone() const 
@@ -455,12 +479,12 @@ LoKi::MCParticles::IsID::operator()
 // ============================================================================
 // IsNotID 
 // ============================================================================
-LoKi::MCParticles::IsNotID::IsNotID ( const int                      id  ) 
+LoKi::MCParticles::IsNotID::IsNotID ( const long                id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::MCParticles::IsID ( id ) 
 {}
 // ============================================================================
-LoKi::MCParticles::IsNotID::IsNotID( const unsigned int  id  ) 
+LoKi::MCParticles::IsNotID::IsNotID( const unsigned long  id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::MCParticles::IsID ( id ) 
 {}
@@ -481,6 +505,16 @@ LoKi::MCParticles::IsNotID::IsNotID( const std::vector<int>& id  )
 {}
 // ============================================================================
 LoKi::MCParticles::IsNotID::IsNotID( const std::vector<unsigned int>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::MCParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::MCParticles::IsNotID::IsNotID( const std::vector<long>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::MCParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::MCParticles::IsNotID::IsNotID( const std::vector<unsigned long>& id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::MCParticles::IsID ( id ) 
 {}
@@ -537,7 +571,7 @@ LoKi::MCParticles::IsNotID::operator()
 // ============================================================================
 // IsAbsID 
 // ============================================================================
-LoKi::MCParticles::IsAbsID::IsAbsID ( const int id  ) 
+LoKi::MCParticles::IsAbsID::IsAbsID ( const long id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
   , m_ints  ( 1 , std::abs ( id ) ) 
@@ -545,7 +579,7 @@ LoKi::MCParticles::IsAbsID::IsAbsID ( const int id  )
   , m_names ()
 {}
 // ============================================================================
-LoKi::MCParticles::IsAbsID::IsAbsID ( const unsigned int  id  ) 
+LoKi::MCParticles::IsAbsID::IsAbsID ( const unsigned long  id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
   , m_ints  ( 1 , id ) 
@@ -559,7 +593,9 @@ LoKi::MCParticles::IsAbsID::IsAbsID ( const LHCb::ParticleID&         id  )
   , m_ints  () 
   , m_pids  ( 1 , id ) 
   , m_names ()
-{}
+{
+  getData() ;
+}
 // ============================================================================
 LoKi::MCParticles::IsAbsID::IsAbsID ( const std::string& id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
@@ -567,12 +603,14 @@ LoKi::MCParticles::IsAbsID::IsAbsID ( const std::string& id  )
   , m_ints  () 
   , m_pids  () 
   , m_names ( 1 , id )
-{}
+{
+  if ( gaudi() ) { getData() ; }
+}
 // ============================================================================
 LoKi::MCParticles::IsAbsID::IsAbsID ( const std::vector<int>& id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_ints  ( std::abs ( id ) ) 
+  , m_ints  ( std::abs ( std::vector<long>( id.begin() ,  id.end() ) ) )  
   , m_pids  () 
   , m_names ()
 {}
@@ -580,7 +618,23 @@ LoKi::MCParticles::IsAbsID::IsAbsID ( const std::vector<int>& id  )
 LoKi::MCParticles::IsAbsID::IsAbsID ( const std::vector<unsigned int>& id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_ints  ( id ) 
+  , m_ints  ( std::abs ( std::vector<long>( id.begin() ,  id.end() ) ) )  
+  , m_pids  () 
+  , m_names ()
+{}
+// ============================================================================
+LoKi::MCParticles::IsAbsID::IsAbsID ( const std::vector<long>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
+  , m_ints  ( std::abs ( id ) )  
+  , m_pids  () 
+  , m_names ()
+{}
+// ============================================================================
+LoKi::MCParticles::IsAbsID::IsAbsID ( const std::vector<unsigned long>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
+  , m_ints  ( id )  
   , m_pids  () 
   , m_names ()
 {}
@@ -591,7 +645,9 @@ LoKi::MCParticles::IsAbsID::IsAbsID ( const std::vector<LHCb::ParticleID>& id  )
   , m_ints  () 
   , m_pids  ( id ) 
   , m_names ()
-{}
+{
+  getData() ;
+}
 // ============================================================================
 LoKi::MCParticles::IsAbsID::IsAbsID ( const std::vector<std::string>& id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
@@ -599,7 +655,9 @@ LoKi::MCParticles::IsAbsID::IsAbsID ( const std::vector<std::string>& id  )
   , m_ints  () 
   , m_pids  () 
   , m_names ( id )
-{}
+{
+  if ( gaudi() ) { getData() ; }
+}
 // ============================================================================
 LoKi::MCParticles::IsAbsID*
 LoKi::MCParticles::IsAbsID::clone() const 
@@ -669,12 +727,12 @@ LoKi::MCParticles::IsAbsID::operator()
 // ============================================================================
 // IsNotAbsID 
 // ============================================================================
-LoKi::MCParticles::IsNotAbsID::IsNotAbsID ( const int id  ) 
+LoKi::MCParticles::IsNotAbsID::IsNotAbsID ( const long         id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::MCParticles::IsAbsID ( id ) 
 {}
 // ============================================================================
-LoKi::MCParticles::IsNotAbsID::IsNotAbsID ( const unsigned int  id  ) 
+LoKi::MCParticles::IsNotAbsID::IsNotAbsID ( const unsigned long id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::MCParticles::IsAbsID ( id ) 
 {}
@@ -695,6 +753,16 @@ LoKi::MCParticles::IsNotAbsID::IsNotAbsID ( const std::vector<int>& id  )
 {}
 // ============================================================================
 LoKi::MCParticles::IsNotAbsID::IsNotAbsID ( const std::vector<unsigned int>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::MCParticles::IsAbsID ( id ) 
+{}
+// ============================================================================
+LoKi::MCParticles::IsNotAbsID::IsNotAbsID ( const std::vector<long>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::MCParticles::IsAbsID ( id ) 
+{}
+// ============================================================================
+LoKi::MCParticles::IsNotAbsID::IsNotAbsID ( const std::vector<unsigned long>& id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::MCParticles::IsAbsID ( id ) 
 {}

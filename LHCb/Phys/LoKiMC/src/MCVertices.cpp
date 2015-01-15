@@ -209,7 +209,8 @@ std::ostream& LoKi::MCVertices::Decay::fillStream
 // ============================================================================
 LoKi::MCVertices::MCVertexDistance::MCVertexDistance
 ( const LoKi::Point3D& point )
-  : LoKi::BasicFunctors<const LHCb::MCVertex*>::Function()
+  : LoKi::AuxFunBase ( std::tie ( point ) ) 
+  , LoKi::BasicFunctors<const LHCb::MCVertex*>::Function()
   , m_point ( point )
 {}
 // ============================================================================
@@ -227,13 +228,6 @@ LoKi::MCVertices::MCVertexDistance::MCVertexDistance
   }
   else { m_point = point->position(); }
 }
-// ============================================================================
-LoKi::MCVertices::MCVertexDistance::MCVertexDistance
-( const LoKi::MCVertices::MCVertexDistance& right )
-  : LoKi::AuxFunBase                      ( right )
-  , LoKi::BasicFunctors<const LHCb::MCVertex*>::Function( right )
-  , m_point ( right.m_point )
-{}
 // ============================================================================
 LoKi::MCVertices::MCVertexDistance::~MCVertexDistance(){}
 // ============================================================================
@@ -261,7 +255,8 @@ std::ostream& LoKi::MCVertices::MCVertexDistance::fillStream
 // ============================================================================
 LoKi::MCVertices::MCVFunAsMCFun::MCVFunAsMCFun
 ( const LoKi::MCTypes::MCVFunc& fun )
-  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Function ()
   , m_fun ( fun )
 {}
 // ============================================================================
@@ -318,7 +313,8 @@ std::ostream& LoKi::MCVertices::Key::fillStream
 // ============================================================================
 LoKi::MCVertices::MCVPFunAsMCFun::MCVPFunAsMCFun
 ( const LoKi::MCTypes::MCVFunc& fun )
-  : LoKi::MCVertices::MCVFunAsMCFun ( fun )
+  : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+  , LoKi::MCVertices::MCVFunAsMCFun ( fun )
 {}
 // ============================================================================
 LoKi::MCVertices::MCVPFunAsMCFun::~MCVPFunAsMCFun(){}
@@ -363,7 +359,8 @@ std::ostream& LoKi::MCVertices::MCVPFunAsMCFun::fillStream
 LoKi::MCVertices::MCVFunction::MCVFunction
 ( const LoKi::MCTypes::MCVFunc& func  ,
   const int                     index )
-  : LoKi::MCVertices::MCVFunAsMCFun ( func )
+  : LoKi::AuxFunBase ( std::tie ( func , index ) ) 
+  , LoKi::MCVertices::MCVFunAsMCFun ( func )
   , m_case  ( true  )
   , m_index ( index )
   , m_cut   ( LoKi::Constant<const LHCb::MCVertex*,bool>( false ) )
@@ -374,7 +371,8 @@ LoKi::MCVertices::MCVFunction::MCVFunction
 LoKi::MCVertices::MCVFunction::MCVFunction
 ( const LoKi::MCTypes::MCVFunc& func ,
   const LoKi::MCTypes::MCVCuts& cuts )
-  : LoKi::MCVertices::MCVFunAsMCFun ( func )
+  : LoKi::AuxFunBase ( std::tie ( func , cuts ) ) 
+  , LoKi::MCVertices::MCVFunAsMCFun ( func )
   , m_case  ( false  )
   , m_index ( 0      )
   , m_cut   ( cuts   )
@@ -385,7 +383,8 @@ LoKi::MCVertices::MCVFunction::MCVFunction
 LoKi::MCVertices::MCVFunction::MCVFunction
 ( const LoKi::MCTypes::MCVCuts& cuts ,
   const LoKi::MCTypes::MCVFunc& func )
-  : LoKi::MCVertices::MCVFunAsMCFun ( func )
+  : LoKi::AuxFunBase ( std::tie ( cuts , func ) ) 
+  , LoKi::MCVertices::MCVFunAsMCFun ( func )
   , m_case  ( false  )
   , m_index ( 0      )
   , m_cut   ( cuts   )

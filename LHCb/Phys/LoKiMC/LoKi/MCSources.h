@@ -118,6 +118,7 @@ namespace LoKi
       const LoKi::MCTypes::MCCuts&    cut    () const { return m_cut        ; }
       const Decays::IMCDecay::Finder& finder () const { return m_finder     ; }
       bool  use_finder                       () const { return m_use_finder ; }
+      void  buildFinder   () const ;
       // ======================================================================
     private:
       // ======================================================================
@@ -130,7 +131,8 @@ namespace LoKi
       /// use decay finder ? 
       bool                      m_use_finder ;            // use decay finder ?
       /// decay finder 
-      Decays::IMCDecay::Finder  m_finder     ;            //       decay finder 
+      mutable Decays::IMCDecay::Finder  m_finder ;            //       decay finder 
+      std::string               m_decay      ;
       // ======================================================================
     } ;
     // ========================================================================

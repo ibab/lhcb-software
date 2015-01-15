@@ -392,12 +392,14 @@ namespace LoKi
     {
     public:
       // ======================================================================
-      IsID ( const int                            id  ) ;
-      IsID ( const unsigned int                   id  ) ;
+      IsID ( const long                           id  ) ;
+      IsID ( const unsigned long                  id  ) ;
       IsID ( const LHCb::ParticleID&              id  ) ;
       IsID ( const std::string&                   id  ) ;
       IsID ( const std::vector<int>&              ids ) ;
+      IsID ( const std::vector<long>&             ids ) ;
       IsID ( const std::vector<unsigned int>&     ids ) ;
+      IsID ( const std::vector<unsigned long>&    ids ) ;
       IsID ( const std::vector<LHCb::ParticleID>& ids ) ;
       IsID ( const std::vector<std::string>&      ids ) ;
       // ======================================================================
@@ -417,7 +419,7 @@ namespace LoKi
       // ======================================================================
     protected: 
       // ======================================================================      
-      mutable std::vector<int>              m_ints  ;
+      mutable std::vector<long>             m_ints  ;
       mutable std::vector<LHCb::ParticleID> m_pids  ;
       std::vector<std::string>              m_names ;
       // ======================================================================      
@@ -431,12 +433,14 @@ namespace LoKi
     {
     public:
       // ======================================================================
-      IsNotID ( const int                            id  ) ;
-      IsNotID ( const unsigned int                   id  ) ;
+      IsNotID ( const long                           id  ) ;
+      IsNotID ( const unsigned long                  id  ) ;
       IsNotID ( const LHCb::ParticleID&              id  ) ;
       IsNotID ( const std::string&                   id  ) ;
       IsNotID ( const std::vector<int>&              ids ) ;
+      IsNotID ( const std::vector<long>&             ids ) ;
       IsNotID ( const std::vector<unsigned int>&     ids ) ;
+      IsNotID ( const std::vector<unsigned long>&    ids ) ;
       IsNotID ( const std::vector<LHCb::ParticleID>& ids ) ;
       IsNotID ( const std::vector<std::string>&      ids ) ;
       // ======================================================================
@@ -457,12 +461,14 @@ namespace LoKi
     {
     public:
       // ======================================================================
-      IsAbsID ( const int                            id  ) ;
-      IsAbsID ( const unsigned int                   id  ) ;
+      IsAbsID ( const long                           id  ) ;
+      IsAbsID ( const unsigned long                  id  ) ;
       IsAbsID ( const LHCb::ParticleID&              id  ) ;
       IsAbsID ( const std::string&                   id  ) ;
       IsAbsID ( const std::vector<int>&              ids ) ;
+      IsAbsID ( const std::vector<long>&             ids ) ;
       IsAbsID ( const std::vector<unsigned int>&     ids ) ;
+      IsAbsID ( const std::vector<unsigned long>&    ids ) ;
       IsAbsID ( const std::vector<LHCb::ParticleID>& ids ) ;
       IsAbsID ( const std::vector<std::string>&      ids ) ;
       // ======================================================================
@@ -482,7 +488,7 @@ namespace LoKi
       // ======================================================================
     protected:
       // ======================================================================      
-      mutable std::vector<unsigned int>     m_ints  ;
+      mutable std::vector<unsigned long>    m_ints  ;
       mutable std::vector<LHCb::ParticleID> m_pids  ;
       std::vector<std::string>              m_names ;
       // ======================================================================      
@@ -493,12 +499,14 @@ namespace LoKi
     {
     public:
       // ======================================================================
-      IsNotAbsID ( const int                            id  ) ;
-      IsNotAbsID ( const unsigned int                   id  ) ;
+      IsNotAbsID ( const long                           id  ) ;
+      IsNotAbsID ( const unsigned long                  id  ) ;
       IsNotAbsID ( const LHCb::ParticleID&              id  ) ;
       IsNotAbsID ( const std::string&                   id  ) ;
       IsNotAbsID ( const std::vector<int>&              ids ) ;
+      IsNotAbsID ( const std::vector<long>&             ids ) ;
       IsNotAbsID ( const std::vector<unsigned int>&     ids ) ;
+      IsNotAbsID ( const std::vector<unsigned long>&    ids ) ;
       IsNotAbsID ( const std::vector<LHCb::ParticleID>& ids ) ;
       IsNotAbsID ( const std::vector<std::string>&      ids ) ;
       // ======================================================================

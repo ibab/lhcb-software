@@ -34,6 +34,8 @@ namespace LoKi
       // ======================================================================
       /// constructor from the actual node
       DecNode ( const Decays::iNode& node ) ;
+      /// constructor from the actual node
+      DecNode ( const std::string&   node ) ;
       /// MANDATORY: virtual destructor
       virtual ~DecNode() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -58,10 +60,15 @@ namespace LoKi
       StatusCode validate ( const LHCb::IParticlePropertySvc* svc ) const
       { return m_node.validate ( svc ) ; }
       // ======================================================================
+    protected:
+      // ======================================================================
+      void getNode () const ;
+      // ======================================================================
     private:
       // ======================================================================
       /// the decay node itself
-      Decays::Node m_node ;                            // the decay node itself
+      mutable Decays::Node m_node   ;                 // the decay node itself
+      std::string          m_string ;
       // ======================================================================
     };
     // ========================================================================    
@@ -117,10 +124,15 @@ namespace LoKi
       // reset the collection
       void reset() const { tree().reset() ; }
       // ======================================================================
+    protected:
+      // ======================================================================
+      void getTree () const ;
+      // ======================================================================
     private:
       // ======================================================================
       /// the decay tree itself
-      Tree m_tree ;                                    // the decay tree itself
+      mutable Tree m_tree   ;                         // the decay tree itself
+      std::string  m_string ;
       // ======================================================================
     };
     // ========================================================================

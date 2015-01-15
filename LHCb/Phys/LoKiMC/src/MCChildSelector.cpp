@@ -14,6 +14,8 @@
 // ============================================================================
 // LoKi
 // ============================================================================
+#include "LoKi/iTree.h"
+#include "LoKi/DecayFinder.h"
 #include "LoKi/ILoKiSvc.h"
 #include "LoKi/BasicFunctors.h"
 #include "LoKi/MCChildSelector.h"
@@ -104,12 +106,14 @@ LoKi::MCChild::child
 // ============================================================================
 LoKi::MCChild::Selector::Selector 
 ( const unsigned int   i  ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( i ) ) 
   , m_indices   ( 1 , i      ) 
   , m_finder    ( s_INVALID  )
+  , m_decay     (            ) 
   , m_setCut    ( false      ) 
   , m_cut       ( s_NONE     ) 
-  , m_decayOnly ( false      ) 
+  , m_decayOnly ( false      )
+  , m_factory   ( s_FACTORY  )
 {}
 // ============================================================================
 // constructor from the index
@@ -117,12 +121,14 @@ LoKi::MCChild::Selector::Selector
 LoKi::MCChild::Selector::Selector 
 ( const unsigned int   i1 , 
   const unsigned int   i2 ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( i1 , i2 ) ) 
   , m_indices   (           ) 
   , m_finder    ( s_INVALID )
+  , m_decay     (           ) 
   , m_setCut    ( false     ) 
   , m_cut       ( s_NONE    ) 
-  , m_decayOnly ( false      ) 
+  , m_decayOnly ( false     ) 
+  , m_factory   ( s_FACTORY  )
 {
   m_indices.push_back ( i1 ) ;
   m_indices.push_back ( i2 ) ;
@@ -134,12 +140,14 @@ LoKi::MCChild::Selector::Selector
 ( const unsigned int   i1 , 
   const unsigned int   i2 ,
   const unsigned int   i3 ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( i1 , i2 , i3 ) )  
   , m_indices   (            ) 
   , m_finder    ( s_INVALID  )
+  , m_decay     (            ) 
   , m_setCut    ( false      ) 
   , m_cut       ( s_NONE     ) 
   , m_decayOnly ( false      ) 
+  , m_factory   ( s_FACTORY  )
 {
   m_indices.push_back ( i1 ) ;
   m_indices.push_back ( i2 ) ;
@@ -153,12 +161,14 @@ LoKi::MCChild::Selector::Selector
   const unsigned int   i2 ,
   const unsigned int   i3 , 
   const unsigned int   i4 )  
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( i1 ,i2 , i3 , i4 ) ) 
   , m_indices   (           ) 
   , m_finder    ( s_INVALID )
+  , m_decay     (           ) 
   , m_setCut    ( false     ) 
   , m_cut       ( s_NONE    ) 
   , m_decayOnly ( false      ) 
+  , m_factory   ( s_FACTORY  )
 {
   m_indices.push_back ( i1 ) ;
   m_indices.push_back ( i2 ) ;
@@ -170,43 +180,33 @@ LoKi::MCChild::Selector::Selector
 // ============================================================================
 LoKi::MCChild::Selector::Selector 
 ( const std::vector<unsigned int>& indices ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( indices ) )  
   , m_indices   ( indices    ) 
   , m_finder    ( s_INVALID  )
   , m_setCut    ( false      ) 
   , m_cut       ( s_NONE     ) 
   , m_decayOnly ( false      ) 
-{
-  Assert ( valid()         , "The child selector is invalid"        ) ;
-}
+  , m_factory   ( s_FACTORY  )
+{}
 // ============================================================================
 // constructor from decay tree 
 // ============================================================================
 LoKi::MCChild::Selector::Selector
 ( const Decays::IMCDecay::iTree& child ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( child ) ) 
   , m_indices   (        ) 
   , m_finder    ( child  )
+  , m_decay     (        ) 
   , m_setCut    ( false  ) 
   , m_cut       ( s_NONE ) 
   , m_decayOnly ( false  ) 
+  , m_factory   ( s_FACTORY  )
 {
-  //
-  if ( !m_finder ) 
+  if ( gaudi() ) 
   {
-    LoKi::ILoKiSvc*  ls  = lokiSvc () ;
-    SmartIF<LHCb::IParticlePropertySvc> pp ( ls ) ;
-    const LHCb::IParticlePropertySvc* ppsvc = pp ;
-    if ( 0 == ppsvc ) 
-    {
-      const LoKi::Services& services = LoKi::Services::instance() ;
-      ppsvc = services.ppSvc() ;
-    }
-    StatusCode sc = m_finder.validate ( ppsvc ) ;
-    Assert ( sc.isSuccess() , " Unable to validate the decay tree!" ) ;
+    StatusCode sc = validate() ; 
+    Assert ( sc.isSuccess() , "Unable to validate decay tree" ) ;
   }
-  //
-  Assert ( valid()           , "The child selector is invalid"        ) ;
 }
 // ============================================================================
 // constructor from decay onde  
@@ -214,47 +214,38 @@ LoKi::MCChild::Selector::Selector
 LoKi::MCChild::Selector::Selector 
 ( const Decays::iNode& node      , 
   const bool           decayOnly ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( node , decayOnly ) ) 
   , m_indices   (           ) 
   , m_finder    ( s_INVALID )
+  , m_decay     (           ) 
   , m_setCut    ( false     ) 
   , m_cut       ( s_NONE    ) 
   , m_decayOnly ( decayOnly ) 
+  , m_factory   ( s_FACTORY )
 {
   //
   m_cut    = LoKi::MCParticles::DecNode ( node ) ;
   m_setCut = true ;
-  //
-  Assert ( valid()       , "The child selector is invalid"        ) ;
 }
 // ============================================================================
 // constructor from decay tree 
 // ============================================================================
 LoKi::MCChild::Selector::Selector
 ( const Decays::IMCDecay::Finder& child ) 
-  : LoKi::AuxFunBase () 
-  , m_indices   (        ) 
-  , m_finder    ( child  )
-  , m_setCut    ( false  ) 
-  , m_cut       ( s_NONE ) 
-  , m_decayOnly ( false  ) 
+  : LoKi::AuxFunBase ( std::tie ( child ) ) 
+  , m_indices   (           )   
+  , m_finder    ( child     )
+  , m_decay     (           ) 
+  , m_setCut    ( false     ) 
+  , m_cut       ( s_NONE    ) 
+  , m_decayOnly ( false     ) 
+  , m_factory   ( s_FACTORY )
 {
-  //
-  if ( !m_finder ) 
+  if ( gaudi() ) 
   {
-    LoKi::ILoKiSvc*  ls  = lokiSvc () ;
-    SmartIF<LHCb::IParticlePropertySvc> pp ( ls ) ;
-    const LHCb::IParticlePropertySvc* ppsvc = pp ;
-    if ( 0 == ppsvc ) 
-    {
-      const LoKi::Services& services = LoKi::Services::instance() ;
-      ppsvc = services.ppSvc() ;
-    }
-    StatusCode sc = m_finder.validate ( ppsvc ) ;
-    Assert ( sc.isSuccess() , " Unable to validate the decay tree!" ) ;
+    StatusCode sc = validate() ; 
+    Assert ( sc.isSuccess() , "Unable to validate decay finder" ) ;
   }
-  //
-  Assert ( valid()           , "The child selector is invalid"        ) ;
 }
 // ============================================================================
 // constructor from the cut 
@@ -262,28 +253,33 @@ LoKi::MCChild::Selector::Selector
 LoKi::MCChild::Selector::Selector 
 ( const LoKi::MCTypes::MCCuts& cut       ,
   const bool                   decayOnly ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( cut , decayOnly ) ) 
   , m_indices   (           ) 
   , m_finder    ( s_INVALID )
+  , m_decay     (           ) 
   , m_setCut    ( true      ) 
   , m_cut       ( cut       ) 
   , m_decayOnly ( decayOnly ) 
+  , m_factory   ( s_FACTORY )
 {}
 // ============================================================================
 // constructor from decay desctriptor 
 // ============================================================================
 LoKi::MCChild::Selector::Selector ( const std::string& child ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( child ) ) 
   , m_indices   (           ) 
   , m_finder    ( s_INVALID )
+  , m_decay     ( child     ) 
   , m_setCut    ( false     ) 
   , m_cut       ( s_NONE    ) 
   , m_decayOnly ( false     ) 
+  , m_factory   ( s_FACTORY )
 {
-  StatusCode sc = buildTree ( child , s_FACTORY ) ;
-  Assert ( sc.isSuccess () , 
-           "Unable to decode descriptor '" + child + "'" , sc ) ;
-  Assert ( valid()           , "The child selector is ibvalid"        ) ;
+  if ( gaudi() ) 
+  {
+    StatusCode sc = validate() ; 
+    Assert ( sc.isSuccess() , "Unable to decode '" + child + "'" ) ;
+  }
 }
 // ============================================================================
 // constructor from decay desctriptor & factory 
@@ -291,17 +287,20 @@ LoKi::MCChild::Selector::Selector ( const std::string& child )
 LoKi::MCChild::Selector::Selector 
 ( const std::string& child   , 
   const std::string& factory ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( child , factory ) ) 
   , m_indices   (           ) 
   , m_finder    ( s_INVALID )
+  , m_decay     ( child     ) 
   , m_setCut    ( false     ) 
   , m_cut       ( s_NONE    ) 
   , m_decayOnly ( false     ) 
+  , m_factory   ( factory   )
 {
-  StatusCode sc = buildTree ( child , factory ) ;
-  Assert ( sc.isSuccess () , 
-           "Unable to decode descriptor '" + child + "'" , sc ) ;
-  Assert ( valid()           , "The child selector is invalid"        ) ;
+  if ( gaudi() ) 
+  {
+    StatusCode sc = validate() ; 
+    Assert ( sc.isSuccess() , "Unable to decode '" + child + "'" ) ;
+  }
 }
 // ============================================================================
 // destructor  
@@ -312,7 +311,7 @@ LoKi::MCChild::Selector::~Selector () {}
 // ============================================================================
 StatusCode LoKi::MCChild::Selector::buildTree
 ( const std::string& descriptor , 
-  const std::string& factory    ) 
+  const std::string& factory    ) const
 {
   LoKi::ILoKiSvc* ls = lokiSvc() ;
   SmartIF<IToolSvc> toolSvc ( ls ) ;
@@ -348,6 +347,28 @@ StatusCode LoKi::MCChild::Selector::validate
 ( const LHCb::IParticlePropertySvc* svc ) const 
 {
   if ( !m_indices.empty() || m_setCut ) { return StatusCode::SUCCESS ; }
+  //
+  if ( !valid() && m_indices.empty() && !m_setCut && !m_decay.empty() ) 
+  {
+    StatusCode sc = buildTree ( m_decay , m_factory ) ;
+    Assert ( sc.isSuccess() , "Unable to decode '" + m_decay + "'" ) ;  
+  }
+  //
+  if ( 0 == svc ) 
+  {
+    LoKi::ILoKiSvc*  ls  = lokiSvc () ;
+    SmartIF<LHCb::IParticlePropertySvc> pp ( ls ) ;
+    svc = pp ;
+  }
+  //
+  if ( 0 == svc ) 
+  {
+    const LoKi::Services& services = LoKi::Services::instance() ;
+    svc = services.ppSvc() ;
+  }
+  //
+  if ( 0 == svc ) 
+  { return Error ("Unable to access ParticlePropertySvc" ) ; } 
   //
   StatusCode sc = m_finder.validate ( svc ) ;
   if ( sc.isFailure() ) 
@@ -406,7 +427,11 @@ unsigned int LoKi::MCChild::Selector::children
     return 0 ;                                                   // RETURN 
   }
   //
-  Assert ( valid () , "Selector is invalid!" ) ;
+  if ( !valid() ) 
+  {
+    StatusCode sc = validate() ;
+    Assert ( sc.isSuccess() , "Unable to validate child selector" );
+  }
   //
   if      ( !m_indices.empty() ) 
   { 
@@ -446,7 +471,11 @@ LoKi::MCChild::Selector::child
     return 0 ;
   }
   //
-  Assert ( valid () , "Selector is invalid!" ) ;
+  if ( !valid() ) 
+  {
+    StatusCode sc = validate() ;
+    Assert ( sc.isSuccess() , "Unable to validate child selector" );
+  }
   //
   if ( !m_indices.empty() ) { return LoKi::MCChild::child ( head , m_indices ) ; }
   //

@@ -33,14 +33,12 @@ LoKi::MCParticles::PolarizationAngle::PolarizationAngle
 ( const LoKi::MCChild::Selector& daughter     , 
   const LoKi::MCChild::Selector& parent       ,      
   const bool                     mother       )
-  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( daughter , parent , mother ) ) 
+  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Function ()
   , m_first        ( daughter )
   , m_second       ( parent   )
   , m_mother       ( mother   ) 
-{
-  Assert ( m_first  .valid () , "The first  tree is invalid!" ) ;
-  Assert ( m_second .valid () , "The second tree is invalid!" ) ;
-}
+{}
 // ============================================================================
 // constructor from two trees 
 // ============================================================================
@@ -48,14 +46,12 @@ LoKi::MCParticles::PolarizationAngle::PolarizationAngle
 ( const Decays::IMCDecay::iTree& daughter , 
   const Decays::IMCDecay::iTree& parent   , 
   const bool                   mother   )
-  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( daughter , parent , mother ) ) 
+  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Function ()
   , m_first        ( daughter )
   , m_second       ( parent   )
   , m_mother       ( mother   ) 
-{
-  Assert ( m_first  .valid () , "The first  tree is invalid!" ) ;
-  Assert ( m_second .valid () , "The second tree is invalid!" ) ;
-}
+{}
 // ============================================================================
 // constructor from two nodes
 // ============================================================================
@@ -64,14 +60,12 @@ LoKi::MCParticles::PolarizationAngle::PolarizationAngle
   const Decays::iNode&         parent    , 
   const bool                   mother    , 
   const bool                   decayOnly ) 
-  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( daughter , parent , mother , decayOnly ) ) 
+  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Function ()
   , m_first        ( daughter , decayOnly )
   , m_second       ( parent   , decayOnly )
   , m_mother       ( mother   ) 
-{
-  Assert ( m_first  .valid () , "The first  tree is invalid!" ) ;
-  Assert ( m_second .valid () , "The second tree is invalid!" ) ;
-}
+{}
 // ============================================================================
 // constructor from two cuts 
 // ============================================================================
@@ -80,14 +74,12 @@ LoKi::MCParticles::PolarizationAngle::PolarizationAngle
   const LoKi::MCTypes::MCCuts& parent    ,
   const bool                   mother    , 
   const bool                   decayOnly ) 
-  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( daughter , parent , mother , decayOnly ) ) 
+  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Function ()
   , m_first        ( daughter , decayOnly )
   , m_second       ( parent   , decayOnly )
   , m_mother       ( mother   ) 
-{
-  Assert ( m_first  .valid () , "The first  tree is invalid!" ) ;
-  Assert ( m_second .valid () , "The second tree is invalid!" ) ;
-}
+{}
 // ============================================================================
 // constructor from two trees 
 // ============================================================================
@@ -96,14 +88,12 @@ LoKi::MCParticles::PolarizationAngle::PolarizationAngle
   const std::string&           parent       ,      
   const bool                   mother       , 
   const std::string&           factory      ) 
-  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( daughter , parent , mother , factory ) ) 
+  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Function ()
   , m_first        ( daughter , factory )
   , m_second       ( parent   , factory )
   , m_mother       ( mother       ) 
-{
-  Assert ( m_first  .valid () , "The first  tree is invalid!" ) ;
-  Assert ( m_second .valid () , "The second tree is invalid!" ) ;
-}
+{}
 // ============================================================================
 // MANDATORY: virtual destructor
 // ============================================================================
@@ -128,6 +118,9 @@ LoKi::MCParticles::PolarizationAngle::getComponents12
     Error ( "LHCb::MCParticle* points to NULL") ;
     return StatusCode::FAILURE ;  //                                 RETURN 
   }
+  //
+  if ( !m_first .valid () ) { m_first .validate() ; }
+  if ( !m_second.valid () ) { m_second.validate() ; }
   //
   Assert ( m_first  .valid () , "The first  tree is invalid!" ) ;
   Assert ( m_second .valid () , "The second tree is invalid!" ) ;
@@ -210,17 +203,16 @@ LoKi::MCParticles::SinChi::SinChi
   const LoKi::MCChild::Selector& particle2 , 
   const LoKi::MCChild::Selector& particle3 , 
   const LoKi::MCChild::Selector& particle4 ) 
-  : LoKi::MCParticles::PolarizationAngle ( particle1    , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ) ) 
+  , LoKi::MCParticles::PolarizationAngle ( particle1    , 
                                            particle2    , 
                                            true         )
   , m_tree3   ( particle3 ) 
   , m_tree4   ( particle4 )
-{
-  //
-  Assert ( m_tree3.valid () , "The third tree is invalid" ) ;
-  Assert ( m_tree4.valid () , "The fourh tree is invalid" ) ;
-  //
-} 
+{} 
 // ============================================================================
 // constructor from the trees 
 // ============================================================================
@@ -229,17 +221,16 @@ LoKi::MCParticles::SinChi::SinChi
   const Decays::IMCDecay::iTree& particle2    , 
   const Decays::IMCDecay::iTree& particle3    , 
   const Decays::IMCDecay::iTree& particle4    )
-  : LoKi::MCParticles::PolarizationAngle ( particle1    , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ) ) 
+  , LoKi::MCParticles::PolarizationAngle ( particle1    , 
                                            particle2    , 
                                            true         )
   , m_tree3   ( particle3 ) 
   , m_tree4   ( particle4 )
-{
-  //
-  Assert ( m_tree3.valid () , "The third tree is invalid" ) ;
-  Assert ( m_tree4.valid () , "The fourh tree is invalid" ) ;
-  //
-} 
+{} 
 // ============================================================================
 // constructor from the nodes 
 // ============================================================================
@@ -249,18 +240,18 @@ LoKi::MCParticles::SinChi::SinChi
   const Decays::iNode& particle3    , 
   const Decays::iNode& particle4    , 
   const bool           decayOnly    ) 
-  : LoKi::MCParticles::PolarizationAngle ( particle1    , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ,
+                                  decayOnly ) ) 
+  , LoKi::MCParticles::PolarizationAngle ( particle1    , 
                                            particle2    , 
                                            true         , 
                                            decayOnly    )
   , m_tree3   ( particle3 , decayOnly ) 
   , m_tree4   ( particle4 , decayOnly )
-{
-  //
-  Assert ( m_tree3.valid () , "The third tree is invalid" ) ;
-  Assert ( m_tree4.valid () , "The fourh tree is invalid" ) ;
-  //
-} 
+{} 
 // ============================================================================
 // constructor from the cuts 
 // ============================================================================
@@ -270,18 +261,18 @@ LoKi::MCParticles::SinChi::SinChi
   const LoKi::MCTypes::MCCuts& particle3 , 
   const LoKi::MCTypes::MCCuts& particle4 ,
   const bool                   decayOnly ) 
-  : LoKi::MCParticles::PolarizationAngle ( particle1    , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 , 
+                                  decayOnly ) ) 
+  , LoKi::MCParticles::PolarizationAngle ( particle1    , 
                                            particle2    , 
                                            true         , 
                                            decayOnly    )
   , m_tree3   ( particle3 , decayOnly ) 
   , m_tree4   ( particle4 , decayOnly )
-{
-  //
-  Assert ( m_tree3.valid () , "The third tree is invalid" ) ;
-  Assert ( m_tree4.valid () , "The fourh tree is invalid" ) ;
-  //
-} 
+{} 
 // ============================================================================
 // constructor from the trees 
 // ============================================================================
@@ -291,18 +282,18 @@ LoKi::MCParticles::SinChi::SinChi
   const std::string& particle3    , 
   const std::string& particle4    , 
   const std::string& factory      ) 
-  : LoKi::MCParticles::PolarizationAngle ( particle1    , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 , 
+                                  factory   ) ) 
+  , LoKi::MCParticles::PolarizationAngle ( particle1    , 
                                            particle2    , 
                                            true         ,
                                            factory      )
   , m_tree3   ( particle3 , factory ) 
   , m_tree4   ( particle4 , factory )
-{
-  //
-  Assert ( m_tree3.valid () , "The third tree is invalid" ) ;
-  Assert ( m_tree4.valid () , "The fourh tree is invalid" ) ;
-  //
-}
+{}
 // ============================================================================
 // get the proper decay components  
 // ==========================================================================
@@ -316,6 +307,9 @@ StatusCode LoKi::MCParticles::SinChi::getComponents34
     Error ( "LHCb::GenParticle* points to NULL") ;
     return StatusCode::FAILURE ;  //                                 RETURN 
   }
+  //
+  if ( !m_tree3.valid () ) { m_tree3.validate() ; }
+  if ( !m_tree4.valid () ) { m_tree4.validate() ; }
   //
   Assert ( m_tree3 . valid () , "The third  tree is invalid!" ) ;
   Assert ( m_tree4 . valid () , "The fourth tree is invalid!" ) ;
@@ -431,7 +425,11 @@ LoKi::MCParticles::CosChi::CosChi
   const LoKi::MCChild::Selector& particle2 , 
   const LoKi::MCChild::Selector& particle3 , 
   const LoKi::MCChild::Selector& particle4 ) 
-  : LoKi::MCParticles::SinChi (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ) ) 
+  , LoKi::MCParticles::SinChi (  particle1 , 
                                  particle2 , 
                                  particle3 , 
                                  particle4 )
@@ -444,7 +442,11 @@ LoKi::MCParticles::CosChi::CosChi
   const Decays::IMCDecay::iTree& particle2 , 
   const Decays::IMCDecay::iTree& particle3 , 
   const Decays::IMCDecay::iTree& particle4 )
-  : LoKi::MCParticles::SinChi (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ) ) 
+  , LoKi::MCParticles::SinChi (  particle1 , 
                                  particle2 , 
                                  particle3 , 
                                  particle4 )
@@ -458,7 +460,12 @@ LoKi::MCParticles::CosChi::CosChi
   const Decays::iNode& particle3 , 
   const Decays::iNode& particle4 , 
   const bool           decayOnly ) 
-  : LoKi::MCParticles::SinChi (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ,
+                                  decayOnly ) ) 
+  , LoKi::MCParticles::SinChi (  particle1 , 
                                  particle2 , 
                                  particle3 , 
                                  particle4 , 
@@ -473,7 +480,12 @@ LoKi::MCParticles::CosChi::CosChi
   const LoKi::MCTypes::MCCuts&   particle3 , 
   const LoKi::MCTypes::MCCuts&   particle4 , 
   const bool                     decayOnly ) 
-  : LoKi::MCParticles::SinChi (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ,
+                                  decayOnly ) ) 
+  , LoKi::MCParticles::SinChi (  particle1 , 
                                  particle2 , 
                                  particle3 , 
                                  particle4 , 
@@ -488,7 +500,12 @@ LoKi::MCParticles::CosChi::CosChi
   const std::string& particle3    , 
   const std::string& particle4    , 
   const std::string& factory      ) 
-  : LoKi::MCParticles::SinChi ( particle1    , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ,
+                                  factory   ) ) 
+  , LoKi::MCParticles::SinChi ( particle1    , 
                                 particle2    , 
                                 particle3    , 
                                 particle4    , 
@@ -564,7 +581,11 @@ LoKi::MCParticles::AngleChi::AngleChi
   const LoKi::MCChild::Selector& particle2 , 
   const LoKi::MCChild::Selector& particle3 , 
   const LoKi::MCChild::Selector& particle4 ) 
-  : LoKi::MCParticles::CosChi (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ) ) 
+  , LoKi::MCParticles::CosChi (  particle1 , 
                                  particle2 , 
                                  particle3 , 
                                  particle4 )
@@ -577,7 +598,11 @@ LoKi::MCParticles::AngleChi::AngleChi
   const Decays::IMCDecay::iTree& particle2 , 
   const Decays::IMCDecay::iTree& particle3 , 
   const Decays::IMCDecay::iTree& particle4 )
-  : LoKi::MCParticles::CosChi (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ) ) 
+  , LoKi::MCParticles::CosChi (  particle1 , 
                                  particle2 , 
                                  particle3 , 
                                  particle4 )
@@ -591,7 +616,12 @@ LoKi::MCParticles::AngleChi::AngleChi
   const Decays::iNode& particle3 , 
   const Decays::iNode& particle4 , 
   const bool           decayOnly )
-  : LoKi::MCParticles::CosChi (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ,
+                                  decayOnly ) ) 
+  , LoKi::MCParticles::CosChi (  particle1 , 
                                  particle2 , 
                                  particle3 , 
                                  particle4 , 
@@ -606,7 +636,12 @@ LoKi::MCParticles::AngleChi::AngleChi
   const LoKi::MCTypes::MCCuts&   particle3 , 
   const LoKi::MCTypes::MCCuts&   particle4 , 
   const bool                     decayOnly ) 
-  : LoKi::MCParticles::CosChi (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ,
+                                  decayOnly ) ) 
+  , LoKi::MCParticles::CosChi (  particle1 , 
                                  particle2 , 
                                  particle3 , 
                                  particle4 , 
@@ -621,7 +656,12 @@ LoKi::MCParticles::AngleChi::AngleChi
   const std::string& particle3    , 
   const std::string& particle4    , 
   const std::string& factory      ) 
-  : LoKi::MCParticles::CosChi ( particle1    , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ,
+                                  factory   ) ) 
+  , LoKi::MCParticles::CosChi ( particle1    , 
                                 particle2    , 
                                 particle3    , 
                                 particle4    , 
@@ -698,7 +738,11 @@ LoKi::MCParticles::CosThetaTr::CosThetaTr
   const LoKi::MCChild::Selector& particle2 , 
   const LoKi::MCChild::Selector& particle3 , 
   const LoKi::MCChild::Selector& particle4 ) 
-  : LoKi::MCParticles::AngleChi (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ) ) 
+  , LoKi::MCParticles::AngleChi (  particle1 , 
                                    particle2 , 
                                    particle3 , 
                                    particle4 )
@@ -711,7 +755,11 @@ LoKi::MCParticles::CosThetaTr::CosThetaTr
   const Decays::IMCDecay::iTree& particle2 , 
   const Decays::IMCDecay::iTree& particle3 , 
   const Decays::IMCDecay::iTree& particle4 )
-  : LoKi::MCParticles::AngleChi (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ) ) 
+  , LoKi::MCParticles::AngleChi (  particle1 , 
                                    particle2 , 
                                    particle3 , 
                                    particle4 )
@@ -725,7 +773,12 @@ LoKi::MCParticles::CosThetaTr::CosThetaTr
   const Decays::iNode& particle3 , 
   const Decays::iNode& particle4 , 
   const bool           decayOnly )
-  : LoKi::MCParticles::AngleChi (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ,
+                                  decayOnly ) ) 
+  , LoKi::MCParticles::AngleChi (  particle1 , 
                                    particle2 , 
                                    particle3 , 
                                    particle4 , 
@@ -740,7 +793,12 @@ LoKi::MCParticles::CosThetaTr::CosThetaTr
   const LoKi::MCTypes::MCCuts&   particle3 , 
   const LoKi::MCTypes::MCCuts&   particle4 , 
   const bool                     decayOnly ) 
-  : LoKi::MCParticles::AngleChi (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ,
+                                  decayOnly ) ) 
+  , LoKi::MCParticles::AngleChi (  particle1 , 
                                    particle2 , 
                                    particle3 , 
                                    particle4 , 
@@ -755,7 +813,12 @@ LoKi::MCParticles::CosThetaTr::CosThetaTr
   const std::string& particle3    , 
   const std::string& particle4    , 
   const std::string& factory      ) 
-  : LoKi::MCParticles::AngleChi ( particle1    , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ,
+                                  factory   ) ) 
+  , LoKi::MCParticles::AngleChi ( particle1    , 
                                   particle2    , 
                                   particle3    , 
                                   particle4    , 
@@ -834,7 +897,11 @@ LoKi::MCParticles::SinPhiTr::SinPhiTr
   const LoKi::MCChild::Selector& particle2 , 
   const LoKi::MCChild::Selector& particle3 , 
   const LoKi::MCChild::Selector& particle4 ) 
-  : LoKi::MCParticles::CosThetaTr (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ) ) 
+  , LoKi::MCParticles::CosThetaTr (  particle1 , 
                                      particle2 , 
                                      particle3 , 
                                      particle4 )
@@ -847,7 +914,11 @@ LoKi::MCParticles::SinPhiTr::SinPhiTr
   const Decays::IMCDecay::iTree& particle2 , 
   const Decays::IMCDecay::iTree& particle3 , 
   const Decays::IMCDecay::iTree& particle4 )
-  : LoKi::MCParticles::CosThetaTr (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ) ) 
+  , LoKi::MCParticles::CosThetaTr (  particle1 , 
                                      particle2 , 
                                      particle3 , 
                                      particle4 )
@@ -861,7 +932,12 @@ LoKi::MCParticles::SinPhiTr::SinPhiTr
   const Decays::iNode& particle3 , 
   const Decays::iNode& particle4 , 
   const bool           decayOnly )
-  : LoKi::MCParticles::CosThetaTr (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ,
+                                  decayOnly ) ) 
+  , LoKi::MCParticles::CosThetaTr (  particle1 , 
                                      particle2 , 
                                      particle3 , 
                                      particle4 , 
@@ -876,7 +952,12 @@ LoKi::MCParticles::SinPhiTr::SinPhiTr
   const LoKi::MCTypes::MCCuts&   particle3 , 
   const LoKi::MCTypes::MCCuts&   particle4 , 
   const bool                     decayOnly ) 
-  : LoKi::MCParticles::CosThetaTr (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ,
+                                  decayOnly ) ) 
+  , LoKi::MCParticles::CosThetaTr (  particle1 , 
                                      particle2 , 
                                      particle3 , 
                                      particle4 , 
@@ -891,7 +972,12 @@ LoKi::MCParticles::SinPhiTr::SinPhiTr
   const std::string& particle3    , 
   const std::string& particle4    , 
   const std::string& factory      ) 
-  : LoKi::MCParticles::CosThetaTr ( particle1    , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ,
+                                  factory   ) ) 
+  , LoKi::MCParticles::CosThetaTr ( particle1    , 
                                     particle2    , 
                                     particle3    , 
                                     particle4    , 
@@ -967,7 +1053,11 @@ LoKi::MCParticles::CosPhiTr::CosPhiTr
   const LoKi::MCChild::Selector& particle2 , 
   const LoKi::MCChild::Selector& particle3 , 
   const LoKi::MCChild::Selector& particle4 ) 
-  : LoKi::MCParticles::SinPhiTr (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ) ) 
+  , LoKi::MCParticles::SinPhiTr (  particle1 , 
                                    particle2 , 
                                    particle3 , 
                                    particle4 )
@@ -980,7 +1070,11 @@ LoKi::MCParticles::CosPhiTr::CosPhiTr
   const Decays::IMCDecay::iTree& particle2 , 
   const Decays::IMCDecay::iTree& particle3 , 
   const Decays::IMCDecay::iTree& particle4 )
-  : LoKi::MCParticles::SinPhiTr (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ) ) 
+  , LoKi::MCParticles::SinPhiTr (  particle1 , 
                                    particle2 , 
                                    particle3 , 
                                    particle4 )
@@ -994,7 +1088,12 @@ LoKi::MCParticles::CosPhiTr::CosPhiTr
   const Decays::iNode& particle3 , 
   const Decays::iNode& particle4 , 
   const bool           decayOnly )
-  : LoKi::MCParticles::SinPhiTr (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ,
+                                  decayOnly ) ) 
+  , LoKi::MCParticles::SinPhiTr (  particle1 , 
                                    particle2 , 
                                    particle3 , 
                                    particle4 , 
@@ -1009,7 +1108,12 @@ LoKi::MCParticles::CosPhiTr::CosPhiTr
   const LoKi::MCTypes::MCCuts&   particle3 , 
   const LoKi::MCTypes::MCCuts&   particle4 , 
   const bool                     decayOnly ) 
-  : LoKi::MCParticles::SinPhiTr (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ,
+                                  decayOnly ) ) 
+  , LoKi::MCParticles::SinPhiTr (  particle1 , 
                                    particle2 , 
                                    particle3 , 
                                    particle4 , 
@@ -1024,7 +1128,12 @@ LoKi::MCParticles::CosPhiTr::CosPhiTr
   const std::string& particle3    , 
   const std::string& particle4    , 
   const std::string& factory      ) 
-  : LoKi::MCParticles::SinPhiTr ( particle1    , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ,
+                                  factory   ) ) 
+  , LoKi::MCParticles::SinPhiTr ( particle1    , 
                                   particle2    , 
                                   particle3    , 
                                   particle4    , 
@@ -1106,7 +1215,11 @@ LoKi::MCParticles::AnglePhiTr::AnglePhiTr
   const LoKi::MCChild::Selector& particle2 , 
   const LoKi::MCChild::Selector& particle3 , 
   const LoKi::MCChild::Selector& particle4 ) 
-  : LoKi::MCParticles::CosPhiTr (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ) ) 
+  , LoKi::MCParticles::CosPhiTr (  particle1 , 
                                    particle2 , 
                                    particle3 , 
                                    particle4 )
@@ -1119,7 +1232,11 @@ LoKi::MCParticles::AnglePhiTr::AnglePhiTr
   const Decays::IMCDecay::iTree& particle2 , 
   const Decays::IMCDecay::iTree& particle3 , 
   const Decays::IMCDecay::iTree& particle4 )
-  : LoKi::MCParticles::CosPhiTr (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ) ) 
+  , LoKi::MCParticles::CosPhiTr (  particle1 , 
                                    particle2 , 
                                    particle3 , 
                                    particle4 )
@@ -1133,7 +1250,12 @@ LoKi::MCParticles::AnglePhiTr::AnglePhiTr
   const Decays::iNode& particle3 , 
   const Decays::iNode& particle4 , 
   const bool           decayOnly )
-  : LoKi::MCParticles::CosPhiTr (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ,
+                                  decayOnly ) ) 
+  , LoKi::MCParticles::CosPhiTr (  particle1 , 
                                    particle2 , 
                                    particle3 , 
                                    particle4 , 
@@ -1148,7 +1270,12 @@ LoKi::MCParticles::AnglePhiTr::AnglePhiTr
   const LoKi::MCTypes::MCCuts&   particle3 , 
   const LoKi::MCTypes::MCCuts&   particle4 , 
   const bool                     decayOnly ) 
-  : LoKi::MCParticles::CosPhiTr (  particle1 , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ,
+                                  decayOnly ) ) 
+  , LoKi::MCParticles::CosPhiTr (  particle1 , 
                                    particle2 , 
                                    particle3 , 
                                    particle4 , 
@@ -1163,7 +1290,12 @@ LoKi::MCParticles::AnglePhiTr::AnglePhiTr
   const std::string& particle3    , 
   const std::string& particle4    , 
   const std::string& factory      ) 
-  : LoKi::MCParticles::CosPhiTr ( particle1    , 
+  : LoKi::AuxFunBase ( std::tie ( particle1 , 
+                                  particle2 , 
+                                  particle3 , 
+                                  particle4 ,
+                                  factory   ) ) 
+  , LoKi::MCParticles::CosPhiTr ( particle1    , 
                                   particle2    , 
                                   particle3    , 
                                   particle4    , 
