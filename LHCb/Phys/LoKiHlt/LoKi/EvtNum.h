@@ -73,6 +73,7 @@
       // =======================================================================
       std::ostream& fillStream ( std::ostream& s ) const ;
       std::string   toString   ()                  const ;
+      std::string   toCpp      ()                  const ;
       // =======================================================================
       evt_type event   () const { return   evtnum () ; }
       evt_type evt     () const { return   evtnum () ; }
@@ -117,7 +118,8 @@
       // =======================================================================
       std::size_t    hash       () const ;
       std::ostream&  fillStream ( std::ostream& s ) const ;
-      std::string   toString   ()                  const ;
+      std::string    toString   ()                  const ;
+      std::string    toCpp      ()                  const ;
       // =======================================================================
       bool contains ( const EvtNum& e ) const ;
       // =======================================================================
@@ -173,6 +175,7 @@
       std::size_t   hash       () const ;
       std::ostream& fillStream ( std::ostream& s ) const ;
       std::string   toString   ()                  const ;
+      std::string   toCpp      ()                  const ;
       // =======================================================================
     public:
       // =======================================================================
@@ -217,6 +220,7 @@
       std::size_t   hash       () const ;
       std::ostream& fillStream ( std::ostream& s ) const ;
       std::string   toString   ()                  const ;
+      std::string   toCpp      ()                  const ;
       // =======================================================================
       bool contains ( const RunEvt& e ) const ;
       // =======================================================================
@@ -356,6 +360,18 @@ namespace Gaudi
     GAUDI_API 
     std::string 
     toString ( const LoKi::Numbers::RunEvt& evt ) ;
+    // =========================================================================
+    inline std::string toCpp ( const LoKi::Numbers::EvtNum&     e )
+    { return e.toCpp() ; }
+    // =========================================================================
+    inline std::string toCpp ( const LoKi::Numbers::EvtNumList& e )
+    { return e.toCpp() ; }
+    // =========================================================================
+    inline std::string toCpp ( const LoKi::Numbers::RunEvt&     e )
+    { return e.toCpp() ; }
+    // =========================================================================
+    inline std::string toCpp ( const LoKi::Numbers::RunEvtList& e )
+    { return e.toCpp() ; }
     // =========================================================================
   } //                                                   end of namespace Utils 
   // ===========================================================================

@@ -17,18 +17,21 @@
  *  @date 2008-09-19 
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  */
-
-namespace {
-    inline bool isTurbo(const LHCb::HltDecReport& rep) {
-        return rep.executionStage()&0x80u;
-    }
+// ============================================================================
+namespace 
+{
+  // ==========================================================================
+  inline bool isTurbo ( const LHCb::HltDecReport& rep ) 
+  { return rep.executionStage()&0x80u; }
+  // ==========================================================================
 }
 // ============================================================================
 // constructor from the decision name 
 // ============================================================================
 LoKi::HLT::HasDecision::HasDecision 
 ( const std::string& name  ) 
-  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( name ) ) 
+  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
   , m_names ( 1 , name ) 
 {}
 // ============================================================================
@@ -37,7 +40,8 @@ LoKi::HLT::HasDecision::HasDecision
 LoKi::HLT::HasDecision::HasDecision 
 ( const std::string& name1 , 
   const std::string& name2 ) 
-  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( name1 , name2 ) ) 
+  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
   , m_names { name1, name2 }
 {
 }
@@ -48,7 +52,8 @@ LoKi::HLT::HasDecision::HasDecision
 ( const std::string& name1 , 
   const std::string& name2 ,
   const std::string& name3 ) 
-  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( name1 , name2 , name3 ) ) 
+  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
   , m_names { name1, name2, name3 }
 {
 }
@@ -60,7 +65,8 @@ LoKi::HLT::HasDecision::HasDecision
   const std::string& name2 ,
   const std::string& name3 , 
   const std::string& name4 ) 
-  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( name1 , name2 , name3 , name4 ) ) 
+  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
   , m_names { name1, name2, name3, name4 }
 {
 }
@@ -69,7 +75,8 @@ LoKi::HLT::HasDecision::HasDecision
 // ============================================================================
 LoKi::HLT::HasDecision::HasDecision 
 ( const LoKi::HLT::HasDecision::Names& names ) 
-  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( names ) ) 
+  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
   , m_names ( names ) 
 {}
 // ============================================================================
@@ -80,9 +87,9 @@ LoKi::HLT::HasDecision::operator()
   ( LoKi::HLT::HasDecision::argument a ) const 
 {
   Assert ( a , "const LHCb::HltDecReports* points to NULL!" ) ;
-  return std::any_of( begin(), end(), [&](Names::const_reference n) {
-                      return a -> hasDecisionName ( n );
-  });
+  return 
+    std::any_of( begin(), end(), [&](Names::const_reference n) 
+                 { return a -> hasDecisionName ( n ); });
 }
 // ============================================================================
 // OPTIONAL: the nice printout 
@@ -120,6 +127,59 @@ std::ostream& LoKi::HLT::HasDecision::print
   //  return s << name << "(" 
   //           << Gaudi::Utils::toString ( names() ) << "') " ;  // RETURN
 }
+// ============================================================================
+
+
+// ============================================================================
+// constructor from the decision names 
+// ============================================================================
+LoKi::HLT::PassDecision::PassDecision 
+( const std::string& name  )
+  : LoKi::AuxFunBase ( std::tie ( name ) ) 
+  , LoKi::HLT::HasDecision ( name )
+{}
+// ============================================================================
+// constructor from the decision names ("OR")
+// ============================================================================
+LoKi::HLT::PassDecision::PassDecision 
+( const std::string& name1 ,
+  const std::string& name2 )
+  : LoKi::AuxFunBase ( std::tie ( name1 , name2  ) ) 
+  , LoKi::HLT::HasDecision ( name1 , name2 )
+{}
+// ============================================================================
+// constructor from the decision names ("OR")
+// ============================================================================
+LoKi::HLT::PassDecision::PassDecision 
+( const std::string& name1 ,
+  const std::string& name2 ,
+  const std::string& name3 )
+  : LoKi::AuxFunBase ( std::tie ( name1 , name2  , name3 ) ) 
+  , LoKi::HLT::HasDecision ( name1 , name2 , name3 )
+{}
+// ============================================================================
+// constructor from the decision names ("OR")
+// ============================================================================
+LoKi::HLT::PassDecision::PassDecision 
+( const std::string& name1 ,
+  const std::string& name2 ,
+  const std::string& name3 ,
+  const std::string& name4 )
+  : LoKi::AuxFunBase ( std::tie ( name1 , name2  , name3 ,  name4 ) ) 
+  , LoKi::HLT::HasDecision ( name1 , name2 , name3 , name4 )
+{}
+// ============================================================================
+// constructor form the decision names ("OR")
+// ============================================================================
+LoKi::HLT::PassDecision::PassDecision 
+( const Names& names ) 
+  : LoKi::AuxFunBase ( std::tie ( names ) ) 
+  , LoKi::HLT::HasDecision ( names ) 
+{}
+// ============================================================================
+    
+
+
 
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -182,7 +242,8 @@ LoKi::HLT::Decision::operator()
 // ============================================================================
 LoKi::HLT::DecisionBut::DecisionBut 
 ( const std::string& name )
-  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( name ) ) 
+  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
   , m_special ( 1 , name ) 
 {}
 // ============================================================================
@@ -191,7 +252,8 @@ LoKi::HLT::DecisionBut::DecisionBut
 LoKi::HLT::DecisionBut::DecisionBut 
 ( const std::string& name1 , 
   const std::string& name2 ) 
-  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( name1 , name2 ) ) 
+  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
   , m_special { name1, name2 }
 {
 }
@@ -202,7 +264,8 @@ LoKi::HLT::DecisionBut::DecisionBut
 ( const std::string& name1 , 
   const std::string& name2 , 
   const std::string& name3 ) 
-  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( name1 , name2 , name3 ) ) 
+  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
   , m_special { name1, name2, name3 }
 {
 }
@@ -214,7 +277,8 @@ LoKi::HLT::DecisionBut::DecisionBut
   const std::string& name2 , 
   const std::string& name3 ,
   const std::string& name4 ) 
-  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( name1 , name2 , name3 , name4 ) ) 
+  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
   , m_special{ name1, name2, name3, name4 }
 {
 }
@@ -223,7 +287,8 @@ LoKi::HLT::DecisionBut::DecisionBut
 // ============================================================================
 LoKi::HLT::DecisionBut::DecisionBut 
 ( const LoKi::HLT::DecisionBut::Names& names ) 
-  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( names ) ) 
+  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
   , m_special ( names ) 
 {}
 // ============================================================================
@@ -231,7 +296,8 @@ LoKi::HLT::DecisionBut::DecisionBut
 // ============================================================================
 LoKi::HLT::DecisionBut::DecisionBut 
 ( const std::vector<std::string>& names ) 
-  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( names ) ) 
+  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
   , m_special ( names.begin() , names.end() ) 
 {}
 // ============================================================================
@@ -296,7 +362,8 @@ std::ostream& LoKi::HLT::DecisionBut::fillStream
 // ============================================================================
 LoKi::HLT::HasDecisionSubString::HasDecisionSubString
 ( const std::string& substr ) 
-  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate()
+  : LoKi::AuxFunBase ( std::tie ( substr ) ) 
+  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate()
   , m_substr ( substr ) 
 {}
 // ============================================================================
@@ -337,7 +404,8 @@ LoKi::HLT::HasDecisionSubString::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::HLT::PassDecisionSubString::PassDecisionSubString
 ( const std::string& substr ) 
-  : LoKi::HLT::HasDecisionSubString( substr ) 
+  : LoKi::AuxFunBase ( std::tie ( substr ) ) 
+  , LoKi::HLT::HasDecisionSubString( substr ) 
 {}
 // ============================================================================
 // destructor 
@@ -379,7 +447,8 @@ LoKi::HLT::PassDecisionSubString::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::HLT::DecisionButSubString::DecisionButSubString
 ( const std::string& substr ) 
-  : LoKi::HLT::PassDecisionSubString( substr ) 
+  : LoKi::AuxFunBase ( std::tie ( substr ) ) 
+  , LoKi::HLT::PassDecisionSubString( substr ) 
 {}
 // ============================================================================
 // destructor 
@@ -418,7 +487,8 @@ LoKi::HLT::DecisionButSubString::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::HLT::HasDecisionRegex::HasDecisionRegex
 ( const std::string& substr ) 
-  : LoKi::HLT::HasDecisionSubString( substr ) 
+  : LoKi::AuxFunBase ( std::tie ( substr ) ) 
+  , LoKi::HLT::HasDecisionSubString( substr ) 
   , m_expression ( substr )
 {}
 // ============================================================================
@@ -457,7 +527,8 @@ LoKi::HLT::HasDecisionRegex::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::HLT::PassDecisionRegex::PassDecisionRegex
 ( const std::string& substr ) 
-  : LoKi::HLT::HasDecisionRegex( substr ) 
+  : LoKi::AuxFunBase ( std::tie ( substr ) ) 
+  , LoKi::HLT::HasDecisionRegex( substr ) 
 {}
 // ============================================================================
 // destructor 
@@ -498,7 +569,8 @@ LoKi::HLT::PassDecisionRegex::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::HLT::DecisionButRegex::DecisionButRegex
 ( const std::string& substr ) 
-  : LoKi::HLT::PassDecisionRegex( substr ) 
+  : LoKi::AuxFunBase ( std::tie ( substr ) ) 
+  , LoKi::HLT::PassDecisionRegex( substr ) 
 {}
 // ============================================================================
 // destructor 
@@ -537,14 +609,16 @@ LoKi::HLT::DecisionButRegex::fillStream ( std::ostream& s ) const
 // constructor from the channel name 
 // ============================================================================
 LoKi::HLT::ErrorBits::ErrorBits ( const std::string& name ) 
-  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( name ) ) 
+  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function () 
   , m_key ( name ) 
 {}
 // ============================================================================
 // constructor from the channel name 
 // ============================================================================
 LoKi::HLT::ErrorBits::ErrorBits ( const Gaudi::StringKey& name ) 
-  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( name ) ) 
+  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function () 
   , m_key ( name ) 
 {}
 // ============================================================================
@@ -583,13 +657,15 @@ LoKi::HLT::ErrorBits::fillStream ( std::ostream& s ) const
 // constructor from the channel name 
 // ============================================================================
 LoKi::HLT::NonTurboPass::NonTurboPass ( const std::string& name ) 
-  : LoKi::HLT::HasDecisionRegex ( name ) 
+  : LoKi::AuxFunBase ( std::tie ( name ) ) 
+  , LoKi::HLT::HasDecisionRegex ( name ) 
 {}
 // ============================================================================
 // constructor from the channel name 
 // ============================================================================
 LoKi::HLT::NonTurboPass::NonTurboPass ( const Gaudi::StringKey& name ) 
-  : LoKi::HLT::HasDecisionRegex ( name ) 
+  : LoKi::AuxFunBase ( std::tie ( name ) ) 
+  , LoKi::HLT::HasDecisionRegex ( name ) 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -621,13 +697,15 @@ LoKi::HLT::NonTurboPass::operator()
 // constructor from the channel name 
 // ============================================================================
 LoKi::HLT::TurboPass::TurboPass ( const std::string& name ) 
-  : LoKi::HLT::HasDecisionRegex ( name ) 
+  : LoKi::AuxFunBase ( std::tie ( name ) ) 
+  , LoKi::HLT::HasDecisionRegex ( name ) 
 {}
 // ============================================================================
 // constructor from the channel name 
 // ============================================================================
 LoKi::HLT::TurboPass::TurboPass ( const Gaudi::StringKey& name ) 
-  : LoKi::HLT::HasDecisionRegex ( name ) 
+  : LoKi::AuxFunBase ( std::tie ( name ) ) 
+  , LoKi::HLT::HasDecisionRegex ( name ) 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -659,13 +737,15 @@ LoKi::HLT::TurboPass::operator()
 // constructor from the channel name 
 // ============================================================================
 LoKi::HLT::ExecutionStage::ExecutionStage ( const std::string& name ) 
-  : LoKi::HLT::ErrorBits ( name ) 
+  : LoKi::AuxFunBase ( std::tie ( name ) ) 
+  , LoKi::HLT::ErrorBits ( name ) 
 {}
 // ============================================================================
 // constructor from the channel name 
 // ============================================================================
 LoKi::HLT::ExecutionStage::ExecutionStage ( const Gaudi::StringKey& name ) 
-  : LoKi::HLT::ErrorBits ( name ) 
+  : LoKi::AuxFunBase ( std::tie ( name ) ) 
+  , LoKi::HLT::ErrorBits ( name ) 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -704,13 +784,15 @@ LoKi::HLT::ExecutionStage::fillStream ( std::ostream& s ) const
 // constructor from the channel name 
 // ============================================================================
 LoKi::HLT::NumberOfCandidates::NumberOfCandidates ( const std::string& name ) 
-  : LoKi::HLT::ErrorBits ( name ) 
+  : LoKi::AuxFunBase ( std::tie ( name ) ) 
+  , LoKi::HLT::ErrorBits ( name ) 
 {}
 // ============================================================================
 // constructor from the channel name 
 // ============================================================================
 LoKi::HLT::NumberOfCandidates::NumberOfCandidates ( const Gaudi::StringKey& name ) 
-  : LoKi::HLT::ErrorBits ( name ) 
+  : LoKi::AuxFunBase ( std::tie ( name ) ) 
+  , LoKi::HLT::ErrorBits ( name ) 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -748,7 +830,8 @@ LoKi::HLT::NumberOfCandidates::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::HLT::Saturated::Saturated
 ( const std::string&      name )
-  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate()
+  : LoKi::AuxFunBase ( std::tie ( name ) ) 
+  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate()
   , m_key ( name ) 
 {}
 // ============================================================================
@@ -756,7 +839,8 @@ LoKi::HLT::Saturated::Saturated
 // ============================================================================
 LoKi::HLT::Saturated::Saturated
 ( const Gaudi::StringKey&  name )
-  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate()
+  : LoKi::AuxFunBase ( std::tie ( name ) ) 
+  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate()
   , m_key ( name ) 
 {}
 // ============================================================================
@@ -801,7 +885,8 @@ LoKi::HLT::Saturated::fillStream ( std::ostream& s ) const
 LoKi::HLT::CountErrorBits::CountErrorBits
 ( const std::vector<std::string>&      lines , 
   const unsigned int                   mask  ) 
-  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( lines , mask ) ) 
+  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function () 
   , m_lines ( lines.begin() , lines.end() ) 
   , m_mask  ( mask )
 {}
@@ -811,7 +896,8 @@ LoKi::HLT::CountErrorBits::CountErrorBits
 LoKi::HLT::CountErrorBits::CountErrorBits
 ( const std::vector<Gaudi::StringKey>&  lines , 
   const unsigned int                    mask  ) 
-  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( lines , mask ) ) 
+  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function () 
   , m_lines ( lines ) 
   , m_mask  ( mask  )
 {}
@@ -822,7 +908,8 @@ LoKi::HLT::CountErrorBits::CountErrorBits
 ( const std::string& line1 , 
   const std::string& line2 , 
   const unsigned int mask  ) 
-  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( line1 , line2 , mask ) ) 
+  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function () 
   , m_lines { line1, line2 }
   , m_mask  ( mask  )
 {
@@ -835,7 +922,8 @@ LoKi::HLT::CountErrorBits::CountErrorBits
   const std::string& line2 , 
   const std::string& line3 , 
   const unsigned int mask  ) 
-  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( line1 , line2 , line3 , mask ) ) 
+  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function () 
   , m_lines { line1, line2, line3 }
   , m_mask  ( mask  )
 {
@@ -849,7 +937,8 @@ LoKi::HLT::CountErrorBits::CountErrorBits
   const std::string& line3 , 
   const std::string& line4 , 
   const unsigned int mask  ) 
-  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( line1 , line2 , line3 , line4 ,  mask ) ) 
+  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function () 
   , m_lines { line1, line2, line3, line4 }
   , m_mask  ( mask  )
 {
@@ -928,7 +1017,8 @@ LoKi::HLT::CountErrorBits::fillStream ( std::ostream& s ) const
 LoKi::HLT::CountErrorBitsRegex::CountErrorBitsRegex 
 ( const std::string&  expression , 
   const unsigned int  mask       )
-  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( expression  ,  mask ) ) 
+  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function () 
   , m_pattern    ( expression ) 
   , m_expression ( expression ) 
   , m_mask       ( mask ) 
@@ -972,7 +1062,8 @@ LoKi::HLT::CountErrorBitsRegex::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::HLT::HltRoutingBits::HltRoutingBits
 ( const LoKi::HLT::RoutingBits& bits ) 
-  :  LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( bits ) ) 
+  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate() 
   , m_bits ( bits ) 
 {}
 // ============================================================================

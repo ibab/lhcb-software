@@ -17,6 +17,7 @@
 // local
 // =============================================================================
 #include "LoKi/EvtNum.h"
+#include "LoKi/ToCpp.h"
 // =============================================================================
 /** @file 
  *  This file is a part of LoKi project - 
@@ -91,6 +92,9 @@ std::string LoKi::Numbers::EvtNum::toString() const
   fillStream ( s ) ;
   return s.str();
 }
+// =============================================================================
+std::string LoKi::Numbers::EvtNum::toCpp() const 
+{ return "LoKi::Numbers::EvtNum(" + toString() + ")" ; }  
 // =============================================================================
 //  the streamer 
 // =============================================================================
@@ -186,6 +190,9 @@ std::string   LoKi::Numbers::EvtNumList::toString   () const
   return s.str();
 }
 // =============================================================================
+std::string LoKi::Numbers::EvtNumList::toCpp() const 
+{ return "LoKi::Numbers::EvtNumList(" + Gaudi::Utils::toCpp ( m_list ) + ")" ; }  
+// =============================================================================
 //  the streamer 
 // =============================================================================
 std::ostream& Gaudi::Utils::toStream 
@@ -263,6 +270,13 @@ std::ostream& Gaudi::Utils::toStream
 std::string   Gaudi::Utils::toString
 ( const LoKi::Numbers::RunEvt& evt ) { return evt.toString ()  ; }
 // =============================================================================
+std::string LoKi::Numbers::RunEvt::toCpp() const 
+{ 
+  return "LoKi::Numbers::RunEvt(" 
+    + Gaudi::Utils::toCpp ( m_pair.first  ) + "," 
+    + Gaudi::Utils::toCpp ( m_pair.second ) + "," ; 
+}  
+// =============================================================================
 // parser 
 // =============================================================================
 StatusCode 
@@ -301,6 +315,9 @@ std::size_t LoKi::Numbers::RunEvtList::hash       () const
 // ============================================================================
 std::ostream& LoKi::Numbers::RunEvtList::fillStream ( std::ostream& s ) const 
 { return Gaudi::Utils::toStream ( m_list , s ) ; }
+// =============================================================================
+std::string LoKi::Numbers::RunEvtList::toCpp() const 
+{ return "LoKi::Numbers::RunEvtList(" + Gaudi::Utils::toCpp ( m_list ) + ")" ; }  
 // ============================================================================
 std::string   LoKi::Numbers::RunEvtList::toString   () const 
 { 

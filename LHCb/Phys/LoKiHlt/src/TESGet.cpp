@@ -21,7 +21,7 @@ namespace
   {
   public:
     // ========================================================================
-    _C ( const LoKi::TES::Get&                    obj , 
+    _C ( const LoKi::TES::Get&                  obj , 
          const LoKi::Functor<const TYPE*,bool>& cut ) 
       : LoKi::Functor<void,bool> () 
       , m_get ( obj ) 
@@ -34,6 +34,14 @@ namespace
     // ========================================================================
     virtual std::ostream& fillStream ( std::ostream& s ) const 
     { return  s << " (" << m_get << " >> " << m_cut  << ") " ; }
+    //
+    virtual std::string toCpp() const 
+    {
+      return
+        "LoKi::TES::TESGet::get( "    +
+        Gaudi::Utils::toCpp ( m_get ) + ", " + 
+        Gaudi::Utils::toCpp ( m_cut ) + ") " ;
+    }
     // ========================================================================
     virtual result_type operator() ( /* argument */ ) const 
     {
@@ -84,6 +92,14 @@ namespace
     // ========================================================================
     virtual std::ostream& fillStream ( std::ostream& s ) const 
     { return  s << " (" << m_get << " >> " << m_fun  << ") " ; }
+    // ========================================================================
+    virtual std::string toCpp() const 
+    {
+      return
+        "LoKi::TES::TESGet::get( "    +
+        Gaudi::Utils::toCpp ( m_get ) + ", " + 
+        Gaudi::Utils::toCpp ( m_fun ) + ") " ;
+    }
     // ========================================================================
     virtual result_type operator() ( /* argument */ ) const 
     {

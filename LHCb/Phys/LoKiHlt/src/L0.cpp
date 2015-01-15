@@ -43,7 +43,8 @@ std::ostream& LoKi::L0::Valid::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::L0::SumEt::SumEt
 ( const int bx )
-  : LoKi::BasicFunctors<const LHCb::L0DUReport*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( bx ) ) 
+  , LoKi::BasicFunctors<const LHCb::L0DUReport*>::Function () 
   , m_bx ( bx ) 
 {}
 // ============================================================================
@@ -70,7 +71,8 @@ LoKi::L0::SumEt::operator()
 // ============================================================================
 LoKi::L0::DataValue::DataValue
 ( const std::string& name  )
-  : LoKi::BasicFunctors<const LHCb::L0DUReport*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( name ) ) 
+  , LoKi::BasicFunctors<const LHCb::L0DUReport*>::Function () 
   , m_name ( name ) 
 {}
 // ============================================================================
@@ -94,7 +96,8 @@ LoKi::L0::DataValue::operator()
 // ============================================================================
 LoKi::L0::DataDigit::DataDigit
 ( const std::string& name  )
-  : LoKi::L0::DataValue ( name ) 
+  : LoKi::AuxFunBase ( std::tie ( name ) ) 
+  , LoKi::L0::DataValue ( name ) 
 {}
 // ============================================================================
 // OPTIONAL: the nice printout 
@@ -117,7 +120,8 @@ LoKi::L0::DataDigit::operator()
 // constructor from decision mask 
 // ============================================================================
 LoKi::L0::Decision::Decision ( const int mask ) 
-  : LoKi::BasicFunctors<const LHCb::L0DUReport*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( mask ) )
+  , LoKi::BasicFunctors<const LHCb::L0DUReport*>::Predicate () 
   , m_mask ( mask ) 
 {
 }
@@ -169,7 +173,8 @@ std::ostream& LoKi::L0::Decision::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::L0::SumDecision::SumDecision ( const int mask , 
                                      const int bx   ) 
-  : LoKi::BasicFunctors<const LHCb::L0DUReport*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( mask , bx ) )
+  , LoKi::BasicFunctors<const LHCb::L0DUReport*>::Predicate () 
   , m_mask ( mask ) 
   , m_bx   ( bx   ) 
 {}
@@ -241,7 +246,8 @@ LoKi::L0::TimingBit::operator()
 LoKi::L0::ConditionValue::ConditionValue
 ( const std::string& channel , 
   const int          bx      ) 
-  : LoKi::L0::ChannelDecision ( channel , bx ) 
+  : LoKi::AuxFunBase ( std::tie ( channel , bx ) ) 
+  , LoKi::L0::ChannelDecision ( channel , bx ) 
 {}
 // ============================================================================
 // channel decision by channel names ("OR")
@@ -249,7 +255,8 @@ LoKi::L0::ConditionValue::ConditionValue
 LoKi::L0::ConditionValue::ConditionValue
 ( const std::vector<std::string>& channels ,
   const int                       bx       ) 
-  : LoKi::L0::ChannelDecision ( channels , bx ) 
+  : LoKi::AuxFunBase ( std::tie ( channels , bx ) )
+  , LoKi::L0::ChannelDecision ( channels , bx ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -338,7 +345,8 @@ std::ostream& LoKi::L0::TimingBit::fillStream ( std::ostream& s ) const
 LoKi::L0::ChannelDecision::ChannelDecision
 ( const std::string& channel , 
   const int          bx      ) 
-  : LoKi::BasicFunctors<const LHCb::L0DUReport*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( channel , bx ) ) 
+  , LoKi::BasicFunctors<const LHCb::L0DUReport*>::Predicate () 
   , m_names    ( 1 ,channel ) 
   , m_channels () 
   , m_bx       ( bx         ) 
@@ -350,7 +358,8 @@ LoKi::L0::ChannelDecision::ChannelDecision
 LoKi::L0::ChannelDecision::ChannelDecision
 ( const std::vector<std::string>& channels ,
   const int                       bx       ) 
-  : LoKi::BasicFunctors<const LHCb::L0DUReport*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( channels , bx ) ) 
+  , LoKi::BasicFunctors<const LHCb::L0DUReport*>::Predicate () 
   , m_names    ( channels ) 
   , m_channels () 
   , m_bx       ( bx       ) 
@@ -417,7 +426,8 @@ std::ostream& LoKi::L0::ChannelDecision::fillStream ( std::ostream& s ) const
 LoKi::L0::ChannelPreDecision::ChannelPreDecision
 ( const std::string& channel , 
   const int          bx      ) 
-  : LoKi::L0::ChannelDecision ( channel , bx ) 
+  : LoKi::AuxFunBase ( std::tie ( channel , bx ) ) 
+  , LoKi::L0::ChannelDecision ( channel , bx ) 
 {}
 // ============================================================================
 // channel decision by channel names ("OR")
@@ -425,7 +435,8 @@ LoKi::L0::ChannelPreDecision::ChannelPreDecision
 LoKi::L0::ChannelPreDecision::ChannelPreDecision
 ( const std::vector<std::string>& channels ,
   const int                       bx       ) 
-  : LoKi::L0::ChannelDecision ( channels , bx ) 
+  : LoKi::AuxFunBase ( std::tie ( channels , bx ) ) 
+  , LoKi::L0::ChannelDecision ( channels , bx ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -490,7 +501,8 @@ std::ostream& LoKi::L0::ChannelPreDecision::fillStream ( std::ostream& s ) const
 LoKi::L0::TriggerDecision::TriggerDecision
 ( const std::string& channel , 
   const int          bx      ) 
-  : LoKi::L0::ChannelDecision ( channel , bx ) 
+  : LoKi::AuxFunBase ( std::tie ( channel , bx ) ) 
+  , LoKi::L0::ChannelDecision ( channel , bx ) 
 {}
 // ============================================================================
 // channel decision by channel names ("OR")
@@ -498,7 +510,8 @@ LoKi::L0::TriggerDecision::TriggerDecision
 LoKi::L0::TriggerDecision::TriggerDecision
 ( const std::vector<std::string>& channels ,
   const int                       bx       ) 
-  : LoKi::L0::ChannelDecision ( channels , bx ) 
+  : LoKi::AuxFunBase ( std::tie ( channels , bx ) ) 
+  , LoKi::L0::ChannelDecision ( channels , bx ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -562,7 +575,8 @@ std::ostream& LoKi::L0::TriggerDecision::fillStream ( std::ostream& s ) const
 LoKi::L0::ChannelDecisionSubString::ChannelDecisionSubString
 ( const std::string& channel , 
   const int          bx      ) 
-  : LoKi::L0::ChannelDecision ( LoKi::L0::ChannelDecision::Names() , bx ) 
+  : LoKi::AuxFunBase ( std::tie ( channel , bx ) ) 
+  , LoKi::L0::ChannelDecision ( LoKi::L0::ChannelDecision::Names() , bx ) 
   , m_substr ( channel )
 {}
 // ============================================================================
@@ -617,7 +631,8 @@ std::ostream& LoKi::L0::ChannelDecisionSubString::fillStream ( std::ostream& s )
 LoKi::L0::ChannelDecisionRegex::ChannelDecisionRegex
 ( const std::string& channel , 
   const int          bx      ) 
-  : LoKi::L0::ChannelDecisionSubString( channel , bx ) 
+  : LoKi::AuxFunBase ( std::tie ( channel , bx ) ) 
+  , LoKi::L0::ChannelDecisionSubString( channel , bx ) 
   , m_expression ( channel )
 {}
 // ============================================================================
@@ -673,7 +688,8 @@ std::ostream& LoKi::L0::ChannelDecisionRegex::fillStream ( std::ostream& s ) con
 LoKi::L0::ChannelPreDecisionSubString::ChannelPreDecisionSubString
 ( const std::string& channel , 
   const int          bx      ) 
-  : LoKi::L0::ChannelDecisionSubString ( channel , bx ) 
+  : LoKi::AuxFunBase ( std::tie ( channel , bx ) ) 
+  , LoKi::L0::ChannelDecisionSubString ( channel , bx ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -727,7 +743,8 @@ std::ostream& LoKi::L0::ChannelPreDecisionSubString::fillStream ( std::ostream& 
 LoKi::L0::ChannelPreDecisionRegex::ChannelPreDecisionRegex
 ( const std::string& channel , 
   const int          bx      ) 
-  : LoKi::L0::ChannelDecisionRegex ( channel , bx ) 
+  : LoKi::AuxFunBase ( std::tie ( channel , bx ) ) 
+  , LoKi::L0::ChannelDecisionRegex ( channel , bx ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -780,7 +797,8 @@ std::ostream& LoKi::L0::ChannelPreDecisionRegex::fillStream ( std::ostream& s ) 
 LoKi::L0::TriggerDecisionSubString::TriggerDecisionSubString
 ( const std::string& channel , 
   const int          bx      ) 
-  : LoKi::L0::ChannelDecisionSubString ( channel , bx ) 
+  : LoKi::AuxFunBase ( std::tie ( channel , bx ) ) 
+  , LoKi::L0::ChannelDecisionSubString ( channel , bx ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -833,7 +851,8 @@ std::ostream& LoKi::L0::TriggerDecisionSubString::fillStream ( std::ostream& s )
 LoKi::L0::TriggerDecisionRegex::TriggerDecisionRegex
 ( const std::string& channel , 
   const int          bx      ) 
-  : LoKi::L0::ChannelDecisionRegex ( channel , bx ) 
+  : LoKi::AuxFunBase ( std::tie ( channel , bx ) ) 
+  , LoKi::L0::ChannelDecisionRegex ( channel , bx ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method 

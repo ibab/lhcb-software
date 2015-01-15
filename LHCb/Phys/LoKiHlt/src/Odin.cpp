@@ -14,7 +14,9 @@
 // LoKi
 // ============================================================================
 #include "LoKi/Constants.h"
+#include "LoKi/EvtNum.h"
 #include "LoKi/Odin.h"
+#include "LoKi/ToCpp.h"
 // ============================================================================
 /** @file 
  *
@@ -41,7 +43,8 @@
 LoKi::Odin::InTime::InTime 
 ( const Gaudi::Time& start , 
   const Gaudi::Time& stop  ) 
-  : LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( start , stop ) ) 
+  , LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
   , m_start ( start ) 
   , m_stop  ( stop  ) 
 {}
@@ -51,7 +54,8 @@ LoKi::Odin::InTime::InTime
 LoKi::Odin::InTime::InTime 
 ( const Gaudi::Time&     start , 
   const Gaudi::TimeSpan& span  ) 
-  : LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( start , span ) ) 
+  , LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
   , m_start ( start        ) 
   , m_stop  ( start + span ) 
 {}
@@ -83,7 +87,8 @@ std::ostream& LoKi::Odin::InTime::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Odin::RunNumber::RunNumber
 ( const LoKi::Odin::RunNumber::run_type run ) 
-  : LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( run ) ) 
+  , LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
   , m_flag  ( One     ) 
   , m_begin ( run     ) 
   , m_end   ( run + 1 ) 
@@ -95,7 +100,8 @@ LoKi::Odin::RunNumber::RunNumber
 LoKi::Odin::RunNumber::RunNumber
 ( const LoKi::Odin::RunNumber::run_type begin ,
   const LoKi::Odin::RunNumber::run_type end   ) 
-  : LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( begin , end  ) ) 
+  , LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
   , m_flag  ( Range ) 
   , m_begin ( begin ) 
   , m_end   ( end   ) 
@@ -106,7 +112,8 @@ LoKi::Odin::RunNumber::RunNumber
 // ============================================================================
 LoKi::Odin::RunNumber::RunNumber
 ( const LoKi::Odin::RunNumber::run_list& runs )
-  : LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( runs ) ) 
+  , LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
   , m_flag  ( List ) 
   , m_begin ( 0    ) 
   , m_end   ( 0    ) 
@@ -171,7 +178,8 @@ std::ostream& LoKi::Odin::RunNumber::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Odin::BXId::BXId
 ( const unsigned int bx   ) 
-  : LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( bx ) ) 
+  , LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
   , m_flag  ( One ) 
   , m_bx    ( bx ) 
   , m_begin ( 0   ) 
@@ -184,7 +192,8 @@ LoKi::Odin::BXId::BXId
 LoKi::Odin::BXId::BXId
 ( const unsigned int begin , 
   const unsigned int end   ) 
-  : LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( begin , end ) ) 
+  , LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
   , m_flag  ( Range ) 
   , m_bx    ( 0     ) 
   , m_begin ( begin ) 
@@ -196,7 +205,8 @@ LoKi::Odin::BXId::BXId
 // ============================================================================
 LoKi::Odin::BXId::BXId
 ( const std::vector<unsigned int>& bxs ) 
-  : LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( bxs ) ) 
+  , LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
   , m_flag  ( List ) 
   , m_bx    ( 0    ) 
   , m_begin ( 0    ) 
@@ -254,7 +264,8 @@ std::ostream& LoKi::Odin::BXId::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Odin::Tck::Tck
 ( const unsigned int bx   ) 
-  : LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( bx ) ) 
+  , LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
   , m_flag  ( One ) 
   , m_bx    ( bx ) 
   , m_bxs   (     ) 
@@ -264,7 +275,8 @@ LoKi::Odin::Tck::Tck
 // ============================================================================
 LoKi::Odin::Tck::Tck
 ( const std::vector<unsigned int>& bxs ) 
-  : LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( bxs ) ) 
+  , LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
   , m_flag  ( List ) 
   , m_bx    ( 0    ) 
   , m_bxs   ( bxs  ) 
@@ -319,7 +331,8 @@ std::ostream& LoKi::Odin::Tck::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Odin::EvtNumber::EvtNumber
 ( const LoKi::Odin::EvtNumber::event_type evt ) 
-  : LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( evt ) ) 
+  , LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
   , m_flag  ( One     ) 
   , m_begin ( evt     ) 
   , m_end   ( evt + 1 ) 
@@ -331,7 +344,8 @@ LoKi::Odin::EvtNumber::EvtNumber
 LoKi::Odin::EvtNumber::EvtNumber
 ( const LoKi::Odin::EvtNumber::event_type begin ,  
   const LoKi::Odin::EvtNumber::event_type end   ) 
-  : LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( begin , end ) ) 
+  , LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
   , m_flag  ( Range ) 
   , m_begin ( begin ) 
   , m_end   ( end   ) 
@@ -342,7 +356,8 @@ LoKi::Odin::EvtNumber::EvtNumber
 // ============================================================================
 LoKi::Odin::EvtNumber::EvtNumber
 ( const LoKi::Odin::EvtNumber::event_list& evts )
-  : LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( evts ) ) 
+  , LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
   , m_flag  ( List ) 
   , m_begin ( 0    ) 
   , m_end   ( 0    ) 
@@ -415,7 +430,8 @@ std::ostream& LoKi::Odin::EvtNumber::fillStream ( std::ostream& s ) const
 LoKi::Odin::RunEvtNumber::RunEvtNumber 
 ( const LoKi::Odin::RunEvtNumber::run_type run , 
   const LoKi::Odin::RunEvtNumber::evt_type evt ) 
-  : LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( run , evt  ) ) 
+  , LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
   , m_flag    ( One ) 
   , m_begin   ( run , evt           ) 
   , m_end     ( run , evt.evt() + 1 ) 
@@ -426,7 +442,8 @@ LoKi::Odin::RunEvtNumber::RunEvtNumber
 // ============================================================================
 LoKi::Odin::RunEvtNumber::RunEvtNumber 
 ( const LoKi::Odin::RunEvtNumber::runevt_type& runevt )  
-  : LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( runevt  ) ) 
+  , LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
   , m_flag    ( One    ) 
   , m_begin   ( runevt ) 
   , m_end     ( runevt.run() , runevt.evt() + 1 ) 
@@ -438,7 +455,8 @@ LoKi::Odin::RunEvtNumber::RunEvtNumber
 LoKi::Odin::RunEvtNumber::RunEvtNumber 
 ( const LoKi::Odin::RunEvtNumber::runevt_type& begin, 
   const LoKi::Odin::RunEvtNumber::runevt_type& end  ) 
-  : LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( begin , end   ) ) 
+  , LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
   , m_flag    ( Range ) 
   , m_begin   ( begin ) 
   , m_end     ( end   ) 
@@ -449,7 +467,8 @@ LoKi::Odin::RunEvtNumber::RunEvtNumber
 // ============================================================================
 LoKi::Odin::RunEvtNumber::RunEvtNumber 
 ( const LoKi::Odin::RunEvtNumber::runevt_list&  runevts ) 
-  : LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( runevts ) ) 
+  , LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
   , m_flag    ( List ) 
   , m_begin   () 
   , m_end     () 
@@ -527,7 +546,8 @@ std::ostream& LoKi::Odin::RunEvtNumber::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Odin::RoutingBits::RoutingBits
 ( const LoKi::HLT::RoutingBits& bits ) 
-  :  LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( bits ) ) 
+  , LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
   , m_bits ( bits ) 
 {}
 // ============================================================================
@@ -562,7 +582,8 @@ std::ostream& LoKi::Odin::RoutingBits::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Odin::Evt1::Evt1
 ( const unsigned long long modulo ) 
-  : LoKi::BasicFunctors<const LHCb::ODIN*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( modulo ) ) 
+  , LoKi::BasicFunctors<const LHCb::ODIN*>::Function () 
   , m_modulo ( modulo ) 
 {}
 // ============================================================================
@@ -595,7 +616,8 @@ std::ostream& LoKi::Odin::Evt1::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Odin::Evt2::Evt2
 ( const unsigned long long modulo ) 
-  : LoKi::Odin::Evt1 ( modulo ) 
+  : LoKi::AuxFunBase ( std::tie ( modulo ) ) 
+  , LoKi::Odin::Evt1 ( modulo ) 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor

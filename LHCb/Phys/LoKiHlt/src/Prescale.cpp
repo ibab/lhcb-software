@@ -91,7 +91,8 @@ namespace
 LoKi::Odin::Prescale::Prescale 
 ( const double       accept , 
   const std::string& seed   ) 
-  : LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( accept , seed ) ) 
+  , LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate () 
   , m_accept  ( accept ) 
   , m_seed    ( seed   )
   , m_initial () 

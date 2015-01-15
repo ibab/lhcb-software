@@ -47,16 +47,16 @@ namespace LoKi
       RoutingBits ( const unsigned short bit  ) ;
       /// constructor from the bits
       RoutingBits ( const unsigned short bit1 ,
-                   const unsigned short bit2 ) ;
+                    const unsigned short bit2 ) ;
       /// constructor from the bits 
       RoutingBits ( const unsigned short bit1 ,
-                   const unsigned short bit2 , 
-                   const unsigned short bit3 ) ;
+                    const unsigned short bit2 , 
+                    const unsigned short bit3 ) ;
       /// constructor from the bits 
       RoutingBits ( const unsigned short bit1 ,
-                   const unsigned short bit2 , 
-                   const unsigned short bit3 ,
-                   const unsigned short bit4 ) ;
+                    const unsigned short bit2 , 
+                    const unsigned short bit3 ,
+                    const unsigned short bit4 ) ;
       /// constructor from the bits 
       RoutingBits ( const std::vector<unsigned int>& bits ) ;
       /// MANDATORY: virtual destructor 

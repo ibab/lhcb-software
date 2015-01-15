@@ -36,7 +36,8 @@
 // ============================================================================
 LoKi::HLT::RoutingBits::RoutingBits 
 ( const unsigned short bit ) 
-  : LoKi::Functor<void,bool>() 
+  : LoKi::AuxFunBase ( std::tie ( bit ) ) 
+  , LoKi::Functor<void,bool>() 
   , m_fired   () 
   , m_bits    ( bit ) 
 {}
@@ -46,7 +47,8 @@ LoKi::HLT::RoutingBits::RoutingBits
 LoKi::HLT::RoutingBits::RoutingBits 
 ( const unsigned short bit1 , 
   const unsigned short bit2 ) 
-  : LoKi::Functor<void,bool>() 
+  : LoKi::AuxFunBase ( std::tie ( bit1 , bit2 ) ) 
+  , LoKi::Functor<void,bool>() 
   , m_fired   () 
   , m_bits    { bit1, bit2 }
 {
@@ -59,7 +61,8 @@ LoKi::HLT::RoutingBits::RoutingBits
 ( const unsigned short bit1 , 
   const unsigned short bit2 , 
   const unsigned short bit3 ) 
-  : LoKi::Functor<void,bool>() 
+  : LoKi::AuxFunBase ( std::tie ( bit1 , bit2 , bit3 ) ) 
+  , LoKi::Functor<void,bool>() 
   , m_fired   () 
   , m_bits    { bit1, bit2, bit3 }
 {
@@ -73,7 +76,8 @@ LoKi::HLT::RoutingBits::RoutingBits
   const unsigned short bit2 , 
   const unsigned short bit3 , 
   const unsigned short bit4 ) 
-  : LoKi::Functor<void,bool>() 
+  : LoKi::AuxFunBase ( std::tie ( bit1 , bit2 , bit3 , bit4 ) ) 
+  , LoKi::Functor<void,bool>() 
   , m_fired   () 
   , m_bits    { bit1, bit2, bit3, bit4 }
 {
@@ -84,7 +88,8 @@ LoKi::HLT::RoutingBits::RoutingBits
 // ============================================================================
 LoKi::HLT::RoutingBits::RoutingBits 
 ( const std::vector<unsigned int>&  bits ) 
-  : LoKi::Functor<void,bool>() 
+  : LoKi::AuxFunBase ( std::tie ( bits ) ) 
+  , LoKi::Functor<void,bool>() 
   , m_fired   () 
   , m_bits    ( bits ) 
 {
