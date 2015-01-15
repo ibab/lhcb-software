@@ -4,29 +4,30 @@ SetupAlignmentOnline
 gaudirun.py runt0OnlineCalibration_test.py
 """
 
-#from Configurables import GaudiSequencer
-#OTt0OnlineClbrSeq = GaudiSequencer("OTt0OnlineClbrSeq")
-
+from Configurables import GaudiSequencer
 from Configurables import OTt0OnlineClbr
 
-#OTt0OnlineClbrAlg = OTt0OnlineClbrSeq("OTt0OnlineClbrAlg")
+OTGaudiSeq = GaudiSequencer("OTt0OnlineClbrSeq")
 
-myFiles1 = [ "/afs/cern.ch/work/l/lgrillo/Brunel-107577-20120228T184550-EOR.root" ]
+OTt0OnlineClbrAlg = OTt0OnlineClbr("OTt0OnlineClbrAlg")
 
-OTt0OnlineClbr.InputFiles  = myFiles1
-OTt0OnlineClbr.xmlFilePath = "/tmp/lgrillo" 
+myFiles1 = [ "/afs/cern.ch/work/f/fdettori/Brunel-107577-20120228T184550-EOR.root" ]
+
+OTt0OnlineClbrAlg.InputFiles  = myFiles1
+OTt0OnlineClbrAlg.xmlFilePath = "/tmp/fdettori"
+OTt0OnlineClbrAlg.OutputLevel = 2
 
 
-#OTt0OnlineClbrSeq.Members += [
-#    OTt0OnlineClbrAlg
-#    ]
+OTGaudiSeq.Members += [
+    OTt0OnlineClbrAlg
+    ]
 
-#OTt0OnlineClbrAlgSeq.IgnoreFilterPassed = True
+OTGaudiSeq.IgnoreFilterPassed = True
 
-#OTt0OnlineClbrAlgAlg.OutputLevel = 3
+
 
 from Configurables import ApplicationMgr
-ApplicationMgr().TopAlg            += [ OTt0OnlineClbr ]
+ApplicationMgr().TopAlg            += [ OTGaudiSeq ]
 
 from Configurables import LHCbApp
 #LHCbApp().DDDBtag   = "head-20120413"
