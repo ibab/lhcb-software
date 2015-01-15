@@ -297,9 +297,9 @@ StatusCode LoKi::PFJetMaker::analyse   ()
     // Get the particles to be banned from jet inputs
     for (std::vector< std::string >::const_iterator i_location = m_banCandidatesLocations.begin() ;
             m_banCandidatesLocations.end() != i_location ; ++i_location ){
-        if( !exist<LHCb::Particles*>(*i_location) )continue;
-        const  LHCb::Particles* mypartsToBan = get<LHCb::Particles*>(*i_location);
-        for (LHCb::Particles::const_iterator i_p = mypartsToBan->begin();mypartsToBan->end()!=i_p;i_p++)
+        if( !exist<LHCb::Particle::Range>(*i_location) )continue;
+        LHCb::Particle::Range myPartsToBan = get<LHCb::Particle::Range>(*i_location);
+        for (LHCb::Particle::Range::const_iterator i_p = myPartsToBan.begin();myPartsToBan.end()!=i_p;i_p++)
         {
             LHCb::Particle::ConstVector particleToBan_daug = (*i_p)->daughtersVector();
             if( particleToBan_daug.size() == 0 ){
