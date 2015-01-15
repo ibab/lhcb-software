@@ -7,7 +7,9 @@
 ! 2015-01-15 - Roel Aaij
  - Online xml files are now written for FEST, use them.
  - Allow Hlt2 to run on MDF files in partition TEST.
-
+ - Hlt2 will run in partition LHCb2 on MDF files from disk. Make sure it actually
+   registers it's interest in MDF events with the buffer manager.
+   
 ! 2015-01-06 - Roel Aaij
  - Update MooreOnline.ForceMDF to ForceMDFInput
  - Fix printing of timing table in runOfflineOnline.py

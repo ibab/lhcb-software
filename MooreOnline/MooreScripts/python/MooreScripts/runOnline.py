@@ -83,7 +83,7 @@ def start(**kwargs) :
             ApplicationMgr().ExtSvc.append( HackRunNrAndGPSSvc() )
         elif HltLevel == 'Hlt2' :     
             mooreOnline.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
-    elif OnlineEnv.PartitionName == 'TEST' and HltLevel == 'Hlt2' :     
+    elif OnlineEnv.PartitionName in ('TEST', 'LHCb2') and HltLevel == 'Hlt2' :     
             mooreOnline.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
 
     OnlineEnv.end_config(False)
