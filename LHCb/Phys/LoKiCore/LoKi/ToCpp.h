@@ -37,6 +37,12 @@ namespace Decays
 {
   class iNode ;
 }
+namespace Gaudi
+{
+  class StringKey ;
+  class Time      ;
+  class TimeSpan  ;
+}
 // ============================================================================
 namespace Gaudi
 {
@@ -54,6 +60,9 @@ namespace Gaudi
     GAUDI_API std::string toCpp ( const LoKi::Point3D&       o ) ;
     GAUDI_API std::string toCpp ( const LHCb::ParticleID&    o ) ;
     GAUDI_API std::string toCpp ( const Decays::iNode&       o ) ;
+    GAUDI_API std::string toCpp ( const Gaudi::Time&         o ) ;
+    GAUDI_API std::string toCpp ( const Gaudi::TimeSpan&     o ) ;
+    GAUDI_API std::string toCpp ( const Gaudi::StringKey&    o ) ;
     // ========================================================================
   }
   // ==========================================================================
@@ -77,6 +86,8 @@ namespace Gaudi
     inline std::string toCpp ( const long   o        ) { return toString ( o ) ; }
     inline std::string toCpp ( const unsigned long o ) { return toString ( o ) ; }
     inline std::string toCpp ( bool o ) { return o ? "true" : "false" ; }
+    inline std::string toCpp ( const long long   o        ) { return toString ( o ) ; }
+    inline std::string toCpp ( const unsigned long long o ) { return toString ( o ) ; }
     // ========================================================================
     GAUDI_API 
     std::string        toCpp ( const LoKi::AuxFunBase& o  ) ;
@@ -128,7 +139,9 @@ namespace Gaudi
     //
     template <class TYPE1, class TYPE2>
     inline std::string toCpp( const std::tuple<TYPE1,TYPE2>& o ) 
-    { return toCpp ( std::get<0> ( o ) ) + ", " + toCpp( std::get<1>( o ) ) ; } 
+    { return 
+        toCpp ( std::get<0> ( o ) ) + ", " + 
+        toCpp ( std::get<1> ( o ) ) ; } 
     //
     template <class TYPE1, class TYPE2, class TYPE3>
     inline std::string toCpp( const std::tuple<TYPE1,TYPE2,TYPE3>& o ) 
