@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-01-15 - Eduardo Rodrigues
+ - Added python/StrippingSettings/__init__.py to please CMake
+
 !========================= StrippingSettings v2r33 2014-11-25 =========================
 
 ! 2014-11-25 - Andrea Contu
