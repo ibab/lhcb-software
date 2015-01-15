@@ -4,6 +4,8 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!======================== JetAccessories v3r10 2015-01-15 =========================
+
 ! 2015-01-15 - Pieter David
  - use LHCb::Particle::Range instead of LHCb::Particles for the banned particles in LoKi::PFJetMaker
 
