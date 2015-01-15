@@ -22,6 +22,14 @@
 #include "GaudiKernel/boost_allocator.h"
 #include <type_traits>
 
+#if __cplusplus < 201100L
+namespace LHCb_MemPoolAlloc_details {
+    // implement the equivalent of C++11 std::conditional...
+    template<bool B, class T, class F> struct conditional { typedef T type; };
+    template<class T, class F> struct conditional<false, T, F> { typedef F type; };
+}
+#endif
+
 namespace LHCb
 {
 
@@ -69,10 +77,17 @@ namespace LHCb
     /// operator new
     inline static void* operator new ( size_t size )
     {
+#if __cplusplus < 201100L
+      typedef boost::singleton_pool<T, sizeof(T),
+                                         Allocator,
+                                         typename LHCb_MemPoolAlloc_details::conditional<Mutex,boost::details::pool::default_mutex,boost::details::pool::null_mutex>::type,
+                                         NextSize> pool;
+#else 
       using pool = boost::singleton_pool<T, sizeof(T),
                                          Allocator,
                                          typename std::conditional<Mutex,boost::details::pool::default_mutex,boost::details::pool::null_mutex>::type,
                                          NextSize>;
+#endif
       return ( sizeof(T) == size ?  pool::malloc() 
                                  : ::operator new ( size ) );
     }
@@ -80,10 +95,17 @@ namespace LHCb
     /// Operator delete
     inline static void operator delete ( void* pObj )
     {
+#if __cplusplus < 201100L
+      typedef boost::singleton_pool<T, sizeof(T),
+                                         Allocator,
+                                         typename LHCb_MemPoolAlloc_details::conditional<Mutex,boost::details::pool::default_mutex,boost::details::pool::null_mutex>::type,
+                                         NextSize> pool;
+#else
       using pool = boost::singleton_pool<T, sizeof(T),
                                          Allocator,
                                          typename std::conditional<Mutex,boost::details::pool::default_mutex,boost::details::pool::null_mutex>::type,
                                          NextSize>;
+#endif
       pool::is_from(pObj) ? pool::free(pObj) 
                           : ::operator delete ( pObj );
     }

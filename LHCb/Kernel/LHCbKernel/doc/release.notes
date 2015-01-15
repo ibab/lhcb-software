@@ -3,6 +3,8 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
+! 2015-01-15 - Gerhard Raven
+ - MemPoolAlloc: provide pre-C++11 version of commit below...
 
 !========================= LHCbKernel v15r7 2015-01-14 =========================
 ! 2014-12-26 - Gerhard Raven
