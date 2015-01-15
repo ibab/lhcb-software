@@ -3,6 +3,41 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v47r4>2015-01-15 Brunel v47r4</A></H1><PRE>
+This version uses projects:
+ LCG_72root6 (ROOT 6.02.03), Gaudi v26r0, LHCb v38r4, Lbcom v16r3,
+ Rec v17r3 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- New functionality
+  . Add option to veto hit pairs in OT for which one hit falls outside the OT
+    readout window. Disabled by default (OTDAQ v7r18)
+
+- New Physics Tuning
+  . New parametrisations in 'PatMatchTool', lower ghost rate and higher
+    efficiency, mostly for low p tracks (PatAlgorithms v4r38)
+  . Update default tunes to use MC12TuneV2 for all data types (removes 
+    dependency on NeuroBayes, previously used for pre-2011 data and MC)
+    (ChargedProtoANNPID v2r9)
+  . Change 3 piece trajectory approximation in OT (OTDet v8r14)
+  . Add support for mono layer alignment in OT geometry (OTDet v8r14)
+  . Fix position of wire locators for short modules (OTDet v8r14)
+
+- Performance improvements
+  . C++ optimisations (FastVelo v1r18, PatAlgorithms v4r38, PatKernel v2r8,
+      PatVeloTT v4r4, TfKernel v2r29, TfTools v1r20, TsaKernel v3r8,
+      TrackExtrapolators v2r35, TrackFitEvent v6r5, TrackTools v5r6,
+      MuonDet v9r17, LHCbKernel v15r7, LHCbMath v3r53, OTDAQ v7r18,
+      GaudiKernel v31r3, GaudiCoreSvc v3r2)
+  . Switch internal representation of the magnetic field grid to single precision
+    (DetDesc v18r35, Magnet v7r8)
+
+- Changes to monitoring
+  . Change GhostClassification tools in PatChecking.py (TrackSys v9r4)
+
+- Changes to QMTests
+  . Remove enableANNPrintout.py and all use of it, was needed to print
+    NeuroBayes errors, therefore obsolete since NB is not used anymore.
+
 </PRE><H1><A NAME=v47r3p1>2014-12-15 Brunel v47r3p1</A></H1><PRE>
 This version uses projects:
  LCG_71root6 (ROOT 6.02.02), Gaudi v25r6, LHCb v38r3p1, Lbcom v16r2p1,
