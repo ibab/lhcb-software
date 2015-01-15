@@ -5,6 +5,8 @@
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================= SelectionLine v1r4 2015-01-15 =========================
+
 ! 2014-12-30 - Gerhard Raven
  - avoid clash between make_unique and std::make_unique when compiling as
    C++14 (somewhere someone is doing a 'using namespace std' ???) 
