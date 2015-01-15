@@ -132,7 +132,7 @@ int _mbmsrv_alloc_reqone_id(ServerBMID bm,int user_type,int desired_type, int* u
 int _mbmsrv_free_reqone_id(ServerBMID bm,int user_type,int user_type_one);
 /// Find matching req
 int _mbmsrv_match_req (ServerBMID bm, int partid, int evtype, TriggerMask& trmask, 
-		       UserMask& mask0, UserMask& mask1, UserMask* one_masks, int* match_or, int gamble);
+		       UserMask& mask0, UserMask& mask1, UserMask* one_masks, int* match_or);
 /// Remove event from active event queue
 int _mbmsrv_del_event(ServerBMID bm, USER* u, EVENT* e);
 /// clear events with freqmode = notall
@@ -543,8 +543,7 @@ int _mbmsrv_check_wsp(ServerBMID bm)  {
 
 /// Find matching req
 int _mbmsrv_match_req(ServerBMID bm, int partid, int evtype, TriggerMask& trmask, 
-		      UserMask& mask0, UserMask& mask1, UserMask* one_masks, 
-		      int* match_or, int gamble)  
+		      UserMask& mask0, UserMask& mask1, UserMask* one_masks, int* match_or)  
 {
   int i;
   REQ *rq;
@@ -567,9 +566,9 @@ int _mbmsrv_match_req(ServerBMID bm, int partid, int evtype, TriggerMask& trmask
 	continue;
       else if (  dummy.mask_and(trmask, rq->vt_mask) )  
 	continue;
-      else if ( !gamble && rq->freq < 100.0 )  
-	continue;
-      else if ( rq->freq < 100.0 && (float(::rand())/float(RAND_MAX)*100.0) > rq->freq)
+      // Somehow what comes out is twice the rate. Need to divide rate by 2
+      else if ( rq->freq < 100.0 &&
+		(float(::rand())/float(RAND_MAX)*100.0) > rq->freq/2.0 )
         continue;
 
       if ( rq->user_type == BM_REQ_ONE )
@@ -657,7 +656,7 @@ int _mbmsrv_efree (ServerBMID bm, USER* u, EVENT* e)  {
 	}
       }
       int match_or = 0;
-      _mbmsrv_match_req(bm,u->partid,u->ev_type,u->ev_trmask,e->umask0,e->umask1,e->one_mask,&match_or, 0);
+      _mbmsrv_match_req(bm,u->partid,u->ev_type,u->ev_trmask,e->umask0,e->umask1,e->one_mask,&match_or);
       int rlen   = ((u->ev_size + c->bytes_p_Bit) >> c->shift_p_Bit) << c->shift_p_Bit;
       e->ev_add  = u->space_add;
       e->ev_size = rlen;
@@ -1171,7 +1170,7 @@ int mbmsrv_declare_event(ServerBMID bm, MSG& msg)    {
   }
   int match_or = 0;
   if ( dest_uid > 0 ) e->umask0.set(dest_uid);
-  _mbmsrv_match_req(bm,u->partid,evtype,trmask,e->umask0,e->umask1,e->one_mask,&match_or,1);
+  _mbmsrv_match_req(bm,u->partid,evtype,trmask,e->umask0,e->umask1,e->one_mask,&match_or);
   e->ev_add  = u->space_add;
   e->ev_size = len;
   if ( match_or )   {
