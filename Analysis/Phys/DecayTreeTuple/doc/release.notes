@@ -4,9 +4,14 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
-!========================= DecayTreeTuple v4r12 2014-12-15 =========================
-! 2014-12-10 - Olli Lupton
+!======================= DecayTreeTuple v4r13 2015-01-16 =====================
 
+! 2015-01-16 - Eduardo Rodrigues
+ - Added python/DecayTreeTuple/__init__.py to please CMake.
+
+!========================= DecayTreeTuple v4r12 2014-12-15 =========================
+
+! 2014-12-10 - Olli Lupton
  - More changes to TupleToolSwimmingInfo:
   . Handle events where multiple candidates were swum. This is more complicated
     because there is no longer a 1:1 mapping from tracks to swimming reports.
