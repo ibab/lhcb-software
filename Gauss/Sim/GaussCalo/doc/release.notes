@@ -8,6 +8,7 @@
 !                  : G4 actions, etc for LHCb calorimeters
 ! -----------------------------------------------------------------------------
 
+!======================== GaussCalo v10r0p1 2015-01-16 ========================
 ! 2014-11-28 - Gloria Corti
  - Try to fix compilation errors with --pedantic
 
