@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinciTrackScaling
 ################################################################################
-gaudi_subdir(DaVinciTrackScaling v1r3p1)
+gaudi_subdir(DaVinciTrackScaling v1r4)
 
 gaudi_depends_on_subdirs(GaudiAlg
                          Event/TrackEvent

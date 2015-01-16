@@ -4,6 +4,11 @@
 ! Purpose     : Track scaling and smearing
 !-----------------------------------------------------------------------------
 
+!=================== DaVinciTrackScaling v1r4 2015-01-16 =====================
+
+! 2015-01-16 - Eduardo Rodrigues
+ - Added python/DaVinciTrackScaling/__init__.py to please CMake.
+
 !========================= DaVinciTrackScaling v1r3p1 2014-10-30 =========================
 
 ! 2014-09-19 - Marco Clemencic 
