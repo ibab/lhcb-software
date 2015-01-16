@@ -4,6 +4,11 @@
 ! Purpose     : Jet Tagging Package
 ! -----------------------------------------------------------------------------
 
+!========================= JetTagging v1r5 2015-01-16 =========================
+
+! 2015-01-16 - Eduardo Rodrigues
+ - Added python/JetTagging/__init__.py to pleasee CMake.
+
 !========================= JetTagging v1r4 2014-12-15 =========================
 
 ! 2014-11-07 Murilo Rangel
