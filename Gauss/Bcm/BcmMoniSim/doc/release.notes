@@ -5,6 +5,7 @@
 ! Purpose     : Histograming for the BCM stations
 !----------------------------------------------------------------------------
 
+!======================= BcmMoniSim v2r0p1 2015-01-16 =======================
 ! 2014-11-26 - Gloria Corti
  - fixes for warning when compiling with --pedantic
 
