@@ -81,11 +81,32 @@ LoKi::Hybrid::Base::Base
   const std::string& name   ,
   const IInterface*  parent )
   : GaudiTool ( type , name , parent )
-  //
-  , m_pyInit   ( false )
-  , m_showCode ( false )
+    //
+  , m_pyInit     ( false )
+  , m_showCode   ( false )
+  , m_makeCpp    ( false )
+  , m_cppname    ()
+  , m_cpplines   ( { "#include \"GaudiKernel/Kernel.h\"" , 
+                     "#include \"GaudiKernel/System.h\"" ,
+                     "#include \"LoKi/Functors.h\""      , } )
+  , m_allfuncs   () 
 {
-  declareProperty( "ShowCode" , m_showCode , "Flag to display the prepared python code") ;
+  declareProperty ( "ShowCode" , 
+                    m_showCode , 
+                    "Flag to display the prepared python code") ;
+  declareProperty ( "MakeCpp"  , 
+                    m_makeCpp  , 
+                    "Generate C++ code for created functors ") ;
+  //
+  m_cppname = this->name() + ".cpp" ;
+  if ( 0 == m_cppname.find ( "ToolSvc." ) ) { m_cppname.erase ( 0 , 8 ) ; }
+  declareProperty ( "CppFileName", 
+                    m_cppname    , 
+                    "File name for C++ code for created functors ") ;
+  //
+  declareProperty ( "CppLines" , 
+                    m_cpplines , 
+                    "C++ (header) lines to be included") ;
 }
 // ============================================================================
 // Destructor (virtual and protected)

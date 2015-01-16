@@ -4,9 +4,18 @@
 // ============================================================================
 // Include files
 // ============================================================================
+// STD &SLT
+// ============================================================================
+#include <vector>
+#include <map>
+// ============================================================================
 // GaudiAlg/GaudiTools 
 // ============================================================================
 #include "GaudiAlg/GaudiTool.h"
+// ============================================================================
+// LoKi 
+// ============================================================================
+#include "LoKi/BasicFunctors.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -31,21 +40,29 @@ namespace LoKi
      */
     class Base : public                 GaudiTool 
     {
+      // ======================================================================
     public:
+      // ======================================================================
       typedef std::vector<std::string> Strings ;
+      // ======================================================================
     public:
+      // ======================================================================
       /// initialization of the tool 
       virtual StatusCode initialize () ;
       /// finalization   of the tool 
-      virtual StatusCode finalize  () ;
+      virtual StatusCode finalize   () ;
+      // ======================================================================
     protected:
+      // ======================================================================
       /** execute the python code 
        *  @attention the method must be invoked *ONLY* with the appropriate scope!!!
        *  @param code python code 
        *  @return status code 
        */
       StatusCode executeCode ( const std::string& code ) const ;
+      // ======================================================================
     protected:    
+      // ======================================================================
       /// Standard constructor
       Base 
       ( const std::string& type   , 
@@ -53,15 +70,27 @@ namespace LoKi
         const IInterface*  parent ) ;
       /// destructor: virtual and protected 
       virtual ~Base( );
+      // ======================================================================
     protected:
+      // ======================================================================
       /// helper method to decrease amount of the typing
       template <class TYPE>
-      inline void       _set 
+      void       _set 
       ( TYPE*& local , const TYPE& right ) ;
+      // ======================================================================
+      template <class TYPE1,class TYPE2>
+      StatusCode _get_
+      ( const std::string&                                            code    , 
+        LoKi::Functor<TYPE1,TYPE2>*&                                  local   , 
+        typename LoKi::Assignable<LoKi::Functor<TYPE1,TYPE2> >::Type& output  ) ;
+      // ======================================================================
     public:
+      // ======================================================================
       // flag to show the prepared code 
       bool showCode () const { return m_showCode ; }
+      // ======================================================================
     protected:
+      // ======================================================================
       /** prepare the actual python code from the functor:
        *  @param modules list of modules 
        *  @param actor the actual actor
@@ -76,29 +105,52 @@ namespace LoKi
         const std::string& code                , 
         const Strings&     lines   = Strings() , 
         const std::string& context = ""        ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled 
       Base () ; ///< the default constructor is disabled 
       // copy constructor is disabled 
       Base           ( const Base& ) ; ///< copy constructor is disabled 
       // assignement operator is disabled 
       Base& operator=( const Base& ) ; ///< assignement operator is disabled 
+      // ======================================================================
     protected:
+      // ======================================================================
       /// execute the code 
       StatusCode executeCode () ;
+      // ======================================================================
     private: 
-      bool                     m_pyInit  ;
-      // flag to displaythe prepared code 
-      bool                     m_showCode ; ///< flag to displa ythe prepared code 
+      // ======================================================================
+      bool                     m_pyInit   ;
+      // flag to display the prepared code 
+      bool                     m_showCode ; ///< flag to display the prepared code 
+      // ======================================================================
+    protected : // some stuff to deal with generation of C++ code 
+      // ======================================================================
+      // make c++ code ?
+      bool                           m_makeCpp    ; ///< make C++ code ?
+      // file name for C++ code 
+      std::string                    m_cppname    ; ///< file name for C++ code 
+      // header lines for C++ code 
+      std::vector<std::string>       m_cpplines   ; ///< header lines for C++ code 
+      /// 
+      // information about the created functors 
+      typedef std::pair<std::string,std::string>  RECORD     ;
+      typedef std::vector<RECORD>                 FUNCTIONS  ;
+      typedef std::map<std::string,FUNCTIONS>     ALLFUNCS   ;
+      ALLFUNCS                       m_allfuncs   ;
+      // ======================================================================
     } ;  
-  } // end of namespace LoKi::Hybrid 
-} // end of namespace LoKi 
+    // ========================================================================
+  } //                                            end of namespace LoKi::Hybrid 
+  // ==========================================================================
+} //                                                      end of namespace LoKi 
 // ============================================================================
 // helper method to decrease the typing
 // ============================================================================
 template <class TYPE>
-inline void LoKi::Hybrid::Base::_set 
-( TYPE*& local , const TYPE& right ) 
+inline void LoKi::Hybrid::Base::_set ( TYPE*& local , const TYPE& right ) 
 { 
   if ( 0 != local ) 
   { 
@@ -116,6 +168,42 @@ inline void LoKi::Hybrid::Base::_set
             << System::typeinfoName( typeid( *local) ) << endmsg  ;
   } ;
   //
+}
+// ============================================================================
+template <class TYPE1,class TYPE2>
+inline 
+StatusCode LoKi::Hybrid::Base::_get_
+( const std::string&                                            code    , 
+  LoKi::Functor<TYPE1,TYPE2>*&                                  local   , 
+  typename LoKi::Assignable<LoKi::Functor<TYPE1,TYPE2> >::Type& output  ) 
+{
+  // ==========================================================================
+  //
+  // 1) clear the placeholder, if needed
+  //
+  if ( 0 != local ) { delete local ; local = 0 ; }
+  //
+  // 2) execute the code 
+  //
+  //    only here modification is needed to load the functo form plugin
+  //
+  StatusCode sc = this->executeCode ( code ) ;
+  if ( sc.isFailure() ) 
+  { return Error ( "Error from LoKi::Hybrid::Base::executeCode"      ) ; } // RETURN 
+  if ( 0 == local     ) 
+  { return Error ( "Invalid object for the code"                     ) ; } // RETURN 
+  // assign the result 
+  output = *local ;                                                        // ASSIGN
+  //
+  if ( this->m_makeCpp ) 
+  {
+    std::string funtype = System::typeinfoName ( typeid( output ) ) ;
+    std::string cppcode = output.toCpp() ;
+    m_allfuncs[ funtype ].push_back ( std::make_pair ( code , cppcode ) ) ;
+  }
+  //
+  return StatusCode::SUCCESS ;
+  // =========================================================================
 }
 // ============================================================================
 // The END 
