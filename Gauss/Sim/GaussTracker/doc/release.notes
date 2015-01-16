@@ -5,6 +5,7 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+!====================== GaussTracker v7r0p1 2015-01-16 =======================
 ! 2014-12-01 - Gloria Corti
  - fix compilation warnings with --pedantic'
 
