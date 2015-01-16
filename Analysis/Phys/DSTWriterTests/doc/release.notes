@@ -4,6 +4,11 @@
 ! Purpose     : Options to generate selection or Micro DSTs and scripts to test them.
 !-----------------------------------------------------------------------------
 
+!===================== DSTWriterTests v2r5 2015-01-16 ========================
+
+! 2015-01-16 - Eduardo Rodrigues
+ - Added python/DSTWriterTests/__init__.py to please CMake.
+
 !========================= DSTWriterTests v2r4p2 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic
