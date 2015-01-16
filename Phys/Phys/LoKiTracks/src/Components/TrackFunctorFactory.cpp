@@ -265,16 +265,26 @@ inline StatusCode LoKi::Hybrid::TrackFunctorFactory::_get
     makeCode  ( m_modules , m_actor , pycode , m_lines , context ) ;
   // define the scope:  ATTENTION: the scope is locked!!
   LoKi::Hybrid::TrackFactoryLock lock ( this ) ; 
-  // clear the placeholder:
-  if ( 0 != local ) { delete local ; local = 0 ; }
-  // execute the code 
-  sc = executeCode ( code ) ;
-  if ( sc.isFailure() ) 
-  { return Error ( "Error from LoKi::Hybrid::Base::executeCode"      ) ; } // RETURN 
-  if ( 0 == local     ) 
-  { return Error ( "Invalid object for the code '" + pycode + "'" ) ; } // RETURN 
-  // assign the result 
-  output = *local ;                                                // ASSIGN
+  //
+  // move it into base class ???
+  //
+  // // clear the placeholder:
+  // if ( 0 != local ) { delete local ; local = 0 ; }
+  // // execute the code 
+  // sc = executeCode ( code ) ;
+  // if ( sc.isFailure() ) 
+  // { return Error ( "Error from LoKi::Hybrid::Base::executeCode"      ) ; } // RETURN 
+  // if ( 0 == local     ) 
+  // { return Error ( "Invalid object for the code '" + pycode + "'"    ) ; } // RETURN 
+  // // assign the result 
+  // output = *local ;                                                        // ASSIGN
+  //
+  //
+  // use the base class method 
+  sc = LoKi::Hybrid::Base::_get_ ( code , local , output ) ;
+  if ( sc.isFailure() )
+  { return Error ( "Invalid object for the code '" + pycode + "'"    ) ; } // RETURN
+  //
   //
   return StatusCode::SUCCESS ;
   // =========================================================================
@@ -323,6 +333,12 @@ LoKi::Hybrid::TrackFunctorFactory::TrackFunctorFactory
     ( "Lines"   , 
       m_lines   , 
       "Additional Python lines to be executed"   ) ;
+  // ==========================================================================
+  // C++
+  // ==========================================================================
+  m_cpplines.push_back ( "#include \"LoKi/TrackTypes.h\"" ) ;
+  m_cpplines.push_back ( "#include \"LoKi/Tracks.h\""     ) ;
+  m_cpplines.push_back ( "#include \"LoKi/TrSources.h\""  ) ;  
   // ==========================================================================
 } 
 // ============================================================================
