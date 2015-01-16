@@ -9,11 +9,14 @@ Development release, based on Gaudi v26r0, LHCb v38r4, Rec v17r4 and Phys v19r4.
 Uses LCG_72root6 with ROOT 6.02.03.
 
 - Packages updated :
-   Ex/MicroDSTExample v2r15, MicroDST/MicroDSTConf v2r12, Hlt/HltSelChecker v12r3,
-   Phys/AnalysisConf v2r4, Phys/DaVinciMonitors v1r20,
+   Analysis/Ostap v1r5, Ex/MicroDSTExample v2r15, MicroDST/MicroDSTConf v2r12,
+   Hlt/HltSelChecker v12r3, Phys/AnalysisConf v2r4, Phys/DaVinciMonitors v1r20,
    Phys/DaVinciTrackRefitting v1r5, Phys/DaVinciTrackScaling v1r4,
    Phys/DecayTreeTuple v4r13, Phys/DSTWriterTests v2r5, Phys/JetAccessoriesMC v2r8
    Phys/JetTagging v1r5, Phys/TeslaTools v1r2, Rich/RichPIDQC v1r9
+
+- In Analysis/Ostap v1r5 :
+  . HParamDeco.py: typo fixed in h1_bernstein.
 
 - In Phys/TeslaTools v1r2 :
   . Major change to accommodate the ReportConvert tool (for versioning).

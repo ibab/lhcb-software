@@ -48,8 +48,8 @@ use  HltSelChecker              v12r3    Hlt    # Patrick Koppenburg
 ####################################################################
 
 use  AnalysisPython             v2r34    Phys
-use  PyAna                      v1r3p1   Analysis
-use  Ostap                      v1r4     Analysis
+use  PyAna                      v1r3p1   Analysis # Vanya Belyaev
+use  Ostap                      v1r5     Analysis # Vanya Belyaev
 
 ####################################################################
 
