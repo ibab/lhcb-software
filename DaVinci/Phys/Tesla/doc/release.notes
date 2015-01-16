@@ -4,12 +4,14 @@ Package Coordinator : Sean Benson
 Purpose             : Turbo Stream Analysis
 !-----------------------------------------------------------------------------
 
+!=========================== Tesla v1r2 2015-01-16 ===========================
+
 ! 2015-1-15 - Sean Benson
  - Update to tesla.containers and tesla.default tests.
  - Lumi algorithms and Turbo raw bank conversion included in Tesla.
 
 ! 2015-01-15 - Eduardo Rodrigues
- - Added python/Tesla/__init__.py to please CMake
+ - Added python/Tesla/__init__.py to please CMake.
 
 !========================= Tesla v1r1 2014-12-17 =========================
 
