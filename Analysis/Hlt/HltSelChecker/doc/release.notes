@@ -4,6 +4,10 @@
 ! Purpose     : Checking and debugging of Hlt2
 !-----------------------------------------------------------------------------
 
+!========================= HltSelChecker v12r3 2015-01-16 =========================
+
+ - Added python/HltSelChecker/__init__.py to please CMake
+
 !========================= HltSelChecker v12r2 2013-12-18 =========================
 
 ! 2013-12-06 - Rob Lambert
