@@ -750,26 +750,37 @@ StatusCode OTt0OnlineClbr::writeCondDBXMLs(double t0s[3][4][4][9])
 
 StatusCode OTt0OnlineClbr::fit_single_hist(TH1D* hist, int s, int l, int q, int m, double& result)
 {
-  if(hist == 0 || hist->GetEntries() < 100)
+  debug() << hist << " " << s << " " << l << " " << q << " "<< m << endmsg;
+  
+  if(!hist){
+    Error("Histogram not found " );
+    return StatusCode::FAILURE;
+  }else if(hist->GetEntries() < 100)
+  {
+    if(!(q % 2 == 0 && m == 8))
     {
-      if(!(q % 2 == 0 && m == 8))
-	{
-	  std::cout << "FAIL: " << s<< " "<<l <<" "<<q<< " "<<m << std::endl;
-        }
-      return 0.0;
+      std::cout << "FAIL: " << s<< " "<<l <<" "<<q<< " "<<m << std::endl;
     }
+    return StatusCode::FAILURE;
+  }
+  
   double left = hist->GetXaxis()->GetXmin();
   double right = hist->GetXaxis()->GetXmax();
   for(int i = 0; i < 5; i++)
-    {
-      hist->Fit("gaus", "QRLL", "", left, right);
-      left = hist->GetFunction("gaus")->GetParameter(1) - 1.0 * hist->GetFunction("gaus")->GetParameter(2);
-      right = hist->GetFunction("gaus")->GetParameter(1) + 1.0 * hist->GetFunction("gaus")->GetParameter(2);
-    }
+  {
+    debug() << "Fitting " << endmsg ;
+    
+    hist->Fit("gaus", "QRLL", "", left, right);
+    debug() << "function " << hist->GetFunction("gaus") << endmsg;
+    
+    
+    left = hist->GetFunction("gaus")->GetParameter(1) - 1.0 * hist->GetFunction("gaus")->GetParameter(2);
+    right = hist->GetFunction("gaus")->GetParameter(1) + 1.0 * hist->GetFunction("gaus")->GetParameter(2);
+  }
   std::cout << "FITTING: " << s<< " "<<l <<" "<<q<< " "<<m <<" "<<hist->GetFunction("gaus")->GetParameter(1)<< " "<< hist->GetFunction("gaus")->GetParameter(2)<<std::endl;
-
+  debug() << "Result " << endmsg ;
   result =  hist->GetFunction("gaus")->GetParameter(1);
-
+  
   return StatusCode::SUCCESS;
 }
 
