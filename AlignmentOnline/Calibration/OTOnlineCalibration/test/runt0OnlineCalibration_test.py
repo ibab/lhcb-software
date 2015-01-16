@@ -7,8 +7,6 @@ gaudirun.py runt0OnlineCalibration_test.py
 from Configurables import GaudiSequencer
 from Configurables import OTt0OnlineClbr
 
-simulation = True 
-
 
 OTGaudiSeq = GaudiSequencer("OTt0OnlineClbrSeq")
 
@@ -17,9 +15,12 @@ OTt0OnlineClbrAlg = OTt0OnlineClbr("OTt0OnlineClbrAlg")
 myFiles1 = [ "clbr_hists.root" ]
 
 OTt0OnlineClbrAlg.InputFiles  = myFiles1
-OTt0OnlineClbrAlg.xmlFilePath = "/tmp/fdettori/"
+#OTt0OnlineClbrAlg.xmlFilePath = "/tmp/fdettori/"
+OTt0OnlineClbrAlg.xmlFilePath = "/tmp/lgrillo/"
 OTt0OnlineClbrAlg.OutputLevel = 2
 OTt0OnlineClbrAlg.Simulation = True 
+
+simulation = OTt0OnlineClbrAlg.Simulation
 
 
 

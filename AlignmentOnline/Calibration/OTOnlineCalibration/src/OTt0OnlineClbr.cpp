@@ -243,7 +243,16 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
 	     for(int m = 8; m >= 0; m--)
 	       {
 		 std::string histName = "OTModuleClbrMon/" + stationNames[s] + "/" + layerNames[l] + "/" + quarterNames[q] + "/" + moduleNames[m] + "/driftTimeResidual";
+		 std::string histName01L = "OTModuleClbrMon/" + stationNames[s] + "/" + layerNames[l] + "/" + quarterNames[q] + "/" + moduleNames[m] + "/driftTimeResidual01L";
+		 std::string histName01R = "OTModuleClbrMon/" + stationNames[s] + "/" + layerNames[l] + "/" + quarterNames[q] + "/" + moduleNames[m] + "/driftTimeResidual01R";
+		 std::string histName23L = "OTModuleClbrMon/" + stationNames[s] + "/" + layerNames[l] + "/" + quarterNames[q] + "/" + moduleNames[m] + "/driftTimeResidual23L";
+		 std::string histName23R = "OTModuleClbrMon/" + stationNames[s] + "/" + layerNames[l] + "/" + quarterNames[q] + "/" + moduleNames[m] + "/driftTimeResidual23R";
+
 		 TH1D* hist = (TH1D*)f->Get(histName.c_str());
+		 TH1D* hist01L = (TH1D*)f->Get(histName01L.c_str());
+		 TH1D* hist01R = (TH1D*)f->Get(histName01R.c_str());
+		 TH1D* hist23L = (TH1D*)f->Get(histName23L.c_str());
+		 TH1D* hist23R = (TH1D*)f->Get(histName23R.c_str());
 		 
 		 int modulen = m + 9 * (q + 4 * (l + 4 * s));
 	
@@ -274,10 +283,15 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
 		 double residual_23L=0.0;
 		 double residual_23R=0.0;
 
-		 StatusCode sc_01L = fit_single_hist(m_histModuleDriftTimeResidual01L[s][l][q][m],s,l,q, m, residual_01L);
-		 StatusCode sc_01R = fit_single_hist(m_histModuleDriftTimeResidual01R[s][l][q][m],s,l,q, m, residual_01R);
-		 StatusCode sc_23L = fit_single_hist(m_histModuleDriftTimeResidual23L[s][l][q][m],s,l,q, m, residual_23L);
-		 StatusCode sc_23R = fit_single_hist(m_histModuleDriftTimeResidual23R[s][l][q][m],s,l,q, m, residual_23R);
+		 // StatusCode sc_01L = fit_single_hist(m_histModuleDriftTimeResidual01L[s][l][q][m],s,l,q, m, residual_01L);
+		 // StatusCode sc_01R = fit_single_hist(m_histModuleDriftTimeResidual01R[s][l][q][m],s,l,q, m, residual_01R);
+		 // StatusCode sc_23L = fit_single_hist(m_histModuleDriftTimeResidual23L[s][l][q][m],s,l,q, m, residual_23L);
+		 // StatusCode sc_23R = fit_single_hist(m_histModuleDriftTimeResidual23R[s][l][q][m],s,l,q, m, residual_23R);
+
+		 StatusCode sc_01L = fit_single_hist(hist01L,s,l,q, m, residual_01L);
+		 StatusCode sc_01R = fit_single_hist(hist01R,s,l,q, m, residual_01R);
+		 StatusCode sc_23L = fit_single_hist(hist23L,s,l,q, m, residual_23L);
+		 StatusCode sc_23R = fit_single_hist(hist23R,s,l,q, m, residual_23R);
 
 		 test[s][l][q][m] = 0.25*(residual_01L + residual_01R + residual_23L+ residual_23R);
 
@@ -766,18 +780,16 @@ StatusCode OTt0OnlineClbr::fit_single_hist(TH1D* hist, int s, int l, int q, int 
   
   double left = hist->GetXaxis()->GetXmin();
   double right = hist->GetXaxis()->GetXmax();
+
+
   for(int i = 0; i < 5; i++)
   {
-    debug() << "Fitting " << endmsg ;
-    
+    debug() << "Fitting " << endmsg ;    
     hist->Fit("gaus", "QRLL", "", left, right);
-    debug() << "function " << hist->GetFunction("gaus") << endmsg;
-    
-    
     left = hist->GetFunction("gaus")->GetParameter(1) - 1.0 * hist->GetFunction("gaus")->GetParameter(2);
     right = hist->GetFunction("gaus")->GetParameter(1) + 1.0 * hist->GetFunction("gaus")->GetParameter(2);
   }
-  std::cout << "FITTING: " << s<< " "<<l <<" "<<q<< " "<<m <<" "<<hist->GetFunction("gaus")->GetParameter(1)<< " "<< hist->GetFunction("gaus")->GetParameter(2)<<std::endl;
+  debug() << "FITTING: " << s<< " "<<l <<" "<<q<< " "<<m <<" "<<hist->GetFunction("gaus")->GetParameter(1)<< " "<< hist->GetFunction("gaus")->GetParameter(2)<< endmsg ;
   debug() << "Result " << endmsg ;
   result =  hist->GetFunction("gaus")->GetParameter(1);
   
