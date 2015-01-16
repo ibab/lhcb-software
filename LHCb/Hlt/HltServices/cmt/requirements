@@ -56,4 +56,4 @@ end_private
 
 
 application  hlttck_cdb_listkeys     ../utilities/main.cpp ../src/cdb.cpp ../src/tar.cpp
-macro_append hlttck_cdp_listkeys_dependencies  " HltServices "
+macro_append hlttck_cdb_listkeys_dependencies  " HltServices "
