@@ -112,17 +112,17 @@ LoKi::Listener& LoKi::Listener:: operator=( const LoKi::Listener& right )
 // ============================================================================
 StatusCode LoKi::Listener::subscribe  
 ( const std::string& incident , 
-  const long         priority ) const 
+  const long         priority ) 
 {
   // specific incident ? 
   Incidents::const_iterator ifind = std::find_if
     ( m_incidents.begin() , m_incidents.end() , match_first ( incident ) ) ;
   //
-  if ( m_incidents.end() != ifind ) { return StatusCode::SUCCESS ; }  
-  // {
-  //  return Warning ( "subscribe: Incident '" + incident + "' already in the list", 
-  //                   StatusCode::SUCCESS ) ;
-  // }
+  if ( m_incidents.end() != ifind ) 
+  {
+    return Warning ( "subscribe: Incident '" + incident + "' already in the list", 
+                     StatusCode::SUCCESS ) ;
+  }
   // 
   if ( !m_incSvc ) 
   {
@@ -131,9 +131,7 @@ StatusCode LoKi::Listener::subscribe
   }
   Assert ( !(!m_incSvc) , "Unable to get Incident Service" ) ;
   //
-  const IIncidentListener* iilc = this;
-  IIncidentListener*       iil  = const_cast<IIncidentListener*>(iilc);
-  m_incSvc->addListener ( iil , incident, priority ) ;
+  m_incSvc->addListener ( this , incident, priority ) ;
   m_incidents.push_back ( std::make_pair ( incident , priority ) ) ;
   //
   return StatusCode::SUCCESS ;
@@ -141,7 +139,8 @@ StatusCode LoKi::Listener::subscribe
 // ============================================================================
 // unsubscribe the incident
 // ============================================================================
-StatusCode LoKi::Listener::unsubscribe ( const std::string& incident ) const 
+
+StatusCode LoKi::Listener::unsubscribe ( const std::string& incident ) 
 {
   // no incidents? 
   if ( m_incidents.empty() ) 
@@ -162,9 +161,7 @@ StatusCode LoKi::Listener::unsubscribe ( const std::string& incident ) const
     //
     while ( !m_incidents.empty() )
     {
-      const IIncidentListener* iilc = this;
-      IIncidentListener*       iil  = const_cast<IIncidentListener*>(iilc);
-      m_incSvc->removeListener ( iil , m_incidents.back().first ) ;
+      m_incSvc->removeListener ( this , m_incidents.back().first ) ;
       m_incidents.pop_back() ;
     }
   }
@@ -184,9 +181,7 @@ StatusCode LoKi::Listener::unsubscribe ( const std::string& incident ) const
   }
   Assert ( !(!m_incSvc) , "Unable to get IIncident Service" ) ;
   //
-  const IIncidentListener* iilc = this;
-  IIncidentListener*       iil  = const_cast<IIncidentListener*>(iilc);
-  m_incSvc->removeListener ( iil , incident ) ;
+  m_incSvc->removeListener ( this , incident ) ;
   m_incidents.erase ( ifind ) ;
   //
   return StatusCode::SUCCESS ;

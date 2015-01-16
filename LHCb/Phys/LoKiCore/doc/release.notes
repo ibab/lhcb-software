@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-01-16 - Vanya Belyaev
+ - restore scalers and lstener 
+
 ! 2015-01-16 - Vanya Belyaev 
  - few more steps towards autogeneration of C++ code from functors 
 

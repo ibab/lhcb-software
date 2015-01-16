@@ -212,12 +212,7 @@ namespace LoKi
     private:
       // ======================================================================
       /// perform the initialization
-      void initialize_ ( const std::string& svc ) const ;
-      // ======================================================================
-    protected:
-      // ======================================================================
-      /// randomize it 
-      void randomize_  () const ;
+      void initialize_ ( const std::string& svc ) ;
       // ======================================================================
     public:
       // ======================================================================
@@ -247,9 +242,6 @@ namespace LoKi
       mutable long double m_next     ;                     //     the next tick 
       /// the previous tick 
       mutable long double m_previous ;                     // the previous tick 
-      // already initialized ? 
-      mutable bool        m_initialized ;
-      std::string         m_service     ;
       // ======================================================================
     };
     // ========================================================================

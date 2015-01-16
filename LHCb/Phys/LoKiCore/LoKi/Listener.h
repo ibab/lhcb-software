@@ -50,14 +50,14 @@ namespace LoKi
      *  @param incident (IN) the incident to be subscribed 
      *  @reuturn status code
      */
-    StatusCode subscribe   ( const std::string& incident      , 
-                             const long         priority  = 0 ) const  ;
+    StatusCode subscribe   ( const std::string& incident     , 
+                             const long         priority = 0 ) ;
     /** unsubscribe the incident 
      *  @param incident (IN) the incident to be subscribed  
      *                      (empty string - for all incidents)
      *  @reuturn status code
      */
-    StatusCode unsubscribe ( const std::string& incident = "" ) const ;
+    StatusCode unsubscribe ( const std::string& incident = "" ) ;
     /// get the list of subscribed incidents 
     const Incidents& incidents() const { return m_incidents ; }
     // ========================================================================
@@ -76,9 +76,9 @@ namespace LoKi
   private:
     // ========================================================================
     /// Incident service 
-    mutable LoKi::Interface<IIncidentSvc>  m_incSvc    ;  // Incident service 
+    LoKi::Interface<IIncidentSvc>  m_incSvc    ;            // Incident service 
     /// the list of incidents 
-    mutable Incidents                      m_incidents ;  // the list of incidents
+    Incidents                      m_incidents ;       // the list of incidents 
     // ========================================================================
   } ;
   // ==========================================================================
