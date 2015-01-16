@@ -3,7 +3,7 @@
 ###############################################
 
 package TeslaTools
-version           v1r1p1
+version           v1r2
 
 branches doc cmt options src python tests
 
