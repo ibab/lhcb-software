@@ -5,6 +5,7 @@
 ! Purpose     : GiGa vi1sualisation and UI 
 !-----------------------------------------------------------------------------
 
+!======================== GiGaVisUI v6r0p2 2015-01-16 ========================
 ! 2014-11-26 - Gloria Corti
  - Fix warning when compiling with --pedantic
 
