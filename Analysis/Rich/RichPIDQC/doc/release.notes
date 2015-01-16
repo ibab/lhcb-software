@@ -5,6 +5,11 @@
 ! Purpose     : PID Calbriation and Monitoring on Data
 !-----------------------------------------------------------------------------
 
+!========================= RichPIDQC v1r9 2015-01-16 ===========================
+
+! 2015-01-16 - Eduardo Rodrigues
+ - Added python/RichPIDQC/__init__.py to please CMake.
+
 !========================= RichPIDQC v1r8 2014-12-16 ===========================
 
 ! 2014-12-16 - Eduardo Rodrigues
