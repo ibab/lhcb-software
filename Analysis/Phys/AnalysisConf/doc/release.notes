@@ -5,6 +5,11 @@
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
 
+!========================= AnalysisConf v2r4 2015-01-16 =========================
+
+! 2015-01-16 - Eduardo Rodrigues
+ - Added python/AnalysisConf/__init__.py to please CMake.
+
 !========================= AnalysisConf v2r3 2013-08-01 =========================
 
 ! 2013-07-25 - Chris Jones
