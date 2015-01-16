@@ -18,7 +18,7 @@ OTt0OnlineClbrAlg.InputFiles  = myFiles1
 #OTt0OnlineClbrAlg.xmlFilePath = "/tmp/fdettori/"
 OTt0OnlineClbrAlg.xmlFilePath = "/tmp/lgrillo/"
 OTt0OnlineClbrAlg.OutputLevel = 2
-OTt0OnlineClbrAlg.Simulation = True 
+OTt0OnlineClbrAlg.Simulation = False 
 
 simulation = OTt0OnlineClbrAlg.Simulation
 

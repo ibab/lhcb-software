@@ -466,23 +466,20 @@ StatusCode OTt0OnlineClbr::readCondDB(double read_t0s[3][4][4][9])
         layerNames[l]+quarterNames[q]+"/"+stationNames[s]+layerNames[l]+ quarterNames[q]+moduleNames[m];
 	    
 	    Condition *myCond = get<Condition>( detSvc(), alignLoc );
-	    if(simulation){
-        debug() << "CAFFE : requiring doublevect " << endmsg;
+	    
+	    debug() << "CAFFE : requiring doublevect " << endmsg;
         
-	      std::vector<double> TZeroVec = myCond->paramAsDoubleVect( "TZero" );
-        
-        Module_t0 = 0; // Reset 
-        for(int i = 0; i<TZeroVec.size();i++){
-          debug() << "t0 per straw = "<<TZeroVec.at(i)<< endmsg; // for check     
-          Module_t0 +=TZeroVec.at(i);
-	      }
-	      read_t0s[s][l][q][m] = Module_t0/(TZeroVec.size()*1.0);
-        //in simcond the t0 are on straw bases, I make an average - for now - to make it module basis   
+	    std::vector<double> TZeroVec = myCond->paramAsDoubleVect( "TZero" );
+	    
+	    Module_t0 = 0; // Reset 
+	    for(int i = 0; i<TZeroVec.size();i++){
+	      debug() << "t0 per straw = "<<TZeroVec.at(i)<< endmsg; // for check     
+	      Module_t0 +=TZeroVec.at(i);
 	    }
-	    else{
-	      read_t0s[s][l][q][m] = myCond->paramAsDouble( "TZero" );
-	    }
-
+	    read_t0s[s][l][q][m] = Module_t0/(TZeroVec.size()*1.0);
+	    //in simcond the t0 are on straw bases, I make an average - for now - to make it module basis
+	    //also in LHCb cond the t0s are stored in a vector, using only one entry->same code
+	    
 	  }
 	}
 
