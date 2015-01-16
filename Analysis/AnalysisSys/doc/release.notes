@@ -3,6 +3,24 @@ Package             : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb analysis packages
 
+</PRE><H1><A NAME=v13r3>2015-01-16 Analysis v13r3</A></H1><PRE>
+
+Development release, based on Gaudi v26r0, LHCb v38r4, Rec v17r4 and Phys v19r4.
+Uses LCG_72root6 with ROOT 6.02.03.
+
+- Packages updated :
+   Ex/MicroDSTExample v2r15, MicroDST/MicroDSTConf v2r12, Hlt/HltSelChecker v12r3,
+   Phys/AnalysisConf v2r4, Phys/DaVinciMonitors v1r20,
+   Phys/DaVinciTrackRefitting v1r5, Phys/DaVinciTrackScaling v1r4,
+   Phys/DecayTreeTuple v4r13, Phys/DSTWriterTests v2r5, Phys/JetAccessoriesMC v2r8
+   Phys/JetTagging v1r5, Phys/TeslaTools v1r2, Rich/RichPIDQC v1r9
+
+- In Phys/TeslaTools v1r2 :
+  . Major change to accommodate the ReportConvert tool (for versioning).
+
+- All other packages :
+  . Added file python/<PackageName>/__init__.py to get rid of CMake build warnings.
+
 </PRE><H1><A NAME=v13r2p1>2014-12-16 Analysis v13r2p1</A></H1><PRE>
 Development release, based on Gaudi v25r6p1, LHCb v38r3p1 and Phys v19r3p1.
 
