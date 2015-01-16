@@ -3,10 +3,10 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v47r4>2015-01-15 Brunel v47r4</A></H1><PRE>
+</PRE><H1><A NAME=v47r4>2015-01-16 Brunel v47r4</A></H1><PRE>
 This version uses projects:
  LCG_72root6 (ROOT 6.02.03), Gaudi v26r0, LHCb v38r4, Lbcom v16r3,
- Rec v17r3 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+ Rec v17r4 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
 
 - New functionality
   . Add option to veto hit pairs in OT for which one hit falls outside the OT
