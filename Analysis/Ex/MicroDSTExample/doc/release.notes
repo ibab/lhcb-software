@@ -5,6 +5,11 @@
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
 
+!==================== MicroDSTExample v2r15 2015-01-16 =======================
+
+! 2015-01-16 - Eduardo Rodrigues
+ - Added python/MicroDSTExample/__init__.py to please CMake
+
 !========================= MicroDSTExample v2r14p1 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic
