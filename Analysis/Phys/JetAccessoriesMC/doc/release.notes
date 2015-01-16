@@ -4,6 +4,11 @@
 ! Purpose     : Jet finding MC accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!======================= JetAccessoriesMC v2r8 2015-01-16 ======================
+
+! 2015-01-16 - Eduardo Rodrigues
+ - Added python/JetAccessoriesMC/__init__.py to please CMake.
+
 !========================= JetAccessoriesMC v2r7 2014-12-15 =========================
 
 ! 2014-12-04 - Cédric Potterat
