@@ -3,6 +3,36 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v19r4>2015-01-16 Phys v19r4</A></H1><PRE>
+Development release, based on Gaudi v26r0, LHCb v38r4 and Rec v17r4.
+Uses LCG_72root6 with ROOT 6.02.03.
+
+- Packages updated :
+   Kernel/SelectionLine v1r4, Phys/JetAccessories v3r10, Phys/KalmanFilter v1r9,
+   Phys/ParticleMaker v6r13
+
+- In Kernel/SelectionLine v1r4 :
+  . A series of code improvements and clean-ups for C++11 and C++14.
+  . In retrieveSubAlgorithms, switch back to std::list (instead of std::deque)
+    to insure that iteratora are not invalidated during insert... and switch
+    from std::list to std::forward_list.
+  . Unexpectedly (as least for me) the HltDecReports in the stripping change 'shape',
+    i.e. the number of lines which are processed varies (occasionally) from event
+    to event. Enhance the 'hinted' insertion to deal with this.
+  . Removed Selection::Line::resetExecuted -- the event manager calls resetExecuted
+    of all algorithms, so no need to call it from here as well.
+
+- In Phys/JetAccessories v3r10 :
+  . Use LHCb::Particle::Range instead of LHCb::Particles for the banned particles
+    in LoKi::PFJetMaker.
+
+- In Phys/KalmanFilter v1r9 :
+  . Compilations warnings fixed to please CMake.
+
+- Phys/ParticleMaker v6r13 :
+  . Particle2State: use vectorized similarity transform from LHCbMath -- which
+    is (in this case) 4.8x faster.
+
 </PRE><H1><A NAME=v19r3p1>2014-12-15 Phys v19r3p1</A></H1><PRE>
 Development release, based on Gaudi v25r6p1, LHCb v38r3p1 and Rec v17r3p1.
 

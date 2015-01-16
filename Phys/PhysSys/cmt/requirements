@@ -1,5 +1,5 @@
 package PhysSys
-version v19r3p1
+version v19r4
 
 branches doc cmt
 
@@ -9,7 +9,7 @@ use  DaVinciInterfaces          v2r23    Phys    # Current DV Maintainer
 use  DaVinciTypes               v2r9     Phys    # Current DV Maintainer
 use  DaVinciUtils               v1r1p1   Phys    # Current DV Maintainer
 use  DaVinciKernel              v12r0    Phys    # Current DV Maintainer
-use  SelectionLine              v1r3     Kernel  # Gerhard Raven
+use  SelectionLine              v1r4     Kernel  # Gerhard Raven
 use  SelPy                      v4r2p2   Phys    # Juan Palacios
 use  PhysSelPython              v9r5     PhysSel # Juan Palacios
 
@@ -17,12 +17,12 @@ use  PhysSelPython              v9r5     PhysSel # Juan Palacios
 
 use  PhysConf                   v1r26    Phys    # Patrick Koppenburg
 use  ProtoParticleFilter        v1r7p2   Phys    # Current DV Maintainer
-use  DaVinciTransporter 	v3r12    Phys    # Juan Palacios
-use  ParticleMaker      	v6r12    Phys    # Current DV Maintainer
+use  DaVinciTransporter 	v3r12    Phys    # Current DV Maintainer
+use  ParticleMaker      	v6r13    Phys    # Current DV Maintainer
 use  VertexFit			v6r20    Phys    # Yuehong Xie
 use  LoKiFitters                v4r12    Phys    # Vanya Belyaev
 use  DecayTreeFitter            v1r18    Phys    # Wouter Hulsbergen
-use  PhysDict                   v4r2p4   Phys    # Juan Palacios
+use  PhysDict                   v4r2p4   Phys    # Current DV Maintainer
 use  HighPtJets                 v1r8p1   Phys    # Marcin Kucharczyk
 use  BBDecTreeTool              v1r6p2   Phys    # Mike Williams
 
@@ -49,7 +49,7 @@ use  LoKiPhys                   v10r21   Phys    # Vanya Belyaev
 use  LoKiProtoParticles         v2r2     Phys    # Vanya Belyaev
 use  LoKi                       v9r0p1   Phys    # Vanya Belyaev
 use  LoKiTracks                 v2r10p2  Phys    # Vanya Belyaev
-use  KalmanFilter               v1r8     Phys    # Vanya Belyaev
+use  KalmanFilter               v1r9     Phys    # Vanya Belyaev
 
 #===================================================================
 
@@ -69,7 +69,7 @@ use FlavourTagging              v13r10   Phys   # Stefania Vecchi
 
 #===================================================================
 
-use JetAccessories              v3r9     Phys   # Victor Coco, Cedric Potterat
+use JetAccessories              v3r10    Phys   # Victor Coco, Cedric Potterat
 
 #===================================================================
 
