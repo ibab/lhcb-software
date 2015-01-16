@@ -4,6 +4,7 @@
 ! Purpose     : VeloGauss monitoring
 !-----------------------------------------------------------------------------
 
+!========================= VeloGauss v3r0p1 2015-01-16 =======================
 ! 2014-11-26 - Gloria Corti
  - fixes for warning when compiling with --pedantic
 
