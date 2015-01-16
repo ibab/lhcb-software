@@ -5,6 +5,10 @@
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
 
+!======================== MicroDSTConf v2r12 2015-01-16 ======================
+
+ - Added python/MicroDSTConf/__init__.py to please CMake
+
 !========================= MicroDSTConf v2r11 2014-02-20 =========================
 
 ! 2014-02-14 - Rob Lambert
