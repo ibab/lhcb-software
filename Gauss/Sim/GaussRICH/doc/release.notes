@@ -3,8 +3,11 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
+
+!======================== GaussRICH v14r2p2 2015-01-16 =======================
 ! 2014-12-04 - Sajan Easo
  - Fixes to avoid pedantic warnings during compilation. 
+
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
 
