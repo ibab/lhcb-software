@@ -13,11 +13,12 @@
 #include "TrackInterfaces/ITrackExtrapolator.h"
 //#include "MCInterfaces/IIdealStateCreator.h"
 
-/** @class PatTTCounter PatTTCounter.h
+/** @class PrTTCounter PrTTCounter.h
  *  
  *
  *  @author Olivier Callot
  *  @date   2006-06-28
+ *  2015-01-17 : modified by Svende Braun, Michel de Cian to work with PrChecker2.cpp
  */
 class PrTTCounter : virtual public IPrTTCounter, public GaudiTool {
 public: 
