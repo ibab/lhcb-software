@@ -10,7 +10,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 
-
 // local
 //#include "PrCounter.h"
 #include "PrKernel/IPrCounter.h"
@@ -32,7 +31,8 @@ class IHistoTool ;
  *   - Eta25Cut: Only consider particles with 2 < eta < 5? (default: false)
  *   - TriggerNumbers: Give numbers for p > 3GeV, pT > 500 MeV? (default: false)
  *     if selected long_fromB_P>3GeV_Pt>0.5GeV cut is added to each track container
- *   - vetoElectrons: Take electrons into account in numbers? (default: true)
+ *   - VetoElectrons: Take electrons into account in numbers? (default: true)
+ *   - TrackExtrapolation: Do track extrapolation into middle of T and TTstations for efficiency maps (default: false)
  * 
  * 
  * additional track location container can be added for PrCounter2 and PrTTCounter via:
@@ -69,7 +69,7 @@ class IHistoTool ;
  * is(Not)Long, is(Not)Velo, is(Not)Down, is(Not)Up, is(Not)TT, is(Not)Seed, fromB, fromD, BOrDMother, fromKsFromB, strange, is(Not)Electron, eta25, over5, trigger and  Loki syntax (LoKi::MCParticles) can be used for kinematical cuts: (MCPT> 2300), here () are essential.
  * 
  *  @author Olivier Callot, Thomas Nikodem, Svende Braun, Michel De Cian
- *  @date   2014-12-22
+ *  @date   2015-01-17
  */
 
 class EffCounter {
@@ -164,17 +164,9 @@ class PrChecker2 : public GaudiHistoAlg {
   bool m_eta25cut;             
   bool m_triggerNumbers;
   bool m_vetoElectrons;
- 
- 
-  
+  bool m_trackextrapolation;
 
-  //convert strings to normal cuts ==> called m_otherCuts (without LoKi Hybrid factory)
-  /** @class isTrack PrChecker2.h
-  *  Predefined selection cuts: it converts strings to normal cuts, used by addOtherCuts
-  */
-  class isTrack {
-  
-    enum recAs {
+  enum recAs {
       isLong = 1,
       isNotLong = 2,
       isDown = 3,
@@ -194,50 +186,55 @@ class PrChecker2 : public GaudiHistoAlg {
       isElectron = 18,
       isNotElectron = 19,
       BOrDMother = 20,
-    };
+      };
 
-    std::map< std::string, recAs> lookuptable = {{"isLong",isLong},
-						 {"isNotLong",isNotLong},
-						 {"isDown",isDown}, 
-						 {"isNotDown",isNotDown},
-						 {"isUp",isUp}, 
-						 {"isNotUp",isNotUp},
-						 {"isVelo",isVelo},
-						 {"isNotVelo",isNotVelo}, 
-						 {"isTT",isTT},
-						 {"isNoTT",isNotTT},
-						 {"isSeed",isSeed}, 
-						 {"isNotSeed",isNotSeed}, 
-						 {"strange",strange},
-						 {"fromB",fromB},
-						 {"fromD",fromD},
-						 {"fromKsFromB",fromKsFromB},
-						 {"isElectron",isElectron},
-						 {"isNotElectron",isNotElectron},
-						 {"BOrDMother",BOrDMother}};
+     std::map< std::string, recAs> m_lookuptable = {{"isLong",isLong},
+						    {"isNotLong",isNotLong},
+						    {"isDown",isDown}, 
+						    {"isNotDown",isNotDown},
+						    {"isUp",isUp}, 
+						    {"isNotUp",isNotUp},
+						    {"isVelo",isVelo},
+						    {"isNotVelo",isNotVelo}, 
+						    {"isTT",isTT},
+						    {"isNoTT",isNotTT},
+						    {"isSeed",isSeed}, 
+						    {"isNotSeed",isNotSeed}, 
+						    {"strange",strange},
+						    {"fromB",fromB},
+						    {"fromD",fromD},
+						    {"fromKsFromB",fromKsFromB},
+						    {"isElectron",isElectron},
+						    {"isNotElectron",isNotElectron},
+						    {"BOrDMother",BOrDMother}};
 
+
+  //convert strings to normal cuts ==> called m_otherCuts (without LoKi Hybrid factory)
+  /** @class isTrack PrChecker2.h
+  *  Predefined selection cuts: it converts strings to normal cuts, used by addOtherCuts
+  */
+  class isTrack {   
         
   public:
-    isTrack(const std::string kind) {
-      m_kind  = lookuptable[kind];//2ndarg=map[1st argument]
-     
-     };
+    isTrack(const int kind) { 
+      m_kind = kind;
+    };
     
-    bool operator()(LHCb::MCParticle* mcp, MCTrackInfo mcInfo) const {
+    bool operator()(LHCb::MCParticle* mcp, MCTrackInfo* mcInfo) const {
       bool motherB       = false;
       bool motherD       = false;
-      if(m_kind == isLong) return mcInfo.hasVeloAndT( mcp );
-      if(m_kind == isNotLong) return !mcInfo.hasVeloAndT( mcp );
-      if(m_kind == isDown) return mcInfo.hasT( mcp ) &&  mcInfo.hasTT( mcp );
-      if(m_kind == isNotDown) return !(mcInfo.hasT( mcp ) &&  mcInfo.hasTT( mcp ));
-      if(m_kind == isUp) return mcInfo.hasVelo( mcp ) &&  mcInfo.hasTT( mcp );
-      if(m_kind == isNotUp) return !(mcInfo.hasVelo( mcp ) &&  mcInfo.hasTT( mcp ));
-      if(m_kind == isVelo) return mcInfo.hasVelo( mcp );
-      if(m_kind == isNotVelo) return !mcInfo.hasVelo( mcp );
-      if(m_kind == isSeed) return mcInfo.hasT( mcp );
-      if(m_kind == isNotSeed) return !mcInfo.hasT( mcp );
-      if(m_kind == isTT) return mcInfo.hasTT( mcp );
-      if(m_kind == isNotTT) return !mcInfo.hasTT( mcp );
+      if(m_kind == isLong) return mcInfo->hasVeloAndT( mcp );
+      if(m_kind == isNotLong) return !mcInfo->hasVeloAndT( mcp );
+      if(m_kind == isDown) return mcInfo->hasT( mcp ) &&  mcInfo->hasTT( mcp );
+      if(m_kind == isNotDown) return !(mcInfo->hasT( mcp ) &&  mcInfo->hasTT( mcp ));
+      if(m_kind == isUp) return mcInfo->hasVelo( mcp ) &&  mcInfo->hasTT( mcp );
+      if(m_kind == isNotUp) return !(mcInfo->hasVelo( mcp ) &&  mcInfo->hasTT( mcp ));
+      if(m_kind == isVelo) return mcInfo->hasVelo( mcp );
+      if(m_kind == isNotVelo) return !mcInfo->hasVelo( mcp );
+      if(m_kind == isSeed) return mcInfo->hasT( mcp );
+      if(m_kind == isNotSeed) return !mcInfo->hasT( mcp );
+      if(m_kind == isTT) return mcInfo->hasTT( mcp );
+      if(m_kind == isNotTT) return !mcInfo->hasTT( mcp );
       if(m_kind == isElectron) return abs( mcp->particleID().pid() ) == 11;
       if(m_kind == isNotElectron) return abs( mcp->particleID().pid() ) != 11;
             
@@ -287,12 +284,12 @@ class PrChecker2 : public GaudiHistoAlg {
 	if( m_kind == fromB && motherB == true)  return m_kind == fromB;
 	
 	if(m_kind == BOrDMother && (motherD || motherB)  )  return m_kind == BOrDMother;
-      }
+	}
       return false;
     }
     
   private:
-    recAs m_kind;
+    int m_kind;
   };
 
 
@@ -304,7 +301,7 @@ class PrChecker2 : public GaudiHistoAlg {
   public:
     void addCut(isTrack cat){ m_cuts.push_back(cat); }
     
-    bool operator()(LHCb::MCParticle* mcp, MCTrackInfo mcInfo){
+    bool operator()(LHCb::MCParticle* mcp, MCTrackInfo* mcInfo){
       
       bool decision = true;
       
@@ -431,8 +428,10 @@ class PrChecker2 : public GaudiHistoAlg {
   LoKi::IMCHybridFactory* m_factory;///<needed to convert normal cuts into Loki cuts
   //maps for cuts
   std::map< std::string, std::vector <std::string> >  m_Cuts;///<map of track container name and corresponding cuts
+  
   std::map < std::string, std::vector < LoKi::Types::MCCut> > m_LoKiCuts;///<converted map of Loki cuts, first component is name of track container
   std::map < std::string, std::vector <addOtherCuts> > m_otherCuts;///<map of other cuts as predefined in isTrack, first component is name of track container 
+  
 
 
 
