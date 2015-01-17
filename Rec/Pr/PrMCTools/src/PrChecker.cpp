@@ -60,8 +60,7 @@ PrChecker::PrChecker( const std::string& name,
   m_triggerNumbers(false),
   m_useElectrons(false),
   m_histoTool(NULL),
-  m_timerTool(nullptr)
-{
+  {
   declareProperty( "VeloTracks",        m_veloTracks      = LHCb::TrackLocation::Velo       );
   declareProperty( "ForwardTracks",     m_forwardTracks   = LHCb::TrackLocation::Forward    );
   declareProperty( "MatchTracks",       m_matchTracks     = LHCb::TrackLocation::Match      );
@@ -117,25 +116,6 @@ StatusCode PrChecker::initialize()
   
   ghtool->setHistoDir("Track/PrChecker") ;
   m_histoTool = htool;
-
-
-   m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool/Timer", this );
-  m_timeTotal = m_timerTool->addTimer( "PrSeeding total" );
-  m_timerTool->increaseIndent();
-  m_timeTotal1 = m_timerTool->addTimer( "execute1" );
-  m_timeTotal2 = m_timerTool->addTimer( "execute2" );
-  // m_timeTotal2a = m_timerTool->addTimer( "execute2a" );
-  m_timeTotal3 = m_timerTool->addTimer( "execute3" );
-   m_timeTotal3a = m_timerTool->addTimer( "execute3a" );
-   m_timeTotal3b = m_timerTool->addTimer( "execute3b" );
-   m_timeFromVelo = m_timerTool->addTimer( " velo container" );
-  m_timeFromForward = m_timerTool->addTimer( " Forward container" );
-  m_timeFrommatch = m_timerTool->addTimer( " match container" );
-  m_timeFrombest = m_timerTool->addTimer( "best  container" );
-   m_timeFromup = m_timerTool->addTimer( "up  container" );
-    m_timeFromttrack = m_timerTool->addTimer( "ttrack  container" );
-     m_timeFromdown = m_timerTool->addTimer( "down  container" );
-  m_timerTool->decreaseIndent();
 
   m_velo = tool<IPrCounter>( "PrCounter", "Velo", this );
   m_velo->setContainer( m_veloTracks );
@@ -363,8 +343,6 @@ StatusCode PrChecker::execute() {
 
   if( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-   m_timerTool->start( m_timeTotal );
-   m_timerTool->start( m_timeTotal1 );
   LHCb::MCParticles* mcParts = getIfExists<LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
   if(  mcParts == nullptr){
     error() << "Could not find MCParticles at " << LHCb::MCParticleLocation::Default << endmsg;
@@ -394,14 +372,12 @@ StatusCode PrChecker::execute() {
       ++nPrim;
     }
   }
- m_timerTool->stop( m_timeTotal1 );
- m_timerTool->start( m_timeTotal2 );
+ 
   for ( std::vector<IPrCounter*>::iterator itC = m_allCounters.begin();
         m_allCounters.end() != itC; ++itC ) {
     (*itC)->initEvent(m_histoTool,nPrim);
   }
-  m_timerTool->stop( m_timeTotal2 );
-  m_timerTool->start( m_timeTotal3 );
+  
   //== Build a table (vector of vectors) of ids per MCParticle, indexed by MCParticle key.
   AllLinks<LHCb::MCParticle> allIds( evtSvc(), msgSvc(), "Pr/LHCbID" );
   std::vector< std::vector<int> > linkedIds;
@@ -415,17 +391,13 @@ StatusCode PrChecker::execute() {
     linkedIds[part->key()].push_back( allIds.key() );
     part = allIds.next();
   }
-   m_timerTool->stop( m_timeTotal3 );
-  m_timerTool->start( m_timeTotal3a );
+  
   LHCb::MCParticles::const_iterator itP;
   for ( itP = mcParts->begin(); mcParts->end() != itP; ++itP ) {
 
-    m_timerTool->start( m_timeTotal3b );
     LHCb::MCParticle* part = *itP;
-    if ( 0 == trackInfo.fullInfo( part ) ) {
-      m_timerTool->stop( m_timeTotal3b );
-      continue;
-    }
+    if ( 0 == trackInfo.fullInfo( part ) ) continue;
+
     if( msgLevel(MSG::VERBOSE) ) verbose() << "checking MCPart " << part->key() << endmsg;
 
     
@@ -512,9 +484,6 @@ StatusCode PrChecker::execute() {
                                            << " has " << ids.size() << " LHCbIDs " <<endmsg;
     //////////////////////////////////////    
 
-    m_timerTool->stop( m_timeTotal3b );
-
-    m_timerTool->start( m_timeFromVelo );
     std::vector<bool> flags;
     //flags.push_back( true );
     flags.push_back( eta25 && isInVelo && !isElectron);
@@ -529,9 +498,7 @@ StatusCode PrChecker::execute() {
       flags.push_back( eta25 && isLong && isInUT && fromB && trigger && !isElectron);
     }
     m_velo->countAndPlot(m_histoTool,part,flags,ids,nPrim);
-    m_timerTool->stop( m_timeFromVelo );
-
-    m_timerTool->start( m_timeFromForward );
+    
     flags.clear();
     flags.push_back( eta25 && isLong && !isElectron );
     flags.push_back( eta25 && isLong && over5 && !isElectron  );
@@ -544,16 +511,10 @@ StatusCode PrChecker::execute() {
       flags.push_back( eta25 && isLong && isInUT && fromB && trigger && !isElectron);
     }
     m_forward->countAndPlot(m_histoTool,part,flags,ids,nPrim);
-    m_timerTool->stop( m_timeFromForward );
-    m_timerTool->start( m_timeFrommatch );
     m_match->countAndPlot(m_histoTool,part,flags,ids,nPrim);
-     m_timerTool->stop( m_timeFrommatch );
-     m_timerTool->start( m_timeFrombest );
     m_best->countAndPlot(m_histoTool,part,flags,ids,nPrim);
     m_bestLong->countAndPlot(m_histoTool,part,flags,ids,nPrim);
-    m_timerTool->stop( m_timeFrombest );
-
-    m_timerTool->start( m_timeFromup );
+    
     flags.clear();
     flags.push_back( eta25 && isInVelo && !isElectron);
     flags.push_back( eta25 && isInVelo && isInUT && !isElectron );
@@ -570,9 +531,7 @@ StatusCode PrChecker::execute() {
       flags.push_back( eta25 && isLong && isInUT && fromB && trigger && !isElectron);
     }
     m_upTrack->countAndPlot(m_histoTool,part,flags,ids,nPrim);
-     m_timerTool->stop( m_timeFromup );
-
-     m_timerTool->start( m_timeFromttrack );
+     
     flags.clear();
     flags.push_back( eta25 && trackInfo.hasT( part ) && !isElectron);
     flags.push_back( eta25 && isLong && !isElectron);
@@ -588,9 +547,7 @@ StatusCode PrChecker::execute() {
     flags.push_back( eta25 && strangeDown && !isInVelo && (fromB || fromD) && !isElectron);
     flags.push_back( eta25 && strangeDown && !isInVelo && over5 && (fromB || fromD) && !isElectron);
     m_tTrack->countAndPlot(m_histoTool,part,flags,ids,nPrim);
-    m_timerTool->stop( m_timeFromttrack );
-
-    m_timerTool->start( m_timeFromdown );
+    
     flags.clear();
     flags.push_back( eta25 && isDown && !isElectron);
     flags.push_back( eta25 && isDown && over5 && !isElectron);
@@ -608,8 +565,7 @@ StatusCode PrChecker::execute() {
     flags.push_back( eta25 && strangeDown && !isInVelo && over5 && (fromB || fromD) && !isElectron);
     m_downTrack->countAndPlot(m_histoTool,part,flags,ids,nPrim);
     m_bestDownstream->countAndPlot(m_histoTool,part,flags,ids,nPrim);
-    m_timerTool->stop( m_timeFromdown );
-
+    
 
     // -- UT Hits counters (excluded for the moment)
     /*
@@ -635,10 +591,7 @@ StatusCode PrChecker::execute() {
     */
   }
 
-  m_timerTool->stop( m_timeTotal3a ); 
-  float tot = m_timerTool->stop( m_timeTotal );
-  debug() << format( " Time %8.3f ms", tot )<< endmsg; 
- 
+   
   return StatusCode::SUCCESS;
 }
 
