@@ -24,7 +24,7 @@ static const InterfaceID IID_IPrTTCounter ( "IPrTTCounter", 1, 0 );
  *  
  *
  *  @author Michel De Cian & Paolo Gandini & Thomas Nikodem & Svende Braun
- *  @date   2014-12-23
+ *  @date   2015-01-17
  */
 class IPrTTCounter : virtual public IAlgTool {
 public: 
@@ -46,6 +46,7 @@ public:
   void setContainer( std::string name )  { m_container = name; };
   void setWriteHistos(int write){ m_writeHistos = write; };
   void setUseEta25Cut(bool cut){ m_eta25cut = cut;};
+  void setTrackExtrapolation(bool extra){m_trackextrapolation = extra;};
   void setSelectId( int data )   { m_selectId = data; };
   void setTriggerNumbers(bool numbers){ m_triggerNumbers = numbers;};
 
@@ -61,6 +62,7 @@ protected:
   int          m_writeHistos;
   bool         m_eta25cut;
   bool         m_triggerNumbers;
+  bool         m_trackextrapolation;
   int          m_selectId;
   std::string  m_container;
 
