@@ -3,10 +3,11 @@
 ! Responsible : Michel De Cian
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
+! 2015-01-17 - Svende Braun
+- Modified PrChecker2 to be faster, added global option to choose track extrapolation(default false).
 
-!========================= PrMCTools v2r6 2015-01-14 =========================
-! 2015-01-10 - Michel De Cian
-- Rewrite method "plotMCHits" in PrPlotFTHits to use MCHit<->FTCluster linker.
+! 2014-12-22 - Svende Braun
+- Fixed fromB/fromD and isNotDown selection, added configurable track container for PrCounter2 and PrTTCounter, added global selection cuts: eta25cut, triggerNumbers, vetoElectrons.
 
 !========================= PrMCTools v2r5 2014-12-11 =========================
 ! 2014-12-10 - Michel De Cian
