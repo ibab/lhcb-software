@@ -25,6 +25,7 @@
 // modified by Wenbin Qian for Upgrade
 // 2013-05-31 : Sascha Stahl, Thomas Nikodem upgraded to write Histograms
 // 2014-12-22 : Svende Braun, Michel De Cian upgraded for configurable selection cuts
+// 2015-01-17 : Svende Braun, Michel De Cian upgraded to faster version
 //-----------------------------------------------------------------------------
 
 
@@ -72,7 +73,8 @@ PrChecker2::PrChecker2( const std::string& name,
   m_selectIdNewTT(1),
   m_eta25cut(false),
   m_triggerNumbers(false),
-  m_vetoElectrons(false),
+  m_vetoElectrons(true),
+  m_trackextrapolation(false),
   m_histoTool(NULL)
 {
   declareProperty( "VeloTracks",        m_veloTracks      = LHCb::TrackLocation::Velo       );
@@ -108,6 +110,7 @@ PrChecker2::PrChecker2( const std::string& name,
   declareProperty( "Eta25Cut",            m_eta25cut              = false    );
   declareProperty( "TriggerNumbers",      m_triggerNumbers        = false    );
   declareProperty( "VetoElectrons",       m_vetoElectrons         = true     );
+  declareProperty( "TrackExtrapolation",  m_trackextrapolation    = false     );
 
   declareProperty( "MyForwardCuts",         m_map_forward  = DefaultCutMap("Forward"));
   declareProperty( "MyVeloCuts",            m_map_velo  = DefaultCutMap("Velo"));
@@ -303,12 +306,14 @@ StatusCode PrChecker2::initialize()
         m_allCounters.end() != itC; ++itC ) {
     (*itC)->setUseEta25Cut(m_eta25cut);
     (*itC)->setTriggerNumbers(m_triggerNumbers);
+    (*itC)->setTrackExtrapolation(m_trackextrapolation);
    }
   
   for ( std::vector<IPrTTCounter*>::iterator itCt = m_allTTCounters.begin();
         m_allTTCounters.end() != itCt; ++itCt ) {
     (*itCt)->setUseEta25Cut(m_eta25cut);
     (*itCt)->setTriggerNumbers(m_triggerNumbers);
+    (*itCt)->setTrackExtrapolation(m_trackextrapolation);
     }
 
   
@@ -336,7 +341,7 @@ StatusCode PrChecker2::initialize()
     std::vector< addOtherCuts > dummy;
     std::vector< LoKi::Types::MCCut > vectortmp; //vector von LoKi cuts
     
-    for( std::string cutString : pair.second ){//loop over 2nd element of textCuts = strings of cuts
+    for( std::string cutString : pair.second ){//loop over 2nd element of Cuts = strings of cuts
              
       dummy.push_back( addOtherCuts() );
       
@@ -346,7 +351,7 @@ StatusCode PrChecker2::initialize()
 	
 	if( found != std::string::npos ){//if found then
 	  
-	  dummy.back().addCut( isTrack( alias ) );//other components are already filled //add this category of cuts to addOtherCuts()
+	  dummy.back().addCut( isTrack(  m_lookuptable[alias]) );//other components are already filled //add this category of cuts to addOtherCuts()
 	  cutString.replace(found, alias.length(), "MCTRUE");//replace found at position found, with length of string to replace, replace it with string "" (Loki Cut)
 	}
       }
@@ -354,7 +359,7 @@ StatusCode PrChecker2::initialize()
           
        if(m_vetoElectrons == true) {
 	std::string str2 ("isNotElectron");
-	dummy.back().addCut( isTrack( str2 ) );
+	dummy.back().addCut( isTrack( m_lookuptable[str2] ) );
 	std::size_t found = cutString.find(str2 );
 	if( found != std::string::npos ){
 	cutString.replace(found, str2.length(), "MCTRUE");
@@ -391,7 +396,7 @@ StatusCode PrChecker2::initialize()
     //give those replaced cuts as input to LoKi and otherCuts
     m_LoKiCuts.insert( std::pair<std::string, std::vector<LoKi::Types::MCCut>>( pair.first, vectortmp ) );//give same names as in m_Cuts = 1st, LoKicuts = 2nd
     m_otherCuts.insert( std::pair<std::string, std::vector<addOtherCuts>>( pair.first, dummy ) );//give same names as in m_Cuts = 1st, othercuts = 2nd
-    
+        
     
   }
   
@@ -410,8 +415,8 @@ StatusCode PrChecker2::execute() {
     error() << "Could not find MCParticles at " << LHCb::MCParticleLocation::Default << endmsg;
     return StatusCode::SUCCESS;
   }
+   
   
-
   MCTrackInfo trackInfo( evtSvc(), msgSvc() );
 
   LHCb::MCVertices* mcVert = getIfExists<LHCb::MCVertices>(LHCb::MCVertexLocation::Default );
@@ -434,7 +439,7 @@ StatusCode PrChecker2::execute() {
 	++nPrim;
     }
   }
-
+ 
   for ( std::vector<IPrCounter*>::iterator itC = m_allCounters.begin();
         m_allCounters.end() != itC; ++itC ) {
     (*itC)->initEvent(m_histoTool,nPrim);
@@ -444,7 +449,6 @@ StatusCode PrChecker2::execute() {
         m_allTTCounters.end() != itCt; ++itCt ) {
     (*itCt)->initEvent(m_histoTool);
   }
-
 
   //== Build a table (vector of vectors) of ids per MCParticle, indexed by MCParticle key.
   AllLinks<LHCb::MCParticle> allIds( evtSvc(), msgSvc(), "Pr/LHCbID" );
@@ -459,15 +463,16 @@ StatusCode PrChecker2::execute() {
     linkedIds[part->key()].push_back( allIds.key() );
     part = allIds.next();
   }
-
+  
   LHCb::MCParticles::const_iterator itP;
   for ( itP = mcParts->begin(); mcParts->end() != itP; ++itP ) {
-    LHCb::MCParticle* part = *itP;
-    if ( 0 == trackInfo.fullInfo( part ) ) continue;
+    
+   LHCb::MCParticle* part = *itP;
+    if ( 0 == trackInfo.fullInfo( part ) )   continue;
     if( msgLevel(MSG::VERBOSE) ) verbose() << "checking MCPart " << part->key() << endmsg;
 
-       
-   
+      
+    
     // all ids associated to the mcparticle
     std::vector<LHCb::LHCbID> ids;    
     if ( linkedIds.size() > (unsigned int) part->key() ) {      
@@ -484,64 +489,56 @@ StatusCode PrChecker2::execute() {
                                            << " has " << ids.size() << " LHCbIDs " <<endmsg;
     //////////////////////////////////////    
 
-
-
-
+    
     std::vector<bool> flags;
-
     //Velo cuts
     std::vector<LoKi::Types::MCCut> veloMCCuts = m_LoKiCuts["Velo"];
     std::vector<addOtherCuts> veloMCCuts2 = m_otherCuts["Velo"];
-
     for(unsigned int i = 0; i < veloMCCuts.size(); ++i){
-      flags.push_back( veloMCCuts[i](part) && veloMCCuts2[i](part, trackInfo) );
+      flags.push_back( veloMCCuts[i](part) && veloMCCuts2[i](part, &trackInfo) );
     }
     m_velo->countAndPlot(m_histoTool,part,flags,ids,nPrim);
-    
+            
     // Forward cuts
     flags.clear();
     std::vector<LoKi::Types::MCCut> forwardMCCuts = m_LoKiCuts["Forward"];
     std::vector<addOtherCuts> forwardMCCuts2 = m_otherCuts["Forward"];
-
     for(unsigned int i = 0; i < forwardMCCuts.size(); ++i){
-      flags.push_back( forwardMCCuts[i](part) && forwardMCCuts2[i](part, trackInfo) );
+      flags.push_back( forwardMCCuts[i](part) && forwardMCCuts2[i](part, &trackInfo) );
     }
     m_forward->countAndPlot(m_histoTool,part,flags,ids,nPrim);
     m_match->countAndPlot(m_histoTool,part,flags,ids,nPrim);
     m_best->countAndPlot(m_histoTool,part,flags,ids,nPrim);
     m_bestLong->countAndPlot(m_histoTool,part,flags,ids,nPrim);
-   
-       
+           
     // Upstream cuts
     flags.clear();
     std::vector<LoKi::Types::MCCut> upstreamMCCuts = m_LoKiCuts["Upstream"];
     std::vector<addOtherCuts> upstreamMCCuts2 = m_otherCuts["Upstream"];
-
     for(unsigned int i = 0; i < upstreamMCCuts.size(); ++i){
-      flags.push_back( upstreamMCCuts[i](part) && upstreamMCCuts2[i](part, trackInfo) );
+      flags.push_back( upstreamMCCuts[i](part) && upstreamMCCuts2[i](part, &trackInfo) );
     }
     m_upTrack->countAndPlot(m_histoTool,part,flags,ids,nPrim);
-
+        
     // Ttrack cuts
     flags.clear();
     std::vector<LoKi::Types::MCCut> ttrackMCCuts = m_LoKiCuts["Ttrack"];
     std::vector<addOtherCuts> ttrackMCCuts2 = m_otherCuts["Ttrack"];
-
     for(unsigned int i = 0; i < ttrackMCCuts.size(); ++i){
-      flags.push_back( ttrackMCCuts[i](part) && ttrackMCCuts2[i](part, trackInfo) );
+      flags.push_back( ttrackMCCuts[i](part) && ttrackMCCuts2[i](part, &trackInfo) );
     }
     m_tTrack->countAndPlot(m_histoTool,part,flags,ids,nPrim);
-
+    
     //Downstream cuts
     flags.clear();
     std::vector<LoKi::Types::MCCut> downstreamMCCuts = m_LoKiCuts["Downstream"];
     std::vector<addOtherCuts> downstreamMCCuts2 = m_otherCuts["Downstream"];
-
     for(unsigned int i = 0; i < downstreamMCCuts.size(); ++i){
-      flags.push_back( downstreamMCCuts[i](part) && downstreamMCCuts2[i](part, trackInfo) );
+      flags.push_back( downstreamMCCuts[i](part) && downstreamMCCuts2[i](part, &trackInfo) );
     }
     m_downTrack->countAndPlot(m_histoTool,part,flags,ids,nPrim);
     m_bestDownstream->countAndPlot(m_histoTool,part,flags,ids,nPrim);
+    
 
     //New cuts (for new track container)
     flags.clear();
@@ -549,7 +546,7 @@ StatusCode PrChecker2::execute() {
     std::vector<addOtherCuts> newMCCuts2 = m_otherCuts["New"];
 
     for(unsigned int i = 0; i < newMCCuts.size(); ++i){
-      flags.push_back( newMCCuts[i](part) && newMCCuts2[i](part, trackInfo) );
+      flags.push_back( newMCCuts[i](part) && newMCCuts2[i](part, &trackInfo) );
     }
     m_new->countAndPlot(m_histoTool,part,flags,ids,nPrim);
     
@@ -558,22 +555,21 @@ StatusCode PrChecker2::execute() {
     flags.clear();
     std::vector<LoKi::Types::MCCut> ttforwardMCCuts = m_LoKiCuts["TTForward"];
     std::vector<addOtherCuts> ttforwardMCCuts2 = m_otherCuts["TTForward"];
-
     for(unsigned int i = 0; i < ttforwardMCCuts.size(); ++i){
-      flags.push_back( ttforwardMCCuts[i](part) && ttforwardMCCuts2[i](part, trackInfo) );
-    }
+      flags.push_back( ttforwardMCCuts[i](part) && ttforwardMCCuts2[i](part, &trackInfo) );
+    }    
     m_ttForward->countAndPlot( m_histoTool, part, flags, ids );
     m_ttMatch->countAndPlot( m_histoTool, part, flags, ids );
-
+    
     //TTDownstream cuts
     flags.clear();
     std::vector<LoKi::Types::MCCut> ttdownstreamMCCuts = m_LoKiCuts["TTDownstream"];
     std::vector<addOtherCuts> ttdownstreamMCCuts2 = m_otherCuts["TTDownstream"];
-
     for(unsigned int i = 0; i < ttdownstreamMCCuts.size(); ++i){
-      flags.push_back( ttdownstreamMCCuts[i](part) && ttdownstreamMCCuts2[i](part, trackInfo) );
+      flags.push_back( ttdownstreamMCCuts[i](part) && ttdownstreamMCCuts2[i](part, &trackInfo) );
     }
     m_ttDownst->countAndPlot( m_histoTool, part, flags, ids );
+    
 
     //New cuts (for new TTtrack container)
     flags.clear();
@@ -581,18 +577,14 @@ StatusCode PrChecker2::execute() {
     std::vector<addOtherCuts> ttnewMCCuts2 = m_otherCuts["TTNew"];
 
     for(unsigned int i = 0; i < ttnewMCCuts.size(); ++i){
-      flags.push_back( ttnewMCCuts[i](part) && ttnewMCCuts2[i](part, trackInfo) );
-    }
+      flags.push_back( ttnewMCCuts[i](part) && ttnewMCCuts2[i](part, &trackInfo) );
+    }    
     m_ttnew->countAndPlot(m_histoTool, part, flags, ids);
-   
+    
     
    
   }
 
- 
-   
-
- 
   return StatusCode::SUCCESS;
 }
 
