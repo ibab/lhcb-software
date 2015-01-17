@@ -1,6 +1,8 @@
 #ifndef HLTGLOBALMONITOR_H
 #define HLTGLOBALMONITOR_H 1
 
+#include <chrono>
+
 #include "Event/ODIN.h"
 #include "Event/HltDecReports.h"
 
@@ -187,8 +189,8 @@ class HltGlobalMonitor : public HltBaseAlg, virtual public IIncidentListener
     double m_currentTime = 0; // seconds since start of clock
     double m_timeSize = 0;
     double m_timeInterval = 0;
-    longlong m_startClock = 0; // in microseconds
-    longlong m_startEvent = 0; // in microseconds
+    std::chrono::high_resolution_clock::time_point  m_startClock;
+    std::chrono::high_resolution_clock::time_point  m_startEvent;
     long m_virtmem = 0;
     int m_gpstimesec = 0;
 };

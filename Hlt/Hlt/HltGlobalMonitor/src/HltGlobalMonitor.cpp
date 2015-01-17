@@ -161,7 +161,7 @@ StatusCode HltGlobalMonitor::initialize()
     if ( m_odinHLT2 ) setBinLabels( m_odinHLT2, odinLabels );
 
     m_gpstimesec = 0;
-    m_startClock = System::currentTime( System::microSec );
+    m_startClock = std::chrono::high_resolution_clock::now(); // System::currentTime( System::microSec );
     // create a histogram with one bin per Alley
     // the order and the names for the bins are
     // configured in HLTConf/Configuration.py
@@ -489,11 +489,13 @@ StatusCode HltGlobalMonitor::execute()
 //=============================================================================
 void HltGlobalMonitor::handle( const Incident& incident )
 {
-    m_startEvent = System::currentTime( System::microSec );
-    if ( m_startClock == 0 || incident.type() == IncidentType::BeginRun ||
+    m_startEvent = std::chrono::high_resolution_clock::now(); // System::currentTime( System::microSec );
+    if ( m_startClock.time_since_epoch().count()  == 0 || 
+         incident.type() == IncidentType::BeginRun ||
          incident.type() == "RunChange" )
         m_startClock = m_startEvent;
-    m_currentTime = double( m_startEvent - m_startClock ) / 1000000; // seconds
+    using seconds = std::chrono::duration<double>;
+    m_currentTime = std::chrono::duration_cast<seconds>( std::chrono::high_resolution_clock::now() - m_startEvent ).count();
 }
 
 //==============================================================================
@@ -635,7 +637,7 @@ void HltGlobalMonitor::monitorVertices()
 
 void HltGlobalMonitor::monitorResolverpositions()
 {
-    double when = m_currentTime / 60;
+    double when  = m_currentTime/60;
 
     m_resolvxle->fill( when, m_xLA );
     m_resolvxre->fill( when, m_xRC );
@@ -652,7 +654,7 @@ void HltGlobalMonitor::monitorResolverpositions()
     m_lhcnbofbunches->fill( when, m_lhcNCollidingBunches );
 
     m_lumipars->reset();
-    if (m_lumiparvalues.size()!=m_lumipars->axis().bins()) {
+    if (int(m_lumiparvalues.size())!=m_lumipars->axis().bins()) {
         error() << "have " << m_lumiparvalues.size() << " lumipars, expecting " << m_lumipars->axis().bins() << endmsg;
     } else {
         for ( int i = 0; i < m_lumipars->axis().bins(); i++ ) {
@@ -665,13 +667,12 @@ void HltGlobalMonitor::monitorResolverpositions()
 
 void HltGlobalMonitor::monitorTrends()
 {
+    using ms = std::chrono::duration<float,std::milli>;
+    auto elapsedTime = std::chrono::duration_cast<ms>( std::chrono::high_resolution_clock::now() - m_startEvent );
+    fill( m_hltTime, std::log10( elapsedTime.count() ) , 1.0 ); // convert to log(time/ms)
 
-    auto elapsedTime =
-        double( System::currentTime( System::microSec ) - m_startEvent );
-    fill( m_hltTime, log10( elapsedTime ) - 3, 1.0 ); // convert to log(time/ms)
-
-    auto t = elapsedTime / 1000; // convert to ms
-    auto when = m_currentTime / 60;
+    auto t = elapsedTime.count();
+    auto  when  = m_currentTime/60;;
 
     m_hltEventsTime->fill( when, t );
 

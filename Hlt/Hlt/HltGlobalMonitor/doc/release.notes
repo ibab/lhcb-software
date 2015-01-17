@@ -4,6 +4,8 @@
 !Package Coordinator : Eric van Herwijnen 
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
+! 2015-01-17 - Gerhard Raven
+ - update time handling to use std::chrono
 
 !========================= HltGlobalMonitor v4r5 2014-12-15 =========================
 
