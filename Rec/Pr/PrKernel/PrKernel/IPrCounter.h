@@ -48,6 +48,7 @@ public:
   void setWriteHistos(int write){ m_writeHistos = write; };
   void setUseEta25Cut(bool cut){ m_eta25cut = cut;};
   void setTriggerNumbers(bool numbers){ m_triggerNumbers = numbers;};
+  void setTrackExtrapolation(bool extra){m_trackextrapolation = extra;};
   void setSelectId( int data )   { m_selectId = data; };
   void setTrackType( LHCb::Track::Types type)  { m_trackType = type; };
 
@@ -60,9 +61,8 @@ protected:
 
   int          m_writeHistos;
   bool         m_eta25cut;
-  bool         m_writeXYEffHistos;
-  bool         m_printparticlekey;
   bool         m_triggerNumbers;
+  bool         m_trackextrapolation;
   int          m_selectId;
   std::string  m_container;
 
