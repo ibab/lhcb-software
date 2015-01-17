@@ -18,7 +18,7 @@
 #include "HltConfigSvc.h"
 
 //TODO: check for IEEE 1003.1 compliance instead of Linux...
-#if linux
+#ifndef _WIN32
 #include <netdb.h>
 #include <unistd.h>
 #endif
@@ -157,7 +157,7 @@ StatusCode HltConfigSvc::start() {
   static boost::regex expr("^HLT.*_([^_]*)_([0-9]+)");
   boost::smatch what;
   if (boost::regex_match(taskName,what,expr)) m_id = ( std::stoul( what[2] ) << 16 );
-#if linux
+#ifndef _WIN32
   char name[_POSIX_HOST_NAME_MAX];
   if (!gethostname(name,sizeof(name))) {
       auto *x = gethostbyname(name);
