@@ -158,8 +158,8 @@ StatusCode HltConfigSvc::start() {
   boost::smatch what;
   if (boost::regex_match(taskName,what,expr)) m_id = ( std::stoul( what[2] ) << 16 );
 #if linux
-  char name[HOST_NAME_MAX]; size_t len=0;
-  if (!gethostname(name,len)) {
+  char name[_POSIX_HOST_NAME_MAX];
+  if (!gethostname(name,sizeof(name))) {
       auto *x = gethostbyname(name);
       if (x) {
           unsigned char *addr = (unsigned char*)(x->h_addr+x->h_length-2);

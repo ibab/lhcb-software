@@ -4,6 +4,10 @@
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
 
+! 2015-01-17 - Gerhard Raven
+ - fix query for IP address (lower 16 bits are stored in HltDecReport to
+   determine which machine was used)
+
 ! 2015-01-15 - Marco Cattaneo
  - In cmt/requirements, add a dependency to avoid compiling the
    hlttck_cdb_listkeys .cpp files twice in separate threads, that can interfere
