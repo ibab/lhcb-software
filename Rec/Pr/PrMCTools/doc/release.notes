@@ -3,6 +3,9 @@
 ! Responsible : Michel De Cian
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
+! 2015-01-18 - Michel De Cian
+- Fix typo in PrChecker.cpp
+
 ! 2015-01-17 - Svende Braun
 - Modified PrChecker2 to be faster, added global option to choose track extrapolation(default false).
 

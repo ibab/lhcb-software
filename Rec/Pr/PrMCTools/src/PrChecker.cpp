@@ -28,14 +28,10 @@
 
 
 DECLARE_ALGORITHM_FACTORY( PrChecker )
-
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PrChecker::PrChecker( const std::string& name,
-                        ISvcLocator* pSvcLocator)
-  //: GaudiAlgorithm ( name , pSvcLocator ),
+PrChecker::PrChecker( const std::string& name, ISvcLocator* pSvcLocator)
 : GaudiHistoAlg ( name , pSvcLocator ),
   m_velo(NULL),
   m_forward(NULL),
@@ -59,8 +55,8 @@ PrChecker::PrChecker( const std::string& name,
   m_eta25cut(false),
   m_triggerNumbers(false),
   m_useElectrons(false),
-  m_histoTool(NULL),
-  {
+  m_histoTool(NULL)
+{
   declareProperty( "VeloTracks",        m_veloTracks      = LHCb::TrackLocation::Velo       );
   declareProperty( "ForwardTracks",     m_forwardTracks   = LHCb::TrackLocation::Forward    );
   declareProperty( "MatchTracks",       m_matchTracks     = LHCb::TrackLocation::Match      );
