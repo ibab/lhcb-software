@@ -12,7 +12,7 @@ public:
   StatusCode initialize();
 
 private:
-
+  using Selection::Line::numberOfCandidates;
   int numberOfCandidates() const override;
   const std::pair<std::string,unsigned>& id() const override;
 

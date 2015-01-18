@@ -5,6 +5,9 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+! 2015-01-18 - Andrea Contu
+ - fixing compilation warning in src/StrippingAlg.cpp
+
 !========================= StrippingAlgs v1r14 2014-12-14 =========================
 
 ! 2014-12-04 - Gerhard Raven
