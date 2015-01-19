@@ -9,7 +9,6 @@ find_package(PythonLibs)
 find_package(ROOT)
 
 gaudi_add_library(OnlineKernel
-                    src/FS/*.cpp
                     src/RTL/*.cpp
                     src/MBM/*.cpp
                     src/MICFSM/*.cpp

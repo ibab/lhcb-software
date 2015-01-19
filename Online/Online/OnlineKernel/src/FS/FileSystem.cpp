@@ -3,16 +3,14 @@
 using namespace FS;
 using namespace std;
 
-FileSystem(const string & name) 
+FileSystem::FileSystem(const string & name) 
 {
   m_name = name;
 }
 #ifdef __linux
 #include <sys/statvfs.h>
-long freeBytes(void)
-{
+long FileSystem::freeBytes(void)   {
   struct statvfs buf;
-
   if (!(statvfs(m_name.c_string(), &buf))) {
     return (buf.f_bsize * buf.f_bavail);
   } else {
@@ -20,14 +18,14 @@ long freeBytes(void)
   }		 	
 }
 #else
-long freeBytes(void)
+long FileSystem::freeBytes(void)
 {
   return 0;
 }
 #endif
 
 
-int format(void) 
+int FileSystem::format(void) 
 {
   return 0;
 }
