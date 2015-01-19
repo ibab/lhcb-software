@@ -2,6 +2,10 @@
 // ============================================================================
 // Include files 
 // ============================================================================
+// STD & STL 
+// ============================================================================
+#include <array>
+// ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/SystemOfUnits.h"
@@ -22,10 +26,6 @@
 // ============================================================================
 #include "KalmanFilter/VertexFitWithTracks.h"
 #include "KalmanFilter/ErrorCodes.h"
-// ============================================================================
-// Boost
-// ============================================================================
-#include "boost/array.hpp"
 // ============================================================================
 /** @file 
  *
@@ -62,7 +62,7 @@ namespace // local anonymous namespace to keep local functions
   const LHCb::Math::Equal_To<double>  s_equal ;
   // ==========================================================================
   /// inverse "large" error in position: used to avoid singularity
-  const boost::array<double,3> s_ERROR2_i  = { { 
+  const std::array<double,3> s_ERROR2_i  = { { 
       1.0 / Gaudi::Math::pow ( 10.0 * Gaudi::Units::cm , 2 ) ,
       1.0 / Gaudi::Math::pow ( 10.0 * Gaudi::Units::cm , 2 ) ,
       1.0 / Gaudi::Math::pow ( 90.0 * Gaudi::Units::cm , 2 ) } } ;
