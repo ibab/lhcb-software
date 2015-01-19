@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-01-19 - Roel Aaij
+ - Add HltRecoConf to configurable user modules for CMake.
+
 ! 2014-12-16 - Roel Aaij
  - Disable extraInfo transfer for IsMuon and LooseForward.
 

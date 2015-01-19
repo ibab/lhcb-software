@@ -17,7 +17,7 @@ gaudi_add_module(HltTracking
                  INCLUDE_DIRS Tr/TrackInterfaces
                  LINK_LIBRARIES HltEvent TrackEvent GaudiAlgLib GaudiKernel HltBase)
 
-set_property(DIRECTORY PROPERTY CONFIGURABLE_USER_MODULES HltTracking.Hlt2Tracking)
+set_property(DIRECTORY PROPERTY CONFIGURABLE_USER_MODULES HltTracking.Hlt2Tracking HltTracking.HltRecoConf)
 gaudi_install_python_modules()
 add_dependencies(HltTrackingConfUserDB HltLineConf)
 
