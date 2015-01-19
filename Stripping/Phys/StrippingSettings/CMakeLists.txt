@@ -1,7 +1,7 @@
 ################################################################################
 # Package: StrippingSettings
 ################################################################################
-gaudi_subdir(StrippingSettings v2r33)
+gaudi_subdir(StrippingSettings v2r34)
 
 gaudi_install_python_modules()
 
