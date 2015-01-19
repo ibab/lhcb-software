@@ -657,7 +657,7 @@ void *handle_proc_ev(void *arg)
         }
         default:
         {
-            printf("unhandled proc event\n");
+	  //printf("unhandled proc event\n");
             break;
         }
       }
