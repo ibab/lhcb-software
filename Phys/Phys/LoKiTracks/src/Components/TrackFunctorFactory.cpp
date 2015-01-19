@@ -336,9 +336,7 @@ LoKi::Hybrid::TrackFunctorFactory::TrackFunctorFactory
   // ==========================================================================
   // C++
   // ==========================================================================
-  m_cpplines.push_back ( "#include \"LoKi/TrackTypes.h\"" ) ;
-  m_cpplines.push_back ( "#include \"LoKi/Tracks.h\""     ) ;
-  m_cpplines.push_back ( "#include \"LoKi/TrSources.h\""  ) ;  
+  m_cpplines.push_back ( "#include \"LoKi/LoKiTracks.h\"" ) ;
   // ==========================================================================
 } 
 // ============================================================================

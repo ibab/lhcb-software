@@ -5,6 +5,9 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2015-01-19 - Vanya Belyaev
+ - few more steps toward autogeneration of C++ code  
+
 ! 2015-01-16 - Vanya Belyaev
  - few more steps toward autogeneration of C++ code  
 

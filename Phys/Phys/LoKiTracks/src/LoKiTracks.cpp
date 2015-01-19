@@ -5,6 +5,18 @@
 // Local 
 // ============================================================================
 #include "LoKi/LoKiTracks.h"
+// ============================================================================
+#include "LoKi/ITrackFunctorAntiFactory.h"
+#include "LoKi/ITrackFunctorFactory.h"
+#include "LoKi/TrackCuts.h"
+#include "LoKi/TrackEngineActor.h"
+#include "LoKi/TrackEngine.h"
+#include "LoKi/TrackFactoryLock.h"
+#include "LoKi/TrackIDs.h"
+#include "LoKi/Tracks.h"
+#include "LoKi/TrackTypes.h"
+#include "LoKi/TrSources.h"
+#include "LoKi/VeloHitPatternFunctions.h"
 // =======================================================================
 /** @file
  *
