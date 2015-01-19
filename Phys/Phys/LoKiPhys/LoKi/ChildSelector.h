@@ -109,7 +109,7 @@ namespace LoKi
       /// the child selector by index 
       std::vector<unsigned int> m_indices ;       // the child selector by index 
       /// rule to find the child 
-      Decays::IDecay::Finder    m_finder  ;       //      rule to find the child 
+      Decays::IDecay::Finder    m_finder  ;  //      rule to find the child 
       /// cut set 
       bool                      m_setCut  ;       //                     cut set
       /// the cut 
@@ -120,6 +120,19 @@ namespace LoKi
   } //                                             end of namespace LoKi::Child
   // ==========================================================================
 } //                                                      end of namespace LoKi
+// ============================================================================
+namespace Gaudi
+{
+  // ==========================================================================
+  namespace Utils 
+  {
+    // ========================================================================
+    GAUDI_API
+    std::string toCpp ( const LoKi::Child::Selector& s ) ;
+    // ========================================================================
+  } 
+  // ==========================================================================
+}
 // ============================================================================
 // The END 
 // ============================================================================

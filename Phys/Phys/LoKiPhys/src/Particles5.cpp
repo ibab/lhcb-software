@@ -36,7 +36,8 @@
 // ============================================================================
 LoKi::Particles::InTree::InTree 
 ( const LoKi::PhysTypes::Cuts& cut ) 
-  : LoKi::PhysTypes::Cuts() 
+  : LoKi::AuxFunBase ( std::tie ( cut ) )
+  , LoKi::PhysTypes::Cuts() 
   , m_cut ( cut ) 
 {}
 // ============================================================================
@@ -71,7 +72,8 @@ LoKi::Particles::InTree::fillStream( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::NinTree::NinTree 
 ( const LoKi::PhysTypes::Cuts& cut ) 
-  : LoKi::PhysTypes::Func () 
+  : LoKi::AuxFunBase ( std::tie ( cut ) )
+  , LoKi::PhysTypes::Func () 
   , m_cut ( cut ) 
 {}
 // ============================================================================
@@ -104,7 +106,8 @@ LoKi::Particles::SumTree::SumTree
 ( const LoKi::PhysTypes::Func& fun ,
   const LoKi::PhysTypes::Cuts& cut ,
   const double                 res ) 
-  : LoKi::PhysTypes::Func() 
+  : LoKi::AuxFunBase ( std::tie ( fun , cut , res ) )
+  , LoKi::PhysTypes::Func() 
   , m_fun ( fun ) 
   , m_cut ( cut )
   , m_res ( res ) 
@@ -114,7 +117,8 @@ LoKi::Particles::SumTree::SumTree
 ( const LoKi::PhysTypes::Cuts& cut ,
   const LoKi::PhysTypes::Func& fun ,
   const double                 res ) 
-  : LoKi::PhysTypes::Func() 
+  : LoKi::AuxFunBase ( std::tie ( cut , fun , res ) )
+  , LoKi::PhysTypes::Func() 
   , m_fun ( fun ) 
   , m_cut ( cut )
   , m_res ( res ) 
@@ -155,7 +159,8 @@ LoKi::Particles::MultTree::MultTree
 ( const LoKi::PhysTypes::Func& fun ,
   const LoKi::PhysTypes::Cuts& cut ,
   const double                 res ) 
-  : LoKi::PhysTypes::Func() 
+  : LoKi::AuxFunBase ( std::tie ( fun , cut , res ) )
+  , LoKi::PhysTypes::Func() 
   , m_fun ( fun ) 
   , m_cut ( cut )
   , m_res ( res ) 
@@ -165,7 +170,8 @@ LoKi::Particles::MultTree::MultTree
 ( const LoKi::PhysTypes::Cuts& cut ,
   const LoKi::PhysTypes::Func& fun ,
   const double                 res ) 
-  : LoKi::PhysTypes::Func() 
+  : LoKi::AuxFunBase ( std::tie ( cut , fun , res ) )
+  , LoKi::PhysTypes::Func() 
   , m_fun ( fun ) 
   , m_cut ( cut )
   , m_res ( res ) 
@@ -205,7 +211,8 @@ LoKi::Particles::MinTree::MinTree
 ( const LoKi::PhysTypes::Func& fun ,
   const LoKi::PhysTypes::Cuts& cut ,
   const double                 res ) 
-  : LoKi::PhysTypes::Func() 
+  : LoKi::AuxFunBase ( std::tie ( fun , cut , res ) )
+  , LoKi::PhysTypes::Func() 
   , m_fun ( fun ) 
   , m_cut ( cut )
   , m_res ( res ) 
@@ -215,7 +222,8 @@ LoKi::Particles::MinTree::MinTree
 ( const LoKi::PhysTypes::Cuts& cut ,
   const LoKi::PhysTypes::Func& fun ,
   const double                 res ) 
-  : LoKi::PhysTypes::Func() 
+  : LoKi::AuxFunBase ( std::tie ( cut , fun , res ) )
+  , LoKi::PhysTypes::Func() 
   , m_fun ( fun ) 
   , m_cut ( cut )
   , m_res ( res ) 
@@ -253,7 +261,8 @@ LoKi::Particles::MaxTree::MaxTree
 ( const LoKi::PhysTypes::Func& fun ,
   const LoKi::PhysTypes::Cuts& cut ,
   const double                 res ) 
-  : LoKi::PhysTypes::Func() 
+  : LoKi::AuxFunBase ( std::tie ( fun , cut , res ) )
+  , LoKi::PhysTypes::Func() 
   , m_fun ( fun ) 
   , m_cut ( cut )
   , m_res ( res ) 
@@ -263,7 +272,8 @@ LoKi::Particles::MaxTree::MaxTree
 ( const LoKi::PhysTypes::Cuts& cut ,
   const LoKi::PhysTypes::Func& fun ,
   const double                 res ) 
-  : LoKi::PhysTypes::Func() 
+  : LoKi::AuxFunBase ( std::tie ( cut , fun , res ) )
+  , LoKi::PhysTypes::Func() 
   , m_fun ( fun ) 
   , m_cut ( cut )
   , m_res ( res ) 
@@ -302,7 +312,8 @@ LoKi::Particles::MaxTree::fillStream( std::ostream& s ) const
 LoKi::Particles::InGeneration::InGeneration 
 ( const LoKi::PhysTypes::Cuts& cut   , 
   const unsigned int           level ) 
-  : LoKi::PhysTypes::Cuts() 
+  : LoKi::AuxFunBase ( std::tie ( cut , level  ) )
+  , LoKi::PhysTypes::Cuts() 
   , m_cut   ( cut   ) 
   , m_level ( level ) 
 {}
@@ -312,7 +323,8 @@ LoKi::Particles::InGeneration::InGeneration
 LoKi::Particles::InGeneration::InGeneration 
 ( const unsigned int           level , 
   const LoKi::PhysTypes::Cuts& cut   ) 
-  : LoKi::PhysTypes::Cuts() 
+  : LoKi::AuxFunBase ( std::tie ( level , cut) )
+  , LoKi::PhysTypes::Cuts() 
   , m_cut   ( cut   ) 
   , m_level ( level ) 
 {}
@@ -358,7 +370,8 @@ LoKi::Particles::InGeneration::fillStream( std::ostream& s ) const
 LoKi::Particles::NinGeneration::NinGeneration 
 ( const LoKi::PhysTypes::Cuts& cut   , 
   const unsigned int           level ) 
-  : LoKi::PhysTypes::Func () 
+  : LoKi::AuxFunBase ( std::tie ( cut , level ) )
+  , LoKi::PhysTypes::Func () 
   , m_cut   ( cut   ) 
   , m_level ( level ) 
 {}
@@ -368,7 +381,8 @@ LoKi::Particles::NinGeneration::NinGeneration
 LoKi::Particles::NinGeneration::NinGeneration 
 ( const unsigned int           level , 
   const LoKi::PhysTypes::Cuts& cut   ) 
-  : LoKi::PhysTypes::Func () 
+  : LoKi::AuxFunBase ( std::tie ( level , cut) )
+  , LoKi::PhysTypes::Func () 
   , m_cut   ( cut   ) 
   , m_level ( level ) 
 {}

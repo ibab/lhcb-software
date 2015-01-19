@@ -15,6 +15,8 @@
 // LoKi
 // ============================================================================
 #include "LoKi/ILoKiSvc.h"
+#include "LoKi/iTree.h"
+#include "LoKi/DecayFinder.h"
 #include "LoKi/BasicFunctors.h"
 #include "LoKi/ChildSelector.h"
 #include "LoKi/Trees.h"
@@ -23,6 +25,7 @@
 #include "LoKi/PhysAlgs.h"
 #include "LoKi/Child.h"
 #include "LoKi/Particles24.h"
+#include "LoKi/ToCpp.h"
 // ============================================================================
 /** @file 
  *  implementation file for class LoKi::Child::Selector 
@@ -117,7 +120,7 @@ LoKi::Child::child
 // ============================================================================
 LoKi::Child::Selector::Selector 
 ( const unsigned int   i  ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( i ) ) 
   , m_indices ( 1 , i      ) 
   , m_finder  ( s_INVALID  )
   , m_setCut  ( false      ) 
@@ -129,7 +132,7 @@ LoKi::Child::Selector::Selector
 LoKi::Child::Selector::Selector 
 ( const unsigned int   i1 , 
   const unsigned int   i2 ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( i1 ,i2 ) ) 
   , m_indices (           ) 
   , m_finder  ( s_INVALID )
   , m_setCut  ( false     ) 
@@ -145,7 +148,7 @@ LoKi::Child::Selector::Selector
 ( const unsigned int   i1 , 
   const unsigned int   i2 ,
   const unsigned int   i3 ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( i1 , i2 , i3 ) ) 
   , m_indices (           ) 
   , m_finder  ( s_INVALID )
   , m_setCut  ( false     ) 
@@ -163,7 +166,7 @@ LoKi::Child::Selector::Selector
   const unsigned int   i2 ,
   const unsigned int   i3 , 
   const unsigned int   i4 )  
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( i1 , i2 , i3 , i4 ) ) 
   , m_indices (           ) 
   , m_finder  ( s_INVALID )
   , m_setCut  ( false     ) 
@@ -179,7 +182,7 @@ LoKi::Child::Selector::Selector
 // ============================================================================
 LoKi::Child::Selector::Selector 
 ( const std::vector<unsigned int>& indices ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( indices ) ) 
   , m_indices ( indices   ) 
   , m_finder  ( s_INVALID )
   , m_setCut  ( false     ) 
@@ -192,7 +195,7 @@ LoKi::Child::Selector::Selector
 // ============================================================================
 LoKi::Child::Selector::Selector
  ( const Decays::IDecay::iTree& child ) 
-  : LoKi::AuxFunBase () 
+   : LoKi::AuxFunBase ( std::tie ( child ) ) 
   , m_indices (        ) 
   , m_finder  ( child  )
   , m_setCut  ( false  ) 
@@ -219,7 +222,7 @@ LoKi::Child::Selector::Selector
 // constructor from decay node 
 // ============================================================================
 LoKi::Child::Selector::Selector ( const Decays::iNode& node ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( node ) ) 
   , m_indices (           ) 
   , m_finder  ( s_INVALID )
   , m_setCut  ( false     ) 
@@ -236,7 +239,7 @@ LoKi::Child::Selector::Selector ( const Decays::iNode& node )
 // ============================================================================
 LoKi::Child::Selector::Selector
 ( const Decays::IDecay::Finder& child ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( child ) ) 
   , m_indices (        ) 
   , m_finder  ( child  )
   , m_setCut  ( false  ) 
@@ -263,7 +266,7 @@ LoKi::Child::Selector::Selector
 // constructor from the cut 
 // ============================================================================
 LoKi::Child::Selector::Selector ( const LoKi::Types::Cuts& cut ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( cut ) ) 
   , m_indices (           ) 
   , m_finder  ( s_INVALID )
   , m_setCut  ( true      ) 
@@ -273,7 +276,7 @@ LoKi::Child::Selector::Selector ( const LoKi::Types::Cuts& cut )
 // constructor from decay desctriptor 
 // ============================================================================
 LoKi::Child::Selector::Selector ( const std::string& child ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( child ) ) 
   , m_indices (           ) 
   , m_finder  ( s_INVALID )
   , m_setCut  ( false     ) 
@@ -290,7 +293,7 @@ LoKi::Child::Selector::Selector ( const std::string& child )
 LoKi::Child::Selector::Selector 
 ( const std::string& child   , 
   const std::string& factory ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( child , factory ) ) 
   , m_indices (           ) 
   , m_finder  ( s_INVALID )
   , m_setCut  ( false     ) 

@@ -9,6 +9,7 @@
 // ============================================================================
 #include "LoKi/PhysTypes.h"
 #include "LoKi/Kinematics.h"
+#include "LoKi/PidFunctions.h"
 // ============================================================================
 namespace LHCb
 { 
@@ -229,6 +230,128 @@ namespace LoKi
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class IsID 
+     *  new verison of PID-comparison 
+     */
+    // ========================================================================
+    class GAUDI_API IsID  
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
+      , public LoKi::Pids::GetPids 
+    {
+    public:
+      // ======================================================================
+      IsID ( const long                           id  ) ;
+      IsID ( const unsigned long                  id  ) ;
+      IsID ( const LHCb::ParticleID&              id  ) ;
+      IsID ( const std::string&                   id  ) ;
+      IsID ( const std::vector<int>&              ids ) ;
+      IsID ( const std::vector<long>&             ids ) ;
+      IsID ( const std::vector<unsigned int>&     ids ) ;
+      IsID ( const std::vector<unsigned long>&    ids ) ;
+      IsID ( const std::vector<LHCb::ParticleID>& ids ) ;
+      IsID ( const std::vector<std::string>&      ids ) ;
+      IsID ( const LoKi::Pids::GetPids&           ids ) ;
+      // ======================================================================
+      virtual IsID* clone() const ;
+      /// the only one essential method
+      result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================      
+      IsID() ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class IsNotID 
+     *  new verison of PID-comparison 
+     */
+    // ========================================================================
+    class GAUDI_API IsNotID : public LoKi::Particles::IsID 
+    {
+    public:
+      // ======================================================================
+      IsNotID ( const long                           id  ) ;
+      IsNotID ( const unsigned long                  id  ) ;
+      IsNotID ( const LHCb::ParticleID&              id  ) ;
+      IsNotID ( const std::string&                   id  ) ;
+      IsNotID ( const std::vector<int>&              ids ) ;
+      IsNotID ( const std::vector<long>&             ids ) ;
+      IsNotID ( const std::vector<unsigned int>&     ids ) ;
+      IsNotID ( const std::vector<unsigned long>&    ids ) ;
+      IsNotID ( const std::vector<LHCb::ParticleID>& ids ) ;
+      IsNotID ( const std::vector<std::string>&      ids ) ;
+      IsNotID ( const LoKi::Pids::GetPids&           ids ) ;
+      // ======================================================================
+      virtual IsNotID* clone() const ;
+      /// the only one essential method
+      result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================      
+      IsNotID() ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    class GAUDI_API IsAbsID : public LoKi::Particles::IsID   
+    {
+    public:
+      // ======================================================================
+      IsAbsID ( const long                           id  ) ;
+      IsAbsID ( const unsigned long                  id  ) ;
+      IsAbsID ( const LHCb::ParticleID&              id  ) ;
+      IsAbsID ( const std::string&                   id  ) ;
+      IsAbsID ( const std::vector<int>&              ids ) ;
+      IsAbsID ( const std::vector<long>&             ids ) ;
+      IsAbsID ( const std::vector<unsigned int>&     ids ) ;
+      IsAbsID ( const std::vector<unsigned long>&    ids ) ;
+      IsAbsID ( const std::vector<LHCb::ParticleID>& ids ) ;
+      IsAbsID ( const std::vector<std::string>&      ids ) ;
+      IsAbsID ( const LoKi::Pids::GetPids&           ids ) ;
+      // ======================================================================
+      virtual IsAbsID* clone() const ;
+      /// the only one essential method
+      result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================      
+      IsAbsID() ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    class GAUDI_API IsNotAbsID : public LoKi::Particles::IsAbsID
+    {
+    public:
+      // ======================================================================
+      IsNotAbsID ( const long                           id  ) ;
+      IsNotAbsID ( const unsigned long                  id  ) ;
+      IsNotAbsID ( const LHCb::ParticleID&              id  ) ;
+      IsNotAbsID ( const std::string&                   id  ) ;
+      IsNotAbsID ( const std::vector<int>&              ids ) ;
+      IsNotAbsID ( const std::vector<long>&             ids ) ;
+      IsNotAbsID ( const std::vector<unsigned int>&     ids ) ;
+      IsNotAbsID ( const std::vector<unsigned long>&    ids ) ;
+      IsNotAbsID ( const std::vector<LHCb::ParticleID>& ids ) ;
+      IsNotAbsID ( const std::vector<std::string>&      ids ) ;
+      IsNotAbsID ( const LoKi::Pids::GetPids&           ids ) ;
+      // ======================================================================
+      virtual IsNotAbsID* clone() const ;
+      /// the only one essential method
+      result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================      
+      IsNotAbsID() ;
       // ======================================================================
     } ;
     // ========================================================================    
@@ -730,9 +853,7 @@ namespace LoKi
       /** constructor  
        *  @param mass nominal mass 
        */
-      DeltaMass
-      ( const double mass ) 
-        : LoKi::Particles::Mass() , m_mass ( mass ) {}
+      DeltaMass ( const double mass ) ;
       /** constructor 
        *  @param pp particle property 
        */
@@ -792,29 +913,25 @@ namespace LoKi
       /** constructor  
        *  @param mass nominal mass 
        */
-      AbsDeltaMass ( const double mass ) 
-        : DeltaMass ( mass ) {}
+      AbsDeltaMass ( const double mass ) ;
       /** constructor 
        *  @param pp particle property 
        */
-      AbsDeltaMass ( const LHCb::ParticleProperty& pp )
-        : DeltaMass ( pp ) {}
+      AbsDeltaMass ( const LHCb::ParticleProperty& pp ) ;
       /** constructor 
        *  @param name particle name 
        *  @param ppsvc LHCb::ParticleProperty service 
        */
       AbsDeltaMass 
       ( const std::string&          name      , 
-        LHCb::IParticlePropertySvc* ppsvc = 0 ) 
-        : DeltaMass ( name , ppsvc ) {}
+        LHCb::IParticlePropertySvc* ppsvc = 0 ) ;
       /** constructor 
        *  @param pid  particle ID 
        *  @param ppsvc LHCb::ParticleProperty service 
        */
       AbsDeltaMass
       ( const LHCb::ParticleID&     pid       , 
-        LHCb::IParticlePropertySvc* ppsvc = 0 )
-        : DeltaMass ( pid , ppsvc ) {}
+        LHCb::IParticlePropertySvc* ppsvc = 0 ) ;
       /// virtual destructor 
       virtual ~AbsDeltaMass(){};
       /// clone method (mandatory!)
@@ -845,30 +962,25 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor  
-      DeltaMeasuredMass ( const double mass ) 
-        : DeltaMass ( mass ) {}
+      DeltaMeasuredMass ( const double mass ) ;
       /** constructor 
        *  @param pp particle property 
        */
-      DeltaMeasuredMass 
-      ( const LHCb::ParticleProperty& pp )
-        : DeltaMass ( pp ) {}
+      DeltaMeasuredMass ( const LHCb::ParticleProperty& pp ) ;
       /** constructor 
        *  @param name particle name 
        *  @param ppsvc LHCb::ParticleProperty service 
        */
       DeltaMeasuredMass 
       ( const std::string&          name      , 
-        LHCb::IParticlePropertySvc* ppsvc = 0 )
-        : DeltaMass ( name , ppsvc ) {}
+        LHCb::IParticlePropertySvc* ppsvc = 0 ) ;
       /** constructor 
        *  @param pid  particle ID 
        *  @param ppsvc LHCb::ParticleProperty service 
        */
       DeltaMeasuredMass 
       ( const LHCb::ParticleID&     pid       , 
-        LHCb::IParticlePropertySvc* ppsvc = 0 ) 
-        : DeltaMass ( pid , ppsvc ) {}
+        LHCb::IParticlePropertySvc* ppsvc = 0 ) ;
       /// virtual destructor 
       virtual ~DeltaMeasuredMass()  ;
       /// clone method (mandatory!)
@@ -903,31 +1015,25 @@ namespace LoKi
       /** constructor  from particle mass 
        *  @param mass particle mass 
        */
-      AbsDeltaMeasuredMass 
-      ( const double mass ) 
-        : DeltaMeasuredMass ( mass ) {}
+      AbsDeltaMeasuredMass ( const double mass ) ;
       /** constructor 
        *  @param pp particle property 
        */
-      AbsDeltaMeasuredMass 
-      ( const LHCb::ParticleProperty& pp )
-        : DeltaMeasuredMass ( pp ) {}
+      AbsDeltaMeasuredMass ( const LHCb::ParticleProperty& pp ) ;
       /** constructor 
        *  @param name particle name 
        *  @param ppsvc  LHCb::ParticleProperty service 
        */
       AbsDeltaMeasuredMass
       ( const std::string&          name      , 
-        LHCb::IParticlePropertySvc* ppsvc = 0 )
-        : DeltaMeasuredMass ( name , ppsvc  ) {}
+        LHCb::IParticlePropertySvc* ppsvc = 0 ) ;
       /** constructor 
        *  @param pid  particle ID 
        *  @param ppsvc LHCb::ParticleProperty service 
        */
       AbsDeltaMeasuredMass 
       ( const LHCb::ParticleID&     pid       , 
-        LHCb::IParticlePropertySvc* ppsvc = 0 )       
-        : DeltaMeasuredMass ( pid  , ppsvc  ) {}
+        LHCb::IParticlePropertySvc* ppsvc = 0 ) ;
       /// destructor (virtual)
       virtual ~AbsDeltaMeasuredMass() ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -957,31 +1063,25 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor  
-      DeltaMeasuredMassChi2 
-      ( const double mass   ) 
-        : DeltaMeasuredMass ( mass ) {}
+      DeltaMeasuredMassChi2 ( const double mass   ) ;
       /** constructor 
        *  @param pp particle property 
        */
-      DeltaMeasuredMassChi2 
-      ( const LHCb::ParticleProperty& pp ) 
-        : DeltaMeasuredMass ( pp ) {}
+      DeltaMeasuredMassChi2 ( const LHCb::ParticleProperty& pp ) ;
       /** constructor 
        *  @param name particle name 
        *  @param ppsvc ParticleProperty service 
        */
       DeltaMeasuredMassChi2 
       ( const std::string&          name      , 
-        LHCb::IParticlePropertySvc* ppsvc = 0 ) 
-        : DeltaMeasuredMass ( name , ppsvc ) {}
+        LHCb::IParticlePropertySvc* ppsvc = 0 ) ;
       /** constructor 
        *  @param pid  particle ID 
        *  @param ppsvc ParticleProperty service 
        */
       DeltaMeasuredMassChi2 
-      ( const LHCb::ParticleID&     pid       , 
-        LHCb::IParticlePropertySvc* ppsvc = 0 ) 
-        : DeltaMeasuredMass ( pid , ppsvc ) {}
+        ( const LHCb::ParticleID&     pid       , 
+          LHCb::IParticlePropertySvc* ppsvc = 0 ) ;
       /// virtual destructor 
       ~DeltaMeasuredMassChi2(){};
       /// clone method (mandatory!)
@@ -1012,28 +1112,25 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor  
-      DeltaMassChi2 ( const double mass ) : DeltaMass ( mass ) {}
+      DeltaMassChi2 ( const double mass ) ;
       /** constructor 
        *  @param pp particle property 
        */
-      DeltaMassChi2 ( const LHCb::ParticleProperty& pp ) 
-        : DeltaMass ( pp ) {}
+      DeltaMassChi2 ( const LHCb::ParticleProperty& pp ) ;
       /** constructor 
        *  @param name particle name 
        *  @param ppsvc ParticleProperty service 
        */
       DeltaMassChi2 
       ( const std::string&          name       , 
-        LHCb::IParticlePropertySvc* ppsvc  = 0 ) 
-        : DeltaMass ( name , ppsvc ) {}
+        LHCb::IParticlePropertySvc* ppsvc  = 0 ) ;
       /** constructor 
        *  @param pid  particle ID 
        *  @param ppsvc ParticleProperty service 
        */
       DeltaMassChi2 
       ( const LHCb::ParticleID&     pid       , 
-        LHCb::IParticlePropertySvc* ppsvc = 0 ) 
-        : DeltaMass ( pid , ppsvc ) {}
+        LHCb::IParticlePropertySvc* ppsvc = 0 ) ;
       /// virtual destructor 
       ~DeltaMassChi2(){};
       /// clone method (mandatory!)

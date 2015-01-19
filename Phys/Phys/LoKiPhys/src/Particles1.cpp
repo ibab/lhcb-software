@@ -45,7 +45,8 @@ LoKi::Particles::VertexDistance::VertexDistance
 // ============================================================================
 LoKi::Particles::VertexDistance::VertexDistance
 ( const LoKi::Point3D& vertex ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase ( std::tie ( vertex ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -126,7 +127,8 @@ LoKi::Particles::VertexSignedDistance::VertexSignedDistance
 // ============================================================================
 LoKi::Particles::VertexSignedDistance::VertexSignedDistance
 ( const LoKi::Point3D& vertex ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase ( std::tie ( vertex ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================
@@ -209,7 +211,8 @@ LoKi::Particles::VertexDotDistance::VertexDotDistance
 // ============================================================================
 LoKi::Particles::VertexDotDistance::VertexDotDistance
 ( const LoKi::Point3D& vertex ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase ( std::tie ( vertex ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , LoKi::Vertices::VertexHolder ( vertex )
 {}
 // ============================================================================
@@ -307,7 +310,8 @@ LoKi::Particles::VertexChi2Distance::VertexChi2Distance
 // ============================================================================
 LoKi::Particles::VertexChi2Distance::VertexChi2Distance
 ( const LoKi::Point3D& vertex ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase ( std::tie ( vertex ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( vertex )
 {}
 // ============================================================================

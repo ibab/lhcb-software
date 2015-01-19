@@ -36,6 +36,24 @@
  *  @date 2006-02-10 
  */
 // ============================================================================
+LoKi::Particles::TimeDistance::TimeDistance 
+( const LoKi::Point3D&     vertex )
+  : LoKi::AuxFunBase ( std::tie ( vertex ) ) 
+  , LoKi::Particles::VertexDistance ( vertex ) 
+{}
+// ============================================================================
+LoKi::Particles::TimeSignedDistance::TimeSignedDistance 
+( const LoKi::Point3D&     vertex )
+  : LoKi::AuxFunBase ( std::tie ( vertex ) ) 
+  , LoKi::Particles::VertexSignedDistance ( vertex ) 
+{}
+// ============================================================================L
+LoKi::Particles::TimeDotDistance::TimeDotDistance 
+( const LoKi::Point3D& vertex ) 
+  : LoKi::AuxFunBase ( std::tie ( vertex ) ) 
+  , LoKi::Particles::VertexDotDistance ( vertex ) {}
+
+
 //  the actual computation 
 // ============================================================================
 LoKi::Particles::TimeDistance::result_type 
@@ -147,7 +165,8 @@ LoKi::Particles::LifetimeDistance::LifetimeDistance
 // ============================================================================
 LoKi::Particles::LifetimeDistance::LifetimeDistance 
 ( const LoKi::Point3D& vertex ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( vertex ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , LoKi::Vertices::VertexHolder ( vertex )  
 {}
 // ============================================================================

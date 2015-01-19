@@ -31,7 +31,8 @@
 LoKi::Particles::VFunAsPFun::VFunAsPFun
 ( const LoKi::Types::VFunc& vfun , 
   const double              bad  ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( vfun , bad ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_vfun ( vfun ) 
   , m_bad  ( bad  ) 
 {}

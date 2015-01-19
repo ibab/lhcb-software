@@ -49,7 +49,8 @@
  */
 // ============================================================================
 LoKi::Particles::ProtoHasInfo::ProtoHasInfo( const int info ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( info ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
   , m_info ( info ) 
 {}
 // ============================================================================
@@ -85,7 +86,8 @@ LoKi::Particles::ProtoInfo::ProtoInfo
 ( const int    key , 
   const double def , 
   const double bad )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase ( std::tie ( key , def , bad ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_key ( key ) 
   , m_def ( def ) 
   , m_bad ( bad ) 
@@ -94,7 +96,8 @@ LoKi::Particles::ProtoInfo::ProtoInfo
 LoKi::Particles::ProtoInfo::ProtoInfo
 ( const int    key , 
   const double def )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase ( std::tie ( key , def ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_key ( key ) 
   , m_def ( def ) 
   , m_bad ( def ) 
@@ -363,7 +366,8 @@ LoKi::Particles::InMuonAcceptance::fillStream ( std::ostream& s ) const
 
 // ============================================================================
 LoKi::Particles::TrackHasInfo::TrackHasInfo( const int info ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( info ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
   , m_info ( info ) 
 {}
 // ============================================================================
@@ -400,7 +404,8 @@ LoKi::Particles::TrackInfo::TrackInfo
 ( const int    key , 
   const double def , 
   const double bad )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase ( std::tie ( key , def , bad ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_key ( key ) 
   , m_def ( def ) 
   , m_bad ( bad ) 
@@ -409,7 +414,8 @@ LoKi::Particles::TrackInfo::TrackInfo
 LoKi::Particles::TrackInfo::TrackInfo
 ( const int    key , 
   const double def )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase ( std::tie ( key , def ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_key ( key ) 
   , m_def ( def ) 
   , m_bad ( def ) 

@@ -54,12 +54,10 @@ namespace LoKi
       ( const LHCb::VertexBase*  vertex )
         : LoKi::Particles::VertexDistance ( vertex ) {}
       /// constructor 
-      TimeDistance 
-      ( const LoKi::Point3D&     vertex )
-        : LoKi::Particles::VertexDistance ( vertex ) {}
+      TimeDistance ( const LoKi::Point3D&     vertex ) ;
       /// constructor
       TimeDistance 
-      ( const LoKi::Vertices::VertexHolder& vertex ) 
+        ( const LoKi::Vertices::VertexHolder& vertex ) 
         : LoKi::Particles::VertexDistance ( vertex ) {}
       /// MANDATORY: destructor
       virtual ~TimeDistance(){} ;
@@ -106,9 +104,7 @@ namespace LoKi
       ( const LHCb::VertexBase*  vertex )
         : LoKi::Particles::VertexSignedDistance ( vertex ) {}
       /// constructor 
-      TimeSignedDistance 
-      ( const LoKi::Point3D&     vertex )
-        : LoKi::Particles::VertexSignedDistance ( vertex ) {}
+      TimeSignedDistance ( const LoKi::Point3D&     vertex ) ;
       /// constructor
       TimeSignedDistance 
       ( const LoKi::Vertices::VertexHolder& vertex ) 
@@ -158,9 +154,7 @@ namespace LoKi
       ( const LHCb::VertexBase* vertex ) 
         : LoKi::Particles::VertexDotDistance ( vertex ) {}
       /// constructor 
-      TimeDotDistance 
-      ( const LoKi::Point3D& vertex ) 
-        : LoKi::Particles::VertexDotDistance ( vertex ) {}
+      TimeDotDistance ( const LoKi::Point3D& vertex ) ;
       /// constructor 
       TimeDotDistance 
       ( const LoKi::Vertices::VertexHolder&    vertex ) 
