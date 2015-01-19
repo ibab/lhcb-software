@@ -18,14 +18,14 @@ use GaudiObjDesc        v11r20
 # LHCb Online packages
 #=======================================================
 use Camera              v1r28    Online
-use Checkpointing       v0r19    Online
+use Checkpointing       v0r20    Online
 macro CondDBServer_use "CondDBServer v1r6 Online" target-i686 ""
 use $(CondDBServer_use)
 ####use CondDBServer        v1r6     Online
 use Controller          v0r14    Online
 use ControllerTests     v0r2     Online
 use DailyReport         v1r3     Online
-use DefHLTUtils         v1r9     Online
+use DefHLTUtils         v1r10    Online
 use DIM                 v20r7p3  Online
 use EventBuilder        v0r5     Online
 use FarmConfig          v0r10    Online
@@ -43,9 +43,9 @@ use InsertDB            v1r10    Online
 use MBMDump             v1r16    Online
 use OMAlib              v4r4     Online
 use OnlineAlign         v0r3     Online
-use OnlineBase          v1r26    Online
+use OnlineBase          v1r27    Online
 use OnlineHistDB        v8r1     Online
-use OnlineKernel        v2r16    Online
+use OnlineKernel        v2r17    Online
 use OnlineTools         v1r5     Online
 use OnlineTasks         v1r53    Online
 use Presenter           v3r10    Online

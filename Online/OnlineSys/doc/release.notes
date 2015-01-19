@@ -6,7 +6,17 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
-<H1><A NAME=v5r13>2015-01-12 OnlineSys v5r14</A></H1>
+<H1><A NAME=v5r15>2015-01-19 OnlineSys v5r15</A></H1>
+<PRE>
+  Use Gaudi v26r0
+  Updated/new packages:	
+     Checkpointing       v0r20    Online
+     DefHLTUtils         v1r10    Online
+     OnlineBase          v1r27    Online
+     OnlineKernel        v2r17    Online
+</PRE>
+
+<H1><A NAME=v5r14>2015-01-12 OnlineSys v5r14</A></H1>
 <PRE>
   Use Gaudi v25r6p1
   Updated/new packages:	
