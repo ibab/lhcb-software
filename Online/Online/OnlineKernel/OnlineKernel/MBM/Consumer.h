@@ -1,22 +1,61 @@
-#ifndef _MBM_CONSUMER_H
-#define _MBM_CONSUMER_H
+// $Header: $
+// ====================================================================
+//
+// --------------------------------------------------------------------
+//
+// Author    : Markus Frank
+//
+// ====================================================================
+#ifndef ONLINE_ONLINEKERNEL_MBM_CONSUMER_H
+#define ONLINE_ONLINEKERNEL_MBM_CONSUMER_H
 
+// Framework include files
 #include "MBM/Client.h"
 
-/*
- *  MBM namespace declaration
- */
+///  MBM (Multi-Buffer-Manager) namespace declaration
 namespace MBM {
 
   // Forward declarations 
   class Requirement;
 
-  /** @class Consumer Comsumer.h MBM/Consumer.h
-    *
-    *   @author  M.Frank
-    *   @version 1.0
-    *   @date    12/1/2006
-    */
+  /// Class describing a MBM Consumer 
+  /** 
+   *   Every readout function is separated into independent tasks running 
+   *   asynchronously in order to derandomize the flow of events. The producer 
+   *   task is responsible for reading/assembling data from data sources. 
+   *
+   *   As soon as the read operation is finished, the data block is declared 
+   *   to a managed shared memory area, the buffer manager (BM) and the 
+   *   producer is ready for the next read operation.
+   *
+   *   The consumer task is activated each time an event is declared in the BM. 
+   *   The consumer is responsible for releasing the space occupied as 
+   *   soon as the consumer has finished processing. Thus, the two activities 
+   *   of reading and processing can proceed asynchronously, provided there is 
+   *   always sufficient space in the buffer to accommodate at least one read 
+   *   operation. 
+   *
+   *   A BM is managed by a dedicated task executing on each node, which creates 
+   *   and initializes the shared memory area. The synchronization between the 
+   *   various participating processes has been realized using shared semaphores. 
+   *   Any task using the BM registers itself with a name and a partition identifier.
+   *   Consumers will only receive data declared by producers with the same 
+   *   partition identifier and a boolean accept and veto mask of a width of 128 bits, 
+   *   which allows consumers to be specific in the type of data they wish to 
+   *   receive. Consumers may request data from the BM in three different ways:
+   *   \li The consumer sees all data declared to the BM according to the request mask.
+   *   \li A group of consumers see the data exactly once. This mode allows 
+   *       executing multiple instances of an application and taking advantage 
+   *       of multiple CPU cores.
+   *   \li A consumer is served on a best effort basis. In this mode producers 
+   *       are always able to declare new data. Possibly pending data, which 
+   *       have to be released to satisfy the space requests, are not seen by 
+   *       these consumers.
+   *
+   *   \author  M.Frank
+   *   \version 1.0
+   *   \date    12/1/2006
+   */
   class Consumer : public Client  {
   protected:
 
@@ -87,4 +126,4 @@ namespace MBM {
     virtual int runSynchronous();
   };
 }
-#endif  // _MBM_CONSUMER_H
+#endif  // ONLINE_ONLINEKERNEL_MBM_CONSUMER_H

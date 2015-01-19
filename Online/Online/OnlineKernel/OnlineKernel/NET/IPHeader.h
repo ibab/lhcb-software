@@ -1,3 +1,11 @@
+// $Header: $
+// ====================================================================
+//
+// --------------------------------------------------------------------
+//
+// Author    : Markus Frank
+//
+// ====================================================================
 #ifndef  NET_IPHEADER_H
 #define  NET_IPHEADER_H
 
@@ -10,8 +18,12 @@
 #define IPHEADER_ALIGNED(x) x __attribute__((__packed__))
 #endif
 
+
+
 namespace RTL {
-  /**@struct IPHeader
+
+  /// This structure encapsulates the various data fields of a IP packet header
+  /**
     */
   IPHEADER_ALIGNED(struct) IPHeader {
     u_int8_t  hlv;

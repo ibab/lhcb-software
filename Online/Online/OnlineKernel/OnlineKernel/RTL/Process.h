@@ -1,19 +1,27 @@
+// $Header: $
+// ====================================================================
+//
+// --------------------------------------------------------------------
+//
+// Author    : Markus Frank
+//
+// ====================================================================#
+// $ID:
 #ifndef ONLINEKERNEL_RTL_PROCESS_H
 #define ONLINEKERNEL_RTL_PROCESS_H
 
-// $ID:
 // C++ include files
 #include <vector>
 #include <string>
 
-/*
- *   RTL namespace declaration
- */
+///  RTL (Run-Time-Library) namespace declaration
 namespace RTL {
-  /** @class Process Process.h RTL/Process.h
+
+  /// Class, which allows to manipulate a single process
+  /** 
    *
-   *  @author  M.Frank
-   *  @version 1.0
+   *  \author  M.Frank
+   *  \version 1.0
    */
   class Process {
   public:

@@ -1,16 +1,30 @@
+// $Header: $
+// ====================================================================
+//
+// --------------------------------------------------------------------
+//
+// Author    : Markus Frank
+//
+// ====================================================================
 #ifndef _RTL_GLOBALSECTION_H
 #define _RTL_GLOBALSECTION_H
 
+// Framework include files
 #include "RTL/rtl.h"
+
+// C/C++ include files
 #include <string>
 
-/*
- *   RTL namespace declaration
- */
+///  RTL (Run-Time-Library) namespace declaration
 namespace RTL  {
 
-  /**@class GlobalSection GlobalSection.h RTL/GlobalSection.h
-    */
+  /// Class to manipulate shared memory sections
+  /**
+   * 
+   *   \author  M.Frank
+   *   \version 1.0
+   *
+   */
   class GlobalSection  {
     /// Section name
     std::string    m_name;

@@ -1,3 +1,11 @@
+// $Header: $
+// ====================================================================
+//
+// --------------------------------------------------------------------
+//
+// Author    : Markus Frank
+//
+// ====================================================================
 #ifndef ONLINEKERNEL_RTL_PROCESSGROUP_H
 #define ONLINEKERNEL_RTL_PROCESSGROUP_H
 // $ID:
@@ -9,14 +17,14 @@
 #include <vector>
 #include <string>
 
-/*
- *   RTL namespace declaration
- */
+///  RTL (Run-Time-Library) namespace declaration
 namespace RTL {
+
   // Forward declarations
   class Process;
 
-  /** @class ProcessGroup ProcessGroup.h RTL/ProcessGroup.h
+  /// Class, which allows to manipulate entire groups of processes
+  /** 
    *
    *  @author  M.Frank
    *  @version 1.0

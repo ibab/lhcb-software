@@ -21,9 +21,11 @@ apply_pattern linker_library          library=OnlineKernel
 #
 application   test                    ../main/wt.cpp
 application   gentest                 ../main/gentest.cpp
+application   checkpoint              ../main/checkpoint.cpp
 application   mbm_remove              ../main/mbm_remove.cpp
 macro_append  test_dependencies       " OnlineKernel "
 macro_append  gentest_dependencies    " OnlineKernel "
+macro_append  checkpoint_dependencies " OnlineKernel "
 macro_append  mbm_remove_dependencies " OnlineKernel "
 macro_append  use_includes            ' $(ppcmd)"$(OnlineKernel_cmtpath)/$(cmt_installarea_prefix)$(shared_install_subdir)/include/OnlineKernel" '
 macro_append  use_linkopts            ' -ldl ' WIN32 ''
@@ -53,4 +55,5 @@ macro_append use_includes     ' $(ppcmd)"$(ONLINEKERNELROOT)/OnlineKernel" '
 macro_append cppflags         ' $(ONLINE_CPPFLAGS) '
 macro_append test_use_linkopts           " -ldl " WIN32 "" target-icc " -Wl,--no-as-needed "
 macro_append gentest_use_linkopts        " -ldl " WIN32 "" target-icc " -Wl,--no-as-needed "
+macro_append checkpoint_use_linkopts     " -ldl " WIN32 "" target-icc " -Wl,--no-as-needed "
 macro_append mbm_remove_use_linkopts     " -ldl " WIN32 "" target-icc " -Wl,--no-as-needed "
