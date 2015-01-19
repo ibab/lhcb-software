@@ -1,5 +1,5 @@
 package  DefHLTUtils
-version  v1r10
+version  v1r11
 
 branches src cmt doc
 

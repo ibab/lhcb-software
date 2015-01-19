@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DefHLTUtils
 ################################################################################
-gaudi_subdir(DefHLTUtils v1r7)
+gaudi_subdir(DefHLTUtils v1r11)
 
 gaudi_depends_on_subdirs(Online/Gaucho
                          Online/OnlineKernel
@@ -12,7 +12,7 @@ find_package(ROOT COMPONENTS Core Hist Rint Gpad)
 gaudi_add_library(DefUtil src/HLTPerfFormatter.cpp src/FileTestSvc.cpp
                   NO_PUBLIC_HEADERS
                   INCLUDE_DIRS ROOT
-                  LINK_LIBRARIES ROMon OnlineKernel GaudiKernel ROOT)
+                  LINK_LIBRARIES ROMon OnlineKernel GaudiKernel dim ROOT)
 
 macro(add_exe name)
   gaudi_add_executable(${name} src/${name} LINK_LIBRARIES DefUtil)
