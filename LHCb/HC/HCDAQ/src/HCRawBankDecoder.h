@@ -34,6 +34,7 @@ class HCRawBankDecoder : public Decoder::AlgBase {
 
   bool decodeV1(LHCb::RawBank* bank);
   bool decodeV2(LHCb::RawBank* bank);
+  bool decodeV3(LHCb::RawBank* bank);
   bool decodeErrorBank(LHCb::RawBank* bank);
 
 };

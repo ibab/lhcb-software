@@ -75,7 +75,7 @@ StatusCode HCRawBankDecoder::execute() {
     }
     const unsigned int source = (*it)->sourceID();
     const unsigned int version = (*it)->version();
-    if (msgLevel(MSG::DEBUG)) {
+    if (UNLIKELY(msgLevel(MSG::DEBUG))) {
       debug() << "Source: " << source << ", version: " << version << endmsg;
     }
     // Decode the raw bank.
@@ -83,6 +83,8 @@ StatusCode HCRawBankDecoder::execute() {
       decodeV1(*it);
     } else if (version == 2) {
       decodeV2(*it);
+    } else if (version == 3) {
+      decodeV3(*it);
     } else {
       error() << "Unknown raw bank version (" << version << ")" << endmsg;
       return StatusCode::FAILURE;
@@ -91,7 +93,7 @@ StatusCode HCRawBankDecoder::execute() {
 
   auto errorBanks = rawEvent->banks(LHCb::RawBank::EcalPackedError);
   if (errorBanks.empty()) {
-    if (msgLevel(MSG::DEBUG)) {
+    if (UNLIKELY(msgLevel(MSG::DEBUG))) {
       debug() << "No error banks in raw event." << endmsg;
     }
     return StatusCode::SUCCESS;
@@ -117,7 +119,7 @@ bool HCRawBankDecoder::decodeV1(LHCb::RawBank* bank) {
     const unsigned int word = bank->data()[i];
     const unsigned int channel = (word >> 16) & 0xFFFF;
     const unsigned int adc = word & 0xFFFF;
-    if (msgLevel(MSG::VERBOSE)) {
+    if (UNLIKELY(msgLevel(MSG::VERBOSE))) {
       debug() << "Channel: " << channel << ", ADC: " << adc << endmsg;
     }
   }
@@ -125,7 +127,7 @@ bool HCRawBankDecoder::decodeV1(LHCb::RawBank* bank) {
 }
 
 //=============================================================================
-// Decoding of raw bank version 2 (compressed format)
+// Decoding of raw bank version 2 (compressed format for ECAL and HCAL)
 //=============================================================================
 bool HCRawBankDecoder::decodeV2(LHCb::RawBank* bank) {
 
@@ -143,7 +145,7 @@ bool HCRawBankDecoder::decodeV2(LHCb::RawBank* bank) {
     const unsigned int crate = (word >> 18) & 0x1F; 
     // Control word.
     const unsigned int ctrl = (word >> 23) & 0x1FF;
-    if (msgLevel(MSG::VERBOSE)) {
+    if (UNLIKELY(msgLevel(MSG::VERBOSE))) {
       verbose() << format("Crate: %02u, card: %02u, ", crate, card) 
                 << format("trigger part: %03u bytes, ", lenTrig)
                 << format("ADC part: %03u bytes", lenAdc) << endmsg;
@@ -156,7 +158,7 @@ bool HCRawBankDecoder::decodeV2(LHCb::RawBank* bank) {
     const unsigned int syncError = ctrl & 0x20;
     const unsigned int linkError = ctrl & 0x40;
     if (generalError != 0 || syncError != 0 || linkError != 0) {
-      if (msgLevel(MSG::DEBUG)) {
+      if (UNLIKELY(msgLevel(MSG::DEBUG))) {
         debug() << "Tell1 error bits have been detected in data" << endmsg;
         if (0 != generalError) debug() << "General error" << endmsg; 
         if (0 != syncError) debug() << "Synchronisation error" << endmsg; 
@@ -191,19 +193,19 @@ bool HCRawBankDecoder::decodeV2(LHCb::RawBank* bank) {
         }
         const int adc = (word >> offset) & 0xFF;
         offset += 8;
-        if (msgLevel(MSG::VERBOSE)) {
+        if (UNLIKELY(msgLevel(MSG::VERBOSE))) {
           verbose() << format("Channel: %06u ", i) 
                     << format("Trigger ADC: %06i", adc) << endmsg;
         }
-	m_l0digits->insert(new LHCb::HCDigit(adc), cell);
+        m_l0digits->insert(new LHCb::HCDigit(adc), cell);
       }
     } else {
       // Empty trigger block. 
       for (unsigned int i = 0; i < 32; ++i) {
         const unsigned int station = i % 8;
         const unsigned int quadrant = (i - station) / 8; 
-	LHCb::HCCellID cell(0, station, quadrant);
-	m_l0digits->insert(new LHCb::HCDigit(-5), cell);
+        LHCb::HCCellID cell(0, station, quadrant);
+        m_l0digits->insert(new LHCb::HCDigit(-5), cell);
       }
     }
     if (m_skipAdc) {
@@ -250,8 +252,110 @@ bool HCRawBankDecoder::decodeV2(LHCb::RawBank* bank) {
       const unsigned int quadrant = (i - station) / 8; 
       LHCb::HCCellID cell(0, station, quadrant);
       m_digits->insert(new LHCb::HCDigit(adc), cell);
-      if (msgLevel(MSG::VERBOSE)) {
+      if (UNLIKELY(msgLevel(MSG::VERBOSE))) {
         verbose() << format("Channel: %06u ", i) 
+                  << format("ADC: %06i", adc) << endmsg;
+      }
+    }
+  }
+  return true;
+}
+
+//=============================================================================
+// Decoding of raw bank version 3 (compressed format for PS and SPD)
+//=============================================================================
+bool HCRawBankDecoder::decodeV3(LHCb::RawBank* bank) {
+
+  uint32_t* data = bank->data();
+  unsigned int nWords = bank->size() / sizeof(uint32_t);
+  while (nWords > 0) {
+    // Read the bank header.
+    uint32_t word = *data++;
+    --nWords;
+    // Length of the trigger part in bytes, without padding.
+    unsigned int lenTrig = word & 0x7F;
+    // Length of the ADC part in bytes, without padding.
+    unsigned int lenAdc = (word >> 7) & 0x7F;
+    const unsigned int card = (word >> 14) & 0xF;
+    const unsigned int crate = (word >> 18) & 0x1F; 
+    // Control word.
+    const unsigned int ctrl = (word >> 23) & 0x1FF;
+    if (UNLIKELY(msgLevel(MSG::VERBOSE))) {
+      verbose() << format("Crate: %02u, card: %02u, ", crate, card) 
+                << format("trigger part: %03u bytes, ", lenTrig)
+                << format("ADC part: %03u bytes", lenAdc) << endmsg;
+      const unsigned int ttype = (ctrl >> 1) & 0xF;
+      const unsigned int chk = (ctrl >> 7) & 0x2;
+      verbose() << format("Trigger type: 0x%1x, ", ttype) 
+                << "control bits: " << chk << endmsg; 
+    }
+    const unsigned int generalError = ctrl & 0x1;
+    const unsigned int syncError = ctrl & 0x20;
+    const unsigned int linkError = ctrl & 0x40;
+    if (generalError != 0 || syncError != 0 || linkError != 0) {
+      if (UNLIKELY(msgLevel(MSG::DEBUG))) {
+        debug() << "Tell1 error bits have been detected in data" << endmsg;
+        if (0 != generalError) debug() << "General error" << endmsg; 
+        if (0 != syncError) debug() << "Synchronisation error" << endmsg; 
+        if (0 != linkError) debug() << "Link error" << endmsg; 
+      }
+    }
+    unsigned int offset = 32;
+    // Read the trigger data.
+    if (m_skipTrigger) {
+      const unsigned int nSkip = (lenTrig + 3) / 4;
+      data += nSkip;
+      nWords -= nSkip;
+    } else {
+      while (lenTrig > 0) {
+        if (32 == offset) {
+          // Read the next word.
+          word = *data++;
+          --nWords;
+          offset = 0;
+        }
+        const unsigned int channel = (word >> offset) & 0x3F;
+        const int prs = (word >> (offset + 6)) & 1;
+        const int spd = (word >> (offset + 7)) & 1;
+        const int adc = prs + 10 * spd;
+        if (UNLIKELY(msgLevel(MSG::VERBOSE))) {
+          verbose() << format("Channel: %06u ", channel) 
+                    << format("PRS: %01i ", prs) 
+                    << format("SPD: %01i ", spd) << endmsg;
+        }
+        const unsigned int station = channel % 8;
+        const unsigned int quadrant = (channel - station) / 8; 
+        LHCb::HCCellID cell(0, station, quadrant);
+        m_l0digits->insert(new LHCb::HCDigit(adc), cell);
+        offset += 8;
+        --lenTrig;
+      }
+    }
+    if (m_skipAdc) {
+      const unsigned int nSkip = (lenAdc + 3) / 4;
+      data += nSkip;
+      nWords -= nSkip;
+      continue;
+    }
+    // Read the ADC data
+    offset = 32;
+    while (lenAdc > 0) {
+      if (32 == offset) {
+        // Read the next word.
+        word = *data++;
+        --nWords;
+        offset = 0;
+      }
+      const int adc = (word >> offset) & 0x3FF;
+      const unsigned int channel = (word >> (offset + 10)) & 0x3F;
+      --lenAdc;
+      offset += 16;
+      const unsigned int station = channel % 8;
+      const unsigned int quadrant = (channel - station) / 8; 
+      LHCb::HCCellID cell(0, station, quadrant);
+      m_digits->insert(new LHCb::HCDigit(adc), cell);
+      if (UNLIKELY(msgLevel(MSG::VERBOSE))) {
+        verbose() << format("Channel: %06u ", channel) 
                   << format("ADC: %06i", adc) << endmsg;
       }
     }
