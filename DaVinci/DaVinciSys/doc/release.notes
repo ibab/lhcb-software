@@ -1,7 +1,30 @@
 <PRE>
 Package             : DaVinciSys
-Package Coordinator : Chris Jones
+Package Coordinator : Eduardo Rodrigues
 Purpose             : LHCb physics analysis application
+
+</PRE><H1><A NAME=v36r4>2015-01-19 DaVinci v36r4</A></H1><PRE>
+
+Development release for 2015 data taking, based on Gaudi v26r0,
+LHCb v38r4, Lbcom v16r3, Rec v17r4, Phys v19r4, Analysis v13r3
+and Stripping v9r4. Uses LCG_72root6 with ROOT 6.02.03.
+
+- Refer to the release notes of Phys, Analysis and Stripping for details
+  on updates to these dependency projects.
+
+- Packages updated :
+  DaVinciTests v2r29, Phys/DaVinci v36r4,  Phys/Tesla v1r2.
+
+- In DaVinciTests v2r29 :
+  . Added python/DaVinciTests/__init__.py to remove a CMake warnning.
+
+- In Phys/DaVinci v36r4 :
+  . Added python/DaVinci/__init__.py to remove a CMake warnning.
+
+- In Phys/Tesla v1r2 :
+  . Update to tesla.containers and tesla.default tests.
+  . Lumi algorithms and Turbo raw bank conversion included in Tesla.
+  . Added python/Tesla/__init__.py to remove a CMake warnning.
 
 </PRE><H1><A NAME=v36r3p1>2014-12-17 DaVinci v36r3p1</A></H1><PRE>
 
@@ -29,7 +52,7 @@ and Stripping v9r3.
 - In DaVinciTests v2r28 :
   . QM tests added for Stripping 21 and 21r1.
 
-- In Phys/DaVinci v36r3 				 :
+- In Phys/DaVinci v36r3 :
   . DataType 2015 added to list of known DataTypes.
 
 - In Phys/Tesla v1r1 :

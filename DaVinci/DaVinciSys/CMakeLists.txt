@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinciSys
 ################################################################################
-gaudi_subdir(DaVinciSys v36r3p1)
+gaudi_subdir(DaVinciSys v36r4)
 
 gaudi_depends_on_subdirs(DaVinciTests
                          Phys/DaVinci
