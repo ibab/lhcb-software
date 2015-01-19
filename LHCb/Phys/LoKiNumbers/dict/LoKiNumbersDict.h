@@ -17,9 +17,7 @@
 #include "LoKi/Random.h"
 #include "LoKi/Scalers.h"
 #include "LoKi/Filters.h"
-#include "LoKi/TES.h"
 #include "LoKi/Status.h"
-#include "LoKi/RecStat.h"
 // ============================================================================
 /** @file
  *  Simple file to build the dictionaries for LoKi's functors, which 
