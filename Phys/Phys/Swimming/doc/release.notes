@@ -5,6 +5,9 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2015-01-19 - Eduardo Rodrigues
+ - Added python/Swimming/__init__.py to please CMake.
+
 !========================= Swimming v3r5 2014-12-15 =========================
 
 ! 2014-11-06 - Marco Clemencic
