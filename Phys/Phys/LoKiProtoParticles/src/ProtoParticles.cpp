@@ -82,6 +82,11 @@ std::ostream&
 LoKi::Functors::Size<const LHCb::ProtoParticle*>::fillStream
 ( std::ostream& s ) const { return s << "PP_SIZE" ; }
 // ============================================================================
+template <>
+std::ostream& 
+LoKi::Valid<const LHCb::ProtoParticle*>::fillStream 
+( std::ostream& s ) const { return s << "PP_VALID " ; }
+// ============================================================================
 // constructor from the filter 
 // ============================================================================
 LoKi::ProtoParticles::Filter::Filter ( const IProtoParticleFilter* fltr ) 
@@ -95,7 +100,8 @@ LoKi::ProtoParticles::Filter::Filter ( const IProtoParticleFilter* fltr )
 // ============================================================================
 LoKi::ProtoParticles::Filter::Filter
 ( const std::string& nick  ) 
-  : LoKi::PPTypes::PPCuts () 
+  : LoKi::AuxFunBase ( std::tie ( nick ) ) 
+  , LoKi::PPTypes::PPCuts () 
   , m_filter () 
 {
   m_filter = LoKi::GetTools::protoParticleFilter ( *this , nick ) ;
@@ -141,7 +147,8 @@ std::ostream& LoKi::ProtoParticles::Filter::fillStream  ( std::ostream& s ) cons
 // contructor from the index 
 // ============================================================================
 LoKi::ProtoParticles::HasInfo::HasInfo ( const int index ) 
-  : LoKi::PPTypes::PPCuts () 
+  : LoKi::AuxFunBase ( std::tie ( index ) ) 
+  , LoKi::PPTypes::PPCuts () 
   , m_index ( index ) 
 {}
 // ============================================================================
@@ -203,7 +210,8 @@ LoKi::ProtoParticles::Info::Info
 ( const int    key , 
   const double def , 
   const double bad ) 
-  : LoKi::PPTypes::PPFunc () 
+  : LoKi::AuxFunBase ( std::tie ( key , def, bad ) ) 
+  , LoKi::PPTypes::PPFunc () 
   , m_key ( key ) 
   , m_def ( def ) 
   , m_bad ( bad ) 
@@ -217,7 +225,8 @@ LoKi::ProtoParticles::Info::Info
 LoKi::ProtoParticles::Info::Info 
 ( const int    key , 
   const double def ) 
-  : LoKi::PPTypes::PPFunc () 
+  : LoKi::AuxFunBase ( std::tie ( key , def ) ) 
+  , LoKi::PPTypes::PPFunc () 
   , m_key ( key ) 
   , m_def ( def ) 
   , m_bad ( LoKi::Constants::NegativeInfinity ) 
@@ -260,7 +269,11 @@ std::ostream& LoKi::ProtoParticles::Info::fillStream ( std::ostream& s ) const
   if ( LoKi::Constants::NegativeInfinity != m_bad ) { s << " , " << m_bad ; }
   return  s << " ) " ; 
 }
-// ============================================================================
+// ============================================================================/
+LoKi::ProtoParticles::HasRichPID::HasRichPID()
+  : LoKi::PPTypes::PPCuts() 
+{}
+// ============================================================================/
 // MANDATORY: virtual destructor
 // ============================================================================
 LoKi::ProtoParticles::HasRichPID::~HasRichPID() {}
@@ -565,7 +578,8 @@ std::ostream& LoKi::ProtoParticles::HasRich2Gas::fillStream ( std::ostream& s ) 
 // ============================================================================
 LoKi::ProtoParticles::HasDetector::HasDetector
 ( const LoKi::ProtoParticles::HasDetector::Detector det ) 
-  : LoKi::ProtoParticles::HasRich2Gas () 
+  : LoKi::AuxFunBase ( std::tie ( det ) ) 
+  , LoKi::ProtoParticles::HasRich2Gas () 
   , m_det ( det ) 
 {
   switch ( det ) 
@@ -602,7 +616,8 @@ LoKi::ProtoParticles::HasDetector::HasDetector
 // ============================================================================
 LoKi::ProtoParticles::HasDetector::HasDetector
 ( const std::string& det ) 
-  : LoKi::ProtoParticles::HasRich2Gas () 
+  : LoKi::AuxFunBase ( std::tie ( det ) ) 
+  , LoKi::ProtoParticles::HasRich2Gas () 
   , m_det ( LoKi::ProtoParticles::HasDetector::RICH ) 
 {
   //
@@ -925,14 +940,16 @@ std::ostream& LoKi::ProtoParticles::HasDetector::fillStream ( std::ostream& s ) 
 // ============================================================================
 LoKi::ProtoParticles::OnlyDetector::OnlyDetector
 ( const LoKi::ProtoParticles::HasDetector::Detector det ) 
-  : LoKi::ProtoParticles::HasDetector ( det ) 
+  : LoKi::AuxFunBase ( std::tie ( det ) ) 
+  , LoKi::ProtoParticles::HasDetector ( det ) 
 {}
 // ============================================================================
 // constructor from the detector 
 // ============================================================================
 LoKi::ProtoParticles::OnlyDetector::OnlyDetector
 ( const std::string& det ) 
-  : LoKi::ProtoParticles::HasDetector ( det ) 
+  : LoKi::AuxFunBase ( std::tie ( det ) ) 
+  , LoKi::ProtoParticles::HasDetector ( det ) 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -1119,7 +1136,8 @@ LoKi::ProtoParticles::SourceTES::SourceTES
 ( const std::string&           path , 
   IDataProviderSvc*            svc  , 
   const LoKi::PPTypes::PPCuts& cuts ) 
-  : LoKi::PPTypes::PPSources () 
+  : LoKi::AuxFunBase ( std::tie ( path , cuts  ) ) 
+  , LoKi::PPTypes::PPSources () 
   , m_path    ( 1 , path ) 
   , m_dataSvc ( svc      ) 
   , m_cut     ( cuts     ) 
@@ -1131,7 +1149,8 @@ LoKi::ProtoParticles::SourceTES::SourceTES
 ( const std::vector<std::string>& path , 
   IDataProviderSvc*               svc  , 
   const LoKi::PPTypes::PPCuts&    cuts ) 
-  : LoKi::PPTypes::PPSources () 
+  : LoKi::AuxFunBase ( std::tie ( path , cuts  ) ) 
+  , LoKi::PPTypes::PPSources () 
   , m_path    ( path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts ) 
@@ -1143,7 +1162,8 @@ LoKi::ProtoParticles::SourceTES::SourceTES
 ( const std::string&           path , 
   const LoKi::PPTypes::PPCuts& cuts ,  
   IDataProviderSvc*            svc  ) 
-  : LoKi::PPTypes::PPSources () 
+  : LoKi::AuxFunBase ( std::tie ( path , cuts  ) ) 
+  , LoKi::PPTypes::PPSources () 
   , m_path    ( 1 , path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts ) 
@@ -1155,7 +1175,8 @@ LoKi::ProtoParticles::SourceTES::SourceTES
 ( const std::vector<std::string>& path  , 
   const LoKi::PPTypes::PPCuts&    cuts  ,  
   IDataProviderSvc*               svc   ) 
-  : LoKi::PPTypes::PPSources () 
+  : LoKi::AuxFunBase ( std::tie ( path , cuts  ) ) 
+  , LoKi::PPTypes::PPSources () 
   , m_path    ( path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts ) 
@@ -1167,7 +1188,8 @@ LoKi::ProtoParticles::SourceTES::SourceTES
 ( const LoKi::PPTypes::PPCuts& cuts  ,  
   const std::string&           path  ,
   IDataProviderSvc*            svc   ) 
-  : LoKi::PPTypes::PPSources () 
+  : LoKi::AuxFunBase ( std::tie ( cuts  , path ) ) 
+  , LoKi::PPTypes::PPSources () 
   , m_path    ( 1 , path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts ) 
@@ -1179,7 +1201,8 @@ LoKi::ProtoParticles::SourceTES::SourceTES
 ( const LoKi::PPTypes::PPCuts&    cuts ,  
   const std::vector<std::string>& path ,
   IDataProviderSvc*               svc  ) 
-  : LoKi::PPTypes::PPSources () 
+  : LoKi::AuxFunBase ( std::tie ( cuts  , path ) ) 
+  , LoKi::PPTypes::PPSources () 
   , m_path    ( path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts ) 
@@ -1191,7 +1214,8 @@ LoKi::ProtoParticles::SourceTES::SourceTES
 ( const LoKi::PPTypes::PPCuts& cuts  ,  
   IDataProviderSvc*            svc   ,  
   const std::string&           path  ) 
-  : LoKi::PPTypes::PPSources () 
+  : LoKi::AuxFunBase ( std::tie ( cuts  , path ) ) 
+  , LoKi::PPTypes::PPSources () 
   , m_path    ( 1 , path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts ) 
@@ -1203,7 +1227,8 @@ LoKi::ProtoParticles::SourceTES::SourceTES
 ( const LoKi::PPTypes::PPCuts&    cuts  ,  
   IDataProviderSvc*               svc   ,  
   const std::vector<std::string>& path  ) 
-  : LoKi::PPTypes::PPSources () 
+  : LoKi::AuxFunBase ( std::tie ( cuts  , path ) ) 
+  , LoKi::PPTypes::PPSources () 
   , m_path    ( path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts ) 
@@ -1325,9 +1350,10 @@ LoKi::ProtoParticles::SourceTES::fillStream ( std::ostream& o ) const
 // constructor from the service, TES location and cuts 
 // ============================================================================
 LoKi::ProtoParticles::TESCounter::TESCounter 
-( const std::string&              path , 
+( const std::string&           path , 
   const LoKi::PPTypes::PPCuts& cuts )
-  : LoKi::Functor<void,double> () 
+  : LoKi::AuxFunBase ( std::tie ( path , cuts ) ) 
+  , LoKi::Functor<void,double> () 
   , m_source ( path , cuts ) 
 {}
 // ============================================================================
@@ -1335,8 +1361,9 @@ LoKi::ProtoParticles::TESCounter::TESCounter
 // ============================================================================
 LoKi::ProtoParticles::TESCounter::TESCounter 
 ( const std::vector<std::string>& path                    , 
-  const LoKi::PPTypes::PPCuts& cuts )
-  : LoKi::Functor<void,double> () 
+  const LoKi::PPTypes::PPCuts&    cuts )
+  : LoKi::AuxFunBase ( std::tie ( path , cuts ) ) 
+  , LoKi::Functor<void,double> () 
   , m_source ( path , cuts ) 
 {}
 // ============================================================================
@@ -1385,7 +1412,8 @@ LoKi::ProtoParticles::TESCounter::fillStream ( std::ostream& o ) const
 // ============================================================================
 LoKi::ProtoParticles::TrackCut::TrackCut
 ( const LoKi::BasicFunctors<LHCb::Track>::Predicate& cut ) 
-  : LoKi::PPTypes::PPCuts ()
+  : LoKi::AuxFunBase ( std::tie ( cut ) ) 
+  , LoKi::PPTypes::PPCuts ()
   , m_cut ( cut ) 
 {}
 // ============================================================================
@@ -1436,7 +1464,8 @@ LoKi::ProtoParticles::TrackCut::fillStream ( std::ostream& o ) const
 LoKi::ProtoParticles::TrackFun::TrackFun
 ( const LoKi::BasicFunctors<LHCb::Track>::Function& fun , 
   const double                                      bad ) 
-  : LoKi::PPTypes::PPFunc ()
+  : LoKi::AuxFunBase ( std::tie ( fun , bad  ) ) 
+  , LoKi::PPTypes::PPFunc ()
   , m_fun ( fun ) 
   , m_bad ( bad ) 
 {}
@@ -1445,7 +1474,8 @@ LoKi::ProtoParticles::TrackFun::TrackFun
 // ============================================================================
 LoKi::ProtoParticles::TrackFun::TrackFun
 ( const LoKi::BasicFunctors<LHCb::Track>::Function& fun )
-  : LoKi::PPTypes::PPFunc ()
+  : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+  , LoKi::PPTypes::PPFunc ()
   , m_fun ( fun ) 
   , m_bad ( LoKi::Constants::NegativeInfinity ) 
 {}
@@ -1499,7 +1529,8 @@ LoKi::ProtoParticles::TrackFun::fillStream ( std::ostream& o ) const
 // ============================================================================
 LoKi::ProtoParticles::RichAboveThres::RichAboveThres 
 ( Rich::ParticleIDType particle ) 
-  : LoKi::ProtoParticles::HasRich2Gas () 
+  : LoKi::AuxFunBase ( std::tie ( particle ) ) 
+  , LoKi::ProtoParticles::HasRich2Gas () 
   , m_particle ( particle ) 
 {}
 // ============================================================================

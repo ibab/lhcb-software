@@ -9,17 +9,22 @@
 // ============================================================================
 #include "GaudiKernel/IDataProviderSvc.h"
 // ============================================================================
-// DaVinciInterafces 
+// DaVinciIntergaces 
 // ============================================================================
 #include "Kernel/IProtoParticleFilter.h"
+// ============================================================================
+// Event 
+// ============================================================================
+#include "Event/ProtoParticle.h"
+#include "Kernel/RichParticleIDType.h"
 // ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/apply.h"
+#include "LoKi/Constants.h"
 #include "LoKi/Filters.h"
 #include "LoKi/Streamers.h"
 #include "LoKi/PPTypes.h"
-#include "LoKi/Constants.h"
 // ============================================================================
 /** @file
  *  The set of basic decorator for objects from Phys/LoKiProtoParticles library
@@ -63,7 +68,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@nikhef.nl
      *  @date   2010-05-26
      */
-    class Filter : public LoKi::PPTypes::PPCuts 
+    class GAUDI_API Filter : public LoKi::PPTypes::PPCuts 
     {
     public:
       // ======================================================================
@@ -100,7 +105,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date   2010-05-26
      */
-    class HasInfo : public LoKi::PPTypes::PPCuts 
+    class GAUDI_API HasInfo : public LoKi::PPTypes::PPCuts 
     {
     public:
       // ======================================================================
@@ -135,7 +140,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date   2010-05-26
      */
-    class Info : public LoKi::PPTypes::PPFunc 
+    class GAUDI_API Info : public LoKi::PPTypes::PPFunc 
     {
     public:
       // ======================================================================
@@ -188,12 +193,12 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date   2010-05-26
      */
-    class HasRichPID : public LoKi::PPTypes::PPCuts 
+    class GAUDI_API HasRichPID : public LoKi::PPTypes::PPCuts 
     {
     public:
       // ======================================================================
       /// Default Constructor
-      HasRichPID() { }
+      HasRichPID() ;
       /// MANDATORY: virtual destructor
       virtual ~HasRichPID() ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -213,7 +218,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date   2010-05-26
      */
-    class HasMuonPID : public LoKi::PPTypes::PPCuts 
+    class GAUDI_API HasMuonPID : public LoKi::PPTypes::PPCuts 
     {
     public:
       // ======================================================================
@@ -238,7 +243,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date   2010-05-26
      */
-    class HasTrack : public LoKi::PPTypes::PPCuts 
+    class GAUDI_API HasTrack : public LoKi::PPTypes::PPCuts 
     {
     public:
       // ======================================================================
@@ -263,7 +268,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date   2010-05-26
      */
-    class Charged : public HasTrack
+    class GAUDI_API Charged : public LoKi::ProtoParticles::HasTrack
     {
     public:
       // ======================================================================
@@ -283,7 +288,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date   2010-05-26
      */
-    class Neutral : public Charged 
+    class GAUDI_API Neutral : public LoKi::ProtoParticles::Charged 
     {
     public:
       // ======================================================================
@@ -307,7 +312,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date   2010-05-26
      */
-    class Calos : public LoKi::PPTypes::PPFunc
+    class GAUDI_API Calos : public LoKi::PPTypes::PPFunc
     {
     public:
       // ======================================================================
@@ -332,7 +337,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date   2010-05-26
      */
-    class HasAerogel : public LoKi::PPTypes::PPCuts 
+    class GAUDI_API HasAerogel : public LoKi::PPTypes::PPCuts 
     {
     public:
       // ======================================================================
@@ -367,7 +372,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date   2010-05-26
      */
-    class HasRich1Gas : public HasAerogel
+    class GAUDI_API HasRich1Gas : public LoKi::ProtoParticles::HasAerogel
     {
     public:
       // ======================================================================
@@ -392,7 +397,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date   2010-05-26
      */
-    class HasRich2Gas : public HasRich1Gas 
+    class GAUDI_API HasRich2Gas : public LoKi::ProtoParticles::HasRich1Gas
     {
     public:
       // ======================================================================
@@ -414,7 +419,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date   2010-05-26
      */
-    class HasDetector : public HasRich2Gas 
+    class GAUDI_API HasDetector : public LoKi::ProtoParticles::HasRich2Gas 
     {
     public  :
       // ======================================================================
@@ -526,7 +531,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date   2010-05-26
      */
-    class OnlyDetector : public HasDetector
+    class GAUDI_API OnlyDetector : public HasDetector
     { 
     public  :
       // ======================================================================
@@ -555,7 +560,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date   2010-05-26
      */
-    class IsMuon : public LoKi::PPTypes::PPCuts 
+    class GAUDI_API IsMuon : public LoKi::PPTypes::PPCuts 
     {
     public:
       // ======================================================================
@@ -587,7 +592,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date   2010-05-26
      */
-    class IsLooseMuon : public IsMuon
+    class GAUDI_API IsLooseMuon : public IsMuon
     {
     public:
       // ======================================================================
@@ -611,7 +616,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
      *  @date 2010-12-10
      */
-    class NShared : public LoKi::PPTypes::PPFunc
+    class GAUDI_API NShared : public LoKi::PPTypes::PPFunc
     {
     public:
       // ======================================================================
@@ -635,7 +640,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date   2010-05-26
      */
-    class SourceTES : public LoKi::PPTypes::PPSources
+    class GAUDI_API SourceTES : public LoKi::PPTypes::PPSources
     {
     public:
       // ======================================================================
@@ -745,7 +750,7 @@ namespace LoKi
      *  @see LoKi::Cuts::PP_NUM
      *  @date   2010-10-24
      */
-    class TESCounter : public LoKi::Functor<void,double>
+    class GAUDI_API TESCounter : public LoKi::Functor<void,double>
     {
     public:
       // ======================================================================
@@ -787,7 +792,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-05-26
      */
-    class TrackCut : public LoKi::PPTypes::PPCuts 
+    class GAUDI_API TrackCut : public LoKi::PPTypes::PPCuts 
     {
     public:
       // ======================================================================
@@ -821,7 +826,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-05-26
      */
-    class TrackFun : public LoKi::PPTypes::PPFunc
+    class GAUDI_API TrackFun : public LoKi::PPTypes::PPFunc
     {
     public:
       // ======================================================================
@@ -873,7 +878,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-06-02
      */
-    class RichAboveThres : public HasRich2Gas 
+    class GAUDI_API RichAboveThres : public HasRich2Gas 
     {
       // ======================================================================
     public:
@@ -924,8 +929,7 @@ namespace LoKi
   // ==========================================================================
   template <>
   std::ostream& 
-  Valid<const LHCb::ProtoParticle*>::fillStream ( std::ostream& s ) const 
-  { return s << "PP_VALID " ; }
+  Valid<const LHCb::ProtoParticle*>::fillStream ( std::ostream& s ) const ;
   // ==========================================================================
   namespace Cuts 
   {    
@@ -1510,7 +1514,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
      *  @date 2010-06-02
      */
-    const LoKi::ProtoParticles::RichAboveThres PP_RICHTHRES_E ( Rich::Electron );
+    // const LoKi::ProtoParticles::RichAboveThres PP_RICHTHRES_E ( Rich::ParticleIDType::Electron );
     // ========================================================================
     /** @var PP_RICHTHRES_MU
      *  simple checker for "above-threshold"
@@ -1527,7 +1531,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
      *  @date 2010-06-02
      */
-    const LoKi::ProtoParticles::RichAboveThres PP_RICHTHRES_MU ( Rich::Muon );
+    // const LoKi::ProtoParticles::RichAboveThres PP_RICHTHRES_MU ( Rich::ParticleIDType::Muon );
     // ========================================================================
     /** @var PP_RICHTHRES_PI
      *  simple checker for "above-threshold"
@@ -1544,7 +1548,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
      *  @date 2010-06-02
      */
-    const LoKi::ProtoParticles::RichAboveThres PP_RICHTHRES_PI ( Rich::Pion ) ;
+    //const LoKi::ProtoParticles::RichAboveThres PP_RICHTHRES_PI ( Rich::ParticleIDType::Pion ) ;
     // ========================================================================
     /** @var PP_RICHTHRES_K
      *  simple checker for "above-threshold"
@@ -1561,7 +1565,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
      *  @date 2010-06-02
      */
-    const LoKi::ProtoParticles::RichAboveThres PP_RICHTHRES_K ( Rich::Kaon ) ;
+    // const LoKi::ProtoParticles::RichAboveThres PP_RICHTHRES_K ( Rich::ParticleIDType::Kaon ) ;
     // ========================================================================
     /** @var PP_RICHTHRES_P
      *  simple checker for "above-threshold"
@@ -1578,7 +1582,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
      *  @date 2010-06-02
      */
-    const LoKi::ProtoParticles::RichAboveThres PP_RICHTHRES_P ( Rich::Proton ) ;
+    // const LoKi::ProtoParticles::RichAboveThres PP_RICHTHRES_P ( Rich::ParticleIDType::Proton ) ;
     // ========================================================================
     /** @var PP_NSHAREDMU 
      *  Simple evaluator of number of muon shared hits 
