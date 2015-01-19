@@ -1,5 +1,5 @@
 package  StrippingSys
-version  v9r3p1
+version  v9r4
 
 branches doc cmt tests
 
@@ -18,12 +18,12 @@ use  IsolationTools              v1r1     Phys   # Alex Shires
 
 ####################################################################
 # Stripping packages
-use  StrippingAlgs               v1r14    Phys   # Anton Poluektov
-use  StrippingArchive            v1r25    Phys   # Stripping coordinators
-use  StrippingConf               v4r13    Phys   # Anton Poluektov
+use  StrippingAlgs               v1r15    Phys   # Anton Poluektov
+use  StrippingArchive            v1r26    Phys   # Stripping coordinators
+use  StrippingConf               v4r14    Phys   # Anton Poluektov
 use  StrippingNeuroBayes         v1r9     Phys   # Ulrich Kerzel
 use  StrippingSelections         v3r39    Phys   # Stripping coordinators
-use  StrippingSettings           v2r33    Phys   # Stripping coordinators
+use  StrippingSettings           v2r34    Phys   # Stripping coordinators
 use  StrippingTCK                v1r4     Phys   # Anton Poluektov
 use  StrippingUtils              v1r9     Phys   # Juan Palacios
 

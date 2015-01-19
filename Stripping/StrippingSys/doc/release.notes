@@ -1,7 +1,21 @@
 <PRE>
 Package     : StrippingSys
-Package Coordinator : l.carson@ed.ac.uk, Stefano.Perazzini@cern.ch
+Package Coordinator : Andrea.Contu@cern.ch, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
+
+!========================= StrippingSys v9r4 2015-01-19 =========================
+
+* Phys/StrippingAlgs
+ - fixing compilation warning in src/StrippingAlg.cpp 
+
+* Phys/StrippingArchive
+ - Update tests/refs/instantiate-all-strip.ref
+
+* Phys/StrippingSettings
+ - Added python/StrippingSettings/__init__.py to please CMake 
+
+* Phys/StrippingConf
+ - Added python/StrippingConf/__init__.py to please CMake 
 
 !========================= StrippingSys v9r3p1 2014-12-17 =========================
 
