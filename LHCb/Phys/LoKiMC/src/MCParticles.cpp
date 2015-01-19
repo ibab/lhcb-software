@@ -323,93 +323,71 @@ LoKi::MCParticles::AbsIdentifier::operator()
 // ============================================================================
 // IsID 
 // ============================================================================
-// IsID 
-// ============================================================================
 LoKi::MCParticles::IsID::IsID ( const long                      id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_ints  ( 1 , id ) 
-  , m_pids  () 
-  , m_names ()
+  , LoKi::Pids::GetPids ( id ) 
 {}
 // ============================================================================
 LoKi::MCParticles::IsID::IsID( const unsigned long  id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_ints  ( 1 , id ) 
-  , m_pids  () 
-  , m_names ()
+  , LoKi::Pids::GetPids ( id ) 
 {}
 // ============================================================================
 LoKi::MCParticles::IsID::IsID( const LHCb::ParticleID&         id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_ints  ( 1 , id.pid() ) 
-  , m_pids  ( 1 , id       ) 
-  , m_names ()
+  , LoKi::Pids::GetPids ( id ) 
 {}
 // ============================================================================
 LoKi::MCParticles::IsID::IsID( const std::string& id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_ints  () 
-  , m_pids  () 
-  , m_names ( 1 , id )
-{
-  if ( gaudi() ) { getData() ; } 
-}
+  , LoKi::Pids::GetPids ( id ) 
+{}
 // ============================================================================
 LoKi::MCParticles::IsID::IsID( const std::vector<int>& id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_ints  ( id.begin() , id.end() ) 
-  , m_pids  () 
-  , m_names ()
+  , LoKi::Pids::GetPids ( id ) 
 {}
 // ============================================================================
 LoKi::MCParticles::IsID::IsID( const std::vector<unsigned int>& id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_ints  ( id.begin() , id.end() ) 
-  , m_pids  () 
-  , m_names ()
+  , LoKi::Pids::GetPids ( id ) 
 {}
 // ============================================================================
 LoKi::MCParticles::IsID::IsID( const std::vector<long>& id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_ints  ( id ) 
-  , m_pids  () 
-  , m_names ()
+  , LoKi::Pids::GetPids ( id ) 
 {}
 // ============================================================================
 LoKi::MCParticles::IsID::IsID( const std::vector<unsigned long>& id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_ints  ( id.begin() , id.end() ) 
-  , m_pids  () 
-  , m_names ()
+  , LoKi::Pids::GetPids ( id ) 
 {}
 // ============================================================================
 LoKi::MCParticles::IsID::IsID( const std::vector<LHCb::ParticleID>& id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_ints  () 
-  , m_pids  ( id ) 
-  , m_names ()
-{
-  getData() ;
-}
+  , LoKi::Pids::GetPids ( id ) 
+{}
 // ============================================================================
 LoKi::MCParticles::IsID::IsID( const std::vector<std::string>& id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
   , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_ints  () 
-  , m_pids  () 
-  , m_names ( id )
-{
-  if ( gaudi() ) { getData() ; }
-}
+  , LoKi::Pids::GetPids ( id ) 
+{}
+// ============================================================================
+LoKi::MCParticles::IsID::IsID( const LoKi::Pids::GetPids& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
+  , LoKi::Pids::GetPids ( id ) 
+{}
 // ============================================================================
 LoKi::MCParticles::IsID*
 LoKi::MCParticles::IsID::clone() const 
@@ -422,30 +400,10 @@ std::ostream& LoKi::MCParticles::IsID::fillStream( std::ostream& s ) const
   //
   if      ( 1 == m_names.size() ) { Gaudi::Utils::toStream ( m_names[0] , s ) ; }
   else if ( !m_names.empty()    ) { Gaudi::Utils::toStream ( m_names    , s ) ; }
-  else if ( 1 == m_pids.size()  ) { Gaudi::Utils::toStream ( m_pids [0] , s ) ; }
-  else if ( !m_pids.empty()     ) { Gaudi::Utils::toStream ( m_pids     , s ) ; }
   else if ( 1 == m_ints.size()  ) { Gaudi::Utils::toStream ( m_ints [0] , s ) ; }
   else                            { Gaudi::Utils::toStream ( m_ints     , s ) ; }
   //
   return s << ")" ; 
-}
-// ============================================================================
-// the only one essential method
-// ============================================================================
-void LoKi::MCParticles::IsID::getData() const 
-{
-  //
-  if (  m_pids.empty() && !m_names.empty() ) 
-  { m_pids = LoKi::Particles::pidsFromNames ( m_names ) ; }
-  //
-  if ( !m_pids.empty() ) 
-  {
-    m_ints.resize  ( m_pids.size() ) ;
-    std::transform ( m_pids.begin () , 
-                     m_pids.end   () , 
-                     m_ints.begin () , 
-                     std::mem_fun_ref(&LHCb::ParticleID::pid ) ) ;
-  }
 }
 // ============================================================================
 // the only one essential method
@@ -461,21 +419,8 @@ LoKi::MCParticles::IsID::operator()
     return false ;                     // RETURN 
   }
   //
-  if ( m_ints.empty() && ( !m_pids.empty() || !m_names.empty() ) ) { getData() ; }
-  //
-  if ( m_ints.empty() ) 
-  {
-    Warning("No PIDs are defined! return False") ;
-    return false ;
-  }
-  //
-  const int pid = p->particleID().pid() ;
-  //
-  return m_ints.end() != std::find ( m_ints.begin() , m_ints.end() , pid ) ;    
+  return in_list ( p->particleID () ) ;  
 }
-
-
-
 // ============================================================================
 // IsNotID 
 // ============================================================================
@@ -540,8 +485,6 @@ std::ostream& LoKi::MCParticles::IsNotID::fillStream( std::ostream& s ) const
   //
   if      ( 1 == m_names.size() ) { Gaudi::Utils::toStream ( m_names[0] , s ) ; }
   else if ( !m_names.empty()    ) { Gaudi::Utils::toStream ( m_names    , s ) ; }
-  else if ( 1 == m_pids.size()  ) { Gaudi::Utils::toStream ( m_pids [0] , s ) ; }
-  else if ( !m_pids.empty()     ) { Gaudi::Utils::toStream ( m_pids     , s ) ; }
   else if ( 1 == m_ints.size()  ) { Gaudi::Utils::toStream ( m_ints [0] , s ) ; }
   else                            { Gaudi::Utils::toStream ( m_ints     , s ) ; }
   //
@@ -560,11 +503,7 @@ LoKi::MCParticles::IsNotID::operator()
     Error("Invalid Particle, return 'False'");
     return false ;                     // RETURN 
   }
-  //
-  if ( m_ints.empty() && ( !m_pids.empty() || !m_names.empty() ) ) { getData() ; }
-  //
-  const int pid = p->particleID().pid() ;
-  return m_ints.end() == std::find ( m_ints.begin() , m_ints.end() , pid ) ;    
+  return not_in_list ( p->particleID() ) ;
 }
 
 
@@ -573,91 +512,58 @@ LoKi::MCParticles::IsNotID::operator()
 // ============================================================================
 LoKi::MCParticles::IsAbsID::IsAbsID ( const long id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
-  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_ints  ( 1 , std::abs ( id ) ) 
-  , m_pids  () 
-  , m_names ()
+  , LoKi::MCParticles::IsID ( id ) 
 {}
 // ============================================================================
 LoKi::MCParticles::IsAbsID::IsAbsID ( const unsigned long  id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
-  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_ints  ( 1 , id ) 
-  , m_pids  () 
-  , m_names ()
+  , LoKi::MCParticles::IsID ( id ) 
 {}
 // ============================================================================
 LoKi::MCParticles::IsAbsID::IsAbsID ( const LHCb::ParticleID&         id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
-  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_ints  () 
-  , m_pids  ( 1 , id ) 
-  , m_names ()
-{
-  getData() ;
-}
+  , LoKi::MCParticles::IsID ( id ) 
+{}
 // ============================================================================
 LoKi::MCParticles::IsAbsID::IsAbsID ( const std::string& id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
-  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_ints  () 
-  , m_pids  () 
-  , m_names ( 1 , id )
-{
-  if ( gaudi() ) { getData() ; }
-}
+  , LoKi::MCParticles::IsID ( id ) 
+{}
 // ============================================================================
 LoKi::MCParticles::IsAbsID::IsAbsID ( const std::vector<int>& id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
-  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_ints  ( std::abs ( std::vector<long>( id.begin() ,  id.end() ) ) )  
-  , m_pids  () 
-  , m_names ()
+  , LoKi::MCParticles::IsID ( id ) 
 {}
 // ============================================================================
 LoKi::MCParticles::IsAbsID::IsAbsID ( const std::vector<unsigned int>& id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
-  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_ints  ( std::abs ( std::vector<long>( id.begin() ,  id.end() ) ) )  
-  , m_pids  () 
-  , m_names ()
+  , LoKi::MCParticles::IsID ( id ) 
 {}
 // ============================================================================
 LoKi::MCParticles::IsAbsID::IsAbsID ( const std::vector<long>& id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
-  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_ints  ( std::abs ( id ) )  
-  , m_pids  () 
-  , m_names ()
+  , LoKi::MCParticles::IsID ( id ) 
 {}
 // ============================================================================
 LoKi::MCParticles::IsAbsID::IsAbsID ( const std::vector<unsigned long>& id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
-  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_ints  ( id )  
-  , m_pids  () 
-  , m_names ()
+  , LoKi::MCParticles::IsID ( id ) 
 {}
 // ============================================================================
 LoKi::MCParticles::IsAbsID::IsAbsID ( const std::vector<LHCb::ParticleID>& id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
-  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_ints  () 
-  , m_pids  ( id ) 
-  , m_names ()
-{
-  getData() ;
-}
+  , LoKi::MCParticles::IsID ( id ) 
+{}
 // ============================================================================
 LoKi::MCParticles::IsAbsID::IsAbsID ( const std::vector<std::string>& id  ) 
   : LoKi::AuxFunBase ( std::tie ( id ) )
-  , LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
-  , m_ints  () 
-  , m_pids  () 
-  , m_names ( id )
-{
-  if ( gaudi() ) { getData() ; }
-}
+  , LoKi::MCParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::MCParticles::IsAbsID::IsAbsID ( const LoKi::Pids::GetPids& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::MCParticles::IsID ( id ) 
+{}
 // ============================================================================
 LoKi::MCParticles::IsAbsID*
 LoKi::MCParticles::IsAbsID::clone() const 
@@ -670,30 +576,10 @@ std::ostream& LoKi::MCParticles::IsAbsID::fillStream( std::ostream& s ) const
   //
   if      ( 1 == m_names.size() ) { Gaudi::Utils::toStream ( m_names[0] , s ) ; }
   else if ( !m_names.empty()    ) { Gaudi::Utils::toStream ( m_names    , s ) ; }
-  else if ( 1 == m_pids.size()  ) { Gaudi::Utils::toStream ( m_pids [0] , s ) ; }
-  else if ( !m_pids.empty()     ) { Gaudi::Utils::toStream ( m_pids     , s ) ; }
   else if ( 1 == m_ints.size()  ) { Gaudi::Utils::toStream ( m_ints [0] , s ) ; }
   else                            { Gaudi::Utils::toStream ( m_ints     , s ) ; }
   //
   return s << ")" ; 
-}
-// ============================================================================
-// the only one essential method
-// ============================================================================
-void LoKi::MCParticles::IsAbsID::getData() const 
-{
-  //
-  if (  m_pids.empty() && !m_names.empty() ) 
-  { m_pids = LoKi::Particles::pidsFromNames ( m_names ) ; }
-  //
-  if ( !m_pids.empty() ) 
-  {
-    m_ints.resize  ( m_pids.size() ) ;
-    std::transform ( m_pids.begin () , 
-                     m_pids.end   () , 
-                     m_ints.begin () , 
-                     std::mem_fun_ref(&LHCb::ParticleID::abspid ) ) ;
-  }
 }
 // ============================================================================
 // the only one essential method
@@ -708,17 +594,8 @@ LoKi::MCParticles::IsAbsID::operator()
     Error("Invalid Particle, return 'False'");
     return false ;                     // RETURN 
   }
-  // 
-  if ( m_ints.empty() && ( !m_pids.empty() || !m_names.empty() ) ) { getData() ; }
   //
-  if ( m_ints.empty() ) 
-  {
-    Warning("No PIDs are defined! return False") ;
-    return false ;
-  }
-  //
-  const unsigned int pid = p->particleID().abspid() ;
-  return m_ints.end() != std::find ( m_ints.begin() , m_ints.end() , pid ) ;    
+  return in_abs_list ( p->particleID() ) ;
 }
 
 
@@ -777,6 +654,11 @@ LoKi::MCParticles::IsNotAbsID::IsNotAbsID ( const std::vector<std::string>& id  
   , LoKi::MCParticles::IsAbsID ( id ) 
 {}
 // ============================================================================
+LoKi::MCParticles::IsNotAbsID::IsNotAbsID ( const LoKi::Pids::GetPids& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::MCParticles::IsAbsID ( id ) 
+{}
+// ============================================================================
 LoKi::MCParticles::IsNotAbsID*
 LoKi::MCParticles::IsNotAbsID::clone() const 
 { return new LoKi::MCParticles::IsNotAbsID(*this) ; }
@@ -788,8 +670,6 @@ std::ostream& LoKi::MCParticles::IsNotAbsID::fillStream( std::ostream& s ) const
   //
   if      ( 1 == m_names.size() ) { Gaudi::Utils::toStream ( m_names[0] , s ) ; }
   else if ( !m_names.empty()    ) { Gaudi::Utils::toStream ( m_names    , s ) ; }
-  else if ( 1 == m_pids.size()  ) { Gaudi::Utils::toStream ( m_pids [0] , s ) ; }
-  else if ( !m_pids.empty()     ) { Gaudi::Utils::toStream ( m_pids     , s ) ; }
   else if ( 1 == m_ints.size()  ) { Gaudi::Utils::toStream ( m_ints [0] , s ) ; }
   else                            { Gaudi::Utils::toStream ( m_ints     , s ) ; }
   //
@@ -808,12 +688,10 @@ LoKi::MCParticles::IsNotAbsID::operator()
     Error("Invalid Particle, return 'False'");
     return false ;                     // RETURN 
   }
-  // 
-  if ( m_ints.empty() && ( !m_pids.empty() || !m_names.empty() ) ) { getData() ; }
   //
-  const unsigned int pid = p->particleID().abspid() ;
-  return m_ints.end() == std::find ( m_ints.begin() , m_ints.end() , pid ) ;    
+  return not_in_abs_list ( p->particleID() ) ;
 }
+// ============================================================================
 
 
 

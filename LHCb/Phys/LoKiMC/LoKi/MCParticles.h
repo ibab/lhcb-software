@@ -29,6 +29,7 @@
 #include "LoKi/Constants.h"
 #include "LoKi/MCTypes.h"
 #include "LoKi/MCPIDOperators.h"
+#include "LoKi/PidFunctions.h"
 // ============================================================================
 /** @file
  *
@@ -389,6 +390,7 @@ namespace LoKi
     // ========================================================================
     class GAUDI_API IsID  
       : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
+      , public LoKi::Pids::GetPids 
     {
     public:
       // ======================================================================
@@ -402,6 +404,7 @@ namespace LoKi
       IsID ( const std::vector<unsigned long>&    ids ) ;
       IsID ( const std::vector<LHCb::ParticleID>& ids ) ;
       IsID ( const std::vector<std::string>&      ids ) ;
+      IsID ( const LoKi::Pids::GetPids&           ids ) ;
       // ======================================================================
       virtual IsID* clone() const ;
       /// the only one essential method
@@ -413,16 +416,6 @@ namespace LoKi
       // ======================================================================      
       IsID() ;
       // ======================================================================
-    protected : 
-      // ======================================================================      
-      void getData() const ;
-      // ======================================================================
-    protected: 
-      // ======================================================================      
-      mutable std::vector<long>             m_ints  ;
-      mutable std::vector<LHCb::ParticleID> m_pids  ;
-      std::vector<std::string>              m_names ;
-      // ======================================================================      
     } ;
     // ========================================================================
     /** @class IsNotID 
@@ -443,6 +436,7 @@ namespace LoKi
       IsNotID ( const std::vector<unsigned long>&    ids ) ;
       IsNotID ( const std::vector<LHCb::ParticleID>& ids ) ;
       IsNotID ( const std::vector<std::string>&      ids ) ;
+      IsNotID ( const LoKi::Pids::GetPids&           ids ) ;
       // ======================================================================
       virtual IsNotID* clone() const ;
       /// the only one essential method
@@ -456,8 +450,7 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
-    class GAUDI_API IsAbsID  
-      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
+    class GAUDI_API IsAbsID : public LoKi::MCParticles::IsID   
     {
     public:
       // ======================================================================
@@ -471,6 +464,7 @@ namespace LoKi
       IsAbsID ( const std::vector<unsigned long>&    ids ) ;
       IsAbsID ( const std::vector<LHCb::ParticleID>& ids ) ;
       IsAbsID ( const std::vector<std::string>&      ids ) ;
+      IsAbsID ( const LoKi::Pids::GetPids&           ids ) ;
       // ======================================================================
       virtual IsAbsID* clone() const ;
       /// the only one essential method
@@ -482,20 +476,9 @@ namespace LoKi
       // ======================================================================      
       IsAbsID() ;
       // ======================================================================
-    protected : 
-      // ======================================================================      
-      void getData() const ;
-      // ======================================================================
-    protected:
-      // ======================================================================      
-      mutable std::vector<unsigned long>    m_ints  ;
-      mutable std::vector<LHCb::ParticleID> m_pids  ;
-      std::vector<std::string>              m_names ;
-      // ======================================================================      
     } ;
     // ========================================================================
-    class GAUDI_API IsNotAbsID  
-      : public LoKi::MCParticles::IsAbsID 
+    class GAUDI_API IsNotAbsID : public LoKi::MCParticles::IsAbsID
     {
     public:
       // ======================================================================
@@ -509,6 +492,7 @@ namespace LoKi
       IsNotAbsID ( const std::vector<unsigned long>&    ids ) ;
       IsNotAbsID ( const std::vector<LHCb::ParticleID>& ids ) ;
       IsNotAbsID ( const std::vector<std::string>&      ids ) ;
+      IsNotAbsID ( const LoKi::Pids::GetPids&           ids ) ;
       // ======================================================================
       virtual IsNotAbsID* clone() const ;
       /// the only one essential method
