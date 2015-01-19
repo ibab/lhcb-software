@@ -234,16 +234,25 @@ inline StatusCode LoKi::Hybrid::HltFactory::_get
     makeCode  ( m_modules , m_actor , pycode , m_lines , context ) ;
   // define and lock the scope:
   LoKi::Hybrid::HltLock lock ( this ) ;   ///< ATTENTION: the scope is locked!!
-  // clear the placeholder:
-  if ( 0 != local ) { delete local ; local = 0 ; }
-  // execute the code 
-  StatusCode sc = executeCode ( code ) ;
-  if ( sc.isFailure() ) 
-  { return Error ( "Error from LoKi::Hybrid::Base::executeCode"      ) ; } // RETURN 
-  if ( 0 == local     ) 
-  { return Error ( "Invaid object for the code '"+pycode+"'" ) ; } // RETURN 
-  // assign the result 
-  output = *local ;                                                // ASSIGN
+  //
+  // move it into base class ???
+  //
+  // // clear the placeholder:
+  // if ( 0 != local ) { delete local ; local = 0 ; }
+  // // execute the code 
+  // sc = executeCode ( code ) ;
+  // if ( sc.isFailure() ) 
+  // { return Error ( "Error from LoKi::Hybrid::Base::executeCode"      ) ; } // RETURN 
+  // if ( 0 == local     ) 
+  // { return Error ( "Invalid object for the code '" + pycode + "'"    ) ; } // RETURN 
+  // // assign the result 
+  // output = *local ;                                                        // ASSIGN
+  //
+  //
+  // use the base class method 
+  StatusCode sc = LoKi::Hybrid::Base::_get_ ( code , local , output ) ;
+  if ( sc.isFailure() )
+  { return Error ( "Invalid object for the code '" + pycode + "'"    ) ; } // RETURN
   //
   return StatusCode::SUCCESS ;
 }    
@@ -283,6 +292,14 @@ LoKi::Hybrid::HltFactory::HltFactory
                     "The processing engine"                  ) ;
   declareProperty ( "Lines"   , m_lines   , 
                     "Additional Python lines to be executed" ) ;
+
+  //
+  //
+  // Treat C++
+  //
+  m_cpplines.push_back ( "#include \"LoKi/LoKiHlt.h\""            ) ;
+  m_cpplines.push_back ( "#include \"LoKi/LoKiNumbers.h\""        ) ;
+  //
 }
 // ============================================================================
 // Destructor (virtual and protected) 

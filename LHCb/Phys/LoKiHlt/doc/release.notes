@@ -4,6 +4,8 @@
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-01-19 - Vanya Belyaev
+ - make few steps towards autogeneration of C++ code 
 
 ! 2015-01-15 - Vanya Belyaev
  - make few steps towards autogeneration of C++ code 
