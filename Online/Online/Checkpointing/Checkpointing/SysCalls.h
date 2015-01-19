@@ -79,12 +79,12 @@
 #define mtcp_sys_readlink(args...)         mtcp_inline_syscall(readlink, 3, args)
 
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
 
-int* __mtcp_sys_errno();
+STATIC(int*) __mtcp_sys_errno();
 #ifdef __cplusplus
-}
+//}
 #endif
 
 #define mtcp_sys_errno (*__mtcp_sys_errno())

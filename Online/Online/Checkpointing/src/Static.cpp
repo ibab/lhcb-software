@@ -21,6 +21,7 @@ typedef SysInfo::mem_address_t mem_address_t;
 DefineMarker(SYS_BEGIN_MARKER,    "PSYS");
 DefineMarker(SYS_END_MARKER,      "psys");
 
+//#define STACKSIZE 8192      // size of temporary stack (in quadwords)
 //#define STACKSIZE 4096      // size of temporary stack (in quadwords)
 #define STACKSIZE 2048      // size of temporary stack (in quadwords)
 //#define STACKSIZE 1024      // size of temporary stack (in quadwords)

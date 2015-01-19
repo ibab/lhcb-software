@@ -202,7 +202,7 @@ gofish:
   }
 }
 
-extern "C" int* __mtcp_sys_errno() {
+STATIC(int*) __mtcp_sys_errno() {
   return &s_mtcp_sys_errno;
 }
 

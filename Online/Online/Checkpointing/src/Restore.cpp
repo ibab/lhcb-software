@@ -34,6 +34,7 @@ DefineMarker(LIBS_END_MARKER,     "libs");
 //DefineMarker(LIBRARY_BEGIN_MARKER,"XLIB");
 //DefineMarker(LIBRARY_END_MARKER,  "xlib");
 
+
 /// Print content to stack saved in context
 STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_print_stack(const char* comment) {
   int* ptr = (int*)chkpt_sys.savedContext->SAVEDSP;
@@ -215,12 +216,17 @@ STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_read_files(Process*,
     in += sizeof(int);
     mtcp_output(MTCP_INFO,"restore: restoring %d pending file descriptors\n",count);
     long cnt=0;
-    do {
-      in += checkpoint_file_read(&dsc,in,true);
-      mtcp_output(MTCP_DEBUG,"restore[addr:%p]: ",in);
-      checkpoint_file_print(MTCP_DEBUG|MTCP_NO_HEADER,&dsc);
-      ++cnt;
-    } while (cnt<count);
+    if ( count > 0 )  {
+      do {
+	in += checkpoint_file_read(&dsc,in,true);
+	mtcp_output(MTCP_DEBUG,"restore[addr:%p]: ",in);
+	checkpoint_file_print(MTCP_DEBUG|MTCP_NO_HEADER,&dsc);
+	++cnt;
+      } while (cnt<count);
+    }
+    else  {
+      mtcp_output(MTCP_INFO,"restore: no files to restore\n");
+    }
     in += checkMarker(in,FILEMAP_END_MARKER);
     return addr_diff(in,addr);
     //#endif
@@ -297,12 +303,17 @@ STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_fread_files(Process*
     in += readInt(fd,&count);
     mtcp_output(MTCP_INFO,"restore[fd:%d]: restoring %d pending file descriptors.\n",fd,count);
     long cnt=0;
-    do {
-      in += checkpoint_file_fread(&dsc,fd,true);
-      mtcp_output(MTCP_DEBUG,"restore[fd:%d]: ",fd);
-      checkpoint_file_print(MTCP_DEBUG|MTCP_NO_HEADER,&dsc);
-      ++cnt;
-    } while (cnt<count);
+    if ( count > 0 )  {
+      do {
+	in += checkpoint_file_fread(&dsc,fd,true);
+	mtcp_output(MTCP_DEBUG,"restore[fd:%d]: ",fd);
+	checkpoint_file_print(MTCP_DEBUG|MTCP_NO_HEADER,&dsc);
+	++cnt;
+      } while (cnt<count);
+    }
+    else  {
+      mtcp_output(MTCP_INFO,"restore: no files to restore\n");
+    }
     in += readMarker(fd,FILEMAP_END_MARKER);
     return in;
 #endif
@@ -315,6 +326,42 @@ STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_fmap_memory(const Ar
   return checkpointing_area_map(a,fd,0,data_len);
 }
 
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_area_fread(Area* a,int fd, long (*map)(const AreaHandler*, const Area& a,int fd,long), const AreaHandler* handler) {
+  long in = 0;
+  int l = 0;
+  int len = sizeof(Area)-sizeof(a->name);
+  in += readMarker(fd,MEMAREA_BEGIN_MARKER);
+  in += m_fread(fd,(void*)a,len);
+  in += m_fread(fd,a->name,a->name_len+1);
+  in += readInt(fd,&l);
+  if ( a->name[0] && a->name[0] == '/' && 
+       chkpt_sys.save_flags&MTCP_SAVE_LIBS &&
+       chkpt_sys.checkpointLibs[0] ) {
+    bool found = false;
+    for(size_t i=0; i<sizeof(chkpt_sys.tmpFiles)/sizeof(chkpt_sys.tmpFiles[0]);++i) {
+      SysInfo::TmpFile& tmp = chkpt_sys.tmpFiles[i];
+      if ( tmp.fd > 0 && m_strcmp(a->name,tmp.name)==0 ) {
+        found = true;
+        break;
+      }
+    }
+    if ( !found ) {
+      char tmp[PATH_MAX];
+      const char *p0, *p1;
+      m_strcpy(tmp,chkpt_sys.checkpointLibs);
+      for(p0=a->name, p1=a->name; *p0; ++p0) if (*p0=='/') p1=p0;
+      m_strcpy(tmp+m_strlen(tmp),p1);
+      m_strcpy(a->name,tmp);
+    }
+    a->name_len = m_strlen(a->name);
+  }
+  long mapped_read = map ? (*map)(handler,*a,fd,l) : l;
+  in += mapped_read;
+  in += readMarker(fd,MEMAREA_END_MARKER);
+  //checkpointing_area_print(a,MTCP_DEBUG,"Read memory area:");
+  return in;
+}
+
 STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_fread_memory(Process*,int fd) {
   MemMaps m;
   if ( fd>0 ) {
@@ -324,7 +371,6 @@ STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_fread_memory(Process
     in += readMarker(fd,MEMMAP_BEGIN_MARKER);
     in += readInt(fd,&numArea);
     Area a;
-    mtcp_output(MTCP_INFO,"fd:%d, restore: Need to restore %d memory areas\n",fd,numArea);
     for(int i=0; i<numArea; ++i) {
       long rc = checkpointing_area_fread(&a,fd,checkpointing_process_fmap_memory,(const AreaHandler*)0);
       if ( rc<0 ) {
@@ -450,42 +496,6 @@ STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_area_read(Area* a, const voi
   in += checkMarker(in,MEMAREA_END_MARKER);
   //checkpointing_area_print(a,MTCP_DEBUG,"Read memory area:");
   return addr_diff(in,addr);  
-}
-
-STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_area_fread(Area* a,int fd, long (*map)(const AreaHandler*, const Area& a,int fd,long), const AreaHandler* handler) {
-  long in = 0;
-  int l = 0;
-  int len = sizeof(Area)-sizeof(a->name);
-  in += readMarker(fd,MEMAREA_BEGIN_MARKER);
-  in += m_fread(fd,a,len);
-  in += m_fread(fd,a->name,a->name_len+1);
-  in += readInt(fd,&l);
-  if ( a->name[0] && a->name[0] == '/' && 
-       chkpt_sys.save_flags&MTCP_SAVE_LIBS &&
-       chkpt_sys.checkpointLibs[0] ) {
-    bool found = false;
-    for(size_t i=0; i<sizeof(chkpt_sys.tmpFiles)/sizeof(chkpt_sys.tmpFiles[0]);++i) {
-      SysInfo::TmpFile& tmp = chkpt_sys.tmpFiles[i];
-      if ( tmp.fd > 0 && m_strcmp(a->name,tmp.name)==0 ) {
-        found = true;
-        break;
-      }
-    }    
-    if ( !found ) {
-      char tmp[PATH_MAX];
-      const char *p0, *p1;
-      m_strcpy(tmp,chkpt_sys.checkpointLibs);
-      for(p0=a->name, p1=a->name; *p0; ++p0) if (*p0=='/') p1=p0;
-      m_strcpy(tmp+m_strlen(tmp),p1);
-      m_strcpy(a->name,tmp);
-    }
-    a->name_len = m_strlen(a->name);
-  }
-  long mapped_read = map ? (*map)(handler,*a,fd,l) : l;
-  in += mapped_read;
-  in += readMarker(fd,MEMAREA_END_MARKER);
-  //checkpointing_area_print(a,MTCP_DEBUG,"Read memory area:");
-  return in;
 }
 
 /// Access protection flags for this memory area

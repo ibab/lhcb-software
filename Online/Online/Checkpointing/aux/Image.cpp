@@ -1,8 +1,9 @@
 #define __STATIC__
-#include "src/Checkpointing.cpp"
 #define CHECKPOINTING_HAS_NAMESPACE 1
+#include "src/Checkpointing.cpp"
 
 #include "src/Restore.cpp"
+
 #include "src/Save.cpp"
 
 #include "src/MMap.cpp"

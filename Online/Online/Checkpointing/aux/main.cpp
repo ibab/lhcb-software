@@ -17,6 +17,12 @@
 #include <sys/mman.h>
 #include <linux/personality.h>
 
+static const int RESTORE_LIBS = 1<<0;
+static const int CONTINUE_AFTER_RESTORE = 1<<1;
+static const int ADVISE_PROCESS = 1<<2;
+static const int RESTART_PROCESS = 1<<3;
+
+
 using namespace Checkpointing;
 //static void* mtcp_global_stack_end = 0;
 static int checkMarker(int fd, Marker should) {
@@ -36,6 +42,7 @@ static inline size_t m_strlen(const char* s) {
   for(; *s; ++s) ++l;
   return l;
 }
+
 static inline size_t m_strcpy(char* t, const char* s) {
   const char* q=s;
   for(; *q; ++q, ++t) *t = *q;
@@ -52,7 +59,12 @@ void mtcp_executable(char* cmd_file) {
   cmd_file[cmd_len] = 0;
 }
 
-static void load(int org_argc, char** org_argv, const char* file_name, const char* lib_dir, int advise, bool restart, SysInfo::start_restore_t* func) {
+static void load(int org_argc, char** org_argv, 
+		 const char* file_name, 
+		 const char* lib_dir, 
+		 int flags,
+		 SysInfo::start_restore_t* func)
+{
   typedef void* pvoid;
   const Marker PROCESS_BEGIN_MARKER = *(Marker*)"PROC";
   const Marker SYS_BEGIN_MARKER     = *(Marker*)"PSYS";
@@ -61,6 +73,12 @@ static void load(int org_argc, char** org_argv, const char* file_name, const cha
   const Marker LIBS_END_MARKER      = *(Marker*)"libs";
   const Marker LIBRARY_BEGIN_MARKER = *(Marker*)"XLIB";
   const Marker LIBRARY_END_MARKER   = *(Marker*)"xlib";
+#define FLAG_SET(f,x)  (x == (f&x))
+  bool restart_process        = FLAG_SET(flags,RESTART_PROCESS);
+  bool advise_process         = FLAG_SET(flags,ADVISE_PROCESS);
+  bool restore_libraries      = FLAG_SET(flags,RESTORE_LIBS);
+  bool continue_after_restore = FLAG_SET(flags,CONTINUE_AFTER_RESTORE);
+
   int   rc, siz, fd, fdnum, num_libs;
   long  libs_size = 0;
   struct stat sb;
@@ -81,12 +99,18 @@ static void load(int org_argc, char** org_argv, const char* file_name, const cha
   mtcp_sys_read(fd,&libs_size,sizeof(long));
   mtcp_sys_read(fd,&num_libs,sizeof(int));
   if ( libs_size > 0 )   {
-    if ( !lib_dir || !restart ) {
+    if ( !lib_dir || !restore_libraries ) {
       long offset = ::lseek(fd,0,SEEK_CUR);
       mtcp_sys_lseek(fd,offset+libs_size,SEEK_SET);
-      mtcp_output(MTCP_INFO,"Ignore image section in checkpoint file:%s - restoring originals\n",file_name);
+      mtcp_output(MTCP_INFO,"Ignore image section in checkpoint file:%s"
+		  " - restoring originals\n",file_name);
     }
-    else {
+    else if ( !lib_dir && restore_libraries ) {
+      mtcp_output(MTCP_ERROR,"Serious problem in %s. "
+		  "Cannot restore libraries without target directory.\n",file_name);
+      mtcp_abort();
+    }
+    else if ( lib_dir && restore_libraries ) {
       int dir_len = m_strlen(lib_dir);
       for ( int ilib=0; ilib<num_libs; ++ilib ) {
         int name_len = 0;
@@ -99,29 +123,29 @@ static void load(int org_argc, char** org_argv, const char* file_name, const cha
         if ( name_len > 0 ) mtcp_sys_read(fd,lib+m_strlen(lib),name_len);
         mtcp_sys_read(fd,&siz,sizeof(siz));
         if ( name_len > 0 )   {
-          mtcp_sys_unlink(lib);
-          int lib_fd = mtcp_sys_open(lib,O_WRONLY|O_TRUNC|O_CREAT,0777);
-          if ( lib_fd < 0 ) {
-            mtcp_output(MTCP_FATAL,"restore: error restoring image file:%s  errno:%d\n",lib,mtcp_sys_errno);
-          }
-          mtcp_output(MTCP_INFO,"Restoring %d bytes for library[%d/%d] %s\n",siz,ilib+1,num_libs,lib);
+	  mtcp_sys_unlink(lib);
+	  int lib_fd = mtcp_sys_open(lib,O_WRONLY|O_TRUNC|O_CREAT,0777);
+	  if ( lib_fd < 0 ) {
+	    mtcp_output(MTCP_FATAL,"restore: error restoring image file:%s  errno:%d\n",lib,mtcp_sys_errno);
+	  }
+	  mtcp_output(MTCP_INFO,"Restoring %d bytes for library[%d/%d] %s\n",siz,ilib+1,num_libs,lib);
           while(siz>=PATH_MAX) {
             mtcp_sys_read(fd,buffer,sizeof(buffer));
-            int rc = mtcp_sys_write(lib_fd,buffer,sizeof(buffer));
-            if ( rc < 0 ) {
-              mtcp_output(MTCP_FATAL,"restore: error writing image file:%s  errno:%d\n",lib,mtcp_sys_errno);
-            }
+	    int rc = mtcp_sys_write(lib_fd,buffer,sizeof(buffer));
+	    if ( rc < 0 ) {
+	      mtcp_output(MTCP_FATAL,"restore: error writing image file:%s  errno:%d\n",lib,mtcp_sys_errno);
+	    }
             siz -= PATH_MAX;
           }
           while(siz>0) {
             mtcp_sys_read(fd,buffer,1);
-            int rc = mtcp_sys_write(lib_fd,buffer,1);
-            if ( rc < 0 ) {
-              mtcp_output(MTCP_FATAL,"restore: error writing image file:%s  errno:%d\n",lib,mtcp_sys_errno);
-            }
+	    int rc = mtcp_sys_write(lib_fd,buffer,1);
+	    if ( rc < 0 ) {
+	      mtcp_output(MTCP_FATAL,"restore: error writing image file:%s  errno:%d\n",lib,mtcp_sys_errno);
+	    }
             siz -= 1;
           }
-          mtcp_sys_close(lib_fd);
+	  mtcp_sys_close(lib_fd);
         }
         checkMarker(fd,LIBRARY_END_MARKER);
       }
@@ -131,6 +155,10 @@ static void load(int org_argc, char** org_argv, const char* file_name, const cha
     mtcp_output(MTCP_INFO,"Image section is EMPTY in checkpoint file:%s - restoring originals\n",file_name);
   }
   checkMarker(fd,LIBS_END_MARKER);
+
+  /// Stop here for restore-only activity
+  if ( !continue_after_restore ) return;
+
 
   checkMarker(fd,SYS_BEGIN_MARKER);
   mtcp_sys_read(fd,&siz,sizeof(siz));
@@ -154,7 +182,7 @@ static void load(int org_argc, char** org_argv, const char* file_name, const cha
       mtcp_sys_exit(0);
     }
     mtcp_sys_read(fd,buffer,siz-2*sizeof(int));    
-    if ( restart ) {
+    if ( restart_process ) {
       int l1=0, l2=0;
       mtcp_executable(cmdLine);
       for(i=0; i<num_arg;++i) {
@@ -173,14 +201,16 @@ static void load(int org_argc, char** org_argv, const char* file_name, const cha
         argv[i] = org_argv[i];
         l2 += m_strlen(argv[i])+1;
       }
-      argv[org_argc] = (char*)"-runnow";
-      l2 += m_strlen(argv[org_argc])+1;
-      argv[org_argc+1] = 0;
+      argv[org_argc] = (char*)"-R";    // No process restart
+      l2 += m_strlen(argv[org_argc])+1; 
+      argv[org_argc+1] = (char*)"-X";  // No library extraction after restart
+      l2 += m_strlen(argv[org_argc+1])+1;
+      argv[org_argc+2] = 0;
       for(e=environ, count=0;e&&*e; ++e)count++;
       mtcp_output(MTCP_INFO,"SysInfo-arg-len  %d \n",long(org_argv[0])-sys.arg0);
       mtcp_output(MTCP_INFO,"SysInfo-arg-len  %d  checkpointed:%d\n",l2,l1);
       mtcp_output(MTCP_INFO,"SysInfo-#argc:   %d  checkpointed:%d   #env:    %d  checkpointed:%d\n",
-                  org_argc+1,sys.argc,count,num_env);
+                  org_argc+2,sys.argc,count,num_env);
       mtcp_output(MTCP_INFO,"SysInfo-argv[0]: %p  checkpointed:%p\n",org_argv[0],sys.arg0);
       mtcp_output(MTCP_INFO,"SysInfo-cmdline = %s\n",cmdLine);
       mtcp_output(MTCP_INFO,"SysInfo-cmdline = %s\n",sys.arg0String);
@@ -243,7 +273,7 @@ static void load(int org_argc, char** org_argv, const char* file_name, const cha
   if ( rc < 0 ) {
     mtcp_output(MTCP_FATAL,"restore: Failed [%d] to seek back to file begin:%s\n",mtcp_sys_errno,file_name);
   }
-  if ( advise ) {
+  if ( advise_process ) {
     int rc = ::posix_fadvise64(fd,0,0,POSIX_FADV_WILLNEED|POSIX_FADV_SEQUENTIAL);
     if ( 0 != rc ) {
       mtcp_output(MTCP_ERROR,"restore: fadvise error:%s\n",::strerror(errno));
@@ -286,6 +316,15 @@ static int usage() {
               "       file-name = string   : Name of the checkpoint file.            \n"
               "       -n                   : Do not write PID in mtcp output.        \n"
               "       -e                   : Read new environment vars from stdin.   \n"
+              "       -d                   : Sleep 10 sec to attacj debugger         \n"
+              "       -a                   : Personalize process                     \n"
+              "       -A                   : DO NOT personalize process              \n"
+              "       -r (DEFAULT)         : Execve process after with restored env. \n"
+              "       -R                   : DO NOT restart.                         \n"
+              "       -x (DEFAULT)         : Restore libraries to dedicated directory\n"
+              "       -X                   : DO NOT restore libraries.               \n"
+              "       -c (DEFAULT)         : Continue execution after lib restore.   \n"
+              "       -X                   : DO NOT continue execution               \n"
               , mtcp_get_debug_level());
   return 1;
 }
@@ -301,23 +340,34 @@ int main(int argc, char** argv, char** /* envp */) {
     int prt = MTCP_WARNING, opts=0;
     const char* libs_dir = 0;
     {
-      int advise=0, norestart=1;
       const char* file_name = 0;
+      int flags = RESTART_PROCESS|RESTORE_LIBS|CONTINUE_AFTER_RESTORE;
       for(int i=1; i<argc; ++i) {
         if      ( argc>i && argv[i][1] == 'i' ) file_name = argv[++i];
         else if ( argc>i && argv[i][1] == 'p' ) prt   = argv[++i][0]-'0';
         else if ( argc>i && argv[i][1] == 'n' ) prt  |= MTCP_PRINT_NO_PID;
         else if ( argc>i && argv[i][1] == 'e' ) opts |= MTCP_STDIN_ENV;
-        else if ( argc>i && argv[i][1] == 'a' ) advise = 1;
-        else if ( argc>i && argv[i][1] == 'r' ) norestart = 0;
         else if ( argc>i && argv[i][1] == 'l' ) libs_dir = argv[++i];
         else if ( argc>i && argv[i][1] == 'd' ) ::sleep(10);
+        else if ( argc>i && argv[i][1] == 'a' ) flags |=  ADVISE_PROCESS;
+        else if ( argc>i && argv[i][1] == 'A' ) flags &= ~ADVISE_PROCESS;
+        else if ( argc>i && argv[i][1] == 'r' ) flags |=  RESTART_PROCESS;
+        else if ( argc>i && argv[i][1] == 'R' ) flags &= ~RESTART_PROCESS;
+        else if ( argc>i && argv[i][1] == 'x' ) flags |=  RESTORE_LIBS;
+        else if ( argc>i && argv[i][1] == 'X' ) flags &= ~RESTORE_LIBS;
+        else if ( argc>i && argv[i][1] == 'c' ) flags |=  CONTINUE_AFTER_RESTORE;
+        else if ( argc>i && argv[i][1] == 'C' ) flags &= ~CONTINUE_AFTER_RESTORE;
       }
       if ( 0 == file_name ) return usage();
       if ( libs_dir )  {  ::realpath(libs_dir,tmp_libs); libs_dir = tmp_libs; }
       mtcp_set_debug_level(prt /* MTCP_ERROR prt */);
-      mtcp_output(MTCP_INFO,"restore: print level:%d input:%s libs to:%s\n",prt,file_name,libs_dir);
-      load(argc, argv, file_name, libs_dir, advise, norestart==1, &func);
+      mtcp_output(MTCP_INFO,"restore: print level:%d input:%s libs to:%s\n",
+		  prt,file_name,libs_dir ? libs_dir : "----");
+      load(argc, argv, file_name, libs_dir, flags, &func);
+      if ( 0 == (flags&CONTINUE_AFTER_RESTORE) )  {
+	mtcp_output(MTCP_INFO,"Premature return after restoring images...\n");
+	return 0;
+      }
     }
     // Now call the restore function - it shouldn't return. 
     // Checkpoint file is still open and positioned to the beginning.

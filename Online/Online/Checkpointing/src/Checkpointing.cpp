@@ -23,7 +23,7 @@ HIDDEN(int)    m_longcheck(const void* a, const void* b)   {
   return *ia == *ib ? 1 : 0;
 }
 
-HIDDEN(int)    m_isspace(char s) {
+HIDDEN(int) m_isspace(char s) {
   return s==' '||s=='\n'||s=='\t'||s=='\r'||s=='\v'||s=='\f' ? 1 : 0;
 }
 
@@ -221,22 +221,16 @@ HIDDEN(size_t) m_fskip(int fd, size_t len) {
   }
   return len;
 }
-
+  
 HIDDEN(size_t) m_fread(int fd, void* t, size_t len) {
   char*  p = (char*)t;
-  //size_t l = len;
   char*  s = p;
-  //char*  e = s + l;
   int err = 0;
+
   mtcp_sys_errno = 0;
   while(len > 0)  {
     long rc = mtcp_sys_read(fd,p,len);
     if ( rc < 0 )   {
-#if 0
-      mtcp_output(MTCP_ERROR,"fd:%d, **************************************** FAILED to fread data to %p at %p "
-		  "after %d bytes todo:%d bytes rc=%d errno=%d\n",
-		  fd,s,p,long(p-s),len,rc,mtcp_sys_errno);
-#endif
       if ( ++err < 3 )  {
 	long lsleep = 10000000;
 	mtcp_sys_nanosleep(lsleep);
@@ -246,7 +240,6 @@ HIDDEN(size_t) m_fread(int fd, void* t, size_t len) {
       else {
 	m_fskip(fd,len);
 	return p - s;
-	//while(1) mtcp_sys_nanosleep(1000000);
       }
       break;
     }

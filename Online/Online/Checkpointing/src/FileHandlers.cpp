@@ -53,20 +53,24 @@ WEAK(int) FileWriteHandler::stop()  {
 
 /// Handle single file entry
 WEAK(int) FileWriteHandler::handle(int fdnum) const {
-  FileDesc dsc;
-  if ( 1 == dsc.setup(fdnum) ) {
-    long n = dsc.write(m_fd);
-    if ( n > 0 ) {
-      ++m_count;
-      m_bytes += n;
-      mtcp_output(MTCP_DEBUG,"FileMap: read %ld bytes current position:%p\n",n,m_offset+m_bytes);
-      return 1;
+  if ( fdnum != m_fd )  {
+    /// We do NOT write the file with the actual checkpoint information
+    FileDesc dsc;
+    if ( 1 == dsc.setup(fdnum) ) {
+      long n = dsc.write(m_fd);
+      if ( n > 0 ) {
+	++m_count;
+	m_bytes += n;
+	mtcp_output(MTCP_DEBUG,"FileMap: wrote %ld bytes current position:%p\n",n,m_offset+m_bytes);
+	return 1;
+      }
+      mtcp_output(MTCP_ERROR,"FileMap: error saving file information for FD:%d -> %s\n",fdnum,dsc.name);
+      return 0;
     }
-    mtcp_output(MTCP_ERROR,"FileMap: error saving file information for FD:%d -> %s\n",fdnum,dsc.name);
+    mtcp_output(MTCP_ERROR,"FileMap: accessing file information for FD:%d\n",fdnum);
     return 0;
   }
-  mtcp_output(MTCP_ERROR,"FileMap: accessing file information for FD:%d\n",fdnum);
-  return 0;
+  return 1;
 }
 
 /// Standard constructor

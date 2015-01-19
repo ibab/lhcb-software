@@ -15,7 +15,6 @@ macro Checkpointing_package_cpp_build_flags ' -Wextra ' WIN32 '' \
   target-icc ' -wd111 -wd180 -wd188 -wd310 -wd981 -wd1418 -wd1419 -wd1599 -wd2259 ' \
   target-gcc ' -Wextra -Wvariadic-macros '
 macro_append Checkpointing_package_cpp_build_flags ' -ansi -Wreturn-type -Wunused ' WIN32 ''
-macro_remove cppflags "-pthread"
 
 # ==================== component libraries ==================================
 public
@@ -46,4 +45,3 @@ apply_pattern QMTestSummarize
 apply_pattern disable_package_on platform=target-winxp
 apply_pattern disable_package_on platform=target-i686
 apply_pattern disable_package_on platform=target-ia32
-

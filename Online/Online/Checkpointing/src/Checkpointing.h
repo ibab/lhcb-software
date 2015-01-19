@@ -34,10 +34,10 @@ namespace CHECKPOINTING_NAMESPACE  {
   HIDDEN(size_t) m_writemem(int fd, const void* s, size_t len);
   HIDDEN(size_t) m_writeset(int fd, unsigned char pattern, size_t len);
 
-  HIDDEN(int) readMarker(int fd, Marker pattern);
-  HIDDEN(int) writeMarker(int fd, Marker pattern);
-  HIDDEN(int) saveMarker(void* addr, Marker pattern);
-  HIDDEN(int) checkMarker(const void* addr, Marker pattern);
+  HIDDEN(int) readMarker(int fd, ::Checkpointing::Marker pattern);
+  HIDDEN(int) writeMarker(int fd, ::Checkpointing::Marker pattern);
+  HIDDEN(int) saveMarker(void* addr, ::Checkpointing::Marker pattern);
+  HIDDEN(int) checkMarker(const void* addr, ::Checkpointing::Marker pattern);
 
 
   HIDDEN(int) writeInt(int fd,int value);
@@ -74,6 +74,6 @@ int  mtcp_get_debug_level();
 
 #endif // CHECKPOINTING_OUTPUT
 
-#define DefineMarker(x,y) static const CHECKPOINTING_NAMESPACE::Marker x = *(CHECKPOINTING_NAMESPACE::Marker*)y
+#define DefineMarker(x,y) static const ::Checkpointing::Marker x = *(::Checkpointing::Marker*)y
 
 #endif  // CHECKPOINTING_CHECKPOINTING_H
