@@ -26,11 +26,6 @@ int main (int argc, char** argv)  {
       if ( fun.function ) {
 	return (*fun.function)(argc-2, &argv[2]);
       }
-      std::cout << "[ERROR] Failed to access test procedure: '" << argv[2] << "'" << std::endl;
-      std::cout << "[ERROR] Error: " << DLERROR << std::endl;
-      return EINVAL;
-    }
-    else {
       // The required function is not in the loaded image.
       // Try to load it directly from the executable
       Function f1(GETPROC(0, argv[2]));
