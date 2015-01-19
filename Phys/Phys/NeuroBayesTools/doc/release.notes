@@ -5,6 +5,9 @@
 !               the NeuroBayes neural network package
 !-----------------------------------------------------------------------------
 
+! 2015-01-19 - Eduardo Rodrigues
+ - Added python/NeuroBayesTools/__init__.py to please CMake.
+
 !========================= NeuroBayesTools v1r2p3 2013-06-13 =========================
 
 ! 2013-05-28 - Chris Jones
