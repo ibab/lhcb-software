@@ -4,6 +4,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2015-01-19 - Eduardo Rodrigues
+ - Added python/JetAccessories/__init__.py to please CMake.
+
 !======================== JetAccessories v3r10 2015-01-15 =========================
 
 ! 2015-01-15 - Pieter David
