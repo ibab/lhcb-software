@@ -6,6 +6,9 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2015-01-19 - Eduardo Rodrigues
+ - Added python/FlavourTagging/__init__.py to please CMake.
+
 !========================= FlavourTagging v13r10 2014-12-15 ========================
 
 ! 2014-12-05 - Jack Wimberley
