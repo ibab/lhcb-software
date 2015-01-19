@@ -177,7 +177,7 @@ class Escher(LHCbConfigurableUser):
         # if the patter reco is not run, we need the DataOnDemand svc
         # so that e.g. the track container(s) is unpacked:
         if not GaudiSequencer("RecoTrSeq").getProp("Enable"):
-        DstConf( EnableUnpack = True )
+            DstConf( EnableUnpack = True )
 
         TrackSys().ExpertTracking = self.getProp("ExpertTracking")
 

@@ -4,6 +4,9 @@ Package Coordinator : Johan Blouw and Rob Lambert
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+! 2015-01-19 - Maurizio Martinelli
+ - Fix indent in Configuration.py
+
 ! 2015-01-12 - Roel Aaij
  - Fix configuration of HLT{1,2} decreports decoders.
 
