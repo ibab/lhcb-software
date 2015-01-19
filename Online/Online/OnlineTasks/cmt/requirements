@@ -2,7 +2,7 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           OnlineTasks 
-version           v1r53
+version           v1r54
 #============================================================================
 branches          cmt doc job options
 include_path      none
