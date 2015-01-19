@@ -303,6 +303,31 @@ public:
    */ 
   std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::LHCbID& id, 
                                              const double =0 /** offset */) const;
+
+
+ public:
+  /// Nested class to communicate to the updatesvc for the
+  /// calibration. Advantage of object is that DeOTModule can also
+  /// register to it.
+  struct Calibration
+  {
+    Calibration( SmartRef<Condition> c ) : m_condition(c) {}
+    virtual ~Calibration() {}
+    StatusCode callback() ;
+    SmartRef<Condition> m_condition ;
+    double m_globalT0 ;
+  } ;
+  
+  /** get the calibrationholder */
+  const Calibration* globalCalibration() const {
+    return m_calibration ;
+  }
+  
+  /** get the global T0 offset */
+  double globalT0() const { return m_calibration ? m_calibration->m_globalT0 : 0 ; }
+
+  /** set the global T0 offset */
+  void setGlobalT0(double t0) ;
   
 private:
   /// three stations; starting from 1
@@ -327,6 +352,7 @@ private:
   double m_maxDriftTime;           ///< maximum drift time
   double m_maxDriftTimeCor;        ///< magn. correction on maximum drift time
   double m_deadTime;               ///< deadtime
+  Calibration* m_calibration ;     ///< holder for global calibration parameters (e.g. t0)
 };
 
 // -----------------------------------------------------------------------------

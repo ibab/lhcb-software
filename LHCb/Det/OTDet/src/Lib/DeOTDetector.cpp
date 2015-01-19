@@ -7,6 +7,7 @@
 // GaudiKernel
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 /// OTDet
 #include "OTDet/DeOTDetector.h"
@@ -46,7 +47,8 @@ DeOTDetector::DeOTDetector(const std::string& name) :
   m_propagationDelay(0.0),
   m_maxDriftTime(0.0),
   m_maxDriftTimeCor(0.0),
-  m_deadTime(0.0)
+  m_deadTime(0.0),
+  m_calibration(0)
 {
   /// Constructor
   m_stations.reserve(3);
@@ -73,7 +75,17 @@ StatusCode DeOTDetector::initialize()
     msg << MSG::ERROR << "Failed to initialize DetectorElement" << endmsg;
     return sc ;
   }
-   
+
+  if( hasCondition("Calibration") ) {
+    m_calibration = new Calibration(this->condition("Calibration")) ;
+    updMgrSvc()->registerCondition( m_calibration,
+				    m_calibration->m_condition.path(),
+				    &DeOTDetector::Calibration::callback ) ;
+  } else {
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::DEBUG << "Cannot find condition for global OT calibration" << endmsg ;
+  }
+
   // loop over stations
   typedef IDetectorElement::IDEContainer::const_iterator Iter;
   for (Iter iS = this->childBegin(); iS != this->childEnd(); ++iS) {
@@ -250,4 +262,27 @@ std::auto_ptr<LHCb::Trajectory> DeOTDetector::trajectory(const LHCb::LHCbID& id,
   
   // Offset hardcoded to 0. to eliminate warning about unused parameter
   return std::auto_ptr<LHCb::Trajectory>(aModule->trajectory(id.otID(),0));
+}
+
+StatusCode DeOTDetector::Calibration::callback()
+{
+  // find the t0 parameter in the calibration condition
+  if(m_condition->exists("TZero")) {
+    m_globalT0 = m_condition->param<double>("TZero") ;
+  } else {
+    throw GaudiException("No parameter 'TZero' in Calibration condition",
+			 "DeOTDetector.cpp",StatusCode::FAILURE) ;
+  }
+  return StatusCode::SUCCESS ;
+}
+
+void DeOTDetector::setGlobalT0(double t0)
+{
+  if( m_calibration ) {
+    m_calibration->m_condition->param<double>("TZero") = t0 ;
+    updMgrSvc()->invalidate( m_calibration->m_condition.target() );
+  } else {
+    throw GaudiException("Cannot set TZero parameter since condition does not exist.",
+			 "DeOTDetector.cpp",StatusCode::FAILURE) ;
+  }
 }

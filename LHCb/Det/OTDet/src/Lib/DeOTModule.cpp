@@ -27,6 +27,7 @@
 // local
 #include "OTDet/DeOTModule.h"
 #include "OTDet/OTWireTraj.h"
+#include "OTDet/DeOTDetector.h"
 
 /** @file DeOTModule.cpp
  *
@@ -92,7 +93,7 @@ StatusCode DeOTModule::initialize() {
   IDetectorElement* quarter = this->parentIDetectorElement();
   IDetectorElement* layer = quarter->parentIDetectorElement();
   IDetectorElement* station = layer->parentIDetectorElement();
-  IDetectorElement* ot = station->parentIDetectorElement();
+  DeOTDetector* ot = dynamic_cast<DeOTDetector*>(station->parentIDetectorElement()) ;
 
   // Get specific parameters from the module
   m_moduleID = (unsigned int)param<int>("moduleID");
@@ -153,6 +154,9 @@ StatusCode DeOTModule::initialize() {
     if ( hasCondition( m_calibrationName ) ) { ///< Only do this if condtion is in LHCBCOND
       m_calibration = condition( m_calibrationName );
       updMgrSvc()->registerCondition( this, m_calibration.path(), &DeOTModule::calibrationCallback );
+      if( ot->globalCalibration() )
+	updMgrSvc()->registerCondition( this, const_cast<DeOTDetector::Calibration*>(ot->globalCalibration()),
+					&DeOTModule::calibrationCallback );
     } else {
       if( msg.level() <= MSG::VERBOSE )
         msg << MSG::VERBOSE << "Going to use DC06 defaults for RT-relation and T0s" << endmsg;
@@ -577,7 +581,7 @@ StatusCode DeOTModule::calibrationCallback() {
       m_calibration->param< std::vector<double> >( "TRParameters" ); // in ns
     const std::vector<double>& sigmaTParameters =
       m_calibration->param< std::vector<double> >( "STParameters" ); // in ns
-    const std::vector<double>& t0Parameters =
+    std::vector<double> t0Parameters =
       m_calibration->param< std::vector<double> >( "TZero" );
 
     // Here we assume the cell radius is the same for all straws. Should be  ;)
@@ -603,6 +607,14 @@ StatusCode DeOTModule::calibrationCallback() {
       }
     }
     else m_walkrelation = OTDet::WalkRelation();
+    
+    // add the global t0 to the given t0 parameters:
+    const IDetectorElement* quarter = this->parentIDetectorElement();
+    const IDetectorElement* layer = quarter->parentIDetectorElement();
+    const IDetectorElement* station = layer->parentIDetectorElement();
+    const DeOTDetector* ot = dynamic_cast<const DeOTDetector*>(station->parentIDetectorElement()) ;
+    const double globalT0 = ot->globalT0() ;
+    for( auto& t0 : t0Parameters ) t0 += globalT0 ;
 
     // how we set the straw t0 depends on the size of the vector.  we
     // allow that the calibration sets either every connected channel,
