@@ -186,6 +186,11 @@ namespace LoKi
     /// OPTIONAL: the nice printout 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " (" << func1() << " & " << func2() << ") " ; }
+    /// OPTIONAL: C++ print
+    virtual std::string   toCpp () const 
+    { return " (" 
+        + Gaudi::Utils::toCpp ( this->func1() ) + " && " 
+        + Gaudi::Utils::toCpp ( this->func2() ) + ") " ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -278,6 +283,11 @@ namespace LoKi
     /// OPTIONAL: the nice printout 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " (" << this->func1() << " | " << this->func2() << ") " ; }
+    /// OPTIONAL: C++ print
+    virtual std::string   toCpp () const 
+    { return " (" 
+        + Gaudi::Utils::toCpp ( this->func1() ) + " || " 
+        + Gaudi::Utils::toCpp ( this->func2() ) + ") " ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -339,13 +349,13 @@ namespace LoKi
     virtual  Not* clone() const { return new Not( *this ); }
     /// the only one essential method ("function")      
     virtual  result_type operator() ( argument_a_unless_void ) const 
-    { 
+    {
       std::logical_not<TYPE2> lnot ;
-      return lnot ( m_fun.fun ( a_unless_void ) ) ; 
+      return lnot ( this->m_fun.fun ( a_unless_void ) ) ; 
     }
     /// the basic printout method 
     virtual std::ostream& fillStream ( std::ostream& s ) const 
-    { return s << " (~"  << m_fun << ") " ; };
+    { return s << " (~"  << this->m_fun << ") " ; };
     // ========================================================================
   private:
     // ========================================================================
@@ -419,7 +429,7 @@ namespace LoKi
     }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
-    { return s << " (-"  << m_fun << ") " ; };
+    { return s << " (-"  << this->m_fun << ") " ; };
     // ========================================================================
   private:
     // ========================================================================
@@ -511,6 +521,11 @@ namespace LoKi
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " (" << this->func1() << "<" << this->func2() << ") " ; }
+    /// OPTIONAL: C++ print
+    virtual std::string   toCpp () const 
+    { return " (" 
+        + Gaudi::Utils::toCpp ( this->func1() ) + " < " 
+        + Gaudi::Utils::toCpp ( this->func2() ) +  ") " ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -611,6 +626,11 @@ namespace LoKi
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " (" << this->func1() << "==" << this->func2() << " ) " ; }
+    /// OPTIONAL: C++ print
+    virtual std::string   toCpp () const 
+    { return " (" 
+        + Gaudi::Utils::toCpp ( this->func1() ) + " == " 
+        + Gaudi::Utils::toCpp ( this->func2() ) + ") " ; }
     // ========================================================================
   public:
     // ========================================================================
@@ -708,6 +728,11 @@ namespace LoKi
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " (" << this->func1() << "<=" << this->func2() << ") " ; }
+    /// OPTIONAL: C++ print
+    virtual std::string   toCpp () const 
+    { return " (" 
+        + Gaudi::Utils::toCpp ( this->func1() ) + " <= "
+        + Gaudi::Utils::toCpp ( this->func2() ) + ") " ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -788,6 +813,11 @@ namespace LoKi
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " (" << this->func1() 
                << "!=" << this->func2() << ") " ; }
+    /// OPTIONAL: C++ print
+    virtual std::string   toCpp () const 
+    { return " ("
+        + Gaudi::Utils::toCpp ( this->func1() ) + " != " 
+        + Gaudi::Utils::toCpp ( this->func2() ) + ") " ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -876,6 +906,11 @@ namespace LoKi
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " (" << this->func1() << "+" << this->func2() << ") " ; }
+    /// OPTIONAL: C++ print
+    virtual std::string   toCpp () const 
+    { return " (" 
+        + Gaudi::Utils::toCpp ( this->func1() ) + " + " 
+        + Gaudi::Utils::toCpp ( this->func2() ) + ") " ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -981,6 +1016,11 @@ namespace LoKi
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " (" << this->func1() << "-" << this->func2() << ") " ; }
+    /// OPTIONAL: C++ print
+    virtual std::string   toCpp () const 
+    { return " ("
+        + Gaudi::Utils::toCpp ( this->func1() ) + " - " 
+        + Gaudi::Utils::toCpp ( this->func2() ) + ") " ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -1064,6 +1104,11 @@ namespace LoKi
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " (" << this->func1() << "/" << this->func2() << ") " ; }
+    /// OPTIONAL: C++ print
+    virtual std::string   toCpp () const 
+    { return " (" 
+        + Gaudi::Utils::toCpp ( this->func1() ) + " / " 
+        + Gaudi::Utils::toCpp ( this->func2() ) + ") " ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -1147,6 +1192,11 @@ namespace LoKi
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " (" << this->func1() << "*" << this->func2() << ") " ; }
+    /// OPTIONAL: C++ print
+    virtual std::string   toCpp () const 
+    { return " (" 
+        + Gaudi::Utils::toCpp ( this->func1() ) + " * " 
+        + Gaudi::Utils::toCpp ( this->func2() ) + ") " ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -1259,6 +1309,11 @@ namespace LoKi
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " min(" << this->func1() << "," << this->func2() << ") " ; }
+    /// OPTIONAL: C++ print
+    virtual std::string   toCpp () const 
+    { return " LoKi::min(" 
+        + Gaudi::Utils::toCpp ( this->func1() ) + "," 
+        + Gaudi::Utils::toCpp ( this->func2() ) + ") " ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -1387,6 +1442,11 @@ namespace LoKi
     /// OPTIONAL: the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " max(" << this->func1() << "," << this->func2() << ") " ; }
+    /// OPTIONAL: C++ print
+    virtual std::string   toCpp () const 
+    { return " LoKi::max(" 
+        + Gaudi::Utils::toCpp ( this->func1() ) + "," 
+        + Gaudi::Utils::toCpp ( this->func2() ) + ") " ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -1456,7 +1516,10 @@ namespace LoKi
     { return m_cut( a_unless_void ) ? m_val1 : m_val2 ; }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
-    { return s << " switch("  << m_cut << ","  << m_val1 << "," << m_val2 << ") " ; }
+    { return s << " switch("  
+               << this->m_cut  << ","  
+               << this->m_val1 << "," 
+               << this->m_val2 << ") " ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -1609,9 +1672,9 @@ namespace LoKi
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " switch("     
-               << m_cut          << "," 
-               << m_two.func1()  << "," 
-               << m_two.func2()  << ") "  ; }
+               << this->m_cut          << "," 
+               << this->m_two.func1()  << "," 
+               << this->m_two.func2()  << ") "  ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -1700,10 +1763,10 @@ namespace LoKi
     { return (*m_func) ( m_fun . fun ( a_unless_void ) ) ; }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
-    { return s << " " << m_desc << "("  << m_fun << ") " ; };
+    { return s << " " << this->m_desc << "("  << this->m_fun << ") " ; };
     // to C++
     virtual std::string   toCpp() const 
-    { return "LoKi::" + m_desc + "("  + Gaudi::Utils::toCpp ( m_fun ) + ") " ; }
+    { return "LoKi::" + this->m_desc + "("  + Gaudi::Utils::toCpp ( this->m_fun ) + ") " ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -1836,9 +1899,9 @@ namespace LoKi
                << m_two.func2 () << ") " ; }
     /// to C++
     virtual std::string toCpp() const 
-    { return "LoKi::" + m_desc + "("  
-        + Gaudi::Utils::toCpp ( m_two.func1 () ) + ", " 
-        + Gaudi::Utils::toCpp ( m_two.func2 () ) + ") " ; }
+    { return "LoKi::" + this->m_desc + "("  
+        + Gaudi::Utils::toCpp ( this->m_two.func1 () ) + ", " 
+        + Gaudi::Utils::toCpp ( this->m_two.func2 () ) + ") " ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -1901,7 +1964,7 @@ namespace LoKi
     }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
-    { return s << " (" << m_fun1 << ">>" << m_fun2  << ") " ; }   
+    { return s << " (" << this->m_fun1 << ">>" << this->m_fun2  << ") " ; }   
     // ========================================================================
   private:
     // ========================================================================

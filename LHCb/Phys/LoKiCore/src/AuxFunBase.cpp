@@ -243,7 +243,7 @@ bool LoKi::AuxFunBase::sameEvent () const
  */ 
 // ============================================================================
 std::string LoKi::AuxFunBase::toCpp() const 
-{ return objType() + "(" + m_cargs + ")" ; }
+{ return objType() +  ( m_cargs.empty() ? "() " : "( " + m_cargs + " ) " ) ; }
 // ============================================================================
 /*  output operator of function objects to std::ostream
  *  @param stream reference to the stream

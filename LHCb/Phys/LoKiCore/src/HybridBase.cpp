@@ -9,6 +9,7 @@
 // STD & STL
 // ============================================================================
 #include <sstream>
+#include <fstream>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -18,6 +19,7 @@
 // ============================================================================
 #include "LoKi/HybridBase.h"
 #include "LoKi/ILoKiSvc.h"
+#include "LoKi/CacheFactory.h"
 // ============================================================================
 // Boots
 // ============================================================================
@@ -88,18 +90,31 @@ LoKi::Hybrid::Base::Base
   , m_cppname    ()
   , m_cpplines   ( { "#include \"GaudiKernel/Kernel.h\"" , 
                      "#include \"GaudiKernel/System.h\"" ,
-                     "#include \"LoKi/Functors.h\""      , } )
+                     "#include \"LoKi/Functors.h\""      , 
+                     "#include \"LoKi/CacheFactory.h\""  , } )
   , m_allfuncs   () 
 {
   declareProperty ( "ShowCode" , 
                     m_showCode , 
                     "Flag to display the prepared python code") ;
+  //
+  // use Environment variable 
+  //
+  m_makeCpp = "UNKNOWN" != System::getEnv  ( "LOKI_GENERATE_CPPCODE" ) ;
+  //
   declareProperty ( "MakeCpp"  , 
                     m_makeCpp  , 
                     "Generate C++ code for created functors ") ;
   //
-  m_cppname = this->name() + ".cpp" ;
+  // make reasonable default name
+  //
+  m_cppname = this->name() ;
   if ( 0 == m_cppname.find ( "ToolSvc." ) ) { m_cppname.erase ( 0 , 8 ) ; }
+  while ( std::string::npos != m_cppname.find ( '.' ) ) 
+  { m_cppname.replace ( m_cppname.find ( '.' ) , 1 , "_" ) ; }
+  m_cppname.insert ( 0 , "FUNCTORS_" ) ;
+  m_cppname.append (     ".cpp"      ) ;
+  //
   declareProperty ( "CppFileName", 
                     m_cppname    , 
                     "File name for C++ code for created functors ") ;
@@ -156,6 +171,11 @@ StatusCode LoKi::Hybrid::Base::finalize  ()
     }
     Py_Finalize () ;
   }
+  //
+  // Write C++ code 
+  //
+  if ( m_makeCpp ) { writeCpp () ; }
+  //
   // finalize the base
   return GaudiTool::finalize() ;
 }
@@ -422,6 +442,49 @@ std::string LoKi::Hybrid::Base::makeCode
   }
   ///
   return result ;
+}
+// ============================================================================
+// write C++ code 
+// ============================================================================
+void LoKi::Hybrid::Base::writeCpp () const 
+{
+  std::ofstream file ( m_cppname ) ;
+  
+  //
+  // 1) write header line
+  //
+  for ( std::vector<std::string>::const_iterator il = m_cpplines.begin() ;
+        m_cpplines.end() != il ; ++il ) 
+  { file << (*il) << std::endl ; }
+  //
+  // 2 ) loop over basic types 
+  //
+  for ( ALLFUNCS::const_iterator ia = m_allfuncs.begin() ;
+        m_allfuncs.end() != ia ; ++ia ) 
+  {
+    //
+    file << "//"          << std::endl 
+         << "// TYPE is " << ia->first 
+         << "//"          << std::endl ;
+    //
+    const std::string& cpptype = ia->first  ;
+    const FUNCTIONS&   funcs   = ia->second ;
+    for ( FUNCTIONS::const_iterator ic = funcs.begin() ; funcs.end() != ic ; ++ic ) 
+    {
+      //
+      const std::string& cppcode = ic->second.first  ;
+      const std::string& pytype  = ic->second.second ;
+      const std::string& pycode  = ic->first         ;
+      //
+      // write actual C++ code 
+      LoKi::Cache::makeCode ( file       , 
+                              cpptype    ,
+                              cppcode    ,
+                              pycode     , 
+                              pytype     ) ;
+      file << std::endl ;
+    }
+  }
 }
 // ============================================================================
 

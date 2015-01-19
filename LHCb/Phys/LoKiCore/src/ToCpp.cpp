@@ -1,5 +1,11 @@
 // Include files 
 // ============================================================================
+// STD &STL
+// ============================================================================
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+// ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/StatusCode.h"
@@ -19,6 +25,20 @@
 // ============================================================================
 #include "LoKi/KinTypes.h"
 #include "LoKi/ToCpp.h"
+// ============================================================================
+std::string Gaudi::Utils::toCpp
+( const long double    o ,
+  const unsigned short p ) 
+{
+  std::ostringstream ss ; 
+  //
+  std::ios::fmtflags orig_flags = ss.flags();
+  ss.setf(std::ios_base::floatfield ) ;
+  ss << std::setprecision( p ) << o ;
+  ss.flags(orig_flags);
+  //
+  return ss.str() ;
+}    
 // ============================================================================
 std::string Gaudi::Utils::toCpp ( const LoKi::LorentzVector&v ) 
 {

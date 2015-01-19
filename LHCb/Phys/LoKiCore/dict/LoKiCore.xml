@@ -31,6 +31,8 @@
   <function pattern = "LoKi::Kinematics::*"    />
   <function pattern = "LoKi::Particles::*"     />
 
+  <function name    = "Gaudi::Utils::toCpp"    />
+
   <variable pattern = "LoKi::Constants::*"     />
 
   <function name = "LoKi::throwException"  />
@@ -48,16 +50,17 @@
   <class name    = "LoKi::CounterDef"      />
 
   <class name    = "Bender::Welcome"       />
+  <class name    = "LoKi::Pids::GetPids"   />
 
   <class name = "LoKi::Hybrid::ICoreFactory"               />
   <class name = "LoKi::Hybrid::ICoreAntiFactory"           />
   <class name = "LoKi::Hybrid::CoreEngine"                 />
 
 
-  <class    name = "Gaudi::Histo1DDef"                 />
-  <function name = "Gaudi::Histos::book"               />
-  <function name = "LoKi::HistoBook::book"             />
-  <function name = "LoKi::Monitoring::getCounter"      />
+  <class    name   = "Gaudi::Histo1DDef"                 />
+  <function name   = "Gaudi::Histos::book"               />
+  <function name   = "LoKi::HistoBook::book"             />
+  <function name   = "LoKi::Monitoring::getCounter"      />
 
   <class name      = "LoKi::Tensors::Delta"     />
   <class name      = "LoKi::Tensors::Epsilon"   />
@@ -81,20 +84,32 @@
     <field name = "m_incSvc" transient = "true"/>
   </class>
 
-  <class    name = "LoKi::TES::Get" >
-    <field name = "m_algorithm" transient = "true"/>
-    <field name = "m_datasvc"   transient = "true"/>
-  </class>
 
   <class name = "LoKi::TES::Exists"        />
   <class name = "LoKi::TES::Contains"      />
-
   <class name = "LoKi::TES::Counter"       />
   <class name = "LoKi::TES::Stat"          />
   <class name = "LoKi::TES::HasRecSummary" />
   <class name = "LoKi::TES::RecSummary"    />
 
+  <class    name = "LoKi::TES::Get" >
+    <field name = "m_algorithm" transient = "true"/>
+    <field name = "m_datasvc"   transient = "true"/>
+  </class>
 
+  <class pattern="LoKi::TES::*">
+    <method name="=" />
+  </class>
+  
+  <class name="LoKi::TES::Stat">
+    <field name="m_getter" />
+  </class>
+  
+  <class    name = "LoKi::TES::Get" >
+    <field name = "m_algorithm" />
+    <field name = "m_datasvc"   />
+  </class>
+    
   <class name =        "implements1<IIncidentListener>" />
   <class name = "extend_interfaces1<IIncidentListener>" />
 
@@ -117,20 +132,7 @@
       <method name="=" />
     </class>
 
-    <class    name = "LoKi::TES::Get" >
-      <field name = "m_algorithm" />
-      <field name = "m_datasvc"   />
-    </class>
-
-    <class pattern="LoKi::TES::*">
-      <method name="=" />
-    </class>
-
-    <class pattern="LoKi::TES::Stat">
-      <field name="m_getter" />
-    </class>
-
-    <class pattern="LoKi::Listener">
+    <class name="LoKi::Listener">
       <method name="release"  />
       <method name="addRef"   />
       <method name="refCount" />

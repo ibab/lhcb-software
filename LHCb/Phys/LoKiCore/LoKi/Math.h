@@ -802,38 +802,51 @@ namespace LoKi
   // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================
+namespace LoKi 
+{
+  // ==========================================================================
+  namespace Math
+  {
+    // ========================================================================
+    template <class TYPE1, class TYPE2>
+    struct _Abs_: public std::unary_function<TYPE1,TYPE2>
+    {
+      inline TYPE2 operator() ( TYPE1 i ) const { return std::abs ( i ) ; }
+    } ;
+    // ========================================================================
+    template <class TYPE1, class TYPE2> 
+    std::vector<TYPE2> _abs_ ( const  std::vector<TYPE1>& vct ) 
+    {
+      std::vector<TYPE2> res ( vct.size() ) ;
+      std::transform ( vct.begin() , 
+                       vct.end  () , 
+                       res.begin() , _Abs_<TYPE1,TYPE2>() ) ;
+      return res ;
+    }
+    // ========================================================================
+  } //                                              end of namespace LoKi::Math  
+  // ==========================================================================
+} // end of namespace Loki 
+// ============================================================================
 namespace std 
 {
   //
-  template <class TYPE1, class TYPE2>
-  struct _Abs_: public unary_function<TYPE1,TYPE2>
-  {
-    inline TYPE2 operator() ( TYPE1 i ) const { return std::abs ( i ) ; }
-  } ;
-  // 
-  template <class TYPE1, class TYPE2> 
-  std::vector<TYPE2> _abs_ ( const  std::vector<TYPE1>& vct ) 
-  {
-    std::vector<TYPE2> res ( vct.size() ) ;
-    std::transform ( vct.begin() , vct.end  () , res.begin() , _Abs_<TYPE1,TYPE2>() ) ;
-    return res ;
-  }
   // 
   inline 
   std::vector<unsigned int>   abs ( const std::vector<int>&   vct ) 
-  { return _abs_<int ,unsigned int>( vct ) ; }
+  { return LoKi::Math::_abs_<int ,unsigned int>( vct ) ; }
   inline 
   std::vector<unsigned long>  abs ( const std::vector<long>&  vct ) 
-  { return _abs_<long,unsigned long>( vct ) ; }
+  { return LoKi::Math::_abs_<long,unsigned long>( vct ) ; }
   inline 
   std::vector<unsigned short> abs ( const std::vector<short>& vct ) 
-  { return _abs_<short,unsigned short>( vct ) ; }
+  { return LoKi::Math::_abs_<short,unsigned short>( vct ) ; }
   inline 
   std::vector<float>          abs ( const std::vector<float>&  vct ) 
-  { return _abs_<float,float>       ( vct ) ; }
+  { return LoKi::Math::_abs_<float,float>       ( vct ) ; }
   inline 
   std::vector<double>         abs ( const std::vector<double>& vct ) 
-  { return _abs_<double,double>     ( vct ) ; }
+  { return LoKi::Math::_abs_<double,double>     ( vct ) ; }
   //
   // just for completenes 
   //

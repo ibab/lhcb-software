@@ -106,6 +106,11 @@ namespace LoKi
         const Strings&     lines   = Strings() , 
         const std::string& context = ""        ) const ;
       // ======================================================================
+    protected:
+      // ======================================================================
+      /// write C++ code 
+      void writeCpp () const ;
+      // ======================================================================
     private:
       // ======================================================================
       // the default constructor is disabled 
@@ -136,8 +141,8 @@ namespace LoKi
       std::vector<std::string>       m_cpplines   ; ///< header lines for C++ code 
       /// 
       // information about the created functors 
-      typedef std::pair<std::string,std::string>  RECORD     ;
-      typedef std::vector<RECORD>                 FUNCTIONS  ;
+      typedef std::pair<std::string,std::string>  PAIR       ;
+      typedef std::map<std::string,PAIR>          FUNCTIONS  ;
       typedef std::map<std::string,FUNCTIONS>     ALLFUNCS   ;
       ALLFUNCS                       m_allfuncs   ;
       // ======================================================================
@@ -197,9 +202,10 @@ StatusCode LoKi::Hybrid::Base::_get_
   //
   if ( this->m_makeCpp ) 
   {
-    std::string funtype = System::typeinfoName ( typeid( output ) ) ;
-    std::string cppcode = output.toCpp() ;
-    m_allfuncs[ funtype ].push_back ( std::make_pair ( code , cppcode ) ) ;
+    std::string funtype = System::typeinfoName ( typeid ( output ) ) ;
+    std::string cppcode = Gaudi::Utils::toCpp           ( output )   ;
+    std::string pytype  = Gaudi::Utils::toString        ( output )   ;
+    m_allfuncs[ funtype ][ code ] = std::make_pair ( cppcode , pytype ) ;
   }
   //
   return StatusCode::SUCCESS ;

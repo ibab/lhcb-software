@@ -82,7 +82,6 @@ namespace Gaudi
     inline std::string toCpp ( const char (&s)[N]    ) { return '"' + s + '"'; }
     template <unsigned N>
     inline std::string toCpp (       char (&s)[N]    ) { return '"' + s + '"'; }  
-    inline std::string toCpp ( const double o        ) { return toString ( o ) ; }
     inline std::string toCpp ( const int    o        ) { return toString ( o ) ; }
     inline std::string toCpp ( const unsigned int  o ) { return toString ( o ) ; }
     inline std::string toCpp ( const long   o        ) { return toString ( o ) ; }
@@ -90,6 +89,13 @@ namespace Gaudi
     inline std::string toCpp ( bool o ) { return o ? "true" : "false" ; }
     inline std::string toCpp ( const long long   o        ) { return toString ( o ) ; }
     inline std::string toCpp ( const unsigned long long o ) { return toString ( o ) ; }
+    //
+    GAUDI_API 
+    std::string toCpp ( const long double o , const unsigned short p = 16 ) ;
+    inline 
+    std::string toCpp ( const double  o ) { return toCpp ( o  , 16 ) ; }
+    inline 
+    std::string toCpp ( const float   o ) { return toCpp ( o  , 12 ) ; }
     // ========================================================================
     GAUDI_API 
     std::string        toCpp ( const LoKi::AuxFunBase& o  ) ;

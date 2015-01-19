@@ -8,11 +8,27 @@
 // LoKi
 // ============================================================================
 #include "LoKi/TreeHelpers.h"
+#include "LoKi/iTree.h"
 #include "LoKi/Trees.h"
 // ============================================================================
 namespace Decays 
 {
   // ==========================================================================
+  namespace Trees 
+  {
+    // ========================================================================
+    template <class PARTICLE>
+    StatusCode factory 
+    ( typename Decays::Trees::Types_<PARTICLE>::Tree&               tree       ,
+      const Decays::iNode&                                          mother     , 
+      const Decays::Trees::Oscillation&                             oscillated ,
+      const Decays::Trees::Arrow&                                   arrow      ,
+      const typename Decays::Trees::Types_<PARTICLE>::TreeList&     daughters  , 
+      const bool                                                    inclusive  ,
+      const typename Decays::Trees::Types_<PARTICLE>::TreeList&     optional   , 
+      std::ostream&                                                 stream     ) ;
+  }
+  // ========================================================================
   namespace Parsers 
   {
     // ========================================================================
@@ -89,6 +105,7 @@ namespace Decays
      *  @date 2009-05-23
      */
     template <class PARTICLE>
+    inline 
     StatusCode factory
     ( Decays::Tree_<PARTICLE>&     tree   ,
       const Decays::Parsers::Tree& parsed ,
