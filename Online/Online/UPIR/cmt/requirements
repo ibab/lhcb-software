@@ -1,5 +1,5 @@
 package UPI
-version v1r6
+version v1r7
 branches cmt
 #
 use UPI v* Online -no_auto_imports
