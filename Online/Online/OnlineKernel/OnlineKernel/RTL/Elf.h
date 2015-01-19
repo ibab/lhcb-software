@@ -59,6 +59,9 @@ namespace Elf  {
     const char* sectionNames;
     const char* dynstrNames;
     const char* strtabNames;
+    Elf64_Word  sh_length;
+    Elf64_Word  pgm_memLength;
+    Elf64_Word  pgm_fileLength;
     std::string name;
     std::vector<std::pair<int,Elf64_Shdr*> >  symbolSections;
     RawImage();
@@ -133,6 +136,8 @@ namespace Elf  {
     Elf64_Off  shOffset()  const           {  return m_ptr->header->e_shoff;          }
     /// Section header table entry size
     Elf64_Half shEntrySize() const         {  return m_ptr->header->e_shentsize;      }
+    /// Aggregated length of all section blocks (headers excluded)
+    Elf64_Word shLength() const            {  return m_ptr->sh_length;                }
     /// The beginning of the section header blocks
     const byte_t* sectionHeaders()  const  {  return start() + shOffset();            }
     /// Access to the section headers one by one
@@ -147,6 +152,10 @@ namespace Elf  {
     Elf64_Off  pgmOffset()  const          {  return m_ptr->header->e_phoff;          }
     /// Program header table entry size
     Elf64_Half pgmEntrySize() const        {  return m_ptr->header->e_phentsize;      }
+    /// Aggregated length of all program sections when mapped to memory
+    Elf64_Word pgmMemLength() const        {  return m_ptr->pgm_memLength;            }
+    /// Aggregated length of all program sections in the file
+    Elf64_Word pgmFileLength() const       {  return m_ptr->pgm_fileLength;           }
     /// The beginning of the section header blocks
     const byte_t* programHeaders()  const  {  return start() + pgmOffset();           }
     /// Access to the program headers one by one
@@ -259,7 +268,6 @@ namespace Elf  {
     Elf64_Word nameIndex()  const      {  return m_ptr->st_name;                }
     /// Name of the symbol as string from the string table
     const char* name()  const;
-    const char* name2()  const;
     /// Name of the symbol as string after demangling
     std::string realname()  const;
     /// ELF Symbol size

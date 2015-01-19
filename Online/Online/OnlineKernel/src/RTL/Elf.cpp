@@ -22,11 +22,11 @@
 #include <fcntl.h>
 #include <cxxabi.h>
 
+//#define MMAP_IMAGES 1
+
 namespace Elf {
   unsigned long ElfOutputStyle = ~0x2UL;
 }
-
-
 using namespace Elf;
 using namespace std;
 
@@ -183,7 +183,11 @@ RawImage::RawImage()
 }
 RawImage::~RawImage() {
   if ( map_len > 0 )   {
+#ifdef MMAP_IMAGES
     ::munmap(header,map_len);
+#else
+    ::free(header);
+#endif
     map_len = 0;
   }
   --raw_image_count;
@@ -209,6 +213,22 @@ Image Image::fromImage(const void* img)   {
   return hdr;
 }
 
+#ifndef MMAP_IMAGES
+namespace  {
+  int file_read(int con, void* buff, int len)  {
+    int tmp = 0;
+    char* p = (char*)buff;
+    while ( tmp < len )  {
+      int sc = ::read(con,p+tmp,len-tmp);
+      if ( sc >  0 ) tmp += sc;
+      else if ( sc == 0 ) return 0;
+      else                return -1;
+    }
+    return 1;
+  }
+}
+#endif
+
 Image Image::mapImage(const char* name)    {
   if ( name && *name )   {
     struct stat buff;
@@ -229,8 +249,13 @@ Image Image::mapImage(const char* name)    {
 		     name, strerror(errno));
 	  throw runtime_error(text);
 	}
-	buff.st_size = ((buff.st_size+pg_size-1)/pg_size) * pg_size;
-	void* ptr = ::mmap64(0,buff.st_size,PROT_READ,MAP_PRIVATE,fd,0);
+	size_t len = ((buff.st_size+pg_size-1)/pg_size) * pg_size;
+#ifdef MMAP_IMAGES
+	void* ptr = ::mmap64(0,len,PROT_READ,MAP_PRIVATE,fd,0);
+#else
+	void* ptr = ::malloc(len);
+	if ( ptr ) ::file_read(fd,ptr,buff.st_size);
+#endif
 	if ( !ptr )   {
 	  ::close(fd);
 	  ::snprintf(text,sizeof(text),"Failed to open file:%s Error:%s\n",
@@ -258,11 +283,14 @@ void Image::setImage(const void* image) {
     throw runtime_error(str.str());
   }
   m_ptr = new RawImage;
-  m_ptr->refCount     = 1;
-  m_ptr->header       = (Elf64_Ehdr*)image;
-  m_ptr->sectionNames = 0;
-  m_ptr->dynstrNames  = 0;
-  m_ptr->strtabNames  = 0;
+  m_ptr->refCount       = 1;
+  m_ptr->sh_length      = 0;
+  m_ptr->pgm_memLength  = 0;
+  m_ptr->pgm_fileLength = 0;
+  m_ptr->header         = (Elf64_Ehdr*)image;
+  m_ptr->sectionNames   = 0;
+  m_ptr->dynstrNames    = 0;
+  m_ptr->strtabNames    = 0;
   m_ptr->symbolSections.clear();
   testSectionHeaderMemory();
   Elf64_Shdr* shdr = sectionHeader(m_ptr->header->e_shstrndx).second;
@@ -273,6 +301,7 @@ void Image::setImage(const void* image) {
       const byte_t* str_tab = start() + shdr->sh_offset;
       const char* sec_name = (char*)(m_ptr->sectionNames + shdr->sh_name);
       elf_test_memory(str_tab,str_tab+shdr->sh_size);
+      m_ptr->sh_length += shdr->sh_size;
       ::printf(" String table:%s\n",sec_name);
       if ( 0 == ::strcmp(sec_name,".dynstr") )
 	m_ptr->dynstrNames = (char*)str_tab;
@@ -282,6 +311,13 @@ void Image::setImage(const void* image) {
     else if ( shdr->sh_type == SHT_SYMTAB || shdr->sh_type == SHT_DYNSYM )   {
       m_ptr->symbolSections.push_back(make_pair(i,shdr));
     }
+  }
+
+  // Calculating the program sections size
+  for(int i=0, n=pgmNumber(); i<n; ++i)   {
+    const Elf64_Phdr* phdr = (Elf64_Phdr*)programHeader(i).second;
+    m_ptr->pgm_fileLength += phdr->p_filesz;
+    m_ptr->pgm_memLength  += phdr->p_memsz;
   }
 }
 
@@ -382,7 +418,7 @@ void Image::printSymbolTables()  const  {
   ::printf("++++++++++++++++++ Symbol dump%s:\n",name(" of image '%s'").c_str());
   for(int isection=0; isection<shNumber(); ++isection)   {
     Section s(sectionHeader(isection));
-    if ( s.type() == SHT_SYMTAB || s.type() == SHT_DYNSYM )   {
+    if ( s.type() == SHT_SYMTAB || s.type() == SHT_DYNSYM || s.type() == SHT_DYNAMIC )   {
       SymbolTable symtab(sectionHeader(isection));
       symtab.testSectionDataMemory();
       s.print();
@@ -423,13 +459,15 @@ void Header::print(const char* prefix)  const  {
 	   prefix, (void*)begin,
 	   ehdr_ident[0], ehdr_ident[1], ehdr_ident[2], ehdr_ident[3],
 	   type(), typeStr(), version(), machine(), flags() );
-  ::printf("%s   Section Headers: num:%d offset:%ld entry size:%d string table index:%d \n"
-	   "%s   String tables: .dynstr: %10p offset:%ld .strtab:%10p offset:%ld\n",
-	   prefix, 
-	   shNumber(), long(shOffset()), shEntrySize(), nameIndex(),
+  ::printf("%s   String tables: .dynstr: %10p offset:%ld .strtab:%10p offset:%ld\n"
+	   "%s   Section Headers: num:%4d offset:%6ld entry size:%3d length:%d bytes string table index:%d\n"
+	   "%s   Program Headers: num:%4d offset:%6ld entry size:%3d length(memory):%d (file):%d bytes\n",
 	   prefix, 
 	   (void*)m_ptr->dynstrNames, m_ptr->dynstrNames-begin,
-	   (void*)m_ptr->strtabNames, m_ptr->sectionNames-begin);
+	   (void*)m_ptr->strtabNames, m_ptr->sectionNames-begin,
+	   prefix, shNumber(), long(shOffset()), shEntrySize(), shLength(), nameIndex(),
+	   prefix, pgmNumber(), long(pgmOffset()), pgmEntrySize(), pgmMemLength(), pgmFileLength()
+	   );
 }
 
 /// Assignment operator
@@ -545,20 +583,18 @@ bool Symbol::operator==(const Symbol& symbol)  const  {
 
 /// Name of the symbol as string from the string table
 const char* Symbol::name()  const   {
-  //if ( !header.dynstrNames() ) return "---";
-  //return (binding() == STB_LOCAL ? header.strtabNames() : header.dynstrNames()) + nameIndex();
-  if ( section->sh_type == SHT_SYMTAB )
-    return header.strtabNames() + nameIndex();
-  else if ( section->sh_type == SHT_DYNSYM )
-    return header.dynstrNames() + nameIndex();
-  return "----";
-}
-
-/// Name of the symbol as string from the string table
-const char* Symbol::name2()  const   {
-  //if ( !header.strtabNames() ) return "---";
-  //return header.strtabNames() + nameIndex();
-  return (binding() == STB_LOCAL ? header.strtabNames() : header.dynstrNames()) + nameIndex();
+  int typ = section->sh_type;
+  switch(typ)  {
+  case SHT_DYNAMIC:
+  case SHT_SYMTAB:
+  case SHT_DYNSYM:  {
+    Elf32_Word link = section->sh_link;
+    Section strtab(header.sectionHeader(link));
+    return (char*)(strtab.dataBegin() + nameIndex());
+  }
+  default:
+    return "----";
+  }
 }
 
 /// Name of the symbol as string after demangling
@@ -614,18 +650,22 @@ void Symbol::print(const char* prefix)  const  {
   if ( (style&ELF_COMPACT) == ELF_COMPACT )   {
     string rn  = (style&ELF_DEMANGLE) ? realname().c_str() : name();
     int    bnd = binding();
-    char   b   = 'U';
-    //Elf64_Addr  sym_offset = 0xFFF&value();
-    if ( bnd == STB_GLOBAL ) b = 'T';
-    else if ( bnd == STB_WEAK ) b = 'W';
-    else if ( bnd == STB_LOCAL ) b = 't';
-    if ( value() )   {
-      ::printf("%s %016lX %c %s\n", prefix, value(), b, rn.c_str());
-    }
-    else  {
-      b = 'U';
+    int    st  = codeSectionIndex();
+    char   b   = ' ';
+    Elf64_Addr  sym_offset = 0;
+    if ( st == SHN_UNDEF ) b = 'U';
+    else if ( bnd == STB_GLOBAL ) b = 'T';
+    else if ( bnd == STB_WEAK   ) b = 'W';
+    else if ( bnd == STB_LOCAL  ) b = 't';
+
+    if ( st == SHN_UNDEF ) sym_offset = 0;
+    else if ( st == SHN_ABS ) sym_offset = value();
+    else if ( st == SHN_COMMON ) sym_offset = 0xBADADDUL;
+    else sym_offset = value();
+    if ( st == SHN_UNDEF )
       ::printf("%s %16s %c %s\n", prefix, "", b, rn.c_str());
-    }
+    else
+      ::printf("%s %016lX %c %s\n", prefix, sym_offset, b, rn.c_str());
   }
   else if ( value() )  {
     Elf64_Addr  sym_offset = 0xFFF&value();
@@ -776,9 +816,33 @@ int callback(struct dl_phdr_info *info, size_t size, void *data)  {
   return 0;
 }
 #include "RTL/rtl.h"
+namespace  {
+
+  void help()  {
+    ::printf(
+	     "   elf_dump -opt [-opt]                                        \n"
+	     "                                                               \n"
+	     "    Options:                                                   \n"
+	     "    -i(input=<file>    Enter shared image name to analyse.     \n"
+	     "                       If option is not present all mapped     \n"
+	     "                       section of the executable are dumped.   \n"
+	     "                                                               \n"
+	     "    -d(emangle)        Demangle symbol names.                  \n"
+	     "    -sec(tions)        Print the section table in the image.   \n"
+	     "    -sym(boltables)    Print symbols from the .dynsym and      \n"
+	     "                       the .symtab sections.                   \n"
+	     "    -pro(gramheaders)  Print the program headers of the image. \n"
+	     "    -e(xtended)        Print extended symbol information.      \n"
+	     "                       Attention: very lengthy and of limited  \n"
+	     "                                  interest.                    \n"
+	     "    -h(elp)            Print this help.                        \n"
+	     "                                                               \n");
+    ::exit(0);
+  }
+}
 
 extern "C" int rtl_elf_dump(int argc, char ** argv)    {
-  RTL::CLI cli(argc,argv,0);
+  RTL::CLI cli(argc,argv,help);
   string input;
   cli.getopt("input",1,input);
   ElfOutputStyle = cli.getopt("extended",1) ? ELF_EXTENDED : ELF_COMPACT;
