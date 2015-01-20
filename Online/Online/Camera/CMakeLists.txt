@@ -46,8 +46,8 @@ cam_exe(CameraWebServer  webserver.C)
 #cam_exe(CameraWebGet get.C)
 
 
-set(dict_srcs ${CMAKE_CURRENT_SOURCE_DIR}/src/MessagePresenter.h
-              ${CMAKE_CURRENT_SOURCE_DIR}/src/LinkDef.h)
+set(dict_srcs ${CMAKE_CURRENT_SOURCE_DIR}/Camera/MessagePresenter.h
+              ${CMAKE_CURRENT_SOURCE_DIR}/Camera/LinkDef.h)
 
 if(ROOT_rootcint_CMD)
   set(dict_cmd ${ROOT_rootcint_CMD})
