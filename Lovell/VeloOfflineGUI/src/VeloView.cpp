@@ -76,8 +76,8 @@ void veloview::setVeloOptionsWidg() {
   FILE * in;
   char buff[512];
   std::string command;
-  if (m_runMode == 0) command = "python " + m_VVinterfaceScript + " run_list";
-  else command = "python dummyDataGetter.py run_list";
+  if (m_runMode == 0) command = "" + m_VVinterfaceScript + " run_list";
+  else command = "dummyDataGetter.py run_list";
   in = popen(command.c_str(), "r");
   while(fgets(buff, sizeof(buff), in)!=NULL) {
     std::string line(buff);

@@ -15,7 +15,7 @@ public:
     FILE * in;
     char buff[512];
 
-    std::string command = "python dummyDataGetter.py " +
+    std::string command = "dummyDataGetter.py " +
         m_plot->m_plotOps->b_veloRunNumber->currentText().toStdString() + " " +
         m_retrivalCommand + " " + m_plot->m_plotOps->currentModuleStr();
     std::cout<<"Sending command: "<<std::endl;
@@ -300,7 +300,7 @@ VTabContent * VContentGetter::veloFileConfigs(VPlotOps * plotOps, std::string in
   FILE * in;
   char buff[512];
 
-  std::string command = "python " + interfaceScript + " run_view_config";
+  std::string command = "" + interfaceScript + " run_view_config";
   in = popen(command.c_str(), "r");
   while(fgets(buff, sizeof(buff), in)!=NULL) {
     std::string rawData(buff);
