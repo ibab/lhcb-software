@@ -18,6 +18,7 @@
 // Local 
 // ============================================================================
 #include "PowhegProduction.h"
+
 // ============================================================================
 /** @class PowhegProduction PowhegProduction.cpp
  */
@@ -85,12 +86,15 @@
     declareProperty( "delk_g", m_delk_g = 0 , "Delta_K(Gamma)");
     declareProperty( "delk_z", m_delk_z = 0, "Delta_K(Z)");
     declareProperty( "tevscale", m_tevscale = 2 , "Form-factor scale, in TeV");	/// check value
+	
+	declareProperty( "vdecaymodeWZ", m_vdecaymodeWZ = "lbb" , "name of decay mode product of the boson that is set at PB-V2 level");
 
     // ZZ boson production parameters
     //=============================================================================    
     declareProperty( "vdecaymodeZ1", m_vdecaymodeZ1 = 11 , "PDG code for charged decay product of the vector boson (11:e-; -11:e+; ...)");
     declareProperty( "vdecaymodeZ2", m_vdecaymodeZ2 = 13 , "PDG code for charged decay product of the vector boson (11:e-; -11:e+; ...)");
     //declareProperty( "mllmin", m_mllmin = 20 , "minimum invariant mass of lepton pairs from Z decay");
+	declareProperty( "vdecaymodeZZ", m_vdecaymodeZZ = "lbb" , "name of decay mode product of the boson that is set at PB-V2 level");
     
    
     // heavy quark production parameters  ( bb, tt )
@@ -103,7 +107,7 @@
     declareProperty( "iymax", m_iymax = 1 , "<= 10, normalization of upper bounding function in iunorm X iunorm square in y, log(m2qq)");
     declareProperty( "ixmax", m_ixmax = 1 , "<= 10, normalization of upper bounding function in iunorm X iunorm square in y, log(m2qq)");
     declareProperty( "xupbound", m_xupbound = 2 , "increase upper bound for radiation generation");
-    declareProperty( "topdecaymode", m_topdecaymode = 20000 , "particles(antiparticles) in the final state: 20000 : both top go into b l nu (with the appropriate signs)");
+    declareProperty( "topdecaymode", m_topdecaymode = "20000" , "particles(antiparticles) in the final state: 20000 : both top go into b l nu (with the appropriate signs)");
     declareProperty( "tdec_wmass", m_tdec_wmass = 80.4 ,"Parameter for the generation of spin correlations in t tbar decays: W mass for top decay");
     declareProperty( "tdec_wwidth", m_tdec_wwidth = 2.141 , "Parameter for the generation of spin correlations in t tbar decays");
     declareProperty( "tdec_bmass", m_tdec_bmass = 5 , "Parameter for the generation of spin correlations in t tbar decays");
@@ -119,7 +123,9 @@
     declareProperty( "tdec_sin2cabibbo", m_tdec_sin2cabibbo = 0.051 , "Parameter for the generation of spin correlations in t tbar decays");
     
     setProperty ( "InputFile" , "pwgevents.lhe" ) ;
+	
   }
+  
 
       
   
@@ -142,12 +148,19 @@ StatusCode PowhegProduction::initialize( ) {
 // ============================================================================
 // Specific initialization goes here
 // ============================================================================
-void PowhegProduction::powhegInitialize(const std::string &process_name)
+void PowhegProduction::powhegInitialize(const std::string& process_name)
 {
-  // Prepare input file for POWHEG - BOX
-  
+  // Prepare input file for POWHEG - BOX		
+    
+    if(process_name=="Wbb") pwhg_numevts = m_numevts*50;		 
+    if(process_name=="WZ") pwhg_numevts = m_numevts*1000;		
+    if(process_name=="ZZ") pwhg_numevts = m_numevts*1000;		
+    if(process_name=="tt") pwhg_numevts = m_numevts*1000;		
+    if(process_name=="bb") pwhg_numevts = m_numevts*2000;
+    if(process_name=="cc") pwhg_numevts = m_numevts*2000;
+    
     std::ofstream g( "powheg.input" ) ;
-    g << "numevts " << m_numevts << std::endl
+    g << "numevts " << pwhg_numevts << std::endl 
       << "ih1 " << m_ih1 << std::endl
       << "ih2 " << m_ih2 << std::endl
       << "ebeam1 " << m_ebeam1 << std::endl
@@ -175,41 +188,44 @@ void PowhegProduction::powhegInitialize(const std::string &process_name)
   
   if ( process_name == "WZ" )
   {
-    g << "ncall1 " << 40000 << std::endl
+    g << "ncall1 " << 400000 << std::endl
       << "itmx1 " << 4 << std::endl
-      << "ncall2 " << 10000 << std::endl
+      << "ncall2 " << 1000000 << std::endl
       << "itmx2 " << 5 << std::endl
-      << "nubound " << 10000 << std::endl
-      << "vdecaymodeW " << m_vdecaymodeW << std::endl
-      << "vdecaymodeZ " << m_vdecaymodeZ << std::endl
-      << "mllmin " << m_mllmin << std::endl
-      << "zerowidth " << m_zerowidth << std::endl
-      << "withinterference " << m_withinterference << std::endl
-      << "dronly " << m_dronly << std::endl
-      << "wllmin " << m_wllmin << std::endl
-      << "diagCKM " << m_diagCKM << std::endl
-      << "delg1_z " << m_delg1_z << std::endl
-      << "delg1_g " << m_delg1_g << std::endl
-      << "lambda_z " << m_lambda_z << std::endl
-      << "lambda_g " << m_lambda_g << std::endl  
-      << "delk_g " << m_delk_g << std::endl
-      << "delk_z " << m_delk_z << std::endl 
-      << "tevscale " << m_tevscale << std::endl;
+      << "nubound " << 1000000 << std::endl
+      //<< "vdecaymodeW " << m_vdecaymodeW << std::endl
+      //<< "vdecaymodeZ " << m_vdecaymodeZ << std::endl
+      << m_vdecaymodeWZ << " " << 1 << std::endl									/// run: ( [W+ -> mu]cc (Z0 -> b b~) )
+      << "mllmin " << m_mllmin << std::endl;
+      //<< "zerowidth " << m_zerowidth << std::endl
+      //<< "withinterference " << m_withinterference << std::endl
+      //<< "dronly " << m_dronly << std::endl
+      //<< "wllmin " << m_wllmin << std::endl
+      //<< "diagCKM " << m_diagCKM << std::endl
+      //<< "delg1_z " << m_delg1_z << std::endl
+      //<< "delg1_g " << m_delg1_g << std::endl
+      //<< "lambda_z " << m_lambda_z << std::endl
+      //<< "lambda_g " << m_lambda_g << std::endl  
+      //<< "delk_g " << m_delk_g << std::endl
+      //<< "delk_z " << m_delk_z << std::endl
+      //<< "tevscale " << m_tevscale << std::endl;
+      // NOTE: commented parameters are not neccessary in PB-v2
   }
   
 if ( process_name == "ZZ" )
   {
-    g << "ncall1 " << 300000 << std::endl
-      << "itmx1 " << 3 << std::endl
+    g << "ncall1 " << 400000 << std::endl
+      << "itmx1 " << 4 << std::endl
       << "ncall2 " << 1000000 << std::endl
       << "itmx2 " << 5 << std::endl
       << "nubound " << 500000 << std::endl
-      << "vdecaymodeZ1 " << m_vdecaymodeZ1 << std::endl
-      << "vdecaymodeZ2 " << m_vdecaymodeZ2 << std::endl
+      << m_vdecaymodeZZ << " " << 1 << std::endl									/// run: ( [Z0 -> mu]cc (Z0 -> b b~) )
+      //<< "vdecaymodeZ1 " << m_vdecaymodeZ1 << std::endl
+      //<< "vdecaymodeZ2 " << m_vdecaymodeZ2 << std::endl
       << "mllmin " << m_mllmin << std::endl;
   }
   
-if ( process_name == "bb" )					/// ToDo: verify output !!!
+if ( process_name == "bb" || process_name == "cc" )					/// ToDo: verify output !!!
   {
     g << "qmass " <<m_qmass << std::endl
 	<< "facscfact " <<m_facscfact << std::endl
@@ -251,12 +267,17 @@ if ( process_name == "tt" )					/// ToDo: verify output !!!
       << "iymax " << m_iymax << std::endl
       << "ixmax " << m_ixmax << std::endl
       << "xupbound " << m_xupbound << std::endl;
+    
+      //<< "idvecbos " << m_idvecbos << std::endl
+      //<< "vdecaymode " << m_vdecaymode << std::endl ;
+    
   }
 
   g.close() ;
   
   Makelink2PDFfile();
   generateLHE(process_name);
+  
 }
 
 
@@ -264,7 +285,7 @@ if ( process_name == "tt" )					/// ToDo: verify output !!!
 StatusCode PowhegProduction::finalize ()
 { 
   // Do some cleaning of files
-  boost::filesystem::remove( boost::filesystem::path( "powheg.input" ) ) ;
+   //   boost::filesystem::remove( boost::filesystem::path( "powheg.input" ) ) ;
   boost::filesystem::remove( boost::filesystem::path( "pwgborngrid.top" ) ) ;
   boost::filesystem::remove( boost::filesystem::path( "pwgbtlgrid.top" ) ) ;
   boost::filesystem::remove( boost::filesystem::path( "pwgcounters.dat" ) ) ;
@@ -278,7 +299,20 @@ StatusCode PowhegProduction::finalize ()
   boost::filesystem::remove( boost::filesystem::path( "cteq6m" ) ) ;
   boost::filesystem::remove( boost::filesystem::path( "pwgevents.lhe" ) ) ;
   
-  
+  /// production files from PB-V2
+  boost::filesystem::remove( boost::filesystem::path( "pwgboundviolations.dat" ) ) ;
+  boost::filesystem::remove( boost::filesystem::path( "pwgbtildeupb.dat" ) ) ;
+  boost::filesystem::remove( boost::filesystem::path( "pwg-btlgrid.top" ) ) ;
+  boost::filesystem::remove( boost::filesystem::path( "pwgfullgrid.dat" ) ) ;
+  boost::filesystem::remove( boost::filesystem::path( "pwgremnupb.dat" ) ) ;
+  boost::filesystem::remove( boost::filesystem::path( "pwg-rmngrid.top.dat" ) ) ;
+  boost::filesystem::remove( boost::filesystem::path( "pwg-stat.dat.dat" ) ) ;
+  boost::filesystem::remove( boost::filesystem::path( "testbndrat.top.dat" ) ) ;
+  boost::filesystem::remove( boost::filesystem::path( "bornequiv.dat" ) ) ;
+  boost::filesystem::remove( boost::filesystem::path( "virtequiv.dat" ) ) ;
+  boost::filesystem::remove( boost::filesystem::path( "realequiv.dat" ) ) ;
+  boost::filesystem::remove( boost::filesystem::path( "realequivregions.dat" ) ) ;
+    
   //Finalize of Pythia done here
   StatusCode sc = LbPythia::ReadLHE::finalize() ;
 
@@ -289,7 +323,7 @@ StatusCode PowhegProduction::finalize ()
 //============================================================================
 // Generate  events with Powheg-BOX and wrtite to .lhe file
 //============================================================================
-StatusCode PowhegProduction::generateLHE(const std::string & process_name){
+StatusCode PowhegProduction::generateLHE(const std::string& process_name){
   
   pid_t pid; 
   int status;
@@ -310,11 +344,14 @@ StatusCode PowhegProduction::generateLHE(const std::string & process_name){
  	std::string powhegexe ;
 	// POWHEGEXE is defined at requirement file of LbPowheg package
 	
-	if ((process_name == "tt") || (process_name == "bb"))
+	if ((process_name == "tt") || (process_name == "bb") || (process_name == "cc") )
 	  powhegexe = System::getEnv( "POWHEGEXE" )+"/"+"hvq";				// heavy quark production
 	else 
 	  powhegexe = System::getEnv( "POWHEGEXE" )+"/"+ (std::string)process_name;
-	
+	/// in case that executables exist somewhere localy in the package:
+// 	if (process_name == "WZ" || process_name == "ZZ"  )
+//     powhegexe = System::getEnv( "POWHEGEXE_local" )+"/"+ (std::string)process_name;
+  
 	// needed for execl:
 	pwhgexe = (char*)malloc( sizeof( char ) *(powhegexe.length() +1) );
 	strcpy( pwhgexe, powhegexe.c_str() );
@@ -322,13 +359,15 @@ StatusCode PowhegProduction::generateLHE(const std::string & process_name){
  	else {
 		exit (-1);
 		}	
-		// RUN POWHEG-BOX
-		if(execl(pwhgexe, process_name.c_str(), NULL) == -1){
-			 exit(status);
-		}
-		else { 
-		  exit(status); 
-		}
+	/// RUN POWHEG-BOX
+ 	if(execl(pwhgexe, process_name.c_str(), NULL) == -1){
+	  
+//         if (1){
+	  exit(status);
+	}
+	else {
+	  exit(status); 
+	}
     }
   return StatusCode::SUCCESS ;
 }
@@ -380,6 +419,7 @@ if ( "UNKNOWN" != System::getEnv( "CTEQPDF" ) ) {
   
   return StatusCode::SUCCESS;
 }
+
 
 // ============================================================================
 // The END 
