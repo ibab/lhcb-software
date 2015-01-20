@@ -12,20 +12,24 @@
 #!/bin/bash
 . /group/online/dataflow/scripts/preamble.sh;
 export ONLINE_VERSION=`python -c "import os;s=os.environ['DIMROOT'];i=s.find('/ONLINE_');print s[i+1:i+1+s[i+1:].find('/')]"`;
+#
 TASKCLASS=-tasktype=LHCb::${2}Task;
 TASKTYPE=${3};
+export DIM_DNS_NODE=${4};
 DYNAMIC_OPTS=/group/online/dataflow/options;
 OPTIONS=${DYNAMIC_OPTS}/${PARTITION}/${1};
-export PREAMBLE_OPTS=${ONLINETASKS}/options/Preamble.opts;
-export gaudi_exe="${GAUDIONLINEROOT}/${CMTCONFIG}/Gaudi.exe libGaudiOnline.so OnlineTask -msgsvc=LHCb::FmcMessageSvc "
-export DIM_DNS_NODE=${4};
+#
+#
+#export PREAMBLE_OPTS=${ONLINETASKS}/options/Preamble.opts;
 export ONLINE_ENV_DIR=/group/online/dataflow/options/${PARTITION}/MONITORING
 export PYTHONPATH=${ONLINE_ENV_DIR}:${PYTHONPATH}
 export AdderOptsFile=/tmp/${PARTITION}_MonAdderOpts.opts
 cd /group/online/dataflow/cmtuser/Online/Online/FarmConfig/job
 python ./MonAdderOpts.py ${AdderOptsFile}
+#
 export LD_LIBRARY_PATH=/home/beat/cmtuser/myOnline/InstallArea/${CMTCONFIG}/lib:$LD_LIBRARY_PATH
-echo $Class1_task
+##echo $Class1_task
 export INFO_OPTIONS=/group/online/dataflow/options/${PARTITION}/${PARTITION}_Info.opts
+#
 exec -a ${UTGID} $gaudi_exe ${TASKCLASS} -opt=../options/genAdder.opts -main=${ONLINETASKS}/options/Main.opts
 #exec -a ${UTGID} ${Class1_task} -opts=../options/genAdder.opts
