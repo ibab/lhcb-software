@@ -23,7 +23,7 @@ macro CondDBServer_use "CondDBServer v1r6 Online" target-i686 ""
 use $(CondDBServer_use)
 ####use CondDBServer        v1r6     Online
 use Controller          v0r15    Online
-use ControllerTests     v0r2     Online
+use ControllerTests     v0r3     Online
 use DailyReport         v1r3     Online
 use DefHLTUtils         v1r11    Online
 use DIM                 v20r7p3  Online
