@@ -1,8 +1,10 @@
 !============================================
 ! Package     : Hlt/Moore
-! Package Coordinator : R. Lambert, G. Raven
+! Package Coordinator : R. Aaij, G. Raven
 ! Purpose     : LHCb HLT application
 !============================================
+
+!========================= Moore v23r4 2015-01-20 =========================
 
 ! 2015-01-20 - Roel Aaij
  - Add __init__.py
