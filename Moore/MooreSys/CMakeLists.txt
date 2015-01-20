@@ -1,14 +1,12 @@
 ################################################################################
 # Package: MooreSys
 ################################################################################
-gaudi_subdir(MooreSys v23r3p1)
+gaudi_subdir(MooreSys v23r4)
 
 gaudi_depends_on_subdirs(Hlt/HltMonitor
                          Hlt/IndependenceTests
                          Hlt/Moore
                          L0/L0App
-                         Hlt/HltRawData
-                         Hlt/HltDAQ
                          )
 
 

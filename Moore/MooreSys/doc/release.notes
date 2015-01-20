@@ -3,6 +3,15 @@ Package     : MooreSys
 Package Coordinator : R. Aaij
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v23r4>2015-01-20 MooreSys v23r4</A></H1><PRE>
+
+Patch Release as part of stack based on Gaudi v26r0.
+Depends on Hlt v23r4.
+
+Main changes:
+     CMake build.
+     Development release to pick up speed improvements.
+
 </PRE><H1><A NAME=v23r3p1>2015-01-08 MooreSys v23r3p1</A></H1><PRE>
 
 Patch Release on stack v38r3 for Turbo MC production.

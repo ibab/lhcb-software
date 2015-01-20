@@ -1,5 +1,5 @@
 package MooreSys
-version           v23r3p1
+version           v23r4
 branches doc cmt
 
 #=======================================================
@@ -10,8 +10,6 @@ use  Moore               v23r3      Hlt
 use  IndependenceTests   v1r9       Hlt
 use  HltMonitor          v1r4	    Hlt   # Diego Martinez
 use  L0App               v2r3       L0    # 
-use  HltRawData          v5r1p1     Hlt
-use  HltDAQ              v4r11      Hlt
 
 # Declare this as a container package
 apply_pattern container_package
