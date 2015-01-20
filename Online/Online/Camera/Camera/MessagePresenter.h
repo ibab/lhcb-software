@@ -5,14 +5,14 @@
 #include <map>
 #include <vector>
 
-#include "container_ROOT.h"
+#include "Camera/container_ROOT.h"
 
 #include "TApplication.h"
 #include <TGMdiMainFrame.h>
 #include <TGButton.h>
 #include <TGListBox.h>
 #include <TGStatusBar.h>
-#include "display.h"
+#include "Camera/display.h"
 #include <TString.h>
 
 // boost
