@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltGlobalMonitor
 ################################################################################
-gaudi_subdir(HltGlobalMonitor v4r5)
+gaudi_subdir(HltGlobalMonitor v4r6)
 
 gaudi_depends_on_subdirs(Event/HltEvent
                          Event/L0Event
