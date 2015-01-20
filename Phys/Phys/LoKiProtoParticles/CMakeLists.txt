@@ -6,7 +6,7 @@ gaudi_subdir(LoKiProtoParticles v2r2)
 gaudi_depends_on_subdirs(Event/RecEvent
                          Phys/DaVinciInterfaces
                          Phys/LoKiCore
-                         Phys/LoKiUtils)
+                         Phys/LoKiUtils
                          Phys/LoKiTracks)
 
 gaudi_add_library(LoKiProtoParticles
