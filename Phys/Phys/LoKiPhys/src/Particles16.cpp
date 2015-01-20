@@ -40,7 +40,8 @@ LoKi::Particles::CosineDirectionAngle::CosineDirectionAngle
 // ============================================================================
 LoKi::Particles::CosineDirectionAngle::CosineDirectionAngle
 ( const LoKi::Point3D& point ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( point ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , LoKi::Vertices::VertexHolder ( point ) 
 {}
 // ============================================================================
@@ -127,7 +128,8 @@ LoKi::Particles::TrgPointingScore::TrgPointingScore
 // ============================================================================
 LoKi::Particles::TrgPointingScore::TrgPointingScore
 ( const LoKi::Point3D& point ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( point ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , LoKi::Vertices::VertexHolder ( point ) 
 {}
 // ============================================================================

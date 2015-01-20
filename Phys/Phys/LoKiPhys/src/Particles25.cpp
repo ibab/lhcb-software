@@ -55,7 +55,8 @@ namespace
 // ============================================================================
 LoKi::Particles::MaxCosineDirectionAngleWithSource::MaxCosineDirectionAngleWithSource
 ( const LoKi::Particles::MaxCosineDirectionAngleWithSource::Source& source ) 
-  : LoKi::Particles::CosineDirectionAngle( s_VERTEX ) 
+  : LoKi::AuxFunBase ( std::tie ( source ) ) 
+  , LoKi::Particles::CosineDirectionAngle( s_VERTEX ) 
   , m_source ( source ) 
 {}
 // ============================================================================
@@ -131,7 +132,8 @@ LoKi::Particles::MaxCosineDirectionAngleDV::MaxCosineDirectionAngleDV ()
 // ============================================================================
 LoKi::Particles::MaxCosineDirectionAngleDV::MaxCosineDirectionAngleDV 
 ( const LoKi::Types::VCuts& vcut ) 
-  : LoKi::AuxDesktopBase ()
+  : LoKi::AuxFunBase ( std::tie ( vcut  ) ) 
+  , LoKi::AuxDesktopBase ()
   , LoKi::Particles::CosineDirectionAngle ( s_VERTEX ) 
   , m_vcut ( vcut  )
 {}
@@ -190,7 +192,8 @@ LoKi::Particles::MaxCosineDirectionAngleDV::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::MaxCosineDirectionAngleTES::MaxCosineDirectionAngleTES 
 ( const std::string& path )
-  : LoKi::Particles::MaxCosineDirectionAngleWithSource ( LoKi::Vertices::SourceTES ( path , s_VALL ) ) 
+  : LoKi::AuxFunBase ( std::tie ( path ) ) 
+  , LoKi::Particles::MaxCosineDirectionAngleWithSource ( LoKi::Vertices::SourceTES ( path , s_VALL ) ) 
   , m_path ( path   ) 
   , m_vcut ( s_VALL ) 
 {}
@@ -200,7 +203,8 @@ LoKi::Particles::MaxCosineDirectionAngleTES::MaxCosineDirectionAngleTES
 LoKi::Particles::MaxCosineDirectionAngleTES::MaxCosineDirectionAngleTES 
 ( const std::string&        path  ,
   const LoKi::Types::VCuts& vcut ) 
-  : LoKi::Particles::MaxCosineDirectionAngleWithSource ( LoKi::Vertices::SourceTES ( path , vcut ) ) 
+  : LoKi::AuxFunBase ( std::tie ( path , vcut ) ) 
+  , LoKi::Particles::MaxCosineDirectionAngleWithSource ( LoKi::Vertices::SourceTES ( path , vcut ) ) 
   , m_path ( path ) 
   , m_vcut ( vcut ) 
 {}
@@ -210,7 +214,8 @@ LoKi::Particles::MaxCosineDirectionAngleTES::MaxCosineDirectionAngleTES
 LoKi::Particles::MaxCosineDirectionAngleTES::MaxCosineDirectionAngleTES 
 ( const LoKi::Types::VCuts& vcut ,
   const std::string&        path )
-  : LoKi::Particles::MaxCosineDirectionAngleWithSource ( LoKi::Vertices::SourceTES ( path , vcut ) ) 
+  : LoKi::AuxFunBase ( std::tie ( vcut , path ) ) 
+  , LoKi::Particles::MaxCosineDirectionAngleWithSource ( LoKi::Vertices::SourceTES ( path , vcut ) ) 
   , m_path ( path ) 
   , m_vcut ( vcut ) 
 {}

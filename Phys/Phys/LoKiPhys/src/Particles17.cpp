@@ -25,7 +25,8 @@
 // constructor from the angle
 // ============================================================================
 LoKi::Particles::DeltaPhi::DeltaPhi ( const double phi ) 
-  : LoKi::Particles::Phi () 
+  : LoKi::AuxFunBase ( std::tie ( phi ) )
+  , LoKi::Particles::Phi () 
   , m_phi  ( phi )
 { 
   m_phi = adjust ( m_phi ) ; 
@@ -34,7 +35,8 @@ LoKi::Particles::DeltaPhi::DeltaPhi ( const double phi )
 // constructor from the vector 
 // ============================================================================
 LoKi::Particles::DeltaPhi::DeltaPhi ( const LoKi::ThreeVector& v ) 
-  : LoKi::Particles::Phi ()
+  : LoKi::AuxFunBase ( std::tie ( v ) )
+  , LoKi::Particles::Phi ()
   , m_phi  ( v.Phi() )
 { 
   m_phi = adjust ( m_phi ) ; 
@@ -43,7 +45,8 @@ LoKi::Particles::DeltaPhi::DeltaPhi ( const LoKi::ThreeVector& v )
 // constructor from the vector 
 // ============================================================================
 LoKi::Particles::DeltaPhi::DeltaPhi ( const LoKi::LorentzVector& v ) 
-  : LoKi::Particles::Phi ()
+  : LoKi::AuxFunBase ( std::tie ( v ) )
+  , LoKi::Particles::Phi ()
   , m_phi  ( v.Phi() )
 { 
   m_phi = adjust ( m_phi ) ; 
@@ -82,21 +85,24 @@ std::ostream& LoKi::Particles::DeltaPhi::fillStream ( std::ostream& s ) const
 // constructor from the angle
 // ============================================================================
 LoKi::Particles::DeltaEta::DeltaEta ( const double eta ) 
-  : LoKi::Particles::PseudoRapidity () 
+  : LoKi::AuxFunBase ( std::tie ( eta ) )
+  , LoKi::Particles::PseudoRapidity () 
   , m_eta  ( eta )
 {}
 // ============================================================================
 // constructor from the vector 
 // ============================================================================
 LoKi::Particles::DeltaEta::DeltaEta ( const LoKi::ThreeVector& v ) 
-  : LoKi::Particles::PseudoRapidity () 
+  : LoKi::AuxFunBase ( std::tie ( v ) )
+  , LoKi::Particles::PseudoRapidity () 
   , m_eta  ( v.Eta() )
 {}
 // ============================================================================
 // constructor from the vector 
 // ============================================================================
 LoKi::Particles::DeltaEta::DeltaEta ( const LoKi::LorentzVector& v ) 
-  : LoKi::Particles::PseudoRapidity () 
+  : LoKi::AuxFunBase ( std::tie ( v ) )
+  , LoKi::Particles::PseudoRapidity () 
   , m_eta  ( v.Eta() )
 {}
 // ============================================================================
@@ -133,21 +139,24 @@ std::ostream& LoKi::Particles::DeltaEta::fillStream ( std::ostream& s ) const
 // constructor from the eta, phi
 // ============================================================================
 LoKi::Particles::DeltaR2::DeltaR2 ( double eta , double phi ) 
-  : LoKi::Particles::DeltaPhi ( phi )  
+  : LoKi::AuxFunBase ( std::tie ( eta , phi ) )
+  , LoKi::Particles::DeltaPhi ( phi )  
   , m_deta ( eta )
 {} 
 // ============================================================================
 // constructor from the vector 
 // ============================================================================
 LoKi::Particles::DeltaR2::DeltaR2 ( const LoKi::ThreeVector& v ) 
-  : LoKi::Particles::DeltaPhi ( v )  
+  : LoKi::AuxFunBase ( std::tie ( v ) )
+  , LoKi::Particles::DeltaPhi ( v )  
   , m_deta ( v ) 
 {}
 // ============================================================================
 // constructor from the vector 
 // ============================================================================
 LoKi::Particles::DeltaR2::DeltaR2 ( const LoKi::LorentzVector& v ) 
-  : LoKi::Particles::DeltaPhi ( v )  
+  : LoKi::AuxFunBase ( std::tie ( v ) )
+  , LoKi::Particles::DeltaPhi ( v )  
   , m_deta ( v ) 
 {}
 // ============================================================================

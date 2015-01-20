@@ -20,7 +20,8 @@
 // ============================================================================
 LoKi::Particles::HasInfo:: HasInfo 
 ( const int key ) 
-  : LoKi::ExtraInfo::CheckInfo<const LHCb::Particle*> ( key ) 
+  : LoKi::AuxFunBase ( std::tie ( key ) ) 
+  , LoKi::ExtraInfo::CheckInfo<const LHCb::Particle*> ( key ) 
 {}
 // ============================================================================
 // copy constructor 
@@ -42,7 +43,8 @@ std::ostream& LoKi::Particles::HasInfo::fillStream( std::ostream& s ) const
  */
 LoKi::Particles::Info::Info
 ( const int    key , const double def )
-  : LoKi::ExtraInfo::GetInfo<const LHCb::Particle*> ( key , def ) 
+  : LoKi::AuxFunBase ( std::tie ( key , def ) ) 
+  , LoKi::ExtraInfo::GetInfo<const LHCb::Particle*> ( key , def ) 
 {}
 // ============================================================================
 // copy constructor 

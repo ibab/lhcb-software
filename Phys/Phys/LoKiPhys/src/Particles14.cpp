@@ -40,7 +40,8 @@
 // ============================================================================
 LoKi::Particles::DecayAngle::DecayAngle
 ( const size_t child ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase ( std::tie ( child ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_child ( child ) 
 {}
 // ============================================================================

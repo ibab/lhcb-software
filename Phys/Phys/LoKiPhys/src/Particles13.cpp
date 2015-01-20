@@ -102,7 +102,8 @@ LoKi::Particles::TrackChi2PerDoF::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::TrackHasState::TrackHasState
 ( const LHCb::State::Location location ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate()
+  : LoKi::AuxFunBase ( std::tie ( location ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate()
   , m_location ( location ) 
 {}
 // ============================================================================

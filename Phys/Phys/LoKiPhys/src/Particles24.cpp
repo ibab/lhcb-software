@@ -73,7 +73,8 @@ namespace
 LoKi::Particles::DecNode::DecNode 
 ( const Decays::iNode& node         , 
   const bool           autovalidate ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate()
+  : LoKi::AuxFunBase ( std::tie ( node , autovalidate ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate()
   , m_node         ( node         ) 
   , m_autovalidate ( autovalidate )
 {}  
@@ -81,8 +82,10 @@ LoKi::Particles::DecNode::DecNode
 // constructor from the actual node 
 // ============================================================================
 LoKi::Particles::DecNode::DecNode 
-( const std::string& node )  
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate()
+( const std::string& node         , 
+  const bool         autovalidate ) 
+  : LoKi::AuxFunBase ( std::tie ( node , autovalidate ) )
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate()
   , m_node         ( s_NODE ) 
   , m_autovalidate ( true   )
 {
@@ -147,7 +150,8 @@ std::ostream& LoKi::Particles::DecNode::fillStream( std::ostream& s ) const
 LoKi::Particles::DecTree::DecTree
 ( const LoKi::Particles::DecTree::iTree& tree         , 
   const bool                             autovalidate ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate()
+  : LoKi::AuxFunBase ( std::tie ( tree , autovalidate ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate()
   , m_tree         ( tree         ) 
   , m_autovalidate ( autovalidate ) 
 {}  
@@ -155,8 +159,10 @@ LoKi::Particles::DecTree::DecTree
 // constructor from the actual node 
 // ============================================================================
 LoKi::Particles::DecTree::DecTree 
-( const std::string& tree )  
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate()
+( const std::string& tree         ,
+  const bool         autovalidate )
+  : LoKi::AuxFunBase ( std::tie ( tree , autovalidate ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate()
   , m_tree         ( s_TREE ) 
   , m_autovalidate ( true   )
 {

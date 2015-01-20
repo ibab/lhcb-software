@@ -275,11 +275,14 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from the tool
-      DOCAChi2Max ( const IDistanceCalculator*                  dc ) ;
+      DOCAChi2Max ( const IDistanceCalculator*                  dc ,
+                    const bool                                  allow = true ) ;
       /// constructor from two the tool
-      DOCAChi2Max ( const LoKi::Interface<IDistanceCalculator>& dc ) ;
+      DOCAChi2Max ( const LoKi::Interface<IDistanceCalculator>& dc ,
+                    const bool                                  allow = true ) ;
       /// constructor from the tool nick-name
-      DOCAChi2Max ( const std::string& nick = ""                   ) ;
+      DOCAChi2Max ( const std::string& nick = ""                   ,
+                    const bool                                  allow = true ) ;
       /// MANDATORY: virtual destructor
       virtual ~DOCAChi2Max() {}
       // MANDATORY: clone method ('virtual constructor')

@@ -41,7 +41,8 @@
 // ============================================================================
 LoKi::Particles::Filter::Filter
 ( const std::string& filter ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( filter ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_filter ()
 {
   // 1. get from the context 
@@ -76,7 +77,7 @@ LoKi::Particles::Filter::Filter
 ( const IParticleFilter* filter ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_filter ( filter )
-{} 
+{}
 // ============================================================================
 // MANDATORY: virtual destructor
 // ============================================================================

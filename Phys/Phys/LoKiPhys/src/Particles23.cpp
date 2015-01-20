@@ -34,8 +34,9 @@ LoKi::Particles::WrongMass::WrongMass
 ( const double m1 ,
   const double m2 , 
   const IParticleTransporter* t  , 
-  const double                dz ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  const double                dz )
+  : LoKi::AuxFunBase ( std::tie ( m1 ,m2 , dz ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
   , m_pids   () 
   , m_names  () 
@@ -54,7 +55,8 @@ LoKi::Particles::WrongMass::WrongMass
   const double m3 ,
   const IParticleTransporter* t  , 
   const double                dz ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( m1 , m2 , m3 , dz ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
   , m_pids   () 
   , m_names  () 
@@ -75,7 +77,8 @@ LoKi::Particles::WrongMass::WrongMass
   const double m4 ,
   const IParticleTransporter* t  , 
   const double                dz ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( m1 , m2 , m3 , m4 , dz ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
   , m_pids   () 
   , m_names  () 
@@ -94,7 +97,8 @@ LoKi::Particles::WrongMass::WrongMass
 ( const std::vector<double>& masses ,
   const IParticleTransporter* t  , 
   const double                dz ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( masses , dz ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses ( masses ) 
   , m_pids   () 
   , m_names  () 
@@ -109,7 +113,8 @@ LoKi::Particles::WrongMass::WrongMass
   const LHCb::ParticleID& p2 ,
   const double                dz ,
   const IParticleTransporter* t  ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( p1 , p2  , dz ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
   , m_pids   () 
   , m_names  () 
@@ -129,7 +134,8 @@ LoKi::Particles::WrongMass::WrongMass
   const LHCb::ParticleID& p3 ,
   const double                dz ,
   const IParticleTransporter* t  ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( p1 , p2 , p3 , dz ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
   , m_pids   () 
   , m_names  () 
@@ -151,7 +157,8 @@ LoKi::Particles::WrongMass::WrongMass
   const LHCb::ParticleID& p4 ,
   const double                dz ,
   const IParticleTransporter* t  ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( p1 , p2 , p3 , p4 , dz ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
   , m_pids   () 
   , m_names  () 
@@ -171,7 +178,8 @@ LoKi::Particles::WrongMass::WrongMass
 ( const std::vector<LHCb::ParticleID>& pids ,
   const double                dz ,
   const IParticleTransporter* t  ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( pids  , dz ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
   , m_pids   ( pids ) 
   , m_names  () 
@@ -188,7 +196,8 @@ LoKi::Particles::WrongMass::WrongMass
   const std::string& p2 ,
   const double                dz ,
   const IParticleTransporter* t  )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( p1 , p2   , dz ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
   , m_pids   () 
   , m_names  () 
@@ -208,7 +217,8 @@ LoKi::Particles::WrongMass::WrongMass
   const std::string& p3 ,
   const double                dz ,
   const IParticleTransporter* t  ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( p1 , p2 , p3 , dz ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
   , m_pids   () 
   , m_names  () 
@@ -230,7 +240,8 @@ LoKi::Particles::WrongMass::WrongMass
   const std::string& p4 ,
   const double                dz ,
   const IParticleTransporter* t  ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( p1 , p2 , p3 , p4 , dz ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
   , m_pids   () 
   , m_names  () 
@@ -250,7 +261,8 @@ LoKi::Particles::WrongMass::WrongMass
 ( const std::vector<std::string>& names ,
   const double                dz ,
   const IParticleTransporter* t  ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( names , dz ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
   , m_pids   () 
   , m_names  ( names ) 
@@ -458,7 +470,8 @@ std::ostream& LoKi::Particles::WrongMass::fillStream ( std::ostream& s ) const
 LoKi::Particles::DeltaWrongMass::DeltaWrongMass
 ( const double            m0 , 
   const LoKi::Particles::WrongMass& wm ) 
-  : LoKi::Particles::WrongMass ( wm ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , wm ) ) 
+  , LoKi::Particles::WrongMass ( wm ) 
   , m_m0    ( m0 ) 
   , m_name0 (    ) 
   , m_pid0  ( 0  ) 
@@ -469,7 +482,8 @@ LoKi::Particles::DeltaWrongMass::DeltaWrongMass
 LoKi::Particles::DeltaWrongMass::DeltaWrongMass
 ( const std::string&                m0 , 
   const LoKi::Particles::WrongMass& wm ) 
-  : LoKi::Particles::WrongMass ( wm ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , wm ) ) 
+  , LoKi::Particles::WrongMass ( wm ) 
   , m_m0    ( -100 * Gaudi::Units::TeV ) 
   , m_name0 ( m0 ) 
   , m_pid0  ( 0  ) 
@@ -482,7 +496,8 @@ LoKi::Particles::DeltaWrongMass::DeltaWrongMass
 LoKi::Particles::DeltaWrongMass::DeltaWrongMass
 ( const LHCb::ParticleID&           m0 , 
   const LoKi::Particles::WrongMass& wm ) 
-  : LoKi::Particles::WrongMass ( wm ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , wm ) ) 
+  , LoKi::Particles::WrongMass ( wm ) 
   , m_m0    ( -100 * Gaudi::Units::TeV ) 
   , m_name0 (    ) 
   , m_pid0  ( m0 ) 
@@ -530,7 +545,8 @@ std::ostream& LoKi::Particles::DeltaWrongMass::fillStream
 LoKi::Particles::AbsDeltaWrongMass::AbsDeltaWrongMass
 ( const double            m0 , 
   const LoKi::Particles::WrongMass& wm ) 
-  : LoKi::Particles::DeltaWrongMass ( m0 , wm ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , wm ) ) 
+  , LoKi::Particles::DeltaWrongMass ( m0 , wm ) 
 {}
 // ======================================================================
 // constructor from name 
@@ -538,7 +554,8 @@ LoKi::Particles::AbsDeltaWrongMass::AbsDeltaWrongMass
 LoKi::Particles::AbsDeltaWrongMass::AbsDeltaWrongMass
 ( const std::string&                m0 , 
   const LoKi::Particles::WrongMass& wm ) 
-  : LoKi::Particles::DeltaWrongMass ( m0 , wm ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , wm ) ) 
+  , LoKi::Particles::DeltaWrongMass ( m0 , wm ) 
 {}
 // ======================================================================
 // constructor from pid 
@@ -546,7 +563,8 @@ LoKi::Particles::AbsDeltaWrongMass::AbsDeltaWrongMass
 LoKi::Particles::AbsDeltaWrongMass::AbsDeltaWrongMass
 ( const LHCb::ParticleID&           m0 , 
   const LoKi::Particles::WrongMass& wm ) 
-  : LoKi::Particles::DeltaWrongMass ( m0 , wm ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , wm ) ) 
+  , LoKi::Particles::DeltaWrongMass ( m0 , wm ) 
 {}
 // ======================================================================
 // constructor from delta 

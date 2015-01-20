@@ -96,7 +96,8 @@ std::ostream& LoKi::Particles::CosineDirectionAngleWithTheBestPV::fillStream
 // ============================================================================
 LoKi::Particles::ImpParWithTheBestPV::ImpParWithTheBestPV 
 ( const std::string& geo ) 
-  : LoKi::AuxDesktopBase()
+  : LoKi::AuxFunBase    ( std::tie ( geo ) ) 
+  , LoKi::AuxDesktopBase()
   , LoKi::Particles::ImpPar ( s_VERTEX , s_IPTOOL ) 
   , m_geo ( geo )   
 {}
@@ -139,7 +140,8 @@ std::ostream& LoKi::Particles::ImpParWithTheBestPV::fillStream
 // ============================================================================
 LoKi::Particles::ImpParChi2WithTheBestPV::ImpParChi2WithTheBestPV 
 ( const std::string& geo ) 
-  : LoKi::Particles::ImpParWithTheBestPV ( geo ) 
+  : LoKi::AuxFunBase    ( std::tie ( geo ) ) 
+  , LoKi::Particles::ImpParWithTheBestPV ( geo ) 
 {}
 // ============================================================================
 // MANDATORY: the clone method ("virtual constructor")
@@ -185,7 +187,8 @@ std::ostream& LoKi::Particles::ImpParChi2WithTheBestPV::fillStream
 LoKi::Particles::MinImpParWithSource::MinImpParWithSource 
 ( const LoKi::BasicFunctors<const LHCb::VertexBase*>::Source& source ,
   const std::string&                                          geo    ) 
-  : LoKi::Particles::MinImpPar ( LHCb::VertexBase::ConstVector() , s_IPTOOL ) 
+  : LoKi::AuxFunBase    ( std::tie ( source , geo ) ) 
+  , LoKi::Particles::MinImpPar ( LHCb::VertexBase::ConstVector() , s_IPTOOL ) 
   , m_source ( source )   
   , m_geo    ( geo    )
 {}
@@ -250,7 +253,8 @@ std::ostream& LoKi::Particles::MinImpParWithSource::fillStream
 // ============================================================================
 LoKi::Particles::MinImpParDV::MinImpParDV 
 ( const std::string& geo    ) 
-  : LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceDesktop ( s_PRIMARY ) , geo )  
+  : LoKi::AuxFunBase    ( std::tie ( geo ) ) 
+  , LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceDesktop ( s_PRIMARY ) , geo )  
 {}
 // ============================================================================
 /*  the constructor form the vertex selection functor and 
@@ -263,7 +267,8 @@ LoKi::Particles::MinImpParDV::MinImpParDV
 LoKi::Particles::MinImpParDV::MinImpParDV 
 ( const LoKi::PhysTypes::VCuts& cuts , 
   const std::string&            geo )
-  : LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceDesktop ( cuts ) , geo )
+  : LoKi::AuxFunBase    ( std::tie ( cuts , geo ) ) 
+  , LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceDesktop ( cuts ) , geo )
 {}
 // ============================================================================
 /*  the constructor form the vertex selection functor and 
@@ -276,7 +281,8 @@ LoKi::Particles::MinImpParDV::MinImpParDV
 LoKi::Particles::MinImpParDV::MinImpParDV 
 ( const std::string&            geo , 
   const LoKi::PhysTypes::VCuts& cuts ) 
-  : LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceDesktop ( cuts ) , geo )
+  : LoKi::AuxFunBase    ( std::tie ( geo , cuts ) ) 
+  , LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceDesktop ( cuts ) , geo )
 {}
 // ============================================================================
 // MANDATORY: the clone method ("virtual constructor")
@@ -302,7 +308,8 @@ std::ostream& LoKi::Particles::MinImpParDV::fillStream
 LoKi::Particles::MinImpParTES::MinImpParTES 
 ( const std::string& path   , 
   const std::string& geo    ) 
-  : LoKi::Particles::MinImpParWithSource 
+  : LoKi::AuxFunBase    ( std::tie ( path , geo ) ) 
+  , LoKi::Particles::MinImpParWithSource 
 ( LoKi::Vertices::SourceTES ( path , s_PRIMARY ) , geo )  
   , m_path ( 1 , path ) 
 {}
@@ -318,7 +325,8 @@ LoKi::Particles::MinImpParTES::MinImpParTES
 LoKi::Particles::MinImpParTES::MinImpParTES 
 ( const std::vector<std::string>& path   , 
   const std::string&              geo    ) 
-  : LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , s_PRIMARY ) , geo )  
+  : LoKi::AuxFunBase    ( std::tie ( path , geo ) ) 
+  , LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , s_PRIMARY ) , geo )  
   , m_path ( path ) 
 {}
 // ============================================================================
@@ -334,8 +342,9 @@ LoKi::Particles::MinImpParTES::MinImpParTES
 ( const LoKi::PhysTypes::VCuts&   cuts ,
   const std::vector<std::string>& path , 
   const std::string&              geo  ) 
-  : LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
-    , m_path ( path ) 
+  : LoKi::AuxFunBase    ( std::tie ( cuts , path , geo ) ) 
+  , LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
+  , m_path ( path ) 
 {}
 // ============================================================================
 /* the constructor,
@@ -350,7 +359,8 @@ LoKi::Particles::MinImpParTES::MinImpParTES
 ( const LoKi::PhysTypes::VCuts& cuts ,
   const std::string&            path , 
   const std::string&            geo  ) 
-  : LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
+  : LoKi::AuxFunBase    ( std::tie ( cuts , path , geo ) ) 
+  , LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
   , m_path ( 1 , path ) 
 {}
 // ============================================================================
@@ -366,7 +376,8 @@ LoKi::Particles::MinImpParTES::MinImpParTES
 ( const std::vector<std::string>& path , 
   const LoKi::PhysTypes::VCuts&   cuts ,
   const std::string&              geo  ) 
-  : LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
+  : LoKi::AuxFunBase    ( std::tie ( path , cuts , geo ) ) 
+  , LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
   , m_path ( path ) 
 {}
 // ============================================================================
@@ -382,7 +393,8 @@ LoKi::Particles::MinImpParTES::MinImpParTES
 ( const std::string&            path , 
   const LoKi::PhysTypes::VCuts& cuts ,
   const std::string&            geo  ) 
-  : LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
+  : LoKi::AuxFunBase    ( std::tie ( path , cuts , geo ) ) 
+  , LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
   , m_path ( 1 , path ) 
 {}
 // ============================================================================
@@ -398,8 +410,9 @@ LoKi::Particles::MinImpParTES::MinImpParTES
 ( const std::vector<std::string>& path , 
   const std::string&              geo  , 
   const LoKi::PhysTypes::VCuts&   cuts ) 
-  : LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
-    , m_path ( path ) 
+  : LoKi::AuxFunBase    ( std::tie ( path , geo , cuts ) ) 
+  , LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
+  , m_path ( path ) 
 {}
 // ============================================================================
 /** the constructor,
@@ -414,7 +427,8 @@ LoKi::Particles::MinImpParTES::MinImpParTES
 ( const std::string&            path , 
   const std::string&            geo  ,
   const LoKi::PhysTypes::VCuts& cuts ) 
-  : LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
+  : LoKi::AuxFunBase    ( std::tie ( path , geo , cuts ) ) 
+  , LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
   , m_path ( 1 , path ) 
 {}
 // ============================================================================
@@ -441,7 +455,8 @@ std::ostream& LoKi::Particles::MinImpParTES::fillStream
 LoKi::Particles::MinImpParChi2WithSource::MinImpParChi2WithSource 
 ( const LoKi::BasicFunctors<const LHCb::VertexBase*>::Source& source ,
   const std::string&                                          geo    ) 
-  : LoKi::Particles::MinImpParWithSource ( source , geo ) 
+  : LoKi::AuxFunBase    ( std::tie ( source , geo ) ) 
+  , LoKi::Particles::MinImpParWithSource ( source , geo ) 
 {}
 // ============================================================================
 // MANDATORY: the clone method ("virtual constructor")
@@ -503,7 +518,8 @@ std::ostream& LoKi::Particles::MinImpParChi2WithSource::fillStream
 // ============================================================================
 LoKi::Particles::MinImpParChi2DV::MinImpParChi2DV 
 ( const std::string& geo    ) 
-  : LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceDesktop ( s_PRIMARY ) , geo )  
+  : LoKi::AuxFunBase    ( std::tie ( geo ) ) 
+  , LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceDesktop ( s_PRIMARY ) , geo )  
 {}
 // ============================================================================
 /*  the constructor,
@@ -516,7 +532,8 @@ LoKi::Particles::MinImpParChi2DV::MinImpParChi2DV
 LoKi::Particles::MinImpParChi2DV::MinImpParChi2DV 
 ( const LoKi::PhysTypes::VCuts& cuts , 
   const std::string&            geo  ) 
-  : LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceDesktop ( cuts  ) , geo )  
+  : LoKi::AuxFunBase    ( std::tie ( cuts , geo ) ) 
+  , LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceDesktop ( cuts  ) , geo )  
 {}
 // ============================================================================
 /*  the  constructor,
@@ -529,7 +546,8 @@ LoKi::Particles::MinImpParChi2DV::MinImpParChi2DV
 LoKi::Particles::MinImpParChi2DV::MinImpParChi2DV 
 ( const std::string&            geo  , 
   const LoKi::PhysTypes::VCuts& cuts ) 
-  : LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceDesktop ( cuts  ) , geo )  
+  : LoKi::AuxFunBase    ( std::tie ( geo , cuts ) ) 
+  , LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceDesktop ( cuts  ) , geo )  
 {}
 // ============================================================================
 // MANDATORY: the clone method ("virtual constructor")
@@ -555,7 +573,8 @@ std::ostream& LoKi::Particles::MinImpParChi2DV::fillStream
 LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES 
 ( const std::string& path   , 
   const std::string& geo    ) 
-  : LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , s_PRIMARY ) , geo )  
+  : LoKi::AuxFunBase    ( std::tie ( path , geo ) ) 
+  , LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , s_PRIMARY ) , geo )  
   , m_path ( 1 , path ) 
 {}
 // ============================================================================
@@ -570,7 +589,8 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
 LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES 
 ( const std::vector<std::string>& path   , 
   const std::string&              geo    ) 
-  : LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , s_PRIMARY ) , geo )  
+  : LoKi::AuxFunBase    ( std::tie ( path , geo ) ) 
+  , LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , s_PRIMARY ) , geo )  
   , m_path ( path ) 
 {}
 // ============================================================================
@@ -586,8 +606,9 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
 ( const LoKi::PhysTypes::VCuts& cuts , 
   const std::string&            path , 
   const std::string&            geo  ) 
-  : LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
-    , m_path ( 1 , path ) 
+  : LoKi::AuxFunBase    ( std::tie ( cuts , path , geo ) ) 
+  , LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
+  , m_path ( 1 , path ) 
 {}
 // ============================================================================
 /*  the constructor,
@@ -602,7 +623,8 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
 ( const LoKi::PhysTypes::VCuts&   cuts , 
   const std::vector<std::string>& path , 
   const std::string&              geo  ) 
-  : LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
+  : LoKi::AuxFunBase    ( std::tie ( cuts , path , geo ) ) 
+  , LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
   , m_path ( path ) 
 {}
 // ============================================================================
@@ -618,7 +640,8 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
 ( const std::string&            path , 
   const LoKi::PhysTypes::VCuts& cuts , 
   const std::string&            geo  ) 
-  : LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
+  : LoKi::AuxFunBase    ( std::tie ( path , cuts , geo ) ) 
+  , LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
   , m_path ( 1 , path ) 
 {}
 // ============================================================================
@@ -633,7 +656,8 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
 ( const std::vector<std::string>& path , 
   const LoKi::PhysTypes::VCuts&   cuts , 
   const std::string&              geo  )  
-  : LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
+  : LoKi::AuxFunBase    ( std::tie ( path , cuts , geo ) ) 
+  , LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
   , m_path ( path ) 
 {}
 // ============================================================================
@@ -649,7 +673,8 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
 ( const std::string&            path , 
   const std::string&            geo  ,
   const LoKi::PhysTypes::VCuts& cuts ) 
-  : LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
+  : LoKi::AuxFunBase    ( std::tie ( path , geo , cuts ) ) 
+  , LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
   , m_path ( 1 , path ) 
 {}
 // ============================================================================
@@ -664,7 +689,8 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
 ( const std::vector<std::string>& path , 
   const std::string&              geo  , 
   const LoKi::PhysTypes::VCuts&   cuts )
-  : LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
+  : LoKi::AuxFunBase    ( std::tie ( path , geo , cuts ) ) 
+  , LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
   , m_path ( path ) 
 {}
 // ============================================================================
@@ -826,7 +852,8 @@ std::ostream& LoKi::Particles::VertexChi2DistanceDV::fillStream
 // constructor 
 // ============================================================================
 LoKi::Particles::LifeTimeDV::LifeTimeDV( const double chi2 ) 
-  : LoKi::AuxDesktopBase ()
+  : LoKi::AuxFunBase    ( std::tie ( chi2 ) ) 
+  , LoKi::AuxDesktopBase ()
   , LoKi::Particles::LifeTime ( s_LTIME , s_VERTEX , chi2 ) 
   , m_fit ( s_LIFETIME         )
 {}
@@ -836,7 +863,8 @@ LoKi::Particles::LifeTimeDV::LifeTimeDV( const double chi2 )
 LoKi::Particles::LifeTimeDV::LifeTimeDV
 ( const std::string& fit  , 
   const double       chi2 ) 
-  : LoKi::AuxDesktopBase ()
+  : LoKi::AuxFunBase    ( std::tie ( fit , chi2 ) ) 
+  , LoKi::AuxDesktopBase ()
   , LoKi::Particles::LifeTime ( s_LTIME , s_VERTEX , chi2 ) 
   , m_fit ( fit  ) 
 {}
@@ -888,7 +916,8 @@ std::ostream& LoKi::Particles::LifeTimeDV::fillStream ( std::ostream& s ) const
 // constructor 
 // ============================================================================
 LoKi::Particles::LifeTimeChi2DV::LifeTimeChi2DV( const double chi2 ) 
-  : LoKi::Particles::LifeTimeDV ( chi2 ) 
+  : LoKi::AuxFunBase    ( std::tie ( chi2 ) ) 
+  , LoKi::Particles::LifeTimeDV ( chi2 ) 
 {}
 // ============================================================================
 // constructor 
@@ -896,7 +925,8 @@ LoKi::Particles::LifeTimeChi2DV::LifeTimeChi2DV( const double chi2 )
 LoKi::Particles::LifeTimeChi2DV::LifeTimeChi2DV
 ( const std::string& fit  , 
   const double       chi2 )
-  : LoKi::Particles::LifeTimeDV ( fit , chi2 ) 
+  : LoKi::AuxFunBase    ( std::tie ( fit , chi2 ) ) 
+  , LoKi::Particles::LifeTimeDV ( fit , chi2 ) 
 {}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
@@ -946,7 +976,8 @@ std::ostream& LoKi::Particles::LifeTimeChi2DV::fillStream ( std::ostream& s ) co
 // ============================================================================
 LoKi::Particles::LifeTimeSignedChi2DV::LifeTimeSignedChi2DV
 ( const double chi2 ) 
-  : LoKi::Particles::LifeTimeChi2DV ( chi2 ) 
+  : LoKi::AuxFunBase    ( std::tie ( chi2 ) ) 
+  , LoKi::Particles::LifeTimeChi2DV ( chi2 ) 
 {}
 // ============================================================================
 // constructor 
@@ -954,7 +985,8 @@ LoKi::Particles::LifeTimeSignedChi2DV::LifeTimeSignedChi2DV
 LoKi::Particles::LifeTimeSignedChi2DV::LifeTimeSignedChi2DV
 ( const std::string& fit  ,
   const double       chi2 ) 
-  : LoKi::Particles::LifeTimeChi2DV ( fit , chi2 ) 
+  : LoKi::AuxFunBase    ( std::tie ( fit , chi2 ) ) 
+  , LoKi::Particles::LifeTimeChi2DV ( fit , chi2 ) 
 {}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
@@ -1013,7 +1045,8 @@ LoKi::Particles::LifeTimeFitChi2DV::LifeTimeFitChi2DV()
 // ============================================================================
 LoKi::Particles::LifeTimeFitChi2DV::LifeTimeFitChi2DV
 ( const std::string& fit ) 
-  : LoKi::Particles::LifeTimeDV( fit ) 
+  : LoKi::AuxFunBase    ( std::tie ( fit ) ) 
+  , LoKi::Particles::LifeTimeDV( fit ) 
 {}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
@@ -1069,7 +1102,8 @@ LoKi::Particles::LifeTimeErrorDV::LifeTimeErrorDV()
 // ============================================================================
 LoKi::Particles::LifeTimeErrorDV::LifeTimeErrorDV
 ( const std::string& fit ) 
-  : LoKi::Particles::LifeTimeDV( fit ) 
+  : LoKi::AuxFunBase    ( std::tie ( fit ) ) 
+  , LoKi::Particles::LifeTimeDV( fit ) 
 {}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
@@ -1215,7 +1249,8 @@ std::ostream& LoKi::Particles::VertexRhoDistanceWithTheBestPV::fillStream
 // ============================================================================
 LoKi::Particles::MinVertexDistanceWithSource::MinVertexDistanceWithSource
 ( const LoKi::Particles::MinVertexDistanceWithSource::_Source& s ) 
-  :  LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase    ( std::tie ( s ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( s ) 
 {}
 // ============================================================================
@@ -1259,7 +1294,8 @@ std::ostream& LoKi::Particles::MinVertexDistanceWithSource::fillStream
 // ============================================================================
 LoKi::Particles::MinVertexChi2DistanceWithSource::MinVertexChi2DistanceWithSource
 ( const LoKi::Particles::MinVertexChi2DistanceWithSource::_Source& s ) 
-  :  LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase    ( std::tie ( s ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( s ) 
 {}
 // ============================================================================
@@ -1311,7 +1347,8 @@ LoKi::Particles::MinVertexDistanceDV::MinVertexDistanceDV ()
 // ============================================================================
 LoKi::Particles::MinVertexDistanceDV::MinVertexDistanceDV 
 ( const LoKi::PhysTypes::VCuts& cut )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  : LoKi::AuxFunBase    ( std::tie ( cut ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( cut ) 
 {}
 // ============================================================================
@@ -1362,7 +1399,8 @@ LoKi::Particles::MinVertexChi2DistanceDV::MinVertexChi2DistanceDV ()
 // ============================================================================
 LoKi::Particles::MinVertexChi2DistanceDV::MinVertexChi2DistanceDV 
 ( const LoKi::PhysTypes::VCuts& cut )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  : LoKi::AuxFunBase    ( std::tie ( cut ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( cut ) 
 {}
 // ============================================================================
@@ -1406,7 +1444,8 @@ std::ostream& LoKi::Particles::MinVertexChi2DistanceDV::fillStream
 // ============================================================================
 LoKi::Particles::MinVertexDistanceTES::MinVertexDistanceTES
 ( const std::string& path ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase    ( std::tie ( path ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( path ) 
 {}
 // ============================================================================
@@ -1414,7 +1453,8 @@ LoKi::Particles::MinVertexDistanceTES::MinVertexDistanceTES
 // ============================================================================
 LoKi::Particles::MinVertexDistanceTES::MinVertexDistanceTES
 ( const std::vector<std::string>& path ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase    ( std::tie ( path ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( path ) 
 {}
 // ============================================================================
@@ -1423,7 +1463,8 @@ LoKi::Particles::MinVertexDistanceTES::MinVertexDistanceTES
 LoKi::Particles::MinVertexDistanceTES::MinVertexDistanceTES
 ( const std::string&            path , 
   const LoKi::PhysTypes::VCuts& cut  ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase    ( std::tie ( path , cut ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( path , cut ) 
 {}
 // ============================================================================
@@ -1432,7 +1473,8 @@ LoKi::Particles::MinVertexDistanceTES::MinVertexDistanceTES
 LoKi::Particles::MinVertexDistanceTES::MinVertexDistanceTES
 ( const std::vector<std::string>& path , 
   const LoKi::PhysTypes::VCuts&   cut  ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase    ( std::tie ( path , cut ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( path , cut ) 
 {}
 // ============================================================================
@@ -1441,7 +1483,8 @@ LoKi::Particles::MinVertexDistanceTES::MinVertexDistanceTES
 LoKi::Particles::MinVertexDistanceTES::MinVertexDistanceTES
 ( const LoKi::PhysTypes::VCuts& cut  ,
   const std::string&            path ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase    ( std::tie ( cut , path ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( cut , path ) 
 {}
 // ============================================================================
@@ -1450,7 +1493,8 @@ LoKi::Particles::MinVertexDistanceTES::MinVertexDistanceTES
 LoKi::Particles::MinVertexDistanceTES::MinVertexDistanceTES
 ( const LoKi::PhysTypes::VCuts&   cut  ,
   const std::vector<std::string>& path ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase    ( std::tie ( cut , path ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( cut , path ) 
 {}
 // ============================================================================
@@ -1503,7 +1547,8 @@ std::ostream& LoKi::Particles::MinVertexDistanceTES::fillStream
 // ============================================================================
 LoKi::Particles::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
 ( const std::string& path ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase    ( std::tie ( path ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( path ) 
 {}
 // ============================================================================
@@ -1511,7 +1556,8 @@ LoKi::Particles::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
 // ============================================================================
 LoKi::Particles::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
 ( const std::vector<std::string>& path ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase    ( std::tie ( path ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( path ) 
 {}
 // ============================================================================
@@ -1520,7 +1566,8 @@ LoKi::Particles::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
 LoKi::Particles::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
 ( const std::string&            path , 
   const LoKi::PhysTypes::VCuts& cut  ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase    ( std::tie ( path , cut ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( path , cut ) 
 {}
 // ============================================================================
@@ -1529,7 +1576,8 @@ LoKi::Particles::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
 LoKi::Particles::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
 ( const std::vector<std::string>& path , 
   const LoKi::PhysTypes::VCuts&   cut  ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase    ( std::tie ( path , cut ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( path , cut ) 
 {}
 // ============================================================================
@@ -1538,7 +1586,8 @@ LoKi::Particles::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
 LoKi::Particles::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
 ( const LoKi::PhysTypes::VCuts& cut  ,
   const std::string&            path ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase    ( std::tie ( cut , path ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( cut , path ) 
 {}
 // ============================================================================
@@ -1547,7 +1596,8 @@ LoKi::Particles::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
 LoKi::Particles::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
 ( const LoKi::PhysTypes::VCuts&   cut  ,
   const std::vector<std::string>& path ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase    ( std::tie ( cut , path ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun ( cut , path ) 
 {}
 // ============================================================================

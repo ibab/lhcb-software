@@ -34,7 +34,8 @@ namespace
 LoKi::Particles::DaughterVertexDistance::DaughterVertexDistance  
 ( const unsigned int d1 , 
   const unsigned int d2 )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( d1 , d2 ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_d1   ( d1 ) 
   , m_d2   ( d2 ) 
   , m_vfun ( s_VERTEX ) 
@@ -104,7 +105,8 @@ LoKi::Particles::DaughterVertexDistance::fillStream ( std::ostream& s ) const
 LoKi::Particles::DaughterVertexSignedDistance::DaughterVertexSignedDistance  
 ( const unsigned int d1 , 
   const unsigned int d2 )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( d1 , d2 ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_d1   ( d1 ) 
   , m_d2   ( d2 ) 
   , m_vfun ( s_VERTEX ) 
@@ -174,7 +176,8 @@ LoKi::Particles::DaughterVertexSignedDistance::fillStream ( std::ostream& s ) co
 LoKi::Particles::DaughterVertexDistanceChi2::DaughterVertexDistanceChi2  
 ( const unsigned int d1 , 
   const unsigned int d2 )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( d1 , d2 ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_d1   ( d1 ) 
   , m_d2   ( d2 ) 
   , m_vfun ( s_VERTEX ) 
@@ -244,7 +247,8 @@ LoKi::Particles::DaughterVertexDistanceChi2::fillStream ( std::ostream& s ) cons
 LoKi::Particles::DaughterVertexDistanceDot::DaughterVertexDistanceDot
 ( const unsigned int d1 , 
   const unsigned int d2 )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( d1 , d2 ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_d1   ( d1 ) 
   , m_d2   ( d2 ) 
   , m_vfun ( s_VERTEX ) 
@@ -307,7 +311,8 @@ LoKi::Particles::DaughterVertexDistanceDot::fillStream ( std::ostream& s ) const
 LoKi::Particles::DaughterVertexDistanceSignedChi2::DaughterVertexDistanceSignedChi2  
 ( const unsigned int d1 , 
   const unsigned int d2 )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( d1 , d2 ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_d1   ( d1 ) 
   , m_d2   ( d2 ) 
   , m_vfun ( s_VERTEX ) 

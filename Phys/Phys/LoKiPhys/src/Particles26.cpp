@@ -101,7 +101,8 @@ LoKi::Particles::DOCA::DOCA
   const size_t       i2    ,
   const std::string& nick  ,
   const bool         allow ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase ( std::tie ( i1 , i2 , nick , allow ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_eval   ( s_PARTICLE , s_TOOL , allow )
   , m_first  ( i1   )
   , m_second ( i2   )
@@ -201,7 +202,8 @@ LoKi::Particles::DOCAChi2::DOCAChi2
   const size_t       i2    ,
   const std::string& nick  ,
   const bool         allow ) 
-  : LoKi::Particles::DOCA( i1 , i2 , nick , allow ) 
+  : LoKi::AuxFunBase ( std::tie ( i1 , i2 , nick , allow ) ) 
+  , LoKi::Particles::DOCA( i1 , i2 , nick , allow ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method
@@ -268,7 +270,8 @@ LoKi::Particles::DOCAMax::DOCAMax
 LoKi::Particles::DOCAMax::DOCAMax
 ( const std::string& nick ,
   const bool         allow )
-  : LoKi::Particles::DOCA( 1 , 1 , nick , allow ) 
+  : LoKi::AuxFunBase ( std::tie ( nick , allow ) ) 
+  , LoKi::Particles::DOCA( 1 , 1 , nick , allow ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method
@@ -308,22 +311,26 @@ std::ostream& LoKi::Particles::DOCAMax::fillStream ( std::ostream& s ) const
 // constructor from two indices and the tool
 // ============================================================================
 LoKi::Particles::DOCAChi2Max::DOCAChi2Max
-( const IDistanceCalculator* dc )
-  : LoKi::Particles::DOCAMax( dc ) 
+( const IDistanceCalculator* dc    , 
+  const bool                 allow ) 
+  : LoKi::Particles::DOCAMax( dc , allow ) 
 {}
 // ============================================================================
 // constructor from two indices and the tool
 // ============================================================================
 LoKi::Particles::DOCAChi2Max::DOCAChi2Max
-( const LoKi::Interface<IDistanceCalculator>& dc )
-  : LoKi::Particles::DOCAMax( dc ) 
+( const LoKi::Interface<IDistanceCalculator>& dc    , 
+  const bool                                  allow ) 
+  : LoKi::Particles::DOCAMax( dc , allow ) 
 {}
 // ============================================================================
 // constructor from two indices and the tool nickname
 // ============================================================================
 LoKi::Particles::DOCAChi2Max::DOCAChi2Max
-( const std::string& nick )
-  : LoKi::Particles::DOCAMax( nick ) 
+( const std::string& nick  , 
+  const bool         allow ) 
+  : LoKi::AuxFunBase ( std::tie ( nick , allow ) ) 
+  , LoKi::Particles::DOCAMax( nick ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method
@@ -362,7 +369,8 @@ std::ostream& LoKi::Particles::DOCAChi2Max::fillStream ( std::ostream& s ) const
 LoKi::Particles::ChildIP::ChildIP
 ( const size_t               index , 
   const IDistanceCalculator* tool  ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( index ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_eval  ( s_VERTEX , tool ) 
   , m_index ( index )
   , m_nick  () 
@@ -384,7 +392,8 @@ LoKi::Particles::ChildIP::ChildIP
 LoKi::Particles::ChildIP::ChildIP
 ( const size_t        index , 
   const std::string&  nick  ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( index , nick ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , m_eval  ( s_VERTEX , s_TOOL ) 
   , m_index ( index )
   , m_nick  ( nick  ) 
@@ -480,7 +489,8 @@ std::ostream& LoKi::Particles::ChildIP::fillStream ( std::ostream& s ) const
 LoKi::Particles::ChildIPChi2::ChildIPChi2
 ( const size_t               index , 
   const IDistanceCalculator* tool  ) 
-  : LoKi::Particles::ChildIP ( index , tool ) 
+  : LoKi::AuxFunBase ( std::tie ( index ) ) 
+  , LoKi::Particles::ChildIP ( index , tool ) 
 {}
 // ============================================================================
 // Constructor from the daughter index & tool 
@@ -496,7 +506,8 @@ LoKi::Particles::ChildIPChi2::ChildIPChi2
 LoKi::Particles::ChildIPChi2::ChildIPChi2
 ( const size_t        index , 
   const std::string&  nick  ) 
-  : LoKi::Particles::ChildIP ( index , nick ) 
+  : LoKi::AuxFunBase ( std::tie ( index , nick ) ) 
+  , LoKi::Particles::ChildIP ( index , nick ) 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor
@@ -568,7 +579,8 @@ std::ostream& LoKi::Particles::ChildIPChi2::fillStream ( std::ostream& s ) const
 LoKi::Particles::MTDOCA::MTDOCA
 ( const size_t               idaughter  ,
   const IDistanceCalculator* dc    )
-  : LoKi::AuxDesktopBase()
+  : LoKi::AuxFunBase ( std::tie ( idaughter) ) 
+  , LoKi::AuxDesktopBase()
   , LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , m_eval   ( s_PARTICLE , dc , false )
   , m_index  ( idaughter )
@@ -592,7 +604,8 @@ LoKi::Particles::MTDOCA::MTDOCA
 LoKi::Particles::MTDOCA::MTDOCA
 ( const size_t       idaughter  ,
   const std::string& nick  )
-  : LoKi::AuxDesktopBase()
+  : LoKi::AuxFunBase ( std::tie ( idaughter , nick ) ) 
+  , LoKi::AuxDesktopBase()
   , LoKi::BasicFunctors<const LHCb::Particle*>::Function()
   , m_eval   ( s_PARTICLE , s_TOOL , false )
   , m_index  ( idaughter )
@@ -684,7 +697,8 @@ StatusCode LoKi::Particles::MTDOCA::loadTool () const
 LoKi::Particles::MTDOCAChi2::MTDOCAChi2
 ( const size_t               idaughter  ,
   const IDistanceCalculator* dc    )
-  : LoKi::Particles::MTDOCA( idaughter , dc )
+  : LoKi::AuxFunBase ( std::tie ( idaughter ) ) 
+  , LoKi::Particles::MTDOCA( idaughter , dc )
 {}
 // ============================================================================
 // constructor from one index and the tool
@@ -700,7 +714,8 @@ LoKi::Particles::MTDOCAChi2::MTDOCAChi2
 LoKi::Particles::MTDOCAChi2::MTDOCAChi2
 ( const size_t       idaughter  ,
   const std::string& nick  )
-  : LoKi::Particles::MTDOCA( idaughter , nick )
+  : LoKi::AuxFunBase ( std::tie ( idaughter , nick ) ) 
+  , LoKi::Particles::MTDOCA( idaughter , nick )
 {}
 // ============================================================================
 // MANDATORY: virtual destructor
