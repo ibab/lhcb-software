@@ -3,6 +3,12 @@ Package             : DaVinciSys
 Package Coordinator : Eduardo Rodrigues
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v36r4p1>2015-01-20 DaVinci v36r4p1</A></H1><PRE>
+
+Patch release otherwise identical to DaVinci v36r4. Only change:
+patch to DaVinciSys/cmt/requirements fixing a bug introduced when
+adding documentation to it.
+
 </PRE><H1><A NAME=v36r4>2015-01-19 DaVinci v36r4</A></H1><PRE>
 
 Development release for 2015 data taking, based on Gaudi v26r0,
