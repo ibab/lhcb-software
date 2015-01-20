@@ -546,7 +546,7 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 	    DeferredCovariance(const decomp_type& decomp) : m_decomp(decomp)
 	    { }
 	    template<class T>
-	    bool operator()(T& cov) { return m_decomp.Invert(cov); }
+	    bool operator()(T& cov) const { return m_decomp.Invert(cov); }
 	};
 
 	/** @brief union to avoid having to initialise the deferred covariance

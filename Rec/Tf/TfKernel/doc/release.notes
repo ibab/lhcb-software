@@ -4,6 +4,10 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2015-01-20 - Manuel Tobias Schiller
+ - SIMDChi2Fit: fix tiny bug which could cause the cov() method to fail in
+   template parameter substitution in certain situations
+
 !========================= TfKernel v2r29 2015-01-14 =========================
 ! 2014-12-26 - Gerhard Raven
  - Tf::TStationHitManager: remove virtual function which allows tweaking of hit 
