@@ -4,6 +4,17 @@
 ! Purpose     : Implementation of the powheg-box in Gauss
 !-----------------------------------------------------------------------------
 
+!========================= LbPowheg v1r2 2015-01-20 ========================
+! 2015-01-20 - Marcin Kucharczyk
+- change m_topdecaymode to be string variable (this easy allow to set
+   topdecaymode = 02000 for muonic decays)
+ - new decay modes options for WZ and ZZ (vdecaymodeWZ, vdecaymodeZZ) 
+   that come from Powheg-BOX-V2
+ - new ProductionTool: PowhegProductioncc
+ - set number of events (pwhg_numevts = numevts*factor) to be produced within 
+   powheg mode on the level that allow process correct number of events at 
+   pythia mode (numevts) due to acceptance cuts
+
 !========================= LbPowheg v1r0p4 2014-12-16 ========================
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
