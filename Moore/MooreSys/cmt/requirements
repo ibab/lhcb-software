@@ -6,9 +6,9 @@ branches doc cmt
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v23r3      Hlt
-use  IndependenceTests   v1r9       Hlt
-use  HltMonitor          v1r4	    Hlt   # Diego Martinez
+use  Moore               v23r4      Hlt
+use  IndependenceTests   v1r10      Hlt
+use  HltMonitor          v1r5	    Hlt   # Diego Martinez
 use  L0App               v2r3       L0    # 
 
 # Declare this as a container package
