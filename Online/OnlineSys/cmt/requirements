@@ -44,7 +44,7 @@ use MBMDump             v1r16    Online
 use OMAlib              v4r4     Online
 use OnlineAlign         v0r4     Online
 use OnlineBase          v1r28    Online
-use OnlineHistDB        v8r1     Online
+use OnlineHistDB        v8r2     Online
 use OnlineKernel        v2r18    Online
 use OnlineTools         v1r5     Online
 use OnlineTasks         v1r54    Online
