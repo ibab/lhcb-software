@@ -11,6 +11,7 @@
   Use Gaudi v26r0
   Sync package version between cmale and cmt
   Updated/new packages:	
+     Camera              v1r29    Online
      Checkpointing       v0r21    Online
      Controller          v0r15    Online
      DefHLTUtils         v1r11    Online
