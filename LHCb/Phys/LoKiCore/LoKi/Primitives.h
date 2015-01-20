@@ -2145,6 +2145,11 @@ namespace LoKi
     virtual std::ostream& fillStream ( std::ostream& s ) const 
     { return s << " (" << this->func () 
                << "==" << this->val  () << ") " ; }
+    /// OPTIONAL: C++ print
+    virtual std::string   toCpp () const 
+    { return " (" 
+        + Gaudi::Utils::toCpp ( this->func () ) + " == " 
+        + Gaudi::Utils::toCpp ( this->val  () ) + ") " ; }
     // ========================================================================
   public:
     // ========================================================================
@@ -2152,11 +2157,43 @@ namespace LoKi
     { 
       // the comparator 
       LHCb::Math::Equal_To<TYPE2> _cmp ;
-      return _cmp ( m_fun.fun ( a_unless_void ) , m_val ) ; 
+      return _cmp ( this->m_fun.fun ( a_unless_void ) , this->m_val ) ; 
     }    
     // ========================================================================
     inline result_type not_equal_to ( argument_a_unless_void ) const
     { return ! this->equal_to ( a_unless_void ) ; }  
+    // ========================================================================
+    inline result_type less    ( argument_a_unless_void ) const
+    { 
+      // the comparator 
+      std::less<TYPE2> _cmp ;
+      return _cmp ( this->m_fun.fun ( a_unless_void ) , this->m_val ) ; 
+    }    
+    // ========================================================================
+    inline result_type greater ( argument_a_unless_void ) const
+    { 
+      // the comparator 
+      std::less<TYPE2> _cmp ;
+      return _cmp ( this->m_val , this->m_fun.fun ( a_unless_void ) ) ; 
+    }    
+    // ========================================================================
+    inline result_type less_or_equal ( argument_a_unless_void ) const
+    { 
+      // the comparator 
+      std::less<TYPE2>            _cmp1 ;
+      LHCb::Math::Equal_To<TYPE2> _cmp2 ;
+      TYPE2 _r = this->m_fun.fun ( a_unless_void ) ;
+      return _cmp1 ( _r , this->m_val ) || _cmp2 ( _r , this->m_val ) ; 
+    }    
+    // ========================================================================
+    inline result_type greater_or_equal ( argument_a_unless_void ) const
+    { 
+      // the comparator 
+      std::less<TYPE2>            _cmp1 ;
+      LHCb::Math::Equal_To<TYPE2> _cmp2 ;
+      TYPE2 _r = this->m_fun.fun ( a_unless_void ) ;
+      return _cmp1 ( this->m_val , _r ) || _cmp2 ( _r , this->m_val ) ; 
+    }    
     // ========================================================================
   public:
     // ========================================================================
@@ -2232,11 +2269,288 @@ namespace LoKi
     virtual std::ostream& fillStream ( std::ostream& s ) const 
     { return s << " (" << this -> func () 
                << "!=" << this -> val  () << ") " ; }
+    /// OPTIONAL: C++ print
+    virtual std::string   toCpp () const 
+    { return " (" 
+        + Gaudi::Utils::toCpp ( this->func () ) + " != " 
+        + Gaudi::Utils::toCpp ( this->val  () ) + ") " ; }
     // ========================================================================
   private:
     // ========================================================================
     /// The default constructor is disabled 
     NotEqualToValue();
+    // ========================================================================
+  };
+  // ==========================================================================
+  /** @class LessThanValue 
+   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+   *  @date 2015-01-19
+   */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template <class TYPE2>
+  class LessThanValue<void,TYPE2> : public LoKi::EqualToValue<void,TYPE2>
+#else
+  template <class TYPE, class TYPE2=double>
+  class LessThanValue             : public LoKi::EqualToValue<TYPE,TYPE2>
+#endif
+  {
+  private:
+    // ========================================================================
+    typedef_void_TYPE
+    /// argument type
+    typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
+    /// result type 
+    typedef typename LoKi::Functor<TYPE,bool>::result_type result_type ; 
+    // constant type 
+    typedef typename LoKi::Constant<TYPE,TYPE2>::T2 T2 ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** constructor from the function and the value 
+     *  @param fun the function
+     *  @param val the reference value 
+     *  @param eps the relative precision
+     */
+    LessThanValue 
+    ( const LoKi::Functor<TYPE,TYPE2>&  fun , 
+      T2                                val )
+      : LoKi::AuxFunBase   ( std::tie ( fun , val ) )
+      , LoKi::EqualToValue<TYPE,TYPE2>( fun , val ) 
+    {}
+    // ========================================================================
+    /// copy constructor 
+    LessThanValue 
+    ( const LessThanValue& right )
+      : LoKi::AuxFunBase                ( right ) 
+      , LoKi::EqualToValue<TYPE,TYPE2>  ( right )
+    {}
+    // ========================================================================
+    /// MANDATORY: virtual destructor 
+    virtual ~LessThanValue(){} ;
+    // ========================================================================
+    /// MANDATORY: clone method ("virtual construcor")
+    virtual  LessThanValue* clone() const { return new LessThanValue(*this); }
+    /// MANDATORY: the only one essential method :
+    virtual  result_type operator() ( argument_a_unless_void ) const
+    { return this->less ( a_unless_void ) ; }
+    /// OPTIONAL: the specific printout 
+    virtual std::ostream& fillStream ( std::ostream& s ) const 
+    { return s << " (" << this->func () 
+               << "<"  << this->val  () << ") " ; }
+    /// OPTIONAL: C++ print
+    virtual std::string   toCpp () const 
+    { return " (" 
+        + Gaudi::Utils::toCpp ( this->func () ) + " < " 
+        + Gaudi::Utils::toCpp ( this->val  () ) + ") " ; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// The default constructor is disabled 
+    LessThanValue();
+    // ========================================================================
+  };
+  // ==========================================================================
+  /** @class LessOrEqualValue 
+   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+   *  @date 2015-01-19
+   */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template <class TYPE2>
+  class LessOrEqualValue<void,TYPE2> : public LoKi::EqualToValue<void,TYPE2>
+#else
+  template <class TYPE, class TYPE2=double>
+  class LessOrEqualValue             : public LoKi::EqualToValue<TYPE,TYPE2>
+#endif
+  {
+  private:
+    // ========================================================================
+    typedef_void_TYPE
+    /// argument type
+    typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
+    /// result type 
+    typedef typename LoKi::Functor<TYPE,bool>::result_type result_type ; 
+    // constant type 
+    typedef typename LoKi::Constant<TYPE,TYPE2>::T2 T2 ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** constructor from the function and the value 
+     *  @param fun the function
+     *  @param val the reference value 
+     *  @param eps the relative precision
+     */
+    LessOrEqualValue 
+    ( const LoKi::Functor<TYPE,TYPE2>&  fun , 
+      T2                                val )
+      : LoKi::AuxFunBase    ( std::tie ( fun , val ) )
+      , LoKi::EqualToValue<TYPE,TYPE2> ( fun , val ) 
+    {}
+    // ========================================================================
+    /// copy constructor 
+    LessOrEqualValue 
+    ( const LessOrEqualValue& right )
+      : LoKi::AuxFunBase                ( right ) 
+      , LoKi::EqualToValue<TYPE,TYPE2>  ( right )
+    {}
+    // ========================================================================
+    /// MANDATORY: virtual destructor 
+    virtual ~LessOrEqualValue(){} ;
+    // ========================================================================
+    /// MANDATORY: clone method ("virtual construcor")
+    virtual  LessOrEqualValue* clone() const { return new LessOrEqualValue(*this); }
+    /// MANDATORY: the only one essential method :
+    virtual  result_type operator() ( argument_a_unless_void ) const
+    { return this->less_or_equal ( a_unless_void ) ; }
+    /// OPTIONAL: the specific printout 
+    virtual std::ostream& fillStream ( std::ostream& s ) const 
+    { return s << " ("  << this->func () 
+               << "<="  << this->val  () << ") " ; }
+    /// OPTIONAL: C++ print
+    virtual std::string   toCpp () const 
+    { return " (" 
+        + Gaudi::Utils::toCpp ( this->func () ) + " <= " 
+        + Gaudi::Utils::toCpp ( this->val  () ) + ") " ; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// The default constructor is disabled 
+    LessOrEqualValue();
+    // ========================================================================
+  };
+  // ==========================================================================
+  /** @class GreaterThanValue 
+   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+   *  @date 2015-01-19
+   */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template <class TYPE2>
+  class GreaterThanValue<void,TYPE2> : public LoKi::EqualToValue<void,TYPE2>
+#else
+  template <class TYPE, class TYPE2=double>
+  class GreaterThanValue             : public LoKi::EqualToValue<TYPE,TYPE2>
+#endif
+  {
+  private:
+    // ========================================================================
+    typedef_void_TYPE
+    /// argument type
+    typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
+    /// result type 
+    typedef typename LoKi::Functor<TYPE,bool>::result_type result_type ; 
+    // constant type 
+    typedef typename LoKi::Constant<TYPE,TYPE2>::T2 T2 ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** constructor from the function and the value 
+     *  @param fun the function
+     *  @param val the reference value 
+     *  @param eps the relative precision
+     */
+    GreaterThanValue 
+    ( const LoKi::Functor<TYPE,TYPE2>&  fun , 
+      T2                                val )
+      : LoKi::AuxFunBase   ( std::tie ( fun , val ) )
+      , LoKi::EqualToValue<TYPE,TYPE2>( fun , val ) 
+    {}
+    // ========================================================================
+    /// copy constructor 
+    GreaterThanValue 
+    ( const GreaterThanValue& right )
+      : LoKi::AuxFunBase                ( right ) 
+      , LoKi::EqualToValue<TYPE,TYPE2>  ( right )
+    {}
+    // ========================================================================
+    /// MANDATORY: virtual destructor 
+    virtual ~GreaterThanValue(){} ;
+    // ========================================================================
+    /// MANDATORY: clone method ("virtual construcor")
+    virtual  GreaterThanValue* clone() const { return new GreaterThanValue(*this); }
+    /// MANDATORY: the only one essential method :
+    virtual  result_type operator() ( argument_a_unless_void ) const
+    { return this->greater ( a_unless_void ) ; }
+    /// OPTIONAL: the specific printout 
+    virtual std::ostream& fillStream ( std::ostream& s ) const 
+    { return s << " (" << this->func () 
+               << ">"  << this->val  () << ") " ; }
+    /// OPTIONAL: C++ print
+    virtual std::string   toCpp () const 
+    { return " (" 
+        + Gaudi::Utils::toCpp ( this->func () ) + " > " 
+        + Gaudi::Utils::toCpp ( this->val  () ) + ") " ; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// The default constructor is disabled 
+    GreaterThanValue();
+    // ========================================================================
+  };  
+  // ==========================================================================
+  /** @class GreaterOrEqualValue 
+   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+   *  @date 2015-01-19
+   */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template <class TYPE2>
+  class GreaterOrEqualValue<void,TYPE2> : public LoKi::EqualToValue<void,TYPE2>
+#else
+  template <class TYPE, class TYPE2=double>
+  class GreaterOrEqualValue             : public LoKi::EqualToValue<TYPE,TYPE2>
+#endif
+  {
+  private:
+    // ========================================================================
+    typedef_void_TYPE
+    /// argument type
+    typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
+    /// result type 
+    typedef typename LoKi::Functor<TYPE,bool>::result_type result_type ; 
+    // constant type 
+    typedef typename LoKi::Constant<TYPE,TYPE2>::T2 T2 ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** constructor from the function and the value 
+     *  @param fun the function
+     *  @param val the reference value 
+     *  @param eps the relative precision
+     */
+    GreaterOrEqualValue 
+    ( const LoKi::Functor<TYPE,TYPE2>&  fun , 
+      T2                                val )
+      : LoKi::AuxFunBase   ( std::tie ( fun , val ) )
+      , LoKi::EqualToValue<TYPE,TYPE2>( fun , val ) 
+    {}
+    // ========================================================================
+    /// copy constructor 
+    GreaterOrEqualValue 
+    ( const GreaterOrEqualValue& right )
+      : LoKi::AuxFunBase                ( right ) 
+      , LoKi::EqualToValue<TYPE,TYPE2>  ( right )
+    {}
+    // ========================================================================
+    /// MANDATORY: virtual destructor 
+    virtual ~GreaterOrEqualValue(){} ;
+    // ========================================================================
+    /// MANDATORY: clone method ("virtual construcor")
+    virtual  GreaterOrEqualValue* clone() const { return new GreaterOrEqualValue(*this); }
+    /// MANDATORY: the only one essential method :
+    virtual  result_type operator() ( argument_a_unless_void ) const
+    { return this->greater_or_equal ( a_unless_void ) ; }
+    /// OPTIONAL: the specific printout 
+    virtual std::ostream& fillStream ( std::ostream& s ) const 
+    { return s << " ("  << this->func () 
+               << ">="  << this->val  () << ") " ; }
+    /// OPTIONAL: C++ print
+    virtual std::string   toCpp () const 
+    { return " (" 
+        + Gaudi::Utils::toCpp ( this->func () ) + " >= " 
+        + Gaudi::Utils::toCpp ( this->val  () ) + ") " ; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// The default constructor is disabled 
+    GreaterOrEqualValue();
     // ========================================================================
   };
   // ==========================================================================

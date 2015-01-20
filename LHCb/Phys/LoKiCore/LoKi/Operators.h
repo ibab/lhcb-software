@@ -184,10 +184,10 @@ namespace LoKi
    *  @date 2001-01-23
    */
   template <class TYPE,class TYPE2>
-  inline   LoKi::Less<TYPE,TYPE2>
+  inline   LoKi::LessThanValue<TYPE,TYPE2>
   operator< ( const  LoKi::Functor<TYPE,TYPE2>&       fun ,
               typename LoKi::Constant<TYPE,TYPE2>::T2 val )
-  { return LoKi::Less<TYPE,TYPE2>( fun , val ) ; }
+  { return LoKi::LessThanValue<TYPE,TYPE2>( fun , val ) ; }
   // ============================================================================
   /** inline construction for operator "<"
    *
@@ -211,10 +211,10 @@ namespace LoKi
    *  @date 2001-01-23
    */
   template <class TYPE, class TYPE2>
-  inline   LoKi::Less<TYPE,TYPE2>
+  inline   LoKi::GreaterThanValue<TYPE,TYPE2>
   operator< ( typename LoKi::Constant<TYPE,TYPE2>::T2 val ,
               const  LoKi::Functor<TYPE,TYPE2>&       fun )
-  { return LoKi::Less<TYPE,TYPE2>( val , fun ) ; }
+  { return LoKi::GreaterThanValue<TYPE,TYPE2>( fun , val ) ; }
   // ============================================================================
   /** inline construction for operator ">"
    *
@@ -263,10 +263,10 @@ namespace LoKi
    *  @date 2001-01-23
    */
   template <class TYPE, class TYPE2>
-  inline   LoKi::Less<TYPE,TYPE2>
+  inline   LoKi::GreaterThanValue<TYPE,TYPE2>
   operator>  ( const  LoKi::Functor<TYPE,TYPE2>&       fun  ,
                typename LoKi::Constant<TYPE,TYPE2>::T2 val )
-  { return LoKi::Less<TYPE,TYPE2>( val , fun ) ; }
+  { return LoKi::GreaterThanValue<TYPE,TYPE2>( fun , val ) ; }
   // ============================================================================
   /** inline construction of operator ">"
    *
@@ -289,10 +289,10 @@ namespace LoKi
    *  @date 2001-01-23
    */
   template <class TYPE, class TYPE2>
-  inline   LoKi::Less<TYPE,TYPE2>
+  inline   LoKi::LessThanValue<TYPE,TYPE2>
   operator> ( typename LoKi::Constant<TYPE,TYPE2>::T2 val ,
               const  LoKi::Functor<TYPE,TYPE2>&       fun  )
-  { return LoKi::Less<TYPE,TYPE2>( fun , val ) ; }
+  { return LoKi::LessThanValue<TYPE,TYPE2>( fun , val ) ; }
   // ============================================================================
   /** inline construction of operator "=="
    *
@@ -468,10 +468,10 @@ namespace LoKi
    *  @date 2001-01-23
    */
   template <class TYPE, class TYPE2>
-  inline   LoKi::LessOrEqual<TYPE,TYPE2>
+  inline   LoKi::LessOrEqualValue<TYPE,TYPE2>
   operator<= ( const  LoKi::Functor<TYPE,TYPE2>&       fun ,
                typename LoKi::Constant<TYPE,TYPE2>::T2 val )
-  { return LoKi::LessOrEqual<TYPE,TYPE2>( fun , val ) ; }
+  { return LoKi::LessOrEqualValue<TYPE,TYPE2>( fun , val ) ; }
   // ============================================================================
   /** inline construction of operator "<="
    *
@@ -495,10 +495,10 @@ namespace LoKi
    *  @date 2001-01-23
    */
   template <class TYPE,class TYPE2>
-  inline   LoKi::LessOrEqual<TYPE,TYPE2>
+  inline   LoKi::GreaterOrEqualValue<TYPE,TYPE2>
   operator<= ( typename LoKi::Constant<TYPE,TYPE2>::T2 val ,
                const  LoKi::Functor<TYPE,TYPE2>&       fun )
-  { return LoKi::LessOrEqual<TYPE,TYPE2>( val , fun ) ; }
+  { return LoKi::GreaterOrEqualValue<TYPE,TYPE2>( fun , val ) ; }
   // ============================================================================
   /** inline construction of operator ">="
    *
@@ -547,10 +547,10 @@ namespace LoKi
    *  @date 2001-01-23
    */
   template <class TYPE, class TYPE2>
-  inline   LoKi::LessOrEqual<TYPE,TYPE2>
+  inline   LoKi::GreaterOrEqualValue<TYPE,TYPE2>
   operator>= ( const  LoKi::Functor<TYPE,TYPE2>&       fun ,
                typename LoKi::Constant<TYPE,TYPE2>::T2 val )
-  { return LoKi::LessOrEqual<TYPE,TYPE2> ( val , fun ) ; }
+  { return LoKi::GreaterOrEqualValue<TYPE,TYPE2> ( fun , val ) ; }
   // ============================================================================
   /** inline construction of operator ">="
    *
@@ -573,10 +573,10 @@ namespace LoKi
    *  @date 2001-01-23
    */
   template <class TYPE, class TYPE2>
-  inline   LoKi::LessOrEqual<TYPE,TYPE2>
+  inline   LoKi::LessOrEqualValue<TYPE,TYPE2>
   operator>= ( typename LoKi::Constant<TYPE,TYPE2>::T2 val ,
-               const  LoKi::Functor<TYPE,TYPE2>&       fun )
-  { return LoKi::LessOrEqual<TYPE,TYPE2> ( fun , val ) ; }
+               const    LoKi::Functor<TYPE,TYPE2>&     fun )
+  { return LoKi::LessOrEqualValue<TYPE,TYPE2> ( fun , val ) ; }
   // ============================================================================
   /** inline construction of operator "!="
    *

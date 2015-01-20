@@ -103,7 +103,7 @@ namespace LoKi
         , m_timer ( 0     )
         , m_first ( true  )
       {
-        if ( !m_svc ) 
+        if ( !m_svc && this->gaudi() ) 
         { 
           SmartIF<IChronoSvc> cs ( this->lokiSvc().getObject() ) ;
           m_svc = cs.get() ;
@@ -112,15 +112,19 @@ namespace LoKi
       /// constructor from functor&timer name 
       Timer_ ( const LoKi::Functor<TYPE1,TYPE2>& fun    , 
                const std::string&                timer  ) 
-        : LoKi::Functor<TYPE1,TYPE2> () 
+        : LoKi::AuxFunBase ( std::tie ( fun , timer ) )  
+        , LoKi::Functor<TYPE1,TYPE2> () 
         , m_fun   ( fun   )
         , m_svc   ()
         , m_tname ( timer ) 
         , m_timer ( 0     )
         , m_first ( true  )
       { 
-        SmartIF<IChronoSvc> cs ( this->lokiSvc().getObject() ) ;
-        m_svc = cs.get() ;
+        if ( this->gaudi() ) 
+        { 
+          SmartIF<IChronoSvc> cs ( this->lokiSvc().getObject() ) ;
+          m_svc = cs.get() ;
+        } 
       }
       /// MANDATORY: virtual destructor 
       virtual ~Timer_ () {}
@@ -130,6 +134,13 @@ namespace LoKi
       virtual typename LoKi::Functor<TYPE1,TYPE2>::result_type operator() 
         ( typename LoKi::Functor<TYPE1,TYPE2>::argument a ) const 
       {
+        //
+        if ( 0 == m_timer && m_first && !m_svc ) 
+        {
+          SmartIF<IChronoSvc> cs ( this->lokiSvc().getObject() ) ;
+          m_svc = cs.get() ;
+        }
+        //
         if ( 0 == m_timer && m_first && !(!m_svc ) )
         { m_timer = m_svc->chronoStart ( m_tname ) ; }
         //
@@ -201,7 +212,7 @@ namespace LoKi
         , m_timer ( 0     )
         , m_first ( true  )
       {
-        if ( !m_svc ) 
+        if ( !m_svc && this->gaudi() ) 
         {
           SmartIF<IChronoSvc> cs ( this->lokiSvc().getObject() ) ;
           m_svc = cs.get() ;
@@ -210,15 +221,19 @@ namespace LoKi
       /// constructor from functor&timer name 
       Timer_ ( const LoKi::Functor<void,TYPE2>& fun    , 
                const std::string&               timer  ) 
-        : LoKi::Functor<void,TYPE2> () 
+        : LoKi::AuxFunBase ( std::tie ( fun , timer ) ) 
+        , LoKi::Functor<void,TYPE2> () 
         , m_fun   ( fun   )
         , m_svc   ()
         , m_tname ( timer ) 
         , m_timer ( 0     )
         , m_first ( true  )
       {
-        SmartIF<IChronoSvc> cs ( this->lokiSvc().getObject() ) ;
-        m_svc = cs.get() ;
+        if ( this->gaudi() ) 
+        {
+          SmartIF<IChronoSvc> cs ( this->lokiSvc().getObject() ) ;
+          m_svc = cs.get() ;
+        }
       }
       /// MANDATORY: virtual destructor 
       virtual ~Timer_ () {}
@@ -228,6 +243,13 @@ namespace LoKi
       /// MANDATORY: the only one essenital method 
       virtual typename LoKi::Functor<void,TYPE2>::result_type operator() () const 
       {
+        //
+        if ( 0 == m_timer && m_first && !m_svc ) 
+        {
+          SmartIF<IChronoSvc> cs ( this->lokiSvc().getObject() ) ;
+          m_svc = cs.get() ;
+        }
+        //
         if ( 0 == m_timer && m_first && !(!m_svc ) )
         { m_timer = m_svc->chronoStart ( m_tname ) ; }
         //
