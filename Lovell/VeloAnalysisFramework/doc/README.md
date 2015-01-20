@@ -6,6 +6,16 @@ A data quality analysis framework used to monitor the LHCb Vertex Locator.
 Usage
 -----
 
+To run on lxplus prior to the official release of Lovell:
+
+1) Checkout the Lovell package via:
+	getpack -PH Lovell
+2) Setup the environment for CMake 3.1 (required for Qt):
+	export PATH=/afs/cern.ch/sw/lcg/contrib/CMake/3.1.0/Linux-x86_64/bin:$PATH
+	export USE_CMAKE=1
+3) Run CMake from LOVELL/LOVELL_HEAD:
+	make
+
 To install the `veloview` Python module, you can use the [git repository](https://git.cern.ch/web/LHCbVeloView.git).
 
 ```bash
