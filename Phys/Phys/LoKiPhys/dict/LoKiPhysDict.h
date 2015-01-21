@@ -645,9 +645,9 @@ namespace
     LoKi::Dicts::PIDOps<LoKi::Particles::Identifier>    m_i1 ;
     LoKi::Dicts::PIDOps<LoKi::Particles::AbsIdentifier> m_21 ;    
     // Monitoring & Extra Info    
-    LoKi::ExtraInfo::GetInfo<const LHCb::Particle*>     m_53 ;
+    LoKi::ExtraInfo::GetInfo<const LHCb::Particle*, double>     m_53 ;
     LoKi::ExtraInfo::CheckInfo<const LHCb::Particle*>   m_54 ;
-    LoKi::ExtraInfo::GetInfo<const LHCb::VertexBase*>   m_63 ;
+    LoKi::ExtraInfo::GetInfo<const LHCb::VertexBase*, double>   m_63 ;
     LoKi::ExtraInfo::CheckInfo<const LHCb::VertexBase*> m_64 ;
     // Monitoring 
     LoKi::Monitoring::Counter<const LHCb::Particle*,bool>   m_50 ;

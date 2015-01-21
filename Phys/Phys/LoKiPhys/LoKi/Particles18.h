@@ -68,7 +68,7 @@ namespace LoKi
      *  @date 2006-02-15
      */
     class GAUDI_API Info 
-      : public LoKi::ExtraInfo::GetInfo<const LHCb::Particle*>
+      : public LoKi::ExtraInfo::GetInfo<const LHCb::Particle*, double>
     {
     public:
       // ======================================================================
