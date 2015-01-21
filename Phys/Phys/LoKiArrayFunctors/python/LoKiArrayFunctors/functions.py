@@ -123,7 +123,15 @@ AETA          = LoKi.AParticles.Eta ( 0 )
 ## @see LoKi::Cuts::AETA0
 AETA0         = LoKi.AParticles.Eta ( 0 )
 ## @see LoKi::Cuts::AETAP
-AETAP         = LoKi.AParticles.Eta 
+AETAP         = LoKi.AParticles.Eta
+## @see LoKi::Cuts::APHI
+APHI          = LoKi.AParticles.Phi
+## @see LoKi::Cuts::APHI0
+APHI0         = LoKi.AParticles.Phi ( 0 )
+## @see LoKi::Cuts::AY
+AY            = LoKi.AParticles.Y
+## @see LoKi::Cuts::AY0
+AY0           = LoKi.AParticles.Y ( 0 )
 ## @see LoKi::Cuts::AFUNCHILD
 AFUNCHILD     = LoKi.AParticles.ChildFun
 ## @see LoKi::Cuts::AHASCHILD

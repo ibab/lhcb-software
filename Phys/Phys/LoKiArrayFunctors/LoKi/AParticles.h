@@ -241,28 +241,23 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from one index 
-      InvariantMass ( const std::size_t index  = 0 ) 
-        : FourMomentum( index ) {}
+      InvariantMass ( const std::size_t index  = 0 ) ;
       /// constructor from two indices 
       InvariantMass ( const std::size_t index1 , 
-                      const std::size_t index2 ) 
-        : FourMomentum( index1 , index2  ) {}
+                      const std::size_t index2 ) ;
       /// constructor from three indices 
       InvariantMass ( const std::size_t index1 , 
                       const std::size_t index2 , 
-                      const std::size_t index3 ) 
-        : FourMomentum( index1 , index2 , index3 ) {}
+                      const std::size_t index3 ) ;
       /// constructor from four indices 
       InvariantMass ( const std::size_t index1 , 
                       const std::size_t index2 , 
                       const std::size_t index3 ,
-                      const std::size_t index4 ) 
-        : FourMomentum( index1 , index2 , index3 , index4 ) {}
+                      const std::size_t index4 ) ;
       /// constructor from four-momentum :
-      InvariantMass ( const FourMomentum& right ) : FourMomentum ( right ) {}
-      // ======================================================================
+      InvariantMass ( const FourMomentum& right ) ;
       /// constructor form the list of indices 
-      InvariantMass ( const Indices& indices ) : FourMomentum ( indices ) {}
+      InvariantMass ( const Indices&    indices ) ;
       /// MANDATORY: virtual destrcutor 
       virtual ~InvariantMass() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -292,27 +287,25 @@ namespace LoKi
     class Momentum : public FourMomentum 
     {
     public:
+      // ======================================================================
       /// constructor from one index 
-      Momentum ( const std::size_t index  = 0 ) 
-        : FourMomentum( index ) {}
+      Momentum ( const std::size_t index  = 0 ) ;
       /// constructor from two indices 
       Momentum ( const std::size_t index1 , 
-                 const std::size_t index2 ) 
-        : FourMomentum( index1 , index2  ) {}
+                 const std::size_t index2 ) ;
       /// constructor from three indices 
       Momentum ( const std::size_t index1 , 
                  const std::size_t index2 , 
-                 const std::size_t index3 ) 
-        : FourMomentum( index1 , index2 , index3 ) {}
+                 const std::size_t index3 ) ;
       /// constructor from four indices 
       Momentum ( const std::size_t index1 , 
                  const std::size_t index2 , 
                  const std::size_t index3 ,
-                 const std::size_t index4 ) 
-        : FourMomentum( index1 , index2 , index3 , index4 ) {}
+                 const std::size_t index4 ) ;
       /// constructor form the list of indices 
-      Momentum ( const Indices& indices ) 
-        : FourMomentum ( indices ) {}
+      Momentum ( const Indices& indices ) ;
+      /// constructor form the list of indices 
+      Momentum ( const FourMomentum& indices ) ;
       /// MANDATORY: virtual destrcutor 
       virtual ~Momentum() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -342,26 +335,25 @@ namespace LoKi
     class TransverseMomentum : public FourMomentum 
     {
     public:
+      // ======================================================================
       /// constructor from one index 
-      TransverseMomentum ( const std::size_t index  = 0 ) 
-        : FourMomentum( index ) {}
+      TransverseMomentum ( const std::size_t index  = 0 ) ;
       /// constructor from two indices 
       TransverseMomentum ( const std::size_t index1 , 
-                           const std::size_t index2 ) 
-        : FourMomentum( index1 , index2  ) {}
+                           const std::size_t index2 ) ;
       /// constructor from three indices 
       TransverseMomentum ( const std::size_t index1 , 
                            const std::size_t index2 , 
-                           const std::size_t index3 ) 
-        : FourMomentum( index1 , index2 , index3 ) {}
+                           const std::size_t index3 ) ;
       /// constructor from four indices 
       TransverseMomentum ( const std::size_t index1 , 
                            const std::size_t index2 , 
                            const std::size_t index3 ,
-                           const std::size_t index4 ) 
-        : FourMomentum( index1 , index2 , index3 , index4 ) {}
+                           const std::size_t index4 ) ;
       /// constructor form the list of indices 
-      TransverseMomentum ( const Indices& indices ) : FourMomentum ( indices ) {}
+      TransverseMomentum ( const Indices&    indices ) ;
+      /// constructor form the list of indices 
+      TransverseMomentum ( const FourMomentum& right ) ;
       /// MANDATORY: virtual destrcutor 
       virtual ~TransverseMomentum() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -391,27 +383,25 @@ namespace LoKi
     class Eta : public FourMomentum
     {
     public:
+      // ======================================================================
       /// constructor from one index 
-      Eta ( const std::size_t index  = 0 ) 
-        : FourMomentum ( index ) {}
+      Eta ( const std::size_t index  = 0 ) ;
       /// constructor from two indices 
       Eta ( const std::size_t index1 , 
-            const std::size_t index2 ) 
-        : FourMomentum ( index1 , index2  ) {}
+            const std::size_t index2 ) ;
       /// constructor from three indices 
       Eta ( const std::size_t index1 , 
             const std::size_t index2 , 
-            const std::size_t index3 ) 
-        : FourMomentum ( index1 , index2 , index3 ) {}
+            const std::size_t index3 ) ;
       /// constructor from four indices 
       Eta ( const std::size_t index1 , 
             const std::size_t index2 , 
             const std::size_t index3 ,
-            const std::size_t index4 ) 
-        : FourMomentum ( index1 , index2 , index3 , index4 ) {}
+            const std::size_t index4 ) ;
       /// constructor form the list of indices 
-      Eta ( const Indices& indices ) 
-        : FourMomentum ( indices ) {}
+      Eta ( const Indices& indices ) ;
+      /// constructor form the list of indices 
+      Eta ( const FourMomentum& indices ) ;
       /// MANDATORY: virtual destrcutor 
       virtual ~Eta() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -427,6 +417,102 @@ namespace LoKi
       // ======================================================================
       /// evaluate the transverse momentum 
       inline double eta ( argument a ) const { return momentum ( a ) . Eta() ; }
+      // ======================================================================      
+    };
+    // ========================================================================
+    /** @class Phi
+     *  evaluator of the momentum of the various subcombinations
+     *  @attention indices starts from one! Zero corresponds to the combination!
+     *  @see LoKi::AKinematics::momentum
+     *  @see LoKi::AParticles::FourMomentum
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-06-15
+     */
+    class Phi : public FourMomentum
+    {
+    public:
+      // ======================================================================
+      /// constructor from one index 
+      Phi ( const std::size_t index  = 0 ) ;
+      /// constructor from two indices 
+      Phi ( const std::size_t index1 , 
+            const std::size_t index2 ) ;
+      /// constructor from three indices 
+      Phi ( const std::size_t index1 , 
+            const std::size_t index2 , 
+            const std::size_t index3 ) ;
+      /// constructor from four indices 
+      Phi ( const std::size_t index1 , 
+            const std::size_t index2 , 
+            const std::size_t index3 ,
+            const std::size_t index4 ) ;
+      /// constructor form the list of indices 
+      Phi ( const Indices& indices ) ;
+      /// constructor form the list of indices 
+      Phi ( const FourMomentum& indices ) ;
+      /// MANDATORY: virtual destrcutor 
+      virtual ~Phi() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Phi* clone() const ;
+      /// MANDATORY: the only one essential method
+      virtual result_type operator() ( argument a ) const 
+      { return phi ( a ) ; }
+      /// OPTIONAL: the nice printout  
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { return print_ ( s , "APHI(" ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// evaluate the transverse momentum 
+      inline double phi ( argument a ) const { return momentum ( a ) . Phi() ; }
+      // ======================================================================      
+    };
+    // ========================================================================
+    /** @class Y
+     *  evaluator of the momentum of the various subcombinations
+     *  @attention indices starts from one! Zero corresponds to the combination!
+     *  @see LoKi::AKinematics::momentum
+     *  @see LoKi::AParticles::FourMomentum
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-06-15
+     */
+    class Y : public FourMomentum
+    {
+    public:
+      // ======================================================================
+      /// constructor from one index 
+      Y ( const std::size_t index  = 0 ) ;
+      /// constructor from two indices 
+      Y ( const std::size_t index1 , 
+          const std::size_t index2 ) ;
+      /// constructor from three indices 
+      Y ( const std::size_t index1 , 
+            const std::size_t index2 , 
+            const std::size_t index3 ) ;
+      /// constructor from four indices 
+      Y ( const std::size_t index1 , 
+          const std::size_t index2 , 
+          const std::size_t index3 ,
+          const std::size_t index4 ) ;
+      /// constructor form the list of indices 
+      Y ( const Indices& indices ) ;
+      /// constructor form the list of indices 
+      Y ( const FourMomentum& indices ) ;
+      /// MANDATORY: virtual destrcutor 
+      virtual ~Y() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Y* clone() const ;
+      /// MANDATORY: the only one essential method
+      virtual result_type operator() ( argument a ) const 
+      { return y ( a ) ; }
+      /// OPTIONAL: the nice printout  
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { return print_ ( s , "AY(" ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// evaluate the transverse momentum 
+      inline double y ( argument a ) const { return momentum ( a ) . Rapidity() ; }
       // ======================================================================      
     };
     // ========================================================================
@@ -1240,127 +1326,78 @@ namespace LoKi
       // ======================================================================
       /// constructor from one index 
       DeltaMass ( const double      m0         , 
-                  const std::size_t index  = 0 ) 
-        : InvariantMass ( index ) , m_m0 ( m0 ) {}
+                  const std::size_t index  = 0 ) ;
       /// constructor from two indices 
       DeltaMass ( const double      m0     ,
                   const std::size_t index1 , 
-                  const std::size_t index2 ) 
-        : InvariantMass ( index1 , index2 ) , m_m0 ( m0 ) {}
+                  const std::size_t index2 ) ;
       /// constructor from three indices
       DeltaMass ( const double      m0     , 
                   const std::size_t index1 , 
                   const std::size_t index2 , 
-                  const std::size_t index3 ) 
-        : InvariantMass ( index1 , index2 , index3 ) , m_m0 ( m0 ) {}
+                  const std::size_t index3 ) ;
       /// constructor from four indices 
       DeltaMass ( const double      m0     , 
                   const std::size_t index1 , 
                   const std::size_t index2 , 
                   const std::size_t index3 ,
-                  const std::size_t index4 ) 
-        : InvariantMass ( index1 , index2 , index3 , index4 ) , m_m0 ( m0 ) {}
+                  const std::size_t index4 ) ;
       /// constructor form the list of indices 
       DeltaMass ( const double   m0      , 
-                  const Indices& indices ) 
-        : InvariantMass ( indices ) , m_m0( m0 ) {}
+                  const Indices& indices ) ;
       /// constructor from the four-momentum 
       DeltaMass ( const double        m0   , 
-                  const FourMomentum& four ) 
-        : InvariantMass ( four ) , m_m0( m0 ) {}
-      // ======================================================================
-      /// constructor from Particle Property 
-      DeltaMass ( const LHCb::ParticleProperty& pp , 
-                  const std::size_t       index  = 0 ) 
-        : InvariantMass ( index ) , m_m0 () { m_m0 = getMass ( pp ) ; }
-      /// constructor from ParticleProperty 
-      DeltaMass ( const LHCb::ParticleProperty& pp     , 
-                  const std::size_t       index1 , 
-                  const std::size_t       index2 ) 
-        : InvariantMass ( index1 , index2 ) , m_m0 () { m_m0 = getMass ( pp ) ; }
-      /// constructor from ParticleProperty 
-      DeltaMass ( const LHCb::ParticleProperty& pp     , 
-                  const std::size_t       index1 , 
-                  const std::size_t       index2 , 
-                  const std::size_t       index3 ) 
-        : InvariantMass ( index1 , index2 , index3 ) , m_m0 () { m_m0 = getMass ( pp ) ; }
-      /// constructor from ParticleProperty 
-      DeltaMass ( const LHCb::ParticleProperty& pp     , 
-                  const std::size_t       index1 , 
-                  const std::size_t       index2 , 
-                  const std::size_t       index3 ,
-                  const std::size_t       index4 ) 
-        : InvariantMass ( index1 , index2 , index3 , index4 ) , m_m0 () { m_m0 = getMass ( pp ) ; }
-      /// constructor from ParticleProperty 
-      DeltaMass ( const LHCb::ParticleProperty& pp      , 
-                  const Indices&          indices ) 
-        : InvariantMass ( indices ) , m_m0() { m_m0 = getMass ( pp ) ; }
-      /// constructor from ParticleProperty 
-      DeltaMass ( const LHCb::ParticleProperty& pp   , 
-                  const FourMomentum&     four ) 
-        : InvariantMass ( four    ) , m_m0() { m_m0 = getMass ( pp ) ; }
+                  const FourMomentum& four ) ;
       // ======================================================================
       /// constructor from Particle name 
       DeltaMass ( const std::string& pp         , 
-                  const std::size_t       index  = 0 ) 
-        : InvariantMass ( index ) , m_m0 () { m_m0 = getMass ( pp ) ; }
+                  const std::size_t       index  = 0 ) ;
       /// constructor from Particle name 
       DeltaMass ( const std::string& pp     , 
                   const std::size_t       index1 , 
-                  const std::size_t       index2 ) 
-        : InvariantMass ( index1 , index2 ) , m_m0 () { m_m0 = getMass ( pp ) ; }
+                  const std::size_t       index2 ) ;
       /// constructor from Particle name 
       DeltaMass ( const std::string& pp     , 
                   const std::size_t       index1 , 
                   const std::size_t       index2 , 
-                  const std::size_t       index3 ) 
-        : InvariantMass ( index1 , index2 , index3 ) , m_m0 () { m_m0 = getMass ( pp ) ; }
+                  const std::size_t       index3 ) ;
       /// constructor from Particle name 
       DeltaMass ( const std::string& pp     , 
                   const std::size_t       index1 , 
                   const std::size_t       index2 , 
                   const std::size_t       index3 ,
-                  const std::size_t       index4 ) 
-        : InvariantMass ( index1 , index2 , index3 , index4 ) , m_m0 () { m_m0 = getMass ( pp ) ; }
+                  const std::size_t       index4 ) ;
       /// constructor from Particle name 
       DeltaMass ( const std::string& pp      , 
-                  const Indices&          indices ) 
-        : InvariantMass ( indices ) , m_m0() { m_m0 = getMass ( pp ) ; }
+                  const Indices&          indices ) ;
       /// constructor from Particle name 
       DeltaMass ( const std::string& pp   , 
-                  const FourMomentum&     four ) 
-        : InvariantMass ( four    ) , m_m0() { m_m0 = getMass ( pp ) ; }
+                  const FourMomentum&     four ) ;
       // ======================================================================
       /// constructor from Particle ID 
       DeltaMass ( const LHCb::ParticleID& pp         , 
-                  const std::size_t       index  = 0 ) 
-        : InvariantMass ( index ) , m_m0 () { m_m0 = getMass ( pp ) ; }
+                  const std::size_t       index  = 0 ) ;
       /// constructor from Particle ID 
       DeltaMass ( const LHCb::ParticleID& pp     , 
                   const std::size_t       index1 , 
-                  const std::size_t       index2 ) 
-        : InvariantMass ( index1 , index2 ) , m_m0 () { m_m0 = getMass ( pp ) ; }
+                  const std::size_t       index2 ) ;
       /// constructor from Particle ID 
       DeltaMass ( const LHCb::ParticleID& pp     , 
                   const std::size_t       index1 , 
                   const std::size_t       index2 , 
-                  const std::size_t       index3 ) 
-        : InvariantMass ( index1 , index2 , index3 ) , m_m0 () { m_m0 = getMass ( pp ) ; }
+                  const std::size_t       index3 ) ;
       /// constructor from Particle ID 
       DeltaMass ( const LHCb::ParticleID& pp     , 
                   const std::size_t       index1 , 
                   const std::size_t       index2 , 
                   const std::size_t       index3 ,
-                  const std::size_t       index4 ) 
-        : InvariantMass ( index1 , index2 , index3 , index4 ) , m_m0 () { m_m0 = getMass ( pp ) ; }
+                  const std::size_t       index4 ) ;
       /// constructor from Particle ID 
       DeltaMass ( const LHCb::ParticleID& pp      , 
-                  const Indices&          indices ) 
-        : InvariantMass ( indices ) , m_m0() { m_m0 = getMass ( pp ) ; }
+                  const Indices&          indices ) ;
       /// constructor from Particle ID
       DeltaMass ( const LHCb::ParticleID& pp   , 
-                  const FourMomentum&     four ) 
-        : InvariantMass ( four    ) , m_m0() { m_m0 = getMass ( pp ) ; }
+                  const FourMomentum&     four ) ;
       // ======================================================================
       /// MANDATORY: virtual destrcutor 
       virtual ~DeltaMass() {}
@@ -1417,127 +1454,78 @@ namespace LoKi
       // ======================================================================
       /// constructor from one index 
       AbsDeltaMass ( const double      m0         , 
-                     const std::size_t index  = 0 ) 
-        : DeltaMass ( m0 , index ) {}
+                     const std::size_t index  = 0 ) ;
       /// constructor from two indices 
       AbsDeltaMass ( const double      m0     ,
                      const std::size_t index1 , 
-                     const std::size_t index2 ) 
-        : DeltaMass ( m0 , index1 , index2 ) {}
+                     const std::size_t index2 ) ;
       /// constructor from three indices
       AbsDeltaMass ( const double      m0     , 
                      const std::size_t index1 , 
                      const std::size_t index2 , 
-                     const std::size_t index3 )
-        : DeltaMass ( m0 , index1 , index2 , index3 ) {}
+                     const std::size_t index3 ) ;
       /// constructor from four indices 
       AbsDeltaMass ( const double      m0     , 
                      const std::size_t index1 , 
                      const std::size_t index2 , 
                      const std::size_t index3 ,
-                     const std::size_t index4 ) 
-        : DeltaMass ( m0 , index1 , index2 , index3 , index4 ) {}
+                     const std::size_t index4 ) ;
       /// constructor form the list of indices 
       AbsDeltaMass ( const double   m0      , 
-                     const Indices& indices ) 
-        : DeltaMass ( m0 , indices ) {}
+                     const Indices& indices ) ;
       /// constructor from the four-momentum 
       AbsDeltaMass ( const double        m0   , 
-                     const FourMomentum& four ) 
-        : DeltaMass ( m0 , four    ) {}
-      // ======================================================================
-      /// constructor from one index 
-      AbsDeltaMass ( const LHCb::ParticleProperty&  m0 , 
-                     const std::size_t index  = 0 ) 
-        : DeltaMass ( m0 , index ) {}
-      /// constructor from two indices 
-      AbsDeltaMass ( const LHCb::ParticleProperty&  m0 , 
-                     const std::size_t index1 , 
-                     const std::size_t index2 ) 
-        : DeltaMass ( m0 , index1 , index2 ) {}
-      /// constructor from three indices
-      AbsDeltaMass ( const LHCb::ParticleProperty&  m0 , 
-                     const std::size_t index1 , 
-                     const std::size_t index2 , 
-                     const std::size_t index3 )
-        : DeltaMass ( m0 , index1 , index2 , index3 ) {}
-      /// constructor from four indices 
-      AbsDeltaMass ( const LHCb::ParticleProperty&  m0 , 
-                     const std::size_t index1 , 
-                     const std::size_t index2 , 
-                     const std::size_t index3 ,
-                     const std::size_t index4 ) 
-        : DeltaMass ( m0 , index1 , index2 , index3 , index4 ) {}
-      /// constructor form the list of indices 
-      AbsDeltaMass ( const LHCb::ParticleProperty&  m0 , 
-                     const Indices& indices ) 
-        : DeltaMass ( m0 , indices ) {}
-      /// constructor from the four-momentum 
-      AbsDeltaMass ( const LHCb::ParticleProperty&  m0 , 
-                     const FourMomentum& four ) 
-        : DeltaMass ( m0 , four    ) {}
+                     const FourMomentum& four ) ;
       // ======================================================================
       /// constructor from one index 
       AbsDeltaMass ( const std::string&  m0 , 
-                     const std::size_t index  = 0 ) 
-        : DeltaMass ( m0 , index ) {}
+                     const std::size_t index  = 0 ) ;
       /// constructor from two indices 
       AbsDeltaMass ( const std::string&  m0 , 
                      const std::size_t index1 , 
-                     const std::size_t index2 ) 
-        : DeltaMass ( m0 , index1 , index2 ) {}
+                     const std::size_t index2 ) ;
       /// constructor from three indices
       AbsDeltaMass ( const std::string&  m0 , 
                      const std::size_t index1 , 
                      const std::size_t index2 , 
-                     const std::size_t index3 )
-        : DeltaMass ( m0 , index1 , index2 , index3 ) {}
+                     const std::size_t index3 ) ;
       /// constructor from four indices 
       AbsDeltaMass ( const std::string&  m0 , 
                      const std::size_t index1 , 
                      const std::size_t index2 , 
                      const std::size_t index3 ,
-                     const std::size_t index4 ) 
-        : DeltaMass ( m0 , index1 , index2 , index3 , index4 ) {}
+                     const std::size_t index4 ) ;
       /// constructor form the list of indices 
       AbsDeltaMass ( const std::string&  m0 , 
-                     const Indices& indices ) 
-        : DeltaMass ( m0 , indices ) {}
+                     const Indices& indices ) ;
       /// constructor from the four-momentum 
       AbsDeltaMass ( const std::string&  m0 , 
-                     const FourMomentum& four ) 
-        : DeltaMass ( m0 , four    ) {}
+                     const FourMomentum& four ) ;
       // ======================================================================
       /// constructor from one index 
       AbsDeltaMass ( const LHCb::ParticleID&  m0 , 
-                     const std::size_t index  = 0 ) 
-        : DeltaMass ( m0 , index ) {}
+                     const std::size_t index  = 0 ) ;
       /// constructor from two indices 
       AbsDeltaMass ( const LHCb::ParticleID&  m0 , 
                      const std::size_t index1 , 
-                     const std::size_t index2 ) 
-        : DeltaMass ( m0 , index1 , index2 ) {}
+                     const std::size_t index2 ) ;
       /// constructor from three indices
       AbsDeltaMass ( const LHCb::ParticleID&  m0 , 
                      const std::size_t index1 , 
                      const std::size_t index2 , 
-                     const std::size_t index3 )
-        : DeltaMass ( m0 , index1 , index2 , index3 ) {}
+                     const std::size_t index3 ) ;
       /// constructor from four indices 
       AbsDeltaMass ( const LHCb::ParticleID&  m0 , 
                      const std::size_t index1 , 
                      const std::size_t index2 , 
                      const std::size_t index3 ,
-                     const std::size_t index4 ) 
-        : DeltaMass ( m0 , index1 , index2 , index3 , index4 ) {}
+                     const std::size_t index4 ) ;
       /// constructor form the list of indices 
       AbsDeltaMass ( const LHCb::ParticleID&  m0 , 
-                     const Indices& indices ) 
-        : DeltaMass ( m0 , indices ) {}
+                     const Indices& indices )  ;
       /// constructor from the four-momentum 
       AbsDeltaMass ( const LHCb::ParticleID&  m0 , 
-                     const FourMomentum& four ) 
-        : DeltaMass ( m0 , four    ) {}
+                     const FourMomentum& four ) ;
       // ======================================================================
       /// MANDATORY: virtual destrcutor 
       virtual ~AbsDeltaMass() {}

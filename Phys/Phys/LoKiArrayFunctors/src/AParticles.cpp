@@ -39,7 +39,8 @@
 // ============================================================================
 LoKi::AParticles::Count::Count 
 ( const LoKi::PhysTypes::Cuts& cut ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase  ( std::tie ( cut ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_cut (cut ) 
 {}
 // ============================================================================
@@ -187,6 +188,374 @@ std::ostream& LoKi::AParticles::FourMomentum::print_
   return s << ")" ;
 }
 // ============================================================================
+
+
+// ============================================================================
+// constructor from one index 
+// ============================================================================
+LoKi::AParticles::InvariantMass::InvariantMass
+( const std::size_t index) 
+  : LoKi::AuxFunBase (   std::tie ( index ) ) 
+  , LoKi::AParticles::FourMomentum( index )
+{}
+// ============================================================================
+// constructor from two indices 
+// ============================================================================
+LoKi::AParticles::InvariantMass::InvariantMass
+( const std::size_t index1 , 
+  const std::size_t index2 ) 
+  : LoKi::AuxFunBase (   std::tie ( index1 , index2 ) ) 
+  , LoKi::AParticles::FourMomentum( index1 , index2  ) 
+{}
+// ============================================================================
+// constructor from three indices 
+// ============================================================================
+LoKi::AParticles::InvariantMass::InvariantMass
+( const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ) 
+  : LoKi::AuxFunBase (   std::tie ( index1 , index2 , index3 ) ) 
+  , LoKi::AParticles::FourMomentum( index1 , index2 , index3 )
+{}
+// ============================================================================
+// constructor from four indices 
+// ============================================================================
+LoKi::AParticles::InvariantMass::InvariantMass
+( const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ,
+  const std::size_t index4 ) 
+  : LoKi::AuxFunBase (   std::tie ( index1 , index2 , index3 , index4 ) ) 
+  , LoKi::AParticles::FourMomentum( index1 , index2 , index3 , index4 )
+{}
+// ============================================================================
+// constructor from four-momentum :
+// ============================================================================
+LoKi::AParticles::InvariantMass::InvariantMass
+( const LoKi::AParticles::FourMomentum& right ) 
+  : LoKi::AuxFunBase (    std::tie ( right ) ) 
+  , LoKi::AParticles::FourMomentum ( right )
+{}
+// ============================================================================
+// constructor form the list of indices 
+// ============================================================================
+LoKi::AParticles::InvariantMass::InvariantMass
+( const LoKi::AParticles::FourMomentum::Indices& indices ) 
+  : LoKi::AuxFunBase (    std::tie ( indices ) )
+  , LoKi::AParticles::FourMomentum ( indices )
+{}
+// ============================================================================
+
+
+// ============================================================================
+// constructor from one index 
+// ============================================================================
+LoKi::AParticles::Momentum::Momentum
+( const std::size_t index) 
+  : LoKi::AuxFunBase (   std::tie ( index ) ) 
+  , LoKi::AParticles::FourMomentum( index )
+{}
+// ============================================================================
+// constructor from two indices 
+// ============================================================================
+LoKi::AParticles::Momentum::Momentum
+( const std::size_t index1 , 
+  const std::size_t index2 ) 
+  : LoKi::AuxFunBase (   std::tie ( index1 , index2 ) ) 
+  , LoKi::AParticles::FourMomentum( index1 , index2  ) 
+{}
+// ============================================================================
+// constructor from three indices 
+// ============================================================================
+LoKi::AParticles::Momentum::Momentum
+( const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ) 
+  : LoKi::AuxFunBase (   std::tie ( index1 , index2 , index3 ) ) 
+  , LoKi::AParticles::FourMomentum( index1 , index2 , index3 )
+{}
+// ============================================================================
+// constructor from four indices 
+// ============================================================================
+LoKi::AParticles::Momentum::Momentum
+( const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ,
+  const std::size_t index4 ) 
+  : LoKi::AuxFunBase (   std::tie ( index1 , index2 , index3 , index4 ) ) 
+  , LoKi::AParticles::FourMomentum( index1 , index2 , index3 , index4 )
+{}
+// ============================================================================
+// constructor from four-momentum :
+// ============================================================================
+LoKi::AParticles::Momentum::Momentum
+( const LoKi::AParticles::FourMomentum& right ) 
+  : LoKi::AuxFunBase (    std::tie ( right ) ) 
+  , LoKi::AParticles::FourMomentum ( right )
+{}
+// ============================================================================
+// constructor form the list of indices 
+// ============================================================================
+LoKi::AParticles::Momentum::Momentum
+( const LoKi::AParticles::FourMomentum::Indices& indices ) 
+  : LoKi::AuxFunBase (    std::tie ( indices ) )
+  , LoKi::AParticles::FourMomentum ( indices )
+{}
+// ============================================================================
+
+
+// ============================================================================
+// constructor from one index 
+// ============================================================================
+LoKi::AParticles::TransverseMomentum::TransverseMomentum
+( const std::size_t index) 
+  : LoKi::AuxFunBase (   std::tie ( index ) ) 
+  , LoKi::AParticles::FourMomentum( index )
+{}
+// ============================================================================
+// constructor from two indices 
+// ============================================================================
+LoKi::AParticles::TransverseMomentum::TransverseMomentum
+( const std::size_t index1 , 
+  const std::size_t index2 ) 
+  : LoKi::AuxFunBase (   std::tie ( index1 , index2 ) ) 
+  , LoKi::AParticles::FourMomentum( index1 , index2  ) 
+{}
+// ============================================================================
+// constructor from three indices 
+// ============================================================================
+LoKi::AParticles::TransverseMomentum::TransverseMomentum
+( const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ) 
+  : LoKi::AuxFunBase (   std::tie ( index1 , index2 , index3 ) ) 
+  , LoKi::AParticles::FourMomentum( index1 , index2 , index3 )
+{}
+// ============================================================================
+// constructor from four indices 
+// ============================================================================
+LoKi::AParticles::TransverseMomentum::TransverseMomentum
+( const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ,
+  const std::size_t index4 ) 
+  : LoKi::AuxFunBase (   std::tie ( index1 , index2 , index3 , index4 ) ) 
+  , LoKi::AParticles::FourMomentum( index1 , index2 , index3 , index4 )
+{}
+// ============================================================================
+// constructor from four-momentum :
+// ============================================================================
+LoKi::AParticles::TransverseMomentum::TransverseMomentum
+( const LoKi::AParticles::FourMomentum& right ) 
+  : LoKi::AuxFunBase (    std::tie ( right ) ) 
+  , LoKi::AParticles::FourMomentum ( right )
+{}
+// ============================================================================
+// constructor form the list of indices 
+// ============================================================================
+LoKi::AParticles::TransverseMomentum::TransverseMomentum
+( const LoKi::AParticles::FourMomentum::Indices& indices ) 
+  : LoKi::AuxFunBase (    std::tie ( indices ) )
+  , LoKi::AParticles::FourMomentum ( indices )
+{}
+// ============================================================================
+
+// ============================================================================
+// constructor from one index 
+// ============================================================================
+LoKi::AParticles::Eta::Eta
+( const std::size_t index) 
+  : LoKi::AuxFunBase (   std::tie ( index ) ) 
+  , LoKi::AParticles::FourMomentum( index )
+{}
+// ============================================================================
+// constructor from two indices 
+// ============================================================================
+LoKi::AParticles::Eta::Eta
+( const std::size_t index1 , 
+  const std::size_t index2 ) 
+  : LoKi::AuxFunBase (   std::tie ( index1 , index2 ) ) 
+  , LoKi::AParticles::FourMomentum( index1 , index2  ) 
+{}
+// ============================================================================
+// constructor from three indices 
+// ============================================================================
+LoKi::AParticles::Eta::Eta
+( const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ) 
+  : LoKi::AuxFunBase (   std::tie ( index1 , index2 , index3 ) ) 
+  , LoKi::AParticles::FourMomentum( index1 , index2 , index3 )
+{}
+// ============================================================================
+// constructor from four indices 
+// ============================================================================
+LoKi::AParticles::Eta::Eta
+( const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ,
+  const std::size_t index4 ) 
+  : LoKi::AuxFunBase (   std::tie ( index1 , index2 , index3 , index4 ) ) 
+  , LoKi::AParticles::FourMomentum( index1 , index2 , index3 , index4 )
+{}
+// ============================================================================
+// constructor from four-momentum :
+// ============================================================================
+LoKi::AParticles::Eta::Eta
+( const LoKi::AParticles::FourMomentum& right ) 
+  : LoKi::AuxFunBase (    std::tie ( right ) ) 
+  , LoKi::AParticles::FourMomentum ( right )
+{}
+// ============================================================================
+// constructor form the list of indices 
+// ============================================================================
+LoKi::AParticles::Eta::Eta
+( const LoKi::AParticles::FourMomentum::Indices& indices ) 
+  : LoKi::AuxFunBase (    std::tie ( indices ) )
+  , LoKi::AParticles::FourMomentum ( indices )
+{}
+// ============================================================================
+
+// ============================================================================
+// constructor from one index 
+// ============================================================================
+LoKi::AParticles::Phi::Phi
+( const std::size_t index) 
+  : LoKi::AuxFunBase (   std::tie ( index ) ) 
+  , LoKi::AParticles::FourMomentum( index )
+{}
+// ============================================================================
+// constructor from two indices 
+// ============================================================================
+LoKi::AParticles::Phi::Phi
+( const std::size_t index1 , 
+  const std::size_t index2 ) 
+  : LoKi::AuxFunBase (   std::tie ( index1 , index2 ) ) 
+  , LoKi::AParticles::FourMomentum( index1 , index2  ) 
+{}
+// ============================================================================
+// constructor from three indices 
+// ============================================================================
+LoKi::AParticles::Phi::Phi
+( const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ) 
+  : LoKi::AuxFunBase (   std::tie ( index1 , index2 , index3 ) ) 
+  , LoKi::AParticles::FourMomentum( index1 , index2 , index3 )
+{}
+// ============================================================================
+// constructor from four indices 
+// ============================================================================
+LoKi::AParticles::Phi::Phi
+( const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ,
+  const std::size_t index4 ) 
+  : LoKi::AuxFunBase (   std::tie ( index1 , index2 , index3 , index4 ) ) 
+  , LoKi::AParticles::FourMomentum( index1 , index2 , index3 , index4 )
+{}
+// ============================================================================
+// constructor from four-momentum :
+// ============================================================================
+LoKi::AParticles::Phi::Phi
+( const LoKi::AParticles::FourMomentum& right ) 
+  : LoKi::AuxFunBase ( std::tie ( right ) ) 
+  , LoKi::AParticles::FourMomentum ( right )
+{}
+// ============================================================================
+// constructor form the list of indices 
+// ============================================================================
+LoKi::AParticles::Phi::Phi
+( const LoKi::AParticles::FourMomentum::Indices& indices ) 
+  : LoKi::AuxFunBase (    std::tie ( indices ) )
+  , LoKi::AParticles::FourMomentum ( indices )
+{}
+// ============================================================================
+
+
+
+// ============================================================================
+// constructor from one index 
+// ============================================================================
+LoKi::AParticles::Y::Y
+( const std::size_t index) 
+  : LoKi::AuxFunBase (   std::tie ( index ) ) 
+  , LoKi::AParticles::FourMomentum( index )
+{}
+// ============================================================================
+// constructor from two indices 
+// ============================================================================
+LoKi::AParticles::Y::Y
+( const std::size_t index1 , 
+  const std::size_t index2 ) 
+  : LoKi::AuxFunBase (   std::tie ( index1 , index2 ) ) 
+  , LoKi::AParticles::FourMomentum( index1 , index2  ) 
+{}
+// ============================================================================
+// constructor from three indices 
+// ============================================================================
+LoKi::AParticles::Y::Y
+( const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ) 
+  : LoKi::AuxFunBase (   std::tie ( index1 , index2 , index3 ) ) 
+  , LoKi::AParticles::FourMomentum( index1 , index2 , index3 )
+{}
+// ============================================================================
+// constructor from four indices 
+// ============================================================================
+LoKi::AParticles::Y::Y
+( const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ,
+  const std::size_t index4 ) 
+  : LoKi::AuxFunBase (   std::tie ( index1 , index2 , index3 , index4 ) ) 
+  , LoKi::AParticles::FourMomentum( index1 , index2 , index3 , index4 )
+{}
+// ============================================================================
+// constructor from four-momentum :
+// ============================================================================
+LoKi::AParticles::Y::Y
+( const LoKi::AParticles::FourMomentum& right ) 
+  : LoKi::AuxFunBase ( std::tie ( right  ) ) 
+  , LoKi::AParticles::FourMomentum ( right )
+{}
+// ============================================================================
+// constructor form the list of indices 
+// ============================================================================
+LoKi::AParticles::Y::Y
+( const LoKi::AParticles::FourMomentum::Indices& indices ) 
+  : LoKi::AuxFunBase (    std::tie ( indices ) )
+  , LoKi::AParticles::FourMomentum ( indices )
+{}
+// ============================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::AParticles::InvariantMass*
@@ -210,13 +579,26 @@ LoKi::AParticles::TransverseMomentum::clone() const
 LoKi::AParticles::Eta*
 LoKi::AParticles::Eta::clone() const 
 { return new LoKi::AParticles::Eta(*this) ; }
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::AParticles::Phi*
+LoKi::AParticles::Phi::clone() const 
+{ return new LoKi::AParticles::Phi(*this) ; }
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::AParticles::Y*
+LoKi::AParticles::Y::clone() const 
+{ return new LoKi::AParticles::Y(*this) ; }
 
 // ============================================================================
 // Constructor from the function
 // ============================================================================
 LoKi::AParticles::MinChild::MinChild 
 ( const LoKi::PhysTypes::Func& fun  )
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  (fun ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun ) 
   , m_cut    ( LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant (true) ) 
   , m_minval ( std::numeric_limits<double>::max() ) 
@@ -227,7 +609,8 @@ LoKi::AParticles::MinChild::MinChild
 LoKi::AParticles::MinChild::MinChild 
 ( const LoKi::PhysTypes::Func& fun  ,
   const double                 minv ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( fun , minv) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun ) 
   , m_cut    ( LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant (true) ) 
   , m_minval ( minv ) 
@@ -238,7 +621,8 @@ LoKi::AParticles::MinChild::MinChild
 LoKi::AParticles::MinChild::MinChild 
 ( const LoKi::PhysTypes::Func& fun  ,
   const LoKi::PhysTypes::Cuts& cut  ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( fun , cut ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun ) 
   , m_cut    ( cut ) 
   , m_minval ( std::numeric_limits<double>::max() ) 
@@ -249,7 +633,8 @@ LoKi::AParticles::MinChild::MinChild
 LoKi::AParticles::MinChild::MinChild 
 ( const LoKi::PhysTypes::Cuts& cut  ,
   const LoKi::PhysTypes::Func& fun  ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( cut , fun ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun ) 
   , m_cut    ( cut ) 
   , m_minval ( std::numeric_limits<double>::max() ) 
@@ -261,7 +646,8 @@ LoKi::AParticles::MinChild::MinChild
 ( const LoKi::PhysTypes::Func& fun  ,
   const LoKi::PhysTypes::Cuts& cut  ,
   const double                 minv ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( fun , cut , minv ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun  ) 
   , m_cut    ( cut  ) 
   , m_minval ( minv ) 
@@ -273,7 +659,8 @@ LoKi::AParticles::MinChild::MinChild
 ( const LoKi::PhysTypes::Cuts& cut  ,
   const LoKi::PhysTypes::Func& fun  ,
   const double                 minv ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( cut , fun , minv ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun  ) 
   , m_cut    ( cut  ) 
   , m_minval ( minv ) 
@@ -339,7 +726,8 @@ LoKi::AParticles::MaxChild::MaxChild
 LoKi::AParticles::MaxChild::MaxChild 
 ( const LoKi::PhysTypes::Func& fun  ,
   const LoKi::PhysTypes::Cuts& cut  ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( fun , cut ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun ) 
   , m_cut    ( cut ) 
   , m_maxval ( -1 * std::numeric_limits<double>::max() ) 
@@ -350,7 +738,8 @@ LoKi::AParticles::MaxChild::MaxChild
 LoKi::AParticles::MaxChild::MaxChild 
 ( const LoKi::PhysTypes::Cuts& cut  ,
   const LoKi::PhysTypes::Func& fun  ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( cut , fun ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun ) 
   , m_cut    ( cut ) 
   , m_maxval ( -1 * std::numeric_limits<double>::max() ) 
@@ -362,7 +751,8 @@ LoKi::AParticles::MaxChild::MaxChild
 ( const LoKi::PhysTypes::Func& fun  ,
   const LoKi::PhysTypes::Cuts& cut  ,
   const double                 maxv ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( fun , cut , maxv ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun  ) 
   , m_cut    ( cut  ) 
   , m_maxval ( maxv ) 
@@ -374,7 +764,8 @@ LoKi::AParticles::MaxChild::MaxChild
 ( const LoKi::PhysTypes::Cuts& cut  ,
   const LoKi::PhysTypes::Func& fun  ,
   const double                 maxv ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( cut , fun , maxv ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun  ) 
   , m_cut    ( cut  ) 
   , m_maxval ( maxv ) 
@@ -420,7 +811,8 @@ std::ostream& LoKi::AParticles::MaxChild::fillStream
 // ============================================================================
 LoKi::AParticles::HasChild::HasChild
 ( const LoKi::PhysTypes::Cuts& cut  ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie  ( cut ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
   , m_cut ( cut ) 
 {}
 // ============================================================================
@@ -451,7 +843,8 @@ LoKi::AParticles::HasChild::fillStream ( std::ostream& s ) const
 LoKi::AParticles::ChildFun::ChildFun
 ( const LoKi::PhysTypes::Func& fun   , 
   const int                    index ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( fun , index  ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun   ( fun ) 
   , m_index ( index ) 
 {}
@@ -461,7 +854,8 @@ LoKi::AParticles::ChildFun::ChildFun
 LoKi::AParticles::ChildFun::ChildFun
 ( const int                    index ,
   const LoKi::PhysTypes::Func& fun   )
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( index , fun ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun   ( fun   ) 
   , m_index ( index ) 
 {}
@@ -498,7 +892,8 @@ LoKi::AParticles::ChildFun::fillStream ( std::ostream& s ) const
 LoKi::AParticles::ChildCut::ChildCut
 ( const LoKi::PhysTypes::Cuts& cut   , 
   const int                    index )
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie  ( cut , index  ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
   , m_cut   ( cut ) 
   , m_index ( index ) 
 {}
@@ -508,7 +903,8 @@ LoKi::AParticles::ChildCut::ChildCut
 LoKi::AParticles::ChildCut::ChildCut
 ( const int                    index ,
   const LoKi::PhysTypes::Cuts& cut   )
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie  ( index , index ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
   , m_cut   ( cut   ) 
   , m_index ( index ) 
 {}
@@ -614,7 +1010,8 @@ LoKi::AParticles::MaxDOCA::MaxDOCA
 LoKi::AParticles::MaxDOCA::MaxDOCA
 ( const std::string& doca  ,
   const bool         allow ) 
-  : LoKi::AParticles::DOCA ( 1 , 1 , doca , allow ) 
+  : LoKi::AuxFunBase ( std::tie  ( doca , allow ) ) 
+  , LoKi::AParticles::DOCA ( 1 , 1 , doca , allow ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -671,7 +1068,8 @@ LoKi::AParticles::MaxDOCACut::MaxDOCACut
 ( const double       threshold ,
   const std::string& doca      ,
   const bool         allow     ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie  ( threshold , doca , allow ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
   , m_doca      ( 1 , 1 , doca , allow ) 
   , m_threshold ( threshold )
 {}
@@ -703,7 +1101,7 @@ LoKi::AParticles::MaxDOCACut::fillStream ( std::ostream& s ) const
            << m_threshold << ",'" 
            << toolName()  << "',"
            << ( allow() ? "True" : "False" ) 
-           << "')" ; }
+           << ")" ; }
 
 // ============================================================================
 // constructor from the tool:
@@ -727,7 +1125,8 @@ LoKi::AParticles::MaxDOCAChi2::MaxDOCAChi2
 LoKi::AParticles::MaxDOCAChi2::MaxDOCAChi2
 ( const std::string& doca  ,
   const bool         allow )
-  : LoKi::AParticles::DOCAChi2 ( 1 , 1 , doca , allow ) 
+  : LoKi::AuxFunBase ( std::tie  ( doca , allow ) ) 
+  , LoKi::AParticles::DOCAChi2 ( 1 , 1 , doca , allow ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -752,7 +1151,7 @@ LoKi::AParticles::MaxDOCAChi2::fillStream ( std::ostream& s ) const
 { return s << "AMAXDOCACHI2('" 
            << toolName () << "',"
            << ( allow() ? "True" : "False" )
-           << "')" ; }
+           << ")" ; }
 
 
 // ============================================================================
@@ -780,7 +1179,8 @@ LoKi::AParticles::MaxDOCAChi2Cut::MaxDOCAChi2Cut
 ( const double       threshold ,
   const std::string& doca      ,
   const bool         allow     )
-  : LoKi::AParticles::MaxDOCACut ( threshold , doca , allow ) 
+  : LoKi::AuxFunBase ( std::tie  ( threshold , doca , allow ) ) 
+  , LoKi::AParticles::MaxDOCACut ( threshold , doca , allow ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -809,7 +1209,7 @@ LoKi::AParticles::MaxDOCAChi2Cut::fillStream ( std::ostream& s ) const
 { return s << "ACUTDOCACHI2(" << m_threshold << ",'" 
            << toolName ()  << "',"
            << ( allow() ? "True" : "False" )
-           << "')" ; }
+           << ")" ; }
 // ============================================================================
 /*  constructor with daughter index (starts from 1).
  *  E.g. for 2-body decays it could be 1 or 2 
@@ -818,7 +1218,8 @@ LoKi::AParticles::MaxDOCAChi2Cut::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::AParticles::DecayAngle::DecayAngle
 ( const size_t child ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( child ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_child ( child ) 
 {}
 // ============================================================================
@@ -880,7 +1281,8 @@ LoKi::AParticles::DecayAngle::fillStream ( std::ostream& s ) const
 LoKi::AParticles::WrongMass:: WrongMass  
 ( const double m1 , 
   const double m2 ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( m1 , m2 ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses () 
 {
   m_masses.push_back ( m1 ) ;
@@ -893,7 +1295,8 @@ LoKi::AParticles::WrongMass:: WrongMass
 ( const double m1 , 
   const double m2 , 
   const double m3 ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( m1 , m2 , m3 ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses () 
 {
   m_masses.push_back ( m1 ) ;
@@ -908,7 +1311,8 @@ LoKi::AParticles::WrongMass::WrongMass
   const double m2 , 
   const double m3 , 
   const double m4 ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( m1 , m2 , m3 , m4 ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses () 
 {
   m_masses.push_back ( m1 ) ;
@@ -921,7 +1325,8 @@ LoKi::AParticles::WrongMass::WrongMass
 // ============================================================================
 LoKi::AParticles::WrongMass::WrongMass 
 ( const std::vector<double>& masses ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( masses ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses ( masses ) 
 {}
 // ============================================================================
@@ -930,7 +1335,8 @@ LoKi::AParticles::WrongMass::WrongMass
 LoKi::AParticles::WrongMass::WrongMass 
 ( const LHCb::ParticleID& pid1 , 
   const LHCb::ParticleID& pid2 ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( pid1 , pid2 ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses () 
 {
   m_masses.push_back ( LoKi::Particles::massFromPID ( pid1 ) ) ;
@@ -943,7 +1349,8 @@ LoKi::AParticles::WrongMass::WrongMass
 ( const LHCb::ParticleID& pid1 , 
   const LHCb::ParticleID& pid2 ,
   const LHCb::ParticleID& pid3 ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( pid1 , pid2 , pid3 ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses () 
 {
   m_masses.push_back ( LoKi::Particles::massFromPID ( pid1 ) ) ;
@@ -958,7 +1365,8 @@ LoKi::AParticles::WrongMass::WrongMass
   const LHCb::ParticleID& pid2 ,
   const LHCb::ParticleID& pid3 ,
   const LHCb::ParticleID& pid4 ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( pid1 , pid2 , pid3 , pid4 ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses () 
 {
   m_masses.push_back ( LoKi::Particles::massFromPID ( pid1 ) ) ;
@@ -971,7 +1379,8 @@ LoKi::AParticles::WrongMass::WrongMass
 // ============================================================================
 LoKi::AParticles::WrongMass::WrongMass
 ( const std::vector<LHCb::ParticleID>& pids ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( pids ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses ( pids.size() ) 
 {
   std::transform 
@@ -986,7 +1395,8 @@ LoKi::AParticles::WrongMass::WrongMass
 LoKi::AParticles::WrongMass::WrongMass
 ( const std::string& name1 , 
   const std::string& name2 ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( name1 , name2 ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses () 
 {
   m_masses.push_back ( LoKi::Particles::massFromName ( name1 ) ) ;
@@ -999,7 +1409,8 @@ LoKi::AParticles::WrongMass::WrongMass
 ( const std::string& name1 , 
   const std::string& name2 ,
   const std::string& name3 ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( name1 , name2 , name3 ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses () 
 {
   m_masses.push_back ( LoKi::Particles::massFromName ( name1 ) ) ;
@@ -1014,7 +1425,8 @@ LoKi::AParticles::WrongMass::WrongMass
   const std::string& name2 ,
   const std::string& name3 ,
   const std::string& name4 ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( name1 , name2 , name3 , name4 ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses () 
 {
   m_masses.push_back ( LoKi::Particles::massFromName ( name1 ) ) ;
@@ -1027,7 +1439,8 @@ LoKi::AParticles::WrongMass::WrongMass
 // ============================================================================
 LoKi::AParticles::WrongMass::WrongMass 
 ( const std::vector<std::string>& names ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie  ( names ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_masses ( names.size() ) 
 {
   std::transform 
@@ -1084,6 +1497,411 @@ LoKi::AParticles::WrongMass::fillStream( std::ostream& s ) const
   }
   return s << ")" ;
 }
+// ============================================================================
+
+// ============================================================================
+// constructor from one index 
+// ============================================================================
+LoKi::AParticles::DeltaMass::DeltaMass 
+( const double      m0     , 
+  const std::size_t index  ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index ) ) 
+  , LoKi::AParticles::InvariantMass ( index ) 
+  , m_m0 ( m0 ) 
+{}
+// ============================================================================
+// constructor from two indices 
+// ============================================================================
+LoKi::AParticles::DeltaMass::DeltaMass 
+( const double      m0     ,
+  const std::size_t index1 , 
+  const std::size_t index2 ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index1 , index2  ) ) 
+  , LoKi::AParticles::InvariantMass ( index1 , index2 ) 
+  , m_m0 ( m0 ) 
+{}
+// ============================================================================
+// constructor from three indices
+// ============================================================================
+LoKi::AParticles::DeltaMass::DeltaMass 
+( const double      m0     , 
+  const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index1 , index2 , index3 ) ) 
+  , LoKi::AParticles::InvariantMass ( index1 , index2 , index3 ) 
+  , m_m0 ( m0 ) 
+{}
+// ============================================================================
+// constructor from four indices 
+// ============================================================================
+LoKi::AParticles::DeltaMass::DeltaMass 
+( const double      m0     , 
+  const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ,
+  const std::size_t index4 ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index1 , index2 , index3 , index4 ) ) 
+  , LoKi::AParticles::InvariantMass ( index1 , index2 , index3 , index4 ) 
+  , m_m0 ( m0 ) 
+{}
+// ============================================================================
+// constructor form the list of indices 
+// ============================================================================
+LoKi::AParticles::DeltaMass::DeltaMass 
+( const double   m0      , 
+  const LoKi::AParticles::FourMomentum::Indices& indices ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , indices ) ) 
+  , LoKi::AParticles::InvariantMass ( indices ) 
+  , m_m0( m0 ) 
+{}
+// ============================================================================
+// constructor from the four-momentum 
+// ============================================================================
+LoKi::AParticles::DeltaMass::DeltaMass 
+( const double                          m0   , 
+  const LoKi::AParticles::FourMomentum& four ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , four ) ) 
+  , LoKi::AParticles::InvariantMass ( four ) 
+  , m_m0( m0 ) 
+{}
+// ============================================================================
+
+
+
+// ============================================================================
+// constructor from one index 
+// ============================================================================
+LoKi::AParticles::DeltaMass::DeltaMass 
+( const LHCb::ParticleID& m0     , 
+  const std::size_t       index  ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index ) ) 
+  , LoKi::AParticles::InvariantMass ( index ) 
+  , m_m0 ( LoKi::Particles::massFromPID ( m0 ) ) 
+{}
+// ============================================================================
+// constructor from two indices 
+// ============================================================================
+LoKi::AParticles::DeltaMass::DeltaMass 
+( const LHCb::ParticleID& m0     , 
+  const std::size_t index1 , 
+  const std::size_t index2 ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index1 , index2 ) ) 
+  , LoKi::AParticles::InvariantMass ( index1 , index2 ) 
+  , m_m0 ( LoKi::Particles::massFromPID ( m0 ) ) 
+{}
+// ============================================================================
+// constructor from three indices
+// ============================================================================
+LoKi::AParticles::DeltaMass::DeltaMass 
+( const LHCb::ParticleID& m0     , 
+  const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index1 , index2 , index3 ) ) 
+  , LoKi::AParticles::InvariantMass ( index1 , index2 , index3 ) 
+  , m_m0 ( LoKi::Particles::massFromPID ( m0 ) ) 
+{}
+// ============================================================================
+// constructor from four indices 
+// ============================================================================
+LoKi::AParticles::DeltaMass::DeltaMass 
+( const LHCb::ParticleID& m0     , 
+  const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ,
+  const std::size_t index4 ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index1 , index2 , index3 , index4 ) ) 
+  , LoKi::AParticles::InvariantMass ( index1 , index2 , index3 , index4 ) 
+  , m_m0 ( LoKi::Particles::massFromPID ( m0 ) ) 
+{}
+// ============================================================================
+// constructor form the list of indices 
+// ============================================================================
+LoKi::AParticles::DeltaMass::DeltaMass 
+( const LHCb::ParticleID&                        m0     , 
+  const LoKi::AParticles::FourMomentum::Indices& indices ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , indices ) ) 
+  , LoKi::AParticles::InvariantMass ( indices ) 
+  , m_m0 ( LoKi::Particles::massFromPID ( m0 ) ) 
+{}
+// ============================================================================
+// constructor from the four-momentum 
+// ============================================================================
+LoKi::AParticles::DeltaMass::DeltaMass 
+( const LHCb::ParticleID&               m0     , 
+  const LoKi::AParticles::FourMomentum& four ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , four ) ) 
+  , LoKi::AParticles::InvariantMass ( four ) 
+  , m_m0 ( LoKi::Particles::massFromPID ( m0 ) ) 
+{}
+// ============================================================================
+
+// ============================================================================
+// constructor from one index 
+// ============================================================================
+LoKi::AParticles::DeltaMass::DeltaMass 
+( const std::string&      m0     , 
+  const std::size_t       index  ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index ) ) 
+  , LoKi::AParticles::InvariantMass ( index ) 
+  , m_m0 ( LoKi::Particles::massFromName( m0 ) ) 
+{}
+// ============================================================================
+// constructor from two indices 
+// ============================================================================
+LoKi::AParticles::DeltaMass::DeltaMass 
+( const std::string& m0     , 
+  const std::size_t index1 , 
+  const std::size_t index2 ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index1 , index2 ) ) 
+  , LoKi::AParticles::InvariantMass ( index1 , index2 ) 
+  , m_m0 ( LoKi::Particles::massFromName ( m0 ) ) 
+{}
+// ============================================================================
+// constructor from three indices
+// ============================================================================
+LoKi::AParticles::DeltaMass::DeltaMass 
+( const std::string& m0     , 
+  const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index1 , index2 , index3 ) ) 
+  , LoKi::AParticles::InvariantMass ( index1 , index2 , index3 ) 
+  , m_m0 ( LoKi::Particles::massFromName ( m0 ) ) 
+{}
+// ============================================================================
+// constructor from four indices 
+// ============================================================================
+LoKi::AParticles::DeltaMass::DeltaMass 
+( const std::string& m0     , 
+  const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ,
+  const std::size_t index4 ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index1 , index2 , index3 , index4 ) ) 
+  , LoKi::AParticles::InvariantMass ( index1 , index2 , index3 , index4 ) 
+  , m_m0 ( LoKi::Particles::massFromName ( m0 ) ) 
+{}
+// ============================================================================
+// constructor form the list of indices 
+// ============================================================================
+LoKi::AParticles::DeltaMass::DeltaMass 
+( const std::string&                        m0     , 
+  const LoKi::AParticles::FourMomentum::Indices& indices ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , indices ) ) 
+  , LoKi::AParticles::InvariantMass ( indices ) 
+  , m_m0 ( LoKi::Particles::massFromName ( m0 ) ) 
+{}
+// ============================================================================
+// constructor from the four-momentum 
+// ============================================================================
+LoKi::AParticles::DeltaMass::DeltaMass 
+( const std::string&               m0     , 
+  const LoKi::AParticles::FourMomentum& four ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , four ) ) 
+  , LoKi::AParticles::InvariantMass ( four ) 
+  , m_m0 ( LoKi::Particles::massFromName ( m0 ) ) 
+{}
+// ============================================================================
+
+
+
+
+// ============================================================================
+// constructor from one index 
+// ============================================================================
+LoKi::AParticles::AbsDeltaMass::AbsDeltaMass 
+( const double      m0     , 
+  const std::size_t index  ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index ) ) 
+  , LoKi::AParticles::DeltaMass ( m0 , index ) 
+{}
+// ============================================================================
+// constructor from two indices 
+// ============================================================================
+LoKi::AParticles::AbsDeltaMass::AbsDeltaMass 
+( const double      m0     ,
+  const std::size_t index1 , 
+  const std::size_t index2 ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index1 , index2  ) ) 
+  , LoKi::AParticles::DeltaMass ( m0 , index1 , index2 ) 
+{}
+// ============================================================================
+// constructor from three indices
+// ============================================================================
+LoKi::AParticles::AbsDeltaMass::AbsDeltaMass 
+( const double      m0     , 
+  const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index1 , index2 , index3 ) ) 
+  , LoKi::AParticles::DeltaMass ( m0 , index1 , index2 , index3 ) 
+{}
+// ============================================================================
+// constructor from four indices 
+// ============================================================================
+LoKi::AParticles::AbsDeltaMass::AbsDeltaMass 
+( const double      m0     , 
+  const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ,
+  const std::size_t index4 ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index1 , index2 , index3 , index4 ) ) 
+  , LoKi::AParticles::DeltaMass ( m0 , index1 , index2 , index3 , index4 ) 
+{}
+// ============================================================================
+// constructor form the list of indices 
+// ============================================================================
+LoKi::AParticles::AbsDeltaMass::AbsDeltaMass 
+( const double   m0      , 
+  const LoKi::AParticles::FourMomentum::Indices& indices ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , indices ) ) 
+  , LoKi::AParticles::DeltaMass ( m0 , indices ) 
+{}
+// ============================================================================
+// constructor from the four-momentum 
+// ============================================================================
+LoKi::AParticles::AbsDeltaMass::AbsDeltaMass 
+( const double                          m0   , 
+  const LoKi::AParticles::FourMomentum& four ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , four ) ) 
+  , LoKi::AParticles::DeltaMass ( m0 , four ) 
+{}
+// ============================================================================
+
+
+
+
+
+// ============================================================================
+// constructor from one index 
+// ============================================================================
+LoKi::AParticles::AbsDeltaMass::AbsDeltaMass 
+( const std::string& m0     , 
+  const std::size_t index  ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index ) ) 
+  , LoKi::AParticles::DeltaMass ( m0 , index ) 
+{}
+// ============================================================================
+// constructor from two indices 
+// ============================================================================
+LoKi::AParticles::AbsDeltaMass::AbsDeltaMass 
+( const std::string& m0     , 
+  const std::size_t index1 , 
+  const std::size_t index2 ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index1 , index2  ) ) 
+  , LoKi::AParticles::DeltaMass ( m0 , index1 , index2 ) 
+{}
+// ============================================================================
+// constructor from three indices
+// ============================================================================
+LoKi::AParticles::AbsDeltaMass::AbsDeltaMass 
+( const std::string& m0     , 
+  const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index1 , index2 , index3 ) ) 
+  , LoKi::AParticles::DeltaMass ( m0 , index1 , index2 , index3 ) 
+{}
+// ============================================================================
+// constructor from four indices 
+// ============================================================================
+LoKi::AParticles::AbsDeltaMass::AbsDeltaMass 
+( const std::string& m0     , 
+  const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ,
+  const std::size_t index4 ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index1 , index2 , index3 , index4 ) ) 
+  , LoKi::AParticles::DeltaMass ( m0 , index1 , index2 , index3 , index4 ) 
+{}
+// ============================================================================
+// constructor form the list of indices 
+// ============================================================================
+LoKi::AParticles::AbsDeltaMass::AbsDeltaMass 
+( const std::string& m0     , 
+  const LoKi::AParticles::FourMomentum::Indices& indices ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , indices ) ) 
+  , LoKi::AParticles::DeltaMass ( m0 , indices ) 
+{}
+// ============================================================================
+// constructor from the four-momentum 
+// ============================================================================
+LoKi::AParticles::AbsDeltaMass::AbsDeltaMass 
+( const std::string& m0     , 
+  const LoKi::AParticles::FourMomentum& four ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , four ) ) 
+  , LoKi::AParticles::DeltaMass ( m0 , four ) 
+{}
+// ============================================================================
+
+
+// ============================================================================
+// constructor from one index 
+// ============================================================================
+LoKi::AParticles::AbsDeltaMass::AbsDeltaMass 
+( const LHCb::ParticleID& m0     , 
+  const std::size_t index  ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index ) ) 
+  , LoKi::AParticles::DeltaMass ( m0 , index ) 
+{}
+// ============================================================================
+// constructor from two indices 
+// ============================================================================
+LoKi::AParticles::AbsDeltaMass::AbsDeltaMass 
+( const LHCb::ParticleID& m0     , 
+  const std::size_t index1 , 
+  const std::size_t index2 ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index1 , index2  ) ) 
+  , LoKi::AParticles::DeltaMass ( m0 , index1 , index2 ) 
+{}
+// ============================================================================
+// constructor from three indices
+// ============================================================================
+LoKi::AParticles::AbsDeltaMass::AbsDeltaMass 
+( const LHCb::ParticleID& m0     , 
+  const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index1 , index2 , index3 ) ) 
+  , LoKi::AParticles::DeltaMass ( m0 , index1 , index2 , index3 ) 
+{}
+// ============================================================================
+// constructor from four indices 
+// ============================================================================
+LoKi::AParticles::AbsDeltaMass::AbsDeltaMass 
+( const LHCb::ParticleID& m0     , 
+  const std::size_t index1 , 
+  const std::size_t index2 , 
+  const std::size_t index3 ,
+  const std::size_t index4 ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , index1 , index2 , index3 , index4 ) ) 
+  , LoKi::AParticles::DeltaMass ( m0 , index1 , index2 , index3 , index4 ) 
+{}
+// ============================================================================
+// constructor form the list of indices 
+// ============================================================================
+LoKi::AParticles::AbsDeltaMass::AbsDeltaMass 
+( const LHCb::ParticleID& m0     , 
+  const LoKi::AParticles::FourMomentum::Indices& indices ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , indices ) ) 
+  , LoKi::AParticles::DeltaMass ( m0 , indices ) 
+{}
+// ============================================================================
+// constructor from the four-momentum 
+// ============================================================================
+LoKi::AParticles::AbsDeltaMass::AbsDeltaMass 
+( const LHCb::ParticleID& m0     , 
+  const LoKi::AParticles::FourMomentum& four ) 
+  : LoKi::AuxFunBase ( std::tie ( m0 , four ) ) 
+  , LoKi::AParticles::DeltaMass ( m0 , four ) 
+{}
+// ============================================================================
+
+
+
+
 // ============================================================================
 // the specific printout 
 // ============================================================================
@@ -1301,7 +2119,8 @@ LoKi::AParticles::MinDOCA::MinDOCA
 LoKi::AParticles::MinDOCA::MinDOCA
 ( const std::string& doca  ,
   const bool         allow ) 
-  : LoKi::AParticles::DOCA ( 1 , 1 , doca , allow ) 
+  : LoKi::AuxFunBase ( std::tie ( doca, allow ) ) 
+  , LoKi::AParticles::DOCA ( 1 , 1 , doca , allow ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -1397,7 +2216,8 @@ LoKi::AParticles::AllSameBestPV::operator()
 // ============================================================================
 LoKi::AParticles::ACutV::ACutV
 ( const LoKi::Types::CutVals& cut ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( cut ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
   , m_cut ( cut ) 
 {}
 // ============================================================================
@@ -1432,7 +2252,8 @@ std::ostream& LoKi::AParticles::ACutV::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::AParticles::AFunV::AFunV
 ( const LoKi::Types::FunVals& fun ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun ( fun ) 
 {}
 // ============================================================================
@@ -1474,7 +2295,8 @@ LoKi::AParticles::MaxVal::MaxVal
   const LoKi::Types::Func& cmpv ,
   const LoKi::Types::Cuts& cuts , 
   const double             retv ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function()
+  : LoKi::AuxFunBase ( std::tie ( eval , cmpv , cuts , retv ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function()
   , m_eval ( eval ) 
   , m_cmpv ( cmpv ) 
   , m_cut  ( cuts )
@@ -1490,7 +2312,8 @@ LoKi::AParticles::MaxVal::MaxVal
 ( const LoKi::Types::Func& eval , 
   const LoKi::Types::Func& cmpv ,
   const LoKi::Types::Cuts& cuts )
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function()
+  : LoKi::AuxFunBase ( std::tie ( eval , cmpv , cuts ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function()
   , m_eval ( eval ) 
   , m_cmpv ( cmpv ) 
   , m_cut  ( cuts )
@@ -1505,7 +2328,8 @@ LoKi::AParticles::MaxVal::MaxVal
 LoKi::AParticles::MaxVal::MaxVal 
 ( const LoKi::Types::Func& eval , 
   const LoKi::Types::Func& cmpv )
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function()
+  : LoKi::AuxFunBase ( std::tie ( eval , cmpv ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function()
   , m_eval ( eval ) 
   , m_cmpv ( cmpv ) 
   , m_cut  ( LoKi::Constant<const LHCb::Particle*,bool> ( true ) )
@@ -1567,7 +2391,8 @@ LoKi::AParticles::MinVal::MinVal
   const LoKi::Types::Func& cmpv ,
   const LoKi::Types::Cuts& cuts , 
   const double             retv ) 
-  : LoKi::AParticles::MaxVal ( eval , cmpv , cuts , retv ) 
+  : LoKi::AuxFunBase ( std::tie ( eval , cmpv , cuts , retv ) ) 
+  , LoKi::AParticles::MaxVal ( eval , cmpv , cuts , retv ) 
 {}
 // ============================================================================
 /*  constructor with the function and "min-value"
@@ -1579,7 +2404,8 @@ LoKi::AParticles::MinVal::MinVal
 ( const LoKi::Types::Func& eval , 
   const LoKi::Types::Func& cmpv ,
   const LoKi::Types::Cuts& cuts )
-  : LoKi::AParticles::MaxVal ( eval , cmpv , cuts , LoKi::Constants::PositiveInfinity ) 
+  : LoKi::AuxFunBase ( std::tie ( eval , cmpv , cuts ) ) 
+  , LoKi::AParticles::MaxVal ( eval , cmpv , cuts , LoKi::Constants::PositiveInfinity ) 
 {}
 // ============================================================================
 /* constructor with the function and "max-value"
@@ -1590,7 +2416,8 @@ LoKi::AParticles::MinVal::MinVal
 LoKi::AParticles::MinVal::MinVal 
 ( const LoKi::Types::Func& eval , 
   const LoKi::Types::Func& cmpv )
-  : LoKi::AParticles::MaxVal 
+  : LoKi::AuxFunBase ( std::tie ( eval , cmpv ) ) 
+  , LoKi::AParticles::MaxVal 
 ( eval , 
   cmpv ,
   LoKi::Constant<const LHCb::Particle*,bool> ( true ) ,
@@ -1649,7 +2476,8 @@ std::ostream&  LoKi::AParticles::MinVal::fillStream ( std::ostream& s ) const
 LoKi::AParticles::Sum::Sum 
 ( const LoKi::Types::Func& fun , 
   const double             ini ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( fun , ini ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun     ( fun  ) 
   , m_cut     (  LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant( true ) ) 
   , m_ini     ( ini  )
@@ -1662,7 +2490,8 @@ LoKi::AParticles::Sum::Sum
 ( const LoKi::Types::Func& fun , 
   const LoKi::Types::Cuts& cut , 
   const double             ini ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( fun , cut , ini ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun     ( fun   ) 
   , m_cut     ( cut   ) 
   , m_ini     ( ini   )
@@ -1675,7 +2504,8 @@ LoKi::AParticles::Sum::Sum
 ( const LoKi::Types::Cuts& cut , 
   const LoKi::Types::Func& fun , 
   const double             ini ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( cut , fun , ini ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun     ( fun   ) 
   , m_cut     ( cut   ) 
   , m_ini     ( ini   )

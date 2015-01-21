@@ -5,6 +5,9 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+! 2015-01-21 - Vanya Belyaev
+ - step towards to autogeneration of C++ code 
+
 !========================= LoKiArrayFunctors v10r6 2014-10-30 =========================
 
 ! 2014-10-09 - Sebastian Neubert
