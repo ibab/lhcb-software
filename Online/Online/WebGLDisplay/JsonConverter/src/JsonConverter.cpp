@@ -1,6 +1,8 @@
 // Include files 
 #include <ctime>
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <map>
 #include <boost/any.hpp>
 
@@ -9,9 +11,11 @@
 #include "Event/Particle.h"
 #include "Event/ODIN.h"
 #include "Event/RecVertex.h"
+#include "Event/MuonCoord.h"
 // local
 #include "JsonConverter.h"
 #include "JSONStream.h"
+#include "MuonDet/DeMuonDetector.h"
 
 using namespace JSON;
 using boost::any_cast;
@@ -104,10 +108,35 @@ StatusCode JsonConverter::execute() {
               });
   // Now adding the entries to the main map
   jsonStream << std::make_pair("PVS", vlistJson);
-  
 
-  // const std::string TracksTESLocation("/Event/Rec/Track/Best");  
-  // LHCb::Tracks *inputTracks = get<LHCb::Tracks>(TracksTESLocation);
+
+  const LHCb::MuonCoords* coords = getIfExists<LHCb::MuonCoords>("Raw/Muon/Coords");
+  if( NULL == coords ) {
+    if(msgLevel(MSG::DEBUG)) debug()<<" Container Raw/Muon/Coords doesn't exist"<<endmsg;    
+  }
+  Stream muonJson(Container::LIST);
+  for_each(coords->begin(),
+           coords->end(),
+           [this, &muonJson] (LHCb::MuonCoord *c) 
+           {
+             DeMuonDetector* muonDetector=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");             
+             std::vector<LHCb::MuonTileID> digitTiles = c->digitTile();
+             for (auto dt: digitTiles) 
+             {
+               
+               double x, dx, y, dy, z, dz;
+               muonDetector-> Tile2XYZ(dt, x, dx, y, dy, z, dz);
+               Stream hitJson(Container::LIST);
+               hitJson << int(x) << int(dx) << int(y) << int(dy) 
+                       << int(z) << int(dz);
+               muonJson << hitJson;
+             }
+           });
+  
+  jsonStream << std::make_pair("MUON", muonJson);
+
+
+// LHCb::Tracks *inputTracks = get<LHCb::Tracks>(TracksTESLocation);
   // int trackCount = 0;
   // for_each (inputTracks->begin(), 
   //           inputTracks->end(),
@@ -120,29 +149,41 @@ StatusCode JsonConverter::execute() {
   // std::cout << "Track count " << trackCount << std::endl;
 
 
-  const std::string PartsTESLocation("/Event/Phys/StdNoPIDsPions/Particles");  
-  LHCb::Particles *inputParts = get<LHCb::Particles>(PartsTESLocation);
-  int partCount = 0;
-  for_each (inputParts->begin(), 
-            inputParts->end(),
-            [&partCount] (LHCb::Particle *p)
-            {
-              partCount++;
-              std::string pname = "";
-              if (p->charge() >0) 
-              {
+  // const std::string PartsTESLocation("/Event/Phys/StdNoPIDsPions/Particles");  
+  // LHCb::Particles *inputParts = get<LHCb::Particles>(PartsTESLocation);
+  // int partCount = 0;
+  // for_each (inputParts->begin(), 
+  //           inputParts->end(),
+  //           [&partCount] (LHCb::Particle *p)
+  //           {
+  //             partCount++;
+  //             std::string pname = "";
+  //             if (p->charge() >0) 
+  //             {
                 
-              }
+  //             }
               
 
-            });
+  //           });
 
-  std::cout << "Part count " << partCount << std::endl;
+  //std::cout << "Part count " << partCount << std::endl;
 
   // Now printing the result
   std::cout << "=====================> JSON Result" << std::endl;
   std::cout << jsonStream.str() << std::endl;
   std::cout << "=====================> JSON Result" << std::endl;
+  
+  std::ofstream jsonOutput;
+  std::stringstream buf;
+  buf << odin->runNumber()
+      << "_"
+      << odin->eventNumber()
+      << ".json";
+  
+  jsonOutput.open(buf.str());
+  jsonOutput << jsonStream.str() << std::endl;
+  jsonOutput.close();
+  
 
   setFilterPassed(true);  // Mandatory. Set to true if event is accepted.
   return StatusCode::SUCCESS;

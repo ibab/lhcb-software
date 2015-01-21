@@ -52,7 +52,7 @@ namespace JSON  {
     }
 
     Stream(const Stream& s) : m_os(m_s.rdbuf()), m_container(s.m_container), m_hasdata(false){
-      m_os << s.str();
+      m_os << s.m_s.str();
     }
 
 
