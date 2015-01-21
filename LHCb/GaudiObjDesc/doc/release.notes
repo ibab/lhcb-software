@@ -5,6 +5,7 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+!========================= GaudiObjDesc v11r20p1 2015-01-21 =========================
 ! 2015-01-21 - Roel Aaij
  - Add explicit second template argument to KeyedContainer<T,U> instantiations
    to work around a ROOT 6 bug.
