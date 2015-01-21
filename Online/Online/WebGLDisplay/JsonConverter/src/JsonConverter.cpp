@@ -15,6 +15,7 @@
 #include "Event/OTTime.h"
 #include "Event/STCluster.h"
 #include "Event/VeloCluster.h"
+#include "Event/CaloDigit.h"
 // local
 #include "JsonConverter.h"
 #include "JSONStream.h"
@@ -25,6 +26,7 @@
 #include "STDet/DeTTDetector.h"
 #include "VeloDet/DeVelo.h"
 #include "VeloDet/DeVeloSensor.h"
+#include "CaloDet/DeCalorimeter.h"
 
 #include "Kernel/OTChannelID.h"           
 #include "Kernel/LHCbID.h"           
@@ -217,6 +219,65 @@ StatusCode JsonConverter::execute() {
     jsonStream << std::make_pair("TT", ttJson);
   }
 
+  std::cout << "=====> Extracting HCAL Hits " << std::endl;
+  const LHCb::CaloDigits* caloDigits = getIfExists<LHCb::CaloDigits>("/Event/Raw/Hcal/Digits");
+  if( NULL == caloDigits ) {
+    if(msgLevel(MSG::INFO)) info()<<" Container Raw/Hcal/Digits doesn't exist"<<endmsg;    
+  } else 
+  {
+    
+    Stream hcalJson(Container::LIST);
+    DeCalorimeter* hcalDetector=getDet<DeCalorimeter>("/dd/Structure/LHCb/DownstreamRegion/Hcal");
+    for_each(caloDigits->begin(),
+             caloDigits->end(),
+             [this, &hcalJson, &hcalDetector] (LHCb::CaloDigit *c) 
+             {
+               if (c->e() > 150) 
+               {
+                 const LHCb::CaloCellID cid = c->cellID();
+                 double x = hcalDetector->cellX(cid);
+                 double y = hcalDetector->cellY(cid);
+                 double z = hcalDetector->cellZ(cid);
+                 double s = hcalDetector->cellSize(cid);
+                 Stream hcalhit(Container::LIST);
+                 hcalhit << int(c->e()) << int(x) << int(y) << int(z)
+                         << int(s);
+                 hcalJson << hcalhit;
+               }
+             });
+    jsonStream << std::make_pair("HCAL", hcalJson);
+  }
+
+  std::cout << "=====> Extracting ECAL Hits " << std::endl;
+  const LHCb::CaloDigits* ecalDigits = getIfExists<LHCb::CaloDigits>("/Event/Raw/Ecal/Digits");
+  if( NULL == ecalDigits ) {
+    if(msgLevel(MSG::INFO)) info()<<" Container Raw/Ecal/Digits doesn't exist"<<endmsg;    
+  } else 
+  {
+    
+    Stream ecalJson(Container::LIST);
+    DeCalorimeter* ecalDetector=getDet<DeCalorimeter>("/dd/Structure/LHCb/DownstreamRegion/Ecal");
+    for_each(ecalDigits->begin(),
+             ecalDigits->end(),
+             [this, &ecalJson, &ecalDetector] (LHCb::CaloDigit *c) 
+             {
+               if (c->e() > 150) 
+               {
+                 const LHCb::CaloCellID cid = c->cellID();
+                 double x = ecalDetector->cellX(cid);
+                 double y = ecalDetector->cellY(cid);
+                 double z = ecalDetector->cellZ(cid);
+                 double s = ecalDetector->cellSize(cid);
+                 Stream ecalhit(Container::LIST);
+                 ecalhit << int(c->e()) << int(x) << int(y) << int(z)
+                         << int(s);
+                 ecalJson << ecalhit;
+               }
+             });
+    jsonStream << std::make_pair("ECAL", ecalJson);
+  }
+
+
   std::cout << "=====> Extracting VELO Hits " << std::endl;
   const LHCb::VeloClusters* veloClusters = getIfExists<LHCb::VeloClusters>("/Event/Raw/Velo/Clusters");
   if( NULL == veloClusters ) {
@@ -231,6 +292,11 @@ StatusCode JsonConverter::execute() {
              veloClusters->end(),
              [this, &veloJson, &veloDetector] (LHCb::VeloCluster *c) 
              {
+               LHCb::VeloChannelID cid = c->channelID();
+               const DeVeloSensor *sensor = veloDetector->sensor(cid);
+               //const ADCVector values = stripValues ();
+               
+               // XXX XXX To be implemented
              });
     jsonStream << std::make_pair("VELO", veloJson);
   }
