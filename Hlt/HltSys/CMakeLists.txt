@@ -23,12 +23,9 @@ gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Hlt/HltTisTosTobbing
                          Hlt/HltTracking
                          Hlt/TCKUtils
-                         Hlt/HltDAQ #TEMP
-                         Hlt/HltServices #TEMP
-                         Hlt/HltInterfaces #TEMP
-                         Phys/DaVinciTools #TEMP
-                         Kernel/SelectionLine #TEMP
-                         GaudiConf #TEMP
+                         GaudiObjDesc #TEMP v23r4
+                         Phys/LoKiPhys #TEMP v23r4
+                         Event/RecEvent #TEMP v23r4
                          Phys/LoKiTrigger)
 
 
