@@ -4,6 +4,7 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v48r0p1 2015-01-21 ==========================
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
 
