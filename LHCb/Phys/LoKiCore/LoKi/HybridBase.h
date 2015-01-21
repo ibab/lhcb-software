@@ -202,10 +202,11 @@ StatusCode LoKi::Hybrid::Base::_get_
   //
   if ( this->m_makeCpp ) 
   {
-    std::string funtype = System::typeinfoName ( typeid ( output ) ) ;
+    std::string funtype = System::typeinfoName ( typeid ( LoKi::Functor<TYPE1,TYPE2> ) ) ;
     std::string cppcode = Gaudi::Utils::toCpp           ( output )   ;
     std::string pytype  = Gaudi::Utils::toString        ( output )   ;
     m_allfuncs[ funtype ][ code ] = std::make_pair ( cppcode , pytype ) ;
+    //
   }
   //
   return StatusCode::SUCCESS ;

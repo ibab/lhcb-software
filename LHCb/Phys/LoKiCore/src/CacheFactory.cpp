@@ -65,10 +65,10 @@ LoKi::Cache::makeCode
   return stream 
     << "namespace LoKi { namespace Cache { "              << std::endl 
     << "template<>"                                       << std::endl 
-    << type                                               << std::endl 
+    << type       << "*"                                  << std::endl 
     << "Factory<" << type    << "," 
     << std::hex   << std::showbase << n << ">::create() " << std::endl 
-    << " { return "            << cppcode << " ; } "      << std::endl 
+    << " { return ("<< cppcode << ").clone() ; } "        << std::endl 
     << " }} // end of namespaces LoKi::Cache"             << std::endl ;  
   //
 }

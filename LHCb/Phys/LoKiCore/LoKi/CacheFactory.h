@@ -29,7 +29,7 @@ namespace LoKi
     struct Factory
     {
       /// the only useful method 
-      FUNCTOR create () ;
+      FUNCTOR* create () ;
     };
     // ========================================================================
     /** helper function to create the code for CacheFactory
