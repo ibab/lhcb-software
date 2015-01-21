@@ -12,15 +12,24 @@
 #include "Event/ODIN.h"
 #include "Event/RecVertex.h"
 #include "Event/MuonCoord.h"
+#include "Event/OTTime.h"
+#include "Event/STCluster.h"
+#include "Event/VeloCluster.h"
 // local
 #include "JsonConverter.h"
 #include "JSONStream.h"
+
 #include "MuonDet/DeMuonDetector.h"
+#include "OTDet/DeOTDetector.h"
+#include "STDet/DeITDetector.h"
+#include "STDet/DeTTDetector.h"
+#include "VeloDet/DeVelo.h"
+#include "VeloDet/DeVeloSensor.h"
+
+#include "Kernel/OTChannelID.h"           
+#include "Kernel/LHCbID.h"           
 
 using namespace JSON;
-using boost::any_cast;
-typedef std::map<std::string, double> msd;
-
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : JsonConverter
@@ -109,31 +118,122 @@ StatusCode JsonConverter::execute() {
   // Now adding the entries to the main map
   jsonStream << std::make_pair("PVS", vlistJson);
 
-
+  std::cout << "=====> Extracting MUON Hits " << std::endl;
   const LHCb::MuonCoords* coords = getIfExists<LHCb::MuonCoords>("Raw/Muon/Coords");
   if( NULL == coords ) {
-    if(msgLevel(MSG::DEBUG)) debug()<<" Container Raw/Muon/Coords doesn't exist"<<endmsg;    
-  }
-  Stream muonJson(Container::LIST);
-  for_each(coords->begin(),
-           coords->end(),
-           [this, &muonJson] (LHCb::MuonCoord *c) 
-           {
-             DeMuonDetector* muonDetector=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");             
-             std::vector<LHCb::MuonTileID> digitTiles = c->digitTile();
-             for (auto dt: digitTiles) 
+    if(msgLevel(MSG::INFO)) info()<<" Container Raw/Muon/Coords doesn't exist"<<endmsg;    
+  } else 
+  {
+    
+    Stream muonJson(Container::LIST);
+    DeMuonDetector* muonDetector=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");             
+    for_each(coords->begin(),
+             coords->end(),
+             [this, &muonJson, &muonDetector] (LHCb::MuonCoord *c) 
              {
-               
-               double x, dx, y, dy, z, dz;
-               muonDetector-> Tile2XYZ(dt, x, dx, y, dy, z, dz);
-               Stream hitJson(Container::LIST);
-               hitJson << int(x) << int(dx) << int(y) << int(dy) 
-                       << int(z) << int(dz);
-               muonJson << hitJson;
-             }
-           });
+               std::vector<LHCb::MuonTileID> digitTiles = c->digitTile();
+               for (auto dt: digitTiles) 
+               {
+                 double x, dx, y, dy, z, dz;
+                 muonDetector-> Tile2XYZ(dt, x, dx, y, dy, z, dz);
+                 Stream hitJson(Container::LIST);
+                 hitJson << int(x) << int(dx) << int(y) << int(dy) 
+                         << int(z) << int(dz);
+                 muonJson << hitJson;
+               }
+             });
+    jsonStream << std::make_pair("MUON", muonJson);
+  }
   
-  jsonStream << std::make_pair("MUON", muonJson);
+  std::cout << "=====> Extracting OT Hits " << std::endl;
+  const LHCb::OTTimes* otTimes = getIfExists<LHCb::OTTimes>("Raw/OT/Times");
+  if( NULL == otTimes ) {
+    if(msgLevel(MSG::INFO)) info()<<" Container Raw/OT/Times doesn't exist"<<endmsg;    
+  } else 
+  {    
+    Stream otJson(Container::LIST);
+    DeOTDetector* otDetector=getDet<DeOTDetector>("/dd/Structure/LHCb/AfterMagnetRegion/T/OT");
+    
+    for_each(otTimes->begin(),
+             otTimes->end(),
+             [this, &otJson, &otDetector] (LHCb::OTTime *c) 
+             {
+               LHCb::OTChannelID cid = c->channel();
+               LHCb::LHCbID id(cid);
+               std::auto_ptr<LHCb::Trajectory> t = otDetector->trajectory(id, 0.0);
+               Stream othit(Container::LIST);
+               othit << t->beginPoint().x() << t->beginPoint().y() << t->beginPoint().z()
+                     << t->endPoint().x() << t->endPoint().y() << t->endPoint().z();
+               otJson << othit;
+             });
+    jsonStream << std::make_pair("OT", otJson);
+  }
+  
+  std::cout << "=====> Extracting IT Hits " << std::endl;
+  const LHCb::STClusters* itClusters = getIfExists<LHCb::STClusters>("/Event/Raw/IT/Clusters");
+  if( NULL == itClusters ) {
+    if(msgLevel(MSG::INFO)) info()<<" Container Raw/IT/Clusters doesn't exist"<<endmsg;    
+  } else 
+  {
+    
+    Stream itJson(Container::LIST);
+    DeITDetector* itDetector=getDet<DeITDetector>("/dd/Structure/LHCb/AfterMagnetRegion/T/IT");
+    for_each(itClusters->begin(),
+             itClusters->end(),
+             [this, &itJson, &itDetector] (LHCb::STCluster *c) 
+             {
+               LHCb::STChannelID cid = c->channelID();
+               LHCb::LHCbID id(cid);
+               std::auto_ptr<LHCb::Trajectory> t = itDetector->trajectory(id, 0.0);
+               Stream ithit(Container::LIST);
+               ithit << t->beginPoint().x() << t->beginPoint().y() << t->beginPoint().z()
+                     << t->endPoint().x() << t->endPoint().y() << t->endPoint().z();
+               itJson << ithit;
+             });
+    jsonStream << std::make_pair("IT", itJson);
+  }
+  
+  std::cout << "=====> Extracting TT Hits " << std::endl;
+  const LHCb::STClusters* ttClusters = getIfExists<LHCb::STClusters>("/Event/Raw/TT/Clusters");
+  if( NULL == ttClusters ) {
+    if(msgLevel(MSG::INFO)) info()<<" Container Raw/TT/Clusters doesn't exist"<<endmsg;    
+  } else 
+  {
+    
+    Stream ttJson(Container::LIST);
+    DeTTDetector* ttDetector=getDet<DeTTDetector>("/dd/Structure/LHCb/BeforeMagnetRegion/TT");
+    for_each(ttClusters->begin(),
+             ttClusters->end(),
+             [this, &ttJson, &ttDetector] (LHCb::STCluster *c) 
+             {
+               LHCb::STChannelID cid = c->channelID();
+               LHCb::LHCbID id(cid);
+               std::auto_ptr<LHCb::Trajectory> t = ttDetector->trajectory(id, 0.0);
+               Stream tthit(Container::LIST);
+               tthit << t->beginPoint().x() << t->beginPoint().y() << t->beginPoint().z()
+                     << t->endPoint().x() << t->endPoint().y() << t->endPoint().z();
+               ttJson << tthit;
+             });
+    jsonStream << std::make_pair("TT", ttJson);
+  }
+
+  std::cout << "=====> Extracting VELO Hits " << std::endl;
+  const LHCb::VeloClusters* veloClusters = getIfExists<LHCb::VeloClusters>("/Event/Raw/Velo/Clusters");
+  if( NULL == veloClusters ) {
+    if(msgLevel(MSG::INFO)) info()<<" Container Raw/Velo/Clusters doesn't exist"<<endmsg;    
+  } else 
+  {
+    
+    Stream veloJson(Container::LIST);
+    DeVelo* veloDetector=getDet<DeVelo>("/dd/Structure/LHCb/BeforeMagnetRegion/Velo");
+    
+    for_each(veloClusters->begin(),
+             veloClusters->end(),
+             [this, &veloJson, &veloDetector] (LHCb::VeloCluster *c) 
+             {
+             });
+    jsonStream << std::make_pair("VELO", veloJson);
+  }
 
 
 // LHCb::Tracks *inputTracks = get<LHCb::Tracks>(TracksTESLocation);
