@@ -204,7 +204,7 @@ def photonReco ( context , enableRecoOnDemand, useTracks = True , useSpd = False
     if  useSpd  :
         alg.addTool ( CaloSelectNeutralClusterWithSpd    , "NeutralClusterWithSpd"    )        
         alg.SelectionTools += [ alg.NeutralClusterWithSpd ]
-        _log.debug ('CaloReco/PhotonReco: Configure Neutral Cluster Selector with !Spd : %s as %s ' %   alg.NeutralClusterWithSpd.getFullName()  )
+        _log.debug ('CaloReco/PhotonReco: Configure Neutral Cluster Selector with !Spd : %s ' %   alg.NeutralClusterWithSpd.getFullName()  )
         
         
     ## hypo tools : add Spd/Prs digits
