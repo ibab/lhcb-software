@@ -7,7 +7,6 @@ gaudi_depends_on_subdirs(Calo/CaloInterfaces
                          Event/PhysEvent
                          GaudiPython
                          Phys/DaVinciKernel
-                         Phys/LoKi
                          Phys/LoKiPhys
                          PhysSel/PhysSelPython
                          Tr/TrackInterfaces)
