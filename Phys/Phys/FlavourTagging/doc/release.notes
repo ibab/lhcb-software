@@ -6,6 +6,12 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2015-01-21 - Vanya Belyaev
+ -  cmt/requirements  Phys/LoKi  ->  Phys/LoKiPhys 
+    src/TaggerCharmTool.cpp  use correct LoKi headers  
+    src/TaggingUtils.cpp     use correct LoKi headers 
+
+
 ! 2015-01-19 - Eduardo Rodrigues
  - Added python/FlavourTagging/__init__.py to please CMake.
 

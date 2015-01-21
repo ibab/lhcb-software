@@ -9,8 +9,11 @@
 #include "TString.h"
 
 // from LOKI
-#include "LoKi/LoKi.h"
-#include "LoKi/ParticleContextCuts.h"
+#include "LoKi/Functors.h"           // NB: changed by VB: instead of LoKi/LoKi.h
+#include "LoKi/ParticleCuts.h"       // NB: added by VB  2015-01-21
+#include "LoKi/VertexCuts.h"         // NB: added by VB  2015-01-21
+#include "LoKi/ParticleProperties.h" // NB: added by VB  2015-01-21
+#include "LoKi/ParticleContextCuts.h" 
 
 // from local
 #include "TaggerCharmTool.h"
@@ -28,6 +31,8 @@
 //#include "CharmDpKpiXWrapper.h"
 //#include "CharmDpKeXWrapper.h"
 //#include "CharmDpKmuXWrapper.h"
+
+
 
 using namespace std;
 using namespace LoKi::Cuts;

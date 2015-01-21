@@ -8,6 +8,8 @@
 #include "TaggingHelpers.h"
 #include "TaggingUtils.h"
 
+#include "LoKi/ParticleProperties.h" // NB: added by VB  2015-01-21
+
 //--------------------------------------------------------------------
 // Implementation file for class : TaggingUtils
 //
