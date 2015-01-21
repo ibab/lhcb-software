@@ -110,7 +110,7 @@ StatusCode PrChecker::initialize()
     return StatusCode::FAILURE;
   }
   
-  ghtool->setHistoDir("Track/PrChecker") ;
+  ghtool->setHistoDir(histoDir+name()) ;
   m_histoTool = htool;
 
   m_velo = tool<IPrCounter>( "PrCounter", "Velo", this );
