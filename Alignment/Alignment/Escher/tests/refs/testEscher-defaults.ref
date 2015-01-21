@@ -1,14 +1,14 @@
 # setting LC_ALL to "C"
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Thu/ALIGNMENT/ALIGNMENT_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Thu/ALIGNMENT/ALIGNMENT_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
+# --> Including file '/afs/cern.ch/user/m/mamartin/cmtuser/ALIGNMENT/ALIGNMENT_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
+# <-- End of file '/afs/cern.ch/user/m/mamartin/cmtuser/ALIGNMENT/ALIGNMENT_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
 # skipping configuration of RawEventFormatConf
 # applying configuration of Escher
 # Initializing sequences!
 # Defining options!
 # Setting up alignment sequence
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Thu/LHCB/LHCB_HEAD/GaudiConf/options/RootHist.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v38r4/GaudiConf/options/RootHist.opts'
 # ApplicationMgr.HistogramPersistency = "ROOT";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Thu/LHCB/LHCB_HEAD/GaudiConf/options/RootHist.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v38r4/GaudiConf/options/RootHist.opts'
 # /***** User Escher/Escher **************************************************************************
 # |-Persistency         = None
 # |-SkipEvents          = 0
@@ -17,7 +17,7 @@
 # |-Kalman              = True
 # |-DDDBtag             = ''
 # |-Millepede           = False
-# |-MainSequence        = ['ProcessPhase/Init', <GaudiSequencer/HltFilterSeq at 0x2ef2200>, 'ProcessPhase/Reco', 'ProcessPhase/Moni', <GaudiSequencer/AlignSequence at 0x2edc350>]
+# |-MainSequence        = ['ProcessPhase/Init', <GaudiSequencer/HltFilterSeq at 0x1b15620>, 'ProcessPhase/Reco', 'ProcessPhase/Moni', <GaudiSequencer/AlignSequence at 0x1cb3fa0>]
 # |                     (default: [])
 # |-OutputType          = 'NONE'
 # |-Incident            = ''
@@ -116,8 +116,8 @@
 # |-PVSelection                  = None
 # |-LogFile                      = 'alignlog.txt'
 # |-ParticleSelections           = []  (default: [])
-# |-TrackSelections              = [<TAlignment.TrackSelections.GoodLongTracks instance at 0x2de5f80>]
-# |                              (default: [<TAlignment.TrackSelections.GoodLongTracks instance at 0x2de5f80>])
+# |-TrackSelections              = [<TAlignment.TrackSelections.GoodLongTracks instance at 0x1bc2128>]
+# |                              (default: [<TAlignment.TrackSelections.GoodLongTracks instance at 0x1bc2128>])
 # |-SolvTool                     = 'DiagSolvTool'
 # |-MinNumberOfHits              = 10
 # |-Precision                    = 10
@@ -143,8 +143,8 @@
 # |-TrackLocation                = ''
 # |-ElementsToAlign              = []  (default: [])
 # |-UseCorrelations              = True
-# |-Sequencer                    = <GaudiSequencer/AlignSequence at 0x2edc350>
-# |                              (default: <GaudiSequencer/TAlignmentSequencer at 0x2d5baa0>)
+# |-Sequencer                    = <GaudiSequencer/AlignSequence at 0x1cb3fa0>
+# |                              (default: <GaudiSequencer/TAlignmentSequencer at 0xf8b200>)
 # |-UsePreconditioning           = True
 # |-OnlineAligWorkDir            = '/group/online/AligWork/running'
 # \----- (End of User TAlignment/TAlignment) ---------------------------------------------------------
@@ -175,12 +175,10 @@
 # WARNING: Using default tag dddb-20130929 for partition DDDB
 # WARNING: Using default tag cond-20141007 for partition LHCBCOND
 # WARNING: Using default tag dq-20140822 for partition DQFLAGS
-Warning in <TInterpreter::ReadRootmapFile>: class  pair<const int,double> found in libCore.so  is already in libSTLRflx.so 
-Warning in <TInterpreter::ReadRootmapFile>: class  pair<const int,int> found in libCore.so  is already in libSTLRflx.so 
 ApplicationMgr    SUCCESS 
 ====================================================================================================================================
                                                    Welcome to Escher version v5r2
-                                          running on lxplus0040.cern.ch on Thu Jan  8 14:23:04 2015
+                                          running on lxplus0206.cern.ch on Wed Jan 21 17:30:50 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -188,7 +186,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   2.92 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   3.32 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 EscherSequencer      INFO Member list: ProcessPhase/Init, GaudiSequencer/HltFilterSeq, ProcessPhase/Reco, ProcessPhase/Moni, GaudiSequencer/AlignSequence
@@ -199,55 +197,27 @@ EscherInit        SUCCESS Requested to process 10 events
 EscherInit        SUCCESS ==================================================================
 RootHistSvc          INFO Writing ROOT histograms to: -10ev-histos.root
 HistogramPersis...   INFO Added successfully Conversion service:RootHistSvc
-HltFilterSeq         INFO Member list: HltDecReportsDecoder/Hlt2DecReportsDecoder, HltDecReportsDecoder, HltDecReportsDecoder/Hlt1DecReportsDecoder, HltCompositionMonitor, LoKi::HDRFilter/HltErrorFilter
-HltDecReportsDe...WARNING HltDecReportsDecoder:: Hlt raw bank decoder HltDecReportsDecoder is configured to decode both Hlt1 and Hlt2 into a single TES location;
-This configuration is deprecated as it can NOT work for data taken with a 'split' Hlt configuration, i.e. 2015 data and beyond
-Please reconfigure, and request seperate decoding of Hlt1 and Hlt2 instead.
-And yes, this 'split' decoding will also work for data taken with an 'unsplit' Hlt configuration, eg. old data taken before 2015
-NB: you may have to adapt your Hlt decision filtering accordingly!
-LoKiSvc           SUCCESS 
-
-
-Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome
-LoKi                                                                                               LoKi 
-LoKi                                                                                               LoKi 
-LoKi                                        Welcome to LoKi!                                       LoKi 
-LoKi                                                                                               LoKi 
-LoKi                                      (LOops & KInematics)                                     LoKi 
-LoKi                                                                                               LoKi 
-LoKi                         Smart & Friendly C++ Physics Analysis Tool Kit                        LoKi 
-LoKi                                                                                               LoKi 
-LoKi                                                                                               LoKi 
-LoKi                         Author:  Vanya BELYAEV Ivan.Belyaev@nikhef.nl                         LoKi 
-LoKi                     With the kind help of Galina Pakhlova & Sergey Barsuk                     LoKi 
-LoKi                                                                                               LoKi 
-LoKi                                       Have fun and enjoy!                                     LoKi 
-LoKi                                                                                               LoKi 
-Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome
-Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome
-
-
-
+HltFilterSeq         INFO Member list: HltDecReportsDecoder/Hlt1DecReportsDecoder, HltDecReportsDecoder/Hlt2DecReportsDecoder
 Reco                 INFO Member list: GaudiSequencer/RecoDecodingSeq, GaudiSequencer/RecoVELOSeq, GaudiSequencer/RecoTrSeq, GaudiSequencer/RecoVertexSeq
 RecoDecodingSeq      INFO Member list: DecodeVeloRawBuffer/createBothVeloClusters, RawBankToSTClusterAlg/createTTClusters, RawBankToSTLiteClusterAlg/createTTLiteClusters, RawBankToSTLiteClusterAlg/createITLiteClusters, RawBankToSTClusterAlg/createITClusters
 createBothVeloC...   INFO Cancel processing of events with more than 6000 Velo clusters
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/DDDB.db/DDDB"
 DDDB                 INFO Using TAG "dddb-20130929"
-LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
+LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
 LHCBCOND             INFO Using TAG "cond-20141007"
-ONLINE_2011          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2011.db/ONLINE"
+ONLINE_2011          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/ONLINE-2011.db/ONLINE"
 ONLINE_2011          INFO Using TAG ""
 RecoVELOSeq          INFO Member list: FastVeloTracking
 RecoTrSeq            INFO Member list: ProcessPhase/Track
 Track                INFO Member list: GaudiSequencer/TrackForwardPatSeq, GaudiSequencer/TrackSeedPatSeq, GaudiSequencer/TrackMatchPatSeq, GaudiSequencer/TrackDownstreamPatSeq, GaudiSequencer/TrackVeloTTPatSeq, GaudiSequencer/TrackFitSeq, GaudiSequencer/TrackAddExtraInfoSeq, GaudiSequencer/TrackEraseExtraInformationSeq
 TrackForwardPatSeq   INFO Member list: PatForward
 ToolSvc.OTRawBa...   INFO  countsPerBX = 64 numberOfBX  = 3 timePerBX = 25 ForceBankVersion = 255 require window [-8,56]
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c1.up.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c2.up.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c3.up.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c4.up.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r6/cdf/field101.c1.up.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r6/cdf/field101.c2.up.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r6/cdf/field101.c3.up.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r6/cdf/field101.c4.up.cdf
 MagneticFieldSvc     INFO Map scaled by factor 1 with polarity internally used: 1 signed relative current: 1
 TrackSeedPatSeq      INFO Member list: PatSeeding
 TrackMatchPatSeq     INFO Member list: PatMatch
@@ -323,12 +293,6 @@ EscherInit        SUCCESS 0 events processed
 EscherInit        SUCCESS ==================================================================
 EscherInit        WARNING Should have processed 10 events
 EscherInit        WARNING ==================================================================
-HltDecReportsDe...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
-HltDecReportsDe...SUCCESS  #WARNINGS   = 1        Message = 'Hlt raw bank decoder HltDecReportsDecoder is configured to decode both Hlt1 and Hlt2 into a single TES location;
-This configuration is deprecated as it can NOT work for data taken with a 'split' Hlt configuration, i.e. 2015 data and beyond
-Please reconfigure, and request seperate decoding of Hlt1 and Hlt2 instead.
-And yes, this 'split' decoding will also work for data taken with an 'unsplit' Hlt configuration, eg. old data taken before 2015
-NB: you may have to adapt your Hlt decision filtering accordingly!'
 createTTClusters     INFO Successfully processed 0 %
 createTTClusters  SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
@@ -370,31 +334,9 @@ ITClusterMonitor  SUCCESS Booked 13 Histogram(s) : 1D=8 2D=4 1DProf=1
 Alignment            INFO Total number of tracks: 0
 Alignment            INFO Number of covariance calculation failures: 0
 ToolSvc.Al::Ali...WARNING ==> No elements to align.
-ToolSvc.WriteMu...   INFO 0x7fff54a1a208
+ToolSvc.WriteMu...   INFO 0x7fff78a93708
 GoodLongTracksI...SUCCESS Booked 2 Histogram(s) : 1D=2 
 EventLoopMgr         INFO Histograms converted successfully according to request.
-LoKiSvc           SUCCESS 
-
-
-Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
-Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
-LoKi                                                                                               LoKi 
-LoKi                                                                                               LoKi 
-LoKi                                       Good Bye from LoKi!                                     LoKi 
-LoKi                                                                                               LoKi 
-LoKi                                      (LOops & KInematics)                                     LoKi 
-LoKi                                                                                               LoKi 
-LoKi                         Smart & Friendly C++ Physics Analysis Tool Kit                        LoKi 
-LoKi                                                                                               LoKi 
-LoKi                                                                                               LoKi 
-LoKi                      LoKi mailing list ('LoKi-club') : lhcb-loki@cern.ch                      LoKi 
-LoKi      Comments, suggestions, criticism, ideas, questions and requests are *ALWAYS* welcome     LoKi 
-LoKi                                                                                               LoKi 
-Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
-Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
-
-
-
 TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Skip'     map has the size 0
 
 TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Recover'  map has the size 0
@@ -413,7 +355,7 @@ ToolSvc.FastVel...   INFO Maximum number of Velo hits 0
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   2.92 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   3.32 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -422,11 +364,8 @@ TimingAuditor.T...   INFO   Init                        |     0.000 |     0.000 
 TimingAuditor.T...   INFO    InitEscherSeq              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     EscherInit                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO   HltFilterSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    Hlt2DecReportsDecoder      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    HltDecReportsDecoder       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    Hlt1DecReportsDecoder      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    HltCompositionMonitor      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    HltErrorFilter             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO    Hlt2DecReportsDecoder      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO   Reco                        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    RecoDecodingSeq            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     createBothVeloClusters    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
