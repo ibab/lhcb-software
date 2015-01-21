@@ -4,6 +4,76 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
+</PRE><H1><A NAME="v48r0p1">2015-01-21 - GaussSys v48r0p1</A></H1><PRE>
+<H2><A NAME="Note"For development and Upgrade studies. Based on LCG_68.
+   New version of reference generators, in particular Pythia6 and Pythia8.
+   Fixes for local builds, productions and tuning. 
+</A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v37r3 (and Gaudi v25r2)</b>
+   AppConfig v3r*,
+   <b>DecFiles v27r*</b>, 
+   ParamFiles v8r*, 
+   SQLDDDB v7r*, FieldMap v5r*,
+   GDMLData v1r*,
+   PGunsData v1r*
+   pythia 6.428.2, lhapdf 5.9.1 
+   photos++ 3.56 and tauola++ 1.1.4 
+   pythia8 186 (via LCG_GeneratorsInterfaces),
+   HepMC 2.06.08 (via LCG_Interfaces),
+   LHAPDFSets v1r* (private LHCb version)
+   Geant4 v95r2p7g2 (based on geant4.9.5.p02 + patches for LHCb) and 
+   Geant4Files v95r0, 
+   XmlVis v1r19,
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   alpgen 2.1.4 and powhegbox r2092 (via LCG_GeneratorsInterfaces),
+   herwig++ 2.7.0a and thepeg 1.9.0a (via LCG_GeneratorsInterfaces),
+   rivet 1.9.0 (via LCG_GeneratorsInterfaces),
+   EvtGen v14r0, EvtGenExtras v3r10 and Mint v3r1 
+   (private LHCb version),
+   BcVegPy v3r1 + BcVegPyData v2r*, GenXicc v2r1 + GenXiccData v3r0 and 
+   HidValley v4r0 (private LHCb versions)
+</A></H3>
+
+!========================= Gauss v48r0p1 2015-01-21 ==========================
+! 2014-11-19 - Marco Clemencic
+ - Updated CMake configuration
+
+! 2014-10-28 - Gloria Corti
+ - Modifiy options for 2011 and 2012 to pick up the same dbase tags as in
+   production
+ - Introduce new options for 2015
+
+!========================= LbPythia8 v9r1 2015-01-21 =========================
+ - on v9b branch
+
+! 2015-01-21 - Gloria Corti
+ - Port from trunk r180460 to 181379, including 
+   . Fixed Pythia initialization order to allow particle updates. 
+   . Updated XML counters. Included resonance bosons in MCParticle record … 
+  by Phil Ilten
+
+! 2015-01-20 - Gloria Corti
+ - Branch v9b from v9r0. 
+
+! 2014-12-02 - Gloria Corti
+ - Trying to fix compilation warnings with --pedantic
+
+! 2014-11-19 - Marco Clemencic
+ - Updated CMake configuration
+
+!======================= GaussTools v19r2p1 2014-10-27 =======================
+! 2014-10-24 - Gloria Corti
+ - Set macro for loading genConf library from Install area so that it can be
+   used with new RPM installation by packages needing the genConf library
+
+!======================== GaussRICH v14r2p1 2014-10-28 =======================
+! 2014-10-24  - Sajan Easo, Chris Jones
+ - Protection added against infinite loops in RichG4Cherenkov when creating
+    randonm hits
+
+
+!=============================================================================
 </PRE><H1><A NAME="v48r0">2014-10-09 - GaussSys v48r0</A></H1><PRE>
 <H2><A NAME="Note"For development and Upgrade studies. Based on LCG_68.
    New version of reference generators, in particular Pythia6 and Pythia8. 
