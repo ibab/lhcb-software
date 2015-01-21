@@ -5,6 +5,10 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+! 2015-01-21 - Roel Aaij
+ - Add explicit second template argument to KeyedContainer<T,U> instantiations
+   to work around a ROOT 6 bug.
+
 !========================= GaudiObjDesc v11r20 2014-06-10 ======================
 ! 2014-05-23 - Marco Clemencic
  - Avoid that the KeyedObject<T> base class of GOD generated classes appears in
