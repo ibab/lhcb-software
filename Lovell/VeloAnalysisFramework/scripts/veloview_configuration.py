@@ -11,6 +11,7 @@ import json
 
 
 def create_parser():
+    from veloview.core import config as veloview_config
     parser = argparse.ArgumentParser(
         description=__doc__.split("\n")[0],
         epilog="\n".join(__doc__.split("\n")[1:]),
@@ -22,12 +23,18 @@ def create_parser():
                             "run_list"
                         ],
                         help="Configuration parameter to return")
+    parser.add_argument("--run-data-dir", default=veloview_config.run_data_dir,
+                        help="Directory to search for run list and data")
     return parser
 
 
-def veloview_configuration(param):
+def veloview_configuration(param, run_data_dir):
+    from veloview.core import config as veloview_config
     from veloview.core import run_view_config
     from veloview.runview import utils
+
+    # Change the run data directory to the user-specified one
+    veloview_config.update_run_data_dir(run_data_dir)
 
     if param == "run_view_config":
         sys.stdout.write(json.dumps(run_view_config.run_view_pages))
@@ -38,7 +45,7 @@ def veloview_configuration(param):
 def main():
     parser = create_parser()
     args = parser.parse_args()
-    veloview_configuration(args.param)
+    veloview_configuration(args.param, args.run_data_dir)
 
 
 if __name__ == "__main__":
