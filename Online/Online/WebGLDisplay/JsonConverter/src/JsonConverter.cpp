@@ -285,20 +285,36 @@ StatusCode JsonConverter::execute() {
   } else 
   {
     
-    Stream veloJson(Container::LIST);
+    Stream veloRJson(Container::LIST);
+    Stream veloPhiJson(Container::LIST);
     DeVelo* veloDetector=getDet<DeVelo>("/dd/Structure/LHCb/BeforeMagnetRegion/Velo");
-    
     for_each(veloClusters->begin(),
              veloClusters->end(),
-             [this, &veloJson, &veloDetector] (LHCb::VeloCluster *c) 
+             [this, &veloRJson, &veloPhiJson, &veloDetector] (LHCb::VeloCluster *c) 
              {
                LHCb::VeloChannelID cid = c->channelID();
                const DeVeloSensor *sensor = veloDetector->sensor(cid);
-               //const ADCVector values = stripValues ();
-               
-               // XXX XXX To be implemented
+               const LHCb::VeloCluster::ADCVector values = c->stripValues();
+               for (auto p: values) 
+               {
+                 auto striplimits = sensor->globalStripLimits(p.first);
+                 auto f = striplimits.first;
+                 auto s = striplimits.second;
+                 Stream hit(Container::LIST);
+                 hit << int(f.x()) << int(f.y()) << int(f.z())
+                     << int(s.x()) << int(s.y()) << int(s.z());
+
+                 if (c->isRType() || c->isPileUp()) 
+                 {
+                   veloRJson << hit;  
+                 } else 
+                 {
+                   veloPhiJson << hit;  
+                 }
+               }
              });
-    jsonStream << std::make_pair("VELO", veloJson);
+    jsonStream << std::make_pair("VELOPHI", veloPhiJson);
+    jsonStream << std::make_pair("VELOR", veloRJson);
   }
 
 
@@ -335,9 +351,10 @@ StatusCode JsonConverter::execute() {
   //std::cout << "Part count " << partCount << std::endl;
 
   // Now printing the result
-  std::cout << "=====================> JSON Result" << std::endl;
-  std::cout << jsonStream.str() << std::endl;
-  std::cout << "=====================> JSON Result" << std::endl;
+  //std::cout << "=====================> JSON Result" << std::endl;
+  //std::cout << jsonStream.str() << std::endl;
+  //
+std::cout << "=====================> JSON Result" << std::endl;
   
   std::ofstream jsonOutput;
   std::stringstream buf;
