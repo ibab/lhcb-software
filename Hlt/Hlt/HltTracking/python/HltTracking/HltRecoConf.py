@@ -69,8 +69,7 @@ CommonForwardTrackingOptions = { "MaxChi2" : 40.,
                                  "MaxChi2Track" : 40.,
                                  "MinHits" : 12,  
                                  "MinOTHits" : 14,
-                                 "SecondLoop" : False,
-                                 "FlagUsedSeeds" : True }
+                                 "SecondLoop" : False }
  
 ForwardTrackingOptions_MomEstimate = { "UseMomentumEstimate" : True
                                        ,"UseWrongSignWindow" : True

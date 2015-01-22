@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-01-22 - Sascha Stahl
+ - Adapted HltRecoConf.py and Hlt2Tracking.py to changes in PatForward
+
 !========================= HltTracking v13r4 2015-01-20 =========================
 
 ! 2015-01-19 - Roel Aaij

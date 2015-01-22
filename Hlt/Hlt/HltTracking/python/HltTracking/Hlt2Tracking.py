@@ -1185,12 +1185,13 @@ class Hlt2Tracking(LHCbConfigurableUser):
         # look for already used TStation hits if we are in resurrection mode
         Hlt1TrackOption = Hlt2Conf().getProp("Hlt1TrackOption")
         if Hlt1TrackOption in ['Decode','Encode-Decode'] :
-            recoForward.PatForwardTool.SkipUsedSeeds = True
+            #recoForward.PatForwardTool.SkipUsedSeeds = True
             from Configurables import TrackUsedLHCbID
-            recoForward.addTool(TrackUsedLHCbID, name='TrackUsedLHCbID')
-            recoForward.UsedLHCbIDToolName="TrackUsedLHCbID"
-            recoForward.TrackUsedLHCbID.inputContainers=[ Hlt1TrackLoc["ForwardHPT"] ] 
-            recoForward.TrackUsedLHCbID.selectorNames=['ForwardSelector']
+            recoForward.PatForwardTool.addTool(TrackUsedLHCbID, name='TrackUsedLHCbID')
+            recoForward.PatForwardTool.UsedLHCbIDToolName="TrackUsedLHCbID"
+            recoForward.PatForwardTool.TrackUsedLHCbID.inputContainers=[ Hlt1TrackLoc["ForwardHPT"] ] 
+            recoForward.PatForwardTool.TrackUsedLHCbID.selectorNames=['ForwardSelector']
+            recoForward.PatForwardTool.VeloVetoTracksName = [ Hlt1TrackLoc["ForwardHPT"] ] 
         # make them a bit more verbose
         recoForward.StatPrint = True
         recoForward.PatForwardTool.StatPrint = True
@@ -1241,8 +1242,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
         recoForwardSecondLoop      = PatForward( self.getProp("Prefix")+'RecoForwardSecondLoop'
                                                 , InputTracksName  = self.__hlt2VeloTracking().outputSelection()
                                                 , maxOTHits = MaxOTHits
-                                                , UnusedVeloSeeds  = True
-                                                , VeloVetoTracksName   = self.__hlt2ForwardTracking().outputSelection()
+                                                 #, UnusedVeloSeeds  = True
+                                                 #, VeloVetoTracksName   = self.__hlt2ForwardTracking().outputSelection()
                                                 , OutputTracksName = forwardTrackOutputLocation )
 
         if self.getProp('Hlt2ForwardMaxVelo') > 0 :
@@ -1256,6 +1257,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         recoForwardSecondLoop.PatForwardTool.MaxChi2Track   = CommonForwardTrackingOptions["MaxChi2Track"]
         recoForwardSecondLoop.PatForwardTool.MinHits        = CommonForwardTrackingOptions["MinHits"]
         recoForwardSecondLoop.PatForwardTool.MinOTHits      = CommonForwardTrackingOptions["MinOTHits"]
+        recoForwardSecondLoop.PatForwardTool.VeloVetoTracksName   = self.__hlt2ForwardTracking().outputSelection()
         # HARDCODED PARAMETERS HERE
         recoForwardSecondLoop.PatForwardTool.MinMomentum    = 1000
         recoForwardSecondLoop.PatForwardTool.MinPt          = 150
