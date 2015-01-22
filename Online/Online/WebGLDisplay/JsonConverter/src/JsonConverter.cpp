@@ -317,44 +317,30 @@ StatusCode JsonConverter::execute() {
     jsonStream << std::make_pair("VELOR", veloRJson);
   }
 
-
-// LHCb::Tracks *inputTracks = get<LHCb::Tracks>(TracksTESLocation);
-  // int trackCount = 0;
-  // for_each (inputTracks->begin(), 
-  //           inputTracks->end(),
-  //           [&trackCount] (LHCb::Track *t)
-  //           {
-  //             trackCount++;
-  //             auto p = t->phi();
-  //           });
-  
-  // std::cout << "Track count " << trackCount << std::endl;
-
-
-  // const std::string PartsTESLocation("/Event/Phys/StdNoPIDsPions/Particles");  
-  // LHCb::Particles *inputParts = get<LHCb::Particles>(PartsTESLocation);
-  // int partCount = 0;
-  // for_each (inputParts->begin(), 
-  //           inputParts->end(),
-  //           [&partCount] (LHCb::Particle *p)
-  //           {
-  //             partCount++;
-  //             std::string pname = "";
-  //             if (p->charge() >0) 
-  //             {
-                
-  //             }
-              
-
-  //           });
-
-  //std::cout << "Part count " << partCount << std::endl;
+  std::cout << "=====> Extracting Particles " << std::endl;
+  const std::string PartsTESLocation("/Event/Phys/StdNoPIDsPions/Particles");  
+  LHCb::Particles *inputParts = getIfExists<LHCb::Particles>(PartsTESLocation);
+  int partCount = 0;
+  if( NULL == inputParts ) {
+     if(msgLevel(MSG::INFO)) info()<<" Container /Event/Phys/StdNoPIDsPions/Particles doesn't exist"<<endmsg;    
+   } else 
+   {
+     for_each (inputParts->begin(), 
+               inputParts->end(),
+               [&partCount] (LHCb::Particle *p)
+               {
+                 partCount++;
+                 std::cout << getParticleName(p) << std::endl;
+               });
+   
+     std::cout << "Part count " << partCount << std::endl;  
+   }
+   
 
   // Now printing the result
   //std::cout << "=====================> JSON Result" << std::endl;
   //std::cout << jsonStream.str() << std::endl;
-  //
-std::cout << "=====================> JSON Result" << std::endl;
+  //std::cout << "=====================> JSON Result" << std::endl;
   
   std::ofstream jsonOutput;
   std::stringstream buf;
@@ -370,6 +356,77 @@ std::cout << "=====================> JSON Result" << std::endl;
 
   setFilterPassed(true);  // Mandatory. Set to true if event is accepted.
   return StatusCode::SUCCESS;
+}
+
+
+std::string getParticleName(LHCb::Particle *p) 
+{
+
+  int  ProbNNe = 700;  //# The ANN probability for the electron hypothesis
+  int  ProbNNmu = 701; //# The ANN probability for the muon hypothesis
+  int  ProbNNpi = 702; //# The ANN probability for the pion hypothesis
+  int  ProbNNk = 703; //  # The ANN probability for the kaon hypothesis
+  int  ProbNNp = 704; //  # The ANN probability for the proton hypothesis
+  int  ProbNNghost = 705; //# The ANN probability for the ghost hypothesis
+
+  std::string pname = "";
+  
+  if (p->charge() > 0) 
+  {
+    pname = "pi+";
+    if  (p->proto()->info(ProbNNk, -9999) > 0.3 
+         && p->proto()->info(ProbNNk, -9999) > p->proto()->info(ProbNNp, -9999)
+         && p->proto()->info(ProbNNk, -9999) > p->proto()->info(ProbNNe, -9999) 
+         && p->proto()->info(ProbNNk, -9999) > p->proto()->info(ProbNNmu, -9999))
+      pname = "K+";
+    
+        
+    if  (p->proto()->info(ProbNNp, -9999) > 0.3 
+         && p->proto()->info(ProbNNp, -9999) > p->proto()->info(ProbNNk, -9999) 
+         && p->proto()->info(ProbNNp, -9999) > p->proto()->info(ProbNNe, -9999) 
+         && p->proto()->info(ProbNNp, -9999) > p->proto()->info(ProbNNmu, -9999))
+      pname = "p+";
+    
+    if  (p->proto()->info(ProbNNe, -9999) > 0.3 
+         && p->proto()->info(ProbNNe, -9999) > p->proto()->info(ProbNNk, -9999) 
+         && p->proto()->info(ProbNNe, -9999) > p->proto()->info(ProbNNp, -9999) 
+         && p->proto()->info(ProbNNe, -9999) > p->proto()->info(ProbNNmu, -9999))
+      pname = "e+";
+    
+    if  (p->proto()->info(ProbNNmu, -9999) > 0.1 
+         && p->proto()->muonPID()->IsMuon())
+      pname = "mu+";
+    
+  }
+  
+  if (p->charge() < 0) 
+  {
+    
+    pname = "pi-";
+    if  (p->proto()->info(ProbNNk, -9999) > 0.3 
+         && p->proto()->info(ProbNNk, -9999) > p->proto()->info(ProbNNp, -9999) 
+         && p->proto()->info(ProbNNk, -9999) > p->proto()->info(ProbNNe, -9999) 
+         && p->proto()->info(ProbNNk, -9999) > p->proto()->info(ProbNNmu, -9999))
+      pname = "K-";
+  
+    if  (p->proto()->info(ProbNNp, -9999) > 0.3 
+         && p->proto()->info(ProbNNp, -9999) > p->proto()->info(ProbNNk, -9999) 
+         && p->proto()->info(ProbNNp, -9999) > p->proto()->info(ProbNNe, -9999) 
+         && p->proto()->info(ProbNNp, -9999) > p->proto()->info(ProbNNmu, -9999))
+      pname = "p-";
+  
+    if  (p->proto()->info(ProbNNe, -9999) > 0.3 
+         && p->proto()->info(ProbNNe, -9999) > p->proto()->info(ProbNNk, -9999) 
+         && p->proto()->info(ProbNNe, -9999) > p->proto()->info(ProbNNp, -9999) 
+         && p->proto()->info(ProbNNe, -9999) > p->proto()->info(ProbNNmu, -9999))
+      pname = "e-";
+  
+    if  (p->proto()->info(ProbNNmu, -9999) > 0.1 && p->proto()->muonPID()->IsMuon())
+      pname = "mu-";
+  }
+
+  return pname;
+
 }
 
 //=============================================================================

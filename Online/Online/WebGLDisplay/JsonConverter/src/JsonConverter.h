@@ -28,4 +28,8 @@ protected:
 private:
 
 };
+
+
+std::string getParticleName(LHCb::Particle *p);
+
 #endif // JSONCONVERTER_H
