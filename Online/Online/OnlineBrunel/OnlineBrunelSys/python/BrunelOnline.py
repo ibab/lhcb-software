@@ -41,12 +41,12 @@ def packDST(self,items):
   """
   Write an RDST in MDF format
   """
-  import OnlineEnv as Online
+  import OnlineEnv
   import Configurables
 
   seq = Gaudi.GaudiSequencer("WriteMDFSeq")
   # Put store explorer in front.
-  #exp = Online.storeExplorer(load=1,freq=0.000001)
+  #exp = OnlineEnv.storeExplorer(load=1,freq=0.000001)
   #exp.OutputLevel = 1
   #seq.Members += [ exp ]
 
@@ -54,9 +54,9 @@ def packDST(self,items):
   packer = Configurables.WritePackedDst('MdfPacker')
   packer.Containers += items
   # Now configure the FID updater of DSTAddress
-  dstUpdate = Online.dstAddressUpdate(name='DstUpdate')
+  dstUpdate = OnlineEnv.dstAddressUpdate(name='DstUpdate')
   # Now configure bank merger
-  mergeDst = Online.evtMerger(buffer='Output',name='DstMerger',location='/Event/DAQ/DstEvent',routing=0x100)
+  mergeDst = OnlineEnv.evtMerger(buffer='Output',name='DstMerger',location='/Event/DAQ/DstEvent',routing=0x100)
   mergeDst.FIDLocation = '/Event';
   mergeDst.AddFID = 1;
   mergeDst.Compress = 0; # May use compress=2 as well
@@ -80,7 +80,7 @@ def configureOutput(self, dstType, withMC, handleLumi):
   print '[ERROR] Configure Brunel output ....'
   sys.stdout.flush()
   if configureBrunelOutput:
-    import OnlineEnv as Online
+    import OnlineEnv
     print '[ERROR] Configure Brunel output sequence ....'
     sys.stdout.flush()
     Configs.DstConf._doWriteROOT=dstconf_write_root
@@ -89,7 +89,7 @@ def configureOutput(self, dstType, withMC, handleLumi):
     ser.Banks = '/Event/GaudiSerialize'
     ser.OutputLevel = 1
     EventPersistencySvc().CnvServices.append(ser)
-    writer = Online.evtMerger(buffer='Output',name='BankWriter',location='/Event/GaudiSerialize',routing=0x100)
+    writer = OnlineEnv.evtMerger(buffer='Output',name='BankWriter',location='/Event/GaudiSerialize',routing=0x100)
     writer.OutputLevel = 1
     seq = GaudiSequencer('Output')
     seq.Members += [OutputStream('DstWriter'),writer]
@@ -101,7 +101,7 @@ def configureForking(appMgr):
   numChildren = os.sysconf('SC_NPROCESSORS_ONLN')
   if os.environ.has_key('NBOFSLAVES'):
     numChildren = int(os.environ['NBOFSLAVES'])
-  
+
   print '++++ configure Brunel for forking with ',numChildren,' children.'
   sys.stdout.flush()
   forker = LHCb__CheckpointSvc("CheckpointSvc")
@@ -127,23 +127,31 @@ def patchBrunel(true_online_version):
   """
   import GaudiConf.DstConf
   import Brunel.Configuration
-  import OnlineEnv as Online
-  
-  brunel = Brunel.Configuration.Brunel()
+  import OnlineEnv
 
+  brunel = Brunel.Configuration.Brunel()
+  brunel.OnlineMode = True
   try:
-    brunel.DDDBtag    = Online.DDDBTag
+    brunel.DDDBtag    = OnlineEnv.DDDBTag
   except:
     print "DDDBTag not found, use default"
 
   try:
-    brunel.CondDBtag = Online.CondDBTag
+    brunel.CondDBtag = OnlineEnv.CondDBTag
   except:
     print "CondDBTag not found, use default"
 
   conddb = CondDB()
   conddb.IgnoreHeartBeat = True
-
+  #
+  # Adjust to pickup the proper online conditions
+  #
+  import Online as RunChange_All
+  conddb.setProp('RunChangeHandlerConditions', RunChange_All.ConditionMap)
+  conddb.setProp('EnableRunChangeHandler', True)
+  #
+  # Brunel output configuration
+  #
   brunel.WriteFSR  = False # This crashes Jaap's stuff
   brunel.DataType = "2013"
 
@@ -154,12 +162,12 @@ def patchBrunel(true_online_version):
   EventClockSvc().InitialTime = 1322701200000000000
 
   brunel.UseDBSnapshot = True     # try it
-#  brunel.PartitionName = "FEST"
-# Hack by Chris
+  #  brunel.PartitionName = "FEST"
+  # Hack by Chris
   print "# Warning using CKThetaQuartzRefractCorrections = [ 0,-0.0001,0 ]"
   from Configurables import RichRecSysConf
   rConf = RichRecSysConf("RichOfflineRec")
-  rConf.richTools().photonReco().CKThetaQuartzRefractCorrections = [ 0,-0.001,0 ] 
+  rConf.richTools().photonReco().CKThetaQuartzRefractCorrections = [ 0,-0.001,0 ]
   if true_online_version:
     brunel.OutputLevel       = MSG_ERROR
     brunel.OutputLevel       = MSG_WARNING
@@ -210,7 +218,7 @@ def setupOnline():
 
         @author M.Frank
   """
-  import OnlineEnv as Online
+  import OnlineEnv
 
   buffs = ['Events','Output']
   app=Gaudi.ApplicationMgr()
@@ -218,14 +226,14 @@ def setupOnline():
   app.HistogramPersistency = 'ROOT'
   app.SvcOptMapping.append('LHCb::OnlineEvtSelector/EventSelector')
   app.SvcOptMapping.append('LHCb::FmcMessageSvc/MessageSvc')
-  mep = Online.mepManager(Online.PartitionID,Online.PartitionName,buffs,True)
+  mep = OnlineEnv.mepManager(OnlineEnv.PartitionID,OnlineEnv.PartitionName,buffs,True)
   mep.ConnectWhen = "start";
-  sel = Online.mbmSelector(input=buffs[0],type='ONE',decode=False,event_type=2)
+  sel = OnlineEnv.mbmSelector(input=buffs[0],type='ONE',decode=False,event_type=2)
   if requirement:
     print '++++ Warning: Setting requirements:',requirement
     sel.REQ1 = requirement
   app.EvtSel  = sel
-  app.Runable = Online.evtRunable(mep)
+  app.Runable = OnlineEnv.evtRunable(mep)
   app.Runable.NumErrorToStop = -1;
   app.ExtSvc.append(mep)
   app.ExtSvc.append(sel)
@@ -235,7 +243,7 @@ def setupOnline():
   Configs.MonitorSvc().UniqueServiceNames = 1
   Configs.RootHistCnv__PersSvc("RootHistSvc").OutputLevel = MSG_ERROR
   app.OutputLevel = MSG_INFO
-  if Online.RecoStartupMode>0:      ### os.environ.has_key('NBOFSLAVES'):
+  if OnlineEnv.RecoStartupMode>0:      ### os.environ.has_key('NBOFSLAVES'):
     configureForking(app)
 
 #============================================================================================================
@@ -246,7 +254,7 @@ def patchMessages():
 
         @author M.Frank
   """
-  import OnlineEnv as Online
+  import OnlineEnv
   app=Gaudi.ApplicationMgr()
   Configs.AuditorSvc().Auditors = []
   app.MessageSvcType = 'LHCb::FmcMessageSvc'
@@ -256,7 +264,7 @@ def patchMessages():
   msg.fifoPath      = os.environ['LOGFIFO']
   msg.LoggerOnly    = True
   msg.doPrintAlways = False
-  msg.OutputLevel   = MSG_INFO # Online.OutputLevel
+  msg.OutputLevel   = MSG_INFO # OnlineEnv.OutputLevel
 
 #============================================================================================================
 def start():
@@ -265,16 +273,16 @@ def start():
 
         @author M.Frank
   """
-  import OnlineEnv as Online
-  Online.end_config(False)
-  #Online.end_config(True)
+  import OnlineEnv
+  OnlineEnv.end_config(False)
+  #OnlineEnv.end_config(True)
 
 #============================================================================================================
 def getProcessingType():
   import os
-  import OnlineEnv as Online
+  import OnlineEnv
 
-  if (hasattr(Online,'ActivityType') and getattr(Online,'ActivityType') == 'Reprocessing'):
+  if (hasattr(OnlineEnv,'ActivityType') and getattr(OnlineEnv,'ActivityType') == 'Reprocessing'):
     return 'Reprocessing'
   if os.environ.has_key('Standalone_test'):
     return 'Reprocessing'
@@ -287,7 +295,7 @@ true_online = os.environ.has_key('LOGFIFO') and os.environ.has_key('PARTITION')
 debug = not true_online
 
 if not true_online:
-  print '\n            Running terminal version 1.1 of Brunel ONLINE\n\n'  
+  print '\n            Running terminal version 1.1 of Escher Online\n\n'
   requirement = "EvType=2;TriggerMask=0x0,0x4,0x0,0x0;VetoMask=0,0,0,0x300;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 
   ##requirement = "EvType=1;TriggerMask=0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF;VetoMask=0,0,0,0x0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
