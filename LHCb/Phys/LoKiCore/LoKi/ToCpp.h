@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include <tuple>
+#include <map>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -118,6 +119,8 @@ namespace Gaudi
     inline std::string toCpp( const std::tuple<TYPE1,TYPE2,TYPE3,TYPE4>& o ) ;
     template <class TYPE1, class TYPE2, class TYPE3, class TYPE4, class TYPE5>
     inline std::string toCpp( const std::tuple<TYPE1,TYPE2,TYPE3,TYPE4,TYPE5>& o ) ;
+    template <class TYPE1, class TYPE2, class TYPE3, class TYPE4, class TYPE5, class TYPE6>
+    inline std::string toCpp( const std::tuple<TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6>& o ) ;
     // ========================================================================
     template <class TYPE>
     inline std::string toCpp ( const std::vector<TYPE>& v )
@@ -180,6 +183,32 @@ namespace Gaudi
         toCpp ( std::get<3> ( o ) ) + ", " + 
         toCpp ( std::get<4> ( o ) ) ;
     }
+    template <class TYPE1, class TYPE2, class TYPE3, class TYPE4, class TYPE5,class TYPE6>
+    inline std::string toCpp( const std::tuple<TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6>& o ) 
+    {
+      return 
+        toCpp ( std::get<0> ( o ) ) + ", " + 
+        toCpp ( std::get<1> ( o ) ) + ", " + 
+        toCpp ( std::get<2> ( o ) ) + ", " + 
+        toCpp ( std::get<3> ( o ) ) + ", " + 
+        toCpp ( std::get<4> ( o ) ) + ", " + 
+        toCpp ( std::get<5> ( o ) ) ;
+    }
+    template <class TYPE1, class TYPE2, 
+              class TYPE3, class TYPE4, 
+              class TYPE5, class TYPE6, class TYPE7>
+    inline std::string toCpp( const std::tuple<TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7>& o ) 
+    {
+      return 
+        toCpp ( std::get<0> ( o ) ) + ", " + 
+        toCpp ( std::get<1> ( o ) ) + ", " + 
+        toCpp ( std::get<2> ( o ) ) + ", " + 
+        toCpp ( std::get<3> ( o ) ) + ", " + 
+        toCpp ( std::get<4> ( o ) ) + ", " + 
+        toCpp ( std::get<5> ( o ) ) + ", " + 
+        toCpp ( std::get<6> ( o ) ) ;
+    }
+    // ========================================================================
   } //                                               The end of namespace Gaudi 
   // ==========================================================================
 } //                                          The end of namespace Gaudi::Utils 
