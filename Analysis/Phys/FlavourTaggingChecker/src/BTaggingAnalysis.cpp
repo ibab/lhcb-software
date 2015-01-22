@@ -1,7 +1,11 @@
 // Include files 
 #include "BTaggingAnalysis.h"
 
-#include "LoKi/LoKi.h" 
+// from LOKI
+#include "LoKi/Functors.h"           // NB: changed by VB: instead of LoKi/LoKi.h
+#include "LoKi/ParticleCuts.h"       // NB: added by VB  2015-01-21
+#include "LoKi/VertexCuts.h"         // NB: added by VB  2015-01-21
+#include "LoKi/ParticleProperties.h" // NB: added by VB  2015-01-21
 #include "LoKi/ParticleContextCuts.h" 
 
 #include "Event/ODIN.h" // event & run number
@@ -181,6 +185,21 @@ StatusCode BTaggingAnalysis::initialize() {
     return StatusCode::FAILURE;
   }
   
+  // Particle IDs
+  ID_Lambda0 = LoKi::Particles::pidFromName("Lambda0");
+  ID_Lambda0Bar = LoKi::Particles::pidFromName("Lambda~0");
+  ID_PiP = LoKi::Particles::pidFromName("pi+");
+  ID_PiM = LoKi::Particles::pidFromName("pi-");  
+  ID_KP = LoKi::Particles::pidFromName("K+");
+  ID_KM = LoKi::Particles::pidFromName("K-");
+  ID_KS0 = LoKi::Particles::pidFromName("KS0");
+  ID_PP = LoKi::Particles::pidFromName("p+");
+  ID_PM = LoKi::Particles::pidFromName("p~-");
+  ID_EP = LoKi::Particles::pidFromName("e+");
+  ID_EM = LoKi::Particles::pidFromName("e-");
+  ID_MuP = LoKi::Particles::pidFromName("mu+");
+  ID_MuM = LoKi::Particles::pidFromName("mu-");
+
   return StatusCode::SUCCESS;
 }
 
@@ -2119,11 +2138,11 @@ StatusCode BTaggingAnalysis::AddCharmInfo(const Particle::ConstVector& cands,
     for (SmartRefVector<Particle>::const_iterator idau = daus.begin(); idau != daus.end(); ++idau) {
 
       const Particle *interCand = *idau;
+      LHCb::ParticleID interID = interCand->particleID();
       
       // LAMBDA0
       std::vector<const Particle*> sublist;
-      if (interCand->particleID() == LoKi::Particles::_ppFromName("Lambda0")->particleID() or
-          interCand->particleID() == LoKi::Particles::_ppFromName("Lambda~0")->particleID()) {
+      if ( interID == ID_Lambda0 or interID == ID_Lambda0Bar) {
         //        std::cout << "Examining " << interCand->particleID() << " ... " << std::endl;
         lambdaCtau = fCTAU(interCand);
         lambdaMass = interCand->measuredMass()/GeV;
@@ -2140,10 +2159,11 @@ StatusCode BTaggingAnalysis::AddCharmInfo(const Particle::ConstVector& cands,
       for (std::vector<const Particle*>::const_iterator iidau = sublist.begin(); iidau != sublist.end(); ++iidau) {
         
         const Particle* daucand = *iidau;
+        LHCb::ParticleID dauID = daucand->particleID();
         //        std::cout << "Examining " << daucand->particleID() << " ... " << std::endl;
         
         // KS0
-        if (daucand->particleID() == LoKi::Particles::_ppFromName("KS0")->particleID()) {
+        if (dauID == ID_KS0) {
           ksCtau = fCTAU(daucand);
           ksMass = daucand->measuredMass()/GeV;
         }
@@ -2161,8 +2181,7 @@ StatusCode BTaggingAnalysis::AddCharmInfo(const Particle::ConstVector& cands,
         }
         
         // PROTON
-        if (daucand->particleID() == LoKi::Particles::_ppFromName("p+")->particleID() or
-            daucand->particleID() == LoKi::Particles::_ppFromName("p~-")->particleID()) {
+        if (dauID == ID_PP or dauID == ID_PM) {
           if (not setProton) {
             setProton = true;
             proId = daucand->particleID().pid();
@@ -2181,8 +2200,7 @@ StatusCode BTaggingAnalysis::AddCharmInfo(const Particle::ConstVector& cands,
         }      
         
         // KAON
-        if (daucand->particleID() == LoKi::Particles::_ppFromName("K+")->particleID() or
-            daucand->particleID() == LoKi::Particles::_ppFromName("K-")->particleID()) {
+        if (dauID == ID_KP or dauID == ID_KM) {
           if (not setKaon) {
             setKaon = true;
             kaonId = daucand->particleID().pid();
@@ -2201,8 +2219,7 @@ StatusCode BTaggingAnalysis::AddCharmInfo(const Particle::ConstVector& cands,
         }      
         
         // PION EXTREMUM
-        if (daucand->particleID() == LoKi::Particles::_ppFromName("pi+")->particleID() or
-            daucand->particleID() == LoKi::Particles::_ppFromName("pi-")->particleID()) {
+        if (dauID == ID_PiP or dauID == ID_PiM) {
           if (not setPion) {
             setPion = true;
             pionId = daucand->particleID().pid();
@@ -2239,8 +2256,7 @@ StatusCode BTaggingAnalysis::AddCharmInfo(const Particle::ConstVector& cands,
         }
 
         // ELECTRON
-        if (daucand->particleID() == LoKi::Particles::_ppFromName("e+")->particleID() or
-            daucand->particleID() == LoKi::Particles::_ppFromName("e-")->particleID()) {
+        if (dauID == ID_EP or dauID == ID_EM) {
           if (daucand->proto()){
             elecNNe = daucand->proto()->info(ProtoParticle::ProbNNe, -1.0);
             elecPT = daucand->proto()->info(ProtoParticle::TrackPt, -1.0);
@@ -2249,8 +2265,7 @@ StatusCode BTaggingAnalysis::AddCharmInfo(const Particle::ConstVector& cands,
         }
         
         // MUON
-        if (daucand->particleID() == LoKi::Particles::_ppFromName("mu+")->particleID() or 
-            daucand->particleID() == LoKi::Particles::_ppFromName("mu-")->particleID()) {
+        if (dauID == ID_MuP or dauID == ID_MuM) {
           if (daucand->proto()) {
             muonNNmu = daucand->proto()->info(ProtoParticle::ProbNNmu, -1.0);
             muonPT = daucand->proto()->info(ProtoParticle::TrackPt, -1.0);
