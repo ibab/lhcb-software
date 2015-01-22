@@ -21,7 +21,7 @@ OTt0OnlineClbrAlg.OutputLevel = 2
 OTt0OnlineClbrAlg.Simulation = False 
 OTt0OnlineClbrAlg.Fit_module_contributions = True
 OTt0OnlineClbrAlg.GetMean_instead_of_Fit = False
-OTt0OnlineClbrAlg.Save_Fits = False
+OTt0OnlineClbrAlg.Save_Fits = True
 
 simulation = OTt0OnlineClbrAlg.Simulation
 

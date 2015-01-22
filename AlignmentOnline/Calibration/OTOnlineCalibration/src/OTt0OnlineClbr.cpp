@@ -212,18 +212,19 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
  
   TFile * outFile = new TFile("calibration_monitoring.root", "RECREATE");
 
+  //To Book Monitoring histograms
+  std::cout << "Book hists ..." << std::endl;
+  TH1D* hdt0 = new TH1D("hdt0", "hdt0", 432, 0, 432);
+  TH1D* ht0 = new TH1D("ht0", "ht0", 432, 0, 432);
+
   if( false == f->IsZombie() )
-    {   
+      {   
       unsigned int xmlVersion;
 
      // To store HPD occupancies
      //std::vector<std::pair<unsigned int, double>> Rich1_OccsVec, Rich2_OccsVec;
      //std::pair<unsigned int, double> HpdOcc;
 
-     //To Book Monitoring histograms
-      std::cout << "Book hists ..." << std::endl;
-      TH1D* hdt0 = new TH1D("hdt0", "", 432, 0, 432);
-      TH1D* ht0 = new TH1D("ht0", "", 432, 0, 432);
 
      //Global t0 from a single distribution
      
@@ -367,12 +368,21 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
 		     StatusCode sc_23L = fit_single_hist(hist23L,s,l,q, m, residual_23L, residual_23L_err, histName23L , outFile);
 		     StatusCode sc_23R = fit_single_hist(hist23R,s,l,q, m, residual_23R, residual_23R_err, histName23R , outFile);
 		   }
- 
-		   test[s][l][q][m] = 0.25*(residual_01L + residual_01R + residual_23L+ residual_23R);
+
+		   if( m==8 && (q == 0 || q == 2)){ //in this case the module is only half, so has only 2 half monlayer contributions 
+		     test[s][l][q][m] = 0.5*(residual_01L + residual_01R);
+
+		     dt0err = 0.2*(sqrt((residual_01L_err*residual_01L_err)+(residual_01R_err*residual_01R_err)));
+
+		   }
+		   else{
+		     test[s][l][q][m] = 0.25*(residual_01L + residual_01R + residual_23L+ residual_23R);
 		   
-		   dt0err = 0.25*(sqrt((residual_01L_err*residual_01L_err)+(residual_01R_err*residual_01R_err)
-				       +(residual_23L_err*residual_23L_err)+(residual_23R_err*residual_23R_err)));
-		   
+
+		     dt0err = 0.25*(sqrt((residual_01L_err*residual_01L_err)+(residual_01R_err*residual_01R_err)
+					 +(residual_23L_err*residual_23L_err)+(residual_23R_err*residual_23R_err)));
+		   }
+
 		 }
 
 		 double dt0 =  test[s][l][q][m];
@@ -398,6 +408,7 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
 		 dt0_ = dt0;
 		 dt0err_ = dt0err;
 		 */
+		 
 		 
 		 hdt0->SetBinContent(hdt0->FindBin(modulen),  dt0);
 		 hdt0->SetBinError(hdt0->FindBin(modulen), dt0err);
@@ -518,12 +529,11 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
      //  Rich2_OccsVec.clear();
      
      f->Close();
-   
+     
     } else {
-   
-    //warning() << m_mergedRun.second.c_str() << " is zombie "
+    
     warning() << "file is zombie "
-	     << endmsg;
+	      << endmsg;
   }
   
   writeCondXMLs(t0s);
@@ -533,17 +543,27 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
   t0Studies_file.flush();
   t0Studies_file.close();
 
-   // if(save_fits){
-   //   outFile->cd();
-   //   hdt0->Write();
-   //   ht0->Write();
-   // }
-
-  //outFile->Flush();
-  outFile->Close();
-
   
   delete f;
+
+
+  if(!ht0){
+    Error("Histogram not found " );
+  }
+
+
+  TH1D* hdt0proj = new TH1D("hdt0proj", "", 100, -10, 10);
+  for(int i = 0; i < 432; i++) if(hdt0->GetBinContent(i+1) != 0) hdt0proj->Fill(hdt0->GetBinContent(i+1));
+
+  if(save_fits){
+    outFile->cd();
+    hdt0->Write();
+    ht0->Write();
+    hdt0proj->Write();
+  }
+  
+  //outFile->Flush();
+  outFile->Close();
   
   return StatusCode::SUCCESS;
 }
