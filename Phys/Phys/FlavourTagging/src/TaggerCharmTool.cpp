@@ -43,6 +43,8 @@ using namespace Gaudi::Units;
 
 using namespace CharmTaggerSpace;
 
+typedef LoKi::FunctorFromFunctor<const LHCb::Particle*, bool> IDFun;
+
 //--------------------------------------------------------------------
 // Implementation file for class : TaggerCharmTool
 //
@@ -151,6 +153,21 @@ StatusCode TaggerCharmTool::initialize()
   // variable_names.push_back("charm_maxprobnnghostdaus");
 
   //  m_myDATAreader = new CharmOSWrapper(variable_names);
+
+  // Particle IDs
+  ID_Lambda0 = LoKi::Particles::pidFromName("Lambda0");
+  ID_Lambda0Bar = LoKi::Particles::pidFromName("Lambda~0");
+  ID_PiP = LoKi::Particles::pidFromName("pi+");
+  ID_PiM = LoKi::Particles::pidFromName("pi-");  
+  ID_KP = LoKi::Particles::pidFromName("K+");
+  ID_KM = LoKi::Particles::pidFromName("K-");
+  ID_KS0 = LoKi::Particles::pidFromName("KS0");
+  ID_PP = LoKi::Particles::pidFromName("p+");
+  ID_PM = LoKi::Particles::pidFromName("p~-");
+  ID_EP = LoKi::Particles::pidFromName("e+");
+  ID_EM = LoKi::Particles::pidFromName("e-");
+  ID_MuP = LoKi::Particles::pidFromName("mu+");
+  ID_MuM = LoKi::Particles::pidFromName("mu-");
 
   return sc;
 }
@@ -322,6 +339,20 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
       Fun fVDCHI2 = VDCHI2(RecVert);
       VFun dist = VVDCHI2(RecVert);
 
+      // IDFun ID_Lambda0 = (ABSID == "Lambda0");
+      // IDFun ID_Lambda0Bar = (ABSID == "Lambda~0");
+      // IDFun ID_PiP = (ABSID == "pi+");
+      // IDFun ID_PiM = (ABSID == "pi-");  
+      // IDFun ID_KP = (ABSID == "K+");
+      // IDFun ID_KM = (ABSID == "K-");
+      // IDFun ID_KS0 = (ABSID == "KS0");
+      // IDFun ID_PP = (ABSID == "p+");
+      // IDFun ID_PM = (ABSID == "p~-");
+      // IDFun ID_EP = (ABSID == "e+");
+      // IDFun ID_EM = (ABSID == "e-");
+      // IDFun ID_MuP = (ABSID == "mu+");
+      // IDFun ID_MuM = (ABSID == "mu-");
+
       // Loop
       for (Gaudi::Range_<LHCb::Particle::ConstVector>::const_iterator icand = purgedParts.begin();
            icand != purgedParts.end(); ++icand) {
@@ -410,11 +441,11 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
         for (SmartRefVector<Particle>::const_iterator idau = daus.begin(); idau != daus.end(); ++idau) {
 
           const Particle *interCand = *idau;
-      
+          LHCb::ParticleID interID = interCand->particleID();
+          
           // LAMBDA0
           std::vector<const Particle*> sublist;
-          if (interCand->particleID() == LoKi::Particles::_ppFromName("Lambda0")->particleID() or
-              interCand->particleID() == LoKi::Particles::_ppFromName("Lambda~0")->particleID()) {
+          if ( interID == ID_Lambda0 or interID == ID_Lambda0Bar) {
             //        std::cout << "Examining " << interCand->particleID() << " ... " << std::endl;
             // lambdaCtau = fCTAU(interCand);
             // lambdaMass = interCand->measuredMass()/GeV;
@@ -432,10 +463,11 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
           for (std::vector<const Particle*>::const_iterator iidau = sublist.begin(); iidau != sublist.end(); ++iidau) {
         
             const Particle* daucand = *iidau;
-            //        std::cout << "Examining " << daucand->particleID() << " ... " << std::endl;
+            LHCb::ParticleID dauID = daucand->particleID();
+            //        std::cout << "Examining " << dauID << " ... " << std::endl;
         
             // KS0
-            if (daucand->particleID() == LoKi::Particles::_ppFromName("KS0")->particleID()) {
+            if (dauID == ID_KS0) {
               // ksCtau = fCTAU(daucand);
               // ksMass = daucand->measuredMass()/GeV;
             }
@@ -453,11 +485,10 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
             }
         
             // PROTON
-            if (daucand->particleID() == LoKi::Particles::_ppFromName("p+")->particleID() or
-                daucand->particleID() == LoKi::Particles::_ppFromName("p~-")->particleID()) {
+            if (dauID == ID_PP or dauID == ID_PM) {
               if (not setProton) {
                 setProton = true;
-                proId = daucand->particleID().pid();
+                proId = dauID.pid();
                 if (daucand->proto()) {
                   proPT = daucand->proto()->info(ProtoParticle::TrackPt, -1.0);
                   // proDLLp = daucand->proto()->info(ProtoParticle::CombDLLp, -1.0);
@@ -473,11 +504,10 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
             }      
         
             // KAON
-            if (daucand->particleID() == LoKi::Particles::_ppFromName("K+")->particleID() or
-                daucand->particleID() == LoKi::Particles::_ppFromName("K-")->particleID()) {
+            if (dauID == ID_KP or dauID == ID_KM) {
               if (not setKaon) {
                 setKaon = true;
-                kaonId = daucand->particleID().pid();
+                kaonId = dauID.pid();
                 if (daucand->proto()) {
                   kaonPT = daucand->proto()->info(ProtoParticle::TrackPt, -1.0);
                   // kaonDLLp = daucand->proto()->info(ProtoParticle::CombDLLp, -1.0);
@@ -493,11 +523,10 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
             }      
         
             // PION EXTREMUM
-            if (daucand->particleID() == LoKi::Particles::_ppFromName("pi+")->particleID() or
-                daucand->particleID() == LoKi::Particles::_ppFromName("pi-")->particleID()) {
+            if (dauID == ID_PiP or dauID == ID_PiM) {
               if (not setPion) {
                 setPion = true;
-                pionId = daucand->particleID().pid();
+                pionId = dauID.pid();
                 if (daucand->proto()) {
                   pionPT = daucand->proto()->info(ProtoParticle::TrackPt, -1.0);
                   // pionDLLp = daucand->proto()->info(ProtoParticle::CombDLLp, -1.0);
@@ -508,7 +537,7 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
                 pionIppvchi2 = ipPvChi2(daucand);
                 pionIpMinchi2 = ipChi2Min(daucand);
               } else {
-                double charge = daucand->particleID().pid(); charge /= abs(charge);
+                double charge = dauID.pid(); charge /= abs(charge);
                 pionId *= charge;
                 if (daucand->proto()) {
                   double PT = daucand->proto()->info(ProtoParticle::TrackPt, -1.0);
@@ -531,8 +560,7 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
             }
         
             // ELECTRON
-            if (daucand->particleID() == LoKi::Particles::_ppFromName("e+")->particleID() or
-                daucand->particleID() == LoKi::Particles::_ppFromName("e-")->particleID()) {
+            if (dauID == ID_EP or dauID == ID_EM) {
               if (daucand->proto()){
                 elecNNe = daucand->proto()->info(ProtoParticle::ProbNNe, -1.0);
                 elecPT = daucand->proto()->info(ProtoParticle::TrackPt, -1.0);
@@ -541,8 +569,7 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
             }
         
             // MUON
-            if (daucand->particleID() == LoKi::Particles::_ppFromName("mu+")->particleID() or 
-                daucand->particleID() == LoKi::Particles::_ppFromName("mu-")->particleID()) {
+            if (dauID == ID_MuP or dauID == ID_MuM) {
               if (daucand->proto()) {
                 muonNNmu = daucand->proto()->info(ProtoParticle::ProbNNmu, -1.0);
                 muonPT = daucand->proto()->info(ProtoParticle::TrackPt, -1.0);

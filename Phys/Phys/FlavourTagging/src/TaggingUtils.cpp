@@ -96,6 +96,20 @@ StatusCode TaggingUtils::initialize()
       return StatusCode::FAILURE;
   };
 
+  // Particle IDs
+  lambda_pid = LoKi::Particles::pidFromName("Lambda0").abspid();
+  pi_pid = LoKi::Particles::pidFromName("pi+").abspid();
+  pi0_pid = LoKi::Particles::pidFromName("pi0").abspid();
+  k_pid = LoKi::Particles::pidFromName("K+").abspid();
+  ks_pid = LoKi::Particles::pidFromName("KS0").abspid();
+  p_pid = LoKi::Particles::pidFromName("p+").abspid();
+  e_pid = LoKi::Particles::pidFromName("e+").abspid();
+  mu_pid = LoKi::Particles::pidFromName("mu+").abspid();
+  d0_pid = LoKi::Particles::pidFromName("D0").abspid();
+  d_pid = LoKi::Particles::pidFromName("D+").abspid();
+  lambdaC_pid = LoKi::Particles::pidFromName("Lambda_c+").abspid();
+
+
   return sc;
 }
 //==========================================================================
@@ -326,18 +340,6 @@ CharmMode TaggingUtils::getCharmDecayMode(const LHCb::Particle* cand, int candTy
 {
 
   CharmMode mode = CharmMode::None;
-
-  const unsigned int d0_pid = LoKi::Particles::_ppFromName("D0")->particleID().abspid();
-  const unsigned int d_pid = LoKi::Particles::_ppFromName("D+")->particleID().abspid();
-  const unsigned int lambdaC_pid = LoKi::Particles::_ppFromName("Lambda_c+")->particleID().abspid();
-  // const unsigned int lambda_pid = LoKi::Particles::_ppFromName("Lambda0")->particleID().abspid();
-  const unsigned int p_pid = LoKi::Particles::_ppFromName("p+")->particleID().abspid();
-  const unsigned int k_pid = LoKi::Particles::_ppFromName("K+")->particleID().abspid();
-  // const unsigned int ks_pid = LoKi::Particles::_ppFromName("KS0")->particleID().abspid();
-  const unsigned int pi_pid = LoKi::Particles::_ppFromName("pi+")->particleID().abspid();
-  const unsigned int pi0_pid = LoKi::Particles::_ppFromName("pi0")->particleID().abspid();
-  const unsigned int e_pid = LoKi::Particles::_ppFromName("e+")->particleID().abspid();
-  const unsigned int mu_pid = LoKi::Particles::_ppFromName("mu+")->particleID().abspid();
 
   const SmartRefVector<Particle>& daus = cand->daughters();
   int numDaus = daus.size();

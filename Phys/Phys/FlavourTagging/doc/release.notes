@@ -6,6 +6,9 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2015-01-22 - Jack Wimberley
+ - Fixed inefficient usage of _ppFromName function
+
 ! 2015-01-22 - Eduardo Rodrigues
  - Trivial fixes to remove compilation warnings from various .C class files
    under src/TMVAClassification/mva_charmtagger_reco14/.
@@ -17,7 +20,6 @@
  -  cmt/requirements  Phys/LoKi  ->  Phys/LoKiPhys 
     src/TaggerCharmTool.cpp  use correct LoKi headers  
     src/TaggingUtils.cpp     use correct LoKi headers 
-
 
 ! 2015-01-19 - Eduardo Rodrigues
  - Added python/FlavourTagging/__init__.py to please CMake.

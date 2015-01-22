@@ -161,6 +161,19 @@ private:
   IParticleDescendants* m_descend;
   IDVAlgorithm* m_dva;
 
+  LHCb::ParticleID ID_Lambda0;
+  LHCb::ParticleID ID_Lambda0Bar;
+  LHCb::ParticleID ID_PiP;
+  LHCb::ParticleID ID_PiM;
+  LHCb::ParticleID ID_KP;
+  LHCb::ParticleID ID_KM;
+  LHCb::ParticleID ID_KS0;
+  LHCb::ParticleID ID_PP;
+  LHCb::ParticleID ID_PM;
+  LHCb::ParticleID ID_EP;
+  LHCb::ParticleID ID_EM;
+  LHCb::ParticleID ID_MuP;
+  LHCb::ParticleID ID_MuM;
 
 };
 

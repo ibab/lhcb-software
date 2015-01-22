@@ -92,6 +92,8 @@ private:
 
   const IDistanceCalculator* getDistanceCalculator() { return m_Dist;}
 
+  unsigned int lambda_pid, pi_pid, pi0_pid, k_pid, ks_pid, p_pid, e_pid, mu_pid, d0_pid, d_pid, lambdaC_pid;
+
 };
 
 //===============================================================//
