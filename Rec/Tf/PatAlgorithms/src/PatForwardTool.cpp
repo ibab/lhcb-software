@@ -228,7 +228,9 @@ static const  auto not_selected = [](const PatForwardHit* hit) { return !hit->is
 PatForwardTool::PatForwardTool( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-    : base_class( type, name , parent )
+  : base_class( type, name , parent )
+  , m_trackSelector(nullptr)
+    
 {
   declareInterface<IPatForwardTool>(this);
   declareInterface<ITracksFromTrack>(this);
@@ -276,8 +278,14 @@ PatForwardTool::PatForwardTool( const std::string& type,
   declareProperty("PreselectionPT",m_PreselectionPT = 400.*Gaudi::Units::MeV);
   declareProperty("UseWrongSignWindow",m_UseWrongSignWindow = false);
   declareProperty("WrongSignPT",m_WrongSignPT = 2000.*Gaudi::Units::MeV);
-  declareProperty("FlagUsedSeeds",m_FlagUsedSeeds = false);
-  declareProperty("SkipUsedSeeds",m_SkipUsedSeeds = false);
+  //declareProperty("FlagUsedSeeds",m_FlagUsedSeeds = false);
+
+  //declareProperty("SkipUsedSeeds",m_skipUsedSeeds = false);
+  //declareProperty("SkipUsedHits",m_skipUsedHits = false);
+  declareProperty( "VeloVetoTracksName", m_veloVetoTracksName = "");
+  declareProperty( "UsedLHCbIDToolName",m_LHCbIDToolName = "");
+  //declareProperty( "UnusedVeloSeeds", m_unusedVeloSeeds = false); 
+  declareProperty( "TrackSelectorName",  m_trackSelectorName   = "None");
 
 }
 
@@ -293,15 +301,87 @@ StatusCode PatForwardTool::initialize ( ) {
   m_tHitManager  = tool<Tf::TStationHitManager<PatForwardHit> >("PatTStationHitManager");
   m_fwdTool      = tool<PatFwdTool>( "PatFwdTool", this);
 
+  m_trackSelector = (m_trackSelectorName != "None") ? tool<ITrackSelector>(m_trackSelectorName, this)
+                                                    : nullptr;
+
+  incSvc()->addListener(this, IncidentType::BeginEvent);
+  m_newEvent = true;
+
   if ( "" != m_addTtToolName  ) {
     m_addTTClusterTool = tool<IAddTTClusterTool>( m_addTtToolName, this );
   } else {
     m_addTTClusterTool = nullptr;
   }
-
-
+  
+  if (!m_LHCbIDToolName.empty()){
+    m_skipUsedHits = true;
+    m_usedLHCbIDTool =  tool<IUsedLHCbID>(m_LHCbIDToolName, this);
+  }else{
+    m_skipUsedHits = false;
+    m_usedLHCbIDTool = nullptr;
+  }
+  
+  m_skipUsedSeeds = !m_veloVetoTracksName.empty();
+                         
   return StatusCode::SUCCESS;
 }
+
+//=============================================================================
+// -- Check if new event has occurred. If yes, set flag
+// -- Note: The actions of initEvent cannot be executed here,
+// -- as this handle runs before decoding the clusters
+//=============================================================================
+void PatForwardTool::handle ( const Incident& incident ) {
+  
+  if ( IncidentType::BeginEvent == incident.type() ) m_newEvent = true;
+  
+}
+
+//=========================================================================
+//  Prepare hits
+//=========================================================================
+void PatForwardTool::prepareHits()
+{
+  m_tHitManager->prepareHits(); 
+  //== if any hits to be flagged as used, do so now...
+  if ( m_usedLHCbIDTool ) {
+    auto hits =   m_tHitManager->hits();
+    std::for_each( std::begin(hits), std::end(hits), [&](PatFwdHit* hit) {
+        //make sure we set all hits to false
+        hit->setIsUsed(false);
+        if (m_usedLHCbIDTool->used(hit->hit()->lhcbID())) hit->setIsUsed(true);
+    } );
+  }
+  m_newEvent = false;
+}
+
+
+//=========================================================================
+//  Check if a track should be processed. Default flags, and selector if defined
+//=========================================================================
+bool PatForwardTool::acceptTrack(const LHCb::Track& track) const
+{
+  if ( track.checkFlag( LHCb::Track::Invalid) ) return false;
+  if ( track.checkFlag( LHCb::Track::Backward) ) return false;
+  if ( m_trackSelector &&  !m_trackSelector->accept(track)) return false;
+  
+  // S.Stahl: Move this external. The track selector above could do the job.
+  if ( m_skipUsedSeeds ) {
+    LHCb::Track::Range vetoTracks = get<LHCb::Track::Range>( m_veloVetoTracksName ); 
+    for (auto it : vetoTracks ) { 
+      auto ancestors = it->ancestors();
+      if (!std::none_of( std::begin( ancestors ), std::end( ancestors ), 
+                         [&](const LHCb::Track* t) { return t == &track; } )){
+        counter("#SkippedUsedSeeds") += 1;
+        return false;
+      }
+    }
+  }
+  
+  //if ( msgLevel( MSG::VERBOSE )) verbose() << "For track " << track.key() << " accept flag =" << ok << endmsg;  
+  return true;
+}
+
 
 //=========================================================================
 //  Main execution: Extend a track.
@@ -331,17 +411,12 @@ void PatForwardTool::forwardTrack( const LHCb::Track* tr, LHCb::Tracks* output )
 
 StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
                                             std::vector<LHCb::Track*>& output ){
-
-  if ( seed.checkFlag( LHCb::Track::Invalid  ) ) return StatusCode::SUCCESS;
-  if ( seed.checkFlag( LHCb::Track::Backward ) ) return StatusCode::SUCCESS;
-  if ( m_SkipUsedSeeds && seed.checkFlag( LHCb::Track::Used ) ) {  // check if seed has already successfully been upgraded
-    counter("#SkippedUsedSeeds") += 1;
-    return StatusCode::SUCCESS;
-  }
+  if ( !acceptTrack(seed) ) return StatusCode::SUCCESS;
 
   counter("#Seeds") += 1;
 
   PatFwdTrackCandidate track( &seed );
+  // S.Stahl: Move this external. The track selector can do the job.
   if(m_Preselection && seed.pt() < m_PreselectionPT && 0 != track.qOverP()) return StatusCode::SUCCESS;
 
   bool isDebug = msgLevel( MSG::DEBUG );
@@ -356,7 +431,8 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
   // used in the x @ zRefenence computation of OT hits, will be missing.
   // Also, the order of IT hits in the overlap regions is not guaranteed to be
   // correct.
-  m_tHitManager->prepareHits();
+  if(m_newEvent) prepareHits();
+  //m_tHitManager->prepareHits();
 
   //== Build the initial list of X candidates
   buildXCandidatesList( track );
@@ -592,7 +668,8 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
                    [&fwTra](PatForwardHit *myHit) {
            fwTra->addToLhcbIDs( myHit->hit()->lhcbID() );
            myHit->hit()->setStatus(Tf::HitBase::UsedByPatForward);
-           myHit->setIsUsed(true);
+           //S.Stahl: This flag was nowehere used. Now used for hit flagging.
+           //myHit->setIsUsed(true);
     } );
     fwTra -> setPatRecStatus( LHCb::Track::PatRecIDs );
 
@@ -602,12 +679,13 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
           debug()<<" Failure in adding TT clusters to track"<<endmsg;
     }
   }
+  // S.Stahl: At this point you don't know if you actually want to flag the seed.
   // mark the input tracks and all ancestors as used
-  if(m_FlagUsedSeeds && !output.empty()){
-    const_cast<LHCb::Track&>(seed).setFlag(LHCb::Track::Used,true);
-    std::for_each( std::begin(seed.ancestors()), std::end(seed.ancestors()),
-                   [](const LHCb::Track* anc) { const_cast<LHCb::Track*>(anc)->setFlag(LHCb::Track::Used,true); } );
-  }
+  //if(m_FlagUsedSeeds && !output.empty()){
+  //  const_cast<LHCb::Track&>(seed).setFlag(LHCb::Track::Used,true);
+  // std::for_each( std::begin(seed.ancestors()), std::end(seed.ancestors()),
+  //                 [](const LHCb::Track* anc) { const_cast<LHCb::Track*>(anc)->setFlag(LHCb::Track::Used,true); } );
+  //}
 
   counter("#FinishedTracks") += output.size();
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "Finished track" << endmsg;
@@ -628,9 +706,9 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
   }
 
   auto yCompat = m_yCompatibleTol + 50 * fabs(track.slY());
-  auto not_ignored_and_y_compatible = [yCompat](double yRegion) {
-        return [yRegion,yCompat](const PatForwardHit* hit) {
-                              return !hit->hit()->ignore() &&  
+  auto not_ignored_and_y_compatible = [yCompat,this](double yRegion) {
+        return [yRegion,yCompat,this](const PatForwardHit* hit) {
+                              return !hit->hit()->ignore() && !(m_skipUsedHits && hit->isUsed()) &&
                                       hit->hit()->isYCompatible( yRegion, yCompat );
         };
   };
@@ -734,7 +812,9 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
     auto minProj = tol + int(ot) * 1.5;
 
     for ( auto* hit : m_tHitManager->hitsWithMinX(xHitMin, region.station(), region.layer(), region.region()) ) {
-      if (hit->hit()->ignore() || !hit->hit()->isYCompatible( yRegion, m_yCompatibleTol ) ) continue;
+      if (hit->hit()->ignore() 
+          || (m_skipUsedHits && hit->isUsed()) 
+          || !hit->hit()->isYCompatible( yRegion, m_yCompatibleTol ) ) continue;
       hit->setIgnored( false );
       bool ok = ot ? updateOTHit(hit) : updateITHit(hit);
       if (!ok) continue;

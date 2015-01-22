@@ -4,6 +4,11 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-01-22 - Sascha Stahl
+ - PatForward and PatForwardTool: Moved options to flag hits and seeds from PatForward to PatForwardTool,
+   such that PatForwardTool is aware of hit flagging. Changed the flag wich is used to flag used hits. 
+   Removed option to flag Velo seeds as at this point it is not clear which Velo seeds should be flagged.
+
 !========================= PatAlgorithms v4r38 2015-01-14 =========================
 ! 2015-01-09 - Michel De Cian
  - New parametrisations in 'PatMatchTool', lower ghost right and higher efficiency, mostly for low p tracks.

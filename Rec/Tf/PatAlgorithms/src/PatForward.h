@@ -6,11 +6,9 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
-#include "TrackInterfaces/ITrackSelector.h"
 #include "TrackInterfaces/IPatForwardTool.h"
 #include "TfKernel/TStationHitManager.h"
 #include "PatKernel/PatForwardHit.h"
-#include "Kernel/IUsedLHCbID.h"
 
 class IOTRawBankDecoder;
 
@@ -22,7 +20,7 @@ class IOTRawBankDecoder;
    *  @date   2007-08-20 Update for A-Team framework 
    */
 
-  class PatForward : public GaudiAlgorithm {
+class PatForward : public GaudiAlgorithm {
   public:
     /// Standard constructor
     PatForward( const std::string& name, ISvcLocator* pSvcLocator );
@@ -34,15 +32,12 @@ class IOTRawBankDecoder;
     
   private:
     
-    bool acceptTrack(const LHCb::Track& track) const;
     int overlaps(const LHCb::Track* lhs, const LHCb::Track* rhs ) const;
     
     int              m_fwdTime;
 
     std::string      m_inputTracksName;
     std::string      m_outputTracksName;
-    std::string      m_trackSelectorName;  
-    std::string      m_veloVetoTracksName;
     std::string      m_forwardToolName;
     
     int m_deltaNumberInTT;
@@ -58,13 +53,8 @@ class IOTRawBankDecoder;
     
     IOTRawBankDecoder* m_rawBankDecoder;
         
-    Tf::TStationHitManager <PatForwardHit> *  m_tHitManager;
-    
-    ITrackSelector*      m_trackSelector;
     IPatForwardTool*     m_forwardTool;
     ISequencerTimerTool* m_timerTool;
-    std::string                                 m_LHCbIDToolName;
-    IUsedLHCbID*                                m_usedLHCbIDTool; ///< Tool to check if hits are already being used
     bool             m_writeNNVariables; // switch on or off NN var. writing
   };
 #endif // PATFORWARD_H

@@ -7,11 +7,16 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/extends.h"
+#include "GaudiKernel/IIncidentListener.h"
 
 #include "TrackInterfaces/IPatForwardTool.h"
 #include "Event/STCluster.h"
 #include "TrackInterfaces/IAddTTClusterTool.h"
 #include "TrackInterfaces/ITracksFromTrack.h"
+#include "TrackInterfaces/ITrackSelector.h"
+
+
+#include "Kernel/IUsedLHCbID.h"
 
 #include "STDet/DeSTDetector.h"
 
@@ -32,7 +37,7 @@
  *  @date   2007-08-20 Update for A-Team framework
  */
 
-class PatForwardTool : public extends2<GaudiTool,IPatForwardTool,ITracksFromTrack> {
+class PatForwardTool : public extends2<GaudiTool,IPatForwardTool,ITracksFromTrack>, public IIncidentListener {
 public:
 
   /// Standard constructor
@@ -48,11 +53,15 @@ public:
 
   StatusCode tracksFromTrack( const LHCb::Track& seed,
                               std::vector<LHCb::Track*>& tracks ) override;
-
-
+  
+  bool acceptTrack(const LHCb::Track& track) const;
+  
   // added for NNTools
   void setNNSwitch( bool nnSwitch) override { m_nnSwitch = nnSwitch;}
   bool nnSwitch()       const       { return m_nnSwitch;}
+  
+  void handle ( const Incident& incident );
+  void prepareHits();
 
 private:
   void buildXCandidatesList( PatFwdTrackCandidate& track ) const;
@@ -185,6 +194,9 @@ private:
   std::string                                 m_addTtToolName;
   std::string                                 m_addUtToolName;
 
+  std::string      m_trackSelectorName;  
+  ITrackSelector*      m_trackSelector;
+
   //== Parameters of the algorithm
   bool   m_secondLoop;
   bool   m_useMomentumEstimate;
@@ -221,6 +233,8 @@ private:
   double m_stateErrorTY2;
   double m_stateErrorP;
 
+  bool m_newEvent;
+  
   mutable PatFwdHits  m_xHitsAtReference; // workspace
   mutable std::vector<PatFwdTrackCandidate> m_candidates; // workspace
 
@@ -229,8 +243,13 @@ private:
   double m_PreselectionPT;
   bool  m_UseWrongSignWindow;
   double m_WrongSignPT;
-  bool  m_FlagUsedSeeds;              // flag velo seeds as used if a track is upgraded
-  bool  m_SkipUsedSeeds;              // skip seeds which are flagged as "used" 
+  //bool  m_FlagUsedSeeds;              // flag velo seeds as used if a track is upgraded
+  std::string      m_veloVetoTracksName;
+  bool  m_skipUsedSeeds;              // skip seeds which are flagged as "used" 
+  bool  m_skipUsedHits;              // skip hits which are flagged as "used" 
+  std::string                                 m_LHCbIDToolName;
+  IUsedLHCbID*                                m_usedLHCbIDTool; ///< Tool to check if hits are already being used
+
   bool  m_nnSwitch = false;           // switch on or off NN var. writing
 };
 

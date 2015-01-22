@@ -45,7 +45,7 @@ public:
                                                   // FIXME: shouldn't this instead do what PatFwdRegionCounter::region does???
                                                   // as-is, this 'just' maps IT region 2 and IT region 4 together, and confuses the 
                                                   // this predicate, as 'r' varies from [0,5], and hence will select 
-      // if ( hit->hit()->type() != Tf::RegionID::OT) region+=Tf::RegionID::OTIndex::kNRegions ; // I suspect this is what was intended... matching the code in PatFwdRegionCounter...
+      //if ( hit->hit()->type() != Tf::RegionID::OT) region+=Tf::RegionID::OTIndex::kNRegions ; // I suspect this is what was intended... matching the code in PatFwdRegionCounter...
       return region == m_region;
     }
 };

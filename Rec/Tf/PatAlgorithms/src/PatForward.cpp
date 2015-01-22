@@ -70,15 +70,11 @@ PatForward::PatForward( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_fwdTime(0)
   , m_rawBankDecoder(nullptr)
-  , m_tHitManager(nullptr)
-  , m_trackSelector(nullptr)
   , m_forwardTool(nullptr)
   , m_timerTool(nullptr)
 { 
   declareProperty( "InputTracksName",    m_inputTracksName    = LHCb::TrackLocation::Velo );
   declareProperty( "OutputTracksName",   m_outputTracksName   = LHCb::TrackLocation::Forward);
-  declareProperty( "VeloVetoTracksName", m_veloVetoTracksName = LHCb::TrackLocation::Forward);
-  declareProperty( "TrackSelectorName",  m_trackSelectorName   = "None");
   declareProperty( "ForwardToolName",    m_forwardToolName    = "PatForwardTool" );
   declareProperty( "MaxNVelo",   m_maxNVelo = 1000 );  
   declareProperty( "maxITHits" ,  m_maxNumberITHits = 3000);  
@@ -86,9 +82,7 @@ PatForward::PatForward( const std::string& name,
   declareProperty( "DeltaNumberInT",   m_deltaNumberInT  = 3 );
   declareProperty( "DeltaNumberInTT",  m_deltaNumberInTT = 1 );
   declareProperty( "DoCleanUp", m_doClean = true); 
-  declareProperty( "UnusedVeloSeeds", m_unusedVeloSeeds = false); 
   declareProperty( "TimingMeasurement", m_doTiming = false);
-  declareProperty( "UsedLHCbIDToolName",m_LHCbIDToolName = "");
   // switch on or off NN var. writing
   declareProperty( "writeNNVariables", m_writeNNVariables = true);
 }
@@ -102,8 +96,6 @@ StatusCode PatForward::initialize() {
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
-  m_trackSelector = (m_trackSelectorName != "None") ? tool<ITrackSelector>(m_trackSelectorName, this)
-                                                    : nullptr;
 
   m_forwardTool = tool<IPatForwardTool>( m_forwardToolName, this );
   m_forwardTool->setNNSwitch( m_writeNNVariables); // pass the NN switch to PatForwardTool
@@ -118,36 +110,11 @@ StatusCode PatForward::initialize() {
   // tool handle to the ot raw bank decoder
   m_rawBankDecoder = tool<IOTRawBankDecoder>("OTRawBankDecoder");
 
-  m_tHitManager    = tool<Tf::TStationHitManager <PatForwardHit> >("PatTStationHitManager");
-
-  m_usedLHCbIDTool = !m_LHCbIDToolName.empty() ? tool<IUsedLHCbID>(m_LHCbIDToolName, this) 
-                                               : nullptr ;
+  //m_tHitManager    = tool<Tf::TStationHitManager <PatForwardHit> >("PatTStationHitManager");
 
   return StatusCode::SUCCESS;
 }
 
-//=========================================================================
-//  Check if a track should be processed. Default flags, and selector if defined
-//=========================================================================
-bool PatForward::acceptTrack(const LHCb::Track& track) const
-{
-    bool ok = !(track.checkFlag( LHCb::Track::Invalid) );
-    ok = ok && (!(track.checkFlag( LHCb::Track::Backward) ));
-
-    if (m_trackSelector) ok = ok && m_trackSelector->accept(track);
-
-    if (m_unusedVeloSeeds && ok) {
-      for (auto it : *get<LHCb::Tracks>( m_veloVetoTracksName)) { 
-        auto ancestors = it->ancestors();
-        ok = std::none_of( std::begin( ancestors ), std::end( ancestors ), 
-                           [&](const LHCb::Track* t) { return t == &track; } ) ;
-        if (!ok) break;
-      }
-    }
-    
-    if ( msgLevel( MSG::VERBOSE )) verbose() << "For track " << track.key() << " accept flag =" << ok << endmsg;
-    return ok;
-}
 
 int
 PatForward::overlaps(const LHCb::Track* lhs, const LHCb::Track* rhs ) const
@@ -178,6 +145,7 @@ StatusCode PatForward::execute() {
   LHCb::Tracks* outputTracks  = 
     getOrCreate<LHCb::Tracks,LHCb::Tracks>( m_outputTracksName);
 
+  // S.Stahl: Why are GEC cuts in here?
   if (inputTracks.size() > m_maxNVelo) {
     LHCb::ProcStatus* procStat =
       getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(
@@ -217,33 +185,22 @@ StatusCode PatForward::execute() {
   bool dbg = msgLevel(MSG::DEBUG);
   if ( dbg ) debug() << "==> Execute" << endmsg;
   if ( dbg  || m_doTiming ) m_timerTool->start( m_fwdTime );
-
-  m_tHitManager->prepareHits(); 
-
-  //== if any hits to be flagged as used, do so now...
-  if ( m_usedLHCbIDTool ) {
-    auto hits =   m_tHitManager->hits();
-    std::for_each( std::begin(hits), std::end(hits), [&](PatFwdHit* hit) {
-            if (m_usedLHCbIDTool->used(hit->hit()->lhcbID())) hit->hit()->setIgnore(true);
-    } );
-  }
-
+  
   int oriSize = outputTracks->size();
 
   counter("#Seeds") += inputTracks.size();
   
   for ( const LHCb::Track *seed: inputTracks ) {
-    if ( acceptTrack(*seed) ) {
-      auto prevSize = outputTracks->size();
-      m_forwardTool->forwardTrack(seed, outputTracks );
-      if ( dbg ) debug()  << " track " << seed->key()
-                          << " position " << seed->position()
-                          << " slopes " << seed->slopes()  
-                          << " cov \n" << seed->firstState().covariance() << "\n"
-                          << " produced " << outputTracks->size() - prevSize
-                          << " tracks " << endmsg;
-
-    }
+    auto prevSize = outputTracks->size();
+    m_forwardTool->forwardTrack(seed, outputTracks );
+    if ( dbg ) debug()  << " track " << seed->key()
+                        << " position " << seed->position()
+                        << " slopes " << seed->slopes()  
+                        << " cov \n" << seed->firstState().covariance() << "\n"
+                        << " produced " << outputTracks->size() - prevSize
+                        << " tracks " << endmsg;
+    
+    
   }
   // added for NNTools -- check how many tracks have common hits
   if( m_writeNNVariables){
