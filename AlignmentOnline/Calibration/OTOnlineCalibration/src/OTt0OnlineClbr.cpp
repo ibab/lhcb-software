@@ -62,10 +62,14 @@ OTt0OnlineClbr::OTt0OnlineClbr( const std::string& name, ISvcLocator* pSvcLocato
 
   detector = 0;
 
-  declareProperty("ReadXMLs", readXMLs = false, "Read condition XML files (default false)");
+  declareProperty("ReadXMLs", readXMLs = false, "Read LOCAL condition XML files (default false)");
   declareProperty("Simulation", simulation = false, " Is simulation or data (default false, so data)");
   declareProperty("Apply_Calibration", Apply_Calibration = false, " Apply_Calibration - in xml (by now) or in DB (default false,)");
   declareProperty("Verbose", verbose = false, " Verbose, for debugging (default false,)");
+  declareProperty("Save_Fits", save_fits = false, " Save fitted gaussian (default false,)");//currently broken: doesnt do anything
+  declareProperty("Fit_module_contributions", fit_module_contributions = true, " Fit 4 contributions each module (default true)");
+  declareProperty("GetMean_instead_of_Fit", getmean_instead_of_fit = false, "GetMean instead of fit the distributions ");
+
   //  declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/group/online/alignment/" );                               
   // declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/afs/cern.ch/user/l/lgrillo/databases_for_online" );   
   declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/afs/cern.ch/user/l/lgrillo/databases_for_online/OT/" );
@@ -144,47 +148,35 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
 				// << ", Run: " << getRunNumber( fileName )
 				      << endmsg;
 
-  double mtoff[] = {
-    27.8546, 27.4911, 27.1707, 26.8945, 26.6638, 26.4802, 26.3445, 26.2568, 26.2233, 27.8478, 27.485, 27.1654, 26.89, 26.66,
-    26.4774, 26.3425, 26.2557, 26.2183, 27.8823, 27.5192, 27.1991, 26.9231, 26.6927, 26.5092, 26.3737, 26.2874, 26.2548,
-    27.8755, 27.5131, 27.1938, 26.9185, 26.6889, 26.5065, 26.3718, 26.2863, 26.2499, 28.1602, 27.7832, 27.4486, 27.1581,
-    26.9129, 26.7143, 26.5635, 26.4614, 26.4162, 27.9127, 27.5628, 27.2564, 26.9949, 26.7797, 26.6116, 26.4919, 26.4203,
-    26.3989, 27.948, 27.5975, 27.2905, 27.0285, 26.8123, 26.6437, 26.5232, 26.4515, 26.4309, 28.1797, 27.8039, 27.4705,
-    27.1812, 26.9373, 26.7396, 26.5899, 26.4906, 26.4385, 28.1285, 27.7806, 27.4759, 27.2155, 27.0011, 26.8335, 26.7139,
-    26.6417, 26.6204, 28.3566, 27.9829, 27.6521, 27.3642, 27.1219, 26.9257, 26.7768, 26.6765, 26.6236, 28.3941, 28.0204,
-    27.689, 27.401, 27.158, 26.9613, 26.8118, 26.712, 26.6684, 28.1465, 27.7992, 27.4958, 27.2364, 27.0229, 26.8563,
-    26.7376, 26.6672, 26.647, 28.4043, 28.0483, 27.734, 27.4635, 27.2378, 27.0581, 26.9255, 26.8403, 26.8076, 28.3955, 28.0395,
-    27.7263, 27.4561, 27.2312, 27.0519, 26.9199, 26.8352, 26.7985, 28.4319, 28.0763, 27.7624, 27.4921, 27.2668, 27.0873, 26.9548,
-    26.8708, 26.8392, 28.4231, 28.0676, 27.7548, 27.485, 27.2602, 27.0811, 26.9493, 26.8659, 26.8301, 29.9962, 29.659, 29.3618, 29.1064,
-    28.8936, 28.7243, 28.5992, 28.5184, 28.4874, 29.9957, 29.6592, 29.3627, 29.108, 28.8956, 28.727, 28.6025, 28.5224, 28.4876,
-    30.024, 29.6872, 29.3902, 29.1352, 28.9228, 28.7535, 28.6285, 28.549, 28.5191, 30.0232, 29.687, 29.3909, 29.1363, 28.9241,
-    28.756, 28.6316, 28.5528, 28.5193, 30.2936, 29.9432, 29.6332, 29.3643, 29.1376, 28.9543, 28.8152, 28.7213, 28.6795,
-    30.0696, 29.7449, 29.4606, 29.2186, 29.0199, 28.8649, 28.7544, 28.6883, 28.6682, 30.0984, 29.773, 29.489, 29.2466, 29.047,
-    28.8915, 28.7804, 28.7145, 28.6956, 30.3194, 29.9702, 29.6607, 29.3929, 29.1675, 28.9852, 28.847, 28.7554, 28.7074,
-    30.2737, 29.951, 29.6685, 29.4276, 29.2294, 29.0747, 28.9644, 28.8977, 28.8779, 30.49, 30.1432, 29.8357, 29.5695, 29.3452,
-    29.1639, 29.0265, 28.9342, 28.8854, 30.5228, 30.1758, 29.8683, 29.6012, 29.3766, 29.195, 29.0571, 28.9649, 28.925, 30.2967,
-    29.9749, 29.6931, 29.4533, 29.256, 29.1021, 28.9927, 28.9281, 28.9096, 30.5439, 30.2125, 29.9213, 29.6709, 29.462,
-    29.2961, 29.1738, 29.0951, 29.0647, 30.5397, 30.209, 29.9183, 29.6682, 29.46, 29.2946, 29.1729, 29.0947, 29.0608, 30.5719,
-    30.2407, 29.9498, 29.6997, 29.4909, 29.3252, 29.2032, 29.1256, 29.0965, 30.5675, 30.2371, 29.9467, 29.6969, 29.489,
-    29.3239, 29.2022, 29.1253, 29.0926, 32.1781, 31.8639, 31.5876, 31.3502, 31.1529, 30.9959, 30.8803, 30.8056, 30.7769, 32.1733,
-    31.8596, 31.5844, 31.3472, 31.1507, 30.9942, 30.879, 30.8049, 30.7727, 32.2062, 31.8923, 31.6162, 31.3791, 31.1818,
-    31.0251, 30.9096, 30.8361, 30.8087, 32.2014, 31.888, 31.613, 31.3761, 31.1796, 31.0233, 30.9083, 30.8354, 30.8046, 32.468,
-    32.142, 31.8531, 31.6031, 31.3927, 31.2227, 31.0939, 31.0069, 30.9683, 32.255, 31.9526, 31.6888, 31.464, 31.2794,
-    31.1357, 31.0333, 30.972, 30.9534, 32.2883, 31.9859, 31.7212, 31.496, 31.311, 31.1667, 31.0638, 31.0029, 30.9857, 32.4905,
-    32.1651, 31.8774, 31.6284, 31.4187, 31.2495, 31.1213, 31.0365, 30.9923, 32.4635, 32.1625, 31.8993, 31.6756, 31.4915,
-    31.3481, 31.2458, 31.1838, 31.1653, 32.6667, 32.343, 32.0568, 31.809, 31.6005, 31.4325, 31.305, 31.2192, 31.1738, 32.6977,
-    32.3737, 32.0871, 31.8392, 31.6305, 31.4617, 31.3338, 31.2484, 31.2115, 32.4885, 32.1884, 31.9263, 31.7032, 31.5199,
-    31.3773, 31.2756, 31.2157, 31.1986, 32.7279, 32.419, 32.1478, 31.9149, 31.7209, 31.5668, 31.4532, 31.3801, 31.3518, 32.7255,
-    32.4177, 32.1464, 31.9141, 31.7206, 31.567, 31.4538, 31.3813, 31.3496, 32.7558, 32.4473, 32.1763, 31.9435, 31.7497,
-    31.5959, 31.4825, 31.4105, 31.3837, 32.7534, 32.446, 32.175, 31.9429, 31.7497, 31.5962, 31.4832, 31.4118, 31.3815
-  };
-
+  //double mtoff[3][4][4][9]; memset(mtoff, 0, sizeof(mtoff));
   double test[3][4][4][9]; memset(test, 0, sizeof(test));
   double t0s[3][4][4][9]; memset(t0s, 0, sizeof(t0s));
+  double global_t0 = 0.0;
+ 
+  //readCondXMLs(mtoff, true);
 
   //Here you need to read t0s?
   if(readXMLs) readCondXMLs(t0s);
   else readCondDB(t0s);
+
+  //temporary way to get the global t0: 
+  double read_global_t0 = 0.0;
+  debug() << "Temporary way to GET THE GLOBAL t0 : calculating from the module contributions in DB"<< endmsg;
+  for(int s = 0; s < 3; s++){
+    for(int l = 0; l < 4; l++){
+      for(int q = 0; q < 4; q++){
+        for(int m = 8; m >= 0; m--){
+	  read_global_t0 += t0s[s][l][q][m];
+        }
+      }
+    }
+  }
+  read_global_t0 = read_global_t0/432.0;
+  debug() << "GLOBAL t0 = " << read_global_t0 << endmsg;
+
+  //temporary output to compare the t0 values and uncertainties
+  std::string t0Studies_fileName = "t0_studies.txt";
+  std::ofstream t0Studies_file(t0Studies_fileName.c_str());
 
   //+++++++++++++++++++//
   //read file by Jibo
@@ -217,29 +209,65 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
   //TFile *f = new TFile(m_mergedRun.second.c_str(),"READ");
 
   TFile* f = new TFile("clbr_hists.root");
-  
+ 
+  TFile * outFile = new TFile("calibration_monitoring.root", "RECREATE");
+
   if( false == f->IsZombie() )
     {   
       unsigned int xmlVersion;
 
      // To store HPD occupancies
-     std::vector<std::pair<unsigned int, double>> Rich1_OccsVec, Rich2_OccsVec;
-     std::pair<unsigned int, double> HpdOcc;
+     //std::vector<std::pair<unsigned int, double>> Rich1_OccsVec, Rich2_OccsVec;
+     //std::pair<unsigned int, double> HpdOcc;
 
      //To Book Monitoring histograms
-     std::cout << "Book hists ..." << std::endl;
-     TH1D* hdt0 = new TH1D("hdt0", "", 432, 0, 432);
-     TH1D* ht0 = new TH1D("ht0", "", 432, 0, 432);
+      std::cout << "Book hists ..." << std::endl;
+      TH1D* hdt0 = new TH1D("hdt0", "", 432, 0, 432);
+      TH1D* ht0 = new TH1D("ht0", "", 432, 0, 432);
 
+     //Global t0 from a single distribution
+     
+     std::string histName_s1 = "OTModuleClbrMon/" + stationNames[0] + "/driftTimeResidual";
+     std::string histName_s2 = "OTModuleClbrMon/" + stationNames[1] + "/driftTimeResidual";
+     std::string histName_s3 = "OTModuleClbrMon/" + stationNames[2] + "/driftTimeResidual";
+
+     TH1D* hist_s1 = (TH1D*)f->Get(histName_s1.c_str());
+     TH1D* hist_s2 = (TH1D*)f->Get(histName_s2.c_str());
+     TH1D* hist_s3 = (TH1D*)f->Get(histName_s3.c_str());
+
+     TH1D* hist_global = (TH1D*)hist_s1->Clone();
+     hist_global->Reset("ICES");
+     hist_global->Add(hist_s1, hist_s2, 1.0, 1.0);
+     hist_global->Add(hist_s3, 1.0);
+
+     double residual_global = 0.0;
+     double residual_global_err = 0.0;
+
+     if(getmean_instead_of_fit){
+       residual_global = hist_global->GetMean();
+       residual_global_err = hist_global->GetMeanError();
+     }
+     else{
+       StatusCode sc_global_t0 = fit_single_hist(hist_global, -1, -1, -1, -1, residual_global, residual_global_err, "hist_global", outFile);
+     }
+
+     global_t0 = read_global_t0 + residual_global;
+ 
+     debug() << " GLOBAL t0 : " << global_t0 << endmsg;   
+     debug() << " GLOBAL dt0 : " << residual_global  << endmsg;   
+     debug() << " GLOBAL dt0_err : " << residual_global_err << endmsg;   
+  
      //Loop over the station layer quarter module
      std::cout << "Loop ..." << std::endl;
      for(int s = 0; s < 3; s++) 
        for(int l = 0; l < 4; l++) 
 	 for(int q = 0; q < 4; q++)
 	   {
+	     /* // used only for Alex's monitorning
 	     double t0_ = 0.0;
 	     double dt0_ = 0.0;
 	     double dt0err_ = 0.1;
+	     */
 	     for(int m = 8; m >= 0; m--)
 	       {
 		 std::string histName = "OTModuleClbrMon/" + stationNames[s] + "/" + layerNames[l] + "/" + quarterNames[q] + "/" + moduleNames[m] + "/driftTimeResidual";
@@ -258,15 +286,28 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
 	
 		 if(hist == 0 || hist->GetEntries() < 1000 || (s == 0 && m == 0))
 		   {
-		     if(m == 8) t0_ = -mtoff[modulen];
+		     //if(m == 8) t0_ = -mtoff[s][l][q][m]; //
+		     //Here Alex's old monitoring: does it make sense? in the meanwhile, I implement a simple new simple one
+		     //if(m == 8) t0_ = -t0s[s][l][q][m]; //why you assume m = 8 different from the others?
 		     if(hist != 0 && !(s == 0 && m == 0)) std::cout << histName << " :: N = " << hist->GetEntries() << std::endl;
-		     t0s[s][l][q][m] = t0_ + mtoff[modulen];
+		     //t0s[s][l][q][m] = t0_ + mtoff[s][l][q][m];
+		     /*
+		     t0s[s][l][q][m] = t0_ + t0s[s][l][q][m];
 		     hdt0->SetBinContent(hdt0->FindBin(modulen), dt0_);
 		     hdt0->SetBinError(hdt0->FindBin(modulen), dt0err_);
 		     ht0->SetBinContent(ht0->FindBin(modulen), t0_ + (28.0 + 2.0 * s));
 		     ht0->SetBinError(ht0->FindBin(modulen), dt0err_);
+		     */
+
+		     hdt0->SetBinContent(hdt0->FindBin(modulen), 0.0);
+		     hdt0->SetBinError(hdt0->FindBin(modulen), 0.0);
+		     ht0->SetBinContent(ht0->FindBin(modulen), t0s[s][l][q][m]);
+		     ht0->SetBinError(ht0->FindBin(modulen), 0.0);
 		     continue;
 		   }
+
+		 //what was this good for?
+		 /*
 		 double left = hist->GetXaxis()->GetXmin();
 		 double right = hist->GetXaxis()->GetXmax();
 		 for(int i = 0; i < 5; i++)
@@ -275,42 +316,77 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
 		     left = hist->GetFunction("gaus")->GetParameter(1) - 2.0 * hist->GetFunction("gaus")->GetParameter(2);
 		     right = hist->GetFunction("gaus")->GetParameter(1) + 2.0 * hist->GetFunction("gaus")->GetParameter(2);
 		   }
-
-		 std::cout<<"Now fitting the 4 sub contributions"<<std::endl;
-
-		 double residual_01L=0.0;
-		 double residual_01R=0.0;
-		 double residual_23L=0.0;
-		 double residual_23R=0.0;
-
-		 // StatusCode sc_01L = fit_single_hist(m_histModuleDriftTimeResidual01L[s][l][q][m],s,l,q, m, residual_01L);
-		 // StatusCode sc_01R = fit_single_hist(m_histModuleDriftTimeResidual01R[s][l][q][m],s,l,q, m, residual_01R);
-		 // StatusCode sc_23L = fit_single_hist(m_histModuleDriftTimeResidual23L[s][l][q][m],s,l,q, m, residual_23L);
-		 // StatusCode sc_23R = fit_single_hist(m_histModuleDriftTimeResidual23R[s][l][q][m],s,l,q, m, residual_23R);
-
-		 StatusCode sc_01L = fit_single_hist(hist01L,s,l,q, m, residual_01L);
-		 StatusCode sc_01R = fit_single_hist(hist01R,s,l,q, m, residual_01R);
-		 StatusCode sc_23L = fit_single_hist(hist23L,s,l,q, m, residual_23L);
-		 StatusCode sc_23R = fit_single_hist(hist23R,s,l,q, m, residual_23R);
-
-		 test[s][l][q][m] = 0.25*(residual_01L + residual_01R + residual_23L+ residual_23R);
-
-		 double dt0 =  test[s][l][q][m];
-
-		 /*
-		 double dt0 = 0.25 * (fit(file, "driftTimeResidual01L", s, l, q, m) +
-				      fit(file, "driftTimeResidual01R", s, l, q, m) +
-				      fit(file, "driftTimeResidual23L", s, l, q, m) +
-				      fit(file, "driftTimeResidual23R", s, l, q, m));
 		 */
 
-		 //      dt0 = hist->GetFunction("gaus")->GetParameter(1);                                                                                                      
-		 double dt0err = hist->GetFunction("gaus")->GetParError(1);
+		 double dt0err = 0.0;
+			 
+		 if(!fit_module_contributions){
 
+		   if(getmean_instead_of_fit){
+		     test[s][l][q][m] = hist->GetMean();
+		     dt0err = hist->GetMeanError();
+		   }
+		   else{
+		     double residual_per_module = 0.0;
+		     double residual_per_module_err = 0.0;
+		     
+		     StatusCode t0_per_module = fit_single_hist(hist,s,l,q, m, residual_per_module, residual_per_module_err, histName, outFile);
+		     
+		     test[s][l][q][m] = residual_per_module;
+		     
+		     dt0err = residual_per_module_err;
+		   }
+		 }
+		 else{
+		   std::cout<<"Now fitting the 4 sub contributions"<<std::endl;
+	   
+		   double residual_01L=0.0;
+		   double residual_01R=0.0;
+		   double residual_23L=0.0;
+		   double residual_23R=0.0;
+
+		   double residual_01L_err=0.0;
+		   double residual_01R_err=0.0;
+		   double residual_23L_err=0.0;
+		   double residual_23R_err=0.0;
+		   
+		   if(getmean_instead_of_fit){
+		     residual_01L = hist01L->GetMean();
+		     residual_01R = hist01R->GetMean();
+		     residual_23L = hist23L->GetMean();
+		     residual_23R = hist23R->GetMean();
+
+		     residual_01L_err = hist01L->GetMeanError();
+		     residual_01R_err = hist01R->GetMeanError();
+		     residual_23L_err = hist23L->GetMeanError();
+		     residual_23R_err = hist23R->GetMeanError();
+		   }
+		   else{
+		     StatusCode sc_01L = fit_single_hist(hist01L,s,l,q, m, residual_01L, residual_01L_err, histName01L , outFile);
+		     StatusCode sc_01R = fit_single_hist(hist01R,s,l,q, m, residual_01R, residual_01R_err, histName01R , outFile);
+		     StatusCode sc_23L = fit_single_hist(hist23L,s,l,q, m, residual_23L, residual_23L_err, histName23L , outFile);
+		     StatusCode sc_23R = fit_single_hist(hist23R,s,l,q, m, residual_23R, residual_23R_err, histName23R , outFile);
+		   }
+ 
+		   test[s][l][q][m] = 0.25*(residual_01L + residual_01R + residual_23L+ residual_23R);
+		   
+		   dt0err = 0.25*(sqrt((residual_01L_err*residual_01L_err)+(residual_01R_err*residual_01R_err)
+				       +(residual_23L_err*residual_23L_err)+(residual_23R_err*residual_23R_err)));
+		   
+		 }
+
+		 double dt0 =  test[s][l][q][m];
+		   
+		 //suspect: the fit above was only for  monitoring :(
+		 //      dt0 = hist->GetFunction("gaus")->GetParameter(1);                                                                                                      
 		 double t0 = t0s[s][l][q][m] + test[s][l][q][m];
+		 
 		 //double t0 = t0s[s][l][q][m] = t0s[s][l][q][m] + dt0;
 		 //      t0 = t0s[s][l][q][m] = mtoff[modulen] - (28.0 + 2.0 * s);                                                                                              
-		 t0 -= mtoff[modulen];
+		 //t0 -= mtoff[s][l][q][m];
+		 //again weird monitorning 
+		 /*
+		 t0 -= t0s[s][l][q][m];
 
 		 hdt0->SetBinContent(hdt0->FindBin(modulen), dt0);
 		 hdt0->SetBinError(hdt0->FindBin(modulen), dt0err);
@@ -321,8 +397,18 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
 		 t0_ = t0;
 		 dt0_ = dt0;
 		 dt0err_ = dt0err;
+		 */
+		 
+		 hdt0->SetBinContent(hdt0->FindBin(modulen),  dt0);
+		 hdt0->SetBinError(hdt0->FindBin(modulen), dt0err);
+		 ht0->SetBinContent(ht0->FindBin(modulen), t0);
+		 ht0->SetBinError(ht0->FindBin(modulen), dt0err);
+
 
 		 if(fabs(dt0) > 1) std::cout << histName << " :: dt0 = " << dt0 << std::endl;
+
+		 t0Studies_file << histName << " dt0 = " << dt0 << " +/- " << dt0err << "\n";
+
 
 		 if(Apply_Calibration){
 		   t0s[s][l][q][m]= t0s[s][l][q][m] + test[s][l][q][m];
@@ -442,6 +528,20 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
   
   writeCondXMLs(t0s);
   writeCondDBXMLs(t0s);
+  write_Globalt0_XML(global_t0);
+
+  t0Studies_file.flush();
+  t0Studies_file.close();
+
+   // if(save_fits){
+   //   outFile->cd();
+   //   hdt0->Write();
+   //   ht0->Write();
+   // }
+
+  //outFile->Flush();
+  outFile->Close();
+
   
   delete f;
   
@@ -487,8 +587,9 @@ StatusCode OTt0OnlineClbr::readCondDB(double read_t0s[3][4][4][9])
   return StatusCode::SUCCESS;
 }
 
-StatusCode OTt0OnlineClbr::readCondXMLs(double t0s[3][4][4][9])
+StatusCode OTt0OnlineClbr::readCondXMLs(double t0s[3][4][4][9], bool TestBeam)
 {
+
   std::string prefix = "CalibrationModules";
 
   for(int s = 0; s < 3; s++) 
@@ -498,6 +599,9 @@ StatusCode OTt0OnlineClbr::readCondXMLs(double t0s[3][4][4][9])
 	  std::string quarterId = stationNames[s] + layerNames[l] + quarterNames[q];
 	  
 	  std::string fileName = quarterId + "@" + prefix + ".xml";
+
+	  if(TestBeam)
+	    std::string fileName = "TestBeam-t0s-inXML" + quarterId + "@" + prefix + ".xml";
 	  
 	  // load file with condition for specific station-layer-quarter                                                                                             
 	  std::ifstream file(fileName.c_str());
@@ -759,7 +863,36 @@ StatusCode OTt0OnlineClbr::writeCondDBXMLs(double t0s[3][4][4][9])
   return StatusCode::SUCCESS;
 }
 
-StatusCode OTt0OnlineClbr::fit_single_hist(TH1D* hist, int s, int l, int q, int m, double& result)
+StatusCode OTt0OnlineClbr::write_Globalt0_XML(double global_t0)
+{
+
+  std::string prefix = "CalibrationModules";
+  boost::filesystem::path full_path(m_xmlFilePath+m_xmlFileName);
+
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Writing the GLOBAL t0 XML for online to " << full_path << endmsg ;
+
+  std::ofstream file;
+  file.open( full_path.string().c_str(), std::ios::app ) ;  // always in append mode  
+
+  file << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
+  file << "<!DOCTYPE DDDB SYSTEM \"conddb:/DTD/structure.dtd\">\n";
+  file << "\n";
+  file << "<DDDB>\n";
+  file << "    <paramVector name=\"TZero\" type=\"double\" comment=\"T0s of straws in module\">\n";
+  //file << "      " << 0.001 * (int)(1000.0 * global_t0 + 0.5) << "\n";
+  file << "      " <<  global_t0  << "\n";
+  file << "    </paramVector>\n";
+  file << "  </condition>\n";
+  file << "</DDDB>\n";
+
+  file.close();
+
+
+  return StatusCode::SUCCESS;
+
+}
+
+StatusCode OTt0OnlineClbr::fit_single_hist(TH1D* hist, int s, int l, int q, int m, double& result, double& result_error, std::string name, TFile* outFile)
 {
   debug() << hist << " " << s << " " << l << " " << q << " "<< m << endmsg;
   
@@ -781,15 +914,21 @@ StatusCode OTt0OnlineClbr::fit_single_hist(TH1D* hist, int s, int l, int q, int 
 
   for(int i = 0; i < 5; i++)
   {
-    debug() << "Fitting " << endmsg ;    
     hist->Fit("gaus", "QRLL", "", left, right);
     left = hist->GetFunction("gaus")->GetParameter(1) - 1.0 * hist->GetFunction("gaus")->GetParameter(2);
     right = hist->GetFunction("gaus")->GetParameter(1) + 1.0 * hist->GetFunction("gaus")->GetParameter(2);
   }
   debug() << "FITTING: " << s<< " "<<l <<" "<<q<< " "<<m <<" "<<hist->GetFunction("gaus")->GetParameter(1)<< " "<< hist->GetFunction("gaus")->GetParameter(2)<< endmsg ;
-  debug() << "Result " << endmsg ;
   result =  hist->GetFunction("gaus")->GetParameter(1);
+  result_error =  hist->GetFunction("gaus")->GetParError(1);
   
+  
+ if(save_fits){
+   outFile->cd();
+   hist->SetName(name.c_str());
+   hist->Write();
+ }
+
   return StatusCode::SUCCESS;
 }
 

@@ -51,7 +51,7 @@ public:
   virtual StatusCode analyze   (std::string& SaveSet,                
 				std::string Task); ///< Algorithm analyze
 
- StatusCode readCondXMLs(double t0s[3][4][4][9]); 
+  StatusCode readCondXMLs(double t0s[3][4][4][9], bool TestBeam = false); 
  StatusCode readCondDB(double t0s[3][4][4][9]);
 
  protected:
@@ -95,6 +95,19 @@ public:
    * Apply_Calibration (default false, if set to true it writes the new XML files - will write DB - with the new, calibrated t0s).                       
    */
   bool Apply_Calibration;
+  /**                                                                                                                                                    
+   * save_fits (default false, I hope to mange to save the fits, ONLY FOR STUDIES).                       
+   */
+  bool save_fits;
+  /**                                                                                                                                                    
+   * fit_module_contributions (default it is true: as done until 2012: fitting 4 half mono layers to get a better shape for the fit.
+   * Hopefully not necessary thanks to monolayer alingment    
+   */
+  bool fit_module_contributions;
+  /**                                                                                                                                                    
+   * getmean_instead_of_fit  
+   */
+  bool getmean_instead_of_fit;
  
   TH1D* hdt0;
   TH1D* ht0;
@@ -112,7 +125,8 @@ public:
   //TF1* m_myFunc;                                                                                                                                             
   StatusCode writeCondXMLs(double t0s[3][4][4][9]);
   StatusCode writeCondDBXMLs(double t0s[3][4][4][9]);
-  StatusCode fit_single_hist(TH1D* hist,int s, int l, int q, int m, double& result);
+  StatusCode write_Globalt0_XML(double global_t0);
+  StatusCode fit_single_hist(TH1D* hist,int s, int l, int q, int m, double& result, double& result_err, std::string name, TFile* outFile);
   
 };
 

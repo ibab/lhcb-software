@@ -4,6 +4,13 @@
 ! Purpose     : OT online calibration
 !-----------------------------------------------------------------------------
 
+! 2015-01-22 Lucia Grillo
+- Different calculations of t0 per Module (4 contribution or single
+contribution, fits or get mean)
+- Added the global t0 computation. xml format to be finalized
+- "Monitoring" histograms replaced the old ones with a simpler version. to be
+improved. Added also option to save the single fits, to be improved
+
 ! 2015-01-12 - Lucia Grillo
 - Adding OTt0OnlineClbr for online calibration of t0
 - First version: compiling, stil to be tested 

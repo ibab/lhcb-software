@@ -19,6 +19,9 @@ OTt0OnlineClbrAlg.InputFiles  = myFiles1
 OTt0OnlineClbrAlg.xmlFilePath = "/tmp/lgrillo/"
 OTt0OnlineClbrAlg.OutputLevel = 2
 OTt0OnlineClbrAlg.Simulation = False 
+OTt0OnlineClbrAlg.Fit_module_contributions = True
+OTt0OnlineClbrAlg.GetMean_instead_of_Fit = False
+OTt0OnlineClbrAlg.Save_Fits = False
 
 simulation = OTt0OnlineClbrAlg.Simulation
 
@@ -40,6 +43,7 @@ from Configurables import LHCbApp
 #LHCbApp().CondDBtag = "cond-20120730"
 
 LHCbApp().Simulation = simulation
+
 if simulation : 
     LHCbApp().DDDBtag   = "dddb-20120831"
     LHCbApp().CondDBtag = "sim-20121025-vc-md100"
