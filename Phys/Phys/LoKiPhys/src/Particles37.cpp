@@ -45,7 +45,8 @@ LoKi::Particles::DecayLengthSignificance::DecayLengthSignificance
 // ============================================================================
 LoKi::Particles::DecayLengthSignificance::DecayLengthSignificance
 ( const LoKi::Point3D& point )
-  : LoKi::BasicFunctors< const LHCb::Particle* >::Function()
+  : LoKi::AuxFunBase ( std::tie ( point ) ) 
+  , LoKi::BasicFunctors< const LHCb::Particle* >::Function()
   , LoKi::Vertices::VertexHolder( point )
 {}
 // ============================================================================
@@ -477,7 +478,8 @@ LoKi::Particles::ProjectedDistanceSignificance::fillStream( std::ostream& s ) co
 // ============================================================================
 LoKi::Particles::PathDistanceWithBestPV::PathDistanceWithBestPV
 (  const std::string& geo ) 
-  : LoKi::Particles::ImpParWithTheBestPV  ( geo ) 
+  : LoKi::AuxFunBase ( std::tie ( geo ) ) 
+  , LoKi::Particles::ImpParWithTheBestPV  ( geo ) 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -557,7 +559,8 @@ LoKi::Particles::PathDistanceWithBestPV::fillStream( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::PathDistanceChi2WithBestPV::PathDistanceChi2WithBestPV
 (  const std::string& geo ) 
-  : LoKi::Particles::PathDistanceWithBestPV  ( geo ) 
+  : LoKi::AuxFunBase ( std::tie ( geo ) ) 
+  , LoKi::Particles::PathDistanceWithBestPV  ( geo ) 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -639,7 +642,8 @@ LoKi::Particles::PathDistanceChi2WithBestPV::fillStream( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::PathDistanceSignificanceWithBestPV::PathDistanceSignificanceWithBestPV
 (  const std::string& geo ) 
-  : LoKi::Particles::PathDistanceChi2WithBestPV  ( geo ) 
+  : LoKi::AuxFunBase ( std::tie ( geo ) ) 
+  , LoKi::Particles::PathDistanceChi2WithBestPV  ( geo ) 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -707,7 +711,8 @@ LoKi::Particles::PathDistanceSignificanceWithBestPV::fillStream
 // ============================================================================
 LoKi::Particles::ProjectedDistanceWithBestPV::ProjectedDistanceWithBestPV
 (  const std::string& geo ) 
-  : LoKi::Particles::PathDistanceWithBestPV ( geo ) 
+  : LoKi::AuxFunBase ( std::tie ( geo ) ) 
+  , LoKi::Particles::PathDistanceWithBestPV ( geo ) 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -795,7 +800,8 @@ LoKi::Particles::ProjectedDistanceWithBestPV::fillStream
 // ============================================================================
 LoKi::Particles::ProjectedDistanceSignificanceWithBestPV::ProjectedDistanceSignificanceWithBestPV
 (  const std::string& geo ) 
-  : LoKi::Particles::ProjectedDistanceWithBestPV ( geo ) 
+  : LoKi::AuxFunBase ( std::tie ( geo ) ) 
+  , LoKi::Particles::ProjectedDistanceWithBestPV ( geo ) 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 

@@ -38,7 +38,8 @@
 // Constructor from bound
 // ============================================================================
 LoKi::Vertices::BeamSpotRho::BeamSpotRho ( const double bound ) 
-  : LoKi::BeamSpot( bound )
+  : LoKi::AuxFunBase ( std::tie ( bound ) ) 
+  , LoKi::BeamSpot( bound )
   , LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
 {}  
 // ============================================================================
@@ -47,7 +48,8 @@ LoKi::Vertices::BeamSpotRho::BeamSpotRho ( const double bound )
 LoKi::Vertices::BeamSpotRho::BeamSpotRho 
 ( const double       bound    , 
   const std::string& condname ) 
-  : LoKi::BeamSpot ( bound , condname )
+  : LoKi::AuxFunBase ( std::tie ( bound , condname ) ) 
+  , LoKi::BeamSpot ( bound , condname )
   , LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
 {}  
 // ============================================================================

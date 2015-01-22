@@ -20,7 +20,8 @@
 LoKi::Particles::ProtoPFun::ProtoPFun 
 ( const LoKi::BasicFunctors<const LHCb::ProtoParticle*>::Function& fun ,
   const double                                                     bad ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase ( std::tie ( fun , bad ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun  ( fun ) 
   , m_bad   ( bad ) 
 {}
@@ -29,7 +30,8 @@ LoKi::Particles::ProtoPFun::ProtoPFun
 // ============================================================================
 LoKi::Particles::ProtoPFun::ProtoPFun 
 ( const LoKi::BasicFunctors<const LHCb::ProtoParticle*>::Function& fun )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun  ( fun ) 
   , m_bad  ( LoKi::Constants::NegativeInfinity ) 
 {}
@@ -78,7 +80,8 @@ std::ostream& LoKi::Particles::ProtoPFun::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::ProtoPCut::ProtoPCut 
 ( const LoKi::BasicFunctors<const LHCb::ProtoParticle*>::Predicate& cut ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( cut ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
   , m_cut  ( cut ) 
 {}
 // ============================================================================
@@ -125,7 +128,8 @@ std::ostream& LoKi::Particles::ProtoPCut::fillStream ( std::ostream& s ) const
 LoKi::Particles::TrackFun::TrackFun 
 ( const LoKi::BasicFunctors<const LHCb::Track*>::Function& fun , 
   const double                                             bad ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase ( std::tie ( fun , bad ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun  ( fun ) 
   , m_bad  ( bad ) 
 {}
@@ -134,7 +138,8 @@ LoKi::Particles::TrackFun::TrackFun
 // ============================================================================
 LoKi::Particles::TrackFun::TrackFun 
 ( const LoKi::BasicFunctors<const LHCb::Track*>::Function& fun )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun  ( fun ) 
   , m_bad  ( LoKi::Constants::NegativeInfinity ) 
 {}
@@ -195,7 +200,8 @@ std::ostream& LoKi::Particles::TrackFun::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::TrackCut::TrackCut 
 ( const LoKi::BasicFunctors<const LHCb::Track*>::Predicate& cut )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
+  : LoKi::AuxFunBase ( std::tie ( cut ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
   , m_cut  ( cut ) 
 {}
 // ============================================================================

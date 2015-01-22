@@ -18,7 +18,8 @@
 // ============================================================================
 LoKi::Particles::BestPrimaryVertexAdaptor::BestPrimaryVertexAdaptor 
 ( const LoKi::PhysTypes::VFunc& vfun  )
-  : LoKi::AuxDesktopBase () 
+  : LoKi::AuxFunBase ( std::tie ( vfun ) ) 
+  , LoKi::AuxDesktopBase () 
   , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_vfun ( vfun  )
 {}

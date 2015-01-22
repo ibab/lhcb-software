@@ -28,7 +28,8 @@ namespace
 // constructor from the tool name 
 // ============================================================================
 LoKi::Particles::ReFitter::ReFitter ( const std::string& name ) 
-  : LoKi::Particles::ReFit ( s_REFIT ) 
+  : LoKi::AuxFunBase  ( std::tie ( name ) ) 
+  , LoKi::Particles::ReFit ( s_REFIT ) 
   , m_name ( name ) 
 {}
 // ============================================================================
@@ -68,7 +69,8 @@ std::ostream& LoKi::Particles::ReFitter::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::MassFitter::MassFitter
 ( const std::string& name ) 
-  : LoKi::Particles::MassFit ( s_MFIT ) 
+  : LoKi::AuxFunBase  ( std::tie ( name ) ) 
+  , LoKi::Particles::MassFit ( s_MFIT ) 
   , m_name ( name ) 
 {}
 // ============================================================================
@@ -77,7 +79,8 @@ LoKi::Particles::MassFitter::MassFitter
 LoKi::Particles::MassFitter::MassFitter
 ( const double       mass , 
   const std::string& name ) 
-  : LoKi::Particles::MassFit ( s_MFIT , mass ) 
+  : LoKi::AuxFunBase  ( std::tie ( mass , name ) ) 
+  , LoKi::Particles::MassFit ( s_MFIT , mass ) 
   , m_name ( name ) 
 {}
 // ============================================================================
@@ -86,7 +89,8 @@ LoKi::Particles::MassFitter::MassFitter
 LoKi::Particles::MassFitter::MassFitter
 ( const std::string& name , 
   const double       mass ) 
-  : LoKi::Particles::MassFit ( s_MFIT , mass ) 
+  : LoKi::AuxFunBase  ( std::tie ( name , mass  ) ) 
+  , LoKi::Particles::MassFit ( s_MFIT , mass ) 
   , m_name ( name ) 
 {}
 // ============================================================================

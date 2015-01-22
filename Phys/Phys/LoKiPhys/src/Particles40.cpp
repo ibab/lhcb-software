@@ -39,7 +39,8 @@ LoKi::Particles::SmartInfo::SmartInfo
 ( const int                                                   index  , 
   const LoKi::BasicFunctors<const LHCb::Particle*>::Function& fun    , 
   const bool                                                  update ) 
-  : LoKi::ExtraInfo::GetSmartInfo<const LHCb::Particle*> ( index , fun , update )
+  : LoKi::AuxFunBase ( std::tie ( index , fun , update ) ) 
+  , LoKi::ExtraInfo::GetSmartInfo<const LHCb::Particle*> ( index , fun , update )
 {}
 // ============================================================================
 // constructor 
@@ -48,7 +49,8 @@ LoKi::Particles::SmartInfo::SmartInfo
 ( const LoKi::BasicFunctors<const LHCb::Particle*>::Function& fun    , 
   const int                                                   index  , 
   const bool                                                  update ) 
-  : LoKi::ExtraInfo::GetSmartInfo<const LHCb::Particle*> ( index , fun , update )
+  : LoKi::AuxFunBase ( std::tie ( fun , index  , update ) ) 
+  , LoKi::ExtraInfo::GetSmartInfo<const LHCb::Particle*> ( index , fun , update )
 {}
 // ============================================================================
 // destructor
@@ -78,7 +80,8 @@ LoKi::Vertices::SmartInfo::SmartInfo
 ( const int                                                     index  , 
   const LoKi::BasicFunctors<const LHCb::VertexBase*>::Function& fun    , 
   const bool                                                    update ) 
-  : LoKi::ExtraInfo::GetSmartInfo<const LHCb::VertexBase*> ( index , fun , update )
+  : LoKi::AuxFunBase ( std::tie ( index , fun , update ) ) 
+  , LoKi::ExtraInfo::GetSmartInfo<const LHCb::VertexBase*> ( index , fun , update )
 {}
 // ============================================================================
 // constructor 
@@ -87,7 +90,8 @@ LoKi::Vertices::SmartInfo::SmartInfo
 ( const LoKi::BasicFunctors<const LHCb::VertexBase*>::Function& fun    , 
   const int                                                   index  , 
   const bool                                                  update ) 
-  : LoKi::ExtraInfo::GetSmartInfo<const LHCb::VertexBase*> ( index , fun , update )
+  : LoKi::AuxFunBase ( std::tie ( fun , index , update ) ) 
+  , LoKi::ExtraInfo::GetSmartInfo<const LHCb::VertexBase*> ( index , fun , update )
 {}
 // ============================================================================
 // destructor

@@ -21,7 +21,8 @@ LoKi::Particles::RelatedInfo::RelatedInfo
 ( const std::string& location , 
   const short        index    , 
   const double       bad      ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase( std::tie ( location , index , bad ) )
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_location ( location ) 
   , m_index    ( index    ) 
   , m_bad      ( bad      ) 
@@ -32,7 +33,8 @@ LoKi::Particles::RelatedInfo::RelatedInfo
 ( const std::string& location , 
   const std::string& variable , 
   const double       bad      ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  : LoKi::AuxFunBase( std::tie ( location , variable , bad ) )
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_location ( location ) 
   , m_bad      ( bad      ) 
   , m_table    ( 0        ) 

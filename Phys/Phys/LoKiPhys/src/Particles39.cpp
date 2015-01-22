@@ -198,7 +198,8 @@ LoKi::Particles::MinMaxDistanceWithSource::operator()
 // ============================================================================
 LoKi::Particles::MinDR2::MinDR2
 ( const LoKi::BasicFunctors<const LHCb::Particle*>::Source& source ) 
-  : LoKi::Particles::MinMaxDistanceWithSource 
+  : LoKi::AuxFunBase  ( std::tie ( source ) ) 
+  , LoKi::Particles::MinMaxDistanceWithSource 
 ( true   , 
   source ,
   &LoKi::PhysKinematics::deltaR2 ) 
@@ -209,7 +210,8 @@ LoKi::Particles::MinDR2::MinDR2
 LoKi::Particles::MinDR2::MinDR2
 ( const std::string&                                            location , 
   const  LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut      ) 
-  : LoKi::Particles::MinMaxDistanceWithSource 
+  : LoKi::AuxFunBase  ( std::tie ( location , cut  ) ) 
+  , LoKi::Particles::MinMaxDistanceWithSource 
 ( true   , 
   LoKi::Particles::SourceTES ( location , cut ) ,
   &LoKi::PhysKinematics::deltaR2 ) 
@@ -220,7 +222,8 @@ LoKi::Particles::MinDR2::MinDR2
 LoKi::Particles::MinDR2::MinDR2
 ( const std::vector<std::string>&                               locations , 
   const  LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut       ) 
-  : LoKi::Particles::MinMaxDistanceWithSource 
+  : LoKi::AuxFunBase  ( std::tie ( locations , cut  ) ) 
+  , LoKi::Particles::MinMaxDistanceWithSource 
 ( true                                           , 
   LoKi::Particles::SourceTES ( locations , cut ) ,
   &LoKi::PhysKinematics::deltaR2 ) 
@@ -250,7 +253,8 @@ std::ostream& LoKi::Particles::MinDR2::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::MaxDR2::MaxDR2
 ( const LoKi::BasicFunctors<const LHCb::Particle*>::Source& source ) 
-  : LoKi::Particles::MinMaxDistanceWithSource 
+  : LoKi::AuxFunBase  ( std::tie ( source ) ) 
+  , LoKi::Particles::MinMaxDistanceWithSource 
 ( false  , 
   source ,
   &LoKi::PhysKinematics::deltaR2 ) 
@@ -261,7 +265,8 @@ LoKi::Particles::MaxDR2::MaxDR2
 LoKi::Particles::MaxDR2::MaxDR2
 ( const std::string&                                            location , 
   const  LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut      ) 
-  : LoKi::Particles::MinMaxDistanceWithSource 
+  : LoKi::AuxFunBase  ( std::tie ( location , cut  ) ) 
+  , LoKi::Particles::MinMaxDistanceWithSource 
 ( false , 
   LoKi::Particles::SourceTES ( location , cut ) ,
   &LoKi::PhysKinematics::deltaR2 ) 
@@ -272,7 +277,8 @@ LoKi::Particles::MaxDR2::MaxDR2
 LoKi::Particles::MaxDR2::MaxDR2
 ( const std::vector<std::string>&                               locations , 
   const  LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut       ) 
-  : LoKi::Particles::MinMaxDistanceWithSource 
+  : LoKi::AuxFunBase  ( std::tie ( locations , cut  ) ) 
+  , LoKi::Particles::MinMaxDistanceWithSource 
 ( false                                          , 
   LoKi::Particles::SourceTES ( locations , cut ) ,
   &LoKi::PhysKinematics::deltaR2 ) 
@@ -302,7 +308,8 @@ std::ostream& LoKi::Particles::MaxDR2::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::MinKL::MinKL
 ( const LoKi::BasicFunctors<const LHCb::Particle*>::Source& source ) 
-  : LoKi::Particles::MinMaxDistanceWithSource 
+  : LoKi::AuxFunBase  ( std::tie ( source ) ) 
+  , LoKi::Particles::MinMaxDistanceWithSource 
 ( true   , 
   source ,
   &LoKi::PhysKinematics::kullback ) 
@@ -313,7 +320,8 @@ LoKi::Particles::MinKL::MinKL
 LoKi::Particles::MinKL::MinKL
 ( const std::string&                                            location , 
   const  LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut      ) 
-  : LoKi::Particles::MinMaxDistanceWithSource 
+  : LoKi::AuxFunBase  ( std::tie ( location , cut  ) ) 
+  , LoKi::Particles::MinMaxDistanceWithSource 
 ( true   , 
   LoKi::Particles::SourceTES ( location , cut ) ,
   &LoKi::PhysKinematics::kullback ) 
@@ -324,7 +332,8 @@ LoKi::Particles::MinKL::MinKL
 LoKi::Particles::MinKL::MinKL
 ( const std::vector<std::string>&                               locations , 
   const  LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut       ) 
-  : LoKi::Particles::MinMaxDistanceWithSource 
+  : LoKi::AuxFunBase  ( std::tie ( locations , cut  ) ) 
+  , LoKi::Particles::MinMaxDistanceWithSource 
 ( true                                           , 
   LoKi::Particles::SourceTES ( locations , cut ) ,
   &LoKi::PhysKinematics::kullback ) 
@@ -352,7 +361,8 @@ std::ostream& LoKi::Particles::MinKL::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::MaxIDs::MaxIDs
 ( const LoKi::BasicFunctors<const LHCb::Particle*>::Source& source ) 
-  : LoKi::Particles::MinMaxDistanceWithSource 
+  : LoKi::AuxFunBase  ( std::tie ( source ) ) 
+  , LoKi::Particles::MinMaxDistanceWithSource 
 ( false  , 
   source ,
   &LoKi::PhysKinematics::overlap ) 
@@ -363,7 +373,8 @@ LoKi::Particles::MaxIDs::MaxIDs
 LoKi::Particles::MaxIDs::MaxIDs
 ( const std::string&                                            location , 
   const  LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut      ) 
-  : LoKi::Particles::MinMaxDistanceWithSource 
+  : LoKi::AuxFunBase  ( std::tie ( location , cut  ) ) 
+  , LoKi::Particles::MinMaxDistanceWithSource 
 ( false , 
   LoKi::Particles::SourceTES ( location , cut ) ,
   &LoKi::PhysKinematics::overlap ) 
@@ -374,7 +385,8 @@ LoKi::Particles::MaxIDs::MaxIDs
 LoKi::Particles::MaxIDs::MaxIDs
 ( const std::vector<std::string>&                               locations , 
   const  LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut       ) 
-  : LoKi::Particles::MinMaxDistanceWithSource 
+  : LoKi::AuxFunBase  ( std::tie ( locations , cut  ) ) 
+  , LoKi::Particles::MinMaxDistanceWithSource 
 ( false                                          , 
   LoKi::Particles::SourceTES ( locations , cut ) ,
   &LoKi::PhysKinematics::overlap ) 
@@ -402,7 +414,8 @@ std::ostream& LoKi::Particles::MaxIDs::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::MinAngle::MinAngle
 ( const LoKi::BasicFunctors<const LHCb::Particle*>::Source& source ) 
-  : LoKi::Particles::MinMaxDistanceWithSource 
+  : LoKi::AuxFunBase  ( std::tie ( source ) ) 
+  , LoKi::Particles::MinMaxDistanceWithSource 
 ( true   , 
   source ,
   &LoKi::PhysKinematics::deltaAlpha ) 
@@ -413,7 +426,8 @@ LoKi::Particles::MinAngle::MinAngle
 LoKi::Particles::MinAngle::MinAngle
 ( const std::string&                                            location , 
   const  LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut      ) 
-  : LoKi::Particles::MinMaxDistanceWithSource 
+  : LoKi::AuxFunBase  ( std::tie ( location , cut  ) ) 
+  , LoKi::Particles::MinMaxDistanceWithSource 
 ( true   , 
   LoKi::Particles::SourceTES ( location , cut ) ,
   &LoKi::PhysKinematics::deltaAlpha ) 
@@ -424,7 +438,8 @@ LoKi::Particles::MinAngle::MinAngle
 LoKi::Particles::MinAngle::MinAngle
 ( const std::vector<std::string>&                               locations , 
   const  LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut       ) 
-  : LoKi::Particles::MinMaxDistanceWithSource 
+  : LoKi::AuxFunBase  ( std::tie ( locations , cut  ) ) 
+  , LoKi::Particles::MinMaxDistanceWithSource 
 ( true                                           , 
   LoKi::Particles::SourceTES ( locations , cut ) ,
   &LoKi::PhysKinematics::deltaAlpha ) 
@@ -452,7 +467,8 @@ std::ostream& LoKi::Particles::MinAngle::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::MinM2::MinM2
 ( const LoKi::BasicFunctors<const LHCb::Particle*>::Source& source ) 
-  : LoKi::Particles::MinMaxDistanceWithSource 
+  : LoKi::AuxFunBase  ( std::tie ( source ) ) 
+  , LoKi::Particles::MinMaxDistanceWithSource 
 ( true   , 
   source ,
   &LoKi::PhysKinematics::deltaM2 ) 
@@ -463,7 +479,8 @@ LoKi::Particles::MinM2::MinM2
 LoKi::Particles::MinM2::MinM2
 ( const std::string&                                            location , 
   const  LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut      ) 
-  : LoKi::Particles::MinMaxDistanceWithSource 
+  : LoKi::AuxFunBase  ( std::tie ( location , cut  ) ) 
+  , LoKi::Particles::MinMaxDistanceWithSource 
 ( true   , 
   LoKi::Particles::SourceTES ( location , cut ) ,
   &LoKi::PhysKinematics::deltaM2 ) 
@@ -474,7 +491,8 @@ LoKi::Particles::MinM2::MinM2
 LoKi::Particles::MinM2::MinM2
 ( const std::vector<std::string>&                               locations ,
   const  LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut       ) 
-  : LoKi::Particles::MinMaxDistanceWithSource 
+  : LoKi::AuxFunBase  ( std::tie ( locations , cut  ) ) 
+  , LoKi::Particles::MinMaxDistanceWithSource 
 ( true                                           , 
   LoKi::Particles::SourceTES ( locations , cut ) ,
   &LoKi::PhysKinematics::deltaM2 ) 

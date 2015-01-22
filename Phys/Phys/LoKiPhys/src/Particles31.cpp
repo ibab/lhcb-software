@@ -19,7 +19,8 @@
 // ============================================================================
 LoKi::Particles::PCutA::PCutA
 ( const LoKi::ATypes::ACuts& cut ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( cut ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_cut ( cut ) 
 {}
 // ============================================================================
@@ -57,7 +58,8 @@ std::ostream& LoKi::Particles::PCutA::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::PFunA::PFunA
 ( const LoKi::ATypes::AFunc& fun ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( fun ) 
 {}
 // ============================================================================
@@ -95,7 +97,8 @@ std::ostream& LoKi::Particles::PFunA::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::PCutV::PCutV
 ( const LoKi::Types::CutVals& cut ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( cut ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_cut ( cut ) 
 {}
 // ============================================================================
@@ -132,7 +135,8 @@ std::ostream& LoKi::Particles::PCutV::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::PFunV::PFunV
 ( const LoKi::Types::FunVals& fun ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( fun ) 
 {}
 // ============================================================================

@@ -769,20 +769,20 @@ MASSFIT       = LoKi.Particles.MassFitter
 # Functions for Jaap Panman 
 # =============================================================================
 ## @see LoKi::Cuts::BPVDVDOCA
-BPVDVDOCA     = LoKi.Particles.DHCoplanarity
+## BPVDVDOCA     = LoKi.Legacy.DHCoplanarity
 
 
 # =============================================================================
 # Functions for Kazu Karvalho Akiba
 # =============================================================================
 ## @see LoKi::Cuts::DPCTAU
-DPCTAU             = LoKi.Particles.DaughterParticleCTau 
+## DPCTAU             = LoKi.Legacy.DaughterParticleCTau 
 ## @see LoKi::Cuts::DPCTAUERR
-DPCTAUERR          = LoKi.Particles.DaughterParticleCTauErr
+## DPCTAUERR          = LoKi.Legacy.DaughterParticleCTauErr
 ## @see LoKi::Cuts::DPCTAUFITCHI2 
-DPCTAUFITCHI2      = LoKi.Particles.DaughterParticleCTauFitChi2 
+## DPCTAUFITCHI2      = LoKi.Legacy.DaughterParticleCTauFitChi2 
 ## @see LoKi::Cuts::DPCTAUSIGNIFICANCE
-DPCTAUSIGNIFICANCE = LoKi.Particles.DaughterParticleCTauSignificance
+## DPCTAUSIGNIFICANCE = LoKi.Legacy.DaughterParticleCTauSignificance
 
 
 # =============================================================================

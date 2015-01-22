@@ -135,7 +135,8 @@ LoKi::Particles::MinMaxPair::operator()
 // ============================================================================
 LoKi::Particles::MinKullback::MinKullback 
 ( const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut ) 
-  : LoKi::Particles::MinMaxPair ( true , 
+  : LoKi::AuxFunBase  ( std::tie ( cut ) ) 
+  , LoKi::Particles::MinMaxPair ( true , 
                                   cut  , 
                                   &LoKi::PhysKinematics::kullback ) 
 {}
@@ -164,7 +165,8 @@ std::ostream& LoKi::Particles::MinKullback::fillStream
 // ============================================================================
 LoKi::Particles::MinAng::MinAng 
 ( const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut ) 
-  : LoKi::Particles::MinMaxPair ( true , 
+  : LoKi::AuxFunBase  ( std::tie ( cut ) ) 
+  , LoKi::Particles::MinMaxPair ( true , 
                                   cut  , 
                                   &LoKi::PhysKinematics::deltaAlpha ) 
 {}
@@ -192,7 +194,8 @@ std::ostream& LoKi::Particles::MinAng::fillStream
 // ============================================================================
 LoKi::Particles::MinDeltaM2::MinDeltaM2 
 ( const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut ) 
-  : LoKi::Particles::MinMaxPair ( true , 
+  : LoKi::AuxFunBase  ( std::tie ( cut ) ) 
+  , LoKi::Particles::MinMaxPair ( true , 
                                   cut  , 
                                   &LoKi::PhysKinematics::deltaM2 ) 
 {}
@@ -221,7 +224,8 @@ std::ostream& LoKi::Particles::MinDeltaM2::fillStream
 // ============================================================================
 LoKi::Particles::MaxOverlap::MaxOverlap
 ( const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut ) 
-  : LoKi::Particles::MinMaxPair ( false , 
+  : LoKi::AuxFunBase  ( std::tie ( cut ) ) 
+  , LoKi::Particles::MinMaxPair ( false , 
                                   cut   , 
                                   &LoKi::PhysKinematics::overlap ) 
 {}

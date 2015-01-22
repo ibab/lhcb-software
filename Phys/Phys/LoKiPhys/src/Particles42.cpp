@@ -128,7 +128,8 @@ void LoKi::Particles::TisTosTobDec::setTool ( const ITriggerTisTos*  tool   )
 LoKi::Particles::TisTosTobbing::TisTosTobbing
 ( const std::string&    lines ,
   const std::string&    tool  ) 
-  : LoKi::Particles::TisTosTobDec::TisTosTobDec ( lines ) 
+  : LoKi::AuxFunBase ( std::tie ( lines , tool ) ) 
+  , LoKi::Particles::TisTosTobDec::TisTosTobDec ( lines ) 
   , m_nick ( tool ) 
 {
   const ITriggerTisTos* tt = LoKi::GetTools::triggerTisTos( *this , tool ) ;
@@ -159,7 +160,8 @@ std::ostream& LoKi::Particles::TisTosTobbing::fillStream
 LoKi::Particles::Tis::Tis
 ( const std::string&    lines ,
   const std::string&    tool  ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( lines , tool ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_fun ( lines , tool ) 
 {}
 // ============================================================================
@@ -197,7 +199,8 @@ std::ostream& LoKi::Particles::Tis::fillStream
 LoKi::Particles::Tos::Tos
 ( const std::string&    lines ,
   const std::string&    tool  ) 
-  : LoKi::Particles::Tis ( lines , tool ) 
+  : LoKi::AuxFunBase ( std::tie ( lines , tool ) ) 
+  , LoKi::Particles::Tis ( lines , tool ) 
 {}
 // ============================================================================
 // MANDATORY : virtual destructor 
@@ -233,7 +236,8 @@ std::ostream& LoKi::Particles::Tos::fillStream
 LoKi::Particles::Tps::Tps
 ( const std::string&    lines ,
   const std::string&    tool  ) 
-  : LoKi::Particles::Tos ( lines , tool ) 
+  : LoKi::AuxFunBase ( std::tie ( lines , tool ) ) 
+  , LoKi::Particles::Tos ( lines , tool ) 
 {}
 // ============================================================================
 // MANDATORY : virtual destructor 
@@ -269,7 +273,8 @@ std::ostream& LoKi::Particles::Tps::fillStream
 LoKi::Particles::Tus::Tus
 ( const std::string&    lines ,
   const std::string&    tool  ) 
-  : LoKi::Particles::Tps ( lines , tool ) 
+  : LoKi::AuxFunBase ( std::tie ( lines , tool ) ) 
+  , LoKi::Particles::Tps ( lines , tool ) 
 {}
 // ============================================================================
 // MANDATORY : virtual destructor 

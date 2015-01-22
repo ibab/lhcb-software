@@ -41,7 +41,8 @@
 // ============================================================================
 LoKi::Particles::Value::Value
 ( const std::string& function ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( function ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_function ()
 {
   // 1. get from the context 

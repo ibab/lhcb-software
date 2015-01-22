@@ -121,8 +121,9 @@ LoKi::Particles::SumInR2ConeWithSource::SumInR2ConeWithSource
 ( const double                                                 dr2    ,
   const LoKi::BasicFunctors<const LHCb::Particle*>::Function&  fun    , 
   const LoKi::BasicFunctors<const LHCb::Particle*>::Source&    source ,
-  const double                                                 init   ) 
-  : LoKi::Particles::SumInR2Cone ( dr2 , fun ,  LHCb::Particle::Range() , init )
+  const double                                                 init   )
+  : LoKi::AuxFunBase ( std::tie ( dr2 , fun , source , init ) ) 
+  , LoKi::Particles::SumInR2Cone ( dr2 , fun ,  LHCb::Particle::Range() , init )
   , m_source ( source ) 
 {}
 // ===========================================================================
@@ -134,7 +135,8 @@ LoKi::Particles::SumInR2ConeWithSource::SumInR2ConeWithSource
   const std::string&                                           location ,
   const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut      , 
   const double                                                 init     )
-  : LoKi::Particles::SumInR2Cone ( dr2 , fun ,  LHCb::Particle::Range() , init )
+  : LoKi::AuxFunBase ( std::tie ( dr2 , fun , location , cut , init ) ) 
+  , LoKi::Particles::SumInR2Cone ( dr2 , fun ,  LHCb::Particle::Range() , init )
   , m_source (   LoKi::Particles::SourceTES ( location , cut ) ) 
 {}
 // ===========================================================================
@@ -146,7 +148,8 @@ LoKi::Particles::SumInR2ConeWithSource::SumInR2ConeWithSource
   const std::vector<std::string>&                              location ,
   const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut      , 
   const double                                                 init     )
-  : LoKi::Particles::SumInR2Cone ( dr2 , fun ,  LHCb::Particle::Range() , init )
+  : LoKi::AuxFunBase ( std::tie ( dr2 , fun , location , cut , init ) ) 
+  , LoKi::Particles::SumInR2Cone ( dr2 , fun ,  LHCb::Particle::Range() , init )
   , m_source (   LoKi::Particles::SourceTES ( location , cut ) ) 
 {}
 // ===========================================================================

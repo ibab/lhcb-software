@@ -5,9 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
-! 2015-01-21 - Roel Aaij
- - Add explicit second template arguments to GetInfo instantiations in
-   dictionary.
+! 2015-01-22 - Vanya Belyaev
+ - move LoKi::Partiles::DHCoplanarity into LoKi::Legacy::DHCoplanarity
+   move DPCTAU*-related stuff into Legacy
 
 ! 2015-01-21 - Vanya Belyaev
  - minor fix in PID-operators 

@@ -1591,64 +1591,64 @@ namespace LoKi
      */        
     typedef LoKi::Particles::DeltaMeasuredMass                         DMMASS ;
     // ========================================================================
-    /** @typedef DPCTAU 
-     *  Evalutor of the c*tau for daughter particle.
-     *  @warning For computation ILifetimeFitter is used, that means 
-     *           that it is non-optimal evaluation 
-     *
-     *  The function has been requiested by Kazu Karvalho Akiba 
-     *  @see ILifetimeFitter 
-     *  @see LoKi::Particle::DaughterParticleCTau
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date 2010-05-15
-     */
-    typedef LoKi::Particles::DaughterParticleCTau                      DPCTAU ;
-    // ========================================================================
-    /** @typedef DPCTAUERR 
-     *  Evalutor of the errror in c*tau for daughter particle.
-     *  @warning For computation ILifetimeFitter is used, that means 
-     *           that it is non-optimal evaluation 
-     *
-     *  The function has been requiested by Kazu Karvalho Akiba 
-     *  @see ILifetimeFitter 
-     *  @see LoKi::Particle::DaughterParticleCTau
-     *  @see LoKi::Particle::DaughterParticleCTauErr
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date 2010-05-15
-     */
-    typedef LoKi::Particles::DaughterParticleCTauErr                DPCTAUERR ;
-    // ========================================================================    
-    /** @typedef DPCTAUFITCHI2 
-     *  Evalutor of the chi2 of  c*tau-fit for daughter particle.
-     *  @warning For computation ILifetimeFitter is used, that means 
-     *           that it is non-optimal evaluation 
-     *
-     *  The function has been requiested by Kazu Karvalho Akiba 
-     *  @see ILifetimeFitter 
-     *  @see LoKi::Particle::DaughterParticleCTau
-     *  @see LoKi::Particle::DaughterParticleCTauErr
-     *  @see LoKi::Particle::DaughterParticleCTauFitChi2
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date 2010-05-15
-     */
-    typedef LoKi::Particles::DaughterParticleCTauFitChi2        DPCTAUFITCHI2 ;
-    // ========================================================================
-    /** @typedef DPCTAUSIGHNIFICANCE
-     *  Evalutor of the c*tau-significance for daughter particle.
-     *  @warning For computation ILifetimeFitter is used, that means 
-     *           that it is non-optimal evaluation 
-     *
-     *  The function has been requiested by Kazu Karvalho Akiba 
-     *  @see ILifetimeFitter 
-     *  @see LoKi::Particle::DaughterParticleCTau
-     *  @see LoKi::Particle::DaughterParticleCTauErr
-     *  @see LoKi::Particle::DaughterParticleCTauFitChi2
-     *  @see LoKi::Particle::DaughterParticleCTauSignificance
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date 2010-05-15
-     */
-    typedef LoKi::Particles::DaughterParticleCTauSignificance DPCTAUSIGNIFICANCE ;
-    // ========================================================================
+    // /** @typedef DPCTAU 
+    //  *  Evalutor of the c*tau for daughter particle.
+    //  *  @warning For computation ILifetimeFitter is used, that means 
+    //  *           that it is non-optimal evaluation 
+    //  *
+    //  *  The function has been requiested by Kazu Karvalho Akiba 
+    //  *  @see ILifetimeFitter 
+    //  *  @see LoKi::Particle::DaughterParticleCTau
+    //  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+    //  *  @date 2010-05-15
+    //  */
+    // typedef LoKi::Particles::DaughterParticleCTau                      DPCTAU ;
+    // // ========================================================================
+    // /** @typedef DPCTAUERR 
+    //  *  Evalutor of the errror in c*tau for daughter particle.
+    //  *  @warning For computation ILifetimeFitter is used, that means 
+    //  *           that it is non-optimal evaluation 
+    //  *
+    //  *  The function has been requiested by Kazu Karvalho Akiba 
+    //  *  @see ILifetimeFitter 
+    //  *  @see LoKi::Particle::DaughterParticleCTau
+    //  *  @see LoKi::Particle::DaughterParticleCTauErr
+    //  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+    //  *  @date 2010-05-15
+    //  */
+    // typedef LoKi::Particles::DaughterParticleCTauErr                DPCTAUERR ;
+    // // ========================================================================    
+    // /** @typedef DPCTAUFITCHI2 
+    //  *  Evalutor of the chi2 of  c*tau-fit for daughter particle.
+    //  *  @warning For computation ILifetimeFitter is used, that means 
+    //  *           that it is non-optimal evaluation 
+    //  *
+    //  *  The function has been requiested by Kazu Karvalho Akiba 
+    //  *  @see ILifetimeFitter 
+    //  *  @see LoKi::Particle::DaughterParticleCTau
+    //  *  @see LoKi::Particle::DaughterParticleCTauErr
+    //  *  @see LoKi::Particle::DaughterParticleCTauFitChi2
+    //  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+    //  *  @date 2010-05-15
+    //  */
+    // typedef LoKi::Particles::DaughterParticleCTauFitChi2        DPCTAUFITCHI2 ;
+    // // ========================================================================
+    // /** @typedef DPCTAUSIGHNIFICANCE
+    //  *  Evalutor of the c*tau-significance for daughter particle.
+    //  *  @warning For computation ILifetimeFitter is used, that means 
+    //  *           that it is non-optimal evaluation 
+    //  *
+    //  *  The function has been requiested by Kazu Karvalho Akiba 
+    //  *  @see ILifetimeFitter 
+    //  *  @see LoKi::Particle::DaughterParticleCTau
+    //  *  @see LoKi::Particle::DaughterParticleCTauErr
+    //  *  @see LoKi::Particle::DaughterParticleCTauFitChi2
+    //  *  @see LoKi::Particle::DaughterParticleCTauSignificance
+    //  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+    //  *  @date 2010-05-15
+    //  */
+    // typedef LoKi::Particles::DaughterParticleCTauSignificance DPCTAUSIGNIFICANCE ;
+    // // ========================================================================
     /** @var DPDGM 
      *  Simple (but not very efficient)  function to evaluate the difference 
      *  between the particle mass and the nominal(PDG) mass
