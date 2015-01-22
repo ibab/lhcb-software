@@ -6,6 +6,10 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2015-01-22 - Eduardo Rodrigues
+ - Trivial fixes to remove compilation warnings from various .C class files
+   under src/TMVAClassification/mva_charmtagger_reco14/.
+
 ! 2015-01-22 - Vanya Belyaev
  - minor fix with LoKi.h
 
