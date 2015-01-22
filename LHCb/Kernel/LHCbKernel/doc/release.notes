@@ -3,6 +3,9 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
+! 2015-01-22 - Gerhard Raven
+ - fix violation of 'one definition rule' in CaloCellCode
+
 ! 2015-01-15 - Gerhard Raven
  - MemPoolAlloc: provide pre-C++11 version of commit below...
 

@@ -1,7 +1,8 @@
 // ============================================================================
 // Include files
 // ============================================================================
-// LHCbKenrel
+// ============================================================================
+// LHCbKernel
 // ============================================================================
 #include "Kernel/CaloCellCode.h"
 #include "Kernel/CaloCellID.h"
@@ -19,6 +20,13 @@
 // ============================================================================
 namespace CaloCellCode
 {
+
+  const CALONAMES CaloNames = { { "Spd" , "Prs", "Ecal" , "Hcal" } } ;
+  const std::string SpdName   = CaloNames[SpdCalo]  ;                   //  Spd
+  const std::string PrsName   = CaloNames[PrsCalo]  ;                   //  Prs
+  const std::string EcalName  = CaloNames[EcalCalo] ;                   // Ecal
+  const std::string HcalName  = CaloNames[HcalCalo] ;                   // Hcal
+
   // ==========================================================================
   /** @enum CaloArea
    *  The actual enumeration for the calorimeter areas

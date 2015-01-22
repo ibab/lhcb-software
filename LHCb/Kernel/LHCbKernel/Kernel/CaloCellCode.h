@@ -146,13 +146,13 @@ namespace CaloCellCode
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2009-09-28
    */
-  const CALONAMES CaloNames = { { "Spd" , "Prs", "Ecal" , "Hcal" } } ;
+  extern const CALONAMES CaloNames;
   // ==========================================================================
   /// the calorimeter names:
-  const std::string SpdName   = CaloNames[SpdCalo]  ;                   //  Spd
-  const std::string PrsName   = CaloNames[PrsCalo]  ;                   //  Prs
-  const std::string EcalName  = CaloNames[EcalCalo] ;                   // Ecal
-  const std::string HcalName  = CaloNames[HcalCalo] ;                   // Hcal
+  extern const std::string SpdName    ;                   //  Spd
+  extern const std::string PrsName    ;                   //  Prs
+  extern const std::string EcalName   ;                   // Ecal
+  extern const std::string HcalName   ;                   // Hcal
   // ==========================================================================
   /** simple function to get the calorimeter name from number
    *  @param num (INPUT) calorimeter index
