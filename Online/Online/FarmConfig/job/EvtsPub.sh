@@ -24,7 +24,7 @@ OPTIONS=${DYNAMIC_OPTS}/${PARTITION}/${1};
 export ONLINE_ENV_DIR=/group/online/dataflow/options/${PARTITION}/MONITORING
 export PYTHONPATH=${ONLINE_ENV_DIR}:${PYTHONPATH}
 export AdderOptsFile=/tmp/${PARTITION}_MonAdderOpts.opts
-cd /group/online/dataflow/cmtuser/Online/Online/FarmConfig/job
+cd /group/online/dataflow/cmtuser/OnlineRelease/Online/FarmConfig/job
 python ./MonAdderOpts.py ${AdderOptsFile}
 #
 export LD_LIBRARY_PATH=/home/beat/cmtuser/myOnline/InstallArea/${CMTCONFIG}/lib:$LD_LIBRARY_PATH
