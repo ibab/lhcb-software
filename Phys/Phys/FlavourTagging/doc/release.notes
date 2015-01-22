@@ -6,6 +6,9 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2015-01-22 - Vanya Belyaev
+ - minor fix with LoKi.h
+
 ! 2015-01-21 - Vanya Belyaev
  -  cmt/requirements  Phys/LoKi  ->  Phys/LoKiPhys 
     src/TaggerCharmTool.cpp  use correct LoKi headers  

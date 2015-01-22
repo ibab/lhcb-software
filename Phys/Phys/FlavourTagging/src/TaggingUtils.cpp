@@ -19,7 +19,7 @@
 using namespace LHCb;
 using namespace Gaudi::Units;
 
-#include "LoKi/LoKi.h" 
+#include "LoKi/ParticleCuts.h" 
 #include "LoKi/ParticleContextCuts.h" 
 
 using namespace LoKi::Cuts;
