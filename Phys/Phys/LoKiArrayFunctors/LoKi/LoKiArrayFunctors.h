@@ -7,13 +7,10 @@
 // ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/MoreFunctions.h"
 #include "LoKi/ATypes.h"
-#include "LoKi/AChild.h"
 #include "LoKi/AKinematics.h"
 #include "LoKi/AParticles.h"
 #include "LoKi/AParticleCuts.h"
-// ============================================================================
 #include "LoKi/IHybridFactory.h"
 // ============================================================================
 // The END 

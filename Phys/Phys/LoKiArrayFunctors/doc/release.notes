@@ -5,6 +5,9 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+! 2015-01-22 - Vanya Belyaev
+ - more step towards to autogeneration of C++ code 
+ 
 ! 2015-01-21 - Vanya Belyaev
  - step towards to autogeneration of C++ code 
 

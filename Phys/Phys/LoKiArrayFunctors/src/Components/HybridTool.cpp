@@ -669,6 +669,14 @@ LoKi::Hybrid::Tool::Tool
     -> declareUpdateHandler
     ( &LoKi::Hybrid::Tool::propHandler , this ) ;
   //
+  // ==========================================================================
+  // C++
+  // ==========================================================================
+  m_cpplines.push_back ( "#include \"LoKi/LoKiTracks.h\""         ) ;
+  m_cpplines.push_back ( "#include \"LoKi/LoKiProtoParticles.h\"" ) ;
+  m_cpplines.push_back ( "#include \"LoKi/LoKiPhys.h\""           ) ;
+  m_cpplines.push_back ( "#include \"LoKi/LoKiArrayFunctors.h\""  ) ;
+  // ==========================================================================
 }
 // ============================================================================
 // Destructor (virtual and protected)

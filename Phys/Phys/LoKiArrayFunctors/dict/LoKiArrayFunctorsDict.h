@@ -18,10 +18,14 @@
 #include "LoKi/FuncOps.h"
 // ============================================================================
 #include "LoKi/ATypes.h"
+#include "LoKi/AChild.h"
+#include "LoKi/AKinematics.h"
+#include "LoKi/AParticleCuts.h"
 #include "LoKi/LoKiArrayFunctors.h"
 // ============================================================================
 #include "LoKi/IHybridTool.h"
 #include "LoKi/HybridEngine.h"
+#include "LoKi/DictTransform.h"
 // ============================================================================
 #ifdef __INTEL_COMPILER
 #pragma warning(disable:177) //  variable ... was declared but never referenced
