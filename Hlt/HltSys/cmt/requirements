@@ -20,6 +20,7 @@ use HltLuminosity       v4r3     Hlt   # Jaap Panman
 use HltRawData          v5r2     Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v3r2     Hlt   # Jose Angel Hernando-Morata
 use HltSettings         v6r10    Hlt   # Parick Koppenburg, Gerhard Raven
+use HltTisTosTobbing    v3r2     Hlt   # Tomasz Skwarnicki
 use HltTracking         v13r4    Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKUtils            v1r14    Hlt   # Gerhard Raven
 use LoKiTrigger         v15r4    Phys  # Vanya Belyaev
