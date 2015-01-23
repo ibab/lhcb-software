@@ -66,7 +66,7 @@ void CircleTraj::expansion( double s,
                             Vector& dp,
                             Vector& ddp ) const
 {
-  Vector r(  AxisAngle(m_normal,s/m_radius)(m_dirStart) );
+  auto r = AxisAngle(m_normal,s/m_radius)(m_dirStart);
   ddp =  (-1.0/m_radius)*r;
   dp  = m_normal.Cross(r);
   p   = m_origin+m_radius*r;
@@ -79,10 +79,10 @@ double CircleTraj::muEstimate( const Point& point ) const
   // get vector from origin, to point after projecting it
   // into the plane of the circle. (i.e. this vector is normal
   // to m_normal)
-  Vector r( (point - m_normal.Dot(point-m_origin)*m_normal)-m_origin );
+  auto r = (point - m_normal.Dot(point-m_origin)*m_normal)-m_origin ;
 
   // Determine delta phi angle between arclength=0 angle and angle of r
-  double dphi = r.phi() - m_dirStart.phi();
+  auto dphi = r.phi() - m_dirStart.phi();
 
   // Check whether angle outside of [-pi/2,+pi/2]
   if( m_dirStart.Dot( r ) < 0) {
@@ -107,6 +107,4 @@ double CircleTraj::distTo2ndError( double /*arclen*/, double tolerance , int /*d
 {
   // require 3rd order term to be less than tolerance
   return std::cbrt(6*tolerance*m_radius*m_radius);
-  // cbrt is NOT available on windows at this time...
-  // return pow(6*tolerance*m_radius*m_radius,double(1)/3);
 }

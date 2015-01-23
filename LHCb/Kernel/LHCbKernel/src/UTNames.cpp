@@ -1,96 +1,65 @@
-
 #include "Kernel/STChannelID.h"
 #include "Kernel/UTNames.h"
 
-// BOOST
-#ifdef __INTEL_COMPILER       // Disable ICC remark from Boost
-#pragma warning(disable:2259) // non-pointer conversion from "int" to "char" may lose significant bits
-#endif
-#include "boost/lexical_cast.hpp"
-#include <boost/assign/std/vector.hpp>
-#if !(defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L)
-#include <boost/assign/list_of.hpp>
-#endif
-
 #include <iostream>
+#include <string>
 
 std::string LHCb::UTNames::UniqueSectorToString(const LHCb::STChannelID& chan)
 {
-  std::string theString = UniqueRegionToString(chan) + SectorToString(chan);
-  return theString;
+  return UniqueRegionToString(chan) + SectorToString(chan);
 }
 
 std::string LHCb::UTNames::SectorToString(const LHCb::STChannelID& chan)
 {
-  return "Sector"+ boost::lexical_cast<std::string>(chan.sector());;
+  return "Sector"+ std::to_string(chan.sector());;
 }
 
 std::vector<std::string> LHCb::UTNames::stations()
 {
-  GaudiUtils::VectorMap<std::string,Station>::iterator iter = s_StationTypMap().begin();
   std::vector<std::string> stations; stations.reserve(s_StationTypMap().size());
-  for ( ;iter != s_StationTypMap().end(); ++iter ){
-    if (iter->first != "Unknownstation") stations.push_back(iter->first);
-  } // iter
-
+  for (const auto& i : s_StationTypMap() ) {
+    if (i.first != "Unknownstation") stations.emplace_back(i.first);
+  }
   return stations;
 }
 
 std::vector<std::string> LHCb::UTNames::detRegions()
 {
-  GaudiUtils::VectorMap<std::string,detRegion>::iterator iter = s_detRegionTypMap().begin();
   std::vector<std::string> regions; regions.reserve(s_detRegionTypMap().size());
-  for ( ;iter != s_detRegionTypMap().end(); ++iter )
-  {
-    if (iter->first != "UnknownRegion") regions.push_back(iter->first);
-  } // iter
+  for (const auto& i : s_detRegionTypMap() ) {
+    if (i.first != "UnknownRegion") regions.emplace_back(i.first);
+  }
   return regions;
 }
 
 const std::vector<std::string>& LHCb::UTNames::layers()
 {
   //messy
-#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
   static const std::vector<std::string> layers = {"X", "U", "V"};
-#else
-  static const std::vector<std::string> layers = boost::assign::list_of("X")("U")("V");
-#endif
   return layers;
 }
 
 std::vector<std::string> LHCb::UTNames::allStations() {
-
   return stations();
 }
 
 std::vector<std::string> LHCb::UTNames::allDetRegions() {
-
-  typedef std::vector<std::string> Strings;
-  Strings layers = allLayers();
-  Strings regions = detRegions();
-  Strings tVector; tVector.reserve(regions.size()*layers.size());
-  for (Strings::iterator iterL = layers.begin(); iterL != layers.end(); ++iterL){
-    for (Strings::iterator iterR = regions.begin(); iterR != regions.end(); ++iterR){
-      std::string temp = (*iterL) + (*iterR) ;
-      tVector.push_back(temp);
-    } // iterB
-  } // iterS
-
+  auto l = allLayers();
+  auto r = detRegions();
+  std::vector<std::string> tVector; tVector.reserve(r.size()*l.size());
+  for (const auto& iL : l ) {
+    for (const auto& iR : r ) {
+      tVector.emplace_back( iL+iR );
+    }
+  }
   return tVector;
 }
 
 std::vector<std::string> LHCb::UTNames::allLayers() {
 
-  typedef std::vector<std::string> Strings;
-  Strings stationVec = stations();
-#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
-  std::vector<std::string> layers = {stationVec[0]+"X", stationVec[0]+"U",
-                                     stationVec[1]+"V", stationVec[1]+"X"};
-#else
-  std::vector<std::string> layers = boost::assign::list_of(stationVec[0]+"X")(stationVec[0]+"U")
-    (stationVec[1]+"V")(stationVec[1]+"X");
-#endif
-  return layers;
+  auto stationVec = stations();
+  return {stationVec[0]+"X", stationVec[0]+"U",
+          stationVec[1]+"V", stationVec[1]+"X"};
 }
 
 
@@ -117,15 +86,12 @@ std::string LHCb::UTNames::UniqueLayerToString(const LHCb::STChannelID& chan)
     // nothing
   }
 
-  std::string theString = StationToString(chan) + layer;
-
-  return theString;
+  return StationToString(chan) + layer;
 }
 
 std::string LHCb::UTNames::channelToString(const LHCb::STChannelID& chan)
 {
-  std::string theStrip = UniqueSectorToString(chan) + "Strip" + boost::lexical_cast<std::string>(chan.strip());
-  return theStrip;
+  return UniqueSectorToString(chan) + "Strip" + std::to_string(chan.strip());
 }
 
 LHCb::STChannelID LHCb::UTNames::stringToChannel(const std::string& name)
@@ -198,28 +164,21 @@ LHCb::STChannelID LHCb::UTNames::stringToChannel(const std::string& name)
 unsigned int LHCb::UTNames::findStationType(const std::string& testname,
                                             const std::vector<std::string>& names)
 {
-
-  std::vector<std::string>::const_iterator theName = names.begin();
-  for ( ; theName != names.end(); ++theName )
-  {
-    if ( testname.find(*theName) != std::string::npos)
-    {
-      break;
-    }
-  } // iterS
-  return theName == names.end()  ? 0 : (unsigned int)StationToType(*theName);
+  auto n = std::find_if( std::begin(names), std::end(names), 
+                         [&](const std::string& s) {
+      return testname.find(s) != std::string::npos;
+  });
+  return n != std::end(names) ?  (unsigned int)StationToType(*n) : 0 ;
 }
 
 unsigned int LHCb::UTNames::findRegionType(const std::string& testname,
                                            const std::vector<std::string>& names)
 {
-  std::vector<std::string>::const_iterator theName = names.begin();
-  for ( ; theName != names.end(); ++theName ){
-    if ( testname.find(*theName) != std::string::npos) {
-      break;
-    }
-  } // iterS
-  return theName == names.end()  ? 0 : (unsigned int)detRegionToType(*theName);
+  auto n = std::find_if( std::begin(names), std::end(names), 
+                         [&](const std::string& s) {
+      return testname.find(s) != std::string::npos;
+  });
+  return n != names.end()  ? (unsigned int)detRegionToType(*n) : 0;
 }
 
 
@@ -227,9 +186,9 @@ unsigned int LHCb::UTNames::toInt(const std::string& str)
 {
   unsigned int outValue = 0;
   try {
-    outValue = boost::lexical_cast<unsigned int>(str);
+    outValue = std::stoul(str);
   }
-  catch(boost::bad_lexical_cast& e){
+  catch(std::invalid_argument& e){
     outValue = 0;
     std::cerr << "ERROR " << e.what() << "** " << str << " **" << std::endl;
   }

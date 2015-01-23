@@ -2,18 +2,14 @@
 
 namespace LHCb
 {
-    HitPattern::HitPattern () {
-    }
-    
     
     HitPattern::HitPattern( const std::vector<LHCbID>& ids  ) {
 
-      for( std::vector<LHCbID>::const_iterator id = ids.begin() ;
-	     id != ids.end(); ++id) {
-  	  switch( id->detectorType() ) {
+      for (const auto& id: ids ) {
+  	  switch( id.detectorType() ) {
 		case LHCbID::Velo:
 		{
-		    LHCb::VeloChannelID veloid = id->veloID() ;
+		    LHCb::VeloChannelID veloid = id.veloID() ;
 		    unsigned int station = (veloid.sensor()%64)/2 ; 
 		    unsigned int side    = (veloid.sensor()%2) ; 
 		    unsigned int type    = (veloid.sensor()/64) ;
@@ -47,7 +43,7 @@ namespace LHCb
 		  // doesn't work for VP. this is not very neat, but
 		  // it is a solution for now. I may also have swapped
 		  // A and C side.
-		  LHCb::VPChannelID vpid = id->vpID() ;
+		  LHCb::VPChannelID vpid = id.vpID() ;
 		  unsigned int station = vpid.station() ;
 		  switch( vpid.sidepos() ) {
 		  case 0:
@@ -64,14 +60,14 @@ namespace LHCb
 		case LHCbID::UT:
 		case LHCbID::TT:
 		{
-		    LHCb::STChannelID stid = id->stID() ;
+		    LHCb::STChannelID stid = id.stID() ;
 		    unsigned int uniquelayer = (stid.station()-1)*2 + stid.layer()-1 ;
 		    m_tt.set(uniquelayer) ;
 		}
 		break ;
 	        case LHCbID::IT:
 		{
-		    LHCb::STChannelID stid = id->stID() ;
+		    LHCb::STChannelID stid = id.stID() ;
 		    unsigned int uniquelayer = (stid.station()-1)*4 + stid.layer()-1 ;
 		    if (stid.detRegion() == 1 || stid.detRegion() == 2)
 		      m_itAC.set(uniquelayer);
@@ -81,7 +77,7 @@ namespace LHCb
 		break ;
 		case LHCbID::OT:
 		{
-		    LHCb::OTChannelID otid = id->otID() ;
+		    LHCb::OTChannelID otid = id.otID() ;
 		    unsigned int uniquelayer = (otid.station()-1)*4 + otid.layer() ;
 		    
 		    if ((otid.quarter()==0 || otid.quarter()==2) && otid.module()==9)
@@ -98,16 +94,13 @@ namespace LHCb
 		break ;
 		case LHCbID::FT:
 		{
-		   LHCb::FTChannelID stid = id->ftID() ;
-		   unsigned int uniquelayer = stid.layer() ;
 		   // we could also fill in OT, but it doesn't really matter now
-		   m_itAC.set(uniquelayer);
+		   m_itAC.set(id.ftID().layer());
 		}
 		break ;
 		case LHCbID::Muon:
 		{
-		    LHCb::MuonTileID muonid = id->muonID() ;
-		    m_muon.set( muonid.station() ) ;
+		    m_muon.set( id.muonID().station() ) ;
 		}
 		break ;
 	    }

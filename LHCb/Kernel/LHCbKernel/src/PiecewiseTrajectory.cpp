@@ -1,20 +1,5 @@
 #include "Kernel/PiecewiseTrajectory.h"
-// Boost
-#ifdef __INTEL_COMPILER        // Disable ICC remark from Boost
-#pragma warning(disable:177) // variable was declared but never referenced
-#pragma warning(disable:193) // zero used for undefined preprocessing identifier
-#endif
-#include "boost/lambda/lambda.hpp"
-#include "boost/lambda/bind.hpp"
-#include "boost/lambda/construct.hpp"
-#include "boost/lambda/core.hpp"
 #include <cassert>
-
-using boost::lambda::_1;
-using boost::lambda::_2;
-using boost::lambda::bind;
-using boost::lambda::var;
-using boost::lambda::delete_ptr;
 
 namespace {
   class dist2point {
@@ -51,39 +36,24 @@ std::auto_ptr<LHCb::Trajectory> LHCb::PiecewiseTrajectory::clone() const
   return std::auto_ptr<LHCb::Trajectory>(new LHCb::PiecewiseTrajectory(*this));
 }
 
-LHCb::PiecewiseTrajectory::PiecewiseTrajectory(const PiecewiseTrajectory& lhs)
-  :LHCb::Trajectory(lhs)
+LHCb::PiecewiseTrajectory::PiecewiseTrajectory(const PiecewiseTrajectory& rhs)
+  :LHCb::Trajectory(rhs)
 {
-  Trajs::const_iterator iter = lhs.m_traj.begin();
-  for(; iter != lhs.m_traj.end() ; ++iter) {
-    append(iter->first->clone().release());
-  }
-}
-
-LHCb::PiecewiseTrajectory::~PiecewiseTrajectory()
-{
-#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
-  std::for_each(m_traj.begin(), m_traj.end(),
-                [](Trajs::value_type &e){ delete e.first; });
-#else
-  std::for_each(m_traj.begin(),
-                m_traj.end(),
-                bind<void>(delete_ptr(),bind(&Trajs::value_type::first,_1)));
-#endif
+  for ( const auto& i : rhs.m_traj ) append(i.first->clone().release());
 }
 
 void
 LHCb::PiecewiseTrajectory::append(LHCb::Trajectory *t)
 {
-  m_traj.push_back(std::make_pair(t,endRange()));
+  m_traj.emplace_back(std::unique_ptr<LHCb::Trajectory>{t},endRange());
   setRange(beginRange(),endRange()+t->endRange()-t->beginRange());
 }
 
 void
 LHCb::PiecewiseTrajectory::prepend(LHCb::Trajectory *t)
 {
-  double newBeginRange = beginRange()-(t->endRange()-t->beginRange());
-  m_traj.push_front(std::make_pair(t,newBeginRange));
+  auto newBeginRange = beginRange()-(t->endRange()-t->beginRange());
+  m_traj.emplace_front(std::unique_ptr<LHCb::Trajectory>{t},newBeginRange);
   setRange(newBeginRange,endRange());
 }
 
@@ -92,29 +62,28 @@ std::pair<const LHCb::Trajectory*,double>
 LHCb::PiecewiseTrajectory::loc(double mu) const
 {
   assert(!m_traj.empty());
-  Trajs::const_iterator i = std::lower_bound(m_traj.begin(),
-                                             m_traj.end(),
-                                             mu,
-                                             order2mu());
+  auto i = std::lower_bound(std::begin(m_traj),
+                            std::end(m_traj),
+                            mu, order2mu());
   if (i==m_traj.end()) --i;
-  return std::make_pair(i->first,i->first->beginRange()+(mu-i->second));
+  return {i->first.get(),i->first->beginRange()+(mu-i->second)};
 }
 
 LHCb::Trajectory::Point
 LHCb::PiecewiseTrajectory::position(double s) const
 {
-  return local<Point>(s,bind(&Trajectory::position,_1,_2));
+  return local(s,[](const LHCb::Trajectory* traj, double t) { return traj->position(t); } );
 }
 
 LHCb::Trajectory::Vector
 LHCb::PiecewiseTrajectory::direction(double s) const{
-  return local<Vector>(s,bind(&Trajectory::direction,_1,_2));
+  return local(s,[](const LHCb::Trajectory* traj, double t) { return traj->direction(t); } );
 }
 
 LHCb::Trajectory::Vector
 LHCb::PiecewiseTrajectory::curvature(double s) const
 {
-  return local<Vector>(s,bind(&Trajectory::curvature,_1,_2));
+  return local(s,[](const LHCb::Trajectory* traj, double t) { return traj->curvature(t); } );
 }
 
 void
@@ -123,14 +92,16 @@ LHCb::PiecewiseTrajectory::expansion( double s,
                                       Vector& dp,
                                       Vector& ddp ) const
 {
-  local<void>(s, bind(&Trajectory::expansion,
-                      _1,_2,var(p),var(dp),var(ddp)));
+  local(s, [&]( const LHCb::Trajectory* traj, double t ) {
+      traj->expansion(t,p,dp,ddp);
+  });
 }
 
 double
 LHCb::PiecewiseTrajectory::muEstimate(const Point& p) const
 {
-  return for_each(m_traj.begin(),m_traj.end(), dist2point(p) ).muEstimate();
+  //TODO: replace by std::accumulate...
+  return for_each(std::begin(m_traj),std::end(m_traj), dist2point(p) ).muEstimate();
 }
 
 double
@@ -155,12 +126,12 @@ LHCb::PiecewiseTrajectory::distToError( double s,
                                         int pathDirection,
                                         distFun f) const
 {
-  std::pair<const Trajectory*,double> l = loc(s);
-  double dist = (l.first->*f)(l.second,tolerance,pathDirection);
-  if ( (l.first!=m_traj.back().first  && pathDirection>0) ||
-       (l.first!=m_traj.front().first && pathDirection<0) ) {  // we're moving amongst
+  auto l = loc(s);
+  auto dist = (l.first->*f)(l.second,tolerance,pathDirection);
+  if ( (l.first!=m_traj.back().first.get()  && pathDirection>0) ||
+       (l.first!=m_traj.front().first.get() && pathDirection<0) ) {  // we're moving amongst
                                                                // the internal pieces
-    double endOfLocalRange = ( pathDirection>0 ? l.first->endRange()
+    auto endOfLocalRange = ( pathDirection>0 ? l.first->endRange()
                                : l.first->beginRange() ) ;
     // make sure we don't run beyond the current piece...
     dist = std::min(dist, std::abs( endOfLocalRange - l.second ));
@@ -171,10 +142,10 @@ LHCb::PiecewiseTrajectory::distToError( double s,
 std::ostream&
 LHCb::PiecewiseTrajectory::print(std::ostream& os) const
 {
-  for (Trajs::const_iterator i=m_traj.begin();i != m_traj.end();++i) {
-    double pieceRange = i->first->endRange() - i->first->beginRange();
-    os << "   BeginPoint[global/local] : " << i->first->beginPoint() << " [" << i->second << "/" << i->first->beginRange() << "]\n"
-       << " ->  EndPoint[global/local] : " << i->first->endPoint() << " [" << i->second+pieceRange << "/" << i->first->endRange() << "]\n" << std::endl;
+  for (const auto& i : m_traj ) {
+    auto pieceRange = i.first->endRange() - i.first->beginRange();
+    os << "   BeginPoint[global/local] : " << i.first->beginPoint() << " [" << i.second << "/" << i.first->beginRange() << "]\n"
+       << " ->  EndPoint[global/local] : " << i.first->endPoint() << " [" << i.second+pieceRange << "/" << i.first->endRange() << "]\n" << std::endl;
   }
   return os;
 

@@ -46,8 +46,8 @@ std::auto_ptr<LHCb::Trajectory> AlignTraj::clone() const
 AlignTraj::Parameters
 AlignTraj::parameters() const
 {
-    return Parameters(m_trans.X(), m_trans.Y(), m_trans.Z(),
-                      m_rx.Angle(),m_ry.Angle(),m_rz.Angle());
+    return { m_trans.X(), m_trans.Y(), m_trans.Z(),
+             m_rx.Angle(),m_ry.Angle(),m_rz.Angle() };
 }
 
 AlignTraj&

@@ -23,7 +23,7 @@ namespace LHCb
   class DifTraj : public Trajectory {
 
   public:
-    enum { kSize = N};
+    enum { kSize = N };
 
     /// Constructor taking the values of arclength
     /// at the begin and at the end of the trajectory

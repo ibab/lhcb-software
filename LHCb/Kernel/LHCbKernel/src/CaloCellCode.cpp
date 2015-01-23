@@ -1,16 +1,12 @@
 // ============================================================================
 // Include files
 // ============================================================================
+#include <type_traits>
 // ============================================================================
 // LHCbKernel
 // ============================================================================
 #include "Kernel/CaloCellCode.h"
 #include "Kernel/CaloCellID.h"
-// ============================================================================
-// Boost
-// ============================================================================
-#include "boost/static_assert.hpp"
-#include "boost/integer_traits.hpp"
 // ============================================================================
 /** @file
  *  trivial assertion for CaloCellCode::ContentType size
@@ -81,31 +77,31 @@ namespace
   // ==========================================================================
 }
 
-BOOST_STATIC_ASSERT ( boost::integer_traits<_Type1>  ::is_specialized &&
-                      boost::integer_traits<_Type1>  ::is_integral    &&
-                      boost::integer_traits<_Type1>  ::is_integer     &&
-                      boost::integer_traits<_Type1>  ::digits == 32u  &&
-                      !boost::integer_traits<_Type1> ::is_signed      ) ;
+static_assert ( std::numeric_limits<_Type1>::is_specialized &&
+                std::is_integral<_Type1>   ::value    &&
+                std::numeric_limits<_Type1>::is_integer     &&
+                std::numeric_limits<_Type1>::digits == 32u  &&
+                !std::is_signed<_Type1>    ::value     , "_Type1 not valid" ) ;
 
-BOOST_STATIC_ASSERT ( boost::integer_traits<_Type2>  ::is_specialized &&
-                      boost::integer_traits<_Type2>  ::is_integral    &&
-                      boost::integer_traits<_Type1>  ::is_integer     &&
-                      boost::integer_traits<_Type2>  ::digits == 32u  &&
-                      !boost::integer_traits<_Type1> ::is_signed      ) ;
+static_assert ( std::numeric_limits<_Type2>::is_specialized &&
+                std::is_integral<_Type2>   ::value    &&
+                std::numeric_limits<_Type1>::is_integer     &&
+                std::numeric_limits<_Type2>::digits == 32u  &&
+                !std::is_signed<_Type1>    ::value     , "_Type2 not valid" ) ;
 
-BOOST_STATIC_ASSERT ( CaloCellCode::BitsTotal == 32 );
+static_assert ( CaloCellCode::BitsTotal == 32 , "32 bits");
 
-BOOST_STATIC_ASSERT ( CaloCellCode::SpdCalo  < CaloCellCode::CaloNums     &&
+static_assert ( CaloCellCode::SpdCalo  < CaloCellCode::CaloNums     &&
                       CaloCellCode::PrsCalo  < CaloCellCode::CaloNums     &&
                       CaloCellCode::EcalCalo < CaloCellCode::CaloNums     &&
-                      CaloCellCode::HcalCalo < CaloCellCode::CaloNums     ) ;
+                      CaloCellCode::HcalCalo < CaloCellCode::CaloNums  , "Det < CaloNums"   ) ;
 
-BOOST_STATIC_ASSERT ( CaloCellCode::Outer    < CaloCellCode::CaloAreaNums &&
-                      CaloCellCode::Middle   < CaloCellCode::CaloAreaNums &&
-                      CaloCellCode::Inner    < CaloCellCode::CaloAreaNums );
+static_assert ( CaloCellCode::Outer    < CaloCellCode::CaloAreaNums &&
+                CaloCellCode::Middle   < CaloCellCode::CaloAreaNums &&
+                CaloCellCode::Inner    < CaloCellCode::CaloAreaNums , "Region < AreaNums");
 
-BOOST_STATIC_ASSERT ( (unsigned int) CaloCellCode::PinArea      <
-                      (unsigned int) CaloCellCode::CaloAreaNums ) ;
+static_assert ( (unsigned int) CaloCellCode::PinArea      <
+                (unsigned int) CaloCellCode::CaloAreaNums , "PinArea < CaloAreaNums") ;
 
 // ============================================================================
 /* get the area name from calorimeter index and number

@@ -50,10 +50,6 @@
        </constructor>
 
 
-       <constructor
-          desc = "Default Constructor">
-       </constructor>
-
        <method 
           name    = "fillStream" 
           desc    = "Print this HitPattern"

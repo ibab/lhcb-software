@@ -3,8 +3,14 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
+
+! 2015-01-23 - Gerhard Raven
+ - Replace usage of boost with C++11 constructs. 
+   Replace some loops by STL algorithms.
+   Use C++11 to simplify a few things.
+
 ! 2015-01-22 - Gerhard Raven
- - fix violation of 'one definition rule' in CaloCellCode
+ - Fix violation of 'one definition rule' in CaloCellCode
 
 ! 2015-01-15 - Gerhard Raven
  - MemPoolAlloc: provide pre-C++11 version of commit below...

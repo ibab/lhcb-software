@@ -61,18 +61,18 @@ void ParabolaTraj::expansion( double arclength,
   /// closest point on this trajectory to a given point
 double ParabolaTraj::muEstimate( const Point& point ) const
 {
-  Vector r = point - m_pos;
+  auto r = point - m_pos;
   if (m_curv.R()<0.01*m_dir.R()) { // small curvature limit: neglect curvature
      return r.Dot(m_dir);
   }
   // get vector from m_pos to point projected into plane of parabola
-  Vector normal = m_dir.Cross(m_curv).unit();
+  auto normal = m_dir.Cross(m_curv).unit();
   r -= normal.Dot(r)*normal;
   // get normalized 'x' and 'y' coordinates of this vector by projecting onto the
   // axis. In terms of these, the parabola is parameterized as (arclen, arclen^2/2)
   // (i.e. arclen is actually the distance along the 'x' coordinate!)
-  double x = r.Dot(m_dir);
-  double y = r.Dot(m_curv);
+  auto x = r.Dot(m_dir);
+  auto y = r.Dot(m_curv);
   //  now we need to minimize the distance between (x,y) and (s,s*s/2)
   //  where s is the arclen (well, not quite, but that is what we really
   //  use in 'point(arclen)' ;-)

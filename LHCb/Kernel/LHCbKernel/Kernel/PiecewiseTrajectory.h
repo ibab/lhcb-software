@@ -3,7 +3,9 @@
 
 // Includes
 #include <utility>
+#include <memory>
 #include <deque>
+#include <type_traits>
 #include "Kernel/Trajectory.h"
 
 // from Gaudi
@@ -27,9 +29,9 @@ namespace LHCb
 
     PiecewiseTrajectory() :Trajectory(0,0){}
 
-    ~PiecewiseTrajectory();
+    ~PiecewiseTrajectory() = default;
 
-    PiecewiseTrajectory(const PiecewiseTrajectory& lhs);
+    PiecewiseTrajectory(const PiecewiseTrajectory& rhs);
 
     // clone thyself...
     virtual std::auto_ptr<Trajectory> clone() const;
@@ -80,16 +82,17 @@ namespace LHCb
     std::ostream& print(std::ostream&) const;
 
   private:
-     typedef std::pair<Trajectory*,double> Elem; // Traj, global mu for start for Traj
-     typedef std::deque<Elem>         Trajs;
-     Trajs                            m_traj; // note: (we assume that) we OWN the Trajectory*!
+     typedef std::pair<std::unique_ptr<Trajectory>,double> Elem; // Traj, global mu for start for Traj
+     std::deque<Elem>                 m_traj; // note: (we assume that) we OWN the Trajectory*!
 
      // global -> local mapping
      std::pair<const Trajectory*, double> loc(double mu) const;
 
      // generic forwarding to local trajectories
-     template <typename RET, typename FUN> RET local(double mu, FUN fun) const {
-        std::pair<const LHCb::Trajectory*, double> j = loc(mu);
+     template <typename FUN> auto local(double mu, FUN fun) const 
+     -> typename std::result_of<FUN(const LHCb::Trajectory*,double)>::type 
+     {
+        auto j = loc(mu);
         return fun(j.first,j.second);
      }
 
