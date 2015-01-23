@@ -1,7 +1,7 @@
 ################################################################################
 # Package: AlignmentOnlineSys
 ################################################################################
-gaudi_subdir(AlignmentOnlineSys v10r1)
+gaudi_subdir(AlignmentOnlineSys v10r2)
 
 gaudi_depends_on_subdirs(AlignmentOnline/AlignOnline)
 

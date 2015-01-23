@@ -1,5 +1,5 @@
 package AlignmentOnlineSys
-version v10r1
+version v10r2
 
 branches cmt doc tests
  
@@ -7,7 +7,7 @@ branches cmt doc tests
 # LHCb Alignment Online packages
 #=======================================================
 
-use AlignOnline v1r0 AlignmentOnline
+use AlignOnline v1r1 AlignmentOnline
 use PRConfig    v*
 use OMAlib      v*   Online
 
