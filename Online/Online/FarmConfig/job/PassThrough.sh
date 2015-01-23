@@ -22,17 +22,14 @@ then
 fi;
 #
 export PYTHONPATH=${FARMCONFIGROOT}/job:${PYTHONPATH};
-echo exec -a ${UTGID} ${Checkpoint_task} ${OPTIONS};
 
-#gdb --args  ${Checkpoint_task} -opts=../options/${TASK_TYPE}.opts -auto
-##exit 1;
-##Debug: python ${FARMCONFIGROOT}/job/ConfigureShell.py;
-
-eval `python ${FARMCONFIGROOT}/job/ConfigureShell.py`;
-if test "${MOORESTARTUP_MODE}" = "RESTORE";      ## RunInfo flag=2
+###echo `python ${FARMCONFIGROOT}/job/ConfigureCheckpoint.py -r ${RUNINFO} -s` | tr ";" ";\n";
+eval `python ${FARMCONFIGROOT}/job/ConfigureCheckpoint.py -r ${RUNINFO} -s`;
+if test "${APP_STARTUP_OPTS}" = "-restore";      ## RunInfo flag=2
     then
-    ##Debug: python -c "import ConfigureFromCheckpoint";
+    echo "+++ [INFO] ${ONLINE_PROJECT_ROOT} ==> ${RESTORE_CMD}";
     eval "python -c \"import ConfigureFromCheckpoint\" | ${RESTORE_CMD}";
 else
+    echo "+++ [INFO] ${ONLINE_PROJECT_ROOT} ==> exec -a ${UTGID} ${Checkpoint_task} ${OPTIONS}";
     exec -a ${UTGID} ${Checkpoint_task} ${OPTIONS} ${APP_STARTUP_OPTS};
 fi;
