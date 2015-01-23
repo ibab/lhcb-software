@@ -1,7 +1,12 @@
 package PhysSys
-version v19r4
+version v19r4p1
 
 branches doc cmt
+
+# TEMPORATY PATCHES TO BE REMOVED JUST AFTER THIS PATCHED RELEASE !!!
+use GaudiObjDesc    v11r20p1 -no_auto_imports
+use RecEvent        v2r53    Event
+# --------------------------
 
 #===================================================================
 
@@ -45,7 +50,7 @@ use  LoKiUtils                  v1r3p1   Phys    # Vanya Belyaev
 use  LoKiJets                   v6r12    Phys    # Vanya Belyaev, Victor Coco
 use  LoKiAlgo                   v9r8p5   Phys    # Vanya Belyaev
 use  LoKiArrayFunctors          v10r6    Phys    # Vanya Belyaev
-use  LoKiPhys                   v10r21   Phys    # Vanya Belyaev
+use  LoKiPhys                   v10r21p1 Phys    # Vanya Belyaev
 use  LoKiProtoParticles         v2r2     Phys    # Vanya Belyaev
 use  LoKi                       v9r0p1   Phys    # Vanya Belyaev
 use  LoKiTracks                 v2r10p2  Phys    # Vanya Belyaev
