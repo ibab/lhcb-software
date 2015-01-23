@@ -3,6 +3,7 @@ Package : AlignmentInterfaces
 Package Coordinator : Johan Blouw
 Purpose :  Collection of interfaces needed for the T-station alignment
 
+!========================= AlignmentInterfaces v3r6 2015-01-23 =========================
 ! 2014-11-21 - Marco Clemencic
  - Fixed some warnings (method was hidden).
 
