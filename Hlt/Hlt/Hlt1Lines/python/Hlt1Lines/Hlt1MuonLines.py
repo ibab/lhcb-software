@@ -144,17 +144,17 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                                         'MultiMuonNoIP'    : ( 'Muon', 'DiMuon' ),
                                         'MultiMuonVeloNoIP'    : ( 'Muon', 'DiMuon' ),
                                         'MultiMuonVeloTTNoIP'    : ( 'Muon', 'DiMuon' ) }
-        ,'Priorities'               : { 'SingleMuonHighPT' : 4,
-                                        'SingleMuonNoIP'   : 3,
-                                        'SingleMuonVeloHighPT' : 4,
-                                        'SingleMuonVeloNoIP'   : 3,
-                                        'SingleMuonVeloTTHighPT' : 4,
-                                        'SingleMuonVeloTTNoIP'   : 3,
-                                        'DiMuonLowMass'    : 2,
-                                        'DiMuonHighMass'   : 1,
-                                        'MultiMuonNoIP'    : 5 ,
-                                        'MultiMuonNoIP'    : 5 ,
-                                        'MultiMuonNoIP'    : 5 }
+        ,'Priorities'               : { 'SingleMuonHighPT' : 7,
+                                        'SingleMuonNoIP'   : 6,
+                                        'SingleMuonVeloHighPT' : 7,
+                                        'SingleMuonVeloNoIP'   : 6,
+                                        'SingleMuonVeloTTHighPT' : 7,
+                                        'SingleMuonVeloTTNoIP'   : 6,
+                                        'DiMuonLowMass'    : 5,
+                                        'DiMuonHighMass'   : 4,
+                                        'MultiMuonNoIP'    : 8 ,
+                                        'MultiMuonNoIP'    : 8 ,
+                                        'MultiMuonNoIP'    : 8 }
         }
     
     def localise_props( self, prefix ):

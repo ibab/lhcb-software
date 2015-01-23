@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-01-23 - Roel Aaij
+ - Update 1Track cuts and allow timing of functors.
+
 !========================= Hlt1Lines v7r7 2014-12-15 =========================
 
 ! 2014-12-10 - Sebastian Neubert
