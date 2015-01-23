@@ -1,7 +1,7 @@
 ################################################################################
 # Package: AlignmentTools
 ################################################################################
-gaudi_subdir(AlignmentTools v3r3)
+gaudi_subdir(AlignmentTools v3r4)
 
 gaudi_depends_on_subdirs(Alignment/AlignmentInterfaces
                          GaudiAlg
