@@ -6,6 +6,9 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2015-01-23 - Eduardo Rodrigues
+ - Another trivial fix to remove compilation warnings in a .C class file.
+
 ! 2015-01-22 - Jack Wimberley
  - Fixed inefficient usage of _ppFromName function
 
