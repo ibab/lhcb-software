@@ -1,9 +1,9 @@
 # =============================================================================
 # Created    : 10/05/2007
-# Maintainer : Adlene Hicheur en Wouter Hulsbergen (Adlene.Hicheur@cern.ch
+# Maintainer : Adlene Hicheur et Wouter Hulsbergen (Adlene.Hicheur@cern.ch
 # =============================================================================
 package             AlignKernel
-version           v3r6
+version           v3r7
 
 # ================= structure =================================================
 branches            cmt doc src xml AlignKernel
