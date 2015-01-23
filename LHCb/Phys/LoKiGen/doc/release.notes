@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-01-23 - Vanya Belyaev
+ - steps towards autogeneration of C++ code 
+
 !========================= LoKiGen v10r19 2014-12-11 =========================
 ! 2014-11-26 - Marco Clemencic
  - Reverted work around for spurious entries in the rootmap files.

@@ -13,16 +13,16 @@
 // ============================================================================
 #include "Kernel/ParticleID.h"
 #include "Kernel/iNode.h"
+#include "LoKi/iTree.h"
 // ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/Constants.h"
-#include "LoKi/Kinematics.h"
 #include "LoKi/BasicFunctors.h"
 #include "LoKi/Functions.h"
 #include "LoKi/GenTypes.h"
-#include "LoKi/iTree.h"
 #include "LoKi/GenChildSelector.h"
+#include "LoKi/PidFunctions.h"
 // ============================================================================
 /** @file
  *
@@ -57,7 +57,7 @@ namespace LoKi
   {
     // ========================================================================
     /** @class BarCode
-     *  the most primitive function - it return the "barcode"
+     *  the most primitive function - it returns the "barcode"
      *  of HepMC::GenParticle object
      *
      *  @see LoKi::Cuts::GBAR
@@ -146,6 +146,129 @@ namespace LoKi
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
     };
+
+    // ========================================================================
+    /** @class IsID 
+     *  new verison of PID-comparison 
+     */
+    // ========================================================================
+    class GAUDI_API IsID  
+      : public LoKi::GenTypes::GCuts
+      , public LoKi::Pids::GetPids 
+    {
+    public:
+      // ======================================================================
+      IsID ( const long                           id  ) ;
+      IsID ( const unsigned long                  id  ) ;
+      IsID ( const LHCb::ParticleID&              id  ) ;
+      IsID ( const std::string&                   id  ) ;
+      IsID ( const std::vector<int>&              ids ) ;
+      IsID ( const std::vector<long>&             ids ) ;
+      IsID ( const std::vector<unsigned int>&     ids ) ;
+      IsID ( const std::vector<unsigned long>&    ids ) ;
+      IsID ( const std::vector<LHCb::ParticleID>& ids ) ;
+      IsID ( const std::vector<std::string>&      ids ) ;
+      IsID ( const LoKi::Pids::GetPids&           ids ) ;
+      // ======================================================================
+      virtual IsID* clone() const ;
+      /// the only one essential method
+      result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================      
+      IsID() ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class IsNotID 
+     *  new verison of PID-comparison 
+     */
+    // ========================================================================
+    class GAUDI_API IsNotID : public LoKi::GenParticles::IsID 
+    {
+    public:
+      // ======================================================================
+      IsNotID ( const long                           id  ) ;
+      IsNotID ( const unsigned long                  id  ) ;
+      IsNotID ( const LHCb::ParticleID&              id  ) ;
+      IsNotID ( const std::string&                   id  ) ;
+      IsNotID ( const std::vector<int>&              ids ) ;
+      IsNotID ( const std::vector<long>&             ids ) ;
+      IsNotID ( const std::vector<unsigned int>&     ids ) ;
+      IsNotID ( const std::vector<unsigned long>&    ids ) ;
+      IsNotID ( const std::vector<LHCb::ParticleID>& ids ) ;
+      IsNotID ( const std::vector<std::string>&      ids ) ;
+      IsNotID ( const LoKi::Pids::GetPids&           ids ) ;
+      // ======================================================================
+      virtual IsNotID* clone() const ;
+      /// the only one essential method
+      result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================      
+      IsNotID() ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    class GAUDI_API IsAbsID : public LoKi::GenParticles::IsID   
+    {
+    public:
+      // ======================================================================
+      IsAbsID ( const long                           id  ) ;
+      IsAbsID ( const unsigned long                  id  ) ;
+      IsAbsID ( const LHCb::ParticleID&              id  ) ;
+      IsAbsID ( const std::string&                   id  ) ;
+      IsAbsID ( const std::vector<int>&              ids ) ;
+      IsAbsID ( const std::vector<long>&             ids ) ;
+      IsAbsID ( const std::vector<unsigned int>&     ids ) ;
+      IsAbsID ( const std::vector<unsigned long>&    ids ) ;
+      IsAbsID ( const std::vector<LHCb::ParticleID>& ids ) ;
+      IsAbsID ( const std::vector<std::string>&      ids ) ;
+      IsAbsID ( const LoKi::Pids::GetPids&           ids ) ;
+      // ======================================================================
+      virtual IsAbsID* clone() const ;
+      /// the only one essential method
+      result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================      
+      IsAbsID() ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    class GAUDI_API IsNotAbsID : public LoKi::GenParticles::IsAbsID
+    {
+    public:
+      // ======================================================================
+      IsNotAbsID ( const long                           id  ) ;
+      IsNotAbsID ( const unsigned long                  id  ) ;
+      IsNotAbsID ( const LHCb::ParticleID&              id  ) ;
+      IsNotAbsID ( const std::string&                   id  ) ;
+      IsNotAbsID ( const std::vector<int>&              ids ) ;
+      IsNotAbsID ( const std::vector<long>&             ids ) ;
+      IsNotAbsID ( const std::vector<unsigned int>&     ids ) ;
+      IsNotAbsID ( const std::vector<unsigned long>&    ids ) ;
+      IsNotAbsID ( const std::vector<LHCb::ParticleID>& ids ) ;
+      IsNotAbsID ( const std::vector<std::string>&      ids ) ;
+      IsNotAbsID ( const LoKi::Pids::GetPids&           ids ) ;
+      // ======================================================================
+      virtual IsNotAbsID* clone() const ;
+      /// the only one essential method
+      result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================      
+      IsNotAbsID() ;
+      // ======================================================================
+    } ;
     // ========================================================================
     /** @class Status
      *  the most primitive function - it return the "status"

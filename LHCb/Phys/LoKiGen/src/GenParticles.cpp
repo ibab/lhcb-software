@@ -17,12 +17,12 @@
 // ============================================================================
 // LoKi
 // ============================================================================
+#include "LoKi/Trees.h"
 #include "LoKi/Constants.h"
+#include "LoKi/ParticleProperties.h"
+#include "LoKi/Services.h"
 #include "LoKi/valid.h"
 #include "LoKi/MoreFunctions.h"
-#include "LoKi/ParticleProperties.h"
-#include "LoKi/Trees.h"
-#include "LoKi/Services.h"
 // ============================================================================
 // LoKiGen
 // ============================================================================
@@ -91,7 +91,8 @@ LoKi::GenParticles::Identifier::result_type
 LoKi::GenParticles::Identifier::operator()
   ( LoKi::GenParticles::Identifier:: argument p ) const
 {
-  if ( 0 != p ) { return LHCb::ParticleID( p->pdg_id() ).pid() ; }
+  // if ( 0 != p ) { return LHCb::ParticleID( p->pdg_id() ).pid() ; }
+  if ( 0 != p ) { return p->pdg_id() ; }
   Error ( "HepMC::GenParticle* points to NULL, return InvalidID" ) ;
   return LoKi::Constants::InvalidID ;
 }
@@ -145,7 +146,8 @@ LoKi::GenParticles::AbsIdentifier::result_type
 LoKi::GenParticles::AbsIdentifier::operator()
   ( LoKi::GenParticles::Identifier:: argument p ) const
 {
-  if ( 0 != p ) { return LHCb::ParticleID( p->pdg_id() ).abspid() ; }
+  // if ( 0 != p ) { return LHCb::ParticleID( p->pdg_id() ).abspid() ; }
+  if ( 0 != p ) { return std::abs ( p->pdg_id() ) ; }
   Error ( "HepMC::GenParticle* points to NULL, return InvalidID" ) ;
   return LoKi::Constants::InvalidID ;
 }
@@ -192,7 +194,8 @@ LoKi::GenParticles::MomentumDistance::MomentumDistance
   const double py ,
   const double pz ,
   const double e  )
-  : LoKi::GenTypes::GFunc()
+  : LoKi::AuxFunBase ( std::tie ( px , py , pz , e ) ) 
+  , LoKi::GenTypes::GFunc()
   , m_vct ()
 {
   m_vct.SetXYZT( px , py , pz , e ) ;
@@ -204,7 +207,8 @@ LoKi::GenParticles::MomentumDistance::MomentumDistance
 // ============================================================================
 LoKi::GenParticles::MomentumDistance::MomentumDistance
 ( const LoKi::LorentzVector& vct )
-  : LoKi::GenTypes::GFunc()
+  : LoKi::AuxFunBase ( std::tie ( vct ) ) 
+  , LoKi::GenTypes::GFunc()
   , m_vct ( vct )
 {}
 // ============================================================================
@@ -270,7 +274,8 @@ LoKi::GenParticles::MomentumDistance::fillStream
 LoKi::GenParticles::TransverseMomentumRel::TransverseMomentumRel
 ( const double theta ,
   const double phi   )
-  : LoKi::GenTypes::GFunc()
+  : LoKi::AuxFunBase ( std::tie ( theta , phi ) )
+  , LoKi::GenTypes::GFunc()
   , m_vct()
 {
   m_vct.SetXYZ
@@ -289,7 +294,8 @@ LoKi::GenParticles::TransverseMomentumRel::TransverseMomentumRel
 ( const double x ,
   const double y ,
   const double z )
-  : LoKi::GenTypes::GFunc()
+  : LoKi::AuxFunBase ( std::tie ( x , y , z ) )
+  , LoKi::GenTypes::GFunc()
   , m_vct()
 {
   m_vct.SetXYZ (  x , y , z ) ;
@@ -302,7 +308,8 @@ LoKi::GenParticles::TransverseMomentumRel::TransverseMomentumRel
 // ============================================================================
 LoKi::GenParticles::TransverseMomentumRel::TransverseMomentumRel
 ( const LoKi::ThreeVector& vct )
-  : LoKi::GenTypes::GFunc()
+  : LoKi::AuxFunBase ( std::tie ( vct ) )
+  , LoKi::GenTypes::GFunc()
   , m_vct ( vct )
 {}
 // ============================================================================
@@ -313,7 +320,8 @@ LoKi::GenParticles::TransverseMomentumRel::TransverseMomentumRel
 // ============================================================================
 LoKi::GenParticles::TransverseMomentumRel::TransverseMomentumRel
 ( const LoKi::LorentzVector& vct )
-  : LoKi::GenTypes::GFunc()
+  : LoKi::AuxFunBase ( std::tie ( vct ) )
+  , LoKi::GenTypes::GFunc()
   , m_vct ( vct.Vect() )
 {}
 // ============================================================================
@@ -549,7 +557,8 @@ LoKi::GenParticles::IsAnAncestor::fillStream
 //  constructor from Quark
 // ============================================================================
 LoKi::GenParticles::HasQuark::HasQuark ( const LHCb::ParticleID::Quark quark )
-  : LoKi::GenTypes::GCuts()
+  : LoKi::AuxFunBase ( std::tie ( quark ) )
+  , LoKi::GenTypes::GCuts()
   , m_quark ( quark  )
 {}
 // ============================================================================
@@ -765,7 +774,8 @@ LoKi::GenParticles::IsNucleus::fillStream
 // ============================================================================
 LoKi::GenParticles::ProperLifeTime::ProperLifeTime
 ( const double bad )
-  : LoKi::GenTypes::GFunc()
+  : LoKi::AuxFunBase ( std::tie ( bad ) )
+  , LoKi::GenTypes::GFunc()
   , m_bad ( bad )
 {}
 // ============================================================================
@@ -862,7 +872,8 @@ LoKi::GenParticles::NominalLifeTime::fillStream
 LoKi::GenParticles::AdapterToProductionVertex::AdapterToProductionVertex
 ( const LoKi::Types::GVFunc& fun ,
   const double               bad )
-  : LoKi::GenTypes::GFunc()
+  : LoKi::AuxFunBase ( std::tie ( fun , bad  ) )
+  , LoKi::GenTypes::GFunc()
   , m_fun ( fun )
   , m_bad ( bad )
 {}
@@ -914,7 +925,8 @@ LoKi::GenParticles::AdapterToProductionVertex::operator()
 LoKi::GenParticles::AdapterToEndVertex::AdapterToEndVertex
 ( const LoKi::Types::GVFunc& fun ,
   const double               bad )
-  : LoKi::GenTypes::GFunc()
+  : LoKi::AuxFunBase ( std::tie ( fun , bad  ) )
+  , LoKi::GenTypes::GFunc()
   , m_fun ( fun )
   , m_bad ( bad )
 {}
@@ -989,7 +1001,8 @@ LoKi::GenParticles::ThreeCharge::fillStream
 LoKi::GenParticles::NInTree::NInTree
 ( const LoKi::GenTypes::GCuts&  cut   ,
   HepMC::IteratorRange          range )
-  : LoKi::GenTypes::GFunc()
+  : LoKi::AuxFunBase ( std::tie ( cut , range  ) )
+  , LoKi::GenTypes::GFunc()
   , m_cut( cut )
   , m_range ( range )
 {}
@@ -1000,7 +1013,7 @@ LoKi::GenParticles::NInTree::NInTree
 // ============================================================================
 LoKi::GenParticles::NInTree::NInTree
 ( const LoKi::GenParticles::NInTree& right )
-  : LoKi::AuxFunBase                         ( right )
+  : LoKi::AuxFunBase     ( right )
   , LoKi::GenTypes::GFunc( right )
   , m_cut   ( right.m_cut )
   , m_range ( right.m_range )
@@ -1068,7 +1081,8 @@ LoKi::GenParticles::NInTree::fillStream( std::ostream& s ) const
 // ============================================================================
 LoKi::GenParticles::InTree::InTree
 ( const LoKi::GenTypes::GCuts& cut )
-  : LoKi::GenTypes::GCuts ()
+  : LoKi::AuxFunBase ( std::tie ( cut ) )
+  , LoKi::GenTypes::GCuts ()
   , m_cut ( cut )
 {}
 // ============================================================================
@@ -1183,7 +1197,8 @@ LoKi::GenParticles::Oscillated2::fillStream ( std::ostream& o ) const
 // ============================================================================
 LoKi::GenParticles::DecNode::DecNode
 ( const Decays::iNode& node )
-  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate()
+  : LoKi::AuxFunBase ( std::tie ( node ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate()
   , m_node ( node )
 {}
 // ============================================================================
@@ -1236,7 +1251,8 @@ LoKi::GenParticles::DecTree::DecTree
 // ============================================================================
 LoKi::GenParticles::DecTree::DecTree
 ( const std::string& descriptor )
-  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate()
+  : LoKi::AuxFunBase ( std::tie ( descriptor ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate()
   , m_tree         ( s_TREE )
   , m_autovalidate ( true   )
 {
@@ -1305,7 +1321,8 @@ std::ostream& LoKi::GenParticles::DecTree::fillStream( std::ostream& s ) const
 LoKi::GenParticles::ChildFun::ChildFun
 ( const LoKi::GenTypes::GFunc& fun   ,
   const unsigned int           index )
-  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( fun , index ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Function ()
   , m_fun   ( fun   )
   , m_child ( index )
 {}
@@ -1319,7 +1336,8 @@ LoKi::GenParticles::ChildFun::ChildFun
 ( const LoKi::GenTypes::GFunc& fun   ,
   const unsigned int           index1 ,
   const unsigned int           index2 )
-  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( fun , index1 , index2  ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Function ()
   , m_fun   ( fun             )
   , m_child ( index1 , index2 )
 {}
@@ -1332,7 +1350,8 @@ LoKi::GenParticles::ChildFun::ChildFun
 LoKi::GenParticles::ChildFun::ChildFun
 ( const LoKi::GenTypes::GFunc& fun   ,
   const std::vector<unsigned int>& indices )
-  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( fun , indices ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Function ()
   , m_fun   ( fun   )
   , m_child ( indices )
 {
@@ -1347,7 +1366,8 @@ LoKi::GenParticles::ChildFun::ChildFun
 LoKi::GenParticles::ChildFun::ChildFun
 ( const LoKi::GenTypes::GFunc&    fun      ,
   const LoKi::GenChild::Selector& selector )
-  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( fun , selector ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Function ()
   , m_fun   ( fun      )
   , m_child ( selector )
 {
@@ -1362,7 +1382,8 @@ LoKi::GenParticles::ChildFun::ChildFun
 LoKi::GenParticles::ChildFun::ChildFun
 ( const LoKi::GenTypes::GFunc& fun   ,
   const std::string&           selector  )
-  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( fun , selector ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Function ()
   , m_fun   ( fun      )
   , m_child ( selector )
 {
@@ -1377,7 +1398,8 @@ LoKi::GenParticles::ChildFun::ChildFun
 LoKi::GenParticles::ChildFun::ChildFun
 ( const LoKi::GenTypes::GFunc&    fun       ,
   const Decays::IGenDecay::iTree& selector  )
-  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( fun , selector ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Function ()
   , m_fun   ( fun      )
   , m_child ( selector )
 {
@@ -1392,7 +1414,8 @@ LoKi::GenParticles::ChildFun::ChildFun
 LoKi::GenParticles::ChildFun::ChildFun
 ( const LoKi::GenTypes::GFunc& fun   ,
   const Decays::iNode&         selector  )
-  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( fun , selector ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Function ()
   , m_fun   ( fun      )
   , m_child ( selector )
 {
@@ -1407,7 +1430,8 @@ LoKi::GenParticles::ChildFun::ChildFun
 LoKi::GenParticles::ChildFun::ChildFun
 ( const LoKi::GenTypes::GFunc& fun   ,
   const LoKi::GenTypes::GCuts& selector  )
-  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( fun , selector ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Function ()
   , m_fun   ( fun      )
   , m_child ( selector )
 {
@@ -1465,8 +1489,9 @@ LoKi::GenParticles::ChildFun::fillStream( std::ostream& s ) const
 // ============================================================================
 LoKi::GenParticles::ChildCut::ChildCut
 ( const LoKi::GenTypes::GCuts& fun   ,
- const unsigned int           index )
-  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate ()
+  const unsigned int           index )
+  : LoKi::AuxFunBase ( std::tie ( fun , index ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate ()
   , m_fun   ( fun   )
   , m_child ( index )
 {}
@@ -1480,7 +1505,8 @@ LoKi::GenParticles::ChildCut::ChildCut
 ( const LoKi::GenTypes::GCuts& fun   ,
   const unsigned int           index1 ,
   const unsigned int           index2 )
-  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate ()
+  : LoKi::AuxFunBase ( std::tie ( fun , index1 , index2 ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate ()
   , m_fun   ( fun             )
   , m_child ( index1 , index2 )
 {}
@@ -1493,7 +1519,8 @@ LoKi::GenParticles::ChildCut::ChildCut
 LoKi::GenParticles::ChildCut::ChildCut
 ( const LoKi::GenTypes::GCuts& fun   ,
   const std::vector<unsigned int>& indices )
-  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate ()
+  : LoKi::AuxFunBase ( std::tie ( fun , indices ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate ()
   , m_fun   ( fun   )
   , m_child ( indices )
 {
@@ -1508,7 +1535,8 @@ LoKi::GenParticles::ChildCut::ChildCut
 LoKi::GenParticles::ChildCut::ChildCut
 ( const LoKi::GenTypes::GCuts& fun   ,
   const LoKi::GenChild::Selector& selector )
-  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate ()
+  : LoKi::AuxFunBase ( std::tie ( fun , selector ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate ()
   , m_fun   ( fun      )
   , m_child ( selector )
 {
@@ -1523,7 +1551,8 @@ LoKi::GenParticles::ChildCut::ChildCut
 LoKi::GenParticles::ChildCut::ChildCut
 ( const LoKi::GenTypes::GCuts& fun   ,
   const std::string&           selector  )
-  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate ()
+  : LoKi::AuxFunBase ( std::tie ( fun , selector ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate ()
   , m_fun   ( fun      )
   , m_child ( selector )
 {
@@ -1538,7 +1567,8 @@ LoKi::GenParticles::ChildCut::ChildCut
 LoKi::GenParticles::ChildCut::ChildCut
 ( const LoKi::GenTypes::GCuts&    fun       ,
   const Decays::IGenDecay::iTree& selector  )
-  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate ()
+  : LoKi::AuxFunBase ( std::tie ( fun , selector ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate ()
   , m_fun   ( fun      )
   , m_child ( selector )
 {
@@ -1553,7 +1583,8 @@ LoKi::GenParticles::ChildCut::ChildCut
 LoKi::GenParticles::ChildCut::ChildCut
 ( const LoKi::GenTypes::GCuts& fun   ,
   const Decays::iNode&         selector  )
-  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate ()
+  : LoKi::AuxFunBase ( std::tie ( fun , selector ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate ()
   , m_fun   ( fun      )
   , m_child ( selector )
 {
@@ -1568,7 +1599,8 @@ LoKi::GenParticles::ChildCut::ChildCut
 LoKi::GenParticles::ChildCut::ChildCut
 ( const LoKi::GenTypes::GCuts& fun   ,
   const LoKi::GenTypes::GCuts& selector  )
-  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate ()
+  : LoKi::AuxFunBase ( std::tie ( fun , selector ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate ()
   , m_fun   ( fun      )
   , m_child ( selector )
 {
@@ -1611,6 +1643,377 @@ LoKi::GenParticles::ChildCut::operator()
 std::ostream&
 LoKi::GenParticles::ChildCut::fillStream( std::ostream& s ) const
 { return s << " GCHILDCUT(" << m_fun << "," << m_child << " ) " ; }
+// ============================================================================
+
+// ============================================================================
+// IsID 
+// ============================================================================
+LoKi::GenParticles::IsID::IsID ( const long                      id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate() 
+  , LoKi::Pids::GetPids ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsID::IsID( const unsigned long  id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate() 
+  , LoKi::Pids::GetPids ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsID::IsID( const LHCb::ParticleID&         id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate() 
+  , LoKi::Pids::GetPids ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsID::IsID( const std::string& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate() 
+  , LoKi::Pids::GetPids ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsID::IsID( const std::vector<int>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate() 
+  , LoKi::Pids::GetPids ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsID::IsID( const std::vector<unsigned int>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate() 
+  , LoKi::Pids::GetPids ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsID::IsID( const std::vector<long>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate() 
+  , LoKi::Pids::GetPids ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsID::IsID( const std::vector<unsigned long>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate() 
+  , LoKi::Pids::GetPids ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsID::IsID( const std::vector<LHCb::ParticleID>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate() 
+  , LoKi::Pids::GetPids ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsID::IsID( const std::vector<std::string>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate() 
+  , LoKi::Pids::GetPids ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsID::IsID( const LoKi::Pids::GetPids& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate() 
+  , LoKi::Pids::GetPids ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsID*
+LoKi::GenParticles::IsID::clone() const 
+{ return new LoKi::GenParticles::IsID(*this) ; }
+// ============================================================================
+std::ostream& LoKi::GenParticles::IsID::fillStream( std::ostream& s ) const
+{
+  //
+  s << "(GID== " ;
+  //
+  if      ( 1 == m_names.size() ) { Gaudi::Utils::toStream ( m_names[0] , s ) ; }
+  else if ( !m_names.empty()    ) { Gaudi::Utils::toStream ( m_names    , s ) ; }
+  else if ( 1 == m_ints.size()  ) { Gaudi::Utils::toStream ( m_ints [0] , s ) ; }
+  else                            { Gaudi::Utils::toStream ( m_ints     , s ) ; }
+  //
+  return s << ")" ; 
+}
+// ============================================================================
+// the only one essential method
+// ============================================================================
+LoKi::GenParticles::IsID::result_type 
+LoKi::GenParticles::IsID::operator() 
+  ( LoKi::GenParticles::IsID::argument p ) const 
+{
+  //
+  if ( 0 == p ) 
+  {
+    Error("Invalid Particle, return 'False'");
+    return false ;                     // RETURN 
+  }
+  //
+  return in_list ( p->pdg_id() ) ;  
+}
+
+// ============================================================================
+// IsNotID 
+// ============================================================================
+LoKi::GenParticles::IsNotID::IsNotID ( const long                id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsNotID::IsNotID( const unsigned long  id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsNotID::IsNotID( const LHCb::ParticleID&         id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsNotID::IsNotID( const std::string& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsNotID::IsNotID( const std::vector<int>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsNotID::IsNotID( const std::vector<unsigned int>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsNotID::IsNotID( const std::vector<long>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsNotID::IsNotID( const std::vector<unsigned long>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsNotID::IsNotID( const std::vector<LHCb::ParticleID>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsNotID::IsNotID( const std::vector<std::string>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsNotID*
+LoKi::GenParticles::IsNotID::clone() const 
+{ return new LoKi::GenParticles::IsNotID(*this) ; }
+// ============================================================================
+std::ostream& LoKi::GenParticles::IsNotID::fillStream( std::ostream& s ) const
+{
+  //
+  s << "(GID!= " ;
+  //
+  if      ( 1 == m_names.size() ) { Gaudi::Utils::toStream ( m_names[0] , s ) ; }
+  else if ( !m_names.empty()    ) { Gaudi::Utils::toStream ( m_names    , s ) ; }
+  else if ( 1 == m_ints.size()  ) { Gaudi::Utils::toStream ( m_ints [0] , s ) ; }
+  else                            { Gaudi::Utils::toStream ( m_ints     , s ) ; }
+  //
+  return s << ")" ; 
+}
+// ============================================================================
+// the only one essential method
+// ============================================================================
+LoKi::GenParticles::IsNotID::result_type 
+LoKi::GenParticles::IsNotID::operator() 
+  ( LoKi::GenParticles::IsNotID::argument p ) const 
+{
+  //
+  if ( 0 == p ) 
+  {
+    Error("Invalid Particle, return 'False'");
+    return false ;                     // RETURN 
+  }
+  return not_in_list ( p->pdg_id () ) ;
+}
+
+// ============================================================================
+// IsAbsID 
+// ============================================================================
+LoKi::GenParticles::IsAbsID::IsAbsID ( const long id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsAbsID::IsAbsID ( const unsigned long  id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsAbsID::IsAbsID ( const LHCb::ParticleID&         id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsAbsID::IsAbsID ( const std::string& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsAbsID::IsAbsID ( const std::vector<int>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsAbsID::IsAbsID ( const std::vector<unsigned int>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsAbsID::IsAbsID ( const std::vector<long>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsAbsID::IsAbsID ( const std::vector<unsigned long>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsAbsID::IsAbsID ( const std::vector<LHCb::ParticleID>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsAbsID::IsAbsID ( const std::vector<std::string>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsAbsID::IsAbsID ( const LoKi::Pids::GetPids& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsAbsID*
+LoKi::GenParticles::IsAbsID::clone() const 
+{ return new LoKi::GenParticles::IsAbsID(*this) ; }
+// ============================================================================
+std::ostream& LoKi::GenParticles::IsAbsID::fillStream( std::ostream& s ) const
+{
+  //
+  s << "(GABSID== " ;
+  //
+  if      ( 1 == m_names.size() ) { Gaudi::Utils::toStream ( m_names[0] , s ) ; }
+  else if ( !m_names.empty()    ) { Gaudi::Utils::toStream ( m_names    , s ) ; }
+  else if ( 1 == m_ints.size()  ) { Gaudi::Utils::toStream ( m_ints [0] , s ) ; }
+  else                            { Gaudi::Utils::toStream ( m_ints     , s ) ; }
+  //
+  return s << ")" ; 
+}
+// ============================================================================
+// the only one essential method
+// ============================================================================
+LoKi::GenParticles::IsAbsID::result_type 
+LoKi::GenParticles::IsAbsID::operator() 
+  ( LoKi::GenParticles::IsAbsID::argument p ) const 
+{
+  //
+  if ( 0 == p ) 
+  {
+    Error("Invalid Particle, return 'False'");
+    return false ;                     // RETURN 
+  }
+  //
+  return in_abs_list ( p->pdg_id() ) ;
+}
+
+// ============================================================================
+// IsNotAbsID 
+// ============================================================================
+LoKi::GenParticles::IsNotAbsID::IsNotAbsID ( const long         id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsAbsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsNotAbsID::IsNotAbsID ( const unsigned long id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsAbsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsNotAbsID::IsNotAbsID ( const LHCb::ParticleID&         id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsAbsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsNotAbsID::IsNotAbsID ( const std::string& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsAbsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsNotAbsID::IsNotAbsID ( const std::vector<int>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsAbsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsNotAbsID::IsNotAbsID ( const std::vector<unsigned int>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsAbsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsNotAbsID::IsNotAbsID ( const std::vector<long>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsAbsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsNotAbsID::IsNotAbsID ( const std::vector<unsigned long>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsAbsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsNotAbsID::IsNotAbsID ( const std::vector<LHCb::ParticleID>& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsAbsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsNotAbsID::IsNotAbsID ( const std::vector<std::string>& id  )  
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsAbsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsNotAbsID::IsNotAbsID ( const LoKi::Pids::GetPids& id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::GenParticles::IsAbsID ( id ) 
+{}
+// ============================================================================
+LoKi::GenParticles::IsNotAbsID*
+LoKi::GenParticles::IsNotAbsID::clone() const 
+{ return new LoKi::GenParticles::IsNotAbsID(*this) ; }
+// ============================================================================
+
+std::ostream& LoKi::GenParticles::IsNotAbsID::fillStream( std::ostream& s ) const
+{
+  //
+  s << "(GABSID!= " ;
+  //
+  if      ( 1 == m_names.size() ) { Gaudi::Utils::toStream ( m_names[0] , s ) ; }
+  else if ( !m_names.empty()    ) { Gaudi::Utils::toStream ( m_names    , s ) ; }
+  else if ( 1 == m_ints.size()  ) { Gaudi::Utils::toStream ( m_ints [0] , s ) ; }
+  else                            { Gaudi::Utils::toStream ( m_ints     , s ) ; }
+  //
+  return s << ")" ; 
+}
+// ============================================================================
+// the only one essential method
+// ============================================================================
+LoKi::GenParticles::IsNotAbsID::result_type 
+LoKi::GenParticles::IsNotAbsID::operator() 
+  ( LoKi::GenParticles::IsNotAbsID::argument p ) const 
+{
+  //
+  if ( 0 == p ) 
+  {
+    Error("Invalid Particle, return 'False'");
+    return false ;                     // RETURN 
+  }
+  //
+  return not_in_abs_list ( p->pdg_id() ) ;
+}
 // ============================================================================
 
 
