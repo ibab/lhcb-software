@@ -18,6 +18,7 @@ library       OnlineBase   ../src/AMS/*.cpp     \
                            ../src/TAN/*.cpp     \
                            ../src/WT/*.cpp
 
+macro LCG_mode 'opt'
 # To enable profiling using the google library:
 ####macro_append  OnlineBase_shlibflags ' -L/sw/lib/lcg/external/tcmalloc/1.7p3/x86_64-slc5-gcc46-opt/lib -lprofiler ' WIN32 ' '
 
