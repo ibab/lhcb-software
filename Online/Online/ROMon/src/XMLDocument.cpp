@@ -1,4 +1,5 @@
 #include "ROMon/XMLDocument.h"
+#include "ROMon/XMLHelpers.h"
 #include "RTL/rtl.h"
 
 #include "xercesc/framework/LocalFileFormatTarget.hpp"
@@ -33,12 +34,16 @@ namespace {
       catch (const XMLException& e)   {
         cout << "Xerces-c error in initialization:" << _toString(e.getMessage()) << endl;
       }
+      cout << "XMLPlatformUtils initialized...." << endl;
     }
     ~__Init() {
       XMLPlatformUtils::Terminate(); 
     }
+    void verify() {}
   };
   __Init __In__;
+
+
   struct ErrHandler : public ErrorHandler    {
     /// Constructor
     ErrHandler() {}
@@ -97,6 +102,9 @@ namespace {
                               "<Cluster>\n"
                               "</Cluster>\n");
 }
+
+XML_Init::XML_Init() { __Init in;in.verify(); }
+XML_Init::~XML_Init() {}
 
 // ----------------------------------------------------------------------------
 XMLDocument::XMLDocument() : m_doc(0),m_parser(0),m_errHdlr(0),m_update(false)

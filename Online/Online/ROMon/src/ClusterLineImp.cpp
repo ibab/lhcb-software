@@ -235,6 +235,7 @@ using namespace SCR;
 using namespace std;
 typedef vector<string>               StringV;
 
+#define TIME_FORMAT            "%Y-%m-%d %H:%M:%S"
 #define UPDATE_TIME_MAX        15
 #define CLUSTERLINE_START      2
 #define COL_ATTENTION       (RED)
@@ -311,7 +312,7 @@ void CtrlFarmClusterLine::display() {
 /// DIM command service callback
 void CtrlFarmClusterLine::updateContent(XML::TaskSupervisorParser& ts) {
   char txt[256];
-  string val, err;
+  string val, err, tim;
   bool cl_good = true;
   Cluster& c = m_cluster;
   Display*       dis = m_parent->display();
@@ -321,9 +322,10 @@ void CtrlFarmClusterLine::updateContent(XML::TaskSupervisorParser& ts) {
   int pvss_status=0;
   c.nodes.clear();
   ts.getClusterNodes(c);
-
+  tim = c.time.substr(0,c.time.rfind(' '));
   RTL::Lock lock(InternalDisplay::screenLock());
-  ::snprintf(txt,sizeof(txt),"%8s %6d ",c.time.c_str()+11,int(c.nodes.size()));
+
+  ::snprintf(txt,sizeof(txt),"%8s %6d ",tim.c_str()+11,int(c.nodes.size()));
   begin_update(txt);
   pos = 87+CLUSTERLINE_START;
   for(Cluster::Nodes::const_iterator i=c.nodes.begin(), e=c.nodes.end(); i!=e;++i) {
@@ -381,9 +383,11 @@ void CtrlFarmClusterLine::updateContent(XML::TaskSupervisorParser& ts) {
   ::scrc_put_chars(dis,pvss_status>1?"ERROR":"   OK",pvss_status>1?COL_ALARM:GREEN,line,53,0);
 
   col = NORMAL|BOLD;
-  struct tm tm;
-  ::strptime(c.time.c_str(),"%Y-%m-%d %H:%M:%S",&tm);
-  if ( ::time(0)-::mktime(&tm) > UPDATE_TIME_MAX )
+  struct tm tm1, tm2;
+  time_t now = time(0);
+  now = ::mktime(localtime_r(&now,&tm2));
+  ::strptime(c.time.c_str(),TIME_FORMAT,&tm1);
+  if ( now-::mktime(&tm1) > UPDATE_TIME_MAX )
     err = " No update information present ", col = COL_ALARM;
   else if ( pvss_status>1 )
     err = " PVSS environment looks funny.", col = COL_ALARM;

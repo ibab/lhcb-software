@@ -11,6 +11,11 @@
 
 namespace XML {
 
+  struct XML_Init  {
+    XML_Init();
+    ~XML_Init();
+  };
+
   struct XMLDocument {
     typedef const std::string& CTSR;
     xercesc::DOMDocument     *m_doc;

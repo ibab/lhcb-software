@@ -26,7 +26,7 @@ using namespace PyRPC;
 #define CONNECTION_UPDATE_TIMEDIFF 30
 #define TASK_UPDATE_TIMEDIFF       60
 #define PUBLISH_TIMEDIFF           10
-#define TIME_FORMAT                "%Y-%m-%d %H:%M:%S"
+#define TIME_FORMAT                "%Y-%m-%d %H:%M:%S %Z"
 #define CMD_DATA                   12345
 static string PUBLISHING_NODE = "ECS03";
 static bool s_debug = false;

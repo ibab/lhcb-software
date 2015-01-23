@@ -1,3 +1,7 @@
+#ifndef ONLINE_ROMON_XMLHELPER_H
+#define ONLINE_ROMON_XMLHELPER_H
+
+
 #include "xercesc/dom/DOM.hpp"
 #include "xercesc/util/XMLString.hpp"
 
@@ -47,3 +51,6 @@ namespace XML {
     XMLCollection& operator++();
   };
 }
+
+#endif // ONLINE_ROMON_XMLHELPER_H
+
