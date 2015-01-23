@@ -21,14 +21,10 @@
 #include "Kernel/IJetMaker.h"
 #include "Kernel/IJets2Jets.h"
 #include "Kernel/IJetTagTool.h"
+#include "Kernel/IDVAlgorithm.h"
 
-// LoKi
-#include "LoKi/LoKi.h"
-#include "LoKi/ILoKiSvc.h"
+#include "Event/MCParticle.h"
 
-#include "LoKi/AlgoMC.h"
-#include "LoKi/GenExtract.h"
-#include "LoKi/GenParticleCuts.h"
 
 // Relations
 #include "Relations/Relation2D.h"

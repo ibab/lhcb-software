@@ -7,6 +7,10 @@
 #include "LoKiElectronTag.h"
 
 
+#include "LoKi/PhysTypes.h"
+#include "LoKi/ParticleCuts.h"
+
+
 // ============================================================================
 // Declaration of the Tool Factory
 DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,ElectronTag)

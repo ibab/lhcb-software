@@ -48,7 +48,7 @@ StatusCode LoKi::TopoTag::initialize()
   if(sc.isFailure())
     return sc;
 
-  svc<LoKi::ILoKiSvc>("LoKiSvc", true);
+  // svc<LoKi::ILoKiSvc>("LoKiSvc", true);
 
  
   m_TriggerTisTosTool = tool<ITriggerTisTos>( "TriggerTisTos","TriggerTisTos",this );

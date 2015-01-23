@@ -17,14 +17,16 @@
 #include "Kernel/IParticle2MCAssociator.h"
 
 
-#include "LoKi/AlgoMC.h"
+// LoKi
+#include "LoKi/ILoKiSvc.h"
+#include "LoKi/GenExtract.h"
+#include "LoKi/GenParticleCuts.h"
 #include "LoKi/ParticleCuts.h"
 #include "LoKi/VertexCuts.h"
 #include "LoKi/MCVertexCuts.h"
 #include "LoKi/MCParticleCuts.h"
+#include "LoKi/GenParticleCuts.h"
 #include "LoKi/PhysMCParticleCuts.h"
-
-
 
 // ============================================================================
 // Declaration of the Tool Factory

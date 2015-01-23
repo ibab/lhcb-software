@@ -14,6 +14,13 @@
 #include <Kernel/GetIDVAlgorithm.h>
 // kernel
 #include "Kernel/IParticle2MCAssociator.h"
+
+// LoKi
+#include "LoKi/ILoKiSvc.h"
+#include "LoKi/GenExtract.h"
+#include "LoKi/GenParticleCuts.h"
+
+
 // ============================================================================
 // Declaration of the Tool Factory
 DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,JetTagTruthNew)

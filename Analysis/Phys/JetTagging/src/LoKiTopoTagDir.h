@@ -27,11 +27,6 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IHistogramSvc.h"
 
-// LoKi
-#include "LoKi/LoKi.h"
-#include "LoKi/ILoKiSvc.h"
-#include "LoKi/ParticleContextCuts.h"
-#include "LoKi/ParticleCuts.h"
 
 class DVAlgorithm;
 

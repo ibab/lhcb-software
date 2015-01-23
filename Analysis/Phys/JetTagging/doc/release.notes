@@ -4,6 +4,9 @@
 ! Purpose     : Jet Tagging Package
 ! -----------------------------------------------------------------------------
 
+! 2015-01-23 - Vanya Belyaev
+ - minor fix to account changes in structure of LoKi header files 
+
 !========================= JetTagging v1r5 2015-01-16 =========================
 
 ! 2015-01-16 - Eduardo Rodrigues

@@ -15,9 +15,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/ToolFactory.h"
 
-// LoKi
-#include "LoKi/LoKi.h"
-#include "LoKi/ILoKiSvc.h"
+
 
 // Track Interfaces
 #include "TrackInterfaces/IPVOfflineTool.h"
@@ -25,6 +23,7 @@
 // Event
 #include "Event/RecVertex.h"
 #include "Event/ODIN.h"
+#include "Event/Particle.h"
 
 #ifdef __GNUC__
 #include "NeuroBayesExpert.hh"

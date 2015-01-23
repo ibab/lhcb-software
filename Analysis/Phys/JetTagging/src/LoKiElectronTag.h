@@ -27,7 +27,6 @@
 #include "GaudiKernel/IHistogramSvc.h"
 
 // LoKi
-#include "LoKi/LoKi.h"
 #include "LoKi/ILoKiSvc.h"
 
 // ============================================================================

@@ -7,6 +7,10 @@
 #include "LoKiNNBTag.h"
 #include "GaudiAlg/CheckForNaN.h"
 
+// LoKi
+#include "LoKi/ILoKiSvc.h"
+#include "LoKi/PhysExtract.h"
+
 DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,NNBTag)
 
 

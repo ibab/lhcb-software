@@ -13,8 +13,15 @@
 
 #include "Kernel/IDVAlgorithm.h"
 #include <Kernel/GetIDVAlgorithm.h>
-#include "LoKi/ParticleContextCuts.h"
-#include "LoKi/ParticleCuts.h"
+
+
+// LoKi
+// #include "LoKi/ILoKiSvc.h"
+// #include "LoKi/ParticleContextCuts.h"
+// #include "LoKi/ParticleCuts.h"
+// #include "LoKi/ParticleContextCuts.h"
+// #include "LoKi/ParticleCuts.h"
+
 // ============================================================================
 // Declaration of the Tool Factory
 DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,TopoTagDir)
@@ -31,7 +38,7 @@ DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,TopoTagDir)
     return sc;
 
 
-  svc<LoKi::ILoKiSvc>("LoKiSvc", true);
+  // svc<LoKi::ILoKiSvc>("LoKiSvc", true);
 
   m_distCalc = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
 

@@ -5,9 +5,10 @@
 
 // Local
 #include "LoKiSVTag.h"
-#include "LoKi/Kinematics.h"
-
-#include "LoKi/Geometry.h"
+// #include "LoKi/Kinematics.h"
+// #include "LoKi/Geometry.h"
+// LoKi
+// #include "LoKi/ILoKiSvc.h"
 
 // ============================================================================
 // Declaration of the Tool Factory
@@ -59,7 +60,7 @@ StatusCode LoKi::SVTag::initialize()
   if(sc.isFailure())
     return sc;
 
-  svc<LoKi::ILoKiSvc>("LoKiSvc", true);
+  // svc<LoKi::ILoKiSvc>("LoKiSvc", true);
 
   m_distCalc = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
 

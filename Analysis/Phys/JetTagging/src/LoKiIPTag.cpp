@@ -5,9 +5,11 @@
 
 // Local
 #include "LoKiIPTag.h"
-#include "LoKi/Kinematics.h"
 
-#include "LoKi/Geometry.h"
+// #include "LoKi/Kinematics.h"
+// #include "LoKi/Geometry.h"
+// #include "LoKi/PhysTypes.h"
+// #include "LoKi/ILoKiSvc.h" //  ??? why it is needed here???
 
 // ============================================================================
 // Declaration of the Tool Factory
@@ -70,9 +72,9 @@ StatusCode LoKi::IPTag::initialize()
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure())
     return sc;
-
-  svc<LoKi::ILoKiSvc>("LoKiSvc", true);
-
+  
+  // svc<LoKi::ILoKiSvc>("LoKiSvc", true);
+  
   m_CleanedDaugthers = new LHCb::Particles();
 
   m_distCalc = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
