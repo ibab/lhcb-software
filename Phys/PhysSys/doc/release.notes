@@ -10,8 +10,16 @@ Patch release needed for HLT matters otherwise identical to v19r4.
   LoKiPhys v10r21p1
 
 - Packages included just for this patched version:
-  GaudiObjDesc v11r20p1,
-  RecEvent     v2r53
+  GaudiObjDesc     v11r20p1
+  Event/RecEvent   v2r53
+  Event/DAQEvent   v9r17
+  Event/DigiEvent  v4r3
+  Event/GenEvent   v6r11
+  Event/HltEvent   v9r5
+  Event/L0Event    v19r9
+  Event/MCEvent    v3r1
+  Event/PhysEvent  v11r28
+  Event/TrackEvent v6r2
 
 </PRE><H1><A NAME=v19r4>2015-01-16 Phys v19r4</A></H1><PRE>
 Development release, based on Gaudi v26r0, LHCb v38r4 and Rec v17r4.
