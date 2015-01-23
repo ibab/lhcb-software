@@ -6,7 +6,7 @@ find_package(GaudiProject)
 #---------------------------------------------------------------
 
 # Declare project name and version
-gaudi_project(Alignment HEAD
+gaudi_project(Alignment v10r2
               USE  Phys v19r4
               DATA AppConfig
                    FieldMap
