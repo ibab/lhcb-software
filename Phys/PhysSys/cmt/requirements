@@ -4,7 +4,9 @@ version v19r4p1
 branches doc cmt
 
 # TEMPORATY PATCHES TO BE REMOVED JUST AFTER THIS PATCHED RELEASE !!!
+private
 use GaudiObjDesc    v11r20p1 -no_auto_imports
+end_private
 use RecEvent        v2r53    Event
 # --------------------------
 
