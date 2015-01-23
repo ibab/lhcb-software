@@ -7,5 +7,5 @@ find_package(GaudiProject)
 
 # Declare project name and version and dependencies (LHCB v36r0 given as example)
 gaudi_project(AlignmentOnline v10r2
-              USE Online v5r13
+              USE Online v5r15
                   Alignment v10r2)
