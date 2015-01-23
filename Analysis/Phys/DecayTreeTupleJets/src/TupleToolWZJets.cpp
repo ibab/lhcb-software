@@ -12,6 +12,9 @@
 #include <map>
 #include <sstream>
 
+
+#include "LoKi/ParticleCuts.h"
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : TupleToolWZJets
 // Autor: Albert Bursche

@@ -4,7 +4,6 @@
 
 #include "Kernel/IJetTagTool.h"
 #include "Kernel/IParticleTupleTool.h"
-#include "LoKi/LoKi.h"
 #include "TupleToolJetsBase.h"
 
 class TupleToolJetTag : public TupleToolJetsBase,

@@ -1,4 +1,5 @@
 #include "TupleToolJetsBase.h"
+#include "LoKi/ParticleCuts.h"
 #include "LoKi/AParticleCuts.h"
 
 TupleToolJetsBase::TupleToolJetsBase( const std::string& type,

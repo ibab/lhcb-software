@@ -1,13 +1,14 @@
 #ifndef TUPLETOOLWZJETS_H
 #define TUPLETOOLWZJETS_H 1
-#include "LoKi/LoKi.h"
 #include "TupleToolJetsBase.h"
+#include "Kernel/IParticleFilter.h"
 #include "Kernel/IParticleTupleTool.h"
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"
 #include "Kernel/FilterParticlesBase.h"
 #include <utility>
 #include "Kernel/IJetMaker.h"
+#include "LoKi/PhysTypes.h"
 
 //autor: Albert Bursche
 class TupleToolWZJets : public TupleToolJetsBase, virtual public IParticleTupleTool

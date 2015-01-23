@@ -3,7 +3,7 @@
 
 #include "DecayTreeTupleBase/TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"
-#include "LoKi/LoKi.h"
+#include "LoKi/PhysTypes.h"
 
 //autor: Albert Bursche
 class TupleToolJetsBase : public TupleToolBase, virtual public IParticleTupleTool {
