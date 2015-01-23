@@ -18,11 +18,12 @@
 #include "Relations/Relation2D.h"
 
 
+
 #include "LoKi/ILoKiSvc.h"
 #include "LoKi/Interface.h"
 
 
-#include "LoKi/LoKiPhys.h"
+#include "LoKi/ParticleCuts.h"
 // ============================================================================
 // LoKiGen
 // ============================================================================
@@ -111,9 +112,11 @@ void LoKi::HepMCJets2HepMCJets::makeRelation( const IJets2Jets::Jets& StdPrimary
 
   // create the relation table and register it into TES
   // select
-  for( IJets2Jets::Jets::const_iterator secjet =StdSecondaryJets.begin() ; StdSecondaryJets.end()!= secjet ; secjet++ )
+  for( IJets2Jets::Jets::const_iterator secjet =StdSecondaryJets.begin() ; 
+       StdSecondaryJets.end()!= secjet ; secjet++ )
   {
-    for(IJets2Jets::Jets::const_iterator primjet =StdPrimaryJets.begin() ; StdPrimaryJets.end()!= primjet ; primjet++)
+    for(IJets2Jets::Jets::const_iterator primjet =StdPrimaryJets.begin() ; 
+        StdPrimaryJets.end()!= primjet ; primjet++)
     {
       double weight_jetsec_jetprim = 0.;
       Parts daug_secjet ;
@@ -121,9 +124,11 @@ void LoKi::HepMCJets2HepMCJets::makeRelation( const IJets2Jets::Jets& StdPrimary
       LoKi::Extract::getParticles (*secjet, std::back_inserter (daug_secjet), PID!="CELLjet");
       Parts daug_primjet ;
       LoKi::Extract::getParticles (*primjet, std::back_inserter (daug_primjet), PID!="CELLjet");
-      for(Parts::iterator idaug_secjet = daug_secjet.begin() ; daug_secjet.end() != idaug_secjet   ; idaug_secjet++ )
+      for(Parts::iterator idaug_secjet = daug_secjet.begin() ; 
+          daug_secjet.end() != idaug_secjet   ; idaug_secjet++ )
       {
-        for(Parts::iterator idaug_primjet = daug_primjet.begin() ; daug_primjet.end()!= idaug_primjet  ; idaug_primjet++ )
+        for(Parts::iterator idaug_primjet = daug_primjet.begin() ; 
+            daug_primjet.end()!= idaug_primjet  ; idaug_primjet++ )
         {
           if(E(*idaug_secjet)==E(*idaug_primjet) && PX(*idaug_secjet)==PX(*idaug_primjet) && PY(*idaug_secjet)==PY(*idaug_primjet)
              && PZ(*idaug_secjet)==PZ(*idaug_primjet))

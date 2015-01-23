@@ -1,7 +1,5 @@
 // $Id: HepMCJets2Jets.cpp,v 1.1 2009-12-14 12:34:33 cocov Exp $
 // Include files
-// $Id: HepMCJets2Jets.h,v 1.1 2009-12-14 12:34:33 cocov Exp $
-// Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiAlg/GaudiTool.h"
@@ -19,6 +17,8 @@
 #include "Relations/Relation1D.h"
 #include "Relations/Relation2D.h"
 
+#include "LoKi/ParticleCuts.h"
+#include "LoKi/MCParticleCuts.h"
 #include "LoKi/PhysMCParticleCuts.h"
 
 #include "LoKi/ILoKiSvc.h"
@@ -28,9 +28,7 @@
 #include "LoKi/MCTypes.h"
 #include "LoKi/MCMatch.h"
 #include "LoKi/MCMatchObj.h"
-#include "LoKi/MCMatchDicts.h"
 
-#include "LoKi/LoKiPhys.h"
 #include <GaudiKernel/IIncidentListener.h>
 #include <GaudiKernel/IIncidentSvc.h>
 #include "Kernel/IParticle2MCAssociator.h"
@@ -213,12 +211,14 @@ void LoKi::MCJets2Jets::makeRelation( const IRelateJets::Jets& StdPrimaryJets,
   LoKi::MCMatch mc = this->matcher();
 
   // Loop over the MC jets and create the function for matching
-  for(IRelateJets::Jets::const_iterator primjet =StdPrimaryJets.begin() ; StdPrimaryJets.end()!= primjet ; primjet++)
+  for(IRelateJets::Jets::const_iterator primjet =StdPrimaryJets.begin() ; 
+      StdPrimaryJets.end()!= primjet ; primjet++)
   {
     MCJets2MCP::Range range =  MCJ2MCP->relations(*primjet);
     Cut matchedMC = PFALSE ;
     std::vector< LHCb::Particle * > ps_tmp;
-    for ( MCJets2MCP::Range::const_iterator i_mcp = range.begin() ; range.end()!= i_mcp ; ++i_mcp ){
+    for ( MCJets2MCP::Range::const_iterator i_mcp = range.begin() ;
+          range.end()!= i_mcp ; ++i_mcp ){
       LHCb::MCParticle *mcp = (*i_mcp).to();
       if (!mcp)continue;
       LHCb::Particle* p_tmp = new LHCb::Particle();
@@ -230,7 +230,8 @@ void LoKi::MCJets2Jets::makeRelation( const IRelateJets::Jets& StdPrimaryJets,
     Fun fun = SUMTREE( E , matchedMC , 0.0 ) ;
 
     // Loop over the StdJets
-    for( IRelateJets::Jets::const_iterator secjet =StdSecondaryJets.begin() ; StdSecondaryJets.end()!= secjet ; secjet++ )
+    for( IRelateJets::Jets::const_iterator secjet =StdSecondaryJets.begin() ; 
+         StdSecondaryJets.end()!= secjet ; secjet++ )
     {
       double matchedE = fun(*secjet);
       if ( fun(*secjet)<1e-2 ) continue;
@@ -238,14 +239,18 @@ void LoKi::MCJets2Jets::makeRelation( const IRelateJets::Jets& StdPrimaryJets,
       double mcEMatched = 0.;
       MCCut matchedRC = MCFALSE;
       std::vector< LHCb::MCParticle * > mcps_tmp;
-      for ( SmartRefVector< LHCb::Particle >::const_iterator ip = (*secjet)->daughters().begin();(*secjet)->daughters().end()!=ip;++ip ){
+      for ( SmartRefVector< LHCb::Particle >::const_iterator ip = 
+              (*secjet)->daughters().begin();
+            (*secjet)->daughters().end()!=ip;++ip )
+      {
         LHCb::MCParticle* mcp_tmp = new LHCb::MCParticle;
         mcp_tmp->setMomentum((*ip)->momentum());
         mcps_tmp.push_back(mcp_tmp);
         MCFun dr2     = MCDR2(mcp_tmp);
         matchedRC = ( matchedRC || ( RCTRUTH(mc,*ip) && dr2  < m_minR*m_minR ) );
       }
-      for ( MCJets2MCP::Range::const_iterator i_mcp = range.begin() ; range.end()!= i_mcp ; ++i_mcp ){
+      for ( MCJets2MCP::Range::const_iterator i_mcp = range.begin() ; 
+            range.end()!= i_mcp ; ++i_mcp ){
         LHCb::MCParticle *mcp = (*i_mcp).to();
         if(!mcp) continue;
         if ( matchedRC(mcp) ) {

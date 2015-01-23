@@ -17,6 +17,9 @@
 #include "Relations/Relation1D.h"
 #include "Relations/Relation2D.h"
 
+
+#include "LoKi/ParticleCuts.h"
+#include "LoKi/MCParticleCuts.h"
 #include "LoKi/PhysMCParticleCuts.h"
 
 #include "LoKi/ILoKiSvc.h"
@@ -26,9 +29,7 @@
 #include "LoKi/MCTypes.h"
 #include "LoKi/MCMatch.h"
 #include "LoKi/MCMatchObj.h"
-#include "LoKi/MCMatchDicts.h"
 
-#include "LoKi/LoKiPhys.h"
 #include <GaudiKernel/IIncidentListener.h>
 #include <GaudiKernel/IIncidentSvc.h>
 #include "Kernel/IParticle2MCAssociator.h"

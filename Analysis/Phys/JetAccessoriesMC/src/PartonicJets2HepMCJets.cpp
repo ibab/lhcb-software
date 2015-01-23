@@ -18,10 +18,11 @@
 #include "LoKi/Interface.h"
 
 #include "Relations/Relation2D.h"
-#include "LoKi/LoKiPhys.h"
+
 // ============================================================================
 // LoKiGen
 // ============================================================================
+#include "LoKi/ParticleCuts.h"
 #include "LoKi/GenParticleCuts.h"
 #include "LoKi/GenExtract.h"
 #include "LoKi/PhysExtract.h"
@@ -70,10 +71,12 @@ namespace LoKi
       //m_ids.push_back ( "s"  ) ;
       //m_ids.push_back ( "d"  ) ;
       m_idsHadron.push_back ( "B"  ) ;
-      declareProperty ( "PartonInJet"  , m_ids  ,"if AllPartons == false specify which parton it should contain to be matched") ;
+      declareProperty ( "PartonInJet"  , m_ids  ,
+                        "if AllPartons == false specify which parton it should contain to be matched") ;
       declareProperty ( "StdHepMC2HepMCTable"  , m_hepMCfromStdHepMC
                         , "Relation table between StdHepMCParticles and corresponding HepMC::GenParticle"      ) ;
-      declareProperty ( "HadronInJet"  , m_idsHadron  ,"if not empty, will only look for jets contining a given hadron flavour [C,B]") ;
+      declareProperty ( "HadronInJet"  , m_idsHadron 
+                        ,"if not empty, will only look for jets contining a given hadron flavour [C,B]") ;
     }
     /// virtual protected destructor
     virtual ~PartonicJets2HepMCJets() {}

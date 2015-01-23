@@ -12,8 +12,9 @@
 #include "Relations/Relation1D.h"
 #include "Relations/Relation2D.h"
 
+#include "LoKi/ParticleCuts.h"
+#include "LoKi/MCParticleCuts.h"
 #include "LoKi/PhysMCParticleCuts.h"
-#include "LoKi/LoKiPhys.h"
 
 #include <math.h>
 namespace LoKi

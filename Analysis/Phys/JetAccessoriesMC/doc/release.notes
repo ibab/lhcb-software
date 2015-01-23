@@ -4,6 +4,9 @@
 ! Purpose     : Jet finding MC accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2015-01-23 - Vanya Belyaev
+ - minor fix to take into account changes in structure of LoKi-headers 
+
 !======================= JetAccessoriesMC v2r8 2015-01-16 ======================
 
 ! 2015-01-16 - Eduardo Rodrigues
