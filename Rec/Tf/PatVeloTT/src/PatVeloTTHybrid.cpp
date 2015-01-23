@@ -22,25 +22,26 @@ DECLARE_ALGORITHM_FACTORY( PatVeloTTHybrid )
 PatVeloTTHybrid::PatVeloTTHybrid( const std::string& name,
                       ISvcLocator* pSvcLocator)
 : GaudiAlgorithm ( name , pSvcLocator ),
-   m_veloTTTime(0)
+  m_ttHitManager(nullptr),
+  m_tracksFitter(nullptr),
+  m_veloTTTool(nullptr),
+  m_timerTool(nullptr),
+  m_veloTTTime(0)
 {
   if ( "Hlt" == context() ) {
     m_inputTracksName =  "";
     m_outputTracksName = "";
-  }
-  else {
+  }else {
     m_inputTracksName =  LHCb::TrackLocation::Velo;
     m_outputTracksName = LHCb::TrackLocation::VeloTT;
   } 
 
-  declareProperty("InputTracksName"    , m_inputTracksName);
-  declareProperty("OutputTracksName"   , m_outputTracksName);
-  declareProperty("removeUsedTracks"   , m_removeUsedTracks = false); 
-  declareProperty("InputUsedTracksNames"    , m_inputUsedTracksNames);
-  declareProperty("fitTracks"          , m_fitTracks = false);
-  declareProperty("Fitter"             , m_fitterName = "TrackMasterFitter" );
-  declareProperty("maxChi2"            , m_maxChi2          = 1280.); 
-  declareProperty( "TimingMeasurement", m_doTiming = false);
+  declareProperty("InputTracksName"       , m_inputTracksName                   );
+  declareProperty("OutputTracksName"      , m_outputTracksName                  );
+  declareProperty("fitTracks"             , m_fitTracks = false                 );
+  declareProperty("Fitter"                , m_fitterName = "TrackMasterFitter"  );
+  declareProperty("maxChi2"               , m_maxChi2          = 1280.          ); 
+  declareProperty("TimingMeasurement"     , m_doTiming = false                  );
     
 }
 //=============================================================================
@@ -89,7 +90,7 @@ StatusCode PatVeloTTHybrid::execute() {
   put(outputTracks, m_outputTracksName);
 
   LHCb::Track::Range inputTracks   = get<LHCb::Track::Range>( m_inputTracksName ); 
-  if( inputTracks.size() == 0 ){
+  if( inputTracks.empty() ){
     if(msgLevel(MSG::DEBUG)) debug() << " Input Tracks container: " <<  m_inputTracksName << " is empty! Skipping" << endmsg;
     return StatusCode::SUCCESS;
   }
@@ -111,7 +112,7 @@ StatusCode PatVeloTTHybrid::execute() {
 
       if (m_fitTracks) {  
         StatusCode sc = m_tracksFitter -> fit( *fitTrack );
-        std::cout << "chi2 after KF " << fitTrack->chi2PerDoF() << std::endl;
+        if(msgLevel(MSG::DEBUG)) debug() << "chi2 after KF " << fitTrack->chi2PerDoF() << endmsg;
 
         if( !sc ){
           warning() << "Could not fit track" << endmsg;
@@ -120,6 +121,7 @@ StatusCode PatVeloTTHybrid::execute() {
         }
         
       }
+      
       if( fitTrack->chi2PerDoF() < maxChi2){
         maxChi2 = fitTrack->chi2PerDoF();
         bestTrack = fitTrack;
@@ -140,123 +142,12 @@ StatusCode PatVeloTTHybrid::execute() {
   
   return StatusCode::SUCCESS;
 }
-
 //=============================================================================
 //  Finalize
 //=============================================================================
 StatusCode PatVeloTTHybrid::finalize() {
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-
-
-//=========================================================================
-// Remove Velo tracks that has been used by other algorithms
-//=========================================================================
-void PatVeloTTHybrid::removeUsedTracks( std::vector<LHCb::Track*>& veloTracks){
-
-  // collect tracks from indicated containers
-
-  std::vector< LHCb::Track*> usedTracks;
-
-  std::vector< std::string >:: iterator itTrName;
-  for (itTrName = m_inputUsedTracksNames.begin(); 
-       itTrName != m_inputUsedTracksNames.end(); itTrName++) {
-
-    // Retrieving tracks
-    LHCb::Tracks* stracks = get<LHCb::Tracks>(*itTrName);
-    if(!stracks) {
-      Warning("Tracks not found at given location: ",StatusCode::SUCCESS).ignore(); 
-      continue;
-    }
-
-    for (LHCb::Tracks::iterator istrack = stracks->begin(); 
-         stracks->end() != istrack; istrack++) {
   
-      LHCb::Track* str = (*istrack);
-      usedTracks.push_back(str);
-    }
-  }
-
-  if( 0 == usedTracks.size() ) return; 
-
-  std::vector< LHCb::Track*> tmpTracks;
-
-  std::vector<LHCb::Track*>::iterator itv;  
-  for(itv = veloTracks.begin(); itv != veloTracks.end(); ++itv){
-
-    LHCb::Track* velocand = *itv;
-    bool found = false;
-    std::vector< LHCb::Track*>::iterator itTrack;
-    for (itTrack = usedTracks.begin(); itTrack != usedTracks.end(); itTrack++) {
-      LHCb::Track* tused = *itTrack;      
-      if(matchingTracks(velocand, tused)) {
-        found = true;
-        break;
-      }
-    }
-    if(!found)  tmpTracks.push_back(velocand);  
-  }
-
-  veloTracks = tmpTracks;
-
 }
-
-
-//=========================================================================
-// Check if two tracks have same VElo hits
-//=========================================================================
-bool PatVeloTTHybrid::matchingTracks( LHCb::Track* vttcand, LHCb::Track* trackused) 
-{
-  
-
-  const std::vector<LHCb::LHCbID>& ids1 = vttcand->lhcbIDs();
-  const std::vector<LHCb::LHCbID>& ids2 = trackused->lhcbIDs();
-
-  bool match = false;
-
-  unsigned int nCommon = 0;
-  
-  int nvelo1 = 0;
-  int nvelo2 = 0;
-  for ( unsigned int i1 = 0; i1 < ids1.size(); ++i1 ) {
-    if(ids1[i1].checkDetectorType(LHCb::LHCbID::Velo) 
-       || ids1[i1].checkDetectorType(LHCb::LHCbID::VP) ) nvelo1++;
-  }
-  for ( unsigned int i2 = 0; i2 < ids2.size(); ++i2 ) {
-    if(ids2[i2].checkDetectorType(LHCb::LHCbID::Velo) 
-       || ids2[i2].checkDetectorType(LHCb::LHCbID::VP) ) nvelo2++;
-  }
-
-  // Calculate the number of common LHCbIDs
-  for ( unsigned int i1 = 0; i1 < ids1.size(); ++i1 ) {
-    if(!ids1[i1].checkDetectorType(LHCb::LHCbID::Velo) 
-       && !ids1[i1].checkDetectorType(LHCb::LHCbID::VP) ) continue;
-    for ( unsigned int i2 = 0; i2 < ids2.size(); ++i2 ) {
-      if(!ids2[i2].checkDetectorType(LHCb::LHCbID::Velo) 
-         && !ids2[i2].checkDetectorType(LHCb::LHCbID::VP)) continue;
-
-      if ( ids1[i1].channelID() == ids2[i2].channelID()  ) {
-        ++nCommon;
-        break;
-      }
-
-    }
-  }  
-
-  float rat1 = 0.;
-  float rat2 = 0.;
-  if(nvelo1) rat1 = 1.0*nCommon/nvelo1;
-  if(nvelo2) rat2 = 1.0*nCommon/nvelo2;
-
-  if(rat1>0.9 && rat2>0.9) {
-    match = true;
-  }
-
-  return match;
-}
-
-
-
 //=============================================================================

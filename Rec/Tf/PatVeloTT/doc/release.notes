@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-01-23 - Michel De Cian
+ - Remove a "std::cout" and clean up VeloTTHybrid.cpp/h code (removing obsolete members). 
+Add some doxygen documentation.
+
 !========================= PatVeloTT v4r4 2015-01-14 =========================
 ! 2014-12-12 - Sebastian Neubert 
  - adapt the check for an empty input to explicitely query the size of the Range
