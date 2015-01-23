@@ -3,6 +3,11 @@ Package: AlignOnline
 Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
 
+</PRE><H1><A NAME=v1r0>2015-01-23 AlignOnline v1r1</A></H1><PRE>
+
+! 2015-01-23 - Maurizio Martinelli
+ - tagged as v1r1
+
 ! 2015-01-12 - Roel Aaij
  - Use MsgStream in AlignOnlineXMLCopier to print warnings
  - Downgrade non-error messages from ERROR to WARNING.
