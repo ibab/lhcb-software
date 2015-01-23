@@ -4,6 +4,9 @@
 ! Purpose     : Jet related Tuple Tools
 !-----------------------------------------------------------------------------
 
+! 2015-01-23 - Vanya Belyaev
+ - minor fix to account changes in structure of LoKi header files
+
 !========================= DecayTreeTupleJets v1r1p2 2013-06-13 =========================
 
 ! 2013-06-12 - Chris Jones
