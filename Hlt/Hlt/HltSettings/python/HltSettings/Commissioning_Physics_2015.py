@@ -66,27 +66,30 @@ class Commissioning_Physics_2015( object ):
         from Hlt2Lines.Hlt2InclusiveDiProtonLines import Hlt2InclusiveDiProtonLinesConf
         from Hlt2Lines.Hlt2DisplVerticesLines  import Hlt2DisplVerticesLinesConf
 
-        thresholds = { Hlt1TrackLinesConf :    { 'AllL0_PT'         :  12500
-                                               , 'AllL0_P'          :  3000
-                                               , 'AllL0_IPChi2'     :  16
-                                               , 'AllL0_TrChi2'     :  2.0
-                                               , 'AllL0_GEC'        : 'Loose'
-                                               , 'Muon_PT'       :  1000 
-                                               , 'Muon_P'        :  3000 
-                                               , 'Muon_IPChi2'   :    16
-                                               , 'Muon_TrChi2'   :     2.5  
-                                               , 'Muon_GEC'      : 'Loose'
-                                               , 'Muon_L0Channels' : 'Muon,DiMuon,MuonNoSPD,DiMuonNoSPD' 
-                                               , 'Photon_PT'     :  1200
-                                               , 'Photon_P'      :  3000
-                                               , 'Photon_IPChi2' :    16
-                                               , 'Photon_TrChi2' :     2.0
-                                               , 'Photon_L0Channels' : 'PhotonHi,ElectronHi' 
+        thresholds = { Hlt1TrackLinesConf :    {'AllL0_Velo_NHits'   : 9
+                                               , 'AllL0_Velo_Qcut'   : 3
+                                               , 'AllL0_TrNTHits'    : 16
+                                               , 'AllL0_PT'          : 1300.
+                                               , 'AllL0_P'           : 6000.
+                                               , 'AllL0_IPChi2'      : 13.
+                                               , 'AllL0_TrChi2'      : 2.
+                                               , 'AllL0_GEC'         : 'Loose'
+                                               , 'Muon_TrNTHits'     : 0 #OFF
+                                               , 'Muon_Velo_NHits'   : 0 #OFF
+                                               , 'Muon_Velo_Qcut'    : 999 #OFF
+                                               , 'Muon_PT'           : 800.
+                                               , 'Muon_P'            : 6000.
+                                               , 'Muon_IPChi2'       : 6.
+                                               , 'Muon_TrChi2'       : 2.
+                                               , 'Muon_GEC'          : 'Loose'
+                                               , 'Photon_PT'         : 1200.
+                                               , 'Photon_P'          : 6000.
+                                               , 'Photon_IPChi2'     : 13.
+                                               , 'Photon_TrChi2'     : 2.
                                                , 'Photon_GEC'        : 'Loose'
-                                               , 'Prescale'          : {'Hlt1TrackAllL0'                   : 1.0, 
-                                                                        'Hlt1TrackForwardPassThrough'      : 0,
-                                                                        'Hlt1TrackForwardPassThroughLoose' : 0}
- 
+                                               , 'L0Channels'        : {'AllL0'  : 'L0_DECISION_PHYSICS',
+                                                                        'Muon'   : ('Muon', 'DiMuon'),
+                                                                        'Photon' : ("Photon", "Electron")}
                                                }
                      , Hlt1ElectronLinesConf : { 'SingleElectronNoIP_P'          : 20000
                                                , 'SingleElectronNoIP_PT'         : 10000
@@ -234,14 +237,8 @@ class Commissioning_Physics_2015( object ):
         """
         Returns a list of active lines
         """
-        hlt2 = ['Hlt2PassThrough','Hlt2Lumi','Hlt2DebugEvent','Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent',
-                'Hlt2diPhotonDiMuon',
-                'Hlt2LowMultMuon',
-                'Hlt2LowMultHadron',
-                'Hlt2LowMultPhoton',
-                'Hlt2LowMultElectron',
-                'Hlt2LowMultHadron_nofilter',
-                'Hlt2LowMultElectron_nofilter',
+        hlt2 = ['Hlt2PassThrough','Hlt2Lumi','Hlt2DebugEvent',
+                'Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent',
                 'Hlt2HighPtJets'
                 ]
 
@@ -263,8 +260,8 @@ class Commissioning_Physics_2015( object ):
         from CharmLeptonic_draft2012 import CharmLeptonic_draft2012
         hlt2.extend( CharmLeptonic_draft2012().ActiveHlt2Lines() )
 
-        from CharmCEP_September2012 import CharmCEP_September2012
-        hlt2.extend( CharmCEP_September2012().ActiveHlt2Lines() )
+        ## from CharmCEP_September2012 import CharmCEP_September2012
+        ## hlt2.extend( CharmCEP_September2012().ActiveHlt2Lines() )
 
         from KshortMuMuPiPi_July2012 import KshortMuMuPiPi_July2012
         hlt2.extend( KshortMuMuPiPi_July2012().ActiveHlt2Lines() )
@@ -279,9 +276,8 @@ class Commissioning_Physics_2015( object ):
                  , 'Hlt1VertexDisplVertex'
                  , 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
                  , 'Hlt1SingleElectronNoIP'
-                 , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
-                 , 'Hlt1DiProtonLowMult', 'Hlt1DiProton'
-                 , 'Hlt1L0HighSumETJet','Hlt1HighPtJetsSinglePV']
+                 , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass' ]
+                 ## [ 'Hlt1L0HighSumETJet','Hlt1HighPtJetsSinglePV']
         
         #from Hlt1TechnicalLines import Hlt1TechnicalLines 
         #lines.extend( Hlt1TechnicalLines().ActiveHlt1Lines() )
