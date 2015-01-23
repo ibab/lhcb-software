@@ -181,7 +181,20 @@ def fitArgs ( name , dataset = None , *args , **kwargs ) :
                             'NUMCPUS'    ) and isinstance ( a , int ) and 1<= a : 
             _args.append   (  ROOT.RooFit.NumCPU( a  ) ) 
             logger.debug   ( '%s add keyword argument %s/%s' % ( name , k , a ) )
-            ncpu_added = True 
+            ncpu_added = True
+        elif k.upper() in ( 'CONSTRAINT'  ,
+                            'CONSTRAINTS' ,
+                            'PARS'        ,
+                            'PARAMS'      ,
+                            'PARAMETER'   ,
+                            'PARAMETERS'  ) :
+            if   isinstance ( a , ROOT.RooCmdArg ) : _args.append ( a )
+            elif isinstance ( a , (tuple,list)   ) :
+                for ia in a :
+                    if isinstance ( ia , ROOT.RooCmdArg ) : _args.append ( ia )
+                    else : logger.warning( '%s skip keyword argument [%s] : %s' % ( name , k , a ) )
+            else : logger.warning( '%s skip keyword argument %s: %s' % ( name , k , a ) )
+                                        
         else : 
             logger.warning ( '%s unknown/illegal keyword argument type %s/%s, skip it ' % ( name , k , type ( a ) ) )
             continue            
