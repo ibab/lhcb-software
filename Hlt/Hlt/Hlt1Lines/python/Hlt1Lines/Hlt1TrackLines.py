@@ -45,6 +45,9 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                     ,   'Muon_IPChi2'       : 6.
                     ,   'Muon_TrChi2'       : 2.
                     ,   'Muon_GEC'          : 'Loose'
+                    ,   'Photon_Velo_NHits' : 0
+                    ,   'Photon_Velo_Qcut'  : 999
+                    ,   'Photon_TrNTHits'   : 0
                     ,   'Photon_PT'         : 1200.
                     ,   'Photon_P'          : 6000.
                     ,   'Photon_IPChi2'     : 13.
@@ -61,18 +64,12 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
     def localise_props( self, prefix ):
         ps = self.getProps()
         # get the list of options belonging to this prefix
-        #myprops = dict( [ ( key, ps[key] 
-           #lp = set( ( "IP", "PT", "P", "TrChi2", "IPChi2", 
-        #            "Velo_NHits", "Velo_Qcut", "TrNTHits", "GEC", 'ValidateTT' ) )
-        return { key.replace(prefix+"_","") : ps[key] for key in ps if key.find(prefix)>=0} 
-
-        #dict( [ ( key, ps[ prefix + "_" + key ] ) for key in lp ] )
+        return { key.replace(prefix + "_", "") : ps[key] for key in ps if key.find(prefix) >= 0 } 
 
     def hlt1Track_Preambulo( self, prefix ) :
         from HltTracking.Hlt1Tracking import ( VeloCandidates, LooseForward,
                                                FitTrack, MatchVeloMuon, IsMuon )
         from HltTracking.Hlt1Tracking import TrackCandidates
-        from HltTracking.Hlt1TrackFilterConf import (ValidateWithTT)
  
         Preambulo = [ VeloCandidates( prefix ),
                       MatchVeloMuon,
@@ -121,8 +118,6 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         from Configurables import LoKi__HltUnit as HltUnit
         props['name'] = name
         props['forward'] = 'LooseForward'
-        if props['ValidateTT'] :
-            props['forward'] = "ValidateWithTT >>" + props['forward']
 
         lineCode = """ 
         TrackCandidates
@@ -131,7 +126,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
               ( TrNVELOMISS < %(Velo_Qcut)s ) )
         >>  tee  ( monitor( TC_SIZE > 0, '# pass VeloQ/IP', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nVeloIP' , LoKi.Monitoring.ContextSvc ) )
-        ( TrPT > %(PT)s * MeV ) & \
+        >>  ( ( TrPT > %(PT)s * MeV ) & \
         ( TrP  > %(P)s  * MeV ) )
         >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nP' , LoKi.Monitoring.ContextSvc ) )
