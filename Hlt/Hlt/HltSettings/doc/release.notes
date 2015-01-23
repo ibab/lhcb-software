@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-01-23 - Roel Aaij
+ - Add Hlt2 Topo only commissioning configuration.
+
 !========================= HltSettings v6r10 2015-01-20 =========================
 
 ! 2015-01-20 - Roel Aaij
