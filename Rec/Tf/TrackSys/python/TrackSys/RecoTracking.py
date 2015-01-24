@@ -61,6 +61,9 @@ def RecoTracking(exclude=[]):
    # Which algs to run ?
    trackAlgs = TrackSys().getProp("TrackPatRecAlgorithms")
 
+   # Which data type is it?
+   dataType = TrackSys().getProp("DataType")
+
    # Decode the RAW banks
    DecodeTracking(trackAlgs)
    
@@ -236,13 +239,23 @@ def RecoTracking(exclude=[]):
    ## Velo-TT pattern
    if "VeloTT" in trackAlgs :
       track.DetectorList += ["VeloTTPat"]
-      from Configurables import PatVeloTT
-      GaudiSequencer("TrackVeloTTPatSeq").Members += [ PatVeloTT("PatVeloTT")] 
-      from PatVeloTT import PatVeloConf
-      PatVeloConf.PatVeloTTConf().configureAlg()      
+      # from 2015 on, 'VeloTTHybrid' is used (as in the HLT)
+      # on python configuration is used
+      if dataType is "2015" :
+         from Configurables import PatVeloTTHybrid
+         GaudiSequencer("TrackVeloTTPatSeq").Members += [ PatVeloTTHybrid("PatVeloTTHybrid")]
+         if TrackSys().timing() :
+            PatVeloTTHybrid("PatVeloTTHybrid").TimingMeasurement = True;
+      # for everything older, the old 'PatVeloTT' is run
+      else :
+         from Configurables import PatVeloTT
+         GaudiSequencer("TrackVeloTTPatSeq").Members += [ PatVeloTT("PatVeloTT")]
+         from PatVeloTT import PatVeloConf
+         PatVeloConf.PatVeloTTConf().configureAlg()
+         if TrackSys().timing() :
+            PatVeloTT("PatVeloTT").TimingMeasurement = True;
       tracklists += ["Rec/Track/VeloTT"]
-      if TrackSys().timing() :
-         PatVeloTT("PatVeloTT").TimingMeasurement = True;
+     
          
 
    ### Clean clone and fit
