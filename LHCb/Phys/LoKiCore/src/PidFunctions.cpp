@@ -94,27 +94,26 @@ LoKi::Pids::GetPids::GetPids ( const std::vector<std::string>& id )
                    std::mem_fun_ref(&LHCb::ParticleID::pid ) ) ;
 }
 // ============================================================================
-bool LoKi::Pids::GetPids::in_list ( const LHCb::ParticleID& id ) const 
+bool LoKi::Pids::GetPids::in_list ( const long id ) const 
 {
   //
   if ( m_ints.empty() && !m_names.empty() ) { getData() ; }
   //
-  const long i = id.pid() ;
-  return m_ints.end() != std::find ( m_ints.begin() , m_ints.end  () , i ) ;  
+  return m_ints.end() != std::find ( m_ints.begin() , m_ints.end  () , id ) ;  
 }
 // ============================================================================
 namespace 
 {
   struct AbsId_ : public std::unary_function<long,bool>
   {
-    AbsId_ ( const LHCb::ParticleID& id ) : m_absid ( id.abspid() ) {} ;
-    inline bool operator() ( long i ) const { return std::abs ( i ) == m_absid ; }
+    AbsId_ ( const long id ) : m_absid ( std::abs ( id ) ) {} ;
+    inline bool operator() ( const long i ) const { return std::abs ( i ) == m_absid ; }
   private:
     long m_absid ;
   } ;
 }
 // ============================================================================
-bool LoKi::Pids::GetPids::in_abs_list ( const LHCb::ParticleID& id ) const 
+bool LoKi::Pids::GetPids::in_abs_list ( const long id ) const 
 {
   //
   if ( m_ints.empty() && !m_names.empty() ) { getData() ; }

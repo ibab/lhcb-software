@@ -54,13 +54,21 @@ namespace LoKi
       // ======================================================================      
     public:
       // ======================================================================      
-      bool     in_list      ( const LHCb::ParticleID& id ) const ;
+      bool     in_list      ( const long              id ) const ;
+      bool not_in_list      ( const long              id ) const 
+      { return !in_list     ( id       ) ; }
+      bool     in_list      ( const LHCb::ParticleID& id ) const 
+      { return  in_list     ( id.pid() ) ; }
       bool not_in_list      ( const LHCb::ParticleID& id ) const 
-      { return !in_list ( id ) ; }
+      { return !in_list     ( id       ) ; }
       // ======================================================================      
-      bool     in_abs_list  ( const LHCb::ParticleID& id ) const ;
+      bool     in_abs_list  ( const long              id ) const ;
+      bool not_in_abs_list  ( const long              id ) const 
+      { return !in_abs_list ( id       ) ; }
+      bool     in_abs_list  ( const LHCb::ParticleID& id ) const
+      { return  in_abs_list ( id.pid() ) ; }
       bool not_in_abs_list  ( const LHCb::ParticleID& id ) const 
-      { return !in_abs_list ( id ) ; }
+      { return !in_abs_list ( id       ) ; }
       // ======================================================================      
     private:
       // ======================================================================      
