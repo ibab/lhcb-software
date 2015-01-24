@@ -23,9 +23,6 @@ gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Hlt/HltTisTosTobbing
                          Hlt/HltTracking
                          Hlt/TCKUtils
-                         GaudiObjDesc #TEMP v23r4
-                         Phys/LoKiPhys #TEMP v23r4
-                         Event/RecEvent #TEMP v23r4
                          Phys/LoKiTrigger)
 
 

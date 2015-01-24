@@ -25,11 +25,6 @@ use HltTracking         v13r4    Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKUtils            v1r14    Hlt   # Gerhard Raven
 use LoKiTrigger         v15r4    Phys  # Vanya Belyaev
 
-# Temporary packages, only for v23r4
-use GaudiObjDesc        v11r20p1
-use LoKiPhys            v10r21p1 Phys
-use RecEvent            v2r53    Event
-
 # Declare this as a container package
 apply_pattern container_package
 
