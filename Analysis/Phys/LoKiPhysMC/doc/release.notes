@@ -5,6 +5,9 @@
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2015-01-24 - Vanya Belyaev
+ - step towards generation of C++ code 
+
 !========================= LoKiPhysMC v9r7 2014-10-30 =========================
 
 ! 2014-09-23 - Chris Jones

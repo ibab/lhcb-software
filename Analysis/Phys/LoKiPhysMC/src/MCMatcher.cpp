@@ -92,7 +92,8 @@ namespace
 LoKi::PhysMCParticles::MCMatcherBase::MCMatcherBase
 ( const LoKi::PhysMCParticles::MCMatcherBase::Locations&  locations , 
   const std::string& thehead   ) 
-  : LoKi::PhysMCParticles::MCTruth() 
+  : LoKi::AuxFunBase ( std::tie ( locations , thehead ) ) 
+  , LoKi::PhysMCParticles::MCTruth() 
   , m_locations ( locations  )
   , m_head      ( thehead.empty() ? LHCb::MCParticleLocation::Default : thehead ) 
   , m_alg       ( 0          )
@@ -102,7 +103,8 @@ LoKi::PhysMCParticles::MCMatcherBase::MCMatcherBase
 // ============================================================================
 LoKi::PhysMCParticles::MCMatcherBase::MCMatcherBase
 ( const std::string&  location ) 
-  : LoKi::PhysMCParticles::MCTruth() 
+  : LoKi::AuxFunBase ( std::tie ( location ) ) 
+  , LoKi::PhysMCParticles::MCTruth() 
   , m_locations ( 1 , location )
   , m_head      ( LHCb::MCParticleLocation::Default ) 
   , m_alg       ( 0            )
@@ -113,7 +115,8 @@ LoKi::PhysMCParticles::MCMatcherBase::MCMatcherBase
 LoKi::PhysMCParticles::MCMatcherBase::MCMatcherBase
 ( const std::string&  location1 ,
   const std::string&  location2 ) 
-  : LoKi::PhysMCParticles::MCTruth() 
+  : LoKi::AuxFunBase ( std::tie ( location1 , location2 ) ) 
+  , LoKi::PhysMCParticles::MCTruth() 
   , m_locations ()
   , m_head      ( LHCb::MCParticleLocation::Default ) 
   , m_alg       ( 0            )
@@ -128,7 +131,8 @@ LoKi::PhysMCParticles::MCMatcherBase::MCMatcherBase
 ( const std::string&  location1 ,
   const std::string&  location2 , 
   const std::string&  location3 ) 
-  : LoKi::PhysMCParticles::MCTruth() 
+  : LoKi::AuxFunBase ( std::tie ( location1 , location2 , location3 ) ) 
+  , LoKi::PhysMCParticles::MCTruth() 
   , m_locations ()
   , m_head      ( LHCb::MCParticleLocation::Default ) 
   , m_alg       ( 0 )
@@ -170,7 +174,7 @@ LoKi::PhysMCParticles::MCMatcherBase::MCMatcherBase
 // ============================================================================
 LoKi::PhysMCParticles::MCMatcherBase::MCMatcherBase
 ( const LoKi::PhysMCParticles::MCMatcherBase& right ) 
-  : LoKi::AuxFunBase               ()
+  : LoKi::AuxFunBase               ( right )
   , LoKi::PhysMCParticles::MCTruth ()              // NB: do not copy MCTruth!!
   , m_locations ( right.m_locations )
   , m_head      ( right.m_head      ) 
@@ -284,7 +288,8 @@ LoKi::PhysMCParticles::MCSelMatch::MCSelMatch
 ( const LoKi::PhysMCParticles::MCSelMatch::MCCuts&       selector  , 
   const LoKi::PhysMCParticles::MCMatcherBase::Locations& locations , 
   const std::string& thehead   ) 
-  : LoKi::PhysMCParticles::MCMatcherBase ( locations , thehead ) 
+  : LoKi::AuxFunBase ( std::tie ( selector , locations , thehead ) ) 
+  , LoKi::PhysMCParticles::MCMatcherBase ( locations , thehead ) 
   , m_cuts ( selector ) 
 {}
 // ======================================================================
@@ -295,7 +300,8 @@ LoKi::PhysMCParticles::MCSelMatch::MCSelMatch
 LoKi::PhysMCParticles::MCSelMatch::MCSelMatch
 ( const LoKi::PhysMCParticles::MCSelMatch::MCCuts& selector , 
   const std::string& location ) 
-  : LoKi::PhysMCParticles::MCMatcherBase ( location ) 
+  : LoKi::AuxFunBase ( std::tie ( selector , location ) ) 
+  , LoKi::PhysMCParticles::MCMatcherBase ( location ) 
   , m_cuts ( selector ) 
 {}
 // ======================================================================
@@ -307,7 +313,8 @@ LoKi::PhysMCParticles::MCSelMatch::MCSelMatch
 ( const LoKi::PhysMCParticles::MCSelMatch::MCCuts&       selector , 
   const std::string& location1 , 
   const std::string& location2 ) 
-  : LoKi::PhysMCParticles::MCMatcherBase ( location1  , 
+  : LoKi::AuxFunBase ( std::tie ( selector , location1 , location2 ) ) 
+  , LoKi::PhysMCParticles::MCMatcherBase ( location1  , 
                                            location2  ) 
   , m_cuts ( selector ) 
 {}
@@ -321,7 +328,8 @@ LoKi::PhysMCParticles::MCSelMatch::MCSelMatch
   const std::string& location1 , 
   const std::string& location2 ,
   const std::string& location3 ) 
-  : LoKi::PhysMCParticles::MCMatcherBase ( location1  , 
+  : LoKi::AuxFunBase ( std::tie ( selector , location1 , location2 , location3 ) ) 
+  , LoKi::PhysMCParticles::MCMatcherBase ( location1  , 
                                            location2  ,
                                            location3  ) 
   , m_cuts ( selector ) 
@@ -335,7 +343,8 @@ LoKi::PhysMCParticles::MCSelMatch::MCSelMatch
 ( const LoKi::PhysMCParticles::MCSelMatch::MCCuts&         selector , 
   const LoKi::PhysMCParticles::ProtoPMatch& protoMatch , 
   const std::string& thehead   ) 
-  : LoKi::PhysMCParticles::MCMatcherBase ( protoMatch , thehead )  
+  : LoKi::AuxFunBase ( std::tie ( selector , protoMatch , thehead ) ) 
+  , LoKi::PhysMCParticles::MCMatcherBase ( protoMatch , thehead )  
   , m_cuts ( selector ) 
 {}
 // ============================================================================
@@ -422,7 +431,8 @@ LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
 ( const LoKi::PhysMCParticles::MCTreeMatch::iTree&       decay     , 
   const LoKi::PhysMCParticles::MCMatcherBase::Locations& locations , 
   const std::string& thehead   ) 
-  : LoKi::PhysMCParticles::MCMatcherBase ( locations , thehead ) 
+  : LoKi::AuxFunBase ( std::tie ( decay , locations, thehead ) ) 
+  , LoKi::PhysMCParticles::MCMatcherBase ( locations , thehead ) 
   , m_finder ( decay ) 
 {
   checkFinder () ;
@@ -431,7 +441,8 @@ LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
 LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
 ( const LoKi::PhysMCParticles::MCTreeMatch::iTree& decay , 
   const std::string& location ) 
-  : LoKi::PhysMCParticles::MCMatcherBase ( location ) 
+  : LoKi::AuxFunBase ( std::tie ( decay , location ) ) 
+  , LoKi::PhysMCParticles::MCMatcherBase ( location ) 
   , m_finder ( decay ) 
 {
   checkFinder () ;
@@ -441,7 +452,8 @@ LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
 ( const LoKi::PhysMCParticles::MCTreeMatch::iTree& decay , 
   const std::string& location1 , 
   const std::string& location2 )
-  : LoKi::PhysMCParticles::MCMatcherBase ( location1 , location2 ) 
+  : LoKi::AuxFunBase ( std::tie ( decay , location1 , location2  ) ) 
+  , LoKi::PhysMCParticles::MCMatcherBase ( location1 , location2 ) 
   , m_finder ( decay ) 
 {
   checkFinder () ;
@@ -452,7 +464,8 @@ LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
   const std::string& location1 , 
   const std::string& location2 ,
   const std::string& location3 )
-  : LoKi::PhysMCParticles::MCMatcherBase ( location1 , 
+  : LoKi::AuxFunBase ( std::tie ( decay , location1 , location2 , location3  ) ) 
+  , LoKi::PhysMCParticles::MCMatcherBase ( location1 , 
                                            location2 ,
                                            location3 ) 
   , m_finder ( decay ) 
@@ -464,7 +477,8 @@ LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
 ( const LoKi::PhysMCParticles::MCTreeMatch::iTree&         decay      , 
   const LoKi::PhysMCParticles::ProtoPMatch& protoMatch , 
   const std::string& thehead   ) 
-  : LoKi::PhysMCParticles::MCMatcherBase ( protoMatch , thehead )  
+  : LoKi::AuxFunBase ( std::tie ( decay , protoMatch , thehead ) ) 
+  , LoKi::PhysMCParticles::MCMatcherBase ( protoMatch , thehead )  
   , m_finder ( decay ) 
 {
   checkFinder () ;
@@ -474,7 +488,8 @@ LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
 ( const std::string&                                     decay     , 
   const LoKi::PhysMCParticles::MCMatcherBase::Locations& locations , 
   const std::string& thehead   ) 
-  : LoKi::PhysMCParticles::MCMatcherBase ( locations , thehead ) 
+  : LoKi::AuxFunBase ( std::tie ( decay , locations , thehead ) ) 
+  , LoKi::PhysMCParticles::MCMatcherBase ( locations , thehead ) 
   , m_finder ( s_INVALID )
 {
   getFinder ( decay ) ;
@@ -483,7 +498,8 @@ LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
 LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
 ( const std::string& decay    , 
   const std::string& location ) 
-  : LoKi::PhysMCParticles::MCMatcherBase ( location ) 
+  : LoKi::AuxFunBase ( std::tie ( decay , location ) ) 
+  , LoKi::PhysMCParticles::MCMatcherBase ( location ) 
   , m_finder ( s_INVALID ) 
 {
   getFinder ( decay ) ;
@@ -493,7 +509,8 @@ LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
 ( const std::string& decay     , 
   const std::string& location1 , 
   const std::string& location2 )
-  : LoKi::PhysMCParticles::MCMatcherBase ( location1 , location2 ) 
+  : LoKi::AuxFunBase ( std::tie ( decay , location1 , location2 ) ) 
+  , LoKi::PhysMCParticles::MCMatcherBase ( location1 , location2 ) 
   , m_finder ( s_INVALID ) 
 {
   getFinder ( decay ) ;
@@ -504,7 +521,8 @@ LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
   const std::string& location1 , 
   const std::string& location2 ,
   const std::string& location3 )
-  : LoKi::PhysMCParticles::MCMatcherBase ( location1 , 
+  : LoKi::AuxFunBase ( std::tie ( decay , location1 , location2 , location3 ) ) 
+  , LoKi::PhysMCParticles::MCMatcherBase ( location1 , 
                                            location2 ,
                                            location3 ) 
   , m_finder ( s_INVALID ) 
@@ -516,7 +534,8 @@ LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
 ( const std::string&                        decay      , 
   const LoKi::PhysMCParticles::ProtoPMatch& protoMatch , 
   const std::string& thehead   ) 
-  : LoKi::PhysMCParticles::MCMatcherBase ( protoMatch , thehead )  
+  : LoKi::AuxFunBase ( std::tie ( decay , protoMatch ,thehead ) ) 
+  , LoKi::PhysMCParticles::MCMatcherBase ( protoMatch , thehead )  
   , m_finder ( s_INVALID ) 
 {
   getFinder ( decay ) ;
@@ -640,7 +659,8 @@ LoKi::PhysMCParticles::MCNodeMatch::MCNodeMatch
 ( const LoKi::PhysMCParticles::MCNodeMatch::iNode&       node      , 
   const LoKi::PhysMCParticles::MCMatcherBase::Locations& locations , 
   const std::string& thehead   ) 
-  : LoKi::PhysMCParticles::MCMatcherBase ( locations , thehead ) 
+  : LoKi::AuxFunBase ( std::tie ( node , locations , thehead ) ) 
+  , LoKi::PhysMCParticles::MCMatcherBase ( locations , thehead ) 
   , m_node ( node ) 
 {
   checkNode () ;
@@ -649,7 +669,8 @@ LoKi::PhysMCParticles::MCNodeMatch::MCNodeMatch
 LoKi::PhysMCParticles::MCNodeMatch::MCNodeMatch
 ( const LoKi::PhysMCParticles::MCNodeMatch::iNode&       node , 
   const std::string& location ) 
-  : LoKi::PhysMCParticles::MCMatcherBase ( location ) 
+  : LoKi::AuxFunBase ( std::tie ( node , location  ) ) 
+  , LoKi::PhysMCParticles::MCMatcherBase ( location ) 
   , m_node ( node ) 
 {
   checkNode () ;
@@ -659,7 +680,8 @@ LoKi::PhysMCParticles::MCNodeMatch::MCNodeMatch
 ( const LoKi::PhysMCParticles::MCNodeMatch::iNode&       node      , 
   const std::string& location1 , 
   const std::string& location2 )
-  : LoKi::PhysMCParticles::MCMatcherBase ( location1 , location2 ) 
+  : LoKi::AuxFunBase ( std::tie ( node , location1 , location2   ) ) 
+  , LoKi::PhysMCParticles::MCMatcherBase ( location1 , location2 ) 
   , m_node ( node ) 
 {
   checkNode () ;
@@ -670,7 +692,8 @@ LoKi::PhysMCParticles::MCNodeMatch::MCNodeMatch
   const std::string& location1 , 
   const std::string& location2 ,
   const std::string& location3 )
-  : LoKi::PhysMCParticles::MCMatcherBase ( location1 , 
+  : LoKi::AuxFunBase ( std::tie ( node , location1 , location2 , location3 ) ) 
+  , LoKi::PhysMCParticles::MCMatcherBase ( location1 , 
                                            location2 ,
                                            location3 ) 
   , m_node ( node ) 
@@ -682,7 +705,8 @@ LoKi::PhysMCParticles::MCNodeMatch::MCNodeMatch
 ( const LoKi::PhysMCParticles::MCNodeMatch::iNode&       node      , 
   const LoKi::PhysMCParticles::ProtoPMatch&      protoMatch , 
   const std::string& thehead   ) 
-  : LoKi::PhysMCParticles::MCMatcherBase ( protoMatch , thehead )  
+  : LoKi::AuxFunBase ( std::tie ( node , protoMatch , thehead  ) ) 
+  , LoKi::PhysMCParticles::MCMatcherBase ( protoMatch , thehead )  
   , m_node ( node ) 
 {
   checkNode () ;
