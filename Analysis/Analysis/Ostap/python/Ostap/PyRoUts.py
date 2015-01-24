@@ -2508,6 +2508,61 @@ ROOT.TH3 . xminmax = lambda s : ( s.xmin() , s.xmax() )
 ROOT.TH3 . yminmax = lambda s : ( s.ymin() , s.ymax() )
 ROOT.TH3 . zminmax = lambda s : ( s.zmin() , s.zmax() )
 
+
+# =============================================================================
+## get the random pair from 2D-histogram
+#  @code 
+#  >>> h2  = ...
+#  >>> x,y = h2.random() 
+#  @endcode
+#  @see ROOT::TH2::GetRandom2
+#  @see ROOT::TH2
+def _h2_random_ ( h2 ) :
+    """
+    get the random value from 2D-histogram
+    
+    >>> h2  = ...
+    >>> x,y = h2.random() 
+    """
+    #
+    _x = ROOT.Double(0.0)
+    _y = ROOT.Double(1.0)
+    h2.GetRandom2( _x , _y )
+    #
+    return float(_x) , float(_y)
+
+# =============================================================================
+## get the random triplet from 3D-histogram
+#  @code 
+#  >>> h3    = ...
+#  >>> x,y,z = h3.random() 
+#  @endcode
+#  @see ROOT::TH3::GetRandom3
+#  @see ROOT::TH3
+def _h3_random_ ( h3 ) :
+    """
+    get the random value from 2D-histogram
+    
+    >>> h3    = ...
+    >>> x,y,z = h3.random() 
+    """
+    #
+    _x = ROOT.Double(0.0)
+    _y = ROOT.Double(1.0)
+    _z = ROOT.Double(2.0)
+    h3.GetRandom3( _x , _y ,_z)
+    #
+    return float(_x) , float(_y) , float(_z) 
+
+ROOT.TH2F.random = _h2_random_
+ROOT.TH2D.random = _h2_random_
+
+ROOT.TH3F.random = _h3_random_
+ROOT.TH3D.random = _h3_random_
+
+ROOT.TH1F.random = lambda s : s.GetRandom() 
+ROOT.TH1D.random = lambda s : s.GetRandom() 
+
 # =============================================================================
 ## convert TProfile to TH1D  (needed for the proper math) 
 #  @see ROOT::TProfile
