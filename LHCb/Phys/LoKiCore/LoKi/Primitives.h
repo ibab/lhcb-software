@@ -2888,7 +2888,7 @@ namespace LoKi
   class EqualToList<void> : public LoKi::Functor<void,bool>
 #else
   template <class TYPE>
-  class EqualToList : public LoKi::Functor<TYPE,bool>
+  class EqualToList       : public LoKi::Functor<TYPE,bool>
 #endif
   {
   private:
@@ -3031,7 +3031,7 @@ namespace LoKi
   class NotEqualToList<void> : public LoKi::EqualToList<void>
 #else
   template <class TYPE>
-  class NotEqualToList : public LoKi::EqualToList<TYPE>
+  class NotEqualToList       : public LoKi::EqualToList<TYPE>
 #endif
   {
   private:
