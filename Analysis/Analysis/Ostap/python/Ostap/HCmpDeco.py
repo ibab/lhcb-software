@@ -236,10 +236,10 @@ def _h1_cmp_dist_ ( h1              ,
         r1   = quad ( lambda x : f1 ( x )**2    , lims[0] , lims[1] , limit = 200 )
         r2   = quad ( lambda x : f2 ( x )**2    , lims[0] , lims[1] , limit = 200 )
         
-        from math import sqrt
+        import math 
         
-        sf1 = 1.0 / sqrt ( r1 [0] )
-        sf2 = 1.0 / sqrt ( r2 [0] )
+        sf1 = 1.0 / math.sqrt ( r1 [0] ) 
+        sf2 = 1.0 / math.sqrt ( r2 [0] ) 
         
         d12  = quad ( lambda x : (sf1*f1(x)-sf2*f2(x))**2 , lims[0] , lims[1] , limit = 200 )
         
@@ -248,6 +248,64 @@ def _h1_cmp_dist_ ( h1              ,
 
 ROOT.TH1D.cmp_dist = _h1_cmp_dist_
 ROOT.TH1F.cmp_dist = _h1_cmp_dist_ 
+
+
+# =============================================================================
+## calculate the norm of difference of scaled histograms/functions 
+#  \f$ d = \lef| (f_1^{*}-f_2^{*})^2/(f_1^{*}f_2^*(x))\right| \f$,
+#  where \f$ f^* \f$-are scaled functions, such \f$ |left| f^*\right| = 1 \f$ 
+def _h1_cmp_dist2_ ( h1              ,
+                     h2              ,
+                     rescale = False ,  
+                     spline  = True  ) :
+    """
+    Calculate the norm of difference of scaled histograms/functions 
+    |(f1-f2)*2/(f1*f2)|, such |f1|=1 and |f2|=1
+
+    >>> h1 = ... ## the first histo
+    >>> h2 = ... ## the second histo
+    >>> diff = h1.cmp_dist2 ( h2 )
+    
+    """
+    if rescale :
+        h1 = h1.rescale_bins ( 1.0 )
+        h2 = h2.rescale_bins ( 1.0 )
+
+    if spline  :
+        f1 = h1.asSpline ()        
+        f2 = h2.asSpline ()
+    else :
+        f1 = h1.asFunc   ()
+        f2 = h2.asFunc   ()
+
+    import warnings 
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        
+        from scipy.integrate import quad
+        
+        lims = h1.xminmax()
+        
+        r1   = quad ( lambda x : f1 ( x )**2    , lims[0] , lims[1] , limit = 200 )
+        r2   = quad ( lambda x : f2 ( x )**2    , lims[0] , lims[1] , limit = 200 )
+        
+        import math 
+        
+        sf1 = 1.0 / math.sqrt ( r1 [0] ) 
+        sf2 = 1.0 / math.sqrt ( r2 [0] ) 
+        
+        def  _func_   ( x ) :
+            v1 =  sf1 * f1 ( x )
+            v2 =  sf2 * f2 ( x )
+            v  = (v1-v2)*(v1-v2)/abs(v1*v2)
+            return v*v 
+        
+        d12  = quad ( _func_ , lims[0] , lims[1] , limit = 200 )
+        
+    return VE( d12[0] , d12[1]**2)
+
+ROOT.TH1D.cmp_dist2 = _h1_cmp_dist2_
+ROOT.TH1F.cmp_dist2 = _h1_cmp_dist2_ 
 
 # =============================================================================
 ## calculate and print some statistic for comparison  
