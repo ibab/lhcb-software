@@ -198,6 +198,7 @@ private:
   double m_zMagnet;
 
   bool m_withoutBField;
+  bool m_ambiguitiesFromPitchResiduals;
 };
 
 #endif // PATFWDTOOL_H

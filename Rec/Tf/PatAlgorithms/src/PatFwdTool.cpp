@@ -141,10 +141,23 @@ bool extend_range(Iterator& start, Iterator& stop,  Iterator first, Iterator las
 }
 
 class RLAmbiguityResolver {
+  protected:
     MsgStream* const m_msg;
     const PatFwdTrackCandidate* const m_track;
     const double m_zRef, m_ca;
-public:
+    /// little helper class to set ambiguities in a pair of hits
+    template <bool sameSign>
+    struct HitPairAmbSetter {
+      /// set ambiguity of h1 to amb, h2 according to sameSign
+      template <class HIT>
+      static inline void set(HIT& h1, HIT& h2, int amb)
+      { h1->setRlAmb(amb); h2->setRlAmb(sameSign ? amb : -amb); }
+      /// set ambiguity of h1 to amb, h2 according to sameSign if setsecond is true
+      template <class HIT>
+      static inline void set(HIT& h1, HIT& h2, int amb, bool setsecond)
+      { h1->setRlAmb(amb); if (setsecond) h2->setRlAmb(sameSign ? amb : -amb); }
+    };
+  public:
     RLAmbiguityResolver( const PatFwdTrackCandidate& track, double zRef,  MsgStream* msg = nullptr ) : 
         m_msg{ msg }, 
         m_track{ &track } ,
@@ -155,17 +168,16 @@ public:
 
     std::pair<double,double> operator()(std::pair<double,double> val, PatFwdHit *prev, PatFwdHit *hit) const {
       //OT : distance to a circle
-      auto dist = (hit->x() - m_track->x( hit->z() - m_zRef ))*m_ca;
-      auto dx = hit->driftDistance();
+      const auto dist = (hit->x() - m_track->x( hit->z() - m_zRef ))*m_ca;
+      const auto dx = hit->driftDistance();
 
-      auto residual = std::make_pair( dist + dx, dist - dx );
+      const auto residual = std::make_pair( dist + dx, dist - dx );
 
-      auto dm = fabs( residual.second - val.first );
-      auto dp = fabs( residual.first - val.second );
+      const auto dm = std::abs( residual.second - val.first );
+      const auto dp = std::abs( residual.first - val.second );
 
-      int rl = std::min( dm, dp) > 0.3 ? 0 : dp < dm ? +1 : -1 ; 
-      hit->setRlAmb( rl );
-      prev->setRlAmb( -rl );
+      const int rl = std::min(dm, dp) > 0.3 ? 0 : (dp < dm ? +1 : -1); 
+      HitPairAmbSetter<false>::set(hit, prev, rl);
 
 #if 0
       if( UNLIKELY( m_msg!=nullptr ) ) {
@@ -178,6 +190,89 @@ public:
     }
 };
 
+class RLAmbiguityResolverFromPitchRes : public RLAmbiguityResolver {
+  public:
+    RLAmbiguityResolverFromPitchRes( const PatFwdTrackCandidate& track, double zRef,  MsgStream* msg = nullptr ) : 
+      RLAmbiguityResolver(track, zRef, msg)
+    { }
+    std::pair<double,double> operator()(std::pair<double,double> val, PatFwdHit *prev, PatFwdHit *hit) const
+    {
+      if (LIKELY(prev != hit)) {
+	// require hits in same module
+	const LHCb::OTChannelID ot1(prev->hit()->lhcbID().otID());
+	const LHCb::OTChannelID ot2(hit->hit()->lhcbID().otID());
+	if (LIKELY(ot1.uniqueModule() == ot2.uniqueModule())) {
+	  // check in detail: distance in z at y = 0 must be compatible with
+	  // straws in different monolayers and distance in x must be
+	  // compatible with the pitch
+	  const auto dzabs = std::abs(prev->hit()->zAtYEq0() - hit->hit()->zAtYEq0());
+	  const auto dxabs = std::abs(prev->hit()->xAtYEq0() - hit->hit()->xAtYEq0());
+	  typedef decltype(dzabs) F;
+	  const F dzmax = F(13) / F(2), dzmin = F(9) / F(2);
+	  const F dxmax = F( 7) / F(2), dxmin = F(3) / F(2);
+	  if (LIKELY(dzmin <= dzabs) && LIKELY(dzabs <= dzmax) &&
+	      LIKELY(dxmin <= dxabs) && LIKELY(dxabs <= dxmax)) {
+	    // have two neighbouring hits, calculate pitch residual
+	    // work out effective slope in module frame
+	    const auto sinT = prev->hit()->sinT(), cosT = prev->hit()->cosT();
+	    typedef decltype(sinT) F;
+	    const auto z0 = (prev->hit()->zAtYEq0() + hit->hit()->zAtYEq0()) / F(2);
+	    const auto txeff = m_track->xSlope(z0 - m_zRef) * cosT +
+	      m_track->ySlope(z0 - m_zRef) * sinT;
+	    // get 2D wire distance vector in module coordinates
+	    const auto dx = (prev->hit()->xAtYEq0() - hit->hit()->xAtYEq0()) * cosT;
+	    const auto dzdy = prev->hit()->dzDy();
+	    const auto dz = (prev->hit()->zAtYEq0() - hit->hit()->zAtYEq0()) /
+	      std::sqrt(F(1) + dzdy * dzdy);
+	    // calculate effective pitch (i.e. pitch seen by m_track)
+	    const auto scale = (dx * txeff + dz) / (F(1) + txeff * txeff);
+	    const auto eprx = dx - scale * txeff, eprz = dz - scale;
+	    const auto epr = std::sqrt(eprx * eprx + eprz * eprz);
+	    // get radii
+	    const auto r1 = prev->driftDistance(), r2 = hit->driftDistance();
+	    // calculate pitch residual (convert back from effective pitch)
+	    // case 1: track passes between hits
+	    // case 2: track passes to one side of both hits
+	    const auto pr1 = std::abs(dx / epr) * (epr - r1 - r2);
+	    const auto pr2 = std::abs(dx / epr) * (epr - std::abs(r1 - r2));
+	    // resolve ambiguities only if smaller of pitch res. is smaller
+	    // than about three times the pitch residual resolution (pitch
+	    // residual resolution is (OT resolution) * sqrt(2), or about 0.283
+	    // mm for a well calibrated OT)
+	    if (std::min(std::abs(pr1), std::abs(pr2)) <= 1.) {
+	      if (std::abs(pr1) <= std::abs(pr2)) {
+		// case 1: set ambiguities accordingly
+		HitPairAmbSetter<false>::set(hit, prev, (dx < F(0)) ? -1 : +1,
+		    // only set amb. on prev hit if better than last pitch res.
+		    val.first >= std::abs(pr1));
+		return std::make_pair(std::abs(pr1), 42.);
+	      } else {
+		// case 2: try to figure out ambiguity by comparing slope
+		// estimate obtained from drift radii (assuming hits do not
+		// pass in between the wires) to the (well measured) effective
+		// slope
+		//
+		// as the slopes are usually big, we have to correct for the
+		// fact that the radius is no longer in x direction (using the
+		// measured txeff)
+		const auto corr = std::sqrt(F(1) + txeff * txeff);
+		const auto dslplus = (dx + (r1 - r2) * corr) - txeff * dz;
+		const auto dslminus = (dx - (r1 - r2) * corr) - txeff * dz;
+		HitPairAmbSetter<true>::set(hit, prev,
+		    (std::abs(dslplus) < std::abs(dslminus)) ? +1 : -1,
+		    // only set amb. on prev hit if better than last pitch res.
+		    val.first >= std::abs(pr2));
+		return std::make_pair(std::abs(pr2), 42.);
+	      } // case 1/2?
+	    } // pitch residual small enough?
+	  } // neighbouring straws?
+	} // same module?
+      } // pit == prev?
+      // no clue about ambiguity...
+      hit->setRlAmb(0);
+      return std::make_pair(42., 42.);
+    }
+};
 
 // find the consequitive range between begin and end which has at least bestPlanes planes, and has the smallest lenght
 template <typename Iter>
@@ -289,6 +384,7 @@ PatFwdTool::PatFwdTool( const std::string& type,
   declareProperty( "xMagnetTol"      , m_xMagnetTol      = 3. );
   declareProperty( "xMagnetTolSlope" , m_xMagnetTolSlope = 40. );
   declareProperty( "withoutBField"   , m_withoutBField   = false);
+  declareProperty( "AmbiguitiesFromPitchResiduals", m_ambiguitiesFromPitchResiduals = false);
 }
 
 //=========================================================================
@@ -320,6 +416,11 @@ StatusCode PatFwdTool::initialize ( ) {
       error() << "The properties ZMagnetParams, xParams, yParams and momentumParams must either"
                  " all be empty, or contain resp. 5, 6, 2 and 2 entries" << endmsg;
       return StatusCode::FAILURE;
+  }
+  if (m_ambiguitiesFromPitchResiduals) {
+    info() << "Resolving ambiguities from pitch residuals." << endmsg;
+  } else {
+    info() << "Resolving ambiguities based on distance to track." << endmsg;
   }
   return StatusCode::SUCCESS;
 }
@@ -722,34 +823,46 @@ double PatFwdTool::qOverP ( const PatFwdTrackCandidate& track ) const {
 
 
 //=========================================================================
+// visit pairs of hits in the same layer
+//=========================================================================
+template <class IT, class FN>
+static inline void visitHitPairs(IT begin, const IT end, const FN& fn)
+{
+  for (int planeCode = 0; begin != end; ++planeCode) {
+    auto part = std::partition(begin, end,
+	[planeCode](const PatFwdHit* hit)
+	{ return hit->planeCode() == planeCode; });
+    if (begin != part) {
+      std::sort(begin, part, Tf::increasingByXAtYEq0<PatForwardHit>()); 
+      accumulate_adjacent_pairs(begin, part, 
+	  fn(std::make_pair(10000.,10000.), *begin, *begin),
+	  std::cref(fn));
+    }
+    begin = part;
+  }
+}
+
+//=========================================================================
 //  Set the RL flag for OT candidates, if obvious.
 //=========================================================================
-
 void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
                                PatFwdHits::const_iterator begin,
                                PatFwdHits::const_iterator end  ) const 
 {
-  const RLAmbiguityResolver resolve{track, zReference(),  UNLIKELY( msgLevel( MSG::DEBUG ) ) ? &debug() : nullptr };
-
   PatFwdHits temp; temp.reserve( std::distance(begin,end) );
   // only OT has ambiguity
   std::copy_if( begin, end, std::back_inserter(temp), [](const PatFwdHit *hit) { 
-      return /* hit->isSelected() && */ hit->hit()->type() == Tf::RegionID::OT ;
+      return /* hit->isSelected() && */ hit->isOT();
   } );
 
-  int planeCode = 0;
-  auto first = std::begin(temp);
-  const auto last  = std::end(temp);
-  while ( first != last ) {
-    auto part = std::partition( first, last, [planeCode](const PatFwdHit* hit) { 
-        return hit->planeCode() == planeCode; 
-    } );
-    ++planeCode;
-    std::sort( first, part, Tf::increasingByX<PatForwardHit>() ); 
-    if ( part != first ) accumulate_adjacent_pairs( first, part, 
-                                                    resolve( std::make_pair(10000.,10000.), *first, *first ),
-                                                    std::cref(resolve) );
-    first = part;
+  if (m_ambiguitiesFromPitchResiduals) {
+    const RLAmbiguityResolverFromPitchRes resolve{track, zReference(),
+      UNLIKELY( msgLevel( MSG::DEBUG ) ) ? &debug() : nullptr};
+    visitHitPairs(std::begin(temp), std::end(temp), resolve);
+  } else {
+    const RLAmbiguityResolver resolve{track, zReference(),
+      UNLIKELY( msgLevel( MSG::DEBUG ) ) ? &debug() : nullptr};
+    visitHitPairs(std::begin(temp), std::end(temp), resolve);
   }
 }
 //=============================================================================

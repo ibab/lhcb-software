@@ -23,7 +23,7 @@ namespace PatSeedFits {
     value_type wmeas(const hit_type& hit, const track_type& track,
 	const PROJ& projector) const
     {
-      const bool isIT = hit->hit()->type() == Tf::RegionID::IT;
+      const bool isIT = !hit->isOT();
       if (isIT) {
 	return hit->x() * hit->hit()->errweight();
       } else {
@@ -57,13 +57,13 @@ namespace PatSeedFits {
     static_assert(3 == nDim, "Fit Policy must have three fit parameters");
     value_type wproj(const track_type& track, const hit_type& hit) const
     {
-      const bool isIT = hit->hit()->type() == Tf::RegionID::IT;
+      const bool isIT = !hit->isOT();
       if (isIT) return track.xAtZ(hit->z()) * hit->hit()->errweight();
       else return track.xAtZ(hit->z()) * hit->hit()->errweight() * track.cosine();
     }
     vector_type wgrad(const track_type& track, const hit_type& hit) const
     {
-      const bool isIT = hit->hit()->type() == Tf::RegionID::IT;
+      const bool isIT = !hit->isOT();
       const value_type w = isIT ? hit->hit()->errweight() :
 	(hit->hit()->errweight() * track.cosine());
       const value_type dz = (hit->z() - track.z0()) / value_type(1 << 10);
@@ -103,13 +103,13 @@ namespace PatSeedFits {
     static_assert(2 == nDim, "Fit Policy must have two fit parameters");
     value_type wproj(const track_type& track, const hit_type& hit) const
     {
-      const bool isIT = hit->hit()->type() == Tf::RegionID::IT;
+      const bool isIT = !hit->isOT();
       if (isIT) return track.xAtZ(hit->z()) * hit->hit()->errweight();
       else return track.xAtZ(hit->z()) * hit->hit()->errweight() * track.cosine();
     }
     vector_type wgrad(const track_type& track, const hit_type& hit) const
     {
-      const bool isIT = hit->hit()->type() == Tf::RegionID::IT;
+      const bool isIT = !hit->isOT();
       const value_type w = isIT ? hit->hit()->errweight() :
 	(hit->hit()->errweight() * track.cosine());
       const value_type dz = (hit->z() - track.z0()) / value_type(1 << 10);
@@ -148,13 +148,13 @@ namespace PatSeedFits {
     static_assert(5 == nDim, "Fit Policy must have five fit parameters");
     value_type wproj(const track_type& track, const hit_type& hit) const
     {
-      const bool isIT = hit->hit()->type() == Tf::RegionID::IT;
+      const bool isIT = !hit->isOT();
       if (isIT) return track.xAtZ(hit->z()) * hit->hit()->errweight();
       else return track.xAtZ(hit->z()) * hit->hit()->errweight() * track.cosine();
     }
     vector_type wgrad(const track_type& track, const hit_type& hit) const
     {
-      const bool isIT = hit->hit()->type() == Tf::RegionID::IT;
+      const bool isIT = !hit->isOT();
       const value_type w = isIT ? hit->hit()->errweight() :
 	(hit->hit()->errweight() * track.cosine());
       const value_type dz = (hit->z() - track.z0()) / value_type(1 << 10);
@@ -203,7 +203,7 @@ namespace PatSeedFits {
     static_assert(3 == nDim, "Fit Policy must have three fit parameters");
     value_type wproj(const track_type& track, const hit_type& hit) const
     {
-      const bool isIT = hit->hit()->type() == Tf::RegionID::IT;
+      const bool isIT = !hit->isOT();
       if (isIT) return track.xAtZ(hit->z()) * hit->hit()->errweight();
       else return track.xAtZ(hit->z()) * hit->hit()->errweight() * track.cosine();
     }

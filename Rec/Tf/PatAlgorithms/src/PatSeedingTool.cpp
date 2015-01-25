@@ -1284,7 +1284,7 @@ void PatSeedingTool::collectLowQualTracks(
     }
     if (maxUsed < 0) continue;
     if (track.nPlanes() < unsigned(m_minTotalPlanes)) continue;
-    bool isOT = (*track.coordBegin())->hit()->type() == Tf::RegionID::OT;
+    bool isOT = (*track.coordBegin())->isOT();
     m_tolCollect = isOT ? m_tolCollectOT : m_tolCollectIT;
     m_maxChi2Hit = isOT ? m_maxChi2HitOT : m_maxChi2HitIT;
 

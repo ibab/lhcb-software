@@ -4,21 +4,44 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-01-25 - Manuel Tobias Schiller
+ - PatFwdTool: add option to use pitch residuals to resolve ambiguities in
+   the OT in a manner similar to the seeding; this results in slight
+   efficiency gains (permille level), a ghost rate reduction on the percent
+   level and a very marginal speedup (half a percent); there is a property
+   which can be used to enable the new code:
+
+   from Configurables import PatForward, PatForwardTool, PatFwdTool
+   fwd = PatForward('PatForward')
+   fwd.addTool(PatForwardTool, name='PatForwardTool')
+   fwd.PatForwardTool.addTool(PatFwdTool, name='PatFwdTool')
+   fwd.PatForwardTool.PatFwdTool.AmbiguitiesFromPitchResiduals = True
+
+   The old method of resolving ambiguities remains the default for now.
+
+ - PatSeeding and classes used by it: take advantage of the new isOT()
+   method available from PatForwardHit
+
 ! 2015-01-22 - Sascha Stahl
- - PatForward and PatForwardTool: Moved options to flag hits and seeds from PatForward to PatForwardTool,
-   such that PatForwardTool is aware of hit flagging. Changed the flag wich is used to flag used hits. 
-   Removed option to flag Velo seeds as at this point it is not clear which Velo seeds should be flagged.
+ - PatForward and PatForwardTool: Moved options to flag hits and seeds from
+   PatForward to PatForwardTool, such that PatForwardTool is aware of hit
+   flagging. Changed the flag wich is used to flag used hits.  Removed
+   option to flag Velo seeds as at this point it is not clear which Velo
+   seeds should be flagged.
 
 !========================= PatAlgorithms v4r38 2015-01-14 =========================
 ! 2015-01-09 - Michel De Cian
- - New parametrisations in 'PatMatchTool', lower ghost right and higher efficiency, mostly for low p tracks.
+ - New parametrisations in 'PatMatchTool', lower ghost right and higher
+   efficiency, mostly for low p tracks.
 
 ! 2015-01-08 - Michel De Cian
- - Make Tool in PatMatch a configurable name, add 'getIfExists' and some doxygen comments.
+ - Make Tool in PatMatch a configurable name, add 'getIfExists' and some
+   doxygen comments.
 
 ! 2014-12-22 - Michel De Cian
- - Fix bug in PatAddTTCoord in 'returnTTClusters' which caused wrong chi2 to be returned. 
- Calculate part of the bending parameter only once per event. Add some doxygen comments.
+ - Fix bug in PatAddTTCoord in 'returnTTClusters' which caused wrong chi2 to
+   be returned.  Calculate part of the bending parameter only once per
+   event. Add some doxygen comments.
 
 ! 2014-12-15 - Gerhard Raven
  - PatFwdTool: use new PatForwardHit methods to speed things up 
