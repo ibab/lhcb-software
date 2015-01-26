@@ -117,9 +117,9 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor 
-      L0MuonCut ( std::string type = "" ) ;
+      L0MuonCut ( const std::string& type = "" ) ;
       /// constructor 
-      L0MuonCut ( std::string type      , 
+      L0MuonCut ( const std::string& type      , 
                   int         threshold ) ;
       /// MANDATORY: virtual desctructor 
       virtual ~L0MuonCut() ;

@@ -69,9 +69,8 @@ namespace LoKi
         // ======================================================================
         ///   constructor from pid hypothesis, name and simple pt cut
         ToParticles
-          ( std::string           pid          ,
-            std::string           location     ,
-            //const double          ptcut        ) ;
+          ( const std::string& pid          ,
+            const std::string& location     ,
             const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&  cuts ) ;
         /// virtual destructor
         virtual ~ToParticles() ;

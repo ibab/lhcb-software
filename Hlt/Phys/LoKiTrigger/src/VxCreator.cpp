@@ -36,7 +36,7 @@ LoKi::Hlt1::VxCreator::VxCreator
 ( const LoKi::Types::TrCuts&  cuts    , 
   const LoKi::Types::TTrCuts& cuts2tr ,
   const LoKi::Types::RVCuts&  cuts4rv ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( cuts , cuts2tr , cuts4rv ) ) 
   //
   , m_cut    ( cuts    ) 
   , m_cut_trivial    ( false ) 
@@ -51,8 +51,8 @@ LoKi::Hlt1::VxCreator::VxCreator
 LoKi::Hlt1::VxCreator::VxCreator
 ( const LoKi::Types::TTrCuts& cuts2tr ,
   const LoKi::Types::RVCuts&  cuts4rv ) 
-  : LoKi::AuxFunBase () 
-  //
+  : LoKi::AuxFunBase ( std::tie ( cuts2tr , cuts4rv ) ) 
+    //
   , m_cut    ( LoKi::Constant<const LHCb::Track*,bool>( true ) ) 
   , m_cut_trivial    ( true  ) 
   , m_cut2tr ( cuts2tr ) 
@@ -66,7 +66,7 @@ LoKi::Hlt1::VxCreator::VxCreator
 LoKi::Hlt1::VxCreator::VxCreator
 ( const LoKi::Types::TrCuts&  cuts    ,
   const LoKi::Types::RVCuts&  cuts4rv ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( cuts , cuts4rv ) ) 
   //
   , m_cut    ( cuts    ) 
   , m_cut_trivial    ( false ) 
@@ -81,7 +81,7 @@ LoKi::Hlt1::VxCreator::VxCreator
 LoKi::Hlt1::VxCreator::VxCreator
 ( const LoKi::Types::TrCuts&  cuts    ,
   const LoKi::Types::TTrCuts& cuts2tr ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( cuts , cuts2tr ) ) 
   //
   , m_cut    ( cuts    ) 
   , m_cut_trivial    ( false ) 
@@ -95,7 +95,7 @@ LoKi::Hlt1::VxCreator::VxCreator
 // ============================================================================
 LoKi::Hlt1::VxCreator::VxCreator
 ( const LoKi::Types::TrCuts& cuts ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( cuts ) ) 
   //
   , m_cut    ( cuts    ) 
   , m_cut_trivial    ( false ) 
@@ -109,7 +109,7 @@ LoKi::Hlt1::VxCreator::VxCreator
 // ============================================================================
 LoKi::Hlt1::VxCreator::VxCreator
 ( const LoKi::Types::TTrCuts& cuts2tr ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( cuts2tr ) ) 
 //
   , m_cut    ( LoKi::Constant<const LHCb::Track*,bool>( true ) ) 
   , m_cut_trivial    ( true  ) 
@@ -123,7 +123,7 @@ LoKi::Hlt1::VxCreator::VxCreator
 // ============================================================================
 LoKi::Hlt1::VxCreator::VxCreator
 ( const LoKi::Types::RVCuts&  cuts4rv ) 
-  : LoKi::AuxFunBase () 
+  : LoKi::AuxFunBase ( std::tie ( cuts4rv ) ) 
   //
   , m_cut    ( LoKi::Constant<const LHCb::Track*,bool>( true ) ) 
   , m_cut_trivial    ( true  ) 

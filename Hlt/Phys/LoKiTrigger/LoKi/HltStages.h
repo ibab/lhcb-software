@@ -374,7 +374,7 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from the algorithm name
-      History ( std::string alg ) ;
+      History ( const std::string& alg ) ;
       /// MANDATORY: virtual descructor 
       virtual ~History() ;
       /// MANDATORY: clone method ("virtual destructor")
@@ -407,7 +407,7 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from the algorithm name substring
-      HistorySub ( std::string alg ) ;
+      HistorySub ( const std::string& alg ) ;
       /// MANDATORY: virtual descructor 
       virtual ~HistorySub () ;
       /// MANDATORY: clone method ("virtual destructor")
@@ -436,7 +436,7 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from the key and data type
-      HasCache ( std::string        key , 
+      HasCache ( const std::string& key , 
                  Hlt::Cache::Values typ ) ;      
       /// MANDATORY: virtual destructor 
       virtual ~HasCache () ;
@@ -473,8 +473,8 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from the key and data type
-      Cache1 ( std::string  key , 
-               double       def ) ;
+      Cache1 ( const std::string& key , 
+               const double       def ) ;
       /// MANDATORY: virtual destructor 
       virtual ~Cache1 () ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -510,8 +510,8 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from the key and data type
-      Cache2 ( std::string  key , 
-               bool         def ) ;
+      Cache2 ( const std::string& key , 
+               const bool         def ) ;
       /// MANDATORY: virtual destructor 
       virtual ~Cache2 () ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -582,8 +582,9 @@ namespace LoKi
       /// constructor from the predicate and the fake integer argument 
       Cut_
       ( const typename LoKi::BasicFunctors<const TYPE*>::Predicate& cut , 
-        int /* a */ )
-        : LoKi::BasicFunctors<const Hlt::Stage*>::Predicate ()
+        const int                                                   a   )
+        : LoKi::AuxFunBase ( std::tie ( cut , a ) ) 
+        , LoKi::BasicFunctors<const Hlt::Stage*>::Predicate ()
         , m_cut  ( cut  )
       {}
       /// MANDATORY: virtual destructor
@@ -705,7 +706,8 @@ namespace LoKi
       Fun_
       ( const typename LoKi::BasicFunctors<const TYPE*>::Function& fun , 
         double                                                     bad )
-        : LoKi::BasicFunctors<const Hlt::Stage*>::Function ()
+        : LoKi::AuxFunBase ( std::tie ( fun , bad ) )
+        , LoKi::BasicFunctors<const Hlt::Stage*>::Function ()
         , m_fun  ( fun )
         , m_bad  ( bad )
       {}

@@ -16,6 +16,7 @@
 // ============================================================================
 // LoKi
 // ============================================================================
+#include "LoKi/TrgToCpp.h"
 #include "LoKi/TrUpgrade.h"
 // ============================================================================
 // Local
@@ -52,11 +53,12 @@
  */
 // ============================================================================
 LoKi::Hlt1::Upgrade::Upgrade 
-( std::string                    output  ,         // output selection name/key 
+( const std::string&             output  ,         // output selection name/key 
   const LoKi::Hlt1::UpgradeConf& config  )         //             configuration 
-  : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe () 
+  : LoKi::AuxFunBase ( std::tie ( output , config ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe () 
   , LoKi::Hlt1::UpgradeTool ( config ) 
-  , m_sink      { std::move(output) } 
+  , m_sink                  ( output ) 
 {}
 // ============================================================================
 /*  constructor from all configuration parameters 
@@ -65,11 +67,12 @@ LoKi::Hlt1::Upgrade::Upgrade
  */
 // ============================================================================
 LoKi::Hlt1::Upgrade::Upgrade 
-( std::string                    output  ,         // output selection name/key 
+( const std::string&             output  ,         // output selection name/key 
   const LoKi::Hlt1::UpgradeTool& config  )         //             configuration 
-  : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe () 
+  : LoKi::AuxFunBase ( std::tie ( output , config ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe () 
   , LoKi::Hlt1::UpgradeTool ( config ) 
-  , m_sink      { std::move(output) } 
+  , m_sink                  ( output ) 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -114,9 +117,10 @@ LoKi::Hlt1::Upgrade::operator()
  */
 // ============================================================================
 LoKi::Hlt1::UpgradeTracks::UpgradeTracks 
-( std::string                    output  ,         // output selection name/key 
+( const std::string&             output  ,         // output selection name/key 
   const LoKi::Hlt1::UpgradeConf& config  )         //             configuration 
-  : LoKi::Hlt1::Upgrade( std::move(output) , config ) 
+  : LoKi::AuxFunBase ( std::tie ( output , config ) ) 
+  , LoKi::Hlt1::Upgrade( output , config ) 
 {}
 // ============================================================================
 /*  constructor from all configuration parameters 
@@ -125,9 +129,10 @@ LoKi::Hlt1::UpgradeTracks::UpgradeTracks
  */
 // ============================================================================
 LoKi::Hlt1::UpgradeTracks::UpgradeTracks 
-( std::string                    output  ,         // output selection name/key 
+( const std::string&             output  ,         // output selection name/key 
   const LoKi::Hlt1::UpgradeTool& config  )         //             configuration 
-  : LoKi::Hlt1::Upgrade( std::move(output) , config ) 
+  : LoKi::AuxFunBase ( std::tie ( output , config ) ) 
+  , LoKi::Hlt1::Upgrade( output , config ) 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -174,10 +179,11 @@ LoKi::Hlt1::UpgradeTracks::operator()
  */
 // ============================================================================
 LoKi::Hlt1::UpgradeMultiTracks::UpgradeMultiTracks 
-( std::string                    output  ,         // output selection name/key 
-  int                            index   ,         //   track index for upgrade  
+( const std::string&             output  ,         // output selection name/key 
+  const int                      index   ,         //   track index for upgrade  
   const LoKi::Hlt1::UpgradeConf& config  )         //             configuration 
-  : LoKi::Hlt1::Upgrade( std::move(output) , config ) 
+  : LoKi::AuxFunBase ( std::tie ( output , index , config ) ) 
+  , LoKi::Hlt1::Upgrade( output , config ) 
   , m_index ( index ) 
 {}
 // ============================================================================
@@ -187,10 +193,11 @@ LoKi::Hlt1::UpgradeMultiTracks::UpgradeMultiTracks
  */
 // ============================================================================
 LoKi::Hlt1::UpgradeMultiTracks::UpgradeMultiTracks 
-( std::string                    output  ,         // output selection name/key 
-  int                            index   ,   //   track index for upgrade  
+( const std::string&             output  ,         // output selection name/key 
+  const int                      index   ,   //   track index for upgrade  
   const LoKi::Hlt1::UpgradeTool& config  )         //             configuration 
-  : LoKi::Hlt1::Upgrade( std::move(output) , config ) 
+  : LoKi::AuxFunBase ( std::tie ( output , index , config ) ) 
+  , LoKi::Hlt1::Upgrade( output , config ) 
   , m_index ( index ) 
 {}
 // ============================================================================

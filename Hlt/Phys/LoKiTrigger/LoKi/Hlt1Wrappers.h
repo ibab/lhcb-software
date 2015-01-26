@@ -26,8 +26,8 @@
 // ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/HltTool.h"
 #include "LoKi/TrackTypes.h"
+#include "LoKi/HltTool.h"
 // ============================================================================
 /** @file LoKi/Hlt1Wrappers.h
  *  Collection of specific wrappers for Hl1 implementation

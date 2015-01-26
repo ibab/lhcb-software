@@ -29,7 +29,7 @@
 LoKi::RecVertices::SourceTES::SourceTES 
 ( const std::string&              path , 
   IDataProviderSvc*               svc  , 
-  const LoKi::TrackTypes::RVCuts& cuts ) 
+  const LoKi::TrackTypes::RVCuts& cuts )
   : LoKi::RecVertices::SourceTES::_Source ()
   , m_path    ( 1 , path ) 
   , m_dataSvc ( svc  ) 
@@ -53,8 +53,9 @@ LoKi::RecVertices::SourceTES::SourceTES
 LoKi::RecVertices::SourceTES::SourceTES 
 ( const std::string&              path , 
   const LoKi::TrackTypes::RVCuts& cuts , 
-  IDataProviderSvc*               svc  ) 
-  : LoKi::RecVertices::SourceTES::_Source () 
+  IDataProviderSvc*               svc  )
+  : LoKi::AuxFunBase ( std::tie ( path , cuts ) ) 
+  , LoKi::RecVertices::SourceTES::_Source () 
   , m_path    ( 1 , path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )
@@ -66,7 +67,8 @@ LoKi::RecVertices::SourceTES::SourceTES
 ( const std::vector<std::string>& path , 
   const LoKi::TrackTypes::RVCuts& cuts , 
   IDataProviderSvc*               svc  ) 
-  : LoKi::RecVertices::SourceTES::_Source () 
+  : LoKi::AuxFunBase ( std::tie ( path , cuts ) ) 
+  , LoKi::RecVertices::SourceTES::_Source () 
   , m_path    ( path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )
@@ -78,7 +80,8 @@ LoKi::RecVertices::SourceTES::SourceTES
 ( const LoKi::TrackTypes::RVCuts& cuts ,
   const std::string&              path , 
   IDataProviderSvc*               svc  ) 
-  : LoKi::RecVertices::SourceTES::_Source () 
+  : LoKi::AuxFunBase ( std::tie ( cuts , path ) ) 
+  , LoKi::RecVertices::SourceTES::_Source () 
   , m_path    ( 1 , path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )
@@ -90,7 +93,8 @@ LoKi::RecVertices::SourceTES::SourceTES
 ( const LoKi::TrackTypes::RVCuts& cuts ,
   const std::vector<std::string>& path , 
   IDataProviderSvc*               svc  ) 
-  : LoKi::RecVertices::SourceTES::_Source () 
+  : LoKi::AuxFunBase ( std::tie ( cuts , path ) ) 
+  , LoKi::RecVertices::SourceTES::_Source () 
   , m_path    ( path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )

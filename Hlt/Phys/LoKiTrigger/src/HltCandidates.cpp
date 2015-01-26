@@ -9,6 +9,7 @@
 // local
 // ============================================================================
 #include "LoKi/select.h"
+#include "LoKi/HltTool.h"
 #include "LoKi/HltCandidates.h"
 #include "LoKi/HltStages.h"
 #include "LoKi/Constants.h"
@@ -136,11 +137,13 @@ std::ostream& LoKi::Candidates::Branch::fillStream ( std::ostream& s ) const
 // ============================================================================
 // constructor
 // ============================================================================
-LoKi::Candidates::StageFun::StageFun( const LoKi::TriggerTypes::TS_Func& cut,
-                                      const int slot )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Function()
-    , m_cut( cut )
-    , m_slot( slot )
+LoKi::Candidates::StageFun::StageFun
+( const LoKi::TriggerTypes::TS_Func& cut  ,
+  const int                          slot )
+  : LoKi::AuxFunBase ( std::tie ( cut , slot ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Function()
+  , m_cut( cut )
+  , m_slot( slot )
 {}
 // ============================================================================
 // MANDATORY: virtual desctructor
@@ -191,11 +194,13 @@ std::ostream& LoKi::Candidates::StageFun::fillStream ( std::ostream& s ) const
 // ============================================================================
 // constructor
 // ============================================================================
-LoKi::Candidates::StageCut::StageCut( const LoKi::TriggerTypes::TS_Cuts& cut,
-                                      const int slot )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate()
-    , m_cut( cut )
-    , m_slot( slot )
+LoKi::Candidates::StageCut::StageCut
+( const LoKi::TriggerTypes::TS_Cuts& cut  ,
+  const int                          slot )
+  : LoKi::AuxFunBase ( std::tie ( cut , slot ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate()
+  , m_cut( cut )
+  , m_slot( slot )
 {}
 // ============================================================================
 // MANDATORY: virtual desctructor
@@ -257,12 +262,13 @@ namespace
  *     - positive value corresponds to step-back in history
  */
 // ============================================================================
-LoKi::Candidates::SlotCut::SlotCut(
-    const LoKi::BasicFunctors<const LHCb::L0MuonCandidate*>::Predicate& cut,
-    const int slot )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate()
-    , m_cut( LoKi::Stages::cut_( cut, s_FAKE ) )
-    , m_slot( slot )
+LoKi::Candidates::SlotCut::SlotCut
+( const LoKi::BasicFunctors<const LHCb::L0MuonCandidate*>::Predicate& cut,
+  const int slot )
+  : LoKi::AuxFunBase ( std::tie ( cut , slot ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate()
+  , m_cut( LoKi::Stages::cut_( cut, s_FAKE ) )
+  , m_slot( slot )
 {}
 // ============================================================================
 /*  constructor
@@ -273,12 +279,13 @@ LoKi::Candidates::SlotCut::SlotCut(
  *     - positive value corresponds to step-back in history
  */
 // ============================================================================
-LoKi::Candidates::SlotCut::SlotCut(
-    const LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate& cut,
-    const int slot )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate()
-    , m_cut( LoKi::Stages::cut_( cut, s_FAKE ) )
-    , m_slot( slot )
+LoKi::Candidates::SlotCut::SlotCut
+( const LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate& cut,
+  const int slot )
+  : LoKi::AuxFunBase ( std::tie ( cut , slot ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate()
+  , m_cut( LoKi::Stages::cut_( cut, s_FAKE ) )
+  , m_slot( slot )
 {}
 // ============================================================================
 /*  constructor
@@ -289,12 +296,13 @@ LoKi::Candidates::SlotCut::SlotCut(
  *     - positive value corresponds to step-back in history
  */
 // ============================================================================
-LoKi::Candidates::SlotCut::SlotCut(
-    const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut, 
-    const int slot )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate()
-    , m_cut( LoKi::Stages::cut_( cut, s_FAKE ) )
-    , m_slot( slot )
+LoKi::Candidates::SlotCut::SlotCut
+( const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut, 
+  const int slot )
+  : LoKi::AuxFunBase ( std::tie ( cut , slot ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate()
+  , m_cut( LoKi::Stages::cut_( cut, s_FAKE ) )
+  , m_slot( slot )
 {}
 // ============================================================================
 /*  constructor
@@ -305,11 +313,12 @@ LoKi::Candidates::SlotCut::SlotCut(
  *     - positive value corresponds to step-back in history
  */
 // ============================================================================
-LoKi::Candidates::SlotCut::SlotCut(
-    const LoKi::BasicFunctors<const LHCb::Track*>::Predicate& cut, const int slot )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate()
-    , m_cut( LoKi::Stages::cut_( cut, s_FAKE ) )
-    , m_slot( slot )
+LoKi::Candidates::SlotCut::SlotCut
+( const LoKi::BasicFunctors<const LHCb::Track*>::Predicate& cut, const int slot )
+  : LoKi::AuxFunBase ( std::tie ( cut , slot ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate()
+  , m_cut( LoKi::Stages::cut_( cut, s_FAKE ) )
+  , m_slot( slot )
 {}
 // ============================================================================
 /*  constructor
@@ -320,12 +329,13 @@ LoKi::Candidates::SlotCut::SlotCut(
  *     - positive value corresponds to step-back in history
  */
 // ============================================================================
-LoKi::Candidates::SlotCut::SlotCut(
-    const LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate& cut,
-    const int slot )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate()
-    , m_cut( LoKi::Stages::cut_( cut, s_FAKE ) )
-    , m_slot( slot )
+LoKi::Candidates::SlotCut::SlotCut
+( const LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate& cut,
+  const int slot )
+  : LoKi::AuxFunBase ( std::tie ( cut , slot ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate()
+  , m_cut( LoKi::Stages::cut_( cut, s_FAKE ) )
+  , m_slot( slot )
 {}
 // ============================================================================
 /*  constructor
@@ -336,11 +346,13 @@ LoKi::Candidates::SlotCut::SlotCut(
  *     - positive value corresponds to step-back in history
  */
 // ============================================================================
-LoKi::Candidates::SlotCut::SlotCut(
-    const LoKi::BasicFunctors<const Hlt::Stage*>::Predicate& cut, const int slot )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate()
-    , m_cut( LoKi::Stages::cut_( cut, s_FAKE ) )
-    , m_slot( slot )
+LoKi::Candidates::SlotCut::SlotCut
+( const LoKi::BasicFunctors<const Hlt::Stage*>::Predicate& cut, 
+  const int slot )
+  : LoKi::AuxFunBase ( std::tie ( cut , slot ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate()
+  , m_cut( LoKi::Stages::cut_( cut, s_FAKE ) )
+  , m_slot( slot )
 {}
 // ============================================================================
 /*  constructor
@@ -351,11 +363,13 @@ LoKi::Candidates::SlotCut::SlotCut(
  *     - positive value corresponds to step-back in history
  */
 // ============================================================================
-LoKi::Candidates::SlotCut::SlotCut(
-    const LoKi::BasicFunctors<const LHCb::Track*>::CutVal& cut, const int slot )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate()
-    , m_cut( LoKi::Stages::cut_( cut, s_FAKE ) )
-    , m_slot( slot )
+LoKi::Candidates::SlotCut::SlotCut
+( const LoKi::BasicFunctors<const LHCb::Track*>::CutVal& cut, 
+  const int slot )
+  : LoKi::AuxFunBase ( std::tie ( cut , slot ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate()
+  , m_cut( LoKi::Stages::cut_( cut, s_FAKE ) )
+  , m_slot( slot )
 {}
 // ============================================================================
 // MANDATORY: virtual destructor
@@ -406,14 +420,15 @@ std::ostream& LoKi::Candidates::SlotCut::fillStream( std::ostream& s ) const
  *     - positive value corresponds to step-back in history
  */
 // ============================================================================
-LoKi::Candidates::SlotFun::SlotFun(
-    const LoKi::BasicFunctors<const LHCb::Track*>::Function& fun, 
-    const int    slot,
-    const double bad )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Function()
-    , m_fun( LoKi::Stages::fun_( fun, bad ) )
-    , m_slot( slot )
-    , m_bad( bad )
+LoKi::Candidates::SlotFun::SlotFun
+( const LoKi::BasicFunctors<const LHCb::Track*>::Function& fun, 
+  const int    slot,
+  const double bad )
+  : LoKi::AuxFunBase ( std::tie ( fun , slot , bad ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Function()
+  , m_fun( LoKi::Stages::fun_( fun, bad ) )
+  , m_slot( slot )
+  , m_bad( bad )
 {}
 // ============================================================================
 /*  constructor
@@ -424,14 +439,15 @@ LoKi::Candidates::SlotFun::SlotFun(
  *     - positive value corresponds to step-back in history
  */
 // ============================================================================
-LoKi::Candidates::SlotFun::SlotFun(
-    const LoKi::BasicFunctors<const LHCb::Particle*>::Function& fun, 
-    const int   slot ,
-    const double bad )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Function()
-    , m_fun( LoKi::Stages::fun_( fun, bad ) )
-    , m_slot( slot )
-    , m_bad( bad )
+LoKi::Candidates::SlotFun::SlotFun
+( const LoKi::BasicFunctors<const LHCb::Particle*>::Function& fun, 
+  const int   slot ,
+  const double bad )
+  : LoKi::AuxFunBase ( std::tie ( fun , slot , bad ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Function()
+  , m_fun( LoKi::Stages::fun_( fun, bad ) )
+  , m_slot( slot )
+  , m_bad( bad )
 {}
 // ============================================================================
 /*  constructor
@@ -442,13 +458,15 @@ LoKi::Candidates::SlotFun::SlotFun(
  *     - positive value corresponds to step-back in history
  */
 // ============================================================================
-LoKi::Candidates::SlotFun::SlotFun(
-    const LoKi::BasicFunctors<const LHCb::VertexBase*>::Function& fun,
-    const int slot, const double bad )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Function()
-    , m_fun( LoKi::Stages::fun_( fun, bad ) )
-    , m_slot( slot )
-    , m_bad( bad )
+LoKi::Candidates::SlotFun::SlotFun
+( const LoKi::BasicFunctors<const LHCb::VertexBase*>::Function& fun,
+  const int   slot , 
+  const double bad )
+  : LoKi::AuxFunBase ( std::tie ( fun , slot , bad ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Function()
+  , m_fun( LoKi::Stages::fun_( fun, bad ) )
+  , m_slot( slot )
+  , m_bad( bad )
 {}
 // ============================================================================
 /*  constructor
@@ -459,13 +477,15 @@ LoKi::Candidates::SlotFun::SlotFun(
  *     - positive value corresponds to step-back in history
  */
 // ============================================================================
-LoKi::Candidates::SlotFun::SlotFun(
-    const LoKi::BasicFunctors<const Hlt::Stage*>::Function& fun, const int slot,
-    const double bad )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Function()
-    , m_fun( LoKi::Stages::fun_( fun, bad ) )
-    , m_slot( slot )
-    , m_bad( bad )
+LoKi::Candidates::SlotFun::SlotFun
+( const LoKi::BasicFunctors<const Hlt::Stage*>::Function& fun, 
+  const int    slot ,
+  const double bad  )
+  : LoKi::AuxFunBase ( std::tie ( fun , slot , bad ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Function()
+  , m_fun( LoKi::Stages::fun_( fun, bad ) )
+  , m_slot( slot )
+  , m_bad( bad )
 {}
 // ============================================================================
 /*  constructor
@@ -476,13 +496,15 @@ LoKi::Candidates::SlotFun::SlotFun(
  *     - positive value corresponds to step-back in history
  */
 // ============================================================================
-LoKi::Candidates::SlotFun::SlotFun(
-    const LoKi::BasicFunctors<const LHCb::Track*>::FunVal& fun, const int slot,
-    const double bad )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Function()
-    , m_fun( LoKi::Stages::fun_( fun, bad ) )
-    , m_slot( slot )
-    , m_bad( bad )
+LoKi::Candidates::SlotFun::SlotFun
+( const LoKi::BasicFunctors<const LHCb::Track*>::FunVal& fun, 
+  const int    slot,
+  const double bad )
+  : LoKi::AuxFunBase ( std::tie ( fun , slot , bad ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Function()
+  , m_fun( LoKi::Stages::fun_( fun, bad ) )
+  , m_slot( slot )
+  , m_bad( bad )
 {}
 // ============================================================================
 /*  constructor
@@ -493,12 +515,15 @@ LoKi::Candidates::SlotFun::SlotFun(
  *     - positive value corresponds to step-back in history
  */
 // ============================================================================
-LoKi::Candidates::SlotFun::SlotFun( const LoKi::Hlt1::TrackFunction& fun,
-                                    const int slot, const double bad )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Function()
-    , m_fun( LoKi::Stages::fun_( LoKi::Tracks::TrFunction( fun ), bad ) )
-    , m_slot( slot )
-    , m_bad( bad )
+LoKi::Candidates::SlotFun::SlotFun
+( const LoKi::Hlt1::TrackFunction& fun,
+  const int    slot , 
+  const double bad  )
+  : LoKi::AuxFunBase ( std::tie ( fun , slot , bad ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Function()
+  , m_fun( LoKi::Stages::fun_( LoKi::Tracks::TrFunction( fun ), bad ) )
+  , m_slot( slot )
+  , m_bad( bad )
 {}
 // ============================================================================
 // MANDATORY: virtual destructor
@@ -555,7 +580,8 @@ std::ostream& LoKi::Candidates::SlotFun::fillStream( std::ostream& s ) const
 LoKi::Candidates::SlotFilter::SlotFilter
 ( const LoKi::BasicFunctors<const LHCb::L0MuonCandidate*>::Predicate& cut ,
   const int slot )
-  : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe()
+  : LoKi::AuxFunBase ( std::tie ( cut , slot ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe()
   , m_cut  (SlotCut( cut , slot ))
 {}
 // ============================================================================
@@ -567,11 +593,12 @@ LoKi::Candidates::SlotFilter::SlotFilter
  *     - positive value corresponds to step-back in history
  */
 // ============================================================================
-LoKi::Candidates::SlotFilter::SlotFilter(
-    const LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate& cut,
-    const int slot )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe()
-    , m_cut( SlotCut( cut, slot ) )
+LoKi::Candidates::SlotFilter::SlotFilter
+( const LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate& cut,
+  const int slot )
+  : LoKi::AuxFunBase ( std::tie ( cut , slot ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe()
+  , m_cut( SlotCut( cut, slot ) )
 {}
 // ============================================================================
 /*  constructor
@@ -582,10 +609,11 @@ LoKi::Candidates::SlotFilter::SlotFilter(
  *     - positive value corresponds to step-back in history
  */
 // ============================================================================
-LoKi::Candidates::SlotFilter::SlotFilter(
-    const LoKi::BasicFunctors<const LHCb::Track*>::Predicate& cut, const int slot )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe()
-    , m_cut( SlotCut( cut, slot ) )
+LoKi::Candidates::SlotFilter::SlotFilter
+( const LoKi::BasicFunctors<const LHCb::Track*>::Predicate& cut, const int slot )
+  : LoKi::AuxFunBase ( std::tie ( cut , slot ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe()
+  , m_cut( SlotCut( cut, slot ) )
 {}
 // ============================================================================
 /*  constructor
@@ -596,11 +624,12 @@ LoKi::Candidates::SlotFilter::SlotFilter(
  *     - positive value corresponds to step-back in history
  */
 // ============================================================================
-LoKi::Candidates::SlotFilter::SlotFilter(
-    const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut, 
-    const int slot )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe()
-    , m_cut( SlotCut( cut, slot ) )
+LoKi::Candidates::SlotFilter::SlotFilter
+( const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut, 
+  const int slot )
+  : LoKi::AuxFunBase ( std::tie ( cut , slot ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe()
+  , m_cut( SlotCut( cut, slot ) )
 {}
 // ============================================================================
 /*  constructor
@@ -611,11 +640,12 @@ LoKi::Candidates::SlotFilter::SlotFilter(
  *     - positive value corresponds to step-back in history
  */
 // ============================================================================
-LoKi::Candidates::SlotFilter::SlotFilter(
-    const LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate& cut,
-    const int slot )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe()
-    , m_cut( SlotCut( cut, slot ) )
+LoKi::Candidates::SlotFilter::SlotFilter
+( const LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate& cut,
+  const int slot )
+  : LoKi::AuxFunBase ( std::tie ( cut , slot ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe()
+  , m_cut( SlotCut( cut, slot ) )
 {}
 // ============================================================================
 /*  constructor
@@ -626,16 +656,19 @@ LoKi::Candidates::SlotFilter::SlotFilter(
  *     - positive value corresponds to step-back in history
  */
 // ============================================================================
-LoKi::Candidates::SlotFilter::SlotFilter(
-    const LoKi::BasicFunctors<const Hlt::Stage*>::Predicate& cut, const int slot )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe()
-    , m_cut( SlotCut( cut, slot ) )
+LoKi::Candidates::SlotFilter::SlotFilter
+( const LoKi::BasicFunctors<const Hlt::Stage*>::Predicate& cut, 
+  const int slot )
+  : LoKi::AuxFunBase ( std::tie ( cut , slot ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe()
+  , m_cut( SlotCut( cut, slot ) )
 {}
 // ============================================================================
 //  constructor
 // ============================================================================
 LoKi::Candidates::SlotFilter::SlotFilter( const LoKi::Candidates::SlotCut& cut )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe(), m_cut( cut )
+  : LoKi::AuxFunBase ( std::tie ( cut ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe(), m_cut( cut )
 {}
 // ============================================================================
 // MANDATORY: virtual destructor
@@ -675,48 +708,59 @@ std::ostream& LoKi::Candidates::SlotFilter::fillStream( std::ostream& s ) const
 // ============================================================================
 //  constructor
 // ============================================================================
-LoKi::Candidates::SlotMap::SlotMap(
-    const LoKi::BasicFunctors<const LHCb::Track*>::Function& fun, const int slot,
-    const double bad )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Map(), m_fun( fun, slot, bad )
+LoKi::Candidates::SlotMap::SlotMap
+( const LoKi::BasicFunctors<const LHCb::Track*>::Function& fun, 
+  const int slot,
+  const double bad )
+  : LoKi::AuxFunBase ( std::tie ( fun , slot , bad ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Map(), m_fun( fun, slot, bad )
 {}
 // ============================================================================
 //  constructor
 // ============================================================================
-LoKi::Candidates::SlotMap::SlotMap(
-    const LoKi::BasicFunctors<const LHCb::Particle*>::Function& fun, const int slot,
-    const double bad )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Map(), m_fun( fun, slot, bad )
+LoKi::Candidates::SlotMap::SlotMap
+( const LoKi::BasicFunctors<const LHCb::Particle*>::Function& fun, 
+  const int slot,
+  const double bad )
+  : LoKi::AuxFunBase ( std::tie ( fun , slot , bad ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Map(), m_fun( fun, slot, bad )
 {}
 // ============================================================================
 //  constructor
 // ============================================================================
-LoKi::Candidates::SlotMap::SlotMap(
-    const LoKi::BasicFunctors<const LHCb::VertexBase*>::Function& fun,
-    const int slot, const double bad )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Map(), m_fun( fun, slot, bad )
+LoKi::Candidates::SlotMap::SlotMap
+( const LoKi::BasicFunctors<const LHCb::VertexBase*>::Function& fun,
+  const int slot, 
+  const double bad )
+  : LoKi::AuxFunBase ( std::tie ( fun , slot , bad ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Map(), m_fun( fun, slot, bad )
 {}
 // ============================================================================
 //  constructor
 // ============================================================================
-LoKi::Candidates::SlotMap::SlotMap(
-    const LoKi::BasicFunctors<const Hlt::Stage*>::Function& fun, const int slot,
-    const double bad )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Map(), m_fun( fun, slot, bad )
+LoKi::Candidates::SlotMap::SlotMap
+( const LoKi::BasicFunctors<const Hlt::Stage*>::Function& fun, 
+  const int    slot,
+  const double bad )
+  : LoKi::AuxFunBase ( std::tie ( fun , slot , bad ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Map(), m_fun( fun, slot, bad )
 {}
 // ============================================================================
 //  constructor
 // ============================================================================
-LoKi::Candidates::SlotMap::SlotMap(
-    const LoKi::BasicFunctors<const LHCb::Track*>::FunVal& fun, const int slot,
-    const double bad )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Map(), m_fun( fun, slot, bad )
+LoKi::Candidates::SlotMap::SlotMap
+( const LoKi::BasicFunctors<const LHCb::Track*>::FunVal& fun, 
+  const int    slot ,
+  const double bad  )
+  : LoKi::AuxFunBase ( std::tie ( fun , slot , bad ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Map(), m_fun( fun, slot, bad )
 {}
 // ============================================================================
 // constructor
 // ============================================================================
 LoKi::Candidates::SlotMap::SlotMap( const LoKi::Candidates::SlotFun& fun )
-    : LoKi::BasicFunctors<const Hlt::Candidate*>::Map(), m_fun( fun )
+  : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Map(), m_fun( fun )
 {}
 // ============================================================================
 // MANDATORY: virtual destructor

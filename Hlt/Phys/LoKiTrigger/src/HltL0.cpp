@@ -37,31 +37,34 @@
 // constructor 
 // ============================================================================
 LoKi::L0::L0CaloCut::L0CaloCut( const L0DUBase::CaloType::Type type )
-    : LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate()
-    , m_type{type}
-    , m_hasThreshold{false}
-    , m_threshold{-1}
+  : LoKi::AuxFunBase ( std::tie ( type ) ) 
+  , LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate()
+  , m_type{type}
+  , m_hasThreshold{false}
+  , m_threshold{-1}
 {
 }
 // ============================================================================
 // constructor 
 // ============================================================================
-LoKi::L0::L0CaloCut::L0CaloCut( const L0DUBase::CaloType::Type type,
-                                const int threshold )
-    : LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate()
-    , m_type{type}
-    , m_hasThreshold{true}
-    , m_threshold{threshold}
+LoKi::L0::L0CaloCut::L0CaloCut
+( const L0DUBase::CaloType::Type type,
+  const int threshold )
+  : LoKi::AuxFunBase ( std::tie ( type , threshold ) ) 
+  , LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate()
+  , m_type{type}
+  , m_hasThreshold{true}
+  , m_threshold{threshold}
 {
 }
 // ============================================================================
 // constructor 
 // ============================================================================
 LoKi::L0::L0CaloCut::L0CaloCut()
-    : LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate()
+  : LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate()
     // , m_type         (       ) Visual C++ does not like this line...
-    , m_hasThreshold{false}
-    , m_threshold{-1}
+  , m_hasThreshold{false}
+  , m_threshold{-1}
 {
 }
 // ============================================================================
@@ -113,20 +116,24 @@ std::ostream& LoKi::L0::L0CaloCut::fillStream( std::ostream& s ) const
 // ============================================================================
 // constructor 
 // ============================================================================
-LoKi::L0::L0MuonCut::L0MuonCut( std::string t )
-    : LoKi::BasicFunctors<const LHCb::L0MuonCandidate*>::Predicate()
-    , m_type{std::move( t )}
-    , m_hasThreshold{false}
-    , m_threshold{-1}
+LoKi::L0::L0MuonCut::L0MuonCut
+( const std::string& t )
+  : LoKi::AuxFunBase ( std::tie ( t ) ) 
+  , LoKi::BasicFunctors<const LHCb::L0MuonCandidate*>::Predicate()
+  , m_type ( t )
+  , m_hasThreshold ( false )
+  , m_threshold{-1}
 {}
 // ============================================================================
 // constructor 
 // ============================================================================
-LoKi::L0::L0MuonCut::L0MuonCut( std::string t, const int threshold )
-    : LoKi::BasicFunctors<const LHCb::L0MuonCandidate*>::Predicate()
-    , m_type{std::move( t )}
-    , m_hasThreshold{true}
-    , m_threshold{threshold}
+LoKi::L0::L0MuonCut::L0MuonCut
+( const std::string& t, const int threshold )
+  : LoKi::AuxFunBase ( std::tie ( t , threshold ) ) 
+  , LoKi::BasicFunctors<const LHCb::L0MuonCandidate*>::Predicate()
+  , m_type ( t )
+  , m_hasThreshold ( true      ) 
+  , m_threshold    ( threshold ) 
 {}
 // ============================================================================
 // MANDATORY: virtual desctructor 

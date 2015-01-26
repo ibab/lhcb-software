@@ -46,9 +46,10 @@
  *  @author Roel Aaij roel.aaij@cern.ch
  *  @date 2011-04-08
  */
-
-const Gaudi::StringKey s_InfoID{ "InfoID" };
-
+namespace 
+{
+  const Gaudi::StringKey s_InfoID{ "InfoID" };
+}
 // ============================================================================
 /*  constructor from configuration parameters 
  *  @param output  the output selection name 
@@ -56,30 +57,31 @@ const Gaudi::StringKey s_InfoID{ "InfoID" };
  */
 // ============================================================================
 LoKi::Hlt1::FilterTracks::FilterTracks
-( std::string output    ,                   // output selection name/key 
-  std::string toolName  )                   //                 tool name
-   : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe()
-   , m_sink( std::move(output)   )
-   , m_tool( std::move(toolName) )
+( const std::string& output    ,                   // output selection name/key 
+  const std::string& toolName  )                   //                 tool name
+  : LoKi::AuxFunBase ( std::tie ( output , toolName ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe()
+  , m_sink( output   )
+  , m_tool( toolName )
 {
-   // get GaudiAlgorithm 
-   GaudiAlgorithm* alg = LoKi::Hlt1::Utils::getGaudiAlg( *this ); 
-   Assert( 0 != alg, "GaudiAlgorithm points to NULL!" ); 
-   // get IAlgorithm 
-   IAlgorithm* ialg = LoKi::Hlt1::Utils::getAlg( *this ); 
-   Assert( alg == ialg , "GaudiAlgorithm is not *my* IAlgorithm" ); 
-
-   m_alg = alg; 
-
-   // retrieve the tool 
-   m_selector = m_alg->tool<ITrackSelector>( tool() );
-
-   /// get the service 
-   SmartIF<IANNSvc> ann = LoKi::Hlt1::Utils::annSvc( *this ); 
-
-   auto info = ann->value( s_InfoID, tool() );
-   Assert( info , "request for unknown Info ID :" + tool() );
-
+  // get GaudiAlgorithm 
+  GaudiAlgorithm* alg = LoKi::Hlt1::Utils::getGaudiAlg( *this ); 
+  Assert( 0 != alg, "GaudiAlgorithm points to NULL!" ); 
+  // get IAlgorithm 
+  IAlgorithm* ialg = LoKi::Hlt1::Utils::getAlg( *this ); 
+  Assert( alg == ialg , "GaudiAlgorithm is not *my* IAlgorithm" ); 
+  
+  m_alg = alg; 
+  
+  // retrieve the tool 
+  m_selector = m_alg->tool<ITrackSelector>( tool() );
+  
+  /// get the service 
+  SmartIF<IANNSvc> ann = LoKi::Hlt1::Utils::annSvc( *this ); 
+  
+  auto info = ann->value( s_InfoID, tool() );
+  Assert( info , "request for unknown Info ID :" + tool() );
+  
    m_recoID = info->second;
 }
 // ============================================================================
@@ -105,56 +107,56 @@ std::ostream& LoKi::Hlt1::FilterTracks::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Hlt1::FilterTracks::result_type 
 LoKi::Hlt1::FilterTracks::operator() 
-   ( LoKi::Hlt1::FilterTracks::argument a ) const
+  ( LoKi::Hlt1::FilterTracks::argument a ) const
 {
-   result_type output; 
-   if ( a.empty() ) {
-      // register the selection 
-      return !m_sink ? output : m_sink ( output ); 
-   }
-
-   for( const Hlt::Candidate* candidate: a ) {
-      if ( !candidate ) {
-         Error ( "Invalid Hlt::Candidate, skip it!");
-         continue;
-      }
-
-      const Hlt::Stage*     stage  = candidate->currentStage(); 
-      if ( !stage ) {
+  result_type output; 
+  if ( a.empty() ) {
+    // register the selection 
+    return !m_sink ? output : m_sink ( output ); 
+  }
+  
+  for( const Hlt::Candidate* candidate: a ) {
+    if ( !candidate ) {
+      Error ( "Invalid Hlt::Candidate, skip it!");
+      continue;
+    }
+    
+    const Hlt::Stage*     stage  = candidate->currentStage(); 
+    if ( !stage ) {
          Error ( "Invalid Hlt::Stage,     skip it!");
          continue;
-      }
-
-      if ( !stage->is<LHCb::Track>() ) {
-         Error ( "State does not contain an LHCb::Track, skip it!");
-         continue;
-      }
-      const LHCb::Track* track = stage->get<LHCb::Track>();
-
-      // do the filtering
-      bool accept = filter( track );
-      if ( !accept ) continue;
-
-      Hlt::Candidate* _candidate = const_cast< Hlt::Candidate* >( candidate );
-      _candidate->addToWorkers( m_alg );
-      output.push_back( _candidate );
-   }
-   // register the selection 
-   return !m_sink ? output : m_sink( output );
+    }
+    
+    if ( !stage->is<LHCb::Track>() ) {
+      Error ( "State does not contain an LHCb::Track, skip it!");
+      continue;
+    }
+    const LHCb::Track* track = stage->get<LHCb::Track>();
+    
+    // do the filtering
+    bool accept = filter( track );
+    if ( !accept ) continue;
+    
+    Hlt::Candidate* _candidate = const_cast< Hlt::Candidate* >( candidate );
+    _candidate->addToWorkers( m_alg );
+    output.push_back( _candidate );
+  }
+  // register the selection 
+  return !m_sink ? output : m_sink( output );
 }
 // ============================================================================
 bool LoKi::Hlt1::FilterTracks::filter( const LHCb::Track* track ) const
 {
-   // not reconstructed yet ?
-   double info = track->info ( recoID() , -1 );
-   if ( -1 == info ) {
-      // filter it
-      bool accept = m_selector->accept( *track );
-      // This is nasty...
-      const_cast< LHCb::Track* >( track )->addInfo
-         ( recoID(), static_cast< double >( accept ) );
-      return accept;
-   } else {
-      return info;
-   }
+  // not reconstructed yet ?
+  double info = track->info ( recoID() , -1 );
+  if ( -1 == info ) {
+    // filter it
+    bool accept = m_selector->accept( *track );
+    // This is nasty...
+    const_cast< LHCb::Track* >( track )->addInfo
+      ( recoID(), static_cast< double >( accept ) );
+    return accept;
+  } else {
+    return info;
+  }
 }

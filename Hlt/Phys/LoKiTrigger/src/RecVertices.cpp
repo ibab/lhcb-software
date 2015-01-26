@@ -224,9 +224,10 @@ LoKi::RecVertices::MaxDOCAChi2::fillStream ( std::ostream& s ) const
  */
 // ============================================================================
 LoKi::RecVertices::DOCACut::DOCACut
-( double docamax ,   // max(DOCA)       (negative: no cut)
-  double chi2max )  // max(chi2(DOCA)) (negative: no cut)
-  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate () 
+( const double docamax ,   // max(DOCA)       (negative: no cut)
+  const double chi2max )  // max(chi2(DOCA)) (negative: no cut)
+  : LoKi::AuxFunBase ( std::tie ( docamax , chi2max ) ) 
+  , LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate () 
   , m_docamax ( docamax )
   , m_chi2max ( chi2max )
 {}

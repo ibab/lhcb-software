@@ -51,14 +51,15 @@
 //  consructor from the pid hypothesis, name and simple pt cut
 // ============================================================================
 LoKi::Hlt1::ToParticles::ToParticles
-( std::string               pid         ,
-  std::string               location    ,
+( const std::string& pid         ,
+  const std::string& location    ,
   const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&   cut )
-  : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
+  : LoKi::AuxFunBase ( std::tie ( pid , location , cut ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
   , LoKi::Hlt1::HelperTool ( 1 )
-  , m_sink { std::move(location) }
-  , m_pid( LoKi::Particles::pidFromName(pid) )
-  , m_cut { cut }
+  , m_sink ( location ) 
+  , m_pid  ( LoKi::Particles::pidFromName(pid) )
+  , m_cut  ( cut      )   
 {}
 // ============================================================================
 // virtual destructor
@@ -113,8 +114,9 @@ LoKi::Hlt1::ToParticles::operator()
     particle->setProto(proto);
 
     // set PID
-    track->charge() > 0 ? particle->setParticleID(LHCb::ParticleID(m_pid.abspid())) : particle->setParticleID(LHCb::ParticleID(-1*m_pid.abspid())) ;
-
+    track->charge() > 0 ? particle->setParticleID(LHCb::ParticleID(m_pid.abspid())) : 
+      particle->setParticleID(LHCb::ParticleID(-1*m_pid.abspid())) ;
+    
     // set mass
     particle->setMeasuredMass(LoKi::Particles::massFromPID(m_pid));
     particle->setMeasuredMassErr(0);

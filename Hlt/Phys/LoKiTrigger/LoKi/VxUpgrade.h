@@ -60,11 +60,11 @@ namespace LoKi
        *  @param location TES location of upgraded vertices 
        */
       VxUpgrade 
-      ( std::string                    output    ,// output selection name/key 
+      ( const std::string&             output    ,// output selection name/key 
         const LoKi::Hlt1::UpgradeConf& config    ,//             configuration 
         const LoKi::Hlt1::VxCreator&   creator   =
         LoKi::Hlt1::VxCreator ()                 ,//            vertex creator  
-        std::string             location  = 
+        const std::string&          location  = 
         "Hlt1/Vertex/VertexUpgradeBank"  ) ; //   location of upgraded vertices
       /** constructor from all configuration parameters 
        *  @param output  the output selection name 
@@ -73,9 +73,9 @@ namespace LoKi
        *  @param location TES location of upgraded vertices 
        */
       VxUpgrade 
-      ( std::string                    output    ,// output selection name/key 
+      ( const std::string&             output    ,// output selection name/key 
         const LoKi::Hlt1::UpgradeConf& config    ,//             configuration 
-        std::string                    location  ,//         upgraded vertices
+        const std::string&             location  ,//         upgraded vertices
         const LoKi::Hlt1::VxCreator&   creator   =
         LoKi::Hlt1::VxCreator ()                 ) ; //          vertex creator  
       /** constructor from all configuration parameters 
@@ -83,20 +83,20 @@ namespace LoKi
        *  @param config  the tool configuration 
        */
       VxUpgrade 
-      ( std::string                    output  ,   // output selection name/key 
+      ( const std::string&             output  ,   // output selection name/key 
         const LoKi::Hlt1::UpgradeTool& config  ,   //             configuration 
         const LoKi::Hlt1::VxCreator&   creator   =
         LoKi::Hlt1::VxCreator ()               ,//            vertex creator  
-        std::string                    location  = 
+        const std::string&             location  = 
         "Hlt1/Vertex/VertexUpgradeBank"  ) ; // location of upgdarded vertices
       /** constructor from all configuration parameters 
        *  @param output  the output selection name 
        *  @param config  the tool configuration 
        */
       VxUpgrade 
-      ( std::string                    output   ,  // output selection name/key 
+      ( const std::string&             output   ,  // output selection name/key 
         const LoKi::Hlt1::UpgradeTool& config   ,  //             configuration 
-        std::string                    location ,  //         upgraded vertices
+        const std::string&             location ,  //         upgraded vertices
         const LoKi::Hlt1::VxCreator&   creator  =
         LoKi::Hlt1::VxCreator ()                ) ;//            vertex creator  
       // ======================================================================

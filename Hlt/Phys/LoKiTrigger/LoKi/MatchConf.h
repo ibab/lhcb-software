@@ -47,12 +47,12 @@ namespace LoKi
        *  @param maxQ2Cut max matching quality2 cut 
        */
       MatchConf 
-      ( std::string       mTool    ,   //          ITrackMatch tool name  
-        std::string       address  ,   // TES location of matched tracks
-        LHCb::Track::Types trType   ,   //                     Track type
-        bool               moveIDs  ,   //                 transfer IDs ? 
-        bool               moveAncs ,   //           transfer ancestors ? 
-        bool               moveInfo );  //          transfer Extra Info ? 
+        ( const std::string&       mTool    ,   //          ITrackMatch tool name  
+          const std::string&       address  ,   // TES location of matched tracks
+          const LHCb::Track::Types trType   ,   //                     Track type
+          const bool               moveIDs  ,   //                 transfer IDs ? 
+          const bool               moveAncs ,   //           transfer ancestors ? 
+          const bool               moveInfo );  //          transfer Extra Info ? 
       // ======================================================================
       /** constructor 
        *  @param mTool ITrackMatch tool name 
@@ -63,13 +63,13 @@ namespace LoKi
        *  @param moveInfo transfer extra info ? 
        */
       MatchConf 
-      ( std::string        mTool    ,   //          ITrackMatch tool name  
-        std::string        address  ,   // TES location of matched tracks
-        LHCb::Track::Types trType   ,   //                     Track type
-        bool               moveIDs  ,   //                 transfer IDs ? 
-        bool               moveAncs ,   //           transfer ancestors ? 
-        bool               moveInfo ,   //          transfer Extra Info ? 
-        const LoKi::Functor<const LHCb::Track*,bool>& cut ); //          filter 
+        ( const std::string& mTool    ,   //          ITrackMatch tool name  
+          const std::string& address  ,   // TES location of matched tracks
+          LHCb::Track::Types trType   ,   //                     Track type
+          const bool         moveIDs  ,   //                 transfer IDs ? 
+          const bool         moveAncs ,   //           transfer ancestors ? 
+          const bool         moveInfo ,   //          transfer Extra Info ? 
+          const LoKi::Functor<const LHCb::Track*,bool>& cut ); //        filter 
       // ======================================================================
     public:
       // ======================================================================
@@ -123,6 +123,18 @@ namespace LoKi
   // ==========================================================================
 } //                                                      end of namespace LoKi 
 // ============================================================================
+namespace Gaudi
+{
+  // ==========================================================================
+  namespace Utils 
+  {
+    // ========================================================================
+    GAUDI_API std::string toCpp ( const LoKi::Hlt1::MatchConf& o ) ;
+    // ========================================================================
+  }  
+  // ==========================================================================
+}
+/// ============================================================================
 // The END 
 // ============================================================================
 #endif // LOKI_MATCHCONF_H

@@ -21,6 +21,7 @@
 // ============================================================================
 // LoKi
 // ============================================================================
+#include "LoKi/TrgToCpp.h"
 #include "LoKi/Combiner.h"
 #include "LoKi/VxMakerConf.h"
 #include "LoKi/VxMaker.h"
@@ -146,11 +147,12 @@ bool LoKi::Hlt1::VxMakerBase::checkVertex
 // constructor
 // ============================================================================
 LoKi::Hlt1::VxMaker::VxMaker
-( std::string                        output  ,   // output selection name/key
+( const std::string&                 output  ,   // output selection name/key
   const LoKi::Hlt1::VxMakerConf&     config  )   //        tool configuration
-  : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
+  : LoKi::AuxFunBase ( std::tie ( output , config ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
   , LoKi::Hlt1::VxMakerBase ( config )
-  , m_sink    { std::move(output)  }
+  , m_sink                  ( output )  
 {}
 // ============================================================================
 // MANDATORY: virtual desctructor
@@ -270,21 +272,23 @@ std::ostream& LoKi::Hlt1::VxMaker::fillStream ( std::ostream& s ) const
 // constructor
 // ============================================================================
 LoKi::Hlt1::VxMaker2::VxMaker2
-( std::string                         output  ,   // output selection name/key
+( const std::string&                  output  ,   // output selection name/key
   const LoKi::Hlt1::VxMaker2::Source& tracks2 ,   // tracks to be matched with
   const LoKi::Hlt1::VxMakerConf&      config  )   //        tool configuration
-  : LoKi::Hlt1::VxMaker ( std::move(output) , config )
+  : LoKi::AuxFunBase ( std::tie ( output , tracks2 , config ) ) 
+  , LoKi::Hlt1::VxMaker ( output , config )
   , m_source2 { tracks2 }
 {}
 // ============================================================================
 // constructor
 // ============================================================================
 LoKi::Hlt1::VxMaker2::VxMaker2
-( std::string                       output  ,   // output selection name/key
-  std::string                       tracks2 ,   // tracks to be matched with
+( const std::string&                output  ,   // output selection name/key
+  const std::string&                tracks2 ,   // tracks to be matched with
   const LoKi::Hlt1::VxMakerConf&    config  )   //        tool configuration
-  : LoKi::Hlt1::VxMaker { std::move(output) , config }
-  , m_source2    { LoKi::Hlt1::Selection ( std::move(tracks2) ) }
+  : LoKi::AuxFunBase ( std::tie ( output , tracks2 , config ) ) 
+  , LoKi::Hlt1::VxMaker ( output , config ) 
+  , m_source2           ( LoKi::Hlt1::Selection ( tracks2 ) )
 {}
 // ============================================================================
 // MANDATORY: virtual desctructor
@@ -413,13 +417,14 @@ std::ostream& LoKi::Hlt1::VxMaker2::fillStream ( std::ostream& s ) const
 // constructor
 // ============================================================================
 LoKi::Hlt1::VxMaker3::VxMaker3
-( std::string                          output  ,  // output selection name/key
+( const std::string&                   output  ,  // output selection name/key
   const LoKi::Hlt1::VxMaker3::Source&  tracks1 ,  //       the first selection
   const LoKi::Hlt1::VxMaker3::Source&  tracks2 ,  //       the first selection
   const LoKi::Hlt1::VxMakerConf&       config  )  //        tool configuration
-  : LoKi::BasicFunctors<const Hlt::Candidate*>::Source ()
+  : LoKi::AuxFunBase ( std::tie ( output , tracks1 , tracks2 , config ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Source ()
   , m_source1 ( tracks1 )
-  , m_vxmaker ( std::move(output) , tracks2 , config )
+  , m_vxmaker ( output , tracks2 , config )
 {}
 // ============================================================================
 // MANTATORY: virtual destructor
@@ -456,9 +461,10 @@ std::ostream& LoKi::Hlt1::VxMaker3::fillStream ( std::ostream& s ) const
 // constructor
 // ============================================================================
 LoKi::Hlt1::VxMaker4::VxMaker4
-( std::string                         output  ,   // output selection name/key
+( const std::string&                  output  ,   // output selection name/key
   const LoKi::Hlt1::VxMakerConf&      config  )   //        tool configuration
-  : LoKi::Hlt1::VxMaker ( std::move(output) , config )
+  : LoKi::AuxFunBase ( std::tie ( output , config ) ) 
+  , LoKi::Hlt1::VxMaker ( output , config )
 {}
 // ============================================================================
 // MANDATORY: virtual desctructor
@@ -580,25 +586,27 @@ std::ostream& LoKi::Hlt1::VxMaker4::fillStream ( std::ostream& s ) const
 // constructor
 // ============================================================================
 LoKi::Hlt1::DiTrackMaker::DiTrackMaker
-( std::string                              output  ,   // output selection name/key
+( const std::string&                       output  ,   // output selection name/key
   const LoKi::Hlt1::DiTrackMaker::Source&  tracks2 ,   // tracks to be matched with
   const LoKi::Hlt1::VxMakerConf&           config  )   //        tool configuration
-  : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
+  : LoKi::AuxFunBase ( std::tie ( output , tracks2 , config ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
   , LoKi::Hlt1::VxMakerBase ( config )
   , m_source2 ( tracks2 )
-  , m_sink    ( std::move(output)  )
+  , m_sink    ( output  )
 {}
 // ============================================================================
 // constructor
 // ============================================================================
 LoKi::Hlt1::DiTrackMaker::DiTrackMaker
-( std::string                              output  ,   // output selection name/key
-  std::string                              tracks2 ,   // tracks to be matched with
+( const std::string&                       output  ,   // output selection name/key
+  const std::string&                       tracks2 ,   // tracks to be matched with
   const LoKi::Hlt1::VxMakerConf&           config  )   //        tool configuration
-  : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
+  : LoKi::AuxFunBase ( std::tie ( output , tracks2 , config ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
   , LoKi::Hlt1::VxMakerBase ( config )
-  , m_source2    { LoKi::Hlt1::Selection { std::move(tracks2) } }
-  , m_sink       { std::move(output)  }
+  , m_source2    ( LoKi::Hlt1::Selection ( tracks2) ) 
+  , m_sink       ( output )  
 {}
 // ============================================================================
 // MANDATORY: virtual desctructor
@@ -726,13 +734,14 @@ std::ostream& LoKi::Hlt1::DiTrackMaker::fillStream ( std::ostream& s ) const
 // constructor
 // ============================================================================
 LoKi::Hlt1::DiTrackMaker2::DiTrackMaker2
-( std::string                              output  ,   // output selection name/key
-  bool                                     neutral ,
+( const std::string&                       output  ,   // output selection name/key
+  const bool                               neutral ,
   const LoKi::Hlt1::VxMakerConf&           config  )   //        tool configuration
-  : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
+  : LoKi::AuxFunBase ( std::tie ( output , neutral , config ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
   , LoKi::Hlt1::VxMakerBase ( config )
-  , m_sink    { std::move(output)  }
-  , m_neutral { neutral }
+  , m_sink    (output )  
+  , m_neutral (neutral)
 {}
 // ============================================================================
 // MANDATORY: virtual desctructor

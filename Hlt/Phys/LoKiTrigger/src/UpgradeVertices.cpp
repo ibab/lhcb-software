@@ -15,6 +15,7 @@
 // ============================================================================
 // LoKi
 // ============================================================================
+#include "LoKi/TrgToCpp.h"
 #include "LoKi/UpgradeVertices.h"
 #include "LoKi/Combiner.h"
 #include "LoKi/Constants.h"
@@ -35,14 +36,17 @@
  */
 // ============================================================================
 LoKi::Hlt1::UpgradeVertices::UpgradeVertices
-( std::string              output     ,     // output selection name/key
+( const std::string&              output     ,     // output selection name/key
   const LoKi::Hlt1::UpgradeConf&  config     ,     //             configuration
-  bool                      allow1Fail ,
-  std::string              clonedTracksLocation )
-  : LoKi::Hlt1::Upgrade   ( std::move(output), config )
-  , m_allow1Fail          { allow1Fail     }
-  , m_clonedTracksLocation{ std::move(clonedTracksLocation) }
-{ if ( m_allow1Fail ) { retrieveFailKey() ; } }
+  const bool                      allow1Fail ,
+  const std::string&              clonedTracksLocation )
+  : LoKi::AuxFunBase ( std::tie ( output , config , allow1Fail , clonedTracksLocation ) ) 
+  , LoKi::Hlt1::Upgrade    ( output, config )
+  , m_allow1Fail           ( allow1Fail     )
+  , m_clonedTracksLocation ( clonedTracksLocation )
+{ 
+  if ( m_allow1Fail ) { retrieveFailKey() ; } 
+}
 // ============================================================================
 /* constructor from all configuration parameters
  *  @param output  the output selection name
@@ -50,14 +54,17 @@ LoKi::Hlt1::UpgradeVertices::UpgradeVertices
  */
 // ============================================================================
 LoKi::Hlt1::UpgradeVertices::UpgradeVertices
-( std::string              output     ,     // output selection name/key
+( const std::string&             output     ,     // output selection name/key
   const LoKi::Hlt1::UpgradeTool&  config     ,     //             configuration
-  bool                     allow1Fail ,
-  std::string              clonedTracksLocation )
-  : LoKi::Hlt1::Upgrade( output, config )
-  , m_allow1Fail          { allow1Fail     }
-  , m_clonedTracksLocation{ std::move(clonedTracksLocation) }
-{ if ( m_allow1Fail ) { retrieveFailKey() ; } }
+  const bool                     allow1Fail ,
+  const std::string&             clonedTracksLocation )
+  : LoKi::AuxFunBase ( std::tie ( output , config , allow1Fail , clonedTracksLocation ) ) 
+  , LoKi::Hlt1::Upgrade( output, config )
+  , m_allow1Fail          ( allow1Fail     )
+  , m_clonedTracksLocation( clonedTracksLocation) 
+{ 
+  if ( m_allow1Fail ) { retrieveFailKey() ; } 
+}
 // ============================================================================
 // Retrieve ExtraInfo key for failed tracks
 // ============================================================================

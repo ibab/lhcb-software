@@ -75,18 +75,18 @@ namespace LoKi
        *  @param config (INPUT) the actual configuration 
        */
       Match 
-      ( std::string                  output  ,   //   output selection name/key 
-        const Source&                tracks2 ,   //   tracks to be matched with 
-        const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
+        ( const std::string&           output  ,   //   output selection name/key 
+          const Source&                tracks2 ,   //   tracks to be matched with 
+          const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
       /** constructor 
        *  @param output (INPUT) name of output selection (can be anonymous) 
        *  @param track2 (INPUT) the second source tracks/candidates 
        *  @param config (INPUT) the actual configuration 
        */
       Match 
-      ( std::string                  output  ,   //   output selection name/key 
-        std::string                  tracks2 ,   //   selection name  
-        const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
+        ( const std::string&           output  ,   //   output selection name/key 
+          const std::string&           tracks2 ,   //   selection name  
+          const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
       /// MANDATORY: virtual desctructor 
       virtual ~Match() ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -149,14 +149,14 @@ namespace LoKi
       // ======================================================================
       /// constructor 
       Match2 
-      ( std::string                  output  ,   //   output selection name/key 
-        const Source&                tracks2 ,   //   tracks to be matched with 
-        const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
+        ( const std::string&           output  ,   //   output selection name/key 
+          const Source&                tracks2 ,   //   tracks to be matched with 
+          const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
       /// constructor 
       Match2 
-      ( std::string                  output  ,   //   output selection name/key 
-        std::string                  tracks2 ,   //   tracks to be matched with 
-        const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
+        ( const std::string&           output  ,   //   output selection name/key 
+          const std::string&           tracks2 ,   //   tracks to be matched with 
+          const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
       /// MANDATORY: virtual destructor 
       virtual ~Match2() ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -194,12 +194,12 @@ namespace LoKi
       // ======================================================================
       /// constructor 
       FilterMatch
-      ( const Source&                candidates ,   //   candidates for matching 
-        const LoKi::Hlt1::MatchConf& config     ) ; //        tool configuration 
+        ( const Source&                candidates ,   //   candidates for matching 
+          const LoKi::Hlt1::MatchConf& config     ) ; //        tool configuration 
       /// constructor 
       FilterMatch 
-      ( std::string                  candidates ,   //   candidates for matching 
-        const LoKi::Hlt1::MatchConf& config     ) ; //        tool configuration 
+        ( const std::string&           candidates ,   //   candidates for matching 
+          const LoKi::Hlt1::MatchConf& config     ) ; //        tool configuration 
       /// MANDATORY: virtual desctructor 
       virtual ~FilterMatch() ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -247,12 +247,12 @@ namespace LoKi
       // ======================================================================
       /// constructor 
       FilterMatch2 
-      ( const Source&                tracks2 ,   //   tracks to be matched with 
-        const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
+        ( const Source&                tracks2 ,   //   tracks to be matched with 
+          const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
       /// constructor 
       FilterMatch2 
-      ( std::string                  tracks2 ,   //   tracks to be matched with 
-        const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
+        ( const std::string&           tracks2 ,   //   tracks to be matched with 
+          const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
       /// MANDATORY: virtual destructor 
       virtual ~FilterMatch2() ;
       /// MANDATORY: clone method ("virtual constructor")

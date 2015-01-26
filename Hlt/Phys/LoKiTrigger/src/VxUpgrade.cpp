@@ -12,6 +12,7 @@
 // ============================================================================
 // LoKi
 // ============================================================================
+#include "LoKi/TrgToCpp.h"
 #include "LoKi/VxUpgrade.h"
 // ============================================================================
 // local 
@@ -30,15 +31,16 @@
  */
 // ============================================================================
 LoKi::Hlt1::VxUpgrade::VxUpgrade 
-( std::string                    output   ,   //      output selection name/key 
+( const std::string&             output   ,   //      output selection name/key 
   const LoKi::Hlt1::UpgradeConf& config   ,   //                  configuration 
   const LoKi::Hlt1::VxCreator&   creator  ,   //                 vertex creator 
-  std::string                    location )   //  location of upgraded vertices
-  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Pipe() 
+  const std::string&             location )   //  location of upgraded vertices
+  : LoKi::AuxFunBase ( std::tie ( output , config , creator , location ) ) 
+  , LoKi::BasicFunctors<const LHCb::RecVertex*>::Pipe() 
   , LoKi::Hlt1::UpgradeTool ( config  ) 
   , LoKi::Hlt1::VxCreator   ( creator ) 
-  , m_sink     { std::move( output   )  }
-  , m_location { std::move( location )  }
+  , m_sink     ( output   )  
+  , m_location ( location )  
 {}
 // ============================================================================
 /*  constructor from all configuration parameters 
@@ -47,15 +49,16 @@ LoKi::Hlt1::VxUpgrade::VxUpgrade
  */
 // ============================================================================
 LoKi::Hlt1::VxUpgrade::VxUpgrade 
-( std::string                    output   ,   //      output selection name/key 
+( const std::string&             output   ,   //      output selection name/key 
   const LoKi::Hlt1::UpgradeConf& config   ,   //                  configuration 
-  std::string                    location ,   //  location of upgraded vertices
+  const std::string&             location ,   //  location of upgraded vertices
   const LoKi::Hlt1::VxCreator&   creator  )   //                 vertex creator 
-  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Pipe() 
+  : LoKi::AuxFunBase ( std::tie ( output , config , location , creator ) ) 
+  , LoKi::BasicFunctors<const LHCb::RecVertex*>::Pipe() 
   , LoKi::Hlt1::UpgradeTool ( config  ) 
   , LoKi::Hlt1::VxCreator   ( creator ) 
-  , m_sink     { std::move( output   )  }
-  , m_location { std::move( location )  }
+  , m_sink     ( output   )  
+  , m_location ( location )  
 {}
 // ============================================================================
 /*  constructor from all configuration parameters 
@@ -64,15 +67,16 @@ LoKi::Hlt1::VxUpgrade::VxUpgrade
  */
 // ============================================================================
 LoKi::Hlt1::VxUpgrade::VxUpgrade 
-( std::string                    output   ,   //      output selection name/key 
+( const std::string&             output   ,   //      output selection name/key 
   const LoKi::Hlt1::UpgradeTool& config   ,   //                  configuration 
-  std::string                    location ,   // location of upgdarded vertices
+  const std::string&             location ,   // location of upgdarded vertices
   const LoKi::Hlt1::VxCreator&   creator  )   //                 vertex creator 
-  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Pipe() 
+  : LoKi::AuxFunBase ( std::tie ( output , config , location , creator ) ) 
+  , LoKi::BasicFunctors<const LHCb::RecVertex*>::Pipe() 
   , LoKi::Hlt1::UpgradeTool ( config ) 
   , LoKi::Hlt1::VxCreator   ( creator ) 
-  , m_sink     { std::move( output   )  }
-  , m_location { std::move( location )  }
+  , m_sink     ( output   )  
+  , m_location ( location )  
 {}
 // ============================================================================
 /*  constructor from all configuration parameters 
@@ -81,15 +85,16 @@ LoKi::Hlt1::VxUpgrade::VxUpgrade
  */
 // ============================================================================
 LoKi::Hlt1::VxUpgrade::VxUpgrade 
-( std::string                    output   ,   //      output selection name/key 
+( const std::string&             output   ,   //      output selection name/key 
   const LoKi::Hlt1::UpgradeTool& config   ,   //                  configuration 
   const LoKi::Hlt1::VxCreator&   creator  ,   //                 vertex creator 
-  std::string                    location )   // location of upgdarded vertices
-  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Pipe() 
+  const std::string&             location )   // location of upgdarded vertices
+  : LoKi::AuxFunBase ( std::tie ( output , config , creator , location ) ) 
+  , LoKi::BasicFunctors<const LHCb::RecVertex*>::Pipe() 
   , LoKi::Hlt1::UpgradeTool ( config ) 
   , LoKi::Hlt1::VxCreator   ( creator ) 
-  , m_sink     { std::move( output   )  }
-  , m_location { std::move( location )  }
+  , m_sink     ( output   )  
+  , m_location ( location )  
 {}
 // ============================================================================
 // MANDATORY: the only one essential method 

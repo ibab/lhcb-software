@@ -149,8 +149,8 @@ namespace LoKi
       // ======================================================================
       /// constructor
       VxMaker
-      ( std::string                    output  ,   // output selection name/key
-        const LoKi::Hlt1::VxMakerConf& config  ) ; //        tool configuration
+        ( const std::string&             output  ,   // output selection name/key
+          const LoKi::Hlt1::VxMakerConf& config  ) ; //        tool configuration
       /// MANTATOY: virtual destructor
       virtual ~VxMaker() ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -193,14 +193,14 @@ namespace LoKi
       // ======================================================================
       /// constructor
       VxMaker2
-      ( std::string                    output  ,   // output selection name/key
-        const Source&                  tracks2 ,   // tracks to be matched with
-        const LoKi::Hlt1::VxMakerConf& config  ) ; //        tool configuration
+        ( const std::string&           output  ,   // output selection name/key
+          const Source&                  tracks2 ,   // tracks to be matched with
+          const LoKi::Hlt1::VxMakerConf& config  ) ; //        tool configuration
       /// constructor
       VxMaker2
-      ( std::string                    output  ,   // output selection name/key
-        std::string                    tracks2 ,   // tracks to be matched with
-        const LoKi::Hlt1::VxMakerConf& config  ) ; //        tool configuration
+        ( const std::string&             output  ,   // output selection name/key
+          const std::string&             tracks2 ,   // tracks to be matched with
+          const LoKi::Hlt1::VxMakerConf& config  ) ; //        tool configuration
       /// MANTATOY: virtual destructor
       virtual ~VxMaker2 () ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -245,10 +245,10 @@ namespace LoKi
       // ======================================================================
       /// constructor
       VxMaker3
-      ( std::string                    output  ,   // output selection name/key
-        const Source&                  tracks1 ,   //       the first selection
-        const Source&                  tracks2 ,   //       the first selection
-        const LoKi::Hlt1::VxMakerConf& config  ) ; //        tool configuration
+        ( const std::string&             output  ,   // output selection name/key
+          const Source&                  tracks1 ,   //       the first selection
+          const Source&                  tracks2 ,   //       the first selection
+          const LoKi::Hlt1::VxMakerConf& config  ) ; //        tool configuration
       /// MANTATORY: virtual destructor
       virtual ~VxMaker3 () ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -295,7 +295,7 @@ namespace LoKi
       // ======================================================================
       /// constructor
       VxMaker4
-      ( std::string                    output  ,   // output selection name/key
+      ( const std::string&             output  ,   // output selection name/key
         const LoKi::Hlt1::VxMakerConf& config  ) ; //        tool configuration
       /// MANTATORY: virtual destructor
       virtual ~VxMaker4 () ;
@@ -331,14 +331,14 @@ namespace LoKi
       // ======================================================================
       /// constructor
       DiTrackMaker
-      ( std::string                    output  ,   // output selection name/key
+      ( const std::string&             output  ,   // output selection name/key
         const Source&                  tracks2 ,   // tracks to be matched with
         const LoKi::Hlt1::VxMakerConf& config  ) ; //        tool configuration
       /// constructor
       DiTrackMaker
-      ( std::string                    output  ,   // output selection name/key
-        std::string                    tracks2 ,   // tracks to be matched with
-        const LoKi::Hlt1::VxMakerConf& config  ) ; //        tool configuration
+        ( const std::string&             output  ,   // output selection name/key
+          const std::string&             tracks2 ,   // tracks to be matched with
+          const LoKi::Hlt1::VxMakerConf& config  ) ; //        tool configuration
       /// MANTATOY: virtual destructor
       virtual ~DiTrackMaker() ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -391,9 +391,9 @@ namespace LoKi
       // ======================================================================
       /// constructor
       DiTrackMaker2
-      ( std::string                    output  ,   // output selection name/key
-        const bool                     neutral ,    // charge-neutral pairs?
-        const LoKi::Hlt1::VxMakerConf& config  ) ;  //       tool configuration
+        ( const std::string&             output  ,   // output selection name/key
+          const bool                     neutral ,    // charge-neutral pairs?
+          const LoKi::Hlt1::VxMakerConf& config  ) ;  //       tool configuration
       /// MANTATOY: virtual destructor
       virtual ~DiTrackMaker2 () ;
       /// MANDATORY: clone method ("virtual constructor")

@@ -5,6 +5,7 @@
 // LoKiTrigger
 // ============================================================================
 #include "LoKi/VxMakerConf.h"
+#include "LoKi/ToCpp.h"
 // ============================================================================
 /** @file
  *  Implementation file for class  LoKi::Hlt1::VxMakerConf
@@ -170,6 +171,19 @@ std::string LoKi::Hlt1::VxMakerConf::toString () const
   return s.str() ;
 }
 // ============================================================================
+std::string Gaudi::Utils::toCpp ( const LoKi::Hlt1::VxMakerConf& o ) 
+{
+  std::string s = " LoKi::Hlt1::VxMakerConf("
+    + toCpp ( o.docamax() ) + ", "
+    + toCpp ( o.chi2max() ) ;
+  if ( !o.track1cut_trivial() ) { s += ", " + toCpp ( o.track1cut () ) ; }
+  if ( !o.track2cut_trivial() ) { s += ", " + toCpp ( o.track2cut () ) ; }
+  if ( !o.    vxcut_trivial() ) { s += ", " + toCpp ( o.    vxcut () ) ; }
+  //
+  return s + ") " ;
+}
+// ========================================================================
+
 
 // ============================================================================
 // The END

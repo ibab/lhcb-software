@@ -33,7 +33,8 @@ LoKi::Candidates::MtFun::MtFun
 ( const LoKi::BasicFunctors<const LHCb::Track*>::Function& fun   ,
   const unsigned int                                       index , 
   const double                                             bad   ) 
-  : LoKi::BasicFunctors<const Hlt::Candidate*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( fun , index , bad ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Function () 
   , m_fun   { fun   } 
   , m_index { index } 
   , m_bad   { bad   }
@@ -44,7 +45,8 @@ LoKi::Candidates::MtFun::MtFun
 LoKi::Candidates::MtFun::MtFun 
 ( const LoKi::BasicFunctors<const LHCb::Track*>::Function& fun   ,
   unsigned int                                             index )
-  : LoKi::BasicFunctors<const Hlt::Candidate*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( fun , index ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Function () 
   , m_fun   { fun   }
   , m_index { index }
   , m_bad   { LoKi::Constants::NegativeInfinity }

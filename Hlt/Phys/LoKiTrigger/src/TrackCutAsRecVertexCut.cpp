@@ -24,13 +24,16 @@
  * @author Pieter David pieter.david@cern.ch
  */
 // ============================================================================
-
-const Gaudi::StringKey s_InfoID{"InfoID"};
-
+namespace 
+{
+  const Gaudi::StringKey s_InfoID{"InfoID"};
+}
+// ============================================================================
 LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_Any::Hlt_TrackCutAsRecVertexCut_Any
 ( const LoKi::BasicFunctors<const LHCb::Track*>::Predicate& cut ,
-  bool useExtraInfo                                             )
-  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate()
+  const bool useExtraInfo )
+  : LoKi::AuxFunBase ( std::tie ( cut , useExtraInfo ) ) 
+  , LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate()
   , m_cut          { cut }
   , m_useExtraInfo { useExtraInfo }
 { 
@@ -92,7 +95,9 @@ LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_Any::operator()
 // ============================================================================
 LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_All::Hlt_TrackCutAsRecVertexCut_All
 ( const LoKi::BasicFunctors<const LHCb::Track*>::Predicate& cut )
-  : m_cut( cut )
+  : LoKi::AuxFunBase ( std::tie ( cut ) )
+  , LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate () 
+  , m_cut( cut )
 {}
 // ============================================================================
 // MANDATORY: the only one essential method

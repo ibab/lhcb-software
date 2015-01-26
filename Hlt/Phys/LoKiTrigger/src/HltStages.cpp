@@ -294,8 +294,9 @@ std::ostream& LoKi::Stages::Type::fillStream ( std::ostream& s ) const
 LoKi::Stages::TrFun::TrFun
 ( const LoKi::TrackTypes::TrFunc& fun , 
   double                          bad )
-  : LoKi::BasicFunctors<const Hlt::Stage*>::Function () 
-  , m_fun { fun } 
+  : LoKi::AuxFunBase ( std::tie ( fun , bad ) )
+  , LoKi::BasicFunctors<const Hlt::Stage*>::Function () 
+  , m_fun ( fun ) 
   , m_bad { bad } 
 {}
 // ============================================================================
@@ -303,7 +304,8 @@ LoKi::Stages::TrFun::TrFun
 // ============================================================================
 LoKi::Stages::TrFun::TrFun
 ( const LoKi::TrackTypes::TrFunc& fun )
-  : LoKi::BasicFunctors<const Hlt::Stage*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( fun ) )
+  , LoKi::BasicFunctors<const Hlt::Stage*>::Function () 
   , m_fun ( fun ) 
   , m_bad ( LoKi::Constants::NegativeInfinity ) 
 {}
@@ -360,7 +362,8 @@ std::ostream& LoKi::Stages::TrFun::fillStream ( std::ostream& s ) const
 LoKi::Stages::TrCut::TrCut
 ( const LoKi::TrackTypes::TrCuts& fun , 
   const bool                      bad )
-  : LoKi::BasicFunctors<const Hlt::Stage*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( fun , bad ) )
+  , LoKi::BasicFunctors<const Hlt::Stage*>::Predicate () 
   , m_fun ( fun ) 
   , m_bad ( bad ) 
 {}
@@ -369,7 +372,8 @@ LoKi::Stages::TrCut::TrCut
 // ============================================================================
 LoKi::Stages::TrCut::TrCut
 ( const LoKi::TrackTypes::TrCuts& fun )
-  : LoKi::BasicFunctors<const Hlt::Stage*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( fun ) )
+  , LoKi::BasicFunctors<const Hlt::Stage*>::Predicate () 
   , m_fun ( fun   ) 
   , m_bad ( false ) 
 {}
@@ -454,9 +458,10 @@ std::ostream& LoKi::Stages::Locked::fillStream ( std::ostream& s ) const
 // ============================================================================
 // constructor from the algorithm name
 // ============================================================================
-LoKi::Stages::History::History ( std::string alg ) 
-  :  LoKi::BasicFunctors<const Hlt::Stage*>::Predicate () 
-  , m_algorithm ( std::move(alg) ) 
+LoKi::Stages::History::History ( const std::string& alg ) 
+  : LoKi::AuxFunBase ( std::tie ( alg ) ) 
+  , LoKi::BasicFunctors<const Hlt::Stage*>::Predicate () 
+  , m_algorithm ( alg )
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -498,8 +503,9 @@ std::ostream& LoKi::Stages::History::fillStream ( std::ostream& s ) const
 // ============================================================================
 // constructor from the algorithm name
 // ============================================================================
-LoKi::Stages::HistorySub::HistorySub ( const std::string alg ) 
-  :  LoKi::Stages::History ( std::move(alg) ) 
+LoKi::Stages::HistorySub::HistorySub ( const std::string& alg ) 
+  : LoKi::AuxFunBase ( std::tie ( alg ) ) 
+  , LoKi::Stages::History ( alg ) 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -539,7 +545,8 @@ std::ostream& LoKi::Stages::HistorySub::fillStream ( std::ostream& s ) const
 // constructor from the algorithm name
 // ============================================================================
 LoKi::Stages::HistoryRegex::HistoryRegex ( const std::string& alg ) 
-  :LoKi::Stages::HistorySub ( alg ) 
+  : LoKi::AuxFunBase ( std::tie ( alg ) ) 
+  , LoKi::Stages::HistorySub ( alg ) 
   , m_expression ( alg ) 
 {}
 // ============================================================================
@@ -577,12 +584,14 @@ std::ostream& LoKi::Stages::HistoryRegex::fillStream ( std::ostream& s ) const
 // ============================================================================
 // constructor from the key and data type
 // ============================================================================
-LoKi::Stages::HasCache::HasCache( std::string key, Hlt::Cache::Values typ )
-    : LoKi::BasicFunctors<const Hlt::Stage*>::Predicate()
-    , m_key{std::move( key )}
-    , m_typ{typ}
-{
-}
+LoKi::Stages::HasCache::HasCache
+( const std::string& key , 
+  Hlt::Cache::Values typ )
+  : LoKi::AuxFunBase ( std::tie ( key , typ ) )
+  , LoKi::BasicFunctors<const Hlt::Stage*>::Predicate()
+  , m_key   ( key )
+  , m_typ   ( typ )
+{}
 // ============================================================================
 // MANDATORY: virtual destructor 
 // ============================================================================
@@ -636,11 +645,12 @@ std::ostream& LoKi::Stages::HasCache::fillStream ( std::ostream& s ) const
 // constructor from the key and data type
 // ============================================================================
 LoKi::Stages::Cache1::Cache1
-( std::string  key , 
-  double       def ) 
-  : LoKi::BasicFunctors<const Hlt::Stage*>::Function()
-  , m_key { std::move(key) } 
-  , m_def { def }
+( const std::string& key , 
+  const double       def ) 
+  : LoKi::AuxFunBase ( std::tie ( key , def ) )
+  , LoKi::BasicFunctors<const Hlt::Stage*>::Function()
+  , m_key ( key ) 
+  , m_def ( def )
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -672,9 +682,10 @@ std::ostream& LoKi::Stages::Cache1::fillStream ( std::ostream& s ) const
 // constructor from the key and data type
 // ============================================================================
 LoKi::Stages::Cache2::Cache2
-( std::string  key , 
-  bool         def ) 
-  : LoKi::BasicFunctors<const Hlt::Stage*>::Predicate()
+( const std::string& key , 
+  const bool         def ) 
+  : LoKi::AuxFunBase ( std::tie ( key , def ) )
+  , LoKi::BasicFunctors<const Hlt::Stage*>::Predicate()
   , m_key { std::move(key) }
   , m_def { def }
 {}
@@ -713,7 +724,8 @@ std::ostream& LoKi::Stages::Cache2::fillStream ( std::ostream& s ) const
 // ==================================================================
 LoKi::Stages::Cut_<Hlt::MultiTrack>::Cut_ 
 ( const LoKi::BasicFunctors<const LHCb::Track*>::CutVal& cut )
-  : LoKi::BasicFunctors<const Hlt::Stage*>::Predicate ()
+  : LoKi::AuxFunBase ( std::tie ( cut ) ) 
+  , LoKi::BasicFunctors<const Hlt::Stage*>::Predicate ()
   , m_cut  ( cut  )
 {}
 
@@ -764,7 +776,8 @@ LoKi::Stages::Cut_<Hlt::MultiTrack>::fillStream ( std::ostream& s ) const
 LoKi::Stages::Fun_<Hlt::MultiTrack>::Fun_
 ( const LoKi::BasicFunctors<const LHCb::Track*>::FunVal& fun , 
   const double                                           bad )
-  : LoKi::BasicFunctors<const Hlt::Stage*>::Function ()
+  : LoKi::AuxFunBase ( std::tie ( fun , bad  ) ) 
+  , LoKi::BasicFunctors<const Hlt::Stage*>::Function ()
   , m_fun  ( fun )
   , m_bad  ( bad )
 {}

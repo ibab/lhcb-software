@@ -43,8 +43,8 @@ namespace LoKi
        *  @param flag public?
        */
       Tool 
-      ( std::string  tool          , 
-        bool         flag  = false ) ;
+        ( const std::string& tool          , 
+          const bool         flag  = false ) ;
       /// virtual destructor 
       virtual ~Tool() {}
       // ======================================================================      
@@ -56,6 +56,8 @@ namespace LoKi
       inline bool        pub  () const { return m_public  ; }
       /// private
       inline bool        priv () const { return !m_public ; }
+      /// flag 
+      inline bool        flag () const { return m_public  ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -100,8 +102,8 @@ namespace LoKi
        *  @param flag public?
        */
       TrackFunction 
-      ( std::string tool          , 
-        bool        flag  = false ) ;
+      ( const std::string& tool          , 
+        const bool         flag  = false ) ;
       // ======================================================================
       /// constructor from the tool 
       TrackFunction ( const LoKi::Hlt1::Tool& tool ) ;
@@ -134,8 +136,8 @@ namespace LoKi
        *  @param flag public?
        */
       TrackBiFunction 
-      ( std::string tool          , 
-        bool        flag  = false ) ;
+        ( const std::string& tool          , 
+          const bool         flag  = false ) ;
       // ======================================================================
       /// constructor from the tool 
       TrackBiFunction ( const LoKi::Hlt1::Tool& tool ) ;
@@ -168,8 +170,8 @@ namespace LoKi
        *  @param flag public?
        */
       MatchTVelo
-      ( std::string tool          , 
-        bool        flag  = false ) ;
+        ( const std::string& tool          , 
+          const bool         flag  = false ) ;
       // ======================================================================
       /// constructor from the tool 
       MatchTVelo ( const LoKi::Hlt1::Tool& tool ) ;
@@ -202,8 +204,8 @@ namespace LoKi
        *  @param flag public?
        */
       TrackVertexFunction 
-      ( std::string tool          , 
-        bool        flag  = false ) ;
+        ( const std::string& tool          , 
+          const bool         flag  = false ) ;
       // ======================================================================
       /// constructor from the tool 
       TrackVertexFunction ( const LoKi::Hlt1::Tool& tool ) ;
@@ -223,6 +225,22 @@ namespace LoKi
   } //                                              end of namespace LoKi::Hlt1 
   // ==========================================================================
 } //                                                      end of namespace LoKi 
+// ============================================================================
+namespace Gaudi
+{
+  // ==========================================================================
+  namespace Utils 
+  {
+    // ========================================================================
+    GAUDI_API std::string toCpp ( const LoKi::Hlt1::Tool&                o ) ;
+    GAUDI_API std::string toCpp ( const LoKi::Hlt1::TrackFunction&       o ) ;
+    GAUDI_API std::string toCpp ( const LoKi::Hlt1::TrackBiFunction&     o ) ;
+    GAUDI_API std::string toCpp ( const LoKi::Hlt1::MatchTVelo&          o ) ;
+    GAUDI_API std::string toCpp ( const LoKi::Hlt1::TrackVertexFunction& o ) ;
+    // ========================================================================
+  }  
+  // ==========================================================================
+}
 // ============================================================================
 //                                                                      The END 
 // ============================================================================

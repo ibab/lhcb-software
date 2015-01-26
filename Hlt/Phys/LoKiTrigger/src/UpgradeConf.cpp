@@ -99,7 +99,25 @@ std::string LoKi::Hlt1::UpgradeConf::toString () const
   std::ostringstream s ;
   fillStream ( s ) ;
   return s.str() ;
+} 
+// ============================================================================
+std::string Gaudi::Utils::toCpp ( const LoKi::Hlt1::UpgradeConf& o ) 
+{
+  std::string s = " LoKi::Hl1t::UpgradeConf( "
+    + toCpp ( o.trTool   () ) + ", "
+    + toCpp ( o.address  () ) + ", "
+    + toCpp ( o.trType   () ) + ", "
+    + toCpp ( o.owner    () ) + ", "
+    + toCpp ( o.moveIDs  () ) + ", "
+    + toCpp ( o.moveAncs () ) + ", "
+    + toCpp ( o.moveInfo () ) + ", "
+    + toCpp ( o.ptOrder  () ) ;
+  if ( o.hasFilter() ) { s += ", " + toCpp ( o.filter() ) ; }
+  //
+  return s + ") " ;
 }
+
+ 
 // ============================================================================
 // The END 
 // ============================================================================

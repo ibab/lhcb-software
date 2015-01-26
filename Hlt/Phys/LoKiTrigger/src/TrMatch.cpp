@@ -8,7 +8,7 @@
 // ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/TrMatch.h"
+#include "LoKi/TrgToCpp.h"
 #include "LoKi/TrMatch.h"
 // ============================================================================
 /** @file 
@@ -16,73 +16,77 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-11-17
  */
-
-
+// ============================================================================
 void
-LoKi::Hlt1::Match::addStage( Hlt::Candidate &candidate
-                           , const Hlt::Candidate& cand1 ) const
+LoKi::Hlt1::Match::addStage
+( Hlt::Candidate &candidate , 
+  const Hlt::Candidate& cand1 ) const
 {
-        /// get new stage 
-        Hlt::Stage*     stage   = newStage() ;
-        candidate.addToStages ( stage ) ;
-        /// lock new stage:
-        Hlt::Stage::Lock lock { stage , match() } ;
-        //
-        lock.addToHistory ( cand1.workers() ) ;
-        // lock.addToHistory ( myName ()  ) ;
-        stage -> set ( cand1.currentStage() ) ;
+  /// get new stage 
+  Hlt::Stage*     stage   = newStage() ;
+  candidate.addToStages ( stage ) ;
+  /// lock new stage:
+  Hlt::Stage::Lock lock { stage , match() } ;
+  //
+  lock.addToHistory ( cand1.workers() ) ;
+  // lock.addToHistory ( myName ()  ) ;
+  stage -> set ( cand1.currentStage() ) ;
 }
-
+// ============================================================================
 void 
-LoKi::Hlt1::Match::addStage( Hlt::Candidate &candidate
-                           , const LHCb::Track& track ) const
+LoKi::Hlt1::Match::addStage
+( Hlt::Candidate &candidate , 
+  const LHCb::Track& track ) const
 {
-        /// get new stage 
-        Hlt::Stage*     stage   = newStage() ;
-        candidate.addToStages ( stage ) ;
-        /// lock new stage:
-        Hlt::Stage::Lock lock { stage , match() } ;
-        // lock.addToHistory ( myName () ) ;
-        stage -> set ( &track ) ;
+  /// get new stage 
+  Hlt::Stage*     stage   = newStage() ;
+  candidate.addToStages ( stage ) ;
+  /// lock new stage:
+  Hlt::Stage::Lock lock { stage , match() } ;
+  // lock.addToHistory ( myName () ) ;
+  stage -> set ( &track ) ;
 }
-
+// ============================================================================
 Hlt::Candidate* 
-LoKi::Hlt1::Match::createCandidate(const Hlt::Candidate& cand1, const LHCb::Track& track) const
+LoKi::Hlt1::Match::createCandidate
+( const Hlt::Candidate& cand1 , 
+  const LHCb::Track&    track) const
 {
-      /// create new candidate:
-      Hlt::Candidate* candidate = newCandidate () ;
-      candidate -> addToWorkers ( alg() ) ;
-      //  1. "initiator" stage - copy the first candidate:
-      addStage( *candidate, cand1 );
-      //  2. "regular" stage : track
-      addStage( *candidate, track );
-
-      return candidate;
+  /// create new candidate:
+  Hlt::Candidate* candidate = newCandidate () ;
+  candidate -> addToWorkers ( alg() ) ;
+  //  1. "initiator" stage - copy the first candidate:
+  addStage( *candidate, cand1 );
+  //  2. "regular" stage : track
+  addStage( *candidate, track );
+  
+  return candidate;
 }
-
 // ============================================================================
 // constructor 
 // ============================================================================
 LoKi::Hlt1::Match::Match 
-( std::string                  output  ,   //   output selection name/key 
+( const std::string&           output  ,   //   output selection name/key 
   const Source&                tracks2 ,   //   tracks to be matched with 
   const LoKi::Hlt1::MatchConf& config  )   //          tool configuration 
-  : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
+  : LoKi::AuxFunBase ( std::tie ( output , tracks2 , config ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
   , LoKi::Hlt1::MatchTool ( config )
   , m_source2    { tracks2 } 
-  , m_sink       { std::move(output)  }
+  , m_sink       { output  }
 {}
 // ============================================================================
 // constructor 
 // ============================================================================
 LoKi::Hlt1::Match::Match 
-( std::string                  output  ,   //   output selection name/key 
-  std::string                  tracks2 ,   //   tracks to be matched with 
+( const std::string&           output  ,   //   output selection name/key 
+  const std::string&           tracks2 ,   //   tracks to be matched with 
   const LoKi::Hlt1::MatchConf& config  )   //          tool configuration 
-  : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
+  : LoKi::AuxFunBase ( std::tie ( output , tracks2 , config ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
   , LoKi::Hlt1::MatchTool ( config )
-  , m_source2    { LoKi::Hlt1::Selection{ std::move(tracks2) } }
-  , m_sink       { std::move( output  )  }
+  , m_source2    { LoKi::Hlt1::Selection{ tracks2} }
+  , m_sink       { output  }
 {}
 // ============================================================================
 // MANDATORY: virtual desctructor 
@@ -168,10 +172,11 @@ std::ostream& LoKi::Hlt1::Match::fillStream ( std::ostream& s ) const
 // constructor 
 // ============================================================================
 LoKi::Hlt1::Match2::Match2 
-( std::string                output  ,         //   output selection name/key 
-  const Source&              tracks2 ,         //   tracks to be matched with 
+( const std::string&           output  ,         //   output selection name/key 
+  const Source&                tracks2 ,         //   tracks to be matched with 
   const LoKi::Hlt1::MatchConf& config  )         //          tool configuration 
-  : LoKi::Hlt1::Match ( std::move(output) , tracks2 , config ) 
+  : LoKi::AuxFunBase  ( std::tie ( output , tracks2 , config ) ) 
+  , LoKi::Hlt1::Match ( std::move(output) , tracks2 , config ) 
 {
   setInverted ( true ) ;
 }
@@ -179,10 +184,11 @@ LoKi::Hlt1::Match2::Match2
 // constructor 
 // ============================================================================
 LoKi::Hlt1::Match2::Match2 
-( std::string                  output  ,         //   output selection name/key 
-  std::string                  tracks2 ,         //   tracks to be matched with 
+( const std::string&           output  ,         //   output selection name/key 
+  const std::string&           tracks2 ,         //   tracks to be matched with 
   const LoKi::Hlt1::MatchConf& config  )         //          tool configuration 
-  : LoKi::Hlt1::Match ( std::move(output) , std::move(tracks2) , config ) 
+  : LoKi::AuxFunBase  ( std::tie ( output , tracks2 , config ) ) 
+  , LoKi::Hlt1::Match ( std::move(output) , std::move(tracks2) , config ) 
 {
   setInverted ( true ) ;
 }
@@ -212,7 +218,8 @@ std::ostream& LoKi::Hlt1::Match2::fillStream ( std::ostream& s ) const
 LoKi::Hlt1::FilterMatch::FilterMatch
 ( const LoKi::Hlt1::FilterMatch::Source& candidates , //   candidates for matching 
   const LoKi::Hlt1::MatchConf&           config     ) //        tool configuration 
-  : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
+  : LoKi::AuxFunBase ( std::tie ( candidates , config ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
   , LoKi::Hlt1::MatchTool ( config )
   , m_source     ( candidates  ) 
 {
@@ -222,11 +229,12 @@ LoKi::Hlt1::FilterMatch::FilterMatch
 // constructor 
 // ============================================================================
 LoKi::Hlt1::FilterMatch::FilterMatch
-( std::string                  candidates ,   //   candidates for matching 
+( const std::string&           candidates ,   //   candidates for matching 
   const LoKi::Hlt1::MatchConf& config     )   //        tool configuration 
-  : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
+  : LoKi::AuxFunBase ( std::tie ( candidates , config ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
   , LoKi::Hlt1::MatchTool ( config )
-  , m_source     {  LoKi::Hlt1::Selection{ std::move(candidates)  } } 
+  , m_source     {  LoKi::Hlt1::Selection{ candidates } } 
 {
   Assert ( !(!match2() ) , "Invalid setup!" ) ;
 }
@@ -291,7 +299,8 @@ std::ostream& LoKi::Hlt1::FilterMatch::fillStream ( std::ostream& s ) const
 LoKi::Hlt1::FilterMatch2::FilterMatch2 
 ( const Source&              tracks2 ,         //   tracks to be matched with 
   const LoKi::Hlt1::MatchConf& config  )         //          tool configuration 
-  : LoKi::Hlt1::FilterMatch ( tracks2 , config ) 
+  : LoKi::AuxFunBase ( std::tie ( tracks2 , config ) ) 
+  , LoKi::Hlt1::FilterMatch ( tracks2 , config ) 
 {
   setInverted ( true ) ;
 }
@@ -299,9 +308,10 @@ LoKi::Hlt1::FilterMatch2::FilterMatch2
 // constructor 
 // ============================================================================
 LoKi::Hlt1::FilterMatch2::FilterMatch2 
-( std::string                  tracks2 ,         //   tracks to be matched with 
+( const std::string&           tracks2 ,         //   tracks to be matched with 
   const LoKi::Hlt1::MatchConf& config  )         //          tool configuration 
-  : LoKi::Hlt1::FilterMatch ( std::move(tracks2) , config ) 
+  : LoKi::AuxFunBase ( std::tie ( tracks2, config ) ) 
+  , LoKi::Hlt1::FilterMatch ( tracks2 , config ) 
 {
   setInverted ( true ) ;
 }

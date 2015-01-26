@@ -9,6 +9,7 @@
 // LoKi
 // =============================================================================
 #include "LoKi/HltTool.h"
+#include "LoKi/ToCpp.h"
 // =============================================================================
 /** @file 
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -21,9 +22,9 @@
  */
 // =============================================================================
 LoKi::Hlt1::Tool::Tool 
-( std::string  tool , 
-  bool         flag ) 
-  : m_tool   ( std::move(tool) ) 
+( const std::string& tool , 
+  const bool         flag ) 
+  : m_tool   ( tool ) 
   , m_public ( flag ) 
 {}
 // =============================================================================
@@ -44,9 +45,9 @@ std::string LoKi::Hlt1::Tool::toString    () const
  */
 // =============================================================================
 LoKi::Hlt1::TrackFunction::TrackFunction 
-( std::string  tool , 
-  bool         flag ) 
-  : LoKi::Hlt1::Tool ( std::move(tool) , flag ) {}
+( const std::string& tool , 
+  const bool         flag ) 
+  : LoKi::Hlt1::Tool ( tool , flag ) {}
 // ============================================================================
 // constructor from the tool TL
 // ============================================================================
@@ -71,8 +72,8 @@ std::ostream& LoKi::Hlt1::TrackFunction::fillStream  ( std::ostream& s ) const
  */
 // =============================================================================
 LoKi::Hlt1::TrackBiFunction::TrackBiFunction 
-( std::string tool , 
-  bool        flag ) 
+( const std::string& tool , 
+  const bool         flag ) 
   : LoKi::Hlt1::Tool ( std::move(tool) , flag ) {}
 // ============================================================================
 // constructor from the tool T
@@ -100,8 +101,8 @@ std::ostream& LoKi::Hlt1::TrackBiFunction::fillStream
  */
 // =============================================================================
 LoKi::Hlt1::MatchTVelo::MatchTVelo
-( std::string tool , 
-  bool        flag ) 
+( const std::string& tool , 
+  const bool         flag ) 
   : LoKi::Hlt1::Tool ( std::move(tool) , flag ) {}
 // ============================================================================
 // constructor from the tool T
@@ -128,8 +129,8 @@ std::ostream& LoKi::Hlt1::MatchTVelo::fillStream
  */
 // =============================================================================
 LoKi::Hlt1::TrackVertexFunction::TrackVertexFunction
-( std::string tool , 
-  bool        flag ) 
+( const std::string& tool , 
+  const bool         flag ) 
   : LoKi::Hlt1::Tool ( std::move(tool) , flag ) {}
 // ============================================================================
 // constructor from the tool T
@@ -149,7 +150,38 @@ std::ostream& LoKi::Hlt1::TrackVertexFunction::fillStream
 }
 // =============================================================================
 
-
+// =============================================================================
+std::string Gaudi::Utils::toCpp 
+( const LoKi::Hlt1::Tool&                o ) 
+{
+  return " LoKi::Hlt1::Tool(" 
+    + toCpp ( o.tool () ) + "," 
+    + toCpp ( o.flag () ) + ") " ;
+}
+std::string Gaudi::Utils::toCpp ( const LoKi::Hlt1::TrackFunction&       o ) 
+{
+  return " LoKi::Hlt1::TrackFunction(" 
+    + toCpp ( o.tool () ) + "," 
+    + toCpp ( o.flag () ) + ") " ;
+} 
+std::string Gaudi::Utils::toCpp ( const LoKi::Hlt1::TrackBiFunction&     o ) 
+{
+  return " LoKi::Hlt1::TrackBiFunction(" 
+    + toCpp ( o.tool () ) + "," 
+    + toCpp ( o.flag () ) + ") " ;
+}
+std::string Gaudi::Utils::toCpp ( const LoKi::Hlt1::MatchTVelo&          o ) 
+{
+  return " LoKi::Hlt1::MatchTVelo(" 
+    + toCpp ( o.tool () ) + "," 
+    + toCpp ( o.flag () ) + ") " ;
+}
+std::string Gaudi::Utils::toCpp ( const LoKi::Hlt1::TrackVertexFunction& o ) 
+{
+  return " LoKi::Hlt1::TrackVertexFunction("
+    + toCpp ( o.tool () ) + "," 
+    + toCpp ( o.flag () ) + ") " ;
+}
 // =============================================================================
 // The END 
 // =============================================================================

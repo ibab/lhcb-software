@@ -5,6 +5,7 @@
 // LoKi
 // ============================================================================
 #include "LoKi/TrackTool.h"
+#include "LoKi/ToCpp.h"
 // ============================================================================
 /** @file
  *  Implementation file for class LoKi::Tracks::TrackTool
@@ -44,6 +45,12 @@ LoKi::Hlt1::TrackTool::TrackTool ()
 // ============================================================================
 LoKi::Hlt1::TrackTool::~TrackTool (){}
 // ============================================================================
+std::string Gaudi::Utils::toCpp ( const LoKi::Hlt1::TrackTool& t ) 
+{
+  std::string s = " LoKi::Hlt1::TrackTool(" ;
+  if ( t.hasFilter() ) { s += toCpp( t.filter() ) ; }
+  return s +  ") " ;
+}
 
 
 // ============================================================================

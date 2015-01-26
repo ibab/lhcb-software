@@ -48,16 +48,16 @@ namespace LoKi
        *  @param config  the tool configuration 
        */
       Upgrade 
-      ( std::string                    output  ,   // output selection name/key 
-        const LoKi::Hlt1::UpgradeConf& config  ) ; //             configuration 
+        ( const std::string&             output  ,   // output selection name/key 
+          const LoKi::Hlt1::UpgradeConf& config  ) ; //             configuration 
       // ======================================================================
       /** constructor from all configuration parameters 
        *  @param output  the output selection name 
        *  @param config  the tool configuration 
        */
       Upgrade 
-      ( std::string                    output  ,   // output selection name/key 
-        const LoKi::Hlt1::UpgradeTool& config  ) ; //             configuration 
+        ( const std::string&             output  ,   // output selection name/key 
+          const LoKi::Hlt1::UpgradeTool& config  ) ; //             configuration 
       // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~Upgrade() ;
@@ -106,7 +106,7 @@ namespace LoKi
        *  @param config  the tool configuration 
        */
       UpgradeTracks
-      ( std::string                    output  ,   // output selection name/key 
+      ( const std::string&             output  ,   // output selection name/key 
         const LoKi::Hlt1::UpgradeConf& config  ) ; //             configuration 
       // ======================================================================
       /** constructor from all configuration parameters 
@@ -114,8 +114,8 @@ namespace LoKi
        *  @param config  the tool configuration 
        */
       UpgradeTracks 
-      ( std::string                    output  ,   // output selection name/key 
-        const LoKi::Hlt1::UpgradeTool& config  ) ; //             configuration 
+        ( const std::string&             output  ,   // output selection name/key 
+          const LoKi::Hlt1::UpgradeTool& config  ) ; //             configuration 
       // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~UpgradeTracks () ;
@@ -154,18 +154,18 @@ namespace LoKi
        *  @param index   teh tarck index to upgrade, -1: upgrade all 
        */
       UpgradeMultiTracks
-      ( std::string                    output  ,   // output selection name/key 
-        int                            index   ,   //   track index for upgrade 
-        const LoKi::Hlt1::UpgradeConf& config  ) ; //             configuration 
+        ( const std::string&             output  ,   // output selection name/key 
+          const int                      index   ,   //   track index for upgrade 
+          const LoKi::Hlt1::UpgradeConf& config  ) ; //             configuration 
       // ======================================================================
       /** constructor from all configuration parameters 
        *  @param output  the output selection name 
        *  @param config  the tool configuration 
        */
       UpgradeMultiTracks 
-      ( std::string                    output  ,   // output selection name/key 
-        int                            index   ,   //   track index for upgrade 
-        const LoKi::Hlt1::UpgradeTool& config  ) ; //             configuration 
+        ( const std::string&             output  ,   // output selection name/key 
+          const int                      index   ,   //   track index for upgrade 
+          const LoKi::Hlt1::UpgradeTool& config  ) ; //             configuration 
       // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~UpgradeMultiTracks () ;

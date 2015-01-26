@@ -71,7 +71,8 @@ namespace LoKi
         const Source_& source , // the source 
         const Cut_&    cut    , // the criteria/decision 
         const bool     input  ) // filter input or source?
-        : public LoKi::BasicFunctors<TYPE*>::Pipe ()
+        : LoKi::AuxFunBase ( std::tie ( fun2 , source , cut , input ) ) 
+        , LoKi::BasicFunctors<TYPE*>::Pipe ()
         //
         , m_source ( source )
         , m_binder ( fun2   , 

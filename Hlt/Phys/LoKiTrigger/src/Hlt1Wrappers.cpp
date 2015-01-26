@@ -8,8 +8,9 @@
 // ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/Hlt1Wrappers.h"
 #include "LoKi/Constants.h"
+#include "LoKi/HltTool.h"
+#include "LoKi/Hlt1Wrappers.h"
 // ============================================================================
 // Local
 // ============================================================================
@@ -32,36 +33,40 @@
 // ============================================================================
 // construct from the configuration tool
 // ============================================================================
-LoKi::Tracks::TrFunction::TrFunction( const LoKi::Hlt1::TrackFunction& tool )
-    : LoKi::TrackTypes::TrFunc(), m_config( tool ), m_tool()
+LoKi::Tracks::TrFunction::TrFunction
+( const LoKi::Hlt1::TrackFunction& tool )
+  : LoKi::AuxFunBase ( std::tie ( tool ) ) 
+  , LoKi::TrackTypes::TrFunc()
+  , m_config( tool )
+  , m_tool()
 {
-    init();
+  init();
 }
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::Tracks::TrFunction* LoKi::Tracks::TrFunction::clone() const
 {
-    return new TrFunction( *this );
+  return new TrFunction( *this );
 }
 // ============================================================================
 // initialize
 // ============================================================================
 void LoKi::Tracks::TrFunction::init()
 {
-    // get GaudiAlgorithm
-    GaudiAlgorithm* alg = LoKi::Hlt1::Utils::getGaudiAlg( *this );
-    Assert( 0 != alg, "GaudiAlgorithm points to NULL!" );
-    // get IAlgorithm
-    IAlgorithm* ialg = LoKi::Hlt1::Utils::getAlg( *this );
-    Assert( alg == ialg, "GaudiAlgorithm is not *my* IAlgorithm" );
-
-    // retrive the tool
-    m_tool = m_config.pub() ? alg->tool<ITrackFunctionTool>( m_config.tool() )
-                            : alg->tool<ITrackFunctionTool>( m_config.tool(), alg );
-
-    /// it must be private tool!
-    Assert( m_tool->parent() == alg, "ITrackFunctionTool tool must be private!" );
+  // get GaudiAlgorithm
+  GaudiAlgorithm* alg = LoKi::Hlt1::Utils::getGaudiAlg( *this );
+  Assert( 0 != alg, "GaudiAlgorithm points to NULL!" );
+  // get IAlgorithm
+  IAlgorithm* ialg = LoKi::Hlt1::Utils::getAlg( *this );
+  Assert( alg == ialg, "GaudiAlgorithm is not *my* IAlgorithm" );
+  
+  // retrive the tool
+  m_tool = m_config.pub() ? alg->tool<ITrackFunctionTool>( m_config.tool() )
+    : alg->tool<ITrackFunctionTool>( m_config.tool(), alg );
+  
+  /// it must be private tool!
+  Assert( m_tool->parent() == alg, "ITrackFunctionTool tool must be private!" );
 }
 // ============================================================================
 // MANDATORY: the only one essential method
@@ -69,22 +74,22 @@ void LoKi::Tracks::TrFunction::init()
 LoKi::Tracks::TrFunction::result_type LoKi::Tracks::TrFunction::
 operator()( LoKi::Tracks::TrFunction::argument a ) const
 {
-    //
-    if ( !a ) {
-        Error( "LHCb::Track* points to NULL, return -inf" );
-        return LoKi::Constants::NegativeInfinity;
-    }
-    //
-    Assert( !( !m_tool ), "Invalid ITrackFunctionTool!" );
-    //
-    return m_tool->function( *a );
+  //
+  if ( !a ) {
+    Error( "LHCb::Track* points to NULL, return -inf" );
+    return LoKi::Constants::NegativeInfinity;
+  }
+  //
+  Assert( !( !m_tool ), "Invalid ITrackFunctionTool!" );
+  //
+  return m_tool->function( *a );
 }
 // ============================================================================
 // OPTIONAL: nice printout
 // ============================================================================
 std::ostream& LoKi::Tracks::TrFunction::fillStream( std::ostream& s ) const
 {
-    return s << "TrFUN(" << m_tool << ")";
+  return s << "TrFUN(" << m_tool << ")";
 }
 // ============================================================================
 
@@ -93,7 +98,8 @@ std::ostream& LoKi::Tracks::TrFunction::fillStream( std::ostream& s ) const
 // // ============================================================================
 // LoKi::Tracks::TTrFunction::TTrFunction
 // ( const LoKi::Hlt1::TrackBiFunction& tool )
-//   : LoKi::TrackTypes::TTrFunc ()
+//   : LoKi::AuxfunBase ( std::tie ( tool ) ) 
+//   , LoKi::TrackTypes::TTrFunc ()
 //     , m_config ( tool )
 //   , m_tool ()
 // {
@@ -152,7 +158,8 @@ std::ostream& LoKi::Tracks::TrFunction::fillStream( std::ostream& s ) const
 // // ============================================================================
 // LoKi::Tracks::TTrFunction2::TTrFunction2
 // ( const LoKi::Hlt1::TrackBiFunction& tool )
-//   : LoKi::Tracks::TTrFunction  (tool )
+//   : LoKi::AuxfunBase ( std::tie ( tool ) ) 
+//   , LoKi::Tracks::TTrFunction  (tool )
 // {}
 // // ============================================================================
 // // MANDATORY: clone method ("virtual constructor")
@@ -185,7 +192,8 @@ std::ostream& LoKi::Tracks::TrFunction::fillStream( std::ostream& s ) const
 // // ============================================================================
 // LoKi::Tracks::TrVFunction::TrVFunction
 // ( const LoKi::Hlt1::TrackVertexFunction& tool )
-//   : LoKi::TrackTypes::TrVFunc ()
+//   : LoKi::AuxfunBase ( std::tie ( tool ) ) 
+//   , LoKi::TrackTypes::TrVFunc ()
 //   , m_config ( tool )
 //   , m_tool ()
 // {

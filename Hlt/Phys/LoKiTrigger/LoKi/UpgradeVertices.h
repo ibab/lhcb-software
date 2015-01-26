@@ -47,8 +47,7 @@ namespace LoKi
      *  @author Pieter David pieter.david@cern.ch
      *  @date 2012-02-24
      */
-    class GAUDI_API UpgradeVertices
-      : public Upgrade
+    class GAUDI_API UpgradeVertices : public Upgrade
     {
     public:
       // ======================================================================
@@ -57,22 +56,20 @@ namespace LoKi
        *  @param config  the tool configuration
        */
       UpgradeVertices
-      ( std::string              output  ,  // output selection name/key
-        const LoKi::Hlt1::UpgradeConf&  config  ,  //             configuration
-        bool                      allow1Fail = false                                   ,
-        std::string              clonedTracksLocation = "Hlt/Track/Tmp" 
-      ) ;
+        ( const std::string&              output  ,  // output selection name/key
+          const LoKi::Hlt1::UpgradeConf&  config  ,  //             configuration
+          const bool                      allow1Fail           =  false          , 
+          const std::string&              clonedTracksLocation = "Hlt/Track/Tmp" ) ;
       // ======================================================================
       /** constructor from all configuration parameters
        *  @param output  the output selection name
        *  @param config  the tool configuration
        */
       UpgradeVertices
-      ( std::string              output  ,  // output selection name/key
+      ( const std::string&              output  ,  // output selection name/key
         const LoKi::Hlt1::UpgradeTool&  config  ,  //             configuration
-        bool                      allow1Fail = false                                   ,
-        std::string              clonedTracksLocation = "Hlt/Track/Tmp"                         
-      ) ;
+        const bool                      allow1Fail = false                     ,
+        const std::string&              clonedTracksLocation = "Hlt/Track/Tmp" ) ;
       // ======================================================================
       /// MANDATORY: virtual destructor
       virtual ~UpgradeVertices () ;

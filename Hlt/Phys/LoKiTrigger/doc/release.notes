@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-01-26 - Vanya Belyaev
+ - add some functionalty, needed for C++ code generation 
+
+! 2015-01-26 - Vanya Belyaev
  - first step to use some new LoKi features 
 
 !========================= LoKiTrigger v15r4 2014-12-15 =========================
