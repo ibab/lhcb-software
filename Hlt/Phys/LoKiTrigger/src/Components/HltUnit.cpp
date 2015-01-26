@@ -283,7 +283,7 @@ StatusCode LoKi::HltUnit::initialize ()
   // We have a dummy that is equal to the default in case no PVs are needed
   auto noPVs = Gaudi::StringKey( "NoPVs" ) ;
   if ( m_pvSelection != noPVs ) {
-    declareInput( m_pvSelection, LoKi::AuxFunBase() ) ;
+    declareInput( m_pvSelection, LoKi::Constant<void,bool>( true ) ) ;
   }
   // register with the incident service
   SmartIF<IIncidentSvc> incSvc;
@@ -390,7 +390,7 @@ void LoKi::HltUnit::handle ( const Incident& )
 // ============================================================================
 const LHCb::RecVertex::Range LoKi::HltUnit::primaryVertices () const
 {
-  auto sel = selection( m_pvSelection, LoKi::AuxFunBase() );
+  auto sel = selection( m_pvSelection, LoKi::Constant<void,bool>( true )  );
   auto vertices = sel->down_cast<LHCb::RecVertex>();
   return LHCb::RecVertex::Range(vertices->begin(), vertices->end());
 }

@@ -51,12 +51,12 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from delta-cut and list of p-cuts
-      MuonDeltaP ( double                     delta , 
-                   std::vector<double>        cuts  ) ;
+      MuonDeltaP ( const double                 delta , 
+                   const std::vector<double>&   cuts  ) ;
       /// constructor from delta-cut 
-      MuonDeltaP ( double                     delta ) ;
+      MuonDeltaP ( const double                 delta ) ;
       /// constructor from list of p-cuts 
-      MuonDeltaP ( std::vector<double>        cuts  ) ;
+      MuonDeltaP ( const std::vector<double>&   cuts  ) ;
       /// default constructor 
       MuonDeltaP () ;
       /// MANDATORY: virtual destructor
@@ -92,14 +92,14 @@ namespace LoKi
       ( const Hlt::TSelection<LHCb::RecVertex>* selection  ) ;
       /// constructor from vertex selection name 
       Hlt1TrackMinIp
-      ( std::string                             selection  ) ;
+      ( const std::string&                     selection  ) ;
       /// constructor from vertex selection and cuts 
       Hlt1TrackMinIp 
       ( const Hlt::TSelection<LHCb::RecVertex>*            selection  ,
         const LoKi::Functor<const LHCb::VertexBase*,bool>& cuts       ) ;
       /// constructor from vertex selection name and cuts 
       Hlt1TrackMinIp 
-      ( std::string                                        selection  ,
+      ( const std::string&                                 selection  ,
         const LoKi::Functor<const LHCb::VertexBase*,bool>& cuts       ) ;
       /// MANDATORY: virtual destructor 
       virtual ~Hlt1TrackMinIp() ;
@@ -147,14 +147,14 @@ namespace LoKi
       ( const Hlt::TSelection<LHCb::RecVertex>*            selection  ) ;
       /// constructor from vertex selection name 
       Hlt1TrackMinIpChi2
-      ( std::string                                        selection  ) ;
+      ( const std::string&                                 selection  ) ;
       /// constructor from vertex selection and cuts 
       Hlt1TrackMinIpChi2 
       ( const Hlt::TSelection<LHCb::RecVertex>*            selection  ,
         const LoKi::Functor<const LHCb::VertexBase*,bool>& cuts       ) ;
       /// constructor from vertex selection name and cuts 
       Hlt1TrackMinIpChi2 
-      ( std::string                                        selection  ,
+      ( const std::string&                                 selection  ,
         const LoKi::Functor<const LHCb::VertexBase*,bool>& cuts       ) ;
       /// MANDATORY: virtual destructor 
       virtual ~Hlt1TrackMinIpChi2 () ;

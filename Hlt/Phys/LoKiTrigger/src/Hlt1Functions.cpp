@@ -78,40 +78,47 @@ const double s_muonDeltaP_pCuts[s_nRegions] = {
 // ============================================================================
 // constructor from delta-cut  and list of p-cuts
 // ============================================================================
-LoKi::Tracks::MuonDeltaP::MuonDeltaP( double delta, std::vector<double> cuts )
-    : LoKi::TrackTypes::TrCuts(), m_deltaP{delta}, m_pCuts{std::move( cuts )}
+LoKi::Tracks::MuonDeltaP::MuonDeltaP
+( const double               delta , 
+  const std::vector<double>& cuts  )
+  : LoKi::AuxFunBase ( std::tie ( delta , cuts ) ) 
+  , LoKi::TrackTypes::TrCuts()
+  , m_deltaP ( delta ) 
+  , m_pCuts  ( cuts  ) 
 {
     Assert( m_pCuts.size() == s_nRegions, "Invalid numbef of Muon-regions" );
 }
 // ============================================================================
 // constructor from delta-cut
 // ============================================================================
-LoKi::Tracks::MuonDeltaP::MuonDeltaP( double delta )
-    : LoKi::TrackTypes::TrCuts()
-    , m_deltaP{delta}
-    , m_pCuts{s_muonDeltaP_pCuts, s_muonDeltaP_pCuts + s_nRegions}
+LoKi::Tracks::MuonDeltaP::MuonDeltaP( const double delta )
+  : LoKi::AuxFunBase ( std::tie ( delta ) ) 
+  , LoKi::TrackTypes::TrCuts()
+  , m_deltaP ( delta ) 
+  , m_pCuts{s_muonDeltaP_pCuts, s_muonDeltaP_pCuts + s_nRegions}
 {
-    Assert( m_pCuts.size() == s_nRegions, "Invalid numbef of Muon-regions" );
+  Assert( m_pCuts.size() == s_nRegions, "Invalid numbef of Muon-regions" );
 }
 // ============================================================================
 // constructor from the list of p-cuts
 // ============================================================================
-LoKi::Tracks::MuonDeltaP::MuonDeltaP( std::vector<double> cuts )
-    : LoKi::TrackTypes::TrCuts()
-    , m_deltaP{s_muonDeltaP_delta}
-    , m_pCuts{std::move( cuts )}
-{
+LoKi::Tracks::MuonDeltaP::MuonDeltaP( const std::vector<double>& cuts )
+  : LoKi::AuxFunBase ( std::tie ( cuts ) ) 
+  , LoKi::TrackTypes::TrCuts()
+  , m_deltaP{s_muonDeltaP_delta}
+  , m_pCuts( cuts ) 
+  {
     Assert( m_pCuts.size() == s_nRegions, "Invalid numbef of Muon-regions" );
 }
 // ============================================================================
 // constructor
 // ============================================================================
 LoKi::Tracks::MuonDeltaP::MuonDeltaP()
-    : LoKi::TrackTypes::TrCuts()
-    , m_deltaP{s_muonDeltaP_delta}
-    , m_pCuts{s_muonDeltaP_pCuts, s_muonDeltaP_pCuts + s_nRegions}
+  : LoKi::TrackTypes::TrCuts()
+  , m_deltaP{s_muonDeltaP_delta}
+  , m_pCuts {s_muonDeltaP_pCuts, s_muonDeltaP_pCuts + s_nRegions}
 {
-    Assert( m_pCuts.size() == s_nRegions, "Invalid numbef of Muon-regions" );
+  Assert( m_pCuts.size() == s_nRegions, "Invalid numbef of Muon-regions" );
 }
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
@@ -209,34 +216,37 @@ LoKi::Tracks::Hlt1TrackMinIp::Hlt1TrackMinIp(
 // ============================================================================
 // constructor from vertex selection & cuts
 // ============================================================================
-LoKi::Tracks::Hlt1TrackMinIp::Hlt1TrackMinIp(
-    const Hlt::TSelection<LHCb::RecVertex>* selection,
-    const LoKi::Functor<const LHCb::VertexBase*, bool>& cuts )
-    : LoKi::TrackTypes::TrFunc()
-    , m_vertices{selection}
-    , m_vxcut{cuts}
-    , m_vxcut_trivial{false}
+LoKi::Tracks::Hlt1TrackMinIp::Hlt1TrackMinIp
+( const Hlt::TSelection<LHCb::RecVertex>* selection,
+  const LoKi::Functor<const LHCb::VertexBase*, bool>& cuts )
+  : LoKi::TrackTypes::TrFunc()
+  , m_vertices{selection}
+                , m_vxcut{cuts}
+                , m_vxcut_trivial{false}
 {
 }
 // ============================================================================
 // constructor from vertex selection
 // ============================================================================
-LoKi::Tracks::Hlt1TrackMinIp::Hlt1TrackMinIp( std::string selection )
-    : LoKi::TrackTypes::TrFunc()
-    , m_vertices{std::move( selection )}
-    , m_vxcut{LoKi::Constant<const LHCb::VertexBase*, bool>{true}}
-    , m_vxcut_trivial{true}
+LoKi::Tracks::Hlt1TrackMinIp::Hlt1TrackMinIp( const std::string& selection )
+  : LoKi::AuxFunBase ( std::tie ( selection ) ) 
+  , LoKi::TrackTypes::TrFunc()
+  , m_vertices      ( selection )
+  , m_vxcut         (LoKi::Constant<const LHCb::VertexBase*, bool>{true} ) 
+  , m_vxcut_trivial (true)
 {
 }
 // ============================================================================
 // constructor from vertex selection & cuts
 // ============================================================================
-LoKi::Tracks::Hlt1TrackMinIp::Hlt1TrackMinIp(
-    std::string selection, const LoKi::Functor<const LHCb::VertexBase*, bool>& cuts )
-    : LoKi::TrackTypes::TrFunc()
-    , m_vertices{std::move( selection )}
-    , m_vxcut{cuts}
-    , m_vxcut_trivial{false}
+LoKi::Tracks::Hlt1TrackMinIp::Hlt1TrackMinIp
+( const std::string&                                  selection , 
+  const LoKi::Functor<const LHCb::VertexBase*, bool>& cuts      )
+  : LoKi::AuxFunBase ( std::tie ( selection , cuts ) ) 
+  , LoKi::TrackTypes::TrFunc()
+  , m_vertices      ( selection )
+  , m_vxcut         ( cuts      )
+  , m_vxcut_trivial ( false     ) 
 {
 }
 // ============================================================================
@@ -372,41 +382,42 @@ std::ostream& LoKi::Tracks::Hlt1TrackMinIp::fillStream( std::ostream& s ) const
 // ============================================================================
 // constructor from vertex selection
 // ============================================================================
-LoKi::Tracks::Hlt1TrackMinIpChi2::Hlt1TrackMinIpChi2(
-    const Hlt::TSelection<LHCb::RecVertex>* selection )
-    : LoKi::Tracks::Hlt1TrackMinIp( selection )
+LoKi::Tracks::Hlt1TrackMinIpChi2::Hlt1TrackMinIpChi2
+( const Hlt::TSelection<LHCb::RecVertex>* selection )
+  : LoKi::Tracks::Hlt1TrackMinIp( selection )
 {
 }
 // ============================================================================
 // constructor from vertex selection & cuts
 // ============================================================================
-LoKi::Tracks::Hlt1TrackMinIpChi2::Hlt1TrackMinIpChi2(
-    const Hlt::TSelection<LHCb::RecVertex>* selection,
-    const LoKi::Functor<const LHCb::VertexBase*, bool>& cuts )
-    : LoKi::Tracks::Hlt1TrackMinIp( selection, cuts )
+LoKi::Tracks::Hlt1TrackMinIpChi2::Hlt1TrackMinIpChi2
+( const Hlt::TSelection<LHCb::RecVertex>* selection,
+  const LoKi::Functor<const LHCb::VertexBase*, bool>& cuts )
+  : LoKi::Tracks::Hlt1TrackMinIp( selection, cuts )
 {
 }
 // ============================================================================
 // constructor from vertex selection
 // ============================================================================
-LoKi::Tracks::Hlt1TrackMinIpChi2::Hlt1TrackMinIpChi2( std::string selection )
-    : LoKi::Tracks::Hlt1TrackMinIp( std::move( selection ) )
-{
-}
+LoKi::Tracks::Hlt1TrackMinIpChi2::Hlt1TrackMinIpChi2
+( const std::string& selection )
+  : LoKi::AuxFunBase ( std::tie ( selection ) ) 
+  , LoKi::Tracks::Hlt1TrackMinIp( selection )
+{}
 // ============================================================================
 // constructor from vertex selection & cuts
 // ============================================================================
-LoKi::Tracks::Hlt1TrackMinIpChi2::Hlt1TrackMinIpChi2(
-    std::string selection, const LoKi::Functor<const LHCb::VertexBase*, bool>& cuts )
-    : LoKi::Tracks::Hlt1TrackMinIp( std::move( selection ), cuts )
-{
-}
+LoKi::Tracks::Hlt1TrackMinIpChi2::Hlt1TrackMinIpChi2
+( const std::string&                                  selection , 
+  const LoKi::Functor<const LHCb::VertexBase*, bool>& cuts      )
+  : LoKi::AuxFunBase ( std::tie ( selection , cuts ) ) 
+  , LoKi::Tracks::Hlt1TrackMinIp( selection , cuts )
+{}
 // ============================================================================
 // MANDATORY: virtual destructor
 // ============================================================================
 LoKi::Tracks::Hlt1TrackMinIpChi2::~Hlt1TrackMinIpChi2()
-{
-}
+{}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================

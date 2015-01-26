@@ -48,9 +48,10 @@ namespace LoKi
       // ======================================================================
       /// constructor from the function and the key 
       Log_ 
-      ( const LoKi::Functor<const Hlt::Candidate*,TYPE>&    fun      , 
-        const Gaudi::StringKey&                                  key      )
-        : LoKi::Functor<const Hlt::Candidate*,TYPE>()
+      ( const LoKi::Functor<const Hlt::Candidate*,TYPE>&    fun , 
+        const Gaudi::StringKey&                             key )
+        : LoKi::AuxFunBase ( std::tie ( fun , key ) ) 
+        , LoKi::Functor<const Hlt::Candidate*,TYPE>()
         , m_fun  ( fun ) 
         , m_key  ( key ) 
         , m_name ()
@@ -60,9 +61,10 @@ namespace LoKi
       }   
       /// constructor from the function and the fictive argument  
       Log_ 
-      ( const LoKi::Functor<const Hlt::Candidate*,TYPE>&    f     , 
-        const bool                                        /* b */ )
-        : LoKi::Functor<const Hlt::Candidate*,TYPE>()
+      ( const LoKi::Functor<const Hlt::Candidate*,TYPE>& f  , 
+        const bool                                       b  )
+        : LoKi::AuxFunBase ( std::tie ( f , b ) ) 
+        , LoKi::Functor<const Hlt::Candidate*,TYPE>()
         , m_fun  ( f            )
         , m_key  ( f.printOut() )
         , m_name () 
@@ -161,7 +163,8 @@ namespace LoKi
       ( const LoKi::Functor<const Hlt::Candidate*,TYPE>&    f      , 
         const Gaudi::StringKey&                             key    , 
         const bool                                          update )
-        : LoKi::Candidates::Log_<TYPE>( f , key ) 
+        : LoKi::AuxFunBase ( std::tie ( f , key , update ) ) 
+        , LoKi::Candidates::Log_<TYPE>( f , key ) 
         , m_update ( update ) 
       {}
       /// MANDATORY: virtual destructor 
@@ -288,9 +291,10 @@ namespace LoKi
       // ======================================================================
       /// constructor from the function and the fictive argument  
       Log_ 
-      ( const LoKi::Functor<const Hlt::Stage*,TYPE>&    f     , 
-        const bool                                   /* a */  )
-        : LoKi::Functor<const Hlt::Stage*,TYPE>()
+      ( const LoKi::Functor<const Hlt::Stage*,TYPE>&  f , 
+        const bool                                    a )
+        : LoKi::AuxFunBase ( std::tie ( f , a ) ) 
+        , LoKi::Functor<const Hlt::Stage*,TYPE>()
         , m_fun     ( f            ) 
         , m_key     ( f.printOut() ) 
         , m_trivial ( true )  
@@ -400,7 +404,8 @@ namespace LoKi
       ( const LoKi::Functor<const Hlt::Stage*,TYPE>&    f      , 
         const Gaudi::StringKey&                         key    , 
         const bool                                      update )
-        : LoKi::Stages::Log_<TYPE>  ( f , key ) 
+        : LoKi::AuxFunBase ( std::tie ( f , key , update ) ) 
+        , LoKi::Stages::Log_<TYPE>  ( f , key ) 
         , m_update ( update ) 
       {} 
       /// MANDATORY: virtual destructor 

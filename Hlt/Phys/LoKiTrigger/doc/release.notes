@@ -4,6 +4,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-01-26 - Vanya Belyaev
+ - first step to use some new LoKi features 
+
 !========================= LoKiTrigger v15r4 2014-12-15 =========================
 
 ! 2014-12-03 - Vanya Belyaev

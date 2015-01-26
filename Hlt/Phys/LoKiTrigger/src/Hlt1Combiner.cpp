@@ -64,7 +64,10 @@ LoKi::Hlt1::Hlt1Combiner::Hlt1Combiner
   const LoKi::Hlt1::Hlt1Combiner::Source&                    particles2 ,
   const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut    ,
   const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut    )
-  : LoKi::BasicFunctors<const Hlt::Candidate*>::Source ()
+  : LoKi::AuxFunBase  ( std::tie ( decay      , output     , 
+                                   particles1 , particles2 ,
+                                   combcut    , mothcut    ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Source ()
   , LoKi::Hlt1::HelperTool( 1 )
   , m_decstring ( decay )
   , m_sink { std::move(output) }
@@ -86,7 +89,10 @@ LoKi::Hlt1::Hlt1Combiner::Hlt1Combiner
   std::string                                                particles2 ,
   const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut    ,
   const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut    )
-  : LoKi::BasicFunctors<const Hlt::Candidate*>::Source ()
+  : LoKi::AuxFunBase  ( std::tie ( decay      , output     , 
+                                   particles1 , particles2 ,
+                                   combcut    , mothcut    ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Source ()
   , LoKi::Hlt1::HelperTool( 1 )
   , m_decstring ( decay )
   , m_sink { std::move(output) }
@@ -210,14 +216,17 @@ LoKi::Hlt1::Hlt1Combiner::operator()
   //std::cout << " == STARTING COMBINATION LOOPS HERE ! == " << std::endl;
 
   // loop over all decays
-  for ( std::vector<Decays::Decay>::const_iterator idecay = m_decays.begin(); idecay != m_decays.end(); idecay++)
+  for ( std::vector<Decays::Decay>::const_iterator idecay = m_decays.begin(); 
+        idecay != m_decays.end(); idecay++)
   {
 
-    //std::cout << "In decay loop for decay: "; idecay->fillStream(std::cout); std::cout << std::endl;
+    // std::cout << "In decay loop for decay: "; 
+    // idecay->fillStream(std::cout); std::cout << std::endl;
 
     Combiner loop ;
     const Decays::Decay::Items& dec_items = idecay->children() ;
-    for ( Decays::Decay::Items::const_iterator child = dec_items.begin() ; child != dec_items.end(); child++)
+    for ( Decays::Decay::Items::const_iterator child = dec_items.begin() ; 
+          child != dec_items.end(); child++)
     {
       //std::cout << "In child loop: "; child->fillStream(std::cout); std::cout << std::endl;
       loop.add( daughters ( child->name() ) ) ;
