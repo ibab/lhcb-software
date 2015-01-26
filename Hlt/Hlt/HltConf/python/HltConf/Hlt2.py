@@ -20,8 +20,8 @@ def import_line_configurables(pkg) :
     #    return [ Hlt2Lines.Hlt2SomeLines.Hlt2SomeLinesConf , ... ]
     #
     import os.path, pkgutil, importlib
-    return  [ getattr( importlib.import_module(pkg.__name__+'.'+name), name+'Conf' ) 
-              for _,name,_ in pkgutil.iter_modules([os.path.dirname(pkg.__file__)]) ]
+    return [getattr(importlib.import_module(pkg.__name__ + '.' + name), name + 'Conf')
+            for _, name, _ in pkgutil.iter_modules(pkg.__path__)]
 
 #import all Hlt2 lines configurables
 import Hlt2Lines

@@ -4,6 +4,10 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2015-01-26 - Roel Aaij
+ - Use a slightly different way to find the list of Hlt1 and Hlt2 Conf modules,
+ 	 which is compatible with the new cmake builds.
+
 !========================= HltConf v12r5 2015-01-20 =========================
 
 ! 2015-1-12 - Sean Benson

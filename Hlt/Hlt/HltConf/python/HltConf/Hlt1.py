@@ -25,9 +25,9 @@ def import_line_configurables(pkg) :
     #    from pkg.xyz import xyzConf 
     #
     import os.path, pkgutil, importlib
-    return  [ getattr( importlib.import_module(pkg.__name__+'.'+name), name+'Conf' ) 
-              for _,name,_ in pkgutil.iter_modules([os.path.dirname(pkg.__file__)]) 
-              if name.endswith('Lines') ]
+    return [getattr(importlib.import_module(pkg.__name__ + '.' + name), name + 'Conf')
+            for _, name, _ in pkgutil.iter_modules(pkg.__path__)
+            if name.endswith('Lines')]
 
 #import all Hlt1 lines configurables  -- and make sure the are kept alive long enough!
 import Hlt1Lines
