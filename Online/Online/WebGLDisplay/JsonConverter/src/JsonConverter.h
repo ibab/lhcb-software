@@ -8,6 +8,14 @@
 #include "Kernel/DaVinciAlgorithm.h"
 #include "Event/Particle.h"
 
+
+// Forward declaration
+class ITrackExtrapolator;
+
+
+
+
+
 /** @class JsonConverter JsonConverter.h
  *  
  *  Converts LHCb Events to JSON format.
@@ -24,12 +32,17 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-  const LHCb::VertexBase* findBestVertex(LHCb::Particle *p);
 
+  /**
+   * Find the best vertex for the particle
+   */
+  const LHCb::VertexBase* findBestVertex(LHCb::Particle *p);
+  
 protected:
 
 private:
-
+  ITrackExtrapolator *m_trackExtrapolator;
+  
 };
 
 /**
@@ -37,5 +50,11 @@ private:
  * Have to understand why not use the standard one ! 
  */
 std::string getParticleName(LHCb::Particle *p);
+
+
+// Some constants for the detectors
+const double HCAL_Z = 14000;
+const double MUON_Z = 19000;
+
 
 #endif // JSONCONVERTER_H

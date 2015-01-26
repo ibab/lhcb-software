@@ -31,6 +31,8 @@
 #include "Kernel/OTChannelID.h"           
 #include "Kernel/LHCbID.h"           
 
+#include "TrackInterfaces/ITrackExtrapolator.h"
+
 using namespace JSON;
 
 //-----------------------------------------------------------------------------
@@ -41,6 +43,19 @@ using namespace JSON;
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( JsonConverter )
+
+
+// Advance declarations
+/**
+ * Process a proto particle, dumping the track to JSON
+ */
+void processTrack(ITrackExtrapolator *extrapolator,
+                  const LHCb::Track* track,
+                  LHCb::ParticleID pid,
+                  double zmin,
+                  double zmax,
+                  Stream& json);
+
 
 
 //=============================================================================
@@ -65,7 +80,7 @@ StatusCode JsonConverter::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-
+  m_trackExtrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator", this);
   return StatusCode::SUCCESS;
 }
 
@@ -332,7 +347,8 @@ StatusCode JsonConverter::execute() {
                {
                  Stream pJson(Container::MAP);
                  partCount++;
-                 pJson <<  std::make_pair("name", getParticleName(p));
+                 std::string partName =  getParticleName(p);
+                 pJson <<  std::make_pair("name", partName);
                  pJson <<  std::make_pair("m", p->measuredMass());
                  pJson <<  std::make_pair("E", p->momentum().E());
                  pJson <<  std::make_pair("px", p->momentum().px());
@@ -340,8 +356,33 @@ StatusCode JsonConverter::execute() {
                  pJson <<  std::make_pair("pz", p->momentum().pz());
                  pJson <<  std::make_pair("q", p->charge());
 
-                 //auto bestVertex = findBestVertex(p);
+                 // XXX Missing Impact parameter info
+                 // Finding boundaries for the track
+                 auto bestVertex = findBestVertex(p);
+                 double zmin = 0;
+                 if (bestVertex == nullptr) 
+                 {  
+                   bestVertex->position().z();
+                 }
                  
+                 double zmax = HCAL_Z;
+                 if (partName == "mu+" || partName == "mu-") 
+                   zmax = MUON_Z;
+
+                 // Now propagating the track!
+                 Stream trackJson(Container::LIST);
+                 if (p->proto() != nullptr) 
+                 {
+                   processTrack(m_trackExtrapolator,
+                                p->proto()->track(), 
+                                p->particleID(),
+                                zmin,
+                                zmax,
+                                trackJson);
+                   pJson <<  std::make_pair("track", trackJson); 
+                 }
+
+                 // Adding this particle to the list
                  allParticlesJson << pJson;
 
                });
@@ -446,14 +487,41 @@ std::string getParticleName(LHCb::Particle *p)
 
 const LHCb::VertexBase* JsonConverter::findBestVertex(LHCb::Particle *p) 
 {
-  LHCb::RecVertices* primaryVertices = get<LHCb::RecVertices>("/Event/Rec/Vertex/Primary");
+  /*LHCb::RecVertices* primaryVertices = get<LHCb::RecVertices>("/Event/Rec/Vertex/Primary");
   std::string relatorName = "GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2";
   IRelatedPVFinder*  pvRelator = tool<IRelatedPVFinder>(relatorName, this);
   auto table = pvRelator->relatedPVs(p, "/Event/Rec/Vertex/Primary");
   auto relPVs = table.relations(p);
-  auto bestVertex = relPVs.back().to();
-  return bestVertex;
+  //std::cout << "TOTO:" << relPVs << std::endl;
+  auto bestVertex = relPVs.back().to();*/
+  
+  const LHCb::VertexBase* bestPV = this->bestPV(p);
+
+  return bestPV;
 }
+
+void processTrack(ITrackExtrapolator *extrapolator,
+                  const LHCb::Track* track, 
+                  LHCb::ParticleID pid,
+                  double zmin,
+                  double zmax,
+                  Stream& json) 
+{
+
+  const int npoints = 10;
+  LHCb::State s;
+  double z;
+  for(int i=0; i < npoints; i++) 
+  {
+    z = zmin + i*(zmax-zmin)/npoints;
+    extrapolator->propagate(*track, z, s, pid);
+    Stream p(Container::LIST);
+    p << s.x() << s.y() << s.z();
+    json << p;
+  }  
+}
+
+
 
 //=============================================================================
 //  Finalize

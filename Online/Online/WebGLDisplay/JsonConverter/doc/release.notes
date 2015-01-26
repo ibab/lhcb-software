@@ -5,5 +5,7 @@
 !-----------------------------------------------------------------------------
 
 !========================= JsonConverter v1r0 2014-12-03 =======================
+! 2015-01-26 - First version that exports hits, particles and their tracks to JSON.
+
 ! 2014-12-03 - Initial commit 
 
