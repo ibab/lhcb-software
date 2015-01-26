@@ -27,7 +27,7 @@ def expandAllVars(env, iterations=10):
     def expandVars(value, env):
         '''expand variables in a string using env, ignoring format errors'''
         try:
-            return Template(value).substitute(env)
+            return Template(value).safe_substitute(env)
         except ValueError:
             return value
     new_env = dict((key, expandVars(value, env))

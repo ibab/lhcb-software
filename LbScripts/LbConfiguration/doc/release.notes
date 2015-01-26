@@ -1,3 +1,7 @@
+2015-01-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-run: fixed variable expansion in SetupProject compatibility (LBCORE-726)
+
 2015-01-12  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v8r3
