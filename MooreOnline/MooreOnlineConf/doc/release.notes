@@ -1,8 +1,10 @@
 !=================================================================================
 ! Package     : MooreOnlineConf
-! Package Coordinator : R. Lambert, G. Raven
+! Package Coordinator : R. Aaij, G. Raven
 ! Purpose     : Holding the master configurable which sets up Moore for the online
 !=================================================================================
+
+!========================= MooreOnlineConf v1r6 2015-01-26 =========================
 
 ! 2015-01-06 - Roel Aaij
  - Add a property to force MDF input when running HLT1 in the timing tests.
