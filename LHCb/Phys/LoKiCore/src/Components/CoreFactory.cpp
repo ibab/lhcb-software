@@ -212,10 +212,10 @@ namespace LoKi
       /// helper method to sdave many lines:
       template <class TYPE1,class TYPE2>
       inline StatusCode _get 
-      ( const std::string& pycode  , 
-        TYPE1*&            local   , 
-        TYPE2&             output  , 
-        const std::string& context ) ;
+      ( const std::string&                                            pycode  , 
+        LoKi::Functor<TYPE1,TYPE2>*&                                  local   , 
+        typename LoKi::Assignable<LoKi::Functor<TYPE1,TYPE2> >::Type& output  ,
+        const std::string&                                            context ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -247,8 +247,8 @@ namespace LoKi
 template <class TYPE1,class TYPE2>
 inline StatusCode LoKi::Hybrid::CoreFactory::_get 
 ( const std::string& pycode  , 
-  TYPE1*&            local   , 
-  TYPE2&             output  ,
+  LoKi::Functor<TYPE1,TYPE2>*&                                  local   , 
+  typename LoKi::Assignable<LoKi::Functor<TYPE1,TYPE2> >::Type& output  ,
   const std::string& context ) 
 {
   // prepare the actual python code 
@@ -256,16 +256,25 @@ inline StatusCode LoKi::Hybrid::CoreFactory::_get
     makeCode  ( m_modules , m_actor , pycode , m_lines , context ) ;
   /// define and lock the scope:
   LoKi::Hybrid::CoreLock lock ( this ) ;   // ATTENTION: the scope is locked!!
-  // clear the placeholder:
-  if ( 0 != local ) { delete local ; local = 0 ; }
-  // execute the code 
-  StatusCode sc = executeCode ( code ) ;
-  if ( sc.isFailure() ) 
-  { return Error ( "Error from LoKi::Hybrid::Base::executeCode"      ) ; } // RETURN 
-  if ( 0 == local     ) 
-  { return Error ( "Invaid object for the code '"+pycode+"'" ) ; } // RETURN 
-  // assign the result 
-  output = *local ;                                                // ASSIGN
+  //
+  // move it into base class ???
+  //
+  // // clear the placeholder:
+  // if ( 0 != local ) { delete local ; local = 0 ; }
+  // // execute the code 
+  // sc = executeCode ( code ) ;
+  // if ( sc.isFailure() ) 
+  // { return Error ( "Error from LoKi::Hybrid::Base::executeCode"      ) ; } // RETURN 
+  // if ( 0 == local     ) 
+  // { return Error ( "Invalid object for the code '" + pycode + "'"    ) ; } // RETURN 
+  // // assign the result 
+  // output = *local ;                                                        // ASSIGN
+  //
+  //
+  // use the base class method 
+  StatusCode sc = LoKi::Hybrid::Base::_get_ ( code , local , output ) ;
+  if ( sc.isFailure() )
+  { return Error ( "Invalid object for the code '" + pycode + "'"    ) ; } // RETURN
   //
   return StatusCode::SUCCESS ;
 }    
@@ -309,6 +318,27 @@ LoKi::Hybrid::CoreFactory::CoreFactory
   declareProperty 
     ( "Lines"   , m_lines   , 
       "Additional Python lines to be executed" ) ;
+  // ==========================================================================
+  // C++
+  // ==========================================================================
+  m_cpplines.push_back ( "#include \"LoKi/LoKiCore.h\""            ) ;
+  m_cpplines.push_back ( "#include \"LoKi/LoKiNumbers.h\""         ) ;
+  //
+  // For Trigger 
+  if ( std::string::npos != name.find ("Hlt" )  || 
+       std::string::npos != name.find ("Trg" )  || 
+       std::string::npos != name.find ("HLT" )  || 
+       std::string::npos != name.find ("TRG" )  || 
+       std::string::npos != name.find ("Trig")  || 
+       std::string::npos != name.find ("TRIG") ) 
+  {
+    m_cpplines.push_back ( "#include \"LoKi/LoKiTracks.h\""         ) ;
+    m_cpplines.push_back ( "#include \"LoKi/LoKiProtoParticles.h\"" ) ;
+    m_cpplines.push_back ( "#include \"LoKi/LoKiPhys.h\""           ) ;
+    m_cpplines.push_back ( "#include \"LoKi/LoKiArrayFunctors.h\""  ) ;
+    m_cpplines.push_back ( "#include \"LoKi/LoKiTrigger.h\""        ) ;
+  }
+  // ==========================================================================
 }
 // ============================================================================
 // Destructor (virtual and protected) 
