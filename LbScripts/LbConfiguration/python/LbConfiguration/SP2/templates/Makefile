@@ -1,5 +1,7 @@
 USE_CMAKE=${use_cmake}
--include build.conf
+ifeq ($$(wildcard build.conf),build.conf)
+include build.conf
+endif
 
 ifneq ($$(USE_CMAKE),)
 ######## CMake case ########
