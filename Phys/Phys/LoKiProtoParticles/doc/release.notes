@@ -6,6 +6,9 @@
 ! Purpose     : New package to deal with ProtoParticles 
 ! -----------------------------------------------------------------------------
 
+! 2015-01-26 - Vanya Belyaev
+ - fix CMakeLists.txt
+
 ! 2015-01-20 - Vanya Belyaev
  - fix mistake in CMakeList
 

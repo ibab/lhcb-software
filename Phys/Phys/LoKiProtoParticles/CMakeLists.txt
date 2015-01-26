@@ -17,7 +17,7 @@ gaudi_add_library(LoKiProtoParticles
 gaudi_add_dictionary(LoKiProtoParticles
                      dict/LoKiProtoParticlesDict.h
                      dict/LoKiProtoParticles.xml
-                     LINK_LIBRARIES RecEvent DaVinciInterfacesLib LoKiCoreLib LoKiUtils LoKiTracksLib LoKiProtoParticlesLib
+                     LINK_LIBRARIES RecEvent DaVinciInterfacesLib LoKiCoreLib LoKiUtils LoKiTracksLib LoKiProtoParticles
                      OPTIONS " -U__MINGW32__ ")
 
 gaudi_install_python_modules()
