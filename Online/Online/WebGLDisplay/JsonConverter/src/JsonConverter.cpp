@@ -81,15 +81,15 @@ StatusCode JsonConverter::execute() {
   //std::map<std::string, boost::any> eventData;
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-  std::cout << "=====> IN JSON CONVERTER" << std::endl;
+   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> IN JSON CONVERTER" << std::endl;
 
 
-  std::cout << "=====> Extracting ODIN " << std::endl;
+   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting ODIN " << endmsg;
   LHCb::ODIN *odin = (LHCb::ODIN *)get<LHCb::ODIN>("/Event/DAQ/ODIN");
-  std::cout << "ODIN RunNumber    : " << odin->runNumber() << std::endl;
-  std::cout << "ODIN EventNumber  : " << odin->eventNumber() << std::endl;
-  std::cout << "ODIN GPS Time     : " << odin->gpsTime() << std::endl;
-  std::cout << "ODIN Event Type   : " << odin->eventType() << std::endl;
+   if ( msgLevel(MSG::DEBUG) ) debug() << "ODIN RunNumber    : " << odin->runNumber() << endmsg;
+   if ( msgLevel(MSG::DEBUG) ) debug() << "ODIN EventNumber  : " << odin->eventNumber() << endmsg;
+   if ( msgLevel(MSG::DEBUG) ) debug() << "ODIN GPS Time     : " << odin->gpsTime() << endmsg;
+   if ( msgLevel(MSG::DEBUG) ) debug() << "ODIN Event Type   : " << odin->eventType() << endmsg;
 
   jsonStream << std::make_pair("runNumber", odin->runNumber());
   jsonStream << std::make_pair("eventNumber", odin->eventNumber());
@@ -102,7 +102,7 @@ StatusCode JsonConverter::execute() {
   }
 
   
-  std::cout << "=====> Extracting PVs " << std::endl;
+   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting PVs " << endmsg;
   LHCb::RecVertices* vertices = get<LHCb::RecVertices>("/Event/Rec/Vertex/Primary");
   int vertexCount = 0;
   Stream vlistJson(Container::LIST);
@@ -120,7 +120,7 @@ StatusCode JsonConverter::execute() {
   // Now adding the entries to the main map
   jsonStream << std::make_pair("PVS", vlistJson);
 
-  std::cout << "=====> Extracting MUON Hits " << std::endl;
+   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting MUON Hits " << endmsg;
   const LHCb::MuonCoords* coords = getIfExists<LHCb::MuonCoords>("Raw/Muon/Coords");
   if( NULL == coords ) {
     if(msgLevel(MSG::INFO)) info()<<" Container Raw/Muon/Coords doesn't exist"<<endmsg;    
@@ -147,7 +147,7 @@ StatusCode JsonConverter::execute() {
     jsonStream << std::make_pair("MUON", muonJson);
   }
   
-  std::cout << "=====> Extracting OT Hits " << std::endl;
+   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting OT Hits " << endmsg;
   const LHCb::OTTimes* otTimes = getIfExists<LHCb::OTTimes>("Raw/OT/Times");
   if( NULL == otTimes ) {
     if(msgLevel(MSG::INFO)) info()<<" Container Raw/OT/Times doesn't exist"<<endmsg;    
@@ -171,7 +171,7 @@ StatusCode JsonConverter::execute() {
     jsonStream << std::make_pair("OT", otJson);
   }
   
-  std::cout << "=====> Extracting IT Hits " << std::endl;
+   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting IT Hits " << endmsg;
   const LHCb::STClusters* itClusters = getIfExists<LHCb::STClusters>("/Event/Raw/IT/Clusters");
   if( NULL == itClusters ) {
     if(msgLevel(MSG::INFO)) info()<<" Container Raw/IT/Clusters doesn't exist"<<endmsg;    
@@ -195,7 +195,7 @@ StatusCode JsonConverter::execute() {
     jsonStream << std::make_pair("IT", itJson);
   }
   
-  std::cout << "=====> Extracting TT Hits " << std::endl;
+   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting TT Hits " << endmsg;
   const LHCb::STClusters* ttClusters = getIfExists<LHCb::STClusters>("/Event/Raw/TT/Clusters");
   if( NULL == ttClusters ) {
     if(msgLevel(MSG::INFO)) info()<<" Container Raw/TT/Clusters doesn't exist"<<endmsg;    
@@ -219,7 +219,7 @@ StatusCode JsonConverter::execute() {
     jsonStream << std::make_pair("TT", ttJson);
   }
 
-  std::cout << "=====> Extracting HCAL Hits " << std::endl;
+   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting HCAL Hits " << endmsg;
   const LHCb::CaloDigits* caloDigits = getIfExists<LHCb::CaloDigits>("/Event/Raw/Hcal/Digits");
   if( NULL == caloDigits ) {
     if(msgLevel(MSG::INFO)) info()<<" Container Raw/Hcal/Digits doesn't exist"<<endmsg;    
@@ -248,7 +248,7 @@ StatusCode JsonConverter::execute() {
     jsonStream << std::make_pair("HCAL", hcalJson);
   }
 
-  std::cout << "=====> Extracting ECAL Hits " << std::endl;
+   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting ECAL Hits " << endmsg;
   const LHCb::CaloDigits* ecalDigits = getIfExists<LHCb::CaloDigits>("/Event/Raw/Ecal/Digits");
   if( NULL == ecalDigits ) {
     if(msgLevel(MSG::INFO)) info()<<" Container Raw/Ecal/Digits doesn't exist"<<endmsg;    
@@ -278,7 +278,7 @@ StatusCode JsonConverter::execute() {
   }
 
 
-  std::cout << "=====> Extracting VELO Hits " << std::endl;
+   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting VELO Hits " << endmsg;
   const LHCb::VeloClusters* veloClusters = getIfExists<LHCb::VeloClusters>("/Event/Raw/Velo/Clusters");
   if( NULL == veloClusters ) {
     if(msgLevel(MSG::INFO)) info()<<" Container Raw/Velo/Clusters doesn't exist"<<endmsg;    
@@ -317,9 +317,10 @@ StatusCode JsonConverter::execute() {
     jsonStream << std::make_pair("VELOR", veloRJson);
   }
 
-  std::cout << "=====> Extracting Particles " << std::endl;
+   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting Particles " << endmsg;
   const std::string PartsTESLocation("/Event/Phys/StdNoPIDsPions/Particles");  
   LHCb::Particles *inputParts = getIfExists<LHCb::Particles>(PartsTESLocation);
+  Stream allParticlesJson(Container::LIST);
   int partCount = 0;
   if( NULL == inputParts ) {
      if(msgLevel(MSG::INFO)) info()<<" Container /Event/Phys/StdNoPIDsPions/Particles doesn't exist"<<endmsg;    
@@ -327,20 +328,32 @@ StatusCode JsonConverter::execute() {
    {
      for_each (inputParts->begin(), 
                inputParts->end(),
-               [&partCount] (LHCb::Particle *p)
+               [this, &partCount, &allParticlesJson] (LHCb::Particle *p)
                {
+                 Stream pJson(Container::MAP);
                  partCount++;
-                 std::cout << getParticleName(p) << std::endl;
+                 pJson <<  std::make_pair("name", getParticleName(p));
+                 pJson <<  std::make_pair("m", p->measuredMass());
+                 pJson <<  std::make_pair("E", p->momentum().E());
+                 pJson <<  std::make_pair("px", p->momentum().px());
+                 pJson <<  std::make_pair("py", p->momentum().py());
+                 pJson <<  std::make_pair("pz", p->momentum().pz());
+                 pJson <<  std::make_pair("q", p->charge());
+
+                 //auto bestVertex = findBestVertex(p);
+                 
+                 allParticlesJson << pJson;
+
                });
    
-     std::cout << "Part count " << partCount << std::endl;  
+      if ( msgLevel(MSG::DEBUG) ) debug() << "Part count " << partCount << endmsg;  
    }
-   
+  jsonStream << std::make_pair("PARTICLES", allParticlesJson);
 
   // Now printing the result
-  //std::cout << "=====================> JSON Result" << std::endl;
-  //std::cout << jsonStream.str() << std::endl;
-  //std::cout << "=====================> JSON Result" << std::endl;
+  // if ( msgLevel(MSG::DEBUG) ) debug() << "=====================> JSON Result" << endmsg;
+  // if ( msgLevel(MSG::DEBUG) ) debug() << jsonStream.str() << endmsg;
+  // if ( msgLevel(MSG::DEBUG) ) debug() << "=====================> JSON Result" << endmsg;
   
   std::ofstream jsonOutput;
   std::stringstream buf;
@@ -352,6 +365,8 @@ StatusCode JsonConverter::execute() {
   jsonOutput.open(buf.str());
   jsonOutput << jsonStream.str() << std::endl;
   jsonOutput.close();
+
+  if(msgLevel(MSG::INFO)) info()<< "Written JSON file: "  << buf.str() <<endmsg;    
   
 
   setFilterPassed(true);  // Mandatory. Set to true if event is accepted.
@@ -427,6 +442,17 @@ std::string getParticleName(LHCb::Particle *p)
 
   return pname;
 
+}
+
+const LHCb::VertexBase* JsonConverter::findBestVertex(LHCb::Particle *p) 
+{
+  LHCb::RecVertices* primaryVertices = get<LHCb::RecVertices>("/Event/Rec/Vertex/Primary");
+  std::string relatorName = "GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2";
+  IRelatedPVFinder*  pvRelator = tool<IRelatedPVFinder>(relatorName, this);
+  auto table = pvRelator->relatedPVs(p, "/Event/Rec/Vertex/Primary");
+  auto relPVs = table.relations(p);
+  auto bestVertex = relPVs.back().to();
+  return bestVertex;
 }
 
 //=============================================================================
