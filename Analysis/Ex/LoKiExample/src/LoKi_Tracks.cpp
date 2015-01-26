@@ -11,6 +11,8 @@
 // LoKi
 // ============================================================================
 #include "LoKi/Algo.h"
+#include "LoKi/ParticleCuts.h"
+#include "LoKi/TrackCuts.h"
 // ============================================================================
 /** @file
  *  Simple algorithm to illustrate the 

@@ -7,6 +7,9 @@
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
 
+! 2015-01-26 - Vanya Belyaev
+ - fix to accomodate the change in LoKi header files 
+
 !========================= LoKiExample v8r8p4 2013-05-07 =========================
 
 ! 2013-02-28 - Chris Jones

@@ -5,6 +5,7 @@
 // LoKi 
 // ===========================================================================
 #include "LoKi/LoKi.h"
+#include "LoKi/ParticleCuts.h"
 // ===========================================================================
 /** @file 
  *  simple example on the extension of LoKi-based algorithm with some 
