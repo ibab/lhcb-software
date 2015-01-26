@@ -1269,6 +1269,9 @@ class SetupProject(object):
                             no_user_area=False,
                             )
 
+        from SP2.options import addPlatform
+        addPlatform(parser)
+
         if 'CMTSITE' in self.environment and \
             self.environment["CMTSITE"] in self.default_externals:
             parser.set_defaults(site_externals = self.default_externals[self.environment["CMTSITE"]])
@@ -1317,7 +1320,7 @@ class SetupProject(object):
             if 'LHCB_USERLOGS' in self.environment and 'USER' in self.environment \
                 and self.project_info.version \
                 and lhcb_style_version.match(self.project_info.version): # I do not want to record non-standard or no versions
-                dirname = os.environ['LHCB_USERLOGS']
+                dirname = self.environment['LHCB_USERLOGS']
                 if os.path.isdir(dirname):
                     try:
                         subdir = os.path.join(dirname, self.project_info.name.upper())
@@ -1727,7 +1730,7 @@ class SetupProject(object):
                                                                        ignore_not_ready = self.opts.ignore_not_ready))
                     self.opts.use += pkgs
 
-        platform = self.environment["CMTCONFIG"]
+        platform = self.opts.platform
         for p in self.overriding_projects + [self.project_info] + self.runtime_projects :
             if not p.supportsPlatform(platform, self.user_area):
                 self._error("Project %s %s is not available for platform %s" % (p.name, p.version, platform))
@@ -1735,6 +1738,10 @@ class SetupProject(object):
             self._verbose("Project %s %s uses %s policy"%(p.name,
                                                           p.version,
                                                           p.policy))
+
+        if self.opts.platform:
+            self.environment['CMTCONFIG'] = self.opts.platform
+
         return 0
 
     def main(self, args = None):
@@ -1842,7 +1849,7 @@ class SetupProject(object):
                 varname = self.project_info.name.upper() + "ROOT"
                 if varname in self.environment:
                     exedir = os.path.join(self.environment[varname],
-                                          self.environment["CMTCONFIG"])
+                                          self.opts.platform)
                     if os.path.isdir(exedir):
                         # it make sense to add it only if it exists
                         messages.append('Appending %s to the path.' % exedir)

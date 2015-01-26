@@ -1,5 +1,9 @@
 2015-01-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* SetupProject: added --platform option (fixes LBCORE-724)
+
+2015-01-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* lb-dev: made build.conf really optional (LBCORE-722)
 
 2015-01-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
