@@ -20,16 +20,38 @@
  *                 by $Author$ 
  */
 // ============================================================================
-#include "LoKi/TrackTypes.h"
-#include "LoKi/Tracks.h"
-#include "LoKi/TrackCuts.h"
-#include "LoKi/HltFunctions.h"
+#include "LoKi/TriggerTypes.h"
+//
 #include "LoKi/HltCuts.h"
+#include "LoKi/HltCandidates.h"
+#include "LoKi/HltStages.h"
+//
 #include "LoKi/RecVertices.h"
-#include "LoKi/RecVertexCuts.h"
+#include "LoKi/MultiTracks.h"
+//
+#include "LoKi/Hlt1Combiner.h"
+#include "LoKi/Hlt1Functions.h"
+#include "LoKi/Hlt1Wrappers.h"
+//
+// #include "LoKi/Hlt1Binders.h"
+// #include "LoKi/HltBinders.h"
+// #include "LoKi/HltBindFilters.h"
+//
 #include "LoKi/TrSources.h"
+#include "LoKi/TrFilter.h"
+#include "LoKi/TrMatch.h"
+#include "LoKi/TrUpgrade.h"
+//
+#include "LoKi/VxMaker.h"
+#include "LoKi/VxUpgrade.h"
+#include "LoKi/VxCreator.h"
+//
+#include "LoKi/TrgSources.h"
+#include "LoKi/MatchTracks.h"
+#include "LoKi/CacheFuncs.h"
 // ============================================================================
 #include "LoKi/ITrgFunctorFactory.h"
+#include "LoKi/ITrgFunctorAntiFactory.h"
 // ============================================================================
 // The END 
 // ============================================================================

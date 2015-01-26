@@ -17,7 +17,6 @@
 #include "LoKi/UpgradeTool.h"
 #include "TrUpgrade.h"
 // ============================================================================
-// ============================================================================
 /** @file
  *  This file is part of LoKi project:
  *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
