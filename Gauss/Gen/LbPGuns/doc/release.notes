@@ -4,6 +4,12 @@
 ! Purpose     : Holds code for generaion of particle guns
 !-----------------------------------------------------------------------------
 
+!========================= LbPGuns v6r0p1 2015-01-26 =========================
+! 2015-01-26 - Gloria Corti
+ - Fix bug in particle guns that does not reject events that do not satisfy the
+   decay cuts but just clean the decay product. 
+   See https://its.cern.ch/jira/browse/LHCBGAUSS-349
+
 !========================== LbPGuns v6r0 2014-12-17 ==========================
 ! 2014-11-28 - Gloria Corti
  - Try to fix warnings when compiling with --pedantic

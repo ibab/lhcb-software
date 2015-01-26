@@ -267,8 +267,11 @@ StatusCode ParticleGun::execute() {
           passCut = m_genCutTool -> applyCut( theParticleList , theGenEvent ,
                                               theGenCollision ) ;
           // event does not pass cuts
-          if ( !passCut || theParticleList.empty() )
+          if ( !passCut || theParticleList.empty() ){
+            
             HepMCUtils::RemoveDaughters( theSignal ) ;
+            goodEvent = false;
+          }
           else ++m_nAfterCut;
         }
       }
