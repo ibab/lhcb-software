@@ -4,6 +4,8 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+!========================= MooreScripts v1r9 2015-01-26 =========================
+
 ! 2015-01-15 - Roel Aaij
  - Online xml files are now written for FEST, use them.
  - Allow Hlt2 to run on MDF files in partition TEST.

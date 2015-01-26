@@ -1,12 +1,12 @@
 #============================================================================
 # $Id: requirements,v 1.143 2010-09-10 11:34:50 graven Exp $
 # Created    : 13/09/2013 by R. Lambert
-# Maintainer : R. Lambert, G. Raven
+# Maintainer : R. Aaij, G. Raven
 #============================================================================
 
 #============================================================================
 package MooreScripts
-version           v1r8
+version           v1r9
 
 branches doc cmt python scripts tests install
 

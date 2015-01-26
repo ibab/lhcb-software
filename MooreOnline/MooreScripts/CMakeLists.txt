@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MooreScripts
 ################################################################################
-gaudi_subdir(MooreScripts v1r8)
+gaudi_subdir(MooreScripts v1r9)
 
 gaudi_depends_on_subdirs(Det/DDDB
                          GaudiConf
