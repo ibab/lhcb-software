@@ -284,4 +284,10 @@ if(GAUDI_ATLAS)
 
   add_definitions(-DATLAS_GAUDI_V21)
   include(AthenaBuildFlags OPTIONAL)
+else()
+  # FIXME: these macros are LHCb specific, but we do not have yet a way to set
+  # compile flags in a project, such that they are inherited by other projects.
+  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_definitions(-DGOD_NOALLOC)
+  endif()
 endif()
