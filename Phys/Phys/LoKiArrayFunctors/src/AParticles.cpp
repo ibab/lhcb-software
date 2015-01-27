@@ -704,7 +704,8 @@ std::ostream& LoKi::AParticles::MinChild::fillStream
 // ============================================================================
 LoKi::AParticles::MaxChild::MaxChild 
 ( const LoKi::PhysTypes::Func& fun  )
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( fun ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun ) 
   , m_cut    ( LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant( true ) ) 
   , m_maxval ( -1 * std::numeric_limits<double>::max() ) 
@@ -715,7 +716,8 @@ LoKi::AParticles::MaxChild::MaxChild
 LoKi::AParticles::MaxChild::MaxChild 
 ( const LoKi::PhysTypes::Func& fun  ,
   const double                 maxv ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( fun , maxv ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
   , m_fun    ( fun ) 
   , m_cut    ( LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant( true ) ) 
   , m_maxval ( maxv ) 
@@ -1997,7 +1999,8 @@ LoKi::AParticles::DOCA::DOCA
   const size_t       i2    , 
   const std::string& nick  ,
   const bool         allow ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function()
+  : LoKi::AuxFunBase ( std::tie ( i1 , i2 , nick , allow ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function()
   , m_eval ( i1 , i2 , nick , allow ) 
 {}
 // ============================================================================
@@ -2062,7 +2065,8 @@ LoKi::AParticles::DOCAChi2::DOCAChi2
   const size_t       i2    , 
   const std::string& nick  ,
   const bool         allow ) 
-  : LoKi::AParticles::DOCA ( i1 , i2 , nick , allow ) 
+  : LoKi::AuxFunBase ( std::tie ( i1 , i2 , nick , allow ) )
+  , LoKi::AParticles::DOCA ( i1 , i2 , nick , allow ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method

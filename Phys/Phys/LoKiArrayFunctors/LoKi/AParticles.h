@@ -1283,7 +1283,8 @@ namespace LoKi
       template <class OBJECT, class FUNCTOR>
       WrongMass ( OBJECT  begin , 
                   OBJECT  end   , 
-                  FUNCTOR func  ) 
+                  FUNCTOR func  , 
+                  const   int /* a */ ) // fictive argument  
         : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
         , m_masses ( end - begin ) 
       {
