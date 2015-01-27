@@ -19,24 +19,17 @@ __version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.44 $"
 
 from Gaudi.Configuration import * 
 from LHCbKernel.Configuration import *
-def import_line_configurables(pkg) :
-    # import all modules in Hlt1Lines, and require each module xyz to contain a class xyzConf
-    # i.e. do the equivalent of 
-    #    from pkg.xyz import xyzConf 
-    #
-    import os.path, pkgutil, importlib
-    return [getattr(importlib.import_module(pkg.__name__ + '.' + name), name + 'Conf')
-            for _, name, _ in pkgutil.iter_modules(pkg.__path__)
-            if name.endswith('Lines')]
+from ThresholdUtils import importLineConfigurables
 
 #import all Hlt1 lines configurables  -- and make sure the are kept alive long enough!
 import Hlt1Lines
-__hlt1linesconfs = import_line_configurables(Hlt1Lines)
+_hlt1linesconfs = importLineConfigurables(Hlt1Lines, endsWithLines = True)
 # add them in our scope so that genConfUser can find it... 
-globals().update( ( cfg.__name__, cfg ) for cfg in __hlt1linesconfs )
+globals().update( ( cfg.__name__, cfg ) for cfg in _hlt1linesconfs )
+
 
 class Hlt1Conf(LHCbConfigurableUser):
-   __used_configurables__ = import_line_configurables(Hlt1Lines)
+   __used_configurables__ = _hlt1linesconfs
 
    __slots__ = { "ThresholdSettings"            : {} # dictionary decoded in HltThresholdSettings
                }
@@ -66,7 +59,7 @@ class Hlt1Conf(LHCbConfigurableUser):
       ## Existing stuff
       from ThresholdUtils import setThresholds
       from functools import partial
-      map( partial( setThresholds, self.getProp("ThresholdSettings") ) , import_line_configurables(Hlt1Lines) )
+      map( partial( setThresholds, self.getProp("ThresholdSettings") ) , _hlt1linesconfs )
 
       from HltLine.HltLine     import Hlt1Line
       Hlt1Line( 'Global', HLT= "HLT_PASS_SUBSTR('Hlt1') ", priority = 255 ) 

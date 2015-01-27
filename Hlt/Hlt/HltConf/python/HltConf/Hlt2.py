@@ -12,22 +12,13 @@ import types
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import GaudiSequencer as Sequence
-
-def import_line_configurables(pkg) :
-    # import all modules in Hlt2Lines, and require each file xyz to contain a class xyzConf
-    # i.e. do the equivalent of 
-    #    import Hlt2Lines.Hlt2SomeLines, ...
-    #    return [ Hlt2Lines.Hlt2SomeLines.Hlt2SomeLinesConf , ... ]
-    #
-    import os.path, pkgutil, importlib
-    return [getattr(importlib.import_module(pkg.__name__ + '.' + name), name + 'Conf')
-            for _, name, _ in pkgutil.iter_modules(pkg.__path__)]
+from ThresholdUtils import importLineConfigurables
 
 #import all Hlt2 lines configurables
 import Hlt2Lines
-__hlt2linesconfs = import_line_configurables(Hlt2Lines)
+_hlt2linesconfs = importLineConfigurables(Hlt2Lines)
 # explicitly put them in our  scope so that genConfUser can find it... 
-globals().update( ( cfg.__name__, cfg ) for cfg in __hlt2linesconfs )
+globals().update( ( cfg.__name__, cfg ) for cfg in _hlt2linesconfs )
 
 #
 # The tracking configurations
@@ -47,7 +38,7 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , (Hlt2Tracking, "Hlt2BiKalmanFittedRichForLowPTParticlesForwardTracking")
                              , (Hlt2Tracking, "Hlt2BiKalmanFittedDownstreamTracking") 
                              , (Hlt2Tracking, "Hlt2BiKalmanFittedForwardTracking")
-                             ] + import_line_configurables(Hlt2Lines)
+                             ] + _hlt2linesconfs
 
     __slots__ = { "DataType"                   : '2010'    # datatype is one of 2009, MC09, DC06...
                 , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration
@@ -86,7 +77,7 @@ class Hlt2Conf(LHCbConfigurableUser):
         from ThresholdUtils import setThresholds
         from functools import partial
         from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
-        map( partial(  setThresholds, self.getProp("ThresholdSettings") ) , import_line_configurables(Hlt2Lines) )
+        map( partial(  setThresholds, self.getProp("ThresholdSettings") ) , _hlt2linesconfs )
         Hlt2Line( "Global", HLT= "HLT_PASS_SUBSTR('Hlt2') ", priority = 255, VoidFilter = '' )
        
 ###################################################################################

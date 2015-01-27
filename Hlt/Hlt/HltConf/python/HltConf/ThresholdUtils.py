@@ -48,3 +48,14 @@ def Name2Threshold(name) :
         #log.warning(' ## type is %-30s ##' % Name2Threshold._dict[name].HltType() )
         log.warning(' '+'#'*(41+len(name)) )
     return Name2Threshold._dict[name]
+
+def importLineConfigurables(pkg, endsWithLines = False) :
+    # import all modules in Hlt{1,2}Lines, and require each file xyz to contain a class xyzConf
+    # i.e. do the equivalent of 
+    #    import HltXLines.HltXSomeLines, ...
+    #    return [ HltXLines.HltXSomeLines.HltXSomeLinesConf , ... ]
+    #
+    import os.path, pkgutil, importlib
+    return [getattr(importlib.import_module(pkg.__name__ + '.' + name), name + 'Conf')
+            for _, name, _ in pkgutil.iter_modules(pkg.__path__)
+            if (not endsWithLines or (endsWithLines and name.endswith('Lines')))]
