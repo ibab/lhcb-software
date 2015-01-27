@@ -418,9 +418,9 @@ StatusCode PatFwdTool::initialize ( ) {
       return StatusCode::FAILURE;
   }
   if (m_ambiguitiesFromPitchResiduals) {
-    info() << "Resolving ambiguities from pitch residuals." << endmsg;
+    debug() << "Resolving ambiguities from pitch residuals." << endmsg;
   } else {
-    info() << "Resolving ambiguities based on distance to track." << endmsg;
+    debug() << "Resolving ambiguities based on distance to track." << endmsg;
   }
   return StatusCode::SUCCESS;
 }

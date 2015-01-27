@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-01-27 - Manuel Tobias Schiller
+ - PatFwdTool: demote an info() printout to debug(), to keep the log files
+   clean
+
+! 2015-01-27 - Manuel Tobias Schiller
  - PatSeeding & friends: more work to take advantage of PatForwardHit::isOT()
 
 ! 2015-01-25 - Manuel Tobias Schiller
