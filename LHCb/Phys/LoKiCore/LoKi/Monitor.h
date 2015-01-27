@@ -240,9 +240,9 @@ namespace Gaudi
   {
     // ========================================================================
     GAUDI_API std::string toCpp ( const LoKi::Histo&       o ) ;
+    GAUDI_API std::string toCpp ( const LoKi::CounterDef&  o ) ;
     GAUDI_API std::string toCpp ( const GaudiAlg::ID&      o ) ;
     GAUDI_API std::string toCpp ( const Gaudi::Histo1DDef& o ) ;
-    GAUDI_API std::string toCpp ( const LoKi::CounterDef&  o ) ;
     // ========================================================================
   }
   // ==========================================================================

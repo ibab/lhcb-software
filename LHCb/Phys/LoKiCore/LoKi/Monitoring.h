@@ -127,9 +127,9 @@ namespace LoKi
       /// the "main" predicate:
       LoKi::FunctorFromFunctor<TYPE,TYPE2> m_cut ;      // the "main" predicate
       /// generic counter used for monitoring:
-      StatEntity* m_stat ;               // generic counter used for monitoring
+      mutable StatEntity* m_stat   ;     // generic counter used for monitoring
       /// counter description 
-      LoKi::CounterDef m_cntdef ;       // counter description 
+      LoKi::CounterDef    m_cntdef ;     // counter description 
       // ======================================================================
     };
     // ========================================================================
@@ -190,9 +190,9 @@ namespace LoKi
       /// the "main" predicate:
       LoKi::FunctorFromFunctor<void,TYPE2> m_cut ;      // the "main" predicate
       /// generic counter used for monitoring:
-      StatEntity* m_stat ;               // generic counter used for monitoring
+      mutable StatEntity* m_stat ;       // generic counter used for monitoring
       /// counter description 
-      LoKi::CounterDef m_cntdef ;       // counter description 
+      LoKi::CounterDef    m_cntdef ;    // counter description 
       // ======================================================================
     };
     // ========================================================================
@@ -302,7 +302,7 @@ namespace LoKi
       /// the "main" function:
       LoKi::FunctorFromFunctor<TYPE,TYPE2> m_fun ; // the "main" function
       /// the histogram for monitoring 
-      AIDA::IHistogram1D*              m_histo ; // the histogram for monitoring 
+      mutable AIDA::IHistogram1D*      m_histo ; // the histogram for monitoring 
       /// histogram description for lazy instantiation 
       LoKi::Histo                      m_hdef  ; // histogram description
       // ======================================================================
@@ -375,7 +375,7 @@ namespace LoKi
       /// the "main" function:
       LoKi::FunctorFromFunctor<void,TYPE2> m_fun ; // the "main" function
       /// the histogram for monitoring 
-      AIDA::IHistogram1D*              m_histo ; // the histogram for monitoring 
+      mutable AIDA::IHistogram1D*      m_histo ; // the histogram for monitoring 
       /// histogram description for lazy instantiation 
       LoKi::Histo                      m_hdef  ; // histogram description
       // ======================================================================
@@ -816,6 +816,13 @@ namespace LoKi
   { 
     return plot ( cut , LoKi::HistoBook::book ( histo , id , csvc ) ) ;
   }
+  // ==========================================================================
+  template <class TYPE, class TYPE2> 
+  inline 
+  LoKi::Monitoring::Plot<TYPE,TYPE2>
+  plot ( const LoKi::Functor<TYPE,TYPE2>& cut , 
+         const LoKi::Histo&               hid )
+  { return LoKi::Monitoring::Plot<TYPE,TYPE2>( cut , hid ) ; }
   // ==========================================================================
   /** helper function to instantiate the monitored functor 
    *  

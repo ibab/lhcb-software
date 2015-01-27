@@ -705,10 +705,10 @@ operator+ ( const LoKi::Functor<TYPE,TYPE2>&  fun1 ,
  *  @date 2001-01-23
  */
 template <class TYPE, class TYPE2>
-inline   LoKi::Plus<TYPE,TYPE2>
+inline   LoKi::SumByValue<TYPE,TYPE2>
 operator+ ( const LoKi::Functor<TYPE,TYPE2>&        fun ,
             typename LoKi::Constant<TYPE,TYPE2>::T2 val )
-{ return LoKi::Plus<TYPE,TYPE2>( fun , val ) ; }
+{ return LoKi::SumByValue<TYPE,TYPE2>( fun , val ) ; }
 // ============================================================================
 /** inline construction of operator "+"
  *
@@ -731,10 +731,10 @@ operator+ ( const LoKi::Functor<TYPE,TYPE2>&        fun ,
  *  @date 2001-01-23
  */
 template <class TYPE, class TYPE2>
-inline   LoKi::Plus<TYPE,TYPE2>
+inline   LoKi::SumByValue<TYPE,TYPE2>
 operator+ ( typename LoKi::Constant<TYPE,TYPE2>::T2 val ,
             const LoKi::Functor<TYPE,TYPE2>&        fun )
-{ return LoKi::Plus<TYPE,TYPE2>( val , fun ) ; }
+{ return LoKi::SumByValue<TYPE,TYPE2>( val , fun ) ; }
 // ============================================================================
 /** inline construction of operator "-"
  *
@@ -783,10 +783,10 @@ operator- ( const LoKi::Functor<TYPE,TYPE2>&  fun1 ,
  *  @date 2001-01-23
  */
 template <class TYPE, class TYPE2>
-inline   LoKi::Minus<TYPE,TYPE2>
+inline   LoKi::Minus1<TYPE,TYPE2>
 operator- ( const LoKi::Functor<TYPE,TYPE2>&        fun ,
             typename LoKi::Constant<TYPE,TYPE2>::T2 val )
-{ return LoKi::Minus<TYPE,TYPE2> ( fun  , val ) ; }
+{ return LoKi::Minus1<TYPE,TYPE2> ( fun  , val ) ; }
 // ============================================================================
 /** inline construction of operator "-"
  *
@@ -810,10 +810,10 @@ operator- ( const LoKi::Functor<TYPE,TYPE2>&        fun ,
  *  @date 2001-01-23
  */
 template <class TYPE, class TYPE2>
-inline   LoKi::Minus<TYPE,TYPE2>
+inline   LoKi::Minus2<TYPE,TYPE2>
 operator- ( typename LoKi::Constant<TYPE,TYPE2>::T2 val ,
             const LoKi::Functor<TYPE,TYPE2>&        fun )
-{ return LoKi::Minus<TYPE,TYPE2> ( val , fun ) ; }
+{ return LoKi::Minus2<TYPE,TYPE2> ( val , fun ) ; }
 // ============================================================================
 /** inline construction of operator "/"
  *
@@ -863,10 +863,10 @@ operator/ ( const LoKi::Functor<TYPE,TYPE2>&  fun1 ,
  *  @date 2001-01-23
  */
 template <class TYPE,class TYPE2>
-inline   LoKi::Divide<TYPE,TYPE2>
+inline   LoKi::Divide1<TYPE,TYPE2>
 operator/ ( const LoKi::Functor<TYPE,TYPE2>&        fun ,
             typename LoKi::Constant<TYPE,TYPE2>::T2 val )
-{ return LoKi::Divide<TYPE,TYPE2>  ( fun  , val ) ; }
+{ return LoKi::Divide1<TYPE,TYPE2>  ( fun  , val ) ; }
 // ============================================================================
 /** inline construction of operator "/"
  *
@@ -891,10 +891,10 @@ operator/ ( const LoKi::Functor<TYPE,TYPE2>&        fun ,
  *  @date 2001-01-23
  */
 template <class TYPE,class TYPE2>
-inline   LoKi::Divide<TYPE,TYPE2>
+inline   LoKi::Divide2<TYPE,TYPE2>
 operator/ ( typename LoKi::Constant<TYPE,TYPE2>::T2 val ,
             const LoKi::Functor<TYPE,TYPE2>&        fun )
-{ return LoKi::Divide<TYPE,TYPE2>  ( val , fun ) ; }
+{ return LoKi::Divide2<TYPE,TYPE2>  ( val , fun ) ; }
 // ============================================================================
 /** inline construction of operator "*"
  *
@@ -944,10 +944,10 @@ operator* ( const LoKi::Functor<TYPE,TYPE2>&  fun1 ,
  *  @date 2001-01-23
  */
 template <class TYPE,class TYPE2>
-inline   LoKi::Multiply<TYPE,TYPE2>
+inline   LoKi::MultiplyByValue<TYPE,TYPE2>
 operator* ( const LoKi::Functor<TYPE,TYPE2>&        fun ,
             typename LoKi::Constant<TYPE,TYPE2>::T2 val )
-{ return LoKi::Multiply<TYPE,TYPE2> ( fun , val ) ; }
+{ return LoKi::MultiplyByValue<TYPE,TYPE2> ( fun , val ) ; }
 // ============================================================================
 /** inline construction of operator "*"
  *
@@ -970,12 +970,10 @@ operator* ( const LoKi::Functor<TYPE,TYPE2>&        fun ,
  *  @date 2001-01-23
  */
 template <class TYPE,class TYPE2>
-inline   LoKi::Multiply<TYPE,TYPE2>
+inline   LoKi::MultiplyByValue<TYPE,TYPE2>
 operator* ( typename LoKi::Constant<TYPE,TYPE2>::T2 val ,
             const LoKi::Functor<TYPE,TYPE2>&        fun )
-{ return LoKi::Multiply<TYPE,TYPE2> ( val , fun ) ; }
-
-
+{ return LoKi::MultiplyByValue<TYPE,TYPE2> ( val , fun ) ; }
 // ============================================================================
 template <class TYPE>
 inline LoKi::EqualToList<TYPE>

@@ -29,21 +29,29 @@ namespace LoKi
   class FirstN     ; 
   class Sort       ; 
   class Param      ; 
+  class Histo      ; 
+  class CounterDef ; 
 }
 namespace LHCb 
 {
   class ParticleID ;
   class LHCbID     ;
 }
+namespace Gaudi
+{
+  class StringKey  ;
+  class Time       ;
+  class TimeSpan   ;
+  class Histo1DDef ;
+}
+// ============================================================================
 namespace Decays
 {
   class iNode ;
 }
-namespace Gaudi
+namespace GaudiAlg 
 {
-  class StringKey ;
-  class Time      ;
-  class TimeSpan  ;
+  class ID ;
 }
 // ============================================================================
 namespace Gaudi
@@ -53,19 +61,27 @@ namespace Gaudi
   {
     // ========================================================================
     GAUDI_API std::string toCpp ( const LoKi::AuxFunBase&    o ) ;
+    GAUDI_API std::string toCpp ( const LoKi::CounterDef&    o ) ;
     GAUDI_API std::string toCpp ( const LoKi::Dump&          o ) ;
     GAUDI_API std::string toCpp ( const LoKi::FirstN&        o ) ;
-    GAUDI_API std::string toCpp ( const LoKi::Sort&          o ) ;
-    GAUDI_API std::string toCpp ( const LoKi::Param&         o ) ;
+    GAUDI_API std::string toCpp ( const LoKi::Histo&         o ) ;
     GAUDI_API std::string toCpp ( const LoKi::LorentzVector& o ) ;
-    GAUDI_API std::string toCpp ( const LoKi::ThreeVector&   o ) ;
     GAUDI_API std::string toCpp ( const LoKi::Point3D&       o ) ;
-    GAUDI_API std::string toCpp ( const LHCb::ParticleID&    o ) ;
+    GAUDI_API std::string toCpp ( const LoKi::Param&         o ) ;
+    GAUDI_API std::string toCpp ( const LoKi::Sort&          o ) ;
+    GAUDI_API std::string toCpp ( const LoKi::ThreeVector&   o ) ;
+    //
     GAUDI_API std::string toCpp ( const LHCb::LHCbID&        o ) ;
-    GAUDI_API std::string toCpp ( const Decays::iNode&       o ) ;
+    GAUDI_API std::string toCpp ( const LHCb::ParticleID&    o ) ;
+    //
     GAUDI_API std::string toCpp ( const Gaudi::Time&         o ) ;
     GAUDI_API std::string toCpp ( const Gaudi::TimeSpan&     o ) ;
     GAUDI_API std::string toCpp ( const Gaudi::StringKey&    o ) ;
+    GAUDI_API std::string toCpp ( const Gaudi::Histo1DDef&   o ) ;
+    //
+    GAUDI_API std::string toCpp ( const GaudiAlg::ID&        o ) ;
+    // ========================================================================
+    GAUDI_API std::string toCpp ( const Decays::iNode&       o ) ;
     // ========================================================================
   }
   // ==========================================================================

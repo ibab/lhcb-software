@@ -113,7 +113,6 @@ LoKi::Hybrid::Base::Base
   while ( std::string::npos != m_cppname.find ( '.' ) ) 
   { m_cppname.replace ( m_cppname.find ( '.' ) , 1 , "_" ) ; }
   m_cppname.insert ( 0 , "FUNCTORS_" ) ;
-  m_cppname.append (     ".cpp"      ) ;
   //
   declareProperty ( "CppFileName", 
                     m_cppname    , 
@@ -448,6 +447,7 @@ std::string LoKi::Hybrid::Base::makeCode
 // ============================================================================
 void LoKi::Hybrid::Base::writeCpp () const 
 {
+  //
   std::ofstream file ( m_cppname ) ;
   
   //

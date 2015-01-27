@@ -57,7 +57,8 @@ namespace LoKi
      */
     Power ( const LoKi::Functor<TYPE,TYPE2>& fun , 
             const int                        val ) 
-      : LoKi::Functor<TYPE,TYPE2>() 
+      : LoKi::AuxFunBase ( std::tie ( fun , val ) ) 
+      , LoKi::Functor<TYPE,TYPE2>() 
       , m_fun ( fun ) 
       , m_val ( val ) 
     {}
@@ -122,7 +123,8 @@ namespace LoKi
      */
     Power ( const LoKi::Functor<TYPE,TYPE2>& fun , 
             const int                        val ) 
-      : LoKi::Functor<TYPE,TYPE2>() 
+      : LoKi::AuxFunBase ( std::tie ( fun , val ) ) 
+      , LoKi::Functor<TYPE,TYPE2>()
       , m_fun ( fun ) 
       , m_val ( val ) 
     {}
