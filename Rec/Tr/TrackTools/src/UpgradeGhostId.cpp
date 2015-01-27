@@ -124,7 +124,7 @@ StatusCode UpgradeGhostId::countHits() {
   vpCont = getIfExists<LHCb::VPClusters>(LHCb::VPClusterLocation::Default);
   utCont = getIfExists<LHCb::STClusters>(LHCb::STClusterLocation::UTClusters);
   if (vpCont) m_veloHits = vpCont->size();
-  if (utCont) m_utHits = utCont->size();;
+  if (utCont) m_utHits = utCont->size();
   //const bool run2 = false;
   //const LHCb::VeloLiteCluster::VeloLiteClusters* veloCont = NULL;
   //const LHCb::STClusters* ttCont = NULL;
