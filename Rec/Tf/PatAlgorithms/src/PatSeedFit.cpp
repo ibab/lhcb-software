@@ -106,7 +106,7 @@ PatSeedTrack PatSeedFit::getTrackITOT(std::vector<PatFwdHit>& hits, int staIT) c
   if (staIT >= 0) {
     // we *know* that we have enough hits in staIT
     for( PatFwdHit& ihit: hits ) {
-      if (ihit.hit()->type() == Tf::RegionID::OT) continue;
+      if (ihit.isOT()) continue;
       if (staIT != ihit.planeCode() / 4) continue;
       unsigned lay = ihit.planeCode() & 3;
       if (!seedhits[lay]) seedhits[lay] = &ihit;
@@ -114,12 +114,12 @@ PatSeedTrack PatSeedFit::getTrackITOT(std::vector<PatFwdHit>& hits, int staIT) c
   } else {
     // fallback solution: two X, two stereo hits; prefer IT over OT
     for( PatFwdHit& ihit: hits ) {
-      if (ihit.hit()->type() == Tf::RegionID::OT) continue;
+      if (ihit.isOT()) continue;
       unsigned lay = ihit.planeCode() & 3;
       if (!seedhits[lay]) seedhits[lay] = &ihit;
     }
     for( PatFwdHit& ihit: hits ) {
-      if (ihit.hit()->type() == Tf::RegionID::IT) continue;
+      if (!ihit.isOT()) continue;
       unsigned lay = ihit.planeCode() & 3;
       if (!seedhits[lay]) seedhits[lay] = &ihit;
     }
@@ -278,8 +278,7 @@ PatSeedTrack PatSeedFit::getTrackXY(std::vector<PatFwdHit>& hits) const
     unsigned sta = ihit.planeCode() / 4;
     if (in[sta] && &ihit != in[sta]) {
       // if in[sta] is OT but ihit is IT, ihit takes precedence
-      if (in[sta]->hit()->type() == Tf::RegionID::OT &&
-	  ihit.hit()->type() == Tf::RegionID::IT) {
+      if (in[sta]->isOT() && !ihit.isOT()) {
 	in[sta] = &ihit;
 	x[sta] = ihit.hit()->xAtYEq0();
 	z[sta] = ihit.hit()->zAtYEq0();
@@ -288,8 +287,7 @@ PatSeedTrack PatSeedFit::getTrackXY(std::vector<PatFwdHit>& hits) const
       }
       // if both in[sta] and ihit are OT, but isCluster[sta] is false,
       // try to find a cluster starting with ihit
-      if (in[sta]->hit()->type() == Tf::RegionID::OT &&
-	  ihit.hit()->type() == Tf::RegionID::OT && !isCluster[sta]) {
+      if (in[sta]->isOT() && ihit.isOT() && !isCluster[sta]) {
 	makeCluster(hits, ihit, in[sta], x[sta], z[sta], isCluster[sta]);
 	continue;
       }
@@ -300,7 +298,7 @@ PatSeedTrack PatSeedFit::getTrackXY(std::vector<PatFwdHit>& hits) const
       in[sta] = &ihit;
       x[sta] = ihit.hit()->xAtYEq0();
       z[sta] = ihit.hit()->zAtYEq0();
-      if (ihit.hit()->type() == Tf::RegionID::OT) {
+      if (ihit.isOT()) {
 	// if OT, look for cluster
 	makeCluster(hits, ihit, in[sta], x[sta], z[sta], isCluster[sta]);
       }
@@ -406,7 +404,7 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
   for( PatFwdHit& ihit: hits ) {
       ihit.setSelected(true);
       ++planectr[ihit.planeCode()];
-      if (ihit.hit()->type() == Tf::RegionID::OT)
+      if (ihit.isOT())
 	++planectrOT[ihit.planeCode()];
       else
 	++planectrIT[ihit.planeCode()];

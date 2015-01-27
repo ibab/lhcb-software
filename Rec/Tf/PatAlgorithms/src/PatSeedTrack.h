@@ -160,7 +160,7 @@ class PatSeedTrack {
     double distanceForFit( const PatFwdHit* hit ) const
     {
       double dist = hit->x() - xAtZ( hit->z() );
-      if ( hit->hit()->type() == Tf::RegionID::IT ) return dist;
+      if (!hit->isOT()) return dist;
       const double dx = hit->driftDistance() / m_cosine;
       if ( fabs( dist - dx ) < fabs( dist + dx ) )
 	return dist - dx;
@@ -171,8 +171,7 @@ class PatSeedTrack {
     /// distance track to hit with ambiguity fixed
     double distanceWithRL( const PatFwdHit* hit ) const
     {
-      if ( 0 == hit->rlAmb() || hit->hit()->type() == Tf::RegionID::IT )
-	return distanceForFit( hit );
+      if (0 == hit->rlAmb() || !hit->isOT()) return distanceForFit( hit );
       const double dist = ( hit->x() - xAtZ( hit->z() ) );
       const double dx = hit->driftDistance() / m_cosine;
       if ( 0 < hit->rlAmb() )
@@ -185,7 +184,7 @@ class PatSeedTrack {
     double distance( const PatFwdHit* hit ) const
     {
       double dist = hit->x() - xAtZ( hit->z() );
-      if ( hit->hit()->type() == Tf::RegionID::IT ) return dist;
+      if (!hit->isOT()) return dist;
       dist *= m_cosine;
       const double dx = hit->driftDistance();
       if ( fabs( dist - dx ) < fabs( dist + dx ) )

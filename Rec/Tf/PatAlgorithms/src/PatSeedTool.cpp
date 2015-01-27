@@ -160,7 +160,7 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
     auto range = as_range(std::begin(wksp),
 	std::copy_if(it, std::min(it + wksp.size(), track.coordEnd()),
 	  std::begin(wksp), [] (const PatFwdHit* hit) {
-	  return hit->isSelected() && Tf::RegionID::OT == hit->hit()->type();
+	  return hit->isSelected() && hit->isOT();
 	  }));
     // stop if no OT hits
     if (std::end(range) == std::begin(range)) continue;

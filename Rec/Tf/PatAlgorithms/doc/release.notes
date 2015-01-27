@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-01-27 - Manuel Tobias Schiller
+ - PatSeeding & friends: more work to take advantage of PatForwardHit::isOT()
+
 ! 2015-01-25 - Manuel Tobias Schiller
  - PatFwdTool: add option to use pitch residuals to resolve ambiguities in
    the OT in a manner similar to the seeding; this results in slight

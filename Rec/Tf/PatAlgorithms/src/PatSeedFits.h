@@ -209,7 +209,7 @@ namespace PatSeedFits {
     }
     vector_type wgrad(const track_type& track, const hit_type& hit) const
     {
-      const bool isIT = hit->hit()->type() == Tf::RegionID::IT;
+      const bool isIT = !hit->isOT();
       const value_type w = isIT ? hit->hit()->errweight() :
 	(hit->hit()->errweight() * track.cosine());
       const value_type dz = (hit->z() - track.z0()) / value_type(1 << 10);

@@ -460,7 +460,7 @@ void PatSeedingTool::killClonesAndStore(
     int maxUsed = int(std::ceil(maxUsedFraction * track->nCoords()));
     unsigned nOT = 0, nIT = 0;
     for( const PatFwdHit* hit: track->coords() ) {
-      if (hit->hit()->type() == Tf::RegionID::OT) ++nOT;
+      if (hit->isOT()) ++nOT;
       else ++nIT;
       if (hit->isUsed() && (0 > --maxUsed)) break;
     }
@@ -1470,7 +1470,7 @@ void PatSeedingTool::debugFwdHit ( const PatFwdHit* coord, MsgStream& msg ) cons
                  coord->hit()->layer(),
                  coord->hit()->region(),
                  coord->isUsed() );
-  if ( coord->hit()->type() == Tf::RegionID::OT ) {
+  if ( coord->isOT() ) {
     msg << format( " P%2d N%2d RL%2d Drift %7.3f",
                    coord->hasPrevious(),
                    coord->hasNext(),
@@ -1865,8 +1865,7 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
 		// here, we know z of the hit at y = 0, so we can compare to a
 		// more accurate x prediction of the track
 		const double tol = m_tolCollect +
-		  ((Tf::RegionID::OT == hit->hit()->type()) ?
-		   std::abs(hit->driftDistance()) : 0.);
+		  hit->isOT() * std::abs(hit->driftDistance());
 		xRange = tiltCorrectedRange(hit, regc, track, tol);
 		if (!xRange.isInside(hit->x())) continue;
 		if ( m_enforceIsolation && !isIsolated(it, range))
@@ -2197,7 +2196,7 @@ bool PatSeedingTool::findBestRangeCosmics(
       // only consider pairs of hits from same region, but different stations
       // (to make sure we have sufficient lever arm)
       if (h1->hit()->region() != h2->hit()->region() &&     // careful: region ranges for IT/OT overlap
-	  h1->hit()->type() == h2->hit()->type()) continue; // need to check IT/OT as well
+	  h1->isOT() == h2->isOT()) continue; // need to check IT/OT as well
       if (h1->hit()->station() == h2->hit()->station()) continue;
       // for each pair of hits, work out slope and intercept
       const double z1 = h1->z();
@@ -2258,7 +2257,7 @@ bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl ) c
     // go from prejection plane to y of hit
     hit->setProjection( hit->projection() * hit->z() / m_zForYMatch );
 
-    if (hit->hit()->type() != Tf::RegionID::OT ) continue;
+    if (!hit->isOT()) continue;
     hit->setRlAmb( 0 );
     const int sta = hit->hit()->station();
     if ( largestDrift[sta] < std::abs(hit->driftDistance()) ) {
