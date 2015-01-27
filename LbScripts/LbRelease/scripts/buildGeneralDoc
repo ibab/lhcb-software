@@ -32,8 +32,7 @@ basedir=`dirname "$0"`
 
 
 # Prepare the environment
-#logcmd . $basedir/LbLogin.sh
-logcmd . /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.sh
+logcmd . $basedir/LbLogin.sh
 
 # Log file
 [ ! -d $LHCB_USERLOGS/doxygen ] && mkdir -p $LHCB_USERLOGS/doxygen
@@ -47,10 +46,8 @@ export DOCROOT=$LHCBDOC/doxygen
 if [ ! -e $DOCROOT/stop_cron ] ; then
     # Fine tuning of the environment
     logcmd . SetupProject.sh LbScripts --no-user --runtime LCGCMT graphviz
-    export PYTHONPATH=/afs/cern.ch/work/m/marcocle/workspace/LbScripts/InstallArea/python:$PYTHONPATH
     # Run the main script
     logcmd python -m LbRelease.LHCbDoc --debug --clean-archived --remove-unused --timeout 23
-    #logcmd python -m LbRelease.LHCbDoc --debug --timeout 23
     if [ $? != 0 ] ; then
         echo Failure in $0
     fi
