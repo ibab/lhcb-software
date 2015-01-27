@@ -1,6 +1,12 @@
 #!/usr/bin/python
 
 import os
+
+if not os.environ.has_key('WEBGLDISPLAYSYSROOT'):
+  print '\n\tusage: cmt run <path>/install_web.py'
+  print '\n\tThis command takes no arguments,\n\tbut requires the cmt provided run-time environment.\n'
+  os.sys.exit(1)
+  
 target = '/group/online/dataflow/cmtuser/EventDisplay'
 home   = os.environ['WEBGLDISPLAYSYSROOT']
 

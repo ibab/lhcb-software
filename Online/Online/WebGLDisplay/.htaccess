@@ -1,0 +1,3 @@
+<DirectoryMatch .*\.svn/.*>
+    Deny From All
+</DirectoryMatch>
