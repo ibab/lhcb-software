@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-01-27 - Manuel Tobias Schiller
+ - PatFwdTool: following decision in today's tracking meeting, use ambiguity
+   resolution from pitch residuals by default
+
+! 2015-01-27 - Manuel Tobias Schiller
  - PatFwdTool: demote an info() printout to debug(), to keep the log files
    clean
 

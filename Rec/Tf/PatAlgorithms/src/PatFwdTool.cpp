@@ -384,7 +384,7 @@ PatFwdTool::PatFwdTool( const std::string& type,
   declareProperty( "xMagnetTol"      , m_xMagnetTol      = 3. );
   declareProperty( "xMagnetTolSlope" , m_xMagnetTolSlope = 40. );
   declareProperty( "withoutBField"   , m_withoutBField   = false);
-  declareProperty( "AmbiguitiesFromPitchResiduals", m_ambiguitiesFromPitchResiduals = false);
+  declareProperty( "AmbiguitiesFromPitchResiduals", m_ambiguitiesFromPitchResiduals = true);
 }
 
 //=========================================================================
