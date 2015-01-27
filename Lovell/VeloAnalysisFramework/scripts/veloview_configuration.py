@@ -5,6 +5,11 @@ Supported configuration parameter names are:
     run_view_config -- Run view GUI configuration dictionary
     run_list -- Available run numbers sorted high-to-low
 """
+# This is due to what appears to be a ROOT bug, where doing `import ROOT`
+# prints a control sequence to stdout on xterm terminal types
+import os
+os.environ["TERM"] = "dumb"
+
 import sys
 import argparse
 import json

@@ -6,6 +6,11 @@ A plot name is invalid if it is not present in the run file.
 A sensor number is invalid if is not in {0, ..., 42, 64, ..., 106}.
 If any invalid arguments are supplied, 1 is returned and the program exits.
 """
+# This is due to what appears to be a ROOT bug, where doing `import ROOT`
+# prints a control sequence to stdout on xterm terminal types
+import os
+os.environ["TERM"] = "dumb"
+
 import sys
 import argparse
 
