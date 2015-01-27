@@ -11,6 +11,8 @@ find_package(Boost)
 find_package(GSL)
 find_package(ROOT COMPONENTS MathCore GenVector)
 
+gaudi_install_headers(LHCbMath Eigen)
+
 gaudi_add_library(LHCbMathLib
                   src/*.cpp
                   PUBLIC_HEADERS LHCbMath

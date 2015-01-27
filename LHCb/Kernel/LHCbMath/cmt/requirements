@@ -20,7 +20,7 @@ use GSL             v*      LCG_Interfaces
 use GaudiGSL        v*   
 use GaudiPython     v*                     -no_auto_imports
 
-apply_pattern install_more_includes more=LHCbMath
+apply_pattern install_more_includes more=LHCbMath offset=Eigen
 
 apply_pattern install_python_modules
 

@@ -6,6 +6,12 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-01-27 - Chris Jones
+ - Add headers for Eigen v3.2.4 library. This is a TEMPORARY measure, awaiting
+   deployment of Eigen within the LCG Externals area, and will be removed
+   once the package is available there. Done to allow developments using the
+   library to be committed independently of when the LCG release is available.
+
 !========================= LHCbMath v3r53 2015-01-14 =========================
 ! 2015-01-13 - Gerhard Raven
  - optimize AVX versions of 'average' and 'filter'
