@@ -5,6 +5,10 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2015-01-27 - Vanya Belyaev
+ - few more steps towards autogeneration of C++ code from functors 
+
+
 ! 2015-01-22 - Vanya Belyaev
  - move LoKi::Partiles::DHCoplanarity into LoKi::Legacy::DHCoplanarity
    move DPCTAU*-related stuff into Legacy

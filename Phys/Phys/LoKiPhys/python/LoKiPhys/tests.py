@@ -96,7 +96,18 @@ def test2() :
         print e
 
     print 80*'*'
-  
+
+## test monitoring stuff 
+def test3() :
+    
+    p   = LHCb.Particle()
+
+    a = monitor ( PT )
+
+    print a ( p )
+
+    print 80*'*'
+
 # =============================================================================
 ## Perform all known tests
 def testAll() :
@@ -106,6 +117,7 @@ def testAll() :
     test0()
     test1()
     test2() ## smart referemnces 
+    test3() 
 
 
 # =============================================================================

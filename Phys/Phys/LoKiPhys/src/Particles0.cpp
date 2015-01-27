@@ -1493,8 +1493,15 @@ std::ostream&
 LoKi::Particles::M2err2::fillStream( std::ostream& s ) const 
 { return s << "M2ERR2" ; }
 
-
-
+// ============================================================================
+// IsID 
+// ============================================================================
+LoKi::Particles::IsID::IsID ( const int                      id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
+  , LoKi::Pids::GetPids ( (long) id ) 
+{}
+// ============================================================================
 // IsID 
 // ============================================================================
 LoKi::Particles::IsID::IsID ( const long                      id  ) 
@@ -1595,6 +1602,14 @@ LoKi::Particles::IsID::operator()
   //
   return in_list ( p->particleID () ) ;  
 }
+
+// ============================================================================
+// IsNotID 
+// ============================================================================
+LoKi::Particles::IsNotID::IsNotID ( const int                id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::Particles::IsID ( (long) id ) 
+{}
 // ============================================================================
 // IsNotID 
 // ============================================================================
@@ -1680,6 +1695,13 @@ LoKi::Particles::IsNotID::operator()
   return not_in_list ( p->particleID() ) ;
 }
 
+// ============================================================================
+// IsAbsID 
+// ============================================================================
+LoKi::Particles::IsAbsID::IsAbsID ( const int id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::Particles::IsID ( (long) id ) 
+{}
 // ============================================================================
 // IsAbsID 
 // ============================================================================
@@ -1771,6 +1793,13 @@ LoKi::Particles::IsAbsID::operator()
   return in_abs_list ( p->particleID() ) ;
 }
 
+// ============================================================================
+// IsNotAbsID 
+// ============================================================================
+LoKi::Particles::IsNotAbsID::IsNotAbsID ( const int         id  ) 
+  : LoKi::AuxFunBase ( std::tie ( id ) )
+  , LoKi::Particles::IsAbsID ( (long) id ) 
+{}
 // ============================================================================
 // IsNotAbsID 
 // ============================================================================

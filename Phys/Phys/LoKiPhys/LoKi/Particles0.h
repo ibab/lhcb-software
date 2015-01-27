@@ -243,6 +243,7 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      IsID ( const int                            id  ) ;
       IsID ( const long                           id  ) ;
       IsID ( const unsigned long                  id  ) ;
       IsID ( const LHCb::ParticleID&              id  ) ;
@@ -275,6 +276,7 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      IsNotID ( const int                            id  ) ;
       IsNotID ( const long                           id  ) ;
       IsNotID ( const unsigned long                  id  ) ;
       IsNotID ( const LHCb::ParticleID&              id  ) ;
@@ -303,6 +305,7 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      IsAbsID ( const int                            id  ) ;
       IsAbsID ( const long                           id  ) ;
       IsAbsID ( const unsigned long                  id  ) ;
       IsAbsID ( const LHCb::ParticleID&              id  ) ;
@@ -331,6 +334,7 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      IsNotAbsID ( const int                            id  ) ;
       IsNotAbsID ( const long                           id  ) ;
       IsNotAbsID ( const unsigned long                  id  ) ;
       IsNotAbsID ( const LHCb::ParticleID&              id  ) ;
