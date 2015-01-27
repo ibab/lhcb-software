@@ -766,8 +766,12 @@ class Brunel(LHCbConfigurableUser):
 
         if expert:
             # Data on Demand for MCParticle to MCHit association, needed by ST, IT, OT, Tr, Muon
-            importOptions( "$ASSOCIATORSROOT/options/MCParticleToMCHit.py" )
-
+            # Different for upgrade and non-upgrade
+            if( self.getProp("DataType") is "Upgrade" ):
+                importOptions( "$ASSOCIATORSROOT/options/MCParticleToMCHitUpgrade.py" )
+            else:
+                importOptions( "$ASSOCIATORSROOT/options/MCParticleToMCHit.py" )
+                
             # Allow multiple files open at once (SIM,DST,DIGI etc.)
             IODataManager().AgeLimit += 1
 
@@ -813,7 +817,11 @@ class Brunel(LHCbConfigurableUser):
 
             if "Tr" in  checkSeq :
                 # Checking on the tracks in the "best" container - needs MCHits
-                importOptions( "$TRACKSYSROOT/options/TrackChecking.opts" )
+                # not active for upgrade for the moment
+                if( self.getProp("DataType") is "Upgrade" ):
+                    pass
+                else:
+                    importOptions( "$TRACKSYSROOT/options/TrackChecking.opts" )
 
             if "CALO" in  checkSeq :
                 import GaudiKernel.ProcessJobOptions
