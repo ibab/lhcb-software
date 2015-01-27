@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-01-26 - Roel Aaij
+ - Use a slightly different way to find the list of Hlt2 Conf modules,
+ 	 which is compatible with the new cmake builds.
+
 ! 2015-01-22 - Sascha Stahl
  - Adapted HltRecoConf.py and Hlt2Tracking.py to changes in PatForward
 

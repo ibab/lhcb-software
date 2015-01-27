@@ -37,21 +37,11 @@ from HltTrackNames import HltRichDefaultTrackCuts, HltDefaultTrackCuts
 
 from Configurables import CaloProcessor, RichRecSysConf, TrackSelector
 
-def import_lines_confs(pkg) :
-    # import all modules in pkg, and require each file xyz to contain a class xyzConf
-    # i.e. we do the equivalent of 
-    #    from pkg.Hlt2SomeLines import Hlt2SomeLinesConf 
-    #    ...
-    #    return [ Hlt2SomeLinesConf, ... ]
-    #
-    import os.path, pkgutil, importlib
-    return [ getattr( importlib.import_module(pkg.__name__+'.'+name), name+'Conf' ) 
-             for _,name,_ in pkgutil.iter_modules([os.path.dirname(pkg.__file__)]) ]
-
 #import all Hlt2 lines configurables in our scope so that genConfUser can find it... (i.e. make sure it is in 'dir()')
+from HltConf.ThresholdUtils import importLineConfigurables
 import Hlt2Lines
-__hlt2linesconfs = import_lines_confs(Hlt2Lines)
-globals().update( ( cfg.__name__, cfg ) for cfg in __hlt2linesconfs )
+_hlt2linesconfs = importLineConfigurables( Hlt2Lines )
+globals().update( ( cfg.__name__, cfg ) for cfg in _hlt2linesconfs )
 
 #################################################################################################
 #
@@ -66,7 +56,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
     import Hlt2Lines
     __used_configurables__ = [ (CaloProcessor   ,   None)
                              , (RichRecSysConf  ,   None)
-                             ] + import_lines_confs(Hlt2Lines)
+                             ] + _hlt2linesconfs
                              # This above hlt2linesconf defines all the Hlt2 Lines since they 
                              # configured after the tracking. This means that each
                              # Hlt2Lines configurable MUST be a singleton AND this
