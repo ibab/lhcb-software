@@ -104,8 +104,8 @@ StatusCode PrTrackAssociator::execute() {
       debug() << "processing container: " << *itS << endreq ;
 
     // Retrieve the Tracks
-    LHCb::Tracks* tracks = getIfExists<LHCb::Tracks> ( *itS );
-    if ( NULL == tracks ) {
+    LHCb::Track::Range tracks = getIfExists<LHCb::Track::Range> ( *itS );
+    if ( tracks.empty() ) {
       if( msgLevel(MSG::DEBUG) ) debug() << "No tracks in container " <<  *itS << "' . Skipping." <<endmsg;
       continue;
     }
@@ -116,9 +116,7 @@ StatusCode PrTrackAssociator::execute() {
     myLinker.reset() ;
 
     // Loop over the Tracks
-    LHCb::Tracks::const_iterator it;
-    for( it = tracks->begin(); tracks->end() != it; ++it ) {
-      const LHCb::Track* tr = *it;
+    for( auto tr  : tracks ) {
       m_total.reset();
       m_truthCounters.clear();
 

@@ -82,15 +82,15 @@ void PrCounter::addSelection ( std::string name, bool writeHisto ) {
 //=========================================================================
 void PrCounter::initEvent(const IHistoTool* htool = NULL, const int nPV = 0){
   m_validData = false;
-  LHCb::Tracks* tracks = getIfExists<LHCb::Tracks>( m_container );
-  if ( NULL == tracks ) {
+  LHCb::Track::Range tracks  = getIfExists<LHCb::Track::Range>(m_container) ;
+  if ( tracks.empty() ) {
     if( msgLevel(MSG::DEBUG) ) debug() << "Track container '" << m_container << "' does not exist" <<endmsg;
     return;
   }
   if ( NULL == m_link ) m_link = new MyAsct( evtSvc(), m_container );
   m_nbGhost = 0;
 
-  m_nbTrack = tracks->size();
+  m_nbTrack = tracks.size();
   const Table* table = m_link->direct();
   if ( NULL == table ) { 
     Warning( "Problem with MC associations for " + m_container ).ignore();
@@ -100,54 +100,52 @@ void PrCounter::initEvent(const IHistoTool* htool = NULL, const int nPV = 0){
 
   double nbTracks = 0;
   if(htool && m_writeHistos>0 )htool->plot1D(nPV,m_title+"/nPV_Events","nPV_Events",-0.5,20.5,21);
-
-  for ( LHCb::Tracks::const_iterator itT = tracks->begin();
-        tracks->end() != itT; ++itT ) {
-    if ( (*itT)->checkFlag( LHCb::Track::Invalid ) ) continue;
-    if ( (m_trackType!=LHCb::Track::TypeUnknown) && ((*itT)->type()!=m_trackType) ) continue;
-    bool eta25 = !m_eta25cut || ((*itT)->pseudoRapidity() > 2. && (*itT)->pseudoRapidity() < 5.);
+  for ( auto track  : tracks) {
+    if ( track->checkFlag( LHCb::Track::Invalid ) ) continue;
+    if ( (m_trackType!=LHCb::Track::TypeUnknown) && (track->type()!=m_trackType) ) continue;
+    bool eta25 = !m_eta25cut || (track->pseudoRapidity() > 2. && track->pseudoRapidity() < 5.);
     if(!eta25)continue;
-    Range range = table->relations( *itT );
+    Range range = table->relations( track );
     if ( range.empty() ){
       m_nbGhost++;
       if(htool && m_writeHistos>0 ){
         htool->plot1D(nPV,m_title+"/nPV_Ghosts","nPV_Ghosts",-0.5,20.5,21);
-        htool->plot1D((*itT)->pseudoRapidity(),m_title+"/Eta_Ghosts","Eta_Ghosts",0.,7.,50);
-        if((*itT)->type() != LHCb::Track::Velo ){
-          htool->plot1D((*itT)->momentum().Phi(),m_title+"/Phi_Ghosts","Phi_Ghosts",-3.142,3.142,25);
-          htool->plot1D((*itT)->pt(),m_title+"/Pt_Ghosts","Pt_Ghosts",0.,10000.,50);
-          htool->plot1D((*itT)->p(),m_title+"/P_Ghosts","P_Ghosts",0.,100000.,50);
+        htool->plot1D(track->pseudoRapidity(),m_title+"/Eta_Ghosts","Eta_Ghosts",0.,7.,50);
+        if(track->type() != LHCb::Track::Velo ){
+          htool->plot1D(track->momentum().Phi(),m_title+"/Phi_Ghosts","Phi_Ghosts",-3.142,3.142,25);
+          htool->plot1D(track->pt(),m_title+"/Pt_Ghosts","Pt_Ghosts",0.,10000.,50);
+          htool->plot1D(track->p(),m_title+"/P_Ghosts","P_Ghosts",0.,100000.,50);
        }
       }
     }
     if(htool && m_writeHistos>0 ){
       htool->plot1D(nPV,m_title+"/nPV_Total","nPV_Total",-0.5,20.5,21);
-      htool->plot1D((*itT)->pseudoRapidity(),m_title+"/Eta_Total","Eta_Total",0.,7.,50);
-      if((*itT)->type() != LHCb::Track::Velo ){
-        htool->plot1D((*itT)->momentum().Phi(),m_title+"/Phi_Total","Phi_Total",-3.142,3.142,25);
-        htool->plot1D((*itT)->pt(),m_title+"/Pt_Total","Pt_Total",0.,10000.,50);
-        htool->plot1D((*itT)->p(),m_title+"/P_Total","P_Total",0.,100000.,50);
+      htool->plot1D(track->pseudoRapidity(),m_title+"/Eta_Total","Eta_Total",0.,7.,50);
+      if(track->type() != LHCb::Track::Velo ){
+        htool->plot1D(track->momentum().Phi(),m_title+"/Phi_Total","Phi_Total",-3.142,3.142,25);
+        htool->plot1D(track->pt(),m_title+"/Pt_Total","Pt_Total",0.,10000.,50);
+        htool->plot1D(track->p(),m_title+"/P_Total","P_Total",0.,100000.,50);
       }
     }
     m_totTrack++;
     nbTracks++;
-    if(m_triggerNumbers && ((*itT)->type() != LHCb::Track::Velo) && (*itT)->p() > 3000. && (*itT)->pt() > 500.){
+    if(m_triggerNumbers && (track->type() != LHCb::Track::Velo) && track->p() > 3000. && track->pt() > 500.){
       if ( range.empty() ){
         m_totGhostTrigger++;
         if(htool && m_writeHistos>0 ){
           htool->plot1D(nPV,m_title+"/nPV_Ghosts_P>3GeV_Pt>0.5GeV","nPV_Ghosts_P>3GeV_Pt>0.5GeV",-0.5,20.5,21);
-          htool->plot1D((*itT)->pseudoRapidity(),m_title+"/Eta_Ghosts_P>3GeV_Pt>0.5GeV","Eta_Ghosts_P>3GeV_Pt>0.5GeV",0.,7.,50);
-          htool->plot1D((*itT)->momentum().Phi(),m_title+"/Phi_Ghosts_P>3GeV_Pt>0.5GeV","Phi_Ghosts_P>3GeV_Pt>0.5GeV",-3.142,3.142,25);
-          htool->plot1D((*itT)->pt(),m_title+"/Pt_Ghosts_P>3GeV_Pt>0.5GeV","Pt_Ghosts_P>3GeV_Pt>0.5GeV",0.,10000.,50);
-          htool->plot1D((*itT)->p(),m_title+"/P_Ghosts_P>3GeV_Pt>0.5GeV","P_Ghosts_P>3GeV_Pt>0.5GeV",0.,100000.,50);
+          htool->plot1D(track->pseudoRapidity(),m_title+"/Eta_Ghosts_P>3GeV_Pt>0.5GeV","Eta_Ghosts_P>3GeV_Pt>0.5GeV",0.,7.,50);
+          htool->plot1D(track->momentum().Phi(),m_title+"/Phi_Ghosts_P>3GeV_Pt>0.5GeV","Phi_Ghosts_P>3GeV_Pt>0.5GeV",-3.142,3.142,25);
+          htool->plot1D(track->pt(),m_title+"/Pt_Ghosts_P>3GeV_Pt>0.5GeV","Pt_Ghosts_P>3GeV_Pt>0.5GeV",0.,10000.,50);
+          htool->plot1D(track->p(),m_title+"/P_Ghosts_P>3GeV_Pt>0.5GeV","P_Ghosts_P>3GeV_Pt>0.5GeV",0.,100000.,50);
         }
       }
       if(htool && m_writeHistos>0 ){
         htool->plot1D(nPV,m_title+"/nPV_Total_P>3GeV_Pt>0.5GeV","nPV_Total_P>3GeV_Pt>0.5GeV",-0.5,20.5,21);
-        htool->plot1D((*itT)->pseudoRapidity(),m_title+"/Eta_Total_P>3GeV_Pt>0.5GeV","Eta_Total_P>3GeV_Pt>0.5GeV",0.,7.,50);
-        htool->plot1D((*itT)->momentum().Phi(),m_title+"/Phi_Total_P>3GeV_Pt>0.5GeV","Phi_Total_P>3GeV_Pt>0.5GeV",-3.142,3.142,25);
-        htool->plot1D((*itT)->pt(),m_title+"/Pt_Total_P>3GeV_Pt>0.5GeV","Pt_Total_P>3GeV_Pt>0.5GeV",0.,10000.,50);
-        htool->plot1D((*itT)->p(),m_title+"/P_Total_P>3GeV_Pt>0.5GeV","P_Total_P>3GeV_Pt>0.5GeV",0.,100000.,50);
+        htool->plot1D(track->pseudoRapidity(),m_title+"/Eta_Total_P>3GeV_Pt>0.5GeV","Eta_Total_P>3GeV_Pt>0.5GeV",0.,7.,50);
+        htool->plot1D(track->momentum().Phi(),m_title+"/Phi_Total_P>3GeV_Pt>0.5GeV","Phi_Total_P>3GeV_Pt>0.5GeV",-3.142,3.142,25);
+        htool->plot1D(track->pt(),m_title+"/Pt_Total_P>3GeV_Pt>0.5GeV","Pt_Total_P>3GeV_Pt>0.5GeV",0.,10000.,50);
+        htool->plot1D(track->p(),m_title+"/P_Total_P>3GeV_Pt>0.5GeV","P_Total_P>3GeV_Pt>0.5GeV",0.,100000.,50);
       }
       m_totTrackTrigger++;
     }

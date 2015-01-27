@@ -3,6 +3,8 @@
 ! Responsible : Michel De Cian
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
+! 2015-01-20 - Sascha Stahl
+ - Modified PrCounter and PrTrackAssociator to use LHCb::Track::Range instead of LHCb::Tracks*.
 
 ! 2015-01-20 - Sascha Stahl
 - Modified PrChecker, such that histograms are saved in a directory according to the
