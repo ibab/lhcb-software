@@ -1,3 +1,37 @@
+! 2015-01-27 - Marco Clemencic (f09d3ce)
+
+ - fixed LBCORE-725: handle relocation of data packages in xenv
+
+   The search path to datapackages' .xenv files is now handles in the same way
+   as for projects: we search for all the data packages at configure time to
+   find the correct location (and version).
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7669
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2015-01-27 - Marco Clemencic (1cb2068)
+
+ - added test for LBCORE-725: relocatability of CMake builds
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7668
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2015-01-27 - Marco Clemencic (c7716b0)
+
+ - commented out a dubug message
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7667
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
 ! 2015-01-27 - Marco Clemencic (07a101c)
 
  - fixed LBCORE-716: include path order not correct

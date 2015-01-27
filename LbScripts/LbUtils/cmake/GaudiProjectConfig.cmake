@@ -3,7 +3,7 @@
 #
 # Authors: Pere Mato, Marco Clemencic
 #
-# Commit Id: 07a101c2ebd10d26882b938bd7d17186594cf81d
+# Commit Id: f09d3cedbbcb6930aa0e05721a9416afae82bda4
 
 cmake_minimum_required(VERSION 2.8.5)
 
@@ -277,6 +277,9 @@ macro(gaudi_project project version)
   # environment description
   set(project_environment)
   set(used_gaudi_projects)
+  set(used_data_packages)
+  set(inherited_data_packages)
+  set(inherited_data_packages_decl)
 
   # Locate and import used projects.
   if(PROJECT_USE)
@@ -286,6 +289,7 @@ macro(gaudi_project project version)
     list(REMOVE_DUPLICATES used_gaudi_projects)
   endif()
   #message(STATUS "used_gaudi_projects -> ${used_gaudi_projects}")
+  #message(STATUS "inherited_data_packages_decl -> ${inherited_data_packages_decl}")
 
   # Ensure that we have the correct order of the modules search path.
   # (the included <project>Config.cmake files are prepending their entries to
@@ -303,8 +307,9 @@ macro(gaudi_project project version)
   endif()
   #message(STATUS "CMAKE_MODULE_PATH -> ${CMAKE_MODULE_PATH}")
 
-  # Find the required data packages and add them to the environment.
+  # Find the required data packages so that we can add them to the environment.
   _gaudi_handle_data_packages(${PROJECT_DATA})
+  _gaudi_handle_data_packages(INHERITED ${inherited_data_packages_decl})
 
   #--- commands required to build cached variable
   # (python scripts are located as such but run through python)
@@ -738,7 +743,7 @@ macro(_gaudi_use_other_projects)
     list(GET ARGN_ 1 other_project_version)
     list(REMOVE_AT ARGN_ 0 1)
 
-    message(STATUS "project -> ${other_project}, version -> ${other_project_version}")
+    #message(STATUS "project -> ${other_project}, version -> ${other_project_version}")
     if(other_project_version MATCHES "${GAUDI_VERSION_REGEX}")
       set(other_project_cmake_version "${CMAKE_MATCH_1}.${CMAKE_MATCH_2}")
       foreach(_i 4 7)
@@ -821,6 +826,9 @@ macro(_gaudi_use_other_projects)
         set(used_gaudi_projects ${other_project} ${used_gaudi_projects})
         if(${other_project}_USES)
           list(APPEND ARGN_ ${${other_project}_USES})
+        endif()
+        if(${other_project}_DATA)
+          list(APPEND inherited_data_packages_decl ${${other_project}_DATA})
         endif()
       else()
         message(FATAL_ERROR "Cannot find project ${other_project} ${other_project_version}")
@@ -987,7 +995,7 @@ function(gaudi_find_data_package name)
 endfunction()
 
 #-------------------------------------------------------------------------------
-# _gaudi_handle_data_pacakges([package [VERSION version] [project version [VERSION version]]...])
+# _gaudi_handle_data_pacakges([INHERITED] [package [VERSION version] [package [VERSION version]]...])
 #
 # Internal macro implementing the handline of the "USE" option.
 # (improve readability)
@@ -995,9 +1003,22 @@ endfunction()
 macro(_gaudi_handle_data_packages)
   # this is neede because of the way variable expansion works in macros
   set(ARGN_ ${ARGN})
+  # name of the variable used to store the list of data packages found
+  set(data_pkg_list used_data_packages)
+  # check if we are dealing with inherited data packages
+  if(ARGN_)
+    list(GET ARGN_ 0 _are_inherited)
+    if(_are_inherited STREQUAL "INHERITED")
+      list(REMOVE_AT ARGN_ 0)
+      # we use a different variable if we are dealing with inherited data packages
+      set(data_pkg_list inherited_data_packages)
+    endif()
+  endif()
+  # this is just info for the user
   if(ARGN_)
     message(STATUS "Looking for data packages")
   endif()
+  # loop over data package declarations
   while(ARGN_)
     # extract data package name and (optional) version from the list
     list(GET ARGN_ 0 _data_package)
@@ -1019,7 +1040,7 @@ macro(_gaudi_handle_data_packages)
       message(STATUS "Using ${_data_package}: ${${_data_package}_DIR}")
     endif()
     if(${_data_package}_FOUND)
-      set(project_environment ${project_environment} INCLUDE ${${_data_package}_XENV})
+      set(${data_pkg_list} ${${data_pkg_list}} ${_data_package})
     endif()
   endwhile()
 endmacro()
@@ -2543,6 +2564,7 @@ set(${CMAKE_PROJECT_NAME}_VERSION_MINOR ${CMAKE_PROJECT_VERSION_MINOR})
 set(${CMAKE_PROJECT_NAME}_VERSION_PATCH ${CMAKE_PROJECT_VERSION_PATCH})
 
 set(${CMAKE_PROJECT_NAME}_USES ${PROJECT_USE})
+set(${CMAKE_PROJECT_NAME}_DATA ${PROJECT_DATA})
 
 list(INSERT CMAKE_MODULE_PATH 0 \${${CMAKE_PROJECT_NAME}_DIR}/cmake)
 include(${CMAKE_PROJECT_NAME}PlatformConfig)
@@ -2746,11 +2768,15 @@ function(gaudi_generate_env_conf filename)
 
   # include inherited environments
   # (note: it's important that the full search path is ready before we start including)
-  foreach(other_project ${used_gaudi_projects})
+  foreach(other_project ${used_gaudi_projects} ${used_data_packages} ${inherited_data_packages})
     set(data "${data}  <env:search_path>${${other_project}_DIR}</env:search_path>\n")
   endforeach()
   foreach(other_project ${used_gaudi_projects})
     set(data "${data}  <env:include>${other_project}.xenv</env:include>\n")
+  endforeach()
+  foreach(datapkg ${used_data_packages})
+    get_filename_component(_xenv_file "${${datapkg}_XENV}" NAME)
+    set(data "${data}  <env:include>${_xenv_file}</env:include>\n")
   endforeach()
 
   set(commands ${ARGN})
