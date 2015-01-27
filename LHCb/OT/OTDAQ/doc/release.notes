@@ -3,6 +3,10 @@
 ! Package manager : A.Kozlinskiy
 !------------------------------------------------------------------------------
 
+! 2015-01-27 - Manuel Tobias Schiller
+ - OTRawBankDecoder: following decision in today's Tracking meeting, change to
+   use the vetoing of out-of-time hit pairs by default
+
 !========================= OTDAQ v7r18 2015-01-14 =========================
 ! 2014-12-28 - Manuel Tobias Schiller
  - OTRawBankDecoder: fix gcc 4.9 error

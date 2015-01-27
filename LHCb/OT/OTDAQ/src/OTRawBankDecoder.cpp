@@ -413,7 +413,7 @@ OTRawBankDecoder::OTRawBankDecoder( const std::string& type,
     m_countsPerBX(64),
     m_numberOfBX(3),
     m_forcebankversion(OTBankVersion::UNDEFINED),
-    m_vetoOutOfTimeHitPairs(false)
+    m_vetoOutOfTimeHitPairs(true)
 {
   declareInterface<IOTRawBankDecoder>(this);
   declareProperty("countsPerBX", m_countsPerBX );
@@ -421,7 +421,7 @@ OTRawBankDecoder::OTRawBankDecoder( const std::string& type,
   declareProperty("timePerBX", m_timePerBX );
   declareProperty("ForceBankVersion", m_forcebankversion = OTBankVersion::UNDEFINED );
   declareProperty("TimeWindow", m_timewindow );
-  declareProperty("VetoOutOfTimeHitPairs", m_vetoOutOfTimeHitPairs);
+  declareProperty("VetoOutOfTimeHitPairs", m_vetoOutOfTimeHitPairs = true);
   //new for decoders, initialize search path, and then call the base method
   m_rawEventLocations = {LHCb::RawEventLocation::Other, LHCb::RawEventLocation::Default};
   initRawEventSearch();
