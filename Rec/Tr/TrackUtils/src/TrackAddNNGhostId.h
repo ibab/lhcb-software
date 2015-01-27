@@ -12,7 +12,7 @@
  *  @author Johannes Albrecht
  *  @date   2009-10-06
  */
-class ITrackManipulator;
+class IGhostProbability;
 
 class TrackAddNNGhostId : public GaudiAlgorithm {
 public: 
@@ -27,7 +27,7 @@ public:
 protected:
 
 private:
-  ITrackManipulator* m_ghostTool;
+  IGhostProbability* m_ghostTool;
   
   std::string m_inputLocation;
   std::string m_ghostToolName;

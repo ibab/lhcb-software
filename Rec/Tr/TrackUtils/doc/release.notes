@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-01-27 - Paul Seyfert
+ - changed interface for TrackAddNNGhostId
+
 !========================= TrackUtils v1r57 2014-12-11 =========================
 ! 2014-12-10 - Sebastian Neubert
  - added counters to TrackListRefiner

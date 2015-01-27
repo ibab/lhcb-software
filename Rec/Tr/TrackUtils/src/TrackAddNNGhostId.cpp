@@ -4,7 +4,7 @@
 #include "GaudiKernel/AlgFactory.h" 
 
 #include "Event/Track.h"
-#include "TrackInterfaces/ITrackManipulator.h"
+#include "TrackInterfaces/IGhostProbability.h"
 
 // local
 #include "TrackAddNNGhostId.h"
@@ -45,7 +45,7 @@ StatusCode TrackAddNNGhostId::initialize() {
 
   if ( UNLIKELY(msgLevel(MSG::DEBUG)) ) debug() << "==> initialize" << endmsg;
 
-  m_ghostTool =  tool<ITrackManipulator>(m_ghostToolName,this);
+  m_ghostTool =  tool<IGhostProbability>(m_ghostToolName,this);
   
   return StatusCode::SUCCESS;
 }
@@ -63,13 +63,13 @@ StatusCode TrackAddNNGhostId::execute() {
     return StatusCode::SUCCESS;
   }
   
+  if (m_ghostTool->beginEvent().isFailure()) {
+    return Error("GhostIdTool could not begin event.",StatusCode::SUCCESS,10);
+  }
   // loop 
   for (Tracks::iterator iterT = inCont->begin(); iterT != inCont->end(); ++iterT) {
-    
     m_ghostTool->execute(**iterT).ignore();
-    
-  } // iterT
-  
+  }
 
   return StatusCode::SUCCESS;
 }
