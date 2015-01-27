@@ -110,9 +110,9 @@ StatusCode JsonConverter::execute() {
   jsonStream << std::make_pair("eventNumber", odin->eventNumber());
   jsonStream << std::make_pair("gpsTime", odin->gpsTime());
 
-  std::time_t result = std::time(NULL);
+  std::time_t result = odin->gpsTime()/1000000;
   char mbstr[100];
-  if (std::strftime(mbstr, sizeof(mbstr), "%A %c", std::localtime(&result))) {
+  if (std::strftime(mbstr, sizeof(mbstr), "%a, %d %b %Y %H:%M:%S", std::localtime(&result))) {
     jsonStream << std::make_pair("time", std::string(mbstr));
   }
 
