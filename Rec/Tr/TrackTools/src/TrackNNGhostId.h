@@ -7,7 +7,7 @@
 
 #include "OTDAQ/IOTRawBankDecoder.h"
 
-#include "TrackInterfaces/ITrackManipulator.h"     
+#include "TrackInterfaces/IGhostProbability.h"     
 #include "GaudiKernel/IIncidentListener.h" 
 
 // For interpolator
@@ -28,7 +28,7 @@ class IVeloExpectation;
  *
  */
 class TrackNNGhostId : public GaudiTool,
-                       virtual public ITrackManipulator,
+                       virtual public IGhostProbability,
                        virtual public IIncidentListener {
 public:
 
@@ -44,6 +44,8 @@ public:
   StatusCode finalize();
 
   StatusCode execute(LHCb::Track& aTrack) const;
+
+  StatusCode beginEvent() { return StatusCode::SUCCESS; }
 
   virtual void handle( const Incident& incident ); 
 

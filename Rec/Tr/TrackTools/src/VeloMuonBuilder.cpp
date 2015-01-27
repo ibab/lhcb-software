@@ -37,7 +37,6 @@ VeloMuonBuilder::VeloMuonBuilder( const std::string& name, ISvcLocator* pSvcLoca
   declareProperty( "zmatch"          , m_zmatch = 15000. );
   declareProperty( "chamberhit"      , m_chamberhit = true );
   declareProperty( "distancecut"     , m_distancecut = 3000000 );
-  declareProperty( "xscale"          , m_xscale = 0.06);
   declareProperty( "lhcbids"         , n_lhcbids = 4);
   declareProperty( "cut"       , m_distcutmultiplyer =1);
   declareProperty( "MaxVeloTracks" , m_maxvelos = 1000 );
@@ -143,15 +142,12 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
       muonpunkty=chamber;
     } else {
       sc = m_linearextrapolator->position(*(*muonIter),m_zmatch,muonpunkty,LHCb::ParticleID(13));
+      if (sc.isFailure()) continue;
     }
-    if (sc.isFailure()) continue;
     sc = m_linearextrapolator->position(*(*muonIter),m_zmagnet,muonpunktx,LHCb::ParticleID(13));
-
     if (sc.isFailure()) continue;
 
-    std::vector<LHCbID> muonTiles= (*muonIter)->lhcbIDs();
-    MuonTileID tileM2=muonTiles[2].muonID();
-    int reg = tileM2.region();
+    int reg = (*muonIter)->lhcbIDs()[2].muonID().region();
 
     //go through the velos
     float minweight=std::numeric_limits<float>::infinity();
@@ -173,19 +169,8 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
       if (sc.isFailure()) continue;
 
 
-      if (reg == 0)
-        m_xscale = 0.06;
-      if (reg == 1)
-        m_xscale = 0.1;
-      if (reg == 2)
-        m_xscale = 0.15;
-      if (reg == 3)
-        m_xscale = 0.15;
-
-
       // now calculate distance
-
-      float weighteddistance = float((velopunktx.x()-muonpunktx.x())*(velopunktx.x()-muonpunktx.x())*m_xscale+(1-m_xscale)*(velopunkty.y()-muonpunkty.y())*(velopunkty.y()-muonpunkty.y()));
+      float weighteddistance = float((velopunktx.x()-muonpunktx.x())*(velopunktx.x()-muonpunktx.x())*m_xscale[reg]+(1-m_xscale[reg])*(velopunkty.y()-muonpunkty.y())*(velopunkty.y()-muonpunkty.y()));
 
       // -- hard coded after determination on private ntuple
       if (reg == 0)
@@ -206,7 +191,7 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
 
         std::auto_ptr<State> monitorstate( ((*veloIter)->firstState()).clone() );
         float xkick = (float)(chamber.x() - monitorstate->x());//jstefaniak used interpolated value here
-        float m_ptkickConstant = 1265;
+        const float m_ptkickConstant = 1265.f;
         float qp = float(xkick / m_ptkickConstant / ((float)chamber.z() - m_zmagnet));
         qp = -qp * m_fieldfactor;
         aCopy = new LHCb::Track();
@@ -218,10 +203,10 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
           copiedstates.push_back((*stateiter)->clone());
           copiedstates.back()->setQOverP(qp);
           Gaudi::TrackSymMatrix cov;
-          cov(0,0) = 1;
-          cov(1,1) = 1;
-          cov(2,2) = 1;
-          cov(3,3) = 1;
+          cov(0,0) = 1.f;
+          cov(1,1) = 1.f;
+          cov(2,2) = 1.f;
+          cov(3,3) = 1.f;
           cov(4,4) = qp*qp*0.15*0.15;
           copiedstates.back()->setCovariance(cov);
         }
@@ -233,10 +218,10 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
           copiedstates.push_back((*stateiter)->clone());
           copiedstates.back()->setQOverP(qp);
           Gaudi::TrackSymMatrix cov;
-          cov(0,0) = 1;
-          cov(1,1) = 1;
-          cov(2,2) = 1;
-          cov(3,3) = 1;
+          cov(0,0) = 1.f;
+          cov(1,1) = 1.f;
+          cov(2,2) = 1.f;
+          cov(3,3) = 1.f;
           cov(4,4) = qp*qp*0.15*0.15;
           copiedstates.back()->setCovariance(cov);
         }

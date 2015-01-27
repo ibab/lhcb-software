@@ -1,6 +1,5 @@
 // Include files
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/IIncidentSvc.h"
 
 #include "Kernel/HitPattern.h"
 #include "Event/FTRawCluster.h"
@@ -38,12 +37,11 @@ DECLARE_TOOL_FACTORY( UpgradeGhostId )
 UpgradeGhostId::UpgradeGhostId( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent)
-: GaudiTool ( type, name, parent ),
-  m_needrefresh(true)
+: GaudiTool ( type, name, parent )
 {
   declareProperty( "Expectors" , m_expectorNames=std::vector<std::string>{"UTHitExpectation","FTHitExpectation"} );
   //declareProperty( "Expectors" , m_expectorNames=std::vector<std::string>({"ITHitExpectation","TTHitExpectation","OTHitExpectation"}) );
-  declareInterface<ITrackManipulator>(this);
+  declareInterface<IGhostProbability>(this);
 
 }
 
@@ -54,6 +52,7 @@ namespace {
  static const int largestChannelIDype = 1+std::max(LHCb::LHCbID::UT,std::max(LHCb::LHCbID::VP,LHCb::LHCbID::FT));
  static const int largestTrackTypes = 1+LHCb::Track::Ttrack;}
 
+
 StatusCode UpgradeGhostId::finalize()
 {
 
@@ -63,16 +62,16 @@ StatusCode UpgradeGhostId::finalize()
   delete m_readers[LHCb::Track::Downstream];
   delete m_readers[LHCb::Track::Long];
   delete m_readers[LHCb::Track::Ttrack];
-  IIncidentSvc* incsvc = svc<IIncidentSvc>("IncidentSvc") ;
-  incsvc->removeListener(this, IncidentType::BeginEvent);
+  //IIncidentSvc* incsvc = svc<IIncidentSvc>("IncidentSvc") ;
+  //incsvc->removeListener(this, IncidentType::BeginEvent);
   return GaudiTool::finalize();
 }
 
 StatusCode UpgradeGhostId::initialize()
 {
   if( !GaudiTool::initialize() ) return StatusCode::FAILURE;
-  IIncidentSvc* incsvc = svc<IIncidentSvc>("IncidentSvc") ;
-  incsvc->addListener(this, IncidentType::BeginEvent);
+  //IIncidentSvc* incsvc = svc<IIncidentSvc>("IncidentSvc") ;
+  //incsvc->addListener(this, IncidentType::BeginEvent);
 
   if (largestTrackTypes<=std::max(LHCb::Track::Ttrack,std::max(
      std::max(LHCb::Track::Velo,LHCb::Track::Upstream),
@@ -107,15 +106,6 @@ StatusCode UpgradeGhostId::initialize()
   m_readers[LHCb::Track::Ttrack] = new ReadMLP_6(names);
 
   return StatusCode::SUCCESS;
-}
-
-void UpgradeGhostId::handle (const Incident& incident) {
-  if (IncidentType::BeginEvent == incident.type() ) {
-    m_needrefresh = true;
-    if (countHits().isFailure() || m_needrefresh) {
-      Error("Subdetector hit counting failed",StatusCode::FAILURE,10).ignore();
-    }
-  }
 }
 
 StatusCode UpgradeGhostId::countHits() {
@@ -153,7 +143,7 @@ StatusCode UpgradeGhostId::countHits() {
   //      || (veloCont && ttCont && itCont && ot) // otherwise we're in runI/II
   //     )) return Warning("detector missing",StatusCode::FAILURE,10);
   if ((vpCont)&&(utCont)) {
-    m_needrefresh = false;
+    return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
 
@@ -182,22 +172,14 @@ namespace {
 //=============================================================================
 StatusCode UpgradeGhostId::execute(LHCb::Track& aTrack) const
 {
-  int veloHits;
-  int   utHits;
-  if (m_needrefresh) {
-    const LHCb::VPClusters* vpCont = NULL;
-    const LHCb::STClusters* utCont = NULL;
-    vpCont = getIfExists<LHCb::VPClusters>(LHCb::VPClusterLocation::Default);
-    utCont = getIfExists<LHCb::STClusters>(LHCb::STClusterLocation::UTClusters);
-    if (vpCont) veloHits = vpCont->size();
-    else return Warning("Couldn't count VP hits",StatusCode::FAILURE,10);
-    if (utCont) utHits = utCont->size();
-    else return Warning("Couldn't count UT hits",StatusCode::FAILURE,10);
-  } else {
-    veloHits = m_veloHits;
-    utHits = m_utHits;
-  }
-
+  /// code for debuging:
+  ///if (true) {
+  ///  int veloHits;
+  ///  const LHCb::VPClusters* vpCont = NULL;
+  ///  vpCont = getIfExists<LHCb::VPClusters>(LHCb::VPClusterLocation::Default);
+  ///  if (vpCont) veloHits = vpCont->size();
+  ///  if (veloHits != m_veloHits) return Error("This is very bad!!!",StatusCode::FAILURE,10);
+  ///}
 
   std::vector<double> obsarray = subdetectorhits(aTrack);
   const LHCb::KalmanFitResult* fit = static_cast<const LHCb::KalmanFitResult*>(aTrack.fitResult());
@@ -228,8 +210,8 @@ StatusCode UpgradeGhostId::execute(LHCb::Track& aTrack) const
   if (aTrack.hasUT()) {
     variables.push_back((fit->nMeasurements(LHCb::Measurement::UT) - fit->nActiveMeasurements(LHCb::Measurement::UT)));// "UpgradeGhostInfo_UToutlier",'F'
   }
-  variables.push_back(veloHits);
-  variables.push_back(  utHits);
+  variables.push_back(m_veloHits);
+  variables.push_back(  m_utHits);
   variables.push_back(aTrack.chi2());
   if (LHCb::Track::Long != aTrack.type() && LHCb::Track::Downstream != aTrack.type()) {
     variables.push_back(aTrack.nDoF());
@@ -239,7 +221,7 @@ StatusCode UpgradeGhostId::execute(LHCb::Track& aTrack) const
   }
   variables.push_back(aTrack.pseudoRapidity());
 
-  //float netresponse = m_readers[aTrack.type()]->GetRarity(variables); // TODO rarity would be nice
+  //float netresponse = m_readers[aTrack.type()]->GetRarity(variables); // TODO rarity would be nice, see https://sft.its.cern.ch/jira/browse/ROOT-7050
   float netresponse = m_readers[aTrack.type()]->GetMvaValue(variables);
   
   aTrack.setGhostProbability(1.-netresponse);

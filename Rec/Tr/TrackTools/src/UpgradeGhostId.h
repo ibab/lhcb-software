@@ -6,7 +6,7 @@
 
 #include "TrackInterfaces/IHitExpectation.h"
 #include "TrackInterfaces/IVPExpectation.h"
-#include "TrackInterfaces/ITrackManipulator.h"
+#include "TrackInterfaces/IGhostProbability.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/IIncidentListener.h"
 
@@ -20,8 +20,7 @@ class IClassifierReader;
  *  @date   30-12-2014
  */
 class UpgradeGhostId : public GaudiTool,
-                       virtual public ITrackManipulator,
-                       virtual public IIncidentListener {
+                       virtual public IGhostProbability {
 
 
 public:
@@ -37,15 +36,12 @@ public:
   virtual StatusCode finalize(); ///< Algorithm initialization
   virtual StatusCode initialize(); ///< Algorithm initialization
   virtual StatusCode execute(LHCb::Track& aTrack) const; 
-
-
-  virtual void handle( const Incident& incident);
+  virtual StatusCode beginEvent() {return countHits();}; 
 
 protected:
   StatusCode countHits();
 
 private:
-  bool              m_needrefresh;
   IVPExpectation   *m_vpExpectation;
   std::vector<IClassifierReader*> m_readers;
 

@@ -28,7 +28,6 @@
  * -  zmatch: where in the y-z plane matching is done
  * -  chamberhit: if for y-z matching the first muon measurement shall be used instead of zmatch
  * -  distancecut: obsolete, kept for compatibility. hard coded.
- * -  xscale: obsolete, kept for compatibility. hard coded.
  * -  lhcbids: obsolete used for elaborate chi^2 fit in the muon stations with unknown hit pattern
  *             not applicable for existing muon algorithms but for private code
  * -  cut: if the hard coded distancecut shall be scaled
@@ -57,7 +56,7 @@ private:
   double m_zmagnet;
   float m_zmatch;
   double m_distancecut;
-  double m_xscale;
+  const float m_xscale[4] = {0.06f,0.1f,0.15f,0.15f};
   std::string m_muonpath;
   std::string m_velopath;
   std::string m_output;

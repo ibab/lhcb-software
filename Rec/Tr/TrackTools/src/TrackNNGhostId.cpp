@@ -72,7 +72,7 @@ DECLARE_TOOL_FACTORY( TrackNNGhostId )
       m_FlattenLookupTableTtrack(0),
       m_nOTCont(0)
 {
-  declareInterface<ITrackManipulator>(this);
+  declareInterface<IGhostProbability>(this);
 }
 
 //=============================================================================
