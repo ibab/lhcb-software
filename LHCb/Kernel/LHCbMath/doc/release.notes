@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-01-28 - Marco Clemencic
+ - Removed Eigen CMakeLists.txt files, because they conflict with the Gaudi
+   based CMake configuration.
+
 ! 2015-01-27 - Chris Jones
  - Add headers for Eigen v3.2.4 library. This is a TEMPORARY measure, awaiting
    deployment of Eigen within the LCG Externals area, and will be removed
@@ -16,11 +20,11 @@
 ! 2015-01-13 - Gerhard Raven
  - optimize AVX versions of 'average' and 'filter'
 
-! 2015-01-09 - Ben Couturier 
- - Add test for Similarity_5_7 and 5_1 
+! 2015-01-09 - Ben Couturier
+ - Add test for Similarity_5_7 and 5_1
 
-! 2015-01-08 - Ben Couturier 
- - Fix CMakeLists.txt to build Similarity test 
+! 2015-01-08 - Ben Couturier
+ - Fix CMakeLists.txt to build Similarity test
 
 ! 2015-01-08 - Gerhard Raven
  - cleanup namespace convention & dispatcher, add 'LHCb::Math::Filter'
@@ -52,7 +56,7 @@
 
 !========================= LHCbMath v3r52 2014-12-11 =========================
 ! 2014-12-02 - Vanya Belyaev
- - some improvement in the integration of 2D-polynomials 
+ - some improvement in the integration of 2D-polynomials
 
 ! 2014-11-30 - Vanya Belyaev
  - add various Splines (B,I,M,..)
@@ -68,11 +72,11 @@
 !========================= LHCbMath v3r51 2014-10-15 =========================
 ! 2014-10-15 - Vanya Belyaev
  - Types.py
-   fix for ROOT5/ROOT6 issues 
+   fix for ROOT5/ROOT6 issues
 
 ! 2014-10-09 - Vanya Belyaev
- - Functions.cpp 
-   fix stupid typo 
+ - Functions.cpp
+   fix stupid typo
 
 ! 2014-09-17 - Marco Clemencic
  - Fixed genreflex warnings (ROOT 6).
@@ -97,10 +101,10 @@
 
 !========================= LHCbMath v3r50 2014-09-08 =========================
 ! 2014-09-02 - Vanya Belyaev
- - Types.py 
-   fix for missing __iadd__, __isub__ operators 
+ - Types.py
+   fix for missing __iadd__, __isub__ operators
    extend operators for linear-algebra vectors, 3D-points and 3D-vectors
-   add new QMTEST 
+   add new QMTEST
 
 ! 2014-09-01 - Manuel Tobias Schiller
  - (hopefully) fix warnings about unneeded semicolons in BloomFilter.h
@@ -121,10 +125,10 @@
    expert should take a good look...)
 
 ! 2014-08-25 - Vanya Belyaev
- - add more efficient treatment of normalization integrals 
+ - add more efficient treatment of normalization integrals
 
 ! 2014-08-24 - Vanya Belyaev
- - minor improvements 
+ - minor improvements
 
 ! 2014-08-23 - Vanya Belyaev
  - few minor fixes in Bukin function
@@ -137,7 +141,7 @@
 
 !========================= LHCbMath v3r49 2014-07-14 =========================
 ! 2014-06-26 - Vanya Belyaev
- - remove some local functions (non needed anymore)  
+ - remove some local functions (non needed anymore)
 
 ! 2014-06-26 - Marco Cattaneo
  - fix some clang33 compilation warnings (unused variables)
@@ -147,25 +151,25 @@
  - fix compilation warning
 
 ! 2014-06-09 - Vanya Belyaev
- - add more functions 
+ - add more functions
 
 ! 2014-06-08 - Vanya Belyaev
- - add weighted statistics 
+ - add weighted statistics
 
 ! 2014-06-07 - Vanya Belyaev
- - few minor fixes 
+ - few minor fixes
 
 ! 2014-06-06 - Vanya Belyaev
- - new module 
+ - new module
 
 ! 2014-06-03 - Vanya Belyaev
- - minor fix 
+ - minor fix
 
 ! 2014-06-02 - Vanya Belyaev
- - add few helper math-functions 
+ - add few helper math-functions
 
 ! 2014-05-28 - Vanya Belyaev
- - Functions.cpp few fixes  
+ - Functions.cpp few fixes
 
 ! 2014-05-24 - Vanya Belyaev
  - Functions.cpp minor fix
@@ -175,22 +179,22 @@
 
 !========================= LHCbMath v3r47 2014-05-12 =========================
 ! 2014-05-11 - Vanya Belyaev
- - improve positive polynomials 
+ - improve positive polynomials
 
 ! 2014-05-10 - Vanya Belyaev
- - improve integration and fix few bugs 
+ - improve integration and fix few bugs
 
 ! 2014-05-09 - Vanya Belyaev
 
  - Functions.h:
      1) add integration for 2D non-factorizable models
-     2) fix a stupid bug in nSphere 
+     2) fix a stupid bug in nSphere
    LHCbMath.h:
-     1) add Zero, NonZero and scale functions  
+     1) add Zero, NonZero and scale functions
 
 
 ! 2014-05-04 - Vanya Belyaev
- - analytical integration of bvernsteins polynomials 
+ - analytical integration of bvernsteins polynomials
 
 !========================= LHCbMath v3r46 2014-03-17 =========================
 ! 2014-03-16 - Vanya Belyaev
@@ -198,21 +202,21 @@
 
 !========================= LHCbMath v3r45 2014-02-17 =========================
 ! 2014-01-25 - Vanya Belyaev
- - add jackknife estimator 
+ - add jackknife estimator
 
 ! 2014-01-22 - Vanya Belyaev
- - fix bug in NSphere+Positive 
+ - fix bug in NSphere+Positive
 
 ! 2014-01-21 - Vanya Belyaev
- - improve positive polinomials with n-sphere parameterization 
+ - improve positive polinomials with n-sphere parameterization
 
 ! 2014-01-21 - Vanya Belyaev
 
  - ValueWithError
-    minor fix to resolve python ambguities 
+    minor fix to resolve python ambguities
 
 ! 2014-01-13 - Vanya Belyaev
- - a bit more functions 
+ - a bit more functions
 
 ! 2014-01-06 - Marco Clemencic
  - Replaced import of GaudiPython with import of cppyy (to allow usage of the
