@@ -4,6 +4,9 @@
 ! Purpose     : Event model for FT digitisation and reconstruction
 !-----------------------------------------------------------------------------
 
+! 2015-01-28 - Michel De Cian
+ - Removed 'FTRawCluster', which was not used anymore since almost a year (replaced by FTLiteCluster)
+
 !========================= FTEvent v1r6 2014-05-12 =========================
 ! 2014-03-19 - Marco Clemencic
  - Modified the CMake configuration to use the provided header and selection
