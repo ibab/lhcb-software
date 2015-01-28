@@ -42,8 +42,8 @@ class TestAvgHistCombiners(unittest.TestCase):
         """Create dictionaries needed by combiners."""
 
         dirname = os.path.dirname(__file__) + '/'
-        orfdata = TFile(os.path.abspath(dirname+'data/dqm_data.root'), 'read')
-        orfref = TFile(os.path.abspath(dirname+'data/dqm_ref.root'), 'read')
+        orfdata = TFile(os.path.abspath(dirname+'fixtures/dqm_data.root'), 'read')
+        orfref = TFile(os.path.abspath(dirname+'fixtures/dqm_ref.root'), 'read')
 
         # valid ROOT files
         assert(not orfdata.IsZombie())
