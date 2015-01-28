@@ -50,17 +50,14 @@ def retrieve_run_view_plot(run, plot, sensor, reference, run_data_dir):
     # str.format will work even with no format specifiers in the string
     plot = plot.format(sensor)
 
-    # Try to the get the plot object
+    # Try to the get the plot object, formatting it to JSON
     try:
-        plot_obj = plots.get_run_plot(plot, run, reference=reference)
+        response = plots.get_run_plot(plot, run, reference=reference,
+                                      formatter=response_formatters.json_formatter)
     except KeyError, e:
         sys.stderr.write("Invalid plot name provided: {0}".format(plot))
         sys.stderr.write("Exception caught: {0}".format(e))
         sys.exit(1)
-
-    # Try to format the object in to JSON
-    try:
-        response = response_formatters.json_formatter(plot_obj)
     except TypeError, e:
         sys.stderr.write("Cannot handle plot type for plot {0}".format(plot))
         sys.stderr.write("Exception caught: {0}".format(e))
