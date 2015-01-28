@@ -23,7 +23,6 @@
 #include "MCInterfaces/ILHCbIDsToMCHits.h"
 #include "Event/FTCluster.h"
 #include "Event/MCHit.h"
-#include "Event/FTRawCluster.h"
 #include "GaudiAlg/GaudiHistoTool.h"
 
 /** @class PrPlotFTHits PrPlotFTHits.h
