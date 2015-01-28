@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-01-28 - Michael Kolpin
+ - changed TrackEffLines to account for changes in Hlt1TrackLines
+
 ! 2015-01-23 - Roel Aaij
  - Add Hlt2 Topo only commissioning configuration.
 

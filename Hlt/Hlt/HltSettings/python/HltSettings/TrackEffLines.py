@@ -78,12 +78,10 @@ class TrackEffLines( object ):
                                                , 'Muon_IPChi2'   :    16
                                                , 'Muon_TrChi2'   :     2.5  
                                                , 'Muon_GEC'      : 'Loose'
-                                               , 'Muon_L0Channels' : 'Muon,DiMuon,MuonNoSPD,DiMuonNoSPD' 
                                                , 'Photon_PT'     :  1200
                                                , 'Photon_P'      :  3000
                                                , 'Photon_IPChi2' :    16
                                                , 'Photon_TrChi2' :     2.0
-                                               , 'Photon_L0Channels' : 'PhotonHi,ElectronHi' 
                                                , 'Photon_GEC'        : 'Loose'
                                                , 'Prescale'          : {'Hlt1TrackAllL0'                   : 1.0, 
                                                                         'Hlt1TrackForwardPassThrough'      : 0,
