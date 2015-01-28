@@ -39,7 +39,8 @@ public:
   const LHCb::VertexBase* findBestVertex(LHCb::Particle *p);
   
 protected:
-
+  /// Property: output directory for JSON files
+  std::string m_outputDir;
 private:
   ITrackExtrapolator *m_trackExtrapolator;
   

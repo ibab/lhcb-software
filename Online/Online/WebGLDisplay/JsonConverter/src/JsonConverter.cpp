@@ -65,7 +65,7 @@ JsonConverter::JsonConverter( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : DaVinciAlgorithm ( name , pSvcLocator )
 {
-
+  declareProperty("OutputDirectory", m_outputDir = "");
 }
 //=============================================================================
 // Destructor
@@ -96,15 +96,15 @@ StatusCode JsonConverter::execute() {
   //std::map<std::string, boost::any> eventData;
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> IN JSON CONVERTER" << std::endl;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "=====> IN JSON CONVERTER" << std::endl;
 
 
-   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting ODIN " << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting ODIN " << endmsg;
   LHCb::ODIN *odin = (LHCb::ODIN *)get<LHCb::ODIN>("/Event/DAQ/ODIN");
-   if ( msgLevel(MSG::DEBUG) ) debug() << "ODIN RunNumber    : " << odin->runNumber() << endmsg;
-   if ( msgLevel(MSG::DEBUG) ) debug() << "ODIN EventNumber  : " << odin->eventNumber() << endmsg;
-   if ( msgLevel(MSG::DEBUG) ) debug() << "ODIN GPS Time     : " << odin->gpsTime() << endmsg;
-   if ( msgLevel(MSG::DEBUG) ) debug() << "ODIN Event Type   : " << odin->eventType() << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "ODIN RunNumber    : " << odin->runNumber() << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "ODIN EventNumber  : " << odin->eventNumber() << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "ODIN GPS Time     : " << odin->gpsTime() << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "ODIN Event Type   : " << odin->eventType() << endmsg;
 
   jsonStream << std::make_pair("runNumber", odin->runNumber());
   jsonStream << std::make_pair("eventNumber", odin->eventNumber());
@@ -347,6 +347,10 @@ StatusCode JsonConverter::execute() {
                {
                  Stream pJson(Container::MAP);
                  partCount++;
+                 
+		 if (p == nullptr)
+		    return;
+
                  std::string partName =  getParticleName(p);
                  pJson <<  std::make_pair("name", partName);
                  pJson <<  std::make_pair("m", p->measuredMass());
@@ -398,6 +402,7 @@ StatusCode JsonConverter::execute() {
   
   std::ofstream jsonOutput;
   std::stringstream buf;
+  if ( !m_outputDir.empty() ) buf << m_outputDir << "/";
   buf << odin->runNumber()
       << "_"
       << odin->eventNumber()
@@ -424,6 +429,13 @@ std::string getParticleName(LHCb::Particle *p)
   int  ProbNNk = 703; //  # The ANN probability for the kaon hypothesis
   int  ProbNNp = 704; //  # The ANN probability for the proton hypothesis
   int  ProbNNghost = 705; //# The ANN probability for the ghost hypothesis
+
+
+  if (p == nullptr)
+     return "NullParticle";
+
+  if (p->proto() == nullptr)
+    return "NullProtoParticle";
 
   std::string pname = "";
   
