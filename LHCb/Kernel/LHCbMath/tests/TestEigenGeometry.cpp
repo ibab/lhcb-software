@@ -109,7 +109,7 @@ bool reflectSpherical_Eigen ( EigenXYZPoint& position,
 
   const float distance1 = 0.5f * ( std::sqrt(discr) - b ) / a;
   // change position to the intersection point
-  position += distance1 * direction;
+  position = position + distance1 * direction;
 
   // reflect the vector
   // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
@@ -117,7 +117,7 @@ bool reflectSpherical_Eigen ( EigenXYZPoint& position,
   const EigenXYZVector normal( position.x() - CoC.x(),
                                position.y() - CoC.y(),
                                position.z() - CoC.z(), 0 );
-  direction -= ( 2.0f / normal.dot(normal) ) * normal.dot(direction) * normal;
+  direction = direction - ( ( 2.0f / normal.dot(normal) ) * normal.dot(direction) * normal );
 
   return true;
 }
@@ -160,8 +160,8 @@ int main ( int /*argc*/, char** /*argv*/ )
     if ( reflectSpherical_ROOT( rposition, rdirection, data.CoC, data.radius ) )  { ++ok_ROOT; }
 
     // test dot products
-    const float a = testROOTDotProduct(rdirection);
-    const float b = testEigenDotProduct(edirection);
+    testROOTDotProduct(rdirection);
+    testEigenDotProduct(edirection);
 
   }
 
