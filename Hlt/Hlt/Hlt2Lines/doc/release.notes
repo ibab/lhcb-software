@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-01-28 - Michael Kolpin
+ - Added Hlt2TrackingEfficiencyLines, moved all track. eff. lines there
+
 ! 2015-01-23 - Roel Aaij
  - Add Calorimeter test lines.
 
