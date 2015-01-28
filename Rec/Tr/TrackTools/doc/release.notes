@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-01-28 - Paul Seyfert
+ - swapped StatusCodes in UpgradeGhostInfo::countHits
+
 !2015-01-28 - Michel De Cian
  - Remove include "FTRawCluster" in UpgradeGhostID.cpp
 

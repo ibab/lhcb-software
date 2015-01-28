@@ -141,7 +141,7 @@ StatusCode UpgradeGhostId::countHits() {
   //  if (!((vpCont && utCont && ftCont) // this is upgrade, all have to be there
   //      || (veloCont && ttCont && itCont && ot) // otherwise we're in runI/II
   //     )) return Warning("detector missing",StatusCode::FAILURE,10);
-  if ((vpCont)&&(utCont)) {
+  if (!((vpCont)&&(utCont))) {
     return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
