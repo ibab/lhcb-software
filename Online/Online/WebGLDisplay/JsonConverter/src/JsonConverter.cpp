@@ -6,7 +6,7 @@
 #include <map>
 #include <boost/any.hpp>
 
- // from Gaudi
+// from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "Event/Particle.h"
 #include "Event/ODIN.h"
@@ -117,25 +117,29 @@ StatusCode JsonConverter::execute() {
   }
 
   
-   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting PVs " << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting PVs " << endmsg;
   LHCb::RecVertices* vertices = get<LHCb::RecVertices>("/Event/Rec/Vertex/Primary");
   int vertexCount = 0;
   Stream vlistJson(Container::LIST);
   for_each (vertices->begin(), 
-              vertices->end(),
+            vertices->end(),
             [&vertexCount, &vlistJson] (LHCb::RecVertex *r)
-              {
-                Stream vertJson(Container::MAP);
-                vertJson << std::make_pair("pv_x", r->position().x());
-                vertJson << std::make_pair("pv_y", r->position().y());
-                vertJson << std::make_pair("pv_z", r->position().z());
-                vlistJson << vertJson;
-                vertexCount++;
-              });
+            {
+
+              if (nullptr == r)
+                return;
+
+              Stream vertJson(Container::MAP);
+              vertJson << std::make_pair("pv_x", r->position().x());
+              vertJson << std::make_pair("pv_y", r->position().y());
+              vertJson << std::make_pair("pv_z", r->position().z());
+              vlistJson << vertJson;
+              vertexCount++;
+            });
   // Now adding the entries to the main map
   jsonStream << std::make_pair("PVS", vlistJson);
 
-   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting MUON Hits " << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting MUON Hits " << endmsg;
   const LHCb::MuonCoords* coords = getIfExists<LHCb::MuonCoords>("Raw/Muon/Coords");
   if( NULL == coords ) {
     if(msgLevel(MSG::INFO)) info()<<" Container Raw/Muon/Coords doesn't exist"<<endmsg;    
@@ -148,6 +152,10 @@ StatusCode JsonConverter::execute() {
              coords->end(),
              [this, &muonJson, &muonDetector] (LHCb::MuonCoord *c) 
              {
+
+              if (nullptr == c)
+                return;
+              
                std::vector<LHCb::MuonTileID> digitTiles = c->digitTile();
                for (auto dt: digitTiles) 
                {
@@ -162,7 +170,7 @@ StatusCode JsonConverter::execute() {
     jsonStream << std::make_pair("MUON", muonJson);
   }
   
-   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting OT Hits " << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting OT Hits " << endmsg;
   const LHCb::OTTimes* otTimes = getIfExists<LHCb::OTTimes>("Raw/OT/Times");
   if( NULL == otTimes ) {
     if(msgLevel(MSG::INFO)) info()<<" Container Raw/OT/Times doesn't exist"<<endmsg;    
@@ -175,6 +183,10 @@ StatusCode JsonConverter::execute() {
              otTimes->end(),
              [this, &otJson, &otDetector] (LHCb::OTTime *c) 
              {
+
+               if (nullptr == c)
+                 return;
+
                LHCb::OTChannelID cid = c->channel();
                LHCb::LHCbID id(cid);
                std::auto_ptr<LHCb::Trajectory> t = otDetector->trajectory(id, 0.0);
@@ -186,7 +198,7 @@ StatusCode JsonConverter::execute() {
     jsonStream << std::make_pair("OT", otJson);
   }
   
-   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting IT Hits " << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting IT Hits " << endmsg;
   const LHCb::STClusters* itClusters = getIfExists<LHCb::STClusters>("/Event/Raw/IT/Clusters");
   if( NULL == itClusters ) {
     if(msgLevel(MSG::INFO)) info()<<" Container Raw/IT/Clusters doesn't exist"<<endmsg;    
@@ -199,6 +211,10 @@ StatusCode JsonConverter::execute() {
              itClusters->end(),
              [this, &itJson, &itDetector] (LHCb::STCluster *c) 
              {
+
+               if (nullptr == c)
+                 return;
+
                LHCb::STChannelID cid = c->channelID();
                LHCb::LHCbID id(cid);
                std::auto_ptr<LHCb::Trajectory> t = itDetector->trajectory(id, 0.0);
@@ -210,7 +226,7 @@ StatusCode JsonConverter::execute() {
     jsonStream << std::make_pair("IT", itJson);
   }
   
-   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting TT Hits " << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting TT Hits " << endmsg;
   const LHCb::STClusters* ttClusters = getIfExists<LHCb::STClusters>("/Event/Raw/TT/Clusters");
   if( NULL == ttClusters ) {
     if(msgLevel(MSG::INFO)) info()<<" Container Raw/TT/Clusters doesn't exist"<<endmsg;    
@@ -223,6 +239,10 @@ StatusCode JsonConverter::execute() {
              ttClusters->end(),
              [this, &ttJson, &ttDetector] (LHCb::STCluster *c) 
              {
+
+               if (nullptr == c)
+                 return;
+
                LHCb::STChannelID cid = c->channelID();
                LHCb::LHCbID id(cid);
                std::auto_ptr<LHCb::Trajectory> t = ttDetector->trajectory(id, 0.0);
@@ -234,7 +254,7 @@ StatusCode JsonConverter::execute() {
     jsonStream << std::make_pair("TT", ttJson);
   }
 
-   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting HCAL Hits " << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting HCAL Hits " << endmsg;
   const LHCb::CaloDigits* caloDigits = getIfExists<LHCb::CaloDigits>("/Event/Raw/Hcal/Digits");
   if( NULL == caloDigits ) {
     if(msgLevel(MSG::INFO)) info()<<" Container Raw/Hcal/Digits doesn't exist"<<endmsg;    
@@ -247,6 +267,10 @@ StatusCode JsonConverter::execute() {
              caloDigits->end(),
              [this, &hcalJson, &hcalDetector] (LHCb::CaloDigit *c) 
              {
+
+               if (nullptr == c)
+                 return;
+
                if (c->e() > 150) 
                {
                  const LHCb::CaloCellID cid = c->cellID();
@@ -263,7 +287,7 @@ StatusCode JsonConverter::execute() {
     jsonStream << std::make_pair("HCAL", hcalJson);
   }
 
-   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting ECAL Hits " << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting ECAL Hits " << endmsg;
   const LHCb::CaloDigits* ecalDigits = getIfExists<LHCb::CaloDigits>("/Event/Raw/Ecal/Digits");
   if( NULL == ecalDigits ) {
     if(msgLevel(MSG::INFO)) info()<<" Container Raw/Ecal/Digits doesn't exist"<<endmsg;    
@@ -293,7 +317,7 @@ StatusCode JsonConverter::execute() {
   }
 
 
-   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting VELO Hits " << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting VELO Hits " << endmsg;
   const LHCb::VeloClusters* veloClusters = getIfExists<LHCb::VeloClusters>("/Event/Raw/Velo/Clusters");
   if( NULL == veloClusters ) {
     if(msgLevel(MSG::INFO)) info()<<" Container Raw/Velo/Clusters doesn't exist"<<endmsg;    
@@ -307,6 +331,9 @@ StatusCode JsonConverter::execute() {
              veloClusters->end(),
              [this, &veloRJson, &veloPhiJson, &veloDetector] (LHCb::VeloCluster *c) 
              {
+               if (nullptr == c)
+                 return;
+
                LHCb::VeloChannelID cid = c->channelID();
                const DeVeloSensor *sensor = veloDetector->sensor(cid);
                const LHCb::VeloCluster::ADCVector values = c->stripValues();
@@ -332,67 +359,67 @@ StatusCode JsonConverter::execute() {
     jsonStream << std::make_pair("VELOR", veloRJson);
   }
 
-   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting Particles " << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting Particles " << endmsg;
   const std::string PartsTESLocation("/Event/Phys/StdNoPIDsPions/Particles");  
   LHCb::Particles *inputParts = getIfExists<LHCb::Particles>(PartsTESLocation);
   Stream allParticlesJson(Container::LIST);
   int partCount = 0;
   if( NULL == inputParts ) {
-     if(msgLevel(MSG::INFO)) info()<<" Container /Event/Phys/StdNoPIDsPions/Particles doesn't exist"<<endmsg;    
-   } else 
-   {
-     for_each (inputParts->begin(), 
-               inputParts->end(),
-               [this, &partCount, &allParticlesJson] (LHCb::Particle *p)
-               {
-                 Stream pJson(Container::MAP);
-                 partCount++;
+    if(msgLevel(MSG::INFO)) info()<<" Container /Event/Phys/StdNoPIDsPions/Particles doesn't exist"<<endmsg;    
+  } else 
+  {
+    for_each (inputParts->begin(), 
+              inputParts->end(),
+              [this, &partCount, &allParticlesJson] (LHCb::Particle *p)
+              {
+                Stream pJson(Container::MAP);
+                partCount++;
                  
-		 if (p == nullptr)
-		    return;
-
-                 std::string partName =  getParticleName(p);
-                 pJson <<  std::make_pair("name", partName);
-                 pJson <<  std::make_pair("m", p->measuredMass());
-                 pJson <<  std::make_pair("E", p->momentum().E());
-                 pJson <<  std::make_pair("px", p->momentum().px());
-                 pJson <<  std::make_pair("py", p->momentum().py());
-                 pJson <<  std::make_pair("pz", p->momentum().pz());
-                 pJson <<  std::make_pair("q", p->charge());
-
-                 // XXX Missing Impact parameter info
-                 // Finding boundaries for the track
-                 auto bestVertex = findBestVertex(p);
-                 double zmin = 0;
-                 if (bestVertex == nullptr) 
-                 {  
-                   bestVertex->position().z();
-                 }
+                if (p == nullptr)
+                  return;
                  
-                 double zmax = HCAL_Z;
-                 if (partName == "mu+" || partName == "mu-") 
-                   zmax = MUON_Z;
+                std::string partName =  getParticleName(p);
+                pJson <<  std::make_pair("name", partName);
+                pJson <<  std::make_pair("m", p->measuredMass());
+                pJson <<  std::make_pair("E", p->momentum().E());
+                pJson <<  std::make_pair("px", p->momentum().px());
+                pJson <<  std::make_pair("py", p->momentum().py());
+                pJson <<  std::make_pair("pz", p->momentum().pz());
+                pJson <<  std::make_pair("q", p->charge());
+                 
+                // XXX Missing Impact parameter info
+                // Finding boundaries for the track
+                auto bestVertex = findBestVertex(p);
+                double zmin = 0;
+                if (bestVertex != nullptr) 
+                {  
+                  zmin = bestVertex->position().z();
+                }
+                 
+                double zmax = HCAL_Z;
+                if (partName == "mu+" || partName == "mu-") 
+                  zmax = MUON_Z;
+                 
+                // Now propagating the track!
+                Stream trackJson(Container::LIST);
+                if (p->proto() != nullptr) 
+                {
+                  processTrack(m_trackExtrapolator,
+                               p->proto()->track(), 
+                               p->particleID(),
+                               zmin,
+                               zmax,
+                               trackJson);
+                  pJson <<  std::make_pair("track", trackJson); 
+                }
+                 
+                // Adding this particle to the list
+                allParticlesJson << pJson;
 
-                 // Now propagating the track!
-                 Stream trackJson(Container::LIST);
-                 if (p->proto() != nullptr) 
-                 {
-                   processTrack(m_trackExtrapolator,
-                                p->proto()->track(), 
-                                p->particleID(),
-                                zmin,
-                                zmax,
-                                trackJson);
-                   pJson <<  std::make_pair("track", trackJson); 
-                 }
-
-                 // Adding this particle to the list
-                 allParticlesJson << pJson;
-
-               });
+              });
    
-      if ( msgLevel(MSG::DEBUG) ) debug() << "Part count " << partCount << endmsg;  
-   }
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Part count " << partCount << endmsg;  
+  }
   jsonStream << std::make_pair("PARTICLES", allParticlesJson);
 
   // Now printing the result
@@ -430,15 +457,15 @@ std::string getParticleName(LHCb::Particle *p)
   int  ProbNNp = 704; //  # The ANN probability for the proton hypothesis
   int  ProbNNghost = 705; //# The ANN probability for the ghost hypothesis
 
-
+  // A few checks in case
   if (p == nullptr)
-     return "NullParticle";
+    return "NullParticle";
 
   if (p->proto() == nullptr)
     return "NullProtoParticle";
 
+  // Now actually doing the checks
   std::string pname = "";
-  
   if (p->charge() > 0) 
   {
     pname = "pi+";
@@ -499,16 +526,13 @@ std::string getParticleName(LHCb::Particle *p)
 
 const LHCb::VertexBase* JsonConverter::findBestVertex(LHCb::Particle *p) 
 {
-  /*LHCb::RecVertices* primaryVertices = get<LHCb::RecVertices>("/Event/Rec/Vertex/Primary");
-  std::string relatorName = "GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2";
-  IRelatedPVFinder*  pvRelator = tool<IRelatedPVFinder>(relatorName, this);
-  auto table = pvRelator->relatedPVs(p, "/Event/Rec/Vertex/Primary");
-  auto relPVs = table.relations(p);
-  //std::cout << "TOTO:" << relPVs << std::endl;
-  auto bestVertex = relPVs.back().to();*/
+  if (nullptr == p) 
+  {
+    if(msgLevel(MSG::DEBUG)) debug()<< " Null pointer passed to findBestVertex"<<endmsg;    
+    return nullptr;
+  }
   
   const LHCb::VertexBase* bestPV = this->bestPV(p);
-
   return bestPV;
 }
 
@@ -523,6 +547,14 @@ void processTrack(ITrackExtrapolator *extrapolator,
   const int npoints = 10;
   LHCb::State s;
   double z;
+
+  // A few checks just in case...
+  if (nullptr == track) 
+    return;
+
+  if (nullptr == extrapolator) 
+    return;
+
   for(int i=0; i < npoints; i++) 
   {
     z = zmin + i*(zmax-zmin)/npoints;
