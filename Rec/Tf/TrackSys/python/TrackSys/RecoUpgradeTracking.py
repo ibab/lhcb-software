@@ -168,3 +168,17 @@ def RecoUpgradeTracking(exclude=[]):
     bestSeq.Members += [ bestTrackCreator ]
 
 
+    ## Extra track information sequence
+    extraInfos = TrackSys().getProp("TrackExtraInfoAlgorithms")
+    if len(extraInfos) > 0 :
+
+        ## ghost probability using a Neural Net
+        if "GhostProbability" in extraInfos :
+            from Configurables import TrackAddNNGhostId, TrackNNGhostId
+            ghostID = TrackAddNNGhostId()
+            ghostID.GhostIdTool = "UpgradeGhostId"
+            GaudiSequencer("TrackAddExtraInfoSeq").Members += [ ghostID ]
+            
+
+        addExtraInfoSeq = GaudiSequencer("TrackAddExtraInfoSeq")
+        GaudiSequencer("RecoTrSeq").Members += [ addExtraInfoSeq ]

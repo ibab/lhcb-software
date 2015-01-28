@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-01-28 - Michel De Cian
+ - Add GhostProbability to RecoUpgradeTracking.py
+
 ! 2015-01-24 - Michel De Cian
  - Adapt RecoTracking.py, such that for data type '2015' PatVeloTTHybrid instead of PatVeloTT is run. The (internal) Kalman filter is off per default.
 
