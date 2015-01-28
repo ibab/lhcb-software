@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-01-28 - Chris Jones
+ - Add a new test application, TestEigenGeometry, to help with testing
+   the Eigen package.
+
 ! 2015-01-28 - Marco Clemencic
  - Removed Eigen CMakeLists.txt files, because they conflict with the Gaudi
    based CMake configuration.

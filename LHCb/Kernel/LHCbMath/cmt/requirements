@@ -64,7 +64,9 @@ application  TestBloomFilter   ../tests/TestBloomFilter.cpp
 macro_append TestBloomFilter_dependencies   " LHCbMathLib "
 application  TestSimilarity   ../tests/TestSimilarity.cpp 
 macro_append TestSimilarity_dependencies   " LHCbMathLib "
-        
+application  TestEigenGeometry   ../tests/TestEigenGeometry.cpp
+macro_append TestEigenGeometry_dependencies   " LHCbMathLib "
+
 # ================= patterns =============================================
 apply_pattern       linker_library library=LHCbMathLib
 #=====================================================================

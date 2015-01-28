@@ -99,6 +99,10 @@ if(GAUDI_BUILD_TESTS)
                        tests/TestSimilarity.cpp
                        INCLUDE_DIRS Boost GSL ROOT
                        LINK_LIBRARIES Boost GSL ROOT GaudiKernel LHCbMathLib)
+  gaudi_add_executable(TestEigenGeometry   
+                       tests/TestEigenGeometry.cpp
+                       INCLUDE_DIRS Boost GSL ROOT
+                       LINK_LIBRARIES Boost GSL ROOT GaudiKernel LHCbMathLib)
 endif()
 
 gaudi_install_python_modules()
