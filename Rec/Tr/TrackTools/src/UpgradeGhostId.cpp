@@ -2,7 +2,6 @@
 #include "GaudiKernel/ToolFactory.h"
 
 #include "Kernel/HitPattern.h"
-#include "Event/FTRawCluster.h"
 #include "Event/FTCluster.h"
 #include "Event/Particle.h"
 #include "Event/STCluster.h"

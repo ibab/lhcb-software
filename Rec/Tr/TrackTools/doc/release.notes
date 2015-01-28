@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+!2015-01-28 - Michel De Cian
+ - Remove include "FTRawCluster" in UpgradeGhostID.cpp
+
 ! 2015-01-27 - Paul Seyfert
  - Changed interface of ghost probability computation
  - improved hit counting in UpgradeGhostInfo
