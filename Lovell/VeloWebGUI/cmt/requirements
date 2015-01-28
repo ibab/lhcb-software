@@ -25,3 +25,4 @@ use VeloAnalysisFramework	v*
 #apply_pattern    component_library library=VeloWebGUI
 #Below needs to be modified as necessary
 apply_pattern install_python_modules
+apply_pattern QMTest
