@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.4 2007-08-10 08:38:17 gcorti Exp $ 
+# $Id: requirements,v 1.4 2007-08-10 08:38:17 gcorti Exp $
 # =============================================================================
 # Created    : 2006-10-22
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -7,20 +7,20 @@ package           LbAlpGen
 version           v4r0p1
 
 # =============== structure ===================================================
-branches          cmt doc src options scripts 
+branches          cmt doc src options scripts
 
 # =============== exported includes ===========================================
-include_dirs      $(LBALPGENROOT) 
+include_dirs      $(LBALPGENROOT)
 
 # =============== environment =================================================
-set               LBALPGENOPTS $(LBALPGENROOT)/options 
+set               LBALPGENOPTS $(LBALPGENROOT)/options
 set               ALPGENPDFPATH $(alpgen_author_dir)/alplib/pdfdat
 #when alpgen pdf files will be copied to $LHAPDFSETSROOT directory, use instead:
 #set               ALPGENPDFPATH $(LHAPDFSETSROOT)/alpgen
 
 # =============== dependencies ================================================
 use               alpgen       v* LCG_GeneratorsInterfaces
-use               LbPythia     v* Gen 
+use               LbPythia     v* Gen
 use               Boost        v* LCG_Interfaces -no_auto_import
 
 macro alpgen_author_dir $(alpgen_home)/share/alpgen-author
@@ -28,20 +28,24 @@ macro alpgen_author_dir $(alpgen_home)/share/alpgen-author
 # =============== constituents ================================================
 library           LbAlpGenRead       component/ReadAlpGen.cpp
 library           LbAlpGenLibRead    Lib/alpsho.F Lib/Ahio.cpp Lib/gahio.F
-library           LbAlpGenzbb       component/AlpGenProduction.cpp component/AlpGenProductionzbb.cpp
-library           LbAlpGenLibzbb    Lib/*.cpp Lib/*.F $(alpgen_author_dir)/zqqlib/zqq.f zqq/*.F
-library           LbAlpGen4q        component/AlpGenProduction.cpp component/AlpGenProduction4q.cpp
-library           LbAlpGenLib4q     Lib/*.cpp Lib/*.F $(alpgen_author_dir)/4Qlib/4Q.f 4Q/*.F
-library           LbAlpGenwqq       component/AlpGenProduction.cpp component/AlpGenProductionwqq.cpp
-library           LbAlpGenLibwqq    Lib/*.cpp Lib/*.F $(alpgen_author_dir)/wqqlib/wqq.f wqq/*.F
-library           LbAlpGentop       component/AlpGenProduction.cpp component/AlpGenProductiontop.cpp
-library           LbAlpGenLibtop     Lib/*.cpp Lib/*.F $(alpgen_author_dir)/toplib/top.f top/*.F
+
+library           LbAlpGenzbb        cmtwrap/zbb-prod.cpp
+library           LbAlpGenLibzbb     cmtwrap/zbb_cpp.cpp cmtwrap/zbb_f.F $(alpgen_author_dir)/zqqlib/zqq.f zqq/*.F
+
+library           LbAlpGen4q         cmtwrap/4q-prod.cpp
+library           LbAlpGenLib4q      cmtwrap/4q_cpp.cpp cmtwrap/4q_f.F $(alpgen_author_dir)/4Qlib/4Q.f 4Q/*.F
+
+library           LbAlpGenwqq        cmtwrap/wqq-prod.cpp
+library           LbAlpGenLibwqq     cmtwrap/wqq_cpp.cpp cmtwrap/wqq_f.F $(alpgen_author_dir)/wqqlib/wqq.f wqq/*.F
+
+library           LbAlpGentop        cmtwrap/top-prod.cpp
+library           LbAlpGenLibtop     cmtwrap/top_cpp.cpp cmtwrap/top_f.F $(alpgen_author_dir)/toplib/top.f top/*.F
 
 ##application       AlpGenFragm Read/AlpGenFragm.cpp \
 ##                              Read/upevnt.F        \
 ##                              Read/upinit.F        \
 ##                              Main/dummy.F         \
-##                              Main/pyr.F 
+##                              Main/pyr.F
 ##application       AlpGen4Q    Main/AlpGen.cpp      \
 ##                              Main/alpgen_main.F   \
 ##                              Main/pyr.F           \
@@ -82,7 +86,7 @@ path_append PATH ${LBALPGENROOT}/${BINDIR}
 path_append PATH ${LBALPGENROOT}/scripts
 
 # =============================================================================
-private           
+private
 ##macro_append  AlpGenFragmlinkopts  $(Boost_linkopts_program_options)
 macro_append  Boost_linkopts " $(Boost_linkopts_filesystem) $(Boost_linkopts_system) "
 macro LbAlpGen_linkopts " -Wl,--no-as-needed "
@@ -95,7 +99,7 @@ macro_remove LbAlpGen_linkopts "-lLbAlpGenLibRead"
 macro_prepend fincludes $(ppcmd)"$(alpgen_author_dir) "
 macro_prepend fincludes $(ppcmd)"$(alpgen_author_dir)/alplib "
 
-##macro_append AlpGenFragm_dependencies LbAlpGenLibzbb 
+##macro_append AlpGenFragm_dependencies LbAlpGenLibzbb
 ##macro_append AlpGen4Q_dependencies LbAlpGenLib4q
 ##macro_append AlpGenZbb_dependencies LbAlpGenLibzbb
 
@@ -120,5 +124,5 @@ macro_remove alpgen_linkopts "/archive"
 end_private
 # =============================================================================
 
-# The END 
+# The END
 # =============================================================================
