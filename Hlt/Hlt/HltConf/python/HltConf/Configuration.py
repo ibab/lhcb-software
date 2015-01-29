@@ -185,16 +185,6 @@ class HltConf(LHCbConfigurableUser):
             Dec.Members.append(Sequence("Hlt1Postamble"))
             Hlt1Conf()
             Hlt1Conf().ThresholdSettings = ThresholdSettings
-            # disable the Hlt1 decoders in case Hlt1 is actually running...
-            ## TODO/FIXME: alternative: add the output location of the decoder to the VetoObjects
-            ##             property? That can be done unconditionally, and will automatically do
-            ##             the right thing!
-            from DAQSys.Decoders import DecoderDB
-            for n in [ "HltDecReportsDecoder/Hlt1DecReportsDecoder",
-                       "HltSelReportsDecoder/Hlt1SelReportsDecoder",
-                       "HltTrackReportsDecoder"] :
-                decoder = DecoderDB[n]
-                decoder.setup().Enable = False
 
         #
         # dispatch Hlt2 configuration
@@ -210,7 +200,13 @@ class HltConf(LHCbConfigurableUser):
                 Hlt2Conf().Hlt1TrackOption = "Rerun" if activehlt1lines else "Decode"
             if thresClass and hasattr( thresClass, 'Hlt2DefaultVoidFilter' ) :
                 Hlt2Conf().DefaultVoidFilter = getattr( thresClass, 'Hlt2DefaultVoidFilter' )
-
+            # Decoding at the beginning of HLT2. Make sure the decoders do not run, if location already exists.
+            from DAQSys.Decoders import DecoderDB
+            for n in [ "HltDecReportsDecoder/Hlt1DecReportsDecoder",
+                       "HltSelReportsDecoder/Hlt1SelReportsDecoder",
+                       "HltTrackReportsDecoder"] :
+                decoder = DecoderDB[n]
+                decoder.setup().VetoObjects = [ loc for loc in decoder.listOutputs() ]
 
         Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
                        , Members = [ Sequence('HltDecisionSequence')
