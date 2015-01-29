@@ -56,6 +56,7 @@ def PV3D(where):
 
     if where.upper() not in ['HLT1','HLT2'] : raise KeyError('PV3D: where must be either HLT1 or HLT2')
 
+    #TODO: Move these options to HltRecoConf
     output3DVertices = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,PV3DSelection)
     proto3DVertices = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,ProtoPV3DSelection)
     recoPV3D = PatPV3D('HltPVsPV3D' )
@@ -70,21 +71,24 @@ def PV3D(where):
     recoPV3D.OutputVerticesName = proto3DVertices
     
     
-    from HltSharedTracking import MinimalVelo
+    from HltSharedTracking import MinimalVelo, RevivedVelo
     velo = MinimalVelo
     name = "HltPV3D"
 
     if where.upper() == "HLT2" :
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
+        # TODO: This one pull the TrackReportsDecoder into HLT1. Needs fix!!!!!
         velo  = Hlt2BiKalmanFittedForwardTracking().hlt2VeloTracking()
-        if velo.members() != MinimalVelo.members() : name = "Hlt2PV3D"
+        #if velo.members() != MinimalVelo.members() : name = "Hlt2PV3D"
+        if velo.members() != RevivedVelo.members() : name = "Hlt2PV3D"
 
     pv3dAlgos = ','.join( [ "'%s'"%m.getFullName() for m in velo.members() + [ recoPV3D ] ] )
     recoPV3D.PVOfflineTool.InputTracks = [ velo.outputSelection() ]
-        
+    
     from Configurables import LoKi__HltUnit as HltUnit
     ## Hlt vertex beamspot filter
     ##-- todo: can we integrate this in the main streamers directly, using 'tee' ?
+    ## TODO: Make this a configurable. Why is there a hard coded number????????????
     filterPV3D = HltUnit(
         name,
         Preambulo = [ 'from LoKiPhys.decorators import *',

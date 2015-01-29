@@ -10,7 +10,7 @@
 """
  Parameters for the HLT reconstruction algorithms
  Note: the actual definition of the tracking sequences can be found in
- HltsharedTracking.py
+ HltSharedTracking.py
  Hlt1Tracking.py
  and
  Hlt2Tracking.py
@@ -29,12 +29,12 @@ from GaudiKernel.SystemOfUnits import MeV
 class HltRecoConf(LHCbConfigurableUser):
    __slots__ = { "Forward_HPT_MinPt"            : 500. * MeV
                  ,"Forward_HPT_MinP"            : 3000. * MeV
-                 ,"Forward_LPT_MinPt"           : 200. * MeV
-                 ,"Forward_LPT_MinP"            : 3000. * MeV
+                 ,"Forward_LPT_MinPt"           : 200. * MeV  # We want to go down with this
+                 ,"Forward_LPT_MinP"            : 3000. * MeV # We want to go down with this
                  ,"Forward_MaxOTHits"           : 15000
-                 ,"Forward_WrongSignPT"         : 2000. * MeV
                  ,"MatchVeloMuon_MinP"          : 6000. * MeV
-                 ,"VeloSelectionCut"               : "(~TrBACKWARD) & ( TrNVELOMISS < 10 )"
+                 ,"GoodTrCHI2PDOF"              : 5.0
+                 ,"VeloSelectionCut"               : "(~TrBACKWARD) & ( TrNVELOMISS < 20 )"
                }
 
    def getConfiguredForward(Name) :
@@ -50,7 +50,7 @@ class HltRecoConf(LHCbConfigurableUser):
         GaudiKernel.ProcessJobOptions.PrintOff()
 
 
-MaxOTHits = 15000 #--> move to CommonForwardOptions
+MaxOTHits = 15000 #--> move to CommonForwardOptions, this one is used e.g. in Hlt1GECs.py or Hlt1BeamGasLines.py
 
 CommonMatchVeloMuonOptions = {"MaxChi2DoFX" : 10.,
                               "XWindow" : 200.,
@@ -61,23 +61,41 @@ VeloTTToolOptions = {"minMomentum" : 0.0,
                      "PassTracks" : True,
                      }
                           
-VeloTTOptions = { "fitTracks" : False,}
+VeloTTOptions = { "fitTracks" : False }
 
-CommonForwardOptions = { "MaxOTHits" : 150000 }
+CommonForwardOptions = { "MaxOTHits" : 150000 , #Why do we have this three times?
+                         "MaxITHits" : 999999 ,
+                         "MaxNVelo" : 999999 }
 
+#Sascha: Rename this to tool,
 CommonForwardTrackingOptions = { "MaxChi2" : 40.,
                                  "MaxChi2Track" : 40.,
                                  "MinHits" : 12,  
-                                 "MinOTHits" : 14,
-                                 "SecondLoop" : False }
- 
-ForwardTrackingOptions_MomEstimate = { "UseMomentumEstimate" : True
-                                       ,"UseWrongSignWindow" : True
-                                       ,"WrongSignPT" : 2000.
-                                       ,"Preselection" : True
-                                       ,"PreselectionPT" : 400.
-                                       ,"AddTTClusterName" : "PatAddTTCoord" }
+                                 "MinOTHits" : 14  }
 
+#Sascha: Rename this to tool and hlt1
+ForwardTrackingOptions_MomEstimate = { "UseMomentumEstimate" : True,
+                                       "UseWrongSignWindow" : True,
+                                       "WrongSignPT" : 2000.,
+                                       "Preselection" : True,
+                                       "PreselectionPT" : 400.,
+                                       "AddTTClusterName" : "PatAddTTCoord", # needs fix...
+                                       "SecondLoop" : False}
+
+ComplementForwardToolOptions = { "AddTTClusterName" : "PatAddTTCoord"
+                                 ,"SecondLoop" : False} # to be decided
+
+OnlineSeedingToolOptions = { "NDblOTHitsInXSearch" : 2,
+                             "MinMomentum" : 3000.
+                             #"UseForward" : True , # Flag hits from Forward tracks
+                             }
+
+# for now synchronize forward and matching
+MatchToolOptions = { "MinMomentum": HltRecoConf().getProp("Forward_LPT_MinP"),
+                     "MinPt": HltRecoConf().getProp("Forward_LPT_MinPt")}
+
+DownstreamOptions = { "MinMomentum": 0.,
+                      "MinPt": 0.}
 
 ## CommonForwardTrackingOptions_EarlyData = { "MaxChi2" : 40., 
 ##                                  "MaxChi2Track" : 40, 

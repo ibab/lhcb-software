@@ -4,6 +4,15 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-01-29 - Sascha Stahl
+ - Work on integrating the Hlt1 reconstruction in Hlt2. Either use decoded tracks
+   or rerun reconstruction. VetoObjects are used such that algorithms do not run
+   if their output location already exists.
+ - HLT2 Forward runs on unused hits of HLT1 Forward. Added option to fit and filter
+   tracks before flagging hits and Velo seeds. This is similarly done for the Seeding.
+ - Moved the configuration of algorithms from Hlt2Tracking.py to HltSharedTracking.py
+   and HltRecoConf.py.
+
 ! 2015-01-26 - Roel Aaij
  - Use a slightly different way to find the list of Hlt2 Conf modules,
  	 which is compatible with the new cmake builds.

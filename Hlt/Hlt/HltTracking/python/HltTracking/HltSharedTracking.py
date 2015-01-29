@@ -72,11 +72,13 @@ from Configurables import TrackStateInitAlg, TrackStateInitTool
 #### Velo Tracking
 
 # the full Velo reconstruction
-def recoVelo(OutputLocation=HltSharedTrackLoc["Velo"]):
-    recoVelo = FastVeloTracking( 'FastVeloHlt', OutputTracksName = OutputLocation) 
+def recoVelo(OutputTracksName=HltSharedTrackLoc["Velo"]):
+    recoVelo = FastVeloTracking( 'FastVeloHlt', OutputTracksName = OutputTracksName) 
+    # TODO: Move this to HltRecoConf
     recoVelo.HLT1Only = False 
     recoVelo.HLT2Complement = False 
     recoVelo.StatPrint = True
+    recoVelo.VetoObjects = [ OutputTracksName ]
     return recoVelo
  
 
@@ -102,27 +104,27 @@ recoVeloTT = PatVeloTTHybrid( 'PatVeloTTHlt',
                         **VeloTTOptions )
 recoVeloTT.addTool(PatVeloTTHybridTool(**VeloTTToolOptions), name="PatVeloTTTool")
 recoVeloTT.PatVeloTTTool.StatPrint = True
-
+recoVeloTT.VetoObjects = [ recoVeloTT.OutputTracksName ]
 
 #### Forward Tracking
 from Configurables import PatForward, PatForwardTool
 from Configurables import HltRecoConf
-recoForward = PatForward( 'RecoForwardHlt'
+recoForwardHPT = PatForward( 'Hlt1ForwardHPT'
                           , InputTracksName  = recoVeloTT.OutputTracksName 
                           , OutputTracksName = HltSharedTrackLoc["ForwardHPT"]
                           , maxOTHits=HltRecoConf().getProp("Forward_MaxOTHits") )
-
+recoForwardHPT.VetoObjects = [ recoForwardHPT.OutputTracksName ]
 # apply modifications on top
 from HltTracking.HltRecoConf import CommonForwardTrackingOptions, ForwardTrackingOptions_MomEstimate
 opts = CommonForwardTrackingOptions
 opts.update(ForwardTrackingOptions_MomEstimate)
-recoForward.addTool(PatForwardTool(**opts), name='PatForwardTool')
+recoForwardHPT.addTool(PatForwardTool(**opts), name='PatForwardTool')
 
 # update configuration with HLT specific tweaks
-recoForward.PatForwardTool.MinMomentum = HltRecoConf().getProp("Forward_HPT_MinP")
-recoForward.PatForwardTool.MinPt = HltRecoConf().getProp("Forward_HPT_MinPt")
-recoForward.PatForwardTool.StatPrint = True
-recoForward.StatPrint = True
+recoForwardHPT.PatForwardTool.MinMomentum = HltRecoConf().getProp("Forward_HPT_MinP")
+recoForwardHPT.PatForwardTool.MinPt = HltRecoConf().getProp("Forward_HPT_MinPt")
+recoForwardHPT.PatForwardTool.StatPrint = True
+recoForwardHPT.StatPrint = True
 
 
 ##### Hlt selections
@@ -135,6 +137,130 @@ prepare3DVelo = HltTrackFilter( 'Hlt1Prepare3DVelo'
 
 
 #############################################################################################
+# HLT2 tracking codes
+#############################################################################################
+def ConfiguredForwardComplement(name 
+                                , InputTracksName #= HltSharedTrackLoc["Velo"]
+                                , OutputTracksName #= Hlt2TrackLoc["ForwardComp"]
+                                , VetoSeedLocations #= [ HltSharedTrackLoc["ForwardHPT"] ]
+                                , MinMomentum #= HltRecoConf().getProp("Forward_LPT_MinP")
+                                , MinPt #= HltRecoConf().getProp("Forward_LPT_MinPt")
+                                ):
+    if name == None: name = PatForward.__name__
+    forward = PatForward( name
+                          , InputTracksName  = InputTracksName
+                          , OutputTracksName = OutputTracksName
+                          )
+    
+    #Sascha Stahl: We should get rid of GECs in the pattern reco, do it centrally
+    from HltTracking.HltRecoConf import CommonForwardOptions
+    from Configurables import HltRecoConf
+    forward.maxOTHits = HltRecoConf().getProp("Forward_MaxOTHits")
+    forward.maxITHits = CommonForwardOptions["MaxITHits"] 
+    forward.MaxNVelo = CommonForwardOptions["MaxNVelo"] 
+        
+    from HltTracking.HltRecoConf import CommonForwardTrackingOptions, ComplementForwardToolOptions, HltRecoConf
+    opts = CommonForwardTrackingOptions
+    opts.update(ComplementForwardToolOptions)
+    opts.update({"MinMomentum" : MinMomentum
+                 ,"MinPt" : MinPt })
+    forward.addTool(PatForwardTool(**opts), name='PatForwardTool')
+
+    from Configurables import TrackUsedLHCbID
+    forward.PatForwardTool.addTool(TrackUsedLHCbID, name='TrackUsedLHCbID')
+    forward.PatForwardTool.UsedLHCbIDToolName="TrackUsedLHCbID"
+    forward.PatForwardTool.TrackUsedLHCbID.inputContainers= VetoSeedLocations
+    forward.PatForwardTool.VeloVetoTracksNames =  VetoSeedLocations
+    # make them a bit more verbose
+    forward.StatPrint = True
+    forward.PatForwardTool.StatPrint = True
+    return forward
+
+def ConfiguredPatSeeding(name
+                         , OutputTracksName 
+                         , VetoTrackLocations = None):
+    if name == None: name = PatForward.__name__
+    from Configurables    import PatSeeding
+    from Configurables      import PatSeedingTool
+    recoSeeding = PatSeeding(name, OutputTracksName = OutputTracksName )
+    recoSeeding.addTool(PatSeedingTool, name="PatSeedingTool")
+    #if VetoTrackLocations != None:
+    #    recoSeeding.PatSeedingTool.UseForward        = True
+    #else:
+    #    recoSeeding.PatSeedingTool.UseForward        = True
+    # New tool
+    if VetoTrackLocations != None:
+        from Configurables import TrackUsedLHCbID
+        #recoSeeding.PatSeedingTool.UseForward        = True
+        recoSeeding.PatSeedingTool.UsedLHCbIDToolName = "TrackUsedLHCbID"
+        recoSeeding.PatSeedingTool.addTool( TrackUsedLHCbID, name="TrackUsedLHCbID" )
+        recoSeeding.PatSeedingTool.TrackUsedLHCbID.inputContainers = VetoTrackLocations
+        
+
+    #recoSeeding.PatSeedingTool.InputTracksName    = VetoTrackLocations
+    #recoSeeding.PatSeedingTool.ForwardCloneMergeSeg = True
+    from HltTracking.HltRecoConf import OnlineSeedingToolOptions
+
+    recoSeeding.PatSeedingTool.NDblOTHitsInXSearch = OnlineSeedingToolOptions ["NDblOTHitsInXSearch"]
+    recoSeeding.PatSeedingTool.MinMomentum = OnlineSeedingToolOptions ["MinMomentum"]
+
+    from Configurables import HltRecoConf
+    from HltTracking.HltRecoConf import CommonForwardOptions
+    recoSeeding.PatSeedingTool.MaxOTHits = HltRecoConf().getProp("Forward_MaxOTHits")
+    recoSeeding.PatSeedingTool.MaxITHits = CommonForwardOptions["MaxITHits"] #ugly...
+    #TODO: put something in like: if(early data):
+    #if self.getProp("EarlyDataTracking") :
+        #    # Do something special in case of early data
+        #    from HltTracking.HltRecoConf import CommonSeedingTrackingOptions_EarlyData
+        #    recoSeeding.PatSeedingTool.OTNHitsLowThresh = CommonSeedingTrackingOptions_EarlyData["OTNHitsLowThresh"]
+        #    recoSeeding.PatSeedingTool.MinTotalPlanes = CommonSeedingTrackingOptions_EarlyData["MinTotalPlanes"]
+        #    recoSeeding.PatSeedingTool.MaxMisses = CommonSeedingTrackingOptions_EarlyData["MaxMisses"]
+        #    recoSeeding.PatSeedingTool.MaxTrackChi2LowMult = CommonSeedingTrackingOptions_EarlyData["MaxTrackChi2LowMult"]
+        #    recoSeeding.PatSeedingTool.MaxFinalTrackChi2 = CommonSeedingTrackingOptions_EarlyData["MaxFinalTrackChi2"]
+        #    recoSeeding.PatSeedingTool.MaxFinalChi2 = CommonSeedingTrackingOptions_EarlyData["MaxFinalChi2"]
+        #    recoSeeding.PatSeedingTool.MaxTrackChi2 = CommonSeedingTrackingOptions_EarlyData["MaxTrackChi2"]
+        #    recoSeeding.PatSeedingTool.MaxChi2HitIT = CommonSeedingTrackingOptions_EarlyData["MaxChi2HitIT"]
+        #    recoSeeding.PatSeedingTool.MaxChi2HitOT = CommonSeedingTrackingOptions_EarlyData["MaxChi2HitOT"]
+    
+
+
+    return recoSeeding
+
+# Move this to TrackFitter package?	
+def ConfiguredHltEventFitter( Name,
+                              TracksInContainer,
+                              DoInit = False):
+    # make sure the name is unique
+    #from Gaudi.Configuration import allConfigurables
+    #if allConfigurables.get( Name ) :
+    #    raise ValueError, 'ConfiguredEventFitter: instance with name '+Name+' already exists'
+    # create the event fitter
+    from Configurables import ( TrackEventFitter, TrackMasterFitter )
+    eventfitter = TrackEventFitter(Name)
+    eventfitter.TracksInContainer = TracksInContainer
+    # this addTool should not be necessary but unfortunately there is a problem with the toolhandle configuration
+    eventfitter.addTool( TrackMasterFitter, name="Fitter")
+    # configure the fitter
+    from TrackFitter.ConfiguredFitters import ConfiguredHltFitter
+    ConfiguredHltFitter( eventfitter.Fitter )
+    return eventfitter
+
+def ConfiguredGoodTrackFilter (Name,
+                               InputLocation,
+                               OutputLocation = None):
+    if OutputLocation == None: OutputLocation = InputLocation + "Filtered"
+    from Configurables import TrackListRefiner
+    filterTracks = TrackListRefiner( Name,
+                                     inputLocation = InputLocation,
+                                     outputLocation = OutputLocation )
+    from Configurables import  LoKi__Hybrid__TrackSelector as LoKiTrackSelector
+    filterTracks.addTool(LoKiTrackSelector,name="LokiTracksSelector")
+    filterTracks.Selector = LoKiTrackSelector(name="LokiTracksSelector")
+    filterTracks.Selector.Code = "( TrCHI2PDOF < %(TrChi2)s )" % {"TrChi2":  HltRecoConf().getProp("GoodTrCHI2PDOF")}
+    filterTracks.Selector.StatPrint = True
+    return filterTracks
+
+#############################################################################################
 # Define modules for the reconstruction sequence 
 #############################################################################################
 from HltLine.HltDecodeRaw import DecodeVELO, DecodeTRACK, DecodeTT, DecodeIT
@@ -142,17 +268,21 @@ from Configurables import DecodeVeloRawBuffer, Hlt2Conf
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 #This is the part which is shared between Hlt1 and Hlt2
-MinimalVelo = bindMembers( None, [DecodeVELO, recoVelo(OutputLocation=HltSharedTrackLoc["Velo"] ) ] ).setOutputSelection( HltSharedTrackLoc["Velo"] )
-RevivedVelo = bindMembers(None, [DecodeVELO, DecodeTRACK]).setOutputSelection( HltSharedTrackLoc["Velo"] )
-RevivedForward = bindMembers(None,DecodeTT.members() + DecodeIT.members() + [ DecodeTRACK ]).setOutputSelection( HltSharedTrackLoc["Forward"] )
+MinimalVelo = bindMembers( None, [DecodeVELO, recoVelo( OutputTracksName=HltSharedTrackLoc["Velo"] ) ] ).setOutputSelection( HltSharedTrackLoc["Velo"] )
+#DecodeTRACK.VetoObjects += [ HltSharedTrackLoc["Velo"], recoForwardHPT.OutputTracksName ]
+#for d in DecodeTRACK.members() :
+#    d.VetoObjects += [ HltSharedTrackLoc["Velo"], recoForwardHPT.OutputTracksName ]
+RevivedVelo = bindMembers( None, [DecodeVELO, DecodeTRACK, recoVelo( OutputTracksName=HltSharedTrackLoc["Velo"] ) ] ).setOutputSelection( HltSharedTrackLoc["Velo"] )
 
 # TODO: put selection revive/redo here (ask Sebastian)
 # for now always redo:
 bm_members =  DecodeVELO.members() + [recoVelo(), filterVelo] 
 bm_members += DecodeTT.members() + [recoVeloTT] 
-bm_members += DecodeIT.members() + [recoForward]
+bm_members += DecodeIT.members() + [recoForwardHPT]
 
-HltHPTTracking = bindMembers(None, bm_members).setOutputSelection( recoForward.OutputTracksName )
+HltHPTTracking = bindMembers(None, bm_members).setOutputSelection( recoForwardHPT.OutputTracksName )
+
+RevivedForward = bindMembers(None,DecodeTT.members() + DecodeIT.members() + [ DecodeTRACK ] + HltHPTTracking.members() ).setOutputSelection( recoForwardHPT.OutputTracksName )
 
 #VeloTT tracking
 vt_members = DecodeVELO.members() + [ recoVelo(), filterVelo ]
