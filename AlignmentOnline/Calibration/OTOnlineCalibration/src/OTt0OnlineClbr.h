@@ -14,6 +14,8 @@
 //ROOT includes
 #include <string>
 #include <TH1D.h>
+#include <TH2D.h>
+#include <TCanvas.h>
 #include <TF1.h>
 #include <TFile.h>
 #include <TString.h>
@@ -24,12 +26,12 @@ DeOTDetector* detector;
 #include <fstream>      // std::ofstream
 #include <iostream>
 
-#include <string>
-#include <TH1D.h>
-#include <TF1.h>
-#include <TFile.h>
-#include <TString.h>
-
+//#include <string>
+//#include <TH1D.h>
+//#include <TF1.h>
+//#include <TFile.h>
+//#include <TString.h>
+//
 /** @class OTt0OnlineClbr OTt0OnlineClbr.h
  * 
  *
@@ -121,6 +123,9 @@ public:
 
   std::string m_xmlFilePath;
   std::string m_xmlFileName;
+
+  std::string m_InputFileName;
+  std::string m_InputFileName_2d;
 
   //TF1* m_myFunc;                                                                                                                                             
   StatusCode writeCondXMLs(double t0s[3][4][4][9]);

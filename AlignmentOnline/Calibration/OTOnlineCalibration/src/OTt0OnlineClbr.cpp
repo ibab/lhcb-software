@@ -68,12 +68,17 @@ OTt0OnlineClbr::OTt0OnlineClbr( const std::string& name, ISvcLocator* pSvcLocato
   declareProperty("Verbose", verbose = false, " Verbose, for debugging (default false,)");
   declareProperty("Save_Fits", save_fits = false, " Save fitted gaussian (default false,)");//currently broken: doesnt do anything
   declareProperty("Fit_module_contributions", fit_module_contributions = true, " Fit 4 contributions each module (default true)");
+  //declareProperty("Fit_module_2D", fit_module_2d = false, " Fit 2d histogram time residual versus modulen)"); //will be an option, now we do anyhow
   declareProperty("GetMean_instead_of_Fit", getmean_instead_of_fit = false, "GetMean instead of fit the distributions ");
 
   //  declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/group/online/alignment/" );                               
   // declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/afs/cern.ch/user/l/lgrillo/databases_for_online" );   
   declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/afs/cern.ch/user/l/lgrillo/databases_for_online/OT/" );
   declareProperty("xmlFileName"   ,  m_xmlFileName  = "results.xml" );
+
+  //inputs
+  declareProperty("InputFileName"   ,  m_InputFileName  = "clbr_hists_109.root" );
+  declareProperty("InputFileName_2d"   ,  m_InputFileName_2d  = "histog_2d_109.root" );
 
   /*
   declareProperty("EoRSignal" ,  m_EoRSignal = "-EOR" ); // End of Run Signal 
@@ -208,14 +213,21 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
   // Open Saveset
   //TFile *f = new TFile(m_mergedRun.second.c_str(),"READ");
 
-  TFile* f = new TFile("clbr_hists.root");
- 
+  //TFile* f = new TFile("clbr_hists.root");
+  TFile* f = new TFile((m_InputFileName).c_str());
+
+  //TFile* f_2d = new TFile("histog_2d.root") 
+  TFile* f_2d = new TFile((m_InputFileName_2d).c_str());
+
   TFile * outFile = new TFile("calibration_monitoring.root", "RECREATE");
 
   //To Book Monitoring histograms
   std::cout << "Book hists ..." << std::endl;
   TH1D* hdt0 = new TH1D("hdt0", "hdt0", 432, 0, 432);
   TH1D* ht0 = new TH1D("ht0", "ht0", 432, 0, 432);
+
+  //To Book the 2D histogram
+  // TH2D* twod_residual = new TH2D("twod_residual", "twod_residual", 432, 0, 432, 50, -25, 25);
 
   if( false == f->IsZombie() )
       {   
@@ -258,6 +270,47 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
      debug() << " GLOBAL dt0 : " << residual_global  << endmsg;   
      debug() << " GLOBAL dt0_err : " << residual_global_err << endmsg;   
   
+     //Module t0 from 2d histogram
+     TH2D* twod_residual = (TH2D*)f_2d->Get("twod_residual");
+
+     twod_residual->FitSlicesY();
+
+     TH1D *twod_residual_1 = (TH1D*)gDirectory->Get("twod_residual_1");
+     TH1D *twod_residual_2 = (TH1D*)gDirectory->Get("twod_residual_2");
+
+     double average = 0.0;
+     for(int i = 0 ; i<  twod_residual_1->GetNbinsX();i++){
+       average += twod_residual_1->GetBinContent(i);
+     }
+
+     average = average/twod_residual_1->GetNbinsX();
+
+     double average_sigma = 0.0;
+     for(int i = 0 ; i<  twod_residual_2->GetNbinsX();i++){
+       average_sigma += twod_residual_2->GetBinContent(i);
+     }
+
+     average_sigma = average_sigma/twod_residual_2->GetNbinsX();
+
+     //TF1* f1 = new TF1("f1", "gaus", (average-2.0*average_sigma),(average+2.0*average_sigma));
+     TF1* f1 = new TF1("f1", "gaus", -4.0, 4.0);
+
+     TObjArray aSlices;
+     twod_residual->FitSlicesY(f1, 0, -1, 0,"QNR", &aSlices);
+
+     TH1D *twod_residual_refit_1 = (TH1D*)gDirectory->Get("twod_residual_1");
+
+     TH1D* hdt0proj_from2d = new TH1D("hdt0proj_from2d", "", 100, -10, 10);
+     for(int i = 0; i < 432; i++) if(twod_residual_refit_1->GetBinContent(i+1) != 0) hdt0proj_from2d->Fill(twod_residual_refit_1->GetBinContent(i+1));
+
+     debug()<< "n modules "<< twod_residual_1->GetNbinsX() << " average t0 "<< average << endmsg;
+
+     outFile->cd();
+     twod_residual->Write();
+     twod_residual_1->Write();
+     hdt0proj_from2d->Write();
+
+
      //Loop over the station layer quarter module
      std::cout << "Loop ..." << std::endl;
      for(int s = 0; s < 3; s++) 
@@ -369,7 +422,7 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
 		     StatusCode sc_23R = fit_single_hist(hist23R,s,l,q, m, residual_23R, residual_23R_err, histName23R , outFile);
 		   }
 
-		   if( m==8 && (q == 0 || q == 2)){ //in this case the module is only half, so has only 2 half monlayer contributions 
+		   if( m==8 && (q == 0 || q == 2) && hist23L->GetEntries()==0 && hist23R->GetEntries()==0){ //only 2 half monlayer contributions 
 		     test[s][l][q][m] = 0.5*(residual_01L + residual_01R);
 
 		     dt0err = 0.2*(sqrt((residual_01L_err*residual_01L_err)+(residual_01R_err*residual_01R_err)));
@@ -942,12 +995,28 @@ StatusCode OTt0OnlineClbr::fit_single_hist(TH1D* hist, int s, int l, int q, int 
   result =  hist->GetFunction("gaus")->GetParameter(1);
   result_error =  hist->GetFunction("gaus")->GetParError(1);
   
-  
- if(save_fits){
-   outFile->cd();
-   hist->SetName(name.c_str());
-   hist->Write();
- }
+
+  //only to save stuff
+
+  if(save_fits){
+    outFile->cd();
+
+    std::string hist_name;
+
+    if(s==-1 && l==-1 && q==-1 && m==-1)
+      hist_name = "Global_hist";
+    else
+      hist_name = stationNames[s] + "_" + layerNames[l] + "_" + quarterNames[q] + "_"+ moduleNames[m];
+
+    hist->SetName(hist_name.c_str());
+    hist->Write();
+
+    //c->SetName(canvas_name.c_str());
+    //c->Write();
+    //c->SaveAs((canvas_name +".pdf").c_str());
+    //c->Clear();
+    
+  }
 
   return StatusCode::SUCCESS;
 }

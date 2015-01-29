@@ -4,6 +4,12 @@
 ! Purpose     : OT online calibration
 !-----------------------------------------------------------------------------
 
+! 2015-01-29 Lucia Grillo
+- Version used for studies: 2d histo with FitSlicesY();
+Lots of output: txt file for the offsets, all fits saved in rootfile,
+global t0 calculated and module t0 calculated. 
+Still to work on the format of the output xmls
+
 ! 2015-01-22 Lucia Grillo
 - Different calculations of t0 per Module (4 contribution or single
 contribution, fits or get mean); Added the global t0 computation. 
