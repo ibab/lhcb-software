@@ -28,7 +28,6 @@ gaudi_project(Gauss v48r0p1
                    BcVegPyData VERSION v2r*
                    Det/GDMLData VERSION v1r*
                    FieldMap VERSION v5r*
-                   Geant4Files VERSION v95r*
                    GenXiccData VERSION v3r*
                    Gen/PGunsData VERSION v1r*
                    Gen/DecFiles VERSION v27r*
