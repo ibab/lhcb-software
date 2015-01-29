@@ -10,8 +10,8 @@ TASK_CLASS_TYPE=${2}
 export TASK_TYPE=${3}
 export DIM_DNS_NODE=${4}
 #
-export CMTCONFIG=x86_64-slc6-gcc48-opt
 export CMTCONFIG=x86_64-slc6-gcc48-dbg
+export CMTCONFIG=x86_64-slc6-gcc48-opt
 #
 . setup.${CMTCONFIG}.vars
 export PYTHONPATH=/group/online/dataflow/options/${PARTITION}/RECONSTRUCTION:/group/online/hlt/conditions/RunChangeHandler:${BASE}/InstallArea/python:${PYTHONPATH}
