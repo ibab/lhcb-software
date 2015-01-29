@@ -188,8 +188,23 @@ std::ostream& LoKi::Scalers::Skipper::fillStream( std::ostream& s ) const
 { return s << " XSKIP ( " << m_skipper.skip() << " ) " ; }
 // ===========================================================================
 
-
-
+namespace 
+{
+  inline 
+  std::string _toString ( const LoKi::Scalers::RateLimitType&  t )
+  {
+    switch ( t ) 
+    {
+    case      LoKi::Scalers::RandomPhasePeriodicLimiter : 
+      return "LoKi::Scalers::RandomPhasePeriodicLimiter" ;
+    case      LoKi::Scalers::RandomLimiter : 
+      return "LoKi::Scalers::RandomLimiter" ;
+    case      LoKi::Scalers::PlainPeriodicLimiter : 
+      return "LoKi::Scalers::PlainPeriodicLimiter" ;
+    }
+    return "static_cast<LoKi::Scalers::RateLimitType>(" + Gaudi::Utils::toCpp ( (int) t ) + ")" ;
+  }
+}
 // ============================================================================
 /*  constructor from rate and "random" flag 
  *  @param maxRate the maximal rate 
@@ -199,7 +214,7 @@ std::ostream& LoKi::Scalers::Skipper::fillStream( std::ostream& s ) const
 LoKi::Scalers::RateLimitV::RateLimitV
 ( const double                       maxRate ,
   const LoKi::Scalers::RateLimitType flag    )
-  : LoKi::AuxFunBase ( std::tie ( maxRate , flag ) ) 
+  : LoKi::AuxFunBase ( std::make_tuple ( maxRate , LoKi::StrKeep( _toString ( flag ) ) ) ) 
   , LoKi::Functor<void,bool> ()
   , LoKi::Listener           ()
   , m_rateSvc   ()

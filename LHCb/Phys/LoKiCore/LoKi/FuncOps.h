@@ -945,14 +945,14 @@ namespace LoKi
         const std::string&           n ,
         const LoKi::Monitoring::Flag f )
       { return LoKi::monitor 
-          ( c , LoKi::Monitoring::getCounter ( f , n ) ) ; }
+          ( c , LoKi::CounterDef ( n , f ) ) ; }
       static Cut __monitor__ 
       ( const Cuts&                  c , 
         const std::string&           g ,
         const std::string&           n ,
         const LoKi::Monitoring::Flag f )
       { return LoKi::monitor 
-          ( c , LoKi::Monitoring::getCounter ( f , g , n ) ) ; }
+          ( c , LoKi::CounterDef ( g , n , f ) ) ; }
       // ======================================================================
       // timing
       // ======================================================================

@@ -26,6 +26,12 @@
 #include "LoKi/KinTypes.h"
 #include "LoKi/ToCpp.h"
 // ============================================================================
+LoKi::StrKeep::StrKeep( const std::string& data) 
+  : m_data( data ) 
+{}
+// ============================================================================
+std::string Gaudi::Utils::toCpp ( const LoKi::StrKeep& s ) { return s.data() ; }
+// ============================================================================
 std::string Gaudi::Utils::toCpp
 ( const long double    o ,
   const unsigned short p ) 

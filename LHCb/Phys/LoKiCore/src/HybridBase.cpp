@@ -121,7 +121,11 @@ LoKi::Hybrid::Base::Base
   m_cppname = this->name() ;
   if ( 0 == m_cppname.find ( "ToolSvc." ) ) { m_cppname.erase ( 0 , 8 ) ; }
   while ( std::string::npos != m_cppname.find ( '.' ) ) 
-  { m_cppname.replace ( m_cppname.find ( '.' ) , 1 , "_" ) ; }
+  { m_cppname.replace ( m_cppname.find ( '.' )  , 1 , "_"  ) ; }
+  while ( std::string::npos != m_cppname.find ( ' ' ) ) 
+  { m_cppname.replace ( m_cppname.find ( ' ' )  , 1 , "_"  ) ; }
+  while ( std::string::npos != m_cppname.find ( "::" ) ) 
+  { m_cppname.replace ( m_cppname.find ( "::" ) , 2 , "__" ) ; }
   m_cppname.insert ( 0 , "FUNCTORS_" ) ;
   //
   declareProperty ( "CppFileName", 
@@ -549,6 +553,8 @@ namespace
         if ( std::string::npos != icode->first.find ( "L0_"                ) ) 
         { morelines.insert ( "#include \"LoKi/LoKiHlt.h\""                 ) ; }
         if ( std::string::npos != icode->first.find ( "HDR_"               ) ) 
+        { morelines.insert ( "#include \"LoKi/LoKiHlt.h\""                 ) ; }
+        if ( std::string::npos != icode->first.find ( "HLT_"               ) ) 
         { morelines.insert ( "#include \"LoKi/LoKiHlt.h\""                 ) ; }
       }  
     }

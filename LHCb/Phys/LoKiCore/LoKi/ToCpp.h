@@ -31,6 +31,15 @@ namespace LoKi
   class Param      ; 
   class Histo      ; 
   class CounterDef ; 
+  //
+  class GAUDI_API StrKeep 
+  {
+  public:
+    StrKeep( const std::string& data ) ;
+    const std::string& data() const { return m_data ; }
+  private: 
+    std::string m_data ;
+  } ;  
 }
 namespace LHCb 
 {
@@ -69,6 +78,7 @@ namespace Gaudi
     GAUDI_API std::string toCpp ( const LoKi::Point3D&       o ) ;
     GAUDI_API std::string toCpp ( const LoKi::Param&         o ) ;
     GAUDI_API std::string toCpp ( const LoKi::Sort&          o ) ;
+    GAUDI_API std::string toCpp ( const LoKi::StrKeep&       o ) ;
     GAUDI_API std::string toCpp ( const LoKi::ThreeVector&   o ) ;
     //
     GAUDI_API std::string toCpp ( const LHCb::LHCbID&        o ) ;
