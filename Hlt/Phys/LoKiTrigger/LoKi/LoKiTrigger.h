@@ -29,6 +29,8 @@
 #include "LoKi/RecVertices.h"
 #include "LoKi/MultiTracks.h"
 //
+#include "LoKi/HltL0.h"
+//
 #include "LoKi/Hlt1Combiner.h"
 #include "LoKi/Hlt1Functions.h"
 #include "LoKi/Hlt1Wrappers.h"
@@ -36,6 +38,8 @@
 // #include "LoKi/Hlt1Binders.h"
 // #include "LoKi/HltBinders.h"
 // #include "LoKi/HltBindFilters.h"
+//
+#include "LoKi/TrackCutAsRecVertexCut.h"
 //
 #include "LoKi/TrSources.h"
 #include "LoKi/TrFilter.h"
@@ -45,6 +49,7 @@
 #include "LoKi/VxMaker.h"
 #include "LoKi/VxUpgrade.h"
 #include "LoKi/VxCreator.h"
+#include "LoKi/UpgradeVertices.h"
 //
 #include "LoKi/TrgSources.h"
 #include "LoKi/MatchTracks.h"

@@ -37,7 +37,11 @@
 // constructor 
 // ============================================================================
 LoKi::L0::L0CaloCut::L0CaloCut( const L0DUBase::CaloType::Type type )
-  : LoKi::AuxFunBase ( std::tie ( type ) ) 
+  : LoKi::AuxFunBase 
+    ( std::make_tuple 
+      ( LoKi::StrKeep
+        ( "static_cast<L0DUBase::CaloType::Type>(" + 
+          Gaudi::Utils::toCpp ( type ) + ")") ) ) 
   , LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate()
   , m_type{type}
   , m_hasThreshold{false}
@@ -50,7 +54,11 @@ LoKi::L0::L0CaloCut::L0CaloCut( const L0DUBase::CaloType::Type type )
 LoKi::L0::L0CaloCut::L0CaloCut
 ( const L0DUBase::CaloType::Type type,
   const int threshold )
-  : LoKi::AuxFunBase ( std::tie ( type , threshold ) ) 
+  : LoKi::AuxFunBase 
+    ( std::make_tuple 
+      ( LoKi::StrKeep
+        ( "static_cast<L0DUBase::CaloType::Type>(" + 
+          Gaudi::Utils::toCpp ( type ) + ")") , threshold ) )  
   , LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate()
   , m_type{type}
   , m_hasThreshold{true}

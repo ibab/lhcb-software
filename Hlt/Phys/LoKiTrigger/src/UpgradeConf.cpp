@@ -103,10 +103,10 @@ std::string LoKi::Hlt1::UpgradeConf::toString () const
 // ============================================================================
 std::string Gaudi::Utils::toCpp ( const LoKi::Hlt1::UpgradeConf& o ) 
 {
-  std::string s = " LoKi::Hl1t::UpgradeConf( "
+  std::string s = " LoKi::Hlt1::UpgradeConf( "
     + toCpp ( o.trTool   () ) + ", "
     + toCpp ( o.address  () ) + ", "
-    + toCpp ( o.trType   () ) + ", "
+    + "LHCb::Track::" + LHCb::Track::TypesToString ( o.trType () ) + ","
     + toCpp ( o.owner    () ) + ", "
     + toCpp ( o.moveIDs  () ) + ", "
     + toCpp ( o.moveAncs () ) + ", "

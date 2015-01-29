@@ -95,7 +95,7 @@ std::string Gaudi::Utils::toCpp ( const LoKi::Hlt1::MatchConf& t )
   std::string s = " LoKi::Hlt1::MatchConf(" 
     + toCpp ( t.mTool     () ) + ","
     + toCpp ( t.address   () ) + ","
-    + toCpp ( t.trType    () ) + ","
+    + "LHCb::Track::" + LHCb::Track::TypesToString ( t.trType () ) + ","
     + toCpp ( t.moveIDs   () ) + ","
     + toCpp ( t.moveAncs  () ) + ","
     + toCpp ( t.moveInfo  () ) ;

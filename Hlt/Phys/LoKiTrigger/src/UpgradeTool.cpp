@@ -768,7 +768,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track_j
 }
 // ============================================================================
 std::string Gaudi::Utils::toCpp ( const LoKi::Hlt1::UpgradeTool& o ) 
-{ return " LoKi::Hl1t::UpgradeTool( " + toCpp ( o.config () ) + ") "; }
+{ return " LoKi::Hlt1::UpgradeTool( " + toCpp ( o.config () ) + ") "; }
 
 // ============================================================================
 // The END 
