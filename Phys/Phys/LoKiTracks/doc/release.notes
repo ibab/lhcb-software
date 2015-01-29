@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-01-29 - Vanya Belyaev
+ - few more steps toward autogeneration of C++ code   
+
+! 2015-01-29 - Vanya Belyaev
  - add TrPHI and TrETA functors  for Paras 
 
 ! 2015-01-27 - Vanya Belyaev

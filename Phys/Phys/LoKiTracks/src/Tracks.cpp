@@ -175,7 +175,10 @@ LoKi::Tracks::Eta::operator()
 // ============================================================================
 LoKi::Tracks::CheckFlag::CheckFlag 
 ( LHCb::Track::Flags flag ) 
-  : LoKi::AuxFunBase ( std::tie ( flag ) ) 
+  : LoKi::AuxFunBase 
+    ( std::make_tuple 
+      ( LoKi::StrKeep
+        ( "LHCb::Track::" + LHCb::Track::FlagsToString( flag ) ) ) )
   , LoKi::BasicFunctors<const LHCb::Track*>::Predicate() 
   , m_flag ( flag ) 
 {}

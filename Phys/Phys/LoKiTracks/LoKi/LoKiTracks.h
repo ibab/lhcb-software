@@ -11,6 +11,7 @@
 #include "LoKi/Tracks.h"
 #include "LoKi/TrackIDs.h"
 #include "LoKi/TrSources.h"
+#include "LoKi/VeloHitPatternFunctions.h"
 // ============================================================================
 //                                                                      The END 
 // ============================================================================
