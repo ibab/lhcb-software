@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <climits>
 #include <map>
 #include <boost/any.hpp>
 
@@ -190,10 +191,12 @@ StatusCode JsonConverter::execute() {
                LHCb::OTChannelID cid = c->channel();
                LHCb::LHCbID id(cid);
                std::auto_ptr<LHCb::Trajectory> t = otDetector->trajectory(id, 0.0);
-               Stream othit(Container::LIST);
-               othit << t->beginPoint().x() << t->beginPoint().y() << t->beginPoint().z()
-                     << t->endPoint().x() << t->endPoint().y() << t->endPoint().z();
-               otJson << othit;
+	       if ( t.get() )  {
+		 Stream othit(Container::LIST);
+		 othit << t->beginPoint().x() << t->beginPoint().y() << t->beginPoint().z()
+		       << t->endPoint().x() << t->endPoint().y() << t->endPoint().z();
+		 otJson << othit;
+	       }
              });
     jsonStream << std::make_pair("OT", otJson);
   }
@@ -218,10 +221,12 @@ StatusCode JsonConverter::execute() {
                LHCb::STChannelID cid = c->channelID();
                LHCb::LHCbID id(cid);
                std::auto_ptr<LHCb::Trajectory> t = itDetector->trajectory(id, 0.0);
-               Stream ithit(Container::LIST);
-               ithit << t->beginPoint().x() << t->beginPoint().y() << t->beginPoint().z()
-                     << t->endPoint().x() << t->endPoint().y() << t->endPoint().z();
-               itJson << ithit;
+	       if ( t.get() )  {
+		 Stream ithit(Container::LIST);
+		 ithit << t->beginPoint().x() << t->beginPoint().y() << t->beginPoint().z()
+		       << t->endPoint().x() << t->endPoint().y() << t->endPoint().z();
+		 itJson << ithit;
+	       }
              });
     jsonStream << std::make_pair("IT", itJson);
   }
@@ -246,10 +251,12 @@ StatusCode JsonConverter::execute() {
                LHCb::STChannelID cid = c->channelID();
                LHCb::LHCbID id(cid);
                std::auto_ptr<LHCb::Trajectory> t = ttDetector->trajectory(id, 0.0);
-               Stream tthit(Container::LIST);
-               tthit << t->beginPoint().x() << t->beginPoint().y() << t->beginPoint().z()
-                     << t->endPoint().x() << t->endPoint().y() << t->endPoint().z();
-               ttJson << tthit;
+	       if ( t.get() )  {
+		 Stream tthit(Container::LIST);
+		 tthit << t->beginPoint().x() << t->beginPoint().y() << t->beginPoint().z()
+		       << t->endPoint().x() << t->endPoint().y() << t->endPoint().z();
+		 ttJson << tthit;
+	       }
              });
     jsonStream << std::make_pair("TT", ttJson);
   }
@@ -375,28 +382,28 @@ StatusCode JsonConverter::execute() {
                 Stream pJson(Container::MAP);
                 partCount++;
                  
-                if (p == nullptr)
-                  return;
-                 
-                std::string partName =  getParticleName(p);
-                pJson <<  std::make_pair("name", partName);
-                pJson <<  std::make_pair("m", p->measuredMass());
-                pJson <<  std::make_pair("E", p->momentum().E());
-                pJson <<  std::make_pair("px", p->momentum().px());
-                pJson <<  std::make_pair("py", p->momentum().py());
-                pJson <<  std::make_pair("pz", p->momentum().pz());
-                pJson <<  std::make_pair("q", p->charge());
-                 
-                // XXX Missing Impact parameter info
-                // Finding boundaries for the track
-                auto bestVertex = findBestVertex(p);
-                double zmin = 0;
-                if (bestVertex != nullptr) 
-                {  
-                  zmin = bestVertex->position().z();
-                }
-                 
-                double zmax = HCAL_Z;
+		 if (p == nullptr)
+		    return;
+
+                 std::string partName =  getParticleName(p);
+                 pJson <<  std::make_pair("name", partName);
+                 pJson <<  std::make_pair("m", p->measuredMass());
+                 pJson <<  std::make_pair("E", p->momentum().E());
+                 pJson <<  std::make_pair("px", p->momentum().px());
+                 pJson <<  std::make_pair("py", p->momentum().py());
+                 pJson <<  std::make_pair("pz", p->momentum().pz());
+                 pJson <<  std::make_pair("q", p->charge());
+
+                 // XXX Missing Impact parameter info
+                 // Finding boundaries for the track
+                 auto bestVertex = findBestVertex(p);
+                 double zmin = 0;
+                 if (bestVertex != 0)
+                 {  
+                   zmin = bestVertex->position().z();
+                 }
+                
+	        double zmax = HCAL_Z;
                 if (partName == "mu+" || partName == "mu-") 
                   zmax = MUON_Z;
                  
@@ -428,18 +435,15 @@ StatusCode JsonConverter::execute() {
   // if ( msgLevel(MSG::DEBUG) ) debug() << "=====================> JSON Result" << endmsg;
   
   std::ofstream jsonOutput;
-  std::stringstream buf;
-  if ( !m_outputDir.empty() ) buf << m_outputDir << "/";
-  buf << odin->runNumber()
-      << "_"
-      << odin->eventNumber()
-      << ".json";
-  
-  jsonOutput.open(buf.str());
+  char fname[PATH_MAX];
+  ::snprintf(fname,sizeof(fname),"%s/%08ld_%010ld.json",
+	     m_outputDir.empty() ? "." : m_outputDir.c_str(),
+	     long(odin->runNumber()), long(odin->eventNumber()));
+  jsonOutput.open(fname);
   jsonOutput << jsonStream.str() << std::endl;
   jsonOutput.close();
 
-  if(msgLevel(MSG::INFO)) info()<< "Written JSON file: "  << buf.str() <<endmsg;    
+  if(msgLevel(MSG::INFO)) info()<< "Written JSON file: "  << fname << endmsg;    
   
 
   setFilterPassed(true);  // Mandatory. Set to true if event is accepted.
@@ -461,35 +465,37 @@ std::string getParticleName(LHCb::Particle *p)
   if (p == nullptr)
     return "NullParticle";
 
-  if (p->proto() == nullptr)
+  auto pr = p->proto();
+  if (pr == nullptr)
     return "NullProtoParticle";
+
+  auto muPID = pr->muonPID();
 
   // Now actually doing the checks
   std::string pname = "";
   if (p->charge() > 0) 
   {
     pname = "pi+";
-    if  (p->proto()->info(ProbNNk, -9999) > 0.3 
-         && p->proto()->info(ProbNNk, -9999) > p->proto()->info(ProbNNp, -9999)
-         && p->proto()->info(ProbNNk, -9999) > p->proto()->info(ProbNNe, -9999) 
-         && p->proto()->info(ProbNNk, -9999) > p->proto()->info(ProbNNmu, -9999))
+    if  (pr->info(ProbNNk, -9999) > 0.3 
+         && pr->info(ProbNNk, -9999) > pr->info(ProbNNp, -9999)
+         && pr->info(ProbNNk, -9999) > pr->info(ProbNNe, -9999) 
+         && pr->info(ProbNNk, -9999) > pr->info(ProbNNmu, -9999))
       pname = "K+";
     
         
-    if  (p->proto()->info(ProbNNp, -9999) > 0.3 
-         && p->proto()->info(ProbNNp, -9999) > p->proto()->info(ProbNNk, -9999) 
-         && p->proto()->info(ProbNNp, -9999) > p->proto()->info(ProbNNe, -9999) 
-         && p->proto()->info(ProbNNp, -9999) > p->proto()->info(ProbNNmu, -9999))
+    if  (pr->info(ProbNNp, -9999) > 0.3 
+         && pr->info(ProbNNp, -9999) > pr->info(ProbNNk, -9999) 
+         && pr->info(ProbNNp, -9999) > pr->info(ProbNNe, -9999) 
+         && pr->info(ProbNNp, -9999) > pr->info(ProbNNmu, -9999))
       pname = "p+";
     
-    if  (p->proto()->info(ProbNNe, -9999) > 0.3 
-         && p->proto()->info(ProbNNe, -9999) > p->proto()->info(ProbNNk, -9999) 
-         && p->proto()->info(ProbNNe, -9999) > p->proto()->info(ProbNNp, -9999) 
-         && p->proto()->info(ProbNNe, -9999) > p->proto()->info(ProbNNmu, -9999))
+    if  (pr->info(ProbNNe, -9999) > 0.3 
+         && pr->info(ProbNNe, -9999) > pr->info(ProbNNk, -9999) 
+         && pr->info(ProbNNe, -9999) > pr->info(ProbNNp, -9999) 
+         && pr->info(ProbNNe, -9999) > pr->info(ProbNNmu, -9999))
       pname = "e+";
     
-    if  (p->proto()->info(ProbNNmu, -9999) > 0.1 
-         && p->proto()->muonPID()->IsMuon())
+    if  (pr->info(ProbNNmu, -9999) > 0.1 && muPID && muPID->IsMuon())
       pname = "mu+";
     
   }
@@ -498,25 +504,25 @@ std::string getParticleName(LHCb::Particle *p)
   {
     
     pname = "pi-";
-    if  (p->proto()->info(ProbNNk, -9999) > 0.3 
-         && p->proto()->info(ProbNNk, -9999) > p->proto()->info(ProbNNp, -9999) 
-         && p->proto()->info(ProbNNk, -9999) > p->proto()->info(ProbNNe, -9999) 
-         && p->proto()->info(ProbNNk, -9999) > p->proto()->info(ProbNNmu, -9999))
+    if  (pr->info(ProbNNk, -9999) > 0.3 
+         && pr->info(ProbNNk, -9999) > pr->info(ProbNNp, -9999) 
+         && pr->info(ProbNNk, -9999) > pr->info(ProbNNe, -9999) 
+         && pr->info(ProbNNk, -9999) > pr->info(ProbNNmu, -9999))
       pname = "K-";
   
-    if  (p->proto()->info(ProbNNp, -9999) > 0.3 
-         && p->proto()->info(ProbNNp, -9999) > p->proto()->info(ProbNNk, -9999) 
-         && p->proto()->info(ProbNNp, -9999) > p->proto()->info(ProbNNe, -9999) 
-         && p->proto()->info(ProbNNp, -9999) > p->proto()->info(ProbNNmu, -9999))
+    if  (pr->info(ProbNNp, -9999) > 0.3 
+         && pr->info(ProbNNp, -9999) > pr->info(ProbNNk, -9999) 
+         && pr->info(ProbNNp, -9999) > pr->info(ProbNNe, -9999) 
+         && pr->info(ProbNNp, -9999) > pr->info(ProbNNmu, -9999))
       pname = "p-";
   
-    if  (p->proto()->info(ProbNNe, -9999) > 0.3 
-         && p->proto()->info(ProbNNe, -9999) > p->proto()->info(ProbNNk, -9999) 
-         && p->proto()->info(ProbNNe, -9999) > p->proto()->info(ProbNNp, -9999) 
-         && p->proto()->info(ProbNNe, -9999) > p->proto()->info(ProbNNmu, -9999))
+    if  (pr->info(ProbNNe, -9999) > 0.3 
+         && pr->info(ProbNNe, -9999) > pr->info(ProbNNk, -9999) 
+         && pr->info(ProbNNe, -9999) > pr->info(ProbNNp, -9999) 
+         && pr->info(ProbNNe, -9999) > pr->info(ProbNNmu, -9999))
       pname = "e-";
   
-    if  (p->proto()->info(ProbNNmu, -9999) > 0.1 && p->proto()->muonPID()->IsMuon())
+    if  (pr->info(ProbNNmu, -9999) > 0.1 && muPID && muPID->IsMuon())
       pname = "mu-";
   }
 
@@ -549,10 +555,7 @@ void processTrack(ITrackExtrapolator *extrapolator,
   double z;
 
   // A few checks just in case...
-  if (nullptr == track) 
-    return;
-
-  if (nullptr == extrapolator) 
+  if (nullptr == track || nullptr == extrapolator) 
     return;
 
   for(int i=0; i < npoints; i++) 

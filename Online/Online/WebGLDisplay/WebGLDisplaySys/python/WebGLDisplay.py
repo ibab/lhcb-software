@@ -10,8 +10,8 @@ import os, sys
 import Configurables as Configs
 import Gaudi.Configuration as Gaudi
 import GaudiKernel
-from GaudiKernel.ProcessJobOptions import PrintOff,InstallRootLoggingHandler,logging
-from Configurables import CondDB, GaudiSequencer, HistogramPersistencySvc, EventLoopMgr
+from   GaudiKernel.ProcessJobOptions import PrintOff,InstallRootLoggingHandler,logging
+from   Configurables import CondDB, GaudiSequencer, HistogramPersistencySvc, EventLoopMgr
 
 #PrintOff(999)
 InstallRootLoggingHandler(level=logging.CRITICAL)
@@ -63,8 +63,9 @@ def patchBrunel(true_online_version):
   #
   # Brunel output configuration
   #
-  brunel.WriteFSR  = False # This crashes Jaap's stuff
-  brunel.DataType = "2013"
+  brunel.WriteFSR   = False # This crashes Jaap's stuff
+  brunel.DataType   = "2013"
+  brunel.OutputType = ''
 
   EventLoopMgr().OutputLevel = MSG_DEBUG #ERROR
   EventLoopMgr().Warnings    = False
@@ -79,13 +80,12 @@ def patchBrunel(true_online_version):
   from Configurables import RichRecSysConf
   rConf = RichRecSysConf("RichOfflineRec")
   rConf.richTools().photonReco().CKThetaQuartzRefractCorrections = [ 0,-0.001,0 ]
-  brunel.OutputLevel       = MSG_ERROR
   brunel.OutputLevel       = MSG_WARNING
   brunel.PrintFreq         = -1
   HistogramPersistencySvc().OutputFile = ""
   HistogramPersistencySvc().OutputLevel = MSG_ERROR
 
-  print brunel
+  #print brunel
   return brunel
 
 #============================================================================================================
@@ -106,16 +106,13 @@ def setupOnline():
   mep = OnlineEnv.mepManager(OnlineEnv.PartitionID,OnlineEnv.PartitionName,buffs,True)
   mep.ConnectWhen = "start";
   sel = OnlineEnv.mbmSelector(input=buffs[0],type='USER',decode=False,event_type=2)
-  if requirement:
-    print '++++ Warning: Setting requirements:',requirement
-    sel.REQ1 = requirement
   app.EvtSel  = sel
   app.Runable = OnlineEnv.evtRunable(mep)
   app.Runable.NumErrorToStop = -1;
   app.ExtSvc.append(mep)
   app.ExtSvc.append(sel)
   app.AuditAlgorithms = False
-  app.TopAlg.insert(0,"UpdateAndReset")
+  ##app.TopAlg.insert(0,"UpdateAndReset")
   Configs.MonitorSvc().OutputLevel = MSG_ERROR
   Configs.MonitorSvc().UniqueServiceNames = 1
   Configs.RootHistCnv__PersSvc("RootHistSvc").OutputLevel = MSG_ERROR
@@ -139,14 +136,19 @@ def patchMessages():
   msg.fifoPath      = os.environ['LOGFIFO']
   msg.LoggerOnly    = True
   msg.doPrintAlways = False
-  msg.OutputLevel   = MSG_INFO # OnlineEnv.OutputLevel
+  msg.OutputLevel   = OnlineEnv.OutputLevel
 
 #============================================================================================================
 def postConfig():
-    from Configurables import JsonConverter, NoPIDsParticleMaker
-    pmaker =  NoPIDsParticleMaker ( 'StdNoPIDsPions' , Particle = 'pion'  )
-    conv = JsonConverter()
-    GaudiSequencer("PhysicsSeq").Members += [ pmaker, conv ]
+  import OnlineEnv
+  from Configurables import JsonConverter, NoPIDsParticleMaker, LHCb__DelaySleepAlg
+  pmaker = NoPIDsParticleMaker ( 'StdNoPIDsPions' , Particle = 'pion'  )
+  conv  = JsonConverter()
+  conv.OutputLevel = MSG_DEBUG
+  conv.OutputDirectory = '/group/online/dataflow/cmtuser/EventDisplay/events'
+  delay = LHCb__DelaySleepAlg('Delay')
+  delay.DelayTime = 1000 # Sleep after each event for 1000 milli-secs
+  GaudiSequencer("PhysicsSeq").Members += [ pmaker, conv, delay ]
 
 #============================================================================================================
 def start():
@@ -160,7 +162,12 @@ def start():
   OnlineEnv.end_config(False)
   #OnlineEnv.end_config(True)
 
-br = patchBrunel(True)
-setupOnline()
-patchMessages()
-start()
+try:
+  br = patchBrunel(True)
+  setupOnline()
+  patchMessages()
+  start()
+
+except Exception,X:
+  print 'ERROR', X
+  raise

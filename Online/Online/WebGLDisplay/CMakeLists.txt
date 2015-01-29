@@ -3,7 +3,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8.5)
 # Load macros and functions for Gaudi-based projects
 find_package(GaudiProject)
 #---------------------------------------------------------------
-##find_package(tcmalloc)
+find_package(tcmalloc)
 ##find_package(Boost COMPONENTS system filesystem thread regex)
 
 gaudi_project(OnlineBrunel  v5r15
