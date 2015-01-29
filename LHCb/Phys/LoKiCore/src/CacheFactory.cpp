@@ -11,6 +11,10 @@
 // ============================================================================
 #include "LoKi/CacheFactory.h"
 // ============================================================================
+// Boost 
+// ============================================================================
+#include "boost/format.hpp"
+// ============================================================================
 /* helper function to create the code for CacheFactory
  *  @param  type    the functor type 
  *  @param  cppcode the actual C++ code
@@ -22,6 +26,28 @@ namespace
 {
   const std::hash<std::string> s_hash ;
 }
+// ============================================================================
+/*  calculate the hash for the code flagment 
+ *  @param code  the code 
+ *  @return hash-value      
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2015-01-17
+ *  @todo replace with sha1
+ */
+// ============================================================================
+unsigned int 
+LoKi::Cache::makeHash  ( const std::string& code ) 
+{ 
+  // @todo replace with sha1
+  return s_hash ( code ) ; 
+}
+// ============================================================================
+/*  helper function to create the code for CacheFactory
+ *  @param  type    the functor type 
+ *  @param  cppcode the actual C++ code
+ *  @param  pycode  the python code (full)
+ *  @param  pytype  the python type (from object)
+ */
 // ============================================================================
 std::string 
 LoKi::Cache::makeCode
@@ -53,24 +79,25 @@ LoKi::Cache::makeCode
 {
   //
   stream << std::endl
-         << "/* ORIGINAL PYTHON CODE " << std::endl 
-         << pycode                     << std::endl 
-         << "*/"                       << std::endl
-         << "/* PYTHON OBJECT "        << std::endl 
-         <<  pytype                    << std::endl 
-         << "*/"                       << std::endl ;
+         << "\n/* ORIGINAL PYTHON CODE " << std::endl 
+         << pycode                       << std::endl 
+         << "*/"                         << std::endl
+         << "\n/* PYTHON OBJECT "        << std::endl 
+         <<  pytype                      << std::endl 
+         << "*/"                         << std::endl ;
   //
-  const unsigned long n = s_hash ( pycode ) ;
+  const unsigned int n  = LoKi::Cache::makeHash ( pycode ) ;
+  const std::string  nX = ( boost::format("%#x") % n ) .str() ;
   //
   return stream 
-    << "namespace LoKi { namespace Cache { "              << std::endl 
-    << "template<>"                                       << std::endl 
-    << type       << "*"                                  << std::endl 
-    << "Factory<" << type    << "," 
-    << std::hex   << std::showbase << n << ">::create() " << std::endl 
-    << " { return ("<< cppcode << ").clone() ; } "        << std::endl 
-    << " }} // end of namespaces LoKi::Cache"             << std::endl ;  
-  //
+    << "\nnamespace LoKi { namespace Details { "                  << std::endl 
+    << "template<>"                                               << std::endl 
+    << type            << "*"                                     << std::endl 
+    << "CacheFactory<" << type << "," << nX << ">::create() "     << std::endl 
+    << " { return ( "  << cppcode << " ).clone() ; } "            << std::endl 
+    << "}} // end of namespaces LoKi::Details"                    << std::endl 
+    << "\ntypedef " << type    << "  t_" << nX << ";"             << std::endl 
+    << "DECLARE_LOKI_FUNCTOR(" << "  t_" << nX << ","<< nX << ")" << std::endl ;
 }
 
 

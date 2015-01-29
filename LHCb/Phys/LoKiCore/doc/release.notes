@@ -13,8 +13,11 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
-! 2015-01-27 - Vanya Belyaev
+! 2015-01-29 - Vanya Belyaev
  - few more steps towards autogeneration of C++ code from functors     
+
+! 2015-01-27 - Vanya Belyaev
+ - afew more steps towards autogeneration of C++ code from functors     
 
 ! 2015-01-26 - Vanya Belyaev
  - few more steps towards autogeneration of C++ code from functors    

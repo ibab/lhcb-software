@@ -20,23 +20,13 @@ namespace LoKi
   namespace Cache 
   {
     // ========================================================================
-    /** @class CacheFactory
-     *  Helper class to create factory of functors 
-     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date 2015-01-17
-     */
-    template <class FUNCTOR,std::size_t N>
-    struct Factory
-    {
-      /// the only useful method 
-      FUNCTOR* create () ;
-    };
-    // ========================================================================
     /** helper function to create the code for CacheFactory
      *  @param  type    the functor type 
      *  @param  cppcode the actual C++ code
      *  @param  pycode  the python code (full)
      *  @param  pytype  the python type (from object)
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-01-17
      */
     GAUDI_API
     std::string 
@@ -52,6 +42,8 @@ namespace LoKi
      *  @param  cppcode the actual C++ code
      *  @param  pycode  the python code (full)
      *  @param  pytype  the python type (from object)
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-01-17
      */
     GAUDI_API
     std::ostream& 
@@ -61,6 +53,16 @@ namespace LoKi
       const std::string&  cppcode , 
       const std::string&  pycode  ,
       const std::string&  pytype  ) ;
+    // ========================================================================
+    /** calculate the hash for the code flagment 
+     *  @param code  the code 
+     *  @return hash-value      
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-01-17
+     */
+    GAUDI_API 
+    unsigned int 
+    makeHash  ( const std::string& code ) ;
     // ========================================================================
   } //                                             end of namespace LoKi::Cache
   // ==========================================================================

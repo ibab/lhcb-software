@@ -16,6 +16,8 @@
 // LoKi 
 // ============================================================================
 #include "LoKi/BasicFunctors.h"
+#include "LoKi/FunctorCache.h"
+#include "LoKi/CacheFactory.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -188,9 +190,19 @@ StatusCode LoKi::Hybrid::Base::_get_
   //
   if ( 0 != local ) { delete local ; local = 0 ; }
   //
-  // 2) execute the code 
+  // 2') look for cached functors:
+  typedef LoKi::CacheFactory< LoKi::Functor<TYPE1,TYPE2> > cache_t;
+  LoKi::Functor<TYPE1,TYPE2>* created = 
+    cache_t::Factory::create ( cache_t::id ( LoKi::Cache::makeHash ( code ) ) );
   //
-  //    only here modification is needed to load the functo form plugin
+  if ( created ) 
+  {
+    local  = created ; 
+    output = *local ;
+    return StatusCode::SUCCESS ;    // RETURN
+  } 
+  // 
+  // 2") execute the code 
   //
   StatusCode sc = this->executeCode ( code ) ;
   if ( sc.isFailure() ) 
