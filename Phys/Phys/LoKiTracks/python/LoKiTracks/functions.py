@@ -116,6 +116,10 @@ TrPX          = LoKi.Tracks.MomentumX         ()
 TrPY          = LoKi.Tracks.MomentumY         () 
 ## @see LoKi::Cuts::TrPZ
 TrPZ          = LoKi.Tracks.MomentumZ         () 
+## @see LoKi::Cuts::TrPHI
+TrPHI         = LoKi.Tracks.Phi () 
+## @see LoKi::Cuts::TrETA
+TrETA         = LoKi.Tracks.Eta () 
 ## @see LoKi::Cuts::TrPIDSELECTED
 TrPIDSELECTED = LoKi.Tracks.CheckFlag ( LHCb.Track.PIDSelected ) 
 ## @see LoKi::Cuts::TrPROBCHI2 

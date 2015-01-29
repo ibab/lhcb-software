@@ -142,10 +142,34 @@ LoKi::Tracks::Momentum::operator()
   }
   return t->p() ;
 }
-
-
-
-
+// ============================================================================
+// mandatory: the only one essential method 
+// ============================================================================
+LoKi::Tracks::Phi::result_type
+LoKi::Tracks::Phi::operator() 
+  ( LoKi::Tracks::Momentum::argument t ) const 
+{
+  if ( 0 == t ) 
+  {
+    Error ("LHCb::Track* points to NULL, return 'InvalidAngle'") ;
+    return LoKi::Constants::InvalidAngle ;
+  }
+  return t->phi() ;
+}
+// ============================================================================
+// mandatory: the only one essential method 
+// ============================================================================
+LoKi::Tracks::Eta::result_type
+LoKi::Tracks::Eta::operator() 
+  ( LoKi::Tracks::Momentum::argument t ) const 
+{
+  if ( 0 == t ) 
+  {
+    Error ("LHCb::Track* points to NULL, return 'InvalidAngle'") ;
+    return LoKi::Constants::InvalidAngle ;
+  }
+  return t->pseudoRapidity() ;
+}
 // ============================================================================
 // constructor from the flag 
 // ============================================================================

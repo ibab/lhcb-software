@@ -172,6 +172,56 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class Phi
+     *  @see LoKi::Cuts::TrPHI
+     *  @see LHCb::Track::phi
+     *  simple evaluator of phi angle for the track 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2015-01-30
+     */  
+    class GAUDI_API Phi : public LoKi::BasicFunctors<const LHCb::Track*>::Function
+    {
+    public:
+      // ======================================================================
+      /// Default Constructor
+      Phi() { }
+      /// MANDATORY: virtual destrcutor  
+      virtual ~Phi() {}
+      /// MANDATORY: clone method ("virtual constructor")  
+      virtual  Phi* clone() const { return new Phi(*this) ; }
+      /// mandatory: the only one essential method 
+      virtual result_type operator() ( argument t ) const ; 
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { return s << "TrPHI" ; }
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Eta
+     *  @see LoKi::Cuts::TrETA
+     *  @see LHCb::Track::pseudoRapidity
+     *  simple evaluator of pseudorapidity for the track 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2015-01-30
+     */  
+    class GAUDI_API Eta : public LoKi::BasicFunctors<const LHCb::Track*>::Function
+    {
+    public:
+      // ======================================================================
+      /// Default Constructor
+      Eta () { }
+      /// MANDATORY: virtual destrcutor  
+      virtual ~Eta () {}
+      /// MANDATORY: clone method ("virtual constructor")  
+      virtual  Eta* clone() const { return new Eta(*this) ; }
+      /// mandatory: the only one essential method 
+      virtual result_type operator() ( argument t ) const ; 
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { return s << "TrETA" ; }
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class MomentumX 
      *  @see LoKi::Cuts::TrPX 
      *  simple evaluator of momentum of the track
