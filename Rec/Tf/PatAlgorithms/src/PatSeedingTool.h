@@ -17,6 +17,7 @@
 #include "TrackInterfaces/IPatSeedingTool.h"
 #include "TrackInterfaces/ITrackMomentumEstimate.h"
 #include "Kernel/ILHCbMagnetSvc.h"
+#include "Kernel/IUsedLHCbID.h"
 
 #include "Event/Track.h"
 
@@ -192,7 +193,9 @@ class PatSeedingTool :
     PatSeedTool* m_seedTool;
     ISequencerTimerTool* m_timer;
     ITrackMomentumEstimate *m_momentumTool;
-
+    std::string m_LHCbIDToolName;  
+    IUsedLHCbID*     m_usedLHCbIDTool; ///< Tool to check if hits are already being used  
+      
     std::string      m_inputTracksName;
 
     double m_zMagnet;

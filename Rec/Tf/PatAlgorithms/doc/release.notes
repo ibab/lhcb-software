@@ -4,6 +4,11 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-01-29 - Sascha Stahl
+ - PatSeedingTool: Added option to flag previously used hits with UsedLHCbIDTool.
+ - PatForwardTool: Made the location to flag Velo seeds as used a vector of locations.
+   Renamed this from VeloVetoTracksName to VeloVetoTracksNames.
+
 ! 2015-01-27 - Manuel Tobias Schiller
  - PatFwdTool: following decision in today's tracking meeting, use ambiguity
    resolution from pitch residuals by default

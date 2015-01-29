@@ -282,7 +282,7 @@ PatForwardTool::PatForwardTool( const std::string& type,
 
   //declareProperty("SkipUsedSeeds",m_skipUsedSeeds = false);
   //declareProperty("SkipUsedHits",m_skipUsedHits = false);
-  declareProperty( "VeloVetoTracksName", m_veloVetoTracksName = "");
+  declareProperty( "VeloVetoTracksNames", m_veloVetoTracksNames = {});
   declareProperty( "UsedLHCbIDToolName",m_LHCbIDToolName = "");
   //declareProperty( "UnusedVeloSeeds", m_unusedVeloSeeds = false); 
   declareProperty( "TrackSelectorName",  m_trackSelectorName   = "None");
@@ -321,7 +321,7 @@ StatusCode PatForwardTool::initialize ( ) {
     m_usedLHCbIDTool = nullptr;
   }
   
-  m_skipUsedSeeds = !m_veloVetoTracksName.empty();
+  m_skipUsedSeeds = !m_veloVetoTracksNames.empty();
                          
   return StatusCode::SUCCESS;
 }
@@ -367,13 +367,16 @@ bool PatForwardTool::acceptTrack(const LHCb::Track& track) const
   
   // S.Stahl: Move this external. The track selector above could do the job.
   if ( m_skipUsedSeeds ) {
-    LHCb::Track::Range vetoTracks = get<LHCb::Track::Range>( m_veloVetoTracksName ); 
-    for (auto it : vetoTracks ) { 
-      auto ancestors = it->ancestors();
-      if (!std::none_of( std::begin( ancestors ), std::end( ancestors ), 
-                         [&](const LHCb::Track* t) { return t == &track; } )){
-        counter("#SkippedUsedSeeds") += 1;
-        return false;
+    for (auto itNames : m_veloVetoTracksNames ){
+      LHCb::Track::Range vetoTracks = get<LHCb::Track::Range>( itNames ); 
+      for (auto it : vetoTracks ) { 
+        if (it == &track ) return false;
+        auto ancestors = it->ancestors();
+        if (!std::none_of( std::begin( ancestors ), std::end( ancestors ), 
+                           [&](const LHCb::Track* t) { return t == &track; } )){
+          counter("#SkippedUsedSeeds") += 1;
+          return false;
+        }
       }
     }
   }

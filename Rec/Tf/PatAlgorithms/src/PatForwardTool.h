@@ -244,7 +244,7 @@ private:
   bool  m_UseWrongSignWindow;
   double m_WrongSignPT;
   //bool  m_FlagUsedSeeds;              // flag velo seeds as used if a track is upgraded
-  std::string      m_veloVetoTracksName;
+  std::vector<std::string>      m_veloVetoTracksNames;
   bool  m_skipUsedSeeds;              // skip seeds which are flagged as "used" 
   bool  m_skipUsedHits;              // skip hits which are flagged as "used" 
   std::string                                 m_LHCbIDToolName;

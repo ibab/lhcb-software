@@ -58,6 +58,7 @@ PatSeedingTool::PatSeedingTool(const std::string& type,
   declareProperty( "OnlyGood",			m_onlyGood		= false  );
   declareProperty( "DiscardChi2",		m_discardChi2		= 1.5      ); 
   declareProperty( "InputTracksName",		m_inputTracksName	= LHCb::TrackLocation::Forward  );
+  declareProperty( "UsedLHCbIDToolName", m_LHCbIDToolName = "");
   declareProperty( "DriftRadiusRange",		m_driftRadiusRange	= {-0.6 * Gaudi::Units::mm,2.8 * Gaudi::Units::mm});
 
   //------------------------------------------------------------------------
@@ -199,6 +200,9 @@ StatusCode PatSeedingTool::initialize()
   m_tHitManager = tool<Tf::TStationHitManager<PatForwardHit> >("PatTStationHitManager");
   m_seedTool = tool<PatSeedTool>("PatSeedTool");
   m_momentumTool = tool<ITrackMomentumEstimate>(m_momentumToolName);
+  m_usedLHCbIDTool = !m_LHCbIDToolName.empty() ? tool<IUsedLHCbID>(m_LHCbIDToolName, this) 
+                                               : nullptr ;
+
 
   m_online = false;
   if (context() == "HLT" || context() == "Hlt") {
@@ -338,11 +342,20 @@ unsigned PatSeedingTool::prepareHits()
   for( PatFwdHit* hit: range ) {
     hit->setSelected( true );
     hit->setIgnored( false );
+    //make sure we set all hits to false
+    hit->setIsUsed(false);
     if (hit->hit()->ignore()){
       hit->setIsUsed( true );
       continue;
     }
-   
+    if ( m_usedLHCbIDTool ) {
+      //make sure we set all hits to false
+      if (m_usedLHCbIDTool->used(hit->hit()->lhcbID())) {
+        hit->setIsUsed(true);
+        continue;
+      }
+    }
+    
     if ( m_useForward )
       if ( hit->hit()->testStatus(Tf::HitBase::UsedByPatForward) ) {
         hit->setIsUsed(true);
@@ -361,7 +374,6 @@ unsigned PatSeedingTool::prepareHits()
         continue;
       }
     }
-    hit->setIsUsed(false);
   }
 
   // alternatively mark only those PatFwd hits
