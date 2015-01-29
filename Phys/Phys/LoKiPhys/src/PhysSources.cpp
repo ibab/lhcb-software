@@ -74,7 +74,8 @@ LoKi::Particles::SourceTES::SourceTES
 ( const std::string&           path , 
   const LoKi::PhysTypes::Cuts& cuts , 
   IDataProviderSvc*            svc  ) 
-  : LoKi::Particles::SourceTES::_Source () 
+  : LoKi::AuxFunBase ( std::tie ( path , cuts ) ) 
+  , LoKi::Particles::SourceTES::_Source () 
   , m_path    ( 1 , path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )
@@ -86,7 +87,8 @@ LoKi::Particles::SourceTES::SourceTES
 ( const std::vector<std::string>& path , 
   const LoKi::PhysTypes::Cuts&    cuts , 
   IDataProviderSvc*               svc  ) 
-  : LoKi::Particles::SourceTES::_Source () 
+  : LoKi::AuxFunBase ( std::tie ( path , cuts ) ) 
+  , LoKi::Particles::SourceTES::_Source () 
   , m_path    ( path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )
@@ -98,7 +100,8 @@ LoKi::Particles::SourceTES::SourceTES
 ( const LoKi::PhysTypes::Cuts& cuts ,
   const std::string&           path , 
   IDataProviderSvc*            svc  ) 
-  : LoKi::Particles::SourceTES::_Source () 
+  : LoKi::AuxFunBase ( std::tie ( cuts , path ) ) 
+  , LoKi::Particles::SourceTES::_Source () 
   , m_path    ( 1 , path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )
@@ -110,7 +113,8 @@ LoKi::Particles::SourceTES::SourceTES
 ( const LoKi::PhysTypes::Cuts&    cuts ,
   const std::vector<std::string>& path , 
   IDataProviderSvc*               svc  ) 
-  : LoKi::Particles::SourceTES::_Source () 
+  : LoKi::AuxFunBase ( std::tie ( cuts , path ) ) 
+  , LoKi::Particles::SourceTES::_Source () 
   , m_path    ( path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )
@@ -285,7 +289,8 @@ LoKi::Particles::SourceTES::fillStream ( std::ostream& o ) const
 LoKi::Particles::TESCounter::TESCounter 
 ( const std::string&           path , 
   const LoKi::PhysTypes::Cuts& cuts ) 
-  : LoKi::Functor<void,double> () 
+  : LoKi::AuxFunBase ( std::tie ( path , cuts ) ) 
+  , LoKi::Functor<void,double> () 
   , m_source ( path , cuts ) 
 {}
 // ============================================================================
@@ -294,7 +299,8 @@ LoKi::Particles::TESCounter::TESCounter
 LoKi::Particles::TESCounter::TESCounter 
 ( const std::vector<std::string>& path , 
   const LoKi::PhysTypes::Cuts&    cuts ) 
-  : LoKi::Functor<void,double> () 
+  : LoKi::AuxFunBase ( std::tie ( path , cuts ) ) 
+  , LoKi::Functor<void,double> () 
   , m_source ( path , cuts ) 
 {}
 // ============================================================================
@@ -340,7 +346,8 @@ LoKi::Particles::TESCounter::fillStream ( std::ostream& o ) const
 LoKi::Particles::SourceDesktop::SourceDesktop 
 ( const IDVAlgorithm*          desktop , 
   const LoKi::PhysTypes::Cuts& cuts    ) 
-  : LoKi::Particles::SourceDesktop::_Source () 
+  : LoKi::AuxFunBase ( std::tie ( cuts ) ) 
+  , LoKi::Particles::SourceDesktop::_Source () 
   , m_desktop ( desktop ) 
   , m_cut     ( cuts    )
 {}
@@ -350,7 +357,8 @@ LoKi::Particles::SourceDesktop::SourceDesktop
 LoKi::Particles::SourceDesktop::SourceDesktop 
 ( const LoKi::PhysTypes::Cuts& cuts    ,
   const IDVAlgorithm*          desktop )
-  : LoKi::Particles::SourceDesktop::_Source () 
+  : LoKi::AuxFunBase ( std::tie ( cuts ) ) 
+  , LoKi::Particles::SourceDesktop::_Source () 
   , m_desktop ( desktop ) 
   , m_cut     ( cuts    )
 {}
@@ -412,8 +420,9 @@ LoKi::Particles::SourceDesktop::fillStream ( std::ostream& o ) const
 LoKi::Vertices::SourceTES::SourceTES 
 ( const std::string&            path , 
   IDataProviderSvc*             svc  , 
-  const LoKi::PhysTypes::VCuts& cuts ) 
-  : LoKi::Vertices::SourceTES::_Source () 
+  const LoKi::PhysTypes::VCuts& cuts )
+  : LoKi::AuxFunBase ( std::tie ( path , cuts ) ) 
+  , LoKi::Vertices::SourceTES::_Source () 
   , m_path    ( 1 , path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )
@@ -425,7 +434,8 @@ LoKi::Vertices::SourceTES::SourceTES
 ( const std::vector<std::string>&  path , 
   IDataProviderSvc*                svc  , 
   const LoKi::PhysTypes::VCuts&    cuts ) 
-  : LoKi::Vertices::SourceTES::_Source () 
+  : LoKi::AuxFunBase ( std::tie ( path , cuts ) ) 
+  , LoKi::Vertices::SourceTES::_Source () 
   , m_path    ( path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )
@@ -436,8 +446,9 @@ LoKi::Vertices::SourceTES::SourceTES
 LoKi::Vertices::SourceTES::SourceTES 
 ( const std::string&            path , 
   const LoKi::PhysTypes::VCuts& cuts , 
-  IDataProviderSvc*             svc  ) 
-  : LoKi::Vertices::SourceTES::_Source () 
+  IDataProviderSvc*             svc  )
+  : LoKi::AuxFunBase ( std::tie ( path , cuts ) ) 
+  , LoKi::Vertices::SourceTES::_Source () 
   , m_path    ( 1 , path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )
@@ -449,7 +460,8 @@ LoKi::Vertices::SourceTES::SourceTES
 ( const std::vector<std::string>& path , 
   const LoKi::PhysTypes::VCuts&   cuts , 
   IDataProviderSvc*               svc  ) 
-  : LoKi::Vertices::SourceTES::_Source () 
+  : LoKi::AuxFunBase ( std::tie ( path , cuts ) ) 
+  , LoKi::Vertices::SourceTES::_Source () 
   , m_path    ( path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )
@@ -461,7 +473,8 @@ LoKi::Vertices::SourceTES::SourceTES
 ( const LoKi::PhysTypes::VCuts& cuts ,
   const std::string&            path , 
   IDataProviderSvc*             svc  ) 
-  : LoKi::Vertices::SourceTES::_Source () 
+  : LoKi::AuxFunBase ( std::tie ( cuts , path ) ) 
+  , LoKi::Vertices::SourceTES::_Source () 
   , m_path    ( 1 , path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )
@@ -473,7 +486,8 @@ LoKi::Vertices::SourceTES::SourceTES
 ( const LoKi::PhysTypes::VCuts&   cuts ,
   const std::vector<std::string>& path , 
   IDataProviderSvc*               svc  ) 
-  : LoKi::Vertices::SourceTES::_Source () 
+  : LoKi::AuxFunBase ( std::tie ( cuts , path ) ) 
+  , LoKi::Vertices::SourceTES::_Source () 
   , m_path    ( path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )
@@ -485,7 +499,8 @@ LoKi::Vertices::SourceTES::SourceTES
 ( const LoKi::PhysTypes::VCuts& cuts ,
   IDataProviderSvc*             svc  ,
   const std::string&            path ) 
-  : LoKi::Vertices::SourceTES::_Source () 
+  : LoKi::AuxFunBase ( std::tie ( path , cuts ) ) 
+  , LoKi::Vertices::SourceTES::_Source () 
   , m_path    ( 1 , path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )
@@ -497,7 +512,8 @@ LoKi::Vertices::SourceTES::SourceTES
 ( const LoKi::PhysTypes::VCuts&   cuts ,
   IDataProviderSvc*               svc  ,
   const std::vector<std::string>& path ) 
-  : LoKi::Vertices::SourceTES::_Source () 
+  : LoKi::AuxFunBase ( std::tie ( path , cuts ) ) 
+  , LoKi::Vertices::SourceTES::_Source () 
   , m_path    ( path ) 
   , m_dataSvc ( svc  ) 
   , m_cut     ( cuts )
@@ -630,7 +646,8 @@ LoKi::Vertices::SourceTES::fillStream ( std::ostream& o ) const
 LoKi::Vertices::SourceDesktop::SourceDesktop 
 ( const IDVAlgorithm*           desktop , 
   const LoKi::PhysTypes::VCuts& cuts    ) 
-  : LoKi::Vertices::SourceDesktop::_Source () 
+  : LoKi::AuxFunBase ( std::tie ( cuts ) ) 
+  , LoKi::Vertices::SourceDesktop::_Source () 
   , m_desktop ( desktop ) 
   , m_cut     ( cuts    )
 {}
@@ -640,7 +657,8 @@ LoKi::Vertices::SourceDesktop::SourceDesktop
 LoKi::Vertices::SourceDesktop::SourceDesktop 
 ( const LoKi::PhysTypes::VCuts& cuts    ,
   const IDVAlgorithm*           desktop )
-  : LoKi::Vertices::SourceDesktop::_Source () 
+  : LoKi::AuxFunBase ( std::tie ( cuts ) ) 
+  , LoKi::Vertices::SourceDesktop::_Source () 
   , m_desktop ( desktop ) 
   , m_cut     ( cuts    )
 {}
@@ -712,7 +730,8 @@ LoKi::Vertices::SourceDesktop::fillStream ( std::ostream& o ) const
 LoKi::Vertices::TESCounter::TESCounter 
 ( const std::string&            path , 
   const LoKi::PhysTypes::VCuts& cuts ) 
-  : LoKi::Functor<void,double> () 
+  : LoKi::AuxFunBase ( std::tie ( path , cuts ) ) 
+  , LoKi::Functor<void,double> () 
   , m_source ( path , cuts ) 
 {}
 // ============================================================================
@@ -720,8 +739,9 @@ LoKi::Vertices::TESCounter::TESCounter
 // ============================================================================
 LoKi::Vertices::TESCounter::TESCounter 
 ( const std::vector<std::string>& path , 
-  const LoKi::PhysTypes::VCuts&    cuts ) 
-  : LoKi::Functor<void,double> () 
+  const LoKi::PhysTypes::VCuts&   cuts ) 
+  : LoKi::AuxFunBase ( std::tie ( path , cuts ) ) 
+  , LoKi::Functor<void,double> () 
   , m_source ( path , cuts ) 
 {}
 // ============================================================================
@@ -761,7 +781,8 @@ LoKi::Vertices::TESCounter::fillStream ( std::ostream& o ) const
 // ============================================================================
 LoKi::Particles::Flatten::Flatten
 ( const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut ) 
-  :  LoKi::BasicFunctors<const LHCb::Particle*>::Pipe () 
+  : LoKi::AuxFunBase ( std::tie ( cut ) ) 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Pipe () 
   ,  m_cut ( cut ) 
 {}
 // ============================================================================

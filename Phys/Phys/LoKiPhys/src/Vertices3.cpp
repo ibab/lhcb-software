@@ -47,7 +47,8 @@
 LoKi::Vertices::RecVertex2TrackMin::RecVertex2TrackMin
 ( const LoKi::Functor<const LHCb::Track*,double>& fun   , 
   const double                                    bad   ) 
-  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( fun , bad ) )
+  , LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
   , m_fun   ( fun   ) 
   , m_bad   ( bad   )   
 {}
@@ -56,7 +57,8 @@ LoKi::Vertices::RecVertex2TrackMin::RecVertex2TrackMin
 // ============================================================================
 LoKi::Vertices::RecVertex2TrackMin::RecVertex2TrackMin
 ( const LoKi::Functor<const LHCb::Track*,double>& fun   )
-  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( fun ) )
+  , LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
   , m_fun   ( fun   ) 
   , m_bad   ( LoKi::Constants::PositiveInfinity ) 
 {}
@@ -126,14 +128,16 @@ std::ostream& LoKi::Vertices::RecVertex2TrackMin::fillStream
 LoKi::Vertices::RecVertex2TrackMax::RecVertex2TrackMax
 ( const LoKi::Functor<const LHCb::Track*,double>& fun   , 
   const double                                    bad   )
-  : LoKi::Vertices::RecVertex2TrackMin ( fun , bad ) 
+  : LoKi::AuxFunBase ( std::tie ( fun , bad ) )
+  , LoKi::Vertices::RecVertex2TrackMin ( fun , bad ) 
 {}
 // ============================================================================
 // constructor from track cuts and "bad" value 
 // ============================================================================
 LoKi::Vertices::RecVertex2TrackMax::RecVertex2TrackMax
 ( const LoKi::Functor<const LHCb::Track*,double>& fun   )
-  : LoKi::Vertices::RecVertex2TrackMin ( fun , LoKi::Constants::NegativeInfinity ) 
+  : LoKi::AuxFunBase ( std::tie ( fun ) )
+  , LoKi::Vertices::RecVertex2TrackMin ( fun , LoKi::Constants::NegativeInfinity ) 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -201,7 +205,8 @@ std::ostream& LoKi::Vertices::RecVertex2TrackMax::fillStream
 LoKi::Vertices::RecVertex2TrackSum::RecVertex2TrackSum
 ( const LoKi::Functor<const LHCb::Track*,double>& fun   , 
   const double                                    bad   )
-  : LoKi::Vertices::RecVertex2TrackMax ( fun , bad ) 
+  : LoKi::AuxFunBase ( std::tie ( fun , bad ) )
+  , LoKi::Vertices::RecVertex2TrackMax ( fun , bad ) 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -262,7 +267,8 @@ LoKi::Vertices::RecVertex2TrackFun::RecVertex2TrackFun
 ( const LoKi::Functor<const LHCb::Track*,double>& fun   , 
   const unsigned short                            index , 
   const double                                    bad   ) 
-  : LoKi::Vertices::RecVertex2TrackSum ( fun , bad ) 
+  : LoKi::AuxFunBase ( std::tie ( fun , index, bad ) )
+  , LoKi::Vertices::RecVertex2TrackSum ( fun , bad ) 
   , m_index ( index ) 
 {}
 // ============================================================================
@@ -271,7 +277,8 @@ LoKi::Vertices::RecVertex2TrackFun::RecVertex2TrackFun
 LoKi::Vertices::RecVertex2TrackFun::RecVertex2TrackFun
 ( const LoKi::Functor<const LHCb::Track*,double>& fun   , 
   const unsigned short                            index )
-  : LoKi::Vertices::RecVertex2TrackSum ( fun , LoKi::Constants::NegativeInfinity ) 
+  : LoKi::AuxFunBase ( std::tie ( fun , index ) )
+  , LoKi::Vertices::RecVertex2TrackSum ( fun , LoKi::Constants::NegativeInfinity ) 
   , m_index ( index ) 
 {}
 // ============================================================================
@@ -338,7 +345,8 @@ std::ostream& LoKi::Vertices::RecVertex2TrackFun::fillStream
 // ============================================================================
 LoKi::Vertices::RecVertex2TrackHas::RecVertex2TrackHas
 ( const LoKi::Functor<const LHCb::Track*,bool>&   cut )
-  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate () 
+  : LoKi::AuxFunBase ( std::tie ( cut ) )
+  , LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate () 
   , m_cut   ( cut   ) 
 {}
 // ============================================================================
@@ -396,7 +404,8 @@ std::ostream& LoKi::Vertices::RecVertex2TrackHas::fillStream
 LoKi::Vertices::RecVertex2TrackCut::RecVertex2TrackCut
 ( const LoKi::Functor<const LHCb::Track*,bool>&   cut   , 
   const unsigned short                            index )
-  : LoKi::Vertices::RecVertex2TrackHas ( cut ) 
+  : LoKi::AuxFunBase ( std::tie ( cut , index ) )
+  , LoKi::Vertices::RecVertex2TrackHas ( cut ) 
   , m_index ( index )
 {}
 // ============================================================================
@@ -460,7 +469,8 @@ std::ostream& LoKi::Vertices::RecVertex2TrackCut::fillStream
 LoKi::Vertices::RecVertex2TrackNum::RecVertex2TrackNum
 ( const LoKi::Functor<const LHCb::Track*,bool>& cut   , 
   const double                                  bad   ) 
-  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( cut , bad  ) )
+  , LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
   , m_cut   ( cut   ) 
   , m_bad   ( bad   )   
 {}
@@ -674,7 +684,8 @@ std::ostream& LoKi::Vertices::RecVertexPt::fillStream
 // ============================================================================
 LoKi::Vertices::RecVertexMass::RecVertexMass 
 ( const std::vector<double>&           masses ) 
-  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( masses ) )
+  , LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
   , m_masses ( masses ) 
 {}
 // ============================================================================
@@ -682,7 +693,8 @@ LoKi::Vertices::RecVertexMass::RecVertexMass
 // ============================================================================
 LoKi::Vertices::RecVertexMass::RecVertexMass 
 ( const std::vector<LHCb::ParticleID>& ids    ) 
-  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( ids ) )
+  , LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
   , m_masses () 
 {
   for ( std::vector<LHCb::ParticleID>::const_iterator ipid = ids.begin() ; 
@@ -695,7 +707,8 @@ LoKi::Vertices::RecVertexMass::RecVertexMass
 // ============================================================================
 LoKi::Vertices::RecVertexMass::RecVertexMass 
 ( const std::vector<std::string>& ids    ) 
-  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( ids ) )
+  , LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
   , m_masses () 
 {
   //
@@ -710,7 +723,8 @@ LoKi::Vertices::RecVertexMass::RecVertexMass
 LoKi::Vertices::RecVertexMass::RecVertexMass 
 ( const std::string& id1 , 
   const std::string& id2 ) 
-  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( id1 , id2 ) )
+  , LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
   , m_masses () 
 {
   //
@@ -725,7 +739,8 @@ LoKi::Vertices::RecVertexMass::RecVertexMass
 ( const std::string& id1 , 
   const std::string& id2 ,
   const std::string& id3 ) 
-  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
+  : LoKi::AuxFunBase ( std::tie ( id1 , id2 , id3 ) )
+  , LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
   , m_masses () 
 {
   //

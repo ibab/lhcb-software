@@ -46,7 +46,8 @@
 // ============================================================================
 LoKi::Vertices::SinkTES::SinkTES 
 ( const std::string&            path )
-  : LoKi::Vertices::SinkTES::_Sink () 
+  : LoKi::AuxFunBase ( std::tie ( path ) ) 
+  , LoKi::Vertices::SinkTES::_Sink () 
   , m_path    ( path  ) 
 {
   // get GaudiAlgorithm 
