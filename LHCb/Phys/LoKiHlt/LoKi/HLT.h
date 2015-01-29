@@ -503,8 +503,6 @@ namespace LoKi
       // ======================================================================
       /// constructor from the channel name
       ErrorBits ( const std::string&      name ) ;
-      /// constructor from the channel name
-      ErrorBits ( const Gaudi::StringKey& name ) ;
       /// MANDATORY: virtual destructor
       virtual ~ErrorBits() ;
       /// MANDATORY: clone method ( "virtual constructor")
@@ -542,8 +540,6 @@ namespace LoKi
       // ======================================================================
       /// constructor from the channel name
       NonTurboPass ( const std::string&      name ) ;
-      /// constructor from the channel name
-      NonTurboPass ( const Gaudi::StringKey& name ) ;
       /// MANDATORY: virtual destructor
       virtual ~NonTurboPass() ;
       /// MANDATORY: clone method ( "virtual constructor")
@@ -570,8 +566,6 @@ namespace LoKi
       // ======================================================================
       /// constructor from the channel name
       TurboPass ( const std::string&      name ) ;
-      /// constructor from the channel name
-      TurboPass ( const Gaudi::StringKey& name ) ;
       /// MANDATORY: virtual destructor
       virtual ~TurboPass() ;
       /// MANDATORY: clone method ( "virtual constructor")
@@ -599,8 +593,6 @@ namespace LoKi
       // ======================================================================
       /// constructor from the channel name
       ExecutionStage ( const std::string&      name ) ;
-      /// constructor from the channel name
-      ExecutionStage ( const Gaudi::StringKey& name ) ;
       /// MANDATORY: virtual destructor
       virtual ~ExecutionStage() ;
       /// MANDATORY: clone method ( "virtual constructor")
@@ -630,8 +622,6 @@ namespace LoKi
       // ======================================================================
       /// constructor from the channel name
       NumberOfCandidates ( const std::string&      name ) ;
-      /// constructor from the channel name
-      NumberOfCandidates ( const Gaudi::StringKey& name ) ;
       /// MANDATORY: virtual destructor
       virtual ~NumberOfCandidates() ;
       /// MANDATORY: clone method ( "virtual constructor")
@@ -663,8 +653,6 @@ namespace LoKi
       // ======================================================================
       /// constructor from the channel name
       Saturated ( const std::string&      name ) ;
-      /// constructor from the channel name
-      Saturated ( const Gaudi::StringKey& name ) ;
       /// MANDATORY: virtual destructor
       virtual ~Saturated() ;
       /// MANDATORY: clone method ( "virtual constructor")

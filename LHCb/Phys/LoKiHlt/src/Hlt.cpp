@@ -614,14 +614,6 @@ LoKi::HLT::ErrorBits::ErrorBits ( const std::string& name )
   , m_key ( name ) 
 {}
 // ============================================================================
-// constructor from the channel name 
-// ============================================================================
-LoKi::HLT::ErrorBits::ErrorBits ( const Gaudi::StringKey& name ) 
-  : LoKi::AuxFunBase ( std::tie ( name ) ) 
-  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function () 
-  , m_key ( name ) 
-{}
-// ============================================================================
 // MANDATORY: virtual destructor 
 // ============================================================================
 LoKi::HLT::ErrorBits::~ErrorBits () {}
@@ -661,13 +653,6 @@ LoKi::HLT::NonTurboPass::NonTurboPass ( const std::string& name )
   , LoKi::HLT::HasDecisionRegex ( name ) 
 {}
 // ============================================================================
-// constructor from the channel name 
-// ============================================================================
-LoKi::HLT::NonTurboPass::NonTurboPass ( const Gaudi::StringKey& name ) 
-  : LoKi::AuxFunBase ( std::tie ( name ) ) 
-  , LoKi::HLT::HasDecisionRegex ( name ) 
-{}
-// ============================================================================
 // MANDATORY: virtual destructor 
 // ============================================================================
 LoKi::HLT::NonTurboPass::~NonTurboPass () {}
@@ -701,13 +686,6 @@ LoKi::HLT::TurboPass::TurboPass ( const std::string& name )
   , LoKi::HLT::HasDecisionRegex ( name ) 
 {}
 // ============================================================================
-// constructor from the channel name 
-// ============================================================================
-LoKi::HLT::TurboPass::TurboPass ( const Gaudi::StringKey& name ) 
-  : LoKi::AuxFunBase ( std::tie ( name ) ) 
-  , LoKi::HLT::HasDecisionRegex ( name ) 
-{}
-// ============================================================================
 // MANDATORY: virtual destructor 
 // ============================================================================
 LoKi::HLT::TurboPass::~TurboPass () {}
@@ -737,13 +715,6 @@ LoKi::HLT::TurboPass::operator()
 // constructor from the channel name 
 // ============================================================================
 LoKi::HLT::ExecutionStage::ExecutionStage ( const std::string& name ) 
-  : LoKi::AuxFunBase ( std::tie ( name ) ) 
-  , LoKi::HLT::ErrorBits ( name ) 
-{}
-// ============================================================================
-// constructor from the channel name 
-// ============================================================================
-LoKi::HLT::ExecutionStage::ExecutionStage ( const Gaudi::StringKey& name ) 
   : LoKi::AuxFunBase ( std::tie ( name ) ) 
   , LoKi::HLT::ErrorBits ( name ) 
 {}
@@ -788,13 +759,6 @@ LoKi::HLT::NumberOfCandidates::NumberOfCandidates ( const std::string& name )
   , LoKi::HLT::ErrorBits ( name ) 
 {}
 // ============================================================================
-// constructor from the channel name 
-// ============================================================================
-LoKi::HLT::NumberOfCandidates::NumberOfCandidates ( const Gaudi::StringKey& name ) 
-  : LoKi::AuxFunBase ( std::tie ( name ) ) 
-  , LoKi::HLT::ErrorBits ( name ) 
-{}
-// ============================================================================
 // MANDATORY: virtual destructor 
 // ============================================================================
 LoKi::HLT::NumberOfCandidates::~NumberOfCandidates () {}
@@ -830,15 +794,6 @@ LoKi::HLT::NumberOfCandidates::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::HLT::Saturated::Saturated
 ( const std::string&      name )
-  : LoKi::AuxFunBase ( std::tie ( name ) ) 
-  , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate()
-  , m_key ( name ) 
-{}
-// ============================================================================
-// constructor from the channel name 
-// ============================================================================
-LoKi::HLT::Saturated::Saturated
-( const Gaudi::StringKey&  name )
   : LoKi::AuxFunBase ( std::tie ( name ) ) 
   , LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate()
   , m_key ( name ) 
