@@ -9,6 +9,10 @@
 designed by Wouter
 - Default only global t0 calibration
 reads global t0 from Wouter's database and writes xml file in the same format
+- Added histog_2d_109.root and clbr_hists_109.root, examples input files with
+monolayer alignment used. Note that at the moment the input global t0 histo is
+actually the sum of the histos of the 3 stations. I will change this using an
+example of monitoring .root file to give the right format.
 
 ! 2015-01-29 Lucia Grillo
 - Version used for studies: 2d histo with FitSlicesY();
