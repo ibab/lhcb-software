@@ -54,7 +54,8 @@ public:
 				std::string Task); ///< Algorithm analyze
 
   StatusCode readCondXMLs(double t0s[3][4][4][9], bool TestBeam = false); 
- StatusCode readCondDB(double t0s[3][4][4][9]);
+  StatusCode readCondDB(double t0s[3][4][4][9]);
+  StatusCode readCondDB_Globalt0(double& read_t0);
 
  protected:
   
@@ -114,6 +115,10 @@ public:
    * calibrate_only_globalt0. This should become the default. We don't want to calibrate all the modules all the time, only global t0 
    */
   bool calibrate_only_globalt0;  
+  /**
+   * read_global_t0_from_db. At the moment option, online will be the only running way
+   */
+  bool read_global_t0_from_db;
 
   TH1D* hdt0;
   TH1D* ht0;

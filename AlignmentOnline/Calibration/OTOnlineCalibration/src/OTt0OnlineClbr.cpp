@@ -72,6 +72,7 @@ OTt0OnlineClbr::OTt0OnlineClbr( const std::string& name, ISvcLocator* pSvcLocato
   declareProperty("GetMean_instead_of_Fit", getmean_instead_of_fit = false, "GetMean instead of fit the distributions ");
 
   declareProperty("Calibrate_only_GlobalT0", calibrate_only_globalt0 = true, "Calculates only the new Global t0 - NO per Module ");
+  declareProperty("read_global_t0_from_db", read_global_t0_from_db = true, "Reads Global t0 from db. at the moment is an option beacuse of implementation ");
 
   //  declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/group/online/alignment/" );                               
   // declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/afs/cern.ch/user/l/lgrillo/databases_for_online" );   
@@ -156,29 +157,40 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
 				      << endmsg;
 
   //double mtoff[3][4][4][9]; memset(mtoff, 0, sizeof(mtoff));
+
   double test[3][4][4][9]; memset(test, 0, sizeof(test));
   double t0s[3][4][4][9]; memset(t0s, 0, sizeof(t0s));
+  
   double global_t0 = 0.0;
  
   //readCondXMLs(mtoff, true);
 
   //Here you need to read t0s?
-  if(readXMLs) readCondXMLs(t0s);
-  else readCondDB(t0s);
+  if(!calibrate_only_globalt0 || !read_global_t0_from_db){    
+    if(readXMLs) readCondXMLs(t0s);
+    else readCondDB(t0s);
+  }
 
-  //temporary way to get the global t0: 
   double read_global_t0 = 0.0;
-  debug() << "Temporary way to GET THE GLOBAL t0 : calculating from the module contributions in DB"<< endmsg;
-  for(int s = 0; s < 3; s++){
-    for(int l = 0; l < 4; l++){
-      for(int q = 0; q < 4; q++){
-        for(int m = 8; m >= 0; m--){
-	  read_global_t0 += t0s[s][l][q][m];
-        }
+
+  if(read_global_t0_from_db){
+    readCondDB_Globalt0(read_global_t0);
+  }
+  else{
+    //temporary way to get the global t0: 
+    debug() << "Temporary way to GET THE GLOBAL t0 : calculating from the module contributions in DB"<< endmsg;
+    for(int s = 0; s < 3; s++){
+      for(int l = 0; l < 4; l++){
+	for(int q = 0; q < 4; q++){
+	  for(int m = 8; m >= 0; m--){
+	    read_global_t0 += t0s[s][l][q][m];
+	  }
+	}
       }
     }
+    read_global_t0 = read_global_t0/432.0;
   }
-  read_global_t0 = read_global_t0/432.0;
+
   debug() << "GLOBAL t0 = " << read_global_t0 << endmsg;
 
   //temporary output to compare the t0 values and uncertainties
@@ -842,6 +854,24 @@ StatusCode OTt0OnlineClbr::writeCondDBXMLs(double t0s[3][4][4][9])
   return StatusCode::SUCCESS;
 }
 
+
+StatusCode OTt0OnlineClbr::readCondDB_Globalt0(double& read_t0)
+{
+  std::string subDet = "OT";
+
+  std::string alignLoc ="/dd/Conditions/Calibration/OT/CalibrationGlobal";
+
+  Condition *myCond = get<Condition>( detSvc(), alignLoc );
+  
+  read_t0 = myCond->paramAsDouble( "TZero" );
+	    
+  debug()<< "reading GLOBAL t0 " << read_t0<< endmsg;
+
+  return StatusCode::SUCCESS;
+}
+
+
+
 StatusCode OTt0OnlineClbr::write_Globalt0_XML(double global_t0)
 {
 
@@ -851,7 +881,8 @@ StatusCode OTt0OnlineClbr::write_Globalt0_XML(double global_t0)
   if ( msgLevel(MSG::DEBUG) ) debug() << "Writing the GLOBAL t0 XML for online to " << full_path << endmsg ;
 
   std::ofstream file;
-  file.open( full_path.string().c_str(), std::ios::app ) ;  // always in append mode  
+  //file.open( full_path.string().c_str(), std::ios::app ) ;  // always in append mode  
+  file.open( full_path.string().c_str()) ;  // do we want it in append mode? 
 
   file << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
   file << "<!DOCTYPE DDDB SYSTEM \"conddb:/DTD/structure.dtd\">\n";

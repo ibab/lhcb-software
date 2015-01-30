@@ -59,4 +59,22 @@ if simulation :
 else : 
     LHCbApp().DDDBtag   = "default"                                                                                                           
     LHCbApp().CondDBtag = "default"
-        
+
+#databases from Wouter        
+path_monolayer = "/afs/cern.ch/user/w/wouter/public/AlignDB/"
+ddbs = []
+ddbs.append(path_monolayer + "OTMonoGeometry.db/DDDB")
+ddbs.append(path_monolayer + "OTMonoCatalog.db/LHCBCOND")
+ddbs.append(path_monolayer + "OTMonoAlign20141225.db/LHCBCOND")
+
+ddbs.append(path_monolayer + "OTGeometryT0.db/DDDB")
+ddbs.append(path_monolayer + "OTCondT0.db/LHCBCOND")
+
+counter = 1
+for db in ddbs:
+     from Configurables import ( CondDB, CondDBAccessSvc )
+     alignCond = CondDBAccessSvc( 'AlignDDDB' + str(counter) )
+     alignCond.ConnectionString = 'sqlite_file:' + db
+     CondDB().addLayer( alignCond )
+     counter += 1
+
