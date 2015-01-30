@@ -4,6 +4,10 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2015-01-30 - Sascha Stahl
+ - In Configuration.py, set the VetoObjects of Hlt1DecReportsDecoder, Hlt1SelReportsDecoder,
+   and HltTrackReportsDecoder to their own output locations for HLT1 and HLT2.
+
 ! 2015-01-29 - Sascha Stahl
  - In Configuration.py, set the VetoObjects of Hlt1DecReportsDecoder, Hlt1SelReportsDecoder,
    and HltTrackReportsDecoder to their own output locations.

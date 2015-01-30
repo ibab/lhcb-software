@@ -177,6 +177,14 @@ class HltConf(LHCbConfigurableUser):
         setRequestedHlt2Lines( activehlt2lines )
 
         Dec=Sequence('HltDecisionSequence',Members=[])
+
+        # Decoding at end of Hlt1 and beginning of HLT2. Make sure the decoders do not run, if location already exists.
+        from DAQSys.Decoders import DecoderDB
+        for n in [ "HltDecReportsDecoder/Hlt1DecReportsDecoder",
+                   "HltSelReportsDecoder/Hlt1SelReportsDecoder",
+                   "HltTrackReportsDecoder"] :
+            decoder = DecoderDB[n]
+            decoder.setup().VetoObjects = [ loc for loc in decoder.listOutputs() ]
         #
         # dispatch Hlt1 configuration, don't do this if there are no HLT1 lines
         #
@@ -200,14 +208,7 @@ class HltConf(LHCbConfigurableUser):
                 Hlt2Conf().Hlt1TrackOption = "Rerun" if activehlt1lines else "Decode"
             if thresClass and hasattr( thresClass, 'Hlt2DefaultVoidFilter' ) :
                 Hlt2Conf().DefaultVoidFilter = getattr( thresClass, 'Hlt2DefaultVoidFilter' )
-            # Decoding at the beginning of HLT2. Make sure the decoders do not run, if location already exists.
-            from DAQSys.Decoders import DecoderDB
-            for n in [ "HltDecReportsDecoder/Hlt1DecReportsDecoder",
-                       "HltSelReportsDecoder/Hlt1SelReportsDecoder",
-                       "HltTrackReportsDecoder"] :
-                decoder = DecoderDB[n]
-                decoder.setup().VetoObjects = [ loc for loc in decoder.listOutputs() ]
-
+          
         Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
                        , Members = [ Sequence('HltDecisionSequence')
                                    , Sequence('HltEndSequence')
