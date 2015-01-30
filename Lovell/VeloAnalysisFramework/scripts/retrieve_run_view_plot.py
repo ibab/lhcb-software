@@ -31,6 +31,13 @@ def create_parser():
     return parser
 
 
+def exit_with_error(msg):
+    """Print the failure JSON response with msg and return exit code 1."""
+    import json
+    sys.stdout.write(json.dumps({'success': False, 'message': msg}))
+    sys.exit(1)
+
+
 def retrieve_run_view_plot(run, plot, sensor, reference, run_data_dir):
     from veloview.core import config as veloview_config
     from veloview.runview import plots, response_formatters, utils
@@ -39,12 +46,15 @@ def retrieve_run_view_plot(run, plot, sensor, reference, run_data_dir):
     veloview_config.update_run_data_dir(run_data_dir)
 
     # Check all arguments have valid values
+    err = False
     if not utils.valid_run(run):
-        sys.stderr.write("Invalid run number provided: {0}".format(run))
-        sys.exit(1)
+        err = True
+        msg = "Invalid run number provided: {0}".format(run)
     if not utils.valid_sensor(sensor):
-        sys.stderr.write("Invalid sensor number provided: {0}".format(sensor))
-        sys.exit(1)
+        err = True
+        msg = "Invalid sensor number provided: {0}".format(sensor)
+    if err:
+        exit_with_error(msg)
 
     # Format the plot name with the sensor number
     # str.format will work even with no format specifiers in the string
@@ -55,12 +65,29 @@ def retrieve_run_view_plot(run, plot, sensor, reference, run_data_dir):
         response = plots.get_run_plot(plot, run, reference=reference,
                                       formatter=response_formatters.json_formatter)
     except KeyError, e:
-        sys.stderr.write("Invalid plot name provided: {0}".format(plot))
-        sys.stderr.write("Exception caught: {0}".format(e))
-        sys.exit(1)
+        err = True
+        msg = (
+            "Invalid plot name provided: {0}. "
+            "Exception caught: {1}."
+        ).format(plot, e)
     except TypeError, e:
-        sys.stderr.write("Cannot handle plot type for plot {0}".format(plot))
-        sys.stderr.write("Exception caught: {0}".format(e))
+        err = True
+        msg = (
+            "Cannot handle plot type for plot: {0}. "
+            "Exception caught: {1}."
+        ).format(plot, e)
+    except Exception, e:
+        # We finally catch every, to make sure clients have an error message to
+        # show
+        err = True
+        msg = (
+            "An unidentified exception was raised fetching plot: {0}. "
+            "Please contact the maintainer with the information."
+            "Exception: {1}"
+        ).format(plot, e)
+
+    if err:
+        exit_with_error(msg)
 
     sys.stdout.write(response)
 
