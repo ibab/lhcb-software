@@ -1269,7 +1269,9 @@ class SetupProject(object):
                             no_user_area=False,
                             )
 
-        from SP2.options import addPlatform
+        # FIXME: "from SP2.options ..." is enough with "python -m LbConfiguration.SetupProject"
+        #        or with "python -c", but it does not work with our copy of runpy
+        from LbConfiguration.SP2.options import addPlatform
         addPlatform(parser)
 
         if 'CMTSITE' in self.environment and \

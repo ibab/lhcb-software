@@ -1,3 +1,7 @@
+2015-01-30  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* SetupProject: fixed an issue with "import SP2" when running through our copy of runpy
+
 2015-01-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* SetupProject: added --platform option (fixes LBCORE-724)
