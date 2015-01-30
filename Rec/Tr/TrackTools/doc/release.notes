@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-01-30 - Sascha Stahl
+ - In TrackUsedLHCbIDs: Changed LHCb::Tracks* to LHCb::Track::Range.
+
 ! 2015-01-28 - Paul Seyfert
  - swapped StatusCodes in UpgradeGhostInfo::countHits
 

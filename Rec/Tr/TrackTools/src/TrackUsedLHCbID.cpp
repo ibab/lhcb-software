@@ -8,13 +8,9 @@
 #include "TrackUsedLHCbID.h"
 #include "Event/Track.h"
 
-// BOOST
-#include <boost/assign/list_of.hpp> // for 'map_list_of()
-
 //stl
 #include <algorithm>
 
-using namespace boost::assign; // bring 'map_list_of()' into scope
 
 DECLARE_TOOL_FACTORY( TrackUsedLHCbID )
   
@@ -25,11 +21,13 @@ GaudiTool(type, name, parent),
 m_configured(false)
 {
 
-  declareProperty("inputContainers", m_inputs);
-  declareProperty("selectorNames", m_names);
+  /** Define containers and corresponding selectors in same order.
+   *  E.g. inputContainers = "Rec/Track/Forward" and selectorNames = "ForwardSelector".
+   */
+ 
+  declareProperty("inputContainers", m_inputs = {""});
+  declareProperty("selectorNames", m_names = {""});
 
-  m_inputs = std::vector<std::string>(1, "Rec/Track/Forward");
-  m_names = std::vector<std::string>(1, "ForwardSelector");
 
   declareInterface<IUsedLHCbID>(this);
   m_usedCont.reserve(5000);
@@ -48,10 +46,17 @@ StatusCode TrackUsedLHCbID::initialize()
     return Error("Failed to initialize", sc);
   }
 
+  if ( m_names.size() != m_inputs.size() ){
+    debug()<<"Number of selectors and number of inputs disagree. Initialize as many selectors as inputs."<<endmsg;
+    m_names.clear();
+    for (auto inputs : m_inputs )
+      m_names.push_back("");
+  }
+  
 
   // make the selector tools
-  for (std::vector<std::string>::const_iterator iter = m_names.begin(); iter != m_names.end(); ++iter){
-    ITrackSelector* aTool = tool<ITrackSelector>("TrackSelector",*iter,this);
+  for (auto name : m_names){
+    ITrackSelector* aTool = !name.empty() ? tool<ITrackSelector>(name, this) : nullptr;
     m_selectors.push_back(aTool); 
   } // iter
 
@@ -78,20 +83,23 @@ void TrackUsedLHCbID::initEvent() const{
  m_configured = true;
  m_usedCont.clear();
 
- Selectors::const_iterator iterSelector = m_selectors.begin();
+ auto iterSelector = m_selectors.begin();
 
- for (TrackContainers::const_iterator iterS = m_inputs.begin();
-      iterS != m_inputs.end(); ++iterS, ++iterSelector){
+ for (auto iterS = m_inputs.begin(); iterS != m_inputs.end(); ++iterS, ++iterSelector){
  
    // get selection tool
    ITrackSelector* tSelector = *iterSelector;
-
+    
    // get the containers and extract the ids from the track
-   const LHCb::Tracks* tCont = get<LHCb::Tracks>(*iterS);
-   LHCb::Tracks::const_iterator iterTrack = tCont->begin();
-   for (; iterTrack != tCont->end() ;++iterTrack){
-     const std::vector<LHCb::LHCbID>& ids = (*iterTrack)->lhcbIDs();
-     if (tSelector->accept(**iterTrack) == true) m_usedCont.insert(m_usedCont.begin(),ids.begin(),ids.end()); 
+   auto tCont = getIfExists<LHCb::Track::Range>(*iterS);
+   if ( tCont.empty() ){
+     if( msgLevel(MSG::DEBUG) ) debug() << "Track container '" << *iterS << "' does not exist" <<endmsg;
+     continue;
+   }
+   for ( auto iterTrack : tCont){
+     auto ids = iterTrack->lhcbIDs();
+     if ( tSelector && !(tSelector->accept(*iterTrack)) ) continue;
+     m_usedCont.insert(m_usedCont.begin(),ids.begin(),ids.end()); 
    } //iterTrack
  }  // iterS
  
@@ -101,5 +109,5 @@ void TrackUsedLHCbID::initEvent() const{
  // strip out duplicates
  m_usedCont.erase(std::unique(m_usedCont.begin(), m_usedCont.end()),
                   m_usedCont.end());
-
+ 
 }
