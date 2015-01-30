@@ -4,6 +4,10 @@
 ! Purpose     : OT online calibration
 !-----------------------------------------------------------------------------
 
+! 2015-01-30 Lucia Grillo
+- Flag to do only global t0 calibration; global t0 wrote in the xml format
+designed by Wouter
+
 ! 2015-01-29 Lucia Grillo
 - Version used for studies: 2d histo with FitSlicesY();
 Lots of output: txt file for the offsets, all fits saved in rootfile,

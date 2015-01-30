@@ -71,6 +71,8 @@ OTt0OnlineClbr::OTt0OnlineClbr( const std::string& name, ISvcLocator* pSvcLocato
   //declareProperty("Fit_module_2D", fit_module_2d = false, " Fit 2d histogram time residual versus modulen)"); //will be an option, now we do anyhow
   declareProperty("GetMean_instead_of_Fit", getmean_instead_of_fit = false, "GetMean instead of fit the distributions ");
 
+  declareProperty("Calibrate_only_GlobalT0", calibrate_only_globalt0 = true, "Calculates only the new Global t0 - NO per Module ");
+
   //  declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/group/online/alignment/" );                               
   // declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/afs/cern.ch/user/l/lgrillo/databases_for_online" );   
   declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/afs/cern.ch/user/l/lgrillo/databases_for_online/OT/" );
@@ -269,351 +271,255 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
      debug() << " GLOBAL t0 : " << global_t0 << endmsg;   
      debug() << " GLOBAL dt0 : " << residual_global  << endmsg;   
      debug() << " GLOBAL dt0_err : " << residual_global_err << endmsg;   
+
+
+     if(!calibrate_only_globalt0){
   
-     //Module t0 from 2d histogram
-     TH2D* twod_residual = (TH2D*)f_2d->Get("twod_residual");
-
-     twod_residual->FitSlicesY();
-
-     TH1D *twod_residual_1 = (TH1D*)gDirectory->Get("twod_residual_1");
-     TH1D *twod_residual_2 = (TH1D*)gDirectory->Get("twod_residual_2");
-
-     double average = 0.0;
-     for(int i = 0 ; i<  twod_residual_1->GetNbinsX();i++){
-       average += twod_residual_1->GetBinContent(i);
-     }
-
-     average = average/twod_residual_1->GetNbinsX();
-
-     double average_sigma = 0.0;
-     for(int i = 0 ; i<  twod_residual_2->GetNbinsX();i++){
-       average_sigma += twod_residual_2->GetBinContent(i);
-     }
-
-     average_sigma = average_sigma/twod_residual_2->GetNbinsX();
-
-     //TF1* f1 = new TF1("f1", "gaus", (average-2.0*average_sigma),(average+2.0*average_sigma));
-     TF1* f1 = new TF1("f1", "gaus", -4.0, 4.0);
-
-     TObjArray aSlices;
-     twod_residual->FitSlicesY(f1, 0, -1, 0,"QNR", &aSlices);
-
-     TH1D *twod_residual_refit_1 = (TH1D*)gDirectory->Get("twod_residual_1");
-
-     TH1D* hdt0proj_from2d = new TH1D("hdt0proj_from2d", "", 100, -10, 10);
-     for(int i = 0; i < 432; i++) if(twod_residual_refit_1->GetBinContent(i+1) != 0) hdt0proj_from2d->Fill(twod_residual_refit_1->GetBinContent(i+1));
-
-     debug()<< "n modules "<< twod_residual_1->GetNbinsX() << " average t0 "<< average << endmsg;
-
-     outFile->cd();
-     twod_residual->Write();
-     twod_residual_1->Write();
-     hdt0proj_from2d->Write();
-
-
-     //Loop over the station layer quarter module
-     std::cout << "Loop ..." << std::endl;
-     for(int s = 0; s < 3; s++) 
-       for(int l = 0; l < 4; l++) 
-	 for(int q = 0; q < 4; q++)
-	   {
-	     /* // used only for Alex's monitorning
-	     double t0_ = 0.0;
-	     double dt0_ = 0.0;
-	     double dt0err_ = 0.1;
-	     */
-	     for(int m = 8; m >= 0; m--)
-	       {
-		 std::string histName = "OTModuleClbrMon/" + stationNames[s] + "/" + layerNames[l] + "/" + quarterNames[q] + "/" + moduleNames[m] + "/driftTimeResidual";
-		 std::string histName01L = "OTModuleClbrMon/" + stationNames[s] + "/" + layerNames[l] + "/" + quarterNames[q] + "/" + moduleNames[m] + "/driftTimeResidual01L";
-		 std::string histName01R = "OTModuleClbrMon/" + stationNames[s] + "/" + layerNames[l] + "/" + quarterNames[q] + "/" + moduleNames[m] + "/driftTimeResidual01R";
-		 std::string histName23L = "OTModuleClbrMon/" + stationNames[s] + "/" + layerNames[l] + "/" + quarterNames[q] + "/" + moduleNames[m] + "/driftTimeResidual23L";
-		 std::string histName23R = "OTModuleClbrMon/" + stationNames[s] + "/" + layerNames[l] + "/" + quarterNames[q] + "/" + moduleNames[m] + "/driftTimeResidual23R";
-
-		 TH1D* hist = (TH1D*)f->Get(histName.c_str());
-		 TH1D* hist01L = (TH1D*)f->Get(histName01L.c_str());
-		 TH1D* hist01R = (TH1D*)f->Get(histName01R.c_str());
-		 TH1D* hist23L = (TH1D*)f->Get(histName23L.c_str());
-		 TH1D* hist23R = (TH1D*)f->Get(histName23R.c_str());
-		 
-		 int modulen = m + 9 * (q + 4 * (l + 4 * s));
-	
-		 if(hist == 0 || hist->GetEntries() < 1000 || (s == 0 && m == 0))
-		   {
-		     //if(m == 8) t0_ = -mtoff[s][l][q][m]; //
-		     //Here Alex's old monitoring: does it make sense? in the meanwhile, I implement a simple new simple one
-		     //if(m == 8) t0_ = -t0s[s][l][q][m]; //why you assume m = 8 different from the others?
-		     if(hist != 0 && !(s == 0 && m == 0)) std::cout << histName << " :: N = " << hist->GetEntries() << std::endl;
-		     //t0s[s][l][q][m] = t0_ + mtoff[s][l][q][m];
-		     /*
-		     t0s[s][l][q][m] = t0_ + t0s[s][l][q][m];
-		     hdt0->SetBinContent(hdt0->FindBin(modulen), dt0_);
-		     hdt0->SetBinError(hdt0->FindBin(modulen), dt0err_);
-		     ht0->SetBinContent(ht0->FindBin(modulen), t0_ + (28.0 + 2.0 * s));
-		     ht0->SetBinError(ht0->FindBin(modulen), dt0err_);
-		     */
-
-		     hdt0->SetBinContent(hdt0->FindBin(modulen), 0.0);
-		     hdt0->SetBinError(hdt0->FindBin(modulen), 0.0);
-		     ht0->SetBinContent(ht0->FindBin(modulen), t0s[s][l][q][m]);
-		     ht0->SetBinError(ht0->FindBin(modulen), 0.0);
-		     continue;
-		   }
-
-		 //what was this good for?
-		 /*
-		 double left = hist->GetXaxis()->GetXmin();
-		 double right = hist->GetXaxis()->GetXmax();
-		 for(int i = 0; i < 5; i++)
-		   {
+       //Module t0 from 2d histogram
+       TH2D* twod_residual = (TH2D*)f_2d->Get("twod_residual");
+       
+       twod_residual->FitSlicesY();
+       
+       TH1D *twod_residual_1 = (TH1D*)gDirectory->Get("twod_residual_1");
+       TH1D *twod_residual_2 = (TH1D*)gDirectory->Get("twod_residual_2");
+       
+       double average = 0.0;
+       for(int i = 0 ; i<  twod_residual_1->GetNbinsX();i++){
+	 average += twod_residual_1->GetBinContent(i);
+       }
+       
+       average = average/twod_residual_1->GetNbinsX();
+       
+       double average_sigma = 0.0;
+       for(int i = 0 ; i<  twod_residual_2->GetNbinsX();i++){
+	 average_sigma += twod_residual_2->GetBinContent(i);
+       }
+       
+       average_sigma = average_sigma/twod_residual_2->GetNbinsX();
+       
+       //TF1* f1 = new TF1("f1", "gaus", (average-2.0*average_sigma),(average+2.0*average_sigma));
+       TF1* f1 = new TF1("f1", "gaus", -4.0, 4.0);
+       
+       TObjArray aSlices;
+       twod_residual->FitSlicesY(f1, 0, -1, 0,"QNR", &aSlices);
+       
+       TH1D *twod_residual_refit_1 = (TH1D*)gDirectory->Get("twod_residual_1");
+       
+       TH1D* hdt0proj_from2d = new TH1D("hdt0proj_from2d", "", 100, -10, 10);
+       for(int i = 0; i < 432; i++) if(twod_residual_refit_1->GetBinContent(i+1) != 0) hdt0proj_from2d->Fill(twod_residual_refit_1->GetBinContent(i+1));
+       
+       debug()<< "n modules "<< twod_residual_1->GetNbinsX() << " average t0 "<< average << endmsg;
+       
+       outFile->cd();
+       twod_residual->Write();
+       twod_residual_1->Write();
+       hdt0proj_from2d->Write();
+       
+       
+       //Loop over the station layer quarter module
+       std::cout << "Loop ..." << std::endl;
+       for(int s = 0; s < 3; s++) 
+	 for(int l = 0; l < 4; l++) 
+	   for(int q = 0; q < 4; q++)
+	     {
+	       /* // used only for Alex's monitorning
+		  double t0_ = 0.0;
+		  double dt0_ = 0.0;
+		  double dt0err_ = 0.1;
+	       */
+	       for(int m = 8; m >= 0; m--)
+		 {
+		   std::string histName = "OTModuleClbrMon/" + stationNames[s] + "/" + layerNames[l] + "/" + quarterNames[q] + "/" + moduleNames[m] + "/driftTimeResidual";
+		   std::string histName01L = "OTModuleClbrMon/" + stationNames[s] + "/" + layerNames[l] + "/" + quarterNames[q] + "/" + moduleNames[m] + "/driftTimeResidual01L";
+		   std::string histName01R = "OTModuleClbrMon/" + stationNames[s] + "/" + layerNames[l] + "/" + quarterNames[q] + "/" + moduleNames[m] + "/driftTimeResidual01R";
+		   std::string histName23L = "OTModuleClbrMon/" + stationNames[s] + "/" + layerNames[l] + "/" + quarterNames[q] + "/" + moduleNames[m] + "/driftTimeResidual23L";
+		   std::string histName23R = "OTModuleClbrMon/" + stationNames[s] + "/" + layerNames[l] + "/" + quarterNames[q] + "/" + moduleNames[m] + "/driftTimeResidual23R";
+		   
+		   TH1D* hist = (TH1D*)f->Get(histName.c_str());
+		   TH1D* hist01L = (TH1D*)f->Get(histName01L.c_str());
+		   TH1D* hist01R = (TH1D*)f->Get(histName01R.c_str());
+		   TH1D* hist23L = (TH1D*)f->Get(histName23L.c_str());
+		   TH1D* hist23R = (TH1D*)f->Get(histName23R.c_str());
+		   
+		   int modulen = m + 9 * (q + 4 * (l + 4 * s));
+		   
+		   if(hist == 0 || hist->GetEntries() < 1000 || (s == 0 && m == 0))
+		     {
+		       //if(m == 8) t0_ = -mtoff[s][l][q][m]; //
+		       //Here Alex's old monitoring: does it make sense? in the meanwhile, I implement a simple new simple one
+		       //if(m == 8) t0_ = -t0s[s][l][q][m]; //why you assume m = 8 different from the others?
+		       if(hist != 0 && !(s == 0 && m == 0)) std::cout << histName << " :: N = " << hist->GetEntries() << std::endl;
+		       //t0s[s][l][q][m] = t0_ + mtoff[s][l][q][m];
+		       /*
+			 t0s[s][l][q][m] = t0_ + t0s[s][l][q][m];
+			 hdt0->SetBinContent(hdt0->FindBin(modulen), dt0_);
+			 hdt0->SetBinError(hdt0->FindBin(modulen), dt0err_);
+			 ht0->SetBinContent(ht0->FindBin(modulen), t0_ + (28.0 + 2.0 * s));
+			 ht0->SetBinError(ht0->FindBin(modulen), dt0err_);
+		       */
+		       
+		       hdt0->SetBinContent(hdt0->FindBin(modulen), 0.0);
+		       hdt0->SetBinError(hdt0->FindBin(modulen), 0.0);
+		       ht0->SetBinContent(ht0->FindBin(modulen), t0s[s][l][q][m]);
+		       ht0->SetBinError(ht0->FindBin(modulen), 0.0);
+		       continue;
+		     }
+		   
+		   //what was this good for?
+		   /*
+		     double left = hist->GetXaxis()->GetXmin();
+		     double right = hist->GetXaxis()->GetXmax();
+		     for(int i = 0; i < 5; i++)
+		     {
 		     hist->Fit("gaus", "Q0R", "", left, right);
 		     left = hist->GetFunction("gaus")->GetParameter(1) - 2.0 * hist->GetFunction("gaus")->GetParameter(2);
 		     right = hist->GetFunction("gaus")->GetParameter(1) + 2.0 * hist->GetFunction("gaus")->GetParameter(2);
-		   }
-		 */
-
-		 double dt0err = 0.0;
-			 
-		 if(!fit_module_contributions){
-
-		   if(getmean_instead_of_fit){
-		     test[s][l][q][m] = hist->GetMean();
-		     dt0err = hist->GetMeanError();
+		     }
+		   */
+		   
+		   double dt0err = 0.0;
+		   
+		   if(!fit_module_contributions){
+		     
+		     if(getmean_instead_of_fit){
+		       test[s][l][q][m] = hist->GetMean();
+		       dt0err = hist->GetMeanError();
+		     }
+		     else{
+		       double residual_per_module = 0.0;
+		       double residual_per_module_err = 0.0;
+		       
+		       StatusCode t0_per_module = fit_single_hist(hist,s,l,q, m, residual_per_module, residual_per_module_err, histName, outFile);
+		       
+		       test[s][l][q][m] = residual_per_module;
+		       
+		       dt0err = residual_per_module_err;
+		     }
 		   }
 		   else{
-		     double residual_per_module = 0.0;
-		     double residual_per_module_err = 0.0;
+		     std::cout<<"Now fitting the 4 sub contributions"<<std::endl;
 		     
-		     StatusCode t0_per_module = fit_single_hist(hist,s,l,q, m, residual_per_module, residual_per_module_err, histName, outFile);
+		     double residual_01L=0.0;
+		     double residual_01R=0.0;
+		     double residual_23L=0.0;
+		     double residual_23R=0.0;
 		     
-		     test[s][l][q][m] = residual_per_module;
+		     double residual_01L_err=0.0;
+		     double residual_01R_err=0.0;
+		     double residual_23L_err=0.0;
+		     double residual_23R_err=0.0;
 		     
-		     dt0err = residual_per_module_err;
+		     if(getmean_instead_of_fit){
+		       residual_01L = hist01L->GetMean();
+		       residual_01R = hist01R->GetMean();
+		       residual_23L = hist23L->GetMean();
+		       residual_23R = hist23R->GetMean();
+		       
+		       residual_01L_err = hist01L->GetMeanError();
+		       residual_01R_err = hist01R->GetMeanError();
+		       residual_23L_err = hist23L->GetMeanError();
+		       residual_23R_err = hist23R->GetMeanError();
+		     }
+		     else{
+		       StatusCode sc_01L = fit_single_hist(hist01L,s,l,q, m, residual_01L, residual_01L_err, histName01L , outFile);
+		       StatusCode sc_01R = fit_single_hist(hist01R,s,l,q, m, residual_01R, residual_01R_err, histName01R , outFile);
+		       StatusCode sc_23L = fit_single_hist(hist23L,s,l,q, m, residual_23L, residual_23L_err, histName23L , outFile);
+		       StatusCode sc_23R = fit_single_hist(hist23R,s,l,q, m, residual_23R, residual_23R_err, histName23R , outFile);
+		     }
+		     
+		     if( m==8 && (q == 0 || q == 2) && hist23L->GetEntries()==0 && hist23R->GetEntries()==0){ //only 2 half monlayer contributions 
+		       test[s][l][q][m] = 0.5*(residual_01L + residual_01R);
+		       
+		       dt0err = 0.2*(sqrt((residual_01L_err*residual_01L_err)+(residual_01R_err*residual_01R_err)));
+		       
+		     }
+		     else{
+		       test[s][l][q][m] = 0.25*(residual_01L + residual_01R + residual_23L+ residual_23R);
+		       
+		       
+		       dt0err = 0.25*(sqrt((residual_01L_err*residual_01L_err)+(residual_01R_err*residual_01R_err)
+					   +(residual_23L_err*residual_23L_err)+(residual_23R_err*residual_23R_err)));
+		     }
+		     
 		   }
-		 }
-		 else{
-		   std::cout<<"Now fitting the 4 sub contributions"<<std::endl;
-	   
-		   double residual_01L=0.0;
-		   double residual_01R=0.0;
-		   double residual_23L=0.0;
-		   double residual_23R=0.0;
-
-		   double residual_01L_err=0.0;
-		   double residual_01R_err=0.0;
-		   double residual_23L_err=0.0;
-		   double residual_23R_err=0.0;
 		   
-		   if(getmean_instead_of_fit){
-		     residual_01L = hist01L->GetMean();
-		     residual_01R = hist01R->GetMean();
-		     residual_23L = hist23L->GetMean();
-		     residual_23R = hist23R->GetMean();
-
-		     residual_01L_err = hist01L->GetMeanError();
-		     residual_01R_err = hist01R->GetMeanError();
-		     residual_23L_err = hist23L->GetMeanError();
-		     residual_23R_err = hist23R->GetMeanError();
-		   }
-		   else{
-		     StatusCode sc_01L = fit_single_hist(hist01L,s,l,q, m, residual_01L, residual_01L_err, histName01L , outFile);
-		     StatusCode sc_01R = fit_single_hist(hist01R,s,l,q, m, residual_01R, residual_01R_err, histName01R , outFile);
-		     StatusCode sc_23L = fit_single_hist(hist23L,s,l,q, m, residual_23L, residual_23L_err, histName23L , outFile);
-		     StatusCode sc_23R = fit_single_hist(hist23R,s,l,q, m, residual_23R, residual_23R_err, histName23R , outFile);
-		   }
-
-		   if( m==8 && (q == 0 || q == 2) && hist23L->GetEntries()==0 && hist23R->GetEntries()==0){ //only 2 half monlayer contributions 
-		     test[s][l][q][m] = 0.5*(residual_01L + residual_01R);
-
-		     dt0err = 0.2*(sqrt((residual_01L_err*residual_01L_err)+(residual_01R_err*residual_01R_err)));
-
-		   }
-		   else{
-		     test[s][l][q][m] = 0.25*(residual_01L + residual_01R + residual_23L+ residual_23R);
+		   double dt0 =  test[s][l][q][m];
 		   
-
-		     dt0err = 0.25*(sqrt((residual_01L_err*residual_01L_err)+(residual_01R_err*residual_01R_err)
-					 +(residual_23L_err*residual_23L_err)+(residual_23R_err*residual_23R_err)));
-		   }
-
-		 }
-
-		 double dt0 =  test[s][l][q][m];
+		   //suspect: the fit above was only for  monitoring :(
+		   //      dt0 = hist->GetFunction("gaus")->GetParameter(1);                                                                                                      
+		   double t0 = t0s[s][l][q][m] + test[s][l][q][m];
 		   
-		 //suspect: the fit above was only for  monitoring :(
-		 //      dt0 = hist->GetFunction("gaus")->GetParameter(1);                                                                                                      
-		 double t0 = t0s[s][l][q][m] + test[s][l][q][m];
-		 
-		 //double t0 = t0s[s][l][q][m] = t0s[s][l][q][m] + dt0;
-		 //      t0 = t0s[s][l][q][m] = mtoff[modulen] - (28.0 + 2.0 * s);                                                                                              
-		 //t0 -= mtoff[s][l][q][m];
-		 //again weird monitorning 
-		 /*
-		 t0 -= t0s[s][l][q][m];
-
-		 hdt0->SetBinContent(hdt0->FindBin(modulen), dt0);
-		 hdt0->SetBinError(hdt0->FindBin(modulen), dt0err);
-
-		 ht0->SetBinContent(ht0->FindBin(modulen), t0 + (28.0 + 2.0 * s));
-		 ht0->SetBinError(ht0->FindBin(modulen), dt0err);
-
-		 t0_ = t0;
-		 dt0_ = dt0;
-		 dt0err_ = dt0err;
-		 */
-		 
-		 
-		 hdt0->SetBinContent(hdt0->FindBin(modulen),  dt0);
-		 hdt0->SetBinError(hdt0->FindBin(modulen), dt0err);
-		 ht0->SetBinContent(ht0->FindBin(modulen), t0);
-		 ht0->SetBinError(ht0->FindBin(modulen), dt0err);
-
-
-		 if(fabs(dt0) > 1) std::cout << histName << " :: dt0 = " << dt0 << std::endl;
-
-		 t0Studies_file << histName << " dt0 = " << dt0 << " +/- " << dt0err << "\n";
-
-
-		 if(Apply_Calibration){
-		   t0s[s][l][q][m]= t0s[s][l][q][m] + test[s][l][q][m];
+		   //double t0 = t0s[s][l][q][m] = t0s[s][l][q][m] + dt0;
+		   //      t0 = t0s[s][l][q][m] = mtoff[modulen] - (28.0 + 2.0 * s);                                                                                              
+		   //t0 -= mtoff[s][l][q][m];
+		   //again weird monitorning 
+		   /*
+		     t0 -= t0s[s][l][q][m];
+		     
+		     hdt0->SetBinContent(hdt0->FindBin(modulen), dt0);
+		     hdt0->SetBinError(hdt0->FindBin(modulen), dt0err);
+		     
+		     ht0->SetBinContent(ht0->FindBin(modulen), t0 + (28.0 + 2.0 * s));
+		     ht0->SetBinError(ht0->FindBin(modulen), dt0err);
+		     
+		     t0_ = t0;
+		     dt0_ = dt0;
+		     dt0err_ = dt0err;
+		   */
+		   
+		   
+		   hdt0->SetBinContent(hdt0->FindBin(modulen),  dt0);
+		   hdt0->SetBinError(hdt0->FindBin(modulen), dt0err);
+		   ht0->SetBinContent(ht0->FindBin(modulen), t0);
+		   ht0->SetBinError(ht0->FindBin(modulen), dt0err);
+		   
+		   
+		   if(fabs(dt0) > 1) std::cout << histName << " :: dt0 = " << dt0 << std::endl;
+		   
+		   t0Studies_file << histName << " dt0 = " << dt0 << " +/- " << dt0err << "\n";
+		   
+		   
+		   if(Apply_Calibration){
+		     t0s[s][l][q][m]= t0s[s][l][q][m] + test[s][l][q][m];
+		   }
+		   else
+		     t0s[s][l][q][m]= t0s[s][l][q][m] + 0.0;
+		   
 		 }
-		 else
-		   t0s[s][l][q][m]= t0s[s][l][q][m] + 0.0;
-		 
-	       }
-	   }
+	     }   
+     }  
 
-
-     //Here you need to write t0s or after closing f?
-
-  /*
-     // Loop over HPD
-     for(int hpdID = m_minHPDID; hpdID< m_maxHPDID; ++hpdID)
-       {
-	 // HPD copy number
-	 const Rich::DAQ::HPDCopyNumber copyNumber =  Rich::DAQ::HPDCopyNumber( hpdID );
-	 // SmartID
-	 const LHCb::RichSmartID smartID = m_RichSys->richSmartID( copyNumber );
-	 if ( msgLevel(MSG::DEBUG) ) debug() << "HPD ID " << hpdID
-					     << ", smartID "  << smartID.toString()
-					     << ", smartID.key() " << smartID.key()
-					     << endmsg;
-	 // Get condition
-	 Condition* siAlign = getSiSensorAlignment( copyNumber );
-	 
-	 // Get image histogram
-	 std::string imageHistName = m_HistBase + "Rich_HPD_" + std::to_string( hpdID ) + "_Image";
-	 TH2D* imageHist = (TH2D*)f->Get( imageHistName.c_str() );
-	 
-	 // Get occupancy histogram
-	 std::string occpHistName = m_OccpHistBase + "CopyNum-" + std::to_string( hpdID ) ;
-	 TH1D* occpHist = (TH1D*)f->Get( occpHistName.c_str() );
-	 
-	 if( !imageHist )  // check image hist is there
-	   {
-	     warning() << "Failed to get HPD image histogram: " << imageHistName
-		       << endmsg ;
-	   }
-	 else if( !occpHist ) // check occupancy hist is there
-	   {
-	     // set occupancy to 0
-	     HpdOcc.first  = smartID.key() ;
-	     HpdOcc.second = 0 ;
-	     
-	     if( smartID.rich() == Rich::DetectorType::Rich1 ) Rich1_OccsVec.push_back( HpdOcc );
-	     if( smartID.rich() == Rich::DetectorType::Rich2 ) Rich2_OccsVec.push_back( HpdOcc );
-	     
-	     warning() << "Failed to get HPD image occupancy histogram: " << occpHistName
-		       << endmsg ;
-	   } 
-	 else if( imageHist->GetEntries() < m_minEntries )
-	   {
-	     warning() << "Not enough HPD image entries: " << imageHist->GetEntries() << endmsg ;
-	   }
-	 else // both hists are there, and enough entries
-	   { 
-	     // Do the fit
-	     const HPDFit::Result result = m_fitter.fit( *imageHist, m_params, occpHist->GetEntries() );
-	     if ( msgLevel(MSG::DEBUG) ) debug() << "In Fit, shift of " << hpdID
-						 << ": (" << result.x() << ", "  << result.y() << ")"
-						 << ", Radius " << result.radInMM()
-						 << endmsg;       
-	     
-	     // Update condition
-	     std::string paramName = "dPosXYZ" ;
-	     std::vector<double> dPosVec = siAlign->paramAsDoubleVect( paramName );
-	     
-	     if ( msgLevel(MSG::DEBUG) ) debug() << "In DB, shift of " << hpdID
-						 << ": " <<  dPosVec
-						 << endmsg ;
-	     
-	     dPosVec[0] = result.x();
-	     dPosVec[1] = result.y();
-	     dPosVec[2] = 0 ;
-	     
-	     siAlign->addParam( paramName, dPosVec, "");
-	     
-	     if ( msgLevel(MSG::DEBUG) ) debug() << "Condition to write out " << siAlign->toXml() 
-						 << endmsg;
-	     
-	     // Get occupancy
-	     HpdOcc.first  = smartID.key() ;
-	     HpdOcc.second = occpHist->GetMean() ;
-	     
-	     if( smartID.rich() == Rich::DetectorType::Rich1 ) Rich1_OccsVec.push_back( HpdOcc );
-	     if( smartID.rich() == Rich::DetectorType::Rich2 ) Rich2_OccsVec.push_back( HpdOcc );
-	     
-	   }   // Now write out xml file
-	 xmlVersion = getVersion( m_mergedRun.first, copyNumber );
-	 if( !xmlWriter( siAlign, copyNumber, xmlVersion ) ) warning() << "Failed to write xml file for HPD " << hpdID << endmsg;
-	 
-       }  //Loop over HPD
-     
-     // Now write out HPD occupancies to xml file
-     if( !writeHpdOccXml( Rich1_OccsVec, "Rich1",   m_mergedRun.first ) )
-       warning() << "Failed to write xml file for Rich1 Occupancies" << endmsg;
-     
-     if( !writeHpdOccXml( Rich2_OccsVec, "Rich2",  m_mergedRun.first ) )
-       warning() << "Failed to write xml file for Rich2 Occupancies" << endmsg;       
-  */
-     
-     // empty vectors, just for safety to-do: ddo you want to move to vectors?
-     //  Rich1_OccsVec.clear();
-     //  Rich2_OccsVec.clear();
-     
      f->Close();
-     
-    } else {
+      } else {
     
     warning() << "file is zombie "
 	      << endmsg;
   }
-  
-  writeCondXMLs(t0s);
-  writeCondDBXMLs(t0s);
+
+  if(!calibrate_only_globalt0){     
+    writeCondXMLs(t0s);
+    writeCondDBXMLs(t0s);
+    
+    t0Studies_file.flush();
+    t0Studies_file.close();
+    
+    
+    if(!ht0){
+      Error("Histogram not found " );
+    }
+    
+    TH1D* hdt0proj = new TH1D("hdt0proj", "", 100, -10, 10);
+    for(int i = 0; i < 432; i++) if(hdt0->GetBinContent(i+1) != 0) hdt0proj->Fill(hdt0->GetBinContent(i+1));
+
+    if(save_fits){
+      outFile->cd();
+      hdt0->Write();
+      ht0->Write();
+      hdt0proj->Write();
+    }
+  }
+   
   write_Globalt0_XML(global_t0);
-
-  t0Studies_file.flush();
-  t0Studies_file.close();
-
-  
-  delete f;
-
-
-  if(!ht0){
-    Error("Histogram not found " );
-  }
-
-
-  TH1D* hdt0proj = new TH1D("hdt0proj", "", 100, -10, 10);
-  for(int i = 0; i < 432; i++) if(hdt0->GetBinContent(i+1) != 0) hdt0proj->Fill(hdt0->GetBinContent(i+1));
-
-  if(save_fits){
-    outFile->cd();
-    hdt0->Write();
-    ht0->Write();
-    hdt0proj->Write();
-  }
   
   //outFile->Flush();
   outFile->Close();
@@ -951,12 +857,26 @@ StatusCode OTt0OnlineClbr::write_Globalt0_XML(double global_t0)
   file << "<!DOCTYPE DDDB SYSTEM \"conddb:/DTD/structure.dtd\">\n";
   file << "\n";
   file << "<DDDB>\n";
-  file << "    <paramVector name=\"TZero\" type=\"double\" comment=\"T0s of straws in module\">\n";
+  file << "  <condition classID=\"5\" name=\"" << "CalibrationGlobal" << "\">\n";
+  file << "    <param name=\"TZero\" type=\"double\" comment=\"Global t0 of OT\">\n";
   //file << "      " << 0.001 * (int)(1000.0 * global_t0 + 0.5) << "\n";
   file << "      " <<  global_t0  << "\n";
-  file << "    </paramVector>\n";
+  file << "    </param>\n";
   file << "  </condition>\n";
   file << "</DDDB>\n";
+
+  // this is how the file should look like
+  //<?xml version="1.0" encoding="ISO-8859-1"?>
+  //<!DOCTYPE DDDB SYSTEM "../../../DTD/structure.dtd">
+  //
+  //<DDDB>
+  //  <condition classID="5" name="CalibrationGlobal">
+  //    <param name="TZero" type="double" comment="Global t0 of OT">
+  //      0.001
+  //    </param>
+  //  </condition>
+  //</DDDB>
+  //
 
   file.close();
 

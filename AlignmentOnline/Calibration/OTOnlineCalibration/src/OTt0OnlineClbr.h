@@ -110,7 +110,11 @@ public:
    * getmean_instead_of_fit  
    */
   bool getmean_instead_of_fit;
- 
+  /**
+   * calibrate_only_globalt0. This should become the default. We don't want to calibrate all the modules all the time, only global t0 
+   */
+  bool calibrate_only_globalt0;  
+
   TH1D* hdt0;
   TH1D* ht0;
   TH1D* hdt0proj;
