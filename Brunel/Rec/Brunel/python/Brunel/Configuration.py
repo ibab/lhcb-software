@@ -256,8 +256,13 @@ class Brunel(LHCbConfigurableUser):
             from Configurables import ProcessPhase
             ProcessPhase("MCLinks").DetectorList += self.getProp("MCLinksSequence")
             # Unpack Sim data
-            GaudiSequencer("MCLinksUnpackSeq").Members += [ "UnpackMCParticle",
-                                                            "UnpackMCVertex" ]
+            GaudiSequencer("MCLinksUnpackSeq").Members += [ "UnpackMCParticle"]
+
+            # particle gun uses MCVertex to fake a reconstructed one
+            # unpacking again would lead to crash
+            if "pGun" not in self.getProp("SpecialData"):
+                 GaudiSequencer("MCLinksUnpackSeq").Members += [ "UnpackMCVertex" ]
+            
             GaudiSequencer("MCLinksTrSeq").Members += [ "TrackAssociator" ]
             GaudiSequencer("MCLinksCaloSeq").Members += [ "CaloDigit2MCLinks2Table", "CaloClusterMCTruth", "CaloHypoMCTruth" ]
 
