@@ -39,7 +39,7 @@ class RecSysConf(LHCbConfigurableUser):
     ## Default reconstruction sequence for field-off data
     DefaultSubDetsFieldOff = ["Decoding"] + DefaultTrackingSubdets+["CALO","RICH","MUON","PROTO","SUMMARY"]
     ## List of known special data processing options
-    KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff", "beamGas", "microBiasTrigger", "pA" ]
+    KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff", "beamGas", "microBiasTrigger", "pA", "pGun" ]
 
     ## Steering options
     __slots__ = {
@@ -96,7 +96,15 @@ class RecSysConf(LHCbConfigurableUser):
                 # Deafult setting uses beam spot constraint from DB, available from 2011. Prior to 2011 stability of beam spot is not certain
                 from PatPV import PVConf
                 PVConf.StandardPV().configureAlg()
-            GaudiSequencer("RecoVertexSeq").Members += [ pvAlg ];
+                
+            # MC with particle gun cannot reconstruct PV, hence need to introduce one by hand
+            if "pGun" in self.getProp("SpecialData"):
+                from Configurables import PGPrimaryVertex
+                pgPV = PGPrimaryVertex()
+                GaudiSequencer("RecoVertexSeq").Members += [ pgPV ]
+            else:
+                GaudiSequencer("RecoVertexSeq").Members += [ pvAlg ];
+                
             trackV0Finder = TrackV0Finder()
             GaudiSequencer("RecoVertexSeq").Members += [ trackV0Finder ]
 

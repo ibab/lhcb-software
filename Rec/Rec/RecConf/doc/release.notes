@@ -4,6 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2015-01-31 - Michel De Cian
+ - Add 'pGun' to KnownSpecialData, replace normal vertex finder with PGPrimaryVertex when pGun is in SpecialData
+
 !========================= RecConf v2r19 2014-12-11 =========================
 ! 2014-11-13 - Marco Cattaneo
  - Remove "upgrade" from KnownSpecialData (obsolete, use the DataType instead)
