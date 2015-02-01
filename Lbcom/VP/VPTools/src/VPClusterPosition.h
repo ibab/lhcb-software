@@ -36,6 +36,10 @@ class VPClusterPosition : public GaudiTool, virtual public IVPClusterPosition {
   /// Pointer to detector element
   DeVP* m_det;
 
+  /// Cosine squared of rotation angle for each sensor.
+  std::vector<double> m_c2;
+  /// Sine squared of rotation angle for each sensor.
+  std::vector<double> m_s2; 
   /// Average error for single-pixel clusters
   double m_errorSinglePixel;
   /// Average error for two-pixel clusters

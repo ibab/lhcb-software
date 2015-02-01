@@ -1,3 +1,5 @@
+#include <cmath>
+
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -46,6 +48,24 @@ StatusCode VPClusterPosition::initialize() {
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;
   m_det = getDet<DeVP>(DeVPLocation::Default);
+  // Store the rotations of each sensor.
+  const unsigned int nSensors = m_det->numberSensors();
+  m_c2.resize(nSensors, 1.);
+  m_s2.resize(nSensors, 0.);
+  const Gaudi::XYZVector vl(1., 0., 0.);
+  for (auto it = m_det->sensorsBegin(); it != m_det->sensorsEnd(); ++it) {
+    const unsigned int sensor = (*it)->sensorNumber();
+    if (sensor >= m_c2.size()) {
+      m_c2.resize(sensor + 1);
+      m_s2.resize(sensor + 1);
+    }
+    const auto vg = (*it)->geometry()->toGlobal(vl);
+    const double cphi = vg.x();
+    const double phi = acos(cphi);
+    const double sphi = sin(phi);
+    m_c2[sensor] = cphi * cphi;
+    m_s2[sensor] = sphi * sphi;
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -71,18 +91,18 @@ LHCb::VPPositionInfo VPClusterPosition::position(const LHCb::VPCluster* cluster,
                                                  const double& /*ty*/) const {
 
   // TODO: include track information, parameterise error as function of angle.
-  LHCb::VPPositionInfo info;
+  LHCb::VPPositionInfo pos;
   // Get the position directly from the cluster.
-  info.x = cluster->x();
-  info.y = cluster->y();
+  pos.x = cluster->x();
+  pos.y = cluster->y();
   // Get the sensor.
   const LHCb::VPChannelID channel = cluster->channelID();
   const DeVPSensor* sensor = m_det->sensorOfChannel(channel);
   if (!sensor) {
     Error("No valid pointer to sensor");
-    info.dx = 0.;
-    info.dy = 0.;
-    return info;
+    pos.dx = 0.;
+    pos.dy = 0.;
+    return pos;
   }
 
   // Initialise the local error estimate.
@@ -113,9 +133,9 @@ LHCb::VPPositionInfo VPClusterPosition::position(const LHCb::VPCluster* cluster,
     dy = 20. * Gaudi::Units::micrometer;
   }
   // Transform the error estimate to the global frame.
-  Gaudi::XYZVector err = sensor->geometry()->toGlobal(Gaudi::XYZVector(dx, dy, 0.));
-  info.dx = err.x();
-  info.dy = err.y();
-  return info;
+  const unsigned int sensorNumber = sensor->sensorNumber();
+  pos.dx = sqrt(dx * dx * m_c2[sensorNumber] + dy * dy * m_s2[sensorNumber]);
+  pos.dy = sqrt(dx * dx * m_s2[sensorNumber] + dy * dy * m_c2[sensorNumber]);
+  return pos;
 }
 

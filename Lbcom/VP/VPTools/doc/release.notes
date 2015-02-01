@@ -4,6 +4,9 @@
 ! Purpose     : Tools used in VP reconstruction
 !--------------------------------------------------------------------------
 
+! 2015-02-01 - Heinrich Schindler
+ - Generalise local-to-global transformation to allow for rotated modules.
+
 !========================= VPTools v2r4 2014-07-14 =========================
 ! 2014-06-11 - Heinrich Schindler
  - Simplified error parameterisation based on cluster size.
