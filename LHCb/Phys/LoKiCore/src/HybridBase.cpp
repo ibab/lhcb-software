@@ -149,13 +149,6 @@ StatusCode LoKi::Hybrid::Base::initialize ()
   if ( sc.isFailure() ) { return sc ; }
   // force the loading/initialization of  LoKi Service
   svc<LoKi::ILoKiSvc>( "LoKiSvc" , true ) ;
-  // Initialize python if it not yet done
-  if ( !Py_IsInitialized() )
-  {
-    info() << "Initialization of Python is triggered" << endmsg ;
-    Py_Initialize () ;
-    m_pyInit = true ;
-  }
   //
   return StatusCode::SUCCESS ;
 }
@@ -186,6 +179,7 @@ StatusCode LoKi::Hybrid::Base::finalize  ()
     Py_Finalize () ;
   }
   //
+  if ( Py_IsInitialized() ) { Warning ( "Python is still initialized!" ) ; }
   // Write C++ code 
   //
   if ( m_makeCpp ) { writeCpp () ; }
@@ -217,6 +211,14 @@ namespace
 // ============================================================================
 StatusCode LoKi::Hybrid::Base::executeCode ( const std::string& pycode ) const
 {
+  // Initialize python if it not yet done
+  if ( !Py_IsInitialized() )
+  {
+    info() << "Initialization of Python is triggered" << endmsg ;
+    Py_Initialize () ;
+    m_pyInit = true  ;
+    ++counter ("Python is initialized!") ;
+  }
   // Check the proper python environment:
   if ( !Py_IsInitialized() ) { return Error("Python is not initialized yet!") ; }
 

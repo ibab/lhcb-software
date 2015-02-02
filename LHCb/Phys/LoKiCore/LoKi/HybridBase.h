@@ -129,7 +129,7 @@ namespace LoKi
       // ======================================================================
     private: 
       // ======================================================================
-      bool                     m_pyInit   ;
+      mutable bool             m_pyInit   ;
       // flag to display the prepared code 
       bool                     m_showCode ; ///< flag to display the prepared code 
       // ======================================================================
@@ -199,6 +199,7 @@ StatusCode LoKi::Hybrid::Base::_get_
   {
     local  = created ; 
     output = *local ;
+    this->counter("# loaded from CACHE" ) += 1 ;
     return StatusCode::SUCCESS ;    // RETURN
   } 
   // 
@@ -211,6 +212,8 @@ StatusCode LoKi::Hybrid::Base::_get_
   { return Error ( "Invalid object for the code"                     ) ; } // RETURN 
   // assign the result 
   output = *local ;                                                        // ASSIGN
+  //
+  this->counter("# loaded from PYTHON") += 1 ;
   //
   if ( this->m_makeCpp ) 
   {
