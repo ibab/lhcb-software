@@ -31,7 +31,7 @@
  *  @date   2010-10-23
  */
 // ============================================================================
-// anonymos namespace to hide local varibales 
+/// anonymos namespace to hide local varibales 
 namespace 
 {
   // ==========================================================================
@@ -52,8 +52,7 @@ LoKi::Particles::PtFlight::PtFlight
 ( const double x , 
   const double y , 
   const double z )
-  : LoKi::AuxFunBase ( std::tie ( x , y, z ) ) 
-  , LoKi::Particles::TransverseMomentumRel ( s_VECTOR ) 
+  : LoKi::Particles::TransverseMomentumRel ( s_VECTOR ) 
   , LoKi::Vertices::VertexHolder   ( LoKi::Point3D ( x , y , z )  ) 
 {}
 // ============================================================================
@@ -72,9 +71,8 @@ LoKi::Particles::PtFlight::PtFlight
  */
 // ============================================================================
 LoKi::Particles::PtFlight::PtFlight 
-( const LoKi::Point3D& point )  
-  : LoKi::AuxFunBase ( std::tie ( point ) ) 
-  , LoKi::Particles::TransverseMomentumRel ( s_VECTOR ) 
+( const LoKi::Point3D& point ) 
+  : LoKi::Particles::TransverseMomentumRel ( s_VECTOR ) 
   , LoKi::Vertices::VertexHolder ( point ) 
 {}
 // ============================================================================
@@ -139,8 +137,7 @@ LoKi::Particles::MCorrected::MCorrected
 ( const double x , 
   const double y , 
   const double z )
-  : LoKi::AuxFunBase ( std::tie ( x , y , z ) ) 
-  , LoKi::Particles::PtFlight ( x , y , z ) 
+  : LoKi::Particles::PtFlight ( x , y , z ) 
 {}
 // ============================================================================
 /*  constructor from the primary vertex
@@ -158,8 +155,7 @@ LoKi::Particles::MCorrected::MCorrected
 // ============================================================================
 LoKi::Particles::MCorrected::MCorrected
 ( const LoKi::Point3D& point ) 
-  : LoKi::AuxFunBase ( std::tie ( point ) ) 
-  , LoKi::Particles::PtFlight ( point ) 
+  : LoKi::Particles::PtFlight ( point ) 
 {}
 // ============================================================================
 // MANDATORY: virtual desctructor 
@@ -211,12 +207,13 @@ LoKi::Particles::MCorrected::fillStream ( std::ostream& s ) const
 }
 // ============================================================================
 
+
+
 // ============================================================================
 // constructor 
 // ============================================================================
 LoKi::Particles::PtFlightWithBestVertex::PtFlightWithBestVertex() 
-  : LoKi::AuxFunBase     () 
-  , LoKi::AuxDesktopBase () 
+  : LoKi::AuxDesktopBase () 
   , LoKi::Particles::PtFlight ( s_POINT ) 
 {}
 // ============================================================================
@@ -280,8 +277,7 @@ LoKi::Particles::PtFlightWithBestVertex::fillStream ( std::ostream& s ) const
 // constructor 
 // ============================================================================
 LoKi::Particles::MCorrectedWithBestVertex::MCorrectedWithBestVertex() 
-  : LoKi::AuxFunBase     () 
-  , LoKi::Particles::PtFlightWithBestVertex() 
+  : LoKi::Particles::PtFlightWithBestVertex() 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 

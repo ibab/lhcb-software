@@ -966,10 +966,11 @@ BPVPATHDIST_         = LoKi.Particles.PathDistanceWithBestPV
 BPVPATHDISTCHI2      = LoKi.Particles.PathDistanceChi2WithBestPV()
 ## @see LoKi::Cuts::BPVPATHDISTCHI2_
 BPVPATHDISTCHI2_     = LoKi.Particles.PathDistanceChi2WithBestPV
+
 ## @see LoKi::Cuts::BPVPDS
-BPVPDS               = LoKi.Particles.PathDistanceSignificanceWithBestPV()
+## BPVPDS               = LoKi.Particles.PathDistanceSignificanceWithBestPV()
 ## @see LoKi::Cuts::BPVPATHDISTCHI2_
-BPVPDS_              = LoKi.Particles.PathDistanceSignificanceWithBestPV
+BPVPDS              = LoKi.Particles.PathDistanceSignificanceWithBestPV
 
 ## @see LoKi::Cuts::PROJDIST 
 PROJDIST             = LoKi.Particles.ProjectedDistance
@@ -977,14 +978,14 @@ PROJDIST             = LoKi.Particles.ProjectedDistance
 PROJDS               = LoKi.Particles.ProjectedDistanceSignificance
 
 ## @see LoKi::Cuts::BPVPROJDIST 
-BPVPROJDIST          = LoKi.Particles.ProjectedDistanceWithBestPV ()
+## BPVPROJDIST          = LoKi.Particles.ProjectedDistanceWithBestPV ()
 ## @see LoKi::Cuts::BPVPROJDIST_ 
-BPVPROJDIST_         = LoKi.Particles.ProjectedDistanceWithBestPV
+## BPVPROJDIST_         = LoKi.Particles.ProjectedDistanceWithBestPV
 
 ## @see LoKi::Cuts::BPVPROJDS 
-BPVPROJDS            = LoKi.Particles.ProjectedDistanceSignificanceWithBestPV ()
+## BPVPROJDS            = LoKi.Particles.ProjectedDistanceSignificanceWithBestPV ()
 ## @see LoKi::Cuts::BPVPROJDS_ 
-BPVPROJDS_           = LoKi.Particles.ProjectedDistanceSignificanceWithBestPV
+## BPVPROJDS_           = LoKi.Particles.ProjectedDistanceSignificanceWithBestPV
 
 
 # =============================================================================

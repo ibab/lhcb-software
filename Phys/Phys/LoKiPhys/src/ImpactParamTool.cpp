@@ -36,7 +36,6 @@ LoKi::Vertices::ImpactParamTool::ImpactParamTool
   : LoKi::AuxFunBase () 
   , m_tool ( tool )
 {
-  if ( !m_tool  && gaudi() ) { acquireTool() ; }
   //if ( 0 == m_tool.getObject() ) 
   //{ throw LoKi::Exception("ImpactParamTool():  Tool* points to NULL "  ,
   //                        StatusCode::FAILURE , __FILE__ , __LINE__ ); }
@@ -47,7 +46,6 @@ LoKi::Vertices::ImpactParamTool::ImpactParamTool
   : LoKi::AuxFunBase () 
   , m_tool ( tool )
 {
-  if ( !m_tool  && gaudi() ) { acquireTool() ; }
   //if ( 0 == m_tool.getObject() ) 
   //{ throw LoKi::Exception("ImpactParamTool():  Tool* points to NULL "  ,
   //                        StatusCode::FAILURE , __FILE__ , __LINE__ ); }
@@ -68,35 +66,9 @@ LoKi::Vertices::ImpactParamTool::ImpactParamTool
 // ============================================================================
 //  virtual destructor
 // ============================================================================
-LoKi::Vertices::ImpactParamTool::~ImpactParamTool(){}
+LoKi::Vertices::ImpactParamTool::~ImpactParamTool() {}
 // ============================================================================
-// accessor to the tool itself 
-// ============================================================================
-const LoKi::Interface<IDistanceCalculator>& 
-LoKi::Vertices::ImpactParamTool::getTool () const
-{ 
-  if ( !m_tool && gaudi() ) 
-  {
-    StatusCode sc = acquireTool() ;
-    if ( sc.isFailure() ) 
-    { Warning ("Unable to get IDistabnceCalcualtor "  , sc ) ; }  
-  }
-  return m_tool ; 
-}
-// ============================================================================
-// try to get the tool using various machinery 
-// ============================================================================
-StatusCode 
-LoKi::Vertices::ImpactParamTool::acquireTool ( const std::string& nick ) const 
-{
-  //
-  if ( !m_tool) { m_tool = LoKi::GetTools::distanceCalculator (*this , nick ) ; }
-  //
-  return !m_tool ? StatusCode::FAILURE : StatusCode::SUCCESS ;
-}
-
-
-
+  
 // ============================================================================
 // The END 
 // ============================================================================

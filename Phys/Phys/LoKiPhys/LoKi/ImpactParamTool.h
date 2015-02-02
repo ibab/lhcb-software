@@ -57,7 +57,8 @@ namespace LoKi
       /// accessor to the tool itself 
       inline const IDistanceCalculator* tool () const { return getTool() ; }
       /// accessor to the tool itself 
-      const LoKi::Interface<IDistanceCalculator>& getTool () const ;
+      inline const LoKi::Interface<IDistanceCalculator>& getTool () const 
+      { return m_tool ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -80,11 +81,6 @@ namespace LoKi
       /// set the tool
       void setTool ( const LoKi::Interface<IDistanceCalculator>& t ) const 
       { m_tool = t ; }      
-      // ======================================================================
-    protected:
-      // ======================================================================
-      /// try to get the tool using various machinery 
-      StatusCode acquireTool( const std::string& nick = "" ) const ;
       // ======================================================================
     public:
       // ======================================================================

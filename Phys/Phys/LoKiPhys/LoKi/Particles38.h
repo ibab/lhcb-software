@@ -285,7 +285,7 @@ namespace LoKi
      */
     typedef LoKi::Particles::PtFlight                                PTFLIGHT ;
     // ========================================================================
-    /** @var BPVPTFLIGHT
+    /** @typedef BPVPTFLIGHT
      *  Simple functor to evaluate the transverse momentum with respect to 
      *  particle flight direction
      *  @see LoKi::Particles::PtFlightWithBestVertex 
@@ -297,7 +297,7 @@ namespace LoKi
      *  @date   2010-10-23
      *  @thanks Mike Williams
      */
-    const LoKi::Particles::PtFlightWithBestVertex                 BPVPTFLIGHT ;
+    typedef LoKi::Particles::PtFlightWithBestVertex               BPVPTFLIGHT ;
     // ========================================================================
     /** @typedef CORRM 
      *  Simple functor to evaluate the 'corrected mass' with respect to 
@@ -329,7 +329,7 @@ namespace LoKi
      */
     typedef LoKi::Particles::MCorrected                                 CORRM ;
     // ========================================================================
-    /** @var BPVCORRM 
+    /** @typedef BPVCORRM 
      *  Simple functor to evaluate the corrected mass with respect to 
      *  particle flight direction
      *
@@ -350,7 +350,7 @@ namespace LoKi
      *  @date   2010-10-23
      *  @thanks Mike Williams
      */
-    const LoKi::Particles::MCorrectedWithBestVertex                  BPVCORRM ;
+    typedef LoKi::Particles::MCorrectedWithBestVertex                BPVCORRM ;
     // ========================================================================
 #ifdef __INTEL_COMPILER
 #pragma warning(pop) 

@@ -751,10 +751,7 @@ LoKi::Particles::ProjectedDistanceWithBestPV::operator()
   }
   //
   setVertex ( pv ) ;
-  //
-  
-  
-  
+  //  
   double distance = LoKi::Constants::InvalidDistance ;
   double error    = LoKi::Constants::InvalidDistance ;
   double chi2     = LoKi::Constants::InvalidChi2     ;

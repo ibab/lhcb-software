@@ -101,8 +101,8 @@ LoKi::Particles::ImpParWithTheBestPV::ImpParWithTheBestPV
   , LoKi::Particles::ImpPar ( s_VERTEX , s_IPTOOL ) 
   , m_geo ( geo )   
 {
-  if ( 0 == tool() && gaudi() ) 
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }    
+  // if ( 0 == tool() && gaudi() ) 
+  // { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
 }
 // ============================================================================
 // MANDATORY: the clone method ("virtual constructor")
@@ -145,10 +145,7 @@ LoKi::Particles::ImpParChi2WithTheBestPV::ImpParChi2WithTheBestPV
 ( const std::string& geo ) 
   : LoKi::AuxFunBase    ( std::tie ( geo ) ) 
   , LoKi::Particles::ImpParWithTheBestPV ( geo ) 
-{
-  if ( 0 == tool() && gaudi() ) 
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }    
-}
+{}
 // ============================================================================
 // MANDATORY: the clone method ("virtual constructor")
 // ============================================================================
@@ -197,10 +194,7 @@ LoKi::Particles::MinImpParWithSource::MinImpParWithSource
   , LoKi::Particles::MinImpPar ( LHCb::VertexBase::ConstVector() , s_IPTOOL ) 
   , m_source ( source )   
   , m_geo    ( geo    )
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+{}
 // ============================================================================
 // MANDATORY: the clone method ("virtual constructor")
 // ============================================================================
@@ -264,10 +258,7 @@ LoKi::Particles::MinImpParDV::MinImpParDV
 ( const std::string& geo    ) 
   : LoKi::AuxFunBase    ( std::tie ( geo ) ) 
   , LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceDesktop ( s_PRIMARY ) , geo )  
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+{}
 // ============================================================================
 /*  the constructor form the vertex selection functor and 
  *  the name/nickname of IDistanceCalculator tool from IDVAlgorithm
@@ -281,10 +272,7 @@ LoKi::Particles::MinImpParDV::MinImpParDV
   const std::string&            geo )
   : LoKi::AuxFunBase    ( std::tie ( cuts , geo ) ) 
   , LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceDesktop ( cuts ) , geo )
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+{}
 // ============================================================================
 /*  the constructor form the vertex selection functor and 
  *  the name/nickname of IDistanceCalculator tool from IDVAlgorithm
@@ -298,10 +286,7 @@ LoKi::Particles::MinImpParDV::MinImpParDV
   const LoKi::PhysTypes::VCuts& cuts ) 
   : LoKi::AuxFunBase    ( std::tie ( geo , cuts ) ) 
   , LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceDesktop ( cuts ) , geo )
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+{}
 // ============================================================================
 // MANDATORY: the clone method ("virtual constructor")
 // ============================================================================
@@ -330,10 +315,7 @@ LoKi::Particles::MinImpParTES::MinImpParTES
   , LoKi::Particles::MinImpParWithSource 
 ( LoKi::Vertices::SourceTES ( path , s_PRIMARY ) , geo )  
   , m_path ( 1 , path ) 
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+{}
 // ============================================================================
 /* the constructor,
  *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
@@ -349,10 +331,7 @@ LoKi::Particles::MinImpParTES::MinImpParTES
   : LoKi::AuxFunBase    ( std::tie ( path , geo ) ) 
   , LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , s_PRIMARY ) , geo )  
   , m_path ( path ) 
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+{}
 // ============================================================================
 /* the constructor,
  *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
@@ -369,10 +348,7 @@ LoKi::Particles::MinImpParTES::MinImpParTES
   : LoKi::AuxFunBase    ( std::tie ( cuts , path , geo ) ) 
   , LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
   , m_path ( path ) 
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+{}
 // ============================================================================
 /* the constructor,
  *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
@@ -389,10 +365,7 @@ LoKi::Particles::MinImpParTES::MinImpParTES
   : LoKi::AuxFunBase    ( std::tie ( cuts , path , geo ) ) 
   , LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
   , m_path ( 1 , path ) 
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+{}
 // ============================================================================
 /*  the constructor,
  *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
@@ -409,10 +382,7 @@ LoKi::Particles::MinImpParTES::MinImpParTES
   : LoKi::AuxFunBase    ( std::tie ( path , cuts , geo ) ) 
   , LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
   , m_path ( path ) 
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+{}
 // ============================================================================
 /*  the constructor,
  *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
@@ -429,10 +399,7 @@ LoKi::Particles::MinImpParTES::MinImpParTES
   : LoKi::AuxFunBase    ( std::tie ( path , cuts , geo ) ) 
   , LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
   , m_path ( 1 , path ) 
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+{}
 // ============================================================================
 /*  the constructor,
  *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
@@ -449,10 +416,7 @@ LoKi::Particles::MinImpParTES::MinImpParTES
   : LoKi::AuxFunBase    ( std::tie ( path , geo , cuts ) ) 
   , LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
   , m_path ( path ) 
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+{}
 // ============================================================================
 /** the constructor,
  *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
@@ -469,10 +433,7 @@ LoKi::Particles::MinImpParTES::MinImpParTES
   : LoKi::AuxFunBase    ( std::tie ( path , geo , cuts ) ) 
   , LoKi::Particles::MinImpParWithSource ( LoKi::Vertices::SourceTES ( path , cuts  ) , geo )  
   , m_path ( 1 , path ) 
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+{}
 // ============================================================================
 // MANDATORY: the clone method ("virtual constructor")
 // ============================================================================
@@ -499,10 +460,7 @@ LoKi::Particles::MinImpParChi2WithSource::MinImpParChi2WithSource
   const std::string&                                          geo    ) 
   : LoKi::AuxFunBase    ( std::tie ( source , geo ) ) 
   , LoKi::Particles::MinImpParWithSource ( source , geo ) 
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+{}
 // ============================================================================
 // MANDATORY: the clone method ("virtual constructor")
 // ============================================================================
@@ -564,12 +522,8 @@ std::ostream& LoKi::Particles::MinImpParChi2WithSource::fillStream
 LoKi::Particles::MinImpParChi2DV::MinImpParChi2DV 
 ( const std::string& geo    ) 
   : LoKi::AuxFunBase    ( std::tie ( geo ) ) 
-  , LoKi::Particles::MinImpParChi2WithSource 
-    ( LoKi::Vertices::SourceDesktop ( s_PRIMARY ) , geo )  
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+  , LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceDesktop ( s_PRIMARY ) , geo )  
+{}
 // ============================================================================
 /*  the constructor,
  *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
@@ -583,10 +537,7 @@ LoKi::Particles::MinImpParChi2DV::MinImpParChi2DV
   const std::string&            geo  ) 
   : LoKi::AuxFunBase    ( std::tie ( cuts , geo ) ) 
   , LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceDesktop ( cuts  ) , geo )  
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+{}
 // ============================================================================
 /*  the  constructor,
  *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
@@ -600,10 +551,7 @@ LoKi::Particles::MinImpParChi2DV::MinImpParChi2DV
   const LoKi::PhysTypes::VCuts& cuts ) 
   : LoKi::AuxFunBase    ( std::tie ( geo , cuts ) ) 
   , LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceDesktop ( cuts  ) , geo )  
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+{}
 // ============================================================================
 // MANDATORY: the clone method ("virtual constructor")
 // ============================================================================
@@ -629,13 +577,9 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
 ( const std::string& path   , 
   const std::string& geo    ) 
   : LoKi::AuxFunBase    ( std::tie ( path , geo ) ) 
-  , LoKi::Particles::MinImpParChi2WithSource 
-    ( LoKi::Vertices::SourceTES ( path , s_PRIMARY ) , geo )  
+  , LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , s_PRIMARY ) , geo )  
   , m_path ( 1 , path ) 
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+{}
 // ============================================================================
 /* the constructor,
  *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
@@ -649,13 +593,9 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
 ( const std::vector<std::string>& path   , 
   const std::string&              geo    ) 
   : LoKi::AuxFunBase    ( std::tie ( path , geo ) ) 
-  , LoKi::Particles::MinImpParChi2WithSource 
-    ( LoKi::Vertices::SourceTES ( path , s_PRIMARY ) , geo )  
+  , LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , s_PRIMARY ) , geo )  
   , m_path ( path ) 
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+{}
 // ============================================================================
 /*  the constructor,
  *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
@@ -670,13 +610,9 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
   const std::string&            path , 
   const std::string&            geo  ) 
   : LoKi::AuxFunBase    ( std::tie ( cuts , path , geo ) ) 
-  , LoKi::Particles::MinImpParChi2WithSource
-    ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
+  , LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
   , m_path ( 1 , path ) 
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+{}
 // ============================================================================
 /*  the constructor,
  *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
@@ -691,13 +627,9 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
   const std::vector<std::string>& path , 
   const std::string&              geo  ) 
   : LoKi::AuxFunBase    ( std::tie ( cuts , path , geo ) ) 
-  , LoKi::Particles::MinImpParChi2WithSource
-    ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
+  , LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
   , m_path ( path ) 
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+{}
 // ============================================================================
 /*  the constructor,
  *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
@@ -712,13 +644,9 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
   const LoKi::PhysTypes::VCuts& cuts , 
   const std::string&            geo  ) 
   : LoKi::AuxFunBase    ( std::tie ( path , cuts , geo ) ) 
-  , LoKi::Particles::MinImpParChi2WithSource 
-    ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
+  , LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
   , m_path ( 1 , path ) 
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+{}
 // ============================================================================
 /*  the constructor,
  *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
@@ -732,13 +660,9 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
   const LoKi::PhysTypes::VCuts&   cuts , 
   const std::string&              geo  )  
   : LoKi::AuxFunBase    ( std::tie ( path , cuts , geo ) ) 
-  , LoKi::Particles::MinImpParChi2WithSource
-    ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
+  , LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
   , m_path ( path ) 
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+{}
 // ============================================================================
 /*  the constructor,
  *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
@@ -753,13 +677,9 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
   const std::string&            geo  ,
   const LoKi::PhysTypes::VCuts& cuts ) 
   : LoKi::AuxFunBase    ( std::tie ( path , geo , cuts ) ) 
-  , LoKi::Particles::MinImpParChi2WithSource 
-    ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
+  , LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
   , m_path ( 1 , path ) 
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+{}
 // ============================================================================
 /*  the constructor,
  *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
@@ -773,13 +693,9 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
   const std::string&              geo  , 
   const LoKi::PhysTypes::VCuts&   cuts )
   : LoKi::AuxFunBase    ( std::tie ( path , geo , cuts ) ) 
-  , LoKi::Particles::MinImpParChi2WithSource 
-    ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
+  , LoKi::Particles::MinImpParChi2WithSource ( LoKi::Vertices::SourceTES ( path , cuts ) , geo )  
   , m_path ( path ) 
-{
-  if ( 0 == tool() && gaudi() )
-  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
-}
+{}
 // ============================================================================
 // MANDATORY: the clone method ("virtual constructor")
 // ============================================================================
@@ -798,8 +714,7 @@ std::ostream& LoKi::Particles::MinImpParChi2TES::fillStream
 // the default constructor 
 // ============================================================================
 LoKi::Particles::VertexDistanceDV::VertexDistanceDV ()
-  : LoKi::AuxFunBase() 
-  , LoKi::AuxDesktopBase ()
+  : LoKi::AuxDesktopBase ()
   , LoKi::Particles::VertexDistance ( s_VERTEX ) 
 {}
 // ============================================================================
@@ -946,8 +861,8 @@ LoKi::Particles::LifeTimeDV::LifeTimeDV( const double chi2 )
   , m_fit ( s_LIFETIME         )
 {
   // check the tool 
-  if ( 0 == tool() && gaudi() ) 
-  { setTool ( LoKi::GetTools::lifetimeFitter ( *this , fitter() ) ) ; }
+  // if ( 0 == tool() && gaudi() ) 
+  // { setTool ( LoKi::GetTools::lifetimeFitter ( *this , fitter() ) ) ; }
 }
 // ============================================================================
 // constructor 
@@ -961,8 +876,8 @@ LoKi::Particles::LifeTimeDV::LifeTimeDV
   , m_fit ( fit  ) 
 {
   // check the tool 
-  if ( 0 == tool() && gaudi() ) 
-  { setTool ( LoKi::GetTools::lifetimeFitter ( *this , fitter() ) ) ; }
+  // if ( 0 == tool() && gaudi() ) 
+  // { setTool ( LoKi::GetTools::lifetimeFitter ( *this , fitter() ) ) ; }
 }
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")

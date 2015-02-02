@@ -65,7 +65,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-16
      */
-    const LoKi::Particles::CosineDirectionAngleWithTheBestPV          BPVDIRA ;
+    // const LoKi::Particles::CosineDirectionAngleWithTheBestPV          BPVDIRA ;
     // ========================================================================
     /** @var BESTPVCOSPF
      *  The special "context-dependent" version of DIRA functor.
@@ -95,7 +95,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-16
      */    
-    const LoKi::Particles::CosineDirectionAngleWithTheBestPV      BESTPVCOSPF ;
+    // const LoKi::Particles::CosineDirectionAngleWithTheBestPV      BESTPVCOSPF ;
     // ========================================================================
     /** @typedef BPVIP 
      *  The special "context-dependent" version of LoKi::Particles::ImpPar functor
@@ -694,7 +694,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-24        
      */
-    const LoKi::Particles::VertexDistanceDV                             BPVVD ;
+    // const LoKi::Particles::VertexDistanceDV                             BPVVD ;
     // ========================================================================
     /** @var BESTPVVERTSEP
      *  The special "context-dependent" version of LoKi::Particles::VertexDistance 
@@ -727,7 +727,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-24        
      */
-    const LoKi::Particles::VertexDistanceDV                     BESTPVVERTSEP ;
+    // const LoKi::Particles::VertexDistanceDV                     BESTPVVERTSEP ;
     // ========================================================================
     /** @var BPVVDSIGN 
      *  The special "context-dependent" version 
@@ -759,7 +759,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-24        
      */
-    const LoKi::Particles::VertexSignedDistanceDV                   BPVVDSIGN ;
+    // const LoKi::Particles::VertexSignedDistanceDV                   BPVVDSIGN ;
     // ========================================================================
     /** @var BESTPVVERTSEPSIGN 
      *  The special "context-dependent" version 
@@ -793,7 +793,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-24        
      */
-    const LoKi::Particles::VertexSignedDistanceDV          BESTPVVERTSEPSIGN ;
+    // const LoKi::Particles::VertexSignedDistanceDV          BESTPVVERTSEPSIGN ;
     // ========================================================================
     /** @var BPVVDDOT
      *  The special "context-dependent" version 
@@ -825,7 +825,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-24        
      */
-    const LoKi::Particles::VertexDotDistanceDV                       BPVVDDOT ;
+    // const LoKi::Particles::VertexDotDistanceDV                       BPVVDDOT ;
     // ========================================================================
     /** @var BESTPVVERTSEPALONGMOM 
      *  The special "context-dependent" version 
@@ -859,7 +859,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-24        
      */
-    const LoKi::Particles::VertexDotDistanceDV          BESTPVVERTSEPALONGMOM ;
+    // const LoKi::Particles::VertexDotDistanceDV          BESTPVVERTSEPALONGMOM ;
     // ========================================================================
     /** @var BPVVDCHI2
      *  The special "context-dependent" version 
@@ -891,7 +891,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-24        
      */
-    const LoKi::Particles::VertexChi2DistanceDV                     BPVVDCHI2 ;
+    // const LoKi::Particles::VertexChi2DistanceDV                     BPVVDCHI2 ;
     // ========================================================================
     /** @var BESTPVVERTSEPCHI2 
      *  The special "context-dependent" version 
@@ -925,7 +925,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-24        
      */
-    const LoKi::Particles::VertexChi2DistanceDV              BESTPVVERTSEPCHI2 ;
+    // const LoKi::Particles::VertexChi2DistanceDV              BESTPVVERTSEPCHI2 ;
     // ========================================================================
     /** @typedef BPVLTIME
      *  The special "context-dependent" version of 
@@ -1090,7 +1090,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-03-29
      */
-    const LoKi::Particles::VertexZDistanceWithTheBestPV                BPVVDZ ;
+    // const LoKi::Particles::VertexZDistanceWithTheBestPV                BPVVDZ ;
     // ========================================================================
     /** @var BPVVDRHO
      *
@@ -1119,7 +1119,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-03-29
      */
-    const LoKi::Particles::VertexRhoDistanceWithTheBestPV           BPVVDRHO  ;
+    // const LoKi::Particles::VertexRhoDistanceWithTheBestPV           BPVVDRHO  ;
     // ========================================================================
     /** @var BPVVDR
      *
@@ -1148,7 +1148,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-03-29
      */
-    const LoKi::Particles::VertexRhoDistanceWithTheBestPV             BPVVDR ;
+    // const LoKi::Particles::VertexRhoDistanceWithTheBestPV             BPVVDR ;
     // ========================================================================
     /** @typedef MINVDSOURCE 
      *  The simlpe functor which  evaluates the minimal distance 
@@ -1342,7 +1342,7 @@ namespace LoKi
      *  @author patrick spradlin
      *  @date   10 March 2009
      */
-    const LoKi::Particles::TrgPointingScoreWithBestPV  BPVTRGPOINTING ;
+    // const LoKi::Particles::TrgPointingScoreWithBestPV  BPVTRGPOINTING ;
     // ========================================================================
     /** @typedef BPV 
      *  Adaptor to "best-primary-vertex"

@@ -314,7 +314,6 @@ namespace LoKi
      *  @see IDistanceCalculator::pathDistance 
      *  @see LoKi::Particles::ImpPar::path 
      *  @see LoKi::Cuts::BPVPATHDIST
-     *  @see LoKi::Cuts::BPVPATHDIST_
      *  @see LoKi::Cuts::PATHDIST
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-10-23
@@ -640,21 +639,6 @@ namespace LoKi
      */
     typedef LoKi::Particles::ProjectedDistanceSignificance             PROJDS ;
     // ========================================================================
-    /** @var BPVPATHDIST
-     *  Functor which uses the best primary vertex from the
-     *  PhysDesktop to calculate the decay length significance.
-     *
-     *  @see LoKi::Particles::PathDistanceWithBestPV 
-     *  @see LoKi::Particles::PathDistance 
-     *  @see IDistanceCalculator::pathDistance 
-     *  @see LoKi::Particles::ImpPar::path
-     *  @see LoKi::Cuts::PATHDIST
-     *  @see LoKi::Cuts::BPVPATHDIST_
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2010-10-23
-     */
-    const LoKi::Particles::PathDistanceWithBestPV                 BPVPATHDIST ;
-    // ========================================================================
     /** @typedef BPVPATHDIST_
      *  Functor which uses the best primary vertex from the
      *  PhysDesktop to calculate the decay length significance.
@@ -669,22 +653,9 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2010-10-23
      */
-    typedef LoKi::Particles::PathDistanceWithBestPV              BPVPATHDIST_ ;
+    typedef LoKi::Particles::PathDistanceWithBestPV              BPVPATHDIST ;
     // ========================================================================
-    /** @var BPVPATHDISTCHI2 
-     *  Functor which uses the best primary vertex from the
-     *  PhysDesktop to calculate the decay length significance.
-     *
-     *  @see LoKi::Particles::PathDistanceChi2WithBestPV 
-     *  @see LoKi::Particles::PathDistanceChi2 
-     *  @see IDistanceCalculator::pathDistance 
-     *  @see LoKi::Particles::ImpPar::path
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2010-10-23
-     */
-    const LoKi::Particles::PathDistanceChi2WithBestPV         BPVPATHDISTCHI2 ;
-    // ========================================================================
-    /** @typedef BPVPATHDISTCHI2_
+    /** @typedef BPVPATHDISTCHI2
      *  Functor which uses the best primary vertex from the
      *  PhysDesktop to calculate the decay length significance.
      *
@@ -697,22 +668,9 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2010-10-23
      */
-    typedef LoKi::Particles::PathDistanceChi2WithBestPV      BPVPATHDISTCHI2_ ;
+    typedef LoKi::Particles::PathDistanceChi2WithBestPV      BPVPATHDISTCHI2 ;
     // ========================================================================
-    /** @var BPVPDS 
-     *  Functor which uses the best primary vertex from the
-     *  PhysDesktop to calculate the decay length significance.
-     *
-     *  @see LoKi::Particles::PathDistanceSiginficanceWithBestPV 
-     *  @see LoKi::Particles::PathDistanceSignificance 
-     *  @see IDistanceCalculator::pathDistance 
-     *  @see LoKi::Particles::ImpPar::path
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2010-10-23
-     */
-    const LoKi::Particles::PathDistanceSignificanceWithBestPV          BPVPDS ;
-    // ========================================================================
-    /** @typedef BPVPDS_
+    /** @typedef BPVPDS 
      *  Functor which uses the best primary vertex from the
      *  PhysDesktop to calculate the decay length significance.
      *
@@ -725,18 +683,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2010-10-23
      */
-    typedef LoKi::Particles::PathDistanceSignificanceWithBestPV       BPVPDS_ ;
-    // ========================================================================
-    /** @var BPVPROJDIST
-     *  Functor which uses the best primary vertex from the
-     *  PhysDesktop to calculate the projected disatnce 
-     *
-     *  @see LoKi::Particles::ProjectedDistanceWithBestPV
-     *  @see IDistanceCalculator::projectedDistance 
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2010-10-23
-     */
-    const LoKi::Particles::ProjectedDistanceWithBestPV            BPVPROJDIST ;
+    typedef LoKi::Particles::PathDistanceSignificanceWithBestPV        BPVPDS ;
     // ========================================================================
     /** @typedef BPVPROJDIST_ 
      *  Functor which uses the best primary vertex from the
@@ -747,20 +694,9 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2010-10-23
      */
-    typedef LoKi::Particles::ProjectedDistanceWithBestPV         BPVPROJDIST_ ;
+    typedef LoKi::Particles::ProjectedDistanceWithBestPV         BPVPROJDIST  ;
     // ========================================================================
-    /** @var BPVPROJDS
-     *  Functor which uses the best primary vertex from the
-     *  PhysDesktop to calculate the sigibnficance of projected distance 
-     *
-     *  @see LoKi::Particles::ProjectedDistanceSignificanceWithBestPV
-     *  @see IDistanceCalculator::projectedDistance 
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2010-10-23
-     */
-    const LoKi::Particles::ProjectedDistanceSignificanceWithBestPV BPVPROJDS ;
-    // ========================================================================
-    /** @typedef BPVPROJDS_ 
+    /** @typedef BPVPROJDS
      *  Functor which uses the best primary vertex from the
      *  PhysDesktop to calculate the significance of projected distance 
      *
@@ -769,7 +705,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2010-10-23
      */
-    typedef LoKi::Particles::ProjectedDistanceSignificanceWithBestPV BPVPROJDS_ ;
+    typedef LoKi::Particles::ProjectedDistanceSignificanceWithBestPV BPVPROJDS ;
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================
