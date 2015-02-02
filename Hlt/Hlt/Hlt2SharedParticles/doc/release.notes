@@ -5,6 +5,9 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-02-02 - Michael Kolpin
+ - Moved probe track reconstruction from TagAndProbeParticles to Hlt2ProbeTracking
+
 !========================= Hlt2SharedParticles v7r3 2014-12-15 =========================
 
 ! 2014-12-15 - Michael Kolpin
