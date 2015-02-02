@@ -366,10 +366,10 @@ namespace LoKi
       /// helper method to sdave many lines:
       template <class TYPE1,class TYPE2>
       inline StatusCode _get 
-      ( const std::string& pycode  , 
-        TYPE1*&            local   , 
-        TYPE2&             output  , 
-        const std::string& context ) ;
+      ( const std::string&                                            pycode  , 
+        LoKi::Functor<TYPE1,TYPE2>*&                                  local   , 
+        typename LoKi::Assignable<LoKi::Functor<TYPE1,TYPE2> >::Type& output  ,
+        const std::string&                                            context ) ;
       // ======================================================================
     protected:
       // ======================================================================
@@ -413,26 +413,35 @@ namespace LoKi
 template <class TYPE1,class TYPE2>
 inline StatusCode 
 LoKi::Hybrid::MCTool::_get 
-( const std::string& pycode  , 
-  TYPE1*&            local   , 
-  TYPE2&             output  , 
-  const std::string& context ) 
+( const std::string&                                            pycode  , 
+  LoKi::Functor<TYPE1,TYPE2>*&                                  local   , 
+  typename LoKi::Assignable<LoKi::Functor<TYPE1,TYPE2> >::Type& output  ,
+  const std::string&                                            context ) 
 {
   // prepare the actual python code 
   std::string code = makeCode  
     ( m_modules , m_actor , pycode , m_lines , context ) ;
   // define and lock the scope:
-  LoKi::Hybrid::MCLock lock ( this ) ;      // ATTENTION: the scope is locked!!
-  // clear the placeholder:
-  if ( 0 != local ) { delete local ; local = 0 ; }
-  // execute the code 
-  StatusCode sc = executeCode ( code ) ;
-  if ( sc.isFailure() ) 
-  { return Error ( "Error from LoKi::Hybrid::Base::executeCode"      ) ; } // RETURN 
-  if ( 0 == local     ) 
-  { return Error ( "Invaid object for the code '"+pycode+"'" ) ; } // RETURN 
-  // assign the result 
-  output = *local ;                                                // ASSIGN
+  LoKi::Hybrid::MCLock lock ( this ) ;      // ATTENTION: the scope is locked!!  
+  //
+  // move it into base class ???
+  //
+  // // clear the placeholder:
+  // if ( 0 != local ) { delete local ; local = 0 ; }
+  // // execute the code 
+  // sc = executeCode ( code ) ;
+  // if ( sc.isFailure() ) 
+  // { return Error ( "Error from LoKi::Hybrid::Base::executeCode"      ) ; } // RETURN 
+  // if ( 0 == local     ) 
+  // { return Error ( "Invalid object for the code '" + pycode + "'"    ) ; } // RETURN 
+  // // assign the result 
+  // output = *local ;                                                        // ASSIGN
+  //
+  //
+  // use the base class method 
+  StatusCode sc = LoKi::Hybrid::Base::_get_ ( code , local , output ) ;
+  if ( sc.isFailure() )
+  { return Error ( "Invalid object for the code '" + pycode + "'"    ) ; } // RETURN
   //
   return StatusCode::SUCCESS ;
 }

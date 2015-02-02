@@ -25,8 +25,10 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   namespace Hybrid 
   {
+    // ========================================================================
     /** @class MCParticleSelector 
      *  
      *  The first (test) attempt to develop a "hybrid"
@@ -50,9 +52,12 @@ namespace LoKi
       : public            GaudiTool
       , virtual public IMCParticleSelector
     {
+      // ======================================================================
       // friend factory for instantiation 
       friend class ToolFactory<LoKi::Hybrid::MCParticleSelector> ;
+      // ======================================================================
     public:
+      // ======================================================================
       /// initialization of the tool 
       virtual StatusCode initialize () ;
       /// select
@@ -61,7 +66,9 @@ namespace LoKi
       /// Test if filter is satisfied (functor interface)
       virtual bool operator()  ( const LHCb::MCParticle* p ) const 
       { return m_mccut.fun ( p ) ; }
+      // ======================================================================
     protected:
+      // ======================================================================
       /// Standard constructor
       MCParticleSelector 
       ( const std::string& type, 
@@ -80,22 +87,29 @@ namespace LoKi
       } ;
       /// destructor : virtual and protected
       virtual ~MCParticleSelector( ){}
+      // ======================================================================
     private:
+      // ======================================================================
       /// the default constructor is disabled 
       MCParticleSelector() ;
       /// the copy constructor is disabled 
       MCParticleSelector           ( const MCParticleSelector& ) ;
       /// the assignement operator is disabled
       MCParticleSelector& operator=( const MCParticleSelector& ) ;
+      // ======================================================================
     private:
+      // ======================================================================
       // selection criteria itself 
       LoKi::Types::MCCut m_mccut ; ///< selection criteria itself
       // python pseudo-code
       std::string       m_code    ; ///< python pseudo-code
       // factory type/name
       std::string       m_factory ; ///< factory type/name
+      // ======================================================================
     } ;
+    // ========================================================================
   } // end of namespace LoKi::Hybrid
+  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
 // Declaration of the Tool Factory
