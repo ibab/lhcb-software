@@ -3,6 +3,10 @@
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-----------------------------------------------------------------------------
 
+! 2015-02-02 - Julien Cogan
+ - Remove unnecessary test on the presence of the RawEvent at a fix location
+   which was preventing to run the emulator on dst
+
 !========================= L0Muon v9r13 2014-02-17 =========================
 ! 2014-02-13 - Rob Lambert
  - Adapt all L0 decoder tools to Decoder base classes, task #49078

@@ -282,10 +282,10 @@ StatusCode L0MuonAlg::execute()
     sc = setProperty("RootInTES",rootInTes);
     if( sc.isFailure() ) return Error( "Unable to set RootInTES property of L0MuonAlg",StatusCode::SUCCESS,50);
 
-    if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) {
-      Warning("RawEvent not found; RootInTES is "+rootInTes,StatusCode::SUCCESS,50).ignore();
-      continue;
-    }
+    // if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) {
+    //   Warning("RawEvent not found; RootInTES is "+rootInTes,StatusCode::SUCCESS,50).ignore();
+    //   continue;
+    // }
 
     // Set rootInTES to point to the current TimeSlot
     sc = m_outputTool->setProperty( "RootInTES", rootInTES() );
