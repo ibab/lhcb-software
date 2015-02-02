@@ -7,6 +7,9 @@
 ! 2015-02-02 Lucia Grillo
 - getting the drift time residual distribution for each station from the EOR 
 files (monitoring from Brunel: OTTrackMonitor)
+- variable double globalt0_threshold default value = 0.1 (ns), otherwise 
+to be specified. If |global_t0| > globalt0_threshold => xml file with the new
+condition is writte.
 
 ! 2015-01-30 Lucia Grillo
 - Flag to do only global t0 calibration; global t0 wrote in the xml format

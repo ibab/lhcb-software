@@ -120,6 +120,11 @@ public:
    */
   bool read_global_t0_from_db;
 
+  /*
+   * if the |global t0| exceedes this threshold, we want to update the global t0 condition
+   */
+  double globalt0_threshold;
+
   TH1D* hdt0;
   TH1D* ht0;
   TH1D* hdt0proj;

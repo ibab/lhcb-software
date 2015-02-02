@@ -71,8 +71,11 @@ OTt0OnlineClbr::OTt0OnlineClbr( const std::string& name, ISvcLocator* pSvcLocato
   //declareProperty("Fit_module_2D", fit_module_2d = false, " Fit 2d histogram time residual versus modulen)"); //will be an option, now we do anyhow
   declareProperty("GetMean_instead_of_Fit", getmean_instead_of_fit = false, "GetMean instead of fit the distributions ");
 
+  //Current OT decision: run online the global t0 calibration ONLY and update when needed that constant ONLY
   declareProperty("Calibrate_only_GlobalT0", calibrate_only_globalt0 = true, "Calculates only the new Global t0 - NO per Module ");
   declareProperty("read_global_t0_from_db", read_global_t0_from_db = true, "Reads Global t0 from db. at the moment is an option beacuse of implementation ");
+
+  declareProperty("globalt0_threshold", globalt0_threshold = 0.1, "if the global t0 exceedes this threshold, we want to update it");
 
   //  declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/group/online/alignment/" );                               
   // declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/afs/cern.ch/user/l/lgrillo/databases_for_online" );   
@@ -225,6 +228,7 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
 	}   
     }
   */
+
   // Open Saveset
   //TFile *f = new TFile(m_mergedRun.second.c_str(),"READ");
 
@@ -538,8 +542,13 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
     }
   }
    
-  write_Globalt0_XML(global_t0);
-  
+  if((global_t0 > globalt0_threshold)||(global_t0 < (globalt0_threshold)*(-1.0))){
+    write_Globalt0_XML(global_t0);
+    debug() << "WRITING global t0 xml. global t0 = "<< global_t0 << "global t0 threshold = " << globalt0_threshold <<endmsg; 
+  }
+  else
+    debug() << "NOT writing global t0 xml. global t0 = "<< global_t0 << "global t0 threshold = " << globalt0_threshold <<endmsg; 
+
   //outFile->Flush();
   outFile->Close();
   
