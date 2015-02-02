@@ -135,6 +135,7 @@ public:
 
   std::string m_InputFileName;
   std::string m_InputFileName_2d;
+  std::string m_InputFilePath;
 
   //TF1* m_myFunc;                                                                                                                                             
   StatusCode writeCondXMLs(double t0s[3][4][4][9]);

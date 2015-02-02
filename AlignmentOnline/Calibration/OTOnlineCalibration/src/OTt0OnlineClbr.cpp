@@ -82,6 +82,7 @@ OTt0OnlineClbr::OTt0OnlineClbr( const std::string& name, ISvcLocator* pSvcLocato
   //inputs
   declareProperty("InputFileName"   ,  m_InputFileName  = "clbr_hists_109.root" );
   declareProperty("InputFileName_2d"   ,  m_InputFileName_2d  = "histog_2d_109.root" );
+  declareProperty("InputFilePath"   ,  m_InputFilePath  = "/afs/cern.ch/work/l/lgrillo/OT_CALIBRATION_files/" );
 
   /*
   declareProperty("EoRSignal" ,  m_EoRSignal = "-EOR" ); // End of Run Signal 
@@ -228,10 +229,10 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
   //TFile *f = new TFile(m_mergedRun.second.c_str(),"READ");
 
   //TFile* f = new TFile("clbr_hists.root");
-  TFile* f = new TFile((m_InputFileName).c_str());
+  TFile* f = new TFile((m_InputFilePath + m_InputFileName).c_str());
 
   //TFile* f_2d = new TFile("histog_2d.root") 
-  TFile* f_2d = new TFile((m_InputFileName_2d).c_str());
+  TFile* f_2d = new TFile((m_InputFilePath + m_InputFileName_2d).c_str());
 
   TFile * outFile = new TFile("calibration_monitoring.root", "RECREATE");
 
@@ -252,80 +253,86 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
      //std::pair<unsigned int, double> HpdOcc;
 
 
-     //Global t0 from a single distribution
-     
-     std::string histName_s1 = "OTModuleClbrMon/" + stationNames[0] + "/driftTimeResidual";
-     std::string histName_s2 = "OTModuleClbrMon/" + stationNames[1] + "/driftTimeResidual";
-     std::string histName_s3 = "OTModuleClbrMon/" + stationNames[2] + "/driftTimeResidual";
+     //Global t0 from a single distribution, at the moment it is got from the 3 stations
 
-     TH1D* hist_s1 = (TH1D*)f->Get(histName_s1.c_str());
-     TH1D* hist_s2 = (TH1D*)f->Get(histName_s2.c_str());
-     TH1D* hist_s3 = (TH1D*)f->Get(histName_s3.c_str());
+      //if the file is coming from a offline Brunel job
+      //std::string histName_s1 = "OTModuleClbrMon/" + stationNames[0] + "/driftTimeResidual";
+      //std::string histName_s2 = "OTModuleClbrMon/" + stationNames[1] + "/driftTimeResidual";
+      //std::string histName_s3 = "OTModuleClbrMon/" + stationNames[2] + "/driftTimeResidual";
 
-     TH1D* hist_global = (TH1D*)hist_s1->Clone();
-     hist_global->Reset("ICES");
-     hist_global->Add(hist_s1, hist_s2, 1.0, 1.0);
-     hist_global->Add(hist_s3, 1.0);
+      //if the file is the standard output of the monitoring
+      std::string histName_s1 = "OT/OTTrackMonitor/station1/drifttimeresidualgood";
+      std::string histName_s2 = "OT/OTTrackMonitor/station2/drifttimeresidualgood";
+      std::string histName_s3 = "OT/OTTrackMonitor/station3/drifttimeresidualgood";
+      
+      TH1D* hist_s1 = (TH1D*)f->Get(histName_s1.c_str());
+      TH1D* hist_s2 = (TH1D*)f->Get(histName_s2.c_str());
+      TH1D* hist_s3 = (TH1D*)f->Get(histName_s3.c_str());
+      
+      TH1D* hist_global = (TH1D*)hist_s1->Clone();
+      hist_global->Reset("ICES");
+      hist_global->Add(hist_s1, hist_s2, 1.0, 1.0);
+      hist_global->Add(hist_s3, 1.0);
+      
+      double residual_global = 0.0;
+      double residual_global_err = 0.0;
 
-     double residual_global = 0.0;
-     double residual_global_err = 0.0;
-
-     if(getmean_instead_of_fit){
-       residual_global = hist_global->GetMean();
-       residual_global_err = hist_global->GetMeanError();
-     }
-     else{
+      if(getmean_instead_of_fit){
+	residual_global = hist_global->GetMean();
+	residual_global_err = hist_global->GetMeanError();
+      }
+      else{
        StatusCode sc_global_t0 = fit_single_hist(hist_global, -1, -1, -1, -1, residual_global, residual_global_err, "hist_global", outFile);
-     }
-
-     global_t0 = read_global_t0 + residual_global;
- 
-     debug() << " GLOBAL t0 : " << global_t0 << endmsg;   
-     debug() << " GLOBAL dt0 : " << residual_global  << endmsg;   
-     debug() << " GLOBAL dt0_err : " << residual_global_err << endmsg;   
-
-
-     if(!calibrate_only_globalt0){
-  
-       //Module t0 from 2d histogram
-       TH2D* twod_residual = (TH2D*)f_2d->Get("twod_residual");
+      }
+      
+      global_t0 = read_global_t0 + residual_global;
+      
+      debug() << " GLOBAL t0 : " << global_t0 << endmsg;   
+      debug() << " GLOBAL dt0 : " << residual_global  << endmsg;   
+      debug() << " GLOBAL dt0_err : " << residual_global_err << endmsg;   
+     
+      
+      if(!calibrate_only_globalt0){
+	
+	//Module t0 from 2d histogram
+	TH2D* twod_residual = (TH2D*)f_2d->Get("twod_residual");
+	
+	twod_residual->FitSlicesY();
+	
+	TH1D *twod_residual_1 = (TH1D*)gDirectory->Get("twod_residual_1");
+	TH1D *twod_residual_2 = (TH1D*)gDirectory->Get("twod_residual_2");
+	
+	double average = 0.0;
+	for(int i = 0 ; i<  twod_residual_1->GetNbinsX();i++){
+	  average += twod_residual_1->GetBinContent(i);
+	}
        
-       twod_residual->FitSlicesY();
+	average = average/twod_residual_1->GetNbinsX();
+	
+	double average_sigma = 0.0;
+	for(int i = 0 ; i<  twod_residual_2->GetNbinsX();i++){
+	  average_sigma += twod_residual_2->GetBinContent(i);
+	}
+	
+	average_sigma = average_sigma/twod_residual_2->GetNbinsX();
+	
+	//TF1* f1 = new TF1("f1", "gaus", (average-2.0*average_sigma),(average+2.0*average_sigma));
+	TF1* f1 = new TF1("f1", "gaus", -4.0, 4.0);
+	
+	TObjArray aSlices;
+	twod_residual->FitSlicesY(f1, 0, -1, 0,"QNR", &aSlices);
+	
+	TH1D *twod_residual_refit_1 = (TH1D*)gDirectory->Get("twod_residual_1");
+	
+	TH1D* hdt0proj_from2d = new TH1D("hdt0proj_from2d", "", 100, -10, 10);
+	for(int i = 0; i < 432; i++) if(twod_residual_refit_1->GetBinContent(i+1) != 0) hdt0proj_from2d->Fill(twod_residual_refit_1->GetBinContent(i+1));
        
-       TH1D *twod_residual_1 = (TH1D*)gDirectory->Get("twod_residual_1");
-       TH1D *twod_residual_2 = (TH1D*)gDirectory->Get("twod_residual_2");
-       
-       double average = 0.0;
-       for(int i = 0 ; i<  twod_residual_1->GetNbinsX();i++){
-	 average += twod_residual_1->GetBinContent(i);
-       }
-       
-       average = average/twod_residual_1->GetNbinsX();
-       
-       double average_sigma = 0.0;
-       for(int i = 0 ; i<  twod_residual_2->GetNbinsX();i++){
-	 average_sigma += twod_residual_2->GetBinContent(i);
-       }
-       
-       average_sigma = average_sigma/twod_residual_2->GetNbinsX();
-       
-       //TF1* f1 = new TF1("f1", "gaus", (average-2.0*average_sigma),(average+2.0*average_sigma));
-       TF1* f1 = new TF1("f1", "gaus", -4.0, 4.0);
-       
-       TObjArray aSlices;
-       twod_residual->FitSlicesY(f1, 0, -1, 0,"QNR", &aSlices);
-       
-       TH1D *twod_residual_refit_1 = (TH1D*)gDirectory->Get("twod_residual_1");
-       
-       TH1D* hdt0proj_from2d = new TH1D("hdt0proj_from2d", "", 100, -10, 10);
-       for(int i = 0; i < 432; i++) if(twod_residual_refit_1->GetBinContent(i+1) != 0) hdt0proj_from2d->Fill(twod_residual_refit_1->GetBinContent(i+1));
-       
-       debug()<< "n modules "<< twod_residual_1->GetNbinsX() << " average t0 "<< average << endmsg;
-       
-       outFile->cd();
-       twod_residual->Write();
-       twod_residual_1->Write();
-       hdt0proj_from2d->Write();
+	debug()<< "n modules "<< twod_residual_1->GetNbinsX() << " average t0 "<< average << endmsg;
+	
+	outFile->cd();
+	twod_residual->Write();
+	twod_residual_1->Write();
+	hdt0proj_from2d->Write();
        
        
        //Loop over the station layer quarter module

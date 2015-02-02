@@ -17,6 +17,7 @@ myFiles1 = [ "clbr_hists_109.root" ]
 
 OTt0OnlineClbrAlg.InputFiles  = myFiles1
 
+OTt0OnlineClbrAlg.InputFilePath = "/afs/cern.ch/work/l/lgrillo/OT_CALIBRATION_files/"
 #OTt0OnlineClbrAlg.InputFileName  = "data_test1_1000ev_sanityNEWCODE_hists.root"
 #OTt0OnlineClbrAlg.InputFileName  = "data_test1_1000ev_sanityOLDCODE_hists.root"
 OTt0OnlineClbrAlg.InputFileName  = "clbr_hists_109.root"
