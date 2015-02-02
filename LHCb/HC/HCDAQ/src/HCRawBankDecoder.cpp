@@ -326,7 +326,12 @@ bool HCRawBankDecoder::decodeV3(LHCb::RawBank* bank) {
         const unsigned int station = channel % 8;
         const unsigned int quadrant = (channel - station) / 8; 
         LHCb::HCCellID cell(0, station, quadrant);
-        m_l0digits->insert(new LHCb::HCDigit(adc), cell);
+        // Make sure there isn't already an object ID.
+        if (m_l0digits->object(cell)) {
+          warning() << "Duplicated cell ID " << cell << endmsg;
+        } else {
+          m_l0digits->insert(new LHCb::HCDigit(adc), cell);
+        }
         offset += 8;
         --lenTrig;
       }
@@ -353,7 +358,11 @@ bool HCRawBankDecoder::decodeV3(LHCb::RawBank* bank) {
       const unsigned int station = channel % 8;
       const unsigned int quadrant = (channel - station) / 8; 
       LHCb::HCCellID cell(0, station, quadrant);
-      m_digits->insert(new LHCb::HCDigit(adc), cell);
+      if (m_digits->object(cell)) {
+        warning() << "Duplicated cell ID " << cell << endmsg;
+      } else {
+        m_digits->insert(new LHCb::HCDigit(adc), cell);
+      }
       if (UNLIKELY(msgLevel(MSG::VERBOSE))) {
         verbose() << format("Channel: %06u ", channel) 
                   << format("ADC: %06i", adc) << endmsg;
