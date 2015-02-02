@@ -76,8 +76,8 @@ namespace LoKi
        *  @param z the x-position of primary vertex 
        */
       PtFlight ( const double x , 
-                                 const double y , 
-                                 const double z ) ;
+                 const double y , 
+                 const double z ) ;
       /// MANDATORY: virtual desctructor 
       virtual ~PtFlight() ;
       /// MANDATORY: clone method ("virtual constructor")

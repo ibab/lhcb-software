@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2015-02-02 - Vanya Belyaev
+ - solve the issuw with late initiazalition 
+
 ! 2015-01-29 - Vanya Belyaev
  - few more steps towards autogeneration of C++ code from functors 
 

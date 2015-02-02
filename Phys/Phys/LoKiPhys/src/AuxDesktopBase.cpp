@@ -31,7 +31,9 @@ namespace
 LoKi::AuxDesktopBase::AuxDesktopBase ()
   : LoKi::AuxFunBase () 
   , m_desktop ( s_IDVAlgorithm ) 
-{}
+{
+  if ( !m_desktop && gaudi() ) { loadDesktop() ; }
+}
 // ============================================================================
 // constructor from the desktop 
 // ============================================================================
@@ -39,7 +41,9 @@ LoKi::AuxDesktopBase::AuxDesktopBase
 ( const IDVAlgorithm* desktop ) 
   : LoKi::AuxFunBase () 
   , m_desktop ( desktop ) 
-{}
+{
+  if ( !m_desktop && gaudi() ) { loadDesktop() ; }
+}
 // ============================================================================
 // constructor from the desktop
 // ============================================================================
@@ -47,7 +51,9 @@ LoKi::AuxDesktopBase::AuxDesktopBase
 ( const LoKi::Interface<IDVAlgorithm>& desktop ) 
   : LoKi::AuxFunBase () 
   , m_desktop ( desktop ) 
-{}
+{
+  if (  !m_desktop && gaudi() ) { loadDesktop() ; }
+}
 // =============================================================================
 // copy constructor 
 // =============================================================================

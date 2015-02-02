@@ -43,7 +43,8 @@ namespace
 // ============================================================================
 LoKi::Vertices::MinVertexDistanceWithSource::MinVertexDistanceWithSource 
 ( const LoKi::Vertices::MinVertexDistanceWithSource::_Source& source )
-  : LoKi::Vertices::MinVertexDistance ( s_EMPTY ) 
+  : LoKi::AuxFunBase ( std::tie ( source ) ) 
+  , LoKi::Vertices::MinVertexDistance ( s_EMPTY ) 
   , m_source ( source  ) 
 {}
 // ============================================================================
@@ -97,7 +98,9 @@ std::ostream& LoKi::Vertices::MinVertexDistanceWithSource::fillStream
 // the default constructor 
 // ============================================================================
 LoKi::Vertices::MinVertexDistanceDV::MinVertexDistanceDV()
-  : LoKi::Vertices::MinVertexDistanceWithSource ( LoKi::Vertices::SourceDesktop ( s_PRIMARY ) ) 
+  : LoKi::AuxFunBase () 
+  , LoKi::Vertices::MinVertexDistanceWithSource 
+    ( LoKi::Vertices::SourceDesktop ( s_PRIMARY ) ) 
   , m_cut ( s_PRIMARY )
 {}
 // ============================================================================
@@ -105,7 +108,8 @@ LoKi::Vertices::MinVertexDistanceDV::MinVertexDistanceDV()
 // ============================================================================
 LoKi::Vertices::MinVertexDistanceDV::MinVertexDistanceDV 
 ( const LoKi::PhysTypes::VCuts& cut ) 
-  : LoKi::Vertices::MinVertexDistanceWithSource ( LoKi::Vertices::SourceDesktop ( cut ) ) 
+  : LoKi::AuxFunBase ( std::tie ( cut ) ) 
+  , LoKi::Vertices::MinVertexDistanceWithSource ( LoKi::Vertices::SourceDesktop ( cut ) ) 
   , m_cut ( cut  )
 {}
 // ============================================================================
@@ -137,7 +141,9 @@ LoKi::Vertices::MinVertexDistanceTES::MinVertexDistanceTES
 // ============================================================================
 LoKi::Vertices::MinVertexDistanceTES::MinVertexDistanceTES
 ( const std::vector<std::string>& path )
-  : LoKi::Vertices::MinVertexDistanceWithSource ( LoKi::Vertices::SourceTES ( path , s_PRIMARY )  ) 
+  : LoKi::AuxFunBase ( std::tie ( path ) ) 
+  , LoKi::Vertices::MinVertexDistanceWithSource
+    ( LoKi::Vertices::SourceTES ( path , s_PRIMARY )  ) 
   , m_cut  ( s_PRIMARY ) 
   , m_path (     path  ) 
 {}
@@ -147,7 +153,8 @@ LoKi::Vertices::MinVertexDistanceTES::MinVertexDistanceTES
 LoKi::Vertices::MinVertexDistanceTES::MinVertexDistanceTES
 ( const std::string&            path , 
   const LoKi::PhysTypes::VCuts& cut  )
-  : LoKi::Vertices::MinVertexDistanceWithSource ( LoKi::Vertices::SourceTES ( path , cut )  ) 
+  : LoKi::AuxFunBase ( std::tie ( path , cut ) ) 
+  , LoKi::Vertices::MinVertexDistanceWithSource ( LoKi::Vertices::SourceTES ( path , cut )  ) 
   , m_cut  ( cut       ) 
   , m_path ( 1 , path  ) 
 {}
@@ -157,7 +164,8 @@ LoKi::Vertices::MinVertexDistanceTES::MinVertexDistanceTES
 LoKi::Vertices::MinVertexDistanceTES::MinVertexDistanceTES
 ( const std::vector<std::string>& path ,
   const LoKi::PhysTypes::VCuts&   cut  )
-  : LoKi::Vertices::MinVertexDistanceWithSource ( LoKi::Vertices::SourceTES ( path , cut )  ) 
+  : LoKi::AuxFunBase ( std::tie ( path , cut ) ) 
+  , LoKi::Vertices::MinVertexDistanceWithSource ( LoKi::Vertices::SourceTES ( path , cut )  ) 
   , m_cut  ( cut   ) 
   , m_path ( path  ) 
 {}
@@ -167,7 +175,8 @@ LoKi::Vertices::MinVertexDistanceTES::MinVertexDistanceTES
 LoKi::Vertices::MinVertexDistanceTES::MinVertexDistanceTES
 ( const LoKi::PhysTypes::VCuts& cut  ,
   const std::string&            path ) 
-  : LoKi::Vertices::MinVertexDistanceWithSource ( LoKi::Vertices::SourceTES ( path , cut )  ) 
+  : LoKi::AuxFunBase ( std::tie ( cut , path ) ) 
+  , LoKi::Vertices::MinVertexDistanceWithSource ( LoKi::Vertices::SourceTES ( path , cut )  ) 
   , m_cut  ( cut       ) 
   , m_path ( 1 , path  ) 
 {}
@@ -177,7 +186,8 @@ LoKi::Vertices::MinVertexDistanceTES::MinVertexDistanceTES
 LoKi::Vertices::MinVertexDistanceTES::MinVertexDistanceTES
 ( const LoKi::PhysTypes::VCuts&   cut  , 
   const std::vector<std::string>& path )
-  : LoKi::Vertices::MinVertexDistanceWithSource ( LoKi::Vertices::SourceTES ( path , cut )  ) 
+  : LoKi::AuxFunBase ( std::tie ( cut , path ) ) 
+  , LoKi::Vertices::MinVertexDistanceWithSource ( LoKi::Vertices::SourceTES ( path , cut )  ) 
   , m_cut  ( cut   ) 
   , m_path ( path  ) 
 {}
@@ -209,7 +219,8 @@ LoKi::Vertices::MinVertexDistanceTES::fillStream
 // ============================================================================
 LoKi::Vertices::MinVertexChi2DistanceWithSource::MinVertexChi2DistanceWithSource 
 ( const LoKi::Vertices::MinVertexChi2DistanceWithSource::_Source& source )
-  : LoKi::Vertices::MinVertexChi2Distance ( s_EMPTY ) 
+  : LoKi::AuxFunBase ( std::tie ( source ) ) 
+  , LoKi::Vertices::MinVertexChi2Distance ( s_EMPTY ) 
   , m_source ( source  ) 
 {}
 // ============================================================================
@@ -262,7 +273,9 @@ std::ostream& LoKi::Vertices::MinVertexChi2DistanceWithSource::fillStream
 // the default constructor 
 // ============================================================================
 LoKi::Vertices::MinVertexChi2DistanceDV::MinVertexChi2DistanceDV()
-  : LoKi::Vertices::MinVertexChi2DistanceWithSource ( LoKi::Vertices::SourceDesktop ( s_PRIMARY ) ) 
+  : LoKi::AuxFunBase ()
+  , LoKi::Vertices::MinVertexChi2DistanceWithSource 
+    ( LoKi::Vertices::SourceDesktop ( s_PRIMARY ) ) 
   , m_cut ( s_PRIMARY )
 {}
 // ============================================================================
@@ -270,7 +283,8 @@ LoKi::Vertices::MinVertexChi2DistanceDV::MinVertexChi2DistanceDV()
 // ============================================================================
 LoKi::Vertices::MinVertexChi2DistanceDV::MinVertexChi2DistanceDV 
 ( const LoKi::PhysTypes::VCuts& cut ) 
-  : LoKi::Vertices::MinVertexChi2DistanceWithSource ( LoKi::Vertices::SourceDesktop ( cut ) ) 
+  : LoKi::AuxFunBase ( std::tie ( cut ) )
+  , LoKi::Vertices::MinVertexChi2DistanceWithSource ( LoKi::Vertices::SourceDesktop ( cut ) ) 
   , m_cut ( cut  )
 {}
 // ============================================================================
@@ -295,7 +309,9 @@ LoKi::Vertices::MinVertexChi2DistanceDV::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Vertices::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
 ( const std::string& path )
-  : LoKi::Vertices::MinVertexChi2DistanceWithSource ( LoKi::Vertices::SourceTES ( path , s_PRIMARY )  ) 
+  : LoKi::AuxFunBase ( std::tie ( path ) )
+  , LoKi::Vertices::MinVertexChi2DistanceWithSource 
+    ( LoKi::Vertices::SourceTES ( path , s_PRIMARY )  ) 
   , m_cut  ( s_PRIMARY ) 
   , m_path ( 1 , path  ) 
 {}
@@ -304,7 +320,9 @@ LoKi::Vertices::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
 // ============================================================================
 LoKi::Vertices::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
 ( const std::vector<std::string>& path )
-  : LoKi::Vertices::MinVertexChi2DistanceWithSource ( LoKi::Vertices::SourceTES ( path , s_PRIMARY )  ) 
+  : LoKi::AuxFunBase ( std::tie ( path ) )
+  , LoKi::Vertices::MinVertexChi2DistanceWithSource 
+    ( LoKi::Vertices::SourceTES ( path , s_PRIMARY )  ) 
   , m_cut  ( s_PRIMARY ) 
   , m_path (     path  ) 
 {}
@@ -314,7 +332,9 @@ LoKi::Vertices::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
 LoKi::Vertices::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
 ( const std::string&            path , 
   const LoKi::PhysTypes::VCuts& cut  )
-  : LoKi::Vertices::MinVertexChi2DistanceWithSource ( LoKi::Vertices::SourceTES ( path , cut )  ) 
+  : LoKi::AuxFunBase ( std::tie ( path , cut ) )
+  , LoKi::Vertices::MinVertexChi2DistanceWithSource 
+    ( LoKi::Vertices::SourceTES ( path , cut )  ) 
   , m_cut  ( cut       ) 
   , m_path ( 1 , path  ) 
 {}
@@ -324,7 +344,9 @@ LoKi::Vertices::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
 LoKi::Vertices::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
 ( const std::vector<std::string>& path ,
   const LoKi::PhysTypes::VCuts&   cut  )
-  : LoKi::Vertices::MinVertexChi2DistanceWithSource ( LoKi::Vertices::SourceTES ( path , cut )  ) 
+  : LoKi::AuxFunBase ( std::tie ( path , cut ) )
+  , LoKi::Vertices::MinVertexChi2DistanceWithSource
+    ( LoKi::Vertices::SourceTES ( path , cut )  ) 
   , m_cut  ( cut   ) 
   , m_path ( path  ) 
 {}
@@ -334,7 +356,9 @@ LoKi::Vertices::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
 LoKi::Vertices::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
 ( const LoKi::PhysTypes::VCuts& cut  ,
   const std::string&            path ) 
-  : LoKi::Vertices::MinVertexChi2DistanceWithSource ( LoKi::Vertices::SourceTES ( path , cut )  ) 
+  : LoKi::AuxFunBase ( std::tie ( cut , path ) )
+  , LoKi::Vertices::MinVertexChi2DistanceWithSource
+    ( LoKi::Vertices::SourceTES ( path , cut )  ) 
   , m_cut  ( cut       ) 
   , m_path ( 1 , path  ) 
 {}
@@ -344,7 +368,9 @@ LoKi::Vertices::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
 LoKi::Vertices::MinVertexChi2DistanceTES::MinVertexChi2DistanceTES
 ( const LoKi::PhysTypes::VCuts&   cut  , 
   const std::vector<std::string>& path )
-  : LoKi::Vertices::MinVertexChi2DistanceWithSource ( LoKi::Vertices::SourceTES ( path , cut )  ) 
+  : LoKi::AuxFunBase ( std::tie ( cut , path ) )
+  , LoKi::Vertices::MinVertexChi2DistanceWithSource 
+    ( LoKi::Vertices::SourceTES ( path , cut )  ) 
   , m_cut  ( cut   ) 
   , m_path ( path  ) 
 {}
