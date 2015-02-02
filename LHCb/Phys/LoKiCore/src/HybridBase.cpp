@@ -157,6 +157,7 @@ StatusCode LoKi::Hybrid::Base::initialize ()
 // ============================================================================
 StatusCode LoKi::Hybrid::Base::finalize  ()
 {
+  //
   // finalize python (if the owner)
   if ( Py_IsInitialized() && m_pyInit )
   {
@@ -179,7 +180,8 @@ StatusCode LoKi::Hybrid::Base::finalize  ()
     Py_Finalize () ;
   }
   //
-  if ( Py_IsInitialized() ) { Warning ( "Python is still initialized!" ) ; }
+  if ( Py_IsInitialized() && m_pyInit ) { Warning ( "Python is still initialized!" ) ; }
+  //
   // Write C++ code 
   //
   if ( m_makeCpp ) { writeCpp () ; }
