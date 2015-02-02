@@ -4,6 +4,11 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-02-02 - Michael Kolpin
+ - Added Hlt2ProbeTracking.py. Moved probe track reconstruction from Hlt2SharedParticles.TagAndProbeParticles
+   there. Structured in a similar manner as Hlt2Tracking.py to allow for simple integration.
+ - Added "FullSeeding" to Hlt1TrackNames.py, needed for FullDownstream tracking
+
 ! 2015-01-29 - Sascha Stahl
  - Work on integrating the Hlt1 reconstruction in Hlt2. Either use decoded tracks
    or rerun reconstruction. VetoObjects are used such that algorithms do not run
