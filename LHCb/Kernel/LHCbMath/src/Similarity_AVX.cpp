@@ -7,6 +7,15 @@
 
 namespace {
 
+struct avx_guard {
+    // see Agner Fog's optimization guide, 12.1 about mixing AVX and non-AVX code,
+    // (http://www.agner.org/optimize/optimizing_cpp.pdf)
+    // and preserving the YMM register state.
+    // Invoking __mm256_zeroupper seems to reduce the overhead when switching.
+    avx_guard()  { _mm256_zeroupper(); }
+    ~avx_guard() { _mm256_zeroupper(); }
+};
+
 inline double dot5_avx(__m256d f0, double f1, __m256d  r0,  double r1) {
     auto t = r0*f0;
     t = _mm256_hadd_pd( t, t ); 
@@ -72,11 +81,14 @@ namespace Math {
 namespace avx {
 
     void similarity_5_1(const double* Ci, const double* Fi, double* Ti)  {
+      avx_guard guard{};
+
       avx_5_t m { Ci };
       *Ti= dot5_avx(Fi,m.c0i(Fi), m.c4i(Fi));
     }
 
     void similarity_5_5(const double* Ci, const double* Fi, double* Ti)  {
+      avx_guard guard{};
 
       // reshuffle the symmetric, lower diagonal, row-major Ci matrix for SIMD use...
       avx_5_t m { Ci };
@@ -108,6 +120,7 @@ namespace avx {
     }
 
     void similarity_5_7(const double* Ci, const double* Fi, double* Ti)  {
+      avx_guard guard{};
 
       // reshuffle the 5x5 symmetric Ci matrix for SIMD use...
       avx_5_t  m { Ci };
@@ -162,6 +175,7 @@ namespace avx {
                   const double* X2, const double* C2,
                   double* X, double* C ) 
     {
+          avx_guard guard{};
           // compute the inverse of the covariance (i.e. weight) of the difference: R=(C1+C2)
           static Gaudi::SymMatrix5x5 invRM;
           auto invR = invRM.Array();
@@ -251,6 +265,8 @@ namespace avx {
                    const double* Xref, const double* H,
                    double refResidual, double errorMeas2 )
     {
+          avx_guard guard{};
+
           auto  res = refResidual + dot5_avx(H,_mm256_loadu_pd(Xref)-_mm256_loadu_pd(X),Xref[4] - X[4]);
           avx_5_t c(C);
           auto cht0 = c.c0i(H);
