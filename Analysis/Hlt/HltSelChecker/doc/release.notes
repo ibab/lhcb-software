@@ -4,6 +4,10 @@
 ! Purpose     : Checking and debugging of Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-02-03 - Eduardo Rodrigues
+ - Replaced Gaudi's ParticlePropertySvc with LHCb::ParticlePropertySvc,
+   see https://its.cern.ch/jira/browse/LHCBPS-1070.
+
 !========================= HltSelChecker v12r3 2015-01-16 =========================
 
  - Added python/HltSelChecker/__init__.py to please CMake
