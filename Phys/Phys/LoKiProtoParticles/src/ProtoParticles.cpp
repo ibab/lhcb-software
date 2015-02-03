@@ -1523,13 +1523,38 @@ LoKi::ProtoParticles::TrackFun::fillStream ( std::ostream& o ) const
   return o << " ) " ;  
 }
 // ============================================================================
-
+namespace 
+{
+  // Unknown = -1,   ///< Unknown particle type
+  // Electron,       ///< Represents e+ or e-
+  // Muon,           ///< Represents mu+ or mu-
+  // Pion,           ///< Represents pi+ or pi-
+  // Kaon,           ///< Represents K+ or K-
+  // Proton,         ///< Represents Pr+ or Pr-
+  // BelowThreshold  ///< Particle type is below threshold
+  inline 
+  std::string rich_type ( Rich::ParticleIDType p ) 
+  {
+    switch  ( p ) 
+    {
+    case Rich::Unknown        : return "Rich::Unknown"  ;
+    case Rich::Electron       : return "Rich::Electron" ;
+    case Rich::Muon           : return "Rich::Muon"     ;
+    case Rich::Pion           : return "Rich::Pion"     ;
+    case Rich::Kaon           : return "Rich::Kaon"     ;
+    case Rich::Proton         : return "Rich::Proton"         ;
+    case Rich::BelowThreshold : return "Rich::BelowThreshold" ;
+    default: break ;
+    }
+    return Gaudi::Utils::toCpp ( p ) ;
+  }
+}
 // ============================================================================
 // constructor form the particle type 
 // ============================================================================
 LoKi::ProtoParticles::RichAboveThres::RichAboveThres 
 ( Rich::ParticleIDType particle ) 
-  : LoKi::AuxFunBase ( std::tie ( particle ) ) 
+  : LoKi::AuxFunBase ( std::make_tuple( LoKi::StrKeep( rich_type ( particle ) ) ) ) 
   , LoKi::ProtoParticles::HasRich2Gas () 
   , m_particle ( particle ) 
 {}

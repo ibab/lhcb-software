@@ -6,6 +6,9 @@
 ! Purpose     : New package to deal with ProtoParticles 
 ! -----------------------------------------------------------------------------
 
+! 2015-02-03 - Vanya Belyaev
+ -  few more steps towards autogeneration of C++ code from functors 
+
 ! 2015-01-26 - Vanya Belyaev
  - fix CMakeLists.txt
 
