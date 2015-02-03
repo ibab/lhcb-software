@@ -4,6 +4,12 @@
 ! Purpose     : OT online calibration
 !-----------------------------------------------------------------------------
 
+! 2015-02-03 Lucia Grillo
+- added boost v* in the requirements. 
+- when a new global t0 has to be written a folder v(n_existing+1) is created 
+and inside a structure as in the db is created:
+/Conditions/OT/Calibration/CalibrationGlobal.xml
+
 ! 2015-02-02 Lucia Grillo
 - getting the drift time residual distribution for each station from the EOR 
 files (monitoring from Brunel: OTTrackMonitor)

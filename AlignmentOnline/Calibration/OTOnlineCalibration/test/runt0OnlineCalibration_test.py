@@ -28,6 +28,10 @@ OTt0OnlineClbrAlg.InputFileName_2d  = "histog_2d_109.root"
 #OTt0OnlineClbrAlg.xmlFilePath = "/tmp/fdettori/"
 OTt0OnlineClbrAlg.xmlFilePath = "/tmp/lgrillo/"
 
+#OTt0OnlineClbrAlg.CondStructure = ""
+#line below should be the default in the db. its default in the analysistask
+OTt0OnlineClbrAlg.CondStructure = "Conditions/OT/Calibration/" 
+
 OTt0OnlineClbrAlg.globalt0_threshold = 0.1
 
 OTt0OnlineClbrAlg.OutputLevel = 2

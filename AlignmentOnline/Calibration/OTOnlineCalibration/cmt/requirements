@@ -20,6 +20,7 @@ use TrackEvent        v*    Event
 use ROOT              v*    LCG_Interfaces -no_auto_imports
 use TrackFitEvent     v*    Tr
 use OMAlib            v*    Online
+use Boost	      v*    LCG_Interfaces -no_auto_imports
 
 include_path      none
 #============================================================================
@@ -37,3 +38,7 @@ macro_append ROOT_linkopts " -lHist -lTree -lMatrix -lGraf -lMinuit"
 # python modules
 #============================================================================
 apply_pattern install_python_modules
+
+private
+macro_append Boost_linkopts " $(Boost_linkopts_system) $(Boost_linkopts_filesystem) "
+end_private

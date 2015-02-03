@@ -80,7 +80,8 @@ OTt0OnlineClbr::OTt0OnlineClbr( const std::string& name, ISvcLocator* pSvcLocato
   //  declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/group/online/alignment/" );                               
   // declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/afs/cern.ch/user/l/lgrillo/databases_for_online" );   
   declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/afs/cern.ch/user/l/lgrillo/databases_for_online/OT/" );
-  declareProperty("xmlFileName"   ,  m_xmlFileName  = "results.xml" );
+  declareProperty("xmlFileName"   ,  m_xmlFileName  = "CalibrationGlobal.xml" );
+  declareProperty("CondStructure"   ,  m_CondStructure  = "Conditions/OT/Calibration/" );
 
   //inputs
   declareProperty("InputFileName"   ,  m_InputFileName  = "clbr_hists_109.root" );
@@ -250,7 +251,7 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
 
   if( false == f->IsZombie() )
       {   
-      unsigned int xmlVersion;
+	//unsigned int xmlVersion;
 
      // To store HPD occupancies
      //std::vector<std::pair<unsigned int, double>> Rich1_OccsVec, Rich2_OccsVec;
@@ -286,7 +287,7 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
 	residual_global_err = hist_global->GetMeanError();
       }
       else{
-       StatusCode sc_global_t0 = fit_single_hist(hist_global, -1, -1, -1, -1, residual_global, residual_global_err, "hist_global", outFile);
+       StatusCode sc_global_t0 = fit_single_hist(hist_global, -1, -1, -1, -1, residual_global, residual_global_err, outFile);
       }
       
       global_t0 = read_global_t0 + residual_global;
@@ -412,7 +413,7 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
 		       double residual_per_module = 0.0;
 		       double residual_per_module_err = 0.0;
 		       
-		       StatusCode t0_per_module = fit_single_hist(hist,s,l,q, m, residual_per_module, residual_per_module_err, histName, outFile);
+		       StatusCode t0_per_module = fit_single_hist(hist,s,l,q, m, residual_per_module, residual_per_module_err, outFile);
 		       
 		       test[s][l][q][m] = residual_per_module;
 		       
@@ -444,10 +445,10 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
 		       residual_23R_err = hist23R->GetMeanError();
 		     }
 		     else{
-		       StatusCode sc_01L = fit_single_hist(hist01L,s,l,q, m, residual_01L, residual_01L_err, histName01L , outFile);
-		       StatusCode sc_01R = fit_single_hist(hist01R,s,l,q, m, residual_01R, residual_01R_err, histName01R , outFile);
-		       StatusCode sc_23L = fit_single_hist(hist23L,s,l,q, m, residual_23L, residual_23L_err, histName23L , outFile);
-		       StatusCode sc_23R = fit_single_hist(hist23R,s,l,q, m, residual_23R, residual_23R_err, histName23R , outFile);
+		       StatusCode sc_01L = fit_single_hist(hist01L,s,l,q, m, residual_01L, residual_01L_err, outFile);
+		       StatusCode sc_01R = fit_single_hist(hist01R,s,l,q, m, residual_01R, residual_01R_err, outFile);
+		       StatusCode sc_23L = fit_single_hist(hist23L,s,l,q, m, residual_23L, residual_23L_err, outFile);
+		       StatusCode sc_23R = fit_single_hist(hist23R,s,l,q, m, residual_23R, residual_23R_err, outFile);
 		     }
 		     
 		     if( m==8 && (q == 0 || q == 2) && hist23L->GetEntries()==0 && hist23R->GetEntries()==0){ //only 2 half monlayer contributions 
@@ -579,7 +580,7 @@ StatusCode OTt0OnlineClbr::readCondDB(double read_t0s[3][4][4][9])
 	    std::vector<double> TZeroVec = myCond->paramAsDoubleVect( "TZero" );
 	    
 	    Module_t0 = 0; // Reset 
-	    for(int i = 0; i<TZeroVec.size();i++){
+	    for(unsigned int i = 0; i<TZeroVec.size();i++){
 	      debug() << "t0 per straw = "<<TZeroVec.at(i)<< endmsg; // for check     
 	      Module_t0 +=TZeroVec.at(i);
 	    }
@@ -886,44 +887,62 @@ StatusCode OTt0OnlineClbr::readCondDB_Globalt0(double& read_t0)
   return StatusCode::SUCCESS;
 }
 
-
+std::string OTt0OnlineClbr::xmldirname(FileVersion v) const
+{
+  return m_xmlFilePath + "/" + "/v"+ std::to_string(v) + "/"+ m_CondStructure;
+}
 
 StatusCode OTt0OnlineClbr::write_Globalt0_XML(double global_t0)
 {
 
-  std::string prefix = "CalibrationModules";
-  boost::filesystem::path full_path(m_xmlFilePath+m_xmlFileName);
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "Writing the GLOBAL t0 XML for online to " << full_path << endmsg ;
+  StatusCode sc = StatusCode::SUCCESS ;
 
   std::ofstream file;
-  //file.open( full_path.string().c_str(), std::ios::app ) ;  // always in append mode  
-  file.open( full_path.string().c_str()) ;  // do we want it in append mode? 
 
-  file << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
-  file << "<!DOCTYPE DDDB SYSTEM \"conddb:/DTD/structure.dtd\">\n";
-  file << "\n";
-  file << "<DDDB>\n";
-  file << "  <condition classID=\"5\" name=\"" << "CalibrationGlobal" << "\">\n";
-  file << "    <param name=\"TZero\" type=\"double\" comment=\"Global t0 of OT\">\n";
-  //file << "      " << 0.001 * (int)(1000.0 * global_t0 + 0.5) << "\n";
-  file << "      " <<  global_t0  << "\n";
-  file << "    </param>\n";
-  file << "  </condition>\n";
-  file << "</DDDB>\n";
+  FileVersion m_version(0);
 
-  // this is how the file should look like
-  //<?xml version="1.0" encoding="ISO-8859-1"?>
-  //<!DOCTYPE DDDB SYSTEM "../../../DTD/structure.dtd">
-  //
-  //<DDDB>
-  //  <condition classID="5" name="CalibrationGlobal">
-  //    <param name="TZero" type="double" comment="Global t0 of OT">
-  //      0.001
-  //    </param>
-  //  </condition>
-  //</DDDB>
-  //
+  FileVersion v = 0;
+
+  while(1) {
+    // check that the directory exists
+    boost::filesystem::path fn(xmldirname(v)) ;
+    if( boost::filesystem::exists(fn) ){
+      debug()<< "Existing directory " << v << endmsg;
+      ++v ;
+    }
+    else break ;
+  }
+  // if( v==0 ) {
+  //   m_version = v ;
+  //   sc = StatusCode::FAILURE ;
+  // } else {
+
+    m_version = v;    
+    boost::filesystem::path xmldir(xmldirname(m_version));
+    //boost::filesystem::create_directory(xmldir);
+    boost::filesystem::create_directories(xmldir);
+
+    boost::filesystem::path full_path(m_xmlFilePath+"v"+ std::to_string(m_version) + "/"+m_CondStructure +m_xmlFileName);
+    //boost::filesystem::path full_path(xmldir+ "/" +m_xmlFileName);
+
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Writing the GLOBAL t0 XML for online to " << full_path << endmsg ;
+
+    //file.open( full_path.string().c_str(), std::ios::app ) ;  // always in append mode  
+    file.open( full_path.string().c_str()) ;  // we don't want it in append mode 
+
+    file << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
+    file << "<!DOCTYPE DDDB SYSTEM \"conddb:/DTD/structure.dtd\">\n";
+    file << "\n";
+    file << "<DDDB>\n";
+    file << "  <condition classID=\"5\" name=\"" << "CalibrationGlobal" << "\">\n";
+    file << "    <param name=\"TZero\" type=\"double\" comment=\"Global t0 of OT\">\n";
+    //file << "      " << 0.001 * (int)(1000.0 * global_t0 + 0.5) << "\n";
+    file << "      " <<  global_t0  << "\n";
+    file << "    </param>\n";
+    file << "  </condition>\n";
+    file << "</DDDB>\n";
+    
+    //  }
 
   file.close();
 
@@ -932,7 +951,7 @@ StatusCode OTt0OnlineClbr::write_Globalt0_XML(double global_t0)
 
 }
 
-StatusCode OTt0OnlineClbr::fit_single_hist(TH1D* hist, int s, int l, int q, int m, double& result, double& result_error, std::string name, TFile* outFile)
+StatusCode OTt0OnlineClbr::fit_single_hist(TH1D* hist, int s, int l, int q, int m, double& result, double& result_error,  TFile* outFile)
 {
   debug() << hist << " " << s << " " << l << " " << q << " "<< m << endmsg;
   
@@ -964,7 +983,6 @@ StatusCode OTt0OnlineClbr::fit_single_hist(TH1D* hist, int s, int l, int q, int 
   
 
   //only to save stuff
-
   if(save_fits){
     outFile->cd();
 

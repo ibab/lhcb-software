@@ -42,6 +42,7 @@ DeOTDetector* detector;
 class OTt0OnlineClbr : public AnalysisTask {
 
 public:
+
   /// Standard constructor
   OTt0OnlineClbr( const std::string& name, ISvcLocator* pSvcLocator );
   
@@ -52,6 +53,9 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
   virtual StatusCode analyze   (std::string& SaveSet,                
 				std::string Task); ///< Algorithm analyze
+
+  typedef int FileVersion ;
+  std::string xmldirname( FileVersion v ) const ;
 
   StatusCode readCondXMLs(double t0s[3][4][4][9], bool TestBeam = false); 
   StatusCode readCondDB(double t0s[3][4][4][9]);
@@ -125,6 +129,8 @@ public:
    */
   double globalt0_threshold;
 
+  FileVersion m_version;
+
   TH1D* hdt0;
   TH1D* ht0;
   TH1D* hdt0proj;
@@ -137,6 +143,7 @@ public:
 
   std::string m_xmlFilePath;
   std::string m_xmlFileName;
+  std::string m_CondStructure;
 
   std::string m_InputFileName;
   std::string m_InputFileName_2d;
@@ -146,7 +153,7 @@ public:
   StatusCode writeCondXMLs(double t0s[3][4][4][9]);
   StatusCode writeCondDBXMLs(double t0s[3][4][4][9]);
   StatusCode write_Globalt0_XML(double global_t0);
-  StatusCode fit_single_hist(TH1D* hist,int s, int l, int q, int m, double& result, double& result_err, std::string name, TFile* outFile);
+  StatusCode fit_single_hist(TH1D* hist,int s, int l, int q, int m, double& result, double& result_err, TFile* outFile);
   
 };
 
