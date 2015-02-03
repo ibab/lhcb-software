@@ -269,6 +269,15 @@ LoKi::Algorithms::Passed::Passed
   if ( gaudi() ) { this->getAlgorithm ( algName() ) ; }
 }
 // ============================================================================
+LoKi::Algorithms::Passed::~Passed () 
+{
+  if ( m_algorithm && !gaudi() ) 
+  {
+    // Warning("IAlgorithm: manual reset!") ;
+    m_algorithm.reset() ;
+  }  
+}
+// ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Algorithms::Passed::result_type 
@@ -398,11 +407,15 @@ LoKi::Algorithms::AnyPassed::getAlgorithm
 // ============================================================================
 void LoKi::Algorithms::AnyPassed::getAlgorithms () const  // get the algorithm 
 {
+  // unsigned int i = 0 ;
   for ( std::vector<std::string>::const_iterator iname = 
           m_names.begin() ; m_names.end() != iname ; ++iname ) 
   {
     const IAlgorithm* a = this->getAlgorithm ( *iname ) ;
     m_algorithms.push_back ( a ) ;
+    // Warning( " AQUICRE alg: " + a->name() 
+    // + Gaudi::Utils::toCpp ( ++i ) + "/"
+    // + Gaudi::Utils::toCpp ( m_names.size() ) ) ;
   }
 }
 // ============================================================================
@@ -470,6 +483,20 @@ LoKi::Algorithms::AnyPassed::AnyPassed
   , m_algorithms ( ) 
 {
   if ( gaudi() ) { getAlgorithms() ; }
+}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Algorithms::AnyPassed::~AnyPassed()
+{
+  for ( Algorithms::iterator ia = m_algorithms.begin() ; m_algorithms.end() != ia ; ++ia ) 
+  {
+    if ( ( *ia )  && !gaudi() ) 
+    {
+      // Warning("IAlgorithm: manual reset!") ;
+      ia->reset() ;
+    }
+  }   
 }
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -591,7 +618,6 @@ LoKi::Algorithms::AllEnabled::AllEnabled
   : LoKi::AuxFunBase ( std::tie ( name ) )
   , LoKi::Algorithms::AnyPassed ( name ) 
 {}
-
 
 // ============================================================================
 // constructor from the algorithm name 

@@ -1796,7 +1796,7 @@ namespace LoKi
       Cause
       ( const LoKi::Functor< void , bool              >& start  , 
         const LoKi::Functor< void , std::vector<TYPE> >& source ) 
-        : LoKi::AuxFunBase ( std::tie ( start , source  ) ) 
+        : LoKi::AuxFunBase ( std::tie ( source , start ) ) 
         , LoKi::Functor< void , std::vector<TYPE> >() 
         , m_start  ( start  ) 
         , m_source ( source ) 

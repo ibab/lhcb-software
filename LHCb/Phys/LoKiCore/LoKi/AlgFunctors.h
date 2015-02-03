@@ -67,7 +67,7 @@ namespace LoKi
       /// constructor from the algorithm name 
       Passed ( const std::string& name ) ;
       /// MANDATORY: virtual destructor 
-      virtual ~Passed () {}
+      virtual ~Passed () ;
       /// MANDATORY: clone method ("virtual constructor")
       virtual  Passed* clone() const { return new Passed ( *this ) ; }
       /// MANDATORY: the only one essential method 
@@ -215,7 +215,7 @@ namespace LoKi
                   const std::string& name4 ) ;
       AnyPassed ( const std::vector<std::string>& name ) ;
       /// MANDATORY: virtual destructor 
-      virtual ~AnyPassed () {}
+      virtual ~AnyPassed () ;
       /// MANDATORY: clone method ("virtual constructor")
       virtual  AnyPassed* clone() const { return new AnyPassed ( *this ) ; }
       /// MANDATORY: the only one essential method 
