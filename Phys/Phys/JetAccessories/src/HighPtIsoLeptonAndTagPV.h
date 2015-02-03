@@ -33,7 +33,6 @@
 #include "MuonDAQ/IMuonRawBuffer.h"
 //To recreate track measurements
 #include "TrackInterfaces/IMeasurementProvider.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
 
 class IDistanceCalculator;
 
@@ -176,7 +175,6 @@ protected:
   std::string  m_transporterName ;
 
   mutable IParticleTransporter* m_transporter;
-  IParticlePropertySvc* m_svcProp;
 
   std::string m_geomToolName ;
   std::string m_typeVertexFit;

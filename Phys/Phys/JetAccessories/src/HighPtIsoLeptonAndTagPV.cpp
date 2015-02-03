@@ -16,7 +16,6 @@
 #include "Kernel/DaVinciAlgorithm.h"
 //#include <Kernel/IGeomDispCalculator.h>
 #include "Kernel/IParticleTransporter.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
 #include "Event/ODIN.h"
 
 // ============================================================================

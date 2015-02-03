@@ -4,6 +4,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2015-02-03 - Eduardo Rodrigues
+ - Cleaned up unnecessary include/code in src/HighPtIsoLeptonAndTagPV.*.
+
 ! 2015-01-19 - Eduardo Rodrigues
  - Added python/JetAccessories/__init__.py to please CMake.
 
