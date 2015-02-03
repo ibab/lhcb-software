@@ -38,6 +38,7 @@ public:
   QComboBox * m_selector2;
   VPlotOps * m_plotOps;
   QWidget * m_statsBox;
+  unsigned int m_moduleNum;
 
 
   // Methods __________________________________________________________________

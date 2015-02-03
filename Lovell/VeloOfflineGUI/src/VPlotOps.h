@@ -37,6 +37,12 @@ public:
             b_moduleSelector2->currentIndex());
     return ss.str();
   }
+
+  unsigned int currentModuleNum() {
+    int val = b_moduleSelector2->count() * b_moduleSelector1->currentIndex() +
+            b_moduleSelector2->currentIndex();
+    return val;
+  }
 };
 
 

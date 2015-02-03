@@ -30,11 +30,11 @@ VPlotOps::VPlotOps(QGroupBox * opsHolder) {
   b_logz->setChecked(false);
   l->addWidget(b_logz, 1, 2, 1, 1);
 
-  b_popout = new QPushButton(QIcon("popoutIcon.png"), "");
+  b_popout = new QPushButton(QIcon("QtAssets/popoutIcon.png"), "");
   l->addWidget(b_popout, 2,0,1,1);
   b_popout->setStyleSheet("background: lightGrey");
 
-  b_ref = new QPushButton(QIcon("refreshIcon.png"), "");
+  b_ref = new QPushButton(QIcon("QtAssets/refreshIcon.png"), "");
   l->addWidget(b_ref, 2,1,1,1);
   b_ref->setStyleSheet("background: lightGrey");
 
@@ -86,11 +86,11 @@ void VPlotOps::newSelection(VPlot * selPlot, bool forceConnect) {
       m_moduleSelector->setEnabled(true);
       connect(b_moduleSelector1, SIGNAL(currentIndexChanged(int)), m_selPlot, SLOT(moduleChanged()));
       connect(b_moduleSelector2, SIGNAL(currentIndexChanged(int)), m_selPlot, SLOT(moduleChanged()));
+      b_moduleSelector1->setCurrentIndex(m_selPlot->m_moduleNum / b_moduleSelector2->count());
+      b_moduleSelector2->setCurrentIndex(m_selPlot->m_moduleNum % b_moduleSelector2->count());
     }
 
     std::cout<<"Selection made"<<std::endl;
-
-
     m_statsBox = selPlot->exportStatsBox();
     m_layout->addWidget(m_statsBox, m_layout->rowCount(), 0, 1, m_layout->columnCount());
   }

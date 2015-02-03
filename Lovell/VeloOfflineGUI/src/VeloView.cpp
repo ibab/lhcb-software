@@ -14,7 +14,8 @@ veloview::veloview(int runMode, QWidget *parent) :
   m_logoText("Default GUI"),
   m_combatFileOpen(false),
   m_keplerFileOpen(false),
-  m_plotOps(NULL)
+  m_plotOps(NULL),
+  m_runProxy(NULL)
 {
 
   QFile stylesheet("styleSheet.qss");
@@ -22,7 +23,7 @@ veloview::veloview(int runMode, QWidget *parent) :
   QString setSheet = QLatin1String(stylesheet.readAll());
   this->setStyleSheet(setSheet);
   ui->setupUi(this);
-  m_VVinterfaceScript = "dummyDataGetter.py";
+  m_VVinterfaceScript = "veloview_configuration.py";
   ui->w_moduleSelector->setEnabled(false);
   loadOptionsFile();
   setOptionsWidg();
@@ -34,7 +35,7 @@ veloview::veloview(int runMode, QWidget *parent) :
 
   ui->l_logo->setText(QString(m_logoText.c_str()));
 
-  //this->setStyleSheet("QWidget{font-size:12px}");
+  this->setStyleSheet("QWidget{font-size:10px}");
   ui->l_logo->setStyleSheet("QWidget{font-size:30px}");
   connect(ui->b_load, SIGNAL(clicked()), this, SLOT(setContent()));  
 
@@ -76,26 +77,37 @@ void veloview::setVeloOptionsWidg() {
   FILE * in;
   char buff[512];
   std::string command;
-  if (m_runMode == 0) command = "" + m_VVinterfaceScript + " run_list";
+  std::cout<<"Retriving run list..."<<std::endl;
+  if (m_runMode == 0) command = "" + m_VVinterfaceScript + " run_list --run-data-dir=/afs/cern.ch/work/a/apearce/public/VetraOutput";
   else command = "dummyDataGetter.py run_list";
+  std::cout<<"Proccessing..."<<std::endl;
   in = popen(command.c_str(), "r");
   while(fgets(buff, sizeof(buff), in)!=NULL) {
     std::string line(buff);
+    line.erase(std::remove(line.begin(), line.end(), '\n'), line.end());
+    std::cout<<"Available runs:\t"<<line<<std::endl;
     runBoxModel->insertRow(runBoxModel->rowCount());
     runBoxModel->setData(runBoxModel->index(runBoxModel->rowCount() - 1, 0),
-                         QString(line.substr(0, line.size()-1).c_str()), Qt::DisplayRole);
+                         QString(line.c_str()), Qt::DisplayRole);
   }
+  std::cout<<"Done."<<std::endl;
+
   b_veloRunNumber = new QComboBox;
-  QSortFilterProxyModel * runProxy = new QSortFilterProxyModel;
-  runProxy->setSourceModel(runBoxModel);
-  b_veloRunNumber->setModel(runProxy);
+  if (m_runProxy != NULL) delete m_runProxy;
+  m_runProxy = new QSortFilterProxyModel;
+  m_runProxy->setSourceModel(runBoxModel);
+  b_veloRunNumber->setModel(m_runProxy);
   b_veloRunNumber->setEditable(true);
   QCompleter * completer = new QCompleter(runBoxModel, this);
   completer->setCaseSensitivity(Qt::CaseInsensitive);
   b_veloRunNumber->setCompleter(completer);
-  connect(b_veloRunNumber, SIGNAL(editTextChanged(QString)), runProxy, SLOT(setFilterWildcard(QString)));
+  connect(b_veloRunNumber, SIGNAL(editTextChanged(QString)), this, SLOT(filterWildcard(QString)));
   l->addWidget(b_veloRunNumber, l->rowCount(), 0, 1, 1);
+}
 
+void veloview::filterWildcard(QString s) {
+	m_runProxy->setFilterWildcard(s.left(s.size()-1));
+}
 
   // Other.
 //  l->addWidget(new QLabel("MultiRun # lower:"), l->rowCount(), 0, 1, 1);
@@ -107,9 +119,7 @@ void veloview::setVeloOptionsWidg() {
 //  b_veloRunNumberUp = new QSpinBox();
 //  b_veloRunNumberUp->setValue(2);
 //  l->addWidget(b_veloRunNumberUp, l->rowCount(), 0, 1, 1);
-}
 
-//_____________________________________________________________________________
 
 void veloview::setKeplerOptionsWidg(){
   delete ui->w_moduleSelector;

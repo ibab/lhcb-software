@@ -27,6 +27,7 @@ public:
     std::vector< std::vector< std::string > > * ops);
   static void findPlots(std::vector<VTabContent*> * allTabs,
     std::vector< std::vector< std::string > > * ops, VPlotOps * plotOps);
+  static void jsonToOps(std::string *, std::vector< std::vector< std::string > > *);
 };
 
 #endif

@@ -24,7 +24,8 @@ VPlot::VPlot(std::string title,
   m_drawn(false),
   m_vcp(NULL),
   m_layout(NULL),
-  m_multipleModules(multipleModules)
+  m_multipleModules(multipleModules),
+  m_moduleNum(0)
 {
   m_title = title;
   m_tab = tab;
@@ -38,8 +39,8 @@ VPlot::VPlot(std::string title,
 void VPlot::draw() {
   setupLayout();
   m_vcp = setupPlot(false);
-  m_vcp->makeSelected();
   m_layout->addWidget(m_vcp, 1, 1, 1, 1);
+  m_vcp->makeSelected();
 }
 
 
@@ -51,8 +52,10 @@ void VPlot::moduleChanged()
   for (unsigned int i=0; i<m_plottables.size(); i++)
     m_plottables[i]->m_gotData = false;
 
+  m_moduleNum = m_plotOps->currentModuleNum();
   getData();
   draw();
+  m_plotOps->newSelection(this, true);
 }
 
 
@@ -146,7 +149,7 @@ QWidget * VPlot::exportStatsBox() {
   lay->setHorizontalSpacing(0);
   QLabel * lab;
   QFont f(font().family(), 12);
-  f.setBold(true);
+  //f.setBold(true);
   QPalette p;
   p.setColor(QPalette::WindowText, Qt::black);
 
@@ -159,7 +162,8 @@ QWidget * VPlot::exportStatsBox() {
      iplottable!= m_plottables.begin() + 1; iplottable++) {
     lab = new QLabel((*iplottable)->m_name.c_str());
     lab->setFont(f);
-    lay->addWidget(lab, lay->rowCount(), 0, 1, 1);
+    lab->setWordWrap(true);
+    lay->addWidget(lab, lay->rowCount(), 0, 2, 2);
     lab->setPalette(p);
 
     for (unsigned int istat = 0; istat < (*iplottable)->m_statsTitles.size(); istat++) {
@@ -193,7 +197,7 @@ void VPlot::addColzPlot(VCustomPlot * vcp, VPlottable * plottable) {
     for (int iy=0; iy<nbinsy; ++iy){
       double x = plottable->m_xs[ix];
       double y = plottable->m_ys[iy];
-      vcp->m_colormap->data()->setCell(ix, iy, plottable->m_zs[iy][ix]);
+      vcp->m_colormap->data()->setCell(ix, iy, plottable->m_zs[ix][iy]);
     }
   }
 

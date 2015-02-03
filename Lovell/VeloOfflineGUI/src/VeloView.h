@@ -35,6 +35,7 @@ public:
   bool m_keplerFileOpen;
   VPlotOps * m_plotOps;
   std::string m_VVinterfaceScript;
+  QSortFilterProxyModel * m_runProxy;
 
   // Methods___________________________________________________________________
   explicit veloview(int, QWidget *parent = 0);
@@ -77,6 +78,7 @@ private slots:
   void moduleChanged();
   void on_b_selector3_clicked();
   void on_b_selector4_clicked();
+  void filterWildcard(QString);
 };
 
 #endif // VELOVIEW_H
