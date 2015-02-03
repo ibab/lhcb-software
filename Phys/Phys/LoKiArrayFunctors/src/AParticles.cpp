@@ -905,7 +905,7 @@ LoKi::AParticles::ChildCut::ChildCut
 LoKi::AParticles::ChildCut::ChildCut
 ( const int                    index ,
   const LoKi::PhysTypes::Cuts& cut   )
-  : LoKi::AuxFunBase ( std::tie  ( index , index ) ) 
+  : LoKi::AuxFunBase ( std::tie  ( index , cut ) ) 
   , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
   , m_cut   ( cut   ) 
   , m_index ( index ) 
