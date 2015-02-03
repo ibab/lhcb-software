@@ -4,6 +4,10 @@
 ! Responsible : Vladimir Gligorov
 !==============================================================================
 
+! 2015-02-03 - Eduardo Rodrigues
+ - Replaced Gaudi's ParticlePropertySvc with LHCb::ParticlePropertySvc,
+   see https://its.cern.ch/jira/browse/LHCBPS-1070.
+
 !========================= DaVinciAssociators v9r5p2 2013-06-13 =========================
 
 ! 2013-05-17 - Chris Jones

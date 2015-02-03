@@ -6,8 +6,8 @@
 // from STL
 #include <string>
 
-// from Gaudi
-#include "GaudiKernel/IParticlePropertySvc.h"
+// from LHCb
+#include "Kernel/IParticlePropertySvc.h"
 
 // local
 #include "Kernel/Particle2MCLinker.h"
@@ -42,7 +42,7 @@ private:
   std::string               m_asctMethod;
   bool                      m_ignorePID;
   // Local variables
-  IParticlePropertySvc*     m_ppSvc;
+  LHCb::IParticlePropertySvc*   m_ppSvc;
   Object2MCLinker<>*            m_p2MCLink;
   Object2MCLinker<>*            m_p2MCComp;
   int                       m_gamma;
