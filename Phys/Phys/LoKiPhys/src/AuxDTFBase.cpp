@@ -221,7 +221,14 @@ unsigned int LoKi::AuxDTFBase::setConstraint
 // ============================================================================
 // virtual destructor 
 // ============================================================================
-LoKi::AuxDTFBase::~AuxDTFBase(){}
+LoKi::AuxDTFBase::~AuxDTFBase()
+{
+  if ( m_fitter && !gaudi() ) 
+  {
+    // Warning("IDecayTreeFit: manual reset") ;
+    m_fitter.reset() ;
+  }  
+}
 // ============================================================================
 // set constraint
 // ============================================================================

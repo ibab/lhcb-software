@@ -81,7 +81,14 @@ LoKi::Particles::Value::Value
 // ============================================================================
 // MANDATORY: virtual destructor
 // ============================================================================
-LoKi::Particles::Value::~Value(){}
+LoKi::Particles::Value::~Value()
+{
+  if ( m_function && !gaudi() ) 
+  {
+    // Warning("IParticleValue: manual reset") ;
+    m_function.reset() ;
+  }
+}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================

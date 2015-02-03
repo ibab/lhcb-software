@@ -157,7 +157,14 @@ LoKi::Particles::SourceTES::SourceTES
 // ============================================================================
 // MANDATORY: virtual destructor 
 // ============================================================================
-LoKi::Particles::SourceTES::~SourceTES(){}
+LoKi::Particles::SourceTES::~SourceTES()
+{
+  if ( m_dataSvc && !gaudi() ) 
+  {
+    // Warning("IDataProviderSvc: manual reset") ;
+    m_dataSvc.reset() ;
+  }
+}
 // ============================================================================
 // MANDATORY: the only essential method:
 // ============================================================================
@@ -375,7 +382,14 @@ LoKi::Particles::SourceDesktop::SourceDesktop
 // ============================================================================
 // MANDATORY: virtual destructor 
 // ============================================================================
-LoKi::Particles::SourceDesktop::~SourceDesktop(){}
+LoKi::Particles::SourceDesktop::~SourceDesktop()
+{
+  if ( m_desktop && !gaudi() ) 
+  {
+    // Warning("IPhysDesktop: manual reset") ;
+    m_desktop.reset () ;
+  }
+}
 // ============================================================================
 // MANDATORY: the only essential method:
 // ============================================================================
@@ -532,7 +546,14 @@ LoKi::Vertices::SourceTES::SourceTES
 // ============================================================================
 // MANDATORY: virtual destructor 
 // ============================================================================
-LoKi::Vertices::SourceTES::~SourceTES(){}
+LoKi::Vertices::SourceTES::~SourceTES()
+{
+  if ( m_dataSvc && !gaudi() ) 
+  {
+    // Warning("IDataProviderSvc: manual reset") ;
+    m_dataSvc.reset() ;
+  }
+}
 // ============================================================================
 // MANDATORY: the only essential method:
 // ============================================================================
@@ -675,7 +696,14 @@ LoKi::Vertices::SourceDesktop::SourceDesktop
 // ============================================================================
 // MANDATORY: virtual destructor 
 // ============================================================================
-LoKi::Vertices::SourceDesktop::~SourceDesktop(){}
+LoKi::Vertices::SourceDesktop::~SourceDesktop()
+{
+  if ( m_desktop && !gaudi() ) 
+  {
+    // Warning("IPhysDesktop: manual reset") ;
+    m_desktop.reset() ;
+  } 
+}
 // ============================================================================
 // MANDATORY: the only essential method:
 // ============================================================================

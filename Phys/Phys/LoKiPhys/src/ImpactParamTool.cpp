@@ -66,9 +66,16 @@ LoKi::Vertices::ImpactParamTool::ImpactParamTool
 // ============================================================================
 //  virtual destructor
 // ============================================================================
-LoKi::Vertices::ImpactParamTool::~ImpactParamTool() {}
+LoKi::Vertices::ImpactParamTool::~ImpactParamTool() 
+{ 
+  if ( m_tool && !gaudi() ) 
+  {
+    // Warning("IDistanceCalculator: manual reset") ;
+    m_tool.reset() ; 
+  } 
+}
 // ============================================================================
-  
+
 // ============================================================================
 // The END 
 // ============================================================================

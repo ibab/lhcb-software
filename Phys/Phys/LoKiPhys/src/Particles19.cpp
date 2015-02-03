@@ -75,6 +75,17 @@ LoKi::Particles::LifeTime::LifeTime
   , m_chi2cut ( chi2 ) 
 {}
 // ============================================================================
+// MANDATORY: virtual destructor
+// ============================================================================
+LoKi::Particles::LifeTime::~LifeTime()
+{
+  if ( m_fitter && !gaudi() ) 
+  {
+    // Warning("ILifetimeFitter: manual reset!") ;
+    m_fitter.reset() ;
+  }
+}
+// ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Particles::LifeTime::result_type

@@ -274,6 +274,17 @@ LoKi::Particles::WrongMass::WrongMass
   decode().ignore () ;
 }
 // ============================================================================
+// MANDATORY : virtual destructor 
+// ============================================================================
+LoKi::Particles::WrongMass::~WrongMass() 
+{
+  if ( m_transporter && !gaudi() )
+  {
+    // Warning("IParticleTRansporter: manual reset") ;
+    m_transporter.reset () ;
+  }
+}
+// ============================================================================
 // decode the masses 
 // ============================================================================
 StatusCode LoKi::Particles::WrongMass::decode () const 

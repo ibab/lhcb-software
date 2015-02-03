@@ -101,8 +101,8 @@ LoKi::Particles::ImpParWithTheBestPV::ImpParWithTheBestPV
   , LoKi::Particles::ImpPar ( s_VERTEX , s_IPTOOL ) 
   , m_geo ( geo )   
 {
-  // if ( 0 == tool() && gaudi() ) 
-  // { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
+  if ( 0 == tool() && gaudi() ) 
+  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo ) ) ; }
 }
 // ============================================================================
 // MANDATORY: the clone method ("virtual constructor")
@@ -861,8 +861,8 @@ LoKi::Particles::LifeTimeDV::LifeTimeDV( const double chi2 )
   , m_fit ( s_LIFETIME         )
 {
   // check the tool 
-  // if ( 0 == tool() && gaudi() ) 
-  // { setTool ( LoKi::GetTools::lifetimeFitter ( *this , fitter() ) ) ; }
+  if ( 0 == tool() && gaudi() ) 
+  { setTool ( LoKi::GetTools::lifetimeFitter ( *this , fitter() ) ) ; }
 }
 // ============================================================================
 // constructor 
@@ -876,8 +876,8 @@ LoKi::Particles::LifeTimeDV::LifeTimeDV
   , m_fit ( fit  ) 
 {
   // check the tool 
-  // if ( 0 == tool() && gaudi() ) 
-  // { setTool ( LoKi::GetTools::lifetimeFitter ( *this , fitter() ) ) ; }
+  if ( 0 == tool() && gaudi() ) 
+  { setTool ( LoKi::GetTools::lifetimeFitter ( *this , fitter() ) ) ; }
 }
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")

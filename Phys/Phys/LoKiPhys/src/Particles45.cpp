@@ -55,12 +55,12 @@ LoKi::Particles::RelatedInfo::RelatedInfo
   , m_bad      ( right.m_bad      ) 
   , m_table    ( 0        ) 
 {}
-LoKi::Particles::RelatedInfo::~RelatedInfo(){}
 //
 LoKi::Particles::RelatedInfo*
 LoKi::Particles::RelatedInfo::clone() const 
 { return new LoKi::Particles::RelatedInfo(*this) ; }
 //
+LoKi::Particles::RelatedInfo::~RelatedInfo(){}
 // MANDATORY: the only one essential method 
 LoKi::Particles::RelatedInfo::result_type 
 LoKi::Particles::RelatedInfo::operator () 

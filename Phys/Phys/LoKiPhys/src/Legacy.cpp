@@ -165,7 +165,14 @@ LoKi::Legacy::DaughterParticleCTau::DaughterParticleCTau
 // ============================================================================
 // MANDATORY: virtual destructor 
 // ============================================================================
-LoKi::Legacy::DaughterParticleCTau::~DaughterParticleCTau(){}
+LoKi::Legacy::DaughterParticleCTau::~DaughterParticleCTau()
+{
+  if ( m_fitter && !gaudi() ) 
+  {
+    // Warning("ILifetimeFitter: manual reset");
+    m_fitter.reset() ;
+  }      
+}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================

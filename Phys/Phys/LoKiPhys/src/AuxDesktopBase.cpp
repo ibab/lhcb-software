@@ -32,7 +32,7 @@ LoKi::AuxDesktopBase::AuxDesktopBase ()
   : LoKi::AuxFunBase () 
   , m_desktop ( s_IDVAlgorithm ) 
 {
-  // if ( !m_desktop && gaudi() ) { loadDesktop() ; }
+  if ( !m_desktop && gaudi() ) { loadDesktop() ; }
 }
 // ============================================================================
 // constructor from the desktop 
@@ -42,7 +42,7 @@ LoKi::AuxDesktopBase::AuxDesktopBase
   : LoKi::AuxFunBase () 
   , m_desktop ( desktop ) 
 {
-  // if ( !m_desktop && gaudi() ) { loadDesktop() ; }
+  if ( !m_desktop && gaudi() ) { loadDesktop() ; }
 }
 // ============================================================================
 // constructor from the desktop
@@ -52,7 +52,7 @@ LoKi::AuxDesktopBase::AuxDesktopBase
   : LoKi::AuxFunBase () 
   , m_desktop ( desktop ) 
 {
-  // if (  !m_desktop && gaudi() ) { loadDesktop() ; }
+  if (  !m_desktop && gaudi() ) { loadDesktop() ; }
 }
 // =============================================================================
 // copy constructor 
@@ -65,7 +65,14 @@ LoKi::AuxDesktopBase::AuxDesktopBase
 // =============================================================================
 // destructor
 // =============================================================================
-LoKi::AuxDesktopBase::~AuxDesktopBase() {}
+LoKi::AuxDesktopBase::~AuxDesktopBase() 
+{
+  if ( m_desktop && !gaudi() ) 
+  {
+    // Warning("IPhysDesktop:        manual reset") ;
+    m_desktop.reset() ; 
+  }
+}
 // =============================================================================
 // load the desktop
 // =============================================================================

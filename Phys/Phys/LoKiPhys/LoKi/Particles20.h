@@ -819,7 +819,7 @@ namespace LoKi
       LifeTimeDV ( const std::string& fit          , 
                    const double       chi2cut = -1 ) ;
       /// MANDATORY: virtual destructor
-      virtual ~LifeTimeDV() {} 
+      virtual ~LifeTimeDV() {} ;
       /// MANDATORY: clone method ("virtual constructor")
       virtual  LifeTimeDV* clone() const ;
       /// MANDATORY: the only one essential method 

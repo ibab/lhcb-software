@@ -53,7 +53,14 @@ LoKi::Particles::TisTosTobDec::TisTosTobDec
 // ============================================================================
 // MANDATORY : virtual destructor 
 // ============================================================================
-LoKi::Particles::TisTosTobDec::~TisTosTobDec (){}
+LoKi::Particles::TisTosTobDec::~TisTosTobDec ()
+{
+  if ( m_tistos && !gaudi() ) 
+  {
+    // Warning("ITriggerTisTos: manual reset") ;
+    m_tistos.reset() ;
+  }
+}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================

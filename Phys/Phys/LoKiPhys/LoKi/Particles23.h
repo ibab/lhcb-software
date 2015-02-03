@@ -116,7 +116,7 @@ namespace LoKi
       //
       // ======================================================================
       /// MANDATORY : virtual destructor 
-      virtual ~WrongMass() {}
+      virtual ~WrongMass() ;
       /// MANDATORY : clone method ("virtual constructor")
       virtual  WrongMass* clone() const { return new WrongMass(*this) ; }
       /// MANDATORY : the only one essential method 

@@ -74,7 +74,7 @@ namespace LoKi
                  const LHCb::VertexBase*                  vertex       ,
                  const double                             chi2cut = -1 ) ;
       /// MANDATORY: virtual destructor 
-      virtual ~LifeTime() {}
+      virtual ~LifeTime() ;
       /// MANDATORY: clone method ("virtual constructor")
       virtual  LifeTime* clone() const { return new LifeTime ( *this ) ; }
       /// MANDATORY: the only one essential method 
