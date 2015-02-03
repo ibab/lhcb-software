@@ -199,7 +199,11 @@ StatusCode LoKi::Hybrid::Base::_get_
   {
     local  = created ; 
     output = *local ;
+    //
     this->counter("# loaded from CACHE" ) += 1 ;
+    //
+    delete local ; local = 0 ;
+    //
     return StatusCode::SUCCESS ;    // RETURN
   } 
   // 
@@ -214,6 +218,8 @@ StatusCode LoKi::Hybrid::Base::_get_
   output = *local ;                                                        // ASSIGN
   //
   this->counter("# loaded from PYTHON") += 1 ;
+  //
+  delete local ; local = 0 ;
   //
   if ( this->m_makeCpp ) 
   {
