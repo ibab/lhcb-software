@@ -4,6 +4,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-02-03 - Vanya Belyaev
+ - Hlt2 also works from cache! 
+
 ! 2015-01-29 - Vanya Belyaev
  - !!! It works !!!
 
