@@ -5,6 +5,11 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2015-02-04 - Pieter David
+ - changed the workarounds for the Kernel/JetEnums dictionary
+   (explicit GaudiPython.loaddict call (for ROOT5) does not work with ROOT6,
+   so try this only if the ROOT6 workaround failed)
+
 !========================= DisplVertices v7r20 2014-12-14 =========================
 
 ! 2014-11-20 - Manuel Tobias Schiller
