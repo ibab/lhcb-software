@@ -113,6 +113,11 @@ LoKi::Hybrid::TrackSelector::TrackSelector
 {
   declareInterface<ITrackSelector> ( this ) ;
   // 
+  if      ( 0 == name.find ( "Hlt1" ) ) 
+  { m_factory = "LoKi::Hybrid::TrackFunctorFactory/Hlt1TrackFunctorFactory:PUBLIC" ; }
+  else if ( 0 == name.find ( "Hlt2" ) ) 
+  { m_factory = "LoKi::Hybrid::TrackFunctorFactory/Hlt2TrackFunctorFactory:PUBLIC" ; }
+  //
   declareProperty 
     ( "Code"    , 
       m_code    , 
