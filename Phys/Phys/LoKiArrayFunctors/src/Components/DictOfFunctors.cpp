@@ -29,7 +29,8 @@
 // ============================================================================
 #include "boost/format.hpp"
 // ============================================================================
-// Local                                                                                                                                  // ============================================================================
+// Local                                                                        
+// ============================================================================
 #include "Preambulo.h"
 // ============================================================================
 namespace LoKi
@@ -38,7 +39,6 @@ namespace LoKi
   namespace Hybrid
   {
     // ========================================================================
-
     /** @class DictOfFunctors DictOfFunctors.h
      *  copies Hybrid::TupleTool functionality to
      *  create a dictionary of LoKi functors
@@ -47,13 +47,16 @@ namespace LoKi
      *  @author Sebastian Neubert
      *  @date   2013-07-08
      */
-
-    class DictOfFunctors : public GaudiTool,
-                           virtual public IParticleDictTool {
+    class DictOfFunctors 
+      :         public GaudiTool
+      , virtual public IParticleDictTool 
+    {
     public:
+      // ======================================================================
       /// friend class factory for instantiation
       friend class ToolFactory<LoKi::Hybrid::DictOfFunctors>;
-
+      // ======================================================================
+    public:
       // ======================================================================
       /** helper class to keep the dictionary items
        *  it is needed due to absence of the default constructor for
@@ -79,7 +82,8 @@ namespace LoKi
       } ;
       // ======================================================================
     public:
-      //typedef GaudiUtils::VectorMap<std::string,double> DICT;
+      // ======================================================================
+      // typedef GaudiUtils::VectorMap<std::string,double> DICT;
       // ======================================================================
       /** Fill the dictionary
        *  @see IParticleDictTool
@@ -88,8 +92,9 @@ namespace LoKi
        *  @param dict the dictionary to fill
        *  @return status code
        */
-      virtual StatusCode  fill ( const LHCb::Particle* p ,
-                                 IParticleDictTool::DICT& dict ) const;
+      virtual StatusCode  fill 
+      ( const LHCb::Particle* p ,
+        IParticleDictTool::DICT& dict ) const;
       // ======================================================================
     public:
       // ======================================================================
@@ -167,7 +172,6 @@ namespace LoKi
       /// the preambulo
       std::string preambulo() const { return _preambulo ( m_preambulo ) ; }
       // ======================================================================
-
     protected:
       // ======================================================================
       DictOfFunctors
@@ -182,17 +186,20 @@ namespace LoKi
       {
         declareInterface<IParticleDictTool> ( this ) ;
         ///
+        if      ( 0 == name.find ( "Hlt1" ) ) 
+        { m_factory =  "LoKi::Hybrid::Tool/Hlt1HybridFactory:PUBLIC" ; }
+        else if ( 0 == name.find ( "Hlt2" ) ) 
+        { m_factory =  "LoKi::Hybrid::Tool/Hlt2HybridFactory:PUBLIC" ; }
+        ///
         declareProperty
           ( "Factory" , m_factory ,
             "Type/Name for C++/Python Hybrid Factory" ) ->
           declareUpdateHandler ( &LoKi::Hybrid::DictOfFunctors::propHandler , this ) ;
-
         //
         declareProperty
           ( "Variables" , m_vars ,
             "The {'name':'functor'}-map defining the dictionary " ) ->
           declareUpdateHandler ( &LoKi::Hybrid::DictOfFunctors::propHandler , this ) ;
-
         // the preambulo
         declareProperty
           ( "Preambulo" ,
@@ -204,6 +211,7 @@ namespace LoKi
       // ======================================================================
       /// virtual & protected destructor
       virtual ~DictOfFunctors() {}
+      // ======================================================================
     private:
       // ======================================================================
       /// the default constructor is disabled
@@ -232,25 +240,28 @@ namespace LoKi
       std::vector<std::string> m_preambulo  ;        //               preambulo
       // ======================================================================
     }; // class MultiTooldictTool
+    // ========================================================================
   } // end namespace Hybrid
+  // ==========================================================================
 } // end namespace LoKi
-
-// ======================================================================
+// ============================================================================
 /** Fill the dictionary
  *  @see IParticleDictTool
  *  @param particle the particle about which some info are filled.
  *  @param dict the dictionary to fill
  *  @return status code
  */
-StatusCode LoKi::Hybrid::DictOfFunctors::fill(const LHCb::Particle* p,
-                                              IParticleDictTool::DICT& dict ) const
+StatusCode LoKi::Hybrid::DictOfFunctors::fill
+( const LHCb::Particle*   p    ,
+  IParticleDictTool::DICT& dict ) const
 {
   if ( 0 == p  ) { Warning ( "LHCb::Particle*       points to NULL" ) ; }
   //
   for ( Items::const_iterator item = m_items.begin();
-        m_items.end() != item ; ++item ) {
+        m_items.end() != item ; ++item ) 
+  {
     // fill dictionary
-    dict.insert(item->m_name,item->m_fun ( p ));
+    dict.insert( item->m_name , item->m_fun ( p ) ) ;
   }// end loop over items
   //
   return StatusCode::SUCCESS ;

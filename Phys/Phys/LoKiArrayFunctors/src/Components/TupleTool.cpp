@@ -180,6 +180,11 @@ namespace LoKi
       {
         declareInterface<IParticleTupleTool> ( this ) ;
         ///
+        if      ( 0 == name.find ( "Hlt1" ) ) 
+        { m_factory = "LoKi::Hybrid::Tool/Hlt1HybridFactory:PUBLIC" ; }
+        else if ( 0 == name.find ( "Hlt2" ) ) 
+        { m_factory = "LoKi::Hybrid::Tool/Hlt2HybridFactory:PUBLIC" ; }
+        //
         declareProperty 
           ( "Factory" , m_factory , 
             "Type/Name for C++/Python Hybrid Factory" ) -> 

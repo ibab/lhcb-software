@@ -1,13 +1,13 @@
+// $Id:$ 
+// ============================================================================
 #include "LoKi/DictTransform.h"
 #include "GaudiKernel/ToolFactory.h"
-//#include "GaudiKernel/MsgStream.h"
-
+// ============================================================================
 #include <iostream>
 #include <boost/foreach.hpp>
-
+// ============================================================================
 typedef std::map<std::string,std::string> optmap;
-
-
+// ============================================================================
 /** @class DummyTransform
  *  Implements a prototype dictionary transform to be used with
  *  DictTransform
@@ -22,16 +22,16 @@ typedef std::map<std::string,std::string> optmap;
  */
 
 
-class DummyTransform {
-
+class DummyTransform 
+{
 private:
-
+  
   bool m_debug;
-
+  
 public:
-
+  
   DummyTransform() : m_debug(false) { }
-
+  
   bool Init(const optmap& options, std::ostream& info, const bool debug = false );
   bool operator()(const IParticleDictTool::DICT& in, IParticleDictTool::DICT& out) const;
 

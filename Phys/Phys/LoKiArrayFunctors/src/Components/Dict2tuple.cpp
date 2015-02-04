@@ -1,74 +1,82 @@
-
+// $Id:$ 
+// ============================================================================
 // Include files
+// ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/VectorMap.h"
-// GaudiAlg                                                                                                                              
+// ============================================================================
+// GaudiAlg
 // ============================================================================ 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/Tuples.h"
 #include "GaudiAlg/TupleObj.h"
 #include "GaudiAlg/GaudiTool.h"
-
+// ============================================================================
 #include "Kernel/IParticleTupleTool.h"            // Interface
 #include "Kernel/IParticleDictTool.h"
-// LoKi                                                                                                                                   // ============================================================================
+// ============================================================================
+// LoKi
+// ============================================================================
 #include "LoKi/PhysTypes.h"
 #include "LoKi/IHybridFactory.h"
-
-
 // ============================================================================     
 namespace LoKi
 {
-  // ==========================================================================                                                                                                      
+  // ==========================================================================
   namespace Hybrid
   {
-
-/** @class Dict2Tuple Dict2Tuple.h Components/Dict2Tuple.h
- *  Writing a Dictionary into the ntuple
- *
- *  @author Sebastian Neubert
- *  @date   2013-07-11
- */
-class Dict2Tuple : public GaudiTool, virtual public IParticleTupleTool {
-public: 
- /// friend class factory for instantiation
-  friend class ToolFactory<LoKi::Hybrid::Dict2Tuple>;
-
-  /// Standard constructor
-  Dict2Tuple( const std::string& type, 
+    // ========================================================================
+    /** @class Dict2Tuple Dict2Tuple.h Components/Dict2Tuple.h
+     *  Writing a Dictionary into the ntuple
+     *
+     *  @author Sebastian Neubert
+     *  @date   2013-07-11
+     */
+    class Dict2Tuple : public GaudiTool, virtual public IParticleTupleTool 
+    {
+    public: 
+      // ======================================================================
+      /// friend class factory for instantiation
+      friend class ToolFactory<LoKi::Hybrid::Dict2Tuple>;
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// Standard constructor
+      Dict2Tuple( const std::string& type, 
                   const std::string& name,
-                  const IInterface* parent) :
-    GaudiTool ( type, name , parent )
-  {
-    declareInterface<IParticleTupleTool>(this);
-
-    ///
-    declareProperty 
-      ( "Source" , m_sourcename , 
-	"Type/Name for Source Dictionary Tool" );
-  }
-
-  virtual ~Dict2Tuple( ){}; ///< Destructor
-
-public:
-  // ======================================================================
-  /** Fill the tuple. 
-   *  @see IParticleTupelTool 
-   *  @param top      the top particle of the decay.
-   *  @param particle the particle about which some info are filled.
-   *  @param head     prefix for the tuple column name.
-   *  @param tuple    the tuple to fill
-   *  @return status code
-   */
-  virtual StatusCode fill
-  ( const LHCb::Particle* top      , 
-    const LHCb::Particle* particle , 
-    const std::string&    head     , 
-    Tuples::Tuple&        tuple    ) ;
-  // ======================================================================
-  
+                  const IInterface* parent ) 
+        : GaudiTool ( type, name , parent )
+        , m_sourcename (   ) 
+        , m_source     ( 0 )
+      {
+        declareInterface<IParticleTupleTool>(this);
+        ///
+        declareProperty 
+          ( "Source"     , 
+            m_sourcename , 
+            "Type/Name for Source Dictionary Tool" );
+      }
+      // ======================================================================
+      virtual ~Dict2Tuple( ){}; ///< Destructor
+      // ======================================================================      
+    public:
+      // ======================================================================
+      /** Fill the tuple. 
+       *  @see IParticleTupelTool 
+       *  @param top      the top particle of the decay.
+       *  @param particle the particle about which some info are filled.
+       *  @param head     prefix for the tuple column name.
+       *  @param tuple    the tuple to fill
+       *  @return status code
+       */
+      virtual StatusCode fill
+      ( const LHCb::Particle* top      , 
+        const LHCb::Particle* particle , 
+        const std::string&    head     , 
+        Tuples::Tuple&        tuple    ) ;
+      // ======================================================================
     public:
       // ======================================================================
       /// initialization of the tool 
@@ -76,34 +84,25 @@ public:
       {
         StatusCode sc = GaudiTool::initialize() ;
         if ( sc.isFailure() ) {  return sc ; }               // RETURN 
-       
-	// get the dicttool
-	m_source = tool<IParticleDictTool>(m_sourcename, this);
-	if(m_source == NULL) return Error("Unable to find the source DictTool " + m_sourcename , sc ) ;
-
-	info() << "Successfully initialized Dict2Tuple" << endmsg;
-
-	return StatusCode::SUCCESS;
-
-
+        
+        // get the dicttool
+        m_source = tool<IParticleDictTool>( m_sourcename, this);
+        if ( m_source == NULL ) 
+        { return Error("Unable to find the source DictTool " + m_sourcename , sc ) ; }
+        //
+        return StatusCode::SUCCESS;
       }
       // ======================================================================
-      /// finalization of the tool 
-      virtual StatusCode finalize () 
-      {
-        return GaudiTool::finalize () ;
-      }
+    private:
       // ======================================================================
-  
-protected:
-
-private:
-  std::string m_sourcename;
-  IParticleDictTool* m_source;
-
-};
-
-
+      std::string m_sourcename;
+      IParticleDictTool* m_source;
+      // ======================================================================      
+    };
+    // ========================================================================
+  }
+  // ==========================================================================
+}
 // ============================================================================
 /*  Fill the tuple. 
  *  @see IParticleTupleTool 
@@ -126,9 +125,9 @@ StatusCode LoKi::Hybrid::Dict2Tuple::fill
   if ( !tuple.valid() ) { return Error ( "Invalid tuple " ) ; } 
   
   // call IParticleDictTool to aquire the dictionary
- /// request the dictionary of variables from the source 
+  /// request the dictionary of variables from the source 
   IParticleDictTool::DICT dict;
-  m_source->fill(particle,dict).ignore();
+  m_source->fill( particle , dict ).ignore();
   
   // prepend the head of the current branch to the variable to make sure
   // columns are uniquely named
@@ -143,9 +142,8 @@ StatusCode LoKi::Hybrid::Dict2Tuple::fill
   //
   return StatusCode::SUCCESS ;
 }
-
-
-  } // end namespace Hybrid
-} // end namespace LoKi
-/// Declaration of the Tool Factory                                                                 
+// ============================================================================
+/// Declaration of the Tool Factory
+// ============================================================================ 
 DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,Dict2Tuple)
+// ============================================================================ 
