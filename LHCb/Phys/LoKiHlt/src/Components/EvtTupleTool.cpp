@@ -273,6 +273,16 @@ LoKi::Hybrid::EvtTupleTool::EvtTupleTool
   // interface
   declareInterface<IEventTupleTool> ( this ) ;
   //
+  if      ( 0 == name.find ( "Hlt1" ) ) 
+  { m_core = "LoKi::Hybrid::CoreFactory/Hlt1CoreFactory:PUBLIC"; }
+  else if ( 0 == name.find ( "Hlt2" ) ) 
+  { m_core = "LoKi::Hybrid::CoreFactory/Hlt1CoreFactory:PUBLIC"; }
+  //
+  if      ( 0 == name.find ( "Hlt1" ) ) 
+  { m_hlt  = "LoKi::Hybrid::HltFactory/Hlt1HltFactory:PUBLIC" ; }
+  else if ( 0 == name.find ( "Hlt2" ) ) 
+  { m_hlt  = "LoKi::Hybrid::HltFactory/Hlt2HltFactory:PUBLIC" ; }
+  //
   declareProperty 
     ( "Preambulo"  , 
       m_preambulo  , 
