@@ -5,6 +5,10 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+! 2015-02-04 - Marco Clemencic
+ - Do not call QMTest tests from CMake builds, because all the tests are already
+   described in the CMakeLists.txt.
+
 !========================= GaudiObjDesc v11r20p1 2015-01-21 =========================
 ! 2015-01-21 - Roel Aaij
  - Add explicit second template argument to KeyedContainer<T,U> instantiations

@@ -26,8 +26,9 @@ gaudi_add_library(GaudiObjDescLib *.cpp
 gaudi_add_unit_test(test_allocatorReleaser ../tests/src/test_allocatorReleaser.cpp
                     LINK_LIBRARIES GaudiObjDescLib)
 
-gaudi_add_test(QMTest QMTEST)
-
 gaudi_add_test(nosetests
-               COMMAND nosetests -v --with-doctest --with-xunit
+               COMMAND nosetests -v --with-doctest
                        ${CMAKE_CURRENT_SOURCE_DIR}/python)
+
+# No need to call QMTest, because all the tests are already described here
+# gaudi_add_test(QMTest QMTEST)
