@@ -84,8 +84,15 @@ namespace LoKi
       //
       StatusCode sc = setProperty ( "Code" , "FNONE" ) ;
       Assert ( sc.isSuccess () , "Unable (re)set property 'Code'"    , sc ) ;
+      //
       sc = setProperty 
-        ( "Factory" , "LoKi::Hybrid::CoreFactory/CoreFactory:PUBLIC" ) ;
+        ( "Factory" , 
+          0 == name.find ( "Hlt1" ) ? 
+          "LoKi::Hybrid::CoreFactory/Hlt1CoreFactory:PUBLIC" :
+          0 == name.find ( "Hlt2" ) ?
+          "LoKi::Hybrid::CoreFactory/Hlt2CoreFactory:PUBLIC" :
+          "LoKi::Hybrid::CoreFactory/CoreFactory:PUBLIC"     ) ;
+      //
       Assert ( sc.isSuccess () , "Unable (re)set property 'Factory'" , sc ) ;
     } 
     /// virtual and protected destructor 
