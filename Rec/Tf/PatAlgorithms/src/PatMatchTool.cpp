@@ -63,7 +63,9 @@ GaudiTool(type, name , parent),
   // -- Use the Velo and Seed tracks in more than one match candidate?
   declareProperty("RejectVeloUsed"      , m_rejectVeloUsed       = true);
   declareProperty("RejectSeedUsed"      , m_rejectSeedUsed       = true);
-
+  // -- Skip Velo tracks if used before
+  declareProperty("VeloVetoTracksName", m_veloVetoTracksNames = {});
+  
 }
 //=============================================================================
 // Destructor
@@ -109,6 +111,32 @@ StatusCode PatMatchTool::matchSingle(const LHCb::Track& velo,
 }
 
 //=============================================================================
+// Check if Velo or T-Seed should be processed.
+//=============================================================================
+bool PatMatchTool::acceptTrack(const LHCb::Track& track) const
+{
+  if (track.checkFlag( LHCb::Track::Invalid) ) return false;
+  if (track.type()==LHCb::Track::Velo){
+    if (track.checkFlag( LHCb::Track::Backward) ) return false;
+    for (auto names : m_veloVetoTracksNames ){
+      if (exist<LHCb::Track::Range>( names )){
+        for (auto longTrack : get<LHCb::Track::Range>( names ) ) { 
+          auto ancestors = longTrack->ancestors();
+          if (!(std::none_of( std::begin( ancestors ), std::end( ancestors ), 
+                              [&](const LHCb::Track* t) { return t == &track; } )))
+            return false;
+        }
+      }else{
+        debug() << "Could not find veto tracks at: " << names << endmsg;
+      }
+      
+    }
+  }
+  return true;
+}
+
+
+//=============================================================================
 // Main execution
 //=============================================================================
 StatusCode PatMatchTool::match(const LHCb::Tracks& velos,
@@ -117,11 +145,10 @@ StatusCode PatMatchTool::match(const LHCb::Tracks& velos,
   // build a match-chi^2 sorted table of velo-seed matches
   std::vector<MatchCandidate> cands;
   cands.reserve(4 * std::max(velos.size(), seeds.size()));
-  for(const LHCb::Track* vTr: velos) {
-    if (vTr->checkFlag(LHCb::Track::Backward)) continue;
-    if (vTr->checkFlag(LHCb::Track::Invalid)) continue;
-    for(const LHCb::Track* sTr: seeds) {
-      if (sTr->checkFlag(LHCb::Track::Invalid)) continue;
+  for( const LHCb::Track* vTr: velos) {
+    if ( !acceptTrack(*vTr) ) continue;
+    for( const LHCb::Track* sTr: seeds) {
+      if ( !acceptTrack(*sTr) ) continue;
       const double dist = getChi2Match(*vTr, *sTr);
       if (m_maxChi2 > dist) {
         cands.push_back(MatchCandidate(vTr, sTr, dist));

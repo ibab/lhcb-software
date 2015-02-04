@@ -138,6 +138,10 @@ private:
 	void makeTrack(const LHCb::Track& velo,
                  const LHCb::Track& seed, LHCb::Track& output,
                  double chi2) const;
+
+  /// Check if Velo or T-Seed should be processed.
+  bool acceptTrack(const LHCb::Track& track) const;
+  std::vector<std::string> m_veloVetoTracksNames;
   
 	// use tool for momentum parametrisation
 	std::string m_fastMomentumToolName;

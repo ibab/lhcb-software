@@ -671,12 +671,12 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
                    [&fwTra](PatForwardHit *myHit) {
            fwTra->addToLhcbIDs( myHit->hit()->lhcbID() );
            myHit->hit()->setStatus(Tf::HitBase::UsedByPatForward);
-           //S.Stahl: This flag was nowehere used. Now used for hit flagging.
+           //S.Stahl: This flag was nowhere used. Now used for hit flagging.
            //myHit->setIsUsed(true);
     } );
     fwTra -> setPatRecStatus( LHCb::Track::PatRecIDs );
-
-    if ( m_addTTClusterTool ) {
+    ///== Add TT hits. Do not do this if the seed is an Upstream track.
+    if ( m_addTTClusterTool && !seed.checkType(LHCb::Track::Upstream) ) {
       StatusCode sc = m_addTTClusterTool->addTTClusters( *fwTra );
       if ( UNLIKELY(sc.isFailure()) && UNLIKELY( isDebug ) )
           debug()<<" Failure in adding TT clusters to track"<<endmsg;
