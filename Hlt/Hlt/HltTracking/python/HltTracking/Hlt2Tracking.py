@@ -67,7 +67,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 , "Hlt2Tracks"                      : "Long" # type of HLT2 tracks
                 , "Prefix"                          : "Hlt2"                 # Why should we need this? It's never changed
                 , "FastFitType"                     : HltUnfittedTracksSuffix
-                , "DoFastFit"                       : False
+                , "DoFastFit"                       : False  # TODO: Remove option. Nowhere used anymore, we always fit.
                 , "DoSeeding"                       : False  
                 , "DoCleanups"                      : True  # Intended default True. Development options
                 , "RestartForward"                  : False  # Intended default False. Development options
@@ -981,56 +981,43 @@ class Hlt2Tracking(LHCbConfigurableUser):
             tracks = self.__hlt2ForwardSecondLoopTracking() 
         #And my output location is?
         hlt2StagedFastFitOutputLocation = self.__trackLocation(secondLoop)
-        # Second check: have I actually been asked to fit the tracks?
-        # If not, just return the unfitted tracks copied into the container specified by
-        # the fast-fit type field
-        # TODO: Remove FastFit option???
-        if (not self.getProp("DoFastFit")) :
-            from Configurables import CreateFastTrackCollection
-            #
-            # Hacking of errors
-            #
-            # Do not insert errors for downstream tacks as these would be meaningless
-            bm_members      = [tracks]
-            if (self.getProp("Hlt2Tracks") <> Hlt2DownstreamTracksName) :
-                from Configurables import HltInsertTrackErrParam
-                HltInsertTrackErrParam_name                 =  self.__trackfitAlgosAndToolsPrefix(secondLoop)+"InsertTrackErrParam"
-                HltInsertTrackErrParam                      =  HltInsertTrackErrParam(HltInsertTrackErrParam_name)
-                HltInsertTrackErrParam.InputLocation        =  tracks.outputSelection()
-                bm_members                                  += [HltInsertTrackErrParam]
-            #### CreateFastTrackCollection
-            # this can only be done ONCE per long track output
-            recoCopy = CreateFastTrackCollection( self.__trackfitAlgosAndToolsPrefix(secondLoop)+'TrackCopyNF'
-                                                , InputLocations = [tracks.outputSelection()]
-                                                , OutputLocation = hlt2StagedFastFitOutputLocation
-                                                , SlowContainer  = True)
-            # Build the bindMembers        
-            bm_name         = self.__trackfitAlgosAndToolsPrefix(secondLoop)+"NoFastFitSeq" 
-            bm_members      = bm_members + [recoCopy]
-            bm_output       = hlt2StagedFastFitOutputLocation
 
-            return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
-        #TODO: If tracks were fitted before, because of DoCleanUps, we do not need to fit again.
+        #TODO: Rework this... , this is a workaround to make sure tracks end up in the place used later
         from Configurables import TrackEventFitter, TrackMasterFitter
-        Hlt2StagedFastFit_name      = self.__trackfitAlgosAndToolsPrefix(secondLoop)+'StagedFastFit'
-        Hlt2StagedFastFit           = TrackEventFitter(Hlt2StagedFastFit_name)
-        Hlt2StagedFastFit.TracksInContainer    = tracks.outputSelection() 
-        Hlt2StagedFastFit.TracksOutContainer    = hlt2StagedFastFitOutputLocation  
-        Hlt2StagedFastFit.addTool(TrackMasterFitter, name = 'Fitter')
-        from TrackFitter.ConfiguredFitters import ConfiguredHltFitter
-        fitter = ConfiguredHltFitter( getattr(Hlt2StagedFastFit,'Fitter'))
- 
-        # Build the bindMembers        
-        bm_name         = self.__trackfitAlgosAndToolsPrefix(secondLoop)+"FastFitSeq"
-        bm_members      = [tracks, Hlt2StagedFastFit]
-        bm_output       = hlt2StagedFastFitOutputLocation
+        if (not self.getProp("DoCleanups")) or self.__trackType() == "Downstream":
+            Hlt2StagedFastFit_name      = self.__trackfitAlgosAndToolsPrefix(secondLoop)+'StagedFastFit'
+            Hlt2StagedFastFit           = TrackEventFitter(Hlt2StagedFastFit_name)
+            Hlt2StagedFastFit.TracksInContainer    = tracks.outputSelection() 
+            Hlt2StagedFastFit.TracksOutContainer    = hlt2StagedFastFitOutputLocation  
+            Hlt2StagedFastFit.addTool(TrackMasterFitter, name = 'Fitter')
+            from TrackFitter.ConfiguredFitters import ConfiguredHltFitter
+            fitter = ConfiguredHltFitter( getattr(Hlt2StagedFastFit,'Fitter'))
+            # Build the bindMembers        
+            bm_name         = self.__trackfitAlgosAndToolsPrefix(secondLoop)+"FastFitSeq"
+            bm_members      = [tracks, Hlt2StagedFastFit]
+            bm_output       = hlt2StagedFastFitOutputLocation
+            return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
+        else:
+            from Configurables import CreateFastTrackCollection
+            recoCopy = CreateFastTrackCollection(self.__trackingAlgosAndToolsPrefix()+'TrackCopyInsteadFit'
+                                                 , InputLocations = [ tracks.outputSelection() ]
+                                                 , OutputLocation = hlt2StagedFastFitOutputLocation
+                                                 , SlowContainer  = True) 
+            from HltTracking.HltSharedTracking import ( RevivedForward, ConfiguredForwardComplement, ConfiguredHltEventFitter,
+                                                        ConfiguredGoodTrackFilter )
 
-        return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
+            # Build the bindMembers
+            from Configurables import DumpTracks
+            bm_name         = self.__trackfitAlgosAndToolsPrefix(secondLoop)+"FastFitSeq"
+            bm_members      = [tracks, recoCopy ]
+            bm_output       = hlt2StagedFastFitOutputLocation
+            return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
+        
     #########################################################################################
     #
     # Track reconstruction
     # Add an option to have a second loop from the forward tracking
-    #
+    # TODO: Separate long and downstream tracks?
     def __hlt2Tracking(self) :
         """
         Track reconstruction
@@ -1063,7 +1050,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
             if self.getProp("DoCloneKilling") :
                
                 from Configurables import TrackEventCloneKiller, TrackCloneFinder
-                
                 cloneKiller = TrackEventCloneKiller( self.__trackingAlgosAndToolsPrefix()+'FastCloneKiller'
                                                      , TracksInContainers         = hlt2TracksToMergeIntoLong
                                                      , TracksOutContainer         = hlt2TrackingOutput
@@ -1071,7 +1057,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
                                                      , CopyTracks                 = True)
                 cloneKiller.addTool(TrackCloneFinder, name = 'CloneFinderTool')
                 cloneKiller.CloneFinderTool.RestrictedSearch = True
-                
                 trackRecoSequence        +=      [cloneKiller]
             else :
                 from Configurables import CreateFastTrackCollection
@@ -1150,7 +1135,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         VetoTracksLocation = []
         if self.getProp("DoCleanups"):
             # Do some filtering of bad tracks before marking hits
-            fitHlt1ForwardTracks = ConfiguredHltEventFitter(Name = self.getProp("Prefix") + 'FitHlt1Tracks',
+            fitHlt1ForwardTracks = ConfiguredHltEventFitter(name = self.getProp("Prefix") + 'FitHlt1Tracks',
                                                             TracksInContainer = RevivedForward.outputSelection())
             filterHlt1ForwardTracks = ConfiguredGoodTrackFilter( self.getProp("Prefix") + 'FilterHlt1ForwardTracks',
                                                                  InputLocation = RevivedForward.outputSelection() )
@@ -1168,7 +1153,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                                                   , MinPt = HltRecoConf().getProp("Forward_LPT_MinPt"))
 
         if self.getProp("DoCleanups"):
-            fitHlt2ForwardTracks = ConfiguredHltEventFitter(Name = self.getProp("Prefix") + 'FitHlt2ForwardTracks',
+            fitHlt2ForwardTracks = ConfiguredHltEventFitter(name = self.getProp("Prefix") + 'FitHlt2ForwardTracks',
                                                             TracksInContainer = recoForward.OutputTracksName)
             filterHlt2ForwardTracks  = ConfiguredGoodTrackFilter( self.getProp("Prefix") + 'FilterHlt2ForwardTracks',
                                                                   InputLocation = recoForward.OutputTracksName )
@@ -1211,7 +1196,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
     #    
     # Hlt2 forward tracking 2nd loop
     # Used for recovery of low momentum tracks not picked up by the first loop 
-    # TODO: Get rid of it
+    # TODO: Keep an option to do an ultra low pt forward iteration
     def __hlt2ForwardSecondLoopTracking(self) :
         """
         Forward track reconstruction for Hlt2 for recovery of lower momentum tracks
@@ -1307,18 +1292,20 @@ class Hlt2Tracking(LHCbConfigurableUser):
         # TODO: We can restrict the input of the matching by vetoing already used velo tracks.
         #### Matching
         recoMatch         = PatMatch(self.getProp("Prefix")+'Match'
-                                 , VeloInput = self.__hlt2VeloTracking().outputSelection()
-                                 , SeedInput = self.__hlt2SeedTracking().outputSelection()
-                                 , MatchOutput = matchTrackOutputLocation)
+                                     , VeloInput = self.__hlt2VeloTracking().outputSelection()
+                                     , SeedInput = self.__hlt2SeedTracking().outputSelection()
+                                     , MatchOutput = matchTrackOutputLocation)
         from Configurables   import PatMatchTool
         from HltRecoConf import MatchToolOptions
         recoMatch.addTool(PatMatchTool, name="PatMatchTool")
         recoMatch.PatMatchTool.MinMomentum = MatchToolOptions["MinMomentum"]
         recoMatch.PatMatchTool.MinPt = MatchToolOptions["MinPt"]
-
+        # We depend on the forward tracking
+        fwdtracks = self.__hlt2ForwardTracking()
+        recoMatch.PatMatchTool.VeloVetoTracksName = [ fwdtracks.outputSelection() ]
         if self.getProp("DoCleanups"):
             from HltTracking.HltSharedTracking import ( ConfiguredHltEventFitter, ConfiguredGoodTrackFilter )
-            fitHlt2MatchTracks = ConfiguredHltEventFitter(Name = self.getProp("Prefix") + 'FitHlt2MatchTracks',
+            fitHlt2MatchTracks = ConfiguredHltEventFitter(name = self.getProp("Prefix") + 'FitHlt2MatchTracks',
                                                           TracksInContainer = matchTrackOutputLocation)
             filterHlt2MatchTracks = ConfiguredGoodTrackFilter( self.getProp("Prefix") + 'FilterHlt2MatchTracks',
                                                                InputLocation = matchTrackOutputLocation )
@@ -1331,7 +1318,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
 
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"MatchTracking"
-        bm_members      = self.__hlt2VeloTracking().members() + self.__hlt2SeedTracking().members()
+        bm_members      = self.__hlt2VeloTracking().members() + self.__hlt2ForwardTracking().members() +self.__hlt2SeedTracking().members()
         if self.getProp("DoCleanups"):
             bm_members += [ recoMatch, fitHlt2MatchTracks, filterHlt2MatchTracks ]
         else:
@@ -1367,7 +1354,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from HltRecoConf import DownstreamOptions
         PatDownstream.MinMomentum = DownstreamOptions["MinMomentum"]
         PatDownstream.MinPt = DownstreamOptions["MinPt"]
-  
+
+        
         if self.getProp("EarlyDataTracking") :
             # Do something special in case of early data
             from HltTracking.HltRecoConf import CommonDownstreamTrackingOptions_EarlyData 

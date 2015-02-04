@@ -4,6 +4,15 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-02-02 - Sascha Stahl
+ - Added option to initialize track fits in HLT1 and HLT2 with the TrackStateInitTool
+   (HltRecoConf.InitFits).
+ - Added option to fit tracks with the TrackMasterFitter but using a simplified material
+   description and lite clusters (HltRecoConf.SimplifiedMaterialFit)
+ - Changed defaults of Forward_LPT_MinPt to 80 and Forward_LPT_MinP to 1000,
+   TrNVELOMISS to 100.
+ - Removed the possibility of assigning track errors without track fit.
+
 ! 2015-02-02 - Michael Kolpin
  - Added Hlt2ProbeTracking.py. Moved probe track reconstruction from Hlt2SharedParticles.TagAndProbeParticles
    there. Structured in a similar manner as Hlt2Tracking.py to allow for simple integration.

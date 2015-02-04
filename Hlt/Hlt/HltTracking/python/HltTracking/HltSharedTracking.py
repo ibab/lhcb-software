@@ -146,7 +146,11 @@ def ConfiguredForwardComplement(name
                                 , MinMomentum #= HltRecoConf().getProp("Forward_LPT_MinP")
                                 , MinPt #= HltRecoConf().getProp("Forward_LPT_MinPt")
                                 ):
-    if name == None: name = PatForward.__name__
+    if name == None:
+        log.fatal( '##################################################################################')
+        log.fatal( '## FATAL You did not specify the name of the PatForward instance.' )
+        log.fatal( '## FATAL I will now die, you need to make Hlt2Tracking aware of the name!  ')
+        log.fatal( '##################################################################################')
     forward = PatForward( name
                           , InputTracksName  = InputTracksName
                           , OutputTracksName = OutputTracksName
@@ -179,15 +183,15 @@ def ConfiguredForwardComplement(name
 def ConfiguredPatSeeding(name
                          , OutputTracksName 
                          , VetoTrackLocations = None):
-    if name == None: name = PatForward.__name__
+    if name == None:
+        log.fatal( '##################################################################################')
+        log.fatal( '## FATAL You did not specify the name of the PatSeeding instance.' )
+        log.fatal( '## FATAL I will now die, you need to make Hlt2Tracking aware of the name!  ')
+        log.fatal( '##################################################################################')
     from Configurables    import PatSeeding
     from Configurables      import PatSeedingTool
     recoSeeding = PatSeeding(name, OutputTracksName = OutputTracksName )
     recoSeeding.addTool(PatSeedingTool, name="PatSeedingTool")
-    #if VetoTrackLocations != None:
-    #    recoSeeding.PatSeedingTool.UseForward        = True
-    #else:
-    #    recoSeeding.PatSeedingTool.UseForward        = True
     # New tool
     if VetoTrackLocations != None:
         from Configurables import TrackUsedLHCbID
@@ -195,9 +199,7 @@ def ConfiguredPatSeeding(name
         recoSeeding.PatSeedingTool.UsedLHCbIDToolName = "TrackUsedLHCbID"
         recoSeeding.PatSeedingTool.addTool( TrackUsedLHCbID, name="TrackUsedLHCbID" )
         recoSeeding.PatSeedingTool.TrackUsedLHCbID.inputContainers = VetoTrackLocations
-        
-
-    #recoSeeding.PatSeedingTool.InputTracksName    = VetoTrackLocations
+  
     #recoSeeding.PatSeedingTool.ForwardCloneMergeSeg = True
     from HltTracking.HltRecoConf import OnlineSeedingToolOptions
 
@@ -226,37 +228,56 @@ def ConfiguredPatSeeding(name
 
     return recoSeeding
 
-# Move this to TrackFitter package?	
-def ConfiguredHltEventFitter( Name,
-                              TracksInContainer,
-                              DoInit = False):
-    # make sure the name is unique
-    #from Gaudi.Configuration import allConfigurables
-    #if allConfigurables.get( Name ) :
-    #    raise ValueError, 'ConfiguredEventFitter: instance with name '+Name+' already exists'
-    # create the event fitter
-    from Configurables import ( TrackEventFitter, TrackMasterFitter )
-    eventfitter = TrackEventFitter(Name)
-    eventfitter.TracksInContainer = TracksInContainer
-    # this addTool should not be necessary but unfortunately there is a problem with the toolhandle configuration
-    eventfitter.addTool( TrackMasterFitter, name="Fitter")
+#TODO: Move this to TrackFitter package?
+def ConfiguredHltInitFitter( parent ):
+    from Configurables import ( TrackEventFitter, TrackMasterFitter, TrackInitFit, TrackStateInitTool )
+    from TrackFitter.ConfiguredFitters import ConfiguredHltFitter, ConfiguredMasterFitter
+    if not HltRecoConf().getProp("InitFits"):
+        parent.addTool( TrackMasterFitter, name="Fitter")
+        fitter = parent.Fitter
+    else:
+        parent.addTool( TrackInitFit, name = "Fitter")
+        parent.Fitter.Init = "TrackStateInitTool/StateInit"
+        parent.Fitter.addTool(TrackStateInitTool, name="StateInit")
+        parent.Fitter.StateInit.VeloFitterName = "FastVeloFitLHCbIDs"
+        parent.Fitter.Fit = "TrackMasterFitter/Fitter"
+        parent.Fitter.addTool(TrackMasterFitter, name="Fitter")
+        fitter = parent.Fitter.Fitter
     # configure the fitter
-    from TrackFitter.ConfiguredFitters import ConfiguredHltFitter
-    ConfiguredHltFitter( eventfitter.Fitter )
+    if not HltRecoConf().getProp("SimplifiedMaterialFit"):
+        ConfiguredHltFitter( fitter )
+    else:
+        ConfiguredMasterFitter( fitter , SimplifiedGeometry = True, LiteClusters = True)
+        fitter.MeasProvider.IgnoreMuon = True
+    return fitter
+
+def ConfiguredHltEventFitter( name,
+                              TracksInContainer ):
+    # create the event fitter
+    from Configurables import ( TrackEventFitter, TrackMasterFitter, TrackInitFit, TrackStateInitTool )
+    
+    eventfitter = TrackEventFitter(name)
+    eventfitter.TracksInContainer = TracksInContainer
+    ConfiguredHltInitFitter(eventfitter)
     return eventfitter
 
-def ConfiguredGoodTrackFilter (Name,
+def ConfiguredGoodTrackFilter (name,
                                InputLocation,
                                OutputLocation = None):
+    if name == None:
+        log.fatal( '##################################################################################')
+        log.fatal( '## FATAL You did not specify the name of the Filter instance.' )
+        log.fatal( '## FATAL I will now die, you need to make Hlt2Tracking aware of the name!  ')
+        log.fatal( '##################################################################################')
     if OutputLocation == None: OutputLocation = InputLocation + "Filtered"
     from Configurables import TrackListRefiner
-    filterTracks = TrackListRefiner( Name,
+    filterTracks = TrackListRefiner( name,
                                      inputLocation = InputLocation,
                                      outputLocation = OutputLocation )
     from Configurables import  LoKi__Hybrid__TrackSelector as LoKiTrackSelector
     filterTracks.addTool(LoKiTrackSelector,name="LokiTracksSelector")
     filterTracks.Selector = LoKiTrackSelector(name="LokiTracksSelector")
-    filterTracks.Selector.Code = "( TrCHI2PDOF < %(TrChi2)s )" % {"TrChi2":  HltRecoConf().getProp("GoodTrCHI2PDOF")}
+    filterTracks.Selector.Code = "(~TrINVALID) & ( TrCHI2PDOF < %(TrChi2)s )" % {"TrChi2":  HltRecoConf().getProp("GoodTrCHI2PDOF")}
     filterTracks.Selector.StatPrint = True
     return filterTracks
 

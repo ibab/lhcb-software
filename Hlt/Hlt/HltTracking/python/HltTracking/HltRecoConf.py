@@ -29,12 +29,14 @@ from GaudiKernel.SystemOfUnits import MeV
 class HltRecoConf(LHCbConfigurableUser):
    __slots__ = { "Forward_HPT_MinPt"            : 500. * MeV
                  ,"Forward_HPT_MinP"            : 3000. * MeV
-                 ,"Forward_LPT_MinPt"           : 200. * MeV  # We want to go down with this
-                 ,"Forward_LPT_MinP"            : 3000. * MeV # We want to go down with this
+                 ,"Forward_LPT_MinPt"           : 80. * MeV  
+                 ,"Forward_LPT_MinP"            : 1000. * MeV 
                  ,"Forward_MaxOTHits"           : 15000
                  ,"MatchVeloMuon_MinP"          : 6000. * MeV
                  ,"GoodTrCHI2PDOF"              : 5.0
-                 ,"VeloSelectionCut"               : "(~TrBACKWARD) & ( TrNVELOMISS < 20 )"
+                 ,"VeloSelectionCut"            : "(~TrBACKWARD) & ( TrNVELOMISS < 100 )"
+                 ,"InitFits"                    : False
+                 ,"SimplifiedMaterialFit"       : False
                }
 
    def getConfiguredForward(Name) :

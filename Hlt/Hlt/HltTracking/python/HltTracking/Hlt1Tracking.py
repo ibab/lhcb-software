@@ -59,10 +59,32 @@ def ConfiguredFastKalman( parent = None, name = None ) :
         parent = getattr( parent, name )
     else :  # make a public instance...
         parent = HltTrackFit()
-    from Configurables import TrackMasterFitter
-    parent.addTool( TrackMasterFitter, name = 'Fit')
-    from TrackFitter.ConfiguredFitters import ConfiguredHltFitter
-    fitter = ConfiguredHltFitter( getattr(parent,'Fit') )
+    from Configurables import TrackMasterFitter, TrackInitFit , TrackStateInitTool
+    from TrackFitter.ConfiguredFitters import ConfiguredHltFitter, ConfiguredMasterFitter
+    #TODO: This is a block copy from HltSharedTracking because Fit and Fitter naming inconsistency.
+    if not HltRecoConf().getProp("InitFits"):
+        # this addTool should not be necessary but unfortunately there is a problem with the toolhandle configuration
+        parent.addTool( TrackMasterFitter, name="Fit")
+        fitter = parent.Fit
+    else:
+        parent.FitterName = "TrackInitFit/Fit"
+        parent.addTool( TrackInitFit, name = "Fit")
+        parent.Fit.Init = "TrackStateInitTool/StateInit"
+        parent.Fit.addTool(TrackStateInitTool, name="StateInit")
+        parent.Fit.StateInit.VeloFitterName = "FastVeloFitLHCbIDs"
+        parent.Fit.Fit = "TrackMasterFitter/Fitter"
+        parent.Fit.addTool(TrackMasterFitter, name="Fitter")
+        fitter = parent.Fit.Fitter
+    # configure the fitter
+    if not HltRecoConf().getProp("SimplifiedMaterialFit"):
+        ConfiguredHltFitter( fitter )
+    else:
+        ConfiguredMasterFitter( fitter , SimplifiedGeometry = True, LiteClusters = True)
+        fitter.MeasProvider.IgnoreMuon = True
+
+    #parent.addTool( TrackMasterFitter, name = 'Fit')
+    #fitter = ConfiguredHltFitter( getattr(parent,'Fit') )
+    #fitter = ConfiguredHltInitFitter( parent,  )
 
 def ConfiguredFastVeloOnlyFit( parent = None, name = None ) :
     if name == None: name = HltTrackFit.__name__ + "VeloOnly"
