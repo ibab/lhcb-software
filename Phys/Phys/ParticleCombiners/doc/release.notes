@@ -4,6 +4,11 @@
 ! Purpose     : Particle Combining components.
 !-----------------------------------------------------------------------------
 
+! 2015-02-04 - Vanya Belyaev
+
+ - CombineParticles 
+   make the default name of factory dependent on the algorithm name prefix  
+
 !========================= ParticleCombiners v1r0 2014-09-30 =========================
 
 ! 2014-08-05 - Chris Jones

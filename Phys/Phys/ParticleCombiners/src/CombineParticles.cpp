@@ -175,6 +175,10 @@ CombineParticles::CombineParticles
   , m_incSvc ( NULL )
 {
   //
+  if      ( 0 == name.find ( "Hlt1" ) ) 
+  { m_factory = "LoKi::Hybrid::Tool/Hlt1HybridFactory:PUBLIC" ; }
+  else if ( 0 == name.find ( "Hlt2" ) )
+  { m_factory = "LoKi::Hybrid::Tool/Hlt2HybridFactory:PUBLIC" ; }
   //
   declareProperty
     ( "DecayDescriptors" , m_decayDescriptors ,
