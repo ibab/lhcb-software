@@ -139,6 +139,12 @@ FilterDesktop::FilterDesktop                  // standard contructor
   , m_to_be_updated2   ( true )
   , m_cloneFilteredParticles (false)
 {
+  //
+  if      ( 0 == name.find("Hlt1") ) 
+  { m_factory = "LoKi::Hybrid::Tool/Hlt1HybridFactory:PUBLIC" ; }
+  else if ( 0 == name.find("Hlt2") )
+  { m_factory = "LoKi::Hybrid::Tool/Hlt2HybridFactory:PUBLIC" ; }
+  //
   // the factory
   declareProperty
     ( "Factory" ,
