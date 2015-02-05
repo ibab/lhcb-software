@@ -8,6 +8,8 @@ base_dir = os.path.join(os.path.dirname(__file__), 'data', 'LBCORE-725')
 build_dir = os.path.join(base_dir, 'tmp')
 release_dir = os.path.join(base_dir, 'dest')
 
+xenv_cmd = os.path.join(os.path.dirname(__file__), os.pardir, 'xenv')
+
 build_log = None
 build_returncode = None
 
@@ -35,7 +37,7 @@ def test_A_env():
                            'A', 'InstallArea', 'A.xenv')
     assert os.path.exists(envfile), envfile
 
-    getenv = Popen(['xenv', '--xml', envfile, '--py'],
+    getenv = Popen([xenv_cmd, '--xml', envfile, '--py'],
                    stdout=PIPE, stderr=PIPE)
     out, _err = getenv.communicate()
     assert getenv.returncode == 0, getenv.returncode
@@ -52,7 +54,7 @@ def _test_B_env():
                            'B', 'InstallArea', 'B.xenv')
     assert os.path.exists(envfile), envfile
 
-    getenv = Popen(['xenv', '--xml', envfile, '--py'],
+    getenv = Popen([xenv_cmd, '--xml', envfile, '--py'],
                    stdout=PIPE, stderr=PIPE)
     out, _err = getenv.communicate()
     assert getenv.returncode == 0, getenv.returncode
@@ -69,7 +71,7 @@ def test_C_env():
                            'C', 'build', 'config', 'C-build.xenv')
     assert os.path.exists(envfile), envfile
 
-    getenv = Popen(['xenv', '--xml', envfile, '--py'],
+    getenv = Popen([xenv_cmd, '--xml', envfile, '--py'],
                    stdout=PIPE, stderr=PIPE)
     out, _err = getenv.communicate()
     assert getenv.returncode == 0, getenv.returncode

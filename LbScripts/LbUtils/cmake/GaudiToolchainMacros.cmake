@@ -154,6 +154,8 @@ macro(set_paths_from_projects)
     # prepare the helper variable (we add it to both CMAKE_PREFIX_PATH and
     # CMAKE_MODULE_PATH)
     set(_path)
+    # and the variable for the extension of the toolchain (e.g. override externals)
+    set(_extra_toolchains)
     foreach(_entry ${_entries})
         if(${_entry}_DIR) # it's a tool
             set(_root ${${_entry}_DIR})
@@ -170,11 +172,19 @@ macro(set_paths_from_projects)
                 set(_path ${_root} ${_path})
             endif()
         endforeach()
+        if(EXISTS ${_root}/InstallArea/${BINARY_TAG}/cmake/extra-toolchain.cmake)
+          list(APPEND _extra_toolchains ${_root}/InstallArea/${BINARY_TAG}/cmake/extra-toolchain.cmake)
+        endif()
     endforeach()
 
     # set the real search paths variables
     set(CMAKE_PREFIX_PATH ${_path} ${CMAKE_PREFIX_PATH})
     set(CMAKE_MODULE_PATH ${_path} ${CMAKE_MODULE_PATH})
+    # include all the toolchain extensions (they should be prepending entries to
+    # CMAKE_PREFIX_PATH and CMAKE_MODULE_PATH)
+    foreach(_extra_toolchain ${_extra_toolchains})
+      include(${_extra_toolchain})
+    endforeach()
 endmacro()
 
 ## How to use these functions in a toolchain:

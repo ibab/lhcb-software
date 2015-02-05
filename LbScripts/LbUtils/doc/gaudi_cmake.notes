@@ -1,3 +1,181 @@
+! 2015-02-05 - Marco Clemencic (934fd72)
+
+ - use only the new .qmt test wrapper
+
+   Removed the special test option "QMTESTNEW"
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7687
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2015-02-04 - Marco Clemencic (fc0851f)
+
+ - hack to use the new qmt wrapper if CMTEXTRATAGS contains gaudi-use-qmtestnew
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7686
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2015-02-01 - Marco Clemencic (1f41511)
+
+ - minor clean up in the custom CMake exports
+
+   
+
+! 2015-02-01 - Marco Clemencic (e0ff021)
+
+ - added label 'disabled' to the test when 'unsupported_platforms' match
+
+   
+
+! 2015-01-31 - Marco Clemencic (9300cba)
+
+ - support proper skipping of .qmt tests (with CMake 3)
+
+   
+
+! 2015-01-31 - Marco Clemencic (da5883b)
+
+ - do not prepend dirname to tests defined at project level
+
+   
+
+! 2015-01-31 - Marco Clemencic (4b2b941)
+
+ - fix to the conversion of QMTest test name to CTest
+
+   
+
+! 2015-01-30 - Marco Clemencic (3e4610a)
+
+ - minor fixes for portability on a couple of tests
+
+   
+
+! 2015-01-30 - Marco Clemencic (e08711e)
+
+ - fixed test_heptools.py to work in the LHCb Nightly builds environment
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7677
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2015-01-29 - Marco Clemencic (1252e68)
+
+ - introduced a replacement for QMTest
+
+    - simpler test wrapper
+   - backward compatible with QMTest extension GaudiTest
+   - integrated with CTest
+
+   Merge branch 'dev/testing-framework'
+
+   * dev/testing-framework: (52 commits)
+    fixed LBCORE-716: include path order not correct
+    fixed a bug in the check for LCG_SYSTEM compatibility
+    removed unnecessary files
+    minor improvement to allow easy execution of single tests
+    minor improvement in the basic test report function
+    use new qmt launcher when env GAUDI_USE_QMTESTNEW is set
+    updated release.notes
+    removed duplicated tests
+    fixed handling of test timeouts
+    added support of custom QMtest suites as test labels
+    fixed a chicken & egg problem with the .qmt dependencies
+    added one dir to JOBOPTSEARCHPATH for tests
+    Added _PyObject_GC_Malloc to the whitelist of StatusCodeSvc
+    added support for temporary dir (and clean up)
+    fixed return code handling in GaudiTesting.BaseTest
+    minor fix in reference normalizer
+    fixed inconsistency in return code of xenv in case of signals
+    use QMTest wrappers for all (QMTest) tests in Gaudi
+    fixes and clean ups
+    fixed missing dependency in two tests
+    ...
+
+   Conflicts:
+   cmake/GaudiProjectConfig.cmake
+   cmake/tests/test_LBCORE_716.py
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7676
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2015-01-29 - Marco Clemencic (d13a553)
+
+ - added support for comments in LCG_*.txt
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7675
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2015-01-29 - Marco Clemencic (16146b1)
+
+ - added test for LCG_*.txt parsing
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7674
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2015-01-29 - Marco Clemencic (3f85aa6)
+
+ - added protections for missing Python_config_version and Qt_config_version
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7673
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2015-01-29 - Marco Clemencic (bc15413)
+
+ - refactored CMake modules test helpers
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7672
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2015-01-29 - Marco Clemencic (87ce36b)
+
+ - added the possibility to extend the toolchain for a project
+
+   When adding projects directories to the search paths, we look for the 
+   conventional file
+
+    <project>/InstallArea/${BINARY_TAG}/cmake/extra-toolchain.cmake
+
+   and include it if present.
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7671
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2015-01-28 - Marco Clemencic (70207c0)
+
+ - minor fix to a test
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7670
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
 ! 2015-01-27 - Marco Clemencic (f09d3ce)
 
  - fixed LBCORE-725: handle relocation of data packages in xenv
@@ -54,6 +232,75 @@
     git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7665
    53ecefc3-a64d-0410-9bdf-b8581fa3287e
 
+
+! 2015-01-27 - Marco Clemencic (e4ab032)
+
+ - fixed LBCORE-716: include path order not correct
+
+   
+
+! 2015-01-27 - Marco Clemencic (c8e1a66)
+
+ - fixed a bug in the check for LCG_SYSTEM compatibility
+
+   When a project was not using LCG (heptools), the compatibility check was 
+   always failing.
+
+! 2015-01-27 - Marco Clemencic (84820bb)
+
+ - minor improvement to allow easy execution of single tests
+
+   
+
+! 2015-01-26 - Marco Clemencic (c51ba4c)
+
+ - use new qmt launcher when env GAUDI_USE_QMTESTNEW is set
+
+   
+
+! 2015-01-22 - Marco Clemencic (ed9df1b)
+
+ - added support of custom QMtest suites as test labels
+
+   The .qms files are analyzed and the suite names are used as labels for the
+   tests the include.
+
+
+! 2015-01-22 - Marco Clemencic (16172b4)
+
+ - fixed a chicken & egg problem with the .qmt dependencies
+
+   
+
+! 2015-01-22 - Marco Clemencic (d847f3d)
+
+ - added support for temporary dir (and clean up)
+
+   
+
+! 2015-01-21 - Marco Clemencic (9a53ab3)
+
+ - fixed inconsistency in return code of xenv in case of signals
+
+   
+
+! 2015-01-21 - Marco Clemencic (de8d3fa)
+
+ - added .qmt dependency analysis to GaudiTesting.QMTTest
+
+   
+
+! 2015-01-21 - Marco Clemencic (c4cb410)
+
+ - moved automatically addition of .qmt to GaudiProjectConfig.cmake
+
+   
+
+! 2015-01-21 - Marco Clemencic (6a0831b)
+
+ - added support to labels in gaudi_add_unit_test
+
+   
 
 ! 2015-01-16 - Marco Clemencic (3afdfa1)
 

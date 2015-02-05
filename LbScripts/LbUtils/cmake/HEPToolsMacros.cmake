@@ -388,8 +388,10 @@ macro(lcg_prepare_paths)
   #===============================================================================
   # Derived variables
   #===============================================================================
-  string(REGEX MATCH "[0-9]+\\.[0-9]+" Python_config_version_twodigit ${Python_config_version})
-  set(Python_ADDITIONAL_VERSIONS ${Python_config_version_twodigit})
+  if(Python_config_version)
+    string(REGEX MATCH "[0-9]+\\.[0-9]+" Python_config_version_twodigit ${Python_config_version})
+    set(Python_ADDITIONAL_VERSIONS ${Python_config_version_twodigit})
+  endif()
 
   # Note: this is needed because FindBoost.cmake requires both if the patch version is 0.
   if (Boost_config_version)
@@ -417,9 +419,11 @@ macro(lcg_prepare_paths)
   endif()
 
   # Required if both Qt3 and Qt4 are available.
-  string(REGEX MATCH "[0-9]+" _qt_major_version ${Qt_config_version})
-  set(DESIRED_QT_VERSION ${_qt_major_version} CACHE STRING "Pick a version of QT to use: 3 or 4")
-  mark_as_advanced(DESIRED_QT_VERSION)
+  if(Qt_config_version)
+    string(REGEX MATCH "[0-9]+" _qt_major_version ${Qt_config_version})
+    set(DESIRED_QT_VERSION ${_qt_major_version} CACHE STRING "Pick a version of QT to use: 3 or 4")
+    mark_as_advanced(DESIRED_QT_VERSION)
+  endif()
 
   if(LCG_COMP MATCHES "clang")
     set(GCCXML_CXX_COMPILER g++ CACHE STRING "Compiler that GCCXML must use.")

@@ -1,8 +1,12 @@
-2014-11-28  Marco Clemencic  <Marco.Clemencic@cern.ch>
+2015-02-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* cmake: updated CMake support modules
+
+2015-01-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* cmake: updated CMake support modules (including fix for LBCORE-725)
 
-2014-11-28  Marco Clemencic  <Marco.Clemencic@cern.ch>
+2015-01-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* cmake: updated CMake support modules (including fix for LBCORE-716)
 

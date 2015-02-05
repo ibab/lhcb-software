@@ -7,6 +7,8 @@ from subprocess import Popen, PIPE
 
 base_dir = os.path.join(os.path.dirname(__file__), 'data', 'LBCORE-716')
 
+xenv_cmd = os.path.join(os.path.dirname(__file__), os.pardir, 'xenv')
+
 build_log = None
 build_returncode = None
 
@@ -47,7 +49,8 @@ def test_env():
     envfile = os.path.join(base_dir, 'D', 'InstallArea', 'D.xenv')
     assert os.path.exists(envfile)
 
-    getenv = Popen(['xenv', '--xml', envfile, 'printenv', 'ROOT_INCLUDE_PATH'],
+    getenv = Popen([xenv_cmd, '--xml', envfile,
+                    'printenv', 'ROOT_INCLUDE_PATH'],
                    stdout=PIPE, stderr=PIPE)
     out, _err = getenv.communicate()
     assert getenv.returncode == 0, getenv.returncode
@@ -55,6 +58,9 @@ def test_env():
     root_inc_path = [os.path.relpath(l, base_dir)[0]
                      for l in out.strip().split(os.pathsep)
                      if 'InstallArea' in l]
+    # if we run the test after "make install" is called, we get one extra '.'
+    # in the list (because of the InstallArea of Gaudi itself)
+    root_inc_path = [l for l in root_inc_path if l != '.']
     assert root_inc_path == ['D', 'B', 'C', 'A'], root_inc_path
 
 def teardown():

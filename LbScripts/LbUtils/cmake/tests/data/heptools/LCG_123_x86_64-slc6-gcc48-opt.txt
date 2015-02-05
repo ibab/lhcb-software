@@ -1,0 +1,7 @@
+PLATFORM: x86_64-slc6-gcc48-opt
+VERSION: 123
+COMPILER: GNU 4.8.2
+# this is a comment
+name1; ignored_hash;  1; name1/1/bin; ignored_deps
+name2; ignored_hash;  2; name2/2/bin; ignored_deps
+name3; ignored_hash;  3; /usr/local/name3/bin; ignored_deps
