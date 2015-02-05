@@ -140,7 +140,7 @@ def flatten(l):
 ## Type of scalar...
 # if the pre/postscales are a string, the pre/postscaler is a LoKi_VoidFilter,
 # imported here as a RateScaler. Otherwise they are the plain DeterministicScaler (Scaler here)
-def _createScalar( name, arg ) :
+def _createScaler( name, arg ) :
         from Configurables import DeterministicPrescaler as Scaler
         from Configurables import LoKi__VoidFilter  as RateScaler 
         if (isinstance(arg, basestring) ):
@@ -149,12 +149,12 @@ def _createScalar( name, arg ) :
                 return Scaler(name , AcceptFraction = arg )
 
 ## the list of all created lines 
-_hlt_1_lines__ = []
-_hlt_2_lines__ = []
+_hlt_1_lines__ = set()
+_hlt_2_lines__ = set()
 
 ## the list of all requested lines
-_req_hlt_1_lines__ = []
-_req_hlt_2_lines__ = []
+_req_hlt_1_lines__ = set()
+_req_hlt_2_lines__ = set()
 
 def _ordered_lines( lines ) :
     d = {}
@@ -261,9 +261,9 @@ def hlt2Decisions () :
     return tuple(t)
 
 ## the list of all input selections
-_hlt_1_input_selections__  = []
+_hlt_1_input_selections__  = set()
 ## the list of all output selections
-_hlt_1_output_selections__ = []
+_hlt_1_output_selections__ = set()
 
 # =============================================================================
 ## get the list of all known input selections
@@ -274,7 +274,7 @@ def hlt1InputSelections ( ) :
     >>> inputs = hlt1InputSelections()
     
     """
-    return tuple(_hlt_1_input_selections__)
+    return _hlt_1_input_selections__
 
 
 # =============================================================================
@@ -286,7 +286,7 @@ def hlt1OutputSelections ( ) :
     >>> outputs = hlt1OutputSelections()
     
     """
-    return tuple(_hlt_1_output_selections__)
+    return _hlt_1_output_selections__
 
 # =============================================================================
 ## add the selection to the list of input selections
@@ -297,8 +297,7 @@ def _add_to_hlt1_input_selections_ ( sel ) :
     if list is not type(sel) and tuple is not type(sel) : sel = [sel]
     for s in sel :
         if s not in hlt1InputSelections() :
-            _hlt_1_input_selections__.append ( s )
-    _hlt_1_input_selections__.sort()
+            _hlt_1_input_selections__.add ( s )
     return hlt1InputSelections ()
 
 # =============================================================================
@@ -310,8 +309,7 @@ def _add_to_hlt1_output_selections_ ( sel ) :
     if list is not type(sel) and tuple is not type(sel) : sel = [sel]
     for s in sel :
         if s not in hlt1OutputSelections() :
-            _hlt_1_output_selections__.append ( s)
-    _hlt_1_output_selections__.sort()
+            _hlt_1_output_selections__.add ( s)
     return hlt1OutputSelections ()
 
 
@@ -334,13 +332,21 @@ def hlt1Selections() :
     dct = {}
     dct [ 'Input'  ] = hlt1InputSelections ()
     dct [ 'Output' ] = hlt1OutputSelections ()
-    s1 = set( hlt1InputSelections  () )
-    s2 = set( hlt1OutputSelections () )
+    s1 = hlt1InputSelections  ()
+    s2 = hlt1OutputSelections ()
     dct [ 'All' ] = tuple(s1.union(s2) )
-    dct [ 'Input&Output' ] = tuple(s1.intersection(s2) )
-    dct [ 'Input-Output' ] = tuple(s1.difference(s2))
-    dct [ 'Output-Input' ] = tuple(s2.difference(s1))
+    dct [ 'Input&Output' ] = s1.intersection(s2)
+    dct [ 'Input-Output' ] = s1.difference(s2)
+    dct [ 'Output-Input' ] = s2.difference(s1)
     return dct
+
+# =============================================================================
+## get the dictionary of all selections 
+def hlt2Selections() :
+    """
+    Get the dictionary of all Hlt2 selections, only decision
+    """
+    return {'All' : hlt2Decisions()}
     
 # =============================================================================
 ## Add the created line into the local storage of created Hlt1Lines 
@@ -348,7 +354,7 @@ def _add_to_hlt1_lines_( line ) :
     """
     Add the line into the local storage of created Hlt1Lines 
     """
-    _hlt_1_lines__.append ( line ) 
+    _hlt_1_lines__.add ( line ) 
 
 # =============================================================================
 ## Add the created line into the local storage of created Hlt2Lines 
@@ -356,7 +362,7 @@ def _add_to_hlt2_lines_( line ) :
     """
     Add the line into the local storage of created Hlt2Lines 
     """
-    _hlt_2_lines__.append ( line ) 
+    _hlt_2_lines__.add ( line ) 
         
 # =============================================================================
 ## the list of possible Hlt1Members types of an Hlt1Line
@@ -1012,12 +1018,14 @@ class Hlt1Line(object):
                 else :
                     self._outputSelections += [ _m.name() ]
                     _add_to_hlt1_output_selections_ ( _m.name         () )
-            elif type(_m) is LoKi__HltUnit and hasattr( _m, 'Code') :
-                ex = r"SINK\s*\(\s*'(\w+)'\s*\)"
+            elif type(_m) is LoKi__HltUnit and (hasattr( _m, 'Code') or hasattr( _m, 'Preambulo')):
+                ex = r"(SOURCE|SELECTION|SINK)\s*\(\s*'(\w+)'\s*\)"
                 import re
-                for s in re.finditer(ex,getattr(_m,'Code')) :
-                        self._outputSelections +=  [ s.group(1) ]
-                        _add_to_hlt1_output_selections_ ( s.group(1) )
+                from itertools import chain
+                for s in chain.from_iterable((re.finditer(ex, line) for line in [getattr(_m, 'Code', '')] + getattr(_m, 'Preambulo', []))):
+                    if s.group(1) == 'SINK':
+                        self._outputSelections.append(s.group(2))
+                    _add_to_hlt1_output_selections_ (s.group(2))
 
         if self._outputsel is None and self._outputSelections :
             self._outputsel = self._outputSelections[-1]
@@ -1034,8 +1042,8 @@ class Hlt1Line(object):
         from DAQSys.Decoders import DecoderDB
         decoder = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
         mdict.update( DecisionName = decisionName ( line ) 
-                    , Prescale     = _createScalar( prescalerName(line), self._prescale  )
-                    , Postscale    = _createScalar( postscalerName(line),self._postscale )
+                    , Prescale     = _createScaler( prescalerName(line), self._prescale  )
+                    , Postscale    = _createScaler( postscalerName(line),self._postscale )
                     , HltDecReportsLocation = decoder.listOutputs()[0]
                     )
         if ODIN : 
@@ -1493,8 +1501,8 @@ class Hlt2Line(object):
         from DAQSys.Decoders import DecoderDB
         decoder = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
         mdict.update( DecisionName = decisionName ( line, 'Hlt2' ) 
-                    , Prescale     = _createScalar( prescalerName(line,'Hlt2'), self._prescale)
-                    , Postscale    = _createScalar( postscalerName(line,'Hlt2'),self._postscale)
+                    , Prescale     = _createScaler( prescalerName(line,'Hlt2'), self._prescale)
+                    , Postscale    = _createScaler( postscalerName(line,'Hlt2'),self._postscale)
                     , HltDecReportsLocation = decoder.listOutputs()[0]
                     , Turbo = self._Turbo
                     )
@@ -1752,18 +1760,18 @@ def len1 ( line ) :
     return len(line) if _i < 0 else len(line) - ( _i + 1 )
 
 ## the major properties/attributes  
-_hlt1_props_   = [ 'AcceptFraction'    , 
-                   'PercertPass'       ,
-                   'L0Channels'        ,
-                   'InputSelection'    ,
-                   'InputSelection1'   ,
-                   'InputSelection2'   ,
-                   'InputSelection3'   ,
-                   'InputSelections'   ,
-                   #'OutputSelection'   ,
-                   'RecoName'          ,
-                   'MatchName'         ,
-                   'FilterDescription' ] 
+_hlt1_props_   = set([ 'AcceptFraction'    , 
+                       'PercertPass'       ,
+                       'L0Channels'        ,
+                       'InputSelection'    ,
+                       'InputSelection1'   ,
+                       'InputSelection2'   ,
+                       'InputSelection3'   ,
+                       'InputSelections'   ,
+                      #'OutputSelection'   ,
+                       'RecoName'          ,
+                       'MatchName'         ,
+                       'FilterDescription' ])
 
 ## Get the tuple of major interesting properties for Hlt1  objects
 def hlt1Props () :
@@ -1773,8 +1781,7 @@ def hlt1Props () :
     >>> print hlt1Props()
     
     """
-    _hlt1_props_.sort() 
-    return tuple(_hlt1_props_)
+    return _hlt1_props_
 
 ## Add the item into the list of Hlt major proeprties 
 def addHlt1Prop ( prop ) :
@@ -1788,7 +1795,7 @@ def addHlt1Prop ( prop ) :
     if  not list is type(prop) and not  tuple is type(prop) : prop = [ prop ] 
     # loop over all items:
     for item in prop :
-        if not item in _hlt1_props_ : _hlt1_props_.append ( item )
+        _hlt1_props_.add ( item )
     # 
     return hlt1Props()
 
@@ -1804,8 +1811,7 @@ def rmHlt1Prop ( prop ) :
     if  not list is type(prop) and not  tuple is type(prop) : prop = [ prop ]
     for item in prop :
         if not item in _hlt1_props_ : return hlt1Props() 
-        pos = _hlt1_props_.index ( item )
-        del _hlt1_props_[ pos ]
+        _hlt1_props_.remove ( item )
     return hlt1Props() 
 
 # =============================================================================

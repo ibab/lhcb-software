@@ -5,6 +5,10 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2015-02-06 - Roel Aaij
+ - Change some internal containers to set() and include SOURCE and SELECTION
+   in selections.
+
 !========================= HltLine v7r7 2015-01-20 =========================
 
 ! 2015-01-20 - Roel Aaij
