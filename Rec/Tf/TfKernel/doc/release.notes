@@ -4,6 +4,11 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2015-02-05 - Manuel Tobias Schiller
+ - OTHit: make use of the new walk_fast method in OTDet::WalkRelation to speed
+   up Seeding and Forward by about 4%; effects on efficiencies, ghost rates,
+   pulls and so on are on the permille level
+
 ! 2015-01-20 - Manuel Tobias Schiller
  - SIMDChi2Fit: fix tiny bug which could cause the cov() method to fail in
    template parameter substitution in certain situations

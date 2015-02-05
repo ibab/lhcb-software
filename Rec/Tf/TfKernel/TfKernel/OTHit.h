@@ -91,7 +91,7 @@ namespace Tf
     {
       double propTime = (yReadout() - globaly) / module().propagationVelocityY();
       double dist2strawend = module().wireLength(m_rawhit.channel()) - propTime * module().propagationVelocity();
-      return propTime + module().walkRelation().walk(dist2strawend);
+      return propTime + module().walkRelation().walk_fast(dist2strawend);
     }
 
     /** The drift time after correction for propagation time */
@@ -183,7 +183,7 @@ namespace Tf
     m_module(&aModule),
     m_rawhit(rawhit),
     m_rtrel(&rtrel)
-    { setDriftDistAndErr(); }
+  { setDriftDistAndErr(); }
   
   inline OTHit::OTHit( const DeOTModule& aModule, const LHCb::OTLiteTime& rawhit ) :
     LineHit(aModule,rawhit),
@@ -203,7 +203,7 @@ namespace Tf
   // our dynamic casts
   inline const OTHit* HitBase::othit() const 
   { 
-    return ( type() == RegionID::OT ? static_cast<const OTHit*>(this) : NULL ); 
+    return ( type() == RegionID::OT ? static_cast<const OTHit*>(this) : nullptr ); 
   }
 
 }
