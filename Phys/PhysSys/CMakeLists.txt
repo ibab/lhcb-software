@@ -4,19 +4,6 @@
 gaudi_subdir(PhysSys v19r4p1)
 
 gaudi_depends_on_subdirs(Kernel/SelectionLine
-####################################################
-###  ADDED FOR PATCH RELEASE -> REMOVE AFTER v19r4p1 RELEASE !!!
-                         GaudiObjDesc
-                         Event/RecEvent
-                         Event/DAQEvent
-                         Event/DigiEvent
-                         Event/GenEvent
-                         Event/HltEvent
-                         Event/L0Event
-                         Event/MCEvent
-                         Event/PhysEvent
-                         Event/TrackEvent
-####################################################
                          Phys/BBDecTreeTool
                          Phys/DaVinciInterfaces
                          Phys/DaVinciKernel

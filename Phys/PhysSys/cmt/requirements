@@ -3,21 +3,6 @@ version v19r4p1
 
 branches doc cmt
 
-# TEMPORATY PATCHES TO BE REMOVED JUST AFTER THIS PATCHED RELEASE !!!
-private
-use GaudiObjDesc    v11r20p1 -no_auto_imports
-end_private
-use RecEvent        v2r53    Event
-use DAQEvent        v9r17    Event
-use DigiEvent       v4r3     Event
-use GenEvent        v6r11    Event
-use HltEvent        v9r5     Event
-use L0Event         v19r9    Event
-use MCEvent         v3r1     Event
-use PhysEvent       v11r28   Event
-use TrackEvent      v6r2     Event
-# --------------------------
-
 #===================================================================
 
 use  DaVinciInterfaces          v2r23    Phys    # Current DV Maintainer
