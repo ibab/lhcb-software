@@ -30,18 +30,14 @@ public:
                      const Material* material,
                      double wallThickness = 0,
                      bool upstream = true,  
-                     LHCb::ParticleID pid = LHCb::ParticleID(211) ) const ;
+                     LHCb::ParticleID pid = LHCb::ParticleID(211) ) const override;
   
   /// Standard constructor
   StateThickMSCorrectionTool( const std::string& type, 
                               const std::string& name,
                               const IInterface* parent);
   
-  virtual ~StateThickMSCorrectionTool( ); ///< Destructor
-  
-  StatusCode initialize();
-  
-protected:
+  ~StateThickMSCorrectionTool( ) override = default; ///< Destructor
   
 private:
   // Job options

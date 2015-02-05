@@ -3,8 +3,7 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
-// from GSL
-#include "gsl/gsl_math.h"
+// from VDT
 #include "vdt/log.h"
 
 // from DetDesc
@@ -65,8 +64,8 @@ void StateThickMSCorrectionTool::correctState( LHCb::State& state,
                                    (1. + 0.038*vdt::fast_log(radThick)) );
   }
 
-  // protect zero momentum
-  const double p = GSL_MAX( state.p(), 1.0 * MeV );
+  // protect against zero momentum
+  const double p = std::max( state.p(), 1.0 * MeV );
   const double norm2cnoise = norm2 * m_msff2 * scatLength / (p*p);
 
   // slope covariances
@@ -75,45 +74,22 @@ void StateThickMSCorrectionTool::correctState( LHCb::State& state,
   const double covTxTy = norm2cnoise * state.tx() * state.ty();
 
   // D - depends on whether up or downstream
-  const double D = (upstream) ? -1. : 1. ;
+  const double D = (upstream) ? -0.5 : 0.5 ;
 
-  Gaudi::TrackSymMatrix Q = Gaudi::TrackSymMatrix();
-  
-  const double wallThickness2 = pow_2(wallThickness);
-
-  Q(0,0) = covTxTx * wallThickness2 / 3.;
-  Q(1,0) = covTxTy * wallThickness2 / 3.;
-  Q(2,0) = 0.5*covTxTx * D * wallThickness;
-  Q(3,0) = 0.5*covTxTy * D * wallThickness;
-
-  Q(1,1) = covTyTy * wallThickness2 / 3.;
-  Q(2,1) = 0.5*covTxTy * D * wallThickness;
-  Q(3,1) = 0.5*covTyTy * D * wallThickness;
-
-  Q(2,2) = covTxTx;
-  Q(3,2) = covTxTy;
-
-  Q(3,3) = covTyTy;
+  const double wallThickness2_3 = pow_2(wallThickness)/3.;
 
   // update covariance matrix C = C + Q
-  Gaudi::TrackSymMatrix& tC = state.covariance();
-  tC += Q;
+  auto& cov = state.covariance();
+
+  cov(0,0) += covTxTx * wallThickness2_3 ;
+  cov(1,0) += covTxTy * wallThickness2_3 ;
+  cov(1,1) += covTyTy * wallThickness2_3 ;
+  cov(2,0) += covTxTx * wallThickness * D ;
+  cov(2,1) += covTxTy * wallThickness * D ;
+  cov(2,2) += covTxTx ;
+  cov(3,0) += covTxTy * wallThickness * D ;
+  cov(3,1) += covTyTy * wallThickness * D ;
+  cov(3,2) += covTxTy ;
+  cov(3,3) += covTyTy ;
 }
-
-//=============================================================================
-// Destructor
-//=============================================================================
-StateThickMSCorrectionTool::~StateThickMSCorrectionTool() {} 
-
-//=============================================================================
-// Initialization
-//=============================================================================
-StatusCode StateThickMSCorrectionTool::initialize()
-{
-  StatusCode sc = GaudiTool::initialize();
-  if (sc.isFailure()) return sc;  // error already reported by base class
-  
-  return StatusCode::SUCCESS;
-}
-
 //=============================================================================

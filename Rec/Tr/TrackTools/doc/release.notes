@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-02-05 - Gerhard Raven
+ - speed up StateThickMSCorrectionTool by a factor two, and
+   StateDetailedBetheBlochEnergyCorrectionTool by a few percent...
+
 ! 2015-01-30 - Sascha Stahl
  - In TrackUsedLHCbIDs: Changed LHCb::Tracks* to LHCb::Track::Range.
 

@@ -4,9 +4,8 @@
 #include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/PhysicalConstants.h"
 
-// from GSL
 #include <cmath>
-#include "gsl/gsl_math.h"
+#include <algorithm>
 #include "vdt/exp.h"
 #include "vdt/log.h"
 
@@ -71,22 +70,25 @@ void StateDetailedBetheBlochEnergyCorrectionTool::correctState( LHCb::State& sta
   // apply correction - note: for now only correct the state vector
   Gaudi::TrackVector& tX = state.stateVector();
   
-  auto eta = 1/(tX[4]*mass);
-  auto beta2 = pow_2(eta)/(1.0+pow_2(eta));
-  auto x = vdt::fast_log(eta*eta)/4.606;
+  auto eta2_inv = pow_2( tX[4]*mass ); 
+  auto beta2_inv = 1.0 + eta2_inv;
+  auto x4 = -vdt::fast_log(eta2_inv);
+  auto x = x4/4.606;
   
-  double rho = 0.0;
+  double rho_2 = 0.0;
   if (x > material->X0()) {
-      rho = 4.606*x-material->C();
+      rho_2 = x4-material->C();
       if (x < material->X1())
-        rho += material->a()*std::pow(material->X1()-x,material->m());
+        rho_2 += material->a()*std::pow(material->X1()-x,material->m());
+      rho_2 *= 0.5;
   }
+  static const auto log_2_me = std::log(2*Gaudi::Units::electron_mass_c2);
   auto eLoss =  m_energyLossCorr*wallThickness
      * std::sqrt( 1. + pow_2(state.tx()) + pow_2(state.ty()) )
      * ( 30.71 * MeV*mm2/mole ) * material->Z() * material->density() / material->A()
-     * (vdt::fast_log(2*Gaudi::Units::electron_mass_c2*eta*eta/material->I()) - beta2 - rho*0.5)/beta2;
+     * ( beta2_inv * ( log_2_me + x4 - vdt::fast_log(material->I()) - rho_2 ) - 1. );
  
-  eLoss = GSL_MIN( m_maxEnergyLoss, eLoss );
+  eLoss = std::min( m_maxEnergyLoss, eLoss );
 
   if (upstream == (tX[4]<0)) eLoss = -eLoss;
   tX[4] /=  ( 1.+eLoss*tX[4] );
