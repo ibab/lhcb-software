@@ -56,6 +56,10 @@ def importLineConfigurables(pkg, endsWithLines = False) :
     #    return [ HltXLines.HltXSomeLines.HltXSomeLinesConf , ... ]
     #
     import os.path, pkgutil, importlib
-    return [getattr(importlib.import_module(pkg.__name__ + '.' + name), name + 'Conf')
-            for _, name, _ in pkgutil.iter_modules(pkg.__path__)
-            if (not endsWithLines or (endsWithLines and name.endswith('Lines')))]
+    old_style = [getattr(importlib.import_module(pkg.__name__ + '.' + name), name + 'Conf')
+                 for _, name, is_pkg in pkgutil.iter_modules(pkg.__path__)
+                 if (not endsWithLines or (endsWithLines and name.endswith('Lines'))) and not is_pkg]
+    new_style = [getattr(importlib.import_module(pkg.__name__ + '.' + name + '.Lines'), name + 'Lines')
+                 for _, name, is_pkg in pkgutil.iter_modules(pkg.__path__)
+                 if is_pkg if name not in ('Utilities')]
+    return old_style + new_style

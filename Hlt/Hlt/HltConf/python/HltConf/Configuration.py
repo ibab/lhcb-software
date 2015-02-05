@@ -407,34 +407,33 @@ class HltConf(LHCbConfigurableUser):
         ### TODO: what about shared selections??? (which appear with multiple indices!)
         ###       but which have names not prefixed by the line name
         ### Make sure that the ANN Svc has everything it will need
-        from HltLine.HltLine     import hlt1Selections
+        from HltLine.HltLine     import hlt1Selections, hlt2Selections
         from Configurables       import HltANNSvc
-        missing = [ i for i in sorted(set(hlt1Selections()['All']) - set(HltANNSvc().Hlt1SelectionID.keys())) if not i.startswith('TES:') ]
-        missingDecisions  = [ i for i in missing if i.endswith('Decision') ]
-        updateDict( HltANNSvc().Hlt1SelectionID, 1000, missingDecisions )
-        missingSelections = [ i for i in missing if not i.endswith('Decision') ]
-        updateDict( HltANNSvc().Hlt1SelectionID, 11000, missingSelections )
-        log.warning( '# added %s selections to HltANNSvc' % len(missingSelections) )
-        log.warning( '# added %s decisions to HltANNSvc' % len(missingDecisions)  )
-        # TODO: add Hlt2 to this list, and remove the hardwired numbers from the Hlt2 lines...
-
+        hltSelections = {'Hlt1' : (hlt1Selections(), 1000, 11000),
+                         'Hlt2' : (hlt2Selections(), 5000, 50000)}
+        for stage, (selections, decStart, selStart) in hltSelections.iteritems():
+            ids = getattr(HltANNSvc(), '%sSelectionID' % stage)
+            missing = [ i for i in sorted(set(selections['All']) - set(ids.keys())) if not i.startswith('TES:') ]
+            missingDecisions  = [ i for i in missing if i.endswith('Decision') ]
+            updateDict( ids, decStart, missingDecisions )
+            missingSelections = [ i for i in missing if not i.endswith('Decision') ]
+            updateDict( ids, selStart, missingSelections )
+            log.warning( '# added %d %s selections to HltANNSvc' %  (len( missingSelections ), stage ) )
+            log.warning( '# added %d %s decisions to HltANNSvc' % ( len( missingDecisions ), stage ) )
 
         if self.getProp('PruneHltANNSvc') :
             # prune all Decisions which are not members of Htl1 or Hlt2...
             def genName( c ) :
                 if type(c) != str : c = c.name()
                 return '%sDecision'%c
-
-            hlt1decnames = [  genName(i) for i in Sequence('Hlt1').Members ]
-            hlt2decnames = [  genName(i) for i in Sequence('Hlt2').Members ]
-            # remove 'stale' entries
-            hlt1extradecnames = [ i for i in HltANNSvc().Hlt1SelectionID.keys() if i.endswith('Decision') and i not in hlt1decnames ]
-            hlt2extradecnames = [ i for i in HltANNSvc().Hlt2SelectionID.keys() if i.endswith('Decision') and i not in hlt2decnames ]
-            #print 'stale Hlt1 entries : %s ' % hlt1extradecnames
-            #print 'stale Hlt2 entries : %s ' % hlt2extradecnames
-            for i in hlt1extradecnames : del HltANNSvc().Hlt1SelectionID[i]
-            for i in hlt2extradecnames : del HltANNSvc().Hlt2SelectionID[i]
-
+            for stage in ('Hlt1', 'Hlt2'):
+                decnames = set([ genName(i) for i in Sequence(stage).Members ])
+                # remove 'stale' entries
+                ids = getattr(HltANNSvc(), '%sSelectionID' % stage)
+                extradecnames = [ i for i in ids.keys() if i.endswith('Decision') and i not in decnames ]
+                #print 'stale %s entries : %s ' % (stage, extradecnames)
+                for i in extradecnames : del ids[i]
+                setattr(HltANNSvc(), '%sSelectionID' % stage, ids)
 
         # given that both Hlt1 and Hlt2 end up in the same rawbank, and thus
         # effectively 'share a namespace' we MUST make sure that there is no overlap

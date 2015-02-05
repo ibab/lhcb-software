@@ -4,6 +4,10 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2015-02-06 - Roel Aaij
+ - Automatically generate all Hlt1 and Hlt2 selection and decision IDs.
+ - Add functionality for importing new template Hlt2 lines.
+
 ! 2015-01-30 - Sascha Stahl
  - In Configuration.py, set the VetoObjects of Hlt1DecReportsDecoder, Hlt1SelReportsDecoder,
    and HltTrackReportsDecoder to their own output locations for HLT1 and HLT2.
