@@ -65,7 +65,7 @@ PatDownstream::PatDownstream( const std::string& name,
   declareProperty( "TolMomentum"   , m_tolMomentum   = 20000.    );
   declareProperty( "maxWindowSize" , m_maxWindow     = 10.0 * Gaudi::Units::mm );
   declareProperty( "MaxDistance"   , m_maxDistance   = 0.30 * Gaudi::Units::mm );
-  declareProperty( "MaxChisq"      , m_maxChisq      = 20.        );
+  declareProperty( "MaxChi2"       , m_maxChi2       = 20.        );
   declareProperty( "errorZMagnet"  , m_errZMag       = 30. *  Gaudi::Units::mm );
   declareProperty( "minTTx"        , m_minTTx        = 35. *  Gaudi::Units::mm );
   declareProperty( "minTTy"        , m_minTTy        = 35. *  Gaudi::Units::mm );
@@ -126,11 +126,11 @@ StatusCode PatDownstream::initialize() {
          << " TolMatch           = " << m_tolX          << endmsg
          << " TolUV              = " << m_tolUV         << endmsg
          << " MaxDistance        = " << m_maxDistance   << endmsg
-         << " MaxChisq           = " << m_maxChisq      << endmsg
+         << " MaxChi2            = " << m_maxChi2      << endmsg
          << " MaxWindowSize      = " << m_maxWindow     << endmsg
          << " RemoveUsed         = " << m_removeUsed    << endmsg
          << " RemoveAll          = " << m_removeAll     << endmsg
-         << " LongChisq          = " << m_longChi2      << endmsg     
+         << " LongChi2           = " << m_longChi2      << endmsg     
          << "========================================"  << endmsg;
   
   info() << "zMagnetParams ";
@@ -222,26 +222,20 @@ StatusCode PatDownstream::execute() {
   //==========================================================================
   Tf::TTStationHitManager<PatTTHit>::HitRange ttCoords = m_ttHitManager->hits();
   
-  for ( LHCb::Tracks::const_iterator itT = myInTracks.begin();
-        myInTracks.end() != itT; ++itT ) {
-    LHCb::Track* tr = (*itT);
+  for ( LHCb::Track* tr : myInTracks ) {
     
     if ( 0 <= m_seedKey && m_seedKey == tr->key() ) m_printing = true;
     
-    
     PatDownTrack track( tr, m_zTT, m_zMagnetParams, m_momentumParams, m_yParams, m_errZMag, magScaleFactor*(-1) );
     
-    //Y. Xie: get rid of particles from beampipe 
-    const double xAtTT = track.xAtZ( m_zTTa );
-    const double yAtTT = track.yAtZ( m_zTTa );
-    if( m_minTTx > fabs(xAtTT) && 
-        m_minTTy > fabs(yAtTT)       ) continue;
+    // -- Veto particles coming from the beam pipe.
+    if( insideBeampipe( track ) ) continue;
     
-    const double deltaP = track.moment() * track.state()->qOverP() - 1.;
+
+    const double deltaP = track.momentum() * track.state()->qOverP() - 1.;
     
     if ( m_printing ) {
-      for ( PatTTHits::const_iterator itH = ttCoords.begin(); ttCoords.end() != itH; ++itH ){
-        PatTTHit* hit = (*itH);
+      for ( PatTTHit* hit : ttCoords ){
         if (hit->hit()->ignore()) continue;
         const double yTrack = track.yAtZ( 0. );
         const double tyTr   = track.slopeY();
@@ -250,7 +244,7 @@ StatusCode PatDownstream::execute() {
       
       info() << "Track " << tr->key() 
              << format( " [%7.2f %7.2f GeV] x,y(TTa)%7.1f%7.1f dp/p%7.3f errXMag%6.1f YTT%6.1f",
-                        .001/track.state()->qOverP(), .001*track.moment(),
+                        .001/track.state()->qOverP(), .001*track.momentum(),
                         track.xAtZ( m_zTTa ), track.yAtZ( m_zTTa ), deltaP,
                         track.errXMag(), track.errYMag() )
              << endmsg;
@@ -270,68 +264,66 @@ StatusCode PatDownstream::execute() {
     // Get hits in TT around a first track estimate
     getPreSelection( track );
     
-    PatTTHits::const_iterator itH;
-    
     int nbOK = 0;
     PatDownTrack bestTrack( track );
     PatTTHits MatchingXHits;
     MatchingXHits.reserve(16);
     int maxPoints = 0;
-    double minChisq = m_maxChisq + 10.;
+    double minChi2 = m_maxChi2 + 10.;
     
-    if ( 2 < ( m_xHits.size() +  m_uvHits.size() ) ) {
-      //==============================================================
-      // Try to find a candidate: X first, then UV.
-      //==============================================================
+    if ( 3 > ( m_xHits.size() +  m_uvHits.size() ) ) continue;
+    
+    //==============================================================
+    // Try to find a candidate: X first, then UV.
+    //==============================================================
+    for( PatTTHit* myHit : m_xHits ){
       
-      for ( itH = m_xHits.begin(); m_xHits.end() != itH; itH++ ) {
-        PatTTHit* myHit = *itH;
-        if ( myHit->hit()->testStatus( Tf::HitBase::UsedByPatDownstream ) ) continue;
-        double meanZ = myHit->z();
-        double posX  = myHit->x( );
-        int myPlane  = myHit->planeCode();
-        
-        track.startNewCandidate();
-        
-        // Create track estimate with one x hit
-        double slopeX = (track.xMagnet() - posX + track.sagitta( meanZ)) / (track.zMagnet() - meanZ);
-        track.setSlopeX( slopeX );
-        
-        if ( m_printing ) {
-          const double tolMatch = (std::abs(track.state()->p() / m_tolMomentum) < 1. / (m_maxWindow - m_tolX)) ?
-            m_maxWindow : (m_tolX + m_tolMomentum / track.state()->p());
-          info() << endmsg 
-                 << format( "... start plane %1d x%8.2f z%8.1f slope%8.2f tolMatch%7.3f",
-                            myPlane, posX, meanZ, 1000. * slopeX, tolMatch )
-                 << endmsg;
-        }        
-        
-        // Fit x projection
-        findMatchingHits( MatchingXHits, track, myPlane );
-        fitXProjection( MatchingXHits, track, myHit );
-        
-        // Fit 3D track
-        addUVHits( track );
-        if ( 3 > track.hits().size() ) {
-          if ( m_printing ) info() << " === not enough hits" << endmsg;
-          continue;
-        }
-        fitAndRemove( track );
-        
-        // Check if candidate is better than the old one
-        if ( !acceptCandidate( track, bestTrack, maxPoints, minChisq ) ) continue;
-        
-        // New best track
-        bestTrack = track;
-        nbOK++;
+      if ( myHit->hit()->testStatus( Tf::HitBase::UsedByPatDownstream ) ) continue;
+      double meanZ = myHit->z();
+      double posX  = myHit->x( );
+      int myPlane  = myHit->planeCode();
+      
+      track.startNewCandidate();
+      
+      // Create track estimate with one x hit
+      double slopeX = (track.xMagnet() - posX + track.sagitta( meanZ)) / (track.zMagnet() - meanZ);
+      track.setSlopeX( slopeX );
+      
+      if ( m_printing ) {
+        const double tolMatch = (std::abs(track.state()->p() / m_tolMomentum) < 1. / (m_maxWindow - m_tolX)) ?
+          m_maxWindow : (m_tolX + m_tolMomentum / track.state()->p());
+        info() << endmsg 
+               << format( "... start plane %1d x%8.2f z%8.1f slope%8.2f tolMatch%7.3f",
+                          myPlane, posX, meanZ, 1000. * slopeX, tolMatch )
+               << endmsg;
+      }        
+      
+      // Fit x projection
+      findMatchingHits( MatchingXHits, track, myPlane );
+      fitXProjection( MatchingXHits, track, myHit );
+      
+      // Fit 3D track
+      addUVHits( track );
+      if ( 3 > track.hits().size() ) {
+        if ( m_printing ) info() << " === not enough hits" << endmsg;
+        continue;
       }
+      fitAndRemove( track );
+        
+      // Check if candidate is better than the old one
+      if ( !acceptCandidate( track, bestTrack, maxPoints, minChi2 ) ) continue;
+      
+      // New best track
+      bestTrack = track;
+      nbOK++;
     }
+    
     
     //== Debug the track.
     if ( 0 == nbOK ) {
       if ( m_printing ) {
         info() << format( "Track %3d P=%7.2f GeV --- discarded, not enough planes",
-                          tr->key(),  .001*track.moment() ) << endmsg;
+                          tr->key(),  .001*track.momentum() ) << endmsg;
       }
     } else {
       
@@ -461,8 +453,8 @@ void PatDownstream::tagUsedTT( const LHCb::Track* tr ) {
 void PatDownstream::getPreSelection( PatDownTrack& track ) {
   // Max Pt around 100 MeV for strange particle decay -> maximum displacement is in 1/p.
   double xPredTol = m_xPredTol2;
-  if (std::abs(track.moment()) >  1e-6)  
-      xPredTol = m_xPredTol / fabs( track.moment() ) + m_xPredTol2;  // P dependance + overal tol.
+  if (std::abs(track.momentum()) >  1e-6)  
+      xPredTol = m_xPredTol / fabs( track.momentum() ) + m_xPredTol2;  // P dependance + overal tol.
   double yTol = xPredTol;
   
   m_xHits.clear();
@@ -497,13 +489,14 @@ void PatDownstream::getPreSelection( PatDownTrack& track ) {
           if ( xPredTol < fabs( pos - hit->x() ) ) continue;
           hit->hit()->setStatus( Tf::HitBase::UsedByPatDownstream, false );
           hit->setProjection( fabs( hit->x()-pos ) );
+          
           // check if x or stereo hit
-          if ( hit->hit()->lhcbID().stID().layer() ==
-               hit->hit()->lhcbID().stID().station() ) {
-            m_xHits.push_back( hit );
-          } else {
+          if( isStereo(hit) ){
             m_uvHits.push_back( hit );
+          }else{
+            m_xHits.push_back( hit );
           }
+          
           if ( m_printing ) {
             info() << format( "  plane%2d z %8.2f x %8.2f pos %8.2f High%2d dist %8.2f", 
                               hit->planeCode(), hit->z(), hit->x(), pos, 
@@ -567,21 +560,21 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
     
       // -- check how many different layers have fired
       if ( 0 == differentPlanes[hit->planeCode()]++ ) ++nDoF;
+      if( isStereo( hit ) ) ++nbUV;
 
-      if ( hit->hit()->lhcbID().stID().layer() != 
-           hit->hit()->lhcbID().stID().station() ) nbUV++;
       if ( m_printing ) {
         info() << format( "   Plane %2d x %7.2f dist %6.3f ", 
                           hit->planeCode(), hit->x(), dist );
         if ( m_debugTool ) m_debugTool->debugTTCluster( info(), hit );
         info() << endmsg;
       }
+      
     }
 
     if (0 != nbUV) {
       CholeskyDecomp<double, 3> decomp(mat);
       if (!decomp) {
-        track.setChisq(1e42);
+        track.setChi2(1e42);
         return;
       } else {
         decomp.Solve(rhs);
@@ -589,7 +582,7 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
     } else {
       CholeskyDecomp<double, 2> decomp(mat);
       if (!decomp) {
-        track.setChisq(1e42);
+        track.setChi2(1e42);
         return;
       } else {
         decomp.Solve(rhs);
@@ -609,7 +602,7 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
 
     //== Remove worst hit and retry, if too far.
 
-    double chisq = track.initialChisq();
+    double chi2 = track.initialChi2();
     
     double maxDist = -1.;
     PatTTHits::iterator worst;
@@ -631,7 +624,7 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
       }
       // --
       
-      chisq += dist * dist * hit->hit()->weight();
+      chi2 += dist * dist * hit->hit()->weight();
       // -- only flag this hit as removable if it is not alone in a plane or there are 4 planes that fired
       if ( maxDist < fabs(dist) &&  (1 < differentPlanes[hit->planeCode()] || nDoF == track.hits().size() ) ) {
         maxDist = fabs( dist );
@@ -639,8 +632,8 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
       }
     }
     
-    if ( 2 < track.hits().size() ) chisq /= (track.hits().size() - 2 );
-    track.setChisq( chisq );
+    if ( 2 < track.hits().size() ) chi2 /= (track.hits().size() - 2 );
+    track.setChi2( chi2 );
     
     
     if ( 5. * m_maxDistance > maxDist && 0 < nbUV ) {
@@ -676,7 +669,7 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
     
 
     if ( m_printing ) {
-      info() << format( "  ---> chi2 %7.2f maxDist %7.3f tol %7.3f", chisq, maxDist, m_maxDistance ) << endmsg;
+      info() << format( "  ---> chi2 %7.2f maxDist %7.3f tol %7.3f", chi2, maxDist, m_maxDistance ) << endmsg;
     }    
   } while (again);
 }
@@ -722,7 +715,7 @@ void PatDownstream::addUVHits ( PatDownTrack& track ) {
 //  Check if the new candidate is better than the old one
 //=========================================================================
 bool PatDownstream::acceptCandidate( PatDownTrack& track, PatDownTrack&  bestTrack, 
-                                     int& maxPoints, double& minChisq ){
+                                     int& maxPoints, double& minChi2 ){
 
   const int nbMeasureOK = track.hits().size();
 
@@ -733,12 +726,12 @@ bool PatDownstream::acceptCandidate( PatDownTrack& track, PatDownTrack&  bestTra
   }
 
   //== Good enough Chi2/ndof
-  if ( m_maxChisq < track.chisq() ) {
-    if ( m_printing ) info() << " === Chisq too big " << track.chisq() << endmsg;
+  if ( m_maxChi2 < track.chi2() ) {
+    if ( m_printing ) info() << " === Chi2 too big " << track.chi2() << endmsg;
     return false;
   }
 
-  const double deltaP = track.moment() * track.state()->qOverP() - 1.;
+  const double deltaP = track.momentum() * track.state()->qOverP() - 1.;
   //== Compatible momentum
   if ( m_deltaP < fabs(deltaP) ) {
     if ( m_printing ) info() << " === Deltap too big " << deltaP << endmsg;
@@ -749,8 +742,8 @@ bool PatDownstream::acceptCandidate( PatDownTrack& track, PatDownTrack&  bestTra
   //== Longest -> Keeep it
   if ( maxPoints <= nbMeasureOK ) {
     //== Same : Keep if better Chi2
-    if ( minChisq < track.chisq() ) {
-      if ( m_printing ) info() << " === Chisq bigger than previous " << track.chisq() << endmsg;
+    if ( minChi2 < track.chi2() ) {
+      if ( m_printing ) info() << " === Chi2 bigger than previous " << track.chi2() << endmsg;
       return false;
     }
   } else {
@@ -790,7 +783,7 @@ bool PatDownstream::acceptCandidate( PatDownTrack& track, PatDownTrack&  bestTra
         
   if ( m_printing ) {
     info() << format( "  *** Good candidate ***  slope%8.2f displX%8.2f Y%8.2f Chi2%8.2f", 
-                      1000.*track.slopeX(), track.displX(), track.displY(), track.chisq() );
+                      1000.*track.slopeX(), track.displX(), track.displY(), track.chi2() );
     if ( 0 == bestTrack.hits().size() ) {
       info() << " OK"  << endmsg;
     } else {
@@ -799,13 +792,13 @@ bool PatDownstream::acceptCandidate( PatDownTrack& track, PatDownTrack&  bestTra
   }
 
   //== Better candidate. 
-  minChisq = track.chisq();
+  minChi2 = track.chi2();
   maxPoints = nbMeasureOK;
   if ( maxPoints > 4 ) maxPoints = 4;
   
   //== calculate pt and p
  
-  const double momentum = std::abs(track.moment());
+  const double momentum = std::abs(track.momentum());
   const double tx2 = track.slopeX()*track.slopeX();
   const double ty2 = track.slopeY()*track.slopeY();
   const double sinTrack = sqrt( 1. - 1./(1.+tx2 + ty2) );
@@ -870,8 +863,8 @@ void PatDownstream::storeTrack( PatDownTrack& track, LHCb::Tracks* finalTracks, 
   
   // check for FPE and magnet off
   double QOverP = 1e-5;
-  if (std::abs(track.moment()) >  1e-6){
-      QOverP = 1.0 / track.moment();
+  if (std::abs(track.momentum()) >  1e-6){
+      QOverP = 1.0 / track.momentum();
   }
 
   //== create a state at zTTa
@@ -933,13 +926,13 @@ void PatDownstream::fitXProjection( PatTTHits& xHits, PatDownTrack& track, PatTT
   track.hits().push_back( firstHit );
   PatDownTrack bestTrack( track );
   PatDownTrack newTrack( track );
-  double minChisq = 1000000;
+  double minChi2 = 1000000;
   for( PatTTHit* hit: xHits) {
     newTrack.startNewXCandidate( firstHit );
     newTrack.hits().push_back( hit );
     fitAndRemove( newTrack );
-    if ( newTrack.chisq() < minChisq ) {
-      minChisq = newTrack.chisq();
+    if ( newTrack.chi2() < minChi2 ) {
+      minChi2 = newTrack.chi2();
       bestTrack = newTrack;
     }
   }

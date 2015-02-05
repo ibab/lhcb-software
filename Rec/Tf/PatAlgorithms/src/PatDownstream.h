@@ -69,6 +69,18 @@ protected:
     
   
 private:
+
+  /// Check if particle is coming from the beampipe
+  inline bool insideBeampipe(const PatDownTrack track) const {
+    return (m_minTTx > std::abs( track.xAtZ( m_zTTa ) )) && (m_minTTy > std::abs( track.yAtZ( m_zTTa ) ));
+  }
+  
+  /// Is this a hit in a stereo layer?
+  inline bool isStereo(const PatTTHit* hit) const {
+    return ( hit->planeCode() == 1 ) || ( hit->planeCode() == 2 );
+  }
+  
+
   int           m_downTime;
   bool          m_printing; 
   bool          m_magnetOff;
@@ -85,7 +97,7 @@ private:
   double        m_tolMomentum;
   double        m_maxDistance;
   double        m_maxWindow;
-  double        m_maxChisq;
+  double        m_maxChi2;
   double        m_minMomentum;
   double        m_minPt;
   bool          m_removeUsed;
@@ -127,5 +139,6 @@ private:
 
   ISequencerTimerTool* m_timerTool;
   bool m_doTiming; 
+  
 };
 #endif // PATKSHORT_H

@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-02-05 - Michel De Cian
+ - Simplify some things in PatDownTrack and PatDownstream. No performance changes.
+
 ! 2015-02-04 - Sascha Stahl
  - PatMatchTool: Added the option to veto Velo seeds similar to PatForwardTool. 
  - PatForwardTool: Do not add additional TT hits to Forward candidates if the
