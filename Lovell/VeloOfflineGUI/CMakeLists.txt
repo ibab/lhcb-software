@@ -20,4 +20,4 @@ gaudi_add_executable(VeloOfflineGUI
             	 INCLUDE_DIRS VeloAnalysisFramework Qt ROOT
 		 LINK_LIBRARIES Qt ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ROOT )
 
- gaudi_install_scripts()
+gaudi_install_scripts()
