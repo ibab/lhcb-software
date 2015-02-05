@@ -2,6 +2,13 @@
 ! Responsible : Alexandr Kozlinskiy, Lucia Grillo
 !--------------------------------------------------------------------------
 
+! 2015-02-05 - Manuel Tobias Schiller
+ - WalkRelation: use new ChebyshevApprox class from LHCbMath; this should be
+   40% faster than the previous code, and is accurate to better than half an
+   OTIS bin (i.e. better than about 0.2 ns), more than accurate enough not to
+   cause trouble in code using this fast version (this corresponds to about 6
+   to 8 % of the OT resolution)
+
 ! 2015-01-19 - Wouter Hulsbergen
  - Added condition for global t0 of OT
 
