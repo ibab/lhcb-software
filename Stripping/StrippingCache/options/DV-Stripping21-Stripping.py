@@ -67,7 +67,7 @@ filterBadEvents = GaudiSequencer("BadEventFilter",
 streamFilter = { 'default'  : filterBadEvents,
                  'MiniBias' : ProcStatusCheck() }
 
-sc = StrippingConf( Streams = streams,
+sc = StrippingConf( Streams = streams[:1] ,
                     MaxCandidates = 2000,
                     AcceptBadEvents = False,
                     BadEventSelection = streamFilter,
@@ -197,3 +197,8 @@ DaVinci().ProductionType = "Stripping"
 from Configurables import TimingAuditor, SequencerTimerTool
 TimingAuditor().addTool(SequencerTimerTool,name="TIMER")
 TimingAuditor().TIMER.NameSize = 60
+
+
+from Configurables import ApplicationMgr, MessageSvc 
+ApplicationMgr().OutputLevel = 1 
+MessageSvc().OutputLevel     = 1
