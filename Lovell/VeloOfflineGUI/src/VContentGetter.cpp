@@ -27,8 +27,8 @@ public:
     std::string rawData;
     while(fgets(buff, sizeof(buff), in)!=NULL) rawData.append(buff);
     pclose(in);
-    std::cout<<"JSON Plot Data:"<<std::endl;
-    std::cout<<rawData<<std::endl;
+//    std::cout<<"JSON Plot Data:"<<std::endl;
+//    std::cout<<rawData<<std::endl;
 
     rapidjson::Document d;
     d.Parse(rawData.c_str());
@@ -54,7 +54,7 @@ public:
 
   //___________
   void th1Decoder(rapidjson::Document * d) {
-  	std::cout<<"TH1 decoder."<<std::endl;
+  	//std::cout<<"TH1 decoder."<<std::endl;
   	m_plottableDimension = 1;
   	if (!(*d)["success"].GetBool()) {
   		std::cout<<"Unable to retrive plot data: "<<(*d)["message"].GetString()<<std::endl;
@@ -84,19 +84,19 @@ public:
 
     double entries = (*d)["data"]["data"]["entries"].GetDouble();
     std::stringstream ssN; ssN<<entries; m_statsValues.push_back(ssN.str());
-    std::cout<<"N: "<<entries<<std::endl;
+    //std::cout<<"N: "<<entries<<std::endl;
     double mean = (*d)["data"]["data"]["mean"].GetDouble();
     std::stringstream ssMean; ssMean<<mean; m_statsValues.push_back(ssMean.str());
-    std::cout<<"Mean: "<<mean<<std::endl;
+    //std::cout<<"Mean: "<<mean<<std::endl;
     double rms = (*d)["data"]["data"]["rms"].GetDouble();
     std::stringstream ssRMS; ssRMS<<rms; m_statsValues.push_back(ssRMS.str());
-    std::cout<<"RMS: "<<rms<<std::endl;
+    //std::cout<<"RMS: "<<rms<<std::endl;
     double underflow = (*d)["data"]["data"]["underflow"].GetDouble();
     std::stringstream ssUnder; ssUnder<<underflow; m_statsValues.push_back(ssUnder.str());
-    std::cout<<"Underflow: "<<underflow<<std::endl;
+    //std::cout<<"Underflow: "<<underflow<<std::endl;
     double overflow = (*d)["data"]["data"]["overflow"].GetDouble();
     std::stringstream ssOver; ssOver<<overflow; m_statsValues.push_back(ssOver.str());
-    std::cout<<"Overflow: "<<overflow<<std::endl;
+    //std::cout<<"Overflow: "<<overflow<<std::endl;
 
     const rapidjson::Value& a = (*d)["data"]["data"]["axis_titles"];
     assert(a.IsArray());
@@ -107,7 +107,7 @@ public:
 
   //___________
   void th2Decoder(rapidjson::Document * d) {
-    std::cout<<"TH2 decoder."<<std::endl;
+    //std::cout<<"TH2 decoder."<<std::endl;
     m_name = (*d)["data"]["title"].GetString();
     m_plottableStyle = 0;
     m_plottableDimension = 2;
@@ -141,7 +141,7 @@ public:
 
     double entries = (*d)["data"]["data"]["entries"].GetDouble();
     std::stringstream ssN; ssN<<entries; m_statsValues.push_back(ssN.str());
-    std::cout<<"N: "<<entries<<std::endl;
+    //std::cout<<"N: "<<entries<<std::endl;
     m_statsValues.push_back("0.0");
     m_statsValues.push_back("0.0");
     m_statsValues.push_back("0.0");
@@ -494,12 +494,12 @@ void VContentGetter::jsonToOps(std::string * jsonOps,
     tabInfo.push_back(tab["title"].GetString());
     tabInfo.push_back("Top");
     ops->push_back(tabInfo);
-    std::cout<<"Tab:\t";
-    for (std::vector<std::string>::iterator is = tabInfo.begin();
-    		is != tabInfo.end(); is++) {
-    	std::cout<<(*is)<<"\t";
-    }
-    std::cout<<"\n";
+//    std::cout<<"Tab:\t";
+//    for (std::vector<std::string>::iterator is = tabInfo.begin();
+//    		is != tabInfo.end(); is++) {
+//    	std::cout<<(*is)<<"\t";
+//    }
+//    std::cout<<"\n";
 
     if (tab.HasMember("plots")) {
     	const rapidjson::Value &plots = tab["plots"];
@@ -515,12 +515,12 @@ void VContentGetter::jsonToOps(std::string * jsonOps,
     	  else plotInfo.push_back("singleModule");
     	  ops->push_back(plotInfo);
 
-    	  std::cout<<"Plot:\t";
-    	  for (std::vector<std::string>::iterator is = plotInfo.begin();
-						is != plotInfo.end(); is++) {
-					std::cout<<(*is)<<"\t";
-				}
-				std::cout<<"\n";
+//    	  std::cout<<"Plot:\t";
+//    	  for (std::vector<std::string>::iterator is = plotInfo.begin();
+//						is != plotInfo.end(); is++) {
+//					std::cout<<(*is)<<"\t";
+//				}
+//				std::cout<<"\n";
     	}
     }
 	}

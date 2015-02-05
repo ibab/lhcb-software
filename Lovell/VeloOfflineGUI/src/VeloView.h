@@ -36,6 +36,7 @@ public:
   VPlotOps * m_plotOps;
   std::string m_VVinterfaceScript;
   QSortFilterProxyModel * m_runProxy;
+  bool m_verbose;
 
   // Methods___________________________________________________________________
   explicit veloview(int, QWidget *parent = 0);

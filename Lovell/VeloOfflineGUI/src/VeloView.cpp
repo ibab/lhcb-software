@@ -15,9 +15,9 @@ veloview::veloview(int runMode, QWidget *parent) :
   m_combatFileOpen(false),
   m_keplerFileOpen(false),
   m_plotOps(NULL),
-  m_runProxy(NULL)
+  m_runProxy(NULL),
+  m_verbose(false)
 {
-
   QFile stylesheet("styleSheet.qss");
   stylesheet.open(QFile::ReadOnly);
   QString setSheet = QLatin1String(stylesheet.readAll());
