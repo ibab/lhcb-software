@@ -6,7 +6,7 @@
 __version__ = "$Id: BrunelOnline.py,v 1.25 2010/11/09 12:20:55 frankb Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
-import os, sys
+import os, sys, re
 import Configurables as Configs
 import Gaudi.Configuration as Gaudi
 import GaudiKernel
@@ -54,8 +54,14 @@ def EscherCommon(true_online_version):
   if hasattr(Online, "AlignXmlDir"):
     escher.OnlineAligWorkDir = os.path.join(Online.AlignXmlDir, 'running')
 
+  handlerConditions = ConditionsMap.RunChangeHandlerConditions
+  if true_online_version and os.environ['PARTITION'] == 'TEST':
+    re_year = re.compile('(201\d)')
+    for k, v in handlerConditions.items():
+      handlerConditions[re_year.sub('2014', k)] = v
+    
   conddb = CondDB()
-  conddb.RunChangeHandlerConditions = ConditionsMap.RunChangeHandlerConditions
+  conddb.RunChangeHandlerConditions = handlerConditions
   conddb.IgnoreHeartBeat = True
   conddb.setProp('EnableRunChangeHandler', True)
   conddb.UseDBSnapshot=True
