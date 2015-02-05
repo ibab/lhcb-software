@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : AlignmentOnline/PyAlignOnline
+! Responsible : Roel Aaij
+! Purpose     : Python steering for online alignment
+!-----------------------------------------------------------------------------
+
+! 2015-02-04 - Roel Aaij
+ - initial import
