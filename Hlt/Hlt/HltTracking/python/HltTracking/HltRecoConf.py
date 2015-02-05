@@ -24,17 +24,20 @@ __version__ = ""
 from Gaudi.Configuration import * 
 from LHCbKernel.Configuration import *
 
-from GaudiKernel.SystemOfUnits import MeV
+from GaudiKernel.SystemOfUnits import MeV, mm
 
 class HltRecoConf(LHCbConfigurableUser):
-   __slots__ = { "Forward_HPT_MinPt"            : 500. * MeV
-                 ,"Forward_HPT_MinP"            : 3000. * MeV
-                 ,"Forward_LPT_MinPt"           : 80. * MeV  
-                 ,"Forward_LPT_MinP"            : 1000. * MeV 
+   __slots__ = { "Forward_HPT_MinPt"            :   500. * MeV
+                 ,"Forward_HPT_MinP"            :  3000. * MeV
+                 ,"Forward_LPT_MinPt"           :    80. * MeV  
+                 ,"Forward_LPT_MinP"            :  1000. * MeV 
                  ,"Forward_MaxOTHits"           : 15000
-                 ,"MatchVeloMuon_MinP"          : 6000. * MeV
-                 ,"GoodTrCHI2PDOF"              : 5.0
-                 ,"VeloSelectionCut"            : "(~TrBACKWARD) & ( TrNVELOMISS < 100 )"
+                 ,"MatchVeloMuon_MinP"          :  6000. * MeV
+                 ,"FitVelo"                     : False
+                 ,"OfflineRich"                 : True
+                 ,"VeloSelectionCut"               : "(~TrBACKWARD) & ( TrNVELOMISS < 10 )"
+                 ,"GoodTrCHI2PDOF"              :     5.0
+                 ,"PVBeamspotRho"               :       0.3 * mm
                  ,"InitFits"                    : False
                  ,"SimplifiedMaterialFit"       : False
                }

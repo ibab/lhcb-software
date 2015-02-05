@@ -35,6 +35,9 @@ from HltTrackNames import HltRichDefaultHypos, HltRichDefaultRadiators
 from HltTrackNames import Hlt2TrackingRecognizedFitTypesForRichID 
 from HltTrackNames import HltRichDefaultTrackCuts, HltDefaultTrackCuts
 
+from HltTrackNames import OfflineRichDefaultHypos, OfflineRichDefaultRadiators
+from HltTrackNames import OfflineRichDefaultTrackCuts
+
 from Configurables import CaloProcessor, RichRecSysConf, TrackSelector
 
 #import all Hlt2 lines configurables in our scope so that genConfUser can find it... (i.e. make sure it is in 'dir()')
@@ -76,6 +79,12 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 , "RichHypos"                       : HltRichDefaultHypos
                 , "RichRadiators"                   : HltRichDefaultRadiators
                 , "RichTrackCuts"                   : HltRichDefaultTrackCuts
+                , "RichTracklessRingAlgs"           : []
+                , "RichFindClusters"                : False
+                , "RichPidConfig"                   : "FastGlobal"
+                # Flip these three for offline RICH
+                , "RichOverrideSafety"              : True
+                , "RichUpfront"                     : True
                 , "ExtraRichName"                   : ""
                 , "TrackCuts"                       : HltDefaultTrackCuts
                 , "Hlt2ForwardMaxVelo"              : 0
@@ -289,7 +298,10 @@ class Hlt2Tracking(LHCbConfigurableUser):
         """
         The staged fast fit
         """
-        return self.getProp("__hlt2PrepareTracksSeq__")
+        if self.getProp("RichUpfront"):
+          return self.getProp("__hlt2ChargedRichProtosSeq__")
+        else:
+          return self.getProp("__hlt2PrepareTracksSeq__")
     #############################################################################################
     #############################################################################################
     #
@@ -364,7 +376,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         # only make the muon and calo protoparticles for the instances which use
         # the default settings for the RICH
         #
-        if  (    self.getProp("RichHypos")         == HltRichDefaultHypos         and 
+        if self.getProp("RichOverrideSafety") or  (    self.getProp("RichHypos")         == HltRichDefaultHypos         and 
                  self.getProp("RichRadiators")     == HltRichDefaultRadiators    
             ) :
             #
@@ -923,6 +935,14 @@ class Hlt2Tracking(LHCbConfigurableUser):
         """
         Set up the sequence for doing the RICH PID on the tracks
         """
+        from HltTracking.HltRecoConf import HltRecoConf
+        if HltRecoConf().getProp("OfflineRich"):
+            self.setProp("RichTrackCuts", OfflineRichDefaultTrackCuts)
+            self.setProp("RichHypos",  OfflineRichDefaultHypos)
+            self.setProp("RichPidConfig", "FullGlobal")
+            self.setProp("RichTracklessRingAlgs", ['ENN'])
+            self.setProp("RichFindClusters", True)
+        
         from HltLine.HltLine import bindMembers
         from Configurables import RichRecSysConf
         #configure the rich reco
@@ -938,14 +958,14 @@ class Hlt2Tracking(LHCbConfigurableUser):
         richConf.DataType   = self.getProp( "DataType" )
         richConf.Context    = richSeqName
         richConf.RichPIDLocation    = self.__richIDLocation()
-        richConf.PidConfig          = "FastGlobal"
+        richConf.PidConfig          = self.getProp("RichPidConfig")
         richConf.CheckProcStatus    = False
         richConf.InitPixels         = True
         richConf.InitTracks         = True
         richConf.InitPhotons        = True
-        richConf.TracklessRingAlgs  = []
+        richConf.TracklessRingAlgs  = self.getProp("RichTracklessRingAlgs")
         richConf.Particles          = self.getProp("RichHypos")
-        richConf.pixelConfig().FindClusters = False
+        richConf.pixelConfig().FindClusters = self.getProp("RichFindClusters")
         # Set cuts on which tracks enter the RICH reco
         richConf.trackConfig().TrackCuts = self.getProp("RichTrackCuts")
         richConf.gpidConfig().TrackCuts  = self.getProp("RichTrackCuts") 
@@ -956,6 +976,12 @@ class Hlt2Tracking(LHCbConfigurableUser):
         tracks                      = self.__hlt2StagedFastFit()
         richConf.trackConfig().InputTracksLocation = tracks.outputSelection()
 
+        if HltRecoConf().getProp("OfflineRich"):
+            richName = "Hlt2BiKalmanFittedForwardTracking_RichRecSysConf"
+            from Configurables import RichTools
+            richTools = RichTools(richName + "ToolRegistry")
+            richTools.PhotonRecoType = "Quartic"
+        
         from HltLine.HltLine import bindMembers
         # Build the bindMembers        
         bm_name         = self.__pidAlgosAndToolsPrefix()+"RICHIDSeq"

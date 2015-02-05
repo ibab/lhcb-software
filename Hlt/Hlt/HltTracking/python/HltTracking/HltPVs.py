@@ -67,12 +67,14 @@ def PV3D(where):
     recoPV3D.PVOfflineTool.addTool(LSAdaptPV3DFitter, "LSAdaptPV3DFitter")
     recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.TrackErrorScaleFactor = 2.
     recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.maxIP2PV = 0.3
+    from HltTracking.HltRecoConf import HltRecoConf
+    if HltRecoConf().getProp("FitVelo"):
+        recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.UseLongKalman = True
     #recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.zVtxShift = 0.0
     recoPV3D.OutputVerticesName = proto3DVertices
     
-    
-    from HltSharedTracking import MinimalVelo, RevivedVelo
-    velo = MinimalVelo
+    from HltSharedTracking import MinimalVelo, FittedVelo, RevivedVelo
+    velo = FittedVelo if HltRecoConf().getProp("FitVelo") else MinimalVelo 
     name = "HltPV3D"
 
     if where.upper() == "HLT2" :
@@ -97,23 +99,18 @@ def PV3D(where):
         Code = """
         execute( %(algo)s ) * VSOURCE( '%(tesInput)s' )
         >> VX_SINK( '%(hltProto)s' )
-        >> ( VX_BEAMSPOTRHO( 1 * mm ) < 0.3 * mm )
+        >> ( VX_BEAMSPOTRHO( 1 * mm ) < %(rhoCut)s )
         >> RV_SINKTES( '%(tesFinal)s' )
         >> VX_SINK( '%(hltFinal)s' )
         >> ~VEMPTY
         """ % { 'algo'     : pv3dAlgos,
                 'tesInput' : recoPV3D.OutputVerticesName,
                 'hltProto' : ProtoPV3DSelection,
+                'rhoCut'   : HltRecoConf().getProp("PVBeamspotRho"),
                 'tesFinal' : output3DVertices,
                 'hltFinal' : PV3DSelection   }
-
         )
     
     pv3d = bindMembers( name+'Sequence', [ filterPV3D ] ).setOutputSelection( PV3DSelection ) 
     pv3d.output = output3DVertices
     return pv3d
-
-## Symbols for streamer framework
-# don't work, as this now contains a HltUnit, and we get into trouble if we go recursive in HltUnit
-#FullPV3D = "FullPV3D =  execute( %s )" % [ m.getFullName() for m in PV3D().members() ]
-#RecoPV3D = "RecoPV3D =  execute( %s )" % [ m.getFullName() for m in PV3D().members() ]

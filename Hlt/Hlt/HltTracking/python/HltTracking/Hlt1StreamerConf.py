@@ -92,7 +92,7 @@ LooseForward = LoKi.Hlt1.UpgradeConf(
 # =============================================================================
 FitTrack = LoKi.Hlt1.UpgradeConf (
     "HltTrackFit"                ,                     ##               "Tool" 
-    Hlt1TrackRoot + "FitTrack"        ,                ##          "TESOutput"
+    Hlt1TrackRoot + "FitTrack"   ,                     ##          "TESOutput"
     LHCb.Track.Long              ,                     ##          "TrackType"
     True                         ,                     ##              "Owner"
     True                         ,                     ##        "TransferIDs"

@@ -135,6 +135,22 @@ prepare3DVelo = HltTrackFilter( 'Hlt1Prepare3DVelo'
                               , Code = [ '~TrBACKWARD' ] 
                               , OutputSelection     = "Velo" )
 
+def fittedVelo(inputTracks, outputTracks):
+    from Configurables import TrackEventFitter, TrackInitFit
+    from Configurables import TrackStateInitTool, TrackMasterFitter
+    fa = TrackEventFitter('VeloOnlyFitterAlg')
+    fa.TracksInContainer = inputTracks
+    fa.TracksOutContainer = outputTracks
+    fa.Fitter = "TrackInitFit/VeloInitFit"
+    fa.addTool(TrackInitFit, "VeloInitFit")
+    fa.VeloInitFit.Init = "TrackStateInitTool/VeloOnlyStateInit"
+    fa.VeloInitFit.addTool(TrackStateInitTool, "VeloOnlyStateInit")
+    fa.VeloInitFit.VeloOnlyStateInit.VeloFitterName = "FastVeloFitLHCbIDs"
+    fa.VeloInitFit.Fit = "TrackMasterFitter/VeloOnlyFitter"
+    fa.VeloInitFit.addTool(TrackMasterFitter, name = "VeloOnlyFitter")
+    from TrackFitter.ConfiguredFitters import ConfiguredForwardFitter
+    fitter = ConfiguredForwardFitter(fa.VeloInitFit.VeloOnlyFitter)
+    return fa
 
 #############################################################################################
 # HLT2 tracking codes
@@ -290,6 +306,7 @@ from Configurables import DecodeVeloRawBuffer, Hlt2Conf
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 #This is the part which is shared between Hlt1 and Hlt2
 MinimalVelo = bindMembers( None, [DecodeVELO, recoVelo( OutputTracksName=HltSharedTrackLoc["Velo"] ) ] ).setOutputSelection( HltSharedTrackLoc["Velo"] )
+FittedVelo  = bindMembers( None, MinimalVelo.members() + [fittedVelo(MinimalVelo.outputSelection(), Hlt1TrackLoc["FittedVelo"])]).setOutputSelection(Hlt1TrackLoc["FittedVelo"])
 #DecodeTRACK.VetoObjects += [ HltSharedTrackLoc["Velo"], recoForwardHPT.OutputTracksName ]
 #for d in DecodeTRACK.members() :
 #    d.VetoObjects += [ HltSharedTrackLoc["Velo"], recoForwardHPT.OutputTracksName ]

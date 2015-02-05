@@ -4,6 +4,12 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-02-05 - Roel Aaij
+ - Added options to HltRecoConf:
+   - Fit velo tracks before PV finding.
+   - Run offline RICH configuration.
+   - Allow PV radius cut to be configured.
+ 
 ! 2015-02-02 - Sascha Stahl
  - Added option to initialize track fits in HLT1 and HLT2 with the TrackStateInitTool
    (HltRecoConf.InitFits).

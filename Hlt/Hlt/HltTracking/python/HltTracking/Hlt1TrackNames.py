@@ -6,9 +6,10 @@ def _baseTrackLocation(prefix,tracks) :
     return prefix + "/" + HltGlobalTrackLocation + "/" + tracks 
 
 Hlt1TracksPrefix 			= HltGlobalEventPrefix + "Hlt1"
-Hlt1TrackRoot               = Hlt1TracksPrefix + "/" + HltGlobalTrackLocation
+Hlt1TrackRoot               = Hlt1TracksPrefix + "/" + HltGlobalTrackLocation + "/"
 
 TrackName = { "Velo"         : "Velo"          # full Velo recoonstruction
+              ,"FittedVelo"   : "FittedVelo"
               ,"VeloSelection": "VeloSelection" # filtered velo tracks
               ,"VeloTTHPT"   : "VeloTTHPT"     # VeloTT for high pt and p thresholds (HLT1-like)
               ,"VeloTTComp"  : "VeloTTComp"    # VeloTT complement (HLT2 relaxed pt & p cuts) 
