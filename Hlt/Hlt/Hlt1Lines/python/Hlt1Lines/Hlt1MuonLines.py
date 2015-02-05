@@ -184,7 +184,6 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
     def singleMuon_preambulo( self, properties ):
         # Common preambulo customized with track type from properties 
         preambulo = []
-        print properties
         if "TrackType" in properties : 
             if properties["TrackType"] == "Velo" :
                 # Velo tracks 

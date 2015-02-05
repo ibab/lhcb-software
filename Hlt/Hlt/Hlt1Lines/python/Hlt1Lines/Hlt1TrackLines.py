@@ -170,31 +170,33 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             code = re.sub( '\\s+%s\\s+' % step, sub, code )
         unit.Code = code
         return unit
-
-    def build_line( self, name, props_name, streamer ):
-        from HltLine.HltLine import Hlt1Line
-        algos = [ self.do_timing( unit ) if self.getProp('DoTiming') else unit for unit in streamer( name, self.localise_props( props_name ) ) ]
-        priorities = self.getProp( "Priorities" )
-        priority = priorities[ props_name ] if props_name in priorities else None
-        l0du = self.L0Channels[props_name]
-        if l0du != 'L0_DECISION_PHYSICS':
-            l0du = "|".join(["L0_CHANNEL('%s')" % l0 for l0 in l0du])
-        line = Hlt1Line(
-            name,
-            prescale  = self.prescale,
-            postscale = self.postscale,
-            priority  = priority,
-            L0DU = l0du,
-            algos = algos
-            )
     
     def __apply_configuration__(self) : 
-        from HltLine.HltLine import Hlt1Line   as Line
-        ps = self.getProps()
-        to_build = [('TrackAllL0',  'AllL0',  self.hlt1TrackBlock_Streamer),
-                    ('TrackMuon',   'Muon',   self.hlt1TrackMuon_Streamer),
-                    ('TrackPhoton', 'Photon', self.hlt1TrackBlock_Streamer)]
-        for name, props_name, streamer in to_build:
-            self.build_line(name, props_name, streamer)
-
-
+        from HltLine.HltLine import Hlt1Line
+        priorities = self.getProp( "Priorities" )
+        l0Channels = self.getProp( 'L0Channels' )
+        doTiming = self.getProp( 'DoTiming' )
+        Hlt1Line('TrackAllL0',
+            prescale  = self.prescale,
+            postscale = self.postscale,
+            priority  = priorities[ 'AllL0' ] if 'AllL0' in priorities else None,
+            L0DU = 'L0_DECISION_PHYSICS',
+            algos = [ self.do_timing( unit ) if doTiming else unit for unit in \
+                      self.hlt1TrackBlock_Streamer( 'TrackAllL0', self.localise_props( 'AllL0' ) ) ]
+            )
+        Hlt1Line('TrackMuon',
+            prescale  = self.prescale,
+            postscale = self.postscale,
+            priority  = priorities[ 'Muon' ] if 'Muon' in priorities else None,
+            L0DU = "|".join(["L0_CHANNEL('%s')" % l0 for l0 in l0Channels['Muon']]),
+            algos = [ self.do_timing( unit ) if doTiming else unit for unit in \
+                      self.hlt1TrackMuon_Streamer( 'TrackMuon', self.localise_props( 'Muon' ) ) ]
+            )
+        Hlt1Line('TrackPhoton',
+            prescale  = self.prescale,
+            postscale = self.postscale,
+            priority  = priorities[ 'Photon' ] if 'Photon' in priorities else None,
+            L0DU = "|".join(["L0_CHANNEL('%s')" % l0 for l0 in l0Channels['Photon']]),
+            algos = [ self.do_timing( unit ) if doTiming else unit for unit in \
+                      self.hlt1TrackBlock_Streamer( 'TrackPhoton', self.localise_props( 'Photon' ) ) ]
+            )

@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-02-05 - Roel Aaij
+ - Explicitly instantiate lines in Hlt1TrackLines
+ - remove spurious print from Hlt1MuonLines
+
 ! 2015-01-23 - Roel Aaij
  - Update 1Track cuts and allow timing of functors.
  - Remove ValidateTT from 1TrackLines
