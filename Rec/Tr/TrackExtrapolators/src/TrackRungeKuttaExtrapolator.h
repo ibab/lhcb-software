@@ -97,9 +97,9 @@ private:
   double m_maxCurvature ;
 
   // parameters of the runge-kutta (depend on rk-scheme)
-  double* m_a ;
-  double* m_b4 ;
-  double* m_b5 ;
+  const double* m_a ;
+  const double* m_b4 ;
+  const double* m_b5 ;
   bool    m_firstSameAsLast ;
   size_t  m_numStages ;
 

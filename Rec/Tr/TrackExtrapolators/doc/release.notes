@@ -3,6 +3,8 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
+! 2015-02-05 - Gerhard Raven
+ - Extrapolators: make static magic numbers 'const'
 
 !========================= TrackExtrapolators v2r35 2015-01-14 =========================
 ! 2014-12-19 - Gerhard Raven
