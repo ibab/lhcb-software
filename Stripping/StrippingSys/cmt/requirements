@@ -12,7 +12,6 @@ use  StandardParticles           v2r3     Phys   # Juan Palacios
 ####################################################################
 # Internal Packages
 use  DisplVertices 		 v7r20	  Phys	 # Neal Gauvin
-use  MvaPreSelB2DH               v1r6     Phys   # Sajan Easo
 use  IncTopoVert                 v1r4     Phys   # Mathieu Perrin-Terrin
 use  IsolationTools              v1r1     Phys   # Alex Shires
 

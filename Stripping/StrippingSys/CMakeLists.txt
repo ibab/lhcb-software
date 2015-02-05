@@ -6,7 +6,6 @@ gaudi_subdir(StrippingSys v9r4)
 gaudi_depends_on_subdirs(Phys/CommonParticles
                          Phys/CommonParticlesArchive
                          Phys/DisplVertices
-                         Phys/MvaPreSelB2DH
                          Phys/IncTopoVert
                          Phys/StandardParticles
                          Phys/StrippingAlgs
