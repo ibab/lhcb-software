@@ -1,24 +1,33 @@
 import GaudiPython
+import cppyy
 from Gaudi.Configuration import *
 from Configurables import ConfigStackAccessSvc, ConfigDBAccessSvc, ConfigZipFileAccessSvc, ConfigTarFileAccessSvc, ConfigFileAccessSvc, ConfigCDBAccessSvc
 from Configurables import ConfigTreeEditor, PropertyConfigSvc
 
-# pick the default config access svc
-from Configurables import ConfigTarFileAccessSvc as ConfigAccessSvc
-#from Configurables import ConfigZipFileAccessSvc as ConfigAccessSvc
+# pick the default config access svc 
+import os.path
+def cdb_file_exists() :
+    __cfg_cdb = ConfigCDBAccessSvc()
+    return  os.path.isfile( __cfg_cdb.getProp('File') ) 
+
+if cdb_file_exists() :
+    from Configurables import ConfigCDBAccessSvc as ConfigAccessSvc
+else :
+    from Configurables import ConfigTarFileAccessSvc as ConfigAccessSvc
+
+print 'using %s as default input '% ConfigAccessSvc().getProp('File')
 
 from pprint import pprint
 
 ### add some decoration...
-MD5 = GaudiPython.gbl.Gaudi.Math.MD5
+MD5 = cppyy.gbl.Gaudi.Math.MD5
 MD5.__str__ = MD5.str
 MD5.__hash__ = lambda x : x.str().__hash__()
-GaudiPython.gbl.ConfigTreeNodeAlias.alias_type.__str__ = GaudiPython.gbl.ConfigTreeNodeAlias.alias_type.str
+cppyy.gbl.ConfigTreeNodeAlias.alias_type.__str__ = cppyy.gbl.ConfigTreeNodeAlias.alias_type.str
 digest = MD5.createFromStringRep
-alias = GaudiPython.gbl.ConfigTreeNodeAlias.alias_type
-topLevelAlias = GaudiPython.gbl.ConfigTreeNodeAlias.createTopLevel
-TCK = GaudiPython.gbl.ConfigTreeNodeAlias.createTCK
-vector_string = GaudiPython.gbl.std.vector('std::string')
+alias = cppyy.gbl.ConfigTreeNodeAlias.alias_type
+topLevelAlias = cppyy.gbl.ConfigTreeNodeAlias.createTopLevel
+TCK = cppyy.gbl.ConfigTreeNodeAlias.createTCK
 from os import getpid
 
 def _appMgr() :
@@ -556,7 +565,7 @@ class RemoteAccess(object) :
         #  either we got (some form of) an ID, and we reverse engineer back the alias (provided it is unique!)
         #  or we got an alias directly...
 
-        if type(id) == GaudiPython.gbl.ConfigTreeNodeAlias :
+        if type(id) == cppyy.gbl.ConfigTreeNodeAlias :
             a = id.alias().str()
             id = id.ref()
             # this is fine for TOPLEVEL, but not TCK...
@@ -569,6 +578,7 @@ class RemoteAccess(object) :
                 return
             a = a[0]
         (release,hlttype) = a.split('/',3)[1:3]
+        vector_string = cppyy.gbl.std.vector('std::string')
         mods = vector_string()
         for algname,props in updates.iteritems() :
             for k,v in props.iteritems() : 
@@ -590,6 +600,7 @@ class RemoteAccess(object) :
             print 'something went wrong: no unique toplevel match for ' + str(id)
             return
         (release,hlttype) = a[0].split('/',3)[1:3]
+        vector_string = cppyy.gbl.std.vector('std::string')
         mods = vector_string()
         # check L0 config in source config
         for cfg in svc.collectLeafRefs( id ) :
