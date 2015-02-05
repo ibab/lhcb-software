@@ -91,6 +91,7 @@ private:
   float m_centralHoleSize;
   float m_zMidTT;
   float m_intraLayerDist;
+  float m_overlapTol;
   
   Tf::TTStationHitManager<PatTTHit> *      m_utHitManager;
   

@@ -47,7 +47,8 @@ PatVeloTTHybridTool::PatVeloTTHybridTool( const std::string& type,
   declareProperty("IntraLayerDist"     , m_intraLayerDist   = 15.0 * Gaudi::Units::mm);
   declareProperty("PrintVariables"     , m_printVariables   = false);
   declareProperty("PassTracks"         , m_passTracks   = false);
-  declareProperty("PassHoleSize"       , m_passHoleSize  = 45. * Gaudi::Units::mm);
+  declareProperty("PassHoleSize"       , m_passHoleSize  = 40. * Gaudi::Units::mm);
+  declareProperty("OverlapTol"         , m_overlapTol  = 0.7 * Gaudi::Units::mm);
 
 
 }
@@ -91,6 +92,7 @@ StatusCode PatVeloTTHybridTool::initialize ( ) {
     info() << " IntraLayerDist     = " << m_intraLayerDist << " mm "<<endmsg;
     info() << " PassTracks         = " <<m_passTracks <<endmsg;
     info() << " PassHoleSize       = " <<m_passHoleSize << " mm "<<endmsg;
+    info() << " OverlapTol         = " << m_overlapTol       << " mm " << endmsg;
   }
   
   m_utHitManager   = tool<Tf::TTStationHitManager <PatTTHit> >("PatTTStationHitManager");
@@ -574,13 +576,32 @@ void PatVeloTTHybridTool::prepareOutputTracks(std::vector<LHCb::Track*>& outtrac
 
   PatVTTHybridTrack cand = *m_bestCand.begin();
   PatTTHits candClusters = cand.clusters();
+  float txTT = cand.xSlopeTT();
+
+  // Adding overlap hits
+  PatTTHits finalHits;
+  for( auto hit : candClusters){ 
+    finalHits.push_back(hit);
+    
+    float xhit = hit->x(); 
+    float zhit = hit->z();
+    
+    for( auto ohit : m_allHits[hit->planeCode()]){
+      float zohit = ohit->z();
+      if(zohit==zhit) continue;
+      
+      float xohit = ohit->x();
+      float xextrap = xhit + txTT*(zhit-zohit);
+      if(fabs(xohit-xextrap)<m_overlapTol)  finalHits.push_back( ohit );
+    }
+  }
+  
   const LHCb::Track* veloTr = cand.track();
   
   //== Handle states. copy Velo one, add TT.
   
   float qop = cand.qOverP();
   float xTT = cand.xTT();
-  float txTT = cand.xSlopeTT();
     
   LHCb::Track* outTr = new LHCb::Track();
   
@@ -597,7 +618,7 @@ void PatVeloTTHybridTool::prepareOutputTracks(std::vector<LHCb::Track*>& outtrac
   }
 
   //Add TT hits to track
-  for( auto hit : candClusters){
+  for( auto hit : finalHits){
     outTr->addToLhcbIDs( hit->hit()->lhcbID() );
   }
   

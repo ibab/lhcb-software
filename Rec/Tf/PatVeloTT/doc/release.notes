@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-02-05 - Espen Eie Bowen
+ - Add code to account for overlap hits, change default value of PassHoleSize
+
 ! 2015-01-23 - Michel De Cian
  - Remove a "std::cout" and clean up VeloTTHybrid.cpp/h code (removing obsolete members). 
 Add some doxygen documentation.
