@@ -8,6 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2015-02-05 - Eduardo Rodrigues
+ - Fixed PFN specified in DaVinci-Simplest.py so that file actually runs.
+ - Removed trivial and obsolete option file DaVinci-MC09.py,
+   and also DC06_v4_BB_lumi2_rdst.py.
+
 !======================= DaVinci v36r4p1 2015-01-20 ==========================
 
 ! 2015-01-20 - Eduardo Rodrigues
