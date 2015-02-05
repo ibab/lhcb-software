@@ -24,7 +24,6 @@ class Hlt1TechnicalLines :
                  , 'Hlt1BeamGasCrossingParasitic', 'Hlt1BeamGasHighRhoVertices'
                  , 'Hlt1NoPVPassThrough'
                  , 'Hlt1CharmCalibrationNoBias'
-                 , 'Hlt1TrackForwardPassThrough','Hlt1TrackForwardPassThroughLoose'
                  , 'Hlt1Lumi', 'Hlt1LumiMidBeamCrossing'
                  , 'Hlt1L0Any','Hlt1L0AnyNoSPD'
                  , 'Hlt1MBNoBias' 
