@@ -124,7 +124,7 @@ class genClassDicts:
                         # "GaudiKernel" hardcoded here to avoid usage of the inclusion mechanism (not nice)
                         self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/%s.h"' % tcname)
                         # include template instantiation
-                        self.sDictInstances = self.conc(self.sDictInstances, '%s<%s,Containers::KeyedObjectManager<Containers::hashmap> > m_%s_%s;' % (tcname, t1name, tcname, self.clean(t1name)))
+                        self.sDictInstances = self.conc(self.sDictInstances, '%s<%s> m_%s_%s;' % (tcname, t1name, tcname, self.clean(t1name)))
                         # Add container id to class id
                         if cl['attrs'].has_key('id'):
                             sid = ' id="%08x-0000-0000-0000-000000000000"' %(int(id)+0x60000)
