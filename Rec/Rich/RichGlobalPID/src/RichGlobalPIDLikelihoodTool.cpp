@@ -15,14 +15,6 @@
 // namespaces
 using namespace Rich::Rec::GlobalPID;
 
-namespace 
-{ // Parameters
-  const double limitA = 0.001;
-  const double limitB = 0.01;
-  const double limitC = 0.1;
-  const double limitD = 1.0;
-}
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -94,13 +86,16 @@ StatusCode LikelihoodTool::initialize()
   statusCreator();
 
   // Check if power series expansions are OK
-  if ( m_minSig < 0.999*limitA )
-  {
-    return Warning( "Power series interpolations for log(exp(x)-1) need retuning" );
-  }
+  //if ( m_minSig < 0.999*limitA )
+  //{
+  //  return Warning( "Power series interpolations for log(exp(x)-1) need retuning" );
+  //}
 
   // Initialise parameters
   m_logMinSig = logExp(m_minSig);
+
+  // Initialise the interpolator
+  m_logExpLookUp.init( m_minSig, 1.0, 10000 );
 
   // Printout some initialisation info
   info() << "Maximum event iterations                  = " << m_maxEventIterations << endmsg;
@@ -164,6 +159,9 @@ void LikelihoodTool::pids( const LHCb::RichGlobalPIDTrack::Vector & tracks ) con
 {
   // Update currently considered track list
   m_gpidTracksToPID = &tracks;
+
+  // Pre-fill all the predicted pixel signal values for each hypo, for speed
+  m_photonSig->prefillPredictedPixelSignal();
 
   // Compute complete likelihood for event with starting hypotheses
   m_currentBestLL = logLikelihood();
@@ -666,45 +664,40 @@ LikelihoodTool::deltaLogLikelihood( LHCb::RichRecTrack * track,
 {
 
   // Change due to track expectation
-  const double tkDeltaLL =
+  double deltaLL =
     ( m_tkSignal->nTotalObservablePhotons( track, newHypo ) -
       m_tkSignal->nTotalObservablePhotons( track, track->currentHypothesis() ) );
 
   // Photon part
-  double pixDeltaLL(0);
-  LHCb::RichRecTrack::Pixels & pixels = track->richRecPixels();
-  const LHCb::RichRecTrack::Pixels::iterator ePixel = pixels.end();
-  for ( LHCb::RichRecTrack::Pixels::iterator iPixel = pixels.begin();
-        iPixel != ePixel; ++iPixel )
+  for ( LHCb::RichRecPixel * pix : track->richRecPixels() )
   {
 
     // photons for this pixel
-    LHCb::RichRecPixel::Photons & photons = (*iPixel)->richRecPhotons();
+    LHCb::RichRecPixel::Photons & photons = pix->richRecPhotons();
     if ( !photons.empty() )
     {
 
-      double oldSig = (*iPixel)->currentBackground();
+      double oldSig = pix->currentBackground();
       double newSig = oldSig;
 
       // Loop over photons for this pixel
-      const LHCb::RichRecPixel::Photons::iterator iPhotonEnd    = photons.end();
-      for ( LHCb::RichRecPixel::Photons::const_iterator iPhoton = photons.begin();
-            iPhoton != iPhotonEnd; ++iPhoton )
+      for ( const LHCb::RichRecPhoton * phot : photons )
       {
         // Skip tracks not in use
-        if ( !(*iPhoton)->richRecTrack()->inUse() ) continue;
+        if ( !phot->richRecTrack()->inUse() ) continue;
 
         // update signal numbers
-        const double tmpOldSig =
-          m_photonSig->predictedPixelSignal( *iPhoton,
-                                             (*iPhoton)->richRecTrack()->currentHypothesis() );
+        const double tmpOldSig = phot->expPixelSignalPhots(phot->richRecTrack()->currentHypothesis()); 
         oldSig += tmpOldSig;
-        newSig += ( (*iPhoton)->richRecTrack() != track ? tmpOldSig :
-                    m_photonSig->predictedPixelSignal( *iPhoton, newHypo ) );
+        newSig += ( phot->richRecTrack() != track ? tmpOldSig : phot->expPixelSignalPhots(newHypo) );
+
       } // end photon loop
 
       // increment change to likelihood for this pixel
-      pixDeltaLL -= ( sigFunc(newSig) - sigFunc(oldSig) );
+      deltaLL -= ( sigFunc(newSig) - sigFunc(oldSig) );
+
+      // new test way
+      //deltaLL -= sigFuncDiff(newSig,oldSig);
 
     } // end photons not empty
 
@@ -720,7 +713,7 @@ LikelihoodTool::deltaLogLikelihood( LHCb::RichRecTrack * track,
   //               << endmsg;
   //   }
 
-  return ( pixDeltaLL + tkDeltaLL );
+  return deltaLL;
 }
 
 //=============================================================================
@@ -752,20 +745,15 @@ double LikelihoodTool::logLikelihood() const
 
   // Pixel loop
   double pixelLL = 0.0;
-  for ( LHCb::RichRecPixels::const_iterator iPixel = richPixels()->begin();
-        iPixel != richPixels()->end(); ++iPixel )
+  for ( const LHCb::RichRecPixel * pixel : *richPixels() )
   {
-    const LHCb::RichRecPixel * pixel = *iPixel;
 
     // loop over all the photons for this pixel
     double photonSig = 0.0;
     bool foundSelectedTrack = false;
-    const LHCb::RichRecPixel::Photons & photons = pixel->richRecPhotons();
-    const LHCb::RichRecPixel::Photons::const_iterator iPhotonEnd = photons.end();
-    for ( LHCb::RichRecPixel::Photons::const_iterator iPhoton    = photons.begin();
-          iPhoton != iPhotonEnd; ++iPhoton )
+    for ( LHCb::RichRecPhoton * phot : pixel->richRecPhotons() )
     {
-      const LHCb::RichRecTrack * rRTrack = (*iPhoton)->richRecTrack();
+      const LHCb::RichRecTrack * rRTrack = phot->richRecTrack();
       if ( rRTrack->inUse() )
       {
         if ( msgLevel(MSG::VERBOSE) )
@@ -773,13 +761,13 @@ double LikelihoodTool::logLikelihood() const
           verbose() << "  -> Using photon : track=" << rRTrack->key()
                     << " pixel=" << pixel->key()
                     << " bkg=" << pixel->currentBackground()
-                    << " sig=" << m_photonSig->predictedPixelSignal( *iPhoton,
+                    << " sig=" << m_photonSig->predictedPixelSignal( phot,
                                                                      rRTrack->currentHypothesis() )
                     << endmsg;
         }
         foundSelectedTrack = true;
-        photonSig += m_photonSig->predictedPixelSignal( *iPhoton,
-                                                        rRTrack->currentHypothesis() );
+        //photonSig += m_photonSig->predictedPixelSignal( *iPhoton, rRTrack->currentHypothesis() );
+        photonSig += phot->expPixelSignalPhots(rRTrack->currentHypothesis());
       }
     } // end loop over photons
 
@@ -812,59 +800,335 @@ double LikelihoodTool::logLikelihood() const
 
 //=============================================================================
 
-double LikelihoodTool::logExp( const double x ) const
-{
-  double res(0);
-  if ( x <= limitD )
-  {
-    // A collection of rational power series covering the important range
-    // note by construction this function should never be called for x < limitA
+// float LikelihoodTool::logExpVectorClass( const float x ) const
+// {
 
-    const double xx    = x*x;
-    const double xxx   = xx*x;
-    const double xxxx  = xx*xx;
-    const double xxxxx = xx*xxx;
+//   // Parameters
+//   const auto limitA ( 0.001f );
+//   const auto limitB ( 0.01f  );
+//   const auto limitC ( 0.1f   );
+//   const auto limitD ( 1.0f   );
+  
+//   // Initialise return value
+//   auto res ( 0.0f );
 
-    if      ( x > limitC )
-    {
-      res = (-5.751779337152293 - 261.58791552313113*x -
-             1610.1902353909695*xx - 291.61172549536417*xxx +
-             3733.957211885683*xxxx + 1224.2104172168554*xxxxx)/
-        (1.0 + 79.52981108433892*x + 953.4570349071099*xx +
-         2638.609797400796*xxx + 1506.9612115322623*xxxx -
-         27.33558114045007*xxxxx);
-    }
-    else if ( x > limitB )
-    {
-      res = (-7.845788509794026 - 3428.7804135353526*x -
-             228752.20145929293*xx - 3.082032088759535e6*xxx -
-             3.836270197409883e6*xxxx + 1.2251900378118051e7*xxxxx)/
-        (1.0 + 638.7306815040638*x + 60430.91709817034*xx +
-         1.315432074531156e6*xxx + 6.373056770682967e6*xxxx +
-         3.3914176474223877e6*xxxxx);
-    }
-    else if ( x > limitA )
-    {
-      res = (-10.160864268729455 - 49897.23275778952*x -
-             3.855669108991894e7*xx - 6.777802095268419e9*xxx -
-             2.421987003565588e11*xxxx - 3.5610129242332263e11*xxxxx)/
-        (1.0 + 6487.897657865318*x + 6.294785881144457e6*xx +
-         1.4333658673633337e9*xxx + 7.670700007081306e10*xxxx +
-         6.06654149712832e11*xxxxx);
-    }
-    else
-    {
-      // should never get here. But just in case ...
-      res = std::log( std::exp(x) - 1.0 );
-    }
-  }
-  else
-  {
-    // Very very rarely called in this regime, so just use the full fat version
-    res = std::log( std::exp(x) - 1.0 );
-  }
-  return res;
-}
+//   // pick the interpolation to use
+//   if ( x <= limitD )
+//   {
+//     // A collection of rational power series covering the important range
+//     // note by construction this function should never be called for x < limitA
+    
+//     // vector with powers of x
+//     const Vec4f x1( x,    x,    x,    x );
+//     const Vec4f x2( 1.0f, x,    x,    x );
+//     const Vec4f x3( 1.0f, 1.0f, x,    x );
+//     const Vec4f x4( 1.0f, 1.0f, 1.0f, x );
+//     const auto xxxx = x1 * x2 * x3 * x4;
+    
+//     if      ( x > limitC ) // 0.1 -> 1
+//     {
+//       const Vec4f topP( -101.76227310588246f, -127.31825068394369f,
+//                         317.31602891172594f,  135.0567120741147f );
+//       const Vec4f botP(  40.31685825976414f,   202.81583582446692f,
+//                          160.94697665742055f, -2.088756969431516f );
+//       res = ( ( -5.143220028201872f + horizontal_add( topP * xxxx ) ) /
+//               ( 1.0f                + horizontal_add( botP * xxxx ) ) );
+//     }
+//     else if ( x > limitB ) // 0.01 -> 0.1
+//     {
+//       const Vec4f topP( -1957.455251107371f,  -63820.69082039389f,
+//                         -227666.32263762745f,  431986.40491931344f );
+//       const Vec4f botP(  403.96307514244734f,  20798.07111653145f,
+//                          188119.3222406968f,   180043.28571064543f );
+//       res = ( ( -7.4441271863249625f + horizontal_add( topP * xxxx ) ) /
+//               ( 1.0f                 + horizontal_add( botP * xxxx ) ) );
+//     }
+//     else if ( x > limitA ) // 0.001 -> 0.01
+//     {
+//       const Vec4f topP( -29524.941133033215f,  -1.1896019336956682e7f,
+//                         -7.860596631970513e8f, -2.795797091759987e9f );
+//       const Vec4f botP(  4115.755490541176f,    2.19207068008156e6f,
+//                          2.1358160394371653e8f, 2.6911720709828815e9f );
+//       res = ( ( -9.760898531545386f + horizontal_add( topP * xxxx ) ) /
+//               ( 1.0f                + horizontal_add( botP * xxxx ) ) );
+//     }
+//     else
+//     {
+//       // should never get here. But just in case ...
+//       //res = std::log( std::exp(x) - 1.0 );
+//       res = vdt::fast_logf( vdt::fast_expf(x) - 1.0f );
+//     }
+//   }
+//   else
+//   {
+//     // Very very rarely called in this regime, so just use the full fat version
+//     //res = std::log( std::exp(x) - 1.0 );
+//     res = vdt::fast_logf( vdt::fast_expf(x) - 1.0f );
+//   }
+  
+//   return res;
+// }
+
+//=============================================================================
+
+// float LikelihoodTool::sigFuncDiff( const float x, const float y ) const
+// {
+//   // Parameters
+//   const auto limitA ( 0.001f );
+//   const auto limitB ( 0.01f  );
+//   const auto limitC ( 0.1f   );
+//   const auto limitD ( 1.0f   );
+
+//   const Vec8f x1( x,    x,    x,    x, y,    y,    y,    y ); 
+//   const Vec8f x2( 1.0f, x,    x,    x, 1.0f, y,    y,    y );
+//   const Vec8f x3( 1.0f, 1.0f, x,    x, 1.0f, 1.0f, y,    y );
+//   const Vec8f x4( 1.0f, 1.0f, 1.0f, x, 1.0f, 1.0f, 1.0f, y );
+//   const auto xxyy = x1 * x2 * x3 * x4;
+
+//   // Compute now the values for x and y
+
+//   // A collection of rational power series covering the important range
+//   // note by construction this function should never be called for x < limitA
+
+//   // Initialise return value
+//   auto res ( 0.0f );
+
+//   // compute the value for x
+//   if ( x < m_minSig )
+//   {
+//     res = m_logMinSig;
+//   }
+//   else if ( x <= limitD )
+//   {
+//     if      ( x > limitC ) // 0.1 -> 1
+//     {
+//       const Vec4f topP( -101.76227310588246f, -127.31825068394369f,
+//                         317.31602891172594f,  135.0567120741147f );
+//       const Vec4f botP(  40.31685825976414f,   202.81583582446692f,
+//                          160.94697665742055f,   -2.088756969431516f );
+//       res = ( ( -5.143220028201872f + horizontal_add( topP * xxyy.get_low() ) ) /
+//               ( 1.0f                + horizontal_add( botP * xxyy.get_low() ) ) );
+//     }
+//     else if ( x > limitB ) // 0.01 -> 0.1
+//     {
+//       const Vec4f topP( -1957.455251107371f,   -63820.69082039389f,
+//                         -227666.32263762745f,  431986.40491931344f );
+//       const Vec4f botP( 403.96307514244734f,   20798.07111653145f,
+//                         188119.3222406968f,    180043.28571064543f );
+//       res = ( ( -7.4441271863249625f + horizontal_add( topP * xxyy.get_low() ) ) /
+//               ( 1.0f                 + horizontal_add( botP * xxyy.get_low() ) ) );
+//     }
+//     else if ( x > limitA ) // 0.001 -> 0.01
+//     {
+//       const Vec4f topP( -29524.941133033215f,  -1.1896019336956682e7f,
+//                         -7.860596631970513e8f, -2.795797091759987e9f );
+//       const Vec4f botP( 4115.755490541176f,    2.19207068008156e6f,
+//                         2.1358160394371653e8f, 2.6911720709828815e9f );
+//       res = ( ( -9.760898531545386f + horizontal_add( topP * xxyy.get_low() ) ) /
+//               ( 1.0f                + horizontal_add( botP * xxyy.get_low() ) ) );
+//     }
+//     else
+//     {
+//       // should never get here. But just in case ...
+//       res = vdt::fast_logf( vdt::fast_expf(x) - 1.0f );
+//     }
+//   }
+//   else
+//   {
+//     // Very very rarely called in this regime, so just use the full fat version
+//     res = vdt::fast_logf( vdt::fast_expf(x) - 1.0f );
+//   }
+
+//   // now subtract y
+//   if ( y < m_minSig )
+//   {
+//     res -= m_logMinSig;
+//   }
+//   else if ( y <= limitD )
+//   {
+//     if      ( y > limitC ) // 0.1 -> 1
+//     {
+//       const Vec4f topP( -101.76227310588246f, -127.31825068394369f,
+//                         317.31602891172594f,  135.0567120741147f );
+//       const Vec4f botP(  40.31685825976414f,   202.81583582446692f,
+//                          160.94697665742055f,   -2.088756969431516f );
+//       res -= ( ( -5.143220028201872f + horizontal_add( topP * xxyy.get_high() ) ) /
+//                ( 1.0f                + horizontal_add( botP * xxyy.get_high() ) ) );
+//     }
+//     else if ( y > limitB ) // 0.01 -> 0.1
+//     {
+//       const Vec4f topP( -1957.455251107371f,   -63820.69082039389f,
+//                         -227666.32263762745f,  431986.40491931344f );
+//       const Vec4f botP( 403.96307514244734f,   20798.07111653145f,
+//                         188119.3222406968f,    180043.28571064543f );
+//       res -= ( ( -7.4441271863249625f + horizontal_add( topP * xxyy.get_high() ) ) /
+//                ( 1.0f                 + horizontal_add( botP * xxyy.get_high() ) ) );
+//     }
+//     else if ( y > limitA ) // 0.001 -> 0.01
+//     {
+//       const Vec4f topP( -29524.941133033215f,  -1.1896019336956682e7f,
+//                         -7.860596631970513e8f, -2.795797091759987e9f );
+//       const Vec4f botP( 4115.755490541176f,    2.19207068008156e6f,
+//                         2.1358160394371653e8f, 2.6911720709828815e9f );
+//       res -= ( ( -9.760898531545386f + horizontal_add( topP * xxyy.get_high() ) ) /
+//                ( 1.0f                + horizontal_add( botP * xxyy.get_high() ) ) );
+//     }
+//     else
+//     {
+//       // should never get here. But just in case ...
+//       res -= vdt::fast_logf( vdt::fast_expf(y) - 1.0f );
+//     }
+//   }
+//   else
+//   {
+//     // Very very rarely called in this regime, so just use the full fat version
+//     res -= vdt::fast_logf( vdt::fast_expf(y) - 1.0f );
+//   }
+
+//   return res;
+// }
+
+//=============================================================================
+
+// float LikelihoodTool::logExpEigen( const float x ) const
+// {
+//   typedef ::Eigen::Array4f V4f;
+
+//   // Parameters
+//   const auto limitA ( 0.001f );
+//   const auto limitB ( 0.01f  );
+//   const auto limitC ( 0.1f   );
+//   const auto limitD ( 1.0f   );
+  
+//   // Initialise return value
+//   auto res ( 0.0f );
+
+//   // pick the interpolation to use
+//   if ( x <= limitD )
+//   {
+//     // A collection of rational power series covering the important range
+//     // note by construction this function should never be called for x < limitA
+    
+//     // vector with powers of x
+//     const V4f x1( x,    x,    x,    x );
+//     const V4f x2( 1.0f, x,    x,    x );
+//     const V4f x3( 1.0f, 1.0f, x,    x );
+//     const V4f x4( 1.0f, 1.0f, 1.0f, x );
+//     const auto xxxx = x1 * x2 * x3 * x4;
+    
+//     if      ( x > limitC ) // 0.1 -> 1
+//     {
+//       const V4f topP( -101.76227310588246f, -127.31825068394369f,
+//                        317.31602891172594f,  135.0567120741147f );
+//       const V4f botP(  40.31685825976414f,   202.81583582446692f,
+//                        160.94697665742055f, -2.088756969431516f );
+//       res = ( ( -5.143220028201872f + ( topP * xxxx ).sum() ) /
+//               ( 1.0f                + ( botP * xxxx ).sum() ) );
+//     }
+//     else if ( x > limitB ) // 0.01 -> 0.1
+//     {
+//       const V4f topP( -1957.455251107371f,   63820.69082039389f,
+//                       -227666.32263762745f,  431986.40491931344f );
+//       const V4f botP(  403.96307514244734f,  20798.07111653145f,
+//                        188119.3222406968f,   180043.28571064543f );
+//       res = ( ( -7.4441271863249625f + ( topP * xxxx ).sum() ) /
+//               ( 1.0f                 + ( botP * xxxx ).sum() ) );
+//     }
+//     else if ( x > limitA ) // 0.001 -> 0.01
+//     {
+//       const V4f topP( -29524.941133033215f,  -1.1896019336956682e7f,
+//                       -7.860596631970513e8f, -2.795797091759987e9f );
+//       const V4f botP(  4115.755490541176f,    2.19207068008156e6f,
+//                        2.1358160394371653e8f, 2.6911720709828815e9f );
+//       res = ( ( -9.760898531545386f + ( topP * xxxx ).sum() ) /
+//               ( 1.0f                + ( botP * xxxx ).sum() ) );
+//     }
+//     else
+//     {
+//       // should never get here. But just in case ...
+//       //res = std::log( std::exp(x) - 1.0 );
+//       res = vdt::fast_logf( vdt::fast_expf(x) - 1.0f );
+//     }
+//   }
+//   else
+//   {
+//     // Very very rarely called in this regime, so just use the full fat version
+//     //res = std::log( std::exp(x) - 1.0 );
+//     res = vdt::fast_logf( vdt::fast_expf(x) - 1.0f );
+//   }
+  
+//   return res;
+// }
+
+//=============================================================================
+
+// float LikelihoodTool::logExpOriginal( const float x ) const
+// {
+  
+//   // Parameters
+//   const float limitA ( 0.001 );
+//   const float limitB ( 0.01  );
+//   const float limitC ( 0.1   );
+//   const float limitD ( 1.0   );
+  
+//   // Initialise 
+//   float res ( 0.0 );
+  
+//   // pick the interpolation to use
+//   if ( x <= limitD )
+//   {
+//     // A collection of rational power series covering the important range
+//     // note by construction this function should never be called for x < limitA
+
+//     const float xx    = x*x;
+//     const float xxx   = xx*x;
+//     const float xxxx  = xx*xx;
+//     const float xxxxx = xx*xxx;
+    
+//     if      ( x > limitC )
+//     {
+//       res = (-5.751779337152293 - 261.58791552313113*x -
+//              1610.1902353909695*xx - 291.61172549536417*xxx +
+//              3733.957211885683*xxxx + 1224.2104172168554*xxxxx)/
+//         (1.0 + 79.52981108433892*x + 953.4570349071099*xx +
+//                2638.609797400796*xxx + 1506.9612115322623*xxxx -
+//          27.33558114045007*xxxxx);
+//     }
+//     else if ( x > limitB )
+//     {
+//       res = (-7.845788509794026 - 3428.7804135353526*x -
+//              228752.20145929293*xx - 3.082032088759535e6*xxx -
+//              3.836270197409883e6*xxxx + 1.2251900378118051e7*xxxxx)/
+//         (1.0 + 638.7306815040638*x + 60430.91709817034*xx +
+//          1.315432074531156e6*xxx + 6.373056770682967e6*xxxx +
+//          3.3914176474223877e6*xxxxx);
+//     }
+//     else if ( x > limitA )
+//     {
+//       res = (-10.160864268729455 - 49897.23275778952*x -
+//              3.855669108991894e7*xx - 6.777802095268419e9*xxx -
+//              2.421987003565588e11*xxxx - 3.5610129242332263e11*xxxxx)/
+//         (1.0 + 6487.897657865318*x + 6.294785881144457e6*xx +
+//          1.4333658673633337e9*xxx + 7.670700007081306e10*xxxx +
+//          6.06654149712832e11*xxxxx);
+//     }
+//     else
+//     {
+//       // should never get here. But just in case ...
+//       //res = std::log( std::exp(x) - 1.0 );
+//       res = vdt::fast_logf( vdt::fast_expf(x) - 1.0 );
+//     }
+//   }
+//   else
+//   {
+//     // Very very rarely called in this regime, so just use the full fat version
+//     //res = std::log( std::exp(x) - 1.0 );
+//     res = vdt::fast_logf( vdt::fast_expf(x) - 1.0 );
+//   }
+  
+//   // return
+//   return res;
+// }
 
 //=============================================================================
 

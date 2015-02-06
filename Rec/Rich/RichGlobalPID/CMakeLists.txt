@@ -6,6 +6,8 @@ gaudi_subdir(RichGlobalPID v3r22)
 gaudi_depends_on_subdirs(GaudiObjDesc
                          Rich/RichRecBase)
 
+find_package(ROOT COMPONENTS Vc)
+
 include(GaudiObjDesc)
 
 god_build_headers(xml/*.xml)
@@ -18,4 +20,3 @@ gaudi_add_module(RichGlobalPID
 gaudi_install_headers(RichGlobalPID)
 
 gaudi_env(SET RICHGLOBALPIDOPTS \${RICHGLOBALPIDROOT}/options)
-

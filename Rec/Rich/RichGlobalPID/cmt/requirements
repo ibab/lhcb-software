@@ -30,5 +30,13 @@ apply_pattern god_headers files=../xml/*.xml
 apply_pattern install_more_includes more=RichGlobalPID offset=Event
 
 # ================ component library=========================================
-library   RichGlobalPID           ../src/*.cpp  -import=AIDA
+library   RichGlobalPID     ../src/*.cpp  -import=AIDA
 apply_pattern component_library library=RichGlobalPID
+
+#macro_append RichGlobalPID_cppflags " -mavx -O3 -fabi-version=0 " 
+#macro_append RichGlobalPID_cppflags " -mavx -O3 " 
+#macro_append RichGlobalPID_cppflags " -mavx " 
+
+private
+macro_append ROOT_linkopts  " -lVc "
+end_private
