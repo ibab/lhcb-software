@@ -23,3 +23,5 @@ library RichTools ../src/*.cpp
 # define component library link options
 #=====================================================================
 apply_pattern component_library library=RichTools
+
+#macro_append RichRayTracingEigen_cppflags " -O3 -msse4 " 

@@ -1,20 +1,19 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichRayTracing.cpp
+/** @file RichRayTracingEigen.cpp
  *
- * Implementation file for class : RichRayTracing
+ * Implementation file for class : RichRayTracingEigen
  *
- * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
- * @date 2003-11-14
+ * @date  2015-01-28
  */
 //-----------------------------------------------------------------------------
 
 // local
-#include "RichRayTracing.h"
+#include "RichRayTracingEigen.h"
 
 /// Factory stuff
-DECLARE_NAMESPACE_TOOL_FACTORY( Rich, RayTracing )
+DECLARE_NAMESPACE_TOOL_FACTORY( Rich, RayTracingEigen )
 
 namespace
 {
@@ -25,9 +24,9 @@ namespace
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-Rich::RayTracing::RayTracing( const std::string& type,
-                              const std::string& name,
-                              const IInterface* parent)
+Rich::RayTracingEigen::RayTracingEigen( const std::string& type,
+                                        const std::string& name,
+                                        const IInterface* parent)
   : Rich::HistoToolBase       ( type, name, parent  ),
     m_snellsLaw               ( NULL                ),
     m_mirrorSegFinder         ( NULL                ),
@@ -48,21 +47,20 @@ Rich::RayTracing::RayTracing( const std::string& type,
 
   // job options
   declareProperty( "IgnoreSecondaryMirrors", m_ignoreSecMirrs = false );
-  
-  // Debug messages
-  //setProperty( "OutputLevel", 1 );
 
+  // Debug messages
+  // setProperty( "OutputLevel", 1 );
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-Rich::RayTracing::~RayTracing() { }
+Rich::RayTracingEigen::~RayTracingEigen() { }
 
 //=============================================================================
 // Initialisation.
 //=============================================================================
-StatusCode Rich::RayTracing::initialize()
+StatusCode Rich::RayTracingEigen::initialize()
 {
   // intialise base class
   const StatusCode sc = Rich::HistoToolBase::initialize();
@@ -84,7 +82,7 @@ StatusCode Rich::RayTracing::initialize()
       const Rich::DetectorType RICH = (Rich::DetectorType)rich;
       m_photoDetPanels[rich][panel] = m_rich[rich]->pdPanel(side);
       if ( msgLevel(MSG::DEBUG) )
-        debug() << "Stored for " << Rich::text(RICH,side) 
+        debug() << "Stored for " << Rich::text(RICH,side)
                 << " PD Panel " << m_photoDetPanels[rich][side]->name() << endmsg;
     }
   }
@@ -134,7 +132,7 @@ StatusCode Rich::RayTracing::initialize()
     Warning( "Will ignore secondary mirrors", StatusCode::SUCCESS );
   }
 
-  info() << "Using ROOT based Ray Tracing" << endmsg;
+  info() << "Using Eigen based Ray Tracing" << endmsg;
 
   return sc;
 }
@@ -145,13 +143,13 @@ StatusCode Rich::RayTracing::initialize()
 // take into account the geometrical boundaries of mirrors and detector
 //=============================================================================
 LHCb::RichTraceMode::RayTraceResult
-Rich::RayTracing::traceToDetector ( const Rich::DetectorType rich,
-                                    const Gaudi::XYZPoint& startPoint,
-                                    const Gaudi::XYZVector& startDir,
-                                    Gaudi::XYZPoint& hitPosition,
-                                    const LHCb::RichTraceMode mode,
-                                    const Rich::Side forcedSide,
-                                    const double photonEnergy ) const
+Rich::RayTracingEigen::traceToDetector ( const Rich::DetectorType rich,
+                                         const Gaudi::XYZPoint& startPoint,
+                                         const Gaudi::XYZVector& startDir,
+                                         Gaudi::XYZPoint& hitPosition,
+                                         const LHCb::RichTraceMode mode,
+                                         const Rich::Side forcedSide,
+                                         const double photonEnergy ) const
 {
   // need to think if this can be done without creating a temp RichGeomPhoton ?
   LHCb::RichGeomPhoton photon;
@@ -167,13 +165,13 @@ Rich::RayTracing::traceToDetector ( const Rich::DetectorType rich,
 // take into account the geometrical boundaries of mirrors and detector
 //=============================================================================
 LHCb::RichTraceMode::RayTraceResult
-Rich::RayTracing::traceToDetector ( const Rich::DetectorType rich,
-                                    const Gaudi::XYZPoint& startPoint,
-                                    const Gaudi::XYZVector& startDir,
-                                    Gaudi::XYZPoint& hitPosition,
-                                    const LHCb::RichTrackSegment& trSeg,
-                                    const LHCb::RichTraceMode mode,
-                                    const Rich::Side forcedSide ) const
+Rich::RayTracingEigen::traceToDetector ( const Rich::DetectorType rich,
+                                         const Gaudi::XYZPoint& startPoint,
+                                         const Gaudi::XYZVector& startDir,
+                                         Gaudi::XYZPoint& hitPosition,
+                                         const LHCb::RichTrackSegment& trSeg,
+                                         const LHCb::RichTraceMode mode,
+                                         const Rich::Side forcedSide ) const
 {
   // need to think if this can be done without creating a temp RichGeomPhoton ?
   LHCb::RichGeomPhoton photon;
@@ -189,13 +187,13 @@ Rich::RayTracing::traceToDetector ( const Rich::DetectorType rich,
 // take into account the geometrical boundaries of mirrors and detector
 //=============================================================================
 LHCb::RichTraceMode::RayTraceResult
-Rich::RayTracing::traceToDetector ( const Rich::DetectorType rich,
-                                    const Gaudi::XYZPoint& startPoint,
-                                    const Gaudi::XYZVector& startDir,
-                                    LHCb::RichGeomPhoton& photon,
-                                    const LHCb::RichTraceMode mode,
-                                    const Rich::Side forcedSide,
-                                    const double photonEnergy ) const
+Rich::RayTracingEigen::traceToDetector ( const Rich::DetectorType rich,
+                                         const Gaudi::XYZPoint& startPoint,
+                                         const Gaudi::XYZVector& startDir,
+                                         LHCb::RichGeomPhoton& photon,
+                                         const LHCb::RichTraceMode mode,
+                                         const Rich::Side forcedSide,
+                                         const double photonEnergy ) const
 {
   // temporary working objects
   Gaudi::XYZPoint  tmpPos ( startPoint );
@@ -217,21 +215,21 @@ Rich::RayTracing::traceToDetector ( const Rich::DetectorType rich,
 // take into account the geometrical boundaries of mirrors and detector
 //=============================================================================
 LHCb::RichTraceMode::RayTraceResult
-Rich::RayTracing::traceToDetector ( const Rich::DetectorType rich,
-                                    const Gaudi::XYZPoint& startPoint,
-                                    const Gaudi::XYZVector& startDir,
-                                    LHCb::RichGeomPhoton& photon,
-                                    const LHCb::RichTrackSegment& trSeg,
-                                    const LHCb::RichTraceMode mode,
-                                    const Rich::Side forcedSide ) const
+Rich::RayTracingEigen::traceToDetector ( const Rich::DetectorType rich,
+                                         const Gaudi::XYZPoint& startPoint,
+                                         const Gaudi::XYZVector& startDir,
+                                         LHCb::RichGeomPhoton& photon,
+                                         const LHCb::RichTrackSegment& trSeg,
+                                         const LHCb::RichTraceMode mode,
+                                         const Rich::Side forcedSide ) const
 {
   // temporary working objects
   Gaudi::XYZPoint  tmpPos ( startPoint );
   Gaudi::XYZVector tmpDir ( startDir   );
-  
+
   // Correct start point/direction for aerogel refraction, if appropriate
-  if ( mode.aeroRefraction()            && 
-       rich             == Rich::Rich1  && 
+  if ( mode.aeroRefraction()            &&
+       rich             == Rich::Rich1  &&
        trSeg.radiator() == Rich::Aerogel )
   {
     snellsLaw()->aerogelToGas(tmpPos,tmpDir,trSeg);
@@ -242,19 +240,19 @@ Rich::RayTracing::traceToDetector ( const Rich::DetectorType rich,
 }
 
 LHCb::RichTraceMode::RayTraceResult
-Rich::RayTracing::_traceToDetector ( const Rich::DetectorType rich,
-                                     const Gaudi::XYZPoint& startPoint,
-                                     Gaudi::XYZPoint& tmpPos,
-                                     Gaudi::XYZVector& tmpDir,
-                                     LHCb::RichGeomPhoton& photon,
-                                     const LHCb::RichTraceMode mode,
-                                     const Rich::Side forcedSide ) const
+Rich::RayTracingEigen::_traceToDetector ( const Rich::DetectorType rich,
+                                          const Gaudi::XYZPoint& startPoint,
+                                          Gaudi::XYZPoint& tmpPos,
+                                          Gaudi::XYZVector& tmpDir,
+                                          LHCb::RichGeomPhoton& photon,
+                                          const LHCb::RichTraceMode mode,
+                                          const Rich::Side forcedSide ) const
 {
   // default result is failure
   LHCb::RichTraceMode::RayTraceResult result = LHCb::RichTraceMode::RayTraceFailed;
 
   //if ( msgLevel(MSG::VERBOSE) )
-  //  verbose() << "Ray Tracing : " << rich << " Ptn=" << startPoint 
+  //  verbose() << "Ray Tracing : " << rich << " Ptn=" << startPoint
   //            << " Dir=" << tmpDir << endmsg;
 
   // first, try and reflect of both mirrors
@@ -286,7 +284,7 @@ Rich::RayTracing::_traceToDetector ( const Rich::DetectorType rich,
       result = m_photoDetPanels[rich][side]->PDWindowPoint( tmpDir, tmpPos,
                                                             hitPosition, smartID, mode );
       //if ( msgLevel(MSG::VERBOSE) )
-      //  verbose() << "  -> After PDWindowPoint " << hitPosition 
+      //  verbose() << "  -> After PDWindowPoint " << hitPosition
       //            << " " << smartID << endmsg;
 
     }
@@ -297,7 +295,7 @@ Rich::RayTracing::_traceToDetector ( const Rich::DetectorType rich,
       result = m_photoDetPanels[rich][side]->detPlanePoint( tmpPos, tmpDir,
                                                             hitPosition, smartID, mode );
       //if ( msgLevel(MSG::VERBOSE) )
-      //  verbose() << "  -> After detPlanePoint " << hitPosition 
+      //  verbose() << "  -> After detPlanePoint " << hitPosition
       //            << " " << smartID << endmsg;
     }
 
@@ -327,19 +325,18 @@ Rich::RayTracing::_traceToDetector ( const Rich::DetectorType rich,
 //  reflect a photon on both mirrors and return the position and direction
 //  on the secondary mirror.
 //=========================================================================
-bool Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
-                                           Gaudi::XYZPoint& position,
-                                           Gaudi::XYZVector& direction,
-                                           LHCb::RichGeomPhoton& photon,
-                                           const LHCb::RichTraceMode mode,
-                                           const Rich::Side forcedSide ) const
+bool Rich::RayTracingEigen::reflectBothMirrors( const Rich::DetectorType rich,
+                                                Gaudi::XYZPoint& position,
+                                                Gaudi::XYZVector& direction,
+                                                LHCb::RichGeomPhoton& photon,
+                                                const LHCb::RichTraceMode mode,
+                                                const Rich::Side forcedSide ) const
 {
-
-  Gaudi::XYZPoint  tmpPos ( position  );
-  Gaudi::XYZVector tmpDir ( direction );
-
   // which side are we on ?
-  Rich::Side side = ( mode.forcedSide() ? forcedSide : m_rich[rich]->side(tmpPos) );
+  Rich::Side side = ( mode.forcedSide() ? forcedSide : m_rich[rich]->side(position) );
+
+  EigenXYZPoint  tmpPos ( position  );
+  EigenXYZVector tmpDir ( direction );
 
   // Spherical mirror reflection with nominal parameters
   if ( !reflectSpherical( tmpPos, tmpDir,
@@ -350,7 +347,7 @@ bool Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
   // if not forced, check if still same side, if not change sides
   if ( !mode.forcedSide() )
   {
-    const Rich::Side tmpSide = m_rich[rich]->side(tmpPos);
+    const Rich::Side tmpSide = m_rich[rich]->side( tmpPos );
     if ( side != tmpSide )
     {
       side   = tmpSide;
@@ -358,13 +355,13 @@ bool Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
       tmpDir = direction;
       if ( !reflectSpherical( tmpPos, tmpDir,
                               m_rich[rich]->nominalCentreOfCurvature(side),
-                              m_rich[rich]->sphMirrorRadius() ) )
-        return false;
+                              m_rich[rich]->sphMirrorRadius() ) ) { return false; }
     }
   }
 
   // find segment
-  const DeRichSphMirror* sphSegment = m_mirrorSegFinder->findSphMirror( rich, side, tmpPos );
+  const DeRichSphMirror* sphSegment =
+    m_mirrorSegFinder->findSphMirror( rich, side, tmpPos );
 
   // depending on the tracing flag
   if ( mode.mirrorSegBoundary() )
@@ -424,8 +421,7 @@ bool Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
   // Spherical mirror reflection with exact parameters
   if ( !reflectSpherical( tmpPos, tmpDir,
                           sphSegment->centreOfCurvature(),
-                          sphSegment->radius() ) )
-    return false;
+                          sphSegment->radius() ) ) { return false; }
 
   // set primary mirror data
   photon.setSphMirReflectionPoint( tmpPos );
@@ -435,7 +431,7 @@ bool Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
   if ( !m_ignoreSecMirrs )
   {
 
-    Gaudi::XYZPoint planeIntersection;
+    EigenXYZPoint planeIntersection;
     // sec mirror reflection with nominal parameters
     if ( !intersectPlane( tmpPos,
                           tmpDir,
@@ -444,10 +440,12 @@ bool Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
       return false;
 
     // find secondary mirror segment
-    const DeRichSphMirror* secSegment = m_mirrorSegFinder->findSecMirror(rich,side,planeIntersection);
+    const DeRichSphMirror* secSegment = 
+      m_mirrorSegFinder->findSecMirror(rich,side,planeIntersection);
 
     // depending on the tracing flag:
-    if ( mode.mirrorSegBoundary() ) {
+    if ( mode.mirrorSegBoundary() )
+    {
       // if reflection from a mirror segment is required
       if ( !secSegment->intersects( tmpPos, tmpDir ) )
       {
@@ -463,27 +461,28 @@ bool Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
     {
 
       // check the outside boundaries of the (whole) mirror
-      if ( !secSegment->intersects( tmpPos, tmpDir ) ) {
+      if ( !secSegment->intersects( tmpPos, tmpDir ) )
+      {
         const RichMirrorSegPosition pos = m_rich[rich]->secMirrorSegPos( secSegment->mirrorNumber() );
         const Gaudi::XYZPoint& mirCentre = secSegment->mirrorCentre();
         bool fail( false );
-        if ( pos.row() == 0 ) {                 // bottom segment
-          if ( planeIntersection.y() < mirCentre.y() )
-            fail = true;
+        if ( pos.row() == 0 ) 
+        { // bottom segment
+          if ( planeIntersection.y() < mirCentre.y() ) fail = true;
         }
-        if ( pos.row() == m_secMirrorSegRows[rich]-1 ) { // top segment
-          if ( planeIntersection.y() > mirCentre.y() )
-            fail = true;
+        if ( pos.row() == m_secMirrorSegRows[rich]-1 ) 
+        { // top segment
+          if ( planeIntersection.y() > mirCentre.y() ) fail = true;
         }
-        if ( pos.column() == 0 ) {                 // right side
-          if ( planeIntersection.x() < mirCentre.x() )
-            fail = true;
+        if ( pos.column() == 0 ) 
+        { // right side
+          if ( planeIntersection.x() < mirCentre.x() ) fail = true;
         }
-        if ( pos.column() == m_secMirrorSegCols[rich]-1 ) {   // left side
-          if ( planeIntersection.x() > mirCentre.x() )
-            fail = true;
+        if ( pos.column() == m_secMirrorSegCols[rich]-1 ) 
+        { // left side
+          if ( planeIntersection.x() > mirCentre.x() ) fail = true;
         }
-        if (fail)
+        if ( fail )
         {
           //if ( produceHistos() )
           //  plot2D( planeIntersection.x(), planeIntersection.y(),
@@ -520,10 +519,10 @@ bool Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
 // have in order to hit that point in the detector panel.
 //==========================================================================
 bool
-Rich::RayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
-                                          const Gaudi::XYZVector& startDir,
-                                          Gaudi::XYZPoint& endPoint,
-                                          Gaudi::XYZVector& endDir ) const
+Rich::RayTracingEigen::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
+                                               const Gaudi::XYZVector& startDir,
+                                               Gaudi::XYZPoint& endPoint,
+                                               Gaudi::XYZVector& endDir ) const
 {
   Gaudi::XYZPoint  tmpStartPoint ( startPoint );
   Gaudi::XYZVector tmpStartDir   ( startDir   );
@@ -548,8 +547,8 @@ Rich::RayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
     { return false; }
 
     // find secondary mirror segment
-    const DeRichSphMirror* secSegment
-      = m_mirrorSegFinder->findSecMirror(rich,side,planeIntersection);
+    const DeRichSphMirror* secSegment =
+      m_mirrorSegFinder->findSecMirror( rich, side, planeIntersection );
 
     if ( !reflectSpherical( tmpStartPoint, tmpStartDir,
                             secSegment->centreOfCurvature(),
@@ -569,8 +568,8 @@ Rich::RayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
   { return false; }
 
   // find primary mirror segment
-  const DeRichSphMirror* sphSegment = m_mirrorSegFinder->
-    findSphMirror( rich, side,tmpStartPoint );
+  const DeRichSphMirror* sphSegment = 
+    m_mirrorSegFinder->findSphMirror( rich, side, tmpStartPoint );
 
   // Spherical mirror reflection with exact parameters
   if ( !reflectSpherical( storePoint, storeDir,
@@ -587,26 +586,27 @@ Rich::RayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
 //=========================================================================
 //  reflect from a spherical mirror
 //=========================================================================
+
 bool
-Rich::RayTracing::reflectSpherical ( Gaudi::XYZPoint& position,
-                                     Gaudi::XYZVector& direction,
-                                     const Gaudi::XYZPoint& CoC,
-                                     const double radius ) const
+Rich::RayTracingEigen::reflectSpherical ( Gaudi::XYZPoint& position,
+                                          Gaudi::XYZVector& direction,
+                                          const Gaudi::XYZPoint& CoC,
+                                          const double radius ) const
 {
   // find intersection point
   // for line sphere intersection look at http://www.realtimerendering.com/int/
 
   const double a = direction.Mag2();
-  if ( 0 == a )  
-  {
-    Warning( "reflectSpherical: Direction vector has zero length..." ).ignore();
-    return false;
-  }
+  //if ( 0 == a )  
+  //{
+  // Warning( "reflectSpherical: Direction vector has zero length..." ).ignore();
+  //  return false;
+  //}
   const Gaudi::XYZVector delta( position - CoC );
   const double b = 2.0 * direction.Dot( delta );
   const double c = delta.Mag2() - radius*radius;
   const double discr = b*b - 4.0*a*c;
-  if ( discr < 0 ) return false;
+  //if ( discr < 0 ) return false;
 
   const double distance1 = 0.5 * ( std::sqrt(discr) - b ) / a;
   // change position to the intersection point
@@ -616,7 +616,7 @@ Rich::RayTracing::reflectSpherical ( Gaudi::XYZPoint& position,
   // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
 
   const Gaudi::XYZVector normal( position - CoC );
-  direction -= (2.0/normal.Mag2()) * (normal.Dot(direction)) * normal;
+  direction -= ( 2.0 * normal.Dot(direction) / normal.Mag2() ) * normal;
 
   return true;
 }
@@ -625,26 +625,27 @@ Rich::RayTracing::reflectSpherical ( Gaudi::XYZPoint& position,
 //  reflect from a flat mirror
 //=========================================================================
 bool
-Rich::RayTracing::reflectFlatPlane ( Gaudi::XYZPoint& position,
-                                     Gaudi::XYZVector& direction,
-                                     const Gaudi::Plane3D& plane ) const
+Rich::RayTracingEigen::reflectFlatPlane ( Gaudi::XYZPoint& position,
+                                          Gaudi::XYZVector& direction,
+                                          const Gaudi::Plane3D& plane ) const
 {
   // temp intersection point
   Gaudi::XYZPoint intersection;
 
   // refect of the plane
   const bool sc = intersectPlane( position, direction, plane, intersection );
-  if ( !sc ) { return sc; }
-
-  // plane normal
-  const Gaudi::XYZVector normal( plane.Normal() );
-
-  // update position to intersection point
-  position = intersection;
-
-  // reflect the vector and update direction
-  // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
-  direction -= 2.0 * (normal.Dot(direction)) * normal;
+  if ( sc ) 
+  {
+    // plane normal
+    const Gaudi::XYZVector normal( plane.Normal() );
+    
+    // update position to intersection point
+    position = intersection;
+    
+    // reflect the vector and update direction
+    // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
+    direction -= 2.0 * normal.Dot(direction) * normal;
+  }
 
   // return status code
   return sc;
@@ -653,18 +654,19 @@ Rich::RayTracing::reflectFlatPlane ( Gaudi::XYZPoint& position,
 //=========================================================================
 //  intersect a plane
 //=========================================================================
+
 bool
-Rich::RayTracing::intersectPlane ( const Gaudi::XYZPoint& position,
-                                   const Gaudi::XYZVector& direction,
-                                   const Gaudi::Plane3D& plane,
-                                   Gaudi::XYZPoint& intersection ) const
+Rich::RayTracingEigen::intersectPlane ( const Gaudi::XYZPoint& position,
+                                        const Gaudi::XYZVector& direction,
+                                        const Gaudi::Plane3D& plane,
+                                        Gaudi::XYZPoint& intersection ) const
 {
   const double scalar = direction.Dot( plane.Normal() );
   if ( fabs(scalar) < 1e-99 ) return false;
-
+  
   const double distance = -(plane.Distance(position)) / scalar;
-  intersection = position + distance*direction;
-
+  intersection = position + (distance*direction);
+  
   return true;
 }
 

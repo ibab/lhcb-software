@@ -4,6 +4,12 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2015-02-06 - Chris Jones
+ - Add a new implementation of the ray tracing tool, RichRayTracingEigen that
+   is based on the Eigen library, to partially vectorise the calculations.
+ - Add a new implementation of the mirror segment finder, 
+   RichMirrorSegFinderLookUpTable, that internally uses a simple lookup table.
+
 !========================= RichTools v2r45 2014-12-11 =========================
 ! 2014-11-25 - Marco Cattaneo
  - Fix unprotected debugs

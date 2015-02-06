@@ -301,7 +301,7 @@ void SnellsLawRefraction::_gasToAerogel( Gaudi::XYZVector & dir,
                                          const double refAero ) const
 {
   // Rich1 Gas ref index
-  const double refrich1Gas = deRad(Rich::Rich1Gas)->refractiveIndex( photonEnergy,m_hltMode );
+  const double refrich1Gas = deRad(Rich::Rich1Gas)->refractiveIndex( photonEnergy, m_hltMode );
 
   // ref index ratio
   const double RratioSq    = (refAero*refAero)/(refrich1Gas*refrich1Gas);
