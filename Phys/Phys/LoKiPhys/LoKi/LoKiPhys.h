@@ -65,6 +65,7 @@
 #include "LoKi/Particles43.h"
 #include "LoKi/Particles44.h"
 #include "LoKi/Particles45.h"
+#include "LoKi/Particles46.h"
 //
 #include "LoKi/BeamLineFunctions.h"
 //

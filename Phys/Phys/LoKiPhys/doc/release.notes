@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2015-02-06 - Vanya Belyaev
+ - add missing particle 
+
 ! 2015-02-02 - Vanya Belyaev
  - solve the issuw with late initiazalition 
 

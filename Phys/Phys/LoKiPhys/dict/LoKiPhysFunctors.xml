@@ -1,5 +1,5 @@
 <!-- 
-     * $Id:$ 
+     * $Id$ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiPhys package
@@ -15,7 +15,7 @@
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-06
      *
-     *  $Revision:$
+     *  $Revision$
      *
      * ========================================================================
 -->
