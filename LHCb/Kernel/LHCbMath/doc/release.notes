@@ -6,6 +6,11 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-02-06 - Chris Jones
+ - Add a new header LHCbMath/EigenTypes.h that contains so wrapper classes
+   that make it easier to convert between Gaudi XYZ points and vectors
+   and representations based on the Eigen library of vectorised objects.
+
 ! 2015-02-05 - Manuel Tobias Schiller
  - add class to calculate fixed order Chebyshev approximations to given
    functions; this class is meant for fast approximations of complicated
@@ -15,7 +20,6 @@
  - Insure that _mm256_zeroupper() is invoked at the boundaries of AVX
    and non-AVX code -- see the discussion in section 12.1 of 
    http://www.agner.org/optimize/optimizing_cpp.pdf
-  
 
 ! 2015-01-28 - Chris Jones
  - Add a new test application, TestEigenGeometry, to help with testing

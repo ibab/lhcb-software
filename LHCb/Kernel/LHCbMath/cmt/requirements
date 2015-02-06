@@ -17,10 +17,12 @@ use GaudiKernel     v*
 use ROOT            v*      LCG_Interfaces
 use Boost           v*      LCG_Interfaces
 use GSL             v*      LCG_Interfaces
+use vdt             v*      LCG_Interfaces
 use GaudiGSL        v*   
 use GaudiPython     v*                     -no_auto_imports
 
-apply_pattern install_more_includes more=LHCbMath offset=Eigen
+apply_pattern install_more_includes more=LHCbMath offset=Eigen 
+#apply_pattern install_more_includes more=LHCbMath offset=VectorClass
 
 apply_pattern install_python_modules
 
@@ -66,6 +68,8 @@ application  TestSimilarity   ../tests/TestSimilarity.cpp
 macro_append TestSimilarity_dependencies   " LHCbMathLib "
 application  TestEigenGeometry   ../tests/TestEigenGeometry.cpp
 macro_append TestEigenGeometry_dependencies   " LHCbMathLib "
+macro_append TestEigenGeometry_cppflags " -O3 -msse4 " 
+#macro_append TestEigenGeometry_cppflags " -O3 -mavx -fabi-version=0 " 
 
 # ================= patterns =============================================
 apply_pattern       linker_library library=LHCbMathLib

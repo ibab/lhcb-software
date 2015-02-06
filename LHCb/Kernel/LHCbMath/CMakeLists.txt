@@ -10,6 +10,7 @@ gaudi_depends_on_subdirs(GaudiGSL
 find_package(Boost)
 find_package(GSL)
 find_package(ROOT COMPONENTS MathCore GenVector)
+find_package(VDT)
 
 gaudi_install_headers(LHCbMath Eigen)
 
@@ -101,8 +102,8 @@ if(GAUDI_BUILD_TESTS)
                        LINK_LIBRARIES Boost GSL ROOT GaudiKernel LHCbMathLib)
   gaudi_add_executable(TestEigenGeometry   
                        tests/TestEigenGeometry.cpp
-                       INCLUDE_DIRS Boost GSL ROOT
-                       LINK_LIBRARIES Boost GSL ROOT GaudiKernel LHCbMathLib)
+                       INCLUDE_DIRS Boost GSL ROOT VDT
+                       LINK_LIBRARIES Boost GSL ROOT VDT GaudiKernel LHCbMathLib)
 endif()
 
 gaudi_install_python_modules()
