@@ -83,7 +83,7 @@
                 type  = "LHCb::RichRecPhoton::FloatType" >
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>
-                        return (expPixelSignalPhots())[type];
+                        return ( type != Rich::BelowThreshold ? (expPixelSignalPhots())[type] : 0.0f );
                 </code>
         </method>
             

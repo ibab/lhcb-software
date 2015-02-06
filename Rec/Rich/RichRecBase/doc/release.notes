@@ -4,6 +4,13 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2015-02-06 - Chris Jones
+ - Add a new method to IRichPhotonSignal to allow a client to request the
+   pre-filling of all photon pixel signal information. Used to then avoid a
+   virtual function call deep inside the Global PID likelihood minimisation.
+ - Add protection to RichRecPhoton::expPixelSignalPhots if call with a 
+   Below Threshold hypothesis.
+
 !========================= RichRecBase v4r18 2014-12-11 =========================
 ! 2014-11-19 - Marco Clemencic
  - Removed unused dictionary selection rules.

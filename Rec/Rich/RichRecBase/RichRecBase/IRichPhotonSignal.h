@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IPhotonSignal
  *
- *  CVS Log :-
- *  $Id: IRichPhotonSignal.h,v 1.11 2007-03-09 18:04:33 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -87,6 +84,9 @@ namespace Rich
        */
       virtual double scatterProb( LHCb::RichRecPhoton * photon,
                                   const Rich::ParticleIDType id ) const = 0;
+
+      /// Method to pre-fill the predicted pixel signal values for all photons
+      virtual void prefillPredictedPixelSignal() const = 0;
 
     };
 

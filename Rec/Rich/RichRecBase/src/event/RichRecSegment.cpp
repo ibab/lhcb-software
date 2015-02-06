@@ -4,9 +4,6 @@
  *
  *  Implementation file for class : RichRecSegment
  *
- *  CVS Log :-
- *  $Id: RichRecSegment.cpp,v 1.10 2006-01-23 14:08:55 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-05-10
  */
