@@ -1,3 +1,7 @@
+2015-02-06  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v8r3p1
+
 2015-01-30  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* SetupProject: fixed an issue with "import SP2" when running through our copy of runpy
