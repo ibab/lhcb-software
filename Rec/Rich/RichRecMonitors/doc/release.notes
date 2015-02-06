@@ -4,6 +4,9 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2015-02-06 - Chris Jones
+ - Add a new histogram to RichCherenkovAngleMonitor.
+
 !========================= RichRecMonitors v2r34 2012-11-28 =========================
 ! 2012-11-26 - Marco Clemencic
  - Fixed build with C++11.

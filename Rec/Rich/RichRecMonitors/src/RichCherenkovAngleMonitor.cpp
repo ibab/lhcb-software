@@ -76,8 +76,10 @@ StatusCode CherenkovAngleMonitor::execute()
   const double yLimit[]       = { 400,     200,      1400    };
 
   // min and max P for histos
-  const double maxP = m_trSelector->maxPCut() * Gaudi::Units::GeV;
-  const double minP = m_trSelector->minPCut() * Gaudi::Units::GeV;
+  //const double maxP = m_trSelector->maxPCut() * Gaudi::Units::GeV;
+  //const double minP = m_trSelector->minPCut() * Gaudi::Units::GeV;
+  const double maxP = 100 * Gaudi::Units::GeV;
+  const double minP = 0   * Gaudi::Units::GeV;
 
   // Iterate over segments
   for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
@@ -261,6 +263,9 @@ StatusCode CherenkovAngleMonitor::execute()
                          -ckRange[rad],ckRange[rad], nBins1D() )->fill(delThetaExpMC);
             richHisto2D( hid(rad,"mcckDiffTrueVPhi"), "Rec-MC CK theta true V true CK Phi",
                          0, 2*M_PI, nBins2D(), -ckRange[rad], ckRange[rad], nBins2D() )->fill(phiMC, delThetaMC);
+            richProfile1D( hid(rad,"absMCExpDiffVP"), "abs(MC-Exp CK theta) Versus Ptot true",
+                           minP, maxP, 50 )->fill(pTot, fabs(delThetaMC) );
+                           
 
           } // mc photon
 
