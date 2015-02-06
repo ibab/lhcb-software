@@ -4,6 +4,10 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+! 2015-02-06 - Chris Jones
+ - Fill the new MagneticFieldGrid data member, that caches the inverse of
+   the step sizes.
+
 !========================= Magnet v7r8 2015-01-14 =========================
 ! 2014-12-18 - Gerhard Raven
  - make the MagneticFieldReader code (at source level) independent of the
