@@ -11,6 +11,9 @@
 #ifndef RICHDET_DERICHHPDPANEL_H
 #define RICHDET_DERICHHPDPANEL_H 1
 
+// STL
+#include <sstream>
+
 // Gaudi
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
@@ -109,9 +112,19 @@ public:
   virtual const DeRichPD* dePD( const unsigned int PDNumber ) const;
 
   /// Returns the detector element for the given PD number
-  inline const DeRichHPD* deHPD( const unsigned int PDNumber ) const
+  inline const DeRichHPD* deHPD( const unsigned int HPDNumber ) const
   {
-    return dynamic_cast<const DeRichHPD*>( dePD(PDNumber) );
+    // CRJ : should this just be < ??
+    const DeRichHPD * deHPD = ( HPDNumber <= nPDs() ? m_DeHPDs[HPDNumber] : NULL );
+#ifndef NDEBUG
+    if ( !deHPD )
+    {
+      std::ostringstream mess;
+      mess << "Inappropriate HPDNumber : " << HPDNumber;
+      throw GaudiException( mess.str(), "*DeRichHPDPanel*", StatusCode::FAILURE );
+    }
+#endif
+    return deHPD;
   }
 
   // Adds to the given vector all the available readout channels in this HPD panel
@@ -133,9 +146,10 @@ private: // methods
 
   /// Returns the PD number for the given RichSmartID
   unsigned int pdNumber( const LHCb::RichSmartID smartID ) const;
-  bool pdGrandSize( const LHCb::RichSmartID /** smartID **/ ) const {return false;}
-  
 
+  /// Need to ask Sajan about this
+  inline bool pdGrandSize( const LHCb::RichSmartID /** smartID **/ ) const { return false; }
+  
   /// Check HPD panel acceptance
   LHCb::RichTraceMode::RayTraceResult checkPanelAcc( const Gaudi::XYZPoint & point ) const;
 
@@ -146,6 +160,8 @@ private: // data
 
   double m_HPDPitch;               ///< distance between HPDs
   double m_HPDColPitch;            ///< distance between HPD columns
+  double m_OneOverHPDPitch;        ///< 1 / distance between HPDs (cached for speed)
+  double m_OneOverHPDColPitch;     ///< 1 / distance between HPD columns (cached for speed)
 
   unsigned int m_pixelRows;        ///< Number of pixel rows
   unsigned int m_pixelColumns;     ///< Number of pixel columns

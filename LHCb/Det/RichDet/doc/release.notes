@@ -4,6 +4,11 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2015-02-06 - Chris Jones
+ - Various speed improvements to DeRichHPDPanel (such as removing completely
+   an unneccessary virtual function call and dynamic_cast, when getting the
+   DeRichHPD object for a given HPD number...).
+
 !========================= RichDet v17r1 2015-01-14 =========================
 ! 2015-01-12 - Antonis Papanestis
  - Found a bug related to the new InactiveHPDList condition (not yet

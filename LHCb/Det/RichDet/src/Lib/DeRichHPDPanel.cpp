@@ -9,7 +9,6 @@
 //----------------------------------------------------------------------------
 
 // STL
-#include <sstream>
 #include <time.h>
 
 // Gaudi
@@ -416,7 +415,8 @@ bool DeRichHPDPanel::findHPDColAndPos ( const Gaudi::XYZPoint& inPanel,
   //int HPDCol = static_cast<int>(std::floor((u-m_panelColumnSideEdge)/m_HPDColPitch));
   // CRJ : Faster than floor. Gets it wrong for negative values, but these are reset
   // to 0 anyway so does not matter
-  int HPDCol = (int)((u-m_panelColumnSideEdge)/m_HPDColPitch);
+  //int HPDCol = (int)((u-m_panelColumnSideEdge)/m_HPDColPitch);
+  int HPDCol = (int)((u-m_panelColumnSideEdge)*m_OneOverHPDColPitch);
   if      ( HPDCol >= (int)nPDColumns() ) { OK = false; HPDCol = nPDColumns() - 1; }
   else if ( HPDCol < 0                  ) { OK = false; HPDCol = 0;                }
 
@@ -427,9 +427,12 @@ bool DeRichHPDPanel::findHPDColAndPos ( const Gaudi::XYZPoint& inPanel,
   //      static_cast<int>(std::floor((v-m_panelStartColPosOdd)/m_HPDPitch)) );
   // CRJ : Faster than floor. Gets it wrong for negative values, but these are reset
   // to 0 anyway so does not matter
+  // int HPDNumInCol = ( 0 == HPDCol%2 ?
+  //                     (int)((v-m_panelStartColPosEven)/m_HPDPitch) :
+  //                     (int)((v-m_panelStartColPosOdd )/m_HPDPitch) );
   int HPDNumInCol = ( 0 == HPDCol%2 ?
-                      (int)((v-m_panelStartColPosEven)/m_HPDPitch) :
-                      (int)((v-m_panelStartColPosOdd)/m_HPDPitch) );
+                      (int)((v-m_panelStartColPosEven)*m_OneOverHPDPitch) :
+                      (int)((v-m_panelStartColPosOdd )*m_OneOverHPDPitch) );
   if      ( HPDNumInCol >= (int)nPDsPerCol() ) { OK = false; HPDNumInCol = nPDsPerCol()-1; }
   else if ( HPDNumInCol < 0                  ) { OK = false; HPDNumInCol = 0;              }
 
@@ -454,27 +457,15 @@ int DeRichHPDPanel::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const
 //=========================================================================
 // Returns the detector element for the given HPD number
 //=========================================================================
-const DeRichPD* DeRichHPDPanel::dePD( const unsigned int HPDNumber ) const
+const DeRichPD* DeRichHPDPanel::dePD( const unsigned int PDNumber ) const
 {
-  const DeRichPD * deHPD = NULL;
-  if ( HPDNumber <= nPDs() ) // CRJ : should this just be < ??
-  {
-    deHPD = m_DeHPDs[HPDNumber];
-  }
-  else
-  {
-    std::ostringstream mess;
-    mess << "Inappropriate HPDNumber : " << HPDNumber;
-    deHPD = NULL;
-    throw GaudiException( mess.str(), "*DeRichHPDPanel*", StatusCode::FAILURE );
-  }
-  return deHPD;
+  return deHPD( PDNumber );
 }
 
 //=========================================================================
 //  generate the transfroms for global <-> local frames
 //=========================================================================
-StatusCode DeRichHPDPanel::geometryUpdate ( ) 
+StatusCode DeRichHPDPanel::geometryUpdate() 
 {
   MsgStream msg ( msgSvc(), "DeRichHPDPanel" );
 
@@ -572,8 +563,10 @@ StatusCode DeRichHPDPanel::geometryUpdate ( )
     HPD10v = startColPos[3];
   }
 
-  if ( HPD00v > 0.0 ) m_HPDPitch = -m_HPDPitch;
+  if ( HPD00v > 0.0 ) m_HPDPitch    = -m_HPDPitch;
   if ( HPD00u > 0.0 ) m_HPDColPitch = -m_HPDColPitch;
+  m_OneOverHPDPitch    = 1.0 / m_HPDPitch;
+  m_OneOverHPDColPitch = 1.0 / m_HPDColPitch;
   m_panelColumnSideEdge = HPD00u - 0.5*m_HPDColPitch;
   m_localOffset = fabs( m_panelColumnSideEdge );
 
