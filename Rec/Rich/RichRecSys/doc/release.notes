@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2015-02-06 - Chris Jones
+ - Fix a small bug with the "PreloadTracks" options that was failing to 
+   properly enable this option.
+
 !========================= RichRecSys v5r4 2015-01-14 =========================
 ! 2015-01-14 - Chris Jones
  - Make all defaults for HLT Context the same as Offline.

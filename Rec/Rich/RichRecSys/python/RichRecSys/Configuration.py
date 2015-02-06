@@ -67,7 +67,6 @@ class RichRecSysConf(RichConfigurableUser):
         
         # default values
         self.setRichDefault("Particles","Offline",["electron","muon","pion","kaon","proton","belowThreshold"] )
-        #self.setRichDefault("Particles","HLT",    ["pion","kaon"] )
         self.setRichDefault("Particles","HLT",    ["electron","muon","pion","kaon","proton","belowThreshold"] )
         self.setRichDefault("Radiators","Offline", ["Rich1Gas","Rich2Gas"] )
         self.setRichDefault("Radiators","HLT",     ["Rich1Gas","Rich2Gas"] )
@@ -193,6 +192,7 @@ class RichRecSysConf(RichConfigurableUser):
             sequence.Members += [ raw ]
         if self.getProp("PreloadTracks"):
             trackInit = self.makeRichAlg( Rich__Rec__Initialise, "LoadRawTracks"+cont )
+            trackInit.LoadRawTracks = True
             sequence.Members += [ trackInit ]
 
         #-----------------------------------------------------------------------------
