@@ -39,16 +39,13 @@ CKthetaBandsPhotonPredictor( const std::string& type,
   // interface
   declareInterface<IPhotonPredictor>(this);
 
-  // default values                               Aero    R1Gas   R2Gas
+  // default values                                 Aero    R1Gas   R2Gas
   // job options
-  declareProperty( "MinTrackROI", m_minROI     = { 110,   0,       0 } );
-  declareProperty( "MaxTrackROI", m_maxROI     = { 390,  86,     165 } );
-  m_nSigma = { 5.5, 5.5, 11.5 };
-  if ( contextContains("HLT") ) m_nSigma = { 4.5, 4.5, 10.5 };
-  declareProperty( "NSigma", m_nSigma );
+  declareProperty( "MinTrackROI",    m_minROI    = { 110,     0,       0 } );
+  declareProperty( "MaxTrackROI",    m_maxROI    = { 390,    86,     165 } );
+  declareProperty( "NSigma",         m_nSigma    = { 5.5,   5.5,    11.5 } );
   declareProperty( "MinPixelXLocal", m_minXlocal = { -1*mm, -1*mm, -1*mm } );
   declareProperty( "MinPixelYLocal", m_minYlocal = { -1*mm, -1*mm, -1*mm } );
-
 }
 
 StatusCode CKthetaBandsPhotonPredictor::initialize()
@@ -130,7 +127,46 @@ CKthetaBandsPhotonPredictor::photonPossible( LHCb::RichRecSegment * segment,
     {
 
       // segment / hit separation squared
-      const double sep2 = m_geomTool->trackPixelHitSep2(segment,pixel);
+      //const double sep2 = m_geomTool->trackPixelHitSep2(segment,pixel);
+
+      // ---------------------------------------------------------------------------
+      // WARNING - Pasting code from virtual call here for speed
+      // ---------------------------------------------------------------------------
+
+      double sep2 = 99999999;
+
+      // Pixel position, in local HPD coords corrected for average radiator distortion
+      const Gaudi::XYZPoint & pixP
+        = pixel->radCorrLocalPositions().position(segment->trackSegment().radiator());
+
+      // segment position ray traced to HPD panel, in local HPD coords
+      const Gaudi::XYZPoint & segP = segment->pdPanelHitPointLocal();
+      
+      if ( ( Rich::Rich1 == pixel->detector() && // RICH1
+             ( ( ( pixP.y() > 0 && segment->photonsInYPlus()  ) ||
+                 ( pixP.y() < 0 && segment->photonsInYMinus() ) ) || 
+               pixP.y()*segP.y() > 0 ) )
+           || // RICH2
+           ( ( ( pixP.x() > 0 && segment->photonsInXPlus()  ) ||
+               ( pixP.x() < 0 && segment->photonsInXMinus() ) ) || 
+             pixP.x()*segP.x() > 0 ) )
+      {
+        const Gaudi::XYZPoint & segPanelPnt = 
+          segment->pdPanelHitPointLocal(pixel->hpdPixelCluster().panel().panel());
+        
+        const double dx = fabs( pixP.x() - segPanelPnt.x() );
+        if ( dx < m_maxROI[rad] )
+        {
+          const double dy = fabs( pixP.y() - segPanelPnt.y() );
+          if ( dy < m_maxROI[rad] )
+          {
+            //sep2 = (pixP-segPanelPnt).Mag2();
+            sep2 = gsl_pow_2(dx) + gsl_pow_2(dy);
+          }
+        }
+      }
+
+     // ---------------------------------------------------------------------------
 
       // Check overall boundaries
       if ( sep2 < m_maxROI2[rad] && sep2 > m_minROI2[rad] )
@@ -140,7 +176,7 @@ CKthetaBandsPhotonPredictor::photonPossible( LHCb::RichRecSegment * segment,
         const double ckThetaEsti = std::sqrt(sep2)*m_scale[rad];
 
         // Loop over mass hypos and check finer grained boundaries
-        for ( auto hypo : m_pidTypes )
+        for ( const auto hypo : m_pidTypes )
         {
 
           // expected CK theta

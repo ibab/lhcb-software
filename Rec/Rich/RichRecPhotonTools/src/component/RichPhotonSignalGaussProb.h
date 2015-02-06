@@ -11,6 +11,10 @@
 #ifndef RICHRECTOOLS_RICHPHOTONSIGNALGAUSSPROB_H
 #define RICHRECTOOLS_RICHPHOTONSIGNALGAUSSPROB_H 1
 
+// from Gaudi
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IIncidentSvc.h"
+
 // base class
 #include "RichRecBase/RichRecToolBase.h"
 
@@ -27,6 +31,7 @@
 #include "RichRecBase/IRichExpectedTrackSignal.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichCherenkovResolution.h"
+#include "RichKernel/IRichParticleProperties.h"
 
 // boost
 #include "boost/numeric/conversion/bounds.hpp"
@@ -34,6 +39,10 @@
 
 // VDT
 #include "vdt/exp.h"
+#include "vdt/sincos.h"
+
+// GSL
+#include "gsl/gsl_math.h"
 
 namespace Rich
 {
@@ -55,7 +64,8 @@ namespace Rich
     //-----------------------------------------------------------------------------
 
     class PhotonSignalGaussProb : public Rich::Rec::ToolBase,
-                                  virtual public IPhotonSignal
+                                  virtual public IPhotonSignal,
+                                  virtual public IIncidentListener
     {
 
     public: // Methods for Gaudi Framework
@@ -71,11 +81,15 @@ namespace Rich
       // Initialize method
       StatusCode initialize();
 
+      /// Implement the handle method for the Incident service.
+      void handle( const Incident& incident );
+
     public: // methods (and doxygen comments) inherited from public interface
 
       // Predicted pixel signal for a given reconstructed photon under a given mass hypothesis
       double predictedPixelSignal( LHCb::RichRecPhoton * photon,
                                    const Rich::ParticleIDType id ) const;
+
       // Signal Probability for a given reconstructed photon under a given mass hypothesis
       double signalProb( LHCb::RichRecPhoton * photon,
                          const Rich::ParticleIDType id ) const;
@@ -84,11 +98,46 @@ namespace Rich
       double scatterProb( LHCb::RichRecPhoton * photon,
                           const Rich::ParticleIDType id ) const;
 
+      /// Method to pre-fill the predicted pixel signal values for all photons
+      void prefillPredictedPixelSignal() const;
+
     protected: // methods
 
-      // compute the acutal signal probability (Gaussian)
+      // compute the actual signal probability (Gaussian)
       virtual double signalProbFunc( const double thetaDiff,
                                      const double thetaExpRes ) const;
+
+    private: // methods
+
+      /// Compute all hypothesis independent term of the predictedPixelSignal calculation
+      inline double _predictedPixelSignal( LHCb::RichRecPhoton * photon ) const
+      {
+        // Which detector
+        const Rich::DetectorType det = photon->richRecSegment()->trackSegment().rich();
+        // Reconstructed Cherenkov theta angle
+        const double thetaReco = photon->geomPhoton().CherenkovTheta();
+        // Get the appropriate pixel area
+        const double aPixelArea = ( m_useMixedPmtInRich2 && m_pmtActivate && (det == Rich::Rich2) ?
+                                    ( m_aRichPDPanel->pdGrandSize(photon->richRecPixel()->hpd()) ?
+                                      m_grandPixelArea : m_stdPixelArea ) : m_pixelArea[det] );
+        // return the ID independent term
+        return ( photon->geomPhoton().activeSegmentFraction() * m_scaleFactor[det] * aPixelArea / 
+                 ( m_radiusCurv[det] * m_radiusCurv[det] * (thetaReco>1e-10 ? thetaReco : 1e-10) ) );
+      }
+
+      /// Compute the hypothesis dependent term of the predictedPixelSignal calculation
+      inline double _predictedPixelSignal( LHCb::RichRecPhoton * photon,
+                                           const Rich::ParticleIDType id ) const
+      {
+        double sig = ( signalProb(photon,id) *
+                       m_signal->nSignalPhotons(photon->richRecSegment(),id) );
+        if ( Rich::Aerogel == photon->richRecSegment()->trackSegment().radiator() )
+        {
+          sig += ( scatterProb(photon,id) *
+                   m_signal->nScatteredPhotons(photon->richRecSegment(),id) );
+        }
+        return sig;
+      }
 
     private: // private data
 
@@ -100,6 +149,9 @@ namespace Rich
 
       /// Pointer to RichCherenkovResolution interface
       const ICherenkovResolution * m_ckRes;
+
+      /// Pointer to RichParticleProperties interface
+      const IParticleProperties * m_richPartProp;
 
       /// Cached Radii of curvature
       double m_radiusCurv[Rich::NRiches];
@@ -113,8 +165,14 @@ namespace Rich
       // Pixel Signal scale factor for RICH2
       double m_rich2PixelSignalScaleFactor;
       
-      
-      // chaced parameters
+      /// Particle ID types to consider
+      Rich::Particles m_pidTypes;
+
+      // cached parameters
+
+      /// Flag to indicate if the pre-filling of information has been performed.
+      mutable bool m_prefillDone; 
+
       double m_minArg;
       double m_expMinArg;
 
@@ -125,6 +183,7 @@ namespace Rich
       bool m_pmtActivate;
       bool m_useGrandPmtInRich2;
       bool m_useMixedPmtInRich2;
+
     };
 
   }

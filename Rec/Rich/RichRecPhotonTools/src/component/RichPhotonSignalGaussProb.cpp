@@ -20,7 +20,10 @@ using namespace Rich::Rec;
 
 namespace
 {
-  static const double root_two_pi = std::sqrt( 2.0 * M_PI );
+  static const double root_two_pi  = std::sqrt( 2.0 * M_PI );
+  static const double maxSignal ( boost::numeric::bounds<LHCb::RichRecPhoton::FloatType>::highest()  );
+  static const double minSignal ( boost::numeric::bounds<LHCb::RichRecPhoton::FloatType>::smallest() );
+  static const double two_over_pi2 = 2.0 / (M_PI*M_PI);
 }
 
 //-----------------------------------------------------------------------------
@@ -31,11 +34,14 @@ DECLARE_TOOL_FACTORY( PhotonSignalGaussProb )
 PhotonSignalGaussProb::PhotonSignalGaussProb( const std::string& type,
                                               const std::string& name,
                                               const IInterface* parent )
-: ToolBase    ( type, name, parent ),
-  m_signal    ( NULL ),
-  m_ckAngle   ( NULL ),
-  m_ckRes     ( NULL ),
-  m_expMinArg ( 0.0  )
+: ToolBase       ( type, name, parent ),
+  m_signal       ( NULL ),
+  m_ckAngle      ( NULL ),
+  m_ckRes        ( NULL ),
+  m_richPartProp ( NULL ),
+  m_prefillDone  ( false ),
+  m_expMinArg    ( 0.0  ),
+  m_aRichPDPanel ( NULL )
 {
   // interface
   declareInterface<IPhotonSignal>(this);
@@ -56,6 +62,10 @@ StatusCode PhotonSignalGaussProb::initialize()
   acquireTool( "RichCherenkovAngle",      m_ckAngle );
   acquireTool( "RichExpectedTrackSignal", m_signal  );
   acquireTool( "RichCherenkovResolution", m_ckRes   );
+  acquireTool( "RichParticleProperties",  m_richPartProp );
+
+  // PID types
+  m_pidTypes = m_richPartProp->particleTypes();
 
   // Get Rich Detector elements
   const DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocations::Rich1 );
@@ -67,8 +77,8 @@ StatusCode PhotonSignalGaussProb::initialize()
   m_radiusCurv[Rich::Rich2] = Rich2DE->sphMirrorRadius();
 
   m_pmtActivate = ( Rich1DE->RichPhotoDetConfig() == Rich::PMTConfig );
-  m_useGrandPmtInRich2 =  Rich1DE->Rich2UseGrandPmt();
-  m_useMixedPmtInRich2 =  Rich1DE->Rich2UseMixedPmt();
+  m_useGrandPmtInRich2 = Rich1DE->Rich2UseGrandPmt();
+  m_useMixedPmtInRich2 = Rich1DE->Rich2UseMixedPmt();
 
   // PD sizes
   const double xSize = ( !m_pmtActivate ?  // 0.5*mm for hpd, 2.78 mm for pmt.
@@ -99,8 +109,8 @@ StatusCode PhotonSignalGaussProb::initialize()
   const double demagScale = ( !m_pmtActivate ? 4.8 : 1.0 );
 
   // area of pixel in mm^2
-  m_stdPixelArea = demagScale*xSize    * demagScale*ySize;
-  m_grandPixelArea=demagScale*gpmxSize * demagScale*gpmySize;
+  m_stdPixelArea   = demagScale*xSize    * demagScale*ySize;
+  m_grandPixelArea = demagScale*gpmxSize * demagScale*gpmySize;
 
   m_pixelArea[Rich::Rich1] = m_stdPixelArea;
   m_pixelArea[Rich::Rich2] = ( !m_useGrandPmtInRich2 ? m_stdPixelArea : m_grandPixelArea );
@@ -117,6 +127,9 @@ StatusCode PhotonSignalGaussProb::initialize()
 
   // exp params
   m_expMinArg = vdt::fast_exp( m_minArg );
+
+  // Setup incident services
+  incSvc()->addListener( this, IncidentType::BeginEvent );
 
   // Informational Printout
   if ( msgLevel(MSG::DEBUG) )
@@ -135,6 +148,35 @@ StatusCode PhotonSignalGaussProb::initialize()
   return sc;
 }
 
+void PhotonSignalGaussProb::handle ( const Incident& )
+{
+  // only subscribe to one sort of incident, so no need to check type
+  m_prefillDone = false;
+}
+
+void PhotonSignalGaussProb::prefillPredictedPixelSignal() const
+{
+  if ( !m_prefillDone )
+  {
+    // Loop over all photons
+    for ( LHCb::RichRecPhoton * photon : *(richPhotons()) )
+    {
+      // Compute the ID independent term
+      const double A = _predictedPixelSignal(photon);
+      // Loop over the mass hypos and compute and fill each value
+      for ( const auto id : m_pidTypes )
+      {
+        // If not alrady done, fill this hypo
+        if ( !photon->expPixelSignalPhots().dataIsValid(id) )
+        {
+          photon->setExpPixelSignalPhots( id, A * _predictedPixelSignal(photon,id) );
+        }
+      }
+    }
+    m_prefillDone = true;
+  }
+}
+
 double
 PhotonSignalGaussProb::predictedPixelSignal( LHCb::RichRecPhoton * photon,
                                              const Rich::ParticleIDType id ) const
@@ -144,63 +186,28 @@ PhotonSignalGaussProb::predictedPixelSignal( LHCb::RichRecPhoton * photon,
 
   if ( !photon->expPixelSignalPhots().dataIsValid(id) )
   {
-    using namespace boost::numeric;
-
-    // static variables
-    static const double maxSignal ( bounds<LHCb::RichRecPhoton::FloatType>::highest()  );
-    static const double minSignal ( bounds<LHCb::RichRecPhoton::FloatType>::smallest() );
-
-    // Which detector
-    const Rich::DetectorType det = photon->richRecSegment()->trackSegment().rich();
-
-    // Reconstructed Cherenkov theta angle
-    const double thetaReco = photon->geomPhoton().CherenkovTheta();
-
-    // Get the appropriate pixel area
-    const double aPixelArea = ( m_useMixedPmtInRich2 && m_pmtActivate && (det == Rich::Rich2) ?
-                                ( m_aRichPDPanel->pdGrandSize(photon->richRecPixel()->hpd()) ?
-                                  m_grandPixelArea : m_stdPixelArea ) :
-                                m_pixelArea[det] );
-
     // Compute the expected pixel contribution
     // See note LHCB/98-040 page 10 equation 16 for the details of where this comes from
-    double pixelSignal = photon->geomPhoton().activeSegmentFraction() *
-      ( ( signalProb(photon, id) *
-          m_signal->nSignalPhotons(photon->richRecSegment(),id) ) +
-        ( scatterProb(photon, id) *
-          m_signal->nScatteredPhotons(photon->richRecSegment(),id) ) ) *
-      m_scaleFactor[det] * aPixelArea / ( m_radiusCurv[det] * m_radiusCurv[det] *
-                                          (thetaReco>1e-10 ? thetaReco : 1e-10) );
 
-    // if ( msgLevel(MSG::VERBOSE) )
-    // {
-    //   if ( pixelSignal < maxSignal && pixelSignal > minSignal )
-    //   {
-    //     verbose() << det << " predicted signal theta active pixelsignal "
-    //               <<thetaReco<<"  "<<photon->geomPhoton().activeSegmentFraction()
-    //               <<" "<<pixelSignal<<" signalProb "<<signalProb(photon, id)<<" "
-    //               << "scatterprob "<<scatterProb(photon, id)<<  endmsg;
-    //   }
-    // }
+    const LHCb::RichRecPhoton::FloatType pixelSignal = 
+      _predictedPixelSignal(photon) * _predictedPixelSignal(photon,id);
 
-    // check for (over/under)flows
-    if      ( pixelSignal > maxSignal ) { pixelSignal = maxSignal; }
-    else if ( pixelSignal < minSignal ) { pixelSignal = minSignal; }
+    // // check for (over/under)flows
+    // if      ( pixelSignal > maxSignal ) { pixelSignal = maxSignal; }
+    // else if ( pixelSignal < minSignal ) { pixelSignal = minSignal; }
 
     // save final result
-    photon->setExpPixelSignalPhots( id, (LHCb::RichRecPhoton::FloatType)(pixelSignal) );
-
+    photon->setExpPixelSignalPhots( id, pixelSignal );
   }
 
   return photon->expPixelSignalPhots( id );
 }
 
-
 double PhotonSignalGaussProb::signalProbFunc( const double thetaDiff,
                                               const double thetaExpRes ) const
 {
   // See note LHCB/98-040 page 11 equation 18
-  const double expArg = -0.5*thetaDiff*thetaDiff/(thetaExpRes*thetaExpRes);
+  const double expArg = -0.5 * gsl_pow_2(thetaDiff/thetaExpRes);
   return ( ( expArg>m_minArg ? vdt::fast_exp(expArg) : m_expMinArg ) /
            ( root_two_pi*thetaExpRes ) );
 }
@@ -225,7 +232,6 @@ PhotonSignalGaussProb::signalProb( LHCb::RichRecPhoton * photon,
 
   // return the expected signal contribution
   return this->signalProbFunc(thetaDiff,thetaExpRes) / (2.0*M_PI);
-
 }
 
 double
@@ -249,12 +255,11 @@ PhotonSignalGaussProb::scatterProb( LHCb::RichRecPhoton * photon,
     double fbkg = 0.0;
     if ( thetaRec < thetaExp )
     {
-      fbkg = ( std::exp(17.0*thetaRec) - 1.0 ) / ( std::exp(17.0*thetaExp) - 1.0 );
+      fbkg = ( vdt::fast_exp(17.0*thetaRec) - 1.0 ) / ( vdt::fast_exp(17.0*thetaExp) - 1.0 );
     }
     else if ( thetaRec < 0.5*M_PI + thetaExp - 0.04 )
     {
-      fbkg = std::cos( thetaRec - thetaExp + 0.04 );
-      fbkg = fbkg*fbkg/0.9984;
+      fbkg = gsl_pow_2( std::cos( thetaRec - thetaExp + 0.04 ) ) / 0.9984;
     }
     else
     {
@@ -262,7 +267,7 @@ PhotonSignalGaussProb::scatterProb( LHCb::RichRecPhoton * photon,
     }
 
     // return the probability
-    return 2.0 * fbkg / (M_PI*M_PI);
+    return two_over_pi2 * fbkg;
   }
 
   return 0.;

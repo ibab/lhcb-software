@@ -23,12 +23,24 @@ use Boost            v*   LCG_Interfaces
 use GSL              v*   LCG_Interfaces
 
 include_path      none
+private
+include_dirs      $(RICHRECPHOTONTOOLSROOT)/src
+end_private
+
 #=====================================================================
 # Component library building rule
 #=====================================================================
-library          RichRecPhotonTools    ../src/*.cpp 
+library          RichRecPhotonTools    ../src/component/*.cpp 
+apply_pattern    component_library library=RichRecPhotonTools
 
 #=====================================================================
-# define component library link options
+# Test application for Photon reconstruction
 #=====================================================================
-apply_pattern    component_library library=RichRecPhotonTools
+application RichPhotonRecoTest ../src/application/PhotonReco/*.cpp
+
+#macro_append RichPhotonRecoTest_cppflags " -O3 -msse4 "
+#macro_append RichPhotonRecoUsingQuarticSoln_cppflags " -O3 -msse4 "
+
+#private
+#macro_append ROOT_linkopts  " -lVc "
+#end_private

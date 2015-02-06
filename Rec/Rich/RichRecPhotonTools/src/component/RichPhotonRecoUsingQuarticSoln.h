@@ -39,6 +39,7 @@
 // Math Definitions
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
+
 // VDT
 #include "vdt/asin.h"
 
@@ -54,8 +55,8 @@
 #include "gsl/gsl_complex_math.h"
 #include "gsl/gsl_poly.h"
 
-// Include the private quartic solving code
-#include "zsolve_quartic_RICH.h"
+// Quartic Solver
+#include "RichRecPhotonTools/QuarticSolver.h"
 
 namespace Rich
 {
@@ -110,31 +111,11 @@ namespace Rich
     private: // methods
 
       /// Access the Snell's law refraction tool on demand when needed
-      inline const ISnellsLawRefraction * snellsLaw() const 
+      inline const ISnellsLawRefraction * snellsLaw() const
       {
         if ( !m_snellsLaw ) { acquireTool( "RichSnellsLawRefraction", m_snellsLaw ); }
         return m_snellsLaw;
       }
-
-      /** Solves the characteristic quartic equation for the RICH optical system.
-       *
-       *  See note LHCB/98-040 RICH section 3 for more details
-       *
-       *  @param emissionPoint Assumed photon emission point on track
-       *  @param CoC           Spherical mirror centre of curvature
-       *  @param virtDetPoint  Virtual detection point
-       *  @param radius        Spherical mirror radius of curvature
-       *  @param sphReflPoint  The reconstructed reflection pont on the spherical mirror
-       *
-       *  @return boolean indicating status of the quartic solution
-       *  @retval true  Calculation was successful. sphReflPoint is valid.
-       *  @retval false Calculation failed. sphReflPoint is not valid.
-       */
-      bool solveQuarticEq( const Gaudi::XYZPoint& emissionPoint,
-                           const Gaudi::XYZPoint& CoC,
-                           const Gaudi::XYZPoint& virtDetPoint,
-                           const double radius,
-                           Gaudi::XYZPoint& sphReflPoint ) const;
 
       /** Correct Aerogel Cherenkov angle theta for refraction at exit of aerogel
        *
@@ -188,11 +169,11 @@ namespace Rich
                                       Gaudi::XYZPoint& sphReflPoint ) const
       {
         // solve quartic equation with nominal values and find spherical mirror reflection point
-        const bool ok = solveQuarticEq( emissionPoint,
-                                        m_rich[rich]->nominalCentreOfCurvature(side),
-                                        virtDetPoint,
-                                        m_rich[rich]->sphMirrorRadius(),
-                                        sphReflPoint );
+        const bool ok = m_quarticSolver.solve<float>( emissionPoint,
+                                                      m_rich[rich]->nominalCentreOfCurvature(side),
+                                                      virtDetPoint,
+                                                      m_rich[rich]->sphMirrorRadius(),
+                                                      sphReflPoint );
         // find the spherical mirror segment
         if (ok) sphSegment = m_mirrorSegFinder->findSphMirror( rich, side, sphReflPoint );
         // return final status
@@ -218,6 +199,9 @@ namespace Rich
 
       /// Snell's Law refraction tool
       mutable const ISnellsLawRefraction * m_snellsLaw;
+
+      /// Quartic Solver
+      QuarticSolver m_quarticSolver;
 
       /** @brief Flag to indicate if the unambiguous photon test should be performed
        *  for each radiator

@@ -37,7 +37,9 @@
 
 // boost
 #include "boost/format.hpp"
-//#include "boost/assign/list_of.hpp"
+
+// VDT
+//#include "vdt/sqrt.h"
 
 namespace Rich
 {

@@ -4,6 +4,14 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-02-06 - Chris Jones
+ - Add a new test application to allow easy profiling of various implementations
+   of Quartic reconstruction of photon angles.
+ - Past the code to calculate the track/pixel seperation on the PD plane directly
+   into RichCKthetaBandsPhotonPredictor. Avoids a virtual call for every 
+   pixel+track combination, as well as avoiding a few squares when not required.
+ - Various minor CPU optimisations (using VDT etc.).
+
 !========================= RichRecPhotonTools v1r15 2014-06-10 ===================
 ! 2014-05-24 - Chris Jones
  - PhotonRecoUsingQuarticSoln :

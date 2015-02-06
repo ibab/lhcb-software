@@ -383,11 +383,11 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       }
 
       // solve the quartic
-      if ( !solveQuarticEq( emissionPoint,
-                            sphSegment->centreOfCurvature(),
-                            virtDetPoint,
-                            sphSegment->radius(),
-                            sphReflPoint ) )
+      if ( !m_quarticSolver.solve<float>( emissionPoint,
+                                          sphSegment->centreOfCurvature(),
+                                          virtDetPoint,
+                                          sphSegment->radius(),
+                                          sphReflPoint ) )
       {
         _ri_debug << radiator << " : Failed to reconstruct photon using mirror segments" << endmsg;
         return StatusCode::FAILURE;
@@ -428,11 +428,19 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
         virtDetPoint = detectionPoint - 2.0 * distance * plane.Normal();
 
         // solve the quartic using the new data
-        if ( !solveQuarticEq( emissionPoint,
-                              sphSegment->centreOfCurvature(),
-                              virtDetPoint,
-                              sphSegment->radius(),
-                              sphReflPoint ) )
+        // if ( Rich::Rich2Gas == radiator )
+        // {
+        //   info() << " " << endmsg;
+        //   info() << "emissionPoint = " << emissionPoint << endmsg
+        //          << "CoC           = " << sphSegment->centreOfCurvature() << endmsg
+        //          << "virtDetPoint  = " << virtDetPoint << endmsg
+        //          << "radius        = " << sphSegment->radius() << endmsg;
+        // }
+        if ( !m_quarticSolver.solve<float>( emissionPoint,
+                                            sphSegment->centreOfCurvature(),
+                                            virtDetPoint,
+                                            sphSegment->radius(),
+                                            sphReflPoint ) )
         {
           _ri_debug << radiator << " : Failed to reconstruct photon using mirror segments" << endmsg;
           return StatusCode::FAILURE;
@@ -577,11 +585,11 @@ findMirrorData( const Rich::DetectorType rich,
                 Gaudi::XYZPoint& secReflPoint ) const
 {
   // solve quartic equation with nominal values and find spherical mirror reflection point
-  if ( !solveQuarticEq( emissionPoint,
-                        m_rich[rich]->nominalCentreOfCurvature(side),
-                        virtDetPoint,
-                        m_rich[rich]->sphMirrorRadius(),
-                        sphReflPoint ) ) { return false; }
+  if ( !m_quarticSolver.solve<float>( emissionPoint,
+                                      m_rich[rich]->nominalCentreOfCurvature(side),
+                                      virtDetPoint,
+                                      m_rich[rich]->sphMirrorRadius(),
+                                      sphReflPoint ) ) { return false; }
 
   // find the spherical mirror segment
   sphSegment = m_mirrorSegFinder->findSphMirror( rich, side, sphReflPoint );
@@ -707,68 +715,3 @@ correctAeroRefraction( const LHCb::RichTrackSegment& trSeg,
   thetaCerenkov = ( ctc>1 ? 0 : vdt::fast_acos(ctc) );
 }
 
-//=========================================================================
-// Setup and solve quartic equation in the form
-// x^4 + a x^3 + b x^2 + c x + d = 0
-//=========================================================================
-bool
-PhotonRecoUsingQuarticSoln::
-solveQuarticEq ( const Gaudi::XYZPoint& emissionPoint,
-                 const Gaudi::XYZPoint& CoC,
-                 const Gaudi::XYZPoint& virtDetPoint,
-                 const double radius,
-                 Gaudi::XYZPoint& sphReflPoint ) const
-{
-
-  // vector from mirror centre of curvature to assumed emission point
-  Gaudi::XYZVector evec = emissionPoint - CoC;
-  const double e2 = evec.Mag2();
-  if ( e2 < 1e-99 ) { return false; }
-
-  // vector from mirror centre of curvature to virtual detection point
-  const Gaudi::XYZVector dvec = virtDetPoint - CoC;
-  const double d2 = dvec.Mag2();
-  if ( d2 < 1e-99 ) { return false; }
-
-  // various quantities needed to create quartic equation
-  // see LHCB/98-040 section 3, equation 3
-  const double e        = std::sqrt(e2);
-  const double d        = std::sqrt(d2);
-  const double cosgamma = evec.Dot(dvec) / (e*d);
-  const double singamma = std::sqrt( 1.0 - cosgamma*cosgamma );
-  const double dx       = d * cosgamma;
-  const double dy       = d * singamma;
-  const double r2       = radius * radius;
-
-  // Fill array for quartic equation
-  const double a0 =     4 * e2 * d2;
-  const double a1 = - ( 4 * e2 * dy * radius ) / a0;
-  const double a2 =   ( (dy * dy * r2) + ((e+dx) * (e+dx) * r2) - a0 ) / a0;
-  const double a3 =   ( 2 * e * dy * (e-dx) * radius ) / a0;
-  const double a4 =   ( ( e2 - r2 ) * dy * dy ) / a0;
-
-  // -----------------------------------------------------------------------
-
-  // use simplified RICH version of quartic solver
-  const double sinbeta = solve_quartic_RICH( a1, // a
-                                             a2, // b
-                                             a3, // c
-                                             a4  // d
-                                             );
-
-  // normal vector to reflection plane
-  const Gaudi::XYZVector nvec2 = evec.Cross(dvec);
-
-  // Set vector mag to radius
-  evec *= radius/e;
-
-  // create rotation
-  const Gaudi::Rotation3D rotn( Gaudi::AxisAngle(nvec2,vdt::fast_asin(sinbeta)) );
-
-  // rotate vector and update reflection point
-  sphReflPoint = CoC + rotn*evec;
-
-  // -----------------------------------------------------------------------
-
-  return true;
-}
