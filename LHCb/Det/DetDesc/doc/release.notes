@@ -3,6 +3,12 @@
 ! package manager : Marco Clemencic
 ! =====================================================================
 
+! 2015-02-06 - Chris Jones
+ - Add new a new data member to MagneticFieldGrid to cache the inverse of
+   the step sizes. Allows the replacement of all divisons by multiplications
+   (and the removal of one) leading to for instance around an 8% speed 
+   improvement in the fieldVector method.
+
 !========================= DetDesc v18r35 2015-01-14 =========================
 ! 2014-12-18 - Gerhard Raven
  - switch the internal representation of the magnetic field to single precision
