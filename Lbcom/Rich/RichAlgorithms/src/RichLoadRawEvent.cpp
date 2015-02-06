@@ -34,7 +34,7 @@ LoadRawEvent::~LoadRawEvent() {}
 StatusCode LoadRawEvent::execute()
 {
   // load raw event data object
-  get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+  getIfExists<LHCb::RawEvent>( LHCb::RawEventLocation::Rich );
 
   // return OK
   return StatusCode::SUCCESS;
