@@ -31,6 +31,8 @@
   <function pattern = "LoKi::Kinematics::*"    />
   <function pattern = "LoKi::Particles::*"     />
 
+  <class name       = "LoKi::Kinematics::MissingParticle"/>
+
   <function name    = "Gaudi::Utils::toCpp"    />
 
   <variable pattern = "LoKi::Constants::*"     />

@@ -873,6 +873,62 @@ double LoKi::Kinematics::deltaAlpha
 {
   return deltaAlpha ( p1.Vect() , p2.Vect() ) ;
 }
+// ============================================================================
+/* trivial functon to get the component of "a" parallel to "b"
+ *  @param a (INPUT)  three vector 
+ *  @param b (INPUT)  reference direction 
+ *  @return component of "a" parallel to "b"
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2015-02-04
+ */
+// ============================================================================
+LoKi::ThreeVector 
+LoKi::Kinematics::parallel 
+( const LoKi::ThreeVector& a , 
+  const LoKi::ThreeVector& b ) 
+{
+  //
+  const double ab = a.Dot ( b ) ;
+  const double b2 = b.Mag2()    ;
+  if ( 0 >= b2 ) 
+  {
+    LoKi::Report::Error 
+      ( "LoKi::Kinematics::parallel () : b^2<=0 return vector a itself" );
+    return a ;
+  }
+  //
+  LoKi::ThreeVector r ( b ) ;
+  r *= ( ab / b2 ) ;
+  return r ;
+}
+// ============================================================================
+/* trivial functon to get the component of "a", transverse to "b"
+ *  @param a (INPUT)  three vector 
+ *  @param b (INPUT)  reference direction 
+ *  @return component of "a", transverse to "b"
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2015-02-04
+ */
+// ============================================================================
+LoKi::ThreeVector 
+LoKi::Kinematics::perpendicular
+( const LoKi::ThreeVector& a , 
+  const LoKi::ThreeVector& b ) { return transverse ( a , b ) ; }
+// ============================================================================
+/* trivial functon to get the component of "a", transverse to "b"
+ *  @param a (INPUT)  three vector 
+ *  @param b (INPUT)  reference direction 
+ *  @return component of "a", transverse to "b"
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2015-02-04
+ */
+// ============================================================================
+LoKi::ThreeVector 
+LoKi::Kinematics::transverse 
+( const LoKi::ThreeVector& a , 
+  const LoKi::ThreeVector& b ) { return a - parallel ( a , b ) ; }
+// ========================================================================
+
 
 
 

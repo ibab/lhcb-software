@@ -81,6 +81,7 @@
 #include "LoKi/Listener.h"
 #include "LoKi/LoKiCore.h"
 #include "LoKi/Math.h"
+#include "LoKi/MissingParticle.h"
 #include "LoKi/Monitor.h"
 #include "LoKi/Monitoring.h"
 #include "LoKi/MoreFunctions.h"

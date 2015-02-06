@@ -952,6 +952,42 @@ namespace LoKi
       const LoKi::LorentzVector& h1 , 
       const LoKi::LorentzVector& h2 ) ;
     // ========================================================================
+    /** trivial functon to get the component of "a", transverse to "b"
+     *  @param a (INPUT)  three vector 
+     *  @param b (INPUT)  reference direction 
+     *  @return component of "a", transverse to "b"
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-02-04
+     */
+    GAUDI_API 
+    LoKi::ThreeVector transverse  
+    ( const LoKi::ThreeVector& a , 
+      const LoKi::ThreeVector& b ) ;                         
+    // ========================================================================
+    /** trivial functon to get the component of "a", transverse to "b"
+     *  @param a (INPUT)  three vector 
+     *  @param b (INPUT)  reference direction 
+     *  @return component of "a", transverse to "b"
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-02-04
+     */
+    GAUDI_API 
+    LoKi::ThreeVector perpendicular
+    ( const LoKi::ThreeVector& a , 
+      const LoKi::ThreeVector& b ) ;                         
+    // ========================================================================
+    /** trivial functon to get the component of "a" parallel to "b"
+     *  @param a (INPUT)  three vector 
+     *  @param b (INPUT)  reference direction 
+     *  @return component of "a" parallel to "b"
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-02-04
+     */
+    GAUDI_API
+    LoKi::ThreeVector parallel 
+    ( const LoKi::ThreeVector& a , 
+      const LoKi::ThreeVector& b ) ;                         
+    // ========================================================================
     /** trivial function to calculate \f$ \Delta \phi \f$ for two particles 
      *  @param p1 the first  particle 
      *  @param p2 the second particle 
@@ -1058,6 +1094,28 @@ namespace LoKi
       const Gaudi::SymMatrix3x3& c1 ,
       const LoKi::Vector3D&      p2 ,
       const Gaudi::SymMatrix3x3& c2 ) ;
+    // ========================================================================
+    /** easy creation of 4-momentum from 3-momenutm and energy
+     *  @param v3     (INPUT) 3-momentum
+     *  @param energy (INPUT) the energy 
+     *  @return 4-momentum
+     *  @author Vanya BELYAEV Ivan.Belyaev@ite.ru
+     *  @date 2015-02-05
+     */ 
+    inline LoKi::LorentzVector 
+    fourMomentum ( const LoKi::Vector3D& v3     , const double          energy ) 
+    { return LoKi::LorentzVector ( v3.X() , v3.Y() , v3.Z() , energy ) ; } 
+    // ========================================================================
+    /** easy creation of 4-momentum from 3-momenutm and energy
+     *  @param energy (INPUT) the energy 
+     *  @param v3     (INPUT) 3-momentum
+     *  @return 4-momentum
+     *  @author Vanya BELYAEV Ivan.Belyaev@ite.ru
+     *  @date 2015-02-05
+     */ 
+    inline LoKi::LorentzVector 
+    fourMomentum ( const double          energy , const LoKi::Vector3D& v3     ) 
+    { return LoKi::LorentzVector ( v3.X() , v3.Y() , v3.Z() , energy ) ; } 
     // ========================================================================
   } //                                        end of namespace LoKi::Kinematics  
   // ==========================================================================

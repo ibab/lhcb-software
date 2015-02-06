@@ -51,6 +51,7 @@
 #include "LoKi/PidFunctions.h"
 #include "LoKi/TES.h"
 #include "LoKi/RecStat.h"
+#include "LoKi/MissingParticle.h"
 // ============================================================================
 namespace
 {
