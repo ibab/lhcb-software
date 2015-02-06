@@ -39,11 +39,11 @@ FunctionalCKResForRecoTracks ( const std::string& type,
   m_trExt         ( NULL                          ),
   m_Ext           ( "TrackRungeKuttaExtrapolator" ),
   m_transSvc      ( NULL                          ),
-  m_scatt         ( 13.6e-03                      ),
-  m_scaleR2Pmt    (  std::vector<double>(2)       )
-
-  // m_scattshould be used with p in GeV
-
+  m_scatt         ( 13.6e-03                      ), // should be used with p in GeV
+  m_scaleR2Pmt    ( 2                             ),
+  m_rich1DE       ( NULL                          ),
+  m_aRichPDPanel  ( NULL                          ),
+  m_altGeom       ( NULL                          )
 {
   // define interface
   declareInterface<ICherenkovResolution>(this);
@@ -60,12 +60,15 @@ FunctionalCKResForRecoTracks ( const std::string& type,
   m_asmpt[Rich::Rich2Gas] = std::vector<double>( Rich::Rec::Track::NTrTypes, 0.0 );
   declareProperty( "Rich2GasAsymptopicErr", m_asmpt[Rich::Rich2Gas] );
 
-  declareProperty( "HPDErrors",     m_hpdErr = { 0.0005, 0.0006, 0.0002 } );
-  declareProperty( "MaxCKThetaRes", m_maxRes = { 0.003,  0.0025, 0.001  } );
+  declareProperty( "HPDErrors",           m_hpdErr = { 0.0005, 0.0006, 0.0002 } );
+  declareProperty( "MaxCKThetaRes",       m_maxRes = { 0.003,  0.0025, 0.001  } );
   declareProperty( "UseLastMeasPoint", m_useLastMP = { false, false, false } );
-  declareProperty( "ScaleFactor",          m_scale = { 1.0, 1.0, 1.0 } );
+  declareProperty( "ScaleFactor",          m_scale = { 1.0,   1.0,   1.0   } );
 
-  declareProperty( "RichGrandPmtPixelSizeFactor" , m_grandPmtPixelSizeFactor=2.1);
+  declareProperty( "RichGrandPmtPixelSizeFactor" , m_grandPmtPixelSizeFactor = 2.1 );
+
+  declareProperty( "UseAltGeom", m_useAltGeom = false );
+  declareProperty( "AltGeomLoc", m_altGeomLoc = "/dd/TrackfitGeometry/Structure/LHCb" );
 
   // default to having histograms disabled
   setProduceHistos ( false             );
@@ -94,101 +97,13 @@ StatusCode FunctionalCKResForRecoTracks::initialize()
             << "Rich1Gas Asymptopic Errors : " << m_asmpt[Rich::Rich1Gas] << endmsg
             << "Rich2Gas Asymptopic Errors : " << m_asmpt[Rich::Rich2Gas] << endmsg;
 
+  // Set up options for Upgrade if appropriate
   sc = sc && setUseOfPmtFlags();
 
-  return sc;
-}
+  // Setup the geometry to use for the radiation length calculation
+  altGeom();
 
-StatusCode FunctionalCKResForRecoTracks::setUseOfPmtFlags()
-{
-  StatusCode sc = StatusCode::SUCCESS;
-
-  /// CRJ : THis needs to be cleaned up once the Upgrade geometery is decided ...
-
-  m_useOfGrandPixPmt=false;
-  m_rich2UseMixedPmt=false;
-  m_usePDWithPMT=false;
-  m_useUpgradeOptics=false;
-  m_rich1DE = getDet<DeRich1>( DeRichLocations::Rich1 );
-  DeRich2* aRich2DE = getDet<DeRich2>( DeRichLocations::Rich2 );
-  if ( m_rich1DE && aRich2DE ) 
-  {
-
-    m_aRichPDPanel = aRich2DE->pdPanel(Rich::left); // any pd panel is sufficient here. Hence getting rich_left.
-    if ( !m_aRichPDPanel ) 
-    {
-      std::ostringstream mess;
-      mess << "PMT Panel not found " << m_aRichPDPanel << " " << DeRichLocations::Rich2 << " " << Rich::left;
-      return Error( mess.str() );
-    }
-
-    if ( m_rich1DE->RichGeometryConfig() == 1 ) 
-    {
-      m_useUpgradeOptics=true;
-    }
-    if( m_rich1DE->RichPhotoDetConfig() == Rich::PMTConfig ) 
-    {
-      m_usePDWithPMT=true;
-
-      if ( m_rich1DE->Rich2UseGrandPmt() ) 
-      {
-        m_useOfGrandPixPmt=true;
-        if ( m_rich1DE->Rich2UseMixedPmt() ) 
-        {
-          m_rich2UseMixedPmt=true;
-        }
-      }
-      //initialize scale factor parameters.
-      std::vector<double> ascaleCurOpticsR1Pmt(2,0.7);
-      std::vector<double> ascaleUpgradeOpticsR1Pmt(2,0.57);
-      m_scaleR2Pmt.resize(2);
-      m_scaleR2Pmt[0]=0.7;
-      m_scaleR2Pmt[1]=1.0;
-
-      if ( m_rich1DE->exists("Rich1BrunelPidResScaleFactorParamCurOpticsPmt") ) 
-      {
-        ascaleCurOpticsR1Pmt= m_rich1DE->paramVect<double>("Rich1BrunelPidResScaleFactorParamCurOpticsPmt");
-      }
-      m_scale[0]= ascaleCurOpticsR1Pmt[0];  //aerogel
-      m_scale[1]= ascaleCurOpticsR1Pmt[1]; // rich1gas
-
-      if ( m_useUpgradeOptics )
-      {
-        if ( m_rich1DE->exists("Rich1BrunelPidResScaleFactorParamUpgradeOpticsPmt" ) )
-        {
-          ascaleUpgradeOpticsR1Pmt = m_rich1DE->paramVect<double>("Rich1BrunelPidResScaleFactorParamUpgradeOpticsPmt" );
-        }
-        m_scale[0]= ascaleUpgradeOpticsR1Pmt[0];
-        m_scale[1]= ascaleUpgradeOpticsR1Pmt[1];
-
-      }
-
-      if ( m_rich1DE->exists("Rich2BrunelPidResScaleFactorParamUpgradeOpticsPmt") ) 
-      {
-        m_scaleR2Pmt = m_rich1DE->paramVect<double>("Rich2BrunelPidResScaleFactorParamUpgradeOpticsPmt");
-      }
-      m_scale[2] = m_scaleR2Pmt[0];
-
-      if ( m_useOfGrandPixPmt ) 
-      {
-        m_scale[2] = m_scaleR2Pmt[1];
-        if ( m_rich2UseMixedPmt )
-        {
-          m_scale[2]  = m_scaleR2Pmt[0];
-        }
-
-      }
-
-    }// end if rich use PMTConfig
-
-  }
-  else
-  {
-    std::ostringstream mess;
-    mess << "DeRich1 DeRich2 not found " << DeRichLocations::Rich1 << " " << DeRichLocations::Rich2;
-    return Error( mess.str() );
-  }
-
+  // return
   return sc;
 }
 
@@ -257,17 +172,21 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
           const bool ok = findLastMeasuredPoint( segment, startPoint );
           effectiveLength =
             transSvc()->distanceInRadUnits( (ok ? startPoint : tkSeg.entryPoint()),
-                                            tkSeg.exitPoint() );
+                                            tkSeg.exitPoint(), 0, altGeom() );
         }
         else
         {
           effectiveLength = transSvc()->distanceInRadUnits( tkSeg.entryPoint(),
-                                                            tkSeg.exitPoint() );
+                                                            tkSeg.exitPoint(), 
+                                                            0, altGeom() );
+          // info() << "RadUnitsTest : " << rad << " : Fast=" 
+          //        << effectiveLength << " Full=" << transSvc()->distanceInRadUnits( tkSeg.entryPoint(),
+          //                                                                          tkSeg.exitPoint() ) << endmsg;
         }
         if ( effectiveLength > 0 )
         {
           const double multScattCoeff = ( m_scatt * std::sqrt(effectiveLength) *
-                                          (1+0.038*std::log(effectiveLength)) );
+                                          (1+0.038*vdt::fast_log(effectiveLength)) );
           scattErr                    = 2.0 * gsl_pow_2(multScattCoeff/ptot);
         }
         res2 += scattErr;
@@ -284,7 +203,7 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
       const double curvErr =
         ( Rich::Aerogel == rad ? 0 :
           gsl_pow_2( Rich::Geom::AngleBetween( tkSeg.entryMomentum(),
-                                               tkSeg.exitMomentum() ) / 4.0 ) );
+                                               tkSeg.exitMomentum() ) * 0.25 ) );
       res2 += curvErr;
       //-------------------------------------------------------------------------------
 
@@ -458,4 +377,97 @@ FunctionalCKResForRecoTracks::findLastMeasuredPoint( LHCb::RichRecSegment * segm
   trackExtrap()->position( *tr, lastMeas->z(), point );
 
   return true;
+}
+
+// CRJ - Horrible method that needs to go away sometime...
+StatusCode FunctionalCKResForRecoTracks::setUseOfPmtFlags()
+{
+  StatusCode sc = StatusCode::SUCCESS;
+
+  /// CRJ : THis needs to be cleaned up once the Upgrade geometery is decided ...
+
+  m_useOfGrandPixPmt = false;
+  m_rich2UseMixedPmt = false;
+  m_usePDWithPMT     = false;
+  m_useUpgradeOptics = false;
+  m_rich1DE = getDet<DeRich1>( DeRichLocations::Rich1 );
+  DeRich2* aRich2DE = getDet<DeRich2>( DeRichLocations::Rich2 );
+  if ( m_rich1DE && aRich2DE ) 
+  {
+
+    m_aRichPDPanel = aRich2DE->pdPanel(Rich::left); // any pd panel is sufficient here. Hence getting rich_left.
+    if ( !m_aRichPDPanel ) 
+    {
+      std::ostringstream mess;
+      mess << "PMT Panel not found " << m_aRichPDPanel << " " << DeRichLocations::Rich2 << " " << Rich::left;
+      return Error( mess.str() );
+    }
+
+    if ( m_rich1DE->RichGeometryConfig() == 1 ) 
+    {
+      m_useUpgradeOptics = true;
+    }
+    if ( m_rich1DE->RichPhotoDetConfig() == Rich::PMTConfig ) 
+    {
+      m_usePDWithPMT = true;
+
+      if ( m_rich1DE->Rich2UseGrandPmt() ) 
+      {
+        m_useOfGrandPixPmt = true;
+        if ( m_rich1DE->Rich2UseMixedPmt() ) 
+        {
+          m_rich2UseMixedPmt = true;
+        }
+      }
+      //initialize scale factor parameters.
+      std::vector<double> ascaleCurOpticsR1Pmt(2,0.7);
+      std::vector<double> ascaleUpgradeOpticsR1Pmt(2,0.57);
+      m_scaleR2Pmt.resize(2);
+      m_scaleR2Pmt[0] = 0.7;
+      m_scaleR2Pmt[1] = 1.0;
+
+      if ( m_rich1DE->exists("Rich1BrunelPidResScaleFactorParamCurOpticsPmt") ) 
+      {
+        ascaleCurOpticsR1Pmt= m_rich1DE->paramVect<double>("Rich1BrunelPidResScaleFactorParamCurOpticsPmt");
+      }
+      m_scale[0] = ascaleCurOpticsR1Pmt[0];  //aerogel
+      m_scale[1] = ascaleCurOpticsR1Pmt[1]; // rich1gas
+
+      if ( m_useUpgradeOptics )
+      {
+        if ( m_rich1DE->exists("Rich1BrunelPidResScaleFactorParamUpgradeOpticsPmt" ) )
+        {
+          ascaleUpgradeOpticsR1Pmt = m_rich1DE->paramVect<double>("Rich1BrunelPidResScaleFactorParamUpgradeOpticsPmt" );
+        }
+        m_scale[0] = ascaleUpgradeOpticsR1Pmt[0];
+        m_scale[1] = ascaleUpgradeOpticsR1Pmt[1];
+
+      }
+
+      if ( m_rich1DE->exists("Rich2BrunelPidResScaleFactorParamUpgradeOpticsPmt") ) 
+      {
+        m_scaleR2Pmt = m_rich1DE->paramVect<double>("Rich2BrunelPidResScaleFactorParamUpgradeOpticsPmt");
+      }
+      m_scale[2] = m_scaleR2Pmt[0];
+
+      if ( m_useOfGrandPixPmt ) 
+      {
+        m_scale[2] = m_scaleR2Pmt[1];
+        if ( m_rich2UseMixedPmt )
+        {
+          m_scale[2] = m_scaleR2Pmt[0];
+        }
+      }
+
+    } // end if rich use PMTConfig
+
+  }
+  else
+  {
+    std::ostringstream mess;
+    mess << "DeRich1 DeRich2 not found " << DeRichLocations::Rich1 << " " << DeRichLocations::Rich2;
+    return Error( mess.str() );
+  }
+
+  return sc;
 }

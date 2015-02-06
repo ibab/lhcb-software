@@ -8,13 +8,14 @@ gaudi_depends_on_subdirs(Det/RichDet
                          Event/TrackEvent
                          GaudiKernel
                          Rich/RichRecBase
-                         Tr/TrackInterfaces)
+                         Tr/TrackInterfaces
+                         Tr/TrackKernel)
 
 find_package(Boost)
 find_package(GSL)
 
 gaudi_add_module(RichRecTrackTools
                  src/*.cpp
-                 INCLUDE_DIRS Boost GSL Tr/TrackInterfaces
-                 LINK_LIBRARIES Boost GSL RichDetLib RecEvent TrackEvent GaudiKernel RichRecBase)
+                 INCLUDE_DIRS Boost GSL Tr/TrackInterfaces Tr/TrackKernel
+                 LINK_LIBRARIES Boost GSL RichDetLib RecEvent TrackEvent TrackKernel GaudiKernel RichRecBase)
 

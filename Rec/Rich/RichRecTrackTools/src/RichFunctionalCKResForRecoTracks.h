@@ -43,6 +43,9 @@
 // kernel
 #include "RichKernel/RichGeomFunctions.h"
 
+// VDT
+#include "vdt/log.h"
+
 namespace Rich
 {
   namespace Rec
@@ -109,6 +112,14 @@ namespace Rich
 
       /// Set flags for geometry, pmt etc.
       StatusCode setUseOfPmtFlags();
+
+      /// Loads on demand the alternate geometry
+      inline IGeometryInfo * altGeom() const 
+      {
+        if ( m_useAltGeom && !m_altGeom ) 
+        { m_altGeom = getDet<IDetectorElement>(m_altGeomLoc); }
+        return ( m_altGeom ? m_altGeom->geometry() : NULL );
+      }
       
     private: // data
 
@@ -149,18 +160,32 @@ namespace Rich
 
       /// Overall factors for each radiator
       std::vector<double> m_scale;
+
      /// Overall factors for Rich2 radiator for MixedPMT
       std::vector<double> m_scaleR2Pmt;
+
+      /// Pointer to Rich1 detector element
+      DeRich1 * m_rich1DE;
+
+      /// Pointer to a PD Panel
+      DeRichPDPanel * m_aRichPDPanel;
+
+      /// Flag to turn on the use of an alternative geometry for the radiation length calculation
+      bool m_useAltGeom;
       
+      /// The location of the fast geometry to use
+      std::string m_altGeomLoc;
+
+      /// Pointer to the DetElm for the alternate geometry
+      mutable IDetectorElement * m_altGeom;
 
       /// Possible uses of Grand Pixel for pmts
       bool m_useOfGrandPixPmt;
       bool m_rich2UseMixedPmt;
       bool m_usePDWithPMT;
       bool m_useUpgradeOptics;
-      DeRich1 * m_rich1DE;
-      DeRichPDPanel * m_aRichPDPanel;
       double m_grandPmtPixelSizeFactor;
+
     };
 
   }

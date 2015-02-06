@@ -14,6 +14,12 @@
 
 // STL
 #include <sstream>
+#include <iostream>
+#include <memory>
+
+// Gaudi
+#include "GaudiKernel/IJobOptionsSvc.h"
+#include "GaudiKernel/IMagneticFieldSvc.h"
 
 // base class
 #include "RichBaseTrSegMakerFromRecoTracks.h"
@@ -28,6 +34,9 @@
 // Track Interfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "TrackInterfaces/ITrackStateProvider.h"
+
+// Event
+#include "TrackKernel/TrackTraj.h"
 
 // histogramming numbers
 //#include "RichRecBase/RichDetParams.h"
@@ -81,8 +90,7 @@ namespace Rich
 
       /// Checks for 'strange' States
       void checkState( const LHCb::State * state,
-                       const Rich::RadiatorType rad,
-                       const std::string& desc ) const;
+                       const Rich::RadiatorType rad ) const;
 
       /** Find all intersections with the given radiator volume(s)
        *  @return The number of radiator intersections
@@ -110,7 +118,7 @@ namespace Rich
        *  @param state        State information to correct
        *  @param refState     Reference starting state.
        */
-      void fixRich1GasEntryPoint( LHCb::State *& state,
+      void fixRich1GasEntryPoint( std::unique_ptr<LHCb::State>& state,
                                   const LHCb::State * refState = 0 ) const;
 
       /** Correct the exit state to the point where the track traverses the spherical mirror
@@ -120,7 +128,7 @@ namespace Rich
        *  @param refState     Reference starting state.
        */
       void correctRadExitMirror( const DeRichRadiator* radiator,
-                                 LHCb::State *& state,
+                                 std::unique_ptr<LHCb::State>& state,
                                  const LHCb::State * refState = 0  ) const;
 
       /** Extrapolate a state to a new z position
@@ -134,13 +142,33 @@ namespace Rich
        * @retval false State could not be extrapolated to the z position.
        *         State remains unaltered.
        */
-      bool moveState( LHCb::State *& stateToMove,
+      bool moveState( std::unique_ptr<LHCb::State> & stateToMove,
                       const double z,
                       const LHCb::State * refState = 0 ) const;
+
+      /** Check if a track type should be skipped in a given radiator, 
+       *  when using the State Provider tool */
+      bool skipByType( const LHCb::Track * track, const Rich::RadiatorType rad ) const
+      {
+        TrackTypesRads::const_iterator iT = m_radsToSkip.find(track->type());
+        return ( iT == m_radsToSkip.end() ? false :
+                 std::find( iT->second.begin(), iT->second.end(), rad ) != iT->second.end() );
+      }
+
+      /// Creates the middle point information
+      bool createMiddleInfo( const Rich::RadiatorType rad,
+                             std::unique_ptr<LHCb::State>& fState,
+                             const LHCb::State * fStateRef,
+                             std::unique_ptr<LHCb::State>& lState,
+                             const LHCb::State * lStateRef,
+                             Gaudi::XYZPoint & midPoint,
+                             Gaudi::XYZVector & midMomentum,
+                             LHCb::RichTrackSegment::StateErrors & errors ) const;    
 
       /// Access primary track extrapolator tool
       inline ITrackExtrapolator * primaryExtrapolator() const
       {
+        if ( !m_trExt1 ) { m_trExt1 = tool<ITrackExtrapolator>( m_trExt1Name ); }
         return m_trExt1;
       }
 
@@ -151,31 +179,27 @@ namespace Rich
         return m_trExt2;
       }
 
-      /// Creates the middle point information
-      bool createMiddleInfo( const Rich::RadiatorType rad,
-                             LHCb::State *& fState,
-                             const LHCb::State * fStateRef,
-                             LHCb::State *& lState,
-                             const LHCb::State * lStateRef,
-                             Gaudi::XYZPoint & midPoint,
-                             Gaudi::XYZVector & midMomentum,
-                             LHCb::RichTrackSegment::StateErrors & errors ) const;    
-
       /// Access track state provider tool on-demand
       inline ITrackStateProvider * stateProvider() const
       {
         if ( !m_trStateP ) 
-        { m_trStateP = tool<ITrackStateProvider>( "TrackStateProvider", "StateProvider", this ); }
+        { 
+          // propagate the extrapolator type to our privately owned TrackStateProvider
+          const StringProperty  exProp ("Extrapolator",m_trExt1Name);
+          //const BooleanProperty matProp("ApplyMaterialCorrections",false);
+          if ( ! joSvc()->addPropertyToCatalogue(name()+".StateProvider",exProp) )
+          { Exception( "Failed to propagate options to StateProvider" ); }
+          // load the tool
+          m_trStateP = tool<ITrackStateProvider>( "TrackStateProvider", "StateProvider", this ); 
+        }
         return m_trStateP;
       }
 
-      /// Check if a track type should be skipped in a given radiator, when using the State Provider tool
-      bool skipByType( const LHCb::Track * track, const Rich::RadiatorType rad ) const
+      /// Access on demand the magnetic field service
+      const IMagneticFieldSvc * magFieldSvc() const
       {
-        TrackTypesRads::const_iterator iT = m_radsToSkip.find(track->type());
-        return ( iT != m_radsToSkip.end() ? 
-                 std::find( iT->second.begin(), iT->second.end(), rad ) != iT->second.end() :
-                 false );
+        if ( !m_magFieldSvc ) { m_magFieldSvc = svc<IMagneticFieldSvc>("MagneticFieldSvc"); }
+        return m_magFieldSvc;
       }
       
     private: // data
@@ -213,7 +237,7 @@ namespace Rich
       std::vector<double> m_minStateDiff;
 
       // Track extrapolators
-      ITrackExtrapolator * m_trExt1; ///< Primary track extrapolation tool
+      mutable ITrackExtrapolator * m_trExt1; ///< Primary track extrapolation tool
       mutable ITrackExtrapolator * m_trExt2; ///< Secondary (backup if primary fails) track extrapolation tool
       std::string m_trExt1Name; ///< Primary track extrapolation tool name
       std::string m_trExt2Name; ///< Secondary track extrapolation tool name
@@ -239,9 +263,18 @@ namespace Rich
       /// Flag to turn on/off the use of the TrackStateProvider
       bool m_useStateProvider;
 
+      /// Flag to use TrackTraj to move states, instead of the extrapolator
+      bool m_useTrackTraj;
+
       /// Radiators to skip, by track type
       typedef std::map< LHCb::Track::Types, Rich::Radiators > TrackTypesRads;
       TrackTypesRads m_radsToSkip;
+
+      /// Pointer to the Magnetic Field Service
+      mutable IMagneticFieldSvc * m_magFieldSvc;
+
+      /// Cached TrackTraj
+      mutable LHCb::TrackTraj * m_trackTraj;
 
     };
 

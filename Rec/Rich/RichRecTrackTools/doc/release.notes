@@ -4,6 +4,15 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-02-06 - Chris Jones
+ - Add a new (off by default) option to RichDetailedTrSegMakerFromRecoTracks to
+   use a TrackTraj object move states to the RICH radiator entry and exit 
+   positions.
+ - Add an option to RichFunctionalCKResForRecoTracks to use the fast geometry
+   when calculating the radiation length the track traverses in the RICH
+   radiator volumes. Off by default.
+ - Various CPU improvements (use VDT math functions etc.).
+
 !========================= RichRecTrackTools v1r38 2015-01-14 =========================
 ! 2015-01-14 - Chris Jones
  - Make the HLT defaults in RichDetailedTrSegMakerFromRecoTracks the same as
