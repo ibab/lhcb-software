@@ -65,7 +65,7 @@ TabulatedGasQuartzWindowAbs::photonTransProb( const LHCb::RichRecSegment * segme
   const Rich::DetectorType rich = segment->trackSegment().rich();
 
   // compute and return transmission probability
-  return std::exp( -m_qWinZSize[rich] /
-                   (*(m_riches[rich]->gasWinAbsLength()))[energy*Gaudi::Units::eV]
-                   );
+  return vdt::fast_exp( -m_qWinZSize[rich] /
+                        (*(m_riches[rich]->gasWinAbsLength()))[energy*Gaudi::Units::eV]
+                        );
 }

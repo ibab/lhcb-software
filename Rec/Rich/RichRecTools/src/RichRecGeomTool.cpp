@@ -67,6 +67,10 @@ double GeomTool::trackPixelHitSep2( const LHCb::RichRecSegment * segment,
 {
   double sep2 = 99999999;
 
+  // NOTE : The code here for speed has been pasted into RichCKthetaBandsPhotonPredictor.cpp
+  //        in Rich/RichRecPhotonTools.
+  //        Should review if there is a better way to package this to avoid code duplication.
+
   // Pixel position, in local HPD coords corrected for average radiator distortion
   const Gaudi::XYZPoint & pixP
     = pixel->radCorrLocalPositions().position(segment->trackSegment().radiator());
@@ -75,15 +79,16 @@ double GeomTool::trackPixelHitSep2( const LHCb::RichRecSegment * segment,
   const Gaudi::XYZPoint & segP = segment->pdPanelHitPointLocal();
 
   if ( ( Rich::Rich1 == pixel->detector() && // RICH1
-         ( pixP.y()*segP.y() > 0 ||
-           ( ( pixP.y() > 0 && segment->photonsInYPlus()  ) ||
-             ( pixP.y() < 0 && segment->photonsInYMinus() ) ) ) )
+         ( ( ( pixP.y() > 0 && segment->photonsInYPlus()  ) ||
+             ( pixP.y() < 0 && segment->photonsInYMinus() ) ) || 
+           pixP.y()*segP.y() > 0 ) )
        || // RICH2
-       ( pixP.x()*segP.x() > 0 ||
-         ( ( pixP.x() > 0 && segment->photonsInXPlus()  ) ||
-           ( pixP.x() < 0 && segment->photonsInXMinus() ) ) ) )
+       ( ( ( pixP.x() > 0 && segment->photonsInXPlus()  ) ||
+           ( pixP.x() < 0 && segment->photonsInXMinus() ) ) || 
+         pixP.x()*segP.x() > 0 ) )
   {
-    const Gaudi::XYZPoint & segPanelPnt = segment->pdPanelHitPointLocal(pixel->hpdPixelCluster().panel().panel());
+    const Gaudi::XYZPoint & segPanelPnt = 
+      segment->pdPanelHitPointLocal(pixel->hpdPixelCluster().panel().panel());
     //sep2 = (pixP-segPanelPnt).Mag2();
     sep2 = gsl_pow_2(pixP.x()-segPanelPnt.x()) + gsl_pow_2(pixP.y()-segPanelPnt.y());
   }

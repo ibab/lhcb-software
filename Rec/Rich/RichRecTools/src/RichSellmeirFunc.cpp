@@ -134,17 +134,17 @@ double SellmeirFunc::photonsInEnergyRange( const LHCb::RichRecSegment * segment,
   if ( Rich::BelowThreshold == id ) return 0;
 
   // Some parameters of the segment
-  const double momentum = std::sqrt(segment->trackSegment().bestMomentum().Mag2());
-  const double length   = segment->trackSegment().pathLength();
+  const double momentum2  = segment->trackSegment().bestMomentum().Mag2();
+  const double length     = segment->trackSegment().pathLength();
   const Rich::RadiatorType rad = segment->trackSegment().radiator();
-  const double Esq      = momentum*momentum + m_particleMassSq[id];
-  const double betaSq   = ( Esq>0 ? momentum*momentum/Esq : 0 );
-  const double gammaSq  = Esq/m_particleMassSq[id];
+  const double Esq        = momentum2 + m_particleMassSq[id];
+  const double invBetaSq  = ( momentum2>0 ? Esq/momentum2 : 0 );
+  const double invGammaSq = ( Esq>0 ? m_particleMassSq[id]/Esq : 0 );
 
   // Compute number of photons
-  double nPhot = ( 37.0 / betaSq ) * ( paraW(rad,topEn) -
-                                       paraW(rad,botEn) -
-                                       (topEn-botEn)/gammaSq );
+  double nPhot = ( 37.0 * invBetaSq ) * ( paraW(rad,topEn) -
+                                          paraW(rad,botEn) -
+                                          ((topEn-botEn)*invGammaSq) );
 
   // correct for wavelength independant transmission coeff. in aerogel
   if ( Rich::Aerogel == rad )
@@ -167,7 +167,7 @@ double SellmeirFunc::photonsInEnergyRange( const LHCb::RichRecSegment * segment,
         const double pLen = (*iR).pathLength();
         const double absL = (*iR).radiator()->absorption()->value(avEn);
         totPlength       += pLen;
-        waveIndepTrans   += pLen * std::exp( -pLen / absL );
+        waveIndepTrans   += pLen * vdt::fast_exp( -pLen / absL );
       }
       if ( totPlength>0 ) waveIndepTrans /= totPlength;
 

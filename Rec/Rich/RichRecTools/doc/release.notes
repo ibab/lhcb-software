@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2015-02-06 - Chris Jones
+ - Various small CPU optimisations (using VDT, prefer * to /  etc.). 
+
 !========================= RichRecTools v4r26 2015-01-14 =========================
 ! 2015-01-14 - Chris Jones
  - Make the default options for the HLT context in RichMassHypothesisRingCreator

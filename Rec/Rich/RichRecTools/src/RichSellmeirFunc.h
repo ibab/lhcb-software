@@ -34,6 +34,10 @@
 #include "RichRecBase/IRichSellmeirFunc.h"
 #include "RichKernel/IRichParticleProperties.h"
 
+// VDT
+#include "vdt/exp.h"
+#include "vdt/log.h"
+
 namespace Rich
 {
   namespace Rec
@@ -117,8 +121,8 @@ namespace Rich
     inline double SellmeirFunc::paraW ( const Rich::RadiatorType rad,
                                         const double energy ) const
     {
-      const double X = m_RXSPscale[rad] * (double)log( (float)((m_REP[rad]+energy)/(m_REP[rad]-energy)) );
-      const double Y = m_RXSMscale[rad] * (double)log( (float)((m_REM[rad]+energy)/(m_REM[rad]-energy)) );
+      const double X = m_RXSPscale[rad] * (double)vdt::fast_logf( (float)((m_REP[rad]+energy)/(m_REP[rad]-energy)) );
+      const double Y = m_RXSMscale[rad] * (double)vdt::fast_logf( (float)((m_REM[rad]+energy)/(m_REM[rad]-energy)) );
       return m_X[rad] * (X-Y);
     }
 

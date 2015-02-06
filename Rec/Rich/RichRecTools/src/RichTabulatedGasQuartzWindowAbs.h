@@ -32,6 +32,9 @@
 // interfaces
 #include "RichRecBase/IRichGasQuartzWindowAbs.h"
 
+// VDT
+#include "vdt/exp.h"
+
 namespace Rich
 {
   namespace Rec
