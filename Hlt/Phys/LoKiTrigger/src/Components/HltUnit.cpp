@@ -21,6 +21,12 @@
  *  @date 2008-11-10
  *  @author Vanya BELYAEV Ivan.BELYAEV@nikhef.nl
  */
+namespace
+{
+  // ==========================================================================
+  const Gaudi::StringKey s_NOPVS{ std::string{"NoPVs"} } ;
+  // ==========================================================================
+}
 // ============================================================================
 /*  standard constructor
  *  @param name the algorithm instance name
@@ -32,14 +38,14 @@ LoKi::HltUnit::HltUnit
   ISvcLocator*       pSvc )                       // pointer to Service Locator
   : LoKi::FilterAlg ( name , pSvc )
   // services:
-  , m_annSvc  { nullptr }                // "Assigned Numbers & Names " service
-  , m_regSvc  { nullptr }                //                Hlt Register service
-  , m_hltSvc  { nullptr }                //                    Hlt Data Service
-  , m_lokiSvc { nullptr }                //                        LoKi Service
+  , m_annSvc     { nullptr }                // "Assigned Numbers & Names " service
+  , m_regSvc     { nullptr }                //                Hlt Register service
+  , m_hltSvc     { nullptr }                //                    Hlt Data Service
+  , m_lokiSvc    { nullptr }                //                        LoKi Service
   //
-  , m_monitor { false }
-  , m_in      {}
-  , m_out     {}
+  , m_monitor    { false }
+  , m_in         {}
+  , m_out        {}
   //
   , m_cut { LoKi::BasicFunctors<void>::BooleanConstant{ false } }
 //
@@ -55,7 +61,7 @@ LoKi::HltUnit::HltUnit
       "Flag to switch on the simple embedded monitoring" ) ;
   declareProperty
     ( "PVSelection" ,
-      m_pvSelection = "NoPVs" ,
+      m_pvSelection = s_NOPVS ,
       "Hlt PV selection." ) ;
   declareProperty
     ( "Tools",
@@ -281,8 +287,7 @@ StatusCode LoKi::HltUnit::initialize ()
   StatusCode sc = LoKi::FilterAlg::initialize();
   if ( !sc.isSuccess() ) return sc;
   // We have a dummy that is equal to the default in case no PVs are needed
-  auto noPVs = Gaudi::StringKey( "NoPVs" ) ;
-  if ( m_pvSelection != noPVs ) {
+  if ( m_pvSelection != s_NOPVS ) {
     declareInput( m_pvSelection, LoKi::Constant<void,bool>( true ) ) ;
   }
   // register with the incident service
@@ -390,6 +395,9 @@ void LoKi::HltUnit::handle ( const Incident& )
 // ============================================================================
 const LHCb::RecVertex::Range LoKi::HltUnit::primaryVertices () const
 {
+  if (m_pvSelection == s_NOPVS) {
+    return LHCb::RecVertex::Range();
+  }
   auto sel = selection( m_pvSelection, LoKi::Constant<void,bool>( true )  );
   auto vertices = sel->down_cast<LHCb::RecVertex>();
   return LHCb::RecVertex::Range(vertices->begin(), vertices->end());
