@@ -1,3 +1,25 @@
+2015-02-06 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v8r3p1
+
+	LbConfiguration
+	* SetupProject:
+	- fixed an issue with "import SP2" when running through our copy of runpy
+	- added --platform option (fixes LBCORE-724)
+
+	* lb-dev:
+	- made build.conf really optional (LBCORE-722)
+	- fixed variable expansion in SetupProject compatibility (LBCORE-726)
+
+	LbRelease:
+	LBCORE-736: Add --reprocess to cern-get-sso-cookie command in ariadne
+	LBCORE-735: Add --reprocess to cern-get-sso-cookie command in SoftConfDB
+
+	LbUtils:
+	* cmake: updated CMake support modules
+	* fix for LBCORE-725
+	* fix for LBCORE-716
+
 2014-01-12 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v8r3
