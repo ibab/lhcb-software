@@ -219,7 +219,7 @@ int main ( int /*argc*/, char** /*argv*/ )
   // Loop over the data
   std::cout << "Looping over the data to test various ray tracing methods" << std::endl;
 
-  unsigned int ok_ROOT(0), ok_Eigen(0), ok_VClass(0);
+  unsigned int ok_ROOT(0), ok_Eigen(0);// ok_VClass(0);
 
   // ROOT Ray Tracing
   for ( auto& data : dataV_ROOT )
@@ -256,7 +256,7 @@ int main ( int /*argc*/, char** /*argv*/ )
   std::cout << "Successfully solved : "
             << "ROOT "   << ( 100.0 * ok_ROOT   ) / dataV_ROOT.size()   << "% " 
             << "Eigen "  << ( 100.0 * ok_Eigen  ) / dataV_Eigen.size()  << "% " 
-            << "VClass " << ( 100.0 * ok_VClass ) / dataV_VClass.size() << "%" 
+    //<< "VClass " << ( 100.0 * ok_VClass ) / dataV_VClass.size() << "%" 
             << std::endl;
 
   return 0;
