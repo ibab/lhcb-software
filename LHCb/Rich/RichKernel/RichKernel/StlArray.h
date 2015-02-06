@@ -1,0 +1,6 @@
+#ifndef RICHKERNEL_STLARRAY_H 
+#define RICHKERNEL_STLARRAY_H 1
+
+#include <array>
+
+#endif // RICHKERNEL_STLARRAY_H

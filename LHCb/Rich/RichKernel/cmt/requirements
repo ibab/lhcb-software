@@ -42,10 +42,18 @@ apply_pattern reflex_dictionary                                       \
 macro_append RichKernelDict_cppflags "" \
                           target-icc " -wd177 -wd873"
 
+# Test applications
+#application  RichTestSigFunc   ../src/tests/TestSigFunc.cpp
+#macro_append RichTestSigFunc_dependencies   " RichKernelLib "
+#macro_append RichTestSigFunc_cppflags " -O3 -mavx -fabi-version=0 " 
+#macro_append RichTestSigFunc_cppflags " -O3 -msse4 "
+
 private
 # RichKernel Configurable uses the generated configurables 
 macro_append RichKernelGenConfUser_dependencies RichKernelConfDbMerge
 # Have to look in local RichKernelConf.py, install_python has to come later 
 path_prepend PYTHONPATH ${RICHKERNELROOT}/genConf
+# Vc library
+macro_append ROOT_linkopts  " -lVc "
 end_private
 apply_pattern install_python_modules

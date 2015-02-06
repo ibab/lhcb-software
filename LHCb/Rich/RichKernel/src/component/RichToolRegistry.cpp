@@ -41,12 +41,14 @@ StatusCode Rich::ToolRegistry::initialize()
   ToolList defaultTools;
 
   // Common RICH tools
-  defaultTools.push_back ( "Rich::MirrorSegFinder/RichMirrorSegFinder"     );
+  //defaultTools.push_back ( "Rich::MirrorSegFinder/RichMirrorSegFinder" );
+  defaultTools.push_back ( "Rich::MirrorSegFinderLookUpTable/RichMirrorSegFinder" );
   defaultTools.push_back ( "Rich::DAQ::RawBufferToSmartIDsTool/RichSmartIDDecoder" );
   defaultTools.push_back ( "Rich::RadiatorTool/RichRadiatorTool" );
   defaultTools.push_back ( "Rich::DAQ::RawDataFormatTool/RichRawDataFormatTool" );
   defaultTools.push_back ( "Rich::ParticleProperties/RichParticleProperties" );
-  defaultTools.push_back ( "Rich::RayTracing/RichRayTracing" );
+  //defaultTools.push_back ( "Rich::RayTracing/RichRayTracing" );
+  defaultTools.push_back ( "Rich::RayTracingEigen/RichRayTracing" );
   defaultTools.push_back ( "Rich::SmartIDTool/RichSmartIDTool" );
   defaultTools.push_back ( "Rich::DetParameters/RichDetParameters" );
   defaultTools.push_back ( "Rich::TabulatedRefractiveIndex/RichRefractiveIndex" );

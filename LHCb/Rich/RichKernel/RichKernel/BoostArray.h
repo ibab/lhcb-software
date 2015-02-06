@@ -12,18 +12,19 @@
 #ifndef RICHKERNEL_BOOSTARRAY_H 
 #define RICHKERNEL_BOOSTARRAY_H 1
 
-// Include files
+// Boost
+//#define BOOST_DISABLE_ASSERTS
 #include "boost/array.hpp"
+
+// Gaudi
 #include "GaudiKernel/MsgStream.h"
 
 /// Implement textual MsgStream << method for boost::array's
-template <class TYPE, std::size_t N>
+template < class TYPE, std::size_t N >
 inline MsgStream& operator << ( MsgStream& s, 
                                 boost::array<TYPE, N>& data )
 {
-  for ( typename boost::array<TYPE, N>::const_iterator i = data.begin(); 
-        i != data.end(); ++i ) 
-  { s << *i << " "; }
+  for ( const auto& i : data ) { s << i << " "; }
   return s;
 }
 

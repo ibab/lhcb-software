@@ -148,9 +148,7 @@ class RichTools(RichConfigurableUser):
         self.setRichDefaults( "TrackSelectorType",   { "Offline" : "Reco",           "HLT" : "Reco" } )
         self.setRichDefaults( "TrSegMakerType",      { "Offline" : "Detailed",       "HLT" : "Detailed" } )
         self.setRichDefaults( "GeomEffType",         { "Offline" : "CKMassRing",     "HLT" : "CKMassRing" } )
-        #self.setRichDefaults( "CkResType",           { "Offline" : "Functional",     "HLT" : "Binned" } )
         self.setRichDefaults( "CkResType",           { "Offline" : "Functional",     "HLT" : "Functional" } )
-        #self.setRichDefaults( "SignalDetEffType",    { "Offline" : "Tabulated",      "HLT" : "NominalTabulated" } )
         self.setRichDefaults( "SignalDetEffType",    { "Offline" : "Tabulated",      "HLT" : "Tabulated" } )
 
     ## @brief Make an instance of the given configurable and configure this
@@ -186,8 +184,10 @@ class RichTools(RichConfigurableUser):
     #  @param nickname The tool nickname
     #  @return The tool configurable
     def rayTracing(self,nickname="RichRayTracing",private=False) :
-        from Configurables import Rich__RayTracing
-        tool = self.__makeRichTool( Rich__RayTracing, nickname, private )
+        from Configurables import Rich__RayTracingEigen
+        tool = self.__makeRichTool( Rich__RayTracingEigen, nickname, private )
+        #from Configurables import Rich__RayTracing
+        #tool = self.__makeRichTool( Rich__RayTracing, nickname, private )
         return tool
     
     ## @brief Returns the appropriate Cherenkov resolution tool

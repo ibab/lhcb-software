@@ -63,6 +63,20 @@
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
+/** @namespace Rich::Maths::FastRoots
+ *
+ *  Namespace for fast approximate root finding methods
+ *
+ *  Inspiration from :-
+ *
+ *  http://www.hackersdelight.org/hdcode.htm
+ *
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   31/02/2015
+ */
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
 /** @namespace Rich::Mon
  *
  *  Namespace for RICH (online) monitoring software

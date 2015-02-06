@@ -30,6 +30,9 @@
 #include "Kernel/MemPoolAlloc.h"
 #include "RichKernel/RichException.h"
 
+// VDT
+#include "vdt/sincos.h"
+
 // General LHCb namespace
 namespace LHCb
 {
@@ -588,16 +591,6 @@ inline void LHCb::RichTrackSegment::computeRotationMatrix() const
 }
 
 inline Gaudi::XYZVector
-LHCb::RichTrackSegment::vectorAtThetaPhi( const double theta,
-                                          const double phi ) const
-{
-  const double sinTheta = std::sin(theta);
-  return rotationMatrix2() * Gaudi::XYZVector( sinTheta*std::cos(phi),
-                                               sinTheta*std::sin(phi),
-                                               std::cos(theta) );
-}
-
-inline Gaudi::XYZVector
 LHCb::RichTrackSegment::vectorAtCosSinThetaPhi ( const double cosTheta,
                                                  const double sinTheta,
                                                  const double cosPhi,
@@ -606,6 +599,16 @@ LHCb::RichTrackSegment::vectorAtCosSinThetaPhi ( const double cosTheta,
   return rotationMatrix2() * Gaudi::XYZVector( sinTheta*cosPhi,
                                                sinTheta*sinPhi,
                                                cosTheta );
+}
+
+inline Gaudi::XYZVector
+LHCb::RichTrackSegment::vectorAtThetaPhi( const double theta,
+                                          const double phi ) const
+{
+  double sinTheta(0), cosTheta(0), sinPhi(0), cosPhi(0);
+  vdt::fast_sincos( theta, sinTheta, cosTheta );
+  vdt::fast_sincos( phi,   sinPhi,   cosPhi   );
+  return vectorAtCosSinThetaPhi( cosTheta, sinTheta, cosPhi, sinPhi );
 }
 
 inline void LHCb::RichTrackSegment::reset() const

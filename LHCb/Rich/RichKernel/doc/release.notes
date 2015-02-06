@@ -4,6 +4,16 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2015-02-06 - Chris Jones
+ - Add new new test application to profile different log(exp(x)-1) implementations.
+ - Update the default tool mappings in the tool registry to use new 
+   implementations of the mirror finder and ray tracing.
+ - Add RichKernel/FastRoots.h that contains various methods for the fast
+   calculation of square and cube roots.
+ - Various small CPU optimisations.
+ - make the default 'SignalDetEffType' and 'CkResType' tools types in
+   Configuration.py for the HLT the same as for Offline.
+
 !========================= RichKernel v7r57 2015-01-14 =========================
 ! 2015-01-14 - Chris Jones
  - Update the default tool types in RichTools Configurable to make the HLT 

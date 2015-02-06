@@ -17,18 +17,38 @@
 // local
 #include "RichKernel/RichTrackSegment.h"
 
+// VDT
+#include "vdt/sqrt.h"
+#include "vdt/atan2.h"
+
+// GSL
+#include "gsl/gsl_math.h"
+
 void
 LHCb::RichTrackSegment::angleToDirection( const Gaudi::XYZVector & direction,
                                           double & theta,
                                           double & phi ) const
 {
   // create vector in track reference frame
-  const Gaudi::XYZVector rotDirection ( rotationMatrix() * direction );
+  const Gaudi::XYZVector rotDir ( rotationMatrix() * direction );
 
   // get the angles
-  theta = rotDirection.theta();
-  phi   = rotDirection.phi();
+  // phi   = rotDir.phi();
+  // theta = rotDir.theta();
 
+  // the above methods are :-
+  // phi   : { return (fX==0 && fY==0) ? 0 : atan2(fY,fX);}
+  // theta : { return (fX==0 && fY==0 && fZ==0) ? 0 : atan2(Rho(),Z());}
+  // Rho   : { return std::sqrt( Perp2());}
+  // Perp2 : { return fX*fX + fY*fY ;}
+
+  // do it by hand, the same only faster ;)
+  // Skip checks against 0 as we know that never happens here.
+  phi   = vdt::fast_atan2( rotDir.y(), rotDir.x() );
+  theta = vdt::fast_atan2( std::sqrt( gsl_pow_2(rotDir.x()) + 
+                                      gsl_pow_2(rotDir.y()) ), 
+                           rotDir.z() );
+  
   // correct phi
   if ( phi < 0 ) phi += 2.0*M_PI;
 }
@@ -56,7 +76,7 @@ void LHCb::RichTrackSegment::computeRotationMatrix2() const
 {
   const Gaudi::XYZVector z = bestMomentum().Unit();
   Gaudi::XYZVector y = z.Cross( Gaudi::XYZVector(1,0,0) );
-  y /= std::sqrt(y.Mag2()); // maybe not needed ?
+  y *= vdt::fast_isqrtf( y.Mag2() ); // maybe not needed ?
   const Gaudi::XYZVector x = y.Cross(z);
   m_rotation2 = new Gaudi::Rotation3D( x.X(), y.X(), z.X(),
                                        x.Y(), y.Y(), z.Y(),
@@ -65,17 +85,18 @@ void LHCb::RichTrackSegment::computeRotationMatrix2() const
 
 Gaudi::XYZPoint LHCb::RichTrackSegment::bestPoint( const double fractDist ) const
 {
+  const Gaudi::XYZVector entryExitV ( entryPoint() - exitPoint() );
   if ( zCoordAt(fractDist) < middlePoint().z() )
   {
-    const double midFrac1 =
-      std::sqrt( (entryPoint()-middlePoint()).mag2() / (entryPoint()-exitPoint()).mag2() );
-    return entryPoint() + (fractDist/midFrac1)*(middlePoint()-entryPoint());
+    const Gaudi::XYZVector midEntryV ( middlePoint() - entryPoint());
+    const double invMidFrac1 = std::sqrt( entryExitV.mag2() / midEntryV.mag2() );
+    return entryPoint() + (fractDist*invMidFrac1*midEntryV);
   }
   else
   {
-    const double midFrac2 =
-      std::sqrt( (middlePoint()-exitPoint()).mag2() / (entryPoint()-exitPoint()).mag2() );
-    return middlePoint() + ((fractDist-midFrac2)/midFrac2)*(exitPoint()-middlePoint());
+    const Gaudi::XYZVector exitMidV ( exitPoint() - middlePoint() );
+    const double midFrac2 = std::sqrt( exitMidV.mag2() / entryExitV.mag2() );
+    return middlePoint() + (exitMidV*((fractDist-midFrac2)/midFrac2));
   }
 }
 
@@ -84,13 +105,15 @@ Gaudi::XYZVector LHCb::RichTrackSegment::bestMomentum( const double fractDist ) 
   if ( zCoordAt(fractDist) < middlePoint().z() )
   {
     const double midFrac =
-      std::sqrt((entryPoint()-exitPoint()).mag2())*fractDist / std::sqrt((entryPoint()-middlePoint()).mag2());
+      fractDist * std::sqrt( (entryPoint()-exitPoint()).mag2() / 
+                             (entryPoint()-middlePoint()).mag2() );
     return entryMomentum()*(1-midFrac) + middleMomentum()*midFrac;
   }
   else
   {
     const double midFrac =
-      std::sqrt((entryPoint()-exitPoint()).mag2())*fractDist / std::sqrt((middlePoint()-exitPoint()).mag2()) - 1;
+      (fractDist * std::sqrt( (entryPoint()-exitPoint()).mag2() / 
+                              (middlePoint()-exitPoint()).mag2() )) - 1;
     return middleMomentum()*(1-midFrac) + exitMomentum()*midFrac;
   }
 }
@@ -105,8 +128,8 @@ void LHCb::RichTrackSegment::chordConstructorInit2()
     v *= std::sqrt( entryMomentum().Mag2() / v.Mag2() );
     setEntryState( entryPoint(), v );
     // Update direction of middle state to chord direction
-    v *= std::sqrt( ((entryMomentum()+exitMomentum())/2).Mag2() / v.Mag2() );
-    setMiddleState( add_points(entryPoint(),exitPoint())/2, v );
+    v *= std::sqrt( ( (entryMomentum()+exitMomentum())*0.5 ).Mag2() / v.Mag2() );
+    setMiddleState( add_points(entryPoint(),exitPoint())*0.5, v );
     // Update direction of exit state to chord direction
     v *= std::sqrt( exitMomentum().Mag2() / v.Mag2() );
     setExitState( exitPoint(), v );
