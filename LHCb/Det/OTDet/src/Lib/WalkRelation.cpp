@@ -4,7 +4,7 @@
 
 #include "GaudiKernel/Kernel.h" // for (UN)LIKELY
 
-#include "ChebyshevApprox.h"
+#include "LHCbMath/ChebyshevApprox.h"
 
 namespace OTDet
 {

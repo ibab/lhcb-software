@@ -2,6 +2,9 @@
 ! Responsible : Alexandr Kozlinskiy, Lucia Grillo
 !--------------------------------------------------------------------------
 
+! 2015-02-06 - Marco Clemencic
+ - Fixed include of LHCbMath/ChebyshevApprox.h in WalkRelation.cpp.
+
 ! 2015-02-05 - Manuel Tobias Schiller
  - WalkRelation: use new ChebyshevApprox class from LHCbMath; this should be
    40% faster than the previous code, and is accurate to better than half an
@@ -50,7 +53,7 @@
 
 !========================= OTDet v8r10 2014-02-05 =========================
 ! 2014-02-05 - Christoph Langenbruch
- - Using the vdt library for the calculation of the tanh in WalkRelation::walk. 
+ - Using the vdt library for the calculation of the tanh in WalkRelation::walk.
    This results in a significant performance increase.
 
 !========================= OTDet v8r10 2013-06-03 =========================
