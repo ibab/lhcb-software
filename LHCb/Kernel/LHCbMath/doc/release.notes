@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-02-07 - Chris Jones
+ - Use a workaround to install the Eigen headers with CMake.
+
 ! 2015-02-06 - Chris Jones
  - Add a new header LHCbMath/EigenTypes.h that contains so wrapper classes
    that make it easier to convert between Gaudi XYZ points and vectors
