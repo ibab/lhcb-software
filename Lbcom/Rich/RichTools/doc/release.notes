@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2015-02-07 - Chris Jones
+ - Add missing FPE protection in RichRayTracingEigen.
+
 ! 2015-02-06 - Chris Jones
  - Add a new implementation of the ray tracing tool, RichRayTracingEigen that
    is based on the Eigen library, to partially vectorise the calculations.

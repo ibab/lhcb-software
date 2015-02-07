@@ -215,25 +215,34 @@ namespace Rich
                                    const Gaudi::XYZPoint& CoC,
                                    const float radius ) const
     {
+      bool OK = true;
       // find intersection point
       // for line sphere intersection look at http://www.realtimerendering.com/int/
       const EigenXYZPoint ecoc(CoC);
-      const auto a = direction.dot(direction);
-      const auto delta = position - ecoc;
-      const auto b     = 2.0f * direction.dot(delta);
-      const auto c     = delta.dot(delta) - radius*radius;
-      const auto discr = b*b - 4.0f*a*c;
-      //const auto sd = vdt::fast_isqrt( discr );
-      //const auto distance1 = (1.0f - (b*sd) ) / ( 2.f * a * sd );
-      const auto distance1 = 0.5f * ( std::sqrt(discr) - b ) / a;
-      // change position to the intersection point
-      position += distance1 * direction;
-      // reflect the vector
-      // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
-      const auto normal = position - ecoc;
-      direction -= ( 2.0f * normal.dot(direction) / normal.dot(normal) ) * normal;
+      const auto a     = direction.dot(direction);
+      if ( UNLIKELY( 0 == a ) ) { OK = false; }
+      else
+      {
+        const auto delta = position - ecoc;
+        const auto b     = 2.0f * direction.dot(delta);
+        const auto c     = delta.dot(delta) - radius*radius;
+        const auto discr = b*b - 4.0f*a*c;
+        if ( UNLIKELY( discr < 0 ) ) { OK = false; }
+        else
+        {
+          //const auto sd = vdt::fast_isqrt( discr );
+          //const auto distance1 = (1.0f - (b*sd) ) / ( 2.f * a * sd );
+          const auto distance1 = 0.5f * ( std::sqrt(discr) - b ) / a;
+          // change position to the intersection point
+          position += distance1 * direction;
+          // reflect the vector
+          // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
+          const auto normal = position - ecoc;
+          direction -= ( 2.0f * normal.dot(direction) / normal.dot(normal) ) * normal;
+        }
+      }
       // return
-      return true;
+      return OK;
     }
 
     /// Ray trace from given position in given direction off flat mirrors

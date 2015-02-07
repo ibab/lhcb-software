@@ -634,17 +634,18 @@ Rich::RayTracing::reflectFlatPlane ( Gaudi::XYZPoint& position,
 
   // refect of the plane
   const bool sc = intersectPlane( position, direction, plane, intersection );
-  if ( !sc ) { return sc; }
-
-  // plane normal
-  const Gaudi::XYZVector normal( plane.Normal() );
-
-  // update position to intersection point
-  position = intersection;
-
-  // reflect the vector and update direction
-  // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
-  direction -= 2.0 * (normal.Dot(direction)) * normal;
+  if ( sc ) 
+  {
+    // plane normal
+    const Gaudi::XYZVector normal( plane.Normal() );
+    
+    // update position to intersection point
+    position = intersection;
+    
+    // reflect the vector and update direction
+    // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
+    direction -= 2.0 * (normal.Dot(direction)) * normal;
+  }
 
   // return status code
   return sc;
@@ -659,13 +660,15 @@ Rich::RayTracing::intersectPlane ( const Gaudi::XYZPoint& position,
                                    const Gaudi::Plane3D& plane,
                                    Gaudi::XYZPoint& intersection ) const
 {
+  bool OK = false;
   const double scalar = direction.Dot( plane.Normal() );
-  if ( fabs(scalar) < 1e-99 ) return false;
-
-  const double distance = -(plane.Distance(position)) / scalar;
-  intersection = position + distance*direction;
-
-  return true;
+  if ( fabs(scalar) > 1e-99 )
+  {
+    const double distance = -(plane.Distance(position)) / scalar;
+    intersection = position + distance*direction;
+    OK = true;
+  }
+  return OK;
 }
 
 //=========================================================================

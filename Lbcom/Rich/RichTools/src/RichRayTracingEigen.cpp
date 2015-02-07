@@ -597,16 +597,16 @@ Rich::RayTracingEigen::reflectSpherical ( Gaudi::XYZPoint& position,
   // for line sphere intersection look at http://www.realtimerendering.com/int/
 
   const double a = direction.Mag2();
-  //if ( 0 == a )  
-  //{
-  // Warning( "reflectSpherical: Direction vector has zero length..." ).ignore();
-  //  return false;
-  //}
+  if ( 0 == a )  
+  {
+    Warning( "reflectSpherical: Direction vector has zero length..." ).ignore();
+    return false;
+  }
   const Gaudi::XYZVector delta( position - CoC );
   const double b = 2.0 * direction.Dot( delta );
   const double c = delta.Mag2() - radius*radius;
   const double discr = b*b - 4.0*a*c;
-  //if ( discr < 0 ) return false;
+  if ( discr < 0 ) return false;
 
   const double distance1 = 0.5 * ( std::sqrt(discr) - b ) / a;
   // change position to the intersection point
@@ -661,13 +661,15 @@ Rich::RayTracingEigen::intersectPlane ( const Gaudi::XYZPoint& position,
                                         const Gaudi::Plane3D& plane,
                                         Gaudi::XYZPoint& intersection ) const
 {
+  bool OK = false;
   const double scalar = direction.Dot( plane.Normal() );
-  if ( fabs(scalar) < 1e-99 ) return false;
-  
-  const double distance = -(plane.Distance(position)) / scalar;
-  intersection = position + (distance*direction);
-  
-  return true;
+  if ( fabs(scalar) > 1e-99 )
+  {
+    const double distance = -(plane.Distance(position)) / scalar;
+    intersection = position + (distance*direction);
+    OK = true;
+  }
+  return OK;
 }
 
 //=========================================================================
