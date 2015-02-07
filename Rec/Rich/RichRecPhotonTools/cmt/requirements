@@ -37,10 +37,3 @@ apply_pattern    component_library library=RichRecPhotonTools
 # Test application for Photon reconstruction
 #=====================================================================
 application RichPhotonRecoTest ../src/application/PhotonReco/*.cpp
-
-#macro_append RichPhotonRecoTest_cppflags " -O3 -msse4 "
-#macro_append RichPhotonRecoUsingQuarticSoln_cppflags " -O3 -msse4 "
-
-#private
-#macro_append ROOT_linkopts  " -lVc "
-#end_private
