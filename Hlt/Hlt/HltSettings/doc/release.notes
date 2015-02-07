@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-02-07 - Roel Aaij
+ - Remove imports of obsolete sets of lines.
+
 ! 2015-02-05 - Roel Aaij
  - Major cleanup. All configurations older than the last one used in 2012
    removed.
