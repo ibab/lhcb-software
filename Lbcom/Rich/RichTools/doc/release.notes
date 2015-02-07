@@ -6,6 +6,7 @@
 
 ! 2015-02-07 - Chris Jones
  - Add missing FPE protection in RichRayTracingEigen.
+ - Downgrade some new info messages to debug.
 
 ! 2015-02-06 - Chris Jones
  - Add a new implementation of the ray tracing tool, RichRayTracingEigen that
