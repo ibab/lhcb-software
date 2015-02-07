@@ -9,7 +9,7 @@
 #include <array>
 
 // Vc
-#include "Vc/Vc"
+//#include "Vc/Vc"
 
 // VectorClass
 //#include "vectorclass/vectorclass.h"
@@ -353,29 +353,29 @@ float testEigen( const float x, const float y )
   return X - Y;
 }
 
-float testVc( const float x )
-{
-  Vc::float_v x1( x );
-  Vc::float_v x2( Vc::One ); x2[1] = x2[2] = x2[3] = x;
-  Vc::float_v x3( Vc::One );         x3[2] = x3[3] = x;
-  Vc::float_v x4( Vc::One );                 x4[3] = x;
-  const auto xxxx = x1 * x2 * x3 * x4;
+// float testVc( const float x )
+// {
+//   Vc::float_v x1( x );
+//   Vc::float_v x2( Vc::One ); x2[1] = x2[2] = x2[3] = x;
+//   Vc::float_v x3( Vc::One );         x3[2] = x3[3] = x;
+//   Vc::float_v x4( Vc::One );                 x4[3] = x;
+//   const auto xxxx = x1 * x2 * x3 * x4;
 
-  Vc::float_v topP; 
-  topP[0] = -101.76227310588246f;
-  topP[1] = -127.31825068394369f;
-  topP[2] =  317.31602891172594f;
-  topP[3] =  135.0567120741147f;
+//   Vc::float_v topP; 
+//   topP[0] = -101.76227310588246f;
+//   topP[1] = -127.31825068394369f;
+//   topP[2] =  317.31602891172594f;
+//   topP[3] =  135.0567120741147f;
 
-  Vc::float_v botP;
-  botP[0] = 40.31685825976414f;
-  botP[1] = 202.81583582446692f;
-  botP[2] = 160.94697665742055f;
-  botP[3] = -2.088756969431516f;
+//   Vc::float_v botP;
+//   botP[0] = 40.31685825976414f;
+//   botP[1] = 202.81583582446692f;
+//   botP[2] = 160.94697665742055f;
+//   botP[3] = -2.088756969431516f;
 
-  return ( ( -5.143220028201872f + (topP*xxxx).sum() ) /
-           ( 1.0f                + (botP*xxxx).sum() ) );
-}
+//   return ( ( -5.143220028201872f + (topP*xxxx).sum() ) /
+//            ( 1.0f                + (botP*xxxx).sum() ) );
+// }
 
 // float testVectorClass4f( const float x )
 // {
@@ -475,13 +475,13 @@ void testEigen2()
   std::cout << "Value = " << f << std::endl;
 }
 
-void testVc()
-{
-  std::cout << "Running Vc tests" << std::endl;
-  float f = 0.0;
-  for ( const auto& x : fValues ) { f += testVc(x); }
-  std::cout << "Value = " << f << std::endl;
-}
+// void testVc()
+// {
+//   std::cout << "Running Vc tests" << std::endl;
+//   float f = 0.0;
+//   for ( const auto& x : fValues ) { f += testVc(x); }
+//   std::cout << "Value = " << f << std::endl;
+// }
 
 // void testVectorClass4f()
 // {

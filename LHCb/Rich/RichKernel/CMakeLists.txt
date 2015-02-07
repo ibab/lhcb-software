@@ -37,8 +37,8 @@ gaudi_add_dictionary(RichKernel
 if(GAUDI_BUILD_TESTS)
   gaudi_add_executable(RichTestSigFunc   
                        src/tests/TestSigFunc.cpp
-                       INCLUDE_DIRS Boost VDT
-                       LINK_LIBRARIES Boost VDT RichKernelLib)
+                       INCLUDE_DIRS Boost VDT Vc
+                       LINK_LIBRARIES Boost VDT Vc RichKernelLib)
 endif()
 
 
