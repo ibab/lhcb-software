@@ -87,6 +87,37 @@ def _tf2_ ( self , *args ) :
     return fun 
 
 # =============================================================================
+## draw the function 
+def _f1_draw_ ( self , *opts ) :
+    """
+    Drawing the function object through conversion to ROOT.TF1
+    
+    >>> fun = ...
+    >>> fun.draw()
+    
+    """
+    if not hasattr ( self , '_tf1'  ) :
+        
+        if hasattr ( self , 'xmin' ) and hasattr ( self , 'xmax' ) :
+            
+            if hasattr ( self , 'npars' ) :
+                
+                self._tf1  = _tf1_ ( self          ,
+                                     self.xmin  () ,
+                                     self.xmax  () ,
+                                     self.npars () )
+                for i in range ( 0, self.npars() ) :
+                    self._tf1.SetParameter ( i , self.par ( i ) )
+                    
+            else : self._tf1  = _tf1_ ( self , self.xmin() , self.xmax() )
+
+            if not type(self) in ( Gaudi.Math.Bernstein , Gaudi.Math.BSpline ) : 
+                self._tf1.SetMinimum(0)
+            
+    return self._tf1.Draw ( *opts )
+    
+    
+# =============================================================================
 ## get the regular complex value for amplitude 
 def _amp_ ( self , x ) :
     """
@@ -193,6 +224,8 @@ for model in ( Gaudi.Math.Chebyshev              ,
                Gaudi.Math.Hermite                ,
                Gaudi.Math.Bernstein              ,
                Gaudi.Math.Positive               ,
+               Gaudi.Math.Monothonic             ,
+               Gaudi.Math.Convex                 ,
                Gaudi.Math.BifurcatedGauss        ,
                Gaudi.Math.Bukin                  ,
                Gaudi.Math.Novosibirsk            ,
@@ -243,6 +276,19 @@ for model in ( Gaudi.Math.Chebyshev              ,
                ) :
     model . tf1 = _tf1_ 
     model.sp_integrate = sp_integrate_1D
+
+## add some drawing method for some shapes 
+for model in ( Gaudi.Math.Bernstein         ,
+               Gaudi.Math.Positive          ,
+               Gaudi.Math.Monothonic        ,
+               Gaudi.Math.Convex            ,
+               #
+               Gaudi.Math.BSpline           ,
+               Gaudi.Math.PositiveSpline    ,
+               Gaudi.Math.IncreasingSpline  ,
+               Gaudi.Math.DecreasingSpline  ) :
+    
+    model.draw = _f1_draw_
     
 # =============================================================================
 ## decorate 2D-models/functions 

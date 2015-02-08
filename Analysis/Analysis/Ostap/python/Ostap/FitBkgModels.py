@@ -20,9 +20,12 @@ __version__ = "$Revision:"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-07-25"
 __all__     = (
-    'Bkg_pdf'     , ## An exponential function, modulated by positiev polynomial
-    'PSPol_pdf'   , ## A phase space  function, modulated by positive polynomial
-    'PolyPos_pdf' , ## A positive polynomial
+    'Bkg_pdf'        , ## An exponential function, modulated by positiev polynomial
+    'PSPol_pdf'      , ## A phase space  function, modulated by positive polynomial
+    'PolyPos_pdf'    , ## A positive polynomial
+    'Monothonic_pdf' , ## A positive monothonic polynomial
+    'Convex_pdf'     , ## A positive polynomial with fixed sign first and second derivatives 
+    'Sigmoid_pdf'    , ## Background: sigmoid modulated by positive polynom 
     ##
     'PSpline_pdf' , ## positive                spline 
     'ISpline_pdf' , ## positive non-decreasing spline 
@@ -80,33 +83,29 @@ class Bkg_pdf(PDF) :
                               "tau_%s"  % name ,
                               "tau(%s)" % name , tau , 0 , -taumax, taumax )
         #
-        self.phis     = []
-        self.phi_list = ROOT.RooArgList ()
         # 
         if 0 >= self.power :
             
-            self.pdf = ROOT.RooExponential (
+            self.phis     = []
+            self.phi_list = ROOT.RooArgList ()
+            self.pdf      = ROOT.RooExponential (
                 'exp_%s' % name  , 'exp(%s)' % name , mass , self.tau )
             
         else :
             
-            for i in range ( 1 , power + 1 ) :
-                #
-                phi_i = makeVar   ( None                         ,
-                                    'phi%d_%s'      % ( i , name ) ,
-                                    '#phi_{%d}(%s)' % ( i , name ) ,  None , 0 , -6.5 , 6.5 )
-                self.phis.append  ( phi_i )
-                self.phi_list.add ( phi_i )
-                #
-                
-        self.pdf  = cpp.Analysis.Models.ExpoPositive (
-            'expopos_%s'  % name ,
-            'expopos(%s)' % name ,
-            mass                 ,
-            self.tau             ,
-            self.phi_list        ,
-            mass.getMin()        ,
-            mass.getMax()        )
+            # 
+            self.makePhis ( power ) 
+            #
+            
+            self.pdf  = cpp.Analysis.Models.ExpoPositive (
+                'expopos_%s'  % name ,
+                'expopos(%s)' % name ,
+                mass                 ,
+                self.tau             ,
+                self.phi_list        ,
+                mass.getMin()        ,
+                mass.getMax()        )
+
         
 # =============================================================================
 ## @class  PSPol_pdf
@@ -135,16 +134,8 @@ class PSPol_pdf(PDF) :
         self.power = power
         
         # 
-        self.phis     = []
-        self.phi_list = ROOT.RooArgList () 
-        for i in range ( 1 , power + 1 ) :
-            #
-            phi_i = makeVar   ( None ,
-                                'phi%d_%s'      % ( i , name ) ,
-                                '#phi_{%d}(%s)' % ( i , name ) ,  None , 0 , -6.5 , 6.5 )
-            self.phis.append  ( phi_i )
-            self.phi_list.add ( phi_i )
-            #
+        self.makePhis ( power ) 
+        #
             
         self.pdf  = cpp.Analysis.Models.PhaseSpacePol (
             'pspol_%s'          % name ,
@@ -162,7 +153,7 @@ class PSPol_pdf(PDF) :
 #  @date 2011-07-25
 class PolyPos_pdf(PDF) :
     """
-    A positive polynomial 
+    A positive (Bernstein) polynomial 
     """
     ## constructor
     def __init__ ( self             ,
@@ -175,17 +166,8 @@ class PolyPos_pdf(PDF) :
         self.power = power
         self.mass  = mass 
         
-        # 
-        self.phis     = []
-        self.phi_list = ROOT.RooArgList ()
-        for i in range ( 1 , power + 1 ) :
-            #
-            phi_i = makeVar   ( None ,
-                                'phi%d_%s'      % ( i , name ) ,
-                                '#phi_{%d}(%s)' % ( i , name ) ,  None , 0 , -6.5 , 6.5 )
-            self.phis.append  ( phi_i )
-            self.phi_list.add ( phi_i )
-            #
+        #
+        self.makePhis ( power ) 
             
         self.pdf  = cpp.Analysis.Models.PolyPositive (
             'pp_%s'            % name ,
@@ -194,6 +176,148 @@ class PolyPos_pdf(PDF) :
             self.phi_list        ,
             self.mass.getMin()   ,
             self.mass.getMax()   ) 
+        
+# =============================================================================
+## @class  Monothonic_pdf
+#  A positive monothonic polynomial 
+#  @see Analysis::Models::PolyMonothonic 
+#  @see Gaudi::Math::Monothonic
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2011-07-25
+class Monothonic_pdf(PDF) :
+    """
+    A positive (Bernstein) monothonic polynomial:
+    see Analysis::Models::PolyMonothonic
+    see Gaudi::Math::Monothonic
+    
+    """
+    ## constructor
+    def __init__ ( self              ,
+                   name              ,   ## the name 
+                   mass              ,   ## the variable
+                   power = 2         ,   ## degree of the polynomial
+                   increasing = True ) : ## increasing or decreasing ?
+        #
+        PDF.__init__ ( self , name )
+        #
+        self.power      = power
+        self.mass       = mass 
+        self.increasing = increasing
+        # 
+        self.makePhis ( power ) 
+            
+        self.pdf  = cpp.Analysis.Models.PolyMonothonic (
+            'pp_%s'              % name ,
+            'PolyMonothonic(%s)' % name ,
+            self.mass            ,
+            self.phi_list        ,
+            self.mass.getMin()   ,
+            self.mass.getMax()   ,
+            self.increasing      )
+        
+        
+# =============================================================================
+## @class  Convex_pdf
+#  A positive polynomial with fixed signs of the first and second derivative 
+#  @see Analysis::Models::PolyConvex 
+#  @see Gaudi::Math::Convex
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2011-07-25
+class Convex_pdf(PDF) :
+    """
+    A positive (Bernstein) polynomial with fixed signs of
+    the first and second derivative 
+    see Analysis::Models::PolyConvex
+    see Gaudi::Math::Conves 
+    
+    """
+    ## constructor
+    def __init__ ( self              ,
+                   name              ,   ## the name 
+                   mass              ,   ## the variable
+                   power = 2         ,   ## degree of the polynomial
+                   increasing = True ,   ## increasing or decreasing ?
+                   convex     = True ) : ## convex or concave ?
+        #
+        PDF.__init__ ( self , name )
+        #
+        self.power      = power
+        self.mass       = mass 
+        self.increasing = increasing
+        self.convex     = convex  
+        # 
+        self.makePhis ( power ) 
+            
+        self.pdf  = cpp.Analysis.Models.PolyConvex (
+            'pp_%s'          % name ,
+            'PolyConvex(%s)' % name ,
+            self.mass            ,
+            self.phi_list        ,
+            self.mass.getMin()   ,
+            self.mass.getMax()   ,
+            self.increasing      ,
+            self.convex          )
+
+# =============================================================================
+## @class  Sigmoid_pdf
+#  Sigmoid function modulated wit hpositive polynomial
+#  @see Analysis::Models::PolySigmoid
+#  @see Gaudi::Math::Sigmoid
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2011-07-25
+class Sigmoid_pdf(PDF) :
+    """
+    A sigmoid function modulated by positive (Bernstein) polynomial 
+
+    f(x) = 0.5*(1+tahn(alpha(x-x0))*Pol(x)
+    
+    see Analysis::Models::PolySigmoid
+    see Gaudi::Math::Sigmoid  
+    
+    """
+    ## constructor
+    def __init__ ( self              ,
+                   name              ,   ## the name 
+                   mass              ,   ## the variable
+                   power = 2         ,   ## degree of the polynomial
+                   alpha = None      ,   ##
+                   x0    = None      ) :
+        #
+        PDF.__init__ ( self , name )
+        #
+        self.power      = power
+        self.mass       = mass
+
+        xmin  = mass.getMin()
+        xmax  = mass.getMax()
+        dx    = xmax - xmin 
+        alpmx = 2000.0/dx 
+        
+        self.alpha  = makeVar ( alpha               ,
+                                  'alpha_%s'  % name  ,
+                                  'alpha(%s)' % name  ,
+                                  alpha               , 0 , -alpmx , alpmx ) 
+        
+        self.x0    = makeVar  ( x0               ,
+                                'x0_%s'  % name  ,
+                                'x0(%s)' % name  ,
+                                x0               ,
+                                0.5*(xmax+xmin)  ,
+                                xmin - 0.1 * dx  ,
+                                xmax + 0.1 * dx  ) 
+        # 
+        self.makePhis ( power ) 
+            
+        self.pdf  = cpp.Analysis.Models.PolySigmoid (
+            'ps_%s'           % name ,
+            'PolySigmoid(%s)' % name ,
+            self.mass            ,
+            self.phi_list        ,
+            self.mass.getMin()   ,
+            self.mass.getMax()   ,
+            self.alpha           ,
+            self.x0              )
+
         
 
 # =============================================================================
@@ -243,16 +367,8 @@ class PSpline_pdf(PDF) :
         self.mass   = mass 
         
         # 
-        self.phis     = []
-        self.phi_list = ROOT.RooArgList ()
-        for i in range ( 1 , spline.npars() + 1 ) :
-            #
-            phi_i = makeVar   ( None ,
-                                'phi%d_%s'      % ( i , name ) ,
-                                '#phi_{%d}(%s)' % ( i , name ) ,  None , 0 , -6.5 , 6.5 )
-            self.phis.append  ( phi_i )
-            self.phi_list.add ( phi_i )
-            #
+        self.makePhis ( spline.npars()  ) 
+        #
             
         self.pdf  = cpp.Analysis.Models.PositiveSpline (
             'ps_%s'              % name ,
@@ -309,16 +425,8 @@ class ISpline_pdf(PDF) :
         self.mass   = mass 
         
         # 
-        self.phis     = []
-        self.phi_list = ROOT.RooArgList ()
-        for i in range ( 1 , spline.npars() + 1 ) :
-            #
-            phi_i = makeVar   ( None ,
-                                'phi%d_%s'      % ( i , name ) ,
-                                '#phi_{%d}(%s)' % ( i , name ) ,  None , 0 , -6.5 , 6.5 )
-            self.phis.append  ( phi_i )
-            self.phi_list.add ( phi_i )
-            #
+        self.makePhis ( spline.npars()  ) 
+        #
             
         self.pdf  = cpp.Analysis.Models.IncreasingSpline (
             'is_%s'              % name ,
@@ -374,17 +482,9 @@ class DSpline_pdf(PDF) :
         self.mass   = mass 
         
         # 
-        self.phis     = []
-        self.phi_list = ROOT.RooArgList ()
-        for i in range ( 1 , spline.npars() + 1 ) :
-            #
-            phi_i = makeVar   ( None ,
-                                'phi%d_%s'      % ( i , name ) ,
-                                '#phi_{%d}(%s)' % ( i , name ) ,  None , 0 , -6.5 , 6.5 )
-            self.phis.append  ( phi_i )
-            self.phi_list.add ( phi_i )
-            #
-            
+        self.makePhis ( spline.npars()  ) 
+        #
+        
         self.pdf  = cpp.Analysis.Models.DecreasingSpline (
             'is_%s'                % name ,
             'DecreasingSpline(%s)' % name ,

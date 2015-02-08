@@ -63,16 +63,9 @@ class PolyPos2D_pdf(PDF2) :
 
         PDF2.__init__ ( self , name , x , y ) 
         
-        self.phis     = []
-        self.phi_list = ROOT.RooArgList() 
-        
-        for i in range ( 1 ,  ( nx + 1 ) * ( ny + 1 ) ) :
-            
-            phi_i = makeVar   ( None ,
-                                'phi_2d_%d_%s'    % ( i , name ) ,
-                                '#phi(2D)_%d(%s)' % ( i , name ) ,  None , 0 , -3.5 , 3.5 )
-            self.phis.append  ( phi_i )
-            self.phi_list.add ( phi_i )
+        # 
+        self.makePhis ( ( nx + 1 ) * ( ny + 1 ) - 1 ) 
+        #
             
         #
         ## finally build PDF 
@@ -115,19 +108,11 @@ class PolyPos2Dsym_pdf(PDF2) :
             
         PDF2.__init__ ( self , name , x , y ) 
         
-        self.phis     = []
-        self.phi_list = ROOT.RooArgList() 
-        
+        # 
         num = ( n + 1 ) * ( n + 2 ) / 2 
-        for i in range ( 1 ,  num ) :
-            
-            phi_i = makeVar   ( None ,
-                                'phi_2ds_%d_%s'      % ( i , name ) ,
-                                '#phi(2Dsym)_%d(%s)' % ( i , name ) ,  None , 0 , -3.5 , 3.5 )
-            self.phis.append  ( phi_i )
-            self.phi_list.add ( phi_i )
-            
+        self.makePhis ( num - 1 ) 
         #
+
         ## finally build PDF 
         #
         self.pdf = cpp.Analysis.Models.Poly2DSymPositive (
@@ -166,16 +151,10 @@ class PSPol2D_pdf(PDF2) :
         self.psx = psx  
         self.psy = psy
                         
-        self.phis     = []
-        self.phi_list = ROOT.RooArgList() 
-        
-        for i in range ( 1 ,  ( nx + 1 ) * ( ny + 1 ) ) :
-            
-            phi_i = makeVar   ( None ,
-                                'phi_2d_%d_%s'    % ( i , name ) ,
-                                '#phi(2D)_%d(%s)' % ( i , name ) ,  None , 0 , -3.5 , 3.5 )
-            self.phis.append  ( phi_i )
-            self.phi_list.add ( phi_i )
+        #
+        num = ( nx + 1 ) * ( ny + 1 )  - 1 
+        self.makePhis ( num ) 
+        #
             
         #
         ## finally build PDF 
@@ -226,16 +205,10 @@ class PSPol2Dsym_pdf(PDF2) :
         self.psx = ps
         self.psy = ps
             
-        self.phis     = []
-        self.phi_list = ROOT.RooArgList() 
-        
-        for i in range ( 1 ,  ( n + 1 ) * ( n + 2 ) / 2 ) :
-            
-            phi_i = makeVar   ( None ,
-                                'phi_2d_%d_%s'    % ( i , name ) ,
-                                '#phi(2D)_%d(%s)' % ( i , name ) ,  None , 0 , -3.5 , 3.5 )
-            self.phis.append  ( phi_i )
-            self.phi_list.add ( phi_i )
+        #
+        num = ( n + 1 ) * ( n + 2 ) / 2  - 1 
+        self.makePhis ( num ) 
+        #
             
         #
         ## finally build PDF 
@@ -293,16 +266,10 @@ class ExpoPSPol2D_pdf(PDF2) :
         
         self.psy = psy
                         
-        self.phis     = []
-        self.phi_list = ROOT.RooArgList() 
-        
-        for i in range ( 1 ,  ( nx + 1 ) * ( ny + 1 ) ) :
-            
-            phi_i = makeVar   ( None ,
-                                'phi_2d_%d_%s'    % ( i , name ) ,
-                                '#phi(2D)_%d(%s)' % ( i , name ) ,  None , 0 , -3.5 , 3.5 )
-            self.phis.append  ( phi_i )
-            self.phi_list.add ( phi_i )
+        #
+        num = ( nx + 1 ) * ( ny + 1 ) - 1 
+        self.makePhis ( num ) 
+        #
             
         #
         ## finally build PDF 
@@ -377,16 +344,10 @@ class ExpoPol2D_pdf(PDF2) :
         self.m1  = x ## ditto 
         self.m2  = y ## ditto
 
-        self.phis     = []
-        self.phi_list = ROOT.RooArgList() 
-        
-        for i in range ( 1 ,  ( nx + 1 ) * ( ny + 1 ) ) :
-            
-            phi_i = makeVar   ( None ,
-                                'phi_2d_%d_%s'    % ( i , name ) ,
-                                '#phi(2D)_%d(%s)' % ( i , name ) ,  None , 0 , -3.5 , 3.5 )
-            self.phis.append  ( phi_i )
-            self.phi_list.add ( phi_i )
+        #
+        num = ( nx + 1 ) * ( ny + 1 ) - 1 
+        self.makePhis ( num ) 
+        #
             
         #
         ## finally build PDF 
@@ -454,16 +415,10 @@ class ExpoPol2Dsym_pdf(PDF2) :
         self.m1  = x ## ditto 
         self.m2  = y ## ditto
 
-        self.phis     = []
-        self.phi_list = ROOT.RooArgList() 
-        
-        for i in range ( 1 ,  ( n + 1 ) * ( n + 2 ) / 2 ) :
-            
-            phi_i = makeVar   ( None ,
-                                'phi_2d_%d_%s'    % ( i , name ) ,
-                                '#phi(2D)_%d(%s)' % ( i , name ) ,  None , 0 , -3.5 , 3.5 )
-            self.phis.append  ( phi_i )
-            self.phi_list.add ( phi_i )
+        #
+        num = ( n + 1 ) * ( n + 2 ) / 2 - 1 
+        self.makePhis ( num ) 
+        #
             
         #
         ## finally build PDF 
@@ -502,16 +457,9 @@ class Spline2D_pdf(PDF2) :
         
         self.spline = spline
 
-        self.phis     = []
-        self.phi_list = ROOT.RooArgList() 
-        
-        for i in range ( 1 , self.spline.npars() + 1 ) :
-            
-            phi_i = makeVar   ( None ,
-                                'phi_s2d_%d_%s'    % ( i , name ) ,
-                                '#phi(S2D)_%d(%s)' % ( i , name ) ,  None , 0 , -6.5 , 6.5 )
-            self.phis.append  ( phi_i )
-            self.phi_list.add ( phi_i )
+        #
+        self.makePhis ( spline.npars() ) 
+        #
             
         #
         ## finally build PDF 
@@ -547,17 +495,10 @@ class Spline2Dsym_pdf(PDF2) :
         
         self.spline = spline
 
-        self.phis     = []
-        self.phi_list = ROOT.RooArgList() 
-        
-        for i in range ( 1 , self.spline.npars() + 1 ) :
-            
-            phi_i = makeVar   ( None ,
-                                'phi_s2d_%d_%s'    % ( i , name ) ,
-                                '#phi(S2D)_%d(%s)' % ( i , name ) ,  None , 0 , -6.5 , 6.5 )
-            self.phis.append  ( phi_i )
-            self.phi_list.add ( phi_i )
-            
+        #
+        self.makePhis ( spline.npars() ) 
+        #
+
         #
         ## finally build PDF 
         #

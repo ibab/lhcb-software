@@ -230,6 +230,23 @@ class PDF (object) :
     ## get all declared backgrounds 
     def backgrounds ( self ) : return self._backgrounds 
 
+    ## Create vector of phases (needed for various polynomial forms)
+    def makePhis    ( self , num ) :
+        """
+        Create vector of phases (needed for various polynomial forms)
+        """
+        self.phis     = []
+        self.phi_list = ROOT.RooArgList()
+        from math import pi 
+        for i in range( 1 , num + 1 ) :
+            phi_i = makeVar ( None ,
+                              'phi%d_%s'      % ( i , self.name )  ,
+                              '#phi_{%d}(%s)' % ( i , self.name )  ,
+                              None , 0 ,  -1.75 * pi  , 1.75 * pi )
+            self.phis.append  ( phi_i ) 
+            self.phi_list.add ( phi_i )
+            
+        
     ## adjust PDF with some small positive portion to avoid bad regions...
     def adjust         ( self , value = 1.e-5 ) :
         """
@@ -577,6 +594,22 @@ class PDF2 (object) :
         self.m2           = yvar ## ditto 
         self._splots      = []
         
+    ## Create vector of phases (needed for various polynomial forms)
+    def makePhis    ( self , num ) :
+        """
+        Create vector of phases (needed for various polynomial forms)
+        """
+        self.phis     = []
+        self.phi_list = ROOT.RooArgList()
+        from math import pi 
+        for i in range( 1 , num + 1 ) :
+            phi_i = makeVar ( None ,
+                              'phi2%d_%s'      % ( i , self.name )  ,
+                              '#phi2_{%d}(%s)' % ( i , self.name )  ,
+                              None , 0 ,  -1.75 * pi  , 1.75 * pi )
+            self.phis.append  ( phi_i ) 
+            self.phi_list.add ( phi_i )    
+
     ## make the actual fit (and optionally draw it!)
     #  @code
     #  r,f = model.fitTo ( dataset )

@@ -118,8 +118,8 @@ __all__ = (
     'Amoroso_pdf'         , ## another view of generalized Gamma distribution
     'LogGammaDist_pdf'    , ## Gamma-distributuon in shape/scale parameterization
     'Log10GammaDist_pdf'  , ## Gamma-distributuon in shape/scale parameterization
-    'LogGamma_pdf'        ,  ## 
-    'BetaPrime_pdf'       ,  ## Beta-prime distribution 
+    'LogGamma_pdf'        , ## 
+    'BetaPrime_pdf'       , ## Beta-prime distribution 
     'Landau_pdf'          , ## Landau distribution 
     'Argus_pdf'           , ## Landau distribution 
     'SinhAsinh_pdf'       , ## "Sinh-asinh" distribution
@@ -127,6 +127,10 @@ __all__ = (
     ## 1D-background models
     # 
     'Bkg_pdf'              , ## Background: exponential modified by positive polynom
+    'PolyPos_pdf'          , ## Background: positive polynom
+    'Monothonic_pdf'       , ## Background: positive monothonic polynom
+    'Convex_pdf'           , ## Background: positive monothonic polynom with fixed sign second derivative
+    'Sigmoid_pdf'          , ## Background: sigmoid modulated by positive polynom 
     'PSPol_pdf'            , ## phase space modulated by positive polynomial
     'PS2_pdf'              , ## 2-body phase space (no parameters)
     'PSLeft_pdf'           , ## Low  edge of N-body phase space 
