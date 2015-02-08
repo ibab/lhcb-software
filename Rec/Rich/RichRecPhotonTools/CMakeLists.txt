@@ -22,3 +22,4 @@ if(GAUDI_BUILD_TESTS)
                        src/application/PhotonReco/*.cpp
                        INCLUDE_DIRS GSL src
                        LINK_LIBRARIES GSL GaudiKernel)
+endif()
