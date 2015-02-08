@@ -4,6 +4,10 @@
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
 
+! 2015-02-08 - Gerhard Raven
+ - ConfigArchiveAccessSvc (i.e. ConfigTarFileAccessSvc and ConfigZipFileAcessSvc): 
+   use old-style format, i.e. use 'str()' directly instead of operator<<
+
 ! 2015-01-17 - Gerhard Raven
  - fix query for IP address (lower 16 bits are stored in HltDecReport to
    determine which machine was used)

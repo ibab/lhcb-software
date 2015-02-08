@@ -463,7 +463,7 @@ ConfigCDBAccessSvc_details::CDB* ConfigCDBAccessSvc::file() const
             error() << " Failed to open " << m_name << " in mode " << m_mode
                     << endmsg;
             error() << string( strerror( errno ) ) << endmsg;
-            m_file.reset( 0 );
+            m_file.reset( nullptr );
         }
     }
     return m_file.get();
@@ -474,7 +474,7 @@ ConfigCDBAccessSvc_details::CDB* ConfigCDBAccessSvc::file() const
 //=============================================================================
 StatusCode ConfigCDBAccessSvc::finalize()
 {
-    m_file.reset( 0 ); // close file if still open
+    m_file.reset( nullptr ); // close file if still open
     return Service::finalize();
 }
 

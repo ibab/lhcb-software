@@ -100,7 +100,7 @@ bool ConfigArchiveAccessSvc::write( const string& path, const T& object ) const
         return false;
     }
     stringstream s;
-    s << object;
+    s << object.str(); // use the 'old fashioned' format when writing the 'old' archives (for backwards compatibility)...
     return file() && file()->append( path, s );
 }
 
