@@ -4,9 +4,6 @@
  *
  *  Implementation file for class : LHCb::RichRecPhoton
  *
- *  CVS Log :-
- *  $Id: RichRecPhoton.cpp,v 1.7 2008-06-14 10:39:46 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-05-10
  */
