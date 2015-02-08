@@ -119,11 +119,6 @@ std::string ConfigTreeNode::str() const {
 }
 
 std::ostream& ConfigTreeNode::print(std::ostream& os) const {
-    return os << str();
-}
-
-// for now, do not make this the default....
-std::ostream& ConfigTreeNode::print_json(std::ostream& os) const {
     // note: advantage of json (or xml): in case of hash collision, can add an optional extra field...
     // ...but that only works if the json representation is used to compute the digest!!!
     ptree top;

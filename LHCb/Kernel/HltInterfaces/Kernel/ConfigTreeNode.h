@@ -76,8 +76,8 @@ public:
     const std::string& label() const { return m_label; }
 
 private:
+    friend class ConfigArchiveAccessSvc; // provide access to 'str' to allow backwards compatible writes...
     std::string str() const;
-    std::ostream& print_json(std::ostream& os) const;
 
     NodeRefs    m_nodes;
     LeafRef     m_leaf;

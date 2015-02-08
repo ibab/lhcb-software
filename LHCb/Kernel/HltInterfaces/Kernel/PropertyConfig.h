@@ -77,8 +77,8 @@ public:
     digest_type digest() const { if (!m_digest.valid()) updateCache(); return m_digest; }
 
 private:
+    friend class ConfigArchiveAccessSvc; // provide access to 'str' to allow backwards compatible writes...
     std::string str() const;
-    std::ostream& print_json(std::ostream& os) const;
 
     Properties   m_properties;
     std::string  m_type,m_name,m_kind;

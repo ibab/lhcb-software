@@ -156,10 +156,6 @@ std::string PropertyConfig::str() const {
 }
 
 std::ostream& PropertyConfig::print(std::ostream& os) const {
-    return os << str();
-}
-
-std::ostream& PropertyConfig::print_json(std::ostream& os) const {
     // note: advantage of json (or xml): in case of hash collision, can add an optional extra field...
     // but that only works if the json representation is used to compute the digest -- which isn't the
     // case!!! (not impossible, but requires a very carefull, non-trivial re-persisting of the already 
