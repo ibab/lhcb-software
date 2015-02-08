@@ -4,14 +4,18 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2015-02-08 - Chris Jones
+ - Update RichHypoData to use std::array instead of boost::array.
+ - Fix a bug in RichHypoData::resetData( const TYPE & value ) that was 
+   incorrectly setting the valid flag to true instead of false.
+
 ! 2015-02-06 - Chris Jones
- - Add new new test application to profile different log(exp(x)-1) implementations.
  - Update the default tool mappings in the tool registry to use new 
    implementations of the mirror finder and ray tracing.
  - Add RichKernel/FastRoots.h that contains various methods for the fast
    calculation of square and cube roots.
  - Various small CPU optimisations.
- - make the default 'SignalDetEffType' and 'CkResType' tools types in
+ - Make the default 'SignalDetEffType' and 'CkResType' tools types in
    Configuration.py for the HLT the same as for Offline.
 
 !========================= RichKernel v7r57 2015-01-14 =========================

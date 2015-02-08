@@ -54,6 +54,6 @@ macro_append RichKernelGenConfUser_dependencies RichKernelConfDbMerge
 # Have to look in local RichKernelConf.py, install_python has to come later 
 path_prepend PYTHONPATH ${RICHKERNELROOT}/genConf
 # Vc library
-macro_append ROOT_linkopts  " -lVc "
+#macro_append ROOT_linkopts  " -lVc "
 end_private
 apply_pattern install_python_modules

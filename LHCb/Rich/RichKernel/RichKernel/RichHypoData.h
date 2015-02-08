@@ -21,7 +21,7 @@
 
 // RichKernel
 #include "Kernel/MemPoolAlloc.h"
-#include "RichKernel/BoostArray.h"
+#include "RichKernel/StlArray.h"
 
 namespace Rich
 {
@@ -44,16 +44,13 @@ namespace Rich
   public: // definitions
 
     /// Definition of internal data array type
-    typedef boost::array<TYPE,Rich::NParticleTypes> DataArray;
-
+    typedef std::array<TYPE,Rich::NParticleTypes> DataArray;
     /// Definition of internal validity array type
-    typedef boost::array<bool,Rich::NParticleTypes> ValidityArray;
+    typedef std::array<bool,Rich::NParticleTypes> ValidityArray;
 
   public: // constructors and destructors
 
     /** Default Constructor
-     *  @attention The data values are un-initialised using this constructor
-     *             although the validty flags are set to false.
      */
     HypoData() { resetData(); }
 
@@ -169,8 +166,8 @@ namespace Rich
   template <class TYPE>
   inline void HypoData<TYPE>::resetData( const TYPE & value )
   {
-    m_valid.assign ( true  );
-    m_data.assign  ( value );
+    m_valid.fill ( false );
+    m_data.fill  ( value );
   }
 
   template <class TYPE>
@@ -184,8 +181,8 @@ namespace Rich
   template <class TYPE>
   inline void HypoData<TYPE>::resetData()
   {
-    m_valid.assign ( false );
-    m_data.assign  ( 0     );
+    m_valid.fill ( false );
+    m_data.fill  ( 0     );
   }
 
   template <class TYPE>

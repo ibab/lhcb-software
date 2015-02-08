@@ -14,7 +14,7 @@ find_package(AIDA)
 find_package(Boost)
 find_package(VDT)
 
-find_package(ROOT COMPONENTS Vc)
+#find_package(ROOT COMPONENTS Vc)
 
 gaudi_add_library(RichKernelLib
                   src/lib/*.cpp
@@ -34,13 +34,12 @@ gaudi_add_dictionary(RichKernel
                      LINK_LIBRARIES Boost DAQEventLib GaudiAlgLib GaudiUtilsLib LHCbKernel RichKernelLib
                      OPTIONS "-U__MINGW32__")
 
-if(GAUDI_BUILD_TESTS)
-  gaudi_add_executable(RichTestSigFunc   
-                       src/tests/TestSigFunc.cpp
-                       INCLUDE_DIRS Boost VDT Vc
-                       LINK_LIBRARIES Boost VDT Vc RichKernelLib)
-endif()
-
+#if(GAUDI_BUILD_TESTS)
+#  gaudi_add_executable(RichTestSigFunc   
+#                       src/tests/TestSigFunc.cpp
+#                       INCLUDE_DIRS Boost VDT Vc
+#                       LINK_LIBRARIES Boost VDT Vc RichKernelLib)
+#endif()
 
 gaudi_install_python_modules()
 
