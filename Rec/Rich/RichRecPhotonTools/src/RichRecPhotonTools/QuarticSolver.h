@@ -154,57 +154,65 @@ namespace Rich
                               const TYPE radius,
                               Gaudi::XYZPoint& sphReflPoint ) const
       {
+        bool OK = true;
 
         // vector from mirror centre of curvature to assumed emission point
         Gaudi::XYZVector evec = emissionPoint - CoC;
         const TYPE e2 = evec.Mag2();
-        //if ( e2 < 1e-99 ) { return false; }
 
         // vector from mirror centre of curvature to virtual detection point
         const Gaudi::XYZVector dvec = virtDetPoint - CoC;
         const TYPE d2 = dvec.Mag2();
-        // if ( d2 < 1e-99 ) { return false; }
 
-        // various quantities needed to create quartic equation
-        // see LHCB/98-040 section 3, equation 3
-        const TYPE e        = std::sqrt(e2);
-        const TYPE d        = std::sqrt(d2);
-        const TYPE cosgamma = evec.Dot(dvec) / (e*d);
-        const TYPE singamma = std::sqrt( 1.0 - cosgamma*cosgamma );
-        const TYPE dx       = d * cosgamma;
-        const TYPE dy       = d * singamma;
-        const TYPE r2       = radius * radius;
-        const TYPE edx      = e + dx;
+        if ( UNLIKELY( (e2 < 1e-99) || (d2 < 1e-99) ) ) 
+        {
+          OK = false;
+        }
+        else
+        {
 
-        // Fill array for quartic equation
-        const TYPE a0 =     4 * e2 * d2;
-        const TYPE a1 = - ( 4 * e2 * dy * radius ) / a0;
-        const TYPE a2 =   ( (dy * dy * r2) + ( edx * edx * r2 ) - a0 ) / a0;
-        const TYPE a3 =   ( 2 * e * dy * (e-dx) * radius ) / a0;
-        const TYPE a4 =   ( ( e2 - r2 ) * dy * dy ) / a0;
-
-        // use simplified RICH version of quartic solver
-        const TYPE sinbeta = solve_quartic_RICH<TYPE>( a1, // a
-                                                       a2, // b
-                                                       a3, // c
-                                                       a4  // d
-                                                       );
-
-        // normal vector to reflection plane
-        const Gaudi::XYZVector nvec2 = evec.Cross(dvec);
-
-        // create rotation
-        const Gaudi::Rotation3D rotn( Gaudi::AxisAngle( nvec2, // normal vector to reflection plane
-                                                        vdt::fast_asin(sinbeta) // rotation angle
-                                                        ) );
-
-        // Set vector mag to radius
-        evec *= ( radius / e );
-
-        // rotate vector and update reflection point
-        sphReflPoint = CoC + rotn*evec;
-
-        return true;
+          // various quantities needed to create quartic equation
+          // see LHCB/98-040 section 3, equation 3
+          const TYPE e        = std::sqrt(e2);
+          const TYPE d        = std::sqrt(d2);
+          const TYPE cosgamma = evec.Dot(dvec) / (e*d);
+          const TYPE singamma = std::sqrt( 1.0 - cosgamma*cosgamma );
+          const TYPE dx       = d * cosgamma;
+          const TYPE dy       = d * singamma;
+          const TYPE r2       = radius * radius;
+          const TYPE edx      = e + dx;
+          
+          // Fill array for quartic equation
+          const TYPE a0 =     4 * e2 * d2;
+          const TYPE a1 = - ( 4 * e2 * dy * radius ) / a0;
+          const TYPE a2 =   ( (dy * dy * r2) + ( edx * edx * r2 ) - a0 ) / a0;
+          const TYPE a3 =   ( 2 * e * dy * (e-dx) * radius ) / a0;
+          const TYPE a4 =   ( ( e2 - r2 ) * dy * dy ) / a0;
+          
+          // use simplified RICH version of quartic solver
+          const TYPE sinbeta = solve_quartic_RICH<TYPE>( a1, // a
+                                                         a2, // b
+                                                         a3, // c
+                                                         a4  // d
+                                                         );
+          
+          // normal vector to reflection plane
+          const Gaudi::XYZVector nvec2 = evec.Cross(dvec);
+          
+          // create rotation
+          const Gaudi::Rotation3D rotn( Gaudi::AxisAngle( nvec2, // normal vector to reflection plane
+                                                          vdt::fast_asin(sinbeta) // rotation angle
+                                                          ) );
+          
+          // Set vector mag to radius
+          evec *= ( radius / e );
+          
+          // rotate vector and update reflection point
+          sphReflPoint = CoC + rotn*evec;
+          
+        }
+        
+        return OK;
       }
 
       /// -----------------------------------------------------------------------
@@ -217,71 +225,80 @@ namespace Rich
                                const TYPE radius,
                                Gaudi::XYZPoint& sphReflPoint ) const
       {
-
         using namespace Rich::Maths::FastRoots;
 
         typedef Eigen::Matrix< TYPE , 3 , 1 > Eigen3Vector;
         typedef Eigen::Matrix< TYPE , 4 , 1 > Eigen4Vector;
+
+        bool OK = true;
 
         // vector from mirror centre of curvature to assumed emission point
         const Eigen4Vector evec( emissionPoint.x() - CoC.x(),
                                  emissionPoint.y() - CoC.y(),
                                  emissionPoint.z() - CoC.z(), 0 );
         const auto e2 = evec.dot(evec);
-        //if ( e2 < 1e-99 ) { return false; }
 
         // vector from mirror centre of curvature to virtual detection point
         const Eigen4Vector dvec( virtDetPoint.x() - CoC.x(),
                                  virtDetPoint.y() - CoC.y(),
                                  virtDetPoint.z() - CoC.z(), 0 );
         const auto d2 = dvec.dot(dvec);
-        //if ( d2 < 1e-99 ) { return false; }
 
-        // various quantities needed to create quartic equation
-        // see LHCB/98-040 section 3, equation 3
-        const auto e        = std::sqrt(e2);
-        const auto d        = std::sqrt(d2);
-        const auto cosgamma = evec.dot(dvec) / (e*d);
-        const auto singamma = std::sqrt( 1.0 - cosgamma*cosgamma );
-        const auto dx       = d * cosgamma;
-        const auto edx      = e + dx;
-        const auto dy       = d * singamma;
-        const auto dy2      = dy * dy;
-        const auto r2       = radius * radius;
+        if ( UNLIKELY( (e2 < 1e-99) || (d2 < 1e-99) ) ) 
+        {
+          OK = false;
+        }
+        else
+        {
 
-        // Fill array for quartic equation
-        const auto a0 =     4 * e2 * d2;
-        const auto a1 = - ( 4 * e2 * dy * radius ) / a0;
-        const auto a2 =   ( (dy2 * r2) + ( edx * edx * r2 ) - a0 ) / a0;
-        const auto a3 =   ( 2 * e * dy * (e-dx) * radius ) / a0;
-        const auto a4 =   ( ( e2 - r2 ) * dy2 ) / a0;
+          // various quantities needed to create quartic equation
+          // see LHCB/98-040 section 3, equation 3
+          const auto e        = std::sqrt(e2);
+          const auto d        = std::sqrt(d2);
+          const auto cosgamma = evec.dot(dvec) / (e*d);
+          const auto singamma = std::sqrt( 1.0 - cosgamma*cosgamma );
+          const auto dx       = d * cosgamma;
+          const auto edx      = e + dx;
+          const auto dy       = d * singamma;
+          const auto dy2      = dy * dy;
+          const auto r2       = radius * radius;
+          
+          // Fill array for quartic equation
+          const auto a0     =     4.0f * e2 * d2; 
+          const auto inv_a0 =   ( 1.0f / a0 );
+          const auto a1     = - ( 4.0f * e2 * dy * radius ) * inv_a0;
+          const auto a2     =   ( (dy2 * r2) + ( edx * edx * r2 ) - a0 ) * inv_a0;
+          const auto a3     =   ( 2.0f * e * dy * (e-dx) * radius ) * inv_a0;
+          const auto a4     =   ( ( e2 - r2 ) * dy2 ) * inv_a0;
+          
+          // use simplified RICH version of quartic solver
+          const auto sinbeta = solve_quartic_RICH<TYPE>( a1, // a
+                                                         a2, // b
+                                                         a3, // c
+                                                         a4  // d
+                                                         );
+          
+          // (normalised) normal vector to reflection plane
+          auto n = evec.cross3(dvec);
+          
+          //n /= std::sqrt( n.dot(n) );
+          n *= vdt::fast_isqrtf( n.dot(n) );
+          
+          // construct rotation transformation
+          // Set vector magnitude to radius
+          // rotate vector and update reflection point
+          const Eigen::AngleAxis<TYPE> angleaxis( vdt::fast_asinf(sinbeta), 
+                                                  Eigen3Vector(n[0],n[1],n[2]) );
+          sphReflPoint = CoC +
+            Gaudi::XYZVector( angleaxis * 
+                              Eigen3Vector(evec[0],evec[1],evec[2]) * 
+                              ( radius / e ) );
+          
+        }
 
-        // use simplified RICH version of quartic solver
-        const auto sinbeta = solve_quartic_RICH<TYPE>( a1, // a
-                                                       a2, // b
-                                                       a3, // c
-                                                       a4  // d
-                                                       );
-
-        // (normalised) normal vector to reflection plane
-        auto n = evec.cross3(dvec);
-
-        //n /= std::sqrt( n.dot(n) );
-        n *= vdt::fast_isqrtf( n.dot(n) );
-
-        // construct rotation transformation
-        // Set vector magnitude to radius
-        // rotate vector and update reflection point
-        const Eigen::AngleAxis<TYPE> angleaxis( vdt::fast_asinf(sinbeta), 
-                                                Eigen3Vector(n[0],n[1],n[2]) );
-        sphReflPoint = CoC +
-          Gaudi::XYZVector( angleaxis * 
-                            Eigen3Vector(evec[0],evec[1],evec[2]) * 
-                            ( radius / e ) );
-
-        return true;
+        return OK;
       }
-
+      
     };
     
   }

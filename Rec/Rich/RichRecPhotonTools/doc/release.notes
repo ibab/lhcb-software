@@ -4,6 +4,10 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-02-08 - Chris Jones
+ - Add some missing FPE protection in QuarticSolver.h
+ - Replace some divisions by multiplications in QuarticSolver.h
+
 ! 2015-02-06 - Chris Jones
  - Add a new test application to allow easy profiling of various implementations
    of Quartic reconstruction of photon angles.
