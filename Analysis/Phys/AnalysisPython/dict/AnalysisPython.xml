@@ -49,6 +49,9 @@
   <class name = "Analysis::Models::Bugg23L"           />
   <class name = "Analysis::Models::BW23L"             />
   <class name = "Analysis::Models::PolyPositive"      />
+  <class name = "Analysis::Models::PolyMonothonic"    />
+  <class name = "Analysis::Models::PolyConvex"        />
+  <class name = "Analysis::Models::PolySigmoid"       />
   <class name = "Analysis::Models::ExpoPositive"      />
   <class name = "Analysis::Models::PositiveSpline"    />
   <class name = "Analysis::Models::IncreasingSpline"  />

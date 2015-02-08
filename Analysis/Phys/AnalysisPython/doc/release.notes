@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2015-02-08 - Vanya Belyaev
+ - add convex and monothonical polynomials 
+
 !========================= AnalysisPython v2r34 2014-12-15 =========================
 
 ! 2014-12-15 - Vanya Belyaev

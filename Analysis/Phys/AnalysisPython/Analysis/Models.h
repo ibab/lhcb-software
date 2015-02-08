@@ -2526,6 +2526,151 @@ namespace Analysis
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class PolyMonothonic
+     *  positive monothonic  polynomial
+     *  @see Gaudi::Math::Monothonic
+     *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
+     *  @date 2015-02-07
+     */
+    class GAUDI_API PolyMonothonic: public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::PolyMonothonic, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// general 
+      PolyMonothonic
+        ( const char*          name       , 
+          const char*          title      ,
+          RooAbsReal&          x          ,
+          const RooArgList&    coeffs     ,
+          const double         xmin       , 
+          const double         xmax       ,
+          const bool           increasing ) ;
+      /// copy
+      PolyMonothonic
+        ( const PolyMonothonic&     right     , 
+          const char*          name = 0  ) ;
+      /// destructor 
+      virtual ~PolyMonothonic() ;
+      /// clone 
+      virtual  PolyMonothonic* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+      ( RooArgSet&     allVars      , 
+        RooArgSet&     analVars     ,
+        const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+      ( Int_t          code         ,  
+        const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::Monothonic& function() const { return m_monothonic ; }
+      // ======================================================================
+    protected :
+      // ======================================================================
+      RooRealProxy m_x    ;
+      RooListProxy m_phis ;
+      // ======================================================================
+      TIterator* m_iterator;  //! do not persist
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::Monothonic m_monothonic ;            // the function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class PolyConvex
+     *  Positive polynomial with fixes sign first and second derivatives 
+     *  @see Gaudi::Math::Convex
+     *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
+     *  @date 2015-02-07
+     */
+    class GAUDI_API PolyConvex: public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::PolyConvex, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// general 
+      PolyConvex
+        ( const char*          name       , 
+          const char*          title      ,
+          RooAbsReal&          x          ,
+          const RooArgList&    coeffs     ,
+          const double         xmin       , 
+          const double         xmax       ,
+          const bool           increasing ,
+          const bool           convex     ) ;
+      /// copy
+      PolyConvex
+        ( const PolyConvex&    right     , 
+          const char*          name = 0  ) ;
+      /// destructor 
+      virtual ~PolyConvex () ;
+      /// clone 
+      virtual  PolyConvex* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+      ( RooArgSet&     allVars      , 
+        RooArgSet&     analVars     ,
+        const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+      ( Int_t          code         ,  
+        const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::Convex& function() const { return m_convex ; }
+      // ======================================================================
+    protected :
+      // ======================================================================
+      RooRealProxy m_x    ;
+      RooListProxy m_phis ;
+      // ======================================================================
+      TIterator* m_iterator;  //! do not persist
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::Convex m_convex ;                    // the function 
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class ExpoPositive
      *  exponential multiplied on positive polynomial
      *  @see Gaudi::Math::Positive
@@ -2591,6 +2736,83 @@ namespace Analysis
       // ======================================================================
       /// the actual function 
       mutable Gaudi::Math::ExpoPositive m_positive ;           // the function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Sigmoid
+     *  The product of sigmoid function and positive polynomial 
+     *  @see Gaudi::Math::Sigmoid
+     *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
+     *  @date 2015-02-07
+     */
+    class GAUDI_API PolySigmoid: public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::PolySigmoid, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// general 
+      PolySigmoid
+        ( const char*          name       , 
+          const char*          title      ,
+          RooAbsReal&          x          ,
+          const RooArgList&    coeffs     ,
+          const double         xmin       , 
+          const double         xmax       ,
+          RooAbsReal&          alpha      , 
+          RooAbsReal&          x0         ) ;
+      /// copy
+      PolySigmoid
+        ( const PolySigmoid&   right     , 
+          const char*          name = 0  ) ;
+      /// destructor 
+      virtual ~PolySigmoid() ;
+      /// clone 
+      virtual  PolySigmoid* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+      ( RooArgSet&     allVars      , 
+        RooArgSet&     analVars     ,
+        const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+      ( Int_t          code         ,  
+        const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::Sigmoid& sigmoid () const { return m_sigmoid    ; }
+      /// access to underlying function 
+      const Gaudi::Math::Sigmoid& function() const { return   sigmoid () ; }
+      // ======================================================================
+    protected :
+      // ======================================================================
+      RooRealProxy m_x     ;
+      RooListProxy m_phis  ;
+      RooRealProxy m_alpha ;
+      RooRealProxy m_x0    ;
+      // ======================================================================
+      TIterator* m_iterator;  //! do not persist
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::Sigmoid m_sigmoid ;                 // the function 
       // ======================================================================
     } ;
     // ========================================================================
