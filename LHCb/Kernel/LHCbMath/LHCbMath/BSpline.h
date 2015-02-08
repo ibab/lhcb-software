@@ -128,6 +128,36 @@ namespace Gaudi
       /// get derivative as function object 
       BSpline derivative          () const ;
       // ======================================================================
+    public:
+      // ======================================================================
+      /// get minimal value of the function on (xmin,xmax) interval 
+      double fun_min       () const ;
+      /// get maximal value of the function on (xmin,xmax) interval 
+      double fun_max       () const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// positive      function ?
+      bool   positive      () const ;
+      /// negative      function ?
+      bool   negative      () const ; 
+      /// non-positive  function ?
+      bool   nonpositive   () const ; 
+      /// non-negative  function ?
+      bool   nonnegative   () const ; 
+      ///  has roots at [xmin,xmax] ? 
+      bool   hasroots      () const { return   !positive () &&   !negative () ; }
+      ///  keep sign at [xmin,xmax] ? 
+      bool   keepsign      () const { return nonpositive () || nonnegative () ; }
+      /// is it a decreasing function?
+      bool   decreasing    () const ;
+      /// is it a increasing function?
+      bool   increasing    () const ;
+      /// is it a monothonical function?
+      bool   monothonic    () const { return increasing() || decreasing() ; }
+      /// is it a constant function?
+      bool   constant      () const ;
+      // ======================================================================
     public: // B-splines 
       // ======================================================================
       /// get the value of the B-spline  i at point x 
@@ -152,10 +182,15 @@ namespace Gaudi
       double ispline ( const          short i ,
                        const unsigned short k , const double x )  const ;
       // ======================================================================
+    public:
+      // ======================================================================
+      /// get the underlying spline 
+      const Gaudi::Math::BSpline& bspline () const { return *this ; }
+      // ======================================================================
     private:
       // ======================================================================
       /// the list of knots 
-      std::vector<double>  m_knots   ;              // the list of knots 
+      std::vector<double>  m_knots  ;              // the list of knots 
       /// the list of parameters
       std::vector<double>  m_pars   ;              // the list of parameters
       /// order of polynomial 
@@ -256,6 +291,13 @@ namespace Gaudi
       const std::vector<double>& knots () const { return m_bspline.knots() ; }
       /// the spline order 
       unsigned short             order () const { return m_bspline.order() ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get minimal value of the function on (xmin,xmax) interval 
+      double fun_min       () const { return m_bspline.fun_min () ; }
+      /// get maximal value of the function on (xmin,xmax) interval 
+      double fun_max       () const { return m_bspline.fun_max () ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -373,6 +415,13 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
+      /// get minimal value of the function on (xmin,xmax) interval 
+      double fun_min       () const { return m_bspline.fun_min () ; }
+      /// get maximal value of the function on (xmin,xmax) interval 
+      double fun_max       () const { return m_bspline.fun_max () ; }
+      // ======================================================================
+    public:
+      // ======================================================================
       /// get the parameter sphere 
       const Gaudi::Math::NSphere& sphere  () const { return m_sphere  ; }
       /// get the underlying spline 
@@ -484,6 +533,13 @@ namespace Gaudi
       const std::vector<double>& knots () const { return m_bspline.knots() ; }
       /// the spline order 
       unsigned short             order () const { return m_bspline.order() ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get minimal value of the function on (xmin,xmax) interval 
+      double fun_min       () const { return m_bspline.fun_min () ; }
+      /// get maximal value of the function on (xmin,xmax) interval 
+      double fun_max       () const { return m_bspline.fun_max () ; }
       // ======================================================================
     public:
       // ======================================================================

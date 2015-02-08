@@ -73,13 +73,15 @@
   <class name    = "Gaudi::Math::WorkSpace"        >
     <field name  = "m_workspace" transient = "true"/>      
   </class>
-  <class name    = "Gaudi::Math::Positive"         />
   <class name    = "Gaudi::Math::Bernstein"        />
+  <class name    = "Gaudi::Math::Positive"         />
+  <class name    = "Gaudi::Math::Monothonic"       />
   <class name    = "Gaudi::Math::Bernstein::Basic" />
   <class name    = "Gaudi::Math::Positive2D"       />
   <class name    = "Gaudi::Math::Bernstein2D"      />
   <class name    = "Gaudi::Math::Positive2DSym"    />
   <class name    = "Gaudi::Math::Bernstein2DSym"   />
+  <class name    = "Gaudi::Math::Sigmoid"          />
   <class name    = "Gaudi::Math::PS2DPol"          />
   <class name    = "Gaudi::Math::PS2DPolSym"       />
   <class name    = "Gaudi::Math::ExpoPS2DPol"      />

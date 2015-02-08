@@ -347,7 +347,82 @@ Gaudi::Math::BSpline::BSpline
   m_knots_i.back  () = m_xmax ;
 }
 // ============================================================================
-
+// get minimal value of the function on (xmin,xmax) interval 
+// ============================================================================
+double Gaudi::Math::BSpline::fun_min       () const 
+{ return *std::min_element( m_pars.begin() , m_pars.end() ) ; }
+// ============================================================================
+// get maximal value of the function on (xmin,xmax) interval 
+// ============================================================================
+double Gaudi::Math::BSpline::fun_max       () const 
+{ return *std::max_element( m_pars.begin() , m_pars.end() ) ; }
+// ============================================================================
+// positive      function ?
+// ============================================================================
+bool Gaudi::Math::BSpline::positive      () const 
+{ 
+  const double v = fun_min () ;
+  return  0 < v && !s_zero ( v ) ; 
+}
+// ============================================================================
+// negative      function ?
+// ============================================================================
+bool Gaudi::Math::BSpline::negative      () const 
+{ 
+  const double v = fun_max () ;
+  return  0 > v && !s_zero ( v ) ; 
+}
+// ============================================================================
+// non-positive      function ?
+// ============================================================================
+bool Gaudi::Math::BSpline::nonpositive   () const 
+{ 
+  const double v = fun_max () ;
+  return  0 >= v || s_zero ( v ) ; 
+}
+// ============================================================================
+// non-negative      function ?
+// ============================================================================
+bool Gaudi::Math::BSpline::nonnegative   () const 
+{ 
+  const double v = fun_min () ;
+  return  0 <= v || s_zero ( v ) ; 
+}
+// ============================================================================
+// is it a increasing function?
+// ============================================================================
+bool Gaudi::Math::BSpline::increasing   () const 
+{
+  if ( m_pars.size() <= 1 ) { return true ; }
+  for ( std::vector<double>::const_iterator it = m_pars.begin() + 1 ; 
+        m_pars.end() != it ; ++it ) 
+  { if (  (*(it-1)) > (*it) && !s_equal ( *(it-1) , *it ) ) { return false ; } }
+  return true ;
+}
+// ============================================================================
+// is it a decreasing function?
+// ============================================================================
+bool Gaudi::Math::BSpline::decreasing   () const 
+{
+  if ( m_pars.size() <= 1 ) { return true ; }
+  for ( std::vector<double>::const_iterator it = m_pars.begin() + 1 ; 
+        m_pars.end() != it ; ++it ) 
+  { if (  (*(it-1)) < (*it) && !s_equal ( *(it-1) , *it ) ) { return false ; } }
+  return true ;
+}
+// ============================================================================
+// is it a constant function?
+// ============================================================================
+bool Gaudi::Math::BSpline::constant () const 
+{
+  //
+  if ( m_pars.size() <= 1 ) { return true ; }
+  for ( std::vector<double>::const_iterator it = m_pars.begin() + 1 ; 
+        m_pars.end() != it ; ++it ) 
+  { if ( !s_equal ( *(it-1) ,  *it ) ) { return false ; } }
+  //
+  return true ;
+}
 // ============================================================================
 // set k-parameter
 // ============================================================================

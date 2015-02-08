@@ -32,6 +32,7 @@
 #include "LHCbMath/NSphere.h"
 #include "LHCbMath/WStatEntity.h"
 #include "LHCbMath/BSpline.h"
+#include "LHCbMath/Bernstein.h"
 // ============================================================================
 /** @file LHCbMathDict.h
  *
