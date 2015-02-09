@@ -8,10 +8,13 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-02-09 - Roel Aaij
+ - Further development on new template.
+
 ! 2015-02-05 - Roel Aaij
  - Remove first set of obsolete lines.
  - Added first set of lines for new template. Lines were taken from
-   Hlt2InclusiveDiMuonLines.py
+   Hlt2InclusiveDiMuonLines
 
 ! 2015-01-28 - Michael Kolpin
  - Added Hlt2TrackingEfficiencyLines, moved all track. eff. lines there

@@ -1,39 +1,49 @@
-class Hlt2Filter(object):
-    def __init__(self, prefix, name, code, inputs, **kwargs):
+from copy import deepcopy
+from Hlt2Stage import Hlt2Stage
+class Hlt2ParticleFilter(Hlt2Stage):
+    def __init__(self, prefix, name, code, inputs, dependencies = [], **kwargs):
         self.__prefix = prefix
-        self.__name = name
         self.__code = code
-        self.__inputs = inputs
         self.__kwargs = kwargs
 
-    def name(self):
-        return self.__name
-        
-    def inputs(self):
-        return self.__inputs
+        Hlt2Stage.__init__(self, name, inputs, dependencies)
 
-    def inputStages(self, cuts):
-        return [i.stage(cuts) if hasattr(i, 'stage') else i for i in self.inputs()]
-    
-    def stages(self, cuts):
-        def __flatten(l):
-            import collections
-            for i in l:
-                if isinstance(i, Hlt2Filter):
-                    for j in __flatten(i.inputs()): yield j
-                    yield i
-                else:
-                    yield i
-        inputs = tuple(__flatten(self.__inputs))
-        if self in inputs:
-            print 'WARNING: Circular dependency %s %s.' % (self.__name, self.__inputs)
-        return tuple(i.stage(cuts) if hasattr(i, 'stage') else i for i in inputs) + (self.stage(cuts),)
-                     
+    def clone(self, name, prefix = None, code = None, inputs = None,
+              dependencies = None, **kwargs):
+        args = deepcopy(self.__kwargs)
+        args.update(kwargs)
+        deps = dependencies
+        return Hlt2ParticleFilter(prefix if prefix else self.__prefix, name,
+                                 code   if code   else self.__code,
+                                 inputs if inputs else self._inputs(),
+                                 deps   if deps   else self._deps(),
+                                 **args)
+                                 
     def stage(self, cuts):
         from HltLine.HltLine import Hlt2Member
         from Configurables import FilterDesktop
-        return Hlt2Member(FilterDesktop, self.__name + 'Filter', 
-                          Code = self.__code % cuts[self.__name],
-                          UseP2PVRelations = False,
+        return Hlt2Member(FilterDesktop, self.__prefix + self._name() + 'Filter', 
+                          Code = self.__code % cuts.get(self._name(), cuts['Common']),
                           Inputs = self.inputStages(cuts), **(self.__kwargs))
 
+class Hlt2VoidFilter(Hlt2Stage):
+    def __init__(self, prefix, name, code, inputs, dependencies = [], **kwargs):
+        self.__prefix = prefix
+        self.__code = code
+        self.__kwargs = kwargs
+        Hlt2Stage.__init__(self, name, inputs, dependencies)
+
+    def clone(self, name, prefix = None, code = None, inputs = None,
+              dependencies = []):
+        deps = dependencies
+        return Hlt2VoidFilter(prefix if prefix else self.__prefix, name,
+                              code   if code   else self.__code,
+                              inputs if inputs else self._inputs(),
+                              deps   if deps   else self._deps())
+                                 
+    def stage(self, cuts):
+        from HltLine.HltLine import bindMembers
+        from Configurables import LoKi__VoidFilter as VoidFilter
+        vfilter = VoidFilter('Hlt2' + self.__prefix + self._name() + 'VoidFilter',
+                             Code = self.__code % cuts.get(self._name(), cuts['Common']))
+        return bindMembers(None, self.dependencies(cuts) + self.inputStages(cuts) + [vfilter])
