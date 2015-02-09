@@ -529,16 +529,36 @@ double Gaudi::Math::BSpline::operator () ( const double x ) const
   //
 }
 // ============================================================================
+namespace 
+{
+  // ==========================================================================
+  inline double   
+  _spline_integral_ 
+  ( const std::vector<double>& pars  , 
+    const std::vector<double>& knots ,
+    const unsigned short       order ) 
+  {
+    double             result = 0 ;
+    for ( unsigned short i = 0 ; i < pars.size() ; ++i ) 
+    { result +=  pars[i] * ( knots[ i + order + 1 ] - knots [ i ] ) ; }
+    //
+    return result / ( order + 1 ) ;
+  }
+  // ==========================================================================
+}
+// ============================================================================
 // get the integral between xmin and xmax
 // ============================================================================
 double Gaudi::Math::BSpline::integral () const
 {
   //
-  double             result = 0 ;
-  for ( unsigned short i = 0 ; i < m_pars.size() ; ++i ) 
-  { result +=  m_pars[i] * ( m_knots[ i + m_order + 1 ] - m_knots [ i ] ) ; }
+  return _spline_integral_ ( m_pars , m_knots , m_order ) ;
   //
-  return result / ( m_order + 1 ) ;
+  // double             result = 0 ;
+  // for ( unsigned short i = 0 ; i < m_pars.size() ; ++i ) 
+  // { result +=  m_pars[i] * ( m_knots[ i + m_order + 1 ] - m_knots [ i ] ) ; }
+  //
+  // return result / ( m_order + 1 ) ;
 }
 // ============================================================================
 // get the integral between low and high 
@@ -722,6 +742,17 @@ Gaudi::Math::PositiveSpline::PositiveSpline
   updateCoefficients() ;
 }
 // ============================================================================
+// cpoy constructor 
+// ============================================================================
+Gaudi::Math::PositiveSpline::PositiveSpline 
+( const Gaudi::Math::PositiveSpline& right )  
+  : std::unary_function<double,double> ( right )
+  , m_bspline ( right.m_bspline ) 
+  , m_sphere  ( right.m_sphere  ) 
+{}
+// ============================================================================
+Gaudi::Math::PositiveSpline::~PositiveSpline(){}
+// ============================================================================
 // update coefficients  
 // ============================================================================
 bool Gaudi::Math::PositiveSpline::updateCoefficients  () 
@@ -751,6 +782,129 @@ bool Gaudi::Math::PositiveSpline::setPar
   if ( !update ) { return false ; }   // no actual change 
   //
   return updateCoefficients () ;
+}
+// ============================================================================
+// ============================================================================
+// MONOTONIC SPLINE 
+// ============================================================================
+// ============================================================================
+/* constructor from the list of knots and the order 
+ *  vector of parameters will be calculated automatically 
+ *  @param points non-empty vector of poinst/knots 
+ *  @param order  the order of splines 
+ *  - vector of points is not requires to be ordered 
+ *  - duplicated knots will be ignored
+ *  - min/max value will be used as interval boundaries 
+ */
+// ============================================================================
+Gaudi::Math::MonothonicSpline::MonothonicSpline
+( const std::vector<double>& points      ,
+  const unsigned short       order       , 
+  const bool                 increasing  )
+  : Gaudi::Math::PositiveSpline ( points , order ) 
+  , m_increasing                ( increasing ) 
+{
+  updateCoefficients () ;
+}
+// ============================================================================
+/*  Constructor from the list of knots and list of parameters 
+ *  The spline order will be calculated automatically 
+ *  @param points non-empty vector of poinst/knots 
+ *  @param pars   non-empty vector of parameters 
+ *  - vector of points is not requires to be ordered 
+ *  - duplicated knots will be ignored
+ *  - min/max value will be used as interval boundaries 
+ */
+// ============================================================================
+Gaudi::Math::MonothonicSpline::MonothonicSpline
+( const std::vector<double>& points     ,
+  const std::vector<double>& pars       ,
+  const bool                 increasing ) 
+  : Gaudi::Math::PositiveSpline ( points , pars ) 
+  , m_increasing                ( increasing    ) 
+{
+  updateCoefficients () ;
+}
+// ============================================================================
+/*  Constructor for uniform binning 
+ *  @param xmin   low  edge of spline interval 
+ *  @param xmax   high edge of spline interval 
+ *  @param inner  number of inner points in   (xmin,xmax) interval
+ *  @param order  the degree of splline 
+ */
+// ============================================================================
+Gaudi::Math::MonothonicSpline::MonothonicSpline
+( const double         xmin       ,  
+  const double         xmax       , 
+  const unsigned short inner      ,   // number of inner points 
+  const unsigned short order      , 
+  const bool           increasing ) 
+  : Gaudi::Math::PositiveSpline ( xmin , xmax  , inner ,order ) 
+  , m_increasing                ( increasing    ) 
+{
+  updateCoefficients () ;
+}
+// ============================================================================
+// constructor from the basic spline 
+// ============================================================================
+Gaudi::Math::MonothonicSpline::MonothonicSpline
+( const Gaudi::Math::PositiveSpline& spline     , 
+  const bool                         increasing ) 
+  : Gaudi::Math::PositiveSpline ( spline        ) 
+  , m_increasing                ( increasing    ) 
+{
+  updateCoefficients () ;
+}
+// ============================================================================
+// constructor from the basic spline 
+// ============================================================================
+Gaudi::Math::MonothonicSpline::MonothonicSpline
+( const Gaudi::Math::BSpline&        spline     , 
+  const bool                         increasing ) 
+  : Gaudi::Math::PositiveSpline ( spline        ) 
+  , m_increasing                ( increasing    ) 
+{
+  updateCoefficients () ;
+}
+// ============================================================================
+// copy constructor from the basic spline 
+// ============================================================================
+Gaudi::Math::MonothonicSpline::MonothonicSpline
+( const Gaudi::Math::MonothonicSpline& right ) 
+  : Gaudi::Math::PositiveSpline ( right              ) 
+  , m_increasing                ( right.m_increasing ) 
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+Gaudi::Math::MonothonicSpline::~MonothonicSpline(){}
+// ============================================================================
+// update coefficients  
+// ============================================================================
+bool Gaudi::Math::MonothonicSpline::updateCoefficients  () 
+{
+  //
+  bool   update = false ;
+  //
+  // get sphere coefficients 
+  std::vector<double> v ( m_sphere.nX() ) ;
+  for ( unsigned short ix = 0 ; ix < m_sphere.nX() ; ++ix ) 
+  { v[ix] = m_sphere.x2 ( ix ) ; }
+  //
+  // integrate them and to get new coefficients
+  if   ( m_increasing ) { std::partial_sum ( v. begin() , v. end() ,  v. begin() ) ; }
+  else                  { std::partial_sum ( v.rbegin() , v.rend() ,  v.rbegin() ) ; }
+  //
+  const double isum = 1.0 / 
+    _spline_integral_ ( v , m_bspline.knots() , m_bspline.order() ) ;
+  //
+  for ( unsigned short ix = 0 ; ix < m_sphere.nX() ; ++ix ) 
+  { 
+    const bool updated = m_bspline.setPar ( ix , v [ix] * isum ) ; 
+    update = updated || update ;
+  }
+  //
+  return update ;
 }
 // ============================================================================
 // ============================================================================

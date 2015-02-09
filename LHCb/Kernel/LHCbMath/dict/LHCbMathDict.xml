@@ -114,6 +114,7 @@
   <class name    = "Gaudi::Math::Interp2D"         />
   <class name    = "Gaudi::Math::BSpline"          />
   <class name    = "Gaudi::Math::PositiveSpline"   />
+  <class name    = "Gaudi::Math::MonothonicSpline" />
   <class name    = "Gaudi::Math::IncreasingSpline" />
   <class name    = "Gaudi::Math::DecreasingSpline" />
 

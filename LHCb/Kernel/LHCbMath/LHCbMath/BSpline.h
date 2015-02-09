@@ -261,6 +261,10 @@ namespace Gaudi
                        const unsigned short order  = 3 ) ; 
       /// constructor from the basic spline 
       PositiveSpline ( const BSpline& spline ) ;
+      /// copy constructor
+      PositiveSpline ( const PositiveSpline& spline ) ;
+      /// destructor 
+      virtual ~PositiveSpline() ;
       // ======================================================================
     public:
       // ======================================================================
@@ -320,14 +324,97 @@ namespace Gaudi
     private:
       // ======================================================================
       /// update coefficients  
-      bool updateCoefficients  () ;
+      virtual bool updateCoefficients  () ;
       // ======================================================================
-    private:
+    protected:
       // ======================================================================
       /// the underlying B-spline 
       Gaudi::Math::BSpline  m_bspline ;  // the underlying B-spline 
       /// the N-sphere of parameters 
       Gaudi::Math::NSphere m_sphere   ; // the N-sphere of parameters
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class MonothonicSpline
+     *  The special spline for non-negative increasing function, 
+     *  (well, actually non-decreasing)
+     *  Actually it is a sum of B-splines with 
+     *  non-decreasing coefficients 
+     *  \f$ f(x) = \sum_i \alpha_i * B_i^k(x) \f$,
+     *  with constraint \f$ 0 \le \alpha_{i} \le \alpha_{i+1}\f$ and 
+     *  normalization is\f$ f(x_{max}=1\f$ 
+     *  @see http://en.wikipedia.org/wiki/I-spline
+     *  @see http://en.wikipedia.org/wiki/B-spline
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     */
+    class GAUDI_API MonothonicSpline : public PositiveSpline 
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** constructor from the list of knots and the order 
+       *  vector of parameters will be calculated automatically 
+       *  @param points non-empty vector of poinst/knots 
+       *  @param order  the order of splines 
+       *  - vector of points is not requires to be ordered 
+       *  - duplicated knots will be ignored
+       *  - min/max value will be used as interval boundaries 
+       */
+      MonothonicSpline
+        ( const std::vector<double>& points            ,
+          const unsigned short       order      = 3    , 
+          const bool                 increasing = true ) ;
+      // ======================================================================
+      /** Constructor from the list of knots and list of parameters 
+       *  The spline order will be calculated automatically 
+       *  @param points non-empty vector of poinst/knots 
+       *  @param pars   non-empty vector of parameters 
+       *  - vector of points is not requires to be ordered 
+       *  - duplicated knots will be ignored
+       *  - min/max value will be used as interval boundaries 
+       */
+      MonothonicSpline 
+        ( const std::vector<double>& points            ,
+          const std::vector<double>& pars              ,
+          const bool                 increasing = true ) ;
+      // ======================================================================
+      /** Constructor for uniform binning 
+       *  @param xmin   low  edge of spline interval 
+       *  @param xmax   high edge of spline interval 
+       *  @param inner  number of inner points in   (xmin,xmax) interval
+       *  @param order  the degree of splline 
+       */
+      MonothonicSpline 
+        ( const double         xmin       = 0    ,  
+          const double         xmax       = 1    , 
+          const unsigned short inner      = 2    ,   // number of inner points 
+          const unsigned short order      = 3    , 
+          const bool           increasing = true ) ;
+      /// constructor from the basic spline 
+      MonothonicSpline ( const PositiveSpline& spline     , 
+                         const bool            increasing ) ;
+      /// constructor from the basic spline 
+      MonothonicSpline ( const BSpline&        spline     , 
+                         const bool            increasing ) ;
+      /// cpoy constructor 
+      MonothonicSpline ( const MonothonicSpline& spline   ) ;
+      /// destructor  
+      virtual ~MonothonicSpline() ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      bool increasing() const { return m_increasing    ; }
+      bool decreasing() const { return  !increasing () ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// update coefficients  
+      virtual bool updateCoefficients  () ;
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// increasing function?
+      bool m_increasing ;  // increasing function?
       // ======================================================================
     } ;
     // ========================================================================
