@@ -21,7 +21,6 @@ from HltTrackNames import TrackName, Hlt2TrackRoot, Hlt2TrackLoc, Hlt1TrackLoc, 
 from HltTrackNames import _baseTrackLocation, _baseProtoPLocation
 from HltTrackNames import HltMuonTracksName, HltAllMuonTracksName
 from HltTrackNames import HltMuonIDSuffix, HltRICHIDSuffix, HltCALOIDSuffix, HltSharedPIDPrefix 
-from HltTrackNames import HltDefaultTrackCuts
 
 from Configurables import CaloProcessor, RichRecSysConf, TrackSelector
 
@@ -37,8 +36,7 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
     #############################################################################################
     __slots__ = { "DataType"                        : '2012' # datatype  2009, MC09, DC06...
                 , "ProbeTrack"                      : "MuonTT"  #Define probe track type
-		, "Prefix"                          : "Hlt2"   # Why should we need this? It's never changed
-                , "TrackCuts"                       : HltDefaultTrackCuts
+                , "Prefix"                          : "Hlt2"   # Why should we need this? It's never changed
                 }
     #############################################################################################
     #############################################################################################
