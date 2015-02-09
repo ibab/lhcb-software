@@ -76,6 +76,7 @@ gaudi_depends_on_subdirs(Associators/MCAssociators
                          Kernel/Relations
                          Kernel/XMLSummaryBase
                          Kernel/XMLSummaryKernel
+                         Kernel/VectorClass
                          L0/L0Base
 			 L0/L0Calo
 			 L0/L0DU

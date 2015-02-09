@@ -5,6 +5,13 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+! 2015-02-09 - Chris Jones
+ - Add new package Kernel/VectorClass that contains a build of the 
+   vectorisation library.
+       http://www.agner.org/optimize/#vectorclass
+   A temporary inclusion, awaiting inclusion of this library in the LCG area.
+   Added as v1r16, as this is the version of the library upstream.
+
 </PRE><H1><A NAME=v38r4>2015-01-15 LHCbSys v38r4</A></H1><PRE>
 This version uses Gaudi v26r0 and LCG_72root6 with ROOT 6.02.03.
 

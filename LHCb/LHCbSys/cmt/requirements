@@ -103,6 +103,7 @@ use PartProp              v1r19   Kernel  # Ivan Belyaev
 use Relations             v6r3    Kernel  # Ivan Belyaev
 use XMLSummaryBase        v1r5    Kernel  # ??
 use XMLSummaryKernel      v1r12   Kernel  # ??
+use VectorClass           v1r16   Kernel  # C.Jones (temporary until available via LCG)
 
 use L0Base                v2r4    L0      # Julien Cogan
 use L0Calo                v11r14  L0      # Patrick Robbe
