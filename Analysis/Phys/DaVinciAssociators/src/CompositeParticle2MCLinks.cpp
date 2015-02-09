@@ -6,7 +6,8 @@
 #include "GaudiKernel/SmartDataPtr.h"
 
 // from LHCb
-#include "Kernel/ParticleProperty.h"
+//#include "Kernel/ParticleProperty.h"
+#include "GaudiKernel/ParticleProperty.h"
 
 // from Event
 #include "Event/MCParticle.h"
@@ -93,7 +94,8 @@ StatusCode CompositeParticle2MCLinks::initialize() {
                    Particle2MCMethod::extension[Particle2MCMethod::Composite], 
                                   m_inputData);
   
-  m_ppSvc  = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc");
+  //m_ppSvc  = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc");
+  m_ppSvc  = svc<IParticlePropertySvc>("ParticlePropertySvc");
   return StatusCode::SUCCESS;
 }
 
@@ -346,7 +348,8 @@ bool CompositeParticle2MCLinks::addMCDaughters( const MCParticle* m,
          k != d.end(); ++k ) {
 
       // Use lifetime to determine if MCParticle is a resonance
-      const LHCb::ParticleProperty* partProp = m_ppSvc -> find( (*k)->particleID() );
+      //const LHCb::ParticleProperty* partProp = m_ppSvc -> find( (*k)->particleID() );
+      ParticleProperty* partProp = m_ppSvc -> findByStdHepID( (*k)->particleID().abspid() );
       bool resonance = false;
       if ( partProp != 0 && partProp->lifetime() < m_maxResonanceLifeTime ) {
         resonance = true;
@@ -362,7 +365,9 @@ bool CompositeParticle2MCLinks::addMCDaughters( const MCParticle* m,
 }
 
 bool CompositeParticle2MCLinks::isResonance(const LHCb::Particle* part) const {
-  const LHCb::ParticleProperty*  partProp = m_ppSvc->find( part->particleID() );
+  //const LHCb::ParticleProperty*  partProp = m_ppSvc->find( part->particleID() );
+  const int id( part->particleID().pid() );
+  ParticleProperty*  partProp = m_ppSvc->findByStdHepID(id );   
   return partProp->lifetime() < m_maxResonanceLifeTime ? true : false;
 }
 
