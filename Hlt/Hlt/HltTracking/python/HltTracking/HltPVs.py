@@ -73,17 +73,10 @@ def PV3D(where):
     #recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.zVtxShift = 0.0
     recoPV3D.OutputVerticesName = proto3DVertices
     
-    from HltSharedTracking import MinimalVelo, FittedVelo, RevivedVelo
-    velo = FittedVelo if HltRecoConf().getProp("FitVelo") else MinimalVelo 
     name = "HltPV3D"
-
-    if where.upper() == "HLT2" :
-        from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
-        # TODO: This one pull the TrackReportsDecoder into HLT1. Needs fix!!!!!
-        velo  = Hlt2BiKalmanFittedForwardTracking().hlt2VeloTracking()
-        #if velo.members() != MinimalVelo.members() : name = "Hlt2PV3D"
-        if velo.members() != RevivedVelo.members() : name = "Hlt2PV3D"
-
+    from HltSharedTracking import FittedVelo, RevivedVelo
+    velo = FittedVelo if HltRecoConf().getProp("FitVelo") else RevivedVelo
+            
     pv3dAlgos = ','.join( [ "'%s'"%m.getFullName() for m in velo.members() + [ recoPV3D ] ] )
     recoPV3D.PVOfflineTool.InputTracks = [ velo.outputSelection() ]
     
@@ -111,6 +104,6 @@ def PV3D(where):
                 'hltFinal' : PV3DSelection   }
         )
     
-    pv3d = bindMembers( name+'Sequence', [ filterPV3D ] ).setOutputSelection( PV3DSelection ) 
+    pv3d = bindMembers( name + 'Sequence', [ filterPV3D ] ).setOutputSelection( PV3DSelection ) 
     pv3d.output = output3DVertices
     return pv3d

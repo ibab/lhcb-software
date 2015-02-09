@@ -305,11 +305,11 @@ from Configurables import DecodeVeloRawBuffer, Hlt2Conf
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 #This is the part which is shared between Hlt1 and Hlt2
 MinimalVelo = bindMembers( None, [DecodeVELO, recoVelo( OutputTracksName=HltSharedTrackLoc["Velo"] ) ] ).setOutputSelection( HltSharedTrackLoc["Velo"] )
-FittedVelo  = bindMembers( None, MinimalVelo.members() + [fittedVelo(MinimalVelo.outputSelection(), Hlt1TrackLoc["FittedVelo"])]).setOutputSelection(Hlt1TrackLoc["FittedVelo"])
 #DecodeTRACK.VetoObjects += [ HltSharedTrackLoc["Velo"], recoForwardHPT.OutputTracksName ]
 #for d in DecodeTRACK.members() :
 #    d.VetoObjects += [ HltSharedTrackLoc["Velo"], recoForwardHPT.OutputTracksName ]
 RevivedVelo = bindMembers( None, [DecodeVELO, DecodeTRACK, recoVelo( OutputTracksName=HltSharedTrackLoc["Velo"] ) ] ).setOutputSelection( HltSharedTrackLoc["Velo"] )
+FittedVelo  = bindMembers( None, RevivedVelo.members() + [fittedVelo(RevivedVelo.outputSelection(), Hlt1TrackLoc["FittedVelo"])]).setOutputSelection(Hlt1TrackLoc["FittedVelo"])
 
 # TODO: put selection revive/redo here (ask Sebastian)
 # for now always redo:
