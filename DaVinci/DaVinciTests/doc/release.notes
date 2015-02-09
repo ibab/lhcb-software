@@ -1,8 +1,13 @@
 !-----------------------------------------------------------------------------
 ! Package     : DaVinciTests
-! Responsible : DaVinci Coordinator
+! Responsible : DaVinci coordinator
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
+
+
+ - Updated tests reference file
+   tests/qmtest/commonparticles.qms/test_standardintermediate_reco14_run.qmt
+   since changes are a consequnce of changes upstream rather than an issue.
 
 !========================= DaVinciTests v2r29 2015-01-16 =======================
 
