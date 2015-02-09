@@ -1271,8 +1271,13 @@ class SetupProject(object):
 
         # FIXME: "from SP2.options ..." is enough with "python -m LbConfiguration.SetupProject"
         #        or with "python -c", but it does not work with our copy of runpy
-        from LbConfiguration.SP2.options import addPlatform
-        addPlatform(parser)
+        try:
+            from LbConfiguration.SP2.options import addPlatform
+            addPlatform(parser)
+        except AssertionError:
+            # LbConfiguration.SP2 works only with Python >= 2.6, but we need to
+            # support 2.4 too (SLC5), so we ignore the assertion
+            pass
 
         if 'CMTSITE' in self.environment and \
             self.environment["CMTSITE"] in self.default_externals:

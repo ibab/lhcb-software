@@ -1,3 +1,7 @@
+2015-02-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* SetupProject: restored compatibility with SLC5 (python 2.4)
+
 2015-02-06  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v8r3p1
