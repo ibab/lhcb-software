@@ -25,10 +25,6 @@ package       BenderSys
 version       v25r4
 author        Vanya BELYAEV
 
-# =========== PATCH ===========================================================
-use GaudiObjDesc        v11r20p1
-use LoKiPhys            v10r21p1 Phys
-use RecEvent            v2r53    Event
 
 # =========== Bender Application itself =======================================
 use           Bender         v25r3   Phys 
