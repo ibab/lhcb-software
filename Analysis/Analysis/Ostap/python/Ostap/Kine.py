@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: RooFitDeco.py 175050 2014-07-15 12:19:15Z ibelyaev $
+# $Id$
 # =============================================================================
 ## @file
 #  Few very simple math-functions related to kinematics  
@@ -10,13 +10,13 @@
 #  @date   2011-06-07
 #
 #  
-#                    $Revision: 175050 $
-#  Last modification $Date: 2014-07-15 14:19:15 +0200 (Tue, 15 Jul 2014) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """Decoration of some RooFit objects for efficient use in python"""
 # =============================================================================
-__version__ = "$Revision: 175050 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
 __all__     = (

@@ -34,9 +34,9 @@
 #  @date   2012-02-15
 #  @author Vanya BELYAEV Ivan.Belyaevitep.ru
 #
-#                    $Revision: 175248 $
-#  Last modification $Date: 2014-07-19 15:56:55 +0200 (Sat, 19 Jul 2014) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """ Simple helper module to get ROOT TCanvas
     
@@ -58,7 +58,7 @@ of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2014-10-19"
-__version__ = '$Revision: 175248 $'
+__version__ = '$Revision$'
 __all__     = ( 'getCanvas' , 'getCanvases' )
 # =============================================================================
 import ROOT

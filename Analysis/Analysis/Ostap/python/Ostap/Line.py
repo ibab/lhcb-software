@@ -1,7 +1,7 @@
 #!/usr/bin/env ipython 
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: ostapline.py 174877 2014-07-13 12:11:41Z ibelyaev $ 
+# $Id$ 
 # =============================================================================
 ## @file Ostap/Line.py
 #  
@@ -32,15 +32,15 @@
 #  @date   2012-02-15
 #  @author Vanya BELYAEV Ivan.Belyaevitep.ru
 #
-#                    $Revision: 174877 $
-#  Last modification $Date: 2014-07-13 14:11:41 +0200 (Sun, 13 Jul 2014) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """Helper module for decoration"""
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2012-09-10"
-__version__ = '$Revision: 174877 $'
+__version__ = '$Revision$'
 __all__     = ( 'line' , 'ostap' ) 
 # =============================================================================
 line = r"""

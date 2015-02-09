@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$
+# $Id$
 # =============================================================================
 ## @file  Ostap/PidCalib.py
 #  Oversimplified script to run PIDCalib machinery from Urania project with Ostap
@@ -26,9 +26,9 @@
 # 
 #  @attention Run-time dependency on Urania is required! 
 #  
-#                    $Revision: 174877 $
-#  Last modification $Date: 2014-07-13 14:11:41 +0200 (Sun, 13 Jul 2014) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """ Oversimplified module to run PIDCalib machinery form Urania project
 
@@ -44,7 +44,7 @@ saveHistos ( histos , '' , config ) ## optionally
 
 """
 # =============================================================================
-__version__ = "$Revision: 175050 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
 __all__     = (

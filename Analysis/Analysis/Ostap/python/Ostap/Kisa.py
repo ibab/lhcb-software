@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$
+# $Id$
 # =============================================================================
 ## @file
 #  Module with some multiprocessing functionality for Ostap 
@@ -13,15 +13,15 @@
 #  @date   2014-09-23
 #
 #  
-#                    $Revision:$
-#  Last modification $Date:$
-#  by                $Author:$
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """ Multiprocessing functionality for Ostap
 Currently it is not loaded on default, and requires manual activation
 """
 # =============================================================================
-__version__ = "$Revision: 177429 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
 __all__     = (
