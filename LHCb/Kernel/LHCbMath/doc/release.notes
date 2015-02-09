@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-02-09 - 
+ - reduce some code duplication 
+
 ! 2015-02-08 - Vanya Belyaev
  - move bernstein polynomials into separate file.
    add monithonic and convex polynomials  

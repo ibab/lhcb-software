@@ -227,6 +227,8 @@ namespace Gaudi
                  const double               xmin  =  0 ,
                  const double               xmax  =  1 ) ;
       // ======================================================================
+      virtual ~Positive () ;
+      // ======================================================================
     public:
       // ======================================================================
       /// get the value
@@ -288,12 +290,12 @@ namespace Gaudi
       Bernstein derivative          () const 
       { return m_bernstein.derivative          () ; }
       // ======================================================================
-    private:
+    protected:
       // ======================================================================
       /// update bernstein coefficinects
-      bool updateBernstein () ;
+      virtual bool updateBernstein () ;
       // ======================================================================
-    private:
+    protected:
       // ======================================================================
       /// the actual bernstein polynomial
       Gaudi::Math::Bernstein m_bernstein ; // the actual bernstein polynomial
@@ -307,8 +309,7 @@ namespace Gaudi
      *  Actually it is a sum of basic bernstein polynomials with
      *  non-negative coefficients
      */
-    class GAUDI_API Monothonic
-      : public std::unary_function<double,double>
+    class GAUDI_API Monothonic : public Gaudi::Math::Positive 
     {
       // ======================================================================
     public:
@@ -327,82 +328,30 @@ namespace Gaudi
           const double               xmax       =    1 ,
           const bool                 increasing = true ) ;
       // ======================================================================
+      /// constructor positive spline 
+      Monothonic
+        ( const Positive&            poly              ,
+          const bool                 increasing        ) ;
+      // ======================================================================
+      /// copy  constructor  
+      Monothonic ( const Monothonic& spline ) ;
+      // ======================================================================
+      virtual ~Monothonic() ;
+      // ======================================================================      
     public:
       // ======================================================================
-      /// get the value
-      double operator () ( const double x ) const { return m_bernstein ( x ) ; }
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// get number of parameters
-      std::size_t npars () const { return m_sphere.nPhi () ; }
-      /// set k-parameter
-      bool setPar       ( const unsigned short k , const double value ) ;
-      /// set k-parameter
-      bool setParameter ( const unsigned short k , const double value )
-      { return setPar   ( k , value ) ; }
-      /// get the parameter value 
-      double  par       ( const unsigned short k ) const 
-      { return m_sphere.par ( k ) ; }
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// get the parameter value
-      double  parameter ( const unsigned short k ) const { return par ( k ) ; }
-      /// get lower edge
-      double xmin () const { return m_bernstein.xmin () ; }
-      /// get upper edge
-      double xmax () const { return m_bernstein.xmax () ; }
       /// increasing ? 
-      bool   increasing() const { return  m_increasing    ; }
+      bool   increasing () const { return  m_increasing    ; }
       /// decreasing ? 
-      bool   decreasing() const { return   !increasing () ; }
-      /// transform variables 
-      double x ( const double t ) const { return m_bernstein. x ( t )  ; }
-      double t ( const double x ) const { return m_bernstein. t ( x )  ; }
+      bool   decreasing () const { return   !increasing () ; }
       // ======================================================================
-    public:
-      // ======================================================================
-      /// get minimal value of the function on (xmin,xmax) interval 
-      double fun_min () const { return m_bernstein.fun_min () ; }
-      /// get maximal value of the function on (xmin,xmax) interval 
-      double fun_max () const { return m_bernstein.fun_max () ; }
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// get the integral between xmin and xmax
-      double integral   () const { return m_bernstein.integral() ; }
-      /// get the integral between low and high 
-      double integral   ( const double low , const double high ) const 
-      { return m_bernstein.integral ( low , high )  ; }
-      /// get the derivative 
-      double derivative ( const double x ) const 
-      { return m_bernstein.derivative ( x ) ; }
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// get the underlying Bernstein polynomial
-      const Gaudi::Math::Bernstein& bernstein () const { return m_bernstein ; }
-      /// get the parameter sphere 
-      const Gaudi::Math::NSphere&   sphere    () const { return m_sphere    ; }
-      /// get the indefinite integral 
-      Bernstein indefinite_integral ( const double C = 0 ) const 
-      { return m_bernstein.indefinite_integral ( C ) ; }
-      /// get the derivative 
-      Bernstein derivative          () const 
-      { return m_bernstein.derivative          () ; }
-      // ======================================================================
-    private:
+    protected:
       // ======================================================================
       /// update bernstein coefficients
-      bool updateBernstein () ;
+      virtual bool updateBernstein () ;
       // ======================================================================
-    private:
+    protected:
       // ======================================================================
-      /// the actual bernstein polynomial
-      Gaudi::Math::Bernstein m_bernstein  ; // the actual bernstein polynomial
-      /// parameters sphere 
-      Gaudi::Math::NSphere   m_sphere     ;
       /// increasing ? 
       bool                   m_increasing ; // increasing ? 
       // ======================================================================
@@ -414,8 +363,7 @@ namespace Gaudi
      *  Actually it is a sum of basic bernstein polynomials with
      *  non-negative coefficients
      */
-    class GAUDI_API Convex 
-      : public std::unary_function<double,double>
+    class GAUDI_API Convex : public Gaudi::Math::Monothonic 
     {
       // ======================================================================
     public:
@@ -436,88 +384,36 @@ namespace Gaudi
           const bool                 increasing = true ,
           const bool                 convex     = true ) ;
       // ======================================================================
-    public:
+      /// constructor from polynom
+      Convex 
+        ( const Positive&            poly       , 
+          const bool                 increasing ,
+          const bool                 convex     ) ;
       // ======================================================================
-      /// get the value
-      double operator () ( const double x ) const { return m_bernstein ( x ) ; }
+      /// constructor from polynom
+      Convex 
+        ( const Monothonic&          poly      , 
+          const bool                 convex    ) ;
       // ======================================================================
-    public:
+      /// copy constructor
+      Convex ( const Convex&         right     ) ;
       // ======================================================================
-      /// get number of parameters
-      std::size_t npars () const { return m_sphere.nPhi () ; }
-      /// set k-parameter
-      bool setPar       ( const unsigned short k , const double value ) ;
-      /// set k-parameter
-      bool setParameter ( const unsigned short k , const double value )
-      { return setPar   ( k , value ) ; }
-      /// get the parameter value 
-      double  par       ( const unsigned short k ) const 
-      { return m_sphere.par ( k ) ; }
+      virtual ~Convex() ;
       // ======================================================================
     public:
       // ======================================================================
-      /// get the parameter value
-      double  parameter ( const unsigned short k ) const { return par ( k ) ; }
-      /// get lower edge
-      double xmin () const { return m_bernstein.xmin () ; }
-      /// get upper edge
-      double xmax () const { return m_bernstein.xmax () ; }
-      /// increasing ? 
-      bool   increasing() const { return  m_increasing    ; }
-      /// decreasing ? 
-      bool   decreasing() const { return   !increasing () ; }
       /// convex     ? 
       bool   convex    () const { return  m_convex    ; }
       /// convex     ? 
       bool   concave   () const { return   !convex () ; }
-      /// transform variables 
-      double x ( const double t ) const { return m_bernstein. x ( t )  ; }
-      double t ( const double x ) const { return m_bernstein. t ( x )  ; }
       // ======================================================================
-    public:
-      // ======================================================================
-      /// get minimal value of the function on (xmin,xmax) interval 
-      double fun_min () const { return m_bernstein.fun_min () ; }
-      /// get maximal value of the function on (xmin,xmax) interval 
-      double fun_max () const { return m_bernstein.fun_max () ; }
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// get the integral between xmin and xmax
-      double integral   () const { return m_bernstein.integral() ; }
-      /// get the integral between low and high 
-      double integral   ( const double low , const double high ) const 
-      { return m_bernstein.integral ( low , high )  ; }
-      /// get the derivative 
-      double derivative ( const double x ) const 
-      { return m_bernstein.derivative ( x ) ; }
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// get the underlying Bernstein polynomial
-      const Gaudi::Math::Bernstein& bernstein () const { return m_bernstein ; }
-      /// get the parameter sphere 
-      const Gaudi::Math::NSphere&   sphere    () const { return m_sphere    ; }
-      /// get the indefinite integral 
-      Bernstein indefinite_integral ( const double C = 0 ) const 
-      { return m_bernstein.indefinite_integral ( C ) ; }
-      /// get the derivative 
-      Bernstein derivative          () const 
-      { return m_bernstein.derivative          () ; }
-      // ======================================================================
-    private:
+    protected:
       // ======================================================================
       /// update bernstein coefficients
-      bool updateBernstein () ;
+      virtual bool updateBernstein () ;
       // ======================================================================
-    private:
+    protected:
       // ======================================================================
-      /// the actual bernstein polynomial
-      Gaudi::Math::Bernstein m_bernstein  ; // the actual bernstein polynomial
-      /// parameters sphere 
-      Gaudi::Math::NSphere   m_sphere     ;
-      /// increasing ? 
-      bool                   m_increasing ; // increasing ? 
       /// convex ? 
       bool                   m_convex     ; // iconvex ? 
       // ======================================================================
@@ -527,7 +423,7 @@ namespace Gaudi
     // ========================================================================
     // 2D-models
     // ========================================================================
-        /** @class Bernstein2D
+    /** @class Bernstein2D
      *  The Bernstein's polynomial of order Nx*Ny
      */
     class GAUDI_API Bernstein2D 

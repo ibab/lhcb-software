@@ -373,6 +373,8 @@ Gaudi::Math::Positive::Positive
   //
 }
 // ============================================================================
+Gaudi::Math::Positive::~Positive() {}
+// ============================================================================
 // set k-parameter
 // ============================================================================
 bool Gaudi::Math::Positive::setPar ( const unsigned short k , const double value )
@@ -413,10 +415,8 @@ Gaudi::Math::Monothonic::Monothonic
   const double              xmin       ,
   const double              xmax       , 
   const bool                increasing ) 
-  : std::unary_function<double,double> ()
-  , m_bernstein ( N , xmin , xmax )
-  , m_sphere    ( N ) 
-  , m_increasing ( increasing )  
+  : Gaudi::Math::Positive ( N , xmin , xmax )  
+  , m_increasing          ( increasing      )  
 {
   updateBernstein () ;
 }
@@ -428,28 +428,35 @@ Gaudi::Math::Monothonic::Monothonic
   const double               xmin       ,
   const double               xmax       ,
   const bool                 increasing ) 
-  : std::unary_function<double,double> ()
-    //
-  , m_bernstein  ( pars.size () , xmin , xmax )
-  , m_sphere     ( pars.size () ) 
-  , m_increasing ( increasing )  
+  : Gaudi::Math::Positive ( pars , xmin , xmax )  
+  , m_increasing          ( increasing      )  
 {
   updateBernstein () ;
 }
 // ============================================================================
-// set k-parameter
+// constructor from the spline 
 // ============================================================================
-bool Gaudi::Math::Monothonic::setPar 
-( const unsigned short k     , 
-  const double         value )
+Gaudi::Math::Monothonic::Monothonic 
+( const Gaudi::Math::Positive& spline   ,
+  const bool                 increasing ) 
+  : Gaudi::Math::Positive ( spline      )  
+  , m_increasing          ( increasing  )  
 {
-  //
-  const bool update = m_sphere.setPhase ( k , value ) ;
-  if ( !update ) { return false ; }   // no actual change 
-  //
-  return updateBernstein () ;
+  updateBernstein () ;
 }
-// =============================================================================
+// ============================================================================
+// constructor from the spline 
+// ============================================================================
+Gaudi::Math::Monothonic::Monothonic 
+( const Gaudi::Math::Monothonic& right ) 
+  : Gaudi::Math::Positive ( right              )  
+  , m_increasing          ( right.m_increasing )
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Gaudi::Math::Monothonic::~Monothonic (){}
+// ============================================================================
 // update bernstein coefficients
 // =============================================================================
 bool Gaudi::Math::Monothonic::updateBernstein ()
@@ -490,11 +497,8 @@ Gaudi::Math::Convex::Convex
   const double              xmax       , 
   const bool                increasing ,
   const bool                convex     ) 
-  : std::unary_function<double,double> ()
-  , m_bernstein ( N , xmin , xmax )
-  , m_sphere    ( N ) 
-  , m_increasing ( increasing )  
-  , m_convex     ( convex     )  
+  : Gaudi::Math::Monothonic ( N , xmin, xmax , increasing ) 
+  , m_convex                ( convex     )  
 {
   updateBernstein () ;
 }
@@ -507,33 +511,46 @@ Gaudi::Math::Convex::Convex
   const double               xmax       ,
   const bool                 increasing ,
   const bool                 convex     ) 
-  : std::unary_function<double,double> ()
-    //
-  , m_bernstein  ( pars.size () , xmin , xmax )
-  , m_sphere     ( pars.size () ) 
-  , m_increasing ( increasing )  
-  , m_convex     ( convex     )  
+  : Gaudi::Math::Monothonic ( pars  , xmin, xmax , increasing ) 
+  , m_convex                ( convex     )  
 {
   updateBernstein () ;
 }
 // ============================================================================
-// set k-parameter
+// constructor from the 
 // ============================================================================
-bool Gaudi::Math::Convex::setPar 
-( const unsigned short k     , 
-  const double         value )
+Gaudi::Math::Convex::Convex
+( const Gaudi::Math::Positive& poly      ,
+  const bool                  increasing ,
+  const bool                  convex     ) 
+  : Gaudi::Math::Monothonic ( poly , increasing ) 
+  , m_convex                ( convex     )  
 {
-  //
-  const bool update = m_sphere.setPhase ( k , value ) ;
-  if ( !update ) { return false ; }   // no actual change 
-  //
-  return updateBernstein () ;
+  updateBernstein () ;
 }
-// =============================================================================
+// ============================================================================
+// constructor from the 
+// ============================================================================
+Gaudi::Math::Convex::Convex
+( const Gaudi::Math::Monothonic& poly   ,
+  const bool                     convex ) 
+  : Gaudi::Math::Monothonic ( poly       ) 
+  , m_convex                ( convex     )  
+{
+  updateBernstein () ;
+}
+// ============================================================================
+// copy constructor 
+// ============================================================================
+Gaudi::Math::Convex::Convex ( const Gaudi::Math::Convex& right  ) 
+  : Gaudi::Math::Monothonic ( right           ) 
+  , m_convex                ( right.m_convex  )  
+{}
+// ============================================================================
+Gaudi::Math::Convex::~Convex (){}
+// ============================================================================
 // update bernstein coefficients
 // =============================================================================
-#include <iostream>
-#include "GaudiKernel/ToStream.h"
 bool Gaudi::Math::Convex::updateBernstein ()
 {
   //
