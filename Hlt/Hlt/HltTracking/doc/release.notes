@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-02-09 - Sascha Stahl
+ - Moved definition of track chi2 cut for proto particle creation 
+   from HltTrackNames.py to HltRecoConf.
+
 ! 2015-02-05 - Roel Aaij
  - Added options to HltRecoConf:
    - Fit velo tracks before PV finding.

@@ -136,22 +136,19 @@ HltCALOIDSuffix				= "CALO"
 #
 # The default RICH options
 #
-MaxChi2 = 3.
 
+
+from Configurables import HltRecoConf
+MaxChi2 = HltRecoConf().getProp("MaxTrCHI2PDOF")
 HltRichDefaultHypos			= ["pion","kaon"]
 HltRichDefaultRadiators			= ["Rich1Gas","Rich2Gas"] 
-HltRichDefaultTrackCuts     = {"Forward" :{ "Chi2Cut" : [0,MaxChi2], "PCut" : [2,100], "PtCut" : [0.8,100]},
+HltRichDefaultTrackCuts     = {"Forward" :{ "Chi2Cut" : [0.,MaxChi2], "PCut" : [2,100], "PtCut" : [0.8,100]},
                                "Match" :{ "Chi2Cut" : [0.,MaxChi2], "PCut" : [2,100], "PtCut" : [0.8,100]}}
 
 OfflineRichDefaultHypos	       = ["pion","kaon","proton","belowThreshold"]
 OfflineRichDefaultRadiators    = ["Rich1Gas","Rich2Gas"]
 OfflineRichDefaultTrackCuts    = { tt : {'Chi2Cut' : [0,3.0], 'PCut' : [0,1e9], 'PtCut' : [0,1e9] } for tt in ['Forward','Match'] }
 
-#
-# The default track cuts applied to every track
-#
-
-HltDefaultTrackCuts = {"Chi2Cut" : [0.,MaxChi2] }
 
 # And the subdirectories. These are necessary so that different algorithms
 # using e.g. different options for the RICH reco (radiators, hypotheses) 

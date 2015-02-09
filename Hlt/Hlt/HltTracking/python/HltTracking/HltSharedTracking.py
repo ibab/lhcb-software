@@ -94,7 +94,6 @@ veloSelector = filterVelo.Selector
 veloSelector.Code = HltRecoConf().getProp("VeloSelectionCut")
 veloSelector.StatPrint = True
 
-
 #### VeloTT Tracking
 from HltTracking.HltRecoConf import VeloTTOptions, VeloTTToolOptions
 from Configurables import PatVeloTTHybrid, PatVeloTTHybridTool
@@ -289,7 +288,7 @@ def ConfiguredGoodTrackFilter (name,
     from Configurables import TrackListRefiner
     filterTracks = TrackListRefiner( name,
                                      inputLocation = InputLocation,
-                                     outputLocation = OutputLocation )
+                                     outputLocation = OutputLocation)
     from Configurables import  LoKi__Hybrid__TrackSelector as LoKiTrackSelector
     filterTracks.addTool(LoKiTrackSelector,name="LokiTracksSelector")
     filterTracks.Selector = LoKiTrackSelector(name="LokiTracksSelector")
@@ -314,7 +313,7 @@ RevivedVelo = bindMembers( None, [DecodeVELO, DecodeTRACK, recoVelo( OutputTrack
 
 # TODO: put selection revive/redo here (ask Sebastian)
 # for now always redo:
-bm_members =  DecodeVELO.members() + [recoVelo(), filterVelo] 
+bm_members =  DecodeVELO.members() + [recoVelo(), filterVelo ] 
 bm_members += DecodeTT.members() + [recoVeloTT] 
 bm_members += DecodeIT.members() + [recoForwardHPT]
 

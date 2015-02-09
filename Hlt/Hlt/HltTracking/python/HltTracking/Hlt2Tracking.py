@@ -33,12 +33,13 @@ from HltTrackNames import HltGlobalTrackLocation
 from HltTrackNames import Hlt2ChargedProtoParticleSuffix, Hlt2NeutralProtoParticleSuffix  
 from HltTrackNames import HltRichDefaultHypos, HltRichDefaultRadiators
 from HltTrackNames import Hlt2TrackingRecognizedFitTypesForRichID 
-from HltTrackNames import HltRichDefaultTrackCuts, HltDefaultTrackCuts
+from HltTrackNames import HltRichDefaultTrackCuts
 
 from HltTrackNames import OfflineRichDefaultHypos, OfflineRichDefaultRadiators
 from HltTrackNames import OfflineRichDefaultTrackCuts
 
 from Configurables import CaloProcessor, RichRecSysConf, TrackSelector
+#from Configurables import HltRecoConf
 
 #import all Hlt2 lines configurables in our scope so that genConfUser can find it... (i.e. make sure it is in 'dir()')
 from HltConf.ThresholdUtils import importLineConfigurables
@@ -86,7 +87,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 , "RichOverrideSafety"              : True
                 , "RichUpfront"                     : True
                 , "ExtraRichName"                   : ""
-                , "TrackCuts"                       : HltDefaultTrackCuts
+                  #, "TrackCuts"                       : HltDefaultTrackCuts # take from HltRecoConf
                 , "Hlt2ForwardMaxVelo"              : 0
                 # TODO : make these variables, not slots 
                 , "__hlt2ChargedNoPIDsProtosSeq__"  : 0
@@ -763,9 +764,9 @@ class Hlt2Tracking(LHCbConfigurableUser):
             charged.TrackSelectorType = "TrackSelector"
             charged.addTool(TrackSelector,name="TrackSelector")
             ts=charged.TrackSelector
-            cuts=self.getProp("TrackCuts")
-            ts.setProp("MinChi2Cut",cuts['Chi2Cut'][0])
-            ts.setProp("MaxChi2Cut",cuts['Chi2Cut'][1])
+            from Configurables import HltRecoConf
+            ts.setProp("MinChi2Cut",0.)
+            ts.setProp("MaxChi2Cut",HltRecoConf().getProp("MaxTrCHI2PDOF"))
            
             # Need to allow for fitted tracks
             # This is now done inside the staged fast fit based on the fastFitType passed
@@ -786,9 +787,9 @@ class Hlt2Tracking(LHCbConfigurableUser):
             charged_secondLoop.TrackSelectorType = "TrackSelector"
             charged_secondLoop.addTool(TrackSelector,name="TrackSelector")
             ts=charged_secondLoop.TrackSelector
-            cuts=self.getProp("TrackCuts")
-            ts.setProp("MinChi2Cut",cuts['Chi2Cut'][0])
-            ts.setProp("MaxChi2Cut",cuts['Chi2Cut'][1])
+            from HltTracking.HltRecoConf import HltRecoConf
+            ts.setProp("MinChi2Cut",0.)
+            ts.setProp("MaxChi2Cut",HltRecoConf().getProp("MaxTrCHI2PDOF"))
                        
             tracks_secondLoop       = self.__hlt2StagedFastFit(secondLoop=True)
             charged_secondLoop.Inputs  = [tracks_secondLoop.outputSelection()]
@@ -1449,9 +1450,9 @@ class Hlt2Tracking(LHCbConfigurableUser):
             charged.TrackSelectorType = "TrackSelector"
             charged.addTool(TrackSelector,name="TrackSelector")
             ts=charged.TrackSelector
-            cuts=self.getProp("TrackCuts")
-            ts.setProp("MinChi2Cut",cuts['Chi2Cut'][0])
-            ts.setProp("MaxChi2Cut",cuts['Chi2Cut'][1])
+            from HltTracking.HltRecoConf import HltRecoConf
+            ts.setProp("MinChi2Cut",0.)
+            ts.setProp("MaxChi2Cut",HltRecoConf().getProp("MaxTrCHI2PDOF"))
            
             charged.Inputs = [tracks.outputSelection()]
             charged.Output = bm_output

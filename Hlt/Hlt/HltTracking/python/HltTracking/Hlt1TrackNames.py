@@ -1,4 +1,3 @@
-#Sascha: Why do we have a separate file for this? Move to HltTrackNames...
 HltGlobalEventPrefix			= ""
 HltGlobalTrackLocation 			= "Track"
 

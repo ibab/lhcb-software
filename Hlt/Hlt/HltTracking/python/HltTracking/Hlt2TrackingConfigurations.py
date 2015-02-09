@@ -13,6 +13,17 @@ from HltTrackNames import HltUniDirectionalKalmanFitSuffix
 #        For 2012, it has been modified to do the seeding and clone killing,
 #        but the name has been kept to simplify all the lines which depend on it. 
 #
+
+def Hlt2Tracks():
+	return Hlt2Tracking("Hlt2Tracks",        
+			    FastFitType            = HltBiDirectionalKalmanFitSuffix,
+			    Hlt2Tracks             = 'Long',
+			    DoFastFit              = True,
+			    DoSeeding              = True,
+			    DoCloneKilling         = True
+			    )
+
+#Hlt2BiKalmanFittedForwardTracking = Hlt2Tracks
 def Hlt2BiKalmanFittedForwardTracking() :
         return Hlt2Tracking("Hlt2BiKalmanFittedForwardTracking",        
                                                                                  FastFitType            = HltBiDirectionalKalmanFitSuffix,
@@ -37,13 +48,13 @@ def Hlt2BiKalmanFittedLongTracking() :
 #
 def Hlt2BiKalmanFittedDownstreamTracking() :
     return Hlt2Tracking("Hlt2BiKalmanFittedDownstreamTracking", 
-                                                                                 FastFitType            = HltBiDirectionalKalmanFitSuffix,
-                                                                                 Hlt2Tracks             = 'Downstream',
-                                                                                 DoFastFit              = True,
-                                                                                 DoSeeding              = True,
-                                                                                 DoCloneKilling         = False,
-                                                                                 TrackCuts              = {"Chi2Cut" : [0.,4.] }    
-                                                                        )
+			FastFitType            = HltBiDirectionalKalmanFitSuffix,
+			Hlt2Tracks             = 'Downstream',
+			DoFastFit              = True,
+			DoSeeding              = True,
+			DoCloneKilling         = False,
+			#TrackCuts              = {"Chi2Cut" : [0.,4.] }    
+			)
 #
 # With track fitting and RICH PID for 3 hypotheses (kaon-proton-pion), but no seeding
 #

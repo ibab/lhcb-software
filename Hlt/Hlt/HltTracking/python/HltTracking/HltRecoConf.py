@@ -27,24 +27,25 @@ from LHCbKernel.Configuration import *
 from GaudiKernel.SystemOfUnits import MeV, mm
 
 class HltRecoConf(LHCbConfigurableUser):
-   __slots__ = { "Forward_HPT_MinPt"            :   500. * MeV
-                 ,"Forward_HPT_MinP"            :  3000. * MeV
-                 ,"Forward_LPT_MinPt"           :    80. * MeV  
-                 ,"Forward_LPT_MinP"            :  1000. * MeV 
+   __slots__ = { "Forward_HPT_MinPt"            :  500. * MeV
+                 ,"Forward_HPT_MinP"            : 3000. * MeV
+                 ,"Forward_LPT_MinPt"           :   80. * MeV  # was 200
+                 ,"Forward_LPT_MinP"            : 1000. * MeV # was 3000
                  ,"Forward_MaxOTHits"           : 15000
-                 ,"MatchVeloMuon_MinP"          :  6000. * MeV
+                 ,"MatchVeloMuon_MinP"          : 6000. * MeV
+                 ,"GoodTrCHI2PDOF"              : 5.0  # This TrCHI2PDOF is used in the sequence to mark hits of good tracks.
+                 ,"MaxTrCHI2PDOF"               : 5.0  # This TrCHI2PDOF is used in the making of protoparticles.
+                 ,"PVBeamspotRho"               : 0.3 * mm
+                 ,"VeloSelectionCut"            : "(~TrBACKWARD) & ( TrNVELOMISS < 100 )"
                  ,"FitVelo"                     : False
                  ,"OfflineRich"                 : True
-                 ,"VeloSelectionCut"               : "(~TrBACKWARD) & ( TrNVELOMISS < 10 )"
-                 ,"GoodTrCHI2PDOF"              :     5.0
-                 ,"PVBeamspotRho"               :       0.3 * mm
                  ,"InitFits"                    : False
                  ,"SimplifiedMaterialFit"       : False
                }
 
    def getConfiguredForward(Name) :
-      
-      pass
+       
+       pass
 
    def __apply_configuration__(self):
         """
@@ -64,6 +65,7 @@ CommonMatchVeloMuonOptions = {"MaxChi2DoFX" : 10.,
 VeloTTToolOptions = {"minMomentum" : 0.0,
                      "minPT" : 100.0 ,
                      "PassTracks" : True,
+                     "PassHoleSize" : 45 * mm,  #TODO: Update to new default 40mm.
                      }
                           
 VeloTTOptions = { "fitTracks" : False }
@@ -84,14 +86,15 @@ ForwardTrackingOptions_MomEstimate = { "UseMomentumEstimate" : True,
                                        "WrongSignPT" : 2000.,
                                        "Preselection" : True,
                                        "PreselectionPT" : 400.,
-                                       "AddTTClusterName" : "PatAddTTCoord", # needs fix...
+                                       "AddTTClusterName" : "PatAddTTCoord",
                                        "SecondLoop" : False}
 
 ComplementForwardToolOptions = { "AddTTClusterName" : "PatAddTTCoord"
                                  ,"SecondLoop" : False} # to be decided
 
 OnlineSeedingToolOptions = { "NDblOTHitsInXSearch" : 2,
-                             "MinMomentum" : 3000.
+                             # This is synchronized with forward and matching
+                             "MinMomentum" : HltRecoConf().getProp("Forward_LPT_MinP")
                              #"UseForward" : True , # Flag hits from Forward tracks
                              }
 
