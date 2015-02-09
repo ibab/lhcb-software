@@ -27,10 +27,10 @@ class IMCDecayFinder;
 #include "Event/Track.h"
 
 // From LHCb
-namespace LHCb 
-{
-  class IParticlePropertySvc;  
-}
+//namespace LHCb 
+//{
+//  class IParticlePropertySvc;  
+//}
 
 class FilterTrueTracks : public GaudiAlgorithm {
 public: 
@@ -56,7 +56,9 @@ private:
   std::vector< std::string >  m_tracksPath ;  ///< Tracks input paths
   std::string m_outputPath ;  ///< Tracks output paths
   bool m_filterOut ;          ///< Revert logic and keep only non-signal?
-  LHCb::IParticlePropertySvc* m_ppSvc ;
+  //LHCb::IParticlePropertySvc* m_ppSvc ;
+  IParticlePropertySvc* m_ppSvc ;
+
   
   
 };

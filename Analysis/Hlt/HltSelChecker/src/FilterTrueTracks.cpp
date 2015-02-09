@@ -6,8 +6,10 @@
 
 // LHCb
 #include "MCInterfaces/IMCDecayFinder.h"
-#include "Kernel/IParticlePropertySvc.h"
-#include "Kernel/ParticleProperty.h"
+//#include "Kernel/IParticlePropertySvc.h"
+//#include "Kernel/ParticleProperty.h"
+#include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/ParticleProperty.h"
 
 // local
 #include "FilterTrueTracks.h"
@@ -62,7 +64,8 @@ StatusCode FilterTrueTracks::initialize()
   if ( "" == m_outputPath ){
     warning() << "Nothing will be written out" << endmsg ;
   }
-  m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc");
+  //m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc");
+  m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc");
   
   return sc;
 }
@@ -83,7 +86,9 @@ StatusCode FilterTrueTracks::execute() {
   LHCb::Track::ConstVector tracks = signalTracks(mcparts) ;
   bool foundall = (!tracks.empty()) ;
   for ( MCParts::const_iterator m = mcparts.begin() ; m != mcparts.end() ; ++m){
-    std::string pname = m_ppSvc->find(m->first->particleID())->particle() ;
+    //std::string pname = m_ppSvc->find(m->first->particleID())->particle() ;
+    std::string pname = m_ppSvc->findByPythiaID(m->first->particleID().pid())->particle() ;
+     
     counter("Found "+pname)+=(m->second) ;
     //    if (m->second) info() << "Found the " << pname <<  endmsg ;
     foundall = (foundall && m->second) ;
