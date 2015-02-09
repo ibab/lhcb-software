@@ -11,13 +11,14 @@
 #define RICHRECPHOTONTOOLS_QuarticSolver_H 1
 
 // Gaudi
+#include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Transform3DTypes.h"
 
 // STL
 #include <math.h>
-#include <complex>
+//#include <complex>
 
 // Eigen
 #include <Eigen/Geometry>
@@ -26,7 +27,10 @@
 #include "vdt/asin.h"
 #include "vdt/sqrt.h"
 
-// Local
+// Vector Class
+#include "VectorClass/complexvec.h"
+
+// RichKernel
 #include "RichKernel/FastRoots.h"
 
 namespace Rich
@@ -128,17 +132,21 @@ namespace Rich
         const auto u1 = -0.5f * (A + B) - rc / 3.0f;
         const auto u2 = UU * fabs(A-B);
 
-        std::complex<TYPE> w1(u1,u2), w2(u1,-u2), w3(0,0);
+        // std::complex<TYPE> w1(u1,u2), w2(u1,-u2);
+        // w1 = std::sqrt(w1);
+        // w2 = std::sqrt(w2);
 
-        w1 = std::sqrt(w1);
-        w2 = std::sqrt(w2);
+        const Complex4f W = sqrt( Complex4f(u1,u2,u1,-u2) );
+ 
+        //const auto V = w1 * w2;
+        const auto V = W.get_low() * W.get_high();
 
-        if ( std::abs( w1 * w2 ) != 0.0 )
-        {
-          w3 = ( -qq / 8.0f ) / ( w1 * w2 ) ;
-        }
+        //const std::complex<TYPE> w3 = ( std::abs(V) != 0.0 ? ( qq * -0.125f ) / V : std::complex<TYPE>(0,0) );
+        //const TYPE res = std::real(w1) + std::real(w2) + std::real(w3) - (r4*a);
 
-        const TYPE res = std::real(w1) + std::real(w2) + std::real(w3) - (r4*a);
+        const Complex2f w3 = ( abs(V) != 0.0 ? ( qq * -0.125f ) / V : Complex2f(0,0) );
+        const TYPE res = W.extract(0) + W.extract(2) + w3.extract(0) - (r4*a);
+
         return ( res >  1.0 ?  1.0 :
                  res < -1.0 ? -1.0 :
                  res );

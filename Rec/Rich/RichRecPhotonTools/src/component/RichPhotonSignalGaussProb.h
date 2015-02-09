@@ -1,3 +1,4 @@
+
 //-----------------------------------------------------------------------------
 /** @file RichPhotonSignalGaussProb.h
  *
@@ -138,6 +139,10 @@ namespace Rich
         }
         return sig;
       }
+
+      /// The exponential function to use
+      template< class TYPE >
+      inline TYPE _exp( const TYPE& x ) const { return (TYPE)vdt::fast_exp(x); }
 
     private: // private data
 

@@ -53,9 +53,6 @@ bool solve( const Data& data )
 void solve( const Data::Vector & dataV )
 {
 
-  // The output position from then solver
-  Gaudi::XYZPoint sphReflPoint;
-
   std::cout << "Solving Quartic Equation for " << dataV.size() << " Photons ..." << std::endl;
 
   // iterate over the data and solve it...
@@ -65,7 +62,7 @@ void solve( const Data::Vector & dataV )
     if ( solve(data) ) 
     {
       ++ok;
-      //std::cout << sphReflPoint << std::endl;
+      std::cout << sphReflPoint << std::endl;
     }
   }
 
@@ -76,7 +73,7 @@ void solve( const Data::Vector & dataV )
 int main ( int /*argc*/, char** /*argv*/ )
 {
 
-  const unsigned int nPhotons = 1000000;
+  const unsigned int nPhotons = 10;
   
   Data::Vector dataV;
   dataV.reserve( nPhotons );

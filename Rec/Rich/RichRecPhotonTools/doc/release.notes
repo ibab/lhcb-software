@@ -4,6 +4,11 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-02-09 - Chris Jones
+ - Update QuarticSolver to use the COmplex2f class from the VectorClass library
+   instead of std::complex. Results in an almostm fact two speed up of the 
+   QuarticSolver::solve method...
+
 ! 2015-02-08 - Chris Jones
  - Add some missing FPE protection in QuarticSolver.h
  - Replace some divisions by multiplications in QuarticSolver.h

@@ -126,7 +126,7 @@ StatusCode PhotonSignalGaussProb::initialize()
   m_scaleFactor[Rich::Rich2] = ( !m_pmtActivate ? 4.0 : 4.0 * m_rich2PixelSignalScaleFactor );
 
   // exp params
-  m_expMinArg = vdt::fast_exp( m_minArg );
+  m_expMinArg = _exp( m_minArg );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
@@ -208,7 +208,7 @@ double PhotonSignalGaussProb::signalProbFunc( const double thetaDiff,
 {
   // See note LHCB/98-040 page 11 equation 18
   const double expArg = -0.5 * gsl_pow_2(thetaDiff/thetaExpRes);
-  return ( ( expArg>m_minArg ? vdt::fast_exp(expArg) : m_expMinArg ) /
+  return ( ( expArg>m_minArg ? _exp(expArg) : m_expMinArg ) /
            ( root_two_pi*thetaExpRes ) );
 }
 
@@ -255,7 +255,7 @@ PhotonSignalGaussProb::scatterProb( LHCb::RichRecPhoton * photon,
     double fbkg = 0.0;
     if ( thetaRec < thetaExp )
     {
-      fbkg = ( vdt::fast_exp(17.0*thetaRec) - 1.0 ) / ( vdt::fast_exp(17.0*thetaExp) - 1.0 );
+      fbkg = ( _exp(17.0*thetaRec) - 1.0 ) / ( _exp(17.0*thetaExp) - 1.0 );
     }
     else if ( thetaRec < 0.5*M_PI + thetaExp - 0.04 )
     {

@@ -36,4 +36,4 @@ apply_pattern    component_library library=RichRecPhotonTools
 #=====================================================================
 # Test application for Photon reconstruction
 #=====================================================================
-#application RichPhotonRecoTest ../src/application/PhotonReco/*.cpp
+application RichPhotonRecoTest ../src/application/PhotonReco/*.cpp
