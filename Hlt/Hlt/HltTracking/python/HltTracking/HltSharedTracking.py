@@ -115,7 +115,7 @@ recoForwardHPT = PatForward( 'Hlt1ForwardHPT'
 recoForwardHPT.VetoObjects = [ recoForwardHPT.OutputTracksName ]
 # apply modifications on top
 from HltTracking.HltRecoConf import CommonForwardTrackingOptions, ForwardTrackingOptions_MomEstimate
-opts = CommonForwardTrackingOptions
+opts = CommonForwardTrackingOptions.copy()
 opts.update(ForwardTrackingOptions_MomEstimate)
 recoForwardHPT.addTool(PatForwardTool(**opts), name='PatForwardTool')
 
@@ -179,7 +179,7 @@ def ConfiguredForwardComplement(name
     forward.MaxNVelo = CommonForwardOptions["MaxNVelo"] 
         
     from HltTracking.HltRecoConf import CommonForwardTrackingOptions, ComplementForwardToolOptions, HltRecoConf
-    opts = CommonForwardTrackingOptions
+    opts = CommonForwardTrackingOptions.copy()
     opts.update(ComplementForwardToolOptions)
     opts.update({"MinMomentum" : MinMomentum
                  ,"MinPt" : MinPt })
