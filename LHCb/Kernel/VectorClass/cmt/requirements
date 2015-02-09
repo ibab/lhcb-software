@@ -1,0 +1,28 @@
+#============================================================================
+# Created    : 2015-02-08
+# Maintainer : Chris Jones
+#============================================================================
+package           VectorClass
+version           v1r16
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+
+#============================================================================
+# Used packages.
+#============================================================================
+use   GaudiPolicy      v*
+
+apply_pattern install_more_includes more=VectorClass
+
+private
+include_dirs      $(VECTORCLASSROOT)/VectorClass
+end_private
+
+#============================================================================
+# library building rule
+#============================================================================
+library          VectorClass     ../src/*.cpp 
+apply_pattern    linker_library  library=VectorClass
