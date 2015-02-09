@@ -19,7 +19,6 @@ class CharmLeptonic_draft2012 :
         lines = [
 
             # Rare decays
-            'Hlt2CharmRareDecayD02MuMu',    
             "Hlt2Dst2PiD02PiPi",            
             "Hlt2Dst2PiD02KPi",             
             "Hlt2Dst2PiD02MuMu",            
@@ -45,7 +44,6 @@ class CharmLeptonic_draft2012 :
             ]
             
         return lines
-
    
     def Thresholds(self) :
         """
@@ -55,18 +53,8 @@ class CharmLeptonic_draft2012 :
         # keep pass through thresholds
         d = { }
 
-        from Hlt2Lines.Hlt2CharmRareDecayLines  import Hlt2CharmRareDecayLinesConf
         from Hlt2Lines.Hlt2Dst2D2XXLines import Hlt2Dst2D2XXLinesConf
         from Hlt2Lines.Hlt2CharmSemilepD02HMuNuLines import Hlt2CharmSemilepD02HMuNuLinesConf
-
-        d.update({Hlt2CharmRareDecayLinesConf : { 
-                          'D02MuMuMinDaughterPt'            : 1.0 # GeV
-                        , 'D02MuMuMinLifeTime'              : 0.1 # ps
-                        , 'D02PiPiForD02MuMuMinLifeTime'    : 0.3 # ps
-                        , 'Prescale'                        : { 
-                            'Hlt2CharmRareDecayD02MuMu'           : 1.0 
-                            }
-            }})
 
         d.update({Hlt2Dst2D2XXLinesConf : { 
                     'Prescale'                        : { 
