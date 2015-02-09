@@ -168,7 +168,7 @@ def fitArgs ( name , dataset = None , *args , **kwargs ) :
     for k,a in kwargs.iteritems() :
         
         if isinstance ( a , ROOT.RooCmdArg ) :
-            logger.debug   ( '%s add keyword argument %s' % ( self.name , k ) )  
+            logger.debug   ( '%s add keyword argument %s' % ( name , k ) )  
             _args.append ( a )
         elif k.upper() in ( 'WEIGHTED'   ,
                             'SUMW2'      ,

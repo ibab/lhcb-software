@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-02-09 - Vanya Belyaev
+ - fix a typo 
+
 ! 2015-02-08 - Vanya Belyaev
  - add monothonic and convex polynomials 
 
