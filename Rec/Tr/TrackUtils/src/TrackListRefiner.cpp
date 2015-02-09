@@ -1,3 +1,4 @@
+
 /** @class TrackListRefiner TrackListRefiner.h
  *
  *  Make a subselection of a track list
@@ -85,6 +86,11 @@ StatusCode TrackListRefiner::finalize()
 
 StatusCode TrackListRefiner::execute()
 {
+  // Do not execute if the TES location does not exist.
+  if( !exist<DataObject>(m_inputLocation) ) {
+    if( UNLIKELY( msgLevel(MSG::ERROR) ) ) error()<<"Location "<<m_inputLocation<<" does not exist!"<<endmsg;
+    return StatusCode::SUCCESS;
+  }
   LHCb::Track::Range tracksin  = get<LHCb::Track::Range>(m_inputLocation) ;
   LHCb::Track::Selection* tracksout = new LHCb::Track::Selection() ;
   put( tracksout, m_outputLocation) ;
