@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-02-09 - Sascha Stahl
+ - PatForwardTool: Added a protection in case the location of veto tracks does not exist.
+
 ! 2015-02-05 - Michel De Cian
  - Simplify some things in PatDownTrack and PatDownstream. No performance changes.
 

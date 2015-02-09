@@ -364,10 +364,14 @@ bool PatForwardTool::acceptTrack(const LHCb::Track& track) const
   if ( track.checkFlag( LHCb::Track::Invalid) ) return false;
   if ( track.checkFlag( LHCb::Track::Backward) ) return false;
   if ( m_trackSelector &&  !m_trackSelector->accept(track)) return false;
-  
   // S.Stahl: Move this external. The track selector above could do the job.
   if ( m_skipUsedSeeds ) {
     for (auto itNames : m_veloVetoTracksNames ){
+      if( !exist<LHCb::Track::Range>(itNames) ) {
+        // Continue here in case the location does not exist.
+        if( UNLIKELY( msgLevel(MSG::ERROR) ) ) error()<<"Location "<<itNames<<" does not exist!"<<endmsg;
+        continue;
+      }
       LHCb::Track::Range vetoTracks = get<LHCb::Track::Range>( itNames ); 
       for (auto it : vetoTracks ) { 
         if (it == &track ) return false;
@@ -380,8 +384,6 @@ bool PatForwardTool::acceptTrack(const LHCb::Track& track) const
       }
     }
   }
-  
-  //if ( msgLevel( MSG::VERBOSE )) verbose() << "For track " << track.key() << " accept flag =" << ok << endmsg;  
   return true;
 }
 
