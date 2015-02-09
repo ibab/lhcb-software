@@ -51,6 +51,8 @@ DBXferAlg::DBXferAlg( const std::string& name, ISvcLocator *svcloc) : Algorithm(
 
 StatusCode DBXferAlg::initialize()
 {
+//	sleep(20);
+	printf("Initializing DBXferAlg...\n");
   StatusCode sc = Algorithm::initialize();
   return sc;
 }
@@ -62,6 +64,7 @@ StatusCode DBXferAlg::finalize()
 
 StatusCode DBXferAlg::execute()
 {
+	printf("DBXferAlg Execute called...\n");
   StatusCode sc = StatusCode::SUCCESS;
   // only called once
 
@@ -77,6 +80,8 @@ StatusCode DBXferAlg::execute()
   sc = service("IncidentSvc",incSvc,false);
 
     // 4. read ASDs and compute new constants
+	printf("DBXferAlg Fireing RunChange incident...\n");
+
     detDataSvc->setEventTime(m_RunStartTime);
     incSvc->fireIncident(RunChangeIncident(name(), m_RunNumber));
 
