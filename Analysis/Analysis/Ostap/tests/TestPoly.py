@@ -44,7 +44,7 @@ varset2  = ROOT.RooArgSet  ( mass2 )
 
 import Ostap.FitModels as     Models 
 
-events = 5000
+events = 10000
 
 logger.debug('Make a test data using Gamma-Distribution')
 m_gamma0 = Models.GammaDist_pdf( 'GD0' , x )
@@ -123,6 +123,7 @@ else :
         
 
 
+
 # =============================================================================
 logger.info("Test  Poly(4)*Expo -Distribution")
 # =============================================================================
@@ -143,9 +144,9 @@ else :
 
 
 # =============================================================================
-logger.info ("Test positive spline: order 3 with 3 inner knots ")
+logger.info ("Test positive spline: order 3 with 2 inner knots ")
 # =============================================================================
-s3   = cpp.Gaudi.Math.PositiveSpline( x.xmin() , x.xmax() , 3 , 3 )
+s3   = cpp.Gaudi.Math.PositiveSpline( x.xmin() , x.xmax() , 2 , 3 )
 m_s3 = Models.PSpline_pdf ( 'S3' , x , s3 )
 
 with rooSilent() : 
@@ -157,6 +158,41 @@ if 0 != result.status() or 3 != result.covQual() :
     print result
 else :
     for phi in m_s3.phis : 
+        print  "\tSpline3:     phi=  %s " % phi.ve() 
+
+
+# =============================================================================
+logger.info ("Test positive decreasing: order 3 with 2 inner knots ")
+# =============================================================================
+m3   = cpp.Gaudi.Math.MonothonicSpline( x.xmin() , x.xmax() , 2 , 3 , False )
+m_m3 = Models.MSpline_pdf ( 'S3' , x , m3 )
+
+with rooSilent() : 
+    result,f  = m_m3.fitTo ( dataset2 )  
+    result,f  = m_m3.fitTo ( dataset2 )  
+    
+if 0 != result.status() or 3 != result.covQual() :
+    logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
+    print result
+else :
+    for phi in m_m3.phis : 
+        print  "\tSpline3:     phi=  %s " % phi.ve() 
+
+# =============================================================================
+logger.info ("Test positive decreasing convex: order 3 with 2 inner knots ")
+# =============================================================================
+c3   = cpp.Gaudi.Math.ConvexSpline( x.xmin() , x.xmax() , 2 , 3 , False , True )
+m_c3 = Models.CSpline_pdf ( 'C3' , x , c3 )
+
+with rooSilent() : 
+    result,f  = m_c3.fitTo ( dataset2 )  
+    result,f  = m_c3.fitTo ( dataset2 )  
+    
+if 0 != result.status() or 3 != result.covQual() :
+    logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
+    print result
+else :
+    for phi in m_c3.phis : 
         print  "\tSpline3:     phi=  %s " % phi.ve() 
 
 

@@ -29,6 +29,7 @@ __all__     = (
     ##
     'PSpline_pdf' , ## positive            spline 
     'MSpline_pdf' , ## positive monothonic spline 
+    'CSpline_pdf' , ## positive monothonic convex or concave spline 
     ##
     'PS2_pdf'     , ## 2-body phase space (no parameters)
     'PSLeft_pdf'  , ## Low  edge of N-body phase space 
@@ -428,6 +429,59 @@ class MSpline_pdf(PDF) :
             self.mass                     ,
             self.spline                   , 
             self.phi_list                 )
+
+# =============================================================================
+## @class  CSpline_pdf
+#  The special spline for non-negative monothonic convex/concave function
+#  @see Analysis::Models::ConvexSpline 
+#  @see Gaudi::Math::ConvexSpline 
+#  @see http://en.wikipedia.org/wiki/I-spline
+#  @see http://en.wikipedia.org/wiki/M-spline
+#  @see http://en.wikipedia.org/wiki/B-spline
+#  @see http://link.springer.com/chapter/10.1007%2F978-3-0348-7692-6_6
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2011-07-25
+class CSpline_pdf(PDF) :
+    """
+    A positive monothonic spline
+
+    >>> mass   = ... ## the variable
+    >>> order  = 3   ## spline order
+    
+    ## create uniform spline 
+    >>> inner  = 3   ## number of inner knots between min and max 
+    >>> spline = Gaudi.Math.ConvexSpline( mass.xmin() , mass.xmax() , inner , order , True , True )
+
+    ## create non-uniform spline with
+    >>> knots = std.vector('double)()
+    >>> knots.push_back ( mass.xmin() )
+    >>> knots.push_back ( mass.xmax() )
+    >>> knots.push_back ( ... )
+    >>> spline = Gaudi.Math.ConvexSpline( knots , order, True  , True )
+
+    >>> bkg = MSpline_pdf ( 'Spline' , mass , spline ) 
+    
+    """
+    ## constructor
+    def __init__ ( self             ,
+                   name             ,   ## the name 
+                   mass             ,   ## the variable
+                   spline           ) : ## the spline object Gaudi::Math::ConvexSpline
+        #
+        PDF.__init__ ( self , name )
+        #
+        self.spline = spline 
+        self.mass   = mass 
+        
+        # 
+        self.makePhis ( spline.npars()  ) 
+        #
+        self.pdf  = cpp.Analysis.Models.ConvexSpline (
+            'is_%s'            % name ,
+            'ConvexSpline(%s)' % name ,
+            self.mass                ,
+            self.spline              , 
+            self.phi_list            )
 
 # =============================================================================
 ## @class  PS2_pdf

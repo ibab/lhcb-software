@@ -139,6 +139,7 @@ __all__ = (
     'PS23L_pdf'            , ## 2-body phase space from 3-body decays with orbital momenta
     'PSpline_pdf'          , ## positive spline (B-spline)
     'MSpline_pdf'          , ## positive monothonic spline 
+    'CSpline_pdf'          , ## positive monothonic convex or concave spline 
     #
     ## 2D non-factorazable models
     #
