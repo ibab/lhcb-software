@@ -73,3 +73,7 @@ class TestRunViewPlots(unittest.TestCase):
             ROOT.gErrorIgnoreLevel = ROOT.kFatal
             plots.get_run_plot('fake_plot', 999000)
             ROOT.gErrorIgnoreLevel = old_level
+
+
+if __name__ == "__main__":
+        unittest.main()

@@ -64,3 +64,7 @@ class TestRunViewUtils(unittest.TestCase):
             utils.run_file_path(123987),
             "/tmp/100000s/120000s/123000s/123900s/123987"
         )
+
+
+if __name__ == "__main__":
+        unittest.main()

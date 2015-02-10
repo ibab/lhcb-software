@@ -121,3 +121,7 @@ class TestRunViewPlots(unittest.TestCase):
             axis_titles=('Foo', 'Bar')
         )
         self.assertEqual(rep, exp)
+
+
+if __name__ == "__main__":
+        unittest.main(verbosity=0)

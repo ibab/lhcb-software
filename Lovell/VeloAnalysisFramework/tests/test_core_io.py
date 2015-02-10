@@ -1,16 +1,5 @@
 import os
 
-if __name__ == '__main__':
-    import sys
-
-    # fiddle with sys.path so that package is importable
-    if __file__.startswith('/'):
-        sys.path.insert(0, os.path.join('/', *__file__.split('/')[:-3]))
-    else:
-        __path_to_script__ = __file__.split('/')[:-1]  # test directory
-        __path_to_script__ += ['..', '..'] # package directory parent
-        sys.path.insert(0, os.path.join(os.getcwd(), *__path_to_script__))
-
 from veloview.utils.rootutils import ROOT
 
 def setUpModule():
@@ -125,6 +114,4 @@ class TestGRFIO(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    hdr_fmt = '='*5 + '{0:^{width}}' + '='*5
-    print hdr_fmt.format('TestGRFIO', width=40)
     unittest.main()

@@ -1,19 +1,3 @@
-#!/usr/bin/env python
-"""This module will test the scores_manipulation module"""
-
-import os
-
-if __name__ == '__main__':
-    import sys
-
-    # fiddle with sys.path so that package is importable
-    if __file__.startswith('/'):
-        sys.path.insert(0, os.path.join('/', *__file__.split('/')[:-3]))
-    else:
-        __path_to_script__ = __file__.split('/')[:-1]  # test directory
-        __path_to_script__ += ['..', '..'] # package directory parent
-        sys.path.insert(0, os.path.join(os.getcwd(), *__path_to_script__))
-
 import unittest
 
 from veloview.core.score_manipulation import Score
@@ -105,8 +89,4 @@ class TestScoreManipulation(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    hdr_fmt = '='*5 + '{0:^{width}}' + '='*5
-    print hdr_fmt.format('TestScoreManipulation', width=40)
-    from logging import basicConfig, DEBUG, INFO, WARNING
-    basicConfig(format='%(levelname)s:%(module)s: %(message)s', level=WARNING)
     unittest.main()
