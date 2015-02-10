@@ -67,31 +67,30 @@ class Physics_draftEM2015( object ):
         
         from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 
-        thresholds = { Hlt1TrackLinesConf :    { 'AllL0_PT'         :  1000  # 1600
-                                               , 'AllL0_P'          :  3000  # 3000
-                                               , 'AllL0_IPChi2'     :  4.0    # 16
-                                               , 'AllL0_TrChi2'     :  5.0   # 2.0
-                                               , 'AllL0_GEC'        : 'Loose'
-                                               , 'Muon_PT'       :  1000 
-                                               , 'Muon_P'        :  3000 
-                                               , 'Muon_IP'       :  0 #0.100
-                                               , 'Muon_IPChi2'   :  4 #16
-                                               , 'Muon_TrChi2'   :  2.5  
-                                               , 'Muon_GEC'      : 'Loose'
-                                               , 'Muon_ValidateTT' : False
-                                               , 'Muon_L0Channels' : 'Muon,DiMuon,MuonNoSPD,DiMuonNoSPD' 
-                                               , 'Photon_PT'     :  1200
-                                               , 'Photon_P'      :  3000
-                                               , 'Photon_IP'     :     0.100
-                                               , 'Photon_IPChi2' :    16
-                                               , 'Photon_TrChi2' :     2.0
-                                               , 'Photon_L0Channels' : 'PhotonHi,ElectronHi' 
+        thresholds = { Hlt1TrackLinesConf :    {'AllL0_Velo_NHits'   : 9
+                                               , 'AllL0_Velo_Qcut'   : 3
+                                               , 'AllL0_TrNTHits'    : 16
+                                               , 'AllL0_PT'          : 1600.
+                                               , 'AllL0_P'           : 3000.
+                                               , 'AllL0_IPChi2'      : 16.
+                                               , 'AllL0_TrChi2'      : 2.
+                                               , 'AllL0_GEC'         : 'Loose'
+                                               , 'Muon_TrNTHits'     : 0 #OFF
+                                               , 'Muon_Velo_NHits'   : 0 #OFF
+                                               , 'Muon_Velo_Qcut'    : 999 #OFF
+                                               , 'Muon_PT'           : 1000.
+                                               , 'Muon_P'            : 3000.
+                                               , 'Muon_IPChi2'       : 16.
+                                               , 'Muon_TrChi2'       : 2.5
+                                               , 'Muon_GEC'          : 'Loose'
+                                               , 'Photon_PT'         : 1200.
+                                               , 'Photon_P'          : 3000.
+                                               , 'Photon_IPChi2'     : 16.
+                                               , 'Photon_TrChi2'     : 2.
                                                , 'Photon_GEC'        : 'Loose'
-                                               , 'Prescale'          : {'Hlt1TrackAllL0'                   : 1.0, 
-                                                                        'Hlt1TrackAllL0Tight'              : 1.0,
-                                                                        'Hlt1TrackForwardPassThrough'      : 0,
-                                                                        'Hlt1TrackForwardPassThroughLoose' : 0}
- 
+                                               , 'L0Channels'        : {'AllL0'  : 'L0_DECISION_PHYSICS',
+                                                                        'Muon'   : ('Muon', 'DiMuon', 'MuonNoSPD', 'DiMuonNoSPD'),
+                                                                        'Photon' : ("PhotonHi", "ElectronHi")}
                                                }
                      , Hlt1MuonLinesConf :     { 'SingleMuonHighPT_P'        : 3000
                                                , 'SingleMuonHighPT_PT'      : 4800
