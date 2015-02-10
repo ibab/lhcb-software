@@ -1,38 +1,39 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$
+# $Id$
 # =============================================================================
 ## @file
-#  Simple adaptive numerical differentiation (for PyPaw/PyRoUts)
+#  Simple adaptive numerical differentiation (for pyroot/PyRoUts/Ostap)
 #  R. De Levie, "An improved numerical approximation for the first derivative"
 #  @see http://www.ias.ac.in/chemsci/Pdf-Sep2009/935.pdf
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-06-06
 #  
-#                    $Revision: 172762 $
-#  Last modification $Date: 2014-05-14 18:13:25 +0200 (Wed, 14 May 2014) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """
-Simple adaptive numerical differentiation (for PyPaw/PyRoUts)
+Simple adaptive numerical differentiation (for pyroot/PyRoUts/Ostap/...)
 
 >>> func = lambda x : x*x
 >>> print derivative ( func , 1 )
 
 """
 # =============================================================================
-__version__ = "$Revision: 172762 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2014-06-06"
-__all__     = ( "derivative" , ) 
+__all__     = ( "derivative" ,
+                "Derivative" ) 
 # =============================================================================
 from sys import float_info
 _eps_   = float_info.epsilon
 if not 0.75 < _eps_ * 2**52 < 1.25 :
     import warnings
-    warnings.warn ('"epsilon" in not in expected range!Math could be suboptimal')
+    warnings.warn ('"epsilon" in not in the expected range!Math could be suboptimal')
 # =============================================================================
 from LHCbMath.Types import cpp 
 VE = cpp.Gaudi.Math.ValueWithError
@@ -194,6 +195,8 @@ _numbers_ = (
     )
 # =============================================================================
 ## Calculate the first derivative for the function
+#  R. De Levie, "An improved numerical approximation for the first derivative"
+#  @see http://www.ias.ac.in/chemsci/Pdf-Sep2009/935.pdf
 #  @code
 #  >>> func =  lambda x : x*x
 #  >>> print derivative ( func , x = 1 ) 
@@ -205,7 +208,7 @@ _numbers_ = (
 #  @param err  (INPUT) calcualte the uncertainty?
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-06-06
-def derivative ( func , x , h = 0  , I = 2 , err = False ) : 
+def derivative ( func , x , h = 0  , I = 2 , err = False , args = () ) : 
     """
     Calculate the first derivative for the function
     #  @code
@@ -213,7 +216,7 @@ def derivative ( func , x , h = 0  , I = 2 , err = False ) :
     #  >>> print derivative ( func , x = 1 ) 
     """
 
-    ## function valut at the given point 
+    ## get the function value at the given point 
     f0 = func(x)
 
     ## adjust the rule 
@@ -226,7 +229,7 @@ def derivative ( func , x , h = 0  , I = 2 , err = False ) :
     
     ## if the intial step is too small, choose another one 
     if abs ( h ) <  _numbers_[I][3] or abs ( h ) < delta :  
-        if _is_zero_( x )     : h    =            _numbers_[0][I]
+        if _is_zero_( x )     : h    =             _numbers_[0][I]
         else                  : h    = abs ( x ) * _numbers_[I][3] 
         
     ## 1) find the estimate for first and "J"th the derivative with the given step 
@@ -248,7 +251,52 @@ def derivative ( func , x , h = 0  , I = 2 , err = False ) :
     e2    = e * e * ( J * _eps_ + abs ( f0 ) + abs( x * d1 ) )**(2-2./J) * abs( dJ )**(2./J)
     return VE ( d1 , 4 * e2 )
 
+# =============================================================================
+## @class Derivative
+#  Calculate the first derivative for the function
+#  R. De Levie, "An improved numerical approximation for the first derivative"
+#  @see http://www.ias.ac.in/chemsci/Pdf-Sep2009/935.pdf
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-06-06
+class Derivative(object) :
+    """
+    Calculate the first derivative for the function
+    R. De Levie, ``An improved numerical approximation for the first derivative''
+    see http://www.ias.ac.in/chemsci/Pdf-Sep2009/935.pdf
+    """
+    def __init__ ( self , func , h = 0 , I = 2 , err = False ) :
+        """
+        Calculate the first derivative for the function
+        R. De Levie, ``An improved numerical approximation for the first derivative''
+        see http://www.ias.ac.in/chemsci/Pdf-Sep2009/935.pdf
+        
+        >>> func = math.sin
+        >>> deri = Derivative ( func )
+        
+        """
+        self._func = func
+        self._h    = h    
+        self._I    = I
+        self._err  = err
 
+    ## evaluate the derivative 
+    def __call__ ( self , x ) :
+        """
+        Calculate the first derivative for the function
+        R. De Levie, ``An improved numerical approximation for the first derivative''
+        see http://www.ias.ac.in/chemsci/Pdf-Sep2009/935.pdf
+        
+        >>> func  = math.sin
+        >>> deriv = Derivative ( func )
+        
+        >>> print deriv(0.1) 
+        """
+        return derivative ( self._func ,
+                            x          ,
+                            self._h    ,
+                            self._I    ,
+                            self._err  )
+    
 # =============================================================================
 if '__main__' == __name__ :
     
@@ -296,8 +344,29 @@ if '__main__' == __name__ :
                 print 'Rule=%2d' % ( 2*i+1 ) , f1 , d , (f1.value()-d)/d  
                     
     print 80*'*'
-    
 
+    ## the function 
+    func    = math.sin
+    ## analysitical derivative 
+    deriv_a = math.cos
+    ## numerical first derivative     
+    deriv_1 = Derivative ( func    , I = 5 )  
+    ## numerical second derivative     
+    deriv_2 = Derivative ( deriv_1 , I = 5 )  
+
+    import random
+
+    for i in range ( 0 , 20 ) : 
+
+        x = random.uniform( 0 , 0.5*math.pi )
+        
+        print "x=%10.5g f=%10.5g delta(f')= %+10.4g delta(f\")= %+10.4g "  %  ( x       ,
+                                                                                func(x) ,
+                                                                                1-deriv_1(x)/deriv_a(x),
+                                                                                1+deriv_2(x)/func(x) )
+
+    print 80*'*'
+            
 # =============================================================================
 # The END 
 # =============================================================================
