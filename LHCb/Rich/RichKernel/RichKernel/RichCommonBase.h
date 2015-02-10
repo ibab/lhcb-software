@@ -15,7 +15,9 @@
 // Interfaces
 #include "RichKernel/IRichToolRegistry.h"
 #include "RichKernel/IRichDetectorTool.h"
-#include "RichKernel/RichXYZTypes.h"
+
+// LHCbKernel
+//#include "Kernel/RichXYZTypes.h"
 
 // Gaudi
 #include "GaudiKernel/ISvcLocator.h"
