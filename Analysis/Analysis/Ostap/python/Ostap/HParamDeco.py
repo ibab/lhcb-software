@@ -76,8 +76,7 @@ BSplineFIT   = H_fit
 #  functions, in particular:
 #  - positive bernstein polynomial,
 #  - positive B-spline expansion 
-#  - positive increasing B-spline expansion 
-#  - positive decreasing B-spline expansion 
+#  - positive monothoni B-spline expansion 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2014-05-09
 class H_Nfit (object) :
@@ -116,8 +115,7 @@ class H_Nfit (object) :
     
 PositiveFIT         = H_Nfit
 PositiveSplineFIT   = H_Nfit
-IncreasingSplineFIT = H_Nfit
-DecreasingSplineFIT = H_Nfit
+MonothonicSplineFIT = H_Nfit
 
 # =============================================================================
 ## represent 1D-histo as Bernstein polynomial
@@ -272,15 +270,15 @@ def _h1_ispline_ ( h1 , order = 3 , knots = 3 , opts = 'SQ0I' ) :
     #
     from Ostap.PyRoUts import funID
     if isinstance ( knots , ( int , long ) ) :
-        b = cpp.Gaudi.Math.IncreasingSpline ( mn , mx , knots , order )
+        b = cpp.Gaudi.Math.MonothonicSpline ( mn , mx , knots , order , True )
     else :
         _knots = cpp.std.vector('double') ()
         _knots.push_back ( mn ) 
         _knots.push_back ( mx ) 
         for k in knots : _knots.push_back( k )
-        b = cpp.Gaudi.Math.IncreasingSpline ( _knots , order )
+        b = cpp.Gaudi.Math.IncreasingSpline ( _knots , order , True )
 
-    bfit  = IncreasingSplineFIT( b )
+    bfit  = MonothonicSplineFIT( b )
     bfit.fun.SetParameter ( 0   , h1[h1.bins()]   )
     bfit.fun.SetNpx ( max ( 100 , 3 * h1.bins() ) )  
     
@@ -305,15 +303,15 @@ def _h1_dspline_ ( h1 , order = 3 , knots = 3 , opts = 'SQ0I' ) :
     #
     from Ostap.PyRoUts import funID
     if isinstance ( knots , ( int , long ) ) :
-        b = cpp.Gaudi.Math.DecreasingSpline ( mn , mx , knots , order )
+        b = cpp.Gaudi.Math.MonothonicSpline ( mn , mx , knots , order , False )
     else :
         _knots = cpp.std.vector('double') ()
         _knots.push_back ( mn ) 
         _knots.push_back ( mx ) 
         for k in knots : _knots.push_back( k )
-        b = cpp.Gaudi.Math.DecreasingSpline ( _knots , order )
+        b = cpp.Gaudi.Math.MonothonicSpline ( _knots , order , False )
 
-    bfit  = IncreasingSplineFIT( b )
+    bfit  = MonothonicSplineFIT( b )
     bfit.fun.SetParameter ( 0 , h1[1]             )
     bfit.fun.SetNpx ( max ( 100 , 3 * h1.bins() ) )  
     
@@ -361,8 +359,7 @@ cpp.Gaudi.Math.Bernstein        .funobj = _funobj0_
 cpp.Gaudi.Math.BSpline          .funobj = _funobj0_
 cpp.Gaudi.Math.Positive         .funobj = _funobjN_
 cpp.Gaudi.Math.PositiveSpline   .funobj = _funobjN_
-cpp.Gaudi.Math.IncreasingSpline .funobj = _funobjN_
-cpp.Gaudi.Math.DecreasingSpline .funobj = _funobjN_
+cpp.Gaudi.Math.MonothonicSpline .funobj = _funobjN_
 
 # =============================================================================
 ## helper class to wrap 1D-histogram as function 

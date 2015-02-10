@@ -214,7 +214,7 @@ def sp_integrate_2D_ ( pdf   ,
     func = pdf.function()
     return func.sp_integrate_2D ( xmin , xmax , ymin , ymax , *args , **kwargs ) 
 
-
+    
 # =============================================================================
 ## decorate 1D-models/functions 
 # =============================================================================
@@ -270,13 +270,13 @@ for model in ( Gaudi.Math.Chebyshev              ,
                #
                Gaudi.Math.BSpline                , 
                Gaudi.Math.PositiveSpline         ,
-               Gaudi.Math.IncreasingSpline       ,
-               Gaudi.Math.DecreasingSpline       ,
+               Gaudi.Math.MonothonicSpline       ,
                #
                ) :
     model . tf1 = _tf1_ 
     model.sp_integrate = sp_integrate_1D
 
+    
 ## add some drawing method for some shapes 
 for model in ( Gaudi.Math.Bernstein         ,
                Gaudi.Math.Positive          ,
@@ -285,8 +285,7 @@ for model in ( Gaudi.Math.Bernstein         ,
                #
                Gaudi.Math.BSpline           ,
                Gaudi.Math.PositiveSpline    ,
-               Gaudi.Math.IncreasingSpline  ,
-               Gaudi.Math.DecreasingSpline  ) :
+               Gaudi.Math.MonothonicSpline  ) :
     
     model.draw = _f1_draw_
     
@@ -338,8 +337,7 @@ for pdf in ( Analysis.Models.BreitWigner          ,
              Analysis.Models.PolyPositive       ,
              Analysis.Models.ExpoPositive       ,
              Analysis.Models.PositiveSpline     ,
-             Analysis.Models.IncreasingSpline   , 
-             Analysis.Models.DecreasingSpline   ,
+             Analysis.Models.MonothonicSpline   , 
              
              Analysis.Models.StudentT           ,
              Analysis.Models.BifurcatedStudentT , 

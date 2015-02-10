@@ -27,9 +27,8 @@ __all__     = (
     'Convex_pdf'     , ## A positive polynomial with fixed sign first and second derivatives 
     'Sigmoid_pdf'    , ## Background: sigmoid modulated by positive polynom 
     ##
-    'PSpline_pdf' , ## positive                spline 
-    'ISpline_pdf' , ## positive non-decreasing spline 
-    'DSpline_pdf' , ## positive non-increasing spline 
+    'PSpline_pdf' , ## positive            spline 
+    'MSpline_pdf' , ## positive monothonic spline 
     ##
     'PS2_pdf'     , ## 2-body phase space (no parameters)
     'PSLeft_pdf'  , ## Low  edge of N-body phase space 
@@ -378,46 +377,42 @@ class PSpline_pdf(PDF) :
             self.phi_list        )
 
 # =============================================================================
-## @class  ISpline_pdf
-#  The special spline for non-negative non-decreasing function
-#  It is a sum of I-splines with non-negative coefficients 
-#  \f$ f(x) = \sum_i \alpha_i * I_i^k(x) \f$,
-#  that is equivalent to the reparameterized sum of B-splines 
-#  \f$ f(x) = \sum_i \alpha^{\prime}_i * B_i^k(x) \f$,
-#  with constraints  \f$ 0 \le \alpha^{\prime}_i \le \alpha^{\prime}_{i+1}\f$.
-#  @see Analysis::Models::IncreasingSpline 
-#  @see Gaudi::Math::IncreasingSpline 
+## @class  MSpline_pdf
+#  The special spline for non-negative monothonic function
+#  @see Analysis::Models::MonothonicSpline 
+#  @see Gaudi::Math::MonothonicSpline 
 #  @see http://en.wikipedia.org/wiki/I-spline
 #  @see http://en.wikipedia.org/wiki/M-spline
 #  @see http://en.wikipedia.org/wiki/B-spline
+#  @see http://link.springer.com/chapter/10.1007%2F978-3-0348-7692-6_6
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class ISpline_pdf(PDF) :
+class MSpline_pdf(PDF) :
     """
-    A positive on-decreasing spline, a composion of I-splines with non-negative coefficients
+    A positive monothonic spline
 
     >>> mass   = ... ## the variable
     >>> order  = 3   ## spline order
     
     ## create uniform spline 
     >>> inner  = 3   ## number of inner knots between min and max 
-    >>> spline = Gaudi.Math.IncreasingSpline( mass.xmin() , mass.xmax() , inner , order )
+    >>> spline = Gaudi.Math.MonothonicSpline( mass.xmin() , mass.xmax() , inner , order , True )
 
     ## create non-uniform spline with
     >>> knots = std.vector('double)()
     >>> knots.push_back ( mass.xmin() )
     >>> knots.push_back ( mass.xmax() )
     >>> knots.push_back ( ... )
-    >>> spline = Gaudi.Math.IncreasingSpline( knots , order )
+    >>> spline = Gaudi.Math.MonothonicSpline( knots , order , True )
 
-    >>> bkg = ISpline_pdf ( 'Spline' , mass , spline ) 
+    >>> bkg = MSpline_pdf ( 'Spline' , mass , spline ) 
     
     """
     ## constructor
     def __init__ ( self             ,
                    name             ,   ## the name 
                    mass             ,   ## the variable
-                   spline           ) : ## the spline object Gaudi::Math::IncreasingSpline
+                   spline           ) : ## the spline object Gaudi::Math::MonothonicSpline
         #
         PDF.__init__ ( self , name )
         #
@@ -427,71 +422,12 @@ class ISpline_pdf(PDF) :
         # 
         self.makePhis ( spline.npars()  ) 
         #
-            
-        self.pdf  = cpp.Analysis.Models.IncreasingSpline (
-            'is_%s'              % name ,
-            'IncreasingSpline(%s)' % name ,
-            self.mass            ,
-            self.spline          , 
-            self.phi_list        )
-
-# =============================================================================
-## @class  DSpline_pdf
-#  The special spline for non-negative non-increasing function, 
-#  implemented as sum of B-splines 
-#  \f$ f(x) = \sum_i \alpha_i * B_i^k(x) \f$
-#  with constraints
-#  \f$ \alpha^{\prime}_i \ge \alpha^{\prime}_{i+1} \ge 0 \f$.
-#  @see Analysis::Models::DecreasingSpline 
-#  @see Gaudi::Math::DecreasingSpline 
-#  @see http://en.wikipedia.org/wiki/I-spline
-#  @see http://en.wikipedia.org/wiki/M-spline
-#  @see http://en.wikipedia.org/wiki/B-spline
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date 2011-07-25
-class DSpline_pdf(PDF) :
-    """
-    A positive non-increasing spline as special composition of B-splines
-
-    >>> mass   = ... ## the variable
-    >>> order  = 3   ## spline order
-    
-    ## create uniform spline 
-    >>> inner  = 3   ## number of inner knots between min and max 
-    >>> spline = Gaudi.Math.DecreasingSpline( mass.xmin() , mass.xmax() , inner , order )
-
-    ## create non-uniform spline with
-    >>> knots = std.vector('double)()
-    >>> knots.push_back ( mass.xmin() )
-    >>> knots.push_back ( mass.xmax() )
-    >>> knots.push_back ( ... )
-    >>> spline = Gaudi.Math.DecreasingSpline( knots , order )
-    
-    >>> bkg = ISpline_pdf ( 'Spline' , mass , spline ) 
-    
-    """
-    ## constructor
-    def __init__ ( self             ,
-                   name             ,   ## the name 
-                   mass             ,   ## the variable
-                   spline           ) : ## the spline object Gaudi::Math::DecreasingSpline
-        #
-        PDF.__init__ ( self , name )
-        #
-        self.spline = spline 
-        self.mass   = mass 
-        
-        # 
-        self.makePhis ( spline.npars()  ) 
-        #
-        
-        self.pdf  = cpp.Analysis.Models.DecreasingSpline (
+        self.pdf  = cpp.Analysis.Models.MonothonicSpline (
             'is_%s'                % name ,
-            'DecreasingSpline(%s)' % name ,
+            'MonothonicSpline(%s)' % name ,
             self.mass                     ,
             self.spline                   , 
             self.phi_list                 )
-
 
 # =============================================================================
 ## @class  PS2_pdf

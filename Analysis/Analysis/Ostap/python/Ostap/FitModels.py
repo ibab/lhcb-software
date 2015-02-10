@@ -138,8 +138,7 @@ __all__ = (
     'PSNL_pdf'             , ## L-body phase space from N-body decays  
     'PS23L_pdf'            , ## 2-body phase space from 3-body decays with orbital momenta
     'PSpline_pdf'          , ## positive spline (B-spline)
-    'ISpline_pdf'          , ## positive non-decreasing spline 
-    'DSpline_pdf'          , ## positive non-increasing spline 
+    'MSpline_pdf'          , ## positive monothonic spline 
     #
     ## 2D non-factorazable models
     #
