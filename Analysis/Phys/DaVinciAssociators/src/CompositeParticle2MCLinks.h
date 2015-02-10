@@ -7,7 +7,7 @@
 #include <string>
 
 // from LHCb
-#include "Kernel/IParticlePropertySvc.h"
+//#include "Kernel/IParticlePropertySvc.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 
 // local
