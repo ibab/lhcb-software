@@ -74,7 +74,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   declareProperty("saverCycle", m_saverCycle = 900);
   declareProperty("resetHistosAfterSave", m_resetHistosAfterSave = 0);
   declareProperty("abortRetroEvents",m_abortRetroEvents = true);
-
+  declareProperty("publishSaveSetLocation",m_publishSavesetLoc=true);
   declareProperty("teste", m_teste = 100000);
   declareProperty("MyName",m_MyName=""); //partition_TaskName
 
@@ -173,7 +173,7 @@ StatusCode UpdateAndReset::start()
   infoName = partName+"/"+taskName+"/SAVESETLOCATION";
   if (m_saveHistograms)
   {
-    if (m_dimSvcSaveSetLoc == 0)
+    if ((m_dimSvcSaveSetLoc == 0) && m_publishSavesetLoc)
     {
       m_dimSvcSaveSetLoc = new DimService(infoName.c_str(),(char*)m_infoFileStatus.c_str());
     }
@@ -529,7 +529,10 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
       if (f->IsOpen()) {f->Close();}
       delete f;f=0;
     }
-    m_dimSvcSaveSetLoc->updateService((char*)m_infoFileStatus.c_str());
+    if (m_publishSavesetLoc)
+    {
+      m_dimSvcSaveSetLoc->updateService((char*)m_infoFileStatus.c_str());
+    }
   }
   else
   {
