@@ -124,8 +124,10 @@ namespace Gaudi
       double  integral   ( const double low , const double high ) const ;
       /// get the derivative at point "x" 
       double  derivative ( const double x   ) const ;
-      /// get integral   as function object 
-      BSpline indefinite_integral () const ;
+      /** get integral   as function object 
+       *  @param C integration constant 
+       */
+      BSpline indefinite_integral ( const double C = 0 ) const ;
       /// get derivative as function object 
       BSpline derivative          () const ;
       // ======================================================================
@@ -273,8 +275,6 @@ namespace Gaudi
                        const unsigned short order  = 3 ) ; 
       /// constructor from the basic spline 
       PositiveSpline ( const BSpline& spline ) ;
-      /// copy constructor
-      PositiveSpline ( const PositiveSpline& spline ) ;
       /// destructor 
       virtual ~PositiveSpline() ;
       // ======================================================================
@@ -406,14 +406,12 @@ namespace Gaudi
           const unsigned short inner      = 2    ,   // number of inner points 
           const unsigned short order      = 3    , 
           const bool           increasing = true ) ;
-      /// constructor from the basic spline 
+      /// constructor from positive spline  
       MonothonicSpline ( const PositiveSpline& spline     , 
                          const bool            increasing ) ;
       /// constructor from the basic spline 
       MonothonicSpline ( const BSpline&        spline     , 
                          const bool            increasing ) ;
-      /// cpoy constructor 
-      MonothonicSpline ( const MonothonicSpline& spline   ) ;
       /// destructor  
       virtual ~MonothonicSpline() ;
       // ======================================================================
@@ -434,6 +432,92 @@ namespace Gaudi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class ConvexSpline
+     *  The special spline with following properties :
+     *   - it is positive
+     *   - it it monothonic (increasing or decreasing) 
+     *   - it is eitehr convex or concave 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     */
+    class GAUDI_API ConvexSpline : public MonothonicSpline 
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** constructor from the list of knots and the order 
+       *  vector of parameters will be calculated automatically 
+       *  @param points non-empty vector of poinst/knots 
+       *  @param order  the order of splines 
+       *  - vector of points is not requires to be ordered 
+       *  - duplicated knots will be ignored
+       *  - min/max value will be used as interval boundaries 
+       */
+      ConvexSpline
+        ( const std::vector<double>& points            ,
+          const unsigned short       order      = 3    , 
+          const bool                 increasing = true ,
+          const bool                 convex     = true ) ;
+      /** Constructor from the list of knots and list of parameters 
+       *  The spline order will be calculated automatically 
+       *  @param points non-empty vector of poinst/knots 
+       *  @param pars   non-empty vector of parameters 
+       *  - vector of points is not requires to be ordered 
+       *  - duplicated knots will be ignored
+       *  - min/max value will be used as interval boundaries 
+       */
+      ConvexSpline
+        ( const std::vector<double>& points            ,
+          const std::vector<double>& pars              ,
+          const bool                 increasing = true ,
+          const bool                 convex     = true ) ;
+      /** Constructor for uniform binning 
+       *  @param xmin   low  edge of spline interval 
+       *  @param xmax   high edge of spline interval 
+       *  @param inner  number of inner points in   (xmin,xmax) interval
+       *  @param order  the degree of splline 
+       */
+      ConvexSpline
+        ( const double            xmin       = 0    ,  
+          const double            xmax       = 1    , 
+          const unsigned short    inner      = 2    ,   // number of inner points 
+          const unsigned short    order      = 3    , 
+          const bool              increasing = true ,
+          const bool              convex     = true ) ;
+      /// constructor from positive spline 
+      ConvexSpline 
+        ( const PositiveSpline&   spline     , 
+          const bool              increasing ,
+          const bool              convex      ) ;
+      /// constructor from basic spline 
+      ConvexSpline 
+        ( const BSpline&          spline     , 
+          const bool              increasing ,
+          const bool              convex      ) ;
+      /// constructor from monothonic spline 
+      ConvexSpline 
+        ( const MonothonicSpline& spline     , 
+          const bool              convex      ) ;
+      /// destructor  
+      virtual ~ConvexSpline() ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// convex? 
+      bool convex   () const { return m_convex    ; } // convex? 
+      /// concave?
+      bool concave  () const { return  !convex () ; } // concave? 
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// update coefficients  
+      virtual bool updateCoefficients  () ;
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// convex function?
+      bool m_convex ;  // convex function?
+      // ======================================================================
+    } ;
     // =========================================================================
     /** @class Spline2D
      *  Non-negative spline in 2D 

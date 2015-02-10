@@ -115,6 +115,7 @@
   <class name    = "Gaudi::Math::BSpline"          />
   <class name    = "Gaudi::Math::PositiveSpline"   />
   <class name    = "Gaudi::Math::MonothonicSpline" />
+  <class name    = "Gaudi::Math::ConvexSpline"     />
 
   <class name    = "Gaudi::Math::Linear"       />
   <class name    = "Gaudi::Math::LinearErr"    />
