@@ -5,6 +5,11 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2015-02-10 - Patrick Spradlin
+ - python/HltLine/HltLine.py:  In Hlt2Line.__init__(), changed some class
+   names in the list of recognized end-of-line algorithms from
+   'DaVinci__NnBodyDecays' to 'DaVinci::NnBodyDecays'.
+
 ! 2015-02-06 - Roel Aaij
  - Change some internal containers to set() and include SOURCE and SELECTION
    in selections.

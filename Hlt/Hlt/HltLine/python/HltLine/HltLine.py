@@ -1535,7 +1535,7 @@ class Hlt2Line(object):
             while hasattr(last,'Members') : 
                 last = getattr(last,'Members')[-1]
             ## TODO: check if 'last' is a FilterDesktop, CombineParticles, or something else...
-            needsCopy = [ 'CombineParticles', 'FilterDesktop', 'Hlt2SelDV', 'TisTosParticleTagger', 'DaVinci__N3BodyDecays', 'DaVinci__N4BodyDecays', 'DaVinci__N5BodyDecays', 'DaVinci__N6BodyDecays', 'DaVinci__N7BodyDecays' ]
+            needsCopy = [ 'CombineParticles', 'FilterDesktop', 'Hlt2SelDV', 'TisTosParticleTagger', 'DaVinci::N3BodyDecays', 'DaVinci::N4BodyDecays', 'DaVinci::N5BodyDecays', 'DaVinci::N6BodyDecays', 'DaVinci::N7BodyDecays' ]
             knownLastMembers = needsCopy + [ 'HltCopySelection<LHCb::Track>','HltIncidentGenerator','TF::PatVeloAlignTrackFilter' ]
             if last.getType() not in knownLastMembers :
               log.warning( 'last item in line ' + self.name() + ' is ' + last.getName() + ' with unknown type ' + last.getType() + '; as a result, TISTOS may not work for this line'  )
