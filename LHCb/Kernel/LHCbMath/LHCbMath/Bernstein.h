@@ -152,6 +152,17 @@ namespace Gaudi
       /// is it a constant function?
       bool   constant      () const ;
       // ======================================================================
+    public: // simple  manipulations with bernstein polynoms 
+      // ======================================================================
+      /// simple  manipulations with bernstein polynoms: scale it! 
+      Bernstein& operator *= ( const double a ) ;     // scale it! 
+      /// simple  manipulations with bernstein polynoms: scale it! 
+      Bernstein& operator /= ( const double a ) ;     // scale it! 
+      /// simple  manipulations with bernstein polynoms: shift it! 
+      Bernstein& operator += ( const double a ) ;     // shift it! 
+      /// simple  manipulations with bernstein polynoms: shift it! 
+      Bernstein& operator -= ( const double a ) ;     // shift it! 
+      // ======================================================================
     public:
       // ======================================================================
       double x ( const double t ) const

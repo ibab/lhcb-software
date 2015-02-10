@@ -184,6 +184,46 @@ bool Gaudi::Math::Bernstein::constant () const
   return true ;
 }
 // ============================================================================
+// simple  manipulations with bernstein polynoms: scale it! 
+// ============================================================================
+Gaudi::Math::Bernstein&
+Gaudi::Math::Bernstein::operator*=( const double a ) 
+{
+  for ( std::vector<double>::iterator it = m_pars.begin() ; m_pars.end() != it ; ++it ) 
+  {  (*it ) *= a ; }
+  return *this ;
+}
+// ============================================================================
+// simple  manipulations with bernstein polynoms: scale it! 
+// ============================================================================
+Gaudi::Math::Bernstein&
+Gaudi::Math::Bernstein::operator/=( const double a ) 
+{
+  for ( std::vector<double>::iterator it = m_pars.begin() ; m_pars.end() != it ; ++it ) 
+  {  (*it ) /= a ; }
+  return *this ;
+}
+// ============================================================================
+// simple  manipulations with bernstein polynoms: shift it! 
+// ============================================================================
+Gaudi::Math::Bernstein&
+Gaudi::Math::Bernstein::operator+=( const double a ) 
+{
+  for ( std::vector<double>::iterator it = m_pars.begin() ; m_pars.end() != it ; ++it ) 
+  {  (*it ) += a ; }
+  return *this ;
+}
+// ============================================================================
+// simple  manipulations with bernstein polynoms: shift it! 
+// ============================================================================
+Gaudi::Math::Bernstein&
+Gaudi::Math::Bernstein::operator-=( const double a ) 
+{
+  for ( std::vector<double>::iterator it = m_pars.begin() ; m_pars.end() != it ; ++it ) 
+  {  (*it ) -= a ; }
+  return *this ;
+} 
+// ============================================================================
 // express the Bernstein polynomial in Bernstein basis of order n+r 
 // ============================================================================
 // Gaudi::Math::Bernstein::elevate ( const unsigned short r ) const 

@@ -3,10 +3,12 @@
 # =============================================================================
 # $Id$
 # =============================================================================
-## @file
+## @file  LHCbMath/deriv.py 
 #  Simple adaptive numerical differentiation (for pyroot/PyRoUts/Ostap)
 #  R. De Levie, "An improved numerical approximation for the first derivative"
 #  @see http://www.ias.ac.in/chemsci/Pdf-Sep2009/935.pdf
+#
+#  .. and also very simple wrapper to numerical integation using scipy
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-06-06
@@ -21,13 +23,29 @@ Simple adaptive numerical differentiation (for pyroot/PyRoUts/Ostap/...)
 >>> func = lambda x : x*x
 >>> print derivative ( func , 1 )
 
+... and also very simple wrapper to numerical integation using scipy
+
+>>> func = lambda x : x*x
+>>> print integral ( func , 0 , 1 )
+
+there are also object form:
+
+>>> func = ...
+>>> deriv = Derivative ( func )
+>>> integ = Integral   ( func , 0 )
+>>> print deriv ( 0.1 ) , integ ( 0.1 )  
+
 """
 # =============================================================================
 __version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2014-06-06"
-__all__     = ( "derivative" ,
-                "Derivative" ) 
+__all__     = (
+    "derivative" , ## numerical differentiation (as function)
+    "integral"   , ## numerical integration     (as function,  using scipy)
+    "Derivative" , ## numerical differentiation (as object) 
+    "Integral"   , ## numerical integration     (as as object, using scipy)
+    ) 
 # =============================================================================
 from sys import float_info
 _eps_   = float_info.epsilon
@@ -208,7 +226,7 @@ _numbers_ = (
 #  @param err  (INPUT) calcualte the uncertainty?
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-06-06
-def derivative ( func , x , h = 0  , I = 2 , err = False , args = () ) : 
+def derivative ( func , x , h = 0  , I = 2 , err = False ) : 
     """
     Calculate the first derivative for the function
     #  @code
@@ -296,6 +314,63 @@ class Derivative(object) :
                             self._h    ,
                             self._I    ,
                             self._err  )
+
+# =============================================================================
+## Calculate the integral (from x0 to x) for the 1D-function 
+#  @code 
+#  >>> func = ...
+#  >>> a = integral(func,0,1)
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-06-06
+def integral ( func , x0 , x , err = False ) :
+    """
+    Calculate the integral for the 1D-function using scipy
+    
+    >>> func = ...
+    >>> i = integral(func,0,1)
+    """
+    from scipy import integrate
+    result = integrate.quad ( func , x0 , x )
+    return VE( result[0] , result[1] * result[1] ) if err else result[0] 
+
+# =============================================================================
+## @class Integral
+#  Calculate the integral (from x0 to x) for the 1D-function 
+#  @code 
+#  >>> func = ...
+#  >>> func_0 = Integral(func,0)
+#  >>> func_0 ( 10 )
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-06-06
+class Integral(object) :
+    """
+    Calculate the integral for the 1D-function using scipy
+    """
+    ## Calculate the integral for the 1D-function using scipy
+    def __init__ ( self , func , x0 = 0 , err = False ) :
+        """
+        Calculate the integral for the 1D-function using scipy
+        
+        >>> func = ...
+        >>> func_0 = Integral(func,0)
+        """
+        self._func   = func 
+        self._x0     = x0
+        self._err    = err 
+    ## Calculate the integral for the 1D-function using scipy
+    def __call__ ( self , x ) :
+        """
+        Calculate the integral for the 1D-function using scipy
+        
+        >>> func = ...
+        >>> func_0 = Integral(func,0)
+        >>> func_0 ( 10 ) 
+        """
+        from scipy import integrate
+        result = integrate.quad ( self._func , self._x0 , x )
+        return VE ( result[0] , result[1] * result[1] ) if self._err else result[0] 
     
 # =============================================================================
 if '__main__' == __name__ :

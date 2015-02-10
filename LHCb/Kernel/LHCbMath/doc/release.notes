@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-02-10 - Vanya Belyaev
+ - improve splines 
+
 ! 2015-02-09 - 
  - improve splines ...
 
