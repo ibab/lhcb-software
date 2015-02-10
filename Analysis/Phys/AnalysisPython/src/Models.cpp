@@ -4070,6 +4070,129 @@ Double_t Analysis::Models::MonothonicSpline::analyticalIntegral
 }
 // ============================================================================
 
+// ============================================================================
+// monothonic spline 
+// ============================================================================
+/** constructor with the spline 
+ *  @param name  the name 
+ *  @param title the  title
+ *  @param x     the  variable 
+ *  @param spine the spline  
+ *  @param phis  vector of parameters 
+ */
+// ============================================================================
+Analysis::Models::ConvexSpline::ConvexSpline 
+( const char*                          name, 
+  const char*                          title     ,
+  RooAbsReal&                          x         ,
+  const Gaudi::Math::ConvexSpline& spline    ,   // the spline 
+  RooArgList&                          phis      )   // parameters
+  : RooAbsPdf ( name , title ) 
+  , m_x        ( "x"       , "Observable"   , this , x ) 
+  , m_phis     ( "phi"     , "Coefficients" , this     )
+    //
+  , m_iterator ( 0 ) 
+    //
+  , m_spline   ( spline ) 
+{
+  //
+  TIterator* tmp  = phis.createIterator() ;
+  RooAbsArg* coef = 0 ;
+  while ( ( coef = (RooAbsArg*) tmp->Next() ) )
+  {
+    RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
+    if ( 0 == r ) { continue ; }
+    m_phis.add ( *coef ) ;
+  }
+  delete tmp ;
+  //
+  m_iterator = m_phis.createIterator() ;
+  setPars () ;
+}
+// ============================================================================
+// copy constructor
+// ============================================================================
+Analysis::Models::ConvexSpline::ConvexSpline 
+( const Analysis::Models::ConvexSpline&  right ,      
+  const char*                                name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x        ( "x"      , this , right.m_x     ) 
+  , m_phis     ( "phis"   , this , right.m_phis  ) 
+    //
+  , m_iterator ( 0 ) 
+    //
+  , m_spline ( right.m_spline ) 
+{
+  m_iterator = m_phis.createIterator () ;
+  setPars () ;
+}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::ConvexSpline::~ConvexSpline() { delete m_iterator ; }
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::ConvexSpline*
+Analysis::Models::ConvexSpline::clone( const char* name ) const 
+{ return new Analysis::Models::ConvexSpline(*this,name) ; }
+// ============================================================================
+void Analysis::Models::ConvexSpline::setPars () const 
+{
+  m_iterator->Reset () ;
+  //
+  RooAbsArg*       phi   = 0 ;
+  const RooArgSet* nset  = m_phis.nset() ;
+  //
+  std::vector<double> sin2phi ;
+  //
+  unsigned short k = 0 ;
+  while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
+  {
+    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
+    if ( 0 == r ) { continue ; }
+    //
+    const double phi   = r->getVal ( nset ) ;
+    //
+    m_spline.setPar ( k  , phi ) ;
+    //
+    ++k ;
+  }
+}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::ConvexSpline::evaluate() const 
+{
+  //
+  setPars () ;
+  //
+  return m_spline ( m_x ) ; 
+}
+// ============================================================================
+Int_t Analysis::Models::ConvexSpline::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if ( matchArgs ( allVars , analVars , m_x ) ) { return 1 ; }
+  return 0 ;
+}
+// ============================================================================
+Double_t Analysis::Models::ConvexSpline::analyticalIntegral 
+( Int_t       code      , 
+  const char* rangeName ) const 
+{
+  assert ( code == 1 ) ;
+  if ( 1 != code ) {}
+  //
+  setPars () ;
+  //
+  return m_spline.integral ( m_x.min(rangeName) , m_x.max(rangeName) ) ;
+}
+// ============================================================================
+
 
 // ============================================================================
 // generic polinomial times exponent 

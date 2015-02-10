@@ -3716,6 +3716,83 @@ namespace Analysis
       mutable Gaudi::Math::MonothonicSpline m_spline ;          // the function 
       // ======================================================================
     };
+    // ========================================================================
+    /** @class MonothonicSpline
+     *  The special spline for non-negative monothonic 
+     convex or concave function 
+     *  @see Gaudi::Math::PositiveSpline
+     */
+    class GAUDI_API  ConvexSpline : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::ConvexSpline, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** constructor with the spline 
+       *  @param name  the name 
+       *  @param title the  title
+       *  @param x     the  variable 
+       *  @param spine the spline  
+       *  @param phis  vector of parameters 
+       */
+      ConvexSpline 
+        ( const char*                      name, 
+          const char*                      title     ,
+          RooAbsReal&                      x         ,
+          const Gaudi::Math::ConvexSpline& spline    ,   // the spline 
+          RooArgList&                      phis      ) ; // parameters
+      /// copy
+      ConvexSpline
+        ( const ConvexSpline& right     , 
+          const char*         name = 0  ) ;
+      /// destructor 
+      virtual ~ConvexSpline() ;
+      /// clone 
+      virtual  ConvexSpline* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:  // integrals 
+      // ======================================================================
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         , 
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::ConvexSpline& function() const { return m_spline ; }
+      const Gaudi::Math::ConvexSpline& spline  () const { return m_spline ; }
+      // ======================================================================
+    protected :
+      // ======================================================================
+      RooRealProxy m_x    ;
+      RooListProxy m_phis ;
+      // ======================================================================
+      TIterator* m_iterator;  //! do not persist
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::ConvexSpline m_spline ;          // the function 
+      // ======================================================================
+    };
+
 
     // ========================================================================
     // 2D non-factorizable models  
