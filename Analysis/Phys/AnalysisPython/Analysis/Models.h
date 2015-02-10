@@ -3639,19 +3639,19 @@ namespace Analysis
       // ======================================================================
     };
     // ========================================================================
-    /** @class IncreasingSpline
-     *  The special spline for non-negative non-decreasing function
+    /** @class MonothonicSpline
+     *  The special spline for non-negative monothonic function
      *  @see http://en.wikipedia.org/wiki/I-spline
      *  @see http://en.wikipedia.org/wiki/M-spline
      *  @see http://en.wikipedia.org/wiki/B-spline
      *  @see Gaudi::Math::PositiveSpline
      */
-    class GAUDI_API  IncreasingSpline : public RooAbsPdf 
+    class GAUDI_API  MonothonicSpline : public RooAbsPdf 
     {
       // ======================================================================
     public :
       // ======================================================================
-      ClassDef(Analysis::Models::IncreasingSpline, 1) ;
+      ClassDef(Analysis::Models::MonothonicSpline, 1) ;
       // ======================================================================
     public:
       // ======================================================================
@@ -3662,20 +3662,20 @@ namespace Analysis
        *  @param spine the spline  
        *  @param phis  vector of parameters 
        */
-      IncreasingSpline 
+      MonothonicSpline 
         ( const char*                          name, 
           const char*                          title     ,
           RooAbsReal&                          x         ,
-          const Gaudi::Math::IncreasingSpline& spline    ,   // the spline 
+          const Gaudi::Math::MonothonicSpline& spline    ,   // the spline 
           RooArgList&                          phis      ) ; // parameters
       /// copy
-      IncreasingSpline
-        ( const IncreasingSpline& right     , 
-          const char*           name = 0  ) ;
+      MonothonicSpline
+        ( const MonothonicSpline& right     , 
+          const char*             name = 0  ) ;
       /// destructor 
-      virtual ~IncreasingSpline() ;
+      virtual ~MonothonicSpline() ;
       /// clone 
-      virtual  IncreasingSpline* clone ( const char* name ) const ; 
+      virtual  MonothonicSpline* clone ( const char* name ) const ; 
       // ======================================================================
     public:
       // ======================================================================
@@ -3700,8 +3700,8 @@ namespace Analysis
     public:
       // ======================================================================
       /// access to underlying function 
-      const Gaudi::Math::IncreasingSpline& function() const { return m_spline ; }
-      const Gaudi::Math::IncreasingSpline& spline  () const { return m_spline ; }
+      const Gaudi::Math::MonothonicSpline& function() const { return m_spline ; }
+      const Gaudi::Math::MonothonicSpline& spline  () const { return m_spline ; }
       // ======================================================================
     protected :
       // ======================================================================
@@ -3713,88 +3713,10 @@ namespace Analysis
     private:
       // ======================================================================
       /// the actual function 
-      mutable Gaudi::Math::IncreasingSpline m_spline ;          // the function 
+      mutable Gaudi::Math::MonothonicSpline m_spline ;          // the function 
       // ======================================================================
     };
-    // ========================================================================
-    /** @class DecreasingSpline
-     *  The special spline for non-negative non-increasing function
-     *  @see http://en.wikipedia.org/wiki/I-spline
-     *  @see http://en.wikipedia.org/wiki/M-spline
-     *  @see http://en.wikipedia.org/wiki/B-spline
-     *  @see Gaudi::Math::PositiveSpline
-     */
-    class GAUDI_API  DecreasingSpline : public RooAbsPdf 
-    {
-      // ======================================================================
-    public :
-      // ======================================================================
-      ClassDef(Analysis::Models::DecreasingSpline, 1) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /** constructor with the spline 
-       *  @param name  the name 
-       *  @param title the  title
-       *  @param x     the  variable 
-       *  @param spine the spline  
-       *  @param phis  vector of parameters 
-       */
-      DecreasingSpline 
-        ( const char*                          name, 
-          const char*                          title     ,
-          RooAbsReal&                          x         ,
-          const Gaudi::Math::DecreasingSpline& spline    ,   // the spline 
-          RooArgList&                          phis      ) ; // parameters
-      /// copy
-      DecreasingSpline
-        ( const DecreasingSpline& right     , 
-          const char*           name = 0  ) ;
-      /// destructor 
-      virtual ~DecreasingSpline() ;
-      /// clone 
-      virtual  DecreasingSpline* clone ( const char* name ) const ; 
-      // ======================================================================
-    public:
-      // ======================================================================
-      // the actual evaluation of function 
-      virtual Double_t evaluate() const ;
-      // ======================================================================
-    public:  // integrals 
-      // ======================================================================
-      virtual Int_t    getAnalyticalIntegral
-        ( RooArgSet&     allVars      , 
-          RooArgSet&     analVars     ,
-          const char* /* rangename */ ) const ;
-      virtual Double_t analyticalIntegral 
-        ( Int_t          code         , 
-          const char*    rangeName    ) const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// set all parameters 
-      void setPars () const ; // set all parameters 
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// access to underlying function 
-      const Gaudi::Math::DecreasingSpline& function() const { return m_spline ; }
-      const Gaudi::Math::DecreasingSpline& spline  () const { return m_spline ; }
-      // ======================================================================
-    protected :
-      // ======================================================================
-      RooRealProxy m_x    ;
-      RooListProxy m_phis ;
-      // ======================================================================
-      TIterator* m_iterator;  //! do not persist
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the actual function 
-      mutable Gaudi::Math::DecreasingSpline m_spline ;          // the function 
-      // ======================================================================
-    };
-  
+
     // ========================================================================
     // 2D non-factorizable models  
     // ========================================================================

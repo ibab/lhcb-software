@@ -3948,7 +3948,7 @@ Double_t Analysis::Models::PositiveSpline::analyticalIntegral
 
 
 // ============================================================================
-// increasing spline 
+// monothonic spline 
 // ============================================================================
 /** constructor with the spline 
  *  @param name  the name 
@@ -3958,11 +3958,11 @@ Double_t Analysis::Models::PositiveSpline::analyticalIntegral
  *  @param phis  vector of parameters 
  */
 // ============================================================================
-Analysis::Models::IncreasingSpline::IncreasingSpline 
+Analysis::Models::MonothonicSpline::MonothonicSpline 
 ( const char*                          name, 
   const char*                          title     ,
   RooAbsReal&                          x         ,
-  const Gaudi::Math::IncreasingSpline& spline    ,   // the spline 
+  const Gaudi::Math::MonothonicSpline& spline    ,   // the spline 
   RooArgList&                          phis      )   // parameters
   : RooAbsPdf ( name , title ) 
   , m_x        ( "x"       , "Observable"   , this , x ) 
@@ -3989,8 +3989,8 @@ Analysis::Models::IncreasingSpline::IncreasingSpline
 // ============================================================================
 // copy constructor
 // ============================================================================
-Analysis::Models::IncreasingSpline::IncreasingSpline 
-( const Analysis::Models::IncreasingSpline&  right ,      
+Analysis::Models::MonothonicSpline::MonothonicSpline 
+( const Analysis::Models::MonothonicSpline&  right ,      
   const char*                                name  ) 
   : RooAbsPdf ( right , name ) 
 //
@@ -4004,19 +4004,18 @@ Analysis::Models::IncreasingSpline::IncreasingSpline
   m_iterator = m_phis.createIterator () ;
   setPars () ;
 }
-
 // ============================================================================
 // destructor 
 // ============================================================================
-Analysis::Models::IncreasingSpline::~IncreasingSpline() { delete m_iterator ; }
+Analysis::Models::MonothonicSpline::~MonothonicSpline() { delete m_iterator ; }
 // ============================================================================
 // clone 
 // ============================================================================
-Analysis::Models::IncreasingSpline*
-Analysis::Models::IncreasingSpline::clone( const char* name ) const 
-{ return new Analysis::Models::IncreasingSpline(*this,name) ; }
+Analysis::Models::MonothonicSpline*
+Analysis::Models::MonothonicSpline::clone( const char* name ) const 
+{ return new Analysis::Models::MonothonicSpline(*this,name) ; }
 // ============================================================================
-void Analysis::Models::IncreasingSpline::setPars () const 
+void Analysis::Models::MonothonicSpline::setPars () const 
 {
   m_iterator->Reset () ;
   //
@@ -4041,7 +4040,7 @@ void Analysis::Models::IncreasingSpline::setPars () const
 // ============================================================================
 // the actual evaluation of function 
 // ============================================================================
-Double_t Analysis::Models::IncreasingSpline::evaluate() const 
+Double_t Analysis::Models::MonothonicSpline::evaluate() const 
 {
   //
   setPars () ;
@@ -4049,7 +4048,7 @@ Double_t Analysis::Models::IncreasingSpline::evaluate() const
   return m_spline ( m_x ) ; 
 }
 // ============================================================================
-Int_t Analysis::Models::IncreasingSpline::getAnalyticalIntegral
+Int_t Analysis::Models::MonothonicSpline::getAnalyticalIntegral
 ( RooArgSet&     allVars      , 
   RooArgSet&     analVars     ,
   const char* /* rangename */ ) const 
@@ -4058,7 +4057,7 @@ Int_t Analysis::Models::IncreasingSpline::getAnalyticalIntegral
   return 0 ;
 }
 // ============================================================================
-Double_t Analysis::Models::IncreasingSpline::analyticalIntegral 
+Double_t Analysis::Models::MonothonicSpline::analyticalIntegral 
 ( Int_t       code      , 
   const char* rangeName ) const 
 {
@@ -4070,131 +4069,6 @@ Double_t Analysis::Models::IncreasingSpline::analyticalIntegral
   return m_spline.integral ( m_x.min(rangeName) , m_x.max(rangeName) ) ;
 }
 // ============================================================================
-
-// ============================================================================
-// decreasing spline 
-// ============================================================================
-/** constructor with the spline 
- *  @param name  the name 
- *  @param title the  title
- *  @param x     the  variable 
- *  @param spine the spline  
- *  @param phis  vector of parameters 
- */
-// ============================================================================
-Analysis::Models::DecreasingSpline::DecreasingSpline 
-( const char*                          name, 
-  const char*                          title     ,
-  RooAbsReal&                          x         ,
-  const Gaudi::Math::DecreasingSpline& spline    ,   // the spline 
-  RooArgList&                          phis      )   // parameters
-  : RooAbsPdf ( name , title ) 
-  , m_x        ( "x"       , "Observable"   , this , x ) 
-  , m_phis     ( "phi"     , "Coefficients" , this     )
-    //
-  , m_iterator ( 0 ) 
-    //
-  , m_spline   ( spline ) 
-{
-  //
-  TIterator* tmp  = phis.createIterator() ;
-  RooAbsArg* coef = 0 ;
-  while ( ( coef = (RooAbsArg*) tmp->Next() ) )
-  {
-    RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
-    if ( 0 == r ) { continue ; }
-    m_phis.add ( *coef ) ;
-  }
-  delete tmp ;
-  //
-  m_iterator = m_phis.createIterator() ;
-  setPars () ;
-}
-// ============================================================================
-// copy constructor
-// ============================================================================
-Analysis::Models::DecreasingSpline::DecreasingSpline 
-( const Analysis::Models::DecreasingSpline&  right ,      
-  const char*                                name  ) 
-  : RooAbsPdf ( right , name ) 
-//
-  , m_x        ( "x"      , this , right.m_x     ) 
-  , m_phis     ( "phis"   , this , right.m_phis  ) 
-    //
-  , m_iterator ( 0 ) 
-    //
-  , m_spline ( right.m_spline ) 
-{
-  m_iterator = m_phis.createIterator () ;
-  setPars () ;
-}
-
-// ============================================================================
-// destructor 
-// ============================================================================
-Analysis::Models::DecreasingSpline::~DecreasingSpline() { delete m_iterator ; }
-// ============================================================================
-// clone 
-// ============================================================================
-Analysis::Models::DecreasingSpline*
-Analysis::Models::DecreasingSpline::clone( const char* name ) const 
-{ return new Analysis::Models::DecreasingSpline(*this,name) ; }
-// ============================================================================
-void Analysis::Models::DecreasingSpline::setPars () const 
-{
-  m_iterator->Reset () ;
-  //
-  RooAbsArg*       phi   = 0 ;
-  const RooArgSet* nset  = m_phis.nset() ;
-  //
-  std::vector<double> sin2phi ;
-  //
-  unsigned short k = 0 ;
-  while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
-  {
-    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
-    if ( 0 == r ) { continue ; }
-    //
-    const double phi   = r->getVal ( nset ) ;
-    //
-    m_spline.setPar ( k  , phi ) ;
-    //
-    ++k ;
-  }
-}
-// ============================================================================
-// the actual evaluation of function 
-// ============================================================================
-Double_t Analysis::Models::DecreasingSpline::evaluate() const 
-{
-  //
-  setPars () ;
-  //
-  return m_spline ( m_x ) ; 
-}
-// ============================================================================
-Int_t Analysis::Models::DecreasingSpline::getAnalyticalIntegral
-( RooArgSet&     allVars      , 
-  RooArgSet&     analVars     ,
-  const char* /* rangename */ ) const 
-{
-  if ( matchArgs ( allVars , analVars , m_x ) ) { return 1 ; }
-  return 0 ;
-}
-// ============================================================================
-Double_t Analysis::Models::DecreasingSpline::analyticalIntegral 
-( Int_t       code      , 
-  const char* rangeName ) const 
-{
-  assert ( code == 1 ) ;
-  if ( 1 != code ) {}
-  //
-  setPars () ;
-  //
-  return m_spline.integral ( m_x.min(rangeName) , m_x.max(rangeName) ) ;
-}
-// ============================================================================
-
 
 
 // ============================================================================

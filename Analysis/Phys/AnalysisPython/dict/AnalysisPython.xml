@@ -54,8 +54,7 @@
   <class name = "Analysis::Models::PolySigmoid"       />
   <class name = "Analysis::Models::ExpoPositive"      />
   <class name = "Analysis::Models::PositiveSpline"    />
-  <class name = "Analysis::Models::IncreasingSpline"  />
-  <class name = "Analysis::Models::DecreasingSpline"  />
+  <class name = "Analysis::Models::MonothonicSpline"  />
 
   <class name = "Analysis::Models::Poly2DPositive"    />
   <class name = "Analysis::Models::Poly2DSymPositive" />

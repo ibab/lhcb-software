@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2015-02-10 - Vanya Belyaev
+ - improve splines 
+
 ! 2015-02-08 - Vanya Belyaev
  - add convex and monothonical polynomials 
 
