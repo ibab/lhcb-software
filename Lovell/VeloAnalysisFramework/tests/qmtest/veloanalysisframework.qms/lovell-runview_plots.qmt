@@ -5,7 +5,8 @@
   </argument>
   <argument name="args">
     <set>
-      <text>$VELOANALYSISFRAMEWORKROOT/tests/test_runview_plots.py</text>
+      <text>$VELOANALYSISFRAMEWORKROOT/tests/run_test.py</text>
+      <text>test_runview_plots.py</text>
     </set>
   </argument>
   <argument name="timeout">
