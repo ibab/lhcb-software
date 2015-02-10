@@ -1078,18 +1078,17 @@ bool Gaudi::Math::ConvexSpline::updateCoefficients  ()
   v2[0] = m_sphere.x2(0)  ;
   for ( unsigned int i = 0 ; i < v.size() ; ++i ) 
   { v2[i+1] = v2[i] + v[i] * ( knot_i (  i + order() + 1 ) - knot_i ( i + 1 )  ) / order() ; }
-  
   //
   // revert, if needed 
-  if ( !m_increasing ) { std::reverse ( v.begin() , v.end () ) ; }
+  if ( !m_increasing ) { std::reverse ( v2.begin() , v2.end () ) ; }
   
   //
   const double isum = 1.0 / 
-    _spline_integral_ ( v , m_bspline.knots() , m_bspline.order() ) ;
+    _spline_integral_ ( v2 , m_bspline.knots() , m_bspline.order() ) ;
   //
   for ( unsigned short ix = 0 ; ix < m_sphere.nX() ; ++ix ) 
   { 
-    const bool updated = m_bspline.setPar ( ix , v [ix] * isum ) ; 
+    const bool updated = m_bspline.setPar ( ix , v2 [ix] * isum ) ; 
     update = updated || update ;
   }
   //
