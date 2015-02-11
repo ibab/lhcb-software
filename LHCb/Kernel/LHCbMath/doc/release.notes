@@ -7,6 +7,11 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-02-11 - Chris Jones
+ - Temporarily revert Gerhard's change from the 3rd Feb to call 
+  _mm256_zeroupper() at the boundaries of AVX and non-AVX code, to test if it
+  is the cause of mysterious seg. faults from DaVinci in the nightlies.
+
+! 2015-02-11 - Chris Jones
  - Improve EigenTypes.h
  - Add VectorClassTypes.h
  - Add a new test TestXYZTypes
