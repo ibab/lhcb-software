@@ -4,6 +4,12 @@ Package Coordinator : Sean Benson
 Purpose             : Turbo Stream Analysis
 !-----------------------------------------------------------------------------
 
+! 2015-2-11 - Sean Benson
+ - Tesla created objects are now packed.
+ - TES objects moved down one level, now under /Event/Turbo/HLTLINE/OBJECT
+ - PV selection harmonised with offline.
+ - PVs now the same for all resurrections in each event.
+
 !=========================== Tesla v1r2 2015-01-16 ===========================
 
 ! 2015-1-15 - Sean Benson

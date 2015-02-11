@@ -29,9 +29,9 @@ prefix = "Hlt2IncPhi"
 
 Tesla().TriggerLines = ["Hlt2IncPhi"]
 Tesla().ReportVersion = 2
-Tesla().OutputLevel = 4
+Tesla().OutputLevel = 2
 Tesla().EvtMax = -1
-#Tesla().PreSplit = True
+Tesla().Pack = False
 
 from GaudiConf.IOHelper import IOHelper
 IOHelper().inputFiles( [ "PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/s/sbenson/TempTestFiles/RemadeReports_HEAD_14-1-15_Bsphiphi_1k.dst" ] ) 
@@ -51,10 +51,10 @@ tes = gaudi.evtsvc()
 
 selRepLoc = "Hlt2/SelReports"
 
-partLoc ="/Event/" + prefix + "/Particles"
-protoLoc ="/Event/" + prefix + "/Protos"
-trackLoc ="/Event/" + prefix + "/Tracks"
-vertLoc ="/Event/" + prefix + "/Vertices"
+partLoc ="/Event/Turbo/" + prefix + "/Particles"
+protoLoc ="/Event/Turbo/" + prefix + "/Protos"
+trackLoc ="/Event/Turbo/" + prefix + "/Tracks"
+vertLoc ="/Event/Turbo/" + prefix + "/Vertices"
 
 i_partTot=0.0
 i_trackTot=0.0

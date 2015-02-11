@@ -10,9 +10,10 @@ import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
 GaudiSequencer, DstConf, L0Conf, CondDB, GlobalRecoConf, RawEventJuggler, DecodeRawEvent,
 RawEventFormatConf, LumiAlgsConf, InputCopyStream, RecombineRawEvent)
+from Configurables import PackParticlesAndVertices
 
 class Tesla(LHCbConfigurableUser):
-    __used_configurables__ = [ LHCbApp, LumiAlgsConf, RawEventJuggler, DecodeRawEvent, RawEventFormatConf, DstConf, RecombineRawEvent]
+    __used_configurables__ = [ LHCbApp, LumiAlgsConf, RawEventJuggler, DecodeRawEvent, RawEventFormatConf, DstConf, RecombineRawEvent, PackParticlesAndVertices]
 
     __slots__ = {
             "EvtMax"		: -1    	# Maximum number of events to process
@@ -25,11 +26,12 @@ class Tesla(LHCbConfigurableUser):
           , 'OutputLevel' 	: 4 		# Er, output level
           , "outputFile" 	: 'Tesla.dst' 	# output filename
           , 'WriteFSR'    	: False 	# copy FSRs as required
-          , 'PV'	        : "Online"      # Associate to the PV chosen by the HLT or the offline one
+          , 'PV'	        : "Offline"      # Associate to the PV chosen by the HLT or the offline one
           , 'PreSplit'	        : False         # Are you looking at a time before the HLT was split?
           , 'ReportVersion'	: 2	        # Do we have the normal or extendedselection reports
           , 'TriggerLines'	: ["Hlt2IncPhi"]# Which trigger line
           , 'Mode'	        : "Offline"     # "Online" (strip unnecessary banks and run lumi algorithms) or "Offline"?
+          , 'Pack'	        : True          # Do we want to pack the objects?
           , 'RawFormatVersion'	: 0.2           # Which banks form the Turbo stream
           }
     _propertyDocDct ={
@@ -48,11 +50,13 @@ class Tesla(LHCbConfigurableUser):
             , 'ReportVersion'   : '1: Normal HLT reports, 2: New extended reports'
             , 'TriggerLines'    : 'Which trigger line to process'
             , 'Mode'     	: '"Online" (strip unnecessary banks and run lumi algorithms) or "Offline"?'
+            , 'Pack'     	: 'Do we want to pack the object?'
             , 'RawFormatVersion': 'Which banks form the Turbo stream'
             }
 
     writerName = "DstWriter"
     teslaSeq = GaudiSequencer("TeslaSequence")
+    base = "Turbo/"
     
     def _safeSet(self,conf,param):
         for p in param:
@@ -153,25 +157,58 @@ class Tesla(LHCbConfigurableUser):
         for l in lines:
             trig1 = self._configureReportAlg(l)
             seq.Members+=[trig1]
-            # NEED TO SET THE LOCATIONS IN THE REPORT ALGORITHM
-            writer.ItemList+=[ l + "/Particles#1" 
-                    , l + "/Protos#1"
-                    , l + "/Vertices#1"
-                    , l + "/Tracks#1"
-                    , l + "/RichPIDs#1"
-                    , l + "/MuonPIDs#1"
-                    , l + "/Primary#1"
-                    , l + "/Particle2VertexRelations#1"
+            # IF NOT PACKING NEED TO SET THE LOCATIONS IN THE REPORT ALGORITHM
+            if not self.getProp('Pack'):
+                writer.ItemList+=[ self.base + l + "/Particles#99" 
+                        , self.base + l + "/Protos#99"
+                        , self.base + l + "/Vertices#99"
+                        , self.base + l + "/Tracks#99"
+                        , self.base + l + "/RichPIDs#99"
+                        , self.base + l + "/MuonPIDs#99"
+                        , self.base + "Primary#99"
+                        , self.base + l + "/Particle2VertexRelations#99"
+                        ]
+
+        if self.getProp('Pack'):
+            for l in lines:
+                # Additional packer configuration for RichPIDs
+                # Temporary solution
+                from Configurables import DataPacking__Pack_LHCb__RichPIDPacker_
+                p = DataPacking__Pack_LHCb__RichPIDPacker_(name = "TurboRichPIDPacker"+l)
+                p.OutputName = "/Event/"+self.base+l+"/pRec/Rich/CustomPIDs"
+                p.InputName = "/Event/"+self.base+l+"/RichPIDs"
+                p.OutputLevel = self.getProp('OutputLevel')
+                writer.ItemList+=[self.base+l+"/pRec/Rich/CustomPIDs"]
+                seq.Members += [p]
+
+            packer = PackParticlesAndVertices( name = "TurboPacker",
+                    InputStream        = "/Event"+"/"+self.base.rstrip('/'),
+                    DeleteInput        = True,
+                    EnableCheck        = False,
+                    AlwaysCreateOutput = True)
+            seq.Members +=[packer]
+            
+            writer.ItemList+=[
+                    self.base+"pPhys/Particles#99"
+                    ,self.base+"pPhys/Vertices#99"
+                    ,self.base+"pPhys/RecVertices#99"
+                    ,self.base+"pPhys/Relations#99"
+                    ,self.base+"pRec/Track/Custom#99"
+                    ,self.base+"pRec/Muon/CustomPIDs#99"
+                    ,self.base+"pRec/ProtoP/Custom#99"
                     ]
+            packer.OutputLevel = self.getProp('OutputLevel')
+        
         self.teslaSeq.Members += [ seq ]
         IOHelper(persistency,persistency).outStream(fname,writer,writeFSR=self.getProp('WriteFSR'))
     
     def _configureReportAlg(self,line):
         from Configurables import TeslaReportAlgo
         trig1 = TeslaReportAlgo("TeslaReportAlgo"+line)
-        trig1.OutputPrefix=line
+        trig1.OutputPrefix=self.base+line
         trig1.ReportVersion=self.getProp('ReportVersion')
         trig1.PV=self.getProp('PV')
+        trig1.PVLoc=self.base+"Primary"
         trig1.PreSplit=self.getProp('PreSplit')
         trig1.TriggerLine=line
         trig1.OutputLevel=self.getProp('OutputLevel')
