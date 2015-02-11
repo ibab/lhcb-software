@@ -4,6 +4,11 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2015-02-11 - Heinrich Schindler
+ - Add algorithm MaskParticles to set the status of high energy and rapidity
+   particles to "DocumentationParticle". This is used in simulations of the  
+   Herschel stations to prevent intact protons from hitting the BRAN absorbers.
+
 !======================== GaussKine v6r4p1 2014-12-18 ========================
 ! 2014-11-26 - Gloria Corti
  - Fix warning when compiling with --pedantic
