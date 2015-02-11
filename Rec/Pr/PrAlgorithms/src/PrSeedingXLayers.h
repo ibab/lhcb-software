@@ -4,14 +4,13 @@
 // Include files
 // from Gaudi
 
-//#define DEBUG_HISTO 
+//#define DEBUG_HISTO
 //uncomment this line if you want to print monitoring histograms
-
-#ifdef DEBUG_HISTO 
-#include "GaudiAlg/GaudiTupleAlg.h"
-#else
-#include "GaudiAlg/GaudiAlgorithm.h"
-#endif
+//#ifdef DEBUG_HISTO 
+#include "GaudiAlg/GaudiHistoAlg.h"
+//#else
+//#include "GaudiAlg/GaudiAlgorithm.h"
+//#endif
 #include "GaudiAlg/ISequencerTimerTool.h"
 
 #include "PrKernel/IPrDebugTool.h"
@@ -19,6 +18,9 @@
 #include "PrSeedTrack.h"
 #include "PrGeometryTool.h"
 #include "TfKernel/RecoFuncs.h"
+
+//#include "PrKernel/IPrDebugTool.h"
+//#include "PrMCTools/PrTStationDebugTool.h"
 
 /** @class PrSeedingXLayers PrSeedingXLayers.h
  *  Stand alone seeding for the FT T stations
@@ -39,6 +41,7 @@
  * - TolTyOffset: Tolerance for the offset in y for adding stereo hits.
  * - TolTySlope: Tolerance for the slope in y for adding stereo hits.
  * - MaxIpAtZero: Maximum impact parameter of the track when doing a straight extrapolation to zero. Acts as a momentum cut.
+ * - To Add New Params
  * - DebugToolName: Name of the debug tool
  * - WantedKey: Key of the particle which should be studied (for debugging).
  * - TimingMeasurement: Do timing measurement and print table at the end (?).
@@ -46,14 +49,15 @@
  *
  *  @author Olivier Callot
  *  @date   2013-02-14
- *  2014-06-26 : Yasmine Amhis Modification
+ *  2013-03-21 : Yasmine Amhis Modification
  *  2014-02-12 : Michel De Cian (TDR version) 
+ *  2014-24-11 : Renato Quagliani
  */
-#ifdef DEBUG_HISTO 
-class PrSeedingXLayers : public GaudiTupleAlg {
-#else 
-class PrSeedingXLayers : public GaudiAlgorithm {
-#endif
+//#ifdef DEBUG_HISTO 
+class PrSeedingXLayers : public GaudiHistoAlg {
+  //#else
+  //class PrSeedingXLayers : public GaudiAlgorithm {
+  //#endif
 public:
   /// Standard constructor
   PrSeedingXLayers( const std::string& name, ISvcLocator* pSvcLocator );
@@ -63,16 +67,14 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-
- 
-
 protected:
+  int matchXCandidate( PrSeedTrack& track );
 
   /** @brief Collect hits in the x-layers. Obsolete, just kept for documentation
    *  @param part lower (1) or upper (0) half
    */
   void findXProjections( unsigned int part );
-
+  
   /** @brief Collect hits in the stereo-layers. Obsolete, just kept for documentation
    *  @param part lower (1) or upper (0) half
    */
@@ -117,6 +119,7 @@ protected:
     return false;
   };
 
+  
   bool matchKey( const PrSeedTrack& track ) {
     if ( !m_debugTool ) return false;
     for ( PrHits::const_iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ) {
@@ -124,8 +127,13 @@ protected:
     }
     return false;
   };
+  
+  void setKey( int key ) {
+    m_wantedKey = key;
+    return;
+  };
 
-
+  
   /** @brief Collect hits in the x-layers using a parabolic search window.
    *  @param part lower (1) or upper (0) half
    */
@@ -185,13 +193,17 @@ private:
   float           m_maxChi2PerDoF;
   bool            m_xOnly;
   unsigned int    m_maxParabolaSeedHits;
-  
+  float           m_bestDist;
+  float           m_tolXStereo; //added
+  float           m_coord; //added
   float           m_tolTyOffset;
   float           m_tolTySlope;
-  
+  float           m_tolYOffset;//added(debug)
+  float           m_tolTriangle; //added(debug)
+  bool            m_useFix; //added  
   bool            m_decodeData;
   bool            m_printSettings;
-  
+  bool            m_doHistos;
 
   PrHitManager*   m_hitManager;
   PrGeometryTool* m_geoTool;
@@ -200,7 +212,7 @@ private:
   std::string     m_debugToolName;
   int             m_wantedKey;
   IPrDebugTool*   m_debugTool;
-
+  //PrTStationDebugTool* m_debugTool;
   std::vector<PrSeedTrack>       m_trackCandidates;
   std::vector<PrSeedTrack>       m_xCandidates;
 
