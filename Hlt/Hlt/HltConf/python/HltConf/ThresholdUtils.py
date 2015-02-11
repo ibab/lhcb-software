@@ -57,9 +57,9 @@ def importLineConfigurables(pkg, endsWithLines = False) :
     #
     import os.path, pkgutil, importlib
     old_style = [getattr(importlib.import_module(pkg.__name__ + '.' + name), name + 'Conf')
-                 for _, name, is_pkg in pkgutil.iter_modules(pkg.__path__)
+                 for _, name, is_pkg in pkgutil.iter_modules(pkg.__path__[:2])
                  if (not endsWithLines or (endsWithLines and name.endswith('Lines'))) and not is_pkg]
     new_style = [getattr(importlib.import_module(pkg.__name__ + '.' + name + '.Lines'), name + 'Lines')
-                 for _, name, is_pkg in pkgutil.iter_modules(pkg.__path__)
+                 for _, name, is_pkg in pkgutil.iter_modules(pkg.__path__[:2])
                  if is_pkg if name not in ('Utilities')]
     return old_style + new_style
