@@ -4,6 +4,9 @@
 ! Purpose     : Jet Tagging Package
 ! -----------------------------------------------------------------------------
 
+! 2015-02-11 - Philip Ilten
+ - added LHCb-ANA-2014-076 b,c-jet tagging tool
+
 ! 2015-01-23 - Vanya Belyaev
  - minor fix to account changes in structure of LoKi header files 
 
