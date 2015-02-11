@@ -41,7 +41,7 @@ class Hlt1_Physics_September2012( object ):
             raise RuntimeError( 'Must update HltType when modifying ActiveHlt.Lines()' )
         
     def L0TCK(self) :
-        return '0x0044'
+        return '0x0046'
 
     def HltType(self) :
         self.verifyType( Hlt1_Physics_September2012 ) 
@@ -61,45 +61,30 @@ class Hlt1_Physics_September2012( object ):
         from Hlt1Lines.Hlt1DisplVertexLines    import Hlt1DisplVertexLinesConf
         from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
 
-        thresholds = { Hlt1TrackLinesConf :    { 'AllL0Tight_PT'         :  1700
-                                               , 'AllL0Tight_P'          :  3000
-                                               , 'AllL0Tight_IP'         :  0.100
-                                               , 'AllL0Tight_IPChi2'     :  16  
-                                               , 'AllL0Tight_TrChi2'     :  1.5 
-                                               , 'AllL0Tight_GEC'        : 'Loose'
-                                               , 'AllL0Tight_Velo_NHits' : 9 
-                                               , 'AllL0Tight_Velo_Qcut'  : 3   
-                                               , 'AllL0Tight_ValidateTT' : True 
-                                               , 'AllL0_PT'         :  1600
-                                               , 'AllL0_P'          :  3000
-                                               , 'AllL0_IP'         :  0.100
-                                               , 'AllL0_IPChi2'     :  16
-                                               , 'AllL0_TrChi2'     :  2.0
-                                               , 'AllL0_GEC'        : 'Loose'
-                                               , 'AllL0_Velo_NHits' : 9 
-                                               , 'AllL0_Velo_Qcut'  : 3  
-                                               , 'AllL0_ValidateTT' : True 
-                                               , 'Muon_PT'       :  1000 
-                                               , 'Muon_P'        :  3000 
-                                               , 'Muon_IP'       :     0.100
-                                               , 'Muon_IPChi2'   :    16
-                                               , 'Muon_TrChi2'   :     2.5  
-                                               , 'Muon_GEC'      : 'Loose'
-                                               , 'Muon_ValidateTT' : False
-                                               , 'Muon_L0Channels' : 'Muon,DiMuon,MuonNoSPD,DiMuonNoSPD' 
-                                               , 'Photon_PT'     :  1200
-                                               , 'Photon_P'      :  3000
-                                               , 'Photon_IP'     :     0.100
-                                               , 'Photon_IPChi2' :    16
-                                               , 'Photon_TrChi2' :     2.0
-                                               , 'Photon_L0Channels' : 'PhotonHi,ElectronHi' 
+        thresholds = { Hlt1TrackLinesConf :    {'AllL0_Velo_NHits'   : 9
+                                               , 'AllL0_Velo_Qcut'   : 3
+                                               , 'AllL0_TrNTHits'    : 16
+                                               , 'AllL0_PT'          : 1600.
+                                               , 'AllL0_P'           : 3000.
+                                               , 'AllL0_IPChi2'      : 16.
+                                               , 'AllL0_TrChi2'      : 2.
+                                               , 'AllL0_GEC'         : 'Loose'
+                                               , 'Muon_TrNTHits'     : 0 #OFF
+                                               , 'Muon_Velo_NHits'   : 0 #OFF
+                                               , 'Muon_Velo_Qcut'    : 999 #OFF
+                                               , 'Muon_PT'           : 1000.
+                                               , 'Muon_P'            : 3000.
+                                               , 'Muon_IPChi2'       : 16.
+                                               , 'Muon_TrChi2'       : 2.5
+                                               , 'Muon_GEC'          : 'Loose'
+                                               , 'Photon_PT'         : 1200.
+                                               , 'Photon_P'          : 3000.
+                                               , 'Photon_IPChi2'     : 16.
+                                               , 'Photon_TrChi2'     : 2.
                                                , 'Photon_GEC'        : 'Loose'
-                                               , 'Photon_ValidateTT' : True
-                                               , 'Prescale'          : {'Hlt1TrackAllL0'                   : 1.0, 
-                                                                        'Hlt1TrackAllL0Tight'              : 1.0,
-                                                                        'Hlt1TrackForwardPassThrough'      : 0,
-                                                                        'Hlt1TrackForwardPassThroughLoose' : 0}
- 
+                                               , 'L0Channels'        : {'AllL0'  : 'L0_DECISION_PHYSICS',
+                                                                        'Muon'   : ('Muon', 'DiMuon', 'MuonNoSPD', 'DiMuonNoSPD'),
+                                                                        'Photon' : ("PhotonHi", "ElectronHi")}
                                                }
                      , Hlt1ElectronLinesConf : { 'SingleElectronNoIP_P'          : 20000
                                                , 'SingleElectronNoIP_PT'         : 10000
@@ -211,13 +196,11 @@ class Hlt1_Physics_September2012( object ):
         """
         Returns a list of active lines
         """
-        lines =  [ 'Hlt1TrackAllL0', 'Hlt1TrackMuon', 'Hlt1TrackAllL0Tight', 'Hlt1TrackPhoton'
+        lines =  [ 'Hlt1TrackAllL0', 'Hlt1TrackMuon', 'Hlt1TrackPhoton'
                  , 'Hlt1VertexDisplVertex'
                  , 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
                  , 'Hlt1SingleElectronNoIP'
-                 , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
-                 , 'Hlt1DiProtonLowMult', 'Hlt1DiProton'
-                 , 'Hlt1L0HighSumETJet','Hlt1HighPtJetsSinglePV']
+                 , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass']
         
         from Hlt1TechnicalLines import Hlt1TechnicalLines 
         lines.extend( Hlt1TechnicalLines().ActiveHlt1Lines() )

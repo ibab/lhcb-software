@@ -59,34 +59,33 @@ class Physics_draftEM2015( object ):
         from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
         from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
         
-        from Hlt2Lines.Hlt2InclusiveMuonLines  import Hlt2InclusiveMuonLinesConf
-        from Hlt2Lines.Hlt2InclusiveDiMuonLines  import Hlt2InclusiveDiMuonLinesConf
-        from Hlt2Lines.Hlt2MuNTrackLines  import Hlt2MuNTrackLinesConf
+        from Hlt2Lines.Hlt2InclusiveMuonLines   import Hlt2InclusiveMuonLinesConf
+        from Hlt2Lines.Hlt2InclusiveDiMuonLines import Hlt2InclusiveDiMuonLinesConf
         from Hlt2Lines.Hlt2CharmHadD02HHLines   import Hlt2CharmHadD02HHLinesConf
-        from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
-        
+        from Hlt2Lines.Hlt2CommissioningLines   import Hlt2CommissioningLinesConf
+        from Hlt2Lines.DiMuon.Lines             import DiMuonLines
         from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 
         thresholds = { Hlt1TrackLinesConf :    {'AllL0_Velo_NHits'   : 9
                                                , 'AllL0_Velo_Qcut'   : 3
                                                , 'AllL0_TrNTHits'    : 16
-                                               , 'AllL0_PT'          : 1600.
+                                               , 'AllL0_PT'          : 1000.
                                                , 'AllL0_P'           : 3000.
-                                               , 'AllL0_IPChi2'      : 16.
-                                               , 'AllL0_TrChi2'      : 2.
+                                               , 'AllL0_IPChi2'      : 4.0
+                                               , 'AllL0_TrChi2'      : 5.0
                                                , 'AllL0_GEC'         : 'Loose'
                                                , 'Muon_TrNTHits'     : 0 #OFF
                                                , 'Muon_Velo_NHits'   : 0 #OFF
                                                , 'Muon_Velo_Qcut'    : 999 #OFF
                                                , 'Muon_PT'           : 1000.
                                                , 'Muon_P'            : 3000.
-                                               , 'Muon_IPChi2'       : 16.
-                                               , 'Muon_TrChi2'       : 2.5
+                                               , 'Muon_IPChi2'       : 4.0
+                                               , 'Muon_TrChi2'       : 5.0
                                                , 'Muon_GEC'          : 'Loose'
                                                , 'Photon_PT'         : 1200.
                                                , 'Photon_P'          : 3000.
-                                               , 'Photon_IPChi2'     : 16.
-                                               , 'Photon_TrChi2'     : 2.
+                                               , 'Photon_IPChi2'     : 4.0
+                                               , 'Photon_TrChi2'     : 5.0
                                                , 'Photon_GEC'        : 'Loose'
                                                , 'L0Channels'        : {'AllL0'  : 'L0_DECISION_PHYSICS',
                                                                         'Muon'   : ('Muon', 'DiMuon', 'MuonNoSPD', 'DiMuonNoSPD'),
@@ -156,46 +155,65 @@ class Physics_draftEM2015( object ):
 
                                                , 'MaxNoBiasRate' : 1000000.
                                                }
-        	       , Hlt2InclusiveDiMuonLinesConf : {      'TrChi2'                   : 10
-                                                               ,'TrChi2Tight'              : 4
-                                                               ,'UnbiasedDiMuonMinMass'    : 2900      # MeV
-                                                               ,'UnbiasedDiMuonPt'        : 0.0      # MeV
-                                                               ,'UnbiasedDiMuonMuPt'      : 0.0      # MeV
-                                                               ,'UnbiasedDiMuonLowPt'     : 0.0      # MeV
-                                                               ,'UnbiasedDiMuonLowMuPt'   : 0.0      # MeV
-                                                               ,'UnbiasedJPsiPt'          : 0.0      # MeV
-                                                               ,'UnbiasedJPsiMuPt'        : 0.0      # MeV
-                                                               ,'UnbiasedJPsiMassWindow'  : 120      # MeV
-                                                               ,'UnbiasedJPsiHighPt'      : 2000     # MeV
-                                                               ,'UnbiasedJPsiHighPTMassWindow' : 100
-                                                               ,'UnbiasedPsi2SPt'         :   0      # MeV
-                                                               ,'UnbiasedPsi2SMuPt'       : 0.0      # MeV
-                                                               ,'UnbiasedPsi2SMassWindow' : 120      # MeV
-                                                               ,'UnbiasedPsi2SPtHigh'     : 3500      #MeV
-                                                               ,'UnbiasedBmmMinMass'      : 4700     # MeV
-                                                               ,'UnbiasedBmmVertexChi2'   : 10
-                                                               ,'DetachedDiMuonPt'        :   600     #MeV 
-                                                               ,'DetachedDiMuonDLS'       :   7
-                                                               ,'DetachedDiMuonMuPt'      : 300      #Mev 
-                                                               ,'DetachedDiMuonMinMass'   :   0 #MeV 
-                                                               ,'DetachedDiMuIPChi2'      :   25
-                                                               ,'DetachedDiMuonVertexChi2':   8
-                                                               ,'DetachedHeavyDiMuonMinMass': 2950 # MeV
-                                                               ,'DetachedHeavyDiMuonDLS'  :   5
-                                                               ,'DetachedJPsiDLS'           : 3
-                                                               ,'DetachedJPsiMassWindow'    : 120 #MeV 
-                                                   		, 'Prescale'   : { 'Hlt2DiMuon'                  :  1.0
-                                                                                  , 'Hlt2DiMuonLowMass'         :  0
-                                                                                  , 'Hlt2DiMuonJPsi'            :  1.0
-                                                                                  , 'Hlt2DiMuonJPsiTurbo'            :  1.0
-                                                                                  , 'Hlt2DiMuonPsi2S'           :  1.0
-                                                                                  , 'Hlt2DiMuonB'               : 1.0
-                                                                                  , 'Hlt2DiMuonDY1'             :  0.005
-                                                                                  , 'Hlt2DiMuonDY2'             :  0.03
-                                                                                  , 'Hlt2DiMuonAndGamma'        :  0
-                                                                                  }
+        	       , Hlt2InclusiveDiMuonLinesConf : { 'TrChi2'                   : 10
+                                                     ,'TrChi2Tight'              : 4
+                                                     ,'UnbiasedJPsiPt'          : 0.0      # MeV
+                                                     ,'UnbiasedJPsiMuPt'        : 0.0      # MeV
+                                                     ,'UnbiasedJPsiMassWindow'  : 120      # MeV
+                                                     ,'UnbiasedJPsiVertexChi2'  :   25
+                                                   	 , 'Prescale' : {  'Hlt2DiMuonJPsiTurbo'       : 1.0
+                                                                     , 'Hlt2DiMuonDY1'             :   0.005
+                                                                     , 'Hlt2DiMuonDY2'             :   0.03
+                                                                     , 'Hlt2DiMuonAndGamma'        :   0
+                                                                     }
                                                         }
+                    , DiMuonLines : {'Common' :        {'TrChi2'     :   10,
+                                                        'TrChi2Tight':    4},
+                                     'DiMuon' :        {'MinMass'    :  2900 * MeV,
+                                                        'Pt'         :     0 * MeV,
+                                                        'MuPt'       :     0 * MeV,
+                                                        'VertexChi2' :    25},
+                                     'JPsi' :          {'MassWindow' :   120 * MeV,
+                                                        'Pt'         :     0 * MeV,
+                                                        'MuPt'       :     0 * MeV,
+                                                        'VertexChi2' :    25},
 
+                                     'JPsiHighPT' :    {'Pt'         :  2000 * MeV,
+                                                        'MassWindow' :   100 * MeV,
+                                                        'MuPt'       :     0 * MeV,
+                                                        'VertexChi2' :    25},
+
+                                     'Psi2S' :         {'MassWindow' :   120 * MeV,
+                                                        'Pt'         :     0 * MeV,
+                                                        'MuPt'       :     0 * MeV,
+                                                        'VertexChi2' :    25},
+                                     'Psi2SHighPT' :   {'MassWindow' :   120 * MeV,
+                                                        'Pt'         :  3500 * MeV,
+                                                        'MuPt'       :     0 * MeV,
+                                                        'VertexChi2' :    25},
+                 
+                                     'B' :             {'MinMass'    :  4700 * MeV,
+                                                        'VertexChi2' :    10},
+
+                                     'Z' :             {'MinMass'    : 40000 * MeV,
+                                                        'Pt'         :     0 * MeV},
+                                                                     
+                                     'Detached' :      {'IPChi2'     :    25,
+                                                        'DLS'        :     5},
+                                     'DetachedHeavy' : {'MinMass'    :  2950 * MeV,
+                                                        'Pt'         :     0 * MeV,
+                                                        'MuPt'       :   600 * MeV,
+                                                        'VertexChi2' :    25,
+                                                        'IPChi2'     :    25,
+                                                        'DLS'        :     5},
+                                     'DetachedJPsi' :  {'DLS'        :     3},
+                                     'DetachedPsi2S' : {'DLS'        :     3},
+                                     'Prescale' : {  'Hlt2DiMuon'         : 1.0
+                                                   , 'Hlt2DiMuonJPsi'     : 1.0
+                                                   , 'Hlt2DiMuonPsi2S'    : 1.0
+                                                   , 'Hlt2DiMuonB'        : 1.0}
+
+                    }
                     ,Hlt2InclusiveMuonLinesConf : {  'TrChi2'              :    2      #chi2PerDof 
                                                     ,'TrChi2Tight'         :    5      #chi2PerDof         
                                                     ,'TrChi2VeryTight'     :    2      #chi2PerDof 

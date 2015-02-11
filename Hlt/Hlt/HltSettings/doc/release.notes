@@ -4,9 +4,15 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
-! 2015-02-10 - Roel Aaij
- - Update Physics_draftEM2015.py for new configuration of 1TrackLines.
+! 2015-02-11 - Roel Aaij
+ - Update Hlt1_Physics_September2012.py for new configuration of 1TrackLines
+   and Physics_draftEM2015.py for new configuration of DiMuon lines.
+ - Put original 1Track cuts back in Physics_draftEM2015.py
 
+! 2015-02-10 - Roel Aaij
+ - Update Physics_draftEM2015.py for new configuration of 1TrackLines and
+   Hlt2 new style DiMuon lines.
+ 
 ! 2015-02-07 - Roel Aaij
  - Remove imports of obsolete sets of lines.
 
