@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2015-02-11 - Heinrich Schindler
+ - Add HC (Herschel) to SimConf.py.
+
 ! 2015-02-04 - Marco Clemencic
  - Removed a few .qmt files because they were referring to files that have been
    removed by Rob on 2014-01-20.

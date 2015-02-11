@@ -151,8 +151,10 @@ class SimConf(LHCbConfigurableUser) :
                     packing.Members += [ MCRichSegmentPacker("MCRichSegmentPacker"+slot) ]
                     packing.Members += [ MCRichTrackPacker("MCRichTrackPacker"+slot) ]
 
+                if 'HC' in dets :
+                    from Configurables import DataPacking__Pack_LHCb__MCHCHitPacker_     as MCHCHitPacker
+                    packing.Members += [ MCHCHitPacker("MCHCHitPacker"+slot) ]
         # print "SimConf.py: _doPacking(): packing.Members =", packing.Members
-
 
     def _makeUnpacker(self, type, name, slot, tesLoc):
         
@@ -250,6 +252,10 @@ class SimConf(LHCbConfigurableUser) :
                                     "UnpackMCRichSegments", slot, 'Rich/Segments' )
                 self._makeUnpacker( DataPacking__Unpack_LHCb__MCRichTrackPacker_,
                                     "UnpackMCRichTracks", slot, 'Rich/Tracks' )
+
+            if 'HC' in dets :
+                from Configurables import DataPacking__Unpack_LHCb__MCHCHitPacker_
+                self._makeUnpacker( DataPacking__Unpack_LHCb__MCHCHitPacker_, "UnpackMCHCHits", slot, 'HC/Hits' )
 
     def addHeaders( self, tape ):
 
@@ -401,6 +407,9 @@ class SimConf(LHCbConfigurableUser) :
                     else:
                         simList += ['/Event/Link/MC/Particles2MCRichTracks#1',
                                     '/Event/Link/MC/Rich/Hits2MCRichOpticalPhotons#1' ]
+
+                if 'HC' in dets :
+                    simList += [ self.tapeLocation( slot, mcRoot, 'HC/Hits' ) ]
 
                 # main event is manditory, spillover events optional.
                 if slot != '':
