@@ -266,9 +266,8 @@ constructSegments( const ContainedObject * obj,
       if ( sc.isSuccess() )
       {
         entryPStateRaw = &m_states[0];
-        std::ostringstream mess;
-        mess << "Found entry state at z=" << zStart << "mm via StateProvider";
-        Warning( mess.str(), StatusCode::SUCCESS, 3 ).ignore();
+        if ( msgLevel(MSG::DEBUG) )
+        { debug() << "Found entry state at z=" << zStart << "mm via StateProvider" << endmsg; }
       }
       else
       {
@@ -325,9 +324,8 @@ constructSegments( const ContainedObject * obj,
       if ( sc.isSuccess() )
       {
         exitPStateRaw = &m_states[1];
-        std::ostringstream mess;
-        mess << "Found exit state at z=" << zEnd << "mm via StateProvider";
-        Warning( mess.str(), StatusCode::SUCCESS, 3 ).ignore();
+        if ( msgLevel(MSG::DEBUG) )
+        { debug() << "Found exit state at z=" << zEnd << "mm via StateProvider" <<  endmsg; }
       }
       else
       {
