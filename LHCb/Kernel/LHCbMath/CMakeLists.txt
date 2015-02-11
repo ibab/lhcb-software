@@ -5,7 +5,8 @@ gaudi_subdir(LHCbMath v3r53)
 
 gaudi_depends_on_subdirs(GaudiGSL
                          GaudiKernel
-                         GaudiPython)
+                         GaudiPython
+                         Kernel/VectorClass)
 
 find_package(Boost)
 find_package(GSL)
@@ -104,6 +105,10 @@ if(GAUDI_BUILD_TESTS)
                        LINK_LIBRARIES Boost GSL ROOT GaudiKernel LHCbMathLib)
   gaudi_add_executable(TestEigenGeometry   
                        tests/TestEigenGeometry.cpp
+                       INCLUDE_DIRS Boost GSL ROOT VDT
+                       LINK_LIBRARIES Boost GSL ROOT VDT GaudiKernel LHCbMathLib)
+  gaudi_add_executable(TestXYZTypes   
+                       tests/TestXYZTypes.cpp
                        INCLUDE_DIRS Boost GSL ROOT VDT
                        LINK_LIBRARIES Boost GSL ROOT VDT GaudiKernel LHCbMathLib)
 endif()

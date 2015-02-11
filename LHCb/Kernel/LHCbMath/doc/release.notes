@@ -6,6 +6,11 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-02-11 - Chris Jones
+ - Improve EigenTypes.h
+ - Add VectorClassTypes.h
+ - Add a new test TestXYZTypes
+
 ! 2015-02-10 - Vanya BELYAEV 
  - add convex spline 
 

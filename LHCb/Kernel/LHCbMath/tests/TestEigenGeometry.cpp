@@ -135,7 +135,7 @@ bool reflectSpherical_Eigen ( EigenXYZPoint& position,
 
   //const auto sd = vdt::fast_isqrt( discr );
   //const auto distance1 = (1.0f - (b*sd) ) / ( 2.f * a * sd );
-  const auto distance1 = 0.5f * ( std::sqrt(discr) - b ) / a;
+   const auto distance1 = 0.5f * ( std::sqrt(discr) - b ) / a;
 
   // change position to the intersection point
   position += distance1 * direction;

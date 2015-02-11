@@ -14,6 +14,7 @@ branches cmt doc LHCbMath src dict python tests
 # Used packages
 #=====================================================================
 use GaudiKernel     v*
+use VectorClass     v*      Kernel
 use ROOT            v*      LCG_Interfaces
 use Boost           v*      LCG_Interfaces
 use GSL             v*      LCG_Interfaces
@@ -67,8 +68,8 @@ application  TestSimilarity   ../tests/TestSimilarity.cpp
 macro_append TestSimilarity_dependencies   " LHCbMathLib "
 application  TestEigenGeometry   ../tests/TestEigenGeometry.cpp
 macro_append TestEigenGeometry_dependencies   " LHCbMathLib "
-#macro_append TestEigenGeometry_cppflags " -O3 -msse4 " 
-#macro_append TestEigenGeometry_cppflags " -O3 -mavx -fabi-version=0 " 
+application  TestXYZTypes   ../tests/TestXYZTypes.cpp
+macro_append TestXYZTypes_dependencies   " LHCbMathLib "
 
 # ================= patterns =============================================
 apply_pattern       linker_library library=LHCbMathLib
