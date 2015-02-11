@@ -5,8 +5,13 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit 
 ! -----------------------------------------------------------------------------
   
+! 2015-02-11 -  Vanya BELYAEV
+  use cholesky decompositon for inversion of 
+  positively definite covariance matrices   
+
 ! 2015-01-19 - Vanya Belyaev
  - remove boost 
+
 
 ========================= KalmanFilter v1r9 2015-01-16 =========================
 

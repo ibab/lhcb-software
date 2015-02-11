@@ -86,18 +86,6 @@ namespace // local anonymous namespace to keep local functions
     }
   }
   // ==========================================================================
-  /** inversion of symmetric positively defined matrices
-   *  1) try fast method based on Cholesky's decomposiion 
-   *  2) in case of failure, swith to the regular inversion           
-   */
-  template <class MATRIX>
-  inline int inverse ( const MATRIX& what , MATRIX& result )
-  {
-    int ifail = 0 ;     result = what.InverseChol ( ifail ) ;
-    if ( 0 != ifail ) { result = what.Inverse     ( ifail ) ; }
-    return ifail ;  
-  }
-  // ==========================================================================
 } //                   end of local anonymous namespace to keep local functions 
 // ============================================================================
 // make one step of Kalman filter 
@@ -126,7 +114,7 @@ StatusCode LoKi::KalmanFilter::step
   entry.m_ci = ci + entry.m_weight * entry.m_vxi  ; 
   //
   /// \f$ C_k = \left( C^{-1}_{k} \right)^{-1}\f$ 
-  if ( 0 != inverse ( entry.m_ci, entry.m_c ) )  
+  if ( 0 != Gaudi::Math::inverse ( entry.m_ci, entry.m_c ) )  
   { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
   // OK ! 
   /// \f$\vec{x}_k\f$
@@ -207,11 +195,11 @@ StatusCode LoKi::KalmanFilter::seed
   }
   //
   Gaudi::SymMatrix3x3 c ; 
-  if ( 0 != inverse ( ci , c ) )
+  if ( 0 != Gaudi::Math::inverse ( ci , c ) )
   { 
     // try to recover using "soft" constraints 
     _smooth ( ci ) ;
-    if ( 0 != inverse ( ci , c ) )
+    if ( 0 != Gaudi::Math::inverse ( ci , c ) )
     { return StatusCode ( ErrorInMatrixInversion4 , true ) ; } 
   }
   //
@@ -264,7 +252,7 @@ StatusCode LoKi::KalmanFilter::step
   }
   //
   Gaudi::SymMatrix3x3 _c ; 
-  if ( 0 != inverse ( _ci , _c ) )
+  if ( 0 != Gaudi::Math::inverse ( _ci , _c ) )
   { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
   //
   _x  = Gaudi::Vector3 ( _c * _x ) ;
@@ -316,7 +304,7 @@ StatusCode LoKi::KalmanFilter::step
   }
   //
   Gaudi::SymMatrix3x3 _c ; 
-  if ( 0 != inverse ( _ci , _c ) ) 
+  if ( 0 != Gaudi::Math::inverse ( _ci , _c ) ) 
   { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
   //
   _x = Gaudi::Vector3 ( _c * _x ) ;
@@ -361,7 +349,7 @@ StatusCode LoKi::KalmanFilter::step
   entry2.m_ci = entry1.m_ci ;
   //
   /// \f$ C_k = \left( C^{-1}_{k} \right)^{-1}\f$ 
-  if ( 0 != inverse ( entry1.m_ci , entry1.m_c ) )
+  if ( 0 != Gaudi::Math::inverse ( entry1.m_ci , entry1.m_c ) )
   { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
   entry2.m_c  = entry1.m_c ;
   
@@ -413,7 +401,7 @@ StatusCode LoKi::KalmanFilter::step
   entry3.m_ci = entry1.m_ci ;
   //
   /// \f$ C_k = \left( C^{-1}_{k} \right)^{-1}\f$ 
-  if ( 0 != inverse ( entry1.m_ci , entry1.m_c ) ) 
+  if ( 0 != Gaudi::Math::inverse ( entry1.m_ci , entry1.m_c ) ) 
   { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
   entry2.m_c  = entry1.m_c ;
   entry3.m_c  = entry1.m_c ;
@@ -479,7 +467,7 @@ StatusCode LoKi::KalmanFilter::step
   entry4.m_ci = entry1.m_ci ;
   //
   /// \f$ C_k = \left( C^{-1}_{k} \right)^{-1}\f$ 
-  if ( 0 != inverse ( entry1.m_ci , entry1.m_c ) ) 
+  if ( 0 != Gaudi::Math::inverse ( entry1.m_ci , entry1.m_c ) ) 
   { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
   entry2.m_c  = entry1.m_c ;
   entry3.m_c  = entry1.m_c ;

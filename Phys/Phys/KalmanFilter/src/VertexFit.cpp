@@ -88,18 +88,6 @@ namespace
     }
   }
   // ==========================================================================
-  /** inversion of symmetric positively defined matrices
-   *  1) try fast method based on Cholesky's decomposiion 
-   *  2) in case of failure, swith to the regular inversion           
-   */
-  template <class MATRIX>
-  inline int inverse ( const MATRIX& what , MATRIX& result )
-  {
-    int ifail = 0 ;     result = what.InverseChol ( ifail ) ;
-    if ( 0 != ifail ) { result = what.Inverse     ( ifail ) ; }
-    return ifail ;  
-  }
-  // ==========================================================================
   /** make Z-projection of the particle 
    *  see the documentation for namespace DaVinciTransporter
    *  projectAndTransport for deltaZ = 0 
@@ -389,12 +377,12 @@ StatusCode LoKi::KalmanFilter::stepRho
   }
   //
   Gaudi::SymMatrix3x3   c ;
-  if ( 0 != inverse ( ci , c ) ) 
+  if ( 0 != Gaudi::Math::inverse ( ci , c ) ) 
   { 
     // try to recover using "soft" constraints 
     _smooth ( ci ) ;
     //
-    if ( 0 !=  inverse ( ci , c ) ) { return StatusCode ( ErrorInMatrixInversion4 , true ) ; } 
+    if ( 0 !=  Gaudi::Math::inverse ( ci , c ) ) { return StatusCode ( ErrorInMatrixInversion4 , true ) ; } 
   }
   //
   Gaudi::Vector3 x = c * seed ; 
@@ -434,12 +422,12 @@ StatusCode LoKi::KalmanFilter::step
     entry.m_chi2 = chi2 ;
     //
     /// \f$ C_k = \left( C^{-1}_{k} \right)^{-1}\f$ 
-    if ( 0 != inverse ( entry.m_ci , entry.m_c ) ) 
+    if ( 0 != Gaudi::Math::inverse ( entry.m_ci , entry.m_c ) ) 
     {
       // try to recover it by "soft" constraint to the photon  
       _smooth ( entry.m_ci ) ;
       // invert it , start from Cholesky'decomposition  
-      if ( 0 != inverse ( entry.m_ci , entry.m_c ) )
+      if ( 0 != Gaudi::Math::inverse ( entry.m_ci , entry.m_c ) )
       { return StatusCode ( ErrorInMatrixInversion3 , true ) ; } // RETURN 
     }
     //
@@ -451,7 +439,7 @@ StatusCode LoKi::KalmanFilter::step
   entry.m_ci = ci + entry.m_vxi  ; 
   //
   /// \f$ C_k = \left( C^{-1}_{k} \right)^{-1}\f$ 
-  if ( 0 != inverse ( entry.m_ci , entry.m_c ) ) 
+  if ( 0 != Gaudi::Math::inverse ( entry.m_ci , entry.m_c ) ) 
   { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
   // OK ! 
   /// \f$\vec{x}_k\f$
@@ -498,7 +486,7 @@ StatusCode LoKi::KalmanFilter::step
   entry2.m_ci = entry1.m_ci ;
   //
   /// \f$ C_k = \left( C^{-1}_{k} \right)^{-1}\f$ 
-  if ( 0 != inverse ( entry1.m_ci , entry1.m_c ) ) 
+  if ( 0 != Gaudi::Math::inverse ( entry1.m_ci , entry1.m_c ) ) 
   { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
   entry2.m_c  = entry1.m_c ;
   
@@ -563,7 +551,7 @@ StatusCode LoKi::KalmanFilter::step
   entry3.m_ci = entry1.m_ci ;
   //
   /// \f$ C_k = \left( C^{-1}_{k} \right)^{-1}\f$ 
-  if ( 0 != inverse (  entry1.m_ci , entry1.m_c ) ) 
+  if ( 0 != Gaudi::Math::inverse (  entry1.m_ci , entry1.m_c ) ) 
   { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
   entry2.m_c  = entry1.m_c ;
   entry3.m_c  = entry1.m_c ;
@@ -645,7 +633,7 @@ StatusCode LoKi::KalmanFilter::step
   entry4.m_ci = entry1.m_ci ;
   //
   /// \f$ C_k = \left( C^{-1}_{k} \right)^{-1}\f$ 
-  if ( 0 != inverse ( entry1.m_ci , entry1.m_c ) ) 
+  if ( 0 != Gaudi::Math::inverse ( entry1.m_ci , entry1.m_c ) ) 
   { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
   entry2.m_c  = entry1.m_c ;
   entry3.m_c  = entry1.m_c ;
@@ -792,12 +780,12 @@ StatusCode LoKi::KalmanFilter::seed
   }
   //
   Gaudi::SymMatrix3x3  c ; 
-  if ( 0 != inverse ( ci , c ) ) 
+  if ( 0 != Gaudi::Math::inverse ( ci , c ) ) 
   { 
     // try to recover using "soft" constraints 
     _smooth ( ci ) ;
     //
-    if ( 0 != inverse ( ci , c ) )
+    if ( 0 != Gaudi::Math::inverse ( ci , c ) )
     { return StatusCode ( ErrorInMatrixInversion4 , true ) ; } 
   }
   //
