@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-02-11 - 
+ - MatrixUtils.h:
+     add Gaudi::Math:inverse   
+
 ! 2015-02-11 - Chris Jones
  - Temporarily revert Gerhard's change from the 3rd Feb to call 
   _mm256_zeroupper() at the boundaries of AVX and non-AVX code, to test if it
