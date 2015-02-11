@@ -4,6 +4,9 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-02-11 - Chris
+ - Avoid creation of local StatusCode object.
+
 ! 2015-02-09 - Chris Jones
  - Update QuarticSolver to use the Complex2f class from the VectorClass library
    instead of std::complex. Results in an almost factor of two speed up of the 

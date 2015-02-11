@@ -585,28 +585,33 @@ findMirrorData( const Rich::DetectorType rich,
                 Gaudi::XYZPoint& secReflPoint ) const
 {
   // solve quartic equation with nominal values and find spherical mirror reflection point
-  if ( !m_quarticSolver.solve<float>( emissionPoint,
-                                      m_rich[rich]->nominalCentreOfCurvature(side),
-                                      virtDetPoint,
-                                      m_rich[rich]->sphMirrorRadius(),
-                                      sphReflPoint ) ) { return false; }
-
-  // find the spherical mirror segment
-  sphSegment = m_mirrorSegFinder->findSphMirror( rich, side, sphReflPoint );
-
-  if ( m_useSecMirs )
+  bool OK = m_quarticSolver.solve<float>( emissionPoint,
+                                          m_rich[rich]->nominalCentreOfCurvature(side),
+                                          virtDetPoint,
+                                          m_rich[rich]->sphMirrorRadius(),
+                                          sphReflPoint );
+  // If OK, continue with the full mirror search
+  if ( OK )
   {
-    // find the sec mirror intersction point and secondary mirror segment
-    const StatusCode sc = m_rayTracing->intersectPlane( sphReflPoint,
-                                                        virtDetPoint - sphReflPoint,
-                                                        m_rich[rich]->nominalPlane(side),
-                                                        secReflPoint );
-    if ( sc.isFailure() ) { return false; }
-    // find the secondary mirror
-    secSegment = m_mirrorSegFinder->findSecMirror( rich, side, secReflPoint );
+    // find the spherical mirror segment
+    sphSegment = m_mirrorSegFinder->findSphMirror( rich, side, sphReflPoint );
+    // If we are using full secondary mirrors, search for the secondary segment
+    if ( m_useSecMirs )
+    {
+      // find the sec mirror intersction point and secondary mirror segment
+      OK = m_rayTracing->intersectPlane( sphReflPoint,
+                                         virtDetPoint - sphReflPoint,
+                                         m_rich[rich]->nominalPlane(side),
+                                         secReflPoint );
+      if ( OK ) 
+      { 
+        // find the secondary mirror
+        secSegment = m_mirrorSegFinder->findSecMirror( rich, side, secReflPoint );
+      }
+    }
   }
-
-  return true;
+  // return
+  return OK;
 }
 
 //=========================================================================
