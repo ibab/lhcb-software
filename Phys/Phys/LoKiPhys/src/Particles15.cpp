@@ -81,7 +81,14 @@ LoKi::Particles::Filter::Filter
 // ============================================================================
 // MANDATORY: virtual destructor
 // ============================================================================
-LoKi::Particles::Filter::~Filter(){}
+LoKi::Particles::Filter::~Filter()
+{
+  if ( m_filter && !gaudi() )
+  {
+    // Warning("Manually reset  IParticleFilter") ;
+    m_filter.reset() ;
+  }
+}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================

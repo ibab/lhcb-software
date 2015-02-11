@@ -58,7 +58,7 @@ LoKi::Particles::Value::Value
     SmartIF<IToolSvc> tsvc ( loki ) ;
     if ( ! ( ! tsvc ) ) 
     {
-      IParticleValue* _func  = 0 ;
+      IParticleValue*   _func  = 0 ;
       const IInterface* parent = 0 ;
       StatusCode sc = tsvc->retrieveTool 
         ( function , _func , parent , true ) ;

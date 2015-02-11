@@ -30,6 +30,17 @@ LoKi::Particles::ReFit::ReFit
   , m_fitter ( fitter )
 {}
 // ============================================================================
+// destructor 
+// ============================================================================
+LoKi::Particles::ReFit::~ReFit() 
+{
+  if ( m_fitter && !gaudi() ) 
+  {
+    // Warning("Manual reset IParticleReFiter") ;
+    m_fitter.reset() ;    
+  }
+}
+// ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Particles::ReFit::result_type 
@@ -135,6 +146,17 @@ LoKi::Particles::MassFit::MassFit
   , m_mass   ( mass   ) 
   , m_flag   ( true   ) 
 {}
+// ============================================================================
+// destructor 
+// ============================================================================
+LoKi::Particles::MassFit::~MassFit() 
+{
+  if ( m_fitter && !gaudi() ) 
+  {
+    // Warning("Manual reset IMassFit") ;
+    m_fitter.reset() ;
+  }
+}
 // ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================

@@ -44,7 +44,7 @@ namespace LoKi
       /// constructor form the tool 
       ReFit ( const LoKi::Interface<IParticleReFitter>& fitter ) ;
       /// MANDATORY: virtual destructor 
-      virtual ~ReFit(){} ;
+      virtual ~ReFit() ;
       /// MANDATORY: clone method ("virtual constructor") 
       virtual  ReFit* clone() const { return new ReFit ( *this ) ; }
       /// MANDATORY: the only one essential method 
@@ -111,7 +111,7 @@ namespace LoKi
       MassFit ( const double                     mass   , 
                 const LoKi::Interface<IMassFit>& fitter ) ;
       /// MANDATORY: virtual destructor 
-      virtual ~MassFit(){} ;
+      virtual ~MassFit() ;
       /// MANDATORY: clone method ("virtual constructor") 
       virtual  MassFit* clone() const { return new MassFit ( *this ) ; }
       /// MANDATORY: the only one essential method 
