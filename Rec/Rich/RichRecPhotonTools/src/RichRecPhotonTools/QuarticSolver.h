@@ -13,12 +13,15 @@
 // Gaudi
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/Transform3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h" 
 
 // STL
 #include <math.h>
 //#include <complex>
 
 // Eigen
+#include "LHCbMath/EigenTypes.h"
 #include <Eigen/Geometry>
 
 // VDT
@@ -26,14 +29,10 @@
 #include "vdt/sqrt.h"
 
 // Vector Class
-#include "LHCbMath/VectorClassTypes.h"
 #include "VectorClass/complexvec.h"
 
 // RichKernel
 #include "RichKernel/FastRoots.h"
-
-// LHCbKernel
-#include "Kernel/RichXYZTypes.h"
 
 namespace Rich
 {
@@ -294,9 +293,9 @@ namespace Rich
           const Eigen::AngleAxis<TYPE> angleaxis( vdt::fast_asinf(sinbeta),
                                                   Eigen3Vector(n[0],n[1],n[2]) );
           sphReflPoint = CoC +
-            Gaudi::XYZVector( Eigen3Vector( angleaxis *
-                                           Eigen3Vector(evec[0],evec[1],evec[2]) *
-                                           ( radius / e ) ) );
+            Gaudi::XYZVector( angleaxis *
+			      Eigen3Vector(evec[0],evec[1],evec[2]) *
+			      ( radius / e ) );
 
         }
 
