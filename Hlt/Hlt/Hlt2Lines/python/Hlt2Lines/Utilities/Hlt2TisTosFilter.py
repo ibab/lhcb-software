@@ -46,7 +46,7 @@ class Hlt2TisTosGlobalTagger(Hlt2Stage):
         return [self.__specs[k] for k in specs]
         
     def clone(self, name, **kwargs):
-        raise RuntimeError('Hlt2Hlt1TrackAllL0TosTagger.clone is not implemented.')
+        raise RuntimeError('Hlt2TisTosGlobalTagger.clone is not implemented.')
 
     def stage(self, cuts):
         if self.__stage != None:
@@ -99,13 +99,16 @@ class Hlt2TisTosParticleTagger(Hlt2Stage):
         self.__stage = None
         Hlt2Stage.__init__(self, name, inputs)
 
-    def clone(self, name, prefix = None, specsOrKeys = None, inputs = None, **kwargs):
+    def clone(self, name, **kwargs):
         args = deepcopy(self.__kwargs)
+        args['name'] = name
+        for arg, default in (('prefix', self._prefix()),
+                             ('specsOrKeys', self.__code),
+                             ('inputs', self.__specsOrKeys)):
+            args[arg] = kwargs.pop(arg) if arg in kwargs else default
         args.update(kwargs)
-        return Hlt2TisTosTagger(prefix if prefix else self.__prefix, name,
-                                sk     if sk     else self.__specsOrKeys,
-                                inputs if inputs else self._inputs(),
-                                **args)
+
+        return Hlt2TisTosTagger(**args)
 
     def __globalTagger(self, specs, cuts):
         tagger = Hlt2TisTosGlobalTagger(TisTosSpecs = specs.keys())
@@ -158,7 +161,6 @@ class Hlt2TisTosStage(Hlt2Stage):
         return self.__tistos
         
     def _handleTisTos(self, cuts, args, handler):
-        print 'HandleTisTos', self._name()
         ## Make a list of specs, substituting cuts if needed; the value
         ## corresponding to a cut can be a list.
         tistos = []

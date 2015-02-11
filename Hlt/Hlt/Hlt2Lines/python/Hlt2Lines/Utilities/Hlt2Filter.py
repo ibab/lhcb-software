@@ -10,17 +10,18 @@ class Hlt2ParticleFilter(Hlt2TisTosStage):
         self.__stage = None
         Hlt2TisTosStage.__init__(self, prefix, name, inputs, dependencies, tistos)
 
-    def clone(self, name, prefix = None, code = None, inputs = None,
-              dependencies = None, tistos = None, **kwargs):
+    def clone(self, name, **kwargs):
         args = deepcopy(self.__kwargs)
+        args['name'] = name
+        for arg, default in (('prefix', self._prefix()),
+                             ('code',   self.__code),
+                             ('inputs', self._inputs()),
+                             ('tistos', self._tistos()),
+                             ('dependencies', self._deps())):
+            args[arg] = kwargs.pop(arg) if arg in kwargs else default
         args.update(kwargs)
-        deps = dependencies
-        return Hlt2ParticleFilter(prefix if prefix else self._prefix(), name,
-                                 code   if code   else self.__code,
-                                 inputs if inputs else self._inputs(),
-                                 deps   if deps   else self._deps(),
-                                 tistos if tistos else self._tistos(),
-                                 **args)
+
+        return Hlt2ParticleFilter(**args)
 
     def _makeMember(self, cuts, args):
         from HltLine.HltLine import Hlt2Member
@@ -53,13 +54,16 @@ class Hlt2VoidFilter(Hlt2Stage):
         self.__stage = None
         Hlt2Stage.__init__(self, name, inputs, dependencies)
 
-    def clone(self, name, prefix = None, code = None, inputs = None,
-              dependencies = []):
-        deps = dependencies
-        return Hlt2VoidFilter(prefix if prefix else self.__prefix, name,
-                              code   if code   else self.__code,
-                              inputs if inputs else self._inputs(),
-                              deps   if deps   else self._deps())
+    def clone(self, name, **kwargs):
+        args = deepcopy(self.__kwargs)
+        args['name'] = name
+        for arg, default in (('prefix', self._prefix()),
+                             ('code',   self.__code),
+                             ('inputs', self._inputs()),
+                             ('dependencies', self._deps())):
+            args[arg] = kwargs.pop(arg) if arg in kwargs else default
+        args.update(kwargs)
+        return Hlt2VoidFilter(**args)
                                  
     def stage(self, cuts):
         if self.__stage != None:

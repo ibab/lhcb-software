@@ -10,6 +10,9 @@
 
 ! 2015-02-11 - Roel Aaij
  - Include TisTos in new template.
+ - Cuts specified as kwargs for Hlt2Combiner.
+ - Support NXBodyDecays.
+ - clone methods simplified.
 
 ! 2015-02-09 - Roel Aaij
  - Further development on new template.
