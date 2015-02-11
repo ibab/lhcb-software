@@ -130,7 +130,7 @@ namespace LoKi
       /// copy contructor 
       Unique ( const Unique& right  ) ;
       /// MANDATORY: virtual destructor 
-      virtual ~Unique() {}
+      virtual ~Unique() ;
       /// MANDATORY: clone method ("virtual constructor")
       virtual  Unique* clone() const { return new Unique(*this) ; }
       /// MANDATORY: the only one essential method 
@@ -776,7 +776,7 @@ namespace LoKi
       /// copy constructor 
       VertexChi2 ( const VertexChi2& right ) ;
       /// MANDATORY: virtual destructor 
-      virtual ~VertexChi2() {}
+      virtual ~VertexChi2() ;
       /// MANDATORY: clone method ("virtual constructor")
       virtual  VertexChi2* clone() const { return new VertexChi2(*this) ; }
       /// MANDATORY: the only one essential method 

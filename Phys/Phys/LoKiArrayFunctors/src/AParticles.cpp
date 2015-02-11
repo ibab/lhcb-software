@@ -87,6 +87,15 @@ LoKi::AParticles::Unique::Unique
   , m_tool ( right.m_tool ) 
 {}
 // ============================================================================
+LoKi::AParticles::Unique::~Unique() 
+{
+  if ( m_tool && !gaudi() ) 
+  {
+    // Warning(""manual reset of ICheckOverlap");
+    m_tool.reset() ;
+  }
+}
+// ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::AParticles::Unique::result_type  
@@ -961,6 +970,15 @@ LoKi::AParticles::VertexChi2::VertexChi2
   , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function ( right ) 
   , m_fit ( right.m_fit ) 
 {}
+// ============================================================================
+LoKi::AParticles::VertexChi2::~VertexChi2() 
+{
+  if ( m_fit && !gaudi() ) 
+  {
+    // Warning("Manual reset of IVertexFit") ;
+    m_fit.reset() ;
+  } 
+}
 // ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================
