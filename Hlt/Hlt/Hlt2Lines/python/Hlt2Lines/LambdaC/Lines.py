@@ -4,7 +4,8 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 class LambdaCLines(Hlt2LinesConfigurableUser):
     __slots__ = {'Prescale' : {},
                  'GEC' : {'NTRACK_MAX'           : 180},
-                 'Common' : {'Trk_TRCHI2DOF_MAX'        :    3.0,
+                 'Common' : {'TisTosSpec'               : "Hlt1Track.*Decision%TOS",
+                             'Trk_TRCHI2DOF_MAX'        :    3.0,
                              'Trk_PT_MIN'               :  500 * MeV,
                              'Trk_MIPCHI2DV_MIN'        :    9.0,
                              'Trk_1of3_MIPCHI2DV_MIN'   :   15.0,
@@ -25,12 +26,12 @@ class LambdaCLines(Hlt2LinesConfigurableUser):
     
     def __apply_configuration__(self):
         from Stages import LC2KPPi, LC2KPK, LC2PiPPi, LC2PiPK
-        stages = {'KPPi'  : [LC2KPPi],
-                  'KPK'   : [LC2KPK],
+        stages = {'KPK'   : [LC2KPK],
+                  'KPPi'  : [LC2KPPi],
                   'PiPPi' : [LC2PiPPi],
                   'PiPK'  : [LC2PiPK]}
 
         from HltLine.HltLine import Hlt2Line
-        for (nickname, stages) in self.stages(stages).iteritems():
+        for nickname, stages in self.stages(stages).iteritems():
             Hlt2Line('NewLambdaC2' + nickname, prescale = self.prescale,
                      algos = stages, postscale = self.postscale)

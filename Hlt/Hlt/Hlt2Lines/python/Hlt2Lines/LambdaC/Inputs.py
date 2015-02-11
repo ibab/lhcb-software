@@ -1,3 +1,3 @@
-from Hlt2SharedParticles.TrackFittedBasicParticles import Hlt2BiKalmanFittedRichPions   as Hlt2LoosePions
-from Hlt2SharedParticles.TrackFittedBasicParticles import Hlt2BiKalmanFittedRichKaons   as Hlt2LooseKaons
-from Hlt2SharedParticles.TrackFittedBasicParticles import Hlt2BiKalmanFittedRichProtons as Hlt2LooseProtons
+from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedRichPions   as Hlt2LoosePions
+from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedRichKaons   as Hlt2LooseKaons
+from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedRichProtons as Hlt2LooseProtons
