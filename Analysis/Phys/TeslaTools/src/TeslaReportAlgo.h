@@ -62,6 +62,7 @@ protected:
 private:
 	std::string m_inputName;
 	std::string m_PV;
+	std::string m_PVLoc;
 	bool m_PreSplit;
 	std::string m_OutputPref;
 	int m_ReportVersion; // 1=OldSelReports, 2=Extended (GaudiMap)

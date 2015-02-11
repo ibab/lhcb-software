@@ -1,8 +1,12 @@
-
 !=============================================================================
 ! Package     : TeslaTools
 ! Responsible : Sean Benson
 !=============================================================================
+
+! 2015-2-11 - Sean Benson
+ - TES objects moved down one level, now under /Event/Turbo/HLTLINE/OBJECT
+ - PV selection harmonised with offline.
+ - PVs now the same for all resurrections in each event.
 
 !========================= TeslaTools v1r2 2015-01-16 ========================
 

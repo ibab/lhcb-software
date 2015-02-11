@@ -29,7 +29,8 @@ TeslaReportAlgo::TeslaReportAlgo( const std::string& name,
   declareProperty( "OutputPrefix" ,         m_OutputPref   = "Tesla" );
   declareProperty( "ReportVersion" ,        m_ReportVersion= 2 );
   declareProperty( "PreSplit" ,             m_PreSplit= false );
-  declareProperty( "PV" ,                   m_PV = "Online" );
+  declareProperty( "PV" ,                   m_PV = "Offline" );
+  declareProperty( "PVLoc" ,                m_PVLoc = "Turbo/Primary" );
 }
 
 //=============================================================================
@@ -119,10 +120,10 @@ StatusCode TeslaReportAlgo::execute()
   std::stringstream ss_MPIDLoc;
   ss_MPIDLoc << m_OutputPref << "/MuonPIDs"; // NOT STORED BY ORIGINAL SELREPORTS
   //
-  std::stringstream ss_PVLoc;
+  //std::stringstream ss_PVLoc;
   //ss_PVLoc << m_OutputPref << "/PV3D";
   //ss_PVLoc << "Rec/Vertex/Primary";
-  ss_PVLoc << m_OutputPref << "/Primary";
+  //ss_PVLoc << m_OutputPref << "/Primary";
   //
   std::stringstream ss_P2PVLoc;
   ss_P2PVLoc << m_OutputPref << "/Particle2VertexRelations";
@@ -145,8 +146,14 @@ StatusCode TeslaReportAlgo::execute()
   LHCb::MuonPID::Container* cont_MPID = new LHCb::MuonPID::Container() ;
   put( cont_MPID , ss_MPIDLoc.str().c_str() );
   //
-  LHCb::VertexBase::Container* cont_PV = new LHCb::VertexBase::Container() ;
-  put( cont_PV , ss_PVLoc.str().c_str() );
+  LHCb::RecVertex::Container* cont_PV = getIfExists<LHCb::RecVertex::Container>( m_PVLoc.c_str() );
+  bool reusePV = true;
+  if( !cont_PV ) {
+    debug() << "Making PVs" << endmsg;
+    cont_PV = new LHCb::RecVertex::Container() ;
+    put( cont_PV , m_PVLoc.c_str() );
+    reusePV = false;
+  }
   //
   Particle2Vertex::Table* cont_P2PV = new Particle2Vertex::Table() ;
   put( cont_P2PV , ss_P2PVLoc.str().c_str() );
@@ -166,12 +173,19 @@ StatusCode TeslaReportAlgo::execute()
         debug() << *vname_it << endmsg;
       }
     }
-    if( vtxRep ){
+    if( vtxRep && !reusePV ){
       for( LHCb::HltVertexReports::HltVertexReport::const_iterator iv=vtxRep->begin();iv!=vtxRep->end(); ++iv){
         const LHCb::VertexBase* v = *iv;
-        LHCb::VertexBase* vnew = v->clone();
+        LHCb::RecVertex* vnew = new LHCb::RecVertex();
         debug() <<"Vertex chi2= " << v->chi2()<< ", ndf =" << v->nDoF()<< endmsg;
         debug() <<"Vertex key= " << v->key() << endmsg;
+        // Turn the VertexBase from the vertex reports in to a RecVertex for packing
+        vnew->setChi2( v->chi2() );
+        vnew->setNDoF( v->nDoF() );
+        vnew->setPosition( v->position() );
+        vnew->setCovMatrix( v->covMatrix() );
+        vnew->setExtraInfo( v->extraInfo() );
+
         // Fill PV container
         cont_PV->insert( vnew );
       } 
@@ -215,6 +229,7 @@ StatusCode TeslaReportAlgo::execute()
   if ( msgLevel(MSG::DEBUG) ){ 
     if(MotherRep!=0) debug() << "Required line has been fired" << endmsg;
   }
+  else return StatusCode::SUCCESS;
   if(MotherRep){
     if ( msgLevel(MSG::DEBUG) ){
       debug() << "Reference: " << endmsg;
@@ -291,7 +306,7 @@ StatusCode TeslaReportAlgo::execute()
       // Which PV is best for the mother???
       double min_var = -1.0;
       int key = 0;
-      for ( LHCb::VertexBase::Container::const_iterator pv = cont_PV->begin() ; pv!=cont_PV->end() ; ++pv){
+      for ( LHCb::RecVertex::Container::const_iterator pv = cont_PV->begin() ; pv!=cont_PV->end() ; ++pv){
         double ip, chi2;
         StatusCode test = m_dist->distance ( Part, *pv, ip, chi2 );
         if(m_PV=="Offline"){
@@ -311,7 +326,7 @@ StatusCode TeslaReportAlgo::execute()
           return StatusCode::FAILURE;
         }
       }
-      cont_P2PV->relate( Part , (LHCb::VertexBase*)cont_PV->containedObject( key ) );
+      cont_P2PV->relate( Part , (LHCb::RecVertex*)cont_PV->containedObject( key ) );
 
       if( motherBasic == false ){
         LHCb::Vertex* vert_mother = new LHCb::Vertex();
@@ -348,7 +363,7 @@ StatusCode TeslaReportAlgo::execute()
           newObjects_d1.push_back(Part_d1);
           Part->addToDaughters(Part_d1);
           cont_Part->insert( Part_d1 );
-          cont_P2PV->relate( Part_d1 , (LHCb::VertexBase*)cont_PV->containedObject( key ) );
+          cont_P2PV->relate( Part_d1 , (LHCb::RecVertex*)cont_PV->containedObject( key ) );
 
           //
           if( d1_Basic == true ){
@@ -413,7 +428,7 @@ StatusCode TeslaReportAlgo::execute()
               // make the objects to be stored
               LHCb::Particle* Part_d2 = new LHCb::Particle();
               cont_Part->insert( Part_d2 );
-              cont_P2PV->relate( Part_d2 , (LHCb::VertexBase*)cont_PV->containedObject( key ) );
+              cont_P2PV->relate( Part_d2 , (LHCb::RecVertex*)cont_PV->containedObject( key ) );
               //
               std::vector<ContainedObject*> newObjects_d2;
               newObjects_d2.push_back(Part_d2);
