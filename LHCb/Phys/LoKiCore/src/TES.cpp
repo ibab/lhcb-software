@@ -71,7 +71,11 @@ LoKi::TES::Get::Get
 // ============================================================================
 // virtual destructor 
 // ============================================================================
-LoKi::TES::Get::~Get(){}
+LoKi::TES::Get::~Get()
+{
+  if ( m_algorithm && !gaudi() ) { m_algorithm.reset() ; }
+  if ( m_datasvc   && !gaudi() ) { m_datasvc  .reset() ; }
+}
 // ============================================================================
 void LoKi::TES::Get::getAlgSvc() const
 {

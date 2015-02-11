@@ -84,7 +84,14 @@ LoKi::Random::Numbers::Numbers
 // destructor 
 // ============================================================================
 LoKi::Random::Numbers::~Numbers() 
-{ if ( 0 != m_param ) { delete m_param ; m_param = 0 ; } }
+{ 
+  if ( 0 != m_param ) { delete m_param ; m_param = 0 ; }
+  if ( m_service && !gaudi () ) 
+  {
+    // Warning ("manual reset of IRndmGenSvc") ;
+    m_service.reset() ;
+  } 
+}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================

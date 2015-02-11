@@ -127,12 +127,13 @@ namespace LoKi
         } 
       }
       /// MANDATORY: virtual destructor 
-      virtual ~Timer_ () {}
+      virtual ~Timer_ () 
+      { if ( this->m_svc && !this->gaudi() ) { this->m_svc.reset() ; } }
       /// MANDATORY: clone method ("virtual constructor")
       virtual  Timer_ * clone() const { return new Timer_ ( *this ) ; }
       /// MANDATORY: the only one essenital method 
       virtual typename LoKi::Functor<TYPE1,TYPE2>::result_type operator() 
-        ( typename LoKi::Functor<TYPE1,TYPE2>::argument a ) const 
+      ( typename LoKi::Functor<TYPE1,TYPE2>::argument a ) const 
       {
         //
         if ( 0 == m_timer && m_first && !m_svc ) 
@@ -236,7 +237,8 @@ namespace LoKi
         }
       }
       /// MANDATORY: virtual destructor 
-      virtual ~Timer_ () {}
+      virtual ~Timer_ () 
+      { if ( this->m_svc && !this->gaudi() ) { this->m_svc.reset() ; } }
       /// MANDATORY: clone method ("virtual constructor")
       virtual  Timer_ * clone() const { return new Timer_ ( *this ) ; }
       // ======================================================================

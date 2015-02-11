@@ -343,7 +343,14 @@ LoKi::Scalers::RateLimitV::RateLimitV
 // ============================================================================
 // MANDATORY: virtual destructor 
 // ============================================================================
-LoKi::Scalers::RateLimitV::~RateLimitV(){}
+LoKi::Scalers::RateLimitV::~RateLimitV()
+{
+  if ( m_rateSvc && !gaudi() ) 
+  {
+    // Warning("Manual reset of IReferenceRate") ;
+    m_rateSvc.reset() ;
+  }  
+}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================

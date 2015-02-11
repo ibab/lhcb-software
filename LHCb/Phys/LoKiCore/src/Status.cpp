@@ -39,7 +39,14 @@ LoKi::Status::Check::Check
 // ============================================================================
 // MANDATORY: virtual destructor 
 // ============================================================================
-LoKi::Status::Check::~Check(){  m_tool.release() ; }
+LoKi::Status::Check::~Check()
+{ 
+  if ( m_tool && !gaudi() ) 
+  {
+    // Warning("Manual release of ICheckTool") ;
+    m_tool.reset () ; 
+  }
+}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
@@ -98,7 +105,14 @@ LoKi::Status::Accept::Accept
 // ============================================================================
 // MANDATORY: virtual destructor 
 // ============================================================================
-LoKi::Status::Accept::~Accept(){  m_tool.release() ; }
+LoKi::Status::Accept::~Accept()
+{ 
+  if ( m_tool && !gaudi() ) 
+  {
+    // Warning("Manual release of IAccept") ;
+    m_tool.reset () ; 
+  }
+}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================

@@ -81,7 +81,8 @@ namespace LoKi
         , m_path ( right.m_path  )
       {}
       /// MANDATORY: virtual desctrutor
-      virtual ~Source() {}
+      virtual ~Source() 
+      { if ( this->m_svc() && !this->gaudi() ) { this->m_svc.reset() ; } }
       /// MANDATORY: clone method ("virtual constructor")
       virtual  Source* clone() const { return new Source ( *this ) ; }
       /// MANATORY: the only one essenial method 
