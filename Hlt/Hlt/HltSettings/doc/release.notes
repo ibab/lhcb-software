@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-02-12 - V. Gligorov 
+ - Update Physics_draftEM2015 to run the new RICH mirror alignment line,
+   and adjust some 1Track cuts a bit in line with most recent studies
+   for the charm xsection lines.
+
 ! 2015-02-11 - Roel Aaij
  - Update Hlt1_Physics_September2012.py for new configuration of 1TrackLines
    and Physics_draftEM2015.py for new configuration of DiMuon lines.

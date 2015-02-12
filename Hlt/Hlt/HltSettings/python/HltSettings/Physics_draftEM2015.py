@@ -58,7 +58,8 @@ class Physics_draftEM2015( object ):
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
         from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
         from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
-        
+        from Hlt1Lines.Hlt1CalibRICHMirrorLines     import Hlt1CalibRICHMirrorLinesConf
+
         from Hlt2Lines.Hlt2InclusiveMuonLines   import Hlt2InclusiveMuonLinesConf
         from Hlt2Lines.Hlt2InclusiveDiMuonLines import Hlt2InclusiveDiMuonLinesConf
         from Hlt2Lines.Hlt2CharmHadD02HHLines   import Hlt2CharmHadD02HHLinesConf
@@ -66,21 +67,21 @@ class Physics_draftEM2015( object ):
         from Hlt2Lines.DiMuon.Lines             import DiMuonLines
         from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 
-        thresholds = { Hlt1TrackLinesConf :    {'AllL0_Velo_NHits'   : 9
-                                               , 'AllL0_Velo_Qcut'   : 3
-                                               , 'AllL0_TrNTHits'    : 16
+        thresholds = { Hlt1TrackLinesConf :    {'AllL0_Velo_NHits'   : 0   #OFF
+                                               , 'AllL0_Velo_Qcut'   : 999 #OFF
+                                               , 'AllL0_TrNTHits'    : 0   #PFF
                                                , 'AllL0_PT'          : 1000.
                                                , 'AllL0_P'           : 3000.
-                                               , 'AllL0_IPChi2'      : 4.0
-                                               , 'AllL0_TrChi2'      : 5.0
+                                               , 'AllL0_IPChi2'      : 9.0
+                                               , 'AllL0_TrChi2'      : 3.0
                                                , 'AllL0_GEC'         : 'Loose'
                                                , 'Muon_TrNTHits'     : 0 #OFF
                                                , 'Muon_Velo_NHits'   : 0 #OFF
                                                , 'Muon_Velo_Qcut'    : 999 #OFF
-                                               , 'Muon_PT'           : 1000.
+                                               , 'Muon_PT'           : 800.
                                                , 'Muon_P'            : 3000.
-                                               , 'Muon_IPChi2'       : 4.0
-                                               , 'Muon_TrChi2'       : 5.0
+                                               , 'Muon_IPChi2'       : 6.0
+                                               , 'Muon_TrChi2'       : 3.0
                                                , 'Muon_GEC'          : 'Loose'
                                                , 'Photon_PT'         : 1200.
                                                , 'Photon_P'          : 3000.
@@ -91,6 +92,14 @@ class Physics_draftEM2015( object ):
                                                                         'Muon'   : ('Muon', 'DiMuon', 'MuonNoSPD', 'DiMuonNoSPD'),
                                                                         'Photon' : ("PhotonHi", "ElectronHi")}
                                                }
+                     , Hlt1CalibRICHMirrorLinesConf : {     'RICHMirror_Velo_NHits'  : 0 
+                                                        ,   'RICHMirror_Velo_Qcut'   : 3 
+                                                        ,   'RICHMirror_TrNTHits'    : 16
+                                                        ,   'RICHMirror_PT'          : 500.
+                                                        ,   'RICHMirror_P'           : 30000.
+                                                        ,   'RICHMirror_ETA'         : 2.55 
+                                                        ,   'RICHMirror_TrChi2'      : 3.
+                                                      }   
                      , Hlt1MuonLinesConf :     { 'SingleMuonHighPT_P'        : 3000
                                                , 'SingleMuonHighPT_PT'      : 4800
                                                , 'SingleMuonHighPT_TrChi2'  :    3.
@@ -306,6 +315,7 @@ class Physics_draftEM2015( object ):
         Returns a list of active lines
         """
         lines =  [ 'Hlt1TrackAllL0', 'Hlt1TrackMuon'
+                 , 'Hlt1CalibRICHMirror'
                  , 'Hlt1SingleMuonNoIP'
                  , 'Hlt1DiMuonLowMass'
                  , 'Hlt1DiMuonHighMass'
