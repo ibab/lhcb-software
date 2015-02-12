@@ -80,7 +80,7 @@ void CntrPub::analyze(void *, int, MonMap* mmap)
       {
         sdes = (*mit).second;
       }
-      d = (CntrDescr*) MonCounter::de_serialize((*mit).second);
+      CntrDescr *d = (CntrDescr*) MonCounter::de_serialize((*it).second);
       if (sdes->type == 1)
       {
         sdes->rdata = d->d_data;
@@ -150,7 +150,7 @@ void CntrPub::analyze(void *, int, MonMap* mmap)
 //    }
 //    m_EvtRateSvc->updateService(m_EvtRate);
 //  }
-}
+//}
 
 CntrPub::CntrPub(const std::string& name, ISvcLocator* sl) :
     PubSvc(name, sl), m_noEvtsSvc(0), m_EvtRateSvc(0)

@@ -10,13 +10,14 @@
 
 // Forward declarations
 class DimService;
-type def struct SVCDescr
+typedef struct
 {
+    int type;
     std::string name;
     int idata;
     float rdata;
     DimService *svc;
-};
+}SVCDescr;
 class CntrPub: public PubSvc {
 public:
   CntrPub(const std::string& name, ISvcLocator* sl);
