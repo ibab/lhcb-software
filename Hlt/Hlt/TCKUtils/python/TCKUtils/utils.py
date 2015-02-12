@@ -8,7 +8,8 @@ from Configurables import ConfigTreeEditor, PropertyConfigSvc
 import os.path
 def cdb_file_exists() :
     __cfg_cdb = ConfigCDBAccessSvc()
-    return  os.path.isfile( __cfg_cdb.getProp('File') ) 
+    cdb_file = os.path.basename( __cfg_cdb.getProp('File') )
+    return os.path.isfile( os.path.join( os.environ['HLTTCKROOT'], cdb_file ) )
 
 if cdb_file_exists() :
     from Configurables import ConfigCDBAccessSvc as ConfigAccessSvc

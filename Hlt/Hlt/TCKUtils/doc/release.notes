@@ -5,6 +5,9 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+! 2015-02-12 - Roel Aaij
+ - Use HLTTCKROOT from environment to check for config.cdb
+
 ! 2015-02-05 - Roel Aaij
  - Switch to CDB access service by default.
 
