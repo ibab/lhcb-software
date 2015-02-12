@@ -12,7 +12,7 @@ package           StrippingCache
 version           v1r0
 
 # =============================================================================
-branches          cmt doc src work 
+branches          cmt doc src work scripts 
 
 # =============== dependencies ================================================
 use               LoKiArrayFunctors  v* Phys 
@@ -23,6 +23,7 @@ library           StrippingCache ../src/*.cpp
 
 # =============== patterns =====================================================
 apply_pattern     linker_library          library=StrippingCache
+apply_pattern     install_scripts
 apply_pattern     generate_componentslist library=StrippingCache
 
 # =============================================================================

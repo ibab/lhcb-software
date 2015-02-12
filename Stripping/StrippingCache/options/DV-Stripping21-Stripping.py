@@ -43,6 +43,39 @@ config  = strippingConfiguration(stripping)
 archive = strippingArchive(stripping)
 
 streams = buildStreams(stripping = config, archive = archive)
+
+log.warning(100*"#")
+log.warning(100*"#")
+log.warning(100*"#")
+log.warning("# adjustment by Vanya Belyaev" )
+
+
+for s in streams :
+
+    _lines = []
+    for l in s.lines :
+        if 0 <= l.name().upper().find('D02KSKS') :
+            log.warning("# VB: REMOVE %s" % l.name() )
+            continue
+        if 0 <= l.name().upper().find('BS2KSKS') :
+            log.warning("# VB: REMOVE %s" % l.name() )
+            continue
+        if 0 <= l.name().upper().find('PROTONASYM') :
+            log.warning("# VB: REMOVE %s" % l.name() )
+            continue
+        if 0 <= l.name().upper().find('MUNU') :
+            log.warning("# VB: REMOVE %s" % l.name() )
+            continue
+        _lines.append ( l )
+    s.lines = _lines
+    
+log.warning(100*"#")
+log.warning(100*"#")
+log.warning(100*"#")
+
+
+
+
 leptonicMicroDSTname   = 'Leptonic'
 charmMicroDSTname      = 'Charm'
 pidMicroDSTname        = 'PID'

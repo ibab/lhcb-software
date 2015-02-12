@@ -1,0 +1,19 @@
+#!/bin/zsh 
+
+
+## prepare pkl file 
+
+gaudirun.py $*  $STRIPPINGCACHEROOT/options/DataType.py $STRIPPINGCACHEROOT/options/NoEvents.py -n -o CACHE.pkl  | tee phase_0.log 
+
+
+export LOKI_GENERATE_CPPCODE=10 
+
+## run it and write C++ code 
+gaudirun.py CACHE.pkl | tee phase_1.log 
+
+unset  LOKI_GENERATE_CPPCODE
+
+rm *.dst 
+rm *.mdst 
+rm *.root 
+rm *.xml 
