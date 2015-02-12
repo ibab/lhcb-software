@@ -994,15 +994,14 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
         if ( (*itH)->x() < xMin ) continue;
         if ( (*itH)->x() > xMax ) continue;
         
-        bool hitFound=false;
-        
+        //bool hitFound=false;
         if (m_useFix){
           //look only to 
           //if ( zone(kk)->isX() )
           //{
           //  continue;
           //}
-          bool ZoneLookedUp = kk%2; // ZoneLooked = True for Upper & U-V , False for Lower & U-V
+          //bool ZoneLookedUp = kk%2; // ZoneLooked = True for Upper & U-V , False for Lower & U-V
           //dxDy >0 for U layers (zones)
           //dxDy <0 for V layers (zones)
             //XProjections is found looping over Upper Regions

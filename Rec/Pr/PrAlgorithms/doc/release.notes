@@ -4,6 +4,9 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2015-02-12 - Michel De Cian
+ - Fix unused variables in PrSeedingXLayers.
+
 ! 2015-02-11 - Renato Quagliani
 
   - PrSeedingXLayers promoted to GaudiHistoAlg and Triangle Fixing implemented
