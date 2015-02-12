@@ -29,10 +29,10 @@ namespace
 // the default constructor (invalid desktop!)
 // ============================================================================
 LoKi::AuxDesktopBase::AuxDesktopBase ()
-  : LoKi::AuxFunBase () 
-  , m_desktop ( s_IDVAlgorithm ) 
+  : LoKi::AuxFunBase (                ) 
+  , m_desktop        ( s_IDVAlgorithm ) 
 {
-  if ( !m_desktop && gaudi() ) { loadDesktop() ; }
+  if ( !m_desktop && gaudi() ) {  loadDesktop() ; }
 }
 // ============================================================================
 // constructor from the desktop 
@@ -49,8 +49,8 @@ LoKi::AuxDesktopBase::AuxDesktopBase
 // ============================================================================
 LoKi::AuxDesktopBase::AuxDesktopBase 
 ( const LoKi::Interface<IDVAlgorithm>& desktop ) 
-  : LoKi::AuxFunBase () 
-  , m_desktop ( desktop ) 
+  : LoKi::AuxFunBase (         ) 
+  , m_desktop        ( desktop )
 {
   if (  !m_desktop && gaudi() ) { loadDesktop() ; }
 }
@@ -60,12 +60,14 @@ LoKi::AuxDesktopBase::AuxDesktopBase
 LoKi::AuxDesktopBase::AuxDesktopBase 
 ( const LoKi::AuxDesktopBase& right ) 
   : LoKi::AuxFunBase ( right ) 
-  , m_desktop        ( right.m_desktop ) 
-{}
+  , m_desktop        (       ) // ATTENTION - it is not a right copy!!! 
+{
+  if (  !m_desktop && gaudi() ) { loadDesktop() ; }
+}
 // =============================================================================
 // destructor
 // =============================================================================
-LoKi::AuxDesktopBase::~AuxDesktopBase() 
+LoKi::AuxDesktopBase::~AuxDesktopBase () 
 {
   if ( m_desktop && !gaudi() ) 
   {
@@ -94,7 +96,11 @@ const LHCb::VertexBase* LoKi::AuxDesktopBase::bestVertex
     return 0 ;
   }
   //
-  if ( !validDesktop() ) { loadDesktop() ; }
+  if ( !validDesktop() ) 
+  { 
+    Warning ( "Late acquire of IDVAlgorithm" ) ;
+    loadDesktop() ; 
+  }
   Assert ( validDesktop() , "Unable to retrieve IDVAlgorithm" ) ;
   //
   const LHCb::VertexBase* vertex = desktop()->bestVertex( p ) ;
@@ -109,7 +115,11 @@ const LHCb::VertexBase* LoKi::AuxDesktopBase::bestVertex
 LHCb::RecVertex::Range LoKi::AuxDesktopBase::primaryVertices() const 
 {
   //
-  if ( !validDesktop() ) { loadDesktop() ; }
+  if ( !validDesktop() ) 
+  { 
+    Warning ( "Late acquire of IDVAlgorithm" ) ;
+    loadDesktop() ; 
+  }
   Assert ( validDesktop() , "Unable to retrieve PhysDekstop!" ) ;
   //
   LHCb::RecVertex::Range pvs = m_desktop->primaryVertices() ;

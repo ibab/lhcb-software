@@ -36,9 +36,9 @@ namespace
 {
   // ==========================================================================
   /// "invalid" pointer 
-  const IDistanceCalculator* const s_IGEO  = 0 ;
+  const IDistanceCalculator* const s_IGEO    = 0 ;
   /// "invalid" pointer 
-  const ILifetimeFitter*     const s_LTIME = 0 ;
+  const ILifetimeFitter*     const s_LTIME   = 0 ;
   // ==========================================================================
   /** @var s_IPTOOL 
    *  the instance of "invalid" IP-tool
@@ -60,7 +60,7 @@ namespace
 // ============================================================================
 LoKi::Particles::CosineDirectionAngleWithTheBestPV::
 CosineDirectionAngleWithTheBestPV()
-  : LoKi::AuxDesktopBase()
+  : LoKi::AuxDesktopBase                  (          )
   , LoKi::Particles::CosineDirectionAngle ( s_VERTEX ) 
 {}
 // ============================================================================
@@ -78,9 +78,10 @@ LoKi::Particles::CosineDirectionAngleWithTheBestPV::operator()
 {
   if ( 0 == p ) 
   {
-    Error ( "LHCb::Particle* points to NULL, retuen -1000" ) ;
+    Error ( "LHCb::Particle* points to NULL, return -1000" ) ;
     return -1000 ;                                                     // RETURN 
   }
+  //
   // get the best vertex from desktop and use it 
   setVertex ( bestVertex ( p ) ) ;
   //
@@ -96,8 +97,8 @@ std::ostream& LoKi::Particles::CosineDirectionAngleWithTheBestPV::fillStream
 // ============================================================================
 LoKi::Particles::ImpParWithTheBestPV::ImpParWithTheBestPV 
 ( const std::string& geo ) 
-  : LoKi::AuxFunBase    ( std::tie ( geo ) ) 
-  , LoKi::AuxDesktopBase()
+  : LoKi::AuxFunBase        ( std::tie ( geo )    ) 
+  , LoKi::AuxDesktopBase    (                     )
   , LoKi::Particles::ImpPar ( s_VERTEX , s_IPTOOL ) 
   , m_geo ( geo )   
 {
