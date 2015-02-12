@@ -12,7 +12,8 @@ gaudi_depends_on_subdirs(Phys/LoKiJets
 			 Phys/DaVinciInterfaces
 			 )
 
-find_package(NeuroBayesExpert ROOT COMPONENTS TMVA)
+find_package(NeuroBayesExpert)
+find_package(ROOT COMPONENTS TMVA Physics)
 
 gaudi_install_headers(Kernel)
 

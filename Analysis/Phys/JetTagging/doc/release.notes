@@ -4,6 +4,9 @@
 ! Purpose     : Jet Tagging Package
 ! -----------------------------------------------------------------------------
 
+! 2015-02-12 - Cédric Potterat
+ - fix CMakeLists.txt to get correctly ROOT TMVA and Phyiscs.
+
 ! 2015-02-11 - Philip Ilten
  - added LHCb-ANA-2014-076 b,c-jet tagging tool
 
