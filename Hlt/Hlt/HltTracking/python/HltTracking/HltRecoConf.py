@@ -40,8 +40,11 @@ class HltRecoConf(LHCbConfigurableUser):
                  ,"FitVelo"                     : False
                  ,"OfflineRich"                 : True
                  ,"InitFits"                    : False
-                 ,"SimplifiedMaterialFit"       : False
-               }
+                 ,"MoreOfflineLikeFit"          : False  # This runs a fit in HLT1 and HLT2 which uses the default offline fit
+                                                         # with a simplified material description
+                 ,"FitIterationsInHltFit"       : 1      # Increases the number of fit iterations in the current Hlt fit.
+                                                         # Default is 1.
+                 }
 
    def getConfiguredForward(Name) :
        

@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-02-12 - Sascha Stahl
+ - HltRecoConf: Added option to change the number of fit iterations of the HLT fit.
+   Renamed HltRecoConf.SimplifiedMaterialFit to HltRecoConf.MoreOfflineLikeFit.
+
 ! 2015-02-09 - Sascha Stahl
  - Moved definition of track chi2 cut for proto particle creation 
    from HltTrackNames.py to HltRecoConf.

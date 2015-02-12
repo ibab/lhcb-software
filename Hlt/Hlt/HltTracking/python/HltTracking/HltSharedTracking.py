@@ -215,32 +215,13 @@ def ConfiguredPatSeeding(name
         recoSeeding.PatSeedingTool.addTool( TrackUsedLHCbID, name="TrackUsedLHCbID" )
         recoSeeding.PatSeedingTool.TrackUsedLHCbID.inputContainers = VetoTrackLocations
   
-    #recoSeeding.PatSeedingTool.ForwardCloneMergeSeg = True
     from HltTracking.HltRecoConf import OnlineSeedingToolOptions
-
     recoSeeding.PatSeedingTool.NDblOTHitsInXSearch = OnlineSeedingToolOptions ["NDblOTHitsInXSearch"]
     recoSeeding.PatSeedingTool.MinMomentum = OnlineSeedingToolOptions ["MinMomentum"]
-
     from Configurables import HltRecoConf
     from HltTracking.HltRecoConf import CommonForwardOptions
     recoSeeding.PatSeedingTool.MaxOTHits = HltRecoConf().getProp("Forward_MaxOTHits")
     recoSeeding.PatSeedingTool.MaxITHits = CommonForwardOptions["MaxITHits"] #ugly...
-    #TODO: put something in like: if(early data):
-    #if self.getProp("EarlyDataTracking") :
-        #    # Do something special in case of early data
-        #    from HltTracking.HltRecoConf import CommonSeedingTrackingOptions_EarlyData
-        #    recoSeeding.PatSeedingTool.OTNHitsLowThresh = CommonSeedingTrackingOptions_EarlyData["OTNHitsLowThresh"]
-        #    recoSeeding.PatSeedingTool.MinTotalPlanes = CommonSeedingTrackingOptions_EarlyData["MinTotalPlanes"]
-        #    recoSeeding.PatSeedingTool.MaxMisses = CommonSeedingTrackingOptions_EarlyData["MaxMisses"]
-        #    recoSeeding.PatSeedingTool.MaxTrackChi2LowMult = CommonSeedingTrackingOptions_EarlyData["MaxTrackChi2LowMult"]
-        #    recoSeeding.PatSeedingTool.MaxFinalTrackChi2 = CommonSeedingTrackingOptions_EarlyData["MaxFinalTrackChi2"]
-        #    recoSeeding.PatSeedingTool.MaxFinalChi2 = CommonSeedingTrackingOptions_EarlyData["MaxFinalChi2"]
-        #    recoSeeding.PatSeedingTool.MaxTrackChi2 = CommonSeedingTrackingOptions_EarlyData["MaxTrackChi2"]
-        #    recoSeeding.PatSeedingTool.MaxChi2HitIT = CommonSeedingTrackingOptions_EarlyData["MaxChi2HitIT"]
-        #    recoSeeding.PatSeedingTool.MaxChi2HitOT = CommonSeedingTrackingOptions_EarlyData["MaxChi2HitOT"]
-    
-
-
     return recoSeeding
 
 #TODO: Move this to TrackFitter package?
@@ -259,8 +240,9 @@ def ConfiguredHltInitFitter( parent ):
         parent.Fitter.addTool(TrackMasterFitter, name="Fitter")
         fitter = parent.Fitter.Fitter
     # configure the fitter
-    if not HltRecoConf().getProp("SimplifiedMaterialFit"):
+    if not HltRecoConf().getProp("MoreOfflineLikeFit"):
         ConfiguredHltFitter( fitter )
+        fitter.NumberFitIterations = HltRecoConf().getProp("FitIterationsInHltFit")
     else:
         ConfiguredMasterFitter( fitter , SimplifiedGeometry = True, LiteClusters = True)
         fitter.MeasProvider.IgnoreMuon = True
