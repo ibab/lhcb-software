@@ -4,10 +4,12 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
-!========================= PrAlgorithms v1r15 2014-12-11 ========================
 ! 2015-02-11 - Renato Quagliani
+
   - PrSeedingXLayers promoted to GaudiHistoAlg and Triangle Fixing implemented
   - PrSeedingXLayers some hardcoded parameters put as settable one
+
+!========================= PrAlgorithms v1r15 2014-12-11 ========================
 
 ! 2014-14-11 -  Renato Quagliani
   - In PrFTHitManager the zone geometry setting has been changed to reflect 
