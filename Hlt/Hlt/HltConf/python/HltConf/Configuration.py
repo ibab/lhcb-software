@@ -291,8 +291,10 @@ class HltConf(LHCbConfigurableUser):
                       , 49 : "HLT_PASS_SUBSTR('Hlt1BeamGas')"
                       , 50 : "HLT_PASS('Hlt1LumiLowBeamCrossingDecision')"
                       , 51 : "HLT_PASS('Hlt1LumiMidBeamCrossingDecision')"
-                      , 59 : "HLT_PASS_RE('Hlt1.*DisplVertex.*Decision')"
                       , 53 : "HLT_PASS_RE('Hlt1CalibTracking.*Decision')"
+                      , 54 : "HLT_PASS_RE('Hlt1CalibRICH.*Decision')"
+                      , 59 : "HLT_PASS_RE('Hlt1.*DisplVertex.*Decision')"
+                      
                       # 64--96: Hlt2
                       , 64 : "HLT_PASS('Hlt2Global')"
                       , 65 : "HLT_PASS('Hlt2DebugEventDecision')"

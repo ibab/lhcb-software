@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2015-02-12 - V. Gligorov
+ - Add routing bit 54 for the RICH calibration lines.
+
 ! 2015-02-11 - Roel Aaij
  - Import configurables of Hlt lines only from the first two items on
    module.__path__, which are the directories of the top-level local project.
