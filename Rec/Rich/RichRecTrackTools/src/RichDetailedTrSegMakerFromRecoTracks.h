@@ -118,7 +118,7 @@ namespace Rich
        *  @param state        State information to correct
        *  @param refState     Reference starting state.
        */
-      void fixRich1GasEntryPoint( std::unique_ptr<LHCb::State>& state,
+      void fixRich1GasEntryPoint( LHCb::State & state,
                                   const LHCb::State * refState = 0 ) const;
 
       /** Correct the exit state to the point where the track traverses the spherical mirror
@@ -128,7 +128,7 @@ namespace Rich
        *  @param refState     Reference starting state.
        */
       void correctRadExitMirror( const DeRichRadiator* radiator,
-                                 std::unique_ptr<LHCb::State>& state,
+                                 LHCb::State & state,
                                  const LHCb::State * refState = 0  ) const;
 
       /** Extrapolate a state to a new z position
@@ -142,7 +142,7 @@ namespace Rich
        * @retval false State could not be extrapolated to the z position.
        *         State remains unaltered.
        */
-      bool moveState( std::unique_ptr<LHCb::State> & stateToMove,
+      bool moveState( LHCb::State & stateToMove,
                       const double z,
                       const LHCb::State * refState = 0 ) const;
 
@@ -157,9 +157,9 @@ namespace Rich
 
       /// Creates the middle point information
       bool createMiddleInfo( const Rich::RadiatorType rad,
-                             std::unique_ptr<LHCb::State>& fState,
+                             LHCb::State & fState,
                              const LHCb::State * fStateRef,
-                             std::unique_ptr<LHCb::State>& lState,
+                             LHCb::State & lState,
                              const LHCb::State * lStateRef,
                              Gaudi::XYZPoint & midPoint,
                              Gaudi::XYZVector & midMomentum,
@@ -273,7 +273,7 @@ namespace Rich
       /// Pointer to the Magnetic Field Service
       mutable IMagneticFieldSvc * m_magFieldSvc;
 
-      /// Cached TrackTraj
+      /// Cached pointer to a TrackTraj object
       mutable LHCb::TrackTraj * m_trackTraj;
 
     };

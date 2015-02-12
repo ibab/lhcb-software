@@ -4,6 +4,10 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-02-12 - Chris Jones
+ - Clean up internal interface used by DetailedTrSegMakerFromRecoTracks to
+   avoid passing around unique_ptr instances by reference.
+
 ! 2015-02-06 - Chris Jones
  - Add a new (off by default) option to RichDetailedTrSegMakerFromRecoTracks to
    use a TrackTraj object move states to the RICH radiator entry and exit 

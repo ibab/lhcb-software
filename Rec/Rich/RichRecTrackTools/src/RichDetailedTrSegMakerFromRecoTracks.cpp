@@ -213,10 +213,6 @@ constructSegments( const ContainedObject * obj,
   //RADIATOR_GLOBAL_POSITIONS_X;
   //RADIATOR_GLOBAL_POSITIONS_Y;
 
-  // Construct TrackTraj if it is to be used
-  //m_trackTraj = ( m_useTrackTraj ? new LHCb::TrackTraj(*track,magFieldSvc()) : NULL );
-  m_trackTraj = ( m_useTrackTraj ? new LHCb::TrackTraj(*track) : NULL );
-
   // Loop over all radiators
   for ( Radiators::const_iterator radiator = m_radiators.begin();
         radiator != m_radiators.end(); ++radiator )
@@ -340,6 +336,11 @@ constructSegments( const ContainedObject * obj,
     checkState( entryPStateRaw, rad );
     checkState( exitPStateRaw,  rad );
 
+    // Construct TrackTraj if it is to be used
+    std::unique_ptr<LHCb::TrackTraj> trackTraj( !m_useTrackTraj ? NULL :
+                                                new LHCb::TrackTraj(*track,magFieldSvc()) );
+    m_trackTraj = trackTraj.get();
+
     // Clone entry state
     std::unique_ptr<LHCb::State> entryPState( entryPStateRaw->clone() );
     if ( !entryPState ) { Warning("Failed to clone entry State").ignore(); continue; }
@@ -377,7 +378,7 @@ constructSegments( const ContainedObject * obj,
                             *radiator, entryPoint1 ) )
     {
       // extrapolate state to the correct z
-      if ( moveState( entryPState, entryPoint1.z(), entryPStateRaw ) )
+      if ( moveState( *entryPState, entryPoint1.z(), entryPStateRaw ) )
       {
         // find radiator entry and exit points
         if ( entryPState &&
@@ -412,7 +413,7 @@ constructSegments( const ContainedObject * obj,
                                *radiator, entryPoint2 ) )
       {
         // extrapolate state to the correct z
-        if ( moveState( exitPState, entryPoint2.z(), exitPStateRaw ) )
+        if ( moveState( *exitPState, entryPoint2.z(), exitPStateRaw ) )
         {
           // find radiator entry and exit points
           if ( exitPState &&
@@ -462,10 +463,10 @@ constructSegments( const ContainedObject * obj,
 
       // make sure at current z positions
       _ri_verbo << "  Checking entry point is at final z=" << entryPoint1.z() << endmsg;
-      const bool sc1 = moveState( entryPState, entryPoint1.z(), entryPStateRaw );
+      const bool sc1 = moveState( *entryPState, entryPoint1.z(), entryPStateRaw );
       _ri_verbo << "  Checking exit point is at final z=" << intersects2.back().exitPoint().z()
                 << endmsg;
-      const bool sc2 = moveState( exitPState,  intersects2.back().exitPoint().z(), exitPStateRaw );
+      const bool sc2 = moveState( *exitPState,  intersects2.back().exitPoint().z(), exitPStateRaw );
       sc = sc1 && sc2;
 
     }
@@ -483,10 +484,10 @@ constructSegments( const ContainedObject * obj,
 
       // make sure at current z positions
       _ri_verbo << "  Checking entry point is at final z= " << entryPoint1.z() << endmsg;
-      const bool sc1 = moveState( entryPState, entryPoint1.z(), entryPStateRaw );
+      const bool sc1 = moveState( *entryPState, entryPoint1.z(), entryPStateRaw );
       _ri_verbo << "  Checking exit point is at final z= " << intersects1.back().exitPoint().z()
                 << endmsg;
-      const bool sc2 = moveState( exitPState, intersects1.back().exitPoint().z(), exitPStateRaw );
+      const bool sc2 = moveState( *exitPState, intersects1.back().exitPoint().z(), exitPStateRaw );
       sc = sc1 && sc2;
 
     }
@@ -501,10 +502,10 @@ constructSegments( const ContainedObject * obj,
 
       // make sure at current z positions
       _ri_verbo << "  Checking entry point is at final z= " << entryPoint2.z() << endmsg;
-      const bool sc1 = moveState( entryPState, entryPoint2.z(), entryPStateRaw );
+      const bool sc1 = moveState( *entryPState, entryPoint2.z(), entryPStateRaw );
       _ri_verbo << "  Checking exit point is at final z= " << intersects2.back().exitPoint().z()
                 << endmsg;
-      const bool sc2 = moveState( exitPState,  intersects2.back().exitPoint().z(), exitPStateRaw );
+      const bool sc2 = moveState( *exitPState,  intersects2.back().exitPoint().z(), exitPStateRaw );
       sc = sc1 && sc2;
 
     }
@@ -575,13 +576,13 @@ constructSegments( const ContainedObject * obj,
       {
         // Update entry point to exit point on cone
         _ri_verbo << "   --> Correcting entry point to point on cone" << endmsg;
-        sc = moveState( entryPState, inter2.z(), entryPStateRaw );
+        sc = moveState( *entryPState, inter2.z(), entryPStateRaw );
       }
       else if ( intType == DeRichBeamPipe::BackFaceAndCone )
       {
         // Update exit point to entry point on cone
         _ri_verbo << "   --> Correcting exit point to point on cone" << endmsg;
-        sc = moveState( exitPState, inter1.z(), exitPStateRaw );
+        sc = moveState( *exitPState, inter1.z(), exitPStateRaw );
       }
       if ( !sc )
       {
@@ -616,7 +617,7 @@ constructSegments( const ContainedObject * obj,
     // a special hack for the Rich1Gas - since the aerogel volume
     // is placed INSIDE the Rich1Gas, the default entry point is wrong.
     //---------------------------------------------------------------------------------------------
-    if ( Rich::Rich1Gas == rad ) fixRich1GasEntryPoint( entryPState, entryPStateRaw );
+    if ( Rich::Rich1Gas == rad ) fixRich1GasEntryPoint( *entryPState, entryPStateRaw );
     //---------------------------------------------------------------------------------------------
 
 //     richHisto2D( HID("entryPostR1GasFix",rad), "Entry Post R1 Gas Fix",
@@ -628,7 +629,7 @@ constructSegments( const ContainedObject * obj,
     // check for intersection with spherical mirror for gas radiators
     // and if need be correct exit point accordingly
     //---------------------------------------------------------------------------------------------
-    if ( Rich::Aerogel != rad  ) correctRadExitMirror( *radiator, exitPState, exitPStateRaw );
+    if ( Rich::Aerogel != rad  ) correctRadExitMirror( *radiator, *exitPState, exitPStateRaw );
     //---------------------------------------------------------------------------------------------
 
 //     richHisto2D( HID("exitPostMirrCorr",rad), "Exit Post Mirror Exit Correction",
@@ -743,8 +744,8 @@ constructSegments( const ContainedObject * obj,
         Gaudi::XYZPoint midPoint;
         Gaudi::XYZVector midMomentum;
         const bool OK = createMiddleInfo( rad,
-                                          entryPState, entryPStateRaw,
-                                          exitPState,  exitPStateRaw,
+                                          *entryPState, entryPStateRaw,
+                                          *exitPState,  exitPStateRaw,
                                           midPoint, midMomentum, midErrs );
 
         if ( OK )
@@ -802,9 +803,6 @@ constructSegments( const ContainedObject * obj,
     verbose() << endmsg;
   }
 
-  // clean up
-  delete m_trackTraj;
-
   // return value is number of segments formed
   return segments.size();
 }
@@ -815,9 +813,9 @@ constructSegments( const ContainedObject * obj,
 bool
 DetailedTrSegMakerFromRecoTracks::
 createMiddleInfo( const Rich::RadiatorType rad,
-                  std::unique_ptr<LHCb::State>& fState,
+                  LHCb::State & fState,
                   const LHCb::State * fStateRef,
-                  std::unique_ptr<LHCb::State>& lState,
+                  LHCb::State & lState,
                   const LHCb::State * lStateRef,
                   Gaudi::XYZPoint & midPoint,
                   Gaudi::XYZVector & midMomentum,
@@ -826,7 +824,7 @@ createMiddleInfo( const Rich::RadiatorType rad,
   _ri_verbo << "   --> Creating middle point information" << endmsg;
 
   // middle point z position
-  const double midZ = (fState->position().z()+lState->position().z())/2;
+  const double midZ = (fState.position().z()+lState.position().z())/2;
 
   // move start state to this z
   const bool moveFirst = moveState( fState, midZ, fStateRef );
@@ -837,36 +835,36 @@ createMiddleInfo( const Rich::RadiatorType rad,
 
   if ( moveFirst && moveLast )
   {
-    midPoint     = fState->position() + (lState->position()-fState->position())/2;
-    midMomentum  = (fState->slopes()+lState->slopes())/2;
-    midMomentum *= (fState->p()+lState->p()) / (2.0*std::sqrt(midMomentum.Mag2()));
-    errors = LHCb::RichTrackSegment::StateErrors( (fState->errX2()+lState->errX2())/2,
-                                                  (fState->errY2()+lState->errY2())/2,
-                                                  (fState->errTx2()+lState->errTx2())/2,
-                                                  (fState->errTy2()+lState->errTy2())/2,
-                                                  (fState->errP2()+lState->errP2())/2 );
+    midPoint     = fState.position() + (lState.position()-fState.position())/2;
+    midMomentum  = (fState.slopes()+lState.slopes())/2;
+    midMomentum *= (fState.p()+lState.p()) / (2.0*std::sqrt(midMomentum.Mag2()));
+    errors = LHCb::RichTrackSegment::StateErrors( (fState.errX2()+lState.errX2())/2,
+                                                  (fState.errY2()+lState.errY2())/2,
+                                                  (fState.errTx2()+lState.errTx2())/2,
+                                                  (fState.errTy2()+lState.errTy2())/2,
+                                                  (fState.errP2()+lState.errP2())/2 );
   }
   else if ( moveFirst )
   {
-    midPoint     = fState->position();
-    midMomentum  = fState->slopes();
-    midMomentum *= fState->p() / std::sqrt(midMomentum.Mag2());
-    errors = LHCb::RichTrackSegment::StateErrors( fState->errX2(),
-                                                  fState->errY2(),
-                                                  fState->errTx2(),
-                                                  fState->errTy2(),
-                                                  fState->errP2() );
+    midPoint     = fState.position();
+    midMomentum  = fState.slopes();
+    midMomentum *= fState.p() / std::sqrt(midMomentum.Mag2());
+    errors = LHCb::RichTrackSegment::StateErrors( fState.errX2(),
+                                                  fState.errY2(),
+                                                  fState.errTx2(),
+                                                  fState.errTy2(),
+                                                  fState.errP2() );
   }
   else if ( moveLast )
   {
-    midPoint     = lState->position();
-    midMomentum  = lState->slopes();
-    midMomentum *= lState->p() / std::sqrt(midMomentum.Mag2());
-    errors = LHCb::RichTrackSegment::StateErrors( lState->errX2(),
-                                                  lState->errY2(),
-                                                  lState->errTx2(),
-                                                  lState->errTy2(),
-                                                  lState->errP2() );
+    midPoint     = lState.position();
+    midMomentum  = lState.slopes();
+    midMomentum *= lState.p() / std::sqrt(midMomentum.Mag2());
+    errors = LHCb::RichTrackSegment::StateErrors( lState.errX2(),
+                                                  lState.errY2(),
+                                                  lState.errTx2(),
+                                                  lState.errTy2(),
+                                                  lState.errP2() );
   }
 
   return ( moveFirst || moveLast );
@@ -916,19 +914,19 @@ getNextInterPoint( const Gaudi::XYZPoint&   point,
 //====================================================================================================
 // fixup Rich1Gas entry point
 void
-DetailedTrSegMakerFromRecoTracks::fixRich1GasEntryPoint( std::unique_ptr<LHCb::State>& state,
+DetailedTrSegMakerFromRecoTracks::fixRich1GasEntryPoint( LHCb::State & state,
                                                          const LHCb::State * refState ) const
 {
   if ( m_radiators[Rich::Aerogel] )
   {
     Rich::RadIntersection::Vector intersections;
-    if ( 0 < getRadIntersections ( state->position(),
-                                   state->slopes(),
+    if ( 0 < getRadIntersections ( state.position(),
+                                   state.slopes(),
                                    m_radiators[Rich::Aerogel],
                                    intersections ) )
     {
       const Gaudi::XYZPoint & aerogelExitPoint = intersections.back().exitPoint();
-      if ( aerogelExitPoint.z() > state->z() )
+      if ( aerogelExitPoint.z() > state.z() )
       {
         _ri_verbo << "   Correcting Rich1Gas entry point" << endmsg;
         const bool sc = moveState( state, aerogelExitPoint.z(), refState );
@@ -942,7 +940,7 @@ DetailedTrSegMakerFromRecoTracks::fixRich1GasEntryPoint( std::unique_ptr<LHCb::S
 //====================================================================================================
 void
 DetailedTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRadiator* radiator,
-                                                        std::unique_ptr<LHCb::State>& state,
+                                                        LHCb::State & state,
                                                         const LHCb::State * refState ) const
 {
   _ri_verbo << "   --> Attempting Correction to exit point for spherical mirror" << endmsg;
@@ -953,16 +951,16 @@ DetailedTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRadiator* ra
   const Rich::DetectorType rich = radiator->rich();
 
   // initial z position of state
-  const double initialZ = state->z();
+  const double initialZ = state.z();
 
   // move state to be on the inside of the mirror
   _ri_verbo << "    --> Moving state first to be inside mirror" << endmsg;
-  sc = sc && moveState( state, state->z() - m_mirrShift[rich], refState );
+  sc = sc && moveState( state, state.z() - m_mirrShift[rich], refState );
   bool correct = false;
 
   // find mirror intersection using the reflect method
-  Gaudi::XYZPoint intersection( state->position() );
-  Gaudi::XYZVector tempDir(state->slopes());
+  Gaudi::XYZPoint intersection ( state.position() );
+  Gaudi::XYZVector tempDir     ( state.slopes()   );
 
   if ( m_rayTracing->reflectSpherical( intersection,
                                        tempDir,
@@ -993,38 +991,41 @@ DetailedTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRadiator* ra
 
 //====================================================================================================
 bool
-DetailedTrSegMakerFromRecoTracks::moveState( std::unique_ptr<LHCb::State>& stateToMove,
+DetailedTrSegMakerFromRecoTracks::moveState( LHCb::State & stateToMove,
                                              const double z,
                                              const LHCb::State * refState ) const
 {
   // Check if requested move is big enough to bother with
-  if ( fabs( stateToMove->z() - z ) > m_minZmove )
+  if ( fabs( stateToMove.z() - z ) > m_minZmove )
   {
 
     // verbose printout
     _ri_verbo << "    --> Extrapolating state from "
-              << stateToMove->position() << endmsg;
+              << stateToMove.position() << endmsg;
 
     if ( UNLIKELY( m_extrapFromRef && refState ) )
     {
       // Delete current working state and start fresh from reference state
-      stateToMove.reset( refState->clone() );
+      stateToMove = *refState;
       _ri_verbo << "      --> Using reference state  "
-                << stateToMove->position() << endmsg;
+                << stateToMove.position() << endmsg;
     }
+
+    //info() << "State Before Move : " << stateToMove << endmsg;
+    //info() << "Moving state from " << stateToMove.position() << " to z=" << z << endmsg;
 
     // Use Track Traj ?
     if ( m_trackTraj )
     {
-      *stateToMove = m_trackTraj->state(z);
+      stateToMove = m_trackTraj->state(z);
     }
     else
     {
       // try first with the primary extrapolator
-      if ( !primaryExtrapolator()->propagate(*stateToMove,z) )
+      if ( !primaryExtrapolator()->propagate(stateToMove,z) )
       {
         // if that fails, try the backup one
-        if ( backupExtrapolator()->propagate(*stateToMove,z) )
+        if ( backupExtrapolator()->propagate(stateToMove,z) )
         {
           Warning( "'"+m_trExt1Name+"' failed -> successfully reverted to '"+
                    m_trExt2Name+"'",StatusCode::SUCCESS ).ignore();
@@ -1039,9 +1040,11 @@ DetailedTrSegMakerFromRecoTracks::moveState( std::unique_ptr<LHCb::State>& state
       }
     }
 
+    //info() << "State After Move  : " << stateToMove << endmsg;
+
     // verbose printout
     _ri_verbo << "                            to   "
-              << stateToMove->position() << endmsg;
+              << stateToMove.position() << endmsg;
 
   }
 
