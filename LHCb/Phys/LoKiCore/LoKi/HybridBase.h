@@ -133,6 +133,11 @@ namespace LoKi
       // flag to display the prepared code 
       bool                     m_showCode ; ///< flag to display the prepared code 
       // ======================================================================
+    protected : // use python as factroy for LOK-functors ?
+      // ======================================================================  
+      /// use python as factroy for LOK-functors ?
+      bool m_use_python ;           // use python as factroy for LOK-functors ?
+      // ======================================================================
     protected : // some stuff to deal with generation of C++ code 
       // ======================================================================
       // make c++ code ?
@@ -207,6 +212,8 @@ StatusCode LoKi::Hybrid::Base::_get_
     return StatusCode::SUCCESS ;    // RETURN
   } 
   // 
+  if ( !this->m_use_python ) { return StatusCode::FAILURE ; }
+  //
   // 2") execute the code 
   //
   StatusCode sc = this->executeCode ( code ) ;
