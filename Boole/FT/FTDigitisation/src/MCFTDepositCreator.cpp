@@ -44,46 +44,38 @@ MCFTDepositCreator::MCFTDepositCreator( const std::string& name,
                                         ISvcLocator* pSvcLocator)
 : GaudiHistoAlg ( name , pSvcLocator )
   , m_spillNames()
-  , m_nXSteps(2)
-  , m_nYSteps(2)
-  , m_deFT(NULL)
+  , m_deFT(nullptr)
+  , m_yMax(0.0)
+  , m_numLayers(12)
 {
-  std::vector<std::string> tmp1 = boost::assign::list_of("/PrevPrev/")
-    ("/Prev/")
-    ("/")
-    ("/Next/")
-    ("/NextNext/");
-  
-  std::vector<double> tmp2 = boost::assign::list_of(-50.0*Gaudi::Units::ns)
-    (-25.0*Gaudi::Units::ns)
-    (0.0*Gaudi::Units::ns)
-    (25.0*Gaudi::Units::ns)
-    (50.0*Gaudi::Units::ns);
+
+
+  std::vector<std::string> tmp1 = { "/PrevPrev/",
+                                    "/Prev/",
+                                    "/",
+                                    "/Next/",
+                                    "/NextNext/"};
+                                    
+  std::vector<double> tmp2 = { -50.0*Gaudi::Units::ns,
+                               -25.0*Gaudi::Units::ns,
+                               0.0*Gaudi::Units::ns,
+                               25.0*Gaudi::Units::ns,
+                               50.0*Gaudi::Units::ns };
   
   declareProperty( "SpillVector"                , m_spillVector                 = tmp1);
   declareProperty( "SpillTimes"                 , m_spillTimes                  = tmp2);  
-  declareProperty( "InputLocation"              , m_inputLocation  = LHCb::MCHitLocation::FT, "Path to input MCHits");
-  declareProperty( "OutputLocation"             , m_outputLocation = LHCb::MCFTDepositLocation::Default, 
+  declareProperty( "InputLocation"              , m_inputLocation               = LHCb::MCHitLocation::FT, "Path to input MCHits");
+  declareProperty( "OutputLocation"             , m_outputLocation              = LHCb::MCFTDepositLocation::Default, 
                    "Path to output MCDeposits");
-  declareProperty( "FiberPropagationTime"       , 
-                   m_fiberPropagationTime = 6.0 * Gaudi::Units::ns / Gaudi::Units::m, 
+  declareProperty( "FiberPropagationTime"       , m_fiberPropagationTime        = 6.0 * Gaudi::Units::ns / Gaudi::Units::m, 
                    "light propagation time in fiber");
   declareProperty( "ScintillationDecayTime"     , m_scintillationDecayTime      = 2.8 * Gaudi::Units::ns, 
                    "Scintillation decay time of photons");
-  declareProperty( "ShortAttenuationLength"     , m_shortAttenuationLength      = 200 * Gaudi::Units::mm, 
-                   "Distance along the fibre to divide the light amplitude by a factor e : short component");
-  declareProperty( "LongAttenuationLength"      , m_longAttenuationLength       = 4700 * Gaudi::Units::mm, 
-                   "Distance along the fibre to divide the light amplitude by a factor e : long component");
-  declareProperty( "FractionShort"              , m_fractionShort = 0.18, "Fraction of short attenuation at SiPM" );
-  declareProperty( "XMaxIrradiatedZone"         , m_xMaxIrradiatedZone          = 2000. * Gaudi::Units::mm );
-  declareProperty( "YMaxIrradiatedZone"         , m_yMaxIrradiatedZone          =  500. * Gaudi::Units::mm );
-  declareProperty( "IrradiatedAttenuationLength", m_irradiatedAttenuationLength);
-  declareProperty( "ReflectionCoefficient"      , m_reflectionCoefficient       = 0.7, 
-                   "Reflection coefficient of the fibre mirrored side, from 0 to 1");
-  declareProperty( "BeginReflectionLossY"       , m_beginReflectionLossY        = 1000. * Gaudi::Units::mm );
-  declareProperty( "EndReflectionLossY"         , m_endReflectionLossY          = 1500. * Gaudi::Units::mm );
-  declareProperty( "XStepOfMap"                 , m_xStepOfMap                  = 200. * Gaudi::Units::mm );
-  declareProperty( "YStepOfMap"                 , m_yStepOfMap                  = 100. * Gaudi::Units::mm );
+  declareProperty( "AttenuationToolName"        , m_attenuationToolName         = "MCFTAttenuationTool"   );
+  declareProperty( "UseAttenuation"             , m_useAttenuation              = true );
+  
+
+
 }
 //=============================================================================
 // Destructor
@@ -95,7 +87,7 @@ MCFTDepositCreator::~MCFTDepositCreator() {}
 //=============================================================================
 StatusCode MCFTDepositCreator::initialize() {
 
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
 
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   if ( msgLevel( MSG::DEBUG) ) {
@@ -103,169 +95,43 @@ StatusCode MCFTDepositCreator::initialize() {
     debug() << ": InputLocation is " <<m_inputLocation << endmsg;
     debug() << ": OutputLocation is " <<m_outputLocation << endmsg;
   }
-  if ( 0 == m_irradiatedAttenuationLength.size() ) {
-    m_irradiatedAttenuationLength.push_back( 3000. * Gaudi::Units::mm );
-    m_irradiatedAttenuationLength.push_back( 3000. * Gaudi::Units::mm );
-    m_irradiatedAttenuationLength.push_back( 3000. * Gaudi::Units::mm );
-    m_irradiatedAttenuationLength.push_back( 1500. * Gaudi::Units::mm );
-    m_irradiatedAttenuationLength.push_back(  300. * Gaudi::Units::mm );
-  }  
+  
+  m_attenuationTool = tool<IMCFTAttenuationTool>( m_attenuationToolName, this );
+  if( m_attenuationTool == nullptr ){
+    error() << "Could not find: " << m_attenuationToolName << endmsg;
+  }
+  
 
-  /// Retrieve and initialize DeFT (no test: exception in case of failure)
+  // -- Setup the transmissionMap
+  if( m_useAttenuation ) m_attenuationTool->initializeTool();
+
+  
+
+  // Retrieve and initialize DeFT (no test: exception in case of failure)
   m_deFT = getDet<DeFTDetector>( DeFTDetectorLocation::Default );
 
-  // Initialize random generator
-
-  sc = m_flatDist.initialize( randSvc(), Rndm::Flat(0.0,1.0) );
-  if ( sc.isFailure() ) return Error( "Failed to get Rndm::Flat generator", sc );
-
-  // construct container names once
-  std::vector<std::string>::const_iterator iSpillName = m_spillVector.begin();
-  while (iSpillName!=m_spillVector.end()){
-    // path in Transient data store
-    std::string mcHitPath = "/Event"+(*iSpillName)+m_inputLocation;//MCHitLocation::FT;
-    m_spillNames.push_back(mcHitPath);
-    ++iSpillName;
-  } // iterSpillName
+  m_numLayers = m_deFT->layers().size();
   
-  //== Generate the transmission map. 
-  //== Two attenuation length, then in the radiation area a different attenuation length
-  //== Compute also the transmission of the reflected signal, attenuated by the two length
-  //   and the irradiated area
-  if ( msgLevel( MSG::DEBUG) ) {
-    debug() << "[initialize] Retrieve the dimensions of the layer/fibremat for the transmission map" << endmsg;
-  }
-  
-  //== Get the size of the area
-  /* For backward compatibility between OLD and NEW geometry, 
-     xMax and yMax variable affectation is made in each case
-  */
-  float xMax;
   if(m_deFT->version() == 20 ){
-    xMax = m_deFT->fibremats()[0]->layerMaxX();
-    if ( msgLevel( MSG::DEBUG) ) {
-      debug() << "[initialize] RUN NEW GEOMETRY" << endmsg;
-    }
-  }
-  else{
-    info() << "Unknown FTDet version" << endmsg; 
+    // THIS HAS TO BE CHECKED, WHAT HAPPENS IF FIBRE MAT IS EMPTY???
+    m_yMax = m_deFT->fibremats()[0]->layerMaxY();
+    if ( msgLevel( MSG::DEBUG) ) debug() << "[initialize] RUN NEW GEOMETRY" << endmsg;
+  }else{
+    error() << "Unknown FTDet version" << endmsg; 
     return  StatusCode::FAILURE;
 	}
+
+  // Initialize random generator
+  sc = m_flatDist.initialize( randSvc(), Rndm::Flat(0.0,1.0) );
+  if ( sc.isFailure() ) return Error( "Failed to get Rndm::Flat generator", sc );
   
-  float yMax;
-  if(m_deFT->version() == 20 ) yMax = m_deFT->fibremats()[0]->layerMaxY();
-  else{
-    info() << "Unknown FTDet version" << endmsg; 
-    return  StatusCode::FAILURE;
-	} 
+ 
 
-  // Setup maps size
-  info() << format( "layerMaxX()=%7.0f layerMaxY()=%7.0f \n",xMax,yMax );
-  m_nXSteps = xMax / m_xStepOfMap + 2;   // add x=0 and x > max position
-  m_nYSteps = yMax / m_yStepOfMap + 2;   // same for y
-  xMax = (m_nXSteps - 1) * m_xStepOfMap;
-  yMax = (m_nYSteps - 1) * m_yStepOfMap;
-  // m_transmissionMap set at 1E-10 initialisatino value to avoid 'division by zero' bug
-  m_transmissionMap.resize( m_nXSteps * m_nYSteps, 1E-10 );
-  m_transmissionRefMap.resize( m_nXSteps * m_nYSteps, 1E-10);
-
-  info() << format( "m_xStepOfMap=%7.0f m_yStepOfMap=%7.0f m_nXSteps=%7.0i m_nYSteps=%7.0i xMax=%7.0f yMax=%7.0f \n",
-                    m_xStepOfMap,m_yStepOfMap,m_nXSteps, m_nYSteps, xMax, yMax);
-
-  // Loop on the x axis
-  for ( int kx = 0; m_nXSteps > kx; ++kx ) {
-    float x = kx * m_xStepOfMap;
-    float radZoneSize = 2 * m_yMaxIrradiatedZone * ( 1 - x / m_xMaxIrradiatedZone );
-    if ( 0. > radZoneSize ) radZoneSize = 0.;
-    float yBoundaryRadZone = .5 * radZoneSize;
-
-    // Loop on the y axis and calculate transmission map
-    for ( int ky = 0; m_nYSteps > ky; ++ky ) {
-      float y = yMax - ky * m_yStepOfMap;
-
-      // Compute attenuation according to the crossed fibre length
-      float att = ( m_fractionShort       * exp( -(yMax-y)/m_shortAttenuationLength ) + 
-                    ( 1-m_fractionShort ) * exp( -(yMax-y)/m_longAttenuationLength ) );
-
-      plot2D(x,y,"FibreAttenuationMap","Attenuation coefficient as a function of the position (Quarter 3); x [mm];y [mm]",
-             0., m_nXSteps*m_xStepOfMap, 0.,m_nYSteps*m_yStepOfMap, m_nXSteps, m_nYSteps, att);
-      if ( y < yBoundaryRadZone ){
-        att = ( m_fractionShort       * exp( -(yMax-yBoundaryRadZone)/m_shortAttenuationLength ) + 
-                ( 1-m_fractionShort ) * exp( -(yMax-yBoundaryRadZone)/m_longAttenuationLength ) );
-        float lInRadiation = yBoundaryRadZone - y;
-        for ( unsigned int kz = 0; m_irradiatedAttenuationLength.size() > kz; ++kz ) {
-          if ( lInRadiation > m_yStepOfMap ) {
-            att  *= exp( - m_yStepOfMap / m_irradiatedAttenuationLength[kz] );
-          } else if ( lInRadiation > 0. ) {
-            att  *= exp( - lInRadiation / m_irradiatedAttenuationLength[kz] );
-          } else {
-          }
-          lInRadiation -= m_yStepOfMap;
-        }
-        plot2D(x,y,"RadiationAttMap",
-               "Attenuation from radiation as a function of the position (Quarter 3); x [mm];y [mm]",0., 
-               m_nXSteps*m_xStepOfMap, 0.,m_nYSteps*m_yStepOfMap, m_nXSteps, m_nYSteps, att);
-        // !!! add plot attenuation from radiation / normal attenuation. !!! 
-      }
-      m_transmissionMap[ m_nYSteps * (kx+1) - ky - 1 ] = att;
-    }
-
-    // Loop on the y axis and calculate transmission of the reflected pulse
-    // The energy from the reflected pulse is calculated as the energy coming from y = 0 and attenuated 
-    // by the reflection coefficient, further attenuated depending on the y.
-    if ( m_reflectionCoefficient > 0. ) {
-
-      // Reflected energy from y = 0
-      float reflected = m_transmissionMap[ m_nYSteps * kx ] * m_reflectionCoefficient;
-      for ( int kk = 0; m_nYSteps > kk; ++kk ) {
-        float y = kk * m_yStepOfMap;
-
-        // Evaluate the attenuation factor. 
-        // Rather than calculating it use information from the transmission map in the same point
-        float att = 0;
-        if (m_nYSteps > (kk + 1)) att = m_transmissionMap[ m_nYSteps*kx + kk] / m_transmissionMap[ m_nYSteps*kx + kk + 1];
-
-        // Fill the map
-        m_transmissionRefMap[ m_nYSteps*kx + kk] = reflected;
-        plot2D(x,y,"ReflectionContributionMap",
-               "Additional signal from reflection (Quarter 3); x [mm];y [mm]",
-               0., m_nXSteps*m_xStepOfMap, 0.,m_nYSteps*m_yStepOfMap, m_nXSteps, m_nYSteps, reflected);
-        
-        // Prepare the reflection ratio for next iteration
-        reflected *= att;
-      }
-    }
-    
-    if ( msgLevel( MSG::DEBUG) ) {
-      debug() << format( "x=%7.0f\n", x)<< endmsg;
-    }
-        
-    for ( int kk = 0; m_nYSteps > kk ; ++kk ) {
-      if ( msgLevel( MSG::DEBUG) ) {
-        debug() << format( "y=%7.0f [%6.3f] [%6.3f]\n", kk * m_yStepOfMap , 
-                           m_transmissionMap[kx*m_nYSteps+kk], m_transmissionRefMap[kx*m_nYSteps+kk])<< endmsg;
-      }
-      // plot attenuation map        
-      plot2D(kx * m_xStepOfMap,kk * m_yStepOfMap,
-             "AttenuationMap", "Attenuation coefficient (direct) (Quarter 3); x [mm];y [mm]",
-             0., m_nXSteps*m_xStepOfMap, 0.,m_nYSteps*m_yStepOfMap, 
-             m_nXSteps, m_nYSteps, m_transmissionMap[kx*m_nYSteps+kk]);
-      plot2D(kx * m_xStepOfMap , kk * m_yStepOfMap, 
-             "FinalAttenuationMap", "Attenuation coefficient as a function of the position (Quarter 3); x [mm];y [mm]",
-             0., m_nXSteps*m_xStepOfMap, 0.,m_nYSteps*m_yStepOfMap, 
-             m_nXSteps, m_nYSteps, m_transmissionMap[kx*m_nYSteps+kk]);
-      // plot attenuation from reflection map
-      plot2D(kx * m_xStepOfMap,kk * m_yStepOfMap,
-             "ReflectedAttenuationMap", "Attenuation coefficient (reflection) (Quarter 3); x [mm];y [mm]",
-             0., m_nXSteps*m_xStepOfMap, 0.,m_nYSteps*m_yStepOfMap, 
-             m_nXSteps, m_nYSteps, m_transmissionRefMap[kx*m_nYSteps+kk]);
-      plot2D(kx * m_xStepOfMap , kk * m_yStepOfMap, 
-             "FinalReflectedAttenuationMap","Attenuation coefficient as a function of the position (Quarter 3); x [mm];y [mm]",
-             0., m_nXSteps*m_xStepOfMap, 0.,m_nYSteps*m_yStepOfMap, 
-             m_nXSteps, m_nYSteps, m_transmissionRefMap[kx*m_nYSteps+kk]);
-    }       
+  // construct container names once
+  for( const std::string spillName : m_spillVector){
+    m_spillNames.push_back(  "/Event"+(spillName)+m_inputLocation );
   }
-
+  
   return StatusCode::SUCCESS;
 }
 
@@ -285,252 +151,261 @@ StatusCode MCFTDepositCreator::execute() {
 
   // Loop over the spills
   // retrieve MCHits and make first list of deposits
-  for (unsigned int iSpill = 0; iSpill < m_spillNames.size(); ++iSpill){
-    SmartDataPtr<MCHits> ftMCHits( eventSvc(), m_spillNames[iSpill] );
+  
 
+  int iSpill = 0;
+  for( const std::string spillName : m_spillNames ){
+    
+    MCHits* ftMCHits = getIfExists<MCHits>( spillName );
+    
     if (!ftMCHits) {
-      if (msgLevel(MSG::DEBUG)) 
-        debug() << "Spillover missing in the loop " + m_spillNames[iSpill] <<endmsg;
-    } else {
-      // found spill - create some digitizations and add them to deposits
-      if ( msgLevel( MSG::DEBUG) )
-        debug() << "ftMCHits->size() : " << ftMCHits->size()<< endmsg;
-
-      // add the loop on the hits
-      for ( MCHits::const_iterator iterHit = ftMCHits->begin(); 
-            iterHit!=ftMCHits->end();++iterHit){
-
-        MCHit* ftHit = *iterHit;     //pointer to the Hit
-        plot2D( ftHit->entry().x(), ftHit->entry().y(),
-                "HitEntryPosition", "Entry position of hits ; x [mm]; y [mm]",  
-                -500., 500., -500.,500., 100, 100 );
-
-        plot(ftHit->energy(),"EnergyOfHit", "Energy of the Hit ; Energy [MeV];Number of hits" , 0 , 10 );
-        plot(ftHit->energy(),"EnergyOfHitZOOM", "Energy of the Hit ; Energy [MeV];Number of hits" , 0 , 1 );
-        // DEBUG printing
-        if ( msgLevel( MSG::DEBUG) ) {
-          debug() << "[ HIT ] XYZ=[" << ftHit->entry() << "][" << ftHit->midPoint()
-                  << "][" << ftHit->exit ()<< "]\tE="<< ftHit->energy()
-                  << "\ttime="<< ftHit->time()<< "\tP="<<ftHit->p()
-                  << "\n...DeltaX="<<std::abs(ftHit->entry().x()-ftHit->exit().x()) 
-                  << endmsg;
-          if(ftHit->mcParticle()){
-            debug()  << "... Come from PDGId="<<(ftHit->mcParticle()->particleID())
-                     << "\t p="<<(ftHit->mcParticle()->p())
-                     << "\t pt="<<(ftHit->mcParticle()->pt())
-                     << "\t midPoint.X="<< floor(fabs(ftHit->midPoint().x())/128.)
-                     <<" remains="<<((int)fabs(ftHit->midPoint().x()))%128
-                     << endmsg; 
-          }
-        }
-
-        // Get the list of fired FTChannel from the (x,y,z) position of the hit, with, 
-        // for each FTChannel, the relative distance to the middle of the cell of the barycentre 
-        // of the (entry point, endpoint) system :
-        if(m_deFT->version() == 20 ){
-          StatusCode sc = HitToChannelConversion(ftHit,depositCont,iSpill);
-          if (  sc.isFailure() ){
-            error() << " HitToChannelConversion() FAILED" << endmsg; 
-            return sc;
-          }
-        } 
-        else{
-          error() << "Unknown FTDet version" << endmsg; 
-          return  StatusCode::FAILURE;
-        }
-      } // loop on hits
-    } // spill found
-  } // loop on spills
-  return StatusCode::SUCCESS;
-}
-
-
-//=========================================================================
-StatusCode MCFTDepositCreator::HitToChannelConversion(LHCb::MCHit* ftHit,LHCb::MCFTDeposits *depositCont, unsigned int iSpill) {
-  const DeFTFibreMat* pL = m_deFT->findFibreMat(ftHit->midPoint());
-  FTDoublePairs channels;
-  if ( msgLevel( MSG::DEBUG) ) {
-    debug() << "[HitToChannelConversion] RUN NEW GEOMETRY" << endmsg;
-  }
-  if ( pL) {
-    // ( call of calculateListOfFiredChannels method from DeFTLayer)
-    if( pL->calculateListOfFiredChannels( ftHit, channels)){
-      if ( msgLevel( MSG::DEBUG) ) {
-        debug() << "--- Hit index: " << ftHit->index() 
-                << ", size of vector of channels: " << channels.size() << endmsg;
-      }
-
-      plot(pL->angle()*180/M_PI,"LayerStereoAngle","Layer Stereo Angle;Layer Stereo Angle [#degree];" ,-10 , 10);
-      plot(pL->layerInnerHoleRadius(),"LayerHoleRadius","Layer Hole Radius ; Hole Radius  [mm];" ,50 , 150);
-      plot(pL->layerMaxY(),"LayerHalfSizeY","Layer Half Size Y ; Layer Half Size Y  [mm];" ,0 , 3500);
+      if (msgLevel(MSG::DEBUG)) debug() << "Spillover missing in the loop " + spillName <<endmsg;
+      info() << "Spillover missing in the loop " + spillName <<endmsg;
+      iSpill++;
+      continue;
+    }
+    
+    // found spill - create some digitizations and add them to deposits
+    if ( msgLevel( MSG::DEBUG) ) debug() << "ftMCHits->size() : " << ftMCHits->size()<< endmsg;
+    
+    for( MCHit* ftHit : *ftMCHits ){
       
-      plot(channels.size(),"CheckNbChannel", 
-           "Number of fired channels per Hit;Number of fired channels;Number of hits", 
-           0. , 50., 50);
-
-      int NbOfFiredFibres = // in mm
-        std::floor(std::abs((ftHit->entry().x()-ftHit->exit().x())*cos(pL->angle()) 
-                            + (ftHit->entry().y()-ftHit->exit().y())*sin(pL->angle()))/.25+1
-                   );
+      counter("NbOfMCHits")++;
       
-      plot2D(channels.size(),NbOfFiredFibres,"NbChannelvsNbFiredFibres", 
-             "Number of fired channels per Hit vs deposit length; Number of fired channels;Deposit Length (in channel units)", 
-             0 , 50, 0, 50, 50, 50);
-
-      plot2D(channels.size(),NbOfFiredFibres,"NbChannelvsNbFiredFibresZOOM", 
-             "Number of fired channels per Hit vs deposit length; Number of fired channels;Deposit Length (in channel units)", 
-             0 , 10, 0, 10, 10, 10);
-
+      // -- Plot some useful quantities
+      plot2D( ftHit->entry().x(), ftHit->entry().y(), "HitEntryPosition", "Entry position of hits ; x [mm]; y [mm]",  
+              -500., 500., -500.,500., 100, 100 );
+      plot(ftHit->energy(),"EnergyOfHit", "Energy of the Hit ; Energy [MeV];Number of hits" , 0 , 10 );
+      plot(ftHit->energy(),"EnergyOfHitZOOM", "Energy of the Hit ; Energy [MeV];Number of hits" , 0 , 1 );
+      // -----------------------------
+      
+      // -- DEBUG printing
       if ( msgLevel( MSG::DEBUG) ) {
-        debug() << "--- Hit index: " << ftHit->index() 
-                << ", size of vector of channels: " << channels.size() << endmsg;
         debug() << "[ HIT ] XYZ=[" << ftHit->entry() << "][" << ftHit->midPoint()
                 << "][" << ftHit->exit ()<< "]\tE="<< ftHit->energy()
                 << "\ttime="<< ftHit->time()<< "\tP="<<ftHit->p()
                 << "\n...DeltaX="<<std::abs(ftHit->entry().x()-ftHit->exit().x()) 
-                << " pL->angle()="<<pL->angle() << " DX=" << (ftHit->entry().x()-ftHit->exit().x()) 
-                << " DY=" << (ftHit->entry().y()-ftHit->exit().y())
-                << "==> #Channels="<<NbOfFiredFibres 
-                << "+2 (light sharing) + 1 (positioning)"<< endmsg;
-      }
-
-      double fibrelength = 0 ;
-      double fibrelengthfraction = 0;
-      if(pL->hitPositionInFibre(ftHit, fibrelength,fibrelengthfraction)){
-        if ( msgLevel( MSG::DEBUG) ) {
-          debug() << format( "fibrelength=%10.3f fibrelengthfraction=%10.3f \n",fibrelength,fibrelengthfraction);
+                << endmsg;
+        if(ftHit->mcParticle()){
+          debug()  << "... Come from PDGId="<<(ftHit->mcParticle()->particleID())
+                   << "\t p="<<(ftHit->mcParticle()->p())
+                   << "\t pt="<<(ftHit->mcParticle()->pt())
+                   << "\t midPoint.X="<< floor(fabs(ftHit->midPoint().x())/128.)
+                   <<" remains="<<((int)fabs(ftHit->midPoint().x()))%128
+                   << endmsg; 
         }
-        plot(fibrelength,"FibreLength","FibreLength; Sci. Fibre Lengh [mm]; Nber of Events" ,2000 ,3000);
-        plot(fibrelengthfraction,"FibreFraction","FibreFraction; Sci. Fibre Fraction ; Nber of Events" ,0 ,1);
       }
-        
-
-      //== Compute attenuation by interpolation in the table
-      //== No difference made here between x-layers and (u,v)-layers : all layers assumed to be x-layers
-      double hitXPosition = ftHit->midPoint().x();
-      double hitYPosition = ftHit->midPoint().y();
-      int kx = std::min(m_nXSteps - 2,(int)(fabs( hitXPosition ) / m_xStepOfMap));
-      int ky = std::min(m_nYSteps - 2,(int)(fabs( hitYPosition ) / m_yStepOfMap));
-      float fracX = fabs( hitXPosition )/m_xStepOfMap - kx;
-      float fracY = fabs( hitYPosition )/m_yStepOfMap - ky;
+      // ----------------
       
-      // A linear interpolation is assumed
-      //
-      //   X1    X2
-      //   D-----C
-      //   |     |         X2 = fy C + (1-fy) B
-      //   | x---|-fy      X1 = fy D + (1-fy) A
-      //   A-|---B
-      //     fx            Att = fx X2 + (1-fx) X1
-      //
-      if ( msgLevel( MSG::DEBUG ) ) {
-        debug() << format( "[ATTENUATION]  kx %3d ky %3d fracx %8.3f fracY %8.3f ",
-                           kx, ky, fracX, fracY ) << endmsg;
-      }
-
-      float att = ( fracX     * ( fracY     * m_transmissionMap[m_nYSteps*(kx+1)+ky+1] + 
-                                  (1-fracY) * m_transmissionMap[m_nYSteps*(kx+1)+ky]   ) +
-                    (1-fracX) * ( fracY     * m_transmissionMap[m_nYSteps*kx+ky+1] + 
-                                  (1-fracY) * m_transmissionMap[m_nYSteps*kx+ky]   ) );
-
-      float attRef = ( fracX     * ( fracY     * m_transmissionRefMap[m_nYSteps*(kx+1)+ky+1] + 
-                                     (1-fracY) * m_transmissionRefMap[m_nYSteps*(kx+1)+ky]   ) +
-                       (1-fracX) * ( fracY     * m_transmissionRefMap[m_nYSteps*kx+ky+1] + 
-                                     (1-fracY) * m_transmissionRefMap[m_nYSteps*kx+ky]   ) );
+      // Get the list of fired FTChannel from the (x,y,z) position of the hit, with, 
+      // for each FTChannel, the relative distance to the middle of the cell of the barycentre 
+      // of the (entry point, endpoint) system :
+      if(m_deFT->version() == 20 ){
         
-      if ( msgLevel( MSG::DEBUG ) ) {
-        debug() << format( "[ATTENUATION] x %9.2f y %9.2f kx %3d ky %3d fracx %8.3f fracY %8.3f att %7.4f attRef %7.4f",
-                           ftHit->midPoint().x(), ftHit->midPoint().y(), kx, ky, fracX, fracY, att, attRef ) << endmsg;
-      }
+        StatusCode sc = hitToChannelConversion(ftHit,depositCont,iSpill);
         
-      plot(att,"AttenuationFactor","AttFactorDistrib; Attenuation factor ; Nber of Events" ,0 ,1);
-      plot(attRef,"AttenuationFactorRef","AttFactorDistribRef; Attenuation factor ref ; Nber of Events" ,0 ,1);
-
-      // Calculate scintillation light release time
-      double releaseTime = -log( m_flatDist() ) * m_scintillationDecayTime; 
-
-      // Calculate the arrival time
-      double yMax = m_deFT->fibremats()[0]->layerMaxY();
-      double timeToSiPM = ftHit->time() + (yMax - fabs(ftHit->midPoint().y())) 
-        * m_fiberPropagationTime + releaseTime + m_spillTimes[iSpill]; // tilted angles... -> y of module
-      double timeRefToSiPM = ftHit->time() + (yMax + fabs(ftHit->midPoint().y())) * m_fiberPropagationTime 
-        + releaseTime + m_spillTimes[iSpill]; 
-      if ( msgLevel( MSG::DEBUG) ){
-        debug()  << "[Pulse Arrival Time] Hit(y)=" << fabs(ftHit->midPoint().y())
-                 << " DirectPulseArrTime="<< timeToSiPM 
-                 << " ReflectedPulseArrTime="<< timeRefToSiPM << endmsg;
-      }
-
-      // Fill MCFTDeposit 
-      FTDoublePairs::const_iterator vecIter;
-      FTDoublePairs::const_iterator EnergyNegativeEnergyIter;
-      // Temporary Patch [Eric 14/05/2014 : remove hits whose fired channels have negative energy!!]
-      bool PositiveEnergy = true;
-      for( vecIter = channels.begin(); vecIter != channels.end(); ++vecIter)
-      {
-        if (vecIter->second < 0 ) {
-          PositiveEnergy = false;
-          EnergyNegativeEnergyIter = vecIter;
+        if (  sc.isFailure() ){
+          error() << " HitToChannelConversion() FAILED" << endmsg; 
+          return sc;
         }
-        
+      }else{
+        error() << "Unknown FTDet version" << endmsg; 
+        return  StatusCode::FAILURE;
       }
-      //End Temporary Patch
-      if(PositiveEnergy){
-        
-      for( vecIter = channels.begin(); vecIter != channels.end(); ++vecIter){
-        double DirectEnergyInSiPM = vecIter->second * att;
-        double ReflectedEnergyInSiPM = vecIter->second * attRef;
-          
-        if ( msgLevel( MSG::DEBUG) ){
-          debug()  << "[FTCHANNEL] FTChannel=" << vecIter->first 
-                   << " DirectEnergyHitFraction="<< DirectEnergyInSiPM 
-                   << " ReflectedEnergyHitFraction="<< ReflectedEnergyInSiPM << endmsg;
-        }
-         
-        plot(vecIter->second, "EnergyDepositedInCell",
-             "EnergyDepositedInCell; Energy Deposited [MeV]; Nber of Channels", 0., 2.);    
-        plot(vecIter->second, "EnergyDepositedInCellZOOM",
-             "EnergyDepositedInCell; Energy Deposited [MeV]; Nber of Channels", 0., 1.);        
-        
-        plot(DirectEnergyInSiPM,"DirectEnergyRecordedInCell",
-             "DirectEnergyRecordedInCell; EnergyReachingSiPM [MeV]; Nber of Channels" ,0. ,2);
-        plot(DirectEnergyInSiPM,"DirectEnergyRecordedInCellZOOM",
-             "DirectEnergyRecordedInCell; EnergyReachingSiPM [MeV]; Nber of Channels" ,0. ,1);
-        plot(ReflectedEnergyInSiPM,"ReflectedEnergyRecordedInCell",
-             "ReflectedEnergyRecordedInCell; EnergyReachingSiPM [MeV]; Nber of Channels" ,0. ,2);
-        plot(ReflectedEnergyInSiPM,"ReflectedEnergyRecordedInCellZOOM",
-             "ReflectedEnergyRecordedInCell; EnergyReachingSiPM [MeV]; Nber of Channels" ,0. ,1);
-
-        //!!!  add zoom!
-
-
-        // if reference to the channelID already exists, just add DepositedEnergy and arrival time
-        if( depositCont->object(vecIter->first) != 0 ){
-          (depositCont->object(vecIter->first))->addMCHit(ftHit,DirectEnergyInSiPM,ReflectedEnergyInSiPM,
-                                                          timeToSiPM,timeRefToSiPM);
-        } else if ( vecIter->first.layer() < 12 ) { // Set to 12 instead 15 because of a bug in new geometry
-          // else, create a new fired channel but ignore fake cells, i.e. not readout, i.e. layer 15
-          MCFTDeposit *energyDeposit = new MCFTDeposit(vecIter->first,ftHit,DirectEnergyInSiPM,
-                                                       ReflectedEnergyInSiPM,timeToSiPM,timeRefToSiPM);
-          depositCont->insert(energyDeposit,vecIter->first);
-        }
-      }
-      }else
-       {
-         plot(EnergyNegativeEnergyIter->first.layer(),"CheckNegativeEnergyLayer",
-                     "CheckNegativeEnergyLayer; Layer of negative energy hit; Nber of Channels" ,0.,20.,20); 
-
-       }
       
+    } // loop on hits
     
-    }else{
-      if ( msgLevel( MSG::DEBUG) ){
-        debug()  << "Call (if(pL->calculateListOfFiredChannels)) returned FALSE" << endmsg;
-      }
-    }// end if(pL->calculateListOfFiredChannels)
-      
-  }// end if(pL)
-
-
+    ++iSpill;
+    
+  } // loop on spills
+  
   return StatusCode::SUCCESS;
+}
+//=========================================================================
+// Convert the hit into channels
+//=========================================================================
+StatusCode MCFTDepositCreator::hitToChannelConversion(LHCb::MCHit* ftHit, LHCb::MCFTDeposits* depositCont, 
+                                                      const unsigned int iSpill) {
+  
+  const DeFTFibreMat* pL = m_deFT->findFibreMat(ftHit->midPoint());
+  FTDoublePairs channels;
+  
+  if ( msgLevel( MSG::DEBUG) ) {
+    debug() << "[HitToChannelConversion] RUN NEW GEOMETRY" << endmsg;
+  }
+
+
+  if ( pL == nullptr) {
+    info() << "Could not find FibreMat corresponding to MCHit with mid point " << ftHit->midPoint().X() << " " << 
+      ftHit->midPoint().Y() << " " << ftHit->midPoint().Z() << endmsg;
+    return StatusCode::SUCCESS;
+  }
+  
+  // -- If this fails, it's mostly due to geometrical reasons (in FTDet v2.0)
+  // -- so not dangerous
+  if( pL->calculateListOfFiredChannels( ftHit, channels) == StatusCode::FAILURE){
+    if ( msgLevel( MSG::DEBUG) ) debug() << "Could not calculate list of fired channels" << endmsg;
+    return StatusCode::SUCCESS;
+  }
+  
+  counter("NbOfHitInActiveArea")++;     
+  counter("NbOfFiredChannels") += channels.size();
+
+  if ( msgLevel( MSG::DEBUG) ) {
+    debug() << "--- Hit index: " << ftHit->index() 
+            << ", size of vector of channels: " << channels.size() << endmsg;
+  }
+      
+  plotChannelProperties(pL, channels, ftHit);
+  
+  double att    = 1;
+  double attRef = 1;
+  
+  // -- Calculate the attenuation using the attenuation tool
+  if( m_useAttenuation) m_attenuationTool->attenuation(ftHit, att, attRef);
+  
+  
+  // -- Calculate scintillation light release time
+  // -- Here could use a fast log, precision should not matter that much
+  const double releaseTime = -log( m_flatDist() ) * m_scintillationDecayTime; 
+  
+  // -- Calculate the arrival time
+  const double timeToSiPM    = calcTimeToSiPM(   ftHit, releaseTime, iSpill);
+  const double timeRefToSiPM = calcTimeRefToSiPM(ftHit, releaseTime, iSpill);
+  
+  
+  if ( msgLevel( MSG::DEBUG) ){
+    debug()  << "[Pulse Arrival Time] Hit(y)=" << fabs(ftHit->midPoint().y())
+             << " DirectPulseArrTime="<< timeToSiPM 
+             << " ReflectedPulseArrTime="<< timeRefToSiPM << endmsg;
+  }
+  
+  
+  // -- Fill MCFTDeposit 
+  FTDoublePair negEnergyPair;
+  // Temporary Patch [Eric 14/05/2014 : remove hits whose fired channels have negative energy!!]
+  bool positiveEnergy = true;
+  for( FTDoublePair ftPair : channels){
+    if (ftPair.second < 0 ) {
+      positiveEnergy = false;
+      negEnergyPair = ftPair;
+      counter("NegativeEnergyLayer")++;
+    }
+  }
+
+  // -- End Temporary Patch
+  if(positiveEnergy){
+
+    for( FTDoublePair ftPair : channels ){
+      const double directEnergyInSiPM    = ftPair.second * att;
+      const double reflectedEnergyInSiPM = ftPair.second * attRef;
+      
+      
+      if ( msgLevel( MSG::DEBUG) ){
+        debug()  << "[FTCHANNEL] FTChannel=" << ftPair.first 
+                 << " DirectEnergyHitFraction="<< directEnergyInSiPM 
+                 << " ReflectedEnergyHitFraction="<< reflectedEnergyInSiPM << endmsg;
+      }
+      
+      
+      // -- plotting stuff
+      plot(ftPair.second, "EnergyDepositedInCell",
+           "EnergyDepositedInCell; Energy Deposited [MeV]; Nber of Channels", 0., 2.);    
+      plot(ftPair.second, "EnergyDepositedInCellZOOM",
+           "EnergyDepositedInCell; Energy Deposited [MeV]; Nber of Channels", 0., 1.);        
+      plot(directEnergyInSiPM,"DirectEnergyRecordedInCell",
+           "DirectEnergyRecordedInCell; EnergyReachingSiPM [MeV]; Nber of Channels" ,0. ,2);
+      plot(directEnergyInSiPM,"DirectEnergyRecordedInCellZOOM",
+           "DirectEnergyRecordedInCell; EnergyReachingSiPM [MeV]; Nber of Channels" ,0. ,1);
+      plot(reflectedEnergyInSiPM,"ReflectedEnergyRecordedInCell",
+           "ReflectedEnergyRecordedInCell; EnergyReachingSiPM [MeV]; Nber of Channels" ,0. ,2);
+      plot(reflectedEnergyInSiPM,"ReflectedEnergyRecordedInCellZOOM",
+           "ReflectedEnergyRecordedInCell; EnergyReachingSiPM [MeV]; Nber of Channels" ,0. ,1);
+      // ---------------------------------------------------------------------------------------
+      
+      
+      // -- if reference to the channelID already exists, just add DepositedEnergy and arrival time
+      LHCb::MCFTDeposit* deposit = depositCont->object(ftPair.first);
+      if( deposit != nullptr ){
+        deposit->addMCHit(ftHit, directEnergyInSiPM, reflectedEnergyInSiPM, timeToSiPM, timeRefToSiPM);
+        counter("NbOfAppendDeposit")++;
+      } else {
+        if ( ftPair.first.layer() < m_numLayers ) { // Set to 12 instead 15 because of a bug in new geometry
+          // else, create a new fired channel but ignore fake cells, i.e. not readout, i.e. layer 15
+          MCFTDeposit* energyDeposit = new MCFTDeposit(ftPair.first,ftHit,directEnergyInSiPM, 
+                                                       reflectedEnergyInSiPM,timeToSiPM,timeRefToSiPM);
+          depositCont->insert(energyDeposit, ftPair.first);
+          counter("NbOfCreatedDeposit")++; 
+        }else if ( ftPair.first.layer() >= m_numLayers ){
+          counter("NbOfGhostDeposit")++;
+          if ( msgLevel( MSG::DEBUG) ) debug() << "hit is not within range of physical layers" << endmsg;
+        }
+      }
+    }
+  }else{
+    
+    plot(negEnergyPair.first.layer(),"CheckNegativeEnergyLayer",
+         "CheckNegativeEnergyLayer; Layer of negative energy hit; Nber of Channels" ,0.,20.,20); 
+    
+  }
+  
+  return StatusCode::SUCCESS;
+  
+}
+//=========================================================================
+// plot stuff
+//=========================================================================
+void MCFTDepositCreator::plotChannelProperties(const DeFTFibreMat* pL, FTDoublePairs channels, const MCHit* ftHit){
+  
+  // -- PRINTING -------------------------------------------------------------------------------------------------
+  plot(pL->angle()*180/M_PI,"LayerStereoAngle","Layer Stereo Angle;Layer Stereo Angle [#degree];" ,-10 , 10);
+  plot(pL->layerInnerHoleRadius(),"LayerHoleRadius","Layer Hole Radius ; Hole Radius  [mm];" ,50 , 150);
+  plot(pL->layerMaxY(),"LayerHalfSizeY","Layer Half Size Y ; Layer Half Size Y  [mm];" ,0 , 3500);
+  
+  plot(channels.size(),"CheckNbChannel", 
+       "Number of fired channels per Hit;Number of fired channels;Number of hits", 
+       0. , 50., 50);
+  
+  
+  const int NbOfFiredFibres = std::floor(std::abs((ftHit->entry().x()-ftHit->exit().x())*cos(pL->angle()) 
+                                                  + (ftHit->entry().y()-ftHit->exit().y())*sin(pL->angle()))/.25+1
+                                         );
+  
+  plot2D(channels.size(),NbOfFiredFibres,"NbChannelvsNbFiredFibres", 
+         "Number of fired channels per Hit vs deposit length; Number of fired channels;Deposit Length (in channel units)", 
+         0 , 50, 0, 50, 50, 50);
+  
+  plot2D(channels.size(),NbOfFiredFibres,"NbChannelvsNbFiredFibresZOOM", 
+         "Number of fired channels per Hit vs deposit length; Number of fired channels;Deposit Length (in channel units)", 
+         0 , 10, 0, 10, 10, 10);
+  
+  
+  if ( msgLevel( MSG::DEBUG) ) {
+    debug() << "--- Hit index: " << ftHit->index() 
+            << ", size of vector of channels: " << channels.size() << endmsg;
+    debug() << "[ HIT ] XYZ=[" << ftHit->entry() << "][" << ftHit->midPoint()
+            << "][" << ftHit->exit ()<< "]\tE="<< ftHit->energy()
+            << "\ttime="<< ftHit->time()<< "\tP="<<ftHit->p()
+            << "\n...DeltaX="<<std::abs(ftHit->entry().x()-ftHit->exit().x()) 
+            << " pL->angle()="<<pL->angle() << " DX=" << (ftHit->entry().x()-ftHit->exit().x()) 
+            << " DY=" << (ftHit->entry().y()-ftHit->exit().y())
+            << "==> #Channels="<<NbOfFiredFibres 
+            << "+2 (light sharing) + 1 (positioning)"<< endmsg;
+  }
+  // -----------------------------------------------------------------------------------------------------
+  
+  double fibrelength = 0;
+  double fibrelengthfraction = 0;
+  if(pL->hitPositionInFibre(ftHit, fibrelength,fibrelengthfraction)){
+        
+    
+    if ( msgLevel( MSG::DEBUG) ) {
+      debug() << format( "fibrelength=%10.3f fibrelengthfraction=%10.3f \n",fibrelength,fibrelengthfraction);
+    }
+    
+    plot(fibrelength,"FibreLength","FibreLength; Sci. Fibre Lengh [mm]; Nber of Events" ,2000 ,3000);
+    plot(fibrelengthfraction,"FibreFraction","FibreFraction; Sci. Fibre Fraction ; Nber of Events" ,0 ,1);
+  }
+  // ----------------------------------------
+
 }

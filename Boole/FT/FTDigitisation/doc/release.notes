@@ -4,6 +4,9 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2015-01-12 - Michel De Cian
+ - Split up MCFTDepositCreator in MCFTDepositCreator, which is mostly a wrapper, and MCFTAttenuationTool, which calculates the attenuation length. Performance should be identical. Add interface IMCFTAttenuationTool.
+
 !========================= FTDigitisation v2r2 2014-06-20 =======================
 ! 2014-06-20 - Michel De Cian
  - Change link location for FTClusters<->MCHits to (standard) /Event/Link/Raw/FT/Clusters2MCHits

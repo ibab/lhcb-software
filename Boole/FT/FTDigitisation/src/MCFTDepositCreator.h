@@ -23,6 +23,7 @@
 // LHCbKernel
 #include "Kernel/FTChannelID.h"
 
+#include "IMCFTAttenuationTool.h"
 
 class MCFTDepositCreator : public GaudiHistoAlg {
 
@@ -39,8 +40,44 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
 
 
-  StatusCode HitToChannelConversion(LHCb::MCHit* ftHit, LHCb::MCFTDeposits *depositCont, unsigned int iSpill);
+  
+
 private:
+
+  inline double calcTimeToSiPM(const LHCb::MCHit* ftHit, const double releaseTime, const int iSpill) const {
+    return ftHit->time() + (m_yMax - fabs(ftHit->midPoint().y())) * m_fiberPropagationTime + releaseTime + m_spillTimes[iSpill];
+  }
+  
+  inline double calcTimeRefToSiPM(const LHCb::MCHit* ftHit, const double releaseTime, const int iSpill) const {
+    return ftHit->time() + (m_yMax + fabs(ftHit->midPoint().y())) * m_fiberPropagationTime + releaseTime + m_spillTimes[iSpill];
+  }
+  
+  /*
+  inline double calcAtt(const double fracX, const double fracY, const int kx, const int ky) const{
+    return fracX * ( fracY     * m_transmissionMap[m_nYSteps*(kx+1)+ky+1] + 
+                     ( 1-fracY ) * m_transmissionMap[m_nYSteps*(kx+1)+ky]   ) +
+      (1-fracX) * ( fracY     * m_transmissionMap[m_nYSteps*kx+ky+1] + 
+                    (1-fracY) * m_transmissionMap[m_nYSteps*kx+ky]   );
+  }
+  
+  inline double calcAttRef(const double fracX, const double fracY, const int kx, const int ky)const{
+    return fracX * ( fracY     * m_transmissionRefMap[m_nYSteps*(kx+1)+ky+1] + 
+                     ( 1-fracY ) * m_transmissionRefMap[m_nYSteps*(kx+1)+ky]   ) +
+      (1-fracX) * ( fracY     * m_transmissionRefMap[m_nYSteps*kx+ky+1] + 
+                    (1-fracY) * m_transmissionRefMap[m_nYSteps*kx+ky]   );
+  }
+  */
+
+  StatusCode hitToChannelConversion(LHCb::MCHit* ftHit, LHCb::MCFTDeposits *depositCont, const unsigned int iSpill);
+  //void calculateAttenuation(const LHCb::MCHit* ftHit, double& att, double& attRef);
+  //void calculateTransmissionMap();
+  void plotChannelProperties( const DeFTFibreMat* pL, FTDoublePairs channels, const LHCb::MCHit* ftHit);
+  
+
+
+  IMCFTAttenuationTool* m_attenuationTool;
+  std::string m_attenuationToolName;
+  
   // Locations
   std::string m_inputLocation;     ///< FT MCHits Location
   std::string m_outputLocation;    ///< FT energy deposit Location
@@ -50,31 +87,19 @@ private:
   std::vector<std::string> m_spillVector; ///< Vector of spill names
   std::vector<double> m_spillTimes;       ///< Vector of spill arrival times       
 
-  // FT Geometry version
-  //int m_ftGeomVersion;
-  
   // Fibre properties
-  float       m_fiberPropagationTime;   ///< Light propagation time in fiber
-  float       m_scintillationDecayTime; ///< Decay time of scintillation light release
-  float       m_shortAttenuationLength; ///< Attenuation lengh of the light along the fibre : short component
-  float       m_longAttenuationLength;  ///< Attenuation lengh of the light along the fibre : long component
-  float       m_fractionShort;          ///< Fraction of short attenuation length at SiPM
-  float       m_xMaxIrradiatedZone;     ///< Size in x of the zone where fibres are irradiated
-  float       m_yMaxIrradiatedZone;     ///< Size in y of the zone where fibres are irradiated
-  std::vector<float> m_irradiatedAttenuationLength;    ///< Attenuation length by steps in the zone.
-  float       m_reflectionCoefficient;   ///< reflection coefficient of the mirror at the y=0 side of the fibre
-  float       m_beginReflectionLossY;    ///< begin zone where reflectio is too late and lost
-  float       m_endReflectionLossY;      ///< end of this zone
-
-  float       m_xStepOfMap;               ///< Step  along X-axis of the FullAttenuationMap(in mm)
-  float       m_yStepOfMap;               ///< Step  along Y-axis of the FullAttenuationMap(in mm)
-  int         m_nXSteps;
-  int         m_nYSteps;
-  std::vector<float> m_transmissionMap;    ///< Maps hits to transmitted energy from the direct pulse
-  std::vector<float> m_transmissionRefMap; ///< Maps hits to transmitted energy from the reflected pulse
-
+  double       m_fiberPropagationTime;   ///< Light propagation time in fiber
+  double       m_scintillationDecayTime; ///< Decay time of scintillation light release
+  
+  
   DeFTDetector* m_deFT; ///< pointer to FT detector description
   Rndm::Numbers m_flatDist; ///< random number generator 
+  
+  bool         m_useAttenuation;           ///< Use an attenuation map to attenuate the light according to a model?
+
+  double       m_yMax;
+  unsigned int m_numLayers;
+  
 
 };
 #endif // MCFTDEPOSITCREATOR_H
