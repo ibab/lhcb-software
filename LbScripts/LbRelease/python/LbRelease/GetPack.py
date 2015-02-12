@@ -417,6 +417,8 @@ class GetPack(Script):
                                "Note: it implies '--batch' and cannot be used for projects.")
         self.parser.add_option('--export', action='store_true',
                                help='use "export" instead of "checkout" to get the packages')
+        self.parser.add_option('--ignore-project-info', action='store_true',
+                               help='do not use the project.info file')
         self.parser.set_defaults(protocol = "default",
                                  switch = False,
                                  version_dirs = False,
@@ -915,12 +917,14 @@ class GetPack(Script):
             self.log.debug("Packages required: %r" % required)
         return required
 
-    def getpack(self):
+    def getpack(self, packages=None):
         # Dictionaries (pkg->version) of done, skipped and to-do packages
         done_packages = {}
         skipped_packages = {}
 
-        if not self.options.file:
+        if packages:
+            todo_packages = dict(packages)
+        elif not self.options.file:
             if self.requested_package and self.requested_package not in self.packages:
                 self.log.error("Unknown package '%s'!", self.requested_package)
                 self.requested_package = None
@@ -1016,33 +1020,52 @@ class GetPack(Script):
             # note that an existing toolchain will not be overwritten
             createToolchainFile(os.path.join(proj[2], 'toolchain.cmake'))
         if self.options.recursive:
-            # get the conatiner package too, etc.
-            try:
-                self.requested_package = None
-                for l in open(os.path.join(proj[2],"cmt","project.cmt")):
-                    l = l.strip().split()
-                    if len(l) == 2 and l[0] == "container":
-                        self.requested_package = l[1]
-                        break
-                if not self.requested_package:
-                    # project.cmt does not have the "container" instruction, let's assume we want ProjectSys
-                    psys = proj[0].upper() + "SYS"
-                    for p in self.packages:
-                        if p.upper() == psys:
-                            self.requested_package = p
-                            break
-                self.requested_package_version = proj[1] # this is the actual version extracted
-                self.log.info("Retrieving packages in %s", proj[2])
-                old_cwd = os.getcwd()
+            packages = None
+            # try to get the list of packages from project.info
+            proj_info_file = os.path.join(proj[2], 'project.info')
+            if not self.options.ignore_project_info and os.path.exists(proj_info_file):
+                from ConfigParser import ConfigParser
+                project_info = ConfigParser()
+                project_info.optionxform = str # make the options case sensitive
+                project_info.read(proj_info_file)
+                if project_info.has_section('Packages'):
+                    self.log.info('Using packages from project.info')
+                    packages = project_info.items('Packages')
+                    if self.options.recursive_head:
+                        # override the version if we got --recursive-head
+                        packages = [(name, 'trunk') for name, _ in packages]
+                    # if we got the packages from project.info, we should not recurse
+                    self.options.recursive = False
+            if not packages:
+                # get the conatiner package and recurse
                 try:
-                    os.chdir(proj[2]) # go to the project directory
-                    self.log.info("Container package is %s %s", self.requested_package, self.requested_package_version)
-                    self.getpack()
-                finally:
-                    # revert to initial directory (needed when using GetPack from python)
-                    os.chdir(old_cwd)
-            except IOError, x:
-                self.log.error("Cannot get data: %s", x)
+                    self.requested_package = None
+                    for l in open(os.path.join(proj[2],"cmt","project.cmt")):
+                        l = l.strip().split()
+                        if len(l) == 2 and l[0] == "container":
+                            self.requested_package = l[1]
+                            break
+                    if not self.requested_package:
+                        # project.cmt does not have the "container" instruction, let's assume we want ProjectSys
+                        psys = proj[0].upper() + "SYS"
+                        for p in self.packages:
+                            if p.upper() == psys:
+                                self.requested_package = p
+                                break
+                    self.requested_package_version = proj[1] # this is the actual version extracted
+                except IOError, x:
+                    self.log.error("Cannot get data: %s", x)
+            self.log.info("Retrieving packages in %s", proj[2])
+            old_cwd = os.getcwd()
+            try:
+                os.chdir(proj[2]) # go to the project directory
+                if not packages:
+                    self.log.info("Container package is %s %s",
+                                  self.requested_package, self.requested_package_version)
+                self.getpack(packages)
+            finally:
+                # revert to initial directory (needed when using GetPack from python)
+                os.chdir(old_cwd)
         print "Checked out project %s %s in '%s'" % proj
 
     def _makeListXML(self, doPackages = False):

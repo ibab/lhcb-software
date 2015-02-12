@@ -1,3 +1,7 @@
+2015-02-12  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* getpack: use project.info (if present) for --project --recursive (LBCORE-147)
+
 2015-02-06  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v5r3p1
