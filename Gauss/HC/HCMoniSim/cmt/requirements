@@ -1,0 +1,17 @@
+package HCMoniSim
+version v1r0
+
+branches cmt src doc 
+
+use  MCEvent        v*       Event
+use  GaudiAlg       v*
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          HCMoniSim    ../src/*.cpp 
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=HCMoniSim

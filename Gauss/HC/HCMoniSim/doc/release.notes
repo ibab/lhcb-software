@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : HC/HCMoniSim
+! Responsible : 
+! Purpose     : Monitoring of hits in Herschel counters
+!-----------------------------------------------------------------------------
+
+! 2015-02-12 - Heinrich Schindler
+ - Initial import.
+
