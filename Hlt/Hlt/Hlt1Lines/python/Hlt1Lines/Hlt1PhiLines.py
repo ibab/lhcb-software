@@ -15,15 +15,15 @@ __version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 0.01 $"
 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 class Hlt1PhiLinesConf( HltLinesConfigurableUser ) :
-  __slots__ = {  'TrackPT'             : 800     # MeV
-                ,'TrackP'              : 4000    # MeV
-                ,'TrackChi2DOF'       : 5       # dimensionless
-                ,'PhiMassWin'         : 30      # MeV
-                ,'PhiDOCA'            : 0.2     # mm
-                ,'PhiVCHI2'           : 20      # dimensionless
-                ,'PhiPT'              : 1800    # MeV
-                ,'Velo_Qcut'          : 3       # dimensionless
-                ,'TrNTHits'           : 16.
+  __slots__ = {  'TrackPT'             : 500     # MeV
+                ,'TrackP'              : 3000    # MeV
+                ,'TrackChi2DOF'       : 3       # dimensionless
+                ,'TrackIPChi2'        : 9
+                ,'PhiDOCA'            : 0.5     # mm
+                ,'PhiVCHI2'           : 25      # dimensionless
+                ,'PhiPT'              : 0    # MeV
+                ,'Velo_Qcut'          : 999       # dimensionless
+                ,'TrNTHits'           : 0.
                 ,'ValidateTT'         : False
       }
 
@@ -31,8 +31,8 @@ class Hlt1PhiLinesConf( HltLinesConfigurableUser ) :
 
     from HltTracking.Hlt1Tracking import ( TrackCandidates, FitTrack)
 
-    props['LowKKmass']  = 1019.455 - props['PhiMassWin'] # phi mass hardcoded from PDG 2012 !
-    props['HighKKmass'] = 1019.455 + props['PhiMassWin'] # phi mass hardcoded from PDG 2012 !
+    props['LowKKmass']  = 0.    # phi mass hardcoded from PDG 2012 !
+    props['HighKKmass'] = 2500. # phi mass hardcoded from PDG 2012 !
 
     preambulo = [ TrackCandidates('TrackAllL0'),
                   FitTrack,
@@ -61,7 +61,7 @@ class Hlt1PhiLinesConf( HltLinesConfigurableUser ) :
     >>  FitTrack
     >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
     >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
-    >>  ( ( TrCHI2PDOF < %(TrackChi2DOF)s ) )
+    >>  ( ( TrCHI2PDOF < %(TrackChi2DOF)s ) & ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(TrackIPChi2)s ) )
     >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackChi2', LoKi.Monitoring.ContextSvc ) )
     >>  tee  ( monitor( TC_SIZE    , 'nChi2' , LoKi.Monitoring.ContextSvc ) )
     >>  MakePhi
@@ -98,6 +98,6 @@ class Hlt1PhiLinesConf( HltLinesConfigurableUser ) :
     Hlt1Line ( 'IncPhi'
           , prescale = self.prescale
           , postscale = self.postscale
-          , L0DU = "L0_DECISION_PHYSICS"
+          , L0DU = "L0_CHANNEL('CALO')"
           , algos = self.hlt1PhiLine_Streamer( "IncPhi", self.getProps() )
           )

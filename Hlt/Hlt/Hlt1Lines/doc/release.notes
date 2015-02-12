@@ -5,6 +5,11 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-02-12 - V. Gligorov
+ - Add Hlt1CalibRICHMirrorLines.py, which contains a new single track line
+   without any IPCHI2 cut but with a strong ETA cut to be used for selecting
+   events enriched in tracks within the lowest occupancy RICH regions.
+
 ! 2015-02-05 - Roel Aaij
  - Explicitly instantiate lines in Hlt1TrackLines
  - remove spurious print from Hlt1MuonLines

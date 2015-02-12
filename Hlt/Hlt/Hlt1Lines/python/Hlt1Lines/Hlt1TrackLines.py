@@ -53,7 +53,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                     ,   'Photon_IPChi2'     : 13.
                     ,   'Photon_TrChi2'     : 2.
                     ,   'Photon_GEC'        : 'Loose'
-                    ,   'L0Channels'        : {'AllL0'  : 'L0_DECISION_PHYSICS',
+                    ,   'L0Channels'        : {'AllL0'  : ['CALO'],#'L0_DECISION_PHYSICS',
                                                'Muon'   : ('Muon', 'DiMuon'),
                                                'Photon' : ("Photon", "Electron")}
                     ,   'Priorities'        : {'AllL0'  : 1,
@@ -180,7 +180,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             prescale  = self.prescale,
             postscale = self.postscale,
             priority  = priorities[ 'AllL0' ] if 'AllL0' in priorities else None,
-            L0DU = 'L0_DECISION_PHYSICS',
+            L0DU = "|".join(["L0_CHANNEL('%s')" % l0 for l0 in l0Channels['AllL0']]),
             algos = [ self.do_timing( unit ) if doTiming else unit for unit in \
                       self.hlt1TrackBlock_Streamer( 'TrackAllL0', self.localise_props( 'AllL0' ) ) ]
             )
