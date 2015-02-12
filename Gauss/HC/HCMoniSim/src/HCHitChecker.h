@@ -3,7 +3,7 @@
 // Gaudi
 #include "GaudiAlg/GaudiTupleAlg.h"
 
-/** @class HCHitMonitor HCHitMonitor.h
+/** @class HCHitChecker HCHitChecker.h
  *
  *  Algorithm run in Gauss for monitoring Herschel MCHits. 
  *
@@ -11,12 +11,12 @@
 
 class MCHit;
 
-class HCHitMonitor : public GaudiTupleAlg {
+class HCHitChecker : public GaudiTupleAlg {
 public: 
   /// Standard constructor
-  HCHitMonitor(const std::string& name, ISvcLocator* pSvcLocator);
+  HCHitChecker(const std::string& name, ISvcLocator* pSvcLocator);
   /// Destructor
-  virtual ~HCHitMonitor();
+  virtual ~HCHitChecker();
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute();       ///< Algorithm execution

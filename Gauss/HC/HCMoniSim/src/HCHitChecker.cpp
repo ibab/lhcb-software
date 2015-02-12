@@ -7,14 +7,14 @@
 #include "Event/MCParticle.h"
 
 // Local
-#include "HCHitMonitor.h"
+#include "HCHitChecker.h"
 
-DECLARE_ALGORITHM_FACTORY(HCHitMonitor)
+DECLARE_ALGORITHM_FACTORY(HCHitChecker)
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-HCHitMonitor::HCHitMonitor(const std::string& name,
+HCHitChecker::HCHitChecker(const std::string& name,
                            ISvcLocator* pSvcLocator) :
     GaudiTupleAlg(name, pSvcLocator) {
 
@@ -24,12 +24,12 @@ HCHitMonitor::HCHitMonitor(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-HCHitMonitor::~HCHitMonitor() {}
+HCHitChecker::~HCHitChecker() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode HCHitMonitor::initialize() {
+StatusCode HCHitChecker::initialize() {
 
   StatusCode sc = GaudiAlgorithm::initialize();
   if (sc.isFailure()) return sc;
@@ -40,7 +40,7 @@ StatusCode HCHitMonitor::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode HCHitMonitor::execute() {
+StatusCode HCHitChecker::execute() {
 
   // Get the hits.
   const LHCb::MCHits* hits = getIfExists<LHCb::MCHits>(m_hitsLocation);
