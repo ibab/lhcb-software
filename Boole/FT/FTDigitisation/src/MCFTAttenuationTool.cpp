@@ -121,7 +121,7 @@ StatusCode MCFTAttenuationTool::initializeTool(){
 	}
   
   // Setup maps size
-  info() << format( "layerMaxX()=%7.0f layerMaxY()=%7.0f \n",m_xMax,m_yMax );
+  if ( msgLevel( MSG::DEBUG) ) debug() << format( "layerMaxX()=%7.0f layerMaxY()=%7.0f \n",m_xMax,m_yMax );
 
   m_nXSteps = m_xMax / m_xStepOfMap + 2;   // add x=0 and x > max position
   m_nYSteps = m_yMax / m_yStepOfMap + 2;   // same for y
@@ -131,10 +131,10 @@ StatusCode MCFTAttenuationTool::initializeTool(){
   // m_transmissionMap set at 1E-10 initialisatino value to avoid 'division by zero' bug
   m_transmissionMap.resize( m_nXSteps * m_nYSteps, 1E-10 );
   m_transmissionRefMap.resize( m_nXSteps * m_nYSteps, 1E-10);
-
-  info() << format( "m_xStepOfMap=%7.0f m_yStepOfMap=%7.0f m_nXSteps=%7.0i m_nYSteps=%7.0i xMax=%7.0f yMax=%7.0f \n",
-                    m_xStepOfMap,m_yStepOfMap,m_nXSteps, m_nYSteps, xMax, yMax);
-
+  
+  if ( msgLevel( MSG::DEBUG) ) debug() << format( "m_xStepOfMap=%7.0f m_yStepOfMap=%7.0f m_nXSteps=%7.0i m_nYSteps=%7.0i xMax=%7.0f yMax=%7.0f \n",
+                                                  m_xStepOfMap,m_yStepOfMap,m_nXSteps, m_nYSteps, xMax, yMax);
+  
   // Loop on the x axis
   for ( int kx = 0; m_nXSteps > kx; ++kx ) {
     const double x = kx * m_xStepOfMap;

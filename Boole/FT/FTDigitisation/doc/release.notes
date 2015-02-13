@@ -4,6 +4,9 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2015-01-13 - Michel De Cian
+ - Reduce verbosity of MCFTDepositCreator and MCFTAttenuationTool.
+
 ! 2015-01-12 - Michel De Cian
  - Split up MCFTDepositCreator in MCFTDepositCreator, which is mostly a wrapper, and MCFTAttenuationTool, which calculates the attenuation length. Performance should be identical. Add interface IMCFTAttenuationTool.
 

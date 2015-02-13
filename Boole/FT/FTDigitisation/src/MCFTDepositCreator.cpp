@@ -159,8 +159,7 @@ StatusCode MCFTDepositCreator::execute() {
     MCHits* ftMCHits = getIfExists<MCHits>( spillName );
     
     if (!ftMCHits) {
-      if (msgLevel(MSG::DEBUG)) debug() << "Spillover missing in the loop " + spillName <<endmsg;
-      info() << "Spillover missing in the loop " + spillName <<endmsg;
+      if (msgLevel(MSG::DEBUG)) debug() << "Spillover missing in the loop " + spillName << endmsg;
       iSpill++;
       continue;
     }
@@ -236,8 +235,8 @@ StatusCode MCFTDepositCreator::hitToChannelConversion(LHCb::MCHit* ftHit, LHCb::
 
 
   if ( pL == nullptr) {
-    info() << "Could not find FibreMat corresponding to MCHit with mid point " << ftHit->midPoint().X() << " " << 
-      ftHit->midPoint().Y() << " " << ftHit->midPoint().Z() << endmsg;
+    if ( msgLevel( MSG::DEBUG) ) debug() << "Could not find FibreMat corresponding to MCHit with mid point " << ftHit->midPoint().X() << " " << 
+                                   ftHit->midPoint().Y() << " " << ftHit->midPoint().Z() << endmsg;
     return StatusCode::SUCCESS;
   }
   
