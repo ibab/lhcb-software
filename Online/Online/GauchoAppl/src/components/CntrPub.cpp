@@ -44,6 +44,11 @@ StatusCode CntrPub::initialize()
 StatusCode CntrPub::finalize()
 {
   StatusCode sc;
+  for (      auto mit = m_cntrSvcMap.begin();mit!=m_cntrSvcMap.end();mit++)
+  {
+    delete (*mit).second;
+  }
+  m_cntrSvcMap.clear();
   Service::finalize();
   return StatusCode::SUCCESS;
 }
