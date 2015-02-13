@@ -11,4 +11,4 @@ gaudi_add_library(StrippingCache
                   LINK_LIBRARIES LoKiHltLib LoKiArrayFunctorsLib)
 
 gaudi_generate_componentslist(StrippingCache) 
-
+gaudi_install_scripts()
