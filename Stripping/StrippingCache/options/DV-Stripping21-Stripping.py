@@ -47,8 +47,7 @@ streams = buildStreams(stripping = config, archive = archive)
 log.warning(100*"#")
 log.warning(100*"#")
 log.warning(100*"#")
-log.warning("# adjustment by Vanya Belyaev" )
-
+log.warning("# some adjustment by Vanya Belyaev" )
 
 for s in streams :
 
