@@ -103,8 +103,10 @@ StatusCode MCFTDepositCreator::initialize() {
   
 
   // -- Setup the transmissionMap
-  if( m_useAttenuation ) m_attenuationTool->initializeTool();
-
+  if( m_useAttenuation ){
+    sc = m_attenuationTool->initializeTool();
+    if( sc.isFailure() ) return Error( "Could not initialize attenuation tool", sc );
+  }
   
 
   // Retrieve and initialize DeFT (no test: exception in case of failure)
