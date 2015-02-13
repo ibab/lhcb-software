@@ -14,11 +14,11 @@
 //
 // 2012-03-20 : Olivier Callot
 // 2013-03-15 : Thomas Nikodem
+// 2015-02-13 : Sevda Esen [additional search in the triangles by Marian Stahl]
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( PrForwardTool )
-
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -51,13 +51,16 @@ DECLARE_TOOL_FACTORY( PrForwardTool )
   declareProperty( "DeltaQuality",           m_deltaQuality           =    3.                    );
   declareProperty( "YQualityWeight",         m_yQualityWeight         =    4.                    );
 
-  declareProperty("AddUTHitsToolName", m_addUTHitsToolName = "PrAddUTHitsTool" );
 
-  declareProperty( "UseMomentumEstimate"   , m_useMomentumEstimate = false ); 
-  declareProperty( "Preselection"              , m_Preselection              =   false  );
-  declareProperty( "PreselectionPT"              , m_PreselectionPT              =   400.* Gaudi::Units::MeV  );
-  declareProperty( "UseWrongSignWindow"    , m_useWrongSignWindow             =  false  );
-  declareProperty( "WrongSignPT"           , m_wrongSignPT              =   2000.* Gaudi::Units::MeV  );
+  declareProperty( "AddUTHitsToolName",      m_addUTHitsToolName      = "PrAddUTHitsTool"        );
+  declareProperty( "YToleranceUVsearch",     m_yTol_UVsearch          =   10.* Gaudi::Units::mm  );          
+  declareProperty( "UseTriangleFix",         m_useTFix                =    true                  );
+
+  declareProperty( "UseMomentumEstimate",    m_useMomentumEstimate    = false                    ); 
+  declareProperty( "Preselection",           m_Preselection           = false                    );
+  declareProperty( "PreselectionPT",         m_PreselectionPT         = 400.* Gaudi::Units::MeV  );
+  declareProperty( "UseWrongSignWindow",     m_useWrongSignWindow     = false                    );
+  declareProperty( "WrongSignPT",            m_wrongSignPT            = 2000.* Gaudi::Units::MeV );
   
 }
 //=============================================================================
@@ -156,7 +159,8 @@ void PrForwardTool::extendTrack ( LHCb::Track* velo, LHCb::Tracks* result ) {
       // -- < Debug --------
       continue;
     }
-    m_minStereoHits = m_minTotalHits - (*itT).hits().size();
+    
+    m_minStereoHits =std::max( static_cast<unsigned int>(m_minTotalHits - (*itT).hits().size()),4u);//10
 
     if ( !fitStereoHits( *itT ) ) continue;
 
@@ -261,10 +265,15 @@ void PrForwardTool::collectAllXHits ( PrForwardTrack& track, unsigned int side )
     if ( !zone->isX() ) continue;  // only X layers
     if ( m_hitManager->hits(zoneNumber).size() > 0 ) ++m_nbXPlanes;
     float zZone = zone->z();
+
+    //the next UV zone in the same half of the detector  
     unsigned int uvZoneNumber = zoneNumber + 2;  // two zones per 'layer'
+    //the next UV zone in the same half of the detector  
     if ( 4 < zone->number()%8 ) uvZoneNumber = zoneNumber - 2;
-    if ( 0 == m_hitManager->hits( uvZoneNumber ).size() ) continue;
-    PrHitZone* zoneUv = m_hitManager->zone(uvZoneNumber);
+    //UV zone in opposite half of the detector --> gets hits in overlapping triangles
+    unsigned int triangleZone = uvZoneNumber + 1;
+    if ( zoneNumber%2 ) triangleZone = uvZoneNumber - 1;
+    
     float xInZone = track.xFromVelo( zZone );
     float yInZone = track.yFromVelo( zZone );
     if ( !zone->isInside( xInZone, yInZone ) ) continue;
@@ -275,9 +284,7 @@ void PrForwardTool::collectAllXHits ( PrForwardTrack& track, unsigned int side )
 
     // -- Use momentum estimate from VeloUT tracks
     if(m_useMomentumEstimate && 0 != track.qOverP() ){
-      
-      
-      
+          
       // - Preselect the VeloUT tracks
       if(m_Preselection && pt<m_PreselectionPT) continue;
 
@@ -300,12 +307,6 @@ void PrForwardTool::collectAllXHits ( PrForwardTrack& track, unsigned int side )
         xMax = xInZone + xTolWS;
       }
     }
-
-    float dx    = yInZone * zoneUv->dxDy();
-    PrHits::const_iterator itUv = m_hitManager->hits( uvZoneNumber ).begin();
-    float zRatio = ( zoneUv->z() - zMag ) / ( zZone - zMag );
-    float xCentral = xInZone + yInZone * zoneUv->dxDy();
-    float xInUv = track.xFromVelo( zoneUv->z() );
     
     // -- Use a binary search to find the lower bound of the range of x values
     PrHits::iterator itH = std::lower_bound(  m_hitManager->hits( zoneNumber ).begin(),  
@@ -319,31 +320,19 @@ void PrForwardTool::collectAllXHits ( PrForwardTrack& track, unsigned int side )
       if ( (*itH)->x() > xMax ) break;
       (*itH)->setUsed( false );
       
-      float xPredUv = xInUv + ( (*itH)->x() - xInZone) * zRatio - dx;
-      float maxDx   = m_tolY + ( fabs( (*itH)->x() -xCentral ) + fabs( yInZone ) ) * m_tolYSlope;
+      bool hasUVHit = false;
+      //search for same side UV hit
+      hasUVHit = matchStereoHit(track,itH,uvZoneNumber);
+      //if no matching UV hit was found, search in other side, to cover triangles
+      if(m_useTFix)
+        hasUVHit ? hasUVHit : hasUVHit = matchStereoHit(track,itH,triangleZone);
       
-      while ( (*itUv)->x() < xPredUv - maxDx ) {
-        if ( itUv == m_hitManager->hits( uvZoneNumber ).end()-1 ) break;
-        ++itUv;
-      }
-
-      // -- > Debug --------
-      if ( m_debug && matchKey( *itH ) ) {
-        info() << format( "UV delta %7.3f / %7.3f ", (*itUv)->x() - xPredUv, maxDx );
+      if(hasUVHit){
+        
         m_geoTool->xAtReferencePlane( track, *itH );
-        printHit( *itH, " " );
-        info() << format( "  y %8.1f  dx %7.2f   ", yInZone, dx );
-        printHit( *itUv, " " );
+        m_allXHits.push_back( *itH );
       }
-      // -- < Debug --------
-      
-      if ( (*itUv)->x() < xPredUv - maxDx ) continue;
-      if ( (*itUv)->x() > xPredUv + maxDx ) continue;
-
-      m_geoTool->xAtReferencePlane( track, *itH );
-      m_allXHits.push_back( *itH );
     }
-
   }
 
   std::sort( m_allXHits.begin(), m_allXHits.end(), PrHit::LowerByCoord() );
@@ -371,7 +360,8 @@ void PrForwardTool::selectXCandidates( PrForwardTrack& track ) {
     
     while( it2 < m_allXHits.end() &&
            planeCount.nbDifferent() < m_minXSize &&
-           (*it2)->coord() - (*it1)->coord() < xWindow ) {   // Add hit if not enough different planes and range small enough
+           (*it2)->coord() - (*it1)->coord() < xWindow ) {  
+      // Add hit if not enough different planes and range small enough
       planeCount.addHit( *it2 );
       ++it2;
     }
@@ -835,7 +825,10 @@ void PrForwardTool::collectStereoHits ( PrForwardTrack& track ) {
   // -- < Debug --------
 
   m_stereoHits.clear();
-  for ( unsigned int zoneNumber = track.zone(); m_hitManager->nbZones() > zoneNumber; zoneNumber += 2 ) {
+  unsigned int step=2;
+
+  if(m_useTFix) step=1;
+  for ( unsigned int zoneNumber = track.zone(); m_hitManager->nbZones() > zoneNumber; zoneNumber += step ) {
     PrHitZone* zone = m_hitManager->zone(zoneNumber);
     if ( zone->isX() ) continue;  // exclude X zones
     if ( zone->hits().empty()) continue;
@@ -844,6 +837,7 @@ void PrForwardTool::collectStereoHits ( PrForwardTrack& track ) {
     zZone = zone->z( yZone );  // Correct for dzDy
     float xPred  = track.x( zZone );
     
+
     // -- > Debug --------
     if ( m_debug ) {
       for ( PrHits::iterator itH = zone->hits().begin(); zone->hits().end() != itH; ++itH ) {
@@ -870,8 +864,12 @@ void PrForwardTool::collectStereoHits ( PrForwardTrack& track ) {
 
     PrHits::const_iterator itEnd = zone->hits().end();
     for ( ; itEnd != itH; ++itH ) {
+      
       float dx = (*itH)->x( yZone ) - xPred ;
       if ( dx >   dxTol ) break;
+      
+      if (yZone < (*itH)->yMin() - m_yTol_UVsearch || yZone > (*itH)->yMax() + m_yTol_UVsearch)continue;
+
       if ( zone->dxDy() < 0 ) dx = -dx;
       (*itH)->setCoord( dx );
       (*itH)->setUsed( false );
@@ -1181,3 +1179,35 @@ void PrForwardTool::makeLHCbTracks ( LHCb::Tracks* result ) {
   
 }
 //=============================================================================
+
+//  Check if a stereo Hit matches the X hit from collectAllXHits
+//=========================================================================
+bool PrForwardTool::matchStereoHit( PrForwardTrack& track, PrHits::iterator Xhit, unsigned int uvZoneNumber ) {
+  
+  if ( 0 == m_hitManager->hits( uvZoneNumber ).size() ) return false;
+  PrHitZone* zoneUv = m_hitManager->zone(uvZoneNumber);
+  float zMag = m_geoTool->zMagnet( track );
+  float zZone = (*Xhit)->z();//zZone is the same as in collectAllXHits
+  float zRatio = ( zoneUv->z() - zMag ) / ( zZone - zMag );
+  float xInZone = track.xFromVelo( zZone );
+  float yInZone = track.yFromVelo( zZone );
+  float xCentral = xInZone + yInZone * zoneUv->dxDy();
+  float xInUv = track.xFromVelo( zoneUv->z() );
+  
+  float dx    = yInZone * zoneUv->dxDy();//x correction from rotation by stereo angle
+  float xPredUv = xInUv + ( (*Xhit)->x() - xInZone) * zRatio - dx;//predicted hit in UV-layer
+  float maxDx   = m_tolY + ( fabs( (*Xhit)->x() -xCentral ) + fabs( yInZone ) ) * m_tolYSlope;
+  
+  bool hasUV = false;
+  for(const PrHit* UVHit : zoneUv->hits()){
+    if(UVHit->x() < xPredUv - maxDx)continue;
+    if(UVHit->x() > xPredUv + maxDx)continue;
+    if(yInZone < (UVHit->yMin() - m_yTol_UVsearch))continue;
+    if(yInZone > (UVHit->yMax() + m_yTol_UVsearch))continue;
+    hasUV = true;
+    break;
+  }
+  return hasUV;
+}
+
+//=========================================================================

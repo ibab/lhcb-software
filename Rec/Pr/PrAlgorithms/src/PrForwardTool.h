@@ -46,6 +46,8 @@ public:
   void collectStereoHits( PrForwardTrack& track );
 
   bool fitStereoHits( PrForwardTrack& track );
+
+  bool matchStereoHit( PrForwardTrack& track, PrHits::iterator Xhit, unsigned int uvZoneNumber );
   
   void makeLHCbTracks ( LHCb::Tracks* result );
 
@@ -92,6 +94,8 @@ private:
   float           m_yQualityWeight;
   unsigned int    m_nbXPlanes;
   unsigned int    m_minStereoHits;
+  float           m_yTol_UVsearch;
+  bool            m_useTFix;    
 
   IPrAddUTHitsTool*  m_addUTHitsTool;
   PrHitManager*   m_hitManager;
