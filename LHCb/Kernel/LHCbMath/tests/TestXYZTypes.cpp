@@ -11,7 +11,7 @@
 #include "LHCbMath/EigenTypes.h"
 
 // VectorClass
-#include "LHCbMath/VectorClassTypes.h"
+//#include "LHCbMath/VectorClassTypes.h"
 
 // VDT
 #include "vdt/sqrt.h"

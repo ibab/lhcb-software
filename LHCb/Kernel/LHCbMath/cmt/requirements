@@ -14,13 +14,13 @@ branches cmt doc LHCbMath src dict python tests
 # Used packages
 #=====================================================================
 use GaudiKernel     v*
-use VectorClass     v*      Kernel
+use VectorClass     v*      Kernel  -no_auto_imports
 use ROOT            v*      LCG_Interfaces
 use Boost           v*      LCG_Interfaces
 use GSL             v*      LCG_Interfaces
 use vdt             v*      LCG_Interfaces
 use GaudiGSL        v*   
-use GaudiPython     v*                     -no_auto_imports
+use GaudiPython     v*              -no_auto_imports
 
 apply_pattern install_more_includes more=LHCbMath offset=Eigen 
 
