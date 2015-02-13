@@ -535,8 +535,8 @@ namespace
       {
         if ( std::string::npos != icode->first.find ( "LoKiPhys"           ) ) 
         { morelines.insert ( "#include \"LoKi/LoKiPhys.h\""                ) ; }
-        if ( std::string::npos != icode->first.find ( "LoKiPhysMC"         ) ) 
-        { morelines.insert ( "#include \"LoKi/LoKiPhysMC.h\""              ) ; }
+        // if ( std::string::npos != icode->first.find ( "LoKiPhysMC"         ) ) 
+        // { morelines.insert ( "#include \"LoKi/LoKiPhysMC.h\""              ) ; }
         if ( std::string::npos != icode->first.find ( "LoKiTracks"         ) ) 
         { morelines.insert ( "#include \"LoKi/LoKiTracks.h\""              ) ; }
         if ( std::string::npos != icode->first.find ( "LoKiArrayFunctors"  ) ) 
