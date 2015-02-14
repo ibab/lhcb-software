@@ -5,6 +5,9 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+! 2015-02-14 - Vanya Belyaev
+ - add AOVERLAP functor for Michael Kolpin 
+
 ! 2015-02-03 - Vanya Belyaev
  - more steps towards to autogeneration of C++ code   
 

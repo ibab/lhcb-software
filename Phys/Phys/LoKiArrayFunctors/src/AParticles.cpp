@@ -19,6 +19,10 @@
 #include "Kernel/ParticleProperty.h"
 #include "Kernel/IParticlePropertySvc.h"
 // ===========================================================================
+// DavinciTypes 
+// ===========================================================================
+#include "Kernel/HashIDs.h"
+// ===========================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/Objects.h"
@@ -2577,6 +2581,135 @@ std::ostream& LoKi::AParticles::Sum::fillStream ( std::ostream& s ) const
   if ( 0 != m_ini  ) { s << "," << m_ini ; }
   return s << ") ";
 }
+// ============================================================================
+
+// ============================================================================
+// calculate the overlap between two daughters 
+// ============================================================================
+LoKi::AParticles::Overlap::Overlap 
+( const unsigned short        i1   , 
+  const unsigned short        i2   ) 
+  : LoKi::AuxFunBase ( std::tie ( i1 , i2 ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function() 
+  , m_i1   ( i1   ) 
+  , m_i2   ( i2   ) 
+  , m_good ( 0    ) 
+  , m_type ( LHCb::LHCbID::channelIDtype::Velo ) 
+  , m_def  ( true ) 
+{}
+// ============================================================================
+// calculate the overlap between two daughters 
+// ============================================================================
+LoKi::AParticles::Overlap::Overlap 
+( const unsigned short           i1   , 
+  const unsigned short           i2   , 
+  LoKi::AParticles::Overlap::PMF good ) 
+  : LoKi::AuxFunBase   () 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function() 
+  , m_i1   ( i1    ) 
+  , m_i2   ( i2    ) 
+  , m_good ( good  ) 
+  , m_type ( LHCb::LHCbID::channelIDtype::Velo ) 
+  , m_def  ( false ) 
+{
+  Assert ( m_good , "Invalid pointer to member function!" ) ;
+}
+// ============================================================================
+// calculate the overlap between two daughters 
+// ============================================================================
+namespace 
+{
+  LoKi::StrKeep _type_to_str_ ( LHCb::LHCbID::channelIDtype type )
+  {
+    std::ostringstream s;
+    s << "LHCb::LHCbID::" << type ;
+    return LoKi::StrKeep ( s.str() ) ;
+  }
+}
+// ============================================================================
+LoKi::AParticles::Overlap::Overlap 
+( const unsigned short          i1   , 
+  const unsigned short          i2   , 
+  LHCb::LHCbID::channelIDtype   type ) 
+  : LoKi::AuxFunBase ( std::make_tuple ( i1 ,i2 , _type_to_str_ ( type ) ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function() 
+  , m_i1   ( i1    ) 
+  , m_i2   ( i2    ) 
+  , m_good ( 0     ) 
+  , m_type ( type  ) 
+  , m_def  ( false ) 
+{
+  Assert ( m_good , "Invalid pointer to member function!" ) ;
+}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::AParticles::Overlap::~Overlap (){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::AParticles::Overlap* 
+LoKi::AParticles::Overlap::clone() const 
+{ return new LoKi::AParticles::Overlap ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::AParticles::Overlap::result_type 
+LoKi::AParticles::Overlap::operator() 
+  ( LoKi::AParticles::Overlap::argument a ) const 
+{
+  //
+  if ( a.size() < m_i1 ) 
+  {
+    Error("Invalid index for the first daughter, return -2 ") ;
+    return -2 ;
+  }
+  //
+  const LHCb::Particle* d1 = a[m_i1 - 1 ] ;
+  if ( 0 == d1 ) 
+  {
+    Error("Invalid first daughter, return -1 ") ;
+    return -1 ;
+  }
+  //
+  if ( a.size() < m_i2 ) 
+  {
+    Error("Invalid index for the second daughter, return -2 ") ;
+    return -2 ;
+  }
+  //
+  const LHCb::Particle* d2 = a[m_i2 - 1 ] ;
+  if ( 0 == d2 ) 
+  {
+    Error("Invalid second daughter, return -1 ") ;
+    return -1 ;
+  }
+  //
+  //PMF good = m_good ;
+  std::pair<double,double> result = 
+    m_def  ? 
+    LHCb::HashIDs::overlap ( d1 , d2          ) : 
+    m_good ? 
+    LHCb::HashIDs::overlap ( d1 , d2 , m_good ) : 
+    LHCb::HashIDs::overlap ( d1 , d2 , m_type ) ;
+  //
+  return std::max ( result.first , result.second ) ;
+} 
+// ============================================================================
+// OPTIONAL: nice printout 
+// ============================================================================
+std::ostream& LoKi::AParticles::Overlap::fillStream ( std::ostream& s ) const 
+{
+  s << " AOVERLAP("
+    << m_i1 << ","
+    << m_i1 ;
+  if ( m_def  ) { return s << ") "              ; }
+  if ( m_good ) { return s << ", <func-here>) " ; }
+  return s << "," << m_type << ")" ;   
+}
+
+ 
+
 // ============================================================================
 // The END 
 // ============================================================================

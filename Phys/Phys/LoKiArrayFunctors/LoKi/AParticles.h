@@ -53,7 +53,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class Size 
+    class GAUDI_API Size 
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function 
     {
     public:
@@ -81,7 +81,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class Count 
+    class GAUDI_API Count 
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function 
     {
     public:
@@ -118,7 +118,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class Unique
+    class GAUDI_API Unique
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate 
     {
     public:
@@ -166,7 +166,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-15
      */
-    class FourMomentum 
+    class GAUDI_API FourMomentum 
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function 
     {
     protected :
@@ -236,7 +236,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-15
      */
-    class InvariantMass : public FourMomentum 
+    class GAUDI_API InvariantMass : public FourMomentum 
     {
     public:
       // ======================================================================
@@ -284,7 +284,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-15
      */
-    class Momentum : public FourMomentum 
+    class GAUDI_API Momentum : public FourMomentum 
     {
     public:
       // ======================================================================
@@ -332,7 +332,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-15
      */
-    class TransverseMomentum : public FourMomentum 
+    class GAUDI_API TransverseMomentum : public FourMomentum 
     {
     public:
       // ======================================================================
@@ -380,7 +380,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-15
      */
-    class Eta : public FourMomentum
+    class GAUDI_API Eta : public FourMomentum
     {
     public:
       // ======================================================================
@@ -428,7 +428,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-15
      */
-    class Phi : public FourMomentum
+    class GAUDI_API Phi : public FourMomentum
     {
     public:
       // ======================================================================
@@ -476,7 +476,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-15
      */
-    class Y : public FourMomentum
+    class GAUDI_API Y : public FourMomentum
     {
     public:
       // ======================================================================
@@ -524,7 +524,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class MinChild 
+    class GAUDI_API MinChild 
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function 
     {
     public:
@@ -582,7 +582,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class MaxChild 
+    class GAUDI_API MaxChild 
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function 
     {
     public:
@@ -639,7 +639,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class HasChild 
+    class GAUDI_API HasChild 
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate
     {
     public:
@@ -676,7 +676,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class ChildFun
+    class GAUDI_API ChildFun
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
     {
     public:
@@ -718,7 +718,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class ChildCut 
+    class GAUDI_API ChildCut 
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate
     {
     public:
@@ -764,7 +764,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class VertexChi2
+    class GAUDI_API VertexChi2
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
     {
     public:
@@ -809,7 +809,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-28
      */
-    class DOCA 
+    class GAUDI_API DOCA 
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
     {
     public:
@@ -917,7 +917,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-28
      */
-    class DOCAChi2 : public LoKi::AParticles::DOCA 
+    class GAUDI_API DOCAChi2 : public LoKi::AParticles::DOCA 
     {
     public:
       // ======================================================================
@@ -961,7 +961,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-07-09
      */
-    class MaxDOCA : public LoKi::AParticles::DOCA 
+    class GAUDI_API MaxDOCA : public LoKi::AParticles::DOCA 
     {
     public:
       // ======================================================================
@@ -999,7 +999,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class MaxDOCAChi2 : public LoKi::AParticles::DOCAChi2 
+    class GAUDI_API MaxDOCAChi2 : public LoKi::AParticles::DOCAChi2 
     {
     public:
       // ======================================================================
@@ -1039,7 +1039,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class MaxDOCACut
+    class GAUDI_API MaxDOCACut
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate
     {
     public:
@@ -1106,7 +1106,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class MaxDOCAChi2Cut : public LoKi::AParticles::MaxDOCACut
+    class GAUDI_API MaxDOCAChi2Cut : public LoKi::AParticles::MaxDOCACut
     {
     public:
       // ======================================================================
@@ -1158,7 +1158,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-11-02
      */
-    class DecayAngle
+    class GAUDI_API DecayAngle
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
     {
     public:
@@ -1200,7 +1200,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-07-26
      */
-    class WrongMass
+    class GAUDI_API WrongMass
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
     {
     public:
@@ -1321,7 +1321,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-15
      */
-    class DeltaMass : public InvariantMass 
+    class GAUDI_API DeltaMass : public InvariantMass 
     {
     public:
       // ======================================================================
@@ -1449,7 +1449,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-15
      */
-    class AbsDeltaMass : public DeltaMass 
+    class GAUDI_API AbsDeltaMass : public DeltaMass 
     {
     public:
       // ======================================================================
@@ -1561,7 +1561,7 @@ namespace LoKi
      *  @author  Patrick SPRADLIN
      *  @date   2009-03-10
      */
-    class MinDOCA : public DOCA 
+    class GAUDI_API MinDOCA : public DOCA 
     {
     public:
       // ======================================================================
@@ -1601,7 +1601,7 @@ namespace LoKi
      *  @author  Patrick SPRADLIN
      *  @date   2009-03-10
      */
-    class AllSameBestPV
+    class GAUDI_API AllSameBestPV
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate
       , public virtual LoKi::AuxDesktopBase
     {
@@ -1630,7 +1630,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-11-16
      */
-    class ACutV 
+    class GAUDI_API ACutV 
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate
     {
     public:
@@ -1665,7 +1665,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-11-16
      */
-    class AFunV 
+    class GAUDI_API AFunV 
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
     {
     public:
@@ -1699,7 +1699,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-11-30
      */
-    class MaxVal : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
+    class GAUDI_API MaxVal
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
     {
     public:
       // ======================================================================
@@ -1760,7 +1761,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-11-30
      */
-    class MinVal : public MaxVal 
+    class GAUDI_API MinVal : public MaxVal 
     {
     public:
       // ======================================================================
@@ -1809,7 +1810,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-05
      */
-    class Sum 
+    class GAUDI_API Sum 
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
     {
     public:
@@ -1829,7 +1830,7 @@ namespace LoKi
       virtual ~Sum() ;
       /// MANDATORY: clone method ("virtual constructor")
       virtual  Sum* clone() const ;
-          /// MANDATORY: the only one essential method 
+      /// MANDATORY: the only one essential method 
       virtual result_type operator() ( argument a ) const ;
       /// OPTIONAL: nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
@@ -1851,6 +1852,54 @@ namespace LoKi
       bool             m_trivial ;            //            trivial predicate ?
       // ======================================================================      
     } ;
+    // ========================================================================
+    /** @class Overlap 
+     *  check the overlap between two daughters 
+     *  @see LHCb::HashIDs::overlap 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date  2015-02-14
+     */
+    class GAUDI_API Overlap : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
+    {
+      // ====================================================================
+      typedef bool (LHCb::LHCbID::*PMF)() const   ;
+      // ====================================================================
+    public :
+      // ====================================================================
+      /// calculate the overlap between two daughters 
+      Overlap ( const unsigned short        i1   , 
+                const unsigned short        i2   ) ;
+      /// calculate the overlap between two daughters 
+      Overlap ( const unsigned short        i1   , 
+                const unsigned short        i2   , 
+                LHCb::LHCbID::channelIDtype type ) ;
+      /// calculate the overlap between two daughters 
+      Overlap ( const unsigned short        i1   , 
+                const unsigned short        i2   , 
+                PMF                         good ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Overlap() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Overlap* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Overlap () ;                       // the default constructor is disabled 
+      // ======================================================================      
+    private:
+      // ======================================================================      
+      unsigned short               m_i1   ;
+      unsigned short               m_i2   ;      
+      PMF                          m_good ;
+      LHCb::LHCbID::channelIDtype  m_type ;
+      bool                         m_def  ;
+      // ======================================================================      
+    };
     // ========================================================================
   } //                                        end of namespace LoKi::AParticles
   // ==========================================================================

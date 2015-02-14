@@ -242,6 +242,9 @@ AMINDOCA      = LoKi.AParticles.MinDOCA
 ## @see LoKi::Cuts::AALLSAMEBPV
 AALLSAMEBPV   = LoKi.AParticles.AllSameBestPV ()
 
+## @see LoKi::Cuts::AOVERLAP 
+AOVERLAP   = LoKi.AParticles.Overlap 
+
 
 ## @see LoKi::Cuts::ACUTV 
 ACUTV         = LoKi.AParticles.ACutV
