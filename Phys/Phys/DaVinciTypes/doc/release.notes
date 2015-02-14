@@ -5,6 +5,9 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2015-02-14 - Vanya Belyaev
+ - HashIDs.h: extend various methods for overlap 
+
 !========================= DaVinciTypes v2r9 2014-10-30 =========================
 
 ! 2014-10-24 - Anton Poluektov 
