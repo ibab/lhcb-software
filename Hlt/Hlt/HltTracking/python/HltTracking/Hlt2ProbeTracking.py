@@ -292,10 +292,9 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
         from Configurables      import MuonTTTrack, TrackMasterFitter, PatAddTTCoord, MuonCombRec, MuonHitDecode, TrackMasterExtrapolator
         from Configurables  	import MeasurementProviderT_MeasurementProviderTypes__TTLite_
         from HltLine.HltLine    import bindMembers
-        from HltTracking.HltRecoConf import CommonForwardTrackingOptions, HltRecoConf
+        from Configurables      import HltRecoConf
+        from HltRecoConf import CommonForwardTrackingOptions
         #        from Hlt1Lines.HltConfigurePR import ConfiguredPR
-        
-        
     
         Hlt2MuonTTTrack = MuonTTTrack("Hlt2MuonTTTrack")
         Hlt2MuonTTTrack.AddTTHits = True

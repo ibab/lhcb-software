@@ -4,6 +4,14 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-02-14 - Roel Aaij
+ - Replace call to HltRecoConf().getProp inside HltRecoConf, with call to get
+   the right property where needed. Current behaviour would *silently* lead
+	 to problems if property were not the default!
+ - Normalise imports of HltRecoConf everywhere.
+ - Add TrackSys to used configurables to prevert loop in used configurables;
+   TrackSys is instantiated in ConfiguredFitters, which is used by Hlt2Tracking.
+
 ! 2015-02-12 - Sascha Stahl
  - HltRecoConf: Added option to change the number of fit iterations of the HLT fit.
    Renamed HltRecoConf.SimplifiedMaterialFit to HltRecoConf.MoreOfflineLikeFit.

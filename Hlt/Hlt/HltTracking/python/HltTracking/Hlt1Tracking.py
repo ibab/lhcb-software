@@ -36,7 +36,7 @@ from GaudiKernel.SystemOfUnits import MeV
 def ConfiguredForward( parent, name , minP , minPt , useMomEst = False ) :
     if name == None: name = PatForwardTool.__name__
     from HltTracking.HltRecoConf import CommonForwardTrackingOptions
-    from Configurables import HltRecoConf
+    from HltTracking import HltRecoConf
     opts = CommonForwardTrackingOptions.copy()
     if useMomEst :
         opts.update( UseMomentumEstimate = True

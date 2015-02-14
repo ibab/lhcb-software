@@ -38,8 +38,7 @@ from HltTrackNames import HltRichDefaultTrackCuts
 from HltTrackNames import OfflineRichDefaultHypos, OfflineRichDefaultRadiators
 from HltTrackNames import OfflineRichDefaultTrackCuts
 
-from Configurables import CaloProcessor, RichRecSysConf, TrackSelector
-#from Configurables import HltRecoConf
+from Configurables import CaloProcessor, RichRecSysConf, TrackSelector, TrackSys
 
 #import all Hlt2 lines configurables in our scope so that genConfUser can find it... (i.e. make sure it is in 'dir()')
 from HltConf.ThresholdUtils import importLineConfigurables
@@ -57,9 +56,9 @@ class Hlt2Tracking(LHCbConfigurableUser):
     # First of all the dependencies and the slots
     #
     #############################################################################################
-    import Hlt2Lines
-    __used_configurables__ = [ (CaloProcessor   ,   None)
-                             , (RichRecSysConf  ,   None)
+    __used_configurables__ = [ (CaloProcessor, None),
+                               (RichRecSysConf, None),
+                               TrackSys
                                ] + _hlt2linesconfs
                              # This above hlt2linesconf defines all the Hlt2 Lines since they 
                              # configured after the tracking. This means that each
@@ -766,7 +765,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
             ts=charged.TrackSelector
             from Configurables import HltRecoConf
             ts.setProp("MinChi2Cut",0.)
-            ts.setProp("MaxChi2Cut",HltRecoConf().getProp("MaxTrCHI2PDOF"))
+            ts.setProp("MaxChi2Cut", HltRecoConf().getProp("MaxTrCHI2PDOF"))
            
             # Need to allow for fitted tracks
             # This is now done inside the staged fast fit based on the fastFitType passed
@@ -787,7 +786,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
             charged_secondLoop.TrackSelectorType = "TrackSelector"
             charged_secondLoop.addTool(TrackSelector,name="TrackSelector")
             ts=charged_secondLoop.TrackSelector
-            from HltTracking.HltRecoConf import HltRecoConf
+            from Configurables import HltRecoConf
             ts.setProp("MinChi2Cut",0.)
             ts.setProp("MaxChi2Cut",HltRecoConf().getProp("MaxTrCHI2PDOF"))
                        
@@ -936,7 +935,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         """
         Set up the sequence for doing the RICH PID on the tracks
         """
-        from HltTracking.HltRecoConf import HltRecoConf
+        from Configurables import HltRecoConf
         if HltRecoConf().getProp("OfflineRich"):
             self.setProp("RichTrackCuts", OfflineRichDefaultTrackCuts)
             self.setProp("RichHypos",  OfflineRichDefaultHypos)
@@ -1155,7 +1154,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from HltLine.HltLine    import bindMembers
         from HltTracking.HltSharedTracking import ( RevivedForward, ConfiguredForwardComplement, ConfiguredHltEventFitter,
                                                     ConfiguredGoodTrackFilter )
-        from HltTracking.HltRecoConf import HltRecoConf
+        from Configurables import HltRecoConf
 
         # Run Forward only on unused hits if wanted
         # Fit Hlt1 tracks for filtering
@@ -1323,10 +1322,9 @@ class Hlt2Tracking(LHCbConfigurableUser):
                                      , SeedInput = self.__hlt2SeedTracking().outputSelection()
                                      , MatchOutput = matchTrackOutputLocation)
         from Configurables   import PatMatchTool
-        from HltRecoConf import MatchToolOptions
         recoMatch.addTool(PatMatchTool, name="PatMatchTool")
-        recoMatch.PatMatchTool.MinMomentum = MatchToolOptions["MinMomentum"]
-        recoMatch.PatMatchTool.MinPt = MatchToolOptions["MinPt"]
+        recoMatch.PatMatchTool.MinMomentum = HltRecoConf().getProp("Forward_LPT_MinP")
+        recoMatch.PatMatchTool.MinPt = HltRecoConf().getProp("Forward_LPT_MinPt")
         # We depend on the forward tracking
         fwdtracks = self.__hlt2ForwardTracking()
         recoMatch.PatMatchTool.VeloVetoTracksName = [ fwdtracks.outputSelection() ]
@@ -1378,7 +1376,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         #Set to true to remove used seeds and tt hits
         PatDownstream.RemoveUsed     = False
         PatDownstream.RemoveAll      = True
-        from HltRecoConf import DownstreamOptions
+        from HltTracking.HltRecoConf import DownstreamOptions
         PatDownstream.MinMomentum = DownstreamOptions["MinMomentum"]
         PatDownstream.MinPt = DownstreamOptions["MinPt"]
 
@@ -1450,7 +1448,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
             charged.TrackSelectorType = "TrackSelector"
             charged.addTool(TrackSelector,name="TrackSelector")
             ts=charged.TrackSelector
-            from HltTracking.HltRecoConf import HltRecoConf
+            from Configurables import HltRecoConf
             ts.setProp("MinChi2Cut",0.)
             ts.setProp("MaxChi2Cut",HltRecoConf().getProp("MaxTrCHI2PDOF"))
            

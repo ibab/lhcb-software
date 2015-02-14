@@ -95,7 +95,7 @@ veloSelector.Code = HltRecoConf().getProp("VeloSelectionCut")
 veloSelector.StatPrint = True
 
 #### VeloTT Tracking
-from HltTracking.HltRecoConf import VeloTTOptions, VeloTTToolOptions
+from HltRecoConf import VeloTTOptions, VeloTTToolOptions
 from Configurables import PatVeloTTHybrid, PatVeloTTHybridTool
 recoVeloTT = PatVeloTTHybrid( 'PatVeloTTHlt', 
                         InputTracksName = HltSharedTrackLoc["VeloSelection"],
@@ -114,7 +114,7 @@ recoForwardHPT = PatForward( 'Hlt1ForwardHPT'
                           , maxOTHits=HltRecoConf().getProp("Forward_MaxOTHits") )
 recoForwardHPT.VetoObjects = [ recoForwardHPT.OutputTracksName ]
 # apply modifications on top
-from HltTracking.HltRecoConf import CommonForwardTrackingOptions, ForwardTrackingOptions_MomEstimate
+from HltRecoConf import CommonForwardTrackingOptions, ForwardTrackingOptions_MomEstimate
 opts = CommonForwardTrackingOptions.copy()
 opts.update(ForwardTrackingOptions_MomEstimate)
 recoForwardHPT.addTool(PatForwardTool(**opts), name='PatForwardTool')
@@ -172,13 +172,13 @@ def ConfiguredForwardComplement(name
                           )
     
     #Sascha Stahl: We should get rid of GECs in the pattern reco, do it centrally
-    from HltTracking.HltRecoConf import CommonForwardOptions
+    from HltRecoConf import CommonForwardOptions
     from Configurables import HltRecoConf
     forward.maxOTHits = HltRecoConf().getProp("Forward_MaxOTHits")
     forward.maxITHits = CommonForwardOptions["MaxITHits"] 
     forward.MaxNVelo = CommonForwardOptions["MaxNVelo"] 
         
-    from HltTracking.HltRecoConf import CommonForwardTrackingOptions, ComplementForwardToolOptions, HltRecoConf
+    from HltRecoConf import CommonForwardTrackingOptions, ComplementForwardToolOptions
     opts = CommonForwardTrackingOptions.copy()
     opts.update(ComplementForwardToolOptions)
     opts.update({"MinMomentum" : MinMomentum
@@ -215,9 +215,9 @@ def ConfiguredPatSeeding(name
         recoSeeding.PatSeedingTool.addTool( TrackUsedLHCbID, name="TrackUsedLHCbID" )
         recoSeeding.PatSeedingTool.TrackUsedLHCbID.inputContainers = VetoTrackLocations
   
-    from HltTracking.HltRecoConf import OnlineSeedingToolOptions
+    from HltRecoConf import OnlineSeedingToolOptions
     recoSeeding.PatSeedingTool.NDblOTHitsInXSearch = OnlineSeedingToolOptions ["NDblOTHitsInXSearch"]
-    recoSeeding.PatSeedingTool.MinMomentum = OnlineSeedingToolOptions ["MinMomentum"]
+    recoSeeding.PatSeedingTool.MinMomentum = HltRecoConf().getProp("Forward_LPT_MinP")
     from Configurables import HltRecoConf
     from HltTracking.HltRecoConf import CommonForwardOptions
     recoSeeding.PatSeedingTool.MaxOTHits = HltRecoConf().getProp("Forward_MaxOTHits")

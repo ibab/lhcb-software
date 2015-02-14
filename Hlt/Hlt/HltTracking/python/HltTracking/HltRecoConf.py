@@ -97,13 +97,8 @@ ComplementForwardToolOptions = { "AddTTClusterName" : "PatAddTTCoord"
 
 OnlineSeedingToolOptions = { "NDblOTHitsInXSearch" : 2,
                              # This is synchronized with forward and matching
-                             "MinMomentum" : HltRecoConf().getProp("Forward_LPT_MinP")
                              #"UseForward" : True , # Flag hits from Forward tracks
                              }
-
-# for now synchronize forward and matching
-MatchToolOptions = { "MinMomentum": HltRecoConf().getProp("Forward_LPT_MinP"),
-                     "MinPt": HltRecoConf().getProp("Forward_LPT_MinPt")}
 
 DownstreamOptions = { "MinMomentum": 0.,
                       "MinPt": 0.}

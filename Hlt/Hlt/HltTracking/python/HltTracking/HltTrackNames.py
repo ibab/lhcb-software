@@ -138,7 +138,7 @@ HltCALOIDSuffix				= "CALO"
 #
 
 
-from Configurables import HltRecoConf
+from HltTracking.HltRecoConf import HltRecoConf
 MaxChi2 = HltRecoConf().getProp("MaxTrCHI2PDOF")
 HltRichDefaultHypos			= ["pion","kaon"]
 HltRichDefaultRadiators			= ["Rich1Gas","Rich2Gas"] 

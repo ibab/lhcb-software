@@ -67,7 +67,7 @@ def PV3D(where):
     recoPV3D.PVOfflineTool.addTool(LSAdaptPV3DFitter, "LSAdaptPV3DFitter")
     recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.TrackErrorScaleFactor = 2.
     recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.maxIP2PV = 0.3
-    from HltTracking.HltRecoConf import HltRecoConf
+    from Configurables import HltRecoConf
     if HltRecoConf().getProp("FitVelo"):
         recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.UseLongKalman = True
     #recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.zVtxShift = 0.0
