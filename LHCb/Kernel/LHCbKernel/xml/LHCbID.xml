@@ -23,7 +23,7 @@
 
        <enum
           desc   = "types of sub-detector channel ID"
-          name   = "channelIDype"
+          name   = "channelIDtype"
           value  = "Velo=1, TT, IT, OT, Rich, Calo, Muon, VP, FT=10, UT , HC"
           access = 'PUBLIC'
        />

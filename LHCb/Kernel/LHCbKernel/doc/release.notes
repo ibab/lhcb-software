@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2015-02-14 - Vanya Belyaev
+ - change LHCb::LHCbID::channelIDype -> LHCb::LHCbID::channelIDtype
+
 ! 2015-01-23 - Gerhard Raven
  - Replace usage of boost with C++11 constructs. 
    Replace some loops by STL algorithms.
