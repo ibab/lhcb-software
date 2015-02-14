@@ -1758,6 +1758,19 @@ namespace LoKi
      */
     typedef LoKi::AParticles::AFunV                                    AFUNV ;
     // ========================================================================
+    /** @typedef AOVERLAP 
+     *  simle function fo check overlaps
+     *  @see LHCb::HashIDs::overlap
+     *  @code
+     *  ACut cut1 = AOVERLAP ( 1 , 2                       ) < 0.1 ;
+     *  ACut cut2 = AOVERLAP ( 1 , 2 ,  LHCb::LHCbID::Velo ) > 0.2 ;
+     *  ACut cut3 = AOVERLAP ( 1 , 2 , &LHCb::LHCbID::isTT ) < 0.5 ;
+     *  @endcode 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-02-14
+     */
+    typedef LoKi::AParticles::Overlap                               AOVERLAP ;
+    // ========================================================================
 #ifdef __INTEL_COMPILER
 #pragma warning(pop) 
 #endif
