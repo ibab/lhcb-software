@@ -25,6 +25,8 @@ class TTree  ;     // ROOT
 class TChain ;     // ROOT 
 class TCut   ;     // ROOT 
 // =============================================================================
+class RooAbsData ; // RooFit 
+// =============================================================================
 namespace Analysis 
 {
   // ==========================================================================
@@ -60,11 +62,13 @@ namespace Analysis
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2013-10-13
      */
-    static Statistic 
-    statVar ( TTree*              tree                                                   , 
-              const std::string&  expression                                             ,
-              const unsigned long first      = 0                                         ,
-              const unsigned long entries    = std::numeric_limits<unsigned long>::max() ) ;
+    static 
+      Statistic 
+      statVar ( TTree*              tree                                                   , 
+                const std::string&  expression                                             ,
+                const unsigned long first      = 0                                         ,
+                const unsigned long entries    = std::numeric_limits<unsigned long>::max() ) ;
+    
     // ========================================================================
     /** build statistic for the <code>expression</code>
      *  @param tree       (INPUT) the tree 
@@ -79,12 +83,13 @@ namespace Analysis
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2013-10-13
      */
-    static Statistic
-    statVar ( TTree*              tree        , 
-              const std::string&  expression  , 
-              const std::string&  cuts        ,
-              const unsigned long first      = 0                                         ,
-              const unsigned long entries    = std::numeric_limits<unsigned long>::max() ) ;
+    static 
+      Statistic
+      statVar ( TTree*              tree        , 
+                const std::string&  expression  , 
+                const std::string&  cuts        ,
+                const unsigned long first      = 0                                         ,
+                const unsigned long entries    = std::numeric_limits<unsigned long>::max() ) ;
     // ========================================================================
     /** build statistic for the <code>expression</code>
      *  @param tree       (INPUT) the tree 
@@ -99,12 +104,13 @@ namespace Analysis
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2013-10-13
      */
-    static Statistic
-    statVar ( TTree*              tree        , 
-              const std::string&  expression  , 
-              const TCut&         cuts        ,
-              const unsigned long first      = 0                                         ,
-              const unsigned long entries    = std::numeric_limits<unsigned long>::max() ) ;
+    static 
+      Statistic
+      statVar ( TTree*              tree        , 
+                const std::string&  expression  , 
+                const TCut&         cuts        ,
+                const unsigned long first      = 0                                         ,
+                const unsigned long entries    = std::numeric_limits<unsigned long>::max() ) ;
     // ========================================================================
     /** calculate the covariance of two expressions 
      *  @param tree  (INPUT)  the inpout tree 
@@ -118,39 +124,16 @@ namespace Analysis
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2014-03-27
      */
-    static unsigned long
-    statCov ( TTree*               tree   , 
-              const std::string&   exp1   , 
-              const std::string&   exp2   , 
-              Statistic&           stat1  ,  
-              Statistic&           stat2  ,  
-              Gaudi::SymMatrix2x2& cov2   , 
-              const unsigned long  first   = 0 ,
-              const unsigned long  entries = std::numeric_limits<unsigned long>::max() ) ;
-    // ========================================================================
-    /** calculate the covariance of two expressions 
-     *  @param tree  (INPUT)  the inpout tree 
-     *  @param exp1  (INPUT)  the first  expresiion
-     *  @param exp2  (INPUT)  the second expresiion
-     *  @param cuts  (INPUT)  the selection criteria 
-     *  @param stat1 (UPDATE) the statistic for the first  expression
-     *  @param stat2 (UPDATE) the statistic for the second expression
-     *  @param cov2  (UPDATE) the covariance matrix 
-     *  @return number of processed events 
-     *  
-     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date   2014-03-27
-     */
-    static unsigned long 
-    statCov ( TTree*               tree   ,
-              const std::string&   exp1   , 
-              const std::string&   exp2   , 
-              const std::string&   cuts   ,
-              Statistic&           stat1  ,  
-              Statistic&           stat2  ,  
-              Gaudi::SymMatrix2x2& cov2   , 
-              const unsigned long  first   = 0                                         ,
-              const unsigned long  entries = std::numeric_limits<unsigned long>::max() ) ;
+    static 
+      unsigned long
+      statCov ( TTree*               tree   , 
+                const std::string&   exp1   , 
+                const std::string&   exp2   , 
+                Statistic&           stat1  ,  
+                Statistic&           stat2  ,  
+                Gaudi::SymMatrix2x2& cov2   , 
+                const unsigned long  first   = 0 ,
+                const unsigned long  entries = std::numeric_limits<unsigned long>::max() ) ;
     // ========================================================================
     /** calculate the covariance of two expressions 
      *  @param tree  (INPUT)  the inpout tree 
@@ -165,16 +148,67 @@ namespace Analysis
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2014-03-27
      */
-    static unsigned long 
-    statCov ( TTree*               tree   ,
-              const std::string&   exp1   , 
-              const std::string&   exp2   , 
-              const TCut&          cuts   ,
-              Statistic&           stat1  ,  
-              Statistic&           stat2  ,  
-              Gaudi::SymMatrix2x2& cov2   , 
-              const unsigned long  first   = 0                                         ,
-              const unsigned long  entries = std::numeric_limits<unsigned long>::max() ) ;
+    static 
+      unsigned long 
+      statCov ( TTree*               tree   ,
+                const std::string&   exp1   , 
+                const std::string&   exp2   , 
+                const std::string&   cuts   ,
+                Statistic&           stat1  ,  
+                Statistic&           stat2  ,  
+                Gaudi::SymMatrix2x2& cov2   , 
+                const unsigned long  first   = 0                                         ,
+                const unsigned long  entries = std::numeric_limits<unsigned long>::max() ) ;
+    // ========================================================================
+    /** calculate the covariance of two expressions 
+     *  @param tree  (INPUT)  the inpout tree 
+     *  @param exp1  (INPUT)  the first  expresiion
+     *  @param exp2  (INPUT)  the second expresiion
+     *  @param cuts  (INPUT)  the selection criteria 
+     *  @param stat1 (UPDATE) the statistic for the first  expression
+     *  @param stat2 (UPDATE) the statistic for the second expression
+     *  @param cov2  (UPDATE) the covariance matrix 
+     *  @return number of processed events 
+     *  
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2014-03-27
+     */
+    static 
+      unsigned long 
+      statCov ( TTree*               tree   ,
+                const std::string&   exp1   , 
+                const std::string&   exp2   , 
+                const TCut&          cuts   ,
+                Statistic&           stat1  ,  
+                Statistic&           stat2  ,  
+                Gaudi::SymMatrix2x2& cov2   , 
+                const unsigned long  first   = 0                                           ,
+                const unsigned long  entries = std::numeric_limits<unsigned long>::max() ) ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    static 
+      Statistic
+      statVar ( RooAbsData*         data        ,   
+                const std::string&  expression  , 
+                const unsigned long first   = 0                                           ,
+                const unsigned long entries = std::numeric_limits<unsigned long>::max() ) ;
+    // ========================================================================
+    static 
+      Statistic
+      statVar ( RooAbsData*         data        , 
+                const std::string&  expression  , 
+                const std::string&  cuts        , 
+                const unsigned long first   = 0                                         ,
+                const unsigned long entries = std::numeric_limits<unsigned long>::max() ) ;
+    // ========================================================================
+    static 
+      Statistic
+      statVar ( RooAbsData*         data        , 
+                const std::string&  expression  , 
+                const TCut&         cuts        , 
+                const unsigned long first   = 0                                         ,
+                const unsigned long entries = std::numeric_limits<unsigned long>::max() ) ;
     // ========================================================================
   };
   // ==========================================================================

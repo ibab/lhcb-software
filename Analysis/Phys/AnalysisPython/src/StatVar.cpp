@@ -6,6 +6,7 @@
 // ============================================================================
 #include "Analysis/StatVar.h"
 #include "Analysis/Formula.h"
+#include "Analysis/Iterator.h"
 // ============================================================================
 // LHCbMath
 // ============================================================================
@@ -15,6 +16,7 @@
 // ============================================================================
 #include "TTree.h"
 #include "TCut.h"
+#include "RooDataSet.h"
 // ============================================================================
 // Boost 
 // ============================================================================
@@ -440,6 +442,111 @@ Analysis::StatVar::statCov
                    exp1  , exp2    , _cuts , 
                    stat1 , stat2   , cov2  , 
                    first , entries ) ; 
+}
+// ============================================================================
+Analysis::StatVar::Statistic
+Analysis::StatVar::statVar 
+( RooAbsData*         data       , 
+  const std::string&  expression , 
+  const unsigned long first      ,
+  const unsigned long entries    )
+{
+  Statistic result ;
+  if ( 0 == data ) { return result ; }                              // RETURN
+  //
+  RooArgList        alst ;
+  const RooArgSet*  aset = data->get() ;
+  if ( 0 == aset    ) { return result ; }                           // RETURN 
+  Analysis::Iterator iter ( *aset );
+  //
+  RooAbsArg*   coef = 0 ;
+  while ( ( coef = (RooAbsArg*) iter.next() ) ) 
+  { alst.add ( *coef ); }
+  //
+  RooFormulaVar formula ( "" ,  expression.c_str() , alst ) ;
+  if ( !formula.ok()   ) { return result ; }                        // RETURN
+  //
+  const bool weighted = data->isWeighted() ;
+  //
+  const unsigned long nEntries = 
+    std::min ( entries , (unsigned long) data->numEntries() ) ;
+  // start the loop 
+  for ( unsigned long ientry = first ; nEntries > ientry ; ++ientry ) 
+  {
+    //
+    if ( 0 == data->get( ientry)  ) { return result ; }             // RETURN 
+    //
+    if ( !weighted ) { result += formula.getVal() ; }
+    else 
+    {
+      const double w = data->weight() ;
+      const double v = !w ? 0.0 : formula.getVal () ;
+      result.add ( v , w ) ;
+    } 
+  }
+  //
+  return result ;
+}
+// ============================================================================
+Analysis::StatVar::Statistic
+Analysis::StatVar::statVar 
+( RooAbsData*         data        , 
+  const std::string&  expression  , 
+  const TCut&         cuts        , 
+  const unsigned long first       ,
+  const unsigned long entries     ) 
+{
+  const std::string _cuts = cuts.GetTitle() ;
+  return statVar ( data , expression , _cuts , first , entries ) ;
+}
+// ============================================================================
+Analysis::StatVar::Statistic
+Analysis::StatVar::statVar 
+( RooAbsData*         data        , 
+  const std::string&  expression  , 
+  const std::string&  cuts        , 
+  const unsigned long first       ,
+  const unsigned long entries     ) 
+{
+  Statistic result ;
+  if ( 0 == data ) { return result ; }                          // RETURN 
+  //
+  RooArgList        alst ;
+  const RooArgSet*  aset = data->get() ;
+  if ( 0 == aset    ) { return result ; }                       // RETURN
+  Analysis::Iterator iter ( *aset );
+  //
+  RooAbsArg*   coef = 0 ;
+  while ( ( coef = (RooAbsArg*) iter.next() ) ) 
+  { alst.add ( *coef ); }
+  //
+  RooFormulaVar formula   ( "" ,  expression.c_str() , alst ) ;
+  if ( !formula.ok()   ) { return result ; }                     // RETURN
+  //
+  RooFormulaVar selection ( "" ,  cuts      .c_str() , alst ) ;
+  if ( !selection.ok() ) { return result ; }                     // RETURN 
+  //
+  const bool weighted = data->isWeighted() ;
+  //
+  const unsigned long nEntries = 
+    std::min ( entries , (unsigned long) data->numEntries() ) ;
+  // start the loop 
+  for ( unsigned long ientry = first ; nEntries > ientry ; ++ientry ) 
+  {
+    //
+    if ( 0 == data->get( ientry)  ) { return result ; }            // RETURN
+    //
+    const double w = 
+      weighted ? 
+      selection.getVal () * data->weight() :
+      selection.getVal ()                  ;
+    //
+    const double v = !w ? 0.0 : formula.getVal () ;
+    //
+    result.add ( v , w ) ;
+  }
+  //
+  return result ;
 }
 // ============================================================================
 // The END 
