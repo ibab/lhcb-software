@@ -4,6 +4,15 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-02-15 - Manuel Tobias Schiller
+ - PatFwdTool: protect debug() printout
+ - PatSeedFit: fix bug which caused a successful stub fit to produce a warning
+   and have its results ignored; having done some subversion araeology, it
+   appears to be a long-standing bug in the logic of the tool. the impact on
+   track parameters is negligible, though, because the stub fit is only needed
+   on a small fraction of tracks, and the fit subsequently recovers by using
+   the best guess parameters to start the Kalman Filter fit
+
 ! 2015-02-09 - Sascha Stahl
  - PatForwardTool: Added a protection in case the location of veto tracks does not exist.
 
@@ -125,7 +134,7 @@
    fit in the Y projection, inline zMagnet, upgrade inRegion check from lambda
    to functor
  - PatFwdTool, PatForwardTool: replace (allmost) all double with auto, to make
-   it easier to see how  a single precision version would work at a later time.
+   it easier to see how a single precision version would work at a later time.
 
 ! 2014-09-19 - Gerhard Raven
  - PatForwardTool: use boost::iterator_range, reduce triple nesting in loop 
@@ -302,7 +311,7 @@
 
 ! 2014-04-01 - Gerhard Raven
  - PatFwdFitLine, PatFwdFitParabola: declare final, remove virtual destructor
- - PatFwdTrackCandidate: use perfect forwarding in  c'tor
+ - PatFwdTrackCandidate: use perfect forwarding in c'tor
  - PatForward: clarify overlap logic
 
 ! 2014-03-27 - Gerhard Raven

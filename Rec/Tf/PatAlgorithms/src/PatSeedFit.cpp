@@ -186,7 +186,7 @@ PatSeedTrack PatSeedFit::getTrackITOT(std::vector<PatFwdHit>& hits, int staIT) c
     // save initial track parameters in case, internal fit fails later
     tr.getParameters( z0, ax, bx, cx, ay, by);
 
-    const bool fitOK = !m_patSeedTool->refitStub(tr, m_initialArrow);
+    const bool fitOK = m_patSeedTool->refitStub(tr, m_initialArrow);
     for( PatFwdHit& ihit: hits ) {
       // if the hit is not on the track, add it
       if (seedhits.end() == 

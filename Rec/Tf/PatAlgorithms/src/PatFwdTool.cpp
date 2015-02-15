@@ -417,10 +417,12 @@ StatusCode PatFwdTool::initialize ( ) {
                  " all be empty, or contain resp. 5, 6, 2 and 2 entries" << endmsg;
       return StatusCode::FAILURE;
   }
-  if (m_ambiguitiesFromPitchResiduals) {
-    debug() << "Resolving ambiguities from pitch residuals." << endmsg;
-  } else {
-    debug() << "Resolving ambiguities based on distance to track." << endmsg;
+  if (UNLIKELY(msgLevel(MSG::DEBUG))) {
+    if (m_ambiguitiesFromPitchResiduals) {
+      debug() << "Resolving ambiguities from pitch residuals." << endmsg;
+    } else {
+      debug() << "Resolving ambiguities based on distance to track." << endmsg;
+    }
   }
   return StatusCode::SUCCESS;
 }
