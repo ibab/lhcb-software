@@ -178,7 +178,7 @@ def _rds_vlist_ ( self ) :
     Get variables in form of RooArgList 
     """
     vlst     = ROOT.RooArgList()
-    vset     = dataset.get()
+    vset     = self.get()
     for v in vset : vlst.add ( v )
     #
     return vlst
@@ -206,6 +206,7 @@ ROOT.RooDataSet . varlist       = _rds_vlist_
 ROOT.RooDataSet . varlst        = _rds_vlist_
 ROOT.RooDataSet . vlist         = _rds_vlist_
 ROOT.RooDataSet . vlst          = _rds_vlist_
+ROOT.RooDataSet . varset        = lambda s : s.get()
         
 # =============================================================================
 ## ``easy'' print of RooFitResult
