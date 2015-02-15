@@ -4,6 +4,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-02-15 - Vanya Belyaev
+ - minor fix in ToParticles 
+
 ! 2015-02-06 - Roel Aaij
  - Add extra protection against loading non-existent PV selection in HltUnit.
 

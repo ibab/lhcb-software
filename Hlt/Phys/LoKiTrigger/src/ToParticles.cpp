@@ -15,6 +15,10 @@
 // ============================================================================
 #include "GaudiAlg/GaudiAlgorithm.h"
 // ============================================================================
+// PartProp
+// ============================================================================
+#include "Kernel/ParticleProperty.h"
+// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/Combiner.h"
@@ -58,9 +62,29 @@ LoKi::Hlt1::ToParticles::ToParticles
   , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
   , LoKi::Hlt1::HelperTool ( 1 )
   , m_sink ( location ) 
-  , m_pid  ( LoKi::Particles::pidFromName(pid) )
-  , m_cut  ( cut      )   
-{}
+  , m_pid       ( pid ) 
+  , m_pid_plus  (     ) 
+  , m_pid_minus (     ) 
+  , m_mass      ( 0   ) 
+  , m_cut       ( cut )    
+{
+  const LHCb::ParticleProperty* pp_1 = LoKi::Particles::ppFromName ( m_pid ) ;
+  Assert ( 0 != pp_1 , "Invalid PID is specified  '" + m_pid + "'" ) ;
+  const LHCb::ParticleProperty* pp_2 = pp_1->anti()  ;
+  Assert ( 0 != pp_2 , "Invalid anti-particle for '" + m_pid + "'" ) ;
+  //
+  if ( 0 < pp_1->charge() ) { m_pid_plus  = pp_1 ->particleID() ; }
+  else                      { m_pid_minus = pp_1 ->particleID() ; }
+  //
+  if ( 0 < pp_2->charge() ) { m_pid_plus  = pp_2 ->particleID() ; }
+  else                      { m_pid_minus = pp_2 ->particleID() ; }
+  //
+  Assert ( 0 != m_pid_plus .pid() , "Invalid PID+ for '" + m_pid + "'" ) ;
+  Assert ( 0 != m_pid_minus.pid() , "Invalid PID- for '" + m_pid + "'" ) ;
+  //
+  m_mass = pp_1 -> mass() ;
+  Assert ( 0 < m_mass  , "Invalid mass for '" + m_pid + "'" ) ;
+}
 // ============================================================================
 // virtual destructor
 // ============================================================================
@@ -112,15 +136,16 @@ LoKi::Hlt1::ToParticles::operator()
     LHCb::Particle* particle = new LHCb::Particle();
     if ( !particle ) { continue ; }
     particle->setProto(proto);
-
+    
     // set PID
-    track->charge() > 0 ? particle->setParticleID(LHCb::ParticleID(m_pid.abspid())) : 
-      particle->setParticleID(LHCb::ParticleID(-1*m_pid.abspid())) ;
+    0 < track->charge() ?
+      particle->setParticleID    ( m_pid_plus  ) : 
+      particle->setParticleID    ( m_pid_minus ) ;
     
     // set mass
-    particle->setMeasuredMass(LoKi::Particles::massFromPID(m_pid));
-    particle->setMeasuredMassErr(0);
-
+    particle->setMeasuredMass    ( m_mass );
+    particle->setMeasuredMassErr ( 0 );
+    
     // which state should be used here ?!?!
     const LHCb::State* state = 0;
     // try closest to beam
@@ -168,7 +193,8 @@ std::ostream& LoKi::Hlt1::ToParticles::fillStream ( std::ostream& s ) const
 {
   return
     s << "TC_TOPARTICLES("
-      <<        m_pid    << ","
-      << "'" << location() << "')" ;
+      <<        m_pid      << " ,"
+      << "'" << location() << "'," 
+      <<        m_cut      << ")" ;
 }
 // ============================================================================

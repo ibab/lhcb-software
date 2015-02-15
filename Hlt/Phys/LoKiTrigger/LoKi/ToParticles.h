@@ -89,16 +89,17 @@ namespace LoKi
       public:
         /// the output selection
         const std::string& location () const { return m_sink.output() ; }
-        //double ptcut() const { return m_ptcut; }
         // ======================================================================
       private:
         // ======================================================================
         /// 'sink': the functor which register the selection in Hlt Data Svc
-        LoKi::Hlt1::Sink          m_sink  ;
+        LoKi::Hlt1::Sink          m_sink      ;        
         /// members which store pid hypoth and ptcut
-        LHCb::ParticleID          m_pid   ;
+        std::string               m_pid       ;
+        LHCb::ParticleID          m_pid_plus  ;
+        LHCb::ParticleID          m_pid_minus ;
+        double                    m_mass      ;
         LoKi::FunctorFromFunctor<const LHCb::Particle*, bool> m_cut;
-        //double&                   m_ptcut ;
         // ======================================================================
     };
     // ==========================================================================
