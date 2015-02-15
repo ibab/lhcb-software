@@ -27,6 +27,7 @@
 #include "LoKi/ImpactParamTool.h"
 #include "LoKi/ImpParBase.h"
 #include "LoKi/LoKiPhys.h"
+#include "LoKi/NBodyCompare.h"
 #include "LoKi/ParticleContextCuts.h"
 #include "LoKi/ParticleCuts.h"
 #include "LoKi/Particles0.h"

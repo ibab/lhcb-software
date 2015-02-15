@@ -5,6 +5,10 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2015-02-15 - Vanya Belyaev
+ - add dedicated particle comparions (for N-body decays)
+   extend it a little bit to allow checking of tracks.
+
 ! 2015-02-06 - Vanya Belyaev
  - add missing particle 
 
