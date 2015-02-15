@@ -242,7 +242,7 @@ namespace Analysis
         const unsigned long last    = std::numeric_limits<unsigned long>::max() ) ;
     // ========================================================================
     /** calculate the covariance of two expressions 
-     *  @param tree  (INPUT)  the inpout tree 
+     *  @param tree  (INPUT)  the input  tree 
      *  @param exp1  (INPUT)  the first  expresiion
      *  @param exp2  (INPUT)  the second expresiion
      *  @param stat1 (UPDATE) the statistic for the first  expression
@@ -264,7 +264,7 @@ namespace Analysis
         const unsigned long  last    = std::numeric_limits<unsigned long>::max() ) ;
     // ========================================================================
     /** calculate the covariance of two expressions 
-     *  @param tree  (INPUT)  the inpout tree 
+     *  @param tree  (INPUT)  the input  tree 
      *  @param exp1  (INPUT)  the first  expresiion
      *  @param exp2  (INPUT)  the second expresiion
      *  @param cuts  (INPUT)  the selection 
