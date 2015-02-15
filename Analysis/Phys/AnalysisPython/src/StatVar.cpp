@@ -145,17 +145,17 @@ Analysis::StatVar::statVar
 ( TTree*             tree       , 
   const std::string& expression , 
   const unsigned long first     ,
-  const unsigned long entries   )
+  const unsigned long last      )
 {
   Statistic result ;
-  if ( 0 == tree          ) { return result ; }  // RETURN 
+  if ( 0 == tree || last <= first ) { return result ; }  // RETURN 
   Analysis::Formula formula ( "" , expression , tree ) ;
-  if ( !formula.GetNdim() ) { return result ; }  // RETURN 
+  if ( !formula.GetNdim() )         { return result ; }  // RETURN 
   //
   Notifier notify ( tree , &formula ) ;
   //
   const unsigned long nEntries = 
-    std::min ( entries , (unsigned long) tree->GetEntries() ) ;
+    std::min ( last , (unsigned long) tree->GetEntries() ) ;
   //
   for ( unsigned long entry = first ; entry < nEntries ; ++entry )   
   {
@@ -192,11 +192,11 @@ Analysis::StatVar::statVar
   const std::string&  expression ,
   const std::string&  cuts       , 
   const unsigned long first      ,
-  const unsigned long entries    )
+  const unsigned long last       )
 {
   //
   Gaudi::Math::WStatEntity result ;
-  if ( 0 == tree        ) { return result ; }            // RETURN 
+  if ( 0 == tree || last <= first ) { return result ; }  // RETURN 
   Analysis::Formula selection ( "" , cuts      , tree ) ;
   if ( !selection.ok () ) { return result ; }            // RETURN 
   Analysis::Formula formula   ( "" , expression , tree ) ;
@@ -205,7 +205,7 @@ Analysis::StatVar::statVar
   Notifier notify ( tree , &selection,  &formula ) ;
   //
   const unsigned long nEntries = 
-    std::min ( entries , (unsigned long) tree->GetEntries() ) ;
+    std::min ( last , (unsigned long) tree->GetEntries() ) ;
   //
   for ( unsigned long entry = first ; entry < nEntries ; ++entry )   
   {
@@ -246,12 +246,12 @@ Analysis::StatVar::statVar
   const std::string&  expression ,
   const TCut&         cuts       , 
   const unsigned long first      ,
-  const unsigned long entries    )
+  const unsigned long last       )
 {
   //
   const std::string _cuts = cuts.GetTitle() ;
   //
-  return statVar ( tree , expression , _cuts , first , entries) ;
+  return statVar ( tree , expression , _cuts , first , last ) ;
 }
 // ============================================================================
 /*  calculate the covariance of two expressions 
@@ -276,32 +276,32 @@ Analysis::StatVar::statCov
   Analysis::StatVar::Statistic& stat2 ,  
   Gaudi::SymMatrix2x2& cov2    , 
   const unsigned long  first   ,
-  const unsigned long  entries )
+  const unsigned long  last    )
 {
   //
   stat1.reset () ;
   stat2.reset () ;
   Gaudi::Math::setToScalar ( cov2 , 0.0 ) ;
   //
-  if ( 0 == tree        ) { return 0 ; } // RETURN 
+  if ( 0 == tree || last <= first ) { return 0 ; }         // RETURN 
   Analysis::Formula formula1 ( "" , exp1 , tree ) ;
-  if ( !formula1 .ok () ) { return 0 ; } // RETURN 
+  if ( !formula1 .ok () ) { return 0 ; }                   // RETURN 
   Analysis::Formula formula2 ( "" , exp2 , tree ) ;
-  if ( !formula2 .ok () ) { return 0 ; } // RETURN 
+  if ( !formula2 .ok () ) { return 0 ; }                   // RETURN 
   //
   Notifier notify ( tree , &formula1 , &formula2 ) ;
   //
   const unsigned long nEntries = 
-    std::min ( entries , (unsigned long) tree->GetEntries() ) ;
+    std::min ( last , (unsigned long) tree->GetEntries() ) ;
   //
   for ( unsigned long entry = first ; entry < nEntries ; ++entry )   
   {
     //
     long ievent = tree->GetEntryNumber ( entry ) ;
-    if ( 0 > ievent ) { return 0 ; } // RETURN
+    if ( 0 > ievent ) { break ; }                        // BREAK 
     //
     ievent      = tree->LoadTree ( ievent ) ;
-    if ( 0 > ievent ) { return 0 ; } // RETURN 
+    if ( 0 > ievent ) { break ; }                        // BREAK
     //
     const double v1 = formula1.evaluate() ;
     const double v2 = formula2.evaluate() ;
@@ -315,7 +315,7 @@ Analysis::StatVar::statCov
     //
   }
   //
-  if ( 0 == stat1.nEntries() ) { return 0 ; }
+  if ( 0 == stat1.nEntries() ) { return 0 ; }          // RETURN
   //
   cov2 /= stat1.nEntries () ;
   //
@@ -353,34 +353,34 @@ Analysis::StatVar::statCov
   Analysis::StatVar::Statistic& stat2 ,  
   Gaudi::SymMatrix2x2& cov2    , 
   const unsigned long  first   ,
-  const unsigned long  entries )
+  const unsigned long  last    )
 {
   //
   stat1.reset () ;
   stat2.reset () ;
   Gaudi::Math::setToScalar ( cov2 , 0.0 ) ;
   //
-  if ( 0 == tree        ) { return 0 ; } // RETURN 
+  if ( 0 == tree || last <= first ) { return 0 ; }              // RETURN 
   Analysis::Formula formula1 ( "" , exp1 , tree ) ;
-  if ( !formula1 .ok () ) { return 0 ; } // RETURN 
+  if ( !formula1 .ok () ) { return 0 ; }                        // RETURN 
   Analysis::Formula formula2 ( "" , exp2 , tree ) ;
-  if ( !formula2 .ok () ) { return 0 ; } // RETURN 
+  if ( !formula2 .ok () ) { return 0 ; }                        // RETURN 
   Analysis::Formula selection ( "" , cuts      , tree ) ;
-  if ( !selection.ok () ) { return 0 ; } // RETURN 
+  if ( !selection.ok () ) { return 0 ; }                        // RETURN 
   //
   Notifier notify ( tree , &formula1 , &formula2 ) ;
   //
   const unsigned long nEntries = 
-    std::min ( entries , (unsigned long) tree->GetEntries() ) ;
+    std::min ( last , (unsigned long) tree->GetEntries() ) ;
   //
   for ( unsigned long entry = first ; entry < nEntries ; ++entry )   
   {
     //
     long ievent = tree->GetEntryNumber ( entry ) ;
-    if ( 0 > ievent ) { return 0 ; } // RETURN
+    if ( 0 > ievent ) { break ; }                              // RETURN
     //
     ievent      = tree->LoadTree ( ievent ) ;
-    if ( 0 > ievent ) { return 0 ; } // RETURN 
+    if ( 0 > ievent ) { break ; }                              // RETURN 
     //
     const double w = selection.evaluate() ;
     //
@@ -434,29 +434,29 @@ Analysis::StatVar::statCov
   Analysis::StatVar::Statistic& stat2 ,  
   Gaudi::SymMatrix2x2& cov2    , 
   const unsigned long  first   ,
-  const unsigned long  entries )
+  const unsigned long  last    )
 {
   const std::string _cuts = cuts.GetTitle() ;
   //
   return statCov ( tree  , 
                    exp1  , exp2    , _cuts , 
                    stat1 , stat2   , cov2  , 
-                   first , entries ) ; 
+                   first , last    ) ; 
 }
 // ============================================================================
 Analysis::StatVar::Statistic
 Analysis::StatVar::statVar 
-( RooAbsData*         data       , 
+( const RooAbsData*   data       , 
   const std::string&  expression , 
   const unsigned long first      ,
-  const unsigned long entries    )
+  const unsigned long last       )
 {
   Statistic result ;
-  if ( 0 == data ) { return result ; }                              // RETURN
+  if ( 0 == data || last <= first ) { return result ; }             // RETURN 
   //
   RooArgList        alst ;
   const RooArgSet*  aset = data->get() ;
-  if ( 0 == aset    ) { return result ; }                           // RETURN 
+  if ( 0 == aset    )               { return result ; }            // RETURN 
   Analysis::Iterator iter ( *aset );
   //
   RooAbsArg*   coef = 0 ;
@@ -469,12 +469,12 @@ Analysis::StatVar::statVar
   const bool weighted = data->isWeighted() ;
   //
   const unsigned long nEntries = 
-    std::min ( entries , (unsigned long) data->numEntries() ) ;
+    std::min ( last , (unsigned long) data->numEntries() ) ;
   // start the loop 
-  for ( unsigned long ientry = first ; nEntries > ientry ; ++ientry ) 
+  for ( unsigned long entry = first ; nEntries > entry ; ++entry ) 
   {
     //
-    if ( 0 == data->get( ientry)  ) { return result ; }             // RETURN 
+    if ( 0 == data->get( entry)  ) { return result ; }             // RETURN 
     //
     if ( !weighted ) { result += formula.getVal() ; }
     else 
@@ -490,26 +490,26 @@ Analysis::StatVar::statVar
 // ============================================================================
 Analysis::StatVar::Statistic
 Analysis::StatVar::statVar 
-( RooAbsData*         data        , 
+( const RooAbsData*   data        , 
   const std::string&  expression  , 
   const TCut&         cuts        , 
   const unsigned long first       ,
-  const unsigned long entries     ) 
+  const unsigned long last        ) 
 {
   const std::string _cuts = cuts.GetTitle() ;
-  return statVar ( data , expression , _cuts , first , entries ) ;
+  return statVar ( data , expression , _cuts , first , last ) ;
 }
 // ============================================================================
 Analysis::StatVar::Statistic
 Analysis::StatVar::statVar 
-( RooAbsData*         data        , 
+( const RooAbsData*   data        , 
   const std::string&  expression  , 
   const std::string&  cuts        , 
   const unsigned long first       ,
-  const unsigned long entries     ) 
+  const unsigned long last        ) 
 {
   Statistic result ;
-  if ( 0 == data ) { return result ; }                          // RETURN 
+  if ( 0 == data || last <= first ) { return result ; }         // RETURN 
   //
   RooArgList        alst ;
   const RooArgSet*  aset = data->get() ;
@@ -529,12 +529,12 @@ Analysis::StatVar::statVar
   const bool weighted = data->isWeighted() ;
   //
   const unsigned long nEntries = 
-    std::min ( entries , (unsigned long) data->numEntries() ) ;
+    std::min ( last , (unsigned long) data->numEntries() ) ;
   // start the loop 
-  for ( unsigned long ientry = first ; nEntries > ientry ; ++ientry ) 
+  for ( unsigned long entry = first ; nEntries > entry ; ++entry ) 
   {
     //
-    if ( 0 == data->get( ientry)  ) { return result ; }            // RETURN
+    if ( 0 == data->get( entry)  ) { return result ; }            // RETURN
     //
     const double w = 
       weighted ? 
@@ -547,6 +547,179 @@ Analysis::StatVar::statVar
   }
   //
   return result ;
+}
+// ============================================================================
+/*  calculate the covariance of two expressions 
+ *  @param tree  (INPUT)  the input tree 
+ *  @param exp1  (INPUT)  the first  expresiion
+ *  @param exp2  (INPUT)  the second expresiion
+ *  @param stat1 (UPDATE) the statistic for the first  expression
+ *  @param stat2 (UPDATE) the statistic for the second expression
+ *  @param cov2  (UPDATE) the covariance matrix 
+ *  @return number of processed events 
+ *  
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2014-03-27
+ */
+// ============================================================================
+unsigned long
+Analysis::StatVar::statCov
+( const RooAbsData*    data    , 
+  const std::string&   exp1    , 
+  const std::string&   exp2    , 
+  Analysis::StatVar::Statistic& stat1 ,  
+  Analysis::StatVar::Statistic& stat2 ,  
+  Gaudi::SymMatrix2x2& cov2    , 
+  const unsigned long  first   ,
+  const unsigned long  last    )
+{
+  //
+  stat1.reset () ;
+  stat2.reset () ;
+  Gaudi::Math::setToScalar ( cov2 , 0.0 ) ;
+  //
+  if ( 0 == data || last <= first ) { return 0 ; }               // RETURN 
+  //
+  RooArgList        alst ;
+  const RooArgSet*  aset = data->get() ;
+  if ( 0 == aset       ) { return  0 ; }                          // RETURN
+  Analysis::Iterator iter ( *aset );
+  //
+  RooAbsArg*   coef = 0 ;
+  while ( ( coef = (RooAbsArg*) iter.next() ) ) 
+  { alst.add ( *coef ); }
+  //
+  RooFormulaVar formula1 ( "" ,  exp1.c_str() , alst ) ;
+  if ( !formula1.ok()   ) { return 0 ; }                          // RETURN
+  RooFormulaVar formula2 ( "" ,  exp2.c_str() , alst ) ;
+  if ( !formula2.ok()   ) { return 0 ; }                          // RETURN
+  //
+  const bool weighted = data->isWeighted() ;
+  //
+  const unsigned long nEntries = 
+    std::min ( last , (unsigned long) data->numEntries() ) ;
+  //
+  for ( unsigned long entry = first ; entry < nEntries ; ++entry )   
+  {
+    //
+    if ( 0 == data->get( entry)  ) { break ; }                    // BREAK
+    //    
+    const double w  = weighted ? data->weight() : 1.0 ;
+    //
+    const double v1 = !w ? formula1.getVal() : 0.0 ;
+    const double v2 = !w ? formula2.getVal() : 0.0 ;
+    //
+    stat1.add ( v1 , w ) ;
+    stat2.add ( v2 , w ) ;
+    //
+    cov2 ( 0 , 0 ) += w * v1 * v1 ;
+    cov2 ( 0 , 1 ) += w * v1 * v2 ;
+    cov2 ( 1 , 1 ) += w * v2 * v2 ;
+    //
+  }
+  //
+  if ( 0 == stat1.nEntries() || 0 == stat1.nEff () ) { return 0 ; }
+  //
+  cov2 /= stat1.weights().sum()  ;
+  //
+  const double v1_mean = stat1.mean() ;
+  const double v2_mean = stat2.mean() ;
+  //
+  cov2 ( 0 , 0 ) -= v1_mean * v1_mean ;
+  cov2 ( 0 , 1 ) -= v1_mean * v2_mean ;
+  cov2 ( 1 , 1 ) -= v2_mean * v2_mean ;  
+  //
+  return stat1.nEntries() ;
+}
+// ============================================================================
+/*  calculate the covariance of two expressions 
+ *  @param tree  (INPUT)  the input tree 
+ *  @param exp1  (INPUT)  the first  expresiion
+ *  @param exp2  (INPUT)  the second expresiion
+ *  @param cuts  (INPUT)  selection 
+ *  @param stat1 (UPDATE) the statistic for the first  expression
+ *  @param stat2 (UPDATE) the statistic for the second expression
+ *  @param cov2  (UPDATE) the covariance matrix 
+ *  @return number of processed events 
+ *  
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2014-03-27
+ */
+// ============================================================================
+unsigned long
+Analysis::StatVar::statCov
+( const RooAbsData*    data    , 
+  const std::string&   exp1    , 
+  const std::string&   exp2    , 
+  const std::string&   cuts    , 
+  Analysis::StatVar::Statistic& stat1 ,  
+  Analysis::StatVar::Statistic& stat2 ,  
+  Gaudi::SymMatrix2x2& cov2    , 
+  const unsigned long  first   ,
+  const unsigned long  last    )
+{
+  //
+  stat1.reset () ;
+  stat2.reset () ;
+  Gaudi::Math::setToScalar ( cov2 , 0.0 ) ;
+  //
+  if ( 0 == data || last <= first ) { return 0 ; }               // RETURN 
+  //
+  RooArgList        alst ;
+  const RooArgSet*  aset = data->get() ;
+  if ( 0 == aset       ) { return  0 ; }                          // RETURN
+  Analysis::Iterator iter ( *aset );
+  //
+  RooAbsArg*   coef = 0 ;
+  while ( ( coef = (RooAbsArg*) iter.next() ) ) 
+  { alst.add ( *coef ); }
+  //
+  RooFormulaVar formula1  ( "" ,  exp1.c_str() , alst ) ;
+  if ( !formula1.ok()   ) { return 0 ; }                          // RETURN
+  RooFormulaVar formula2  ( "" ,  exp2.c_str() , alst ) ;
+  if ( !formula2.ok()   ) { return 0 ; }                          // RETURN
+  RooFormulaVar selection ( "" ,  cuts.c_str() , alst ) ;
+  if ( !selection.ok()  ) { return 0 ; }                          // RETURN
+  //
+  const bool weighted = data->isWeighted() ;
+  //
+  const unsigned long nEntries = 
+    std::min ( last , (unsigned long) data->numEntries() ) ;
+  //
+  for ( unsigned long entry = first ; entry < nEntries ; ++entry )   
+  {
+    //
+    if ( 0 == data->get( entry)  ) { break ; }                    // BREAK
+    //    
+    const double w = 
+      weighted ? 
+      selection.getVal () * data->weight() :
+      selection.getVal ()                  ;
+    //
+    const double v1 = !w ? formula1.getVal() : 0.0 ;
+    const double v2 = !w ? formula2.getVal() : 0.0 ;
+    //
+    stat1.add ( v1 , w ) ;
+    stat2.add ( v2 , w ) ;
+    //
+    cov2 ( 0 , 0 ) += w * v1 * v1 ;
+    cov2 ( 0 , 1 ) += w * v1 * v2 ;
+    cov2 ( 1 , 1 ) += w * v2 * v2 ;
+    //
+  }
+  //
+  if ( 0 == stat1.nEntries() || 0 == stat1.nEff () ) { return 0 ; }
+  //
+  cov2 /= stat1.weights().sum()  ;
+  //
+  const double v1_mean = stat1.mean() ;
+  const double v2_mean = stat2.mean() ;
+  //
+  cov2 ( 0 , 0 ) -= v1_mean * v1_mean ;
+  cov2 ( 0 , 1 ) -= v1_mean * v2_mean ;
+  cov2 ( 1 , 1 ) -= v2_mean * v2_mean ;  
+  //
+  return stat1.nEntries() ;
 }
 // ============================================================================
 // The END 
