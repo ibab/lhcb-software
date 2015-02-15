@@ -4,7 +4,7 @@
 // ============================================================================
 // LoKiPhys 
 // ============================================================================
-#include "LoKi/CompareParticles.h"
+#include "LoKi/NBodyCompare.h"
 // ============================================================================
 // local 
 // ============================================================================
@@ -712,53 +712,6 @@ namespace DaVinci
 namespace 
 {
   // ========================================================================== 
-  // very crude uniqueness criteria, based on the same protos  
-  bool _unique_ ( const LHCb::Particle* p1 , 
-                  const LHCb::Particle* p2 ) ;
-  // very crude uniqueness criteria, based on the same protos  
-  template <class PARTICLE> 
-  bool _unique_ ( PARTICLE begin           , 
-                  PARTICLE end             , 
-                  const LHCb::Particle* p2 ) 
-  {
-    for ( ; begin != end ; ++begin ) 
-    { if ( !_unique_ ( *begin , p2 ) ) { return false ; } }
-    return true ;
-  }
-  // very crude uniqueness criteria, based on the same protos  
-  bool _unique_ ( const LHCb::Particle* p1 , 
-                  const LHCb::Particle* p2 ) 
-  {
-    //
-    if ( 0 == p1 || 0 == p2 || p1 == p2 ) { return false ; }
-    //
-    const bool bp1 = p1 -> isBasicParticle() ;
-    const bool bp2 = p2 -> isBasicParticle() ;
-    //
-    if ( bp1 && bp2 ) 
-    { 
-      //
-      const LHCb::ProtoParticle* pp1 = p1->proto() ;
-      const LHCb::ProtoParticle* pp2 = p2->proto() ;
-      //
-      if ( 0 != pp1 && 0 != pp2 && pp1 == pp2 ) { return false ; }
-      //
-      return true ; // a bit strange logic, but should be OK
-    }
-    //
-    const SmartRefVector<LHCb::Particle>& daughters1 = p1 -> daughters() ;
-    const SmartRefVector<LHCb::Particle>& daughters2 = p2 -> daughters() ;
-    //
-    // one basic and one composite particle 
-    if      ( bp1 ) { return _unique_ ( daughters2.begin() , daughters2.end() , p1 ) ; }
-    else if ( bp2 ) { return _unique_ ( daughters1.begin() , daughters1.end() , p2 ) ; }
-    //
-    return 
-      daughters1.size() < daughters2.size() ?
-      _unique_ ( daughters2.begin () , daughters2.end() , p1 ) :
-      _unique_ ( daughters1.begin () , daughters1.end() , p2 ) ;
-  }
-  // ==========================================================================
   /// check the N-body decay structure 
   bool _check_decays_ ( const std::vector<Decays::Decay>& decays , 
                         const unsigned short N ) 
@@ -773,135 +726,11 @@ namespace
   // ==========================================================================
   /** @var compare 
    *  comparison criteria to remove of double counts for the same pid
-   *  @see LoKi::Particles::PidCompare
+   *  @see LoKi::Particles::NBodyCompare
    */
-  const LoKi::Particles::PidCompare compare = LoKi::Particles::PidCompare () ;
+  const LoKi::Particles::NBodyCompare compare = LoKi::Particles::NBodyCompare () ;
   // ==========================================================================
-  bool _ok_ ( const LHCb::Particle* p1 , 
-              const LHCb::Particle* p2 ) 
-  {
-    return 
-      0 != p1 && 0 != p2 && p1 != p2 
-      &&  compare ( p1 , p2 ) 
-      && _unique_ ( p1 , p2 ) ;
-  }
-  // ==========================================================================
-  bool _ok_ ( const LHCb::Particle* p1 , 
-              const LHCb::Particle* p2 ,
-              const LHCb::Particle* p3 )
-  {
-    return 
-      0  != p3 && p1 != p3 && p2 != p3
-      &&  compare ( p1 , p3 ) &&  compare ( p2 , p3 ) 
-      && _unique_ ( p1 , p3 ) && _unique_ ( p2 , p3 ) ;
-  }
-  // ==========================================================================  
-  bool _ok_ ( const LHCb::Particle* p1 , 
-              const LHCb::Particle* p2 ,
-              const LHCb::Particle* p3 ,
-              const LHCb::Particle* p4 )
-  {
-    return 
-      0  != p4 && p1 != p4 && p2 != p4 && p3 != p4 
-      &&  compare ( p1 , p4 ) &&  compare ( p2 , p4 ) &&  compare ( p3 , p4 ) 
-      && _unique_ ( p1 , p4 ) && _unique_ ( p2 , p4 ) && _unique_ ( p3 , p4 ) ;
-  }
-  // ==========================================================================  
-  bool _ok_ ( const LHCb::Particle* p1 , 
-              const LHCb::Particle* p2 ,
-              const LHCb::Particle* p3 ,
-              const LHCb::Particle* p4 ,
-              const LHCb::Particle* p5 )
-  {
-    return 
-      0  != p5 && p1 != p5 && p2 != p5 && p3 != p5 && p4 != p5  
-      &&  compare ( p1 , p5 ) 
-      &&  compare ( p2 , p5 ) 
-      &&  compare ( p3 , p5 ) 
-      &&  compare ( p4 , p5 ) 
-      && _unique_ ( p1 , p5 ) 
-      && _unique_ ( p2 , p5 ) 
-      && _unique_ ( p3 , p5 ) 
-      && _unique_ ( p4 , p5 ) ;
-  }
-  // ==========================================================================  
-  bool _ok_ ( const LHCb::Particle* p1 , 
-              const LHCb::Particle* p2 ,
-              const LHCb::Particle* p3 ,
-              const LHCb::Particle* p4 ,
-              const LHCb::Particle* p5 ,
-              const LHCb::Particle* p6 )
-  {
-    return 
-      0  != p6 && p1 != p6 && p2 != p6 && p3 != p6 && p4 != p6 && p5 != p6   
-      &&  compare ( p1 , p6 ) 
-      &&  compare ( p2 , p6 ) 
-      &&  compare ( p3 , p6 ) 
-      &&  compare ( p4 , p6 ) 
-      &&  compare ( p5 , p6 )
-      && _unique_ ( p1 , p6 ) 
-      && _unique_ ( p2 , p6 ) 
-      && _unique_ ( p3 , p6 ) 
-      && _unique_ ( p4 , p6 ) 
-      && _unique_ ( p5 , p6 ) ;
-  }
-  // ==========================================================================
-  bool _ok_ ( const LHCb::Particle* p1 , 
-              const LHCb::Particle* p2 ,
-              const LHCb::Particle* p3 ,
-              const LHCb::Particle* p4 ,
-              const LHCb::Particle* p5 ,
-              const LHCb::Particle* p6 ,
-              const LHCb::Particle* p7 )
-  {
-    return 
-      0  != p7 && 
-      p1 != p7 && p2 != p7 && p3 != p7 && 
-      p4 != p7 && p5 != p7 && p6 != p7   
-      &&  compare ( p1 , p7 ) 
-      &&  compare ( p2 , p7 ) 
-      &&  compare ( p3 , p7 ) 
-      &&  compare ( p4 , p7 ) 
-      &&  compare ( p5 , p7 )
-      &&  compare ( p6 , p7 )
-      && _unique_ ( p1 , p7 ) 
-      && _unique_ ( p2 , p7 ) 
-      && _unique_ ( p3 , p7 ) 
-      && _unique_ ( p4 , p7 )
-      && _unique_ ( p5 , p7 ) 
-      && _unique_ ( p6 , p7 ) ;
-  }
-  // ==========================================================================  
-  bool _ok_ ( const LHCb::Particle* p1 , 
-              const LHCb::Particle* p2 ,
-              const LHCb::Particle* p3 ,
-              const LHCb::Particle* p4 ,
-              const LHCb::Particle* p5 ,
-              const LHCb::Particle* p6 ,
-              const LHCb::Particle* p7 ,
-              const LHCb::Particle* p8 )
-  {
-    return 
-      0  != p8 && 
-      p1 != p8 && p2 != p8 && p3 != p8 && 
-      p4 != p8 && p5 != p8 && p6 != p8 && p7 != p8    
-      &&  compare ( p1 , p8 ) 
-      &&  compare ( p2 , p8 ) 
-      &&  compare ( p3 , p8 ) 
-      &&  compare ( p4 , p8 ) 
-      &&  compare ( p5 , p8 )
-      &&  compare ( p6 , p8 )
-      &&  compare ( p7 , p8 )
-      && _unique_ ( p1 , p8 ) 
-      && _unique_ ( p2 , p8 ) 
-      && _unique_ ( p3 , p8 ) 
-      && _unique_ ( p4 , p8 )
-      && _unique_ ( p5 , p8 ) 
-      && _unique_ ( p6 , p8 ) 
-      && _unique_ ( p7 , p8 ) ;
-  }
-  // ==========================================================================  
-} // end of anonymous namesapce 
+} // end of anonymous namespace
 // ============================================================================
 
 // ============================================================================
@@ -1357,7 +1186,7 @@ StatusCode DaVinci::N3BodyDecays::execute()
         const LHCb::Particle* c2 = *it2 ;
         //
         // good and unique ? 
-        if ( ! _ok_ ( c1 , c2 ) ) { continue ; }     // CONTINUE, next c2 
+        if ( !compare ( c1 , c2 ) ) { continue ; }     // CONTINUE, next c2 
         //
         comb12      [1] = c2 ;
         combination [1] = c2 ;
@@ -1379,7 +1208,7 @@ StatusCode DaVinci::N3BodyDecays::execute()
           const LHCb::Particle* c3 = *it3 ;
           //        
           // good and unique ? 
-          if ( ! _ok_ ( c1 , c2 , c3 ) ) { continue ; }   // CONTINUE, next c3
+          if ( !compare ( c1 , c2 , c3 ) ) { continue ; }   // CONTINUE, next c3
           //
           combination [2] = c3 ;
           
@@ -1517,7 +1346,7 @@ StatusCode DaVinci::N4BodyDecays::execute()
         const LHCb::Particle* c2 = *it2 ;
         //
         // good & unique ?
-        if ( !_ok_ ( c1 , c2 ) ) { continue ; } // CONTINUE, next c2 
+        if ( !compare ( c1 , c2 ) ) { continue ; } // CONTINUE, next c2 
         //
         comb12      [1] = c2 ;
         comb123     [1] = c2 ;
@@ -1539,7 +1368,7 @@ StatusCode DaVinci::N4BodyDecays::execute()
           const LHCb::Particle* c3 = *it3 ;
           //        
           // good & unique ? 
-          if ( !_ok_ ( c1 ,c2 , c3 ) ) { continue ; } // CONTINUE, next c3 
+          if ( ! compare ( c1 ,c2 , c3 ) ) { continue ; } // CONTINUE, next c3 
           //
           comb123     [2] = c3 ;
           combination [2] = c3 ;
@@ -1560,7 +1389,7 @@ StatusCode DaVinci::N4BodyDecays::execute()
             const LHCb::Particle* c4 = *it4 ;
             //        
             // good & unique ? 
-            if ( !_ok_ ( c1 ,c2 , c3 , c4 ) ) { continue ; } // CONTINUE, next c4 
+            if ( !compare ( c1 ,c2 , c3 , c4 ) ) { continue ; } // CONTINUE, next c4 
             //
             combination [3] = c4 ;
             
@@ -1705,7 +1534,7 @@ StatusCode DaVinci::N5BodyDecays::execute()
         const LHCb::Particle* c2 = *it2 ;
         //
         // good & unique ?
-        if ( !_ok_ ( c1 , c2 ) ) { continue ; } // CONTINUE, next c2 
+        if ( !compare ( c1 , c2 ) ) { continue ; } // CONTINUE, next c2 
         //
         comb12      [1] = c2 ;
         comb123     [1] = c2 ;
@@ -1727,7 +1556,7 @@ StatusCode DaVinci::N5BodyDecays::execute()
           const LHCb::Particle* c3 = *it3 ;
           //        
           // good & unique ? 
-          if ( !_ok_ ( c1 ,c2 , c3 ) ) { continue ; } // CONTINUE, next c3 
+          if ( !compare ( c1 ,c2 , c3 ) ) { continue ; } // CONTINUE, next c3 
           //
           comb123     [2] = c3 ;
           comb1234    [2] = c3 ;
@@ -1749,7 +1578,7 @@ StatusCode DaVinci::N5BodyDecays::execute()
             const LHCb::Particle* c4 = *it4 ;
             //        
             // good & unique ? 
-            if ( !_ok_ ( c1 ,c2 , c3 , c4 ) ) { continue ; } // CONTINUE, next c4 
+            if ( !compare ( c1 ,c2 , c3 , c4 ) ) { continue ; } // CONTINUE, next c4 
             //
             comb1234    [3] = c4 ;
             combination [3] = c4 ;
@@ -1770,7 +1599,7 @@ StatusCode DaVinci::N5BodyDecays::execute()
               const LHCb::Particle* c5 = *it5 ;
               //        
               // good & unique ? 
-              if ( !_ok_ ( c1 ,c2 , c3 , c4 , c5 ) ) { continue ; } // CONTINUE, next c5
+              if ( !compare ( c1 ,c2 , c3 , c4 , c5 ) ) { continue ; } // CONTINUE, next c5
               //
               combination [4] = c5 ;
               
@@ -1921,7 +1750,7 @@ StatusCode DaVinci::N6BodyDecays::execute()
         const LHCb::Particle* c2 = *it2 ;
         //
         // good & unique ?
-        if ( !_ok_ ( c1 , c2 ) ) { continue ; } // CONTINUE, next c2 
+        if ( !compare ( c1 , c2 ) ) { continue ; } // CONTINUE, next c2 
         //
         comb12      [1] = c2 ;
         comb123     [1] = c2 ;
@@ -1945,7 +1774,7 @@ StatusCode DaVinci::N6BodyDecays::execute()
           const LHCb::Particle* c3 = *it3 ;
           //        
           // good & unique ? 
-          if ( !_ok_ ( c1 ,c2 , c3 ) ) { continue ; } // CONTINUE, next c3 
+          if ( !compare ( c1 ,c2 , c3 ) ) { continue ; } // CONTINUE, next c3 
           //
           comb123     [2] = c3 ;
           comb1234    [2] = c3 ;
@@ -1968,7 +1797,7 @@ StatusCode DaVinci::N6BodyDecays::execute()
             const LHCb::Particle* c4 = *it4 ;
             //        
             // good & unique ? 
-            if ( !_ok_ ( c1 ,c2 , c3 , c4 ) ) { continue ; } // CONTINUE, next c4 
+            if ( !compare ( c1 ,c2 , c3 , c4 ) ) { continue ; } // CONTINUE, next c4 
             //
             comb1234    [3] = c4 ;
             comb12345   [3] = c4 ;
@@ -1990,7 +1819,7 @@ StatusCode DaVinci::N6BodyDecays::execute()
               const LHCb::Particle* c5 = *it5 ;
               //        
               // good & unique ? 
-              if ( !_ok_ ( c1 ,c2 , c3 , c4 , c5 ) ) { continue ; } // CONTINUE, next c5
+              if ( !compare ( c1 ,c2 , c3 , c4 , c5 ) ) { continue ; } // CONTINUE, next c5
               //
               comb12345   [4] = c5 ;
               combination [4] = c5 ;
@@ -2011,7 +1840,7 @@ StatusCode DaVinci::N6BodyDecays::execute()
                 const LHCb::Particle* c6 = *it6 ;
                 //        
                 // good & unique ? 
-                if ( !_ok_ ( c1 ,c2 , c3 , c4 , c5 , c6 ) )
+                if ( !compare( c1 ,c2 , c3 , c4 , c5 , c6 ) )
                 { continue ; } // CONTINUE, next c6
                 //
                 combination [5] = c6 ;               
@@ -2170,7 +1999,7 @@ StatusCode DaVinci::N7BodyDecays::execute()
         const LHCb::Particle* c2 = *it2 ;
         //
         // good & unique ?
-        if ( !_ok_ ( c1 , c2 ) ) { continue ; } // CONTINUE, next c2 
+        if ( !compare ( c1 , c2 ) ) { continue ; } // CONTINUE, next c2 
         //
         comb12      [1] = c2 ;
         comb123     [1] = c2 ;
@@ -2195,7 +2024,7 @@ StatusCode DaVinci::N7BodyDecays::execute()
           const LHCb::Particle* c3 = *it3 ;
           //        
           // good & unique ? 
-          if ( !_ok_ ( c1 ,c2 , c3 ) ) { continue ; } // CONTINUE, next c3 
+          if ( !compare ( c1 ,c2 , c3 ) ) { continue ; } // CONTINUE, next c3 
           //
           comb123     [2] = c3 ;
           comb1234    [2] = c3 ;
@@ -2219,7 +2048,7 @@ StatusCode DaVinci::N7BodyDecays::execute()
             const LHCb::Particle* c4 = *it4 ;
             //        
             // good & unique ? 
-            if ( !_ok_ ( c1 ,c2 , c3 , c4 ) ) { continue ; } // CONTINUE, next c4 
+            if ( !compare ( c1 ,c2 , c3 , c4 ) ) { continue ; } // CONTINUE, next c4 
             //
             comb1234    [3] = c4 ;
             comb12345   [3] = c4 ;
@@ -2242,7 +2071,7 @@ StatusCode DaVinci::N7BodyDecays::execute()
               const LHCb::Particle* c5 = *it5 ;
               //        
               // good & unique ? 
-              if ( !_ok_ ( c1 ,c2 , c3 , c4 , c5 ) ) { continue ; } // CONTINUE, next c5
+              if ( !compare ( c1 ,c2 , c3 , c4 , c5 ) ) { continue ; } // CONTINUE, next c5
               //
               comb12345   [4] = c5 ;
               comb123456  [4] = c5 ;
@@ -2264,7 +2093,7 @@ StatusCode DaVinci::N7BodyDecays::execute()
                 const LHCb::Particle* c6 = *it6 ;
                 //        
                 // good & unique ? 
-                if ( !_ok_ ( c1 ,c2 , c3 , c4 , c5 , c6 ) )
+                if ( !compare ( c1 ,c2 , c3 , c4 , c5 , c6 ) )
                 { continue ; } // CONTINUE, next c6
                 //
                 comb123456  [5] = c6 ;
@@ -2287,7 +2116,7 @@ StatusCode DaVinci::N7BodyDecays::execute()
                   const LHCb::Particle* c7 = *it7 ;
                   //        
                   // good & unique ? 
-                  if ( !_ok_ ( c1 ,c2 , c3 , c4 , c5 , c6 , c7 ) )
+                  if ( !compare ( c1 ,c2 , c3 , c4 , c5 , c6 , c7 ) )
                   { continue ; } // CONTINUE, next c6
                   //
                   combination [6] = c7 ;            
@@ -2453,7 +2282,7 @@ StatusCode DaVinci::N8BodyDecays::execute()
         const LHCb::Particle* c2 = *it2 ;
         //
         // good & unique ?
-        if ( !_ok_ ( c1 , c2 ) ) { continue ; } // CONTINUE, next c2 
+        if ( !compare ( c1 , c2 ) ) { continue ; } // CONTINUE, next c2 
         //
         comb12      [1] = c2 ;
         comb123     [1] = c2 ;
@@ -2479,7 +2308,7 @@ StatusCode DaVinci::N8BodyDecays::execute()
           const LHCb::Particle* c3 = *it3 ;
           //        
           // good & unique ? 
-          if ( !_ok_ ( c1 ,c2 , c3 ) ) { continue ; } // CONTINUE, next c3 
+          if ( !compare ( c1 ,c2 , c3 ) ) { continue ; } // CONTINUE, next c3 
           //
           comb123     [2] = c3 ;
           comb1234    [2] = c3 ;
@@ -2504,7 +2333,7 @@ StatusCode DaVinci::N8BodyDecays::execute()
             const LHCb::Particle* c4 = *it4 ;
             //        
             // good & unique ? 
-            if ( !_ok_ ( c1 ,c2 , c3 , c4 ) ) { continue ; } // CONTINUE, next c4 
+            if ( !compare ( c1 ,c2 , c3 , c4 ) ) { continue ; } // CONTINUE, next c4 
             //
             comb1234    [3] = c4 ;
             comb12345   [3] = c4 ;
@@ -2528,7 +2357,7 @@ StatusCode DaVinci::N8BodyDecays::execute()
               const LHCb::Particle* c5 = *it5 ;
               //        
               // good & unique ? 
-              if ( !_ok_ ( c1 ,c2 , c3 , c4 , c5 ) ) { continue ; } // CONTINUE, next c5
+              if ( !compare ( c1 ,c2 , c3 , c4 , c5 ) ) { continue ; } // CONTINUE, next c5
               //
               comb12345   [4] = c5 ;
               comb123456  [4] = c5 ;
@@ -2551,7 +2380,7 @@ StatusCode DaVinci::N8BodyDecays::execute()
                 const LHCb::Particle* c6 = *it6 ;
                 //        
                 // good & unique ? 
-                if ( !_ok_ ( c1 ,c2 , c3 , c4 , c5 , c6 ) )
+                if ( !compare ( c1 ,c2 , c3 , c4 , c5 , c6 ) )
                 { continue ; } // CONTINUE, next c6
                 //
                 comb123456  [5] = c6 ;
@@ -2574,7 +2403,7 @@ StatusCode DaVinci::N8BodyDecays::execute()
                   const LHCb::Particle* c7 = *it7 ;
                   //        
                   // good & unique ? 
-                  if ( !_ok_ ( c1 ,c2 , c3 , c4 , c5 , c6 , c7 ) )
+                  if ( !compare ( c1 ,c2 , c3 , c4 , c5 , c6 , c7 ) )
                   { continue ; } // CONTINUE, next c6
                   //
                   comb1234567 [6] = c7 ;
@@ -2596,7 +2425,7 @@ StatusCode DaVinci::N8BodyDecays::execute()
                     const LHCb::Particle* c8 = *it8 ;
                     //        
                     // good & unique ? 
-                    if ( !_ok_ ( c1 ,c2 , c3 , c4 , c5 , c6 , c7 , c8 ) )
+                    if ( !compare ( c1 ,c2 , c3 , c4 , c5 , c6 , c7 , c8 ) )
                     { continue ; } // CONTINUE, next c6
                     //
                     combination [7] = c8 ;            

@@ -4,6 +4,9 @@
 ! Purpose     : Particle Combining components.
 !-----------------------------------------------------------------------------
 
+! 2015-02-15 - Vanya Belyaev
+ - NBody-decays: make use of extended particle comparison.  
+
 ! 2015-02-04 - Vanya Belyaev
 
  - CombineParticles 
