@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2015-02-12 - Heinrich Schindler
+ - Add BCM and BLS to SimConf.py.
+
 ! 2015-02-11 - Heinrich Schindler
  - Add HC (Herschel) to SimConf.py.
 

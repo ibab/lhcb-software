@@ -154,6 +154,15 @@ class SimConf(LHCbConfigurableUser) :
                 if 'HC' in dets :
                     from Configurables import DataPacking__Pack_LHCb__MCHCHitPacker_     as MCHCHitPacker
                     packing.Members += [ MCHCHitPacker("MCHCHitPacker"+slot) ]
+
+                if 'Bcm' in dets :
+                    from Configurables import DataPacking__Pack_LHCb__MCBcmHitPacker_    as MCBcmHitPacker
+                    packing.Members += [ MCBcmHitPacker("MCBcmHitPacker"+slot) ]
+
+                if 'Bls' in dets :
+                    from Configurables import DataPacking__Pack_LHCb__MCBlsHitPacker_    as MCBlsHitPacker
+                    packing.Members += [ MCBlsHitPacker("MCBlsHitPacker"+slot) ]
+
         # print "SimConf.py: _doPacking(): packing.Members =", packing.Members
 
     def _makeUnpacker(self, type, name, slot, tesLoc):
