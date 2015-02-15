@@ -65,6 +65,8 @@ namespace LHCb
     static const std::string& FT      = "pSim/FT/Hits";
     static const std::string& Muon    = "pSim/Muon/Hits";
     static const std::string& HC      = "pSim/HC/Hits";
+    static const std::string& Bcm     = "pSim/Bcm/Hits";
+    static const std::string& Bls     = "pSim/Bls/Hits";
   }
 
   /** @class PackedMCHits Event/PackedMCHit.h
@@ -407,6 +409,44 @@ namespace LHCb
     }
     static const std::string packedLocation()   { return LHCb::PackedMCHitLocation::HC; }
     static const std::string unpackedLocation() { return LHCb::MCHitLocation::HC;       }
+  };
+
+  /** @class MCBcmHitPacker Event/PackedMCHit.h
+   *
+   *  Utility class to handle the packing and unpacking of the MC Bcm Hits
+   *
+   *  @author Heinrich Schindler
+   *  @date   2015-02-12
+   */
+  class MCBcmHitPacker : public MCHitPacker
+  {
+  public:
+    MCBcmHitPacker( GaudiAlgorithm & parent ) : MCHitPacker(parent)
+    {
+      m_dispScale = 1.0e2;
+      m_enScale   = 5.0e3;
+    }
+    static const std::string packedLocation()   { return LHCb::PackedMCHitLocation::Bcm; }
+    static const std::string unpackedLocation() { return LHCb::MCHitLocation::Bcm;       }
+  };
+
+  /** @class MCBlsHitPacker Event/PackedMCHit.h
+   *
+   *  Utility class to handle the packing and unpacking of the MC Bls Hits
+   *
+   *  @author Heinrich Schindler
+   *  @date   2015-02-12
+   */
+  class MCBlsHitPacker : public MCHitPacker
+  {
+  public:
+    MCBlsHitPacker( GaudiAlgorithm & parent ) : MCHitPacker(parent)
+    {
+      m_dispScale = 1.0e2;
+      m_enScale   = 5.0e3;
+    }
+    static const std::string packedLocation()   { return LHCb::PackedMCHitLocation::Bls; }
+    static const std::string unpackedLocation() { return LHCb::MCHitLocation::Bls;       }
   };
 
 }

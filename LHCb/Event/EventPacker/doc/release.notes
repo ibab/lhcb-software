@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2015-02-12 - Heinrich Schindler
+ - Add support for BCM and BLS hits.
+
 !========================= EventPacker v4r6 2014-12-11 =========================
 ! 2014-10-20 - Chris Jones
  - Remove dictionary for std::pair<short,float> as it is already produced

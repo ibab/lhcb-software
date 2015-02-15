@@ -124,6 +124,14 @@ template class DataPacking::Pack<LHCb::MCHCHitPacker>;
 typedef DataPacking::Pack<LHCb::MCHCHitPacker> V;
 DECLARE_ALGORITHM_FACTORY( V )
 
+template class DataPacking::Pack<LHCb::MCBcmHitPacker>;
+typedef DataPacking::Pack<LHCb::MCBcmHitPacker> Va;
+DECLARE_ALGORITHM_FACTORY( Va )
+
+template class DataPacking::Pack<LHCb::MCBlsHitPacker>;
+typedef DataPacking::Pack<LHCb::MCBlsHitPacker> Vb;
+DECLARE_ALGORITHM_FACTORY( Vb )
+
 template class DataPacking::Pack<LHCb::RelatedInfoRelationsPacker>;
 typedef DataPacking::Pack<LHCb::RelatedInfoRelationsPacker> W;
 DECLARE_ALGORITHM_FACTORY( W )
