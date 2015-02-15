@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2015-02-15 - Vanya Belyaev
+ - adjust statistics 
+
 ! 2015-02-10 - Vanya Belyaev
  -  - add convex spline 
 
