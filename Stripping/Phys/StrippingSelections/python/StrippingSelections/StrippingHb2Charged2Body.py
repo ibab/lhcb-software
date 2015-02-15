@@ -6,7 +6,7 @@ Authors: Stefano Perazzini, Lars Eklumd
 
 ########################################################################
 __author__ = ['Stefano Perazzini', 'Lars Eklund']
-__date__ = '21/08/2012'
+__date__ = '15/02/2015'
 __version__ = '$Revision: 1.5 $'
 
 __all__ = ('Hb2Charged2BodyLines',
