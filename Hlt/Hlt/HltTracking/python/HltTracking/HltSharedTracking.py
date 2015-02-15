@@ -203,8 +203,8 @@ def ConfiguredPatSeeding(name
         log.fatal( '## FATAL You did not specify the name of the PatSeeding instance.' )
         log.fatal( '## FATAL I will now die, you need to make Hlt2Tracking aware of the name!  ')
         log.fatal( '##################################################################################')
-    from Configurables    import PatSeeding
-    from Configurables      import PatSeedingTool
+    from Configurables import PatSeeding
+    from Configurables import PatSeedingTool
     recoSeeding = PatSeeding(name, OutputTracksName = OutputTracksName )
     recoSeeding.addTool(PatSeedingTool, name="PatSeedingTool")
     # New tool
@@ -214,7 +214,8 @@ def ConfiguredPatSeeding(name
         recoSeeding.PatSeedingTool.UsedLHCbIDToolName = "TrackUsedLHCbID"
         recoSeeding.PatSeedingTool.addTool( TrackUsedLHCbID, name="TrackUsedLHCbID" )
         recoSeeding.PatSeedingTool.TrackUsedLHCbID.inputContainers = VetoTrackLocations
-  
+
+    from Configurables import HltRecoConf
     from HltRecoConf import OnlineSeedingToolOptions
     recoSeeding.PatSeedingTool.NDblOTHitsInXSearch = OnlineSeedingToolOptions ["NDblOTHitsInXSearch"]
     recoSeeding.PatSeedingTool.MinMomentum = HltRecoConf().getProp("Forward_LPT_MinP")

@@ -1321,7 +1321,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
                                      , VeloInput = self.__hlt2VeloTracking().outputSelection()
                                      , SeedInput = self.__hlt2SeedTracking().outputSelection()
                                      , MatchOutput = matchTrackOutputLocation)
-        from Configurables   import PatMatchTool
+        from Configurables import PatMatchTool
+        from Configurables import HltRecoConf
         recoMatch.addTool(PatMatchTool, name="PatMatchTool")
         recoMatch.PatMatchTool.MinMomentum = HltRecoConf().getProp("Forward_LPT_MinP")
         recoMatch.PatMatchTool.MinPt = HltRecoConf().getProp("Forward_LPT_MinPt")
