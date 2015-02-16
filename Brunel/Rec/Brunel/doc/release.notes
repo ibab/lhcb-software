@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Renato Quagliani 16/02/2015
+  . Change refs in upgrade tests to reflect changes in forward tracking (triangle fixing).
+
 - Renato Quagliani 11/12/2015 
   . Change refs in upgrade tests using the PrSeedingXLayers (baseline, baseline-ut, baseline-25ns) 
     to reflect changes in Pr/PrAlgorithms/PrSeedingXLayers
