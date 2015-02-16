@@ -4,6 +4,9 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-02-16 - Chris Jones
+ - Protect against a sqrt(-number) FPE in QuarticSolver.h
+
 ! 2015-02-11 - Chris
  - Avoid creation of local StatusCode object.
 

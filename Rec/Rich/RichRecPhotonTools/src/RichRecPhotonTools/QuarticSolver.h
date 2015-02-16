@@ -258,15 +258,16 @@ namespace Rich
 
           // various quantities needed to create quartic equation
           // see LHCB/98-040 section 3, equation 3
-          const auto e        = std::sqrt(e2);
-          const auto d        = std::sqrt(d2);
-          const auto cosgamma = evec.dot(dvec) / (e*d);
-          const auto singamma = std::sqrt( 1.0 - cosgamma*cosgamma );
-          const auto dx       = d * cosgamma;
-          const auto edx      = e + dx;
-          const auto dy       = d * singamma;
-          const auto dy2      = dy * dy;
-          const auto r2       = radius * radius;
+          const auto e         = std::sqrt(e2);
+          const auto d         = std::sqrt(d2);
+          const auto cosgamma  = evec.dot(dvec) / (e*d);
+          const auto cosgamma2 = cosgamma * cosgamma;
+          const auto singamma  = ( cosgamma2 < 1.0f ? std::sqrt(1.0-cosgamma2) : 0.0f );
+          const auto dx        = d * cosgamma;
+          const auto edx       = e + dx;
+          const auto dy        = d * singamma;
+          const auto dy2       = dy * dy;
+          const auto r2        = radius * radius;
 
           // Fill array for quartic equation
           const auto a0     =     4.0f * e2 * d2;
