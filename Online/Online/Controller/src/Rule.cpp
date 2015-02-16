@@ -84,11 +84,11 @@ const Transition* Rule::applies(const State* slave_state, Direction direction_fl
 		tr->c_name(),tr->from()->c_name(),to->c_name());
 	return tr;
       }
-      display(NOLOG,c_name(),"+++RULE: Ignore rule on slave:  %s -> %s  [NO_TRANSITION]",
+      display(NOLOG,c_name(),"+++RULE: Ignore rule on slave:  %s -> %s  ******** [NO_TRANSITION]",
 	      slave_state->c_name(),to->c_name());
       return 0;
     }
-    else if ( 0 != (tr=slave_state->findTrans(to)) )   {
+    if ( 0 != (tr=slave_state->findTrans(to)) )   {
       if ( !m_currState || (m_currState && m_currState == tr->from()) )  {
 	display(NOLOG,c_name(),"+++RULE: Apply rule on slave: tr:%s [%s] --  %s -> %s",
 		tr->c_name(),m_currState ? m_currState->c_name() : "----",

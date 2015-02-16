@@ -68,7 +68,7 @@ Machine::Machine(const Type *typ, const string& nam)
   : TypedObject(typ,nam), m_fsm(MACH_IDLE), m_currState(0), 
     m_currTrans(0), m_direction(Rule::MASTER2SLAVE)
 {
-  display(DEBUG,c_name(),"FSMmachine: creating machine %s of type %s",typ->c_name());
+  display(DEBUG,c_name(),"FSMmachine: creating machine %s of type %s",nam.c_str(),typ->c_name());
   setState(m_type->initialState()).setTarget(0);
   Callback cb(this);
   m_fsm.setCurrentState(MACH_IDLE);
@@ -278,6 +278,15 @@ ErrCond Machine::invokeTransition (const Transition* transition, Rule::Direction
 /// Invoke FSM transition
 ErrCond Machine::invokeTransitionByName(const string& transition, Rule::Direction direction)   {
   if ( !transition.empty() )  {
+    const State* st = m_currState;
+    if ( st )  {
+      for(State::Transitions::const_iterator i=st->outgoing().begin(); i!=st->outgoing().end(); ++i)    {
+	const Transition* tr = *i;
+	if ( tr->name() == transition )   {
+	  return invokeTransition(tr,direction);
+	}
+      }
+    }
     const Transition* tr = type()->transition(transition);
     if ( tr ) return invokeTransition(tr,direction);
   }
@@ -439,8 +448,8 @@ ErrCond Machine::startTransition()  {
     if ( !sl.empty() )  {
       PredicateSlave pred = for_each(sl.begin(),sl.end(),PredicateSlave(tr));
       if ( pred.ok() )   {
-	display(DEBUG,c_name(),"Executing %s. Predicates checking finished successfully. Dir:%s",
-		tr->c_name(),dir(m_direction));
+	display(DEBUG,c_name(),"Executing %s. Predicates checking finished successfully. Dir:%s #Slaves:%d",
+		tr->c_name(),dir(m_direction),sl.size());
 	m_meta.execute(this);
 	InvokeSlave func = for_each(sl.begin(),sl.end(),InvokeSlave(tr,m_direction));
 	if ( func.status == FSM::WAIT_ACTION )  {

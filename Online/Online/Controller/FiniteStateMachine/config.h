@@ -36,6 +36,7 @@ namespace FiniteStateMachine {
     const T& operator*() const  { return *ptr; }
   };
 
+  inline const char* yes_no(bool v) {  return v ? "Yes" : "No ";  }
   /// Utility function to access the package ROOT directory
   std::string controller_root();
   /// Utility function to access the package binary directory

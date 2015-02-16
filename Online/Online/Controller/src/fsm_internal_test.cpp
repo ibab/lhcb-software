@@ -26,11 +26,11 @@ using namespace FiniteStateMachine;
  */
 namespace   {
 
-  /**@class InternalSlave
-   *
-   * @author  M.Frank
-   * @date    01/03/2013
-   * @version 0.1
+  /// Helper class InternalSlave
+  /**
+   * \author  M.Frank
+   * \date    01/03/2013
+   * \version 0.1
    */
   struct InternalSlave : public Slave {
     /// Sleep between transitions [milli seconds]
@@ -42,6 +42,17 @@ namespace   {
       : Slave(typ,nam,machine,true), m_sleep(msleep) {}
     /// Defautl constructor
     virtual ~InternalSlave() {}
+    /// Inquire slave state. The reply may come later!
+    virtual ErrCond inquireState() { return FSM::SUCCESS; }
+    /// Start slave process. Base class implementation will throw an exception
+    virtual ErrCond start()      { return FSM::SUCCESS; }
+    /// Kill slave process. Base class implementation will throw an exception
+    virtual ErrCond kill()       { return FSM::SUCCESS; }
+    /// Kill slave process. Base class implementation will throw an exception
+    virtual ErrCond forceKill()  { return FSM::SUCCESS; }
+    /// Virtual method -- must be overloaded -- Send transition request to the slave
+    //virtual ErrCond sendRequest(const Transition* )  { return FSM::SUCCESS; }
+
     /// Start the slave's transition timeout
     virtual Slave& startTimer(int, const void*) { return *this; }
     /// Stop the slave's transition timeout

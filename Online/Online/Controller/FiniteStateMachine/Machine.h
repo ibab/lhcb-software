@@ -96,6 +96,8 @@ namespace FiniteStateMachine {
     /// Standatrd destructor  
     virtual ~Machine();
 
+    /// Set new machine name
+    void setName(const std::string& nam)          {  m_name = nam;                             }
     /// Retrieve reference to current State structure
     const State* state ()  const                  {  return m_currState;                       }
     /// Retrieve reference to current State structure name
