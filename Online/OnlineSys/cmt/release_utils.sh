@@ -36,8 +36,9 @@ make_tag()
 #
 #
 #
-    cd ${ONLINESYSROOT}/../Online/$1/cmt;
+    cd ${ONLINESYSROOT}/../Online/$1;
     svn commit -m "New package tag $2";
+    cd cmt;
     echo $2 > version.cmt;
     echo "+++ Tagging package: tag_package Online/$1 $2 ";
     tag_package Online/$1 $2;

@@ -6,10 +6,24 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v5r16>2015-02-16 OnlineSys v5r16</A></H1>
+<PRE>
+  Use Gaudi v26r1
+  Updated/new packages:	
+     Controller          v0r16    Online
+     FarmConfig          v0r12    Online
+     Gaucho              v7r37    Online
+     GauchoAppl          v1r20    Online
+     GaudiOnline         v2r77    Online
+     GaudiRootCnvTests   v1r13    Online
+     OnlineBase          v1r29    Online
+     ROMon               v1r51    Online
+</PRE>
+
 <H1><A NAME=v5r15>2015-01-19 OnlineSys v5r15</A></H1>
 <PRE>
   Use Gaudi v26r0
-  Sync package version between cmale and cmt
+  Sync package version between cmake and cmt
   Updated/new packages:	
      Camera              v1r29    Online
      Checkpointing       v0r21    Online
