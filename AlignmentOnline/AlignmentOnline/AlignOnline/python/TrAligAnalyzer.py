@@ -40,14 +40,14 @@ from TAlignment.TrackSelections import *
 from TAlignment.AlignmentScenarios import *
 from TrAlignCommon import *
 
-def patchEscher(true_online_version, n = -1):
+def patchEscher(true_online_version, alignment_module, n = -1):
   import GaudiConf.DstConf
   import Escher.Configuration
   import OnlineEnv as Online
   from Configurables import MagneticFieldSvc
   from Configurables import TAlignment
   from TAlignment.VertexSelections import configuredPVSelection
-  escher = EscherCommon(true_online_version)
+  escher = EscherCommon(true_online_version, alignment_module)
   hostname = HostName()
   escher.DataType = "2012"
   escher.InputType  = "MDF"
@@ -59,25 +59,7 @@ def patchEscher(true_online_version, n = -1):
   else:
     suffix = ("_%02d_Escher.out" % n)
   TAlignment().OutputDataFile = asddir + hostname + suffix
-
-  # specify the input to the alignment
-  #from TAlignment.ParticleSelections import defaultHLTD0Selection
-# specify what we actually align for
-  configure2012DataAlignment()
-  TAlignment().TrackSelections = [
-#                                  NoPIDTracksFromHlt(),
-                                 GoodLongTracks(),
-                                 VeloOverlapTracks(),
-                                 VeloBackwardTracks(),
-                                 ITBoxOverlapTracks() ]
-
-# add the default PV selection
-  TAlignment().PVSelection = configuredPVSelection()
   TAlignment().UpdateInFinalize = False
-# specify what we actually align for
-  configureVeloHalfAlignment()
-#   print TAlignment()
-  # print escher
   return escher
 
 def setupOnline(directory, prefix, filename):
@@ -162,7 +144,8 @@ def getProcessingType():
     return 'Reprocessing'
   return 'DataTaking'
 
-def doIt(filename = "/localdisk/Run_112181_0000000182.raw", n = -1):
+def doIt(filename = "/localdisk/Run_112181_0000000182.raw",
+         alignment_module = "VeloHalfAlignment", n = -1):
   true_online = os.environ.has_key('LOGFIFO') and os.environ.has_key('PARTITION')
   debug = not true_online
 
@@ -170,7 +153,7 @@ def doIt(filename = "/localdisk/Run_112181_0000000182.raw", n = -1):
     print '\n            Running terminal version 1.1 of ESCHER ONLINE\n\n'
     requirement = "EvType=2;TriggerMask=0x0,0x4,0x0,0x0;VetoMask=0,0,0,0x300;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 
-  br = patchEscher(true_online, n)
+  br = patchEscher(true_online, alignment_module, n)
   directory = os.path.dirname(filename)
   prefix = os.path.basename(filename)[:4]
 

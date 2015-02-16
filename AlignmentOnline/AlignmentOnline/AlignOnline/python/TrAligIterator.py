@@ -40,14 +40,14 @@ from TAlignment.TrackSelections import *
 from TAlignment.AlignmentScenarios import *
 from TrAlignCommon import *
 
-def patchEscher(true_online_version):
+def patchEscher(true_online_version, alignment_module):
   import GaudiConf.DstConf
   import Escher.Configuration
   import OnlineEnv as Online
   from Configurables import MagneticFieldSvc
   from TAlignment.VertexSelections import configuredPVSelection
   from Configurables import GaudiSequencer
-  escher = EscherCommon(true_online_version)
+  escher = EscherCommon(true_online_version, alignment_module)
 #   TAlignment().OnlineIterator = True
   TAlignment().NumIterations = 10
   print escher
@@ -156,7 +156,7 @@ def getProcessingType():
     return 'Reprocessing'
   return 'DataTaking'
 
-def doIt(n = -1):
+def doIt(alignment_module = "VeloHalfAlignment"):
   true_online = os.environ.has_key('LOGFIFO') and os.environ.has_key('PARTITION')
   debug = not true_online
 
@@ -164,7 +164,7 @@ def doIt(n = -1):
     print '\n            Running terminal version 1.1 of ESCHER ONLINE\n\n'
     requirement = "EvType=2;TriggerMask=0x0,0x4,0x0,0x0;VetoMask=0,0,0,0x300;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 
-  br = patchEscher(true_online)
+  br = patchEscher(true_online, alignment_module)
   setupOnline()
   if true_online: patchMessages()
   start()

@@ -6,6 +6,7 @@
 __version__ = "$Id: BrunelOnline.py,v 1.25 2010/11/09 12:20:55 frankb Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
+import importlib
 import os, sys, re
 import Configurables as Configs
 import Gaudi.Configuration as Gaudi
@@ -38,7 +39,7 @@ configureBrunelOutput = None
 from TAlignment.AlignmentScenarios import *
 from TAlignment.TrackSelections import *
 from TAlignment.AlignmentScenarios import *
-def EscherCommon(true_online_version):
+def EscherCommon(true_online_version, alignment_module):
   import GaudiConf.DstConf
   import Escher.Configuration
   import OnlineEnv as Online
@@ -72,10 +73,9 @@ def EscherCommon(true_online_version):
                   "ONLINE" : 'fake'}
   MagneticFieldSvc().UseSetCurrent = True
   escher.UseDBSnapshot = True
-  configure2012DataAlignment()
-  configureVeloHalfAlignment()
-  ## TAlignment().OnlineMode = True
-  print conddb
+
+  config_module = importlib.import_module('AlignmentConfigurations.' + alignment_module)
+  config_module.configureAlignment()
   return escher
 
 def HostName():
