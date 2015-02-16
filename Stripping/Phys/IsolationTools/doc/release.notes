@@ -3,6 +3,9 @@
 ! Responsible : Alex Shires
 !============================================================================
 
+! 2015-02-16 - Stefano Perazzini
+ - Removed RelInfoBs2MuMuIsolation.{cpp,h} as obsolete
+
 !========================= IsolationTools v1r1 2014-10-30 =========================
 
 ! 2014-10-13 - Anton Poluektov
