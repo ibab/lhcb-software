@@ -1,0 +1,50 @@
+// =======================================================================================
+// Dummy task processing NO events
+//
+// Use to test new services etc.
+//
+// \author M.Frank
+// \date   02/02/2015
+//
+// =======================================================================================
+#pragma print off
+#include "$INFO_OPTIONS"
+#include "$STATIC_OPTS/SvcMapping.opts"
+#include "$STATIC_OPTS/Monitoring.opts"
+ApplicationMgr.HistogramPersistency  ="NONE";
+ApplicationMgr.ExtSvc               += { "LHCb::FILEEvtSelector/EventSelector" };
+ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true ;
+EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+#include "$ONLINETASKS/options/MessageSvc.opts"
+ApplicationMgr.TopAlg                = { "LHCb::DelaySleepAlg/Delay", "UpdateAndReset","LHCb::RawBankSizes/RawBankSizes" };
+Delay.DelayTime                      = 0;
+//Delay.InitializeDelay                = 100000;
+//Delay.StartDelay                = 100000000;
+RawBankSizes.number_ofRMS            = 10;
+RawBankSizes.Bins                    = 100;
+#include "/group/online/dataflow/templates/options/RawSize_Detectors.opts"
+#include "/group/online/dataflow/templates/options/RawSize_HistParams.opts"
+//
+//  Customize UpdateAndreset
+//
+UpdateAndReset.MyName                = "$UTGID";
+UpdateAndReset.saveHistograms        = 1;
+UpdateAndReset.saverCycle            = 900000;  // No intermediate saving
+UpdateAndReset.saveSetDir            = "/hist/Savesets";
+UpdateAndReset.saveSetDir            = "/home/frankm/cmtuser/Online_v5r14/Online/Controller/cmt/Savesets";
+//
+//  Customize monitoring service
+//
+MonitorSvc.ExpandCounterServices     = 0;
+MonitorSvc.PartitionName             = "FEST";
+MonitorSvc.ExpandNameInfix           = "<part>_x_<program>/";
+MonitorSvc.ProgramName               = "$TASK_TYPE";
+//
+//  Event selector setup:
+// 
+//MessageSvc.OutputLevel = 1;
+EventSelector.Decode  = false;
+EventSelector.Pause   = true;
+#include "$EVENTSELECTOR_OPTIONS"

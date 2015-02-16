@@ -1,0 +1,23 @@
+// =======================================================================================
+// Dummy task processing NO events
+//
+// Use to test new services etc.
+//
+// \author M.Frank
+// \date   02/02/2015
+//
+// =======================================================================================
+#include "$INFO_OPTIONS"
+#include "$STATIC_OPTS/SvcMapping.opts"
+#include "$STATIC_OPTS/Monitoring.opts"
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.ExtSvc               += {"LHCb::IncidentProvoker/Pause"};
+Pause.Incident                       = "DAQ_ERROR";
+Pause.Incident                       = "DAQ_PAUSE";
+Pause.Timeout                        = 10;
+Runable.Wait                         = 3;  // 1 of running as daemon
+MessageSvc.OutputLevel               = 1;  //@OnlineEnv.OutputLevel;
+IncidentSvc.OutputLevel              = 4;

@@ -1,0 +1,7 @@
+#pragma print off
+#include "$GAUDIONLINEROOT/options/Main.opts"
+Runable.Wait                         = 3;
+ApplicationMgr.ExtSvc                = {"IncidentSvc"};
+MessageSvc.OutputLevel               = 4;  // Minimum is Warning
+ApplicationMgr.TopAlg               += {"LHCb::PausAlg/Pause"};
+Pause.Timeout                        = 15;
