@@ -1,3 +1,7 @@
+2015-02-13  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-dev: removed reference to QMTest in lb-dev message
+
 2015-02-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* SetupProject: restored compatibility with SLC5 (python 2.4)

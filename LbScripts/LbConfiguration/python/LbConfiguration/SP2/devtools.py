@@ -174,7 +174,6 @@ then
     finalMessageCMake = finalMessage + '''
   > make
   > make test
-  > make QMTestSummary
 
 and optionally
 
