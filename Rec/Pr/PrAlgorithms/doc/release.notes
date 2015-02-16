@@ -4,6 +4,10 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2015-02-16 - Renato Quagliani
+ - PrSeedingXLayers cleaner version and reverted to a simple GaudiAlgorithm.
+
+
 ! 2015-02-13 - Michel De Cian
  - Add triangle fix in forward tracking.
 
