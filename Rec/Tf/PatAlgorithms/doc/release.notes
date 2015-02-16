@@ -4,6 +4,15 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-02-16 - Manuel Tobias Schiller
+ - Tested patch by Gerhard Raven which switches off the OT walk correction in
+   the combinatorial stages of the Forward tracking to save even more time.
+   The impact of this was verified on MC with the same method the approximated
+   walk correction was verified in last week's Tracking and Alignment meeting.
+   Efficiencies and ghost rates are essentially unchanged (there are permille
+   level fluctuations), and so are pulls. The Forward tracking will become
+   about 9% faster.
+
 ! 2015-02-15 - Manuel Tobias Schiller
  - PatFwdTool: protect debug() printout
  - PatSeedFit: fix bug which caused a successful stub fit to produce a warning

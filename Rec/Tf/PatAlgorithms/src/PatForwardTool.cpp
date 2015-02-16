@@ -723,8 +723,7 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
   auto y0 = track.yStraight( 0. );
   auto updateOTHitsForTrack = [&](PatFwdHits::iterator first, PatFwdHits::iterator last) {
         std::for_each( first, last, [=](PatForwardHit* hit) { 
-                           // approxUpdateOTHitForTrack( hit, y0, ty);
-                           updateOTHitForTrack( hit, y0, ty);
+                           approxUpdateOTHitForTrack( hit, y0, ty);
                            hit->setIgnored( false );
                            hit->setRlAmb( 0 );
                            hit->setSelected( this->driftInRange(*hit) );
@@ -793,8 +792,7 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
     return true;
   };
   auto updateOTHit = [=](PatFwdHit* hit ) {
-    // approxUpdateOTHitForTrack( hit, y0, ty );
-    updateOTHitForTrack( hit, y0, ty );
+    approxUpdateOTHitForTrack( hit, y0, ty );
     auto ok = this->driftInRange(*hit);
     hit->setSelected( ok );
     return ok;
