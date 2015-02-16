@@ -115,8 +115,8 @@ remove_sys_tag()
 #
 #
 #
-    echo "+++ Removing tag from package: OnlineSys $2 ";
-    svn rm -m "Need to remove tag Online/$1 version $2" svn+ssh://svn.cern.ch/reps/lhcb/Online/tags/OnlineSys/${2};
+    echo "+++ Removing tag from package: OnlineSys $1 ";
+    svn rm -m "Need to remove tag OnlineSys version $1" svn+ssh://svn.cern.ch/reps/lhcb/Online/tags/OnlineSys/${1};
 }
 echo "+++"
 echo "+++ Define macro \$> make_release <version> "
