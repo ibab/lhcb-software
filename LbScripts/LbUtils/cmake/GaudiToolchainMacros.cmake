@@ -50,6 +50,7 @@ include(CMakeParseArguments)
 ## Helper for recursion and ordering of found projects.
 function(_internal_find_projects projects_var tools_var config_file)
     #message(STATUS "processing ${config_file}")
+    set(collected_config ${collected_config} ${config_file})
     # Extract information from configuration file
     file(READ ${config_file} config_file_data)
     # Warning: this regular expression implies that 'gaudi_project' is not on the
@@ -96,7 +97,7 @@ function(_internal_find_projects projects_var tools_var config_file)
         endif()
     endwhile()
 
-    # first we look for the used projects
+    # then we look for the used projects
     print_var(PROJECT_USE)
     while(PROJECT_USE)
         # PROJECT_USE format is "<proj1> <vers1> <proj2> <vers2>..."
@@ -113,6 +114,11 @@ function(_internal_find_projects projects_var tools_var config_file)
                                    ${name})
         # recursion
         if(${name_upper}_CONFIG_FILE)
+            # protect against infinit recursion
+            list(FIND collected_config ${${name_upper}_CONFIG_FILE} conf_pos)
+            if(NOT conf_pos EQUAL -1)
+              message(FATAL_ERROR "Infinite recursion detected at project ${name}")
+            endif()
             _internal_find_projects(projects tools
                                     ${${name_upper}_CONFIG_FILE} ${name_upper})
         endif()
@@ -127,6 +133,7 @@ endfunction()
 function(find_projects projects_var tools_var config_file)
     set(projects)
     set(tools)
+    set(collected_config)
     _internal_find_projects(projects tools ${config_file})
     if(projects)
         list(REMOVE_DUPLICATES projects)

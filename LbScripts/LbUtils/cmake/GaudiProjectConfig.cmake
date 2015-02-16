@@ -3,7 +3,7 @@
 #
 # Authors: Pere Mato, Marco Clemencic
 #
-# Commit Id: 934fd72439800dba6ff42d6b04ecc7733d252433
+# Commit Id: 557a8bb456f995aaf881e21ea73d4bb572335e7a
 
 cmake_minimum_required(VERSION 2.8.5)
 
@@ -613,7 +613,9 @@ macro(gaudi_project project version)
         file(WRITE ${CMAKE_BINARY_DIR}/python/${pypack}/__init__.py "
 import os, sys
 __path__ = [d for d in [os.path.join(d, '${pypack}') for d in sys.path if d]
-            if os.path.exists(d) or 'python.zip' in d]
+            if (d.startswith('${CMAKE_BINARY_DIR}') or
+                d.startswith('${CMAKE_SOURCE_DIR}')) and
+               (os.path.exists(d) or 'python.zip' in d)]
 ")
         if(EXISTS ${CMAKE_SOURCE_DIR}/${package}/python/${pypack}/__init__.py)
           file(READ ${CMAKE_SOURCE_DIR}/${package}/python/${pypack}/__init__.py _py_init_content)
@@ -678,12 +680,8 @@ __path__ = [d for d in [os.path.join(d, '${pypack}') for d in sys.path if d]
                     COMMAND ${env_cmd} --xml "${installed_env_release_xml}" true)
   add_dependencies(post-install precompile-project-xenv)
 
-  #--- Special target to print the summary of QMTest runs.
   if(GAUDI_BUILD_TESTS)
-    add_custom_target(QMTestSummary)
-    add_custom_command(TARGET QMTestSummary
-                       COMMAND ${env_cmd} --xml ${env_xml}
-                               qmtest_summarize.py)
+    #--- Special target to generate HTML reports from CTest XML reports.
     add_custom_target(HTMLSummary)
     add_custom_command(TARGET HTMLSummary
                        COMMAND ${env_cmd} --xml ${env_xml}

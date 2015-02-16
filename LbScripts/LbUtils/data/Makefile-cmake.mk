@@ -34,9 +34,6 @@
 #     configure [*]_
 #         alias to CMake 'rebuild_cache' target
 #
-#     tests [*]_
-#         backward-compatibility target for the CMT generic Makefile
-#
 # :Author: Marco Clemencic
 #
 # .. [*] Targets defined by this Makefile. 
@@ -111,12 +108,8 @@ endif
 
 # This wrapping around the test target is used to ensure the generation of
 # the XML output from ctest. 
-test:
-	cd build.$(BINARY_TAG) && $(CTEST) -T test $(ARGS)
-
-tests: all
-	-cd build.$(BINARY_TAG) && $(CTEST) -T test $(ARGS)
-	$(BUILD_CMD) QMTestSummary
+test: $(BUILDDIR)/$(BUILD_CONF_FILE)
+	cd $(BUILDDIR) && $(CTEST) -T test $(ARGS)
 
 # ensure that the target are always passed to the CMake Makefile
 FORCE:
