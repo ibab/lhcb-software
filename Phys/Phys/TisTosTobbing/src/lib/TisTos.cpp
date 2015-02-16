@@ -454,10 +454,13 @@ bool TisTos::setTISFrac(unsigned int hitType,double tisFrac)
   if( hitType<nHitTypes ){
     m_TISFrac[hitType] = tisFrac;
     if ( msgLevel(MSG::VERBOSE) ) 
+    {
       verbose() << " TISFrac changed for HitType " << hitTypeName(hitType) << " to " << tisFrac << endmsg;
-    if( tisFrac> m_TOSFrac[hitType] ){
-      Warning(" You set TISFrac above TOSFrac. This can upset TisTos logic - be worried. ",
-              StatusCode::SUCCESS, 10).ignore();      
+      // intentionally print this warning only in verbose mode
+      if( tisFrac> m_TOSFrac[hitType] ){
+        Warning(" You set TISFrac above TOSFrac. This can upset TisTos logic - be worried. ",
+                StatusCode::SUCCESS, 10).ignore();      
+      }
     }
     return true;    
   } else {
@@ -484,10 +487,13 @@ bool TisTos::setTISFrac(std::vector<double> tisFrac)
     if( hitType>= tisFrac.size() )break;
     m_TISFrac[hitType] = tisFrac[hitType];
     if ( msgLevel(MSG::VERBOSE) ) 
+    {
       verbose() << " TISFrac changed for HitType " << hitTypeName(hitType) << " to " << m_TISFrac[hitType] << endmsg;   
-    if( m_TISFrac[hitType] > m_TOSFrac[hitType] ){
-      Warning(" You set TISFrac above TOSFrac. This can upset TisTos logic - be worried. ",
-              StatusCode::SUCCESS, 10).ignore();      
+      // intentionally print this warning only in verbose mode
+      if( m_TISFrac[hitType] > m_TOSFrac[hitType] ){
+        Warning(" You set TISFrac above TOSFrac. This can upset TisTos logic - be worried. ",
+                StatusCode::SUCCESS, 10).ignore();      
+      }
     }    
   }
   return true; 

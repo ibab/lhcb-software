@@ -3,6 +3,10 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
+
+! 2015-02-16 - Tomasz Skwarnicki
+  - suppress some Warnings in TisTos.cpp
+
 !========================= TisTosTobbing v8r1p1 2014-10-30 =========================
 
 ! 2014-10-20 - Chris Jones
