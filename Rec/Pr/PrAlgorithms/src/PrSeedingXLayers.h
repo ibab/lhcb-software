@@ -5,14 +5,15 @@
 // from Gaudi
 
 //#define DEBUG_HISTO
-//uncomment this line if you want to print monitoring histograms
-//#ifdef DEBUG_HISTO 
-#include "GaudiAlg/GaudiHistoAlg.h"
-//#else
-//#include "GaudiAlg/GaudiAlgorithm.h"
-//#endif
-#include "GaudiAlg/ISequencerTimerTool.h"
+//uncomment this line if you want to print monitorin histograms
 
+#ifdef DEBUG_HISTO
+#include "GaudiAlg/GaudiTupleAlg.h"
+#else
+#include "GaudiAlg/GaudiAlgorithm.h"
+#endif
+
+#include "GaudiAlg/ISequencerTimerTool.h"
 #include "PrKernel/IPrDebugTool.h"
 #include "PrKernel/PrHitManager.h"
 #include "PrSeedTrack.h"
@@ -45,7 +46,7 @@
  * - DebugToolName: Name of the debug tool
  * - WantedKey: Key of the particle which should be studied (for debugging).
  * - TimingMeasurement: Do timing measurement and print table at the end (?).
- * - PrintSettings: Print all values of the properties at the beginning?
+  * - PrintSettings: Print all values of the properties at the beginning?
  *
  *  @author Olivier Callot
  *  @date   2013-02-14
@@ -53,21 +54,19 @@
  *  2014-02-12 : Michel De Cian (TDR version) 
  *  2014-24-11 : Renato Quagliani
  */
-//#ifdef DEBUG_HISTO 
+#ifdef DEBUG_HISTO 
 class PrSeedingXLayers : public GaudiHistoAlg {
-  //#else
-  //class PrSeedingXLayers : public GaudiAlgorithm {
-  //#endif
+#else
+class PrSeedingXLayers : public GaudiAlgorithm {
+#endif
 public:
-  /// Standard constructor
-  PrSeedingXLayers( const std::string& name, ISvcLocator* pSvcLocator );
-
-  virtual ~PrSeedingXLayers( ); ///< Destructor
-
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-protected:
+    /// Standard constructor
+    PrSeedingXLayers( const std::string& name, ISvcLocator* pSvcLocator );
+    virtual ~PrSeedingXLayers( ); ///< Destructor
+    virtual StatusCode initialize();    ///< Algorithm initialization
+    virtual StatusCode execute   ();    ///< Algorithm execution
+    virtual StatusCode finalize  ();    ///< Algorithm finalization
+  protected:
   int matchXCandidate( PrSeedTrack& track );
 
   /** @brief Collect hits in the x-layers. Obsolete, just kept for documentation
@@ -203,7 +202,6 @@ private:
   bool            m_useFix; //added  
   bool            m_decodeData;
   bool            m_printSettings;
-  bool            m_doHistos;
 
   PrHitManager*   m_hitManager;
   PrGeometryTool* m_geoTool;
