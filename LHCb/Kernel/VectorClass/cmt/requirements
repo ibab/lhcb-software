@@ -24,5 +24,8 @@ end_private
 #============================================================================
 # library building rule
 #============================================================================
-library          VectorClassLib     ../src/*.cpp 
+library          VectorClassLib     ../src/ranvec1.cpp 
 apply_pattern    linker_library  library=VectorClassLib
+
+# Disable some warnings
+macro_append VectorClassLib_cppflags " -Wno-overflow -Wno-sign-compare -Wno-strict-aliasing "
