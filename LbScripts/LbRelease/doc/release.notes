@@ -1,3 +1,7 @@
+2015-02-13  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* mkLCGCMTtarFromRPM: fixed name mapping for Frontier_Client
+
 2015-02-12  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* getpack: use project.info (if present) for --project --recursive (LBCORE-147)
