@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2015-02-16 - Chris Jones
+ - Use long int instead of just int in DeRichHPDPanel::findHPDColAndPos to 
+   avoid FPE's when truncating very large doubles to integer values.
+
 ! 2015-02-06 - Chris Jones
  - Various speed improvements to DeRichHPDPanel (such as removing completely
    an unneccessary virtual function call and dynamic_cast, when getting the

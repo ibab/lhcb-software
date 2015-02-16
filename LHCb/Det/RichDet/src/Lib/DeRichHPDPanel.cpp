@@ -416,9 +416,9 @@ bool DeRichHPDPanel::findHPDColAndPos ( const Gaudi::XYZPoint& inPanel,
   // CRJ : Faster than floor. Gets it wrong for negative values, but these are reset
   // to 0 anyway so does not matter
   //int HPDCol = (int)((u-m_panelColumnSideEdge)/m_HPDColPitch);
-  int HPDCol = (int)((u-m_panelColumnSideEdge)*m_OneOverHPDColPitch);
-  if      ( HPDCol >= (int)nPDColumns() ) { OK = false; HPDCol = nPDColumns() - 1; }
-  else if ( HPDCol < 0                  ) { OK = false; HPDCol = 0;                }
+  long int HPDCol = (long int)((u-m_panelColumnSideEdge)*m_OneOverHPDColPitch);
+  if      ( HPDCol >= (long int)nPDColumns() ) { OK = false; HPDCol = nPDColumns() - 1; }
+  else if ( HPDCol < 0                       ) { OK = false; HPDCol = 0;                }
 
   // nearest number in column
   //int HPDNumInCol
@@ -430,14 +430,14 @@ bool DeRichHPDPanel::findHPDColAndPos ( const Gaudi::XYZPoint& inPanel,
   // int HPDNumInCol = ( 0 == HPDCol%2 ?
   //                     (int)((v-m_panelStartColPosEven)/m_HPDPitch) :
   //                     (int)((v-m_panelStartColPosOdd )/m_HPDPitch) );
-  int HPDNumInCol = ( 0 == HPDCol%2 ?
-                      (int)((v-m_panelStartColPosEven)*m_OneOverHPDPitch) :
-                      (int)((v-m_panelStartColPosOdd )*m_OneOverHPDPitch) );
-  if      ( HPDNumInCol >= (int)nPDsPerCol() ) { OK = false; HPDNumInCol = nPDsPerCol()-1; }
-  else if ( HPDNumInCol < 0                  ) { OK = false; HPDNumInCol = 0;              }
+  long int HPDNumInCol = ( 0 == HPDCol%2 ?
+                           (long int)((v-m_panelStartColPosEven)*m_OneOverHPDPitch) :
+                           (long int)((v-m_panelStartColPosOdd )*m_OneOverHPDPitch) );
+  if      ( HPDNumInCol >= (long int)nPDsPerCol() ) { OK = false; HPDNumInCol = nPDsPerCol()-1; }
+  else if ( HPDNumInCol < 0                       ) { OK = false; HPDNumInCol = 0;              }
 
   // Set HPD information in RichSmartID
-  id.setPD( HPDCol, HPDNumInCol );
+  id.setPD( (int)HPDCol, (int)HPDNumInCol );
 
   return OK;
 }
