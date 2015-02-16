@@ -27,7 +27,7 @@ export AdderOptsFile=/tmp/${PARTITION}_MonAdderOpts.opts
 cd /group/online/dataflow/cmtuser/OnlineRelease/Online/FarmConfig/job
 python ./MonAdderOpts.py ${AdderOptsFile}
 #
-export LD_LIBRARY_PATH=/home/beat/cmtuser/myOnline/InstallArea/${CMTCONFIG}/lib:$LD_LIBRARY_PATH
+###export LD_LIBRARY_PATH=/home/beat/cmtuser/myOnline/InstallArea/${CMTCONFIG}/lib:$LD_LIBRARY_PATH
 ##echo $Class1_task
 export INFO_OPTIONS=/group/online/dataflow/options/${PARTITION}/${PARTITION}_Info.opts
 #

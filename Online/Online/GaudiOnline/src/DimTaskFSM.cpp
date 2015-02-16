@@ -62,7 +62,7 @@ namespace  {
       }
       else if ( cmd == "stop"       ) {
 	m_target->setTargetState(Target::ST_STOPPED);
-	m_target->disable();
+	IOCSENSOR.send(m_target, Target::DISABLE);
       }
       else if ( cmd == "reset"      ) {
 	m_target->setTargetState(Target::ST_UNKNOWN);
@@ -70,27 +70,27 @@ namespace  {
       }
       else if ( cmd == "pause"      ) {
 	m_target->setTargetState(Target::ST_PAUSED);
-        m_target->cancel();
+        IOCSENSOR.send(m_target, DimTaskFSM::CANCEL);
         IOCSENSOR.send(m_target, DimTaskFSM::PAUSE);
       }
       else if ( cmd == "continue"   ) {
 	m_target->setTargetState(Target::ST_RUNNING);
-        m_target->cancel();
+        IOCSENSOR.send(m_target, DimTaskFSM::CANCEL);
         IOCSENSOR.send(m_target, DimTaskFSM::CONTINUE);
       }
       else if ( cmd == "unload"     ) {
 	m_target->setTargetState(Target::ST_UNKNOWN);
-        m_target->cancel();
+        IOCSENSOR.send(m_target, DimTaskFSM::CANCEL);
         IOCSENSOR.send(m_target, DimTaskFSM::UNLOAD);
       }
       else if ( cmd == "recover"    ) {
 	m_target->setTargetState(Target::ST_UNKNOWN);
-        m_target->cancel();
+        IOCSENSOR.send(m_target, DimTaskFSM::CANCEL);
         IOCSENSOR.send(m_target, DimTaskFSM::UNLOAD);
       }
       else if ( cmd == "RESET"      )   {
 	m_target->setTargetState(Target::ST_UNKNOWN);
-        m_target->cancel();
+        IOCSENSOR.send(m_target, DimTaskFSM::CANCEL);
         IOCSENSOR.send(m_target, DimTaskFSM::UNLOAD);
       }
       else if ( cmd == "error" )  {
@@ -358,6 +358,7 @@ void DimTaskFSM::handle(const Event& ev)  {
         _CASE(START)        sc=start();                               break;
         _CASE(ENABLE)       sc=enable();                              break;
         _CASE(DISABLE)      sc=disable();                             break;
+	_CASE(CANCEL)       sc=cancel();                              break;
         _CASE(NEXTEVENT)    sc=nextEvent(1);                          break;
         _CASE(STOP)         sc=stop();                                break;
         _CASE(FINALIZE)     sc=finalize();                            break;

@@ -65,6 +65,7 @@ namespace LHCb  {
       CONTINUE,
       ERROR,
       STARTUP_DONE,
+      CANCEL=900,
       CONNECT_DIM=1000,
       FIRE_INCIDENT=1100
     };

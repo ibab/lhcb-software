@@ -285,7 +285,7 @@ FILEEvtSelector::FILEEvtSelector(const string& nam, ISvcLocator* svc)
   declareProperty("BrokenHosts", m_brokenHostsFile = "");
   declareProperty("DeleteFiles", m_deleteFiles = false);
   declareProperty("AllowedRuns", m_allowedRuns);
-  declareProperty("EvtMax", m_evtMax);
+  declareProperty("EvtMax",      m_evtMax);
   m_allowedRuns.push_back("*");
 }
 

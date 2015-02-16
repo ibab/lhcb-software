@@ -3,24 +3,24 @@
 #include "$INFO_OPTIONS"
 #include "/group/online/dataflow/options/LHCb/LHCb_Tell1Boards.opts"
 ApplicationMgr.ExtSvc               += {
-					"MEPSvc/MEPrxCountPub"
+          "MEPSvc/MEPrxCountPub"
                                        };
 ApplicationMgr.ExtSvc               += {
                                         "RateSvc/HLTRater"
                                        };
 ApplicationMgr.ExtSvc               += {
 //					"GenStatSvc/EVTProd",
-					"GenStatSvc/DiskWR"
+          "GenStatSvc/DiskWR"
                                        };
 ApplicationMgr.ExtSvc               += {
-					"BusyPub"
+          "BusyPub"
                                        };
 ApplicationMgr.ExtSvc               += {
-					"DiskWrPub"
+          "DiskWrPub"
                                        };
-//ApplicationMgr.ExtSvc               += {
-//					"OvrPub"
-//                                       };
+ApplicationMgr.ExtSvc               += {
+          "CntrPub"
+                                       };
 
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
@@ -86,6 +86,15 @@ DiskWrPub.AdderClass          = "Counter";
 DiskWrPub.InDNS               = "mona08";
 DiskWrPub.TrendingOn          = true;
 DiskWrPub.OutDNS              = "mona08";
+
+CntrPub.MyName              = "<part>_X_CntrPub";
+CntrPub.PartitionName       = @OnlineEnv.PartitionName;
+CntrPub.TaskPattern         = "MON_<part>_HLT01_PartAdder_(.*)";
+CntrPub.ServicePattern      = "MON_<part>_AlignWriter_00/Counter/";
+CntrPub.AdderClass          = "Counter";
+CntrPub.CounterPattern      = "(.*)AlignDataWriter_(.*)EvtsOut";
+CntrPub.InDNS               = "mona08";
+CntrPub.OutDNS              = "mona08";
 
 //OvrPub.MyName              = "<part>_X_OvrPub";
 //OvrPub.PartitionName       = @OnlineEnv.PartitionName;
