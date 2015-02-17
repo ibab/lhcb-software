@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-02-17 - Christian Linn
+ - Updated Physics_draftEM2015: added trackeff and high pT muon lines,
+   adjusted thresholds to more reasonable values
+
 ! 2015-02-12 - V. Gligorov 
  - Update Physics_draftEM2015 to run the new RICH mirror alignment line,
    and adjust some 1Track cuts a bit in line with most recent studies

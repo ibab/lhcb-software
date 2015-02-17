@@ -41,7 +41,7 @@ class Physics_draftEM2015( object ):
             raise RuntimeError( 'Must update HltType when modifying ActiveHlt.Lines()' )
         
     def L0TCK(self) :
-        return '0x0033'
+        return '0x0050'
 
     def HltType(self) :
         self.verifyType( Physics_draftEM2015 ) 
@@ -62,9 +62,9 @@ class Physics_draftEM2015( object ):
 
         from Hlt2Lines.Hlt2InclusiveMuonLines   import Hlt2InclusiveMuonLinesConf
         from Hlt2Lines.Hlt2InclusiveDiMuonLines import Hlt2InclusiveDiMuonLinesConf
-        from Hlt2Lines.Hlt2CharmHadD02HHLines   import Hlt2CharmHadD02HHLinesConf
         from Hlt2Lines.Hlt2CommissioningLines   import Hlt2CommissioningLinesConf
         from Hlt2Lines.DiMuon.Lines             import DiMuonLines
+        from Hlt2Lines.Hlt2TrackingEfficiencyLines import Hlt2TrackingEfficiencyLinesConf
         from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 
         thresholds = { Hlt1TrackLinesConf :    {'AllL0_Velo_NHits'   : 0   #OFF
@@ -78,19 +78,14 @@ class Physics_draftEM2015( object ):
                                                , 'Muon_TrNTHits'     : 0 #OFF
                                                , 'Muon_Velo_NHits'   : 0 #OFF
                                                , 'Muon_Velo_Qcut'    : 999 #OFF
-                                               , 'Muon_PT'           : 800.
+                                               , 'Muon_PT'           : 1200.
                                                , 'Muon_P'            : 3000.
-                                               , 'Muon_IPChi2'       : 6.0
+                                               , 'Muon_IPChi2'       : 4.0
                                                , 'Muon_TrChi2'       : 3.0
                                                , 'Muon_GEC'          : 'Loose'
-                                               , 'Photon_PT'         : 1200.
-                                               , 'Photon_P'          : 3000.
-                                               , 'Photon_IPChi2'     : 4.0
-                                               , 'Photon_TrChi2'     : 5.0
-                                               , 'Photon_GEC'        : 'Loose'
-                                               , 'L0Channels'        : {'AllL0'  : 'L0_DECISION_PHYSICS',
-                                                                        'Muon'   : ('Muon', 'DiMuon', 'MuonNoSPD', 'DiMuonNoSPD'),
-                                                                        'Photon' : ("PhotonHi", "ElectronHi")}
+                                               , 'ODINTriggers'      : {'AllL0'  : ['LHCb.ODIN.PhysicsTrigger']}
+                                               , 'L0Channels'        : {'AllL0'  : '',
+                                                                        'Muon'   : ('Muon',)}
                                                }
                      , Hlt1CalibRICHMirrorLinesConf : {     'RICHMirror_Velo_NHits'  : 0 
                                                         ,   'RICHMirror_Velo_Qcut'   : 3 
@@ -103,19 +98,11 @@ class Physics_draftEM2015( object ):
                      , Hlt1MuonLinesConf :     { 'SingleMuonHighPT_P'        : 3000
                                                , 'SingleMuonHighPT_PT'      : 4800
                                                , 'SingleMuonHighPT_TrChi2'  :    3.
+                                               ,'SingleMuonHighPT_TrNTHits'   : 0 #OFF
+                                               ,'SingleMuonHighPT_Velo_NHits' : 0 #OFF
+                                               ,'SingleMuonHighPT_Velo_Qcut'  : 999 #OFF
                                                , 'SingleMuonHighPT_GEC'     : 'Loose'
-                                               , 'SingleMuonNoIP_P'         : 3000
-                                               , 'SingleMuonNoIP_PT'        : 1300
-                                               , 'SingleMuonNoIP_TrChi2'    :    3.
-                                               , 'SingleMuonNoIP_GEC'       : 'Loose'
-                                               , 'DiMuonLowMass_VxDOCA'     :  0.2
-                                               , 'DiMuonLowMass_VxChi2'     :   25
-                                               , 'DiMuonLowMass_P'          :    0
-                                               , 'DiMuonLowMass_PT'         :    0
-                                               , 'DiMuonLowMass_TrChi2'     :    3
-                                               , 'DiMuonLowMass_M'          :    0.
-                                               , 'DiMuonLowMass_IPChi2'     :    6.
-                                               , 'DiMuonLowMass_GEC'        : 'Loose'
+                                               ,'SingleMuonHighPT_TrackType' : 'Long'
                                                , 'DiMuonHighMass_VxDOCA'    :  0.2
                                                , 'DiMuonHighMass_VxChi2'    :   25
                                                , 'DiMuonHighMass_P'         : 3000
@@ -123,21 +110,16 @@ class Physics_draftEM2015( object ):
                                                , 'DiMuonHighMass_TrChi2'    :    3
                                                , 'DiMuonHighMass_M'         : 2700
                                                , 'DiMuonHighMass_GEC'       : 'Loose'
+                                               ,'DiMuonHighMass_TrackType' :'Long'                                               
                                                ,'L0Channels'               : {
-                                                   'SingleMuonHighPT' : ( 'Muon', 'MuonNoSPD'),
-                                                   'SingleMuonNoIP'   : ( 'Muon', 'MuonNoSPD'),
-                                                   'DiMuonLowMass'    : ( 'Muon', 'MuonNoSPD', 'DiMuon', 'DiMuonNoSPD' ),
-                                                   'DiMuonHighMass'   : ( 'Muon', 'MuonNoSPD', 'DiMuon', 'DiMuonNoSPD' ),
-                                                   'MultiMuonNoIP'    : ( 'Muon', 'MuonNoSPD', 'DiMuon', 'DiMuonNoSPD' ) }
-
-                                               , 'Prescale'                 : { 'Hlt1SingleMuonNoIP' : 1.0,
-                                                                                'Hlt1MultiMuonNoIP'  : 0.0 }
+                                                   'SingleMuonHighPT' : ( 'Muon', ),
+                                                   'DiMuonHighMass'   : ( 'Muon', )}
+                                                                  
                                                 }
-                       , Hlt1L0LinesConf :     {  'Postscale' : { 'Hlt1L0AnyRateLimited'       : 'RATE(1)'
+                         , Hlt1L0LinesConf :     {  'Postscale' : { 'Hlt1L0AnyRateLimited'       : 'RATE(1)'
                                                                 , 'Hlt1L0AnyNoSPDRateLimited'  : 'RATE(1)'
                                                                 }
-                                               ,  'Prescale' : { 'Hlt1L0HighSumETJet' : 1
-                                                               , 'Hlt1L0AnyNoSPD'     : 0.01
+                                               ,  'Prescale' : { 'Hlt1L0AnyNoSPD'     : 0.01
                                                                }
                                                }
 
@@ -154,50 +136,31 @@ class Physics_draftEM2015( object ):
                                                                  , 'Hlt1BeamGasHighRhoVertices'        : 'RATE(4)'}
                                                    }
 
-			, Hlt1CommissioningLinesConf : { 'Postscale' : { 'Hlt1ErrorEvent'   : 'RATE(0.01)' }
+         		, Hlt1CommissioningLinesConf : { 'Postscale' : { 'Hlt1ErrorEvent'   : 'RATE(0.01)' }
 
                                                        } 
-                       , Hlt1MBLinesConf :     { 'Prescale' : { 'Hlt1MBMicroBiasVelo'                : 0
+                        , Hlt1MBLinesConf :     { 'Prescale' : { 'Hlt1MBMicroBiasVelo'                : 0
                                                               , 'Hlt1MBMicroBiasTStation'            : 0 
                                                              , 'Hlt1MBMicroBiasVeloRateLimited'     : 0
                                                               , 'Hlt1MBMicroBiasTStationRateLimited' : 0 }
 
                                                , 'MaxNoBiasRate' : 1000000.
                                                }
-        	       , Hlt2InclusiveDiMuonLinesConf : { 'TrChi2'                   : 10
-                                                     ,'TrChi2Tight'              : 4
+        	    , Hlt2InclusiveDiMuonLinesConf : {'TrChi2Tight'              : 4
                                                      ,'UnbiasedJPsiPt'          : 0.0      # MeV
                                                      ,'UnbiasedJPsiMuPt'        : 0.0      # MeV
-                                                     ,'UnbiasedJPsiMassWindow'  : 120      # MeV
+                                                     ,'UnbiasedJPsiMassWindow'  : 150      # MeV
                                                      ,'UnbiasedJPsiVertexChi2'  :   25
-                                                   	 , 'Prescale' : {  'Hlt2DiMuonJPsiTurbo'       : 1.0
-                                                                     , 'Hlt2DiMuonDY1'             :   0.005
-                                                                     , 'Hlt2DiMuonDY2'             :   0.03
-                                                                     , 'Hlt2DiMuonAndGamma'        :   0
-                                                                     }
                                                         }
-                    , DiMuonLines : {'Common' :        {'TrChi2'     :   10,
-                                                        'TrChi2Tight':    4},
-                                     'DiMuon' :        {'MinMass'    :  2900 * MeV,
-                                                        'Pt'         :     0 * MeV,
-                                                        'MuPt'       :     0 * MeV,
-                                                        'VertexChi2' :    25},
-                                     'JPsi' :          {'MassWindow' :   120 * MeV,
+                    , DiMuonLines : {'Common' :        {'TrChi2Tight':    4},
+                                     'JPsi' :          {'MassWindow' :   150 * MeV,
                                                         'Pt'         :     0 * MeV,
                                                         'MuPt'       :     0 * MeV,
                                                         'VertexChi2' :    25},
 
-                                     'JPsiHighPT' :    {'Pt'         :  2000 * MeV,
-                                                        'MassWindow' :   100 * MeV,
-                                                        'MuPt'       :     0 * MeV,
-                                                        'VertexChi2' :    25},
 
-                                     'Psi2S' :         {'MassWindow' :   120 * MeV,
+                                     'Psi2S' :         {'MassWindow' :   150 * MeV,
                                                         'Pt'         :     0 * MeV,
-                                                        'MuPt'       :     0 * MeV,
-                                                        'VertexChi2' :    25},
-                                     'Psi2SHighPT' :   {'MassWindow' :   120 * MeV,
-                                                        'Pt'         :  3500 * MeV,
                                                         'MuPt'       :     0 * MeV,
                                                         'VertexChi2' :    25},
                  
@@ -206,80 +169,73 @@ class Physics_draftEM2015( object ):
 
                                      'Z' :             {'MinMass'    : 40000 * MeV,
                                                         'Pt'         :     0 * MeV},
-                                                                     
-                                     'Detached' :      {'IPChi2'     :    25,
-                                                        'DLS'        :     5},
-                                     'DetachedHeavy' : {'MinMass'    :  2950 * MeV,
-                                                        'Pt'         :     0 * MeV,
-                                                        'MuPt'       :   600 * MeV,
-                                                        'VertexChi2' :    25,
-                                                        'IPChi2'     :    25,
-                                                        'DLS'        :     5},
-                                     'DetachedJPsi' :  {'DLS'        :     3},
-                                     'DetachedPsi2S' : {'DLS'        :     3},
                                      'Prescale' : {  'Hlt2DiMuon'         : 1.0
                                                    , 'Hlt2DiMuonJPsi'     : 1.0
                                                    , 'Hlt2DiMuonPsi2S'    : 1.0
                                                    , 'Hlt2DiMuonB'        : 1.0}
 
                     }
-                    ,Hlt2InclusiveMuonLinesConf : {  'TrChi2'              :    2      #chi2PerDof 
-                                                    ,'TrChi2Tight'         :    5      #chi2PerDof         
-                                                    ,'TrChi2VeryTight'     :    2      #chi2PerDof 
-                                                    ,'SingleMuonPt'        : 1300      # MeV
+                    ,Hlt2InclusiveMuonLinesConf : { 'TrChi2VeryTight'     :    3      #chi2PerDof 
+                                                    ,'SingleMuonPt'        : 1500      # MeV
                                                     ,'SingleMuonIP'        : 0.0       # mm #0.5
-                                                    ,'SingleMuonIPChi2'    : 4         # 200
-                                                    ,'SingleMuHLT1Filter'  :  ""  #"HLT_PASS_RE('Hlt1TrackMuonDecision')"            
+                                                    ,'SingleMuonIPChi2'    : 16         # 200
+                                                    ,'SingleMuHLT1Filter'  :  "HLT_PASS_RE('Hlt1TrackMuonDecision')"            
                                                     ,'SingleMuonHighPt'    : 10000     # MeV
-                                                    ,'SingleMuonLowPt'     : 1300      # MeV
-                                                    ,'Prescale'   : { #'Hlt2MuonFromHLT1'       : 0.0
-                                                                      'Hlt2SingleMuon'        : 1.0
+                                                    ,'Prescale'   : { 'Hlt2SingleMuon'        : 1.0
                                                                       ,'Hlt2SingleHighPTMuon'  : 1.0
-                                                                      ,'Hlt2SingleMuonLowPT'   : 1.0
                                                                       }
                                                   }   
-                     ,Hlt2CharmHadD02HHLinesConf       : {  'Trk_PT_MIN'               : 0.0 * MeV
-                                                           , 'Trk_P_MIN'                : 3.0  * GeV
-                                                           , 'Trk_MIPCHI2DV_MIN'        : 4.0
-                                                           , 'Trk_TRCHI2DOF_MAX'        : 500.0
-                                                           , 'Pair_AMINDOCA_MAX'        : 0.10 * mm
-                                                           , 'Trk_Max_APT_MIN'          : 0.0 * MeV
-                                                           , 'D0_BPVVDCHI2_MIN'         : 20.0
-                                                           , 'D0_BPVDIRA_MIN'           : 0.999
-                                                           , 'D0_VCHI2PDOF_MAX'         : 25.0
-                                                           , 'D0_PT_MIN'                : 2000.0 * MeV
-                                                           , 'Sig_M_MIN'                : 1790.0 * MeV
-                                                           , 'Sig_M_MAX'                : 1950.0 * MeV
-                                                           , 'WideMass_M_MIN'           : 1715.0 * MeV
-                                                           , 'WideMass_M_MAX'           : 2085.0 * MeV
-                                                           ## 2-body inclusive!
-                                                           , 'Inc_Trk_PT_MIN'           : 0.0 * MeV
-                                                           , 'Inc_Trk_P_MIN'            : 3.0 * GeV
-                                                           , 'Inc_Trk_MIPCHI2DV_MIN'    : 4.0       # neuter
-                                                           , 'Inc_Trk_TRCHI2DOF_MAX'    : 500.0        # neuter
-                                                           , 'Inc_Pair_AMINDOCA_MAX'    : 0.10 * mm
-                                                           , 'Inc_D0_BPVVDCHI2_MIN'     : 20.0      # neuter
-                                                           , 'Inc_Trk_Max_APT_MIN'      : 0.0 * MeV
-                                                           , 'Inc_D0_APT_MIN'           : 2000.0 * MeV
-                                                           , 'Inc_D0_SumAPT_MIN'        : 1500.0 * MeV
-                                                           , 'Inc_D0_BPVIPCHI2_MIN'     : 2.0        # neuter
-                                                           , 'Inc_D0_BPVCORRM_MIN'      : 300.0 * MeV
-                                                           , 'Inc_D0_BPVCORRM_MAX'      : 3200.0 * MeV
-                                                           ## GEC
-                                                           , 'GEC_Filter_NTRACK'        : True       # 
-                                                           , 'GEC_NTRACK_MAX'           : 180        # 
-                                                           , 'Postscale' : {
-                                                                             'Hlt2CharmHadD02KKWideMass'    : 1.0
-                                                                            , 'Hlt2CharmHadD02KPiWideMass'  : 1.0
-                                                                            , 'Hlt2CharmHadD02PiPiWideMass' : 1.0
-                                                                           }
-                                                        }
 						      
-                       , Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 0.0001
+                      , Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 0.0001
                                                                        , 'Hlt2Forward'      : 0.00001
                                                                        , 'Hlt2DebugEvent'   : 0.000001  }
                                                         , 'Postscale' : { 'Hlt2ErrorEvent'   : 'RATE(0.01)' } 
 						      }
+                      , Hlt2TrackingEfficiencyLinesConf : { 'Prescale'   : { 'Hlt2TrackEffMuonTT1'      	    : 1.0
+				   ,'Hlt2TrackEffMuonTT2'      	    : 1.0
+				   ,'Hlt2TrackEffVeloMuon1'   	    : 1.0
+				   ,'Hlt2TrackEffVeloMuon2'   	    : 1.0
+				   ,'Hlt2TrackEffDownstream1'	    : 1.0
+				   ,'Hlt2TrackEffDownstream2'	    : 1.0
+                                   }
+                  
+		  # Muon TT cuts
+                  ,'MuonTTProbeP'              :    0 #MeV
+                  ,'MuonTTProbePt'             :    0 #MeV
+                  ,'MuonTTLongMuonPID'         :    2 #dimensionless
+                  ,'MuonTTLongP'               :10000 #MeV
+                  ,'MuonTTLongPt'              : 1300 #MeV
+                  ,'MuonTTLongTrChi2'          :    5 #dimensionless
+                  ,'MuonTTJPsiP'               : 1000 #MeV
+                  ,'MuonTTJPsiPt'              : 1000 #MeV
+                  ,'MuonTTJPsiMaxIP'           :    1 #mm
+                  ,'MuonTTJPsiVtxChi2'         :    5 #dimensionless
+                  ,'MuonTTMassWindow'          :  500 #MeV
+		  # VeloMuon cuts
+                  ,'VeloProbePt'                  :   0 #MeV
+		  ,'VeloProbeTrChi2'		  :   5 #dimensionless
+                  ,'VeloLongMuonPID'              :   1 #dimensionless
+                  ,'VeloLongPt'                   :   0 #MeV
+                  ,'VeloLongP'                    :7000 #MeV
+		  ,'VeloLongTrchi2'		  :   3 #dimensionless
+                  ,'VeloMassWindow'               : 500 #MeV
+                  ,'VeloJPsiPt'                   : 500 #MeV
+		  ,'VeloVertchi2'		  :   2 #dimensionless
+		  # DownstreamMuon cuts
+                  ,'DownstreamProbePt'                  : 200 #MeV
+                  ,'DownstreamProbeP'                   :3000 #MeV
+		  ,'DownstreamProbeTrchi2'	        :  10 #dimensionless
+                  ,'DownstreamLongPt'                   : 700 #MeV
+                  ,'DownstreamLongP'                    :5000 #MeV
+		  ,'DownstreamLongTrchi2'		:  10 #dimensionless
+                  ,'DownstreamLongMuonPID'	        :   2 #dimensionless
+                  ,'DownstreamLongMinIP'	        : 0.5 #mm
+                  ,'DownstreamJPsiDOCA'                 :   5 #mm
+                  ,'DownstreamMassWindow'               : 200 #MeV
+                  ,'DownstreamJPsiPt'                   :   0 #MeV
+		  ,'DownstreamVertchi2'			:   5 #dimensionless
+                  }
+                        
 
         }
 
@@ -291,20 +247,19 @@ class Physics_draftEM2015( object ):
         """
         Returns a list of active lines
         """
-        hlt2 = ['Hlt2PassThrough', 'Hlt2Lumi','Hlt2DebugEvent','Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent',
-            'Hlt2SingleMuon',
-            'Hlt2SingleMuonLowPT',
-            'Hlt2DiMuon',
-            'Hlt2DiMuonJPsi',
-            'Hlt2DiMuonJPsiTurbo',
-            'Hlt2DiMuonPsi2S',
-            'Hlt2DiMuonB',
-            'Hlt2DiMuonDetached',
-            'Hlt2DiMuonDetachedJPsi',
-            'Hlt2DiMuonDetachedPsi2S',                
-            'Hlt2CharmHadD02HH_D02KKWideMass',
-            'Hlt2CharmHadD02HH_D02KPiWideMass',
-            'Hlt2CharmHadD02HH_D02PiPiWideMass'    
+        hlt2 = ['Hlt2SingleMuon',
+                'Hlt2SingleMuonHighPT',
+                'Hlt2DiMuonJPsi',
+                'Hlt2DiMuonJPsiTurbo',
+                'Hlt2DiMuonPsi2S',
+                'Hlt2DiMuonB',
+	        'Hlt2PassThrough', 'Hlt2Lumi','Hlt2DebugEvent','Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent', # technical lines
+                'Hlt2TrackEffMuonTT1', # track efficiency lines
+                'Hlt2TrackEffMuonTT2',
+                'Hlt2TrackEffVeloMuon1',
+                'Hlt2TrackEffVeloMuon2',
+                'Hlt2TrackEffDownstream1',
+                'Hlt2TrackEffDownstream2',
          ]
 
 
@@ -316,8 +271,7 @@ class Physics_draftEM2015( object ):
         """
         lines =  [ 'Hlt1TrackAllL0', 'Hlt1TrackMuon'
                  , 'Hlt1CalibRICHMirror'
-                 , 'Hlt1SingleMuonNoIP'
-                 , 'Hlt1DiMuonLowMass'
+                 , 'Hlt1SingleMuonHighPT'
                  , 'Hlt1DiMuonHighMass'
                  , 'Hlt1BeamGasNoBeamBeam1', 'Hlt1BeamGasNoBeamBeam2'   # technical lines
                  , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2'
@@ -329,7 +283,7 @@ class Physics_draftEM2015( object ):
                  , 'Hlt1Lumi', 'Hlt1LumiMidBeamCrossing'
                  , 'Hlt1L0Any','Hlt1L0AnyNoSPD'
                  , 'Hlt1MBNoBias'
-                 , 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent' # , 'Hlt1Incident' 
+                 , 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent'  
                  , 'Hlt1MBMicroBiasVelo','Hlt1MBMicroBiasTStation'
                  , 'Hlt1VeloClosingMicroBias'
             ]
