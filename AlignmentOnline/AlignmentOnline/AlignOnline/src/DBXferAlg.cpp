@@ -6,6 +6,7 @@
  */
 
 #include "GaudiKernel/Service.h"
+#include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/Time.h"
 #include "GaudiKernel/Algorithm.h"
 
@@ -17,6 +18,12 @@
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "DetDesc/RunChangeIncident.h"
+//#include "GaudiAlg/GaudiTool.h"
+
+// STL
+
+// from AlignmentInterfaces
+#include "AlignmentInterfaces/IWriteAlignmentConditionsTool.h"
 
 //#include <stdio.h>
 //#include <stdlib.h>
@@ -37,7 +44,8 @@ class DBXferAlg : public Algorithm
     std::string m_alignxmldir;
     Gaudi::Time::ValueType m_RunStartTime;
     int m_RunNumber;
-
+    IWriteAlignmentConditionsTool* m_XMLWriter;
+    IToolSvc *m_toolsvc;
 };
 
 DECLARE_ALGORITHM_FACTORY(DBXferAlg)
@@ -52,19 +60,29 @@ DBXferAlg::DBXferAlg( const std::string& name, ISvcLocator *svcloc) : Algorithm(
 StatusCode DBXferAlg::initialize()
 {
 //	sleep(20);
-	printf("Initializing DBXferAlg...\n");
+  printf("Initializing DBXferAlg...\n");
   StatusCode sc = Algorithm::initialize();
+//  sc = GaudiTool::initialize();
+
+  // loading the xml writers
+  service("ToolSvc",m_toolsvc,true);
+  sc =  m_toolsvc->retrieveTool("WriteMultiAlignmentConditionsTool",m_XMLWriter);//this) ) ;
+  m_XMLWriter->initialize();
   return sc;
 }
 
 StatusCode DBXferAlg::finalize()
 {
+  m_XMLWriter->write();
+//  GaudiTool::finalize();
+  m_XMLWriter->finalize();
+  m_toolsvc->releaseTool(m_XMLWriter);
   return Algorithm::finalize();
 }
 
 StatusCode DBXferAlg::execute()
 {
-	printf("DBXferAlg Execute called...\n");
+  printf("DBXferAlg Execute called...\n");
   StatusCode sc = StatusCode::SUCCESS;
   // only called once
 
@@ -80,7 +98,7 @@ StatusCode DBXferAlg::execute()
   sc = service("IncidentSvc",incSvc,false);
 
     // 4. read ASDs and compute new constants
-	printf("DBXferAlg Fireing RunChange incident...\n");
+  printf("DBXferAlg Fireing RunChange incident...\n");
 
     detDataSvc->setEventTime(m_RunStartTime);
     incSvc->fireIncident(RunChangeIncident(name(), m_RunNumber));
