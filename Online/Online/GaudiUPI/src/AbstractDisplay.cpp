@@ -101,7 +101,7 @@ int AbstractMainDisplay::repaint() {
   return DISPLAY_SUCCESS;
 }
 
-int AbstractMainDisplay::SetOutOfBandAsts (int /* ast_map */, AbstractMainDisplay::HandlerType handle,Interactor* actor) {
+int AbstractMainDisplay::SetOutOfBandAsts (int /* ast_map */, AbstractMainDisplay::HandlerType handle,CPP::Interactor* actor) {
   m_actor = actor;
   m_handler = handle;
   return DISPLAY_SUCCESS;

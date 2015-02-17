@@ -36,7 +36,8 @@ enum DisplayStatus
 };
 
 
-class Interactor;
+namespace CPP {  class Interactor;  }
+
 struct DisplayAstData;
 class AbstractDisplay;
 class AbstractSubDisplay;
@@ -114,7 +115,7 @@ public:
 struct DisplayAstData   {
 public:
   int pasteboardID;
-  Interactor* astparameter;
+  CPP::Interactor* astparameter;
   char byte[4];
 };
 
@@ -195,16 +196,16 @@ public:
   static AbstractMainDisplay* create (const AbstractDisplay& data);
   virtual int print (const std::string& printer = 0) = 0;
   Children& children() {     return m_children; }
-  Interactor* actor()  {     return m_actor;    }
+  CPP::Interactor* actor()  {     return m_actor;    }
   virtual int map();
   virtual int close();
   virtual int flush();
   virtual int repaint();
   virtual int endUpdate();
   virtual int beginUpdate();
-  virtual int SetOutOfBandAsts (int ast_map,HandlerType handle,Interactor* actor);
+  virtual int SetOutOfBandAsts (int ast_map,HandlerType handle,CPP::Interactor* actor);
 protected:
-  Interactor  *m_actor;
+  CPP::Interactor  *m_actor;
   HandlerType  m_handler;
   Children     m_children;
 };

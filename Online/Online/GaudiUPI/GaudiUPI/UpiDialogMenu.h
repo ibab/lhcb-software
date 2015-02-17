@@ -1,10 +1,17 @@
+// ====================================================================
+//  UPI Dialog menu classes
+// --------------------------------------------------------------------
+//
+//	Author    : Markus Frank
+//
+// ====================================================================
 #ifndef _UPIDIALOGMENU_H
 #define _UPIDIALOGMENU_H 1
 
 #include "UPI/upidef.h"
+#include "UPI/UpiSensor.h"
 #include "GaudiUPI/DialogMenu.h"
 
-class UpiSensor;
 class UpiFactory;
 class UpiDialogMenu;
 
@@ -16,13 +23,13 @@ protected:
 public:
   virtual ~UpiFactory();
   static DialogFactory* instance ();
-  virtual DialogMenu* createMenu (Interactor* actor = 0,DialogMenu* parent = 0,ClientData data = 0);
-  virtual DialogSubMenu* createSubMenu (Interactor* actor = 0,DialogMenu* master = 0,ClientData data = 0);
+  virtual DialogMenu* createMenu (CPP::Interactor* actor = 0,DialogMenu* parent = 0,ClientData data = 0);
+  virtual DialogSubMenu* createSubMenu (CPP::Interactor* actor = 0,DialogMenu* master = 0,ClientData data = 0);
 };
 
 class UpiDialogMenu : public DialogMenu   {
 public:
-  UpiDialogMenu (Interactor* actor = 0,DialogMenu* parent = 0,ClientData data = 0);
+  UpiDialogMenu (CPP::Interactor* actor = 0,DialogMenu* parent = 0,ClientData data = 0);
   UpiDialogMenu (int menuId);
   virtual ~UpiDialogMenu();
   virtual int id();

@@ -34,7 +34,7 @@ class DialogMenuCreator;
 typedef long (*BackSpaceCall)(int,int,int,ClientData);
 typedef DialogMenu DialogSubMenu;
 
-class DialogMenu : public Interactor
+class DialogMenu : public CPP::Interactor
 {
 public:
   DialogMenu (Interactor* actor = 0,DialogMenu* parent = 0,ClientData /* data */ = 0) 
