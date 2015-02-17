@@ -81,8 +81,6 @@ class Hlt2Conf(LHCbConfigurableUser):
 
         definedTrackings = [ Hlt2BiKalmanFittedDownstreamTracking()
                            , Hlt2BiKalmanFittedForwardTracking() ]
-                           ## , Hlt2BiKalmanFittedRichForProtonsForwardTracking()
-                           ## , Hlt2BiKalmanFittedRichForLowPTParticlesForwardTracking() ]
 
         # And now we have to, for each of the configurables we just created, 
         # tell it the data type and tell it to use all the Hlt2 lines...
