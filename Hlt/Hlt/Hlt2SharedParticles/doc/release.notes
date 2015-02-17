@@ -5,6 +5,10 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-02-17 - Roel Aaij
+ - Remove second loop particles
+ - Remove special tracking configurations for (lowPT) RICH protons.
+
 ! 2015-02-02 - Michael Kolpin
  - Moved probe track reconstruction from TagAndProbeParticles to Hlt2ProbeTracking
 

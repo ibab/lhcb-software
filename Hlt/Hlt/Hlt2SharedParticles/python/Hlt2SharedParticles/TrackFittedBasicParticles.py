@@ -26,17 +26,6 @@ Hlt2BiKalmanFittedForwardTracking   			= Hlt2BiKalmanFittedForwardTracking()
 #
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
 Hlt2BiKalmanFittedDownstreamTracking 			= Hlt2BiKalmanFittedDownstreamTracking()
-#
-# Forward fitted for Rich-ID of protons 
-#
-from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedRichForProtonsForwardTracking
-Hlt2BiKalmanFittedRichForProtonsForwardTracking 	= Hlt2BiKalmanFittedRichForProtonsForwardTracking()
-
-#
-# Forward fitted for Rich-ID of LowPT protons
-#
-from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedRichForLowPTParticlesForwardTracking
-Hlt2BiKalmanFittedRichForLowPTParticlesForwardTracking 	= Hlt2BiKalmanFittedRichForLowPTParticlesForwardTracking()
 
 ##########################################################################
 #
@@ -48,10 +37,6 @@ Hlt2BiKalmanFittedRichForLowPTParticlesForwardTracking 	= Hlt2BiKalmanFittedRich
 #
 BiKalmanFittedChargedProtoMaker 			= Hlt2BiKalmanFittedForwardTracking.hlt2ChargedNoPIDsProtos()
 #
-# Charged hadron protoparticles, second loop forward trackign, no Rich
-#
-BiKalmanFittedChargedSecondLoopProtoMaker   = Hlt2BiKalmanFittedForwardTracking.hlt2ChargedNoPIDsProtos(secondLoop=True)
-#
 # Downstream hadron protoparticles, no Rich
 #
 BiKalmanFittedChargedDownProtoMaker			= Hlt2BiKalmanFittedDownstreamTracking.hlt2ChargedNoPIDsProtos()
@@ -62,11 +47,11 @@ BiKalmanFittedChargedRichHadronProtoMaker 		= Hlt2BiKalmanFittedForwardTracking.
 #
 # hadrons with the Rich configured to ID protons
 #
-BiKalmanFittedChargedRichForProtonsHadronProtoMaker	= Hlt2BiKalmanFittedRichForProtonsForwardTracking.hlt2ChargedRichProtos()
+BiKalmanFittedChargedRichForProtonsHadronProtoMaker	= Hlt2BiKalmanFittedForwardTracking.hlt2ChargedRichProtos()
 #
 # hadrons with the Rich configured to ID LowPT protons
 #
-BiKalmanFittedChargedRichForLowPTParticlesHadronProtoMaker = Hlt2BiKalmanFittedRichForLowPTParticlesForwardTracking.hlt2ChargedRichProtos()
+BiKalmanFittedChargedRichForLowPTParticlesHadronProtoMaker = Hlt2BiKalmanFittedForwardTracking.hlt2ChargedRichProtos()
 #
 # electrons
 #
@@ -76,10 +61,6 @@ BiKalmanFittedElectronFromL0Maker         = Hlt2BiKalmanFittedForwardTracking.hl
 # Muons  
 #
 BiKalmanFittedMuonProtoMaker 				= Hlt2BiKalmanFittedForwardTracking.hlt2ChargedMuonProtos()
-#
-# Second Loop Muons  
-#
-BiKalmanFittedMuonSecondLoopProtoMaker 		 = Hlt2BiKalmanFittedForwardTracking.hlt2ChargedMuonProtos(secondLoop=True)
 
 ##########################################################################
 #
@@ -289,48 +270,6 @@ Hlt2BiKalmanFittedElectronsFromL0	= CombinedParticleMaker("Hlt2BiKalmanFittedEle
 Hlt2BiKalmanFittedElectronsFromL0.addTool(ProtoParticleCALOFilter('Electron'))
 Hlt2BiKalmanFittedElectronsFromL0.Electron.Selection 		= ["RequiresDet='CALO' CombDLL(e-pi)>'-2.0'"]
 ##########################################################################
-#
-# Make the second loop pions
-#
-Hlt2BiKalmanFittedSecondLoopPions = NoPIDsParticleMaker("Hlt2BiKalmanFittedSecondLoopPions"
-                                            , Particle              =  "pion"
-                                            , Input                 =  BiKalmanFittedChargedSecondLoopProtoMaker.outputSelection()
-                                            , Output                = 'Hlt2/Hlt2BiKalmanFittedSecondLoopPions/Particles'
-                                            , WriteP2PVRelations    =  False
-                                            )
-##########################################################################
-#
-# Make the second loop protons
-#
-Hlt2BiKalmanFittedSecondLoopProtons = NoPIDsParticleMaker("Hlt2BiKalmanFittedSecondLoopProtons"
-                                            , Particle              =  "proton"
-                                            , Input                 =  BiKalmanFittedChargedSecondLoopProtoMaker.outputSelection()
-                                            , Output                = 'Hlt2/Hlt2BiKalmanFittedSecondLoopProtons/Particles'
-                                            , WriteP2PVRelations    =  False
-                                            ) 
-##########################################################################
-#
-# Make the second loop kaons
-#
-Hlt2BiKalmanFittedSecondLoopKaons = NoPIDsParticleMaker("Hlt2BiKalmanFittedSecondLoopKaons"
-                                            , Particle              =  "kaon"
-                                            , Input                 =  BiKalmanFittedChargedSecondLoopProtoMaker.outputSelection()
-                                            , Output                = 'Hlt2/Hlt2BiKalmanFittedSecondLoopKaons/Particles'
-                                            , WriteP2PVRelations    =  False
-                                            )
-##########################################################################
-#
-# Make the second loop Muons
-#
-Hlt2BiKalmanFittedSecondLoopMuons = CombinedParticleMaker("Hlt2BiKalmanFittedSecondLoopMuons"
-                                            , Particle 			    = "muon"
-                                            , Input 				=  BiKalmanFittedMuonSecondLoopProtoMaker.outputSelection()
-                                            , Output                = 'Hlt2/Hlt2BiKalmanFittedSecondLoopMuons/Particles'
-                                            , WriteP2PVRelations 	=  False
-                                            )
-Hlt2BiKalmanFittedSecondLoopMuons.addTool(ProtoParticleMUONFilter('Muon'))
-Hlt2BiKalmanFittedSecondLoopMuons.Muon.Selection 			= ["RequiresDet='MUON' IsMuon=True"]
-##########################################################################
 # Make the photons
 #
 Hlt2BiKalmanFittedPhotons = PhotonMakerAlg("Hlt2BiKalmanFittedPhotons")
@@ -378,10 +317,6 @@ __all__ = ( 	'BiKalmanFittedMuons',
               'BiKalmanFittedKaons', 
               'BiKalmanFittedKaons', 
               'BiKalmanFittedPions',
-              'BiKalmanFittedSecondLoopKaons',
-              'BiKalmanFittedSecondLoopPions',
-              'BiKalmanFittedSecondLoopProtons',
-              'BiKalmanFittedSecondLoopMuons',
               'BiKalmanFittedDownPions',
               'BiKalmanFittedProtons',
               'BiKalmanFittedDownProtons',
@@ -400,11 +335,6 @@ __all__ = ( 	'BiKalmanFittedMuons',
 #
 BiKalmanFittedKaons         = bindMembers( None, [ BiKalmanFittedChargedProtoMaker			, Hlt2BiKalmanFittedKaons 	] )
 BiKalmanFittedPions         = bindMembers( None, [ BiKalmanFittedChargedProtoMaker			, Hlt2BiKalmanFittedPions 	] )
-
-BiKalmanFittedSecondLoopKaons = bindMembers( None, [ BiKalmanFittedChargedSecondLoopProtoMaker , Hlt2BiKalmanFittedSecondLoopKaons   ] ) 
-BiKalmanFittedSecondLoopPions = bindMembers( None, [ BiKalmanFittedChargedSecondLoopProtoMaker , Hlt2BiKalmanFittedSecondLoopPions   ] )
-BiKalmanFittedSecondLoopProtons = bindMembers( None, [ BiKalmanFittedChargedSecondLoopProtoMaker , Hlt2BiKalmanFittedSecondLoopProtons   ] )
-BiKalmanFittedSecondLoopMuons = bindMembers( None, [ BiKalmanFittedMuonSecondLoopProtoMaker, Hlt2BiKalmanFittedSecondLoopMuons])
 
 BiKalmanFittedDownPions     = bindMembers( None, [ BiKalmanFittedChargedDownProtoMaker      , Hlt2BiKalmanFittedDownPions   ] )
 BiKalmanFittedProtons       = bindMembers( None, [ BiKalmanFittedChargedProtoMaker			, Hlt2BiKalmanFittedProtons 	] )
