@@ -3,6 +3,11 @@
 !--------------------------------------------------------------------------
 
 ! 2015-02-17 - Manuel Tobias Schiller
+ - prevent ROOT's dictionary generation phase from seeing the clever bits in
+   WalkRelation's padeTanh implementation, and fall back on a slower but safer
+   default, as this can cause problems in the dictionary generation phase
+
+! 2015-02-17 - Manuel Tobias Schiller
  - WalkRelation: optimise code further, but get rid of run-time switching the
    implementation of the fast approximation code, as this can't be inlined, and
    inlining gains about 1% of time in pattern reco

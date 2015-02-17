@@ -81,7 +81,7 @@ namespace OTDet
     // very short Padé approximation for the rest of the way
     const auto xx = x * 0.125;
     const auto xx2 = xx * xx;
-#if 0 // pedestrian code
+#if (0 || defined(__ROOTCLING__)) // pedestrian code
     const auto numer = 135135 + xx2 * (17325 + xx2 * ( 378 + xx2 *  1));
     const auto denom = 135135 + xx2 * (62370 + xx2 * (3150 + xx2 * 28));
 
@@ -107,7 +107,7 @@ namespace OTDet
     if (UNLIKELY(std::abs(x) > 9.1f)) return std::copysign(1.f, x);
     const auto xx = x * 0.125f;
     const auto xx2 = xx * xx;
-#if 1 // pedestrian code
+#if (1 || defined(__ROOTCLING__)) // pedestrian code
     auto tanh = xx * (xx2 + 15) / (6 * xx2 + 15);
 #else // same code SIMD'ified - same speed as pedestrian code above
     // unfortunately, there's only a variant that works on four floats at a
