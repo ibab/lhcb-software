@@ -1,3 +1,10 @@
+// ====================================================================
+//  AmsDataReceiver
+// --------------------------------------------------------------------
+//
+//	Author    : Markus Frank
+//
+// ====================================================================
 #include "GaudiOnline/NetworkDataReceiver.h"
 #include "WT/wt_facilities.h"
 #include "AMS/amsdef.h"
@@ -10,11 +17,12 @@
  */
 namespace LHCb  {
     
+  ///  Implementation of the NetworkDataReceiver using AMS.
   /** @class AmsDataReceiver AmsDataReceiver.cpp GaudiOnline/AmsDataReceiver.cpp
     *
-    *  Implementation of the NetworkDataReceiver using AMS.
     *
-    *  @author Markus Frank
+    *  \author  Markus Frank
+    *  \version 1.0
     */
   class AmsDataReceiver : public NetworkDataReceiver  {
   protected:
