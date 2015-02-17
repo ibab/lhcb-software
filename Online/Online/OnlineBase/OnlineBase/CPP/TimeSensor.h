@@ -29,29 +29,35 @@
 
 #include "CPP/Sensor.h"
 
-class TimeSensor : public Sensor {
-  /// Standard constructor
-  TimeSensor();
-public:
+/// CPP namespace declaration
+namespace CPP  {
 
-  /// Standard destructor
-  virtual ~TimeSensor();
-  /// Add interactor
-  virtual void add( Interactor*, void* );
-  /// Add interactor
-  virtual void  add(Interactor*, void*, void*);
-  /// Add interactor
-  virtual void  add(Interactor*, int, void* = 0 );
-  /// Remove interactor
-  virtual void  remove(Interactor*, void* = 0);
-  /// Timer event dispatching routine
-  virtual void  dispatch(void*);
-  /// Timer rearm callback
-  virtual void  rearm();
-  /// Singleton instantiation
-  static TimeSensor& instance();
-};
 
-#define TIMESENSOR (TimeSensor::instance())
+  class TimeSensor : public Sensor {
+    /// Standard constructor
+    TimeSensor();
+  public:
+
+    /// Standard destructor
+    virtual ~TimeSensor();
+    /// Add interactor
+    virtual void add( Interactor*, void* );
+    /// Add interactor
+    virtual void  add(Interactor*, void*, void*);
+    /// Add interactor
+    virtual void  add(Interactor*, int, void* = 0 );
+    /// Remove interactor
+    virtual void  remove(Interactor*, void* = 0);
+    /// Timer event dispatching routine
+    virtual void  dispatch(void*);
+    /// Timer rearm callback
+    virtual void  rearm();
+    /// Singleton instantiation
+    static TimeSensor& instance();
+  };
+}
+using CPP::TimeSensor;
+
+#define TIMESENSOR (::CPP::TimeSensor::instance())
 
 #endif // CPP_TIMESENSOR_H

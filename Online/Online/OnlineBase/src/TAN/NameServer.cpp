@@ -19,7 +19,7 @@ inline const char *timestr (void)  {
   return tim;
 }          
 
-class Receivehandler : public EventHandler  {
+class Receivehandler : public CPP::EventHandler  {
 protected:
   TcpNetworkChannel*    _pNetwork;
   TanDataBase::Entry*   _pEntry;
@@ -64,7 +64,7 @@ public:
   *  @author  M.Frank
   *  @version 1.0
   */
-class NameService : public EventReactor  {
+class NameService : public CPP::EventReactor  {
 protected:
   //@Man: Protected member variables
   /// Reference to tan database object
@@ -121,7 +121,7 @@ public:
   virtual ~UdpNameService()   {
   }
   /// Reactor's Event dispatching overlayed method
-  virtual int handle ( EventHandler* /* handler */ )  {
+  virtual int handle ( CPP::EventHandler* /* handler */ )  {
     return NAME_SERVER_SUCCESS;
   }
   /// handle Single request
@@ -170,11 +170,11 @@ public:
   /// Overloaded abstract member function: resume the service
   virtual int resume();
   /// Reactor's Event dispatching overlayed method
-  int handle ( EventHandler* handler );
+  int handle ( CPP::EventHandler* handler );
   /// handle Accept request
-  int handleAcceptRequest ( EventHandler* handler );
+  int handleAcceptRequest ( CPP::EventHandler* handler );
   /// handle receive request
-  int handleReceiveRequest ( EventHandler* handler );
+  int handleReceiveRequest ( CPP::EventHandler* handler );
 };
 
 // ----------------------------------------------------------------------------

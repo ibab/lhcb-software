@@ -20,12 +20,16 @@
 #include "NET/NetworkConnection.h"
 #include "NET/TcpNetworkChannel.h"
 //
+
 /// Definition of the NetworkAddress data structure for TCP sockets
 /** 
-        {\Large{\bf Class NetworkAddress}}
-
- Small wrapper containing the inet socket address.
-*/
+ *        {\Large{\bf Class NetworkAddress}}
+ *
+ *   Small wrapper containing the inet socket address.
+ *
+ *  \author  M.Frank
+ *  \version 1.0
+ */
 class TcpNetworkAddress : public NetworkAddress {
   public:
   //@Man: Class specific enumerations and typedefs
@@ -50,10 +54,13 @@ class TcpNetworkAddress : public NetworkAddress {
 
 /// Definition of a network connection based on TCP sockets
 /**
-    {\Large{\bf Class TcpConnection}}
-
- Definition of the TcpConnection class.
-*/
+ *    {\Large{\bf Class TcpConnection}}
+ *
+ *  Definition of the TcpConnection class.
+ *
+ *  \author  M.Frank
+ *  \version 1.0
+ */
 class TcpConnection  : public NetworkConnection {
 public:
   //@Man: Class specific enumerations and typedefs
@@ -95,7 +102,7 @@ public:
   /// Virtual method to send data
   virtual int send     (BasicRequest* req, NetworkAddress& to);
   /// Virtual method to listen to the connection socket
-  virtual int listen( EventHandler *handler );
+  virtual int listen( CPP::EventHandler *handler );
   /// Standard constructor with given service name
   static int servicePort(const char* service = "UserService");
 };

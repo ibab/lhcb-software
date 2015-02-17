@@ -27,29 +27,36 @@
 #ifndef __SENSOR
 #define __SENSOR 1
 
+// C/C++ include files
 #include <string>
 
-class Sensor;
-class Interactor;
+/// CPP namespace declaration
+namespace CPP  {
 
-class Sensor {
-private:
-  Sensor  *m_next;
-public:
-  unsigned int     m_facility;
-  bool             m_rearmPending;
-  std::string Name;
-  explicit Sensor( unsigned int fac, const char* = "NONAME", bool = true);
-  /// Standard destructor
-  virtual ~Sensor();
-  Sensor* next()  const   {  return m_next; }
-  void setRearm(bool val) {  m_rearmPending = val;  }
+  class Sensor;
+  class Interactor;
 
-  virtual void add( Interactor*, void* ) {}
-  virtual void remove( Interactor*, void* ) {}
-  virtual void dispatch(void*) {}
-  virtual void rearm() {}
-  virtual int  run();
-  int runThreaded();
-};
+  class Sensor {
+  private:
+    Sensor  *m_next;
+  public:
+    unsigned int     m_facility;
+    bool             m_rearmPending;
+    std::string Name;
+    /// Initializing constructor
+    explicit Sensor( unsigned int fac, const char* = "NONAME", bool = true);
+    /// Standard destructor
+    virtual ~Sensor();
+    Sensor* next()  const   {  return m_next; }
+    void setRearm(bool val) {  m_rearmPending = val;  }
+
+    virtual void add( Interactor*, void* ) {}
+    virtual void remove( Interactor*, void* ) {}
+    virtual void dispatch(void*) {}
+    virtual void rearm() {}
+    virtual int  run();
+    int runThreaded();
+  };
+}
+using CPP::Sensor;
 #endif

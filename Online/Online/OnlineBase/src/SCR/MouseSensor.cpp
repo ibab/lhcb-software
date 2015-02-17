@@ -35,7 +35,7 @@ MouseEvent::MouseEvent(int key, int x_val, int y_val, unsigned int ms)
 }
 
 /// Standard constructor
-MouseSensor::MouseSensor() : Sensor(WT_FACILITY_SCR_MOUSE,"ScrMouseSensor",true),m_pasteboard(0) {
+MouseSensor::MouseSensor() : CPP::Sensor(WT_FACILITY_SCR_MOUSE,"ScrMouseSensor",true),m_pasteboard(0) {
 }
 
 /// Standard destructor
@@ -68,7 +68,7 @@ void MouseSensor::stop() {
 
 /// Sensor overload: Dispatch interrupts and deliver callbacks to clients
 void MouseSensor::dispatch( void* arg )  {
-  std::auto_ptr<Event> ev((Event*)arg);
+  std::auto_ptr<CPP::Event> ev((Event*)arg);
   if ( ev.get() ) {
     MouseEvent* m = ev->get<MouseEvent>();
     Display* display = ::scrc_display_at (m_pasteboard,m->y,m->x);
@@ -86,7 +86,7 @@ void MouseSensor::dispatch( void* arg )  {
 }
 
 /// Subscribe Interactor target to display mouse-events
-void MouseSensor::add(Interactor* actor, void* display) {
+void MouseSensor::add(CPP::Interactor* actor, void* display) {
   if ( display ) {
     Targets& t = m_clients[display];
     for(Targets::iterator j=t.begin(); j!=t.end(); ++j)
@@ -101,7 +101,7 @@ void MouseSensor::remove(void* display) {
 }
 
 /// Unsubscribe Interactor target from display mouse-events
-void MouseSensor::remove(Interactor* actor, void* display) {
+void MouseSensor::remove(CPP::Interactor* actor, void* display) {
   Clients::iterator i = m_clients.find(display);
   if ( i != m_clients.end() ) {
     Targets& t = (*i).second;

@@ -1,3 +1,10 @@
+// ====================================================================
+//  MouseSensor
+// --------------------------------------------------------------------
+//
+//	Author    : Markus Frank
+//
+// ====================================================================
 #ifndef ONLINEKERNEL_SCR_MOUSESENSOR_H
 #define ONLINEKERNEL_SCR_MOUSESENSOR_H 1
 
@@ -13,8 +20,8 @@ namespace SCR {
   struct Pasteboard;
   struct Display;
 
+  /// Communication object describing the Mouse click events.
   /**
-   * Communication object describing the Mouse click events.
    * After the mouse interaction with a given SCR display
    * Clients retrieve an instance of this object.
    *
@@ -31,15 +38,15 @@ namespace SCR {
     MouseEvent(int key, int x, int y, unsigned int us);
   };
 
+  /// Mouse sensor. Display clients may subscribe to interrupts of a given display.
   /**
-   * Mouse sensor. Display clients may subscribe to interrupts of a given display.
    * It is up to the clients to define the appropriate action on the callback of 
    * a given display.
    *
    * @author M.Frank
    */
-  class MouseSensor : public Sensor {
-    typedef std::vector<Interactor*> Targets;
+  class MouseSensor : public CPP::Sensor {
+    typedef std::vector<CPP::Interactor*> Targets;
     typedef std::map<void*, Targets> Clients;
 
     /// Buffer with clients
@@ -59,11 +66,11 @@ namespace SCR {
     /// The MouseSensor is a singleton: Static instantiator
     static MouseSensor& instance();
     /// Subscribe Interactor target to display mouse-events
-    void add(Interactor* actor, void* display);
+    void add(CPP::Interactor* actor, void* display);
     /// Unsubscribe all Interactor targets from display mouse-events
     void remove(void* display);
     /// Unsubscribe Interactor target from display mouse-events
-    void remove(Interactor* actor, void* display);
+    void remove(CPP::Interactor* actor, void* display);
     /// Start the Mouse listener
     void start(Pasteboard* pb);
     /// Stop the Mouse listener

@@ -2,18 +2,20 @@
 #define __UdpNetworkChannel_H__
 #ifdef __cplusplus
 #include "RTL/QIO.h"
+#include "CPP/EventHandler.h"
+#include "NET/NetworkChannel.h"
 
 /// Definition of the UDP NetworkChannel data structure
 /**
-{\Large{\bf Class UdpNetworkChannel}}
-
-
-Networking object based on UDP sockets, which allows sending and receiving with timeouts
-
+ *   {\Large{\bf Class UdpNetworkChannel}}
+ *
+ *
+ *  Networking object based on UDP sockets, which allows sending and receiving with timeouts
+ *
+ * 
+ *  \author  M.Frank
+ *  \version 1.0
 */
-#include "NET/NetworkChannel.h"
-class EventHandler;
-
 class UdpNetworkChannel : public NetworkChannel {
 protected:
   /// Accept IOSB:
@@ -39,7 +41,7 @@ public:
   /// receive data from network partner.
   int recv  (void* buff, int len, int tmo = 0, int flags = 0, Address* addr = 0);
   /// Queue receive call 
-  int queueReceive ( Port port, EventHandler *handler );
+  int queueReceive ( Port port, CPP::EventHandler *handler );
   /// Queue receive call
   int _unqueueIO ( Port port );
   /// Standard constructor with given service name

@@ -12,7 +12,7 @@ namespace {
   class InteractorTarget;
 
   class Period {
-    friend class ::TimeSensor;
+    friend class CPP::TimeSensor;
   private:
     int           Time; 
     unsigned long m_alrmID;
@@ -34,7 +34,7 @@ namespace {
   };
 
   class InteractorTarget {
-    friend      class ::TimeSensor;
+    friend      class CPP::TimeSensor;
   private:
     Interactor* Inter;
     void*       Data;

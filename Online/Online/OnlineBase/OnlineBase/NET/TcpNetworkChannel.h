@@ -1,17 +1,20 @@
 #ifndef __TcpNetworkChannel_H__
 #define __TcpNetworkChannel_H__
 
+#include "CPP/EventHandler.h"
+#include "NET/NetworkChannel.h"
+
 /// Definition of the TCP NetworkChannel data structure
 /**
-        {\Large{\bf Class TcpNetworkChannel}}
-
-
-  Networking object based on TCP sockets, which allows sending and receiving with timeouts
-
-*/
-#include "NET/NetworkChannel.h"
-class EventHandler;
-
+ *        {\Large{\bf Class TcpNetworkChannel}}
+ *
+ *
+ *  Networking object based on TCP sockets, which allows sending and receiving with timeouts
+ *
+ * 
+ *  \author  M.Frank
+ *  \version 1.0
+ */
 class TcpNetworkChannel : public NetworkChannel {
 protected:
     struct IOSB  {
@@ -47,9 +50,9 @@ public:
     /// receive data from network partner.
     int recv  (void* buff, int len, int tmo = 0, int flags = 0, Address* addr = 0);
     /// Queue Accept call 
-    int queueAccept  ( Port port, EventHandler *handler );
+    int queueAccept  ( Port port, CPP::EventHandler *handler );
     /// Queue receive call 
-    int queueReceive ( Port port, EventHandler *handler );
+    int queueReceive ( Port port, CPP::EventHandler *handler );
     /// Queue receive call
     int _unqueueIO ( Port port );
     /// Cancel eventually pending I/O requests
