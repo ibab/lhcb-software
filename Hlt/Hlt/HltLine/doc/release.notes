@@ -5,6 +5,9 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2015-02-17 - Roel Aaij
+ - Return Hlt1 and Hlt2 lines in a defined order from HltLine.hlt{1,2}Lines()
+
 ! 2015-02-10 - Patrick Spradlin
  - python/HltLine/HltLine.py:  In Hlt2Line.__init__(), changed some class
    names in the list of recognized end-of-line algorithms from

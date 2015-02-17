@@ -157,16 +157,16 @@ _req_hlt_1_lines__ = set()
 _req_hlt_2_lines__ = set()
 
 def _ordered_lines( lines ) :
-    d = {}
+    from collections import defaultdict
+    d = defaultdict(list)
     for i in lines : 
         priority = i.priority()
         if not priority : priority = 127
         if priority < 0 or priority > 255 :
             raise AttributeError, 'Priority must by in [0,255], or None, line %s has %s' % (i.name(),i.priority() )
-        if priority in d : d[ priority ] += [ i ]
-        else             : d[ priority ]  = [ i ]
+        d[ priority ] += [ i ]
     l = []
-    for i in sorted( d.keys() ) : l += d[i]
+    for i in sorted( d.keys() ) : l += sorted(d[i], key = lambda l: l.name())
     return l
 # =============================================================================
 ## Simple function which returns the (tuple) of all currently created Hlt1Lines
