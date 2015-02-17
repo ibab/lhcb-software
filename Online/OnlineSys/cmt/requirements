@@ -37,7 +37,7 @@ use GaudiOnline         v2r77    Online
 use GaudiOnlineTests    v1r4     Online
 use GaudiRootCnvTests   v1r13    Online
 use GaudiSerialize      v0r15    Online
-use GaudiUPI            v1r19    Online
+use GaudiUPI            v1r20    Online
 use HistDBPython        v1r8     Online
 use InsertDB            v1r10    Online
 use MBMDump             v1r16    Online
@@ -45,7 +45,7 @@ use OMAlib              v4r4     Online
 use OnlineAlign         v0r4     Online
 use OnlineBase          v1r29    Online
 use OnlineHistDB        v8r2     Online
-use OnlineKernel        v2r18    Online
+use OnlineKernel        v2r19    Online
 use OnlineTools         v1r5     Online
 use OnlineTasks         v1r54    Online
 use Presenter           v3r11    Online
@@ -59,7 +59,7 @@ use ROLogger            v0r29    Online
 ##use $(Stomp_use)
 
 use Trending            v2r3     Online
-use UPI                 v1r28    Online
+use UPI                 v1r29    Online
 use UPIR                v1r7     Online
 use Writer              v1r50    Online
 use XML                 v0r5     Online

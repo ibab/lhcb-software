@@ -52,13 +52,13 @@ remove_tag()
     then
 	echo "+++ Package name = Online/$1";
     else
-	echo "+++ The first argument to make_tag must be the package name";
+	echo "+++ The first argument to remove_tag must be the package name";
     fi;
     if test "$2" != "";
     then
 	echo "+++ Package version = $2";
     else
-	echo "+++ The second argument to make_tag must be the package version";
+	echo "+++ The second argument to remove_tag must be the package version";
     fi;
 #
 #
@@ -90,9 +90,9 @@ remove_sys_tag()
 {
     if test "$1" != "";
     then
-	echo "+++ Package version = $1";
+	echo "+++ Package OnlineSys version = $1";
     else
-	echo "+++ The second argument to make_tag must be the package version";
+	echo "+++ argument to remove_sys_tag must be the package version";
     fi;
 #
 #
