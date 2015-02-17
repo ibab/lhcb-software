@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-02-17 - Marco Cattaneo
+ . Remove unnecessary PhysEvent includes from PGPrimaryVertex.h and remove
+   PhysEvent dependency that they introduced
+ 
 !========================= TrackMCTools v3r11 2014-12-11 =========================
 ! 2014-11-24 - Paul Seyfert
  - Add wrapper for ghost track classification tools to decide on a track-by-track

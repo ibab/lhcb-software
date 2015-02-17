@@ -4,9 +4,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/RndmGenerators.h"
-// From PhysEvent
-#include "Event/Particle.h"
-#include "Event/ProtoParticle.h"
+// From MCEvent
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
 // From ROOT
