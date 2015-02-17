@@ -1,35 +1,29 @@
-
 #include "OTDet/WalkRelation.h"
 #include "vdt/exp.h"
-
-#include "GaudiKernel/Kernel.h" // for (UN)LIKELY
-
-#include "LHCbMath/ChebyshevApprox.h"
 
 namespace OTDet
 {
 
   WalkRelation::WalkRelation() :
-    m_walk_fast(&WalkRelation::walk_fast_zero),
-    m_upperend(0.f),
+    m_upperend(0.f), m_foff(0.f), m_fdptfactor(0.f),
     m_approx(0., 1., [] (double) { return 0.;} ), // dummy walk relation
+    m_famp(0.f), m_fovertau(0.f),
     m_off(0.0), m_amp(0.0), m_tau(0.0), m_dpt(0.0), m_dptfactor(0.0), m_overtau(0.0)
   {
   }
 
   WalkRelation::WalkRelation(double off, double amp, double tau, double dpt) :
-    m_upperend(9.* std::abs(tau)),
-    m_approx(0., 9. * std::abs(tau), [off, amp, tau, dpt] (double l) {
+    m_upperend(9.1 * std::abs(tau)),
+    m_foff(off), m_fdptfactor((0. != m_tau) ? (1e-3 * m_dpt) : 0.),
+    m_approx(0., 9.1 * std::abs(tau), [off, amp, tau, dpt] (double l) {
 	return off + amp * (std::tanh(((0. != tau) ?
 	      (1. / std::abs(tau)) : 0.) * l) - 1.0) +
        	((0. != tau) ? (1e-3 * dpt) : 0.) * l; }),
+    m_famp(amp), m_fovertau((0. != m_tau) ? (1. / std::abs(m_tau)) : 0.),
     m_off(off), m_amp(amp), m_tau(tau), m_dpt(dpt),
     m_dptfactor((0. != m_tau) ? (1e-3 * m_dpt) : 0.),
     m_overtau((0. != m_tau) ? (1. / std::abs(m_tau)) : 0.)
   {
-    m_walk_fast = (0. == m_tau ||
-	m_approx.error_estimate() > 0.5f * 25.f / 64.f) ?
-      &WalkRelation::walk_fast_exact : &WalkRelation::walk_fast_chebyshev;
   }
 
   inline double WalkRelation::fastTanh(const double x) noexcept
@@ -46,39 +40,6 @@ namespace OTDet
     return tantable[i] + fraction*(tantable[i+1]-tantable[i]);
   }
 
-  inline double WalkRelation::padeTanh(const double x) noexcept
-  {
-    typedef double T;
-    // for very large |x| > 20, tanh(x) is x/|x| anyway (at least to double
-    // precision)
-    const T x2 = x * x;
-    if (x2 > T(400)) return (x > T(0)) ? T(1) : T(-1);
-    // strategy for large arguments: tanh(2x) = 2 tanh(x)/(1 + tanh^2(x))
-    // idea is to use this "argument halving" a couple of times, and use a
-    // very short Padé approximation for the rest of the way
-    constexpr unsigned N = 3;
-    const T xx = x / T(1u << N);
-    const T xx2 = xx * xx;
-    const T numer = T(135135) + xx2 * (T(17325) + xx2 * (T( 378) + xx2 * T( 1)));
-    const T denom = T(135135) + xx2 * (T(62370) + xx2 * (T(3150) + xx2 * T(28)));
-
-    T f = xx * numer / denom;
-    for (unsigned i = N; i--; f = T(2) * f / (T(1) + f * f));
-
-    return f;
-  }
-
-  inline float WalkRelation::padeTanh(const float x) noexcept
-  {
-    if (std::abs(x) > 9.1f) return (x > 0.f) ? 1.f : -1.f;
-    const auto xx = x * 0.125f;
-    const auto xx2 = xx * xx;
-    auto tanh = xx * (xx2 + 15.f) / (6.f * xx2 + 15.f);
-    tanh = 2.f * tanh / (1.f + tanh * tanh);
-    tanh = 2.f * tanh / (1.f + tanh * tanh);
-    return 2.f * tanh / (1.f + tanh * tanh);
-  }
-
   inline double vdt_tanh(const double x) noexcept
   {
     const double _e = 2.0 * x;
@@ -87,31 +48,4 @@ namespace OTDet
                              vdt::fast_exp(_e) );
     return (exptwox-1.0)/(exptwox+1.0);
   }
-
-  double WalkRelation::walk(double l) const noexcept
-  {
-    l *= (l > 0);//only positive values allowed
-    const double tanh = padeTanh(l * m_overtau);
-    return (m_amp * (tanh - 1.0)) + (l * m_dptfactor + m_off);
-  }
-
-  float WalkRelation::walk_fast_exact(float l) const noexcept
-  {
-    l *= (l > 0);//only positive values allowed
-    const float tanh = padeTanh(l * m_overtau);
-    return (m_amp * (tanh - 1.0f) + (l * m_dptfactor + m_off));
-  }
-
-  float WalkRelation::walk_fast_chebyshev(float l) const noexcept
-  {
-    // if l > 9 * m_tau, then tanh(x) is 1 to float precision anyway, so we can
-    // get by with a linear approximation; typical values for l and m_tau will
-    // not produce such a large result, and we make do with a Chebyshev
-    // approximation of the full monty...
-    if (UNLIKELY(l > m_upperend)) return m_dptfactor * l + m_off;
-    else return m_approx((l *= (l > 0)));
-  }
-
-  float WalkRelation::walk_fast_zero(float) const noexcept
-  { return 0.f; }
 }

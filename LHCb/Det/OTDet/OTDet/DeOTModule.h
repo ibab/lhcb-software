@@ -23,6 +23,8 @@ namespace LHCb
   class OTWireTraj ;
 }
 
+class MsgStream;
+
 /** @class DeOTModule DeOTModule.h "OTDet/DeOTModule.h"
  *
  *  This is the detector element class for a Outer Tracker Module. It
@@ -451,6 +453,9 @@ private:
   void sCircle(const double z1, const double u1, const double z2,
                const double u2, const double dz,
                double& zc, double& uc, double& rc) const;
+
+  void checkRtRelation(MsgStream& msg) const;
+  void checkWalkRelation(MsgStream& msg) const;
 
   /// Private members
 private :

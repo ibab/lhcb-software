@@ -2,6 +2,30 @@
 ! Responsible : Alexandr Kozlinskiy, Lucia Grillo
 !--------------------------------------------------------------------------
 
+! 2015-02-17 - Manuel Tobias Schiller
+ - WalkRelation: optimise code further, but get rid of run-time switching the
+   implementation of the fast approximation code, as this can't be inlined, and
+   inlining gains about 1% of time in pattern reco
+ - RtRelation: reimplement using ChebyshevApprox class to get rid of the large
+   lookup tables, the order of ChebyshevApprox is chosen to be of similar
+   quality as the fast approximation in WalkRelation (equivalent to about a
+   quarter of an OTIS time bin), and the approximation errors of r(t) and
+   sigma_r(t) are now of a similar order of magnitude (before, the error made
+   in sigma_r(t) was an order of magnitude larger than the one on r(t))
+   Also, it uses float internally, as the OTIS does not have the resolution to
+   require double precision...
+ - DeOTModule: add protection code which monitors accuracy of approximations
+   in WalkRelation and RtRelation when they are set/changed; warning
+   thresholds are set to the equivalent of half an OTIS time bin (6.5-7.8% of
+   OT resolution), and error messages are printed if the accuracy is worse
+   than twice that
+   this should leave sufficient "headroom" in the approximation error for
+   small variations due to different calibrations etc., but will catch
+   pathological cases, and complain (visibly) about them - the old code did
+   not monitor the accuracy of the LUT in the old version of RtRelation, so
+   it's a step in the right direction because feedback is given when things
+   start to go wrong
+
 ! 2015-02-06 - Marco Clemencic
  - Fixed include of LHCbMath/ChebyshevApprox.h in WalkRelation.cpp.
 

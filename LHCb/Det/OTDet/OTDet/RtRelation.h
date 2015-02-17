@@ -1,145 +1,183 @@
 #ifndef OTDET_RTRELATION
 #define OTDET_RTRELATION
 
-#include <gsl/gsl_poly.h>
 #include <vector>
+#include <algorithm>
+
+#include "GaudiKernel/Kernel.h"
+
+#include "LHCbMath/ChebyshevApprox.h"
+#include "LHCbMath/PolyEval.h"
 
 namespace OTDet
 {
-  
+  /// little helper class to represent a value with its associated error
   struct ValueWithError
   {
     ValueWithError() : val(0), err(0) {}
-    ValueWithError(double v, double e) : val(v), err(e) {}
-    double val ;
-    double err ;
-  } ;
+    ValueWithError(float v, float e) : val(v), err(e) {}
+    float val;
+    float err;
+  };
 
-  inline ValueWithError interpolate( const double wlhs, const ValueWithError lhs, 
-				     const double wrhs, const ValueWithError rhs) 
-  { 
-    return ValueWithError( wlhs*lhs.val + wrhs*rhs.val, wlhs*lhs.err + wrhs*rhs.err ) ;
-  }
-
-  typedef ValueWithError RadiusWithError ;
-  typedef ValueWithError DriftTimeWithError  ;
+  /// convenience typedef
+  typedef ValueWithError RadiusWithError;
+  /// convenience typedef
+  typedef ValueWithError DriftTimeWithError;
     
+  /** @brief r(t) relation for the Outer Tracker.
+   *
+   * @author Wouter Hulsbergen
+   * @date the mists of time
+   *	- initial implementation with lookup tables to invert t(r) and friends
+   *
+   * @author Manuel Schiller
+   * @date 2015-02-09
+   * 	- move to Chebyshev polynomials and float precision instead of doubles;
+   * 	  the precision is better with the new code
+   */
   class RtRelation
   {
-  public:
-    /// default constructor. does nothing sensible.
-    RtRelation() {}
-    /// constructor from a polynomial t(r) and sigmat(r).  the
-    /// coefficients are actually those of a polynominal in r/rmax,
-    /// such that they all have unit [ns].
-    RtRelation(double rmax, const std::vector<double>& tcoeff, const std::vector<double>& terrcoeff, size_t nbins=49) ;
-    ///  constructor from a polynomial t(r) and a fixed error in r. this is only for convenience with MC.
-    RtRelation(double rmax, const std::vector<double>& tcoeff, double sigmaR, size_t nbins=25) ;
-    /// return radius for given drifttime
-    RadiusWithError radiusWithError(double time) const ;
-    /// return radius for given drifttime
-    double radius(double time) const ;
-    /// return radius for given drifttime. extrapolate into 'unphysical' region.
-    double extrapolatedradius( double time ) const ;
-    /// return derivative to time
-    double drdt(double time) const ;
-    /// return derivative to radius
-    double dtdr(double radius) const ;
-    /// return drifttime for given radius
-    double drifttime( double radius) const ;
-    /// return sigma(drifttime) for given radius
-    double drifttimeError( double radius) const ;
-    /// return drifttime with error
-    DriftTimeWithError drifttimeWithError( double radius ) const ;
-    /// return average driftvelocity
-    double drdt() const { return m_rmax/(m_tmax-m_tmin) ; }
-    /// return maximum drift time
-    double tmax() const { return m_tmax ; }
-    /// return minimum drift time
-    double tmin() const { return m_tmin ; }
-    /// return maximum drift radius
-    double rmax() const { return m_rmax ; }
-    /// return coefficients of polynimial t(r)
-    const std::vector<double>& tcoeff() const { return m_tcoeff ; }
-    /// return coefficients of polynimial sigma_t(r)
-    const std::vector<double>& terrcoeff() const { return m_terrcoeff ; }
-    /// number of points in the r(t) table
-    size_t nbins() const { return m_rtable.size() ; }
-  private:
-    static double polyeval(const std::vector<double>& coeff, double x) { 
-      return gsl_poly_eval(&(coeff.front()),coeff.size(),x) ; }
-    void initRTable(size_t ntbins) ;
-  private:
-    double m_rmax ;
-    std::vector<double> m_tcoeff ;    /// coefficients of polynomial t(r/rmax) all in [ns]
-    std::vector<double> m_terrcoeff ; /// coefficients of polynomial sigma_t(r/rmax) all in [ns]
-    double m_tmin ;
-    double m_tmax ;
-    double m_dt ;
-    std::vector<RadiusWithError> m_rtable ; /// table which maps to a radius with error
-  } ;
+    public:
+      /// default constructor. does nothing sensible.
+      RtRelation();
+      /// constructor from a polynomial t(r) and sigmat(r).  the
+      /// coefficients are actually those of a polynomial in r/rmax,
+      /// such that they all have unit [ns].
+      RtRelation(double rmax, const std::vector<double>& tcoeff, const std::vector<double>& terrcoeff);
+      ///  constructor from a polynomial t(r) and a fixed error in r. this is only for convenience with MC.
+      RtRelation(double rmax, const std::vector<double>& tcoeff, double sigmaR);
 
-  inline RadiusWithError RtRelation::radiusWithError( double time ) const 
+      // -------------------- various little helpers --------------------
+      /// return maximum drift time
+      inline float tmax() const noexcept { return m_tmax; }
+      /// return minimum drift time
+      inline float tmin() const noexcept { return m_tmin; }
+      /// return minimum drift radius
+      constexpr static inline float rmin() noexcept { return 0.f; }
+      /// return maximum drift radius
+      inline float rmax() const noexcept { return m_rmax; }
+
+      /// return coefficients of polynimial t(r)
+      inline const std::vector<float>& tcoeff() const noexcept
+      { return m_tcoeff; }
+
+      /// return coefficients of polynimial sigma_t(r)
+      inline const std::vector<float>& terrcoeff() const noexcept
+      { return m_terrcoeff; }
+
+      typedef enum { Rt, Drdt, Rerr } WhichError;
+      /// return error estimates of underlying Chebyshev approximations
+      inline float error_estimate(WhichError which) const noexcept
+      {
+	return (Rt == which) ? m_rt.error_estimate() :
+	  (Drdt == which) ? m_drdt.error_estimate() :
+	  m_sigmar.error_estimate();
+      }
+
+      // -------------------- as function of radius --------------------
+      /// return drifttime for given radius
+      inline float drifttime(float radius) const noexcept;
+      /// return derivative to radius
+      inline float dtdr(float radius) const noexcept;
+      /// return sigma(drifttime) for given radius
+      inline float drifttimeError(float radius) const noexcept;
+
+      /// return drifttime with error
+      inline DriftTimeWithError drifttimeWithError(float radius) const noexcept;
+
+      // -------------------- as function of drift time --------------------
+      /// return radius for given drifttime
+      inline float radius(float time) const noexcept;
+
+      /// return radius for given drifttime. extrapolate into 'unphysical' region.
+      inline float extrapolatedradius(float time) const noexcept;
+
+      /// return radius for given drifttime
+      inline float radiusError(float time) const noexcept;
+
+      /// return derivative to time
+      inline float drdt(float time) const noexcept;
+
+      /// return average driftvelocity
+      inline float drdt() const noexcept
+      { return (rmax() - rmin()) / (tmax() - tmin()); }
+
+      /// return radius for given drifttime
+      inline RadiusWithError radiusWithError(float time) const noexcept;
+
+    private:
+      float m_rmax;		///< radius of inner edge straw wall [mm]
+      float m_rconv;		///< cached 1.f / m_rmax [1/mm]
+      std::vector<float> m_tcoeff;    ///< coefficients of polynomial t(r/rmax) all in [ns]
+      std::vector<float> m_dtdrcoeff; ///< coefficients of dt/dr(r/rmax) all in [ns/1]
+      std::vector<float> m_terrcoeff; ///< coefficients of polynomial sigma_t(r/rmax) all in [ns]
+
+      float m_tmin;		///< cached t(r = 0) [ns]
+      float m_tmax;		///< cached t(r = m_rmax) [ns]
+
+      constexpr static unsigned s_ChebTerms = 5; ///< number of terms in Chebyshev approximations
+      ChebyshevApprox<float, s_ChebTerms> m_rt; ///< approximation to r(t) relation
+      ChebyshevApprox<float, s_ChebTerms - 1> m_drdt; ///< approximation to drdt(t) relation
+      ChebyshevApprox<float, s_ChebTerms - 1> m_sigmar; ///< approximation to sigma_r(t) relation
+
+      float m_drdtAtRmin; ///< dr/dt at r = 0
+      float m_drdtAtRmax; ///< dr/dt at r = rmax
+  };
+
+  inline float RtRelation::drifttime(float radius) const noexcept
   {
-    double        fbin = (time-m_tmin)/m_dt ;
-    unsigned int ibin = int(fbin) ;
-    double        w    = fbin - ibin ;
-    return time <= m_tmin ? m_rtable.front() : 
-      ( time >= m_tmax ? m_rtable.back() : 
-	interpolate( (1-w), m_rtable[ibin], w, m_rtable[ibin+1] ) ) ;
-  }
-  
-  inline double RtRelation::radius( double time ) const 
-  {
-    double        fbin = (time-m_tmin)/m_dt ;
-    unsigned int ibin = int(fbin) ;
-    double        w    = fbin - ibin ;
-    return time <= m_tmin ? m_rtable.front().val : 
-      ( time >= m_tmax ? m_rtable.back().val : 
-	(1-w)*m_rtable[ibin].val + w*m_rtable[ibin+1].val ) ;
-  }
-  
-  inline double RtRelation::extrapolatedradius( double time ) const 
-  {
-    // horribly expensive
-    double fbin = (time-m_tmin)/m_dt ;
-    int ibin = int(fbin) ;
-    int maxbin = m_rtable.size()-2 ;
-    ibin = ibin<=0 ? 0 : (ibin >= maxbin ? maxbin: ibin) ;
-    double w    = fbin - ibin ;
-    return (1-w)*m_rtable[ibin].val + w*m_rtable[ibin+1].val ;
-  }
-  
-  inline double RtRelation::drdt( double time ) const 
-  {
-    double fbin = time/m_dt ;
-    unsigned int ibin = std::min((unsigned int)(fbin),(unsigned int)m_rtable.size()-2) ;
-    return (m_rtable[ibin+1].val - m_rtable[ibin].val)/m_dt ;
-  }
-  
-  inline double RtRelation::drifttime( double r ) const 
-  {
-    return polyeval(m_tcoeff, r<m_rmax ? r/m_rmax : 1 ) ;
+    return PolyEval::eval(
+	std::min(rmax(), std::max(rmin(), radius)) * m_rconv, m_tcoeff);
   }
 
-  inline double RtRelation::drifttimeError( double r ) const 
+  inline float RtRelation::dtdr(float radius) const noexcept
   {
-    return polyeval(m_terrcoeff, r<m_rmax ? r/m_rmax : 1) ;
+    return PolyEval::eval(
+	std::min(rmax(), std::max(rmin(), radius)) * m_rconv, m_dtdrcoeff);
   }
 
-  inline DriftTimeWithError RtRelation::drifttimeWithError( double r ) const 
+  inline float RtRelation::drifttimeError(float radius) const noexcept
   {
-    return DriftTimeWithError(drifttime(r),drifttimeError(r)) ;
+    return PolyEval::eval(
+	std::min(rmax(), std::max(rmin(), radius)) * m_rconv, m_terrcoeff);
   }
 
-  inline double RtRelation::dtdr( double r ) const 
+  inline DriftTimeWithError RtRelation::drifttimeWithError(float radius) const noexcept
   {
-    // we probably want to cache these ...
-    std::vector<double> derivcoeff(m_tcoeff.size()-1) ;
-    for( size_t i=0; i<derivcoeff.size(); ++i) derivcoeff[i] = m_tcoeff[i+1] * (i+1) / m_rmax ;
-    return polyeval(derivcoeff,r/m_rmax) ;
+    radius = std::min(rmax(), std::max(rmin(), radius)) * m_rconv;
+    return DriftTimeWithError(PolyEval::eval(radius, m_tcoeff),
+	PolyEval::eval(radius, m_terrcoeff));
   }
-  
+
+  inline float RtRelation::radius(float time) const noexcept
+  {
+    return m_rt(std::min(tmax(), std::max(tmin(), time)));
+  }
+
+  inline float RtRelation::extrapolatedradius(float time) const noexcept
+  {
+    return 
+	UNLIKELY(time > tmax()) ? (rmax() + m_drdtAtRmax * (time - tmax())) :
+	UNLIKELY(time < tmin()) ? (rmin() + m_drdtAtRmin * (time - tmin())) :
+	m_rt(time);
+  }
+
+  inline float RtRelation::radiusError(float time) const noexcept
+  {
+    return m_sigmar(std::min(tmax(), std::max(tmin(), time)));
+  }
+
+  inline float RtRelation::drdt(float time) const noexcept
+  {
+    return m_drdt(std::min(tmax(), std::max(tmin(), time)));
+  }
+
+  inline RadiusWithError RtRelation::radiusWithError(float time) const noexcept
+  {
+    time = std::min(tmax(), std::max(tmin(), time));
+    return RadiusWithError(m_rt(time), m_sigmar(time));
+  }
 }
 
 #endif

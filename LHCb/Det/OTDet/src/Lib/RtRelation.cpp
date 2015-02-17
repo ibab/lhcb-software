@@ -1,68 +1,80 @@
 #include "OTDet/RtRelation.h"
-//#include <math.h>
 #include <cmath>
 #include <iostream>
 
+/// little helper routines
+namespace {
+  /// little helper routine to get coefficients of derivative of given polynomial
+  template <typename FLT, typename RETFLT = FLT>
+  static std::vector<RETFLT> derivative(const std::vector<FLT>& coeffs, const FLT scale = 1)
+  {
+    if (2 > coeffs.size()) return std::vector<RETFLT>{RETFLT(0)};
+    std::vector<RETFLT> retVal(std::begin(coeffs) + 1, std::end(coeffs));
+    unsigned k = 0;
+    for (RETFLT& c: retVal) c *= scale * ++k;
+    return retVal;
+  }
+}
+
 namespace OTDet
 {
-  
-  RtRelation::RtRelation(double rmax, 
-			 const std::vector<double>& tcoeff, 
-			 const std::vector<double>& terrcoeff,
-			 size_t ntbins)
-    : m_rmax(rmax),
-      m_tcoeff(tcoeff),
-      m_terrcoeff(terrcoeff)
+
+  RtRelation::RtRelation(double rmax,
+			 const std::vector<double>& tcoeff,
+			 const std::vector<double>& terrcoeff) :
+    m_rmax(rmax), m_rconv(1 / rmax),
+    m_tcoeff(std::begin(tcoeff), std::end(tcoeff)),
+    m_dtdrcoeff(derivative<double, float>(tcoeff, 1 / rmax)),
+    m_terrcoeff(std::begin(terrcoeff), std::end(terrcoeff)),
+    m_tmin(drifttime(0.)), m_tmax(drifttime(m_rmax)),
+    m_rt(ChebyshevApprox<float, s_ChebTerms>::inverse(0., rmax,
+	  [this] (double rr) { return double(drifttime(rr)); })),
+    m_drdt(ChebyshevApprox<float, s_ChebTerms - 1>::implicit(0., rmax,
+	  [this] (double rr) { return 1. / dtdr(rr); },
+	  [this] (double rr) { return double(drifttime(rr)); })),
+    m_sigmar(ChebyshevApprox<float, s_ChebTerms - 1>::implicit(0., rmax,
+	  [this] (double rr) { return double(drifttimeError(rr) / std::abs(dtdr(rr))); },
+	  [this] (double rr) { return double(drifttime(rr)); })),
+    m_drdtAtRmin(1 / std::abs(dtdr(0.f))),
+    m_drdtAtRmax(1 / std::abs(dtdr(m_rmax)))
   {
-    initRTable(ntbins) ;
+    // "normalise" polynomials by chopping off zero coefficients at the back
+    while (m_tcoeff.size() > 1 && 0.f == m_tcoeff.back()) m_tcoeff.pop_back();
+    while (m_terrcoeff.size() > 1 && 0.f == m_terrcoeff.back()) m_terrcoeff.pop_back();
+    while (m_dtdrcoeff.size() > 1 && 0.f == m_dtdrcoeff.back()) m_dtdrcoeff.pop_back();
   }
 
-  RtRelation::RtRelation(double rmax, 
-			 const std::vector<double>& tcoeff, 
-			 double sigmaR, size_t ntbins)
-    : m_rmax(rmax),
-      m_tcoeff(tcoeff),
-      m_terrcoeff(tcoeff.size()-1)
+  RtRelation::RtRelation(double rmax,
+      const std::vector<double>& tcoeff,
+      double sigmaR) :
+    m_rmax(rmax), m_rconv(1 / rmax),
+    m_tcoeff(std::begin(tcoeff), std::end(tcoeff)),
+    m_dtdrcoeff(derivative<double, float>(tcoeff, 1 / rmax)),
+    // if we want constant error in r, we must put dt/dr = sigma_r * t'(r)
+    m_terrcoeff(derivative<double, float>(tcoeff, sigmaR / rmax)),
+    m_tmin(drifttime(0.)), m_tmax(drifttime(m_rmax)),
+    m_rt(ChebyshevApprox<float, s_ChebTerms>::inverse(0., rmax,
+	  [this] (double rr) { return double(drifttime(rr)); })),
+    m_drdt(ChebyshevApprox<float, s_ChebTerms - 1>::implicit(0., rmax,
+	  [this] (double rr) { return 1. / dtdr(rr); },
+	  [this] (double rr) { return double(drifttime(rr)); })),
+    m_sigmar(ChebyshevApprox<float, s_ChebTerms - 1>::implicit(0., rmax,
+	  [sigmaR] (double /* rr */) { return sigmaR; },
+	  [this] (double rr) { return double(drifttime(rr)); })),
+    m_drdtAtRmin(1 / std::abs(dtdr(0.f))),
+    m_drdtAtRmax(1 / std::abs(dtdr(m_rmax)))
   {
-    // we want a fixed error in the radius. that just means that
-    // sigma_t(r) is the derivative of t(r)
-    for(size_t i=0; i<m_terrcoeff.size(); ++i) m_terrcoeff[i] = sigmaR * m_tcoeff[i+1] * (i+1) / m_rmax ;
-    // now initialize the table
-    initRTable(ntbins) ;
+    // "normalise" polynomials by chopping off zero coefficients at the back
+    while (m_tcoeff.size() > 1 && 0.f == m_tcoeff.back()) m_tcoeff.pop_back();
+    while (m_terrcoeff.size() > 1 && 0.f == m_terrcoeff.back()) m_terrcoeff.pop_back();
+    while (m_dtdrcoeff.size() > 1 && 0.f == m_dtdrcoeff.back()) m_dtdrcoeff.pop_back();
   }
-  
-  void RtRelation::initRTable(size_t ntbins)
-  {
-    // create a table for the r(t) relation. this table has a fixed bin
-    // size, otherwise things are not fast enough.
-    m_tmin = polyeval(m_tcoeff,0) ;
-    m_tmax = polyeval(m_tcoeff,1) ;
-    m_dt   = (m_tmax-m_tmin)/(ntbins-1) ;
-    m_rtable.resize( ntbins ) ;
-    std::vector<double> derivcoeff(m_tcoeff.size()-1) ;
-    for(size_t i=0; i<derivcoeff.size(); ++i) derivcoeff[i] = m_tcoeff[i+1] * (i+1) / m_rmax ;
-    m_rtable.front() = RadiusWithError(0,drifttimeError(0)/polyeval(derivcoeff,0)) ;
-    m_rtable.back()  = RadiusWithError(m_rmax,drifttimeError(m_rmax)/polyeval(derivcoeff,1)) ;
-    // the rest goes numeric (newton-raphson) 
-    for(size_t i = 1; i<ntbins-1; ++i) {
-      double t = m_tmin + i*m_dt ;
-      const double precision = 0.001 ;
-      double r = m_rtable[i-1].val ;
-      const unsigned char maxtries = 10 ;
-      size_t ntries = 0 ;
-      double residual(0) ;
-      do {
-	residual = t - drifttime(r) ;
-	r += residual / polyeval(derivcoeff,r/m_rmax) ;
-      } while( ++ntries<maxtries && std::abs(residual) > precision) ;
-      
-      double dtdr = polyeval(derivcoeff,r/m_rmax) ;
-      m_rtable[i] = RadiusWithError(r, drifttimeError(r)/dtdr ) ;
-    }
-  }
-  
-  //   RtRelation::RtRelation(double tmin, double tmax, const std::vector<double>& radius) 
-  //     : m_tmin(tmin), m_tmax(tmax), m_rtable(radius), m_dt( (tmax-tmin) / (radius.size()-1)), m_rmin(radius.front()), m_rmax(radius.back()) 
+
+  RtRelation::RtRelation() : RtRelation(2.45, { 0., 20.1, 14.4 }, { 3.0, 0.67 } )
+  { }
+
+  //   RtRelation::RtRelation(double tmin, double tmax, const std::vector<double>& radius)
+  //     : m_tmin(tmin), m_tmax(tmax), m_rtable(radius), m_dt( (tmax-tmin) / (radius.size()-1)), m_rmin(radius.front()), m_rmax(radius.back())
   //   {
   //     // now we still need to create the coefficients for the t(r)
   //     // function. the best is just to make a chebychev approximation
@@ -75,5 +87,5 @@ namespace OTDet
   //     m_tcoeff = boost::assign::list_of(m_tmin - m_rmin * dtdr)(dtdr) ;
   //     std::cout << "This constructor is not complete. Please FIXME." << std::endl ;
   //   }
-  
+
 }
