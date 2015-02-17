@@ -52,26 +52,26 @@
   <class name = "IAccept"                />
   <class name = "ICountContainedObjects" />
 
-  <variable pattern="Rich::NRadiatorTypes"  />
+  <variable name="Rich::NRadiatorTypes"  />
   <enum name = "Rich::RadiatorType" />
   <class name = "Rich::RadiatorTypeVector" />
   <class name = "Rich::Radiators" />
   <function pattern="Rich::radiators*" />
 
-  <variable pattern="Rich::NRiches"  />
+  <variable name="Rich::NRiches"  />
   <enum name = "Rich::DetectorType" />
   <class name = "Rich::DetectorVector" />
   <class name = "Rich::Detectors" />
   <function pattern="Rich::detectors*" />
 
-  <variable pattern="Rich::NParticleTypes"  />
+  <variable name="Rich::NParticleTypes"  />
   <enum name = "Rich::ParticleIDType" />
   <class name = "Rich::ParticleIDTypeVector" />
   <class name = "Rich::Particles" />
   <function pattern="Rich::particles*" />
 
-  <variable pattern="Rich::NTotalPDPanels"  />
-  <variable pattern="Rich::NPDPanelsPerRICH"  />
+  <variable name="Rich::NTotalPDPanels"  />
+  <variable name="Rich::NPDPanelsPerRICH"  />
   <enum name = "Rich::Side" />
   <class name = "Rich::RichSideVector" />
   <class name = "Rich::Sides" />

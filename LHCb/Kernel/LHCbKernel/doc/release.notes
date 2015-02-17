@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2015-02-17 - Chris Jones
+ - Fix some RICH dictionary warnings.
+
 ! 2015-02-14 - Vanya Belyaev
  - change LHCb::LHCbID::channelIDype -> LHCb::LHCbID::channelIDtype
 
