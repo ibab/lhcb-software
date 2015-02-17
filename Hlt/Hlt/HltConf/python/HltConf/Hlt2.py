@@ -27,16 +27,9 @@ from HltTracking.Hlt2Tracking import Hlt2Tracking
 #
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
-from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedRichForProtonsForwardTracking
-from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedRichForLowPTParticlesForwardTracking
-# Define what categories stand for
-# There are the strings used in HltThresholdSettings
-
 
 class Hlt2Conf(LHCbConfigurableUser):
-    __used_configurables__ = [ (Hlt2Tracking, "Hlt2BiKalmanFittedRichForProtonsForwardTracking")
-                             , (Hlt2Tracking, "Hlt2BiKalmanFittedRichForLowPTParticlesForwardTracking")
-                             , (Hlt2Tracking, "Hlt2BiKalmanFittedDownstreamTracking") 
+    __used_configurables__ = [ (Hlt2Tracking, "Hlt2BiKalmanFittedDownstreamTracking") 
                              , (Hlt2Tracking, "Hlt2BiKalmanFittedForwardTracking")
                              ] + _hlt2linesconfs
 
@@ -87,9 +80,9 @@ class Hlt2Conf(LHCbConfigurableUser):
     def configureReconstruction(self):
 
         definedTrackings = [ Hlt2BiKalmanFittedDownstreamTracking()
-                           , Hlt2BiKalmanFittedForwardTracking()
-                           , Hlt2BiKalmanFittedRichForProtonsForwardTracking()
-                           , Hlt2BiKalmanFittedRichForLowPTParticlesForwardTracking() ]
+                           , Hlt2BiKalmanFittedForwardTracking() ]
+                           ## , Hlt2BiKalmanFittedRichForProtonsForwardTracking()
+                           ## , Hlt2BiKalmanFittedRichForLowPTParticlesForwardTracking() ]
 
         # And now we have to, for each of the configurables we just created, 
         # tell it the data type and tell it to use all the Hlt2 lines...

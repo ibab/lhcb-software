@@ -59,13 +59,13 @@ class Hlt1Conf(LHCbConfigurableUser):
       ## Existing stuff
       from ThresholdUtils import setThresholds
       from functools import partial
-      map( partial( setThresholds, self.getProp("ThresholdSettings") ) , _hlt1linesconfs )
+      map( partial( setThresholds, self.getProp("ThresholdSettings") ), _hlt1linesconfs )
 
       from HltLine.HltLine     import Hlt1Line
       Hlt1Line( 'Global', HLT= "HLT_PASS_SUBSTR('Hlt1') ", priority = 255 ) 
          
       # add a few thing to our printout
-      from HltLine.HltLine     import addHlt1Prop
+      from HltLine.HltLine import addHlt1Prop
       addHlt1Prop([ 'RoutingBits', 'Accept', 'FilterDescriptor'
                   , 'Code', 'Preambulo', 'InputLocations', 'Input','Inputs', 'Output','OutputProtoParticleLocation','InputTrackLocation'
                   , 'DaughtersCuts', 'CombinationCut', 'MotherCut', 'DecayDescriptor'

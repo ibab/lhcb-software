@@ -4,6 +4,10 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2015-02-17 - Roel Aaij
+ - Remove second loop tracking configurations.
+ - Remove special tracking configurations for (lowPT) RICH protons.
+
 ! 2015-02-12 - V. Gligorov
  - Add routing bit 54 for the RICH calibration lines.
 
