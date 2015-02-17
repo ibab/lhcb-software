@@ -5,47 +5,47 @@
 
 #include "DetDesc/DetectorElement.h"
 
-class WriteAlignmentConditionsTool 
+class WriteAlignmentConditionsTool
   : public GaudiTool, virtual public IWriteAlignmentConditionsTool
 {
 public:
 
   /// constructer
   WriteAlignmentConditionsTool( const std::string& type,
-				const std::string& name,
-				const IInterface* parent); ///< Standard constructor
-  
+        const std::string& name,
+        const IInterface* parent); ///< Standard constructor
+
   /// destructer
   virtual ~WriteAlignmentConditionsTool();
 
   /// initialize
   StatusCode initialize();
-  
+
   // write to file with name name
   StatusCode write(const std::string& filename) const ;
 
   // Everything configured via options
   StatusCode write() const ;
- 
+
   // Everything configured via options
   StatusCode write(std::string& version) const ;
- 
+
   // Everything configured via arguments
   StatusCode write( const std::string& filename,
-		    const std::string& topelement,
-		    const std::vector<unsigned int>& depths,
-		    const std::string& tag = "",
-		    const std::string& author = "",
-		    const std::string& description = "") const ;
-  
+        const std::string& topelement,
+        const std::vector<unsigned int>& depths,
+        const std::string& tag = "",
+        const std::string& author = "",
+        const std::string& description = "") const ;
+
 private:
   std::string m_topElement;
   std::string m_footer;
   std::string m_startTag;
 
   /// Recursively print out the tree of the child DetectorElements
-  void children(DetectorElement* parent, std::ofstream& out, 
-		const std::vector<unsigned int>& depths, unsigned int depth) const ;
+  void children(DetectorElement* parent, std::ofstream& out,
+    const std::vector<unsigned int>& depths, unsigned int depth) const ;
 
   std::string footer() const;
   std::string header(const std::string& conString) const;
@@ -96,8 +96,8 @@ DECLARE_TOOL_FACTORY( WriteAlignmentConditionsTool )
 //--------------------------------------------------------------------
 
 WriteAlignmentConditionsTool::WriteAlignmentConditionsTool( const std::string& type,
-							    const std::string& name,
-							    const IInterface* parent)
+                  const std::string& name,
+                  const IInterface* parent)
 : GaudiTool( type,name,parent)
 {
   // interface
@@ -121,20 +121,20 @@ WriteAlignmentConditionsTool::~WriteAlignmentConditionsTool()
   // destructer
 }
 
-StatusCode WriteAlignmentConditionsTool::initialize() 
+StatusCode WriteAlignmentConditionsTool::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
   info() << "topElement = " << m_topElement << "\n"
-	 << "footer     = " << m_footer << "\n"
-	 << "startTag   = " << m_startTag << "\n"
-	 << "outputFile = " << m_outputFileName << "\n"
+  << "footer     = " << m_footer << "\n"
+  << "startTag   = " << m_startTag << "\n"
+  << "outputFile = " << m_outputFileName << "\n"
          << "precision  = " << m_precision << endreq;
   return sc;
 }
 
-void WriteAlignmentConditionsTool::children(DetectorElement* parent, std::ofstream& out, 
-					    const std::vector<unsigned int>& depths,
-					    unsigned int depth ) const
+void WriteAlignmentConditionsTool::children(DetectorElement* parent, std::ofstream& out,
+              const std::vector<unsigned int>& depths,
+              unsigned int depth ) const
 {
   if (parent != 0){
     const AlignmentCondition* aCon = parent->geometry()->alignmentCondition();
@@ -145,18 +145,18 @@ void WriteAlignmentConditionsTool::children(DetectorElement* parent, std::ofstre
       }
       if ( 0 == depths.size() ) wanted = true; // in case of empty list print all levels
       if ( wanted ) {
-	// if we want to remove the pivot point, first set it to zero
-	bool removePivot = m_removePivot && aCon->exists("pivotXYZ") ;
-	if( removePivot ) (const_cast<AlignmentCondition*>(aCon))->setPivotPoint( Gaudi::XYZPoint() ) ; 
-	// now get the condition as a single string
+  // if we want to remove the pivot point, first set it to zero
+  bool removePivot = m_removePivot && aCon->exists("pivotXYZ") ;
+  if( removePivot ) (const_cast<AlignmentCondition*>(aCon))->setPivotPoint( Gaudi::XYZPoint() ) ;
+  // now get the condition as a single string
         std::string temp = strip(aCon->toXml("", false, m_precision));
-	// now remove the pivot point from the output string
-	if( removePivot ) {
-	  static const std::string stringToRemove = "<paramVector name=\"pivotXYZ\" type=\"double\">0 0 0</paramVector>" ;
-	  size_t pos = temp.find( stringToRemove ) ;
-	  if( pos != std::string::npos )
-	    temp.replace( pos, stringToRemove.size(), "") ;
-	}
+  // now remove the pivot point from the output string
+  if( removePivot ) {
+    static const std::string stringToRemove = "<paramVector name=\"pivotXYZ\" type=\"double\">0 0 0</paramVector>" ;
+    size_t pos = temp.find( stringToRemove ) ;
+    if( pos != std::string::npos )
+      temp.replace( pos, stringToRemove.size(), "") ;
+  }
         replaceChars(temp);
         out << temp << std::endl;
       }
@@ -166,7 +166,7 @@ void WriteAlignmentConditionsTool::children(DetectorElement* parent, std::ofstre
     for ( ; iChild != parent->childEnd(); ++iChild ) {
       DetectorElement* tElem = dynamic_cast<DetectorElement*>(*iChild);
       children(tElem,out,depths,depth);
-    }  
+    }
   }
 }
 
@@ -176,6 +176,7 @@ void WriteAlignmentConditionsTool::createDirectory( const std::string& dirname )
   size_t pos = dirname.find_last_of('/') ;
   if( pos != std::string::npos ) createDirectory( std::string(dirname.substr(0,pos)) ) ;
   //std::cout << "creating dirname: " << dirname << std::endl ;
+  if (dirname.size()==0) return;
   if(mkdir(dirname.c_str(),0xFFFF)==0) {
     debug() << "Creating directory: " << dirname << endreq ;
   } else if( errno != EEXIST ) {
@@ -195,11 +196,11 @@ StatusCode WriteAlignmentConditionsTool::write(const std::string& version) const
 
  // Everything configured via arguments
 StatusCode WriteAlignmentConditionsTool::write( const std::string& filename,
-						const std::string& topelement,
-						const std::vector<unsigned int>& depths,
-						const std::string& tag,
-						const std::string& author,
-						const std::string& description) const 
+            const std::string& topelement,
+            const std::vector<unsigned int>& depths,
+            const std::string& tag,
+            const std::string& author,
+            const std::string& description) const
 {
   info() << "Writing alignment conditions to file: " << filename << endreq;
   // Print out the full tree
@@ -209,9 +210,9 @@ StatusCode WriteAlignmentConditionsTool::write( const std::string& filename,
 
   // make output dir if necessary
   size_t pos = filename.find_last_of('/') ;
-  if(  pos != std::string::npos ) 
+  if(  pos != std::string::npos )
     createDirectory( std::string(filename.substr(0,pos)) ) ;
-   
+
   std::ofstream outputFile(filename.c_str());
   if (outputFile.fail() ){
     return Warning("Failed to open output file",StatusCode::FAILURE);
@@ -238,7 +239,7 @@ StatusCode WriteAlignmentConditionsTool::write( const std::string& filename,
 
 std::string WriteAlignmentConditionsTool::footer() const{
   return m_footer;
-} 
+}
 
 std::string WriteAlignmentConditionsTool::header(const std::string& conString) const{
 
@@ -256,7 +257,7 @@ std::string WriteAlignmentConditionsTool::strip(const std::string& conString) co
   std::string::size_type startpos = conString.find(m_startTag);
   std::string::size_type endpos = conString.find(m_footer);
   return conString.substr(startpos, endpos - startpos);
-} 
+}
 
 void WriteAlignmentConditionsTool::replaceChars(std::string& conString) const{
 
@@ -275,4 +276,4 @@ void WriteAlignmentConditionsTool::replace(std::string& conString, std::string i
     }
   } //pos
 
-} 
+}
