@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-02-17 - Roel Aaij
+ - Remove second loop option.
+
 ! 2015-02-14 - Roel Aaij
  - Replace call to HltRecoConf().getProp inside HltRecoConf, with call to get
    the right property where needed. Current behaviour would *silently* lead
