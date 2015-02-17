@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2015-02-17 - Marco Clemencic
+ - Added workaround for GAUDI-1007.
+
 !========================= LumiAlgs v9r6 2014-12-11 =========================
 ! 2014-11-18 - Jaap Panman
 - update unittests (and example jobs) to use latest database tag
@@ -26,7 +29,7 @@
 - revert to create a component library
 
 ! 2014-06-13 - Jaap Panman
-- Expose ILumiIntegrator interface to python 
+- Expose ILumiIntegrator interface to python
   This makes it possible to get lumi and mu values per run in gaudipython job.
 
 !========================= LumiAlgs v9r3 2014-06-10 =========================
@@ -39,13 +42,13 @@
  - (GetIntegratedLuminosity) add mu per raw file from the FSRs as a root ntuple
    activated by LumiIntegrateFSR('IntegrateBeamCrossing').AccumulateMu = True
    one ntuple for corrected values and one for raw values
-   corrsponding mods to LumiIntegrateFSR and LumiIntegrator 
+   corrsponding mods to LumiIntegrateFSR and LumiIntegrator
 
 ! 2014-05-23 - Jaap Panman
  - remove compilation warning
 
 ! 2014-05-21 - Jaap Panman
- - More sanity checks in LumiIntegrateFSR to handle empty timeSpanFSRs 
+ - More sanity checks in LumiIntegrateFSR to handle empty timeSpanFSRs
    (possible problem with legacy reco versions after merging)
 
 !========================= LumiAlgs v9r2 2014-05-13 =========================
@@ -65,7 +68,7 @@
 
 !========================= LumiAlgs v8r2 2013-10-01 =========================
 ! 2013-09-19 - Jaap Panman
- - Fix bug in TimeAccounting.cpp to avoid writing multiple timeSpanFSRs 
+ - Fix bug in TimeAccounting.cpp to avoid writing multiple timeSpanFSRs
  - Update freezer input files to use existing files in eos
  - Update unit test references
  - Update db tags in tests
@@ -108,7 +111,7 @@
 !========================= LumiAlgs v7r8 2012-08-02 =========================
 
 ! 2012-08-02 - Chris Jones
- - Add CMT requirements dependency on LHCbAlgs, due to python dependency on 
+ - Add CMT requirements dependency on LHCbAlgs, due to python dependency on
    FSRCleaner in that package.
 
 ! 2012-08-01 - Rob Lambert
@@ -159,7 +162,7 @@
  - introduce option IgnoreDQFlags
 
 ! 2012-02-15 - Jaap Panman
- - introduce logic in LumiIntegrateFSR to skip integration based on DQflags  
+ - introduce logic in LumiIntegrateFSR to skip integration based on DQflags
  - update unittests
 
 ! 2012-02-15 - Jaap Panman
@@ -204,7 +207,7 @@
  - Fix some UNINIT_CTOR Coverity defects
 
 ! 2011-12-02 - Jaap Panman
- - Fix ERROR message from PropertyConfigSvc at initialization. 
+ - Fix ERROR message from PropertyConfigSvc at initialization.
 
 ! 2011-11-22 - Marco Cattaneo
  - Fix gcc46 warning
@@ -226,12 +229,12 @@
    to ROOT
 
 ! 2011-08-11 - Jaap Panman
- - add a filter algorithm FilterFillingScheme 
-   . filters on the presence of buckets in a given beam for a given magnet 
+ - add a filter algorithm FilterFillingScheme
+   . filters on the presence of buckets in a given beam for a given magnet
      polarity
-   . this needs the online partition of the CondDB filling scheme data (2011 
+   . this needs the online partition of the CondDB filling scheme data (2011
      onward)
- - activate this filer for 2011 MAGUUP data Beam1, Beam2 in Brunel sequences 
+ - activate this filer for 2011 MAGUUP data Beam1, Beam2 in Brunel sequences
    (in Configuration.py)
 
 ! 2011-08-10 - Patrick Koppenburg
@@ -240,12 +243,12 @@
    . Adapt GetLumiParameters to use this tool
      . Remove duplicate defined interfaces
  - Cleanup:
-   . LumiMergeFSR, LumiIntegrator, DumpFSR: indent properly. Protect a few debug() 
+   . LumiMergeFSR, LumiIntegrator, DumpFSR: indent properly. Protect a few debug()
 
 ! 2011-08-09 - Patrick Koppenburg
  - GetLumiParameters.cpp: Bug #85240
    rename method init(..) to initialise and push the properties
-   passed to that method to this class. Change 
+   passed to that method to this class. Change
    LumiCheckCondDB and GetIntegratedLuminosity.cpp accordingly.
    . Move UseOnline property to tool in LumiIntegratorConf
 
@@ -257,7 +260,7 @@
    Why do we have coding conventions?
 
 ! 2011-08-08 - Patrick Koppenburg
- - Moved src/IGetLumiParameters.h to LHCbKernel, and 
+ - Moved src/IGetLumiParameters.h to LHCbKernel, and
 	 changed src/GetLumiParameters.h accordingly. Task 21133.
 
 !========================= LumiAlgs v6r1 2011-07-27 =========================
@@ -266,14 +269,14 @@
    forward compatibility of tests with next Gaudi version
 
 ! 2011-07-18 - Jaap Panman
- - add a method in LumiIntegrator to extract values of "mu" per raw file 
+ - add a method in LumiIntegrator to extract values of "mu" per raw file
    (under control of AccumulateMu and MuKeyName options, default is OFF)
 
 !========================= LumiAlgs v6r0 2011-06-10 =========================
 ! 2011-06-01 - Rob Lambert
  - Add more debug (verbose) information to FSRNavigator
  - Update test references from FSR fixes in GaudiConf
- 
+
 
 ! 2011-05-31 - Rob Lambert
  - Added framework test suite to check FSRs can move between frameworks
@@ -296,14 +299,14 @@
 ! 2011-05-11 - Jaap Panman
  - update unittests
 
-! 2011-05-06 - Yasmine Amhis 
-  - Remove warning messages triggered by LumiIntegrateFSR.cpp 
+! 2011-05-06 - Yasmine Amhis
+  - Remove warning messages triggered by LumiIntegrateFSR.cpp
 !========================= LumiAlgs v5r1 2011-04-27 =========================
 ! 2011-04-26 - Jaap Panman
  - make previous fix 32-bit compliant
 
 ! 2011-04-20 - Jaap Panman
- - update logic in GetLumiParameters to accept nBunches from online database 
+ - update logic in GetLumiParameters to accept nBunches from online database
    even if wrongBucketFlag is on (for limited period beginning 2011 run)
 
 !========================= LumiAlgs v5r0p1 2011-03-09 =========================
@@ -320,7 +323,7 @@
  LumiIntegratorConf.py)
 
 ! 2011-01-31 - Jaap Panman
- - move database acces to a tool since it is being used from at leat two 
+ - move database acces to a tool since it is being used from at leat two
    algorithms now: GetLumiParameters used by LumiIntegrateFSR, LumiCheckCondDB
  - add usage of online partition for LHC parameters (filling scheme) and TCK
    dependent parameters (e.g. rate limiters)
@@ -331,7 +334,7 @@
 ! 2011-01-19 - Rob Lambert
  - Try and reduce slc4 and slc5 differences by making sure all variables
    are initialized in the constructors correctly
-   The tests still show minor differences which must be from 
+   The tests still show minor differences which must be from
    numerical precision since they arise in 32-bit not 64-bit tests
 
 !========================= LumiAlgs v4r1p3 2011-01-17 =========================
@@ -341,7 +344,7 @@
 
 ! 2010-12-22 - Jaap Panman
  - add further protection for missing data in LumiIntegrateFSR
-   There can be completely empty raw data files, then no run number is stored 
+   There can be completely empty raw data files, then no run number is stored
    and no TimeSpan FSR created.  The missing run-number is used to detect this
    and to skip checking the time which would otherwise crash the job.
 
@@ -352,7 +355,7 @@
 
 !========================= LumiAlgs v4r1p1 2010-11-05 =========================
 ! 2010-11-05 - Jaap Panman
- - always create one FSR of each type in LumiAccounting even if no lumi-event 
+ - always create one FSR of each type in LumiAccounting even if no lumi-event
  seen
 
 ! 2010-11-05 - Jaap Panman
@@ -369,7 +372,7 @@
 ! 2010-10-27 - Jaap Panman
  - add database checker in unit tests (LumiCheckCondDB algorithm)
  - update unit tests to use raw file at CERN
- - update database layer 
+ - update database layer
 
 ! 2010-10-19 - Jaap Panman
  - LumiMergeFSR: add EventCountFSR handling
@@ -381,11 +384,11 @@
 
 ! 2010-10-14 - Marco Cattaneo
  - Add a QMTest LumiAlgsExclusions file, to avoid failing tests when just the
-   LHCBCOND or DDDB path or default tag changes. 
+   LHCBCOND or DDDB path or default tag changes.
 
 ! 2010-10-14 - Jaap Panman
  - add LumiMergeFSR: collects FSRs from the FileRecord leaves in one
-   keyed container per type and makes sure the original ones are unlinked 
+   keyed container per type and makes sure the original ones are unlinked
    this needs also an update of Event/LumiEvent
  - LumiIntegrateFSR: can now handle merged and original FSRs
 
@@ -402,7 +405,7 @@
  - fix qmtests
 
 ! 2010-09-24 - Marco Cattaneo
- - Add LumiAlgsConf().Siumlation slot (default False) to switch off 
+ - Add LumiAlgsConf().Siumlation slot (default False) to switch off
    LumiAccounting algorithm in case of Simulation
 
 ! 2010-09-23 - Marco Cattaneo
@@ -415,14 +418,14 @@
 !========================== LumiAlgs v4r0 2010-07-29 =========================
 ! 2010-07-29 - Jaap Panman
  - changes in code and configurables to move to -log(P) method for normalization
- - requirements: updated database required 
+ - requirements: updated database required
 
 !========================== LumiAlgs v3r7 2010-07-20 =========================
-! 2010-07-08 - Yasmine Amhis 
+! 2010-07-08 - Yasmine Amhis
   - src/GetIntegratedLuminosity.cpp/h
     . update algorithm
   - python/LumiIntegratedConf.py
-    . run GetIntegratedLuminosity  
+    . run GetIntegratedLuminosity
 
 !========================== LumiAlgs v3r6 2010-06-23 ========================
 
@@ -432,18 +435,18 @@
 ! 2010-06-18 - Jaap Panman
  - python/LumiAlgs/Configuration.py
   . only run EventAccount on DST type data.  Remove unneccessary algorithms.
- - python/LumiIntegratorConf.py 
+ - python/LumiIntegratorConf.py
   . remove Remove unneccessary algorithms, just run integration.
  - requirements
   . add DetDesc to access database
 
-! 2010-06-07 - Yasmine Amhis 
- - Add new algorithm : GetLumiIntegratedLuminosity.cpp/h 	
-   . For the time being the value of the returned integrated luminosity is -16. 
-   . Set WriteCountersDetails to true to store all the counters. 
+! 2010-06-07 - Yasmine Amhis
+ - Add new algorithm : GetLumiIntegratedLuminosity.cpp/h
+   . For the time being the value of the returned integrated luminosity is -16.
+   . Set WriteCountersDetails to true to store all the counters.
 
 ! 2010-06-01a - Jaap Panman
- - add ascii file writer for FSRs (job/LumiFsrToFile.py) uses 
+ - add ascii file writer for FSRs (job/LumiFsrToFile.py) uses
    LumiFsrReaderConf.py.  Using these options all FSR contents are dumped
    into a file for further analysis.
  - add options to DumpFSR to write an ascii file
@@ -451,7 +454,7 @@
 
 ! 2010-06-01 - Jaap Panman
  - all Configurations:
-   . update to be compatible with Moore >= v9r1 
+   . update to be compatible with Moore >= v9r1
      (check Method counter to select Lumi events, backward incompatible)
    . default set al DataType = '2010'
    . allow separate .py files for input files
@@ -464,10 +467,10 @@
  - Review of warnings
 
 ! 2010-05-12 - Jaap Panman
- - DumpFSR: 
+ - DumpFSR:
    . now dumps the FSRs at FileOpen, after first event, finalize
    . no longer needs the raw data banks
- - LumiIntegrateFSR: 
+ - LumiIntegrateFSR:
    . no longer needs access to rawdata
    . assumes FSRs are instantiated on the TS by Gaudi
    . does the integral at finalize(), no longer at each file
@@ -477,7 +480,7 @@
 
 ! 2010-05-05 - Jaap Panman
  - Added check on "Method" to select random Lumi events
-   . breaks treatment of data taken with Moore < v9 where the rate was 
+   . breaks treatment of data taken with Moore < v9 where the rate was
      anyway too low to use the random method (except for one fill)
  - Updated test suite using a 2010 raw file written with Moore v9r1
 
@@ -537,7 +540,7 @@
 ! 2009-11-14 - Jaap Panman
  - Added explicit createODIN in Configuration.touchFSR()
    Temporary solution until incidentSvc reliable for FSR
-   Present setup fails for files without events 
+   Present setup fails for files without events
 
 ! 2009-11-13 - Rob Lambert
  - Added GaudiConf to configuration, to pick up stdopts at run time
@@ -548,12 +551,12 @@
 
 
 ! 2009-11-12 - Jaap Panman
- - Added LumiIntegratorConf: does a lumi integral for analysis jobs 
+ - Added LumiIntegratorConf: does a lumi integral for analysis jobs
    (not yet using eventFSR)
 
 ! 2009-11-11 - Jaap Panman
- - Added protection in navigate method of LumiIntegrateFSR not to attempt 
-   reading not-existing FSR tree, and prevent the configurable to attempt 
+ - Added protection in navigate method of LumiIntegrateFSR not to attempt
+   reading not-existing FSR tree, and prevent the configurable to attempt
    it for MDF files
  - remove RandomTrigger in configurables (now LumiTrigger)
 
@@ -598,9 +601,9 @@
  - LumiIntegrator:    integrator tool, holds integrated lumi info
    this tool is meant to be able to apply calibration constants and give
    an integrated luminosity at the end of a job
- - LumiIntegrateFSR:  Algorithm to work with the tool.  Picks up all FSRs at 
+ - LumiIntegrateFSR:  Algorithm to work with the tool.  Picks up all FSRs at
 	 change of run, navigates FileRecords to find all FSRs, and counts all events
-   on input.  
+   on input.
  - LumiAccounting:   Follow change to FileRecords
 
 !========================== LumiAlgs v2r0 2009-05-08 =========================
