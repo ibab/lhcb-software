@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2015-02-17 - Manuel Tobias Schiller
+ - update TrajOTProjector for upcoming changes to RtRelation class by being
+   more flexible in terms of data type returned by RtRelation's methods, no
+   functional changes, no changes in performance
+
 !========================= TrackProjectors v3r1 2014-05-13 ======================
 ! 2014-04-01 - Heinrich Schindler
  - Follow removal of VPLite measurement (r170832, r170821).

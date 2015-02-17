@@ -1,7 +1,7 @@
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 
 // from TrackFitEvent
 #include "Event/OTMeasurement.h"
@@ -36,33 +36,33 @@ StatusCode TrajOTProjector::project( const StateVector& statevector,
 /// Project a state onto a measurement
 /// It returns the chi squared of the projection
 //-----------------------------------------------------------------------------
-StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector, 
+StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector,
                                      const OTMeasurement& meas )
 {
   // call the standard tracjectory-doca projector
   StatusCode sc = TrackProjector::project( statevector, meas ) ;
-  
+
   OTMeasurement& nonconstmeas = const_cast<OTMeasurement&>(meas) ;
   nonconstmeas.setDriftTimeStrategy( LHCb::OTMeasurement::DriftTimeIgnored ) ;
   m_errMeasure = meas.module().cellRadius()/std::sqrt(3.0) ;
-  
+
   // Is this a 'prefit'?
   bool prefit = m_prefitStrategy!=NoPrefit && meas.ambiguity() == 0 ;
-  
+
   // is the ambiguity set by the LR sign tool?
   bool ambiguityIsFixed = std::abs( meas.ambiguity() == 2 ) ;
 
   // if not, set the ambiguity "on the fly"
   if( !ambiguityIsFixed && m_updateAmbiguity )
     nonconstmeas.setAmbiguity( m_doca > 0 ? 1 : -1 ) ;
-  
+
   // check that the drifttime is not out of range
   double measureddrifttime = meas.driftTime(m_sMeas) ;
   const OTDet::RtRelation& rtr = meas.module().rtRelation() ;
   bool gooddrifttime = useDriftTime() &&
-    measureddrifttime > -m_outOfTimeTolerance && 
+    measureddrifttime > -m_outOfTimeTolerance &&
     measureddrifttime < rtr.tmax() + m_outOfTimeTolerance ;
-  
+
   if ( gooddrifttime ) {
     // a zero ambiguity may indicate that we should not use the drifttime
     if(prefit) {
@@ -80,17 +80,17 @@ StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector,
       // prediction, we'll not use driftttime.
 
       if( m_maxDriftTimePull>0 ) {
-	double predictedradius = std::min( rtr.rmax(), std::abs(m_doca) ) ;      
+	decltype(rtr.rmax()) predictedradius = std::min( rtr.rmax(), std::abs(static_cast<decltype(rtr.rmax())>(m_doca)) ) ;
 	OTDet::DriftTimeWithError predictedtime = rtr.drifttimeWithError( predictedradius ) ;
 	gooddrifttime = std::abs( measureddrifttime - predictedtime.val ) / predictedtime.err < m_maxDriftTimePull ;
       }
-      
+
       if(gooddrifttime ) {
 	int lrsign =  meas.ambiguity() > 0 ? 1 : -1 ;
 	if(m_fitDriftTime) {
-	  double radius = std::min( rtr.rmax(), std::abs(m_doca) ) ;
+	  decltype(rtr.rmax()) radius = std::min( rtr.rmax(), std::abs(static_cast<decltype(rtr.rmax())>(m_doca)) ) ;
 	  OTDet::DriftTimeWithError predictedtime = rtr.drifttimeWithError( radius ) ;
-	  double dtdr                             = rtr.dtdr( radius ) ;
+	  float dtdr                             = rtr.dtdr( radius ) ;
 	  m_residual   = measureddrifttime - predictedtime.val ;
 	  m_errMeasure = predictedtime.err ;
 	  m_H          *= ( lrsign * dtdr ) ;
@@ -101,10 +101,10 @@ StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector,
 	  m_errMeasure = radiusWithError.err ;
 	  nonconstmeas.setDriftTimeStrategy( LHCb::OTMeasurement::FitDistance ) ;
 	}
-      } 
+      }
     }
   }
-  
+
   m_errResidual = m_errMeasure ;
 
   return sc;
@@ -116,11 +116,11 @@ StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector,
 StatusCode TrajOTProjector::initialize()
 {
   StatusCode sc = TrackProjector::initialize();
-  if(msgLevel(MSG::DEBUG)) debug() << "Use drifttime           = " 
-                                   << m_useDriftTime << endmsg 
-                                   << "Fit drifttime residuals = " 
-                                   << m_fitDriftTime << endmsg 
-                                   << "Prefit strategy = " 
+  if(msgLevel(MSG::DEBUG)) debug() << "Use drifttime           = "
+                                   << m_useDriftTime << endmsg
+                                   << "Fit drifttime residuals = "
+                                   << m_fitDriftTime << endmsg
+                                   << "Prefit strategy = "
                                    << m_prefitStrategy << endmsg ;
   return sc;
 }
@@ -139,7 +139,7 @@ TrajOTProjector::TrajOTProjector( const std::string& type,
   declareProperty( "FitDriftTime", m_fitDriftTime = false );
   declareProperty( "UpdateAmbiguity", m_updateAmbiguity = true ) ;
   declareProperty( "PrefitStrategy", m_prefitStrategy = TjeerdKetel ) ;
-  declareProperty( "OutOfTimeTolerance", m_outOfTimeTolerance = 6 ) ; 
+  declareProperty( "OutOfTimeTolerance", m_outOfTimeTolerance = 6 ) ;
   declareProperty( "MaxDriftTimePull", m_maxDriftTimePull = 3 ) ;
 }
 
