@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2015-02-17 - Roel Aaij
+ - Change default persistency format to CDB. Switch to HltTCK v3r*.
+
 !========================= Moore v23r4 2015-01-20 =========================
 
 ! 2015-01-20 - Roel Aaij

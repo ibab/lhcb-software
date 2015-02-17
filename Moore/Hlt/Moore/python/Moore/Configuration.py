@@ -36,7 +36,7 @@ class MooreExpert(LHCbConfigurableUser):
         , 'WriteFSR'    :  True #copy FSRs as required
         , "configAlgorithms" : ['Hlt']    # which algorithms to configure (automatically including their children!)...
         , "configServices" :   ['ToolSvc','Hlt::Service','HltANNSvc' ]    # which services to configure (automatically including their dependencies!)...
-        , "TCKpersistency" :   'tarfile' # which method to use for TCK data? valid is 'file','tarfile', 'zipfile', 'cdb' and 'sqlite'
+        , "TCKpersistency" :   'cdb' # which method to use for TCK data? valid is 'file','tarfile', 'zipfile', 'cdb' and 'sqlite'
         , "Hlt2Independent" : False #turn off HLT1 track decoding
         , "DisableMonitors" : False #Disable HLT monitoring
         }
@@ -55,8 +55,8 @@ class Moore(LHCbConfigurableUser):
     __used_configurables__ = [ HltConf
                              , LHCbApp
                              , DecodeRawEvent
-                             ,  DDDBConf
-                             ,  MooreExpert ]
+                             , DDDBConf
+                             , MooreExpert ]
     
     __slots__ = {
         #########################################
