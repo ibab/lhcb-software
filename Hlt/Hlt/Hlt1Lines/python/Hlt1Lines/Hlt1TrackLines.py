@@ -56,6 +56,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                     ,   'L0Channels'        : {'AllL0'  : ['CALO'],#'L0_DECISION_PHYSICS',
                                                'Muon'   : ('Muon', 'DiMuon'),
                                                'Photon' : ("Photon", "Electron")}
+                    ,   'ODINTriggers'      : {'AllL0'  : ''}
                     ,   'Priorities'        : {'AllL0'  : 1,
                                                'Muon'   : 2,
                                                'Photon' : 3}
@@ -174,11 +175,19 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
 
     def __l0du(self, nickname):
         import collections
-        l0 = self.getProp( 'L0Channels' )['AllL0']
+        l0 = self.getProp( 'L0Channels' )[nickname]
         if isinstance(l0, collections.Iterable) and not isinstance(l0, basestring):
             return "|".join(["L0_CHANNEL('%s')" % chan for chan in l0])
         else:
             return l0
+
+    def __odin(self, nickname):
+        import collections
+        odin = self.getProp( 'ODINTriggers' )[nickname]
+        if isinstance(odin, collections.Iterable) and not isinstance(odin, basestring):
+            return "|".join(["(ODIN_TRGTYP == %s)" % chan for chan in odin])
+        else:
+            return odin
 
     def __apply_configuration__(self) : 
         from HltLine.HltLine import Hlt1Line
@@ -190,6 +199,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             postscale = self.postscale,
             priority  = priorities[ 'AllL0' ] if 'AllL0' in priorities else None,
             L0DU =  self.__l0du('AllL0'),
+            ODIN = self.__odin('AllL0'),
             algos = [ self.do_timing( unit ) if doTiming else unit for unit in \
                       self.hlt1TrackBlock_Streamer( 'TrackAllL0', self.localise_props( 'AllL0' ) ) ]
             )

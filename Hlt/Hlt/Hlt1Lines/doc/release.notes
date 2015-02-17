@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-02-17 - Christian Linn
+ - Add Odin trigger type filter for 1TrackAllL0.
+
 ! 2015-02-17 - Roel Aaij
  - Fix L0 filter configuration of 1TrackAllL0.
 
