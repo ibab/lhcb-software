@@ -87,6 +87,11 @@ BackgroundCategory::category( const LHCb::Particle* reconstructed_mother,
     Exception("Something failed when making the associators. Bye!");
   }
 
+  if ( !m_particleDescendants )
+  {
+    Exception("Something failed when making the particle descendents tool. Bye!");
+  }
+
   //Some debug information at VERBOSE level
   if (msgLevel(MSG::VERBOSE)) verbose() << "About to start processing the categorisation tree for a "
                                         <<  reconstructed_mother->particleID().pid()
@@ -1089,6 +1094,13 @@ bool BackgroundCategory::isTheMotherCorrectlyIdentified(const LHCb::Particle* re
 {
   bool carryon;
 
+  if (!m_ppSvc->find(m_commonMother->particleID())) {
+    warning() << "The common mother has a particle ID,"<<m_commonMother->particleID()<<"unknown to the particle service!" << endmsg;
+    warning() << "I cannot tell if this is the particle you are looking for, so am classifying as 20, unless you are\
+                  looking for an inclusive decay, in which case it will be classified 40/50. " << endmsg;
+    return 0;
+  }
+
   if (m_ppSvc->find(m_commonMother->particleID())->charge() == 0)
     carryon = ( m_commonMother->particleID().abspid() == reconstructed_mother->particleID().abspid() );
   else
@@ -1112,6 +1124,12 @@ bool BackgroundCategory::checkLowMassBackground(const LHCb::Particle* candidate)
 //for a particle of its PID.
 {
   bool carryon = false;
+
+  if (!m_ppSvc->find(candidate->particleID())) {
+    warning() << "The reconstructed particle has a particle ID,"<<candidate->particleID()<<"unknown to the particle service!" << endmsg;
+    warning() << "I cannot tell its mass, so cannot tell if your background is low mass or not; as such I am classifying it 40." << endmsg;
+    return 0;
+  }
 
   if ( (m_commonMother->virtualMass() - m_lowMassCut) <
        (m_ppSvc->find(candidate->particleID())->mass()) ) carryon = true;
