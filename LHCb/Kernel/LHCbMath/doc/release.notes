@@ -6,6 +6,13 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-02-17 - Manuel Tobias Schiller
+ - add LHCbMath/PolyEval.h, as a substitute for various hand-written or
+   library supplied routines (like GSL's poly-eval); the main feature of this
+   implementation is a focus on writing C++ code that will map nicely onto
+   CPUs with FMA support and unrolling the loop, so the loop counter needs
+   checking only every eight coefficients
+
 ! 2015-02-13 - Chris Jones
  - Add -no_auto_imports to the VectorClass CMT usage so downstream packages
    are not forced into attempting to link against it.
