@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-02-17 - Roel Aaij
+ - Fix L0 filter configuration of 1TrackAllL0.
+
 ! 2015-02-12 - V. Gligorov
  - Add Hlt1CalibRICHMirrorLines.py, which contains a new single track line
    without any IPCHI2 cut but with a strong ETA cut to be used for selecting

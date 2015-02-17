@@ -171,16 +171,25 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         unit.Code = code
         return unit
     
+
+    def __l0du(self, nickname):
+        import collections
+        l0 = self.getProp( 'L0Channels' )['AllL0']
+        if isinstance(l0, collections.Iterable) and not isinstance(l0, basestring):
+            return "|".join(["L0_CHANNEL('%s')" % chan for chan in l0])
+        else:
+            return l0
+
     def __apply_configuration__(self) : 
         from HltLine.HltLine import Hlt1Line
         priorities = self.getProp( "Priorities" )
-        l0Channels = self.getProp( 'L0Channels' )
         doTiming = self.getProp( 'DoTiming' )
+
         Hlt1Line('TrackAllL0',
             prescale  = self.prescale,
             postscale = self.postscale,
             priority  = priorities[ 'AllL0' ] if 'AllL0' in priorities else None,
-            L0DU = "|".join(["L0_CHANNEL('%s')" % l0 for l0 in l0Channels['AllL0']]),
+            L0DU =  self.__l0du('AllL0'),
             algos = [ self.do_timing( unit ) if doTiming else unit for unit in \
                       self.hlt1TrackBlock_Streamer( 'TrackAllL0', self.localise_props( 'AllL0' ) ) ]
             )
@@ -188,7 +197,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             prescale  = self.prescale,
             postscale = self.postscale,
             priority  = priorities[ 'Muon' ] if 'Muon' in priorities else None,
-            L0DU = "|".join(["L0_CHANNEL('%s')" % l0 for l0 in l0Channels['Muon']]),
+            L0DU = self.__l0du('Muon'),
             algos = [ self.do_timing( unit ) if doTiming else unit for unit in \
                       self.hlt1TrackMuon_Streamer( 'TrackMuon', self.localise_props( 'Muon' ) ) ]
             )
@@ -196,7 +205,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             prescale  = self.prescale,
             postscale = self.postscale,
             priority  = priorities[ 'Photon' ] if 'Photon' in priorities else None,
-            L0DU = "|".join(["L0_CHANNEL('%s')" % l0 for l0 in l0Channels['Photon']]),
+            L0DU = self.__l0du('Photon'),
             algos = [ self.do_timing( unit ) if doTiming else unit for unit in \
                       self.hlt1TrackBlock_Streamer( 'TrackPhoton', self.localise_props( 'Photon' ) ) ]
             )
