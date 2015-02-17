@@ -127,7 +127,7 @@ PropertyConfigSvc::PropertyConfigSvc( const string& name, ISvcLocator* pSvcLocat
   , m_accessSvc{nullptr}
   , m_os{nullptr}
 {
-  declareProperty("ConfigAccessSvc", s_accessSvc = "ConfigTarFileAccessSvc");
+  declareProperty("ConfigAccessSvc", s_accessSvc = "ConfigCDBAccessSvc");
   declareProperty("prefetchConfig", m_prefetch);
   declareProperty("SkipComponent", m_skip); // do not touch these algorithms configurations, NOR THEIR DEPENDENTS!
   declareProperty("optionsfile", m_ofname);

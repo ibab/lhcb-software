@@ -4,6 +4,9 @@
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
 
+! 2015-02-17 - Roel Aaij
+ - Switch default config access service to CDB.
+
 ! 2015-02-08 - Gerhard Raven
  - ConfigArchiveAccessSvc (i.e. ConfigTarFileAccessSvc and ConfigZipFileAcessSvc): 
    use old-style format, i.e. use 'str()' directly instead of operator<<
