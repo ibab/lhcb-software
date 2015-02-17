@@ -13,5 +13,5 @@ gaudi_project(Moore v23r4
                    PRConfig
                    ParamFiles VERSION v8r*
                    RawEventFormat
-                   TCK/HltTCK
-                   TCK/L0TCK)
+                   TCK/HltTCK VERSION v3r*
+                   TCK/L0TCK  VERSION v4r*)
