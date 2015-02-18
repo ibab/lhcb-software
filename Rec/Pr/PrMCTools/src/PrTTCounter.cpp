@@ -26,7 +26,8 @@ DECLARE_TOOL_FACTORY( PrTTCounter )
 PrTTCounter::PrTTCounter( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+: GaudiTool ( type, name , parent ),
+m_selector("",this)
 {
   declareInterface<IPrTTCounter>(this);
   m_link      = NULL;
@@ -42,6 +43,7 @@ PrTTCounter::PrTTCounter( const std::string& type,
   m_totTrackTrigger    = 0;
   m_totGhostTrigger    = 0;
   declareProperty( "TitleSize", m_titleSize = 40 );
+  declareProperty( "Selector", m_selector );
 
   std::string title(name);
   while(title.find(".") < title.size()){
@@ -60,6 +62,23 @@ PrTTCounter::~PrTTCounter() {}
 StatusCode PrTTCounter::finalize ( ) {
   if ( NULL != m_link ) delete m_link;
   return GaudiTool::finalize();
+}
+
+//=========================================================================
+// Initialize
+//=========================================================================
+
+StatusCode PrTTCounter::initialize ( ) {
+  StatusCode sc = GaudiTool::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiTool
+  // retrieve the selector if it is set
+  if ( !m_selector.empty() ) {
+    if( msgLevel(MSG::DEBUG) ) debug()<<"Get Selector "<<endmsg;
+    sc = m_selector.retrieve() ;
+    if(sc.isFailure())
+      error() << "Failed to retrieve selector." << endmsg ;
+  }
+  return sc;
 }
 
 //=========================================================================
@@ -118,6 +137,7 @@ void PrTTCounter::initEvent (const IHistoTool* htool = NULL) {
       // -- Protect against nonphysical states
       if( isnan( state.x() ) || isnan( state.y() ) ) continue;
     }
+    if ( !m_selector.empty() && !m_selector->accept( *tr ) )continue;
     if ( m_link->direct()->relations( tr ).empty() ) {
       double nbInTT = 0;
       for ( std::vector<LHCb::LHCbID>::const_iterator itId = tr->lhcbIDs().begin();
@@ -227,6 +247,10 @@ int PrTTCounter::countAndPlot(const IHistoTool* htool, const LHCb::MCParticle* p
     if ( flags[kk] ) {
       for ( InvIterator it = trackList.begin(); trackList.end() != it; ++it ) {
         const LHCb::Track* tr = it->to();
+	if ( !m_selector.empty() && !m_selector->accept( *tr ) ) {
+	  //always()<<"Did not accept track"<<endmsg;
+	  continue;
+	}
 	key = it->to()->key();
         unsigned int nbOK = 0;
         unsigned int nbWrong = 0;
