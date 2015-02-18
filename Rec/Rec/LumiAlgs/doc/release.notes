@@ -4,6 +4,11 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2015-02-18 - Marco Cattaneo
+ - Update references to follow:
+   . New counter in HltFactory
+   . ConfigCDBAccessSvc replaces ConfigTarFileAccessSvc
+
 ! 2015-02-17 - Marco Clemencic
  - Added workaround for GAUDI-1007.
 

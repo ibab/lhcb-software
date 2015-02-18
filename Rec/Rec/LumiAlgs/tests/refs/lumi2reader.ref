@@ -1,13 +1,13 @@
-# --> Including file '/build/jenkins/workspace/nightly-slot-test-project-platform/build/REC/REC_HEAD/Rec/LumiAlgs/job/LumiReader.py'
-# <-- End of file '/build/jenkins/workspace/nightly-slot-test-project-platform/build/REC/REC_HEAD/Rec/LumiAlgs/job/LumiReader.py'
+# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@4/build/REC/REC_HEAD/Rec/LumiAlgs/job/LumiReader.py'
+# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@4/build/REC/REC_HEAD/Rec/LumiAlgs/job/LumiReader.py'
 # applying configuration of LumiReaderConf
-# WARNING: Using default tag head-20110721 for partition DDDB
-# WARNING: Using default tag head-20110614 for partition LHCBCOND
+# WARNING: Using default tag dddb-20140610 for partition DDDB
+# WARNING: Using default tag cond-20141007 for partition LHCBCOND
 # WARNING: Using default tag tt-20110126 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr (GaudiCoreSvc v2r1)
-                                          running on lxbuild159.cern.ch on Fri Feb 14 05:35:32 2014
+                                                   Welcome to ApplicationMgr (GaudiCoreSvc v3r2)
+                                          running on lbbuild06.cern.ch on Wed Feb 18 07:56:07 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -16,7 +16,7 @@ LumiSeq              INFO Member list: GaudiSequencer/readLumiSeq
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.48 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.30 times the speed of a 2.8 GHz Xeon.
 readLumiSeq         DEBUG Property update for OutputLevel : new value = 2
 readLumiSeq         DEBUG Property update for OutputLevel : new value = 2
 readLumiSeq         DEBUG Initialize base class GaudiCommon<Algorithm>
@@ -94,7 +94,6 @@ Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome 
 
 
 
-# WARNING: using PyCintex as cppyy implementation
 filterLumi           INFO OR Member list: FilterOnLumiSummary/LumiRandomFilter, FilterOnLumiSummary/LumiLowFilter
 LumiFileReader      DEBUG Property update for OutputLevel : new value = 2
 LumiFileReader      DEBUG Property update for OutputLevel : new value = 2
@@ -1018,19 +1017,22 @@ Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye
 
 
 ToolSvc              INFO Removing all tools created by ToolSvc
+ToolSvc.HltFactorySUCCESS Number of counters : 1
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "# loaded from PYTHON"                          |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.48 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.30 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO readLumiSeq                   |     0.300 |     0.348 |    0.289       1.4 |      20 |     0.007 |
-ToolSvc.Sequenc...   INFO   createODIN                  |     0.100 |     0.049 |    0.021       0.6 |      20 |     0.001 |
-ToolSvc.Sequenc...   INFO   OdinTriggerTypes            |     0.000 |     0.008 |    0.003       0.1 |      20 |     0.000 |
-ToolSvc.Sequenc...   INFO   HltLumiSummaryDecoder       |     0.000 |     0.015 |    0.010       0.1 |      20 |     0.000 |
-ToolSvc.Sequenc...   INFO   filterLumi                  |     0.000 |     0.007 |    0.006       0.0 |      20 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiRandomFilter          |     0.000 |     0.005 |    0.003       0.0 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO readLumiSeq                   |     0.550 |     0.636 |    0.461       3.3 |      20 |     0.013 |
+ToolSvc.Sequenc...   INFO   createODIN                  |     0.050 |     0.103 |    0.028       1.5 |      20 |     0.002 |
+ToolSvc.Sequenc...   INFO   OdinTriggerTypes            |     0.000 |     0.014 |    0.007       0.1 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO   HltLumiSummaryDecoder       |     0.000 |     0.040 |    0.016       0.4 |      20 |     0.001 |
+ToolSvc.Sequenc...   INFO   filterLumi                  |     0.000 |     0.016 |    0.010       0.1 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO     LumiRandomFilter          |     0.000 |     0.009 |    0.004       0.1 |      20 |     0.000 |
 ToolSvc.Sequenc...   INFO     LumiLowFilter             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO   LumiFileReader              |     0.100 |     0.082 |    0.071       0.3 |      20 |     0.002 |
-ToolSvc.Sequenc...   INFO   InputDump                   |     0.100 |     0.177 |    0.166       0.3 |      20 |     0.004 |
+ToolSvc.Sequenc...   INFO   LumiFileReader              |     0.100 |     0.124 |    0.096       0.5 |      20 |     0.002 |
+ToolSvc.Sequenc...   INFO   InputDump                   |     0.350 |     0.321 |    0.270       0.6 |      20 |     0.006 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
