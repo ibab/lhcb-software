@@ -14,8 +14,7 @@ find_package(ROOT COMPONENTS MathCore GenVector)
 find_package(VDT)
 
 gaudi_install_headers(LHCbMath)
-#gaudi_install_headers(Eigen)
-install(DIRECTORY Eigen DESTINATION include)
+gaudi_install_headers(Eigen)
 
 gaudi_add_library(LHCbMathLib
                   src/*.cpp
