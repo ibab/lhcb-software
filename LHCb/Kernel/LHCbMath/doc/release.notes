@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-02-18 - Vanya Belyaev
+ - make flatte amplitude simpler 
+
 ! 2015-02-18 - Chris Jones
  - Change CMake command to install Eigen headers from
       install(DIRECTORY Eigen DESTINATION include)

@@ -2183,17 +2183,22 @@ namespace Gaudi
     public:
       // ======================================================================
       /** constructor  from all parameters
+       *  \f$ f \rigtharrow A_1 + A_2\f$ 
        *  @param m0    the mass
        *  @param m0g1  parameter \f$ m_0\times g_1\f$
        *  @param g2og2 parameter \f$ g2/g_1       \f$
-       *  @param mK    kaon mass
-       *  @param mPi   pion mass
+       *  @param mA1   mass of A1 
+       *  @param mA2   mass of A2 
+       *  @param mB1   mass of B1 
+       *  @param mB2   mass of B2 
        */
-      Flatte  ( const double m0    = 980    ,
-                const double m0g1  = 165    ,
-                const double g2og1 = 4.21   ,
-                const double mK    = 493.7  ,
-                const double mPi   = 139.6  ) ;
+      Flatte  ( const double m0    = 980   ,
+                const double m0g1  = 165   ,
+                const double g2og1 = 4.21  ,
+                const double mA1   = 139.6 ,
+                const double mA2   = 139.6 ,
+                const double mB1   = 493.7 ,
+                const double mB2   = 493.7 ) ;
       /// destructor
       virtual ~Flatte () ;
       // ======================================================================
@@ -2202,14 +2207,13 @@ namespace Gaudi
       /// get the value of Flatte function
       virtual double operator() ( const double x ) const ;
       /// get the value of Flatte amplitude
-      virtual std::complex<double> amplitude ( const double x ) const ;
+      std::complex<double> amplitude ( const double x ) const 
+      { return flatte_amp ( x ) ; }
       // ======================================================================
     public:
       // ======================================================================
       /// get the amplitude for pipi-channel
       std::complex<double> flatte_amp  ( const double x ) const ;
-      /// get the amplitude for KK-channel
-      std::complex<double> flatte2_amp ( const double x ) const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -2225,8 +2229,10 @@ namespace Gaudi
       double peak   () const { return   m0   () ; }
       double m0g1   () const { return m_m0g1    ; }
       double g2og1  () const { return m_g2og1   ; }
-      double mK     () const { return m_K       ; }
-      double mPi    () const { return m_Pi       ; }
+      double mA1    () const { return m_A1      ; }
+      double mA2    () const { return m_A2      ; }
+      double mB1    () const { return m_B1      ; }
+      double mB2    () const { return m_B2      ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -2242,10 +2248,6 @@ namespace Gaudi
       virtual double integral () const ;
       /// get the integral between low and high limits
       virtual double integral  ( const double low  ,
-                                 const double high ) const 
-      { return integral1 ( low ,high ) ; }
-      /// get the integral between low and high limits
-      double         integral1 ( const double low  ,
                                  const double high ) const ;
       // ======================================================================
     private:
@@ -2253,8 +2255,10 @@ namespace Gaudi
       double m_m0     ;
       double m_m0g1   ;
       double m_g2og1  ;
-      double m_K      ;
-      double m_Pi     ;
+      double m_A1     ;
+      double m_A2     ;
+      double m_B1     ;
+      double m_B2     ;
       // ======================================================================
     private:
       // ======================================================================
@@ -2273,23 +2277,32 @@ namespace Gaudi
      *  http://www.sciencedirect.com/science/article/pii/0370269376906547
      *
      *  KK-channel
-     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2011-11-30
      */
     class GAUDI_API Flatte2 : public Gaudi::Math::Flatte
     {
     public:
       // ======================================================================
-      /** constructor  from three parameters
+      /** constructor  from all parameters
+       *  \f$ f \rigtharrow B_1 + B_2\f$ 
        *  @param m0    the mass
        *  @param m0g1  parameter \f$ m_0\times g_1\f$
        *  @param g2og2 parameter \f$ g2/g_1       \f$
+       *  @param mA1   mass of A1 
+       *  @param mA2   mass of A2 
+       *  @param mB1   mass of B1 
+       *  @param mB2   mass of B2 
        */
-      Flatte2  ( const double m0    = 980      ,
-                 const double m0g1  = 165      ,
-                 const double g2og1 = 4.21     ,
-                 const double mK    = 493.7    ,
-                 const double mPi   = 139.6    ) ;
+      Flatte2 ( const double m0    = 980   ,
+                const double m0g1  = 165   ,
+                const double g2og1 = 4.21  ,
+                const double mA1   = 139.6 ,
+                const double mA2   = 139.6 ,
+                const double mB1   = 493.7 ,
+                const double mB2   = 493.7 ) ;
+      /// constructor  from Flatte
+      Flatte2 ( const Flatte& flatte ) ;
       /// destructor
       virtual ~Flatte2 () ;
       // ======================================================================
@@ -2297,8 +2310,6 @@ namespace Gaudi
       // ======================================================================
       /// get the value of Flatte function (KK-channel)
       virtual double operator() ( const double x ) const ;
-      /// get the value of Flatte amplitude
-      virtual std::complex<double> amplitude ( const double x ) const ;
       // ======================================================================
     } ;
     // ========================================================================
@@ -3070,8 +3081,8 @@ namespace Gaudi
        *  @param m0    the mass
        *  @param m0g1  parameter \f$ m_0\times g_1\f$
        *  @param g2og2 parameter \f$ g2/g_1       \f$
-       *  @param mK    kaon mass
-       *  @param mPi   pion mass
+       *  @param mA    A mass
+       *  @param mB    B mass
        *  @param m3    the mass of the third particle
        *  @param m     the mass of mother particle
        *  @param L     the orbital momentum between the pair and the third particle

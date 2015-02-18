@@ -4488,16 +4488,20 @@ Gaudi::Math::Flatte::Flatte
 ( const double m0    ,
   const double m0g1  ,
   const double g2og1 ,
-  const double mK    ,
-  const double mPi   )
+  const double mA1   ,
+  const double mA2   ,
+  const double mB1   ,
+  const double mB2   )
   : std::unary_function<double,double> ()
-//
+    //
   , m_m0    ( std::fabs ( m0    ) )
   , m_m0g1  ( std::fabs ( m0g1  ) )
   , m_g2og1 ( std::fabs ( g2og1 ) )
-  , m_K     ( std::fabs ( mK    ) )
-  , m_Pi    ( std::fabs ( mPi   ) )
-//
+  , m_A1    ( std::fabs ( mA1   ) )
+  , m_A2    ( std::fabs ( mA2   ) )
+  , m_B1    ( std::fabs ( mB1   ) )
+  , m_B2    ( std::fabs ( mB2   ) )
+    //
   , m_workspace ()
 {}
 // ============================================================================
@@ -4508,89 +4512,60 @@ Gaudi::Math::Flatte::~Flatte(){}
 // get the value of Flatte function
 // ============================================================================
 double Gaudi::Math::Flatte::operator() ( const double x ) const
-{ return flatte ( x ) ; }
-// ============================================================================
-// get the complex Flatte amplitude (pipi-channel)
-// ============================================================================
-std::complex<double> Gaudi::Math::Flatte::amplitude
-( const double x     )  const { return flatte_amp ( x ) ; }
-// ============================================================================
-// get the complex Flatte amplitude (pipi-channel)
+  { return flatte ( x ) ; }
+  // ============================================================================
+  // get the complex Flatte amplitude
 // ============================================================================
 std::complex<double> Gaudi::Math::Flatte::flatte_amp
 ( const double x     )  const
 {
   //
-  if ( 2 * mPi () >= x ) { return 0 ; }
-  //
-  const std::complex<double> rho_PP =
-    Gaudi::Math::PhaseSpace2::q1 ( x , mPi() , mPi() )  ;
-  const std::complex<double> rho_KK =
-    Gaudi::Math::PhaseSpace2::q1 ( x , mK () , mK () )  ;
+  const std::complex<double> rho_AA =
+    Gaudi::Math::PhaseSpace2::q1 ( x , mA1 () , mA2 () )  ;
+  const std::complex<double> rho_BB =
+    Gaudi::Math::PhaseSpace2::q1 ( x , mB1 () , mB2  () )  ;
   //
   static const std::complex<double> s_j ( 0 , 1 ) ;
   //
   const std::complex<double> v =
-    m0() * m0 () - x * x - s_j * m0g1() * ( rho_PP + g2og1 () * rho_KK ) ;
+    m0() * m0 () - x * x - s_j * m0g1() * ( rho_AA + g2og1 () * rho_BB ) ;
   //
   return  1.0 / v ;
 }
-// ==========================================================================
-// get the complex Flatte amplitude (KK-channel)
-// ==========================================================================
-std::complex<double>
-Gaudi::Math::Flatte::flatte2_amp
-( const double x ) const
-{
-  //
-  if ( 2 * mK() >= x ) { return 0 ; }
-  //
-  const std::complex<double> rho_PP =
-    Gaudi::Math::PhaseSpace2::q1 ( x , mPi () , mPi () ) ;
-  const std::complex<double> rho_KK =
-    Gaudi::Math::PhaseSpace2::q1 ( x , mK  () , mK  () ) ;
-  //
-  static const std::complex<double> s_j ( 0 , 1 ) ;
-  //
-  const std::complex<double> v =
-    m0 () * m0 () - x * x - s_j * m0g1 () * ( rho_PP + g2og1 () * rho_KK ) ;
-  //
-  return  1.0 / v ;
-}
-// ==========================================================================
+// ===========================================================================
 // get the function for pipi-channel
-// ============================================================================
+// ===========================================================================
 double Gaudi::Math::Flatte::flatte ( const double x ) const
 {
   //
-  if ( 2 * mPi () >= x ) { return 0 ; }
+  if ( ( mA1 () + mA2 () ) >= x ) { return 0 ; }
   //
   // get the amplitude...
   std::complex<double> amp = flatte_amp ( x ) ;
   //
-  const double ps = Gaudi::Math::PhaseSpace2::phasespace ( x ,  mPi() , mPi() ) ;
+  const double ps = Gaudi::Math::PhaseSpace2::phasespace ( x ,  mA1() , mA2() ) ;
   //
   return x * ps * std::norm ( amp ) * 2 / M_PI * m0g1() ;
 }
-// ==========================================================================
+// ===========================================================================
 // get the function for KK-channel
-// ============================================================================
+// ===========================================================================
 double Gaudi::Math::Flatte::flatte2 ( const double x ) const
 {
   //
-  if ( 2 * mK () >= x ) { return 0 ; }
+  if ( ( mB1 () + mB2() ) >= x ) { return 0 ; }
   //
   // get the amplitude...
-  std::complex<double> amp = flatte2_amp ( x ) ;
+  std::complex<double> amp = flatte_amp ( x ) ;
   //
-  const double ps = Gaudi::Math::PhaseSpace2::phasespace ( x ,  mK() , mK() ) ;
+  const double ps = Gaudi::Math::PhaseSpace2::phasespace ( x ,  mB1() , mB2() ) ;
   //
   return x * ps * std::norm ( amp ) * 2 / M_PI * m0g1 () * g2og1 () ;
 }
 // ============================================================================
 // get the integral between low and high limits
 // ============================================================================
-double  Gaudi::Math::Flatte::integral1
+double  Gaudi::Math::Flatte::integral
 ( const double low  ,
   const double high ) const
 {
@@ -4599,45 +4574,34 @@ double  Gaudi::Math::Flatte::integral1
   if (           low > high   ) { return - integral ( high ,
                                                       low  ) ; } // RETURN
   //
-  if ( 2 * m_Pi >= high ) { return                           0   ; }
-  if ( 2 * m_Pi >  low  ) { return integral  ( 2 * m_Pi , high ) ; }
+  const double a = std::min ( mA1() + mA2() , mB1() + mB2() ) ;
   //
-  // split into reasonable sub intervals
+  if ( a >= high ) { return                     0 ; }
+  if ( a >  low  ) { return integral ( a , high ) ; }
   //
-  const double x_low  = m_m0
-    -  3 * std::abs ( m_m0g1 / m_m0           )
-    -  3 * std::abs ( m_m0g1 / m_m0 * m_g2og1 ) ;
+  const double b = std::max ( mA1() + mA2() , mB1() + mB2() ) ;
   //
-  const double x_high = m_m0
-    + 10 * std::abs ( m_m0g1 / m_m0           )
-    + 10 * std::abs ( m_m0g1 / m_m0 * m_g2og1 ) ;
+  if ( low < b     && b    < high ) 
+  { return integral ( low , b ) + integral ( b , high ) ; }
   //
-  if      ( low <  x_low  && x_low  < high )
-  {
-    return
-      integral (   low  , x_low   ) +
-      integral ( x_low  ,   high  ) ;
-  }
-  else if ( low <  x_high && x_high < high )
-  {
-    return
-      integral (   low  , x_high  ) +
-      integral ( x_high ,   high  ) ;
-  }
-  //
-  // split, if interval too large
+  if ( low < m_m0  && m_m0 < high ) 
+  { return integral ( low , m_m0 ) + integral ( m_m0 , high ) ; }
   //
   const double width =
     0 > m_m0 ? 0.0 :
-    std::fabs ( m_m0g1 / m_m0 ) +
-    std::fabs ( m_m0g1 / m_m0 * m_g2og1 ) ;
+    std::abs ( m_m0g1 / m_m0           ) +
+    std::abs ( m_m0g1 / m_m0 * m_g2og1 ) ;
   //
-  if ( 0 < width &&  3 * width < high - low  )
+  for ( unsigned int i = 0 ; ( i < 5 ) && ( 0 < width ) ; ++ i ) 
   {
-    return
-      integral ( low                   , 0.5 *  ( high + low ) ) +
-      integral ( 0.5 *  ( high + low ) ,          high         ) ;
+    const double x1 = m_m0 + i * width ;
+    if ( low < x1  && x1 < high ) { return integral ( low , x1 ) + integral ( x1 , high ) ; }
+    const double x2 = m_m0 - i * width ;
+    if ( low < x2  && x2 < high ) { return integral ( low , x2 ) + integral ( x2 , high ) ; }
   }
+  //
+  const double x_low  = 0 < width ? m_m0 - 20 * width : low  ;
+  const double x_high = 0 < width ? m_m0 + 20 * width : high ;
   //
   // use GSL to evaluate the integral
   //
@@ -4681,9 +4645,11 @@ double  Gaudi::Math::Flatte::integral () const
   //
   // split into reasonable sub intervals
   //
+  //
+  const double x_low  = std::min ( mA1() + mA2() , mB1() + mB2() ) ;
   const double x_high = m_m0
-    + 10 * std::abs ( m_m0g1 / m_m0           )
-    + 10 * std::abs ( m_m0g1 / m_m0 * m_g2og1 ) ;
+    + 15 * std::abs ( m_m0g1 / m_m0           )
+    + 15 * std::abs ( m_m0g1 / m_m0 * m_g2og1 ) ;
   //
   // use GSL to evaluate the integral
   //
@@ -4716,7 +4682,7 @@ double  Gaudi::Math::Flatte::integral () const
     result = 0.0 ;
   }
   //
-  return result + integral ( 2 * m_Pi , x_high );
+  return result + integral ( x_low , x_high );
 }
 // ============================================================================
 // set mass
@@ -4774,9 +4740,16 @@ Gaudi::Math::Flatte2::Flatte2
 ( const double m0    ,
   const double m0g1  ,
   const double g2og1 ,
-  const double mK    ,
-  const double mPi   )
-  : Gaudi::Math::Flatte ( m0 , m0g1 , g2og1 ,mK , mPi )
+  const double mA1   ,
+  const double mA2   ,
+  const double mB1   ,
+  const double mB2   )
+  : Gaudi::Math::Flatte ( m0 , m0g1 , g2og1 , mA1 , mA2 , mB1 , mB2 )
+{}
+// ============================================================================
+Gaudi::Math::Flatte2::Flatte2
+( const Gaudi::Math::Flatte& flatte ) 
+  : Gaudi::Math::Flatte ( flatte )
 {}
 // ============================================================================
 // destructor
@@ -4788,12 +4761,6 @@ Gaudi::Math::Flatte2::~Flatte2(){}
 double Gaudi::Math::Flatte2::operator() ( const double x ) const
 { return flatte2 ( x ) ; }
 // ============================================================================
-// get the complex Flatte amplitude (pipi-channel)
-// ============================================================================
-std::complex<double> Gaudi::Math::Flatte2::amplitude
-( const double x     )  const { return flatte2_amp ( x ) ; }
-// ============================================================================
-
 
 // ============================================================================
 // Voigtian
@@ -6023,15 +5990,15 @@ Gaudi::Math::Flatte23L::Flatte23L
 ( const double         m0    ,     // MeV
   const double         m0g1  ,     // MeV^2
   const double         g2og1 ,     // dimensionless
-  const double         mK    ,     // MeV
-  const double         mPi   ,     // MeV
+  const double         mA    ,     // MeV
+  const double         mB    ,     // MeV
   const double         m3    ,     // MeV
   const double         m     ,     // MeV
   const unsigned short L     )
   : std::unary_function<double,double> ()
 //
-  , m_flatte    ( m0  , m0g1 , g2og1 , mK , mPi  )
-  , m_ps        ( mPi , mPi  , m3    , m  , L    )
+  , m_flatte    ( m0  , m0g1 , g2og1 , mA , mA , mB , mB ) 
+  , m_ps        ( mA  , mA  , m3    , m  , L    )
 //
   , m_workspace ()
 {}
@@ -6050,8 +6017,8 @@ Gaudi::Math::Flatte23L::Flatte23L
   : std::unary_function<double,double> ()
 //
   , m_flatte    ( fun )
-  , m_ps        ( fun.mPi() , fun.mPi()  , m3    , m  , L    )
-//
+  , m_ps        ( fun.mA1() , fun.mA2()  , m3    , m  , L    )
+    //
   , m_workspace ()
 {}
 // ============================================================================
