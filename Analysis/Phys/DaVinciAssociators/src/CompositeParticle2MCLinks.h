@@ -7,8 +7,7 @@
 #include <string>
 
 // from LHCb
-//#include "Kernel/IParticlePropertySvc.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
+#include "Kernel/IParticlePropertySvc.h"
 
 // local
 #include "Kernel/Particle2MCLinker.h"
@@ -43,8 +42,7 @@ private:
   std::string               m_asctMethod;
   bool                      m_ignorePID;
   // Local variables
-  //LHCb::IParticlePropertySvc*   m_ppSvc;
-  IParticlePropertySvc*   m_ppSvc;
+  LHCb::IParticlePropertySvc*   m_ppSvc;
   Object2MCLinker<>*            m_p2MCLink;
   Object2MCLinker<>*            m_p2MCComp;
   int                       m_gamma;
