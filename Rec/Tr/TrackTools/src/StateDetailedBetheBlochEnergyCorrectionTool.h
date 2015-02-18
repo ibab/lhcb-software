@@ -3,9 +3,11 @@
 
 // Include files
 // -------------
+
+#include <unordered_map>
+
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "GaudiKernel/VectorMap.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/IStateCorrectionTool.h"
@@ -51,6 +53,17 @@ private:
   double m_energyLossCorr;      ///< tunable energy loss correction
   double m_maxEnergyLoss;       ///< maximum energy loss in dE/dx correction
   LHCb::IParticlePropertySvc* m_pp;   /// particle property service
-  mutable GaudiUtils::VectorMap<LHCb::ParticleID,double> m_pid2mass;
+
+  typedef std::unordered_map<unsigned, double> PID2MassMap;
+  enum class Mat { X0, C, X1, a, m, DensityFactor, LogI };
+  typedef std::unordered_map<const Material*, std::tuple<
+      double, double, double, double, double, double, double> >
+      Material2FactorMap;
+
+  mutable PID2MassMap m_pid2mass;
+  mutable Material2FactorMap m_material2factors;
+  mutable PID2MassMap::iterator m_lastCachedPID;
+  mutable Material2FactorMap::iterator m_lastCachedMaterial;
+  //mutable GaudiUtils::VectorMap<LHCb::ParticleID,double> m_pid2mass;
 };
 #endif // TRACKTOOLS_STATEDETAILEDBETHEBLOChENERGYCORRECTIONTOOL_H

@@ -4,6 +4,16 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-02-18 - Manuel Tobias Schiller
+ - speed up StateDetailedBetheBlochEnergyCorrectionTool by a factor two while
+   preserving the output (in the sense that the returned correction should be
+   identical up to the last couple of bits in the mantissa); this is achieved
+   through:
+   - caching particle masses more agressively
+   - aggressive caching of material-related quatities and calculations (this
+     will save quite a few virtual function calls and a log at runtime)
+   - use of vdt to implement pow(x, y)
+
 ! 2015-02-05 - Gerhard Raven
  - speed up StateThickMSCorrectionTool by a factor two, and
    StateDetailedBetheBlochEnergyCorrectionTool by a few percent...
