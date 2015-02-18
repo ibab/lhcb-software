@@ -3,18 +3,8 @@
 ! Responsible : Michel De Cian
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
-! 2015-01-28 - Michel De Cian
- - Remove inclusion of 'FTRawCluster' in PrPlotFTHits
-
-! 2015-01-20 - Sascha Stahl
- - Modified PrCounter and PrTrackAssociator to use LHCb::Track::Range instead of LHCb::Tracks*.
-
-! 2015-01-20 - Sascha Stahl
-- Modified PrChecker, such that histograms are saved in a directory according to the
-	name of the PrChecker instance. 
-
-! 2015-01-18 - Michel De Cian
-- Fix typo in PrChecker.cpp
+! 2015-02-18 - Svende Braun
+- Modified PrChecker2 to be faster, added TrackSelector and variable m_upgrade to change between hitLocation Pat/LHCbID or Pr/LHCbID for upgrade (default true).
 
 ! 2015-01-17 - Svende Braun
 - Modified PrChecker2 to be faster, added global option to choose track extrapolation(default false).
