@@ -12,6 +12,9 @@
 #include "PrKernel/IPrTTCounter.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
 //#include "MCInterfaces/IIdealStateCreator.h"
+#include "GaudiKernel/ToolHandle.h"
+#include "TrackInterfaces/ITrackSelector.h"
+
 
 /** @class PrTTCounter PrTTCounter.h
  *  
@@ -29,6 +32,7 @@ public:
                const IInterface* parent);
 
   virtual ~PrTTCounter( ); ///< Destructor
+  virtual StatusCode initialize();
   virtual StatusCode finalize();  
 
   void initEvent(const IHistoTool* htool);
@@ -78,5 +82,7 @@ private:
   std::vector<double>      m_mcHits3;         ///< Nb of MC hits on tracks with >= 3 TT hits
   std::vector<double>      m_foundOK3;        ///< Nb of correct hits 3 TT hits
   std::vector<double>      m_wrong3;          ///< Nb of wrong ones 3 TT hits
+
+  ToolHandle<ITrackSelector> m_selector;
 };
 #endif // PRTTCOUNTER_H
