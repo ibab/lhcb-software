@@ -24,7 +24,8 @@ DECLARE_TOOL_FACTORY( PrCounter2 )
 PrCounter2::PrCounter2( const std::string& type,
                         const std::string& name,
                         const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+: GaudiTool ( type, name , parent ),
+  m_selector("",this)
 {
   declareInterface<IPrCounter>(this);
   m_link        = NULL;
@@ -42,6 +43,7 @@ PrCounter2::PrCounter2( const std::string& type,
   m_nEvent      = 0.;
   m_trackType   = LHCb::Track::TypeUnknown;
   declareProperty( "TitleSize", m_titleSize = 40 );
+  declareProperty( "Selector", m_selector );
 
   std::string title(name);
   while(title.find(".") < title.size()){
@@ -62,6 +64,23 @@ PrCounter2::~PrCounter2() {}
 StatusCode PrCounter2::finalize ( ) {
   delete m_link;
   return GaudiTool::finalize();
+}
+
+//=========================================================================
+// Initialize
+//=========================================================================
+
+StatusCode PrCounter2::initialize ( ) {
+  StatusCode sc = GaudiTool::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiTool
+  // retrieve the selector if it is set
+  if ( !m_selector.empty() ) {
+    if( msgLevel(MSG::DEBUG) ) debug()<<"Get Selector "<<endmsg;
+    sc = m_selector.retrieve() ;
+    if(sc.isFailure())
+      error() << "Failed to retrieve selector." << endmsg ;
+  }
+  return sc;
 }
 
 //=========================================================================
@@ -118,6 +137,7 @@ void PrCounter2::initEvent(const IHistoTool* htool = NULL, const int nPV = 0){
     
     if ( track->checkFlag( LHCb::Track::Invalid ) ) continue;
     if ( (m_trackType!=LHCb::Track::TypeUnknown) && (track->type()!=m_trackType) ) continue;
+    if ( !m_selector.empty() && !m_selector->accept( *track ) )continue;
     bool eta25 = !m_eta25cut || (track->pseudoRapidity() > 2. && track->pseudoRapidity() < 5.);
     if(!eta25)continue;
     Range range = table->relations( track );
@@ -225,34 +245,25 @@ int PrCounter2::countAndPlot(const IHistoTool* htool,const LHCb::MCParticle* par
   //double phimeas = -999;//
   
   //trackList link tracks related to the MCparticle passed
-  if ( LHCb::Track::TypeUnknown == m_trackType ){
-    //TODO loop
-
-    if ( trackList.size() != 0 ) {
+  for ( auto it = std::begin(trackList); std::end(trackList) != it; ++it ) {
+    const LHCb::Track* tr = it->to();
+    if ( !m_selector.empty() && !m_selector->accept( *tr ) ) {
+      //always()<<"Did not accept track"<<endmsg;
+      continue;
+    }
+    
+    if (LHCb::Track::TypeUnknown == m_trackType || tr->type()==m_trackType) {
       found = true;
       clone = trackList.size() - 1;
-      key = trackList.begin()->to()->key();  
+      key = it->to()->key();  
       //pmeas   = trackList.begin()->to()->p();//
      // ptmeas  = trackList.begin()->to()->pt();//
      // etameas = trackList.begin()->to()->pseudoRapidity();//
      // phimeas = trackList.begin()->to()->phi();//
+      break;
     }
   }
-  else{
-    for ( InvIterator it = trackList.begin(); trackList.end() != it; ++it ) {
-      const LHCb::Track* tr = it->to();
-      if (tr->type()==m_trackType) {
-        found = true;
-        clone = trackList.size() - 1;
-        key = it->to()->key();
-       // pmeas   = it->to()->p();//
-       // ptmeas  = it->to()->pt();//
-       // etameas = it->to()->pseudoRapidity();//
-       // phimeas = it->to()->phi();//
-        break;
-      }
-    }
-  }
+  
 
   //== Count how many of the proper type...
   double nTrue = 0.;
@@ -280,6 +291,7 @@ int PrCounter2::countAndPlot(const IHistoTool* htool,const LHCb::MCParticle* par
         for ( InvIterator it = trackList.begin(); trackList.end() != it; ++it ) {
           const LHCb::Track* tr = it->to();
           if ( (m_trackType!=LHCb::Track::TypeUnknown) && (tr->type()!=m_trackType) ) continue;
+	  if ( !m_selector.empty() && !m_selector->accept( *tr ) ) continue;
           m_purity[kk] += it->weight();
 	  unsigned int nbMeas = 0;
           for ( std::vector<LHCb::LHCbID>::const_iterator itId = tr->lhcbIDs().begin();
