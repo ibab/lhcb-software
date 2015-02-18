@@ -67,22 +67,48 @@ default_config = {
 			"TrChi2VeMu":		5.	# adimensional
 		,	"TrChi2LongMu":		3.	# adimensional
 		,	"JpsiPt":		0.5	# GeV
+		,	"ZPt":			0.5	# GeV
+		,	"UpsilonPt":		0.5	# GeV
 		,	"TrPt":			100.	# MeV
 		,	"TrP":			5.	# GeV
+		,	"ZTrPt":		20000.	# MeV
+		,	"ZTrP":			0.	# MeV
+		,	"UpsilonTrPt":		500.	# MeV
+		,	"UpsilonTrP":		0.	# MeV
 		,	"LongP":		7.	# GeV
+		,	"ZTrMinEta":		2.0	# adimensional
+		,	"ZTrMaxEta":		4.5	# adimensional
 		,	"MuDLL":		1.	# adimensional
 		,	"VertChi2":		2.	# adimensional
+		,	"ZVertChi2":		10000.	# adimensional, dummy
+		,	"UpsilonVertChi2":	10000.	# adimensional, dummy
 		,	"MassPreComb":		1000.	# MeV
+		,	"ZMassPreComb":		100000. # MeV
+		,	"UpsilonMassPreComb":	100000. # MeV
 		,	"MassPostComb":		400.	# MeV
-		,	"Prescale":		0.22	# adimensional
+		,	"ZMassPostComb":	40000.	# MeV
+		,	"UpsilonMassPostComb":	1500.	# MeV
+		,	"Prescale":		1.	# adimensional
+		,	"ZPrescale":		1.	# adimensional
+		,	"UpsilonPrescale":	1.	# adimensional
 		,	"Postscale":		1.	# adimensional
-		,	'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPDecision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
-		,	'HLT1PassOnAll': True
-		,	'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0} #reg. expression allowed
-		,	'HLT2PassOnAll': False
+		,	"ZPostscale":		1.	# adimensional
+		,	"UpsilonPostscale":	1.	# adimensional
+		,	'HLT1TisTosSpecs'	: { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPDecision%TOS" : 0 } #no reg. expression allowed(see selHlt1Jpsi )
+		,	'ZHLT1TisTosSpecs'	: { "Hlt1SingleMuonHighPTDecision%TOS" : 0 } #no reg. expression allowed(see selHlt1Jpsi )
+		,	'UpsilonHLT1TisTosSpecs': { "Hlt1SingleMuonHighPTDecision%TOS" : 0 } #no reg. expression allowed(see selHlt1Jpsi )
+		,	'HLT1PassOnAll'		: True
+		,	'HLT2TisTosSpecs'	: { "Hlt2SingleMuon.*Decision%TOS" : 0, "Hlt2TrackEffVeloMuon.*Decision%TOS" : 0 } #reg. expression allowed
+		,	'ZHLT2TisTosSpecs'	: { "Hlt2SingleMuonHighPTDecision%TOS" : 0} #reg. expression allowed
+		,	'UpsilonHLT2TisTosSpecs': { "Hlt2SingleMuonLowPTDecision%TOS" : 0} #reg. expression allowed
+		,	'HLT2PassOnAll'		: False
          },
     'STREAMS'     : { 'Calibration' : ['StrippingTrackEffVeloMuonLine1',
-                                       'StrippingTrackEffVeloMuonLine2']}
+                                       'StrippingTrackEffVeloMuonLine2',
+                                       'StrippingTrackEffVeloMuonZLine1',
+                                       'StrippingTrackEffVeloMuonZLine2',
+                                       'StrippingTrackEffVeloMuonUpsilonLine1',
+                                       'StrippingTrackEffVeloMuonUpsilonLine2']}
     }
 
 
@@ -95,18 +121,40 @@ class StrippingTrackEffVeloMuonConf(LineBuilder):
 				'TrChi2VeMu',
                                 'TrChi2LongMu',
 				'JpsiPt',
+				'ZPt',
+				'UpsilonPt',
 				'TrPt',
 				'TrP',
+				'ZTrPt',
+				'ZTrP',
+				'UpsilonTrPt',
+				'UpsilonTrP',
 				'LongP',
+				'ZTrMinEta',
+				'ZTrMaxEta',
 				'MuDLL',
 				'VertChi2',
+				'ZVertChi2',
+				'UpsilonVertChi2',
 				'MassPreComb',
+				'ZMassPreComb',
+				'UpsilonMassPreComb',
 				'MassPostComb',
+				'ZMassPostComb',
+				'UpsilonMassPostComb',
                               	'Prescale',
+                              	'ZPrescale',
+                              	'UpsilonPrescale',
                               	'Postscale',
+                              	'ZPostscale',
+                              	'UpsilonPostscale',
 				'HLT1TisTosSpecs',
+				'ZHLT1TisTosSpecs',
+				'UpsilonHLT1TisTosSpecs',
 		   	        'HLT1PassOnAll',
 				'HLT2TisTosSpecs',
+				'ZHLT2TisTosSpecs',
+				'UpsilonHLT2TisTosSpecs',
 				'HLT2PassOnAll'
                               )
 
@@ -115,58 +163,157 @@ class StrippingTrackEffVeloMuonConf(LineBuilder):
         LineBuilder.__init__(self, name, config)
 	
 	# CHECK TRIGGER
-	self.TisTosPreFilter1Jpsi = selHlt1Jpsi('TisTosFilter1Jpsifor'+name, HLT1TisTosSpecs = config['HLT1TisTosSpecs'], HLT1PassOnAll = config['HLT1PassOnAll'])
-	self.TisTosPreFilter2Jpsi = selHlt2Jpsi('TisTosFilter2Jpsifor'+name, hlt1Filter = self.TisTosPreFilter1Jpsi, HLT2TisTosSpecs = config['HLT2TisTosSpecs'], HLT2PassOnAll = config['HLT2PassOnAll'])
-
-	# CHECK FOR TAG-TRACKS
-	muCut = "((TRCHI2DOF < %(TrChi2LongMu)s)) & (PT > %(TrPt)s) & (P > %(LongP)s) & (PIDmu > %(MuDLL)s)" % config
-	vmCut = "((TRCHI2DOF < %(TrChi2VeMu)s)) & (PT > %(TrPt)s) & (P > %(TrP)s)" % config
+        self.TisTosPreFilter1Jpsi = selHlt1Jpsi('TisTosFilter1Jpsifor'+name, HLT1TisTosSpecs = config['HLT1TisTosSpecs'], HLT1PassOnAll = config['HLT1PassOnAll'])
+        self.TisTosPreFilter2Jpsi = selHlt2Jpsi('TisTosFilter2Jpsifor'+name, hlt1Filter = self.TisTosPreFilter1Jpsi, HLT2TisTosSpecs = config['HLT2TisTosSpecs'], HLT2PassOnAll = config['HLT2PassOnAll'])
+        
+        self.TisTosPreFilter1Z = selHlt1Jpsi('TisTosFilter1Zfor'+name, HLT1TisTosSpecs = config['ZHLT1TisTosSpecs'], HLT1PassOnAll = config['HLT1PassOnAll'])
+        self.TisTosPreFilter2Z = selHlt2Jpsi('TisTosFilter2Zfor'+name, hlt1Filter = self.TisTosPreFilter1Z, HLT2TisTosSpecs = config['ZHLT2TisTosSpecs'], HLT2PassOnAll = config['HLT2PassOnAll'])
+        
+        self.TisTosPreFilter1Upsilon = selHlt1Jpsi('TisTosFilter1Upsilonfor'+name, HLT1TisTosSpecs = config['UpsilonHLT1TisTosSpecs'], HLT1PassOnAll = config['HLT1PassOnAll'])
+        self.TisTosPreFilter2Upsilon = selHlt2Jpsi('TisTosFilter2Upsilonfor'+name, hlt1Filter = self.TisTosPreFilter1Upsilon, HLT2TisTosSpecs = config['UpsilonHLT2TisTosSpecs'], HLT2PassOnAll = config['HLT2PassOnAll'])
+        
+        # CHECK FOR TAG-TRACKS
+        muCut = "((TRCHI2DOF < %(TrChi2LongMu)s)) & (PT > %(TrPt)s) & (P > %(LongP)s) & (PIDmu > %(MuDLL)s)" % config
+        vmCut = "((TRCHI2DOF < %(TrChi2VeMu)s)) & (PT > %(TrPt)s) & (P > %(TrP)s)" % config
+        ZmuCut = "((PT > %(ZTrPt)s) & (ETA > %(ZTrMinEta)s) & (ETA < %(ZTrMaxEta)s) & (P > %(ZTrP)s) )" % config
+        UpsilonmuCut = "((PT > %(UpsilonTrPt)s) & (P > %(UpsilonTrP)s) )" % config
+        
         self.longbothJpsi = longtrackFilter( name+'LongJpsiBoth', trackAlgo = 'LongMu', partSource = StdLooseMuons, muCut = muCut)
-	self.longMinusJpsi = chargeFilter( name+'LongJpsiMinus', trackAlgo = 'LongMu',   partSource = self.longbothJpsi, charge = -1, vmCut = vmCut, muCut = muCut)
-	self.longPlusJpsi = chargeFilter( name+'LongJpsiPlus', trackAlgo =  'LongMu',   partSource = self.longbothJpsi, charge = 1, vmCut = vmCut, muCut = muCut)
-	
-	# RECONSTRUCT PROBE-TRACKS
-	self.TrackingPreFilter = trackingPreFilter('TrackingPreFilter'+name, [self.TisTosPreFilter2Jpsi,self.longbothJpsi]) 
-	self.VeloMuProtoPFilter = selMuonPParts('VeloMuon'+name, self.TrackingPreFilter)
-	self.VeloMuPFilter = makeMyMuons('VeloMuon'+name, self.VeloMuProtoPFilter)
-	   
-	self.veloMuonMinusJpsi = chargeFilter(name+'MuonVeloJpsiMinus', trackAlgo =  'VeloMuon',   partSource =  self.VeloMuPFilter , charge = -1, vmCut = vmCut, muCut = muCut)
+        self.longMinusJpsi = chargeFilter( name+'LongJpsiMinus', trackAlgo = 'LongMu',   partSource = self.longbothJpsi, charge = -1, vmCut = vmCut, muCut = muCut)
+        self.longPlusJpsi = chargeFilter( name+'LongJpsiPlus', trackAlgo =  'LongMu',   partSource = self.longbothJpsi, charge = 1, vmCut = vmCut, muCut = muCut)
+        
+        self.longbothZ = longtrackFilter( name+'LongZBoth', trackAlgo = 'LongMu', partSource = StdLooseMuons, muCut = ZmuCut)
+        self.longMinusZ = chargeFilter( name+'LongZMinus', trackAlgo = 'LongMu',   partSource = self.longbothZ, charge = -1, vmCut = ZmuCut, muCut = ZmuCut)
+        self.longPlusZ = chargeFilter( name+'LongZPlus', trackAlgo =  'LongMu',   partSource = self.longbothZ, charge = 1, vmCut = ZmuCut, muCut = ZmuCut)
+        
+        self.longbothUpsilon = longtrackFilter( name+'LongUpsilonBoth', trackAlgo = 'LongMu', partSource = StdLooseMuons, muCut = UpsilonmuCut)
+        self.longMinusUpsilon = chargeFilter( name+'LongUpsilonMinus', trackAlgo = 'LongMu',   partSource = self.longbothUpsilon, charge = -1, vmCut = UpsilonmuCut, muCut = UpsilonmuCut)
+        self.longPlusUpsilon = chargeFilter( name+'LongUpsilonPlus', trackAlgo =  'LongMu',   partSource = self.longbothUpsilon, charge = 1, vmCut = UpsilonmuCut, muCut = UpsilonmuCut)
+        
+        # RECONSTRUCT PROBE-TRACKS
+        self.TrackingPreFilter = trackingPreFilter(name+"_Jpsi", [self.TisTosPreFilter2Jpsi,self.longbothJpsi]) 
+        self.VeloMuProtoPFilter = selMuonPParts(name+"_Jpsi", self.TrackingPreFilter)
+        self.VeloMuPFilter = makeMyMuons(name+"_Jpsi", self.VeloMuProtoPFilter)
+        
+        self.ZTrackingPreFilter = trackingPreFilter(name+"_Z", [self.TisTosPreFilter2Z,self.longbothZ]) 
+        self.ZVeloMuProtoPFilter = selMuonPParts(name+"_Z", self.ZTrackingPreFilter)
+        self.ZVeloMuPFilter = makeMyMuons(name+"_Z", self.ZVeloMuProtoPFilter)
+           
+        self.UpsilonTrackingPreFilter = trackingPreFilter(name+"_Upsilon", [self.TisTosPreFilter2Upsilon,self.longbothUpsilon]) 
+        self.UpsilonVeloMuProtoPFilter = selMuonPParts(name+"_Upsilon", self.UpsilonTrackingPreFilter)
+        self.UpsilonVeloMuPFilter = makeMyMuons(name+"_Upsilon", self.UpsilonVeloMuProtoPFilter)
+           
+        self.veloMuonMinusJpsi = chargeFilter(name+'MuonVeloJpsiMinus', trackAlgo =  'VeloMuon',   partSource =  self.VeloMuPFilter , charge = -1, vmCut = vmCut, muCut = muCut)
         self.veloMuonPlusJpsi = chargeFilter(name+'MuonVeloJpsiPlus', trackAlgo = 'VeloMuon',  partSource = self.VeloMuPFilter,  charge = 1, vmCut = vmCut, muCut = muCut)
-
-	# TAG-AND-PROBE
-	self.JpsiMuMuTrackEff1 = makeResonanceVeloMuTrackEff(name + "VeloMuJpsiSel1", 
-							   resonanceName = 'J/psi(1S)', 
-							   decayDescriptor = 'J/psi(1S) -> mu+ mu-',
-							   plusCharge = self.veloMuonPlusJpsi, 
-							   minusCharge = self.longMinusJpsi,
-							   mode = 1,
-							   TrPt = config['TrPt'], 
-							   TrP = config['TrP'],
-							   MuDLL = config['MuDLL'],
-							   MassPreComb = config['MassPreComb'], 
-							   VertChi2 = config['VertChi2'], 
-							   MassPostComb = config['MassPostComb'], 
-							   JpsiPt = config['JpsiPt'])   
-
-	self.JpsiMuMuTrackEff2 = makeResonanceVeloMuTrackEff(name + "VeloMuJpsiSel2", 
-							   resonanceName = 'J/psi(1S)', 
-							   decayDescriptor = 'J/psi(1S) -> mu+ mu-',
-							   plusCharge = self.longPlusJpsi, 
-							   minusCharge = self.veloMuonMinusJpsi,
-							   mode = 2,
-							   TrPt = config['TrPt'],  
-							   TrP = config['TrP'],
-							   MuDLL = config['MuDLL'],
-							   MassPreComb = config['MassPreComb'], 
-							   VertChi2 = config['VertChi2'], 
-							   MassPostComb = config['MassPostComb'], 
-							   JpsiPt = config['JpsiPt'])    
-	
-	self.nominal_line1 =  StrippingLine(name + 'Line1',  prescale = config['Prescale'], postscale = config['Postscale'], algos=[self.JpsiMuMuTrackEff1], RequiredRawEvents = ["Trigger","Muon","Velo","Tracker"], MDSTFlag = True)
-	self.nominal_line2 =  StrippingLine(name + 'Line2',  prescale = config['Prescale'], postscale = config['Postscale'], algos=[self.JpsiMuMuTrackEff2], RequiredRawEvents = ["Trigger","Muon","Velo","Tracker"], MDSTFlag = True)
-
-	self.registerLine(self.nominal_line1)
-	self.registerLine(self.nominal_line2)
+        
+        self.veloMuonMinusZ = chargeFilter(name+'MuonVeloZMinus', trackAlgo =  'VeloMuon',   partSource =  self.ZVeloMuPFilter , charge = -1, vmCut = ZmuCut, muCut = ZmuCut)
+        self.veloMuonPlusZ = chargeFilter(name+'MuonVeloZPlus', trackAlgo = 'VeloMuon',  partSource = self.ZVeloMuPFilter,  charge = 1, vmCut = ZmuCut, muCut = ZmuCut)
+        
+        self.veloMuonMinusUpsilon = chargeFilter(name+'MuonVeloUpsilonMinus', trackAlgo =  'VeloMuon',   partSource =  self.UpsilonVeloMuPFilter , charge = -1, vmCut = UpsilonmuCut, muCut = UpsilonmuCut)
+        self.veloMuonPlusUpsilon = chargeFilter(name+'MuonVeloUpsilonPlus', trackAlgo = 'VeloMuon',  partSource = self.UpsilonVeloMuPFilter,  charge = 1, vmCut = UpsilonmuCut, muCut = UpsilonmuCut)
+        
+        # TAG-AND-PROBE
+        self.JpsiMuMuTrackEff1 = makeResonanceVeloMuTrackEff(name + "VeloMuJpsiSel1", 
+        						   resonanceName = 'J/psi(1S)', 
+        						   decayDescriptor = 'J/psi(1S) -> mu+ mu-',
+        						   plusCharge = self.veloMuonPlusJpsi, 
+        						   minusCharge = self.longMinusJpsi,
+        						   mode = 1,
+        						   TrPt = config['TrPt'], 
+        						   TrP = config['TrP'],
+        						   MuDLL = config['MuDLL'],
+        						   MassPreComb = config['MassPreComb'], 
+        						   VertChi2 = config['VertChi2'], 
+        						   MassPostComb = config['MassPostComb'], 
+        						   JpsiPt = config['JpsiPt'])   
+        
+        self.JpsiMuMuTrackEff2 = makeResonanceVeloMuTrackEff(name + "VeloMuJpsiSel2", 
+        						   resonanceName = 'J/psi(1S)', 
+        						   decayDescriptor = 'J/psi(1S) -> mu+ mu-',
+        						   plusCharge = self.longPlusJpsi, 
+        						   minusCharge = self.veloMuonMinusJpsi,
+        						   mode = 2,
+        						   TrPt = config['TrPt'],  
+        						   TrP = config['TrP'],
+        						   MuDLL = config['MuDLL'],
+        						   MassPreComb = config['MassPreComb'], 
+        						   VertChi2 = config['VertChi2'], 
+        						   MassPostComb = config['MassPostComb'], 
+        						   JpsiPt = config['JpsiPt'])    
+        
+        self.ZMuMuTrackEff1 = makeResonanceVeloMuTrackEff(name + "VeloMuZSel1", 
+        						  resonanceName = 'Z0', 
+        						  decayDescriptor = 'Z0 -> mu+ mu-',
+        						  plusCharge = self.veloMuonPlusZ, 
+        						  minusCharge = self.longMinusZ,
+        						  mode = 1,
+        						  TrPt = config['ZTrPt'], 
+        						  TrP = config['ZTrP'],
+        						  MuDLL = config['MuDLL'],
+        						  MassPreComb = config['ZMassPreComb'], 
+        						  VertChi2 = config['ZVertChi2'], 
+        						  MassPostComb = config['ZMassPostComb'], 
+        						  JpsiPt = config['ZPt'])   
+        
+        self.ZMuMuTrackEff2 = makeResonanceVeloMuTrackEff(name + "VeloMuZSel2", 
+        						  resonanceName = 'Z0', 
+        						  decayDescriptor = 'Z0 -> mu+ mu-',
+        						  plusCharge = self.longPlusZ, 
+        						  minusCharge = self.veloMuonMinusZ,
+        						  mode = 2,
+        						  TrPt = config['ZTrPt'], 
+        						  TrP = config['ZTrP'],
+        						  MuDLL = config['MuDLL'],
+        						  MassPreComb = config['ZMassPreComb'], 
+        						  VertChi2 = config['ZVertChi2'], 
+        						  MassPostComb = config['ZMassPostComb'], 
+        						  JpsiPt = config['ZPt'])   
+        
+        self.UpsilonMuMuTrackEff1 = makeResonanceVeloMuTrackEff(name + "VeloMuUpsilonSel1", 
+        						  resonanceName = 'Upsilon(1S)', 
+        						  decayDescriptor = 'Upsilon(1S) -> mu+ mu-',
+        						  plusCharge = self.veloMuonPlusUpsilon, 
+        						  minusCharge = self.longMinusUpsilon,
+        						  mode = 1,
+        						  TrPt = config['UpsilonTrPt'], 
+        						  TrP = config['UpsilonTrP'],
+        						  MuDLL = config['MuDLL'],
+        						  MassPreComb = config['UpsilonMassPreComb'], 
+        						  VertChi2 = config['UpsilonVertChi2'], 
+        						  MassPostComb = config['UpsilonMassPostComb'], 
+        						  JpsiPt = config['UpsilonPt'])   
+        
+        self.UpsilonMuMuTrackEff2 = makeResonanceVeloMuTrackEff(name + "VeloMuUpsilonSel2", 
+        						  resonanceName = 'Upsilon(1S)', 
+        						  decayDescriptor = 'Upsilon(1S) -> mu+ mu-',
+        						  plusCharge = self.longPlusUpsilon, 
+        						  minusCharge = self.veloMuonMinusUpsilon,
+        						  mode = 2,
+        						  TrPt = config['UpsilonTrPt'], 
+        						  TrP = config['UpsilonTrP'],
+        						  MuDLL = config['MuDLL'],
+        						  MassPreComb = config['UpsilonMassPreComb'], 
+        						  VertChi2 = config['UpsilonVertChi2'], 
+        						  MassPostComb = config['UpsilonMassPostComb'], 
+        						  JpsiPt = config['UpsilonPt'])   
+        
+        self.nominal_line1 =  StrippingLine(name + 'Line1',  prescale = config['Prescale'], postscale = config['Postscale'], algos=[self.JpsiMuMuTrackEff1], RequiredRawEvents = ["Trigger","Muon","Velo","Tracker"], MDSTFlag = True)
+        self.nominal_line2 =  StrippingLine(name + 'Line2',  prescale = config['Prescale'], postscale = config['Postscale'], algos=[self.JpsiMuMuTrackEff2], RequiredRawEvents = ["Trigger","Muon","Velo","Tracker"], MDSTFlag = True)
+        
+        self.Z_line1 =  StrippingLine(name + 'ZLine1',  prescale = config['ZPrescale'], postscale = config['ZPostscale'], algos=[self.ZMuMuTrackEff1], RequiredRawEvents = ["Trigger","Muon","Velo","Tracker"], MDSTFlag = True)
+        self.Z_line2 =  StrippingLine(name + 'ZLine2',  prescale = config['ZPrescale'], postscale = config['ZPostscale'], algos=[self.ZMuMuTrackEff2], RequiredRawEvents = ["Trigger","Muon","Velo","Tracker"], MDSTFlag = True)
+        
+        self.Upsilon_line1 =  StrippingLine(name + 'UpsilonLine1',  prescale = config['UpsilonPrescale'], postscale = config['UpsilonPostscale'], algos=[self.UpsilonMuMuTrackEff1], RequiredRawEvents = ["Trigger","Muon","Velo","Tracker"], MDSTFlag = True)
+        self.Upsilon_line2 =  StrippingLine(name + 'UpsilonLine2',  prescale = config['UpsilonPrescale'], postscale = config['UpsilonPostscale'], algos=[self.UpsilonMuMuTrackEff2], RequiredRawEvents = ["Trigger","Muon","Velo","Tracker"], MDSTFlag = True)
+        
+        self.registerLine(self.nominal_line1)
+        self.registerLine(self.nominal_line2)
+        
+        self.registerLine(self.Z_line1)
+        self.registerLine(self.Z_line2)
+        
+        self.registerLine(self.Upsilon_line1)
+        self.registerLine(self.Upsilon_line2)
 	
 # ########################################################################################
 # Make the protoparticles
@@ -176,8 +323,8 @@ def selMuonPParts(name, trackingSeq):
        Make ProtoParticles out of VeloMuon tracks
    """
    veloprotos = ChargedProtoParticleMaker(name+"ProtoPMaker")
-   veloprotos.Inputs = ["Rec/VeloMuon/Tracks"]
-   veloprotos.Output = "Rec/ProtoP/"+name+"ProtoPMaker/ProtoParticles"
+   veloprotos.Inputs = ["Rec/VeloMuon/"+name+"Tracks"]
+   veloprotos.Output = "Rec/ProtoP/ProtoPMaker/"+name+"ProtoParticles"
    veloprotos.addTool( DelegatingTrackSelector, name="TrackSelector" )
    tracktypes = [ "Long" ]
    veloprotos.TrackSelector.TrackTypes = tracktypes
@@ -193,7 +340,7 @@ def selMuonPParts(name, trackingSeq):
 
    return GSWrapper(name="WrappedVeloMuonProtoPSeqFor" + name,
                     sequencer=veloprotoseq,
-                    output='Rec/ProtoP/' + name +'ProtoPMaker/ProtoParticles',
+                    output='Rec/ProtoP/ProtoPMaker/'+name+'ProtoParticles',
                     requiredSelections = [ trackingSeq])
 #   return Selection(name+"_SelPParts", Algorithm = veloprotos, OutputBranch="Rec/ProtoP", Extension="ProtoParticles",RequiredSelections=[trackingSeq], InputDataSetter=None)
 
@@ -202,7 +349,7 @@ def makeMyMuons(name, protoParticlesMaker):
      Make Particles out of the muon ProtoParticles
    """
    particleMaker =  NoPIDsParticleMaker(name+"ParticleMaker" , Particle = "Muon")
-   particleMaker.Input = "Rec/ProtoP/"+name+"ProtoPMaker/ProtoParticles"
+   particleMaker.Input = "Rec/ProtoP/ProtoPMaker/"+name+"ProtoParticles"
    #particleMaker.OutputLevel = 0
 
    DataOnDemandSvc().AlgMap.update( {
@@ -237,8 +384,8 @@ def makeResonanceVeloMuTrackEff(name, resonanceName, decayDescriptor, plusCharge
        #MuonVeloResonance.DaughtersCuts = {"mu+": muCut,
        #                                   "mu-": vmCut}
 
-       MuonVeloResonance.CombinationCut = "ADAMASS('J/psi(1S)')<%(MassPreComb)s*MeV"% locals()
-       MuonVeloResonance.MotherCut = "(VFASPF(VCHI2/VDOF)< %(VertChi2)s) & (ADMASS('J/psi(1S)')<%(MassPostComb)s*MeV) & (PT > %(JpsiPt)s*GeV)"% locals()
+       MuonVeloResonance.CombinationCut = "ADAMASS('%(resonanceName)s')<%(MassPreComb)s*MeV"% locals()
+       MuonVeloResonance.MotherCut = "(VFASPF(VCHI2/VDOF)< %(VertChi2)s) & (ADMASS('%(resonanceName)s')<%(MassPostComb)s*MeV) & (PT > %(JpsiPt)s*GeV)"% locals()
         
        return Selection( name, Algorithm = MuonVeloResonance, RequiredSelections = [minusCharge, plusCharge] )
      
@@ -246,10 +393,11 @@ def makeResonanceVeloMuTrackEff(name, resonanceName, decayDescriptor, plusCharge
        #MuonVeloResonance.DaughtersCuts = {"mu-": muCut  % locals(),
        #                                   "mu+": vmCut  % locals() }
 
-       MuonVeloResonance.CombinationCut = "ADAMASS('J/psi(1S)')<%(MassPreComb)s*MeV"% locals()
-       MuonVeloResonance.MotherCut = "(VFASPF(VCHI2/VDOF)< %(VertChi2)s) & (ADMASS('J/psi(1S)')<%(MassPostComb)s*MeV) & (PT > %(JpsiPt)s*GeV)"% locals()
+       MuonVeloResonance.CombinationCut = "ADAMASS('%(resonanceName)s')<%(MassPreComb)s*MeV"% locals()
+       MuonVeloResonance.MotherCut = "(VFASPF(VCHI2/VDOF)< %(VertChi2)s) & (ADMASS('%(resonanceName)s')<%(MassPostComb)s*MeV) & (PT > %(JpsiPt)s*GeV)"% locals()
             
        return Selection( name, Algorithm = MuonVeloResonance, RequiredSelections = [plusCharge, minusCharge] )
+
 # ########################################################################################
 # Charge filter, that filters, well, the charge and takes the particles from the right source (long or Velomuon)
 # TODO: I introduced vmCut and muCut here although muCut is already been done somewhere else ... clean this some day
@@ -341,27 +489,30 @@ def selHlt2Jpsi(name, hlt1Filter, HLT2TisTosSpecs, HLT2PassOnAll):
 
 def trackingPreFilter(name, prefilter):
 
-   VeloMuonBuilder1 = VeloMuonBuilder("VeloMuonBuilder")
+   VeloMuonBuilder1 = VeloMuonBuilder("VeloMuonBuilder"+name)
    VeloMuonBuilder1.OutputLevel = 6
-   VeloMuonBuilder1.MuonLocation = "Hlt1/Track/MuonSeg"
-   VeloMuonBuilder1.VeloLocation = "Rec/Track/UnFittedVelo"
+   #VeloMuonBuilder1.MuonLocation = "Rec/Track/"+name+"MuonStandalone"
+   #VeloMuonBuilder1.MuonLocation = "Hlt1/Track/MuonSeg"
+   VeloMuonBuilder1.MuonLocation = "Rec/Track/"+name+"MuonStandalone"
+   VeloMuonBuilder1.VeloLocation = "Rec/Track/"+name+"UnFittedVelo"
    VeloMuonBuilder1.lhcbids = 4
-   VeloMuonBuilder1.OutputLocation = "Rec/VeloMuon/Tracks"
+   VeloMuonBuilder1.OutputLocation = "Rec/VeloMuon/"+name+"Tracks"
 
-   preve = TrackPrepareVelo("preve")
-   preve.inputLocation = "Rec/Track/Velo"
-   preve.outputLocation = "Rec/Track/UnFittedVelo"
+   preve = TrackPrepareVelo(name+"preve")
+   preve.inputLocation = "Rec/"+name+"_Track/Velo"
+   preve.outputLocation = "Rec/Track/"+name+"UnFittedVelo"
    preve.bestLocation = ""
 
    #TODO: apparently FastVelo is now (april 2012) run with fixes in the production which don't neccessarily apply to the stripping...
    alg = GaudiSequencer("VeloMuonTrackingFor"+name,
-                         Members = [ FastVeloTracking(name+"FastVelo",OutputTracksName="Rec/Track/Velo"),
+                         Members = [ FastVeloTracking(name+"FastVelo",OutputTracksName="Rec/"+name+"_Track/Velo"),
 				 preve, 
-				 StandaloneMuonRec(name+"MuonStandalone"), VeloMuonBuilder1])
+				 #StandaloneMuonRec(name+"MuonStandalone", OutputMuonTracksName = "Rec/Track/"+name+"MuonStandalone"), VeloMuonBuilder1])
+				 StandaloneMuonRec(name+"MuonStandalone",OutputMuonTracksName="Rec/Track/"+name+"MuonStandalone"), VeloMuonBuilder1])
 
-   return GSWrapper(name="WrappedVeloMuonTracking",
+   return GSWrapper(name="WrappedVeloMuonTracking"+name,
                      sequencer=alg,
-                     output='Rec/VeloMuon/Tracks',
+                     output='Rec/VeloMuon/'+name+'Tracks',
                      requiredSelections =  prefilter)
 
 

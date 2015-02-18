@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-02-18 - Michael Kolpin
+ - Changed Trigger lines used for StrippingTrackEff lines
+ - Added Z and Upsilon lines to StrippingTrackEffVeloMuon and StrippingTrackEffDownMuon
+ - Added Seeding P cut to StrippingTrackEffDownMuon
+ - Updated MuonTT reconstruction in StrippingTrackEffMuonTT
+
 !========================= StrippingSelections v3r39 2014-12-14 =========================
 
 !========================= StrippingSelections v3r38 2014-11-25 =========================

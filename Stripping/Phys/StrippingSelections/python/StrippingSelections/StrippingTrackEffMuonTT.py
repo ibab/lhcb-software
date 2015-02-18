@@ -60,7 +60,8 @@ from StandardParticles import StdLooseKaons, StdLooseMuons, StdAllLooseMuons
 
 
 from Configurables import (MuonCombRec, 
-                           MuonTTTrack, 
+                           MuonTTTrack,
+			   MuonHitDecode,
                            PatAddTTCoord, 
                            TrackMasterFitter, 
                            TrackMasterExtrapolator, 
@@ -105,7 +106,7 @@ default_config = {
 			'JpsiHlt1Triggers'            :  { "Hlt1TrackMuonDecision%TOS" : 0},
 			'UpsilonHlt1Triggers'         :  { "Hlt1SingleMuonHighPTDecision%TOS" : 0},
 			'ZHlt1Triggers'               :  { "Hlt1SingleMuonHighPTDecision%TOS" : 0},
-			'JpsiHlt2Triggers'            :  { "Hlt2SingleMuon.*Decision%TOS" : 0},
+			'JpsiHlt2Triggers'            :  { "Hlt2SingleMuon.*Decision%TOS" : 0, "Hlt2TrackEffMuonTT.*Decision%TOS" : 0},
 			'UpsilonHlt2Triggers'         :  { "Hlt2SingleMuonLowPTDecision%TOS" : 0},
 			'ZHlt2Triggers'               :  { "Hlt2SingleMuonHighPTDecision%TOS" : 0},
 			'BJpsiKHlt2TriggersTUS'       :  { "Hlt2TopoMu2BodyBBDTDecision%TUS" : 0},
@@ -564,13 +565,15 @@ def selMakeMuonTT(name, XTolParam, MaxChi2TolParam, MinAxProjParam, MajAxProjPar
     MakeMuonTT.MuonCombRec.CloneKiller = False
     MakeMuonTT.MuonCombRec.SkipStation = -1 # -1=no skip, 0=M1, 1=M2, 2=M3, 3=M4, 4=M5
     MakeMuonTT.MuonCombRec.DecodingTool = "MuonHitDecode"
-    MakeMuonTT.MuonCombRec.PadRecTool = "MuonPadRec"
-    MakeMuonTT.MuonCombRec.ClusterTool = "MuonClusterRec" # to enable: "MuonClusterRec"
+    MakeMuonTT.MuonCombRec.PadRecTool = "MuonPadFromCoord"
+    MakeMuonTT.MuonCombRec.ClusterTool = "MuonFakeClustering" # to enable: "MuonClusterRec"
     MakeMuonTT.MuonCombRec.PhysicsTiming = True
     MakeMuonTT.MuonCombRec.AssumeCosmics = False
     MakeMuonTT.MuonCombRec.AssumePhysics = True
     MakeMuonTT.MuonCombRec.StrongCloneKiller = False 
     MakeMuonTT.MuonCombRec.SeedStation = seedStation # default seet station is M5
+    MakeMuonTT.MuonCombRec.addTool( MuonHitDecode, ("MuonHitDecode") )
+    MakeMuonTT.MuonCombRec.MuonHitDecode.SkipHWNumber = True
     # #############################################################
     MakeMuonTT.addTool( PatAddTTCoord )
     MakeMuonTT.PatAddTTCoord.YTolSlope = 400000.0
