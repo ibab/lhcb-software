@@ -1069,14 +1069,13 @@ class Flatte_pdf(MASS) :
     """
     def __init__ ( self              ,
                    name              ,
+                   flatte            , ## Gaudi::Math::Flatte 
                    mn       = None   ,
                    mx       = None   ,
                    mass     = None   ,
                    m0_980   = None   ,    ## mass  of f0(980) resonance
                    m0g1     = 165000 ,    ## m0(f0(980))*gamma_1 
-                   g2og1    = 4.21   ,    ## gamma2/gamma1 
-                   mKaon    = 493.7  ,    ## kaon mass 
-                   mPion    = 139.6  ) :  ## pion mass 
+                   g2og1    = 4.21   ) :  ## gamma2/gamma1 
         
         #
         ## initialize the base
@@ -1086,6 +1085,8 @@ class Flatte_pdf(MASS) :
                          m0_980  , None     )
         
         del self.sigma 
+
+        self.flatte = flatte 
 
         self.m0_980 = self.mean 
         sname  = self.mean.GetName  ()
@@ -1108,12 +1109,11 @@ class Flatte_pdf(MASS) :
                                4.21     , 
                                0.01     , 100 ) 
 
-        self.mKaon = mKaon
-        self.mPion = mPion
-        
+
         #
         ## build the actual pdf
-        # 
+        #
+    
         ## create PDF 
         self.pdf = cpp.Analysis.Models.Flatte ( 
             "flatte_"    + name ,
@@ -1122,9 +1122,7 @@ class Flatte_pdf(MASS) :
             self.m0_980  ,
             self.m0g1    ,
             self.g2og1   ,
-            self.mKaon   ,
-            self.mPion   )
-        
+            self.flatte  )
         
 # =============================================================================
 ## @class Flatte2_pdf
@@ -1144,26 +1142,27 @@ class Flatte2_pdf(Flatte_pdf) :
     """
     def __init__ ( self              ,
                    name              ,
+                   flatte            , ## Gaudi::Math::Flatte or Flatte2 
                    mn       = None   ,
                    mx       = None   ,
                    mass     = None   ,
                    m0_980   = None   ,    ## mass  of f0(980) resonance
                    m0g1     = 165000 ,    ## m0(f0(980))*gamma_1
-                   g2og1    = 4.21   ,    ## gamma2/gamma1 
-                   mKaon    = 493.7  ,    ## kaon mass 
-                   mPion    = 139.6  ) :  ## pion mass
+                   g2og1    = 4.21   ) :  ## gamma2/gamma1 
         
         #
         ## initialize the base
         # 
-        Flatte_pdf.__init__  ( self , name , mn , mx ,
+        Flatte_pdf.__init__  ( self     , name , flatte ,
+                               mn       , mx ,
                                mass     ,
                                m0_980   ,
                                m0g1     ,
-                               g2og1    , 
-                               mKaon    , mPion )
+                               g2og1    )
+
+        ## delete the creatd pdf (not-needed) 
+        del self.pdf
         
-        #
         ## build the actual pdf
         # 
         ## create PDF 
@@ -1174,9 +1173,7 @@ class Flatte2_pdf(Flatte_pdf) :
             self.m0_980  ,
             self.m0g1    ,
             self.g2og1   ,
-            self.mKaon   ,
-            self.mPion   )
-
+            self.flatte  ) 
         
 # =============================================================================
 ## @class LASS_pdf
