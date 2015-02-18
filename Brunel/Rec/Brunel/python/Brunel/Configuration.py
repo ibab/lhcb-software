@@ -261,7 +261,10 @@ class Brunel(LHCbConfigurableUser):
             # particle gun uses MCVertex to fake a reconstructed one
             # unpacking again would lead to crash
             if "pGun" not in self.getProp("SpecialData"):
-                 GaudiSequencer("MCLinksUnpackSeq").Members += [ "UnpackMCVertex" ]
+                GaudiSequencer("MCLinksUnpackSeq").Members += [ "UnpackMCVertex" ]
+            else:
+                # Cannot run trigger on pGun events...
+                L0Conf().EnsureKnownTCK=False
             
             GaudiSequencer("MCLinksTrSeq").Members += [ "TrackAssociator" ]
             GaudiSequencer("MCLinksCaloSeq").Members += [ "CaloDigit2MCLinks2Table", "CaloClusterMCTruth", "CaloHypoMCTruth" ]

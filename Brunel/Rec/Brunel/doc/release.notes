@@ -3,13 +3,15 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-- Renato Quagliani 16/02/2015
-  . Change refs in upgrade tests to reflect changes in forward tracking (triangle fixing).
+- Changes to Configuration
+  . Add support for Brunel().SpecialData += ['pGun']
 
-- Renato Quagliani 11/12/2015 
-  . Change refs in upgrade tests using the PrSeedingXLayers (baseline, baseline-ut, baseline-25ns) 
-    to reflect changes in Pr/PrAlgorithms/PrSeedingXLayers
+- Changes to references to reflect changes since v47r4
+  . Follow changes in upgrade forward tracking  (triangle fixing)
+  . Follow changes in PrSeedingXLayers  (baseline, baseline-ut, baseline-25ns)
 
+- Changes to QMTests
+  . Add brunel.sim08-pgun test to test SpecialData=["pGun"] option
 
 </PRE><H1><A NAME=v47r4>2015-01-15 Brunel v47r4</A></H1><PRE>
 This version uses projects LHCb v38r4, Lbcom v16r3, Rec v17r4, Gaudi v26r0
@@ -59,7 +61,7 @@ This version uses projects LHCb v38r3, Lbcom v16r2, Rec v17r3
   . Added a rejection for too many tracks using the same phi clusters (FastVelo)
   . Replace TrackMatch by PatMatch for all configurations
   . New implementation of the search for compatible hits in PatAddTTCoord
-    (PatAlgotrithms)
+    (PatAlgorithms)
   . FTDet changes
   . Fix bug introduced in decoding that prevented the proper decoding of TAE
     event (STDAQ)
