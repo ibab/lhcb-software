@@ -89,6 +89,7 @@ FileWriteMgr::FileWriteMgr(const string& nam, ISvcLocator* svc) :
   declareProperty("Input", m_input="None");
   declareProperty("MEPManager", m_mepMgrName = "LHCb::MEPManager/MEPManager");
   declareProperty("RoutingBits", m_routingBits = 0x400);
+  declareProperty("WriterServicePatt",m_ServPatt="AlignDataWriter_");
 //  m_RunList.clear();
   m_texit = false;
 //  pthread_mutex_init(&m_listlock,0);
@@ -153,6 +154,7 @@ void FileWriteMgr::handle(const Incident& inc)
 
 StatusCode FileWriteMgr::initialize()
 {
+  toLowerCase(m_ServPatt);
   StatusCode sc = OnlineService::initialize();
   MsgStream log(msgSvc(), name());
   m_BytesOut = 0;
@@ -168,7 +170,7 @@ StatusCode FileWriteMgr::initialize()
     is = *it;
     nam = is->name();
     toLowerCase(nam);
-    if (nam.find("lhcbfilewriter_")!= nam.npos)
+    if (nam.find(m_ServPatt)!= nam.npos)
     {
       m_ServiceList.insert(m_ServiceList.end(),dynamic_cast<FileWriterSvc*>(*it));
     }

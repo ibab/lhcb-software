@@ -88,6 +88,7 @@ namespace LHCb
 //    std::map<unsigned int,RunDesc*> m_RunList;
     std::string m_node;
     int m_FileCloseDelay;
+    std::string m_ServPatt;
   public:
     ISvcLocator* m_SvcLoc;
     typedef std::list<FileWriterSvc*> SvcList;
