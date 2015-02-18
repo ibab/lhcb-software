@@ -101,62 +101,6 @@ StatusCode TeslaReportAlgo::execute()
     }
   }
 	
-  // Set our output locations
-  std::stringstream ss_PartLoc;
-  ss_PartLoc << m_OutputPref << "/Particles";
-  //
-  std::stringstream ss_ProtoLoc;
-  ss_ProtoLoc << m_OutputPref << "/Protos"; // NOT STORED BY ORIGINAL SELREPORTS
-  //
-  std::stringstream ss_VertLoc;
-  ss_VertLoc << m_OutputPref << "/Vertices"; // NOT STORED BY ORIGINAL SELREPORTS
-  //
-  std::stringstream ss_TrackLoc;
-  ss_TrackLoc << m_OutputPref << "/Tracks";
-  //
-  std::stringstream ss_RPIDLoc;
-  ss_RPIDLoc << m_OutputPref << "/RichPIDs"; // NOT STORED BY ORIGINAL SELREPORTS
-  //
-  std::stringstream ss_MPIDLoc;
-  ss_MPIDLoc << m_OutputPref << "/MuonPIDs"; // NOT STORED BY ORIGINAL SELREPORTS
-  //
-  //std::stringstream ss_PVLoc;
-  //ss_PVLoc << m_OutputPref << "/PV3D";
-  //ss_PVLoc << "Rec/Vertex/Primary";
-  //ss_PVLoc << m_OutputPref << "/Primary";
-  //
-  std::stringstream ss_P2PVLoc;
-  ss_P2PVLoc << m_OutputPref << "/Particle2VertexRelations";
-  //
-  LHCb::Particle::Container* cont_Part = new LHCb::Particle::Container() ;
-  put( cont_Part , ss_PartLoc.str().c_str() );
-  //
-  LHCb::ProtoParticle::Container* cont_Proto = new LHCb::ProtoParticle::Container() ;
-  put( cont_Proto , ss_ProtoLoc.str().c_str() );
-  //
-  LHCb::Vertex::Container* cont_Vert = new LHCb::Vertex::Container() ;
-  put( cont_Vert , ss_VertLoc.str().c_str() );
-  //
-  LHCb::Track::Container* cont_Track = new LHCb::Track::Container() ;
-  put( cont_Track , ss_TrackLoc.str().c_str() );
-  //
-  LHCb::RichPID::Container* cont_RPID = new LHCb::RichPID::Container() ;
-  put( cont_RPID , ss_RPIDLoc.str().c_str() );
-  //
-  LHCb::MuonPID::Container* cont_MPID = new LHCb::MuonPID::Container() ;
-  put( cont_MPID , ss_MPIDLoc.str().c_str() );
-  //
-  LHCb::RecVertex::Container* cont_PV = getIfExists<LHCb::RecVertex::Container>( m_PVLoc.c_str() );
-  bool reusePV = true;
-  if( !cont_PV ) {
-    debug() << "Making PVs" << endmsg;
-    cont_PV = new LHCb::RecVertex::Container() ;
-    put( cont_PV , m_PVLoc.c_str() );
-    reusePV = false;
-  }
-  //
-  Particle2Vertex::Table* cont_P2PV = new Particle2Vertex::Table() ;
-  put( cont_P2PV , ss_P2PVLoc.str().c_str() );
 
   const LHCb::HltSelReports* selReports;
   const LHCb::HltVertexReports* vtxReports;
@@ -172,23 +116,6 @@ StatusCode TeslaReportAlgo::execute()
       for(std::vector<std::string>::iterator vname_it=vnames.begin();vname_it!=vnames.end();vname_it++){
         debug() << *vname_it << endmsg;
       }
-    }
-    if( vtxRep && !reusePV ){
-      for( LHCb::HltVertexReports::HltVertexReport::const_iterator iv=vtxRep->begin();iv!=vtxRep->end(); ++iv){
-        const LHCb::VertexBase* v = *iv;
-        LHCb::RecVertex* vnew = new LHCb::RecVertex();
-        debug() <<"Vertex chi2= " << v->chi2()<< ", ndf =" << v->nDoF()<< endmsg;
-        debug() <<"Vertex key= " << v->key() << endmsg;
-        // Turn the VertexBase from the vertex reports in to a RecVertex for packing
-        vnew->setChi2( v->chi2() );
-        vnew->setNDoF( v->nDoF() );
-        vnew->setPosition( v->position() );
-        vnew->setCovMatrix( v->covMatrix() );
-        vnew->setExtraInfo( v->extraInfo() );
-
-        // Fill PV container
-        cont_PV->insert( vnew );
-      } 
     }
   } else{
     warning() << "Vertex reports do not exist!!!" << endmsg;
@@ -228,8 +155,78 @@ StatusCode TeslaReportAlgo::execute()
 
   if ( msgLevel(MSG::DEBUG) ){ 
     if(MotherRep!=0) debug() << "Required line has been fired" << endmsg;
+    else return StatusCode::SUCCESS;
   }
-  else return StatusCode::SUCCESS;
+  
+  // Set our output locations
+  std::stringstream ss_PartLoc;
+  ss_PartLoc << m_OutputPref << "/Particles";
+  //
+  std::stringstream ss_ProtoLoc;
+  ss_ProtoLoc << m_OutputPref << "/Protos"; // NOT STORED BY ORIGINAL SELREPORTS
+  //
+  std::stringstream ss_VertLoc;
+  ss_VertLoc << m_OutputPref << "/Vertices"; // NOT STORED BY ORIGINAL SELREPORTS
+  //
+  std::stringstream ss_TrackLoc;
+  ss_TrackLoc << m_OutputPref << "/Tracks";
+  //
+  std::stringstream ss_RPIDLoc;
+  ss_RPIDLoc << m_OutputPref << "/RichPIDs"; // NOT STORED BY ORIGINAL SELREPORTS
+  //
+  std::stringstream ss_MPIDLoc;
+  ss_MPIDLoc << m_OutputPref << "/MuonPIDs"; // NOT STORED BY ORIGINAL SELREPORTS
+  //
+  std::stringstream ss_P2PVLoc;
+  ss_P2PVLoc << m_OutputPref << "/Particle2VertexRelations";
+  //
+  LHCb::Particle::Container* cont_Part = new LHCb::Particle::Container() ;
+  put( cont_Part , ss_PartLoc.str().c_str() );
+  //
+  LHCb::ProtoParticle::Container* cont_Proto = new LHCb::ProtoParticle::Container() ;
+  put( cont_Proto , ss_ProtoLoc.str().c_str() );
+  //
+  LHCb::Vertex::Container* cont_Vert = new LHCb::Vertex::Container() ;
+  put( cont_Vert , ss_VertLoc.str().c_str() );
+  //
+  LHCb::Track::Container* cont_Track = new LHCb::Track::Container() ;
+  put( cont_Track , ss_TrackLoc.str().c_str() );
+  //
+  LHCb::RichPID::Container* cont_RPID = new LHCb::RichPID::Container() ;
+  put( cont_RPID , ss_RPIDLoc.str().c_str() );
+  //
+  LHCb::MuonPID::Container* cont_MPID = new LHCb::MuonPID::Container() ;
+  put( cont_MPID , ss_MPIDLoc.str().c_str() );
+  //
+  LHCb::RecVertex::Container* cont_PV = getIfExists<LHCb::RecVertex::Container>( m_PVLoc.c_str() );
+  bool reusePV = true;
+  if( !cont_PV ) {
+    debug() << "Making PVs" << endmsg;
+    cont_PV = new LHCb::RecVertex::Container() ;
+    put( cont_PV , m_PVLoc.c_str() );
+    reusePV = false;
+  }
+  if( !reusePV ){
+    for( LHCb::HltVertexReports::HltVertexReport::const_iterator iv=vtxRep->begin();iv!=vtxRep->end(); ++iv){
+      const LHCb::VertexBase* v = *iv;
+      LHCb::RecVertex* vnew = new LHCb::RecVertex();
+      debug() <<"Vertex chi2= " << v->chi2()<< ", ndf =" << v->nDoF()<< endmsg;
+      debug() <<"Vertex key= " << v->key() << endmsg;
+      // Turn the VertexBase from the vertex reports in to a RecVertex for packing
+      vnew->setChi2( v->chi2() );
+      vnew->setNDoF( v->nDoF() );
+      vnew->setPosition( v->position() );
+      vnew->setCovMatrix( v->covMatrix() );
+      vnew->setExtraInfo( v->extraInfo() );
+
+      // Fill PV container
+      cont_PV->insert( vnew );
+    } 
+  }
+  //
+  Particle2Vertex::Table* cont_P2PV = new Particle2Vertex::Table() ;
+  put( cont_P2PV , ss_P2PVLoc.str().c_str() );
+  
   if(MotherRep){
     if ( msgLevel(MSG::DEBUG) ){
       debug() << "Reference: " << endmsg;

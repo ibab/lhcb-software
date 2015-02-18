@@ -3,6 +3,9 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-2-18 - Sean Benson
+ - Containers only created when a report exists.
+
 ! 2015-2-11 - Sean Benson
  - TES objects moved down one level, now under /Event/Turbo/HLTLINE/OBJECT
  - PV selection harmonised with offline.
