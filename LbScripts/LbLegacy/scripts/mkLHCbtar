@@ -45,7 +45,7 @@ def help() :
       -p or --project= <project>         - project name \n
       -v or --version= <version>         - project version\n
       -b or --binary=  <binary>          - binary \n
-
+      -x or --dbgext                     - Refer to LCGCMT in dbg config\n
     Examples:
       cd $LHCBRELEASES
       if the project uses InstallArea then
@@ -105,7 +105,7 @@ def _get_grid_version(path_list):
             break
     return grid_version
 #-----------------------------------------------------------------------------------
-def make_tar(pname, pversion, binary=''):
+def make_tar(pname, pversion, binary='', use_dbg_externals=False):
 
     global TARSRC
 
@@ -144,8 +144,9 @@ def make_tar(pname, pversion, binary=''):
         title = ' (' + binary + ' binary files) '
         # external package binary : only the optimized version is distributed
         tar_opt = tar_bin
-        if isBinaryDbg(binary) :
-            tar_opt = "_" + getBinaryOpt(binary)
+        if not use_dbg_externals:
+            if isBinaryDbg(binary) :
+                tar_opt = "_" + getBinaryOpt(binary)
         platform = binary.split('_')[0]
         if platform.find('slc') != -1:
             platform = 'slc'
@@ -527,7 +528,7 @@ if __name__ == "__main__":
         help()
         sys.exit()
     try:
-        keys, values = getopt.getopt(arguments, 'hdwb:p:v:',
+        keys, values = getopt.getopt(arguments, 'hdwb:p:v:x',
             ['help', 'debug', 'web', 'binary', 'project=', 'version='])
 
     except getopt.GetoptError:
@@ -535,7 +536,7 @@ if __name__ == "__main__":
         sys.exit()
 
     binary = ''
-
+    use_dbg_externals = False
     for key, value in keys:
         if key in ('-d', '--debug'):
             debug_flag = 1
@@ -547,6 +548,9 @@ if __name__ == "__main__":
             pname = value
         if key in ('-b', '--binary'):
             binary = value
+        if key in ('-x', '--dbgext'):
+            # Special option added to allow refering to DBG version of LCGCMT
+            use_dbg_externals = True
         if key in ('-w', '--web'):
             rc = create_web()
             sys.exit()
@@ -556,7 +560,7 @@ if __name__ == "__main__":
     print pname, pversion, binary
     print 'debug_flag= %s' % (debug_flag)
 
-    tar_status = make_tar(pname, pversion, binary)
+    tar_status = make_tar(pname, pversion, binary, use_dbg_externals)
 
     if tar_status == 0 : rc = create_web()
 
