@@ -1,8 +1,12 @@
 // Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 
+//to publish online 
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/ServiceLocatorHelper.h"
+#include "GaudiKernel/IPublishSvc.h"
 // local
 #include "OTt0OnlineClbr.h"
 
@@ -62,6 +66,8 @@ OTt0OnlineClbr::OTt0OnlineClbr( const std::string& name, ISvcLocator* pSvcLocato
 
   detector = 0;
 
+  declareProperty("EoRSignal" ,  m_EoRSignal = "-EOR" ); // End of Run Signal  
+
   declareProperty("ReadXMLs", readXMLs = false, "Read LOCAL condition XML files (default false)");
   declareProperty("Simulation", simulation = false, " Is simulation or data (default false, so data)");
   declareProperty("Apply_Calibration", Apply_Calibration = false, " Apply_Calibration - in xml (by now) or in DB (default false,)");
@@ -82,6 +88,8 @@ OTt0OnlineClbr::OTt0OnlineClbr( const std::string& name, ISvcLocator* pSvcLocato
   declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/afs/cern.ch/user/l/lgrillo/databases_for_online/OT/" );
   declareProperty("xmlFileName"   ,  m_xmlFileName  = "CalibrationGlobal.xml" );
   declareProperty("CondStructure"   ,  m_CondStructure  = "Conditions/OT/Calibration/" );
+
+  declareProperty("RunOnline"   ,  m_RunOnline  = true );
 
   //inputs
   declareProperty("InputFileName"   ,  m_InputFileName  = "clbr_hists_109.root" );
@@ -161,6 +169,31 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
 				// << ", Run: " << getRunNumber( fileName )
 				      << endmsg;
 
+  if(m_RunOnline){  
+    if( fileName.find( m_EoRSignal ) != std::string::npos ) {
+      
+      m_mergedRun = std::pair<unsigned int, std::string>( getRunNumber( fileName ), SaveSet );
+      m_lastRun   = std::pair<unsigned int, std::string>( 0, "") ;
+      
+    } // "-EOR" inside the file name 
+    else
+      {
+	// if it is the first time to read a file without "-EOR"
+	// or still the same run
+	if( m_lastRun.first ==0 || getRunNumber( fileName ) ==  m_lastRun.first ) 
+	  {
+	    m_lastRun = std::pair<unsigned int, std::string>( getRunNumber( fileName ), SaveSet );
+	    
+	    return StatusCode::SUCCESS;
+	  } // wait for new file
+	else if( getRunNumber( fileName ) !=  m_lastRun.first ) // new Run, use previous file
+	  {
+	    m_mergedRun = m_lastRun;
+	    m_lastRun   = std::pair<unsigned int, std::string>( 0, "") ;
+	  }   
+      }
+  }
+
   //double mtoff[3][4][4][9]; memset(mtoff, 0, sizeof(mtoff));
 
   double test[3][4][4][9]; memset(test, 0, sizeof(test));
@@ -231,10 +264,14 @@ StatusCode OTt0OnlineClbr::analyze (std::string& SaveSet,
   */
 
   // Open Saveset
-  //TFile *f = new TFile(m_mergedRun.second.c_str(),"READ");
+  TFile *f;
+
+  if(m_RunOnline)
+    f = new TFile(m_mergedRun.second.c_str(),"READ");
+  else
+    f = new TFile((m_InputFilePath + m_InputFileName).c_str());
 
   //TFile* f = new TFile("clbr_hists.root");
-  TFile* f = new TFile((m_InputFilePath + m_InputFileName).c_str());
 
   //TFile* f_2d = new TFile("histog_2d.root") 
   TFile* f_2d = new TFile((m_InputFilePath + m_InputFileName_2d).c_str());
@@ -946,6 +983,20 @@ StatusCode OTt0OnlineClbr::write_Globalt0_XML(double global_t0)
 
   file.close();
 
+  //from Example. I am actually not sure where things have to go
+  StatusCode sc2;
+  MsgStream msg( msgSvc(), name() );
+  m_pPublishSvc = 0;
+  sc2 = serviceLocator()->service("LHCb::PublishSvc", m_pPublishSvc, false);
+  if (m_pPublishSvc) m_pPublishSvc->declarePubItem("Tasks",m_PubString);
+
+  //static int Rn=0;
+  char crn[255];
+  //Rn++;
+  //::sprintf(crn,"Run %d /group/online/calibrations/RICH_Alignement_%d.xml",Rn,Rn);
+  ::sprintf(crn, (m_xmlFilePath+"v"+ std::to_string(m_version) + "/"+m_CondStructure +m_xmlFileName).c_str());
+  m_PubString = crn;
+  if (m_pPublishSvc) m_pPublishSvc->updateItem("Tasks");
 
   return StatusCode::SUCCESS;
 

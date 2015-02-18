@@ -12,29 +12,23 @@ OTGaudiSeq = GaudiSequencer("OTt0OnlineClbrSeq")
 
 OTt0OnlineClbrAlg = OTt0OnlineClbr("OTt0OnlineClbrAlg")
 
-#myFiles1 = [ "clbr_hists.root" ]
-myFiles1 = [ "clbr_hists_109.root" ]
-
-OTt0OnlineClbrAlg.InputFiles  = myFiles1
-
-OTt0OnlineClbrAlg.RunOnline = False
-
-OTt0OnlineClbrAlg.InputFilePath = "/afs/cern.ch/work/l/lgrillo/OT_CALIBRATION_files/"
-#OTt0OnlineClbrAlg.InputFileName  = "data_test1_1000ev_sanityNEWCODE_hists.root"
-#OTt0OnlineClbrAlg.InputFileName  = "data_test1_1000ev_sanityOLDCODE_hists.root"
-OTt0OnlineClbrAlg.InputFileName  = "clbr_hists_109.root"
-
-#OTt0OnlineClbrAlg.InputFileName_2d  = "histog_2d_109_20.root"
-OTt0OnlineClbrAlg.InputFileName_2d  = "histog_2d_109.root"
-
-#OTt0OnlineClbrAlg.xmlFilePath = "/tmp/fdettori/"
+OTt0OnlineClbrAlg.InputTasks  = [ "Brunel" ]
+#OTt0OnlineClbrAlg.xmlFilePath = "/group/online/alignment/" #<- this will be the right one
 OTt0OnlineClbrAlg.xmlFilePath = "/tmp/lgrillo/"
+
+#myFiles1 = [ "clbr_hists_109.root" ]
+#OTt0OnlineClbrAlg.InputFiles  = myFiles1
+#OTt0OnlineClbrAlg.InputFilePath = "/afs/cern.ch/work/l/lgrillo/OT_CALIBRATION_files/"
+#OTt0OnlineClbrAlg.InputFileName  = "clbr_hists_109.root"
+#OTt0OnlineClbrAlg.InputFileName_2d  = "histog_2d_109.root"
+
 
 #OTt0OnlineClbrAlg.CondStructure = ""
 #line below should be the default in the db. its default in the analysistask
 OTt0OnlineClbrAlg.CondStructure = "Conditions/OT/Calibration/" 
 
 OTt0OnlineClbrAlg.globalt0_threshold = 0.1
+
 
 OTt0OnlineClbrAlg.OutputLevel = 2
 OTt0OnlineClbrAlg.Simulation = False 
@@ -43,7 +37,6 @@ OTt0OnlineClbrAlg.GetMean_instead_of_Fit = False
 OTt0OnlineClbrAlg.Save_Fits = True
 
 simulation = OTt0OnlineClbrAlg.Simulation
-
 
 
 OTGaudiSeq.Members += [
@@ -56,6 +49,10 @@ OTGaudiSeq.IgnoreFilterPassed = True
 
 from Configurables import ApplicationMgr
 ApplicationMgr().TopAlg            += [ OTGaudiSeq ]
+
+ApplicationMgr().EvtSel = "NONE"
+ApplicationMgr().ExtSvc += [ "MonitorSvc" ]
+ApplicationMgr().Runable = "LHCb::OnlineRunable/Runable"
 
 from Configurables import LHCbApp
 #LHCbApp().DDDBtag   = "head-20120413"
@@ -70,10 +67,9 @@ else :
     LHCbApp().DDDBtag   = "default"                                                                                                           
     LHCbApp().CondDBtag = "default"
 
-#databases from Wouter        
-#path_monolayer = "/afs/cern.ch/user/w/wouter/public/AlignDB/"
-path_monolayer = "./db_patches/"
-
+#databases from Wouter (the monolayer alignment will be in the
+#default database)
+path_monolayer = "/afs/cern.ch/user/w/wouter/public/AlignDB/"
 ddbs = []
 ddbs.append(path_monolayer + "OTMonoGeometry.db/DDDB")
 ddbs.append(path_monolayer + "OTMonoCatalog.db/LHCBCOND")

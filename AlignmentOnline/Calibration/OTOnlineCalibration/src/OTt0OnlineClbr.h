@@ -128,6 +128,11 @@ public:
    * if the |global t0| exceedes this threshold, we want to update the global t0 condition
    */
   double globalt0_threshold;
+  /*
+   * Run online or offline - the difference is that offline I read a test .root file,
+   * while online it should get the last EoR file from the monitoring?
+   */
+  bool m_RunOnline;
 
   FileVersion m_version;
 
@@ -149,12 +154,38 @@ public:
   std::string m_InputFileName_2d;
   std::string m_InputFilePath;
 
+  std::string m_EoRSignal;
+  std::pair<unsigned int, std::string> m_mergedRun ;  // to store run number and file path
+  std::pair<unsigned int, std::string> m_lastRun ;    // to store run number and file path of last run
+
   //TF1* m_myFunc;                                                                                                                                             
   StatusCode writeCondXMLs(double t0s[3][4][4][9]);
   StatusCode writeCondDBXMLs(double t0s[3][4][4][9]);
   StatusCode write_Globalt0_XML(double global_t0);
   StatusCode fit_single_hist(TH1D* hist,int s, int l, int q, int m, double& result, double& result_err, TFile* outFile);
   
+
+  std::string m_PubString;
+
+ private:
+  IPublishSvc* m_pPublishSvc; ///< Online Gaucho Monitoring Service
+  
+  //=============================================================================
+  // Function to get run number from fileName, rely on the name convention here:
+  // https://lbtwiki.cern.ch/bin/view/Online/MonitoringExpertGuide#Savesets
+  //=============================================================================
+  inline unsigned int getRunNumber( std::string fileName )
+  {
+    std::string firstName = fileName.substr(fileName.find_first_of("-")+1);
+    std::string runString = firstName.substr(0, firstName.find_first_of("-"));
+    
+    unsigned int runNumber = atoi( runString.c_str() );
+    
+    return runNumber;
+  } 
+  
+
+
 };
 
 #endif // OTt0OnlineClbr_H
