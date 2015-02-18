@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-02-18 - Chris Jones
+ - Replace use of ROOT::Math::Similarity with new faster vectorised
+   LHCb::Math::Similarity in CubicStateInterpolationTraj.
+
 !========================= TrackKernel v2r1 2014-12-11 =========================
 ! 2014-11-20 - Manuel Tobias Schiller
  - rewrite TrackCloneData class:
