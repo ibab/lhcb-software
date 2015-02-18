@@ -426,14 +426,13 @@ namespace Analysis
     public:
       // ======================================================================
       /// constructor from all parameters 
-      Flatte ( const char*          name      , 
-               const char*          title     ,
-               RooAbsReal&          x         ,
-               RooAbsReal&          m0        ,
-               RooAbsReal&          m0g1      ,
-               RooAbsReal&          g2og1     ,
-               const double         k_mass    , 
-               const double         pi_mass   ) ;
+      Flatte ( const char*                name      , 
+               const char*                title     ,
+               RooAbsReal&                x         ,
+               RooAbsReal&                m0        ,
+               RooAbsReal&                m0g1      ,
+               RooAbsReal&                g2og1     ,
+               const Gaudi::Math::Flatte& flatte    ) ;
       /// "copy" constructor 
       Flatte ( const Flatte& , const char* name = 0 ) ;
       /// virtual destructor 
@@ -474,8 +473,6 @@ namespace Analysis
       RooRealProxy m_m0    ;
       RooRealProxy m_m0g1  ;
       RooRealProxy m_g2og1 ;
-      double       m_K     ;
-      double       m_pi    ;
       // ======================================================================
     protected:
       // ======================================================================
@@ -493,14 +490,11 @@ namespace Analysis
      *
      *  http://www.sciencedirect.com/science/article/pii/0370269376906547
      *
-     *  @warning something wrong here...
-     *  @todo    checks needed 
-     *
-     *  KK-channel
-     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  \f$\pi\pi\f$-channel
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-11-30
      */
-    class GAUDI_API Flatte2 : public Analysis::Models::Flatte
+    class GAUDI_API Flatte2 : public RooAbsPdf
     {
     public:
       // ======================================================================
@@ -509,14 +503,13 @@ namespace Analysis
     public:
       // ======================================================================
       /// constructor from all parameters 
-      Flatte2 ( const char*          name      , 
-                const char*          title     ,
-                RooAbsReal&          x         ,
-                RooAbsReal&          m0        ,
-                RooAbsReal&          m0g1      ,
-                RooAbsReal&          g2og1     ,
-                const double         k_mass    , 
-                const double         pi_mass   ) ;
+      Flatte2 ( const char*                name      , 
+                const char*                title     ,
+                RooAbsReal&                x         ,
+                RooAbsReal&                m0        ,
+                RooAbsReal&                m0g1      ,
+                RooAbsReal&                g2og1     ,
+                const Gaudi::Math::Flatte& flatte    ) ;
       /// "copy" constructor 
       Flatte2 ( const Flatte2& , const char* name = 0 ) ;
       /// virtual destructor 
@@ -526,23 +519,42 @@ namespace Analysis
       // ======================================================================
     public:
       // ======================================================================
-      /// get the amplitude 
-      virtual std::complex<double> amplitude () const  ;
-      // ======================================================================
-    public:
-      // ======================================================================
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
       // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
     public:
       // ======================================================================
-      virtual Int_t    getAnalyticalIntegral
-        ( RooArgSet&   allVars   , 
-          RooArgSet&   analVars  ,
-          const char*  rangename ) const ;
-      virtual Double_t analyticalIntegral 
-      ( Int_t          code         ,  
-        const char*    rangeName    ) const ;
+      /// get the amplitude 
+      std::complex<double>          amplitude () const  ;
+      /// access to underlying function 
+      const Gaudi::Math::Flatte2&   function  () const { return m_flatte2 ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x     ;
+      RooRealProxy m_m0    ;
+      RooRealProxy m_m0g1  ;
+      RooRealProxy m_g2og1 ;
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::Flatte2 m_flatte2 ;          // the actual function 
       // ======================================================================
     } ;
     // ========================================================================

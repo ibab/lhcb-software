@@ -437,22 +437,21 @@ Double_t Analysis::Models::BW23L::analyticalIntegral
 // constructor from all parameters 
 // ============================================================================
 Analysis::Models::Flatte::Flatte 
-( const char*          name      , 
-  const char*          title     ,
-  RooAbsReal&          x         ,
-  RooAbsReal&          m0        ,
-  RooAbsReal&          m0g1      ,
-  RooAbsReal&          g2og1     ,
-  const double         k_mass    , 
-  const double         pi_mass   ) 
+( const char*                name      , 
+  const char*                title     ,
+  RooAbsReal&                x         ,
+  RooAbsReal&                m0        ,
+  RooAbsReal&                m0g1      ,
+  RooAbsReal&                g2og1     ,
+  const Gaudi::Math::Flatte& flatte    ) 
   : RooAbsPdf ( name , title ) 
 //
-  , m_x     ( "x"     , "Observable" , this , x     ) 
-  , m_m0    ( "m0"    , "Peak"       , this , m0    ) 
-  , m_m0g1  ( "m0g1"  , "M0*G1"      , this , m0g1  )
-  , m_g2og1 ( "g2og1" , "G2/G1"      , this , g2og1 )
-//
-  , m_flatte ( 0 , 1 , 0.1 , k_mass , pi_mass ) 
+  , m_x      ( "x"     , "Observable" , this , x     ) 
+  , m_m0     ( "m0"    , "Peak"       , this , m0    ) 
+  , m_m0g1   ( "m0g1"  , "M0*G1"      , this , m0g1  )
+  , m_g2og1  ( "g2og1" , "G2/G1"      , this , g2og1 )
+    //
+  , m_flatte ( flatte ) 
 {
   setPars() ;
 }
@@ -521,7 +520,7 @@ Double_t Analysis::Models::Flatte::analyticalIntegral
   //
   setPars () ;
   //
-  return m_flatte.integral1 ( m_x.min(rangeName) , m_x.max(rangeName) ) ;
+  return m_flatte.integral ( m_x.min(rangeName) , m_x.max(rangeName) ) ;
 }
 // ===========================================================================
 // get the amplitude 
@@ -533,35 +532,47 @@ std::complex<double> Analysis::Models::Flatte::amplitude () const
   //
   return m_flatte.amplitude ( m_x ) ;
 }
+
+
 // ============================================================================
 // constructor from all parameters 
 // ============================================================================
 Analysis::Models::Flatte2::Flatte2 
-( const char*          name      , 
-  const char*          title     ,
-  RooAbsReal&          x         ,
-  RooAbsReal&          m0        ,
-  RooAbsReal&          m0g1      ,
-  RooAbsReal&          g2og1     ,
-  const double         k_mass    , 
-  const double         pi_mass   ) 
-  : Analysis::Models::Flatte ( name    , 
-                               title   , 
-                               x       , 
-                               m0      , 
-                               m0g1    , 
-                               g2og1   , 
-                               k_mass  , 
-                               pi_mass ) 
-{}
+( const char*                name      , 
+  const char*                title     ,
+  RooAbsReal&                x         ,
+  RooAbsReal&                m0        ,
+  RooAbsReal&                m0g1      ,
+  RooAbsReal&                g2og1     ,
+  const Gaudi::Math::Flatte& flatte    ) 
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x       ( "x"     , "Observable" , this , x     ) 
+  , m_m0      ( "m0"    , "Peak"       , this , m0    ) 
+  , m_m0g1    ( "m0g1"  , "M0*G1"      , this , m0g1  )
+  , m_g2og1   ( "g2og1" , "G2/G1"      , this , g2og1 )
+    //
+  , m_flatte2 ( flatte ) 
+{
+  setPars() ;
+}
 // ============================================================================
 // "copy" constructor 
 // ============================================================================
 Analysis::Models::Flatte2::Flatte2 
 ( const Analysis::Models::Flatte2& right , 
-  const char*                     name  ) 
-  : Analysis::Models::Flatte ( right , name ) 
-{}
+  const char*                      name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x       ( "x"     , this , right.m_x     ) 
+  , m_m0      ( "m0"    , this , right.m_m0    ) 
+  , m_m0g1    ( "m0g1"  , this , right.m_m0g1  )
+  , m_g2og1   ( "g2og1" , this , right.m_g2og1 )
+//
+  , m_flatte2 ( right.m_flatte2 ) 
+{
+  setPars() ;
+}
 // ============================================================================
 // destructor 
 // ============================================================================
@@ -573,6 +584,15 @@ Analysis::Models::Flatte2*
 Analysis::Models::Flatte2::clone( const char* name ) const 
 { return new Analysis::Models::Flatte2(*this,name) ; }
 // ============================================================================
+void Analysis::Models::Flatte2::setPars () const 
+{
+  //
+  m_flatte2.setM0     ( m_m0    ) ;
+  m_flatte2.setM0G1   ( m_m0g1  ) ;
+  m_flatte2.setG2oG1  ( m_g2og1 ) ;
+  //
+}
+// ============================================================================
 // the actual evaluation of function 
 // ============================================================================
 Double_t Analysis::Models::Flatte2::evaluate() const 
@@ -580,40 +600,43 @@ Double_t Analysis::Models::Flatte2::evaluate() const
   //
   setPars () ;
   //
-  return m_flatte.flatte2 ( m_x ) ;
+  return m_flatte2 ( m_x ) ;
 }
 // ============================================================================
-/// @attention integrtaion is disabled 
 Int_t Analysis::Models::Flatte2::getAnalyticalIntegral
-( RooArgSet&  /* allVars   */ , 
-  RooArgSet&  /* analVars  */ ,
-  const char* /* rangename */ ) const { return 0 ; }
-// =============================================================================
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if ( matchArgs ( allVars , analVars , m_x ) ) { return 1 ; }
+  return 0 ;
+}
+// ============================================================================
 Double_t Analysis::Models::Flatte2::analyticalIntegral 
-( Int_t          code         , 
-  const char* /* rangeName */ ) const 
+( Int_t       code      , 
+  const char* rangeName ) const 
 {
   assert ( code == 1 ) ;
   if ( 1 != code ) {}
   //
-  /// @warning integration is disabled 
+  setPars () ;
   //
-  return 1 ;
-  // setPars () ;
-  // return m_flatte.integral1 ( m_x.min(rangeName) , m_x.max(rangeName) ) ;
+  return m_flatte2.integral ( m_x.min(rangeName) , m_x.max(rangeName) ) ;
 }
 // ===========================================================================
-
-
-// ============================================================================
+// get the amplitude 
+// ===========================================================================
 std::complex<double> Analysis::Models::Flatte2::amplitude () const  
 {
   //
   setPars () ;
   //
-  return m_flatte.flatte2_amp ( m_x ) ;
+  return m_flatte2.amplitude ( m_x ) ;
 }
-// ===========================================================================
+
+
+
+
 
 // ============================================================================
 // constructor from all parameters 

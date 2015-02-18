@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2015-02-18 - Vanya Belyaev
+ - make flatte amplitude simpler
+
 ! 2015-02-15 - Vanya Belyaev
  - adjust statistics 
 
