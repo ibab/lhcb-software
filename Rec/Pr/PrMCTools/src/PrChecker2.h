@@ -33,6 +33,7 @@ class IHistoTool ;
  *     if selected long_fromB_P>3GeV_Pt>0.5GeV cut is added to each track container
  *   - VetoElectrons: Take electrons into account in numbers? (default: true)
  *   - TrackExtrapolation: Do track extrapolation into middle of T and TTstations for efficiency maps (default: false)
+ *   - Upgrade: Gets hitLocation from link to MCParticle from "Pr/LHCbID" instead of "Pat/LHCbID" (default: true)
  * 
  * 
  * additional track location container can be added for PrCounter2 and PrTTCounter via:
@@ -51,7 +52,16 @@ class IHistoTool ;
  *   PrChecker2("PrChecker2").MyNewCuts= {"fromBorD" : "BOrDMother", "B daughters": "fromB", "D daughters": "fromD" }
  *  @endcode
  *
+ *  TrackSelector to change definition of reconstructed tracks, change MaxChi2Cut for example:
  *
+ *  @code
+ *   from Configurables import TrackSelector
+ *   PrChecker2("PrChecker2").addTool(PrCounter2, name="Velo")
+ *   PrChecker2("PrChecker2").Velo.addTool(PrCounter2, name="Selector")
+ *   PrChecker2("PrChecker2").Velo.Selector = "TrackSelector"
+ *   PrChecker2("PrChecker2").Velo.addTool(TrackSelector("TrackSelector"))
+ *   PrChecker2("PrChecker2").Velo.TrackSelector.MaxChi2Cut = 5.0 
+ *  @endcode
  *
  *  Uses IHistoTool: for each container histograms are plotted if the following code segment is used. Default values are -1 (no histograms), can also be set to 2 for additional histograms (expectedHits, docaz, PVz, EtaP, EtaPhi, efficiency maps @z=9000mm XYZ9000 and @z=2485mm XYZ2485) 
  * 
@@ -165,6 +175,8 @@ class PrChecker2 : public GaudiHistoAlg {
   bool m_triggerNumbers;
   bool m_vetoElectrons;
   bool m_trackextrapolation;
+  
+  bool m_upgrade;
 
   enum recAs {
       isLong = 1,
@@ -432,8 +444,24 @@ class PrChecker2 : public GaudiHistoAlg {
   std::map < std::string, std::vector < LoKi::Types::MCCut> > m_LoKiCuts;///<converted map of Loki cuts, first component is name of track container
   std::map < std::string, std::vector <addOtherCuts> > m_otherCuts;///<map of other cuts as predefined in isTrack, first component is name of track container 
   
-
-
+  std::vector<LoKi::Types::MCCut> m_veloMCCuts; 
+  std::vector<addOtherCuts> m_veloMCCuts2; 
+  std::vector<LoKi::Types::MCCut> m_forwardMCCuts;
+  std::vector<addOtherCuts> m_forwardMCCuts2; 
+  std::vector<LoKi::Types::MCCut> m_upstreamMCCuts; 
+  std::vector<addOtherCuts> m_upstreamMCCuts2;
+  std::vector<LoKi::Types::MCCut> m_ttrackMCCuts;
+  std::vector<addOtherCuts> m_ttrackMCCuts2;
+  std::vector<LoKi::Types::MCCut> m_downstreamMCCuts;
+  std::vector<addOtherCuts> m_downstreamMCCuts2;
+  std::vector<LoKi::Types::MCCut> m_newMCCuts;
+  std::vector<addOtherCuts> m_newMCCuts2;
+  std::vector<LoKi::Types::MCCut> m_ttforwardMCCuts;
+  std::vector<addOtherCuts> m_ttforwardMCCuts2;
+  std::vector<LoKi::Types::MCCut> m_ttdownstreamMCCuts;
+  std::vector<addOtherCuts> m_ttdownstreamMCCuts2;
+  std::vector<LoKi::Types::MCCut> m_ttnewMCCuts;
+  std::vector<addOtherCuts> m_ttnewMCCuts2;
 
 
 };
