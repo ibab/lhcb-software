@@ -12,6 +12,8 @@
 #include "PrKernel/IPrCounter.h"
 //#include "MCInterfaces/IIdealStateCreator.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
+#include "GaudiKernel/ToolHandle.h"
+#include "TrackInterfaces/ITrackSelector.h"
 
 
 /** @class PrCounter2 PrCounter2.h
@@ -33,7 +35,8 @@ public:
               const IInterface* parent);
 
   virtual ~PrCounter2( ); ///< Destructor
-
+  
+  virtual StatusCode initialize();
   virtual StatusCode finalize();
 
   void initEvent(const IHistoTool* htool, const int nPV);
@@ -91,6 +94,8 @@ private:
   std::vector<int>         m_clone;   ///< counters for clones
   std::vector<double>      m_purity;  ///< Sum of purity (linker weight)
   std::vector<double>      m_hitEff;  ///< Sum of hitEfficiency
+
+  ToolHandle<ITrackSelector> m_selector;
 };
 
 #endif // PRCOUNTER_H
