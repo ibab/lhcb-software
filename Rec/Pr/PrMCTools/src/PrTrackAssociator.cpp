@@ -75,7 +75,7 @@ StatusCode PrTrackAssociator::execute() {
     //== Scan the root directory and make a list of containers to process.
     DataObject* root =  getIfExists<DataObject*>( m_rootOfContainers );
     if ( NULL == root ) {
-      if( msgLevel(MSG::ERROR) ) error() << "Root-of-Containers directory " <<   m_rootOfContainers << "' does not exist. Skipping." <<endmsg;
+      if( msgLevel(MSG::DEBUG) ) debug() << "Root-of-Containers directory " <<   m_rootOfContainers << "' does not exist. Skipping." <<endmsg;
       return StatusCode::SUCCESS;
     }
 
