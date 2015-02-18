@@ -159,7 +159,7 @@ class Tesla(LHCbConfigurableUser):
             seq.Members+=[trig1]
             # IF NOT PACKING NEED TO SET THE LOCATIONS IN THE REPORT ALGORITHM
             if not self.getProp('Pack'):
-                writer.ItemList+=[ self.base + l + "/Particles#99" 
+                writer.OptItemList+=[ self.base + l + "/Particles#99" 
                         , self.base + l + "/Protos#99"
                         , self.base + l + "/Vertices#99"
                         , self.base + l + "/Tracks#99"
@@ -178,7 +178,7 @@ class Tesla(LHCbConfigurableUser):
                 p.OutputName = "/Event/"+self.base+l+"/pRec/Rich/CustomPIDs"
                 p.InputName = "/Event/"+self.base+l+"/RichPIDs"
                 p.OutputLevel = self.getProp('OutputLevel')
-                writer.ItemList+=[self.base+l+"/pRec/Rich/CustomPIDs"]
+                writer.OptItemList+=[self.base+l+"/pRec/Rich/CustomPIDs"]
                 seq.Members += [p]
 
             packer = PackParticlesAndVertices( name = "TurboPacker",
@@ -188,7 +188,7 @@ class Tesla(LHCbConfigurableUser):
                     AlwaysCreateOutput = True)
             seq.Members +=[packer]
             
-            writer.ItemList+=[
+            writer.OptItemList+=[
                     self.base+"pPhys/Particles#99"
                     ,self.base+"pPhys/Vertices#99"
                     ,self.base+"pPhys/RecVertices#99"
@@ -217,6 +217,9 @@ class Tesla(LHCbConfigurableUser):
     def __apply_configuration__(self):
         #GaudiKernel.ProcessJobOptions.PrintOff()
         
+        from GaudiKernel.Configurable import ConfigurableGeneric as RFileCnv
+        RFileCnv('RFileCnv').GlobalCompression = "LZMA:6"
+
         ############## Set other properties ###########
         self._safeSet( LHCbApp(), ['EvtMax','SkipEvents','Simulation', 'DataType' , 'CondDBtag','DDDBtag'] )
         ApplicationMgr().AppName="Tesla, utilising DaVinci"

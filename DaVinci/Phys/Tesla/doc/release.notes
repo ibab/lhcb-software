@@ -4,6 +4,10 @@ Package Coordinator : Sean Benson
 Purpose             : Turbo Stream Analysis
 !-----------------------------------------------------------------------------
 
+! 2015-2-18 - Sean Benson
+ - Containers are only written when created.
+ - ROOT compression factor of LZMA:6 added.
+
 ! 2015-2-11 - Sean Benson
  - Tesla created objects are now packed.
  - TES objects moved down one level, now under /Event/Turbo/HLTLINE/OBJECT
