@@ -2,6 +2,11 @@
 ! Responsible : Alexandr Kozlinskiy, Lucia Grillo
 !--------------------------------------------------------------------------
 
+! 2015-02-18 - Manuel Tobias Schiller
+ - WalkRelation: fix bug in initializer list of constructor (member used
+   before it was set - why did the compiler not complain about the
+   initialisation order?)
+
 ! 2015-02-17 - Manuel Tobias Schiller
  - prevent ROOT's dictionary generation phase from seeing the clever bits in
    WalkRelation's padeTanh implementation, and fall back on a slower but safer
