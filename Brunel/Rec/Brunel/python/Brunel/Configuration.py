@@ -385,35 +385,37 @@ class Brunel(LHCbConfigurableUser):
 
             brunelSeq.Members += [ lumiSeq, notPhysSeq ]
             #brunelSeq.Members += [ lumiSeq ]
+            
+        # Hlt decreports decoders
+        from DAQSys.Decoders import DecoderDB
+        from Configurables import LoKi__HDRFilter, AddToProcStatus
+        hltStages = ('Hlt1',) if self.getProp('OnlineMode') else ('Hlt1', 'Hlt2')
+        hltDecoders = []
+        hltFilters = []
+        for stage in hltStages:
+            decoder = DecoderDB["HltDecReportsDecoder/%sDecReportsDecoder" % stage].setup()
+            filterCode = "HLT_PASS_RE('%s(?!ErrorEvent).*Decision')" % stage
+            # identifies events that are not of type ErrorEvent
+            hltFilter = LoKi__HDRFilter('%sErrorFilter' % stage, Code = filterCode, Location = decoder.OutputHltDecReportsLocation )   # the filter
+            hltDecoders += [decoder]            # decode DecReports
+            hltFilters  += [decoder, hltFilter] # and apply filter
 
         # Do not process events flagged as error in Hlt, but still write procstatus
         if vetoHltErrorEvents:
             """
             By Patrick Koppenburg, 16/6/2011
             """
-            
-            from DAQSys.Decoders import DecoderDB
-            Hlt1DecReportsDecoder=DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].setup()
-            Hlt2DecReportsDecoder=DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].setup()
-            from Configurables import LoKi__HDRFilter, AddToProcStatus
-            # identifies events that are not of type Hlt1ErrorEvent or Hlt2ErrorEvent
-            hlt1filterCode = "HLT_PASS_RE('Hlt1(?!ErrorEvent).*Decision')"  # from Gerhard
-            hlt2filterCode = "HLT_PASS_RE('Hlt2(?!ErrorEvent).*Decision')"  # from Gerhard
-            hlt1ErrorFilter = LoKi__HDRFilter('Hlt1ErrorFilter', Code = hlt1filterCode, Location = Hlt1DecReportsDecoder.OutputHltDecReportsLocation )   # the filter
-            hlt2ErrorFilter = LoKi__HDRFilter('Hlt2ErrorFilter', Code = hlt2filterCode, Location = Hlt2DecReportsDecoder.OutputHltDecReportsLocation )   # the filter
-            # Make a sequence that selects these events
-            hltfilterSeq = GaudiSequencer( "HltFilterSeq" )
-            if handleLumi: hltfilterSeq.Members = [ physFilter ]         # protect against lumi (that doesn't have decreports)
-            hltfilterSeq.Members += [ Hlt1DecReportsDecoder,             # decode DecReports
-                                      hlt1ErrorFilter,                   # apply filter
-                                      Hlt2DecReportsDecoder,             # decode DecReports
-                                      hlt2ErrorFilter ]                  # apply filter
-            # Sequence to be executed if hltErrorFilter is failing to set ProcStatus
+            # Make a sequence that selects HltErrorEvents
+            hltfilterSeq = GaudiSequencer("HltFilterSeq")
+            if handleLumi: hltfilterSeq.Members = [ physFilter ]       # protect against lumi (that doesn't have decreports)
+            hltfilterSeq.Members += hltFilters
+
+            # Sequence to be executed if HltErrorFilter is failing to set ProcStatus
             hlterrorSeq = GaudiSequencer("HltErrorSeq", ModeOR = True, ShortCircuit = True) # anti-logic
-            addToProc = AddToProcStatus("HltErrorProc",Reason="HltError",Subsystem="Hlt")   # write a procstatus
-            hlterrorSeq.Members += [ hltfilterSeq, addToProc ]           # only run if hltfilterSeq fails
-            brunelSeq.Members += [ hlterrorSeq ]                         # add this sequece to Brunel _before_ physseq
-            physicsSeq.Members += [ hltfilterSeq ]                       # take good events in physics seq
+            addToProc = AddToProcStatus("HltErrorProc", Reason = "HltError", Subsystem = "Hlt") # write a procstatus
+            hlterrorSeq.Members += [hltfilterSeq, addToProc]           # only run if hltfilterSeq fails
+            brunelSeq.Members   += [hlterrorSeq]                       # add this sequece to Brunel _before_ physseq
+            physicsSeq.Members  += [hltfilterSeq]                      # take good events in physics seq
 
         # Convert Calo ReadoutStatus to ProcStatus
         caloBanks=GaudiSequencer("CaloBanksHandler")
@@ -425,10 +427,7 @@ class Brunel(LHCbConfigurableUser):
         trgSeq = GaudiSequencer("DecodeTriggerSeq")
         l0TrgSeq = GaudiSequencer("L0TriggerSeq")
         if self.getProp( "DataType" ) not in [ "2008", "2009" ]:
-            from DAQSys.Decoders import DecoderDB
-            Hlt1DecReportsDecoder=DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].setup()
-            Hlt2DecReportsDecoder=DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].setup()
-            trgSeq.Members += [ Hlt1DecReportsDecoder, Hlt2DecReportsDecoder ]
+            trgSeq.Members += hltDecoders
         trgSeq.Members += [ l0TrgSeq ]
         physicsSeq.Members += [ trgSeq ]
         L0Conf().L0Sequencer = l0TrgSeq
