@@ -302,7 +302,8 @@ private: // private member functions
                          const unsigned int  quarter,
                          unsigned int&       sipmID,
                          unsigned int&       cellID, 
-                         double&             fracDistCellCenter) const;
+                         double&             fracDistCellCenter,
+                         double&             sipmREdgeX) const;
 
   /** Convert 'gross' cellID (counts sensitive and non-sensitive cells/SiPM edges)
    *  to 'net' cellID (counts only sensitive cells).
@@ -333,17 +334,20 @@ private: // private member functions
                                   unsigned int sipmID,
                                   unsigned int grossCellID) const;
 
+
   /** Determine the XYZ crossing point of a straight line determined by
    *  @param gpEntry Global entry point
    *  @param gpExit  Global exit point
    *  and the vertical (or tilted in the case of u/v layers) plane between two cells.
    *  @param pIntersect Global intersection point (set by the function)
    *  @return Status of the execution
+   *  In LOCAL fibremat frame
    */
-  StatusCode cellCrossingPoint(const double            cellEdgeU,
-                               const Gaudi::XYZPoint&  gpEntry,
-                               const Gaudi::XYZPoint&  gpExit,
-                               Gaudi::XYZPoint&        pIntersect) const;
+  StatusCode cellCrossingPointLocal(const double       lcellEdgeX,
+                                    const Gaudi::XYZPoint&  lpEntry,
+                                    const Gaudi::XYZPoint&  lpExit,
+                                    Gaudi::XYZPoint&        pIntersect) const;
+                               
 
   /** Function to determine the y coordinate of the crossing point between
    *  the beam-pipe hole (circle) and the fibres. Purely geometrical function.
@@ -500,8 +504,8 @@ private: // private data members
   
   //Validate acceptance and other things for MC hit, find sipm info for entry and exit hit
   StatusCode CalculateSipmInfo(const Gaudi::XYZPoint enPLocal, const Gaudi::XYZPoint exPLocal,
-                               unsigned int &enPSipmID, unsigned int &enPCellID, double &enPFraction,
-                               unsigned int &exPSipmID, unsigned int &exPCellID, double &exPFraction) const;
+                               unsigned int &enPSipmID, unsigned int &enPCellID, double &enPFraction, double &ensipmREdgeX,
+                               unsigned int &exPSipmID, unsigned int &exPCellID, double &exPFraction, double &exsipmREdgeX) const;
     
 };
 

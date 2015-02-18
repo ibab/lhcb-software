@@ -4,7 +4,14 @@
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
 
+! 2015-02-18 - Luigi Del Buono
+ - Correct a bug affecting the way the fractional position is used in the light sharing for
+  tracks crossing the inter SIpms gaps (at least when this single gap size is not an integer
+  multiple of the sipm cell size) : slight increase in track reconstruction efficiency after
+  the correction
+
 !========================= FTDet v2r8 2014-12-11 =========================
+  
 ! 2014-12-04 - Luigi Del Buono
  - change again "CreateDetSegment" to correct for a bug in the z0 computation (could explain at least
  partly the efficiency problems), and also to make this routine less geometry version dependent.
