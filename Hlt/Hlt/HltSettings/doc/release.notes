@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-02-18 - Roel Aaij
+ - Fix Hlt1Track thresholds in (Hlt1_)Commissionning_Physics_2015.
+
 ! 2015-02-17 - Christian Linn
  - Updated Physics_draftEM2015: added trackeff and high pT muon lines,
    adjusted thresholds to more reasonable values

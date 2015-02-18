@@ -72,7 +72,7 @@ class Commissioning_Physics_2015( object ):
                                                , 'AllL0_PT'          : 1300.
                                                , 'AllL0_P'           : 6000.
                                                , 'AllL0_IPChi2'      : 13.
-                                               , 'AllL0_TrChi2'      : 2.
+                                               , 'AllL0_TrChi2'      : 3.
                                                , 'AllL0_GEC'         : 'Loose'
                                                , 'Muon_TrNTHits'     : 0 #OFF
                                                , 'Muon_Velo_NHits'   : 0 #OFF
@@ -80,12 +80,12 @@ class Commissioning_Physics_2015( object ):
                                                , 'Muon_PT'           : 800.
                                                , 'Muon_P'            : 6000.
                                                , 'Muon_IPChi2'       : 6.
-                                               , 'Muon_TrChi2'       : 2.
+                                               , 'Muon_TrChi2'       : 5.
                                                , 'Muon_GEC'          : 'Loose'
                                                , 'Photon_PT'         : 1200.
                                                , 'Photon_P'          : 6000.
                                                , 'Photon_IPChi2'     : 13.
-                                               , 'Photon_TrChi2'     : 2.
+                                               , 'Photon_TrChi2'     : 4.
                                                , 'Photon_GEC'        : 'Loose'
                                                , 'L0Channels'        : {'AllL0'  : 'L0_DECISION_PHYSICS',
                                                                         'Muon'   : ('Muon', 'DiMuon'),
