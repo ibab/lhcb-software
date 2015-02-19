@@ -228,7 +228,7 @@ StatusCode UpgradeGhostId::execute(LHCb::Track& aTrack) const
   return StatusCode::SUCCESS;
 }
 
-std::vector<std::string> UpgradeGhostId::veloVars() {
+std::vector<std::string> UpgradeGhostId::veloVars() const {
   std::vector<std::string> retval;
   retval.push_back("UpgradeGhostInfo_obsVP");
   retval.push_back("UpgradeGhostInfo_expVP");
@@ -243,7 +243,7 @@ std::vector<std::string> UpgradeGhostId::veloVars() {
 }
 
 
-std::vector<std::string> UpgradeGhostId::upstreamVars() {
+std::vector<std::string> UpgradeGhostId::upstreamVars() const {
   std::vector<std::string> retval;
   retval.push_back("UpgradeGhostInfo_obsVP");
   retval.push_back("UpgradeGhostInfo_expVP");
@@ -263,7 +263,7 @@ std::vector<std::string> UpgradeGhostId::upstreamVars() {
 
 
 
-std::vector<std::string> UpgradeGhostId::downstreamVars() {
+std::vector<std::string> UpgradeGhostId::downstreamVars() const {
   std::vector<std::string> retval;
   retval.push_back("UpgradeGhostInfo_obsFT");
   retval.push_back("UpgradeGhostInfo_expFTHitExpectation");
@@ -282,7 +282,7 @@ std::vector<std::string> UpgradeGhostId::downstreamVars() {
 
 
 
-std::vector<std::string> UpgradeGhostId::longVars() {
+std::vector<std::string> UpgradeGhostId::longVars() const {
   std::vector<std::string> retval;
   retval.push_back("UpgradeGhostInfo_obsVP");
   retval.push_back("UpgradeGhostInfo_expVP");
@@ -306,7 +306,7 @@ std::vector<std::string> UpgradeGhostId::longVars() {
 
 
 
-std::vector<std::string> UpgradeGhostId::ttrackVars() {
+std::vector<std::string> UpgradeGhostId::ttrackVars() const {
   std::vector<std::string> retval;
   retval.push_back("UpgradeGhostInfo_obsFT");
   retval.push_back("UpgradeGhostInfo_expFTHitExpectation");

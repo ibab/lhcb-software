@@ -49,6 +49,24 @@ public:
 
   virtual void handle( const Incident& incident ); 
 
+  /** reveal the variable names for a track type */
+  virtual std::vector<std::string> variableNames(LHCb::Track::Types type) const {
+    std::vector<std::string> vec;
+    if (LHCb::Track::Velo==type) variableNames_Velo(vec);
+    if (LHCb::Track::Long==type) variableNames_Longtrack(vec);
+    if (LHCb::Track::Upstream==type) variableNames_Upstream(vec);
+    if (LHCb::Track::Downstream==type) variableNames_Downstream(vec);
+    if (LHCb::Track::Ttrack==type) variableNames_Ttrack(vec);
+    return vec;
+  }
+
+  /** reveal the variable values for a track */
+  virtual std::vector<float> netInputs(LHCb::Track& ) const {
+    fatal() << "TrackNNGhostId::netInputs is NOT IMPLEMENTED" << endmsg;
+    return std::vector<float>();
+  }
+
+
 private:
 
   IOTRawBankDecoder* m_otdecoder;

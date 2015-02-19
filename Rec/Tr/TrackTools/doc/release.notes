@@ -4,6 +4,14 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-02-19 - Paul Seyfert
+ - Ghost Probability for Run2. (cleaner code, removed time consuming inputs,
+   newly trained to work with new reconstruction and expected 2015 conditions,
+   NN implementation speed up).
+   NB: output not (yet?) flat for ghost tracks
+ - adapt to updated IGhostProbability interface
+ - foreseen to remove TrackNNGhostId and corresponding network trainings
+
 ! 2015-02-19 - Manuel Tobias Schiller
  - VeloClusterPositionTool: various little fixes to speed things up
    - don't create std::vector on the fly every time cluster->channels() is
