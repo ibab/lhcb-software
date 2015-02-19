@@ -5,6 +5,11 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-02-12 - Matthew Kenzie
+ - Add Hlt1JpsiPhiLines.py - still in testing
+ - Some changes to Hlt1PhiLines.py and Hlt1CalibTrackingLines.py to
+   fit in with new Hlt1 combinatorics changes
+
 ! 2015-02-17 - Christian Linn
  - Add Odin trigger type filter for 1TrackAllL0.
 
@@ -30,7 +35,7 @@
  - reintegrate merge from branch taskLHCBPS-1296
 
 ! 2014-12-10 - Sebastian Neubert
- - GECStreamer uses HltRecoConf 
+ - GECStreamer uses HltRecoConf
  - renamed HltReco --> HltSharedTracking
    renamed Hlt1TrackUpgradeConf --> Hlt1Tracking
 
@@ -41,11 +46,11 @@
  - removed deprecated dependencies in all tracking lines
 
 ! 2014-11-24 - Francesco Dettori
- - Changing Hlt1MuonLines to use TrackCandidates 
-   VeloTT lines added as well.   Velo lines kept for comparison. 
+ - Changing Hlt1MuonLines to use TrackCandidates
+   VeloTT lines added as well.   Velo lines kept for comparison.
 
 ! 2014-11-20 - Jibo He
- - Hlt1ProtonLines, modified to use EnBlock Reco, Velo nHits cuts removed 
+ - Hlt1ProtonLines, modified to use EnBlock Reco, Velo nHits cuts removed
 
 ! 2014-11-07 - Sebastian Neubert
  - Further cleaning up 1TrackLines
@@ -73,7 +78,7 @@
 ! 2014-09-24 - Alex Shires
  - adding track electron (track with electron ID) for future dev
  - adding electron plus track line for 2015
- - consistent with changed to HltTracking and HltConf 
+ - consistent with changed to HltTracking and HltConf
 
 ! 2014-09-02 - Sebastian Neubert
  - added Hlt1TrackAllL0Block line performing Velo + VeloTT + Forward en block
@@ -105,7 +110,7 @@
 
 !========================= Hlt1Lines v7r1 2013-07-04 =========================
 ! 2013-05-21 - Sebastian Neubert
- - Added two new VeloTT tracking lines. 
+ - Added two new VeloTT tracking lines.
    Should be used with Tf/PatVeloTT later than r156982
    The lines are not independent. Only run one line at a time out of
    TrackAllL0
@@ -137,7 +142,7 @@
 
 ! 2012-12-20 - Jibo He
  - python/Hlt1Lines/Hlt1pALines.py
-   Added GEC (SPD,Velo,IT,OT) pass through lines 
+   Added GEC (SPD,Velo,IT,OT) pass through lines
 
 !========================= Hlt1Lines v6r30 2012-10-11 =========================
 ! 2012-10-11 - Sascha Stahl
@@ -159,7 +164,7 @@
 ! 2012-08-29 - Eric van Herwijnen
  - In Hlt1MuonLines, add an ODINFilter to Hlt1NoPVPassThrough to prevent it
    from firing while the velo is still open.
- 
+
 !========================= Hlt1Lines v6r26 2012-07-04 =========================
 ! 2012-07-03 - Rosen Matev
  - In Hlt1BeamGasLines, add setting slot 'FullZVetoLumiTriggers' (boolean),
@@ -205,7 +210,7 @@
 !========================= Hlt1Lines v6r19 2012-04-02 =========================
 ! 2012-04-02 - Eric van Herwijnen
  - another try of odin definition; remove rate limiter on HltLumiLines.py
- 
+
 ! 2012-04-02 - Jibo He
  - Tighten SPDMult of Hlt1DiProtonLowMult from 20 to 10
 
@@ -236,7 +241,7 @@
  - Several changes in Hlt1BeamGasLines.py:
    * Make the selection for high-rho vertices a separate Hlt1Line (Hlt1BeamGasHighRhoVertices)
      The line name ensures that it will fall into the existing BeamGas routing bit definition.
-     Added job-option settable prescales for bb and b1e+b2e crossings. 
+     Added job-option settable prescales for bb and b1e+b2e crossings.
    * Create Hlt1BeamGasCrossingForcedRecoFullZ (mainly needed for VDM scans)
    * Parasitic line: set the L0 rate limit to 1.e5 Hz
    * Create job-options for the tracking z-window and enlarge the default z-vertex range to 2 m
@@ -282,7 +287,7 @@
    BeamCrossing events, rate limited to 500Hz.
 
 ! 2011-06-20 - V. Gligorov
- - Add possibility to use ValidateWithTT in Hlt1TrackLines. 
+ - Add possibility to use ValidateWithTT in Hlt1TrackLines.
 
 ! 2011-05-31 - Roel Aaij
  - Get L0MuonCandidatesFromRaw from L0Algs in Hlt1LumiLines.
@@ -308,7 +313,7 @@
    type and ET.
 
 ! 2011-04-26 - Roel Aaij
- - Ensure unique instantiation of the tools which implements the GECs for 
+ - Ensure unique instantiation of the tools which implements the GECs for
    different sets of cuts.
 
 ! 2011-04-26 - Roel Aaij
@@ -334,17 +339,17 @@
  - add a Hlt1VeloClosingMicroBias, gated on ODIN eventType, for velo closing
 
 ! 2011-03-28 - Roel Aaij
- - Added Hlt1ElectronLines.py which contains prototype version for a 
+ - Added Hlt1ElectronLines.py which contains prototype version for a
    SingleElectronNoIP line.
 
 ! 2011-03-24 - Jibo He
  - Hlt1ProtonLines.py
-   Unused variables in slot removed 
+   Unused variables in slot removed
 
 ! 2011-03-23 - Jibo He
  - Hlt1ProtonLines.py
    add PT cut of Charmonium to reduce the retention rate,
-   require Phys/LoKiTracks r120449 or newer   
+   require Phys/LoKiTracks r120449 or newer
 
 !========================== Hlt1Lines v6r8  2011-03-18 ===================
 ! 2011-03-18 - Roel Aaij
@@ -418,26 +423,26 @@
 
 ! 2011-02-28 - Jibo He
  - Hlt1ProtonLines.py updated
-   
+
 ! 2011-02-28 - Roel Aaij
  - Change TightForward to LooseForward in Hlt1SingleMuonHighPT. This gains time
-   since all tracks passing MatchVeloMuon are upgraded by LooseForward in 
+   since all tracks passing MatchVeloMuon are upgraded by LooseForward in
    DiMuonHighMass anyway.
  - Remove MuonHigh from L0Channels in Hlt1MuonLines.py
  - Set postscale to postscale, not prescale (J. He)
  - Add MultiMuonNoIP, prescaled to 0
 
 !2011-02-28 - Johannes Albrecht & Eric van Herwijnen
- - Hlt1MBLines make slots 
+ - Hlt1MBLines make slots
 
 ! 2011-02-28 - V. Gligorov
- - Hlt1TrackLines : add monitoring for the logfiles. 
+ - Hlt1TrackLines : add monitoring for the logfiles.
 
 ! 2011-02-27 - Jibo He
  - Hlt1ProtonLines.py
-   . Tuned DiProton lines, still missing SumPT cut to reduce output rate further 
-	 + Added a new DiProtonLowMult line, for exclusive production study, 
-     CPU timing and output rate negligible 
+   . Tuned DiProton lines, still missing SumPT cut to reduce output rate further
+	 + Added a new DiProtonLowMult line, for exclusive production study,
+     CPU timing and output rate negligible
 
 !========================== Hlt1Lines v6r5   2011-02-22 ===================
 ! 2011-02-20 - Gerhard Raven
@@ -494,7 +499,7 @@
  - Also removed obsolete functions from 1TrackLines
 
 ! 2011-02-09 - Roel Aaij
- - Propagated change of IsMuonTool from track filter to upgrade in 
+ - Propagated change of IsMuonTool from track filter to upgrade in
    Hlt1NewMuonLines and Hlt1TrackLines
 
 ! 2011-02-09 - Gerhard Raven
@@ -521,10 +526,10 @@
    by HltTracking.
 
 ! 2011-01-30 - V. Gligorov
- - Stream TrackAllL0 and TrackPhoton. 
+ - Stream TrackAllL0 and TrackPhoton.
 
 !========================== Hlt1Lines v6r1   2011-01-20 ===================
-! 2011-01-20 - Gerhard Raven 
+! 2011-01-20 - Gerhard Raven
  - adapt to update to BG lines
 
 ! 2011-01-19 - Johannes Albrecht
@@ -538,7 +543,7 @@
 ! 2010-11-22 - Vanya Belyaev
 
  - Hlt1Lines/Hl1Units.py
-    remove the obsolete symbols.. 
+    remove the obsolete symbols..
 
 ! 2010-11-19 - Roel Aaij
  - Hlt1Lines/Hl1Units.py
@@ -548,11 +553,11 @@
 
 ! 2010-11-16 - Vanya Belyaev
  - Hlt1Lines/Hl1Units.py
-    remove the obsolete symbols.. 
+    remove the obsolete symbols..
 
 ! 2010-10-18 - Vladimir Gligorov
  - add Hlt1NoPVPassThroughDecision to Hlt1MuonLines: a passthrough for L0
-   muon lowMult events into Hlt2  
+   muon lowMult events into Hlt2
 
 ! 2010-10-12 Gerhard Raven
  - fix GEC configuration: the code assumed a private tool, when it actually
@@ -569,12 +574,12 @@
  - canonicalize L0TCK so that both '0x002a' and '0x002A' are properly treated...
 
 ! 2010-09-29 Plamen Hopchev
- - Several Changes to Hlt1BeamGasLines in regards to the creation of Hlt2BeamGasLines: 
+ - Several Changes to Hlt1BeamGasLines in regards to the creation of Hlt2BeamGasLines:
    -- The BeamGasCrossing and ForcedRZ lines now run only on events with BXType = 3 (before
-      there was no BXType requirement)  
+      there was no BXType requirement)
    -- put FractionOfUnusedClusterCut in __slots__ and decreased its value from 0.27 to 0.23
    -- loosened a bit the cuts on the pseudo-vertex
-   -- increased the output rate limits		
+   -- increased the output rate limits
 
 !========================== Hlt1Lines v5r1   2010-09-16 ===================
 ! 2010-09-16 Gerhard Raven
@@ -591,10 +596,10 @@
 ! 2010-09-08 Gerhard Raven
  - make changes below compatible with TrackUpgrade changes
 ! 2010-09-08 Johannes Albrecht
- - add two muon lines with Velo GEC at 4000 for B2mm 
+ - add two muon lines with Velo GEC at 4000 for B2mm
 
 ! 2010-09-08 - Gerhard Raven
- - follow changes to TrackUpgrade code in HltTracking v7r0: 
+ - follow changes to TrackUpgrade code in HltTracking v7r0:
     common upgrades share now a common tool, centralizing the configuration
     in HltTracking instead of distributing amongst the lines (and then pray
     things are consistent!)
@@ -628,7 +633,7 @@
  - Add histogramming to 1Track lines.
 
 ! 2010-08-28 - V. Gligorov
- - Add velo track quality cuts to the 1Track lines. 
+ - Add velo track quality cuts to the 1Track lines.
 
 ! 2010-08-28 - P. Hopchev
  - Add 2 new Hlt1 Lines to Hlt1BeamGasLines
@@ -666,18 +671,18 @@
 
 ! 2010-08-07 - V. Gligorov
  - Hlt1GECs : add a GEC filter for the number of OT hits.
- - Hlt1CommissioningLines : add OT GEC passthrough. 
+ - Hlt1CommissioningLines : add OT GEC passthrough.
  - Hlt1HadronLines : use the new GEC cuts.
  - Hlt1HadronLines : apply the companion PT cut at the reconstruction stage.
  - HltConfigurePR : allow the forward reconstruction to be configured with a
-                    cutoff on the track PT. 
+                    cutoff on the track PT.
 
 ! 2010-08-02 - V. Gligorov
  - Hlt1GECs : a module which will contain the definitions of the GEC
               filters for Hlt1. Defines a filter on the number of IT
               and velo clusters for now.
  - Hlt1CommissioningLines : add Velo/IT commissioning lines using the
-                            above filters; rate limit to 5 Hz.   
+                            above filters; rate limit to 5 Hz.
 
 !========================== Hlt1Lines v4r1   2010-07-07 ===================
 ! 2010-07-07 - Johannes Albrecht
@@ -688,7 +693,7 @@
  - add Hlt1ErrorEvent line
 
 ! 2010-07-01 - Gerhard Raven
- - run Hlt1HadronMonComp on 1 Hz of L0 Hadron 
+ - run Hlt1HadronMonComp on 1 Hz of L0 Hadron
 
 !========================== Hlt1Lines v4r0p1 2010-06-03 ===================
 ! 2010-06-03 - Gerhard Raven
@@ -703,7 +708,7 @@
 ! 2010-05-23 - V. Gligorov
  - Update hadron lines (lifetime biased and unbiased) with new default cuts
  - Remove reference to PV2D from muon lines
- - Move lumi lines to using PV3D  
+ - Move lumi lines to using PV3D
 
 ! 2010-05-22 - Antonio Perez-Calero
  - Change muon+track lines in Hlt1MuonLines to new PV3D reconstruction
@@ -714,8 +719,8 @@
 ! 2010-05-19 - V. Gligorov
  - Fix typos in lifetime unbiased hadron lines.
  - Reoptimize hadron lines for the new 3D paradigm.
- - Make Hlt1 use the bidirectional Kalman fit in order to match 
-   Hlt2; the time penalty is totally negligable.  
+ - Make Hlt1 use the bidirectional Kalman fit in order to match
+   Hlt2; the time penalty is totally negligable.
 
 ! 2010-05-18 - M. Witek
  - Adapt photon and electron lines to new PV3D recontsruction.
@@ -728,11 +733,11 @@
    now and will be updated using helicity angle and invariant mass cuts added
    by U. Kerzel to HltFunctions. Note that these lines are explicitly for selecting
    two body hadronic signals only for now.
- - Update Hlt1Hadron lines with lines which do the 3D Velo reconstruction upfront.  
- 
+ - Update Hlt1Hadron lines with lines which do the 3D Velo reconstruction upfront.
+
 !========================== Hlt1Lines v3r3p1 2010-04-26 ===================
 ! 2010-04-26 - V. Gligorov
- - fix typo 
+ - fix typo
 
 !========================== Hlt1Lines v3r3 2010-04-25 ===================
 ! 2010-04-25 - Gerhard Raven
@@ -765,10 +770,10 @@
 ! 2010-04-16 - V. Gligorov
  - Break up hadron confirmation into pre-ipcut, ipcut, and post-ipcut
    stages in order to remove the duplication of the ip cuts between the
-   "confirmation" stage and the "single/dihad" stages. 
+   "confirmation" stage and the "single/dihad" stages.
 
 ! 2010-04-15 - Johannes Albrecht
- - configure forward and seeding centrally in one file, 
+ - configure forward and seeding centrally in one file,
    electron alley bug fix
 
 ! 2010-04-12 - Gerhard Raven
@@ -785,7 +790,7 @@
 
 ! 2010-03-30 - V. Gligorov
  - Correct the formatting in the Hlt1 HadronViaT lines and enlarge the search
-   windows from 3 to 4 sigma. 
+   windows from 3 to 4 sigma.
 
 !========================== Hlt1Lines v3r0 2010-03-29 ===================
 ! 2010-03-29 - Gerhard Raven
@@ -793,7 +798,7 @@
    write a warning, then assume an empty list of L0 channels
 
 ! 2010-03-28 - Gerhard Raven
- - follow changes to  LumiFromL0DU 
+ - follow changes to  LumiFromL0DU
 
 ! 2010-03-27 - Gerhard Raven
  - further automation in HltL0Candidates
@@ -804,7 +809,7 @@
 
 ! 2010-03-11 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691. Remove Hlt2 containers
-   from Lumi Counter Definitions. 
+   from Lumi Counter Definitions.
 
 ! 2010-03-02 - V. Gligorov
  - Follow developments in Savannah tasks 13784/12691. Change Hlt/Track
@@ -817,11 +822,11 @@
 
 ! 2010-02-24 - V. Gligorov
  - Follow progress of Savannah tasks 13784 and 12691 by updating Hlt1 lines
-   to get their primary vertices from HltPVs.py and not HltReco.py 
+   to get their primary vertices from HltPVs.py and not HltReco.py
 
 ! 2010-03-22 - Gerhard Raven
  - max rate limits in Hlt1MBNoBiasLine and Hlt1LumiLine prime numbers
-   to avoid getting them in sync. With limits of 997 Hz and 97 Hz 
+   to avoid getting them in sync. With limits of 997 Hz and 97 Hz
    respectively, this should become a 1% effect instead of a 100% one...
 
 !========================== Hlt1Lines v2r3p1 2010-03-15 ===================
@@ -840,7 +845,7 @@
  - rate limit lumi input rate at 1KHz.
  - simplify RZ velo reco setup in Hlt1BeamGasLines
  - resplit lumilow
- - smarter input rate limiting 
+ - smarter input rate limiting
 
 ! 2010-02-25 - Gerhard Raven
  - do not require L0_DECISION in OT cosmic line
@@ -870,7 +875,7 @@
 
 ! 2010-02-26 - Johannes Albrecht
  - Hlt1CosmicLines: remove L0 decision requirement
- 
+
 !========================== Hlt1Lines v2r2p1 2010-02-21 ===================
 ! 2010-02-18 - Gerhard Raven
  - add () around some terms in the L0 mask predicates..
@@ -893,9 +898,9 @@
  - add L0 channel predicate in beam gas lines
  - minor tweaks to 'forced RZ Velo' crossing beam gas line
 
-! 2010-02-15 - Plamen Hopchev 
+! 2010-02-15 - Plamen Hopchev
  - fix typos in Hlt1BeamGasLines
- 
+
 ! 2010-02-14 - Plamen Hopchev
  - change the ODIN and L0DU filter definitions in Hlt1BeamGasLines :
    now rely only on ODIN_BXTYP & ODIN_TRGTYP
@@ -915,7 +920,7 @@
  - set a rate limit of 25 Hz for the individual beamgas lines
 
 ! 2010-02-11 - V. Gligorov
- - rename SoftDiHadron to DiHadronSoft  
+ - rename SoftDiHadron to DiHadronSoft
 
 ! 2010-02-09 - Gerhard Raven
  - check L0 channels for MASKs -- if present, add ODIN filter
@@ -936,7 +941,7 @@
  - take into account that not all L0 channels have candidates to be converted
 
 ! 2010-01-31 - Gerhard Raven
- - use L0DUConfigProvider instead of L0DUMultiConfigProvider 
+ - use L0DUConfigProvider instead of L0DUMultiConfigProvider
 
 ! 2010-01-30 - Gerhard Raven
  - comment out Hlt1LumiLow for time being (needs newer LHCb release)
@@ -962,7 +967,7 @@
  - add python/Hlt1Lines/Hlt1HadronForSwimmingLines.py : the hadron lines modified to
    allow measuring the lifetime acceptance ia the swimming mehod
 
-! 2010-01-07 - G. Raven   
+! 2010-01-07 - G. Raven
  - protect Hlt1HadronViaTLines against missing L0 channels
  - deal with the L0MUON channel (all upper case) as used in december 2009
 
@@ -970,8 +975,8 @@
  - Hlt1MuonLines: add slots for TConf and velo T match
 
 ! 2010-01-07 - V. Gligorov
- - python/Hlt1Lines/Hlt1HadronViaTLines : configure correctly from the python 
- - options : remove directory as no longer needed 
+ - python/Hlt1Lines/Hlt1HadronViaTLines : configure correctly from the python
+ - options : remove directory as no longer needed
 
 ! 2010-01-06 - V. Gligorov
  - python/Hlt1Lines/Hlt1HadronViaTLines : clean up and leave configuration to
@@ -989,7 +994,7 @@
 ! 2009-12-10 - V. Gligorov
  - python/Hlt1Lines/Hlt1HadronVeloOpenLines : added new lines for use
    with an open Velo; they do the full "offline" 3D Velo reconstruction
-   and PV finding 
+   and PV finding
 
 ! 2009-12-09 - Johannes Albrecht
  - fix syntax error introduced in the last commit
@@ -997,9 +1002,9 @@
 ! 2009-12-08 - Johannes Albrecht
  - configure monitoring histograms in Hlt1MuonLines.py
 
-! 2009-12-07 - Yasmine Amhis. 
+! 2009-12-07 - Yasmine Amhis.
   - Require the 'LumiTrigger' in the Hlt1NoBiasLine.
-  - Use only the L0DU Hadron channel in Hlt1MiniBiasLine. 
+  - Use only the L0DU Hadron channel in Hlt1MiniBiasLine.
 
 !========================== Hlt1Lines v1r10 2009-12-03 ===================
 
@@ -1012,7 +1017,7 @@
 ! 2009-12-01 - Katarzyna Senderowska
  - new names for photon lines to make regexp syntax simpler ( PhotonFromEleTrack -> PhotonTrackFromEle etc.)
  - new electron line: single electron no IP high PT (for Z->ee)
- - modified cut slots to use separate names for each line 
+ - modified cut slots to use separate names for each line
  - introduced final track fit to reapply IP cut
  - photon line: 3D Velo reconstruction directly after photon confirmation followed by IP3D cut (IP2D cut removed)
 
@@ -1029,7 +1034,7 @@
  - added histograms for muon+track lines monitoring in Hlt1MuonLines.py
 
 ! 2009-11-26 V. Gligorov
- - fixed bug in Hlt1HadronViaTLines which was caused by hardcoding a filter 
+ - fixed bug in Hlt1HadronViaTLines which was caused by hardcoding a filter
    name as an input to another filter.
 
 ! 2009-11-26 - Jaap Panman
@@ -1043,7 +1048,7 @@
 !========================== Hlt1Lines v1r8p1 2009-11-17 ==================
 ! 2009-11-17 - Gerhard Raven
  - Update Hlt1LumiLines to avoid using 'Enable=False' on a sequencer;
-   because GaudiAlgorithm::SysInitialize is aborted early, subAlgorithms 
+   because GaudiAlgorithm::SysInitialize is aborted early, subAlgorithms
    are not registered, and thus not recognized by the TCK snapshot utility...
  - In Hlt1LumiLines, reuse the same LumiReco sequencer across all lines.
 
@@ -1127,9 +1132,9 @@
     - add some explicit prescale factors
 
 ! 2009-08-27 - Plamen Hopchev
- - changes in HltBeamGasLines: 
-     Activate (uncomment) the configuration of the BeamGas Alley 
-     Change the ODIN BXType to Beam1(2) instead of SingleBeamLeft(Right)      
+ - changes in HltBeamGasLines:
+     Activate (uncomment) the configuration of the BeamGas Alley
+     Change the ODIN BXType to Beam1(2) instead of SingleBeamLeft(Right)
      Put priority = 200 for both the beam-empty and the beam-beam Lines
 
 !  2009-08-24 - Gerhard Raven
@@ -1150,7 +1155,7 @@
  - Move Muon lines names to HltConf
 
 ! 2009-08-10 - Gerhard Raven
- - use callback mechanism in member to 'localize' the setup of fast 
+ - use callback mechanism in member to 'localize' the setup of fast
    track fit
  - make HltFastTrackFit.py play nice with callback use
  - minor format changes to muon lines
@@ -1195,16 +1200,16 @@
 
 ! 2009-07-15 - Vanya BELYAEV
 
- - add Hlt1Units 
+ - add Hlt1Units
 
 
 ! 2009-07-14 - Plamen Hopchev
  - HltBeamGasLines.py: keep the lines as they are, but
-   comment out the actual conf and addition to the Line 
+   comment out the actual conf and addition to the Line
    of the trig algos, as they are not yet in the release
 
 ! 2009-07-14 - Plamen Hopchev
- - HltBeamGasLines.py: bring it closer to what it is supposed to do - configure the 
+ - HltBeamGasLines.py: bring it closer to what it is supposed to do - configure the
    algorithms in the HltBeamGasAlley
 
 ! 2009-07-10 - Jaap Panman
@@ -1221,12 +1226,12 @@
  - minor fix for electron lines in TEleConf.
 
 ! 2009-06-25 - Antonio Perez-Calero
- - Substitute 'TConf' reco for 'TMuonConf' in muon lines and 'TEleConf' in electron 
+ - Substitute 'TConf' reco for 'TMuonConf' in muon lines and 'TEleConf' in electron
    lines. Use specific tool instead of generic, due to changes in HltTrackUpgradeTool.
- - Implemented Alternative algorithm order in muon+track for improved timing. Both 
+ - Implemented Alternative algorithm order in muon+track for improved timing. Both
    active while testing. muon+track for jpsi will follow.
 
 !========================== Hlt1Lines v1r0 2009-06-03 ===================
 ! 2009-05-28 - Gerhard Raven
- - initial import of bits from HltConf 
+ - initial import of bits from HltConf
 

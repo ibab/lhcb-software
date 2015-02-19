@@ -15,15 +15,18 @@ __version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 0.01 $"
 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 class Hlt1PhiLinesConf( HltLinesConfigurableUser ) :
-  __slots__ = {  'TrackPT'             : 500     # MeV
-                ,'TrackP'              : 3000    # MeV
-                ,'TrackChi2DOF'       : 3       # dimensionless
-                ,'TrackIPChi2'        : 9
-                ,'PhiDOCA'            : 0.5     # mm
-                ,'PhiVCHI2'           : 25      # dimensionless
-                ,'PhiPT'              : 0    # MeV
-                ,'Velo_Qcut'          : 999       # dimensionless
-                ,'TrNTHits'           : 0.
+  __slots__ = {  'TrackPT'             : 800     # MeV
+                ,'TrackP'              : 4000    # MeV
+                ,'TrackChi2DOF'       : 5       # dimensionless
+                ,'TrackIPChi2'        : 5       # dimensionless
+                ,'ParticlePT'         : 800     # MeV
+                ,'PhiMassWinLoose'    : 80      # MeV
+                ,'PhiMassWin'         : 50      # MeV
+                ,'PhiDOCA'            : 0.2     # mm
+                ,'PhiVCHI2'           : 20      # dimensionless
+                ,'PhiPT'              : 1800    # MeV
+                ,'Velo_Qcut'          : 3       # dimensionless
+                ,'TrNTHits'           : 16.
                 ,'ValidateTT'         : False
       }
 
@@ -31,17 +34,13 @@ class Hlt1PhiLinesConf( HltLinesConfigurableUser ) :
 
     from HltTracking.Hlt1Tracking import ( TrackCandidates, FitTrack)
 
-    props['LowKKmass']  = 0.    # phi mass hardcoded from PDG 2012 !
-    props['HighKKmass'] = 2500. # phi mass hardcoded from PDG 2012 !
-
     preambulo = [ TrackCandidates('TrackAllL0'),
                   FitTrack,
-                  "VertexConf = LoKi.Hlt1.VxMakerConf( %(PhiDOCA)f *mm, %(PhiVCHI2)f )"% props,
-                  "MakePhi = TC_VXMAKE4( '', VertexConf )",
-                  "from LoKiPhys.decorators import RV_MASS",
-                  "PhiMassCut = in_range( %(LowKKmass)f *MeV, RV_MASS('K+','K-') , %(HighKKmass)f *MeV )"%props,
-                  "from LoKiPhys.decorators import RV_PT",
-                  "PhiPtCut      = RV_PT > %(PhiPT)f *MeV"%props,
+                  "from LoKiArrayFunctors.decorators import APT, ADAMASS, ACUTDOCA",
+                  "from LoKiPhys.decorators import PT",
+                  "CombinationConf = LoKi.Hlt1.Hlt1CombinerConf( 'phi(1020) -> K+ K-' \
+                          , (APT>%(PhiPT)s*MeV) & (ADAMASS('phi(1020)')<%(PhiMassWinLoose)s*MeV) \
+                          , (ADMASS('phi(1020)')<%(PhiMassWin)s*MeV) & (VFASPF(VCHI2/VDOF)<%(PhiVCHI2)s) )" % props ,
                  ]
 
     return preambulo
@@ -49,8 +48,8 @@ class Hlt1PhiLinesConf( HltLinesConfigurableUser ) :
   def hlt1PhiLine_Streamer( self, name, props ) :
     from Configurables import LoKi__HltUnit as HltUnit
     props['name'] = name
-    
-    lineCode = """
+
+    KaonUnitLineCode = """
     TrackCandidates
     >>  ( ( TrNVELOMISS < %(Velo_Qcut)s ) )
     >>  tee  ( monitor( TC_SIZE > 0, '# pass Velo', LoKi.Monitoring.ContextSvc ) )
@@ -61,19 +60,23 @@ class Hlt1PhiLinesConf( HltLinesConfigurableUser ) :
     >>  FitTrack
     >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
     >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
-    >>  ( ( TrCHI2PDOF < %(TrackChi2DOF)s ) & ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(TrackIPChi2)s ) )
+    >>  ( ( TrCHI2PDOF < %(TrackChi2DOF)s ) )
     >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackChi2', LoKi.Monitoring.ContextSvc ) )
     >>  tee  ( monitor( TC_SIZE    , 'nChi2' , LoKi.Monitoring.ContextSvc ) )
-    >>  MakePhi
-    >>  tee  ( monitor( TC_SIZE > 0, '# pass vertex', LoKi.Monitoring.ContextSvc ) )
-    >>  tee  ( monitor( TC_SIZE    , 'nVertices'  , LoKi.Monitoring.ContextSvc ) )
-    >>  PhiMassCut
-    >>  tee  ( monitor( TC_SIZE > 0, '# pass mass', LoKi.Monitoring.ContextSvc ) )
-    >>  tee  ( monitor( TC_SIZE    , 'nPhis'  , LoKi.Monitoring.ContextSvc ) )
-    >>  PhiPtCut
-    >>  tee  ( monitor( TC_SIZE > 0, '# pass pT', LoKi.Monitoring.ContextSvc ) )
-    >>  tee  ( monitor( TC_SIZE    , 'nPhis pass pT'  , LoKi.Monitoring.ContextSvc ) )
-    >>  SINK(  'Hlt1%(name)sDecision' )
+    >>  TC_TOPROTOPARTICLES( '' )
+    >>  TC_TOPARTICLES( 'K-',  '', (PT>%(ParticlePT)s*MeV) )
+    >>  tee ( monitor( TC_SIZE > 0, '# pass ToKaons', LoKi.Monitoring.ContextSvc ) )
+    >>  tee ( monitor( TC_SIZE    , 'nKaons',         LoKi.Monitoring.ContextSvc ) )
+    >>  SINK ('Hlt1IncPhiKaons' )
+    >>  ~TC_EMPTY
+    """ %props
+
+    PhiUnitLineCode = """
+    SELECTION( 'Hlt1IncPhiKaons' )
+    >>  TC_HLT1COMBINER( '', CombinationConf )
+    >>  tee ( monitor( TC_SIZE > 0, '# pass ToPhis', LoKi.Monitoring.ContextSvc ) )
+    >>  tee ( monitor( TC_SIZE    , 'nPhis',         LoKi.Monitoring.ContextSvc ) )
+    >>  SINK ('Hlt1IncPhiDecision')
     >>  ~TC_EMPTY
     """ %props
 
@@ -81,15 +84,24 @@ class Hlt1PhiLinesConf( HltLinesConfigurableUser ) :
     from Configurables import LoKi__HltUnit as HltUnit
     from HltTracking.HltPVs import PV3D
 
-    hlt1PhiLine_Unit = HltUnit(
-        'Hlt1'+name+'Unit',
+    hlt1PhiLine_KaonUnit = HltUnit(
+        'Hlt1'+name+'KaonUnit',
         #OutputLevel = 1,
         Monitor = True,
         Preambulo = self.hlt1PhiLine_Preambulo( props ),
-        Code = lineCode
+        Code = KaonUnitLineCode
         )
 
-    return [ Hlt1GECUnit( 'Loose' ), PV3D('Hlt1'), hlt1PhiLine_Unit ]
+    hlt1PhiLine_PhiUnit = HltUnit(
+        'Hlt1'+name+'Unit',
+        #PVSelection = "PV3D",
+        #OutputLevel = 1,
+        Monitor = True,
+        Preambulo = self.hlt1PhiLine_Preambulo( props ),
+        Code = PhiUnitLineCode
+        )
+
+    return [ Hlt1GECUnit( 'Loose' ), PV3D('Hlt1'), hlt1PhiLine_KaonUnit, hlt1PhiLine_PhiUnit ]
 
   def __apply_configuration__(self) :
 
@@ -98,6 +110,6 @@ class Hlt1PhiLinesConf( HltLinesConfigurableUser ) :
     Hlt1Line ( 'IncPhi'
           , prescale = self.prescale
           , postscale = self.postscale
-          , L0DU = "L0_CHANNEL('CALO')"
+          , L0DU = "L0_CHANNEL('Hadron')"
           , algos = self.hlt1PhiLine_Streamer( "IncPhi", self.getProps() )
           )

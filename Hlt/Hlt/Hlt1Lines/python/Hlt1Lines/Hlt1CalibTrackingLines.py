@@ -18,10 +18,14 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
   __slots__ = {  'TrackPT'           : 500     # MeV
                 ,'TrackP'            : 2000    # MeV
                 ,'TrackChi2DOF'      : 5       # dimensionless
-                ,'D0MassWin'         : 100      # MeV
+                ,'ParticlePT'        : 500     # MeV
+                ,'D0MassWinLoose'    : 150     # MeV
+                ,'D0MassWin'         : 100     # MeV
+                ,'D0PT'              : 1000    # MeV
                 ,'D0DOCA'            : 0.2     # mm
                 ,'D0VCHI2'           : 20      # dimensionless
-                ,'D0PT'              : 2000    # MeV
+                ,'D0DIRA'            : 0.9     # dimensionless
+                ,'D0TAU'             : 1.5     # ps
                 ,'Velo_Qcut'         : 3       # dimensionless
                 ,'TrNTHits'          : 16.
                 ,'ValidateTT'        : False
@@ -31,26 +35,14 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
     from HltTracking.Hlt1Tracking import ( TrackCandidates, FitTrack)
 
-    props['LowKPimass']  = 1864.86 - props['D0MassWin'] # D0 mass hardcoded from PDG 2012 !
-    props['HighKPimass'] = 1864.86 + props['D0MassWin'] # D0 mass hardcoded from PDG 2012 !
-
     preambulo = [ TrackCandidates('TrackAllL0'),
                   FitTrack,
-                  "from LoKiArrayFunctors.decorators import APT, ADAMASS",
-                  "from LoKiPhys.decorators import PT"
+                  "from LoKiArrayFunctors.decorators import APT, ADAMASS, ACUTDOCA",
+                  "from LoKiPhys.decorators import PT",
+                  "CombinationConf = LoKi.Hlt1.Hlt1CombinerConf( '[D0 -> K- pi+]cc' \
+                          , (APT>%(D0PT)s*MeV) & (ADAMASS('D0')<%(D0MassWinLoose)s*MeV) & (ACUTDOCA(%(D0DOCA)s*mm,'')) \
+                          , (ADMASS('D0')<%(D0MassWin)s*MeV) & (BPVDIRA > %(D0DIRA)s) & (BPVLTIME()>%(D0TAU)s*ps) & (VFASPF(VCHI2/VDOF)<%(D0VCHI2)s) )" % props
                 ]
-                 # "ToKaons = TC_TOPARTICLES( 'K-',  'Kaons', 500*MeV)",
-                 # "ToPions = TC_TOPARTICLES( 'pi+', 'Pions', 500*MeV)",
-                 # "ToD0s = TC_HLT1COMBINER( '[D0 -> K- pi+]cc', 'Pions', 500*MeV )"
-                  #"VertexConf = LoKi.Hlt1.VxMakerConf( %(D0DOCA)f *mm, %(D0VCHI2)f )"% props,
-                  #"MakeD0 = TC_VXMAKE4( '', VertexConf )",
-                  #"ParticleConf = LoKi.Hlt1.ParticleMakerConf( 0. )",
-                  #"MakePart = TC_PARTICLEMAKE( '', ParticleConf )",
-                  #"from LoKiPhys.decorators import RV_MASS",
-                  #"D0MassCut    = in_range( %(LowKPimass)f *MeV, RV_MASS('pi+','K-') , %(HighKPimass)f *MeV )"%props,
-                  #"D0barMassCut = in_range( %(LowKPimass)f *MeV, RV_MASS('K+','pi-') , %(HighKPimass)f *MeV )"%props,
-                  #"from LoKiPhys.decorators import RV_PT",
-                  #"D0PtCut      = RV_PT > %(D0PT)f *MeV"%props,
 
     return preambulo
 
@@ -72,49 +64,37 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     >>  ( ( TrCHI2PDOF < %(TrackChi2DOF)s ) )
     >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackChi2', LoKi.Monitoring.ContextSvc ) )
     >>  tee  ( monitor( TC_SIZE    , 'nChi2' , LoKi.Monitoring.ContextSvc ) )
-    >>  SINK(  'Hlt1CalibTrackingTracks' )
+    >>  TC_TOPROTOPARTICLES( '' )
+    >>  SINK(  'Hlt1CalibTrackingProtos' )
     >>  ~TC_EMPTY
     """ %props
 
     KaonUnitLineCode = """
-    SELECTION( 'Hlt1CalibTrackingTracks' )
-    >>  TC_TOPARTICLES( 'K-',  'Kaons', (PT>500*MeV) )
+    SELECTION( 'Hlt1CalibTrackingProtos' )
+    >>  TC_TOPARTICLES( 'K-',  '', (PT>%(ParticlePT)s*MeV) )
     >>  tee ( monitor( TC_SIZE > 0, '# pass ToKaons', LoKi.Monitoring.ContextSvc ) )
     >>  tee ( monitor( TC_SIZE    , 'nKaons',         LoKi.Monitoring.ContextSvc ) )
-    >>  SINK ('Hlt1CalibTrackingKaons ')
+    >>  SINK ( 'Hlt1CalibTrackingKaons' )
     >>  ~TC_EMPTY
-    """
+    """ %props
 
     PionUnitLineCode = """
-    SELECTION( 'Hlt1CalibTrackingTracks' )
-    >>  TC_TOPARTICLES( 'pi+', 'Pions', (PT>500*MeV) )
+    SELECTION( 'Hlt1CalibTrackingProtos' )
+    >>  TC_TOPARTICLES( 'pi+', '', (PT>%(ParticlePT)s*MeV) )
     >>  tee ( monitor( TC_SIZE > 0, '# pass ToPions', LoKi.Monitoring.ContextSvc ) )
     >>  tee ( monitor( TC_SIZE    , 'nPions',         LoKi.Monitoring.ContextSvc ) )
-    >>  SINK ('Hlt1CalibTrackingPions ')
+    >>  SINK ( 'Hlt1CalibTrackingPions' )
     >>  ~TC_EMPTY
-    """
+    """ %props
 
     D0UnitLineCode = """
-    TC_HLT1COMBINER( '[D0 -> K- pi+]cc', 'D0s', 'Kaons', 'Pions', (APT>1*GeV) & (ADAMASS('D0')<100*MeV), ((BPVDIRA > 0.9) & (BPVIPCHI2()<25) & (BPVLTIME()>1.5*ps)))
+    SELECTION( 'Hlt1CalibTrackingKaons' )
+    >>  TC_HLT1COMBINER2( '', CombinationConf, 'Hlt1CalibTrackingPions' )
     >>  tee ( monitor( TC_SIZE > 0, '# pass ToD0s', LoKi.Monitoring.ContextSvc ) )
     >>  tee ( monitor( TC_SIZE    , 'nD0s',         LoKi.Monitoring.ContextSvc ) )
     >>  SINK ('Hlt1CalibTrackingDecision')
     >>  ~TC_EMPTY
-    """
-
-    #TC_HLT1COMBINER( '[D0 -> K- pi+]cc', 'D0s', 'Kaons', 'Pions', 'APT>1*GeV & ADAMASS(\'D0\')<100*MeV', 'BPVIPCHI2<100 & BPVDIRA>0.9 & BPVTAU>0.5*ps )
-    #>>  ToD0s
-    #>>  tee ( monitor( TC_SIZE > 0, '# pass ToD0s', LoKi.Monitoring.ContextSvc ) )
-    #>>  tee ( monitor( TC_SIZE    , 'nD0s',         LoKi.Monitoring.ContextSvc ) )
-    #>>  MakeD0
-    #>>  tee  ( monitor( TC_SIZE > 0, '# pass vertex', LoKi.Monitoring.ContextSvc ) )
-    #>>  tee  ( monitor( TC_SIZE    , 'nVertices'  , LoKi.Monitoring.ContextSvc ) )
-    #>>  ( D0MassCut | D0barMassCut )
-    #>>  tee  ( monitor( TC_SIZE > 0, '# pass mass', LoKi.Monitoring.ContextSvc ) )
-    #>>  tee  ( monitor( TC_SIZE    , 'nD0s'  , LoKi.Monitoring.ContextSvc ) )
-    #>>  D0PtCut
-    #>>  tee  ( monitor( TC_SIZE > 0, '# pass pT', LoKi.Monitoring.ContextSvc ) )
-    #>>  tee  ( monitor( TC_SIZE    , 'nD0s pass pT'  , LoKi.Monitoring.ContextSvc ) )
+    """ %props
 
     from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
     from Configurables import LoKi__HltUnit as HltUnit
