@@ -145,11 +145,11 @@ void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
     f->push_back(fmcLogger(data,h->m_facility));
   host = h->name().substr(0,4);
   
-  if ( host == "LHCb" ) {
-    f->push_back(fmcLogger("HLT01",h->m_facility));
+  if ( host.substr(0,4) == "LHCb" ) {
     f->push_back(fmcLogger("CALD07",h->m_facility));
   }
-  if ( host == "LHCb" || host == "FEST" ) {
+  if ( host.substr(0,4) == "LHCb" || host == "FEST" ) {
+    f->push_back(fmcLogger("HLT01",h->m_facility));
     f->push_back(fmcLogger("MONA09","pvssconfig"));
   }
   f->push_back(fmcLogger("MONA08","pvssconfig"));
@@ -200,7 +200,7 @@ void PartitionListener::nodeHandler(void* tag, void* address, int* size) {
     ::sprintf(txt,"MONA08%02d",int(j));
     n->push_back(txt);
   }
-  if ( nam == "LHCb" || nam == "FEST" ) {
+  if ( nam.substr(0,4) == "LHCb" || nam == "FEST" ) {
     n->push_back("HLT01");
     n->push_back("MONA09");
     n->push_back("CALD0701");
