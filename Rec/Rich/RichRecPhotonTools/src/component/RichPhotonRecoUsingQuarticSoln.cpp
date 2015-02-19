@@ -428,14 +428,6 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
         virtDetPoint = detectionPoint - 2.0 * distance * plane.Normal();
 
         // solve the quartic using the new data
-        // if ( Rich::Rich2Gas == radiator )
-        // {
-        //   info() << " " << endmsg;
-        //   info() << "emissionPoint = " << emissionPoint << endmsg
-        //          << "CoC           = " << sphSegment->centreOfCurvature() << endmsg
-        //          << "virtDetPoint  = " << virtDetPoint << endmsg
-        //          << "radius        = " << sphSegment->radius() << endmsg;
-        // }
         if ( !m_quarticSolver.solve<float>( emissionPoint,
                                             sphSegment->centreOfCurvature(),
                                             virtDetPoint,
@@ -481,6 +473,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     _ri_debug << radiator << " : Photon crosses between detector sides" << endmsg;
     return StatusCode::FAILURE;
   }
+  //else { return StatusCode::FAILURE; } // uncomment to select ONLY crossing photons
   // --------------------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------------------

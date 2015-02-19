@@ -26,11 +26,11 @@ PhotonRecoBase::PhotonRecoBase( const std::string& type,
 {
   // declare interface
   declareInterface<IPhotonReconstruction>(this);
-  // JOs                                     Aero   R1Gas R2Gas
+  // JOs                                     Aero   R1Gas  R2Gas
   declareProperty( "CheckSideCrossing", 
-                   m_checkPhotCrossSides = { false, true, true } );
+                   m_checkPhotCrossSides = { false, false, false } );
   declareProperty( "CKThetaQuartzRefractCorrections", 
-                   m_ckJOCorrs           = { 0.0,   0.0,  0.0  } );
+                   m_ckJOCorrs           = { 0.0,   0.0,   0.0   } );
 }
 
 //=============================================================================

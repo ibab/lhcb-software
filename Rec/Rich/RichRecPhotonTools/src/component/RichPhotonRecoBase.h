@@ -62,7 +62,7 @@ namespace Rich
 
     protected: // methods
 
-      /// Check if the local coordinate hits a and b are on the same detector side
+      /// Check if the coordinate hits a and b are on the same detector side
       inline bool sameSide( const Rich::RadiatorType rad,
                             const Gaudi::XYZPoint & a,
                             const Gaudi::XYZPoint & b ) const
