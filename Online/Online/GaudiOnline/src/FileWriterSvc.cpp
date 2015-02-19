@@ -35,6 +35,7 @@
 #include "time.h"
 #include <errno.h>
 #include "dic.hxx"
+#include <boost/filesystem.hpp>
 
 using MBM::Producer;
 using MBM::Consumer;
@@ -161,6 +162,32 @@ StatusCode FileWriterSvc::initialize()
         declareInfo("BytesOut",m_BytesOut=0,"Number of Bytes Writte to File");
         declareInfo("NumberofFiles",m_NumFiles=0,"Total Number of Files");
         this->m_SizeLimit *= 1024*1024;
+        size_t lslash = m_FilePrefixMEP.find_last_of("/");
+        m_DirectoryMEP = m_FilePrefixMEP.substr(0,lslash);
+        {
+          boost::filesystem::path dir(m_DirectoryMEP);
+          if (!boost::filesystem::exists(dir))
+          {
+            if (!boost::filesystem::create_directories(dir))
+            {
+              log<<MSG::ERROR<<"Cannot Create Directory "<<dir<<endmsg;
+              return StatusCode::FAILURE;
+            }
+          }
+        }
+        lslash = m_FilePrefixEvt.find_last_of("/");
+        m_DirectoryEvt = m_FilePrefixEvt.substr(0,lslash);
+        {
+          boost::filesystem::path dir(m_DirectoryEvt);
+          if (!boost::filesystem::exists(dir))
+          {
+            if (!boost::filesystem::create_directories(dir))
+            {
+              log<<MSG::ERROR<<"Cannot Create Directory "<<dir<<endmsg;
+              return StatusCode::FAILURE;
+            }
+          }
+        }
         return StatusCode::SUCCESS;
 //      }
 //      catch (exception& e)

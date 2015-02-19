@@ -13,6 +13,7 @@ use MDF           v* DAQ            -no_auto_imports
 use DIM           v* Online         -no_auto_imports
 use OnlineKernel  v* Online
 use GaudiKernel   v*
+use Boost        v* LCG_Interfaces
 
 apply_pattern install_more_includes more=GaudiOnline
 apply_pattern install_python_modules
@@ -27,6 +28,7 @@ apply_pattern component_library library=GaudiOnlineComp
 apply_pattern gerenate_componentslist library=GaudiOnlineComp
 macro_append  GaudiOnlineComp_dependencies  " GaudiOnline "
 apply_pattern genconfig_add_preload library=$(library_prefix)MDF.$(shlibsuffix)
+macro_append GaudiOnline_shlibflags " $(Boost_linkopts_system) $(Boost_linkopts_filesystem)  "
 
 private
 # ==================== private test application =============================

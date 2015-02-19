@@ -138,6 +138,10 @@ namespace LHCb
     long m_NumFiles;
     /// Current Run Number (initialized to 0)
     unsigned int m_RunNumber;
+    /// Directory where MEP Files will be written
+    std::string m_DirectoryMEP;
+    /// Directory where Event Files will be written
+    std::string m_DirectoryEvt;
     /// Name of the currently open file
     std::string m_FileName;
     ///File Prefix String. Filename wil be m_FilePrefix + Runnumber + _Sequence+.MEP
