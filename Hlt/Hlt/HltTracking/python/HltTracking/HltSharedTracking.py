@@ -283,16 +283,18 @@ def ConfiguredGoodTrackFilter (name,
 # Define modules for the reconstruction sequence 
 #############################################################################################
 from HltLine.HltDecodeRaw import DecodeVELO, DecodeTRACK, DecodeTT, DecodeIT
-from Configurables import DecodeVeloRawBuffer, Hlt2Conf
+from Configurables import DecodeVeloRawBuffer, HltConf, Hlt2Conf
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 #This is the part which is shared between Hlt1 and Hlt2
 MinimalVelo = bindMembers( None, [DecodeVELO, recoVelo( OutputTracksName=HltSharedTrackLoc["Velo"] ) ] ).setOutputSelection( HltSharedTrackLoc["Velo"] )
-#DecodeTRACK.VetoObjects += [ HltSharedTrackLoc["Velo"], recoForwardHPT.OutputTracksName ]
-#for d in DecodeTRACK.members() :
-#    d.VetoObjects += [ HltSharedTrackLoc["Velo"], recoForwardHPT.OutputTracksName ]
-RevivedVelo = bindMembers( None, [DecodeVELO, DecodeTRACK, recoVelo( OutputTracksName=HltSharedTrackLoc["Velo"] ) ] ).setOutputSelection( HltSharedTrackLoc["Velo"] )
+# We have to remove the decoder from the sequence if disabled otherwise the PV unit complains and does not run.
+veloAlgs = [DecodeTRACK, DecodeVELO, recoVelo( OutputTracksName=HltSharedTrackLoc["Velo"] )]
+if Hlt2Conf().getProp('Hlt1TrackOption') == "Rerun":
+    veloAlgs.remove(DecodeTRACK)
+RevivedVelo = bindMembers( None, veloAlgs ).setOutputSelection( HltSharedTrackLoc["Velo"] )
 FittedVelo  = bindMembers( None, RevivedVelo.members() + [fittedVelo(RevivedVelo.outputSelection(), Hlt1TrackLoc["FittedVelo"])]).setOutputSelection(Hlt1TrackLoc["FittedVelo"])
+
 
 # TODO: put selection revive/redo here (ask Sebastian)
 # for now always redo:
@@ -302,7 +304,7 @@ bm_members += DecodeIT.members() + [recoForwardHPT]
 
 HltHPTTracking = bindMembers(None, bm_members).setOutputSelection( recoForwardHPT.OutputTracksName )
 
-RevivedForward = bindMembers(None,DecodeTT.members() + DecodeIT.members() + [ DecodeTRACK ] + HltHPTTracking.members() ).setOutputSelection( recoForwardHPT.OutputTracksName )
+RevivedForward = bindMembers(None, [ DecodeTRACK ] + DecodeTT.members() + DecodeIT.members() + HltHPTTracking.members() ).setOutputSelection( recoForwardHPT.OutputTracksName )
 
 #VeloTT tracking
 vt_members = DecodeVELO.members() + [ recoVelo(), filterVelo ]

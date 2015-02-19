@@ -199,6 +199,7 @@ def VeloCandidates( lineName ):
         InputSelection  = MinimalVelo.outputSelection(),
         OutputSelection = selection,
         )
+    
     bm = bindMembers ( None , [ MinimalVelo, tracks ] )
     return "VeloCandidates = execute( %s ) * SELECTION( '%s' )" % \
                 ( [ m.getFullName() for m in bm.members() ], selection )

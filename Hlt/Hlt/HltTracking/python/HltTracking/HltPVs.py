@@ -73,17 +73,17 @@ def PV3D(where):
     #recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.zVtxShift = 0.0
     recoPV3D.OutputVerticesName = proto3DVertices
     
-    name = "HltPV3D"
     from HltSharedTracking import FittedVelo, RevivedVelo
     velo = FittedVelo if HltRecoConf().getProp("FitVelo") else RevivedVelo
-            
+
     pv3dAlgos = ','.join( [ "'%s'"%m.getFullName() for m in velo.members() + [ recoPV3D ] ] )
     recoPV3D.PVOfflineTool.InputTracks = [ velo.outputSelection() ]
     
     from Configurables import LoKi__HltUnit as HltUnit
     ## Hlt vertex beamspot filter
     ##-- todo: can we integrate this in the main streamers directly, using 'tee' ?
-    ## TODO: Make this a configurable. Why is there a hard coded number????????????
+    ## TODO: Make this a configurable.
+    name = "HltPV3D"
     filterPV3D = HltUnit(
         name,
         Preambulo = [ 'from LoKiPhys.decorators import *',

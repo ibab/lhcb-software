@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-02-19 - Sascha Stahl
+ - Remove DecodeTrack from RevivedVelo in case we want to Rerun the Hlt1Tracking in Hlt2.
+ 	 Otherwise the PV unit does not run.
+
 ! 2015-02-17 - Roel Aaij
  - Remove second loop option.
 
