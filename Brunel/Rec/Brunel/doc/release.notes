@@ -6,13 +6,14 @@ Purpose: LHCb reconstruction program
 - Changes to Configuration
   . OnlineBrunel will run on the output of Hlt1, so don't try to decode
     Hlt2DecReports in OnlineMode. 
-
-- Changes to Configuration
   . Add support for Brunel().SpecialData += ['pGun']
 
 - Changes to references to reflect changes since v47r4
   . Follow changes in upgrade forward tracking  (triangle fixing)
   . Follow changes in PrSeedingXLayers  (baseline, baseline-ut, baseline-25ns)
+  . Follow various tracking improvements
+  . For data type '2015' PatVeloTTHybrid instead of PatVeloTT is run
+  . Follow replacement of ConfigTarFileAccesSvc by ConfigCDBAccessSvc
 
 - Changes to QMTests
   . Add brunel.sim08-pgun test to test SpecialData=["pGun"] option
