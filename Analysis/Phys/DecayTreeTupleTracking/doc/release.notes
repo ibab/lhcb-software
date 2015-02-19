@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-02-19 - Simone Bifani
+ - Added TupleToolConeIsolation. Extension of TupleToolTrackIsolation that includes
+   neutral cone and extra isolation variables
+
 !========================= DecayTreeTupleTracking v1r1 2014-02-20 =========================
 
 ! 2014-02-04 - Francesco Dettori
