@@ -4,6 +4,9 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-02-19 - Chris Jones
+ - Use LCG version of Eigen.
+
 ! 2015-02-16 - Chris Jones
  - Protect against a sqrt(-number) FPE in QuarticSolver.h
 

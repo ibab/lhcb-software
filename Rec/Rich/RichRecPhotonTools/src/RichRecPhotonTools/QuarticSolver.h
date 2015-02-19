@@ -14,7 +14,7 @@
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/Transform3DTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
-#include "GaudiKernel/Vector3DTypes.h" 
+#include "GaudiKernel/Vector3DTypes.h"
 
 // STL
 #include <math.h>
@@ -295,9 +295,9 @@ namespace Rich
                                                   Eigen3Vector(n[0],n[1],n[2]) );
           sphReflPoint = CoC +
             Gaudi::XYZVector( angleaxis *
-			      Eigen3Vector(evec[0],evec[1],evec[2]) *
-			      ( radius / e ) );
-
+                              Eigen3Vector(evec[0],evec[1],evec[2]) *
+                              ( radius / e ) );
+          
         }
 
         return OK;
