@@ -2,6 +2,7 @@
 
 // stl
 #include <vector>
+#include <array>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -12,6 +13,7 @@
 #include "GaudiKernel/Point3DTypes.h"
 
 // Velo
+#include "Kernel/VeloChannelID.h"
 #include "VeloDet/DeVelo.h"
 #include "Event/VeloCluster.h"
 
@@ -20,6 +22,11 @@
 
 // boost
 #include <boost/assign/std/vector.hpp>
+
+#include "vdt/sin.h"
+#include "vdt/cos.h"
+#include "vdt/asin.h"
+#include "vdt/atan.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : VeloClusterPosition
@@ -171,11 +178,20 @@ double VeloClusterPosition::fracPosLA(const LHCb::VeloCluster* cluster) const
   //
   double centre=0., sum=0., fractionalPos;
   int intDistance=0;
-  int stripNumber=cluster->size();
-  std::vector<LHCb::VeloChannelID> chanCont=cluster->channels();
+  std::array<LHCb::VeloChannelID, 16> chanCont; // assume cluster size <= 16 (always true!)
+  unsigned stripNumber=std::min(cluster->size(), unsigned(chanCont.size()));
+  {
+    // avoid creating a std::vector on the fly - this is stolen from
+    // LHCb::VeloCluster::channels() and adapted to fit here
+    auto it = std::begin(chanCont);
+    LHCb::VeloChannelID first = cluster->firstChannel();
+    for (unsigned i = 0; i < stripNumber; ++i, ++it) {
+      *it = LHCb::VeloChannelID(first.sensor(),first.strip()+i,first.type());
+    }
+  }
   //
   const DeVeloSensor* sens=m_veloDet->sensor(chanCont[0].sensor());
-  for(int i=0; i<stripNumber; i++){
+  for(unsigned i=0; i<stripNumber; ++i){
     StatusCode sc=sens->channelDistance(chanCont[0],chanCont[i],intDistance);
     sc.ignore(); // channels in a cluster are always in same sensor!
     centre+=static_cast<float>(intDistance)*cluster->adcValue(i);
@@ -197,7 +213,7 @@ double VeloClusterPosition::fracPosLA(const LHCb::VeloCluster* cluster) const
   if(fabs(fractionalPos-cluster->interStripFraction())>0.5){
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<< " clu size: " << stripNumber
           << " strip adcs: " <<endmsg;
-    for(int str=0; str<stripNumber; str++){
+    for(unsigned str=0; str<stripNumber; str++){
       if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<< " adc[ " << str << "] = " << (cluster->adcValue(str)) <<endmsg;
     }
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << " frac pos tool: " << fractionalPos
@@ -246,12 +262,12 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloChannelID &centreChannel,
     return ( myInfo );
   }
   if(sens->isR()||sens->isPileUp()){
-    const DeVeloRType* rSens=dynamic_cast<const DeVeloRType*>(sens);
+    const DeVeloRType* rSens=static_cast<const DeVeloRType*>(sens);
     pitch=rSens->rPitch(centreChannel.strip(), fractionalPos);
     errorPos=meanResolution(pitch/Gaudi::Units::micrometer);
     errorPos/=(pitch/Gaudi::Units::micrometer);
   }else if(sens->isPhi()){
-    const DeVeloPhiType* phiSens=dynamic_cast<const DeVeloPhiType*>(sens);
+    const DeVeloPhiType* phiSens=static_cast<const DeVeloPhiType*>(sens);
     double minRadius=0., maxRadius=0.;
     unsigned int zoneOfCluster=0;
     zoneOfCluster=sens->zoneOfStrip(centreChannel.strip());
@@ -348,7 +364,7 @@ double VeloClusterPosition::angleOfTrack(const Direction& localSlopes,
   );
   parallel2Track=normParallel;
   double cosOfInsertion=parallel2Track.Dot(ZVersor);
-  double alphaOfInsertion=acos(cosOfInsertion);
+  double alphaOfInsertion=vdt::fast_acos(cosOfInsertion);
   //
   return ( alphaOfInsertion );
 }
@@ -380,7 +396,7 @@ double VeloClusterPosition::errorEstimate(const double projAngle,
      double p2=m_errAnglePara[4]+m_errAnglePara[5]*pitch;
      double p3=m_errAnglePara[6]+m_errAnglePara[7]*pitch;
     //-- make some fine tuning - difference between sigma snd RMS
-     error=1.08*(p0*sin(p1*angle+p2)+p3); 
+     error=1.08*(p0*vdt::fast_sin(p1*angle+p2)+p3); 
     }
   }
   //
@@ -467,7 +483,7 @@ Pair VeloClusterPosition::projectedAngle(const DeVeloSensor* sensor,
   //   R sensor
   //----------------
   if(sensor->isR()||(sensor->isPileUp())){ 
-    const DeVeloRType* rSensor=dynamic_cast<const DeVeloRType*>(sensor);
+    const DeVeloRType* rSensor=static_cast<const DeVeloRType*>(sensor);
     double rOfCluCentre=rSensor->rOfStrip(centreStrip, m_fracPos);
     localPitch=rSensor->rPitch(rOfCluCentre);
     if(m_calculateExactProjAngle){  //-- exact calculations for R
@@ -481,8 +497,8 @@ Pair VeloClusterPosition::projectedAngle(const DeVeloSensor* sensor,
       //-- projection of track on normal to local strip
       double trackOnNormal=fabs(cosTrackOnNormal);
       //-- projection of track on Z axis
-      double trackOnZ=cos(alphaOfTrack);
-      projectedAngle=atan(trackOnNormal/trackOnZ);
+      double trackOnZ=vdt::fast_cos(alphaOfTrack);
+      projectedAngle=vdt::fast_atan(trackOnNormal/trackOnZ);
       locPair=std::make_pair(projectedAngle, localPitch);
     }else{                          //-- approximated calculations for R
       // for R sensor, this is a good approximation, sqrt(tx**2+ty**2)
@@ -494,7 +510,7 @@ Pair VeloClusterPosition::projectedAngle(const DeVeloSensor* sensor,
   //   Phi sensor
   //----------------
   if(sensor->isPhi()){
-    const DeVeloPhiType* phiSensor=dynamic_cast<const DeVeloPhiType*>(sensor);
+    const DeVeloPhiType* phiSensor=static_cast<const DeVeloPhiType*>(sensor);
     double radiusOnPhi=aLocPoint.rho();
     // make velo trajectory
     std::auto_ptr<LHCb::Trajectory> traj=
@@ -518,15 +534,15 @@ Pair VeloClusterPosition::projectedAngle(const DeVeloSensor* sensor,
       double alphaOfTrack=angleOfTrack(locDir, parallel2Track);
       double cosTrackOnNormal=parallel2Track.Dot(perp2PhiStrip.Unit());
       double trackOnNormal=fabs(cosTrackOnNormal);
-      double trackOnZ=cos(alphaOfTrack);
-      projectedAngle=atan(trackOnNormal/trackOnZ);
+      double trackOnZ=vdt::fast_cos(alphaOfTrack);
+      projectedAngle=vdt::fast_atan(trackOnNormal/trackOnZ);
       locPair=std::make_pair(projectedAngle, localPitch);
     }else{                              //-- approximated calculations for Phi
       // this is an approximation, but should be ok since sensors are never 
       // tilted so much that it matters. Make sure we just use the xy-plane:
       Gaudi::XYZVector stripdir = traj->direction(0.5).Unit() ;
       double cosangle = (stripdir.x()*m_gloPoint.x() + stripdir.y()*m_gloPoint.y())/m_gloPoint.rho() ;
-      double stereoAngle = std::abs(cosangle)<1 ? acos( cosangle ) : 0 ;
+      double stereoAngle = std::abs(cosangle)<1 ? vdt::fast_acos( cosangle ) : 0 ;
 
       // for phi sensors, projection angle is diluted by stereo angle
       projectedAngle=m_trackDir.rho()*stereoAngle;

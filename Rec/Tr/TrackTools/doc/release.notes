@@ -5,6 +5,14 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-02-19 - Manuel Tobias Schiller
+ - VeloClusterPositionTool: various little fixes to speed things up
+   - don't create std::vector on the fly every time cluster->channels() is
+     called, fill an std::array of sufficient size instead
+   - don't dynamic_cast when a static_cast will do
+   - use vdt::fast_... versions of various trigonometric functions (they're
+     more than accurate enough not to affect Velo performance in any way) 
+
+! 2015-02-19 - Manuel Tobias Schiller
  - speed up StateThickMSCorrectionTool by 10% by reordering and regrouping
    calculations a bit, this shouldn't change the output significantly, as
    there are no (new) approximations made beyond those that were already in
