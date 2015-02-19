@@ -201,7 +201,7 @@ DECLARE_ALGORITHM_FACTORY(CaloClusterMCTruth)
       } // end of loop over all entries in Cluster
 
       if ( mcMap.empty() )
-      { Warning ( "No MC information for the cluster is found" ) ; }
+      { Warning ( "No MC information for the cluster is found" ).ignore() ; }
 
       // loop over auxillary container of merged depositions
       // and fill relation table entries for given cluster

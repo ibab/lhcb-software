@@ -188,7 +188,7 @@ StatusCode CaloDigit2MCLinks2Table::execute    ()
   table->i_sort() ;                               // NB !!
   
   if ( foundInput && 
-       table->relations().empty() ) { Warning ( "Empty Relation table" ) ; }
+       table->relations().empty() ) { Warning ( "Empty Relation table" ).ignore() ; }
   
   if ( msgLevel ( MSG::DEBUG ) ) 
   { debug() << "Number of MC-links #" 

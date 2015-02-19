@@ -5,9 +5,13 @@
 !               Olivier Deschamps odescham@in2p3.fr
 ! ====================================================================
 
+! 2015-02-19 - Marco Cattaneo
+ - Fix untested StatusCodes on Warning messages
+
 !========================= CaloAssociators v6r14 2014-03-18 =====================
 ! 2014-03-06 - Olivier Deschamps
- -  python/Configuration.py : propagate OutputLevel value to calo sequences only when the property is explicitly set
+ -  python/Configuration.py : propagate OutputLevel value to calo sequences only
+    when the property is explicitly set
 
 !========================= CaloAssociators v6r13 2013-10-24 =====================
 ! 2013-10-09 - Olivier Deschamps

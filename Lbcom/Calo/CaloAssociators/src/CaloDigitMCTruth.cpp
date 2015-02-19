@@ -200,7 +200,7 @@ StatusCode CaloDigitMCTruth::execute    ()
   
   { // check the availability of the global MC truth 
     LHCb::MCCaloDigits* _mc = mcTruth<LHCb::MCCaloDigits>( digits ) ;
-    if ( 0 == _mc ) { Error ( "MCCaloDigits* point to NULL" ) ; }
+    if ( 0 == _mc ) { Error ( "MCCaloDigits* point to NULL" ).ignore() ; }
   }
   
   // create the Linker object 

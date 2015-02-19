@@ -140,7 +140,7 @@ StatusCode CaloReCreateMCLinks::execute()
     // "ignore" mode ?
     if ( m_ignore && !exist<LHCb::MCCaloDigits> ( addr2 ) ) 
     { 
-      Warning ( "(MC)container is not found '" + addr2 + "', skip" , StatusCode::SUCCESS , 0 ) ; 
+      Warning ( "(MC)container is not found '" + addr2 + "', skip" , StatusCode::SUCCESS , 0 ).ignore() ; 
       continue ;                                        // CONTINUE 
     }
     //
