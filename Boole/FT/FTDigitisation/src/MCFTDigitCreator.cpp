@@ -54,6 +54,7 @@ MCFTDigitCreator::MCFTDigitCreator( const std::string& name,
   declareProperty("SiPMGainVariation",    m_sipmGainVariation    = 0.05 );  // relative fluctuation of the gain
   declareProperty("ADCNoise",             m_adcNoise             = 0.5  );
   declareProperty("IntegrationOffset",    m_integrationOffset    = tmp); // tof + full fiber propagation time
+  declareProperty("Force2bitADC"     ,    m_force2bitADC         = false); // force the use of 3-valued charges at the end
 
   // noise-related
   declareProperty("SimulateNoise",    m_doNoise          =   0,   "Simulate noise (thermal, crosstalk, afterpulses)");
@@ -244,6 +245,7 @@ StatusCode MCFTDigitCreator::execute() {
     // Define & store digit
     // The deposited energy to ADC conversion is made by the deposit2ADC method
     int adc = deposit2ADC(mcDeposit);
+      
     if ( 0 < adc ) {
       plot2D(HitEnergySumInChannel,(double)adc,"ADCGain","ADC Gain; Energy [MeV]; ADC", 0., .6 ,0., 100., 100, 100);
       plot2D(HitEnergySumInChannel,(double)adc,"ADCGainZOOM","ADC Gain; Energy [MeV]; ADC", 0., .2, 0., 80., 100, 80);
@@ -252,6 +254,8 @@ StatusCode MCFTDigitCreator::execute() {
            "ADC in SiPM Channel;ADC;Number of SiPM channels", 0, 20);
       if (HitEnergySumInChannel > 0) 
         counter("ADCPerMeV") += (double)adc/HitEnergySumInChannel ;
+
+
       MCFTDigit *mcDigit = new MCFTDigit(mcDeposit->channelID(), adc, mcDeposit );
       digitCont->insert(mcDigit);
 
@@ -340,7 +344,7 @@ StatusCode MCFTDigitCreator::execute() {
       double noise = m_adcNoise * m_gauss();
       int noiseADCcount = int( m_pedestal + Npe * gain + noise + 0.5 );
 
-      // Check if not already in MCHit list
+      // Check if already in MCHit list
       std::vector<FTChannelID>::const_iterator chanIt = std::find(mcHitChannels.begin(), mcHitChannels.end(), noiseChannel);
       if (chanIt != mcHitChannels.end()) {
         // if it IS, add ADC value to existing MCHit channel
@@ -570,6 +574,25 @@ StatusCode MCFTDigitCreator::execute() {
 
 
 
+
+  if(m_force2bitADC) {
+    // Force 2-bits ADC charge values
+    int adc, newAdc;
+    for (MCFTDigits::const_iterator iterDigit = digitCont->begin(); iterDigit!=digitCont->end();++iterDigit){
+      MCFTDigit* mcDigit = *iterDigit;   
+      adc = mcDigit -> adcCount();
+
+      newAdc = 0;
+      if(adc > 3) { newAdc = 3; }
+      if(adc > 5) { newAdc = 5; }
+      if(adc > 8) { newAdc = 8; }
+      mcDigit -> setAdcCount( newAdc );
+    
+      plot( adc   , "force2bitADC_oldAdc", "force2bitADC oldADC" , 0. , 20. , 20);
+      plot( newAdc, "force2bitADC_newAdc", "force2bitADC newADC" , 0. , 20. , 20);
+      plot2D(adc, newAdc, "force2bitADC_NewvsOld","oldAdc; newAdc", 0., .20, 0., 20., 20, 20);
+    }
+  }
 
 
   // Digits are sorted according to their ChannelID to prepare the clusterisation stage

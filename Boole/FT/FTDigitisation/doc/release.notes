@@ -4,6 +4,13 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2015-02-19 - Jacco de Vries
+ - Cleaned up FTClusterCreator code
+ - Added monitoring functionality to FTClusterMonitor for RawBank maxClus (bandwidth) studies
+ - Added option in MCFTDigitCreator to enforce 2-bits ADC at Digit level
+ - Added option in SiPMResponse to turn on new data-driven electronics response
+    (also added the tools used to create this response from the data table, in the folder 'tools')
+
 ! 2015-01-13 - Michel De Cian
  - Reduce verbosity of MCFTDepositCreator and MCFTAttenuationTool. Fix unchecked StatusCode.
 

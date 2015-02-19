@@ -24,5 +24,6 @@ public:
 
 private:
   std::string m_clusterLocation;      ///< FTCluster Container
+  unsigned int QuarterModule(const unsigned int module);
 };
 #endif // FTCLUSTERMONITOR_H

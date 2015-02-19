@@ -62,6 +62,8 @@ private:
   std::vector<double> m_integrationOffset; ///< Vector of the integration offsets for T1,T2,T3
   std::vector<double> m_stationsZ; ///< Vector of the Z position for T1,T2,T3
 
+  bool m_force2bitADC;  ///< force 3-valued charges at the end
+
   // Noise related
   float  m_pedestal, m_clusterMinCharge;
   float m_temperature, m_irradiation;

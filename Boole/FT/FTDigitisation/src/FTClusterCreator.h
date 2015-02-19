@@ -35,31 +35,22 @@ private:
   std::string m_inputLocation;       ///< MCFTDigit input Container
   std::string m_outputLocation;      ///< FTCluster output Container
 
-  double m_dynamicsLowLimit;         ///< Lower edge of the clustering range
-  double m_dynamicsUpLimit;          ///< Upper edge of the clustering range
-  uint m_dynamicsBitsNber;           ///< Number of bits of the dynamics
-
-  std::map<double, double> m_thresholdWeightMap; //< map linking weights to thresholds
-  
-
-  int m_adcThreshold;   ///<Minimal ADC value for cluster definition
   unsigned int m_clusterMinWidth;   ///< Minimal Width for clusters
   unsigned int m_clusterMaxWidth;   ///< Maximal Width for clusters
+  int m_adcThreshold;               ///< Minimal ADC value for cluster addition
+  int m_clusterMinCharge;           ///< Minimal total ADC for clusters
+  int m_clusterMinADCPeak;          ///< Minimal ADC for cluster peaks
 
-  unsigned int m_clusterMinCharge;   ///<Minimal total ADC for clusters
-  int m_clusterMinADCPeak;   ///<Minimal ADC for cluster peaks
-  //=== Sum for some average information
-  int  m_nCluster;
-  float m_sumCharge;
-
-  bool m_splitPrevNextMoni;
-  int  m_removeITRegion;
+  int m_removeITRegion;
+  bool m_makeSpillPlots;
   float m_ITScale;
 
-  int     m_nberOfLostHitFromMap;
-  int     m_nberOfKeptHitFromMap;
-  int     m_evtNbCluster64;
-  
+  //=== Sum for some average information
+  int   m_nCluster;
+  float m_sumCharge;
+  int m_nberOfLostHitFromMap;
+  int m_nberOfKeptHitFromMap;
+
   DeFTDetector* m_deFT; ///< pointer to FT detector description
 
 };

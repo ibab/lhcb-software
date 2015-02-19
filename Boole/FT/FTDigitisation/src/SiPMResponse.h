@@ -48,5 +48,7 @@ private:
   std::vector<double> m_times;  
   std::vector<double> m_values; 
   std::string m_splineType;
+
+  bool m_useNewResponse;
 };
 #endif // BOOLE_V26R9_SIPMRESPONSE_H
