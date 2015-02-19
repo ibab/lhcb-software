@@ -2,8 +2,6 @@
 #define Run2GhostId_H 1
 
 // Include files
-#include "Linker/LinkerTool.h"
-
 #include "TrackInterfaces/IHitExpectation.h"
 //#include "TrackInterfaces/IVPExpectation.h"
 #include "TrackInterfaces/IVeloExpectation.h"
