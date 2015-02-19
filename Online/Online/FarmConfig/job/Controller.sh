@@ -17,6 +17,10 @@ export PRINT_LEVEL=4;
 #export PRINT_LEVEL=2;
 if test "${PARTITION_NAME}" = "LHCb"; then
   eval `python ${FARMCONFIGROOT}/job/ConfigureCheckpoint.py -r ${RUNINFO} -c -l`;
+elif test "${PARTITION_NAME}" = "LHCb2"; then
+  eval `python ${FARMCONFIGROOT}/job/ConfigureCheckpoint.py -r ${RUNINFO} -c -l`;
+elif test "${PARTITION_NAME}" = "FEST"; then
+  eval `python ${FARMCONFIGROOT}/job/ConfigureCheckpoint.py -r ${RUNINFO} -c -l`;
 fi;
 exec -a ${UTGID} fsm_ctrl.exe \
     -print=${PRINT_LEVEL} -sleep=0 \

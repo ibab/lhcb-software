@@ -23,13 +23,13 @@ class RunInfo:
 class Checkpoint:
   def __init__(self, runinfo):
     self.runinfo = runinfo
-    self.task_type = runinfo.HLTType
+    self.task_type = 'Moore1' # FixME: runinfo.HLTType
     self.torrent_file = self._getTorrentFile()
     self.checkpoint_bin = os.environ['CHECKPOINTING_BIN']
     self.restore = self.checkpoint_bin + '/bin/restore.exe'
     if self.torrent_file:
       self.target_path = self.checkpointTargetDir()+sep+self.torrent_file
-      self.lib_dir = os.path.dirname(self.target_path)+'/libs'
+      self.lib_dir = os.path.dirname(self.target_path)+'/lib'
 
   def _getTorrentFile(self):
     if self.runinfo.MooreStartupMode > 1:
@@ -40,7 +40,7 @@ class Checkpoint:
           if idx>0 and idx==len(i)-5:
             return i
       except Exception,X:
-        print X
+        print 'echo "[ERROR] '+str(X)+'";'
         return None
     return None
 
@@ -173,8 +173,10 @@ def extractLibraries(runinfo,copy=True,extract=True):
   print 'exit 1;'
 
 #=========================================================================================
-def configureForCheckpoint():
+def configureForCheckpoint(runinfo):
   print 'export APP_STARTUP_OPTS="-checkpoint -auto";'
+  chkpt_dir = os.path.dirname(os.path.dirname(os.environ['CHECKPOINTINGROOT']))
+  print 'export CHECKPOINTING_BIN='+chkpt_dir+'/InstallArea/'+os.environ['CMTCONFIG']+';'
   print 'export CHECKPOINT_DIR; export CHECKPOINT_FILE;'
   print 'export PYTHONPATH=${CHECKPOINT_DIR}:${PYTHONPATH};'
   print 'export MBM_SETUP_OPTIONS='+checkpoint_dir+'/cmds/MBM_setup.opts;'
@@ -182,14 +184,14 @@ def configureForCheckpoint():
   print 'echo "[ERROR] '+line+'";'
   print 'echo "[ERROR] == Running in checkkpoint PRODUCTION mode....";'
   print 'echo "[ERROR] == File:  ${CHECKPOINT_FILE} MBM setup:${MBM_SETUP_OPTIONS}";'
-  print 'echo "[ERROR] == Producing CHECKPOINT file......Please be patient.";'
+  print 'echo "[ERROR] == Producing CHECKPOINT file......Please be patient. RunInfo:'+runinfo+'";'
   print 'echo "[ERROR] == LD_PRELOAD=${CHECKPOINTING_BIN}/lib/libCheckpointing.so";'
   print 'echo "[ERROR] '+line+'";'
   # Note: This is the VERY LAST statement. Afterwards the executable MUST run!
   print 'export LD_PRELOAD=${CHECKPOINTING_BIN}/lib/libCheckpointing.so;'
 
 #=========================================================================================
-def configureForTest():
+def configureForTest(runinfo):
   print 'echo "[ERROR] Running in checkpoint TESTING mode....";'
   print 'export APP_STARTUP_OPTS=-restore;'
   print 'export CHECKPOINT_DIR; export CHECKPOINT_FILE;'
@@ -199,7 +201,7 @@ def configureForTest():
   print 'echo "'+line+'";'
   print 'echo "== File:  ${CHECKPOINT_FILE} MBM setup:${MBM_SETUP_OPTIONS}";'
   print 'echo "== Command ${RESTORE_CMD}";'
-  print 'echo "== Testing CHECKPOINT file......Please be patient.";'
+  print 'echo "== Testing CHECKPOINT file......Please be patient. RunInfo:'+runinfo+'";'
   print 'echo "'+line+'";'
   print 'if test ! -f "${CHECKPOINT_FILE}";then'
   print '  echo "[FATAL] '+line+'";'
@@ -228,22 +230,23 @@ def doIt():
 
   try:
     (opts, args) = parser.parse_args()
+
+    ##print 'echo [ERROR] Flags: ',opts.copy,opts.libs,opts.test,opts.create,';'
     if os.environ.has_key('TEST_CHECKPOINT') or opts.test:
-      configureForTest()
-      return1111
+      configureForTest(opts.runinfo)
+      return
     elif os.environ.has_key('CREATE_CHECKPOINT') or opts.create:
-      configureForCheckpoint()
+      configureForCheckpoint(opts.runinfo)
       return
     elif opts.runinfo is None:
       parser.format_help()
       return
-
     if opts.copy:    extractLibraries(opts.runinfo,True,False)
     if opts.libs:    extractLibraries(opts.runinfo,False,True)
     if opts.start:   configureForRunning(opts.runinfo)
 
   except Exception,X:
-    traceback.print_exc()
+    traceback.print_stack()
     print 'echo "[ERROR] Exception(ConfigureShell): Checkpoint production mode:'+str(X)+'";'
     print 'exit 1;'
 
