@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2015-02-19 - Chris Jones
+ - Use LCG version of Eigen.
+
 ! 2015-02-07 - Chris Jones
  - Add missing FPE protection in RichRayTracingEigen.
  - Downgrade some new info messages to debug.
