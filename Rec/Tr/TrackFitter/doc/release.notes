@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2015-02-19 - Manuel Tobias Schiller
+ - reserve space in vector of matrial intersections, so we don't have to
+   reallocate quite as frequently; this does not change results
+
 !========================= TrackFitter v5r2 2014-09-08 =========================
 ! 2014-08-20 - Wouter Hulsbergen
  - added functionality to TrackMasterFitter to _not_ set scattering momentum for velo-only tracks
@@ -26,7 +30,7 @@
 !========================= TrackFitter v4r10 2013-02-14 =========================
 ! 2013-02-07 - Sascha Stahl
  - Added check for available upgrade detectors. It sets the correct
-	 measurement providers.
+    measurement providers.
 
 ! 2013-02-01 - Sascha Stahl
  - Added VL measurements to the TrackMasterFitter. 

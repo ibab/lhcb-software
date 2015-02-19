@@ -795,6 +795,12 @@ StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track, LHCb
     tracktraj.setRange( zmin,zmax ) ;
 
     IMaterialLocator::Intersections intersections ;
+    // make sure we have the space we need in intersections so we don't need to
+    // reallocate (offline, I've seen tracks with more than 670 intersections
+    // in 100 events; we stay a bit above that to be on the safe side - and we
+    // don't mind the occasional reallocate if it's a rare track that has even
+    // more intersections)
+    intersections.reserve(1024);
     m_materialLocator->intersect( tracktraj, intersections ) ;
 
     // now we need to redistribute the result between the nodes. the first node cannot have any noise.
