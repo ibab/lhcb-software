@@ -119,6 +119,43 @@ remove_sys_tag()
     svn rm -m "Need to remove tag OnlineSys version $1" svn+ssh://svn.cern.ch/reps/lhcb/Online/tags/OnlineSys/${1};
 }
 echo "+++"
+echo "+++ Define macro \$> redo_sys_tag <version> "
+redo_sys_tag()
+{
+    if test "$1" != "";
+    then
+	echo "+++ Package OnlineSys version = $1";
+    else
+	echo "+++ argument to remove_sys_tag must be the package version";
+    fi;
+#
+#
+#
+    if test "$ONLINESYSROOT" = "";
+    then
+	eval `cmt run printenv|grep ONLINESYSROOT`;
+    fi;
+#
+#
+#
+    while true; do
+	read -p "+++ Is this correct? Y/N Cr=[Y]" yn;
+	case $yn in
+            [Yy]* ) break;;
+            [Nn]* ) return 0;;
+            * ) break;;
+	esac;
+    done;
+#
+#
+#
+    echo "+++ Removing tag from package: OnlineSys $1 ";
+    svn rm -m "Need to remove tag OnlineSys version $1" svn+ssh://svn.cern.ch/reps/lhcb/Online/tags/OnlineSys/${1};
+    cd ${ONLINESYSROOT};
+    svn commit -m ${1};
+    tag_package OnlineSys ${1};
+}
+echo "+++"
 echo "+++ Define macro \$> make_release <version> "
 make_release()
 {

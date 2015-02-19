@@ -54,7 +54,7 @@ use PyDIM               v2r13    Online
 use RawBankSizes        v2r21    Online
 use RootCnv             v1r25    Online
 use ROMon               v1r51    Online
-use ROLogger            v0r29    Online
+use ROLogger            v0r30    Online
 ## Only at the pit: macro Stomp_use "" CERN "Stomp v1r2 Online"
 ##use $(Stomp_use)
 
