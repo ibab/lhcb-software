@@ -42,7 +42,7 @@
 //#include "Vc/Vc"
 
 // Eigen
-#include <Eigen/Geometry>
+//#include <Eigen/Geometry>
 
 // VectorClass
 //#include "VectorClass/vectorclass.h"
