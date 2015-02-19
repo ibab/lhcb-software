@@ -9,14 +9,6 @@
 ! 2015-02-18 - Vanya Belyaev
  - make flatte amplitude simpler 
 
-! 2015-02-18 - Chris Jones
- - Change CMake command to install Eigen headers from
-      install(DIRECTORY Eigen DESTINATION include)
-   to
-      gaudi_install_headers(Eigen)
-   now that the bug that prevented suffixless headers from being installed is
-   fixed in Gaudi v26r1.
-
 ! 2015-02-17 - Manuel Tobias Schiller
  - add LHCbMath/PolyEval.h, as a substitute for various hand-written or
    library supplied routines (like GSL's poly-eval); the main feature of this
