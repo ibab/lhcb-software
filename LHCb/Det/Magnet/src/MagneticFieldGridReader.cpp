@@ -74,24 +74,37 @@ StatusCode MagneticFieldGridReader::readDC06File( const std::string& filename,
   return sc ;
 }
 
-void MagneticFieldGridReader::fillConstantField( const Gaudi::XYZVector& field,
+void MagneticFieldGridReader::fillConstantField( const Gaudi::XYZVector& /* field */,
                                                  LHCb::MagneticFieldGrid& grid ) const
 {
   // make a grid that spans the entire world
-  grid.m_Dxyz[0] = 2*Gaudi::Units::km ;
-  grid.m_Dxyz[1] = 2*Gaudi::Units::km ;
-  grid.m_Dxyz[2] = 2*Gaudi::Units::km ;
-  grid.m_invDxyz[0] = 1.0 / grid.m_Dxyz[0];
-  grid.m_invDxyz[1] = 1.0 / grid.m_Dxyz[1];
-  grid.m_invDxyz[2] = 1.0 / grid.m_Dxyz[2];
-  grid.m_min_FL[0] = - Gaudi::Units::km ;
-  grid.m_min_FL[1] = - Gaudi::Units::km ;
-  grid.m_min_FL[2] = - Gaudi::Units::km ;
-  grid.m_Nxyz[0] = 2;
-  grid.m_Nxyz[1] = 2;
-  grid.m_Nxyz[2] = 2 ;
-  grid.m_Q.clear() ;
-  grid.m_Q.resize(grid.m_Nxyz[0] * grid.m_Nxyz[1] * grid.m_Nxyz[2], decltype(grid.m_Q)::value_type{field} ) ;
+
+  // // original
+  // grid.m_Dxyz[0] = 2*Gaudi::Units::km ;
+  // grid.m_Dxyz[1] = 2*Gaudi::Units::km ;
+  // grid.m_Dxyz[2] = 2*Gaudi::Units::km ;
+  // grid.m_invDxyz[0] = 1.0 / grid.m_Dxyz[0];
+  // grid.m_invDxyz[1] = 1.0 / grid.m_Dxyz[1];
+  // grid.m_invDxyz[2] = 1.0 / grid.m_Dxyz[2];
+  // grid.m_min_FL[0] = - Gaudi::Units::km ;
+  // grid.m_min_FL[1] = - Gaudi::Units::km ;
+  // grid.m_min_FL[2] = - Gaudi::Units::km ;
+  // grid.m_Nxyz[0] = 2;
+  // grid.m_Nxyz[1] = 2;
+  // grid.m_Nxyz[2] = 2 ;
+  // grid.m_Q.clear() ;
+  // grid.m_Q.resize( grid.m_Nxyz[0] * grid.m_Nxyz[1] * grid.m_Nxyz[2], decltype(grid.m_Q)::value_type{field} ) ;
+
+  // Vectorised version
+  grid.m_Dxyz_V = Vec4f( 2*Gaudi::Units::km, 2*Gaudi::Units::km, 2*Gaudi::Units::km, 0. );
+  grid.m_invDxyz_V = Vec4f( 1.0 / grid.m_Dxyz_V[0],
+                            1.0 / grid.m_Dxyz_V[1],
+                            1.0 / grid.m_Dxyz_V[2], 0.0 );
+  grid.m_min_FL_V = Vec4f( -Gaudi::Units::km, -Gaudi::Units::km, -Gaudi::Units::km, 0. );
+  grid.m_Nxyz_V = { 2, 2, 2 };
+  grid.m_Q_V.clear() ;
+  grid.m_Q_V.resize( grid.m_Nxyz_V[0] * grid.m_Nxyz_V[1] * grid.m_Nxyz_V[2], Vec4f(0,0,0,0) ) ;
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -118,55 +131,93 @@ void MagneticFieldGridReader::fillGridFromQuadrants( GridQuadrant* quadrants,
   }
 
   // now we remap: put the 4 quadrants in a single grid
-  size_t Nxquad = quadrants[0].Nxyz[0] ;
-  size_t Nyquad = quadrants[0].Nxyz[1] ;
-  size_t Nzquad = quadrants[0].Nxyz[2] ;
+  const size_t Nxquad = quadrants[0].Nxyz[0] ;
+  const size_t Nyquad = quadrants[0].Nxyz[1] ;
+  const size_t Nzquad = quadrants[0].Nxyz[2] ;
 
   // new number of bins. take into account that they overlap at z axis
-  grid.m_Dxyz[0] = quadrants[0].Dxyz[0] ;
-  grid.m_Dxyz[1] = quadrants[0].Dxyz[1] ;
-  grid.m_Dxyz[2] = quadrants[0].Dxyz[2] ;
-  grid.m_invDxyz[0] = 1.0 / grid.m_Dxyz[0];
-  grid.m_invDxyz[1] = 1.0 / grid.m_Dxyz[1];
-  grid.m_invDxyz[2] = 1.0 / grid.m_Dxyz[2];
-  grid.m_Nxyz[0] = 2*Nxquad - 1;
-  grid.m_Nxyz[1] = 2*Nyquad - 1;
-  grid.m_Nxyz[2] = Nzquad ;
-  grid.m_Q.resize(grid.m_Nxyz[0] * grid.m_Nxyz[1] * grid.m_Nxyz[2], {0,0,0} ) ;
+  // grid.m_Dxyz[0] = quadrants[0].Dxyz[0] ;
+  // grid.m_Dxyz[1] = quadrants[0].Dxyz[1] ;
+  // grid.m_Dxyz[2] = quadrants[0].Dxyz[2] ;
+  grid.m_Dxyz_V = Vec4f( quadrants[0].Dxyz[0],
+                         quadrants[0].Dxyz[1],
+                         quadrants[0].Dxyz[2], 0.0 );
+  // grid.m_invDxyz[0] = 1.0 / grid.m_Dxyz[0];
+  // grid.m_invDxyz[1] = 1.0 / grid.m_Dxyz[1];
+  // grid.m_invDxyz[2] = 1.0 / grid.m_Dxyz[2];
+  grid.m_invDxyz_V = Vec4f( 1.0 / grid.m_Dxyz_V[0],
+                            1.0 / grid.m_Dxyz_V[1],
+                            1.0 / grid.m_Dxyz_V[2], 0.0 );
+  // grid.m_Nxyz[0] = 2*Nxquad - 1;
+  // grid.m_Nxyz[1] = 2*Nyquad - 1;
+  // grid.m_Nxyz[2] = Nzquad ;
+  grid.m_Nxyz_V[0] = 2*Nxquad - 1;
+  grid.m_Nxyz_V[1] = 2*Nyquad - 1;
+  grid.m_Nxyz_V[2] = Nzquad ;
+  //grid.m_Q.resize(grid.m_Nxyz[0] * grid.m_Nxyz[1] * grid.m_Nxyz[2], {0,0,0} ) ;
+  grid.m_Q_V.resize(grid.m_Nxyz_V[0] * grid.m_Nxyz_V[1] * grid.m_Nxyz_V[2], Vec4f(0,0,0,0) ) ;
   for( size_t iz=0; iz<Nzquad; ++iz)
     for( size_t iy=0; iy<Nyquad; ++iy)
-      for( size_t ix=0; ix<Nxquad; ++ix) {
+      for( size_t ix=0; ix<Nxquad; ++ix)
+      {
+
+        // // 4th quadrant (negative x, negative y)
+        // grid.m_Q[ grid.m_Nxyz[0] * ( grid.m_Nxyz[1]*iz + (Nyquad-iy-1) ) + (Nxquad-ix-1)] =
+        //   quadrants[3].Q[Nxquad * ( Nyquad * iz + iy ) + ix ] ;
+        // // 2nd quadrant (negative x, positive y)
+        // grid.m_Q[ grid.m_Nxyz[0] * ( grid.m_Nxyz[1]*iz + (Nyquad+iy-1) ) + (Nxquad-ix-1)] =
+        //   quadrants[1].Q[Nxquad * ( Nyquad * iz + iy ) + ix ] ;
+        // // 3rd quadrant (postive x, negative y)
+        // grid.m_Q[ grid.m_Nxyz[0] * ( grid.m_Nxyz[1]*iz + (Nyquad-iy-1) ) + (Nxquad+ix-1)] =
+        //   quadrants[2].Q[Nxquad * ( Nyquad * iz + iy ) + ix ] ;
+        // // 1st quadrant (positive x, positive y)
+        // grid.m_Q[ grid.m_Nxyz[0] * ( grid.m_Nxyz[1]*iz + (Nyquad+iy-1) ) + (Nxquad+ix-1)] =
+        //   quadrants[0].Q[Nxquad * ( Nyquad * iz + iy ) + ix ] ;
+
+        // Vectorised one
+
         // 4th quadrant (negative x, negative y)
-        grid.m_Q[ grid.m_Nxyz[0] * ( grid.m_Nxyz[1]*iz + (Nyquad-iy-1) ) + (Nxquad-ix-1)] =
-          quadrants[3].Q[Nxquad * ( Nyquad * iz + iy ) + ix ] ;
+        const auto& Q4 = quadrants[3].Q[Nxquad * ( Nyquad * iz + iy ) + ix ];
+        grid.m_Q_V[ grid.m_Nxyz_V[0] * ( grid.m_Nxyz_V[1]*iz + (Nyquad-iy-1) ) + (Nxquad-ix-1)] = 
+          Vec4f( Q4.x(), Q4.y(), Q4.z(), 0.0 );
         // 2nd quadrant (negative x, positive y)
-        grid.m_Q[ grid.m_Nxyz[0] * ( grid.m_Nxyz[1]*iz + (Nyquad+iy-1) ) + (Nxquad-ix-1)] =
-          quadrants[1].Q[Nxquad * ( Nyquad * iz + iy ) + ix ] ;
+        const auto& Q2 = quadrants[1].Q[Nxquad * ( Nyquad * iz + iy ) + ix ] ;
+        grid.m_Q_V[ grid.m_Nxyz_V[0] * ( grid.m_Nxyz_V[1]*iz + (Nyquad+iy-1) ) + (Nxquad-ix-1)] =
+          Vec4f( Q2.x(), Q2.y(), Q2.z(), 0.0 );
         // 3rd quadrant (postive x, negative y)
-        grid.m_Q[ grid.m_Nxyz[0] * ( grid.m_Nxyz[1]*iz + (Nyquad-iy-1) ) + (Nxquad+ix-1)] =
-          quadrants[2].Q[Nxquad * ( Nyquad * iz + iy ) + ix ] ;
+        const auto& Q3 = quadrants[2].Q[Nxquad * ( Nyquad * iz + iy ) + ix ] ;
+        grid.m_Q_V[ grid.m_Nxyz_V[0] * ( grid.m_Nxyz_V[1]*iz + (Nyquad-iy-1) ) + (Nxquad+ix-1)] =
+          Vec4f( Q3.x(), Q3.y(), Q3.z(), 0.0 );
         // 1st quadrant (positive x, positive y)
-        grid.m_Q[ grid.m_Nxyz[0] * ( grid.m_Nxyz[1]*iz + (Nyquad+iy-1) ) + (Nxquad+ix-1)] =
-          quadrants[0].Q[Nxquad * ( Nyquad * iz + iy ) + ix ] ;
+        const auto& Q1 = quadrants[0].Q[Nxquad * ( Nyquad * iz + iy ) + ix ] ;
+        grid.m_Q_V[ grid.m_Nxyz_V[0] * ( grid.m_Nxyz_V[1]*iz + (Nyquad+iy-1) ) + (Nxquad+ix-1)] =
+          Vec4f( Q1.x(), Q1.y(), Q1.z(), 0.0 );
+
       }
 
-  grid.m_min_FL[0] = - ((Nxquad-1) * grid.m_Dxyz[0]) ;
-  grid.m_min_FL[1] = - ((Nyquad-1) * grid.m_Dxyz[1]) ;
-  grid.m_min_FL[2] = quadrants[0].zOffset ;
+  // grid.m_min_FL[0] = - ((Nxquad-1) * grid.m_Dxyz[0]) ;
+  // grid.m_min_FL[1] = - ((Nyquad-1) * grid.m_Dxyz[1]) ;
+  // grid.m_min_FL[2] = quadrants[0].zOffset ;
+  grid.m_min_FL_V  = Vec4f( - ((Nxquad-1) * grid.m_Dxyz_V[0]),
+                            - ((Nyquad-1) * grid.m_Dxyz_V[1]),
+                            quadrants[0].zOffset, 0 );
 
   if( UNLIKELY(m_msg.level() <= MSG::DEBUG) )
+  {
     m_msg << MSG::DEBUG
-          << "Field grid , nbins x,y,z  : (" << grid.m_Nxyz[0] << ","
-          << grid.m_Nxyz[1] << "," <<  grid.m_Nxyz[2] << ")" << std::endl
+          << "Field grid , nbins x,y,z  : (" << grid.m_Nxyz_V[0] << ","
+          << grid.m_Nxyz_V[1] << "," <<  grid.m_Nxyz_V[2] << ")" << std::endl
           << "dx, xmin, xmax: "
-          << "(" << grid.m_Dxyz[0] << "," << grid.m_min_FL[0] << ","
-          << grid.m_min_FL[0] + (grid.m_Nxyz[0]-1) * grid.m_Dxyz[0] << ")" << std::endl
+          << "(" << grid.m_Dxyz_V[0] << "," << grid.m_min_FL_V[0] << ","
+          << grid.m_min_FL_V[0] + (grid.m_Nxyz_V[0]-1) * grid.m_Dxyz_V[0] << ")" << std::endl
           << "dy, ymin, ymax: "
-          << "(" << grid.m_Dxyz[0] << "," << grid.m_min_FL[1] << ","
-          << grid.m_min_FL[1] + (grid.m_Nxyz[1]-1) * grid.m_Dxyz[1] << ")" << std::endl
+          << "(" << grid.m_Dxyz_V[0] << "," << grid.m_min_FL_V[1] << ","
+          << grid.m_min_FL_V[1] + (grid.m_Nxyz_V[1]-1) * grid.m_Dxyz_V[1] << ")" << std::endl
           << "dz, zmin, zmax: "
-          << "(" << grid.m_Dxyz[0] << "," << grid.m_min_FL[2] << ","
-          << grid.m_min_FL[2] + (grid.m_Nxyz[2]-1) * grid.m_Dxyz[2] << ")" << endmsg ;
+          << "(" << grid.m_Dxyz_V[0] << "," << grid.m_min_FL_V[2] << ","
+          << grid.m_min_FL_V[2] + (grid.m_Nxyz_V[2]-1) * grid.m_Dxyz_V[2] << ")" << endmsg ;
+  }
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
