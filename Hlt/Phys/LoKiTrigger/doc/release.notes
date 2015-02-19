@@ -4,14 +4,20 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-02-19 - Matthew Kenzie
+ - addition of ToProtoParticles() (avoids repeat creation)
+ - minor changes in ToParticles() to facilitate this (including sligthly different solution to Vanya's fix below)
+ - addition of Hlt1CombinerConf() to avoid having to pass huge strings in Hlt1Lines
+ - change of Hlt1Combiner() to pick input stream and possible additional inputs if necessary
+
 ! 2015-02-15 - Vanya Belyaev
- - minor fix in ToParticles 
+ - minor fix in ToParticles
 
 ! 2015-02-06 - Roel Aaij
  - Add extra protection against loading non-existent PV selection in HltUnit.
 
 ! 2015-02-03 - Vanya Belyaev
- - Hlt2 also works from cache! 
+ - Hlt2 also works from cache!
 
 ! 2015-01-29 - Vanya Belyaev
  - !!! It works !!! (Caching functors in C++ source)
@@ -20,17 +26,17 @@
  - comment out binders... it looks like they are not used at all..
 
 ! 2015-01-26 - Vanya Belyaev
- - add some functionalty, needed for C++ code generation 
+ - add some functionalty, needed for C++ code generation
 
 ! 2015-01-26 - Vanya Belyaev
- - first step to use some new LoKi features 
+ - first step to use some new LoKi features
 
 !========================= LoKiTrigger v15r4 2014-12-15 =========================
 
 ! 2014-12-03 - Vanya Belyaev
  - add Particles into streamer functions
-  
-   update tests.py with following examples:  
+
+   update tests.py with following examples:
 
    ... >> TS_ISPARTICLE >> ...
    ... >> ( PT > 1    ) >> ...
@@ -46,14 +52,14 @@
 
 ! 2014-11-25 - Roel Aaij
  - HltUnit inherits from IDVAlgorithm to allow more particle functors to be used
-   in HLT1. Most methods return NULL pointers, but the ones that we needed are 
+   in HLT1. Most methods return NULL pointers, but the ones that we needed are
    there.
 
 !========================= LoKiTrigger v15r3 2014-09-29 =========================
 
 ! 2014-09-24 - Alex Shires
  - adding new functor - MatchTracks - which looks for matching tracks and returns a bool
- - (compare to FilterTracks, which filters and writes a new stream if the matching is successful ) 
+ - (compare to FilterTracks, which filters and writes a new stream if the matching is successful )
 
 ! 2014-09-02 - Alex Shires
  - minor fix to TrMatch
@@ -77,7 +83,7 @@
 ! 2014-03-27 - Vanya Belyaev
 
  - HltUnit: change the type of "Params" to std::map<std::string,double>
-   to be reverted so something more reasonable [what?] after update of LoKiCore 
+   to be reverted so something more reasonable [what?] after update of LoKiCore
 
 ! 2014-03-26 - Gerhard Raven
  - trivial C++11 changes
@@ -88,25 +94,25 @@
 
    Add new property "Params"
 
-   Params = { 'PtMin' :  1 * GeV } 
+   Params = { 'PtMin' :  1 * GeV }
 
    Code = """
    ...
    >>  ( TrPT > PARAM ( 'Params[PtMin]/<Unit-name-or-regex-pattern>' ) ) >>
-   ... 
-   
-   """  
-   The format of 'Params[PtMin]/<Unit-name-or-regex-pattern>' 
+   ...
+
+   """
+   The format of 'Params[PtMin]/<Unit-name-or-regex-pattern>'
    is defined in $LOKICOREROOT/src/Param.cpp
 
-   *If* parameters are redefined *after* initialiaztaion, 
-    and the value is actrually changed 
-    currently the warning is printed   (probably need to be revisited) 
+   *If* parameters are redefined *after* initialiaztaion,
+    and the value is actrually changed
+    currently the warning is printed   (probably need to be revisited)
     but anyhow  only Eric is allowed to redefine "Params"
 
 !========================= LoKiTrigger v15r0 2014-02-20 =========================
 ! 2014-02-01 - Vanya Belyaev
- - add dictionaries for new FuncOps__ 
+ - add dictionaries for new FuncOps__
 
 ! 2014-11-25 - Gerhard Raven
  - run clang-format on some more source files
@@ -159,16 +165,16 @@
 !========================= LoKiTrigger v12r7 2012-04-09 =========================
 ! 2012-04-09 - Vanya Belyaev
  - remove down-cast from Upgrade Vertices
- - remove commented lines 
+ - remove commented lines
 
 ! 2012-04-09 - Victor Coco
- - Fix related to UpgradeVertices and TrackCutAsRecVertexCut to avoid use of 
+ - Fix related to UpgradeVertices and TrackCutAsRecVertexCut to avoid use of
    RecVertex adapters
-    * removed from HltCandidates.* class the RecVertex filter / fun / cut and map 
+    * removed from HltCandidates.* class the RecVertex filter / fun / cut and map
       and equivalent in LoKiTriggerDict.h
-    * base the TrackCutAsRecVertexCut.* class on VertexBase instead of RecVertex 
+    * base the TrackCutAsRecVertexCut.* class on VertexBase instead of RecVertex
     * modify UpgradeVertices to access the stage as VertexBase
-  
+
 !========================= LoKiTrigger v12r6 2012-03-17 =========================
 ! 2012-03-14 - Pieter David
  - Add adapters from a RecVertex cut to a track cut, with the option to pass
@@ -181,38 +187,38 @@
 
 !========================= LoKiTrigger v12r5 2012-02-06 =========================
 ! 2011-11-21 - Vanya Belyaev
- - add few new streamer features: first_N and reverse 
+ - add few new streamer features: first_N and reverse
 
 !========================== LoKiTrigger v12r4 2011-08-29 ===================
 ! 2011-07-20 - Vanya Belyaev
 
  - move BeamLineFunctions.h into Phys/LoKiPhys
-     enabling "Hlt-free" DaVinci 
+     enabling "Hlt-free" DaVinci
 
- - cmt/requirements 
-     version increment to v12r4 
+ - cmt/requirements
+     version increment to v12r4
 
 !========================== LoKiTrigger v12r3 2011-06-24 ===================
 ! 2011-06-07 - Vanya Belyaev
- - fix almost all ICC warnings 
+ - fix almost all ICC warnings
 
 ! 2011-06-03 - Vanya Belyaev
 
  - BeamLineFunctions
-   fix problmes with copy constructor 
+   fix problmes with copy constructor
 
-   In practice it doe snto affect trigger, 
-   but it could affect offline processing and especially MC processing 
+   In practice it doe snto affect trigger,
+   but it could affect offline processing and especially MC processing
 
-   many thanks to Steve Blusk for pointing to the problem 
+   many thanks to Steve Blusk for pointing to the problem
 
- - cmt/requirements 
-     version increment to v12r3 
-  
+ - cmt/requirements
+     version increment to v12r3
+
 !========================== LoKiTrigger v12r2 2011-05-04 ===================
 ! 2011-05-04 - Roel Aaij
  - Fix a bug in UpgradeTool where the extraInfo field for the recoID on a seed
-   would be it's key instead of the number of resulting output tracks if the 
+   would be it's key instead of the number of resulting output tracks if the
    underlying tool does not modify the track but returns the track itself.
 
 ! 2011-04-29 - Roel Aaij
@@ -239,7 +245,7 @@
    successful matching and cuts are not on the quality arguments but on
    internal properties, the quality function arguments are effectively obsolete.
    A change of interface to remove them should be considerd.
-   Because allow the cuts to be stored as propeties in the TCK.   
+   Because allow the cuts to be stored as propeties in the TCK.
  - Update check for being closed also when functor is created.
 
 ! 2011-03-29 - Roel Aaij
@@ -252,36 +258,36 @@
 
 ! 2011-03-27 - Vanya Belyaev
 
- - 1. add di-track creator from the stream 
+ - 1. add di-track creator from the stream
 
-       TC_DITRACKS2 
+       TC_DITRACKS2
 
-   2. add interpretation of "track-vector-function (FunVal&CutVal)" 
-      inside TC-stream as corresponding "scalar" functor that needs 
+   2. add interpretation of "track-vector-function (FunVal&CutVal)"
+      inside TC-stream as corresponding "scalar" functor that needs
       to be applied to underlying Hlt::MultiTrack
 
-      e.g. following stream-element filters MULTITRACKS with scalar PT-sum: 
+      e.g. following stream-element filters MULTITRACKS with scalar PT-sum:
 
         " ... >>   ( 1 < sum ( TrPT ) >> ... "
-    
+
 
 ! 2011-03-18 - Vanya Belyaev
- - add protection against double lock 
+ - add protection against double lock
 
- - cmt/requirements 
-     version increment to v12r1 
+ - cmt/requirements
+     version increment to v12r1
 
 !========================== LoKiTrigger v12r0 2011-03-17 ===================
 ! 2011-03-17 - Roel Aaij
  - Add a bit better protection in VxSink
 
 ! 2011-03-16 - Victor Coco
- - update BeamSpotRho function with threshold 
+ - update BeamSpotRho function with threshold
    to ensure the velo is closed
-   replace m_veloDet by m_condition in LoKiTrigger.xml 
+   replace m_veloDet by m_condition in LoKiTrigger.xml
 
 ! 2011-03-15 - Vanya Belyaev
- - update BeamSpotRho function 
+ - update BeamSpotRho function
 
 ! 2011-03-12 - Vanya Belyaev
 
@@ -294,9 +300,9 @@
      use Condition
 
 ! 2011-03-11 - Vanya Belyaev
- - kill bad concept of "Element"-functor 
- - cmt/requirements 
-     version increment to v12r0 
+ - kill bad concept of "Element"-functor
+ - cmt/requirements
+     version increment to v12r0
 
 ! 2011-03-10 - Vanya Belyaev
 
@@ -304,13 +310,13 @@
    srs/BeamLineFunctions.cpp
 
     add *skeleton* for VX_BEAMSPOTRHO functor
-       
+
       " ...  >> ( VX_BEAMSPOTRHO() > 5 * mm ) >> ... "
 
- - cmt/requirements 
+ - cmt/requirements
 
-     1. add dependency on VeloDet 
-     2. version increment to v11r10 
+     1. add dependency on VeloDet
+     2. version increment to v11r10
 
 !========================== LoKiTrigger v11r9 2011-03-06 ===================
 ! 2011-03-06 - Roel Aaij
@@ -352,7 +358,7 @@
 
  - add "match-as-filter" concept and corresponding symbols:
 
-     TC_MATCHFLTR and TC_MATCHFLTR2 
+     TC_MATCHFLTR and TC_MATCHFLTR2
 
  - cmt/requirements
 
@@ -360,10 +366,10 @@
 
 !========================== LoKiTrigger v11r5 2011-02-10 ===================
 ! 2011-02-10 - Roel Aaij
- - Fixed the UpgradeTool to correctly flag seeds and look for already upgraded 
+ - Fixed the UpgradeTool to correctly flag seeds and look for already upgraded
    candidates in accordance with the current "model", where the Candidates are
    unique per line.
-   Please note that the logic for MultiTracks has not been checked and as a 
+   Please note that the logic for MultiTracks has not been checked and as a
    safeguard, calls will always return FAILURE.
 
 ! 2011-02-08 - Roel Aaij
@@ -375,7 +381,7 @@
 
  - UpgradeTool:
 
-     force TES-registration of tracks not yer registered 
+     force TES-registration of tracks not yer registered
 
 ! 2011-02-08 - Gerhard Raven
  - remove Warning about 'reconstruction causes split candidates' as this
@@ -389,34 +395,34 @@
  - "re-add" timers
 
  - allow "right-side" usage of gate with pipes both with ">>" and "*"
- 
- - add new symbol TC_VXMAKER4 
 
-     for vertex making via pairing of all tracks form the stream 
+ - add new symbol TC_VXMAKER4
+
+     for vertex making via pairing of all tracks form the stream
 
  - add possibility to specify "simple" track cust fo rupgrade an dmatch tools:
 
-    xxx = LoKi.Hlt1.UpgradeConf ( 
-            ... , 
-            ( TrPT > 0.5 * GeV ) & ( TrCHI2NDOF < 3 ) 
+    xxx = LoKi.Hlt1.UpgradeConf (
+            ... ,
+            ( TrPT > 0.5 * GeV ) & ( TrCHI2NDOF < 3 )
            )
 
-    yyy = LoKi.Hlt1.MatchConf ( 
-            ... , 
-            ( TrPT > 0.5 * GeV ) & ( TrCHI2NDOF < 3 ) 
+    yyy = LoKi.Hlt1.MatchConf (
+            ... ,
+            ( TrPT > 0.5 * GeV ) & ( TrCHI2NDOF < 3 )
            )
 
     The cut (if specified) does NOT affect the actual track upgrade
-    all upgraded tracks are properly registered, treated etc, 
-    but only "good" tracks goes into the stream.  This prevents 
-    double reconstruction...  
+    all upgraded tracks are properly registered, treated etc,
+    but only "good" tracks goes into the stream.  This prevents
+    double reconstruction...
 
  - cmt/requirements
       version increment to v11r5
 
 !========================== LoKiTrigger v11r4 2011-02-07 ===================
 
- - tag as v11r4 
+ - tag as v11r4
 
  - cmt/requirements
       version increment to v11r4
@@ -433,20 +439,20 @@
 
 ! 2011-02-03 - Vanya Belyaev
 
- - Hlt.py 
-   new module with decoration of Hlt Event model classes 
+ - Hlt.py
+   new module with decoration of Hlt Event model classes
 
     - add easy iteration over SmartRefVector<HltStage>
     - add TRIVIAL iteration over the content of Hlt::Candidate
-      ( using INVERSE CHRONOLOGICAL order, accoridng to slot numbering ) 
+      ( using INVERSE CHRONOLOGICAL order, accoridng to slot numbering )
 
       candidate = ...
 
       for o in candidate :
 
-            print o 
+            print o
 
-       
+
 ! 2011-02-03 - Vanya Belyaev
 
  - add timers
@@ -463,10 +469,10 @@
    Fix some problems with on-line Moore:
 
  - LoKiTrigger/functions.h
-      comment out the import of LoKiTrigger.Service module 
+      comment out the import of LoKiTrigger.Service module
 
  - LoKiTrigger/Service.h
-      comment out the import of GaudiPython.GaudiAlgs module 
+      comment out the import of GaudiPython.GaudiAlgs module
 
  - cmt/requirements
       version increment to v11r3
@@ -483,7 +489,7 @@
 
 ! 2010-12-04 - Vanya Belyaev
 
- - resurrect vertex & di-track making 
+ - resurrect vertex & di-track making
 
 ! 2010-11-30 - Vanya Belyaev
 
@@ -493,22 +499,22 @@
 
 
 
-     >>> hlt = gaudi.htlInspector 
+     >>> hlt = gaudi.htlInspector
 
    Make dot-graph for algorithm:
 
      >>> alg = ...
-     >>> htl.dotAlg( alg ) 
+     >>> htl.dotAlg( alg )
 
    Make dot-graph for selection
 
      >>> sel = ...
-     >>> htl.dotSel( sel ) 
+     >>> htl.dotSel( sel )
 
-   Make dot-graph for ALL algorithms and selections 
+   Make dot-graph for ALL algorithms and selections
 
      >>> sel = ...
-     >>> htl.dotSel( sel ) 
+     >>> htl.dotSel( sel )
 
 
 

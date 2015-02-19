@@ -1,4 +1,4 @@
-// $Id: ToParticles.cpp 180655 2014-11-25 10:38:48Z mkenzie $
+// $Id: ToProtoParticles.cpp 180655 2014-11-25 10:38:48Z mkenzie $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -22,7 +22,7 @@
 // LoKi
 // ============================================================================
 #include "LoKi/Combiner.h"
-#include "LoKi/ToParticles.h"
+#include "LoKi/ToProtoParticles.h"
 #include "LoKi/Hlt1.h"
 #include "LoKi/Constants.h"
 #include "LoKi/ParticleProperties.h"
@@ -35,7 +35,7 @@
 // ============================================================================
 /** @file
  *
- *  Implementation file for class LoKi::Hlt1::ToParticles
+ *  Implementation file for class LoKi::Hlt1::ToProtoParticles
  *  This file is part of LoKi project:
  *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
  *
@@ -52,61 +52,34 @@
  *                 by $Author: mkenzie $
  */
 // ============================================================================
-//  consructor from the pid hypothesis, name and LoKi basic functor
+//  consructor from the pid hypothesis, name and simple pt cut
 // ============================================================================
-LoKi::Hlt1::ToParticles::ToParticles
-( const std::string& pid         ,
-  const std::string& location    ,
-  const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&   cut )
-  : LoKi::AuxFunBase ( std::tie ( pid , location , cut ) )
+LoKi::Hlt1::ToProtoParticles::ToProtoParticles
+( const std::string& location )
+  : LoKi::AuxFunBase ()
   , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
   , LoKi::Hlt1::HelperTool ( 1 )
   , m_sink ( location )
-  , m_pp   ( LoKi::Particles::ppFromName(pid) )
-  , m_cut  ( cut      )
 {}
 // ============================================================================
 // virtual destructor
 // ============================================================================
-LoKi::Hlt1::ToParticles::~ToParticles () {}
+LoKi::Hlt1::ToProtoParticles::~ToProtoParticles () {}
 // ============================================================================
 // clone method ("virtual constructor")
 // ============================================================================
-LoKi::Hlt1::ToParticles* LoKi::Hlt1::ToParticles::clone() const
-{ return new LoKi::Hlt1::ToParticles { *this } ; }
-// ============================================================================
-// getState helper function
-// ============================================================================
-const LHCb::State*
-LoKi::Hlt1::ToParticles::getState
-  ( const LHCb::Track* &track ) const
-{
-  const LHCb::State* state = 0;
-  // try closest to beam
-  if ( !state ) { state = track->stateAt ( LHCb::State::ClosestToBeam )    ; }
-  // try first measurement
-  if ( !state ) { state = track->stateAt ( LHCb::State::FirstMeasurement ) ; }
-  // try first state
-  if ( !state ) { state = &track->firstState()                             ; }
-
-  return state;
-}
+LoKi::Hlt1::ToProtoParticles* LoKi::Hlt1::ToProtoParticles::clone() const
+{ return new LoKi::Hlt1::ToProtoParticles { *this } ; }
 // ============================================================================
 // the only one important method
 // ============================================================================
-LoKi::Hlt1::ToParticles::result_type
-LoKi::Hlt1::ToParticles::operator()
-  ( LoKi::Hlt1::ToParticles::argument a ) const
+LoKi::Hlt1::ToProtoParticles::result_type
+LoKi::Hlt1::ToProtoParticles::operator()
+  ( LoKi::Hlt1::ToProtoParticles::argument a ) const
 {
   Assert ( alg() , "Invalid setup!" );
 
   typedef result_type           CANDIDATES ;
-
-  LoKi::ILoKiSvc* svc = lokiSvc() ;
-  SmartIF<IToolSvc> tsvc ( svc );
-
-  IParticle2State* m_p2s = 0;
-  StatusCode sc = tsvc->retrieveTool("Particle2State",m_p2s);
 
   if ( a.empty() ) { return result_type () ; }
 
@@ -120,53 +93,14 @@ LoKi::Hlt1::ToParticles::operator()
     const Hlt::Candidate* cand1 = *icand1 ;
     if ( !cand1 ) { continue ; }                              // CONTINUE
 
-    // get the proto
-    const LHCb::ProtoParticle* proto = cand1->get<LHCb::ProtoParticle> () ;
-    if ( !proto ) { continue ; }
-
     // get the track
-    const LHCb::Track* track = proto->track () ;
+    const LHCb::Track* track = cand1->get<LHCb::Track> () ;
     if ( !track ) { continue ; }
 
-    // create Particle
-    LHCb::Particle* particle = new LHCb::Particle();
-    particle->setProto(proto);
-
-    // set PID
-    track->charge() == m_pp->charge() ?
-      particle->setParticleID(m_pp->particleID()) :
-      particle->setParticleID(m_pp->anti()->particleID()) ;
-
-    // set mass
-    particle->setMeasuredMass(m_pp->mass());
-    particle->setMeasuredMassErr(0);
-
-    // which state should be used here ?!?!
-    const LHCb::State* state = getState ( track );
-    if ( !state ) {
-      delete particle ;
-      continue ;
-    }
-
-    // fill particle from state
-    const StatusCode sc = m_p2s->state2Particle( *state, *particle ) ;
-    if ( sc.isFailure() ) {
-      delete particle ;
-      continue ;
-    }
-
-    //std::cout << "Converted track: (ch: " << track->charge() << ", p: "<< track->p() << ") -> particle: " << LoKi::Particles::nameFromPID(particle->particleID()) << " PID: (" << particle->particleID().pid() << ")" << " P: " << particle->p() << " PT: " << particle->pt();
-
-    // cuts here
-    if ( ! m_cut ( particle ) ) {
-      delete particle;
-      continue ;
-      //std::cout << std::endl;
-    }
-    //std::cout << " -- PASS " << std::endl;
-
-    // store in TES
-    _storeParticle( particle ) ;
+    // create ProtoParticle
+    LHCb::ProtoParticle* proto = newProtoParticle();
+    if ( !proto ) { continue ; }
+    proto->setTrack(track);
 
     // add new candidate
     Hlt::Candidate *candidate = newCandidate();
@@ -175,7 +109,7 @@ LoKi::Hlt1::ToParticles::operator()
     Hlt::Stage*  stage = newStage () ;
     candidate->addToStages( stage ) ;
     Hlt::Stage::Lock lock { stage, alg() } ;
-    stage->set( particle ) ;
+    stage->set( proto ) ;
     output.push_back ( candidate ) ;
     // ========================================================================
   } //                                           end of loop over input data
@@ -187,11 +121,9 @@ LoKi::Hlt1::ToParticles::operator()
 // ============================================================================
 // OPTIONAL: nice printout
 // ============================================================================
-std::ostream& LoKi::Hlt1::ToParticles::fillStream ( std::ostream& s ) const
+std::ostream& LoKi::Hlt1::ToProtoParticles::fillStream ( std::ostream& s ) const
 {
   return
-    s << "TC_TOPARTICLES("
-      <<        m_pp->name() << ","
-      << "'" << location()   << "')" ;
+    s << "TC_TOPROTOPARTICLES( '' )" ;
 }
 // ============================================================================

@@ -200,6 +200,15 @@ namespace LoKi
         _add_ ( _p , m_hlt_particles ) ;
         return 1;
       }
+      inline bool _storeProtoParticle ( const LHCb::ProtoParticle* p ) const
+      {
+        if ( !p               ) { return false ; }
+        if ( !m_hlt_protoparticles ) { m_hlt_protoparticles = _createProtoParticles () ; }
+        if ( !m_hlt_protoparticles ) { return false ; }
+        LHCb::ProtoParticle* _p = const_cast<LHCb::ProtoParticle*> ( p ) ;
+        _add_ ( _p , m_hlt_protoparticles ) ;
+        return 1;
+      }
       // ======================================================================
     private:
       // ======================================================================

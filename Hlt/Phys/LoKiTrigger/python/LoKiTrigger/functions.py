@@ -238,10 +238,16 @@ TC_VXMAKE4     = LoKi.Hlt1.VxMaker4
 # =============================================================================
 ## particle making
 # =============================================================================
+## @see LoKi::Cuts::TC_TOPROTOPARTICLES
+TC_TOPROTOPARTICLES = LoKi.Hlt1.ToProtoParticles
 ## @see LoKi::Cuts::TC_TOPARTICLES
 TC_TOPARTICLES = LoKi.Hlt1.ToParticles
 ## @see LoKi::Cuts::TC_HLT1COMBINER
 TC_HLT1COMBINER = LoKi.Hlt1.Hlt1Combiner
+## @see LoKi::Cuts::TC_HLT1COMBINER2
+TC_HLT1COMBINER2 = LoKi.Hlt1.Hlt1Combiner2
+## @see LoKi::Cuts::TC_HLT1COMBINER3
+TC_HLT1COMBINER3 = LoKi.Hlt1.Hlt1Combiner3
 
 # =============================================================================
 ## di-tracks makers
@@ -304,6 +310,8 @@ LoKi.Hlt1.TrackFunction    . __str__  =  LoKi.Hlt1.TrackFunction   . toString
 LoKi.Hlt1.TrackFunction    . __repr__ =  LoKi.Hlt1.TrackFunction   . toString
 LoKi.Hlt1.VxMakerConf      . __str__  =  LoKi.Hlt1.VxMakerConf     . toString
 LoKi.Hlt1.VxMakerConf      . __repr__ =  LoKi.Hlt1.VxMakerConf     . toString
+LoKi.Hlt1.Hlt1CombinerConf . __str__  =  LoKi.Hlt1.Hlt1CombinerConf. toString
+LoKi.Hlt1.Hlt1CombinerConf . __repr__ =  LoKi.Hlt1.Hlt1CombinerConf. toString
 
 ##LoKi.Hlt1.TrackBiFunction  . __str__  =  LoKi.Hlt1.TrackBiFunction . toString
 ##LoKi.Hlt1.TrackBiFunction  . __repr__ =  LoKi.Hlt1.TrackBiFunction . toString

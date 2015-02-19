@@ -17,7 +17,7 @@
 
   <!-- Hlt::Candidate -->
 
-  
+
   <class pattern = "LoKi::Functor<*Hlt::Candidate*>"              />
   <class pattern = "LoKi::FunctorFromFunctor<*Hlt::Candidate*>"   />
   <class name    = "LoKi::Constant<const Hlt::Candidate*,double>" />
@@ -91,7 +91,14 @@
   <class name    = "LoKi::Hlt1::MatchConf"           />
   <class name    = "LoKi::Hlt1::Tool"                />
   <class name    = "LoKi::Hlt1::MatchTVelo"          />
-  
+  <class name    = "LoKi::Hlt1::ToProtoParticles"    />
+  <class name    = "LoKi::Hlt1::ToParticles"         />
+  <class name    = "LoKi::Hlt1::Hlt1CombinerConf">
+    <field name = "m_acut"      transient = "true"/>
+    <field name = "m_cut"       transient = "true"/>
+  </class>
+  <class name    = "LoKi::Hlt1::Hlt1Combiner"        />
+
   <class name    = "LoKi::Hlt1::VxMakerConf">
     <field name = "m_vxcut"     transient = "true"/>
   </class>
@@ -106,14 +113,14 @@
 
   <class name = "LoKi::Tracks::TrFunction"   />
   <class name = "LoKi::Hlt1::TrackFunction"  />
-  
-  
-  <!-- Track functions --> 
+
+
+  <!-- Track functions -->
   <class name = "LoKi::Tracks::MuonDeltaP" />
   <class name = "LoKi::Tracks::Hlt1TrackMinIp" >
     <field name = "m_vxcut"        transient = "true"/>
     <field name = "m_vertices"     transient = "true"/>
-  </class> 
+  </class>
   <class name = "LoKi::Tracks::Hlt1TrackMinIpChi2" />
 
   <!-- vertex functions -->
@@ -122,8 +129,8 @@
   <class name = "LoKi::RecVertices::DOCACut"     />
   <class name = "LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_Any" />
   <class name = "LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_All" />
-  
-  
+
+
   <exclusion>
     <class name="LoKi::Stages::HistoryRegex" >
       <field name = "m_expression"/>

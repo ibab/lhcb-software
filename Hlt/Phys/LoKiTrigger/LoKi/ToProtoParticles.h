@@ -1,7 +1,7 @@
-// $Id: ToParticles.h 180655 2014-11-25 10:38:48Z mkenzie $
+// $Id: ToProtoParticles.h 180655 2014-11-25 10:38:48Z mkenzie $
 // ============================================================================
-#ifndef LOKI_TOPARTICLES_H
-#define LOKI_TOPARTICLES_H 1
+#ifndef LOKI_TOPROTOPARTICLES_H
+#define LOKI_TOPROTOPARTICLES_H 1
 // ============================================================================
 // Include files
 // ============================================================================
@@ -33,7 +33,7 @@
 // ============================================================================
 class GaudiAlgorithm;
 // ============================================================================
-/** @file  LoKi/ToParticles.h
+/** @file  LoKi/ToProtoParticles.h
  *
  *  This file is part of LoKi project:
  *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
@@ -57,26 +57,24 @@ namespace LoKi
   namespace Hlt1
   {
     // ========================================================================
-    /** @class ToParticles LoKi/ToParticles.h
-     *  Class to implement conversion of protos to particles in Hlt1
+    /** @class ToProtoParticles LoKi/ToProtoParticles.h
+     *  Class to implement conversion of tracks to protoparticles in Hlt1
      *  @author Matthew KENZIE matthew.kenzie@cern.ch
      *  @date   2014-11-27
      */
-    class GAUDI_API ToParticles
+    class GAUDI_API ToProtoParticles
       : public LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe
       , public LoKi::Hlt1::HelperTool
     {
       public:
         // ======================================================================
-        ///   constructor from pid hypothesis, name and LoKi basic functor
-        ToParticles
-          ( const std::string& pid          ,
-            const std::string& location     ,
-            const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&  cuts ) ;
+        ///   constructor with output name
+        ToProtoParticles
+          ( const std::string& location    ) ;
         /// virtual destructor
-        virtual ~ToParticles() ;
+        virtual ~ToProtoParticles() ;
         /// clone method ("virtual constructor")
-        virtual ToParticles* clone() const ;
+        virtual ToProtoParticles* clone() const ;
         /// the only essential method
         virtual result_type operator() ( argument a ) const ;
         /// nice printout
@@ -85,7 +83,7 @@ namespace LoKi
       private:
         // ======================================================================
         /// the default constructor is disabled
-        ToParticles();
+        ToProtoParticles();
         // ======================================================================
       public:
         /// the output selection
@@ -95,11 +93,6 @@ namespace LoKi
         // ======================================================================
         /// 'sink': the functor which register the selection in Hlt Data Svc
         LoKi::Hlt1::Sink          m_sink      ;
-        /// members which store pid hypoth and ptcut
-        const LHCb::ParticleProperty* m_pp ;
-        LoKi::FunctorFromFunctor<const LHCb::Particle*, bool> m_cut;
-        // user functions
-        const LHCb::State*        getState( const LHCb::Track* &track ) const;
         // ======================================================================
     };
     // ==========================================================================
@@ -108,25 +101,25 @@ namespace LoKi
   namespace Cuts
   {
     // ==========================================================================
-    /** @typedef TC_TOPARTICLES
+    /** @typedef TC_TOPROTOPARTICLES
      *  particle maker from tracks
      *
      *  @code
      *
-     *  " ... >> TC_TOPARTICLES ( 'K+', 'output', cuts ) >> ... "
+     *  " ... >> TC_TOPROTOPARTICLES ( '' ) >> ... "
      *
      *  @endcode
      *
      *  @see LHCb::Track
      *  @see LHCb::ProtoParticle
      *  @see LHCb::Particle
-     *  @see LoKi::Hlt1::ToProtoParticles
+     *  @see LoKi::Hlt1::ToParticles
      *  @see LoKi::Hlt1::Hlt1Combiner
      *
      *  @author Matthew KENZIE matthew.kenzie@cern.ch
      *  @date 2014-11-27
      */
-    typedef LoKi::Hlt1::ToParticles                              TC_TOPARTICLES ;
+    typedef LoKi::Hlt1::ToProtoParticles                    TC_TOPROTOPARTICLES ;
     // ==========================================================================
   } //                                                end of namespace LoKi::Cuts
   // ============================================================================
@@ -134,5 +127,6 @@ namespace LoKi
 // ==============================================================================
 //                                                                        The END
 // ==============================================================================
-#endif   // LOKI_TOPARTICLES_H
+#endif   // LOKI_TOPROTOPARTICLES_H
 // ==============================================================================
+
