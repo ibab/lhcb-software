@@ -39,9 +39,11 @@ public:
   
   ~StateThickMSCorrectionTool( ) override = default; ///< Destructor
   
+  virtual StatusCode initialize();
 private:
   // Job options
   double m_msff2;    ///< fudge factor for multiple scattering errors
+  double m_msff2MoliereFact2; ///< auxiliary variable, precomputed
   
 };
 #endif // TRACKTOOLS_STATETHICKMSCORRECTIONTOOL_H

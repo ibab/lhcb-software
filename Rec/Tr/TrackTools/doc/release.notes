@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-02-19 - Manuel Tobias Schiller
+ - speed up StateThickMSCorrectionTool by 10% by reordering and regrouping
+   calculations a bit, this shouldn't change the output significantly, as
+   there are no (new) approximations made beyond those that were already in
+
 ! 2015-02-18 - Manuel Tobias Schiller
  - speed up StateDetailedBetheBlochEnergyCorrectionTool by a factor two while
    preserving the output (in the sense that the returned correction should be

@@ -1,7 +1,12 @@
-// Include files 
+// Include files
 // ------------
+
+#include <cmath>
+#include <limits>
+#include <algorithm>
+
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 
 // from VDT
 #include "vdt/log.h"
@@ -38,7 +43,9 @@ DECLARE_TOOL_FACTORY( StateThickMSCorrectionTool )
 StateThickMSCorrectionTool::StateThickMSCorrectionTool( const std::string& type,
                                                         const std::string& name,
                                                         const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ),
+    // break things good and hard if initialize isn't called
+    m_msff2MoliereFact2(std::numeric_limits<double>::quiet_NaN())
 {
   declareInterface<IStateCorrectionTool>(this);
   declareProperty( "MSFudgeFactor2" , m_msff2 = 1.0 );
@@ -50,46 +57,61 @@ StateThickMSCorrectionTool::StateThickMSCorrectionTool( const std::string& type,
 void StateThickMSCorrectionTool::correctState( LHCb::State& state,
                                                const Material* material,
                                                double wallThickness,
-                                               bool upstream, 
+                                               bool upstream,
                                                LHCb::ParticleID  ) const
 {
-  const double tx2        = pow_2( state.tx() );
-  const double ty2        = pow_2( state.ty() );
-  const double norm2      = 1. + tx2 + ty2;
-  double scatLength = 0.;
-  double t          = wallThickness / material -> radiationLength();
-  if ( t > TrackParameters::lowTolerance ) {
-    double radThick = sqrt(norm2) * t;
-    scatLength = radThick * pow_2( TrackParameters::moliereFactor *
-                                   (1. + 0.038*vdt::fast_log(radThick)) );
-  }
+  const auto t = wallThickness / material->radiationLength();
+  // if t is below tolerance, all corrections end up zero anyway, so we can
+  // stop early (put UNLIKELY here because it'll influence what gcc inlines
+  // below, and we want gcc to think the rest of the code path is hot - and it
+  // is - and inline sqrt and vdt::fast_log)
+  if (UNLIKELY(t <= TrackParameters::lowTolerance)) return;
 
+  const auto& stv = state.stateVector(); // x, y, tx, ty, q/p
+  const auto norm2 = 1 + pow_2(stv[2]) + pow_2(stv[3]);
   // protect against zero momentum
-  const double p = std::max( state.p(), 1.0 * MeV );
-  const double norm2cnoise = norm2 * m_msff2 * scatLength / (p*p);
+  static constexpr decltype(stv[4]) iMeV = 1. / MeV;
+  const auto norm2cnoisetmp = norm2 * m_msff2MoliereFact2 *
+      pow_2(std::min(std::abs(stv[4]), iMeV));
 
-  // slope covariances
-  const double covTxTx = norm2cnoise * ( 1. + tx2 );
-  const double covTyTy = norm2cnoise * ( 1. + ty2 );
-  const double covTxTy = norm2cnoise * state.tx() * state.ty();
+  const auto radThick = t * std::sqrt(norm2);
+  // in a normal tracking run, for around 95% of cases, radThick is in the
+  // interval [1e-7, 1e-1] - that's the region where the log turns nasty
+  // because it decreases so rapidly, and it's not easily possible to
+  // approximate it in a quick and dirty way
+  //
+  // be FMA friendly
+  const auto norm2cnoise = norm2cnoisetmp *
+      pow_2(.038 * vdt::fast_log(radThick) + 1) * radThick;
 
-  // D - depends on whether up or downstream
-  const double D = (upstream) ? -0.5 : 0.5 ;
-
-  const double wallThickness2_3 = pow_2(wallThickness)/3.;
+  const auto covTxTx = norm2cnoise * (1 + pow_2(stv[2]));
+  const auto covTyTy = norm2cnoise * (1 + pow_2(stv[3]));
+  const auto covTxTy = norm2cnoise * stv[2] * stv[3];
+  const auto wallThicknessD = wallThickness * (upstream ? -.5 : .5);
+  static constexpr decltype(wallThickness) thirds = 1. / 3.;
+  const auto wallThickness2_3 = pow_2(wallThickness) * thirds;
 
   // update covariance matrix C = C + Q
   auto& cov = state.covariance();
-
-  cov(0,0) += covTxTx * wallThickness2_3 ;
-  cov(1,0) += covTxTy * wallThickness2_3 ;
-  cov(1,1) += covTyTy * wallThickness2_3 ;
-  cov(2,0) += covTxTx * wallThickness * D ;
-  cov(2,1) += covTxTy * wallThickness * D ;
-  cov(2,2) += covTxTx ;
-  cov(3,0) += covTxTy * wallThickness * D ;
-  cov(3,1) += covTyTy * wallThickness * D ;
-  cov(3,2) += covTxTy ;
-  cov(3,3) += covTyTy ;
+  cov(0, 0) += covTxTx * wallThickness2_3, // don't care about the order or
+  cov(1, 0) += covTxTy * wallThickness2_3, // update so use commata here,
+  cov(1, 1) += covTyTy * wallThickness2_3, // and let compiler decide
+  cov(2, 0) += covTxTx * wallThicknessD,
+  cov(2, 1) += covTxTy * wallThicknessD,
+  cov(2, 2) += covTxTx,
+  cov(3, 0) += covTxTy * wallThicknessD,
+  cov(3, 1) += covTyTy * wallThicknessD,
+  cov(3, 2) += covTxTy,
+  cov(3, 3) += covTyTy;
 }
 //=============================================================================
+
+StatusCode StateThickMSCorrectionTool::initialize()
+{
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()) return sc;
+  // move computation out of the hot code path
+  m_msff2MoliereFact2 = m_msff2 * pow_2(TrackParameters::moliereFactor);
+  return sc;
+}
+
