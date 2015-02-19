@@ -36,8 +36,8 @@ class Hlt2Conf(LHCbConfigurableUser):
     __slots__ = { "DataType"                   : '2010'    # datatype is one of 2009, MC09, DC06...
                 , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration
                 , "DefaultVoidFilter"          : ''
-                , "Hlt2ForwardMaxVelo"         : 1000
-                , "Hlt1TrackOption" : "Decode" #what to do with tracks from Hlt1?
+                , "Hlt2ForwardMaxVelo"         : 1000 # TODO: What is that doing here? Remove???
+                , "Hlt1TrackOption" : "Rerun" #For now we rerun the HLT1 reconstruction in HLT2 by default.
                 }
     #__known_hlt1trackoptions__ = ["Decode","Encode-Decode","Rerun","Copy"]
     __known_hlt1trackoptions__ = ["Decode","Rerun"]

@@ -185,6 +185,7 @@ class HltConf(LHCbConfigurableUser):
                    "HltTrackReportsDecoder"] :
             decoder = DecoderDB[n]
             decoder.setup().VetoObjects = [ loc for loc in decoder.listOutputs() ]
+
         #
         # dispatch Hlt1 configuration, don't do this if there are no HLT1 lines
         #
@@ -204,11 +205,13 @@ class HltConf(LHCbConfigurableUser):
             Hlt2Conf()
             self.setOtherProps(Hlt2Conf(),[ "DataType" ])
             Hlt2Conf().ThresholdSettings = ThresholdSettings
-            if not Hlt2Conf().isPropertySet('Hlt1TrackOption') :
-                Hlt2Conf().Hlt1TrackOption = "Rerun" if activehlt1lines else "Decode"
             if thresClass and hasattr( thresClass, 'Hlt2DefaultVoidFilter' ) :
                 Hlt2Conf().DefaultVoidFilter = getattr( thresClass, 'Hlt2DefaultVoidFilter' )
-          
+            # Never try to decode if we want to rerun the HLT1 tracking in HLT2.
+            if Hlt2Conf().getProp('Hlt1TrackOption') == "Rerun":
+                decoder = DecoderDB["HltTrackReportsDecoder"]
+                decoder.setup().Enable = False
+
         Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
                        , Members = [ Sequence('HltDecisionSequence')
                                    , Sequence('HltEndSequence')

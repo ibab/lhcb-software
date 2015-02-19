@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2015-02-19 - Sascha Stahl
+ - Disable TrackReportsDecoder in case the Hlt2Conf option Hlt1TrackingOption is set to Rerun.
+
 ! 2015-02-17 - Roel Aaij
  - Remove second loop tracking configurations.
  - Remove special tracking configurations for (lowPT) RICH protons.
