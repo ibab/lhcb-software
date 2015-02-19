@@ -12,10 +12,11 @@ find_package(Boost)
 find_package(GSL)
 find_package(ROOT COMPONENTS MathCore GenVector)
 find_package(VDT)
+find_package(Eigen)
 
 gaudi_install_headers(LHCbMath)
 #gaudi_install_headers(Eigen)
-install(DIRECTORY Eigen DESTINATION include)
+#install(DIRECTORY Eigen DESTINATION include)
 
 gaudi_add_library(LHCbMathLib
                   src/*.cpp
@@ -105,11 +106,11 @@ if(GAUDI_BUILD_TESTS)
                        LINK_LIBRARIES Boost GSL ROOT GaudiKernel LHCbMathLib)
   gaudi_add_executable(TestEigenGeometry   
                        tests/TestEigenGeometry.cpp
-                       INCLUDE_DIRS Boost GSL ROOT VDT
+                       INCLUDE_DIRS Boost GSL ROOT VDT Eigen
                        LINK_LIBRARIES Boost GSL ROOT VDT GaudiKernel LHCbMathLib)
   gaudi_add_executable(TestXYZTypes   
                        tests/TestXYZTypes.cpp
-                       INCLUDE_DIRS Boost GSL ROOT VDT
+                       INCLUDE_DIRS Boost GSL ROOT VDT Eigen
                        LINK_LIBRARIES Boost GSL ROOT VDT GaudiKernel LHCbMathLib)
 endif()
 

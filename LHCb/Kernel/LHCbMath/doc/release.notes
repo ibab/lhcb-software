@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-02-19 - Chris Jones
+ - Turn off the installation of the private Eigen headers.
+   Use the LCG version instead.
+
 ! 2015-02-18 - Vanya Belyaev
  - make flatte amplitude simpler 
 
