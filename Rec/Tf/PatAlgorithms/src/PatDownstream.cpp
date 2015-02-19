@@ -66,11 +66,10 @@ PatDownstream::PatDownstream( const std::string& name,
   declareProperty( "maxWindowSize" , m_maxWindow     = 10.0 * Gaudi::Units::mm );
   declareProperty( "MaxDistance"   , m_maxDistance   = 0.30 * Gaudi::Units::mm );
   declareProperty( "MaxChi2"       , m_maxChi2       = 20.        );
-  declareProperty( "errorZMagnet"  , m_errZMag       = 30. *  Gaudi::Units::mm );
   declareProperty( "minTTx"        , m_minTTx        = 35. *  Gaudi::Units::mm );
   declareProperty( "minTTy"        , m_minTTy        = 35. *  Gaudi::Units::mm );
   // Define parameters for MC09 field, zState = 9410
-  declareProperty( "zMagnetParams" , m_zMagnetParams  = { 5376.8,-3895.12,309.877,85527.9});
+  declareProperty( "zMagnetParams" , m_zMagnetParams  = {5372.13, -3702.66, 401.378, 109033, -0.0119398, -0.158909, 1668.42} );
   declareProperty( "momentumParams", m_momentumParams = {1148.65,961.786,5326.81});
   declareProperty( "yParams"       , m_yParams        = {5.,2000.});
 
@@ -226,7 +225,7 @@ StatusCode PatDownstream::execute() {
     
     if ( 0 <= m_seedKey && m_seedKey == tr->key() ) m_printing = true;
     
-    PatDownTrack track( tr, m_zTT, m_zMagnetParams, m_momentumParams, m_yParams, m_errZMag, magScaleFactor*(-1) );
+    PatDownTrack track( tr, m_zTT, m_zMagnetParams, m_momentumParams, m_yParams, magScaleFactor*(-1) );
     
     // -- Veto particles coming from the beam pipe.
     if( insideBeampipe( track ) ) continue;

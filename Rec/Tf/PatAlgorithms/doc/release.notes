@@ -4,6 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-02-19 - Michel De Cian
+ - Tuned uncertainty of point on magnetic plane in downstream tracking, change zMagnet parametrisation. 
+  Should slightly improve efficiency / ghost rate.
+
 ! 2015-02-16 - Manuel Tobias Schiller
  - Tested patch by Gerhard Raven which switches off the OT walk correction in
    the combinatorial stages of the Forward tracking to save even more time.

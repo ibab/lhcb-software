@@ -27,7 +27,6 @@ public:
                 const std::vector<double>& magnetParams,
                 const std::vector<double>& momentumParams,
                 const std::vector<double>& yParams,
-                const double errZMag,
                 const double magnetScale ); 
   
   virtual ~PatDownTrack( ) {} ///< Destructor
@@ -53,6 +52,7 @@ public:
     m_slopeX = slope;
     m_slopeXCand = slope;
   }
+  
   void setDisplX( const double displX ){ m_displX = displX; }
   void setDisplY( const double displY ){ m_displY = displY; }
   void setChi2( const double chi2 ){ m_chi2 = chi2; }

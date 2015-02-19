@@ -18,7 +18,6 @@ PatDownTrack::PatDownTrack( LHCb::Track* tr,
                             const std::vector<double>& magnetParams,
                             const std::vector<double>& momentumParams,
                             const std::vector<double>& yParams,
-                            const double errZMag,
                             const double magnetScale) :
   m_magPar(&magnetParams), 
   m_momPar(&momentumParams), 
@@ -29,22 +28,26 @@ PatDownTrack::PatDownTrack( LHCb::Track* tr,
   m_hits.reserve(8);
     
   // -- Number of IT hits
-  unsigned int nbIT = std::count_if( tr->lhcbIDs().begin(), tr->lhcbIDs().end(), 
-                                     [](const LHCb::LHCbID id){ return id.isIT();});
+  const unsigned int nbIT = std::count_if( tr->lhcbIDs().begin(), tr->lhcbIDs().end(), 
+                                           [](const LHCb::LHCbID id){ return id.isIT();});
   
   m_state = &tr->closestState( 10000. );
   
-  // -- Calculate the z position of the point in the magnet
-  const double zMagnet = 
-    (*m_magPar)[0] + 
-    (*m_magPar)[1] * m_state->ty() * m_state->ty() +
-    (*m_magPar)[2] * m_state->tx() * m_state->tx() + (*m_magPar)[3] / m_state->p();
-
+  // -- See KsFitParams to see how these coefficients are derived.
+  double zMagnet = magnetParams[0] + 
+    magnetParams[1] * m_state->ty() * m_state->ty() +  
+    magnetParams[2] * m_state->tx() * m_state->tx() +
+    magnetParams[3] * 1/m_state->p() +
+    magnetParams[4] * std::abs( m_state->x() ) +
+    magnetParams[5] * std::abs( m_state->y() ) +
+    magnetParams[6] * std::abs( m_state->ty() );
+  
   const double dz      = zMagnet - m_state->z();
   const double xMagnet = m_state->x() + dz * m_state->tx();
   m_slopeX       = xMagnet / zMagnet;
   
-  const double dSlope2 = (m_slopeX - m_state->tx())*(m_slopeX - m_state->tx());
+  const double dSlope = std::abs( m_slopeX - m_state->tx() );
+  const double dSlope2 = dSlope*dSlope;
 
   double by = m_state->y() / ( m_state->z() + 
                                ( yParams[0] * fabs(m_state->ty()) * zMagnet + yParams[1] )* dSlope2  );
@@ -55,10 +58,16 @@ PatDownTrack::PatDownTrack( LHCb::Track* tr,
   const double yMagnet = m_state->y() + dz * by - yParams[1] * by * dSlope2;
   m_magnet = Gaudi::XYZPoint( xMagnet, yMagnet, zMagnet );
   
-  // -- These numbers have to be revised...
-  m_errXMag = errZMag * std::abs( m_slopeX - m_state->tx() ) + 2.;
-  m_errYMag = 15.;
-  if ( 4 < nbIT ) m_errYMag = 4.;
+  // -- These resolutions are semi-empirical and are obtained by fitting residuals
+  // -- with MCHits and reconstructed tracks
+  // -- See Tracking &Alignment meeting, 19.2.2015.
+  if(nbIT > 3 ){
+    m_errXMag = dSlope * 30.0 + 0.5;
+    m_errYMag = dSlope * 18.0 + 1.5;
+  }else{
+    m_errXMag = dSlope2 * 15.0 + dSlope * 15.0 + 3.0;
+    m_errYMag = dSlope2 * 80.0 + dSlope * 10.0 + 4.0;
+  }
 
   //=== Save for reference
   m_magnetSave = m_magnet;

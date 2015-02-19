@@ -112,7 +112,6 @@ private:
   std::vector<double> m_zMagnetParams;
   std::vector<double> m_momentumParams;
   std::vector<double> m_yParams;
-  double m_errZMag;
   ILHCbMagnetSvc*     m_magFieldSvc; 
   
   double m_stateErrorX2;
