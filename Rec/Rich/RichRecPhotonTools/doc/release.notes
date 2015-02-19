@@ -6,7 +6,7 @@
 
 ! 2015-02-19 - Chris Jones
  - Turn off photon reconstruction check to reject gas photons where the
-   emmission point and first reflection points are on different detector sides.
+   emission point and first reflection points are on different detector sides.
 
 ! 2015-02-19 - Chris Jones
  - Use LCG version of Eigen.
