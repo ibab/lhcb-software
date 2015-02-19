@@ -4,6 +4,10 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2015-02-19 - Matthew Kenzie
+ - HltStage: allow ProtoParticle to be stored
+
+
 !========================= HltBase v15r5 2015-01-20 =========================
 
 ! 2015-01-10 - Gerhard Raven
@@ -32,7 +36,7 @@
 !========================= HltBase v15r1 2014-06-16 =========================
 
 ! 2014-06-06 - Gerhard Raven
- - HltAlgorithm: fix use after move 
+ - HltAlgorithm: fix use after move
  - C++11 updates..
 
 !========================= HltBase v15r0 2014-04-26 =========================
@@ -43,7 +47,7 @@
 ! 2014-04-21 - Gerhard Raven
  - change HltStage to use a variant (see https://savannah.cern.ch/task/?48822)
  - change Cache interface to use StringKey (see https://savannah.cern.ch/task/?48821)
- - clarify memory ownership in IHltUnit (and its implementations): use 
+ - clarify memory ownership in IHltUnit (and its implementations): use
    std::unique_ptr in interface where relevant
  - change locker from  SmartIF<INamedInterface> to const INamedInterface*
 
@@ -57,7 +61,7 @@
  - replace boost::tuple in SelectionContainer with std::tuple
 
 ! 2014-02-10 - Gerhard Raven
- - simplify SelectionContainer{1,2,3,4,5}  using C++11 
+ - simplify SelectionContainer{1,2,3,4,5}  using C++11
  - replace SelectionContainer{1,2,3,4,5} with a single variadic template
    called SelectionContinainer.
 
@@ -124,14 +128,14 @@
 !========================== HltBase v12r1p1 2011-06-24 ===================
 ! 2011-06-07 - Vanya Belyaev
 
- - fix ICC warninsg that affects Phys/LoKiTrigger 
+ - fix ICC warninsg that affects Phys/LoKiTrigger
 
 ! 2011-06-06 - Vanya Belyaev
 
  - fix few ICC warnings
 
- - cmt/requirements 
-    version increment v12r1p1 
+ - cmt/requirements
+    version increment v12r1p1
 
 !========================== HltBase v12r1 2011-03-06 ===================
 ! 2011-03-04 - Roel Aaij
@@ -149,27 +153,27 @@
  - remove unused interfaces: IFunctions, IFunctionFactory
 
 ! 2011-02-11 - Vanya Belyaev
- - add new interface 
-   Hlt::ITrack2CandidateMatch 
+ - add new interface
+   Hlt::ITrack2CandidateMatch
 
 !========================== HltBase v10r4 2011-02-07 ===================
 ! 2011-02-08 - Gerhard Raven
- - add SmartRef<Hlt::Stage> to Reflex dictionary 
+ - add SmartRef<Hlt::Stage> to Reflex dictionary
 
 ! 2011-02-07 - Vanya Belyaev
 
- - add SmartRefVector<Hlt::Stage> to Reflex dictionary 
+ - add SmartRefVector<Hlt::Stage> to Reflex dictionary
 
 ! 2011-02-03 - Vanya Belyaev
 
  - HltCandidate
 
-    add accessor method  suitable for python 
+    add accessor method  suitable for python
 
- - cmt/requirements 
+ - cmt/requirements
 
     version increment v10r4
- 
+
 !========================== HltBase v10r3 2011-01-30 ===================
 ! 2011-01-27 - Gerhard Raven
  - remove obsolete, unused code in HltUtils
@@ -178,36 +182,36 @@
 !========================== HltBase v10r2 2010-12-08 ===================
 ! 2010-12-07 - Vanya Belyaev
 
- - remove confusing branches in Hlt::Stage/Candidate  
+ - remove confusing branches in Hlt::Stage/Candidate
 
 ! 2010-12-06 - Vanya Belyaev
  - improve a little bit the handling of Hlt::Cache
-   add "VertexBase" as vizibel tyep for RecVertex 
+   add "VertexBase" as vizibel tyep for RecVertex
 
 
 ! 2010-11-30 - Vanya Belyaev
 
  - add functions to dictionary:
 
-     Hlt::HltUtils::impactParameter 
+     Hlt::HltUtils::impactParameter
      Hlt::HltUtils::impactParameterVector
      Hlt::HltUtils::impactParameterSignificance
-   
+
 
 ! 2010-11-22 - Vanya Belyaev
- - improve  a little bit the treatment of history 
+ - improve  a little bit the treatment of history
 
 ! 2010-11-18 - Vanya Belyaev
- - improve printout a little bit 
+ - improve printout a little bit
 
 ! 2010-11-17 - Vanya Belyaev
- - add printout utils 
+ - add printout utils
 
 ! 2010-10-26 - Vanya Belyaev
 
  - add few getters into HltCandidate to bypass stage...
 
- - cmt/requirements 
+ - cmt/requirements
     version increment v10r2
 
 !========================== HltBase v10r1 2010-09-08 ===================
@@ -215,7 +219,7 @@
  - remove setReco from the ITrackUpgrade interface
 
 ! 2010-08-30 - Alexander Mazurov
- - cmt/requirements 
+ - cmt/requirements
     update requirements to properly use GOD_NOALLOC
     version increment v10r1
 !========================== HltBase v10r0 2010-08-26 ===================
@@ -237,25 +241,25 @@
 ! 2010-08-05 - Vanya Belyaev
 
  - MultiTrack
-   more polishing 
+   more polishing
 
 ! 2010-08-02 - Vanya Belyaev
 
- - Hlt::Stage & Htl::Candidate 
-   more polishing 
+ - Hlt::Stage & Htl::Candidate
+   more polishing
 
 ! 2010-08-02 - Vanya Belyaev
 
  - Htl::Stage
 
-   add accessor to the history 
+   add accessor to the history
 
 ! 2010-08-01 - Vanya Belyaev
 
- - small polishing in Hlt::Stage 
+ - small polishing in Hlt::Stage
 
  - cmt/requirements
-    version increment to v9r2 
+    version increment to v9r2
 
 ! 2010-07-19 Sasha Mazurov
 
@@ -266,18 +270,18 @@
 
 ! 2010-07-19 - Vanya Belyaev
 
- - small reshullfling of lines in new event-classes 
+ - small reshullfling of lines in new event-classes
 
- - cmt/requirements 
+ - cmt/requirements
     version increment to v9r1p1
 
 !========================== HltBase v9r1 2010-07-14 ===================
 ! 2010-07-14 - Vanya Belyaev
 
- - Add new Hlt-Event-model by Sasha Mazurov 
+ - Add new Hlt-Event-model by Sasha Mazurov
 
- - cmt/requirements 
-    version increment to v9r1 
+ - cmt/requirements
+    version increment to v9r1
 
 
 !========================== HltBase v9r0p1 2010-06-06 ===================
@@ -291,7 +295,7 @@
 
 !========================== HltBase v8r2 2010-04-21 ===================
 ! 2010-04-16 - V. Gligorov
- - Commit helper functions to be used in the lifetime unbiased 
+ - Commit helper functions to be used in the lifetime unbiased
    hlt1 hadron lines, code written by U. Kerzel.
 
 !========================== HltBase v8r1p1 2010-03-28 ===================
@@ -315,9 +319,9 @@
  - remove unused 'book' call in HltAlgorithm
 
 ! 2010-01-06 - Johannes Albrecht
- - remove updateFiled function again .. not necessary 
+ - remove updateFiled function again .. not necessary
  - IL0ConfExtrapolator, ICaloSeedTool, IMuuonSeedTool:
-   add public function to update the B field with the 
+   add public function to update the B field with the
    Update manager service
 
 ! 2009-12-27 - Gerhard Raven
@@ -335,11 +339,11 @@
 
 !========================== HltBase v7r1 2009-11-30 ===================
 ! 2009-11-26 - Antonio Perez-Calero
- - Modified HltAlgorithm.h and HltHistogramUtilities.h/.cpp to allow for 
+ - Modified HltAlgorithm.h and HltHistogramUtilities.h/.cpp to allow for
    monitoring of number of candidates passing a given algorithm inside a line
 
 ! 2009-11-26 - Johanens Albrecht
- - HltBase.icpp: remove Assert in infoID and infoName methods 
+ - HltBase.icpp: remove Assert in infoID and infoName methods
 
 !========================== HltBase v7r0p2 2009-11-16 ===================
 ! 2009-11-16 - Patrick Koppenburg
@@ -379,13 +383,13 @@
 ! 2009-10-06 - Gerhard Raven
  - use the fact that LHCbIDs on tracks are now sorted
  - remove some unused code
- - re-use code from LHCbMath 
+ - re-use code from LHCbMath
  - consolidate code in HltAlgorithm
 
 !========================== HltBase v6r7 2009-08-31 =====================
 ! 2009-08-27 - Gerhard Raven
  - replace PropertyConfig::update by better named PropertyConfig::copyAndModify
-   as it does not touch the original instance... 
+   as it does not touch the original instance...
 
 !========================== HltBase v6r6 2009-08-11 =====================
 ! 2009-08-11 - Gerhard Raven
@@ -398,7 +402,7 @@
    needed
 !========================== HltBase v6r5 2009-07-03 ===================
 ! 2009-06-30 - Gerhard Raven
- - reduce IConfigTreeEditor interface (some functionality made obsolete 
+ - reduce IConfigTreeEditor interface (some functionality made obsolete
    by TCKUtils python code)
 
 !========================== HltBase v6r4p1 2009-06-03 ===================
@@ -416,13 +420,13 @@
  - fix cut+paste typo in IHltReferenceClockSvc
 
 ! 2009-04-08 - Wouter Hulsbergen
- - add IHltReferenceClockSvc, which provides a reference 'clock' for 
+ - add IHltReferenceClockSvc, which provides a reference 'clock' for
    triggers with a fixed rate
 
 !========================== HltBase v6r3 2009-04-08 ===================
 ! 2009-04-03 - Gerhard Raven
  - add some utilities which allow to set histogram binlabels
-   given an AIDA histogram. This is to put all code which 
+   given an AIDA histogram. This is to put all code which
    goes from AIDA to an (possible) underlying ROOT histogram
    in one place, so there is one clearly identified location
    for this, instead of spreading ROOT dependencies over many
@@ -432,18 +436,18 @@
 
  - HltBase/ITrackBiFunctionTool.h
 
-   remove duplicated definition of ITrackBifunctionTool class, 
+   remove duplicated definition of ITrackBifunctionTool class,
    replace it with #include "HltBase/IBiFunctionTool.h"
 
  - HltBase/IBiFunctionTool.h, src/IBiFunctionTool.cpp
 
-    add the unique interface IDs for I*BiFunctionTool interfaces 
-    and the virtual protected destructors 
+    add the unique interface IDs for I*BiFunctionTool interfaces
+    and the virtual protected destructors
 
- - cmt/requirements 
+ - cmt/requirements
 
-    version increment to v6r4 
- 
+    version increment to v6r4
+
 !========================== HltBase v6r2 2009-03-23 ===================
 ! 2009-02-25 - Gerhard Raven
  - remove HltSummaryHelper.h and IHltDecisionPredicateFactory.h
@@ -456,14 +460,14 @@
  - add IHltDataSvc and stringKey to python dict
 
 ! 2009-02-06 - Gerhard Raven
- - remove try/catch in HltAlgorithm::execute -- this is now done in HltLine 
+ - remove try/catch in HltAlgorithm::execute -- this is now done in HltLine
  - don't clean selection in HltAlgorithm -- this is already done in HltDataSvc
  - move accept counter in HltAlgorithm to avoid it being called twice per event
  - fix gcc4.3 warning
  - use XYZVector functionality to simplify deltaAngle
 
 ! 2009-01-24 - Antonio Perez-Calero
- - changed definition of deltaAngle in HltUtils.cpp (to the actual diff in angle 
+ - changed definition of deltaAngle in HltUtils.cpp (to the actual diff in angle
    between two tracks)
 
 ! 2009-01-21 - Gerhard Raven
@@ -477,7 +481,7 @@
 ! 2009-01-14 - Gerhard Raven
  - add const version of Hlt::Selection::down_cast
  - change IHltDataSvc::selection to return pointer instead of ref:
-    return 0 pointer if selection not present; this avoids having 
+    return 0 pointer if selection not present; this avoids having
     to first use 'hasSelection', and hence saves a lookup...
 
 ! 2009-01-13 - Gerhard Raven
@@ -499,10 +503,10 @@
  - streamline counter usage
  - remove unused HltMonitorAlgorithm, HltSequences
  - use standard StatEntity instead of Hlt::Counter
- - remove obsolete IHltSelectionCombinerFactory.h 
+ - remove obsolete IHltSelectionCombinerFactory.h
 
 ! 2008-12-11 - Vanya BELYAEV
- - IHltDataSvc :  IAlgorithm*  -> const IAlgorithm* 
+ - IHltDataSvc :  IAlgorithm*  -> const IAlgorithm*
 
 !========================== HltBase v5r5 2008-12-19 ===================
 
@@ -516,20 +520,20 @@
 
 ! 2008-11-18 - Vanya Belyaev
  - Hlt/HltSelection.h
-  
+
   Hlt::TSelection<TYPE>
-  expose the underlying container via the explicit method "vct" and 
+  expose the underlying container via the explicit method "vct" and
   impliict cast. (const only!)
 
 ! 2008-11-12 - Vanya BELYAEV
  - HltBase/ITrackUpgrade.h
 
-    1) add "const"-qualifier for input tracks in "upgrade" method 
-    2) increment the minor version of InterfaceID 
- 
+    1) add "const"-qualifier for input tracks in "upgrade" method
+    2) increment the minor version of InterfaceID
+
 ! 2008-11-12 - Vanya BELYAEV
 
- - minor modifications for stringKey and Hlt::Selection 
+ - minor modifications for stringKey and Hlt::Selection
 
 
 ! 2008-10-31 - Gerhard Raven
@@ -555,7 +559,7 @@
 
 !========================== HltBase v5r1 2008-08-28 ===================
 ! 2008-08-13 - Gerhard Raven
- - move TES callback for Selections from HltSelectionsContainer to 
+ - move TES callback for Selections from HltSelectionsContainer to
    HltAlgorithm
  - add (back) option to specify that not all input selections have to
    be positive in HltAlgorithm
@@ -574,8 +578,8 @@
    version and a runtype
 
 ! 2008-07-30 - Gerhard Raven
- - HltAlgorithm: move items not mandatory out of baseclass, and into 
-      HltSelectionContainer. Implementations can use the templates in 
+ - HltAlgorithm: move items not mandatory out of baseclass, and into
+      HltSelectionContainer. Implementations can use the templates in
       HltSelectionContainer when appropriate. Update HltAlgorithm to
       work together with HltSelectionContainer.
       Implement 'restart', default to printing out a warning, to be silenced
@@ -604,7 +608,7 @@
 
 !========================== HltBase v4r4 2008-07-09 ===================
 ! 2008-07-09 - Jose A. Hernando
- - ITrackUpgrade, ITrackConfirm, ITrackView: 
+ - ITrackUpgrade, ITrackConfirm, ITrackView:
       o adaptations to drawing in Panoramix
 
 ! 2008-07-08 - sandra Amato
@@ -613,14 +617,14 @@
 ! 2008-07-08 - Gerhard Raven
   - extend IPropertyConfigSvc interface with alias operations
   - add caching of digest of ConfigTreeNode, PropertyConfig
-  - use boost::operators to implement !=, <=,>=,> in terms of == and < in 
+  - use boost::operators to implement !=, <=,>=,> in terms of == and < in
      stringKey,PropertyConfig,ConfigTreeNode; add operator< in ConfigTreeNodeAlias
 
 ! 2008-07-04 - Gerhard Raven
- - EFunctions: 
+ - EFunctions:
       o use covariant return types on clone
       o use auto_ptr for memory managenemt
-      o write explicit copy-c'tor 
+      o write explicit copy-c'tor
       o binding is now against a container, instead of the
         containers value_type, so that we don't assume the
         container is a vector
@@ -664,7 +668,7 @@
  - remove unused HltConfigurationHelper
 
 ! 2008-06-20 - Gerhard Raven
- - add IHltDataSvc 
+ - add IHltDataSvc
 
 ! 2008-06-19 - Jose A. Hernando
  - extending ITrackUpgrade interface for drawing in Panoramix
@@ -700,7 +704,7 @@
    - adapt to m_monitor -> produceHistos()
    IANNSvc:
    - add some doxygen comments
-   ESequences: 
+   ESequences:
    - zen::map is identical to std::transform, replace usage by std::transform
    - implement zen::find in terms of std::find.
 
@@ -723,21 +727,21 @@
 
 ! 2008-05-15 - Gerhard Raven
    - HltAlgorithm: register algorithm with context service, so that an instance
-     request a 'bound' functor, the binding argument is obtained through the 
+     request a 'bound' functor, the binding argument is obtained through the
      'current' HltAlgorithm, so that one can determine the algorithm uses an
      additional input selection,use stringKey as OutputSelection property
    - move retrieveSelection from HltBase to HltAlgorithm for the above
    - move registerSelection from HltBase to HltAlgorithm: only algorithms
      will register. Also, always use the OutputSelection property as name
    - comment out unused variables to kill compiler warning about them
-   - registerSelection _always_ uses m_outputSelection, i.e. the OutputSelection 
+   - registerSelection _always_ uses m_outputSelection, i.e. the OutputSelection
      property as name to register.
-   - add stringKey class: behaves as integer, but uses (unexposed!) internal hash to 
+   - add stringKey class: behaves as integer, but uses (unexposed!) internal hash to
      speed up comparisons
    - use stringKey instead of strings to speed up searching maps, lists, etc.
    - add IANNSvc accessor to HltBase
    - use IANNSvc in getId, htlSelectionName, hltInfoName,
-   - in HltData, use strings instead of IDs, add 'clean' member to clean 
+   - in HltData, use strings instead of IDs, add 'clean' member to clean
      contained Selections
 
 !2008-05-11 - Gerhard Raven
@@ -776,20 +780,20 @@
 
 ! 2008-03-27 Johannes Albrecht
 	- add FwdHypothesis.h, ParabolaHypothesis.h:
-		helper classes to hold search window information for Tf decoding on demand 
+		helper classes to hold search window information for Tf decoding on demand
 	- add IL0ConfExtrapolator.h:
-		Interface to L0Confirmation helper tool: holds parameterizations for search 
+		Interface to L0Confirmation helper tool: holds parameterizations for search
 		windows and extrapolates track hypothesis to T-stations
 
 ! 2008-03-05 - Gerhard Raven
- - changes for ConfigTreeEditor + Configuration use in python 
+ - changes for ConfigTreeEditor + Configuration use in python
 
 !========================== HltBase v4r1 2008-03-07 ===================
 ! 2008-02-24 - Gerhard Raven
  - cosmetic changes to HltUtils
 
 ! 2008-02-19 - Gerhard Raven
- - strip md5 to a minimum, and merge md5.cpp and md5.h into MD5.cpp (better for 
+ - strip md5 to a minimum, and merge md5.cpp and md5.h into MD5.cpp (better for
     systems with case-insensensitive file systems...)
  - fix copy/paste error in EFunctions::logical_or::clone: it had new logical_and...
 
@@ -797,22 +801,22 @@
  - IHltConfSummary tool : must return const particles
 
 ! 2008-02-15 Gerhard Raven
-  - add IPropertyConfig interface for obtaining an configuration 'ID' given an 
-    INamedInterface instance, and to search in a configuration tree for the 'ID'  
+  - add IPropertyConfig interface for obtaining an configuration 'ID' given an
+    INamedInterface instance, and to search in a configuration tree for the 'ID'
     of an object specified either by their name, or their INamedInterface-ness
   - cosmetic changes to MD5 class
   - make sure that HltBase::create is called only once per algorithm/tool construction
   - some cosmetic changes to HltBase
 
 ! 2008-02-13 Gerhard Raven
-  - remove a 'const' qualifier on the templated function 'extend' in ESequences 
+  - remove a 'const' qualifier on the templated function 'extend' in ESequences
      as it forces an otherwise unneeded cast elsewhere...
 
 ! 2008-02-13 Gerhard Raven
  - split tree structure of configurations from the 'data' part;
-   add a 'label' field to the tree nodes which can be used to 
+   add a 'label' field to the tree nodes which can be used to
    give a human-readable description of a given 'branch' of the tree;
-   add a 'kind' field to the 'data' so it is now known whether a 
+   add a 'kind' field to the 'data' so it is now known whether a
    configuration is for a Service, Tool or Algorithm
    (warning: needs corresponding changes in HltCommon)
 
@@ -821,7 +825,7 @@
 
 ! 2008-02-11 Gerhard Raven
  - add .cvsignore file to cmt directory to ignore cmt generated files
- - factor invocation of actual MD5 digest computation out of PropertyConfig 
+ - factor invocation of actual MD5 digest computation out of PropertyConfig
    into seperate file & strip md5 computation to (almost) minimum required
    (warning: needs corresponding changes in HltCommon)
 
@@ -850,9 +854,9 @@
  - increment to v3r1
 
 ! 2008-01-22 Jose A. Hernando
-   HLT-clean, clean up 
+   HLT-clean, clean up
    - remove: HltBase/HltFunctions (to be in HltCommon)
-             HltBase/ITrackFunctionTool.h 
+             HltBase/ITrackFunctionTool.h
              src/HltMonitorAlgorithm.cpp
              src/HltSummaryHelper.cpp
    - add: HltBase/EAssertions.h (external code for assertions)
@@ -873,17 +877,17 @@
 
 ! 2007-12-07 Johannes Albrecht
 	 - IMuonSeedTool.h: Add interface to prepare tracks from muon coords
-	
+
 
 ! 2007-12-6 Jose A. Hernando
 	 - IPrepareMuonTSeedTool from Sandra for MuonSegment preparation
    - ITrackFunctionTool and ITrackBiFunctionTool to make Fuctions from GaudiTools using Tracks
    - HltUtils adding DoShareM3 and VertexMatchIDsFraction (to compute fraction of IDs between two vertices)
    - HltFunctions adding DoShareM3, VertexMatchIDsFraction and MuonIDDistance functions in factory
-   - HltFunctions.h add DimuonMass, VertexDimuonMass and VertexSumPT functions 
+   - HltFunctions.h add DimuonMass, VertexDimuonMass and VertexSumPT functions
 
 ! 2007-12-2 Jose A. Hernando
-   - HltFunctions.h add DimuonMass, VertexDimuonMass and VertexSumPT functions 
+   - HltFunctions.h add DimuonMass, VertexDimuonMass and VertexSumPT functions
 
 ! 2007-11-28 Gerhard Raven
    - HltAlgorithm.h: use 0 instead of NULL, check strings for empty instead of ""
@@ -894,7 +898,7 @@
 
 ! 2007-11-19 Gerhard Raven
    - EDictionary: use boost::any to avoid dynamic_cast altogether
-   - HltFunctions: sort by pt: explicitly compare keys if-and-only-if 
+   - HltFunctions: sort by pt: explicitly compare keys if-and-only-if
        pt is equal instead of adding key*epsilon to the pt.-
    - HltConfigurationHelper: remove spurious cast to int
    - HltUtils: reduce the number of temporary objects generated
@@ -908,33 +912,33 @@
       in case dynamic_cast fails (it shouldn't, but it's good to be defensive &
       paranoid)
 
-! 2007-11-14 Jose A. Hernando 
+! 2007-11-14 Jose A. Hernando
 	 - replace the Pat containers in the base clases
    - removing any dependence with Pat.
 
 !========================== HltBase v2r7 2007-10-28 ===================
-! 2007-10-12 Jose A. Hernando 
-   - deleting delete from destructors (problems slc4_amd64_gcc34 -Gaudi) 
+! 2007-10-12 Jose A. Hernando
+   - deleting delete from destructors (problems slc4_amd64_gcc34 -Gaudi)
    - HltAlgorithm: using HltDataSvc from DataSvc
 
-! 2007-10-11 Jose A. Hernando 
+! 2007-10-11 Jose A. Hernando
    - HltAlgorithm: do not delete m_outputHolder if it is NULL
 
 !========================== HltBase v2r6 2007-09-23 ===================
 ! 2007-09-20 Tomasz Skwarnicki
   - HltAlgorith : add special flag m_consider1
 
-! 2007-08-17 Jose A. Hernando 
+! 2007-08-17 Jose A. Hernando
   - HltFunctions: adding function to check for L0Candidate flag
-  - IHltConfSummaryTool: extra functionality (filters, type, and particles)	
+  - IHltConfSummaryTool: extra functionality (filters, type, and particles)
   - HltUtils missing namespace for some functions
-          
-! 2007-08-01 Jose A. Hernando 
-  - IHltFunctionFactory: add setSmart() 
+
+! 2007-08-01 Jose A. Hernando
+  - IHltFunctionFactory: add setSmart()
   - HltAlgorithm : special flag m_consider2, to consider or not inputs from tracks2
   - HltTrackMatchUpgrade: interface tool to match 2 tracks and make a new one
 
-! 2007-08-01 Jose A. Hernando 
+! 2007-08-01 Jose A. Hernando
   - HltFunctions: adding function to get key of best match in binder function
     EFunctions: repare bug in binder function
 
@@ -942,8 +946,8 @@
 ! 2007-07-31 Gabriel Guerrer
   - HltUtils: added get3x3CellIDs, get2x2CellIDs and matchCellIDs
 
-! 2007-07-27 Jose A. Hernando 
-  - adding method has<> in HltSummaryHelper header for Tomasz 
+! 2007-07-27 Jose A. Hernando
+  - adding method has<> in HltSummaryHelper header for Tomasz
 
 ! 2007-07-12 A. Satta
   - add a variable in match velo T ( for Sandra Amato)
@@ -953,7 +957,7 @@
   - src/HltAlgorithm.cpp: adding configuration type for Tracks and Vertices
 
 ! 2007-07-04 Johannes Albrecht
-	- HltBase/ICaloSeedTool.h	
+	- HltBase/ICaloSeedTool.h
 			first release of new tool: creates track at Calo from L0Cand
 	- HltBase/IMuonSeedTool.h
 			first release of new tool: creates track at M2 from L0Cand
@@ -969,15 +973,15 @@
   - HltBase/EParser : A parser of string
   - HltConfigurationHelper: functors to use the HltConfiguration
   - HltSummaryHelper : functors to use the HltSummary
-  - HltBase/HltTypes (updating types) 
+  - HltBase/HltTypes (updating types)
   - (removing ParseDescriptor, moved to EParser)
-  - HltBase/HltBaseAlg (cleaning the logic of set decision) 
-  - HltBase/HltAlgorithm (ordering methods, methods to retrieve and register selection containers from data summary, removing conection with TES report-summary)  - IConfHltSummaryTool (incrementing methods to deal "human like" the summary and the configuration)  
+  - HltBase/HltBaseAlg (cleaning the logic of set decision)
+  - HltBase/HltAlgorithm (ordering methods, methods to retrieve and register selection containers from data summary, removing conection with TES report-summary)  - IConfHltSummaryTool (incrementing methods to deal "human like" the summary and the configuration)
 
 ! 2007-06-19 - Jose A. Hernando
  - HltBase/HltTypes (define types for Hlt)
- - HltBase/IL0Value (to get easy access to L0 values, i.e EtTotal)	
- - HltBase/ITrackUpgrade (interface to do the tracking)	
+ - HltBase/IL0Value (to get easy access to L0 values, i.e EtTotal)
+ - HltBase/ITrackUpgrade (interface to do the tracking)
  - HltBase/ITrackMatch (interface to do the track matching)
  - HltBase/IHltFunctionFactory (interface for the Hlt alleys function factory)
  - removing HltContainers.h
@@ -987,7 +991,7 @@
 
 !========================== HltBase v2r4 2007-06-18 ===================
 ! 2007-05-22 - Alessia Satta
- - Modify interfaces IPrepareMuonTSeed.h 
+ - Modify interfaces IPrepareMuonTSeed.h
 
 !========================= Hlt/HltBase v2r3 2007-03-16 =======================
 ! 2007-03-16 - Marco Cattaneo
@@ -1010,7 +1014,7 @@
 
 ! 2007-02-08 - Jose Angel Hernando Morata
  - src/HltAlgorithm.cpp: small modifications with summary and Force type
- - src/HltMonitorAlgorithm : 
+ - src/HltMonitorAlgorithm :
 	    only deals with summary and not with Hlt tracks
       methods to deal with the summary
  - HltBase/IHltSummaryTool
@@ -1050,7 +1054,7 @@
 
 ! 2006-10-23 - Jose A. Hernando
 	- HltBase/HltMonitorAlgorithm : base class to monitor from HltSummary
-  - HltBase/ERelations : helper class to keep relations 
+  - HltBase/ERelations : helper class to keep relations
 
 !========================== Hlt/HltBase v1r0 2006-09-26 ======================
 
@@ -1066,7 +1070,7 @@
  - HltBase/HltUtils.h: common c-functions used in HLT
  - HltBase/HltFunctions.h : common functions used in HLT
  - HltBase/HltSequences.h : common loop in containers in HLT
- - HltBase/EFunctions.h: template funtions (a la LoKi)	
+ - HltBase/EFunctions.h: template funtions (a la LoKi)
  - HltBase/ESequences.h: template loops in containers (a la LoKi)
  - HltBase/ParserDescriptor.h : helper class to parser a string option
 

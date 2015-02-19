@@ -410,7 +410,7 @@ class GAUDI_API Stage : public ContainedObject
     //
     void _lock( const INamedInterface* locker );
     void _unlock( const INamedInterface* locker );
-    void _checkLock() const 
+    void _checkLock() const
     {
         if ( UNLIKELY( !locked() ) ) {
             throw GaudiException( "Not locked", "Stage::_checkLock",
@@ -604,6 +604,7 @@ template void Hlt::Stage::set(const LHCb::Track*) ;
 template void Hlt::Stage::set(const LHCb::RecVertex*) ;
 template void Hlt::Stage::set(const Hlt::MultiTrack*) ;
 template void Hlt::Stage::set(const LHCb::Particle*) ;
+template void Hlt::Stage::set(const LHCb::ProtoParticle*) ;
 template void Hlt::Stage::set(const Hlt::Stage*) ;
 
 // ==========================================================================
