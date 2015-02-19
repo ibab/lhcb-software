@@ -197,6 +197,10 @@ void OTTrackMonitor::bookHists(int index, const std::string& prefix)
                          -3000, 3000, 20, -3000, 3000, 20);
   histRT[index] = book2D(prefix + "rt", "drifttime versus unbiased distance",
                          -cellRadius, cellRadius, 50, -25, 75, 50);
+  hists[index][HIST_GOOD_DRIFTTIME_RESIDUAL] = book(prefix +
+                                                    "drifttimeresidualgood",
+                                                    "drifttime residual (rms unbiased, good tracks)",
+                                                    -20, 20);
   
   if(!m_isOnline){
     hists[index][HIST_DRIFTRADIUS] = book(prefix + "driftradius", "driftradius", 0, 5);
@@ -208,10 +212,6 @@ void OTTrackMonitor::bookHists(int index, const std::string& prefix)
     hists[index][HIST_GOOD_DRIFTTIME] = book(prefix + "drifttimegood", "drifttime (good tracks)", -25, 75);
     hists[index][HIST_GOOD_DRIFTRADIUS] = book(prefix + "driftradiusgood", "driftradius (good tracks)", 0, 5);
     hists[index][HIST_GOOD_TRACK_DISTANCE] = book(prefix + "trkdistgood", "unbiased distance (good tracks)", -5, 5);
-    hists[index][HIST_GOOD_DRIFTTIME_RESIDUAL] = book(prefix +
-                                                      "drifttimeresidualgood",
-                                                      "drifttime residual (rms unbiased, good tracks)",
-                                                      -20, 20);
     hists[index][HIST_GOOD_RESIDUAL] = book(prefix + "residualgood", "residual (rms unbiased, good tracks)", -2, 2);
     hists[index][HIST_GOOD_RESIDUAL_PULL] = book(prefix + "residualpullgood", "residual pull (good tracks)", -5, 5);
     
