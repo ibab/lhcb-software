@@ -17,6 +17,27 @@ class TestRunViewPlots(unittest.TestCase):
         self.th1 = th1
 
         th2 = ROOT.TH2F('test_th2f', 'Test TH2F;Foo;Bar', 2, 0, 1, 2, 0, 1)
+        # x underflow values
+        th2.SetBinContent(th2.GetBin(0, 1), 1)
+        th2.SetBinContent(th2.GetBin(0, 2), 2)
+        # x overflow values
+        th2.SetBinContent(th2.GetBin(3, 1), 3)
+        th2.SetBinContent(th2.GetBin(3, 2), 4)
+        # y underflow values
+        th2.SetBinContent(th2.GetBin(1, 0), 5)
+        th2.SetBinContent(th2.GetBin(2, 0), 6)
+        # y overflow values
+        th2.SetBinContent(th2.GetBin(1, 3), 7)
+        th2.SetBinContent(th2.GetBin(2, 3), 8)
+        # x/y underflow
+        th2.SetBinContent(th2.GetBin(0, 0), 9)
+        # x underflow y overflow
+        th2.SetBinContent(th2.GetBin(0, 3), 10)
+        # x/y overflow
+        th2.SetBinContent(th2.GetBin(3, 3), 11)
+        # x overflow y underflow
+        th2.SetBinContent(th2.GetBin(3, 0), 12)
+        # Central bin values
         th2.SetBinContent(th2.GetBin(1, 1), 4)
         th2.SetBinContent(th2.GetBin(1, 2), 9)
         th2.SetBinContent(th2.GetBin(2, 1), 4)
@@ -118,8 +139,13 @@ class TestRunViewPlots(unittest.TestCase):
             xbinning=[(0.0, 0.5), (0.5, 1.0)],
             ybinning=[(0.0, 0.5), (0.5, 1.0)],
             values=[[4.0, 9.0], [4.0, 1.0]],
+            xunderflow=(1 + 2 + 9 + 10),
+            yunderflow=(5 + 6 + 9 + 12),
+            xoverflow=(3 + 4 + 11 + 12),
+            yoverflow=(7 + 8 + 10 + 11),
             axis_titles=('Foo', 'Bar')
         )
+        self.maxDiff = None
         self.assertEqual(rep, exp)
 
 

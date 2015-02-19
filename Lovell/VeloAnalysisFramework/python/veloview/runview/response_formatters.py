@@ -103,6 +103,10 @@ def th2_formatter(th2):
     Keyword arguments:
     th2 -- ROOT.TH1 object or a that of deriving class (like TProfile2D)
     """
+    def contents(th2, i, j):
+        """Return the contents of the ith-jth bin of the TH2."""
+        return th2.GetBinContent(th2.GetBin(i, j))
+
     xaxis = th2.GetXaxis()
     yaxis = th2.GetYaxis()
     axis_titles = (xaxis.GetTitle(), yaxis.GetTitle())
@@ -117,9 +121,16 @@ def th2_formatter(th2):
         for i in range(1, nbinsy + 1)
     ]
     values = [
-        [th2.GetBinContent(th2.GetBin(x, y)) for y in range(1, nbinsy + 1)]
+        [contents(th2, x, y) for y in range(1, nbinsy + 1)]
         for x in range(1, nbinsx + 1)
     ]
+
+    # Compute the integrated under and overflows for each axis
+    # An NxN 2D histogram has an (N + 2)x(N + 2) "ring" of over/underflow bins
+    xunderflow = sum([contents(th2, 0, y) for y in range(nbinsy + 2)])
+    yunderflow = sum([contents(th2, x, 0) for x in range(nbinsx + 2)])
+    xoverflow = sum([contents(th2, nbinsx + 1, y) for y in range(nbinsy + 2)])
+    yoverflow = sum([contents(th2, x, nbinsy + 1) for x in range(nbinsx + 2)])
 
     # Histogram 'metadata'
     entries = th2.GetEntries()
@@ -133,5 +144,9 @@ def th2_formatter(th2):
         xbinning=xbins,
         ybinning=ybins,
         values=values,
+        xunderflow=xunderflow,
+        yunderflow=yunderflow,
+        xoverflow=xoverflow,
+        yoverflow=yoverflow,
         axis_titles=axis_titles
     )
