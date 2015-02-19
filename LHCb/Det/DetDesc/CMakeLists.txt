@@ -5,7 +5,8 @@ gaudi_subdir(DetDesc v18r35)
 
 gaudi_depends_on_subdirs(GaudiKernel
                          GaudiUtils
-                         Kernel/LHCbMath)
+                         Kernel/LHCbMath
+                         Kernel/VectorClass)
 
 find_package(ROOT COMPONENTS MathCore GenVector)
 

@@ -3,6 +3,10 @@
 ! package manager : Marco Clemencic
 ! =====================================================================
 
+! 2015-02-19 - Chris Jones
+ - New vectorised implementation of MagneticFieldGrid based on the
+   VectorClass package.
+
 ! 2015-02-06 - Chris Jones
  - Add new a new data member to MagneticFieldGrid to cache the inverse of
    the step sizes. Allows the replacement of all divisons by multiplications
