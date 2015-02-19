@@ -28,6 +28,12 @@ public:
 
   /** consider this the beginning of a new event */
   virtual StatusCode beginEvent() = 0;
+
+  /** reveal the variable names for a track type */
+  virtual std::vector<std::string> variableNames(LHCb::Track::Types type) const = 0;
+
+  /** reveal the variable values for a track */
+  virtual std::vector<float> netInputs(LHCb::Track& aTrack) const = 0;
 };
                                                                                 
 #endif
