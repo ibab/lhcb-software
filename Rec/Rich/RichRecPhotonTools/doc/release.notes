@@ -4,6 +4,9 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-02-20 - Marco Clemencic
+ - fixed the name of the LCG_Interfaces/eigen package
+
 ! 2015-02-19 - Chris Jones
  - Turn off photon reconstruction check to reject gas photons where the
    emission point and first reflection points are on different detector sides.

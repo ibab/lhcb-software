@@ -22,7 +22,7 @@ use VectorClass      v*   Kernel
 use GaudiKernel      v*
 use Boost            v*   LCG_Interfaces
 use GSL              v*   LCG_Interfaces
-use Eigen            v*   LCG_Interfaces
+use eigen            v*   LCG_Interfaces
 
 include_path      none
 private
