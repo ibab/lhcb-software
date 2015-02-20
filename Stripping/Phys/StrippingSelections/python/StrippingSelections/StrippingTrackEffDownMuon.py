@@ -20,8 +20,6 @@ __all__ = ('StrippingTrackEffDownMuonConf',
 	   'selMuonPParts',
            'makeMyMuons',
            'DownJPsi',
-           'DownZ',
-           'DownUpsilon',
            'selHlt1Jpsi',
            'selHlt2Jpsi',
            'trackingDownPreFilter'
@@ -54,7 +52,7 @@ from StandardParticles import StdAllLooseMuons
 from Configurables import GaudiSequencer
 from Configurables import TrackToDST
 from Configurables import TrackSys
-from Configurables import PatSeeding, PatSeedingTool, PatDownstream
+from Configurables import PatSeeding, PatDownstream
 from PhysSelPython.Wrappers import AutomaticData
 # Get the fitters
 from TrackFitter.ConfiguredFitters import ConfiguredFit, ConfiguredFitSeed, ConfiguredFitDownstream
@@ -72,40 +70,22 @@ default_config = {
     'CONFIG'      : { 
 				'MuMom':		2000.	# MeV
 			,	'MuTMom':		200.	# MeV
-			,	'ZMuMom':		0.	# MeV
-			,	'ZMuTMom':		20000.	# MeV
-			,	'UpsilonMuMom':		0.	# MeV
-			,	'UpsilonMuTMom':	500.	# MeV
-			,	'ZMuMinEta':		2.	# adimensional
-			,	'ZMuMaxEta':		4.5	# adimensional
 			,	'TrChi2':		10.	# MeV
 			,	'MassPreComb':		2000.	# MeV
 			,	'MassPostComb':		200.	# MeV
-			,	'ZMassPreComb':		100000.	# MeV
-			,	'ZMassPostComb':	1500.	# MeV
-			,	'UpsilonMassPreComb':	100000.	# MeV
-			,	'UpsilonMassPostComb':	00.	# MeV
 			,	'Doca':			5.	# mm
 			,	'VertChi2':		25.	# adimensional
-			,	'SeedingMinP':		1500.	# MeV
                 	,       'DataType':             '2011'  # for ConfiguredMuonIDs configuration
-			,	'NominalLinePrescale':  1. # proposal: 0.2 to stay below 0.15% retention rate 
+			,	'NominalLinePrescale':  0.2 # proposal: 0.2 to stay below 0.15% retention rate 
 			,	'NominalLinePostscale': 1.
 			,	'ValidationLinePrescale':0.0015 #0.5 in stripping15: 0.1 gives 1.42% retention rate , ValidationLine further prescaled
 			,	'ValidationLinePostscale': 1.
-			,	'ZLinePrescale':  1. # proposal: 0.2 to stay below 0.15% retention rate 
-			,	'ZLinePostscale':  1.  
-			,	'UpsilonLinePrescale':  1. # proposal: 0.2 to stay below 0.15% retention rate 
-			,	'UpsilonLinePostscale':  1.  
 			,	'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPL0Decision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
-			,	'ZHLT1TisTosSpecs': { "Hlt1SingleMuonHighPTDecision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
-			,	'UpsilonHLT1TisTosSpecs': { "Hlt1SingleMuonHighPTDecision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
 			,	'HLT1PassOnAll': True
-			,	'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0, "Hlt2TrackEffDownstream.*Decision%TOS" : 0 } #reg. expression allowed
-			,	'UpsilonHLT2TisTosSpecs': { "Hlt2SingleMuonLowPTDecision%TOS" : 0} #reg. expression allowed
+			,	'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0} #reg. expression allowed
 			,	'HLT2PassOnAll': False
                     },
-    'STREAMS'     : { 'Calibration' : ['StrippingTrackEffDownMuonNominalLine','StrippingTrackEffDownMuonValidationLine','StrippingTrackEffDownMuonZLine','StrippingTrackEffDownMuonUpsilonLine']}
+    'STREAMS'     : { 'Calibration' : ['StrippingTrackEffDownMuonNominalLine','StrippingTrackEffDownMuonValidationLine']}
     }
 
 
@@ -117,93 +97,46 @@ class StrippingTrackEffDownMuonConf(LineBuilder):
     __configuration_keys__ = (
 		    		'MuMom',
 				'MuTMom',
-		    		'ZMuMom',
-		    		'ZMuTMom',
-		    		'UpsilonMuMom',
-		    		'UpsilonMuTMom',
-		    		'ZMuMinEta',
-		    		'ZMuMaxEta',
 				'TrChi2',
 				'MassPreComb',
 				'MassPostComb',
-				'ZMassPreComb',
-				'ZMassPostComb',
-				'UpsilonMassPreComb',
-				'UpsilonMassPostComb',
 				'Doca',
 				'VertChi2',
-				'SeedingMinP',
 				'DataType',
                               	'NominalLinePrescale',
                               	'NominalLinePostscale',
                               	'ValidationLinePrescale',
                               	'ValidationLinePostscale',
-                              	'ZLinePrescale',
-                              	'ZLinePostscale',
-                              	'UpsilonLinePrescale',
-                              	'UpsilonLinePostscale',
 				'HLT1TisTosSpecs',
-				'ZHLT1TisTosSpecs',
-				'UpsilonHLT1TisTosSpecs',
 		   	        'HLT1PassOnAll',
 				'HLT2TisTosSpecs',
-				'ZHLT2TisTosSpecs',
-				'UpsilonHLT2TisTosSpecs',
 				'HLT2PassOnAll'
                               )
 				
 
     def __init__(self, name, config) :
 
-          LineBuilder.__init__(self, name, config)
-          
-          nominal_name = name + 'Nominal'
-          valid_name = name + 'Validation'
-          Z_name = name + 'Z'
-          Upsilon_name = name + 'Upsilon'
-          
-          self.TisTosPreFilter1Jpsi = selHlt1Jpsi('TisTosFilter1Jpsi'+name, HLT1TisTosSpecs = config['HLT1TisTosSpecs'], HLT1PassOnAll = config['HLT1PassOnAll'])
-          self.TisTosPreFilter2Jpsi = selHlt2Jpsi('TisTosFilter2Jpsi'+name, hlt1Filter = self.TisTosPreFilter1Jpsi, HLT2TisTosSpecs = config['HLT2TisTosSpecs'], HLT2PassOnAll = config['HLT2PassOnAll'])
-          
-          self.TisTosPreFilter1Z = selHlt1Jpsi('TisTosFilter1Z'+name, HLT1TisTosSpecs = config['ZHLT1TisTosSpecs'], HLT1PassOnAll = config['HLT1PassOnAll'])
-          self.TisTosPreFilter2Z = selHlt2Jpsi('TisTosFilter2Z'+name, hlt1Filter = self.TisTosPreFilter1Z, HLT2TisTosSpecs = config['ZHLT2TisTosSpecs'], HLT2PassOnAll = config['HLT2PassOnAll'])
-          
-          self.TisTosPreFilter1Upsilon = selHlt1Jpsi('TisTosFilter1Upsilon'+name, HLT1TisTosSpecs = config['UpsilonHLT1TisTosSpecs'], HLT1PassOnAll = config['HLT1PassOnAll'])
-          self.TisTosPreFilter2Upsilon = selHlt2Jpsi('TisTosFilter2Upsilon'+name, hlt1Filter = self.TisTosPreFilter1Upsilon, HLT2TisTosSpecs = config['UpsilonHLT2TisTosSpecs'], HLT2PassOnAll = config['HLT2PassOnAll'])
-          
-          self.TrackingPreFilter = trackingDownPreFilter(nominal_name, self.TisTosPreFilter2Jpsi, config['SeedingMinP'])
-          self.DownMuProtoPFilter = selMuonPParts(nominal_name, config['DataType'], self.TrackingPreFilter)
-          self.DownMuPFilter = makeMyMuons(nominal_name, self.DownMuProtoPFilter)
-          self.DownJpsiFilter = DownJPsi( 'DownJpsiSel'+nominal_name, self.DownMuPFilter, config['TrChi2'], 
-          		config['MuTMom'], config['MuMom'], config['MassPreComb'], config['Doca'], 
-          		config['MassPostComb'], config['VertChi2'] )
-          
-          self.ZTrackingPreFilter = trackingDownPreFilter( Z_name, self.TisTosPreFilter2Z, config['SeedingMinP'])
-          self.ZDownMuProtoPFilter = selMuonPParts(Z_name, config['DataType'], self.ZTrackingPreFilter)
-          self.ZDownMuPFilter = makeMyMuons(Z_name, self.ZDownMuProtoPFilter)
-          self.DownZFilter = DownZ( 'DownSel'+Z_name, self.ZDownMuPFilter,  
-          		config['ZMuMom'], config['ZMuTMom'], config['ZMuMinEta'], config['ZMuMaxEta'], 
-          		config['ZMassPreComb'], config['ZMassPostComb'], )
-          
-          self.UpsilonTrackingPreFilter = trackingDownPreFilter( Upsilon_name, self.TisTosPreFilter2Upsilon, config['SeedingMinP'])
-          self.UpsilonDownMuProtoPFilter = selMuonPParts(Upsilon_name, config['DataType'], self.UpsilonTrackingPreFilter)
-          self.UpsilonDownMuPFilter = makeMyMuons(Upsilon_name, self.UpsilonDownMuProtoPFilter)
-          self.DownUpsilonFilter = DownUpsilon( 'DownSel'+Upsilon_name, self.UpsilonDownMuPFilter,  
-          		config['UpsilonMuMom'], config['UpsilonMuTMom'], 
-          		config['UpsilonMassPreComb'], config['UpsilonMassPostComb'], )
-          
-          self.nominal_line =  StrippingLine(nominal_name + 'Line',  prescale = config['NominalLinePrescale'], postscale = config['NominalLinePostscale'], algos=[self.DownJpsiFilter])
-          
-          self.valid_line = StrippingLine(valid_name + 'Line', prescale = config['ValidationLinePrescale'], postscale = config['ValidationLinePostscale'], algos=[self.TisTosPreFilter2Jpsi])
-          
-          self.Z_line =  StrippingLine(Z_name + 'Line',  prescale = config['ZLinePrescale'], postscale = config['ZLinePostscale'], algos=[self.DownZFilter])
-          
-          self.Upsilon_line =  StrippingLine(Upsilon_name + 'Line',  prescale = config['UpsilonLinePrescale'], postscale = config['UpsilonLinePostscale'], algos=[self.DownUpsilonFilter])
-          
-          self.registerLine(self.nominal_line)
-          self.registerLine(self.valid_line)
-          self.registerLine(self.Z_line)
-          self.registerLine(self.Upsilon_line)
+        LineBuilder.__init__(self, name, config)
+	
+        nominal_name = name + 'Nominal'
+        valid_name = name + 'Validation'
+        
+        self.TisTosPreFilter1Jpsi = selHlt1Jpsi('TisTosFilter1Jpsi'+name, HLT1TisTosSpecs = config['HLT1TisTosSpecs'], HLT1PassOnAll = config['HLT1PassOnAll'])
+        self.TisTosPreFilter2Jpsi = selHlt2Jpsi('TisTosFilter2Jpsi'+name, hlt1Filter = self.TisTosPreFilter1Jpsi, HLT2TisTosSpecs = config['HLT2TisTosSpecs'], HLT2PassOnAll = config['HLT2PassOnAll'])
+        
+        self.TrackingPreFilter = trackingDownPreFilter('TrackingPreFilter' + nominal_name, self.TisTosPreFilter2Jpsi)
+        self.DownMuProtoPFilter = selMuonPParts('DownMuon'+nominal_name, config['DataType'], self.TrackingPreFilter)
+        self.DownMuPFilter = makeMyMuons('DownMuon'+nominal_name, self.DownMuProtoPFilter)
+        self.DownJpsiFilter = DownJPsi( 'DownJpsiSel'+nominal_name, self.DownMuPFilter, config['TrChi2'], 
+        		config['MuTMom'], config['MuMom'], config['MassPreComb'], config['Doca'], 
+        		config['MassPostComb'], config['VertChi2'] )
+        
+        self.nominal_line =  StrippingLine(nominal_name + 'Line',  prescale = config['NominalLinePrescale'], postscale = config['NominalLinePostscale'], algos=[self.DownJpsiFilter])
+        
+        self.valid_line = StrippingLine(valid_name + 'Line', prescale = config['ValidationLinePrescale'], postscale = config['ValidationLinePostscale'], algos=[self.TisTosPreFilter2Jpsi])
+        
+        self.registerLine(self.nominal_line)
+        self.registerLine(self.valid_line)
 
 # ########################################################################################
 # Make the protoparticles
@@ -213,20 +146,20 @@ def selMuonPParts(name, DataType, downstreamSeq):
        Make ProtoParticles out of Downstream tracks
    """
    unpacker = UnpackTrack(name+"UnpackTrack")  # do we need this or is it here for historical reason ?
-   unpacker.InputName="pRec/"+name+"_Downstream/FittedTracks"
-   unpacker.OutputName="Rec/"+name+"_Downstream/FittedTracks"
+   unpacker.InputName="pRec/Downstream/FittedTracks"
+   unpacker.OutputName="Rec/Downstream/FittedTracks"
 
    idalg = MuonIDAlg(name+"IDalg")
    cm=ConfiguredMuonIDs.ConfiguredMuonIDs( DataType ) #data=DaVinci().getProp("DataType"))
    cm.configureMuonIDAlg(idalg)
-   idalg.TrackLocation = "Rec/"+name+"_Downstream/FittedTracks"
-   idalg.MuonIDLocation = "Rec/"+name+"_Muon/DownstreamMuonPID"
-   idalg.MuonTrackLocation = "Rec/"+name+"_Track/MuonForDownstream" # I would call it FromDownstream
+   idalg.TrackLocation = "Rec/Downstream/FittedTracks"
+   idalg.MuonIDLocation = "Rec/Muon/DownstreamMuonPID"
+   idalg.MuonTrackLocation = "Rec/Track/MuonForDownstream" # I would call it FromDownstream
 
    downprotoseq = GaudiSequencer(name+"ProtoPSeq")
    downprotos = ChargedProtoParticleMaker(name+"ProtoPMaker")
-   downprotos.Inputs = ["Rec/"+name+"_Downstream/FittedTracks"]
-   downprotos.Output = "Rec/ProtoP/"+name+"_ProtoPMaker/ProtoParticles"
+   downprotos.Inputs = ["Rec/Downstream/FittedTracks"]
+   downprotos.Output = "Rec/ProtoP/"+name+"ProtoPMaker/ProtoParticles"
    downprotos.addTool( DelegatingTrackSelector, name="TrackSelector" )
    #tracktypes = [ "Long","Upstream","Downstream","Ttrack","Velo","VeloR" ] # only downstream needed 
    tracktypes = ["Downstream"]
@@ -243,11 +176,11 @@ def selMuonPParts(name, DataType, downstreamSeq):
    	ts.MaxChi2Cut = 10
 
    addmuonpid = ChargedProtoParticleAddMuonInfo(name+"addmuoninfo")
-   addmuonpid.InputMuonPIDLocation = "Rec/"+name+"_Muon/DownstreamMuonPID"
-   addmuonpid.ProtoParticleLocation = "Rec/ProtoP/"+name+"_ProtoPMaker/ProtoParticles"
+   addmuonpid.InputMuonPIDLocation = "Rec/Muon/DownstreamMuonPID"
+   addmuonpid.ProtoParticleLocation = "Rec/ProtoP/"+name+"ProtoPMaker/ProtoParticles"
    #addmuonpid.OutputLevel = 0
    combinedll = ChargedProtoCombineDLLsAlg(name+"CombineDLL")
-   combinedll.ProtoParticleLocation = "Rec/ProtoP/"+name+"_ProtoPMaker/ProtoParticles"
+   combinedll.ProtoParticleLocation = "Rec/ProtoP/"+name+"ProtoPMaker/ProtoParticles"
    #combinedll.OutputLevel = 0
    # DST post treatment
    #TrackToDST(name+"TrackToDST").TracksInContainer = "Rec/Downstream/Tracks"
@@ -255,14 +188,14 @@ def selMuonPParts(name, DataType, downstreamSeq):
    downprotoseq.Members += [ downprotos, addmuonpid, combinedll ]
 #        
    DataOnDemandSvc().AlgMap.update( {
-                "/Event/Rec/"+name+"_Downstream/Tracks" : unpacker.getFullName(),
-                "/Event/Rec/"+name+"_Muon/DownstreamMuonPID" : idalg.getFullName(),
+                "/Event/Rec/Downstream/Tracks" : unpacker.getFullName(),
+                "/Event/Rec/Muon/DownstreamMuonPID" : idalg.getFullName(),
 #                "/Event/Rec/ProtoP/"+name+"ProtoPMaker" : downprotoseq.getFullName()
 		} )
 
    return GSWrapper(name="WrappedDownMuonProtoPSeqFor"+name,
                     sequencer=downprotoseq,
-                    output='Rec/ProtoP/' + name +'_ProtoPMaker/ProtoParticles',
+                    output='Rec/ProtoP/' + name +'ProtoPMaker/ProtoParticles',
                     requiredSelections = [ downstreamSeq])
    #     return Selection(name+"_SelPParts", Algorithm = MuonTTPParts, OutputBranch="Rec/ProtoP", Extension="ProtoParticles",RequiredSelections=[downstreamSeq], InputDataSetter=None)
 
@@ -274,7 +207,7 @@ def makeMyMuons(name, protoParticlesMaker):
    particleMaker.addTool(ProtoParticleMUONFilter,name="muon")
    particleMaker.muon.Selection = ["RequiresDet='MUON' IsMuonLoose=True"]
    particleMaker.Particles = [ "muon" ]
-   particleMaker.Input = "Rec/ProtoP/"+name+"_ProtoPMaker/ProtoParticles"
+   particleMaker.Input = "Rec/ProtoP/"+name+"ProtoPMaker/ProtoParticles"
    #particleMaker.OutputLevel = 0
 
    DataOnDemandSvc().AlgMap.update( {
@@ -306,48 +239,6 @@ def DownJPsi( name,
 
    return Selection ( name,
                       Algorithm = _MyDownJpsis,
-                      RequiredSelections = [protoPartSel])
- 
-#########################################################################################
-def DownZ( name,
-		protoPartSel,
-		MuMom,
-		MuTMom,
-		MuMinEta,
-		MuMaxEta,
-		MassPreComb,
-		MassPostComb) :
-   #self.makeMyMuons("DownMuonsForTrackEff", "Downstream")
-   
-   _MuCuts =  "((ETA < %(MuMaxEta)s*MeV) & (ETA > %(MuMinEta)s*MeV) & (P > %(MuMom)s*MeV) & (PT > %(MuTMom)s*MeV) )" % locals()
-   _CombinationCuts = "((ADAMASS('Z0') < %(MassPreComb)s * MeV))" % locals()
-   _MotherCuts = "((ADMASS('Z0') < %(MassPostComb)s * MeV))" % locals()
-   
-   _MyDownZ = CombineParticles( DecayDescriptor = "Z0 -> mu+ mu-" ,
-   DaughtersCuts = { "mu+": _MuCuts,  "mu-": _MuCuts }, CombinationCut = _CombinationCuts, MotherCut = _MotherCuts)
-
-   return Selection ( name,
-                      Algorithm = _MyDownZ,
-                      RequiredSelections = [protoPartSel])
- 
-#########################################################################################
-def DownUpsilon( name,
-		protoPartSel,
-		MuMom,
-		MuTMom,
-		MassPreComb,
-		MassPostComb) :
-   #self.makeMyMuons("DownMuonsForTrackEff", "Downstream")
-   
-   _MuCuts =  "( (P > %(MuMom)s*MeV) & (PT > %(MuTMom)s*MeV) )" % locals()
-   _CombinationCuts = "((ADAMASS('Z0') < %(MassPreComb)s * MeV))" % locals()
-   _MotherCuts = "((ADMASS('Upsilon(1S)') < %(MassPostComb)s * MeV))" % locals()
-   
-   _MyDownZ = CombineParticles( DecayDescriptor = "Upsilon(1S) -> mu+ mu-" ,
-   DaughtersCuts = { "mu+": _MuCuts,  "mu-": _MuCuts }, CombinationCut = _CombinationCuts, MotherCut = _MotherCuts)
-
-   return Selection ( name,
-                      Algorithm = _MyDownZ,
                       RequiredSelections = [protoPartSel])
  
 #########################################################################################
@@ -394,7 +285,7 @@ def selHlt2Jpsi(name, hlt1Filter, HLT2TisTosSpecs, HLT2PassOnAll):
 ##########################################################
         
 
-def trackingDownPreFilter(name, prefilter, seedcut):
+def trackingDownPreFilter(name, prefilter):
     #Test code for debugging
     #Jpsi_already_there = LoKi__VoidFilter("Jpsi_already_there")
     #Jpsi_already_there.Code = "1 <= CONTAINS('Rec/Track/Downstream')"
@@ -402,39 +293,32 @@ def trackingDownPreFilter(name, prefilter, seedcut):
     #Jpsi_not_yet_there = LoKi__VoidFilter("Jpsi_not_yet_there")
     #Jpsi_not_yet_there.Code = "1 > CONTAINS('Rec/Track/Downstream')"
 
-    TrackToDST(name+"_DownTrackToDST").TracksInContainer = "Rec/"+name+"_Downstream/FittedTracks"
+    TrackToDST("DownTrackToDST").TracksInContainer = "Rec/Downstream/FittedTracks"
 
     jpsidotracking=GaudiSequencer("DownTrackingFor" + name)
     
     #Add seed tracking
-    DownSeeding = PatSeeding(name+"_DownSeeding")
-    DownSeeding.OutputTracksName = "Rec/"+name+"_DownSeeding/Tracks" 
+    jpsidotracking.Members += [PatSeeding("PatSeeding")]
     PatAlgConf.SeedingConf().configureAlg()
-    #DownSeeding.addTool(PatSeedingTool, name=name+"_PatSeedingTool")
-    DownSeeding.addTool(PatSeedingTool)
-    DownSeeding.PatSeedingTool.MinMomentum = seedcut
-
-    jpsidotracking.Members += [DownSeeding]
     #Add Seed Fit
-    jpsidotracking.Members += [GaudiSequencer(name+"_TrackSeedFitSeq")]
+    jpsidotracking.Members += [GaudiSequencer("TrackSeedFitSeq")]
     #AddPatDownstream
-    downstreamTracking = PatDownstream(name+"_PatDownstream")
-    downstreamTracking.InputLocation = DownSeeding.OutputTracksName
-    downstreamTracking.OutputLocation = 'Rec/'+name+'_Downstream/Tracks'
+    downstreamTracking = PatDownstream()
+    downstreamTracking.OutputLocation = 'Rec/Downstream/Tracks'
     jpsidotracking.Members += [ downstreamTracking ];
     #AddDownstreamFitSeq
-    jpsidotracking.Members += [TrackStateInitAlg(name+"_InitSeedDownstream")]
-    TrackStateInitAlg("InitSeedDownstream").TrackLocation = "Rec/"+name+"_Downstream/Tracks"
-    downstreamFit = ConfiguredFitDownstream(name+"_FitDownstream")
-    downstreamFit.TracksInContainer = 'Rec/'+name+'_Downstream/Tracks'
-    downstreamFit.TracksOutContainer = 'Rec/'+name+'_Downstream/FittedTracks'
+    jpsidotracking.Members += [TrackStateInitAlg("InitSeedDownstream")]
+    TrackStateInitAlg("InitSeedDownstream").TrackLocation = "Rec/Downstream/Tracks"
+    downstreamFit = ConfiguredFitDownstream()
+    downstreamFit.TracksInContainer = 'Rec/Downstream/Tracks'
+    downstreamFit.TracksOutContainer = 'Rec/Downstream/FittedTracks'
     jpsidotracking.Members += [downstreamFit]
-    jpsidotracking.Members += [TrackToDST(name+"_DownTrackToDST")]
+    jpsidotracking.Members += [TrackToDST("DownTrackToDST")]
 
 
-    return GSWrapper(name="WrappedDownstreamTracking"+name,
+    return GSWrapper(name="WrappedDownstreamTracking",
                      sequencer=jpsidotracking,
-                     output='Rec/'+name+'_Downstream/FittedTracks',
+                     output='Rec/Downstream/FittedTracks',
                      requiredSelections = [ prefilter])
 
 
