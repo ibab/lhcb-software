@@ -59,9 +59,10 @@ m_bankTypeString(""){
  
  declareProperty( "rawEventLocation",  m_rawEventLocation = "", 
                   "DEPRECATED. Use RawEventLocations instead" );
- declareProperty( "RawEventLocations", m_rawEventLocations={LHCb::RawEventLocation::Other,LHCb::RawEventLocation::Default},
+ declareProperty( "RawEventLocations", m_rawEventLocations=
+     {LHCb::RawEventLocation::Tracker,LHCb::RawEventLocation::Other,LHCb::RawEventLocation::Default},
                   "List of possible locations of the RawEvent object in the"
-                  " transient store. By default it is LHCb::RawEventLocation::Other,"
+                  " transient store. By default it is LHCb::RawEventLocation::Tracker,LHCb::RawEventLocation::Other,"
                   " LHCb::RawEventLocation::Default.");
  declareProperty("forcedVersion", m_forcedVersion = STDAQ::inValidVersion);
  declareProperty("checkValidity", m_checkValidSpill = true);
