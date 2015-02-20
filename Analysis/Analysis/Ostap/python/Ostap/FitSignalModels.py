@@ -40,7 +40,8 @@ Empricial PDFs to describe narrow peaks
   - Bukin,
   - Student-T
   - bifurcated Student-T
-
+  - SinhAsinh_pdf   
+  
 PDF to describe ``wide'' peaks
 
   - BreitWigner
@@ -77,7 +78,8 @@ __all__ = (
     'SkewGauss_pdf'          , ## skewed gaussian
     'Bukin_pdf'              , ## generic Bukin PDF: skewed gaussian with exponential tails     
     'StudentT_pdf'           , ## Student-T function 
-    'BifurcatedStudentT_pdf' , ## bifurcated Student-T function 
+    'BifurcatedStudentT_pdf' , ## bifurcated Student-T function
+    'SinhAsinh_pdf'          , ## "Sinh-arcsinh distributions". Biometrika 96 (4): 761
     #
     ## pdfs for "wide" peaks, to be used with care - phase space corrections are large!
     # 
@@ -893,6 +895,82 @@ class BifurcatedStudentT_pdf(MASS) :
             self.nL     ,
             self.nR     ) 
         
+# =============================================================================
+## @class SinhAsinh_pdf
+#  
+#  @see Gaudi::Math::SinhAsinh
+#  @see Analysis::Models::SinhAsinh
+#  Jones, M. C.; Pewsey, A. (2009). 
+#  "Sinh-arcsinh distributions". Biometrika 96 (4): 761. 
+#   doi:10.1093/biomet/asp053
+#   http://oro.open.ac.uk/22510
+#
+#   Location & scale  parameters are the 
+#   dsual representation of the family of 
+#   distributions 
+#    - \f$\epsilon\f$ parameter control the skewness 
+#    - \f$\delta\f$   parameter control the kurtosis 
+#   Normal distribution reappears as \f$\epsilon=0\f$ and \f$\delta=1\f$ 
+#  The heavy tails correspond to \f$\delta<1\f$, 
+#  light tails correpond to \f$\delta>1\f$
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-08-02
+class SinhAsinh_pdf(MSSS) :
+    """
+    Jones, M. C.; Pewsey, A. (2009). 
+    ``Sinh-arcsinh distributions''. Biometrika 96 (4): 761. 
+    doi:10.1093/biomet/asp053
+    http://oro.open.ac.uk/22510
+    
+    Location & scale  parameters are the 
+    dsual representation of the family of 
+    distributions 
+    - \f$\epsilon\f$ parameter control the skewness 
+    - \f$\delta\f$   parameter control the kurtosis 
+    Normal distribution reappears as \f$\epsilon=0\f$ and \f$\delta=1\f$ 
+    The heavy tails correspond to \f$\delta<1\f$, 
+    light tails correpond to \f$\delta>1\f$
+    """
+    def __init__ ( self             ,
+                   name             ,
+                   mn        = None , 
+                   mx        = None , 
+                   mass      = None ,
+                   mean      = None , ## mu 
+                   sigma     = None ,
+                   epsilon   = 0    ,
+                   delta     = 1    ) :
+
+        #
+        ## initialize the base
+        # 
+        MASS.__init__  ( self    , name  ,
+                         mn      , mx    , mass    ,
+                         mean    , sigma )
+
+        self.mu      = self.mean
+        self.epsilon = makeVar ( epsilon ,
+                                 'epsilon_%s'   % name ,
+                                 '#epsilon(%s)' % name , epsilon ,
+                                 0 , -1000 , +1000 )
+        self.delta   = makeVar ( delta ,
+                                 'delta_%s'   % name ,
+                                 '#delta(%s)' % name , delta ,
+                                 1 , 1.e-6 , 1000   )
+        
+        #
+        ## finally build pdf
+        # 
+        self.pdf = cpp.Analysis.Models.ASingAsinh (
+            "sinhaT_"        + name ,
+            "SinhAsinh(%s)" % name ,
+            self.mass      ,
+            self.mean      ,
+            self.sigma     ,
+            self.epsilpon  ,
+            self.delta     ) 
+
 # =============================================================================
 ## @class Voigt_pdf
 #  Voigt-pdf distribution

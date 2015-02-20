@@ -40,7 +40,9 @@ Empricial PDFs to describe narrow peaks :
   - Bukin,
   - Student-T
   - bifurcated Student-T
+  - sinh-asinh shape
 
+  
 PDF to describe ``wide'' peaks : 
 
   - BreitWigner
@@ -82,6 +84,7 @@ __all__ = (
     'Bukin_pdf'              , ## generic Bukin PDF: skewed gaussian with exponential tails     
     'StudentT_pdf'           , ## Student-T function 
     'BifurcatedStudentT_pdf' , ## bifurcated Student-T function 
+    'SinhAsinh_pdf'          , ## "Sinh-arcsinh distributions". Biometrika 96 (4): 761
     #
     ## specializations:
     # 
