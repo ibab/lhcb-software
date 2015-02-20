@@ -5,6 +5,10 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-02-20 - Sean Benson
+ - Add first cuts for ConvPhotons.
+ - Required new TrackFittedBasicParticle for downstream electrons.
+
 ! 2015-02-17 - Roel Aaij
  - Remove second loop particles
  - Remove special tracking configurations for (lowPT) RICH protons.
