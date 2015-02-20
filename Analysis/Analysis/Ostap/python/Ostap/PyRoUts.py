@@ -2081,7 +2081,7 @@ def _h1_pow_ ( h1 , val ) :
 ## 'abs' the histograms 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2012-04-29
-def _h1_abs_ ( h1 , val ) :
+def _h1_abs_ ( h1 ) :
     """
     ``abs'' the histogram
 
@@ -2875,7 +2875,7 @@ def _h2_pow_ ( h1 , val ) :
     return result 
 
 # =============================================================================
-## 'abs' the histograms 
+## 'abs' th histograms 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_abs_ ( h1 ) :
@@ -3286,7 +3286,7 @@ def _h3_abs_ ( h1 ) :
     #
     for ix1,iy1,iz1,x1,y1,z1,v1 in h1.iteritems() :
         #
-        result.SetBinContent ( ix1 , iy1 , iz1 ,  0 ) 
+        result.SetBinContent ( ix1 , iy1 , iz1 , 0 ) 
         result.SetBinError   ( ix1 , iy1 , iz1 , 0 )
         #
         v = abs  ( v1 ) 
