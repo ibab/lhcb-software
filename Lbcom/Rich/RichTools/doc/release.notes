@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2015-02-20 - Marco Clemencic
+ - fixed the name of the LCG_Interfaces/eigen package
+
 ! 2015-02-19 - Chris Jones
  - Use LCG version of Eigen.
 
