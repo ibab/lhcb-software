@@ -207,9 +207,9 @@ class RichRecSysConf(RichConfigurableUser):
             from TrackFitter.ConfiguredFitters import ConfiguredFit
             from Configurables import TrackStateInitAlg
             tracksLoc = self.trackConfig().getProp("InputTracksLocation")
-            sequence.Members += [ TrackStateInitAlg( name = "InitBestTrackStates",
+            sequence.Members += [ TrackStateInitAlg( name = "InitRichTrackStates",
                                                      TrackLocation = tracksLoc ),
-                                  ConfiguredFit("RefitBestTracks",tracksLoc) ]  
+                                  ConfiguredFit("RefitRichTracks",tracksLoc) ]  
 
         #-----------------------------------------------------------------------------
         # Initialisation
