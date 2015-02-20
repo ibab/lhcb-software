@@ -5,6 +5,21 @@
  */
 #ifndef SIMDCHI2FIT_H
 #define SIMDCHI2FIT_H
+
+namespace std {
+    // force gcc and friends to inline inner_product aggressively
+#if defined(__GNUC__)
+    template <class InputIt1, class InputIt2, class T>
+    T inner_product(InputIt1 first1, InputIt1 last1,
+	    InputIt2 first2, T value) __attribute__((
+		    hot,
+		    optimize("-ffast-math", "-ftree-vectorize",
+		       	"-fvect-cost-model", "-ftree-slp-vectorize",
+		       	"-ftree-vect-loop-version", "-funroll-all-loops"),
+		    always_inline));
+#endif
+}
+
 #include <cmath>
 #include <array>
 #include <cassert>
@@ -259,7 +274,7 @@ template <class COMMONPOLICY> struct HitUpdater : public COMMONPOLICY
 /// - how many times to iterate the fit before giving up
 ///
 /// @note At "-O2", the auto-vectorisation needs to be triggered with compiler
-/// flags "-ffast-math -ftree-vectorize"; of course, the more CPU features (SSE,
+/// flags "-ffast-math -ftree-vectorize", "-fvect-cost-model"; of course, the more CPU features (SSE,
 /// SSE2, SSE3, SSE4, AVX, ...) you allow the compiler to take advantage of, the
 /// better it gets.
 ///
@@ -572,7 +587,7 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 	 * 			hits to be fitted
 	 */
 	template<class RC>
-	SIMDChi2Fit(track_type& track, RC& rangeOrContainer) :
+	SIMDChi2Fit(track_type& track, RC& rangeOrContainer) noexcept :
 	    m_status(doFit(track, rangeOrContainer))
 	{ }
 
@@ -592,7 +607,7 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 	 * @returns true if the fit converged and the hit has at least as many
 	 * data points as degrees of freedom
 	 */
-	operator bool() const
+	operator bool() const noexcept
 	{
 	    return (1 == nIterMax) ? (UpdateAccepted <= m_status) :
 		(FitConverged <= m_status);
@@ -603,13 +618,13 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 	 * @returns true if the fit converged and the hit has at least as many
 	 * data points as degrees of freedom
 	 */
-	bool ok() const { return *this; }
+	bool ok() const noexcept { return *this; }
 
 	/** @brief return status of last fit
 	 *
 	 * @returns status of last fit
 	 */
-	FitStatus status() const { return m_status; }
+	FitStatus status() const noexcept { return m_status; }
 
 	/** @brief return number of degrees of freedom
 	 *
@@ -619,7 +634,7 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 	 * parameters, so it can be negative if you try to fit too many
 	 * parameters.
 	 */
-	int ndf() const { return m_ndf; }
+	int ndf() const noexcept { return m_ndf; }
 
 	/** @brief calculate @f$\chi^2@f$ contribution of a hit
 	 *
@@ -635,14 +650,13 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 	 * @note Hits for which MeasurementProvider().valid(hit) is false are
 	 * skipped.
 	 */
-	value_type chi2(const track_type& track, const hit_type& hit) const
-	{
-	    if (UNLIKELY(!MeasurementProvider().valid(hit))) return value_type(0);
-	    const value_type wproj = MeasurementProjector().wproj(track, hit);
-	    const value_type wmeas =
-		MeasurementProvider().wmeas(hit, track, MeasurementProjector());
-	    return (wmeas - wproj) * (wmeas - wproj);
-	}
+	value_type chi2(const track_type& track, const hit_type& hit) const noexcept
+#if defined(__GNUC__)
+	    // force gcc and friends to optimise aggressively
+	    __attribute__((optimize("-ffast-math", "-ftree-vectorize", "-fvect-cost-model", "-ftree-slp-vectorize", "-ftree-vect-loop-version"), flatten));
+#else
+	    ;
+#endif
 
 	/** @brief calculate @f$\chi^2@f$ contribution of a range of hits
 	 *
@@ -661,7 +675,7 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 	 * skipped.
 	 */
 	template <class IT>
-	value_type chi2(const track_type& track, const IT& begin, const IT& end) const
+	value_type chi2(const track_type& track, const IT& begin, const IT& end) const noexcept
 	{
 	    static_assert(std::is_convertible<
 		    decltype(*begin), const hit_type&>::value,
@@ -688,7 +702,7 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 	 * skipped.
 	 */
 	template <class C>
-	value_type chi2(const track_type& track, const C& containerOrRange) const
+	value_type chi2(const track_type& track, const C& containerOrRange) const noexcept
 	{ return chi2(track,
 		std::begin(containerOrRange), std::end(containerOrRange)); }
 
@@ -703,7 +717,7 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 	 * Use this routine to repeat the computations done in the constructor.
 	 */
 	template<class RC>
-	FitStatus refit(track_type& track, RC& rangeOrContainer)
+	FitStatus refit(track_type& track, RC& rangeOrContainer) noexcept
 	{ return (m_status = doFit(track, rangeOrContainer)); }
 
 	/** @brief refit a track to the hits given in rangeOrContainer
@@ -717,7 +731,7 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 	 * Use this routine to repeat the computations done in the constructor.
 	 */
 	template<class IT>
-	FitStatus refit(track_type& track, IT&& begin, IT&& end)
+	FitStatus refit(track_type& track, IT&& begin, IT&& end) noexcept
 	{ return refit(track, as_range(std::forward(begin), std::forward(end))); }
 
 	/** @brief add a single hit to inverse covariance matrix and right hand side
@@ -750,7 +764,7 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 	 * }
 	 * @endcode
 	 */
-	void addHit(track_type& track, const hit_type& hit)
+	void addHit(track_type& track, const hit_type& hit) noexcept
 	{ ++m_ndf; doAddRemoveHit(track, hit, +1); }
 
 	/** @brief add a single hit to inverse covariance matrix and right hand side
@@ -783,7 +797,7 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 	 * }
 	 * @endcode
 	 */
-	void removeHit(track_type& track, const hit_type& hit)
+	void removeHit(track_type& track, const hit_type& hit) noexcept
 	{ --m_ndf; doAddRemoveHit(track, hit, -1); }
 	
 	/** @brief refit after adding/removing single hits
@@ -817,7 +831,7 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 	 * }
 	 * @endcode
 	 */
-	FitStatus refit(track_type& track)
+	FitStatus refit(track_type& track) noexcept
 	{ return (m_status = solveAndUpdate(track)); }
 
 	/** @brief return the covariance matrix of the last fit
@@ -831,7 +845,7 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 	 */
 	template<class T>
 	bool cov(typename std::enable_if<
-		deferredCovariance, T>::type& cov) const
+		deferredCovariance, T>::type& cov) const noexcept
 	{
 	    // check if we have a deferred covariance calculation stored
 	    if (m_deferredCovarianceInitialised && ok()) {
@@ -845,7 +859,7 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 
     private:
 	/// fill m_icov and m_rhs with initial values
-	void reset(const track_type& track)
+	void reset(const track_type& track) noexcept
 	{
 	    m_icov = MeasurementProjector().seedICov(track);
 	    m_rhs = MeasurementProjector().seedRhs(track);
@@ -856,17 +870,17 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 
 	/// helper to implement addHit and removeHit
 	void doAddRemoveHit(track_type& track, const hit_type& hit,
-		value_type w)
+		value_type w) noexcept
 	{
 	    const value_type wproj = MeasurementProjector().wproj(track, hit);
 	    const value_type wgrad = MeasurementProjector().wgrad(track, hit);
 	    const value_type wmeas =
 		MeasurementProvider().wmeas(hit, track, MeasurementProjector());
-	    for (unsigned i = 0, idx = 0; i != nDim; ++i) {
+	    for (unsigned i = 0, idx = 0; LIKELY(i != nDim); ++i) {
 		// update m_rhs
 		m_rhs[i] += w * wgrad[i] * (wmeas - wproj);
 		// update m_icov
-		for (unsigned j = 0; j <= i; ++j, ++idx) {
+		for (unsigned j = 0; LIKELY(j <= i); ++j, ++idx) {
 		    m_icov[idx] += w * wgrad[i] * wgrad[j];
 		}
 	    }
@@ -875,89 +889,44 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 	/// helper to add hits to fit - autovectorisable
 	void accumulate(unsigned iHitMax,
 		const std::array<std::array<value_type, nHitsMax>, nDim>& wgrads,
-		const std::array<value_type, nHitsMax>& wmeass)
-	{
-	    for (unsigned i = 0, idx = 0; i != nDim; ++i) {
-		// update m_rhs
-		// vectorises
-		m_rhs[i] = std::inner_product(
-			&wgrads[i][0], &wgrads[i][iHitMax],
-			&wmeass[0], m_rhs[i]);
-		// update m_icov
-		for (unsigned j = 0; j <= i; ++j, ++idx) {
-		    // vectorises
-		    m_icov[idx] = std::inner_product(
-			&wgrads[i][0], &wgrads[i][iHitMax],
-			&wgrads[j][0], m_icov[idx]);
-		}
-	    }
-	}
+		const std::array<value_type, nHitsMax>& wmeass) noexcept
+#if defined(__GNUC__)
+	    // force gcc and friends to optimise aggressively
+	    __attribute__((optimize("-ffast-math", "-ftree-vectorize",
+			    "-fvect-cost-model", "-ftree-slp-vectorize",
+			    "-ftree-vect-loop-version", "-funroll-all-loops"),
+		       	flatten));
+#else
+	    ;
+#endif
 
 	/// helper to add hits to track
 	template<class C>
-	void addHits(const track_type& track, const C& hits)
-	{
-	    unsigned iHit = 0;
-	    std::array<std::array<value_type, nHitsMax>, nDim> wgrads;
-	    std::array<value_type, nHitsMax> wmeass;
-	    // loop over all hits
-	    for (const hit_type& hit : hits) {
-		// skip deselected hits
-		if (UNLIKELY(!MeasurementProvider().valid(hit))) continue;
-		++m_ndf;
-		// project out contribution of each hit and save in
-		// SIMD-friendly vectors
-		{
-		    const vector_type wgrad(
-			    MeasurementProjector().wgrad(track, hit));
-		    for (unsigned j = 0; j != nDim; ++j)
-			wgrads[j][iHit] = wgrad[j];
-		    const value_type wproj =
-			MeasurementProjector().wproj(track, hit);
-		    const value_type wmeas = MeasurementProvider().wmeas(
-			    hit, track, MeasurementProjector());
-		    wmeass[iHit] = wmeas - wproj;
-		}
-		if (UNLIKELY(++iHit == nHitsMax)) {
-		    // ok, array fully filled, accumulate
-		    accumulate(nHitsMax, wgrads, wmeass);
-		    iHit = 0;
-		}
-	    }
-	    if (iHit) {
-		// pad wgrads and wmeass to next multiple of simdWidth...
-		const unsigned iHitMax = (0 == iHit % simdWidth) ? iHit :
-		    (simdWidth * (iHit / simdWidth + 1));
-		assert(iHitMax <= nHitsMax);
-		std::fill(&wmeass[iHit], &wmeass[iHitMax], value_type(0));
-		for (unsigned j = 0; j != nDim; ++j)
-		    std::fill(&wgrads[j][iHit], &wgrads[j][iHitMax], value_type(0));
-		// ... and accumulate the rest
-		accumulate(iHitMax, wgrads, wmeass);
-	    }
-	}
-
+	void addHits(const track_type& track, const C& hits) noexcept
+#if defined(__GNUC__)
+	    // force gcc and friends to optimise aggressively
+	    __attribute__((optimize("-ffast-math", "-ftree-vectorize",
+			    "-fvect-cost-model", "-ftree-slp-vectorize",
+			    "-ftree-vect-loop-version", "-funroll-all-loops"),
+		       	flatten));
+#else
+	    ;
+#endif
 
 	/// solve and update the track
-	FitStatus solveAndUpdate(track_type& track)
-	{
-	    if (UNLIKELY(m_ndf < 0)) return NotPosDef;
-	    ROOT::Math::CholeskyDecomp<value_type, nDim> decomp(m_icov.data());
-	    if (UNLIKELY(!decomp)) return NotPosDef;
-	    vector_type dparam(m_rhs);
-	    decomp.Solve(dparam);
-	    FitStatus retVal = TrackUpdater().updateTrack(track, dparam);
-	    if (deferredCovariance && UNLIKELY(retVal == FitConverged)) {
-		m_deferredCovarianceUnion.m_deferredCovariance =
-		    DeferredCovariance(decomp);
-		m_deferredCovarianceInitialised = true;
-	    }
-	    return retVal;
-	}
+	FitStatus solveAndUpdate(track_type& track) noexcept
+#if defined(__GNUC__)
+	    // force gcc and friends to optimise aggressively
+	    __attribute__((optimize("-ffast-math", "-ftree-vectorize",
+			    "-fvect-cost-model", "-ftree-slp-vectorize",
+			    "-ftree-vect-loop-version"), flatten));
+#else
+	    ;
+#endif
 
 	/// solve and update the track and hits
 	template<class C>
-	FitStatus solveAndUpdate(track_type& track, C& hits)
+	FitStatus solveAndUpdate(track_type& track, C& hits) noexcept
 	{
 	    FitStatus retVal = solveAndUpdate(track);
 	    if (LIKELY(UpdateAccepted <= retVal)) {
@@ -968,7 +937,7 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 
 	/// iterate track fit once
 	template<class C>
-	FitStatus doFitOneIter(track_type& track, C& hits)
+	FitStatus doFitOneIter(track_type& track, C& hits) noexcept
 	{
 	    reset(track);
 	    addHits(track, hits);
@@ -976,16 +945,139 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 	}
 	/// iterate track fit the specified number of times
 	template<class C>
-	FitStatus doFit(track_type& track, C& hits)
+	FitStatus doFit(track_type& track, C& hits) noexcept
 	{
 	    FitStatus retVal = UpdateRejected;
-	    for (unsigned iter = 0; iter != nIterMax; ++iter) {
+	    for (unsigned iter = 0; LIKELY(iter != nIterMax); ++iter) {
 		retVal = doFitOneIter(track, hits);
 		if (UNLIKELY(UpdateAccepted != retVal)) break;
 	    }
 	    return retVal;
 	}
 };
+
+template<
+    class MEASUREMENTPROVIDER, class MEASUREMENTPROJECTOR,
+    class TRACKUPDATER, class HITUPDATER, 
+    unsigned NHITSMAX, unsigned SIMDWIDTH>
+typename SIMDChi2Fit<MEASUREMENTPROVIDER, MEASUREMENTPROJECTOR,
+     TRACKUPDATER, HITUPDATER, NHITSMAX, SIMDWIDTH>::value_type
+SIMDChi2Fit<MEASUREMENTPROVIDER, MEASUREMENTPROJECTOR,
+     TRACKUPDATER, HITUPDATER, NHITSMAX, SIMDWIDTH>::chi2(
+	     const track_type& track, const hit_type& hit) const noexcept
+{
+    if (UNLIKELY(!MeasurementProvider().valid(hit))) return value_type(0);
+    const value_type wproj = MeasurementProjector().wproj(track, hit);
+    const value_type wmeas =
+	MeasurementProvider().wmeas(hit, track, MeasurementProjector());
+    return (wmeas - wproj) * (wmeas - wproj);
+}
+
+template<
+    class MEASUREMENTPROVIDER, class MEASUREMENTPROJECTOR,
+    class TRACKUPDATER, class HITUPDATER, 
+    unsigned NHITSMAX, unsigned SIMDWIDTH>
+void SIMDChi2Fit<MEASUREMENTPROVIDER, MEASUREMENTPROJECTOR,
+     TRACKUPDATER, HITUPDATER, NHITSMAX, SIMDWIDTH>::accumulate(unsigned iHitMax,
+	     const std::array<std::array<value_type, nHitsMax>, nDim>& wgrads,
+	     const std::array<value_type, nHitsMax>& wmeass) noexcept
+{
+    for (unsigned i = 0, idx = 0; LIKELY(i != nDim); ++i) {
+	// update m_rhs
+	// vectorises
+	m_rhs[i] += std::inner_product(
+		std::begin(wgrads[i]), std::begin(wgrads[i]) + iHitMax,
+		std::begin(wmeass), value_type(0));
+	// update m_icov
+	for (unsigned j = 0; LIKELY(j <= i); ++j, ++idx) {
+	    // vectorises
+	    m_icov[idx] += std::inner_product(
+		    std::begin(wgrads[i]), std::begin(wgrads[i]) + iHitMax,
+		    std::begin(wgrads[j]), value_type(0));
+	}
+    }
+}
+
+template<
+    class MEASUREMENTPROVIDER, class MEASUREMENTPROJECTOR,
+    class TRACKUPDATER, class HITUPDATER, 
+    unsigned NHITSMAX, unsigned SIMDWIDTH>
+template<class C>
+void SIMDChi2Fit<MEASUREMENTPROVIDER, MEASUREMENTPROJECTOR,
+     TRACKUPDATER, HITUPDATER, NHITSMAX, SIMDWIDTH>::addHits(
+	     const track_type& track, const C& hits) noexcept
+{
+    typedef std::array<value_type, nHitsMax>
+#if defined(__GNUC__)
+	// align workspace arrays to cache lines to produce better SIMD code
+       	__attribute__((aligned(64)))
+#endif
+       	AlignedArray;
+    std::array<AlignedArray, nDim> wgrads;
+    AlignedArray wmeass;
+    unsigned iHit = 0;
+    // loop over all hits
+    for (const hit_type& hit : hits) {
+	// skip deselected hits
+	if (UNLIKELY(!MeasurementProvider().valid(hit))) continue;
+	++m_ndf;
+	// project out contribution of each hit and save in
+	// SIMD-friendly vectors
+	{
+	    const vector_type wgrad(
+		    MeasurementProjector().wgrad(track, hit));
+	    for (unsigned j = 0; LIKELY(j != nDim); ++j)
+		wgrads[j][iHit] = wgrad[j];
+	    const value_type wproj =
+		MeasurementProjector().wproj(track, hit);
+	    const value_type wmeas = MeasurementProvider().wmeas(
+		    hit, track, MeasurementProjector());
+	    wmeass[iHit] = wmeas - wproj;
+	}
+	if (UNLIKELY(++iHit == nHitsMax)) {
+	    // ok, array fully filled, accumulate
+	    accumulate(nHitsMax, wgrads, wmeass);
+	    iHit = 0;
+	}
+    }
+    if (LIKELY(iHit)) {
+	// pad wgrads and wmeass to next multiple of simdWidth...
+	const unsigned iHitMax = (0 == iHit % simdWidth) ? iHit :
+	    (simdWidth * (iHit / simdWidth + 1));
+	assert(iHitMax <= nHitsMax);
+	std::fill(std::begin(wmeass) + iHit,
+		std::begin(wmeass) + iHitMax, value_type(0));
+	for (unsigned j = 0; LIKELY(j != nDim); ++j)
+	    std::fill(std::begin(wgrads[j]) + iHit, 
+		    std::begin(wgrads[j]) + iHitMax, value_type(0));
+	// ... and accumulate the rest
+	accumulate(iHitMax, wgrads, wmeass);
+    }
+}
+
+template<
+    class MEASUREMENTPROVIDER, class MEASUREMENTPROJECTOR,
+    class TRACKUPDATER, class HITUPDATER, 
+    unsigned NHITSMAX, unsigned SIMDWIDTH>
+typename SIMDChi2Fit<MEASUREMENTPROVIDER, MEASUREMENTPROJECTOR,
+    TRACKUPDATER, HITUPDATER, NHITSMAX, SIMDWIDTH>::FitStatus
+SIMDChi2Fit<MEASUREMENTPROVIDER, MEASUREMENTPROJECTOR,
+    TRACKUPDATER, HITUPDATER, NHITSMAX, SIMDWIDTH>::solveAndUpdate(
+	     track_type& track) noexcept
+{
+    if (UNLIKELY(m_ndf < 0)) return NotPosDef;
+    ROOT::Math::CholeskyDecomp<value_type, nDim> decomp(m_icov.data());
+    if (UNLIKELY(!decomp)) return NotPosDef;
+    vector_type dparam(m_rhs);
+    decomp.Solve(dparam);
+    FitStatus retVal = TrackUpdater().updateTrack(track, dparam);
+    if (deferredCovariance && UNLIKELY(retVal == FitConverged)) {
+	m_deferredCovarianceUnion.m_deferredCovariance =
+	    DeferredCovariance(decomp);
+	m_deferredCovarianceInitialised = true;
+    }
+    return retVal;
+}
 
 } // namespace SIMDChi2FitUtils
 

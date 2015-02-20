@@ -5,6 +5,19 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-02-20 - Manuel Tobias Schiller
+ - SIMDChi2Fit: Either gcc 4.8.1 on SLC 6 is a bit more temperamental than the
+   version I built on my laptop when it comes to autovectorising the loops
+   that should be vectorised, or the full-blown measurement providers and
+   projectors make its job more difficult than my mock test cases. In any
+   case, I twist its arm a little by using function attributes to nudge it to
+   produce something approaching the code it ought to produce (the combination
+   of optimisation options is probably not the best we can achieve, but this
+   produces reasonable code that should run on all CPUs without problems).
+   This will speed up the Seeding by another 3 %. All the magic is protected
+   with an #if defined(__GNUC__), so if other compilers set it, but don't
+   support it, they're on their own... ;)
+
+! 2015-02-20 - Manuel Tobias Schiller
  - SIMDChi2Fit: use UNLIKELY/LIKELY to give hints to the compiler (seems to
    improve the timing of the Seeding by about 5%)
 
