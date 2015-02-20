@@ -689,9 +689,6 @@ class SelectorWithVars(SelectorWithCuts) :
 class SelectorWithVarsCached(SelectorWithVars) :
     """
     Create and fill the basic dataset for RooFit. Or just load it from cache.
-
-    BEWARE! Changing `cuts` in __init__ or access functions for variables is ignored by caching.
-
     """
     ## constructor 
     def __init__ ( self                           ,
@@ -716,11 +713,30 @@ class SelectorWithVarsCached(SelectorWithVars) :
             self.Process = lambda entry: 1
             self._loaded_from_cache = True
 
+    def _l_internals(self, lmbd):
+        " Returns str of lambda expression internals"
+        if not hasattr(lmbd, "__code__"):
+            return ""
+
+        code = lmbd.__code__
+        return str((code.co_code, code.co_consts))
+
+    def _get_files_str(self):
+        "Returns string with used files and their modification times"
+        ret = ""
+        for filename in sorted(self.__filelist):
+            ret += filename
+            ret += str(int(os.stat(filename).st_mtime))
+        return ret
+
     def _compute_cache_name(self):
         " Computes dataset cache path(SHA512) "
-        h = ";".join(sorted(self.__filelist)) # Actual hash
+        h =  self._get_files_str()
+        h += self._l_internals(self.__cuts)
+
         for var , vdesc , vmin , vmax , vfun in self._variables:
             h += var.GetName() + vdesc + str(vmin) + str(vmax)
+            h += self._l_internals(vfun)
 
         h += str(self.__selection)
 

@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-02-20 - Sasha Baranov
+ - Improve cache-key calculation in SelectorWithVarsCached
+
 ! 2015-02-20 - Vanya Belyaev
  - fix bug in abs(h)
 
