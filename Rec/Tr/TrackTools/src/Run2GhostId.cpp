@@ -178,10 +178,10 @@ StatusCode Run2GhostId::countHits() {
   ttCont = getIfExists<LHCb::STClusters>(LHCb::STClusterLocation::TTClusters);
   itCont = getIfExists<LHCb::STClusters>(LHCb::STClusterLocation::ITClusters);
   //}
-  //if (veloCont) m_veloHits = veloCont->size();
-  //if (ttCont) m_ttHits = ttCont->size();;
+  if (veloCont) m_veloHits = veloCont->size();
+  if (ttCont) m_ttHits = ttCont->size();;
   //if (ftCont) m_ftHits = ftCont->size();;
-  //if (itCont) m_itHits = itCont->size();;
+  if (itCont) m_itHits = itCont->size();;
   m_otHits = m_otdecoder->totalNumberOfHits();
 
   //  if (!((vpCont && utCont && ftCont) // this is upgrade, all have to be there
