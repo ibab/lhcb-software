@@ -170,7 +170,6 @@ class RichRecSysConf(RichConfigurableUser):
         # Do the configuration
         if self.getProp("ConfigureTools") : self.configTools()
         if self.getProp("ConfigureAlgs")  : self.configAlgorithms(recoSequencer)
-
         
     ## @brief Configure the RICH algorithms
     #  @param sequence The GaudiSequencer to add the RICH reconstruction to      
@@ -206,8 +205,11 @@ class RichRecSysConf(RichConfigurableUser):
             for det in ["Velo","TT","IT"] :
                 sequence.Members += [ d.setup() for d in decodersForBank(DecoderDB,det) ]
             from TrackFitter.ConfiguredFitters import ConfiguredFit
-            sequence.Members += [ ConfiguredFit("RefitBestTracks",
-                                                self.trackConfig().getProp("InputTracksLocation")) ]  
+            from Configurables import TrackStateInitAlg
+            tracksLoc = self.trackConfig().getProp("InputTracksLocation")
+            sequence.Members += [ TrackStateInitAlg( name = "InitBestTrackStates",
+                                                     TrackLocation = tracksLoc ),
+                                  ConfiguredFit("RefitBestTracks",tracksLoc) ]  
 
         #-----------------------------------------------------------------------------
         # Initialisation
