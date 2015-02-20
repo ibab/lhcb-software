@@ -60,7 +60,7 @@ namespace SolidTicks
     const SOLID       & solid )
   {
     // local typedefs 
-    typedef std::vector<size_t>     Indexes  ; 
+    typedef StaticArray<size_t, ISolid::Ticks::MaxSize>     Indexes  ; 
     typedef ISolid::Tick            Tick     ; 
     typedef ISolid::Ticks::iterator iterator ;
     // no abjancent ?

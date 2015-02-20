@@ -3,6 +3,18 @@
 ! package manager : Marco Clemencic
 ! =====================================================================
 
+! 2015-02-20 - Manuel Tobias Schiller
+ - SolidTicks: get rid of dynamic memory allocation in RemoveAdjacent
+   (this will speed up offline track fit by 3.4%)
+ - LVolume, VolumeIntersectionIntervals: reserve space in
+   std:vector<Interval> and std::vector<size_t> ("IndexCont"), and move
+   allocations out of loops (these two changes gain about 0.9% of time
+   in offline track fit)
+ - SolidMath: rewrite quadratic equation solver for better numerical
+   stability; also regroup/refactor some calculations to save a FLOP or
+   two (little impact in time, no change in results)
+ - go some way towards pushing StaticArray into the C++11 age
+
 ! 2015-02-19 - Chris Jones
  - New vectorised implementation of MagneticFieldGrid based on the
    VectorClass package.
@@ -152,9 +164,9 @@
  - DetDesc/src/Lib/HistoParam.cpp: change printout from histogram conditions
      to histogram parameters
  - add interface functions DetDesc::Params::paramAsHisto1D and paramAsHisto2D
-	   to extract 1d and 2d histogram parameters from a Condition, new files:
-	DetDesc/ParamAsHisto.h
-	src/Lib/ParamAsHisto.cpp
+      to extract 1d and 2d histogram parameters from a Condition, new files:
+   DetDesc/ParamAsHisto.h
+   src/Lib/ParamAsHisto.cpp
  - dict/DetDescDict.h: add include DetDesc/ParamAsHisto.h
  - dict/DetDescDict.xml: add names of the interface functions
  - cmt/requirements: version increment to v18r18
@@ -1053,7 +1065,7 @@
 
 ! 2005-06-07 - Marco Clemencic
  - Added requested optimization to UpdateManagerSvc: check the intersection
-	 of validities of the head items before starting the update loop.
+    of validities of the head items before starting the update loop.
 
 ! 2005-06-03 - Marco Cattaneo
  - Fix some doxygen warnings

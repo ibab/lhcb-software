@@ -250,6 +250,7 @@ bool LVolume::intersectBody
   if( Threshold>0 || m_solid == pSolid ) {
     // construct intervals
     intervals.clear();
+    intervals.reserve(ticks.size());
     TicksToIntervals( ticks , std::back_inserter( intervals ) );
     // check the total thickness
     if( Threshold > 0 ) {
@@ -283,6 +284,7 @@ bool LVolume::intersectBody
      *  radiation thickness and construct intervals!
      */
     intervals.clear();
+    intervals.reserve(ticks.size());
     TicksToIntervals( ticks , std::back_inserter( intervals ) ); 
   }
   
@@ -370,6 +372,7 @@ bool LVolume::intersectBody
   Intervals intervals; 
   if ( ( useThisVolume && Threshold > 0 ) || m_solid == pSolid ) {
     // create the intervals for the covertop
+    intervals.reserve(ticks.size());
     TicksToIntervals( ticks , std::back_inserter( intervals ) );
     
     // if there is a threshold, check that covertop intersection large enough
@@ -415,6 +418,7 @@ bool LVolume::intersectBody
      *  radiation thickness and construct intervals!
      */
     intervals.clear(); 
+    intervals.reserve(ticks.size());
     TicksToIntervals( ticks , std::back_inserter( intervals ) );
     if(Threshold>0) {
       /// the total length of intervals in Tick units 

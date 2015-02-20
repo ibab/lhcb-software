@@ -199,11 +199,13 @@ namespace  VolumeIntersectionIntervals
     const double tol = 1.e-6;  // Needed to test equalities...
     ///
     ///
+    // temporary container of indexes of related intervals 
+    IndexCont tmpIndex; 
+    tmpIndex.reserve(std::distance(child.begin(), child.end()));
     for( Iter iterTop = own.begin(); own.end() != iterTop ; ++iterTop ) {
       const Interval& intervalTop = iterTop->first  ;
       const Material* matTop      = iterTop->second ;
-      // temporary container of indexes of related intervals 
-      IndexCont tmpIndex; 
+      tmpIndex.clear();
       for( Iter iter = child.begin();  child.end() != iter ; ++iter ) {
         const Interval& intervalLoc = iter->first;
         
@@ -319,13 +321,15 @@ namespace  VolumeIntersectionIntervals
     typedef ILVolume::Intersections::const_iterator         Iter      ; 
     typedef ISolid::Tick                                    Tick      ;
     typedef ILVolume::Interval                              Interval  ; 
+    // temporary container of indexes of related intervals 
+    IndexCont tmpIndex; 
+    tmpIndex.reserve(std::distance(child.begin(), child.end()));
     // loop over all "own" intervals 
     for ( Iter iterTop = own.begin(); own.end() != iterTop ; ++iterTop ) 
     {
       const Interval& intervalTop = iterTop->first  ;
       const Material* matTop      = iterTop->second ;
-      // temporary container of indexes of related intervals 
-      IndexCont tmpIndex; 
+      tmpIndex.clear();
       for ( Iter iter = child.begin();  child.end() != iter ; ++iter ) 
       {
         const Interval& intervalLoc = iter->first ;

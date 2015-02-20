@@ -4,6 +4,7 @@
 /** Includes */
 #include "GaudiKernel/GaudiException.h"
 #include <algorithm> // For std::swap_ranges
+#include <array>
 
 /** @class StaticArray StaticArray.h "DetDesc/StaticArray.h"
  *
@@ -28,15 +29,15 @@ class StaticArray
 public:
   ///@{
   /** types */
-  typedef T                                     value_type;            
-  typedef T*                                    iterator;              
-  typedef const T*                              const_iterator;        
-  typedef std::reverse_iterator<iterator>       reverse_iterator;      
-  typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
-  typedef T&                                    reference;             
-  typedef const T&                              const_reference;       
-  typedef std::size_t                           size_type;             
-  typedef std::ptrdiff_t                        difference_type;       
+  typedef typename std::array<T, N>::value_type          value_type;            
+  typedef typename std::array<T, N>::iterator            iterator;              
+  typedef typename std::array<T, N>::const_iterator      const_iterator;        
+  typedef std::reverse_iterator<iterator>                reverse_iterator;      
+  typedef std::reverse_iterator<const_iterator>          const_reverse_iterator;
+  typedef typename std::array<T, N>::reference           reference;             
+  typedef typename std::array<T, N>::const_reference     const_reference;       
+  typedef typename std::array<T, N>::size_type           size_type;             
+  typedef typename std::array<T, N>::difference_type     difference_type;       
   ///@}
 
   ///@{
@@ -51,60 +52,60 @@ public:
 
   ///@{
   /** iterator support */
-  iterator begin()             { return m_data ; }
-  const_iterator begin() const { return m_data ; }
-  iterator end()               { return m_data + m_size ; }
-  const_iterator end() const   { return m_data + m_size ; }
+  iterator begin() noexcept             { return m_data.begin(); }
+  const_iterator begin() const noexcept { return m_data.begin() ; }
+  iterator end() noexcept               { return m_data.begin() + m_size ; }
+  const_iterator end() const noexcept   { return m_data.begin() + m_size ; }
   ///@}
 
   ///@{
   /** reverse iterator support */
-  reverse_iterator rbegin()             { return reverse_iterator(end()) ; }
-  const_reverse_iterator rbegin() const { return const_reverse_iterator(end()) ; }
-  reverse_iterator rend()               { return reverse_iterator(begin()) ; }
-  const_reverse_iterator rend() const   { return const_reverse_iterator(begin()) ; }
+  reverse_iterator rbegin() noexcept             { return reverse_iterator(end()) ; }
+  const_reverse_iterator rbegin() const noexcept { return const_reverse_iterator(end()) ; }
+  reverse_iterator rend() noexcept               { return reverse_iterator(begin()) ; }
+  const_reverse_iterator rend() const noexcept   { return const_reverse_iterator(begin()) ; }
   ///@}
 
   ///@{
   /** size and capacity */
-  size_type size() const { return m_size ; }
-  bool empty()     const { return m_size==0 ; }
-  size_type max_size() const { return N ; }
-  size_type capacity() const { return N ; }
+  size_type size() const noexcept { return m_size ; }
+  bool empty()     const noexcept { return 0 == m_size; }
+  constexpr size_type max_size() const noexcept { return N ; }
+  constexpr size_type capacity() const noexcept { return N ; }
   void reserve(size_type n) { testcapacity(n) ; }
   ///@}
 
   ///@{
   /** element access */
-  reference operator[](size_type i)             { return m_data[i] ; }
-  const_reference operator[](size_type i) const { return m_data[i] ; }
-  reference at(size_type i)                     { return m_data[i] ; }
-  const_reference at(size_type i) const         { return m_data[i] ; }
-  reference front()                             { return m_data[0] ; }
-  const_reference front() const                 { return m_data[0] ; }
-  reference back()                              { return m_data[m_size-1] ; }
-  const_reference back() const                  { return m_data[m_size-1] ; }
+  reference operator[](size_type i) noexcept             { return m_data[i] ; }
+  const_reference operator[](size_type i) const noexcept { return m_data[i] ; }
+  reference at(size_type i) noexcept                     { return m_data[i] ; }
+  const_reference at(size_type i) const noexcept         { return m_data[i] ; }
+  reference front() noexcept                             { return m_data[0] ; }
+  const_reference front() const noexcept                 { return m_data[0] ; }
+  reference back() noexcept                              { return m_data[m_size-1] ; }
+  const_reference back() const noexcept                  { return m_data[m_size-1] ; }
   ///@}
 
   /** add a single element */
   void push_back(const_reference x) { testcapacity(m_size+1) ; at(m_size++) = x ; }
 
   /** clear all entries. note: no desctrutors called. */
-  void clear() { m_size = 0 ; }
+  void clear() noexcept { m_size = 0 ; }
 
   /** erase a range */
-  void erase(iterator first, iterator last) {
+  void erase(iterator first, iterator last) noexcept {
     if( last>first ) {
       if(last < end() ) {
-	int n = end() - last ;
-	for(int i=0; i<n; ++i) *(first + i) = *(last+i) ;
+	difference_type n = end() - last ;
+	for(size_type i=0; i<n; ++i) *(first + i) = *(last+i) ;
       }
       m_size -= last - first ;
     }
   }
 
   /** erase a single element */
-  void erase(iterator pos) { return erase(pos,pos+1) ; }
+  void erase(iterator pos) noexcept { return erase(pos,pos+1) ; }
 
   /** insert a single element */
   void insert(iterator pos, const_reference x) {
@@ -115,8 +116,8 @@ public:
   }
 
   /** swap the contents of this array with that of another one */
-  void swap( StaticArray<T, N>& rhs) { 
-    std::swap_ranges(m_data,m_data+std::max(m_size,rhs.m_size),rhs.m_data) ; 
+  void swap( StaticArray<T, N>& rhs) noexcept(noexcept(std::swap(rhs.m_size, rhs.m_size)) && noexcept(std::swap(rhs.front(), rhs.front()))) { 
+    std::swap_ranges(begin(),begin()+std::max(m_size,rhs.m_size),rhs.begin()); 
     std::swap( m_size, rhs.m_size ) ;
   }
   
@@ -128,7 +129,7 @@ private:
   }
   
 private:
-  T m_data[N];       /// elements
+  std::array<T, N> m_data;       /// elements
   size_type m_size ; /// size
 };
 
