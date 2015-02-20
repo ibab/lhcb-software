@@ -11,6 +11,7 @@ ApplicationMgr.ExtSvc               += { "IncidentSvc", "LHCb::MEPManager/MepMan
 ApplicationMgr.ExtSvc               += { "LHCb::FileWriterSvc/AlignDataWriter_D0"};
 ApplicationMgr.ExtSvc               += { "LHCb::FileWriterSvc/AlignDataWriter_VeLoMuons"};
 ApplicationMgr.ExtSvc               += { "LHCb::FileWriterSvc/AlignDataWriter_Tracker"};
+ApplicationMgr.ExtSvc               += { "LHCb::FileWriterSvc/AlignDataWriter_RICH"};
 //
 MEPManager.PartitionBuffers          = @OnlineEnv.PartitionBuffers;
 MEPManager.PartitionName             = @OnlineEnv.PartitionName;
@@ -32,6 +33,16 @@ AlignDataWriter_D0.Requirements         = {
 AlignDataWriter_D0.MEPFilePrefix         = "/localdisk/Alignment/D0/Run_";
 AlignDataWriter_D0.EvtFilePrefix         = "/localdisk/Alignment/D0/Run_";
 AlignDataWriter_D0.MaxEvents       = 1000;
+
+AlignDataWriter_RICH.SizeLimit                 = 1000;
+AlignDataWriter_RICH.PrintFreq                 = 1.0;
+AlignDataWriter_RICH.Requirements         = {
+"EvType=1;TriggerMask=0xffffffff,0x0,0x00400000,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
+"EvType=2;TriggerMask=0xffffffff,0x0,0x00400000,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+};
+AlignDataWriter_RICH.MEPFilePrefix         = "/localdisk/Alignment/RICH/Run_";
+AlignDataWriter_RICH.EvtFilePrefix         = "/localdisk/Alignment/RICH/Run_";
+AlignDataWriter_RICH.MaxEvents       = 1000;
 
 AlignDataWriter_VeLoMuons.SizeLimit                 = 1000;
 AlignDataWriter_VeLoMuons.PrintFreq                 = 1.0;
