@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-02-20 - Marco Clemencic
+ - fixed the name of the LCG_Interfaces/eigen package
+
 ! 2015-02-19 - Chris Jones
  - Turn off the installation of the private Eigen headers.
    Use the LCG version instead.
