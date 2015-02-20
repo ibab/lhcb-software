@@ -44,6 +44,7 @@ class RichRecSysConf(RichConfigurableUser):
        ,"ConfigureAlgs":   True   # Configure the reconstruction algorithms
        ,"PreloadRawEvent": False  # Preload the RawEvent prior to the RICH algorithms
        ,"PreloadTracks":   False  # Preload the input tracks prior to the RICH algorithms
+       ,"RefitTracks":     False  # Refit the tracks first. Useful for running on DSTs.
        ,"InitPixels":      True   # Run an initialisation algorithm to create the pixels
        ,"InitTracks":      True   # Run an initialisation algorithm to create the tracks
        ,"InitPhotons":     True   # Run an initialisation algorithm to create the photons
@@ -194,6 +195,19 @@ class RichRecSysConf(RichConfigurableUser):
             trackInit = self.makeRichAlg( Rich__Rec__Initialise, "LoadRawTracks"+cont )
             trackInit.LoadRawTracks = True
             sequence.Members += [ trackInit ]
+
+        #-----------------------------------------------------------------------------
+        # Enable this to run a full track refit prior to processing
+        # Useful for running on DSTs.
+        #-----------------------------------------------------------------------------
+        if self.getProp("RefitTracks") :
+            from DAQSys.Decoders import DecoderDB
+            from DAQSys.DecoderClass import decodersForBank
+            for det in ["Velo","TT","IT"] :
+                sequence.Members += [ d.setup() for d in decodersForBank(DecoderDB,det) ]
+            from TrackFitter.ConfiguredFitters import ConfiguredFit
+            sequence.Members += [ ConfiguredFit("RefitBestTracks",
+                                                self.trackConfig().getProp("InputTracksLocation")) ]  
 
         #-----------------------------------------------------------------------------
         # Initialisation

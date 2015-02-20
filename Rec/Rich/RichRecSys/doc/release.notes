@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2015-02-20 - Chris Jones
+ - Add a new configuration option "RefitTracks" which enables a full refit of
+   the tracks prior to running the RICH reconstruction on them.
+
 ! 2015-02-06 - Chris Jones
  - Fix a small bug with the "PreloadTracks" options that was failing to 
    properly enable this option.
