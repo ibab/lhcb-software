@@ -4,6 +4,9 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-02-20 - Andrea Contu
+ - Update tests/refs/instantiate-all-strip.ref
+
 !========================= StrippingArchive v1r26 2014-01-19 =========================
 
 ! 2014-01-19 - Stefano Perazzini

@@ -54,18 +54,18 @@ Created lines
 # WARNING: lineMBNoBias uses plain Gaudi configurable MBNoBiasORL. Consider using Selection instead!
 # WARNING: lineHlt1L0Any uses plain Gaudi configurable Hlt1L0AnyORL. Consider using Selection instead!
 Created lines
-# WARNING: StrippingPromptCharm: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy '] 
+# WARNING: StrippingPromptCharm: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy ']
 B2fourbody: 1084 channels
 # WARNING: lineB2hhh_KKK_inclLine uses plain Gaudi configurable B2hhhGlobalEventCutFilter. Consider using Selection instead!
 # WARNING: lineB2hhh_pph_inclLine uses plain Gaudi configurable B2hhhGlobalEventCutFilter. Consider using Selection instead!
 Created lines
-# WARNING: StrippingPromptCharm: new configuration: D0Prescale       : 0.33 
-# WARNING: StrippingPromptCharm: new configuration: DplusPrescale    : 0.33 
+# WARNING: StrippingPromptCharm: new configuration: D0Prescale       : 0.33
+# WARNING: StrippingPromptCharm: new configuration: DplusPrescale    : 0.33
 makeJpsiPhi2KK Code =  (MINTREE('K+'==ABSID,PIDK)> 0.0)& (MINTREE(ABSID=='K+',PT)> 500.0 *MeV)& (MINTREE(ABSID=='K+',MIPCHI2DV(PRIMARY))> 9.0)& (ADMASS('phi(1020)') < 25.0 *MeV)& (PT > 900.0 *MeV)& (VFASPF(VCHI2/VDOF) < 9.0)
 -----------------------------------------
 --  Bd -> K* mu mu stripping line cuts --
 -----------------------------------------
- 
+
 Bd cut:                 (M > 4850.0 * MeV) & (M < 5780.0 * MeV) & (VFASPF(VCHI2/VDOF) < 6.0) & (BPVIPCHI2() < 16.0) & (BPVDIRA> 0.9999) & (BPVVDCHI2 > 121.0) & (MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> 9.0 )
 Bd combination cut:     (AM > 4600.0 * MeV) & (AM < 6000.0 * MeV)
 Kstar cut:              (VFASPF(VCHI2/VDOF) < 12.0) & (BPVDIRA> -0.9) & (M > 600.0 * MeV) & (M < 2000.0 * MeV) & (BPVVDCHI2 > 9.0) & (MIPCHI2DV(PRIMARY) > 0.0) & (MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> 9.0 )
@@ -74,17 +74,17 @@ DiMuon cut:             (VFASPF(VCHI2/VDOF) < 12.0) & (BPVDIRA> -0.9) & (BPVVDCH
 Kaon cut:               (TRCHI2DOF < 5.0) & (MIPCHI2DV(PRIMARY) > 9.0)
 Pion cut:               (TRCHI2DOF < 5.0) & (MIPCHI2DV(PRIMARY) > 9.0)
 Muon cut:               (TRCHI2DOF < 5.0) & (MIPCHI2DV(PRIMARY) > 9.0)
- 
+
 -----------------------------------------------------------
 -- the cuts below should be compiled from the ones above --
 -----------------------------------------------------------
- 
+
 KstarFilter cut:     (VFASPF(VCHI2/VDOF) < 12.0) & (BPVDIRA> -0.9) & (M > 600.0 * MeV) & (M < 2000.0 * MeV) & (BPVVDCHI2 > 9.0) & (MIPCHI2DV(PRIMARY) > 0.0) & (MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> 9.0 ) & (INTREE(ABSID=='K+') & (TRCHI2DOF < 5.0) & (MIPCHI2DV(PRIMARY) > 9.0)) & (INTREE(ABSID=='pi+') & (TRCHI2DOF < 5.0) & (MIPCHI2DV(PRIMARY) > 9.0))
- 
+
 -------------------------------------------
 -- B+ -> K X3872 etc stripping line cuts --
 -------------------------------------------
- 
+
   --> B+ -> K X3872 line
   --> Bu cut:                 (ADMASS('B+') < 400.0 * MeV) & (VFASPF(VCHI2/VDOF) < 4.0) & (BPVIPCHI2() < 15.0) & (BPVDIRA> 0.9995) & (BPVVDCHI2 > 40.0)
   --> Bu combination cut:     (ADAMASS('B+') < 450.0 * MeV)
@@ -93,7 +93,7 @@ KstarFilter cut:     (VFASPF(VCHI2/VDOF) < 12.0) & (BPVDIRA> -0.9) & (M > 600.0 
   --> JPsi cuts:              (ADMASS('J/psi(1S)') < 70.0 * MeV) & (VFASPF(VCHI2/VDOF) < 10.0) & (2 == NINTREE((ABSID=='mu-') & (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 3.0) & (PT > 500.0 * MeV) & (ISMUON)))
   --> Pion cut:               (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 6.0)
   --> Kaon cut:               (TRCHI2DOF < 4.0) & (PT > 200.0 * MeV) & (MIPCHI2DV(PRIMARY) > 6.0)
- 
+
   --> B+ -> K X3872 loose line
   --> Bu cut:                 (ADMASS('B+') < 400.0 * MeV) & (VFASPF(VCHI2/VDOF) < 5.0) & (BPVIPCHI2() < 20.0) & (BPVDIRA> 0.9995) & (BPVVDCHI2 > 30.0)
   --> Bu combination cut:     (ADAMASS('B+') < 500.0 * MeV)
@@ -102,7 +102,7 @@ KstarFilter cut:     (VFASPF(VCHI2/VDOF) < 12.0) & (BPVDIRA> -0.9) & (M > 600.0 
   --> JPsi cuts:              (ADMASS('J/psi(1S)') < 70.0 * MeV) & (VFASPF(VCHI2/VDOF) < 10.0) & (2 == NINTREE((ABSID=='mu-') & (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 2.0) & (PT > 500.0 * MeV) & (ISMUON)))
   --> Pion cut:               (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 5.0)
   --> Kaon cut:               (TRCHI2DOF < 4.0)  & (PT > 150.0 * MeV) & (MIPCHI2DV(PRIMARY) > 5.0)
- 
+
   --> B+ -> K Psi(2S) line
   --> Bu cut:                 (ADMASS('B+') < 400.0 * MeV) & (VFASPF(VCHI2/VDOF) < 4.0) & (BPVIPCHI2() < 15.0) & (BPVDIRA> 0.9995) & (BPVVDCHI2 > 40.0)
   --> Bu combination cut:     (ADAMASS('B+') < 450.0 * MeV)
@@ -111,7 +111,7 @@ KstarFilter cut:     (VFASPF(VCHI2/VDOF) < 12.0) & (BPVDIRA> -0.9) & (M > 600.0 
   --> JPsi cuts:              (ADMASS('J/psi(1S)') < 70.0 * MeV) & (VFASPF(VCHI2/VDOF) < 10.0) & (2 == NINTREE((ABSID=='mu-') & (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 3.0) & (PT > 500.0 * MeV) & (ISMUON)))
   --> Pion cut:               (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 6.0)
   --> Kaon cut:               (TRCHI2DOF < 4.0) & (PT > 200.0 * MeV) & (MIPCHI2DV(PRIMARY) > 6.0)
- 
+
   --> B+ -> K Psi(2S) loose line
   --> Bu cut:                 (ADMASS('B+') < 400.0 * MeV) & (VFASPF(VCHI2/VDOF) < 5.0) & (BPVIPCHI2() < 20.0) & (BPVDIRA> 0.9995) & (BPVVDCHI2 > 30.0)
   --> Bu combination cut:     (ADAMASS('B+') < 500.0 * MeV)
@@ -261,7 +261,7 @@ Trying to import module StrippingArchive.Stripping21
 # WARNING: lineHlt1L0AnyRateLimited uses plain Gaudi configurable Hlt1L0AnyRateLimitedORL. Consider using Selection instead!
 # WARNING: lineB2hhh_KKK_inclLine uses plain Gaudi configurable B2hhhGlobalEventCutFilter. Consider using Selection instead!
 # WARNING: lineB2hhh_pph_inclLine uses plain Gaudi configurable B2hhhGlobalEventCutFilter. Consider using Selection instead!
-# WARNING: new configuration: TrackCuts        :  ( TRCHI2DOF < 5 ) & ( PT > 250 * MeV ) & ( TRGHOSTPROB < 0.5 ) & in_range  ( 2 , ETA , 5 )  
+# WARNING: new configuration: TrackCuts        :  ( TRCHI2DOF < 5 ) & ( PT > 250 * MeV ) & ( TRGHOSTPROB < 0.5 ) & in_range  ( 2 , ETA , 5 )
 Creating CharmToBeSwum stream with 14 lines
 Creating Bhadron stream with 277 lines
 Creating Semileptonic stream with 34 lines
@@ -322,7 +322,7 @@ Trying to import module StrippingArchive.Stripping20r3
 Trying to import module StrippingArchive.Stripping21
 B2threebody: 445 channels
 {'kLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MIN': '0', 'PT_MIN': '300*MeV'}, 'MASS_WINDOW': {'KST': '150*MeV', 'PHI': '15*MeV', 'OMEGA': '30*MeV', 'RHO': '250*MeV'}, 'BPVVDCHI2_MIN': 81, 'ASUMPT_MIN': '1500*MeV', 'VCHI2DOF_MAX': 9, 'piLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MAX': '5', 'PT_MIN': '300*MeV'}, 'pLAMBDADAUGHTERS': {'P_MIN': '10000*MeV', 'PIDp_MIN': '5', 'PT_MIN': '1200*MeV'}, 'DAUGHTERS': {'P_MIN': '3000*MeV', 'PT_MIN': '300*MeV'}}
-# WARNING: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy '] 
+# WARNING: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy ']
 # Register line: StrippingDiMuonAndGammaForCharmAssociative
 # Register line: StrippingDoubleDiMuonForCharmAssociative
 # Register line: StrippingChiAndDiMuonForCharmAssociative
@@ -427,7 +427,7 @@ Trying to import module StrippingArchive.Stripping21
 Creating CharmToBeSwum stream with 14 lines
 Creating Bhadron stream with 848 lines
 Creating Semileptonic stream with 37 lines
-Creating BhadronCompleteEvent stream with 69 lines
+Creating BhadronCompleteEvent stream with 67 lines
 Creating Calibration stream with 19 lines
 Creating Radiative stream with 8 lines
 Creating Dimuon stream with 37 lines
@@ -444,7 +444,7 @@ Creating CharmCompleteEvent stream with 43 lines
 # WARNING: Line StrippingD2hhWSCompleteEventPromptDst2D2KKLine has prescale <= 0, it will be removed from stream CharmCompleteEvent
 # WARNING: Line StrippingD2hhWSCompleteEventPromptDst2D2PiPiLine has prescale <= 0, it will be removed from stream CharmCompleteEvent
 Creating Charm stream with 246 lines
-Creating EW stream with 141 lines
+Creating EW stream with 143 lines
 Creating MiniBias stream with 4 lines
 Creating Leptonic stream with 162 lines
 # WARNING: Line StrippingBs2MuMusNoMuIDLooseLine has prescale <= 0, it will be removed from stream Leptonic
@@ -517,39 +517,39 @@ Trying to import module StrippingArchive.Stripping20r0p3
 Trying to import module StrippingArchive.Stripping20r2
 Trying to import module StrippingArchive.Stripping20r3
 Trying to import module StrippingArchive.Stripping21
-# WARNING: new configuration: ProtonCut        : 
-# WARNING:                   ( CLONEDIST   > 5000    ) & 
-# WARNING:                   ( TRCHI2DOF   < 4       ) & 
-# WARNING:                   ( TRGHOSTPROB < 0.4     ) & 
-# WARNING:                   ( PT          > 500 * MeV              ) & 
+# WARNING: new configuration: ProtonCut        :
+# WARNING:                   ( CLONEDIST   > 5000    ) &
+# WARNING:                   ( TRCHI2DOF   < 4       ) &
+# WARNING:                   ( TRGHOSTPROB < 0.4     ) &
+# WARNING:                   ( PT          > 500 * MeV              ) &
 # WARNING:                   in_range (  2        , ETA , 4.9       ) &
 # WARNING:                   in_range ( 10 * GeV  , P   , 150 * GeV ) &
 # WARNING:                   HASRICH                   &
 # WARNING:                   ( PROBNNp      > 0.15   ) &
-# WARNING:                   ( MIPCHI2DV()  > 4.     ) 
-# WARNING:                    
-# WARNING: new configuration: KaonCut          : 
-# WARNING:                   ( CLONEDIST   > 5000   ) & 
-# WARNING:                   ( TRCHI2DOF   < 4      ) & 
-# WARNING:                   ( TRGHOSTPROB < 0.4    ) & 
-# WARNING:                   ( PT          > 750 * MeV               ) & 
+# WARNING:                   ( MIPCHI2DV()  > 4.     )
+# WARNING:
+# WARNING: new configuration: KaonCut          :
+# WARNING:                   ( CLONEDIST   > 5000   ) &
+# WARNING:                   ( TRCHI2DOF   < 4      ) &
+# WARNING:                   ( TRGHOSTPROB < 0.4    ) &
+# WARNING:                   ( PT          > 750 * MeV               ) &
 # WARNING:                   in_range ( 2          , ETA , 4.9       ) &
 # WARNING:                   in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
 # WARNING:                   HASRICH                  &
 # WARNING:                   ( PROBNNk      > 0.20  ) &
-# WARNING:                   ( MIPCHI2DV()  > 9.    ) 
-# WARNING:                    
-# WARNING: new configuration: PionCut          : 
-# WARNING:                   ( CLONEDIST   > 5000   ) & 
+# WARNING:                   ( MIPCHI2DV()  > 9.    )
+# WARNING:
+# WARNING: new configuration: PionCut          :
+# WARNING:                   ( CLONEDIST   > 5000   ) &
 # WARNING:                   ( TRCHI2DOF   < 4      ) &
 # WARNING:                   ( TRGHOSTPROB < 0.4    ) &
-# WARNING:                   ( PT          > 750 * MeV               ) & 
+# WARNING:                   ( PT          > 750 * MeV               ) &
 # WARNING:                   in_range ( 2          , ETA , 4.9       ) &
 # WARNING:                   in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
 # WARNING:                   HASRICH                  &
 # WARNING:                   ( PROBNNpi     > 0.15  ) &
 # WARNING:                   ( MIPCHI2DV()  > 9.    )
-# WARNING:                    
+# WARNING:
 # Register line: StrippingBc3pppiForBc3h
 # Register line: StrippingBc3ppkForBc3h
 # Register line: StrippingBc3piForBc3h
@@ -696,7 +696,7 @@ Trying to import module StrippingArchive.Stripping21
 # WARNING: lineHlt1L0AnyRateLimited uses plain Gaudi configurable Hlt1L0AnyRateLimitedORL. Consider using Selection instead!
 # WARNING: lineB2hhh_KKK_inclLine uses plain Gaudi configurable B2hhhGlobalEventCutFilter. Consider using Selection instead!
 # WARNING: lineB2hhh_pph_inclLine uses plain Gaudi configurable B2hhhGlobalEventCutFilter. Consider using Selection instead!
-# WARNING: new configuration: TrackCuts        :  ( TRCHI2DOF < 5 ) & ( PT > 250 * MeV ) & ( TRGHOSTPROB < 0.5 ) & in_range  ( 2 , ETA , 5 )  
+# WARNING: new configuration: TrackCuts        :  ( TRCHI2DOF < 5 ) & ( PT > 250 * MeV ) & ( TRGHOSTPROB < 0.5 ) & in_range  ( 2 , ETA , 5 )
 Creating CharmToBeSwum stream with 14 lines
 Creating Bhadron stream with 275 lines
 Creating Semileptonic stream with 32 lines
@@ -774,7 +774,7 @@ Trying to import module StrippingArchive.Stripping21
 Creating CharmToBeSwum stream with 14 lines
 Creating Bhadron stream with 854 lines
 Creating Semileptonic stream with 37 lines
-Creating BhadronCompleteEvent stream with 69 lines
+Creating BhadronCompleteEvent stream with 67 lines
 Creating Calibration stream with 19 lines
 Creating Radiative stream with 8 lines
 Creating Dimuon stream with 37 lines
@@ -791,7 +791,7 @@ Creating CharmCompleteEvent stream with 44 lines
 # WARNING: Line StrippingD2hhWSCompleteEventPromptDst2D2KKLine has prescale <= 0, it will be removed from stream CharmCompleteEvent
 # WARNING: Line StrippingD2hhWSCompleteEventPromptDst2D2PiPiLine has prescale <= 0, it will be removed from stream CharmCompleteEvent
 Creating Charm stream with 246 lines
-Creating EW stream with 141 lines
+Creating EW stream with 143 lines
 Creating MiniBias stream with 4 lines
 Creating Leptonic stream with 162 lines
 # WARNING: Line StrippingBs2MuMusNoMuIDLooseLine has prescale <= 0, it will be removed from stream Leptonic
@@ -824,7 +824,7 @@ Trying to import module StrippingArchive.Stripping20r3
 Trying to import module StrippingArchive.Stripping21
 B2threebody: 445 channels
 {'kLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MIN': '0', 'PT_MIN': '300*MeV'}, 'MASS_WINDOW': {'KST': '150*MeV', 'PHI': '15*MeV', 'OMEGA': '30*MeV', 'RHO': '250*MeV'}, 'BPVVDCHI2_MIN': 81, 'ASUMPT_MIN': '1500*MeV', 'VCHI2DOF_MAX': 9, 'piLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MAX': '5', 'PT_MIN': '300*MeV'}, 'pLAMBDADAUGHTERS': {'P_MIN': '10000*MeV', 'PIDp_MIN': '5', 'PT_MIN': '1200*MeV'}, 'DAUGHTERS': {'P_MIN': '3000*MeV', 'PT_MIN': '500*MeV'}}
-# WARNING: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy '] 
+# WARNING: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy ']
 # Register line: StrippingDiMuonAndGammaForCharmAssociative
 # Register line: StrippingDoubleDiMuonForCharmAssociative
 # Register line: StrippingChiAndDiMuonForCharmAssociative
@@ -917,7 +917,7 @@ Trying to import module StrippingArchive.Stripping20r3
 Trying to import module StrippingArchive.Stripping21
 B2threebody: 445 channels
 {'kLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MIN': '0', 'PT_MIN': '300*MeV'}, 'MASS_WINDOW': {'KST': '150*MeV', 'PHI': '15*MeV', 'OMEGA': '30*MeV', 'RHO': '250*MeV'}, 'BPVVDCHI2_MIN': 81, 'ASUMPT_MIN': '1500*MeV', 'VCHI2DOF_MAX': 9, 'piLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MAX': '5', 'PT_MIN': '300*MeV'}, 'pLAMBDADAUGHTERS': {'P_MIN': '10000*MeV', 'PIDp_MIN': '5', 'PT_MIN': '1200*MeV'}, 'DAUGHTERS': {'P_MIN': '3000*MeV', 'PT_MIN': '500*MeV'}}
-# WARNING: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy '] 
+# WARNING: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy ']
 # Register line: StrippingDiMuonAndGammaForCharmAssociative
 # Register line: StrippingDoubleDiMuonForCharmAssociative
 # Register line: StrippingChiAndDiMuonForCharmAssociative
@@ -1209,7 +1209,7 @@ Trying to import module StrippingArchive.Stripping20r2
 Trying to import module StrippingArchive.Stripping20r3
 Trying to import module StrippingArchive.Stripping21
 B2threebody: 445 channels
-# WARNING: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy '] 
+# WARNING: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy ']
 # Register line: StrippingDiMuonAndGammaForCharmAssociative
 # Register line: StrippingDoubleDiMuonForCharmAssociative
 # Register line: StrippingChiAndDiMuonForCharmAssociative
@@ -1295,7 +1295,7 @@ Trying to import module StrippingArchive.Stripping20r3
 Trying to import module StrippingArchive.Stripping21
 B2threebody: 445 channels
 {'kLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MIN': '0', 'PT_MIN': '300*MeV'}, 'MASS_WINDOW': {'KST': '150*MeV', 'PHI': '15*MeV', 'OMEGA': '30*MeV', 'RHO': '250*MeV'}, 'BPVVDCHI2_MIN': 81, 'ASUMPT_MIN': '1500*MeV', 'VCHI2DOF_MAX': 9, 'piLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MAX': '5', 'PT_MIN': '300*MeV'}, 'pLAMBDADAUGHTERS': {'P_MIN': '10000*MeV', 'PIDp_MIN': '5', 'PT_MIN': '1200*MeV'}, 'DAUGHTERS': {'P_MIN': '3000*MeV', 'PT_MIN': '300*MeV'}}
-# WARNING: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy '] 
+# WARNING: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy ']
 # Register line: StrippingDiMuonAndGammaForCharmAssociative
 # Register line: StrippingDoubleDiMuonForCharmAssociative
 # Register line: StrippingChiAndDiMuonForCharmAssociative
@@ -1387,11 +1387,11 @@ Hadron_Z02TauTauProng
 self.name BetaSPsi2SMuMu
 inclusiveline BetaSPsi2SMuMu_InclPsi2SToMuMu
 Created lines
- 
+
 -------------------------------------------
 -- B+ -> K X3872 etc stripping line cuts --
 -------------------------------------------
- 
+
   --> B+ -> K X3872 line
   --> Bu cut:                 (ADMASS('B+') < 400.0 * MeV) & (VFASPF(VCHI2/VDOF) < 4.0) & (BPVIPCHI2() < 15.0) & (BPVDIRA> 0.9995) & (BPVVDCHI2 > 40.0)
   --> Bu combination cut:     (ADAMASS('B+') < 450.0 * MeV)
@@ -1400,7 +1400,7 @@ Created lines
   --> JPsi cuts:              (ADMASS('J/psi(1S)') < 70.0 * MeV) & (VFASPF(VCHI2/VDOF) < 10.0) & (2 == NINTREE((ABSID=='mu-') & (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 3.0) & (PT > 500.0 * MeV) & (ISMUON)))
   --> Pion cut:               (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 6.0)
   --> Kaon cut:               (TRCHI2DOF < 4.0) & (PT > 200.0 * MeV) & (MIPCHI2DV(PRIMARY) > 6.0)
- 
+
   --> B+ -> K X3872 loose line
   --> Bu cut:                 (ADMASS('B+') < 400.0 * MeV) & (VFASPF(VCHI2/VDOF) < 5.0) & (BPVIPCHI2() < 20.0) & (BPVDIRA> 0.9995) & (BPVVDCHI2 > 30.0)
   --> Bu combination cut:     (ADAMASS('B+') < 500.0 * MeV)
@@ -1409,7 +1409,7 @@ Created lines
   --> JPsi cuts:              (ADMASS('J/psi(1S)') < 70.0 * MeV) & (VFASPF(VCHI2/VDOF) < 10.0) & (2 == NINTREE((ABSID=='mu-') & (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 2.0) & (PT > 500.0 * MeV) & (ISMUON)))
   --> Pion cut:               (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 5.0)
   --> Kaon cut:               (TRCHI2DOF < 4.0)  & (PT > 150.0 * MeV) & (MIPCHI2DV(PRIMARY) > 5.0)
- 
+
   --> B+ -> K Psi(2S) line
   --> Bu cut:                 (ADMASS('B+') < 400.0 * MeV) & (VFASPF(VCHI2/VDOF) < 4.0) & (BPVIPCHI2() < 15.0) & (BPVDIRA> 0.9995) & (BPVVDCHI2 > 40.0)
   --> Bu combination cut:     (ADAMASS('B+') < 450.0 * MeV)
@@ -1418,7 +1418,7 @@ Created lines
   --> JPsi cuts:              (ADMASS('J/psi(1S)') < 70.0 * MeV) & (VFASPF(VCHI2/VDOF) < 10.0) & (2 == NINTREE((ABSID=='mu-') & (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 3.0) & (PT > 500.0 * MeV) & (ISMUON)))
   --> Pion cut:               (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 6.0)
   --> Kaon cut:               (TRCHI2DOF < 4.0) & (PT > 200.0 * MeV) & (MIPCHI2DV(PRIMARY) > 6.0)
- 
+
   --> B+ -> K Psi(2S) loose line
   --> Bu cut:                 (ADMASS('B+') < 400.0 * MeV) & (VFASPF(VCHI2/VDOF) < 5.0) & (BPVIPCHI2() < 20.0) & (BPVDIRA> 0.9995) & (BPVVDCHI2 > 30.0)
   --> Bu combination cut:     (ADAMASS('B+') < 500.0 * MeV)
@@ -1430,7 +1430,7 @@ Created lines
 -----------------------------------------
 --  Bd -> K* mu mu stripping line cuts --
 -----------------------------------------
- 
+
 Bd cut:                 (M > 4850.0 * MeV) & (M < 5780.0 * MeV) & (VFASPF(VCHI2/VDOF) < 6.0) & (BPVIPCHI2() < 16.0) & (BPVDIRA> 0.9999) & (BPVVDCHI2 > 121.0) & (MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> 9.0 )
 Bd combination cut:     (AM > 4600.0 * MeV) & (AM < 6000.0 * MeV)
 Kstar cut:              (VFASPF(VCHI2/VDOF) < 12.0) & (BPVDIRA> -0.9) & (M > 600.0 * MeV) & (M < 2000.0 * MeV) & (BPVVDCHI2 > 9.0) & (MIPCHI2DV(PRIMARY) > 0.0) & (MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> 9.0 )
@@ -1439,11 +1439,11 @@ DiMuon cut:             (VFASPF(VCHI2/VDOF) < 12.0) & (BPVDIRA> -0.9) & (BPVVDCH
 Kaon cut:               (TRCHI2DOF < 5.0) & (MIPCHI2DV(PRIMARY) > 9.0)
 Pion cut:               (TRCHI2DOF < 5.0) & (MIPCHI2DV(PRIMARY) > 9.0)
 Muon cut:               (TRCHI2DOF < 5.0) & (MIPCHI2DV(PRIMARY) > 9.0)
- 
+
 -----------------------------------------------------------
 -- the cuts below should be compiled from the ones above --
 -----------------------------------------------------------
- 
+
 KstarFilter cut:     (VFASPF(VCHI2/VDOF) < 12.0) & (BPVDIRA> -0.9) & (M > 600.0 * MeV) & (M < 2000.0 * MeV) & (BPVVDCHI2 > 9.0) & (MIPCHI2DV(PRIMARY) > 0.0) & (MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> 9.0 ) & (INTREE(ABSID=='K+') & (TRCHI2DOF < 5.0) & (MIPCHI2DV(PRIMARY) > 9.0)) & (INTREE(ABSID=='pi+') & (TRCHI2DOF < 5.0) & (MIPCHI2DV(PRIMARY) > 9.0))
 Created lines
 Creating Bhadron stream with 101 lines
@@ -1638,39 +1638,39 @@ Trying to import module StrippingArchive.Stripping20r0p3
 Trying to import module StrippingArchive.Stripping20r2
 Trying to import module StrippingArchive.Stripping20r3
 Trying to import module StrippingArchive.Stripping21
-# WARNING: new configuration: ProtonCut        : 
-# WARNING:                   ( CLONEDIST   > 5000    ) & 
-# WARNING:                   ( TRCHI2DOF   < 4       ) & 
-# WARNING:                   ( TRGHOSTPROB < 0.4     ) & 
-# WARNING:                   ( PT          > 500 * MeV              ) & 
+# WARNING: new configuration: ProtonCut        :
+# WARNING:                   ( CLONEDIST   > 5000    ) &
+# WARNING:                   ( TRCHI2DOF   < 4       ) &
+# WARNING:                   ( TRGHOSTPROB < 0.4     ) &
+# WARNING:                   ( PT          > 500 * MeV              ) &
 # WARNING:                   in_range (  2        , ETA , 4.9       ) &
 # WARNING:                   in_range ( 10 * GeV  , P   , 150 * GeV ) &
 # WARNING:                   HASRICH                   &
 # WARNING:                   ( PROBNNp      > 0.15   ) &
-# WARNING:                   ( MIPCHI2DV()  > 4.     ) 
-# WARNING:                    
-# WARNING: new configuration: KaonCut          : 
-# WARNING:                   ( CLONEDIST   > 5000   ) & 
-# WARNING:                   ( TRCHI2DOF   < 4      ) & 
-# WARNING:                   ( TRGHOSTPROB < 0.4    ) & 
-# WARNING:                   ( PT          > 750 * MeV               ) & 
+# WARNING:                   ( MIPCHI2DV()  > 4.     )
+# WARNING:
+# WARNING: new configuration: KaonCut          :
+# WARNING:                   ( CLONEDIST   > 5000   ) &
+# WARNING:                   ( TRCHI2DOF   < 4      ) &
+# WARNING:                   ( TRGHOSTPROB < 0.4    ) &
+# WARNING:                   ( PT          > 750 * MeV               ) &
 # WARNING:                   in_range ( 2          , ETA , 4.9       ) &
 # WARNING:                   in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
 # WARNING:                   HASRICH                  &
 # WARNING:                   ( PROBNNk      > 0.20  ) &
-# WARNING:                   ( MIPCHI2DV()  > 9.    ) 
-# WARNING:                    
-# WARNING: new configuration: PionCut          : 
-# WARNING:                   ( CLONEDIST   > 5000   ) & 
+# WARNING:                   ( MIPCHI2DV()  > 9.    )
+# WARNING:
+# WARNING: new configuration: PionCut          :
+# WARNING:                   ( CLONEDIST   > 5000   ) &
 # WARNING:                   ( TRCHI2DOF   < 4      ) &
 # WARNING:                   ( TRGHOSTPROB < 0.4    ) &
-# WARNING:                   ( PT          > 750 * MeV               ) & 
+# WARNING:                   ( PT          > 750 * MeV               ) &
 # WARNING:                   in_range ( 2          , ETA , 4.9       ) &
 # WARNING:                   in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
 # WARNING:                   HASRICH                  &
 # WARNING:                   ( PROBNNpi     > 0.15  ) &
 # WARNING:                   ( MIPCHI2DV()  > 9.    )
-# WARNING:                    
+# WARNING:
 # Register line: StrippingBc3pppiForBc3h
 # Register line: StrippingBc3ppkForBc3h
 # Register line: StrippingBc3piForBc3h
