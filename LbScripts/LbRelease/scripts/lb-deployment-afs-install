@@ -1,0 +1,28 @@
+#!/bin/bash
+#
+# Helper script to install RPMs to AFS during the deployment of a project.
+#
+
+if [ $# -le 2 ] ; then
+  echo 'Usage: $(basename $0) <project> <version> <platform1> [<platform2> ...]'
+fi
+
+project=$1
+version=$2
+shift 2
+
+rpms=$(for platform in $* index ; do echo ${project^^}_${version}_$(echo ${platform} | tr - _) ; done)
+
+
+#echo "cleaning up 'lcg' scratch space, be patient"
+rm -rf /afs/cern.ch/lhcb/software/rpmrel/lcg/*
+#echo "cleaning up 'tmp', be patient"
+rm -rf /afs/cern.ch/lhcb/software/rpmrel/tmp/*
+
+echo installing RPMs
+/afs/cern.ch/lhcb/software/rpmrel/afslbpkr install $rpms
+
+#echo "cleaning up 'lcg' scratch space, be patient"
+rm -rf /afs/cern.ch/lhcb/software/rpmrel/lcg/*
+#echo "cleaning up 'tmp', be patient"
+rm -rf /afs/cern.ch/lhcb/software/rpmrel/tmp/*
