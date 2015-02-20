@@ -92,7 +92,7 @@ void CntrPub::analyze(void *, int, MonMap* mmap)
       }
       else
       {
-        sdes->idata = d->i_data;
+        sdes->idata = d->l_data;
       }
       sdes->svc->updateService();
     }
