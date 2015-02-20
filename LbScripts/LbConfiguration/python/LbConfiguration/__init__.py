@@ -1,6 +1,7 @@
 import External
 import Platform
 import Project
+import shutil
 
 
 def createProjectMakefile(dest, overwrite=False):
@@ -18,12 +19,29 @@ def createProjectMakefile(dest, overwrite=False):
 def createToolchainFile(dest, overwrite=False):
     '''Write the generic toolchain.cmake file needed by CMake-based projects.
     @param dest: destination filename
+    @param overwrite: flag to decide if an already present file has to be kept or not (default is False)
     '''
     import os, logging
     if overwrite or not os.path.exists(dest):
         logging.debug("Creating '%s'", dest)
         f = open(dest, "w")
         f.write("include($ENV{LBUTILSROOT}/data/toolchain.cmake)\n")
+        f.close()
+
+def createDataPackageCMakeLists(pkg, dest, overwrite=False):
+    '''Create the generic CMakeLists.txt file for data packages.
+    @param pkg: data package name
+    @param dest: destination filename
+    @param overwrite: flag to decide if an already present file has to be kept or not (default is False)
+    '''
+    import os, logging
+    from string import Template
+    if overwrite or not os.path.exists(dest):
+        logging.debug("Creating '%s'", dest)
+        tpl = Template(open(os.path.join(os.environ['LBCONFIGURATIONROOT'],
+                                         'data', 'DataPkgCMakeLists.tpl')).read())
+        f = open(dest, "w")
+        f.write(tpl.substitute(package_name=pkg))
         f.close()
 
 def createEclipseConfiguration(dest, projectpath):

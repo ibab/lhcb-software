@@ -1,5 +1,9 @@
 2015-02-20  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	LBCORE-751: add support for data packages checked out in a CMake-based project
+
+2015-02-20  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* lb-deployment-*: improvements to support Gaudi builds and added a command
 	to install on AFS
 

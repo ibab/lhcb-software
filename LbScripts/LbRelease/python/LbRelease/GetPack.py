@@ -7,9 +7,11 @@ from subprocess import Popen, PIPE
 from LbUtils.Script import Script
 from LbUtils.VCS import SVNReposInfo, CVSReposInfo
 from LbConfiguration import (createProjectMakefile, createToolchainFile,
+                             createDataPackageCMakeLists,
                              eclipseConfigurationAddPackage,
                              createEclipseConfiguration)
 from LbConfiguration.Repository import repositories as __repositories__
+from LbConfiguration.Package import package_names as __data_packages__
 import rcs
 
 ## Class to select valid version tags according to LHCb policy
@@ -976,6 +978,13 @@ class GetPack(Script):
                 # Check out the package
                 done_packages[pkg] = self.checkout(pkg, vers)
                 pkgdir = done_packages[pkg][2]
+                # create special CMakeLists.txt for data packages (if needed)
+                # see LBCORE-751
+                if os.path.basename(pkg) in __data_packages__:
+                    # note that pkgdir includes the 'cmt' directory
+                    createDataPackageCMakeLists(pkg,
+                                                os.path.join(pkgdir, os.pardir,
+                                                             'CMakeLists.txt'))
                 # See if we need to check out something else
                 todo_packages.update(self._getNeededPackages(pkgdir))
                 # Progress report
@@ -986,6 +995,7 @@ class GetPack(Script):
                                                              total_count)
                 # ensure that the previous message is printed at the right moment
                 sys.stdout.flush()
+
             except Skip:
                 skipped_packages[pkg] = vers
                 self.log.warning("Skipped package %s %s", pkg, vers)
