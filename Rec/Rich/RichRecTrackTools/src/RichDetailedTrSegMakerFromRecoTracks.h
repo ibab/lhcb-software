@@ -115,25 +115,30 @@ namespace Rich
        *  is contained inside this medium. This means the start of the visable Rich1Gas
        *  segment is the aerogel exit point, and not the Rich1Gas entrance point.
        *
+       *  @param track        The Track object
        *  @param state        State information to correct
        *  @param refState     Reference starting state.
        */
-      void fixRich1GasEntryPoint( LHCb::State & state,
+      void fixRich1GasEntryPoint( const LHCb::Track & track,
+                                  LHCb::State & state,
                                   const LHCb::State * refState = 0 ) const;
 
       /** Correct the exit state to the point where the track traverses the spherical mirror
        *
        *  @param radiator     Pointer to the apropriate radiator detector element
+       *  @param track        The Track object
        *  @param state        State information to correct
        *  @param refState     Reference starting state.
        */
       void correctRadExitMirror( const DeRichRadiator* radiator,
+                                 const LHCb::Track & track,
                                  LHCb::State & state,
                                  const LHCb::State * refState = 0  ) const;
 
       /** Extrapolate a state to a new z position
        *
        * @param stateToMove  The state to extrapolate
+       * @param track        The Track object
        * @param z            The z position to extrapolate the state to
        * @param refState     Reference starting state.
        *
@@ -143,6 +148,7 @@ namespace Rich
        *         State remains unaltered.
        */
       bool moveState( LHCb::State & stateToMove,
+                      const LHCb::Track& track,
                       const double z,
                       const LHCb::State * refState = 0 ) const;
 
@@ -156,7 +162,8 @@ namespace Rich
       }
 
       /// Creates the middle point information
-      bool createMiddleInfo( const Rich::RadiatorType rad,
+      bool createMiddleInfo( const LHCb::Track & track,
+                             const Rich::RadiatorType rad,
                              LHCb::State & fState,
                              const LHCb::State * fStateRef,
                              LHCb::State & lState,
@@ -260,11 +267,14 @@ namespace Rich
       /// Locally cached states for the TrackStateProvider
       mutable LHCb::State m_states[2];
 
-      /// Flag to turn on/off the use of the TrackStateProvider
-      bool m_useStateProvider;
+      /// Flag to turn on/off the use of the TrackStateProvider to create missing states
+      bool m_createMissingStates;
 
       /// Flag to use TrackTraj to move states, instead of the extrapolator
       bool m_useTrackTraj;
+
+      /// Use the State provider instead of the extrapolator to move states
+      bool m_useStateProvider;
 
       /// Radiators to skip, by track type
       typedef std::map< LHCb::Track::Types, Rich::Radiators > TrackTypesRads;

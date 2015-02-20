@@ -4,6 +4,11 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-02-20 - Chris Jones
+ - Add a new option (enabled by default) to move states in 
+   DetailedTrSegMakerFromRecoTracks using a StateProvider using the
+   stateFromTrajectory method. Faster, with no signficant loss of resolution.
+
 ! 2015-02-12 - Chris Jones
  - Clean up internal interface used by DetailedTrSegMakerFromRecoTracks to
    avoid passing around unique_ptr instances by reference.

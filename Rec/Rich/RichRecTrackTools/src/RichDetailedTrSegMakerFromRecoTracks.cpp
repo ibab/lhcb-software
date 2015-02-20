@@ -33,50 +33,33 @@ DetailedTrSegMakerFromRecoTracks( const std::string& type,
     m_nomZstates         ( 2*Rich::NRiches,    0      ),
     m_trExt1             ( NULL                       ),
     m_trExt2             ( NULL                       ),
-    m_trExt1Name         ( ""                         ),
-    m_trExt2Name         ( ""                         ),
-    m_extrapFromRef      ( false                      ),
-    m_minZmove           ( 1 * Gaudi::Units::mm       ),
     m_magFieldSvc        ( NULL                       )
 {
   using namespace Gaudi::Units;
 
-  // // context specific defaults
-  // if ( contextContains("HLT") )
-  // {
-  //   m_trExt1Name   = "TrackParabolicExtrapolator";
-  //   m_trExt2Name   = "TrackLinearExtrapolator";
-  //   // Rads            Aerogel   Rich1Gas  Rich2Gas
-  //   m_zTolerance   = { 3000*mm , 3000*mm , 4000*mm } ;
-  //   m_minRadLength = { 0*mm    , 500*mm  , 1500*mm } ;
-  // }
-  // else // offline
-  // {
-  m_trExt1Name   = "TrackRungeKuttaExtrapolator";
-  m_trExt2Name   = "TrackParabolicExtrapolator";
-  // Rads            Aerogel   Rich1Gas  Rich2Gas
-  //m_zTolerance   = { 800*mm  , 2000*mm , 3000*mm } ;
-  m_zTolerance   = { 800*mm  , 1000*mm , 1000*mm } ;
-  m_minRadLength = { 0*mm    , 500*mm  , 1500*mm } ;
-  // }
-
   // job options
 
-  declareProperty( "PrimaryTrackExtrapolator", m_trExt1Name    );
-  declareProperty( "BackupTrackExtrapolator",  m_trExt2Name    );
-  declareProperty( "ExtrapolateFromReference", m_extrapFromRef );
-  declareProperty( "MinimumZMove",             m_minZmove      );
+  declareProperty( "PrimaryTrackExtrapolator", 
+                   m_trExt1Name = "TrackRungeKuttaExtrapolator" );
+  declareProperty( "BackupTrackExtrapolator",  
+                   m_trExt2Name = "TrackParabolicExtrapolator"  );
+
+  // Always start state extrapolations from reference state.
+  declareProperty( "ExtrapolateFromReference", m_extrapFromRef = false );
+
+  // Minimum move in z to bother with
+  declareProperty( "MinimumZMove",             m_minZmove = 1*mm       );
 
   // Nominal z positions of states at RICHes
-  // do not have to be precisely accurate
-  m_nomZstates[0] =   99.0*Gaudi::Units::cm; // Place to look for Rich1 entry state
-  m_nomZstates[1] =  216.5*Gaudi::Units::cm; // Place to look for Rich1 exit state
-  m_nomZstates[2] =  945.0*Gaudi::Units::cm; // Place to look for Rich2 entry state
-  m_nomZstates[3] = 1190.0*Gaudi::Units::cm; // Place to look for Rich2 exit state
+  m_nomZstates[0] =   990*mm; // Place to look for Rich1 entry state
+  m_nomZstates[1] =  2165*mm; // Place to look for Rich1 exit state
+  m_nomZstates[2] =  9450*mm; // Place to look for Rich2 entry state
+  m_nomZstates[3] = 11900*mm; // Place to look for Rich2 exit state
   declareProperty( "NominalStateZ", m_nomZstates );
 
   // tolerances on z positions
-  declareProperty( "ZTolerances", m_zTolerance );
+  // Was { 800*mm  , 2000*mm , 3000*mm }
+  declareProperty( "ZTolerances", m_zTolerance = { 10*mm, 10*mm, 10*mm  } );
 
   // sanity checks on state information
   declareProperty( "ZSanityChecks", m_minStateDiff = { 1*mm, 25*mm, 50*mm } );
@@ -88,13 +71,17 @@ DetailedTrSegMakerFromRecoTracks( const std::string& type,
   declareProperty( "SegmentType", m_trSegTypeJO = "AllStateVectors" );
 
   // min path length
-  declareProperty( "MinRadiatorPathLength", m_minRadLength );
+  declareProperty( "MinRadiatorPathLength", 
+                   m_minRadLength = { 0*mm, 500*mm, 1500*mm } );
 
-  // Flag to use the state provider
-  declareProperty( "UseStateProvider", m_useStateProvider = true );
+  // Recreate missing states using the state provider tool
+  declareProperty( "CreateMissingStates", m_createMissingStates = true );
 
   // Flag to use TrackTraj to move states, instead of the extrapolator
   declareProperty( "UseTrackTraj", m_useTrackTraj = false );
+
+  // Use the State provider instead of the extrapolator to move states
+  declareProperty( "UseStateProvider", m_useStateProvider = true );
 
   // Radiators to skip by track type, when using the track provider tool
   m_radsToSkip[LHCb::Track::Ttrack]   = { Rich::Aerogel, Rich::Rich1Gas };
@@ -119,9 +106,12 @@ StatusCode DetailedTrSegMakerFromRecoTracks::initialize()
   const StatusCode sc = BaseTrSegMakerFromRecoTracks::initialize();
   if ( sc.isFailure() ) return sc;
 
-  // load primary track extrapolator now if it is going to be used 
-  // ( backup is loaded on-demand )
-  if ( !m_useTrackTraj ) { primaryExtrapolator(); }
+  // load primary track extrapolator now if it is going to be used to perform
+  // the state extrapolations   ( backup is loaded on-demand )
+  if ( !m_useTrackTraj && !m_useStateProvider ) { primaryExtrapolator(); }
+
+  // Load the state provider if it is to be used
+  if ( m_createMissingStates || m_useStateProvider ) { stateProvider(); }
 
   // Get the RICH tools
   acquireTool( "RichRayTracing",          m_rayTracing   );
@@ -140,9 +130,18 @@ StatusCode DetailedTrSegMakerFromRecoTracks::initialize()
   m_radiators.push_back( usedRads(Rich::Rich2Gas) ?
                          getDet<DeRichRadiator>(DeRichLocations::Rich2Gas) : NULL );
 
+  if ( m_useStateProvider )
+  {
+    info() << "Will use StateProvider instead of extrapolator to move states" << endmsg;
+  }
+
   if ( m_useTrackTraj )
   {
     info() << "Will use TrackTraj instead of extrapolator to move states" << endmsg;
+    if ( m_useStateProvider )
+    {
+      return Error( "Cannot use both TrackTraj and StateProvider at the same time !" );
+    }
   }
 
   if ( m_extrapFromRef )
@@ -182,8 +181,7 @@ StatusCode DetailedTrSegMakerFromRecoTracks::initialize()
 int
 DetailedTrSegMakerFromRecoTracks::
 constructSegments( const ContainedObject * obj,
-                   std::vector<LHCb::RichTrackSegment*>& segments )
-  const
+                   std::vector<LHCb::RichTrackSegment*>& segments ) const
 {
 
   // Try to cast input data to required type for this implementation
@@ -256,18 +254,18 @@ constructSegments( const ContainedObject * obj,
     }
 
     // Failed to find the state, so try with the state provider....
-    if ( !entryPStateRaw && m_useStateProvider && !skipByType(track,rad) )
+    if ( !entryPStateRaw && m_createMissingStates && !skipByType(track,rad) )
     {
       const StatusCode sc = stateProvider()->state( m_states[0], *track, zStart );
       if ( sc.isSuccess() )
       {
         entryPStateRaw = &m_states[0];
         if ( msgLevel(MSG::DEBUG) )
-        { debug() << "Found entry state at z=" << zStart << "mm via StateProvider" << endmsg; }
+        { debug() << "   -> Found entry state at z=" << zStart << "mm via StateProvider" << endmsg; }
       }
       else
       {
-        _ri_verbo << "Failed to get entry State at z=" << zStart 
+        _ri_verbo << "   -> Failed to get entry State at z=" << zStart 
                   << "mm via StateProvider" << endmsg;
       }
     }
@@ -314,18 +312,18 @@ constructSegments( const ContainedObject * obj,
     }
 
     // Failed to find the state, so try with the state provider....
-    if ( !exitPStateRaw && m_useStateProvider && !skipByType(track,rad) )
+    if ( !exitPStateRaw && m_createMissingStates && !skipByType(track,rad) )
     {
       const StatusCode sc = stateProvider()->state( m_states[1], *track, zEnd );
       if ( sc.isSuccess() )
       {
         exitPStateRaw = &m_states[1];
         if ( msgLevel(MSG::DEBUG) )
-        { debug() << "Found exit state at z=" << zEnd << "mm via StateProvider" <<  endmsg; }
+        { debug() << "    -> Found exit state at z=" << zEnd << "mm via StateProvider" <<  endmsg; }
       }
       else
       {
-        _ri_verbo << "Failed to get exit State at z=" << zEnd 
+        _ri_verbo << "    -> Failed to get exit State at z=" << zEnd 
                   << "mm via StateProvider" << endmsg;
       }
     }
@@ -378,7 +376,7 @@ constructSegments( const ContainedObject * obj,
                             *radiator, entryPoint1 ) )
     {
       // extrapolate state to the correct z
-      if ( moveState( *entryPState, entryPoint1.z(), entryPStateRaw ) )
+      if ( moveState( *entryPState, *track, entryPoint1.z(), entryPStateRaw ) )
       {
         // find radiator entry and exit points
         if ( entryPState &&
@@ -413,7 +411,7 @@ constructSegments( const ContainedObject * obj,
                                *radiator, entryPoint2 ) )
       {
         // extrapolate state to the correct z
-        if ( moveState( *exitPState, entryPoint2.z(), exitPStateRaw ) )
+        if ( moveState( *exitPState, *track, entryPoint2.z(), exitPStateRaw ) )
         {
           // find radiator entry and exit points
           if ( exitPState &&
@@ -463,10 +461,12 @@ constructSegments( const ContainedObject * obj,
 
       // make sure at current z positions
       _ri_verbo << "  Checking entry point is at final z=" << entryPoint1.z() << endmsg;
-      const bool sc1 = moveState( *entryPState, entryPoint1.z(), entryPStateRaw );
+      const bool sc1 = moveState( *entryPState, *track, 
+                                  entryPoint1.z(), entryPStateRaw );
       _ri_verbo << "  Checking exit point is at final z=" << intersects2.back().exitPoint().z()
                 << endmsg;
-      const bool sc2 = moveState( *exitPState,  intersects2.back().exitPoint().z(), exitPStateRaw );
+      const bool sc2 = moveState( *exitPState, *track, 
+                                  intersects2.back().exitPoint().z(), exitPStateRaw );
       sc = sc1 && sc2;
 
     }
@@ -484,10 +484,11 @@ constructSegments( const ContainedObject * obj,
 
       // make sure at current z positions
       _ri_verbo << "  Checking entry point is at final z= " << entryPoint1.z() << endmsg;
-      const bool sc1 = moveState( *entryPState, entryPoint1.z(), entryPStateRaw );
+      const bool sc1 = moveState( *entryPState, *track, entryPoint1.z(), entryPStateRaw );
       _ri_verbo << "  Checking exit point is at final z= " << intersects1.back().exitPoint().z()
                 << endmsg;
-      const bool sc2 = moveState( *exitPState, intersects1.back().exitPoint().z(), exitPStateRaw );
+      const bool sc2 = moveState( *exitPState, *track, 
+                                  intersects1.back().exitPoint().z(), exitPStateRaw );
       sc = sc1 && sc2;
 
     }
@@ -502,10 +503,11 @@ constructSegments( const ContainedObject * obj,
 
       // make sure at current z positions
       _ri_verbo << "  Checking entry point is at final z= " << entryPoint2.z() << endmsg;
-      const bool sc1 = moveState( *entryPState, entryPoint2.z(), entryPStateRaw );
+      const bool sc1 = moveState( *entryPState, *track, entryPoint2.z(), entryPStateRaw );
       _ri_verbo << "  Checking exit point is at final z= " << intersects2.back().exitPoint().z()
                 << endmsg;
-      const bool sc2 = moveState( *exitPState,  intersects2.back().exitPoint().z(), exitPStateRaw );
+      const bool sc2 = moveState( *exitPState, *track,
+                                  intersects2.back().exitPoint().z(), exitPStateRaw );
       sc = sc1 && sc2;
 
     }
@@ -576,13 +578,13 @@ constructSegments( const ContainedObject * obj,
       {
         // Update entry point to exit point on cone
         _ri_verbo << "   --> Correcting entry point to point on cone" << endmsg;
-        sc = moveState( *entryPState, inter2.z(), entryPStateRaw );
+        sc = moveState( *entryPState, *track, inter2.z(), entryPStateRaw );
       }
       else if ( intType == DeRichBeamPipe::BackFaceAndCone )
       {
         // Update exit point to entry point on cone
         _ri_verbo << "   --> Correcting exit point to point on cone" << endmsg;
-        sc = moveState( *exitPState, inter1.z(), exitPStateRaw );
+        sc = moveState( *exitPState, *track, inter1.z(), exitPStateRaw );
       }
       if ( !sc )
       {
@@ -617,7 +619,7 @@ constructSegments( const ContainedObject * obj,
     // a special hack for the Rich1Gas - since the aerogel volume
     // is placed INSIDE the Rich1Gas, the default entry point is wrong.
     //---------------------------------------------------------------------------------------------
-    if ( Rich::Rich1Gas == rad ) fixRich1GasEntryPoint( *entryPState, entryPStateRaw );
+    if ( Rich::Rich1Gas == rad ) fixRich1GasEntryPoint( *track, *entryPState, entryPStateRaw );
     //---------------------------------------------------------------------------------------------
 
 //     richHisto2D( HID("entryPostR1GasFix",rad), "Entry Post R1 Gas Fix",
@@ -629,7 +631,8 @@ constructSegments( const ContainedObject * obj,
     // check for intersection with spherical mirror for gas radiators
     // and if need be correct exit point accordingly
     //---------------------------------------------------------------------------------------------
-    if ( Rich::Aerogel != rad  ) correctRadExitMirror( *radiator, *exitPState, exitPStateRaw );
+    if ( Rich::Aerogel != rad  ) correctRadExitMirror( *radiator, *track, 
+                                                       *exitPState, exitPStateRaw );
     //---------------------------------------------------------------------------------------------
 
 //     richHisto2D( HID("exitPostMirrCorr",rad), "Exit Post Mirror Exit Correction",
@@ -743,7 +746,7 @@ constructSegments( const ContainedObject * obj,
         LHCb::RichTrackSegment::StateErrors midErrs;
         Gaudi::XYZPoint midPoint;
         Gaudi::XYZVector midMomentum;
-        const bool OK = createMiddleInfo( rad,
+        const bool OK = createMiddleInfo( *track, rad,
                                           *entryPState, entryPStateRaw,
                                           *exitPState,  exitPStateRaw,
                                           midPoint, midMomentum, midErrs );
@@ -812,7 +815,8 @@ constructSegments( const ContainedObject * obj,
 // creates middle point info
 bool
 DetailedTrSegMakerFromRecoTracks::
-createMiddleInfo( const Rich::RadiatorType rad,
+createMiddleInfo( const LHCb::Track & track,
+                  const Rich::RadiatorType rad,
                   LHCb::State & fState,
                   const LHCb::State * fStateRef,
                   LHCb::State & lState,
@@ -827,11 +831,11 @@ createMiddleInfo( const Rich::RadiatorType rad,
   const double midZ = (fState.position().z()+lState.position().z())/2;
 
   // move start state to this z
-  const bool moveFirst = moveState( fState, midZ, fStateRef );
+  const bool moveFirst = moveState( fState, track, midZ, fStateRef );
 
   // move end state to this z
   const bool moveLast = ( Rich::Rich1Gas == rad ?
-                          moveState( lState, midZ, lStateRef ) : false );
+                          moveState( lState, track, midZ, lStateRef ) : false );
 
   if ( moveFirst && moveLast )
   {
@@ -914,7 +918,8 @@ getNextInterPoint( const Gaudi::XYZPoint&   point,
 //====================================================================================================
 // fixup Rich1Gas entry point
 void
-DetailedTrSegMakerFromRecoTracks::fixRich1GasEntryPoint( LHCb::State & state,
+DetailedTrSegMakerFromRecoTracks::fixRich1GasEntryPoint( const LHCb::Track & track,
+                                                         LHCb::State & state,
                                                          const LHCb::State * refState ) const
 {
   if ( m_radiators[Rich::Aerogel] )
@@ -929,7 +934,7 @@ DetailedTrSegMakerFromRecoTracks::fixRich1GasEntryPoint( LHCb::State & state,
       if ( aerogelExitPoint.z() > state.z() )
       {
         _ri_verbo << "   Correcting Rich1Gas entry point" << endmsg;
-        const bool sc = moveState( state, aerogelExitPoint.z(), refState );
+        const bool sc = moveState( state, track, aerogelExitPoint.z(), refState );
         if ( !sc ) Warning( "Problem correcting RICH1Gas entry point for aerogel" ).ignore();
       }
     }
@@ -940,6 +945,7 @@ DetailedTrSegMakerFromRecoTracks::fixRich1GasEntryPoint( LHCb::State & state,
 //====================================================================================================
 void
 DetailedTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRadiator* radiator,
+                                                        const LHCb::Track & track,
                                                         LHCb::State & state,
                                                         const LHCb::State * refState ) const
 {
@@ -955,7 +961,7 @@ DetailedTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRadiator* ra
 
   // move state to be on the inside of the mirror
   _ri_verbo << "    --> Moving state first to be inside mirror" << endmsg;
-  sc = sc && moveState( state, state.z() - m_mirrShift[rich], refState );
+  sc = sc && moveState( state, track, state.z() - m_mirrShift[rich], refState );
   bool correct = false;
 
   // find mirror intersection using the reflect method
@@ -977,12 +983,12 @@ DetailedTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRadiator* ra
   if ( correct )
   {
     _ri_verbo << "    --> Found correction is needed" << endmsg;
-    sc = sc && moveState( state, intersection.z(), refState );
+    sc = sc && moveState( state, track, intersection.z(), refState );
   }
   else
   {
     _ri_verbo << "    --> Found correction not needed. Moving back to original position" << endmsg;
-    sc = sc && moveState( state, initialZ, refState );
+    sc = sc && moveState( state, track, initialZ, refState );
   }
 
   if ( !sc ) Warning( "Problem correcting segment exit to mirror intersection" ).ignore();
@@ -992,9 +998,12 @@ DetailedTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRadiator* ra
 //====================================================================================================
 bool
 DetailedTrSegMakerFromRecoTracks::moveState( LHCb::State & stateToMove,
+                                             const LHCb::Track& track,
                                              const double z,
                                              const LHCb::State * refState ) const
 {
+  bool OK = true;
+
   // Check if requested move is big enough to bother with
   if ( fabs( stateToMove.z() - z ) > m_minZmove )
   {
@@ -1010,15 +1019,23 @@ DetailedTrSegMakerFromRecoTracks::moveState( LHCb::State & stateToMove,
       _ri_verbo << "      --> Using reference state  "
                 << stateToMove.position() << endmsg;
     }
-
-    //info() << "State Before Move : " << stateToMove << endmsg;
-    //info() << "Moving state from " << stateToMove.position() << " to z=" << z << endmsg;
-
+    
+    // Use State provider to move the state
+    if ( m_useStateProvider )
+    {
+      //if ( !stateProvider()->state(stateToMove,track,z) )
+      if ( !stateProvider()->stateFromTrajectory(stateToMove,track,z) )
+      {
+        Warning( "Failed to move state using StateProvider" ).ignore();
+        OK = false;
+      }
+    }
     // Use Track Traj ?
-    if ( m_trackTraj )
+    else if ( UNLIKELY(m_useTrackTraj) )
     {
       stateToMove = m_trackTraj->state(z);
     }
+    // Use original extrapolator
     else
     {
       // try first with the primary extrapolator
@@ -1035,12 +1052,10 @@ DetailedTrSegMakerFromRecoTracks::moveState( LHCb::State & stateToMove,
           // Both failed ...
           Warning( "Failed to extrapolate state using either '"+
                    m_trExt1Name+"' or '"+m_trExt2Name+"'" ).ignore();
-          return false;
+          OK =  false;
         }
       }
     }
-
-    //info() << "State After Move  : " << stateToMove << endmsg;
 
     // verbose printout
     _ri_verbo << "                            to   "
@@ -1048,7 +1063,7 @@ DetailedTrSegMakerFromRecoTracks::moveState( LHCb::State & stateToMove,
 
   }
 
-  return true;
+  return OK;
 }
 //====================================================================================================
 
