@@ -4,6 +4,10 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2015-02-20 - Manuel Tobias Schiller
+ - SIMDChi2Fit: use UNLIKELY/LIKELY to give hints to the compiler (seems to
+   improve the timing of the Seeding by about 5%)
+
 ! 2015-02-05 - Manuel Tobias Schiller
  - OTHit: make use of the new walk_fast method in OTDet::WalkRelation to speed
    up Seeding and Forward by about 4%; effects on efficiencies, ghost rates,

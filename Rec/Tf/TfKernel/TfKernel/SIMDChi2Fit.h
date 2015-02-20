@@ -14,6 +14,7 @@
 #include <type_traits>
 
 #include "Math/CholeskyDecomp.h"
+#include "GaudiKernel/Kernel.h" // LIKELY/UNLIKELY
 
 namespace Tf {
 /// SIMDChi2FitUtils - autovectorisable @f$\chi^2@f$ fits
@@ -636,7 +637,7 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 	 */
 	value_type chi2(const track_type& track, const hit_type& hit) const
 	{
-	    if (!MeasurementProvider().valid(hit)) return value_type(0);
+	    if (UNLIKELY(!MeasurementProvider().valid(hit))) return value_type(0);
 	    const value_type wproj = MeasurementProjector().wproj(track, hit);
 	    const value_type wmeas =
 		MeasurementProvider().wmeas(hit, track, MeasurementProjector());
@@ -902,7 +903,7 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 	    // loop over all hits
 	    for (const hit_type& hit : hits) {
 		// skip deselected hits
-		if (!MeasurementProvider().valid(hit)) continue;
+		if (UNLIKELY(!MeasurementProvider().valid(hit))) continue;
 		++m_ndf;
 		// project out contribution of each hit and save in
 		// SIMD-friendly vectors
@@ -917,7 +918,7 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 			    hit, track, MeasurementProjector());
 		    wmeass[iHit] = wmeas - wproj;
 		}
-		if (++iHit == nHitsMax) {
+		if (UNLIKELY(++iHit == nHitsMax)) {
 		    // ok, array fully filled, accumulate
 		    accumulate(nHitsMax, wgrads, wmeass);
 		    iHit = 0;
@@ -940,13 +941,13 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 	/// solve and update the track
 	FitStatus solveAndUpdate(track_type& track)
 	{
-	    if (m_ndf < 0) return NotPosDef;
+	    if (UNLIKELY(m_ndf < 0)) return NotPosDef;
 	    ROOT::Math::CholeskyDecomp<value_type, nDim> decomp(m_icov.data());
-	    if (!decomp) return NotPosDef;
+	    if (UNLIKELY(!decomp)) return NotPosDef;
 	    vector_type dparam(m_rhs);
 	    decomp.Solve(dparam);
 	    FitStatus retVal = TrackUpdater().updateTrack(track, dparam);
-	    if (deferredCovariance && retVal == FitConverged) {
+	    if (deferredCovariance && UNLIKELY(retVal == FitConverged)) {
 		m_deferredCovarianceUnion.m_deferredCovariance =
 		    DeferredCovariance(decomp);
 		m_deferredCovarianceInitialised = true;
@@ -959,7 +960,7 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 	FitStatus solveAndUpdate(track_type& track, C& hits)
 	{
 	    FitStatus retVal = solveAndUpdate(track);
-	    if (UpdateAccepted <= retVal) {
+	    if (LIKELY(UpdateAccepted <= retVal)) {
 		for (hit_type& hit : hits) HitUpdater().updateHit(hit, track);
 	    }
 	    return retVal;
@@ -980,7 +981,7 @@ class SIMDChi2Fit : public MEASUREMENTPROVIDER::commonfitpolicy_type
 	    FitStatus retVal = UpdateRejected;
 	    for (unsigned iter = 0; iter != nIterMax; ++iter) {
 		retVal = doFitOneIter(track, hits);
-		if (UpdateAccepted != retVal) break;
+		if (UNLIKELY(UpdateAccepted != retVal)) break;
 	    }
 	    return retVal;
 	}
