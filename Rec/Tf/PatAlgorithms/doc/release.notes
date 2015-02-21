@@ -4,6 +4,34 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-02-21 - Manuel Tobias Schiller
+ - PatSeedingTool changes for running in tandem with Forward:
+   - remove the old UseForward property in favour of Sascha's clearly superior
+     'UsedLHCbIDToolName' property; to only run over hits not used by the
+     Forward, use these options:
+
+     from Configurables import PatSeeding, PatSeedingTool, TrackUsedLHCbID
+     seeding = PatSeeding('PatSeedingTool')
+     seeding.addTool(PatSeedingTool, name = 'PatSeedingTool')
+     seeding.PatSeedingTool.addTool(TrackUsedLHCbID, name = 'TrackUsedLHCbID')
+     seeding.PatSeedingTool.UsedLHCbIDToolName = 'TrackUsedLHCbID'
+     seeding.PatSeedingTool.TrackUsedLHCbID.inputContainers = [
+         'location/of/good/forward/tracks/on/the/TES', ... ]
+     
+     With this new flexibility, the old properties OnlyGood and DiscardChi2
+     have become obsolete, too, and have been removed. The functionality can
+     be duplicated with the 'selectorNames' property of the TrackUsedLHCbID
+     tool.
+
+   - slightly modernise the code which allows "injecting" the T station
+     segments of Forward tracks into the output of the Seeding (property
+     'UseForwardTracks'); the main application for this is specialised
+     studies; also add a property to limit the extraction of Forward tracks to
+     those which have a minimum chi^2/ndf
+   
+   These changes do not affect performance or timing in the default
+   configuration of the Seeding. 
+
 ! 2015-02-19 - Michel De Cian
  - Tuned uncertainty of point on magnetic plane in downstream tracking, change zMagnet parametrisation. 
   Should slightly improve efficiency / ghost rate.

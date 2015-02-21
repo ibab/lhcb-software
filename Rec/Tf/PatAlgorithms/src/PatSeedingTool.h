@@ -248,7 +248,6 @@ class PatSeedingTool :
     int m_timeStereo;
     int m_timeItOt;
     int m_timeLowQual;
-    bool m_useForward;
     bool m_useForwardTracks;
 
     unsigned m_nDblOTHitsInXSearch;
@@ -299,6 +298,7 @@ class PatSeedingTool :
     unsigned m_otNHitsLowThresh;
 
     // clone killing among forward tracks
+    double m_forwardMaxChi2;
     double m_forwardCloneMaxXDist;
     double m_forwardCloneMaxYDist;
     double m_forwardCloneMaxTXDist;
@@ -312,10 +312,6 @@ class PatSeedingTool :
     unsigned m_maxITHits;
     unsigned m_maxOTHits;
     bool m_abortOnVeloAbort;
-
-    // Re-using of hits on PatForward tracks
-    bool m_onlyGood;
-    double m_discardChi2;
 
     /// maximum number of holes in a track (i.e. planes without hit)
     unsigned m_maxHoles;

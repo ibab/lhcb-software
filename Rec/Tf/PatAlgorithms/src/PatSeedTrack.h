@@ -42,6 +42,9 @@ class PatSeedTrack {
   public:
     friend class PatSeedTool;
 
+    /// use a BloomFilter for clone killing purposes
+    typedef BloomFilter<LHCb::LHCbID, 12, 81789, 1 << 20> XHitFingerPrint;
+
     /// Standard constructor
     PatSeedTrack( double x0, double x1, double x2, 
 	double z0, double z1, double z2, double zRef, double dRatio);
@@ -314,7 +317,7 @@ class PatSeedTrack {
 	m_ids.insert(hit->hit()->lhcbID());
       }
     }
-    const BloomFilter<LHCb::LHCbID, 12, 81789, 1 << 20>& bloomfilter() const
+    const XHitFingerPrint& bloomfilter() const
     { return m_ids; }
 
   protected:
@@ -338,7 +341,7 @@ class PatSeedTrack {
 
     PlaneArray m_planeList;
     PatFwdHits m_coords;
-    BloomFilter<LHCb::LHCbID, 12, 81789, 1 << 20> m_ids;
+    XHitFingerPrint m_ids;
 
     struct countIfHighThreshold : /// helper predicate for nbHighThreshold
       public std::unary_function<const PatFwdHit*,bool>
