@@ -4538,7 +4538,7 @@ std::complex<double> Gaudi::Math::Flatte::flatte_amp
 double Gaudi::Math::Flatte::flatte ( const double x ) const
 {
   //
-  if ( ( mA1 () + mA2 () ) >= x ) { return 0 ; }
+  if ( thresholdA () >= x ) { return 0 ; }
   //
   // get the amplitude...
   std::complex<double> amp = flatte_amp ( x ) ;
@@ -4553,7 +4553,7 @@ double Gaudi::Math::Flatte::flatte ( const double x ) const
 double Gaudi::Math::Flatte::flatte2 ( const double x ) const
 {
   //
-  if ( ( mB1 () + mB2() ) >= x ) { return 0 ; }
+  if ( thresholdB () >= x ) { return 0 ; }
   //
   // get the amplitude...
   std::complex<double> amp = flatte_amp ( x ) ;
@@ -4574,13 +4574,11 @@ double  Gaudi::Math::Flatte::integral
   if (           low > high   ) { return - integral ( high ,
                                                       low  ) ; } // RETURN
   //
-  const double a = std::min ( mA1() + mA2() , mB1() + mB2() ) ;
-  //
+  const double a = threshold() ;
   if ( a >= high ) { return                     0 ; }
   if ( a >  low  ) { return integral ( a , high ) ; }
   //
-  const double b = std::max ( mA1() + mA2() , mB1() + mB2() ) ;
-  //
+  const double b = std::max ( thresholdA () , thresholdB () ) ;
   if ( low < b     && b    < high ) 
   { return integral ( low , b ) + integral ( b , high ) ; }
   //
@@ -4611,7 +4609,6 @@ double  Gaudi::Math::Flatte::integral
   F.function = &flatte_GSL ;
   const Flatte* _f = this  ;
   F.params   = const_cast<Flatte*> ( _f ) ;
-  //
   //
   double result   =  1.0 ;
   double error    = -1.0 ;
@@ -4646,7 +4643,7 @@ double  Gaudi::Math::Flatte::integral () const
   // split into reasonable sub intervals
   //
   //
-  const double x_low  = std::min ( mA1() + mA2() , mB1() + mB2() ) ;
+  const double x_low  = threshold () ;
   const double x_high = m_m0
     + 15 * std::abs ( m_m0g1 / m_m0           )
     + 15 * std::abs ( m_m0g1 / m_m0 * m_g2og1 ) ;

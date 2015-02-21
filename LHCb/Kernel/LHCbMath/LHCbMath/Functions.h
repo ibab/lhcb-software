@@ -2236,6 +2236,13 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
+      double thresholdA () const { return mA1() + mA2() ; }
+      double thresholdB () const { return mB1() + mB2() ; }
+      double threshold  () const 
+      { return std::min ( thresholdA () , thresholdB () ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
       bool setM0     ( const double x ) ;
       bool setMass   ( const double x ) { return setM0 ( x ) ; }
       bool setPeak   ( const double x ) { return setM0 ( x ) ; }

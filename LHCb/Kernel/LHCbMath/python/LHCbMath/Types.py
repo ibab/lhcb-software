@@ -1640,6 +1640,7 @@ ROOT.TMatrix.__repr__  = _tmg_str_
 ROOT.TMatrix.__str__   = _tmg_str_
 
 # =============================================================================
+VE            = Gaudi.Math.ValueWithError
 SE            = cpp.StatEntity 
 WSE           = Gaudi.Math.WStatEntity 
 # =============================================================================
@@ -1667,16 +1668,20 @@ SE. mean    = lambda s : VE ( s._orig_mean () , s.meanErr()**2 )
 # =============================================================================
 # minor decoration for WStatEntity 
 # ============================================================================= 
+if not hasattr ( WSE , '_orig_sum'  ) : 
+    _orig_sum     = WSE.sum
+    WSE._orig_sum = _orig_sum
+
 if not hasattr ( WSE , '_orig_mean' ) : 
     _orig_mean_wse = WSE.mean
     WSE._orig_mean = _orig_mean_wse
     
+WSE. sum     = lambda s : VE ( s._orig_sum  () , s.sum2()       )
 WSE. mean    = lambda s : VE ( s._orig_mean () , s.meanErr()**2 )
 WSE. minmax  = lambda s :            s.values  ().minmax() 
 WSE.__repr__ = lambda s : 'WStat: '+ s.toString()
 WSE.__str__  = lambda s : 'WStat: '+ s.toString()
 
-VE              = Gaudi.Math.ValueWithError
 
 # =============================================================================
 ## get the B/S estimate from the formula 

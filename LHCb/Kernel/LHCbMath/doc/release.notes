@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-02-21 - Vanya Belyaev
+ - impove printout for WStatEntity 
+
 ! 2015-02-20 - Marco Clemencic
  - fixed the name of the LCG_Interfaces/eigen package
 
