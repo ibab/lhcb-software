@@ -192,6 +192,19 @@ from Ostap.FitSpecificModels import *
 logger.debug ('Import ``other''   models from FitOtherModels'          )
 from Ostap.FitOtherModels    import *
 
+
+models = []
+from Ostap.FitSignalModels   import models as _models 
+models += _models
+from Ostap.FitBkgModels      import models as _models 
+models += _models
+from Ostap.FitOtherModels    import models as _models 
+models += _models 
+from Ostap.FitSpecificModels import models as _models
+models += _models
+from Ostap.Fit2DModels       import models as _models 
+models += _models
+
 import Ostap.Models 
 # =============================================================================
 if '__main__' == __name__ :
@@ -206,7 +219,9 @@ if '__main__' == __name__ :
     logger.info ( ' Date    : %s' %         __date__      )
     logger.info ( ' Symbols : %s' %  list ( __all__     ) )
     logger.info ( 80*'*' ) 
-
+    for m in models : logger.info ( 'Model %s: %s' % ( m.__name__ ,  m.__doc__  ) ) 
+    logger.info ( 80*'*' ) 
+ 
 # =============================================================================
 # The END 
 # =============================================================================

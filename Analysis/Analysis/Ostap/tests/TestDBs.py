@@ -54,8 +54,8 @@ for i in range ( 0, 100000) : h2.Fill( m1.gauss() , m1.gauss() )
 data [ 'histo-1D' ] = h1
 data [ 'histo-2D' ] = h2
 
-db_sql  = SQLiteShelve.open    ( db_sql_name , mode = 'n' )
-db_zip  = ZipShelve.open       ( db_zip_name , flag = 'n' )
+db_sql  = SQLiteShelve.open    ( db_sql_name , 'c' )
+db_zip  = ZipShelve.open       ( db_zip_name , 'c' )
 #
 #
 for k in data :
@@ -71,8 +71,8 @@ db_zip.close()
 logger.info('SQLiteShelve size: %d ' % os.path.getsize( db_sql_name ) )
 logger.info('ZipShelve    size: %d ' % os.path.getsize( db_zip_name ) )
 
-db_sql  = SQLiteShelve.open    ( db_sql_name , mode = 'r' )
-db_zip  = ZipShelve.open       ( db_zip_name , flag = 'r' )
+db_sql  = SQLiteShelve.open    ( db_sql_name , 'r' )
+db_zip  = ZipShelve.open       ( db_zip_name , 'r' )
 
 with timing ( 'h1-read/SQL' ) : h1_sql = db_sql [ 'histo-1D']
 with timing ( 'h1-read/ZIP' ) : h1_zip = db_sql [ 'histo-1D']

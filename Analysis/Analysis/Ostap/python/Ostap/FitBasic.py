@@ -289,7 +289,7 @@ class PDF (object) :
     #  r,f = model.fitTo ( dataset , ncpu     = 10   )    
     #  r,f = model.fitTo ( dataset , draw = True , nbins = 300 )    
     #  @endcode 
-    def fitTo ( self , dataset , draw = False , nbins = 100 , silent = False , *args , **kwargs ) :
+    def fitTo ( self , dataset , draw = False , nbins = 100 , silent = False , refit = False , *args , **kwargs ) :
         """
         Perform the actual fit (and draw it)
         >>> r,f = model.fitTo ( dataset )
@@ -323,16 +323,21 @@ class PDF (object) :
         st = result.status()
         if 0 != st and silent :
             logger.warning ( 'PDF(%s).fitTo: status is %s. Refit in non-silent regime ' % ( self.name , st  ) )    
-            return self.fitTo ( dataset , draw , nbins , False , *args , **kwargs )
+            return self.fitTo ( dataset , draw , nbins , False , refit , *args , **kwargs )
         
-        if 0 != st   : logger.warning ( 'PDF(%s).fitTo: Fit status is %s ' % ( self.name , st   ) )
+        for_refit = False
+        if 0 != st   :
+            for_refit = 'status' 
+            logger.warning ( 'PDF(%s).fitTo: Fit status is %s ' % ( self.name , st   ) )
         #
         qual = result.covQual()
         if   -1 == qual : logger.debug   ( 'PDF(%s).fitTo: covQual    is unknown ' ) 
-        elif  3 != qual : logger.warning ( 'PDF(%s).fitTo: covQual    is %s ' % ( self.name , qual ) ) 
+        elif  3 != qual :
+            for_refit = 'covariance' 
+            logger.warning ( 'PDF(%s).fitTo: covQual    is %s ' % ( self.name , qual ) ) 
 
         #
-        ## check the integrals (is possible)
+        ## check the integrals (when possible)
         if hasattr ( self , 'alist2' ) :
             
             nsum = VE()            
@@ -346,9 +351,19 @@ class PDF (object) :
                 nl = nsum.value() - 0.10 * nsum.error()
                 nr = nsum.value() + 0.10 * nsum.error()
                 if not nl <= len ( dataset ) <= nr :
-                    logger.error ( 'PDF(%s).fitTo is problematic:  sum %s != %s '
-                                   % ( self.name , nsum , len( dataset ) ) )  
-                    
+                    logger.error ( 'PDF(%s).fitTo is problematic:  sum %s != %s ' % ( self.name , nsum , len( dataset ) ) )
+                    for_refit = 'integral'
+
+        #
+        ## call for refit if needed
+        #
+        if refit and for_refit :
+            logger.info ( 'PDF(%s).fitTo: call for refit:  %s/%s'  % ( self.name , for_refit , refit ) ) 
+            if ininstance ( refit , ( int , long ) )  : refit -= 1
+            else                                      : refit  = False
+            return  self.pdf ( dataset , draw , nbins , silent , refit , *args , **kwargs ) 
+
+
         if hasattr ( self.pdf , 'setPars' ) : self.pdf.setPars()
             
         for s in self.components () : 

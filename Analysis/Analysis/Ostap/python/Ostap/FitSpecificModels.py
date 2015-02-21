@@ -50,6 +50,7 @@ else                       : logger = getLogger ( __name__     )
 # =============================================================================
 from   Ostap.FitBasic            import PDF,PDF2 
 from   Ostap.FitSignalModels     import CB2_pdf
+models = [] 
 # =============================================================================
 ## @class Bd_pdf
 #  simple wrapper over CB2-pdf
@@ -60,10 +61,7 @@ from   Ostap.FitSignalModels     import CB2_pdf
 #  @date 2011-07-25
 class Bd_pdf(CB2_pdf) :
     """
-    Define PDF for Bd: Double sided Crystall Ball
-    
-    Attention: mass is mandatory argument!
-    
+    B0: double-sided Crystal Ball function
     """
     def __init__ ( self                   ,
                    mass                   ,   ## mass is mandatory here! 
@@ -87,7 +85,8 @@ class Bd_pdf(CB2_pdf) :
                            nL               ,
                            nR               )
 
-B0_pdf = Bd_pdf 
+B0_pdf = Bd_pdf
+models.append ( Bd_pdf ) 
 # =============================================================================
 ## @class Bu_pdf
 #  simple wrapper over CB2-pdf
@@ -97,7 +96,7 @@ B0_pdf = Bd_pdf
 #  @date 2011-07-25
 class Bu_pdf(CB2_pdf) :
     """
-    Define PDF for B+: Double sided Crystall Ball 
+    B+: double-sided Crystal Ball function
     """
     def __init__ ( self                   ,
                    mass                   ,   ## mass is mandatory here! 
@@ -121,6 +120,7 @@ class Bu_pdf(CB2_pdf) :
                            nL               ,
                            nR               )
 
+models.append ( Bu_pdf ) 
 # =============================================================================
 ## @class Bs_pdf
 #  simple wrapper over CB2-pdf
@@ -130,7 +130,7 @@ class Bu_pdf(CB2_pdf) :
 #  @date 2011-07-25
 class Bs_pdf(CB2_pdf) :
     """
-    Define PDF for Bs: Double sided Crystall Ball 
+    Bs: double-sided Crystal Ball function
     """
     def __init__ ( self                   ,
                    mass                   ,    ## mass is mandatory here! 
@@ -154,6 +154,7 @@ class Bs_pdf(CB2_pdf) :
                            nL               ,
                            nR               )
 
+models.append ( Bs_pdf ) 
 # =============================================================================
 ## @class Bc_pdf
 #  simple wrapper over CB2-pdf
@@ -163,7 +164,7 @@ class Bs_pdf(CB2_pdf) :
 #  @date 2011-07-25
 class Bc_pdf(CB2_pdf) :
     """
-    Define PDF for Bc+ : Double sided Crystall Ball 
+    Bc: double-sided Crystal Ball function
     """
     def __init__ ( self                   ,
                    mass                   ,   ## mass is mandatory here! 
@@ -188,6 +189,7 @@ class Bc_pdf(CB2_pdf) :
                            nR               )
 
 
+models.append ( Bc_pdf ) 
 # =============================================================================
 # Specializations for Bukin function
 # =============================================================================
@@ -200,7 +202,7 @@ from   Ostap.FitSignalModels   import Bukin_pdf
 #  @date 2011-07-25
 class D0_pdf(Bukin_pdf) :
     """
-    Define PDF for D0
+    D0: Bukin function 
     """
     def __init__ ( self                   ,
                    mass                   , ## mass is mandatory here! 
@@ -222,6 +224,7 @@ class D0_pdf(Bukin_pdf) :
                              rhoL          ,
                              rhoR          ) 
                              
+models.append ( D0_pdf ) 
 # =============================================================================
 ## @class Dp_pdf
 #  simple wrapper over Bukin-pdf
@@ -230,7 +233,7 @@ class D0_pdf(Bukin_pdf) :
 #  @date 2011-07-25
 class Dp_pdf(Bukin_pdf) :
     """
-    Define PDF for D+
+    D+: Bukin function 
     """
     def __init__ ( self                    ,
                    mass                    , ## mass is mandatory here 
@@ -252,6 +255,7 @@ class Dp_pdf(Bukin_pdf) :
                              rhoL          ,
                              rhoR          ) 
         
+models.append ( Dp_pdf ) 
 # =============================================================================
 ## @class Ds_pdf
 #  simple wrapper over Bukin-pdf
@@ -260,7 +264,7 @@ class Dp_pdf(Bukin_pdf) :
 #  @date 2011-07-25
 class Ds_pdf(Bukin_pdf) :
     """
-    Define PDF for Ds+
+    Ds: Bukin function 
     """
     def __init__ ( self                    , 
                    mass     = None         , ## mass is mandatory 
@@ -282,6 +286,7 @@ class Ds_pdf(Bukin_pdf) :
                              rhoL          ,
                              rhoR          ) 
         
+models.append ( Ds_pdf ) 
 # =============================================================================
 ## @class Lc_pdf
 #  simple wrapper over Bukin-pdf
@@ -290,7 +295,7 @@ class Ds_pdf(Bukin_pdf) :
 #  @date 2011-07-25
 class Lc_pdf(Bukin_pdf) :
     """
-    Define PDF for Lc+
+    Lc: Bukin function 
     """
     def __init__ ( self                     ,
                    mass                     , 
@@ -312,6 +317,7 @@ class Lc_pdf(Bukin_pdf) :
                              rhoL     ,
                              rhoR     ) 
         
+models.append ( Lc_pdf ) 
 # =============================================================================
 ## @class Manca_pdf 
 #  the final full PDF for Y->mu+mu- fit
@@ -321,8 +327,12 @@ class Lc_pdf(Bukin_pdf) :
 #  @date 2011-08-02
 class Manca_pdf (PDF) :
     """
-    The final fir model for Y->mu+mu- fit
-    This is physically well-motivated function for fits in narrow bins in pt and rapidity  
+    Manca: the final fit model for Y->mu+mu- fit
+    This is physically well-motivated function for fits in narrow bins in pt and rapidity
+    - three Needham functions for Y(1S), Y(2S) and Y(3S) peaks
+    - constrants for their resoltuions and masses 
+    - background: exponent modulated by positive polynomial 
+    
     """
     def __init__ ( self          ,
                    mass          ,
@@ -536,6 +546,7 @@ class Manca_pdf (PDF) :
     def alpha_3S ( self ) : return self.Y3S.pdf.alpha ()
 
     
+models.append ( Manca_pdf ) 
 # =============================================================================
 ## @class Manca2_pdf 
 #  the final full PDF for Y->mu+mu- fit
@@ -544,8 +555,11 @@ class Manca_pdf (PDF) :
 #  @date 2014-06-24
 class Manca2_pdf (PDF) :
     """
-    The final fit model for Y->mu+mu- fit
+    Manca2: the final fit model for Y->mu+mu- fit
     This is an effective function for fit in global bin, without pt/y-binning
+    - three double-sided Crystal Ball functions for Y(1S), Y(2S) and Y(3S) peaks
+    - constrants for their resoltuions and masses 
+    - background: exponent modulated by positive polynomial 
     """
     def __init__ ( self            ,
                    mass            ,
@@ -752,11 +766,12 @@ class Manca2_pdf (PDF) :
         self.backgrounds() . add ( self.background.pdf ) 
 
 
+models.append ( Manca2_pdf ) 
 # =============================================================================
 ## Specific model for fitting of Y+X
 class MancaX_pdf(PDF2) :
     """
-    The models for upsilon fit
+    MancaX: 2D-model to study associative production of Upsilon and X 
     """
     def __init__ ( self         ,
                    manca        , ## manca pdf, that defined 3 upsolon peaks  
@@ -996,6 +1011,7 @@ class MancaX_pdf(PDF2) :
             frame.Draw()
          
 
+models.append ( MancaX_pdf ) 
 # =============================================================================
 if '__main__' == __name__ :
     
@@ -1009,7 +1025,9 @@ if '__main__' == __name__ :
     logger.info ( ' Date    : %s' %         __date__      )
     logger.info ( ' Symbols : %s' %  list ( __all__     ) )
     logger.info ( 80*'*' ) 
-
+    for m in models : logger.info ( 'Model %s: %s' % ( m.__name__ ,  m.__doc__  ) ) 
+    logger.info ( 80*'*' ) 
+ 
 # =============================================================================
 # The END 
 # =============================================================================

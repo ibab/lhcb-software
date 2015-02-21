@@ -207,7 +207,14 @@ ROOT.RooDataSet . varlst        = _rds_vlist_
 ROOT.RooDataSet . vlist         = _rds_vlist_
 ROOT.RooDataSet . vlst          = _rds_vlist_
 ROOT.RooDataSet . varset        = lambda s : s.get()
-        
+
+
+from Ostap.TreeDeco import _stat_var_, _sum_var_, _sum_var_old_
+ROOT.RooAbsData . statVar       = _stat_var_ 
+ROOT.RooAbsData . sumVar        = _sum_var_ 
+ROOT.RooAbsData . sumVar_       = _sum_var_old_ 
+
+
 # =============================================================================
 ## ``easy'' print of RooFitResult
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru

@@ -1,0 +1,89 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# =========================================================================================
+# $Id:$ 
+# =========================================================================================
+# @file  TestFlatte
+# test for Flatte shape
+#
+# @author Vanya BELYAEV Ivan.Belyaeve@itep.ru
+# @date 2014-05-11
+# 
+#                    $Revision: 174117 $
+#  Last modification $Date: 2014-06-21 15:24:21 +0200 (Sat, 21 Jun 2014) $
+#                 by $Author: ibelyaev $
+# =============================================================================
+"""
+Tests for various background fit models  
+"""
+import ROOT
+from   Ostap.PyRoUts         import * 
+# ==========================================================================================
+from AnalysisPython.Logger   import getLogger 
+if '__main__' == __name__ : logger = getLogger( 'Ostap.TestFlatte'  )
+else                      : logger = getLogger( __name__  )
+# ==========================================================================================
+logger.info('Compare Breit and Flatte')
+# ==========================================================================================
+import Ostap.FitModels as Models
+
+m_X    = 3.87156
+g_X    = 0.001 
+m_Jpsi = 3.0960
+m_pipi = 0.4000
+
+mass   = ROOT.RooRealVar('m' , 'mass(J/psi pipi)' , 3.868 , 3.88 ) 
+
+bw    = cpp.Gaudi.Math.BreitWigner ( m_X , g_X , m_Jpsi , m_pipi , 0 )
+breit = Models.BreitWigner_pdf ( 'BW'          ,
+                                 bw            ,
+                                 mass  = mass  ,
+                                 mean  = m_X   ,
+                                 gamma = g_X   )
+
+
+a1 = 0.40
+a2 = 0.03
+
+a1 = 0.03
+a2 = 0.40
+
+f1 = a1 /( a1+a2)
+f2 = a2 /( a1+a2)
+
+fl_      = cpp.Gaudi.Math.Flatte ( m_X           ,
+                                   m_X * g_X * f1 ,
+                                   f2/f1          ,
+                                   m_Jpsi         ,
+                                   m_pipi         ,
+                                   1.86483        ,
+                                   2.00696        )
+
+flatte  = Models.Flatte_pdf ( 'Flatte' , fl_ , 
+                              mass   = mass            ,
+                              m0_980 = m_X             ,
+                              m0g1   = m_X * g_X * f1  ,
+                              g2og1  = f2/f1           )
+
+flatte2 = Models.Flatte2_pdf ( 'Flatte' , fl_ , 
+                               mass   = mass            ,
+                               m0_980 = m_X             ,
+                               m0g1   = m_X * g_X * f1  ,
+                               g2og1  = f2/f1           )
+
+
+
+br  = breit  .draw () # nbins = 500 )
+fl  = flatte .draw () # nbins = 500 )
+
+##fl2 = flatte2.draw ( nbins = 1000 )
+
+br .Draw()
+fl .Draw('same')
+
+## fl2.Draw('same')
+
+
+# ==========================================================================================
+# The END 
+# ==========================================================================================

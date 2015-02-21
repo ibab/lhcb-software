@@ -46,7 +46,8 @@ from   AnalysisPython.Logger     import getLogger
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.FitBkgModels' )
 else                       : logger = getLogger ( __name__             )
 # =============================================================================
-logger.debug ( __doc__ ) 
+logger.debug ( __doc__ )
+models = []
 # =============================================================================
 ## @class  Bkg_pdf
 #  The exponential modified with the positive polynomial 
@@ -55,14 +56,21 @@ logger.debug ( __doc__ )
 #  @date 2011-07-25
 class Bkg_pdf(PDF) :
     """
-    Exponential function, modulated by the positive polynomial
+    Exponential function, modulated by the positive polynomial:
+    
+    f(x) ~ exp(-tau*X) * Pol_n(x)
+    where Pol_n(x) is POSITIVE polynomial (Pol_n(x)>=0 over the whole range) 
+    
+    >>>  mass = ROOT.RooRealVar( ... ) 
+    >>>  bkg  = Bkg_pdf ( 'B' , mass , power = 3 )
+    
     """
     ## constructor
     def __init__ ( self             ,
                    name             ,   ## the name 
                    mass             ,   ## the variable
-                   power = 0        ,
-                   tau   = None     ) : ## degree of polynomial 
+                   power = 0        ,   ## degree of polynomial
+                   tau   = None     ) : ##  
         #
         PDF.__init__  ( self , name )
         #                
@@ -106,7 +114,7 @@ class Bkg_pdf(PDF) :
                 mass.getMin()        ,
                 mass.getMax()        )
 
-        
+models.append ( Bkg_pdf ) 
 # =============================================================================
 ## @class  PSPol_pdf
 #  Phase space function modulated with the positive polynomial 
@@ -118,6 +126,16 @@ class Bkg_pdf(PDF) :
 class PSPol_pdf(PDF) :
     """
     The phase space function modified with positive polynomial 
+    
+    f(x) ~ PS( x ) * Pol_n(x)
+    where
+    - PS       is a phase-space function
+    - Pol_n(x) is POSITIVE polynomial (Pol_n(x)>=0 over the whole range) 
+
+    >>>  mass = ROOT.RooRealVar( ... )
+    >>>  ps   = cpp.Gaudi.Math.PhaseSpaceNL ( low , high , 3 , 4 )  
+    >>>  bkg  = PSPol_pdf ( 'B' , mass , ps , power = 2 )
+    
     """
     ## constructor
     def __init__ ( self             ,
@@ -144,6 +162,7 @@ class PSPol_pdf(PDF) :
             self.ps              ,  ## Gaudi::Math::PhaseSpaceNL 
             self.phi_list        )
 
+models.append ( PSPol_pdf ) 
 # =============================================================================
 ## @class  PolyPos_pdf
 #  A positive polynomial 
@@ -153,7 +172,13 @@ class PSPol_pdf(PDF) :
 #  @date 2011-07-25
 class PolyPos_pdf(PDF) :
     """
-    A positive (Bernstein) polynomial 
+    Positive (Bernstein) polynomial: 
+    
+    f(x) = Pol_n(x)
+    with Pol_n(x)>= 0 over the whole range 
+    
+    >>>  mass = ROOT.RooRealVar( ... )
+    >>>  bkg  = PolyPos_pdf ( 'B' , mass , power = 2 )
     """
     ## constructor
     def __init__ ( self             ,
@@ -177,6 +202,7 @@ class PolyPos_pdf(PDF) :
             self.mass.getMin()   ,
             self.mass.getMax()   ) 
         
+models.append ( PolyPos_pdf ) 
 # =============================================================================
 ## @class  Monothonic_pdf
 #  A positive monothonic polynomial 
@@ -186,10 +212,19 @@ class PolyPos_pdf(PDF) :
 #  @date 2011-07-25
 class Monothonic_pdf(PDF) :
     """
-    A positive (Bernstein) monothonic polynomial:
-    see Analysis::Models::PolyMonothonic
-    see Gaudi::Math::Monothonic
+    Positive monothonic (Bernstein) polynomial:
     
+    f(x) = Pol_n(x)
+    with f(x)>= 0 over the whole range and
+    the derivative f' do not change the sign
+    
+    >>>  mass = ROOT.RooRealVar( ... )
+    
+    # increasing background 
+    >>>  bkg_inc  = Monothonic_pdf ( 'B1' , mass , power = 2 , increasing = True  )
+    
+    # decreasing background 
+    >>>  bkg_dec  = Monothonic_pdf ( 'B2' , mass , power = 2 , increasing = False  )
     """
     ## constructor
     def __init__ ( self              ,
@@ -216,6 +251,7 @@ class Monothonic_pdf(PDF) :
             self.increasing      )
         
         
+models.append ( Monothonic_pdf ) 
 # =============================================================================
 ## @class  Convex_pdf
 #  A positive polynomial with fixed signs of the first and second derivative 
@@ -225,11 +261,25 @@ class Monothonic_pdf(PDF) :
 #  @date 2011-07-25
 class Convex_pdf(PDF) :
     """
-    A positive (Bernstein) polynomial with fixed signs of
-    the first and second derivative 
-    see Analysis::Models::PolyConvex
-    see Gaudi::Math::Conves 
+    Positive monothonic (Bernstein) polynomial with fixed-sign second derivative:
     
+    f(x) = Pol_n(x)
+    with f(x)>= 0 over the whole range and
+    the both frist derivative f' and second derivative f'' do not change the sign
+    
+    >>>  mass = ROOT.RooRealVar( ... )
+    
+    # increasing convex background 
+    >>>  bkg  = Convex_pdf ( 'B1' , mass , power = 2 , increasing = True  , convex = True  )
+
+    # dereasing convex background 
+    >>>  bkg  = Convex_pdf ( 'B2' , mass , power = 2 , increasing = False , convex = True  )
+
+    # increasing concave background 
+    >>>  bkg  = Convex_pdf ( 'B3' , mass , power = 2 , increasing = True  , convex = False )
+
+    # dereasing concave background 
+    >>>  bkg  = Convex_pdf ( 'B3' , mass , power = 2 , increasing = False , convex = False )   
     """
     ## constructor
     def __init__ ( self              ,
@@ -258,6 +308,7 @@ class Convex_pdf(PDF) :
             self.increasing      ,
             self.convex          )
 
+models.append ( Convex_pdf ) 
 # =============================================================================
 ## @class  Sigmoid_pdf
 #  Sigmoid function modulated wit hpositive polynomial
@@ -268,11 +319,8 @@ class Convex_pdf(PDF) :
 class Sigmoid_pdf(PDF) :
     """
     A sigmoid function modulated by positive (Bernstein) polynomial 
-
-    f(x) = 0.5*(1+tahn(alpha(x-x0))*Pol(x)
     
-    see Analysis::Models::PolySigmoid
-    see Gaudi::Math::Sigmoid  
+    f(x) = 0.5*(1+tahn(alpha(x-x0))*Pol_n(x)
     
     """
     ## constructor
@@ -319,7 +367,7 @@ class Sigmoid_pdf(PDF) :
             self.x0              )
 
         
-
+models.append ( Sigmoid_pdf ) 
 # =============================================================================
 ## @class  PSpline_pdf
 #  The special spline for non-negative function
@@ -377,6 +425,7 @@ class PSpline_pdf(PDF) :
             self.spline          , 
             self.phi_list        )
 
+models.append ( PSpline_pdf ) 
 # =============================================================================
 ## @class  MSpline_pdf
 #  The special spline for non-negative monothonic function
@@ -430,6 +479,7 @@ class MSpline_pdf(PDF) :
             self.spline                   , 
             self.phi_list                 )
 
+models.append ( MSpline_pdf ) 
 # =============================================================================
 ## @class  CSpline_pdf
 #  The special spline for non-negative monothonic convex/concave function
@@ -483,6 +533,7 @@ class CSpline_pdf(PDF) :
             self.spline              , 
             self.phi_list            )
 
+models.append ( CSpline_pdf ) 
 # =============================================================================
 ## @class  PS2_pdf
 #  Primitive 2-body phase space function 
@@ -492,7 +543,7 @@ class CSpline_pdf(PDF) :
 #  @date 2011-07-25
 class PS2_pdf(PDF) :
     """
-    Primitive 2-body phase space function 
+    Primitive 2-body phase space function
     """
     ## constructor
     def __init__ ( self             ,
@@ -515,6 +566,7 @@ class PS2_pdf(PDF) :
             self.mass            ,
             m1  , m2 )
 
+models.append ( PS2_pdf ) 
 # =============================================================================
 ## @class  PSLeft_pdf
 #  Left edge of N-body phase space
@@ -524,7 +576,7 @@ class PS2_pdf(PDF) :
 #  @date 2011-07-25
 class PSLeft_pdf(PDF) :
     """
-    Left edge of B-body phase space function 
+    Left edge of N-body phase space function
     """
     ## constructor
     def __init__ ( self             ,
@@ -552,6 +604,7 @@ class PSLeft_pdf(PDF) :
             self.left ,
             N         ) 
 
+models.append ( PSLeft_pdf ) 
 # =============================================================================
 ## @class  PSRight_pdf
 #  Right edge of L-body phase space fro N-body decay 
@@ -568,7 +621,7 @@ class PSRight_pdf(PDF) :
                    name             ,   ## the name 
                    mass             ,   ## the variable
                    L                ,   ## L  
-                   N                ,  ## N
+                   N                ,   ## N
                    right   = None   ) : 
         #
         ## initialize the base 
@@ -591,6 +644,7 @@ class PSRight_pdf(PDF) :
             L          , 
             N          ) 
 
+models.append ( PSRight_pdf ) 
 # =============================================================================
 ## @class  PSNL_pdf
 #  L-body phase space from N-body decay 
@@ -649,6 +703,8 @@ class PSNL_pdf(PDF) :
             L          , 
             N          ) 
 
+
+models.append ( PSNL_pdf ) 
 # =============================================================================
 ## @class  PS23L_pdf
 #  2-body phase space from 3-body decay with orbital momenta 
@@ -676,12 +732,13 @@ class PS23L_pdf(PDF) :
         PDF.__init__ ( self , name )
         #
         self.mass = mass        
-        self.pdf  = cpp.Analysis.Models.PhaseSpaceNL (
+        self.pdf  = cpp.Analysis.Models.PhaseSpace23L (
             'ps23l_%s'          % name ,
             'PhaseSpace23L(%s)' % name ,
             self.mass  ,
             m1 , m2 , m3 , m , L , l )
         
+models.append ( PS23L_pdf ) 
 # =============================================================================
 if '__main__' == __name__ :
     
@@ -695,7 +752,9 @@ if '__main__' == __name__ :
     logger.info ( ' Date    : %s' %         __date__      )
     logger.info ( ' Symbols : %s' %  list ( __all__     ) )
     logger.info ( 80*'*' ) 
-    
+    for m in models : logger.info ( 'Model %s: %s' % ( m.__name__ ,  m.__doc__  ) ) 
+    logger.info ( 80*'*' ) 
+        
 # =============================================================================
 # The END 
 # =============================================================================

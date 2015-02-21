@@ -121,11 +121,63 @@ def _tt_project_ ( tree , histo , what , *args ) :
 ROOT.TTree .project = _tt_project_
 ROOT.TChain.project = _tt_project_
 
+# =============================================================================
+## get the statistic for certain expression in Tree/Dataset
+#  @code
+#  tree  = ... 
+#  stat1 = tree.statVar( 'S_sw/effic' )
+#  stat2 = tree.statVar( 'S_sw/effic' ,'pt>1000')
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-09-15
+def _stat_var_ ( tree , expression , *cuts ) :
+    """
+    Get a statistic for the  expression in Tree/Dataset
+    
+    >>> tree  = ... 
+    >>> stat1 = tree.statVar ( 'S_sw/effic' )
+    >>> stat2 = tree.statVar ( 'S_sw/effic' ,'pt>1000')
+    
+    """
+    return cpp.Analysis.StatVar.statVar ( tree , expression , *cuts )
+
+ROOT.TTree     . statVar = _stat_var_
+ROOT.TChain    . statVar = _stat_var_
 
 # =============================================================================
 ## @var _h_one_
 #  special helper histogram for summation
 _h_one_ = ROOT.TH1D( "_h_one_", '' , 3 , -1 , 2 ) ; _h_one_.Sumw2()
+# =============================================================================
+## make a sum over expression in Tree/Dataset
+#
+#  @code
+#
+#  >>> dataset = ...
+#  ## get corrected number of events 
+#  >>> n_corr  = dataset.sumVar ( "S_sw/effic" )
+#
+#  @endcode
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-09-15
+def _sum_var_old_ ( tree , expression ) :
+    """
+    Make a sum over expression in Tree/Dataset
+    
+    >>> dataset = ...
+    ## get corrected number of signale events  
+    >>> n_corr  = dataset.sumVar ( 'S_sw/effic' )
+    
+    """
+    _h_one_.Reset() 
+    tree.project ( _h_one_ , '1' , expression )
+    return _h_one_.accumulate()
+
+    
+ROOT.TTree      . sumVar_ = _sum_var_old_
+ROOT.TChain     . sumVar_ = _sum_var_old_
+
 # =============================================================================
 ## make a sum over expression in Tree/Dataset
 #
@@ -148,36 +200,11 @@ def _sum_var_ ( tree , expression ) :
     >>> n_corr  = dataset.sumVar ( 'S_sw/effic' )
     
     """
-    _h_one_.Reset() 
-    tree.project ( _h_one_ , '1' , expression )
-    return _h_one_.accumulate()
+    w = tree.statVar ( expression )
+    return VE ( w.sum() , w.sum2() )
 
-ROOT.RooDataSet . sumVar = _sum_var_
 ROOT.TTree      . sumVar = _sum_var_
 ROOT.TChain     . sumVar = _sum_var_
-
-# =============================================================================
-## get the statistic for certain expression in Tree/Dataset
-#  @code
-#  tree  = ... 
-#  stat1 = tree.statVar( 'S_sw/effic' )
-#  stat2 = tree.statVar( 'S_sw/effic' ,'pt>1000')
-#  @endcode
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2013-09-15
-def _stat_var_ ( tree , expression , *cuts ) :
-    """
-    Get a statistic for the  expression in Tree/Dataset
-    
-    >>> tree  = ... 
-    >>> stat1 = tree.statVar ( 'S_sw/effic' )
-    >>> stat2 = tree.statVar ( 'S_sw/effic' ,'pt>1000')
-    
-    """
-    return cpp.Analysis.StatVar.statVar ( tree , expression , *cuts )
-
-ROOT.TTree  . statVar = _stat_var_
-ROOT.TChain . statVar = _stat_var_
 
 # =============================================================================
 ## get the leaves for the given tree/chain

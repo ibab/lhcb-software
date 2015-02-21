@@ -103,14 +103,18 @@ from   AnalysisPython.Logger     import getLogger
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.FitSignalModels' )
 else                       : logger = getLogger ( __name__                )
 # =============================================================================
+models = [] 
+# =============================================================================
 ## @class Gauss_pdf
 #  simple wrapper over Gaussian-pdf
+#  @see http://en.wikipedia.org/wiki/Normal_distribution
 #  @see RooGaussian
 #  @author Vanya BELYAEV Ivan.Belyaeve@itep.ru
 #  @date 2011-07-25
 class Gauss_pdf(MASS) :
     """
-    Simple Gaussian function 
+    Trivial Gaussian function:
+    http://en.wikipedia.org/wiki/Normal_distribution
     """
     def __init__ ( self             ,
                    name             ,
@@ -135,16 +139,43 @@ class Gauss_pdf(MASS) :
             self.mass  ,
             self.mean  ,
             self.sigma )
-        
+
+models.append ( Gauss_pdf ) 
 # =============================================================================
 ## @class CrystalBall_pdf
 #  @see Analysis::Models::CrystalBall
 #  @see Gaudi::Math::CrystalBall
+#  @see http://en.wikipedia.org/wiki/Crystal_Ball_function
+#  - T. Skwarnicki, A study of the radiative CASCADE transitions between the Upsilon-Prime and Upsilon resonances,
+#                   Ph.D Thesis, DESY F31-86-02(1986), Appendix E.
+#                   @see http://inspirehep.net/record/230779/files/f31-86-02.pdf
+#  - J. E. Gaiser,  Charmonium Spectroscopy from Radiative Decays of the J/Psi and Psi-Prime,
+#                   Ph.D. Thesis, SLAC-R-255 (1982), Appendix F, p 178
+#                   @see http://www.slac.stanford.edu/cgi-wrap/getdoc/slac-r-255.pdf
+#  - M. J. Oreglia, A Study of the Reactions psi prime --> gamma gamma psi,
+#                   Ph.D. Thesis, SLAC-R-236 (1980), Appendix D.
+#                   @see http://www.slac.stanford.edu/pubs/slacreports/slac-r-236.html
+#  @attention Unlike the original definition parameter <code>n</code> here is shifted by 1:
+#                    \f$ n_{0} \leftarrow \left| n_{here} \right| + 1  \f$
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
 class CrystalBall_pdf(MASS) :
     """
-    Simple Crystal Ball
+    Crystal Ball function
+    http://en.wikipedia.org/wiki/Crystal_Ball_function
+    
+    - T. Skwarnicki, ``A study of the radiative cascade transitions between the Upsilon-Prime and Upsilon resonances'', Ph.D Thesis, DESY F31-86-02(1986), Appendix E.
+    http://inspirehep.net/record/230779/files/f31-86-02.pdf
+    - J. E. Gaiser, ``Charmonium Spectroscopy from Radiative Decays of the J/Psi and Psi-Prime'', Ph.D. Thesis, SLAC-R-255 (1982), Appendix F, p 178
+    http://www.slac.stanford.edu/cgi-wrap/getdoc/slac-r-255.pdf
+    - M. J. Oreglia, ``A Study of the Reactions psi prime --> gamma gamma psi'', Ph.D. Thesis, SLAC-R-236 (1980), Appendix D.
+    http://www.slac.stanford.edu/pubs/slacreports/slac-r-236.html
+    
+    Note:
+    - Unlike the original definition parameter 'n' here is shifted by 1: n <- |n| + 1
+    - Typical value of parameter alpha for ``physical'' peaks is 1.5<alpha<3.0,
+    - For large alpha (e.g. alpha>3), there is no sensitivity for n;
+    similarly in the limit of large n, sensitivity for alpha is minimal
     """
     def __init__ ( self             ,
                    name             ,
@@ -184,16 +215,20 @@ class CrystalBall_pdf(MASS) :
             self.sigma ,
             self.alpha ,
             self.n     )
-        
+
+models.append ( CrystalBall_pdf )    
 # =============================================================================
 ## @class CrystalBallRS_pdf
+#  Crystal Ball function with the right side tail.
+#  to be rewritten
 #  @see Analysis::Models::CrystalBallRS
 #  @see Gaudi::Math::CrystalBallRS
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
 class CrystalBallRS_pdf(MASS) :
     """
-    Simple right-side CrystalBall
+    Right-side CrystalBall
+    
     """
     def __init__ ( self              ,
                    name              ,
@@ -232,15 +267,28 @@ class CrystalBallRS_pdf(MASS) :
             self.alpha ,
             self.n     )
         
+models.append ( CrystalBallRS_pdf )    
 # =============================================================================
 ## @class CB2_pdf
-#  simple wrapper over double-sided Cristal Ball function
+#  Double-sided Cristal Ball function
+#  It appears to be very powerful and is used for many LHCb papers to describe
+#   B-hadron mass signals, especially for \f$B \rightarrow J/\psi X\f$-final states 
 #  @see Analysis::Models::CrystalBallDS
+#  @see CrystalBall_pdf 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
 class CB2_pdf(MASS) :
     """
-    Define double sided Crystal Ball
+    Double sided Crystal Ball function with both left and rigth sides
+    It appears to be very powerful and is used for many LHCb papers to describe
+    B-hadron mass signals, especially for B->J/psi X final states 
+    
+    Note:
+    - Similar to CrystalBall_pdf and unlike the original definition,
+    the parameters 'n' here are shifted by 1: n <- |n| + 1
+    - Typical value of parameters alpha for ``physical'' peaks is 1.5<alpha<3.0,
+    - For large alpha (e.g. alpha>3), there is no sensitivity for n;
+    similarly in the limit of large n, sensitivity for alpha is minimal
     """
     def __init__ ( self              ,
                    name              ,
@@ -287,18 +335,36 @@ class CB2_pdf(MASS) :
             self.aR      ,
             self.nR      )
         
-
+models.append ( CB2_pdf )    
 # =============================================================================
 ## @class Needham_pdf
-#  Wrapper over CrystalBall function, using
-#  alpha/sigma parameterization by Matt Needham
+#  Needham function: specific parameterisation of Crystal Ball function with
+#   - \f$ n = 1 \f$  
+#   - \f$ \alpha(\sigma) = a_0 + \sigma\times (a_1+\sigma \times a_2)
+#  The function is very well sutable to fit
+#  \f$J/\psi \rightarrow \mu^+\mu^-\f$,
+#  \f$\psi^{\prime} \rightarrow \mu^+\mu^-\f$ and
+#  \f$\Upsilon \rightarrow \mu^+\mu^-\f$ signals and
+#  is has been used with great success for all LCHb papers
+#  on quarkonia production in dimuon final states
 #  @thank Matthew Needham
+#  @see CrystalBall_pdf 
+#  @see Analysis::Models::Needham 
 #  @see Gaudi::Math::Needham 
 #  @author Vanya BELYAEV Ivan.Belyaeve@itep.ru
 #  @date 2011-07-25
 class Needham_pdf(MASS) :
     """
-    Define PDF for J/psi, psi' or Y-signals 
+    Needham function: specific parameterisation of Crystal Ball function with
+    - n = 1 
+    - alpha(sigma) = a_0 + sigma*(a_1+sigma*a_2)
+    
+    The function is well sutable to fit dimuon final states: 
+    - J/psi   -> mu+ mu-
+    - psi'    -> mu+ mu-
+    - Upsilon -> mu+ mu-
+    Is has been used with great success for all LCHb papers on
+    quarkonia production in dimuon final states
     """
     def __init__ ( self                 ,
                    name                 ,
@@ -349,6 +415,7 @@ class Needham_pdf(MASS) :
             self.a2
             )
         
+models.append ( Needham_pdf )    
 # =============================================================================
 ## @class Apolonios_pdf
 #  simple wrapper over Apolonios PDF 
@@ -361,11 +428,19 @@ class Needham_pdf(MASS) :
 #  @date 2011-07-25
 class Apolonios_pdf(MASS) :
     """
-    Simple wrapper over Apolonios PDF 
+    Apolonios function
+    http://arxiv.org/abs/1312.5000
+    
     The function is proposed by Diego Martinez Santos 
     https://indico.itep.ru/getFile.py/access?contribId=2&resId=1&materialId=slides&confId=262633
-    Here a bit modified version is used with redefined parameter <code>n</code>
+    
+    Note :
+    - similar to CrystalBall case,  parameter n is redefined:   n <- |n|+1
     to be coherent with local definitions of Crystal Ball
+    - unfortuately neither sigma nor b parameters allows easy interpretation
+    - typical value of parameters alpha for ``physical'' peaks is 1.5<alpha<3.0,
+    - for large alpha (e.g. alpha>3), there is no sensitivity for n;
+    similarly in the limit of large n, sensitivity for alpha is minimal
     """
     def __init__ ( self                    ,
                    name                    ,
@@ -415,18 +490,47 @@ class Apolonios_pdf(MASS) :
             self.b      ) 
 
 
-
+models.append ( Apolonios_pdf )    
 # =============================================================================
 ## @class Apolonios2_pdf
 #  "Bifurcated Apolonious"
-#  Asymmetrical) Gaussian with exponential (asymmetrical) tails 
+#  Gaussian with exponential (asymmetrical) tails
+#
+#  A convinient reparameterization is applied to keep reduce 
+#  the correlations between "sigma"s and "beta" 
+#  \f[ f(x;\mu,\sigma_l,\sigma_r,\beta) \propto 
+#         \mathrm{e}^{\left|\beta\right|( \left|\beta\right| - \sqrt{ \beta^2+\left(\delta x\right)^2}} 
+#  \f] 
+#   where 
+#  \f[ \delta x  = \left\{ \begin{array}{ccc}
+#          \frac{x-\mu}{\sigma_l} & \text{for} & x \le \mu \\
+#          \frac{x-\mu}{\sigma_r} & \text{for} & x \gt \mu \\
+#          \end{array}
+#          \right.\f]
+#  Large betas corresponds to gaussian 
+#      
 #  @see Analysis::Models::Apolonios2 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2014-08-20
 class Apolonios2_pdf(MASS) :
     """
     Bifurcated Apolonious:
-    (Asymmetrical) Gaussian with exponential (asymmetrical) tails 
+    Gaussian with exponential (asymmetrical) tails
+    
+    f(x; mu, sigma_l, sigma_r, beta) ~ exp( |beta|(|\beta| - sqrt( beta^2+( delta x)^2 ))      
+    with
+    delta x  = (x-mu)/sigma_l for  x < mu
+    delta x  = (x-mu)/sigma_r for  x > mu
+    and
+    sigma_{l,r} = sigma * ( 1 + kappa)
+    with asymmetry parameter -1 < kappa < 1 
+    
+    The function is inspired by Appolonios function, but it has no power-law tails:
+    instead the exponential tails are used.
+    Reparameterization reduces the correlation between ``sigma'' and ``beta'',
+    allowing their easy interpretation.
+    Large ``beta'' and small ``asymmetry'' corresponds to gaussian
+    
     """
     def __init__ ( self               ,
                    name               ,
@@ -481,7 +585,7 @@ class Apolonios2_pdf(MASS) :
             self.beta   ) 
 
 
-
+models.append ( Apolonios2_pdf )    
 # =============================================================================
 ## @class BifurcatedGauss_pdf
 #  simple wrapper over bifurcated-gaussian
@@ -490,7 +594,17 @@ class Apolonios2_pdf(MASS) :
 #  @date 2011-07-25
 class BifurcatedGauss_pdf(MASS) :
     """
-    bifurcated Gauss 
+    Bifurcated Gauss :
+
+    f(x; mu, sigma_l, sigma_r ) ~ exp ( -0.5 * dx^2 )
+    
+    with
+    delta x  = (x-mu)/sigma_l for  x < mu
+    delta x  = (x-mu)/sigma_r for  x > mu
+    and
+    sigma_{l,r} = sigma * ( 1 + kappa)
+    with asymmetry parameter -1 < kappa < 1 
+    
     """
     def __init__ ( self                  ,
                    name                  ,
@@ -537,18 +651,62 @@ class BifurcatedGauss_pdf(MASS) :
             self.sigmaL ,
             self.sigmaR )
 
+models.append ( BifurcatedGauss_pdf )    
 # =============================================================================
 ## @class GenGaussV1_pdf
 #  Simple class that implements the generalized normal distribution v1
 #  @see http://en.wikipedia.org/wiki/Generalized_normal_distribution#Version_1
+#
+#  Known also as the exponential power distribution, or the generalized error distribution,
+#  this is a parametric family of symmetric distributions.
+#  It includes all normal and Laplace distributions, and as limiting cases it includes all
+#  continuous uniform distributions on bounded intervals of the real line.
+#
+#  This family includes the normal distribution when beta=2 (with mean mu and variance alpha^2/2)
+#  and it includes the Laplace distribution when beta=1
+#  As beta->inf, the density converges pointwise to a uniform density on (mu-alpha,mu+alpha)
+# 
+#  This family allows for tails that are either heavier than normal (when beta<2)
+#  or lighter than normal (when beta>2).
+#  It is a useful way to parametrize a continuum of symmetric, platykurtic densities
+#  spanning from the normal (beta=2) to the uniform density (beta=inf),
+#  and a continuum of symmetric, leptokurtic densities spanning from the Laplace
+#  (beta=1) to the normal density (beta=2).
+#    
+#  Parameters:
+#  - mu         : location/mean  
+#  - alpha > 0  : scale 
+#  - beta  > 0  : shape   (beta=2 corresponds to Gaussian distribution)
+#
 #  @see Analysis::Models::GenGaussV1 
 #  @see Gaudi::Math::GenGaussV1 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2013-12-01
 class GenGaussV1_pdf(MASS) :
     """
-    Simple class that implements the generalized normal distribution v1
+    Generalized Normal distribution v1
     see http://en.wikipedia.org/wiki/Generalized_normal_distribution#Version_1
+
+    Known also as the exponential power distribution, or the generalized error distribution,
+    this is a parametric family of symmetric distributions.
+    It includes all normal and Laplace distributions, and as limiting cases it includes all
+    continuous uniform distributions on bounded intervals of the real line.
+
+    This family includes the normal distribution when beta=2 (with mean mu and variance alpha^2/2)
+    and it includes the Laplace distribution when beta=1
+    As beta->inf, the density converges pointwise to a uniform density on (mu-alpha,mu+alpha)
+    
+    This family allows for tails that are either heavier than normal (when beta<2)
+    or lighter than normal (when beta>2).
+    It is a useful way to parametrize a continuum of symmetric, platykurtic densities
+    spanning from the normal (beta=2) to the uniform density (beta=inf),
+    and a continuum of symmetric, leptokurtic densities spanning from the Laplace
+    (beta=1) to the normal density (beta=2).
+    
+    Parameters:
+    - mu         : location/mean  
+    - alpha > 0  : scale 
+    - beta  > 0  : shape   (beta=2 corresponds to Gaussian distribution)
     """
     def __init__ ( self             ,
                    name             ,
@@ -594,9 +752,10 @@ class GenGaussV1_pdf(MASS) :
             self.alpha  ,
             self.beta   )
 
+models.append ( GenGaussV1_pdf )    
 # =============================================================================
 ## @class GenGaussV2_pdf
-#  Simple class that implements the generalized normal distribution v2
+#  Generalized Normal distribution v2
 #  @see http://en.wikipedia.org/wiki/Generalized_normal_distribution#Version_2
 #  @see Analysis::Models::GenGaussV2
 #  @see Gaudi::Math::GenGaussV2 
@@ -604,8 +763,19 @@ class GenGaussV1_pdf(MASS) :
 #  @date 2013-12-01
 class GenGaussV2_pdf(MASS) :
     """
-    Simple class that implements the generalized normal distribution v1
-    see http://en.wikipedia.org/wiki/Generalized_normal_distribution#Version_1
+    Generalized normal distribution v2
+    see http://en.wikipedia.org/wiki/Generalized_normal_distribution#Version_2
+
+    This is a family of continuous probability distributions in which the shape
+    parameter can be used to introduce skew.
+    When the shape parameter is zero, the normal distribution results.
+    Positive values of the shape parameter yield left-skewed distributions bounded to the right,
+    and negative values of the shape parameter yield right-skewed distributions bounded to the left.
+
+    Parameters:
+    - mu      : location 
+    - alpha>0 : scale
+    - kappa   : shape   (kappa=0 corresponds to gaussian distribution)
     """
     def __init__ ( self               ,
                    name               ,
@@ -658,6 +828,7 @@ class GenGaussV2_pdf(MASS) :
             self.alpha  ,
             self.kappa  )
 
+models.append ( GenGaussV2_pdf )    
 # =============================================================================
 ## @class SkewGauss_pdf
 #  Simple class that implements the skew normal distribution
@@ -668,8 +839,16 @@ class GenGaussV2_pdf(MASS) :
 #  @date 2011-07-25
 class SkewGauss_pdf(MASS) :
     """
-    Simple class that implements the skew normal distribution
+    Skew normal distribution
     see http://en.wikipedia.org/wiki/Skew_normal_distribution
+    
+    The skew normal distribution is a continuous probability distribution that
+    generalises the normal distribution to allow for non-zero skewness.
+
+    Parameters:
+    - location
+    - omega>0   : scale
+    - alpha     : shape   (alpha=0 corresponds to gaussian distribuition)
     """
     def __init__ ( self             ,
                    name             ,
@@ -709,18 +888,57 @@ class SkewGauss_pdf(MASS) :
             self.omega  ,
             self.alpha  )
 
-  
+models.append ( SkewGauss_pdf )      
 # =============================================================================
 ## @class Bukin_pdf
-#  simple wrapper over Bukin-pdf
-#  @see http://arxiv.org/abs/1107.5751
+#  Bukin function, aka ``modified Novosibirsk function''
+#  - asymmetrical gaussian-like core
+#  - exponential (optionally gaussian) asymmetrical tails
+#  @see http://journals.aps.org/prd/abstract/10.1103/PhysRevD.84.112007
+#  @http://arxiv.org/abs/1107.5751
+#  Here small reparameterization is applied to achieve more stable fits.
+# 
+#  It is very well suitable to describe high statistic charm meson peaks,
+#  as well some asymmetric distributions, e.g. log( chi^2(IP) ) 
+#
+#  Parameters:
+#  - mean      : peak position 
+#  - sigma     : defines full width at half heigh 
+#  - xi        : asymmetry
+#  - rho_l>=0  : define gaussian component to left  tail
+#  - rho_r>=0  : define gaussian component to right tail
+#
+#  Note: 
+#  - for rho_{l,r}=0 left/right tails are exponential.
+#  - for large asymmetry parameter function has weird shape
+#
 #  @see http://dx.doi.org/10.1007/JHEP06(2012)141     
-#  @see RooBukinPdf
+#  @see Gaudi::Math::Bukin
+#  @see Analusis::Models::Bukin
 #  @author Vanya BELYAEV Ivan.Belyaeve@itep.ru
 #  @date 2011-07-25
 class Bukin_pdf(MASS) :
     """
-    Define PDFs for D0,D+,Ds+
+    Bukin function, aka ``modified Novosibirsk function'':
+    - asymmetrical gaussian-like core
+    - exponential (optionally gaussian) asymmetrical tails
+    see http://journals.aps.org/prd/abstract/10.1103/PhysRevD.84.112007
+    see http://arxiv.org/abs/1107.5751
+    see http://dx.doi.org/10.1007/JHEP06(2012)141     
+    Here small reparameterization is applied to achieve more stable fits.
+    
+    It is very well suitable to describe high statistic charm meson peaks,
+    as well some asymmetric distributions, e.g. log( chi^2(IP) ) 
+
+    Parameters:
+    - mean      : peak position 
+    - sigma     : defines full width at half heigh 
+    - xi        : asymmetry
+    - rho_l>=0  : define gaussian component to left  tail
+    - rho_r>=0  : define gaussian component to right tail
+    Note: 
+    - for rho_{l,r}=0 left/right tails are exponential
+    - for large asymmetry parameter function has weird shape    
     """
     def __init__ ( self            ,
                    name            ,
@@ -757,15 +975,6 @@ class Bukin_pdf(MASS) :
         # 
         ## create PDF
         # 
-        ## self.pdf = ROOT.RooBukinPdf (
-        ##     "bkn_"      + name ,
-        ##     "Bukin(%s)" % name ,
-        ##     self.mass  ,
-        ##     self.mean  ,
-        ##     self.sigma ,
-        ##     self.xi    ,
-        ##     self.rhol  ,
-        ##     self.rhor  )
         self.pdf = cpp.Analysis.Models.Bukin (
             "bkn_"      + name ,
             "Bukin(%s)" % name ,
@@ -776,21 +985,37 @@ class Bukin_pdf(MASS) :
             self.rhol  ,
             self.rhor  )
 
+models.append ( Bukin_pdf )      
 # =============================================================================
 ## @class StudentT_pdf
 #  Student-T distribution
+#  @see http://en.wikipedia.org/wiki/Student%27s_t-distribution
 #
 #  \f[  f(y) = \frac{1}{\sqrt{\pi n}} \frac { \Gamma( \frac{n+1}{2}) } { \Gamma( \frac{n}{2}  ) }
 #  \left( 1 + \frac{y^2}{n} \right)^{ -\frac{n+1}{2}} \f], 
 #  where \f$ y = \frac{x - \mu}{\sigma} \f$  
 # 
+#  @attention Unlike the original definition parameter 'n' here is shifted by 1: n <- |n| + 1
 #  @see Analysis::Models::StudentT
 #  @see Gaudi::Math::StudentT
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
 class StudentT_pdf(MASS) :
     """
-    Student-T distribution
+    Student-T distribution:
+    http://en.wikipedia.org/wiki/Student%27s_t-distribution
+    
+    f(dx) ~ (1 + dx^2/n)^{-(n+1)/2 }
+    with
+    dx = ( x - mu )  / sigma
+    
+    Note:
+    - unlike the original definition parameter 'n' here is shifted by 1: n <- |n| + 1
+    
+    Parameters 
+    - mean    : location 
+    - sigma   : scale 
+    - n       : n-parameter, |n|+1 is used 
     """
     def __init__ ( self             ,
                    name             ,
@@ -823,7 +1048,7 @@ class StudentT_pdf(MASS) :
             self.sigma  ,
             self.n      )
 
-
+models.append ( StudentT_pdf )      
 # =============================================================================
 ## @class BifurcatedStudentT_pdf
 #  bifurcated Student-T distribution
@@ -834,7 +1059,22 @@ class StudentT_pdf(MASS) :
 #  @date 2011-07-25
 class BifurcatedStudentT_pdf(MASS) :
     """
-    Bifurcated Student-T distribution
+    Bifurcated Student-T distribution:
+
+    f(dx) ~ (1 + dx^2/n)^{-(n+1)/2 }
+    where
+    for x < mu   n=n_l and dx = ( x - mu )  / sigma_l
+    for x > mu   n=n_l and dx = ( x - mu )  / sigma_r
+    with 
+    sigma_{l,r} = sigma * ( 1 + kappa)
+    with asymmetry parameter -1 < kappa < 1 
+
+    Parameters:
+    - mean
+    - sigma
+    - -1<asymmetry<1 
+    - n_L     
+    - n_R
     """
     def __init__ ( self             ,
                    name             ,
@@ -895,6 +1135,7 @@ class BifurcatedStudentT_pdf(MASS) :
             self.nL     ,
             self.nR     ) 
         
+models.append ( BifurcatedStudentT_pdf )      
 # =============================================================================
 ## @class SinhAsinh_pdf
 #  
@@ -905,9 +1146,8 @@ class BifurcatedStudentT_pdf(MASS) :
 #   doi:10.1093/biomet/asp053
 #   http://oro.open.ac.uk/22510
 #
-#   Location & scale  parameters are the 
-#   dsual representation of the family of 
-#   distributions 
+#   Location & scale  parameters are the usual representation of the family of 
+#   distributions:
 #    - \f$\epsilon\f$ parameter control the skewness 
 #    - \f$\delta\f$   parameter control the kurtosis 
 #   Normal distribution reappears as \f$\epsilon=0\f$ and \f$\delta=1\f$ 
@@ -916,25 +1156,25 @@ class BifurcatedStudentT_pdf(MASS) :
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-08-02
-class SinhAsinh_pdf(MSSS) :
+class SinhAsinh_pdf(MASS) :
     """
-    Jones, M. C.; Pewsey, A. (2009). 
-    ``Sinh-arcsinh distributions''. Biometrika 96 (4): 761. 
+    SinhAsing-function: 
+    see Jones, M. C.; Pewsey, A. (2009). ``Sinh-arcsinh distributions''. Biometrika 96 (4): 761. 
     doi:10.1093/biomet/asp053
     http://oro.open.ac.uk/22510
     
-    Location & scale  parameters are the 
-    dsual representation of the family of 
-    distributions 
-    - \f$\epsilon\f$ parameter control the skewness 
-    - \f$\delta\f$   parameter control the kurtosis 
-    Normal distribution reappears as \f$\epsilon=0\f$ and \f$\delta=1\f$ 
-    The heavy tails correspond to \f$\delta<1\f$, 
-    light tails correpond to \f$\delta>1\f$
+    Normal distribution reappears as epsilon=0 and delta=1 
+    The heavy tails correspond to delta<1, light tails correpond to delta>1
+    
+    Parameters 
+    - mean     : location
+    - sigma    : scale 
+    - epsilon  : parameter to control the skewness 
+    - delta>0  : parameter to control the kurtosis 
     """
     def __init__ ( self             ,
                    name             ,
-                   mn        = None , 
+                   mn        = None ,
                    mx        = None , 
                    mass      = None ,
                    mean      = None , ## mu 
@@ -962,25 +1202,39 @@ class SinhAsinh_pdf(MSSS) :
         #
         ## finally build pdf
         # 
-        self.pdf = cpp.Analysis.Models.ASingAsinh (
+        self.pdf = cpp.Analysis.Models.SinhAsinh (
             "sinhaT_"        + name ,
             "SinhAsinh(%s)" % name ,
             self.mass      ,
             self.mean      ,
             self.sigma     ,
-            self.epsilpon  ,
+            self.epsilon   ,
             self.delta     ) 
 
+models.append ( SinhAsinh_pdf )      
 # =============================================================================
 ## @class Voigt_pdf
 #  Voigt-pdf distribution
 #  @see Analysis::Models::Voigt
 #  @see Gaudi::Math::Voigt
+#  The implementation relied on Faddeeva function 
+#  @see http://en.wikipedia.org/wiki/Faddeeva_function
+#  @see http://ab-initio.mit.edu/wiki/index.php/Faddeeva_Package
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
 class Voigt_pdf(MASS) :
     """
-    Voigt function
+    Voigt function:
+    Convolution of non-relativistic Breit-Wigner with gaussian resolution
+    
+    The implementation relied on Faddeeva function 
+    http://en.wikipedia.org/wiki/Faddeeva_function
+    http://ab-initio.mit.edu/wiki/index.php/Faddeeva_Package
+    
+    Parameters
+    - mean  : location 
+    - gamma : gamma for breight-wigner pole
+    - sigma : resolution parameter for gaussian 
     """
     def __init__ ( self             ,
                    name             ,
@@ -1015,16 +1269,57 @@ class Voigt_pdf(MASS) :
             self.gamma  ,
             self.sigma  )
 
-                    
+models.append ( Voigt_pdf )                          
 # =============================================================================
 ## @class BreitWigner_pdf 
+#  Relativistic Breit-Wigner function using Jackson's parameterization
+#  J.D.Jackson,
+#  "Remarks on the Phenomenological Analysis of Resonances",
+#  In Nuovo Cimento, Vol. XXXIV, N.6
+#  http://www.springerlink.com/content/q773737260425652/
+#  Optional convolution with resolution function is possible a
 #  @see Analysis::Models::BreitWigner 
 #  @see Gaudi::Math::BreitWigner
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
 class BreitWigner_pdf(MASS) :
     """
-    Simple wrapper over relativistic Breit-Wigner function
+    Relativistic Breit-Wigner function using Jackson's parameterization
+    J.D.Jackson, ``Remarks on the Phenomenological Analysis of Resonances'',
+    In Nuovo Cimento, Vol. XXXIV, N.6
+    http://www.springerlink.com/content/q773737260425652/
+
+    >>> bw    = cpp.Gaudi.Math.BreitWigner( m_X , g_X , m_Jpsi , m_pipi , 0 )
+    >>> breit = Models.BreitWigner_pdf ( 'BW'          ,
+    ...                                  bw            ,
+    ...                                  mass  = mass  ,
+    ...                                  mean  = m_X   ,
+    ...                                  gamma = g_X   )
+    
+    Optional convolution with the resolution function is possible
+    e.g. use gaussian resoltuion and fast-fourier convolution method:
+    
+    >>> breit = Models.BreitWigner_pdf ( 'BW'          ,
+    ...                                  bw            ,
+    ...                                  mass  = mass  ,
+    ...                                  mean  = m_X   ,
+    ...                                  gamma = g_X   ,
+    ...                                  convolution = 1*MeV ,
+    ...                                  useFFT      = True  ) 
+    
+    Other resolution functions can be used:
+    
+    >>> resolution_pdf = ...
+    >>> breit = Models.BreitWigner_pdf ( 'BW'          ,
+    ...                                  ...
+    ...                                  convolution = resolution_pdf ,
+    ...                                  useFFT      = True  ) 
+
+    
+    Parameters:
+    - mean  : location
+    - gamma : width of Breight-Wigner function
+    
     """
     def __init__ ( self               ,
                    name               ,
@@ -1077,16 +1372,21 @@ class BreitWigner_pdf(MASS) :
                                       convolution , useFFT    ) 
             self.pdf  = self.conv.pdf
 
-
+models.append ( BreitWigner_pdf )                          
 # =============================================================================
-## @class BW23L_pdf 
+## @class BW23L_pdf
+#  The shape of Breit-Wigner resonace from 2-body decays, e.f.
 #  @see Analysis::Models::BW23L 
 #  @see Gaudi::Math::BW23L
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2014-08-25
 class BW23L_pdf(MASS) :
     """
-    Simple wrapper over relativistic Breit-Wigner function
+    The shape of Breit-Wigner resonace from 3-body decays, e.f. X -> ( A B ) C
+    In this case the phase space factors can be modified by the  orbital momentum
+    between (AB) and C-systems
+    
+
     """
     def __init__ ( self               ,
                    name               ,
@@ -1129,21 +1429,27 @@ class BW23L_pdf(MASS) :
             self.gamma         ,
             self.breitwigner   )
 
+models.append ( BW23L_pdf )                          
 # =============================================================================
 ## @class Flatte_pdf
-#  Flatte function to describe dipion system near dikaon threshold
-#
-#  S.M.Flatte, 
-#    "Coupled-channel analysis of the \f$\pi\eta\f$ 
+#  Flatte function
+#  S.M.Flatte, "Coupled-channel analysis of the \f$\pi\eta\f$ 
 #    and \f$K\bar{K}\f$ systems near \f$K\bar{K}\f$ threshold  
-#    Phys. Lett. B63, 224 (1976
+#    Phys. Lett. B63, 224 (1976)
+#  Well suitable for \f$\f_0(980)\rightarrow \pi^+ \pi^-\f$
+#  @see http://www.sciencedirect.com/science/article/pii/0370269376906547
 #  @see Analysis::Models::Flatte
 #  @see Gaudi::Math::Flatte
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2014-01-18
 class Flatte_pdf(MASS) :
     """
-    Flatte function to describe dipion system near dikaon threshold
+    Flatte function:
+    S.M.Flatte, ``Coupled-channel analysis of the (pi eta) and (KbarK) systems near (KbarK) threshold'' 
+    Phys. Lett. B63, 224 (1976
+    http://www.sciencedirect.com/science/article/pii/0370269376906547
+
+    Typical case:    f0 -> pi+ pi- shape 
     """
     def __init__ ( self              ,
                    name              ,
@@ -1202,21 +1508,28 @@ class Flatte_pdf(MASS) :
             self.g2og1   ,
             self.flatte  )
         
+models.append ( Flatte_pdf )                          
 # =============================================================================
 ## @class Flatte2_pdf
 #  Flatte function to describe dikaon system near threshold
-#
 #  S.M.Flatte, 
 #    "Coupled-channel analysis of the \f$\pi\eta\f$ 
 #    and \f$K\bar{K}\f$ systems near \f$K\bar{K}\f$ threshold  
-#    Phys. Lett. B63, 224 (1976
+#    Phys. Lett. B63, 224 (1976)
+#  Well suitable for \f$\f_0(980)\rightarrow K^+ K^-\f$
+#  @see http://www.sciencedirect.com/science/article/pii/0370269376906547
 #  @see Analysis::Models::Flatte2
 #  @see Gaudi::Math::Flatte2
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2014-01-18
 class Flatte2_pdf(Flatte_pdf) :
     """
-    Flatte function to describe dipion system near dikaon threshold
+    Flatte function:
+    S.M.Flatte, ``Coupled-channel analysis of the (pi eta) and (KbarK) systems near (KbarK) threshold'' 
+    Phys. Lett. B63, 224 (1976
+    http://www.sciencedirect.com/science/article/pii/0370269376906547
+    
+    Typical case:    f0 -> K+ K- shape 
     """
     def __init__ ( self              ,
                    name              ,
@@ -1253,16 +1566,23 @@ class Flatte2_pdf(Flatte_pdf) :
             self.g2og1   ,
             self.flatte  ) 
         
+models.append ( Flatte2_pdf )                          
 # =============================================================================
 ## @class LASS_pdf
-#  kappa-pole 
+#  The LASS parameterization (Nucl. Phys. B296, 493 (1988))
+#  describes the 0+ component of the Kpi spectrum.
+#  It consists of the K*(1430) resonance together with an
+#  effective range non-resonant component
 #  @see Analysis::Models::LASS
 #  @see Gaudi::Math::LASS
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
 class LASS_pdf(MASS) :
     """
-    Kappa pole 
+    Kappa pole:
+    The LASS parameterization (Nucl. Phys. B296, 493 (1988))
+    describes the 0+ component of the Kpi spectrum.
+    It consists of the K*(1430) resonance together with an
     """
     def __init__ ( self               ,
                    name               ,
@@ -1338,17 +1658,19 @@ class LASS_pdf(MASS) :
             self.mKaon   ,
             self.mPion   ) 
 
-
+models.append ( LASS_pdf )                          
 # =============================================================================
 ## @class Bugg_pdf
-#  sigma-pole 
+#  The parameterization of sigma pole by B.S.Zou and D.V.Bugg, Phys.Rev. D48 (1993) R3948.
+#  @see http://dx.doi.org/10.1103/PhysRevD.48.R3948
 #  @see Analysis::Models::Bugg
 #  @see Gaudi::Math::Bugg
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
 class Bugg_pdf(MASS) :
     """
-    Bugg pole 
+    The parameterization of sigma pole by B.S.Zou and D.V.Bugg, Phys.Rev. D48 (1993) R3948.
+    http://dx.doi.org/10.1103/PhysRevD.48.R3948
     """
     def __init__ ( self              ,
                    name              ,
@@ -1434,7 +1756,7 @@ class Bugg_pdf(MASS) :
             self.bugg_s2 ,
             self.mPion   ) 
         
-
+models.append ( Bugg_pdf )
 # =============================================================================
 if '__main__' == __name__ :
     
@@ -1447,8 +1769,10 @@ if '__main__' == __name__ :
     logger.info ( ' Version : %s' %         __version__   ) 
     logger.info ( ' Date    : %s' %         __date__      )
     logger.info ( ' Symbols : %s' %  list ( __all__     ) )
+    logger.info ( 80*'*' )
+    for m in models : logger.info ( 'Model %s: %s' % ( m.__name__ ,  m.__doc__  ) ) 
     logger.info ( 80*'*' ) 
-
+    
 # =============================================================================
 # The END 
 # =============================================================================

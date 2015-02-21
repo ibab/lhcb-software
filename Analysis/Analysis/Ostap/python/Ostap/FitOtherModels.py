@@ -29,7 +29,6 @@ __all__     = (
     'BetaPrime_pdf'      , ## Beta-prime distribution 
     'Landau_pdf'         , ## Landau distribution 
     'Argus_pdf'          , ## ARGUS distribution 
-    'SinhAsinh_pdf'      , ## "Sinh-asinh" distribution
     )
 # =============================================================================
 import ROOT, math
@@ -44,6 +43,8 @@ else                       : logger = getLogger ( __name__               )
 # =============================================================================
 from   Ostap.FitBasic             import makeVar, PDF
 # =============================================================================
+models = []
+# =============================================================================
 ## @class GammaDist_pdf
 #  Gamma-distribution with shape/scale parameters
 #  http://en.wikipedia.org/wiki/Gamma_distribution
@@ -56,7 +57,31 @@ class GammaDist_pdf(PDF) :
     """
     Gamma-distribution with shape/scale parameters
     http://en.wikipedia.org/wiki/Gamma_distribution
-    It suits nicely for firs of multiplicity and/or chi2 distributions
+    It suits nicely for firs of multiplicity and/or, especially chi2 distributions
+    
+    In probability theory and statistics, the gamma distribution is a two-parameter
+    family of continuous probability distributions.
+    The common exponential distribution and chi-squared distribution are special
+    cases of the gamma distribution.
+    Here a shape parameter k and a scale parameter theta are used for parameterization
+    
+    The parameterization with k and theta appears to be more common in econometrics
+    and certain other applied fields, where e.g. the gamma distribution is frequently
+    used to model waiting times. For instance, in life testing, the waiting time
+    until death is a random variable that is frequently modeled with a gamma distribution.
+
+    If k is an integer, then the distribution represents an Erlang distribution;
+    i.e., the sum of k independent exponentially distributed random variables,
+    each of which has a mean of theta (which is equivalent to a rate parameter of 1/theta).
+
+    If X ~ Gamma(nu/2, 2), then X is identical to chi2(nu),
+    the chi-squared distribution with nu degrees of freedom.
+    Conversely, if Q ~ chi2(nu) and c is a positive constant,
+    then cQ ~ Gamma(nu/2, 2c).
+    
+    Parameters
+    - k>0     : shape
+    - theta>0 : scale 
     """
     ## constructor
     def __init__ ( self             ,
@@ -92,6 +117,7 @@ class GammaDist_pdf(PDF) :
             self.k                 ,
             self.theta             )
 
+models.append ( GammaDist_pdf ) 
 # =============================================================================
 ## @class GenGammaDist_pdf 
 #  Generalized Gamma-distribution with additional shift parameter 
@@ -167,6 +193,7 @@ class GenGammaDist_pdf(PDF) :
             self.p         , 
             self.low       )
 
+models.append ( GenGammaDist_pdf ) 
 # =============================================================================
 ## @class Amoroso_pdf
 #  Another view on generalized gamma distribution
@@ -222,6 +249,7 @@ class Amoroso_pdf(PDF) :
             self.beta      ,
             self.a         )
 
+models.append ( Amoroso_pdf ) 
 # =============================================================================
 ## @class LogGammaDist_pdf
 #  Distribution for log(x), where x follows Gamma distribution
@@ -234,7 +262,7 @@ class Amoroso_pdf(PDF) :
 #  @see Gaudi::Math::GammaDist 
 class LogGammaDist_pdf(PDF) :
     """
-    Gamma-distribution for log(x), where x follows Gamma distribution
+    Distribution for log(x), where x follows Gamma distribution
     It suits nicely for fits of log(multiplicity) and/or log(chi2) distributions
     """
     ## constructor
@@ -274,6 +302,7 @@ class LogGammaDist_pdf(PDF) :
             self.k                 ,
             self.theta             )
 
+models.append ( LogGammaDist_pdf ) 
 # =============================================================================
 ## @class Log10GammaDist_pdf
 #  Distribution for log10(x), where x follows Gamma distribution
@@ -288,7 +317,7 @@ class LogGammaDist_pdf(PDF) :
 #  @see Gaudi::Math::GammaDist 
 class Log10GammaDist_pdf(PDF) :
     """
-    Gamma-distribution for log10(x), where x follows Gamma distribution
+    Distribution for log10(x), where x follows Gamma distribution
     It suits nicely for fits of log10(multiplicity) and/or log10(chi2) distributions
     """
     ## constructor
@@ -328,6 +357,7 @@ class Log10GammaDist_pdf(PDF) :
             self.k                 ,
             self.theta             )
 
+models.append ( Log10GammaDist_pdf ) 
 # =============================================================================
 ## @class LogGamma_pdf
 #  - http://arxiv.org/pdf/1005.3274
@@ -345,6 +375,13 @@ class Log10GammaDist_pdf(PDF) :
 class LogGamma_pdf(PDF) :
     """
     - http://arxiv.org/pdf/1005.3274
+    - Prentice, R. L. (1974). A log gamma model and its maximum likelihood
+    estimation. Biometrika 61, 539
+    - Johnson, N. L., Kotz, S., and Balakrishnan, N. (1995). Continuous
+    univariate distributions, 2nd ed. Vol. 2. Wiley, New York.
+    - Bartlett, M. S. and G., K. M. (1946). The statistical analysis of
+    variance-heterogeneity and the logarithmic transformation. 
+    J. Roy. Statist. Soc. Suppl. 8, 1, 128.
     """
     ## constructor
     def __init__ ( self         ,
@@ -394,6 +431,7 @@ class LogGamma_pdf(PDF) :
             self.lam   ,
             self.alpha )
 
+models.append ( LogGamma_pdf ) 
 # =============================================================================
 ## @class BetaPrime_pdf
 #  http://en.wikipedia.org/wiki/Beta_prime_distribution
@@ -403,6 +441,7 @@ class LogGamma_pdf(PDF) :
 #  @see Gaudi::Math::BetaPrime
 class BetaPrime_pdf(PDF) :
     """
+    Beta-prime disribution 
     - http://en.wikipedia.org/wiki/Beta_prime_distribution
     """
     ## constructor
@@ -462,6 +501,7 @@ class BetaPrime_pdf(PDF) :
             self.scale ,
             self.delta )
 
+models.append ( BetaPrime_pdf ) 
 # =============================================================================
 ## @class Landau_pdf
 #  http://en.wikipedia.org/wiki/Landau_distribution
@@ -471,6 +511,7 @@ class BetaPrime_pdf(PDF) :
 #  @see Gaudi::Math::Landau
 class Landau_pdf(PDF) :
     """
+    Landau distribution 
     - http://en.wikipedia.org/wiki/Landau_distribution
     """
     ## constructor
@@ -508,6 +549,7 @@ class Landau_pdf(PDF) :
             self.scale ,
             self.delta )
 
+models.append ( Landau_pdf ) 
 # =============================================================================
 ## @class Argus_pdf
 #  http://en.wikipedia.org/wiki/ARGUS_distribution
@@ -517,6 +559,7 @@ class Landau_pdf(PDF) :
 #  @see Gaudi::Math::Argus
 class Argus_pdf(PDF) :
     """
+    Argus distribution
     - http://en.wikipedia.org/wiki/ARGUS_distribution
     """
     ## constructor
@@ -566,98 +609,7 @@ class Argus_pdf(PDF) :
             self.high  ,
             self.low   )
 
-# =============================================================================
-## @class SinhAsinh_pdf
-#
-#  Jones, M. C.; Pewsey, A. (2009). 
-#  "Sinh-arcsinh distributions". Biometrika 96 (4): 761. 
-#  doi:10.1093/biomet/asp053
-#  http://oro.open.ac.uk/22510
-#
-#  Location & scale  parameters are the 
-#  usual representation of the family of 
-#  distributions 
-#  - \f$\epsilon\f$ parameter control the skewness 
-#  - \f$\delta\f$   parameter control the kurtosis 
-#  Normal distribtion reappears as \f$\epsilon=0\f$ 
-#  and \f$\delta=1\f$ 
-#  The heavy tails correspond to \f$\delta<1\f$, 
-#  light tails correpond to \f$\delta>1\f$
-#  @date   2013-05-11
-#  @see Analysis::Models::SinhAsinh
-#  @see Gaudi::Math::SingAsinh
-class SinhAsinh_pdf(PDF) :
-    """
-    Jones, M. C.; Pewsey, A. (2009). 
-    'Sinh-arcsinh distributions'. Biometrika 96 (4): 761. 
-    doi:10.1093/biomet/asp053
-    http://oro.open.ac.uk/22510
-    
-    Location & scale  parameters are the 
-    usual representation of the family of 
-    distributions 
-    - \f$\epsilon\f$ parameter control the skewness 
-    - \f$\delta\f$   parameter control the kurtosis 
-    Normal distribtion reappears as \f$\epsilon=0\f$ 
-    and \f$\delta=1\f$ 
-    The heavy tails correspond to \f$\delta<1\f$, 
-    light tails correpond to \f$\delta>1\f$
-    """
-    ## constructor
-    def __init__ ( self              ,
-                   name              ,   ## the name 
-                   x                 ,   ## the variable
-                   mu      = None    ,   ## location parameter
-                   sigma   = None    ,   ## scale/sigma parameter
-                   epsilon = 0       ,
-                   delta   = 1       ) : 
-        #
-        PDF.__init__ ( self , name ) 
-        #
-        self.x     = x
-        self.mass  = x  ## ditto
-        #
-        self.mu       = makeVar ( mu               ,
-                                  'mu_%s'           % name ,
-                                  '#mu_{shash}(%s)' % name ,
-                                  mu         ,
-                                  x.getMin() ,
-                                  x.getMax() )  
-        
-        self.sigma    = makeVar ( sigma                       ,
-                                  'sigma_%s'           % name ,
-                                  '#sigma_{shash}(%s)' % name ,
-                                  sigma ,
-                                  0.100 * ( x.getMax() - x.getMin() ) ,
-                                  0.002 * ( x.getMax() - x.getMin() ) ,
-                                  0.501 * ( x.getMax() - x.getMin() ) ) 
-        
-        self.epsilon  = makeVar ( epsilon                     ,
-                                  'epsilon_%s'           % name ,
-                                  '#epsilon_{shash}(%s)' % name ,
-                                  epsilon ,
-                                  0       , -20     , +20    ) 
-        
-        self.delta    = makeVar ( delta                       ,
-                                  'delta_%s'            % name ,
-                                  '#delta_{shash}(%s) ' % name ,
-                                  delta   ,
-                                  1       , 1.e-3   , 20     )
-        
-        logger.debug ('SinhAsinh mu      %s' % self.mu      )
-        logger.debug ('SinhAsinh sigma   %s' % self.sigma   )
-        logger.debug ('SinhAsinh epsilon %s' % self.epsilon )
-        logger.debug ('SinhAsinh delta   %s' % self.delta   )
-
-        self.pdf  = cpp.Analysis.Models.SinhAsinh (
-            'shash_%s'    % name ,
-            'SinhAsinh(%s)' % name ,
-            self.x       ,
-            self.mu      ,
-            self.sigma   ,
-            self.epsilon ,
-            self.delta   )
-
+models.append ( Argus_pdf ) 
 # =============================================================================
 if '__main__' == __name__ :
     
@@ -670,6 +622,8 @@ if '__main__' == __name__ :
     logger.info ( ' Version : %s' %         __version__   ) 
     logger.info ( ' Date    : %s' %         __date__      )
     logger.info ( ' Symbols : %s' %  list ( __all__     ) )
+    logger.info ( 80*'*' ) 
+    for m in models : logger.info ( 'Model %s: %s' % ( m.__name__ ,  m.__doc__  ) ) 
     logger.info ( 80*'*' ) 
 
 # =============================================================================
