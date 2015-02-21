@@ -4,6 +4,9 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2015-02-21 - Michel De Cian
+ - Revert to fraction range [0,1[ for consistency in the release in FTClusterCreator.
+
 ! 2015-02-19 - Jacco de Vries
  - Cleaned up FTClusterCreator code
  - Added monitoring functionality to FTClusterMonitor for RawBank maxClus (bandwidth) studies

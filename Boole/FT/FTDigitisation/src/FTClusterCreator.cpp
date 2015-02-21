@@ -349,12 +349,18 @@ StatusCode FTClusterCreator::execute(){
         //   (+ the startDigit->channelID)
         uint meanChanPosition = std::floor(meanPosition); // will be 0 or 1  +  startDigit->channelID
         double fractionChanPosition = (meanPosition-std::floor(meanPosition)); // will be the decimals 
+        
+        // -- This is mostly a choice
+        // -- In the future, a range [-.5,.5]
+        // -- is desirable, however until all things are understood
+        // -- we revert to [0,1[
+        /*
         if(fractionChanPosition > .5) {
           // keep fractional part within [-.5,.5] range
           meanChanPosition += 1;
           fractionChanPosition -= 1.; // can range (-0.49,0.5]
         }
-        
+        */
 
         // Define new cluster
         //  FTCluster::FTCluster( LHCb::FTChannelID &id, double fraction, int size, int charge )
