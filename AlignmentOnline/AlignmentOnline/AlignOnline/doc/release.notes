@@ -3,6 +3,10 @@ Package: AlignOnline
 Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
 
+! 2015-02-21 - Roel Aaij
+ - Fix bug in iterator logic when maximum number of iterations is reached.
+ - New XML is only written if the alignment was successful.  
+
 ! 2015-02-16 - Roel Aaij
  - Put alignment configuration in seperate modules that are imported by name
    to configure the requested alignment.

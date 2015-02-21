@@ -101,7 +101,8 @@ def setupOnline():
   ai.PartitionName     = Online.PartitionName
   ai.ASDFilePattern        = "_Escher.out"
   ai.OutputLevel      = 2
-
+  ai.MaxIteration = 4
+  
   for attr in ['ASDDir', 'OnlineXmlDir', 'AlignXmlDir']:
     __propAtt(attr, Online, ai)
   evtclk().EventTimeDecoder = "FakeEventTime"

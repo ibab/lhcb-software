@@ -179,13 +179,17 @@ StatusCode AlignOnlineIterator::i_run()
     return sc;
   }
   IIncidentSvc* incSvc = svc<IIncidentSvc>("IncidentSvc");
-  while (m_iteration < m_maxIteration)
+
+  Al::IAlignUpdateTool::ConvergenceStatus convergencestatus = Al::IAlignUpdateTool::Unknown;
+
+  while (m_iteration <= m_maxIteration)
   {
+    debug() << "wait for analyzers" << endreq;
     m_parent->waitRunOnce();
 
+    debug() << "Iteration " << m_iteration << endreq;
     // 4. read ASDs and compute new constants
     debug() << "Collecting ASD files" << endreq;
-    Al::IAlignUpdateTool::ConvergenceStatus convergencestatus;
     Al::Equations equations;
     m_asdCollector.collectASDs(equations);
     debug() << "Collected ASDs: numevents = " << equations.numEvents()
@@ -200,7 +204,7 @@ StatusCode AlignOnlineIterator::i_run()
 
     // Now call the update tool
     debug() << "Calling AlignUpdateTool" << endreq;
-    StatusCode sc = m_alignupdatetool->process(equations, convergencestatus);
+    sc = m_alignupdatetool->process(equations, convergencestatus);
     if (!sc.isSuccess())
     {
       error() << "Error calling alignupdate tool" << endreq;
@@ -216,26 +220,24 @@ StatusCode AlignOnlineIterator::i_run()
       break;
     }
 
-    // break the loop if converged
-    if (convergencestatus == Al::IAlignUpdateTool::Converged)
-    {
-      break;
-    }
-
     // writes a little file with number of iteration step
     debug() << "calling parent->writeReference()" << endreq;
     m_parent->writeReference();
 
+    ++m_iteration;
+    // break the loop if converged or maximum number of iterations reached
+    if (convergencestatus == Al::IAlignUpdateTool::Converged || m_iteration > m_maxIteration)
+    {
+      break;
+    }
     // start the analyzers and wait
-    debug() << "wait for analyzers" << endreq;
     m_asdCollector.setTime();
-    debug() << "Iteration " << ++m_iteration << endreq;
     m_parent->doContinue();
   }
   std::string *s;
-  if (sc.isSuccess() && m_iteration > 1)
+  if (sc.isSuccess() && m_iteration > 1 && convergencestatus == Al::IAlignUpdateTool::Converged)
   {
-    // after last update, if more than one iteration
+    // after last update, if more than one iteration and successfully converged
     for (auto& i : m_xmlcopiers)
     {
       StatusCode thissc = i->copyToOnlineArea();
@@ -252,7 +254,7 @@ StatusCode AlignOnlineIterator::i_run()
   }
   else
   {
-    if (sc.isSuccess())
+    if (sc.isSuccess() && m_iteration <= 1)
     {
       warning() << "Alignment didn't change." << endmsg;
     }
