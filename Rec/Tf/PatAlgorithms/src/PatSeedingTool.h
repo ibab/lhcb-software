@@ -648,19 +648,15 @@ inline PatSeedingTool::HitRange PatSeedingTool::hitsInRange(
     std::lower_bound(hitRange.begin(), hitRange.end(), xrange.min(),
 	Tf::compByX_LB<PatFwdHit>());
   if (hitRange.end() == beg) return HitRange(beg, beg);
-  // range is typically small, so scan up to n elements to find the end
-  // if range is not small, we wasted time to look at n elements,
-  // and use std::lower_bound instead (which is O(N log(N)) where N is
-  // the size of hitRange)
-  unsigned n = 8;
   HitRange::iterator end = beg;
-  while (hitRange.end() != end &&
-      (*end)->hit()->xAtYEq0() < xrange.max() && n)
-    ++end, --n;
-  if (0 == n && hitRange.end() != end &&
-      (*end)->hit()->xAtYEq0() < xrange.max())
+  // for small windows, scan linearly
+  if (std::abs(xrange.max() - xrange.min()) < isRegionOT(reg) ? 20.0 : 2.0) {
+    while (hitRange.end() != end &&
+	(*end)->hit()->xAtYEq0() < xrange.max()) ++end;
+  } else {
     end = std::lower_bound(end, hitRange.end(), xrange.max(),
 	Tf::compByX_LB<PatFwdHit>());
+  }
 
   return HitRange(beg, end);
 }

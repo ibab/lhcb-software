@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-02-21 - Manuel Tobias Schiller
+ - PatSeedingTool: be a bit smarter in hitsInRange method - saves 0.9% in CPU,
+   same results
+
+! 2015-02-21 - Manuel Tobias Schiller
  - PatSeedingTool changes for running in tandem with Forward:
    - remove the old UseForward property in favour of Sascha's clearly superior
      'UsedLHCbIDToolName' property; to only run over hits not used by the
