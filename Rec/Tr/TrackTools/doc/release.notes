@@ -4,6 +4,25 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-02-21 - Manuel Tobias Schiller
+ - TrackUsedLHCbIDs: make hit lookup O(1) instead of O(ln(Nhits)) by using
+   BloomFilters; here's the small print:
+   - The BloomFilters are kept by (tracking) subdetector, and it is assumed
+     that current and upgrade detectors will not be mixed.
+   - Specifically, we use (Velo, VP), (TT, UT), (T, FT), and a catchall
+     category Other if other LHCbIDs ever make it into this tool.
+   - The collision probability (i.e. the probability to mistake two distinct
+     hits in the same subdetector for one another) is below 1e-4 as long as
+     the occupancy in the tracking detectors stays below 4 times the averages
+     coded in the header (Velo: 1%, ST: 2%, OT: 15 %, VP: .125%, UT: 1.8%,
+     FT: 2%, other subdetectors: up to 1024 hits); keep in mind that not all
+     hits in a detector end up on tracks, so the collision probability is
+     likely much lower even if the average event occupancy occasionally
+     exceeds the thresholds given above by more than the safety factor 4.
+   - When used offline to run Seeding only on hits not used by Forward tracks,
+     this reduces the time to look if a hit was used by the Forward by 36%
+     (down to about 160 CPU cycles per hit) 
+
 ! 2015-02-19 - Paul Seyfert
  - Ghost Probability for Run2. (cleaner code, removed time consuming inputs,
    newly trained to work with new reconstruction and expected 2015 conditions,
