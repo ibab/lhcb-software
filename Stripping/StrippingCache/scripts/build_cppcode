@@ -3,7 +3,7 @@
 
 ## prepare pkl file 
 
-gaudirun.py $* $STRIPPINGCACHEROOT/options/DataType.py $STRIPPINGCACHEROOT/options/DataOnDemand.py $STRIPPINGCACHEROOT/options/NoEvents.py -n -o CACHE.pkl  | tee phase_0.log 
+gaudirun.py $* $STRIPPINGCACHEROOT/options/PostAction.py -n -o CACHE.pkl  | tee phase_0.log 
 
 rm -f *.dst 
 rm -f *.mdst 
