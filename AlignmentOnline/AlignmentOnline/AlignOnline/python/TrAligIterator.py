@@ -43,13 +43,13 @@ from TrAlignCommon import *
 def patchEscher(true_online_version, alignment_module):
   import GaudiConf.DstConf
   import Escher.Configuration
-  import OnlineEnv as Online
   from Configurables import MagneticFieldSvc
   from TAlignment.VertexSelections import configuredPVSelection
   from Configurables import GaudiSequencer
+
   escher = EscherCommon(true_online_version, alignment_module)
-#   TAlignment().OnlineIterator = True
   TAlignment().NumIterations = 10
+
   print escher
   return escher
 
@@ -59,11 +59,11 @@ def setupOnline():
 
         @author M.Frank
   """
-  print "+++++++++++++++++++++++++++++ Setting up Online ++++++++++++++++++++"
-  import OnlineEnv as Online
   from Configurables import LHCb__FILEEvtSelector as es
   from Configurables import LHCb__AlignDrv as Adrv
   from Configurables import EventClockSvc as evtclk
+  Online = importOnline()
+
   app=Gaudi.ApplicationMgr()
   app.AppName = ''
   app.HistogramPersistency = 'ROOT'
@@ -84,10 +84,12 @@ def setupOnline():
   Configs.RootHistCnv__PersSvc("RootHistSvc").OutputLevel = MSG_ERROR
   app.OutputLevel = MSG_INFO
 
-  def __propAtt(att, fr, to):
+  def __propAtt(att, fr, to, d = None):
     if hasattr(fr, att):
       setattr(to, att, getattr(fr, att))
-
+    elif d:
+      setattr(to, att, d)
+      
   from Configurables import AlignOnlineIterator as Aiter
   ad = Adrv("AlignDrv")
   ad.PartitionName     = Online.PartitionName
@@ -103,8 +105,10 @@ def setupOnline():
   ai.OutputLevel      = 2
   ai.MaxIteration = 4
   
-  for attr in ['ASDDir', 'OnlineXmlDir', 'AlignXmlDir']:
-    __propAtt(attr, Online, ai)
+  for attr, default in [('ASDDir', "/group/online/alignment/EscherOut/"),
+                        ('OnlineXmlDir', "/group/online/alignment"),
+                        ('AlignXmlDir', "/group/online/AligWork")]:
+    __propAtt(attr, Online, ai, default)
   evtclk().EventTimeDecoder = "FakeEventTime"
   app.Runable = ad.getType()+"/"+ad.getName()
   import time
@@ -122,7 +126,8 @@ def patchMessages():
 
         @author M.Frank
   """
-  import OnlineEnv as Online
+  Online = importOnline()
+
   app=Gaudi.ApplicationMgr()
   Configs.AuditorSvc().Auditors = []
   app.MessageSvcType = 'LHCb::FmcMessageSvc'
@@ -141,15 +146,14 @@ def start():
 
         @author M.Frank
   """
-  import OnlineEnv as Online
-  import sys
+  Online = importOnline()
 #   Online.end_config(True)
   Online.end_config(False)
 
 #============================================================================================================
 def getProcessingType():
   import os
-  import OnlineEnv as Online
+  Online = importOnline()
 
   if (hasattr(Online,'ActivityType') and getattr(Online,'ActivityType') == 'Reprocessing'):
     return 'Reprocessing'
@@ -158,7 +162,7 @@ def getProcessingType():
   return 'DataTaking'
 
 def doIt(alignment_module = "VeloHalfAlignment"):
-  true_online = os.environ.has_key('LOGFIFO') and os.environ.has_key('PARTITION')
+  true_online = ('LOGFIFO' in os.environ and 'RUNINFO' in os.environ)
   debug = not true_online
 
   if not true_online:

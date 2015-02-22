@@ -43,10 +43,11 @@ from TrAlignCommon import *
 def patchEscher(true_online_version, alignment_module, n = -1):
   import GaudiConf.DstConf
   import Escher.Configuration
-  import OnlineEnv as Online
   from Configurables import MagneticFieldSvc
   from Configurables import TAlignment
   from TAlignment.VertexSelections import configuredPVSelection
+  Online = importOnline()
+
   escher = EscherCommon(true_online_version, alignment_module)
   hostname = HostName()
   escher.DataType = "2012"
@@ -68,8 +69,9 @@ def setupOnline(directory, prefix, filename):
 
         @author M.Frank
   """
-  import OnlineEnv as Online
   from Configurables import LHCb__FILEEvtSelector as es
+  Online = importOnline()
+  
   app=Gaudi.ApplicationMgr()
   app.AppName = ''
   HistogramPersistencySvc().OutputFile = ""
@@ -82,7 +84,7 @@ def setupOnline(directory, prefix, filename):
   sel.OutputLevel = MSG_INFO
   sel.DeleteFiles = False;
   sel.FilePrefix = prefix
-  sel.Decode=False
+  sel.Decode = False
   sel.Pause = True
   app.EvtSel  = sel
   app.EvtMax = 400
@@ -109,7 +111,8 @@ def patchMessages():
 
         @author M.Frank
   """
-  import OnlineEnv as Online
+  Online = importOnline()
+
   app=Gaudi.ApplicationMgr()
   Configs.AuditorSvc().Auditors = []
   app.MessageSvcType = 'LHCb::FmcMessageSvc'
@@ -128,15 +131,14 @@ def start():
 
         @author M.Frank
   """
-  import OnlineEnv as Online
-  import sys
+  Online = importOnline()
 #   Online.end_config(True)
   Online.end_config(False)
 
 #============================================================================================================
 def getProcessingType():
   import os
-  import OnlineEnv as Online
+  Online = importOnline()
 
   if (hasattr(Online,'ActivityType') and getattr(Online,'ActivityType') == 'Reprocessing'):
     return 'Reprocessing'
@@ -146,7 +148,7 @@ def getProcessingType():
 
 def doIt(filename = "/localdisk/Run_112181_0000000182.raw",
          alignment_module = "VeloHalfAlignment", n = -1):
-  true_online = os.environ.has_key('LOGFIFO') and os.environ.has_key('PARTITION')
+  true_online = ('LOGFIFO' in os.environ and 'RUNINFO' in os.environ)
   debug = not true_online
 
   if not true_online:
@@ -154,8 +156,12 @@ def doIt(filename = "/localdisk/Run_112181_0000000182.raw",
     requirement = "EvType=2;TriggerMask=0x0,0x4,0x0,0x0;VetoMask=0,0,0,0x300;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 
   br = patchEscher(true_online, alignment_module, n)
-  directory = os.path.dirname(filename)
-  prefix = os.path.basename(filename)[:4]
+  if os.path.isdir(filename):
+    directory = filename
+    prefix = 'Run_'
+  else:
+    directory = os.path.dirname(filename)
+    prefix = os.path.basename(filename)[:4]
 
   setupOnline(directory, prefix, filename)
   if true_online: patchMessages()

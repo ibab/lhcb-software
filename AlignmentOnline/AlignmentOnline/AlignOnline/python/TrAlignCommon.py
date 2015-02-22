@@ -39,16 +39,39 @@ configureBrunelOutput = None
 from TAlignment.AlignmentScenarios import *
 from TAlignment.TrackSelections import *
 from TAlignment.AlignmentScenarios import *
+
+def staticVar(varname, value):
+    def decorate(func):
+        setattr(func, varname, value)
+        return func
+    return decorate
+
+@staticVar("Online", None)
+def importOnline():
+  if importOnline.Online:
+    return importOnline.Online
+  if 'RUNINFO' in os.environ:
+    runinfo = os.environ['RUNINFO']
+    d, f = os.path.split(runinfo)
+    name, ext = os.path.splitext(f)
+    sys.path.insert(1, d)
+    Online = importlib.import_module('OnlineEnv')
+  else:
+    import OnlineEnv as Online
+  importOnline.Online = Online  
+  return Online
+
 def EscherCommon(true_online_version, alignment_module):
   import GaudiConf.DstConf
   import Escher.Configuration
-  import OnlineEnv as Online
   from Configurables import MagneticFieldSvc
   from Configurables import TAlignment
   from TAlignment.VertexSelections import configuredPVSelection
   from Configurables import RunChangeHandlerSvc
-  escher = Escher.Configuration.Escher()
+  Online = importOnline()
   import ConditionsMap
+
+  escher = Escher.Configuration.Escher()
   escher.DDDBtag   = ConditionsMap.DDDBTag
   escher.CondDBtag = ConditionsMap.CondDBTag
   escher.OnlineMode = True
@@ -56,7 +79,7 @@ def EscherCommon(true_online_version, alignment_module):
     escher.OnlineAligWorkDir = os.path.join(Online.AlignXmlDir, 'running')
 
   handlerConditions = ConditionsMap.RunChangeHandlerConditions
-  if true_online_version and os.environ['PARTITION'] == 'TEST':
+  if true_online_version and os.environ['PARTITION_NAME'] == 'TEST':
     re_year = re.compile('(201\d)')
     for k, v in handlerConditions.items():
       handlerConditions[re_year.sub('2014', k)] = v
