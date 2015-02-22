@@ -8,7 +8,7 @@
 #include "Kernel/CircleTraj.h"
 
 #include "Math/GenVector/AxisAngle.h"
-#include <cmath>
+#include "vdt/atan2.h"
 
 using namespace LHCb;
 using namespace ROOT::Math;
@@ -79,18 +79,13 @@ double CircleTraj::muEstimate( const Point& point ) const
   // get vector from origin, to point after projecting it
   // into the plane of the circle. (i.e. this vector is normal
   // to m_normal)
-  auto r = (point - m_normal.Dot(point-m_origin)*m_normal)-m_origin ;
+  auto r = ((point - m_normal.Dot(point-m_origin)*m_normal)-m_origin).unit();
+  // use trigonometric addition theorems to avoid two expensive atan2 calls and
+  // the annoying if statements to clamp things into the allowed range
+  const auto cosdphi = r.x() * m_dirStart.x() + r.y() * m_dirStart.y();
+  const auto sindphi = r.y() * m_dirStart.x() - r.x() * m_dirStart.y();
 
-  // Determine delta phi angle between arclength=0 angle and angle of r
-  auto dphi = r.phi() - m_dirStart.phi();
-
-  // Check whether angle outside of [-pi/2,+pi/2]
-  if( m_dirStart.Dot( r ) < 0) {
-    if( dphi > M_PI ) dphi -= 2*M_PI;
-    else              dphi += 2*M_PI;
-  }
-
-  return m_radius * dphi;
+  return m_radius * vdt::fast_atan2(sindphi, cosdphi);
 }
 
 /// arclength until deviation of the trajectory from the expansion

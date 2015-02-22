@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2015-02-22 - Manuel Tobias Schiller
+ - CircleTraj: speed up the muEstimate method by factor of 3
+
 ! 2015-02-17 - Chris Jones
  - Fix some RICH dictionary warnings.
 
@@ -334,8 +337,8 @@
 
 ! 2011-08-09 - Patrick Koppenburg
  - IGetLumiParameters.h: Bug #85240
-	. Remove init() method
-	. Make a few methods const
+   . Remove init() method
+   . Make a few methods const
 
 ! 2011-08-08 - Patrick Koppenburg
  - Move IGetLumiParameters.h from LumiAlgs to here so it can

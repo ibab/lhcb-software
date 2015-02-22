@@ -10,6 +10,7 @@ gaudi_depends_on_subdirs(GaudiAlg
 
 find_package(Boost COMPONENTS system)
 find_package(ROOT)
+find_package(VDT)
 
 include(GaudiObjDesc)
 
@@ -19,8 +20,8 @@ god_build_headers(xml/*.xml
 gaudi_add_library(LHCbKernel
                   src/*.cpp
                   PUBLIC_HEADERS Kernel
-                  INCLUDE_DIRS ROOT Boost
-                  LINK_LIBRARIES ROOT Boost GaudiKernel GaudiObjDescLib LHCbMathLib GaudiAlgLib)
+		  INCLUDE_DIRS ROOT Boost VDT
+		  LINK_LIBRARIES ROOT Boost VDT GaudiKernel GaudiObjDescLib LHCbMathLib GaudiAlgLib)
 
 god_build_dictionary(xml/*.xml
                      HEADERS_DESTINATION Kernel
