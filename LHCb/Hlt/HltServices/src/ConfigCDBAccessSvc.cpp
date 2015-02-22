@@ -410,9 +410,7 @@ ConfigCDBAccessSvc::ConfigCDBAccessSvc( const string& name,
                                         ISvcLocator* pSvcLocator )
     : Service( name, pSvcLocator ), m_file{ nullptr }
 {
-    string def( System::getEnv( "HLTTCKROOT" ) );
-    if ( !def.empty() ) def += "/config.cdb";
-    declareProperty( "File", m_name = def );
+    declareProperty( "File", m_name = "" );
     declareProperty( "Mode", m_mode = "ReadOnly" );
 }
 
@@ -456,7 +454,17 @@ ConfigCDBAccessSvc_details::CDB* ConfigCDBAccessSvc::file() const
                                  : ( m_mode == "Truncate" )
                                        ? ( ios::in | ios::out | ios::trunc )
                                        : ios::in;
-
+        if ( m_name.empty() ) {
+            std::string def( System::getEnv( "HLTTCKROOT" ) );
+            if ( !def.empty() ) {
+                def += "/config.cdb";
+            } else {
+               throw GaudiException("Environment variable HLTTCKROOT not specified and no explicit "
+                                    "filename given; cannot obtain location of config.cdb.",
+                                    name(), StatusCode::FAILURE);
+            }
+            m_name = def;
+        }
         info() << " opening " << m_name << " in mode " << m_mode << endmsg;
         m_file.reset( new CDB( m_name, mode ) );
         if ( !*m_file ) {

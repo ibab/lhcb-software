@@ -58,6 +58,7 @@ HltConfigSvc::HltConfigSvc( const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("checkOdin", m_checkOdin = true);
   declareProperty("maskL0TCK", m_maskL0TCK = false);
   declareProperty("HltDecReportsLocations", m_outputContainerName = {"/Event/Hlt1/DecReports","/Event/Hlt2/DecReports"} );
+  declareProperty("Hlt2Mode", m_hlt2mode = false);
 }
 
 void HltConfigSvc::updateMap(Property&) {

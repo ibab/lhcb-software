@@ -21,9 +21,7 @@ DECLARE_SERVICE_FACTORY(ConfigFileAccessSvc)
 ConfigFileAccessSvc::ConfigFileAccessSvc( const std::string& name, ISvcLocator* pSvcLocator)
   : Service ( name , pSvcLocator )
 {
-  std::string def( System::getEnv("HLTTCKROOT") );
-  if (!def.empty()) def += "/config";
-  declareProperty("Directory", m_dir = def);
+  declareProperty("Directory", m_dir = "");
 }
 
 //=============================================================================
@@ -66,21 +64,36 @@ bool ConfigFileAccessSvc::create_directories( fs::path dir ) const {
    return false;
 }
 
+fs::path ConfigFileAccessSvc::dir() const {
+  if ( m_dir.empty() ) {
+     std::string def( System::getEnv("HLTTCKROOT") );
+     if ( !def.empty() ) {
+        if (!def.empty()) def += "/config";
+     } else {
+        throw GaudiException("Environment variable HLTTCKROOT not specified and no explicit "
+                             "filename given; cannot obtain location of config.tar.",
+                             name(), StatusCode::FAILURE);
+     }
+     m_dir = def;
+  }
+  return fs::path(m_dir);
+}
+   
 fs::path
 ConfigFileAccessSvc::propertyConfigPath( const PropertyConfig::digest_type& digest ) const {
-     std::string sref=digest.str();
-     return fs::path(m_dir) / "PropertyConfigs" / sref.substr(0,2) / sref;
+    std::string sref=digest.str();
+    return dir() / "PropertyConfigs" / sref.substr(0,2) / sref;
 }
 
 fs::path
 ConfigFileAccessSvc::configTreeNodePath( const ConfigTreeNode::digest_type& digest)  const{
-     std::string sref=digest.str();
-     return fs::path(m_dir) / "ConfigTreeNodes" / sref.substr(0,2) / sref;
+    std::string sref=digest.str();
+    return dir() / "ConfigTreeNodes" / sref.substr(0,2) / sref;
 }
 
 fs::path
 ConfigFileAccessSvc::configTreeNodeAliasPath( const ConfigTreeNodeAlias::alias_type& alias ) const {
-     return fs::path(m_dir) / "Aliases" / alias.str();
+    return dir() / "Aliases" / alias.str();
 }
 
 boost::optional<PropertyConfig>
@@ -232,7 +245,7 @@ ConfigFileAccessSvc::configTreeNodeAliases(const ConfigTreeNodeAlias::alias_type
     std::vector<ConfigTreeNodeAlias> x;
 
     // use std::list as iterators are not invalidated when extending list...
-    fs::path basedir = fs::path(m_dir) / "Aliases" ;
+    fs::path basedir = dir() / "Aliases" ;
     std::list<fs::path> dirs; dirs.push_back( basedir / alias.major() );
 
     for (const auto&  dir : dirs ) {

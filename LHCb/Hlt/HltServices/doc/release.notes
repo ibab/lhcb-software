@@ -4,6 +4,11 @@
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
 
+! 2015-02-22 - Roel Aaij
+ - Perhaps due to a slight change in behaviour of genconf, the File property for
+   various AccessSvc was set to the value at build time. The environment
+   variable default is now always resolved when the file is opened.
+
 ! 2015-02-17 - Roel Aaij
  - Switch default config access service to CDB.
 

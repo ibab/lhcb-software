@@ -26,7 +26,7 @@ public:
 private:  
   IArchive*  file() const;
   mutable std::unique_ptr<IArchive>    m_file;
-  std::string                          m_name;   ///< filename of zip file from which to read configurations
+  mutable std::string                  m_name;   ///< filename of zip file from which to read configurations
   std::string                          m_mode;   ///< which flags to specify when opening the zip file
 };
 #endif // CONFIGZIPFILEACCESSSVC_H

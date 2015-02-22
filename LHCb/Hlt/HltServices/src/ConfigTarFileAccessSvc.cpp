@@ -17,9 +17,7 @@ ConfigTarFileAccessSvc::ConfigTarFileAccessSvc( const std::string& name,
                                                 ISvcLocator* pSvcLocator )
     : ConfigArchiveAccessSvc( name, pSvcLocator ), m_file{ nullptr }
 {
-    std::string def( System::getEnv( "HLTTCKROOT" ) );
-    if ( !def.empty() ) def += "/config.tar";
-    declareProperty( "File", m_name = def );
+    declareProperty( "File", m_name = "" );
     declareProperty( "Mode", m_mode = "ReadOnly" );
     declareProperty("CompressOnWrite", m_compress = true );
 }
@@ -47,6 +45,17 @@ IArchive* ConfigTarFileAccessSvc::file() const
                                  : ( m_mode == "Truncate" )
                                        ? ( std::ios::in | std::ios::out | std::ios::trunc )
                                        : std::ios::in;
+        if ( m_name.empty() ) {
+            std::string def( System::getEnv( "HLTTCKROOT" ) );
+            if ( !def.empty() ) {
+                def += "/config.tar";
+            } else {
+               throw GaudiException("Environment variable HLTTCKROOT not specified and no explicit "
+                                    "filename given; cannot obtain location of config.tar.",
+                                    name(), StatusCode::FAILURE);
+            }
+            m_name = def;
+        }
         info() << " opening " << m_name << " in mode " << m_mode << endmsg;
         m_file.reset( new TarFile( m_name, mode, m_compress ) );
         if ( !*m_file ) {

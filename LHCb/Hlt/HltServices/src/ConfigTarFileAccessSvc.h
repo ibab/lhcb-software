@@ -26,7 +26,7 @@ private:
   IArchive*  file() const override;
 
   mutable std::unique_ptr<IArchive>    m_file;
-  std::string                          m_name;   ///< filename of tar file from which to read configurations
+  mutable std::string                  m_name;   ///< filename of tar file from which to read configurations
   std::string                          m_mode;   ///< which flags to specify when opening the tar file
   bool                                 m_compress; ///< do we want to transparently compress items on write?
 };

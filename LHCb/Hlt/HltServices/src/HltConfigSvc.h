@@ -42,10 +42,10 @@ private:
   void checkOdin();
   void createHltDecReports();
 
-   void updateMap(Property&);
-   void updateInitial(Property&);
+  void updateMap(Property&);
+  void updateInitial(Property&);
 
-   typedef std::map<TCK,std::string> TCKMap_t;
+  typedef std::map<TCK,std::string> TCKMap_t;
 
   std::vector<std::string>     m_outputContainerName;  ///< location of HltDecReports in which to record configured TCK
   std::string                  m_prefetchDir;     ///< which set of configurations 
@@ -53,10 +53,10 @@ private:
                                                   ///< and to prefetch...
 
   TCKMap_t                          m_tck2config;      ///< from TCK to configuration ID
-  std::map<std::string,std::string> m_tck2config_;      ///< from TCK to configuration ID
+  std::map<std::string,std::string> m_tck2config_;     ///< from TCK to configuration ID
 
   TCK                          m_initialTCK;      ///< which TCK to start with...
-  std::string                  m_initialTCK_;      ///< which TCK to start with...
+  std::string                  m_initialTCK_;     ///< which TCK to start with...
 
   mutable TCKMap_t             m_tck2configCache; ///< from TCK to configuration ID
   TCK                          m_configuredTCK;   ///< which TCK is currently in use?
@@ -66,7 +66,8 @@ private:
   bool                         m_checkOdin;
   bool                         m_maskL0TCK;
   unsigned int                 m_id;
-
+  bool                         m_hlt2mode;
+   
   // resolve TCK -> toplevel config ID, then call method with ID
   ConfigTreeNode::digest_type tck2id(TCK    tck) const;
 

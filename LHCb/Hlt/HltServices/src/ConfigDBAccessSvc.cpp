@@ -235,9 +235,7 @@ ConfigDBAccessSvc::ConfigDBAccessSvc( const std::string& name, ISvcLocator* pSvc
   , m_session(0)
   , m_coolConfSvc(0)
 {
-  std::string def( System::getEnv("HLTTCKROOT") );
-  if (!def.empty()) def = std::string("sqlite_file:") + def + "/db/config.db";
-  declareProperty("Connection", m_connection = def );
+  declareProperty("Connection", m_connection = "" );
   declareProperty("ReadOnly", m_readOnly = true );
   declareProperty("CreateSchema", m_createSchema = false);
 }
@@ -520,6 +518,17 @@ StatusCode ConfigDBAccessSvc::openConnection() {
         if ( !sc.isSuccess() )   return sc;
     }
 
+    if ( m_connection.empty() ) {
+       std::string def( System::getEnv( "HLTTCKROOT" ) );
+       if (!def.empty()) {
+          def = std::string("sqlite_file:") + def + "/db/config.db";
+       } else {
+          throw GaudiException("Environment variable HLTTCKROOT not specified and no explicit "
+                               "filename given; cannot obtain location of config.db.",
+                               name(), StatusCode::FAILURE);
+       }
+       m_connection = def;
+    }
     m_session = m_coolConfSvc->connectionSvc()
               . connect(m_connection, m_readOnly ? coral::ReadOnly : coral::Update );
     info() << "Connected to database \"" << m_connection << "\"" << endmsg;
