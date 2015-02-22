@@ -28,7 +28,7 @@ StatusCode TrajOTProjector::project( const StateVector& statevector,
                                      const Measurement& meas )
 {
   return meas.checkType( Measurement::OT ) ?
-    project(statevector, dynamic_cast<const OTMeasurement&>(meas) ) :
+    project(statevector, static_cast<const OTMeasurement&>(meas) ) :
     StatusCode::FAILURE;
 }
 

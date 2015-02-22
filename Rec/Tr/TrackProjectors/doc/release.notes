@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2015-02-22 - Manuel Tobias Schiller
+ - TrajOTProjector: remove superfluous dynamic_cast, speedup about 6%
+
 ! 2015-02-17 - Manuel Tobias Schiller
  - update TrajOTProjector for upcoming changes to RtRelation class by being
    more flexible in terms of data type returned by RtRelation's methods, no
