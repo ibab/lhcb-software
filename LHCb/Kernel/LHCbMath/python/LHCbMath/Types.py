@@ -1733,6 +1733,111 @@ VE . prec       = _prec2_
 VE . precision  = _prec2_
 
 # =============================================================================
+## add something to std::vector 
+def _add_to ( vct , arg1 , *args ) :
+    ##
+    if hasattr ( arg1 , '__iter__' ) :
+        for a in arg1 : vct.push_back ( a ) 
+    else : vct.push_back ( arg1 ) 
+    #
+    for a in args : _add_to ( vct , a )
+        
+# =============================================================================
+## construct std::vector<double> from the arguments
+def doubles ( arg1 , *args ) :
+    """
+    Construct the std::vector<double> from the arguments
+    
+    >>> v1 = doubles ( 1.01 )
+    >>> v2 = doubles ( 1.01 , 1.02 , 1.03  )
+    >>> v3 = doubles ( [ 1.01 , 1.02 , 1.03 ] )
+    
+    """
+    ## create new vector 
+    VT  = std.vector('double')
+    vct = VT()
+    ## add arguments to the vector 
+    _add_to ( vct , arg1 , *args )
+    ## 
+    return vct
+
+# =============================================================================
+## construct std::vector<ints> from the arguments
+def ints ( arg1 , *args ) :
+    """
+    Construct the std::vector<int> from the arguments
+    
+    >>> v1 = ints ( 1 )
+    >>> v2 = ints ( 1 , 1 , 1  )
+    >>> v3 = ints ( [ 1 , 2 , 3 ] )
+    
+    """
+    ## create new vector 
+    VT  = std.vector('int')
+    vct = VT()
+    ## add arguments to the vector 
+    _add_to ( vct , arg1 , *args )
+    ## 
+    return vct
+
+# =============================================================================
+## construct std::vector<unsigned int> from the arguments
+def uints ( arg1 , *args ) :
+    """
+    Construct the std::vector<unsigned int> from the arguments
+    
+    >>> v1 = uints ( 1 )
+    >>> v2 = uints ( 1 , 1 , 1  )
+    >>> v3 = uints ( [ 1 , 2 , 3 ] )
+    
+    """
+    ## create new vector 
+    VT  = std.vector('unsigned int')
+    vct = VT()
+    ## add arguments to the vector 
+    _add_to ( vct , arg1 , *args )
+    ## 
+    return vct
+
+# =============================================================================
+## construct std::vector<long> from the arguments
+def longs ( arg1 , *args ) :
+    """
+    Construct the std::vector<long> from the arguments
+    
+    >>> v1 = longs ( 1 )
+    >>> v2 = longs ( 1 , 1 , 1  )
+    >>> v3 = longs ( [ 1 , 2 , 3 ] )
+    
+    """
+    ## create new vector 
+    VT  = std.vector('long')
+    vct = VT()
+    ## add arguments to the vector 
+    _add_to ( vct , arg1 , *args )
+    ## 
+    return vct
+
+# =============================================================================
+## construct std::vector<unsigned long> from the arguments
+def ulongs ( arg1 , *args ) :
+    """
+    Construct the std::vector<unsigned long> from the arguments
+    
+    >>> v1 = ulongs ( 1 )
+    >>> v2 = ulongs ( 1 , 1 , 1  )
+    >>> v3 = ulongs ( [ 1 , 2 , 3 ] )
+    
+    """
+    ## create new vector 
+    VT  = std.vector('unsigned long')
+    vct = VT()
+    ## add arguments to the vector 
+    _add_to ( vct , arg1 , *args )
+    ## 
+    return vct
+
+# =============================================================================
 if '__main__' == __name__ :
 
     ## make printout of the own documentations

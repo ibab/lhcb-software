@@ -22,10 +22,15 @@ __date__    = "2014-06-02"
 __version__ = "$Revision$"
 # =============================================================================
 __all__     = (
-    'exp'  , 'log'  , 'log10' ,
-    'sqrt' , 'cbrt' , 'pow'   ,   
-    'sin'  , 'cos'  , 'tan'   , 
-    'sinh' , 'cosh' , 'tanh'  
+    'exp'    , 'expm1'  ,
+    'log'    , 'log10'  , 'logp1' , 
+    'sqrt'   , 'cbrt'   , 'pow'   ,   
+    'sin'    , 'cos'    , 'tan'   , 
+    'sinh'   , 'cosh'   , 'tanh'  ,
+    'asin'   , 'acos'   , 'atan'  , 
+    'asinh'  , 'acosh'  , 'atanh' ,
+    'erf'    , 'erfc'   ,
+    'gamma'  , 'tgamma' , 'lgamma' 
     )
 # =============================================================================
 import math
@@ -41,8 +46,19 @@ def exp ( x ) :
     """
     'exp' function taking into account the uncertainties
     """
-    if isinstance ( x , VE ) : return x.__exp__() 
+    fun = getattr ( x , '__exp__' , None )
+    if fun : return fun()
     return math.exp ( x )
+
+# =============================================================================
+## define ``expm1'' function 
+def expm1 ( x ) :
+    """
+    'expm1' function taking into account the uncertainties
+    """
+    fun = getattr ( x , '__expm1__' , None )
+    if fun : return fun()
+    return math.expm1 ( x )
 
 # =============================================================================
 ## define ``log'' function 
@@ -50,7 +66,8 @@ def log ( x ) :
     """
     'log' function taking into account the uncertainties
     """
-    if isinstance ( x , VE ) : return x.__log__() 
+    fun = getattr ( x , '__log__' , None )
+    if fun : return fun()
     return math.log ( x )
 
 # =============================================================================
@@ -59,7 +76,8 @@ def log10 ( x ) :
     """
     'log10' function taking into account the uncertainties
     """
-    if isinstance ( x , VE ) : return x.__log10__() 
+    fun = getattr ( x , '__log10__' , None )
+    if fun : return fun()
     return math.log10 ( x )
 
 # =============================================================================
@@ -68,7 +86,8 @@ def sqrt ( x ) :
     """
     'sqrt' function taking into account the uncertainties
     """
-    if isinstance ( x , VE ) : return x.__sqrt__() 
+    fun = getattr ( x , '__sqrt__' , None )
+    if fun : return fun()
     return math.sqrt ( x )
 
 # =============================================================================
@@ -77,7 +96,8 @@ def cbrt ( x ) :
     """
     'cbrt' function taking into account the uncertainties
     """
-    if isinstance ( x , VE ) : return x.__cbrt__() 
+    fun = getattr ( x , '__cbrt__' , None )
+    if fun : return fun()
     return math.pow ( x , 1.0/3.0 )
 
 # =============================================================================
@@ -96,7 +116,8 @@ def sin ( x ) :
     """
     'Sine' function taking into account the uncertainties
     """
-    if isinstance ( x , VE ) : return x.__sin__() 
+    fun = getattr ( x , '__sin__' , None )
+    if fun : return fun()
     return math.sin ( x )
 
 # =============================================================================
@@ -105,7 +126,8 @@ def cos ( x ) :
     """
     'cos' function taking into account the uncertainties
     """
-    if isinstance ( x , VE ) : return x.__cos__() 
+    fun = getattr ( x , '__cos__' , None )
+    if fun : return fun()
     return math.cos ( x )
 
 # =============================================================================
@@ -114,7 +136,8 @@ def tan ( x ) :
     """
     'tan' function taking into account the uncertainties
     """
-    if isinstance ( x , VE ) : return x.__tan__()
+    fun = getattr ( x , '__tan__' , None )
+    if fun : return fun()
     return math.tan ( x )
 
 # =============================================================================
@@ -123,8 +146,9 @@ def sinh ( x ) :
     """
     'Sinh' function taking into account the uncertainties
     """
-    if isinstance ( x , VE ) : return x.__sinh__() 
-    return math.sin ( x )
+    fun = getattr ( x , '__sinh__' , None )
+    if fun : return fun()
+    return math.sinh ( x )
 
 # =============================================================================
 ## define ``cosh'' function 
@@ -132,8 +156,9 @@ def cosh ( x ) :
     """
     'cosh' function taking into account the uncertainties
     """
-    if isinstance ( x , VE ) : return x.__cosh__() 
-    return math.cos ( x )
+    fun = getattr ( x , '__cosh__' , None )
+    if fun : return fun()
+    return math.cosh ( x )
 
 # =============================================================================
 ## define ``tanh'' function 
@@ -141,9 +166,113 @@ def tanh ( x ) :
     """
     'tanh' function taking into account the uncertainties
     """
-    if isinstance ( x , VE ) : return x.__tanh__()
-    return math.tan ( x )
+    fun = getattr ( x , '__tanh__' , None )
+    if fun : return fun()
+    return math.tanh ( x )
 
+# =============================================================================
+## define ``erf'' function 
+def erf ( x ) :
+    """
+    'erf' function taking into account the uncertainties
+    """
+    fun = getattr ( x , '__erf__' , None )
+    if fun : return fun()
+    return math.erf ( x )
+
+# =============================================================================
+## define ``erfc'' function 
+def erfc ( x ) :
+    """
+    'erf' function taking into account the uncertainties
+    """
+    fun = getattr ( x , '__erfc__' , None )
+    if fun : return fun()
+    return math.erfc ( x )
+
+# =============================================================================
+## define ``asin'' function 
+def asin ( x ) :
+    """
+    'asin' function taking into account the uncertainties
+    """
+    fun = getattr ( x , '__asin__' , None )
+    if fun : return fun()
+    return math.asin ( x )
+
+# =============================================================================
+## define ``acos'' function 
+def acos ( x ) :
+    """
+    'acos' function taking into account the uncertainties
+    """
+    fun = getattr ( x , '__acos__' , None )
+    if fun : return fun()
+    return math.acos ( x )
+
+# =============================================================================
+## define ``atan'' function 
+def atan ( x ) :
+    """
+    'atan' function taking into account the uncertainties
+    """
+    fun = getattr ( x , '__atan__' , None )
+    if fun : return fun()
+    return math.atan ( x )
+
+# =============================================================================
+## define ``asinh'' function 
+def asinh ( x ) :
+    """
+    'asinh' function taking into account the uncertainties
+    """
+    fun = getattr ( x , '__asinh__' , None )
+    if fun : return fun()
+    return math.asinh ( x )
+
+# =============================================================================
+## define ``acosh'' function 
+def acosh ( x ) :
+    """
+    'acosh' function taking into account the uncertainties
+    """
+    fun = getattr ( x , '__acosh__' , None )
+    if fun : return fun()
+    return math.acosh ( x )
+
+# =============================================================================
+## define ``atanh'' function 
+def atanh ( x ) :
+    """
+    'atanh' function taking into account the uncertainties
+    """
+    fun = getattr ( x , '__atanh__' , None )
+    if fun : return fun()
+    return math.atanh ( x )
+
+
+# =============================================================================
+## define ``tgamma'' function 
+def tgamma ( x ) :
+    """
+    'tgamma' function taking into account the uncertainties
+    """
+    fun = getattr ( x , '__tgamma__' , None )
+    if fun : return fun()
+    return math.gamma ( x )
+
+## define ``gamma'' function 
+gamma = tgamma
+
+# =============================================================================
+## define ``lgamma'' function 
+def lgamma ( x ) :
+    """
+    'lgamma' function taking into account the uncertainties
+    """
+    fun = getattr ( x , '__lgamma__' , None )
+    if fun : return fun()
+    return math.lgamma ( x )
 
 # =============================================================================
 if '__main__' == __name__ :

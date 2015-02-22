@@ -236,27 +236,51 @@ namespace Gaudi
       /// e**me 
       ValueWithError __rpow__ ( const double          e ) const ;
       /// exp(me) 
-      ValueWithError __exp__   () const ;
+      ValueWithError __exp__    () const ;
+      /// expm1(me) 
+      ValueWithError __expm1__  () const ;
       /// log(me) 
-      ValueWithError __log__   () const ;
+      ValueWithError __log__    () const ;
       /// log10(me) 
-      ValueWithError __log10__ () const ;
+      ValueWithError __log10__  () const ;
+      /// log1p(me) 
+      ValueWithError __log1p__  () const ;
       /// sqrt(me) 
-      ValueWithError __sqrt__  () const ;
+      ValueWithError __sqrt__   () const ;
       /// sqrt(me) 
-      ValueWithError __cbrt__  () const ;
+      ValueWithError __cbrt__   () const ;
       /// sin(me) 
-      ValueWithError __sin__   () const ;
+      ValueWithError __sin__    () const ;
       /// cos(me) 
-      ValueWithError __cos__   () const ;
+      ValueWithError __cos__    () const ;
       /// tan(me) 
-      ValueWithError __tan__   () const ;
+      ValueWithError __tan__    () const ;
       /// sinh(me) 
-      ValueWithError __sinh__  () const ;
+      ValueWithError __sinh__   () const ;
       /// cosh(me) 
-      ValueWithError __cosh__  () const ;
+      ValueWithError __cosh__   () const ;
       /// tanh(me) 
-      ValueWithError __tanh__  () const ;
+      ValueWithError __tanh__   () const ;
+      /// erf 
+      ValueWithError __erf__    () const ;
+      /// erf 
+      ValueWithError __erfc__   () const ;
+      /// asin 
+      ValueWithError __asin__   () const ;
+      /// acos
+      ValueWithError __acos__   () const ;
+      /// atan
+      ValueWithError __atan__   () const ;
+      /// asinh 
+      ValueWithError __asinh__  () const ;
+      /// acosh
+      ValueWithError __acosh__  () const ;
+      /// atanh
+      ValueWithError __atanh__  () const ;
+      /// tgamma 
+      ValueWithError __tgamma__ () const ;
+      /// lgamma 
+      ValueWithError __lgamma__ () const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -440,7 +464,8 @@ namespace Gaudi
       const ValueWithError& rejected ) ;
     // ========================================================================
     /** evaluate the binomial efficiency for Bernulli scheme with weights 
-     *  \f[ R = \frac{N_acc}{N_tot} = \frac{N_acc}{N_acc+N_rej} = \left( 1 + \frac{N_rej}{N_acc}\right)^{-1} \f]
+     *  \f[ R = \frac{N_acc}{N_tot} = \frac{N_acc}{N_acc+N_rej} = 
+     *          \left( 1 + \frac{N_rej}{N_acc}\right)^{-1} \f]
      *  @param nAccepted (INPUT) number of accepted (weighted) events 
      *  @param nRejected (INPUT) number of rejected (weighted) events 
      *  @return the binomial efficiency 
@@ -544,6 +569,15 @@ namespace Gaudi
     ValueWithError exp
     ( const ValueWithError& b ) ;
     // ========================================================================    
+    /** evaluate expm1(b)
+     *  @param b (INPUT) the exponent 
+     *  @return  expm1(b) 
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError expm1
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
     /** evaluate log(b)
      *  @param b (INPUT) the parameter 
      *  @return logarithm
@@ -560,6 +594,15 @@ namespace Gaudi
      */
     GAUDI_API
     ValueWithError log10
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate log1p(b)
+     *  @param b (INPUT) the parameter 
+     *  @return  log1p(b)
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError log1p
     ( const ValueWithError& b ) ;
     // ========================================================================    
     /** evaluate sqrt(b)
@@ -632,6 +675,96 @@ namespace Gaudi
      */
     GAUDI_API
     ValueWithError tanh 
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate erf(b)
+     *  @param b (INPUT) the parameter 
+     *  @return  erf(b)
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError erf
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate erfc(b)
+     *  @param b (INPUT) the parameter 
+     *  @return  erfc(b)
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError erfc
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate asin(b)
+     *  @param b (INPUT) the parameter 
+     *  @return  asin(b)
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError asin
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate acos(b)
+     *  @param b (INPUT) the parameter 
+     *  @return  acos(b)
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError acos
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate atan(b)
+     *  @param b (INPUT) the parameter 
+     *  @return  atan(b)
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError atan
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate asinh(b)
+     *  @param b (INPUT) the parameter 
+     *  @return  asinh(b)
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError asinh
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate acosh(b)
+     *  @param b (INPUT) the parameter 
+     *  @return  acosh(b)
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError acosh
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate atanh(b)
+     *  @param b (INPUT) the parameter 
+     *  @return  atanh(b)
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError atanh
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate tgamma(b)
+     *  @param b (INPUT) the parameter 
+     *  @return  Gamma(b)
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError tgamma
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate lgamma(b)
+     *  @param b (INPUT) the parameter 
+     *  @return  log(Gamma(b))
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError lgamma
     ( const ValueWithError& b ) ;
     // ========================================================================    
     /// check for NaN
@@ -801,11 +934,35 @@ namespace Gaudi
     ValueWithError sumabs ( const std::vector<ValueWithError>& vct )
     { return abssum ( vct )  ; }
     // ========================================================================    
+    /** evaluate polynomial
+     *  \f$f(x) = a_0 + a_1x + a_2x^2 + ... + a_{n-1}x^{n-1} + a_nx^n\f$
+     *  such as \f$f(0) = a_0 \f$      
+     *  using Horner rule
+     *  @param poly  INPUT the coefficients
+     *  @param x     INPUT argument 
+     *  @return value of polynomial
+     *  @warning invalid and small covariances are ignored 
+     */
+    ValueWithError horner_a0 ( const std::vector<double>& poly ,
+                               const ValueWithError&      x    ) ;
+    // ======================================================================
+    /** evaluate polynomial
+     *  \f$f(x) = a_0x^n + a_1x^{n-1}+ ... + a_{n-1}x + a_n\f$, 
+     *  such as \f$f(0) = a_n \f$      
+     *  using Horner rule
+     *  @param poly  INPUT the coefficients 
+     *  @param x     INPUT argument 
+     *  @return value of polynomial
+     *  @warning invalid and small covariances are ignored 
+     */
+    ValueWithError horner_aN ( const std::vector<double>& poly ,
+                               const ValueWithError&      x    ) ;
+    // ========================================================================    
     /// the output operator for the vector 
     GAUDI_API 
     std::ostream& operator<<
-      ( std::ostream& s , 
-        const std::vector<Gaudi::Math::ValueWithError>& v ) ;
+    ( std::ostream& s , 
+      const std::vector<Gaudi::Math::ValueWithError>& v ) ;
     // ========================================================================
   } //                                             end of namespace Gaudi::Math 
   // ==========================================================================

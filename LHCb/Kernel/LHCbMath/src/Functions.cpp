@@ -5045,7 +5045,8 @@ Gaudi::Math::LASS::amplitude ( const double x ) const
   // phase shift:
   const double cotR = ( m_m0 * m_m0 - x * x )  / m_m0 / gs ;
   //
-  const double sinB =  1.0 / std::sqrt ( 1 + cotB*cotB ) ;
+  // const double sinB =  1.0 / std::sqrt ( 1 + cotB*cotB ) ;
+  const double sinB =  1.0 / std::hypoth ( 1.0 ,  cotB ) ;
   const double cosB = cotB * sinB ;
   //
   // exp( i*pi/2 )
@@ -7629,8 +7630,9 @@ double Gaudi::Math::SinhAsinh::pdf ( const double x ) const
   const double z = shash ( y , epsilon() , delta() )  ;
   //
   const double r = s_SQRT2PIi * delta() 
-    * std::sqrt ( ( 1.0 + z * z ) / ( 1.0 + y * y )  ) 
-    * my_exp ( -0.5 * z * z ) ;
+    // * std::sqrt  ( ( 1.0 + z * z ) / ( 1.0 + y * y )  ) 
+    *    std::hypot ( 1 ,z )          / std::hypot ( 1 , y )  
+    *    my_exp ( -0.5 * z * z ) ;
   //
   return  r / sigma() ;
 }

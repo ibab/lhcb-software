@@ -26,7 +26,10 @@
 // Boost
 // ============================================================================
 #include "boost/format.hpp"
-#include "boost/math/special_functions/fpclassify.hpp"
+// ============================================================================
+// GSL 
+// ============================================================================
+#include "gsl/gsl_sf_psi.h"
 // ============================================================================
 /** @file
  *  Implementation file for class Gaudi::Math::ValueWithError
@@ -486,36 +489,28 @@ Gaudi::Math::ValueWithError::asym ( const double  b ) const
 // =============================================================================
 bool Gaudi::Math::ValueWithError::isnan    () const
 {
-  return
-    boost::math::isnan    ( m_value ) ||
-    boost::math::isnan    ( m_cov2  )  ;
+  return std::isnan    ( m_value ) || std::isnan    ( m_cov2  )  ;
 }
 // =============================================================================
 // check for finiteness
 // =============================================================================
 bool Gaudi::Math::ValueWithError::isfinite () const
 {
-  return
-    boost::math::isfinite ( m_value ) &&
-    boost::math::isfinite ( m_cov2  )  ;
+  return std::isfinite ( m_value ) && std::isfinite ( m_cov2  )  ;
 }
 // =============================================================================
 // check for finiteness
 // =============================================================================
 bool Gaudi::Math::ValueWithError::isnormal () const
 {
-  return
-    boost::math::isnormal ( m_value ) &&
-    boost::math::isfinite ( m_cov2  )  ;
+  return std::isnormal ( m_value ) && std::isfinite ( m_cov2  )  ;
 }
 // =============================================================================
 // check for finiteness
 // =============================================================================
 bool Gaudi::Math::ValueWithError::isinf () const
 {
-  return
-    boost::math::isinf ( m_value ) ||
-    boost::math::isinf ( m_cov2  )  ;
+  return std::isinf ( m_value ) || std::isinf ( m_cov2  )  ;
 }
 // ============================================================================
 // check for goodness: finite values and non-negative covariance 
@@ -661,6 +656,11 @@ Gaudi::Math::ValueWithError::__pos__() const { return *this ; }
 Gaudi::Math::ValueWithError
 Gaudi::Math::ValueWithError::__exp__   () const { return exp   ( *this ) ; }
 // ============================================================================
+// expm1(me)
+// ============================================================================
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__expm1__ () const { return expm1 ( *this ) ; }
+// ============================================================================
 // log(me)
 // ============================================================================
 Gaudi::Math::ValueWithError
@@ -670,6 +670,11 @@ Gaudi::Math::ValueWithError::__log__   () const { return log   ( *this ) ; }
 // ============================================================================
 Gaudi::Math::ValueWithError
 Gaudi::Math::ValueWithError::__log10__ () const { return log10 ( *this ) ; }
+// ============================================================================
+// log1p(me)
+// ============================================================================
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__log1p__ () const { return log1p ( *this ) ; }
 // ============================================================================
 // sqrt(me)
 // ============================================================================
@@ -710,6 +715,56 @@ Gaudi::Math::ValueWithError::__cosh__  () const { return cosh ( *this ) ; }
 // ============================================================================
 Gaudi::Math::ValueWithError
 Gaudi::Math::ValueWithError::__tanh__  () const { return tanh ( *this ) ; }
+// ============================================================================
+// erf(me)
+// ============================================================================
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__erf__   () const { return erf   ( *this ) ; }
+// ============================================================================
+// erfc(me)
+// ============================================================================
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__erfc__  () const { return erfc  ( *this ) ; }
+// ============================================================================
+// asin(me)
+// ============================================================================
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__asin__  () const { return asin  ( *this ) ; }
+// ============================================================================
+// acos(me)
+// ============================================================================
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__acos__  () const { return acos  ( *this ) ; }
+// ============================================================================
+// atan(me)
+// ============================================================================
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__atan__  () const { return atan  ( *this ) ; }
+// ============================================================================
+// asinh(me)
+// ============================================================================
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__asinh__ () const { return asinh ( *this ) ; }
+// ============================================================================
+// acosh(me)
+// ============================================================================
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__acosh__ () const { return acosh ( *this ) ; }
+// ============================================================================
+// atanh(me)
+// ============================================================================
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__atanh__ () const { return atanh ( *this ) ; }
+// ============================================================================
+// tgamma(me)
+// ============================================================================
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__tgamma__ () const { return tgamma ( *this ) ; }
+// ============================================================================
+// lgamma(me)
+// ============================================================================
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__lgamma__ () const { return lgamma ( *this ) ; }
 // ============================================================================
 
 
@@ -1048,6 +1103,70 @@ Gaudi::Math::ValueWithError Gaudi::Math::exp
   return Gaudi::Math::ValueWithError ( v , v * v * b.cov2 () ) ;
 }
 // ============================================================================
+/*  evaluate expm1(b)
+ *  @param b (INPUT) the exponent
+ *  @return  expm1
+ *  @warning invalid and small covariances are ignored
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::expm1
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return std::expm1 ( b.value() ) ; }
+  //
+  const double v  = std::expm1 ( b.value() ) ;
+  const double d1 = ( v + 1 )  ;
+  const double d2 = d1 * d1    ;
+  const double e2 = d2 * b.cov2() ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e2 ) ;
+}
+// ============================================================================
+/*  evaluate tgamma(b)
+ *  @param b (INPUT) the exponent
+ *  @return  tgamma
+ *  @warning invalid and small covariances are ignored
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::tgamma
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return std::tgamma ( b.value() ) ; }
+  //
+  const double bv = b.value() ;
+  const double v  =      std::tgamma ( bv ) ;
+  //
+  // Gamma'/Gamma:
+  const double p  = gsl_sf_psi ( bv ) ;
+  const double e1 = v * p * b.error() ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e1 * e1  ) ;
+}
+// ============================================================================
+/*  evaluate lgamma(b)
+ *  @param b (INPUT) the exponent
+ *  @return  lgamma
+ *  @warning invalid and small covariances are ignored
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::lgamma
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return std::lgamma ( b.value() ) ; }
+  //
+  const double bv = b.value() ;
+  const double v  = std::lgamma  ( bv ) ;
+  //
+  const double d1 = gsl_sf_psi   ( bv ) ;
+  const double d2 = d1 * d1 ;
+  const double e2 = d2 * b.cov2() ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e2 ) ;
+}
+// ============================================================================
 /*  evaluate log(b)
  *  @param b (INPUT) the parameter
  *  @return logarithm
@@ -1291,6 +1410,27 @@ Gaudi::Math::ValueWithError Gaudi::Math::log10
   return Gaudi::Math::ValueWithError ( v , e1 * e1 * b.cov2 () ) ;
 }
 // ============================================================================
+/*  evaluate log1p(b)
+ *  @param b (INPUT) the parameter
+ *  @return  log1p(b)
+ *  @warning invalid and small covariances are ignored
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::log1p
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return std::log1p ( b.value() ) ; }
+  //
+  const double bv = b.value() ;
+  const double v  = std::log1p ( bv ) ;
+  //
+  const double d1 = 1 / ( 1 + bv ) ;
+  const double e2 = d1 * d1 * b.cov2() ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e2 ) ;
+}
+// ============================================================================
 /*  evaluate sqrt(b)
  *  @param b (INPUT) the parameter
  *  @warning invalid and small covariances are ignored
@@ -1441,6 +1581,190 @@ Gaudi::Math::ValueWithError Gaudi::Math::tanh
   return Gaudi::Math::ValueWithError ( v , e2 ) ;
 }
 // ============================================================================
+/*  evaluate erf(b)
+ *  @param b (INPUT) the parameter 
+ *  @return  erf(b)
+ *  @warning invalid and small covariances are ignored 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::erf 
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return std::erf( b.value() ) ; }
+  //
+  const double bv = b.value() ;
+  const double v  = std::erf ( bv ) ;
+  //
+  static const double factor  = 4.0 / M_PI ;
+  //
+  const double d2 = factor * std::exp ( - bv * bv ) ;
+  const double e2 = d2     * b.cov2() ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e2 ) ;
+}
+// ============================================================================
+/*  evaluate erfc(b)
+ *  @param b (INPUT) the parameter 
+ *  @return  erfc(b)
+ *  @warning invalid and small covariances are ignored 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::erfc 
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return std::erfc( b.value() ) ; }
+  //
+  const double bv = b.value() ;
+  const double v  = std::erfc ( bv ) ;
+  //
+  static const double factor  = 4.0 / M_PI ;
+  //
+  const double d2 = factor * std::exp ( - bv * bv ) ;
+  const double e2 = d2     * b.cov2() ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e2 ) ;
+}
+// ============================================================================
+/*  evaluate asin(b)
+ *  @param b (INPUT) the parameter 
+ *  @return  asin(b)
+ *  @warning invalid and small covariances are ignored 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::asin
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return std::asin( b.value() ) ; }
+  //
+  const double bv = b.value() ;
+  const double v  = std::asin ( bv ) ;
+  //
+  const double b2 = bv * bv ;
+  if ( _one  ( b2 ) ) { return Gaudi::Math::ValueWithError ( v , -1 ) ; }
+  //
+  const double d2 = 1.0 / ( 1 - b2 ) ;
+  const double e2 = d2     * b.cov2() ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e2 ) ;
+}
+// ============================================================================
+/*  evaluate acos(b)
+ *  @param b (INPUT) the parameter 
+ *  @return  acos(b)
+ *  @warning invalid and small covariances are ignored 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::acos
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return std::acos ( b.value() ) ; }
+  //
+  const double bv = b.value() ;
+  const double v  = std::acos( bv ) ;
+  //
+  const double b2 = bv * bv ;
+  if ( _one  ( b2 ) ) { return Gaudi::Math::ValueWithError ( v , -1 ) ; }
+  //
+  const double d2 = 1.0 / ( 1 - b2 ) ;
+  const double e2 = d2     * b.cov2() ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e2 ) ;
+}
+// ============================================================================
+/*  evaluate atan(b)
+ *  @param b (INPUT) the parameter 
+ *  @return  atan(b)
+ *  @warning invalid and small covariances are ignored 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::atan
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return std::atan ( b.value() ) ; }
+  //
+  const double bv = b.value() ;
+  const double v  = std::atan( bv ) ;
+  //
+  const double b2 = bv * bv ;
+  const double d1 = 1.0 / ( 1 + b2 ) ;
+  const double d2 = d1 * d1 ;
+  const double e2 = d2      * b.cov2() ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e2 ) ;
+}
+// ============================================================================
+/*  evaluate asinh(b)
+ *  @param b (INPUT) the parameter 
+ *  @return  asinh(b)
+ *  @warning invalid and small covariances are ignored 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::asinh
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return std::asinh( b.value() ) ; }
+  //
+  const double bv = b.value() ;
+  const double v  = std::asinh ( bv ) ;
+  //
+  const double b2 = bv * bv ;
+  const double d2 = 1.0 / ( 1 + b2 ) ;
+  const double e2 = d2     * b.cov2() ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e2 ) ;
+}
+// ============================================================================
+/*  evaluate acosh(b)
+ *  @param b (INPUT) the parameter 
+ *  @return  acosh(b)
+ *  @warning invalid and small covariances are ignored 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::acosh
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return std::acosh( b.value() ) ; }
+  //
+  const double bv = b.value() ;
+  const double v  = std::acosh ( bv ) ;
+  //
+  const double b2 = bv * bv ;
+  const double d2 = 1.0 / ( b2 - 1 ) ;
+  const double e2 = d2     * b.cov2() ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e2 ) ;
+}
+// ============================================================================
+/*  evaluate atanh(b)
+ *  @param b (INPUT) the parameter 
+ *  @return  acosh(b)
+ *  @warning invalid and small covariances are ignored 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::atanh
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return std::atanh( b.value() ) ; }
+  //
+  const double bv = b.value() ;
+  const double v  = std::atanh( bv ) ;
+  //
+  const double b2 = bv * bv ;
+  const double d1 = 1.0 / ( 1 - b2 ) ;
+  const double d2 = d1 * d1 ;
+  const double e2 = d2      * b.cov2() ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e2 ) ;
+}
+// ============================================================================
 /*  simple linear interpolation 
  *  @param x  the value to evaluate the function 
  *  @param x0 the abscissa for the first  point
@@ -1549,7 +1873,86 @@ Gaudi::Math::abssum
   //
 }
 // ============================================================================
- 
+// Horner's rule 
+// ============================================================================
+namespace 
+{
+  // null-pair 
+  const std::pair<double,double> s_pnull(0,0) ;
+  // 
+  template <class ITERATOR>
+  inline std::pair<double,double>
+  _horner_( ITERATOR     first , 
+            ITERATOR     last  , 
+            const double x     ) 
+  {
+    if ( first == last ) { return s_pnull ; }
+    //
+    double p = *first ;
+    double q = 0      ;
+    while ( ++first != last ) 
+    {
+      q = std::fma ( x , q ,  p     ) ; // x * q + p       ;
+      p = std::fma ( x , p , *first ) ; // x * p + *first  ;
+    }
+    //
+    return std::make_pair ( p , q ) ;
+  }
+  // Step 1: Set p = a[n] and q = 0
+  // Step 2: Do steps 3 and 4 for i from n-1 to 0, decreasing by 1
+  // Step 3: set q = p + x0 * q
+  // Step 4: set p = a[i] + x0 * p
+  // Step 5: The value of P(x_0) is p and the value of P'(x_0) is q
+}
+// ============================================================================
+/*  evaluate polynomial
+ *  \f$f(x) = a_0 + a_1x + a_2x^2 + ... + a_{n-1}x^{n-1} + a_nx^n\f$
+ *  such as \f$f(0) = a_0 \f$      
+ *  using Horner rule
+ *  @param poly  INPUT the coefficients
+ *  @param x     INPUT argument 
+ *  @return value of polynomial
+ *  @warning invalid and small covariances are ignored 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::horner_a0
+( const std::vector<double>&         poly ,
+  const Gaudi::Math::ValueWithError& x    ) 
+{
+  if ( poly.empty() ) { return Gaudi::Math::ValueWithError(0,0) ; }
+  //
+  const std::pair<double,double> r = 
+    _horner_ ( poly.rbegin() , poly.rend() , x.value() ) ;
+  //
+  if ( 0 >= x.cov2() || _zero( x.cov2() ) ) { return r.first  ; }
+  //
+  return Gaudi::Math::ValueWithError( r.first , r.second * r.second * x.cov2() );
+}
+// ============================================================================
+/*  evaluate polynomial
+ *  \f$f(x) = a_0x^n + a_1x^{n-1}+ ... + a_{n-1}x + a_n\f$, 
+ *   such as \f$f(0) = a_n \f$      
+ *  using Horner rule
+ *  @param poly  INPUT the coefficients 
+ *  @param x     INPUT argument 
+ *  @return value of polynomial
+ *  @warning invalid and small covariances are ignored 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::horner_aN
+( const std::vector<double>&         poly ,
+  const Gaudi::Math::ValueWithError& x    ) 
+{
+  if ( poly.empty() ) { return Gaudi::Math::ValueWithError(0,0) ; }
+  //
+  const std::pair<double,double> r = 
+    _horner_ ( poly.begin() , poly.end() , x.value() ) ;
+  //
+  if ( 0 >= x.cov2() || _zero( x.cov2() ) ) { return r.first  ; }
+  return Gaudi::Math::ValueWithError( r.first , r.second * r.second * x.cov2() ) ;
+}
 // ============================================================================
 // Utiilties 
 // ============================================================================
