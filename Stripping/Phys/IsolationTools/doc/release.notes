@@ -4,7 +4,8 @@
 !============================================================================
 
 ! 2015-02-16 - Stefano Perazzini
- - Removed RelInfoBs2MuMuIsolation.{cpp,h} as obsolete
+ - Put an ERROR message in RelInfoBs2MuMuIsolation.cpp saying that the tool is
+   obsolete
 
 !========================= IsolationTools v1r1 2014-10-30 =========================
 
