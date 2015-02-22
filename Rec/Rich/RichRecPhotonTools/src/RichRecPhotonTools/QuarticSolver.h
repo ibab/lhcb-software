@@ -26,7 +26,6 @@
 
 // VDT
 #include "vdt/asin.h"
-#include "vdt/sqrt.h"
 
 // Vector Class
 #include "VectorClass/complexvec.h"
@@ -286,7 +285,7 @@ namespace Rich
 
           // (normalised) normal vector to reflection plane
           auto n = evec.cross3(dvec);
-          n *= vdt::fast_isqrtf( n.dot(n) );
+          n /= std::sqrt( n.dot(n) );
 
           // construct rotation transformation
           // Set vector magnitude to radius

@@ -4,6 +4,10 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-02-22 - Chris Jones
+ - Revert back to std::sqrt(x) instead of vdt::fast_isqrt(x) as its actually 
+   faster ...
+
 ! 2015-02-20 - Marco Clemencic
  - fixed the name of the LCG_Interfaces/eigen package
 
