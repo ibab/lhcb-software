@@ -1,4 +1,4 @@
-! $Id:$ 
+! $Id$ 
 ! -----------------------------------------------------------------------------
 ! Package     : StrippingCache
 ! Responsible : Vanya Belyaev
@@ -6,9 +6,11 @@
 ! Created     : 2015-02-4 
 ! -----------------------------------------------------------------------------
 !                   $Revision$
-! Last modification $Date:$
-!                by $Author:$
+! Last modification $Date$
+!                by $Author$
 ! -----------------------------------------------------------------------------
+
+
 
 ! 2015-02-22 - Vanya Belyaev
  - commit fixed version of script directory 

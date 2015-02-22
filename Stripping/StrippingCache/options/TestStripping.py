@@ -1,5 +1,5 @@
 #!/usr/bin/env  gaudirun.py
-# $Id: $
+# $Id$
 # Test your line(s) of the stripping
 #  
 # NOTE: Please make a copy of this file for your testing, and do NOT change this one!
