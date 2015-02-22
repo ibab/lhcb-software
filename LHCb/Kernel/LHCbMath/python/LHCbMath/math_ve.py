@@ -23,7 +23,7 @@ __version__ = "$Revision$"
 # =============================================================================
 __all__     = (
     'exp'    , 'expm1'  ,
-    'log'    , 'log10'  , 'logp1' , 
+    'log'    , 'log10'  , 'log1p' , 
     'sqrt'   , 'cbrt'   , 'pow'   ,   
     'sin'    , 'cos'    , 'tan'   , 
     'sinh'   , 'cosh'   , 'tanh'  ,
@@ -79,6 +79,16 @@ def log10 ( x ) :
     fun = getattr ( x , '__log10__' , None )
     if fun : return fun()
     return math.log10 ( x )
+
+# =============================================================================
+## define ``log1p'' function 
+def log1p ( x ) :
+    """
+    'log1p' function taking into account the uncertainties
+    """
+    fun = getattr ( x , '__log1p__' , None )
+    if fun : return fun()
+    return math.log1p ( x )
 
 # =============================================================================
 ## define ``sqrt'' function 
@@ -286,10 +296,15 @@ if '__main__' == __name__ :
     print '*'*120
     
     vars  = [ VE ( 0.001 , 0.0001**2 ) , VE(1,0) , VE(1,0.1**2) , VE(10,0.01**2) ]
-    funcs = [ exp  , log  , log10 ,
-              sqrt , cbrt ,
-              sin  , cos  , tan  ,
-              sinh , cosh , tanh ]
+    funcs = [ exp   , expm1  ,
+              log   , log10  , log1p  , 
+              sqrt  , cbrt   ,
+              sin   , cos    , tan    ,
+              sinh  , cosh   , tanh   ,
+              asin  , acos   , atan   ,
+              asinh , acosh  , atanh  ,
+              erf   , erfc   ,
+              gamma , tgamma , lgamma ]
     
     for v in vars :
         print 'Var = ' , v 

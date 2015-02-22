@@ -5046,7 +5046,7 @@ Gaudi::Math::LASS::amplitude ( const double x ) const
   const double cotR = ( m_m0 * m_m0 - x * x )  / m_m0 / gs ;
   //
   // const double sinB =  1.0 / std::sqrt ( 1 + cotB*cotB ) ;
-  const double sinB =  1.0 / std::hypoth ( 1.0 ,  cotB ) ;
+  const double sinB =  1.0 / std::hypot ( 1.0 ,  cotB ) ;
   const double cosB = cotB * sinB ;
   //
   // exp( i*pi/2 )
