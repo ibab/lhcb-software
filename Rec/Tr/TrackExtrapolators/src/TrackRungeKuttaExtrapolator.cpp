@@ -333,13 +333,8 @@ TrackRungeKuttaExtrapolator::propagate( Gaudi::TrackVector& state,
   if (transMat) jacobian = RKJacobian();
 
   // translate the state to one we use in the runge kutta. note the factor c.
-  RKState rkstate ;
-  rkstate.x()  = state(0) ;
-  rkstate.y()  = state(1) ;
-  rkstate.tx() = state(2) ;
-  rkstate.ty() = state(3) ;
-  rkstate.qop  = state(4) * Gaudi::Units::c_light ;
-  rkstate.z    = zin ;
+  RKState rkstate = { { state(0), state(1), state(2), state(3) },
+      state(4) * Gaudi::Units::c_light, zin };
 
   StatusCode sc = StatusCode::SUCCESS ;
   RKErrorCode success = m_numericalJacobian && jacobian  
@@ -402,14 +397,13 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState& state,
 
   RKCache       rkcache ;
   RKTrackVector err, totalErr ;
-  RKState       prevstate ;
   RKStatistics  stats ;
   RKErrorCode rc = RKSuccess ;
 
   while( rc==RKSuccess && std::abs(state.z - zout) > TrackParameters::propagationTolerance ) {
     
     // make a single range-kutta step
-    prevstate = state ;
+    RKState prevstate = state ;
     evaluateRKStep( absstep * direction, state, err, rkcache ) ;
 
     // decide if the error is small enough
@@ -449,7 +443,7 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState& state,
       // adapt the stepsize if necessary. the powers come from num.recipees.
       double stepfactor(1) ;
       if( errorOverTolerance > 1 ) { // decrease step size
-        stepfactor = std::max( m_minStepScale, m_safetyFactor * std::pow( errorOverTolerance , -0.25 ) ) ;
+        stepfactor = std::max( m_minStepScale, m_safetyFactor / std::sqrt(std::sqrt(errorOverTolerance))); // was : * std::pow( errorOverTolerance , -0.25 ) ) ;
       } else {                       // increase step size
         if( errorOverTolerance > 0 ) 
           stepfactor = std::min( m_maxStepScale, m_safetyFactor * std::pow( errorOverTolerance , -0.20 ) ) ;
@@ -460,8 +454,8 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState& state,
       absstep *= stepfactor ;
       
       // apply another limitation criterion
-      if(      absstep > m_maxRKStep ) absstep = m_maxRKStep ;
-      else if( absstep < m_minRKStep ) absstep = m_minRKStep ;
+      absstep = std::min(absstep, m_maxRKStep);
+      absstep = std::max(absstep, m_minRKStep);
 
     }
     
@@ -486,7 +480,7 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState& state,
     } 
 
     // final check: bail out for vertical or looping tracks
-    if( std::abs( state.tx() ) > m_maxSlope || std::abs( state.ty() ) > m_maxSlope ) {
+    if( std::max(std::abs(state.tx()), std::abs(state.ty())) > m_maxSlope ) {
       if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
         debug() << "State has very large slope, probably curling: tx, ty = "
                 << state.tx() << ", " << state.ty() 

@@ -3,6 +3,11 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
+! 2015-02-22 - Manuel Tobias Schiller
+ - TrackRungeKuttaExtrapolator: replace std::pow(x, 0.25) by
+   std::sqrt(std::sqrt(x)) because it's faster, tidy up in a few places; this
+   makes the extrapolator 2% faster without changing the results significantly
+
 ! 2015-02-05 - Gerhard Raven
  - Extrapolators: make static magic numbers 'const'
 
