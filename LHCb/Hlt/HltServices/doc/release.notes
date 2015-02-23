@@ -4,6 +4,7 @@
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
 
+!========================= HltServices v2r7 2015-02-23 =========================
 ! 2015-02-22 - Roel Aaij
  - Perhaps due to a slight change in behaviour of genconf, the File property for
    various AccessSvc was set to the value at build time. The environment
