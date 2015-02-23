@@ -4,6 +4,11 @@
 ! Purpose     : Basic tools for Pattern for the Upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrKernel v1r8 2015-02-23 =========================
+! 2015-01-17 - Svende Braun
+ - Add modified version of IPrCounter for efficiency studies.
+ - Modified PrChecker2 to be faster, added global option to choose track extrapolation(default false).
+
 !========================= PrKernel v1r7 2015-01-14 =========================
 ! 2014-12-23 - Svende Braun
 - Add modified version of IPrTTCounter for efficiency studies.
