@@ -13,6 +13,7 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiGen v10r20 2015-02-23 =========================
 ! 2015-01-23 - Vanya Belyaev
  - steps towards autogeneration of C++ code 
 
