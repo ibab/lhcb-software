@@ -4,6 +4,7 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+!========================= DDDB v1r74 2015-02-23 =========================
 ! 2015-02-18 - Marco Cattaneo
  - Update default database tags to the latest ones:
    . DDDB,     2015                        : dddb-20150119-3
