@@ -92,7 +92,7 @@ while n<1000:
     tracks  = tes[trackLoc]
     verts   = tes[vertLoc]
     protos  = tes[protoLoc]
-    if not parts.size()>0:
+    if not parts:
         continue
     else:
         n_pop+=1.0
