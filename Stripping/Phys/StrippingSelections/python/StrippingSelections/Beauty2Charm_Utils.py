@@ -244,7 +244,7 @@ def makeB2X(name,decay,inputs,config,useIP=True,resVert=True):
     '''Makes all B -> X selections.'''
     from copy import deepcopy
     config = deepcopy(config)
-    if name.find('B02') >= 0 or name.find('NoIP') >= 0:
+    if name.find('B02') >= 0 or name.find('B2D0PiNoIP') >= 0:
         config['AM_MAX'] = '6000*MeV'
     if name.find('B02DPiD2HHHBeauty2Charm') >=0 or name.find('B02DKD2HHHBeauty2Charm') >=0 :
          config['AM_MAX'] = '7000*MeV'
