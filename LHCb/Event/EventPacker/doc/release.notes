@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v4r7 2015-02-23 =========================
 ! 2015-02-12 - Heinrich Schindler
  - Add support for BCM and BLS hits.
 
