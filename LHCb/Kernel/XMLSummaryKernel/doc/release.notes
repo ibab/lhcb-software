@@ -4,6 +4,7 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+!========================= XMLSummaryKernel v1r12p1 2015-02-23 =====================
 ! 2015-01-15 - Marco Cattaneo
  - Update tests to use an input file from PRCONFIG (on eos) instead of a private
    castor file

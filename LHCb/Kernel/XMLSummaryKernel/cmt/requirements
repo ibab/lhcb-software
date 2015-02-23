@@ -2,7 +2,7 @@
 # Maintainer : R. Lambert
 #=========================================================================
 package           XMLSummaryKernel 
-version           v1r12
+version           v1r12p1
 
 # Structure, i.e. directories to process. 
 #=========================================================================
