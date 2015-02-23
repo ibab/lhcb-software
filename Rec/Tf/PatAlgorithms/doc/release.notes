@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r39 2015-02-23 =========================
 ! 2015-02-21 - Manuel Tobias Schiller
  - PatSeedingTool: be a bit smarter in hitsInRange method - saves 0.9% in CPU,
    same results
