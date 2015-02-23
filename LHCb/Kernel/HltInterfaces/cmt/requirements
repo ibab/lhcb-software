@@ -3,7 +3,7 @@
 # Maintainer : Gerhard Raven
 #=====================================================================
 package           HltInterfaces
-version           v5r3
+version           v6r0
 
 # Structure, i.e. directories to process. 
 #=====================================================================

@@ -2,6 +2,8 @@
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
+
+!========================= HltInterfaces v6r0 2015-02-23 =========================
 ! 2015-02-08 - Gerhard Raven
  - switch print() to json format, but allow ConfigArchiveAccessSvc access to
    old style format using str()
