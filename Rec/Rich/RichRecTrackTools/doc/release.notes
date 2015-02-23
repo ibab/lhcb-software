@@ -4,6 +4,7 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RichRecTrackTools v1r39 2015-02-23 ========================
 ! 2015-02-20 - Chris Jones
  - Add a new option (enabled by default) to move states in 
    DetailedTrSegMakerFromRecoTracks using a StateProvider using the
@@ -22,7 +23,7 @@
    radiator volumes. Off by default.
  - Various CPU improvements (use VDT math functions etc.).
 
-!========================= RichRecTrackTools v1r38 2015-01-14 =========================
+!========================= RichRecTrackTools v1r38 2015-01-14 ========================
 ! 2015-01-14 - Chris Jones
  - Make the HLT defaults in RichDetailedTrSegMakerFromRecoTracks the same as
    for Offline.
