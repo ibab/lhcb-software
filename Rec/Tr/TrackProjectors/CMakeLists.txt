@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TrackProjectors
 ################################################################################
-gaudi_subdir(TrackProjectors v3r1)
+gaudi_subdir(TrackProjectors v3r2)
 
 gaudi_depends_on_subdirs(Det/OTDet
                          Det/STDet

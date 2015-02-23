@@ -4,6 +4,7 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!========================= TrackProjectors v3r2 2015-02-23 =========================
 ! 2015-02-22 - Manuel Tobias Schiller
  - TrajOTProjector: remove superfluous dynamic_cast, speedup about 6%
 
