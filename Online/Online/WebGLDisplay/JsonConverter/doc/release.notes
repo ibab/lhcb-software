@@ -4,6 +4,8 @@
 ! Purpose     : JSON file ouput
 !-----------------------------------------------------------------------------
 
+! 2015-02-23 - Check vertices before trying to serialize them to JSON. 
+
 !========================= JsonConverter v1r0 2014-12-03 =======================
 ! 2015-01-26 - First version that exports hits, particles and their tracks to JSON.
 

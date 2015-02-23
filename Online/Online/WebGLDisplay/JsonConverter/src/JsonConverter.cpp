@@ -119,26 +119,30 @@ StatusCode JsonConverter::execute() {
 
   
   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting PVs " << endmsg;
-  LHCb::RecVertices* vertices = get<LHCb::RecVertices>("/Event/Rec/Vertex/Primary");
-  int vertexCount = 0;
-  Stream vlistJson(Container::LIST);
-  for_each (vertices->begin(), 
-            vertices->end(),
-            [&vertexCount, &vlistJson] (LHCb::RecVertex *r)
-            {
-
-              if (nullptr == r)
-                return;
-
-              Stream vertJson(Container::MAP);
-              vertJson << std::make_pair("pv_x", r->position().x());
-              vertJson << std::make_pair("pv_y", r->position().y());
-              vertJson << std::make_pair("pv_z", r->position().z());
-              vlistJson << vertJson;
-              vertexCount++;
-            });
-  // Now adding the entries to the main map
-  jsonStream << std::make_pair("PVS", vlistJson);
+  LHCb::RecVertices* vertices = getIfExists<LHCb::RecVertices>("/Event/Rec/Vertex/Primary");
+  if (NULL == vertices)   {
+    if(msgLevel(MSG::INFO)) info()<<" Container Rec/Vertex/Primary doesn't exist"<<endmsg;    
+  } else {
+    int vertexCount = 0;
+    Stream vlistJson(Container::LIST);
+    for_each (vertices->begin(), 
+              vertices->end(),
+              [&vertexCount, &vlistJson] (LHCb::RecVertex *r)
+              {
+                
+                if (nullptr == r)
+                  return;
+                
+                Stream vertJson(Container::MAP);
+                vertJson << std::make_pair("pv_x", r->position().x());
+                vertJson << std::make_pair("pv_y", r->position().y());
+                vertJson << std::make_pair("pv_z", r->position().z());
+                vlistJson << vertJson;
+                vertexCount++;
+              });
+    // Now adding the entries to the main map
+    jsonStream << std::make_pair("PVS", vlistJson);
+  }
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting MUON Hits " << endmsg;
   const LHCb::MuonCoords* coords = getIfExists<LHCb::MuonCoords>("Raw/Muon/Coords");
