@@ -4,6 +4,7 @@
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
 
+!========================= FTDet v2r9 2015-02-23 =========================
 ! 2015-02-18 - Luigi Del Buono
  - Correct a bug affecting the way the fractional position is used in the light sharing for
   tracks crossing the inter SIpms gaps (at least when this single gap size is not an integer
