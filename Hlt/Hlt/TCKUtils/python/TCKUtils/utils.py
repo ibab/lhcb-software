@@ -6,19 +6,29 @@ from Configurables import ConfigTreeEditor, PropertyConfigSvc
 
 # pick the default config access svc 
 import os.path
-def cdb_file_exists() :
+def cdb_file() :
     __cfg_cdb = ConfigCDBAccessSvc()
     cdb_file = os.path.basename( __cfg_cdb.getProp('File') )
-    return os.path.isfile( os.path.join( os.environ['HLTTCKROOT'], cdb_file ) )
+    return os.path.join( os.environ['HLTTCKROOT'], cdb_file )
+
+def cdb_file_exists():
+    return os.path.isfile( cdb_file() )
 
 if cdb_file_exists() :
     from Configurables import ConfigCDBAccessSvc as ConfigAccessSvc
 else :
     from Configurables import ConfigTarFileAccessSvc as ConfigAccessSvc
 
-print 'using %s as default input '% ConfigAccessSvc().getProp('File')
+print 'using %s as input.' % cdb_file()
 
 from pprint import pprint
+
+## TCK numbering
+## Bit 31 is assigned to "technical"
+## Bit 30 is assigned to "for MC"
+## Bit 29 is assigned to "HLT2 only"
+## Bit 28 is assigned to "HLT1 only"
+## Neither 30 nor 29 is "old style" Hlt1 + Hlt2
 
 ### add some decoration...
 MD5 = cppyy.gbl.Gaudi.Math.MD5
