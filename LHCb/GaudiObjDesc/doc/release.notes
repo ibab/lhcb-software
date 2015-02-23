@@ -5,6 +5,7 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+!========================= GaudiObjDesc v11r21 2015-02-23 =========================
 ! 2015-02-06 - Marco Clemencic
  - Removed Roel's work around for ROOT-7037 (fixed in ROOT 6.02/05).
 
