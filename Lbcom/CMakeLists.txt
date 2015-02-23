@@ -6,7 +6,7 @@ find_package(GaudiProject)
 #---------------------------------------------------------------
 
 # Declare project name and version
-gaudi_project(Lbcom v16r3
-              USE LHCb v38r4
+gaudi_project(Lbcom v16r4
+              USE LHCb v38r5
               DATA ParamFiles
                    TCK/HltTCK)
