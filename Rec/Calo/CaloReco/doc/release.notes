@@ -4,6 +4,7 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!========================= CaloReco v5r23 2015-02-23 =========================
 ! 2015-01-21 - Daria Savrina
  - Corrected a typo in Calo/CaloReco/python/CaloReco/Reconstruction.py, line 160
    (there were too few arguments to format a string)
