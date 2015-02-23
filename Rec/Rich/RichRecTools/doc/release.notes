@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!========================= RichRecTools v4r27 2015-02-23 =========================
 ! 2015-02-06 - Chris Jones
  - Various small CPU optimisations (using VDT, prefer * to /  etc.). 
 
