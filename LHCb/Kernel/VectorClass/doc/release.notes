@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Kernel/VectorClass
+! Responsible : Chris Jones
+! Purpose     : Copy of C++ vector class library (VCL) www.agner.org/optimize
+!-----------------------------------------------------------------------------
+
+! 2015-02-23 - Chris Jones
+ - Version 1.16
