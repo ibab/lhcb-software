@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PrMCTools
 ################################################################################
-gaudi_subdir(PrMCTools v2r6)
+gaudi_subdir(PrMCTools v2r7)
 
 gaudi_depends_on_subdirs(Det/VPDet
                          Event/FTEvent

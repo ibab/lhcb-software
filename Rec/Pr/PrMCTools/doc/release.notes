@@ -4,6 +4,7 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrMCTools v2r7 2015-02-23 =========================
 ! 2015-02-18 - Sascha Stahl
  - PrTrackAssociator: Changed output level in case the root of containers does not exist from ERROR to DEBUG. This reduces the output when
    running the PrTrackAssociator in Moore when locations not necessarily exist in each event. In the default Brunel configuration
