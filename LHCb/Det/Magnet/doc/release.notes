@@ -4,6 +4,7 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+!========================= Magnet v7r9 2015-02-23 =========================
 ! 2015-02-19 - Chris Jones
  - Adapt to new vectorised version of MagneticFieldGrid.
 
