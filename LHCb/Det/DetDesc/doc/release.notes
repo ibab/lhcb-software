@@ -3,6 +3,10 @@
 ! package manager : Marco Clemencic
 ! =====================================================================
 
+! 2015-02-23 - Manuel Tobias Schiller
+ - SolidTicks: (hopefully) fix a gcc 4.9 warning about comparison of signed
+   and unsigned integer types
+
 !========================= DetDesc v18r36 2015-02-23 =========================
 ! 2015-02-20 - Manuel Tobias Schiller
  - SolidTicks: get rid of dynamic memory allocation in RemoveAdjacent

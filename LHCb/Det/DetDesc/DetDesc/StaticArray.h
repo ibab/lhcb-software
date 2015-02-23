@@ -97,8 +97,8 @@ public:
   void erase(iterator first, iterator last) noexcept {
     if( last>first ) {
       if(last < end() ) {
-	difference_type n = end() - last ;
-	for(size_type i=0; i<n; ++i) *(first + i) = *(last+i) ;
+	size_type n = static_cast<size_type>(end() - last);
+	for(size_type i=0; i<n; ++i) *(first + i) = *(last+i);
       }
       m_size -= last - first ;
     }
