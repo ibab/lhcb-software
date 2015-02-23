@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= RichAlgorithms v1r8 2015-02-23 =========================
 ! 2015-02-06 - Chris Jones
  - Update location of RICH RawEvent in RichLoadRawEvent to be the new split 
    location. Use getIfExists as well, to avoid termination if not present.
