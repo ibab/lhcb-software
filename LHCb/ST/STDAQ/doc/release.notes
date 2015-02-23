@@ -4,6 +4,7 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!========================= STDAQ v4r6 2015-02-23 =========================
 ! 2015-02-20 - Chris Jones
  - Extend list of known raw event locations in the decoders to include 
    LHCb::RawEventLocation::Tracker.
