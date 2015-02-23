@@ -4,6 +4,7 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+!========================= DAQSys v8r6 2015-02-23 =========================
 ! 2015-02-19 - Sascha Stahl
  - Updated TrackReports Decoder locations.
 
