@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecSys v5r5 2015-02-23 =========================
 ! 2015-02-20 - Chris Jones
  - Add a new configuration option "RefitTracks" which enables a full refit of
    the tracks prior to running the RICH reconstruction on them.
