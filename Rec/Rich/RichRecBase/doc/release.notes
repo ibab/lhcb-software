@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecBase v4r19 2015-02-23 =========================
 ! 2015-02-06 - Chris Jones
  - Add a new method to IRichPhotonSignal to allow a client to request the
    pre-filling of all photon pixel signal information. Used to then avoid a
