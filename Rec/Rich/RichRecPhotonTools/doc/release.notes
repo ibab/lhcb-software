@@ -4,6 +4,7 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RichRecPhotonTools v1r16 2015-02-23 =======================
 ! 2015-02-22 - Chris Jones
  - Revert back to std::sqrt(x) instead of vdt::fast_isqrt(x) as its actually 
    faster ...
