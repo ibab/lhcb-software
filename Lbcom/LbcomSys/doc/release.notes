@@ -6,6 +6,31 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v16r4>2015-02-24 LbcomSys v16r4</A></H1><PRE>
+This version uses Gaudi v26r1 and LHCb v38r5 (and ROOT 6.02.05)
+
+- Packages modified: Associators/Associators v3r9, Calo/CaloAssociators v6r14p1,
+    Rich/RichAlgorithms v1r8, Rich/RichTools v2r46, VP/VPTools v2r5
+
+- In Associators/Associators v3r9
+  . Make MCParticleToMCHitUpgrade.py, to work with upgrade detectors.
+
+- In Calo/CaloAssociators v6r14p1
+  . Fix untested StatusCodes on Warning messages
+
+- In Rich/RichAlgorithms v1r8
+  . Update location of RICH RawEvent in RichLoadRawEvent to be the new split 
+    location. Use getIfExists as well, to avoid termination if not present.
+
+- In Rich/RichTools v2r46
+  . Add a new implementation of the ray tracing tool, RichRayTracingEigen that
+    is based on the Eigen library, to partially vectorise the calculations.
+  . Add a new implementation of the mirror segment finder, 
+    RichMirrorSegFinderLookUpTable, that internally uses a simple lookup table.
+
+- In VP/VPTools v2r5
+  . Generalise local-to-global transformation to allow for rotated modules.
+
 </PRE><H1><A NAME=v16r3>2015-01-15 LbcomSys v16r3</A></H1><PRE>
 This version uses Gaudi v26r0 and LHCb v38r4 (and ROOT 6.02.03)
 

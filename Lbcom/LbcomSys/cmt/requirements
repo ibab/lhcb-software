@@ -1,5 +1,5 @@
 package           LbcomSys
-version           v16r3
+version           v16r4
 
 branches doc cmt tests
 
@@ -8,10 +8,10 @@ branches doc cmt tests
 #===============================================================
 
 # Common
-use Associators       v3r8     Associators # Matt Needham
+use Associators       v3r9     Associators # Matt Needham
 
 # Calorimeter
-use CaloAssociators   v6r14    Calo      # Olivier Deschamps
+use CaloAssociators   v6r14p1  Calo      # Olivier Deschamps
 
 # DAQ
 use DAQMonitors       v1r9     DAQ       # Olivier Deschamps
@@ -28,10 +28,10 @@ use OTAssociators     v4r6     OT        # Alexandr Kozlinskiy
 use OTMonitor         v3r8     OT        # Francesco Dettori
 
 # Rich
-use RichAlgorithms    v1r7     Rich      # Chris Jones
+use RichAlgorithms    v1r8     Rich      # Chris Jones
 use RichMCMonitors    v1r10    Rich      # Chris Jones
 use RichMCTools       v3r18    Rich      # Chris Jones
-use RichTools         v2r45    Rich      # Chris Jones
+use RichTools         v2r46    Rich      # Chris Jones
 
 # Silicon detectors
 use SiTools           v1r9     Si        # Matt Needham
@@ -52,7 +52,7 @@ use VeloTools         v4r2     Velo      # Tomasz Szumlak
 # Velo Pixel
 use VPAlgorithms      v4r4     VP        # Heinrich Schindler
 use VPAssociators     v2r6     VP        # Heinrich Schindler
-use VPTools           v2r4     VP        # Heinrich Schindler
+use VPTools           v2r5     VP        # Heinrich Schindler
 
 # Declare this as a container package
 apply_pattern container_package
