@@ -5,8 +5,7 @@ private:
 // The templated method filling the tuple for Particles and MCParticles
 //=============================================================================
 /// The templated method that does it all
-template<class TYPE>
-StatusCode fill( const std::vector<const TYPE*>& dauts     /// daughters
+template<class TYPE> StatusCode fill( const std::vector<const TYPE*>& dauts     /// daughters
                  , const std::string& head                 /// header
                  , Tuples::Tuple& tuple                    /// tuple
                  , bool revert ) /// revert all PID (because mother is antiparticle)
@@ -18,24 +17,28 @@ StatusCode fill( const std::vector<const TYPE*>& dauts     /// daughters
   std::set<std::string> usedNames;
   unsigned int add = 0;
   
-  for ( typename std::vector<const TYPE*>::const_iterator i = dauts.begin(); 
-        i != dauts.end(); ++i )
-  {
+  // sort out daughters vector
+  std::vector<const TYPE*> daughters(dauts); // local copies to sort
+  std::stable_sort(daughters.begin(), daughters.end(), [](const TYPE* c1, const TYPE* c2){
+      return ( std::tie(c1->particleID().pid(),c1->key()) > std::tie(c2->particleID().pid(),c2-key()) ); 
+    });
+  if(revert)std::reverse(daughters.begin(),daughters.end())
+  
+
+  for ( typename std::vector<const TYPE*>::const_iterator i = daughters.begin();i != daughters.end(); ++i )  {
     const std::string n1 = particleName( (*i)->particleID(), revert );
     const Gaudi::LorentzVector& p1 = (*i)->momentum() ;
-    for ( typename std::vector<const TYPE*>::const_iterator j = dauts.begin(); 
-          i != j; ++j ) 
-    {
+    for ( typename std::vector<const TYPE*>::const_iterator j = daughters.begin();i != j; ++j )    {
       const std::string n2 = particleName( (*j)->particleID(), revert );
       const Gaudi::LorentzVector p = p1 + (*j)->momentum();
       const std::string basename = prefix+"_Dalitz_"+n1+"_"+n2+"_M2";
       std::string name = basename;
       bool renamed = false;
-      while ( usedNames.find(name) != usedNames.end() ) 
-      {
+      while ( usedNames.find(name) != usedNames.end() ){
         renamed = true;
         name = basename + "_" + boost::lexical_cast<std::string>(add++);
       }
+      usedNames.insert(name);
       if ( renamed ) Info("Renaming duplicate to "+name,StatusCode::SUCCESS,1);
       if (msgLevel(MSG::VERBOSE))
       {
