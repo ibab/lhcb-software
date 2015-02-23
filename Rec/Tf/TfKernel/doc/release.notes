@@ -4,6 +4,7 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!========================= TfKernel v2r30 2015-02-23 =========================
 ! 2015-02-20 - Manuel Tobias Schiller
  - SIMDChi2Fit: Either gcc 4.8.1 on SLC 6 is a bit more temperamental than the
    version I built on my laptop when it comes to autovectorising the loops
