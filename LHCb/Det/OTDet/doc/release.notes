@@ -2,6 +2,7 @@
 ! Responsible : Alexandr Kozlinskiy, Lucia Grillo
 !--------------------------------------------------------------------------
 
+!========================= OTDet v8r15 2015-02-23 =========================
 ! 2015-02-18 - Manuel Tobias Schiller
  - WalkRelation: fix bug in initializer list of constructor (member used
    before it was set - why did the compiler not complain about the
