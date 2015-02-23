@@ -4,9 +4,9 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrAlgorithms v1r16 2015-02-23 =========================
 ! 2015-02-16 - Renato Quagliani
  - PrSeedingXLayers cleaner version and reverted to a simple GaudiAlgorithm.
-
 
 ! 2015-02-13 - Michel De Cian
  - Add triangle fix in forward tracking.
@@ -15,7 +15,6 @@
  - Fix unused variables in PrSeedingXLayers.
 
 ! 2015-02-11 - Renato Quagliani
-
   - PrSeedingXLayers promoted to GaudiHistoAlg and Triangle Fixing implemented
   - PrSeedingXLayers some hardcoded parameters put as settable one
 
