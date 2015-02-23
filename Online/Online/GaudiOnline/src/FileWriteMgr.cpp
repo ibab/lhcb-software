@@ -154,11 +154,11 @@ void FileWriteMgr::handle(const Incident& inc)
 
 StatusCode FileWriteMgr::initialize()
 {
-  toLowerCase(m_ServPatt);
   StatusCode sc = OnlineService::initialize();
   MsgStream log(msgSvc(), name());
   m_BytesOut = 0;
   m_NumFiles = 0;
+  toLowerCase(m_ServPatt);
   m_node = RTL::nodeNameShort();
   ISvcList svclist;
   svclist = m_SvcLoc->getServices();
