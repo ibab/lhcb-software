@@ -3,6 +3,7 @@
 ! Package manager : A.Kozlinskiy
 !------------------------------------------------------------------------------
 
+!========================= OTDAQ v7r19 2015-02-23 =========================
 ! 2015-01-27 - Manuel Tobias Schiller
  - OTRawBankDecoder: following decision in today's Tracking meeting, change to
    use the vetoing of out-of-time hit pairs by default
