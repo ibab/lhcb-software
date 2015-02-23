@@ -4,6 +4,7 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+!========================= RichGlobalPID v3r23 2015-02-23 =========================
 ! 2015-02-06 - Chris Jones
  - Add (yet another) new implementation of the log(exp(x)-1) function based on
    a fast linear interpolator.
