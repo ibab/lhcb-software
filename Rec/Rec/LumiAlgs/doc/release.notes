@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================= LumiAlgs v9r7 2015-02-23 =========================
 ! 2015-02-18 - Marco Cattaneo
  - Update references to follow:
    . New counter in HltFactory
