@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+!========================= LHCbKernel v15r8 2015-02-23 =========================
 ! 2015-02-22 - Manuel Tobias Schiller
  - CircleTraj: speed up the muEstimate method by factor of 3
 
