@@ -14,14 +14,9 @@
 !
 ! -----------------------------------------------------------------------------
 
-! 2015-01-19 - Vanya Belyaev
+!========================= LoKiMC v10r16 2015-02-23 =========================
+! 2015-01-14  -> 2015-01-19 - Vanya Belyaev
  - few more steps towards autogeneration of C++ code from functors  
-
-! 2015-01-15 - Vanya Belyaev
- - few more steps towards autogeneration of C++ code from functors 
-
-! 2015-01-14 - Vanya Belyaev
- - few more steps towards autogeneration of C++ code from functors 
 
 !========================= LoKiMC v10r15 2014-12-11 =========================
 ! 2014-11-26 - Marco Clemencic
