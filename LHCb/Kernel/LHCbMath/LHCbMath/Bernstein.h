@@ -18,6 +18,7 @@
 // Local
 // ============================================================================
 #include "LHCbMath/NSphere.h"
+#include "LHCbMath/Polynomials.h"
 // ============================================================================
 /** @file LHCbMath/Bersstein.h
  *  Set of useful math-functions, related to Bernstein polynomials 
@@ -38,10 +39,12 @@ namespace Gaudi
   {
     // ========================================================================
     /** @class Bernstein
-     *  The Bernstein's polynomial of order N
+     *  The sum of bernstein's polynomial of order N
+     *  \f$f(x) = \sum_i a_i B^n_i(x)\f$, where 
+     *  \f$ B^n_k(x) = C^n_k x^k(1-x)^{n-k}\f$ 
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      */
-    class GAUDI_API Bernstein : public std::unary_function<double,double>
+    class GAUDI_API Bernstein : public Gaudi::Math::PolySum 
     {
       // ======================================================================
     public:
@@ -51,8 +54,9 @@ namespace Gaudi
       {
       public:
         // ====================================================================
-        explicit  Basic ( const unsigned short k = 0 , 
-                          const unsigned short N = 0 ) 
+        explicit  
+          Basic ( const unsigned short k = 0 , 
+                  const unsigned short N = 0 ) 
           : m_k ( k ) 
           , m_N ( N ) 
         {}
@@ -70,29 +74,30 @@ namespace Gaudi
     public:
       // ======================================================================
       /// constructor from the order
-      Bernstein ( const unsigned short       N          ,
-                  const double               xmin  =  0 ,
-                  const double               xmax  =  1 ) ;
+      Bernstein ( const unsigned short       N     = 0 ,
+                  const double               xmin  = 0 ,
+                  const double               xmax  = 1 ) ;
       // ======================================================================
       /// constructor from N+1 coefficients
-      Bernstein ( const std::vector<double>& pars       ,
-                  const double               xmin  =  0 ,
-                  const double               xmax  =  1 ) ;
-      /// templated constructor from the sequence of coefficients 
+      Bernstein ( const std::vector<double>& pars      ,
+                  const double               xmin  = 0 ,
+                  const double               xmax  = 1 ) ;
+      // ======================================================================
+      /// construct the basic bernstein polinomial  B(k,N)
+      Bernstein  ( const Basic&              basic     ,
+                   const double              xmin  = 0 , 
+                   const double              xmax  = 1 ) ;
+      // ======================================================================
+      /// template constructor from sequence of parameters 
       template <class ITERATOR>
-      Bernstein ( ITERATOR     first    , 
-                  ITERATOR     last     , 
-                  const double xmin = 0 , 
-                  const double xmax = 0 ) 
-        : std::unary_function<double,double>()
-        , m_pars ( first , last ) 
+        Bernstein ( ITERATOR                 first     , 
+                    ITERATOR                 last      , 
+                    const double             xmin  = 0 , 
+                    const double             xmax  = 1 ) 
+        : Gaudi::Math::PolySum ( first , last ) 
         , m_xmin ( std::min ( xmin, xmax ) )
         , m_xmax ( std::max ( xmin, xmax ) )
-      { if ( m_pars.empty() ) { m_pars.push_back ( 0 ) ; } }
-      /// construct the basic bernstein polinomial  B(k,N)
-      Bernstein  ( const Basic&         basic    ,
-                   const double         xmin = 0 , 
-                   const double         xmax = 0 ) ;
+      {}
       // ======================================================================
     public:
       // ======================================================================
@@ -101,26 +106,10 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      /// get number of parameters
-      std::size_t npars  () const { return m_pars.size() ; }
-      /// are all parameters zero?
-      bool        zero   () const ;
-      /// set k-parameter
-      bool setPar        ( const unsigned short k , const double value ) ;
-      /// set k-parameter
-      bool setParameter  ( const unsigned short k , const double value )
-      { return setPar    ( k , value ) ; }
-      /// get the parameter value
-      double  par        ( const unsigned short k ) const
-      { return ( k < m_pars.size() ) ? m_pars[k] : 0.0 ; }
-      /// get the parameter value
-      double  parameter ( const unsigned short k ) const { return par ( k ) ; }
       /// get lower edge
       double xmin () const { return m_xmin ; }
       /// get upper edge
       double xmax () const { return m_xmax ; }
-      /// get all parameters:
-      const std::vector<double>& pars() const { return m_pars ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -152,17 +141,6 @@ namespace Gaudi
       /// is it a constant function?
       bool   constant      () const ;
       // ======================================================================
-    public: // simple  manipulations with bernstein polynoms 
-      // ======================================================================
-      /// simple  manipulations with bernstein polynoms: scale it! 
-      Bernstein& operator *= ( const double a ) ;     // scale it! 
-      /// simple  manipulations with bernstein polynoms: scale it! 
-      Bernstein& operator /= ( const double a ) ;     // scale it! 
-      /// simple  manipulations with bernstein polynoms: shift it! 
-      Bernstein& operator += ( const double a ) ;     // shift it! 
-      /// simple  manipulations with bernstein polynoms: shift it! 
-      Bernstein& operator -= ( const double a ) ;     // shift it! 
-      // ======================================================================
     public:
       // ======================================================================
       double x ( const double t ) const
@@ -193,8 +171,6 @@ namespace Gaudi
       // ======================================================================      
     private:
       // ======================================================================
-      /// the list of parameters
-      std::vector<double>  m_pars ;                // the list of parameters
       /// the left edge of interval
       double m_xmin  ;                             // the left edge of interval
       /// the right edge of interval
@@ -222,6 +198,10 @@ namespace Gaudi
      *  The "positive" polynomial of order N
      *  Actually it is a sum of basic bernstein polynomials with
      *  non-negative coefficients
+     *  \f$ f(x) = \sum_i  \alpha^2_i B^n_i(x)\f$, where 
+     *  \f$  \sum_i \alpha^2_i = 1\f$ and 
+     *  parameters \f$ \alpha_i(p_0,p_1,....p_{n-1})\f$ form 
+     *  n-dimension sphere 
      */
     class GAUDI_API Positive : public std::unary_function<double,double>
     {
@@ -784,7 +764,8 @@ namespace Gaudi
     public:
       // ======================================================================
       /** get the integral over 2D-region 
-       *  \f[ \int_{x_low}^{x_high}\int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y\f] 
+       *  \f[ \int_{x_low}^{x_high}\int_{y_low}^{y_high} 
+       *  \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y\f] 
        *  @param xlow  low  edge in x 
        *  @param xhigh high edge in x 
        *  @param ylow  low  edge in y 
@@ -892,7 +873,8 @@ namespace Gaudi
     public:
       // ======================================================================
       /** get the integral over 2D-region 
-       *  \f[ \int_{x_low}^{x_high}\int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y\f] 
+       *  \f[ \int_{x_low}^{x_high}\int_{y_low}^{y_high} 
+       *   \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y \f] 
        *  @param xlow  low  edge in x 
        *  @param xhigh high edge in x 
        *  @param ylow  low  edge in y 
@@ -901,6 +883,7 @@ namespace Gaudi
       double integral   ( const double xlow , const double xhigh , 
                           const double ylow , const double yhigh ) const 
       { return m_bernstein.integral ( xlow , xhigh , ylow , yhigh ) ; }
+      // ======================================================================
       /** integral over x-dimension 
        *  \f[ \int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}y\f] 
        *  @param x     variable 
@@ -910,6 +893,7 @@ namespace Gaudi
       double integrateX ( const double y    , 
                           const double xlow , const double xhigh ) const 
       { return m_bernstein.integrateX ( y , xlow , xhigh ) ; }
+      // ======================================================================
       /** integral over x-dimension 
        *  \f[ \int_{x_low}^{x_high} \mathcal{B}(x,y) \mathrm{d}x\f] 
        *  @param y     variable 

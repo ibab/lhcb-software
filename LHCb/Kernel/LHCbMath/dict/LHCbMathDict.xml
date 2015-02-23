@@ -31,6 +31,7 @@
   
   <class name    = "Gaudi::Math::EigenSystems"            />
   <class name    = "Gaudi::Math::Chebyshev"               />
+  <class name    = "Gaudi::Math::ChebyshevU"              />
   <class name    = "Gaudi::Math::Legendre"                />  
   <class name    = "Gaudi::Math::Hermite"                 />  
   <class name    = "Gaudi::Math::Bukin"                   />
@@ -70,9 +71,13 @@
   <class name    = "Gaudi::Math::Kstar0"           />
   <class name    = "Gaudi::Math::Phi0"             />
   <class name    = "Gaudi::Math::Rho0FromEtaPrime" />
-  <class name    = "Gaudi::Math::WorkSpace"        >
+  <class name    = "Gaudi::Math::WorkSpace"         >
     <field name  = "m_workspace" transient = "true"/>      
   </class>
+  <class name    = "Gaudi::Math::PolySum"          />
+  <class name    = "Gaudi::Math::ChebyshevSum"     />
+  <class name    = "Gaudi::Math::LegendreSum"      />
+  <class name    = "Gaudi::Math::Polynomial"       />
   <class name    = "Gaudi::Math::Bernstein"        />
   <class name    = "Gaudi::Math::Positive"         />
   <class name    = "Gaudi::Math::Monothonic"       />
@@ -182,7 +187,6 @@
   <function name = "Gaudi::Math::divide"          />
   <function name = "Gaudi::Math::sumabs"          />
   <function name = "Gaudi::Math::abssum"          />
-  <function name = "Gaudi::Math::horner_a0"       />
   <function name = "Gaudi::Math::horner_aN"       />
   <function name = "Gaudi::Math::binomEff"        />
   <function name = "Gaudi::Math::binomEff2"       />
@@ -191,6 +195,10 @@
   <function name = "Gaudi::Math::exclusiveEff"    />
   <function name = "Gaudi::Math::zechEff"         />
   <function name = "Gaudi::Math::effJackknife"    />
+
+  <function name = "Gaudi::Math::clenshaw_chebyshev" />
+  <function name = "Gaudi::Math::clenshaw_legendre"  />
+  <function name = "Gaudi::Math::clenshaw_polynom"   />
   
   <function name    = "LHCb::Math::round"                  />
   <function name    = "LHCb::Math::isint"                  />

@@ -17,6 +17,8 @@
 #include "LHCbMath/Functions.h"
 #include "LHCbMath/LHCbMath.h"
 #include "LHCbMath/Power.h"
+#include "LHCbMath/Polynomials.h"
+#include "LHCbMath/Bernstein.h"
 // ============================================================================
 // GSL
 // ============================================================================
@@ -175,6 +177,13 @@ double Gaudi::Math::Jackson::jackson_A7
 namespace
 {
   // ==========================================================================
+  /// equality criteria for doubles
+  LHCb::Math::Equal_To<double> s_equal ;       // equality criteria for doubles
+  /// zero for doubles  
+  LHCb::Math::Zero<double>     s_zero  ;       // zero for doubles
+  /// zero fo vectors 
+  LHCb::Math::Zero< std::vector<double> > s_vzero ; // zero foro vectors
+  // ==========================================================================
   typedef Gaudi::Math::GSL::GSL_Error_Handler Sentry ;
   // ==========================================================================
   /// get GSL-workspace
@@ -241,106 +250,6 @@ namespace
    */
   const double      s_LN10 = std::log ( 10 ) ;
   // ==========================================================================
-  // Chebyshev & Co
-  // ==========================================================================
-  Gaudi::Math::Chebyshev_<2> s_c2 ;
-  Gaudi::Math::Chebyshev_<3> s_c3 ;
-  Gaudi::Math::Chebyshev_<4> s_c4 ;
-  Gaudi::Math::Chebyshev_<5> s_c5 ;
-  Gaudi::Math::Chebyshev_<6> s_c6 ;
-  Gaudi::Math::Chebyshev_<7> s_c7 ;
-  Gaudi::Math::Chebyshev_<8> s_c8 ;
-  Gaudi::Math::Chebyshev_<9> s_c9 ;
-  // ==========================================================================
-  inline double _chebyshev ( const unsigned int N , const double x )
-  {
-    switch ( N )
-    {
-    case 0  : return        1   ; //
-    case 1  : return        x   ; //
-    case 2  : return s_c2 ( x ) ; //
-    case 3  : return s_c3 ( x ) ; //
-    case 4  : return s_c4 ( x ) ; //
-    case 5  : return s_c5 ( x ) ; //
-    case 6  : return s_c6 ( x ) ; //
-    case 7  : return s_c7 ( x ) ; //
-    case 8  : return s_c8 ( x ) ; //
-    case 9  : return s_c9 ( x ) ; //
-      //
-    default : break ;
-    }
-    //
-    return 2 * x * _chebyshev ( N - 1 , x ) - _chebyshev ( N - 2 , x ) ;
-  }
-  // ==========================================================================
-  // Legendre & Co
-  // ==========================================================================
-  Gaudi::Math::Legendre_<2>  s_l2 ;
-  Gaudi::Math::Legendre_<3>  s_l3 ;
-  Gaudi::Math::Legendre_<4>  s_l4 ;
-  Gaudi::Math::Legendre_<5>  s_l5 ;
-  Gaudi::Math::Legendre_<6>  s_l6 ;
-  Gaudi::Math::Legendre_<7>  s_l7 ;
-  Gaudi::Math::Legendre_<8>  s_l8 ;
-  Gaudi::Math::Legendre_<9>  s_l9 ;
-  // ==========================================================================
-  inline double _legendre  ( const unsigned int N , const double x )
-  {
-    //
-    switch ( N )
-    {
-    case 0  : return        1   ; //
-    case 1  : return        x   ; //
-    case 2  : return s_l2 ( x ) ; //
-    case 3  : return s_l3 ( x ) ; //
-    case 4  : return s_l4 ( x ) ; //
-    case 5  : return s_l5 ( x ) ; //
-    case 6  : return s_l6 ( x ) ; //
-    case 7  : return s_l7 ( x ) ; //
-    case 8  : return s_l8 ( x ) ; //
-    case 9  : return s_l9 ( x ) ; //
-      //
-    default : break ;
-    }
-    //
-    return
-      ( ( 2 * N - 1 ) * x * _legendre ( N - 1 , x ) -
-        (     N - 1 ) *     _legendre ( N - 2 , x ) ) / N ;
-  }
-  // ==========================================================================
-  // Hermite & Co
-  // ==========================================================================
-  Gaudi::Math::Hermite_<2>  s_h2 ;
-  Gaudi::Math::Hermite_<3>  s_h3 ;
-  Gaudi::Math::Hermite_<4>  s_h4 ;
-  Gaudi::Math::Hermite_<5>  s_h5 ;
-  Gaudi::Math::Hermite_<6>  s_h6 ;
-  Gaudi::Math::Hermite_<7>  s_h7 ;
-  Gaudi::Math::Hermite_<8>  s_h8 ;
-  Gaudi::Math::Hermite_<9>  s_h9 ;
-  // ==========================================================================
-  inline double _hermite  ( const unsigned int N , const double x )
-  {
-    //
-    switch ( N )
-    {
-    case 0  : return        1   ; //
-    case 1  : return        x   ; //
-    case 2  : return s_h2 ( x ) ; //
-    case 3  : return s_h3 ( x ) ; //
-    case 4  : return s_h4 ( x ) ; //
-    case 5  : return s_h5 ( x ) ; //
-    case 6  : return s_h6 ( x ) ; //
-    case 7  : return s_h7 ( x ) ; //
-    case 8  : return s_h8 ( x ) ; //
-    case 9  : return s_h9 ( x ) ; //
-      //
-    default : break ;
-    }
-    //
-    return
-      x * _hermite ( N - 1 , x ) - ( N - 1 ) * _hermite ( N - 2 , x ) ;
-  }
   // ==========================================================================
   // Constants
   // ==========================================================================
@@ -410,13 +319,6 @@ namespace
    *  @date 2010-04-19
    */
   const double s_ln2 = std::log ( 2.0 ) ;
-  // ==========================================================================
-  /// equality criteria for doubles
-  LHCb::Math::Equal_To<double> s_equal ;       // equality criteria for doubles
-  /// zero for doubles  
-  LHCb::Math::Zero<double>     s_zero  ;       // zero for doubles
-  /// zero fo vectors 
-  LHCb::Math::Zero< std::vector<double> > s_vzero ; // zero foro vectors
   // ==========================================================================
   /** helper function for itegration of Bukin's function
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
@@ -1231,20 +1133,9 @@ namespace
   // ==========================================================================
 } // end of the anonymous namespace
 // ============================================================================
-// evaluate Chebyshev polynomial
-// ============================================================================
-double Gaudi::Math::Chebyshev::operator() ( const double x ) const
-{ return _chebyshev ( m_N , x ) ; }
-// ============================================================================
-// evaluate Legendre polynomial
-// ============================================================================
-double Gaudi::Math::Legendre::operator() ( const double x ) const
-{ return _legendre ( m_N , x ) ; }
-// ============================================================================
-// evaluate Hermite polynomial
-// ============================================================================
-double Gaudi::Math::Hermite::operator() ( const double x ) const
-{ return _hermite  ( m_N , x ) ; }
+
+
+
 // ============================================================================
 // BifurcatedGauss
 // ============================================================================
@@ -3247,6 +3138,12 @@ Gaudi::Math::GramCharlierA::GramCharlierA
 // destructor
 // ============================================================================
 Gaudi::Math::GramCharlierA::~GramCharlierA() {}
+// ============================================================================
+namespace 
+{ 
+  const Gaudi::Math::Hermite_<3>  s_h3 ;
+  const Gaudi::Math::Hermite_<4>  s_h4 ;
+}
 // ============================================================================
 // evaluate Gram-Charlier type A approximation
 // ============================================================================

@@ -65,13 +65,9 @@ Gaudi::Math::Bernstein::Bernstein
 ( const unsigned short      N    ,
   const double              xmin ,
   const double              xmax )
-  : std::unary_function<double,double> ()
-//
-  , m_pars ( N + 1 , 0.0 )
-//
+  : Gaudi::Math::PolySum ( N ) 
   , m_xmin ( std::min ( xmin , xmax ) )
   , m_xmax ( std::max ( xmin , xmax ) )
-//
 {}
 // ============================================================================
 // constructor from the order
@@ -80,16 +76,10 @@ Gaudi::Math::Bernstein::Bernstein
 ( const std::vector<double>& pars ,
   const double               xmin ,
   const double               xmax )
-  : std::unary_function<double,double> ()
-//
-  , m_pars ( pars )
-//
+  : Gaudi::Math::PolySum ( pars ) 
   , m_xmin ( std::min ( xmin , xmax ) )
   , m_xmax ( std::max ( xmin , xmax ) )
-//
-{
-  if ( m_pars.empty() ) { m_pars.push_back ( 0 ) ; }
-}
+{}
 // ============================================================================
 // construct the basic bernstein polinomial
 // ============================================================================
@@ -97,9 +87,7 @@ Gaudi::Math::Bernstein::Bernstein
 ( const Gaudi::Math::Bernstein::Basic& bb   , 
   const double                         xmin , 
   const double                         xmax ) 
-  : std::unary_function<double,double> ()
-  , m_pars ( bb.N() + 1 , 0  )
-    //
+  : Gaudi::Math::PolySum ( bb.N()  ) 
   , m_xmin ( std::min ( xmin , xmax ) )
   , m_xmax ( std::max ( xmin , xmax ) )
     //
@@ -183,46 +171,6 @@ bool Gaudi::Math::Bernstein::constant () const
   //
   return true ;
 }
-// ============================================================================
-// simple  manipulations with bernstein polynoms: scale it! 
-// ============================================================================
-Gaudi::Math::Bernstein&
-Gaudi::Math::Bernstein::operator*=( const double a ) 
-{
-  for ( std::vector<double>::iterator it = m_pars.begin() ; m_pars.end() != it ; ++it ) 
-  {  (*it ) *= a ; }
-  return *this ;
-}
-// ============================================================================
-// simple  manipulations with bernstein polynoms: scale it! 
-// ============================================================================
-Gaudi::Math::Bernstein&
-Gaudi::Math::Bernstein::operator/=( const double a ) 
-{
-  for ( std::vector<double>::iterator it = m_pars.begin() ; m_pars.end() != it ; ++it ) 
-  {  (*it ) /= a ; }
-  return *this ;
-}
-// ============================================================================
-// simple  manipulations with bernstein polynoms: shift it! 
-// ============================================================================
-Gaudi::Math::Bernstein&
-Gaudi::Math::Bernstein::operator+=( const double a ) 
-{
-  for ( std::vector<double>::iterator it = m_pars.begin() ; m_pars.end() != it ; ++it ) 
-  {  (*it ) += a ; }
-  return *this ;
-}
-// ============================================================================
-// simple  manipulations with bernstein polynoms: shift it! 
-// ============================================================================
-Gaudi::Math::Bernstein&
-Gaudi::Math::Bernstein::operator-=( const double a ) 
-{
-  for ( std::vector<double>::iterator it = m_pars.begin() ; m_pars.end() != it ; ++it ) 
-  {  (*it ) -= a ; }
-  return *this ;
-} 
 // ============================================================================
 // express the Bernstein polynomial in Bernstein basis of order n+r 
 // ============================================================================
@@ -331,26 +279,7 @@ double Gaudi::Math::Bernstein::derivative ( const double x   ) const
   const double t1 = 1 - t0  ;
   //
   return
-    _casteljau_ ( ck.begin() + 1 , ck.end() , t0 , t1 ) * ( m_xmax - m_xmin ) / npars() ;
-}
-// ============================================================================
-// are all parameters zero?
-// ============================================================================
-bool Gaudi::Math::Bernstein::zero () const { return s_vzero ( m_pars ) ; }
-// ============================================================================
-// set k-parameter
-// ============================================================================
-bool Gaudi::Math::Bernstein::setPar
-( const unsigned short k , const double value )
-{
-  //
-  if ( k >= npars() )                  { return false ; }
-  //
-  if ( s_equal ( par ( k ) , value ) ) { return false ; }
-  //
-  m_pars [ k ] = value ;
-  //
-  return true ;
+    _casteljau_ ( ck.begin() + 1 , ck.end() , t0 , t1 ) * ( npars()-1 )  / ( m_xmax - m_xmin ) ;
 }
 // ============================================================================
 // get the value
