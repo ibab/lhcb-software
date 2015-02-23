@@ -13,57 +13,15 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v11r22 2015-02-23 =========================
 ! 2015-02-11 - Vanya Belyaev
- - insrument some desctructors 
+ - Instrument some destructors 
 
-! 2015-02-03 - Vanya Belyaev
- - few more steps towards autogeneration of C++ code from functors      
-
-! 2015-02-02 - Vanya Belyaev
- - few more steps towards autogeneration of C++ code from functors      
-
-! 2015-01-29 - Vanya Belyaev
- - few more steps towards autogeneration of C++ code from functors     
-
-! 2015-01-29 - Vanya Belyaev
- - few more steps towards autogeneration of C++ code from functors     
-
-! 2015-01-27 - Vanya Belyaev
- - afew more steps towards autogeneration of C++ code from functors     
-
-! 2015-01-26 - Vanya Belyaev
- - few more steps towards autogeneration of C++ code from functors    
-
-! 2015-01-23 - Vanya Belyaev
- - minor fix 
-
-! 2015-01-22 - Vanya Belyaev
- - few more steps towards autogeneration of C++ code from functors   
-
-! 2015-01-21 - Vanya Belyaev
- - few more steps towards autogeneration of C++ code from functors  
- 
-
-! 2015-01-20 - Vanya Belyaev
- - few more steps towards autogeneration of C++ code from functors  
-
-! 2015-01-19 - Vanya Belyaev
- - few more steps towards autogeneration of C++ code from functors  
+!  2015-01-13 -> 2015-02-03 - Vanya Belyaev
+ - Several commits to add autogeneration of C++ code from functors      
 
 ! 2015-01-16 - Vanya Belyaev
- - restore scalers and lstener 
-
-! 2015-01-16 - Vanya Belyaev 
- - few more steps towards autogeneration of C++ code from functors 
-
-! 2015-01-15 - Vanya Belyaev
- - few more steps towards autogeneration of C++ code from functors 
-
-! 2015-01-14 - Vanya Belyaev
- - few more steps towards autogeneration of C++ code from functors 
-
-! 2015-01-13 - Vanya Belyaev
- - make few steps towards autogeneration of C++ code from functors 
+ - restore scalers and llstener 
 
 !========================= LoKiCore v11r21 2014-12-11 =========================
 ! 2014-12-11 - Marco Clemencic
