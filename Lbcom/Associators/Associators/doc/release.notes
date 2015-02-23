@@ -2,6 +2,7 @@
 ! Responsible : Matt Needham
 !---------------------------------------------------------------------------
 
+!========================= Associators v3r9 2015-02-23 =========================
 ! 2015-01-27 - Michel De Cian
  - Make MCParticleToMCHitUpgrade.py, to work with upgrade detectors.
 
