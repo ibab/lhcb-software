@@ -3,6 +3,7 @@
 ! package manager : Marco Clemencic
 ! =====================================================================
 
+!========================= DetDesc v18r36 2015-02-23 =========================
 ! 2015-02-20 - Manuel Tobias Schiller
  - SolidTicks: get rid of dynamic memory allocation in RemoveAdjacent
    (this will speed up offline track fit by 3.4%)
