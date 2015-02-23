@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$ 
+# $Id$ 
 # =============================================================================
 ## @file TestData.py
 #
@@ -10,9 +10,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaeve@itep.ru
 #  @date 2014-06-06
 # 
-#                    $Revision: 173870 $
-#  Last modification $Date: 2014-06-14 13:44:41 +0200 (Sat, 14 Jun 2014) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 tests for simple data-access 

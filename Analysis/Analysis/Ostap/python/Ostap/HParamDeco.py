@@ -48,6 +48,7 @@ class H_fit(object) :
         from Ostap.PyRoUts import funID
         self.fun = ROOT.TF1 ( funID() , self , hfit.xmin() , hfit.xmax() , hfit.npars() )
     #
+    def norm     ( self ) : return False 
     def npars    ( self ) : return self._hfit.npars () 
     def pars     ( self ) : return self._hfit.pars  ()
     #
@@ -66,10 +67,7 @@ class H_fit(object) :
                 self._hfit.setPar ( i , pars[i] )
                 
         return self._hfit( x[0] )
-
-BernsteinFIT = H_fit
-BSplineFIT   = H_fit
-
+    
 # =============================================================================
 ## @class H_nfit
 #  simple function to fit/represent the histogram with normalized
@@ -86,9 +84,10 @@ class H_Nfit (object) :
     def __init__ ( self , hfit ) :
         self._hfit = hfit
         from Ostap.PyRoUts import funID
-        self.fun   = ROOT.TF1 ( funID() , self , hfit.xmin() , hfit.xmax() , hfit.npars() + 1  )
-        self.fun.SetParameter ( 0 , 1 )
+        self.fun   = ROOT.TF1 ( funID() , self , hfit.xmin() , hfit.xmax() , hfit.npars() + 1 )
+        self.fun.SetParameter ( 0 , 1 ) 
         
+    def norm     ( self ) : return True  
     def npars    ( self ) : return self._hfit.npars () + 1  ## NB: normalization!  
     def pars     ( self ) : return self._hfit.pars  ()
     
@@ -113,65 +112,202 @@ class H_Nfit (object) :
                 
         return norm * self._hfit( x[0] )
     
-PositiveFIT         = H_Nfit
-PositiveSplineFIT   = H_Nfit
-MonothonicSplineFIT = H_Nfit
+
+# =============================================================================
+## represent 1D-histo as polynomial sum 
+def _h1_param_sum_ ( h1             ,
+                     fun_obj        ,
+                     fit_type       ,  
+                     opts  = 'SQ0I' ) :
+    """
+    Represent histo as polynomial sum    
+    """
+    ## 
+    b     = fun_obj  
+    #
+    bfit  = fit_type ( b )    
+    bfit.fun.SetNpx  ( max ( 100 , 3 * h1.bins() ) )  
+    
+    bfit.histo     = h1
+    
+    if bfit.norm() : 
+        mn,mx = h1.xminmax ()    
+        mi    = h1.accumulate().value()*(mn-mx)/h1.bins() 
+        bfit.fun.SetParameter ( 0 , mi )
+        from math import pi 
+        for i in range( 0, b.npars() ) :
+            bfit.fun.SetParLimits ( i + 1 , -0.6 * pi  , 1.1 * pi ) 
+            
+    if 0 > opts.upper().find('S') : opts += 'S '
+
+    fun = bfit.fun
+    
+    r = fun.Fit(h1,opts) 
+    if 0 != r.Status() :
+        logger.info ( 'Fit status is  %d [%s]' % ( r.Status() , type(b).__name__ ) )
+        if bfit.norm() :
+            mn,mx = h1.xminmax ()    
+            mi    = h1.accumulate().value()*(mn-mx)/h1.bins() 
+            fun.SetParameter ( 0 , mi )
+            for i in range( 0 , b.npars() ) :
+                b.setPar         ( 0     , mi )
+                fun.SetParameter ( i + 1 , 0  )
+        r = fun.Fit(h1,opts)
+        
+    if 0 != r.Status() :
+        logger.warning ( 'Fit status is  %d [%s]' % ( r.Status() , type(b).__name__ ) )
+        r = fun.Fit(h1,opts)        
+        if bfit.norm() :
+            mn,mx = h1.xminmax ()    
+            mi    = h1.accumulate().value()*(mn-mx)/h1.bins() 
+            fun.SetParameter ( 0 , mi )
+            for i in range( 0 , b.npars() ) :
+                b.setPar         ( 0     , mi )
+                fun.SetParameter ( i + 1 , 0  )
+        r = fun.Fit ( h1 , opts )
+        if 0 != r.Status() :
+            logger.error ('Fit status is  %d [%s]' % ( r.Status() , type(b).__name__ ) )
+                
+    bfit.fitresult = r 
+    return bfit.fun , bfit , b , bfit.fitresult 
+
 
 # =============================================================================
 ## represent 1D-histo as Bernstein polynomial
-def _h1_bernstein_ ( h1 , N , interpolate = True , opts = 'SQ0I' ) :
+def _h1_bernstein_ ( h1 , degree , interpolate = True , opts = 'SQ0' ) :
     """
     Represent histo as Bernstein polynomial
     
     >>> h = ... # the historgam
-    >>> b = h.bernstein ( 5 )
+    >>> b = h.bernstein ( 5 )  ## make a fit... 
+
+    >>> tfun       = r[0]  ## get TH1 object
+    >>> tfun.Draw()
+
+    Underlying C++ object:
+    >>> fun        = b[2]
+    >>> print fun.pars() 
+
+    ## fit result and status 
+    >>> fit_result = r[3]
+    >>> print fit_result.CovMatrix(1,1)
+    """
+    #
+    mn,mx = h1.xminmax ()    
+    func = cpp.Gaudi.Math.Bernstein ( degree , mn , mx ) 
+    #
+    ## make the approximation for bernstein coefficients
+    #
+    for i in range ( 0 , degree + 1 ) :
+        x    = mn + ( mx - mn ) * float( i ) / degree
+        v    = h1 ( x , interpolate = interpolate ).value()
+        func.setPar ( i , v )
+        
+    func.setPar ( 0      , h1[ 1         ].value() )
+    func.setPar ( degree , h1[ h1.bins() ].value() )
+
+    return _h1_param_sum_ ( h1 , func , H_fit , opts )  
+
+
+# =============================================================================
+## represent 1D-histo as Chebyshev polynomial
+def _h1_chebyshev_ ( h1 , degree , interpolate = True , opts = 'SQ0I' ) :
+    """
+    Represent histo as Bernstein polynomial
+    
+    >>> h = ... # the historgam
+    >>> b = h.bernstein ( 5 )  ## make a fit... 
+    
+    >>> tfun       = r[0]  ## get TH1 object
+    >>> tfun.Draw()
+
+    Underlying C++ object:
+    >>> fun        = b[2]
+    >>> print fun.pars() 
+
+    ## fit result and status 
+    >>> fit_result = r[3]
+    >>> print fit_result.CovMatrix(1,1)
+    """
+    #
+    mn,mx = h1.xminmax ()    
+    func  = cpp.Gaudi.Math.ChebyshevSum ( degree , mn , mx ) 
+    #
+    my = h1.accumulate().value()/h1.bins()
+    func.setPar( 0 , my )
+    ##
+    return _h1_param_sum_ ( h1 , func , H_fit , opts )  
+
+
+# =============================================================================
+## represent 1D-histo as Legendre polynomial
+def _h1_legendre_ ( h1 , degree , interpolate = True , opts = 'SQ0' ) :
+    """
+    Represent histo as Legendre polynomial
+    
+    >>> h = ... # the historgam
+    >>> r = h.legendre ( 5 )  ## make a fit...
+
+    
+    >>> tfun       = r[0]  ## get TH1 object
+    >>> tfun.Draw()
+
+    Underlying C++ object:
+    >>> fun        = b[2]
+    >>> print fun.pars() 
+
+    ## fit result and status 
+    >>> fit_result = r[3]
+    >>> print fit_result.CovMatrix(1,1)
     
     """
-    mn,mx = h1.xminmax ()
+    mn,mx = h1.xminmax ()    
+    func  = cpp.Gaudi.Math.LegendreSum ( degree , mn , mx ) 
     #
-    ## N = min ( N ,  len ( h1 ) - 1 ) 
-    b  = cpp.Gaudi.Math.Bernstein ( N , mn , mx )
+    my = h1.accumulate().value()/h1.bins()
+    func.setPar( 0, my )
+    ##
+    return _h1_param_sum_ ( h1 , func , H_fit , opts )  
+
+
+# =============================================================================
+## represent 1D-histo as plain vanilla polynomial
+def _h1_polinomial_ ( h1 , degree , interpolate = True , opts = 'SQ0' ) :
+    """
+    Represent histo as plain vanilla polynomial
+    
+    >>> h = ... # the historgam
+    >>> b = h.polinomial ( 5 )  ## make a fit... 
+
+    >>> tfun       = r[0]  ## get TH1 object
+    >>> tfun.Draw()
+
+    Underlying C++ object:
+    >>> fun        = b[2]
+    >>> print fun.pars() 
+
+    ## fit result and status 
+    >>> fit_result = r[3]
+    >>> print fit_result.CovMatrix(1,1)
+    """
+    mn,mx = h1.xminmax ()    
+    func  = cpp.Gaudi.Math.Polynomial ( degree , mn , mx ) 
     #
-    ## make the approximation for bernstein coefficients 
-    for i in range ( 0 , N + 1 ) :
+    my = h1.accumulate().value()/h1.bins()
+    func.setPar( 0, my )
+    ##
+    return _h1_param_sum_ ( h1 , func , H_fit , opts )  
 
-        if   i == 0   :
-        
-            x  = mn 
-            fb =  1 
-            v  = h1 [ 1 ].value()
-
-        elif i == N   :
-            
-            x  = mx
-            lb = h1.bins() 
-            v  = h1 [ lb ].value()
-            
-        else :
-            
-            x = mn + ( mx - mn ) * float( i ) / float ( N )
-            v = h1 ( x , interpolate = interpolate ).value()
-            
-        b.setPar ( i , v )
-
-
-    bfit  = BernsteinFIT( b )    
-    bfit.fun.SetNpx ( max ( 100 , 3 * h1.bins() ) )  
-    
-    bfit.histo     = h1
-    bfit.fitresult = bfit.fun.Fit(h1,opts) 
-    
-    return bfit.fun,bfit,b,bfit.fitresult 
 
 # =============================================================================
 ## represent 1D-histo as B-spline
-def _h1_bspline_ ( h1 , order = 3 , knots = 3 , opts = 'SQ0I' ) :
+def _h1_bspline_ ( h1 , degree = 3 , knots = 3 , opts = 'SQ0' ) :
     """
     Represent histo as B-spline polynomial
     
     >>> h = ... # the historgam
-    >>> b1 = h.bSpline ( order = 3 , innerknots = 3  )
-    >>> b2 = h.bSpline ( order = 3 , innerknots = [ 0.1 , 0.2, 0.8, 0.9 ]  )
+    >>> b1 = h.bSpline ( degree = 3 , innerknots = 3  )
+    >>> b2 = h.bSpline ( degree = 3 , innerknots = [ 0.1 , 0.2, 0.8, 0.9 ]  )
     
     
     """
@@ -179,26 +315,20 @@ def _h1_bspline_ ( h1 , order = 3 , knots = 3 , opts = 'SQ0I' ) :
     #
     from Ostap.PyRoUts import funID
     if isinstance ( knots , ( int , long ) ) :
-        b = cpp.Gaudi.Math.BSpline ( mn , mx , knots , order )
+        func = cpp.Gaudi.Math.BSpline ( mn , mx , knots , degree )
     else :
-        _knots = cpp.std.vector('double') ()
-        _knots.push_back ( mn ) 
-        _knots.push_back ( mx ) 
+        from LHCbMath.Types import doubles
+        _knots = doubles ( mn , mx ) 
         for k in knots : _knots.push_back( k )
-        b = cpp.Gaudi.Math.BSpline ( _knots , order )
-
-    bfit  = BSplineFIT( b )
-    bfit.fun.SetNpx ( max ( 100 , 3 * h1.bins() ) )  
-    
-    bfit.histo     = h1 
-    bfit.fitresult = bfit.fun.Fit(h1,opts) 
-    
-    return bfit.fun,bfit,b,bfit.fitresult 
+        func = cpp.Gaudi.Math.BSpline ( _knots , degree )
+        
+    ##
+    return _h1_param_sum_ ( h1 , func , H_fit , opts )  
 
 
 # =============================================================================
-## represent 1D-histo as POSITIVE spline polynomial
-def _h1_positive_ ( h1 , N , opts = 'SQ0I' ) :
+## represent 1D-histo as POSITIVE bernstein polynomial
+def _h1_positive_ ( h1 , N , opts = 'SQ0' ) :
     """
     Represent histo as Positive Bernstein polynomial
     
@@ -207,127 +337,133 @@ def _h1_positive_ ( h1 , N , opts = 'SQ0I' ) :
     
     """
     mn,mx = h1.xminmax ()
-    b = cpp.Gaudi.Math.Positive ( N , mn , mx )
-    #
+    func  = cpp.Gaudi.Math.Positive ( N , mn , mx )
+    # 
+    return _h1_param_sum_ ( h1 , func , H_Nfit , opts ) 
 
-    bfit  = PositiveFIT( b )
 
-    bfit.fun.SetNpx ( max ( 100 , 3 * h1.bins() ) )  
-    bfit.fun.SetParameter ( 0 , h1.accumulate().value() / h1.bins() )
+# =============================================================================
+## represent 1D-histo as MONOTHONIC bernstein polynomial
+def _h1_monothonic_ ( h1 , N , increasing = True , opts = 'SQ0' ) :
+    """
+    Represent histo as Monothonic Bernstein polynomial
     
-    bfit.histo     = h1
-    bfit.fitresult = bfit.fun.Fit(h1,opts) 
+    >>> h = ... # the historgam
+    >>> b = h.monothonic ( 5 , increasing = True )
     
-    return fun,bfit,b,bfit.fitresult 
+    """
+    mn,mx = h1.xminmax ()
+    func  = cpp.Gaudi.Math.Monothonic ( N , mn , mx , increasing )
+    # 
+    return _h1_param_sum_ ( h1 , func , H_Nfit , opts ) 
+
+
+# =============================================================================
+## represent 1D-histo as MONOTHONIC CONVEX/CONCAVE bernstein polynomial
+def _h1_convex_ ( h1 , N , increasing = True , convex = True , opts = 'SQ0' ) :
+    """
+    Represent histo as Monothonic Convex/Concave  Bernstein polynomial
+    
+    >>> h = ... # the historgam
+    >>> b = h.convex ( 5 , increasing = True , convex = False )
+    
+    """
+    mn,mx = h1.xminmax ()
+    func  = cpp.Gaudi.Math.Convex ( N , mn , mx , increasing , convex )
+    # 
+    return _h1_param_sum_ ( h1 , func , H_Nfit , opts ) 
+
+
 
 # =============================================================================
 ## represent 1D-histo as positive B-spline
-def _h1_pspline_ ( h1 , order = 3 , knots = 3 , opts = 'SQ0I' ) :
+def _h1_pspline_ ( h1 , degree = 3 , knots = 3 , opts = 'SQ0I' ) :
     """
     Represent histo as positive B-spline 
     
     >>> h = ... # the historgam
-    >>> b1 = h.pSpline ( order = 3 , knots = 3  )
-    >>> b2 = h.pSpline ( order = 3 , knots = [ 0.1 , 0.2, 0.8, 0.9 ]  )
+    >>> b1 = h.pSpline ( degree = 3 , knots = 3  )
+    >>> b2 = h.pSpline ( degree = 3 , knots = [ 0.1 , 0.2, 0.8, 0.9 ]  )
     
     """
     mn,mx = h1.xminmax ()
     #
     from Ostap.PyRoUts import funID
     if isinstance ( knots , ( int , long ) ) :
-        b = cpp.Gaudi.Math.PositiveSpline ( mn , mx , knots , order )
+        func = cpp.Gaudi.Math.PositiveSpline ( mn , mx , knots , degree  )
     else :
-        _knots = cpp.std.vector('double') ()
-        _knots.push_back ( mn ) 
-        _knots.push_back ( mx ) 
+        from LHCbMath.Types import doubles
+        _knots = doubles ( mn , mx ) 
         for k in knots : _knots.push_back( k )
-        b = cpp.Gaudi.Math.BSpline ( _knots , order )
-
-
-    bfit  = PositiveSplineFIT( b )
-    
-    bfit.fun.SetParameter ( 0 , h1.accumulate().value() / h1.bins() )
-    bfit.fun.SetNpx ( max ( 100 , 3 * h1.bins() ) )  
-    
-    bfit.histo     = h1
-    bfit.fitresult = bfit.fun.Fit(h1,opts) 
-    
-    return bfit.fun,bfit,b,bfit.fitresult 
-
+        func = cpp.Gaudi.Math.PositiveSpline ( _knots , degree )
+    #
+    return _h1_param_sum_ ( h1 , func , H_Nfit , opts ) 
 
 # =============================================================================
-## represent 1D-histo as positive increasing spline
-def _h1_ispline_ ( h1 , order = 3 , knots = 3 , opts = 'SQ0I' ) :
+## represent 1D-histo as positive monothonic spline
+def _h1_mspline_ ( h1 , degree = 3 , knots = 3 , increasing = True , opts = 'SQ0I' ) :
     """
-    Represent histo as positive increasing spline 
+    Represent histo as positive monothonic  spline 
     
     >>> h = ... # the historgam
-    >>> b1 = h.iSpline ( order = 3 , knots = 3  )
-    >>> b2 = h.iSpline ( order = 3 , knots = [ 0.1 , 0.2, 0.8, 0.9 ]  )
+    >>> b1 = h.mSpline ( degree = 3 , knots = 3  , increasing = True  )
+    >>> b2 = h.mSpline ( degree = 3 , knots = [ 0.1 , 0.2, 0.8, 0.9 ] )
+    >>> b3 = h.mSpline ( degree = 3 , knots = 3  , increasing = False )
     
     """
     mn,mx = h1.xminmax ()
     #
     from Ostap.PyRoUts import funID
     if isinstance ( knots , ( int , long ) ) :
-        b = cpp.Gaudi.Math.MonothonicSpline ( mn , mx , knots , order , True )
+        func = cpp.Gaudi.Math.MonothonicSpline ( mn , mx , knots , degree , increasing )
     else :
-        _knots = cpp.std.vector('double') ()
-        _knots.push_back ( mn ) 
-        _knots.push_back ( mx ) 
+        from LHCbMath.Types import doubles
+        _knots = doubles ( mn , mx ) 
         for k in knots : _knots.push_back( k )
-        b = cpp.Gaudi.Math.IncreasingSpline ( _knots , order , True )
-
-    bfit  = MonothonicSplineFIT( b )
-    bfit.fun.SetParameter ( 0   , h1[h1.bins()]   )
-    bfit.fun.SetNpx ( max ( 100 , 3 * h1.bins() ) )  
-    
-    bfit.histo     = h1
-    bfit.fitresult = bfit.fun.Fit(h1,opts) 
-    
-    return bfit.fun,bfit,b,bfit.fitresult 
-
+        func = cpp.Gaudi.Math.MonothonicSpline ( knots , degree , increasing )
+    #
+    return _h1_param_sum_ ( h1 , func , H_Nfit , opts ) 
 
 # =============================================================================
-## represent 1D-histo as positive decreasing spline
-def _h1_dspline_ ( h1 , order = 3 , knots = 3 , opts = 'SQ0I' ) :
+## represent 1D-histo as monothonic convex/concave spline
+def _h1_cspline_ ( h1 , degree = 3   , knots = 3 ,
+                   increasing = True ,
+                   convex     = True , 
+                   opts       = 'SQ0I' ) :
     """
-    Represent histo as positive decreasing spline 
+    Represent histo as positive monothonic convex/concave spline  
     
     >>> h = ... # the historgam
-    >>> b1 = h.dSpline ( order = 3 , knots = 3  )
-    >>> b2 = h.dSpline ( order = 3 , knots = [ 0.1 , 0.2, 0.8, 0.9 ]  )
+    >>> b1 = h.cSpline ( degree = 3 , knots = 3  , increasing = True , convex = False )
+    >>> b2 = h.cSpline ( degree = 3 , knots = [ 0.1 , 0.2, 0.8, 0.9 ]  )
     
     """
     mn,mx = h1.xminmax ()
     #
     from Ostap.PyRoUts import funID
     if isinstance ( knots , ( int , long ) ) :
-        b = cpp.Gaudi.Math.MonothonicSpline ( mn , mx , knots , order , False )
+        func = cpp.Gaudi.Math.ConvexSpline ( mn , mx , knots , degree , increasing , convex  )
     else :
-        _knots = cpp.std.vector('double') ()
-        _knots.push_back ( mn ) 
-        _knots.push_back ( mx ) 
+        from LHCbMath.Types import doubles
+        _knots = doubles ( mn , mx ) 
         for k in knots : _knots.push_back( k )
-        b = cpp.Gaudi.Math.MonothonicSpline ( _knots , order , False )
-
-    bfit  = MonothonicSplineFIT( b )
-    bfit.fun.SetParameter ( 0 , h1[1]             )
-    bfit.fun.SetNpx ( max ( 100 , 3 * h1.bins() ) )  
-    
-    bfit.histo     = h1
-    bfit.fitresult = bfit.fun.Fit(h1,opts) 
-    
-    return bfit.fun,bfit,b,bfit.fitresult 
+        func   = cpp.Gaudi.Math.ConvexSpline ( _knots , order , increasing , convex )
+        
+    return _h1_param_sum_ ( h1 , func , H_Nfit , opts ) 
 
 
 for t in ( ROOT.TH1D , ROOT.TH1F ) :
     t.bernstein  = _h1_bernstein_
+    t.chebyshev  = _h1_chebyshev_
+    t.legendre   = _h1_legendre_
+    t.polynomial = _h1_polinomial_
     t.positive   = _h1_positive_
+    t.monothonic = _h1_monothonic_
+    t.convex     = _h1_convex_
     t.bSpline    = _h1_bspline_
     t.pSpline    = _h1_pspline_
-    t.iSpline    = _h1_ispline_
-    t.dSpline    = _h1_dspline_
+    t.mSpline    = _h1_mspline_
+    t.cSpline    = _h1_cspline_
 
     
 ## create function object 
@@ -353,13 +489,16 @@ def _sp_draw_   ( self , opts = '' ) :
     """
     bf = self.funobj () 
     return bf.fun.Draw( opts ) 
-
     
 cpp.Gaudi.Math.Bernstein        .funobj = _funobj0_
+cpp.Gaudi.Math.ChebyshevSum     .funobj = _funobj0_
+cpp.Gaudi.Math.LegendreSum      .funobj = _funobj0_
+cpp.Gaudi.Math.Polynomial       .funobj = _funobj0_
 cpp.Gaudi.Math.BSpline          .funobj = _funobj0_
 cpp.Gaudi.Math.Positive         .funobj = _funobjN_
 cpp.Gaudi.Math.PositiveSpline   .funobj = _funobjN_
 cpp.Gaudi.Math.MonothonicSpline .funobj = _funobjN_
+cpp.Gaudi.Math.ConvexSpline     .funobj = _funobjN_
 
 # =============================================================================
 ## helper class to wrap 1D-histogram as function 
@@ -442,7 +581,7 @@ class H2Func(object) :
 #  @date   2011-06-07
 def _h1_as_fun_ ( self , func = lambda s : s.value () ) :
     """
-    construct the function fomr the histogram 
+    construct the function from the histogram
     """
     return H1Func ( self , func )
 
@@ -812,14 +951,78 @@ def _fit_get_item_ ( self , i ) :
         return VE ( _p[i]  , _e[i]**2 )
     raise IndexError 
 
+# =============================================================================
+## Get correlation coefficient for parameters 'i' and 'j'
+def _fit_cor_ ( self , i , j ) :
+    """
+    Get correlation coefficient for parameters 'i' and 'j'
+
+    >>> r = ...
+    >>> print r.cor(1,2)
+    """
+    _p = self.Parameters ()
+    _e = self.Errors     ()
+    _l = len(_p)
+    if 0 <= i <_l and 0 <= j <_l :
+        return self.CovMatrix( i , j ) / ( _e[i] * _e[j] )
+    raise IndexError 
+
+
+# =============================================================================
+## Get correlation matrix 
+def _fit_corm_ ( self , root = False ) :
+    """
+    Get correlation matrix 
+
+    >>> r = ...
+    >>> print r.corMtrx ()
+    """
+    _p = self.Parameters ()
+    _e = self.Errors     ()
+    _l = len(_p)
+    ##
+    
+    matrix = None
+    
+    from LHCbMath.Types import Gaudi as _G 
+    _GM    = _G.Math
+    
+    if   1 == _l and hasattr ( _GM , 'SymMatrix1x1' ) : matrix = _GM.SymMatrix1x1
+    elif 2 == _l and hasattr ( _GM , 'SymMatrix2x2' ) : matrix = _GM.SymMatrix2x2
+    elif 3 == _l and hasattr ( _GM , 'SymMatrix3x3' ) : matrix = _GM.SymMatrix3x3
+    elif 4 == _l and hasattr ( _GM , 'SymMatrix4x4' ) : matrix = _GM.SymMatrix4x4
+    elif 5 == _l and hasattr ( _GM , 'SymMatrix5x5' ) : matrix = _GM.SymMatrix5x5
+    elif 6 == _l and hasattr ( _GM , 'SymMatrix6x6' ) : matrix = _GM.SymMatrix6x6
+    elif 7 == _l and hasattr ( _GM , 'SymMatrix7x7' ) : matrix = _GM.SymMatrix7x7
+    elif 8 == _l and hasattr ( _GM , 'SymMatrix8x8' ) : matrix = _GM.SymMatrix8x8
+    elif 9 == _l and hasattr ( _GM , 'SymMatrix9x9' ) : matrix = _GM.SymMatrix9x9
+    
+    ## use ROOT matrices
+    if not matrix : matrix = ROOT.TMatrix( _l , _l )
+
+    ## fill matrix 
+    for i in range ( 0 , _l ) :
+        for j in range ( 0 , _l ) :
+            _cij = self.CovMatrix( i , j ) 
+            _eij = _e[i] * _e[j]
+            matrix [ i , j ] = _cij / _eij 
+            matrix [ j , i ] = _cij / _eij 
+            
+    return matrix
+
+
 ROOT.TFitResultPtr.__repr__     = _fit_repr_ 
 ROOT.TFitResultPtr.__str__      = _fit_repr_ 
 ROOT.TFitResultPtr.__iter__     = _fit_iter_ 
 ROOT.TFitResultPtr.__getitem__  = _fit_get_item_ 
 ROOT.TFitResultPtr.__call__     = _fit_get_item_ 
 ROOT.TFitResultPtr.__len__      = lambda s : len( s.Parameters() ) 
+ROOT.TFitResultPtr.cor          = _fit_cor_ 
+ROOT.TFitResultPtr.corMtrx      = _fit_corm_ 
 
 
+
+    
 # =============================================================================
 if '__main__' == __name__ :
     

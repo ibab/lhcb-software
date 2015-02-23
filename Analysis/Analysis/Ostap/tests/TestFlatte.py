@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =========================================================================================
-# $Id:$ 
+# $Id$ 
 # =========================================================================================
 # @file  TestFlatte
 # test for Flatte shape
@@ -9,9 +9,9 @@
 # @author Vanya BELYAEV Ivan.Belyaeve@itep.ru
 # @date 2014-05-11
 # 
-#                    $Revision: 174117 $
-#  Last modification $Date: 2014-06-21 15:24:21 +0200 (Sat, 21 Jun 2014) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 Tests for various background fit models  

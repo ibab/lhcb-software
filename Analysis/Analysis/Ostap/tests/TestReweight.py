@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: TestReweight.py 173560 2014-06-09 10:03:52Z ibelyaev $ 
+# $Id$ 
 # =============================================================================
 ## @file TestReweigt.py
 #
@@ -10,9 +10,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2014-05-11
 # 
-#                    $Revision: 173560 $
-#  Last modification $Date: 2014-06-09 12:03:52 +0200 (Mon, 09 Jun 2014) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 Test for reweighting machinery

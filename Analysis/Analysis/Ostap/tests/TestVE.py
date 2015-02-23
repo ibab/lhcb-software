@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$
+# $Id$
 # =============================================================================
 ## @file
 #  Test for ROOT6 problem with copy-constructor and cast-operators 
@@ -11,9 +11,9 @@
 #  @date   2014-08-27
 #
 #  
-#                    $Revision: 176953 $
-#  Last modification $Date: 2014-08-27 21:18:32 +0200 (Wed, 27 Aug 2014) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """
 Test for ROOT6 problem with copy-constructor and cast-operators 
@@ -22,7 +22,7 @@ see https://sft.its.cern.ch/jira/browse/ROOT-6627
 
 """
 # =============================================================================
-__version__ = "$Revision: 176953 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
 # =============================================================================
