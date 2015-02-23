@@ -15,6 +15,7 @@ MEPManager.PartitionName             = @OnlineEnv.PartitionName;
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 MEPManager.Buffers                   = @OnlineEnv.DskWriter_Buffers;
 //
+WrManager.WriterServicePatt          = "LHCbFileWriter_";
 WrManager.Input                     = @OnlineEnv.DskWriter_Input;
 LHCbFileWriter_Overflow.SizeLimit                 = 1000;
 LHCbFileWriter_Overflow.PrintFreq                 = 1.0;

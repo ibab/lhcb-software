@@ -47,8 +47,8 @@ AlignDataWriter_RICH.MaxEvents       = 1000;
 AlignDataWriter_VeLoMuons.SizeLimit                 = 1000;
 AlignDataWriter_VeLoMuons.PrintFreq                 = 1.0;
 AlignDataWriter_VeLoMuons.Requirements         = {
-"EvType=1;TriggerMask=0xffffffff,0x0,0x400,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
-"EvType=2;TriggerMask=0xffffffff,0x0,0x400,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+"EvType=1;TriggerMask=0xffffffff,0x0,0x4008,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
+"EvType=2;TriggerMask=0xffffffff,0x0,0x4008,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
 AlignDataWriter_VeLoMuons.MEPFilePrefix         = "/localdisk/Alignment/VeLo/Run_";
 AlignDataWriter_VeLoMuons.EvtFilePrefix         = "/localdisk/Alignment/VeLo/Run_";
