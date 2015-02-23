@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HCDAQ
 ################################################################################
-gaudi_subdir(HCDAQ v1r1)
+gaudi_subdir(HCDAQ v1r2)
 
 gaudi_depends_on_subdirs(DAQ/DAQUtils
 			 DAQ/DAQKernel	
