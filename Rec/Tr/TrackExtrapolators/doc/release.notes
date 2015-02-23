@@ -3,6 +3,8 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
+
+!========================= TrackExtrapolators v2r36 2015-02-23 ========================
 ! 2015-02-22 - Manuel Tobias Schiller
  - TrackRungeKuttaExtrapolator: replace std::pow(x, 0.25) by
    std::sqrt(std::sqrt(x)) because it's faster, tidy up in a few places; this
@@ -11,7 +13,7 @@
 ! 2015-02-05 - Gerhard Raven
  - Extrapolators: make static magic numbers 'const'
 
-!========================= TrackExtrapolators v2r35 2015-01-14 =========================
+!========================= TrackExtrapolators v2r35 2015-01-14 ========================
 ! 2014-12-19 - Gerhard Raven
  - TrackRungeKuttaExtrapolator use boost::optional (instead of new/delete)
    to keep the (optional) jacobian on the stack instead of the heap; eliminate
