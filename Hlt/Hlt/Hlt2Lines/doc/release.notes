@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-02-23 - Mika Vesterinen
+ - Add TrackEff module
+
 ! 2015-02-11 - Roel Aaij
  - Include TisTos in new template.
  - Cuts specified as kwargs for Hlt2Combiner.
