@@ -5,12 +5,201 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-! 2015-02-09 - Chris Jones
- - Add new package Kernel/VectorClass that contains a build of the 
-   vectorisation library.
-       http://www.agner.org/optimize/#vectorclass
-   A temporary inclusion, awaiting inclusion of this library in the LCG area.
-   Added as v1r16, as this is the version of the library upstream.
+</PRE><H1><A NAME=v38r5>2015-02-24 LHCbSys v38r5</A></H1><PRE>
+This version uses Gaudi v26r1 and LCG_74root6 with ROOT 6.02.05.
+
+- Packages added:    Kernel/VectorClass v1r16 - agner.org vectorisation libary
+                     (temporary, waiting for LCG distribution)
+- Packages modified: DAQ/DAQSys v8r6, Det/DDDB v1r74, Det/DetDesc v18r36,
+    Det/FTDet v2r9, Det/Magnet v7r9, Det/OTDet v8r15, Det/RichDet v17r2,
+    Event/EventPacker v4r7, Event/FTEvent v1r7, Event/MCEvent v3r2,
+    GaudiConf v19r7, GaudiObjDesc v11r21, HC/HCDAQ v1r2, Hlt/HltServices v2r7,
+    Kernel/HltInterfaces v6r0, Kernel/LHCbKernel v15r8, Kernel/LHCbMath v3r54,
+    Kernel/XMLSummaryKernel v1r12p1, L0/L0Muon v9r14, OT/OTDAQ v7r19,
+    Phys/LoKiCore v11r22, Phys/LoKiGen v10r20, Phys/LoKiHlt v3r19,
+    Phys/LoKiMC v10r16, Phys/LoKiNumbers v10r8, Rich/RichKernel v7r58,
+    ST/STDAQ v4r6
+
+- In DAQ/DAQSys v8r6
+  . Updated TrackReports Decoder locations.
+
+- In Det/DDDB v1r74
+  . Update default database tags to the latest ones:
+    o DDDB,     2015                        : dddb-20150119-3
+    o DDDB,                 2012            : dddb-20150119-2
+    o DDDB,                       2011      : dddb-20150119-1
+    o DDDB,                             2010: dddb-20150119
+    o LHCBCOND, 2015                        : cond-20150119-1
+    o LHCBCOND,       2013, 2012, 2011, 2010: cond-20150119
+
+- In Det/DetDesc v18r36
+  . SolidTicks: get rid of dynamic memory allocation in RemoveAdjacent
+                (this will speed up offline track fit by 3.4%)
+  . LVolume, VolumeIntersectionIntervals: reserve space in
+    std:vector<Interval> and std::vector<size_t> ("IndexCont"), and move
+    allocations out of loops
+    (these two changes gain about 0.9% of time in offline track fit)
+  . SolidMath: rewrite quadratic equation solver for better numerical
+    stability; also regroup/refactor some calculations to save a FLOP or
+    two (little impact in time, no change in results)
+  . go some way towards pushing StaticArray into the C++11 age
+  . New vectorised implementation of MagneticFieldGrid based on the
+    VectorClass package.
+  . Add new a new data member to MagneticFieldGrid to cache the inverse of
+    the step sizes. Allows the replacement of all divisions by multiplications
+    (and the removal of one) leading to for instance around an 8% speed 
+    improvement in the fieldVector method.
+
+- In Det/FTDet v2r9
+  . Fix bug affecting the way the fractional position is used in the light
+    sharing for tracks crossing the inter SIpms gaps (at least when this single
+    gap size is not an integer multiple of the sipm cell size) : slight increase
+    in track reconstruction efficiency after the correction
+
+- In Det/Magnet v7r9
+  . Adapt to new vectorised version of MagneticFieldGrid.
+  . Fill the new MagneticFieldGrid data member, that caches the inverse of
+    the step sizes.
+  . Add options to load compensator and LSS magnets.
+
+- In Det/OTDet v8r15
+  . RtRelation: reimplement using ChebyshevApprox class to get rid of the large
+    lookup tables, the order of ChebyshevApprox is chosen to be of similar
+    quality as the fast approximation in WalkRelation (equivalent to about a
+    quarter of an OTIS time bin), and the approximation errors of r(t) and
+    sigma_r(t) are now of a similar order of magnitude (before, the error made
+    in sigma_r(t) was an order of magnitude larger than the one on r(t))
+    Also, it uses float internally, as the OTIS does not have the resolution to
+    require double precision...
+  . DeOTModule: add protection code which monitors accuracy of approximations
+    in WalkRelation and RtRelation when they are set/changed; warning
+    thresholds are set to the equivalent of half an OTIS time bin (6.5-7.8% of
+    OT resolution), and error messages are printed if the accuracy is worse
+    than twice that.
+  . WalkRelation: use new ChebyshevApprox class from LHCbMath; this should be
+    40% faster than the previous code, and is accurate to better than half an
+    OTIS bin (i.e. better than about 0.2 ns), more than accurate enough not to
+    cause trouble in code using this fast version (this corresponds to about 6
+    to 8 % of the OT resolution)
+  . Added condition for global t0 of OT
+
+- In Det/RichDet v17r2
+  . Use long int instead of just int in DeRichHPDPanel::findHPDColAndPos to 
+    avoid FPE's when truncating very large doubles to integer values.
+  . Various speed improvements to DeRichHPDPanel (such as removing completely
+    an unneccessary virtual function call and dynamic_cast, when getting the
+    DeRichHPD object for a given HPD number...).
+
+- In Event/EventPacker v4r7
+  . Add support for BCM and BLS hits.
+
+- In Event/FTEvent v1r7
+  . Removed 'FTRawCluster', which was not used any more since almost a year
+    (replaced by FTLiteCluster)
+
+- In Event/MCEvent v3r2
+  . Add BCM and BLS hit locations.
+
+- In GaudiConf v19r7
+  . Add BCM, BLS and HC (Herschel) to SimConf.py.
+  . Removed a few .qmt files because they were referring to files that have been
+    removed by Rob on 2014-01-20.
+
+- In GaudiObjDesc v11r20p1, v11r21
+  . Do not call QMTest tests from CMake builds, because all the tests are already
+    described in the CMakeLists.txt.
+
+- In HC/HCDAQ v1r2
+  . Protect against inserting digits with existing cell IDs.
+  . Add PS/SPD bank decoding.
+
+- In Hlt/HltServices v2r7
+  . Switch default config access service to CDB.
+  . ConfigArchiveAccessSvc (i.e. ConfigTarFileAccessSvc & ConfigZipFileAcessSvc): 
+    use old-style format, i.e. use 'str()' directly instead of operator<<
+  . Fix query for IP address (lower 16 bits are stored in HltDecReport to
+    determine which machine was used)
+  . In cmt/requirements, add a dependency to avoid compiling the
+    hlttck_cdb_listkeys .cpp files twice in separate threads, that can interfere
+    with each other
+
+- In Kernel/HltInterfaces v6r0
+  . switch print() to json format, but allow ConfigArchiveAccessSvc access to
+    old style format using str()
+
+- In Kernel/LHCbKernel v15r8
+  . CircleTraj: speed up the muEstimate method by factor of 3
+  . Fix some RICH dictionary warnings.
+  . Fix typo: change LHCb::LHCbID::channelIDype -> LHCb::LHCbID::channelIDtype
+  . Replace usage of boost with C++11 constructs. 
+  . Replace some loops by STL algorithms.
+  . Use C++11 to simplify a few things.
+  . Fix violation of 'one definition rule' in CaloCellCode
+  . MemPoolAlloc: provide pre-C++11 version of commit in v15r7
+
+- In Kernel/LHCbMath v3r54
+  . Extend a bit VE-math 
+  . Improve printout for WStatEntity 
+  . Make flatte amplitude simpler 
+  . Add LHCbMath/PolyEval.h, as a substitute for various hand-written or
+    library supplied routines (like GSL's poly-eval); the main feature of this
+    implementation is a focus on writing C++ code that will map nicely onto
+    CPUs with FMA support and unrolling the loop, so the loop counter needs
+    checking only every eight coefficients
+  . MatrixUtils.h: add Gaudi::Math:inverse   
+  . Improve splines, add convex spline
+  . Move bernstein polynomials into separate file.
+  . Add monithonic and convex polynomials  
+  . Add class to calculate fixed order Chebyshev approximations to given
+    functions; this class is meant for fast approximations of complicated
+    fuctions (prime example is the walk correction in the OT)
+  . Ensure that _mm256_zeroupper() is invoked at the boundaries of AVX
+    and non-AVX code -- see the discussion in section 12.1 of 
+    http://www.agner.org/optimize/optimizing_cpp.pdf
+  . Add VectorClassTypes.h
+  . Add a new test TestXYZTypes
+  . Add a new header LHCbMath/EigenTypes.h that contains so wrapper classes
+    that make it easier to convert between Gaudi XYZ points and vectors
+    and representations based on the Eigen library of vectorised objects.
+  . Add a new test application, TestEigenGeometry, to help with testing
+    the Eigen package.
+  . Add headers for Eigen v3.2.4 library. This is a TEMPORARY measure, awaiting
+    correct deployment of Eigen within the LCG Externals area
+
+- In Kernel/XMLSummaryKernel v1r12p1
+  . Update tests to use an input file from PRCONFIG (on eos) instead of a private
+    castor file
+
+- In L0/L0Muon v9r14
+  . Remove unnecessary test on the presence of the RawEvent at a fix location
+    which was preventing to run the emulator on dst
+
+- In OT/OTDAQ v7r19
+  . OTRawBankDecoder: use the vetoing of out-of-time hit pairs by default
+
+- In Phys/LoKiCore v11r22, Phys/LoKiGen v10r20, Phys/LoKiHlt v3r19,
+     Phys/LoKiMC v10r16, Phys/LoKiNumbers v10r8
+  . Steps towards autogeneration of C++ code 
+
+- In Phys/LoKiCore v11r22
+  . Instrument some destructors 
+  . Restore scalers and listener 
+
+- In Rich/RichKernel v7r58
+  . Update RichHypoData to use std::array instead of boost::array.
+  . Fix a bug in RichHypoData::resetData( const TYPE & value ) that was 
+    incorrectly setting the valid flag to true instead of false.
+  . Update the default tool mappings in the tool registry to use new 
+    implementations of the mirror finder and ray tracing.
+  . Add RichKernel/FastRoots.h that contains various methods for the fast
+    calculation of square and cube roots.
+  . Various small CPU optimisations.
+  . Make the default 'SignalDetEffType' and 'CkResType' tools types in
+    Configuration.py for the HLT the same as for Offline.
+
+- In ST/STDAQ v4r6 
+  . Extend list of known raw event locations in the decoders to include 
+    LHCb::RawEventLocation::Tracker.
 
 </PRE><H1><A NAME=v38r4>2015-01-15 LHCbSys v38r4</A></H1><PRE>
 This version uses Gaudi v26r0 and LCG_72root6 with ROOT 6.02.03.
