@@ -4,7 +4,7 @@
 ! Purpose     : Dalitz tools
 !-----------------------------------------------------------------------------
 
-! 2014-04-02 - O. Deschamps
+! 2015-02-24 - O. Deschamps
  - fix problem with Dalitz variable naming when daughter vector has not a constant order (stable::sort by PID)
 
 !========================= DecayTreeTupleDalitz v1r1p1 2014-04-02 =========================

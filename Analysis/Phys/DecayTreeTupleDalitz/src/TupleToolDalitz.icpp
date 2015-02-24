@@ -19,12 +19,12 @@ template<class TYPE> StatusCode fill( const std::vector<const TYPE*>& dauts     
   
   // sort out daughters vector
   std::vector<const TYPE*> daughters(dauts); // local copies to sort
-  std::stable_sort(daughters.begin(), daughters.end(), [](const TYPE* c1, const TYPE* c2){
-      return ( std::tie(c1->particleID().pid(),c1->key()) > std::tie(c2->particleID().pid(),c2-key()) ); 
+  std::stable_sort(daughters.begin(), daughters.end(), [revert](const TYPE* c1, const TYPE* c2){
+      bool comp=std::make_pair(c1->particleID().pid(),c1->key()) > std::make_pair(c2->particleID().pid(),c2->key());
+      return (revert) ? !comp : comp;
     });
-  if(revert)std::reverse(daughters.begin(),daughters.end())
-  
-
+              
+              
   for ( typename std::vector<const TYPE*>::const_iterator i = daughters.begin();i != daughters.end(); ++i )  {
     const std::string n1 = particleName( (*i)->particleID(), revert );
     const Gaudi::LorentzVector& p1 = (*i)->momentum() ;
@@ -48,7 +48,6 @@ template<class TYPE> StatusCode fill( const std::vector<const TYPE*>& dauts     
       test &= tuple->column( name, p .M2() );
     }
   }
-
   return StatusCode(test);
 }
 
