@@ -1,9 +1,11 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/NeuroBayesTools
-! Responsible : Ulrich Kerzel
+! Responsible : Chris Jones
 ! Purpose     : Collection of Tools for identifying various decays using
 !               the NeuroBayes neural network package
 !-----------------------------------------------------------------------------
+
+!===================== NeuroBayesTools v1r3 2015-02-24 =======================
 
 ! 2015-01-19 - Eduardo Rodrigues
  - Added python/NeuroBayesTools/__init__.py to please CMake.
