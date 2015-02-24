@@ -58,7 +58,6 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                             BFilter, ZFilter, DetachedDiMuonFilter,
                             DetachedDiMuonHeavyFilter, DetachedJpsiFilter,
                             DetachedPsi2SFilter)
-        from HltTracking.HltPVs import PV3D
         stages = {'DiMuon'        : [DiMuonFilter('DiMuon')],
                   'JPsi'          : [JpsiFilter('JPsi')],
                   'JPsiHighPT'    : [JpsiFilter('JPsiHighPT')],
@@ -72,7 +71,7 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                   'DetachedPsi2S' : [DetachedPsi2SFilter('DetachedPsi2S')]}
 
         from HltLine.HltLine import Hlt2Line
-        for (nickname, stages) in self.stages(stages).iteritems():
+        for (nickname, algos) in self.algorithms(stages).iteritems():
             linename = 'DiMuon' + nickname if nickname != 'DiMuon' else nickname
             Hlt2Line(linename, prescale = self.prescale,
-                     algos = stages, postscale = self.postscale)
+                     algos = algos, postscale = self.postscale)

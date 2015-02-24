@@ -3,7 +3,7 @@ class Hlt2LinesConfigurableUser(HltLinesConfigurableUser):
     __slots__ = {'Prescale'  : {},
                  'Postscale' : {}}
             
-    def stages(self, stages):
+    def algorithms(self, stages):
         from copy import deepcopy
         algos = []
         # Get a local instance of the cuts

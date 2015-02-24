@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-02-24 - Roel Aaij
+ - Change specsOrKeys to tistos, change Hlt2LinesConfigurableUser.stages
+   to algorithms.
+
 ! 2015-02-23 - Mika Vesterinen
  - Add TrackEff module
 

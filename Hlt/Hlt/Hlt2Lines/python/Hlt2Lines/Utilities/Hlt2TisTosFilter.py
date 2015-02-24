@@ -81,8 +81,8 @@ class Hlt2TisTosGlobalTagger(Hlt2Stage):
         return self.__stage
 
 class Hlt2TisTosParticleTagger(Hlt2Stage):
-    def __init__(self, prefix, name, specsOrKeys, inputs = [], **kwargs):
-        specsOrKeys = makeList(specsOrKeys)
+    def __init__(self, prefix, name, tistos, inputs = [], **kwargs):
+        specsOrKeys = makeList(tistos)
         self.__specs = set()
         self.__keys = set()
         re_spec = re.compile('.*%T[OUI]S$')
@@ -103,8 +103,8 @@ class Hlt2TisTosParticleTagger(Hlt2Stage):
         args = deepcopy(self.__kwargs)
         args['name'] = name
         for arg, default in (('prefix', self._prefix()),
-                             ('specsOrKeys', self.__code),
-                             ('inputs', self.__specsOrKeys)):
+                             ('tistos', self.__code),
+                             ('inputs', self._inputs())):
             args[arg] = kwargs.pop(arg) if arg in kwargs else default
         args.update(kwargs)
 

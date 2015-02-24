@@ -44,7 +44,7 @@ class LambdaC2KPPiCombiner(Hlt2Combiner):
         Hlt2Combiner.__init__(self, linePrefix, 'KPPi', "[Lambda_c+ -> K- p+ pi+]cc", inputs,
                               dependencies = [TrackGEC(linePrefix + 'TrackGEC'), PV3D('Hlt2')],
                               tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
-                              MotherCut = mc)
+                              MotherCut = mc, Preambulo = [])
 
 # Combiners
 from Inputs import Hlt2LoosePions, Hlt2LooseKaons, Hlt2LooseProtons
