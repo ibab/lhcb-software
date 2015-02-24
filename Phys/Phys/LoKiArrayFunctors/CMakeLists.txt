@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LoKiArrayFunctors
 ################################################################################
-gaudi_subdir(LoKiArrayFunctors v10r6)
+gaudi_subdir(LoKiArrayFunctors v10r7)
 
 gaudi_depends_on_subdirs(Phys/LoKiPhys
                          Phys/LoKiProtoParticles)
