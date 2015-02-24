@@ -233,34 +233,6 @@ else :
     print  "\tBeta':       delta= %s " % result( m_betaprime. delta     .GetName()  )[0]   
 
 
-
-# =============================================================================
-logger.info("Test  SinhAsinh-Distribution")
-# =============================================================================
-m_shash = Models.SinhAsinh_pdf( 'SASH' , x  )
-
-m_shash.mu      .setVal (  0.79 )
-m_shash.sigma   .setVal (  0.88 ) 
-m_shash.epsilon .setVal ( -0.76 ) 
-m_shash.delta   .setVal (  0.92 ) 
-
-with rooSilent() : 
-    result,f  = m_shash.fitTo ( dataset2 )  
-    result,f  = m_shash.fitTo ( dataset2 )  
-    m_shash.delta.release()
-    result,f  = m_shash.fitTo ( dataset2 )  
-    m_shash.epsilon.release()
-    result,f  = m_shash.fitTo ( dataset2 )  
-        
-if 0 != result.status() or 3 != result.covQual() :
-    logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
-    print result
-else :
-    print  "\tSinhAsinh:   mu   = %s " % result( m_shash. mu        .GetName()  )[0]   
-    print  "\tSinhAsinh:   sigma= %s " % result( m_shash. sigma     .GetName()  )[0]   
-    print  "\tSinhAsinh:   eps  = %s " % result( m_shash. epsilon   .GetName()  )[0]   
-    print  "\tSinhAsinh:   delta= %s " % result( m_shash. delta     .GetName()  )[0]   
-
 # =============================================================================
 logger.info("Test  Argus-Distribution")
 # =============================================================================

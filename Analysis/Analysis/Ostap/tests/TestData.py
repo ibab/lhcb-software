@@ -38,21 +38,27 @@ else :
 logger.info('Test  Data')
 # =============================================================================
 # data patterns: 
-ganga    = '/afs/cern.ch/work/i/ibelyaev/public/GANGA/workspace/ibelyaev/LocalXML'
+ganga = '/afs/cern.ch/work/i/ibelyaev/public/GANGA/workspace/ibelyaev/LocalXML'
 patterns = [
-    ganga +  '/90/*/output/Bc.root' ,  ## 2011-Mag-Down
-    ganga +  '/91/*/output/Bc.root' ,  ## 2011-Mag-Up 
+    ganga + '/358/*/output/CY.root' , ## 2k+11,down
+    ganga + '/359/*/output/CY.root' , ## 2k+11,up
+    ganga + '/356/*/output/CY.root' , ## 2k+12,down
+    ganga + '/357/*/output/CY.root' , ## 2k+12,up
     ]
 
-data1 = Data ( 'Bc/Bc' , patterns )
-logger.info  ( 'DATA       %s' % data1       )
+data1 = Data ( 'YD0/CY'   , patterns )
+logger.info  ( 'DATA %s' % data1       )
 
 # =============================================================================
 logger.info('Test  Data&Lumi')
 # =============================================================================
 
-data2 = DataAndLumi ( 'Bc/Bc' , patterns    )
-logger.info ( 'DATA       %s' % data2       )
+data7 = DataAndLumi ( 'Y/Y' , patterns[ :2])
+data8 = DataAndLumi ( 'Y/Y' , patterns[2:])
+logger.info ( 'DATA@7TeV %s' % data7    )
+logger.info ( 'DATA@8TeV %s' % data8    )
+
+logger.info ( 'TChain  %s' % data7.chain )
 
 # =============================================================================
 # The END 

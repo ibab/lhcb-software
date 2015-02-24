@@ -71,16 +71,19 @@ flatte2 = Models.Flatte2_pdf ( 'Flatte' , fl_ ,
                                m0g1   = m_X * g_X * f1  ,
                                g2og1  = f2/f1           )
 
-
+if not ROOT.gROOT.IsBatch() :
+    from Ostap.Canvas import getCanvas
+    c = getCanvas()
 
 br  = breit  .draw () # nbins = 500 )
 fl  = flatte .draw () # nbins = 500 )
 
 ##fl2 = flatte2.draw ( nbins = 1000 )
 
-br .Draw()
-fl .Draw('same')
-
+if not ROOT.gROOT.IsBatch() : 
+    br .Draw()
+    fl .Draw('same')
+    
 ## fl2.Draw('same')
 
 

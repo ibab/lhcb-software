@@ -115,6 +115,8 @@ def getLumi ( data , *args ) :
             return VE()
         
     if isinstance ( data , ROOT.TTree ) :
+
+        ## print data
         
         try:
             #

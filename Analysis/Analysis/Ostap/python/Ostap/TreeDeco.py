@@ -225,6 +225,7 @@ def _rt_leaves_ ( t ) :
     
     """
     _lst =  t.GetListOfLeaves()
+    if not _lst : return tuple() 
     _lst = [ l.GetName() for l in _lst ] 
     _lst.sort()
     return tuple( _lst ) 
@@ -253,6 +254,7 @@ def _rt_branches_ ( t ) :
     
     """
     _lst =  t.GetListOfBranches()
+    if not _lst : return tuple() 
     _lst = [ l.GetName() for l in _lst ] 
     _lst.sort()
     return tuple( _lst ) 
@@ -278,20 +280,23 @@ def _rt_print_ ( t ) :
     >>> tree = ...
     >>> print tree
     """
-    res = "Name: %s " % t.GetName() 
-    if hasattr ( t , 'GetNtrees' ) :
-        res += " Chain/#%d " % t.GetNtrees()
+    ##
+    res = "Name: %s Enries/#%d" %  ( t.GetName() , t.GetEntries() ) 
+    if hasattr ( t , 'GetNtrees' ) : res += " Chain/#%d " %       t.GetNtrees()
+    ##
     _b          = t.branches()
-    res     += "\nBranches: %s" % list(_b)
+    _b.sort () 
+    res        +=        "\nBranches: %s" % list(_b)
     _l          = t.leaves()
-    if _l != _l : res += "\nLeaves: %s" % list(_s)
+    _l.sort () 
+    if _l != _b : res += "\nLeaves: %s"   % list(_l)
     return res
 
 ROOT.TTree.__repr__ = _rt_print_
 ROOT.TTree.__str__  = _rt_print_
 
 # =============================================================================
-## get lst of files used for th egiven chain
+## get lst of files used for the given chain
 #  @code
 #
 #  >>> chain = ... ## get the files 

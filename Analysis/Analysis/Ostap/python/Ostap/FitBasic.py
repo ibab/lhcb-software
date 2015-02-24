@@ -447,8 +447,9 @@ class PDF (object) :
             frame.SetXTitle('')
             frame.SetYTitle('')
             frame.SetZTitle('')
-            
-            frame.Draw()
+
+            if not ROOT.gROOT.IsBatch() : 
+                frame.Draw()
             
             return frame 
         
@@ -762,8 +763,9 @@ class PDF2 (object) :
         if dataset : dataset.fillHistogram( hdata , _lst ) 
         self.pdf.fillHistogram  ( hpdf , _lst )
         
-        hdata.lego ()
-        hpdf .Draw ( 'same surf')
+        if not ROOT.gROOT.IsBatch() : 
+            hdata.lego ()
+            hpdf .Draw ( 'same surf')
         
         return hpdf , hdata 
     
@@ -809,8 +811,9 @@ class PDF2 (object) :
             frame.SetXTitle ( '' )
             frame.SetYTitle ( '' )
             frame.SetZTitle ( '' )
-            
-            frame.Draw()
+
+            if not ROOT.gROOT.IsBatch() : 
+                frame.Draw()
             
             return frame
 
@@ -1490,8 +1493,9 @@ class Fit2D (object) :
                 if dataset : dataset.fillHistogram( hdata , _lst ) 
                 self.pdf.fillHistogram  ( hpdf , _lst )
 
-                hdata.lego ()
-                hpdf .Draw ( 'same surf')
+                if not ROOT.gROOT.IsBatch() : 
+                    hdata.lego ()
+                    hpdf .Draw ( 'same surf')
                 
                 return hpdf , hdata 
             
@@ -1544,8 +1548,9 @@ class Fit2D (object) :
             frame.SetXTitle ( '' )
             frame.SetYTitle ( '' )
             frame.SetZTitle ( '' )
-            
-            frame.Draw()
+
+            if not ROOT.gROOT.IsBatch() : 
+                frame.Draw()
             
             return frame
 

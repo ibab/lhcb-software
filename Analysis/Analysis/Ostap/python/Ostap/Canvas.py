@@ -74,7 +74,7 @@ _canvases = {}
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2014-10-19
 def getCanvas ( name   = 'glCanvas' ,   ## canvas name 
-                title  = 'Ostap'    ,   ## cnavas title
+                title  = 'Ostap'    ,   ## canvas title
                 width  = 1000       ,   ## canvas width
                 height = 800        ) : ## canvas height 
     """
