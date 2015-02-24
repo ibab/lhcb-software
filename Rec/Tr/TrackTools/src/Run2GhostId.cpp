@@ -161,9 +161,9 @@ StatusCode Run2GhostId::countHits() {
   //if (vpCont) m_veloHits = vpCont->size();
   //if (utCont) m_utHits = utCont->size();
   //const bool run2 = false;
-  const LHCb::VeloLiteCluster::VeloLiteClusters* veloCont = NULL;
-  const LHCb::STClusters* ttCont = NULL;
-  const LHCb::STClusters* itCont = NULL;
+  //const LHCb::VeloLiteCluster::VeloLiteClusters* veloCont = NULL;
+  //const LHCb::STClusters* ttCont = NULL;
+  //const LHCb::STClusters* itCont = NULL;
   //typedef FastClusterContainer<LHCb::FTRawCluster,int> FTRawClusters;
   //FTRawClusters* ftCont = NULL;
   //if (!run2) {
@@ -174,9 +174,9 @@ StatusCode Run2GhostId::countHits() {
   //    ftCont = getIfExists<FTRawClusters>( LHCb::FTRawClusterLocation::Default );
   //  }
   //} else {
-  veloCont = getIfExists<LHCb::VeloLiteCluster::VeloLiteClusters>(LHCb::VeloLiteClusterLocation::Default);
-  ttCont = getIfExists<LHCb::STClusters>(LHCb::STClusterLocation::TTClusters);
-  itCont = getIfExists<LHCb::STClusters>(LHCb::STClusterLocation::ITClusters);
+  auto veloCont = getIfExists<LHCb::VeloLiteCluster::VeloLiteClusters>(LHCb::VeloLiteClusterLocation::Default);
+  auto ttCont = getIfExists<LHCb::STLiteCluster::STLiteClusters>(LHCb::STLiteClusterLocation::TTClusters);
+  auto itCont = getIfExists<LHCb::STLiteCluster::STLiteClusters>(LHCb::STLiteClusterLocation::ITClusters);
   //}
   if (veloCont) m_veloHits = veloCont->size();
   if (ttCont) m_ttHits = ttCont->size();;
