@@ -96,9 +96,7 @@ ComplementForwardToolOptions = { "AddTTClusterName" : "PatAddTTCoord"
                                  ,"SecondLoop" : False} # to be decided
 
 OnlineSeedingToolOptions = { "NDblOTHitsInXSearch" : 2,
-                             # This is synchronized with forward and matching
-                             #"UseForward" : True , # Flag hits from Forward tracks
-                             }
+                             "MinMomentum" : 1000.}
 
 DownstreamOptions = { "MinMomentum": 0.,
                       "MinPt": 0.}

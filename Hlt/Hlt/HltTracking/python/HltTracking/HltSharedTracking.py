@@ -210,7 +210,6 @@ def ConfiguredPatSeeding(name
     # New tool
     if VetoTrackLocations != None:
         from Configurables import TrackUsedLHCbID
-        #recoSeeding.PatSeedingTool.UseForward        = True
         recoSeeding.PatSeedingTool.UsedLHCbIDToolName = "TrackUsedLHCbID"
         recoSeeding.PatSeedingTool.addTool( TrackUsedLHCbID, name="TrackUsedLHCbID" )
         recoSeeding.PatSeedingTool.TrackUsedLHCbID.inputContainers = VetoTrackLocations
@@ -218,7 +217,7 @@ def ConfiguredPatSeeding(name
     from Configurables import HltRecoConf
     from HltRecoConf import OnlineSeedingToolOptions
     recoSeeding.PatSeedingTool.NDblOTHitsInXSearch = OnlineSeedingToolOptions ["NDblOTHitsInXSearch"]
-    recoSeeding.PatSeedingTool.MinMomentum = HltRecoConf().getProp("Forward_LPT_MinP")
+    recoSeeding.PatSeedingTool.MinMomentum = OnlineSeedingToolOptions["MinMomentum"]
     from Configurables import HltRecoConf
     from HltTracking.HltRecoConf import CommonForwardOptions
     recoSeeding.PatSeedingTool.MaxOTHits = HltRecoConf().getProp("Forward_MaxOTHits")

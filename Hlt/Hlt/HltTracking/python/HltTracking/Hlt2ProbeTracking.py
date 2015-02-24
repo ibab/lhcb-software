@@ -354,8 +354,7 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
         #### Seeding on all hist
         DownSeeding = PatSeeding('DownSeeding', OutputTracksName = FullseedTrackOutputLocation)
         DownSeeding.addTool(PatSeedingTool, name="PatSeedingTool")
-
-        DownSeeding.PatSeedingTool.UseForward        = False
+        
         DownSeeding.PatSeedingTool.NDblOTHitsInXSearch = 2
         DownSeeding.PatSeedingTool.MinMomentum = 1500 
     

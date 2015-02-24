@@ -4,6 +4,11 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-02-24 - Sascha Stahl
+ - Changed Hlt2ProbeTracking to be inline with new PatSeeding options (UseForward removed).
+ - PatSeeding now picks up its own minimal momentum from HltRecoConf. 
+   Currently set to 1 GeV.
+
 ! 2015-02-19 - Sascha Stahl
  - Remove DecodeTrack from RevivedVelo in case we want to Rerun the Hlt1Tracking in Hlt2.
  	 Otherwise the PV unit does not run.
