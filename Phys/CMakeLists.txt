@@ -6,5 +6,5 @@ find_package(GaudiProject)
 #---------------------------------------------------------------
 
 # Declare project name and version
-gaudi_project(Phys v19r4p1
-              USE Rec v17r4)
+gaudi_project(Phys v19r5
+              USE Rec v17r5)
