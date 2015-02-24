@@ -3,7 +3,7 @@
 ! package manager : Marco Clemencic
 ! =====================================================================
 
-!========================= DetDesc v18r38 2015-02-24 =========================
+!========================= DetDesc v18r36 2015-02-24 =========================
 ! 2015-02-23 - Manuel Tobias Schiller
  - SolidTicks: (hopefully) fix a gcc 4.9 warning about comparison of signed
    and unsigned integer types
