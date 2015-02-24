@@ -5,6 +5,262 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v17r5>2015-02-25 RecSys v17r5</A></H1><PRE>
+This version uses Gaudi v26r1, LHCb v38r5 and Lbcom v16r4 (and ROOT 6.02.05)
+
+- Packages modified: Calo/CaloReco v5r23, Muon/MuonID v9r13, 
+    Pr/PrAlgorithms v1r16, Pr/PrKernel v1r8, Pr/PrMCTools v2r7, Rec/LumiAlgs v9r7,
+    Rec/RecConf v2r20, Rich/RichGlobalPID v3r23, Rich/RichRecBase v4r19,
+    Rich/RichRecMonitors v2r35, Rich/RichRecPhotonTools v1r16, 
+    Rich/RichRecSys v5r5, Rich/RichRecTools v4r27, Rich/RichRecTrackTools v1r39,
+    Tf/PatAlgorithms v4r39, Tf/PatVeloTT v4r5, Tf/TfKernel v2r30,
+    Tf/TrackSys v9r5, Tr/TrackExtrapolators v2r36, Tr/TrackFitter v5r3, 
+    Tr/TrackInterfaces v4r28, Tr/TrackKernel v2r2, Tr/TrackMCTools v3r11p1,
+    Tr/TrackMonitors v2r5, Tr/TrackProjectors v3r2, Tr/TrackTools v5r7,
+    Tr/TrackUtils v1r58
+
+- In Calo/CaloReco v5r23
+  . Reconstruction.py: Corrected a typo (too few arguments to format a string)
+  . CaloCorrectionBase : add boolean method to flag condition update
+                         (hasConditionChanged())
+  . ClusterCovarianceMatrixTool : update parameters via BeginEvent incident only
+                                  when condition changed
+
+- In Muon/MuonID v9r13
+  . Speed up MuonIDAlg by a factor of 1.8 by only computing the FOI once per
+    station/region/candidate momentum, and factorizing out the hit (i.e. 'dx' 
+    and 'dy') dependence
+
+- In Pr/PrAlgorithms v1r16
+  . Add triangle fix in forward tracking.
+  . PrSeedingXLayers:
+    o Triangle Fixing implemented
+    o Some hardcoded parameters put as properties
+
+- In Pr/PrKernel v1r8
+  . Add modified version of IPrCounter for efficiency studies.
+
+- In Pr/PrMCTools v2r7
+  . PrTrackAssociator: Changed output level in case the root of containers does
+    not exist from ERROR to DEBUG. This reduces the output when running in Moore
+    when locations not necessarily exist in each event. In the default Brunel
+    configuration the default root always exists.
+  . PrChecker2:
+    o Modifications to be faster
+    o Added TrackSelector and variable m_upgrade to change between hitLocation
+      Pat/LHCbID or Pr/LHCbID for upgrade (default true).
+    o Added global option to choose track extrapolation (default false).
+  . Fixed fromB/fromD and isNotDown selection, added configurable track container
+    for PrCounter2 and PrTTCounter, added global selection cuts: eta25cut,
+    triggerNumbers, vetoElectrons.
+
+- In Rec/LumiAlgs v9r7
+  . Updated test references to follow:
+    o New counter in HltFactory
+    o ConfigCDBAccessSvc replaces ConfigTarFileAccessSvc
+  . Added workaround for GAUDI-1007.
+
+- In Rec/RecConf v2r20
+  . Added 'pGun' to KnownSpecialData, replace normal vertex finder with
+    PGPrimaryVertex when pGun is in SpecialData
+
+- In Rich/RichGlobalPID v3r23
+  . Add (yet another) new implementation of the log(exp(x)-1) function based on
+    a fast linear interpolator.
+  . Various other speed optimisations (avoid virtual calls etc.).
+
+- In Rich/RichRecBase v4r19
+  . Add a new method to IRichPhotonSignal to allow a client to request the
+    pre-filling of all photon pixel signal information. Used to then avoid a
+    virtual function call deep inside the Global PID likelihood minimisation.
+  . Add protection to RichRecPhoton::expPixelSignalPhots if call with a 
+    Below Threshold hypothesis.
+
+- In Rich/RichRecMonitors v2r35
+  . Add a new histogram to RichCherenkovAngleMonitor.
+
+- In Rich/RichRecPhotonTools v1r16
+  . Revert back to std::sqrt(x) instead of vdt::fast_isqrt(x) as its actually 
+    faster ...
+  . Turn off photon reconstruction check to reject gas photons where the
+    emission point and first reflection points are on different detector sides.
+  . Protect against a sqrt(-number) FPE in QuarticSolver.h
+  . Update QuarticSolver to use the Complex2f class from the VectorClass library
+    instead of std::complex. Results in an almost factor of two speed up of the 
+    QuarticSolver::solve method...
+  . Add some missing FPE protection in QuarticSolver.h
+  . Replace some divisions by multiplications in QuarticSolver.h
+  . Add a new test application to allow easy profiling of various implementations
+    of Quartic reconstruction of photon angles.
+  . Paste the code to calculate the track/pixel seperation on the PD plane
+    directly into RichCKthetaBandsPhotonPredictor. Avoids a virtual call for
+    every pixel+track combination, as well as avoiding a few squares when not
+    required.
+  . Various minor CPU optimisations (using VDT etc.).
+
+- In Rich/RichRecSys v5r5
+  . Add a new configuration option "RefitTracks" which enables a full refit of
+    the tracks prior to running the RICH reconstruction on them.
+  . Fix a small bug with the "PreloadTracks" options that was failing to 
+    properly enable this option.
+
+- In Rich/RichRecTools v4r27
+  . Various small CPU optimisations (using VDT, prefer * to /  etc.). 
+
+- In Rich/RichRecTrackTools v1r39
+  . Add a new option (enabled by default) to move states in 
+    DetailedTrSegMakerFromRecoTracks using a StateProvider using the
+    stateFromTrajectory method. Faster, with no signficant loss of resolution.
+  . Clean up internal interface used by DetailedTrSegMakerFromRecoTracks to
+    avoid passing around unique_ptr instances by reference.
+  . Add a new (off by default) option to RichDetailedTrSegMakerFromRecoTracks to
+    use a TrackTraj object move states to the RICH radiator entry and exit 
+    positions.
+  . Add an option to RichFunctionalCKResForRecoTracks to use the fast geometry
+    when calculating the radiation length the track traverses in the RICH
+    radiator volumes. Off by default.
+  . Various CPU improvements (use VDT math functions etc.).
+
+- In Tf/PatAlgorithms v4r39
+  . PatSeedingTool:
+    o Be a bit smarter in hitsInRange method - saves 0.9% in CPU, same results
+    o Added option to flag previously used hits with UsedLHCbIDTool.
+    o Changes for running in tandem with Forward: remove the old UseForward
+      property in favour of 'UsedLHCbIDToolName' property - see PAtAlgorithms
+      release notes for details on how to only run over hits not used by the
+      Forward. With this new flexibility, the old properties OnlyGood and
+      DiscardChi2 have become obsolete, too, and have been removed.
+    o Slightly modernise the code which allows "injecting" the T station
+      segments of Forward tracks into the output of the Seeding (property
+      'UseForwardTracks'); also add a property to limit the extraction of Forward
+      tracks to those which have a minimum chi^2/ndf
+  . Tuned uncertainty of point on magnetic plane in downstream tracking, change
+    zMagnet parametrisation. Should slightly improve efficiency / ghost rate.
+  . Tested patch which switches off the OT walk correction in the combinatorial
+    stages of the Forward tracking to save even more time. Efficiencies and ghost
+    rates are essentially unchanged (there are permille level fluctuations), and
+    so are pulls. The Forward tracking will become about 9% faster.
+  . PatSeedFit: fix bug which caused a successful stub fit to produce a warning
+    and have its results ignored; having done some subversion araeology, it
+    appears to be a long-standing bug in the logic of the tool. The impact on
+    track parameters is negligible, though, because the stub fit is only needed
+    on a small fraction of tracks, and the fit subsequently recovers by using
+    the best guess parameters to start the Kalman Filter fit
+  . PatSeeding and classes used by it: take advantage of the new isOT()
+    method available from PatForwardHit
+  . Simplify some things in PatDownTrack and PatDownstream. No performance change
+  . PatMatchTool: Added the option to veto Velo seeds similar to PatForwardTool. 
+  . PatForwardTool:
+    o Do not add additional TT hits to Forward candidates if the Seed is an
+      Upstream track. 
+    o Made the location to flag Velo seeds as used a vector of locations.
+      Renamed this from VeloVetoTracksName to VeloVetoTracksNames.
+    o Added a protection in case the location of veto tracks does not exist.
+  . PatFwdTool:
+    o Use ambiguity resolution from pitch residuals by default
+    o Demote an info() printout to debug(), to keep the log files clean
+    o Add option to use pitch residuals to resolve ambiguities in
+      the OT in a manner similar to the seeding; this results in slight
+      efficiency gains (permille level), a ghost rate reduction on the percent
+      level and a very marginal speedup (half a percent); see PAtAlgorithms
+      release notes for details of configuration options
+      The old method of resolving ambiguities remains the default for now.
+  . PatForward and PatForwardTool: Moved options to flag hits and seeds from
+    PatForward to PatForwardTool, such that PatForwardTool is aware of hit
+    flagging. Changed the flag wich is used to flag used hits.  Removed
+    option to flag Velo seeds as at this point it is not clear which Velo
+    seeds should be flagged.
+
+- In Tf/PatVeloTT v4r5
+  . Add code to account for overlap hits, change default value of PassHoleSize
+  . Remove a "std::cout" and clean up VeloTTHybrid.cpp/h code
+    (removing obsolete members). 
+  . Add some doxygen documentation.
+
+- In Tf/TfKernel v2r30
+  . SIMDChi2Fit: 
+    o use UNLIKELY/LIKELY to give hints to the compiler
+      (seems to improve the timing of the Seeding by about 5%)
+    o add further hints to help gcc produce good autovectorised code
+      This will speed up the Seeding by another 3 %.
+    o Fix tiny bug which could cause the cov() method to fail in
+      template parameter substitution in certain situations
+  . OTHit: make use of the new walk_fast method in OTDet::WalkRelation to speed
+    up Seeding and Forward by about 4%; effects on efficiencies, ghost rates,
+    pulls and so on are on the permille level
+
+- In Tf/TrackSys v9r5
+  . Add GhostProbability to RecoUpgradeTracking.py
+  . Adapt RecoTracking.py, such that for data type '2015' PatVeloTTHybrid instead
+    of PatVeloTT is run. The (internal) Kalman filter is off per default.
+
+- In Tr/TrackExtrapolators v2r36
+  . TrackRungeKuttaExtrapolator: replace std::pow(x, 0.25) by
+    std::sqrt(std::sqrt(x)) because it's faster, tidy up in a few places; this
+    makes the extrapolator 2% faster without changing the results significantly
+  . Extrapolators: make static magic numbers 'const'
+
+- In Tr/TrackFitter v5r3
+  . Reserve space in vector of matrial intersections, so we don't have to
+    reallocate quite as frequently; this does not change results
+
+- In Tr/TrackInterfaces v4r28
+  . Extended IGhostProbability to ease up development
+  . Different interfaces for GhostProbability and TrackLikelihood (incident
+    handle doesn't do the job)
+
+- In Tr/TrackKernel v2r2
+  . Replace use of ROOT::Math::Similarity with new faster vectorised
+    LHCb::Math::Similarity in CubicStateInterpolationTraj.
+
+- In Tr/TrackMCTools v3r11p1
+  . Remove unnecessary PhysEvent includes from PGPrimaryVertex.h and remove
+    PhysEvent dependency that they introduced
+
+- In Tr/TrackMonitors v2r5
+  . Add the histograms needed for online OT T0 calibration to the histograms
+    produced online.
+
+- In Tr/TrackProjectors v3r2
+  . TrajOTProjector:
+    o Remove superfluous dynamic_cast, speedup about 6%
+    o Update for upcoming changes to RtRelation class by being more flexible in
+      terms of data type returned by RtRelation's methods
+
+- In Tr/TrackTools v5r7
+  . TrackUsedLHCbIDs:
+    o Make hit lookup O(1) instead of O(ln(Nhits)) by using BloomFilters - see
+      TrackTools release notes for assumptions made in the implementation. When
+      used offline to run Seeding only on hits not used by Forward tracks, this
+      reduces the time to look if a hit was used by the Forward by 36%
+    o  Changed LHCb::Tracks* to LHCb::Track::Range
+  . VeloClusterPositionTool: various little fixes to speed things up
+    o don't create std::vector on the fly every time cluster->channels() is
+      called, fill an std::array of sufficient size instead
+    o don't dynamic_cast when a static_cast will do
+    o use vdt::fast_... versions of various trigonometric functions (they're
+      more than accurate enough not to affect Velo performance in any way) 
+  . Speed up StateThickMSCorrectionTool by a factor two
+  . Speed up StateDetailedBetheBlochEnergyCorrectionTool by a factor two
+    o caching particle masses more agressively
+    o aggressive caching of material-related quatities and calculations (this
+      will save quite a few virtual function calls and a log at runtime)
+    o use of vdt to implement pow(x, y)
+  . Remove include "FTRawCluster" in UpgradeGhostID.cpp
+  . Ghost Probability for Run2.
+    o Cleaner code, removed time consuming inputs, newly trained to work with new
+      reconstruction and expected 2015 conditions, NN implementation speed up.
+    o Foreseen to remove TrackNNGhostId and corresponding network trainings
+    o Adapt to updated IGhostProbability interface
+  . Swapped StatusCodes in UpgradeGhostInfo::countHits
+  . Improved hit counting in UpgradeGhostInfo
+  . Minor code cosmetics on VeloMuonBuild
+
+- In Tr/TrackUtils v1r58
+  . TrackListRefiner: Prevented algorithm from creating a new location in case
+    the input location does not exist.
+  . Changed interface for TrackAddNNGhostId
+
 </PRE><H1><A NAME=v17r4>2015-01-15 RecSys v17r4</A></H1><PRE>
 This version uses Gaudi v26r0, LHCb v38r4 and Lbcom v16r3 (and ROOT 6.02.03)
 
