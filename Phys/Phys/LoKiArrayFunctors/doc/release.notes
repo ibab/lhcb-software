@@ -5,7 +5,7 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
-!=================== LoKiArrayFunctors v10r7 2015-02-24 =======================
+!=================== LoKiArrayFunctors v11r0 2015-02-24 =======================
 
 ! 2015-02-14 - Vanya Belyaev
  - add AOVERLAP functor for Michael Kolpin 
