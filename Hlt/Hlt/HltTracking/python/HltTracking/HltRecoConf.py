@@ -38,7 +38,9 @@ class HltRecoConf(LHCbConfigurableUser):
                  ,"PVBeamspotRho"               : 0.3 * mm
                  ,"VeloSelectionCut"            : "(~TrBACKWARD) & ( TrNVELOMISS < 100 )"
                  ,"FitVelo"                     : False
+                 ,"OfflineSeeding"              : False
                  ,"OfflineRich"                 : True
+                 ,"AddGhostProb"                : True
                  ,"InitFits"                    : False
                  ,"MoreOfflineLikeFit"          : False  # This runs a fit in HLT1 and HLT2 which uses the default offline fit
                                                          # with a simplified material description
@@ -97,6 +99,10 @@ ComplementForwardToolOptions = { "AddTTClusterName" : "PatAddTTCoord"
 
 OnlineSeedingToolOptions = { "NDblOTHitsInXSearch" : 2,
                              "MinMomentum" : 1000.}
+
+OfflineSeedingToolOptions = { "NDblOTHitsInXSearch" : 0,
+                              "MinMomentum" : 500.}
+
 
 DownstreamOptions = { "MinMomentum": 0.,
                       "MinPt": 0.}

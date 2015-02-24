@@ -5,6 +5,15 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-02-24 - Sascha Stahl
+ - HltRecoConf and Hlt2Tracking: 
+   Added option to run PatSeeding with offline settings, HltReconConf().OfflineSeeding. 
+   Added option to add Ghost probability to tracks, HltReconConf().AddGhostprob.
+ - Hlt2Tracking: Implemented option to merge Long and Downstream tracks with the CloneKiller
+   to a Best track selection. The proto particle maker distinguishes between 
+   Long and Downstream tracks.
+ - Hlt1TrackNames: Added Best to names, changed SeedTT to Downstream.
+
+! 2015-02-24 - Sascha Stahl
  - Changed Hlt2ProbeTracking to be inline with new PatSeeding options (UseForward removed).
  - PatSeeding now picks up its own minimal momentum from HltRecoConf. 
    Currently set to 1 GeV.

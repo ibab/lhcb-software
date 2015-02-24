@@ -215,9 +215,13 @@ def ConfiguredPatSeeding(name
         recoSeeding.PatSeedingTool.TrackUsedLHCbID.inputContainers = VetoTrackLocations
 
     from Configurables import HltRecoConf
-    from HltRecoConf import OnlineSeedingToolOptions
-    recoSeeding.PatSeedingTool.NDblOTHitsInXSearch = OnlineSeedingToolOptions ["NDblOTHitsInXSearch"]
-    recoSeeding.PatSeedingTool.MinMomentum = OnlineSeedingToolOptions["MinMomentum"]
+    from HltRecoConf import OnlineSeedingToolOptions, OfflineSeedingToolOptions
+    if HltRecoConf().getProp("OfflineSeeding"):
+        recoSeeding.PatSeedingTool.NDblOTHitsInXSearch = OfflineSeedingToolOptions ["NDblOTHitsInXSearch"]
+        recoSeeding.PatSeedingTool.MinMomentum = OfflineSeedingToolOptions["MinMomentum"]
+    else:
+        recoSeeding.PatSeedingTool.NDblOTHitsInXSearch = OnlineSeedingToolOptions ["NDblOTHitsInXSearch"]
+        recoSeeding.PatSeedingTool.MinMomentum = OnlineSeedingToolOptions["MinMomentum"]
     from Configurables import HltRecoConf
     from HltTracking.HltRecoConf import CommonForwardOptions
     recoSeeding.PatSeedingTool.MaxOTHits = HltRecoConf().getProp("Forward_MaxOTHits")
