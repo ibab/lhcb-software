@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LoKiTracks
 ################################################################################
-gaudi_subdir(LoKiTracks v2r10p2)
+gaudi_subdir(LoKiTracks v3r0)
 
 gaudi_depends_on_subdirs(Event/TrackEvent
                          Phys/KalmanFilter
