@@ -244,9 +244,26 @@ def _h1_chebyshev_ ( h1 , degree , interpolate = True , opts = 'SQ0I' ) :
     mn,mx = h1.xminmax ()    
     func  = cpp.Gaudi.Math.ChebyshevSum ( degree , mn , mx ) 
     #
-    my = h1.accumulate().value()/h1.bins()
-    func.setPar( 0 , my )
-    ##
+    ## make reasonable approximation
+    import math 
+    N  = func.npars()  
+    for j in range ( 0 , N ) :
+
+        cj = 0 
+        for k in range(1,N+1)  :
+            qk  = math.pi * j * ( k - 0.5 ) / N
+            ck  = math.cos ( qk )
+            tk  = math.pi *     ( k - 0.5 ) / N 
+            tk  = math.cos ( tk )
+            xk  = func.x   ( tk )
+            fk  = h1 ( xk ) 
+            cj += fk * ck
+            
+        if 0 == j : cj /=       N  
+        else      : cj *= 2.0 / N 
+        
+        func.setPar ( j , cj ) 
+        
     return _h1_param_sum_ ( h1 , func , H_fit , opts )  
 
 
@@ -275,9 +292,20 @@ def _h1_legendre_ ( h1 , degree , interpolate = True , opts = 'SQ0' ) :
     mn,mx = h1.xminmax ()    
     func  = cpp.Gaudi.Math.LegendreSum ( degree , mn , mx ) 
     #
-    my = h1.accumulate().value()/h1.bins()
-    func.setPar( 0, my )
-    ##
+    ## make some reasonable approximation
+    #
+    _b    = 1.0 / h1.bins() 
+    _f    = cpp.Gaudi.Math.LegendreSum ( degree , mn , mx )
+    for i in range ( 0 , _f.npars()  ) :
+        _f  .setPar ( i ,  1 )
+        _h  = h1 * _f 
+        _c  = _h.accumulate().value()*(2*i+1) * _b 
+        _f  .setPar ( i ,  0 ) 
+        func.setPar ( i , _c )
+        del _h
+
+    del _f
+    
     return _h1_param_sum_ ( h1 , func , H_fit , opts )  
 
 
