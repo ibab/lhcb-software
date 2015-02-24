@@ -61,12 +61,13 @@ class H_fit(object) :
     ## the major method 
     def __call__ ( self , x , pars = [] ) :
         
+        x0 = x if isinstance ( x ,  ( int , long , float ) ) else x[0]
         if pars :
             np = self._hfit.npars() 
             for i in range ( 0 , np ) :    
                 self._hfit.setPar ( i , pars[i] )
                 
-        return self._hfit( x[0] )
+        return self._hfit( x0 )
     
 # =============================================================================
 ## @class H_nfit
@@ -101,6 +102,7 @@ class H_Nfit (object) :
     def __call__ ( self , x , pars = [] ) :
 
         norm = 1.0
+        x0 = x if isinstance ( x ,  ( int , long , float ) ) else x[0]
         
         if pars :
 
@@ -110,9 +112,8 @@ class H_Nfit (object) :
             for i in range ( 0 , np ) :    
                 self._hfit.setPar ( i , pars[i+1] )
                 
-        return norm * self._hfit( x[0] )
+        return norm * self._hfit( x0 )
     
-
 # =============================================================================
 ## represent 1D-histo as polynomial sum 
 def _h1_param_sum_ ( h1             ,
@@ -136,37 +137,47 @@ def _h1_param_sum_ ( h1             ,
         bfit.fun.SetParameter ( 0 , mi )
         from math import pi 
         for i in range( 0, b.npars() ) :
+            bfit.fun.SetParameter ( i + 1 , 0  )
             bfit.fun.SetParLimits ( i + 1 , -0.6 * pi  , 1.1 * pi ) 
             
     if 0 > opts.upper().find('S') : opts += 'S '
 
     fun = bfit.fun
-    
-    r = fun.Fit(h1,opts) 
+
+    if bfit.norm() :
+        mn,mx = h1.xminmax ()    
+        mi    = h1.accumulate().value()*(mn-mx)/h1.bins() 
+        fun.FixParameter    (0,mi)
+        r = fun.Fit(h1,opts+'0Q')
+        fun.ReleaseParameter(0)
+        
+    r = fun.Fit( h1 , opts )
+        
     if 0 != r.Status() :
         logger.info ( 'Fit status is  %d [%s]' % ( r.Status() , type(b).__name__ ) )
         if bfit.norm() :
-            mn,mx = h1.xminmax ()    
-            mi    = h1.accumulate().value()*(mn-mx)/h1.bins() 
-            fun.SetParameter ( 0 , mi )
-            for i in range( 0 , b.npars() ) :
-                b.setPar         ( 0     , mi )
+            fun.FixParameter ( 0 , mi ) 
+            for i in range ( 0 , b.npars() ) :
                 fun.SetParameter ( i + 1 , 0  )
+            r = fun.Fit(h1,opts)
+            fun.ReleaseParameter( 0)
         r = fun.Fit(h1,opts)
-        
+            
     if 0 != r.Status() :
         logger.warning ( 'Fit status is  %d [%s]' % ( r.Status() , type(b).__name__ ) )
         r = fun.Fit(h1,opts)        
         if bfit.norm() :
             mn,mx = h1.xminmax ()    
             mi    = h1.accumulate().value()*(mn-mx)/h1.bins() 
-            fun.SetParameter ( 0 , mi )
+            fun.FixParameter ( 0 , mi )
             for i in range( 0 , b.npars() ) :
-                b.setPar         ( 0     , mi )
                 fun.SetParameter ( i + 1 , 0  )
+            r = fun.Fit(h1,opts)
+            fun.ReleaseParameter( 0)
         r = fun.Fit ( h1 , opts )
         if 0 != r.Status() :
             logger.error ('Fit status is  %d [%s]' % ( r.Status() , type(b).__name__ ) )
+            
                 
     bfit.fitresult = r 
     return bfit.fun , bfit , b , bfit.fitresult 
@@ -501,12 +512,25 @@ cpp.Gaudi.Math.MonothonicSpline .funobj = _funobjN_
 cpp.Gaudi.Math.ConvexSpline     .funobj = _funobjN_
 
 # =============================================================================
-## helper class to wrap 1D-histogram as function 
+## helper class to wrap 1D-histogram as function
+#  Optionally  normalization, bias and scale are applied
+#  Seful e.g. for using a histogram as function fitting 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 class H1Func(object) :
     """
-    Helper class to Wrap 1D-histogram as function 
+    Helper class to wrap 1D-histogram as function
+
+    >>> histo =
+    >>> func  = H1Func ( histo )
+    >>> tf1   = ROOT.TF1('f1', func , low , high , 3 )
+
+    Three parameters: NORM, BIAS and SCALE
+    f( x )  = NORM  * histo (  ( x - BIAS ) / scale ) 
+    
+    >>> histo2 = ...
+    >>> histo2.Fit ( tf1 , 'S' )
+    
     """
     def __init__ ( self , histo , func = lambda s : s.value() ) :
         self._histo = histo
@@ -520,14 +544,40 @@ class H1Func(object) :
         #
         x0 = x if isinstance ( x , (int,long,float) ) else x[0]
         #
-        norm  = par[0]
-        bias  = par[1]
-        scale = par[2]
+        norm  = float ( par[0] )   ## NORM 
+        bias  = float ( par[1] )   ## BIAS 
+        scale = float ( par[2] )   ## SCALE 
         #
         x0    = ( x0 - bias ) / scale
         # 
         return norm * self._func ( self._histo ( x0 , interpolate = True ) )
 
+    ## get corresponsing ROOT.TF1 object 
+    def tf1  ( self ) :
+        """
+        Get corresponsing ROOT.TF1 object 
+        """
+        if not hasattr ( self , '_tf1' ) : 
+            
+            from Ostap.PyRoUts import funID
+            mn = self._histo.xmin ()
+            mx = self._histo.xmax ()
+            self._tf1 =  ROOT.TF1 ( funID() , self , mn , mx , 3 )
+            self._tf1.SetParNames (
+                'Normalization' ,
+                'Bias'          ,
+                'Scale'
+                )
+            self._tf1.FixParameter ( 0 , 1 )
+            self._tf1.FixParameter ( 1 , 0 )
+            self._tf1.FixParameter ( 2 , 1 )
+
+        return self._tf1
+
+    def Draw ( self , *args ) : return self.draw ( *args ) 
+    def draw ( self , *args ) :
+        t = self.tf1()
+        return t.Draw( *args )
 
 # =============================================================================
 ## helper class to wrap 1D-histogram as spline 
@@ -535,24 +585,75 @@ class H1Func(object) :
 #  @date   2014-03-27
 class H1Spline(object) :
     """
-    Helper class to Wrap 1D-histogram as function/spline 
+    Helper class to Wrap 1D-histogram as function/spline
+
+    >>> histo =
+    >>> func  = H1Spline ( histo )
+    >>> tf1   = ROOT.TF1('f1', func , low , high , 1 )
+
+    Parameters: NORM, BIAS and SCALE
+    f( x)  = NORM  * spline ( ( x - BIAS ) / SCALE ) 
+    
+    >>> histo2 = ...
+    >>> histo2.Fit ( tf1 , 'S' )
+    
+    
     """
     def __init__ ( self , histo , func = lambda s : s.value() , *args ) :
-        self._spline = histo.splineErr ( *args )
+        """
+        *args are transferred to Gaudi::Math::Spline
+        """
+        ## create the actual spline: 
+        ## self._spline = histo.splineErr ( *args )
+        self._spline = histo.spline ( *args )
         self._histo  = self._spline ## ATTENTION!!! 
-        self._func   = func
+        self._func   = func        
         
     ## evaluate the function 
-    def __call__ ( self , x , par = [ 1 ] ) :
+    def __call__ ( self , x , par = [ 1 , 0 , 1 ] ) :
         """
         Evaluate the function 
         """
         #
         x0 = x if isinstance ( x , (int,long,float) ) else x[0]
         #
-        norm  = par[0]
+        norm  = float ( par[0] )  ## NORM 
+        bias  = float ( par[1] )  ## BIAS 
+        scale = float ( par[2] )  ## SCALE 
         #
-        return norm * self._func ( self._spline ( x0 ) ) 
+        x0    = ( x0 - bias ) / scale
+        #
+        return norm * self._func ( VE( self._spline ( x0 ) , 0 ) ) 
+
+    ## get corresponsing ROOT.TF1 object 
+    def tf1  ( self ) :
+        """
+        Get corresponsing ROOT.TF1 object 
+        """
+        if not hasattr ( self , '_tf1' ) : 
+            
+            from Ostap.PyRoUts import funID
+            #mn = self._spline.spline().xmin ()
+            #mx = self._spline.spline().xmax ()
+            mn = self._spline.xmin ()
+            mx = self._spline.xmax ()
+            self._tf1 =  ROOT.TF1 ( funID() , self , mn , mx , 3 )
+            self._tf1.SetParNames (
+                'Normalization' ,
+                'Bias'          ,
+                'Scale'
+                )
+            self._tf1.FixParameter ( 0 , 1 )
+            self._tf1.FixParameter ( 1 , 0 )
+            self._tf1.FixParameter ( 2 , 1 )
+
+        return self._tf1
+
+    def Draw ( self , *args ) : return self.draw ( *args ) 
+    def draw ( self , *args ) :
+        t = self.tf1()
+        return t.Draw( *args )
+    
 
 # ==============================================================================
 ## helper class to wrap 2D-histogram as function 
@@ -601,7 +702,7 @@ def _h1_as_spline_ ( self , func = lambda s : s.value () , *args ) :
 #  @date   2011-06-07
 def _h2_as_fun_ ( self , func = lambda s : s.value () ) :
     """
-    construct the function fomr the histogram 
+    construct the function from the histogram 
     """
     return H2Func ( self , func )
 # =============================================================================
@@ -612,44 +713,19 @@ def _h1_as_tf1_ ( self , func = lambda s : s.value () , spline = False , *args )
     """
     Construct the function from the 1D-histogram
 
-    >>> fun = h1.asFunc()
-    
+    >>> histo = ...
+    >>> fun1  = histo.asTF1 ( spline = False )
+    >>> fun2  = histo.asTF1 ( spline = True  ) 
     """
-    ax  = self.GetXaxis()
     #
-    from Ostap.PyRoUts import funID
+    if spline : fun = _h1_as_spline_ ( self , func , *args )
+    else      : fun = _h1_as_fun_    ( self , func )
     #
-    if spline :
-        fun = _h1_as_spline_ ( self , func , *args )
-        f1  = ROOT.TF1  ( funID()       ,
-                          fun           ,
-                          ax.GetXmin () ,
-                          ax.GetXmax () , 1 )
-        
-        f1.SetParNames ( 'Normalization' )
-        #
-    else      :
-        #
-        fun = _h1_as_fun_    ( self , func )
-        f1  = ROOT.TF1  ( funID()       ,
-                          fun           ,
-                          ax.GetXmin () ,
-                          ax.GetXmax () , 3 )
-        f1.SetParNames (
-            'Normalization' ,
-            'Bias'          ,
-            'Scale' 
-            )
-        #
-        f1.FixParameter(1,0)
-        f1.FixParameter(2,1)
-        #
-
-    f1.FixParameter(0,1) 
-    f1.SetNpx  ( 10 * ax.GetNbins() )
-    f1._funobj = fun  
-    f1._histo  = fun._histo
-    f1._func   = fun._func
+    f1 = fun .tf1  ()
+    nb = self.nbins()
+    
+    if f1.GetNpx() <  1.2 * nb :
+        f1.SetNpx ( max ( 100 , 10 * nb ) ) 
     
     return f1 
     
@@ -703,6 +779,21 @@ ROOT.TH2D . asFunc   = _h2_as_fun_
 ROOT.TH1F . asSpline = _h1_as_spline_ 
 ROOT.TH1D . asSpline = _h1_as_spline_ 
 
+# ============================================================================
+def _h1_data_ ( h ) :
+    """
+    Get histogram/graph as vector of pairs (x,y)
+    
+    >>> histo = ...
+    >>> data  = histo.data() 
+    """
+    return cpp.Gaudi.Math.Splines.getData ( h )
+
+ROOT.TH1F         . data = _h1_data_
+ROOT.TH1D         . data = _h1_data_
+ROOT.TGraph       . data = _h1_data_
+ROOT.TGraphErrors . data = _h1_data_
+
 
 
 # =============================================================================
@@ -727,7 +818,7 @@ def _1d_spline_ ( self                                      ,
     >>> histo = ...
     >>> spline = histo.spline ()
 
-    >>> value = spline ( 10 ) 
+    >>> value  = spline ( 10 ) 
     """
     return cpp.Gaudi.Math.Spline ( self , type , null , scale , shift )
 # =============================================================================
@@ -894,6 +985,8 @@ def _f_fit_ ( func , histo , *args ) :
 
 ROOT.TF1 . Fit      = _f_fit_ 
 ROOT.TF1 . fitHisto = _f_fit_ 
+ROOT.TF1 . fit      = _f_fit_ 
+ROOT.TH1 . fit      = ROOT.TH1.Fit
 
 # =============================================================================
 # Decorate fit results 

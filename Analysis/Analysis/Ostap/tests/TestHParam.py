@@ -45,7 +45,7 @@ logger.info ( 'Test for specific historgam comparisons')
 h1 = ROOT.TH1F( hID() , 'histogram(expo)' , 100, 0 , 10 ) ; h1.Sumw2() 
 h2 = ROOT.TH1F( hID() , 'histogram(expo)' , 100, 0 , 10 ) ; h2.Sumw2() 
 
-entries = 20000
+entries = 10000
 ## 
 ## random.seed(10) 
 for i in xrange(0,entries) :
@@ -132,6 +132,24 @@ with timing ( 'cSpline' ) :
     rc2 = h2.cSpline  ( 2 , 1  , increasing = True  , convex = True  )
     rc3 = h3.cSpline  ( 2 , 1  , increasing = True  , convex = False )
     rc4 = h4.cSpline  ( 2 , 1  , increasing = False , convex = False )
+
+#
+## another splines 
+#
+
+templ = ROOT.TH1F( hID() , 'histogram(expo)' , 12 , 0 , 10 )  
+h1c   = h1.rebinNumbers ( templ )
+h2c   = h2.rebinNumbers ( templ )
+h3c   = h3.rebinNumbers ( templ )
+h4c   = h4.rebinNumbers ( templ )
+
+
+sp1 = h1c.asSpline()
+sp2 = h2c.asSpline()
+sp3 = h3c.asSpline()
+sp4 = h4c.asSpline()
+
+
 
 # =============================================================================
 # The END 
