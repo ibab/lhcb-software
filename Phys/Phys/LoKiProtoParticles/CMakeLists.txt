@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LoKiProtoParticles
 ################################################################################
-gaudi_subdir(LoKiProtoParticles v2r2)
+gaudi_subdir(LoKiProtoParticles v3r0)
 
 gaudi_depends_on_subdirs(Event/RecEvent
                          Phys/DaVinciInterfaces

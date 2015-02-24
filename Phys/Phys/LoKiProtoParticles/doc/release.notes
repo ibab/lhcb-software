@@ -6,6 +6,8 @@
 ! Purpose     : New package to deal with ProtoParticles 
 ! -----------------------------------------------------------------------------
 
+!====================== LoKiProtoParticles v3r0 2014-02-24 ====================
+
 ! 2015-02-03 - Vanya Belyaev
  -  few more steps towards autogeneration of C++ code from functors 
 
