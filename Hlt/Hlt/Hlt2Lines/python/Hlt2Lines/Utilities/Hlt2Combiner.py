@@ -57,7 +57,7 @@ class Hlt2Combiner(Hlt2TisTosStage):
 
         if not self._tistos():
             ## Return combiner if no tistos is required
-            self.__stage = self._makeMember(args)
+            self.__stage = self._makeMember(cuts, args)
             return self.__stage
 
         ## define the callback used to insert the right extra cut.

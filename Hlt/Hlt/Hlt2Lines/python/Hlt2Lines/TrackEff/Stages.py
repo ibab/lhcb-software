@@ -42,12 +42,14 @@ class TrackEffSlowPionFilter(Hlt2ParticleFilter):
 
 class D0ToKpiCombiner(Hlt2Combiner):
     def __init__(self, name,inputs):
-        cuts = dict(CombinationCut = ("(in_range( %(D0_MinAM)s,AM, %(D0_MaxAM)s ))"
-                                      +"& (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(D0_MaxDOCA)s)"),
-                    MotherCut = ("(BPVVDZ > %(D0_MinVDZ)s*mm) & ((acos(BPVDIRA)*180./3.142) < %(D0_MaxACosDIRADeg)s) & (VFASPF(VCHI2/VDOF)< %(D0_MaxVCHI2NDF)s)"))
+        combCut   = ("(in_range( %(D0_MinAM)s,AM, %(D0_MaxAM)s ))"
+                     + "& (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(D0_MaxDOCA)s)")
+        motherCut = ("(BPVVDZ > %(D0_MinVDZ)s*mm) & ((acos(BPVDIRA)*180./3.142) < %(D0_MaxACosDIRADeg)s) "
+                     + "& (VFASPF(VCHI2/VDOF)< %(D0_MaxVCHI2NDF)s)")
         from HltTracking.HltPVs import PV3D
-        Hlt2Combiner.__init__(self, linePrefix+"D0Combiner", name,"[D0 -> K- pi+]cc", cuts, inputs,
-                              dependencies = [TrackGEC(linePrefix + '__TrackGEC'), PV3D('Hlt2')])
+        Hlt2Combiner.__init__(self, linePrefix+"D0Combiner", name,"[D0 -> K- pi+]cc", inputs,
+                              dependencies = [TrackGEC(linePrefix + '__TrackGEC'), PV3D('Hlt2')],
+                              CombinationCut = combCut, MotherCut = motherCut)
         
 
 class D0Filter(Hlt2ParticleFilter):
@@ -68,14 +70,13 @@ class DstTagger(Hlt2Combiner):
         formula = "(180./3.1415)*acos( %(dot_prod)s / (ACHILD(P,2)*%(mag)s) )" %{"dot_prod":dot_prod,
                                                                                  "mag":mag}
         DstCombinationCut = "("+formula+" < %(Dst_MaxAOA)s) & (APT > %(Dst_MinAPT)s *MeV) & (AALLSAMEBPV)"
-        DstMotherCut = "(Dst_M - D0_M < %(Dst_MaxSimpleFitDeltaMass)s)" 
-        cuts = dict(DaughtersCuts  = {'pi+' : "(PT > %(Slowpi_MinPt)s*MeV)"}, # & (MIPCHI2DV(PRIMARY) < %(Slowpi_MaxIPCHI2)s)"},
-                    CombinationCut = (DstCombinationCut),
-                    MotherCut =     (DstMotherCut))
+        DstMotherCut      = "(Dst_M - D0_M < %(Dst_MaxSimpleFitDeltaMass)s)" 
+        DaughtersCuts     = {'pi+' : "(PT > %(Slowpi_MinPt)s*MeV)"} # & (MIPCHI2DV(PRIMARY) < %(Slowpi_MaxIPCHI2)s)"},
         from HltTracking.HltPVs import PV3D
-        Hlt2Combiner.__init__(self, linePrefix+"__DstTagger",name,"[D*(2010)+ -> D0 pi+]cc", cuts, inputs,
+        Hlt2Combiner.__init__(self, linePrefix+"__DstTagger",name,"[D*(2010)+ -> D0 pi+]cc", inputs,
                               dependencies = [TrackGEC(linePrefix + '__TrackGEC'), PV3D('Hlt2')],
-                              Preambulo = DstPreambulo())
+                              CombinationCut = DstCombinationCut, MotherCut = DstMotherCut,
+                              DaughtersCuts = DaughtersCuts, Preambulo = DstPreambulo())
 
 class DstDTFFilter(Hlt2ParticleFilter):
     def __init__(self, name, inputs):

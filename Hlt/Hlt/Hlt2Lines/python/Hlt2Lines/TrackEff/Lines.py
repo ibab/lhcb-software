@@ -44,6 +44,6 @@ class TrackEffLines(Hlt2LinesConfigurableUser):
                   'D0ToKpiKaonProbe'  : [FilteredDstD0ToKpiKaonProbe]}
         
         from HltLine.HltLine import Hlt2Line
-        for (nickname, stages) in self.stages(stages).iteritems():
+        for (nickname, algos) in self.algorithms(stages).iteritems():
             Hlt2Line('TrackEff_' + nickname, prescale = self.prescale,
-                     algos = stages, postscale = self.postscale)
+                     algos = algos, postscale = self.postscale)
