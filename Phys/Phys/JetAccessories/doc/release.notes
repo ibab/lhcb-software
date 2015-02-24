@@ -4,6 +4,8 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!====================== JetAccessories v3r11 2015-02-24 =======================
+
 ! 2015-02-03 - Eduardo Rodrigues
  - Cleaned up unnecessary include/code in src/HighPtIsoLeptonAndTagPV.*.
 
