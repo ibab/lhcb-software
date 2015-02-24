@@ -6,6 +6,8 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!====================== FlavourTagging v13r11 2014-02-24 =====================
+
 ! 2015-01-23 - Eduardo Rodrigues
  - Another trivial fix to remove compilation warnings in a .C class file.
 
