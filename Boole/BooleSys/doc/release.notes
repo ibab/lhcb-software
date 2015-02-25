@@ -3,6 +3,35 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v29r4>2015-02-25 Boole v29r4</A></H1><PRE>
+This version uses projects:
+ LCG_72root6 (ROOT 6.02.05), Gaudi v26r1, LHCb v38r5, Lbcom v16r4
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+ - Configuration changes (FTDigitisation v2r3)
+   . Split up MCFTDepositCreator in MCFTDepositCreator and MCFTAttenuationTool
+
+ - New functionality
+   . Added option in MCFTDigitCreator to enforce 2-bits ADC at Digit level
+     (FTDigitisation v2r3)
+   . Added option in SiPMResponse to turn on new data-driven electronics response
+     (FTDigitisation v2r3)
+   . Generalise local-to-global transformation to allow for rotated modules.
+     (VPTools v2r5)
+
+ - New tuning
+   . Cleaned up FTClusterCreator code (FTDigitisation v2r3)
+   . Vectorised optimisation of magnetic field (DetDesc v18r36, Magnet v7r9)
+   . Speed optimisation in multiple packages (LHCb v38r5)
+
+ - Bug fixes
+   . Fix bug affecting the way the fractional position is used in the light
+     sharing for tracks crossing the inter SIpms gaps (FTDet v2r9)
+
+ - Monitoring changes
+   . Added monitoring functionality to FTClusterMonitor for RawBank maxClus
+     (bandwidth) studies (FTDigitisation v2r3)
+
 </PRE><H1><A NAME=v29r3>2015-01-15 Boole v29r3</A></H1><PRE>
 This version uses projects:
  LCG_72root6 (ROOT 6.02.03), Gaudi v26r0, LHCb v38r4, Lbcom v16r3
