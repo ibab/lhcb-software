@@ -55,6 +55,7 @@ StatusCode FastVeloFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID) {
   int nRight(0), nLeft(0);
   std::vector< LHCb::LHCbID > otherIDs;
   FastVeloHits phiHits;
+  phiHits.reserve(20);
   std::vector<int> byZone(4,0);
   FastVeloTrack fastTrack;
   double zMin =  1.e9;

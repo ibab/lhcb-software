@@ -4,6 +4,10 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2015-02-25 - Sascha Stahl
+ - Reserve vector in FastVeloFitLHCbIDs. This makes it a tiny bit faster when used
+   in TrackStateInitTool.
+
 !========================= FastVelo v1r18 2015-01-14 =========================
 ! 2015-01-04 - Gerhard Raven
  - Faster conversion to LHCb::Track
