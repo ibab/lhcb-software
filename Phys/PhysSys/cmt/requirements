@@ -1,12 +1,12 @@
 package PhysSys
-version v19r4p1
+version v19r5
 
 branches doc cmt
 
 #===================================================================
 
 use  DaVinciInterfaces          v2r23    Phys    # Current DV Maintainer
-use  DaVinciTypes               v2r9     Phys    # Current DV Maintainer
+use  DaVinciTypes               v2r10    Phys    # Current DV Maintainer
 use  DaVinciUtils               v1r1p1   Phys    # Current DV Maintainer
 use  DaVinciKernel              v12r0    Phys    # Current DV Maintainer
 use  SelectionLine              v1r4     Kernel  # Gerhard Raven
@@ -31,9 +31,9 @@ use  BBDecTreeTool              v1r6p2   Phys    # Mike Williams
 use  DaVinciTools       	v24r2    Phys    # ?
 use  RelatedInfoTools           v1r1     Phys    # Anton Poluektov
 use  ExtraInfoTools             v1r0     Phys    # Anton Poluektov
-use  ParticleCombiners          v1r0     Phys    # ?
+use  ParticleCombiners          v1r1     Phys    # ?
 use  DaVinciPVTools             v1r1     Phys    # ?
-use  DaVinciFilters             v1r0     Phys    # ?
+use  DaVinciFilters             v1r1     Phys    # ?
 use  DaVinciDecayFinder         v1r0     Phys    # ?
 use  TopologicalTools           v1r0     Phys    # Mike Williams et. al.
 use  DaVinciOverlapsAndClones   v1r0     Phys    # ?
@@ -44,32 +44,32 @@ use  DaVinciNeutralTools        v1r0     Phys    # CALO Group
 use  LoKiUtils                  v1r3p1   Phys    # Vanya Belyaev
 use  LoKiJets                   v6r12    Phys    # Vanya Belyaev, Victor Coco
 use  LoKiAlgo                   v9r8p5   Phys    # Vanya Belyaev
-use  LoKiArrayFunctors          v10r6    Phys    # Vanya Belyaev
-use  LoKiPhys                   v10r21p1 Phys    # Vanya Belyaev
-use  LoKiProtoParticles         v2r2     Phys    # Vanya Belyaev
+use  LoKiArrayFunctors          v11r0    Phys    # Vanya Belyaev
+use  LoKiPhys                   v11r0    Phys    # Vanya Belyaev
+use  LoKiProtoParticles         v3r0     Phys    # Vanya Belyaev
 use  LoKi                       v9r0p1   Phys    # Vanya Belyaev
-use  LoKiTracks                 v2r10p2  Phys    # Vanya Belyaev
-use  KalmanFilter               v1r9     Phys    # Vanya Belyaev
+use  LoKiTracks                 v3r0     Phys    # Vanya Belyaev
+use  KalmanFilter               v1r10    Phys    # Vanya Belyaev
 
 #===================================================================
 
-use TisTosTobbing		v8r1p1   Phys	 # Tomasz Skwarnicki
+use TisTosTobbing		v8r2     Phys	 # Tomasz Skwarnicki
 
 #===================================================================
 
-use Swimming                    v3r5     Phys    # Vava Gligorov, Roel Aaij
+use Swimming                    v3r6     Phys    # Vava Gligorov, Roel Aaij
 
 #===================================================================
 
-use NeuroBayesTools             v1r2p3   Phys   # ???
+use NeuroBayesTools             v1r3     Phys   # ???
 
 #===================================================================
 
-use FlavourTagging              v13r10   Phys   # Stefania Vecchi
+use FlavourTagging              v13r11   Phys   # Stefania Vecchi
 
 #===================================================================
 
-use JetAccessories              v3r10    Phys   # Victor Coco, Cedric Potterat
+use JetAccessories              v3r11    Phys   # Victor Coco, Cedric Potterat
 
 #===================================================================
 

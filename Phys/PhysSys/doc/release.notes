@@ -3,6 +3,70 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+
+</PRE><H1><A NAME=v19r4>2015-01-16 Phys v19r4</A></H1><PRE>
+Development release, based on Gaudi v26r1, LHCb v38r5 and Rec v17r5.
+Uses LCG_74root6 with ROOT 6.02.05.
+
+- Packages updated :
+  Phys/DaVinciFilters v1r1, Phys/DaVinciTypes v2r10, Phys/FlavourTagging v13r11,
+  Phys/JetAccessories v3r11, Phys/KalmanFilter v1r10, Phys/LoKiArrayFunctors v11r0,
+  Phys/LoKiPhys v11r0, Phys/LoKiProtoParticles v3r0, Phys/LoKiTracks v3r0,
+  Phys/NeuroBayesTools v1r3, Phys/ParticleCombiners v1r1, Phys/Swimming v3r6,
+  Phys/TisTosTobbing v8r2.
+
+- In Phys/DaVinciFilters v1r1 :
+  . FilterDesktop: make the default name of factory dependent on the algorithm name prefix.
+
+- In Phys/DaVinciTypes v2r10 :
+  . HashIDs.h: extended various methods for overlap.
+
+- In Phys/FlavourTagging v13r11 :
+  . Fixed inefficient usage of _ppFromName function.
+  . Trivial fixes to remove compilation warnings from various .C class files.
+  . Updates to use correct LoKi headers.
+  . Added python/FlavourTagging/__init__.py to please CMake.
+
+- In Phys/JetAccessories v3r11 :
+  . Cleaned up unnecessary include/code in src/HighPtIsoLeptonAndTagPV.*.
+  . Added python/JetAccessories/__init__.py to please CMake.
+
+- In Phys/KalmanFilter v1r10 :
+  . Use cholesky decompositon for inversion of  positively definite covariance matrices.
+
+- In Phys/LoKiArrayFunctors v11r0 :
+  . A series of steps towards the autogeneration of C++ code from functors.
+  . Added AOVERLAP functor for Michael Kolpin.
+
+- In Phys/LoKiPhys v11r0 :
+  . A series of steps towards the autogeneration of C++ code from functors.
+  . Added dedicated particle comparisons (for N-body decays).
+    Extended it a little bit to allow checking of tracks.
+  . Move LoKi::Partiles::DHCoplanarity into LoKi::Legacy::DHCoplanarity.
+  . Move DPCTAU*-related stuff into Legacy.
+  . Minor fix in PID-operators.
+
+- In Phys/LoKiProtoParticles v3r0 :
+  . A series of steps towards the autogeneration of C++ code from functors.
+  . Fixed CMakeLists.txt.
+
+- In Phys/LoKiTracks v3r0 :
+  . A series of steps towards the autogeneration of C++ code from functors.
+  . Added TrPHI and TrETA functors for Paras.
+
+- In Phys/NeuroBayesTools v1r3 :
+  . Added python/NeuroBayesTools/__init__.py to please CMake.
+
+- In Phys/ParticleCombiners v1r1 :
+  . NBody-decays: make use of extended particle comparison.
+  . CombineParticles:  make the default name of factory dependent on the algorithm name prefix.
+
+- In Phys/Swimming v3r6 :
+  . Added python/Swimming/__init__.py to please CMake.
+
+- In Phys/TisTosTobbing v8r2 :
+  . Some warnings in TisTos.cpp suppressed.
+
 </PRE><H1><A NAME=v19r4p1>2015-01-23 Phys v19r4p1</A></H1><PRE>
 Patch release needed for HLT matters otherwise identical to v19r4.
 
