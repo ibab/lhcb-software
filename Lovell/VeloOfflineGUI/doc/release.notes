@@ -4,6 +4,9 @@
 ! Purpose     : Offline GUI for analysis of VELO data
 !----------------------------------------------------------------------------
 
+! 2015-02-25 - Marco Clemencic
+ - fixed CMakeLists.txt to work with CMake 2.8.9
+
 !====================== VeloOfflineGUI v1r0 2015-12-02 ======================
 ! 2015-12-02 - J Harrison
   - v1r0 for the first release of the Lovell project

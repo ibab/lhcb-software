@@ -5,19 +5,21 @@ gaudi_subdir(VeloOfflineGUI v1r0)
 
 gaudi_depends_on_subdirs(VeloAnalysisFramework)
 
-
-find_package(Qt COMPONENTS QtCore QtGui)
 find_package(ROOT COMPONENTS Core RIO)
 
-QT4_WRAP_UI(UIS_HDRS VeloView.ui)
+find_package(Qt COMPONENTS QtCore QtGui)
+include(${QT_USE_FILE})
 
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
+file(GLOB HRDS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*.h)
+QT4_WRAP_CPP(MOCS ${HRDS})
 
-gaudi_add_executable(VeloOfflineGUI
-		 src/*.cpp 
-            	 INCLUDE_DIRS VeloAnalysisFramework Qt ROOT
-		 LINK_LIBRARIES Qt ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ROOT )
+QT4_WRAP_UI(UIS_HDRS src/VeloView.ui)
+add_custom_target(GenUIHeaders DEPENDS ${UIS_HDRS})
+
+gaudi_add_executable(VeloOfflineGUI src/*.cpp ${MOCS}
+                     INCLUDE_DIRS VeloAnalysisFramework Qt ROOT
+                     LINK_LIBRARIES Qt ROOT)
+
+add_dependencies(VeloOfflineGUI GenUIHeaders)
 
 gaudi_install_scripts()
