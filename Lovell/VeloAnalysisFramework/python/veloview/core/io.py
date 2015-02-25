@@ -1,7 +1,7 @@
 """This module implements an interface to GiantRootFileIO"""
 
 from ..utils.rootutils import ROOT
-from ..GiantRootFileIO.GUITree import Tree
+from veloview.giantrootfile.gui_tree import Tree
 
 def flatten(pydict):
     from copy import deepcopy

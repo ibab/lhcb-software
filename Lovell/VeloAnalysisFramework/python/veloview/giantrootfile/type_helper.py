@@ -187,8 +187,11 @@ def __patchmap__(t):
     # something fishy at the moment)
     print 'WARNING: patching %s for sane behaviour' % str(t)
     t.__getitem__ = lambda obj, idx: obj.at(idx)
-    from IterTools import (RangeIter, ValueRangeIter,
-            KeyRangeIter)
+    from veloview.giantrootfile.iter_tools import (
+        RangeIter,
+        ValueRangeIter,
+        KeyRangeIter
+    )
     t.__iter__ = lambda obj: KeyRangeIter(obj.begin(), obj.end())
     t.iterkeys = lambda obj: KeyRangeIter(obj.begin(), obj.end())
     t.itervalues = lambda obj: ValueRangeIter(obj.begin(), obj.end())

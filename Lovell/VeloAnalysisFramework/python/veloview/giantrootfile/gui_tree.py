@@ -13,8 +13,8 @@
 # @date 2013-05-02
 #
 import ROOT, ctypes, re
-from TypeHelper import getTypeFactory
-import DrawHelper
+from veloview.giantrootfile.type_helper import getTypeFactory
+from veloview.giantrootfile import draw_helper
 
 ## smart TTree replacement
 #
@@ -247,7 +247,7 @@ class Tree:
     def __iter__(self):
         return self.__TreeIter__(self)
 
-    ## plot Tree contents (see DrawHelper.Draw for details)
-    Plot = DrawHelper.Draw
+    ## plot Tree contents (see draw_helper.Draw for details)
+    Plot = draw_helper.Draw
 
 # vim: sw=4:tw=78:ft=python

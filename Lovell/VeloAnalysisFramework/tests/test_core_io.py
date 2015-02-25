@@ -4,9 +4,9 @@ from veloview.utils.rootutils import ROOT
 
 def setUpModule():
     ROOT.SetMemoryPolicy(ROOT.kMemoryStrict)
-    status = ROOT.gSystem.Load('libCintex')
-    if status >= 0: ROOT.Cintex.Enable()
-    else: raise RuntimeError('Couldn\'t load libCintex')
+    # status = ROOT.gSystem.Load('libCintex')
+    # if status >= 0: ROOT.Cintex.Enable()
+    # else: raise RuntimeError('Couldn\'t load libCintex')
     status = ROOT.gSystem.Load('libVeloGUIUtils')
     if status < 0: raise RuntimeError('Couldn\'t load libVeloGUIUtils')
 
