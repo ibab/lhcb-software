@@ -89,7 +89,8 @@ FileWriteMgr::FileWriteMgr(const string& nam, ISvcLocator* svc) :
   declareProperty("Input", m_input="None");
   declareProperty("MEPManager", m_mepMgrName = "LHCb::MEPManager/MEPManager");
   declareProperty("RoutingBits", m_routingBits = 0x400);
-  declareProperty("WriterServicePatt",m_ServPatt="AlignDataWriter_");
+//  declareProperty("WriterServicePatt",m_ServPatt="AlignDataWriter_");
+  declareProperty("WriterList", m_FileWriters);
 //  m_RunList.clear();
   m_texit = false;
 //  pthread_mutex_init(&m_listlock,0);
@@ -147,7 +148,13 @@ void FileWriteMgr::handle(const Incident& inc)
     for (it=m_ServiceList.begin();it!=m_ServiceList.end();it++)
     {
       FileWriterSvc *fw=(*it);
-      fw->AddRequirements(m_consumer);
+      std::vector<std::string> reqlist = fw->getRequirements();
+      for (size_t i=0;i<reqlist.size();i++)
+      {
+        Requirement r;
+        r.parse(reqlist[i]);
+        m_consumer->addRequest(r);
+      }
     }
   }
 }
@@ -158,21 +165,24 @@ StatusCode FileWriteMgr::initialize()
   MsgStream log(msgSvc(), name());
   m_BytesOut = 0;
   m_NumFiles = 0;
-  toLowerCase(m_ServPatt);
+//  toLowerCase(m_ServPatt);
   m_node = RTL::nodeNameShort();
   ISvcList svclist;
-  svclist = m_SvcLoc->getServices();
-  ISvcList::iterator it;
-  for (it=svclist.begin();it!=svclist.end();it++)
+//  svclist = m_SvcLoc->getServices();
+//  ISvcList::iterator it;
+  for (size_t i=0;i<m_FileWriters.size();i++)
+//  for (it=svclist.begin();it!=svclist.end();it++)
   {
     string nam;
     IService *is;
-    is = *it;
+//    is = *it;
     nam = is->name();
     toLowerCase(nam);
-    if (nam.find(m_ServPatt)!= nam.npos)
+    sc = service(m_FileWriters[i],is,true);
+    if (sc.isSuccess())
     {
-      m_ServiceList.insert(m_ServiceList.end(),dynamic_cast<FileWriterSvc*>(*it));
+      FileWriterSvc* fs = dynamic_cast<FileWriterSvc*>(is);
+      m_ServiceList.insert(m_ServiceList.end(),fs);
     }
   }
   if (sc.isSuccess())
@@ -250,13 +260,6 @@ StatusCode FileWriteMgr::run()
   }
   return StatusCode::SUCCESS;
 }
-//void FileWriteMgr::Markclose(FileDescr* d)
-//{
-//  d->m_CloseAt = time(0)+m_FileCloseDelay;
-//  LockList();
-//  this->m_FileCloseList.push_back(d);
-//  UnlockList();
-//}
 unsigned int FileWriteMgr::getRunNumber(MEPEvent *me)
 {
 
@@ -273,133 +276,3 @@ unsigned int FileWriteMgr::getRunNumber(MEPEvent *me)
   }
   return 0;
 }
-//FileDescr *FileWriteMgr::openFile(unsigned int runn, FTYPE t)
-//{
-//  RunDesc *r = m_RunList[runn];
-//  int seq = r->m_Files;
-//  seq++;
-//  r->m_Files++;
-//  FileDescr *f = new FileDescr(t);
-//  r->m_CurrentFileDescr = f;
-//  f->m_Sequence = seq;
-//  char fname[255];
-//  std::string format;
-//  if (t == FILETYPE_MEP)
-//  {
-//    format = m_FilePrefixMEP+"%07d_%s.%s.MEP";
-//  }
-//  else
-//  {
-//    format = m_FilePrefixEvt+"%07d_%s.%s.mdf";
-//  }
-//  std::string ftim = FileTime();
-//  sprintf(fname,format.c_str(),runn,ftim.c_str(),m_node.c_str());
-//  f->m_BytesWritten = 0;
-//  f->m_Handle = open(fname,O_RDWR+O_CREAT+O_APPEND+O_LARGEFILE+O_NOATIME,
-//      S_IRWXU|S_IRWXG|S_IRWXO);
-//  f->m_FileName = fname;
-//  f->state = C_OPEN;
-//  f->m_BytesWritten = 0;
-//  m_NumFiles++;
-//  return f;
-//}
-//
-//void FileWriteMgr::CreateMonitoringInfo(unsigned int runn)
-//{
-//  RunDesc *r=m_RunList[runn];
-//  std::string namePref;
-//  char cRunNo[255];
-//  sprintf(cRunNo,"%d/",runn);
-//  namePref = m_input+"/";
-//  namePref +=cRunNo;
-//  std::string comm;
-//  comm ="Number of Files";
-//  std::string mnam = namePref+"NoFiles";
-//  declareInfo(namePref+"NoFiles",r->m_Files,comm);
-//  comm="Number of MEPs";
-//  mnam = namePref+"MEPs";
-//  declareInfo(mnam,r->m_MEPs,comm);
-//  comm="Number of Bytes";
-//  mnam = namePref+"Bytes";
-//  declareInfo(mnam,r->m_BytesWritten,comm);
-//}
-//std::string FileWriteMgr::FileTime()
-//{
-//  time_t rawtime;
-//  struct tm * timeinfo;
-//  char buffer[80];
-//
-//  time(&rawtime);
-//  timeinfo = localtime(&rawtime);
-//
-//  strftime(buffer, 80, "%Y%m%d-%H%M%S", timeinfo);
-//  std::string ret = std::string(buffer);
-//  return ret;
-//}
-//void FileWriteMgr::handleFileWriteError()
-//{
-//  std::string node;
-//  node = m_node;
-//  for (unsigned int i=0;i<node.size();i++)
-//  {
-//    node[i] = toupper(node[i]);
-//  }
-//  std::string cmdname=node+"_MEPRx_01/setOverflow";
-//  DimClient::sendCommand(cmdname.c_str(),2);
-//}
-//
-//ssize_t FileWriteMgr::Write(int fd, const void *buf, size_t n)
-//{
-//  char *cbuf = (char*)buf;
-//  size_t towrite = n;
-//  int status;
-//  int nintr_max = 2;
-//  while (towrite > 0)
-//  {
-//    status = write(fd, cbuf, towrite);
-//    if (status >0)
-//    {
-//      towrite = towrite - status;
-//      cbuf += status;
-//      continue;
-//    }
-//    else if (status == 0)
-//    {
-//      printf("%s: 0 Bytes written! Ignoring MEP\n", RTL::processName().c_str());
-//      status = -1;
-//      return status;
-//    }
-//    else if (status == -1)
-//    {
-//      if (errno == EIO || errno == ENOSPC)
-//      {
-//        printf("%s: File Write Error (IO or NoSpace): Errno = %d\n", RTL::processName().c_str(),errno);
-//        handleFileWriteError();
-//        status = -1;
-//        return status;
-//      }
-//      else if (errno == EINTR)
-//      {
-//        nintr_max--;
-//        if (nintr_max >0)
-//        {
-//          continue;
-//        }
-//        else
-//        {
-//          status = -1;
-//          return status;
-//        }
-//      }
-//      else
-//      {
-//        printf("%s: File Write Error: Errno = %d\n", RTL::processName().c_str(),errno);
-//        handleFileWriteError();
-//        status = -1;
-//        return status;
-//      }
-//    }
-//  }
-//  status = 0;
-//  return status;
-//}

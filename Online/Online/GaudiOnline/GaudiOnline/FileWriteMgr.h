@@ -19,6 +19,7 @@
 #include "MDF/RawEventDescriptor.h"
 #include <map>
 #include <list>
+#include <vector>
 #include "stdio.h"
 #include "time.h"
 #include "pthread.h"
@@ -88,12 +89,13 @@ namespace LHCb
 //    std::map<unsigned int,RunDesc*> m_RunList;
     std::string m_node;
     int m_FileCloseDelay;
-    std::string m_ServPatt;
   public:
     ISvcLocator* m_SvcLoc;
     typedef std::list<FileWriterSvc*> SvcList;
     typedef std::list<IService*> ISvcList;
+    typedef std::vector<std::string> FileWriterList;
     SvcList m_ServiceList;
+    FileWriterList m_FileWriters;
     /// Standard Constructor
     FileWriteMgr(const std::string& name, ISvcLocator* svc);
     /// Standard Destructor

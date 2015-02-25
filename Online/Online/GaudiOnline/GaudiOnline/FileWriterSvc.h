@@ -103,8 +103,8 @@ namespace LHCb
   protected:
     /// Reference to MEP manager service
     pthread_mutex_t m_listlock;
-    MEPManager* m_mepMgr;
-    MBM::Consumer* m_consumer;
+//    MEPManager* m_mepMgr;
+//    MBM::Consumer* m_consumer;
     /// Flag indicating that MBM event retrieval is active
     bool m_receiveEvts;
     /// Property: printout frequence
@@ -159,6 +159,7 @@ namespace LHCb
     std::map<unsigned int,FileWriter::RunDesc*> m_RunList;
     std::string m_node;
     int m_FileCloseDelay;
+    int m_DIMSteering;
   public:
     /// Standard Constructor
     FileWriterSvc(const std::string& name, ISvcLocator* svc);
@@ -187,7 +188,8 @@ namespace LHCb
     virtual void handleFileWriteError();
     virtual ssize_t Write(int fd, const void *buf, size_t n);
     virtual void Markclose(FileWriter::FileDescr* d);
-    void AddRequirements(MBM::Consumer* consumer);
+//    void AddRequirements(MBM::Consumer* consumer);
+    std::vector<std::string> &getRequirements();
     bool matchRequirements(const MBM::EventDesc &e);
     /// Flag indicating that MBM eve)
     void LockList(void)

@@ -75,7 +75,7 @@ extern "C"
 
 // Standard Constructor
 FileWriterSvc::FileWriterSvc(const string& nam, ISvcLocator* svc) :
-  OnlineService(nam, svc), m_mepMgr(0), m_consumer(0),
+  OnlineService(nam, svc), /*m_mepMgr(0), *//*m_consumer(0),*/
       m_receiveEvts(false), m_RunNumber(0),m_FileDesc(0)
 {
   m_mepIn =  m_mepOut = m_minAlloc = m_EvIn = m_EvOut= 0;
@@ -90,6 +90,7 @@ FileWriterSvc::FileWriterSvc(const string& nam, ISvcLocator* svc) :
   declareProperty("FileCloseDelay",m_FileCloseDelay=10);
   declareProperty("MaxEvents",m_maxevts=-1);
   declareProperty("EventFraction",m_evfrac=1.0);
+  declareProperty("DIMSteering",m_DIMSteering = 0);
   m_RunList.clear();
   m_texit = false;
   m_numev = 0;
@@ -120,18 +121,18 @@ StatusCode FileWriterSvc::queryInterface(const InterfaceID& riid,
 /// Incident handler implemenentation: Inform that a new incident has occured
 void FileWriterSvc::handle(const Incident& inc)
 {
-  MsgStream log(msgSvc(), name());
-  log << MSG::INFO << "Got incident:" << inc.source() << " of type "
-      << inc.type() << endmsg;
-  if (inc.type() == "DAQ_CANCEL")
-  {
-    m_receiveEvts = false;
-    m_consumer->cancel();
-  }
-  else if (inc.type() == "DAQ_ENABLE")
-  {
-    m_receiveEvts = true;
-  }
+//  MsgStream log(msgSvc(), name());
+//  log << MSG::INFO << "Got incident:" << inc.source() << " of type "
+//      << inc.type() << endmsg;
+//  if (inc.type() == "DAQ_CANCEL")
+//  {
+//    m_receiveEvts = false;
+//    m_consumer->cancel();
+//  }
+//  else if (inc.type() == "DAQ_ENABLE")
+//  {
+//    m_receiveEvts = true;
+//  }
 }
 
 StatusCode FileWriterSvc::initialize()
@@ -143,18 +144,8 @@ StatusCode FileWriterSvc::initialize()
   m_node = RTL::nodeNameShort();
   if (sc.isSuccess())
   {
-//    if (service(m_mepMgrName, m_mepMgr).isSuccess())
-//    {
-//      try
-//      {
-//        m_consumer = m_mepMgr->createConsumer(m_input,m_mepMgr->processName());
-//        for (Requirements::iterator i = m_req.begin(); i != m_req.end(); ++i)  {
-//          Requirement r;
-//          r.parse(*i);
-//          m_consumer->addRequest(r);
-//        }
-        incidentSvc()->addListener(this, "DAQ_CANCEL");
-        incidentSvc()->addListener(this, "DAQ_ENABLE");
+//        incidentSvc()->addListener(this, "DAQ_CANCEL");
+//        incidentSvc()->addListener(this, "DAQ_ENABLE");
         declareInfo("MEPsIn", m_mepIn = 0, "Number of MEPs received.");
         declareInfo("MEPsOut", m_mepOut = 0, "Number of MEPs written.");
         declareInfo("EvtsIn", m_EvIn = 0, "Number of Events received.");
@@ -202,10 +193,10 @@ StatusCode FileWriterSvc::initialize()
 
 StatusCode FileWriterSvc::finalize()
 {
-  if (m_consumer)
-  {
-    m_consumer = 0;
-  }
+//  if (m_consumer)
+//  {
+//    m_consumer = 0;
+//  }
   undeclareAll();
   m_minAlloc = 0;
   m_mepIn = 0;
@@ -438,25 +429,34 @@ FileDescr *FileWriterSvc::openFile(unsigned int runn, FTYPE t)
   m_NumFiles++;
   return f;
 }
-void FileWriterSvc::AddRequirements(MBM::Consumer* consumer)
+std::vector<std::string> &FileWriterSvc::getRequirements()
 {
-  m_consumer = consumer;
-  try
-  {
-    for (Requirements::iterator i = m_req.begin(); i != m_req.end(); ++i)  {
-      Requirement r;
-      r.parse(*i);
-      consumer->addRequest(r);
-      m_breq.insert(m_breq.end(),r);
-    }
-    return;
+  for (Requirements::iterator i = m_req.begin(); i != m_req.end(); ++i)  {
+    Requirement r;
+    r.parse(*i);
+    m_breq.insert(m_breq.end(),r);
   }
-  catch (exception& e)
-  {
-    error(string("Failed setup MEP buffers:") + e.what());
-    return;
-  }
+  return this->m_req;
 }
+//void FileWriterSvc::AddRequirements(MBM::Consumer* consumer)
+//{
+//  m_consumer = consumer;
+//  try
+//  {
+//    for (Requirements::iterator i = m_req.begin(); i != m_req.end(); ++i)  {
+//      Requirement r;
+//      r.parse(*i);
+//      consumer->addRequest(r);
+//      m_breq.insert(m_breq.end(),r);
+//    }
+//    return;
+//  }
+//  catch (exception& e)
+//  {
+//    error(string("Failed setup MEP buffers:") + e.what());
+//    return;
+//  }
+//}
 
 void FileWriterSvc::CreateMonitoringInfo(unsigned int runn)
 {

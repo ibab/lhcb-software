@@ -196,21 +196,21 @@ MEPRx::MEPRx(const string &nam, MEPRxSvc *parent) :
     std::string liveBufName = parent->m_nameLiveBuf;
     std::string overBufName = parent->m_nameOverflowBuf;
     if ( parent->m_partitionBuffers ) {
-	liveBufName += "_";
-	overBufName += "_";
-	if ( !parent->m_partitionName.empty() )  {
-	  liveBufName += parent->m_partitionName;
-	  overBufName += parent->m_partitionName;
-	}
-	else {
+  liveBufName += "_";
+  overBufName += "_";
+  if ( !parent->m_partitionName.empty() )  {
+    liveBufName += parent->m_partitionName;
+    overBufName += parent->m_partitionName;
+  }
+  else {
           char txt[32];
-	  liveBufName += _itoa(parent->m_partitionID,txt,16);
-	  overBufName += _itoa(parent->m_partitionID,txt,16);
-	}
+    liveBufName += _itoa(parent->m_partitionID,txt,16);
+    overBufName += _itoa(parent->m_partitionID,txt,16);
+  }
     }
     m_liveBuf = new MEPBuf(liveBufName, nam, parent->partitionID());
     if ( !parent->m_nameOverflowBuf.empty() ) {
-	m_ovflBuf = new MEPBuf(overBufName, nam, parent->partitionID());
+  m_ovflBuf = new MEPBuf(overBufName, nam, parent->partitionID());
     }
     m_buf = m_liveBuf;
     m_log << MSG::DEBUG << std::hex << std::showbase
@@ -252,8 +252,8 @@ int MEPRx::spaceRearm(int)
     memset(m_seen, 0, m_nSrc * sizeof(int));
     m_parent->m_overflowActive = false;
     if (m_parent->m_overflow) {
-        sc = m_ovflBuf ? m_liveBuf->getSpaceTry(m_spaceSize) 
-	    : m_liveBuf->getSpace(m_spaceSize);
+        sc = m_ovflBuf ? m_liveBuf->getSpaceTry(m_spaceSize)
+      : m_liveBuf->getSpace(m_spaceSize);
         if (sc == MBM_REQ_CANCEL)
             return sc;
         if (sc == MBM_NORMAL) {
@@ -533,13 +533,21 @@ int MEPRx::spaceAction()
     }
     dsc.type = m_eventType;
     m->setSize(m_brx);
-    m_buf->declareEvent();
-    int sc = m_buf->sendSpace();
-    if (m_eventType == EVENT_TYPE_MEP) {
-        (m_parent->m_totMEPproduced)++;
-        if (m_buf == m_liveBuf)
-            (m_parent->m_totMEPproducedLive)++;
-        else (m_parent->m_totMEPproducedOvfl)++;
+    int sc;
+    try
+    {
+      m_buf->declareEvent();
+      sc = m_buf->sendSpace();
+      if (m_eventType == EVENT_TYPE_MEP) {
+          (m_parent->m_totMEPproduced)++;
+          if (m_buf == m_liveBuf)
+              (m_parent->m_totMEPproducedLive)++;
+          else (m_parent->m_totMEPproducedOvfl)++;
+      }
+    }
+    catch (std::runtime_error &e)
+    {
+      sc = MBM_ERROR;
     }
     m_parent->m_complTimeSock->fill(1.0 * (m_age), 1.0);
     m_parent->m_L0IDDiff->fill(1.0 * m_l0ID - m_prevL0ID, 1.0);
@@ -735,7 +743,7 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc) :
 MEPRxSvc::~MEPRxSvc()
 {
     delete[] (u_int8_t*) m_trashCan;
-    
+
 }
 
 void MEPRxSvc::truncatedPkt(RTL::IPHeader *iphdr)
@@ -798,12 +806,12 @@ StatusCode MEPRxSvc::setupMEPReq(const std::string& odinName)
 StatusCode MEPRxSvc::sendMEPReq(int m)
 {
     static u_int32_t seqno = 0;
-    
+
     if (m_dynamicMEPRequest) {
         mepreq.nmep = m;
         mepreq.seqno = seqno++;
         mepreq.runno = m_runNumber;
-        clock_gettime(CLOCK_REALTIME, &mepreq.txtime);  
+        clock_gettime(CLOCK_REALTIME, &mepreq.txtime);
         int n = MEPRxSys::send_msg(m_mepSock, m_odinIPAddr, MEP_REQ_TOS, &mepreq,
                                    MEP_REQ_LEN, 0);
         if (n == MEP_REQ_LEN) {
@@ -900,9 +908,9 @@ StatusCode MEPRxSvc::run()
             continue;
         }
     }
-    // we got a START command - send a clear-command first 
+    // we got a START command - send a clear-command first
     if (!sendMEPReq(0xff).isSuccess()) {
-	log << MSG::WARNING << "Could not send MEP clear command" <<  endmsg;
+  log << MSG::WARNING << "Could not send MEP clear command" <<  endmsg;
     }
     MEPRxSys::microsleep(rand() | 0xffff); // back-off a bit
     // now send initial MEP requests
@@ -1438,7 +1446,7 @@ StatusCode MEPRxSvc::initialize()
         m_incidentSvc->addListener(this, "DAQ_CANCEL");
         m_incidentSvc->addListener(this, "DAQ_ENABLE");
     }
-    
+
     m_mepRQCommand = new MEPRQCommand(this, msgSvc(), RTL::processName());
     m_clearMonCommand = new ClearMonCommand(this, msgSvc(), RTL::processName());
     m_upMonCommand = new UpMonCommand(this, msgSvc(), RTL::processName());
@@ -1460,15 +1468,15 @@ StatusCode MEPRxSvc::initialize()
     MEPRxSys::gethostname_short(hostname); // get lowercased short hostname
     std::string errmsg;
     if (MEPRxSys::is_in_file_no_case(hostname, m_badDiskList, errmsg)) {
-	info(std::string("Disk disabled on ") + hostname + std::string(" - disabling overflow"));
-	m_overflow = false;
-	m_setOverflowCmd->m_permDisable = true;
+  info(std::string("Disk disabled on ") + hostname + std::string(" - disabling overflow"));
+  m_overflow = false;
+  m_setOverflowCmd->m_permDisable = true;
     } else {
-	if (errmsg.compare("") != 0) {
-	    error(errmsg);
-	}
+  if (errmsg.compare("") != 0) {
+      error(errmsg);
+  }
     }
-    
+
     m_overflowStatSvc = new OverflowStatSvc(this, msgSvc(), RTL::processName());
     m_ebState = READY;
     return StatusCode::SUCCESS;
