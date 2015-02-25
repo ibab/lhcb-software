@@ -4,6 +4,8 @@
 ! Responsible : Vladimir Gligorov
 !==============================================================================
 
+!==================== DaVinciAssociators v9r6 2015-02-25 ======================
+
 ! 2015-02-18 - Eduardo Rodrigues
  - Put back the LHCb::ParticlePropertySvc code after having removed it
    temporarily to try and debug crashes in the DaVinci nightly tests.
