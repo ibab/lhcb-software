@@ -5,6 +5,8 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+!====================== AnalysisPython v2r35 2015-02-25 ======================
+
 ! 2015-02-18 - Vanya Belyaev
  - make flatte amplitude simpler
 
@@ -12,8 +14,7 @@
  - adjust statistics 
 
 ! 2015-02-10 - Vanya Belyaev
- -  - add convex spline 
-
+ - add convex spline 
 
 ! 2015-02-10 - Vanya Belyaev
  - improve splines 
