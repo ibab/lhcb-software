@@ -12,6 +12,8 @@
 # @author Manuel Schiller <manuel.schiller@nikhef.nl>
 # @date 2013-04-30
 #
+import logging
+
 import ROOT, ctypes
 from ROOT import std
 
@@ -185,7 +187,7 @@ def __patchmap__(t):
     # patch map, std::map to have a sane __getitem__ and a sane
     # iterator implementation (PyROOT's implementation is doing
     # something fishy at the moment)
-    print 'WARNING: patching %s for sane behaviour' % str(t)
+    logging.info('patching %s for sane behaviour' % str(t))
     t.__getitem__ = lambda obj, idx: obj.at(idx)
     from veloview.giantrootfile.iter_tools import (
         RangeIter,
