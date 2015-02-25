@@ -6,6 +6,12 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-02-25 - Vanya Belyaev
+ - add dependency on pyanalysis  (needed for test_poly.py)
+   question:
+	 should it be used with -no_auto_imports directive(for CMT?)
+	  if so, what is the corresponding CMake function?
+	                
 !========================= LHCbMath v3r54 2015-02-24 =========================
 ! 2015-02-23 - Vanya Belyaev
  - reshuffle polinomials 

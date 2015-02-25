@@ -13,6 +13,7 @@ find_package(GSL)
 find_package(ROOT COMPONENTS MathCore GenVector)
 find_package(VDT)
 find_package(Eigen)
+find_package(pyanalysis)
 
 gaudi_install_headers(LHCbMath)
 #gaudi_install_headers(Eigen)

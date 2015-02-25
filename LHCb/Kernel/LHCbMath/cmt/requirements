@@ -1,3 +1,4 @@
+
 #=====================================================================
 # Created    : 19/04/2006
 # Maintainer : Vanya Belyaev
@@ -22,6 +23,7 @@ use vdt             v*      LCG_Interfaces
 use eigen           v*      LCG_Interfaces
 use GaudiGSL        v*   
 use GaudiPython     v*              -no_auto_imports
+use pyanalysis      v*     LCG_Interfaces
 
 apply_pattern install_more_includes more=LHCbMath 
 #apply_pattern install_more_includes more=LHCbMath offset=Eigen 
