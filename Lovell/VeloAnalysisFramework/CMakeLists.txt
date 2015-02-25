@@ -10,7 +10,6 @@ gaudi_depends_on_subdirs(GaudiKernel)
 
 gaudi_add_library(VeloGUIUtils
                   src/*.cc
-                  # PUBLIC_HEADERS src
                   NO_PUBLIC_HEADERS
                   INCLUDE_DIRS ROOT
                   LINK_LIBRARIES ROOT)
