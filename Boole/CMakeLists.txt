@@ -6,8 +6,8 @@ find_package(GaudiProject)
 #---------------------------------------------------------------
 
 # Declare project name and version
-gaudi_project(Boole v29r3
-              USE Lbcom v16r3
+gaudi_project(Boole v29r4
+              USE Lbcom v16r4
               DATA AppConfig VERSION v3r*
                    FieldMap VERSION v5r*
                    ParamFiles VERSION v8r*)
