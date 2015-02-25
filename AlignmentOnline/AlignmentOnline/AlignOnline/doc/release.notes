@@ -3,6 +3,10 @@ Package: AlignOnline
 Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
 
+! 2015-02-25 - Maurizio Martinelli
+ - Added alignment configuration for Tracker alignment with D0 candidates
+ - Moved previous configuration based on tracks into TrackerAlignmentWithTracks.py
+
 ! 2015-02-22 - Roel Aaij
  - Fix import of OnlineEnvBase to use the RUNINFO. Fix default value of ASDDir
    for iterator.

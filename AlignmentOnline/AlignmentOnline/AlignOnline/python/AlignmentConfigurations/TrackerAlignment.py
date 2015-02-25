@@ -1,14 +1,10 @@
 def configureAlignment():
-    from Configurables import TAlignment
-    from TAlignment.TrackSelections import GoodLongTracks, VeloOverlapTracks, VeloBackwardTracks
-    from TAlignment.VertexSelections import configuredPVSelection
-    # specify what we actually align for
-    TAlignment().TrackSelections = [GoodLongTracks(),
-                                    VeloOverlapTracks(),
-                                    VeloBackwardTracks()]
-
-    # add the default PV selection
-    TAlignment().PVSelection = configuredPVSelection()
+    from Configurables import Escher, TAlignment
+    Escher().HltFilterCode = "HLT_PASS_RE( 'Hlt1CalibTrackingDecision' )"
+    from TAlignment.ParticleSelections import defaultHLTD0Selection
+    TAlignment().ParticleSelections = [ defaultHLTD0Selection() ]
+    from TAlignment.TrackSelections import NoPIDTracksFromHlt
+    TAlignment().TrackSelections = [ NoPIDTracksFromHlt() ]
 
     from TAlignment.AlignmentScenarios import configure2012DataAlignment
     configure2012DataAlignment()
