@@ -4,14 +4,10 @@ from veloview.utils.rootutils import ROOT
 
 def setUpModule():
     ROOT.SetMemoryPolicy(ROOT.kMemoryStrict)
-    # status = ROOT.gSystem.Load('libCintex')
-    # if status >= 0: ROOT.Cintex.Enable()
-    # else: raise RuntimeError('Couldn\'t load libCintex')
-    status = ROOT.gSystem.Load('libVeloGUIUtils')
-    if status < 0: raise RuntimeError('Couldn\'t load libVeloGUIUtils')
 
 
 import unittest
+import tempfile
 from veloview.core.io import flatten, unflatten
 class TestGRFIOutils(unittest.TestCase):
 
@@ -65,12 +61,13 @@ class TestGRFIO(unittest.TestCase):
                 self.entry2['checked'] = 3
                 self.entry2['comment'] = 'undecided'
 
-        self.grf = GRFIO('/tmp/test.root', mode = 'new', branches = self.branches)
+        self.temppath = '{0}/test.root'.format(tempfile.mkdtemp())
+        self.grf = GRFIO(self.temppath, mode = 'new', branches = self.branches)
 
     def tearDown(self):
         del self.grf
-        if os.path.exists('/tmp/test.root'):
-            os.remove('/tmp/test.root')
+        if os.path.exists(self.temppath):
+            os.remove(self.temppath)
 
         # from glob import glob
         # locks = glob('/tmp/test.root.lock*')
