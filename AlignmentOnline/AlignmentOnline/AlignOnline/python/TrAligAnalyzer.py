@@ -99,6 +99,7 @@ def setupOnline(directory, prefix, filename):
   app.AuditAlgorithms = False
   Configs.MonitorSvc().OutputLevel = MSG_ERROR
   Configs.MonitorSvc().UniqueServiceNames = 1
+  Configs.MonitorSvc().CounterUpdateInterval = -1
   Configs.RootHistCnv__PersSvc("RootHistSvc").OutputLevel = MSG_ERROR
   app.OutputLevel = MSG_INFO
   # print sel
