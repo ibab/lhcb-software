@@ -9,10 +9,10 @@ Development release, based on Gaudi v26r1, LHCb v38r5, Rec v17r5 and Phys v19r5.
 Uses LCG_74root6 with ROOT 6.02.05.
 
 - Packages updated :
-  Analysis/Ostap v1r6, Hlt/HltSelChecker v12r4, Phys/AnalysisPython v2r35, Phys/DaVinciAssociators v9r6,
-  Phys/DaVinciMCTools v10r12, Phys/DecayTreeTupleDalitz v1r2, Phys/DecayTreeTupleJets v1r2,
-  Phys/DecayTreeTupleTracking v1r2, Phys/FlavourTaggingChecker v7r8, Phys/JetAccessoriesMC v2r9,
-  Phys/JetTagging v1r6, Phys/TeslaTools v1r3.
+  Analysis/Ostap v1r6, Hlt/HltSelChecker v12r4, Ex/LoKiExample v8r9, Phys/AnalysisPython v2r35,
+  Phys/DaVinciAssociators v9r6, Phys/DaVinciMCTools v10r12, Phys/DecayTreeTupleDalitz v1r2,
+  Phys/DecayTreeTupleJets v1r2, Phys/DecayTreeTupleTracking v1r2, Phys/FlavourTaggingChecker v7r8,
+  Phys/JetAccessoriesMC v2r9, Phys/JetTagging v1r6, Phys/LoKiPhysMC v9r8, Phys/TeslaTools v1r3.
 
 - In Analysis/Ostap v1r6 :
   . Addition of decorations, minor fixes, various improvements, etc.
@@ -21,6 +21,9 @@ Uses LCG_74root6 with ROOT 6.02.05.
 - In Hlt/HltSelChecker v12r4 :
   . Replaced Gaudi's ParticlePropertySvc with LHCb::ParticlePropertySvc,
     see https://its.cern.ch/jira/browse/LHCBPS-1070.
+
+- In Ex/LoKiExample v8r9 :
+  . Fix to accomodate the change in LoKi header files.
 
 - In Phys/AnalysisPython v2r35 :
   . Made Flatte amplitude simpler.
@@ -57,6 +60,9 @@ Uses LCG_74root6 with ROOT 6.02.05.
   . Added LHCb-ANA-2014-076 b,c-jet tagging tool.
   . Minor fix to account changes in structure of LoKi header files.
   . Fix CMakeLists.txt to get correctly ROOT TMVA and Phyiscs.
+
+- In Phys/LoKiPhysMC v9r8 :
+  . Step towards generation of C++ code for LoKi functions.
 
 - In Phys/TeslaTools v1r3 :
   . PV selection harmonised with offline.
