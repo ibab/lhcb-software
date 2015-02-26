@@ -8,12 +8,13 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+!=========================== Ostap v1r6 2015-02-26 ============================
+
 ! 2015-02-25 - Vanya Belyaev
  - minor fix 
 
 ! 2015-02-24 - Vanya Belyaev
  - more decorations 
-
 
 ! 2015-02-24 - Vanya Belyaev
  - more decorations 
@@ -28,7 +29,6 @@
  - improvement for polynomials 
 
 - 2015-02-21 - Vanya Belyaev
-
   1. some improvement for fit models 
   2. add parameter "refit" to PDF.fitTo function
   3. add qmtest for ZipShelve&SQLiteShelve 
@@ -57,7 +57,6 @@
 
 ! 2015-01-24 - Vanya Belyaev
  - minor additons ..
-
 
 !=========================== Ostap v1r5 2015-01-16 ============================
 
