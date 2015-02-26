@@ -4,6 +4,8 @@
 ! Purpose     : Jet Tagging Package
 ! -----------------------------------------------------------------------------
 
+!========================= JetTagging v1r6 2015-02-26 =========================
+
 ! 2015-02-12 - Cédric Potterat
  - fix CMakeLists.txt to get correctly ROOT TMVA and Phyiscs.
 
