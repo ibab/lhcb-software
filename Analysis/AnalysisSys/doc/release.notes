@@ -3,6 +3,67 @@ Package             : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb analysis packages
 
+</PRE><H1><A NAME=v13r4>2015-02-26 Analysis v13r4</A></H1><PRE>
+
+Development release, based on Gaudi v26r1, LHCb v38r5, Rec v17r5 and Phys v19r5.
+Uses LCG_74root6 with ROOT 6.02.05.
+
+- Packages updated :
+  Analysis/Ostap v1r6, Hlt/HltSelChecker v12r4, Phys/AnalysisPython v2r35, Phys/DaVinciAssociators v9r6,
+  Phys/DaVinciMCTools v10r12, Phys/DecayTreeTupleDalitz v1r2, Phys/DecayTreeTupleJets v1r2,
+  Phys/DecayTreeTupleTracking v1r2, Phys/FlavourTaggingChecker v7r8, Phys/JetAccessoriesMC v2r9,
+  Phys/JetTagging v1r6, Phys/TeslaTools v1r3.
+
+- In Analysis/Ostap v1r6 :
+  . Addition of decorations, minor fixes, various improvements, etc.
+  . See package release notes for details.
+
+- In Hlt/HltSelChecker v12r4 :
+  . Replaced Gaudi's ParticlePropertySvc with LHCb::ParticlePropertySvc,
+    see https://its.cern.ch/jira/browse/LHCBPS-1070.
+
+- In Phys/AnalysisPython v2r35 :
+  . Made Flatte amplitude simpler.
+  . Added convex spline and improved splines.
+  . Added convex and monothonical polynomials.
+
+- In Phys/DaVinciAssociators v9r6 :
+  . Replaced Gaudi's ParticlePropertySvc with LHCb::ParticlePropertySvc,
+    see https://its.cern.ch/jira/browse/LHCBPS-1070.
+
+- In Phys/DaVinciMCTools v10r12 :
+  . Fixed unprotected pointer dereferences in BkgCat when consulting the particle
+    property service, in case the particle being looked for is not in the service.
+    Print loud warnings and draw what conclusion we can about the background.
+
+- In Phys/DecayTreeTupleDalitz v1r2 :
+  . Fixed problem with Dalitz variable naming when daughter vector has not a constant order.
+
+- In Phys/DecayTreeTupleJets v1r2 :
+  . Minor fix to account changes in structure of LoKi header files.
+
+- In Phys/DecayTreeTupleTracking v1r2 :
+  . Added new tool TupleToolConeIsolation. Extension of TupleToolTrackIsolation that includes
+    neutral cone and extra isolation variables.
+	
+- In Phys/FlavourTaggingChecker v7r8 :
+  . Updated LoKi headers in BTaggingAnalysis.cpp.
+  . Fixed inefficient usage of _ppFromName function.
+	
+- In Phys/JetAccessoriesMC v2r9 :
+  . Minor fix to take into account changes in structure of LoKi-headers.
+
+- In Phys/JetTagging v1r6 :
+  . Added LHCb-ANA-2014-076 b,c-jet tagging tool.
+  . Minor fix to account changes in structure of LoKi header files.
+  . Fix CMakeLists.txt to get correctly ROOT TMVA and Phyiscs.
+
+- In Phys/TeslaTools v1r3 :
+  . PV selection harmonised with offline.
+  . PVs now the same for all resurrections in each event.
+  . TES objects moved down one level, now under /Event/Turbo/HLTLINE/OBJECT.
+  . Containers only created when a report exists.
+
 </PRE><H1><A NAME=v13r3>2015-01-16 Analysis v13r3</A></H1><PRE>
 
 Development release, based on Gaudi v26r0, LHCb v38r4, Rec v17r4 and Phys v19r4.
