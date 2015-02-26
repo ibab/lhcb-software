@@ -4,6 +4,8 @@
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+!========================= DaVinciMCTools v10r12 2015-02-26 =====================
+
 ! 2015-02-17 - V. Gligorov
  - Fix unprotected pointer dereferences in BkgCat when consulting the particle
    property service, in case the particle being looked for is not in the service.
