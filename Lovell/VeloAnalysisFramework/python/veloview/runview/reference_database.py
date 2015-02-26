@@ -72,7 +72,13 @@ class InvalidPlot(Exception):
 
 
 class ReferenceDatabase(object):
-    """Object responsible for executing CRUD operations on an SQLite3 DB."""
+    """Object responsible for executing CRUD operations on an SQLite3 DB.
+
+    Using a proper ORM with SQLite support here, like SQLAlchemey, here would
+    be ideal, but installing third party Python packages in the LHCb software
+    environment is a pain, and as we only deal with two resources here, we
+    just use SQL statements.
+    """
     def __init__(self, path):
         """Initialise a ReferenceDatabase at path.
 
@@ -257,8 +263,8 @@ class ReferenceDatabase(object):
                 msg = 'Boundary {0} does not exist'.format(boundary)
                 raise InvalidPlot(msg)
             elif err.startswith('UNIQUE constraint failed'):
-                msg = 'Boundary plot {0} {1} already exists'.format(
-                    boundary, plot
+                msg = 'Plot name `{0}` already exists at boundary {1}'.format(
+                    plot, boundary
                 )
                 raise InvalidPlot(msg)
             else:
