@@ -5,6 +5,8 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+!=================== FlavourTaggingChecker v7r8 2015-02-26 ===================
+
 ! 2015-1-22 - Jack Wimberley
  - Updated LoKi headers in BTaggingAnalysis.cpp
  - Fixed inefficient usage of _ppFromName function
