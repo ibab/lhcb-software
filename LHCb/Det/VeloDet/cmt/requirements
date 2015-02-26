@@ -5,7 +5,7 @@
 package           VeloDet 
 version           v13r20
 
-# =============== structure ===============================================	
+# =============== structure =============================================== 
 branches         src cmt doc VeloDet dict
 
 # =============== used packages ===========================================
@@ -14,7 +14,7 @@ use DetDescCnv  v*    Det
 use LHCbKernel  v*    Kernel
 use LHCbMath    v*    Kernel
 use GaudiAlg    v*
-use GSL         v*    LCG_Interfaces
+use vdt         v*    LCG_Interfaces
 use Boost       v*    LCG_Interfaces
 
 macro_append Boost_linkopts " $(Boost_linkopts_regex) "

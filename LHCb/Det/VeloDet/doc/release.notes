@@ -3,6 +3,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-02-26 - Manuel Tobias Schiller
+ - follow move from GSL to vdt also in cmt/requirements
+
+! 2015-02-26 - Manuel Tobias Schiller
  - get rid of gsl_pow_2, just squaring stuff is much much better than a
    function call
  - use vdt special functions where possible to speed up things
