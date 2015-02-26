@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v47r5>2015-02-27 Brunel v47r5</A></H1><PRE>
+This version uses projects LHCb v38r5, Lbcom v16r4, Rec v17r5, Gaudi v26r1
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
 - Changes to Configuration
   . OnlineBrunel will run on the output of Hlt1, so don't try to decode
     Hlt2DecReports in OnlineMode. 
@@ -14,6 +18,12 @@ Purpose: LHCb reconstruction program
   . Follow various tracking improvements
   . For data type '2015' PatVeloTTHybrid instead of PatVeloTT is run
   . Follow replacement of ConfigTarFileAccesSvc by ConfigCDBAccessSvc
+  . Follow tuning of uncertainty of point on magnetic plane in downstream
+    tracking, change zMagnet parametrisation
+  . Follow optimisation of Rich photon reconstruction
+  . Follow use of StateProvider instead of extrapolator to move states in Rich
+    (RichRecTrackTools)
+  . Follow vetoing of out of time OT hit pairs
 
 - Changes to QMTests
   . Add brunel.sim08-pgun test to test SpecialData=["pGun"] option
