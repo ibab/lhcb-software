@@ -1,0 +1,15 @@
+#!/bin/bash
+for i in `ls ../pvss/dplist`;
+  do 
+  if test -f ../pvss/dplist/${i};
+  then
+    FF=`basename $i`;
+    FTYPE="${FF#*.}";
+    FNAME="${FF%.*}";
+    if test "${FTYPE}" = "dpl";
+    then
+      echo "echo \"${i}: ${FNAME} ${FTYPE}\";";
+      echo "cmt run ../scripts/manipFSMtype -P ${1} -T ${FNAME} -E -S;";
+    fi;
+  fi;
+done;

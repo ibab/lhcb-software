@@ -44,7 +44,7 @@ class StorageInfo(General):
     return sum(self.strMult.data)
   # ===========================================================================
   def numLayer1Slots(self):
-    return self.nSubFarm.data  
+    return self.nSubFarm.data 
   # ===========================================================================
   def defineTasks(self,partition):
     """

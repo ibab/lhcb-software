@@ -66,7 +66,7 @@ detectors['ECAL'] = {'PVSSSystem':    'ECSECAL',
 daq_numPartition    = 16
 
 # HLT farm definitions
-hlt_numSubFarms     = 50
+hlt_numSubFarms     = 57
 
 # Joboptions control parameters
 if platform.system() == 'Linux': jobopts_optsdir = "/group/online/dataflow/options"
@@ -75,10 +75,13 @@ gauditask_startscript='/group/online/dataflow/scripts/runGaudi.sh'
 
 # Storage parameters
 # Stream definitions are in Online.RunInfoClasses.Installer
-storage_streams_per_node = 15
 stroage_control_node= "STORECTRL01"
-storage_recv_nodes  = ['STORERECV01','STORERECV02']
-storage_strm_nodes  = ['STORESTRM01','STORESTRM02']
+storage_recv_nodes  = ['STORERECV01','STORERECV02','STORERECV03','STORERECV04']
+storage_strm_nodes  = ['STORESTRM01','STORESTRM02','STORESTRM03','STORESTRM04']
+storage_subfarms_per_node = 60
+storage_streams_per_node  = 25
+storage_recv_slices = len(storage_recv_nodes)*storage_subfarms_per_node
+storage_strm_slices = len(storage_strm_nodes)*storage_streams_per_node
 
 def setUpStorage(project):
   global daq_numPartition
@@ -89,7 +92,7 @@ def setUpStorage(project):
     storage_streams_per_node = 25
     daq_numPartition         = 4
   else:
-    storage_streams_per_node = 15
+    storage_streams_per_node = 20
     daq_numPartition    = 16
 
 # Monitoring parameters
@@ -113,7 +116,7 @@ if node_name == "MONA06":
   monitor_type             = 'Monitoring2'
   monitor_num_nodes        = 10
   monitor_streams_per_node =  8
-  monitor_workers_per_node = 15
+  monitor_workers_per_node = 20
 
 elif node_name == "MONA09":
   print ' -----> Setup for RECONSTRUCTION System:'
@@ -122,9 +125,9 @@ elif node_name == "MONA09":
   # Monitoring system parameters
   monitor_system_name      = 'RECONSTRUCTION'
   monitor_type             = 'Reconstruction'
-  monitor_num_nodes        =  9
+  monitor_num_nodes        =  15
   monitor_streams_per_node =  8 # 4 partitions + 4 optional streams
-  monitor_workers_per_node = 24
+  monitor_workers_per_node = 32
 
 else:
   ##### if node_name == "MONA08":
@@ -132,9 +135,9 @@ else:
   # Monitoring system parameters
   monitor_system_name      = 'MONITORING'
   monitor_type             = 'Monitoring'
-  monitor_num_nodes        =  5
+  monitor_num_nodes        = 10
   monitor_streams_per_node = 20 # 16 partitions + 4 optional streams
-  monitor_workers_per_node = 16
+  monitor_workers_per_node = 32
 
 # Same for all monitoring systems
 monitor_control_node     =  node_name

@@ -19,8 +19,8 @@ def install(name,system=Online.SetupParams.storage_system_name):
   inst.numPartition     = Online.SetupParams.daq_numPartition
   inst.recvNodes        = Online.SetupParams.storage_recv_nodes
   inst.strmNodes        = Online.SetupParams.storage_strm_nodes
-  inst.numRecvSlices    = Online.SetupParams.hlt_numSubFarms
-  inst.numStreamSlices  = len(inst.strmNodes)*Online.SetupParams.storage_streams_per_node
+  inst.numRecvSlices    = Online.SetupParams.storage_recv_slices
+  inst.numStreamSlices  = Online.SetupParams.storage_strm_slices
   inst.create()
   return inst.manager
 

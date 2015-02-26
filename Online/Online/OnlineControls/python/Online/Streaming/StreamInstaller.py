@@ -80,4 +80,8 @@ class Installer(InstallerBase):
       slices[i] = node+":%02d"%nodes[node]
     self.set('StreamNodes',strmNodes)
     self.set('StreamSlices',slices)
+    self.set('Setup.NumRecvNodes',len(self.recvNodes))
+    self.set('Setup.NumRecvSlices',self.numRecvSlices/len(self.recvNodes))
+    self.set('Setup.NumStrmNodes',len(self.strmNodes))
+    self.set('Setup.NumStrmSlices',self.numStreamSlices/len(self.strmNodes))
     return self.write(prefix='StreamControl('+self.name+'): ')

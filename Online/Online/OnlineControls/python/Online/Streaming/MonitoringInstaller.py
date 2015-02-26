@@ -27,12 +27,12 @@ class Installer(InstallerBase):
   def __init__(self, mgr, dev):
     "Default constructor"
     InstallerBase.__init__(self,mgr,dev+'Alloc')
-    self.system           = dev
-    self.numPartition     = Params.daq_numPartition
+    self.system            = dev
+    self.numPartition      = Params.daq_numPartition
     self.numWorkersPerNode = Params.monitor_workers_per_node
-    self.numStreams       = Params.monitor_streams_per_node
-    self.relayNodes       = Params.monitor_relay_nodes
-    self.monNodes         = Params.monitor_nodes
+    self.numStreams        = Params.monitor_streams_per_node
+    self.relayNodes        = Params.monitor_relay_nodes
+    self.monNodes          = Params.monitor_nodes
 
   # ===========================================================================
   def create(self):
@@ -84,6 +84,10 @@ class Installer(InstallerBase):
       worker_slices[i] = node+":%02d"%nodes[node]
     self.set('StreamNodes',monNodes)
     self.set('StreamSlices',worker_slices)
+    self.set('Setup.NumRecvNodes',len(self.relayNodes))
+    self.set('Setup.NumRecvSlices',self.numStreams)
+    self.set('Setup.NumStrmNodes',len(self.monNodes))
+    self.set('Setup.NumStrmSlices',self.numWorkersPerNode)
     return self.write(prefix='StreamControl('+self.name+'): ')
 
 # =============================================================================

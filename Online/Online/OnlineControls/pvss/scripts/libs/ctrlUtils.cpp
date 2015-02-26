@@ -15,10 +15,10 @@ void ctrlUtils_trace(string msg)  {
   }
 }
 //=============================================================================
-string ctrlUtils_dimMapName() {
+string ctrlUtils_dimMapName(string prefix="DimMap") {
   string sys = getSystemName();
-  string dimMap;// = "DimStorage";
-  dimMap = "DimMap"+substr(sys,0,strlen(sys)-1);
+  string dimMap = prefix;
+  dimMap = dimMap+substr(sys,0,strlen(sys)-1);
   return dimMap;
 }
 //=============================================================================
@@ -217,7 +217,7 @@ int ctrlUtils_stopAllTree(string stream="")  {
 int ctrlUtils_installPythonManager(int num, string name, string script)  {
   string path = PROJ_PATH+"/bin/"+name;
   file f = fopen(path,"w");
-  fprintf(f,"#!/bin/bash\n. `dirname $0`/PVSS00api.sh -NAME "+name+" -DLL PVSSInterface -FUN pvss_pymain $*\n\n");
+  fprintf(f,"#!/bin/bash\n. `dirname $0`/WINCCOA_api.sh -NAME "+name+" -DLL PVSSInterface -FUN pvss_pymain $*\n\n");
   fclose(f);  
   system("/bin/chmod +x "+path);
   fwInstallation_addManager(name,"always", 30, 3, 3, "-num "+num+" -SCRIPT "+script);

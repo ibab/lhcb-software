@@ -3,17 +3,16 @@ import os, sys, time
 
 def pvssDir():         return os.environ['PVSS_SYSTEM_ROOT']
 def projectName():     return os.environ['PVSS_PROJECT_NAME']
-def projectBaseDir():  return '/localdisk/pvss/'+projectName()
+def projectBaseDir():  return '/localdisk/wincc/'+projectName()
 def componentsDir():   return os.environ['PVSS_COMPONENTS_DIR']
 def sourceDir():       return os.environ['ONLINECONTROLSROOT']
 def systemNumber():    return int(os.environ['PVSS_SYSTEM_NUMBER'])
 
-def pvssCTRL():        return os.environ['PVSS_SYSTEM_ROOT']+'/bin/PVSS00ctrl -proj '+projectName()+' '
-def pvssPMON():        return os.environ['PVSS_SYSTEM_ROOT']+'/bin/PVSS00pmon -proj '+projectName()+' '
-#def pvssPMON():        return os.environ['PVSS_SYSTEM_ROOT']+'/bin/PVSS00pmon '
-def pvssASCII():       return os.environ['PVSS_SYSTEM_ROOT']+'/bin/PVSS00ascii -proj '+projectName()+' '
+def pvssCTRL():        return os.environ['PVSS_SYSTEM_ROOT']+'/bin/WCCOActrl -proj '+projectName()+' '
+def pvssPMON():        return os.environ['PVSS_SYSTEM_ROOT']+'/bin/WCCILpmon -proj '+projectName()+' '
+def pvssASCII():       return os.environ['PVSS_SYSTEM_ROOT']+'/bin/WCCOAascii -proj '+projectName()+' '
 def pvssConsole():     return '/usr/local/bin/startConsole 3.8'
-def pvssTool():        return os.environ['PVSS_SYSTEM_ROOT']+'/bin/PVSStoolSyncTypes -proj '+projectName()+' '
+def pvssTool():        return os.environ['PVSS_SYSTEM_ROOT']+'/bin/WCCOAtoolSyncTypes -proj '+projectName()+' '
 
 def usage():
   print "usage: Install.py <action> -project <project-name> [-opt [-opt]]"
@@ -98,7 +97,8 @@ def installDirectory(source_path,target_path,sub_path='',relative_path_up=None,r
       os.stat(d)
   for d in dirs:
     if os.path.isdir(dir+os.sep+d):
-      if d != 'CVS':
+      if d != 'CVS' and d != '.svn':
+        ##os.system('ln -s '+source_path+'/'+sub_path+os.sep+d+' '+target_path+'/../'+sub_path+os.sep+d)
         installDirectory(source_path,target_path,sub_path+os.sep+d,relative_path_up+'..'+os.sep,rel_install_path)
 
 def installFiles():
@@ -106,7 +106,7 @@ def installFiles():
   print 'Copy files from '+sourceDir()+os.sep+'pvss to '+projectBaseDir()+' ...'
   curr = os.getcwd()
   try:
-    installDirectory(sourceDir()+os.sep+'pvss',projectBaseDir())
+    installDirectory(sourceDir()+os.sep+'pvss/bin',projectBaseDir()+'/bin')
   except Exception,X:
     print X
   os.chdir(curr)
@@ -125,7 +125,7 @@ def installFiles():
 
 def importDpList(fname):
   print 'Installing datapoint list...'
-  dplist = sourceDir()+'/pvss/dplist/'+fname
+  dplist = sourceDir()+'/pvss/dplist/'+projectName()+'/'+fname
   try:
     os.stat(dplist)
     execCmd(pvssASCII()+' -in '+dplist)
@@ -244,22 +244,22 @@ def install():
 def copyProject():
   start = time.time()
   src = sourceDir()+os.sep+'farmTemplate'
-  src = '/group/online/dataflow/pvss/TEMPLATE/project.2010.11.15'
+  src = '/group/online/dataflow/pvss/TEMPLATE/project.2015.02.25'
   nam = projectName()
   sysN = systemNumber()
-  cfg = '/localdisk/pvss/'+nam+'/config/config'
+  cfg = '/localdisk/wincc/'+nam+'/config/config'
   os.environ['PVSS_II']=cfg
   execCmd(pvssPMON()+' -config '+cfg+' -stopWait')
-  execCmd('rm -rf /localdisk/pvss'+os.sep+nam)
-  execCmd('cp -r '+src+' /localdisk/pvss'+os.sep+nam)
-  execCmd('chmod -R 0777 /localdisk/pvss'+os.sep+nam)
+  execCmd('rm -rf /localdisk/wincc'+os.sep+nam)
+  execCmd('cp -r '+src+' /localdisk/wincc'+os.sep+nam)
+  execCmd('chmod -R 0777 /localdisk/wincc'+os.sep+nam)
   print '......... --> Patching project configuration file'
   lines = open(cfg,'r').readlines()
   fout  = open(cfg,'w')
   for line in lines:
     content = line[:-1]
-    if content.find('proj_path = "/localdisk/pvss/TEMPLATE"')==0:
-      content = 'proj_path = "/localdisk/pvss/'+nam+'"'
+    if content.find('proj_path = "/localdisk/wincc/TEMPLATE"')==0:
+      content = 'proj_path = "/localdisk/wincc/'+nam+'"'
     print >>fout,content
     if content=='distributed = 1':
       """
@@ -269,16 +269,27 @@ def copyProject():
       print >>fout, '[dist]'
       print >>fout, 'distPort= '+str(sysN+100)+'10'
       """
-      print >>fout, 'pmonPort= 44000'
-      print >>fout, 'dataPort= 44001'
-      print >>fout, 'eventPort= 44002'
-      print >>fout, '[dist]'
-      print >>fout, 'distPort= 44010'
+      if nam == "STORAGE":
+        print >>fout, 'pmonPort= 44000'
+        print >>fout, 'dataPort= 44001'
+        print >>fout, 'eventPort= 44002'
+        print >>fout, '[dist]'
+        print >>fout, 'distPort= 44010'
 
-      print >>fout, 'distPeer= "storectl01:49910" 399 # LBECS'
-      print >>fout, 'distPeer= "storectl01:40710" 307 # RECSTORAGE'
-      print >>fout, 'distPeer= "mona07:40610"     306 # RECCTRL'
-      print >>fout, 'distPeer= "mona07:40310"     303 # RECFARM'
+        print >>fout, 'distPeer= "storectl01:49910" 399 # LBECS'
+        ##print >>fout, 'distPeer = "mona08" 301 # MONITORING'
+        ##print >>fout, 'distPeer = "mona09:40210" 302   # Online real time RECONSTRUCTION'
+        ##print >>fout, 'distPeer = "tfc002" 11  # LHC/LHCCOM'
+        ##print >>fout, 'distPeer = "trg001" 250 # TRGL0DU'
+      
+        #print >>fout, 'distPeer= "storectl01:40710" 307 # RECSTORAGE'
+        #print >>fout, 'distPeer= "mona07:40610"     306 # RECCTRL'
+        #print >>fout, 'distPeer= "mona07:40310"     303 # RECFARM'
+      else:
+        print >>fout, 'pmonPort= 4999'
+        print >>fout, '[dist]'
+        #print >>fout, 'distPeer = "storectl01:44000" 400 # STORAGE'
+        print >>fout, 'distPeer = "devpvssslc6:44010" 400 # STORAGE'
     elif content.find('[dist]')==0:
       pass
     elif content.find('pmonPort = ')==0:
@@ -308,7 +319,7 @@ def copyProject2():
   start = time.time()
   nam = projectName()
   sysN = systemNumber()
-  cfg = '/localdisk/pvss/'+nam+'/config/config'
+  cfg = '/localdisk/wincc/'+nam+'/config/config'
   os.environ['PVSS_II']=cfg
   execCmd(pvssPMON()+' -config '+cfg+' -autoreg &')
   print '......... --> Project',nam,' System number',sysN,' started.'
@@ -347,7 +358,7 @@ def hostName():
 def startFarm():
   print 'Starting...'
   h = hostname().upper()
-  cfg = '/localdisk/pvss/REC'+h+'/config/config'
+  cfg = '/localdisk/wincc/REC'+h+'/config/config'
   os.environ['PVSS_II']=cfg
   execCmd(pvssPMON()+' -config '+cfg+' -autoreg&')
 

@@ -59,6 +59,12 @@ int StreamTaskMgr_install()  {
   names[12] = makeDynString ("","RecvSlicesGarage","","");
   names[13] = makeDynString ("","StreamNodesGarage","","");
   names[14] = makeDynString ("","StreamSlicesGarage","","");
+  names[15] = makeDynString ("","Setup","","");
+  names[16] = makeDynString ("","","NumRecvNodes","");
+  names[17] = makeDynString ("","","NumRecvSlices","");
+  names[18] = makeDynString ("","","NumStrmNodes","");
+  names[19] = makeDynString ("","","NumStrmSlices","");
+
   types[1]  = makeDynInt (DPEL_STRUCT,0,0,0);
   types[2]  = makeDynInt (0,DPEL_DYN_STRING,0,0);
   types[3]  = makeDynInt (0,DPEL_STRING,0,0);
@@ -73,6 +79,11 @@ int StreamTaskMgr_install()  {
   types[12] = makeDynInt (0,DPEL_DYN_STRING,0,0);
   types[13] = makeDynInt (0,DPEL_DYN_STRING,0,0);
   types[14] = makeDynInt (0,DPEL_DYN_STRING,0,0);
+  types[15] = makeDynInt (0,DPEL_STRUCT,0,0);
+  types[16] = makeDynInt (0,0,DPEL_INT,0,0);
+  types[17] = makeDynInt (0,0,DPEL_INT,0,0);
+  types[18] = makeDynInt (0,0,DPEL_INT,0,0);
+  types[19] = makeDynInt (0,0,DPEL_INT,0,0);
   ctrlUtils_installDataType(names,types);
 
   names[1]  = makeDynString ("StreamConfigurator","","","");

@@ -297,7 +297,8 @@ class RunDB:
 def run():
     import time
 
-    db=_createConnection('rundb_admin','adm1n','rundb')
+    db=_createConnection('rundb_admin','adm1n','lhcbonr_rundb')
+    #db=_createConnection('rundb_admin','adm1n','rundb')
     rundb = RunDB(db)
     rundb.initialize()
     while(1):

@@ -20,10 +20,10 @@ void StreamStatusDisplay_install() {
   }
   // Display Server
   ctrlUtils_trace("StreamStatusDisplay_install> Installing display server...");
-  ctrlUtils_installPythonManager(51,"PVSS00DataflowMon","../python/Online/Streaming/DisplayServer.py");
+  ctrlUtils_installPythonManager(51,"WCCOADataflowMon","../python/Online/Streaming/DisplayServer.py");
   // Display itslf
   ctrlUtils_trace("StreamStatusDisplay_install> Installing display monitor...");
-  fwInstallation_addManager("PVSS00ui","manual", 30, 3, 3, "-p StreamControl/DataflowStatus.pnl -iconBar -menuBar");
+  fwInstallation_addManager("WCCOAui","manual", 30, 3, 3, "-p StreamControl/DataflowStatus.pnl -iconBar -menuBar");
 }
 //=============================================================================
 int StreamStatusDisplay_uninstall()  {

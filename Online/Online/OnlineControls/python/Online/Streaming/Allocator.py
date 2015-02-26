@@ -297,6 +297,8 @@ class FSMmanip:
 
     unused_tasks = copy.deepcopy(tasks_parents[0])
     parents = copy.deepcopy(tasks_parents[1])
+    if debug: print 'tasks_parents[0]:',len(tasks_parents[0]),tasks_parents[0]
+    if debug: print 'tasks_parents[1]:',len(tasks_parents[1]),tasks_parents[1]
     used_tasks = {}
     for n in processes.keys():
       if debug: print '--->',len(processes[n]),' tasks running on node:',n
@@ -318,11 +320,15 @@ class FSMmanip:
           del unused_tasks[n][0]
           #print 'Task:',len(used_tasks[n]),task
         else:
-          error(self.name+': No task slots present!',timestamp=1)
+          error(self.name+': No free task slots present for node '+str(n)+' [FSM_DimTask device units]!',timestamp=1)
+          error(self.name+': The number of FSM_DimTask device units per node is a hard limit.',timestamp=1)
+          error(self.name+': However: Is it possible a node in this system is disabled?',timestamp=1)
           if not unused_tasks.has_key(n):
-            error(self.name+': Key '+str(n)+' canot be found.',timestamp=1)
+            error(self.name+': Node '+str(n)+' cannot be found in the list and seems to have no device slots.',timestamp=1)
           else:
-            error(self.name+': No slots for key '+str(n)+' present.',timestamp=1)
+            error(self.name+': No more slots/device units for node '+str(n)+' present.',timestamp=1)
+          if debug: print 'Used   tasks:', len(used_tasks), used_tasks
+          if debug: print 'Unused tasks:', len(unused_tasks), unused_tasks
           return None
     #self.nodeParents = parents
     #self.tasks = used_tasks
@@ -769,6 +775,7 @@ class Allocator(StreamingDescriptor):
     self.load()
     nLayer1Slots = info_obj.numLayer1Slots()
     nLayer2Slots = info_obj.numLayer2Slots()
+    print 'allocate: nLayer1Slots:',nLayer1Slots,' nLayer2Slots:',nLayer2Slots
     part_info = self.allocateSlots(rundp_name,partition,nLayer1Slots,recv_slots_per_node,nLayer2Slots,strm_slots_per_node)
 
     if part_info is not None:   # Allocation was successful: Now update Info table+tasks

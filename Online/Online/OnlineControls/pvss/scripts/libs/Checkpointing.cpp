@@ -166,11 +166,14 @@ string Checkpoint_directory()  {
   }
   f = f + "/" + Checkpoint_AppType +
           "/" + m_app.text;
-  if ( strlen(Checkpoint_HLTType)> 0 ) f = f + "/" + m_hltType.text;
+  if ( strlen(m_hltType.text)> 0 ) f = f + "/" + m_hltType.text;
   if ( Checkpoint_useDBtags )  {
     f = f +   "/" + m_condDB.text + "/" + m_ddDB.text;
   }
-  if ( strlen(Checkpoint_HLTProgram)> 0 ) f = f + "/" + m_hltProgram.text;
+  if ( strlen(m_condMap.text)> 0 )   {
+    f = f + "/" + baseName(m_condMap.text);
+  }
+  if ( strlen(m_hltProgram.text)> 0 ) f = f + "/" + m_hltProgram.text;
   return f;
 }
 
@@ -185,6 +188,7 @@ void Checkpoint_update()  {
   m_result.text          = "";
   m_result.backCol       = "_Transparent";
   m_result.foreCol       = "_WindowText";
+  m_condMap.visible      = Checkpoint_useDBtags;
   m_condDB.visible       = Checkpoint_useDBtags;
   m_ddDB.visible         = Checkpoint_useDBtags;
   m_condDBLabel.visible  = Checkpoint_useDBtags;
@@ -354,6 +358,8 @@ void MooreCheckpoint_init(string partition, string triggerConf)   {
   m_hltType.toolTipText      = m_hltTypeLabel.toolTipText;
   m_condDBLabel.toolTipText  = "Select the conditions database tag to create the checkpoint.";
   m_condDB.toolTipText       = m_condDBLabel.toolTipText;  
+  m_condMapLabel.toolTipText = "File with run-dependent conditions items";
+  m_condMap.toolTipText      = "File with run-dependent conditions items";
   m_ddDBLabel.toolTipText    = "Select the detector database tag to create the checkpoint.";
   m_ddDB.toolTipText         = m_ddDBLabel.toolTipText;  
   m_outdirLabel.toolTipText  = "Output directory for checkpoint files.";
@@ -615,6 +621,7 @@ void MooreCheckpoint_initValuesFromMapping(string partition, string triggerConf)
   Checkpoint_HLTType        = parameters["HLTType"];
   Checkpoint_DDDB           = parameters["DDDBTag"];
   Checkpoint_CondDB         = parameters["CondDBTag"];
+  Checkpoint_CondMap        = parameters["DynCondList"];
   Checkpoint_LumiBB         = parameters["LumiBBRate"];
   Checkpoint_BeamGasEnabled = parameters["BeamGasTrigger"] == "FALSE" ? 0 : 1;
   Checkpoint_LumiEnabled    = parameters["LumiTrigger"] == "FALSE" ? 0 : 1;
@@ -632,6 +639,9 @@ void MooreCheckpoint_initValuesFromMapping(string partition, string triggerConf)
 
   m_hltType.items    = makeDynString(Checkpoint_HLTType);
   m_hltType.text     = Checkpoint_HLTType;
+
+  m_condMap.text     = Checkpoint_CondMap;
+  m_condMap.editable = false;
 
   sprintf(name,"%s (%08x)",Checkpoint_TCKLabel,tckHex);
   m_tck.text = name;
@@ -667,25 +677,26 @@ void MooreCheckpoint_enableCommands(bool val)   {
   bool edit = val;
   // Input fields
   if ( !Checkpoint_Editable ) edit = false;
-  m_app.editable   = edit;
-  m_outdir.editable  = edit;
-  m_hltType.editable = edit;
-  m_output.editable  = edit;
-  m_online.editable  = edit;
+  m_app.editable       = edit;
+  m_outdir.editable    = edit;
+  m_hltType.editable   = edit;
+  m_output.editable    = edit;
+  m_condMap.editable   = edit;
+  m_online.editable    = edit;
   m_mooreVsn.editable  = edit;
-  m_tck.editable     = edit;
-  m_tckList.enabled  = edit;
+  m_tck.editable       = edit;
+  m_tckList.enabled    = edit;
   // DB tags
-  m_condDB.enabled  = val;
-  m_ddDB.enabled    = val;
+  m_condDB.enabled     = val;
+  m_ddDB.enabled       = val;
   // Buttons:
-  m_close.enabled   = val;
-  m_create.enabled  = val;
-  m_test.enabled    = val;
-  m_reload.enabled  = val;
-  m_gzip.enabled    = val;
-  m_options.enabled = val;
-  m_enable.visible  = !val;
+  m_close.enabled      = val;
+  m_create.enabled     = val;
+  m_test.enabled       = val;
+  m_reload.enabled     = val;
+  m_gzip.enabled       = val;
+  m_options.enabled    = val;
+  m_enable.visible     = !val;
 }
 
 //=============================================================================
@@ -887,6 +898,7 @@ string MooreCheckpoint_createOptions(int mode=0)  {
       "OnlineEnv.MooreStartupMode   = "+mode+";\n" +
       "OnlineEnv.CondDBTag          = \""+m_condDB.text+"\";\n"  +
       "OnlineEnv.DDDBTag            = \""+m_ddDB.text+"\";\n"  +
+      "OnlineEnv.ConditionsMapping  = \""+m_condMap.text+"\";\n"  +
       "OnlineEnv.LumiTrigger        = "+Checkpoint_LumiEnabled+";\n"  +
       "OnlineEnv.BeamGasTrigger     = "+Checkpoint_BeamGasEnabled+";\n"  +
       "OnlineEnv.LumiPars           = {"+lumi_param+"};\n"  +

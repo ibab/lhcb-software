@@ -384,9 +384,17 @@ class OptionsWriter(Control.AllocatorClient):
     opts = PyOptions('#'+self.optHeader(partition))
     opts = self.addGeneralInfo(partition,opts)
     opts = self.addTriggerInfo(opts)
+    if self.run.deferredRuns is not None and len(self.run.deferredRuns.data)>0:
+      opts.add('DeferredRuns', ["%s"%i for i in self.run.deferredRuns.data])
+    else:
+      opts.add('DeferredRuns', ["*"])
+
     if self.writePythonFile(partition, fname+'Base', subdir, opts.value) is None:
       return None
     opts = PyOptions('#'+self.optHeader(partition))
+    if partition == 'LHCb2':
+      opts.comment().add('import OnlineNodeEnv')
+      opts.add('OnlineNodeEnv.load_node_info()')
     opts.comment().add('from '+fname+'Base import *')
     opts.comment().add('from OnlineConfig import *')
     if self.writePythonFile(partition, fname, subdir, opts.value) is None:
@@ -621,150 +629,179 @@ class HLTOptionsWriter(OptionsWriter):
 
   # ===========================================================================
   def _writeHLTOpts(self,partition):
-    info = self.getStreamInfo(self.storageMgr,'Storage')
-    if info is not None:
-      farms = self.run.subFarms.data
+    farms = self.run.subFarms.data
+    num = len(farms)
+    farm_names = []
+    for i in xrange(num):
+      farm = farms[i]
+      farm_names.append(farm)
+    hdr='//'+self.optHeader(partition)+'\n//  Number of subfarms:'+str(len(farms))
+    #
+    # 
+    #  If the storage is in use (storeFlag>0) we have to check if the slices match!
+    #
+    if self.run.storeFlag.data > 0:
+      info = self.getStreamInfo(self.storageMgr,'Storage')
+      #
+      # Check availability of the storage streaming information
+      #
+      if info is None:
+        error('No storage streaming information present!')
+        return None
+      #
+      # Check if slice numbers match:
+      #
       slots = info.recvSlices()
       if len(farms) != len(slots):
         error('Severe mismatch: Number of subfarms:'+str(len(farms))+' Number of recv tasks:'+str(len(slots)))
         return None
-      num = len(farms)
-      farm_names = []
-      hdr='//'+self.optHeader(partition)+'\n//  Number of subfarms:'+str(len(farms))
-      
       for i in xrange(num):
+        farm = farms[i]
         node = slots[i].split(':')[0]
         name = '%s_%s_SF%02d_HLT'%(partition,node,i)
-        farm = farms[i]
-        farm_names.append(farm)
         opts = hdr+'\n//\n'+\
-               '// ---------------- Data sending information for sub-farm:'+farm+'\n'+\
-               'OnlineEnv.Target  = "'+node+'-d1::'+name+'";\n'+\
-               'OnlineEnv.Target0 = { "'+node+'-d1::'+name+'" };\n'+\
-               'OnlineEnv.Target1 = { "'+node+'-d1" };\n'+\
-               'OnlineEnv.Target2 = { "'+name+'" };'
+            '// ---------------- Data sending information for sub-farm:'+farm+'\n'+\
+            'OnlineEnv.Target  = "'+node+'-d1::'+name+'";\n'+\
+            'OnlineEnv.Target0 = { "'+node+'-d1::'+name+'" };\n'+\
+            'OnlineEnv.Target1 = { "'+node+'-d1" };\n'+\
+            'OnlineEnv.Target2 = { "'+name+'" };'
         fname = partition+'_'+farm+'_HLT'
         if self.writeOptionsFile(partition, fname, opts) is None:
           return None
-        log('      --> Farm:'+farm+' sends to slot:'+slots[i]+', Task:'+name,timestamp=1)
+        log('      --> Farm:'+farm+' sends to slot:'+slots[i]+', Task:'+name+', opts:'+fname,timestamp=1)
 
-      opts = self._getOnlineEnv(partition)
-      opts.comment('---------------- HLT patrameters:   ')
-      opts.add('SubFarms',       farm_names)
+    opts = self._getOnlineEnv(partition)
+    opts.comment('---------------- HLT patrameters:   ')
+    opts.add('SubFarms',       farm_names)
 
-      # For the HLT info add the list of deferred runs
-      if self.run.deferredRuns is not None and len(self.run.deferredRuns.data)>0:
-        opts.add('DeferredRuns', ["%s"%i for i in self.run.deferredRuns.data])
-      else:
-        opts.add('DeferredRuns', ["*"])
+    # For the HLT info add the list of deferred runs
+    if self.run.deferredRuns is not None and len(self.run.deferredRuns.data)>0:
+      opts.add('DeferredRuns', ["%s"%i for i in self.run.deferredRuns.data])
+    else:
+      opts.add('DeferredRuns', ["*"])
       
-      if self.writeOptionsFile(partition, partition+'_Info', opts.value) is None:
-        return None
+    if self.writeOptionsFile(partition, partition+'_Info', opts.value) is None:
+      return None
 
-      if partition != 'LHCb1' and partition != 'LHCb2' and partition != 'LHCbA':
-        opts = self._getTell1Boards(partition,hdr)
-        if self.writeOptionsFile(partition, partition+'_Tell1Boards', opts.value) is None:
-          return None
-      self._makeRunInfo(partition)
-      return self.run
-    return None
+    if partition != 'LHCb1' and partition != 'LHCb2' and partition != 'LHCbA':
+      opts = self._getTell1Boards(partition,hdr)
+      if self.writeOptionsFile(partition, partition+'_Tell1Boards', opts.value) is None:
+        return None
+    self._makeRunInfo(partition)
+    return self.run
 
   # ===========================================================================
   def _writePyHLTOpts(self,partition):
     opt_header = self.optHeader(partition)
-    info = self.getStreamInfo(self.storageMgr,'Storage')
-    if info is not None:
-      farms = self.run.subFarms.data
+    farms = self.run.subFarms.data
+    num = len(farms)
+    farm_names = []
+    for i in xrange(num):
+      farm = farms[i]
+      farm_names.append(farm)
+    hdr='//'+self.optHeader(partition)+'\n//  Number of subfarms:'+str(len(farms))
+    run_type = self.run.runType()
+    #
+    # 
+    #  If the storage is in use (storeFlag>0) we have to check if the slices match!
+    #
+    if self.run.storeFlag.data > 0:
+      info = self.getStreamInfo(self.storageMgr,'Storage')
+      #
+      # Check availability of the storage streaming information
+      #
+      if info is None:
+        error('No storage streaming information present!')
+        return None
+      #
+      # Check if slice numbers match:
+      #
       slots = info.recvSlices()
       if len(farms) != len(slots):
         error('Severe mismatch: Number of subfarms:'+str(len(farms))+' Number of recv tasks:'+str(len(slots)))
         return None
-      num = len(farms)
-      run_type = self.run.runType()
-      farm_names = []
+
       for i in xrange(num):
+        farm = farms[i]
         node = slots[i].split(':')[0]
         name = '%s_%s_SF%02d_HLT'%(partition,node,i)
-        farm = farms[i]
-        farm_names.append(farm)
         opts = '#'+opt_header+'\n#\n'+\
-               '# ---------------- Data sending information for sub-farm:'+farm+'\n'+\
-               'Target  = "'+node+'-d1::'+name+'"\n'+\
-               'Target0 = [ "'+node+'-d1::'+name+'" ]\n'+\
-               'Target1 = [ "'+node+'-d1" ]\n'+\
-               'Target2 = [ "'+name+'" ]'
+            '# ---------------- Data sending information for sub-farm:'+farm+'\n'+\
+            'Target  = "'+node+'-d1::'+name+'"\n'+\
+            'Target0 = [ "'+node+'-d1::'+name+'" ]\n'+\
+            'Target1 = [ "'+node+'-d1" ]\n'+\
+            'Target2 = [ "'+name+'" ]'
         fname = partition+'_'+farm+'_HLT'
         if self.writePythonFile(partition, fname, subdir='HLT', opts=opts) is None:
           return None
-        log('      --> Farm:'+farm+' sends to slot:'+slots[i]+', Task:'+name,timestamp=1)
-
-      opts = PyOptions('#'+opt_header)
-      opts = self.addGeneralInfo(partition,opts)
-      opts.comment('---------------- HLT patrameters:   ')
-      opts.add('SubFarms',       farm_names)
-
-      # For the HLT info add the list of deferred runs -- NOT NEEDED FOR THE TIME BEING!
-      #if self.run.deferredRuns is not None and len(self.run.deferredRuns.data)>0:
-      #  opts.add('DeferredRuns', ["%s"%i for i in self.run.deferredRuns.data])
-      #else:
-      #  opts.add('DeferredRuns', ["*"])
-
-      opts = self.addTriggerInfo(opts)
-      if self.writePythonFile(partition, partition+'_Info', subdir='HLT', opts=opts.value) is None:
-        return None
-
-      # Do not write Tell1 board content for LHCb1 (HLT reprocessing)
-      if partition == 'LHCb1' or partition == 'LHCb2' or partition == 'LHCbA':
-        self._makeRunInfo(partition)
-        return self.run
+        log('      --> Farm:'+farm+' sends to slot:'+slots[i]+', Task:'+name+', pyOpts:HLT/'+fname,timestamp=1)
         
-      opts = Options('#'+opt_header)
-      opts.comment().comment('---------------- Tell1 board information:  ')
-      opts.add('Tell1Boards         = [')
-      err = None
-      num = 0;
-      print 'New version of HLT options generator....'
-      boards = self._tell1Boards(partition)
-      if boards:
-        for b in boards:
-          opts.add('  "%s", "%s", "",'%b)
-          num = num + 1
-        if num > 0:
-          opts.value = opts.value[:-2] + '\n]\n'
-        else:
-          opts.value = opts.value + '\n]\n'
-      else:
-        return None
+    opts = PyOptions('#'+opt_header)
+    opts = self.addGeneralInfo(partition,opts)
+    opts.comment('---------------- HLT patrameters:   ')
+    opts.add(    'SubFarms', farm_names)
 
-      odin = 'Unknown'
-      try:
-        # If OdinData or OdinIP is explicitly set to None
-        # No odin is in the readout
-        odin  = self.run.odinData.data
-        host  = odin
-        if odin != "None":
-          host = self._gethost(odin)
-        opts.append('Tell1Boards',[host,odin,'ODIN'])
+    # For the HLT info add the list of deferred runs -- NOT NEEDED FOR THE TIME BEING!
+    if self.run.deferredRuns is not None and len(self.run.deferredRuns.data)>0:
+      opts.add('DeferredRuns', ["%s"%i for i in self.run.deferredRuns.data])
+    else:
+      opts.add('DeferredRuns', ["*"])
 
-        odin  = self.run.odinRequest.data
-        host  = odin
-        if odin != "None":
-          host = self._gethost(odin)
+    opts = self.addTriggerInfo(opts)
+    if self.writePythonFile(partition, partition+'_Info', subdir='HLT', opts=opts.value) is None:
+      return None
 
-        opts.add('ODIN_Name',odin)
-        opts.add('ODIN_IP',  host)
-      except Exception,X:
-        error('Failed to retrieve ODIN ip address for '+str(odin),timestamp=1)
-        error('Error [IGNORED for NOW] '+str(X),timestamp=1)
-        err = self
-      if err:
-        return None
-      fname = partition+'_Tell1Boards'
-      if self.writePythonFile(partition, fname, subdir='HLT', opts=opts.value) is None:
-        return None
+    # Do not write Tell1 board content for LHCb1 (HLT reprocessing)
+    if partition == 'LHCb1' or partition == 'LHCb2' or partition == 'LHCbA':
       self._makeRunInfo(partition)
       return self.run
-    return None
+        
+    opts = Options('#'+opt_header)
+    opts.comment().comment('---------------- Tell1 board information:  ')
+    opts.add('Tell1Boards         = [')
+    err = None
+    num = 0;
+    print 'New version of HLT options generator....'
+    boards = self._tell1Boards(partition)
+    if boards:
+      for b in boards:
+        opts.add('  "%s", "%s", "",'%b)
+        num = num + 1
+      if num > 0:
+        opts.value = opts.value[:-2] + '\n]\n'
+      else:
+        opts.value = opts.value + '\n]\n'
+    else:
+      return None
+
+    odin = 'Unknown'
+    try:
+      # If OdinData or OdinIP is explicitly set to None
+      # No odin is in the readout
+      odin  = self.run.odinData.data
+      host  = odin
+      if odin != "None":
+        host = self._gethost(odin)
+      opts.append('Tell1Boards',[host,odin,'ODIN'])
+
+      odin  = self.run.odinRequest.data
+      host  = odin
+      if odin != "None":
+        host = self._gethost(odin)
+
+      opts.add('ODIN_Name',odin)
+      opts.add('ODIN_IP',  host)
+    except Exception,X:
+      error('Failed to retrieve ODIN ip address for '+str(odin),timestamp=1)
+      error('Error [IGNORED for NOW] '+str(X),timestamp=1)
+      err = self
+    if err:
+      return None
+    fname = partition+'_Tell1Boards'
+    if self.writePythonFile(partition, fname, subdir='HLT', opts=opts.value) is None:
+      return None
+    self._makeRunInfo(partition)
+    return self.run
 
 #==============================================================================
 class InjectorOptionsWriter(OptionsWriter):
