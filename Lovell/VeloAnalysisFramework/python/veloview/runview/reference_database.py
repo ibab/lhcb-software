@@ -155,13 +155,13 @@ class ReferenceDatabase(object):
                 ') VALUES (?, ?, ?)'
             ), (boundary, up_run, down_run))
         except sqlite3.IntegrityError as e:
-            err = e.message
-            if err.startswith('UNIQUE constraint failed: '):
+            err = e.message.lower()
+            if 'unique' in err:
                 msg = 'Could not add boundary {0}, already exists'.format(
                     boundary
                 )
                 raise InvalidBoundary(msg)
-            elif err.startswith(('datatype mismatch', 'CHECK constraint')):
+            elif 'datatype mismatch' in err or 'constraint' in err:
                 msg = 'Could not add boundary {0}, not integer type'.format(
                     boundary
                 )
@@ -258,11 +258,11 @@ class ReferenceDatabase(object):
                 ') VALUES (?, ?, ?, ?)'
             ), (plot, boundary, up_run, down_run))
         except sqlite3.IntegrityError as e:
-            err = e.message
-            if err.startswith('FOREIGN KEY constraint failed'):
+            err = e.message.lower()
+            if 'foreign key' in err:
                 msg = 'Boundary {0} does not exist'.format(boundary)
                 raise InvalidPlot(msg)
-            elif err.startswith('UNIQUE constraint failed'):
+            elif 'unique' in err:
                 msg = 'Plot name `{0}` already exists at boundary {1}'.format(
                     plot, boundary
                 )
