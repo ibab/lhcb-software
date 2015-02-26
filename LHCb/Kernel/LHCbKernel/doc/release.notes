@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2015-02-26 - Manuel Tobias Schiller
+ - CircleTraj: speed up distTo2ndError by factor 3 (fast cube root)
+ - STDataFunctor: avoid call to exp and log from pow, as the exponent is integer
+
 !========================= LHCbKernel v15r8 2015-02-23 =========================
 ! 2015-02-22 - Manuel Tobias Schiller
  - CircleTraj: speed up the muEstimate method by factor of 3

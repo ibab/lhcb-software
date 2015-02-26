@@ -1,6 +1,7 @@
 #ifndef _STDataFunctor_H_
 #define _STDataFunctor_H_
 
+#include <cmath>
 #include <functional>
 #include <numeric>
 
@@ -122,7 +123,7 @@ template <class TYPE>
     : public std::binary_function<double,TYPE, double>{
 public:
     inline double  operator() ( double& charge2  , TYPE obj ) const {
-      return ( !obj ) ? charge2 :  charge2+= pow(obj->depositedCharge(),2.0) ; };
+      return ( !obj ) ? charge2 :  charge2+= std::pow(obj->depositedCharge(),2) ; };
     ///
 };
 

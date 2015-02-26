@@ -132,6 +132,7 @@ namespace LHCb
     Vector m_normal;
     Vector m_dirStart;
     double m_radius;
+    double m_cbrt6radius2;
 
   }; // class CircleTraj
 
