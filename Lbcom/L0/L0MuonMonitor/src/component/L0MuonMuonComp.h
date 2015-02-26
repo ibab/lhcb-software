@@ -39,7 +39,7 @@ protected:
 
 private:
 
-  StatusCode getMuonTilesTAE(std::vector<std::pair<LHCb::MuonTileID, std::pair<int,int> > > & muontiles);
+  StatusCode getMuonTilesTAE(std::vector<std::pair<LHCb::MuonTileID, std::pair<int,int> > > & muontiles, bool & truncated);
   StatusCode getMuonPadsTAE(std::vector<std::pair<LHCb::MuonTileID, int > > & muonpads);
   StatusCode getCandPadsTAE(std::vector<std::pair<LHCb::MuonTileID, int > > & candpads);
   StatusCode isMuonTruncatedTAE( bool & truncated);

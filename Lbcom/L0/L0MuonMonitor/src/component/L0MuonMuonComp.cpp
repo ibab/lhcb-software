@@ -220,17 +220,38 @@ StatusCode L0MuonMuonComp::execute() {
     diffCandAndData(candpads,datapads);
   }
 
-  if (m_muonZS) {
-    // Check muon ro saturation
-    bool truncated = false;
-    sc = isMuonTruncatedTAE( truncated );
-    if (sc==StatusCode::FAILURE){
-      return Error("can not get muon readout saturation status",StatusCode::SUCCESS,100);
+  // Compare tiles from L0Muon and muon
+
+  // Decode muon data to get muon tiles
+  std::vector<std::pair<LHCb::MuonTileID,std::pair<int,int> > >  muontiles;
+  bool truncated = false;
+  sc=getMuonTilesTAE(muontiles,truncated);
+  if (sc==StatusCode::FAILURE){
+    return Error("can not get muon tiles",StatusCode::SUCCESS,100);
+  }
+  if (truncated) {
+    return Warning("Truncation of Muon data in event, comparison skipped", StatusCode::SUCCESS,20);
+  }
+  if (!m_online) m_channelHist_muon->fillHistos(muontiles);
+  if (msgLevel( MSG::VERBOSE ) ){
+    std::vector<std::pair<LHCb::MuonTileID,std::pair<int,int> > >::iterator it;
+    for (it=muontiles.begin(); it<muontiles.end(); ++it){
+      LHCb::MuonTileID tile=it->first;
+      int dt=(it->second).first;
+      LHCb::MuonTileID ol=m_opt_link_layout.contains(tile);
+      LHCb::MuonTileID mid_board=MuonLayout(1,1).contains(ol);
+      int ipb=mid_board.region()*3+mid_board.nY()*2+mid_board.nX()-1;
+      LHCb::MuonTileID mid_pu=ol.containerID(MuonLayout(2,2));
+      int ipu=(mid_pu.nY()%2)*2+(mid_pu.nX()%2);
+      verbose()<<"--muon--- "<<"Q"<<(ol.quarter()+1)<<" M"<<(ol.station()+1)<<" R"<<(ol.region()+1)
+               <<" PB"<<ipb<<" PU"<<ipu
+               <<"\t ol= "<<ol.toString()
+               <<"\t tile= "<<tile.toString()<<" in "<<dt<<endmsg;
     }
-    if (truncated) return Warning("Event is truncated ... abort",StatusCode::SUCCESS,10);
   }
 
-  // Compare tiles from L0Muon and muon
+
+
   std::vector<std::pair<LHCb::MuonTileID,int > >  l0muontiles;
   sc=getL0MuonTilesTAE(l0muontiles);
   if (sc==StatusCode::FAILURE){
@@ -254,29 +275,6 @@ StatusCode L0MuonMuonComp::execute() {
     }
   }
   
-  std::vector<std::pair<LHCb::MuonTileID,std::pair<int,int> > >  muontiles;
-  sc=getMuonTilesTAE(muontiles);
-  if (sc==StatusCode::FAILURE){
-    return Error("can not get muon tiles",StatusCode::SUCCESS,100);
-  }
-  if (!m_online) m_channelHist_muon->fillHistos(muontiles);
-  if (msgLevel( MSG::VERBOSE ) ){
-    std::vector<std::pair<LHCb::MuonTileID,std::pair<int,int> > >::iterator it;
-    for (it=muontiles.begin(); it<muontiles.end(); ++it){
-      LHCb::MuonTileID tile=it->first;
-      int dt=(it->second).first;
-      LHCb::MuonTileID ol=m_opt_link_layout.contains(tile);
-      LHCb::MuonTileID mid_board=MuonLayout(1,1).contains(ol);
-      int ipb=mid_board.region()*3+mid_board.nY()*2+mid_board.nX()-1;
-      LHCb::MuonTileID mid_pu=ol.containerID(MuonLayout(2,2));
-      int ipu=(mid_pu.nY()%2)*2+(mid_pu.nX()%2);
-      verbose()<<"--muon--- "<<"Q"<<(ol.quarter()+1)<<" M"<<(ol.station()+1)<<" R"<<(ol.region()+1)
-               <<" PB"<<ipb<<" PU"<<ipu
-               <<"\t ol= "<<ol.toString()
-               <<"\t tile= "<<tile.toString()<<" in "<<dt<<endmsg;
-    }
-  }
-
   std::vector<std::pair<LHCb::MuonTileID,int > >  diff;
   bool diff_l0muon_vs_muon=diffL0MuonAndMuon(l0muontiles,muontiles,diff);
   if (!m_online) m_channelHist_l0muon->fillHistosDT(diff);
@@ -358,7 +356,7 @@ StatusCode L0MuonMuonComp::getCandPadsTAE(std::vector<std::pair<LHCb::MuonTileID
   
 }
 
-StatusCode L0MuonMuonComp::getMuonTilesTAE(std::vector<std::pair<LHCb::MuonTileID, std::pair<int,int> > > & muontiles)
+StatusCode L0MuonMuonComp::getMuonTilesTAE(std::vector<std::pair<LHCb::MuonTileID, std::pair<int,int> > > & muontiles, bool & truncated)
 {
 
   // Loop over time slots
@@ -376,13 +374,22 @@ StatusCode L0MuonMuonComp::getMuonTilesTAE(std::vector<std::pair<LHCb::MuonTileI
         if( sc.isFailure() )
           return Error( "Unable to set RootInTES property of MuonRawBuffer", sc );
       } else return Error( "Unable to locate IProperty interface of MuonRawBuffer" );
+      LHCb::RawEvent* rawEvt = getIfExists<LHCb::RawEvent>( LHCb::RawEventLocation::Default , true);
       if (m_muonZS) { // Look at ZS supressed bank
-        m_muonBuffer->getTileAndTDC(tiles);
+        m_muonBuffer->getTileAndTDC(rawEvt, tiles, rootInTES());
+
+	// Check muon ro saturation
+	for (unsigned int TellNum=0;TellNum<MuonDAQHelper_maxTell1Number;TellNum++){
+	  for (unsigned int linkNum=0;linkNum<MuonDAQHelper_linkNumber;linkNum++){
+	    truncated |= m_muonBuffer->LinkReachedHitLimit(TellNum,linkNum);
+	  }
+	}
+	
       } else {// Look at NonZS supressed bank
-	LHCb::RawEvent* rawEvt = getIfExists<LHCb::RawEvent>( LHCb::RawEventLocation::Default , true);
-        m_muonBuffer->getNZSupp(rawEvt,tiles, rootInTES());
+        m_muonBuffer->getNZSupp(rawEvt, tiles, rootInTES());
         //         debug()<<"Nb of muon hits : "<<muontiles.size()<<endmsg;
       } // End NonZS supressed bank
+
       m_muonBuffer->forceReset();
     }// End if muon raw buffer tool
 
@@ -422,10 +429,11 @@ StatusCode L0MuonMuonComp::getMuonPadsTAE(std::vector<std::pair<LHCb::MuonTileID
         if( sc.isFailure() )
           return Error( "Unable to set RootInTES property of MuonRawBuffer", sc );
       } else return Error( "Unable to locate IProperty interface of MuonRawBuffer" );
+      LHCb::RawEvent* rawEvt = getIfExists<LHCb::RawEvent>( LHCb::RawEventLocation::Default , true);
       if (m_muonZS) { // Look at ZS supressed bank
-        m_muonBuffer->getTileAndTDC(tiles_and_tdc);
+        m_muonBuffer->getTileAndTDC(rawEvt,tiles_and_tdc, rootInTES());
       } else {// Look at NonZS supressed bank
-        m_muonBuffer->getNZSupp(tiles_and_tdc);
+        m_muonBuffer->getNZSupp(rawEvt,tiles_and_tdc, rootInTES());
         //         debug()<<"Nb of muon hits : "<<muonpads.size()<<endmsg;
       } // End NonZS supressed bank
       m_muonBuffer->forceReset();
@@ -990,6 +998,10 @@ void L0MuonMuonComp::initFullTileList()
 
 StatusCode L0MuonMuonComp::isMuonTruncatedTAE( bool & truncated)
 {
+  //
+  //  m_muonBuffer->LinkReachedHitLimit force the deconding of tiles if not done yet
+  // The decoding will look for the rawevent in the location given by the decoder helper 
+  //
 
   // Loop over time slots
   for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
