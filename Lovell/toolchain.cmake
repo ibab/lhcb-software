@@ -1,6 +1,5 @@
 # Special wrapper to load the declared version of the heptools toolchain.
-#set(heptools_version 71root6)
-set(heptools_version 72root6)
+#set(heptools_version 72root6)
 
 if(DEFINED ENV{HEPTOOLS_VERSION})
   set(heptools_version $ENV{HEPTOOLS_VERSION})
