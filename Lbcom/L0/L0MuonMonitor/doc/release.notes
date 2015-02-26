@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring of the L0Muon
 !----------------------------------------------------------------------------
 
+! 2015-02-26 - Julien Cogan
+- L0MuonMuonComp : Fix to decode the proper muon banks for NZS Tae data
+
 !========================= L0MuonMonitor v2r3 2012-11-28 =========================
 ! 2012-11-21 - Marco Clemencic
  - Added CMake configuration file.

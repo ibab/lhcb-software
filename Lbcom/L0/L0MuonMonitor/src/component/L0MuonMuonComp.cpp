@@ -220,14 +220,16 @@ StatusCode L0MuonMuonComp::execute() {
     diffCandAndData(candpads,datapads);
   }
 
-  // Check muon ro saturation
-  bool truncated = false;
-  sc = isMuonTruncatedTAE( truncated );
-  if (sc==StatusCode::FAILURE){
-    return Error("can not get muon readout saturation status",StatusCode::SUCCESS,100);
+  if (m_muonZS) {
+    // Check muon ro saturation
+    bool truncated = false;
+    sc = isMuonTruncatedTAE( truncated );
+    if (sc==StatusCode::FAILURE){
+      return Error("can not get muon readout saturation status",StatusCode::SUCCESS,100);
+    }
+    if (truncated) return Warning("Event is truncated ... abort",StatusCode::SUCCESS,10);
   }
-  if (truncated) return StatusCode::SUCCESS;
-  
+
   // Compare tiles from L0Muon and muon
   std::vector<std::pair<LHCb::MuonTileID,int > >  l0muontiles;
   sc=getL0MuonTilesTAE(l0muontiles);
@@ -377,7 +379,8 @@ StatusCode L0MuonMuonComp::getMuonTilesTAE(std::vector<std::pair<LHCb::MuonTileI
       if (m_muonZS) { // Look at ZS supressed bank
         m_muonBuffer->getTileAndTDC(tiles);
       } else {// Look at NonZS supressed bank
-        m_muonBuffer->getNZSupp(tiles);
+	LHCb::RawEvent* rawEvt = getIfExists<LHCb::RawEvent>( LHCb::RawEventLocation::Default , true);
+        m_muonBuffer->getNZSupp(rawEvt,tiles, rootInTES());
         //         debug()<<"Nb of muon hits : "<<muontiles.size()<<endmsg;
       } // End NonZS supressed bank
       m_muonBuffer->forceReset();
