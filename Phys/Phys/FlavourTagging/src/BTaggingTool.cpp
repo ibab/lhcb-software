@@ -38,7 +38,7 @@ GaudiTool ( type, name, parent )
 
   declareProperty( "CombineTaggersName",      m_CombineTaggersName = "CombineTaggersProbability" );
   declareProperty( "TaggerLocation",          m_taggerLocation = "Phys/TaggingParticles" );
-  declareProperty( "CombineWithNNetTagger",   m_CombineWithNNetTagger = true );
+  declareProperty( "CombineWithNNetTagger",   m_CombineWithNNetTagger = false );
   declareProperty( "CombineWithCharmTagger",  m_CombineWithCharmTagger = false );
 
   //choose active taggers
