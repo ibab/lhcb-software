@@ -6,12 +6,19 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-02-26 - Manuel Tobias Schiller
+ - add new header FastRoots.h which implement fast cube and fifth roots and
+   their inverses which are accurate to almost the full precision of the
+   underlying floating point type, and also a very quick and dirty
+   approximation to the hypot function (hypot(x, y) = sqrt(x * x + y * y), the
+   approximation of hypot is good to about 4% relative error)
+
 ! 2015-02-25 - Vanya Belyaev
  - add dependency on pyanalysis  (needed for test_poly.py)
    question:
-	 should it be used with -no_auto_imports directive(for CMT?)
-	  if so, what is the corresponding CMake function?
-	                
+    should it be used with -no_auto_imports directive(for CMT?)
+     if so, what is the corresponding CMake function?
+                   
 !========================= LHCbMath v3r54 2015-02-24 =========================
 ! 2015-02-23 - Vanya Belyaev
  - reshuffle polinomials 
