@@ -2,6 +2,7 @@
   #pragma warning(disable:654)  // ITrackExtrapolator::propagate" only partially overridden
   #pragma warning(push)
 #endif
+#include "LHCbMath/FastRoots.h"
 #include "TrackRungeKuttaExtrapolator.h"
 #ifdef __INTEL_COMPILER         // Re-enable ICC warning 654
   #pragma warning(pop)
@@ -446,7 +447,7 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState& state,
         stepfactor = std::max( m_minStepScale, m_safetyFactor / std::sqrt(std::sqrt(errorOverTolerance))); // was : * std::pow( errorOverTolerance , -0.25 ) ) ;
       } else {                       // increase step size
         if( errorOverTolerance > 0 ) 
-          stepfactor = std::min( m_maxStepScale, m_safetyFactor * std::pow( errorOverTolerance , -0.20 ) ) ;
+          stepfactor = std::min( m_maxStepScale, m_safetyFactor * FastRoots::invfifthroot(errorOverTolerance) ) ; // was: * std::pow( errorOverTolerance, -0.2) ) ;
         else 
           stepfactor = m_maxStepScale ;
         ++stats.numincreasedstep ;
