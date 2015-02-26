@@ -3,6 +3,11 @@
 !--------------------------------------------------------------------------
 
 ! 2015-02-26 - Manuel Tobias Schiller
+ - DeOTModule: remove temporary variables, write somewhat leaner code to speed
+   up the calculateHits method by another percent or so (shouldn't change the
+   results, and I can't spot anything in my Brunel job)
+
+! 2015-02-26 - Manuel Tobias Schiller
  - follow move from GSL to vdt also in cmt/requirements
 
 ! 2015-02-26 - Manuel Tobias Schiller
