@@ -9,6 +9,7 @@
 #include "Event/StateVector.h"
 #include "TrackKernel/ZTrajectory.h"
 #include "GaudiKernel/PhysicalConstants.h"
+#include "LHCbMath/FastRoots.h"
 
 namespace LHCb 
 {
@@ -167,7 +168,7 @@ namespace LHCb
   inline double CubicStateVectorInterpolationTraj::distTo2ndError( double /*z*/, double tolerance, int /*pathDirection*/ ) const 
   {
     // need to replace this with a sensible check on size of c3
-    return m_cx[3]!=0 ? std::pow(std::abs(tolerance/m_cx[3]), 1.0/3.0) : 10*Gaudi::Units::km ;
+    return m_cx[3]!=0 ? FastRoots::cbrt(std::abs(tolerance/m_cx[3])) : 10*Gaudi::Units::km ;
   }
 #ifdef __INTEL_COMPILER         // End disable ICC remark
   #pragma warning(pop)

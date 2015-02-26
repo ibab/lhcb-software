@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-02-26 - Manuel Tobias Schiller
+ - CubicStateInterpolationTraj: make distTo2ndError a factor 5 faster
+
 !========================= TrackKernel v2r2 2015-02-23 =========================
 ! 2015-02-18 - Chris Jones
  - Replace use of ROOT::Math::Similarity with new faster vectorised
