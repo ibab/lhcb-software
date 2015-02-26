@@ -16,7 +16,7 @@ use  RichPIDQC                  v1r9     Rich   # Chris Jones
 use  DaVinciMCTools     	v10r12   Phys   # Chris Jones
 use  LoKiAlgoMC                 v9r6p1   Phys   # Vanya Belyaev
 use  LoKiGenMC                  v9r1p2   Phys   # Vanya Belyaev
-use  LoKiPhysMC                 v9r7     Phys   # Vanya Belyaev
+use  LoKiPhysMC                 v9r8     Phys   # Vanya Belyaev
 use  DaVinciAssociators         v9r6     Phys   # Vladimir Gligorov
 use  Particle2MCTruth           v2r5p1   Phys   # Chris Jones
 use  VertexFitCheck             v1r8p3   Phys   # Yuehong Xie
@@ -62,7 +62,7 @@ use  MicroDSTConf               v2r12    MicroDST # Chris Jones
 ####################################################################
 
 use  Analysis                   v10r6   Tutorial   # P. Koppenburg
-use  LoKiExample                v8r8p4  Ex         # Vanya Belyaev
+use  LoKiExample                v8r9    Ex         # Vanya Belyaev
 use  MicroDSTExample            v2r15   Ex         # Chris Jones
 
 ####################################################################
