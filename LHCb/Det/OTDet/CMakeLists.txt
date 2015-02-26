@@ -8,24 +8,23 @@ gaudi_depends_on_subdirs(Det/DetDescCnv
                          Kernel/LHCbMath)
 
 find_package(Boost)
-find_package(GSL)
 find_package(VDT)
 
 gaudi_add_library(OTDetLib
                   src/Lib/*.cpp
                   PUBLIC_HEADERS OTDet
-                  INCLUDE_DIRS Boost GSL VDT
-                  LINK_LIBRARIES Boost GSL DetDescCnvLib LHCbKernel LHCbMathLib)
+                  INCLUDE_DIRS Boost VDT
+                  LINK_LIBRARIES Boost DetDescCnvLib LHCbKernel LHCbMathLib)
 
 gaudi_add_module(OTDet
                  src/component/*.cpp
-                 INCLUDE_DIRS Boost GSL
-                 LINK_LIBRARIES Boost GSL DetDescCnvLib LHCbKernel LHCbMathLib OTDetLib)
+                 INCLUDE_DIRS Boost
+                 LINK_LIBRARIES Boost DetDescCnvLib LHCbKernel LHCbMathLib OTDetLib)
 
 gaudi_add_dictionary(OTDet
                      dict/OTDetDict.h
                      dict/OTDetDict.xml
-                     INCLUDE_DIRS Boost GSL
-                     LINK_LIBRARIES Boost GSL DetDescCnvLib LHCbKernel LHCbMathLib OTDetLib
+                     INCLUDE_DIRS Boost
+                     LINK_LIBRARIES Boost DetDescCnvLib LHCbKernel LHCbMathLib OTDetLib
                      OPTIONS "-U__MINGW32__")
 

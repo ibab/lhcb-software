@@ -3,6 +3,7 @@
 #define OTDET_DEOTMODULE_H 1
 
 /// DetDesc
+#include "DetDesc/StaticArray.h"
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
 
@@ -83,8 +84,8 @@ public:
 
   /// some handy typedefs
   typedef std::vector<DeOTModule*> Container;
-  typedef std::vector<unsigned int> Straws;
   enum { MAXNUMCHAN = 128 } ;
+  typedef StaticArray<unsigned, MAXNUMCHAN> Straws;
   enum ChannelStatus { Good = 0, Dead = 1, Noisy = 2, Unknown = 99 } ;
 
   /** Constructor */

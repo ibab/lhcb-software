@@ -2,6 +2,11 @@
 ! Responsible : Alexandr Kozlinskiy, Lucia Grillo
 !--------------------------------------------------------------------------
 
+! 2015-02-26 - Manuel Tobias Schiller
+ - speed up findStraws() by factor two by getting rid of the memory
+   allocations; also prefer std::min/max/hypot over the GSL variants; no
+   changes in results
+
 !========================= OTDet v8r15 2015-02-23 =========================
 ! 2015-02-18 - Manuel Tobias Schiller
  - WalkRelation: fix bug in initializer list of constructor (member used

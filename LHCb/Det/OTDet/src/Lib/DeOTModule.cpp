@@ -18,8 +18,6 @@
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/SolidBox.h"
 
-// GSL
-#include "gsl/gsl_math.h"
 #if !(defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L)
 #include <boost/assign/list_of.hpp>
 #endif
@@ -194,12 +192,11 @@ void DeOTModule::findStraws(const Gaudi::XYZPoint& entryPoint,
   if (lo > hi) std::swap(lo , hi);
 
   const int exStraw = 1; ///< Add extra straws to the the left and right
-  unsigned int strawLo = GSL_MAX_INT(0, int(std::floor(lo)) - exStraw);
-  unsigned int strawHi = GSL_MIN_INT(int(m_nStraws)-1, GSL_MAX_INT(0, int(std::ceil(hi)) + exStraw));
+  unsigned int strawLo = std::max(0, int(std::floor(lo)) - exStraw);
+  unsigned int strawHi = std::min(int(m_nStraws)-1, std::max(0, int(std::ceil(hi)) + exStraw));
 
   /// Now let's fill the vector. Remember straw numbering starts at 1, i.e. i+1
   straws.clear();
-  straws.reserve(strawHi-strawLo + 1u);
   for (unsigned int i = strawLo; i <= strawHi; ++i) straws.push_back(i+1);
 }
 
@@ -314,7 +311,7 @@ void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
       const double zStrawA = -0.5*m_zPitch;//localZOfStraw(strawA);
       while ( (uStep < uHigh) && strawA != 0 ) {
         uStep = localUOfStraw(strawA);
-        distCirc = gsl_hypot((zCirc-zStrawA), (uCirc-uStep));
+        distCirc = std::hypot((zCirc-zStrawA), (uCirc-uStep));
         amb = ((-(uStep-(x1+x2)/2.0)*(distCirc-rCirc)) < 0.0) ? -1 : 1;
         dist = amb*std::abs(distCirc-rCirc);
         const unsigned int straw = strawA;
@@ -331,7 +328,7 @@ void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
       uStep = uLow;
       while ( (uStep < uHigh) && strawB != 0 ) {
         uStep = localUOfStraw(strawB);
-        distCirc = gsl_hypot((zCirc-zStrawB), (uCirc-uStep));
+        distCirc = std::hypot((zCirc-zStrawB), (uCirc-uStep));
         amb = ((-(uStep-(x1+x2)/2.0)*(distCirc-rCirc))< 0.0) ?  -1 : 1;
         dist = amb*std::abs(distCirc-rCirc);
         const unsigned int straw = strawB;
@@ -370,7 +367,7 @@ double DeOTModule::distanceToWire(const unsigned int aStraw,
 
   // calculate distance to the straw
   double u = localPoint.x()+localVec.x()*(localZOfStraw(aStraw)-localPoint.z());
-  double cosU = 1.0/gsl_hypot(1.0, (localVec.x()/localVec.z()));
+  double cosU = 1.0/std::hypot(1.0, (localVec.x()/localVec.z()));
 
   // return distance to straw
   return (u-localUOfStraw(aStraw))*cosU;
