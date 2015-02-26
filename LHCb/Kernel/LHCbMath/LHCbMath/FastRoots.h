@@ -16,6 +16,17 @@
 #include <cstdint>
 #include <algorithm>
 
+#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+// all okay, code will work
+#elif __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+#error "Code will likely not work for big endian machines without modification."
+#else
+#error "Unknown endianness, please define __LITTLE_ENDIAN__ or __BIG_ENDIAN__."
+#endif
+#if __FLOAT_WORD_ORDER != __BYTE_ORDER__
+#error "Floating point and integer byte order do not match!"
+#endif
+
 // hint to gcc's optimizer that __pure functions have no side effects and
 // depend only on declared input arguments
 #ifdef __pure

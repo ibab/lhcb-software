@@ -7,6 +7,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-02-26 - Manuel Tobias Schiller
+ - FastRoots: add protection if this code is ever compiled on big endian
+   machines (produces an #error)
+
+! 2015-02-26 - Manuel Tobias Schiller
  - add new header FastRoots.h which implement fast cube and fifth roots and
    their inverses which are accurate to almost the full precision of the
    underlying floating point type, and also a very quick and dirty
