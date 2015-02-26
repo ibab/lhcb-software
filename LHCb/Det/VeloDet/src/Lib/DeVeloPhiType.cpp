@@ -2,6 +2,10 @@
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
 // Include files
+#include <cmath>
+#include "vdt/atan2.h"
+#include "vdt/sin.h"
+#include "vdt/sincos.h"
 
 // From Gaudi
 #include "GaudiKernel/Bootstrap.h"
@@ -14,8 +18,6 @@
 // From LHCb
 #include "LHCbMath/LHCbMath.h"
 #include "Kernel/LineTraj.h"
-
-#include "gsl/gsl_math.h"
 
 // From Velo
 #include "VeloDet/DeVeloPhiType.h"
@@ -127,15 +129,15 @@ StatusCode DeVeloPhiType::initialize()
   /* Inner strips (dist. to origin defined by angle between
      extrapolated strip and phi)*/
   m_innerDistToOrigin = param<double>("InnerDistToOrigin");
-  m_innerTilt = asin(m_innerDistToOrigin/innerRadius());
+  m_innerTilt = vdt::fast_asin(m_innerDistToOrigin/innerRadius());
   m_innerTilt += m_phiOrigin;
   // Outer strips
   m_outerDistToOrigin = param<double>("OuterDistToOrigin");
-  m_outerTilt = asin(m_outerDistToOrigin/m_middleRadius);
+  m_outerTilt = vdt::fast_asin(m_outerDistToOrigin/m_middleRadius);
   double phiAtBoundary   = m_innerTilt -
-    asin( m_innerDistToOrigin / m_middleRadius );
+    vdt::fast_asin( m_innerDistToOrigin / m_middleRadius );
   m_outerTilt += phiAtBoundary;
-  double phi = m_outerTilt - asin( m_outerDistToOrigin/outerRadius() );
+  double phi = m_outerTilt - vdt::fast_asin( m_outerDistToOrigin/outerRadius() );
   if(m_debug) msg() << MSG::DEBUG << "Phi (degree) inner "    
 		    << m_phiOrigin/Gaudi::Units::degree
 		    << " at boundary " << phiAtBoundary/Gaudi::Units::degree
@@ -197,10 +199,13 @@ void DeVeloPhiType::calcStripLines()
       rInner=m_middleRadius+m_rGap/2;
       rOuter=outerRadius();
     }
-    x1 = rInner * cos(phiOfStrip(strip,0.,rInner));
-    y1 = rInner * sin(phiOfStrip(strip,0.,rInner));
-    x2 = rOuter * cos(phiOfStrip(strip,0.,rOuter));
-    y2 = rOuter * sin(phiOfStrip(strip,0.,rOuter));
+    double sin, cos;
+    vdt::fast_sincos(phiOfStrip(strip,0.,rInner), sin, cos);
+    x1 = rInner * cos;
+    y1 = rInner * sin;
+    vdt::fast_sincos(phiOfStrip(strip,0.,rOuter), sin, cos);
+    x2 = rOuter * cos;
+    y2 = rOuter * sin;
 
     double gradient;
     gradient = (y2 - y1) /  (x2 - x1);
@@ -238,14 +243,10 @@ void DeVeloPhiType::calcStripLengths()
     m_staticDataInvalid=false;
     std::vector< std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> >::const_iterator iStLi = m_stripLimits.begin();
     for( ; iStLi != m_stripLimits.end() ; ++iStLi ) {
-      double x1 = iStLi->first.x();
-      double y1 = iStLi->first.y();
-      double z1 = iStLi->first.z();
-      double x2 = iStLi->second.x();
-      double y2 = iStLi->second.y();
-      double z2 = iStLi->second.z();
-      double length = gsl_pow_2(x2-x1) + gsl_pow_2(y2-y1) + gsl_pow_2(z2-z1);
-      m_stripLengths.push_back(sqrt(length));
+      const auto dx = iStLi->first.x() - iStLi->second.x();
+      const auto dy = iStLi->first.y() - iStLi->second.y();
+      const auto dz = iStLi->first.z() - iStLi->second.z();
+      m_stripLengths.push_back(std::sqrt(dx * dx + dy * dy + dz * dz));
     }
   }
 }
@@ -290,7 +291,7 @@ StatusCode DeVeloPhiType::pointToChannel(const Gaudi::XYZPoint& point,
   if(!sc.isSuccess()) return sc;
 
   // Use symmetry to handle second stereo...
-  double phi=localPoint.phi();
+  double phi=vdt::fast_atan2(localPoint.y(), localPoint.x());
 
   // Calculate nearest channel....
   unsigned int closestStrip;
@@ -313,7 +314,7 @@ StatusCode DeVeloPhiType::pointToChannel(const Gaudi::XYZPoint& point,
   channel.setStrip(closestStrip);
   channel.setType(LHCb::VeloChannelID::PhiType);
 
-  if(m_verbose) {
+  if (UNLIKELY(m_verbose)) {
     msg() << MSG::VERBOSE << "pointToChannel; local phi " << localPoint.phi()/Gaudi::Units::degree
           << " radius " << localPoint.Rho()
           << " phiOffset " << phiOffset(radius)/Gaudi::Units::degree
@@ -386,7 +387,7 @@ StatusCode DeVeloPhiType::isInActiveArea(const Gaudi::XYZPoint& point) const
     if(0 < y) endStrip = numberOfStrips()-1;
   }
   // Work out if point is outside active region
-  double phi=atan2(y,x);
+  double phi=vdt::fast_atan2(y,x);
   double phiStrip=phiOfStrip(endStrip,0.0,radius);
   //  double pitch=phiPitch(radius);
   if(0 > y) {
@@ -401,7 +402,7 @@ StatusCode DeVeloPhiType::isInActiveArea(const Gaudi::XYZPoint& point) const
 //==============================================================================
 bool DeVeloPhiType::isCutOff(double x, double y) const
 {
-  double radius=sqrt(x*x+y*y);
+  double radius=std::sqrt(x*x+y*y);
   if(m_middleRadius < radius) return false;
   if(0 < y) {
     // First corner
@@ -475,22 +476,28 @@ StatusCode DeVeloPhiType::residual(const Gaudi::XYZPoint& point,
   double x=localPoint.x();
   double y=localPoint.y();
   double xNear = (gradient*y+x-gradient*intercept);
-  xNear /= (1+gsl_pow_2(gradient));
+  xNear /= (1+gradient * gradient);
 
   double yNear = gradient*xNear + intercept;
 
-  residual = sqrt(gsl_pow_2(xNear-x)+gsl_pow_2(yNear-y));
+  residual = std::sqrt((xNear - x) * (xNear - x) + (yNear - y) * (yNear - y));
 
   // Work out how to calculate the sign!
   Gaudi::XYZPoint localNear(xNear,yNear,0.0);
   Gaudi::XYZPoint globalNear = DeVeloSensor::localToGlobal(localNear);
-  if(point.phi() < globalNear.phi()) residual *= -1.;
+  {
+    const auto irl = 1 / std::hypot(xNear, yNear);
+    const auto irg = 1 / std::hypot(globalNear.x(), globalNear.y());
+    const auto cdphi = irl * irg * (xNear * globalNear.x() + yNear * globalNear.y());
+    const auto sdphi = irl * irg * (yNear * globalNear.x() - xNear * globalNear.y());
+    if (vdt::fast_atan2(sdphi, cdphi) < 0) residual = -residual;
+  }
 
   double radius = localPoint.Rho();
   double sigma = m_resolution.first*phiPitch(radius) - m_resolution.second;
-  chi2 = gsl_pow_2(residual/sigma);
+  chi2 = (residual / sigma) * (residual / sigma);
 
-  if(m_verbose) {
+  if (UNLIKELY(m_verbose)) {
     msg() << MSG::VERBOSE << "Residual; sensor " << channel.sensor()
 	  << " strip " << strip
 	  << " x " << x << " y " << y << endmsg;
@@ -618,7 +625,7 @@ StatusCode DeVeloPhiType::updatePhiCache()
     double d0 = zone ? m_outerDistToOrigin : m_innerDistToOrigin;
     d0 = isDownstream() ? d0 : -d0;
     m_idealDistToOrigin[zone] = d0;
-    double offset = asin(d0/r0);
+    double offset = vdt::fast_asin(d0/r0);
     m_idealOffsetAtR0[zone] = offset;
 
     Gaudi::XYZPoint begin = localToGlobal(limits.first);
@@ -626,25 +633,26 @@ StatusCode DeVeloPhiType::updatePhiCache()
     r0 = (begin.rho()+end.rho())/2.0;
     Gaudi::XYZVector dx = end-begin;
     Gaudi::XYZPoint center = begin + 0.5*dx;
-    d0 = r0*sin(center.phi()-dx.phi());
+    d0 = r0*vdt::fast_sin(center.phi()-dx.phi());
     m_globalDistToOrigin[zone] = d0;
-    m_globalOffsetAtR0[zone] = asin(d0/r0);
+    m_globalOffsetAtR0[zone] = vdt::fast_asin(d0/r0);
 
     begin = localToVeloHalfBox(limits.first);
     end   = localToVeloHalfBox(limits.second);
     r0 = (begin.rho()+end.rho())/2.0;
     dx = end-begin;
     center = begin + 0.5*dx;
-    d0 = r0*sin(center.phi()-dx.phi());
+    d0 = r0*vdt::fast_sin(center.phi()-dx.phi());
     m_halfboxDistToOrigin[zone] = d0;
-    m_halfboxOffsetAtR0[zone] = asin(d0/r0);
+    m_halfboxOffsetAtR0[zone] = vdt::fast_asin(d0/r0);
 
     for (unsigned int s=0; s<m_stripsInZone[zone]; ++s) {
 
       unsigned int strip = s + m_nbInner*zone;
-      double phi0 = phiOfStrip(strip,0.0,r0);
-      double x = r0*cos(phi0);
-      double y = r0*sin(phi0);
+      double sin, cos;
+      vdt::fast_sincos(phiOfStrip(strip,0.0,r0), sin, cos);
+      double x = r0*cos;
+      double y = r0*sin;
 
       Gaudi::XYZPoint lp(x,y,0.0);
       m_idealPhi[strip] = localPhiToGlobal(lp.phi());
@@ -727,7 +735,7 @@ StatusCode DeVeloPhiType::updateZoneLimits()
     }
 
     // extend the phi ranges by half a strip pitch
-    double pitch = fabs(phiPitch(minStrip));
+    double pitch = std::abs(phiPitch(minStrip));
     m_globalPhiLimitsZone [zone].first  -= pitch/2.0;
     m_globalPhiLimitsZone [zone].second += pitch/2.0;
     m_halfboxPhiLimitsZone[zone].first  -= pitch/2.0;

@@ -2,6 +2,12 @@
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
 // Include files
+#include <cmath>
+
+#include "vdt/asin.h"
+#include "vdt/cos.h"
+#include "vdt/sin.h"
+#include "vdt/sincos.h"
 
 // From Gaudi
 #include "GaudiKernel/Bootstrap.h"
@@ -14,8 +20,6 @@
 // From LHCb
 #include "LHCbMath/LHCbMath.h"
 #include "Kernel/CircleTraj.h"
-
-#include "gsl/gsl_math.h"
 
 // From Velo
 #include "VeloDet/DeVeloRType.h"
@@ -250,12 +254,12 @@ StatusCode DeVeloRType::pointToChannel(const Gaudi::XYZPoint& point,
   double radius=localPoint.Rho();
   logarithm = (m_pitchSlope*(radius - m_innerR)+m_innerPitch) /
     m_innerPitch;
-  strip = log(logarithm)/m_pitchSlope;
+  strip = vdt::fast_log(logarithm)/m_pitchSlope;
   closestStrip = LHCb::Math::round(strip);
   fraction = strip - closestStrip;
 
   // Which zone is the strip in?
-  double phi=localPoint.phi();
+  double phi=vdt::fast_atan2(localPoint.y(), localPoint.x());
   unsigned int zone=zoneOfPhi(phi);
 
   // minimum strip in zone
@@ -305,7 +309,7 @@ bool DeVeloRType::isCutOff(double x, double y) const
   if(m_cornerX1 - epsilon > x) return true;
   if(m_cornerX1 - epsilon <= x && x <= m_cornerX2 + epsilon) {
     double yMax=m_gradCutOff*x+m_intCutOff;
-    if(yMax > fabs(y)) {
+    if(yMax > std::abs(y)) {
       return true;
     }
   }
@@ -317,16 +321,16 @@ bool DeVeloRType::isCutOff(double x, double y) const
 double DeVeloRType::phiMinZone(unsigned int zone, double radius) const {
   double phiMin;
   if(0 == zone){
-    phiMin = -acos(m_overlapInX/radius);
-    double y=radius*sin(phiMin);
+    phiMin = -vdt::fast_acos(m_overlapInX/radius);
+    double y=radius*vdt::fast_sin(phiMin);
     if(isCutOff(m_overlapInX,y)) {
       double x,yy;
       intersectCutOff(radius,x,yy);
       yy = -yy;
-      phiMin=atan2(yy,x);
+      phiMin=vdt::fast_atan2(yy,x);
     }
   } else if(2 == zone){
-    phiMin = asin(m_phiGap/radius);
+    phiMin = vdt::fast_asin(m_phiGap/radius);
   } else {
     phiMin = phiMinZone(zone);
   }
@@ -338,14 +342,14 @@ double DeVeloRType::phiMinZone(unsigned int zone, double radius) const {
 double DeVeloRType::phiMaxZone(unsigned int zone, double radius) const {
   double phiMax;
   if(1 == zone){
-    phiMax = asin(-m_phiGap/radius);
+    phiMax = vdt::fast_asin(-m_phiGap/radius);
   } else if(3 == zone){
-    phiMax = acos(m_overlapInX/radius);
-    double y=radius*sin(phiMax);
+    phiMax = vdt::fast_acos(m_overlapInX/radius);
+    double y=radius*vdt::fast_sin(phiMax);
     if(isCutOff(m_overlapInX,y)) {
       double x,yy;
       intersectCutOff(radius,x,yy);
-      phiMax=atan2(yy,x);
+      phiMax=vdt::fast_atan2(yy,x);
     }
   } else {
     phiMax = phiMaxZone(zone);
@@ -425,7 +429,7 @@ StatusCode DeVeloRType::residual(const Gaudi::XYZPoint& point,
   residual = rStrip + offset  - rPoint;
 
   double sigma=m_resolution.first*rPitch(strip) - m_resolution.second;
-  chi2 = gsl_pow_2(residual/sigma);
+  chi2 = (residual / sigma) * (residual / sigma);
 
   if(m_verbose) {
     msg() << MSG::VERBOSE << "Residual; rPoint = " << rPoint << " strip " << strip
@@ -471,16 +475,19 @@ void DeVeloRType::calcStripLimits()
     double radius,pitch;
     for(unsigned int zone=0; zone<m_numberOfZones; ++zone) {
       for(unsigned int istrip=0; istrip<m_stripsInZone; ++istrip){
-        radius = (exp(m_pitchSlope*istrip)*m_innerPitch -
+        radius = (vdt::fast_exp(m_pitchSlope*istrip)*m_innerPitch -
                   (m_innerPitch-m_pitchSlope*m_innerR)) /
           m_pitchSlope;
-        pitch = exp(m_pitchSlope*istrip)*m_innerPitch;
+        pitch = vdt::fast_exp(m_pitchSlope*istrip)*m_innerPitch;
         double phiMin=phiMinZone(zone,radius);
         double phiMax=phiMaxZone(zone,radius);
-        double x1 = radius*cos(phiMin);
-        double y1 = radius*sin(phiMin);
-        double x2 = radius*cos(phiMax);
-        double y2 = radius*sin(phiMax);
+	double sin, cos;
+	vdt::fast_sincos(phiMin, sin, cos);
+        double x1 = radius*cos;
+        double y1 = radius*sin;
+	vdt::fast_sincos(phiMax, sin, cos);
+        double x2 = radius*cos;
+        double y2 = radius*sin;
 
         m_rStrips.push_back(radius);
         m_rPitch.push_back(pitch);
@@ -506,10 +513,13 @@ void DeVeloRType::calcStripLimits()
       double phiMin = spli->first;
       double phiMax = spli->second;
       double radius = *ri;
-      double x1 = radius*cos(phiMin);
-      double y1 = radius*sin(phiMin);
-      double x2 = radius*cos(phiMax);
-      double y2 = radius*sin(phiMax);
+      double sin, cos;
+      vdt::fast_sincos(phiMin, sin, cos);
+      double x1 = radius*cos;
+      double y1 = radius*sin;
+      vdt::fast_sincos(phiMax, sin, cos);
+      double x2 = radius*cos;
+      double y2 = radius*sin;
       Gaudi::XYZPoint begin(x1,y1,0.);
       Gaudi::XYZPoint end(x2,y2,0.);
       m_stripLimits.push_back(std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>(begin,end));
@@ -564,9 +574,9 @@ void DeVeloRType::intersectCutOff(const double radius, double& x, double& y) con
   double QuadC=c*c-r*r;
   double B2Minus4AC=QuadB*QuadB-4*QuadA*QuadC;
   if(B2Minus4AC > 0) {
-    double x1 = ( -QuadB+sqrt(B2Minus4AC) ) / (2*QuadA);
+    double x1 = ( -QuadB+std::sqrt(B2Minus4AC) ) / (2*QuadA);
     double y1 = m*x1+c;
-    double x2 =  ( -QuadB-sqrt(B2Minus4AC) ) / (2*QuadA);
+    double x2 =  ( -QuadB-std::sqrt(B2Minus4AC) ) / (2*QuadA);
     double y2 = m*x2+c;
     if(x1 < x2) {
       x=x1;
@@ -592,7 +602,7 @@ void DeVeloRType::intersectCutOff(const double radius, double& x, double& y) con
 void DeVeloRType::phiZoneLimits()
 {
   double phi;
-  phi = acos(m_overlapInX/outerRadius());
+  phi = vdt::fast_acos(m_overlapInX/outerRadius());
 
   m_phiMin.clear();
   m_phiMax.clear();
@@ -692,8 +702,11 @@ std::auto_ptr<LHCb::Trajectory> DeVeloRType::trajectory(const LHCb::VeloChannelI
 
   // start with coords of center and both ends in local frame
   Gaudi::XYZPoint lOrigin(0.,0.,0.);
-  Gaudi::XYZPoint lBegin(radius*cos(phiMin),radius*sin(phiMin),z);
-  Gaudi::XYZPoint lEnd(radius*cos(phiMax),radius*sin(phiMax),z);
+  double sin, cos;
+  vdt::fast_sincos(phiMin, sin, cos);
+  Gaudi::XYZPoint lBegin(radius*cos,radius*sin,z);
+  vdt::fast_sincos(phiMax, sin, cos);
+  Gaudi::XYZPoint lEnd(radius*cos,radius*sin,z);
 
   // move to global frame
   Gaudi::XYZPoint gOrigin = localToGlobal(lOrigin);
@@ -702,9 +715,9 @@ std::auto_ptr<LHCb::Trajectory> DeVeloRType::trajectory(const LHCb::VeloChannelI
   // Convert phi range to [0,2pi] on the right (C) side only 
   // to make sure trajectories run in right direction
   // and protect against crossing the -pi/pi boundary 
-  double phiBeginTmp=gBegin.phi();
+  double phiBeginTmp=vdt::fast_atan2(gBegin.y(), gBegin.x());
   if( isRight() && phiBeginTmp < 0) phiBeginTmp += 2*Gaudi::Units::pi;
-  double phiEndTmp=gEnd.phi();
+  double phiEndTmp=vdt::fast_atan2(gEnd.y(), gEnd.x());
   if( isRight() && phiEndTmp < 0) phiEndTmp += 2*Gaudi::Units::pi;
   if(phiBeginTmp > phiEndTmp){
     Gaudi::XYZPoint gTmp=gBegin;
@@ -740,7 +753,9 @@ StatusCode DeVeloRType::updateStripRCache()
 
     // integrate over strip
     for ( ; phiLocal < phiMax; phiLocal += dphi) {
-      Gaudi::XYZPoint lp(rLocal*cos(phiLocal),rLocal*sin(phiLocal),0.0);
+      double sin, cos;
+      vdt::fast_sincos(phiLocal, sin, cos);
+      Gaudi::XYZPoint lp(rLocal*cos,rLocal*sin,0.0);
 
       num += dphi;
 
@@ -755,7 +770,9 @@ StatusCode DeVeloRType::updateStripRCache()
     dphi = phiMax - phiLocal + dphi;
     num += dphi;
 
-    Gaudi::XYZPoint lp(rLocal*cos(phiMax),rLocal*sin(phiMax),0.0);
+    double sin, cos;
+    vdt::fast_sincos(phiMax, sin, cos);
+    Gaudi::XYZPoint lp(rLocal*cos,rLocal*sin,0.0);
 
     Gaudi::XYZPoint hbp = localToVeloHalfBox(lp);
     hbden += dphi/hbp.rho();
@@ -873,13 +890,13 @@ StatusCode DeVeloRType::distToM2Line(const Gaudi::XYZPoint& point,
   double radius=lPoint.Rho();
   double logarithm = (m_pitchSlope*(radius - m_innerR)+m_innerPitch) /
     m_innerPitch;
-  double strip = log(logarithm)/m_pitchSlope;
+  double strip = vdt::fast_log(logarithm)/m_pitchSlope;
   // no routing lines below strip 0 (+ rounding error fix)
   if( strip < 0. ) return StatusCode::FAILURE; 
   unsigned int closestStrip = LHCb::Math::round(strip);
   // sanity check in case of rounding error
   if( closestStrip > 2047 ) closestStrip = 2047; 
-  distToStrip = fabs(strip - closestStrip)*rPitch(closestStrip);
+  distToStrip = std::abs(strip - closestStrip)*rPitch(closestStrip);
 
   bool OKM2 = distToM2Line(lPoint.x(), lPoint.y(), vID, distToM2);
   if(!OKM2) return StatusCode::FAILURE;
@@ -893,7 +910,7 @@ bool DeVeloRType::distToM2Line(double const & x, double const & y,
 
   // find range of strips covering this phi point
   // a crude optimisation by skipping paths not covering this phi
-  double phi = atan2(y,x);
+  double phi = vdt::fast_atan2(y,x);
   unsigned int zone = zoneOfPhi(phi); // no overlap between zones
   // start at begining of zone
   std::vector<std::pair<double,unsigned int> >::const_iterator iLineMin = 
@@ -945,7 +962,7 @@ bool DeVeloRType::distToM2Line(double const & x, double const & y,
     } else if( isPileUp() ) {
       vID.setType(LHCb::VeloChannelID::PileUpType);
     }
-    dist = sqrt(dist2);
+    dist = std::sqrt(dist2);
     return true;
   }
   return false;

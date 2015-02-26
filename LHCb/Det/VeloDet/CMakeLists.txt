@@ -10,24 +10,24 @@ gaudi_depends_on_subdirs(Det/DetDesc
                          Kernel/LHCbMath)
 
 find_package(Boost COMPONENTS regex)
-find_package(GSL)
+find_package(VDT)
 
 gaudi_add_library(VeloDetLib
                   src/Lib/*.cpp
                   PUBLIC_HEADERS VeloDet
-                  INCLUDE_DIRS Boost GSL
-                  LINK_LIBRARIES Boost GSL DetDescLib DetDescCnvLib GaudiAlgLib LHCbKernel LHCbMathLib)
+		  INCLUDE_DIRS VDT Boost
+		  LINK_LIBRARIES VDT Boost DetDescLib DetDescCnvLib GaudiAlgLib LHCbKernel LHCbMathLib)
 
 gaudi_add_module(VeloDet
                  src/component/*.cpp
-                 INCLUDE_DIRS Boost GSL
-                 LINK_LIBRARIES Boost GSL DetDescLib DetDescCnvLib GaudiAlgLib LHCbKernel LHCbMathLib VeloDetLib)
+		 INCLUDE_DIRS VDT Boost
+		 LINK_LIBRARIES VDT Boost DetDescLib DetDescCnvLib GaudiAlgLib LHCbKernel LHCbMathLib VeloDetLib)
 
 gaudi_add_dictionary(VeloDet
                      dict/VeloDetDict.h
                      dict/VeloDetDict.xml
-                     INCLUDE_DIRS Boost GSL
-                     LINK_LIBRARIES Boost GSL DetDescLib DetDescCnvLib GaudiAlgLib LHCbKernel LHCbMathLib VeloDetLib
+		     INCLUDE_DIRS VDT Boost
+		     LINK_LIBRARIES VDT Boost DetDescLib DetDescCnvLib GaudiAlgLib LHCbKernel LHCbMathLib VeloDetLib
                      OPTIONS "-U__MINGW32__")
 
 

@@ -3,6 +3,9 @@
 #define VELODET_DEVELORTYPE_H 1
 
 // Include files
+#include "vdt/exp.h"
+#include "vdt/log.h"
+#include "vdt/atan2.h"
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
@@ -137,7 +140,7 @@ public:
 
   /// Return the local pitch of the sensor for a given strip +/- fraction
   inline double rPitch(unsigned int strip, double fraction) const {
-    return exp(m_pitchSlope*((strip%512)+fraction))*m_innerPitch;
+    return vdt::fast_exp(m_pitchSlope*((strip%512)+fraction))*m_innerPitch;
   }
 
   /// Return the local pitch at a given radius 
@@ -344,14 +347,14 @@ public:
     PolyLine(std::vector<double> x, std::vector<double> y): m_x(x), m_y(y),
                                                             m_maxPhi(-999.){
       for( unsigned int i = 0 ; i < m_x.size() ; ++i ){
-        double phi = atan2(m_y[i],m_x[i]);
+        double phi = vdt::fast_atan2(m_y[i],m_x[i]);
         if( phi > m_maxPhi ) m_maxPhi = phi;
       }
     };
     double minPhi() const{
       double minPhi(999.);
       for( unsigned int i = 0 ; i < m_x.size() ; ++i ){
-        double phi = atan2(m_y[i],m_x[i]);
+        double phi = vdt::fast_atan2(m_y[i],m_x[i]);
         if( phi < minPhi ) minPhi = phi;
       }
       return minPhi;

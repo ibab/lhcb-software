@@ -2,6 +2,7 @@
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
 // Include files
+#include <cmath>
 
 // From Gaudi
 #include "GaudiKernel/Bootstrap.h"
@@ -229,7 +230,7 @@ StatusCode DeVeloSensor::intersectWithLine(const Gaudi::XYZPoint& point,
   // compute n*dir and check for parallel case
   double denom = n.x()*dir.x() + n.y()*dir.y() + n.z()*dir.z();
   double epsilon = 1.0e-12;
-  if (fabs(denom) < epsilon) {
+  if (std::abs(denom) < epsilon) {
     msg() << MSG::ERROR
           << "Failed to compute intersection. Line parallel to sensor plane."
           << endmsg;

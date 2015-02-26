@@ -2,6 +2,8 @@
 #define VELODET_DEVELOPHITYPE_H 1
 
 // Include files
+#include <cmath>
+#include "vdt/asin.h"
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
@@ -468,7 +470,7 @@ private:
   /// d0 and the c0 of the strip: protected agains impossible radii values
   inline double safePhiOffset(double const &c0, double const &d0, 
 			      double const & radius) const {
-    return (fabs(d0/radius) < 1.) ? (asin(d0/radius) - c0) : (asin(1.) - c0);
+    return (std::abs(d0/radius) < 1.) ? (vdt::fast_asin(d0/radius) - c0) : (vdt::fast_asin(1.) - c0);
   }
 
   /// cached Message Stream object
