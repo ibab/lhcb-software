@@ -3,6 +3,7 @@
 #define TRACKTOOLS_TRAJPOCA_H 1
 
 // Include files
+#include <algorithm>
 
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
@@ -60,15 +61,22 @@ public:
                        Gaudi::XYZVector& distance,
                        double precision ) const ;
 private:
-  StatusCode stepTowardPoca( const LHCb::Trajectory& traj1,
-                             double& mu1,
-                             bool restrictRange1,
-                             const LHCb::Trajectory& traj2,
-                             double& mu2, 
-                             bool restrictRange2,
-                             double precision ) const;
+  bool stepTowardPoca( const LHCb::Trajectory& traj1,
+                       double& mu1,
+                       bool restrictRange1,
+                       const LHCb::Trajectory& traj2,
+                       double& mu2, 
+                       bool restrictRange2,
+                       double precision ) const;
 
-  bool restrictToRange( double& l, const LHCb::Trajectory& t ) const;
+  inline bool restrictToRange(double& l, const LHCb::Trajectory& t) const
+  {
+    const auto lmax = std::max(t.beginRange(),t.endRange());
+    const auto lmin = std::min(t.beginRange(),t.endRange());
+    const auto oldl = l;
+    l = std::max(lmin, std::min(lmax, l));
+    return oldl != l;
+  }
 
 private:
 
@@ -79,6 +87,11 @@ private:
   int m_maxnTry;
   double m_maxDist;
   double m_maxExtrapTolerance;
+
+  // replace the statics in stepTowardPoca
+  mutable Gaudi::XYZPoint m_p1, m_p2;
+  mutable Gaudi::XYZVector m_dp1dmu1, m_dp2dmu2;
+  mutable Gaudi::XYZVector m_d2p1dmu12, m_d2p2dmu22;
 };
 
 #endif // TRACKTOOLS_TRAJPOCA_H

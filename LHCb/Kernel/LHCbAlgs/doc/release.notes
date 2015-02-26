@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2015-02-26 - Manuel Tobias Schiller
+ - TrajPoca: polish code and methods a little, speeds up TrajPoca by 7.7%
+
 !========================= LHCbAlgs v3r4 2014-09-08 =========================
 ! 2014-08-19 - Chris Jones
  - Add new algorithm AddressKillerAlg (from Markus) that clears the address
@@ -310,14 +313,14 @@
 !========================= LHCbAlgs v2r42 2011-08-29 =========================
 ! 2011-08-10 - Patrick Koppenburg
  - Task #21133:
-	 . New Tool RateFromTCK forking out the not lumi-specific actions from
+    . New Tool RateFromTCK forking out the not lumi-specific actions from
      GetLumiParameters (LumiAlgs).
    . Adapt OfflineRateLimiter to use it.
    . New dependency on HltInterfaces needed
 
 ! 2011-08-09 - Patrick Koppenburg
  - OfflineRateLimiter:
-	. Add 'Hz' to messages to be clear
+   . Add 'Hz' to messages to be clear
   . Remove call to init() method of GetLumiParameters tool
 
 ! 2011-08-08 - Patrick Koppenburg
