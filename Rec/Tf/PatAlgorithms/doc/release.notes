@@ -5,6 +5,16 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-02-27 - Manuel Tobias Schiller
+ - PatSeedTool: add improvements made in the ambiguity resolution of the
+   Forward:
+   - keep track of quality of last ambiguity assignment, and make sure each
+     hit keeps the best assignment that is possible
+   - do not assign ambiguities if the pitch residual looks fishy (too large) 
+   These changes speed up the Seeding by 2%, raise the efficiency by up to
+   half a percent while keeping the ghost rate stable with permille level
+   fluctuations.
+
+! 2015-02-27 - Manuel Tobias Schiller
  - PatSeedFits: add template argument to select OT only, IT only, or mixed hit
    content to avoid if statements in fits
  - PatSeedTool: count OT hits being passed, so can call specialised variant of

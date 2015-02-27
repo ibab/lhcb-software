@@ -302,10 +302,8 @@ void PatSeedTool::resAmbFromPitchRes(PatSeedTrack& tr, Range hits) const
   // increasing x - this brings together neighbouring straws
   std::sort(std::begin(hits), std::end(hits),
       [] (const PatFwdHit* hit1, const PatFwdHit* hit2) {
-        const LHCb::OTChannelID ot1(hit1->hit()->lhcbID().otID());
-        const LHCb::OTChannelID ot2(hit2->hit()->lhcbID().otID());
-        if (ot1.uniqueModule() < ot2.uniqueModule()) return true;
-        else if (ot2.uniqueModule() < ot1.uniqueModule()) return false;
+        if (hit1->planeCode() < hit2->planeCode()) return true;
+	else if (hit2->planeCode() < hit1->planeCode()) return false;
         else if (hit1->hit()->xAtYEq0() < hit2->hit()->xAtYEq0()) return true;
         else if (hit2->hit()->xAtYEq0() < hit1->hit()->xAtYEq0()) return false;
         else return hit1->hit()->lhcbID() < hit2->hit()->lhcbID();
@@ -327,12 +325,15 @@ void PatSeedTool::resAmbFromPitchRes(PatSeedTrack& tr, Range hits) const
     const F dxmax = F( 7) / F(2), dxmin = F(3) / F(2);
     return dzmin <= dz && dz <= dzmax && dxmin <= dx && dx <= dxmax;
   };
+  double lastpitchres = std::numeric_limits<double>::max();
   // loop over pairs of neighbouring straws in the same OT module
-  for (auto end = std::end(hits), begin = std::adjacent_find(
-	std::begin(hits), std::end(hits), areNeighbours);
-      end != begin && end != begin + 1;
-      begin = std::adjacent_find(begin + 1, end, areNeighbours)) {
+  for (auto end = std::end(hits), begin = std::begin(hits);
+      end != begin && end != begin + 1; ++begin) {
     PatFwdHit *h1 = *begin, *h2 = *(begin + 1);
+    if (!areNeighbours(h1, h2)) {
+      lastpitchres = std::numeric_limits<double>::max();
+      continue;
+    }
     // have two neighbouring hits, calculate pitch residual
     // work out effective slope in module frame
     const auto sinT = h1->hit()->sinT(), cosT = h1->hit()->cosT();
@@ -354,9 +355,17 @@ void PatSeedTool::resAmbFromPitchRes(PatSeedTrack& tr, Range hits) const
     // case 1: track passes between hits, case 2: not case 1
     const auto pr1 = std::abs(dx / epr) * (epr - r1 - r2);
     const auto pr2 = std::abs(dx / epr) * (epr - std::abs(r1 - r2));
+    if (std::min(std::abs(pr1), std::abs(pr2)) > F(3)/F(2)) {
+      // pitch residual too large to be believable (3/2 mm is a bit above 5
+      // times the OT resolution), refuse to resolve ambiguities for this hit
+      // pair
+      lastpitchres = std::numeric_limits<double>::max();
+      continue;
+    }
     if (std::abs(pr1) <= std::abs(pr2)) {
       // set ambiguities accordingly
-      HitPairAmbSetter<false>::set(h1, h2, (dx > F(0)) ? -1 : +1);
+      HitPairAmbSetter<false>::set(h1, h2, (dx > F(0)) ? -1 : +1, pr1 < lastpitchres);
+      lastpitchres = pr1;
     } else {
       // try to figure out ambiguity by comparing slope estimate obtained
       // from drift radii (assuming hits do not pass in between the wires)
@@ -368,7 +377,8 @@ void PatSeedTool::resAmbFromPitchRes(PatSeedTrack& tr, Range hits) const
       const auto dslplus = (dx + (r1 - r2) * corr) - txeff * dz;
       const auto dslminus = (dx - (r1 - r2) * corr) - txeff * dz;
       HitPairAmbSetter<true>::set(h1, h2,
-	  (std::abs(dslplus) < std::abs(dslminus)) ? +1 : -1);
+	  (std::abs(dslplus) < std::abs(dslminus)) ? +1 : -1, pr2 < lastpitchres);
+      lastpitchres = pr2;
     }
   }
 }

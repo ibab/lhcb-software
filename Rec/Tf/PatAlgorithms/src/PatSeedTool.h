@@ -103,8 +103,8 @@ class PatSeedTool : public GaudiTool {
     struct HitPairAmbSetter {
       /// set ambiguity of h1 to amb, h2 according to sameSign
       template <class HIT>
-      static inline void set(HIT& h1, HIT& h2, int amb)
-      { h1->setRlAmb(amb); h2->setRlAmb(sameSign ? amb : -amb); }
+      static inline void set(HIT& h1, HIT& h2, int amb, bool setFirst)
+      { if (setFirst) h1->setRlAmb(amb); h2->setRlAmb(sameSign ? amb : -amb); }
     };
 };
 
