@@ -3,15 +3,33 @@ version v3r1
 
 branches  cmt doc
 use GaudiPolicy  v*
-macro PVSS_installation "/opt/WinCC_OA/3.11"
+
+#macro PVSS_installation "/opt/WinCC_OA/3.11"
+#macro WCCOA_installation "/opt/WinCC_OA/3.11"
+macro PVSS_installation "/group/online/dataflow/cmtuser/libraries/WinCC_OA/3.11"
+macro WCCOA_installation "$(PVSS_installation)"
 
 macro PVSS_major_version "V311"
+macro WCCOA_major_version "V311"
+
 macro PVSS_native_version $(PVSS_major_version)
+macro WCCOA_native_version $(WCCOA_major_version)
+
 macro PVSS_api   "$(PVSS_installation)/api"
+macro WCCOA_api   "$(WCCOA_installation)/api"
+
 macro PVSS_inc   "$(PVSS_api)/include"
+macro WCCOA_inc   "$(WCCOA_api)/include"
+
 set PVSS_II      '/localdisk/pvss/STORAGE/config/config'
+set WCCOA_II      '/localdisk/pvss/STORAGE/config/config'
+
 set PVSS_II_HOME "$(PVSS_installation)"
+set WCCOA_II_HOME "$(WCCOA_installation)"
+
 set PVSS_SYSTEM_ROOT "$(PVSS_installation)"
+set WCCOA_SYSTEM_ROOT "$(WCCOA_installation)"
+
 set PROJECT_ROOT     "."
 set PLATFORM         "linux_RHEL4"
 
@@ -38,6 +56,3 @@ macro PVSS_link "-lstdc++ -lc -L$(PVSS_installation)/bin/libwklin.so -L$(PVSS_in
 macro PVSS_link_Ctrl -lCtrl$(PVSS_native_version) 
 
 macro_remove libraryshr_linkopts "-Wl,--as-needed"
-
-# libCtrl.lib libConfigs.lib 
-# -lCtrl$(PVSS_native_version)
