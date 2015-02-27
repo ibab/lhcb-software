@@ -147,7 +147,7 @@ PVSS::pvss_function_t PVSS::pvss_load_function(const char* lib, const char* fun)
   dll += lib;
   dll += ".so";
   printf("PVSS> --------> Loading DLL:%s\n",dll.c_str());
-  void* handle = ::dlopen(dll.c_str(),RTLD_NOW);
+  void* handle = ::dlopen(dll.c_str(),RTLD_NOW|RTLD_GLOBAL);
   if ( 0 == handle )  {
     ::printf("PVSS> Failed to load library:%s\n",dll.c_str());
     ::printf("PVSS> Error: %s\n",pvss_load_error());
