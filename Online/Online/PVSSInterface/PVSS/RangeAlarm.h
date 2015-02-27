@@ -22,8 +22,33 @@ namespace PVSS {
 
   class DataPoint;
 
-  /** @class RangeAlarm   RangeAlarm.h  PVSS/RangeAlarm.h
+  /// Range definition
+  /** 
+    *  PVSS configuration attribute.
     *
+    *   @author  M.Frank
+    *   @version 1.0
+    */
+  template <typename T> struct RangeDefinition  {
+      std::string text;
+      std::string clazz;
+      T lower, upper;
+      bool inc_lower, inc_upper;
+      RangeDefinition();
+      RangeDefinition(const std::string t,
+            const std::string& cl,
+            const T& l,
+            bool  il,
+            const T& u,
+            bool  iu);
+      RangeDefinition(const RangeDefinition& c);
+      RangeDefinition& operator=(const RangeDefinition& r);
+      bool operator==(const RangeDefinition& r) const;
+      bool operator<(const RangeDefinition& r) const;
+    };
+
+  /// RangeAlarm class
+  /** 
     *  PVSS configuration attribute.
     *
     *   @author  M.Frank
@@ -31,24 +56,8 @@ namespace PVSS {
     */
   template <typename T> class RangeAlarm : virtual public BasicAlarm {
   public:
-    struct Range  {
-      std::string text;
-      std::string clazz;
-      T lower, upper;
-      bool inc_lower, inc_upper;
-      Range();
-      Range(const std::string t,
-            const std::string& cl,
-            const T& l,
-            bool  il,
-            const T& u,
-            bool  iu);
-      Range(const Range& c);
-      Range& operator=(const Range& r);
-      bool operator==(const Range& r) const;
-      bool operator<(const Range& r) const;
-    };
-    typedef std::vector<Range> Ranges;
+    typedef RangeDefinition<T> Range;
+    typedef std::vector<Range > Ranges;
   protected:
     /// Defined ranges
     Ranges m_ranges;

@@ -13,12 +13,10 @@
 #include "PVSS/Kernel.h"
 #include "PVSS/DataPoint.h"
 #include "CPP/Interactor.h"
+#include "CPP/Event.h"
 
 // C++ include files
 #include <map>
-
-// Forward declarations
-class Event;
 
 /*
  *   PVSS namespace declaration
@@ -37,7 +35,7 @@ namespace PVSS {
     *   @author  M.Frank
     *   @version 1.0
     */
-  class DeviceListener : public Interactor {
+  class DeviceListener : public CPP::Interactor {
   public:
     /// Definition of device connections
     typedef std::map<DpID,DataPoint*> DevDesc;
@@ -65,7 +63,7 @@ namespace PVSS {
     /// Access to current device (Only valid during callback!)
     DataPoint& dp() const;
     /// Sensor callback
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
     /// Interface callback to handle all devices 
     virtual void handleDevices();
     /// Interface callback to handle single devices one by one

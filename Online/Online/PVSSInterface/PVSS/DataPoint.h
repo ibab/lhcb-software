@@ -234,10 +234,8 @@ namespace PVSS {
     /// Access debug flag
     int flag(int which)  const
     { return (which >= 0 && which < 3) ? m_flag[which] : -1; }
-    /// Template access to data - overloaded for concrete types
-    template <class T> T data();
     /// Template access to data (CONST) - overloaded for concrete types
-    template <class T> const T data() const;
+    template <class T> T data() const;
     /// Set value data (for publishing data to PVSS)
     template <class T> void set(const T& val);
     /// Template access to reference of data - overloaded for concrete types

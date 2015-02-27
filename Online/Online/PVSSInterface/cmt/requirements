@@ -19,10 +19,9 @@ apply_pattern reflex_dictionary dictionary=PVSS \
                                 headerfiles=$(PVSSINTERFACEROOT)/dict/dictionary.h \
                                 selectionfile=$(PVSSINTERFACEROOT)/dict/dictionary.xml \
                                 imports=Python
-
-macro OnlineKernelDict_use_linkopts $(use_linkopts)
-# Gnerate dictionary rootmap file
-apply_pattern generate_rootmap library=PVSSDict
+apply_pattern reflex_dictionary dictionary=PVSS_STL \
+                                headerfiles=$(PVSSINTERFACEROOT)/dict/dictionary_stl.h \
+                                selectionfile=$(PVSSINTERFACEROOT)/dict/dictionary_stl.xml
 
 private
 use Python       v* LCG_Interfaces -no_auto_imports

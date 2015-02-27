@@ -17,27 +17,27 @@
 using namespace PVSS;
 
 template <typename T> 
-RangeAlarm<T>::Range::Range() : lower(0), upper(0), inc_lower(true), inc_upper(false)
+RangeDefinition<T>::RangeDefinition() : lower(0), upper(0), inc_lower(true), inc_upper(false)
 {}
 
 template <typename T> 
-RangeAlarm<T>::Range::Range(const std::string t,
-      const std::string& cl,
-      const T& l,
-      bool  il,
-      const T& u,
-      bool  iu) 
+RangeDefinition<T>::RangeDefinition(const std::string t,
+				    const std::string& cl,
+				    const T& l,
+				    bool  il,
+				    const T& u,
+				    bool  iu) 
 : text(t), clazz(cl), lower(l), upper(u), inc_lower(il), inc_upper(iu)
 {}
 
 template <typename T> 
-RangeAlarm<T>::Range::Range(const Range& c) 
+RangeDefinition<T>::RangeDefinition(const RangeDefinition<T>& c) 
 : text(c.text), clazz(c.clazz),
 lower(c.lower), upper(c.upper), inc_lower(c.inc_lower), inc_upper(c.inc_upper)
 {}
 
 template <typename T> 
-typename RangeAlarm<T>::Range& RangeAlarm<T>::Range::operator=(const Range& c)  {
+RangeDefinition<T>& RangeDefinition<T>::operator=(const RangeDefinition<T>& c)  {
   if ( &c != this )  {
     text=c.text; 
     clazz=c.clazz;
@@ -50,14 +50,14 @@ typename RangeAlarm<T>::Range& RangeAlarm<T>::Range::operator=(const Range& c)  
 }
 
 template <typename T> 
-bool RangeAlarm<T>::Range::operator==(const Range& c) const  {
+bool RangeDefinition<T>::operator==(const RangeDefinition<T>& c) const  {
   if ( &c == this ) return true;
   return text==c.text && clazz==c.clazz && lower==c.lower &&
          upper==c.upper && inc_lower==c.inc_lower && inc_upper==c.inc_upper;
 }
 
 template <typename T> 
-bool RangeAlarm<T>::Range::operator<(const Range& c) const  {
+bool RangeDefinition<T>::operator<(const RangeDefinition<T>& c) const  {
   if ( &c == this ) return false;
   else if ( text<c.text ) return true;
   else if ( text>c.text ) return false;
@@ -173,12 +173,24 @@ bool RangeAlarm<T>::operator<(const RangeAlarm& alm) const  {
   return false;
 }
 
-template class RangeAlarm<double>;
+template class RangeDefinition<char>;
+template class RangeDefinition<unsigned char>;
+template class RangeDefinition<short>;
+template class RangeDefinition<unsigned short>;
+template class RangeDefinition<int>;
+template class RangeDefinition<unsigned int>;
+template class RangeDefinition<long>;
+template class RangeDefinition<unsigned long>;
+template class RangeDefinition<float>;
+template class RangeDefinition<double>;
+
 template class RangeAlarm<char>;
 template class RangeAlarm<unsigned char>;
 template class RangeAlarm<short>;
-template class RangeAlarm<float>;
+template class RangeAlarm<unsigned short>;
 template class RangeAlarm<int>;
 template class RangeAlarm<unsigned int>;
 template class RangeAlarm<long>;
 template class RangeAlarm<unsigned long>;
+template class RangeAlarm<float>;
+template class RangeAlarm<double>;

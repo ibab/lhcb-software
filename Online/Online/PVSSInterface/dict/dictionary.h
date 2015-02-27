@@ -117,12 +117,12 @@ namespace PVSS {
 #define TR_SPECIALIZATIONS(x) __TR2_SPECIALIZATIONS(x) __TR_SPECIALIZATIONS(std::vector<x >)
 
 #define SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(x)           \
-  namespace PVSS {                                            \
-    template <> x DataPoint::data< x >();                     \
-    template <> const x DataPoint::data< x >() const;         \
-  }
+  namespace PVSS { template <> x DataPoint::data< x >() const; }
 
-#define VECTOR_SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(std::vector< x >)
+#define VECTOR_SPECIALIZATIONS(x) \
+  BASIC_SPECIALIZATIONS(std::vector< x >)  \
+  BASIC_SPECIALIZATIONS(std::list< x >)   \
+  BASIC_SPECIALIZATIONS(std::set< x >)
 
   SPECIALIZATIONS(bool)
   SPECIALIZATIONS(char)
@@ -198,9 +198,23 @@ namespace  {
     } m_dps;
     struct RangeAlarms {
       RangeAlarm<char>                                      m_i7;
+      RangeAlarm<unsigned char>                             m_i7u;
       RangeAlarm<short>                                     m_i9;
+      RangeAlarm<unsigned short>                            m_i9u;
       RangeAlarm<int>                                       m_i3;
-      RangeAlarm<float>                                     m_i5;
+      RangeAlarm<unsigned int>                              m_i3u;
+      RangeAlarm<long>                                      m_i4;
+      RangeAlarm<unsigned long>                             m_i4u;
+      RangeAlarm<float>                                     m_i5f;
+      RangeAlarm<double>                                    m_i5d;
+      RangeDefinition<char>                                 m_ir7;
+      RangeDefinition<unsigned char>                        m_ir7u;
+      RangeDefinition<short>                                m_ir9;
+      RangeDefinition<unsigned short>                       m_ir9u;
+      RangeDefinition<int>                                  m_ir3;
+      RangeDefinition<unsigned int>                         m_ir3u;
+      RangeDefinition<float>                                m_ir5f;
+      RangeDefinition<double>                               m_ir5d;
     } _ralms;
     struct BitAlarms {
       BitAlarm                                              m_i1;

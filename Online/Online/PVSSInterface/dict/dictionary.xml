@@ -1,35 +1,23 @@
 <lcgdict>
   <selection>
-    <!-- class pattern="*PVSS::*"/ -->
     <class pattern="PVSS::*"/>
     <class pattern="std::map<*,PVSS::*>"/>
-    <class pattern="std::map<*,PVSS::*>::*iterator"/>
-    <class pattern="std::_Tree<*PVSS::*>"/>
     <class pattern="std::vector<PVSS::*>"/>
-    <class pattern="std::vector<PVSS::*>::*iterator"/>
     <class pattern="std::vector<const PVSS::*>"/>
-    <class pattern="std::vector<const PVSS::*>::*iterator"/>
     <class pattern="std::list<PVSS::*>"/>
-    <class pattern="std::list<PVSS::*>::*iterator"/>
     <class pattern="std::set<PVSS::*>"/>
-    <class pattern="std::set<PVSS::*>::*iterator"/>
     <class pattern="std::auto_ptr<PVSS::*>"/>
 
     <class name="std::vector<char>"/>
     <class name="std::vector<int>"/>
     <class name="std::vector<float>"/>
 
-    <class name="Event"/>
-    <class name="Message"/>
-    <class name="Sensor"/>
-    <class name="Interactor"/>
+    <!--
+    <class name="CPP::Event"/>
+    <class name="CPP::Message"/>
+    <class name="CPP::Sensor"/>
+    <class name="CPP::Interactor"/>
+    -->
     <function pattern="PVSS*"/>
-    <!-- class name="Address"/ -->
   </selection>
-<!--
-  <exclusion>
-    <class name="PVSS::DeviceIO::Read"/>
-    <class name="PVSS::DeviceIO::Write"/>
-  </exclusion>
--->
 </lcgdict>

@@ -20,8 +20,6 @@
 #include <map>
 #include <set>
 
-class Interactor;
-
 /*
  *   PVSS namespace declaration
  */
@@ -49,9 +47,9 @@ namespace PVSS {
   class DeviceSensor : public HotLinkCallback  {
   public:
     // Type definitions
-    typedef std::map<DpID,DataPoint*> DataPoints;
-    typedef std::vector<DataPoint*>   DataPointArray;
-    typedef std::set<Interactor*>     Listeners;
+    typedef std::map<DpID,DataPoint*>  DataPoints;
+    typedef std::vector<DataPoint*>    DataPointArray;
+    typedef std::set<CPP::Interactor*> Listeners;
 
   protected:
     /// Reference to controls manager
@@ -102,9 +100,9 @@ namespace PVSS {
     /// Access to the device array (CONST)
     const DataPointArray& deviceArray() const {  return m_pointArray; }
     /// Add device listener
-    void addListener(Interactor* listener);
+    void addListener(CPP::Interactor* listener);
     /// Remove listener
-    void removeListener(Interactor* listener);
+    void removeListener(CPP::Interactor* listener);
     /// Remove all listeners
     void removeListeners();
     /// Run Sensor instance
