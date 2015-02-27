@@ -1,6 +1,7 @@
 #include "RTL/rtl.h"
 #include <iostream>
 #include <typeinfo>
+#include <cerrno>
 #include <cstdio>
 #include <climits>
 #include <ctime>

@@ -181,7 +181,7 @@ namespace Elf  {
     Header header;
   private:
     /// Default constructor is inhibited!
-    Section() : Handle(0), header(0)  {}
+    Section() : Handle<Elf64_Shdr>(0), header(0)  {}
   public:
     typedef Header::byte_t byte_t;
     
@@ -238,7 +238,7 @@ namespace Elf  {
     Elf64_Shdr* section;
   private:
     /// Default constructor is inhibited!
-    Symbol() : Handle(0), header(0)  {}
+    Symbol() : Handle<Elf64_Sym>(0), header(0)  {}
   public:
     typedef Header::byte_t byte_t;
     

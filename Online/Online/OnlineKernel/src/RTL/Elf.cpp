@@ -510,18 +510,18 @@ void Header::testSectionHeaderMemory()  const   {
 
 /// Copy constructor
 Section::Section(const Section& s) 
-  : Handle(s), header(s.header) 
+  : Handle<Elf64_Shdr>(s), header(s.header) 
 {
 }
 
 /// Initializing constructor
 Section::Section(const pair<RawImage*,Elf64_Shdr*>& h)
-  : Handle(h.second), header(h.first) 
+  : Handle<Elf64_Shdr>(h.second), header(h.first) 
 {
 }
 
 /// Initializing constructor
-Section::Section(const Header& h,int num_section) : Handle(0), header(h)   {
+Section::Section(const Header& h,int num_section) : Handle<Elf64_Shdr>(0), header(h)   {
   const byte_t* p = header.sectionHeaders() + num_section*header.shEntrySize();
   m_ptr = (Elf64_Shdr*)p;
 }
@@ -558,13 +558,13 @@ void Section::testSectionDataMemory()  {
 
 /// Initializing constructor
 Symbol::Symbol(const Header& hdr, Elf64_Shdr* sec, Elf64_Sym* sym)
-  : Handle(sym), header(hdr), section(sec)
+  : Handle<Elf64_Sym>(sym), header(hdr), section(sec)
 {
 }
 
 /// Copy constructor
 Symbol::Symbol(const Symbol& s)
-  : Handle(s), header(s.header), section(s.section)
+  : Handle<Elf64_Sym>(s), header(s.header), section(s.section)
 {
 }
 

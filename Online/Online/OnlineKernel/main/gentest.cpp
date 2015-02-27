@@ -8,6 +8,7 @@
 // ====================================================================
 #include "RTL/DllAccess.h"
 #include <iostream>
+#include <cerrno>
 
 /// Generic main program to start any process
 /**

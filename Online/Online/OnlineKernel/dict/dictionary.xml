@@ -12,21 +12,24 @@
     <function name="remqhead"/>
     <class name="qentry"/>
 
-    <class pattern="*Sensor"/>
-
     <enum  pattern="SCR::*"/>
-    <class pattern="SCR::*"/>
     <function pattern="scrc_*"/>
     <function pattern="scrcc_*"/>
-
     <function pattern="wtc_*"/>
-
+    <function pattern="mbm_*"/>
     <function pattern="amsc_*"/>
-
-    <class pattern="DataTransfer::_*"/>
+    <function pattern="DataTransfer::net_*"/>
+    <class pattern="DataTransfer::*"/>
+    <class pattern="*Sensor"/>
     <class name="CPP::Event"/>
+    <class name="CPP::Message"/>
+    <class name="CPP::Address"/>
     <class name="CPP::Interactor"/>
     <class name="CPP::PyInteractor"/>
+    <class pattern="Network*"/>
+    <class pattern="Udp*"/>
+    <class pattern="Tcp*"/>
+    <class name="IOPortManager"/>
 <!--
     <function pattern="DataTransfer::_*"/>
     <function pattern="SCR::*"/>
@@ -42,8 +45,8 @@
     <class name="UdpConnection"/>
 
 
--->
     <class pattern="MBM::*"/>
+-->
     <function pattern="mbm_*"/>
     <class name="REQ"/>
     <class name="BUFFERS"/>
