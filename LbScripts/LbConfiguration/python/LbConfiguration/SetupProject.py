@@ -591,7 +591,7 @@ class GetNightlyCMTPROJECTPATH(ContentHandler):
         self._path = []
         self._in_slot = False
         self._in_cmtpp = False
-        if day is None:
+        if day in (None, 'Today'):
             self._day = time.localtime()[6] # today
         elif day in days:
             self._day = days.index(day)

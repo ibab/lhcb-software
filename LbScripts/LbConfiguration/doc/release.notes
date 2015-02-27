@@ -1,3 +1,7 @@
+2015-02-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* updated lb-run/lb-dev tests and fixed LBCORE-758
+
 2015-02-20  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	LBCORE-751: add support for data packages checked out in a CMake-based project

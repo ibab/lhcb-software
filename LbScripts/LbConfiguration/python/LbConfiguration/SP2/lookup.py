@@ -103,7 +103,7 @@ def listVersions(name, platform):
     bindir = os.path.join('InstallArea', platform)
 
     found_versions = set()
-    for p in path:
+    for p in [dirname for dirname in path if os.path.isdir(dirname)]:
         files = set(os.listdir(p))
         # the plain project name is taken into account as 'latest' version
         if 'prod' not in found_versions and name in files:

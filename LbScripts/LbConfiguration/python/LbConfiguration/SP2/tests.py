@@ -193,7 +193,7 @@ def test_options_addSearchPath():
     import datetime
     days = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
     weekday = datetime.date.today().weekday()
-    today = days[weekday]
+    today = 'Today' # days[weekday]
     yesterday = days[(weekday - 1) % 7]
 
     with TempDir({'lhcb-nightly-slot/%s' % today: None,
@@ -324,6 +324,34 @@ def test_lookup():
 
     path[:] = bk_path
 
+def test_listVersions():
+    from LbConfiguration.SP2 import path
+    bk_path = list(path)
+    from os.path import join
+
+    from LbConfiguration.SP2.lookup import listVersions
+
+    if 'BINARY_TAG' in os.environ:
+        del os.environ['BINARY_TAG']
+    os.environ['CMTCONFIG'] = 'x86_64-slc6-gcc48-opt'
+
+    data = {'MYPROJECT/MYPROJECT_v1r0/InstallArea/x86_64-slc6-gcc48-opt/manifest.xml':
+                '<?xml version="1.0" encoding="UTF-8"?><manifest></manifest>',
+            'MYPROJECT/MYPROJECT_v1r2/InstallArea/x86_64-slc6-gcc48-opt/manifest.xml':
+                '<?xml version="1.0" encoding="UTF-8"?><manifest></manifest>'}
+    with TempDir(data) as tmp:
+        path[:] = ['/no/where', tmp, tmp]
+
+        expected = [('v1r2', join(tmp, 'MYPROJECT', 'MYPROJECT_v1r2')),
+                    ('v1r0', join(tmp, 'MYPROJECT', 'MYPROJECT_v1r0'))]
+        observed = list(listVersions('MyProject', os.environ['CMTCONFIG']))
+        print 'expected', expected
+        print 'observed', observed
+        assert expected == observed
+
+    path[:] = bk_path
+
+
 def _test_profiling():
     from LbConfiguration.SP2 import profiling
 
@@ -377,12 +405,6 @@ def test_LBCORE_522():
     original = {'MYDATA': '${DATA}/subdir', 'DATA': '/main/path'}
     expected = {'MYDATA': '/main/path/subdir', 'DATA': '/main/path'}
     assert expandAllVars(original) == expected
-
-    try:
-        expandAllVars({'A': '${B}'})
-        assert False, 'exception expected'
-    except KeyError:
-        pass
 
     try:
         expandAllVars({'A': '${B}/x', 'B': '${A}/y'})
