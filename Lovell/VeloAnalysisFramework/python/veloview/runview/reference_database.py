@@ -34,31 +34,29 @@ Reference runs
 A reference file is uniquely identified by a run number. With this in mind,
 the reference database can be thought of as a mapping from 'nominal' plots to
 reference plots, and as the set of plots within each run file are the same the
-mapping is from nominal plots to reference run numbers. If a given plot in a
-given run does not have a reference run number associated with, the reference
-run number for the range of validity the run falls in to is used.
-
-Each plot and each range of validity in the database has a corresponding
-reference run ID, which can be empty, corresponding to there being no reference
-run.
+mapping is from nominal plots to reference run numbers. If a given run plot in
+the range of validity the run falls in to does not have a reference run number
+associated with it, the reference run number for the range of validity is used.
 
 For example, take the following mapping.
 
     10 -> MagUp 8, MagDown 9 BOUNDARY
     14 -> MagUp 16, MagDown 18 BOUNDARY
-    18
-     plot_name_A -> 11
+        plot_name_A -> MagUp 15, MagDown 18
     21 -> MagUp 22, MagDown 25 BOUNDARY
 
-There are 3 runs in the database, 10, 14, and 21, and one plot, plot_name_A.
-The three runs are all marked as boundaries, and all have magnet up and magnet
-down reference runs defined on them. plot_name_A, of run 18, also has a
-reference run defined. There are then 4 ranges of validity:
-    [0, 10[, [14, 18[, [18, 21[, [21, \infty[
-As an example, every magnet up run in [14, 21[ will have run 16 as a reference,
-and every magnet down run in the same range will have run 18 as a reference.
-The only exception in this case is plot_name_A in run 18, which will have
-plot_name_A from run 11 as its reference.
+There are 3 boundary runs in the database, 10, 14, and 21, and one boundary
+plot, plot_name_A defined on boundary 14. All have magnet up and magnet down
+reference runs defined on them. This demarcates four ranges of validity:
+    [0, 10[, [14, 21[, [21, \infty[
+As an example, any plot from any magnet up run greater than or equal to run 21
+will have a run 22 as its reference run, and plot from any magnet down will
+have run 25 as its reference.
+Any plot from any magnet up run falling in [14, 21[ will have run 16 as its
+reference run, except the plot with name plot_name_A which has run 15 as its
+reference. Similarly, all plots in magnet down runs in the same RoV will have
+run 18 as its reference, except the plot with name plot_name_A which will
+haverun 18 as its reference.
 """
 import sqlite3
 
