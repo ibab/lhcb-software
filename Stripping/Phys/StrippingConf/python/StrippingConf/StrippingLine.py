@@ -63,6 +63,16 @@ def hltentryName    ( line, level = 'Stripping' ) :
     """ Convention: the name of 'HLTFilter' algorithm inside StrippingLine """
     return '%s%sHltFilter'   % (level,line)
 
+## Convention: the name of 'HLTFilter' algorithm inside StrippingLine
+def hlt1entryName    ( line, level = 'Stripping' ) :
+    """ Convention: the name of 'HLT1Filter' algorithm inside StrippingLine """
+    return '%s%sHlt1Filter'   % (level,line)
+
+## Convention: the name of 'HLTFilter' algorithm inside StrippingLine
+def hlt2entryName    ( line, level = 'Stripping' ) :
+    """ Convention: the name of 'HLT2Filter' algorithm inside StrippingLine """
+    return '%s%sHlt2Filter'   % (level,line)
+
 def decisionName   ( line, level = 'Stripping'  ) :
     """Convention: the name of 'Decision' algorithm inside StrippingLine"""
     return level + '%sDecision'   % line if line != 'Global' else level+'Global'
@@ -83,8 +93,8 @@ def _add_to_stripping_lines_( line ) :
     """
 
     for i in _stripping_lines__ :
-	if i.name() == line.name() :
-	    raise ValueError,"Created StrippingLine with duplicate name %s" % line.name()
+        if i.name() == line.name() :
+            raise ValueError,"Created StrippingLine with duplicate name %s" % line.name()
 
     _stripping_lines__.append ( line )
 
@@ -114,8 +124,8 @@ class bindMembers (object) :
 
     def _getOutputLocation (self, alg) :
         if type(alg) is GaudiSequencer :
-    	    for i in alg.Members :
-    		self._getOutputLocation( i )
+            for i in alg.Members :
+                self._getOutputLocation( i )
         elif hasattr ( type(alg) , 'OutputSelection' ) :
             if hasattr ( alg , 'OutputSelection' ) :
                 self._outputloc = "Phys/"+alg.OutputSelection
@@ -204,7 +214,9 @@ class StrippingLine(object):
                    prescale  = 1    ,   # prescale factor
                    ODIN      = None ,   # ODIN predicate
                    L0DU      = None ,   # L0DU predicate
-                   HLT       = None ,   # HltDecReports predicate
+                   HLT       = None ,   # HltDecReports predicate  -> Deprecated since 2015
+                   HLT1      = None ,   # Hlt1DecReports predicate
+                   HLT2      = None ,   # Hlt2DecReports predicate
                    FILTER    = None ,   # 'VOID'-predicate, e.g. Global Event Cut
                    checkPV   = True ,   # Check PV before running algos
                    algos     = None ,   # the list of stripping members
@@ -244,6 +256,8 @@ class StrippingLine(object):
         ODIN   = deepcopy ( ODIN   )
         L0DU   = deepcopy ( L0DU   )
         HLT    = deepcopy ( HLT    )
+        HLT1   = deepcopy ( HLT1    )
+        HLT2   = deepcopy ( HLT2    )
         FILTER = deepcopy ( FILTER )
         algos  = deepcopy ( algos  )
         args   = deepcopy ( args   )
@@ -255,6 +269,8 @@ class StrippingLine(object):
         self._ODIN      = ODIN
         self._L0DU      = L0DU
         self._HLT       = HLT
+        self._HLT1      = HLT1
+        self._HLT2      = HLT2
         self._FILTER    = FILTER
         self._checkPV   = checkPV
         self._HDRLocation = HDRLocation
@@ -305,20 +321,20 @@ class StrippingLine(object):
     	    check = CheckPV("checkPVmin1");
     	    check.MinPVs = 1;
     	    self._members.insert(0, check);
-    	elif isinstance(checkPV, int) :
+        elif isinstance(checkPV, int) :
     	    check = CheckPV("checkPVmin%d" % checkPV)
     	    check.MinPVs = checkPV
     	    self._members.insert(0, check);
-    	elif isinstance(checkPV, tuple) :
-    	    if len(checkPV) == 2 :
-    		check = CheckPV("checkPVmin%dmax%d" % checkPV)
-    		check.MinPVs = checkPV[0]
-    		check.MaxPVs = checkPV[1]
-    		self._members.insert(0, check);
-    	    else :
-    		raise TypeError, "Wrong checkPV tuple length %d, should be 2" % len(checkPV)
-    	elif checkPV != False :
-    	    raise TypeError, "Wrong checkPV argument type '%s'" % type(checkPV).__name__
+        elif isinstance(checkPV, tuple) :
+            if len(checkPV) == 2 :
+                check = CheckPV("checkPVmin%dmax%d" % checkPV)
+                check.MinPVs = checkPV[0]
+                check.MaxPVs = checkPV[1]
+                self._members.insert(0, check);
+            else :
+                raise TypeError, "Wrong checkPV tuple length %d, should be 2" % len(checkPV)
+        elif checkPV != False :
+            raise TypeError, "Wrong checkPV argument type '%s'" % type(checkPV).__name__
 
         # if needed, apply filter before running all algos
         if FILTER :
@@ -332,7 +348,7 @@ class StrippingLine(object):
                 fltr = VOIDFilter  ( voidentryName  ( line ) , **FILTER )
                 self._members.insert ( 0 , fltr )
             else :
-    		raise TypeError, "Wrong FILTER attribute: %s " % FILTER
+                raise TypeError, "Wrong FILTER attribute: %s " % FILTER
 
         # bind members to line
         _boundMembers    = bindMembers( line, algos )
@@ -347,34 +363,34 @@ class StrippingLine(object):
         return self._selection
 
     def declareAppended( self ) :
-	self._appended = True
+        self._appended = True
 
     def isAppended( self ) :
-	return self._appended
+        return self._appended
 
     def selectionsToLocations(self, selList) :
-	locList = []
-    	for sel in selList :
-    	    if type(sel).__name__ == 'Selection' or type(sel).__name__ == 'MergedSelection' :
-		# Need to check if the selection is the top selection
-		# In that case use line's output location because the
-		# name of the top algoritm is redefined by the framework
-    		if sel == self._initialSelection :
-    		    fullPath = "/Event/" + self.outputLocation()
-    		else :
-        	    fullPath = "/Event/" + sel.outputLocation()
-        	locList += [ fullPath ]
-#                print "Added outputlocation %s to ExtraInfo in line %s" % (fullPath, self.name() )
-    	    else :
-        	raise AttributeError, "Storing ExtraInfo is not supported for selection of type '%s' (in line %s)" % \
-        	      (type(sel).__name__, self.name() )
+        locList = []
+        for sel in selList :
+            if type(sel).__name__ == 'Selection' or type(sel).__name__ == 'MergedSelection' :
+                # Need to check if the selection is the top selection
+                # In that case use line's output location because the
+                # name of the top algoritm is redefined by the framework
+                if sel == self._initialSelection :
+                    fullPath = "/Event/" + self.outputLocation()
+                else :
+                    fullPath = "/Event/" + sel.outputLocation()
+                    locList += [ fullPath ]
+                    #print "Added outputlocation %s to ExtraInfo in line %s" % (fullPath, self.name() )
+            else :
+                raise AttributeError, "Storing ExtraInfo is not supported for selection of type '%s' (in line %s)" % \
+                      (type(sel).__name__, self.name() )
         return locList
 
     def createConfigurable( self, TESPrefix = "Strip", HDRLocation = 'Phys/DecReports' ) :
 
         if self._HDRLocation == None :
     	    self.fullHDRLocation = TESPrefix + "/" + HDRLocation
-    	else :
+        else :
     	    self.fullHDRLocation = self._HDRLocation
 
         # check for forbidden attributes
@@ -397,78 +413,109 @@ class StrippingLine(object):
 
         if self._ODIN :
             if isinstance   ( self._ODIN , str   ) :
-        	mdict.update( { 'ODIN'    : ODINFilter ( odinentryName ( line ) , Code = self._ODIN   )  } )
+                mdict.update( { 'ODIN'    : ODINFilter ( odinentryName ( line ) , Code = self._ODIN   )  } )
             elif isinstance ( self._ODIN , ( tuple , list ) ) and 2 == len ( self._ODIN ) :
-        	mdict.update( { 'ODIN'    : ODINFilter ( odinentryName ( line ) , Code = self._ODIN[0],  Preambulo = self._ODIN[1] )  } )
+                mdict.update( { 'ODIN'    : ODINFilter ( odinentryName ( line ) , Code = self._ODIN[0],  Preambulo = self._ODIN[1] )  } )
             elif isinstance ( self._ODIN , dict     ) :
-        	mdict.update( { 'ODIN'    : ODINFilter ( odinentryName ( line ) , **self._ODIN  )  } )
+                mdict.update( { 'ODIN'    : ODINFilter ( odinentryName ( line ) , **self._ODIN  )  } )
             else :
-    		raise TypeError, "Wrong ODIN attribute: %s " % self._ODIN
+                raise TypeError, "Wrong ODIN attribute: %s " % self._ODIN
 
         if self._L0DU   :
             if isinstance   ( self._L0DU , str   ) :
-    		mdict.update( { 'L0DU'    : L0Filter   ( l0entryName   ( line ) , Code = self._L0DU   )  } )
+                mdict.update( { 'L0DU'    : L0Filter   ( l0entryName   ( line ) , Code = self._L0DU   )  } )
             if isinstance   ( self._L0DU , ( tuple, list) ) and 2 == len ( self._L0DU ) :
-    		mdict.update( { 'L0DU'    : L0Filter   ( l0entryName   ( line ) , Code = self._L0DU[0],  Preambulo = self._L0DU[1]  )  } )
+                mdict.update( { 'L0DU'    : L0Filter   ( l0entryName   ( line ) , Code = self._L0DU[0],  Preambulo = self._L0DU[1]  )  } )
             if isinstance   ( self._L0DU , dict )  :
-    		mdict.update( { 'L0DU'    : L0Filter   ( l0entryName   ( line ) , **self._L0DU)  } )
+                mdict.update( { 'L0DU'    : L0Filter   ( l0entryName   ( line ) , **self._L0DU)  } )
 
-        if self._HLT    :
-            if isinstance   ( self._HLT , str   ) :
-        	mdict.update( { 'HLT'     : HDRFilter  ( hltentryName  ( line ) , Code = self._HLT    ) } )
+        from DAQSys.Decoders import DecoderDB
+        Hlt1DecReportsDecoder=DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].setup()
+        Hlt2DecReportsDecoder=DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].setup()
+        if self._HLT :
+            log.warning("The usage of unique HLT is deprecated and will not work on data taken from 2015 onward. Please move to use HLT1 and HLT2.")
+            if isinstance( self._HLT , str   ) :
+                mdict.update( { 'HLT' : HDRFilter( hltentryName( line ), Code = self._HLT ) } )
             if isinstance   ( self._HLT , ( tuple, list) ) and 2 == len ( self._HLT ) :
-    		mdict.update( { 'HLT'     : HDRFilter  ( hltentryName  ( line ) , Code = self._HLT[0],  Preambulo = self._HLT[1]  )  } )
+                mdict.update( { 'HLT' : HDRFilter( hltentryName( line ), Code = self._HLT[0],  Preambulo = self._HLT[1] ) } )
             if isinstance   ( self._HLT , dict )  :
-    		mdict.update( { 'HLT'     : HDRFilter  ( hltentryName  ( line ) , **self._HLT)  } )
+                mdict.update( { 'HLT' : HDRFilter( hltentryName( line ) , **self._HLT) } )
+
+        if self._HLT1 :
+            if isinstance( self._HLT1, str ) :
+                mdict.update( { 'HLT1' : HDRFilter( hlt1entryName( line ),
+                                                    Code = self._HLT1,
+                                                    Location = Hlt1DecReportsDecoder.OutputHltDecReportsLocation ) } )
+            if isinstance( self._HLT1, ( tuple, list) ) and 2 == len ( self._HLT1 ) :
+                mdict.update( { 'HLT1' : HDRFilter( hlt1entryName( line ), 
+                                                    Code = self._HLT1[0],
+                                                    Location = Hlt1DecReportsDecoder.OutputHltDecReportsLocation,
+                                                    Preambulo = self._HLT1[1] ) } )
+            if isinstance( self._HLT1 , dict )  :
+                mdict.update( { 'HLT1' : HDRFilter( hlt1entryName( line ), **self._HLT1) } )
+
+        if self._HLT2 :
+            if isinstance( self._HLT2 , str ) :
+                mdict.update( { 'HLT2' : HDRFilter( hlt2entryName( line ), 
+                                                    Code = self._HLT2,
+                                                    Location = Hlt2DecReportsDecoder.OutputHltDecReportsLocation ) } )
+            if isinstance( self._HLT2, ( tuple, list) ) and 2 == len ( self._HLT2 ) :
+                mdict.update( { 'HLT2' : HDRFilter( hlt2entryName( line ), 
+                                                    Code = self._HLT2[0],  
+                                                    Location = Hlt2DecReportsDecoder.OutputHltDecReportsLocation,
+                                                    Preambulo = self._HLT2[1] ) } )
+            if isinstance( self._HLT2 , dict )  :
+                mdict.update( { 'HLT2' : HDRFilter( hlt2entryName( line ), **self._HLT2) } )
+
 
 	# Add extra info tools if needed
-	if self.ExtraInfoTools :
-	    from Configurables import AddExtraInfo
-	    extraInfoAlg = AddExtraInfo('ExtraInfo_' + self.name())
-	    if self.ExtraInfoSelections :
-    		extraInfoAlg.Inputs = self.selectionsToLocations( self.ExtraInfoSelections )
-    	    else :
-    		extraInfoAlg.Inputs = [ self.outputLocation() ]
-            if self.ExtraInfoDaughters :
-        	extraInfoAlg.MaxLevel = self.ExtraInfoRecursionLevel
-    		extraInfoAlg.DaughterLocations = self.selectionsToLocations( self.ExtraInfoDaughters )
+        if self.ExtraInfoTools :
+            from Configurables import AddExtraInfo
+            extraInfoAlg = AddExtraInfo('ExtraInfo_' + self.name())
+            if self.ExtraInfoSelections :
+                extraInfoAlg.Inputs = self.selectionsToLocations( self.ExtraInfoSelections )
             else :
-        	extraInfoAlg.MaxLevel = 0
+                extraInfoAlg.Inputs = [ self.outputLocation() ]
+            if self.ExtraInfoDaughters :
+                extraInfoAlg.MaxLevel = self.ExtraInfoRecursionLevel
+                extraInfoAlg.DaughterLocations = self.selectionsToLocations( self.ExtraInfoDaughters )
+            else :
+                extraInfoAlg.MaxLevel = 0
 
             toolNames = []
             toolNum = 0
 
             for itool in self.ExtraInfoTools :
-        	toolNum += 1
-        	toolType = itool["Type"]
-        	toolName = "Tool%d" % toolNum
-        	module = __import__("Configurables", globals(), locals(), [ toolType ] )
-        	toolClass = getattr( module, toolType )
-        	extraInfoAlg.addTool( toolClass, toolName )
-        	toolInstance = getattr( extraInfoAlg, toolName )
-        	for property,value in itool.iteritems() :
-        	    if property == "Type" : continue
-        	    setattr( toolInstance, property, value)
-        	toolNames += [ toolType + '/' + toolName ]
-       	    extraInfoAlg.Tools = toolNames
-	    self._members.append(extraInfoAlg)
+                toolNum += 1
+                toolType = itool["Type"]
+                toolName = "Tool%d" % toolNum
+                module = __import__("Configurables", globals(), locals(), [ toolType ] )
+                toolClass = getattr( module, toolType )
+                extraInfoAlg.addTool( toolClass, toolName )
+                toolInstance = getattr( extraInfoAlg, toolName )
+                for property,value in itool.iteritems() :
+                    if property == "Type" : continue
+                    setattr( toolInstance, property, value)
+                toolNames += [ toolType + '/' + toolName ]
+            extraInfoAlg.Tools = toolNames
+            self._members.append(extraInfoAlg)
 
-	if self.RelatedInfoTools != None :
-	    self.addRelatedInfo()
-	    if self.RelatedInfoFilter :
-		self._members.append( self.RelatedInfoFilter )
-		oldOutput = self.outputLocation()
-		self._outputloc = "Phys/" + self.RelatedInfoFilter.name() + "/Particles"
-	        log.debug( 'Redefined OutputLocation for line '+ self.name()+ ' from '+ oldOutput+ ' to '+ self._outputloc )
-		self.addRelatedInfo()
+        if self.RelatedInfoTools != None :
+            self.addRelatedInfo()
+            if self.RelatedInfoFilter :
+                self._members.append( self.RelatedInfoFilter )
+                oldOutput = self.outputLocation()
+                self._outputloc = "Phys/" + self.RelatedInfoFilter.name() + "/Particles"
+                log.debug( 'Redefined OutputLocation for line '+ self.name()+ ' from '+ oldOutput+ ' to '+ self._outputloc )
+                self.addRelatedInfo()
 
 	# Add flavour tagging tool to the end of line sequence if needed
-	if self._EnableFlavourTagging :
-	    if not self.outputLocation() or self.outputLocation() == "" :
+        if self._EnableFlavourTagging :
+            if not self.outputLocation() or self.outputLocation() == "" :
                 raise AttributeError, "Line %s does not have output, cannot do flavour tagging" % self.name()
-	    from Configurables import BTagging
-	    btag = BTagging("BTag_"+self.name(), Inputs = [ self.outputLocation() ] )
-	    self._members.append(btag)
+            from Configurables import BTagging
+            btag = BTagging("BTag_"+self.name(), Inputs = [ self.outputLocation() ] )
+            self._members.append(btag)
 
         if self._members :
             mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Stripping' ) , Members = self._members, OutputLevel = WARNING ) })
@@ -498,89 +545,89 @@ class StrippingLine(object):
     # Add related info tools if needed
     def addRelatedInfo( self ) :
 
-	if self.RelatedInfoTools :
+        if self.RelatedInfoTools :
 
             log.debug( "Add RelatedInfo tools for output location "+ self.outputLocation() )
 
             toolNum = 0
             for itool in self.RelatedInfoTools :
 
-        	toolNum += 1
+                toolNum += 1
 
-		from Configurables import AddRelatedInfo
-		output_basename = self.outputLocation().split("/")[-2]
-		relatedInfoAlg = AddRelatedInfo('RelatedInfo%d_%s' % ( toolNum, output_basename ) )
-		if 'TopSelection' in itool.keys() : # and 'Locations' in itool.keys() :
-    		    relatedInfoAlg.Inputs = self.selectionsToLocations( [ itool['TopSelection'] ] )
-    		else :
-    		    relatedInfoAlg.Inputs = [ "/Event/" + self.outputLocation() ]
+                from Configurables import AddRelatedInfo
+                output_basename = self.outputLocation().split("/")[-2]
+                relatedInfoAlg = AddRelatedInfo('RelatedInfo%d_%s' % ( toolNum, output_basename ) )
+                if 'TopSelection' in itool.keys() : # and 'Locations' in itool.keys() :
+                    relatedInfoAlg.Inputs = self.selectionsToLocations( [ itool['TopSelection'] ] )
+                else :
+                    relatedInfoAlg.Inputs = [ "/Event/" + self.outputLocation() ]
 
-        	if 'Locations' in itool.keys() :
-        	    if 'Location' in itool.keys() :
-        		raise Exception('Both "Location" and "Locations" are defined in %s RelatedInfo dictionary, use either of them.' %  self.name() )
-        	    if 'RecursionLevel' in itool.keys() :
-        		relatedInfoAlg.MaxLevel = itool['RecursionLevel']
-        	    else :
-        		relatedInfoAlg.MaxLevel = 1
-        	    infoLocations = {}
-        	    for k,v in itool['Locations'].iteritems() :
-			if not isinstance(v, list) :
-			    v = [ v ]
-    			if type(k).__name__ in  [ 'Selection', 'MergedSelection', 'AutomaticData', 'DataOnDemand' ] :
+                if 'Locations' in itool.keys() :
+                    if 'Location' in itool.keys() :
+                        raise Exception('Both "Location" and "Locations" are defined in %s RelatedInfo dictionary, use either of them.' %  self.name() )
+                    if 'RecursionLevel' in itool.keys() :
+                        relatedInfoAlg.MaxLevel = itool['RecursionLevel']
+                    else :
+                        relatedInfoAlg.MaxLevel = 1
+                    infoLocations = {}
+                    for k,v in itool['Locations'].iteritems() :
+                        if not isinstance(v, list) :
+                            v = [ v ]
+                        if type(k).__name__ in  [ 'Selection', 'MergedSelection', 'AutomaticData', 'DataOnDemand' ] :
 
 			    # Need to check if the selection is the top selection
 			    # In that case use line's output location because the
 			    # name of the top algoritm is redefined by the framework
-    			    if k == self._initialSelection :
-    				fullPath = "/Event/" + self.outputLocation()
-    			    else :
-        			fullPath = "/Event/" + k.outputLocation()
-        		    infoLocations[fullPath] = v
-            	        else :
-            	    	    if not k.startswith('/Event') : k = '/Event/' + k
-            	    	    if not k.endswith('/Particles') : k += '/Particles'
-            	    	    infoLocations[k] = v
-    		    relatedInfoAlg.InfoLocations = infoLocations
-        	elif 'Location' in itool.keys() :
-        	    relatedInfoAlg.MaxLevel = 0
-        	    relatedInfoAlg.InfoLocations = { relatedInfoAlg.Inputs[0] : [ itool['Location'] ] }
-        	else :
-        	    raise Exception('\n "Location" or "Locations" is not defined in RelatedInfo dictionary')
-        	toolType = itool["Type"]
-        	toolName = "Tool%d" % toolNum
-        	module = __import__("Configurables", globals(), locals(), [ toolType ] )
-        	toolClass = getattr( module, toolType )
-        	relatedInfoAlg.addTool( toolClass, toolName )
-        	toolInstance = getattr( relatedInfoAlg, toolName )
-        	for property,value in itool.iteritems() :
-        	    if property in ["Type", "Location", "Locations", "RecursionLevel", "TopSelection" ] : continue
-        	    setattr( toolInstance, property, value)
+                            if k == self._initialSelection :
+                                fullPath = "/Event/" + self.outputLocation()
+                            else :
+                                fullPath = "/Event/" + k.outputLocation()
+                            infoLocations[fullPath] = v
+                        else :
+                            if not k.startswith('/Event') : k = '/Event/' + k
+                            if not k.endswith('/Particles') : k += '/Particles'
+                            infoLocations[k] = v
+                    relatedInfoAlg.InfoLocations = infoLocations
+                elif 'Location' in itool.keys() :
+                    relatedInfoAlg.MaxLevel = 0
+                    relatedInfoAlg.InfoLocations = { relatedInfoAlg.Inputs[0] : [ itool['Location'] ] }
+                else :
+                    raise Exception('\n "Location" or "Locations" is not defined in RelatedInfo dictionary')
+                toolType = itool["Type"]
+                toolName = "Tool%d" % toolNum
+                module = __import__("Configurables", globals(), locals(), [ toolType ] )
+                toolClass = getattr( module, toolType )
+                relatedInfoAlg.addTool( toolClass, toolName )
+                toolInstance = getattr( relatedInfoAlg, toolName )
+                for property,value in itool.iteritems() :
+                    if property in ["Type", "Location", "Locations", "RecursionLevel", "TopSelection" ] : continue
+                    setattr( toolInstance, property, value)
 
-       		relatedInfoAlg.Tool = toolType + '/' + toolName
+                relatedInfoAlg.Tool = toolType + '/' + toolName
 
-		self._members.append(relatedInfoAlg)
+                self._members.append(relatedInfoAlg)
 
 
 
     def filterMembers( self ) :
-	_members = GaudiSequencer( filterName ( self.subname(), 'Stripping' ) ).Members
+        _members = GaudiSequencer( filterName ( self.subname(), 'Stripping' ) ).Members
 
-	while True :
-	    _foundSequencer = False
-	    _flattenedMembers = []
-	    for i in _members :
-		if GaudiSequencer is type(i) :
-		    _flattenedMembers += i.Members
-		    _foundSequencer = True
-		else :
-		    _flattenedMembers += [ i ]
-	    _members = _flattenedMembers
-	    if not _foundSequencer : break
+        while True :
+            _foundSequencer = False
+            _flattenedMembers = []
+            for i in _members :
+                if GaudiSequencer is type(i) :
+                    _flattenedMembers += i.Members
+                    _foundSequencer = True
+                else :
+                    _flattenedMembers += [ i ]
+            _members = _flattenedMembers
+            if not _foundSequencer : break
 
-	log.debug( "FilterMembers for line %s : " % self.name() )
-	log.debug( _members )
+        log.debug( "FilterMembers for line %s : " % self.name() )
+        log.debug( _members )
 
-	return _members
+        return _members
 
     def subname   ( self ) :
         """ 'Sub-name' of the Stripping line  """
@@ -605,7 +652,7 @@ class StrippingLine(object):
         return self._configurable
 
     def decReportLocation ( self ) :
-	return self.fullHDRLocation
+        return self.fullHDRLocation
 
     def outputLocation ( self ) :
         """
@@ -724,12 +771,12 @@ def limitCombinatorics( configurable,
             return False
     elif type(configurable) == SubPIDMMFilter or \
              type(configurable) == SubstitutePID:
-	if MaxCandidates != None:
+        if MaxCandidates != None:
     	    configurable.MaxParticles        = MaxCandidates
     	    configurable.StopIncidentType    = incidentName
     	    return True
-	else :
-	    return False
+        else :
+            return False
     elif type(configurable) != CombineParticles and \
          hasattr(type(configurable),'StopAtMaxCandidates') and hasattr(type(configurable),'MaxCandidates') and \
          hasattr(type(configurable),'StopAtMaxCombinations') and hasattr(type(configurable),'MaxCombinations'):

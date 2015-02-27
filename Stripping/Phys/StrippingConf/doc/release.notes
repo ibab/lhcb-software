@@ -4,6 +4,10 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2015-02-27 - Stefano Perazzini
+ - Changed configuration of trigger filter in StrippingLine in order to cope with
+   split HltDecReports for Hlt1 and Hlt2
+
 !========================= StrippingConf v4r14 2015-01-19 =========================
 
 ! 2015-01-15 - Eduardo Rodrigues
