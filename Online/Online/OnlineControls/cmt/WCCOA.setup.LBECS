@@ -1,3 +1,3 @@
 #/bin/bash
-. ./setup.x86_64-slc6-gcc44-dbg.vars;
-PVSS_II="/localdisk/pvss/LBECS/config/config"; export PVSS_II
+. ./setup.generic.vars;
+export PVSS_II="/localdisk/pvss/LBECS/config/config";

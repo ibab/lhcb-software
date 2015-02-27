@@ -1,5 +1,5 @@
 import sys, time, platform
-import PyCintex as Dictionary
+import cppyy as Dictionary
 #Dictionary.gbl.Cintex.SetDebug(1)
 lib_prefix = ''
 if platform.system()=='Linux':
@@ -7,7 +7,7 @@ if platform.system()=='Linux':
 
 Dictionary.loadDict(lib_prefix+'PVSS_STLDict')
 
-gbl  = Dictionary.makeNamespace('')
+gbl  = Dictionary.gbl
 std  = gbl.std
 fifo = None
 partition = ''

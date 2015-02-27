@@ -1,4 +1,4 @@
 #/bin/bash
-. ./setup.x86_64-slc6-gcc44-dbg.vars
+. ./setup.generic.vars;
 export PYTHONPATH=`pwd`/../python:${PYTHONPATH};
-PVSS_II="/localdisk/wincc/INJECTOR/config/config"; export PVSS_II
+export PVSS_II="/localdisk/wincc/INJECTOR/config/config";

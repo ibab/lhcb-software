@@ -16,9 +16,9 @@ def batchMode():
   return not os.isatty(sys.stdout.fileno())
 
 # == External class definitions ===============================================
-Sensor            = gbl.Sensor
-Event             = gbl.Event
-Interactor        = gbl.Interactor
+Sensor            = gbl.CPP.Sensor
+Event             = gbl.CPP.Event
+Interactor        = gbl.CPP.Interactor
 IAPIManager       = PVSS.IAPIManager
 Printer           = PVSS.Printer
 DeviceSensor      = PVSS.DeviceSensor

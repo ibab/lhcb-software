@@ -183,7 +183,10 @@ def install():
     execCmd(pvssCTRL()+'InstallStorage.cpp')
     importStreamDpLists()
     print '......... --> Executing python setup....'
-    execCmd("""python -c "import Online.Streaming.StorageInstaller as IM; IM.install('Storage','"""+pro+"""')";""")
+    execCmd("""/bin/bash""")
+    #  import Online.Streaming.StorageInstaller as IM
+    #  IM.install('Storage','STORAGE')
+    #execCmd("""python -c "import Online.Streaming.StorageInstaller as IM; IM.install('Storage','"""+pro+"""')";""")
     print '......... --> Executing final PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallStorage2.cpp')
   elif pro=="RECSTORAGE":
