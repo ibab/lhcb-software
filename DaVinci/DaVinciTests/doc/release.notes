@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 
+! 2015-02-27 - Jack Wimberley
+ - Updated tagging reference file to account for charm tagger
+
  - Updated tests reference file
    tests/qmtest/commonparticles.qms/test_standardintermediate_reco14_run.qmt
    since changes are a consequnce of changes upstream rather than an issue.
