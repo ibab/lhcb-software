@@ -1,0 +1,12 @@
+<lcgdict>
+  <class pattern="*::hash_map<*>"/>
+  <class pattern="*::hash_set<*>"/>
+  <class pattern="*::hash_multimap<*>"/>
+  <class pattern="*::hash_multiset<*>"/>
+  <class pattern="std::list<*>"/>
+  <class pattern="std::set<*>"/>
+  <class pattern="std::vector<*>"/>
+  <class name="std::pair<std::string,std::string>"/>
+  <class name="std::pair<double, std::pair<double, double> >"/>
+  <class pattern="std::pair<*, unsigned*>"/>
+</lcgdict>
