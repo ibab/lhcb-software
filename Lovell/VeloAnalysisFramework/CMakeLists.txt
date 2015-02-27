@@ -8,19 +8,14 @@ find_package(ROOT COMPONENTS Hist Matrix Graf)
 
 gaudi_depends_on_subdirs(GaudiKernel)
 
-gaudi_add_library(VeloGUIUtils
+gaudi_add_dictionary(VeloAnalysisFramework dict/VeloAnalysisFramework.h  dict/VeloAnalysisFramework.xml
+                     LINK_LIBRARIES VeloAnalysisFramework)
+
+gaudi_add_library(VeloAnalysisFramework
                   src/*.cc
                   NO_PUBLIC_HEADERS
                   INCLUDE_DIRS ROOT
                   LINK_LIBRARIES ROOT)
-
-gaudi_add_dictionary(VeloGUIUtils src/VeloGUIUtilsRflx.h  src/VeloGUIUtilsRflx.xml
-                     LINK_LIBRARIES VeloGUIUtils)
-
-# gaudi_add_module(VeloGUIUtils
-#                  src/*.cc
-#                  INCLUDE_DIRS ROOT
-#                  LINK_LIBRARIES ROOT)
 
 gaudi_install_python_modules()
 

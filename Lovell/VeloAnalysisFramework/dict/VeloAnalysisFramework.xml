@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<lcgdict>
+    <selection>
+	<!-- Instantiate STL classes and their nested types (as needed) -->
+	<class pattern = "std::pair&lt;*&gt;::first_type" />
+	<class pattern = "std::pair&lt;*&gt;::second_type" />
+	<class pattern = "std::pair&lt;*&gt;" />
+	<class pattern = "std::string::value_type" />
+	<class pattern = "std::string::size_type" />
+	<class pattern = "std::string::distance_type" />
+	<class pattern = "std::string::allocator_type" />
+	<class pattern = "std::string::pointer" />
+	<class pattern = "std::string::const_pointer" />
+	<class pattern = "std::string::reference" />
+	<class pattern = "std::string::const_reference" />
+	<class pattern = "std::string::iterator" />
+	<class pattern = "std::string::const_iterator" />
+	<class pattern = "std::string::reverse_iterator" />
+	<class pattern = "std::string::const_reverse_iterator" />
+	<class name = "std::string" />
+	<class pattern = "std::vector&lt;*&gt;::value_type" />
+	<class pattern = "std::vector&lt;*&gt;::distance_type" />
+	<class pattern = "std::vector&lt;*&gt;::size_type" />
+	<class pattern = "std::vector&lt;*&gt;::allocator_type" />
+	<class pattern = "std::vector&lt;*&gt;::pointer" />
+	<class pattern = "std::vector&lt;*&gt;::const_pointer" />
+	<class pattern = "std::vector&lt;*&gt;::reference" />
+	<class pattern = "std::vector&lt;*&gt;::const_reference" />
+	<class pattern = "std::vector&lt;*&gt;::iterator" />
+	<class pattern = "std::vector&lt;*&gt;::const_iterator" />
+	<class pattern = "std::vector&lt;*&gt;::reverse_iterator" />
+	<class pattern = "std::vector&lt;*&gt;::const_reverse_iterator" />
+	<class pattern = "std::vector&lt;*&gt;" />
+  <class pattern = "std::map&lt;*&gt;::mapped_type" />
+	<class pattern = "std::map&lt;*&gt;::key_type" />
+	<class pattern = "std::map&lt;*&gt;::value_type" />
+	<class pattern = "std::map&lt;*&gt;::size_type" />
+	<class pattern = "std::map&lt;*&gt;::distance_type" />
+	<class pattern = "std::map&lt;*&gt;::allocator_type" />
+	<class pattern = "std::map&lt;*&gt;::pointer" />
+	<class pattern = "std::map&lt;*&gt;::const_pointer" />
+	<class pattern = "std::map&lt;*&gt;::reference" />
+	<class pattern = "std::map&lt;*&gt;::const_reference" />
+	<class pattern = "std::map&lt;*&gt;::key_compare" />
+	<class pattern = "std::map&lt;*&gt;::iterator" />
+	<class pattern = "std::map&lt;*&gt;::const_iterator" />
+	<class pattern = "std::map&lt;*&gt;::reverse_iterator" />
+	<class pattern = "std::map&lt;*&gt;::const_reverse_iterator" />
+	<class pattern = "std::map&lt;*&gt;" />
+	<!-- Instantiate Velo GUI classes and their nested types (as needed) -->
+	<class name = "DotLock::DotLockException" />
+	<class name = "DotLock" />
+	<class name = "TimeStamp::TimeStampException" />
+	<class name = "TimeStamp" />
+	<class name = "VersionedObjectBase::OutOfRangeException" />
+	<class name = "VersionedObjectBase" />
+	<class pattern = "VersionedObject&lt;*&gt;::mapped_type" />
+	<class pattern = "VersionedObject&lt;*&gt;::obj_type" />
+	<class pattern = "VersionedObject&lt;*&gt;::key_type" />
+	<class pattern = "VersionedObject&lt;*&gt;::version_type" />
+	<class pattern = "VersionedObject&lt;*&gt;::value_type" />
+	<class pattern = "VersionedObject&lt;*&gt;::size_type" />
+	<class pattern = "VersionedObject&lt;*&gt;::difference_type" />
+	<class pattern = "VersionedObject&lt;*&gt;::allocator_type" />
+	<class pattern = "VersionedObject&lt;*&gt;::insert_return_type" />
+	<class pattern = "VersionedObject&lt;*&gt;::allocator_type" />
+	<class pattern = "VersionedObject&lt;*&gt;::key_compare" />
+	<class pattern = "VersionedObject&lt;*&gt;::version_compare" />
+	<class pattern = "VersionedObject&lt;*&gt;::iterator" />
+	<class pattern = "VersionedObject&lt;*&gt;::const_iterator" />
+	<class pattern = "VersionedObject&lt;*&gt;::reverse_iterator" />
+	<class pattern = "VersionedObject&lt;*&gt;::const_reverse_iterator" />
+	<class pattern = "VersionedObject&lt;*&gt;" />
+    </selection>
+</lcgdict>

@@ -266,7 +266,7 @@ class VersionedObject : public VersionedObjectBase
 	map_type m_objs;
 };
 
-#if defined(__CINT__) || defined(__GCCXML__)
+#if defined(__CINT__) || defined(__ROOTCLING__)  || defined(__GCCXML__)
 // instantiate most important versions of templated VersionedObject, so that
 // the CINT/GCCXML/Reflex dictionary generation process sees them
 #define INSTANTIATE_VERSIONEDOBJECTS_NOW
