@@ -4,6 +4,10 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2015-02-27 - Manuel Tobias Schiller
+ - SIMDChi2Fit: speed up by 3% by using a smarter way to assign to columns of
+   the wgrads matrix in addHits()
+
 !========================= TfKernel v2r30 2015-02-23 =========================
 ! 2015-02-20 - Manuel Tobias Schiller
  - SIMDChi2Fit: Either gcc 4.8.1 on SLC 6 is a bit more temperamental than the

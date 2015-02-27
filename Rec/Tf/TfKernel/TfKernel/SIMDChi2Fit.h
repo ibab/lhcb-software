@@ -228,6 +228,85 @@ template <class COMMONPOLICY> struct HitUpdater : public COMMONPOLICY
 	    hit_type& hit, const track_type& track) const;
 };
 
+/// SIMDChi2Fit implementation details
+namespace SIMDChi2FitImplDetail {
+    /// forward decls
+    template <class M, size_t N>
+    class transposer;
+    template<class M, size_t N>
+    class transposer_helper;
+
+    /// smart class representing row of transposed view of matrix
+    template<class M, size_t N>
+    class transposer_helper
+    {
+	private:
+	    M& m_lhs; ///< underlying matrix
+	    size_t m_idx; ///< column of the underlying matrix to be written/read
+
+	    friend class transposer<M, N>;
+	    template<class MM, size_t NN>
+	    friend class transposer_helper;
+
+	    transposer_helper(M& lhs, size_t idx) noexcept :
+		m_lhs(lhs), m_idx(idx)
+	    { }
+
+	public:
+	    /// assign to this row
+	    template<class T>
+	    auto operator=(const T& rhs) const noexcept -> decltype(*this)
+	    {
+		transposer_helper<M, N - 1>(m_lhs, m_idx) = rhs;
+		m_lhs[N - 1][m_idx] = rhs[N - 1];
+		return *this;
+	    }
+
+	    /// read/write access to underlying matrix elements
+	    auto operator[](
+		    size_t idx) const noexcept -> decltype(m_lhs[idx][m_idx])&
+	    { return m_lhs[idx][m_idx]; }
+    };
+
+    /// specialisation to terminate recursion
+    template<class M>
+    class transposer_helper<M, 0>
+    {
+	private:
+	    friend class transposer<M, 0>;
+	    template<class MM, size_t NN>
+	    friend class transposer_helper;
+
+	    transposer_helper(M&, size_t) noexcept { }
+
+	public:
+	    template<class T>
+            auto operator=(const T&) const noexcept -> decltype(*this)
+	    { return *this; }
+    };
+
+    /// transposed view of underlying matrix
+    template <class M, size_t N>
+    class transposer
+    {
+	private:
+	    M& m_lhs; ///< underlying matrix
+
+	public:
+	    /// constructor
+	    transposer(M& lhs) noexcept : m_lhs(lhs) { }
+
+	    /// return view of column of underlying matrix as row vector
+	    transposer_helper<M, N> operator[](size_t idx) const noexcept
+	    { return transposer_helper<M, N>(m_lhs, idx); }
+    };
+
+    /// return a transposed view of given matrix
+    template<size_t N, class M>
+    transposer<M, N> make_transposed_view(M& lhs) noexcept
+    { return transposer<M, N>(lhs); }
+}
+
 /// @brief perform a simple iterative @f$\chi^2@f$ fit that can be
 /// autovectorised
 ///
@@ -1007,6 +1086,7 @@ void SIMDChi2Fit<MEASUREMENTPROVIDER, MEASUREMENTPROJECTOR,
      TRACKUPDATER, HITUPDATER, NHITSMAX, SIMDWIDTH>::addHits(
 	     const track_type& track, const C& hits) noexcept
 {
+    using namespace SIMDChi2FitImplDetail;
     typedef std::array<value_type, nHitsMax>
 #if defined(__GNUC__)
 	// align workspace arrays to cache lines to produce better SIMD code
@@ -1014,6 +1094,7 @@ void SIMDChi2Fit<MEASUREMENTPROVIDER, MEASUREMENTPROJECTOR,
 #endif
        	AlignedArray;
     std::array<AlignedArray, nDim> wgrads;
+    const auto wgradsT = make_transposed_view<nDim>(wgrads);
     AlignedArray wmeass;
     unsigned iHit = 0;
     // loop over all hits
@@ -1021,19 +1102,12 @@ void SIMDChi2Fit<MEASUREMENTPROVIDER, MEASUREMENTPROJECTOR,
 	// skip deselected hits
 	if (UNLIKELY(!MeasurementProvider().valid(hit))) continue;
 	++m_ndf;
-	// project out contribution of each hit and save in
-	// SIMD-friendly vectors
-	{
-	    const vector_type wgrad(
-		    MeasurementProjector().wgrad(track, hit));
-	    for (unsigned j = 0; LIKELY(j != nDim); ++j)
-		wgrads[j][iHit] = wgrad[j];
-	    const value_type wproj =
-		MeasurementProjector().wproj(track, hit);
-	    const value_type wmeas = MeasurementProvider().wmeas(
-		    hit, track, MeasurementProjector());
-	    wmeass[iHit] = wmeas - wproj;
-	}
+	wgradsT[iHit] = MeasurementProjector().wgrad(track, hit);
+	const value_type wproj =
+	    MeasurementProjector().wproj(track, hit);
+	const value_type wmeas = MeasurementProvider().wmeas(
+		hit, track, MeasurementProjector());
+	wmeass[iHit] = wmeas - wproj;
 	if (UNLIKELY(++iHit == nHitsMax)) {
 	    // ok, array fully filled, accumulate
 	    accumulate(nHitsMax, wgrads, wmeass);
