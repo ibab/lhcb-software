@@ -13,8 +13,16 @@
 
 namespace PatSeedFits {
   using namespace Tf::SIMDChi2FitUtils;
+
+  /// specify if there is an exclusive type of hit in the fit
+  enum class HitType {
+      OT,
+      IT,
+      Mixed
+  };
+
   /// general measurement provider for the seeding
-  template <class FITPOLICY, bool forceRLAmb, bool xOnly = false, bool stereoOnly = false>
+  template <class FITPOLICY, bool forceRLAmb, bool xOnly = false, bool stereoOnly = false, HitType hittype = HitType::Mixed>
   struct MeasurementProvider :
       public Tf::SIMDChi2FitUtils::MeasurementProvider<FITPOLICY>
   {
@@ -23,7 +31,7 @@ namespace PatSeedFits {
     value_type wmeas(const hit_type& hit, const track_type& track,
 	const PROJ& projector) const
     {
-      const bool isIT = !hit->isOT();
+      const bool isIT = HitType::IT == hittype || !(HitType::OT == hittype || hit->isOT());
       if (isIT) {
 	return hit->x() * hit->hit()->errweight();
       } else {
@@ -50,20 +58,20 @@ namespace PatSeedFits {
   };
 
   /// measurement provider for tracks in xz projection
-  template <class FITPOLICY>
+  template <class FITPOLICY, HitType hittype>
   struct XMeasurementProjector : public MeasurementProjector<FITPOLICY>
   {
     COMMONPOLICY_INJECT_TYPES(FITPOLICY);
     static_assert(3 == nDim, "Fit Policy must have three fit parameters");
     value_type wproj(const track_type& track, const hit_type& hit) const
     {
-      const bool isIT = !hit->isOT();
+      const bool isIT = HitType::IT == hittype || !(HitType::OT == hittype || hit->isOT());
       if (isIT) return track.xAtZ(hit->z()) * hit->hit()->errweight();
       else return track.xAtZ(hit->z()) * hit->hit()->errweight() * track.cosine();
     }
     vector_type wgrad(const track_type& track, const hit_type& hit) const
     {
-      const bool isIT = !hit->isOT();
+      const bool isIT = HitType::IT == hittype || !(HitType::OT == hittype || hit->isOT());
       const value_type w = isIT ? hit->hit()->errweight() :
 	(hit->hit()->errweight() * track.cosine());
       const value_type dz = (hit->z() - track.z0()) / value_type(1 << 10);
@@ -96,20 +104,20 @@ namespace PatSeedFits {
   };
 
   /// measurement provider for simultaneous track fits in xz and yz
-  template <class FITPOLICY>
+  template <class FITPOLICY, HitType hittype>
   struct YMeasurementProjector : public MeasurementProjector<FITPOLICY>
   {
     COMMONPOLICY_INJECT_TYPES(FITPOLICY);
     static_assert(2 == nDim, "Fit Policy must have two fit parameters");
     value_type wproj(const track_type& track, const hit_type& hit) const
     {
-      const bool isIT = !hit->isOT();
+      const bool isIT = HitType::IT == hittype || !(HitType::OT == hittype || hit->isOT());
       if (isIT) return track.xAtZ(hit->z()) * hit->hit()->errweight();
       else return track.xAtZ(hit->z()) * hit->hit()->errweight() * track.cosine();
     }
     vector_type wgrad(const track_type& track, const hit_type& hit) const
     {
-      const bool isIT = !hit->isOT();
+      const bool isIT = HitType::IT == hittype || !(HitType::OT == hittype || hit->isOT());
       const value_type w = isIT ? hit->hit()->errweight() :
 	(hit->hit()->errweight() * track.cosine());
       const value_type dz = (hit->z() - track.z0()) / value_type(1 << 10);
@@ -141,20 +149,20 @@ namespace PatSeedFits {
   };
 
   /// measurement provider for simultaneous track fits in xz and yz
-  template <class FITPOLICY>
+  template <class FITPOLICY, HitType hittype = HitType::Mixed>
   struct XYMeasurementProjector : public MeasurementProjector<FITPOLICY>
   {
     COMMONPOLICY_INJECT_TYPES(FITPOLICY);
     static_assert(5 == nDim, "Fit Policy must have five fit parameters");
     value_type wproj(const track_type& track, const hit_type& hit) const
     {
-      const bool isIT = !hit->isOT();
+      const bool isIT = HitType::IT == hittype || !(HitType::OT == hittype || hit->isOT());
       if (isIT) return track.xAtZ(hit->z()) * hit->hit()->errweight();
       else return track.xAtZ(hit->z()) * hit->hit()->errweight() * track.cosine();
     }
     vector_type wgrad(const track_type& track, const hit_type& hit) const
     {
-      const bool isIT = !hit->isOT();
+      const bool isIT = HitType::IT == hittype || !(HitType::OT == hittype || hit->isOT());
       const value_type w = isIT ? hit->hit()->errweight() :
 	(hit->hit()->errweight() * track.cosine());
       const value_type dz = (hit->z() - track.z0()) / value_type(1 << 10);
@@ -196,20 +204,20 @@ namespace PatSeedFits {
   };
 
   /// measurement provider for stub fits
-  template <class FITPOLICY>
+  template <class FITPOLICY, HitType hittype = HitType::Mixed>
   struct StubMeasurementProjector : public MeasurementProjector<FITPOLICY>
   {
     COMMONPOLICY_INJECT_TYPES(FITPOLICY);
     static_assert(3 == nDim, "Fit Policy must have three fit parameters");
     value_type wproj(const track_type& track, const hit_type& hit) const
     {
-      const bool isIT = !hit->isOT();
+      const bool isIT = HitType::IT == hittype || !(HitType::OT == hittype || hit->isOT());
       if (isIT) return track.xAtZ(hit->z()) * hit->hit()->errweight();
       else return track.xAtZ(hit->z()) * hit->hit()->errweight() * track.cosine();
     }
     vector_type wgrad(const track_type& track, const hit_type& hit) const
     {
-      const bool isIT = !hit->isOT();
+      const bool isIT = HitType::IT == hittype || !(HitType::OT == hittype || hit->isOT());
       const value_type w = isIT ? hit->hit()->errweight() :
 	(hit->hit()->errweight() * track.cosine());
       const value_type dz = (hit->z() - track.z0()) / value_type(1 << 10);
@@ -258,10 +266,10 @@ namespace PatSeedFits {
   /// fit object (xz fits)
   template <bool forceRLAmb, unsigned maxIter,
 	   bool xOnly = false, bool stereoOnly = false,
-	   bool allowUpdateReject = true>
+	   bool allowUpdateReject = true, HitType hittype = HitType::Mixed>
   using XFit = SIMDChi2Fit<
-    MeasurementProvider<XFitPolicy<maxIter>, forceRLAmb, xOnly, stereoOnly>,
-    XMeasurementProjector<XFitPolicy<maxIter> >,
+    MeasurementProvider<XFitPolicy<maxIter>, forceRLAmb, xOnly, stereoOnly, hittype>,
+    XMeasurementProjector<XFitPolicy<maxIter>, hittype>,
     XTrackUpdater<XFitPolicy<maxIter>, allowUpdateReject>,
     NullHitUpdater<XFitPolicy<maxIter> >, 16>;
 
@@ -272,10 +280,10 @@ namespace PatSeedFits {
   /// fit object (yz fits)
   template <bool forceRLAmb, unsigned maxIter,
 	   bool xOnly = false, bool stereoOnly = false,
-	   bool allowUpdateReject = true>
+	   bool allowUpdateReject = true, HitType hittype = HitType::Mixed>
   using YFit = SIMDChi2Fit<
-    MeasurementProvider<YFitPolicy<maxIter>, forceRLAmb, xOnly, stereoOnly>,
-    YMeasurementProjector<YFitPolicy<maxIter> >,
+    MeasurementProvider<YFitPolicy<maxIter>, forceRLAmb, xOnly, stereoOnly, hittype>,
+    YMeasurementProjector<YFitPolicy<maxIter>, hittype>,
     YTrackUpdater<YFitPolicy<maxIter>, allowUpdateReject>,
     NullHitUpdater<YFitPolicy<maxIter> >, 16>;
 
@@ -285,10 +293,10 @@ namespace PatSeedFits {
 
   /// fit object (simultaneous xz/yz fits)
   template <bool forceRLAmb, unsigned maxIter,
-	   bool allowUpdateReject = true>
+	   bool allowUpdateReject = true, HitType hittype = HitType::Mixed>
   using XYFit = SIMDChi2Fit<
-    MeasurementProvider<XYFitPolicy<maxIter>, forceRLAmb>,
-    XYMeasurementProjector<XYFitPolicy<maxIter> >,
+    MeasurementProvider<XYFitPolicy<maxIter>, forceRLAmb, false, false, hittype>,
+    XYMeasurementProjector<XYFitPolicy<maxIter>, hittype>,
     XYTrackUpdater<XYFitPolicy<maxIter>, allowUpdateReject>,
     NullHitUpdater<XYFitPolicy<maxIter> >, 32>;
 
@@ -298,10 +306,10 @@ namespace PatSeedFits {
 
   /// fit object for stub fits
   template <bool forceRLAmb, unsigned maxIter,
-	   bool allowUpdateReject = true>
+	   bool allowUpdateReject = true, HitType hittype = HitType::Mixed>
   using StubFit = SIMDChi2Fit<
-    MeasurementProvider<StubFitPolicy<maxIter>, forceRLAmb>,
-    StubMeasurementProjector<StubFitPolicy<maxIter> >,
+    MeasurementProvider<StubFitPolicy<maxIter>, forceRLAmb, false, false, hittype>,
+    StubMeasurementProjector<StubFitPolicy<maxIter>, hittype>,
     StubTrackUpdater<StubFitPolicy<maxIter>, allowUpdateReject>,
     NullHitUpdater<StubFitPolicy<maxIter> >, 8>;
 } // namespace PatSeedFits

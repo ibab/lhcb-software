@@ -4,6 +4,13 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-02-27 - Manuel Tobias Schiller
+ - PatSeedFits: add template argument to select OT only, IT only, or mixed hit
+   content to avoid if statements in fits
+ - PatSeedTool: count OT hits being passed, so can call specialised variant of
+   fit (this is part of an ongoing effort to push the conditional jumps out of
+   the hot code path(s)); this saves about 2% CPU without affecting results
+
 !========================= PatAlgorithms v4r39 2015-02-23 =========================
 ! 2015-02-21 - Manuel Tobias Schiller
  - PatSeedingTool: be a bit smarter in hitsInRange method - saves 0.9% in CPU,

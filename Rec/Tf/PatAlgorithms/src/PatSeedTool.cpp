@@ -170,17 +170,51 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
     if (m_ambigFromPitchResiduals) resAmbFromPitchRes(track, range);
     if (m_ambigFromLargestDrift) resAmbFromLargestDrift(track, range, isDebug);
   }
+  const unsigned nTot = std::count_if(track.coordBegin(),
+      track.coordEnd(), [] (const PatFwdHit* h) {
+      return h->isSelected(); });
+  const unsigned nOT = std::count_if(track.coordBegin(),
+      track.coordEnd(), [] (const PatFwdHit* h) {
+      return h->isSelected() && h->isOT(); });
   if (xOnly) {
-    XFit<true, 1, false, false, false> xfit(track, track.m_coords);
-    if (!xfit) return false;
-    else return removeHitsWhileChi2TooLarge<XFit<false, 10>, true>(
+    if (nTot == nOT) {
+      XFit<true, 1, false, false, false, HitType::OT> xfit(track, track.m_coords);
+      if (!xfit) return false;
+      else return removeHitsWhileChi2TooLarge<
+	XFit<false, 10, false, false, true, HitType::OT>, true>(
 	track, maxChi2, minPlanes, isDebug);
+    } else if (0 == nOT) {
+      XFit<true, 1, false, false, true, HitType::IT> xfit(track, track.m_coords);
+      if (!xfit) return false;
+      else return removeHitsWhileChi2TooLarge<
+	XFit<false, 10, false, false, true, HitType::IT>, true>(
+	track, maxChi2, minPlanes, isDebug);
+    } else {
+      XFit<true, 1, false, false, false> xfit(track, track.m_coords);
+      if (!xfit) return false;
+      else return removeHitsWhileChi2TooLarge<XFit<false, 10>, true>(
+	track, maxChi2, minPlanes, isDebug);
+    }
   } else {
     track.updateHits();
-    XYFit<true, 1, false> xyfit(track, track.m_coords);
-    if (!xyfit) return false;
-    else return removeHitsWhileChi2TooLarge<XYFit<false, 10>, false>(
-	track, maxChi2, minPlanes, isDebug);
+    if (nTot == nOT) {
+      XYFit<true, 1, false, HitType::OT> xyfit(track, track.m_coords);
+      if (!xyfit) return false;
+      else return removeHitsWhileChi2TooLarge<
+	XYFit<false, 10, true, HitType::OT>, false>(
+	  track, maxChi2, minPlanes, isDebug);
+    } else if (0 == nOT) {
+      XYFit<true, 1, false, HitType::IT> xyfit(track, track.m_coords);
+      if (!xyfit) return false;
+      else return removeHitsWhileChi2TooLarge<
+	XYFit<false, 10, true, HitType::IT>, false>(
+	  track, maxChi2, minPlanes, isDebug);
+    } else {
+      XYFit<true, 1, false> xyfit(track, track.m_coords);
+      if (!xyfit) return false;
+      else return removeHitsWhileChi2TooLarge<XYFit<false, 10>, false>(
+	  track, maxChi2, minPlanes, isDebug);
+    }
   }
   // should never get here
   return false;
@@ -351,9 +385,23 @@ bool PatSeedTool::refitStub(PatSeedTrack& track, double arrow) const
     ~TrackFiddler() { m_track.setChi2(m_chi2saved); }
   } guard(track, -arrow);
 
+  const unsigned nTot = std::count_if(track.coordBegin(),
+      track.coordEnd(), [] (const PatFwdHit* h) {
+      return h->isSelected(); });
+  const unsigned nOT = std::count_if(track.coordBegin(),
+      track.coordEnd(), [] (const PatFwdHit* h) {
+      return h->isSelected() && h->isOT(); });
   // do the fit...
-  StubFit<false, 10> fit(track, track.m_coords);
-  return fit;
+  if (nTot == nOT) {
+    StubFit<false, 10, true, HitType::OT> fit(track, track.m_coords);
+    return fit;
+  } else if (0 == nOT) {
+    StubFit<false, 10, true, HitType::IT> fit(track, track.m_coords);
+    return fit;
+  } else {
+    StubFit<false, 10> fit(track, track.m_coords);
+    return fit;
+  }
 }
 
 void PatSeedTool::printTCoord( MsgStream& msg,
