@@ -19,12 +19,12 @@
   <argument name="args"><set>
     <text>$BRUNELROOT/tests/options/testBrunel-defaults.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; from Configurables import LHCbApp; LHCbApp().DDDBtag="head-20100624"; LHCbApp().CondDBtag="sim-20100624-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v21r9/00007107_00000001_2.digi' TYP='POOL_ROOTTREE' OPT='READ'"]; Brunel().InputType="DIGI"; Brunel().DataType="2010"; Brunel().Simulation=True</text>
+    <text>from Brunel.Configuration import *; from Configurables import LHCbApp; LHCbApp().DDDBtag="head-20100624"; LHCbApp().CondDBtag="sim-20100624-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v21r9/00007107_00000001_2.digi?svcClass=default' TYP='POOL_ROOTTREE' OPT='READ'"]; Brunel().InputType="DIGI"; Brunel().DataType="2010"; Brunel().Simulation=True</text>
   </set></argument>
   <argument name="validator"><text>
 #print stdout
 from Brunel.QMTest.BrunelExclusions import preprocessor
 #validateWithReference(preproc = preprocessor)
-countErrorLines({"FATAL":0, "WARNING":0, "ERROR":0})
+countErrorLines({"FATAL":0, "WARNING":2, "ERROR":0})
 </text></argument>
 </extension>

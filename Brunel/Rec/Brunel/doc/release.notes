@@ -27,6 +27,8 @@ This version uses projects LHCb v38r5, Lbcom v16r4, Rec v17r5, Gaudi v26r1
 
 - Changes to QMTests
   . Add brunel.sim08-pgun test to test SpecialData=["pGun"] option
+  . Fix compatibility tests to use root: instead of castor: protocol and to
+    ignore detector description warnings when using old (2010) tags
 
 </PRE><H1><A NAME=v47r4>2015-01-15 Brunel v47r4</A></H1><PRE>
 This version uses projects LHCb v38r4, Lbcom v16r3, Rec v17r4, Gaudi v26r0

@@ -20,7 +20,7 @@
     <text>$BRUNELROOT/tests/options/testBrunel-defaults.py</text>
     <text>$BRUNELROOT/tests/options/db-latest-2010.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; from Configurables import LHCbApp; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/75161/075161_0000000282.raw' SVC='LHCb::MDFSelector'"]; Brunel().InputType="MDF"; Brunel().DataType="2010";</text>
+    <text>from Brunel.Configuration import *; from Configurables import LHCbApp; EventSelector().Input = ["DATAFILE='PFN:mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/75161/075161_0000000282.raw?svcClass=lhcbtape' SVC='LHCb::MDFSelector'"]; Brunel().InputType="MDF"; Brunel().DataType="2010";</text>
   </set></argument>
   <argument name="validator"><text>
 #print stdout

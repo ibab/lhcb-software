@@ -19,12 +19,12 @@
   <argument name="args"><set>
     <text>$BRUNELROOT/tests/options/testBrunel-defaults.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; from Configurables import LHCbApp; LHCbApp().DDDBtag="head-20101026"; LHCbApp().CondDBtag="head-20101112"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/75161/075161_0000000282.raw' SVC='LHCb::MDFSelector'"]; Brunel().InputType="MDF"; Brunel().DataType="2010";</text>
+    <text>from Brunel.Configuration import *; from Configurables import LHCbApp; LHCbApp().DDDBtag="head-20101026"; LHCbApp().CondDBtag="head-20101112"; EventSelector().Input = ["DATAFILE='PFN:mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/75161/075161_0000000282.raw?svcClass=lhcbtape' SVC='LHCb::MDFSelector'"]; Brunel().InputType="MDF"; Brunel().DataType="2010";</text>
   </set></argument>
   <argument name="validator"><text>
 #print stdout
 from Brunel.QMTest.BrunelExclusions import preprocessor
 #validateWithReference(preproc = preprocessor)
-countErrorLines({"FATAL":0, "WARNING":0, "ERROR":2})
+countErrorLines({"FATAL":0, "WARNING":2, "ERROR":2})
 </text></argument>
 </extension>
