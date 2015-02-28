@@ -167,6 +167,9 @@ class RLAmbiguityResolver {
     }
 
     std::pair<double,double> operator()(std::pair<double,double> val, PatFwdHit *prev, PatFwdHit *hit) const {
+      // catch the case where we switch from one layer to the next
+      if (prev == hit || prev->planeCode() != hit->planeCode())
+	return std::make_pair(std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
       //OT : distance to a circle
       const auto dist = (hit->x() - m_track->x( hit->z() - m_zRef ))*m_ca;
       const auto dx = hit->driftDistance();
@@ -197,7 +200,8 @@ class RLAmbiguityResolverFromPitchRes : public RLAmbiguityResolver {
     { }
     std::pair<double,double> operator()(std::pair<double,double> val, PatFwdHit *prev, PatFwdHit *hit) const
     {
-      if (LIKELY(prev != hit)) {
+      // catch the case where we switch from one layer to the next
+      if (LIKELY(prev != hit && prev->planeCode() == hit->planeCode())) {
 	// require hits in same module
 	const LHCb::OTChannelID ot1(prev->hit()->lhcbID().otID());
 	const LHCb::OTChannelID ot2(hit->hit()->lhcbID().otID());
@@ -245,7 +249,7 @@ class RLAmbiguityResolverFromPitchRes : public RLAmbiguityResolver {
 		HitPairAmbSetter<false>::set(hit, prev, (dx < F(0)) ? -1 : +1,
 		    // only set amb. on prev hit if better than last pitch res.
 		    val.first >= std::abs(pr1));
-		return std::make_pair(std::abs(pr1), 42.);
+		return std::make_pair(std::abs(pr1), std::numeric_limits<double>::max());
 	      } else {
 		// case 2: try to figure out ambiguity by comparing slope
 		// estimate obtained from drift radii (assuming hits do not
@@ -262,7 +266,7 @@ class RLAmbiguityResolverFromPitchRes : public RLAmbiguityResolver {
 		    (std::abs(dslplus) < std::abs(dslminus)) ? +1 : -1,
 		    // only set amb. on prev hit if better than last pitch res.
 		    val.first >= std::abs(pr2));
-		return std::make_pair(std::abs(pr2), 42.);
+		return std::make_pair(std::abs(pr2), std::numeric_limits<double>::max());
 	      } // case 1/2?
 	    } // pitch residual small enough?
 	  } // neighbouring straws?
@@ -270,7 +274,7 @@ class RLAmbiguityResolverFromPitchRes : public RLAmbiguityResolver {
       } // pit == prev?
       // no clue about ambiguity...
       hit->setRlAmb(0);
-      return std::make_pair(42., 42.);
+      return std::make_pair(std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
     }
 };
 
@@ -830,18 +834,9 @@ double PatFwdTool::qOverP ( const PatFwdTrackCandidate& track ) const {
 template <class IT, class FN>
 static inline void visitHitPairs(IT begin, const IT end, const FN& fn)
 {
-  for (int planeCode = 0; begin != end; ++planeCode) {
-    auto part = std::partition(begin, end,
-	[planeCode](const PatFwdHit* hit)
-	{ return hit->planeCode() == planeCode; });
-    if (begin != part) {
-      std::sort(begin, part, Tf::increasingByXAtYEq0<PatForwardHit>()); 
-      accumulate_adjacent_pairs(begin, part, 
-	  fn(std::make_pair(10000.,10000.), *begin, *begin),
-	  std::cref(fn));
-    }
-    begin = part;
-  }
+  accumulate_adjacent_pairs(begin, end, 
+      fn(std::make_pair(std::numeric_limits<double>::max(), std::numeric_limits<double>::max()), *begin, *begin),
+      std::cref(fn));
 }
 
 //=========================================================================
@@ -851,20 +846,41 @@ void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
                                PatFwdHits::const_iterator begin,
                                PatFwdHits::const_iterator end  ) const 
 {
-  PatFwdHits temp; temp.reserve( std::distance(begin,end) );
-  // only OT has ambiguity
-  std::copy_if( begin, end, std::back_inserter(temp), [](const PatFwdHit *hit) { 
-      return /* hit->isSelected() && */ hit->isOT();
-  } );
-
-  if (m_ambiguitiesFromPitchResiduals) {
-    const RLAmbiguityResolverFromPitchRes resolve{track, zReference(),
-      UNLIKELY( msgLevel( MSG::DEBUG ) ) ? &debug() : nullptr};
-    visitHitPairs(std::begin(temp), std::end(temp), resolve);
-  } else {
-    const RLAmbiguityResolver resolve{track, zReference(),
-      UNLIKELY( msgLevel( MSG::DEBUG ) ) ? &debug() : nullptr};
-    visitHitPairs(std::begin(temp), std::end(temp), resolve);
+  // should not have more than 64 hits on a track, but if we do, the code keeps
+  // working with minimal performance loss (up to 2 hits in 64 for which the
+  // ambiguity is not resolved, but only if we have more than 64 OT hits on a
+  // track...)
+  std::array<PatFwdHit*, 64> hits;
+  auto hbegin = std::begin(hits), hend = std::begin(hits);
+  for (auto it = begin; end != it; hend = hbegin) {
+    const unsigned howmany = std::min(unsigned(std::distance(it, end)), 64u);
+    // only OT has ambiguity
+    hend = std::copy_if(it, it + howmany, hend, [](const PatFwdHit *hit) { 
+	return /* hit->isSelected() && */ hit->isOT();
+	} );
+    if (std::distance(hbegin, hend) > 1) {
+      // sort such that neighbouring hits end up next to each other
+      std::sort(hbegin, hend, [] (const PatFwdHit* h1, const PatFwdHit* h2) {
+	  if (h1->planeCode() < h2->planeCode()) return true;
+	  else if (h2->planeCode() < h1->planeCode()) return false;
+	  else if (h1->hit()->xAtYEq0() < h2->hit()->xAtYEq0()) return true;
+	  else if (h2->hit()->xAtYEq0() < h1->hit()->xAtYEq0()) return false;
+	  else return h1->hit()->lhcbID() < h2->hit()->lhcbID();
+	  });
+      // resolve ambiguities
+      if (m_ambiguitiesFromPitchResiduals) {
+	const RLAmbiguityResolverFromPitchRes resolve{track, zReference(),
+	  UNLIKELY( msgLevel( MSG::DEBUG ) ) ? &debug() : nullptr};
+	visitHitPairs(hbegin, hend, resolve);
+      } else {
+	const RLAmbiguityResolver resolve{track, zReference(),
+	  UNLIKELY( msgLevel( MSG::DEBUG ) ) ? &debug() : nullptr};
+	visitHitPairs(hbegin, hend, resolve);
+      }
+    } else if (1 == std::distance(hbegin, hend)) {
+      (*hbegin)->setRlAmb(0);
+    }
+    it += howmany;
   }
 }
 //=============================================================================

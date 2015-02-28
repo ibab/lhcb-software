@@ -4,6 +4,11 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-02-28 - Manuel Tobias Schiller
+ - PatFwdTool: be a bit smarter in setting up the data structure used to
+   resolve ambiguities (avoid dynamic memory management, sort only once);
+   this speeds up the Forward by 2% without any change in performance
+
 ! 2015-02-27 - Manuel Tobias Schiller
  - PatSeedTool: add improvements made in the ambiguity resolution of the
    Forward:
