@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-02-28 - Manuel Tobias Schiller
+ - PatSeedingTool/PatSeedTool/PatSeedFit: continue to push outward decision if
+   hit is IT or OT (in many cases, we can now neglect to check the track
+   altogether); this gains another 5 permille in speed without affecting
+   results one bit
+
+! 2015-02-28 - Manuel Tobias Schiller
  - PatFwdTool: be a bit smarter in setting up the data structure used to
    resolve ambiguities (avoid dynamic memory management, sort only once);
    this speeds up the Forward by 2% without any change in performance

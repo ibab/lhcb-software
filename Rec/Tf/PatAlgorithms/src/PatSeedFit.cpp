@@ -13,8 +13,6 @@
 #include "TfKernel/RecoFuncs.h"
 
 #include "PatSeedFit.h"
-#include "PatSeedTool.h"
-
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatSeedFit
@@ -100,6 +98,7 @@ namespace PatSeedFitUtils {
     };
 }
 
+template<PatSeedTool::TrackType tracktype>
 PatSeedTrack PatSeedFit::getTrackITOT(std::vector<PatFwdHit>& hits, int staIT) const
 {
   std::array<PatFwdHit*, 4> seedhits = { { 0, 0, 0, 0 } };
@@ -186,7 +185,7 @@ PatSeedTrack PatSeedFit::getTrackITOT(std::vector<PatFwdHit>& hits, int staIT) c
     // save initial track parameters in case, internal fit fails later
     tr.getParameters( z0, ax, bx, cx, ay, by);
 
-    const bool fitOK = m_patSeedTool->refitStub(tr, m_initialArrow);
+    const bool fitOK = m_patSeedTool->refitStub<tracktype>(tr, m_initialArrow);
     for( PatFwdHit& ihit: hits ) {
       // if the hit is not on the track, add it
       if (seedhits.end() == 
@@ -212,7 +211,7 @@ PatSeedTrack PatSeedFit::getTrackITOT(std::vector<PatFwdHit>& hits, int staIT) c
     tr.updateHits();
     tr.getParameters( z0, ax, bx, cx, ay, by);
     // first full fit for the emergency case
-    if (!m_patSeedTool->fitTrack( tr, m_maxChi2, 5, false, false )) {
+    if (!m_patSeedTool->fitTrack<tracktype>( tr, m_maxChi2, 5, false, false )) {
 	Warning("First full fit failed, using best guess parameters", StatusCode::FAILURE, 0).ignore();
 	// restore best guess of track parameters in case of fit failure
 	tr.setParameters(z0, ax, bx, cx, ay, by);
@@ -225,7 +224,7 @@ PatSeedTrack PatSeedFit::getTrackITOT(std::vector<PatFwdHit>& hits, int staIT) c
   tr.getParameters( z0, ax, bx, cx, ay, by);
 
   // full refit
-  if (!m_patSeedTool->fitTrack( tr, m_maxChi2, 5, false, false )) {
+  if (!m_patSeedTool->fitTrack<tracktype>( tr, m_maxChi2, 5, false, false )) {
     Warning("First full fit failed, using best guess parameters", StatusCode::FAILURE, 0).ignore();
     // restore best guess of track parameters in case of fit failure
     tr.setParameters(z0, ax, bx, cx, ay, by);
@@ -267,7 +266,8 @@ void PatSeedFit::makeCluster(std::vector<PatFwdHit>& hits, PatFwdHit& ihit,
     return;
   }
 }
-
+ 
+template<PatSeedTool::TrackType tracktype>
 PatSeedTrack PatSeedFit::getTrackXY(std::vector<PatFwdHit>& hits) const
 {
   std::array<double, 3> x = { { 0., 0., 0. } }, z = { { 0., 0., 0. } };
@@ -306,7 +306,7 @@ PatSeedTrack PatSeedFit::getTrackXY(std::vector<PatFwdHit>& hits) const
   }
   // this should never happen, but we make sure we have a fallback solution...
   if (!in[0] || !in[1] || !in[2])
-    return getTrackITOT(hits, -1);
+    return getTrackITOT<tracktype>(hits, -1);
   PatSeedTrack tr(x[0], x[1], x[2], z[0], z[1], z[2],
       StateParameters::ZMidT, m_dRatio);
   tr.setValid(true);
@@ -317,9 +317,9 @@ PatSeedTrack PatSeedFit::getTrackXY(std::vector<PatFwdHit>& hits) const
   }
   tr.sort();
   // refit X only
-  if (!m_patSeedTool->fitTrack( tr, m_maxChi2, 3, true, false )) {
+  if (!m_patSeedTool->fitTrack<tracktype>( tr, m_maxChi2, 3, true, false )) {
     Warning("First x fit failed, falling back on emergency fit", StatusCode::FAILURE, 0).ignore();
-    return getTrackITOT(hits, -1);
+    return getTrackITOT<tracktype>(hits, -1);
   }
   // add all the stereo hits and get rough estimate of y parameters
   double ty = 0.;
@@ -335,9 +335,9 @@ PatSeedTrack PatSeedFit::getTrackXY(std::vector<PatFwdHit>& hits) const
   tr.setYParams(0., ty / double(nStereo));
   tr.sort();
   // refit stereo
-  if (!m_patSeedTool->fitTrack( tr, m_maxChi2, 5, false, false )) {
+  if (!m_patSeedTool->fitTrack<tracktype>( tr, m_maxChi2, 5, false, false )) {
     Warning("First full fit failed, falling back on emergency fit", StatusCode::FAILURE, 0).ignore();
-    return getTrackITOT(hits, -1);
+    return getTrackITOT<tracktype>(hits, -1);
   }
   // all ok
   tr.updateHits();
@@ -442,19 +442,30 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
   if (planectrIT[8] && planectrIT[9] && planectrIT[10] && planectr[11])
     hasITOTSta = 2;
   // case c) above is identified by hasITOTSta == -1
-  PatSeedTrack pattrack((has1XperSta ? getTrackXY(hits) :
-	getTrackITOT(hits, hasITOTSta)));
+  PatSeedTrack pattrack((has1XperSta ? 
+	      (othits.empty() ? getTrackXY<PatSeedTool::TrackType::ITOnly>(hits) :
+	       (sthits.empty() ? getTrackXY<PatSeedTool::TrackType::OTOnly>(hits) :
+		getTrackXY<PatSeedTool::TrackType::Mixed>(hits))) :
+	      (othits.empty() ? getTrackITOT<PatSeedTool::TrackType::ITOnly>(hits, hasITOTSta) :
+	       (sthits.empty() ? getTrackITOT<PatSeedTool::TrackType::OTOnly>(hits, hasITOTSta) :
+		getTrackITOT<PatSeedTool::TrackType::Mixed>(hits, hasITOTSta)))));
 
   // save initial track parameters in case internal refit fails
   double z0, ax, bx, cx, ay, by;
   pattrack.getParameters(z0, ax, bx, cx, ay, by);
 
   // refit (unless we have a troublesome track)
-  if (pattrack.valid() &&
-      !m_patSeedTool->fitTrack(pattrack, m_maxChi2, 5, false, false)) {
-    Warning("Second full fit failed, falling back on best guess parameters", StatusCode::FAILURE, 0).ignore();
-    // fall back on old track parameters
-    pattrack.setParameters(z0, ax, bx, cx, ay, by);
+  if (pattrack.valid()) {
+      bool tmp = (othits.empty() ?
+	      m_patSeedTool->fitTrack<PatSeedTool::TrackType::ITOnly>(pattrack, m_maxChi2, 5, false, false) :
+	      (sthits.empty() ?
+	       m_patSeedTool->fitTrack<PatSeedTool::TrackType::OTOnly>(pattrack, m_maxChi2, 5, false, false) :
+	       m_patSeedTool->fitTrack<PatSeedTool::TrackType::Mixed>(pattrack, m_maxChi2, 5, false, false)));
+      if (!tmp) {
+	  Warning("Second full fit failed, falling back on best guess parameters", StatusCode::FAILURE, 0).ignore();
+	  // fall back on old track parameters
+	  pattrack.setParameters(z0, ax, bx, cx, ay, by);
+      }
   }
 
   LHCb::State temp(Gaudi::TrackVector(pattrack.xAtZ(m_zReference), 

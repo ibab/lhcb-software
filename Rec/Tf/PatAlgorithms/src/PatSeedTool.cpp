@@ -139,81 +139,93 @@ bool PatSeedTool::removeHitsWhileChi2TooLarge(
 //=========================================================================
 //  Fit a Seed track
 //=========================================================================
+template <PatSeedTool::TrackType hittype>
 bool PatSeedTool::fitTrack( PatSeedTrack& track,
     double maxChi2, unsigned minPlanes, bool xOnly, bool forceDebug ) const
 {
-  const bool isDebug = msgLevel( MSG::DEBUG ) || forceDebug;
-
-  //== get enough planes fired
-  if ( minPlanes > track.nPlanes() ) return false;
-
-  if ( isDebug ) info() << "+++ Track fit, planeCount " << track.nPlanes()
-    << " size " << track.coordEnd() - track.coordBegin() << endmsg;
-
-  // special treatment for OT hits: try to fix ambiguities
-  // (the for loop is a safety harness, in normal operation, the body will
-  // execute only once!)
-  workspace wksp;
-  for (auto it = track.coordBegin(); track.coordEnd() > it;
-      it += wksp.size()) {
-    // get selected OT hits
-    auto range = as_range(std::begin(wksp),
-	std::copy_if(it, std::min(it + wksp.size(), track.coordEnd()),
-	  std::begin(wksp), [] (const PatFwdHit* hit) {
-	  return hit->isSelected() && hit->isOT();
-	  }));
-    // stop if no OT hits
-    if (std::end(range) == std::begin(range)) continue;
-    // reset ambiguities for OT hits
-    for (auto hit: range) hit->setRlAmb(0);
-    // resolve ambiguities from pitch residuals where possible
-    if (m_ambigFromPitchResiduals) resAmbFromPitchRes(track, range);
-    if (m_ambigFromLargestDrift) resAmbFromLargestDrift(track, range, isDebug);
-  }
-  const unsigned nTot = std::count_if(track.coordBegin(),
-      track.coordEnd(), [] (const PatFwdHit* h) {
-      return h->isSelected(); });
-  const unsigned nOT = std::count_if(track.coordBegin(),
-      track.coordEnd(), [] (const PatFwdHit* h) {
-      return h->isSelected() && h->isOT(); });
-  if (xOnly) {
-    if (nTot == nOT) {
-      XFit<true, 1, false, false, false, HitType::OT> xfit(track, track.m_coords);
-      if (!xfit) return false;
-      else return removeHitsWhileChi2TooLarge<
-	XFit<false, 10, false, false, true, HitType::OT>, true>(
-	track, maxChi2, minPlanes, isDebug);
-    } else if (0 == nOT) {
-      XFit<true, 1, false, false, true, HitType::IT> xfit(track, track.m_coords);
-      if (!xfit) return false;
-      else return removeHitsWhileChi2TooLarge<
-	XFit<false, 10, false, false, true, HitType::IT>, true>(
-	track, maxChi2, minPlanes, isDebug);
-    } else {
-      XFit<true, 1, false, false, false> xfit(track, track.m_coords);
-      if (!xfit) return false;
-      else return removeHitsWhileChi2TooLarge<XFit<false, 10>, true>(
-	track, maxChi2, minPlanes, isDebug);
-    }
+  // if we don't know if we have only OT, only IT or mixed hit content, figure
+  // it out
+  if (TrackType::Unknown == hittype) {
+    // see if we have an OT ot IT only track
+    const unsigned nTot = std::count_if(track.coordBegin(),
+	track.coordEnd(), [] (const PatFwdHit* h) {
+	return h->isSelected(); });
+    const unsigned nOT = std::count_if(track.coordBegin(),
+	track.coordEnd(), [] (const PatFwdHit* h) {
+	return h->isSelected() && h->isOT(); });
+    if (nTot == nOT) return fitTrack<TrackType::OTOnly>(track, maxChi2, minPlanes, xOnly, forceDebug);
+    else if (0 == nOT) return fitTrack<TrackType::ITOnly>(track, maxChi2, minPlanes, xOnly, forceDebug);
+    else return fitTrack<TrackType::Mixed>(track, maxChi2, minPlanes, xOnly, forceDebug);
   } else {
-    track.updateHits();
-    if (nTot == nOT) {
-      XYFit<true, 1, false, HitType::OT> xyfit(track, track.m_coords);
-      if (!xyfit) return false;
-      else return removeHitsWhileChi2TooLarge<
-	XYFit<false, 10, true, HitType::OT>, false>(
-	  track, maxChi2, minPlanes, isDebug);
-    } else if (0 == nOT) {
-      XYFit<true, 1, false, HitType::IT> xyfit(track, track.m_coords);
-      if (!xyfit) return false;
-      else return removeHitsWhileChi2TooLarge<
-	XYFit<false, 10, true, HitType::IT>, false>(
-	  track, maxChi2, minPlanes, isDebug);
+    const bool isDebug = msgLevel( MSG::DEBUG ) || forceDebug;
+
+    //== get enough planes fired
+    if ( minPlanes > track.nPlanes() ) return false;
+
+    if ( isDebug ) info() << "+++ Track fit, planeCount " << track.nPlanes()
+      << " size " << track.coordEnd() - track.coordBegin() << endmsg;
+
+    if (TrackType::OTOnly == hittype || TrackType::Mixed == hittype) {
+      // special treatment for OT hits: try to fix ambiguities
+      // (the for loop is a safety harness, in normal operation, the body will
+      // execute only once!)
+      workspace wksp;
+      for (auto it = track.coordBegin(); track.coordEnd() > it;
+	  it += wksp.size()) {
+	// get selected OT hits
+	auto range = as_range(std::begin(wksp),
+	    std::copy_if(it, std::min(it + wksp.size(), track.coordEnd()),
+	      std::begin(wksp), [] (const PatFwdHit* hit) {
+	      return hit->isSelected() && hit->isOT();
+	      }));
+	// stop if no OT hits
+	if (std::end(range) == std::begin(range)) continue;
+	// reset ambiguities for OT hits
+	for (auto hit: range) hit->setRlAmb(0);
+	// resolve ambiguities from pitch residuals where possible
+	if (m_ambigFromPitchResiduals) resAmbFromPitchRes(track, range);
+	if (m_ambigFromLargestDrift) resAmbFromLargestDrift(track, range, isDebug);
+      }
+    }
+    if (xOnly) {
+      if (TrackType::OTOnly == hittype) {
+	XFit<true, 1, false, false, false, HitType::OT> xfit(track, track.m_coords);
+	if (!xfit) return false;
+	else return removeHitsWhileChi2TooLarge<
+	  XFit<false, 10, false, false, true, HitType::OT>, true>(
+	      track, maxChi2, minPlanes, isDebug);
+      } else if (TrackType::ITOnly == hittype) {
+	XFit<true, 1, false, false, true, HitType::IT> xfit(track, track.m_coords);
+	if (!xfit) return false;
+	else return removeHitsWhileChi2TooLarge<
+	  XFit<false, 10, false, false, true, HitType::IT>, true>(
+	      track, maxChi2, minPlanes, isDebug);
+      } else { // Mixed
+	XFit<true, 1, false, false, false> xfit(track, track.m_coords);
+	if (!xfit) return false;
+	else return removeHitsWhileChi2TooLarge<XFit<false, 10>, true>(
+	    track, maxChi2, minPlanes, isDebug);
+      }
     } else {
-      XYFit<true, 1, false> xyfit(track, track.m_coords);
-      if (!xyfit) return false;
-      else return removeHitsWhileChi2TooLarge<XYFit<false, 10>, false>(
-	  track, maxChi2, minPlanes, isDebug);
+      track.updateHits();
+      if (TrackType::OTOnly == hittype) {
+	XYFit<true, 1, false, HitType::OT> xyfit(track, track.m_coords);
+	if (!xyfit) return false;
+	else return removeHitsWhileChi2TooLarge<
+	  XYFit<false, 10, true, HitType::OT>, false>(
+	      track, maxChi2, minPlanes, isDebug);
+      } else if (TrackType::ITOnly == hittype) {
+	XYFit<true, 1, false, HitType::IT> xyfit(track, track.m_coords);
+	if (!xyfit) return false;
+	else return removeHitsWhileChi2TooLarge<
+	  XYFit<false, 10, true, HitType::IT>, false>(
+	      track, maxChi2, minPlanes, isDebug);
+      } else {
+	XYFit<true, 1, false> xyfit(track, track.m_coords);
+	if (!xyfit) return false;
+	else return removeHitsWhileChi2TooLarge<XYFit<false, 10>, false>(
+	    track, maxChi2, minPlanes, isDebug);
+      }
     }
   }
   // should never get here
@@ -383,34 +395,64 @@ void PatSeedTool::resAmbFromPitchRes(PatSeedTrack& tr, Range hits) const
   }
 }
 
+template <PatSeedTool::TrackType hittype>
 bool PatSeedTool::refitStub(PatSeedTrack& track, double arrow) const
 {
-  /// we have to pass a variable into the fit, so swap it for the track's chi^2
-  struct TrackFiddler {
-    PatSeedTrack& m_track;
-    const double m_chi2saved;
-    TrackFiddler(PatSeedTrack& track, double arrow) :
-      m_track(track), m_chi2saved(track.chi2())
-    { track.setChi2(arrow); }
-    ~TrackFiddler() { m_track.setChi2(m_chi2saved); }
-  } guard(track, -arrow);
-
-  const unsigned nTot = std::count_if(track.coordBegin(),
-      track.coordEnd(), [] (const PatFwdHit* h) {
-      return h->isSelected(); });
-  const unsigned nOT = std::count_if(track.coordBegin(),
-      track.coordEnd(), [] (const PatFwdHit* h) {
-      return h->isSelected() && h->isOT(); });
-  // do the fit...
-  if (nTot == nOT) {
-    StubFit<false, 10, true, HitType::OT> fit(track, track.m_coords);
-    return fit;
-  } else if (0 == nOT) {
-    StubFit<false, 10, true, HitType::IT> fit(track, track.m_coords);
-    return fit;
+  if (TrackType::Unknown == hittype) {
+    const unsigned nTot = std::count_if(track.coordBegin(),
+	track.coordEnd(), [] (const PatFwdHit* h) {
+	return h->isSelected(); });
+    const unsigned nOT = std::count_if(track.coordBegin(),
+	track.coordEnd(), [] (const PatFwdHit* h) {
+	return h->isSelected() && h->isOT(); });
+    if (nTot == nOT) return refitStub<TrackType::OTOnly>(track, arrow);
+    else if (0 == nOT) return refitStub<TrackType::ITOnly>(track, arrow);
+    else return refitStub<TrackType::Mixed>(track, arrow);
   } else {
-    StubFit<false, 10> fit(track, track.m_coords);
-    return fit;
+    if (TrackType::OTOnly == hittype || TrackType::Mixed == hittype) {
+      const bool isDebug = msgLevel( MSG::DEBUG );
+      // special treatment for OT hits: try to fix ambiguities
+      // (the for loop is a safety harness, in normal operation, the body will
+      // execute only once!)
+      workspace wksp;
+      for (auto it = track.coordBegin(); track.coordEnd() > it;
+	  it += wksp.size()) {
+	// get selected OT hits
+	auto range = as_range(std::begin(wksp),
+	    std::copy_if(it, std::min(it + wksp.size(), track.coordEnd()),
+	      std::begin(wksp), [] (const PatFwdHit* hit) {
+	      return hit->isSelected() && hit->isOT();
+	      }));
+	// stop if no OT hits
+	if (std::end(range) == std::begin(range)) continue;
+	// reset ambiguities for OT hits
+	for (auto hit: range) hit->setRlAmb(0);
+	// resolve ambiguities from pitch residuals where possible
+	if (m_ambigFromPitchResiduals) resAmbFromPitchRes(track, range);
+	if (m_ambigFromLargestDrift) resAmbFromLargestDrift(track, range, isDebug);
+      }
+    }
+    /// we have to pass a variable into the fit, so swap it for the track's chi^2
+    struct TrackFiddler {
+      PatSeedTrack& m_track;
+      const double m_chi2saved;
+      TrackFiddler(PatSeedTrack& track, double arrow) :
+	m_track(track), m_chi2saved(track.chi2())
+      { track.setChi2(arrow); }
+      ~TrackFiddler() { m_track.setChi2(m_chi2saved); }
+    } guard(track, -arrow);
+
+    // do the fit...
+    if (TrackType::OTOnly == hittype) {
+      StubFit<false, 10, true, HitType::OT> fit(track, track.m_coords);
+      return fit;
+    } else if (TrackType::ITOnly == hittype) {
+      StubFit<false, 10, true, HitType::IT> fit(track, track.m_coords);
+      return fit;
+    } else { // Mixed
+      StubFit<false, 10> fit(track, track.m_coords);
+      return fit;
+    }
   }
 }
 
@@ -425,5 +467,27 @@ void PatSeedTool::printTCoord( MsgStream& msg,
 	hit->planeCode(), hit->z(), hit->x() - track.xAtZ( hit->z() ),
 	hit->driftDistance(), dist, hit->rlAmb(), chi2 );
 }
+
+// force instantiations
+template
+bool PatSeedTool::fitTrack<PatSeedTool::TrackType::OTOnly>(PatSeedTrack& track,
+    double maxChi2, unsigned minPlanes, bool xOnly, bool forceDebug ) const;
+template
+bool PatSeedTool::fitTrack<PatSeedTool::TrackType::ITOnly>(PatSeedTrack& track,
+    double maxChi2, unsigned minPlanes, bool xOnly, bool forceDebug ) const;
+template
+bool PatSeedTool::fitTrack<PatSeedTool::TrackType::Mixed>(PatSeedTrack& track,
+    double maxChi2, unsigned minPlanes, bool xOnly, bool forceDebug ) const;
+template
+bool PatSeedTool::fitTrack<PatSeedTool::TrackType::Unknown>(PatSeedTrack& track,
+    double maxChi2, unsigned minPlanes, bool xOnly, bool forceDebug ) const;
+template
+bool PatSeedTool::refitStub<PatSeedTool::TrackType::OTOnly>(PatSeedTrack& track, double arrow) const;
+template
+bool PatSeedTool::refitStub<PatSeedTool::TrackType::ITOnly>(PatSeedTrack& track, double arrow) const;
+template
+bool PatSeedTool::refitStub<PatSeedTool::TrackType::Mixed>(PatSeedTrack& track, double arrow) const;
+template
+bool PatSeedTool::refitStub<PatSeedTool::TrackType::Unknown>(PatSeedTrack& track, double arrow) const;
 
 // vim:shiftwidth=2:tw=78

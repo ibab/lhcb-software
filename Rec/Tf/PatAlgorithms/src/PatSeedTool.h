@@ -41,6 +41,14 @@ class PatSeedTool : public GaudiTool {
 
     virtual ~PatSeedTool( ); ///< Destructor
 
+    /// type of hits on track
+    enum class TrackType {
+      OTOnly,
+      ITOnly,
+      Mixed,
+      Unknown
+    };
+
     /** fit a track
      * @param track PatSeedTrack to fit
      * @param maxChi2 outlier removal starts at maxChi2
@@ -49,6 +57,7 @@ class PatSeedTool : public GaudiTool {
      * @param forceDebug force printing debugging information
      * @return false if fit failed to satisfy criteria given by arguments, true otherwise
      */
+    template <TrackType hittype = TrackType::Unknown>
     bool fitTrack( PatSeedTrack& track, double maxChi2, unsigned minPlanes,
 	bool xOnly, bool forceDebug ) const;
 
@@ -62,6 +71,7 @@ class PatSeedTool : public GaudiTool {
      * @param arrow conversion constant from x intercept at z=0 to curvature
      * @return false on failure, true otherwise
      */
+    template <TrackType hittype = TrackType::Unknown>
     bool refitStub(PatSeedTrack& track, double arrow) const;
 
   protected:

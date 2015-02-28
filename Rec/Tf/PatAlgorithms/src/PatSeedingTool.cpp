@@ -800,7 +800,11 @@ void PatSeedingTool::collectPerRegion(
 
           track.sort();
           if ( m_printing ) info() << "-- Before fit, nPlanes = " << track.nPlanes() << endmsg;
-          ok = m_seedTool->fitTrack( track, m_maxFinalChi2, m_minTotalPlanes, false, m_printing );
+	  if (isRegionOT(reg)) {
+	    ok = m_seedTool->fitTrack<PatSeedTool::TrackType::OTOnly>( track, m_maxFinalChi2, m_minTotalPlanes, false, m_printing );
+	  } else {
+	    ok = m_seedTool->fitTrack<PatSeedTool::TrackType::ITOnly>( track, m_maxFinalChi2, m_minTotalPlanes, false, m_printing );
+	  }
 
 	  if ( m_printing ) info() << "After fit status "<< ok << " chi2 " << track.chi2()
 	    << ", nPlanes = " << track.nPlanes() << endmsg;
@@ -1862,7 +1866,9 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
 	track.sort();
 	//== Fit the track
 	if ( m_printing ) info() << " -- start fitting, nCoord = " << track.nCoords() << endmsg;
-	bool fitOK = m_seedTool->fitTrack( track, m_maxChi2Hit, m_minXPlanes, true, m_printing );
+	bool fitOK = isRegionOT(reg0) ?
+	  m_seedTool->fitTrack<PatSeedTool::TrackType::OTOnly>( track, m_maxChi2Hit, m_minXPlanes, true, m_printing ) :
+	  m_seedTool->fitTrack<PatSeedTool::TrackType::ITOnly>( track, m_maxChi2Hit, m_minXPlanes, true, m_printing );
 	if ( !fitOK ) {
 	  if ( m_printing ) info() << "    -- fit failed" << endmsg;
 	  continue;
@@ -1884,7 +1890,7 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
 
         //== Limited OT multiplicity -> check if compatible with in the central Y region
         if ( isRegionOT(reg0) && 8 > track.nCoords() ) {
-          fitOK = m_seedTool->fitTrack( track, m_maxFinalChi2, m_minXPlanes, true, m_printing );
+          fitOK = m_seedTool->fitTrack<PatSeedTool::TrackType::OTOnly>( track, m_maxFinalChi2, m_minXPlanes, true, m_printing );
           if ( !fitOK ) {
             if ( m_printing ) info() << "    -- re-fit with final Chi2 failed" << endmsg;
             continue;
@@ -1925,7 +1931,9 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
     track.sort();
     m_printing = msgLevel( MSG::DEBUG );
 
-    bool fitOK = m_seedTool->fitTrack( track, m_maxChi2Hit, m_minXPlanes, true, m_printing );
+    bool fitOK = isRegionOT(reg0) ?
+      m_seedTool->fitTrack<PatSeedTool::TrackType::OTOnly>( track, m_maxChi2Hit, m_minXPlanes, true, m_printing ) :
+      m_seedTool->fitTrack<PatSeedTool::TrackType::ITOnly>( track, m_maxChi2Hit, m_minXPlanes, true, m_printing );
     if (fitOK && ( m_maxFinalChi2 >= track.chi2() ))
     // cut on chi2 per DoF
     track.setValid( fitOK && ( m_maxFinalChi2 >= track.chi2() ) );

@@ -8,10 +8,11 @@
 #include "Kernel/ILHCbMagnetSvc.h"
 #include "Event/STLiteCluster.h"
 
+#include "PatSeedTool.h"
+
 static const InterfaceID IID_PatSeedFit("PatSeedFit", 1, 0);
 
 // forward declarations
-class PatSeedTool;
 namespace Tf {
   class IOTHitCreator;
 }
@@ -81,6 +82,7 @@ private:
    *               the method falls back on using whatever hits are available)
    * @returns a PatSeedTrack
    */
+  template<PatSeedTool::TrackType tracktype>
   PatSeedTrack getTrackITOT(std::vector<PatFwdHit>& hits, int staIT = -1) const;
   /// return a track constructed by fitting the x only projection first then y
   /** construct a track from x hits in three different stations, then adding
@@ -88,6 +90,7 @@ private:
    * @param hits   list of hits from which to construct the track
    * @returns a PatSeedTrack
    */
+  template<PatSeedTool::TrackType tracktype>
   PatSeedTrack getTrackXY(std::vector<PatFwdHit>& hits) const;
 
   /// make an OT cluster from ihit and a suitable one in hits (if possible)
