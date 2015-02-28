@@ -22,31 +22,23 @@ PatSeedTrack::PatSeedTrack(
     double z0, double z1, double z2,
     double zRef, double dRatio ) :
   m_valid(true), m_nbPlanes(0),
-  m_z0(0.5 * (z0 + z2)), m_ax((x2 - x0) / (z2 - z0)),
-  m_bx(x1 - (z1 - m_z0) * m_ax),
-  m_cx((x2 + x0 - 2. * m_bx) * 2.0 / ((z2 - z0) * (z2 - z0))),
+  m_z0(zRef),
   m_dx(dRatio),
   m_ay(0.), m_by(0.), m_cosine(1.), m_chi2(HUGE_VAL)
 {
-  // swap below is needed to avoid warnings about the order of
-  // initialisation - apologies... (Manuel)
-  std::swap(m_ax, m_bx);
-  // Applies a correction in cubic term, proportional to cx at zRef.
-  const double zDiff = zRef - m_z0;
-  const double dz = 0.5 * (z2 - z0);
-  // apply cubic term
-  const double dx = dRatio * m_cx / ( 1. - 3. * zDiff * dRatio ) ;
-  // Correct so that we still go through the points
-  m_bx -= dx * dz * dz;
-
-  // shift reference point from midpoint between z0 and z2 to zRef
-  m_ax += zDiff * ( m_bx + zDiff * ( m_cx + zDiff * dx ));
-  m_bx += zDiff * ( 2. * m_cx + zDiff * 3. * dx );
-  m_cx += zDiff * ( 3. * dx );
-  m_z0 = zRef;
+  const auto dz0 = z0 - zRef, dz1 = z1 - zRef, dz2 = z2 - zRef;
+  const auto qt0 = dz0 * dz0 * (1 + dz0 * dRatio);
+  const auto qt1 = dz1 * dz1 * (1 + dz1 * dRatio);
+  const auto qt2 = dz2 * dz2 * (1 + dz2 * dRatio);
+  const auto rt1 = (qt0 - qt1) / (z0 - z1);
+  const auto rt2 = (qt0 - qt2) / (z0 - z2);
+  const auto dx02 = x0 - x2, dx01 = x0 - x1;
+  const auto dz02 = z0 - z2, dz01 = z0 - z1;
+  m_cx = (dx02 / dz02 - dx01 / dz01) / (rt2 - rt1);
+  m_bx = dx01 / dz01 - m_cx * rt1;
+  m_ax = x1 - m_bx * dz1 - m_cx * qt1;
 
   std::fill(m_planeList.begin(), m_planeList.end(), 0);
-  m_coords.reserve(32);
 }
 
 //=========================================================================
@@ -86,7 +78,6 @@ PatSeedTrack::PatSeedTrack(
                 ( xAtZ( c2->z() ) - c2->x() ) / c2->hit()->dxDy()  ) / m_z0 ;
 
   std::fill(m_planeList.begin(), m_planeList.end(), 0);
-  m_coords.reserve(32);
 
   addCoord( c0 );
   addCoord( c1 );

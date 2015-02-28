@@ -350,7 +350,7 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
 {
 
   // these are the z-positions for the output states
-  std::vector<double> m_zOutputs  = {StateParameters::ZBegT,StateParameters::ZMidT,StateParameters::ZEndT};
+  static constexpr std::array<double, 3> m_zOutputs  = {StateParameters::ZBegT,StateParameters::ZMidT,StateParameters::ZEndT};
 
   // if we have not requested the container of STLiteClusters in this event,
   // do so now
@@ -442,74 +442,79 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
   if (planectrIT[8] && planectrIT[9] && planectrIT[10] && planectr[11])
     hasITOTSta = 2;
   // case c) above is identified by hasITOTSta == -1
-  PatSeedTrack pattrack((has1XperSta ? 
-	      (othits.empty() ? getTrackXY<PatSeedTool::TrackType::ITOnly>(hits) :
-	       (sthits.empty() ? getTrackXY<PatSeedTool::TrackType::OTOnly>(hits) :
-		getTrackXY<PatSeedTool::TrackType::Mixed>(hits))) :
-	      (othits.empty() ? getTrackITOT<PatSeedTool::TrackType::ITOnly>(hits, hasITOTSta) :
-	       (sthits.empty() ? getTrackITOT<PatSeedTool::TrackType::OTOnly>(hits, hasITOTSta) :
-		getTrackITOT<PatSeedTool::TrackType::Mixed>(hits, hasITOTSta)))));
+  try {
+      PatSeedTrack pattrack((has1XperSta ? 
+		  (othits.empty() ? getTrackXY<PatSeedTool::TrackType::ITOnly>(hits) :
+		   (sthits.empty() ? getTrackXY<PatSeedTool::TrackType::OTOnly>(hits) :
+		    getTrackXY<PatSeedTool::TrackType::Mixed>(hits))) :
+		  (othits.empty() ? getTrackITOT<PatSeedTool::TrackType::ITOnly>(hits, hasITOTSta) :
+		   (sthits.empty() ? getTrackITOT<PatSeedTool::TrackType::OTOnly>(hits, hasITOTSta) :
+		    getTrackITOT<PatSeedTool::TrackType::Mixed>(hits, hasITOTSta)))));
 
-  // save initial track parameters in case internal refit fails
-  double z0, ax, bx, cx, ay, by;
-  pattrack.getParameters(z0, ax, bx, cx, ay, by);
+      // save initial track parameters in case internal refit fails
+      double z0, ax, bx, cx, ay, by;
+      pattrack.getParameters(z0, ax, bx, cx, ay, by);
 
-  // refit (unless we have a troublesome track)
-  if (pattrack.valid()) {
-      bool tmp = (othits.empty() ?
-	      m_patSeedTool->fitTrack<PatSeedTool::TrackType::ITOnly>(pattrack, m_maxChi2, 5, false, false) :
-	      (sthits.empty() ?
-	       m_patSeedTool->fitTrack<PatSeedTool::TrackType::OTOnly>(pattrack, m_maxChi2, 5, false, false) :
-	       m_patSeedTool->fitTrack<PatSeedTool::TrackType::Mixed>(pattrack, m_maxChi2, 5, false, false)));
-      if (!tmp) {
-	  Warning("Second full fit failed, falling back on best guess parameters", StatusCode::FAILURE, 0).ignore();
-	  // fall back on old track parameters
-	  pattrack.setParameters(z0, ax, bx, cx, ay, by);
+      // refit (unless we have a troublesome track)
+      if (pattrack.valid()) {
+	  bool tmp = (othits.empty() ?
+		  m_patSeedTool->fitTrack<PatSeedTool::TrackType::ITOnly>(pattrack, m_maxChi2, 5, false, false) :
+		  (sthits.empty() ?
+		   m_patSeedTool->fitTrack<PatSeedTool::TrackType::OTOnly>(pattrack, m_maxChi2, 5, false, false) :
+		   m_patSeedTool->fitTrack<PatSeedTool::TrackType::Mixed>(pattrack, m_maxChi2, 5, false, false)));
+	  if (!tmp) {
+	      Warning("Second full fit failed, falling back on best guess parameters", StatusCode::FAILURE, 0).ignore();
+	      // fall back on old track parameters
+	      pattrack.setParameters(z0, ax, bx, cx, ay, by);
+	  }
       }
-  }
 
-  LHCb::State temp(Gaudi::TrackVector(pattrack.xAtZ(m_zReference), 
-	      pattrack.yAtZ(m_zReference),
-	      pattrack.xSlope(m_zReference), 
-	      pattrack.ySlope(m_zReference), 0.),
-	  m_zReference, LHCb::State::AtT);
+      LHCb::State temp(Gaudi::TrackVector(pattrack.xAtZ(m_zReference), 
+		  pattrack.yAtZ(m_zReference),
+		  pattrack.xSlope(m_zReference), 
+		  pattrack.ySlope(m_zReference), 0.),
+	      m_zReference, LHCb::State::AtT);
 
-  double qOverP, sigmaQOverP;
-  StatusCode sc = m_momentumTool->calculate(&temp, qOverP, sigmaQOverP, true) ;
+      double qOverP, sigmaQOverP;
+      StatusCode sc = m_momentumTool->calculate(&temp, qOverP, sigmaQOverP, true) ;
 
-  if (sc.isFailure()) {
-    // if our momentum tool doesn't succeed, we have to try ourselves
-    // to get q/p from curvature
-    const double scaleFactor = m_magFieldSvc->signedRelativeCurrent();
-    if (std::abs(scaleFactor) < 1e-4) {
-      // return a track of 1 GeV, with a momentum uncertainty which makes it
-      // compatible with a 1 MeV track
-      qOverP = ((pattrack.curvature() < 0) ? -1. : 1.) *
-	((scaleFactor < 0.) ? -1. : 1.) / Gaudi::Units::GeV;
-      sigmaQOverP = 1. / Gaudi::Units::MeV;
-    } else {
-      // get qOverP from curvature
-      qOverP = pattrack.curvature() * m_momentumScale / (-scaleFactor);
-      sigmaQOverP = 0.5 * qOverP; // be conservative
-    }
-  }
+      if (sc.isFailure()) {
+	  // if our momentum tool doesn't succeed, we have to try ourselves
+	  // to get q/p from curvature
+	  const double scaleFactor = m_magFieldSvc->signedRelativeCurrent();
+	  if (std::abs(scaleFactor) < 1e-4) {
+	      // return a track of 1 GeV, with a momentum uncertainty which makes it
+	      // compatible with a 1 MeV track
+	      qOverP = ((pattrack.curvature() < 0) ? -1. : 1.) *
+		  ((scaleFactor < 0.) ? -1. : 1.) / Gaudi::Units::GeV;
+	      sigmaQOverP = 1. / Gaudi::Units::MeV;
+	  } else {
+	      // get qOverP from curvature
+	      qOverP = pattrack.curvature() * m_momentumScale / (-scaleFactor);
+	      sigmaQOverP = 0.5 * qOverP; // be conservative
+	  }
+      }
 
-  temp.setQOverP(qOverP);
-  //== overestimated covariance matrix, as input to the Kalman fit
-  Gaudi::TrackSymMatrix& cov = temp.covariance();
-  cov(0,0) = m_stateErrorX2;
-  cov(1,1) = m_stateErrorY2;
-  cov(2,2) = m_stateErrorTX2;
-  cov(3,3) = m_stateErrorTY2;
-  cov(4,4) = sigmaQOverP * sigmaQOverP;
+      temp.setQOverP(qOverP);
+      //== overestimated covariance matrix, as input to the Kalman fit
+      Gaudi::TrackSymMatrix& cov = temp.covariance();
+      cov(0,0) = m_stateErrorX2;
+      cov(1,1) = m_stateErrorY2;
+      cov(2,2) = m_stateErrorTX2;
+      cov(3,3) = m_stateErrorTY2;
+      cov(4,4) = sigmaQOverP * sigmaQOverP;
 
-  for( const double z: m_zOutputs ) {
-      temp.setX(pattrack.xAtZ(z));
-      temp.setY(pattrack.yAtZ(z));
-      temp.setZ(z);
-      temp.setTx(pattrack.xSlope(z));
-      temp.setTy(pattrack.ySlope(z));
-      states->push_back( temp );
+      for( const double z: m_zOutputs ) {
+	  temp.setX(pattrack.xAtZ(z));
+	  temp.setY(pattrack.yAtZ(z));
+	  temp.setZ(z);
+	  temp.setTx(pattrack.xSlope(z));
+	  temp.setTy(pattrack.ySlope(z));
+	  states->push_back( temp );
+      }
+  } catch (const std::length_error& e) {
+      Warning(e.what()).ignore();
+      return StatusCode::FAILURE;
   }
 
   return StatusCode::SUCCESS ;

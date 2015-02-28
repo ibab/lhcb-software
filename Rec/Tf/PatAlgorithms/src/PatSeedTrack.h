@@ -7,6 +7,7 @@
 #include <cmath>
 #include <algorithm>
 #include <functional>
+#include <stdexcept>
 
 #include <array>
 
@@ -14,6 +15,7 @@
 #include "TfKernel/RecoFuncs.h"
 #include "TfKernel/RegionID.h"
 #include "TfKernel/STHit.h"
+#include "DetDesc/StaticArray.h"
 
 #include "LHCbMath/BloomFilter.h"
 
@@ -41,6 +43,17 @@ class PatSeedTrack {
 
   public:
     friend class PatSeedTool;
+
+    // 12 layers - should not have more than 6 hits per layer on track
+    typedef StaticArray<PatFwdHit*, 72> Hits;
+
+    class TooManyHits : public std::length_error
+    {
+      public:
+	TooManyHits() :
+	  std::length_error("Too many hits on PatSeedTrack")
+        { }
+    };
 
     /// use a BloomFilter for clone killing purposes
     typedef BloomFilter<LHCb::LHCbID, 12, 81789, 1 << 20> XHitFingerPrint;
@@ -104,15 +117,15 @@ class PatSeedTrack {
     { return m_cx; }
 
     /// const iterator to first coordinate(hit)
-    PatFwdHits::const_iterator coordBegin() const { return m_coords.begin(); }
+    Hits::const_iterator coordBegin() const { return m_coords.begin(); }
     /// const iterator to end of coordinates(hits)
-    PatFwdHits::const_iterator coordEnd()   const { return m_coords.end(); }
+    Hits::const_iterator coordEnd()   const { return m_coords.end(); }
     /// iterator to first coordinate(hit)
-    PatFwdHits::iterator coordBegin()             { return m_coords.begin(); }
+    Hits::iterator coordBegin()             { return m_coords.begin(); }
     /// iterator to end of coordinates(hits)
-    PatFwdHits::iterator coordEnd()               { return m_coords.end(); }
+    Hits::iterator coordEnd()               { return m_coords.end(); }
     /// const reference to coordinate(hit) container
-    const PatFwdHits& coords() const		  { return m_coords; }
+    const Hits& coords() const		  { return m_coords; }
 
     unsigned nCoords() const ///< return number of hits on the track
     { return m_coords.size(); }
@@ -149,14 +162,49 @@ class PatSeedTrack {
 
     void addCoord( PatFwdHit* hit ) ///< add a hit
     {
+      try {
       m_coords.push_back( hit );
       if ( 0 == m_planeList[hit->planeCode()]++ ) ++m_nbPlanes;
+      } catch (const GaudiException& ge) {
+	throw TooManyHits();
+      }
     }
 
-    void removeCoord( PatFwdHits::iterator& worst ) ///< remove a hit
+    template <class IT, class SEL>
+    void addCoord(IT begin, IT end) ///< add range of hits
+    {
+      try {
+	while (begin != end) {
+	  auto hit = *begin;
+	  m_coords.push_back(hit);
+	  if (0 == m_planeList[hit->planeCode()]++) ++m_nbPlanes;
+	  ++begin;
+	}
+      } catch (const GaudiException& ge) {
+	throw TooManyHits();
+      } 
+    }
+    template <class IT, class SEL>
+    void addCoord(IT begin, IT end, SEL sel) ///< add range of hits passing sel
+    {
+      try {
+	while (begin != end) {
+	  auto hit = *begin;
+	  if (sel(hit)) {
+	    m_coords.push_back(hit);
+	    if (0 == m_planeList[hit->planeCode()]++) ++m_nbPlanes;
+	  }
+	  ++begin;
+	}
+      } catch (const GaudiException& ge) {
+	throw TooManyHits();
+      }
+    }
+
+    Hits::iterator removeCoord( Hits::iterator worst ) ///< remove a hit
     {
       if ( 0 == --m_planeList[(*worst)->planeCode()] ) --m_nbPlanes;
-      worst = m_coords.erase( worst ) - 1;
+      return m_coords.erase( worst ) - 1;
     }
 
     /// perpendicular distance for fit
@@ -340,16 +388,8 @@ class PatSeedTrack {
     double m_chi2;
 
     PlaneArray m_planeList;
-    PatFwdHits m_coords;
+    Hits m_coords;
     XHitFingerPrint m_ids;
-
-    struct countIfHighThreshold : /// helper predicate for nbHighThreshold
-      public std::unary_function<const PatFwdHit*,bool>
-  {
-    bool operator() (const PatFwdHit* hit) const
-    { const Tf::STHit* itHit = hit->hit()->sthit();
-      return itHit && itHit->cluster().highThreshold(); }
-  };
 
 };
 
@@ -427,7 +467,9 @@ inline unsigned PatSeedTrack::nbOnSide() const
 inline unsigned PatSeedTrack::nbHighThreshold() const
 {
   return std::count_if( m_coords.begin(), m_coords.end(),
-      countIfHighThreshold() );
+      [] (const PatFwdHit* h) {
+      return !h->isOT() && h->hit()->sthit()->cluster().highThreshold();
+      });
 }
 
 inline void PatSeedTrack::updateHits()

@@ -53,7 +53,7 @@ bool PatSeedTool::removeHitsWhileChi2TooLarge(
   struct WorstHitFinder {
     typename FIT::value_type m_chi2;
     typename FIT::value_type m_worstchi2;
-    PatFwdHits::iterator m_worst;
+    decltype(track.coordBegin()) m_worst;
     WorstHitFinder(const FIT& fit, PatSeedTrack& track) :
       m_chi2(0), m_worstchi2(0), m_worst(track.coordBegin())
     {
@@ -105,7 +105,7 @@ bool PatSeedTool::removeHitsWhileChi2TooLarge(
       if (xOnly || (*worst.m_worst)->hit()->isX()) --nHitsX;
       else if (!xOnly) --nHitsStereo;
       // ... remove ...
-      track.removeCoord(worst.m_worst);
+      worst.m_worst = track.removeCoord(worst.m_worst);
       // ... and refit only if we know it should work...
       const bool expectFitOkay = 0 <= nHitsX && 0 <= nHitsStereo && 0 < fit.ndf()
 	&& minPlanes <= track.nPlanes();

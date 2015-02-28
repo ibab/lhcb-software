@@ -5,6 +5,15 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-02-28 - Manuel Tobias Schiller
+ - PatSeedTrack: rewrite code in constructor which calculates parabola
+   parameters from three X hits (permille level increase in efficiency)
+ - various PatSeeding classes: remove dynamic memory management by replacing
+   std::vector<PatFwdHit*> with StaticArray class from DetDesc; this speeds up
+   the Seeding by 4% without significant changes in performance (the code will
+   now abandon track candidates which accumulate a crazy number of hits 72 or
+   more, i.e. at least 6 in every layer of the T stations) 
+
+! 2015-02-28 - Manuel Tobias Schiller
  - PatSeedingTool/PatSeedTool/PatSeedFit: continue to push outward decision if
    hit is IT or OT (in many cases, we can now neglect to check the track
    altogether); this gains another 5 permille in speed without affecting

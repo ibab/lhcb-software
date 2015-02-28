@@ -8,6 +8,8 @@
 #include <iomanip>
 #include <algorithm>
 
+#include "boost/range/iterator_range_core.hpp"
+
 // from Gaudi
 #include "GaudiKernel/extends.h"
 #include "GaudiAlg/GaudiTool.h"
@@ -18,6 +20,8 @@
 #include "TrackInterfaces/ITrackMomentumEstimate.h"
 #include "Kernel/ILHCbMagnetSvc.h"
 #include "Kernel/IUsedLHCbID.h"
+
+#include "DetDesc/StaticArray.h"
 
 #include "Event/Track.h"
 
@@ -67,6 +71,18 @@ class PatSeedingTool :
 {
   public:
     typedef Tf::TStationHitManager<PatForwardHit>::HitRange HitRange;
+    // allocating FwdHits below costs nothing in terms of time, we only need
+    // 2-3 while PatSeeding is running, and 2^14 elements max is certainly
+    // enough (can comfortably accomodate more than 100% OT occupancy (about
+    // 50 k channels for whole OT, but only stereo layers in either the upper
+    // or the lower half are be used to fill these arrays, so 2^14 elements is
+    // more than you can possibly put in; the figures look more favourable for
+    // the IT (where it's only stereo hits from a single box)...
+    typedef StaticArray<PatForwardHit*, 16384> FwdHits;
+
+    template <class IT>
+    static auto make_range(IT begin, IT end) -> boost::iterator_range<IT>
+    { return boost::iterator_range<IT>(begin, end); }
 
     /// Standard constructor
     PatSeedingTool(const std::string& type,
@@ -127,20 +143,20 @@ class PatSeedingTool :
 
     /// find candidates in xz projection in region reg, layer lay
     void findXCandidates ( unsigned lay, unsigned reg,
-	std::vector<PatSeedTrack>& pool, PatFwdHits& candsT2,
+	std::vector<PatSeedTrack>& pool,
 	const LHCb::State* state );
 
     /// collect stereo hits compatible with track candidate in xz projection
     void collectStereoHits ( PatSeedTrack& track, unsigned typ,
-	PatFwdHits& stereo, const LHCb::State* state );
+	FwdHits& stereo, const LHCb::State* state );
 
     /// search for cluster of stereo hits in projection plane
-    bool findBestRange ( unsigned reg, int minNbPlanes, PatFwdHits& stereo ) const;
+    bool findBestRange ( unsigned reg, int minNbPlanes, FwdHits& stereo ) const;
     /// search for cluster of stereo hits in projection plane (for cosmics only)
-    bool findBestRangeCosmics ( unsigned reg, int minNbPlanes, PatFwdHits& stereo ) const;
+    bool findBestRangeCosmics ( unsigned reg, int minNbPlanes, FwdHits& stereo ) const;
 
     /// fit a line to the hits found by findBestRange
-    bool fitLineInY ( PatFwdHits& stereo, double& y0, double& sl ) const;
+    bool fitLineInY ( FwdHits& stereo, double& y0, double& sl ) const;
 
     /// convert a seed track to an LHCb track, estimating momentum
     void storeTrack( const PatSeedTrack& track,
@@ -150,7 +166,8 @@ class PatSeedingTool :
 	std::vector<LHCb::Track*>& outputTracks ) const;
 
     /// check if the hit pointed to by it is isolated in the range range
-    bool isIsolated(HitRange::const_iterator it, const HitRange& range) const;
+    template <class RANGE>
+    bool isIsolated(typename RANGE::const_iterator it, const RANGE& range) const;
 
     /// first stage: collect tracks per region
     void collectPerRegion(
@@ -159,7 +176,6 @@ class PatSeedingTool :
 	std::vector<PatSeedTrack*>& finalSelection,
 	std::vector<LHCb::Track*>& outputTracks,
 	const LHCb::State* state,
-	PatFwdHits& candsT2,
 	bool OTonly = false);
 
     /// second stage: make tracks in one IT station, collect more OT/IT hits
