@@ -5,6 +5,18 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-02-28 - V. Gligorov
+ - Remove "LowPT" particles from TrackFittedBasicParticles, as with the
+   new reconstruction where tracks of all PT are made upfront in HLT2 these
+   no longer serve any purpose.
+ - Make sure both Rich and non-Rich TrackFittedBasicParticles actually
+   contain Rich information. The difference is that in the former case there
+   is an explicit cut on being in the RICH acceptance, in the latter, not.
+ - Remove Ds/Dplus files, these are obsolete.
+ - Commit some non-working and commented out braindump for a possible  
+   configuration of basic input particles for HLT2 lines to GoodParticles.py
+   (which is otherwise obsolete)
+
 ! 2015-02-20 - Sean Benson
  - Add first cuts for ConvPhotons.
  - Required new TrackFittedBasicParticle for downstream electrons.
