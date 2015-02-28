@@ -54,7 +54,7 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
         from Configurables import CombineParticles
         from Configurables import FilterDesktop
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions,BiKalmanFittedKaons,BiKalmanFittedProtons
-        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedRichLowPTPions, BiKalmanFittedRichLowPTKaons, BiKalmanFittedRichLowPTProtons
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedRichPions, BiKalmanFittedRichKaons, BiKalmanFittedRichProtons
         from Configurables import TisTosParticleTagger      
  
         from Configurables import LoKi__VoidFilter as VoidFilter
@@ -141,20 +141,20 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
                 , DaughtersCuts = { 'pi+' : _daughters_cut,
                                     'K+' : _daughters_cut,
                                     'p+' : _proton_cut_rich }
-                , Inputs = [ BiKalmanFittedRichLowPTPions.outputSelection(), 
-                             BiKalmanFittedRichLowPTKaons.outputSelection(),
-                             BiKalmanFittedRichLowPTProtons.outputSelection() ]
+                , Inputs = [ BiKalmanFittedRichPions.outputSelection(), 
+                             BiKalmanFittedRichKaons.outputSelection(),
+                             BiKalmanFittedRichProtons.outputSelection() ]
         )
 
         ## Other decay modes.
         Hlt2CharmHadLambdaC2KPK_Rich = Hlt2CharmHadLambdaC2KPPi_Rich.clone( "CombineRich",
                                         DecayDescriptor = "[Lambda_c+ -> K- p+ K+]cc",
-                                        Inputs = [ BiKalmanFittedRichLowPTKaons.outputSelection(),
-                                                   BiKalmanFittedRichLowPTProtons.outputSelection() ] )
+                                        Inputs = [ BiKalmanFittedRichKaons.outputSelection(),
+                                                   BiKalmanFittedRichProtons.outputSelection() ] )
         Hlt2CharmHadLambdaC2PiPPi_Rich = Hlt2CharmHadLambdaC2KPPi_Rich.clone( "CombineRich",
                                         DecayDescriptor = "[Lambda_c+ -> pi- p+ pi+]cc",
-                                        Inputs = [ BiKalmanFittedRichLowPTPions.outputSelection(), 
-                                                   BiKalmanFittedRichLowPTProtons.outputSelection() ] )
+                                        Inputs = [ BiKalmanFittedRichPions.outputSelection(), 
+                                                   BiKalmanFittedRichProtons.outputSelection() ] )
         Hlt2CharmHadLambdaC2PiPK_Rich = Hlt2CharmHadLambdaC2KPPi_Rich.clone( "CombineRich",
                                         DecayDescriptor = "[Lambda_c+ -> pi- p+ K+]cc" )
 
@@ -186,9 +186,9 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
                                                , BiKalmanFittedKaons
                                                , BiKalmanFittedProtons
                                                , Hlt2CharmHadLambdaC2KPPi
-                                               , BiKalmanFittedRichLowPTPions
-                                               , BiKalmanFittedRichLowPTKaons
-                                               , BiKalmanFittedRichLowPTProtons
+                                               , BiKalmanFittedRichPions
+                                               , BiKalmanFittedRichKaons
+                                               , BiKalmanFittedRichProtons
                                                , Hlt2CharmHadLambdaC2KPPi_Rich
                                                , DecodeHlt1SelRep
                                                , filterTOS_LC2KPPi ] )
@@ -196,8 +196,8 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
                                                , BiKalmanFittedKaons
                                                , BiKalmanFittedProtons
                                                , Hlt2CharmHadLambdaC2KPK
-                                               , BiKalmanFittedRichLowPTKaons
-                                               , BiKalmanFittedRichLowPTProtons
+                                               , BiKalmanFittedRichKaons
+                                               , BiKalmanFittedRichProtons
                                                , Hlt2CharmHadLambdaC2KPK_Rich
                                                , DecodeHlt1SelRep
                                                , filterTOS_LC2KPK ] )
@@ -205,8 +205,8 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
                                                , BiKalmanFittedPions
                                                , BiKalmanFittedProtons
                                                , Hlt2CharmHadLambdaC2PiPPi
-                                               , BiKalmanFittedRichLowPTPions
-                                               , BiKalmanFittedRichLowPTProtons
+                                               , BiKalmanFittedRichPions
+                                               , BiKalmanFittedRichProtons
                                                , Hlt2CharmHadLambdaC2PiPPi_Rich
                                                , DecodeHlt1SelRep
                                                , filterTOS_LC2PiPPi ] )
@@ -215,9 +215,9 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
                                                , BiKalmanFittedKaons
                                                , BiKalmanFittedProtons
                                                , Hlt2CharmHadLambdaC2PiPK
-                                               , BiKalmanFittedRichLowPTPions
-                                               , BiKalmanFittedRichLowPTKaons
-                                               , BiKalmanFittedRichLowPTProtons
+                                               , BiKalmanFittedRichPions
+                                               , BiKalmanFittedRichKaons
+                                               , BiKalmanFittedRichProtons
                                                , Hlt2CharmHadLambdaC2PiPK_Rich
                                                , DecodeHlt1SelRep
                                                , filterTOS_LC2PiPK ] )

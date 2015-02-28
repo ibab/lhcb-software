@@ -209,14 +209,14 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         #TFRichProtonPID = "((PIDp-PIDpi) > %(LowMult_TFRichProtonPIDppi)s) & ((PIDp-PIDK) > %(LowMult_TFRichProtonPIDpK)s)" % self.getProps()   
         TFRichProtonPID = "(PIDp> %(LowMult_TFRichProtonPIDppi)s)" % self.getProps()
         
-        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedRichLowPTProtons
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedRichProtons
         TFRichCombine = Hlt2Member( CombineParticles
                                     , "TFRichCombine"
                                     , DecayDescriptor = "J/psi(1S) -> p+ p~-"
                                     , DaughtersCuts = { "p+" : TFProtonCut+" & "+TFRichProtonPID }
                                     , CombinationCut = TFCombCut
                                     , MotherCut = TFMomCut
-                                    , Inputs = [ BiKalmanFittedRichLowPTProtons ]
+                                    , Inputs = [ BiKalmanFittedRichProtons ]
                                     , InputPrimaryVertices = "None"
                                     , UseP2PVRelations = False
                                     )
@@ -230,7 +230,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
                         , HLT  = Hlt1Req
                         , algos = [ BiKalmanFittedProtons
                                     , TFCombine
-                                    , BiKalmanFittedRichLowPTProtons
+                                    , BiKalmanFittedRichProtons
                                     , TFRichCombine
                                     ]
                         , postscale = self.postscale

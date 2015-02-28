@@ -8,6 +8,12 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-02-28 - V. Gligorov
+ - First commit of CharmHad module to host the various hadronic charm lines
+ - Modify lines which used "LowPT" particles to use regular ones instead, the
+   "LowPT" particles are obsolete since we can do the tracking upfront now
+   and are removed from Hlt2SharedParticles  
+
 ! 2015-02-24 - Roel Aaij
  - Fix TrackEff lines.
 
