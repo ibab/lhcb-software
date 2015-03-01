@@ -379,7 +379,7 @@ class StrippingLine(object):
                     fullPath = "/Event/" + self.outputLocation()
                 else :
                     fullPath = "/Event/" + sel.outputLocation()
-                    locList += [ fullPath ]
+                locList += [ fullPath ]
                     #print "Added outputlocation %s to ExtraInfo in line %s" % (fullPath, self.name() )
             else :
                 raise AttributeError, "Storing ExtraInfo is not supported for selection of type '%s' (in line %s)" % \

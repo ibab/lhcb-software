@@ -4,6 +4,9 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2015-03-01 - Stefano Perazzini
+ - Bug fix to StrippingLine.py
+
 ! 2015-02-27 - Stefano Perazzini
  - Changed configuration of trigger filter in StrippingLine in order to cope with
    split HltDecReports for Hlt1 and Hlt2
