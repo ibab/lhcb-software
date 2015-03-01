@@ -63,12 +63,12 @@ def hltentryName    ( line, level = 'Stripping' ) :
     """ Convention: the name of 'HLTFilter' algorithm inside StrippingLine """
     return '%s%sHltFilter'   % (level,line)
 
-## Convention: the name of 'HLTFilter' algorithm inside StrippingLine
+## Convention: the name of 'HLT1Filter' algorithm inside StrippingLine
 def hlt1entryName    ( line, level = 'Stripping' ) :
     """ Convention: the name of 'HLT1Filter' algorithm inside StrippingLine """
     return '%s%sHlt1Filter'   % (level,line)
 
-## Convention: the name of 'HLTFilter' algorithm inside StrippingLine
+## Convention: the name of 'HLT2Filter' algorithm inside StrippingLine
 def hlt2entryName    ( line, level = 'Stripping' ) :
     """ Convention: the name of 'HLT2Filter' algorithm inside StrippingLine """
     return '%s%sHlt2Filter'   % (level,line)
@@ -80,7 +80,7 @@ def decisionName   ( line, level = 'Stripping'  ) :
 _protected_ = ( 'IgnoreFilterPassed' , 'Members' , 'ModeOR', 'DecisionName', 'Prescale','Postscale','Filter1' )
 
 # Own slots of StrippingLine
-_myslots_   = ( 'name' , 'prescale'  , 'postscale' , 'ODIN', 'L0DU', 'HLT' , 'algos' )
+_myslots_   = ( 'name' , 'prescale'  , 'postscale' , 'ODIN', 'L0DU', 'HLT' , 'HLT1', 'HLT2', 'algos' )
 
 
 _stripping_lines__ = []
@@ -707,6 +707,8 @@ class StrippingLine(object):
         __ODIN       = deepcopy ( args.get ( 'ODIN'      , self._ODIN      ) )
         __L0DU       = deepcopy ( args.get ( 'L0DU'      , self._L0DU      ) )
         __HLT        = deepcopy ( args.get ( 'HLT'       , self._HLT       ) )
+        __HLT1       = deepcopy ( args.get ( 'HLT1'      , self._HLT1      ) )
+        __HLT2       = deepcopy ( args.get ( 'HLT2'      , self._HLT2      ) )
         __FILTER     = deepcopy ( args.get ( 'FILTER'    , self._FILTER    ) )
         __checkPV    = deepcopy ( args.get ( 'checkPV'   , self._checkPV   ) )
         __postscale  = deepcopy ( args.get ( 'postscale' , self._postscale ) )
@@ -732,6 +734,8 @@ class StrippingLine(object):
                                ODIN      = __ODIN       ,
                                L0DU      = __L0DU       ,
                                HLT       = __HLT        ,
+                               HLT1      = __HLT1       ,
+                               HLT2      = __HLT2       ,
                                FILTER    = __FILTER     ,
                                checkPV   = __checkPV    ,
                                postscale = __postscale  ,
