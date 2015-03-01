@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-03-01 - Manuel Tobias Schiller
+ - FastRoots: the code is safe on big endian machines (verified on powerpc),
+   so reenable the code for big endian machines
+
 ! 2015-02-26 - Manuel Tobias Schiller
  - FastRoots: add protection if this code is ever compiled on big endian
    machines (produces an #error)

@@ -17,9 +17,9 @@
 #include <algorithm>
 
 #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-// all okay, code will work
+// all okay, code will work (tested on x86_64/linux)
 #elif __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-#error "Code will likely not work for big endian machines without modification."
+// all okay, code will work (tested on powerpc/linux)
 #else
 #error "Unknown endianness, please define __LITTLE_ENDIAN__ or __BIG_ENDIAN__."
 #endif
