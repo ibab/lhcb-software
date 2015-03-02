@@ -53,18 +53,18 @@ int testAmps(){
        << "\n I am now making a SpinFactor"
        << endl;
 
-  Amplitude amp0(dt2, &eventList);
+  Amplitude amp0(dt2);
 
-  ISpinFactor* sf2 = SpinFactorMaker(dt2, &amp0);
+  ISpinFactor* sf2 = SpinFactorMaker(dt2);
   cout << " Made SpinFactor. This is normally done"
        << " automatically by the Amplitude Class."
        << endl;
   cout << "\n\n====================================\n" << endl;
   cout << " Finding Amplitudes (with SpinFactors) for Trees\n" << endl;
   cout << "Now I'm going to make an Amplitude for each tree." << endl;
-  Amplitude amp(dt1, &eventList);
+  Amplitude amp(dt1);
   cout << " amp 1:\n" << amp << endl;
-  Amplitude amp2(dt2, &eventList);
+  Amplitude amp2(dt2);
   cout << " amp 2:\n" << amp2 << endl;
   cout << "\n\n====================================\n" << endl;
 
@@ -72,43 +72,27 @@ int testAmps(){
   cout << "\nThese are the events I generated, and"
        << "\n what the Amplitude class makes of them" <<endl;
 
-  eventList.Start();
-  int counter=0;
-  do{
-    cout << " ----- Event number " << counter << "------" << endl;
-    if(0 != sf2){
-      cout << "spin factor sf2 (from amplitude amp2)" 
-	   << amp2.spinFactor()->getVal() << endl;
+  cout << "going to loop over " << eventList.size() << " events" << endl;
+  for(unsigned int i=0; i < eventList.size(); i++){
+    cout << " ----- Event number " << i << "------" << endl;
+    DalitzEvent& evt(eventList[i]);
+    if(0 != amp2.spinFactor()){
+      cout << "spin factor of amplitude 2" 
+	   << amp2.spinFactor()->getVal(evt) << endl;
     }
+    if(0 != sf2){
+      cout << "spin factor sf2" << endl;
+      cout << sf2->getVal(evt) << endl;
+    }
+    
     cout << " phase space: (from event) "
-	 << eventList.currentEvent()->phaseSpace() 
+	 << evt.phaseSpace() 
 	 << endl;
-    cout << "ask the amplitude amp1 to print the event" <<endl;
-    amp.getEvent()->print();
     cout << " evaluating amp2: "
-	 << " amp2.getVal() = " << amp2.getVal() << endl;
+	 << " amp2.getVal() = " << amp2.getVal(evt) << endl;
     cout << "\n\n\n" << endl;
-    if(eventList.currentEvent()->phaseSpace() > 5.e-18){
-      eventList.Delete(); // this is to check that delete doesn't destroy
-    }                     // loop-pointers etc.
-    counter++;
-  }while(eventList.Next());
-  cout << "\n\n=============================\n\n" << endl;
-  cout << "Printed all events, and also deleted a few to make"
-       << " sure that Delete() works without upsetting"
-       << " the loop. Check what's left:"
-       << endl;
-  cout << "\n\n Loop  again: " << endl;
-  counter=0;
-  eventList.Start();
-  while(eventList.Next()){
-    cout << " ----- Event number " << counter << "------" << endl;
-    cout << counter++ << ") " 
-	 << eventList.currentEvent()->phaseSpace() 
-	 << endl;
-    cout << "amp to print event:" << endl;
-    amp.getEvent()->print();
   }
+  cout << "\n\n=============================\n\n" << endl;
 
   return 0;
 }

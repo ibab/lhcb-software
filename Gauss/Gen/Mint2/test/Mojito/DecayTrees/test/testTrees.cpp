@@ -49,9 +49,9 @@ int testTrees(){
   eventList.generatePhaseSpaceEvents(Nevents, pdg);
   cout << "eventList.size() " << eventList.size() << endl;
 
-  AssociatingDecayTree a1(dt1, &eventList);
+  AssociatingDecayTree a1(dt1);
   
-  cout << "The associated decay tree is\n" << a1.getTree() << endl;
+  cout << "The associated decay tree is\n" << a1.getTree(pdg) << endl;
 
   cout << "Tree 1, once more\n" << dt1 << endl;
   cout << "Tree1, but as a one-liner" << endl;

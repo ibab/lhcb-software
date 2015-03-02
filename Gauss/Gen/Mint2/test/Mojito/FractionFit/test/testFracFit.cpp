@@ -44,7 +44,7 @@ int testFracFit(){
   FitAmpSum Amps(pat);
   cout << " making AmpsBar" << endl;
   
-  SignalGenerator sg(&Amps);
+  SignalGenerator sg(pat);
   sg.setWeighted();
   //    SignalGenerator sgbar(AmpsBar.get());
   NamedParameter<double> IntegPrecision("IntegPrecision", 1.e-3);

@@ -16,7 +16,7 @@ int testEff4piSymmetric(){
   evtList.generatePhaseSpaceEvents(100, pat);
 
 
-  Eff4piSymmetric eps(5, GeV*GeV, &evtList, 0);
+  Eff4piSymmetric eps(5, pat, 0);
 
   cout << eps << endl;
 
@@ -31,10 +31,8 @@ int testEff4piSymmetric(){
        << endl;
 
   cout << "now for real Dalitz events:" << endl;
-  int counter=0;
-  evtList.Start();
-  while(evtList.Next()){
-    cout << " " << ++counter << ": " << eps.getVal() << endl;
+  for(unsigned int i = 0; i < evtList.size(); i++){
+    cout << " " << i << ": " << eps.getVal(evtList[i]) << endl;
   }
 
   return 0;

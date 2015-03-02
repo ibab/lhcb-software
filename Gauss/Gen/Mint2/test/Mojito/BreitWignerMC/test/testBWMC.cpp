@@ -35,17 +35,17 @@ class AmpsPdf
 protected:
   FitAmpSum _amps;
 public:
-  double un_normalised(){
-    complex<double> cval = _amps.getVal();
+  double un_normalised_noPs(IDalitzEvent& evt){
+    complex<double> cval = _amps.getVal(evt);
     return cval.real()*cval.real() + cval.imag()*cval.imag();
   }
 
-  AmpsPdf(IDalitzEventAccess* events=0) 
-    : DalitzPdfBase(events) 
+  AmpsPdf(const DalitzEventPattern& pat) 
+    : DalitzPdfBase() 
       // WARNING: this is out of date. 
       // Use DalitzPdfBaseFastInteg for 
       // faster and more accurate integration.
-    , _amps((IDalitzEventAccess*)this)
+    , _amps(pat)
   {
   }
   

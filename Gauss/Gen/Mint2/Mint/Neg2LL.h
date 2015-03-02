@@ -6,6 +6,7 @@
 #include "Mint/Minimisable.h"
 #include "Mint/IPdf.h"
 #include "Mint/IEventList.h"
+#include "Mint/IWeightedEvent.h"
 #include "Mint/counted_ptr.h"
 
 #include <iostream>
@@ -32,7 +33,9 @@
 
    Neg2LL fcnP(BpPdf, BpEventList);
 
-  It will take any PDF and Eventlist, as described above.
+  It will take any PDF and Eventlist, with the restrictions described above.
+  This is a bit friendlier than old MINT Neg2LL, which required that you specify
+  template arguments as in Neg2LL<EVENT_TYPE> fcnP(...)
 
  */
 
@@ -49,12 +52,13 @@ namespace MINT{
   protected:
     //IPdf<EVENT_TYPE>* _pdf;
     //IEventList<EVENT_TYPE>* _eventList;
-    PDF_TYPE & _pdf;
+    PDF_TYPE       & _pdf;
     EVENTLIST_TYPE & _eventList;
     
     // Putting the constructors into "protected" means that nobody can 
     // use this class except for Neg2LL. That's the idea. Use Neg2LL,
     // not this, this is just a helper class.
+
 
   Neg2LLClass( PDF_TYPE & pdf // IPdf<EVENT_TYPE>* pdf
 	       , EVENTLIST_TYPE & erptr // IEventList<EVENT_TYPE>* erptr
@@ -107,22 +111,22 @@ namespace MINT{
 	std::cout << "Neg2LLClass: I got initialised with an event list with "
 		  << _eventList.size() << " events." << std::endl;
 	std::cout << "Neg2LLClass: with pointer: " << &_eventList << std::endl;
-	if(_eventList.size() > 0){
-	  std::cout << "The first one is:\n"
-		    << _eventList[0]
-		    << std::endl;
-	}
+	//if(_eventList.size() > 0){
+	// std::cout << "The first one is:\n"
+	//	    << _eventList[0]
+	//	    << std::endl;
+	//}
       }
       return true;
     }
     
     virtual double logPdf(unsigned int evtNumber){
       bool dbThis=false;
-      if(dbThis) {
-	std::cout << "about to call _pdf.getVal() " 
-		  << "for event:\n " << _eventList[evtNumber]
-		  << std::endl;
-      }
+      //if(dbThis) {
+      //std::cout << "about to call _pdf.getVal() " 
+      //<< "for event:\n " << _eventList[evtNumber]
+      //<< std::endl;
+      //}
       double valPdf = _pdf.getVal(_eventList[evtNumber]);
       if(dbThis) std::cout << " that worked! the value is " 
 			   << valPdf << std::endl;
@@ -135,6 +139,15 @@ namespace MINT{
       }
       return log(valPdf);
     }
+
+    virtual double eventWeight(unsigned int evtNumber){
+      return MINT::getWeight(_eventList[evtNumber]);
+      // trick: this is a template that will return one
+      // for all event types, but evt.getWeight in case 
+      // the event inherits from IWeightedEvent.
+      // This template is included in IWeightedEvent.h
+    }
+
     virtual double getVal(){
       _NCalls ++;
       bool verbose=false;
@@ -160,12 +173,12 @@ namespace MINT{
       double sumsquareweights=0.0;
       
       for(counter=0; counter < _eventList.size(); ++counter){
-          //EVENT_TYPE & evt( (*_eventList)[counter] );
-          // sum += logPdf((*_eventList)[counter]);
-          double weight = _eventList[counter].getWeight();
-          sum += weight*logPdf(counter);
-          sumweights+=weight;
-          sumsquareweights+=weight*weight;
+	//EVENT_TYPE & evt( (*_eventList)[counter] );
+	// sum += logPdf((*_eventList)[counter]);
+	double weight     = eventWeight(counter);
+	sum              += weight*logPdf(counter);
+	sumweights       += weight;
+	sumsquareweights += weight*weight;
       }
       
       if(printout){

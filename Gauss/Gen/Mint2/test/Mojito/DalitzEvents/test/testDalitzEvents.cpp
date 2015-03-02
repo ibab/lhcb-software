@@ -29,42 +29,17 @@ int testDalitzEvents(){
     cout << "phase space: " << it->phaseSpace() << endl;
   }
 
-  eventList.Start();
-  cout << "eventList.Start() worked " << endl;
-  int counter=0;
-  while(eventList.Next()){
-    cout << counter++ << ") ";
-    IDalitzEvent* ptr = eventList.currentEvent();
+  for(unsigned int i = 0; i < eventList.size(); i++){
+    cout << i << ") ";
+    IDalitzEvent* ptr = &(eventList[i]);
     if(0 == ptr){
       cout << " ptr is zero !!" << endl;
     }else{
       cout << " ptr is OK." << endl;
     }
     cout << " phase space: "
-	 << eventList.currentEvent()->phaseSpace();
+	 << eventList[i].phaseSpace();
 
-    cout << " (will delete now if phase space > 6.e-18)" << endl;
-    if(eventList.currentEvent()->phaseSpace() > 6.e-18){
-      eventList.Delete();
-    }
-    cout << endl;
-  }
-
-  cout << "\n\n and again, after removing events with"
-       << " a phase-space factor > 6.e-18" << endl;
-  counter=0;
-  eventList.Start();
-  while(eventList.Next()){
-    cout << counter++ << ") ";
-    IDalitzEvent* ptr = eventList.currentEvent();
-    if(0 == ptr){
-      cout << " ptr is zero !!" << endl;
-    }else{
-      cout << " ptr is OK." << endl;
-    }
-    cout << " phase space: "
-	 << eventList.currentEvent()->phaseSpace()
-	 << endl;
     cout << endl;
   }
 
@@ -109,7 +84,7 @@ int testDalitzEvents(){
       i++){
     cout << "evt " << i << "  original:     " << eventList[i] << endl;
     cout << "evt " << i << ", the copy:     " << readBackList[i] << endl;
-    cout << "evt " << i << ", the 2nd copy: " << ntpList(i) << endl;
+    cout << "evt " << i << ", the 2nd copy: " << ntpList.getEvent(i) << endl;
     //    cout << "evt " << i << ", the 3rd copy: " << ntpList2(i) << endl;
     cout << " ---------------------------------- "
 	 << endl;
@@ -118,8 +93,8 @@ int testDalitzEvents(){
   cout << "now testing autosave by adding many, many events to newNtpList" 
        << endl;
   DiskResidentEventList newNtpList(pdg, "funnyFileName.root");
-  int N = 1000000000;
-  //int N=100000;
+  //int N = 1000000000;
+  int N=100000;
   //int N=10;
   for(int i=1; i <= N; i++){
     if(i < 5 || 0 == i%10000){

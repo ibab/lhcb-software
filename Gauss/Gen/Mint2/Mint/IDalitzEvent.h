@@ -6,13 +6,14 @@
 #include "TLorentzVector.h"
 #include "TVector3.h"
 
+#include "Mint/IWeightedEvent.h"
 #include "Mint/DalitzEventPattern.h"
 
 #include <vector>
 #include <iostream>
 #include <complex>
 
-class IDalitzEvent{
+class IDalitzEvent : public virtual MINT::IWeightedEvent{
  protected:
   IDalitzEvent(){}
  public:

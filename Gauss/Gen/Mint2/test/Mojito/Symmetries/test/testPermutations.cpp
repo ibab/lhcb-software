@@ -67,17 +67,15 @@ int testPermutations(){
   cout << "Got " << eventList.size() << " events" << endl;
 
   cout << "Now I'm going to make an Amplitude for the tree." << endl;
-  Amplitude amp(dt1, &eventList);
+  Amplitude amp(dt1);
 
-  eventList.Start();
-  int counter=0;
-  while(eventList.Next()){
-    cout << " ----- Event number " << counter << "------" << endl;
-
+  for(unsigned int i=0; i < eventList.size(); i++){
+    cout << " ----- Event number " << i << "------" << endl;
+    
     cout << "ask the amplitude amp to print the event" <<endl;
-    amp.getEvent()->print();
+    eventList[i].print();
     cout << " evaluating amp: "
-	 << " amp.getVal() = " << amp.getVal() << endl;
+	 << " amp.getVal() = " << amp.getVal(eventList[i]) << endl;
     cout << "\n\n\n" << endl;
   }
 

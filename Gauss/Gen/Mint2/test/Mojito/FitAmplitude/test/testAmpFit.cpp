@@ -35,14 +35,7 @@ class TimePdf : public PdfBase<double>{
   FitParameter tau;
 public:
   TimePdf() : tau("tau"){}
-  double getVal(){
-    double* evtPtr = getEvent();
-    if(! evtPtr){
-      cout << "timePdf: Can't get event!!"
-	   << endl;
-      return -9999;
-    }
-    double t = *(evtPtr);
+  double getVal(double& t){
     return exp(-t/tau)/tau;
   }
 };
@@ -60,7 +53,7 @@ int toyFit(){
 
   TimePdf myTimePdf;
 
-  Neg2LL<double> fcn(&myTimePdf, &times);
+  Neg2LL fcn(myTimePdf, times);
 
   Minimiser mini(&fcn);
   mini.doFit();
@@ -107,7 +100,6 @@ int testFitAmplitude(){
 
   DalitzEventList eventList;
   eventList.generatePhaseSpaceEvents(Nevents, pdg);
-  eventList.Start();
 
   //  DalitzEvent* fullEvent = (DalitzEvent*) eventList.currentEvent();
   DalitzEvent fullEvent(pdg, (TRandom*)0);
@@ -115,11 +107,11 @@ int testFitAmplitude(){
   //  double GeV2 = GeV*GeV;
   //  int bins = 100;
 
-  FitAmplitude fa("D0->phi(1020)0(->K+,K-),rho(770)0(->pi+,pi-)"
-		  , &eventList);
+  FitAmplitude fa("D0->phi(1020)0(->K+,K-),rho(770)0(->pi+,pi-)");
+
   cout << fa << endl;
 
-  FitAmpSum fas(&eventList);
+  FitAmpSum fas(pdg);
 
   std::vector<int> sijIndices;
   sijIndices.push_back(1);
@@ -145,41 +137,23 @@ int testFitAmplitude(){
   cout << " generated a lot of events, now am about to throw them away"
        << endl;
 
-  bool throwAway=false;
-  if(throwAway){
-    eventList.throwAwayData(&fas);
-    cout << " making all plots: " << endl;
-    PlotSet ps= eventList.makeAllPlots("all_sum");
-    ps.save("plotList.root");
-   }else{
-     fas.setDoGauss();
-     PlotSet psG= eventList.makeAllPlots("gauss_sum", &fas);
-     psG.save("plotListGauss.root");
-     fas.unsetDoGauss();
-     PlotSet ps= eventList.makeAllPlots("all_sum", &fas);
-     ps.save("plotList.root");
-   }
+  PlotSet ps= eventList.makeAllPlots("all_sum", &fas);
+  ps.save("plotList.root");
+
   cout << "made all plots " << endl;
 
-  int counter=0;
-  eventList.Start();
-
-  while(eventList.Next()){
-    double a = fa.Prob();
-    double as = fas.Prob();
-    if(counter < 20 || 0 == counter%(Nevents/10)){
-      cout << counter << ") " 
-	   << eventList.currentEvent()->phaseSpace() 
+  for(unsigned int i=0; i < eventList.size(); i++){
+    double a = fa.Prob(eventList[i]);
+    double as = fas.Prob(eventList[i]);
+    if(i < 20 || 0 == i%(Nevents/10)){
+      cout << i << ") " 
+	   << eventList[i].phaseSpace() 
 	   << endl;
-      fa.getEvent()->print();
+      eventList[i].print();
       cout << " fa.getVal() = " << a << endl;
       cout << " fas.getVal() = " << as << endl;
       cout << endl;
     }
-    if(eventList.currentEvent()->phaseSpace() < 1.e10){
-      //      eventList.Delete();
-    }
-    counter++;
   }
 
   eventList.save();

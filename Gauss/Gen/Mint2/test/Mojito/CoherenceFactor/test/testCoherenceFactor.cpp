@@ -27,7 +27,7 @@ int coherenceFactor(){
   
   FitAmpSum Amps(pat);
   FitAmpSum AmpsBar(patBar);
-  if(pat.selfConjugateFS())AmpsBar = Amps.GetCPConjugateSameFitParameters();
+  if(pat.selfConjugateFS())AmpsBar = *(Amps.GetCPConjugateSameFitParameters());
   //FitAmpSum AmpsBar(Amps.GetCPConjugateSameFitParameters());
 
   cout << " I made the amplitudes. Now comes the coherence factor"

@@ -34,14 +34,14 @@ class AmpsPdf
 protected:
   FitAmpSum _amps;
 public:
-  double un_normalised(){
-    complex<double> cval = _amps.getVal();
+  double un_normalised_noPs(IDalitzEvent& evt){
+    complex<double> cval = _amps.getVal(evt);
     return cval.real()*cval.real() + cval.imag()*cval.imag();
   }
 
-  AmpsPdf(IDalitzEventAccess* events=0) 
-    : DalitzPdfBase(events)
-    , _amps(this)
+  AmpsPdf(const DalitzEventPattern& pat) 
+    : DalitzPdfBase()
+    , _amps(pat)
   {
   }
   
@@ -155,7 +155,7 @@ int testBoxGeneration(){
   eventList.generatePhaseSpaceEvents(1, pdg);
 
   //  AmpsPdf amps(&eventList);
-  AmpsPdf amps;
+  AmpsPdf amps(pdg);
 
   DalitzBox phaseSpaceBox(pdg, &amps);
   cout << " made box " << endl;
@@ -167,7 +167,7 @@ int testBoxGeneration(){
   singleBoxPlots.save("singleBoxPlots.root");
   */
 
-  FitAmpSum Amps(&eventList);
+  FitAmpSum Amps(pdg);
   
   double nSigma = 3;
   //  double maxWidth = 2*  2*1*GeV * (nSigma*75)*MeV; // in m^2
@@ -176,7 +176,7 @@ int testBoxGeneration(){
   // nSigma * 75 MeV for a particle of 1GeV mass.
   //  DalitzBoxSet_Method2 boxes(Amps.makeBoxes(nSigma).split(2).splitIfWiderThan(maxWidth), pdg);
   //DalitzBoxSet_Method2 boxes(Amps.makeBoxes(nSigma).splitIfWiderThan(maxWidth), pdg);
-  DalitzBoxSet_Method2 boxes(Amps.makeBoxes(nSigma), pdg);
+  DalitzBoxSet_Method2 boxes(Amps.makeBoxes(pdg), pdg);
 
   cout << " made " << boxes.size() << " boxes " << endl;
 

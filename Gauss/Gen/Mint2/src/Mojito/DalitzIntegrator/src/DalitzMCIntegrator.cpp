@@ -3,12 +3,14 @@
 #include "Mint/DalitzMCIntegrator.h"
 
 #include "TRandom.h"
+#include "Mint/IWeightedEvent.h"
 
 #include <iostream>
 #include <ctime>
 
 using namespace std;
 using namespace MINT;
+
 
 /*
   Warning: This piece of code is much slower and less accurate than

@@ -40,12 +40,8 @@ int ampRatiosTest(){
   NamedParameter<int> EventPattern("Event Pattern", 421, -321, 211, 211, -211);
   DalitzEventPattern pdg(EventPattern.getVector());
 
-  DalitzEventList eventList;
-  cout << "now about ot generate " << 5 << " events" << endl;
-  eventList.generatePhaseSpaceEvents(5, pdg);
-  eventList.Start();
 
-  FitAmpSum amps(&eventList);
+  FitAmpSum amps(pdg);
   // IMPORTANT: figure out why amps(pdg) leads to crash in AmpRatios
 
   AmpRatios rats(pdg);

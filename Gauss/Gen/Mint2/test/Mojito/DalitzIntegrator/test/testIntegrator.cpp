@@ -28,20 +28,20 @@ int testIntegrator(){
   DalitzEventList eventList;
   cout << "now about ot generate " << Nevents << " events" << endl;
   eventList.generatePhaseSpaceEvents(Nevents, pdg);
-  eventList.Start();
 
-  FitAmpSum fas(&eventList);
+  FitAmpSum fas(pdg);
 
   DalitzMCIntegrator integrator(pdg, &fas);
 
   double integral = integrator.getVal();
 
   double sum=0;
-  eventList.Start();
-  while(eventList.Next()){
-    sum += fas.RealVal();
+  for(unsigned int i=0; i < eventList.size(); i++){
+    sum += fas.RealVal(eventList[i]);
   }
-  cout << " sum/(Nevents * integral ) = " << sum/(Nevents * integral ) << endl;
+  cout << " sum/(Nevents * integral) = " 
+       << sum << " /( " << Nevents << " * " << integral << " ) = "
+       << sum/(Nevents * integral) << endl;
   
   return 0;
 }

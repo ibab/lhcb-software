@@ -45,10 +45,10 @@ int compareDefaultWithCLEO2012(){
   FitAmpSum Amps(pat, "", "NoCLEO2012");
   FitAmpSum CLEO2012_Amps(pat, "", "OnlyCLEO2012");
   
-  SignalGenerator sg(&Amps);
+  SignalGenerator sg(pat, &Amps);
   sg.setWeighted();
 
-  SignalGenerator CLEO2012_sg(&CLEO2012_Amps);
+  SignalGenerator CLEO2012_sg(pat, &CLEO2012_Amps);
   CLEO2012_sg.setWeighted();
 
   NamedParameter<double> IntegPrecision("IntegPrecision", 1.e-3);

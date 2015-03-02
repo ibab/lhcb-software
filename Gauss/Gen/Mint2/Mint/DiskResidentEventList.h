@@ -84,7 +84,7 @@ class DiskResidentEventList : virtual public MINT::IMinimalEventList<DalitzEvent
   virtual unsigned int size() const;
   virtual bool empty() const;
 
-  //  DalitzEvent operator[](unsigned int i) const;
+  // DalitzEvent operator[](unsigned int i) const;
   DalitzEvent getEvent(unsigned int i) const;
 
   virtual bool Add(const DalitzEvent& evt);

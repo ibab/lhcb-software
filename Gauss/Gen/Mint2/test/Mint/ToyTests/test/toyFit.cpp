@@ -96,7 +96,7 @@ int toyFit(){
   //TwoGaussPdf my2GaussPdf;
   TwoGaussPdf2 my2GaussPdf;
 
-  Neg2LL<evt> fcn(&my2GaussPdf, &xvalues);
+  Neg2LL fcn(my2GaussPdf, xvalues);
 
   Minimiser mini(&fcn);
   mini.doFit();
