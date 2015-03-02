@@ -23,6 +23,7 @@
 #include "stdio.h"
 #include "time.h"
 #include "pthread.h"
+#include "dic.hxx"
 
 // Forward declarations
 class IIncidentSvc;
@@ -90,7 +91,20 @@ namespace FileWriter
 namespace LHCb
 {
   class MEPManager;
-
+  class SteeringInfo : DimInfo
+  {
+    public:
+      int *m_variable;
+      SteeringInfo(std::string nam, int &var) :DimInfo(nam.c_str(),-1)
+      {
+        m_variable = &var;
+      }
+      void infoHandler()
+      {
+        *m_variable = getInt();
+        return;
+      }
+  };
   class FileWriterSvc: public OnlineService,
       virtual public IRunable,
       virtual public IIncidentListener
@@ -149,6 +163,7 @@ namespace LHCb
     ///File Prefix String. Filename wil be m_FilePrefix + Runnumber + _Sequence+.MEP
     std::string m_FilePrefixEvt;
     ///Limit on the filesize in MB=1024*1024 Bytes
+    std::string m_PartitionName;
     long m_maxevts;
     long m_numev;
     long m_numwr;
@@ -161,6 +176,7 @@ namespace LHCb
     int m_FileCloseDelay;
     int m_DIMSteering;
   public:
+    SteeringInfo *m_SteeringSvc;
     /// Standard Constructor
     FileWriterSvc(const std::string& name, ISvcLocator* svc);
     /// Standard Destructor
@@ -172,6 +188,10 @@ namespace LHCb
     void handle(const Incident& inc);
     /// Service overload: initialize()
     virtual StatusCode initialize();
+    /// Service overload: start()
+    virtual StatusCode start();
+    /// Service overload: stop()
+    virtual StatusCode stop();
     /// Service overload: finalize()
     virtual StatusCode finalize();
     /// Process events
@@ -203,6 +223,7 @@ namespace LHCb
     std::list<FileWriter::FileDescr*> m_FileCloseList;
     bool m_texit;
     pthread_t m_tid;
+    int m_Steeringdata;
   };
 } // End namespace LHCb
 #endif //  GAUDIONLINE_FILEWRITERSVC_H

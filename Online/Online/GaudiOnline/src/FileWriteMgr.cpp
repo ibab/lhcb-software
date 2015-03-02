@@ -176,8 +176,8 @@ StatusCode FileWriteMgr::initialize()
     string nam;
     IService *is;
 //    is = *it;
-    nam = is->name();
-    toLowerCase(nam);
+//    nam = is->name();
+//    toLowerCase(nam);
     sc = service(m_FileWriters[i],is,true);
     if (sc.isSuccess())
     {

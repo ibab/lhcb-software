@@ -76,7 +76,7 @@ extern "C"
 // Standard Constructor
 FileWriterSvc::FileWriterSvc(const string& nam, ISvcLocator* svc) :
   OnlineService(nam, svc), /*m_mepMgr(0), *//*m_consumer(0),*/
-      m_receiveEvts(false), m_RunNumber(0),m_FileDesc(0)
+      m_receiveEvts(false), m_RunNumber(0),m_FileDesc(0),m_SteeringSvc(0)
 {
   m_mepIn =  m_mepOut = m_minAlloc = m_EvIn = m_EvOut= 0;
 //  declareProperty("Input", m_input="None");
@@ -91,6 +91,7 @@ FileWriterSvc::FileWriterSvc(const string& nam, ISvcLocator* svc) :
   declareProperty("MaxEvents",m_maxevts=-1);
   declareProperty("EventFraction",m_evfrac=1.0);
   declareProperty("DIMSteering",m_DIMSteering = 0);
+  declareProperty("PartitionName",m_PartitionName="LHCb");
   m_RunList.clear();
   m_texit = false;
   m_numev = 0;
@@ -119,7 +120,7 @@ StatusCode FileWriterSvc::queryInterface(const InterfaceID& riid,
 }
 
 /// Incident handler implemenentation: Inform that a new incident has occured
-void FileWriterSvc::handle(const Incident& inc)
+void FileWriterSvc::handle(const Incident& )
 {
 //  MsgStream log(msgSvc(), name());
 //  log << MSG::INFO << "Got incident:" << inc.source() << " of type "
@@ -190,7 +191,29 @@ StatusCode FileWriterSvc::initialize()
   }
   return error("Failed to initialize service base class.");
 }
-
+StatusCode FileWriterSvc::start()
+{
+  OnlineService::start();
+  if (m_DIMSteering != 0)
+  {
+    if (m_SteeringSvc != 0)
+    {
+      std::string svcnam;
+      svcnam = m_PartitionName+"/"+name();
+      m_SteeringSvc = new SteeringInfo(svcnam,m_Steeringdata);
+    }
+  }
+  return StatusCode::SUCCESS;
+}
+StatusCode FileWriterSvc::stop()
+{
+  if (m_SteeringSvc != 0)
+  {
+    delete m_SteeringSvc;
+  }
+  OnlineService::stop();
+  return StatusCode::SUCCESS;
+}
 StatusCode FileWriterSvc::finalize()
 {
 //  if (m_consumer)
@@ -228,6 +251,13 @@ bool FileWriterSvc::matchRequirements(const EventDesc &e)
 }
 StatusCode FileWriterSvc::run(const EventDesc& e, unsigned int runnr)
 {
+  if (this->m_DIMSteering !=0)
+  {
+    if (this->m_Steeringdata == 0)
+    {
+      return StatusCode::SUCCESS;
+    }
+  }
 //  ulonglong prtCount = fabs(m_freq) > 1. / ULONGLONG_MAX ? ulonglong(1.0/ m_freq) : ULONGLONG_MAX;
   m_receiveEvts = true;
   {
