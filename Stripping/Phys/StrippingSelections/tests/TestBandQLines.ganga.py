@@ -34,8 +34,8 @@ DaVinci().EvtMax = 1000
 
 t.backend = Local()
 fpj = 1
-t.splitter = SplitByFiles(maxFiles = 7*fpj, filesPerJob = fpj)
-t.outputfiles = [SandboxFile('*.dst'), SandboxFile('*.mdst')]
+t.splitter = SplitByFiles(maxFiles = 1*fpj, filesPerJob = fpj)
+t.outputfiles = [LocalFile('*.dst'), LocalFile('*.mdst')]
 
 t.inputdata = LHCbDataset()
 t.inputdata.files = [

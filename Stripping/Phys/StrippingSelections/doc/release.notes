@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-03-02 - Lucio Anderlini
+ - Several syntax errors in StrippingPIDCalib were fixed
+
+! 2015-03-02 - Lucio Anderlini
  - Drafted StrippingPIDCalib for single-vertex PIDCalib samples
 
 !========================= StrippingSelections v3r39 2014-12-14 =========================

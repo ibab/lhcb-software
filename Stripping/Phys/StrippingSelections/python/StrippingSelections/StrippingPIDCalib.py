@@ -48,7 +48,7 @@ default_config = {
             'mu+' : "(ISLONG) & (P>3*GeV) & (PT>800*MeV) & (MIPCHI2DV(PRIMARY)>10) & (TRCHI2DOF<3)"
           }
         , 'TagAndProbeCut'     :
-            "(ACHILD(ISMUON, #tag)) & (ACHILD(P, #tag) > 6*GeV) & (ACHILD(PT, #tag) > 1.5*GeV) & (ACHILD(MIPCHI2DV(PRIMARY), #tag) > 25)"
+            "(ACHILD(PIDmu, #tag) > 0) & (ACHILD(P, #tag) > 6*GeV) & (ACHILD(PT, #tag) > 1.5*GeV) & (ACHILD(MIPCHI2DV(PRIMARY), #tag) > 25)"
         , 'CombinationCut'     :
             "(in_range(3096-200, AM, 3096+200)) & (ACHI2DOCA(1,2) < 10)"
         , 'MotherCut'          :
@@ -67,8 +67,8 @@ default_config = {
             'K+'  : "(MIPCHI2DV(PRIMARY)>25)"
           }
         , 'TagAndProbeCut'     :
-            "(ACHILD(ISMUON, #tag)) & (ACHILD(P, #tag) > 6*GeV) & (ACHILD(PT, #tag) > 1.5*GeV) & (ACHILD(MIPCHI2DV(PRIMARY), #tag) > 25)"
-        , 'CombinationCut12'   :
+            "(ACHILD(PIDmu, #tag) > 0) & (ACHILD(P, #tag) > 6*GeV) & (ACHILD(PT, #tag) > 1.5*GeV) & (ACHILD(MIPCHI2DV(PRIMARY), #tag) > 25)"
+        , 'Combination12Cut'   :
             "(in_range(3096-200, AM, 3096+200)) & (ACHI2DOCA(1,2) < 10)"
         , 'CombinationCut'     :
             "(in_range(5279-100, AM, 5279+100)) & (ACHI2DOCA(1,3) < 10) & (ACHI2DOCA(2,3) < 10)"
@@ -92,9 +92,9 @@ default_config = {
         , 'MotherCut'          : (
             "   ( ADMASS ( 'Lambda0') < 25 ) " + 
             " & ( in_range ( 0 , VFASPF ( VCHI2 ) , 16 ) )" + 
-            " & ( VFASPF ( VZ ) < 2200 ) " + 
-            " & ( in_range ( 0 , BPVLTFITCHI2() , 49 ) )" + 
-            " & ( CTAU >  5  ) " + 
+            " & ( VFASPF ( VZ ) < 2200 ) "  +
+#            " & ( in_range ( 0 , BPVLTFITCHI2() , 49 ) )" + 
+            " & ( BPVDLS > 100  ) " +
             " & ( ADWM( 'KS0' , WM( 'pi+' , 'pi-') ) > 20 )"
           )
       },
@@ -118,7 +118,7 @@ default_config = {
             'e+' : "(BPVIPCHI2()> 9.0) & ( P > 3*GeV ) & ( PT > 500*MeV )"
           }
         , 'TagAndProbeCut'     :
-            "(ACHILD(PIDe, #tag) > 500*Mev) & (ACHILD(PT, #tag) > 1500) & (ACHILD(P, #tag) > 6*GeV) "
+            "(ACHILD(PIDe, #tag) > 5.0) & (ACHILD(PT, #tag) > 1500*MeV) & (ACHILD(P, #tag) > 6*GeV) "
         , 'CombinationCut'     :
             "(in_range(2100, AM, 4300)) & (ACHI2DOCA(1,2) < 18)"
         , 'MotherCut'          :
@@ -136,8 +136,8 @@ default_config = {
             'K+'  : "(BPVIPCHI2()> 9.0) & ( PT > 1.0*GeV ) & ( PIDK > 0 ) "
           }
         , 'TagAndProbeCut'     :
-            "(ACHILD(PIDe, #tag) > 500*Mev) & (ACHILD(PT, #tag) > 1500) & (ACHILD(P, #tag) > 6*GeV) "
-        , 'CombinationCut12'   :
+            "(ACHILD(PIDe, #tag) > 5.0) & (ACHILD(PT, #tag) > 1500) & (ACHILD(P, #tag) > 6*GeV) "
+        , 'Combination12Cut'   :
             "(in_range(2100, AM, 4300)) & (ACHI2DOCA(1,2) < 18)"
         , 'CombinationCut'     :
             "(in_range(5279-1200, AM, 5279+1000)) & (ACHI2DOCA(1,3) < 18) & (ACHI2DOCA(2,3) < 18)"
@@ -148,11 +148,12 @@ default_config = {
   }
 
 from Gaudi.Configuration import *
+from Configurables import CombineParticles
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays 
+from Configurables import DaVinci__N3BodyDecays 
 
 class PIDCalibLineBuilder(LineBuilder):
     
@@ -161,8 +162,8 @@ class PIDCalibLineBuilder(LineBuilder):
         'Bu2KMuMu',
         'L02ppiLowPT',
         'L02ppiHighPT', 
-        'Jpsi2eeLine',
-        'Bu2KeeLine'
+        'Jpsi2ee',
+        'Bu2Kee'
       )
 
     
@@ -179,8 +180,8 @@ class PIDCalibLineBuilder(LineBuilder):
       self.registerLine ( self.buildPIDLine ( 'Bu2KMuMu'     , bodies = 3) )
       self.registerLine ( self.buildPIDLine ( 'L02ppiLowPT'  , bodies = 2) )
       self.registerLine ( self.buildPIDLine ( 'L02ppiHighPT' , bodies = 2) )
-      self.registerLine ( self.buildPIDLine ( 'Jpsi2eeLine'  , bodies = 2) )
-      self.registerLine ( self.buildPIDLine ( 'Bu2KeeLine'   , bodies = 3) )
+      self.registerLine ( self.buildPIDLine ( 'Jpsi2ee'      , bodies = 2) )
+      self.registerLine ( self.buildPIDLine ( 'Bu2Kee'       , bodies = 3) )
 
 
 ##==============================================================================
@@ -190,13 +191,13 @@ class PIDCalibLineBuilder(LineBuilder):
 ##    tag and probe particles as defined in the configuration dictionary.
 ##    Tag and probe tracks are then swapped and the resulting cuts AND-ed.
 ##==============================================================================
-    def _buildTagProbeCut(cutPattern, indices):
+    def _buildTagProbeCut(self, cutPattern, indices):
       "service function to swap tag and probe and build the combination cut"
-      cut  = '('
+      cut  = '(('
       cut +=  cutPattern.replace('#tag',indices[0]).replace('#probe',indices[1])
-      cut += "|"
+      cut += ")|("
       cut +=  cutPattern.replace('#tag',indices[1]).replace('#probe',indices[0])
-      cut += ")"
+      cut += "))"
       return cut
 
 
@@ -212,36 +213,37 @@ class PIDCalibLineBuilder(LineBuilder):
       ## If the line inherit another line clones and updates the dictionary
       if 'CloneLine' in _config:
         _newConfig = {}
-        _newConfig.update ( config['CloneLine'] ) 
+        _newConfig.update ( self.config[_config['CloneLine']] ) 
         _newConfig.update ( _config )
         _config = _newConfig
       
       ## Selects the algorithm according to the number of bodies
       _algorithm = None
       if (bodies == 2)   :
-        _algorithm = CombineParticles(name + configRowId + 'Algorithm')
+        _algorithm = CombineParticles(self.name + configRowId + 'Algorithm')
       elif (bodies == 3) :
-        _algorithm = DaVinci__N3BodyDecays(name + configRowId + 'Line')
-        _algorithm.CombinationCut12 = _config['CombinationCut12']
+        _algorithm = DaVinci__N3BodyDecays(self.name + configRowId + 'Line')
+        _algorithm.Combination12Cut = _config['Combination12Cut']
 
       ## Prepares the tag&probe cut if needed
       _combinationCut = _config['CombinationCut']
       if 'TagAndProbeIndices' in _config:   ## Tag & Probe defined
         _id = [str(x) for x in _config['TagAndProbeIndices']]
         _combinationCut += ' & '
-        _combinationCut += _buildTagProbeCut(_config['TagAndProbeCut'], _id)
+        _combinationCut += self._buildTagProbeCut(_config['TagAndProbeCut'], _id)
 
-      _algorithm.CombinationCut = _combinationCut
-      _algorithm.DaughtersCut   = _config['DaughterCuts']
-      _algorithm.MotherCut      = _config['MotherCut']
+      _algorithm.CombinationCut  = _combinationCut
+      _algorithm.DaughtersCuts   = _config['DaughterCuts']
+      _algorithm.MotherCut       = _config['MotherCut']
+      _algorithm.DecayDescriptor = _config['DecayDescriptor']
       
       _requiredSelections = [DataOnDemand(x) for x in _config['InputTES']]
-      _selection = Selection(name + configRowId + 'Selection'
+      _selection = Selection(self.name + configRowId + 'Selection'
                               , Algorithm = _algorithm
                               , RequiredSelections = _requiredSelections
                             )
 
-      _line = StrippingLine( self.name + configRowId + 'Selection'
+      _line = StrippingLine( self.name + configRowId + 'Line'
                               , prescale = _config['Prescale']
                               , checkPV  = _config['CheckPV']
                               , algos    = [ _selection ]
