@@ -4,6 +4,7 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+!========================= DAQSys v8r7 2015-03-02 =========================
 ! 2015-03-03 - Marco Cattaneo
  - Decoders.py: set up separate configurations for the decoder of OT "normal"
    RawBanks and OTRaw and OTError "expert" banks, made necessary by the move 

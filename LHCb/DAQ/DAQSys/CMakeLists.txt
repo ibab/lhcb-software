@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DAQSys
 ################################################################################
-gaudi_subdir(DAQSys v8r6)
+gaudi_subdir(DAQSys v8r7)
 
 gaudi_depends_on_subdirs(Event/LumiEvent
 			 Calo/CaloDAQ
