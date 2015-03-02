@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-03-02 - Lucio Anderlini
+ - Drafted StrippingPIDCalib for single-vertex PIDCalib samples
+
 !========================= StrippingSelections v3r39 2014-12-14 =========================
 
 !========================= StrippingSelections v3r38 2014-11-25 =========================
