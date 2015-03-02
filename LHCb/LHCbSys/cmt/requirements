@@ -16,7 +16,7 @@ use CaloKernel            v6r5    Calo    # Olivier Deschamps
 use CaloUtils             v10r4   Calo    # Olivier Deschamps
 
 use DAQKernel             v1r1    DAQ     # Marco Cattaneo
-use DAQSys                v8r6    DAQ     # Marco Cattaneo
+use DAQSys                v8r7    DAQ     # Marco Cattaneo
 use DAQUtils              v1r13   DAQ     # Marco Cattaneo
 use MDF                   v3r40   DAQ     # Markus Frank
 use MDF_ROOT              v1r9    DAQ     # Markus Frank

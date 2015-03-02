@@ -5,12 +5,12 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v38r5>2015-02-24 LHCbSys v38r5</A></H1><PRE>
+</PRE><H1><A NAME=v38r5>2015-03-02 LHCbSys v38r5</A></H1><PRE>
 This version uses Gaudi v26r1 and LCG_74root6 with ROOT 6.02.05.
 
 - Packages added:    Kernel/VectorClass v1r16 - agner.org vectorisation libary
                      (temporary, waiting for LCG distribution)
-- Packages modified: DAQ/DAQSys v8r6, Det/DDDB v1r74, Det/DetDesc v18r36,
+- Packages modified: DAQ/DAQSys v8r7, Det/DDDB v1r74, Det/DetDesc v18r36,
     Det/FTDet v2r9, Det/Magnet v7r9, Det/OTDet v8r15, Det/RichDet v17r2,
     Event/EventPacker v4r7, Event/FTEvent v1r7, Event/MCEvent v3r2,
     GaudiConf v19r7, GaudiObjDesc v11r21, HC/HCDAQ v1r2, Hlt/HltServices v2r7,
@@ -20,8 +20,10 @@ This version uses Gaudi v26r1 and LCG_74root6 with ROOT 6.02.05.
     Phys/LoKiMC v10r16, Phys/LoKiNumbers v10r8, Rich/RichKernel v7r58,
     ST/STDAQ v4r6
 
-- In DAQ/DAQSys v8r6
+- In DAQ/DAQSys v8r6, v8r7
   . Updated TrackReports Decoder locations.
+  . Decoders.py: set up separate configurations for the decoder of OT "normal"
+    RawBanks and OTRaw and OTError "expert" banks
 
 - In Det/DDDB v1r74
   . Update default database tags to the latest ones:
