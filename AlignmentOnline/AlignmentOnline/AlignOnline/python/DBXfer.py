@@ -117,7 +117,7 @@ dbxalg.RunNumber = RunOption.RunNumber
 dbxalg.RunStartTime = RunOption.RunStartTime*1000000000
 dbxalg.OnlineXmlDir = RunOption.OutputDirectory
 wrconf = WriterConf("wconf",["Velo","IT","TT","OT"])
-wrconf.CondFilePrefix = RunOption.OutputDirectory
+wrconf.CondFilePrefix = RunOption.OutputDirectory+"/offl/Conditions"
 from Configurables import WriteMultiAlignmentConditionsTool
 xmlwriter = WriteMultiAlignmentConditionsTool()#"AlignWriterTool")
 wrconf.addXmlWriters(xmlwriter)
@@ -134,4 +134,28 @@ app.OutputLevel = INFO
 EventDataSvc(ForceLeaves = True)
 from GaudiPython.Bindings import AppMgr
 Gaudi=AppMgr()
+print "===================== Running the XML conversion ========================"
 Gaudi.run(1)
+Gaudi.stop()
+Gaudi.finalize()
+Gaudi.exit()
+print "===================== Updating the Database ========================"
+import CondDBUI
+import CondDBUI.Admin
+DBString = "sqlite_file:/home/beat/LHCBCOND_cond.db/LHCBCOND"
+db = CondDBUI.CondDB(DBString, create_new_db = True, readOnly=False)
+status = CondDBUI.Admin.MakeDBFromFiles(RunOption.OutputDirectory+"/offl", db,
+                                   includes = [], excludes = [],
+                                   verbose = True,
+                                   since = RunOption.RunStartTime*1000000000, until = None
+                                   )
+print "===================== Updated the Database ======================== Status = ",status
+
+
+
+
+
+
+
+
+
