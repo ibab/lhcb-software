@@ -4,6 +4,10 @@
 ! Purpose     : Analysis framework and configuration for offline and web GUIs
 !----------------------------------------------------------------------------
 
-!=================== VeloAnalysisFramework v1r0 2015-12-02 ==================
-! 2015-12-02 - J Harrison
+!=================== VeloAnalysisFramework v1r1 2015-03-02 ==================
+! 2015-03-02 - J Harrison / A Pearce
+  - Fixes for CMake building and C++ compilation
+
+!=================== VeloAnalysisFramework v1r0 2015-02-12 ==================
+! 2015-02-12 - J Harrison
   - v1r0 for the first release of the Lovell project
