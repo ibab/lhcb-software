@@ -4,6 +4,10 @@
 ! Purpose     : Web GUI for analysis of VELO data
 !------------------------------------------------------------------------------
 
-!========================= VeloWebGUI v1r0 2015-12-02 =========================
-! 2015-12-02 - J Harrison
+!========================= VeloWebGUI v1r1 2015-03-02 =========================
+! 2015-03-02 - J Harrison / A Pearce
+  - For Lovell v1r1
+
+!========================= VeloWebGUI v1r0 2015-02-12 =========================
+! 2015-02-12 - J Harrison
   - v1r0 for the first release of the Lovell project
