@@ -1,8 +1,6 @@
 # Each stage must specify its own inputs
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2VoidFilter
 
-linePrefix = ''
-
 # The GEC
 class TrackGEC(Hlt2VoidFilter):
     def __init__(self, name):
@@ -14,19 +12,19 @@ class TrackGEC(Hlt2VoidFilter):
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking as Hlt2LongTracking
         tracks = Hlt2LongTracking().hlt2PrepareTracks()
         code = ("CONTAINS('%s')" % tracks.outputSelection()) + " < %(NTRACK_MAX)s"
-        Hlt2VoidFilter.__init__(self, linePrefix + 'Track', 'GEC', code, [tracks])
+        Hlt2VoidFilter.__init__(self, name, code, [tracks])
 
 # Mass filter
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
 class MassFilterD(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
         cut = "in_range( %(D_Mass_M_MIN)s , M , %(D_Mass_M_MAX)s )"
-        Hlt2ParticleFilter.__init__(self, linePrefix, name, cut, inputs)
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs)
 
 class MassFilterLc(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
         cut = "in_range( %(Lc_Mass_M_MIN)s , M , %(Lc_Mass_M_MAX)s )"
-        Hlt2ParticleFilter.__init__(self, linePrefix, name, cut, inputs)
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs)
 
 # The class that creates the Hlt2Combiner
 from Hlt2Lines.Utilities.Hlt2Combiner import Hlt2Combiner
@@ -53,8 +51,8 @@ class HHHCombiner(Hlt2Combiner):
         from HltTracking.HltPVs import PV3D
         from Inputs import Hlt2LoosePions, Hlt2LooseKaons,Hlt2LooseProtons
         inputs = [Hlt2LooseKaons, Hlt2LoosePions]
-        Hlt2Combiner.__init__(self, linePrefix, 'KPiPi_SS', "[D+ -> K- pi+ pi+]cc", inputs,
-                              dependencies = [TrackGEC(linePrefix + 'TrackGEC'), PV3D('Hlt2')],
+        Hlt2Combiner.__init__(self, 'KPiPi_SS', "[D+ -> K- pi+ pi+]cc", inputs,
+                              dependencies = [TrackGEC('GEC'), PV3D('Hlt2')],
                               tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
                               MotherCut = mc, Preambulo = [])
 

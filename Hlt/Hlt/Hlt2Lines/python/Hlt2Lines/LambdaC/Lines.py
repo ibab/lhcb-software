@@ -3,7 +3,7 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 
 class LambdaCLines(Hlt2LinesConfigurableUser):
     __slots__ = {'Prescale' : {},
-                 'GEC' : {'NTRACK_MAX'           : 180},
+                 'TrackGEC' : {'NTRACK_MAX'           : 180},
                  'Common' : {'TisTosSpec'               : "Hlt1Track.*Decision%TOS",
                              'Trk_TRCHI2DOF_MAX'        :    3.0,
                              'Trk_PT_MIN'               :  500 * MeV,

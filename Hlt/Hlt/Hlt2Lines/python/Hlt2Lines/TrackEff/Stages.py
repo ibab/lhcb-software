@@ -7,8 +7,6 @@ from Hlt2Lines.Utilities.Hlt2Combiner import Hlt2Combiner
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
 from Preambulo import D0Preambulo, DstPreambulo
 
-linePrefix = ''
-
 class TrackGEC(Hlt2VoidFilter):
     def __init__(self, name):
         from Configurables import LoKi__Hybrid__CoreFactory as Factory
@@ -19,13 +17,13 @@ class TrackGEC(Hlt2VoidFilter):
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking as Hlt2LongTracking
         tracks = Hlt2LongTracking().hlt2PrepareTracks()
         code = ("CONTAINS('%s')" % tracks.outputSelection()) + " < %(NTRACK_MAX)s"
-        Hlt2VoidFilter.__init__(self, linePrefix + 'Track', 'GEC', code, [tracks])
+        Hlt2VoidFilter.__init__(self, name, code, [tracks])
 
 class TrackEffTagFilter(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
         ### fixme. need the tag PID cut.
         cut = "(PT > %(Tag_MinPT)s*MeV) & (MIPCHI2DV(PRIMARY) > %(Tag_MinIPCHI2)s) & (TRCHI2DOF <%(Tag_MaxTrchi2)s)"
-        Hlt2ParticleFilter.__init__(self, linePrefix+"__TagFilter", name, cut, inputs)
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs)
 
 class TrackEffProbeFilter(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
@@ -33,12 +31,12 @@ class TrackEffProbeFilter(Hlt2ParticleFilter):
                #+ " & (TRCHI2DOF <%(Probe_MaxTrchi2)s)" 
                #+ " & (MIPDV(PRIMARY) > %(Probe_MinIP)s *mm)" 
                + " & (MIPCHI2DV(PRIMARY) > %(Probe_MinIPCHI2)s)")
-        Hlt2ParticleFilter.__init__(self, linePrefix+"__ProbeFilter", name, cut, inputs)
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs)
 
 class TrackEffSlowPionFilter(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
         cut = ("(PT > %(Slowpi_MinPt)s)")
-        Hlt2ParticleFilter.__init__(self, linePrefix+"__SlowPionFilter", name, cut, inputs)
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs)
 
 class D0ToKpiCombiner(Hlt2Combiner):
     def __init__(self, name,inputs):
@@ -47,8 +45,8 @@ class D0ToKpiCombiner(Hlt2Combiner):
         motherCut = ("(BPVVDZ > %(D0_MinVDZ)s*mm) & ((acos(BPVDIRA)*180./3.142) < %(D0_MaxACosDIRADeg)s) "
                      + "& (VFASPF(VCHI2/VDOF)< %(D0_MaxVCHI2NDF)s)")
         from HltTracking.HltPVs import PV3D
-        Hlt2Combiner.__init__(self, linePrefix+"D0Combiner", name,"[D0 -> K- pi+]cc", inputs,
-                              dependencies = [TrackGEC(linePrefix + '__TrackGEC'), PV3D('Hlt2')],
+        Hlt2Combiner.__init__(self, name,"[D0 -> K- pi+]cc", inputs,
+                              dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                               CombinationCut = combCut, MotherCut = motherCut)
         
 
@@ -60,7 +58,7 @@ class D0Filter(Hlt2ParticleFilter):
         args = {'PreMonitor'  : (Hlt2MonitorMinMax("D0_M","D0 fast fit mass [MeV]", 500,3500,"D0_FastFit_M_in",nbins=50)),
                 'PostMonitor'  : (Hlt2MonitorMinMax("D0_M","D0 fast fit mass [MeV]", 500,3500,"D0_FastFit_M_out",nbins=50))
                 }
-        Hlt2ParticleFilter.__init__(self, linePrefix+"__D0Filter", name, cut, inputs,Preambulo = D0Preambulo(),**args)
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs,Preambulo = D0Preambulo(),**args)
         
 class DstTagger(Hlt2Combiner):
     def __init__(self, name,inputs):
@@ -73,8 +71,8 @@ class DstTagger(Hlt2Combiner):
         DstMotherCut      = "(Dst_M - D0_M < %(Dst_MaxSimpleFitDeltaMass)s)" 
         DaughtersCuts     = {'pi+' : "(PT > %(Slowpi_MinPt)s*MeV)"} # & (MIPCHI2DV(PRIMARY) < %(Slowpi_MaxIPCHI2)s)"},
         from HltTracking.HltPVs import PV3D
-        Hlt2Combiner.__init__(self, linePrefix+"__DstTagger",name,"[D*(2010)+ -> D0 pi+]cc", inputs,
-                              dependencies = [TrackGEC(linePrefix + '__TrackGEC'), PV3D('Hlt2')],
+        Hlt2Combiner.__init__(self, name, "[D*(2010)+ -> D0 pi+]cc", inputs,
+                              dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                               CombinationCut = DstCombinationCut, MotherCut = DstMotherCut,
                               DaughtersCuts = DaughtersCuts, Preambulo = DstPreambulo())
 
@@ -87,26 +85,25 @@ class DstDTFFilter(Hlt2ParticleFilter):
                 'PostMonitor'  : (Hlt2MonitorMinMax("DTF_FUN(M,True,'D0')","DecayTreeFitter D^{*} mass [MeV]", 2000,2040,"Dst_DTF_M_out",nbins=50)
                                   +"&"+Hlt2MonitorMinMax("DTF_CHI2NDOF(True,'D0')","DecayTreeFitter D^{*} #chi^{2}/ndf", 0,20,"Dst_DTF_CHI2_out",nbins=50))
                 }
-        Hlt2ParticleFilter.__init__(self, linePrefix+"__DstDTFFilter", name, cut, inputs,**args)
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs,**args)
 
 # Combiners
 from Inputs import Hlt2LoosePions, Hlt2LooseKaons, Hlt2ProbeVeloKaons, Hlt2ProbeVeloPions , Hlt2SlowPions
 #SlowPions = TrackEffSlowPionFilter('D0ToKpiPionProbe',inputs = [Hlt2SlowPions])
 
 #### pion probe
-ProbePions = TrackEffProbeFilter('D0ToKpiPionProbe',inputs = [Hlt2ProbeVeloPions])
-TagKaons   = TrackEffTagFilter('D0ToKpiPionProbe',inputs = [Hlt2LooseKaons])
-D0ToKpiPionProbe  = D0ToKpiCombiner('D0ToKpiPionProbe',inputs = [TagKaons,ProbePions])
-FilteredD0ToKpiPionProbe  = D0Filter('D0ToKpiPionProbe',inputs = [D0ToKpiPionProbe])
-DstD0ToKpiPionProbe  = DstTagger('D0ToKpiPionProbe',inputs=[FilteredD0ToKpiPionProbe,Hlt2LoosePions])
-FilteredDstD0ToKpiPionProbe  = DstDTFFilter('D0ToKpiPionProbe',inputs=[DstD0ToKpiPionProbe])
+ProbePions = TrackEffProbeFilter('Probe',inputs = [Hlt2ProbeVeloPions])
+TagKaons   = TrackEffTagFilter('TagK',inputs = [Hlt2LooseKaons])
+D0ToKpiPionProbe  = D0ToKpiCombiner('D0', inputs = [TagKaons,ProbePions])
+FilteredD0ToKpiPionProbe  = D0Filter('D0',inputs = [D0ToKpiPionProbe])
+DstD0ToKpiPionProbe  = DstTagger('Dst',inputs=[FilteredD0ToKpiPionProbe,Hlt2LoosePions])
+FilteredDstD0ToKpiPionProbe  = DstDTFFilter('DstDTF',inputs=[DstD0ToKpiPionProbe])
 
 ##### kaon probe
-ProbeKaons = TrackEffProbeFilter('D0ToKpiKaonProbe',inputs = [Hlt2ProbeVeloKaons])
-TagPions   = TrackEffTagFilter('D0ToKpiKaonProbe',inputs = [Hlt2LoosePions])
-D0ToKpiKaonProbe   = D0ToKpiPionProbe.clone('D0ToKpiKaonProbe', decay = "[D0 -> pi+ K-]cc",
+ProbeKaons = TrackEffProbeFilter('Probe',inputs = [Hlt2ProbeVeloKaons])
+TagPions   = TrackEffTagFilter('TagPi',inputs = [Hlt2LoosePions])
+D0ToKpiKaonProbe   = D0ToKpiPionProbe.clone('D0', decay = "[D0 -> pi+ K-]cc",
                                             inputs = [TagPions,ProbeKaons])
-FilteredD0ToKpiKaonProbe  = D0Filter('D0ToKpiKaonProbe',inputs = [D0ToKpiKaonProbe])
-DstD0ToKpiKaonProbe  = DstTagger('D0ToKpiKaonProbe',inputs=[FilteredD0ToKpiKaonProbe,Hlt2LoosePions])
-FilteredDstD0ToKpiKaonProbe  = DstDTFFilter('D0ToKpiKaonProbe',inputs=[DstD0ToKpiKaonProbe])
-
+FilteredD0ToKpiKaonProbe  = D0Filter('D0',inputs = [D0ToKpiKaonProbe])
+DstD0ToKpiKaonProbe  = DstTagger('Dst',inputs=[FilteredD0ToKpiKaonProbe,Hlt2LoosePions])
+FilteredDstD0ToKpiKaonProbe  = DstDTFFilter('DstDTF',inputs=[DstD0ToKpiKaonProbe])

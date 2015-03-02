@@ -7,7 +7,7 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 
 class TrackEffLines(Hlt2LinesConfigurableUser):
     __slots__ = {'Prescale' : {},
-                 'GEC' : {'NTRACK_MAX'           : 180},
+                 'TrackGEC' : {'NTRACK_MAX'           : 180},
                  'Common' : {'Slowpi_MinPt' : 120. #MeV
                              , 'D0_MinAM' : 900. #MeV
                              , 'D0_MaxAM' : 2200. #MeV
@@ -40,10 +40,10 @@ class TrackEffLines(Hlt2LinesConfigurableUser):
         from Stages import FilteredDstD0ToKpiPionProbe
         from Stages import FilteredDstD0ToKpiKaonProbe
         
-        stages = {'D0ToKpiPionProbe'  : [FilteredDstD0ToKpiPionProbe],
-                  'D0ToKpiKaonProbe'  : [FilteredDstD0ToKpiKaonProbe]}
+        stages = {'Pion'  : [FilteredDstD0ToKpiPionProbe],
+                  'Kaon'  : [FilteredDstD0ToKpiKaonProbe]}
         
         from HltLine.HltLine import Hlt2Line
         for (nickname, algos) in self.algorithms(stages).iteritems():
-            Hlt2Line('TrackEff_' + nickname, prescale = self.prescale,
+            Hlt2Line('TrackEff_D0ToKpi' + nickname, prescale = self.prescale,
                      algos = algos, postscale = self.postscale)

@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-02 - Roel Aaij
+ - Remove prefix from new template.
+ - Updates to TrackEff lines.
+
 ! 2015-02-28 - V. Gligorov
  - First commit of CharmHad module to host the various hadronic charm lines
  - Modify lines which used "LowPT" particles to use regular ones instead, the

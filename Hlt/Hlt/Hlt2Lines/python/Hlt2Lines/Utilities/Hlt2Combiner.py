@@ -4,7 +4,7 @@ from Configurables import CombineParticles
 
 class Hlt2Combiner(Hlt2TisTosStage):
     __cutTypes = set(('MotherCut', 'DaughtersCuts', 'CombinationCut'))
-    def __init__(self, prefix, name, decay, inputs, dependencies = [], tistos = [],
+    def __init__(self, name, decay, inputs, dependencies = [], tistos = [],
                  combiner = CombineParticles, **kwargs):
         self.__decay = decay
         self.__stage = None
@@ -18,7 +18,7 @@ class Hlt2Combiner(Hlt2TisTosStage):
 
         ## Support NXBodyDecays
         self.__combiner = combiner
-        Hlt2TisTosStage.__init__(self, prefix, name, inputs, dependencies, tistos)
+        Hlt2TisTosStage.__init__(self, name, inputs, dependencies, tistos)
 
     def clone(self, name, **kwargs):
         args = deepcopy(self.__kwargs)
@@ -27,8 +27,7 @@ class Hlt2Combiner(Hlt2TisTosStage):
         for ct in self.__cutTypes:
             if ct in kwargs: cuts[ct] = kwargs.pop(ct)
         args.update(cuts)
-        for arg, default in (('prefix', self._prefix()),
-                             ('decay',  self.__decay),
+        for arg, default in (('decay',  self.__decay),
                              ('inputs', self._inputs()),
                              ('tistos', self._tistos()),
                              ('dependencies', self._deps()),
@@ -40,7 +39,7 @@ class Hlt2Combiner(Hlt2TisTosStage):
 
     def _makeMember(self, cuts, args):
         from HltLine.HltLine import Hlt2Member
-        return Hlt2Member(self.__combiner, self._prefix() + self._name() + 'Combiner',
+        return Hlt2Member(self.__combiner, self._name() + 'Combiner',
                           DecayDescriptor = self.__decay, Inputs = self.inputStages(cuts), **args)
                                      
     def stage(self, cuts):

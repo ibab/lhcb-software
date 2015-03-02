@@ -1,8 +1,6 @@
 # Each stage must specify its own inputs
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2VoidFilter
 
-linePrefix = ''
-
 # The GEC
 class TrackGEC(Hlt2VoidFilter):
     def __init__(self, name):
@@ -14,7 +12,7 @@ class TrackGEC(Hlt2VoidFilter):
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking as Hlt2LongTracking
         tracks = Hlt2LongTracking().hlt2PrepareTracks()
         code = ("CONTAINS('%s')" % tracks.outputSelection()) + " < %(NTRACK_MAX)s"
-        Hlt2VoidFilter.__init__(self, linePrefix + 'Track', 'GEC', code, [tracks])
+        Hlt2VoidFilter.__init__(self, name, code, [tracks])
 
 # The class that creates the Hlt2Combiner
 from Hlt2Lines.Utilities.Hlt2Combiner import Hlt2Combiner
@@ -41,8 +39,8 @@ class LambdaC2KPPiCombiner(Hlt2Combiner):
         from HltTracking.HltPVs import PV3D
         from Inputs import Hlt2LoosePions, Hlt2LooseKaons, Hlt2LooseProtons
         inputs = [Hlt2LooseKaons, Hlt2LooseProtons, Hlt2LoosePions]
-        Hlt2Combiner.__init__(self, linePrefix, 'KPPi', "[Lambda_c+ -> K- p+ pi+]cc", inputs,
-                              dependencies = [TrackGEC(linePrefix + 'TrackGEC'), PV3D('Hlt2')],
+        Hlt2Combiner.__init__(self, 'KPPi', "[Lambda_c+ -> K- p+ pi+]cc", inputs,
+                              dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                               tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
                               MotherCut = mc, Preambulo = [])
 
@@ -60,7 +58,7 @@ from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
 class LambdaCMassFilter(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
         cut = "in_range( %(SigMass_M_MIN)s, M, %(SigMass_M_MAX)s )"
-        Hlt2ParticleFilter.__init__(self, linePrefix, name, cut, inputs)
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs)
 
 # Final selections
 LC2KPPi  = LambdaCMassFilter("KPPi",  inputs = [LambdaC2KPPi])

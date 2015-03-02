@@ -81,7 +81,7 @@ class Hlt2TisTosGlobalTagger(Hlt2Stage):
         return self.__stage
 
 class Hlt2TisTosParticleTagger(Hlt2Stage):
-    def __init__(self, prefix, name, tistos, inputs = [], **kwargs):
+    def __init__(self, name, tistos, inputs = [], **kwargs):
         specsOrKeys = makeList(tistos)
         self.__specs = set()
         self.__keys = set()
@@ -95,15 +95,13 @@ class Hlt2TisTosParticleTagger(Hlt2Stage):
             raise AttributeError("Either only specs or only cut keys must be specified")
                             
         self.__kwargs = kwargs
-        self.__prefix = prefix
         self.__stage = None
         Hlt2Stage.__init__(self, name, inputs)
 
     def clone(self, name, **kwargs):
         args = deepcopy(self.__kwargs)
         args['name'] = name
-        for arg, default in (('prefix', self._prefix()),
-                             ('tistos', self.__code),
+        for arg, default in (('tistos', self.__code),
                              ('inputs', self._inputs())):
             args[arg] = kwargs.pop(arg) if arg in kwargs else default
         args.update(kwargs)
@@ -113,13 +111,13 @@ class Hlt2TisTosParticleTagger(Hlt2Stage):
     def __globalTagger(self, specs, cuts):
         tagger = Hlt2TisTosGlobalTagger(TisTosSpecs = specs.keys())
         code = tagger.particleCut(specs.values())
-        return Hlt2ParticleFilter(self.__prefix, 'Global' + self._name(), code,
+        return Hlt2ParticleFilter('Global' + self._name(), code,
                                   self._inputs(), [tagger], **self.__kwargs).stage(cuts)
     
     def __localTagger(self, specs, cuts):
         from HltLine.HltLine import Hlt2Member
         from Configurables import TisTosParticleTagger
-        return Hlt2Member(TisTosParticleTagger, self.__prefix + self._name() + 'TisTosTagger',
+        return Hlt2Member(TisTosParticleTagger, self._name() + 'TisTosTagger',
                           TisTosSpecs = specs, Inputs = self.inputStages(cuts), **self.__kwargs)        
 
     def stage(self, cuts):
@@ -149,13 +147,9 @@ class Hlt2TisTosParticleTagger(Hlt2Stage):
         return self.__stage
 
 class Hlt2TisTosStage(Hlt2Stage):
-    def __init__(self, prefix, name, inputs, dependencies = [], tistos = []):
+    def __init__(self, name, inputs, dependencies = [], tistos = []):
         self.__tistos = makeList(tistos)
         Hlt2Stage.__init__(self, name, inputs, dependencies)
-        self.__prefix = prefix
-
-    def _prefix(self):
-        return self.__prefix
     
     def _tistos(self):
         return self.__tistos
@@ -185,8 +179,7 @@ class Hlt2TisTosStage(Hlt2Stage):
             ## There are also local specs, so a TisTosParticleTagger is
             ## needed, that takes the output of the member as input
             self._addInputs([member])
-            return Hlt2TisTosParticleTagger(self.__prefix, self._name(),
-                                            localSpecs, [member]).stage(cuts)
+            return Hlt2TisTosParticleTagger(self._name(), localSpecs, [member]).stage(cuts)
         else:
             ## No local tagger, return the member
             return member
