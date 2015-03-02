@@ -94,18 +94,19 @@ public:
   void clear() noexcept { m_size = 0 ; }
 
   /** erase a range */
-  void erase(iterator first, iterator last) noexcept {
-    if( last>first ) {
-      if(last < end() ) {
+  iterator erase(iterator first, iterator last) noexcept {
+    if (last > first) {
+      if (last < end()) {
 	size_type n = static_cast<size_type>(end() - last);
 	for(size_type i=0; i<n; ++i) *(first + i) = *(last+i);
       }
-      m_size -= last - first ;
+      m_size -= last - first;
     }
+    return first;
   }
 
   /** erase a single element */
-  void erase(iterator pos) noexcept { return erase(pos,pos+1) ; }
+  iterator erase(iterator pos) noexcept { return erase(pos,pos+1) ; }
 
   /** insert a single element */
   void insert(iterator pos, const_reference x) {

@@ -3,6 +3,11 @@
 ! package manager : Marco Clemencic
 ! =====================================================================
 
+! 2015-03-02 - Manuel Tobias Schiller
+ - StaticArray: fix interface of erase to return iterator pointing to the
+   first element after the removed one(s), or end (just what std::vector and
+   friends do)
+
 !========================= DetDesc v18r36 2015-02-24 =========================
 ! 2015-02-23 - Manuel Tobias Schiller
  - SolidTicks: (hopefully) fix a gcc 4.9 warning about comparison of signed
