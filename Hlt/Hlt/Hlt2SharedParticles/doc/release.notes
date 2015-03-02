@@ -5,6 +5,9 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-03-02 - Roel Aaij
+ - Fix bindMembers for Basic{Pions,Kaons,Protons}.
+
 ! 2015-02-28 - V. Gligorov
  - Remove "LowPT" particles from TrackFittedBasicParticles, as with the
    new reconstruction where tracks of all PT are made upfront in HLT2 these
