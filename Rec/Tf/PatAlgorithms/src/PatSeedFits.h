@@ -138,7 +138,7 @@ namespace PatSeedFits {
 	    std::abs(dparam[1] / value_type(1 << 10)) > 1.))
 	return UpdateRejected;
       // update track parameters
-      track.updateYParameters(
+      track.updateYParametersOnly(
 	  dparam[0] - track.z0() * dparam[0] / value_type(1 << 10),
 	  dparam[1] / value_type(1 << 10));
       if (std::abs(dparam[0]) < 5e-2 &&
@@ -190,7 +190,7 @@ namespace PatSeedFits {
       // update track parameters
       track.updateParameters(dparam[0], dparam[1] / value_type(1 << 10),
 	  dparam[2] / value_type(1 << 20));
-      track.updateYParameters(
+      track.updateYParametersOnly(
 	  dparam[3] - track.z0() * dparam[4] / value_type(1 << 10),
 	  dparam[4] / value_type(1 << 10));
       if (std::abs(dparam[0]) < 5e-3 &&
@@ -242,7 +242,7 @@ namespace PatSeedFits {
       track.updateParameters(
 	  dparam[1], dparam[2] / value_type(1 << 10),
 	  track.chi2() * (dparam[1] - track.z0() * dparam[2] / value_type(1 << 10)));
-      track.updateYParameters(0., dparam[0] / track.z0());
+      track.updateYParametersOnly(0., dparam[0] / track.z0());
       if (std::abs(dparam[0]) < 1e-5 &&
 	  std::abs(dparam[1]) < 5e-3 &&
 	  std::abs(dparam[2] / value_type(1 << 10)) < 5e-6)
@@ -252,11 +252,27 @@ namespace PatSeedFits {
   };
 
   /// null hit updater (no-op)
-  template <class FITPOLICY>
-    struct NullHitUpdater : public HitUpdater<FITPOLICY>
+  template <class FITPOLICY, HitType hittype = HitType::Mixed>
+  struct NullHitUpdater : public HitUpdater<FITPOLICY>
   {
     COMMONPOLICY_INJECT_TYPES(FITPOLICY);
     void updateHit(hit_type&, const track_type&) const { }
+  };
+
+  /// null hit updater (no-op)
+  template <class FITPOLICY, HitType hittype = HitType::Mixed>
+  struct HitYUpdater : public HitUpdater<FITPOLICY>
+  {
+    COMMONPOLICY_INJECT_TYPES(FITPOLICY);
+    void updateHit(hit_type& hit, const track_type& track) const
+    {
+      const auto y = Tf::updateNonOTHitForTrack(hit, track.yAtZEq0(), track.ySlopeAtZEq0());
+      if (HitType::OT == hittype ||
+	  (HitType::IT != hittype && hit->isOT())) {
+	hit->setDriftDistance(
+	    hit->hit()->othit()->untruncatedDriftDistance(y));
+      }
+    }
   };
 
   /// fit policy for xz fits
@@ -285,7 +301,7 @@ namespace PatSeedFits {
     MeasurementProvider<YFitPolicy<maxIter>, forceRLAmb, xOnly, stereoOnly, hittype>,
     YMeasurementProjector<YFitPolicy<maxIter>, hittype>,
     YTrackUpdater<YFitPolicy<maxIter>, allowUpdateReject>,
-    NullHitUpdater<YFitPolicy<maxIter> >, 16>;
+    HitYUpdater<YFitPolicy<maxIter>, hittype>, 16>;
 
   /// fit policy for simultaneous xz/yz fits
   template <unsigned maxIter>
@@ -298,7 +314,7 @@ namespace PatSeedFits {
     MeasurementProvider<XYFitPolicy<maxIter>, forceRLAmb, false, false, hittype>,
     XYMeasurementProjector<XYFitPolicy<maxIter>, hittype>,
     XYTrackUpdater<XYFitPolicy<maxIter>, allowUpdateReject>,
-    NullHitUpdater<XYFitPolicy<maxIter> >, 32>;
+    HitYUpdater<XYFitPolicy<maxIter>, hittype>, 32>;
 
   /// fit policy for stub fits
   template <unsigned maxIter>
@@ -311,7 +327,7 @@ namespace PatSeedFits {
     MeasurementProvider<StubFitPolicy<maxIter>, forceRLAmb, false, false, hittype>,
     StubMeasurementProjector<StubFitPolicy<maxIter>, hittype>,
     StubTrackUpdater<StubFitPolicy<maxIter>, allowUpdateReject>,
-    NullHitUpdater<StubFitPolicy<maxIter> >, 8>;
+    HitYUpdater<StubFitPolicy<maxIter>, hittype>, 8>;
 } // namespace PatSeedFits
 
 #endif // PATSEEDFITS_H

@@ -165,28 +165,7 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
     if ( isDebug ) info() << "+++ Track fit, planeCount " << track.nPlanes()
       << " size " << track.coordEnd() - track.coordBegin() << endmsg;
 
-    if (TrackType::OTOnly == hittype || TrackType::Mixed == hittype) {
-      // special treatment for OT hits: try to fix ambiguities
-      // (the for loop is a safety harness, in normal operation, the body will
-      // execute only once!)
-      workspace wksp;
-      for (auto it = track.coordBegin(); track.coordEnd() > it;
-	  it += wksp.size()) {
-	// get selected OT hits
-	auto range = as_range(std::begin(wksp),
-	    std::copy_if(it, std::min(it + wksp.size(), track.coordEnd()),
-	      std::begin(wksp), [] (const PatFwdHit* hit) {
-	      return hit->isSelected() && hit->isOT();
-	      }));
-	// stop if no OT hits
-	if (std::end(range) == std::begin(range)) continue;
-	// reset ambiguities for OT hits
-	for (auto hit: range) hit->setRlAmb(0);
-	// resolve ambiguities from pitch residuals where possible
-	if (m_ambigFromPitchResiduals) resAmbFromPitchRes(track, range);
-	if (m_ambigFromLargestDrift) resAmbFromLargestDrift(track, range, isDebug);
-      }
-    }
+    resolveAmbiguities<hittype>(track, track.coordBegin(), track.coordEnd());
     if (xOnly) {
       if (TrackType::OTOnly == hittype) {
 	XFit<true, 1, false, false, false, HitType::OT> xfit(track, track.m_coords);
@@ -238,8 +217,11 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
 //=========================================================================
 template <class Range>
 bool PatSeedTool::resAmbFromLargestDrift (
-		PatSeedTrack& track, Range othits, bool forceDebug ) const
+		const PatSeedTrack& ctrack, Range othits, bool forceDebug ) const
 {
+  // don't touch track, only hits, so we need to make a copy - we fiddle with
+  // track parameters, after all
+  PatSeedTrack track(ctrack);
   // we use builtin arrays because we know there are three stations, and
   // the cost of allocating memory dynamically for std::vector is too
   // high
@@ -303,7 +285,7 @@ bool PatSeedTool::resAmbFromLargestDrift (
 //=============================================================================
 
 template <class Range>
-void PatSeedTool::resAmbFromPitchRes(PatSeedTrack& tr, Range hits) const
+void PatSeedTool::resAmbFromPitchRes(const PatSeedTrack& tr, Range hits) const
 {
   // ignore hits which have their ambiguities set from elsewhere
   hits.second = std::partition(std::begin(hits), std::end(hits),
@@ -395,6 +377,37 @@ void PatSeedTool::resAmbFromPitchRes(PatSeedTrack& tr, Range hits) const
   }
 }
 
+template <PatSeedTool::TrackType hittype, class IT>
+void PatSeedTool::resolveAmbiguities(const PatSeedTrack& track, IT begin, IT end) const
+{
+  if (TrackType::OTOnly == hittype || TrackType::Mixed == hittype) {
+    const bool isDebug = msgLevel( MSG::DEBUG );
+    // special treatment for OT hits: try to fix ambiguities
+    // (the for loop is a safety harness, in normal operation, the body will
+    // execute only once!)
+    workspace wksp;
+    for (auto it = begin; end != it; ) {
+      // get selected OT hits
+      auto itend = it + std::min(
+	  ptrdiff_t(wksp.size()), ptrdiff_t(std::distance(it, end)));
+      auto range = as_range(std::begin(wksp),
+	  std::copy_if(it, itend, std::begin(wksp),
+	    [] (const PatFwdHit* hit) {
+	    return hit->isSelected() &&
+	        (TrackType::OTOnly == hittype || hit->isOT());
+	    }));
+      it = itend;
+      // stop if no OT hits
+      if (std::end(range) == std::begin(range)) continue;
+      // reset ambiguities for OT hits
+      for (auto hit: range) hit->setRlAmb(0);
+      // resolve ambiguities from pitch residuals where possible
+      if (m_ambigFromPitchResiduals) resAmbFromPitchRes(track, range);
+      if (m_ambigFromLargestDrift) resAmbFromLargestDrift(track, range, isDebug);
+    }
+  }
+}
+
 template <PatSeedTool::TrackType hittype>
 bool PatSeedTool::refitStub(PatSeedTrack& track, double arrow) const
 {
@@ -409,29 +422,7 @@ bool PatSeedTool::refitStub(PatSeedTrack& track, double arrow) const
     else if (0 == nOT) return refitStub<TrackType::ITOnly>(track, arrow);
     else return refitStub<TrackType::Mixed>(track, arrow);
   } else {
-    if (TrackType::OTOnly == hittype || TrackType::Mixed == hittype) {
-      const bool isDebug = msgLevel( MSG::DEBUG );
-      // special treatment for OT hits: try to fix ambiguities
-      // (the for loop is a safety harness, in normal operation, the body will
-      // execute only once!)
-      workspace wksp;
-      for (auto it = track.coordBegin(); track.coordEnd() > it;
-	  it += wksp.size()) {
-	// get selected OT hits
-	auto range = as_range(std::begin(wksp),
-	    std::copy_if(it, std::min(it + wksp.size(), track.coordEnd()),
-	      std::begin(wksp), [] (const PatFwdHit* hit) {
-	      return hit->isSelected() && hit->isOT();
-	      }));
-	// stop if no OT hits
-	if (std::end(range) == std::begin(range)) continue;
-	// reset ambiguities for OT hits
-	for (auto hit: range) hit->setRlAmb(0);
-	// resolve ambiguities from pitch residuals where possible
-	if (m_ambigFromPitchResiduals) resAmbFromPitchRes(track, range);
-	if (m_ambigFromLargestDrift) resAmbFromLargestDrift(track, range, isDebug);
-      }
-    }
+    resolveAmbiguities<hittype>(track, track.coordBegin(), track.coordEnd());
     /// we have to pass a variable into the fit, so swap it for the track's chi^2
     struct TrackFiddler {
       PatSeedTrack& m_track;

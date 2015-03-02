@@ -729,8 +729,7 @@ void PatSeedingTool::collectPerRegion(
           }
           double yAtOrigin = y0;
           double yCorr     = sl * sl * track.curvature() * track.curvature() / m_yCorrection;
-          if ( sl > 0 ) yAtOrigin = y0 - yCorr;
-          else yAtOrigin = y0 + yCorr;
+          yAtOrigin = y0 - std::copysign(yCorr, sl);
 
           if ( m_printing ) {
             info() << format( "  Y0 %10.1f corr %10.1f yAtOrigin%10.1f  sl%10.7f  curv*E6 %8.4f",
@@ -1006,7 +1005,7 @@ void PatSeedingTool::collectITOT(
 
 	      // try to kill the seed extremely early by doing a very
 	      // loose red. chi^2 cut even before we attempt a refit
-	      track.updateHits();
+	      track.updateHits<PatSeedTrack::IT>();
 	      double chi2 = 0.;
 	      for( const PatFwdHit* hit: track.coords() )
 		chi2 += track.chi2Hit(hit);
@@ -1037,9 +1036,9 @@ void PatSeedingTool::collectITOT(
 	      }
 
 	      if ( m_printing ) {
-          info() << "--- IT point -- " << endmsg;
-          for( const PatFwdHit* hit: track.coords() )
-            debugFwdHit( hit, info() );
+		info() << "--- IT point -- " << endmsg;
+		for( const PatFwdHit* hit: track.coords() )
+		  debugFwdHit( hit, info() );
 	      }
 	    }
 	  }
@@ -1050,15 +1049,14 @@ void PatSeedingTool::collectITOT(
     // follow these track segments into OT and IT and collect more hits there
     finalSelection.reserve(pool.size());
     if ( m_printing ) info() << "===== Candidates Type " << reg << endmsg;
-    for ( auto itT = pool.begin();
-          pool.end() != itT; ++itT ) {
+    for (auto itT = pool.begin(); pool.end() != itT; ++itT) {
       PatSeedTrack& track = *itT;
-      track.updateHits();
+      track.updateHits<PatSeedTrack::IT>();
       track.setValid(false);
       bool centralYIT = false;
       bool fromInsideBeampipe = false;
       //      bool hasOT = false;
-      bool fitOK = false;
+      bool fitOK = false, hasOT = false;
       m_printing = msgLevel( MSG::DEBUG );
 
       if ( m_printing ) info() << "   candidate " << itT - pool.begin()
@@ -1128,12 +1126,11 @@ void PatSeedingTool::collectITOT(
 	    }
 	  }
 	  if ( dirty ) {
-	    //	  hasOT = true;
-	    const double maxchi2hit = (PatSeedTrack::IT == track.trackRegion()) ?
-	      m_maxChi2HitIT : m_maxChi2HitOT;
+	    hasOT = true;
+	    const double maxchi2hit = hasOT ? m_maxChi2HitOT : m_maxChi2HitIT;
 	    const unsigned minPlanes = (track.nPlanes() <= 8) ?
 	      8 : m_minTotalPlanes;
-	    fitOK = m_seedTool->fitTrack( track, maxchi2hit, minPlanes, false, m_printing );
+	    fitOK = m_seedTool->fitTrack<PatSeedTool::TrackType::Mixed>(track, maxchi2hit, minPlanes, false, m_printing);
 	    dirty = (nbPlanes != track.nPlanes());
 	    if ( m_printing ) info() << "*** refitted track candidate status " << fitOK << endmsg;
 	  }
@@ -1192,9 +1189,12 @@ void PatSeedingTool::collectITOT(
 		const unsigned nSta = track.nStations();
 		const unsigned minPlanes = (track.nPlanes() <= 8) ?
 		  8 : m_minTotalPlanes;
-		const double maxchi2hit = (PatSeedTrack::IT == track.trackRegion()) ?
-		  m_maxChi2HitIT : m_maxChi2HitOT;
-		fitOK = m_seedTool->fitTrack( track, maxchi2hit, minPlanes, false, m_printing );
+		const double maxchi2hit = hasOT ? m_maxChi2HitOT : m_maxChi2HitIT;
+		if (hasOT) {
+		  fitOK = m_seedTool->fitTrack<PatSeedTool::TrackType::Mixed>(track, maxchi2hit, minPlanes, false, m_printing);
+		} else {
+		  fitOK = m_seedTool->fitTrack<PatSeedTool::TrackType::ITOnly>(track, maxchi2hit, minPlanes, false, m_printing);
+		}
 		dirty = nSta != track.nStations();
 	      }
 	    }
@@ -1226,9 +1226,12 @@ void PatSeedingTool::collectITOT(
       if (dirty) {
 	const unsigned minPlanes = (track.nPlanes() <= 8) ?
 	  8 : m_minTotalPlanes;
-	double maxchi2hit = (PatSeedTrack::IT == track.trackRegion()) ?
-	  m_maxChi2HitIT : m_maxFinalChi2;
-	fitOK = m_seedTool->fitTrack( track, maxchi2hit, minPlanes, false, m_printing );
+	const double maxchi2hit = hasOT ? m_maxFinalChi2 : m_maxChi2HitIT;
+	if (hasOT) {
+	  fitOK = m_seedTool->fitTrack<PatSeedTool::TrackType::Mixed>(track, maxchi2hit, minPlanes, false, m_printing);
+	} else {
+	  fitOK = m_seedTool->fitTrack<PatSeedTool::TrackType::ITOnly>(track, maxchi2hit, minPlanes, false, m_printing);
+	}
       }
       if (!fitOK) continue;
       if (track.chi2() > m_maxTrackChi2LowMult) continue;
@@ -1315,8 +1318,7 @@ void PatSeedingTool::collectLowQualTracks(
     // check that pointing constraint still holds
     double yAtOrigin = y0;
     double yCorr     = sl * sl * track.curvature() * track.curvature() / m_yCorrection;
-    if ( sl > 0 ) yAtOrigin = y0 - yCorr;
-    else yAtOrigin = y0 + yCorr;
+    yAtOrigin = y0 - std::copysign(yCorr, sl);
     if ( m_maxYAtOriginLowQual < std::abs(yAtOrigin) ) continue;
 
     // check for compatibility with state (if we have one)
@@ -2173,7 +2175,7 @@ bool PatSeedingTool::findBestRange (
   // remove other hits - we don't want to ignore lots of hits in fitLineInY
   // below
   if (stereo.begin() != itBeg)
-    itEnd = std::copy(itBeg, itEnd, stereo.begin());
+    itEnd = std::move(itBeg, itEnd, stereo.begin());
   if (stereo.end() != itEnd)
     stereo.erase(itEnd, stereo.end());
 

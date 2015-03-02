@@ -97,10 +97,10 @@ class PatSeedTool : public GaudiTool {
     typedef std::array<PatFwdHit*, 32> workspace;
     /// resolve ambiguities from pitch residuals
     template <class Range>
-    void resAmbFromPitchRes(PatSeedTrack& tr, Range hits) const;
+    void resAmbFromPitchRes(const PatSeedTrack& tr, Range hits) const;
     /// resolve ambiguities from largest drift time in each station
     template <class Range>
-    bool resAmbFromLargestDrift( PatSeedTrack& track, Range othits, bool forceDebug ) const;
+    bool resAmbFromLargestDrift(const PatSeedTrack& track, Range othits, bool forceDebug) const;
 
     /// remove hits while max chi^2 per hit too large
     template <class FIT, bool xOnly>
@@ -116,6 +116,10 @@ class PatSeedTool : public GaudiTool {
       static inline void set(HIT& h1, HIT& h2, int amb, bool setFirst)
       { if (setFirst) h1->setRlAmb(amb); h2->setRlAmb(sameSign ? amb : -amb); }
     };
+
+    template <TrackType tracktype, class IT>
+    void resolveAmbiguities(const PatSeedTrack& track, IT begin, IT end) const;
+
 };
 
 #endif // PATSEEDTOOL_H

@@ -4,6 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-03-02 - Manuel Tobias Schiller
+ - PatSeedingTool, PatSeedTool, PatSeedTrack, PatSeedFits: refactor bits of
+   code to avoid code duplication; no changes in performance or timing
+
 ! 2015-03-02 - Michel De Cian
  - Change 'ifndef KSTRACK' to 'ifndef PATDOWNTRACK' in PatDownTrack.h to get rid of relics.
 

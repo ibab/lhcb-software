@@ -110,7 +110,13 @@ class PatSeedTrack {
     double yAtZ( double z ) const ///< return y at given z
     { return m_ay + m_by * z; }
 
+    double yAtZEq0() const ///< return y at z=0
+    { return m_ay; }
+
     double ySlope( double ) const ///< return slope in y at given z
+    { return m_by; }
+
+    double ySlopeAtZEq0() const ///< return slope in y at z=0
     { return m_by; }
 
     double curvature() const ///< return curvature
@@ -254,7 +260,10 @@ class PatSeedTrack {
     void setYParams( double y0, double sl ) ///< set track parameters in y
     { m_ay = y0; m_by = sl; updateHits( ); }
 
+    /// type to represent IT only/OT only/ITOT overlap track
+    typedef enum { OT = 1, IT = 2, ITOT = 3 } TrackRegion;
     /// update hit positions
+    template <TrackRegion region = ITOT>
     inline void updateHits();
 
     /// sort hits on track by increasing z
@@ -266,22 +275,25 @@ class PatSeedTrack {
     bool valid() const ///< return if a track is valid
     { return m_valid; }
 
+    void updateYParametersOnly( double day, double dby  )
+    {
+      m_ay += day, m_by += dby;
+      if (LIKELY(0 < m_coords.size()))
+	m_z0 += day * (*m_coords.begin())->hit()->dzDy();
+    }
+
     /// update track parameters in y
+    template <TrackRegion region = ITOT>
     void updateYParameters( double day, double dby  )
     {
-      m_ay += day;
-      m_by += dby;
-      if ( 0 < m_coords.size() )
-	m_z0 += day * (*m_coords.begin())->hit()->dzDy();
-      updateHits();
+      updateYParametersOnly(day, dby);
+      updateHits<region>();
     }
 
     /// update track parameters in x
     void updateParameters( double dax, double dbx, double dcx )
     {
-      m_ax += dax;
-      m_bx += dbx;
-      m_cx += dcx;
+      m_ax += dax, m_bx += dbx, m_cx += dcx;
       m_cosine =  1. / std::sqrt( 1. +  m_bx * m_bx  );
     }
 
@@ -307,8 +319,6 @@ class PatSeedTrack {
 	((m_planeList[8] || m_planeList[9] || m_planeList[10] || m_planeList[11]) ? 1 : 0);
     }
 
-    /// type to represent IT only/OT only/ITOT overlap track
-    typedef enum { OT = 1, IT = 2, ITOT = 3 } TrackRegion;
     /// return track region (IT only, OT only, ITOT overlap)
     TrackRegion trackRegion() const
     {
@@ -472,10 +482,25 @@ inline unsigned PatSeedTrack::nbHighThreshold() const
       });
 }
 
+template <PatSeedTrack::TrackRegion region>
 inline void PatSeedTrack::updateHits()
 {
-  for( PatFwdHit* hit: m_coords )
-    updateHitForTrack(hit, m_ay, m_by);
+  if (ITOT == region) {
+    std::array<PatFwdHit*, Hits::MaxSize> ithits, othits;
+    auto itend = ithits.begin(), otend = othits.begin();
+    for( PatFwdHit* hit: m_coords ) {
+      if (hit->isOT()) *otend++ = hit;
+      else *itend++ = hit;
+    }
+    for (auto it = ithits.begin(); itend != it; ++it)
+      updateNonOTHitForTrack(*it, m_ay, m_by);
+    for (auto it = othits.begin(); otend != it; ++it)
+      updateOTHitForTrack(*it, m_ay, m_by);
+  } else if (OT == region) {
+    for (auto hit: m_coords) updateOTHitForTrack(hit, m_ay, m_by);
+  } else {
+    for (auto hit: m_coords) updateNonOTHitForTrack(hit, m_ay, m_by);
+  }
 }
 
 inline void PatSeedTrack::sort()
