@@ -4,6 +4,12 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2015-03-03 - Marco Cattaneo
+ - Decoders.py: set up separate configurations for the decoder of OT "normal"
+   RawBanks and OTRaw and OTError "expert" banks, made necessary by the move 
+   OT to RawEventLocation::Tracker in RawEventFormat 4.0. Only the "normal"
+   configuration has been tested
+
 !========================= DAQSys v8r6 2015-02-23 =========================
 ! 2015-02-19 - Sascha Stahl
  - Updated TrackReports Decoder locations.
