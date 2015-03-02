@@ -1,6 +1,6 @@
 // $Id: PatDownTrack.h,v 1.3 2009-10-08 10:09:46 sstahl Exp $
-#ifndef KSTRACK_H 
-#define KSTRACK_H 1
+#ifndef PATDOWNTRACK_H 
+#define PATDOWNTRACK_H 1
 
 // Include files
 #include "GaudiKernel/Point3DTypes.h"
@@ -146,4 +146,4 @@ private:
   
   PatTTHits m_hits;      /// working list of hits on this track
 };
-#endif // KSTRACK_H
+#endif // PATDOWNTRACK_H

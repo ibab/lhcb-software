@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-03-02 - Michel De Cian
+ - Change 'ifndef KSTRACK' to 'ifndef PATDOWNTRACK' in PatDownTrack.h to get rid of relics.
+
 ! 2015-02-28 - Manuel Tobias Schiller
  - PatSeedTrack: rewrite code in constructor which calculates parabola
    parameters from three X hits (permille level increase in efficiency)
