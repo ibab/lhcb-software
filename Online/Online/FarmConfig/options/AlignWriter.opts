@@ -8,10 +8,6 @@ ApplicationMgr.EvtSel                = "NONE";
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::FileWriteMgr/WrManager";
 ApplicationMgr.ExtSvc               += { "IncidentSvc", "LHCb::MEPManager/MepManager"};
-ApplicationMgr.ExtSvc               += { "LHCb::FileWriterSvc/AlignDataWriter_D0"};
-ApplicationMgr.ExtSvc               += { "LHCb::FileWriterSvc/AlignDataWriter_VeLoMuons"};
-ApplicationMgr.ExtSvc               += { "LHCb::FileWriterSvc/AlignDataWriter_Tracker"};
-ApplicationMgr.ExtSvc               += { "LHCb::FileWriterSvc/AlignDataWriter_RICH"};
 //
 MEPManager.PartitionBuffers          = @OnlineEnv.PartitionBuffers;
 MEPManager.PartitionName             = @OnlineEnv.PartitionName;
@@ -19,6 +15,12 @@ MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 MEPManager.Buffers                   = @OnlineEnv.AlignWriter_Buffers;
 //
 WrManager.Input                     = @OnlineEnv.AlignWriter_Input;
+WrManager.WriterList                += { "LHCb::FileWriterSvc/AlignDataWriter_D0"};
+WrManager.WriterList                += { "LHCb::FileWriterSvc/AlignDataWriter_VeLo"};
+WrManager.WriterList                += { "LHCb::FileWriterSvc/AlignDataWriter_Tracker"};
+WrManager.WriterList                += { "LHCb::FileWriterSvc/AlignDataWriter_RICH"};
+WrManager.WriterList                += { "LHCb::FileWriterSvc/AlignDataWriter_Muons"};
+
 MessageSvc.fifoPath              = "$LOGFIFO";
 MessageSvc.OutputLevel           = @OnlineEnv.OutputLevel;
 MonitorSvc.CounterUpdateInterval = 5;
@@ -27,39 +29,44 @@ HistogramPersistencySvc.Warnings = 0;
 AlignDataWriter_D0.SizeLimit                 = 1000;
 AlignDataWriter_D0.PrintFreq                 = 1.0;
 AlignDataWriter_D0.Requirements         = {
-"EvType=1;TriggerMask=0xffffffff,0x0,0x00200000,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
-"EvType=2;TriggerMask=0xffffffff,0x0,0x00200000,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+"EvType=2;TriggerMask=0x0,0x00200000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
-AlignDataWriter_D0.MEPFilePrefix         = "/localdisk/Alignment/D0/Run_";
-AlignDataWriter_D0.EvtFilePrefix         = "/localdisk/Alignment/D0/Run_";
-AlignDataWriter_D0.MaxEvents       = 1000;
+AlignDataWriter_D0.MEPFilePrefix          = "/localdisk/Alignment/D0/Run_";
+AlignDataWriter_D0.EvtFilePrefix          = "/localdisk/Alignment/D0/Run_";
+AlignDataWriter_D0.MaxEvents              = 1000;
 
-AlignDataWriter_RICH.SizeLimit                 = 1000;
-AlignDataWriter_RICH.PrintFreq                 = 1.0;
+AlignDataWriter_RICH.SizeLimit            = 1000;
+AlignDataWriter_RICH.PrintFreq            = 1.0;
 AlignDataWriter_RICH.Requirements         = {
-"EvType=1;TriggerMask=0xffffffff,0x0,0x00400000,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
-"EvType=2;TriggerMask=0xffffffff,0x0,0x00400000,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+"EvType=2;TriggerMask=0x0,0x400000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
-AlignDataWriter_RICH.MEPFilePrefix         = "/localdisk/Alignment/RICH/Run_";
-AlignDataWriter_RICH.EvtFilePrefix         = "/localdisk/Alignment/RICH/Run_";
-AlignDataWriter_RICH.MaxEvents       = 1000;
+AlignDataWriter_RICH.MEPFilePrefix        = "/localdisk/Alignment/RICH/Run_";
+AlignDataWriter_RICH.EvtFilePrefix        = "/localdisk/Alignment/RICH/Run_";
+AlignDataWriter_RICH.MaxEvents            = 1000;
 
-AlignDataWriter_VeLoMuons.SizeLimit                 = 1000;
-AlignDataWriter_VeLoMuons.PrintFreq                 = 1.0;
-AlignDataWriter_VeLoMuons.Requirements         = {
-"EvType=1;TriggerMask=0xffffffff,0x0,0x4008,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
-"EvType=2;TriggerMask=0xffffffff,0x0,0x4008,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+AlignDataWriter_VeLo.SizeLimit            = 1000;
+AlignDataWriter_VeLo.PrintFreq            = 1.0;
+AlignDataWriter_VeLo.Requirements         = {
+"EvType=2;TriggerMask=0x0,0x4008,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
-AlignDataWriter_VeLoMuons.MEPFilePrefix         = "/localdisk/Alignment/VeLo/Run_";
-AlignDataWriter_VeLoMuons.EvtFilePrefix         = "/localdisk/Alignment/VeLo/Run_";
-AlignDataWriter_VeLoMuons.MaxEvents       = 1000;
+AlignDataWriter_VeLo.MEPFilePrefix        = "/localdisk/Alignment/VeLo/Run_";
+AlignDataWriter_VeLo.EvtFilePrefix        = "/localdisk/Alignment/VeLo/Run_";
+AlignDataWriter_VeLo.MaxEvents            = 1000;
 
-AlignDataWriter_Tracker.SizeLimit                 = 1000;
-AlignDataWriter_Tracker.PrintFreq                 = 1.0;
-AlignDataWriter_Tracker.Requirements         = {
-"EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
-"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+AlignDataWriter_Tracker.SizeLimit         = 1000;
+AlignDataWriter_Tracker.PrintFreq         = 1.0;
+AlignDataWriter_Tracker.Requirements      = {
+"EvType=2;TriggerMask=0x0,0x4000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
-AlignDataWriter_Tracker.MEPFilePrefix         = "/localdisk/Alignment/Tracker/Run_";
-AlignDataWriter_Tracker.EvtFilePrefix         = "/localdisk/Alignment/Tracker/Run_";
-AlignDataWriter_Tracker.MaxEvents       = 100;
+AlignDataWriter_Tracker.MEPFilePrefix     = "/localdisk/Alignment/Tracker/Run_";
+AlignDataWriter_Tracker.EvtFilePrefix     = "/localdisk/Alignment/Tracker/Run_";
+AlignDataWriter_Tracker.MaxEvents         = 1000;
+
+AlignDataWriter_Muons.SizeLimit            = 1000;
+AlignDataWriter_Muons.PrintFreq            = 1.0;
+AlignDataWriter_Muons.Requirements         = {
+"EvType=2;TriggerMask=0x0,0x400,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+};
+AlignDataWriter_Muons.MEPFilePrefix        = "/localdisk/Alignment/Muons/Run_";
+AlignDataWriter_Muons.EvtFilePrefix        = "/localdisk/Alignment/Muons/Run_";
+AlignDataWriter_Muons.MaxEvents            = 1000;

@@ -15,12 +15,12 @@ MEPManager.PartitionName             = @OnlineEnv.PartitionName;
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 MEPManager.Buffers                   = @OnlineEnv.DskWriter_Buffers;
 //
-WrManager.WriterServicePatt          = "LHCbFileWriter_";
+//WrManager.WriterServicePatt          = "LHCbFileWriter_";
+WrManager.WriterList                += { "LHCb::FileWriterSvc/LHCbFileWriter_Overflow"};
 WrManager.Input                     = @OnlineEnv.DskWriter_Input;
 LHCbFileWriter_Overflow.SizeLimit                 = 1000;
 LHCbFileWriter_Overflow.PrintFreq                 = 1.0;
 LHCbFileWriter_Overflow.Requirements         = {
-"EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
 "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
 LHCbFileWriter_Overflow.MEPFilePrefix         = "/localdisk/overflow/NewRun_";
