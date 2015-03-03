@@ -9,11 +9,15 @@ Development release, based on Gaudi v26r1, LHCb v38r5 and Rec v17r5.
 Uses LCG_74root6 with ROOT 6.02.05.
 
 - Packages updated :
-  Phys/DaVinciFilters v1r1, Phys/DaVinciTypes v2r10, Phys/FlavourTagging v13r11,
-  Phys/JetAccessories v3r11, Phys/KalmanFilter v1r10, Phys/LoKiArrayFunctors v11r0,
-  Phys/LoKiPhys v11r0, Phys/LoKiProtoParticles v3r0, Phys/LoKiTracks v3r0,
-  Phys/NeuroBayesTools v1r3, Phys/ParticleCombiners v1r1, Phys/Swimming v3r6,
-  Phys/TisTosTobbing v8r2.
+  Kernel/SelectionLine v1r5, Phys/DaVinciFilters v1r1, Phys/DaVinciTypes v2r10,
+  Phys/FlavourTagging v13r11, Phys/JetAccessories v3r11, Phys/KalmanFilter v1r10,
+  Phys/LoKiArrayFunctors v11r0, Phys/LoKiPhys v11r0, Phys/LoKiProtoParticles v3r0,
+  Phys/LoKiTracks v3r0, Phys/NeuroBayesTools v1r3, Phys/ParticleCombiners v1r1,
+  Phys/Swimming v3r6, Phys/TisTosTobbing v8r2.
+
+- In Kernel/SelectionLine v1r5 :
+  . Added HLT1 and HLT2 stages to Selection::Line::Stage class in order to
+    deal with split HLT.
 
 - In Phys/DaVinciFilters v1r1 :
   . FilterDesktop: make the default name of factory dependent on the algorithm name prefix.

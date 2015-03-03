@@ -9,7 +9,7 @@ use  DaVinciInterfaces          v2r23    Phys    # Current DV Maintainer
 use  DaVinciTypes               v2r10    Phys    # Current DV Maintainer
 use  DaVinciUtils               v1r1p1   Phys    # Current DV Maintainer
 use  DaVinciKernel              v12r0    Phys    # Current DV Maintainer
-use  SelectionLine              v1r4     Kernel  # Gerhard Raven
+use  SelectionLine              v1r5     Kernel  # Gerhard Raven
 use  SelPy                      v4r2p2   Phys    # Juan Palacios
 use  PhysSelPython              v9r5     PhysSel # Juan Palacios
 
