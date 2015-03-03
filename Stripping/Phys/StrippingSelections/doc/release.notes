@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-03-03 - Stefano Perazzini
+ - Branched the project into v3r39b. This branch is based on revision
+   r184694
+
+! 2015-03-03 - Marcin Kucharczyk
+ - Change the cut on min. sumPt of the secondary vertex in StrippingInclbJets.py
+
 ! 2015-03-02 - Lucio Anderlini
  - Several syntax errors in StrippingPIDCalib were fixed
 
@@ -13,9 +20,6 @@
 !========================= StrippingSelections v3r39 2014-12-14 =========================
 
 !========================= StrippingSelections v3r38 2014-11-25 =========================
-
-! 2015-03-03 - Marcin Kucharczyk
-  - Change the cut on min. sumPt of the secondary vertex in StrippingInclbJets.py
 
 ! 2014-11-25 - Andrea Contu
  - Fix weird tabulation in Beauty2Charm_B2DXBuilder.py which was preventing svn commits
