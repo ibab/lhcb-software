@@ -5,6 +5,7 @@
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/Kernel.h"
 
 
 // local
@@ -54,16 +55,17 @@ bool PatSeedTool::removeHitsWhileChi2TooLarge(
     typename FIT::value_type m_chi2;
     typename FIT::value_type m_worstchi2;
     decltype(track.coordBegin()) m_worst;
-    WorstHitFinder(const FIT& fit, PatSeedTrack& track) :
+    WorstHitFinder(const FIT& fit, PatSeedTrack& track) noexcept :
       m_chi2(0), m_worstchi2(0), m_worst(track.coordBegin())
     {
       for (auto it = m_worst; track.coordEnd() != it; ++it) {
 	const auto hit = *it;
-	if (!hit->isSelected()) continue;
-	if (xOnly && !hit->hit()->isX()) continue;
+	if (UNLIKELY(!hit->isSelected())) continue;
+	if (xOnly && UNLIKELY(!hit->hit()->isX())) continue;
 	const auto chi2hit = fit.chi2(track, hit);
 	m_chi2 += chi2hit;
-	if (chi2hit > m_worstchi2) m_worstchi2 = chi2hit, m_worst = it;
+	m_worstchi2 = std::max(m_worstchi2, chi2hit);
+	if (UNLIKELY(m_worstchi2 == chi2hit)) m_worst = it;
       }
     }
   };
@@ -71,21 +73,21 @@ bool PatSeedTool::removeHitsWhileChi2TooLarge(
   // keep track of number of degrees of freedom ourselves...
   int nHitsX = -3, nHitsStereo = xOnly ? 0 : -2;
   for (const PatFwdHit* hit : track.m_coords) {
-    if (!hit->isSelected()) continue;
+    if (UNLIKELY(!hit->isSelected())) continue;
     if (xOnly || hit->hit()->isX()) ++nHitsX;
     else if (!xOnly) ++nHitsStereo;
   }
   // ... and stop early if we don't have enough hits
-  if (0 > nHitsX || 0 > nHitsStereo) return false;
+  if (UNLIKELY(0 > nHitsX || 0 > nHitsStereo)) return false;
 
   FIT fit(track, track.m_coords);
-  if (!fit) return false;
+  if (UNLIKELY(!fit)) return false;
 
   bool okay;
   do {
     WorstHitFinder worst(fit, track);
 
-    if (debug) {
+    if (UNLIKELY(debug)) {
       MsgStream& msg = info();
       for (const PatFwdHit* hit: track.coords()) {
 	if (!hit->isSelected()) continue;
@@ -97,25 +99,25 @@ bool PatSeedTool::removeHitsWhileChi2TooLarge(
     okay = (!(0. < maxChi2) || maxChi2 >= worst.m_worstchi2) &&
       minPlanes <= track.nPlanes() && 0 <= nHitsX && 0 <= nHitsStereo;
     // if we're above thresholds, and can remove hits, do so, and refit
-    if (!okay) {
-      if (debug) {
+    if (UNLIKELY(!okay)) {
+      if (UNLIKELY(debug)) {
 	info() << " Remove hit and try again " << endmsg;
       }
       // keep track of what we're about to remove...
       if (xOnly || (*worst.m_worst)->hit()->isX()) --nHitsX;
       else if (!xOnly) --nHitsStereo;
       // ... remove ...
-      worst.m_worst = track.removeCoord(worst.m_worst);
+      track.removeCoord(worst.m_worst);
       // ... and refit only if we know it should work...
       const bool expectFitOkay = 0 <= nHitsX && 0 <= nHitsStereo && 0 < fit.ndf()
 	&& minPlanes <= track.nPlanes();
-      if (expectFitOkay) {
+      if (LIKELY(expectFitOkay)) {
 	// full refit because of OT!
 	fit.refit(track, track.m_coords);
       }
 
-      if (!expectFitOkay || !fit) {
-	if (debug) info() << " Abandon: Only " << track.nPlanes()
+      if (UNLIKELY(!expectFitOkay || !fit)) {
+	if (UNLIKELY(debug)) info() << " Abandon: Only " << track.nPlanes()
 	  << " planes, min " << minPlanes  << " highestChi2 "
 	    << worst.m_worstchi2 << " status " << fit.status() << " nDoF "
 	    << fit.ndf() << endmsg;
@@ -125,14 +127,14 @@ bool PatSeedTool::removeHitsWhileChi2TooLarge(
       continue;
     }
     // okay, we're done (either below chi^2 threshold, or not enough planes)
-    if ( debug ) info() << ".. done with " << track.nPlanes()
+    if (UNLIKELY(debug)) info() << ".. done with " << track.nPlanes()
       << " planes, min " << minPlanes << " highestChi2 "
 	<< worst.m_worstchi2 << endmsg;
     // set chi2/ndf, but avoid division by 0
     track.setChi2((0 < fit.ndf()) ?
 	(worst.m_chi2 / typename FIT::value_type(fit.ndf())) :
 	std::numeric_limits<typename FIT::value_type>::max());
-  } while (!okay);
+  } while (LIKELY(!okay));
   return okay;
 }
 
@@ -186,20 +188,22 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
 	    track, maxChi2, minPlanes, isDebug);
       }
     } else {
-      track.updateHits();
       if (TrackType::OTOnly == hittype) {
+	track.updateHits<PatSeedTrack::OT>();
 	XYFit<true, 1, false, HitType::OT> xyfit(track, track.m_coords);
 	if (!xyfit) return false;
 	else return removeHitsWhileChi2TooLarge<
 	  XYFit<false, 10, true, HitType::OT>, false>(
 	      track, maxChi2, minPlanes, isDebug);
       } else if (TrackType::ITOnly == hittype) {
+	track.updateHits<PatSeedTrack::IT>();
 	XYFit<true, 1, false, HitType::IT> xyfit(track, track.m_coords);
 	if (!xyfit) return false;
 	else return removeHitsWhileChi2TooLarge<
 	  XYFit<false, 10, true, HitType::IT>, false>(
 	      track, maxChi2, minPlanes, isDebug);
       } else {
+	track.updateHits<PatSeedTrack::ITOT>();
 	XYFit<true, 1, false> xyfit(track, track.m_coords);
 	if (!xyfit) return false;
 	else return removeHitsWhileChi2TooLarge<XYFit<false, 10>, false>(
@@ -308,7 +312,7 @@ void PatSeedTool::resAmbFromPitchRes(const PatSeedTrack& tr, Range hits) const
     // require hits in same module
     const LHCb::OTChannelID ot1(h1->hit()->lhcbID().otID());
     const LHCb::OTChannelID ot2(h2->hit()->lhcbID().otID());
-    if (ot1.uniqueModule() != ot2.uniqueModule()) return false;
+    if (UNLIKELY(ot1.uniqueModule() != ot2.uniqueModule())) return false;
     // check in detail: distance in z at y = 0 must be compatible with straws
     // in different monolayers and distance in x must be compatible with the
     // pitch
@@ -324,7 +328,7 @@ void PatSeedTool::resAmbFromPitchRes(const PatSeedTrack& tr, Range hits) const
   for (auto end = std::end(hits), begin = std::begin(hits);
       end != begin && end != begin + 1; ++begin) {
     PatFwdHit *h1 = *begin, *h2 = *(begin + 1);
-    if (!areNeighbours(h1, h2)) {
+    if (UNLIKELY(!areNeighbours(h1, h2))) {
       lastpitchres = std::numeric_limits<double>::max();
       continue;
     }
@@ -349,7 +353,7 @@ void PatSeedTool::resAmbFromPitchRes(const PatSeedTrack& tr, Range hits) const
     // case 1: track passes between hits, case 2: not case 1
     const auto pr1 = std::abs(dx / epr) * (epr - r1 - r2);
     const auto pr2 = std::abs(dx / epr) * (epr - std::abs(r1 - r2));
-    if (std::min(std::abs(pr1), std::abs(pr2)) > F(3)/F(2)) {
+    if (UNLIKELY(std::min(std::abs(pr1), std::abs(pr2)) > F(3)/F(2))) {
       // pitch residual too large to be believable (3/2 mm is a bit above 5
       // times the OT resolution), refuse to resolve ambiguities for this hit
       // pair
@@ -380,8 +384,7 @@ void PatSeedTool::resAmbFromPitchRes(const PatSeedTrack& tr, Range hits) const
 template <PatSeedTool::TrackType hittype, class IT>
 void PatSeedTool::resolveAmbiguities(const PatSeedTrack& track, IT begin, IT end) const
 {
-  if (TrackType::OTOnly == hittype || TrackType::Mixed == hittype) {
-    const bool isDebug = msgLevel( MSG::DEBUG );
+  if (TrackType::Mixed == hittype) {
     // special treatment for OT hits: try to fix ambiguities
     // (the for loop is a safety harness, in normal operation, the body will
     // execute only once!)
@@ -398,13 +401,22 @@ void PatSeedTool::resolveAmbiguities(const PatSeedTrack& track, IT begin, IT end
 	    }));
       it = itend;
       // stop if no OT hits
-      if (std::end(range) == std::begin(range)) continue;
+      if (UNLIKELY(std::end(range) == std::begin(range))) continue;
       // reset ambiguities for OT hits
       for (auto hit: range) hit->setRlAmb(0);
       // resolve ambiguities from pitch residuals where possible
-      if (m_ambigFromPitchResiduals) resAmbFromPitchRes(track, range);
-      if (m_ambigFromLargestDrift) resAmbFromLargestDrift(track, range, isDebug);
+      if (LIKELY(m_ambigFromPitchResiduals)) resAmbFromPitchRes(track, range);
+      if (UNLIKELY(m_ambigFromLargestDrift)) resAmbFromLargestDrift(track, range, msgLevel(MSG::DEBUG));
     }
+  } else if (TrackType::OTOnly == hittype) {
+    auto range = as_range(begin, end);
+    // stop if no OT hits
+    if (UNLIKELY(std::end(range) == std::begin(range))) return;
+    // reset ambiguities for OT hits
+    for (auto hit: range) hit->setRlAmb(0);
+    // resolve ambiguities from pitch residuals where possible
+    if (LIKELY(m_ambigFromPitchResiduals)) resAmbFromPitchRes(track, range);
+    if (UNLIKELY(m_ambigFromLargestDrift)) resAmbFromLargestDrift(track, range, msgLevel(MSG::DEBUG));
   }
 }
 

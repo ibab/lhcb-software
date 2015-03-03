@@ -4,6 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-03-03 - Manuel Tobias Schiller
+ - PatSeedTrack: (very) slight code modernisation
+ - PatSeedTool: clean up further
+
 ! 2015-03-02 - Manuel Tobias Schiller
  - PatSeedingTool, PatSeedTool, PatSeedTrack, PatSeedFits: refactor bits of
    code to avoid code duplication; no changes in performance or timing

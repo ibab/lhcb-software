@@ -65,105 +65,95 @@ class PatSeedTrack {
     PatSeedTrack( PatFwdHit* c0, PatFwdHit* c1, PatFwdHit* c2, PatFwdHit* c3,
 	double zRef, double dRatio, double arrow );
 
-    PatSeedTrack( const PatSeedTrack& other) { *this = other; }
+    PatSeedTrack(const PatSeedTrack& other) { *this = other; }
 
-    virtual ~PatSeedTrack( ); ///< Destructor
+    virtual ~PatSeedTrack(); ///< Destructor
 
     /// get track parameters
-    void getParameters( double& z0, double& ax, double &bx, double &cx,
-			double& ay, double& by) const {
-      z0 = m_z0;
-      ax = m_ax;
-      bx = m_bx;
-      cx = m_cx;
-      ay = m_ay;
-      by = m_by;
-    }
+    void getParameters(double& z0, double& ax, double &bx, double &cx,
+			double& ay, double& by) const noexcept
+    { z0 = m_z0; ax = m_ax; bx = m_bx; cx = m_cx; ay = m_ay; by = m_by; }
 
     /// set track parameters
-    void setParameters (double z0, double ax, double bx, double cx,
-			double ay, double by) {
-      m_z0 = z0;
-      m_ax = ax;
-      m_bx = bx;
-      m_cx = cx;
-      m_ay = ay;
-      m_by = by;
+    void setParameters(double z0, double ax, double bx, double cx,
+	double ay, double by) noexcept
+    {
+      m_z0 = z0, m_ax = ax, m_bx = bx, m_cx = cx, m_ay = ay, m_by = by;
       m_cosine =  1. / std::sqrt( 1. +  m_bx * m_bx  );
     }
 
-    double z0() const { return m_z0; } ///< return reference z
-    double xAtZEqZ0() const { return m_ax; } ///< return x at reference z
+    double z0() const noexcept { return m_z0; } ///< return reference z
+    double xAtZEqZ0() const noexcept { return m_ax; } ///< return x at reference z
 
-    double xAtZ( double z ) const ///< return x at given z
+    double xAtZ( double z ) const noexcept ///< return x at given z
     {
       const double dz = z - m_z0;
-      return m_ax + dz * ( m_bx + dz * ( m_cx * (1. + dz * m_dx )));
+      return m_ax + dz * (m_bx + dz * (m_cx * (1. + dz * m_dx )));
     }
 
-    double xSlope( double z ) const ///< return slope in x at given z
+    double xSlope( double z ) const noexcept ///< return slope in x at given z
     {
       const double dz = z - m_z0;
-      return m_bx + dz * ( 2. * m_cx * (1. + 1.5 * dz * m_dx) );
+      return m_bx + dz * m_cx * (2. + 3. * dz * m_dx);
     }
 
-    double yAtZ( double z ) const ///< return y at given z
+    double yAtZ( double z ) const noexcept ///< return y at given z
     { return m_ay + m_by * z; }
 
-    double yAtZEq0() const ///< return y at z=0
+    double yAtZEq0() const noexcept ///< return y at z=0
     { return m_ay; }
 
-    double ySlope( double ) const ///< return slope in y at given z
+    double ySlope( double ) const noexcept ///< return slope in y at given z
     { return m_by; }
 
-    double ySlopeAtZEq0() const ///< return slope in y at z=0
+    double ySlopeAtZEq0() const noexcept ///< return slope in y at z=0
     { return m_by; }
 
-    double curvature() const ///< return curvature
+    double curvature() const noexcept ///< return curvature
     { return m_cx; }
 
     /// const iterator to first coordinate(hit)
-    Hits::const_iterator coordBegin() const { return m_coords.begin(); }
+    Hits::const_iterator coordBegin() const noexcept { return m_coords.begin(); }
     /// const iterator to end of coordinates(hits)
-    Hits::const_iterator coordEnd()   const { return m_coords.end(); }
+    Hits::const_iterator coordEnd()   const noexcept { return m_coords.end(); }
     /// iterator to first coordinate(hit)
-    Hits::iterator coordBegin()             { return m_coords.begin(); }
+    Hits::iterator coordBegin() noexcept             { return m_coords.begin(); }
     /// iterator to end of coordinates(hits)
-    Hits::iterator coordEnd()               { return m_coords.end(); }
+    Hits::iterator coordEnd() noexcept               { return m_coords.end(); }
     /// const reference to coordinate(hit) container
-    const Hits& coords() const		  { return m_coords; }
+    const Hits& coords() const noexcept		  { return m_coords; }
 
-    unsigned nCoords() const ///< return number of hits on the track
+    unsigned nCoords() const noexcept ///< return number of hits on the track
     { return m_coords.size(); }
 
-    unsigned nPlanes() const ///< return number of planes on the track
+    unsigned nPlanes() const noexcept ///< return number of planes on the track
     { return m_nbPlanes; }
 
-    unsigned nXPlanes() const; ///< return number of X planes on the track
-    unsigned nStPlanes() const; ///< return number of stereo planes on the track
+    unsigned nXPlanes() const noexcept; ///< return number of X planes on the track
+    unsigned nStPlanes() const noexcept; ///< return number of stereo planes on the track
 
-    double cosine() const ///< return cosine of track angle in xz projection
+    double cosine() const noexcept ///< return cosine of track angle in xz projection
     { return m_cosine; }
 
     /// return number of holes (planes without hit)
-    inline unsigned nHoles() const;
+    inline unsigned nHoles() const noexcept;
 
     /// return minimum number of planes per station of all stations
-    inline unsigned minPlanesPerStation(unsigned* minSta = 0) const;
+    inline unsigned minPlanesPerStation(unsigned* minSta = 0) const noexcept;
 
     ///< weighted number of hits (hits in clusters count twice)
-    inline unsigned nbOnSide() const;
+    inline unsigned nbOnSide() const noexcept;
 
     /// return number of hits in monolayer 1 minus monolayer2
-    inline int otMonoAsym() const;
+    inline int otMonoAsym() const noexcept;
 
     ///< number of hits above ST high threshold
-    inline unsigned nbHighThreshold() const;
+    inline unsigned nbHighThreshold() const noexcept;
 
-    double chi2() const ///< track chi^2/ndf
+    double chi2() const noexcept ///< track chi^2/ndf
     { return m_chi2; }
 
-    void setChi2( double chi2 ) ///< set track chi^2/ndf
+    void setChi2( double chi2 ) noexcept ///< set track chi^2/ndf
     { m_chi2 = chi2; }
 
     void addCoord( PatFwdHit* hit ) ///< add a hit
@@ -214,7 +204,7 @@ class PatSeedTrack {
     }
 
     /// perpendicular distance for fit
-    double distanceForFit( const PatFwdHit* hit ) const
+    double distanceForFit( const PatFwdHit* hit ) const noexcept
     {
       double dist = hit->x() - xAtZ( hit->z() );
       if (!hit->isOT()) return dist;
@@ -226,7 +216,7 @@ class PatSeedTrack {
     }
 
     /// distance track to hit with ambiguity fixed
-    double distanceWithRL( const PatFwdHit* hit ) const
+    double distanceWithRL( const PatFwdHit* hit ) const noexcept
     {
       if (0 == hit->rlAmb() || !hit->isOT()) return distanceForFit( hit );
       const double dist = ( hit->x() - xAtZ( hit->z() ) );
@@ -238,7 +228,7 @@ class PatSeedTrack {
     }
 
     /// distance track to hit
-    double distance( const PatFwdHit* hit ) const
+    double distance( const PatFwdHit* hit ) const noexcept
     {
       double dist = hit->x() - xAtZ( hit->z() );
       if (!hit->isOT()) return dist;
@@ -251,31 +241,31 @@ class PatSeedTrack {
     }
 
     /// chi^2 contribution of a hit
-    double chi2Hit( const PatFwdHit* hit) const
+    double chi2Hit( const PatFwdHit* hit) const noexcept
     {
       const double dist = distance( hit ) * hit->hit()->errweight();
       return dist * dist;
     }
 
-    void setYParams( double y0, double sl ) ///< set track parameters in y
+    void setYParams( double y0, double sl ) noexcept ///< set track parameters in y
     { m_ay = y0; m_by = sl; updateHits( ); }
 
     /// type to represent IT only/OT only/ITOT overlap track
     typedef enum { OT = 1, IT = 2, ITOT = 3 } TrackRegion;
     /// update hit positions
     template <TrackRegion region = ITOT>
-    inline void updateHits();
+    inline void updateHits() noexcept;
 
     /// sort hits on track by increasing z
     inline void sort();
 
-    void setValid( bool flag ) ///< set if a track is valid
+    void setValid( bool flag ) noexcept ///< set if a track is valid
     { m_valid = flag; }
     
-    bool valid() const ///< return if a track is valid
+    bool valid() const noexcept ///< return if a track is valid
     { return m_valid; }
 
-    void updateYParametersOnly( double day, double dby  )
+    void updateYParametersOnly( double day, double dby  ) noexcept
     {
       m_ay += day, m_by += dby;
       if (LIKELY(0 < m_coords.size()))
@@ -284,25 +274,25 @@ class PatSeedTrack {
 
     /// update track parameters in y
     template <TrackRegion region = ITOT>
-    void updateYParameters( double day, double dby  )
+    void updateYParameters( double day, double dby  ) noexcept
     {
       updateYParametersOnly(day, dby);
       updateHits<region>();
     }
 
     /// update track parameters in x
-    void updateParameters( double dax, double dbx, double dcx )
+    void updateParameters( double dax, double dbx, double dcx ) noexcept
     {
       m_ax += dax, m_bx += dbx, m_cx += dcx;
       m_cosine =  1. / std::sqrt( 1. +  m_bx * m_bx  );
     }
 
     /// return ratio of cubic/parabolic coefficient
-    double dRatio() const
+    double dRatio() const noexcept
     { return m_dx; }
 
     /// return length of track (start layer - end layer + 1)
-    unsigned length() const
+    unsigned length() const noexcept
     {
       unsigned start = 0, end = kNPlanes;
       while (end > start && !m_planeList[end - 1]) --end;
@@ -311,7 +301,7 @@ class PatSeedTrack {
     }
 
     /// return number of stations hit
-    unsigned nStations() const
+    unsigned nStations() const noexcept
     {
       return
 	((m_planeList[0] || m_planeList[1] || m_planeList[2] || m_planeList[3]) ? 1 : 0) +
@@ -320,7 +310,7 @@ class PatSeedTrack {
     }
 
     /// return track region (IT only, OT only, ITOT overlap)
-    TrackRegion trackRegion() const
+    TrackRegion trackRegion() const noexcept
     {
       unsigned trreg = 0;
       for(const PatFwdHit* hit: m_coords) {
@@ -368,14 +358,14 @@ class PatSeedTrack {
       return *this;
     }
 
-    void updateIDs()
+    void updateIDs() noexcept
     {
       m_ids.clear();
       for (const PatFwdHit* hit : m_coords) {
 	m_ids.insert(hit->hit()->lhcbID());
       }
     }
-    const XHitFingerPrint& bloomfilter() const
+    const XHitFingerPrint& bloomfilter() const noexcept
     { return m_ids; }
 
   protected:
@@ -403,7 +393,7 @@ class PatSeedTrack {
 
 };
 
-inline int PatSeedTrack::otMonoAsym() const
+inline int PatSeedTrack::otMonoAsym() const noexcept
 { 
   int otMonoAsym = 0;
   for(const PatFwdHit* hit: m_coords) {
@@ -422,7 +412,7 @@ inline int PatSeedTrack::otMonoAsym() const
   return otMonoAsym;
 }
 
-inline unsigned PatSeedTrack::nHoles() const
+inline unsigned PatSeedTrack::nHoles() const noexcept
 {
   unsigned nHoles = 0, i = 0, j = kNPlanes;
   // find first and last plane with hit
@@ -433,7 +423,7 @@ inline unsigned PatSeedTrack::nHoles() const
   return nHoles;
 }
 
-inline unsigned PatSeedTrack::nXPlanes() const
+inline unsigned PatSeedTrack::nXPlanes() const noexcept
 {
   unsigned retVal = 0;
   for (unsigned i = kNPlanes; i--; )
@@ -442,7 +432,7 @@ inline unsigned PatSeedTrack::nXPlanes() const
   return retVal;
 }
 
-inline unsigned PatSeedTrack::nStPlanes() const
+inline unsigned PatSeedTrack::nStPlanes() const noexcept
 {
   unsigned retVal = 0;
   for (unsigned i = kNPlanes; i--; )
@@ -451,7 +441,7 @@ inline unsigned PatSeedTrack::nStPlanes() const
   return retVal;
 }
 
-inline unsigned PatSeedTrack::minPlanesPerStation(unsigned* minSta) const
+inline unsigned PatSeedTrack::minPlanesPerStation(unsigned* minSta) const noexcept
 {
   std::array<unsigned, kNStations> pps = { { 0, 0, 0 } };
   for (unsigned i = kNPlanes; i--; )
@@ -464,7 +454,7 @@ inline unsigned PatSeedTrack::minPlanesPerStation(unsigned* minSta) const
   return minPlanes;
 }
 
-inline unsigned PatSeedTrack::nbOnSide() const
+inline unsigned PatSeedTrack::nbOnSide() const noexcept
 { 
   unsigned nb = 0;
   for(const PatFwdHit* hit: m_coords) {
@@ -474,7 +464,7 @@ inline unsigned PatSeedTrack::nbOnSide() const
   return nb;
 }
 
-inline unsigned PatSeedTrack::nbHighThreshold() const
+inline unsigned PatSeedTrack::nbHighThreshold() const noexcept
 {
   return std::count_if( m_coords.begin(), m_coords.end(),
       [] (const PatFwdHit* h) {
@@ -483,7 +473,7 @@ inline unsigned PatSeedTrack::nbHighThreshold() const
 }
 
 template <PatSeedTrack::TrackRegion region>
-inline void PatSeedTrack::updateHits()
+inline void PatSeedTrack::updateHits() noexcept
 {
   if (ITOT == region) {
     std::array<PatFwdHit*, Hits::MaxSize> ithits, othits;
