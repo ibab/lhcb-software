@@ -118,10 +118,13 @@ int SysFile::read(char* buf, size_t siz) const  {
       break;
     }
   }
-  string err = "Read of system file "+m_name+" failed:";
-  err += ::strerror(errno);
-  ::close(fd);
-  throw runtime_error(err);
+  if ( tmp != siz )  {
+    string err = "Read of system file "+m_name+" failed:";
+    err += ::strerror(errno);
+    ::close(fd);
+    throw runtime_error(err);
+  }
+  return tmp;
 }
 
 /// Write buffer to file in  one go
@@ -150,10 +153,13 @@ int SysFile::write(char* buf, size_t siz, int flags) const  {
       break;
     }
   }
-  string err = "Write of system file "+m_name+" failed:";
-  err += ::strerror(errno);
-  ::close(fd);
-  throw runtime_error(err);
+  if ( tmp != siz )  {
+    string err = "Write of system file "+m_name+" failed:";
+    err += ::strerror(errno);
+    ::close(fd);
+    throw runtime_error(err);
+  }
+  return tmp;
 }
 
 /// Read system data from proc file system: system uptime information
