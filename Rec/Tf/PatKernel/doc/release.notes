@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-03-03 - Manuel Tobias Schiller
+ - PatFwdHit: optimise planeCodee(), layer(), isStereo(), isX(), and
+   rlAmb()/setRlAmb(int) methods
+
 !========================= PatKernel v2r8 2015-01-14 =========================
 ! 2014-12-15 - Gerhard Raven
  - PatForwardHit, PatTTHit: bypass mutex of static memory pool.

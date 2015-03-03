@@ -1,6 +1,8 @@
 #ifndef PATFORWARD_PatForwardHit_H
 #define PATFORWARD_PatForwardHit_H 1
 
+#include <cstdint>
+
 #include "TfKernel/HitExtension.h"
 #include "TfKernel/LineHit.h"
 #include "TfKernel/OTHit.h"
@@ -28,8 +30,8 @@ final
 private:    
     // set relies standards-conforming on integral promotion of  bool; false -> 0 , true -> 1
     // hence unsigned(-b) gives 0 for false, and ~0 for true
-    unsigned set(bool b, unsigned mask, unsigned val) { return    ( val     & ~mask ) | ( unsigned(-b) & mask ) ; }
-    void     set(bool b, unsigned mask)               { m_flags = ( m_flags & ~mask ) | ( unsigned(-b) & mask ) ; }
+    static unsigned set(bool b, unsigned mask, unsigned val) noexcept { return    ( val     & ~mask ) | ( unsigned(-b) & mask ) ; }
+    void     set(bool b, unsigned mask)               noexcept { m_flags = ( m_flags & ~mask ) | ( unsigned(-b) & mask ) ; }
     // void set(bool b, unsigned mask) { m_flags  ^= (unsigned(-b) ^ m_flags) & mask; }
     // void set(bool b, unsigned mask) { if (b) m_flags |=  mask ; else m_flags &= ~mask ; } 
 public:
@@ -40,7 +42,7 @@ public:
     m_x{otHit.xMid()},
     m_z{otHit.zMid()},
     m_driftDistance{otHit.driftDistance()},
-    m_flags{ set( true, 0x8000u , 4 * otHit.station() + otHit.layer() ) } {
+    m_flags{ 0x800u + 4 * otHit.station() + otHit.layer() } {
   };
 
   /// Constructor from an ST hit
@@ -52,43 +54,41 @@ public:
   };
 
   // Accessors
-  double x()             const { return m_x; }
-  double z()             const { return m_z; }
-  double driftDistance() const { return m_driftDistance; }
-  double projection()    const { return m_projection; }
-  bool isOT()            const { return   m_flags & 0x8000u; }
-  int  rlAmb()           const { return ( m_flags & 0x4000u ) ? -1  :
-                                        ( m_flags & 0x2000u ) ? +1  : 0 ; }
-  bool hasPrevious()     const { return   m_flags & 0x1000u; }
-  bool hasNext()         const { return   m_flags & 0x0800u; }
-  bool isIgnored()       const { return   m_flags & 0x0400u; }
-  bool isUsed()          const { return   m_flags & 0x0200u; }
-  bool isSelected()      const { return   m_flags & 0x0100u; }
-  int  planeCode()       const { return   m_flags & 0x00ffu; }
-  int  layer()           const { return   planeCode()%4; }
+  double x()             const noexcept { return m_x; }
+  double z()             const noexcept { return m_z; }
+  double driftDistance() const noexcept { return m_driftDistance; }
+  double projection()    const noexcept { return m_projection; }
+  bool isOT()            const noexcept { return m_flags & 0x800u; }
+  int  rlAmb()           const noexcept { return int(m_flags << 21) >> 30; }
+  bool hasPrevious()     const noexcept { return m_flags & 0x100u; }
+  bool hasNext()         const noexcept { return m_flags & 0x080u; }
+  bool isIgnored()       const noexcept { return m_flags & 0x040u; }
+  bool isUsed()          const noexcept { return m_flags & 0x020u; }
+  bool isSelected()      const noexcept { return m_flags & 0x010u; }
+  int  planeCode()       const noexcept { return m_flags & 0x00fu; }
+  int  layer()           const noexcept { return m_flags & 3u; }
   //the next is in the baseclass, chasing the 'basehit' pointer, but then it is also 'polluted' by a check for UT,TT...
-  bool isStereo()        const { int l = layer(); return (l==1 || l == 2); } // TODO: check whether a 'popcount(l)==1' would be faster...
-  bool isX()             const { int l = layer(); return (l==0 || l == 3); }
+  bool isStereo()        const noexcept { return  ((m_flags + 1u) & 2u); }
+  bool isX()             const noexcept { return !((m_flags + 1u) & 2u); }
 
   // Setters
-  void setRlAmb( int rl )                       { m_flags = set( rl!=0, 0x2000u, 
-                                                            set( rl <0, 0x4000u, m_flags)); }
-  void setHasPrevious( bool hasPrevious )       { set(hasPrevious, 0x1000u ); }
-  void setHasNext( bool hasNext )               { set(hasNext,     0x0800u ); }
-  void setIgnored( bool isIgnored )             { set(isIgnored,   0x0400u ); }
-  void setIsUsed(bool isUsed)                   { set(isUsed,      0x0200u ); }
-  void setSelected( bool isSelected )           { set(isSelected,  0x0100u ); }
-  void setX( double x )                         { m_x = x; }
-  void setZ( double z )                         { m_z = z; }
-  void setDriftDistance( double driftDistance ) { m_driftDistance = driftDistance; }
-  void setProjection( double proj )             { m_projection = proj; }
+  void setRlAmb( int rl )                       noexcept { m_flags &= ~0x600u; m_flags |= (unsigned(rl) & 3u) << 9; }
+  void setHasPrevious( bool hasPrevious )       noexcept { set(hasPrevious, 0x100u ); }
+  void setHasNext( bool hasNext )               noexcept { set(hasNext,     0x080u ); }
+  void setIgnored( bool isIgnored )             noexcept { set(isIgnored,   0x040u ); }
+  void setIsUsed(bool isUsed)                   noexcept { set(isUsed,      0x020u ); }
+  void setSelected( bool isSelected )           noexcept { set(isSelected,  0x010u ); }
+  void setX( double x )                         noexcept { m_x = x; }
+  void setZ( double z )                         noexcept { m_z = z; }
+  void setDriftDistance( double driftDistance ) noexcept { m_driftDistance = driftDistance; }
+  void setProjection( double proj )             noexcept { m_projection = proj; }
 
 private:
   double   m_x = 0;
   double   m_z = 0;
   double   m_driftDistance = 0;
   double   m_projection    = -999.;
-  unsigned m_flags         = 0u;
+  uint32_t m_flags         = 0u;
 };
 
 typedef PatForwardHit               PatFwdHit;
