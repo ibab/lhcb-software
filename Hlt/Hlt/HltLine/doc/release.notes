@@ -5,6 +5,10 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2015-03-03 - Roel Aaij
+ - Allow Hlt2Member to be shared through a special constructor argument. All
+   arguments are checked, but use with care.
+   
 ! 2015-02-17 - Roel Aaij
  - Return Hlt1 and Hlt2 lines in a defined order from HltLine.hlt{1,2}Lines()
 

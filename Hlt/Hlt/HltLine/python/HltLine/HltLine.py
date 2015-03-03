@@ -1251,14 +1251,15 @@ class Hlt2Member ( object ) :
     @date   2008-08-06
     
     """
-    __slots__ = ( 'Type' , 'Name' , 'Args', 'Tools' )
+    __slots__ = ( 'Type' , 'Name' , 'Args', 'Tools', 'Shared' )
     
     ### The standard constructor to create the  Hlt1Member instance:
-    def __init__ ( self       ,    ## ...
-                   Type       ,    ## type of members
-                   name  = '' ,    ## the specific part of the algorithm name 
-                   tools = [] ,    ## list of tool options for this algorithm
-                   **Args     ) :  ## arguments 
+    def __init__ ( self          ,    ## ...
+                   Type          ,    ## type of members
+                   name   = ''   ,    ## the specific part of the algorithm name 
+                   tools  = []   ,    ## list of tool options for this algorithm
+                   shared = False,    ## If shared, do not inject the line name in the name
+                   **Args        ) :  ## arguments 
         """
         The standard constructor to create the  Hlt1Member instance:
         >>> m1 = Hlt2Member ( FilterDesktop , 'Filter', Code = '...', Inputs = ... ,
@@ -1282,10 +1283,11 @@ class Hlt2Member ( object ) :
             Args['Context'] = "" # make sure context is NOT Hlt...
 
         ## (1) "clone" all agruments
-        self.Type  = deepcopy ( Type  )
-        self.Name  = deepcopy ( name  )
-        self.Args  = deepcopy ( Args  )
-        self.Tools = deepcopy ( tools )
+        self.Type   = deepcopy ( Type   )
+        self.Name   = deepcopy ( name   )
+        self.Args   = deepcopy ( Args   )
+        self.Tools  = deepcopy ( tools  )
+        self.Shared = deepcopy ( shared )
 
     def clone( self, name, **mods ) :
         args = deepcopy( self.Args )
@@ -1293,6 +1295,7 @@ class Hlt2Member ( object ) :
         return Hlt2Member( self.Type
                          , name = name
                          , tools = self.Tools
+                         , shared = self.Shared
                          , **args )
 
     def subtype( self )        :
@@ -1300,7 +1303,10 @@ class Hlt2Member ( object ) :
         return self.Type.__name__
     def name   ( self , line ) :
         " Return the full name of the member "
-        return memberName ( self , line, level = 'Hlt2' ) 
+        if self.Shared:
+            return memberName ( self , '', level = 'Hlt2' ) 
+        else:
+            return memberName ( self , line, level = 'Hlt2' ) 
     def id     ( self )        :
         " Return the ID of the member "        
         return self.Name
@@ -1321,13 +1327,16 @@ class Hlt2Member ( object ) :
                 from Configurables import FilterDesktop, CombineParticles, NoPIDsParticleMaker, CombinedParticleMaker
                 from Configurables import DaVinci__N3BodyDecays, DaVinci__N4BodyDecays, DaVinci__N5BodyDecays, DaVinci__N6BodyDecays, DaVinci__N7BodyDecays
                 if hasattr(i,'Output') : 
-                        return i.Output
+                    return i.Output
                 elif type(i) is bindMembers :
-                       return  i.outputSelection()
+                    return  i.outputSelection()
                 elif type(i) in [ CombineParticles, FilterDesktop, NoPIDsParticleMaker,CombinedParticleMaker, DaVinci__N3BodyDecays, DaVinci__N4BodyDecays, DaVinci__N5BodyDecays, DaVinci__N6BodyDecays, DaVinci__N7BodyDecays ] : 
-                       return 'Hlt2/%s/Particles' % i.getName()
+                    return 'Hlt2/%s/Particles' % i.getName()
                 elif type(i) is Hlt2Member :
-                       return 'Hlt2/Hlt2'+line+i.subname()+'/Particles'
+                    if i.Shared:
+                        return 'Hlt2/Hlt2' + i.subname() + '/Particles'
+                    else:
+                        return 'Hlt2/Hlt2' + line + i.subname() + '/Particles'
                 else :
                        from re import sub
                        return sub('^%', 'Hlt2' + line, i )
@@ -1341,12 +1350,22 @@ class Hlt2Member ( object ) :
         else :
             print 'WARNING: Output for %s has been explicitly specified as %s' % ( _name, args['Output'] )
         from GaudiConfUtils import configurableExists
-        if configurableExists(_name) :
+        if configurableExists(_name):
+            if self.Shared:
+                from GaudiKernel.Configurable import Configurable
+                prev = Configurable.allConfigurables.get(_name)
+                for arg, val in args.iteritems():
+                    if getattr(prev, arg) != val:
+                        raise AttributeError('%s is not the same for previously created ' +
+                            'configurable %s and new instance: %s %s' % (arg, _name, getattr(prev, arg), val))
+                return prev
+            else:
                 raise NameError('Configurable %s already exists, oh dear!'%_name)
-        instance =  self.Type( _name, **args)
-        # see if alg has any special Tool requests...
-        for tool in self.Tools : tool.createConfigurable( instance )
-        return instance
+        else:
+            instance =  self.Type( _name, **args)
+            # see if alg has any special Tool requests...
+            for tool in self.Tools : tool.createConfigurable( instance )
+            return instance
 
 # ============================================================================
 ## @class Hlt2Line
