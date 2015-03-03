@@ -199,10 +199,42 @@ def getBuilderConfFromModule(confModule) :
     lbs = filter(lambda lb : inspect.isclass(lb), lbs)
     lbs = filter(lambda lb : issubclass(lb, LineBuilder), lbs)
     builderConfDict = {}
-    for lb in lbs :
-      if confModule.__dict__.has_key('default_config'):
+    if confModule.__dict__.has_key('default_config'):
+      if isinstance(confModule.__dict__['default_config'],dict):
         tmpKeys = confModule.default_config.keys()
         tmpKeys.sort(key=lambda x: x[0])
-        if not tmpKeys == ['BUILDERTYPE', 'CONFIG', 'NAME', 'STREAMS', 'WGs']: continue
-        builderConfDict[confModule.default_config['NAME']] = confModule.default_config 
+        if tmpKeys == ['BUILDERTYPE', 'CONFIG', 'NAME', 'STREAMS', 'WGs']:
+          builderConfDict[confModule.default_config['NAME']] = confModule.default_config
+        else:
+          for k,d in confModule.default_config.iteritems():
+            if not isinstance(d,dict):
+              log.error("The default_config of %s.py is not a dictionary"%confModule.__name__)
+              break
+            tmpKeys = d.keys()
+            tmpKeys.sort(key=lambda x: x[0])
+            if not tmpKeys == ['BUILDERTYPE', 'CONFIG', 'STREAMS', 'WGs']:
+              log.error("The default_config of %s.py is incorrect"%confModule.__name__)
+              break
+            builderConfDict[k] = d
     return builderConfDict
+
+def getBuilderAndConfFromModule(confModule) :
+    """
+    Extract all the line builders and their default
+    configuration from a given module.
+    Return as a class name : class dictionary.
+    """
+    buildersConf = {}
+    lineBuilders = getLineBuildersFromModule(confModule)
+    _confs       = getBuilderConfFromModule(confModule)
+    for name,conf in _confs.iteritems():  
+      if conf['BUILDERTYPE'] in lineBuilders.keys():
+        buildersConf[name] = conf
+      else:
+        print '[WARNING] The LinBuilder %s is not defined in the module %s' % (conf['BUILDERTYPE'], confModule.__name__ )
+
+    configuration = {'LineBuilders' : lineBuilder,
+                     'Configuration' : buildersConf }
+    return configuration
+
+

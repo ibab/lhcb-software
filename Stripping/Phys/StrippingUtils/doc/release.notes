@@ -4,9 +4,8 @@
 ! Purpose     : Helpers for safely building stripping components.
 !-----------------------------------------------------------------------------
 
-! 2015-03-03 - Stefano Perazzini
- - Branched the package to v1r9b. This branch is based on revision
-   r175641.
+! 2015-03-03 - Andrea Contu
+ - Updated python/StrippingUtils/Utils.py to accont for changes in Phys/StrippingSelections
 
 !========================= StrippingUtils v1r9 2014-07-28 =========================
 
