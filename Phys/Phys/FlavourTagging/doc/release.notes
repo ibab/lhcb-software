@@ -6,11 +6,11 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!====================== FlavourTagging v13r11 2015-03-03 =====================
+
 ! 2015-02-26 - Jack Wimberley
  - Made Nnet tagger not a part of combination by default
  - This magically fixes many things
-
-!====================== FlavourTagging v13r11 2014-02-24 =====================
 
 ! 2015-01-23 - Eduardo Rodrigues
  - Another trivial fix to remove compilation warnings in a .C class file.
