@@ -66,7 +66,8 @@ This version uses projects:
 
 - Changes to QMTests
   . Add brunel.sim08-pgun test to test SpecialData=["pGun"] option
-
+  . Fix compatibility tests to use root: instead of castor: protocol and to
+    ignore detector description warnings when using old (2010) tags
 
 </PRE><H1><A NAME=v47r4>2015-01-16 Brunel v47r4</A></H1><PRE>
 This version uses projects:
