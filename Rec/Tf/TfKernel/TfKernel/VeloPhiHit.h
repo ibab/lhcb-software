@@ -40,15 +40,15 @@ namespace Tf {
     inline VeloPhiHit(const DeVeloPhiType* sensor, const LHCb::VeloLiteCluster& clu, double signal);
 
     //== simple accessors
-    double phi()                           const { return m_coord; }
-    double phiHalfBox()                    const { return m_coordHalfBox; }
-    double phiIdeal()                      const { return m_coordIdeal; }
-    double z()                             const { return m_sensor->z(); }
-    const DeVeloPhiType* sensor()          const { return m_sensor; }
+    double phi()                           const noexcept { return m_coord; }
+    double phiHalfBox()                    const noexcept { return m_coordHalfBox; }
+    double phiIdeal()                      const noexcept { return m_coordIdeal; }
+    double z()                             const noexcept { return m_sensor->z(); }
+    const DeVeloPhiType* sensor()          const noexcept { return m_sensor; }
     //== access to coords used for sorting and searching (mapped to [pi/2,3/2pi] on the right side)
-    double sortCoord()                     const { return m_sortCoord; }
-    double sortCoordHalfBox()              const { return m_sortCoordHalfBox; }
-    double sortCoordIdeal()                const { return m_sortCoordIdeal; }
+    double sortCoord()                     const noexcept { return m_sortCoord; }
+    double sortCoordHalfBox()              const noexcept { return m_sortCoordHalfBox; }
+    double sortCoordIdeal()                const noexcept { return m_sortCoordIdeal; }
 
   private:
 
@@ -90,9 +90,9 @@ namespace Tf {
   }
 
   // our dynamic casts
-  inline const VeloPhiHit* HitBase::veloPhiHit() const
+  inline const VeloPhiHit* HitBase::veloPhiHit() const noexcept
   {
-    return type()==RegionID::VeloPhi ? static_cast<const VeloPhiHit*>(this) : 0;
+    return type()==RegionID::VeloPhi ? static_cast<const VeloPhiHit*>(this) : nullptr;
   }
 }
 

@@ -4,6 +4,13 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2015-03-03 - Manuel Tobias Schiller
+ - revisit hit classes to give the code some more resemblance to C++11 by
+   adding noexcept where appropriate
+ - also use somewhat more efficient way to determine if a hit is an X hit in
+   IT and OT  
+ - change order of some hit class members to optimise layout in memory
+
 ! 2015-02-27 - Manuel Tobias Schiller
  - SIMDChi2Fit: speed up by 3% by using a smarter way to assign to columns of
    the wgrads matrix in addHits()

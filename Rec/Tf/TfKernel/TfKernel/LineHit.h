@@ -52,100 +52,98 @@ namespace Tf
     // Simple accessors to internal data members
 
     /** Access the start point y coordinate for this LineHit */
-    inline double yBegin()  const { return m_ybegin ; }
+    inline double yBegin()  const noexcept { return m_ybegin ; }
 
     /** Access the end point y coordinate for this LineHit */
-    inline double yEnd()    const { return m_yend ; }
+    inline double yEnd()    const noexcept { return m_yend ; }
 
     /** Access the value of global x coordinate at the point y=0 for this LineHit */
-    inline double xAtYEq0() const { return m_xAtYEq0 ; }
+    inline double xAtYEq0() const noexcept { return m_xAtYEq0 ; }
 
     /** Access the value of global z coordinate at the point y=0 for this LineHit */
-    inline double zAtYEq0() const { return m_zAtYEq0 ; }
+    inline double zAtYEq0() const noexcept { return m_zAtYEq0 ; }
 
     /** Setter for value of global x coordinate at the point y=0 for this LineHit */
-    inline void setXAtYEq0( const double xAtYEq0 ) const { m_xAtYEq0 = xAtYEq0 ; }
+    inline void setXAtYEq0( const double xAtYEq0 ) const noexcept { m_xAtYEq0 = xAtYEq0 ; }
 
     /** Setter for value of global z coordinate at the point y=0 for this LineHit */
-    inline void setZAtYEq0( const double zAtYEq0) const  { m_zAtYEq0 = zAtYEq0; }
+    inline void setZAtYEq0( const double zAtYEq0) const noexcept { m_zAtYEq0 = zAtYEq0; }
 
     /** Access the value of dx/dy  for this LineHit */
-    inline double dxDy()    const { return m_dxdy ; }
+    inline double dxDy()    const noexcept { return m_dxdy ; }
 
     /** Access the value of dz/dy  for this LineHit */
-    inline double dzDy()    const { return m_dzdy ; }
+    inline double dzDy()    const noexcept { return m_dzdy ; }
 
     /** x-coordinate in the rotated system (XXX???XXX what does rotated mean ???) */
-    inline double xT()   const { return coord() ; }
+    inline double xT()   const noexcept { return coord() ; }
 
     /** x coordinate of the line as function of y */
-    inline double x(const double globalY = 0.) const { return m_xAtYEq0 + globalY*m_dxdy ; }
+    inline double x(const double globalY = 0.) const noexcept { return m_xAtYEq0 + globalY*m_dxdy ; }
 
     /** z coordinate of the line as function of y */
-    inline double z(const double globalY = 0.) const { return m_zAtYEq0 + globalY*m_dzdy ; }
+    inline double z(const double globalY = 0.) const noexcept { return m_zAtYEq0 + globalY*m_dzdy ; }
 
     /** y coordinate in middle of the line */
-    inline double y() const { return 0.5*(yBegin()+yEnd()); }
+    inline double y() const noexcept { return 0.5*(yBegin()+yEnd()); }
 
     /** tan of stereo angle */
-    inline double tanT() const { return -m_dxdy ; }
+    inline double tanT() const noexcept { return -m_dxdy ; }
 
     /** sin of stereo angle */
-    inline double sinT() const { return tanT()*cosT() ; }
+    inline double sinT() const noexcept { return tanT()*cosT() ; }
 
     /** cos of stereo angle */
-    inline double cosT() const { 
+    inline double cosT() const noexcept { 
 	if (fabs(m_xAtYEq0) < 1.0E-9)
-	    return cos(atan(-m_dxdy));
+	    return 1 / std::sqrt(1 + m_dxdy * m_dxdy); //cos(atan(-m_dxdy));
 	return coord()/m_xAtYEq0 ; 
     }
 
       /** Minimum y coordinate of line endpoints */
-    inline double yMin() const { return std::min(yBegin(),yEnd()) ; }
+    inline double yMin() const noexcept { return std::min(yBegin(),yEnd()) ; }
 
     /** Maximum y coordinate of line endpoints */
-    inline double yMax() const { return std::max(yBegin(),yEnd()) ; }
+    inline double yMax() const noexcept { return std::max(yBegin(),yEnd()) ; }
 
     /** Minimum x coordinate of line endpoints */
-    inline double xMin() const { return std::min(x(yBegin()),x(yEnd())) ; }
+    inline double xMin() const noexcept { return std::min(x(yBegin()),x(yEnd())) ; }
 
     /** Maximum x coordinate of line endpoints */
-    inline double xMax() const { return std::max(x(yBegin()),x(yEnd())) ; }
+    inline double xMax() const noexcept { return std::max(x(yBegin()),x(yEnd())) ; }
 
     /** y coordinate of line mid point */
-    inline double yMid() const { return 0.5*(yBegin()+yEnd()) ; }
+    inline double yMid() const noexcept { return 0.5*(yBegin()+yEnd()) ; }
 
     /** x coordinate of line mid point */
-    inline double xMid() const { return x(yMid()) ; }
+    inline double xMid() const noexcept { return x(yMid()) ; }
 
     /** z coordinate of line mid point */
-    inline double zMid() const { return z(yMid()) ; }
+    inline double zMid() const noexcept { return z(yMid()) ; }
 
     /** Check if the y value is compatible with line */
-    inline bool isYCompatible ( const double y, const double tol ) const 
+    inline bool isYCompatible ( const double y, const double tol ) const noexcept
     {
-      // which one is faster?
-      return fabs( y - 0.5*(yBegin() + yEnd()) ) < 0.5*fabs(yBegin() - yEnd()) + tol ;
-      //return yMin() - tol <= y && y <= yMax() + tol ;
+      return yMin() - tol <= y && y <= yMax() + tol ;
     }
 
     /** Position for y=0. Note: This is not the begin point of the
         line. However, it is what is needed to make the
         intersection calls efficient 
     */
-    inline Point beginPoint() const { return Point((float)m_xAtYEq0,0.f,(float)m_zAtYEq0) ; }
+    inline Point beginPoint() const noexcept { return Point((float)m_xAtYEq0,0.f,(float)m_zAtYEq0) ; }
 
     /** direction, normalized to its y coordinate */
-    inline Vector direction() const { return Vector((float)m_dxdy,1.f,(float)m_dzdy) ; }
+    inline Vector direction() const noexcept { return Vector((float)m_dxdy,1.f,(float)m_dzdy) ; }
 
     /** position for any value of y */
-    inline Point position(const double globalY) const { return Point((float)x(globalY),(float)globalY,(float)z(globalY)) ; }
+    inline Point position(const double globalY) const noexcept { return Point((float)x(globalY),(float)globalY,(float)z(globalY)) ; }
 
     /** length of the line */
-    inline double length() const { return fabs( (yEnd()-yBegin())*sqrt(1 + m_dxdy*m_dxdy + m_dzdy*m_dzdy )) ; }
+    inline double length() const noexcept { return std::abs(yEnd()-yBegin())*std::sqrt(1 + m_dxdy*m_dxdy + m_dzdy*m_dzdy ) ; }
 
-    inline bool isX() const { if (type()==RegionID::TT || type()==RegionID::UT) return (layer()==station());
-    else return (layer()==0 || layer()==3);}
+    inline bool isX() const noexcept { if (type()==RegionID::TT || type()==RegionID::UT) return (layer()==station());
+    else return !((layer() + 1u) & 2u);}
 
   protected:
 

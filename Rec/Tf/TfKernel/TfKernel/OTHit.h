@@ -59,27 +59,27 @@ namespace Tf
   public: // Simple accessors to internal data members
 
     /** Returns the calibrated time is drift time + propagation time - default tof */
-    inline double calibratedTime() const { return m_rawhit.calibratedTime(); }
+    inline double calibratedTime() const noexcept { return m_rawhit.calibratedTime(); }
 
     /** Access the associated DeOTModule for this hit
      *  @return Reference to the associated DeOTModule */
-    inline const DeOTModule& module() const { return *m_module; }
+    inline const DeOTModule& module() const noexcept { return *m_module; }
 
     /** Access the raw hit information (OTLiteTime)
      *  @return The OTLiteTime for this hit */
-    inline const LHCb::OTLiteTime& rawhit() const { return m_rawhit ; }
+    inline const LHCb::OTLiteTime& rawhit() const noexcept { return m_rawhit ; }
 
     /** Access the default drift distance. 
      *  Defined at the point halfway along the length the wire.
      *  @return The drift distrance */
-    inline double driftDistance()  const { return m_driftDistance; }
+    inline double driftDistance()  const noexcept { return m_driftDistance; }
 
     /** Access the y-coordinate of the readout side of the wire (defines t0) */
-    inline double  yReadout()   const { return yEnd() ; }
+    inline double  yReadout()   const noexcept { return yEnd() ; }
 
     /** Access the propagation time relative to the default, which is halfway along the
         wire. The velocity has been corrected for sign and direction */
-    inline double approxPropagationTime( const double globaly ) const 
+    inline double approxPropagationTime( const double globaly ) const noexcept
     {
       // we ASSUME here that the average of the walk correction is zero... (it should, by construction)
       return (yReadout() - globaly) / module().propagationVelocityY();
@@ -87,7 +87,7 @@ namespace Tf
 
     /** Access the propagation time relative to the default, which is halfway along the
         wire. The velocity has been corrected for sign and direction */
-    inline double propagationTime( const double globaly ) const 
+    inline double propagationTime( const double globaly ) const noexcept
     {
       double propTime = (yReadout() - globaly) / module().propagationVelocityY();
       double dist2strawend = module().wireLength(m_rawhit.channel()) - propTime * module().propagationVelocity();
@@ -95,59 +95,59 @@ namespace Tf
     }
 
     /** The drift time after correction for propagation time */
-    inline double approxDriftTime( const double globaly ) const 
+    inline double approxDriftTime( const double globaly ) const noexcept
     { 
       return calibratedTime() - approxPropagationTime( globaly ) ;
     }
 
     /** The drift time after correction for propagation time */
-    inline double driftTime( const double globaly ) const 
+    inline double driftTime( const double globaly ) const noexcept
     { 
       return calibratedTime() - propagationTime( globaly ) ;
     }
 
     /** The drift distance after correction for propagation time */
-    inline double driftDistance( const double globaly ) const
+    inline double driftDistance( const double globaly ) const noexcept
     { 
       return m_rtrel->radius( driftTime( globaly) ) ; 
     }
 
     /** Test if this hit is out-of-time */
-    bool outOfTime( const double globaly, const double numsigma ) const ;
+    bool outOfTime( const double globaly, const double numsigma ) const noexcept;
 
     /** obsolete. please, don't use. To select valid drifttimes, cut directly on the drifttime. */
-    inline double approxUntruncatedDriftDistance( const double globaly ) const 
+    inline double approxUntruncatedDriftDistance( const double globaly ) const noexcept
     { 
       return m_rtrel->extrapolatedradius( approxDriftTime( globaly) ) ; 
     }
 
     /** obsolete. please, don't use. To select valid drifttimes, cut directly on the drifttime. */
-    inline double untruncatedDriftDistance( const double globaly ) const 
+    inline double untruncatedDriftDistance( const double globaly ) const noexcept
     { 
       return m_rtrel->extrapolatedradius( driftTime( globaly) ) ; 
     }
 
     /** obsolete. please, don't use. To select valid drifttimes, cut directly on the drifttime. */
-    inline double untruncatedDriftDistance() const 
+    inline double untruncatedDriftDistance() const noexcept
     { 
       return m_rtrel->extrapolatedradius( driftTime(yMid()) ) ; 
     }
 
     /** Access the straw number for this hit */
-    inline unsigned int straw() const { return m_rawhit.channel().straw() ; }
+    inline unsigned int straw() const noexcept { return m_rawhit.channel().straw() ; }
 
     /** Access the monolayer number for this hit */
-    inline unsigned int monolayer() const { return module().monoLayerB(straw()) ; }
+    inline unsigned int monolayer() const noexcept { return module().monoLayerB(straw()) ; }
 
     /** The length of the wire */
-    inline double wireLength() const { return module().wireLength(m_rawhit.channel()); }
+    inline double wireLength() const noexcept { return module().wireLength(m_rawhit.channel()); }
 
   private: // data
 
     const DeOTModule* m_module ;         ///< Pointer to the associated DeOTModule
+    const OTDet::RtRelation* m_rtrel;	 ///< The rt relation used to convert drift times to radii
     LHCb::OTLiteTime  m_rawhit ;         ///< The raw OTLiteTime for this hit
     double            m_driftDistance ;  ///< The default drift distance. Defined at the point halfway along the length the wire.
-    const OTDet::RtRelation* m_rtrel;	 ///< The rt relation used to convert drift times to radii
 
   private: // methods
     /** set drift distance and error to avoid duplicate code in constructors */
@@ -181,18 +181,18 @@ namespace Tf
 		  const OTDet::RtRelation& rtrel ) :
     LineHit(aModule, rawhit),
     m_module(&aModule),
-    m_rawhit(rawhit),
-    m_rtrel(&rtrel)
+    m_rtrel(&rtrel),
+    m_rawhit(rawhit)
   { setDriftDistAndErr(); }
   
   inline OTHit::OTHit( const DeOTModule& aModule, const LHCb::OTLiteTime& rawhit ) :
     LineHit(aModule,rawhit),
     m_module(&aModule),
-    m_rawhit(rawhit),
-    m_rtrel(&aModule.rtRelation())
+    m_rtrel(&aModule.rtRelation()),
+    m_rawhit(rawhit)
   { setDriftDistAndErr(); }
 
-  inline bool OTHit::outOfTime( double globaly, double numsigma ) const 
+  inline bool OTHit::outOfTime( double globaly, double numsigma ) const noexcept
   {
     const double tres = m_rtrel->drifttimeError(m_driftDistance) ;
     const double tmax = m_rtrel->tmax() ;
@@ -201,7 +201,7 @@ namespace Tf
   }
 
   // our dynamic casts
-  inline const OTHit* HitBase::othit() const 
+  inline const OTHit* HitBase::othit() const noexcept
   { 
     return ( type() == RegionID::OT ? static_cast<const OTHit*>(this) : nullptr ); 
   }

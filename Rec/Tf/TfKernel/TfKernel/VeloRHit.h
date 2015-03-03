@@ -44,16 +44,16 @@ namespace Tf {
                     const LHCb::VeloLiteCluster& clus, double signal);
 
     //== simple accessors
-    double r()                             const { return m_coord; }
-    double rHalfBox()                      const { return m_coordHalfBox; }
-    double rIdeal()                        const { return m_coordIdeal; }
-    double z()                             const { return m_sensor->z(); }
+    double r()                             const noexcept { return m_coord; }
+    double rHalfBox()                      const noexcept { return m_coordHalfBox; }
+    double rIdeal()                        const noexcept { return m_coordIdeal; }
+    double z()                             const noexcept { return m_sensor->z(); }
     //== access to coords used for sorting and searching (for r the same as coords)
-    double sortCoord()                     const { return m_coord; }
-    double sortCoordHalfBox()              const { return m_coordHalfBox; }
-    double sortCoordIdeal()                const { return m_coordIdeal; }
+    double sortCoord()                     const noexcept { return m_coord; }
+    double sortCoordHalfBox()              const noexcept { return m_coordHalfBox; }
+    double sortCoordIdeal()                const noexcept { return m_coordIdeal; }
     /// Returns pointer to the associated sensor for this hit
-    const DeVeloRType* sensor()            const { return m_sensor; }
+    const DeVeloRType* sensor()            const noexcept { return m_sensor; }
 
   private:
 
@@ -89,9 +89,9 @@ namespace Tf {
   { ; }
   
   // our dynamic casts
-  inline const VeloRHit* HitBase::veloRHit() const
+  inline const VeloRHit* HitBase::veloRHit() const noexcept
   {
-    return type()==RegionID::VeloR ? static_cast<const VeloRHit*>(this) : 0;
+    return type()==RegionID::VeloR ? static_cast<const VeloRHit*>(this) : nullptr;
   }
 
 }

@@ -23,16 +23,16 @@ namespace Tf {
 
 
     //== simple accessors
-    double coordHalfBox()                  const { return m_coordHalfBox; }
-    double coordIdeal()                    const { return m_coordIdeal; }
-    double signal()                        const { return m_signal; }
-    const LHCb::VeloLiteCluster& cluster() const { return m_clu; }
-    const LHCb::VeloChannelID channelID()  const { return m_clu.channelID(); }
-    bool highThreshold()                   const { return m_clu.highThreshold(); }
-    unsigned int strip()                   const { return m_clu.channelID().strip(); }
-    double interStripFraction()            const { return m_clu.interStripFraction(); }
-    unsigned int size()                    const { return m_clu.pseudoSize(); }
-    bool isPileUp()                        const { return m_clu.isPileUp(); }
+    double coordHalfBox()                  const noexcept { return m_coordHalfBox; }
+    double coordIdeal()                    const noexcept { return m_coordIdeal; }
+    double signal()                        const noexcept { return m_signal; }
+    const LHCb::VeloLiteCluster& cluster() const noexcept { return m_clu; }
+    const LHCb::VeloChannelID channelID()  const noexcept { return m_clu.channelID(); }
+    bool highThreshold()                   const noexcept { return m_clu.highThreshold(); }
+    unsigned int strip()                   const noexcept { return m_clu.channelID().strip(); }
+    double interStripFraction()            const noexcept { return m_clu.interStripFraction(); }
+    unsigned int size()                    const noexcept { return m_clu.pseudoSize(); }
+    bool isPileUp()                        const noexcept { return m_clu.isPileUp(); }
 
     //----------------------------------------------------------------------
     // functors
@@ -46,7 +46,7 @@ namespace Tf {
      */
     struct Compare  {
       template<typename HIT>
-      bool operator() (const HIT* lhs, const HIT* rhs) const
+      bool operator() (const HIT* lhs, const HIT* rhs) const noexcept
       {
         return lhs->sortCoord() < rhs->sortCoord();
       }
@@ -60,7 +60,7 @@ namespace Tf {
      */
     struct CompareHalfBox  {
       template<typename HIT>
-      bool operator() (const HIT* lhs, const HIT* rhs) const
+      bool operator() (const HIT* lhs, const HIT* rhs) const noexcept
       {
         return lhs->sortCoordHalfBox() < rhs->sortCoordHalfBox();
       }
@@ -74,7 +74,7 @@ namespace Tf {
      */
     struct CompareIdeal  {
       template<typename HIT>
-      bool operator() (const HIT* lhs, const HIT* rhs) const
+      bool operator() (const HIT* lhs, const HIT* rhs) const noexcept
       {
         return lhs->sortCoordIdeal() < rhs->sortCoordIdeal();
       }
@@ -88,7 +88,7 @@ namespace Tf {
      */
     struct IncreasingByZ  {
       template<typename HIT>
-      bool operator() (const HIT* lhs, const HIT* rhs) const
+      bool operator() (const HIT* lhs, const HIT* rhs) const noexcept
       {
         return lhs->z() < rhs->z();
       }
@@ -102,7 +102,7 @@ namespace Tf {
      */
     struct DecreasingByZ  {
       template<typename HIT>
-      bool operator() (const HIT* lhs, const HIT* rhs) const
+      bool operator() (const HIT* lhs, const HIT* rhs) const noexcept
       {
         return lhs->z() > rhs->z();
       }
@@ -121,10 +121,10 @@ namespace Tf {
 
   protected:
 
-    LHCb::VeloLiteCluster m_clu; ///< the cluster
     double m_coordHalfBox;        ///< the coordinate in the VELO halfbox frame
     double m_coordIdeal;          ///< the coordinate in the ideal global frame
     double m_signal;              ///< the total ADC counts of the cluster (if constructed from a full cluster)
+    LHCb::VeloLiteCluster m_clu; ///< the cluster
 
   };
 
@@ -145,10 +145,10 @@ namespace Tf {
               , rid
               , coord
               , error)
-    , m_clu(c)
     , m_coordHalfBox(coordHalfBox)
     , m_coordIdeal(coordIdeal)
     , m_signal(signal)
+    , m_clu(c)
   { ; }
 
 }
