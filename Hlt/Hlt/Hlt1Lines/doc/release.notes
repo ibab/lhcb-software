@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-03-03 - Matthew Kenzie
+ - Added more CalibTracking lines to do any of D->hh, B->hh, phi->hh
+
 ! 2015-02-12 - Matthew Kenzie
  - Add Hlt1JpsiPhiLines.py - still in testing
  - Some changes to Hlt1PhiLines.py and Hlt1CalibTrackingLines.py to
