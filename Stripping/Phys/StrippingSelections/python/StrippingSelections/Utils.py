@@ -11,7 +11,7 @@ from StrippingSettings.Utils import strippingConfiguration
 
 def checkConfig(reference_keys, configuration) :
     pass
-def lineBuilder(stripping, lineBuilderName) :
+def lineBuilder(stripping, lineBuilderName, WGs = None) :
     """
     Create a line builder from a stripping version and a line builder
     instance name.  The instance name must be registered in the database.
@@ -25,8 +25,13 @@ def lineBuilder(stripping, lineBuilderName) :
     else :
         _config = stripping[lineBuilderName]
 
-    return lineBuilders()[_config['BUILDERTYPE']](lineBuilderName,
-                                                  _config['CONFIG'])
+    try:
+        _lb = lineBuilders(WGs)[_config['BUILDERTYPE']](lineBuilderName,_config['CONFIG'])
+    except Exception, x:
+        log.error("Unable to configure %s because of %s" %(_config['BUILDERTYPE'],str(x)))
+    else:
+        return _lb
+
 
 def streamNames(stripping) :
     from SelPy.utils import flattenList, removeDuplicates
@@ -138,20 +143,23 @@ def buildStream( stripping, streamName = '', WGs = None ):
         _conf = _db[key]
         if stream.name() in _conf['STREAMS']:
             if WGs and not any( WG for WG in _conf['WGs'] if WG in WGs): continue
-            _lb = lineBuilders()[_conf['BUILDERTYPE']](key,_conf['CONFIG'])
-
-            if isinstance(_conf['STREAMS'],dict):
-                for linename in _conf['STREAMS'][stream.name()]:
-                    line = lineFromName( _lb, linename )
-                    if line:
-                        stream.appendLines( [ line ] )
-                    else:
-                        raise Exception('The line you have requested does not exist '+linename)
-            elif isinstance(_conf['STREAMS'],list):
-                stream.appendLines( _lb.lines() )
+            try:
+                _lb = lineBuilders()[_conf['BUILDERTYPE']](key,_conf['CONFIG'])
+            except Exception, x:
+                log.error("Unable to configure %s because of %s" %(_conf['BUILDERTYPE'], str(x)))
             else:
-                raise Exception( 'Unsupported type, expected list ' +
-                                 'or dict for line-to-STREAM mapping' )
+                if isinstance(_conf['STREAMS'],dict):
+                    for linename in _conf['STREAMS'][stream.name()]:
+                        line = lineFromName( _lb, linename )
+                        if line:
+                            stream.appendLines( [ line ] )
+                        else:
+                            raise Exception('The line you have requested does not exist '+linename)
+                elif isinstance(_conf['STREAMS'],list):
+                    stream.appendLines( _lb.lines() )
+                else:
+                    raise Exception( 'Unsupported type, expected list ' +
+                                     'or dict for line-to-STREAM mapping' )
     return stream
 
 
@@ -193,8 +201,12 @@ def buildStreams( stripping, WGs = None ):
     for k, v in scdb.iteritems() :
         if 'STREAMS' in v.keys() and not WGs or 'WGs' in v.keys():
             if not WGs or any( WG for WG in v['WGs'] if WG in WGs ):
-                lb = lineBuilders()[v['BUILDERTYPE']](k,v['CONFIG'])
-                addBuilderToStreamGrouping( streams, v, lb )
+                try:
+                    lb = lineBuilders()[v['BUILDERTYPE']](k,v['CONFIG'])
+                except Exception, x:
+                    log.error("Unable to configure %s because of %s" %(v['BUILDERTYPE'],str(x)))
+                else:
+                    addBuilderToStreamGrouping( streams, v, lb )
         else:
             raise Exception('Config',k,'missing either STREAM or WG data data.')
 
@@ -206,7 +218,50 @@ def buildStreams( stripping, WGs = None ):
         strippingStreams.append( StrippingStream( stream, Lines = lines ) )
     return strippingStreams
 
+def buildStreamsFromBuilder(conf, name ):
+    """
+    Build and return a set of StrippingStreams for a given line builder configuration
+    Usage:
 
+    >>> streams = buildStreamsFromBuilder(somelinebuilder, 'B2ppipiSigmacmm_Lcpi')
+    """
+    
+    from StrippingConf.StrippingStream import StrippingStream
+    from StrippingSettings.Utils import strippingConfiguration
+    from StrippingSelections import lineBuilders
+
+    streams = {}
+    
+    
+    k = name
+    _conf = {}
+    _conf[k] = conf[name]
+    
+    #_conf=lb.default_config
+    #if isinstance(stripping, basestring) :
+        #scdb = strippingConfiguration(stripping)
+    #else :
+        #scdb = stripping
+
+    for k, v in _conf.iteritems() :
+        if 'STREAMS' in v.keys():
+          
+            try:
+                lb = lineBuilders()[v['BUILDERTYPE']](k,v['CONFIG'])
+            except Exception, x:
+                log.error("Unable to configure %s because of %s" %(v['BUILDERTYPE'],str(x)))
+            else:
+                addBuilderToStreamGrouping( streams, v, lb )
+        else:
+            raise Exception('Config',k,'missing either STREAM.')
+
+    strippingStreams=[]
+    for stream in streams:
+        lines = [ line for line in streams[stream] ]
+        print ( 'Creating ' + stream + ' stream with '
+                + str( len(lines) ) + ' lines' )
+        strippingStreams.append( StrippingStream( stream, Lines = lines ) )
+    return strippingStreams
 
 ## def buildStream(stripping, streamName = ''):
 ##     """

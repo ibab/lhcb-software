@@ -4,18 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
-! 2015-03-03 - Stefano Perazzini
- - Branched the project into v3r39b. This branch is based on revision
-   r184694
-
-! 2015-03-03 - Marcin Kucharczyk
- - Change the cut on min. sumPt of the secondary vertex in StrippingInclbJets.py
-
-! 2015-03-02 - Lucio Anderlini
- - Several syntax errors in StrippingPIDCalib were fixed
-
-! 2015-03-02 - Lucio Anderlini
- - Drafted StrippingPIDCalib for single-vertex PIDCalib samples
+! 2015-03-03 - Andrea Contu
+ - New structure of StrippingSelections, the directory python/StrippingSelections
+   contains a subdirectory for each WG where lines should be added
+ - New dedicated tests directories for users, liaisons, and coordinators (to be completed)
+ - Complete cleanup of all existing stripping lines
+ - Complete cleanup of all testing scripts
 
 !========================= StrippingSelections v3r39 2014-12-14 =========================
 
