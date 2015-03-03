@@ -92,7 +92,7 @@ StatusProcess* StatusProcess::reset() {
   return this;
 }
 
-
+/// Read buffer from file in  one go
 int SysFile::read(char* buf, size_t siz) const  {
   int fd;
   if((fd = ::open(m_name.c_str(),O_RDONLY))<0)  {
@@ -118,13 +118,45 @@ int SysFile::read(char* buf, size_t siz) const  {
       break;
     }
   }
-  string err = "Read of Proc file "+m_name+" failed:";
+  string err = "Read of system file "+m_name+" failed:";
   err += ::strerror(errno);
   ::close(fd);
   throw runtime_error(err);
 }
 
-  /// Read system data from proc file system: system uptime information
+/// Write buffer to file in  one go
+int SysFile::write(char* buf, size_t siz, int flags) const  {
+  int fd;
+  if((fd = ::open(m_name.c_str(),O_WRONLY|O_CREAT|O_TRUNC,flags))<0)  {
+    string err = "Failed to open "+m_name+" ";
+    throw runtime_error(err+::strerror(errno));
+  }
+  size_t tmp = 0;
+  while ( tmp < siz )  {
+    int sc = ::write(fd,buf+tmp,siz-tmp);
+    if ( sc >  0 ) {
+      tmp += sc;
+    }
+    else if ( sc == 0 )  {
+      buf[tmp] = 0;
+      ::close(fd);
+      return tmp;
+    }
+    else if ( errno == EINTR )  {
+      printf("EINTR~!!!!\n");
+      continue;
+    }
+    else  {
+      break;
+    }
+  }
+  string err = "Write of system file "+m_name+" failed:";
+  err += ::strerror(errno);
+  ::close(fd);
+  throw runtime_error(err);
+}
+
+/// Read system data from proc file system: system uptime information
 int RTL::read(SystemUptime& ut) {
   char buff[256];
   int cnt = SysFile("/proc/uptime").read(buff,sizeof(buff));

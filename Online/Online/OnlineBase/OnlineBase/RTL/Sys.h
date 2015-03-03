@@ -175,10 +175,16 @@ namespace RTL {
    */
   class SysFile  {
   public:
+    /// File name
     std::string m_name;
+    /// Initializing constructor
     SysFile(const char* name) : m_name(name) {}
+    /// Default destructor. Non-virtuality is intended. Do not inherit!
     ~SysFile() {}
+    /// Read buffer from file in  one go
     int read(char* buffer, size_t len) const;
+    /// Write buffer in one go to file
+    int write(char* buffer, size_t len, int flags) const;
   };
 
   /// Class to store system uptime information
