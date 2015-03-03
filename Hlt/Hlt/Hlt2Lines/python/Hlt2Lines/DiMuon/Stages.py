@@ -11,7 +11,7 @@ class DiMuonFilter(Hlt2ParticleFilter):
                 " & (VFASPF(VCHI2PDOF)<%(VertexChi2)s )"
                 " & (MAXTREE('mu-' == ABSID, TRCHI2DOF) < %(TrChi2Tight)s)")
         inputs = [TrackFittedDiMuon]
-        Hlt2ParticleFilter.__init__(self, name, code, inputs)
+        Hlt2ParticleFilter.__init__(self, name, code, inputs, shared = True)
 
 class DetachedDiMuonFilter(Hlt2ParticleFilter):
     def __init__(self, name):
@@ -49,7 +49,7 @@ class JpsiFilter(Hlt2ParticleFilter):
                                 + " & " + Hlt2MonitorMinMax("MINTREE('mu-' == ABSID, PT)", "MINTREE(mu-==ABSID, PT)", 0, 10000, 'MuPT_out', nbins = 100)
                                 + " & " + Hlt2MonitorMinMax("VFASPF(VCHI2PDOF)", "VFASPF(VCHI2PDOF)", 0, 25, 'JPsiVeterxChi2_out', nbins = 100)}
         inputs = [TrackFittedDiMuon]
-        Hlt2ParticleFilter.__init__(self, name, code, inputs, **args)
+        Hlt2ParticleFilter.__init__(self, name, code, inputs, shared = True, **args)
 
 class DetachedJpsiFilter(Hlt2ParticleFilter):
     def __init__(self, name):
@@ -74,7 +74,7 @@ class Psi2SFilter(Hlt2ParticleFilter):
         args = {'PreMonitor'  : Hlt2Monitor("M", "M(#mu#mu)", 3097, 200, 'M_in',  nbins = 25),
                 'PostMonitor' : Hlt2Monitor("M", "M(#mu#mu)", 3686, 200, 'M_out', nbins = 25)}
         inputs = [TrackFittedDiMuon]
-        Hlt2ParticleFilter.__init__(self, name, code, inputs, **args)
+        Hlt2ParticleFilter.__init__(self, name, code, inputs, shared = True, **args)
 
 class DetachedPsi2SFilter(Hlt2ParticleFilter):
     def __init__(self, name):

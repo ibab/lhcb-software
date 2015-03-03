@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-03 - Roel Aaij
+ - Allow separate nickname and name, name goes to the configurable name and
+   nickname is used to get the cuts from the dictionary.
+ - Update DiMuon lines to used shared filters where appropriate.
+
 ! 2015-03-02 - Roel Aaij
  - Remove prefix from new template.
  - Updates to TrackEff lines.

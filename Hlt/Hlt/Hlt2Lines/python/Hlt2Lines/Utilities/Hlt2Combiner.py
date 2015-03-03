@@ -5,7 +5,7 @@ from Configurables import CombineParticles
 class Hlt2Combiner(Hlt2TisTosStage):
     __cutTypes = set(('MotherCut', 'DaughtersCuts', 'CombinationCut'))
     def __init__(self, name, decay, inputs, dependencies = [], tistos = [],
-                 combiner = CombineParticles, **kwargs):
+                 combiner = CombineParticles, nickname = None, shared = False, **kwargs):
         self.__decay = decay
         self.__stage = None
 
@@ -18,7 +18,7 @@ class Hlt2Combiner(Hlt2TisTosStage):
 
         ## Support NXBodyDecays
         self.__combiner = combiner
-        Hlt2TisTosStage.__init__(self, name, inputs, dependencies, tistos)
+        Hlt2TisTosStage.__init__(self, name, inputs, dependencies, tistos, nickname, shared)
 
     def clone(self, name, **kwargs):
         args = deepcopy(self.__kwargs)
@@ -31,7 +31,8 @@ class Hlt2Combiner(Hlt2TisTosStage):
                              ('inputs', self._inputs()),
                              ('tistos', self._tistos()),
                              ('dependencies', self._deps()),
-                             ('combiner', self.__combiner)):
+                             ('combiner', self.__combiner),
+                             ('nickname', self._nickname())):
             args[arg] = kwargs.pop(arg) if arg in kwargs else default
         args.update(kwargs)
         
@@ -39,8 +40,9 @@ class Hlt2Combiner(Hlt2TisTosStage):
 
     def _makeMember(self, cuts, args):
         from HltLine.HltLine import Hlt2Member
-        return Hlt2Member(self.__combiner, self._name() + 'Combiner',
-                          DecayDescriptor = self.__decay, Inputs = self.inputStages(cuts), **args)
+        return Hlt2Member(self.__combiner, self._name() + 'Combiner', shared = self._shared(),
+                          DecayDescriptor = self.__decay, Inputs = self.inputStages(cuts),
+                          **args)
                                      
     def stage(self, cuts):
         if self.__stage != None:
@@ -50,9 +52,9 @@ class Hlt2Combiner(Hlt2TisTosStage):
         args = deepcopy(self.__kwargs)
         for k, v in self.__cuts.iteritems():
             if k == 'DaughtersCuts':
-                args[k] = dict((l, w % cuts.get(self._name(), cuts['Common'])) for l, w in v.iteritems())
+                args[k] = dict((l, w % cuts.get(self._nickname(), cuts['Common'])) for l, w in v.iteritems())
             else:
-                args[k] = v % cuts.get(self._name(), cuts['Common'])
+                args[k] = v % cuts.get(self._nickname(), cuts['Common'])
 
         if not self._tistos():
             ## Return combiner if no tistos is required

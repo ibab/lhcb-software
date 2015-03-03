@@ -2,16 +2,21 @@ from copy import deepcopy
 from Utilities import makeList, splitSpecs
 
 class Hlt2Stage(object):
-    def __init__(self, name, inputs, dependencies = []):
+    def __init__(self, name, inputs, dependencies = [], nickname = None, shared = False):
         self.__name = name
+        self.__nickname = name if nickname == None else nickname
         self.__inputs = inputs
         self.__deps = dependencies
+        self.__shared = shared
         self.__depStages = None
         self.__inputStages = None
         
     def _name(self):
         return self.__name
 
+    def _nickname(self):
+        return self.__nickname
+    
     def _inputs(self):
         return self.__inputs
 
@@ -23,7 +28,10 @@ class Hlt2Stage(object):
 
     def _addDeps(self, deps):
         self.__deps.extend(deps)
-                                        
+
+    def _shared(self):
+        return self.__shared
+                                                
     def inputStages(self, cuts):
         if self.__inputStages == None:
             self.__inputStages = [i.stage(cuts) if hasattr(i, 'stage') else i for i in self._inputs()]
@@ -47,7 +55,7 @@ class Hlt2Stage(object):
                     yield i
                 else:
                     yield i
-        ## Make the stage first, this might update deps/inputs!!
+        ## Make our own stage first, this might update deps/inputs!!
         stage = self.stage(cuts)
         ## Flatten the list of deps and inputs and create stages to return.
         deps = list(__flatten(self.__deps)) + list(__flatten(self.__inputs))

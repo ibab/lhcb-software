@@ -24,7 +24,7 @@ class Hlt2TisTosGlobalTagger(Hlt2Stage):
         if self.__specs and not all(map(lambda s: s in _globalSpecs, self.__specs)):
             raise AttributeError("All specs must be globally taggable.")
         self.__stage = None
-        Hlt2Stage.__init__(self, 'Hlt2TisTosGlobalTagger', [])
+        Hlt2Stage.__init__(self, 'Hlt2TisTosGlobalTagger', shared = True)
         
     def __checkSpecs(self, specs):
         bad = filter(lambda x: x not in _globalSpecs, specs)
@@ -81,7 +81,7 @@ class Hlt2TisTosGlobalTagger(Hlt2Stage):
         return self.__stage
 
 class Hlt2TisTosParticleTagger(Hlt2Stage):
-    def __init__(self, name, tistos, inputs = [], **kwargs):
+    def __init__(self, name, tistos, inputs = [], nickname = None, shared = False, **kwargs):
         specsOrKeys = makeList(tistos)
         self.__specs = set()
         self.__keys = set()
@@ -96,13 +96,15 @@ class Hlt2TisTosParticleTagger(Hlt2Stage):
                             
         self.__kwargs = kwargs
         self.__stage = None
-        Hlt2Stage.__init__(self, name, inputs)
+        Hlt2Stage.__init__(self, name, inputs, nickname = nickname, shared = shared)
 
     def clone(self, name, **kwargs):
         args = deepcopy(self.__kwargs)
         args['name'] = name
+        args['shared'] = self._shared()
         for arg, default in (('tistos', self.__code),
-                             ('inputs', self._inputs())):
+                             ('inputs', self._inputs()),
+                             ('nickname', self._nickname())):
             args[arg] = kwargs.pop(arg) if arg in kwargs else default
         args.update(kwargs)
 
@@ -112,12 +114,13 @@ class Hlt2TisTosParticleTagger(Hlt2Stage):
         tagger = Hlt2TisTosGlobalTagger(TisTosSpecs = specs.keys())
         code = tagger.particleCut(specs.values())
         return Hlt2ParticleFilter('Global' + self._name(), code,
-                                  self._inputs(), [tagger], **self.__kwargs).stage(cuts)
+                                  self._inputs(), [tagger], shared = self._shared(),
+                                  nickname = self._nickname(), **self.__kwargs).stage(cuts)
     
     def __localTagger(self, specs, cuts):
         from HltLine.HltLine import Hlt2Member
         from Configurables import TisTosParticleTagger
-        return Hlt2Member(TisTosParticleTagger, self._name() + 'TisTosTagger',
+        return Hlt2Member(TisTosParticleTagger, self._name() + 'TisTosTagger', shared = self._shared(),
                           TisTosSpecs = specs, Inputs = self.inputStages(cuts), **self.__kwargs)        
 
     def stage(self, cuts):
@@ -147,9 +150,10 @@ class Hlt2TisTosParticleTagger(Hlt2Stage):
         return self.__stage
 
 class Hlt2TisTosStage(Hlt2Stage):
-    def __init__(self, name, inputs, dependencies = [], tistos = []):
+    def __init__(self, name, inputs, dependencies = [], tistos = [],
+                 nickname = None, shared = False):
         self.__tistos = makeList(tistos)
-        Hlt2Stage.__init__(self, name, inputs, dependencies)
+        Hlt2Stage.__init__(self, name, inputs, dependencies, nickname, shared)
     
     def _tistos(self):
         return self.__tistos
@@ -179,7 +183,8 @@ class Hlt2TisTosStage(Hlt2Stage):
             ## There are also local specs, so a TisTosParticleTagger is
             ## needed, that takes the output of the member as input
             self._addInputs([member])
-            return Hlt2TisTosParticleTagger(self._name(), localSpecs, [member]).stage(cuts)
+            return Hlt2TisTosParticleTagger(self._name(), localSpecs, [member],
+                                            self._nickname(), self._shared()).stage(cuts)
         else:
             ## No local tagger, return the member
             return member
