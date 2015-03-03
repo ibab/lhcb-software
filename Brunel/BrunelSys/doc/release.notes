@@ -3,6 +3,71 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v47r5>2015-02-04 Brunel v47r5</A></H1><PRE>
+This version uses projects:
+ LCG_74root6 (ROOT 6.02.05), Gaudi v26r1, LHCb v38r5, Lbcom v16r4,
+ Rec v17r5 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- Changes to Configuration
+  . OnlineBrunel will run on the output of Hlt1, so don't try to decode
+    Hlt2DecReports in OnlineMode. 
+  . Add support for Brunel().SpecialData += ['pGun']
+    (Brunel v47r5, RecConf v2r20)
+  . Switch default config access service to CDB (HltServices v2r7)
+
+- New functionality
+  . Generalise local-to-global transformation to allow for rotated modules.
+    (VPTools v2r5)
+
+- New Physics tuning
+  . New default database tags (DDDB v1r74)
+    o DDDB,     2015                        : dddb-20150119-3
+    o DDDB,                 2012            : dddb-20150119-2
+    o DDDB,                       2011      : dddb-20150119-1
+    o DDDB,                             2010: dddb-20150119
+    o LHCBCOND, 2015                        : cond-20150119-1
+    o LHCBCOND,       2013, 2012, 2011, 2010: cond-20150119
+  . OTRawBankDecoder: use the vetoing of out-of-time hit pairs by default
+    (OTDAQ v7r19)
+  . Tuned uncertainty of point on magnetic plane in downstream tracking, change
+    zMagnet parametrisation (PatAlgorithms v4r39)
+  . PatForwardTool: Do not add additional TT hits to Forward candidates if the
+    Seed is an Upstream track. (PatAlgorithms v4r39) 
+  . PatFwdTool: Add option (enabled by default) to use pitch residuals to resolve 
+    ambiguities in the OT in a manner similar to the seeding; this results in 
+    slight efficiency gains (permille level), a ghost rate reduction on the
+    percent. (PatAlgorithms v4r39)
+  . Add code to account for overlap hits, change default value of PassHoleSize
+    (PatVeloTT v4r5)
+  . OTHit: make use of the new walk_fast method in OTDet::WalkRelation to speed
+    up Seeding and Forward by about 4%; effects on efficiencies, ghost rates,
+    pulls and so on are on the permille level (TfKernel v2r30
+  . Add GhostProbability to RecoUpgradeTracking.py (TrackSys v9r5)
+  . Adapt RecoTracking.py, such that for data type '2015' PatVeloTTHybrid instead
+    of PatVeloTT is run. The (internal) Kalman filter is off per default.
+    (TrackSys v9r5)
+
+- Performance improvements
+  . Vectorised optimisation of magnetic field (DetDesc v18r36, Magnet v7r9)
+  . Speed optimisation in multiple packages (Tracking, Rich, MuonID)
+    (LHCb v38r5, Rec v17r5)
+
+ - Bug fixes
+   . Fix bug affecting the way the fractional position is used in the light
+     sharing for tracks crossing the inter SiPMs gaps (FTDet v2r9)
+   . Decoders.py: set up separate configurations for the decoder of OT "normal"
+     RawBanks and OTRaw and OTError "expert" banks (DAQSys v8r7)
+   . PatSeedFit: fix bug which caused a successful stub fit to produce a warning
+     and have its results ignored (PatAlgorithms v4r39)
+
+- Monitoring changes
+  . Add the histograms needed for online OT T0 calibration to the histograms
+    produced online (TrackMonitors v2r5)
+
+- Changes to QMTests
+  . Add brunel.sim08-pgun test to test SpecialData=["pGun"] option
+
+
 </PRE><H1><A NAME=v47r4>2015-01-16 Brunel v47r4</A></H1><PRE>
 This version uses projects:
  LCG_72root6 (ROOT 6.02.03), Gaudi v26r0, LHCb v38r4, Lbcom v16r3,
