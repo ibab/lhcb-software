@@ -18,7 +18,6 @@ def Hlt2Tracks():
 	return Hlt2Tracking("Hlt2Tracks",        
 			    FastFitType            = HltBiDirectionalKalmanFitSuffix,
 			    Hlt2Tracks             = 'Long',
-			    DoFastFit              = True,
 			    DoSeeding              = True,
 			    DoCloneKilling         = True
 			    )
@@ -28,7 +27,6 @@ def Hlt2BiKalmanFittedForwardTracking() :
         return Hlt2Tracking("Hlt2BiKalmanFittedForwardTracking",        
                                                                                  FastFitType            = HltBiDirectionalKalmanFitSuffix,
                                                                                  Hlt2Tracks             = 'Long',
-                                                                                 DoFastFit              = True,
                                                                                  DoSeeding              = True,
                                                                                  DoCloneKilling         = True
                                                                         )
@@ -39,7 +37,6 @@ def Hlt2BiKalmanFittedLongTracking() :
         return Hlt2Tracking("Hlt2BiKalmanFittedLongTracking",  
                                                                                  FastFitType            = HltBiDirectionalKalmanFitSuffix,
                                                                                  Hlt2Tracks             = 'Long',
-                                                                                 DoFastFit              = True,
                                                                                  DoSeeding              = True,
                                                                                  DoCloneKilling         = True
                                                                         )
@@ -50,7 +47,6 @@ def Hlt2BiKalmanFittedDownstreamTracking() :
     return Hlt2Tracking("Hlt2BiKalmanFittedDownstreamTracking", 
 			FastFitType            = HltBiDirectionalKalmanFitSuffix,
 			Hlt2Tracks             = 'Downstream',
-			DoFastFit              = True,
 			DoSeeding              = True,
 			DoCloneKilling         = False,
 			#TrackCuts              = {"Chi2Cut" : [0.,4.] }    
@@ -62,7 +58,6 @@ def Hlt2BiKalmanFittedRichForProtonsForwardTracking() :
      return Hlt2Tracking("Hlt2BiKalmanFittedRichForProtonsForwardTracking", 
                          FastFitType            = HltBiDirectionalKalmanFitSuffix,
                          Hlt2Tracks             = 'Long',
-                         DoFastFit              = True,
                          DoSeeding              = True,
                          DoCloneKilling         = True,
                          RichHypos              = ["pion","proton","kaon"],
@@ -77,7 +72,6 @@ def Hlt2BiKalmanFittedRichForLowPTParticlesForwardTracking() :
      return Hlt2Tracking("Hlt2BiKalmanFittedRichForLowPTParticlesForwardTracking", 
                          FastFitType            = HltBiDirectionalKalmanFitSuffix,
                          Hlt2Tracks             = 'Long',
-                         DoFastFit              = True,
                          DoSeeding              = True,
                          DoCloneKilling         = True,
                          RichHypos              = ["pion","proton","kaon"],

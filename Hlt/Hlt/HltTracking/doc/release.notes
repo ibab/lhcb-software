@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-03-03 - Sascha Stahl
+ - Hlt2Tracking.py and Hlt2TrackingConfigurations.py: Remove unused option DoFastFit.
+
 ! 2015-02-24 - Sascha Stahl
  - HltRecoConf and Hlt2Tracking: 
    Added option to run PatSeeding with offline settings, HltReconConf().OfflineSeeding. 

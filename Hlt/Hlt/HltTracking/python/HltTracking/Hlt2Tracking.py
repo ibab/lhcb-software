@@ -69,7 +69,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 , "Hlt2Tracks"                      : "Long" # type of HLT2 tracks
                 , "Prefix"                          : "Hlt2"                 # Why should we need this? It's never changed
                 , "FastFitType"                     : HltUnfittedTracksSuffix
-                , "DoFastFit"                       : False  # TODO: Remove option. Nowhere used anymore, we always fit.
                 , "DoSeeding"                       : False  
                 , "DoCleanups"                      : True   # Intended default True. Development options
                 , "RestartForward"                  : False  # Intended default False. Development options
@@ -296,7 +295,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
         log.debug('## INFO Tracks to make are %s'   % self.getProp("Hlt2Tracks"     ))
         #log.debug('## INFO The prefix is %s'        % self.getProp("Prefix"         ))
         log.debug('## INFO The fit type is %s'      % self.getProp("FastFitType"    ))
-        log.debug('## INFO Fast Fit? = %s'          % self.getProp("DoFastFit"      ))
         log.debug('## INFO Seeding? = %s'           % self.getProp("DoSeeding"      ))
         log.debug('## INFO Clone Killing? = %s'     % self.getProp("DoCloneKilling" ))
         log.debug('## INFO Rich hypos = %s'         % self.getProp("RichHypos"      ))
