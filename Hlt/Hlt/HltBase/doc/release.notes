@@ -4,6 +4,10 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2015-03-03 - Matthew Kenzie
+ - One addition for ProtoParticle storage
+ - Adjustment to make cout less confusing in HltStage
+
 ! 2015-02-19 - Matthew Kenzie
  - HltStage: allow ProtoParticle to be stored
 

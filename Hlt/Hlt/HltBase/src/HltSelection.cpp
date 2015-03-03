@@ -25,6 +25,7 @@ template class Hlt::TSelection<LHCb::RecVertex>;
 template class Hlt::TSelection<LHCb::L0CaloCandidate>;
 template class Hlt::TSelection<LHCb::L0MuonCandidate>;
 template class Hlt::TSelection<LHCb::Particle>;
+template class Hlt::TSelection<LHCb::ProtoParticle>;
 
 template class Hlt::TSelection<Hlt::Candidate>;
 template class Hlt::TSelection<Hlt::Stage>;

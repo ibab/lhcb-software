@@ -104,9 +104,9 @@ std::ostream& Hlt::Stage::fillStream( std::ostream& s ) const
         s << "RecVertex/" << (void*)get<LHCb::RecVertex>();
     } else if ( is<LHCb::Particle>() ){
         s << "Particle/" << (void*)get<LHCb::Particle>();
-    } else if ( is<LHCb::Particle>() ){
+    } else if ( is<LHCb::ProtoParticle>() ){
         s << "ProtoParticle/" << (void*)get<LHCb::ProtoParticle>();
-    } else if ( is<LHCb::Particle>() ){
+    } else if ( is<LHCb::Vertex>() ){
         s << "Vertex/" << (void*)get<LHCb::Vertex>();
     } else if ( is<LHCb::L0CaloCandidate>() ) {
         s << "L0CaloCandidate/" << (void*)get<LHCb::L0CaloCandidate>();
