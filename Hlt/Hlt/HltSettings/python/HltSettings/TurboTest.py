@@ -65,13 +65,10 @@ class TurboTest( object ):
                                                , 'Muon_IPChi2'   :    16
                                                , 'Muon_TrChi2'   :     2.5  
                                                , 'Muon_GEC'      : 'Loose'
-                                               , 'Muon_L0Channels' : 'Muon,DiMuon,MuonNoSPD,DiMuonNoSPD' 
                                                , 'Photon_PT'     :  1200
                                                , 'Photon_P'      :  3000
                                                , 'Photon_IPChi2' :    16
                                                , 'Photon_TrChi2' :     2.0
-                                               , 'Photon_L0Channels' : 'PhotonHi,ElectronHi' 
-                                               , 'Photon_GEC'        : 'Loose'
                                                , 'Prescale'          : {'Hlt1TrackAllL0'                   : 1.0 }} 
                        , Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 0.000001 
                                                                        , 'Hlt2Forward'      : 0.00001
@@ -88,7 +85,12 @@ class TurboTest( object ):
         """
         Returns a list of active lines
         """
-        hlt2 = ['Hlt2PassThrough', 'Hlt2DiMuonJPsiTurbo']
+        hlt2 = ['Hlt2PassThrough', 'Hlt2DiMuonJPsiTurbo'
+                ,'Hlt2B2GammaGamma',    
+                'Hlt2B2GammaGammaDouble',    
+                'Hlt2B2GammaGammaLL' ,   
+                'Hlt2B2GammaGammaDD'    
+                ]
         
         from Hadrons_September2012 import Hadrons_September2012
         hlt2.extend( Hadrons_September2012().ActiveHlt2Lines() )
