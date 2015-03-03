@@ -107,13 +107,15 @@ namespace Selection {
                    odin      =       2,  // i.e. did not pass 'filter0'
                    l0du      =       3,  // i.e. did not pass 'filter1'
                    hlt       =       4,  // i.e. did not pass 'filter2'
-                   filter1ed =       5,  // i.e. did not pass 'filter3'
-                   filter2ed =       6,  // i.e. did not pass 'postscale'
-                   postscaled =      7 ,
+                   hlt1      =       5,  // i.e. did not pass 'filter2'
+                   hlt2      =       6,  // i.e. did not pass 'filter2'
+                   filter1ed =       7,  // i.e. did not pass 'filter3'
+                   filter2ed =       8,  // i.e. did not pass 'postscale'
+                   postscaled =      9 ,
                    nStages = postscaled };
       const std::string& transition( const stage &s) const {
             static const std::vector<std::string> s_map = { 
-                {"Prescale"}, {"ODIN"}, {"L0DU"}, {"HLT"},
+                {"Prescale"}, {"ODIN"}, {"L0DU"}, {"HLT"}, {"HLT1"}, {"HLT2"},
                 {"Filter0"}, {"Filter1"}, {"Postscale"} } ;
             return s_map[s];
       };

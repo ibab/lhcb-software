@@ -5,6 +5,10 @@
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2015-03-03 - Stefano Perazzini
+ - Added HLT1 and HLT2 stages to Selection::Line::Stage class in order to deal
+   with split Hlt 
+
 !========================= SelectionLine v1r4 2015-01-15 =========================
 
 ! 2014-12-30 - Gerhard Raven
