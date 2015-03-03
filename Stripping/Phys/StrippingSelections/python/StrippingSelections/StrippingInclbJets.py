@@ -45,7 +45,7 @@ default_config = {
                       'PrtPtCut'         : 0.6,
                       'PrtIPSCut'        : 2.5,
                       'DZSVPVCut'        : 1.0,
-                      'SumMomSVCut'      : 3.0,
+                      'SumMomSVCut'      : 1.0,
                       'VtxChi2Cut'       : 20.0,
                       'scale'            : 0.05
                     },

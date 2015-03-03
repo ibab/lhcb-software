@@ -14,6 +14,9 @@
 
 !========================= StrippingSelections v3r38 2014-11-25 =========================
 
+! 2015-03-03 - Marcin Kucharczyk
+  - Change the cut on min. sumPt of the secondary vertex in StrippingInclbJets.py
+
 ! 2014-11-25 - Andrea Contu
  - Fix weird tabulation in Beauty2Charm_B2DXBuilder.py which was preventing svn commits
 
