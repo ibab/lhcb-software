@@ -387,7 +387,7 @@ class StrippingLine(object):
         return locList
 
     def createConfigurable( self, TESPrefix = "Strip", HDRLocation = 'Phys/DecReports' ) :
-
+ 
         if self._HDRLocation == None :
     	    self.fullHDRLocation = TESPrefix + "/" + HDRLocation
         else :
@@ -433,7 +433,9 @@ class StrippingLine(object):
         Hlt1DecReportsDecoder=DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].setup()
         Hlt2DecReportsDecoder=DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].setup()
         if self._HLT :
+
             log.warning("The usage of unique HLT is deprecated and will not work on data taken from 2015 onward. Please move to use HLT1 and HLT2.")
+
             if isinstance( self._HLT , str   ) :
                 mdict.update( { 'HLT' : HDRFilter( hltentryName( line ), Code = self._HLT ) } )
             if isinstance   ( self._HLT , ( tuple, list) ) and 2 == len ( self._HLT ) :
@@ -518,7 +520,12 @@ class StrippingLine(object):
             self._members.append(btag)
 
         if self._members :
-            mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Stripping' ) , Members = self._members, OutputLevel = WARNING ) })
+
+            filterSeq = GaudiSequencer( filterName( line,'Stripping' ), 
+                                        Members = self._members, 
+                                        OutputLevel = WARNING )
+
+            mdict.update( { 'Filter1' : filterSeq })
 
         #print self._members
 

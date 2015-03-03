@@ -4,6 +4,12 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2015-03-03 - Stefano Perazzini
+ - Modification to StrippingLine and StrippingStream in order to insert
+   BadEvent selection inside the line filter sequence
+   TODO: prepare a workaround to keep BadEvents (short circuit line's filter
+   only when the event is bad)
+
 ! 2015-03-01 - Stefano Perazzini
  - Bug fix to StrippingLine.py
 

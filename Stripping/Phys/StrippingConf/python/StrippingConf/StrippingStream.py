@@ -47,163 +47,150 @@ class StrippingStream ( object ) :
         self.seq = None
         self.streamLine = None                   # Line with OR of all stream lines, created in createConfigurables()
         self.eventSelectionLine = None           # Line to mark bad events, created in createConfigurables()
+        self.goodEventFilter    = None           # filter to reject bad events
+        self.badEventSeq = None                  # sequencer used to run bad event line
         self.BadEventSelection = BadEventSelection
         self.AcceptBadEvents = AcceptBadEvents
         self.MaxCandidates = MaxCandidates
         self.MaxCombinations = MaxCombinations
-	self.TESPrefix = TESPrefix               # Prefix for DecReports location, configured when appending stream
+        self.TESPrefix = TESPrefix               # Prefix for DecReports location, configured when appending stream
         self.HDRLocation = 'Phys/DecReports'     # DecReports location, configured when appending to StrippingConf
 
     def name(self) :
         return self._name
 
     def clone(self, name) : 
-	return StrippingStream(name, Lines = copy(self.lines), 
+        return StrippingStream(name, Lines = copy(self.lines), 
 	                       BadEventSelection = self.BadEventSelection, 
 	                       AcceptBadEvents = self.AcceptBadEvents, 
 	                       MaxCandidates = self.MaxCandidates, 
 	                       MaxCombinations = self.MaxCombinations)
 
     def appendLines (self, lines) : 
-	for line in lines : 
-	    self.lines.append(line)
-	    line.declareAppended()
+        for line in lines : 
+            self.lines.append(line)
+            line.declareAppended()
 
     def createConfigurables(self) :
         from Configurables import StrippingCheck
 
         # Create configurables
 
-	if self.TESPrefix == None : self.TESPrefix = self._name
+        if self.TESPrefix == None : self.TESPrefix = self._name
 
-	for line in self.lines : 
-	    if line.MaxCandidates == "Override" : 
-	    	line.MaxCandidates = self.MaxCandidates
-	    if line.MaxCombinations == "Override" : 
-	    	line.MaxCombinations = self.MaxCombinations
+        from StrippingLine import StrippingLine
+        # If the BadEventsSelection was not given neither in StrippingConf nor in StrippingStream
 
-	    if line.prescale() > 0. : 
-		line.createConfigurable( self.TESPrefix, self.HDRLocation )
-        	log.debug("ADDING configurable " + line.configurable().name() + "to stream " + self.name() )
-        	self.algs.append(line.configurable())
-    	    else : 
-    		log.warning("Line " + line.name() + " has zero prescale, skipping" )
+        if self.BadEventSelection == "Override" :
+            self.BadEventSelection = None
+
+        # Make the line to mark bad events (those satisfying BadEventSelection)
+
+        if self.BadEventSelection != None :
+
+            # create the line that select bad events
+            self.eventSelectionLine = StrippingLine("Stream"+self.name()+"BadEvent",
+                                              checkPV = False, algos = [ self.BadEventSelection ] )
+            self.eventSelectionLine.createConfigurable( self.TESPrefix, self.HDRLocation )
+            self.eventSelectionLine.declareAppended()
+
+            if self.AcceptBadEvents != False :
+
+                # Need to think a bit more on this
+                log.error("NOT POSSIBLE TO ACCEPT BAD EVENTS WITH THE CURRENT CONFIGURATION OF STRIPPINGCONF!!!")
+                return
+
+            else:
+
+                # Create a sequencer that runs the StrippingAlg selecting bad events.
+                # This sequencer has IgnoreFilterPassed = True such that it will not prevent 
+                # all the lines in the stream to run.
+                self.badEventSeq = GaudiSequencer("StrippingBadEventSequence"+self.name(),
+                                                  Members = [ self.eventSelectionLine.configurable() ],
+                                                  OutputLevel = WARNING,
+                                                  IgnoreFilterPassed = True)
+ 
+                # Create a filter that negates the bad events (select good events). 
+                # This filter will be inserted at the beginning of the filters run by all the lines.
+                from Configurables import LoKi__VoidFilter as Filter
+                self.goodEventFilter = Filter( "StrippingGoodEventCondition"+self.name() ,
+                                               Code      = " ALG_EXECUTED('%s') & ~ALG_PASSED('%s') "
+                                               % (self.eventSelectionLine.name(), self.eventSelectionLine.name()) ,
+                                               Preambulo = [ "from LoKiHlt.algorithms import *" ] )
+
+
+
+        for line in self.lines : 
+            if line.MaxCandidates == "Override" : 
+                line.MaxCandidates = self.MaxCandidates
+            if line.MaxCombinations == "Override" : 
+                line.MaxCombinations = self.MaxCombinations
+
+            if self.BadEventSelection != None :
+                if not self.AcceptBadEvents != False :
+                    # inserting filter for good events inside the lines
+                    if not "StrippingGoodEventCondition" in line._members[0].name() :
+                      line._members.insert(0,self.goodEventFilter)
+
+            if line.prescale() > 0. : 
+                line.createConfigurable( self.TESPrefix, self.HDRLocation )
+                log.debug("ADDING configurable " + line.configurable().name() + "to stream " + self.name() )
+                self.algs.append(line.configurable())
+
+            else : 
+                log.warning("Line " + line.name() + " has zero prescale, skipping" )
 
         # Make the line for stream decision (OR of all stream lines)
 
-	linesSeq = GaudiSequencer("StrippingStreamSeq"+self.name(),
+        linesSeq = GaudiSequencer("StrippingStreamSeq"+self.name(),
                                   ModeOR = True,
                                   #ShortCircuit = False,
                                   OutputLevel = WARNING, 
                                   Members = self.algs)
 
-	from StrippingLine import StrippingLine
-
-	self.streamLine = StrippingLine("Stream"+self.name(), checkPV = False, algos = [ linesSeq ] )
-	self.streamLine.createConfigurable( self.TESPrefix, self.HDRLocation )
-	self.streamLine.declareAppended()
-
-        # If the BadEventsSelection was not given neither in StrippingConf nor in StrippingStream
-        
-        if self.BadEventSelection == "Override" : 
-            self.BadEventSelection = None
-
-        # Make the line to mark bad events (those satisfying BadEventSelection)
-        
-	if self.BadEventSelection != None : 
-	    self.eventSelectionLine = StrippingLine("Stream"+self.name()+"BadEvent", 
-	                                      checkPV = False, algos = [ self.BadEventSelection ] )
-	    self.eventSelectionLine.createConfigurable( self.TESPrefix, self.HDRLocation )
-	    self.eventSelectionLine.declareAppended()
-
+        self.streamLine = StrippingLine("Stream"+self.name(), checkPV = False, algos = [ linesSeq ] )
+        self.streamLine.createConfigurable( self.TESPrefix, self.HDRLocation )
+        self.streamLine.declareAppended()
 
     def sequence ( self ) :
         if self.seq == None :
 
-            if self.eventSelectionLine == None : 
-                # If we don't care about bad events, build a flat 
-                # sequencer for all line configurables, including the stream decision line
-
+            if self.eventSelectionLine == None:
+                # We don't care of BadEvents, thus not insert bad event line in the stream sequence
                 self.seq = GaudiSequencer("StrippingSequenceStream"+self.name(),
-                                      ModeOR = True,
-                                      ShortCircuit = False,
-                                      OutputLevel = WARNING, 
-                                      Members = self.algs + [ self.streamLine.configurable() ] )
-            else : 
-                # If BadEventSelection is used, the stream sequencer has to be "protected" by 
-                # another one, which ensures that it runs only for good events 
-                
-            	lineSeq = GaudiSequencer("StrippingProtectedSequence"+self.name(),
                                           ModeOR = True,
                                           ShortCircuit = False,
-                                          OutputLevel = WARNING, 
-                                          Members = self.algs + [ self.streamLine.configurable() ] )
-                                          
-                # The structure differs depending on whether we want to accept or reject bad events
+                                          OutputLevel = WARNING,
+                                          Members =  self.algs + [ self.streamLine.configurable() ] )
 
-            	if self.AcceptBadEvents != False : 
-            	
-            	    # If we want to accept bad events, create the sequencer in OR mode with ShortCircuit=True
-            	    # If the bad event condition passes, the stream sequencer will not run
-
-        	    self.seq = GaudiSequencer("StrippingSequenceStream" + self.name(), 
-                                              OutputLevel = WARNING, 
-                                              Members = [ self.eventSelectionLine.configurable(), lineSeq ] )
-            	    self.seq.ModeOR = True 
-        	    self.seq.ShortCircuit = True
-        	    
-        	else : 
-        	    
-        	    # If we want to reject bad events, things are more complicated. 
-        	    # We need a logical NOT of the bad event condition. 
-        	    
-        	    # To get it, we first run the bad event condition, and ignore its result. 
-        	    # This is achieved by the GaudiSequencer in IgnoreFilterPassed mode
-        	    # that has only the BadEventSelection as a member. It always passes. 
-        	    
-        	    badEventSeq = GaudiSequencer("StrippingBadEventSequence"+self.name(), 
-        					 Members = [ self.eventSelectionLine.configurable() ], 
-                                                 OutputLevel = WARNING, 
-        	                                 IgnoreFilterPassed = True)
-        	    
-        	    # Now create a LoKi filter that negates the result of the bad event selection
-        	    
-        	    from Configurables import LoKi__VoidFilter as Filter 
-        	    
-        	    goodEventFilter = Filter( "StrippingGoodEventCondition"+self.name() , 
-                                              Code      = " ALG_EXECUTED('%s') & ~ALG_PASSED('%s') " 
-                                              % (self.eventSelectionLine.name(), self.eventSelectionLine.name()) ,
-                                              Preambulo = [ "from LoKiHlt.algorithms import *" ] 
-                                              )
-        	    
-        	    # Finally, the AND sequencer that will run the bad event selection (its result will 
-        	    # be ignored since it's wrapped into a GaudiSequencer with IgnoreFilterPassed), 
-        	    # then good event LokiFilter (it will pass only for good events)
-        	    # then the stream sequence. 
-        	    
-        	    self.seq = GaudiSequencer("StrippingSequenceStream" + self.name(), 
-                                              OutputLevel = WARNING, 
-                                              Members = [ badEventSeq, goodEventFilter, lineSeq ] )
+            else:
+                # since we care of bad events we insert the sequence running the StrippingAlg selecting them
+                # as the first one of the stream.
+                self.seq = GaudiSequencer("StrippingSequenceStream"+self.name(),
+                                          ModeOR = True,
+                                          ShortCircuit = False,
+                                          OutputLevel = WARNING,
+                                          Members = [ self.badEventSeq ] + self.algs + [ self.streamLine.configurable() ] )
 
         return self.seq
 
 
     def outputLocations (self) : 
-	outputList = []
-	for i in self.lines :
-	    output = i.outputLocation()
-	    if output : 
-		outputList.append(output)
-	return outputList
+        outputList = []
+        for i in self.lines :
+            output = i.outputLocation()
+            if output : 
+                outputList.append(output)
+        return outputList
 
 
     def filterMembers( self ) : 
-	_members = []
-	for line in self.lines : 
-	    lineMembers = line.filterMembers()
-	    for i in lineMembers : 
-		if i not in _members : _members.append(i) 
-	return _members
+        _members = []
+        for line in self.lines : 
+            lineMembers = line.filterMembers()
+            for i in lineMembers : 
+                if i not in _members : _members.append(i) 
+        return _members
 
 
     def getRequiredRawEvents(self) :
@@ -247,16 +234,16 @@ class StrippingStream ( object ) :
                                     "' Requests to refit the PV")
 
     def getRelatedInfoLocations(self) : 
-	locations = []
-	for line in self.lines : 
-	    if line.RelatedInfoTools != None : 
-		for tool in line.RelatedInfoTools : 
-		    if 'Locations' in tool.keys() : 
-			locs = tool['Locations']
-			for part,loc in locs.iteritems() : 
-			    if loc not in locations : locations += [ loc ]
-		    if 'Location' in tool.keys() : 
-			loc = tool['Location']
-			if loc not in locations : locations += [ loc ]
-	log.info("RelatedInfoLocations for stream %s: %s" % (self.name(), str(locations)) )
-	return locations
+        locations = []
+        for line in self.lines : 
+            if line.RelatedInfoTools != None : 
+                for tool in line.RelatedInfoTools : 
+                    if 'Locations' in tool.keys() : 
+                        locs = tool['Locations']
+                        for part,loc in locs.iteritems() : 
+                            if loc not in locations : locations += [ loc ]
+                    if 'Location' in tool.keys() : 
+                        loc = tool['Location']
+                        if loc not in locations : locations += [ loc ]
+        log.info("RelatedInfoLocations for stream %s: %s" % (self.name(), str(locations)) )
+        return locations
