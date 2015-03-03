@@ -4,6 +4,10 @@
 ! Purpose     : Helpers for safely building stripping components.
 !-----------------------------------------------------------------------------
 
+! 2015-03-03 - Stefano Perazzini
+ - Branched the package to v1r9b. This branch is based on revision
+   r175641.
+
 !========================= StrippingUtils v1r9 2014-07-28 =========================
 
 ! 2014-07-04 - Stefano Perazzini
