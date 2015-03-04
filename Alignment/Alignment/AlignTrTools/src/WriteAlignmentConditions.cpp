@@ -25,10 +25,13 @@ public:
   virtual ~WriteAlignmentConditions();
 
   /// initialize
-  virtual StatusCode initialize();
+  StatusCode initialize();
 
   // finalize
   StatusCode finalize();
+
+  /// empty execute
+  StatusCode execute() { return StatusCode::SUCCESS ; }
 
 private:
 
