@@ -76,9 +76,17 @@ class DbCore:
     self._cur = self._DB.cursor()
   
   def _db(self):
-    if ( self._name[0:5]=='odbc:' ):
+    if self._name[0:5]=='odbc:':
       import odbc
       return odbc.odbc(self._name[5:])
+    elif self._name[0:7]=='sqlite:':
+      import sqlite3
+      return sqlite3.connect(self._name[7:])
+    elif self._name.find('@')>0 and self._name.find('/')>0:
+      import cx_Oracle
+      rest,password = database.split('/')
+      username,database = rest.split('@')
+      return cx_Oracle.Connection(username, password, database)
     else:
       import cx_Oracle
       return cx_Oracle.Connection(self._name)
