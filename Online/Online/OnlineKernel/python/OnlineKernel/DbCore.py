@@ -90,6 +90,9 @@ class DbCore:
     else:
       import cx_Oracle
       return cx_Oracle.Connection(self._name)
+
+  def database(self):
+    return self._db()
   
   def executeQuery(self, sql, *parms, **kws):
     try:
