@@ -78,11 +78,11 @@ StatusCode WriteMultiAlignmentConditionsTool::initialize()
   StatusCode sc = GaudiTool::initialize();
 
   std::stringstream msg("Calling the following xml writers:\n");
-  for (auto wr: m_xmlWriterNames) msg << "\t" << wr;
+  for (const auto& wr: m_xmlWriterNames) msg << "\t" << wr;
   info() << msg << endreq;
 
   // loading the xml writers
-  for( auto i : m_xmlWriterNames )
+  for(const auto& i : m_xmlWriterNames )
     m_xmlWriters.push_back( tool<IWriteAlignmentConditionsTool>(i,this) ) ;
 
   return sc;
@@ -92,7 +92,7 @@ StatusCode WriteMultiAlignmentConditionsTool::initialize()
 StatusCode WriteMultiAlignmentConditionsTool::write() const
 {
   // write conditions for each writer
-  for( auto i: m_xmlWriters )
+  for( auto& i: m_xmlWriters )
     if (i->write() == StatusCode::FAILURE) return StatusCode::FAILURE ;
   return StatusCode::SUCCESS ;
 }
@@ -101,7 +101,7 @@ StatusCode WriteMultiAlignmentConditionsTool::write() const
  // version, description and author as arguments
 StatusCode WriteMultiAlignmentConditionsTool::write( const std::string& version ) const 
 {
-  for( auto i: m_xmlWriters )
+  for( auto& i: m_xmlWriters )
     if (i->write(version) == StatusCode::FAILURE) 
       return StatusCode::FAILURE ;
   return StatusCode::SUCCESS ;
