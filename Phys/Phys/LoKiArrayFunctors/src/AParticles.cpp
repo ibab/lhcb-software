@@ -2638,9 +2638,7 @@ LoKi::AParticles::Overlap::Overlap
   , m_good ( 0     ) 
   , m_type ( type  ) 
   , m_def  ( false ) 
-{
-  Assert ( m_good , "Invalid pointer to member function!" ) ;
-}
+{}
 // ============================================================================
 // MANDATORY: virtual destructor 
 // ============================================================================
