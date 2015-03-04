@@ -4,6 +4,12 @@
 ! Purpose     : Decision Tree classifier for Hlt2 topological trigger
 ! -----------------------------------------------------------------------------
 
+! 2015-Mar-04 - Patrick Spradlin
+ - Reintegrate development branch v1r6p2-VarGeneralization.
+   This generalizes the BBDecTreeTool and BBDTSimpleTool to accommodate
+   any lookup-table variables that can be expressed as LoKi hybrid functors.
+   I also tried to improve the doxygen documentation for the classes.
+
 !========================= BBDecTreeTool v1r6p2 2013-05-07 =========================
 
 ! 2013-05-07 - Chris Jones

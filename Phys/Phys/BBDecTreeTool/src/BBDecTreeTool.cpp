@@ -1,9 +1,8 @@
+#include <sstream>
 #include "BBDecTreeTool.h"
 #include "GaudiKernel/System.h"
 #include "boost/filesystem/path.hpp"
 #include "boost/filesystem.hpp"
-#include "LoKi/IHybridFactory.h"
-#include <Kernel/GetIDVAlgorithm.h>
 // ============================================================================
 std::string SubstituteEnvVarInPath(const std::string& in)
 {
@@ -33,14 +32,17 @@ BBDecTreeTool::BBDecTreeTool( const std::string& type,
   : base_class(type,name,parent), 
     m_threshold(-1.0), 
     m_key(-1), 
+    m_dictool_name( "LoKi::Hybrid::DictOfFunctors" ),
     m_ntrees(-1),
-    m_vars(0)
+    m_var_names(),
+    m_hybrid_dicttool(0)
 {
   // declare configurable properties
   declareProperty("Threshold", m_threshold, "response threshold (cut)");
   declareProperty("ParamFile", m_paramFile, "parameter file (full path)");
   declareProperty("ANNSvcKey", m_key, "extrainfo key");
-  declareProperty("PIDs",m_pids, "PID names for daughter PT variables");
+  declareProperty("ParticleDictTool" , m_dictool_name,
+                        "Type/Name for C++/Python hybrid dictionary of functors tool");
 }
 // ============================================================================
 StatusCode BBDecTreeTool::readError(const std::string &msg) const 
@@ -54,52 +56,30 @@ StatusCode BBDecTreeTool::initialize()
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
 
-  // Get DV Alg. *must* be private to do this
-  const IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm(contextSvc(),this);
-  if ( !dva ) 
-  {
-    return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);
-  }
-
-  // get tools
-  const IDistanceCalculator * dist = dva->distanceCalculator(); 
-
-  m_vars = new BBDTVarHandler( dva, dist );
-
-  // configure the BBDT var handler to use specified PIDs
-  const unsigned int size = m_pids.size();
-  if ( size > 0 )
-  {
-    LoKi::PhysTypes::Cut cut(LoKi::Cuts::ABSID == m_pids[0]);
-    for ( unsigned int i = 1; i < size; ++i )
-    {
-      cut = (cut || (LoKi::Cuts::ABSID == m_pids[i]));
-    }
-    m_vars->setPIDs(cut);
-  }
+  // Get the LoKi::Hybrid::DictOfFunctors tool that manages the interactions
+  // with the hybrid functors.
+  m_hybrid_dicttool = tool<IParticleDictTool>(m_dictool_name, this);
 
   // read in parameters
-  if(!m_paramFile.empty() && m_paramFile[0] != '/' && m_paramFile[0]!='$')
+  if( !m_paramFile.empty() && m_paramFile[0] != '/'
+                                && m_paramFile[0] != '.' && m_paramFile[0]!='$')
     m_paramFile = "$PARAMFILESROOT/data/" + m_paramFile;
   std::string fnam = SubstituteEnvVarInPath(m_paramFile);
   std::ifstream inFile(fnam.c_str());
   if(!inFile.is_open()) return this->readError("failed to open file");
+
   unsigned int nvar(0),index(0),value(0);
   double dvalue(0);
-  std::vector<std::string> var_names;
-  // number of variables
-  inFile >> nvar;
-  var_names.resize(nvar);
+  inFile >> nvar;               // number of variables
+  m_var_names.resize(nvar);
   m_splits.resize(nvar);
 
   // variable names
   for ( unsigned int v = 0; v < nvar; ++v )
   {
-    if(!(inFile >> var_names[v]))
+    if(!(inFile >> m_var_names[v]))
       return this->readError("error reading in variable names");
   }
-  if(!m_vars->initialize(var_names))
-    return Error("Couldn't init BBDTVarHandler", StatusCode::FAILURE);
 
   // number of splits for each variable
   unsigned int numSplits = 1;
@@ -110,6 +90,7 @@ StatusCode BBDecTreeTool::initialize()
     m_splits[v].resize(value);
     numSplits *= value;
   }
+
   // split values for each variable
   for ( unsigned int v = 0; v < nvar; ++v ) 
   {
@@ -120,9 +101,11 @@ StatusCode BBDecTreeTool::initialize()
       m_splits[v][s] = dvalue;
     }
   }
+
   // number of trees
   if(!(inFile >> m_ntrees))
     return this->readError("error reading no. of trees");
+
   // actual values
   m_values.resize(numSplits);
   while(inFile >> index >> value)
@@ -140,14 +123,14 @@ StatusCode BBDecTreeTool::initialize()
 
   return sc;
 }
+
+
 // ===========================================================================
 StatusCode BBDecTreeTool::finalize() {
-  if (m_vars) {
-    delete m_vars;
-    m_vars = 0;
-  }
   return GaudiTool::finalize();
 }
+
+
 // ============================================================================
 int BBDecTreeTool::getVarIndex(int varIndex, double value) const {
   if(value < m_splits[varIndex][0]) return 0;
@@ -157,28 +140,52 @@ int BBDecTreeTool::getVarIndex(int varIndex, double value) const {
   }
   return size-1;
 }
+
+
 // ============================================================================
-int BBDecTreeTool::getIndex() const {
+int BBDecTreeTool::getIndex( const IParticleDictTool::DICT &vars ) const {
   unsigned int size = m_splits.size();
-  if(size != m_vars->numVars()) return -1;
+
   int ind_mult = 1, index = 0;
   for(int v = size-1; v >= 0; v--){
     if(v < (int)size-1) ind_mult *= m_splits[v+1].size();
-    index += this->getVarIndex(v,(*m_vars)[v])*ind_mult;
+
+    IParticleDictTool::DICT::iterator pval = vars.find( m_var_names[v] );
+    if( pval == vars.end() )
+    {
+      Error("Unable to find value for " + m_var_names[v] + " in dictionary of functor values, returning invalid index.");
+      index = -1;
+      break;
+    }
+
+    index += this->getVarIndex(v, pval->second)*ind_mult;
   }
   return index;
 }
+
+
 // ============================================================================
 bool BBDecTreeTool::operator()(const LHCb::Particle* p) const {
 
+  // TODO:  consider whether some of these error conditions should be fatal.
   if(0 == p) {
     Error("LHCb::Particle* points to NULL, return false");
     return false ;
   }
-  if(!m_vars->set(p)) return false;
+
+  // DICT is a typedef of GaudiUtils::VectorMap< std::string, double > 
+  IParticleDictTool::DICT vals;   // Map of functor values keyed by var_name
+
+  // Evaluate the functors
+  StatusCode sc = m_hybrid_dicttool->fill(p, vals);
+  if( !sc.isSuccess() )
+  {
+    Error("Unable to fill map of functor values, return false");
+    return false ;
+  }
 
   // get response
-  int index = this->getIndex();
+  int index = this->getIndex( vals );
   if(index < 0 || index >= (int)m_values.size()){
     Error("BBDecTreeTool tool is misconfigured!");
     return false;
@@ -191,6 +198,21 @@ bool BBDecTreeTool::operator()(const LHCb::Particle* p) const {
     }
     else const_cast<LHCb::Particle*>(p)->addInfo(m_key, response);
   }
+
+  // Debugging.  Consider putting this in an optionally compiled block.
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Input variable values:\n";
+    unsigned int size = m_splits.size();
+    for(int v = size-1; v >= 0; v--)
+      debug() << "        " << m_var_names[v] << " = " << vals[m_var_names[v]] << "\n";
+
+    debug() << endmsg;
+    debug() << "Index = " << index << ";   Response/ ntrees = "
+            << m_values[index] << " / " << m_ntrees << " = " << response
+            << ";  Threshold:  " << m_threshold << endmsg;
+  }
+
   return response > m_threshold;
 }
 // ============================================================================
