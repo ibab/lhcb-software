@@ -5,6 +5,8 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+!================== LoKiArrayFunctors v11r0p1 2015-03-04 ======================
+
 ! 2015-03-04 - Vanya Belyaev
  - fix sad line duplication in AOVERLAP 
 
