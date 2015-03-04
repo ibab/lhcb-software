@@ -11,7 +11,7 @@ Uses LCG_74root6 with ROOT 6.02.05.
 - Packages updated :
   Kernel/SelectionLine v1r5, Phys/DaVinciFilters v1r1, Phys/DaVinciTypes v2r10,
   Phys/FlavourTagging v13r11, Phys/JetAccessories v3r11, Phys/KalmanFilter v1r10,
-  Phys/LoKiArrayFunctors v11r0, Phys/LoKiPhys v11r0, Phys/LoKiProtoParticles v3r0,
+  Phys/LoKiArrayFunctors v11r0p1, Phys/LoKiPhys v11r0, Phys/LoKiProtoParticles v3r0,
   Phys/LoKiTracks v3r0, Phys/NeuroBayesTools v1r3, Phys/ParticleCombiners v1r1,
   Phys/Swimming v3r6, Phys/TisTosTobbing v8r2.
 
@@ -38,7 +38,7 @@ Uses LCG_74root6 with ROOT 6.02.05.
 - In Phys/KalmanFilter v1r10 :
   . Use cholesky decompositon for inversion of  positively definite covariance matrices.
 
-- In Phys/LoKiArrayFunctors v11r0 :
+- In Phys/LoKiArrayFunctors v11r0p1 :
   . A series of steps towards the autogeneration of C++ code from functors.
   . Added AOVERLAP functor for Michael Kolpin.
 

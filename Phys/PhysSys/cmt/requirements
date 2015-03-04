@@ -44,7 +44,7 @@ use  DaVinciNeutralTools        v1r0     Phys    # CALO Group
 use  LoKiUtils                  v1r3p1   Phys    # Vanya Belyaev
 use  LoKiJets                   v6r12    Phys    # Vanya Belyaev, Victor Coco
 use  LoKiAlgo                   v9r8p5   Phys    # Vanya Belyaev
-use  LoKiArrayFunctors          v11r0    Phys    # Vanya Belyaev
+use  LoKiArrayFunctors          v11r0p1  Phys    # Vanya Belyaev
 use  LoKiPhys                   v11r0    Phys    # Vanya Belyaev
 use  LoKiProtoParticles         v3r0     Phys    # Vanya Belyaev
 use  LoKi                       v9r0p1   Phys    # Vanya Belyaev
