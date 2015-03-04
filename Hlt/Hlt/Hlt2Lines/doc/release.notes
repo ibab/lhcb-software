@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-04 - Patrick Spradlin
+ - Hlt2TopologicalLines.py:  Updated for generalized version of BBDecTreeTool 
+   ** DEPENDS ON r184832 of Phys/BBDecTreeTool **
+
 ! 2015-03-04 - Sascha Stahl
  - TrackEff/Inputs: Switched order of TrackStateInitAlg and TrackContainerCopy 
    such that the original tracks are not touched. Removed hardcoded locations

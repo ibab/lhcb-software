@@ -66,6 +66,16 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         'SIMPLE_2BODY_CUTS' : [],
         'SIMPLE_3BODY_CUTS' : [],
         'SIMPLE_4BODY_CUTS' : [],
+        'BDT_BASIC_LOOKUP_VARMAP' : {
+                          "M"          :  "MM/MeV"
+                        , "DOCA"       :  "DOCAMAX_('',False)/mm"
+                        , "CANDIPCHI2" :  "BPVIPCHI2()"
+                        , "MCOR"       :  "BPVCORRM"
+                        , "FDCHI2"     :  "BPVVDCHI2"
+                        , "PT"         :  "PT"
+                        , "PTMIN"      :  "MINTREE(ISBASIC,PT)/MeV"
+                        , "PTSUM"      :  "SUMTREE(PT,ISBASIC,0.0)/MeV"
+                },
         # pre- and post-scale values are set in HltSettings/TopoLines.py
         'Prescale' : {},
         'Postscale' : {},
@@ -206,17 +216,43 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                             Inputs=input,Code=cuts)
         return bindMembers('Topo%d%s' % (n,tag), input+[filter])
 
+    def __prepVarMap(self, pidList) : # {
+        ## Prepare the variable : functor map with the additional PIDs.
+        ## This code used to be part of BBDecTreeTool, but must now be done
+        ##   at a higher level.
+        idStr = "(ABSID == '%s')" % (pidList[0])
+        for lclID in pidList[1:] : # {
+          idSeg = "(ABSID == '%s')" % (lclID) 
+          idStr = idStr + '|' + idSeg
+        # }
+
+        ptsumStr = "SUMTREE(PT,%s,0.0)/MeV" % (idStr)
+        ptminStr = "MINTREE(%s,PT)/MeV" % (idStr)
+
+        funcDict = self.getProp('BDT_BASIC_LOOKUP_VARMAP')
+        funcDict["PTSUM"] = ptsumStr
+        funcDict["PTMIN"] = ptminStr
+
+        return funcDict
+    # }
+
     def __filterBDT(self,n,input):
         '''Applies the BDT cut.'''
         from Configurables import BBDecTreeTool as BBDT
+        from Configurables import LoKi__Hybrid__DictOfFunctors as VarHandler
         from Configurables import FilterDesktop
         from HltLine.HltLine import Hlt2Member, bindMembers
         from HltLine.HltLine import Hlt1Tool as Tool
         props = self.getProps()
+
+        varMap = self.__prepVarMap( ['K+','KS0','Lambda0','Lambda~0'] )
+        varHandler = Tool( type = VarHandler, name = "VarHandler", Variables = varMap )
+
         file='Hlt2Topo%dBody_BDTParams_%s.txt'%(n,props['BDT_%dBODY_PARAMS'%n])
         bdttool = Tool(type=BBDT,name='TrgBBDT',
                        Threshold=props['BDT_%dBODY_MIN'%n],ParamFile=file,
-                       ANNSvcKey=6300+n,PIDs=['K+','KS0','Lambda0','Lambda~0'])
+                       ParticleDictTool='LoKi::Hybrid::DictOfFunctors/'+varHandler.Name,
+                       ANNSvcKey=6300+n,tools=[varHandler])
         cuts = "FILTER('BBDecTreeTool/TrgBBDT')" 
         filter = Hlt2Member(FilterDesktop, 'FilterBDT', Inputs=input,
                             Code=cuts,tools=[bdttool]) 
@@ -225,14 +261,20 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
     def __filterMuonBDT(self,n,input):
         '''Applies the muon and BDT cuts.'''
         from Configurables import BBDecTreeTool as BBDT
+        from Configurables import LoKi__Hybrid__DictOfFunctors as VarHandler
         from Configurables import FilterDesktop
         from HltLine.HltLine import Hlt2Member, bindMembers
         from HltLine.HltLine import Hlt1Tool as Tool
         props = self.getProps()
+
+        varMap = self.__prepVarMap( ['K+','KS0','Lambda0','Lambda~0'] )
+        varHandler = Tool( type = VarHandler, name = "VarHandler", Variables = varMap )
+
         file='Hlt2Topo%dBody_BDTParams_%s.txt'%(n,props['BDT_%dBODY_PARAMS'%n])
         bdttool = Tool(type=BBDT,name='TrgBBDT',
                        Threshold=props['BDT_%dBODYMU_MIN'%n],ParamFile=file,
-                       ANNSvcKey=6300+n,PIDs=['K+','KS0','Lambda0','Lambda~0'])
+                       ParticleDictTool='LoKi::Hybrid::DictOfFunctors/'+varHandler.Name,
+                       ANNSvcKey=6300+n,tools=[varHandler])
         cuts = "INTREE(HASPROTO & HASMUON & ISMUON)"
         cuts += "& FILTER('BBDecTreeTool/TrgBBDT') "
         filter = Hlt2Member(FilterDesktop, 'FilterMuonBDT',
@@ -242,14 +284,20 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
     def __filterElectronBDT(self,n,input):
         '''Applies the e and BDT cuts.'''
         from Configurables import BBDecTreeTool as BBDT
+        from Configurables import LoKi__Hybrid__DictOfFunctors as VarHandler
         from Configurables import FilterDesktop
         from HltLine.HltLine import Hlt2Member, bindMembers
         from HltLine.HltLine import Hlt1Tool as Tool
         props = self.getProps()
+
+        varMap = self.__prepVarMap( ['K+','KS0','Lambda0','Lambda~0'] )
+        varHandler = Tool( type = VarHandler, name = "VarHandler", Variables = varMap )
+
         file='Hlt2Topo%dBody_BDTParams_%s.txt'%(n,props['BDT_%dBODY_PARAMS'%n])
         bdttool = Tool(type=BBDT,name='TrgBBDT',
                        Threshold=props['BDT_%dBODYE_MIN'%n],ParamFile=file,
-                       ANNSvcKey=6300+n,PIDs=['K+','KS0','Lambda0','Lambda~0'])
+                       ParticleDictTool='LoKi::Hybrid::DictOfFunctors/'+varHandler.Name,
+                       ANNSvcKey=6300+n,tools=[varHandler])
         cuts = "INTREE(HASPROTO & (PIDe > %s))" % props['PIDE_MIN']
         cuts += "& FILTER('BBDecTreeTool/TrgBBDT') "
         filter = Hlt2Member(FilterDesktop, 'FilterElectronBDT',
@@ -259,6 +307,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
     def __filterRadBDT(self,n,input):
         '''Applies the BDT cuts for radiative candidates.'''
         from Configurables import BBDecTreeTool as BBDT
+        from Configurables import LoKi__Hybrid__DictOfFunctors as VarHandler
         from Configurables import FilterDesktop
         from HltLine.HltLine import Hlt2Member, bindMembers
         from HltLine.HltLine import Hlt1Tool as Tool
@@ -270,8 +319,13 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         thresh = 1.0
         if n == 2: thresh = props['BDT_RAD2_MIN']
         else: thresh = props['BDT_RAD2p1_MIN']
+
+        varMap = self.__prepVarMap( pids )
+        varHandler = Tool( type = VarHandler, name = "VarHandler", Variables = varMap )
+
         bdttool = Tool(type=BBDT,name='TrgBBDT',Threshold=thresh,
-                       ParamFile=file,ANNSvcKey=6300+3,PIDs=pids)
+                       ParticleDictTool='LoKi::Hybrid::DictOfFunctors/'+varHandler.Name,
+                       ParamFile=file,ANNSvcKey=6300+3,tools=[varHandler])
         cuts = "FILTER('BBDecTreeTool/TrgBBDT')"
         filter = Hlt2Member(FilterDesktop, 'FilterRad%dBDT'%n,
                             Inputs=input,Code=cuts,tools=[bdttool]) 
@@ -280,11 +334,17 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
     def __filterSimple(self,n,input):
         '''Applies easy cuts factored out of BDT.'''
         from Configurables import BBDTSimpleTool as BBDTSimple
+        from Configurables import LoKi__Hybrid__DictOfFunctors as VarHandler
         from Configurables import FilterDesktop
         from HltLine.HltLine import Hlt2Member, bindMembers
         from HltLine.HltLine import Hlt1Tool as Tool
+
+        varMap = self.__prepVarMap( ['K+'] )
+        varHandler = Tool( type = VarHandler, name = "VarHandler", Variables = varMap )
         simpletool = Tool(type=BBDTSimple,name='TrgSimple',
-                          Cuts=self.getProps()['SIMPLE_%dBODY_CUTS'%n])
+                          Cuts=self.getProps()['SIMPLE_%dBODY_CUTS'%n],
+                          ParticleDictTool='LoKi::Hybrid::DictOfFunctors/'+varHandler.Name,
+                          tools=[varHandler])
         cuts = "FILTER('BBDTSimpleTool/TrgSimple') "
         filter = Hlt2Member(FilterDesktop, 'FilterBBDTSimple',
                             Inputs=input,Code=cuts,tools=[simpletool]) 
