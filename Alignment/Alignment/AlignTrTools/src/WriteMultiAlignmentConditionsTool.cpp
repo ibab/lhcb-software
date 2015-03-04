@@ -31,8 +31,10 @@ public:
 
 private:
 
+  void updateOnline(Property& p);
   std::vector<std::string>          m_xmlWriterNames ;
   std::vector<IWriteAlignmentConditionsTool*> m_xmlWriters ;
+  bool m_online;
 };
 
 
@@ -66,6 +68,8 @@ WriteMultiAlignmentConditionsTool::WriteMultiAlignmentConditionsTool( const std:
   declareInterface<IWriteAlignmentConditionsTool>(this);
   // constructer
   declareProperty("XmlWriters",m_xmlWriterNames) ;
+  declareProperty("OnlineMode",m_online = false)->
+     declareUpdateHandler(&WriteMultiAlignmentConditionsTool::updateOnline, this);
 }
 
 WriteMultiAlignmentConditionsTool::~WriteMultiAlignmentConditionsTool()
@@ -88,6 +92,20 @@ StatusCode WriteMultiAlignmentConditionsTool::initialize()
   return sc;
 }
 
+void WriteMultiAlignmentConditionsTool::updateOnline(Property&)
+{
+  // no action if not initialized yet:
+  if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) {
+    return;
+  }
+  IProperty* prop = 0;
+  for (auto& writer : m_xmlWriters) {
+    StatusCode sc = writer->queryInterface(IProperty::interfaceID(), (void**)&prop);
+    if (sc.isSuccess()) {
+       prop->setProperty("OnlineMode", m_online ? "True" : "False");
+    }
+  }
+}
 
 StatusCode WriteMultiAlignmentConditionsTool::write() const
 {

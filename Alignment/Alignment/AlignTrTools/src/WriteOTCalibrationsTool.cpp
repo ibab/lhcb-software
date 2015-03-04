@@ -72,6 +72,7 @@ private:
   std::string m_description;
   std::string m_version;
   const DeOTDetector* m_otdetector ;
+  bool m_online;
 
 } ;
 
@@ -102,6 +103,7 @@ WriteOTCalibrationsTool::WriteOTCalibrationsTool( const std::string& type,
   declareProperty("Author", m_author = "");
   declareProperty("Version", m_version = "");
   declareProperty("Description", m_description = "");
+  declareProperty("OnlineMode", m_online = false);
 }
 
 
@@ -186,7 +188,10 @@ StatusCode WriteOTCalibrationsTool::createXmlFile(const std::string& filename,
     return Warning( "Failed to open output file " + filename, StatusCode::FAILURE );
   }
   // write the header
-  output << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<!DOCTYPE DDDB SYSTEM \"conddb:/DTD/structure.dtd\">\n<DDDB>\n";
+  if (!m_online) {
+     output << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<!DOCTYPE DDDB SYSTEM "
+            << "\"conddb:/DTD/structure.dtd\">\n<DDDB>\n";
+  }
   // only write the comments if it is actually meanigfull
   if( !m_author.empty() || !version.empty() || !m_description.empty() ) {
     std::ostringstream comment ;
@@ -196,7 +201,9 @@ StatusCode WriteOTCalibrationsTool::createXmlFile(const std::string& filename,
   /// write the contents
   output << contents ;
   /// write the footer
-  output << "</DDDB>\n" ;
+  if (!m_online) {
+     output << "</DDDB>\n" ;
+  }
   /// close the file
   output.close() ;
   return StatusCode::SUCCESS ;

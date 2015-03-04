@@ -61,7 +61,8 @@ private:
   std::string m_author;
   std::string m_desc;
   std::string m_version;
-  bool m_removePivot ;
+  bool m_removePivot;
+  bool m_online;
 
 } ;
 
@@ -114,6 +115,7 @@ WriteAlignmentConditionsTool::WriteAlignmentConditionsTool( const std::string& t
   declareProperty("version", m_version = "Unknown");
   declareProperty("desc", m_desc = "blahblah");
   declareProperty("RemovePivotPoint", m_removePivot = true ) ;
+  declareProperty("OnlineMode", m_online = false);
 }
 
 WriteAlignmentConditionsTool::~WriteAlignmentConditionsTool()
@@ -220,7 +222,7 @@ StatusCode WriteAlignmentConditionsTool::write( const std::string& filename,
 
   const Condition* aCon = det->geometry()->alignmentCondition();
   if (aCon) {
-    outputFile << header(aCon->toXml("", true, m_precision)) << std::endl;
+    outputFile << header(aCon->toXml("", !m_online, m_precision)) << std::endl;
 
     // add some comments describing the file
     std::ostringstream comment;
@@ -228,7 +230,8 @@ StatusCode WriteAlignmentConditionsTool::write( const std::string& filename,
     outputFile << comment.str() << std::endl;
 
     children(det, outputFile, depths, 0);
-    outputFile << footer() << std::endl;
+    if (!m_online) outputFile << footer();
+    outputFile << std::endl;
   }
   else {
     warning() << "head has no condition " << endreq;
@@ -249,7 +252,9 @@ std::string WriteAlignmentConditionsTool::header(const std::string& conString) c
   // correct the location of the DTD
   std::string location;
   std::string::size_type pos = temp.find("structure");
-  temp.insert(pos,location);
+  if (pos != std::string::npos) {
+     temp.insert(pos,location);
+  }
   return temp;
 }
 
