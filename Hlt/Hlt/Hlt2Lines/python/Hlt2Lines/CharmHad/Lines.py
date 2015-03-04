@@ -3,4 +3,5 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 
 class CharmHadLines(Hlt2LinesConfigurableUser):
     def __apply_configuration__(self):
-        CharmHadD2HHHLines()
+        D2HHHLines = CharmHadD2HHHLines()
+        __slots__ = D2HHHLines.__slots__

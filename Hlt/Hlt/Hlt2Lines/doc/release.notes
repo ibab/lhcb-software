@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-03 - V. Gligorov
+ - Update CharmHad module to exploit shared filters where needed
+ - Add lifetime unbiased and PIDCalib D->HHH lines to CharmHad
+
 ! 2015-03-03 - Roel Aaij
  - Allow separate nickname and name, name goes to the configurable name and
    nickname is used to get the cuts from the dictionary.
