@@ -20,8 +20,6 @@ from GaudiKernel.SystemOfUnits import MeV
 #
 from HltTracking.Hlt2ProbeTracking import Hlt2ProbeTracking
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking, Hlt2BiKalmanFittedDownstreamTracking
-from HltTracking.HltTrackNames import _baseProtoPLocation, Hlt2TrackLoc, TrackName
-from HltTracking.HltTrackNames import HltSharedTrackLoc, Hlt2TrackRoot, HltBiDirectionalKalmanFitSuffix, HltSharedPIDPrefix, HltMuonIDSuffix, HltMuonTracksName, Hlt2ChargedProtoParticleSuffix, HltMuonProtosSuffix
 Hlt2BiKalmanFittedForwardTracking   			= Hlt2BiKalmanFittedForwardTracking()
 Hlt2BiKalmanFittedDownstreamTracking   			= Hlt2BiKalmanFittedDownstreamTracking()
 Hlt2MuonTTTracking = Hlt2ProbeTracking('Hlt2MuonTTTracking',ProbeTrack='MuonTT')

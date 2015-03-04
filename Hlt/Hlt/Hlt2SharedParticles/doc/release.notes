@@ -1,9 +1,11 @@
-
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2015-03-04 - Sascha Stahl
+ - Removed unnecessary imports in TagAndProbeParticles.py
 
 ! 2015-03-02 - Roel Aaij
  - Fix bindMembers for Basic{Pions,Kaons,Protons}.
