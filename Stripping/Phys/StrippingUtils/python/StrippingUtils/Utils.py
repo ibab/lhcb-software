@@ -12,6 +12,9 @@ __all__ = ('checkConfig',
            )
 
 import inspect
+from os import environ
+from pprint import *
+from Gaudi.Configuration import *
 from StrippingConf.Configuration import StrippingLine
 
 def checkConfig(reference_keys, configuration) :

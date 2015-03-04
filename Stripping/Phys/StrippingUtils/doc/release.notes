@@ -4,6 +4,9 @@
 ! Purpose     : Helpers for safely building stripping components.
 !-----------------------------------------------------------------------------
 
+! 2015-03-04 - Stefano Perazzini
+ - Bug fix to Phys/StrippingUtils/Utils.py
+
 ! 2015-03-03 - Andrea Contu
  - Updated python/StrippingUtils/Utils.py to accont for changes in Phys/StrippingSelections
 
