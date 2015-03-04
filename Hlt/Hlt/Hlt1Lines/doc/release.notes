@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-03-03 - Matthew Kenzie
+ - Added lifetime cut back into CalibTracking lines
+
+! 2015-03-03 - Matthew Kenzie
  - Added more CalibTracking lines to do any of D->hh, B->hh, phi->hh
 
 ! 2015-02-12 - Matthew Kenzie

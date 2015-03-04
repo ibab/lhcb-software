@@ -21,13 +21,14 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
                 ,'ParticlePT'        : 500     # MeV
                 ,'CombAPT'           : 1500    # MeV
                 ,'CombDOCA'          : 0.2     # mm
-                ,'CombVCHI2'         : 25      # dimensionless
+                ,'CombVCHI2'         : 20      # dimensionless
                 ,'CombDIRA'          : 0.9     # dimensionless
-                ,'D0MassWinLoose'    : 200     # MeV
+                ,'CombTAU'           : 0.2     # ps
+                ,'D0MassWinLoose'    : 150     # MeV
                 ,'D0MassWin'         : 100     # MeV
                 ,'PhiMassWinLoose'   : 200     # MeV
                 ,'PhiMassWin'        : 100     # MeV
-                ,'B0MassWinLoose'    : 300     # MeV
+                ,'B0MassWinLoose'    : 250     # MeV
                 ,'B0MassWin'         : 200     # MeV
                 ,'Velo_Qcut'         : 3       # dimensionless
                 ,'TrNTHits'          : 16.
@@ -47,7 +48,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
                   "from LoKiPhys.decorators import PT",
                   "KPiCombinationConf = LoKi.Hlt1.Hlt1CombinerConf( '[D0 -> K- pi+]cc' \
                           , ( (ADAMASS('D0')<%(D0MassWinLoose)s*MeV) | ( (DAMASS('B0')>-%(B0MassWinLoose)s*MeV) & (DAMASS('B_s0')<%(B0MassWinLoose)s*MeV) ) ) & (APT>%(CombAPT)s*MeV) & (ACUTDOCA(%(CombDOCA)s*mm,'')) \
-                          , ( (ADMASS('D0')<%(D0MassWin)s*MeV) | ( (DMASS('B0')>-1*%(B0MassWin)f*MeV) & (DMASS('B_s0')<%(B0MassWin)s*MeV) ) ) & (BPVDIRA > %(CombDIRA)s) & (VFASPF(VCHI2)<%(CombVCHI2)s) )" % props
+                          , ( (ADMASS('D0')<%(D0MassWin)s*MeV) | ( (DMASS('B0')>-%(B0MassWin)s*MeV) & (DMASS('B_s0')<%(B0MassWin)s*MeV) ) ) & (BPVDIRA > %(CombDIRA)s) & (VFASPF(VCHI2)<%(CombVCHI2)s) & (BPVLTIME()>%(CombTAU)s*ps) )" % props
                 ]
     return preambulo
 
@@ -57,7 +58,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
                   "from LoKiPhys.decorators import PT",
                   "KKCombinationConf = LoKi.Hlt1.Hlt1CombinerConf( '[D0 -> K- K+]cc' \
                           , ( (ADAMASS('phi(1020)')<%(PhiMassWinLoose)s*MeV) | (ADAMASS('D0')<%(D0MassWinLoose)s*MeV) | ( (DAMASS('B0')>-%(B0MassWinLoose)s*MeV) & (DAMASS('B_s0')<%(B0MassWinLoose)s*MeV) ) ) & (APT>%(CombAPT)s*MeV) & (ACUTDOCA(%(CombDOCA)s*mm,'')) \
-                          , ( (ADMASS('phi(1020)')<%(PhiMassWin)s*MeV) | (ADMASS('D0')<%(D0MassWin)s*MeV) | ( (DMASS('B0')>-1*%(B0MassWin)f*MeV) & (DMASS('B_s0')<%(B0MassWin)s*MeV) ) ) & (BPVDIRA > %(CombDIRA)s) & (VFASPF(VCHI2)<%(CombVCHI2)s) )" % props
+                          , ( (ADMASS('phi(1020)')<%(PhiMassWin)s*MeV) | (ADMASS('D0')<%(D0MassWin)s*MeV) | ( (DMASS('B0')>-%(B0MassWin)s*MeV) & (DMASS('B_s0')<%(B0MassWin)s*MeV) ) ) & (BPVDIRA > %(CombDIRA)s) & (VFASPF(VCHI2)<%(CombVCHI2)s) & (BPVLTIME()>%(CombTAU)s*ps) )" % props
                 ]
     return preambulo
 
@@ -67,7 +68,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
                   "from LoKiPhys.decorators import PT",
                   "PiPiCombinationConf = LoKi.Hlt1.Hlt1CombinerConf( '[D0 -> pi- pi+]cc' \
                           , ( (ADAMASS('D0')<%(D0MassWinLoose)s*MeV) | ( (DAMASS('B0')>-%(B0MassWinLoose)s*MeV) & (DAMASS('B_s0')<%(B0MassWinLoose)s*MeV) ) ) & (APT>%(CombAPT)s*MeV) & (ACUTDOCA(%(CombDOCA)s*mm,'')) \
-                          , ( (ADMASS('D0')<%(D0MassWin)s*MeV) | ( (DMASS('B0')>-1*%(B0MassWin)f*MeV) & (DMASS('B_s0')<%(B0MassWin)s*MeV) ) ) & (BPVDIRA > %(CombDIRA)s) & (VFASPF(VCHI2)<%(CombVCHI2)s) )" % props
+                          , ( (ADMASS('D0')<%(D0MassWin)s*MeV) | ( (DMASS('B0')>-%(B0MassWin)s*MeV) & (DMASS('B_s0')<%(B0MassWin)s*MeV) ) ) & (BPVDIRA > %(CombDIRA)s) & (VFASPF(VCHI2)<%(CombVCHI2)s) & (BPVLTIME()>%(CombTAU)s*ps) )" % props
                 ]
     return preambulo
 
