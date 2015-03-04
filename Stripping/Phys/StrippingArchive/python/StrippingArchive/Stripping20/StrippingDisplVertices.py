@@ -17,7 +17,7 @@ from StrippingUtils.Utils import LineBuilder
 
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 
-from StrippingSelections.DisplVertices_Utils import SelectionPatPV3DWrapper
+from DisplVertices_Utils import SelectionPatPV3DWrapper
 
 # constants
 LLPLHCbName = "~chi_10"

@@ -24,7 +24,7 @@ from Configurables import GaudiSequencer
 from Configurables import LoKi__HDRFilter  as HltFilter
 from Configurables import LoKi__ODINFilter as ODINFilter
 
-from StrippingSelections.DisplVertices_Utils import SelectionPatPV3DWrapper
+from DisplVertices_Utils import SelectionPatPV3DWrapper
 
 def addPrivateToolAndGet( motherConf, toolConfType, name=None ):
     from GaudiKernel.Configurable import Configurable

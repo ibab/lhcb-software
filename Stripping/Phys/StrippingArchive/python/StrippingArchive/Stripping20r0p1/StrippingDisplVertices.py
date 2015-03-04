@@ -21,7 +21,7 @@ from Configurables import GaudiSequencer
 from Configurables import LoKi__HDRFilter  as HltFilter
 from Configurables import LoKi__ODINFilter as ODINFilter
 
-from StrippingSelections.DisplVertices_Utils import SelectionPatPV3DWrapper
+from DisplVertices_Utils import SelectionPatPV3DWrapper
 
 # constants
 LLPLHCbName = "~chi_10"
