@@ -38,6 +38,8 @@ Hlt2TracksPrefix 			= HltGlobalEventPrefix + "Hlt2"
 Hlt2TrackRoot               = Hlt2TracksPrefix + "/" + HltGlobalTrackLocation
 HltSharedTrackRoot          = HltSharedTracksPrefix + "/" + HltGlobalTrackLocation
 
+Hlt2TrackEffRoot  =  Hlt2TracksPrefix + "/TrackEff" 
+
 #
 # names of track types (these go into the tracks field of _trackLocation 
 # and _protosLocation)
@@ -88,25 +90,29 @@ HltAllMuonTracksName			= "AllMuonSegments"
 # types of track fit (including no fit!) (these go into the fastFitType 
 # field of _trackLocation and _protosLocation)
 #
-HltUnfittedTracksSuffix			= "Unfitted"
-HltBiDirectionalKalmanFitSuffix 	= "BiKalmanFitted"
-HltUniDirectionalKalmanFitSuffix 	= "UniKalmanFitted"  
+#HltUnfittedTracksSuffix			= "Unfitted"
+#HltBiDirectionalKalmanFitSuffix 	= "BiKalmanFitted"
+#HltUniDirectionalKalmanFitSuffix 	= "UniKalmanFitted"
+HltDefaultFitSuffix 	                = "Fitted"  
 #
 # The recognised track types for the Hlt2 Tracking
 #
-Hlt2TrackingRecognizedTrackTypes 	= [	"Forward",
-                                        "Long", 
-                                        "Downstream" ]
+Hlt2TrackingRecognizedTrackTypes 	= [ "Forward",
+                                            "Long", 
+                                            "Downstream",
+                                            "Best"]
 #
 # The recognised fit types for the Hlt2 Tracking
 # 
-Hlt2TrackingRecognizedFitTypes		= [	HltUnfittedTracksSuffix,
-						HltBiDirectionalKalmanFitSuffix,
-						HltUniDirectionalKalmanFitSuffix
+Hlt2TrackingRecognizedFitTypes		= [ HltDefaultFitSuffix
+                                            #HltUnfittedTracksSuffix,
+                                            #HltBiDirectionalKalmanFitSuffix,
+                                            #HltUniDirectionalKalmanFitSuffix
 					  ]
 #
-Hlt2TrackingRecognizedFitTypesForRichID = [	HltBiDirectionalKalmanFitSuffix
-					  ]	
+Hlt2TrackingRecognizedFitTypesForRichID = [
+                                            HltDefaultFitSuffix
+                                            ]	
 #
 
 
@@ -177,9 +183,10 @@ __all__ = (
 		HltMuonTracksName,
 		HltAllMuonTracksName,
 		#
-		HltUnfittedTracksSuffix, 
-		HltBiDirectionalKalmanFitSuffix, 
-		HltUniDirectionalKalmanFitSuffix,
+                HltDefaultFitSuffix,
+		#HltUnfittedTracksSuffix, 
+		#HltBiDirectionalKalmanFitSuffix, 
+		#HltUniDirectionalKalmanFitSuffix,
 		#
 		Hlt2TrackingRecognizedTrackTypes,
 		Hlt2TrackingRecognizedFitTypes, 

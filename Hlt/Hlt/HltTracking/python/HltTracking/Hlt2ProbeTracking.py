@@ -15,7 +15,8 @@ __version__ = "0.1"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
-from HltTrackNames import HltBiDirectionalKalmanFitSuffix
+#from HltTrackNames import HltBiDirectionalKalmanFitSuffix
+from HltTrackNames import HltDefaultFitSuffix
 from HltTrackNames import TrackName, Hlt2TrackRoot, Hlt2TrackLoc, Hlt1TrackLoc, HltSharedTrackLoc
 
 from HltTrackNames import _baseTrackLocation, _baseProtoPLocation
@@ -161,7 +162,7 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
 				   )
         from MuonID	      import ConfiguredMuonIDs
        
-        ProbeMuonProtosOutputLocation = _baseProtoPLocation("Hlt2", HltBiDirectionalKalmanFitSuffix+"/"+TrackName[self.trackType()])
+        ProbeMuonProtosOutputLocation = _baseProtoPLocation("Hlt2", HltDefaultFitSuffix+"/"+TrackName[self.trackType()])
 
         Hlt2ProbeMuonProtoMaker = ChargedProtoParticleMaker(self.__pidAlgosAndToolsPrefix()+'ProbeProtoPAlg')
        
@@ -193,8 +194,8 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
                 cm=ConfiguredMuonIDs.ConfiguredMuonIDs( self.getProp("DataType") )
                 cm.configureMuonIDAlg(idalg)
                 idalg.TrackLocation = self.__hlt2FullDownstreamTracking().outputSelection() 
-                idalg.MuonIDLocation = Hlt2TrackRoot+HltBiDirectionalKalmanFitSuffix+"/"+HltSharedPIDPrefix+"/"+HltMuonIDSuffix
-                idalg.MuonTrackLocation = Hlt2TrackRoot+HltBiDirectionalKalmanFitSuffix+"/"+HltSharedPIDPrefix+"/"+HltMuonTracksName
+                idalg.MuonIDLocation = Hlt2TrackRoot+HltDefaultFitSuffix+"/"+HltSharedPIDPrefix+"/"+HltMuonIDSuffix
+                idalg.MuonTrackLocation = Hlt2TrackRoot+HltDefaultFitSuffix+"/"+HltSharedPIDPrefix+"/"+HltMuonTracksName
                 # make protos
                 Hlt2ProbeMuonProtoMaker.Inputs = [self.__hlt2FullDownstreamTracking().outputSelection()]
                 Hlt2ProbeMuonProtoMaker.Output = ProbeMuonProtosOutputLocation

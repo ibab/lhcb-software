@@ -6,6 +6,9 @@
 
 ! 2015-03-04 - Sascha Stahl
  - Moved RichConfigurations from HltTrackNames.py to HltRecoConf.py.
+ - Hlt2TrackingConfigurations.py: Removed unused tracking configurations.
+ - HltTrackNames.py: Simplified name for fast fit type to HltDefaultFitSuffix="Fitted".
+   Adapted Hlt2TrackingConfigurations.py and Hlt2ProbeTracking.py accordingly.
 
 ! 2015-03-03 - Sascha Stahl
  - Hlt2Tracking.py and Hlt2TrackingConfigurations.py: Remove unused option DoFastFit.

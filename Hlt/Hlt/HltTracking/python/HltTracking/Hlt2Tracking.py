@@ -16,7 +16,7 @@ __version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.25 $"
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 #from HltTrackNames import Hlt2LongTracksName, HltSharedTracksPrefix
-from HltTrackNames import HltBiDirectionalKalmanFitSuffix
+#from HltTrackNames import HltBiDirectionalKalmanFitSuffix
 from HltTrackNames import TrackName, Hlt2TrackRoot, Hlt2TrackLoc, Hlt1TrackLoc, HltSharedTrackLoc
 
 #from HltTrackNames import Hlt2MatchTracksName, Hlt2DownstreamTracksName   
@@ -27,7 +27,8 @@ from HltTrackNames import _baseTrackLocation, _baseProtoPLocation
 from HltTrackNames import HltMuonTracksName, HltAllMuonTracksName
 from HltTrackNames import HltMuonIDSuffix, HltRICHIDSuffix, HltCALOIDSuffix, HltSharedPIDPrefix 
 from HltTrackNames import HltNoPIDSuffix, HltCaloProtosSuffix, HltMuonProtosSuffix, HltRichProtosSuffix
-from HltTrackNames import HltUnfittedTracksSuffix, HltUniDirectionalKalmanFitSuffix
+#from HltTrackNames import HltUnfittedTracksSuffix, HltUniDirectionalKalmanFitSuffix
+from HltTrackNames import HltDefaultFitSuffix
 from HltTrackNames import HltGlobalTrackLocation                
 from HltTrackNames import Hlt2ChargedProtoParticleSuffix, Hlt2NeutralProtoParticleSuffix  
 from HltTrackNames import Hlt2TrackingRecognizedFitTypesForRichID 
@@ -68,7 +69,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 , "EarlyDataTracking"               : False
                 , "Hlt2Tracks"                      : "Long" # type of HLT2 tracks
                 , "Prefix"                          : "Hlt2"                 # Why should we need this? It's never changed
-                , "FastFitType"                     : HltUnfittedTracksSuffix
+                , "FastFitType"                     : HltDefaultFitSuffix
                 , "DoSeeding"                       : False  
                 , "DoCleanups"                      : True   # Intended default True. Development options
                 , "RestartForward"                  : False  # Intended default False. Development options

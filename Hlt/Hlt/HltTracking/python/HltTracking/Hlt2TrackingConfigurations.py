@@ -3,8 +3,9 @@
 #
 __author__  =  "V. Gligorov vladimir.gligorov@cern.ch"
 from Hlt2Tracking  import Hlt2Tracking
-from HltTrackNames import HltBiDirectionalKalmanFitSuffix
-from HltTrackNames import HltUniDirectionalKalmanFitSuffix 
+#from HltTrackNames import HltBiDirectionalKalmanFitSuffix
+from HltTrackNames import HltDefaultFitSuffix
+#from HltTrackNames import HltUniDirectionalKalmanFitSuffix 
 #
 # Define all the instances of Hlt2Tracking
 #
@@ -16,7 +17,7 @@ from HltTrackNames import HltUniDirectionalKalmanFitSuffix
 
 def Hlt2Tracks():
 	return Hlt2Tracking("Hlt2Tracks",        
-			    FastFitType            = HltBiDirectionalKalmanFitSuffix,
+			    FastFitType            = HltDefaultFitSuffix,
 			    Hlt2Tracks             = 'Long',
 			    DoSeeding              = True,
 			    DoCloneKilling         = True
@@ -25,61 +26,22 @@ def Hlt2Tracks():
 #Hlt2BiKalmanFittedForwardTracking = Hlt2Tracks
 def Hlt2BiKalmanFittedForwardTracking() :
         return Hlt2Tracking("Hlt2BiKalmanFittedForwardTracking",        
-                                                                                 FastFitType            = HltBiDirectionalKalmanFitSuffix,
-                                                                                 Hlt2Tracks             = 'Long',
-                                                                                 DoSeeding              = True,
-                                                                                 DoCloneKilling         = True
-                                                                        )
-#
-# With seeding and track fitting
-#
-def Hlt2BiKalmanFittedLongTracking() :
-        return Hlt2Tracking("Hlt2BiKalmanFittedLongTracking",  
-                                                                                 FastFitType            = HltBiDirectionalKalmanFitSuffix,
-                                                                                 Hlt2Tracks             = 'Long',
-                                                                                 DoSeeding              = True,
-                                                                                 DoCloneKilling         = True
-                                                                        )
-#
-# Now the Downstream tracks with the bidirectional Kalman fit.
+			    FastFitType            = HltDefaultFitSuffix,
+			    Hlt2Tracks             = 'Long',
+			    DoSeeding              = True,
+			    DoCloneKilling         = True
+			    )
+##
+# Now the Downstream tracks with Kalman fit.
 #
 def Hlt2BiKalmanFittedDownstreamTracking() :
     return Hlt2Tracking("Hlt2BiKalmanFittedDownstreamTracking", 
-			FastFitType            = HltBiDirectionalKalmanFitSuffix,
+			FastFitType            = HltDefaultFitSuffix,
 			Hlt2Tracks             = 'Downstream',
 			DoSeeding              = True,
 			DoCloneKilling         = False,
 			#TrackCuts              = {"Chi2Cut" : [0.,4.] }    
 			)
-#
-# With track fitting and RICH PID for 3 hypotheses (kaon-proton-pion), but no seeding
-#
-def Hlt2BiKalmanFittedRichForProtonsForwardTracking() :
-     return Hlt2Tracking("Hlt2BiKalmanFittedRichForProtonsForwardTracking", 
-                         FastFitType            = HltBiDirectionalKalmanFitSuffix,
-                         Hlt2Tracks             = 'Long',
-                         DoSeeding              = True,
-                         DoCloneKilling         = True,
-                         RichHypos              = ["pion","proton","kaon"],
-                         ExtraRichName          = "highPT",
-                         RichTrackCuts          = {"Forward":{ "Chi2Cut" : [0,3], "PCut" : [2,100], "PtCut" : [1.9,100], "Likelihood" : [-999999,999999] } , "Match":{ "Chi2Cut" : [0,3], "PCut" : [2,100], "PtCut" : [1.9,100], "Likelihood" : [-999999,999999] } }
-                         )
-
-#
-# With track fitting and RICH PID for 2 hypotheses (proton-pion), but no seeding
-#
-def Hlt2BiKalmanFittedRichForLowPTParticlesForwardTracking() :
-     return Hlt2Tracking("Hlt2BiKalmanFittedRichForLowPTParticlesForwardTracking", 
-                         FastFitType            = HltBiDirectionalKalmanFitSuffix,
-                         Hlt2Tracks             = 'Long',
-                         DoSeeding              = True,
-                         DoCloneKilling         = True,
-                         RichHypos              = ["pion","proton","kaon"],
-                         ExtraRichName          = "lowPT",
-                         RichTrackCuts          = {"Forward":{ "Chi2Cut" : [0,3], "PCut" : [2,100], "PtCut" : [0.3,100], "Likelihood" : [-999999,999999] }, "Match" : { "Chi2Cut" : [0,3], "PCut" : [2,100], "PtCut" : [0.3,100], "Likelihood" : [-999999,999999] }  }
-                         )
-
-#
 def setDataTypeForTracking(trackingInstance, dataType):
 
     trackingInstance.setProp("DataType", dataType)
