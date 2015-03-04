@@ -1518,7 +1518,7 @@ class CondDB(object):
         self.storeXMLStringList(path, [objDict])
 
 
-    def storeXMLStringList(self, path, XMLList):
+    def storeXMLStringList(self, path, XMLList, writeDuplicate = True):
         '''
         Allows to store a list of XML string into a given folder.
         inputs:
@@ -1555,7 +1555,19 @@ class CondDB(object):
                 since = cool.ValidityKey(obj['since'])
                 until = cool.ValidityKey(obj['until'])
                 channelID = obj['channel']
-                self.storeObject(folder, since, until, payload, cool.ChannelId(channelID))
+                doWrite = True
+                if not writeDuplicate:
+                    # Do not write the same xml content twice
+                    dbxmlstr = ""
+                    try: 
+                        dbobj = folder.findObject(since, channelID)
+                        dbpayload = dict(self.payload(dbobj))
+                        for key in payloadKeys:#NB: Only works with the case of only one key
+                            if payload[key] == str(dbpayload[key]): 
+                                print "identical content for path %s, no overwriting" %path
+                                doWrite = False
+                    except: pass
+                if doWrite: self.storeObject(folder, since, until, payload, cool.ChannelId(channelID))
 
             # Write the data to the DB
             folder.flushStorageBuffer()

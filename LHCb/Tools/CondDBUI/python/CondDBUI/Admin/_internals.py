@@ -132,9 +132,11 @@ def MergeAndTag(source, target, tag, check_addition_db = True):
 def MakeDBFromFiles(source, db, includes, excludes, basepath = "",
                     remove_extension = False, verbose = False,
                     since = None,
-                    until = None):
+                    until = None,
+                    writeDuplicate = True):
     """
     Copy the content of a directory into a CondDB instance.
+    writeDuplicate is set to False for the ONLINE to avoid writing out duplicate contents
     """
     # prepare the list of nodes to insert
     # the format is something like:
@@ -208,7 +210,7 @@ def MakeDBFromFiles(source, db, includes, excludes, basepath = "",
             if verbose:
                 print ("%" + count_folders_len + "d %" + count_folders_len + "d  %s (%d files)")%\
                       (folder_count,count_folders-folder_count,folder_path,len(keys))
-            db.storeXMLStringList(folder_path, xmllist)
+            db.storeXMLStringList(folder_path, xmllist, writeDuplicate)
 
     if verbose:
         print "Total folders inserted = %d"%folder_count
