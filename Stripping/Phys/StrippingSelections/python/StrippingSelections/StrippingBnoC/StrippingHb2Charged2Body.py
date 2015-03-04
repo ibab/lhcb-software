@@ -11,7 +11,7 @@ __version__ = '$Revision: 1.5 $'
 
 __all__ = ('Hb2Charged2BodyLines',
            'makeB2Charged2Body',
-           'default_confis')
+           'default_config')
 
 from Gaudi.Configuration import *
 

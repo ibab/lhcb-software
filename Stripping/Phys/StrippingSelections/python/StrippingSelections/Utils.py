@@ -6,6 +6,11 @@ __date__ = "30/06/2010"
 
 __all__ = ('lineBuilder')
 
+import inspect
+from os import environ
+from pprint import *
+from Gaudi.Configuration import *
+
 from StrippingSettings.Utils import lineBuilderConfiguration
 from StrippingSettings.Utils import strippingConfiguration
 
@@ -233,10 +238,12 @@ def buildStreamsFromBuilder(conf, name ):
     streams = {}
     
     
-    k = name
     _conf = {}
-    _conf[k] = conf[name]
-    
+    if conf.has_key(name) :
+      _conf[name] = conf[name]
+    else:
+      log.error("The requested name %s is not present in the default_config of any LineBuilder" %name) 
+  
     #_conf=lb.default_config
     #if isinstance(stripping, basestring) :
         #scdb = strippingConfiguration(stripping)
