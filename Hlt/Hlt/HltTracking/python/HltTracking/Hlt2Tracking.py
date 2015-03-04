@@ -30,12 +30,12 @@ from HltTrackNames import HltNoPIDSuffix, HltCaloProtosSuffix, HltMuonProtosSuff
 from HltTrackNames import HltUnfittedTracksSuffix, HltUniDirectionalKalmanFitSuffix
 from HltTrackNames import HltGlobalTrackLocation                
 from HltTrackNames import Hlt2ChargedProtoParticleSuffix, Hlt2NeutralProtoParticleSuffix  
-from HltTrackNames import HltRichDefaultHypos, HltRichDefaultRadiators
 from HltTrackNames import Hlt2TrackingRecognizedFitTypesForRichID 
-from HltTrackNames import HltRichDefaultTrackCuts
 
-from HltTrackNames import OfflineRichDefaultHypos, OfflineRichDefaultRadiators
-from HltTrackNames import OfflineRichDefaultTrackCuts
+from HltRecoConf import HltRichDefaultHypos, HltRichDefaultRadiators
+from HltRecoConf import HltRichDefaultTrackCuts
+from HltRecoConf import OfflineRichDefaultHypos, OfflineRichDefaultRadiators
+from HltRecoConf import OfflineRichDefaultTrackCuts
 
 from Configurables import CaloProcessor, RichRecSysConf, TrackSelector, TrackSys
 
