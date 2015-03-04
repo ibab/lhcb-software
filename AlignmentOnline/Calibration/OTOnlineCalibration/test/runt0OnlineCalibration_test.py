@@ -19,7 +19,8 @@ OTt0OnlineClbrAlg.InputFiles  = myFiles1
 
 OTt0OnlineClbrAlg.RunOnline = False
 
-OTt0OnlineClbrAlg.InputFilePath = "/afs/cern.ch/work/l/lgrillo/OT_CALIBRATION_files/"
+#OTt0OnlineClbrAlg.InputFilePath = "/afs/cern.ch/work/l/lgrillo/OT_CALIBRATION_files/"
+OTt0OnlineClbrAlg.InputFilePath = "./"
 #OTt0OnlineClbrAlg.InputFileName  = "data_test1_1000ev_sanityNEWCODE_hists.root"
 #OTt0OnlineClbrAlg.InputFileName  = "data_test1_1000ev_sanityOLDCODE_hists.root"
 OTt0OnlineClbrAlg.InputFileName  = "clbr_hists_109.root"
@@ -28,7 +29,8 @@ OTt0OnlineClbrAlg.InputFileName  = "clbr_hists_109.root"
 OTt0OnlineClbrAlg.InputFileName_2d  = "histog_2d_109.root"
 
 #OTt0OnlineClbrAlg.xmlFilePath = "/tmp/fdettori/"
-OTt0OnlineClbrAlg.xmlFilePath = "/tmp/lgrillo/"
+#OTt0OnlineClbrAlg.xmlFilePath = "/tmp/lgrillo/"
+OTt0OnlineClbrAlg.xmlFilePath = "./"
 
 #OTt0OnlineClbrAlg.CondStructure = ""
 #line below should be the default in the db. its default in the analysistask

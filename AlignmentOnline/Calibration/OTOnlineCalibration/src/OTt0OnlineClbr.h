@@ -49,6 +49,7 @@ public:
   virtual ~OTt0OnlineClbr( ); ///< Destructor
   
   virtual StatusCode initialize();    ///< Algorithm initialization
+  virtual StatusCode start     ();    ///< Algorithm start
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
   virtual StatusCode analyze   (std::string& SaveSet,                

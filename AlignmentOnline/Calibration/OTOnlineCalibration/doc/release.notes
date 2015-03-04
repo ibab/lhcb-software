@@ -4,6 +4,10 @@
 ! Purpose     : OT online calibration
 !-----------------------------------------------------------------------------
 
+! 2015-03-04 - Roel Aaij
+ - Updates and fixes to run online. Configuration script and test script
+   to launch additional log viewer.
+
 ! 2015-02-03 Lucia Grillo
 - added boost v* in the requirements. 
 - when a new global t0 has to be written a folder v(n_existing+1) is created 
