@@ -7,7 +7,7 @@ class Hlt2LinesConfigurableUser(HltLinesConfigurableUser):
         from copy import deepcopy
         algos = []
         # Get a local instance of the cuts
-        common = self.getProps()['Common']
+        common = self.getProps().get('Common', {})
         cuts = deepcopy(self.getProps())
         for k, v in cuts.iteritems():
             if k != 'Common': v.update(common)
