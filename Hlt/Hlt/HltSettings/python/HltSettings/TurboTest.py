@@ -86,10 +86,6 @@ class TurboTest( object ):
         Returns a list of active lines
         """
         hlt2 = ['Hlt2PassThrough', 'Hlt2DiMuonJPsiTurbo'
-                ,'Hlt2B2GammaGamma',    
-                'Hlt2B2GammaGammaDouble',    
-                'Hlt2B2GammaGammaLL' ,   
-                'Hlt2B2GammaGammaDD'    
                 ]
         
         from Hadrons_September2012 import Hadrons_September2012
