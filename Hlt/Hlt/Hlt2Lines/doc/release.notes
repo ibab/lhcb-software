@@ -8,6 +8,12 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-04 - Sascha Stahl
+ - TrackEff/Inputs: Switched order of TrackStateInitAlg and TrackContainerCopy 
+   such that the original tracks are not touched. Removed hardcoded locations
+   and put tracks, protoparticles and particles for tracking efficiencies
+   in its own directory defined by Hlt2TrackEffRoot.
+
 ! 2015-03-04 - Roel Aaij
  - Allow a list of decay descriptors.
  - Fix separation of nickname and name.

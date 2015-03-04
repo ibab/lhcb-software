@@ -12,7 +12,7 @@ from Hlt2SharedParticles.TrackFittedBasicParticles import Hlt2BiKalmanFittedRich
 #from Hlt2SharedParticles.TrackFittedBasicParticles import Hlt2BiKalmanFittedKaons       as Hlt2ProbeVeloKaons
 
 ## velo probes made here for now ##
-from HltTracking.HltTrackNames import HltSharedTrackLoc, HltBiDirectionalKalmanFitSuffix, _baseProtoPLocation, TrackName
+from HltTracking.HltTrackNames import HltSharedTrackLoc, HltDefaultFitSuffix, _baseProtoPLocation, TrackName, Hlt2TrackEffRoot
 from HltLine.HltLine import bindMembers
 from Configurables import CombinedParticleMaker, ChargedProtoParticleMaker, BestPIDParticleMaker, NoPIDsParticleMaker
 from Configurables import DelegatingTrackSelector
@@ -24,30 +24,30 @@ DecodeVelo.DecodeToVeloClusters = True
 from TrackFitter.ConfiguredFitters import (ConfiguredEventFitter,
                                            ConfiguredForwardStraightLineEventFitter)
 
-preve = TrackStateInitAlg("PrepareVeloTracks",TrackLocation = HltSharedTrackLoc["Velo"] )
-preve.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
 copyVelo = TrackContainerCopy( "CopyVeloForFitForTrackEff" )
 copyVelo.inputLocation = HltSharedTrackLoc["Velo"]
-copyVelo.outputLocation = 'Hlt2/FittedVelo/VeloTracks'
+copyVelo.outputLocation = Hlt2TrackEffRoot+'/FittedVelo/VeloTracks'
+preve = TrackStateInitAlg("PrepareVeloTracks",TrackLocation = copyVelo.outputLocation )
+preve.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
 MyVeloFit = ConfiguredEventFitter("VeloRefitterAlgForTrackEff",
-                                  TracksInContainer='Hlt2/FittedVelo/VeloTracks',
+                                  TracksInContainer=copyVelo.outputLocation,
                                   SimplifiedGeometry = True)
 
 Hlt2VeloProtos = ChargedProtoParticleMaker('Hlt2VeloProtosForTrackEff')
 #Hlt2VeloProtos.Inputs = [ HltSharedTrackLoc["Velo"]]
-Hlt2VeloProtos.Inputs = ['Hlt2/FittedVelo/VeloTracks']
-Hlt2VeloProtos.Output = _baseProtoPLocation("Hlt2", HltBiDirectionalKalmanFitSuffix+"/"+TrackName["Velo"])
+Hlt2VeloProtos.Inputs = [copyVelo.outputLocation]
+Hlt2VeloProtos.Output = _baseProtoPLocation("Hlt2", Hlt2TrackEffRoot+"/"+TrackName["Velo"])
 Hlt2VeloProtos.addTool(DelegatingTrackSelector, name='delTrackSelVelo')
 Hlt2VeloProtos.delTrackSelVelo.TrackTypes = ['Velo']
 Hlt2VeloPionParts = NoPIDsParticleMaker("Hlt2VeloPionParts")
 Hlt2VeloPionParts.Particle = 'pion'
 Hlt2VeloPionParts.Input =  Hlt2VeloProtos.Output
-Hlt2VeloPionParts.Output =  "Hlt2/Hlt2VeloPions/Particles"
+Hlt2VeloPionParts.Output =  Hlt2TrackEffRoot+"/Hlt2VeloPions/Particles"
 Hlt2VeloKaonParts = NoPIDsParticleMaker("Hlt2VeloKaonParts")
 Hlt2VeloKaonParts.Particle = 'kaon'
 Hlt2VeloKaonParts.Input =  Hlt2VeloProtos.Output
-Hlt2VeloKaonParts.Output =  "Hlt2/Hlt2VeloKaons/Particles"
-ProbeVeloProtos  = bindMembers( None, [ DecodeVelo,preve,copyVelo,MyVeloFit,Hlt2VeloProtos ])
+Hlt2VeloKaonParts.Output =  Hlt2TrackEffRoot+"/Hlt2VeloKaons/Particles"
+ProbeVeloProtos  = bindMembers( None, [ DecodeVelo,copyVelo,preve,MyVeloFit,Hlt2VeloProtos ])
 Hlt2ProbeVeloPions  = bindMembers( None, [ ProbeVeloProtos , Hlt2VeloPionParts ] )
 Hlt2ProbeVeloKaons  = bindMembers( None, [ ProbeVeloProtos , Hlt2VeloKaonParts ] )
 
