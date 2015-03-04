@@ -216,7 +216,7 @@ def getBuilderConfFromModule(confModule) :
             tmpKeys = d.keys()
             tmpKeys.sort(key=lambda x: x[0])
             if not tmpKeys == ['BUILDERTYPE', 'CONFIG', 'STREAMS', 'WGs']:
-              log.error("The default_config of %s.py is incorrect"%confModule.__name__)
+              log.error("The default_config of %s.py has incorrect keys"%confModule.__name__)
               break
             builderConfDict[k] = d
     return builderConfDict
@@ -236,8 +236,6 @@ def getBuilderAndConfFromModule(confModule) :
       else:
         print '[WARNING] The LinBuilder %s is not defined in the module %s' % (conf['BUILDERTYPE'], confModule.__name__ )
 
-    configuration = {'LineBuilders' : lineBuilder,
-                     'Configuration' : buildersConf }
-    return configuration
+    return lineBuilder,buildersConf
 
 
