@@ -1,5 +1,5 @@
 package MooreSys
-version           v23r4
+version           v23r4p1
 branches doc cmt
 
 #=======================================================
@@ -10,6 +10,9 @@ use  Moore               v23r4      Hlt
 use  IndependenceTests   v1r10      Hlt
 use  HltMonitor          v1r5	    Hlt   # Diego Martinez
 use  L0App               v2r3       L0    # 
+use  HltBase             v15r5p1    Hlt
+use  LoKiTracks          v2r10p3    Phys
+use  LoKiTrigger         v15r4p1    Phys
 
 # Declare this as a container package
 apply_pattern container_package
