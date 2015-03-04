@@ -3,6 +3,10 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2015-03-04 - Roel Aaij
+ - Add scenario for TED Velo alignment (from Silvia) and scenario that only
+   aligns TT, IT and OT (MUON is removed).
+
 !========================= TAlignment v6r2 2014-11-10 =========================
 
 ! 2014-11-10 - Maurizio Martinelli
