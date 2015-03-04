@@ -40,8 +40,9 @@ class Hlt2Combiner(Hlt2TisTosStage):
 
     def _makeMember(self, cuts, args):
         from HltLine.HltLine import Hlt2Member
+        decays = [decay] if type(self.__decay) == str else decay
         return Hlt2Member(self.__combiner, self._name() + 'Combiner', shared = self._shared(),
-                          DecayDescriptor = self.__decay, Inputs = self.inputStages(cuts),
+                          DecayDescriptors = decays, Inputs = self.inputStages(cuts),
                           **args)
                                      
     def stage(self, cuts):
