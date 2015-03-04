@@ -10,7 +10,8 @@
 
 ! 2015-03-04 - Roel Aaij
  - Allow a list of decay descriptors.
-
+ - Fix separation of nickname and name.
+ 
 ! 2015-03-03 - V. Gligorov
  - Update CharmHad module to exploit shared filters where needed
  - Add lifetime unbiased and PIDCalib D->HHH lines to CharmHad
