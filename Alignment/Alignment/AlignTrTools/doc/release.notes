@@ -4,6 +4,9 @@ Package Coordinator : Wouter Hulsbergen
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+! 2015-03-04 - Wouter Hulsbergen
+ - added WriteOTCalibrationsTool
+
 !========================= AlignTrTools v4r14 2014-11-10 =========================
 
 ! 2014-10-25 - Wouter Hulsbergen
