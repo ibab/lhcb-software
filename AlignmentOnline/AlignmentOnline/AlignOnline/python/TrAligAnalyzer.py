@@ -86,6 +86,7 @@ def setupOnline(directory, prefix, filename):
   sel.FilePrefix = prefix
   sel.Decode = False
   sel.Pause = True
+  sel.AllowedRuns = Online.DeferredRuns
   app.EvtSel  = sel
   app.EvtMax = 400
   Online.rawPersistencySvc()

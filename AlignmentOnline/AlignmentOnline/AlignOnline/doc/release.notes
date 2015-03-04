@@ -3,6 +3,12 @@ Package: AlignOnline
 Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
 
+! 2015-03-04 - Roel Aaij
+ - Add writeWrapper method to AlignOnlineIterator. Writes a wrapper that can
+   be used by the Analyzers to read the generated XML. Otherwise the XML cannot
+   be read by HLT2.
+ - Use configureTrackerAlignment.
+
 ! 2015-02-25 - Maurizio Martinelli
  - Added alignment configuration for Tracker alignment with D0 candidates
  - Moved previous configuration based on tracks into TrackerAlignmentWithTracks.py

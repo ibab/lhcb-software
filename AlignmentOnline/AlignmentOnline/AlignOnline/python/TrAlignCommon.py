@@ -56,6 +56,7 @@ def importOnline():
     name, ext = os.path.splitext(f)
     sys.path.insert(1, d)
     Online = importlib.import_module('OnlineEnv')
+    sys.path.remove(d)
   else:
     import OnlineEnv as Online
   importOnline.Online = Online  

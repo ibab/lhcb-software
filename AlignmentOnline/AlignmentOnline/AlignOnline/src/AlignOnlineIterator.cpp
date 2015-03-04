@@ -4,6 +4,7 @@
  *  Created on: Oct 6, 2014
  *      Author: beat
  */
+#include <fstream>
 
 #include "GaudiKernel/Service.h"
 #include "GaudiAlg/GaudiTool.h"
@@ -29,12 +30,22 @@
 //#include <stdio.h>
 //#include <stdlib.h>
 
+namespace {
+   using std::string;
+   using std::vector;
+   using std::map;
+   using std::to_string;
+   using std::ofstream;
+   using std::make_pair;
+   using std::endl;
+}
+
 class AlignOnlineIterator: public GaudiTool, virtual public LHCb::IAlignIterator
 {
   public:
-    AlignOnlineIterator(const std::string & type, const std::string & name,
+    AlignOnlineIterator(const string & type, const string & name,
         const IInterface * parent);
-    //      StatusCode init(std::string, std::string);
+    //      StatusCode init(string, string);
     StatusCode i_start();
     StatusCode i_run();
     StatusCode initialize();
@@ -43,20 +54,22 @@ class AlignOnlineIterator: public GaudiTool, virtual public LHCb::IAlignIterator
     //      StatusCode de_init();
     StatusCode queryInterface(const InterfaceID& riid, void** ppvIF);
   private:
+    StatusCode writeWrapper(const string& sd);
     LHCb::IAlignDrv *m_parent;
     lib_rtl_thread_t m_thread;
-    std::string m_PartitionName;
+    string m_PartitionName;
     ToolHandle<Al::IAlignUpdateTool> m_alignupdatetool;
     ToolHandle<IWriteAlignmentConditionsTool> m_xmlwriter;
     unsigned int m_maxIteration;
     ASDCollector m_asdCollector;
     unsigned int m_iteration;
-    std::string m_onlinexmldir;
-    std::string m_alignxmldir;
-    std::vector<AlignOnlineXMLCopier*> m_xmlcopiers;
+    string m_onlinexmldir;
+    string m_alignxmldir;
+    vector<AlignOnlineXMLCopier*> m_xmlcopiers;
     IPublishSvc *m_PubSvc;
-    std::map<std::string, std::string*> m_condmap;
-    std::string m_ServInfix;
+    map<string, string*> m_condmap;
+    string m_ServInfix;
+    vector<string> m_subDets;
 };
 
 DECLARE_TOOL_FACTORY(AlignOnlineIterator)
@@ -75,8 +88,8 @@ extern "C"
 
 }
 
-AlignOnlineIterator::AlignOnlineIterator(const std::string & type,
-    const std::string & name, const IInterface * parent) :
+AlignOnlineIterator::AlignOnlineIterator(const string & type,
+    const string & name, const IInterface * parent) :
     GaudiTool(type, name, parent), m_alignupdatetool("Al::AlignUpdateTool"), m_xmlwriter(
         "WriteMultiAlignmentConditionsTool")
 {
@@ -88,6 +101,7 @@ AlignOnlineIterator::AlignOnlineIterator(const std::string & type,
   declareProperty("OnlineXmlDir", m_onlinexmldir = "/group/online/alignment");
   declareProperty("AlignXmlDir", m_alignxmldir = "/group/online/AligWork");
   declareProperty("ServiceInfix", m_ServInfix = "TrackerAlignment/");
+  declareProperty("SubDetectors", m_subDets);
 
   m_iteration = 0;
   IInterface *p = (IInterface*) parent;
@@ -120,26 +134,29 @@ StatusCode AlignOnlineIterator::initialize()
     sc = m_xmlwriter.retrieve();
     if (!sc.isSuccess())
       error() << "Cannot retrieve xmlwriter" << endreq;
+    if (m_xmlwriter->FSMState() < Gaudi::StateMachine::INITIALIZED) m_xmlwriter->initialize();
+    IProperty* prop = 0;
+    sc = m_xmlwriter->queryInterface(IProperty::interfaceID(), (void**)&prop);
+    if (sc.isSuccess()) {
+       prop->setProperty("OnlineMode", "True");
+    }
   }
 
   // instantiate the objects that will take care of copying and versioning files
-  const std::string runningdir = m_alignxmldir + "/running";
+  const string runningdir = m_alignxmldir + "/running";
   if (!boost::filesystem::exists(runningdir))
     boost::filesystem::create_directory(runningdir);
 
-  const std::vector<std::string> condnames =
-  {
-  { "Velo/VeloGlobal", "Velo/VeloModules", "TT/TTGlobal", "TT/TTModules",
-      "IT/ITGlobal", "IT/ITModules", "OT/OTGlobal", "OT/OTModules" } };
-  for (const auto& i : condnames)
-  {
-    std::string *s = new std::string("");
-//    s->reserve(1024);
-    m_condmap.insert(std::make_pair(i, s));
-    auto j = m_condmap.find(i);
-    AlignOnlineXMLCopier* acpy = new AlignOnlineXMLCopier(m_onlinexmldir,
-        runningdir, i, &info());
-    m_PubSvc->declarePubItem(m_ServInfix + j->first, *s);
+  vector<string> condnames;
+  for (const auto& sd: m_subDets) {
+     condnames.push_back(sd + "/" + sd + "Global");
+     condnames.push_back(sd + "/" + sd + "Modules");
+  }
+  for (const auto& i : condnames) {
+    string *s = new string("");
+    m_condmap.insert(make_pair(i, s));
+    AlignOnlineXMLCopier* acpy = new AlignOnlineXMLCopier(m_onlinexmldir, runningdir, i, &info());
+    m_PubSvc->declarePubItem(m_ServInfix + i, *s);
     m_xmlcopiers.push_back(acpy);
   }
   fflush(stdout);
@@ -213,7 +230,7 @@ StatusCode AlignOnlineIterator::i_run()
 
     // write the xml
     debug() << "writing xml files" << endreq;
-    sc = m_xmlwriter->write("run" + std::to_string(runnr) ) ;
+    sc = m_xmlwriter->write("run" + to_string(runnr) ) ;
     if (!sc.isSuccess())
     {
       error() << "Error writing xml files" << endreq;
@@ -224,17 +241,17 @@ StatusCode AlignOnlineIterator::i_run()
     debug() << "calling parent->writeReference()" << endreq;
     m_parent->writeReference();
 
-    ++m_iteration;
     // break the loop if converged or maximum number of iterations reached
     if (convergencestatus == Al::IAlignUpdateTool::Converged || m_iteration > m_maxIteration)
     {
       break;
     }
+    ++m_iteration;
     // start the analyzers and wait
     m_asdCollector.setTime();
     m_parent->doContinue();
   }
-  std::string *s;
+  string *s;
   if (sc.isSuccess() && m_iteration > 1 && convergencestatus == Al::IAlignUpdateTool::Converged)
   {
     // after last update, if more than one iteration and successfully converged
@@ -245,7 +262,7 @@ StatusCode AlignOnlineIterator::i_run()
           << i->copybackfilename() << endmsg;
       auto j = m_condmap.find(i->condition());
       s = (j->second);
-      *s = std::to_string(runnr) + " " + i->copybackfilename();
+      *s = to_string(runnr) + " " + i->copybackfilename();
       if (!thissc.isSuccess())
       {
         error() << "Error copying file to online area" << endmsg;
@@ -268,19 +285,19 @@ StatusCode AlignOnlineIterator::i_run()
           << i->onlinefilename() << endmsg;
       auto j = m_condmap.find(i->condition());
       s = (j->second);
-      *s = std::to_string(runnr) + " " + i->onlinefilename();
+      *s = to_string(runnr) + " " + i->onlinefilename();
     }
   }
   m_PubSvc->updateAll();
   fflush(stdout);
 
-// move the 'running' dir to a dirname with current run
-  std::string rundir = m_alignxmldir + "/run" + std::to_string(runnr);
+  // move the 'running' dir to a dirname with current run
+  string rundir = m_alignxmldir + "/run" + to_string(runnr);
   if (boost::filesystem::exists(rundir))
     boost::filesystem::remove_all(rundir);
   boost::filesystem::rename(m_alignxmldir + "/running", rundir);
 
-//fflush(stdout);
+  //fflush(stdout);
   m_parent->doStop();
   return sc;
 }
@@ -288,16 +305,16 @@ StatusCode AlignOnlineIterator::i_run()
 StatusCode AlignOnlineIterator::i_start()
 {
   StatusCode sc = StatusCode::SUCCESS;
-// called only once
-// don't touch this
+  // called only once
+  // don't touch this
   debug() << "Iteration " << ++m_iteration << endreq;
 
-// 1. writes a little file with number of iteration step
+  // 1. writes a little file with number of iteration step
   debug() << "calling parent->writeReference()" << endreq;
   m_parent->writeReference();
 
-// 2. copy the files from the online area. if this doesn't work,
-// dump the current database.
+  // 2. copy the files from the online area. if this doesn't work,
+  // dump the current database.
   for (auto& i : m_xmlcopiers)
   {
     StatusCode thissc = i->copyFromOnlineArea();
@@ -309,8 +326,8 @@ StatusCode AlignOnlineIterator::i_start()
   }
   fflush(stdout);
 
-// if some of the input files are missing, bootstrap this by writing
-// from the database.
+  // if some of the input files are missing, bootstrap this by writing
+  // from the database.
   if (!sc.isSuccess())
   {
     debug() << "writing xml files in i_start to bootstrap alignment" << endreq;
@@ -318,8 +335,19 @@ StatusCode AlignOnlineIterator::i_start()
     if (!sc.isSuccess())
       error() << "Error writing xml files" << endreq;
   }
-
-// 3. start the analyzers and wait
+  // Write the wrappers for the generated conditions, this only needs to happen once.
+  if (sc.isSuccess()) {
+     // Write the wrappers for the generated conditions, this only needs to happen once.
+     for (const auto& sd: m_subDets) {
+        sc = writeWrapper(sd);
+        if (!sc.isSuccess()) {
+           error() << "Error writing wrapper file for " << sd << endreq;
+           break;
+        }
+     }
+  }
+  
+  // 3. start the analyzers and wait
   debug() << "wait for analyzers" << endreq;
   m_asdCollector.setTime();
   ::lib_rtl_start_thread(AlignOnlineIteratorThreadFunction, this, &m_thread);
@@ -328,7 +356,7 @@ StatusCode AlignOnlineIterator::i_start()
 
 StatusCode AlignOnlineIterator::stop()
 {
-// called only once
+  // called only once
   ::lib_rtl_delete_thread(m_thread);
   return StatusCode::SUCCESS;
 }
@@ -345,3 +373,25 @@ StatusCode AlignOnlineIterator::queryInterface(const InterfaceID& riid,
   return GaudiTool::queryInterface(riid, ppvIF);
 }
 
+StatusCode AlignOnlineIterator::writeWrapper(const string& sd)
+{
+   string filename = m_alignxmldir + "/running/" + sd + ".xml";
+   ofstream xml(filename);
+   if (xml.fail() ){
+      return Warning(string("Failed to open wrapper file ") + filename, StatusCode::FAILURE);
+   }
+   // XML header and links
+   xml << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>" << endl
+       << "<!DOCTYPE DDDB SYSTEM \"conddb:/DTD/structure.dtd\"" << endl
+       << "[<!ENTITY " << sd << "GlobalLabel SYSTEM \"" << sd << "/" << sd << "Global.xml\">" << endl
+       << " <!ENTITY " << sd << "ModLabel SYSTEM \"" << sd << "/" << sd << "Modules.xml\">]" << endl
+       << ">" << endl
+   // DDDB open
+       << "<DDDB>" << endl
+   // labels
+       << "&" << sd << "GlobalLabel;" << endl
+       << "&" << sd << "ModLabel;" << endl
+   // DDDB close
+       << "</DDDB>" << endl;
+   return StatusCode::SUCCESS;
+}

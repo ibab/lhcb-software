@@ -99,12 +99,23 @@ def setupOnline():
 
   ad.addTool( Aiter, ad.FitterName )
   ai = ad.AlIterator
-#   ai = ad.Aiter(AlIterator)
-  ai.PartitionName     = Online.PartitionName
-  ai.ASDFilePattern        = "_Escher.out"
-  ai.OutputLevel      = 2
-  ai.MaxIteration = 4
-  
+  ai.PartitionName  = Online.PartitionName
+  ai.ASDFilePattern = "_Escher.out"
+  ai.OutputLevel    = 3
+  ai.MaxIteration   = 10
+  ai.ServiceInfix   = ""
+
+  runType = os.environ.get('RUN_TYPE', 'Unknown')
+  runType = runType.split('|')[-1].strip() if '|' in runType else runType
+  if runType == 'Tracker':
+    sds = ['TT', 'IT', 'OT']
+  elif runType in ('Velo', 'Muon'):
+    sds = [runType]
+  else:
+    print 'WARNING: RUN_TYPE is not one of Velo, Tracker or Muon. Will assume all subdetectors'
+    sds = ['Velo', 'TT', 'IT', 'OT', 'Muon']
+  ai.SubDetectors = sds
+    
   for attr, default in [('ASDDir', "/group/online/alignment/EscherOut/"),
                         ('OnlineXmlDir', "/group/online/alignment"),
                         ('AlignXmlDir', "/group/online/AligWork")]:

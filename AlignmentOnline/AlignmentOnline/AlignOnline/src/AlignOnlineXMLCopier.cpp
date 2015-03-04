@@ -110,7 +110,8 @@ StatusCode AlignOnlineXMLCopier::copyToOnlineArea()
       // update the version number
       m_version += 1 ;
       boost::filesystem::path target(onlinefilename(m_version)) ;
-      printf("++++++++++++++++++++++++++++ AlignOnlineXMLCopier: copying %s to %s\n",origin.c_str(),target.c_str());
+      msg(MSG::INFO) << "AlignOnlineXMLCopier: copying " << origin << " to "
+                     << target << "." << endmsg;
       boost::filesystem::copy( origin, target ) ;
       if( !boost::filesystem::exists(target) ) {
         sc = StatusCode::FAILURE ;

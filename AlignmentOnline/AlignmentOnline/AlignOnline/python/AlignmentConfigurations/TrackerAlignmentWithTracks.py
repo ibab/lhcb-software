@@ -10,5 +10,5 @@ def configureAlignment():
     # add the default PV selection
     TAlignment().PVSelection = configuredPVSelection()
 
-    from TAlignment.AlignmentScenarios import configure2012DataAlignment
-    configure2012DataAlignment()
+    from TAlignment.AlignmentScenarios import configureTrackerAlignment
+    configureTrackerAlignment(True)
