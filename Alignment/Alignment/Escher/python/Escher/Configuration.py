@@ -370,43 +370,45 @@ class Escher(LHCbConfigurableUser):
         rch.Conditions = dict( (c,'/'.join([baseloc,f])) for f,cs in cdb.getProp("RunChangeHandlerConditions").iteritems() for c in cs )
         
         #path = self.getProp('DBSnapshotDirectory') + "/.."*4 + "/group/online/AligWork/current/"
-        path = self.getProp("OnlineAligWorkDir") + "/"
-        conditionmap = {
-            path + 'Velo/VeloGlobal.xml'  : [
-                'Conditions/Alignment/Velo/VeloSystem',
-                'Conditions/Alignment/Velo/VeloRight',
-                'Conditions/Alignment/Velo/VeloLeft' ],
-            path + 'Velo/VeloModules.xml' : []
-                     + [ 'Conditions/Alignment/Velo/Module%02d'%i for i in range(0,42) ]
-                     + [ 'Conditions/Alignment/Velo/Detector%02d-%02d'%(i,(1+i/2)%2) for i in range(0,42)  ] ,
-            path + 'IT/ITGlobal.xml' : []
-                     + [ 'Conditions/Alignment/IT/ITSystem' ]
-                     + [ 'Conditions/Alignment/IT/ITT%d' % i for i in range(1,4) ]
-                     + [ 'Conditions/Alignment/IT/ITT%d%sBox' % (i,b) for i in range(1,4) for b in ['Top','Bottom','ASide','CSide' ] ] ,
-            path + 'IT/ITModules.xml' : []
-                     + [ 'Conditions/Alignment/IT/ITT%d%sLayer%s' % (i,b,l) for i in range(1,4) for b in ['Top','Bottom','ASide','CSide' ] for l in ['X1','U','V','X2' ] ]
-                     + [ 'Conditions/Alignment/IT/ITT%d%sLayer%sLadder%d' % (i,b,l,a) for i in range(1,4) for b in ['Top','Bottom','ASide','CSide' ] for l in ['X1','U','V','X2' ] for a in range(1,8) ] ,
-        #         + [ 'Conditions/Alignment/IT/ITT%d%sLayer%sLadder%dSector' % (i,b,l,a) for i in range(1,4) for b in ['Top','Bottom','ASide','CSide' ] for l in ['X1','U','V','X2' ] for a in range(1,8) ]
-        #            + [ 'Conditions/Alignment/IT/ITT%d%sLayer%sLadder%dSector_Sensor1' % (i,b,l,a) for i in range(1,4) for b in ['Top','Bottom','ASide','CSide' ] for l in ['X1','U','V','X2' ] for a in range(1,8) ]
-        #            + [ 'Conditions/Alignment/IT/ITT%d%sLayer%sLadder%dSector_Sensor2' % (i,b,l,a) for i in range(1,4) for b in ['ASide','CSide' ] for l in ['X1','U','V','X2' ] for a in range(1,8) ] ,
-            path + 'OT/OTGlobal.xml' : []
-                     + [ 'Conditions/Alignment/OT/OTSystem' ]
-                     + [ 'Conditions/Alignment/OT/T%d' %i for i in range(1,4) ]
-                     + [ 'Conditions/Alignment/OT/T%d%s' % (i,l) for i in range(1,4) for l in ['X1','U','V','X2' ] ]
-                     + [ 'Conditions/Alignment/OT/T%d%sQ%d' % (i,l,q) for i in range(1,4) for l in ['X1','U','V','X2' ] for q in range(0,4) ] ,
-            path + 'OT/OTModules.xml' : []
-                     + [ 'Conditions/Alignment/OT/T%d%sQ%dM%d' % (i,l,q,m) for i in range(1,4) for l in ['X1','U','V','X2' ] for q in range(0,4) for m in range(1,10) ] ,
-            path + 'TT/TTGlobal.xml' : []
-                     + [ 'Conditions/Alignment/TT/TTSystem' ]
-                     + [ 'Conditions/Alignment/TT/TT%s' % i for i in ['a','b' ] ]
-                     + [ 'Conditions/Alignment/TT/TT%sLayer' % (l) for l in ['aX','aU','bV','bX' ] ],
-            path + 'TT/TTModules.xml' : []
-                     + [ 'Conditions/Alignment/TT/TT%sLayerR%dModule%d%s' % (l,r,m,w) for w in ['T','B'] for l in ['aX','aU','bV','bX'] for r in range(1,4) for m in range(1,4)]
-                     + [ 'Conditions/Alignment/TT/TT%sLayerR%dModule%d%s' % (l,r,m,w) for w in ['T','B'] for l in ['bV','bX']           for r in range(1,4) for m in range(4,6)]
-                     + [ 'Conditions/Alignment/TT/TT%sLayerR%dModule%d%s' % (l,r,m,w) for w in ['T','B'] for l in ['aX','aU','bV','bX'] for r in [1,3]      for m in range(6,7)]
-                     + [ 'Conditions/Alignment/TT/TT%sLayerR%dModule%d%s' % (l,r,m,w) for w in ['T','B'] for l in ['aX','aU']           for r in [1,3]      for m in range(4,6)]
+        allconds = {
+            'Velo' : [
+                    'Conditions/Alignment/Velo/VeloSystem',
+                    'Conditions/Alignment/Velo/VeloRight',
+                    'Conditions/Alignment/Velo/VeloLeft']
+                 + ['Conditions/Alignment/Velo/Module%02d'%i for i in range(0, 42)] 
+                 + ['Conditions/Alignment/Velo/Detector%02d-%02d' % (i, (1 + i / 2) % 2) for i in range(0, 42)],
+            'IT' : []
+                 + [ 'Conditions/Alignment/IT/ITSystem' ]
+                 + [ 'Conditions/Alignment/IT/ITT%d' % i for i in range(1,4) ]
+                 + [ 'Conditions/Alignment/IT/ITT%d%sBox' % (i,b) for i in range(1,4) for b in ['Top','Bottom','ASide','CSide' ] ]
+                 + [ 'Conditions/Alignment/IT/ITT%d%sLayer%s' % (i,b,l) for i in range(1,4) for b in ['Top','Bottom','ASide','CSide' ] for l in ['X1','U','V','X2' ] ]
+                 + [ 'Conditions/Alignment/IT/ITT%d%sLayer%sLadder%d' % (i,b,l,a) for i in range(1,4) for b in ['Top','Bottom','ASide','CSide' ] for l in ['X1','U','V','X2' ] for a in range(1,8) ],
+        #        + [ 'Conditions/Alignment/IT/ITT%d%sLayer%sLadder%dSector' % (i,b,l,a) for i in range(1,4) for b in ['Top','Bottom','ASide','CSide' ] for l in ['X1','U','V','X2' ] for a in range(1,8) ]
+        #        + [ 'Conditions/Alignment/IT/ITT%d%sLayer%sLadder%dSector_Sensor1' % (i,b,l,a) for i in range(1,4) for b in ['Top','Bottom','ASide','CSide' ] for l in ['X1','U','V','X2' ] for a in range(1,8) ]
+        #        + [ 'Conditions/Alignment/IT/ITT%d%sLayer%sLadder%dSector_Sensor2' % (i,b,l,a) for i in range(1,4) for b in ['ASide','CSide' ] for l in ['X1','U','V','X2' ] for a in range(1,8) ] ,
+            'OT' : []
+                 + [ 'Conditions/Alignment/OT/OTSystem' ]
+                 + [ 'Conditions/Alignment/OT/T%d' %i for i in range(1,4) ]
+                 + [ 'Conditions/Alignment/OT/T%d%s' % (i,l) for i in range(1,4) for l in ['X1','U','V','X2' ] ]
+                 + [ 'Conditions/Alignment/OT/T%d%sQ%d' % (i,l,q) for i in range(1,4) for l in ['X1','U','V','X2' ] for q in range(0,4) ]
+                 + [ 'Conditions/Alignment/OT/T%d%sQ%dM%d' % (i,l,q,m) for i in range(1,4) for l in ['X1','U','V','X2' ] for q in range(0,4) for m in range(1,10) ],
+            'TT' : []
+                 + [ 'Conditions/Alignment/TT/TTSystem' ]
+                 + [ 'Conditions/Alignment/TT/TT%s' % i for i in ['a','b' ] ]
+                 + [ 'Conditions/Alignment/TT/TT%sLayer' % (l) for l in ['aX','aU','bV','bX' ] ]
+                 + [ 'Conditions/Alignment/TT/TT%sLayerR%dModule%d%s' % (l,r,m,w) for w in ['T','B'] for l in ['aX','aU','bV','bX'] for r in range(1,4) for m in range(1,4)]
+                 + [ 'Conditions/Alignment/TT/TT%sLayerR%dModule%d%s' % (l,r,m,w) for w in ['T','B'] for l in ['bV','bX']           for r in range(1,4) for m in range(4,6)]
+                 + [ 'Conditions/Alignment/TT/TT%sLayerR%dModule%d%s' % (l,r,m,w) for w in ['T','B'] for l in ['aX','aU','bV','bX'] for r in [1,3]      for m in range(6,7)]
+                 + [ 'Conditions/Alignment/TT/TT%sLayerR%dModule%d%s' % (l,r,m,w) for w in ['T','B'] for l in ['aX','aU']           for r in [1,3]      for m in range(4,6)]
         }
 
+        ## This is a bit dirty, since we're supposed to control TAlignment. We
+        ## know that this is set from top level, so let's give it a try anyway
+        ta = TAlignment()
+        sdToWrite = set(ta.getProp("WriteCondSubDetList"))
+        pat = self.getProp("OnlineAligWorkDir") + "/%s.xml" 
+        conditionmap = dict((pat % sd, f) for (sd, f) in allconds.iteritems() if sd in sdToWrite)
+            
         # add to the existing map
         rch.Conditions = dict(rch.Conditions.items() +  dict( (c,f) for f,cs in conditionmap.iteritems() for c in cs ).items() )
 
