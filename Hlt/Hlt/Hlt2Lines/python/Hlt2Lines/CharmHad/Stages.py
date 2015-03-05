@@ -2,6 +2,7 @@
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2VoidFilter
 from Hlt2Lines.Utilities.Hlt2Combiner import Hlt2Combiner
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
+from Inputs import KS0_LL, KS0_DD, Lambda_LL, Lambda_DD
 
 # The GEC
 class TrackGEC(Hlt2VoidFilter):
@@ -33,11 +34,9 @@ class TagDecay(Hlt2Combiner):
         DecayRHS = DecayRHS.split(' ')
         for part in DecayRHS :
             dc[part] = "ALL"
-        cc =    ('  ((AM - AM1) < %(DeltaM_AM_MAX)s)' +
-                 '& ((AM1 - AM) > %(DeltaM_AM_MIN)s)' )
+        cc =    ('in_range( %(DeltaM_AM_MIN)s, (AM - AM1), %(DeltaM_AM_MAX)s )')
         mc =    ("(VFASPF(VCHI2PDOF) < %(TagVCHI2PDOF_MAX)s)" +
-                 "& ((M - M1) < %(DeltaM_MAX)s)" +
-                 "& ((M1 - M) > %(DeltaM_MIN)s)")  
+                 "& in_range( %(DeltaM_MIN)s, (M - M1), %(DeltaM_MAX)s )")
  
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name, decay, inputs,
@@ -143,9 +142,7 @@ class DetachedHHHCombiner(Hlt2Combiner):
                      'K+'  : "(MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)",
                      'p+'  : "(MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)"}
         else :
-            dc =    {'pi+' : "ALL",
-                     'K+'  : "ALL",
-                     'p+'  : "ALL"}
+            dc =    {}
         cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
                  " & ((APT1+APT2+APT3) > %(ASUMPT_MIN)s )" +
                  " & (AHASCHILD((MIPCHI2DV(PRIMARY)) > %(Trk_1OF3_MIPCHI2DV_MIN)s))"+
@@ -162,13 +159,29 @@ class DetachedHHHCombiner(Hlt2Combiner):
 
 class HHHCombiner(Hlt2Combiner):
     def __init__(self, name, decay,inputs):
-        dc =    {'pi+' : "ALL",
-                 'K+'  : "ALL",
-                 'p+'  : "ALL"}
+        dc =    {}
         cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
                  " & ((APT1+APT2+APT3) > %(ASUMPT_MIN)s )" )
         mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
                  " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 " & (BPVLTIME() > %(BPVLTIME_MIN)s )")
+        from HltTracking.HltPVs import PV3D
+        Hlt2Combiner.__init__(self, name, decay, inputs,
+                              dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                              tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
+                              MotherCut = mc, Preambulo = [])
+
+class DetachedV0HCombiner(Hlt2Combiner):
+    def __init__(self, name, decay,inputs):
+        dc =    {'KS0'    : "ALL",
+                 'Lambda0' : "ALL",
+                 'pi+'    : "(MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)",
+                 'K+'     : "(MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)"}
+        cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
+                 " & ((APT1+APT2+APT3) > %(ASUMPT_MIN)s )" )
+        mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
+                 " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 " & (BPVVDCHI2 > %(BPVVDCHI2_MIN)s )" +
                  " & (BPVLTIME() > %(BPVLTIME_MIN)s )")
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name, decay, inputs,
@@ -248,6 +261,8 @@ class Lc2PiPK(DetachedHHHCombiner) :
                   DetachedInParticleFilter("SharedDetachedLcChild_p")]
         DetachedHHHCombiner.__init__(self,name,decay,inputs)
 
+# The lifetime unbiased lines now
+
 class D2KPiPi_SS_LTUNB(HHHCombiner) :
     def __init__(self,name) :
         decay = "[D+ -> K- pi+ pi+]cc"
@@ -272,6 +287,8 @@ class Lc2KPPi_LTUNB(HHHCombiner) :
                   protonsForPromptHHHCombiner]
         HHHCombiner.__init__(self,name,decay,inputs)
 
+# The PID calib lines now
+
 class Lc2KPPi_PIDCALIB(DetachedHHHCombiner) :
     def __init__(self,name) :
         decay = "[Lambda_c+ -> K- p+ pi+]cc"
@@ -280,3 +297,62 @@ class Lc2KPPi_PIDCALIB(DetachedHHHCombiner) :
                   DetachedInParticleFilter("SharedDetachedLcChild_pi"),
                   protonsForLc2KPPiPIDCALIBCombiner]
         DetachedHHHCombiner.__init__(self,name,decay,inputs)
+
+# The V0H lines now
+
+class D2KS0Pi_LL(DetachedV0HCombiner) :
+    def __init__(self,name) :
+        decay = "[D+ -> pi+ KS0]cc"
+        inputs = [DetachedInParticleFilter("SharedDetachedDpmChild_pi"),
+                  KS0_LL]
+        DetachedV0HCombiner.__init__(self,name,decay,inputs)
+
+class D2KS0K_LL(DetachedV0HCombiner) :
+    def __init__(self,name) :
+        decay = "[D+ -> K+ KS0]cc"
+        inputs = [DetachedInParticleFilter("SharedDetachedDpmChild_K"),
+                  KS0_LL]
+        DetachedV0HCombiner.__init__(self,name,decay,inputs)        
+
+class D2KS0Pi_DD(DetachedV0HCombiner) :
+    def __init__(self,name) :
+        decay = "[D+ -> pi+ KS0]cc"
+        inputs = [DetachedInParticleFilter("SharedDetachedDpmChild_pi"),
+                  KS0_DD]
+        DetachedV0HCombiner.__init__(self,name,decay,inputs)
+
+class D2KS0K_DD(DetachedV0HCombiner) :
+    def __init__(self,name) :
+        decay = "[D+ -> K+ KS0]cc"
+        inputs = [DetachedInParticleFilter("SharedDetachedDpmChild_K"),
+                  KS0_DD]
+        DetachedV0HCombiner.__init__(self,name,decay,inputs)
+
+class Lc2LambdaPi_LL(DetachedV0HCombiner) :
+    def __init__(self,name) :
+        decay = "[Lambda_c+ -> pi+ Lambda0]cc"
+        inputs = [DetachedInParticleFilter("SharedDetachedLcChild_pi"),
+                  Lambda_LL]
+        DetachedV0HCombiner.__init__(self,name,decay,inputs)
+
+class Lc2LambdaK_LL(DetachedV0HCombiner) :
+    def __init__(self,name) :
+        decay = "[Lambda_c+ -> K+ Lambda0]cc"
+        inputs = [DetachedInParticleFilter("SharedDetachedLcChild_K"),
+                  Lambda_LL]
+        DetachedV0HCombiner.__init__(self,name,decay,inputs)
+
+class Lc2LambdaPi_DD(DetachedV0HCombiner) :
+    def __init__(self,name) :
+        decay = "[Lambda_c+ -> pi+ Lambda0]cc"
+        inputs = [DetachedInParticleFilter("SharedDetachedLcChild_pi"),
+                  Lambda_DD]
+        DetachedV0HCombiner.__init__(self,name,decay,inputs)
+
+class Lc2LambdaK_DD(DetachedV0HCombiner) :
+    def __init__(self,name) :
+        decay = "[Lambda_c+ -> K+ Lambda0]cc"
+        inputs = [DetachedInParticleFilter("SharedDetachedLcChild_K"),
+                  Lambda_DD]
+        DetachedV0HCombiner.__init__(self,name,decay,inputs)
+

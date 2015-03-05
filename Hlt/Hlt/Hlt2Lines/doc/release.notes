@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-05 - V. Gligorov
+ - Update CharmHad module to instantiate lines from Lines.py
+ - Add D2V0HLines.py which does what the name suggests it would do
+ - Some code optimization thanks to suggestions from Vanya
+
 ! 2015-03-04 - Patrick Spradlin
  - Hlt2TopologicalLines.py:  Updated for generalized version of BBDecTreeTool 
    ** DEPENDS ON r184832 of Phys/BBDecTreeTool **
