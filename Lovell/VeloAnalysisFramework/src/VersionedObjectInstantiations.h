@@ -69,9 +69,9 @@
     namespace { struct JOIN3(__map_iterator_instantiations_, CTR1, CTR2) { \
     CLASS <__VA_ARGS__>::value_type value; \
     CLASS <__VA_ARGS__>::iterator iterator; \
-    CLASS <__VA_ARGS__>::const_iterator const_iterator; } ; }
-/*  CLASS <__VA_ARGS__>::reverse_iterator reverse_iterator; \
-    CLASS <__VA_ARGS__>::const_reverse_iterator const_reverse_iterator; }; } */
+    CLASS <__VA_ARGS__>::const_iterator const_iterator; \
+    CLASS <__VA_ARGS__>::reverse_iterator reverse_iterator; \
+    CLASS <__VA_ARGS__>::const_reverse_iterator const_reverse_iterator; }; }
 
 #define INSTANTIATE_ITERATORS_BASICTYPES(CTR, CLASS, PFX, SFX) \
     INSTANTIATE_ITERATORS(CTR, 0, CLASS, PFX Char_t SFX) \
@@ -117,8 +117,8 @@ namespace {
     struct __map_iterator_instantiations_70 {
 	VersionedObject<std::string>::iterator iterator;
 	VersionedObject<std::string>::const_iterator const_iterator;
-	//VersionedObject<std::string>::reverse_iterator reverse_iterator;
-	//VersionedObject<std::string>::const_reverse_iterator const_reverse_iterator;
+	VersionedObject<std::string>::reverse_iterator reverse_iterator;
+	VersionedObject<std::string>::const_reverse_iterator const_reverse_iterator;
     };
 }
 template class VersionedObject<std::string>;
