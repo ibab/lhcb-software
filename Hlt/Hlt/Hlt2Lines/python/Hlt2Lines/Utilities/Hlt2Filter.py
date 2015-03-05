@@ -8,7 +8,8 @@ class Hlt2ParticleFilter(Hlt2TisTosStage):
         self.__code = code
         self.__kwargs = kwargs
         self.__stage = None
-        Hlt2TisTosStage.__init__(self, name, inputs, dependencies, tistos, nickname, shared)
+        super(Hlt2TisTosStage, self).__init__(self, name, inputs, dependencies,
+                                              tistos, nickname, shared)
 
     def clone(self, name, **kwargs):
         args = deepcopy(self.__kwargs)
@@ -43,7 +44,7 @@ class Hlt2ParticleFilter(Hlt2TisTosStage):
         def __partCutHandler(tagger, specs, args):
             tisTosCut = tagger.particleCut(specs.values())
             args['Code'] = '{0} & {1}'.format(tisTosCut, args['Code'])
-
+ 
         self.__stage = self._handleTisTos(cuts, args, __partCutHandler)
         return self.__stage
     
@@ -53,7 +54,7 @@ class Hlt2VoidFilter(Hlt2Stage):
         self.__code = code
         self.__kwargs = kwargs
         self.__stage = None
-        Hlt2Stage.__init__(self, name, inputs, dependencies, nickname, shared)
+        super(Hlt2Stage, self).__init__(self, name, inputs, dependencies, nickname, shared)
 
     def clone(self, name, **kwargs):
         args = deepcopy(self.__kwargs)

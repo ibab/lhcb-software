@@ -1,4 +1,5 @@
 from GaudiKernel.SystemOfUnits import GeV, MeV 
+from Hlt2Lines.Utilities.Utilities import staticVar
 
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 class DiMuonLines(Hlt2LinesConfigurableUser) :
@@ -52,25 +53,31 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
 
                  'DetachedPsi2S' : {'DLS'        :     3},
                  }
-                                   
-    def __apply_configuration__(self) :
+
+    def stages(self):
+        if hasattr(self, '__stages') and self.__stages:
+            return self.__stages
+
         from Stages import (DiMuonFilter, JpsiFilter, Psi2SFilter,
                             BFilter, ZFilter, DetachedDiMuonFilter,
                             DetachedDiMuonHeavyFilter, DetachedJpsiFilter,
                             DetachedPsi2SFilter)
-        stages = {'DiMuon'        : [DiMuonFilter('DiMuon')],
-                  'JPsi'          : [JpsiFilter('JPsi')],
-                  'JPsiHighPT'    : [JpsiFilter('JPsiHighPT')],
-                  'Psi2S'         : [Psi2SFilter('Psi2S')],
-                  'Psi2SHighPT'   : [Psi2SFilter('Psi2SHighPT')],
-                  'B'             : [BFilter('B')],
-                  'Z'             : [ZFilter('Z')],
-                  'Detached'      : [DetachedDiMuonFilter('Detached')],
-                  'DetachedHeavy' : [DetachedDiMuonHeavyFilter('DetachedHeavy')],
-                  'DetachedJPsi'  : [DetachedJpsiFilter('DetachedJPsi')],
-                  'DetachedPsi2S' : [DetachedPsi2SFilter('DetachedPsi2S')]}
+        self.__stages = {'DiMuon'        : [DiMuonFilter('DiMuon')],
+                        'JPsi'          : [JpsiFilter('JPsi')],
+                        'JPsiHighPT'    : [JpsiFilter('JPsiHighPT')],
+                        'Psi2S'         : [Psi2SFilter('Psi2S')],
+                        'Psi2SHighPT'   : [Psi2SFilter('Psi2SHighPT')],
+                        'B'             : [BFilter('B')],
+                        'Z'             : [ZFilter('Z')],
+                        'Detached'      : [DetachedDiMuonFilter('Detached')],
+                        'DetachedHeavy' : [DetachedDiMuonHeavyFilter('DetachedHeavy')],
+                        'DetachedJPsi'  : [DetachedJpsiFilter('DetachedJPsi')],
+                        'DetachedPsi2S' : [DetachedPsi2SFilter('DetachedPsi2S')]}
+        return self.__stages
 
+    def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line
+        stages = self.stages()
         for (nickname, algos) in self.algorithms(stages).iteritems():
             linename = 'DiMuon' + nickname if nickname != 'DiMuon' else nickname
             Hlt2Line(linename, prescale = self.prescale,

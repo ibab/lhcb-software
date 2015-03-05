@@ -7,6 +7,7 @@ from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 
+from Hlt2Lines.Hlt2CharmHadD02HHXDstLines import Hlt2CharmHadD02HHXDstLinesConf
 from Hlt2Lines.Hlt2CharmHadD02HHHHDstLines import Hlt2CharmHadD02HHHHDstLinesConf 
 from Hlt2Lines.Hlt2CharmHadD02HHHHDstNoHlt1Lines  import Hlt2CharmHadD02HHHHDstNoHlt1LinesConf 
 
@@ -23,7 +24,9 @@ class Hlt2CharmHadTwoBodyForD02HHHHConf(HltLinesConfigurableUser) : # {
     """
 
     ## Must be configured before every configurable that uses it.
-    __used_configurables__ = [Hlt2CharmHadD02HHHHDstLinesConf,Hlt2CharmHadD02HHHHDstNoHlt1LinesConf]
+    __used_configurables__ = [Hlt2CharmHadD02HHHHDstLinesConf,
+                              Hlt2CharmHadD02HHHHDstNoHlt1LinesConf,
+                              Hlt2CharmHadD02HHXDstLinesConf]
 
     __slots__ = {
                     'Trk_PT_MIN'                :  300.0 * MeV

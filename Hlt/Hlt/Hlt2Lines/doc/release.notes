@@ -8,6 +8,12 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-05 - Roel Aaij
+ - Fix configurable dependency between Hlt2CharmHadD02HHXDstLines and
+   Hlt2CharmHadTwoBodyForD02HHHH.
+ - Add Combination{1-7}Cut to the cuts that substitutions are make for.
+ - Use super to call base class constructor.
+
 ! 2015-03-05 - Mika Vesterinen
  - Move the units to the dictionary in TrackEff module
 

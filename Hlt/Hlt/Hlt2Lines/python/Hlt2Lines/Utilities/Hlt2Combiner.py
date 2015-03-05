@@ -2,8 +2,10 @@ from copy import deepcopy
 from Hlt2TisTosFilter import Hlt2TisTosStage
 from Configurables import CombineParticles
 
+
 class Hlt2Combiner(Hlt2TisTosStage):
-    __cutTypes = set(('MotherCut', 'DaughtersCuts', 'CombinationCut'))
+    __cutTypes = set(('MotherCut', 'DaughtersCuts', 'CombinationCut') +
+                     ('Combination%sCut' % s for s in Hlt2Combiner.__counter(8)))
     def __init__(self, name, decay, inputs, dependencies = [], tistos = [],
                  combiner = CombineParticles, nickname = None, shared = False, **kwargs):
         self.__decay = decay
@@ -18,7 +20,8 @@ class Hlt2Combiner(Hlt2TisTosStage):
 
         ## Support NXBodyDecays
         self.__combiner = combiner
-        Hlt2TisTosStage.__init__(self, name, inputs, dependencies, tistos, nickname, shared)
+        super(Hlt2Combiner, self).__init__(self, name, inputs, dependencies,
+                                           tistos, nickname, shared)
 
     def clone(self, name, **kwargs):
         args = deepcopy(self.__kwargs)
@@ -73,3 +76,9 @@ class Hlt2Combiner(Hlt2TisTosStage):
         self.__stage = self._handleTisTos(cuts, args, __combCutHandler)
         return self.__stage
         ## Convenience function to create the actual particle combiner
+
+    def __counter(n):
+        m = 3
+        while m <= n:
+            yield ''.join(str(i) for i in range(1, m))
+            m += 1
