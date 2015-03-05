@@ -11,10 +11,8 @@ __author__  = "V. Gligorov vladimir.gligorov@cern.ch"
 # =============================================================================
 from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
-from Configurables import CombinedParticleMaker, ChargedProtoParticleMaker, BestPIDParticleMaker, NoPIDsParticleMaker, TrackSelector
+from Configurables import CombinedParticleMaker, BestPIDParticleMaker, NoPIDsParticleMaker, TrackSelector
 from Configurables import ProtoParticleMUONFilter
-from Configurables import GaudiSequencer
-from GaudiKernel.SystemOfUnits import MeV
 #
 # These are all based on unfitted tracks
 #
@@ -54,6 +52,18 @@ Hlt2TagAndProbeMuons.Output = 'Hlt2/Hlt2TagAndProbeMuons/Particles'
 Hlt2TagAndProbeMuons.WriteP2PVRelations = False
 ##########################################################################
 #
+# No PID muon particles, for association with probe track
+#
+##########################################################################
+Hlt2LongAssocParts = NoPIDsParticleMaker("Hlt2LongAssocParts")
+Hlt2LongAssocParts.Particle = 'pion' # call this a pion for CombinePart to distringuish from probe
+Hlt2LongAssocParts.addTool( TrackSelector )
+Hlt2LongAssocParts.TrackSelector.TrackTypes = [ "Long" ]
+Hlt2LongAssocParts.Input =  muonWithCaloProtos.outputSelection()
+Hlt2LongAssocParts.Output =  "Hlt2/Hlt2LongAssocMuons/Particles"
+
+##########################################################################
+#
 # MuonTT particles
 #
 ##########################################################################
@@ -63,7 +73,6 @@ Hlt2MuonTTParts.addTool( TrackSelector )
 Hlt2MuonTTParts.TrackSelector.TrackTypes = [ "Long" ]
 Hlt2MuonTTParts.Input =  muonTTProtos.outputSelection()
 Hlt2MuonTTParts.Output =  "Hlt2/Hlt2MuonTTMuons/Particles"
-Hlt2MuonTTParts.OutputLevel = 6 
 
 ##########################################################################
 #
@@ -72,7 +81,6 @@ Hlt2MuonTTParts.OutputLevel = 6
 ##########################################################################
 Hlt2VeloMuonParts = NoPIDsParticleMaker("Hlt2VeloMuonParts")
 Hlt2VeloMuonParts.Particle = 'Muon'
-Hlt2VeloMuonParts.OutputLevel = 6
 Hlt2VeloMuonParts.Input =  velomuonProtos.outputSelection()
 Hlt2VeloMuonParts.Output =  "Hlt2/Hlt2VeloMuons/Particles"
 	
@@ -95,10 +103,11 @@ Hlt2FullDownParts.Output = "Hlt2/Hlt2DownstreamMuons/Particles"
 # from Hlt2SharedParticles.TagAndProbeParticles import TagAndProbeMuons
 #
 
-__all__ = ( 'TagAndProbePions', 'TagAndProbeMuons', 'TagMuonTTMuons', 'TagVeloMuons', 'TagDownstreamMuons' )
+__all__ = ( 'TagAndProbePions', 'TagAndProbeMuons', 'LongAssocMuons', 'TagMuonTTMuons', 'TagVeloMuons', 'TagDownstreamMuons' )
 
 TagAndProbePions   = bindMembers( None, [ caloProtos		,	Hlt2TagAndProbePions 	] )
 TagAndProbeMuons   = bindMembers( None, [ muonWithCaloProtos	, 	Hlt2TagAndProbeMuons	] )
-TagMuonTTMuons		= bindMembers( None, [ muonTTProtos	,	Hlt2MuonTTParts	] )
-TagVeloMuons   		= bindMembers( None, [ velomuonProtos, Hlt2VeloMuonParts] )
-TagDownstreamMuons	= bindMembers( None, [ fulldownProtos, Hlt2FullDownParts] )
+LongAssocMuons     = bindMembers( None, [ muonWithCaloProtos	, 	Hlt2LongAssocParts	] )
+ProbeMuonTTMuons	= bindMembers( None, [ muonTTProtos	,	Hlt2MuonTTParts	] )
+ProbeVeloMuons   	= bindMembers( None, [ velomuonProtos, Hlt2VeloMuonParts] )
+ProbeDownstreamMuons	= bindMembers( None, [ fulldownProtos, Hlt2FullDownParts] )
