@@ -1,5 +1,4 @@
 from GaudiKernel.SystemOfUnits import GeV, MeV 
-from Hlt2Lines.Utilities.Utilities import staticVar
 
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 class DiMuonLines(Hlt2LinesConfigurableUser) :

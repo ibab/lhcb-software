@@ -4,8 +4,15 @@ from Configurables import CombineParticles
 
 
 class Hlt2Combiner(Hlt2TisTosStage):
+    def __counter(n):
+        m = 3
+        while m <= n:
+            yield ''.join(str(i) for i in range(1, m))
+            m += 1
+
     __cutTypes = set(('MotherCut', 'DaughtersCuts', 'CombinationCut') +
-                     ('Combination%sCut' % s for s in Hlt2Combiner.__counter(8)))
+                     tuple('Combination%sCut' % s for s in __counter(8)))
+
     def __init__(self, name, decay, inputs, dependencies = [], tistos = [],
                  combiner = CombineParticles, nickname = None, shared = False, **kwargs):
         self.__decay = decay
@@ -20,7 +27,7 @@ class Hlt2Combiner(Hlt2TisTosStage):
 
         ## Support NXBodyDecays
         self.__combiner = combiner
-        super(Hlt2Combiner, self).__init__(self, name, inputs, dependencies,
+        super(Hlt2Combiner, self).__init__(name, inputs, dependencies,
                                            tistos, nickname, shared)
 
     def clone(self, name, **kwargs):
@@ -77,8 +84,3 @@ class Hlt2Combiner(Hlt2TisTosStage):
         return self.__stage
         ## Convenience function to create the actual particle combiner
 
-    def __counter(n):
-        m = 3
-        while m <= n:
-            yield ''.join(str(i) for i in range(1, m))
-            m += 1

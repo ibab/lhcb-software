@@ -8,7 +8,7 @@ class Hlt2ParticleFilter(Hlt2TisTosStage):
         self.__code = code
         self.__kwargs = kwargs
         self.__stage = None
-        super(Hlt2TisTosStage, self).__init__(self, name, inputs, dependencies,
+        super(Hlt2TisTosStage, self).__init__(name, inputs, dependencies,
                                               tistos, nickname, shared)
 
     def clone(self, name, **kwargs):
@@ -54,7 +54,7 @@ class Hlt2VoidFilter(Hlt2Stage):
         self.__code = code
         self.__kwargs = kwargs
         self.__stage = None
-        super(Hlt2Stage, self).__init__(self, name, inputs, dependencies, nickname, shared)
+        super(Hlt2Stage, self).__init__(name, inputs, dependencies, nickname, shared)
 
     def clone(self, name, **kwargs):
         args = deepcopy(self.__kwargs)

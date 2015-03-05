@@ -24,7 +24,7 @@ class Hlt2TisTosGlobalTagger(Hlt2Stage):
         if self.__specs and not all(map(lambda s: s in _globalSpecs, self.__specs)):
             raise AttributeError("All specs must be globally taggable.")
         self.__stage = None
-        super(Hlt2Stage, self).__init__(self, 'Hlt2TisTosGlobalTagger', shared = True)
+        super(Hlt2Stage, self).__init__('Hlt2TisTosGlobalTagger', shared = True)
         
     def __checkSpecs(self, specs):
         bad = filter(lambda x: x not in _globalSpecs, specs)
@@ -96,7 +96,7 @@ class Hlt2TisTosParticleTagger(Hlt2Stage):
                             
         self.__kwargs = kwargs
         self.__stage = None
-        super(Hlt2Stage, self).__init__(self, name, inputs, nickname = nickname, shared = shared)
+        super(Hlt2Stage, self).__init__(name, inputs, nickname = nickname, shared = shared)
 
     def clone(self, name, **kwargs):
         args = deepcopy(self.__kwargs)
@@ -153,7 +153,7 @@ class Hlt2TisTosStage(Hlt2Stage):
     def __init__(self, name, inputs, dependencies = [], tistos = [],
                  nickname = None, shared = False):
         self.__tistos = makeList(tistos)
-        super(Hlt2Stage, self).__init__(self, name, inputs, dependencies, nickname, shared)
+        super(Hlt2Stage, self).__init__(name, inputs, dependencies, nickname, shared)
     
     def _tistos(self):
         return self.__tistos
