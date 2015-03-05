@@ -30,6 +30,6 @@ class Hlt2LinesConfigurableUser(HltLinesConfigurableUser):
                 else:
                     sl.append(i)
             sd[name] = list(uniqueEverseen(__flatten(sl)))
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         return sd
 
