@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-03-05 - V. Gligorov
+ - Fit Hlt1CalibRICHMirrorLines and CalibTracking lines
+   to use their own candidates and not reuse the TrackAllL0 candidates.
+
 ! 2015-03-03 - Matthew Kenzie
  - Added lifetime cut back into CalibTracking lines
 

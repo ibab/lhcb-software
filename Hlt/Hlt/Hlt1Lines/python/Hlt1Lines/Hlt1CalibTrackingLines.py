@@ -17,7 +17,7 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
   __slots__ = {  'TrackPT'           : 500     # MeV
                 ,'TrackP'            : 2000    # MeV
-                ,'TrackChi2DOF'      : 5       # dimensionless
+                ,'TrackChi2DOF'      : 3       # dimensionless
                 ,'ParticlePT'        : 500     # MeV
                 ,'CombAPT'           : 1500    # MeV
                 ,'CombDOCA'          : 0.2     # mm
@@ -38,7 +38,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
   def hh_Preambulo( self, props ):
     from HltTracking.Hlt1Tracking import ( TrackCandidates, FitTrack)
 
-    preambulo = [ TrackCandidates('TrackAllL0'),
+    preambulo = [ TrackCandidates('CalibTracking'),
                   FitTrack ]
     return preambulo
 
@@ -267,3 +267,4 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
            , ODIN = ''
            , algos = self.PiPi_Line_Streamer( 'CalibTracking', self.getProps() )
           )
+

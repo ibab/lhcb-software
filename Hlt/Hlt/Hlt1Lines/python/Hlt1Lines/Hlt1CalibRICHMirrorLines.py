@@ -46,10 +46,8 @@ class Hlt1CalibRICHMirrorLinesConf( HltLinesConfigurableUser ) :
 
     def hltRICHMirror_Preambulo( self ) :
         from HltTracking.Hlt1Tracking import ( VeloCandidates, TrackCandidates, FitTrack )
-        # Reuse Velo/Track candidates from TrackAllL0
-        Preambulo = [ VeloCandidates( 'TrackAllL0' ),
-                      FitTrack,
-                      TrackCandidates( 'TrackAllL0' )]
+        Preambulo = [ FitTrack,
+                      TrackCandidates( 'CalibRICHMirror' )]
         return Preambulo
 
     # line using velo+veloTT+forwardUpgrade en'block 
