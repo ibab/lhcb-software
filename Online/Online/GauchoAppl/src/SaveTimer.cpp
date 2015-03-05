@@ -3,6 +3,8 @@
 #include "Gaucho/ObjService.h"
 #include "stdio.h"
 #include "TFile.h"
+#include "TROOT.h"
+#include "TThread.h"
 #include "Gaucho/SerialHeader.h"
 #include "Gaucho/MonHist.h"
 #include "sys/time.h"
@@ -25,6 +27,11 @@ SaveTimer::SaveTimer(MonAdder *add, int period) : GenTimer((void*)add,period*100
   TProfile::SetDefaultSumw2();
   m_filenamesvc =0;
   m_dontdimlock = true;
+  ROOT::GetROOT();
+  if (!TThread::IsInitialized())
+  {
+    TThread::Initialize();
+  }
 }
 
 SaveTimer::~SaveTimer( )
@@ -82,6 +89,12 @@ void SaveTimer::SavetoFile(void *buff)
   char fdir[1024];
   void *bend = AddPtr(buff,hd->buffersize);
   int runo = (int)hd->run_number;
+  static BRTLLock *loclock = 0;
+  if (loclock == 0)
+  {
+    loclock = new BRTLLock();
+    loclock->m_name = "RootSaverHackLock";
+  }
   if (m_EOR && (runo == 0))
   {
 //    printf("Run Number == 0. No attempt to save....\n");
@@ -124,6 +137,7 @@ void SaveTimer::SavetoFile(void *buff)
     }
 
 //    printf("File Saver: Filename %s\n",fn);
+//  loclock->lockMutex();
   m_Adder->Lock();
   TFile *f = TFile::Open(fn,"RECREATE");
   m_Adder->UnLock();
@@ -131,6 +145,7 @@ void SaveTimer::SavetoFile(void *buff)
   {
     printf("Root File %s cannot be opened or is Zombie\n",fn);
     fflush (stdout);
+//    loclock->unlockMutex();
     delete f;
     return;
   }
@@ -207,5 +222,6 @@ void SaveTimer::SavetoFile(void *buff)
   f->Close();
   delete f;
   m_Adder->UnLock();
+//  loclock->unlockMutex();
   if (m_filenamesvc != 0) m_filenamesvc->updateService(fn);
 }

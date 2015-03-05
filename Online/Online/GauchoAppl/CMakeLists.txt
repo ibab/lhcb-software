@@ -1,16 +1,16 @@
 ################################################################################
 # Package: GauchoAppl
 ################################################################################
-gaudi_subdir(GauchoAppl v1r20)
+gaudi_subdir(GauchoAppl v1r19)
 
 gaudi_depends_on_subdirs(Online/Gaucho
                          Online/GaudiOnline)
 
-find_package(ROOT COMPONENTS Minuit)
+find_package(ROOT COMPONENTS Minuit Thread)
 
 gaudi_add_library(GauchoApplLib src/*.cpp
                   PUBLIC_HEADERS GauchoAppl
-                  LINK_LIBRARIES GauchoLib)
+                  LINK_LIBRARIES GauchoLib ROOT)
 
 gaudi_add_module(GauchoAppl src/components/*.cpp
                  LINK_LIBRARIES GauchoApplLib GaudiOnline ROOT)
