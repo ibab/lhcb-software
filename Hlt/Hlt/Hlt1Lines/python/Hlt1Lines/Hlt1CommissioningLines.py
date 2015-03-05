@@ -77,8 +77,14 @@ class Hlt1CommissioningLinesConf(HltLinesConfigurableUser):
             , postscale = self.postscale
             , priority = 254
             )
+        from DAQSys.Decoders import DecoderDB
+        from Configurables import LoKi__HDRFilter   as HDRFilter
+        decoder = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
+        # TODO: just want presence, so HLT_ERRORBITS(0xffff) would be nice to have...
         Line('ErrorEvent',prescale = self.prescale, postscale = self.postscale
-            , HLT = "HLT_COUNT_ERRORBITS_RE('^Hlt1.*',0xffff) > 0" # TODO: just want presence, so want HLT_ERRORBITS(0xffff) would be nice to have...
+            , algos = [HDRFilter('Counter' ,
+                                  Code = "HLT_COUNT_ERRORBITS_RE('^Hlt1.*',0xffff) > 0",
+                                  Location = decoder.listOutputs()[0])]
             , priority = 254
             )
         from HltTracking.HltSharedTracking import MinimalVelo

@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-03-05 - Roel Aaij
+ - Adapt to removal of HLT constructor argument from Hlt1Line.
+
 ! 2015-03-05 - V. Gligorov
  - Fit Hlt1CalibRICHMirrorLines and CalibTracking lines
    to use their own candidates and not reuse the TrackAllL0 candidates.
