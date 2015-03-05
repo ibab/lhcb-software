@@ -2,7 +2,8 @@ from GaudiKernel.SystemOfUnits import GeV, MeV
 
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 class DiMuonLines(Hlt2LinesConfigurableUser) :
-    __slots__ = {'Prescale' : {},
+    __slots__ = {'_stages' : {},
+                 'Prescale' : {},
 
                  'Common' :        {'TrChi2'     :   10,
                                     'TrChi2Tight':    5},
@@ -54,14 +55,14 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                  }
 
     def stages(self):
-        if hasattr(self, '__stages') and self.__stages:
-            return self.__stages
+        if hasattr(self, '_stages') and self._stages:
+            return self._stages
 
         from Stages import (DiMuonFilter, JpsiFilter, Psi2SFilter,
                             BFilter, ZFilter, DetachedDiMuonFilter,
                             DetachedDiMuonHeavyFilter, DetachedJpsiFilter,
                             DetachedPsi2SFilter)
-        self.__stages = {'DiMuon'        : [DiMuonFilter('DiMuon')],
+        self._stages = {'DiMuon'        : [DiMuonFilter('DiMuon')],
                         'JPsi'          : [JpsiFilter('JPsi')],
                         'JPsiHighPT'    : [JpsiFilter('JPsiHighPT')],
                         'Psi2S'         : [Psi2SFilter('Psi2S')],
@@ -72,7 +73,7 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                         'DetachedHeavy' : [DetachedDiMuonHeavyFilter('DetachedHeavy')],
                         'DetachedJPsi'  : [DetachedJpsiFilter('DetachedJPsi')],
                         'DetachedPsi2S' : [DetachedPsi2SFilter('DetachedPsi2S')]}
-        return self.__stages
+        return self._stages
 
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line

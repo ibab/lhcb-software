@@ -1,6 +1,7 @@
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 class Hlt2LinesConfigurableUser(HltLinesConfigurableUser):
-    __slots__ = {'Prescale'  : {},
+    __slots__ = {'_stages' : {},
+                 'Prescale'  : {},
                  'Postscale' : {}}
             
     def algorithms(self, stages):
