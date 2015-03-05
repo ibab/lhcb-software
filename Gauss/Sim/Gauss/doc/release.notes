@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2015-03-05 - Gloria Corti
+ - Use LHAPDFSet v2r* compatible with LHAPDF6
+
 ! 2015-01-28 - Gloria Corti
  - Comment out use of Geant4Files that should now be in G4Config
 
