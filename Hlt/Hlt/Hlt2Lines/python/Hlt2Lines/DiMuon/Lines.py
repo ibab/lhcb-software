@@ -54,9 +54,12 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                  'DetachedPsi2S' : {'DLS'        :     3},
                  }
 
-    def stages(self):
+    def stages(self, nickname = ""):
         if hasattr(self, '_stages') and self._stages:
-            return self._stages
+            if nickname:
+                return self._stages[nickname]
+            else:
+                return self._stages
 
         from Stages import (DiMuonFilter, JpsiFilter, Psi2SFilter,
                             BFilter, ZFilter, DetachedDiMuonFilter,
@@ -73,7 +76,10 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                         'DetachedHeavy' : [DetachedDiMuonHeavyFilter('DetachedHeavy')],
                         'DetachedJPsi'  : [DetachedJpsiFilter('DetachedJPsi')],
                         'DetachedPsi2S' : [DetachedPsi2SFilter('DetachedPsi2S')]}
-        return self._stages
+        if nickname:
+            return self._stages[nickname]
+        else:
+            return self._stages
 
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line
