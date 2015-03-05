@@ -244,7 +244,7 @@ public:
         rowZs.clear();
       }
     }
-    for (std::size_t i=0; i<rowZs.size(); i++) std::cout<<rowZs[i]<<"  ";
+    for (int i=0; i<rowZs.size(); i++) std::cout<<rowZs[i]<<"  ";
     //m_zs.push_back(rowZs);
 
     m_statsTitles.push_back("N:");
@@ -506,7 +506,7 @@ void VContentGetter::jsonToOps(std::string * jsonOps,
     if (tab.HasMember("plots")) {
     	const rapidjson::Value &plots = tab["plots"];
     	rapidjson::SizeType numPlots = plots.Size();
-    	for (rapidjson::SizeType i = 0; i < plots.Size(); ++i) {
+    	for (rapidjson::SizeType i = 0; i < numPlots; ++i) {
     		std::vector<std::string> plotInfo;
     		const rapidjson::Value &plot = plots[i];
     		plotInfo.push_back("Plot");

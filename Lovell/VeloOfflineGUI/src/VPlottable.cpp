@@ -49,7 +49,7 @@ VPlottable::VPlottable(VPlot * plot,
 void VPlottable::reset() {
     m_xs.clear();
     m_ys.clear();
-    for (std::size_t i=0; i<m_zs.size(); i++) m_zs[i].clear();
+    for (int i=0; i<m_zs.size(); i++) m_zs[i].clear();
     m_zs.clear();
     m_statsTitles.clear();
     m_statsValues.clear();
