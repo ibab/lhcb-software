@@ -1,29 +1,30 @@
 import os
 import unittest
 import mock
+import tempfile
+import shutil
 
 import ROOT
 
 from veloview.runview import plots
 
 
+TMPDIR = tempfile.mkdtemp()
 NOMINAL_RUN = 123000
-NOMINAL_RUN_FILE = "/tmp/123000/nominal_run_file.root"
+NOMINAL_RUN_FILE = os.path.join(TMPDIR, "123000/nominal_run_file.root")
 REFERENCE_RUN = 124000
-REFERENCE_RUN_FILE = "/tmp/124000/reference_run_file.root"
+REFERENCE_RUN_FILE = os.path.join(TMPDIR, "124000/reference_run_file.root")
 # This file should not be created
-NONEXISTENT_RUN_FILE = "/tmp/125000/nonexistent_run_file.root"
+NONEXISTENT_RUN_FILE = os.path.join(TMPDIR, "125000/nonexistent_run_file.root")
 
 
 def tearDownModule():
     """Delete temporary test files after this module has run."""
-    for f in [NOMINAL_RUN_FILE, REFERENCE_RUN_FILE]:
-        if os.path.exists(f):
-            os.remove(f)
+    shutil.rmtree(TMPDIR)
 
 
 def mocked_run_file_path(run):
-    return "/tmp/{0}".format(run)
+    return os.path.join(TMPDIR, str(run))
 
 
 def mocked_reference_run(plot, run):

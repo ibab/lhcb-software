@@ -1,4 +1,6 @@
 import os
+import tempfile
+import shutil
 
 from veloview.analysis import (FloorThreshold, CeilingThreshold,
                                MeanWidthDiffRef, AbsoluteBandRef,
@@ -20,19 +22,14 @@ from math import sqrt
 import unittest
 
 
-def tearDownModule():
-    for f in ['/tmp/fdata.root', '/tmp/fref.root']:
-        if os.path.exists(f):
-            os.remove(f)
-
-
 class TestCombinersWToys(unittest.TestCase):
 
     def setUp(self):
         """Create dictionaries and ROOT files needed for testing."""
 
-        self.rfdata = TFile('/tmp/fdata.root', 'recreate')
-        self.rfref = TFile('/tmp/fref.root', 'recreate')
+        self.tdir = tempfile.mkdtemp()
+        self.rfdata = TFile(os.path.join(self.tdir, 'fdata.root'), 'recreate')
+        self.rfref = TFile(os.path.join(self.tdir, 'fref.root'), 'recreate')
 
         fns = {}
         fns['pol0'] = get_simple_fns('5', (-10, 10))
@@ -92,8 +89,7 @@ class TestCombinersWToys(unittest.TestCase):
         self.mycombiner.evaluate()
 
     def tearDown(self):
-        del self.rfdata
-        del self.rfref
+        shutil.rmtree(self.tdir)
         del self.mycombiner
 
     def for_each_combiner(self, combiner, res):

@@ -1,4 +1,6 @@
 import os
+import tempfile
+import shutil
 
 from veloview.analysis import (FloorThreshold, CeilingThreshold,
                                MeanWidthDiffRef, AbsoluteBandRef,
@@ -17,27 +19,28 @@ import unittest
 from veloview.utils.testutils import get_avg_hist, get_avg_trend
 
 
-def tearDownModule():
-    for f in ['/tmp/fdata.root', '/tmp/fref.root']:
-        if os.path.exists(f):
-            os.remove(f)
-
-
 class TestAvgHistCombiners(unittest.TestCase):
 
     def setUp(self):
         """Create dictionaries needed by combiners."""
 
-        dirname = os.path.dirname(__file__) + '/'
-        orfdata = TFile(os.path.abspath(dirname+'fixtures/dqm_data.root'), 'read')
-        orfref = TFile(os.path.abspath(dirname+'fixtures/dqm_ref.root'), 'read')
+        dirname = os.path.join(os.path.dirname(__file__), 'fixtures')
+        orfdata = TFile(
+            os.path.abspath(os.path.join(dirname, 'dqm_data.root')),
+            'read'
+        )
+        orfref = TFile(
+            os.path.abspath(os.path.join(dirname, 'dqm_ref.root')),
+            'read'
+        )
 
         # valid ROOT files
         assert(not orfdata.IsZombie())
         assert(not orfref.IsZombie())
 
-        self.rfdata = TFile('/tmp/fdata.root', 'recreate')
-        self.rfref = TFile('/tmp/fref.root', 'recreate')
+        self.tdir = tempfile.mkdtemp()
+        self.rfdata = TFile(os.path.join(self.tdir, 'fdata.root'), 'recreate')
+        self.rfref = TFile(os.path.join(self.tdir, 'fref.root'), 'recreate')
 
         # histogram recipes: function to call, dir in orig ROOT file,
         # rest of the arguments for function (orig hist name, new hist
@@ -104,8 +107,7 @@ class TestAvgHistCombiners(unittest.TestCase):
         self.mycombiner.evaluate()
 
     def tearDown(self):
-        del self.rfdata
-        del self.rfref
+        shutil.rmtree(self.tdir)
         del self.mycombiner
 
     def for_each_combiner(self, combiner, res):
