@@ -2,6 +2,11 @@
 ! Package     : Gen/BcVegPy
 ! Responsible : 
 
+! 2015-03-05 - Jibo He 
+ - To switch to LHAPDF6, removed MRST PDF related things from 
+  . src/genevnt_mod.F
+  . src/outerpdf.F
+
 !========================= BcVegPy v3r3 2014-12-16 ===========================
 ! 2014-11-19 - Marco Clemencic
  - Fixed CMake configuration.

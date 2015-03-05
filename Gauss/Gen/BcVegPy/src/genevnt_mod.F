@@ -618,8 +618,8 @@ C...THIS IS THE ENERGY SCALE USED IN GOUZ'S PROGRAM
 	
 C...GET THE VALUE OF ALPHAS. ALL ARE IN LEADING ORDER.
       IF(IOUTPDF.EQ.1) THEN
-         IF(IPDFNUM.EQ.100) ALPS =ALPGRV(Q2,1)*4*PI
-         IF(IPDFNUM.EQ.200) ALPS =ALPMSRT(DSQRT(Q2),0.220D0,0)
+         IF(IPDFNUM.EQ.100) ALPS =ALPGRV(Q2,1)*4*PI  
+C         IF(IPDFNUM.EQ.200) ALPS =ALPMSRT(DSQRT(Q2),0.220D0,0)
          IF(IPDFNUM.EQ.300) ALPS =ALPCTEQ(Q2,1)*4*PI
       ELSE   
          ALPS =PYALPS(Q2)
@@ -632,7 +632,7 @@ C...ALPHAS^4=ALPHAS^2(\mu_b**2)*ALPHAS^2(\mu_c**2).
          IF(IOUTPDF.EQ.1) THEN
             Q2=4.0D0*PMC**2.0D0
             IF(IPDFNUM.EQ.100) ALPS2 =ALPGRV(Q2,1)*4*PI
-            IF(IPDFNUM.EQ.200) ALPS2 =ALPMSRT(DSQRT(Q2),0.22D0,0)
+C            IF(IPDFNUM.EQ.200) ALPS2 =ALPMSRT(DSQRT(Q2),0.22D0,0)
             IF(IPDFNUM.EQ.300) ALPS2 =ALPCTEQ(Q2,1)*4*PI
          ELSE
             ALPS2 =PYALPS(4.0D0*PMC**2.0D0)
@@ -697,48 +697,6 @@ C...Evaluate Parton distribution for (g1<--p,g2<---p)
                   IF(IQCODE.EQ.3) THEN ! THE SAME FOR TEVATRON OR LHC
 		     XPP(3)=2.0D0*SS
 		     XPPBAR(3)=2.0D0*SS
-                  END IF
-               END IF
-            END IF
-            IF(IPDFNUM.EQ.200) THEN
-               QQ=DSQRT(Q2)
-               CALL MRSTLO(X1,QQ,1,upv,dnv,usea,dsea,str,chm,bot,GLU1)
-               CALL MRSTLO(X2,QQ,1,upv,dnv,usea,dsea,str,chm,bot,GLU2)
-               IF(IQQBAR.EQ.0) THEN
-                  XPP(21)=GLU1
-                  XPPBAR(21)=GLU2
-               ELSE
-                  IF(IQCODE.EQ.1) THEN
-                     IF(NPDFU.EQ.1) THEN !TEVATRON (u-P,~u-~P AND u-~P,~u-p)
-                        XPP(IQCODE)=UPV+USEA
-                        XPP(-IQCODE)=USEA
-                        XPPBAR(IQCODE)=UPV+USEA
-                        XPPBAR(-IQCODE)=USEA
-		     END IF
-                     IF(NPDFU.EQ.2) THEN !LHC (u-P,~u-P AND u-P,~u-p)
-                        XPP(IQCODE)=UPV+USEA
-                        XPP(-IQCODE)=USEA
-                        XPPBAR(IQCODE)=USEA
-                        XPPBAR(-IQCODE)=UPV+USEA
-		     END IF
-                  END IF
-                  IF(IQCODE.EQ.2) THEN
-                     IF(NPDFU.EQ.1) THEN !TEVATRON (u-P,~u-~P AND u-~P,~u-p)
-                        XPP(IQCODE)=DNV+DSEA
-                        XPP(-IQCODE)=DSEA
-                        XPPBAR(IQCODE)=DNV+DSEA
-                        XPPBAR(-IQCODE)=DSEA
-		     END IF
-                     IF(NPDFU.EQ.2) THEN !LHC (u-P,~u-P AND u-P,~u-p)
-                        XPP(IQCODE)=DNV+DSEA
-                        XPP(-IQCODE)=DSEA
-                        XPPBAR(IQCODE)=DSEA
-                        XPPBAR(-IQCODE)=DNV+DSEA
-		     END IF
-                  END IF
-                  IF(IQCODE.EQ.3) THEN
-		     XPP(3)=STR*2.0D0
-		     XPPBAR(3)=STR*2.0D0
                   END IF
                END IF
             END IF
