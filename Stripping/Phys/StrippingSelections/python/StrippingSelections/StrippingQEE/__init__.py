@@ -3,19 +3,20 @@ Module importing stripping selection line builder modules
 for QEE WG.
 """
 
-_selections = [ ]
 
-for _sel in _selections :
-    try :
-        __import__( '%s.%s'  % ( __name__, _sel ) )
-    except Exception, x:
-        print '[WARNING] Submodule %s.%s raises the excetpion "%s" and will be skipped !' % ( __name__,_sel,x )
+_selections = (
+  'StrippingZ02MuMu',
+  'StrippingMuMuSS',
+  'StrippingWMu',
+  'StrippingSingleTrackTIS',
+  # 'StrippingMBNoBias',     # Chitsanu: where are you... Hmm, I'm come back later
+)
 
-from sys import modules as _modules
-_this = _modules[__name__]
+for _sel in _selections :  
+  try :
+    __import__( '%s.%s'  % ( __name__, _sel ) )
+  except Exception, x:
+    print '[WARNING] Submodule %s.%s raises the excetpion "%s" and will be skipped !' % ( __name__,_sel,x )
 
-_strippingKeys = filter ( lambda x : x[:9]=='Stripping',
-                          locals().keys())
-
-_strippingModules = [getattr(_this, _k) for _k in _strippingKeys]
+_strippingModules = [ val for key,val in dict(locals()).iteritems() if key.startswith('Stripping') ]
 
