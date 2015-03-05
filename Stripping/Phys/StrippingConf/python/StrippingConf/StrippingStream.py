@@ -48,7 +48,6 @@ class StrippingStream ( object ) :
         self.streamLine = None                   # Line with OR of all stream lines, created in createConfigurables()
         self.eventSelectionLine = None           # Line to mark bad events, created in createConfigurables()
         self.goodEventFilter    = None           # filter to reject bad events
-        self.badEventSeq = None                  # sequencer used to run bad event line
         self.BadEventSelection = BadEventSelection
         self.AcceptBadEvents = AcceptBadEvents
         self.MaxCandidates = MaxCandidates
@@ -90,7 +89,8 @@ class StrippingStream ( object ) :
 
             # create the line that select bad events
             self.eventSelectionLine = StrippingLine("Stream"+self.name()+"BadEvent",
-                                              checkPV = False, algos = [ self.BadEventSelection ] )
+                                                    checkPV = False, 
+                                                    algos = [ self.BadEventSelection ] )
             self.eventSelectionLine.createConfigurable( self.TESPrefix, self.HDRLocation )
             self.eventSelectionLine.declareAppended()
 
@@ -102,14 +102,6 @@ class StrippingStream ( object ) :
 
             else:
 
-                # Create a sequencer that runs the StrippingAlg selecting bad events.
-                # This sequencer has IgnoreFilterPassed = True such that it will not prevent 
-                # all the lines in the stream to run.
-                self.badEventSeq = GaudiSequencer("StrippingBadEventSequence"+self.name(),
-                                                  Members = [ self.eventSelectionLine.configurable() ],
-                                                  OutputLevel = WARNING,
-                                                  IgnoreFilterPassed = True)
- 
                 # Create a filter that negates the bad events (select good events). 
                 # This filter will be inserted at the beginning of the filters run by all the lines.
                 from Configurables import LoKi__VoidFilter as Filter
@@ -149,6 +141,12 @@ class StrippingStream ( object ) :
                                   Members = self.algs)
 
         self.streamLine = StrippingLine("Stream"+self.name(), checkPV = False, algos = [ linesSeq ] )
+        ## I think it is redundant, otherwise if it comes out it is needed
+        ## uncomment the following lines
+        #if self.BadEventSelection != None :
+        #    if not self.AcceptBadEvents != False :
+        #        if not "StrippingGoodEventCondition" in self.streamLine._members[0].name() :
+        #            self.streamLine._members.insert(0,self.goodEventFilter)
         self.streamLine.createConfigurable( self.TESPrefix, self.HDRLocation )
         self.streamLine.declareAppended()
 
@@ -164,13 +162,34 @@ class StrippingStream ( object ) :
                                           Members =  self.algs + [ self.streamLine.configurable() ] )
 
             else:
-                # since we care of bad events we insert the sequence running the StrippingAlg selecting them
-                # as the first one of the stream.
-                self.seq = GaudiSequencer("StrippingSequenceStream"+self.name(),
-                                          ModeOR = True,
-                                          ShortCircuit = False,
-                                          OutputLevel = WARNING,
-                                          Members = [ self.badEventSeq ] + self.algs + [ self.streamLine.configurable() ] )
+
+                if self.AcceptBadEvents != False :
+
+                    # Need to think a bit more on this
+                    log.error("NOT POSSIBLE TO ACCEPT BAD EVENTS WITH THE CURRENT CONFIGURATION OF STRIPPINGCONF!!!")
+                    return None
+
+                else:
+                    # since we care of bad events we have to protect the execution of lines and stream-line
+                    # inserting them in a sequence with ModeOR = True and ShortCircuit = False.
+                    lineSeq = GaudiSequencer("StrippingProtectedSequence"+self.name(),
+                                             ModeOR = True,
+                                             ShortCircuit = False,
+                                             OutputLevel = WARNING,
+                                             Members = self.algs + [ self.streamLine.configurable() ] )
+
+                    # We need a badEventSeq with IgnoreFilterPassed = True in order to always run the protected sequence with
+                    # lines and stream-lines
+                    badEventSeq = GaudiSequencer("StrippingBadEventSequence"+self.name(),
+                                                 Members = [ self.eventSelectionLine.configurable() ],
+                                                 OutputLevel = WARNING,
+                                                 IgnoreFilterPassed = True)
+
+                    # The final sequence is an AND sequence of the badEventSeq and the lines + stream-lines
+                    #  algorithms (protected sequence)
+                    self.seq = GaudiSequencer("StrippingSequenceStream"+self.name(),
+                                              OutputLevel = WARNING,
+                                              Members = [ badEventSeq, lineSeq ] )
 
         return self.seq
 
