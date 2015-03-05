@@ -20,7 +20,7 @@ public:
 
   // Methods __________________________________________________________________
   VContentGetter(){}
-  static VTabContent * veloShortConfigs(VPlotOps*);
+  /* static VTabContent * veloShortConfigs(VPlotOps*); */
   static VTabContent * veloFileConfigs(VPlotOps*, std::string);
   static void findChildren(VTabContent * parentTab,
     std::vector<VTabContent*> * allTabs,

@@ -12,8 +12,6 @@ veloview::veloview(int runMode, QWidget *parent) :
   m_ran(false),
   m_runMode(runMode),
   m_logoText("Default GUI"),
-  m_combatFileOpen(false),
-  m_keplerFileOpen(false),
   m_plotOps(NULL),
   m_runProxy(NULL),
   m_verbose(false)
@@ -30,8 +28,6 @@ veloview::veloview(int runMode, QWidget *parent) :
 
   // Logo settings.
   if (m_runMode == 0) m_logoText = "VeloView";
-  else if (m_runMode == 1) m_logoText = "CombatDQM";
-  else if (m_runMode == 2) m_logoText = "KeplerView";
 
   ui->l_logo->setText(QString(m_logoText.c_str()));
 
@@ -59,8 +55,6 @@ void veloview::loadOptionsFile(){
 void veloview::setOptionsWidg(){
   std::cout<<"Setting options."<<std::endl;
   if (m_runMode == 0 || m_runMode == 3) setVeloOptionsWidg();
-  else if (m_runMode == 1) setCombatOptionsWidg();
-  else if (m_runMode == 2) setKeplerOptionsWidg();
 }
 
 
@@ -120,39 +114,6 @@ void veloview::filterWildcard(QString s) {
 //  b_veloRunNumberUp->setValue(2);
 //  l->addWidget(b_veloRunNumberUp, l->rowCount(), 0, 1, 1);
 
-
-void veloview::setKeplerOptionsWidg(){
-  delete ui->w_moduleSelector;
-  QGridLayout * l;
-  l = (QGridLayout*)ui->w_settings->layout();
-  l->addWidget(new QLabel("FileName:"), l->rowCount(), 0, 1, 1);
-  b_keplerFileName = new QLineEdit("~/Kepler-histos.root");
-  l->addWidget(b_keplerFileName, l->rowCount(), 0, 1, 1);
-
-  l->addWidget(new QLabel("nPlanes:"), l->rowCount(), 0, 1, 1);
-  b_keplerPlaneNum = new QSpinBox();
-  b_keplerPlaneNum->setValue(8);
-  l->addWidget(b_keplerPlaneNum, l->rowCount(), 0, 1, 1);
-}
-
-
-//_____________________________________________________________________________
-
-void veloview::setCombatOptionsWidg(){
-  delete ui->w_moduleSelector;
-  QGridLayout * l;
-  l = (QGridLayout*)ui->w_settings->layout();
-  l->addWidget(new QLabel("FileName:"), l->rowCount(), 0, 1, 1);
-  b_combatFileName = new QLineEdit("~/COMBATOnlineData.root");
-  l->addWidget(b_combatFileName, l->rowCount(), 0, 1, 1);
-
-  l->addWidget(new QLabel("nPlanes:"), l->rowCount(), 0, 1, 1);
-  b_combatPlaneNum = new QSpinBox();
-  b_combatPlaneNum->setValue(8);
-  l->addWidget(b_combatPlaneNum, l->rowCount(), 0, 1, 1);
-}
-
-
 //_______________________ ______________________________________________________
 
 void veloview::setContent() {
@@ -184,12 +145,6 @@ void veloview::setContent() {
     m_content = VContentGetter::veloFileConfigs(m_plotOps, m_VVinterfaceScript);
     if (!m_ran) delete ui->m_logo;
   }
-  else if (m_runMode == 1)
-    m_content = VCombatContent::configs(combatFile(), combatPlaneNum(), m_plotOps);
-
-  else if (m_runMode == 2)
-    m_content = VKeplerContent::configs(keplerFile(), keplerPlaneNum(), m_plotOps);
-
   else if (m_runMode == 3) {
 		m_content = VContentGetter::veloFileConfigs(m_plotOps, "dummyDataGetter.py");
   }
@@ -220,6 +175,9 @@ void veloview::completeTabs(std::vector<VTabContent*> & tabsContents,
   // given contents (belonging in that level). Called recusively. By ensuring
   // the use of a dummy top level tab, this function is always safe.
 
+  // tabsHolder is passed as a parameter but not used in the function body
+  Q_UNUSED(tabsHolder);
+
   QTabWidget * tabPages = new QTabWidget();
   topLay->addWidget(tabPages, 1, 1, 1, 1);
 
@@ -246,7 +204,7 @@ void veloview::VPrintContentDetails(VTabContent* tabPage) {
   if (tabPage->m_parentTab != NULL) VPrint(tabPage->m_parentTab->m_title);
   VPrint("\n");
 
-  for (int i=0; i<tabPage->m_subContents.size(); i++)
+  for (std::size_t i=0; i<tabPage->m_subContents.size(); i++)
       VPrintContentDetails(tabPage->m_subContents[i]);
 }
 
@@ -281,28 +239,6 @@ veloview::~veloview() {
 
 void veloview::on_b_quit_clicked() {
   this->close();
-}
-
-
-//_____________________________________________________________________________
-
-TFile * veloview::combatFile() {
-  if (!m_combatFileOpen) {
-    m_rootFiles.push_back(new TFile(combatFileName().c_str()));
-    m_combatFileOpen = true;
-  }
-  return m_rootFiles[0];
-}
-
-
-//_____________________________________________________________________________
-
-TFile * veloview::keplerFile() {
-  if (!m_keplerFileOpen) {
-    m_rootFiles.push_back(new TFile(keplerFileName().c_str()));
-    m_keplerFileOpen = true;
-  }
-  return m_rootFiles[0];
 }
 
 

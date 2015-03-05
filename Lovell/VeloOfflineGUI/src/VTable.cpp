@@ -37,6 +37,8 @@ void VTable::setupLayout() {
 //_____________________________________________________________________________
 
 QTableWidget * VTable::getTable(bool isPopUp) {
+  Q_UNUSED(isPopUp);
+
   // Converts a .csv file into a QTableWidget. Start by opening the .csv file.
   std::ifstream myfile;
   myfile.open(m_fileName.c_str());

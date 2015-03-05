@@ -244,7 +244,7 @@ public:
         rowZs.clear();
       }
     }
-    for (unsigned int i=0; i<rowZs.size(); i++) std::cout<<rowZs[i]<<"  ";
+    for (std::size_t i=0; i<rowZs.size(); i++) std::cout<<rowZs[i]<<"  ";
     //m_zs.push_back(rowZs);
 
     m_statsTitles.push_back("N:");
@@ -395,6 +395,7 @@ public:
 //_____________________________________________________________________________
 //_____________________________________________________________________________
 
+/*
 VTabContent * VContentGetter::veloShortConfigs(VPlotOps * plotOps){
   // Dummy example.
   VTabContent * topDummyTab = new VTabContent(); // Always needed.
@@ -446,6 +447,7 @@ VTabContent * VContentGetter::veloShortConfigs(VPlotOps * plotOps){
 
   return topDummyTab;
 }
+*/
 
 
 //_____________________________________________________________________________

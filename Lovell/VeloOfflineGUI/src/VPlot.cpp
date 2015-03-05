@@ -195,8 +195,8 @@ void VPlot::addColzPlot(VCustomPlot * vcp, VPlottable * plottable) {
                                     QCPRange(plottable->m_ys[0], plottable->m_ys[nbinsy-1]));
   for (int ix=0; ix<nbinsx; ++ix){
     for (int iy=0; iy<nbinsy; ++iy){
-      double x = plottable->m_xs[ix];
-      double y = plottable->m_ys[iy];
+      /* double x = plottable->m_xs[ix]; */
+      /* double y = plottable->m_ys[iy]; */
       vcp->m_colormap->data()->setCell(ix, iy, plottable->m_zs[ix][iy]);
     }
   }
