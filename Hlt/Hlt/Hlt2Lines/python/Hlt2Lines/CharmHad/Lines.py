@@ -77,9 +77,6 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
         self.__lines__.update(D2HHHLines.locallines())
         self.__lines__.update(D2V0HLines.locallines())
 
-        print self.__slots__
-        print self.__lines__
-
         from HltLine.HltLine import Hlt2Line
         for nickname, algos in self.algorithms(self.__lines__).iteritems():
             Hlt2Line(nickname, prescale = self.prescale,
