@@ -31,6 +31,6 @@ gaudi_project(Gauss v48r1
                    GenXiccData VERSION v3r*
                    Gen/PGunsData VERSION v1r*
                    Gen/DecFiles VERSION v27r*
-                   LHAPDFSets VERSION v1r*
+                   LHAPDFSets VERSION v2r*
                    MIBData VERSION v3r*
                    ParamFiles VERSION v8r*)
