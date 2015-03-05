@@ -41,7 +41,7 @@ class Physics_draftEM2015( object ):
             raise RuntimeError( 'Must update HltType when modifying ActiveHlt.Lines()' )
         
     def L0TCK(self) :
-        return '0x0050'
+        return '0x0046'
 
     def HltType(self) :
         self.verifyType( Physics_draftEM2015 ) 

@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-03-05 - Roel Aaij
+ - Removed not-released L0TCK from Physics_draftEM2015.py.
+
 ! 2015-03-05 - Michael Kolpin
  - Updated Hlt2 lines used in TrackEffLines.
 
