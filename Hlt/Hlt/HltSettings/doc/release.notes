@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-03-05 - Michael Kolpin
+ - Updated Hlt2 lines used in TrackEffLines.
+
 ! 2015-03-03 - Sean Benson
  - Fix Hlt1Track thresholds in TurboTest.
 

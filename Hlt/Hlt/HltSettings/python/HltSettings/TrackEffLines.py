@@ -185,18 +185,24 @@ class TrackEffLines( object ):
         """
         Returns a list of active lines
         """
-        hlt2 = ['Hlt2TrackEffMuonTT1',
-                'Hlt2TrackEffMuonTT2',
-                'Hlt2TrackEffMuonTTLL1',
-                'Hlt2TrackEffMuonTTLL2',
-                'Hlt2TrackEffVeloMuon1',
-                'Hlt2TrackEffVeloMuon2',
-                'Hlt2TrackEffVeloMuonLL1',
-                'Hlt2TrackEffVeloMuonLL2',
-                'Hlt2TrackEffDownstream1',
-                'Hlt2TrackEffDownstream2',
-                'Hlt2TrackEffDownstreamLL1',
-                'Hlt2TrackEffDownstreamLL2'
+        hlt2 = ['Hlt2TrackEffMuonTTPlusTagged',
+                'Hlt2TrackEffMuonTTMinusTagged',
+                'Hlt2TrackEffVeloMuonPlusTagged',
+                'Hlt2TrackEffVeloMuonMinusTagged',
+                'Hlt2TrackEffDownstreamPlusTagged',
+                'Hlt2TrackEffDownstreamMinusTagged'
+                #'Hlt2TrackEffMuonTTPlusMatchedTurbo',
+                #'Hlt2TrackEffMuonTTMinusMatchedTurbo',
+                #'Hlt2TrackEffMuonTTPlusTaggedTurbo',
+                #'Hlt2TrackEffMuonTTMinusTaggedTurbo',
+                #'Hlt2TrackEffVeloMuonPlusMatchedTurbo',
+                #'Hlt2TrackEffVeloMuonMinusMatchedTurbo',
+                #'Hlt2TrackEffVeloMuonPlusTaggedTurbo',
+                #'Hlt2TrackEffVeloMuonMinusTaggedTurbo',
+                #'Hlt2TrackEffDownstreamPlusMatchedTurbo',
+                #'Hlt2TrackEffDownstreamMinusMatchedTurbo',
+                #'Hlt2TrackEffDownstreamPlusTaggedTurbo',
+                #'Hlt2TrackEffDownstreamMinusTaggedTurbo'
                 ]
 
  
