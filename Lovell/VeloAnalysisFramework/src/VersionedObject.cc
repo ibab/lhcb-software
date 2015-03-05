@@ -8,7 +8,7 @@
 
 #include <iterator>
 
-#include "VersionedObject.h"
+#include "VeloAnalysisFramework/VersionedObject.h"
 
 VersionedObjectBase::VersionedObjectBase()
 { }
@@ -351,7 +351,7 @@ VersionedObject<OBJ, VEROBJ, CMP>::upper_bound(
 
 // force instantiation of templated code for most important cases
 #define INSTANTIATE_VERSIONEDOBJECTS_NOW
-#include "VersionedObjectInstantiations.h"
+#include "VeloAnalysisFramework/VersionedObjectInstantiations.h"
 #undef INSTANTIATE_VERSIONEDOBJECTS_NOW
 
 // vim: sw=4:tw=78:ft=cpp

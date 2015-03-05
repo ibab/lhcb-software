@@ -18,7 +18,7 @@
 #include <sys/socket.h>
 #include <netdb.h>
 
-#include "DotLock.h"
+#include "VeloAnalysisFramework/DotLock.h"
 
 DotLock::DotLockException::DotLockException(int err, bool isgetaddrinfoerr) :
     m_gaierr(0)

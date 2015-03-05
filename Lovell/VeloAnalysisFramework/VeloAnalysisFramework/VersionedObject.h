@@ -15,7 +15,7 @@
 #include <utility>
 #include <functional>
 
-#include "TimeStamp.h"
+#include "VeloAnalysisFramework/TimeStamp.h"
 
 /** @brief base class to keep a version history of objects
  *
@@ -270,7 +270,7 @@ class VersionedObject : public VersionedObjectBase
 // instantiate most important versions of templated VersionedObject, so that
 // the CINT/GCCXML/Reflex dictionary generation process sees them
 #define INSTANTIATE_VERSIONEDOBJECTS_NOW
-#include "VersionedObjectInstantiations.h"
+#include "VeloAnalysisFramework/VersionedObjectInstantiations.h"
 #undef INSTANTIATE_VERSIONEDOBJECTS_NOW
 #endif
 

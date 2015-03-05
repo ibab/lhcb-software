@@ -13,7 +13,7 @@ gaudi_add_dictionary(VeloAnalysisFramework dict/VeloAnalysisFramework.h  dict/Ve
 
 gaudi_add_library(VeloAnalysisFramework
                   src/*.cc
-                  NO_PUBLIC_HEADERS
+                  PUBLIC_HEADERS VeloAnalysisFramework
                   INCLUDE_DIRS ROOT
                   LINK_LIBRARIES ROOT)
 

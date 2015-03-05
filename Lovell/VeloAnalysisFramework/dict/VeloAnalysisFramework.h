@@ -1,3 +1,3 @@
-#include "src/DotLock.h"
-#include "src/TimeStamp.h"
-#include "src/VersionedObject.h"
+#include "VeloAnalysisFramework/DotLock.h"
+#include "VeloAnalysisFramework/TimeStamp.h"
+#include "VeloAnalysisFramework/VersionedObject.h"
