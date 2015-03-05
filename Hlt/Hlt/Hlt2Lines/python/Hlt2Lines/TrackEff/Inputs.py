@@ -20,7 +20,7 @@ from Configurables import TrackContainerCopy,TrackStateInitAlg,DelegatingTrackSe
 
 DecodeVelo = DecodeVeloRawBuffer('DecodeVelo') 
 DecodeVelo.DecodeToVeloLiteClusters = False
-DecodeVelo.DecodeToVeloClusters = True
+DecodeVelo.DecodeToVeloClusters = False
 from TrackFitter.ConfiguredFitters import (ConfiguredEventFitter,
                                            ConfiguredForwardStraightLineEventFitter)
 
@@ -31,6 +31,7 @@ preve = TrackStateInitAlg("PrepareVeloTracks",TrackLocation = copyVelo.outputLoc
 preve.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
 MyVeloFit = ConfiguredEventFitter("VeloRefitterAlgForTrackEff",
                                   TracksInContainer=copyVelo.outputLocation,
+                                  LiteClusters=True,
                                   SimplifiedGeometry = True)
 
 Hlt2VeloProtos = ChargedProtoParticleMaker('Hlt2VeloProtosForTrackEff')
