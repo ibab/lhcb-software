@@ -62,7 +62,14 @@ class Hlt1Conf(LHCbConfigurableUser):
       map( partial( setThresholds, self.getProp("ThresholdSettings") ), _hlt1linesconfs )
 
       from HltLine.HltLine     import Hlt1Line
-      Hlt1Line( 'Global', HLT= "HLT_PASS_SUBSTR('Hlt1') ", priority = 255 ) 
+      from Configurables import LoKi__HDRFilter   as HDRFilter
+      from DAQSys.Decoders import DecoderDB
+      decoder = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
+      Hlt1Line( 'Global', priority = 255
+                 , algos = [HDRFilter('Filter' ,
+                            Code = "HLT_PASS_SUBSTR('Hlt1') ",
+                            Location = decoder.listOutputs()[0])]
+              )
          
       # add a few thing to our printout
       from HltLine.HltLine import addHlt1Prop
@@ -70,7 +77,6 @@ class Hlt1Conf(LHCbConfigurableUser):
                   , 'Code', 'Preambulo', 'InputLocations', 'Input','Inputs', 'Output','OutputProtoParticleLocation','InputTrackLocation'
                   , 'DaughtersCuts', 'CombinationCut', 'MotherCut', 'DecayDescriptor'
                   , 'OutputSelection','Context' ])
-      
       
       ## finally, define the Hlt1 sequence!!
       from Configurables import GaudiSequencer as Sequence
