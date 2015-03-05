@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-05 - Michael Kolpin
+ - Added TrackEffDiMuon module, containing the tracking efficiency lines
+
 ! 2015-03-05 - V. Gligorov
  - Update CharmHad module to instantiate lines from Lines.py
  - Add D2V0HLines.py which does what the name suggests it would do

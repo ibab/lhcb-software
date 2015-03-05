@@ -73,7 +73,7 @@ class Hlt2TrackingEfficiencyLinesConf(HltLinesConfigurableUser) :
         from Configurables import FilterDesktop
         from Hlt2SharedParticles.TrackFittedBasicParticles import ( BiKalmanFittedMuons,
                                                                     BiKalmanFittedPions )
-        from Hlt2SharedParticles.TagAndProbeParticles import TagMuonTTMuons, TagVeloMuons, TagDownstreamMuons
+        from Hlt2SharedParticles.TagAndProbeParticles import ProbeMuonTTMuons, ProbeVeloMuons, ProbeDownstreamMuons
 
         from Configurables import TisTosParticleTagger
         from HltLine.Hlt2Monitoring import Hlt2Monitor,Hlt2MonitorMinMax
@@ -107,7 +107,7 @@ class Hlt2TrackingEfficiencyLinesConf(HltLinesConfigurableUser) :
         filterMinus1 = Hlt2Member( FilterDesktop
                                  , "filterMinus"
                                  , Code = "(Q < 0) & (PT>%(MuonTTProbePt)s*MeV) & (P>%(MuonTTProbeP)s*MeV)"%self.getProps()
-                                 , Inputs  = [ TagMuonTTMuons ]
+                                 , Inputs  = [ ProbeMuonTTMuons ]
                                  , PreMonitor = Hlt2MonitorMinMax ("TRCHI2DOF","M(#mu#mu)",0,10)
                                  )
                              
@@ -124,7 +124,7 @@ class Hlt2TrackingEfficiencyLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('TrackEffMuonTT1'
                       , prescale = self.prescale
                       , L0DU = "L0_CHANNEL('Muon') | L0_CHANNEL('DiMuon')"
-                      , algos = [ BiKalmanFittedMuons, filterPlus1, TOSTagMuonsFilter1, TagMuonTTMuons, filterMinus1, JPsiCombine1 ]
+                      , algos = [ BiKalmanFittedMuons, filterPlus1, TOSTagMuonsFilter1, ProbeMuonTTMuons, filterMinus1, JPsiCombine1 ]
                       , postscale = self.postscale
                       )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffMuonTT1Decision" : 50601 } )
@@ -178,7 +178,7 @@ class Hlt2TrackingEfficiencyLinesConf(HltLinesConfigurableUser) :
         filterPlus2 = Hlt2Member( FilterDesktop
                                  , "filterPlus"
                                  , Code = "(Q > 0) & (PT>%(MuonTTProbePt)s*MeV) & (P>%(MuonTTProbeP)s*MeV)"%self.getProps()
-                                 , Inputs  = [ TagMuonTTMuons ]
+                                 , Inputs  = [ ProbeMuonTTMuons ]
                                  , PreMonitor = Hlt2MonitorMinMax ("TRCHI2DOF","M(#mu#mu)",0,10)
                                  )
                              
@@ -194,7 +194,7 @@ class Hlt2TrackingEfficiencyLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('TrackEffMuonTT2'
                       , prescale = self.prescale
                       , L0DU = "L0_CHANNEL('Muon') | L0_CHANNEL('DiMuon')"
-                      , algos = [ BiKalmanFittedMuons, filterMinus2, TOSTagMuonsFilter2, TagMuonTTMuons, filterPlus2, JPsiCombine2 ]
+                      , algos = [ BiKalmanFittedMuons, filterMinus2, TOSTagMuonsFilter2, ProbeMuonTTMuons, filterPlus2, JPsiCombine2 ]
                       , postscale = self.postscale
                       )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffMuonTT2Decision" : 50602 } )
@@ -252,7 +252,7 @@ class Hlt2TrackingEfficiencyLinesConf(HltLinesConfigurableUser) :
         filterVeloMinus1 = Hlt2Member( FilterDesktop
                                  , "filterMinus"
                                  , Code = "(Q < 0) & (TRCHI2DOF <%(VeloProbeTrChi2)s) & (PT>%(VeloProbePt)s*MeV)"%self.getProps()
-                                 , Inputs  = [ TagVeloMuons ]
+                                 , Inputs  = [ ProbeVeloMuons ]
                                  )
 
 
@@ -268,7 +268,7 @@ class Hlt2TrackingEfficiencyLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('TrackEffVeloMuon1'
                       , prescale = self.prescale
                       , L0DU = "L0_CHANNEL('Muon') | L0_CHANNEL('DiMuon')"
-                      , algos = [ BiKalmanFittedMuons, filterVeloPlus1, TOSTagVeloMuonsFilter1, TagVeloMuons, filterVeloMinus1, JPsiVeloCombine1 ]
+                      , algos = [ BiKalmanFittedMuons, filterVeloPlus1, TOSTagVeloMuonsFilter1, ProbeVeloMuons, filterVeloMinus1, JPsiVeloCombine1 ]
                       , postscale = self.postscale
                       )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffVeloMuon1Decision" : 50603 } )
@@ -321,7 +321,7 @@ class Hlt2TrackingEfficiencyLinesConf(HltLinesConfigurableUser) :
         filterVeloPlus2 = Hlt2Member( FilterDesktop
                                  , "filterPlus"
                                  , Code = "(Q > 0) & (TRCHI2DOF <%(VeloProbeTrChi2)s) & (PT>%(VeloProbePt)s*MeV)"%self.getProps()
-                                 , Inputs  = [ TagVeloMuons ]
+                                 , Inputs  = [ ProbeVeloMuons ]
                                  )
 
 
@@ -337,7 +337,7 @@ class Hlt2TrackingEfficiencyLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('TrackEffVeloMuon2'
                       , prescale = self.prescale
                       , L0DU = "L0_CHANNEL('Muon') | L0_CHANNEL('DiMuon')"
-                      , algos = [ BiKalmanFittedMuons, filterVeloMinus2, TOSTagVeloMuonsFilter2, TagVeloMuons, filterVeloPlus2, JPsiVeloCombine2 ]
+                      , algos = [ BiKalmanFittedMuons, filterVeloMinus2, TOSTagVeloMuonsFilter2, ProbeVeloMuons, filterVeloPlus2, JPsiVeloCombine2 ]
                       , postscale = self.postscale
                       )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffVeloMuon2Decision" : 50604 } )
@@ -394,7 +394,7 @@ class Hlt2TrackingEfficiencyLinesConf(HltLinesConfigurableUser) :
         filterDownstreamMinus1 = Hlt2Member( FilterDesktop
                                  , "filterMinus"
                                  , Code = "(Q < 0) & (TRCHI2DOF <%(DownstreamProbeTrchi2)s) & (PT>%(DownstreamProbePt)s*MeV) & (P>%(DownstreamProbeP)s*MeV) & (PIDmu >-%(DownstreamLongMuonPID)s)"%self.getProps()
-                                 , Inputs  = [ TagDownstreamMuons ]
+                                 , Inputs  = [ ProbeDownstreamMuons ]
                                  )
 
 
@@ -411,7 +411,7 @@ class Hlt2TrackingEfficiencyLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('TrackEffDownstream1'
                       , prescale = self.prescale
                       , L0DU = "L0_CHANNEL('Muon') | L0_CHANNEL('DiMuon')"
-                      , algos = [ BiKalmanFittedMuons, filterDownstreamPlus1, TOSTagDownstreamMuonsFilter1, TagDownstreamMuons, filterDownstreamMinus1, JPsiDownstreamCombine1 ]
+                      , algos = [ BiKalmanFittedMuons, filterDownstreamPlus1, TOSTagDownstreamMuonsFilter1, ProbeDownstreamMuons, filterDownstreamMinus1, JPsiDownstreamCombine1 ]
                       , postscale = self.postscale
                       )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffDownstream1Decision" : 50605 } )
@@ -465,7 +465,7 @@ class Hlt2TrackingEfficiencyLinesConf(HltLinesConfigurableUser) :
         filterDownstreamPlus2 = Hlt2Member( FilterDesktop
                                  , "filterPlus"
                                  , Code = "(Q > 0) & (TRCHI2DOF <%(DownstreamProbeTrchi2)s) & (PT>%(DownstreamProbePt)s*MeV) & (P>%(DownstreamProbeP)s*MeV)"%self.getProps()
-                                 , Inputs  = [ TagDownstreamMuons ]
+                                 , Inputs  = [ ProbeDownstreamMuons ]
                                  )
 
 
@@ -482,7 +482,7 @@ class Hlt2TrackingEfficiencyLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('TrackEffDownstream2'
                       , prescale = self.prescale
                       , L0DU = "L0_CHANNEL('Muon') | L0_CHANNEL('DiMuon')"
-                      , algos = [ BiKalmanFittedMuons, filterDownstreamMinus2, TOSTagDownstreamMuonsFilter2, TagDownstreamMuons, filterDownstreamPlus2, JPsiDownstreamCombine2 ]
+                      , algos = [ BiKalmanFittedMuons, filterDownstreamMinus2, TOSTagDownstreamMuonsFilter2, ProbeDownstreamMuons, filterDownstreamPlus2, JPsiDownstreamCombine2 ]
                       , postscale = self.postscale
                       )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffDownstream2Decision" : 50606 } )
