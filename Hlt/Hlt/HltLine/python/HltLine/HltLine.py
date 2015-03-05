@@ -938,7 +938,6 @@ class Hlt1Line(object):
                    prescale  = 1    ,   # prescale factor
                    ODIN      = None ,   # ODIN predicate  
                    L0DU      = None ,   # L0DU predicate  
-                   HLT       = None ,   # HltDecReports predicate
                    algos     = []   ,   # the list of algorithms/members
                    postscale = 1    ,   # postscale factor
                    priority  = None  ,   # ordering 'hint'
@@ -951,7 +950,6 @@ class Hlt1Line(object):
         - 'prescale'  : the prescaler factor
         - 'ODIN'      : the list of ODIN types for ODINFilter
         - 'L0DU'      : the list of L0Channels names for L0Filter
-        - 'HLT'       : the list of HLT selections for HLTFilter
         - 'algos'     : the list of actual members 
         - 'postscale' : the postscale factor
         
@@ -960,7 +958,6 @@ class Hlt1Line(object):
         name  = deepcopy ( name  )
         ODIN  = deepcopy ( ODIN  )
         L0DU  = deepcopy ( L0DU  )
-        HLT   = deepcopy ( HLT   )
         algos = deepcopy ( algos )
         args  = deepcopy ( args  )
         
@@ -972,7 +969,6 @@ class Hlt1Line(object):
         self._postscale = postscale
         self._ODIN      = ODIN
         self._L0DU      = L0DU
-        self._HLT       = HLT
         self._priority  = priority
         self._algos     = algos
         self._args      = args
@@ -1056,9 +1052,6 @@ class Hlt1Line(object):
                                , Members = DecodeL0DU.members() + [ L0Filter( l0entryName( line ) , Code = self._L0DU  ) ] 
                                )
             mdict.update( L0DU = _s )
-        ## TODO: in case of HLT, we have a dependency... dangerous, as things become order dependent...
-        if HLT  : 
-            mdict.update( HLT = HDRFilter  ( hltentryName ( line ) , Code = self._HLT, Location = mdict['HltDecReportsLocation']  ) )
         if _members : 
             if len(_members)==1 :
                 mdict.update( Filter1 = _members[0] )
@@ -1196,7 +1189,6 @@ class Hlt1Line(object):
         __prescale   = deepcopy ( args.get ( 'prescale'  , self._prescale  ) ) 
         __ODIN       = deepcopy ( args.get ( 'ODIN'      , self._ODIN      ) )        
         __L0DU       = deepcopy ( args.get ( 'L0DU'      , self._L0DU      ) )        
-        __HLT        = deepcopy ( args.get ( 'HLT'       , self._HLT       ) )        
         __postscale  = deepcopy ( args.get ( 'postscale' , self._postscale ) ) 
         __algos      = deepcopy ( args.get ( 'algos'     , self._algos     ) )
         __priority   = deepcopy ( args.get ( 'priority'  , self._priority  ) )
@@ -1227,7 +1219,6 @@ class Hlt1Line(object):
                           prescale  = __prescale   ,
                           ODIN      = __ODIN       ,
                           L0DU      = __L0DU       ,
-                          HLT       = __HLT        ,
                           postscale = __postscale  ,
                           priority  = __priority   ,
                           algos     = __algos      , **__args )
@@ -1541,11 +1532,12 @@ class Hlt2Line(object):
             #  so that it won't execute when the target TES location already exists...
             from DAQSys.Decoders import DecoderDB
             decoder = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
+            decoder.VetoObjects = decoder.listOutputs()
             decoder.active = True
             _s = GaudiSequencer( hltentryName( line, 'Hlt2') + 'Sequence' 
                                , Members = [ decoder.setup(), HDRFilter  ( hltentryName ( line,'Hlt2' ) , Code = self._HLT , Location = decoder.listOutputs()[0]  )  ]
                                ) 
-            mdict.update( HLT =  _s )
+            mdict.update( HLT1 =  _s )
         from Configurables import LoKi__VoidFilter
         if self._VoidFilter : 
             mdict.update( Filter0 = LoKi__VoidFilter( voidName( line, 'Hlt2' ), Code = self._VoidFilter ) )
@@ -1734,7 +1726,7 @@ def computeIndices( configurable ) :
         for i in getattr( configurable, 'Members' ) : 
             list += computeIndices(i)
     elif type(configurable) == Line :
-        stages = [ 'Prescale','ODIN','L0DU','HLT','Filter0','Filter1','Postscale' ]
+        stages = [ 'Prescale','ODIN','L0DU','HLT','HLT1','HLT2','Filter0','Filter1','Postscale' ]
         for i in [ getattr( configurable, j ) for j in stages if hasattr(configurable,j) ] :
             list +=  computeIndices( i )
     list += [ configurable.name() ]

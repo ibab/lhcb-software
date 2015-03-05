@@ -5,6 +5,10 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2015-03-05 - Roel Aaij
+ - Remove HLT constructor argument from Hlt1Line.
+ - Adapt to changes in SelectionLine.
+
 ! 2015-03-03 - Roel Aaij
  - Allow Hlt2Member to be shared through a special constructor argument. All
    arguments are checked, but use with care.
