@@ -9,6 +9,9 @@
 !----------------------------------------------------------------------------
 
 ! 2015-03-05 - Roel Aaij
+ - Add first JPsi turbo line in the new template.
+
+! 2015-03-05 - Roel Aaij
  - Fix configurable dependency between Hlt2CharmHadD02HHXDstLines and
    Hlt2CharmHadTwoBodyForD02HHHH.
  - Add Combination{1-7}Cut to the cuts that substitutions are make for.
