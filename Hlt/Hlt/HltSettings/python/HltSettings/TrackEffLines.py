@@ -190,19 +190,25 @@ class TrackEffLines( object ):
                 'Hlt2TrackEffVeloMuonPlusTagged',
                 'Hlt2TrackEffVeloMuonMinusTagged',
                 'Hlt2TrackEffDownstreamPlusTagged',
-                'Hlt2TrackEffDownstreamMinusTagged'
-                #'Hlt2TrackEffMuonTTPlusMatchedTurbo',
-                #'Hlt2TrackEffMuonTTMinusMatchedTurbo',
-                #'Hlt2TrackEffMuonTTPlusTaggedTurbo',
-                #'Hlt2TrackEffMuonTTMinusTaggedTurbo',
-                #'Hlt2TrackEffVeloMuonPlusMatchedTurbo',
-                #'Hlt2TrackEffVeloMuonMinusMatchedTurbo',
-                #'Hlt2TrackEffVeloMuonPlusTaggedTurbo',
-                #'Hlt2TrackEffVeloMuonMinusTaggedTurbo',
-                #'Hlt2TrackEffDownstreamPlusMatchedTurbo',
-                #'Hlt2TrackEffDownstreamMinusMatchedTurbo',
-                #'Hlt2TrackEffDownstreamPlusTaggedTurbo',
-                #'Hlt2TrackEffDownstreamMinusTaggedTurbo'
+                'Hlt2TrackEffDownstreamMinusTagged',
+                'Hlt2TrackEffMuonTTPlusMatched',
+                'Hlt2TrackEffMuonTTMinusMatched',
+                'Hlt2TrackEffVeloMuonPlusMatched',
+                'Hlt2TrackEffVeloMuonMinusMatched',
+                'Hlt2TrackEffDownstreamPlusMatched',
+                'Hlt2TrackEffDownstreamMinusMatched',
+                'Hlt2NewTrackEffDiMuonMuonTTPlusTaggedTurbo',
+                'Hlt2NewTrackEffDiMuonMuonTTMinusTaggedTurbo',
+                'Hlt2NewTrackEffDiMuonVeloMuonPlusTaggedTurbo',
+                'Hlt2NewTrackEffDiMuonVeloMuonMinusTaggedTurbo',
+                'Hlt2NewTrackEffDiMuonDownstreamPlusTaggedTurbo',
+                'Hlt2NewTrackEffDiMuonDownstreamMinusTaggedTurbo'
+                #'Hlt2NewTrackEffDiMuonMuonTTPlusMatchedTurbo',
+                #'Hlt2NewTrackEffDiMuonMuonTTMinusMatchedTurbo',
+                #'Hlt2NewTrackEffDiMuonVeloMuonPlusMatchedTurbo',
+                #'Hlt2NewTrackEffDiMuonVeloMuonMinusMatchedTurbo',
+                #'Hlt2NewTrackEffDiMuonDownstreamPlusMatchedTurbo',
+                #'Hlt2NewTrackEffDiMuonDownstreamMinusMatchedTurbo'
                 ]
 
  

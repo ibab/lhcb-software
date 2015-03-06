@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-03-06 - Michael Kolpin
+ - Updated names of Turbo lines in TrackEffLines.py
+
 ! 2015-03-06 - Sean Benson
  - Add Roel's new Hlt2 Turbo template line to TurboTest.
 
