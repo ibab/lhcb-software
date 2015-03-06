@@ -16,7 +16,7 @@ branches          cmt doc src options
 set               LBPOWHEGOPTS $(LBPOWHEGROOT)/options 
 set               POWHEGEXE $(powhegbox_execs)
 
-set            	  CTEQPDF $(LHAPATH)
+set            	  CTEQPDF $(LHAPDF_DATA_PATH)
 
 
 # Used packages. 
