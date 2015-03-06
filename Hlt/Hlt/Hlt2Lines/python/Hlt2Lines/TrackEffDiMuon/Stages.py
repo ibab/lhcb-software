@@ -28,11 +28,11 @@ from Configurables import DaVinci__N3BodyDecays as N3Body
 class N3BodyCombiner(Hlt2Combiner):
     def __init__(self, name, mode, nickname):
         if nickname == 'MuonTT':
-       	    overlap = ("(AOVERLAP(1,2, LHCb.LHCbID.TT) > 0.4) & (AOVERLAP(1,2, LHCb.LHCbID.Muon) > 0.5)") 
+       	    overlap = ("(AOVERLAP(1,2, LHCb.LHCbID.TT) > %(OverlapTT)s) & (AOVERLAP(1,2, LHCb.LHCbID.Muon) > %(OverlapMuon)s)") 
         elif nickname == 'VeloMuon':
-       	    overlap = ("(AOVERLAP(1,2, LHCb.LHCbID.Velo) > 0.5) & (AOVERLAP(1,2, LHCb.LHCbID.Muon) > 0.4)") 
+       	    overlap = ("(AOVERLAP(1,2, LHCb.LHCbID.Velo) > %(OverlapVelo)s) & (AOVERLAP(1,2, LHCb.LHCbID.Muon) > %(OverlapMuon)s)") 
         else:
-       	    overlap = ("(AOVERLAP(1,2, LHCb.LHCbID.TT) > 0.5) & ((AOVERLAP(1,2, LHCb.LHCbID.IT) > 0.4) | (AOVERLAP(1,2, LHCb.LHCbID.OT) > 0.4))")
+       	    overlap = ("(AOVERLAP(1,2, LHCb.LHCbID.TT) > %(OverlapTT)s) & ((AOVERLAP(1,2, LHCb.LHCbID.IT) > %(OverlapIT)s) | (AOVERLAP(1,2, LHCb.LHCbID.OT) > %(OverlapOT)s))")
         inputs = [TagFilter('Tag2', mode, nickname), ProbeFilter('Probe2', mode, nickname), LongFilter('Long', mode, nickname)]
         decay = "J/psi(1S) -> pi+ mu+ mu-" if mode == 1 else "J/psi(1S) -> pi- mu- mu+"
         Hlt2Combiner.__init__(self, name, decay , inputs, combiner = N3Body,

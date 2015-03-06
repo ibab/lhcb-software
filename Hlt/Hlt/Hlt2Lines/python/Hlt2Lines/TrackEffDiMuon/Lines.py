@@ -55,33 +55,39 @@ class TrackEffDiMuonLines(Hlt2LinesConfigurableUser):
 			        'JPsiMassWin'	: 200 * MeV}
                 }
     
-    def __apply_configuration__(self):
+    def stages(self, nickname = ""):
+        if hasattr(self, '_stages') and self._stages:
+            if nickname:
+                return self._stages[nickname]
+            else:
+                return self._stages
+
         from Stages import JPsiCombiner, N3BodyCombiner
-	#second arg gives mode = Plus/Minus refers to the charge of the Probe Muon, third arg decides if matched/unmatched
-        stages ={'MuonTTPlusTagged'              : [JPsiCombiner('JPsi', 1, 'MuonTT')],
-                 'MuonTTMinusTagged'             : [JPsiCombiner('JPsi', 0, 'MuonTT')],
-                 'VeloMuonPlusTagged'            : [JPsiCombiner('JPsi', 1, 'VeloMuon')],
-                 'VeloMuonMinusTagged'           : [JPsiCombiner('JPsi', 0, 'VeloMuon')],
-                 'DownstreamPlusTagged'          : [JPsiCombiner('JPsi', 1, 'Downstream')],
-                 'DownstreamMinusTagged'         : [JPsiCombiner('JPsi', 0, 'Downstream')],
-                 'MuonTTPlusTaggedTurbo'         : [JPsiCombiner('JPsi', 1, 'MuonTT')],
-                 'MuonTTMinusTaggedTurbo'        : [JPsiCombiner('JPsi', 0, 'MuonTT')],
-                 'VeloMuonPlusTaggedTurbo'       : [JPsiCombiner('JPsi', 1, 'VeloMuon')],
-                 'VeloMuonMinusTaggedTurbo'      : [JPsiCombiner('JPsi', 0, 'VeloMuon')],
-                 'DownstreamPlusTaggedTurbo'     : [JPsiCombiner('JPsi', 1, 'Downstream')],
-                 'DownstreamMinusTaggedTurbo'    : [JPsiCombiner('JPsi', 0, 'Downstream')],
-                 'MuonTTPlusMatchedTurbo'        : [JPsiCombiner('JPsi', 1, 'MuonTT'), N3BodyCombiner('N3Body', 1, 'MuonTT')],
-                 'MuonTTMinusMatchedTurbo'       : [JPsiCombiner('JPsi', 0, 'MuonTT'), N3BodyCombiner('N3Body', 0, 'MuonTT')],
-                 'VeloMuonPlusMatchedTurbo'      : [JPsiCombiner('JPsi', 1, 'VeloMuon'), N3BodyCombiner('N3Body', 1, 'VeloMuon')],
-                 'VeloMuonMinusMatchedTurbo'     : [JPsiCombiner('JPsi', 0, 'VeloMuon'), N3BodyCombiner('N3Body', 0, 'VeloMuon')],
-                 'DownstreamPlusMatchedTurbo'    : [JPsiCombiner('JPsi', 1, 'Downstream'), N3BodyCombiner('N3Body', 1, 'Downstream')],
-                 'DownstreamMinusMatchedTurbo'   : [JPsiCombiner('JPsi', 0, 'Downstream'), N3BodyCombiner('N3Body', 0, 'Downstream')]
-        	}
+	#second arg gives mode = Plus/Minus refers to the charge of the Probe Muon
+        self._stages = {'MuonTTPlusTagged'              : [JPsiCombiner('JPsi', 1, 'MuonTT')],
+                        'MuonTTMinusTagged'             : [JPsiCombiner('JPsi', 0, 'MuonTT')],
+                        'VeloMuonPlusTagged'            : [JPsiCombiner('JPsi', 1, 'VeloMuon')],
+                        'VeloMuonMinusTagged'           : [JPsiCombiner('JPsi', 0, 'VeloMuon')],
+                        'DownstreamPlusTagged'          : [JPsiCombiner('JPsi', 1, 'Downstream')],
+                        'DownstreamMinusTagged'         : [JPsiCombiner('JPsi', 0, 'Downstream')],
+                        'MuonTTPlusMatched'             : [JPsiCombiner('JPsi', 1, 'MuonTT'), N3BodyCombiner('N3Body', 1, 'MuonTT')],
+                        'MuonTTMinusMatched'            : [JPsiCombiner('JPsi', 0, 'MuonTT'), N3BodyCombiner('N3Body', 0, 'MuonTT')],
+                        'VeloMuonPlusMatched'           : [JPsiCombiner('JPsi', 1, 'VeloMuon'), N3BodyCombiner('N3Body', 1, 'VeloMuon')],
+                        'VeloMuonMinusMatched'          : [JPsiCombiner('JPsi', 0, 'VeloMuon'), N3BodyCombiner('N3Body', 0, 'VeloMuon')],
+                        'DownstreamPlusMatched'         : [JPsiCombiner('JPsi', 1, 'Downstream'), N3BodyCombiner('N3Body', 1, 'Downstream')],
+                        'DownstreamMinusMatched'        : [JPsiCombiner('JPsi', 0, 'Downstream'), N3BodyCombiner('N3Body', 0, 'Downstream')]
+                        }
+        if nickname:
+            return self._stages[nickname]
+        else:
+            return self._stages
+    
+    def __apply_configuration__(self):
         
+        stages = self.stages()
         from HltLine.HltLine import Hlt2Line
         for (nickname, algos) in self.algorithms(stages).iteritems():
             linename = 'TrackEff' + nickname
-            turbo = True if 'Turbo' in nickname else False
             Hlt2Line(linename, prescale = self.prescale,
                      algos = algos, postscale = self.postscale,
-                     L0DU = self.getProp('Common').get('L0Filter'), Turbo = turbo)
+                     L0DU = self.getProp('Common').get('L0Filter'))

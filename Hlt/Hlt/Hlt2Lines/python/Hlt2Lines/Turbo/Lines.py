@@ -3,7 +3,21 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 class TurboLines(Hlt2LinesConfigurableUser) :
     __slots__ = {'Prescale' : {},
                  'Postscale' : {},
-                 'CloneLines'  : {'DiMuon' : ['JPsi']}
+                 'CloneLines'  : {'DiMuon' : ['JPsi'],
+			          'TrackEffDiMuon': ['MuonTTPlusTagged',
+					             'MuonTTMinusTagged',
+					             'VeloMuonPlusTagged',
+					             'VeloMuonMinusTagged',
+					             'DownstreamPlusTagged',
+					             'DownstreamMinusTagged',
+					             'MuonTTPlusMatched',
+					             'MuonTTMinusMatched',
+					             'VeloMuonPlusMatched',
+					             'VeloMuonMinusMatched',
+					             'DownstreamPlusMatched',
+					             'DownstreamMinusMatched'
+					            ]
+			         }
                  }
 
     def __apply_configuration__(self):
