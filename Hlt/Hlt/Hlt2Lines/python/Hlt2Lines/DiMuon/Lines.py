@@ -83,8 +83,11 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
 
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line
+        from Configurables import HltANNSvc
         stages = self.stages()
         for (nickname, algos) in self.algorithms(stages).iteritems():
             linename = 'DiMuon' + nickname if nickname != 'DiMuon' else nickname
             Hlt2Line(linename, prescale = self.prescale,
                      algos = algos, postscale = self.postscale)
+            if nickname is 'JPsi':
+                HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonJPsiDecision":  50201 } )

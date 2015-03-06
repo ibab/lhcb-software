@@ -8,6 +8,7 @@ class TurboLines(Hlt2LinesConfigurableUser) :
 
     def __apply_configuration__(self):
         from HltLine.HltLine import Hlt2Line
+        from Configurables import HltANNSvc
         lines = self.getProp('CloneLines')
         for (module, lines) in lines.iteritems():
             # Import the other module that has the stages.
@@ -21,3 +22,6 @@ class TurboLines(Hlt2LinesConfigurableUser) :
                 algos = conf.algorithms({'Turbo' : stages})
                 Hlt2Line('New' + module + line + 'Turbo', prescale = self.prescale,
                          algos = algos['Turbo'], postscale = self.postscale, Turbo = True)
+                if module is 'DiMuon':
+                    if line is 'JPsi':
+                        HltANNSvc().Hlt2SelectionID.update( { 'New'+module+line+'Turbo'+'Decision':  50212 } ) 

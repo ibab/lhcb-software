@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-06 - Sean Benson
+ - Add IDs for altered JPsi lines, so that tests using thresholds work.
+
 ! 2015-03-05 - Roel Aaij
  - Add first JPsi turbo line in the new template.
 
