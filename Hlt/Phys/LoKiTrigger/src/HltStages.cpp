@@ -226,6 +226,33 @@ std::ostream& LoKi::Stages::IsParticle::fillStream ( std::ostream& s ) const
 { return s << "TS_ISPARTICLE" ; }
 // ============================================================================
 
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Stages::IsProtoP::~IsProtoP (){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Stages::IsProtoP*
+LoKi::Stages::IsProtoP::clone() const 
+{ return new LoKi::Stages::IsProtoP(*this) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Stages::IsProtoP::result_type 
+LoKi::Stages::IsProtoP::operator() 
+  ( LoKi::Stages::IsProtoP::argument a ) const 
+{
+  if ( !a ) { Error ("Hlt::Stage points to NULL, return false " ) ; }
+  return a ? a->is<LHCb::ProtoParticle>() : false ;
+}
+// ============================================================================
+// OPTIONAL: the ince printout 
+// ============================================================================
+std::ostream& LoKi::Stages::IsProtoP::fillStream ( std::ostream& s ) const 
+{ return s << "TS_ISPROTOP" ; }
+// ============================================================================
+
 
 // ============================================================================
 // MANDATORY: virtual destructor 

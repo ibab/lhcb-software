@@ -4,6 +4,13 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-03-06 - Vanya Belyaev
+ - add particle and protoparticle cuts into selection source:
+   it allows to save some code for combiners :
+
+           Selection ( name , predicates ) 
+   
+
 ! 2015-02-19 - Matthew Kenzie
  - addition of ToProtoParticles() (avoids repeat creation)
  - minor changes in ToParticles() to facilitate this (including sligthly different solution to Vanya's fix below)

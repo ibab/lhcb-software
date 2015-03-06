@@ -217,6 +217,29 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
+    /** @class IsProtoP
+     *  trivial predicate to check if the stage is a ProtoParticle
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @see LoKi::Cuts::TS_ISPROTOP
+     *  @date 2014-12-03
+     */
+    class GAUDI_API IsProtoP : public IsVertex
+    { 
+    public:
+      // ======================================================================
+      /// Default Constructor
+      IsProtoP() { }
+      /// MANDATORY: virtual destructor 
+      virtual ~IsProtoP () ;
+      /// MANDATORY: clone method ("virtual constructor") 
+      virtual  IsProtoP* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument a ) const ;
+      /// OPTIONAL: the ince printout 
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    };
+    // ========================================================================
     /** @class IsStage
      *  trivial predicate to check if the stage is a Stage
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -895,6 +918,15 @@ namespace LoKi
      *  @date 2014-12-03
      */
     const LoKi::Stages::IsParticle                              TS_ISPARTICLE ;
+    // ========================================================================
+    /** @var TS_ISPROTOP
+     *  trivial predicate to check the type of Hlt::Stage 
+     *  @see Hlt::Stage 
+     *  @see Hlt::Stage::is<LHCb::ProtoParticle>
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2014-12-03
+     */
+    const LoKi::Stages::IsProtoP                                  TS_ISPROTOP ;
     // ========================================================================
     /** @var TS_ISSTAGE
      *  trivial predicate to check the type of Hlt::Stage 

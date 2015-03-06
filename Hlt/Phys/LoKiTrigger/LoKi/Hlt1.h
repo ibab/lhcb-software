@@ -70,28 +70,43 @@ namespace LoKi
       Selection ( const std::string&                     selection ) ;
       /// constructor from the selection & criteria 
       Selection
-        ( const std::string&                                    selection , 
-          const LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate& cut       ) ;
+        ( const std::string&                                                selection , 
+          const LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate&      cut       ) ;
       /// constructor from the selection & criteria 
       Selection
-        ( const std::string&                                           selection , 
-          const LoKi::BasicFunctors<const Hlt::Stage*>::Predicate&     cut       ,
-          const int                                                    slot = 0  ) ;
+        ( const std::string&                                                selection , 
+          const LoKi::BasicFunctors<const Hlt::Stage*>::Predicate&          cut       ,
+          const int                                                         slot = 0  ) ;
       /// constructor from the selection & criteria 
       Selection
-        ( const std::string&                                                 selection  , 
+        ( const std::string&                                                selection  , 
           const LoKi::BasicFunctors<const LHCb::L0MuonCandidate*>::Predicate& cut , 
-          const int                                                          slot = -1  ) ;
+          const int                                                         slot = -1  ) ;
       /// constructor from the selection & criteria 
       Selection
-        ( const std::string&                                            selection  , 
+        ( const std::string&                                                selection  , 
           const LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate& cut ,
-          const int                                                    slot = -1  ) ;
+          const int                                                         slot = -1  ) ;
       /// constructor from the selection & criteria 
       Selection
-        ( const std::string&                                           selection , 
-          const LoKi::BasicFunctors<const LHCb::Track*>::Predicate&    cut       , 
-          const int                                                    slot =  0 ) ;
+        ( const std::string&                                                selection , 
+          const LoKi::BasicFunctors<const LHCb::Track*>::Predicate&         cut       , 
+          const int                                                         slot =  0 ) ;
+      /// constructor from the selection & criteria 
+      Selection
+        ( const std::string&                                                selection , 
+          const LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate&    cut       , 
+          const int                                                         slot =  0 ) ;
+      /// constructor from the selection & criteria 
+      Selection
+        ( const std::string&                                                selection , 
+          const LoKi::BasicFunctors<const LHCb::ProtoParticle*>::Predicate& cut       , 
+          const int                                                         slot =  0 ) ;
+      /// constructor from the selection & criteria 
+      Selection
+        ( const std::string&                                                selection , 
+          const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      cut       , 
+          const int                                                         slot =  0 ) ;
       /// MANDATORY: virtual destructor 
       virtual ~Selection() {}
       /// MANDATORY: clone method ("virtual constructor")
