@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-03-06 - Sean Benson
+ - Add Roel's new Hlt2 Turbo template line to TurboTest.
+
 ! 2015-03-05 - Roel Aaij
  - Removed not-released L0TCK from Physics_draftEM2015.py.
 

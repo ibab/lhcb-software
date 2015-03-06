@@ -85,7 +85,7 @@ class TurboTest( object ):
         """
         Returns a list of active lines
         """
-        hlt2 = ['Hlt2PassThrough', 'Hlt2DiMuonJPsiTurbo'
+        hlt2 = ['Hlt2PassThrough', 'Hlt2DiMuonJPsiTurbo', 'Hlt2NewDiMuonJPsiTurbo'
                 ]
         
         from Hadrons_September2012 import Hadrons_September2012
