@@ -62,7 +62,11 @@ private:
   /// location of output
   StringProperty m_outputRawEventLocation;
 
+  /// Save track states or not
+  bool m_writeStates;
+  
   unsigned int m_callcount;
 
+  
 };
 #endif // HLTDECREPORTSWRITER_H

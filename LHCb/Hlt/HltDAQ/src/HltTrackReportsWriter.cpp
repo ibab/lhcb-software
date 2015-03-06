@@ -45,6 +45,7 @@ HltTrackReportsWriter::HltTrackReportsWriter( const std::string& name,
                                                } );
     declareProperty( "OutputRawEventLocation",
                      m_outputRawEventLocation = LHCb::RawEventLocation::Default );
+    declareProperty( "WriteStates", m_writeStates = true );
 }
 
 //=============================================================================
@@ -122,7 +123,7 @@ void HltTrackReportsWriter::convert(const std::string& location, unsigned source
         std::vector<unsigned int> bankBody;
 
         // calling core encoder function see src/core/HltTrackingCoder.cxx
-        encodeTracks( *inputTracks, bankBody );
+        encodeTracks( *inputTracks, bankBody, m_writeStates );
 
         // RawBank is limited in size to 65535 bytes i.e. 16383 words; be conservative cut it
         // off at a smaller limit.

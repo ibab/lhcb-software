@@ -26,7 +26,8 @@
 
 void
 encodeTracks(const LHCb::Tracks& tracks,                 // Input track container
-	         std::vector<unsigned int>& rawBank);        // Output RawBank body
+             std::vector<unsigned int>& rawBank,
+             bool writeStates);        // Output RawBank body
 
 unsigned int
 // returns number of decoded tracks

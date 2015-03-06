@@ -4,6 +4,10 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2015-03-06 - Sascha Stahl
+ - HltTrackReportsWriter: Added property (WriteStates) to write or not write out states.
+   Default is true to keep the old behaviour.
+
 !========================= HltDAQ v4r12 2015-01-14 =========================
 ! 2015-01-12 - Sean Benson
  - Fix CMake config.

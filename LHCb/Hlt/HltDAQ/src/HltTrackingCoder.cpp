@@ -32,13 +32,13 @@ using namespace LHCb;
 // It is stupid to have to instantiate this
 const StandardPacker pac;
 
-void encodeTracks( const LHCb::Tracks& tracks, std::vector<unsigned int>& rawBank )
+void encodeTracks( const LHCb::Tracks& tracks, std::vector<unsigned int>& rawBank, bool writeStates )
 {
     auto out = std::back_inserter(rawBank);
 
     auto nWords = std::accumulate( std::begin(tracks), std::end(tracks), rawBank.size(),
-                                   [](std::vector<unsigned int>::size_type s, const LHCb::Track* t) {
-        return s+3+t->nLHCbIDs()+t->states().size()*22;
+                                   [writeStates](std::vector<unsigned int>::size_type s, const LHCb::Track* t) {
+                                     return writeStates ? s+3+t->nLHCbIDs()+t->states().size()*22 : s+3+t->nLHCbIDs() ;
     });
     rawBank.reserve(nWords);
 
@@ -61,6 +61,12 @@ void encodeTracks( const LHCb::Tracks& tracks, std::vector<unsigned int>& rawBan
         // write states
         // check number of states on track
         const std::vector<LHCb::State*>& states = Tr->states();
+
+        if (!writeStates) {
+          // Do not write states to save disk space
+          *out++ =  0;
+          continue;
+        }
         // TODO: remove the states we're not interested in...
         *out++ =  states.size();
 

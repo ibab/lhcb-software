@@ -48,8 +48,8 @@ equalStates(const LHCb::Tracks& tracks, const LHCb::Tracks& reftracks){
       // check the number of states
       unsigned int nstates=Tr->states().size();
       if (nstates != (refTr->states().size())) return false;
-      const std::vector<LHCb::State*>& states = Tr->states();
-      const std::vector<LHCb::State*>& refstates = refTr->states();
+      auto states = Tr->states();
+      auto refstates = refTr->states();
       for(unsigned int i=0;i<nstates;++i) {
         bool result = (states[i]->location() == refstates[i]->location());
         if(!result){
@@ -143,20 +143,21 @@ struct ExampleTracks {
 
     LHCb::State Michigan(v,cov,220.,LHCb::State::ClosestToBeam);
     tr->addToStates(Michigan);
-
+    
     m_tracks.add(tr);
     
     // format:                   flags nIDs  IDs    nStates States(Loc, z, par)
     std::vector<unsigned int> bank = { 1,    3,  1,3,5,    0,      
-			          9,    3,  2,4,6,    0,
-			          3,    4,  7,11,13,17, 
-				                          2,  // 2 states in this track
-				 3 , 2000000, 10000, 4294957296, 100000000, 4194967296, 100, // state at location 3
-				 10488, 10954, 114017543, 118321596, 12247449, 5483, 7777, 5284, // its cov
-				 9912, 7407, 5115, 11911, 9391, 7090, 4968, 
-				 1 , 2200000, 10000, 4294957296, 100000000, 4194967296, 100, // // state at location 1
-				 10488, 10954, 114017543, 118321596, 12247449, 5483, 7777, 5284, // its cov
-				 9912, 7407, 5115, 11911, 9391, 7090, 4968 }; 
+                                       9,    3,  2,4,6,    0,
+                                       3,    4,  7,11,13,17,
+                                       2,  // 2 states in this track
+                                       3 , 2000000, 10000, 4294957296, 100000000, 4194967296, 100, // state at location 3
+                                       10488, 10954, 114017543, 118321596, 12247449, 5483, 7777, 5284, // its cov
+                                       9912, 7407, 5115, 11911, 9391, 7090, 4968, 
+                                       1 , 2200000, 10000, 4294957296, 100000000, 4194967296, 100, // // state at location 1
+                                       10488, 10954, 114017543, 118321596, 12247449, 5483, 7777, 5284, // its cov
+                                       9912, 7407, 5115, 11911, 9391, 7090, 4968 
+    }; 
     m_rawbank = bank;
   }
 
@@ -181,10 +182,31 @@ BOOST_AUTO_TEST_CASE(comparetracks)
 BOOST_AUTO_TEST_CASE(encode)
 {
   std::vector<unsigned int> rawBank;
-  encodeTracks(m_tracks,rawBank);
+  encodeTracks(m_tracks,rawBank, true);
   BOOST_CHECK(rawBank.size() == m_rawbank.size()  );
   BOOST_CHECK(rawBank == m_rawbank );
 }
+
+BOOST_AUTO_TEST_CASE(encodeNoStates)
+{
+  std::vector<unsigned int> rawBank;
+  ExampleTracks myTracks;
+  for (auto tr : myTracks.m_tracks)
+  {
+    tr->clearStates();
+  }
+  std::vector<unsigned int> bank = { 1,    3,  1,3,5,    0,      
+                                     9,    3,  2,4,6,    0,
+                                     3,    4,  7,11,13,17,
+                                     0,  // 0 states in this track
+                               
+  }; 
+  myTracks.m_rawbank = bank;
+  encodeTracks(myTracks.m_tracks,rawBank, false);
+  BOOST_CHECK(rawBank.size() == myTracks.m_rawbank.size()  );
+  BOOST_CHECK(rawBank == myTracks.m_rawbank );
+}
+
 
 BOOST_AUTO_TEST_CASE(decode)
 {
@@ -194,7 +216,6 @@ BOOST_AUTO_TEST_CASE(decode)
   BOOST_CHECK(equalLHCbIDs(tracks,m_tracks));
   BOOST_CHECK(equalStates(tracks,m_tracks));
   BOOST_CHECK(equalMeta(tracks,m_tracks));
-
 }
 
 
@@ -202,7 +223,19 @@ BOOST_AUTO_TEST_CASE(decode)
 BOOST_AUTO_TEST_CASE(en_de_code)
 {
   std::vector<unsigned int> rawBank;
-  encodeTracks(m_tracks,rawBank);
+  encodeTracks(m_tracks,rawBank, true);
+  LHCb::Tracks tracks;
+  decodeTracks(m_rawbank.data(),m_rawbank.size(),tracks);
+  BOOST_CHECK(equalLHCbIDs(tracks,m_tracks));
+  BOOST_CHECK(equalStates(tracks,m_tracks));
+  BOOST_CHECK(equalMeta(tracks,m_tracks));
+}
+
+
+BOOST_AUTO_TEST_CASE(en_de_codeNoStates)
+{
+  std::vector<unsigned int> rawBank;
+  encodeTracks(m_tracks,rawBank, false);
   LHCb::Tracks tracks;
   decodeTracks(m_rawbank.data(),m_rawbank.size(),tracks);
   BOOST_CHECK(equalLHCbIDs(tracks,m_tracks));
