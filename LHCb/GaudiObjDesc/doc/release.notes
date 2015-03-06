@@ -5,6 +5,13 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+! 2015-03-06 - Chris Jones
+ - Add new option to genClasses.py to generate boost pool allocators with
+   threading support disabled. Avoids some mutex lock calls during new/delete 
+   that are unneccessary as long as threading is not fully supported.
+   New option is the default.
+ - Remove the placement operators from the pool allocator definitions.
+
 !========================= GaudiObjDesc v11r21 2015-02-23 =========================
 ! 2015-02-06 - Marco Clemencic
  - Removed Roel's work around for ROOT-7037 (fixed in ROOT 6.02/05).

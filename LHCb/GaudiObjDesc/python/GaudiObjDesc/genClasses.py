@@ -580,9 +580,37 @@ class genClasses(genSrcUtils.genSrcUtils):
         return s
 
 #--------------------------------------------------------------------------------
+    def _genAllocBoostNoMutex(self, classname):
+        """
+        Generate code to use Boost allocator with check on delete.
+        """
+        data = {'classname': classname}
+        s = """
+#ifndef GOD_NOALLOC
+  /// operator new
+  static void* operator new ( size_t size )
+  {
+    using pool = boost::singleton_pool< %(classname)s, sizeof(%(classname)s),
+                                        boost::default_user_allocator_new_delete,
+                                        boost::details::pool::null_mutex, 128 >;
+    return ( sizeof(%(classname)s) == size ? pool::malloc() : ::operator new(size) );
+  }
+
+  /// operator delete
+  static void operator delete ( void* p )
+  {
+    using pool = boost::singleton_pool< %(classname)s, sizeof(%(classname)s),
+                                        boost::default_user_allocator_new_delete,
+                                        boost::details::pool::null_mutex, 128 >;
+    pool::is_from(p) ? pool::free(p) : ::operator delete(p);
+  }
+#endif""" % data
+        self.include.append("GaudiKernel/boost_allocator.h")
+        return s
+
     def _genAllocBoost(self, classname):
         """
-        Generate codo to use Boost allocator with check on delete.
+        Generate code to use Boost allocator with check on delete.
         """
         data = {'classname': classname}
         s = """
@@ -595,27 +623,12 @@ class genClasses(genSrcUtils.genSrcUtils):
              ::operator new(size) );
   }
 
-  /// placement operator new
-  /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
-  /// it is not needed in libstdc++ >= 3.4
-  static void* operator new ( size_t size, void* pObj )
-  {
-    return ::operator new (size,pObj);
-  }
-
   /// operator delete
   static void operator delete ( void* p )
   {
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p) ?
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p) :
     ::operator delete(p);
-  }
-
-  /// placement operator delete
-  /// not sure if really needed, but it does not harm
-  static void operator delete ( void* p, void* pObj )
-  {
-    ::operator delete (p, pObj);
   }
 #endif""" % data
         self.include.append("GaudiKernel/boost_allocator.h")
@@ -636,25 +649,10 @@ class genClasses(genSrcUtils.genSrcUtils):
              ::operator new(size) );
   }
 
-  /// placement operator new
-  /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
-  /// it is not needed in libstdc++ >= 3.4
-  static void* operator new ( size_t size, void* pObj )
-  {
-    return ::operator new (size,pObj);
-  }
-
   /// operator delete
   static void operator delete ( void* p )
   {
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p);
-  }
-
-  /// placement operator delete
-  /// not sure if really needed, but it does not harm
-  static void operator delete ( void* p, void* pObj )
-  {
-    ::operator delete (p, pObj);
   }
 #endif""" % data
         self.include.append("GaudiKernel/boost_allocator.h")
@@ -677,15 +675,6 @@ class genClasses(genSrcUtils.genSrcUtils):
     return ( ptr );
   }
 
-  /// placement operator new
-  /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
-  /// it is not needed in libstdc++ >= 3.4
-  static void* operator new ( size_t size, void* pObj )
-  {
-    std::cout << "%(classname)s::new(" << pObj << ")" << std::endl;
-    return ::operator new (size,pObj);
-  }
-
   /// operator delete
   static void operator delete ( void* p )
   {
@@ -695,14 +684,6 @@ class genClasses(genSrcUtils.genSrcUtils):
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p) ?
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p) :
     ::operator delete(p);
-  }
-
-  /// placement operator delete
-  /// not sure if really needed, but it does not harm
-  static void operator delete ( void* p, void* pObj )
-  {
-    std::cout << "%(classname)s::delete(" << p << "," << pObj << ")" << std::endl;
-    ::operator delete (p, pObj);
   }
 #endif""" % data
         self.include.append("GaudiKernel/boost_allocator.h")
@@ -726,27 +707,12 @@ class genClasses(genSrcUtils.genSrcUtils):
              ::operator new(size) );
   }
 
-  /// placement operator new
-  /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
-  /// it is not needed in libstdc++ >= 3.4
-  static void* operator new ( size_t size, void* pObj )
-  {
-    return ::operator new (size,pObj);
-  }
-
   /// operator delete
   static void operator delete ( void* p )
   {
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p) ?
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_free(p) :
     ::operator delete(p);
-  }
-
-  /// placement operator delete
-  /// not sure if really needed, but it does not harm
-  static void operator delete ( void* p, void* pObj )
-  {
-    ::operator delete (p, pObj);
   }
 
   /// release memory pool
@@ -763,11 +729,13 @@ class genClasses(genSrcUtils.genSrcUtils):
             allocatorType = godClass['attrs']['allocator']
 
         # choose the appropriate generator method, using a dummy one if not found
-        gen = {'BOOST':    self._genAllocBoost,
-               'BOOST2':   self._genAllocBoostNoCheck,
-               'DEBUG':    self._genAllocBoostDebug,
-               'ORDERED':  self._genAllocBoostOrdered,
-               'DEFAULT':  self._genAllocBoost, # default allocator type is Boost
+        gen = {'BOOST':     self._genAllocBoost,
+               'BOOST2':    self._genAllocBoostNoCheck,
+               'DEBUG':     self._genAllocBoostDebug,
+               'ORDERED':   self._genAllocBoostOrdered,
+               'WITHMUTEX': self._genAllocBoost,
+               'NOMUTEX':   self._genAllocBoostNoMutex,
+               'DEFAULT':   self._genAllocBoostNoMutex # default allocator type is Boost without mutex support
                }.get(allocatorType, lambda _: "")
         return gen(godClass['attrs']['name'])
 
@@ -778,7 +746,7 @@ class genClasses(genSrcUtils.genSrcUtils):
 
         if allocatorType == 'DEFAULT' :
             # set the default allocator type
-            allocatorType = 'BOOST'
+            allocatorType = 'NOMUTEX'
 
         data = {}
         data['classname'] = godClass['attrs']['name']
