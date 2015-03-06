@@ -29,9 +29,9 @@ from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamT
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
 
 class Hlt2Conf(LHCbConfigurableUser):
-    __used_configurables__ = [ (Hlt2Tracking, "Hlt2BiKalmanFittedDownstreamTracking") 
-                             , (Hlt2Tracking, "Hlt2BiKalmanFittedForwardTracking")
-                             ] + _hlt2linesconfs
+    __used_configurables__ = [ (Hlt2Tracking, "Hlt2LongTracking"),
+                               (Hlt2Tracking, "Hlt2DownstreamTracking") 
+                               ] + _hlt2linesconfs
 
     __slots__ = { "DataType"                   : '2010'    # datatype is one of 2009, MC09, DC06...
                 , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration
