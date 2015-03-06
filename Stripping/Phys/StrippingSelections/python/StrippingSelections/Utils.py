@@ -223,7 +223,7 @@ def buildStreams( stripping, WGs = None ):
         strippingStreams.append( StrippingStream( stream, Lines = lines ) )
     return strippingStreams
 
-def buildStreamsFromBuilder(conf, name ):
+def buildStreamsFromBuilder(conf, names ):
     """
     Build and return a set of StrippingStreams for a given line builder configuration
     Usage:
@@ -236,31 +236,35 @@ def buildStreamsFromBuilder(conf, name ):
     from StrippingSelections import lineBuilders
 
     streams = {}
-    
-    
-    _conf = {}
-    if conf.has_key(name) :
-      _conf[name] = conf[name]
-    else:
-      log.error("The requested name %s is not present in the default_config of any LineBuilder" %name) 
-  
-    #_conf=lb.default_config
-    #if isinstance(stripping, basestring) :
-        #scdb = strippingConfiguration(stripping)
-    #else :
-        #scdb = stripping
 
-    for k, v in _conf.iteritems() :
-        if 'STREAMS' in v.keys():
-          
-            try:
-                lb = lineBuilders()[v['BUILDERTYPE']](k,v['CONFIG'])
-            except Exception, x:
-                log.error("Unable to configure %s because of %s" %(v['BUILDERTYPE'],str(x)))
-            else:
-                addBuilderToStreamGrouping( streams, v, lb )
-        else:
-            raise Exception('Config',k,'missing either STREAM.')
+    if not isinstance(names, list):
+      names = [names]
+    
+    for name in names:
+      _conf = {}
+      if conf.has_key(name) :
+        _conf[name] = conf[name]
+      else:
+        log.error("The requested name %s is not present in the default_config of any LineBuilder" %name) 
+    
+      #_conf=lb.default_config
+      #if isinstance(stripping, basestring) :
+          #scdb = strippingConfiguration(stripping)
+      #else :
+          #scdb = stripping
+
+      for k, v in _conf.iteritems() :
+          if 'STREAMS' in v.keys():
+            
+              try:
+                  lb = lineBuilders()[v['BUILDERTYPE']](k,v['CONFIG'])
+              except Exception, x:
+                  log.error("Unable to configure %s because of %s" %(v['BUILDERTYPE'],str(x)))
+              else:
+                  addBuilderToStreamGrouping( streams, v, lb )
+          else:
+              raise Exception('Config',k,'missing either STREAM.')
+    ##
 
     strippingStreams=[]
     for stream in streams:

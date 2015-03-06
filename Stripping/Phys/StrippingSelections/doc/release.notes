@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-03-06 - Lucio Anderlini
+ - Drafted line builders for Calib lines
+
 ! 2015-03-06 - Mika Vesterinen
  - Added three modules to the StrippingSL
  - Split some functions from StrippingB2DMuNuX.py into StrippingB2DMuNuXUtils.py

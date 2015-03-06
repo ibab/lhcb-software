@@ -3,7 +3,13 @@ Module importing stripping selection line builder modules
 for Calib WG.
 """
 
-_selections = [ ]
+_selections = [
+    "StrippingElectronID",
+    "StrippingMuIDCalib",
+    "StrippingNoPIDDstarWithD02RSKPi",
+    "StrippingPIDCalib",
+    "StrippingV0ForPID"
+ ]
 
 for _sel in _selections :
     try :
