@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-06 - Sascha Stahl
+ - TrackEff/Inputs: DecoToVeloLiteCusters set to true.
+
 ! 2015-03-06 - Michael Kolpin
  - Moved TrackEffDiMuon Turbo versions to the Turbo module
 

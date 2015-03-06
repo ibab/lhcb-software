@@ -19,7 +19,7 @@ from Configurables import DelegatingTrackSelector
 from Configurables import TrackContainerCopy,TrackStateInitAlg,DelegatingTrackSelector, DecodeVeloRawBuffer
 
 DecodeVelo = DecodeVeloRawBuffer('DecodeVelo') 
-DecodeVelo.DecodeToVeloLiteClusters = False
+DecodeVelo.DecodeToVeloLiteClusters = True
 DecodeVelo.DecodeToVeloClusters = False
 from TrackFitter.ConfiguredFitters import (ConfiguredEventFitter,
                                            ConfiguredForwardStraightLineEventFitter)
