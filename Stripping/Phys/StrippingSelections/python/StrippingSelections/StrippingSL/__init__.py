@@ -3,7 +3,9 @@ Module importing stripping selection line builder modules
 for SL WG.
 """
 
-_selections = [ ]
+_selections = ['StrippingB2DMuNuX',
+               'StrippingJPsiForSL',
+               'StrippingB2DstMuNuIncl']
 
 for _sel in _selections :
     try :
