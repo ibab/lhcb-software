@@ -258,6 +258,12 @@ namespace LoKi
       // ======================================================================
       /// the main method 
       bool operator() ( const _Type& a , const _Type& b )  const
+      { return _union_ ( a , b ) ;}
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// the main method 
+      bool _union_ ( const _Type& a , const _Type& b )  const
       {
         // 
         if ( &a == &b ) { return true ; }                         // RETURN 
@@ -275,7 +281,36 @@ namespace LoKi
           ( _a.begin () , _ia , 
             _b.begin () , _ib ) ;
         //
-      } 
+      }
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @struct NonEmptyUnion 
+     *  Helper structure to represent the non-empty union of two containters 
+     *  It is empty if some of the container is empty 
+     *  @see LoKi::Operations::Union            
+     *  @see LoKi::BasicFunctors::Pipe
+     *  @see LoKi::BasicFunctors::Source
+     *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
+     *  @date 2010-06-05
+     */
+    template <class TYPE> 
+    struct NoEmptyUnion : public Union<TYPE> 
+    {
+      // ======================================================================
+      typedef std::vector<TYPE> _Type ;
+      // ======================================================================
+      /// the main method 
+      _Type operator() ( const _Type& a , const _Type& b )  const
+      {
+        // 
+        if ( &a == &b         ) { return a ; } // RETURN
+        //
+        if      (  a.empty () ) { return a ; } // RETURN EMPTY  
+        else if (  b.empty () ) { return b ; } // RETURN EMPTY 
+        //
+        return _union_ ( a , b ) ;
+      }  
       // ======================================================================
     } ;
     // ========================================================================

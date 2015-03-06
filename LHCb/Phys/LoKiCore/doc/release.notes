@@ -13,6 +13,12 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-03-06 - Vanya Belyaev
+ - add NoEmptyUnion
+   union of two streamers that is empty if one of inputs is empty, 
+   and equal to the union of inputs otherwise 
+
+
 !========================= LoKiCore v11r22 2015-02-23 =========================
 ! 2015-02-11 - Vanya Belyaev
  - Instrument some destructors 

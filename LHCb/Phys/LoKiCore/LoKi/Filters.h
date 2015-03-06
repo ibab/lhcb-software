@@ -1362,6 +1362,97 @@ namespace LoKi
       // ======================================================================
     } ;  
     // ========================================================================
+    /** @class NoEmptyUnion
+     *  simple functor to represent the "union" for two NON-empty vector-functors
+     *  Result is empty if one of inputs is empty 
+     *  @see LoKi::Operations::NoEmptyUnion 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-06-06
+     */
+    template <class TYPE, class TYPE2> 
+    class NoEmptyUnion : public Union<TYPE,TYPE2>
+    {
+    public:
+      // ======================================================================
+      /// constructor from two streamers 
+      NoEmptyUnion 
+      ( const LoKi::Functor <TYPE,std::vector<TYPE2> >& fun1 , 
+        const LoKi::Functor <TYPE,std::vector<TYPE2> >& fun2 ) 
+        : LoKi::AuxFunBase ( std::tie ( fun1 , fun2 ) ) 
+        , LoKi::Functors::Union<TYPE,TYPE2> ( fun1 , fun2 ) 
+      {}
+      /// MANDATORY: virtual destructor 
+      virtual ~NoEmptyUnion() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  NoEmptyUnion* clone() const { return new NoEmptyUnion ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual 
+      typename LoKi::Functor<TYPE,std::vector<TYPE2> >::result_type operator() 
+      ( typename LoKi::Functor<TYPE,std::vector<TYPE2> >::argument a ) const 
+      {
+        LoKi::Operations::NoEmptyUnion<TYPE2> _union ;
+        //
+        typename LoKi::Functor<TYPE,std::vector<TYPE2> >::result_type r1 = this->fun1 ( a ) ;
+        if ( r1.empty() ) { return r1 ; }  // RETURN EMPTY 
+        typename LoKi::Functor<TYPE,std::vector<TYPE2> >::result_type r2 = this->fun2 ( a ) ;
+        if ( r2.empty() ) { return r2 ; }  // RETURN EMPTY        
+        return _union ( r1 , r2 ) ;
+      }
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return s << " no_empty_union( " << this->func1() 
+                 << ","                 << this->func2() << ") " ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      NoEmptyUnion () ;                         // the default constructor is disabled 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    template <class TYPE2> 
+    class NoEmptyUnion<void,TYPE2> : public Union<void,TYPE2>
+    {
+    public:
+      // ======================================================================
+      /// constructor from two streamers 
+      NoEmptyUnion 
+      ( const LoKi::Functor <void,std::vector<TYPE2> >& fun1 , 
+        const LoKi::Functor <void,std::vector<TYPE2> >& fun2 ) 
+        : LoKi::AuxFunBase ( std::tie ( fun1 , fun2 ) ) 
+        , LoKi::Functors::Union<void,std::vector<TYPE2> > () 
+      {}
+      /// MANDATORY: virtual destructor 
+      virtual ~NoEmptyUnion() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  NoEmptyUnion* clone() const { return new NoEmptyUnion ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual 
+      typename LoKi::Functor<void,std::vector<TYPE2> >::result_type operator() 
+      ( /* typename LoKi::Functor<void,std::vector<TYPE2> >::argument a */ ) const 
+      {
+        //
+        LoKi::Operations::NoEmptyUnion<TYPE2> _union ;
+        //
+        typename LoKi::Functor<void,std::vector<TYPE2> >::result_type r1 = this->fun1( /* a */ ) ;
+        if ( r1.empty() ) { return r1 ; }  // RETURN EMPTY 
+        typename LoKi::Functor<void,std::vector<TYPE2> >::result_type r2 = this->fun2( /* a */ ) ;
+        if ( r2.empty() ) { return r2 ; }  // RETURN EMPTY        
+        //
+        return _union ( r1 , r2 ) ;
+      }
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return s << " union(" << this->func1() 
+                 << ","       << this->func2() << ") " ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      NoEmptyUnion () ;                  // the default constructor is disabled 
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class Difference
      *  simle functor to represent the "difference" for two vector-functors
      *  @see LoKi::Operations::Difference 
@@ -1387,7 +1478,7 @@ namespace LoKi
       /// MANDATORY: the only one essential method 
       virtual 
       typename LoKi::Functors::Union<TYPE,TYPE2>::result_type operator() 
-        ( typename LoKi::Functors::Union<TYPE,TYPE2>::argument a ) const 
+      ( typename LoKi::Functors::Union<TYPE,TYPE2>::argument a ) const 
       {
         typename LoKi::Functor <TYPE,std::vector<TYPE2> >::result_type
           r1 = this -> fun1 ( a ) ;
@@ -2597,6 +2688,15 @@ namespace LoKi
            const LoKi::Functor<TYPE,std::vector<TYPE2> >& fun2 ) 
   {
     return LoKi::Functors::Union<TYPE,TYPE2> ( fun1 , fun2 ) ;
+  }
+  // ==========================================================================
+  template <class TYPE, class TYPE2>
+  inline 
+  LoKi::Functors::NoEmptyUnion<TYPE,TYPE2>
+  no_empty_union ( const LoKi::Functor<TYPE,std::vector<TYPE2> >& fun1 , 
+                   const LoKi::Functor<TYPE,std::vector<TYPE2> >& fun2 ) 
+  {
+    return LoKi::Functors::NoEmptyUnion<TYPE,TYPE2> ( fun1 , fun2 ) ;
   }
   // ==========================================================================
   template <class TYPE>
