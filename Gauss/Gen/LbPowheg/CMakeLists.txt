@@ -13,7 +13,7 @@ gaudi_add_module(LbPowheg
                  src/component/*.cpp
                  LINK_LIBRARIES GeneratorsLib LbPythiaLib)
 
-gaudi_env(SET CTEQPDF \${LHAPATH}
+gaudi_env(SET CTEQPDF \${LHAPDF_DATA_PATH}
           SET LBPOWHEGOPTS \${LBPOWHEGROOT}/options
           SET POWHEGEXE ${POWHEG-BOX_BINARY_PATH})
 
