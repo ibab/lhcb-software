@@ -87,6 +87,9 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         
         lineCode = """ 
         TrackCandidates
+        >>  FitTrack
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) ) 
         >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
               ( TrTNORMIDC > %(TrNTHits)s ) & \
               ( TrNVELOMISS < %(Velo_Qcut)s ) )
@@ -96,9 +99,6 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         ( TrP  > %(P)s  * MeV ) )
         >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nP' , LoKi.Monitoring.ContextSvc ) )
-        >>  FitTrack
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
         >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & \
         ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
         >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackChi2/IPChi2', LoKi.Monitoring.ContextSvc ) )
@@ -127,13 +127,13 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
               ( TrNVELOMISS < %(Velo_Qcut)s ) )
         >>  tee  ( monitor( TC_SIZE > 0, '# pass VeloQ/IP', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nVeloIP' , LoKi.Monitoring.ContextSvc ) )
+        >>  FitTrack
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
         >>  ( ( TrPT > %(PT)s * MeV ) & \
         ( TrP  > %(P)s  * MeV ) )
         >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nP' , LoKi.Monitoring.ContextSvc ) )
-        >>  FitTrack
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
         >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & \
         ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
         >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackChi2/IPChi2', LoKi.Monitoring.ContextSvc ) )

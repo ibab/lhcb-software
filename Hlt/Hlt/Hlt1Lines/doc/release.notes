@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-03-06 - V. Gligorov
+ - Change sequence in 1Track, Hlt1CalibRICHMirrorLines, and CalibTracking
+   lines to do the track fit directly after the TrackCandidates are made.
+
 ! 2015-03-05 - Roel Aaij
  - Adapt to removal of HLT constructor argument from Hlt1Line.
 

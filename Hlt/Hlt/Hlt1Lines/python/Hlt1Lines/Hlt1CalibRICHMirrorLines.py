@@ -58,6 +58,9 @@ class Hlt1CalibRICHMirrorLinesConf( HltLinesConfigurableUser ) :
         
         lineCode = """ 
         TrackCandidates
+        >>  FitTrack
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
         >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
               ( TrTNORMIDC > %(TrNTHits)s ) & \
               ( TrNVELOMISS < %(Velo_Qcut)s ) )
@@ -68,9 +71,6 @@ class Hlt1CalibRICHMirrorLinesConf( HltLinesConfigurableUser ) :
               ( TrETA < %(ETA)s      ) )
         >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT/ETA', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nP' , LoKi.Monitoring.ContextSvc ) )
-        >>  FitTrack
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
         >>  ( ( TrCHI2PDOF < %(TrChi2)s ) )
         >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackChi2', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nChi2' , LoKi.Monitoring.ContextSvc ) )
