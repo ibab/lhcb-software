@@ -1,10 +1,12 @@
 from D2V0HLines import CharmHadD2V0HLines
 from D2HHHLines import CharmHadD2HHHLines
+from D2V0V0Lines import CharmHadD2V0V0Lines
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
 D2HHHLines = CharmHadD2HHHLines()
 D2V0HLines = CharmHadD2V0HLines()
+D2V0V0Lines = CharmHadD2V0V0Lines()
 
 theseslots = {   'Prescale' : {}, 
                  'TrackGEC' : {'NTRACK_MAX'           : 10000},
@@ -68,6 +70,7 @@ theseslots = {   'Prescale' : {},
 
 theseslots.update(D2HHHLines.localcuts())
 theseslots.update(D2V0HLines.localcuts())
+theseslots.update(D2V0V0Lines.localcuts())
 
 class CharmHadLines(Hlt2LinesConfigurableUser):
     __slots__ = theseslots
@@ -76,6 +79,7 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
     def __apply_configuration__(self):
         self.__lines__.update(D2HHHLines.locallines())
         self.__lines__.update(D2V0HLines.locallines())
+        self.__lines__.update(D2V0V0Lines.locallines())
 
         from HltLine.HltLine import Hlt2Line
         for nickname, algos in self.algorithms(self.__lines__).iteritems():

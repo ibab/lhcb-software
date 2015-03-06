@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-06 - V. Gligorov
+ - Add D2V0V0Lines to the CharmHad module, for now makes D->KS0KS0 with
+   two LL KS0. To see if LLDD and 2DD combinations are worth adding.
+
 ! 2015-03-06 - Sean Benson
  - Add IDs for altered JPsi lines, so that tests using thresholds work.
 

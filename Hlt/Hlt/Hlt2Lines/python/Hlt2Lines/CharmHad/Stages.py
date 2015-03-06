@@ -189,6 +189,23 @@ class DetachedV0HCombiner(Hlt2Combiner):
                               tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
                               MotherCut = mc, Preambulo = [])
 
+class DetachedV0V0Combiner(Hlt2Combiner):
+    def __init__(self, name, decay,inputs):
+        dc =    {'KS0'    : ( "(PT > %(KS0_ALL_PT_MIN)s) &"+
+                              "(MIPCHI2DV(PRIMARY) > %(KS0_ALL_MIPCHI2DV_MIN)s)" )
+                }
+        cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
+                 " & ((APT1+APT2+APT3) > %(ASUMPT_MIN)s )" )
+        mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
+                 " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 " & (BPVVDCHI2 > %(BPVVDCHI2_MIN)s )" +
+                 " & (BPVLTIME() > %(BPVLTIME_MIN)s )")
+        from HltTracking.HltPVs import PV3D
+        Hlt2Combiner.__init__(self, name, decay, inputs,
+                              dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                              tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
+                              MotherCut = mc, Preambulo = [])
+
 class D2KPiPi_SS(DetachedHHHCombiner) :
     def __init__(self,name) :
         decay = "[D+ -> K- pi+ pi+]cc"
@@ -356,3 +373,10 @@ class Lc2LambdaK_DD(DetachedV0HCombiner) :
                   Lambda_DD]
         DetachedV0HCombiner.__init__(self,name,decay,inputs)
 
+# The V0V0 lines now
+
+class D2KS0KS0_2LL(DetachedV0V0Combiner) :
+    def __init__(self,name) :
+        decay = "D0 -> KS0 KS0"
+        inputs = [KS0_LL]
+        DetachedV0V0Combiner.__init__(self,name,decay,inputs)
