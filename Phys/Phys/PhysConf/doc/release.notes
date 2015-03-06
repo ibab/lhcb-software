@@ -5,6 +5,15 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2015-03-06 - Vanya Belyaev
+ - LoKi_Filters
+   add new properties:
+   - HLT1_Code/Preambulo/Location
+   - HLT2_Code/Preambulo/Location
+   For HLT_Code/Preambulo/Location code there is warning message
+   and *if* code allows translation to HLT(1/2)_Code proeprty, 
+   such translation is performed, otherwise error message is issued  
+
 !========================= PhysConf v1r26 2014-04-02 =========================
 
 ! 2014-03-04 - Olivier Deschamps

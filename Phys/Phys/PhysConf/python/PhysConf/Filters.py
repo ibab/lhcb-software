@@ -11,11 +11,12 @@
 # >>> fltrs = LoKi_Filters (
 #       ODIN_Code  = ' in_range ( 5000 , ODIN_RUNNUM , 9000 ) '          ,
 #       L0DU_Code  = ' L0_CHANNEL  ( ... )  '                            ,
-#       HLT_Code   = ' HLT_PASS_RE ( 'Hlt1MBMicro.*Decision')  '         ,
-#       STRIP_Code = ' HLT_PASS    ( 'StrippingBd2KstarGammaDecision') ' ,
-#       VOID_Code  = ' CONTAINS    ('Rec/Vertex/Primary') == 1 '         , 
-#       MC_Code    = ' count ( 'D0' == MCABSID ) > 0.5 '                 , 
-#       GEN_Code   = ' count ( 'D0' ==  GABSID ) > 0.5 '                 , 
+#       HLT1_Code  = ' HLT_PASS_RE ( "Hlt1MBMicro.*Decision")  '         ,
+#       HLT2_Code  = ' HLT_PASS_RE ( "Hlt2.*Muon.*Decision" )  '         ,
+#       STRIP_Code = ' HLT_PASS    ( "StrippingBd2KstarGammaDecision') ' ,
+#       VOID_Code  = ' CONTAINS    ( "Rec/Vertex/Primary") == 1 '         , 
+#       MC_Code    = ' count ( "D0" == MCABSID ) > 0.5 '                 , 
+#       GEN_Code   = ' count ( "D0" ==  GABSID ) > 0.5 '                 , 
 #      )
 #
 # >>> ## get the list of algorithms:
@@ -51,7 +52,8 @@ Helper script to simplify the creation of various LoKi-filters
 >>> fltrs = LoKi_Filters (
      ODIN_Code  = ' in_range ( 5000 , ODIN_RUNNUM , 9000 ) '          ,
      L0DU _Code  = ' L0_CHANNEL  ( ... )  '                           ,
-     HLT_Code   = ' HLT_PASS_RE ( 'Hlt1MBMicro.*Decision')  '         ,
+     HLT1_Code  = ' HLT_PASS_RE ( 'Hlt1MBMicro.*Decision')  '         ,
+     HLT2_Code  = ' HLT_PASS_RE ( 'Hlt2.*Muon.*Decision' )  '         ,
      STRIP_Code = ' HLT_PASS    ( 'StrippingBd2KstarGammaDecision') ' ,
      VOID_Code  = ' CONTAINS    ('Rec/Vertex/Primary') == 1 '         , 
      MC_Code    = ' count ( 'D0' == MCABSID ) > 0.5 '                 , 
@@ -77,8 +79,6 @@ __all__      = ( "LoKi_Filters" ,  )
 # =============================================================================
 from Gaudi.Configuration import *
 from copy import deepcopy 
-import logging
-_log = logging.getLogger('LoKi_Filters')
 
 # =============================================================================
 ## @class LoKi_Filters
@@ -91,7 +91,8 @@ _log = logging.getLogger('LoKi_Filters')
 # >>> fltrs = Lo Ki_Filters (
 #       ODIN_Code  = ' in_range ( 5000 , ODIN_RUNNUM , 9000 ) '          ,
 #       L0DU_Code  = ' L0_CHANNEL  ( ... )  '                            ,
-#       HLT_Code   = ' HLT_PASS_RE ( 'Hlt1MBMicro.*Decision')  '         ,
+#       HLT1_Code  = ' HLT_PASS_RE ( "Hlt1MBMicro.*Decision")  '         ,
+#       HLT2_Code  = ' HLT_PASS_RE ( "Hlt2.*Muon.*Decision" )  '         ,
 #       STRIP_Code = ' HLT_PASS    ( 'StrippingBd2KstarGammaDecision') ' ,
 #       VOID_Code  = ' CONTAINS    ('Rec/Vertex/Primary') == 1 '         ,
 #       MC_Code    = ' count ( 'D0' == MCABSID ) > 0.5 '                 , 
@@ -168,6 +169,14 @@ class LoKi_Filters ( object ) :
         self.__HLT_Preambulo    = kwargs.pop ( 'HLT_Preambulo'    , []   )
         self.__HLT_Location     = kwargs.pop ( 'HLT_Location'     , ''   )
 
+        self.__HLT1_Code        = kwargs.pop ( 'HLT1_Code'        , ''   )
+        self.__HLT1_Preambulo   = kwargs.pop ( 'HLT1_Preambulo'   , []   )
+        self.__HLT1_Location    = kwargs.pop ( 'HLT1_Location'    , 'Hlt1/DecReports' )
+        
+        self.__HLT2_Code        = kwargs.pop ( 'HLT2_Code'        , ''   )
+        self.__HLT2_Preambulo   = kwargs.pop ( 'HLT2_Preambulo'   , []   )
+        self.__HLT2_Location    = kwargs.pop ( 'HLT2_Location'    , 'Hlt2/DecReports' )
+        
         self.__STRIP_Code       = kwargs.pop ( 'STRIP_Code'       , ''   )
         self.__STRIP_Preambulo  = kwargs.pop ( 'STRIP_Preambulo'  , []   )
         self.__STRIP_Location   = kwargs.pop ( 'STRIP_Location'   , ''   )
@@ -256,15 +265,50 @@ class LoKi_Filters ( object ) :
             _seq += [ _l0du ]
 
         if self.__HLT_Code :
+            #
+            if   0 <= self.__HLT_Code.upper().find('HLT1') and not self.__HLT1_Code :
+                if 0 > self.__HLT_Code.upper().find('HLT2')  :
+                    self.__HLT1_Code      = self.__HLT_Code
+                    self.__HLT1_Preambulo = self.__HLT_Preambulo
+                    log.warning ('LoKi_Filters: Obsolete property HLT_Code is replaced with HLT1_Code')
+            elif 0 <= self.__HLT_Code.upper().find('HLT2') and not self.__HLT2_Code :
+                if 0 > self.__HLT_Code.upper().find('HLT1')  :
+                    self.__HLT2_Code      = self.__HLT_Code
+                    self.__HLT2_Preambulo = self.__HLT_Preambulo
+                    log.warning ('LoKi_Filters: Obsolete property HLT_Code is replaced with HLT2_Code') 
+            else :
+                log.error('LoKi_Filters: Specification of HLT_Code does not allow traslation to HLT(1/2)_Code')         
+                from Configurables import LoKi__HDRFilter
+                _hlt = LoKi__HDRFilter (
+                    name + '_HLT'    , 
+                    Code  = self.__HLT_Code 
+                    )
+                if self.__HLT_Preambulo : _hlt.Preambulo = self.__HLT_Preambulo
+                if self.__HLT_Location  : _hlt.Location  = self.__HLT_Location
+                _seq += [ _hlt ]                
+
+        if self.__HLT1_Code :
             # 
             from Configurables import LoKi__HDRFilter
             _hlt = LoKi__HDRFilter (
-                name + '_HLT'    , 
-                Code  = self.__HLT_Code 
+                name + '_HLT1'    , 
+                Code  = self.__HLT1_Code 
                 )
-            if self.__HLT_Preambulo : _hlt.Preambulo = self.__HLT_Preambulo
-            if self.__HLT_Location  : _hlt.Location  = self.__HLT_Location
+            if self.__HLT1_Preambulo : _hlt.Preambulo = self.__HLT1_Preambulo
+            if self.__HLT1_Location  : _hlt.Location  = self.__HLT1_Location
             _seq += [ _hlt ]
+            
+        if self.__HLT2_Code :
+            # 
+            from Configurables import LoKi__HDRFilter
+            _hlt = LoKi__HDRFilter (
+                name + '_HLT2'    , 
+                Code  = self.__HLT2_Code 
+                )
+            if self.__HLT2_Preambulo : _hlt.Preambulo = self.__HLT2_Preambulo
+            if self.__HLT2_Location  : _hlt.Location  = self.__HLT2_Location
+            _seq += [ _hlt ]
+
 
         if self.__STRIP_Code :
             #
@@ -300,7 +344,7 @@ class LoKi_Filters ( object ) :
                     _used.append ( key )
                     
         for key in _used  : args.pop ( key , None ) 
-        if args : _log.error ( "LoKiFilters: Unable propagate properties: %s " % args.keys() )
+        if args : log.error ( "LoKiFilters: Unable propagate properties: %s " % args.keys() )
             
         return  _seq 
 
