@@ -15,19 +15,14 @@ __version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.25 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
-#from HltTrackNames import Hlt2LongTracksName, HltSharedTracksPrefix
-#from HltTrackNames import HltBiDirectionalKalmanFitSuffix
 from HltTrackNames import TrackName, Hlt2TrackRoot, Hlt2TrackLoc, Hlt1TrackLoc, HltSharedTrackLoc
 
-#from HltTrackNames import Hlt2MatchTracksName, Hlt2DownstreamTracksName   
-#from HltTrackNames import Hlt2VeloTracksName, HltSharedRZVeloTracksName
 from HltTrackNames import Hlt2ChargedProtoParticleSuffix, Hlt2TrackingRecognizedTrackTypes
 from HltTrackNames import Hlt2TrackingRecognizedFitTypes
 from HltTrackNames import _baseTrackLocation, _baseProtoPLocation
 from HltTrackNames import HltMuonTracksName, HltAllMuonTracksName
 from HltTrackNames import HltMuonIDSuffix, HltRICHIDSuffix, HltCALOIDSuffix, HltSharedPIDPrefix 
 from HltTrackNames import HltNoPIDSuffix, HltCaloProtosSuffix, HltMuonProtosSuffix, HltRichProtosSuffix
-#from HltTrackNames import HltUnfittedTracksSuffix, HltUniDirectionalKalmanFitSuffix
 from HltTrackNames import HltDefaultFitSuffix
 from HltTrackNames import HltGlobalTrackLocation                
 from HltTrackNames import Hlt2ChargedProtoParticleSuffix, Hlt2NeutralProtoParticleSuffix  
@@ -73,8 +68,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 , "DoSeeding"                       : False  
                 , "DoCleanups"                      : True   # Intended default True. Development options
                 , "RestartForward"                  : False  # Intended default False. Development options
-                , "MergeLongAndDownstream"          : False  # Intended default True. Development options
-                , "DoCloneKilling"                  : False
+                , "CreateBestTracks"                : True  # Intended default True. Development options
                 , "RichHypos"                       : HltRichDefaultHypos
                 , "RichRadiators"                   : HltRichDefaultRadiators
                 , "RichTrackCuts"                   : HltRichDefaultTrackCuts
@@ -297,7 +291,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
         #log.debug('## INFO The prefix is %s'        % self.getProp("Prefix"         ))
         log.debug('## INFO The fit type is %s'      % self.getProp("FastFitType"    ))
         log.debug('## INFO Seeding? = %s'           % self.getProp("DoSeeding"      ))
-        log.debug('## INFO Clone Killing? = %s'     % self.getProp("DoCloneKilling" ))
         log.debug('## INFO Rich hypos = %s'         % self.getProp("RichHypos"      ))
         log.debug('## INFO Rich radiators = %s'     % self.getProp("RichRadiators"  ))
         log.debug('#################################%##########################')
@@ -552,7 +545,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
     #
     # Electron Protos
     #
-    def __hlt2ChargedCaloProtos(self) :
+    def __hlt2ChargedCaloProtos( self ) :
         """
         Charged Calo protoparticles = electrons
         """
@@ -729,7 +722,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
             ts.TrackTypes = ["Long"]
         elif self.__trackType() == "Downstream":
             ts.TrackTypes = ["Downstream"]
-
+            
         # Need to allow for fitted tracks
         # This is now done inside the staged fast fit based on the fastFitType passed
         tracks          = self.__hlt2StagedFastFit()
@@ -898,7 +891,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         richConf.trackConfig().InputTracksLocation = tracks.outputSelection()
 
         if HltRecoConf().getProp("OfflineRich"):
-            richName = "Hlt2BiKalmanFittedForwardTracking_RichRecSysConf"
+            richName = "Hlt2Tracking_RichRecSysConf"
             from Configurables import RichTools
             richTools = RichTools(richName + "ToolRegistry")
             richTools.PhotonRecoType = "Quartic"
@@ -927,23 +920,16 @@ class Hlt2Tracking(LHCbConfigurableUser):
 
         #And my output location is?
         hlt2StagedFastFitOutputLocation = self.__trackLocation()
-        if self.getProp("MergeLongAndDownstream"):
-            hlt2StagedFastFitOutputLocation = tracks.outputSelection()+"Fitted"
+            
         #TODO: Rework this... , this is a workaround to make sure tracks end up in the place used later
-        # Use TrackBestTrackCreator to be consistent with offline
+        #TODO: Use TrackBestTrackCreator to be consistent with offline
         from Configurables import TrackEventFitter, TrackMasterFitter
         bm_members=[]
-        if ((self.getProp("DoCleanups") and self.__trackType() == "Long") or self.getProp("MergeLongAndDownstream")):
-            from Configurables import CreateFastTrackCollection
-            #recoCopy = CreateFastTrackCollection(self.__trackingAlgosAndToolsPrefix()+'TrackCopyInsteadFit'
-            recoCopy = CreateFastTrackCollection(self.getProp("Prefix")+'TrackCopyInsteadFit'
-                                                 , InputLocations = [ tracks.outputSelection() ]
-                                                 , OutputLocation = hlt2StagedFastFitOutputLocation
-                                                 , SlowContainer  = True) 
-            from HltTracking.HltSharedTracking import ( RevivedForward, ConfiguredForwardComplement, ConfiguredHltEventFitter,
-                                                        ConfiguredGoodTrackFilter )
+        if ((self.getProp("DoCleanups") and self.__trackType() == "Long") or self.getProp("CreateBestTracks")):
+            # In this case the tracks have been fitted and nothing needs to be done
             # Build the bindMembers
-            bm_members      = [tracks, recoCopy ]
+            hlt2StagedFastFitOutputLocation = tracks.outputSelection()
+            bm_members      = [ tracks ]
         else:
             Hlt2StagedFastFit_name      = self.__trackfitAlgosAndToolsPrefix()+'StagedFastFit'
             Hlt2StagedFastFit           = TrackEventFitter(Hlt2StagedFastFit_name)
@@ -957,6 +943,9 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from Configurables import HltRecoConf
         if HltRecoConf().getProp("AddGhostProb"):
             from Configurables import TrackAddNNGhostId
+            ghostIDName = self.__trackfitAlgosAndToolsPrefix()+"TrackAddNNGhostID"
+            if self.getProp("CreateBestTracks"):
+                ghostIDName = self.getProp("Prefix") +"TrackAddNNGhostID"
             addNNGhostId = TrackAddNNGhostId(self.__trackfitAlgosAndToolsPrefix()+"TrackAddNNGhostID",GhostIdTool="Run2GhostId")
             addNNGhostId.inputLocation = hlt2StagedFastFitOutputLocation
             bm_members += [ addNNGhostId ]
@@ -976,51 +965,44 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from HltLine.HltLine import bindMembers    
         #
         # Some "inevitable" special stuff here
+        # TODO: fix this description
         # If we ask for long tracks and no seeding, the final output will be
         # the forward tracking, otherwise the final output is the long 
         # (forward + match) tracking.
         #
         hlt2TrackingOutput      = Hlt2TrackLoc[self.__trackType()]
-        if self.getProp("MergeLongAndDownstream"):
+        if self.getProp("CreateBestTracks"):
             hlt2TrackingOutput      = Hlt2TrackLoc["Best"]
         # Finally make the sequence
+        # TODO: fix this description
         # The sequence called depends on the track type, so far we recognise two track types
         # for Long tracks the options doSeeding, doCloneKilling, etc. are meaningful
         # for SeedTT tracks the seeding is mandatory and the CloneKilling is irrelevant 
         # This part gets done in either case
         trackRecoSequence = []
-        if (self.__trackType() == "Long" or self.getProp("MergeLongAndDownstream")) :
+        if (self.__trackType() == "Long" or self.getProp("CreateBestTracks")) :
             # Do the forward, seeding + matching
             trackRecoSequence        =    [self.__hlt2ForwardTracking()]
             trackRecoSequence       +=    [self.__hlt2MatchTracking()]
             # The copy sequence, which merges the forward and
             # match tracks into the long track container
-            hlt2TracksToMergeIntoLong    =    []
-            hlt2TracksToMergeIntoLong   +=    [ self.__hlt2ForwardTracking().outputSelection()]
-            hlt2TracksToMergeIntoLong   +=    [ self.__hlt2MatchTracking().outputSelection()  ]
-            if  self.getProp("MergeLongAndDownstream"):
+            hlt2TracksToMerge    =    []
+            hlt2TracksToMerge   +=    [ self.__hlt2ForwardTracking().outputSelection()]
+            hlt2TracksToMerge   +=    [ self.__hlt2MatchTracking().outputSelection()  ]
+            if  self.getProp("CreateBestTracks"):
                 trackRecoSequence       +=    [self.__hlt2DownstreamTracking()]
-                hlt2TracksToMergeIntoLong   +=    [ self.__hlt2DownstreamTracking().outputSelection()  ]
+                hlt2TracksToMerge   +=    [ self.__hlt2DownstreamTracking().outputSelection()  ]
             from Configurables import TrackEventCloneKiller, TrackCloneFinder
             #cloneKiller = TrackEventCloneKiller( self.__trackingAlgosAndToolsPrefix()+'FastCloneKiller'
             cloneKiller = TrackEventCloneKiller( self.getProp("Prefix") +'FastCloneKiller'
-                                                 , TracksInContainers         = hlt2TracksToMergeIntoLong
+                                                 , TracksInContainers         = hlt2TracksToMerge
                                                  , TracksOutContainer         = hlt2TrackingOutput
                                                  , SkipSameContainerTracks    = False
                                                  , CopyTracks                 = True)
             cloneKiller.addTool(TrackCloneFinder, name = 'CloneFinderTool')
             cloneKiller.CloneFinderTool.RestrictedSearch = True
             trackRecoSequence        +=      [cloneKiller]
-            #else :
-            #    from Configurables import CreateFastTrackCollection
-            #    recoCopy = CreateFastTrackCollection(self.__trackingAlgosAndToolsPrefix()+'TrackCopy'
-            #                                         , InputLocations = hlt2TracksToMergeIntoLong
-            #                                         , OutputLocation = hlt2TrackingOutput
-            #                                         , SlowContainer  = True) 
-            #    trackRecoSequence        +=     [recoCopy]
 
-        #elif (self.__trackType() == "Forward") :
-        #    trackRecoSequence        =     [self.__hlt2ForwardTracking()]
         elif (self.__trackType() == "Downstream" ) :
             trackRecoSequence         =    [self.__hlt2DownstreamTracking()]
   
@@ -1044,14 +1026,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from HltLine.HltLine    import bindMembers 
         
         veloTracksOutputLocation = HltSharedTrackLoc["Velo"]
-
-        # select which Velo sequence we want, depending on Hlt1TrackOption
-        # Decode: Pick up the tracks from HLt1 decoded into Hlt1TrackLoc["Velo"] (default)
-        # Rerun:  Rerun the full FastVelo 
-
-        #set vetoobject here
-        #veloOptions = { 'Decode' : RevivedVelo, 'Rerun' : MinimalVelo }
-        #Velo = veloOptions[ Hlt2Conf().getProp("Hlt1TrackOption") ]
 
         Velo = RevivedVelo
         
@@ -1263,14 +1237,22 @@ class Hlt2Tracking(LHCbConfigurableUser):
 
         bm_members      = self.__hlt2MatchTracking().members() + [PatDownstream]
         #TODO: If we merge them, we don't need to fit the Downstream tracks which are obviously clones of good long tracks.
-        if self.getProp("MergeLongAndDownstream"):
+        if self.getProp("CreateBestTracks"):
             from HltTracking.HltSharedTracking import ( ConfiguredHltEventFitter, ConfiguredGoodTrackFilter )
             fitHlt2DownstreamTracks = ConfiguredHltEventFitter(name = self.getProp("Prefix") + 'FitHlt2DownstreamTracks',
                                                                TracksInContainer = downstreamTrackOutputLocation)
-            #filterHlt2DownstreamTracks = ConfiguredGoodTrackFilter( self.getProp("Prefix") + 'FilterHlt2DownstreamTracks',
-            #                                                   InputLocation = downstreamTrackOutputLocation )
+            filterHlt2DownstreamTracks = ConfiguredGoodTrackFilter( self.getProp("Prefix") + 'FilterHlt2DownstreamTracks',
+                                                                    InputLocation = downstreamTrackOutputLocation )
+
+            from Configurables import CreateFastTrackCollection
+            recoCopy = CreateFastTrackCollection(self.getProp("Prefix")+'CopyDownstreamTracks'
+                                                 , InputLocations = [ filterHlt2DownstreamTracks.outputLocation ]
+                                                 , OutputLocation = filterHlt2DownstreamTracks.outputLocation + "Fitted"
+                                                 , SlowContainer  = True) 
+            #downstreamTrackOutputLocation = recoCopy.OutputLocation
+            downstreamTrackOutputLocation = downstreamTrackOutputLocation
             #downstreamTrackOutputLocation = filterHlt2DownstreamTracks.outputLocation
-            #bm_members      += [ filterHlt2DownstreamTracks, fitHlt2DownstreamTracks ]
+            #bm_members      += [ fitHlt2DownstreamTracks,filterHlt2DownstreamTracks, recoCopy ]
             bm_members      += [ fitHlt2DownstreamTracks ]
  
         # Build the bindMembers        
@@ -1293,7 +1275,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
     #
     # Helper function to set up the CALO processor and return the correct sequence 
     #
-    def __getNewCALOSeq(self, mode):
+    def __getNewCALOSeq(self, mode ):
         from HltLine.HltLine    import bindMembers      
         # Load tracks
         tracks        = self.__hlt2StagedFastFit()

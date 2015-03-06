@@ -38,11 +38,11 @@ class HltRecoConf(LHCbConfigurableUser):
                  ,"PVBeamspotRho"               : 0.3 * mm
                  ,"VeloSelectionCut"            : "(~TrBACKWARD) & ( TrNVELOMISS < 100 )"
                  ,"FitVelo"                     : False
-                 ,"OfflineSeeding"              : False
+                 ,"OfflineSeeding"              : True
                  ,"OfflineRich"                 : True
                  ,"AddGhostProb"                : True
-                 ,"InitFits"                    : False
-                 ,"MoreOfflineLikeFit"          : False  # This runs a fit in HLT1 and HLT2 which uses the default offline fit
+                 ,"InitFits"                    : True
+                 ,"MoreOfflineLikeFit"          : True   # This runs a fit in HLT1 and HLT2 which uses the default offline fit
                                                          # with a simplified material description
                  ,"FitIterationsInHltFit"       : 1      # Increases the number of fit iterations in the current Hlt fit.
                                                          # Default is 1.
@@ -70,7 +70,7 @@ CommonMatchVeloMuonOptions = {"MaxChi2DoFX" : 10.,
 VeloTTToolOptions = {"minMomentum" : 0.0,
                      "minPT" : 100.0 ,
                      "PassTracks" : True,
-                     "PassHoleSize" : 45 * mm,  #TODO: Update to new default 40mm.
+                     "PassHoleSize" : 40 * mm,  # Update to new default from 45 mm.
                      }
                           
 VeloTTOptions = { "fitTracks" : False }

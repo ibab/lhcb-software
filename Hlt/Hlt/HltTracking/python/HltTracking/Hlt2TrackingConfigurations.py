@@ -15,33 +15,39 @@ from HltTrackNames import HltDefaultFitSuffix
 #        but the name has been kept to simplify all the lines which depend on it. 
 #
 
-def Hlt2Tracks():
-	return Hlt2Tracking("Hlt2Tracks",        
+#def Hlt2LongTracks():
+#	return Hlt2Tracking("Hlt2LongTracks",        
+#			    FastFitType            = HltDefaultFitSuffix,
+#			    Hlt2Tracks             = 'Long',
+#			    DoSeeding              = True,
+#			    DoCloneKilling         = True
+#			    )
+#
+#def Hlt2BiKalmanFittedForwardTracking() :
+# 	print "Please switch to Hlt2LongTracks"
+#	print "Please switch to Hlt2LongTracks"
+#	print "Please switch to Hlt2LongTracks"
+#	print "Please switch to Hlt2LongTracks"
+#	return Hlt2LongTracks()
+#
+def Hlt2BiKalmanFittedForwardTracking() :
+        return Hlt2Tracking("Hlt2LongTracking",        
 			    FastFitType            = HltDefaultFitSuffix,
 			    Hlt2Tracks             = 'Long',
 			    DoSeeding              = True,
-			    DoCloneKilling         = True
+			    CreateBestTracks       = True # Set it to the same in both tracking configurations
 			    )
 
-#Hlt2BiKalmanFittedForwardTracking = Hlt2Tracks
-def Hlt2BiKalmanFittedForwardTracking() :
-        return Hlt2Tracking("Hlt2BiKalmanFittedForwardTracking",        
-			    FastFitType            = HltDefaultFitSuffix,
-			    Hlt2Tracks             = 'Long',
-			    DoSeeding              = True,
-			    DoCloneKilling         = True
-			    )
 ##
 # Now the Downstream tracks with Kalman fit.
 #
 def Hlt2BiKalmanFittedDownstreamTracking() :
-    return Hlt2Tracking("Hlt2BiKalmanFittedDownstreamTracking", 
-			FastFitType            = HltDefaultFitSuffix,
-			Hlt2Tracks             = 'Downstream',
-			DoSeeding              = True,
-			DoCloneKilling         = False,
-			#TrackCuts              = {"Chi2Cut" : [0.,4.] }    
-			)
+	return Hlt2Tracking("Hlt2DownstreamTracking", 
+			    FastFitType            = HltDefaultFitSuffix,
+			    Hlt2Tracks             = 'Downstream',
+			    DoSeeding              = True,
+			    CreateBestTracks       = True # Set it to the same in both tracking configurations
+			    #TrackCuts              = {"Chi2Cut" : [0.,4.] }    
+			    )
 def setDataTypeForTracking(trackingInstance, dataType):
-
-    trackingInstance.setProp("DataType", dataType)
+	trackingInstance.setProp("DataType", dataType)

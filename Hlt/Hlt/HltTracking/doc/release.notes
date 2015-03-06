@@ -4,6 +4,14 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-03-06 - Sascha Stahl
+ - Hlt2TrackingConfigurations: Changed name of configurations to be shorter.
+ - HltRecoConf: Changed VeloTT option PassHoleSize to new default as in offline.
+   Switched on all the goodies, like MoreOfflineLikeFit, FullSeeding and InitFits.
+ - Hlt2Tracking: Further cleanup of unused options. Per default Long and Downstream tracks 
+   are merged and clonekilled to create a "Best" track location. The corresponding 
+	 protoparticles still live in different containers depending on track type.
+
 ! 2015-03-04 - Sascha Stahl
  - Moved RichConfigurations from HltTrackNames.py to HltRecoConf.py.
  - Hlt2TrackingConfigurations.py: Removed unused tracking configurations.
