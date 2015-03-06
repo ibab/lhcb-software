@@ -4,6 +4,11 @@
 ! Purpose     : Generic MVA classifier backends for DictTransform
 !---------------------------------------------------------------------------
 
+!========================= MVADictTools v1r9 2015-03-06 =========================
+
+! 2015-03-06 - Andrey Ustyuzhanin
+ - fix eos URL to sample file for mvaDfromB scripts
+
 !========================= MVADictTools v1r8 2014-12-15 =========================
 
 ! 2014-10-31 - Andrey Ustyuzhanin

@@ -222,7 +222,7 @@ DaVinci().TupleFile = 'bdt_d.root'
 ################################################################################
 from Configurables import EventSelector
 DaVinci().EvtMax = 10000
-eos = 'root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/BHADRON.MDST'
+eos = 'root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision12/BHADRON.MDST'
 EventSelector().Input = [
     'PFN:{}/00020198/0000/00020198_00007143_1.bhadron.mdst'.format(eos),
     'PFN:{}/00020198/0000/00020198_00007352_1.bhadron.mdst'.format(eos),
