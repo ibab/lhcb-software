@@ -2699,6 +2699,28 @@ namespace LoKi
     return LoKi::Functors::NoEmptyUnion<TYPE,TYPE2> ( fun1 , fun2 ) ;
   }
   // ==========================================================================
+  template <class TYPE, class TYPE2>
+  inline 
+  LoKi::Functors::NoEmptyUnion<TYPE,TYPE2>
+  no_empty_union ( const LoKi::Functor<TYPE,std::vector<TYPE2> >& fun1 , 
+                   const LoKi::Functor<TYPE,std::vector<TYPE2> >& fun2 ,
+                   const LoKi::Functor<TYPE,std::vector<TYPE2> >& fun3 ) 
+  {
+    return no_empty_union ( no_empty_union ( fun1 , fun2 ) , fun3 ) ;
+  }
+  // ==========================================================================
+  template <class TYPE, class TYPE2>
+  inline 
+  LoKi::Functors::NoEmptyUnion<TYPE,TYPE2>
+  no_empty_union ( const LoKi::Functor<TYPE,std::vector<TYPE2> >& fun1 , 
+                   const LoKi::Functor<TYPE,std::vector<TYPE2> >& fun2 ,
+                   const LoKi::Functor<TYPE,std::vector<TYPE2> >& fun4 ,  
+                   const LoKi::Functor<TYPE,std::vector<TYPE2> >& fun3 ) 
+  {
+    return
+      no_empty_union ( no_empty_union ( no_empty_union ( fun1 , fun2 ) , fun3 ) , fun4 ) ;
+  }
+  // ==========================================================================
   template <class TYPE>
   inline 
   LoKi::Functors::Union< std::vector<TYPE>,TYPE>

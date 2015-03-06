@@ -14,6 +14,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-03-06 - Vanya Belyaev
+ - add 3 and 4-argument variants of no_empty_union 
+
+! 2015-03-06 - Vanya Belyaev
  - add NoEmptyUnion
    union of two streamers that is empty if one of inputs is empty, 
    and equal to the union of inputs otherwise 
