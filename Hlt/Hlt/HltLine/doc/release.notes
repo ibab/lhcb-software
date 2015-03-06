@@ -5,6 +5,9 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2015-03-06 - Sascha Stahl
+ - Added "outputLocation" to possible outputs in HltLine.
+
 ! 2015-03-05 - Roel Aaij
  - Remove HLT constructor argument from Hlt1Line.
  - Adapt to changes in SelectionLine.

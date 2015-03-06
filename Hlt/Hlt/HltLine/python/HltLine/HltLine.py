@@ -528,7 +528,7 @@ def _checkSelections ( args      ,   # the dictionary with arguments
 # =============================================================================
 def _getOutput(alg) :
         from Configurables import LoKi__HltUnit
-        props = [ 'OutputSelection','Output','OutputLocation','TracksOutContainer','OutputTracksName','MatchOutput' ]
+        props = [ 'OutputSelection','Output','OutputLocation','TracksOutContainer','OutputTracksName','MatchOutput', 'outputLocation' ]
         for i in props :
             if hasattr ( type(alg) , i) and hasattr(alg,i) : return getattr(alg,i)
         if type(alg) is LoKi__HltUnit and hasattr( alg, 'Code' ) :
@@ -597,7 +597,8 @@ class bindMembers (object) :
                         for i in getattr(alg,'Members') : _list += _OutputLocationsGetter(i) 
                         return _list
                     if hasattr(alg,'Output') : return [ getattr(alg,'Output') ] 
-                    if hasattr(alg,'OutputLocation') : return [ getattr(alg,'OutputLocation') ] 
+                    if hasattr(alg,'OutputLocation') : return [ getattr(alg,'OutputLocation') ]
+                    if hasattr(alg,'outputLocation') : return [ getattr(alg,'outputLocation') ] 
                     if hasattr(alg,'OutputTracksName') : return [ getattr(alg,'OutputTracksName') ]
                     if hasattr(alg,'MatchOutput') : return [ getattr(alg,'MatchOutput') ] 
                     if hasattr(alg,'TracksOutContainer') : return [ getattr(alg,'TracksOutContainer') ] 
