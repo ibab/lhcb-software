@@ -4,6 +4,11 @@
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-03-06 - Vanya Belyaev
+ - HDRFilter: 
+   make default location dependent on the name 
+   Check in initialzation consitency of name/code/location 
+
 !========================= LoKiHlt v3r19 2015-02-23 =========================
 ! 2015-01-15 -> 2015-01-19 - Vanya Belyaev
  - steps towards autogeneration of C++ code 
