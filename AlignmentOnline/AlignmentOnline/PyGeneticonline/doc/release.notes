@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : AlignmentOnline/PyGeneticOnline
+! Responsible : Andrii Usachov
+! Purpose     : Python steering for genetic trigger fitter online
+!-----------------------------------------------------------------------------
+
+! 2015-03-05 - Andrii Usachov
+ - initial import
