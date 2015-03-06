@@ -24,4 +24,4 @@ class TurboLines(Hlt2LinesConfigurableUser) :
                          algos = algos['Turbo'], postscale = self.postscale, Turbo = True)
                 if module is 'DiMuon':
                     if line is 'JPsi':
-                        HltANNSvc().Hlt2SelectionID.update( { 'New'+module+line+'Turbo'+'Decision':  50212 } ) 
+                        HltANNSvc().Hlt2SelectionID.update( { 'Hlt2New'+module+line+'Turbo'+'Decision':  50212 } ) 
