@@ -4,10 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
-! 2015-03-06 - Chitsanu Khurewathanakul
+! 2015-03-06 - Chitsanu Khurewathanakul (QEE)
  - Start putting QEE EM Stripping request to the package.
  - Refactored redundant codes in StrippingSelection.Utils
    - With corresponding pytest in tests/liasons/QEE
+ - Apply Hlt-split patch to QEE lines.
 
 ! 2015-03-06 - Lucio Anderlini
  - Drafted line builders for Calib lines

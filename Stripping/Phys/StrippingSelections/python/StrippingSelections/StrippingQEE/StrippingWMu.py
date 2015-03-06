@@ -9,50 +9,37 @@
 # SingleMuon control:   StdAllLooseMuons,  pT>10GeV &  Hlt2SingleMuonHighPT Dec     (1% PRESCALE)
 # SingleMuon control:   StdAllLooseMuons,  pT>4.8GeV & Hlt2SingleMuonLowPT Dec      (20% PRESCALE)
 
-__all__ = ('WMuConf',
-           'makeFilter',
-           'default_config')
+__all__ = (
+  'WMuConf',
+  'default_config',
+)
 
-from Gaudi.Configuration import *
-from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
-from PhysSelPython.Wrappers import Selection
+from Configurables import FilterDesktop
+from PhysSelPython.Wrappers import SimpleSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllLooseMuons, StdAllNoPIDsMuons
 
-#confdict_WMu = { 'WMu_Prescale'    : 1.0,
-#                 'WMuLow_Prescale' : 0.1, 
-#                 'STNB_Prescale' : 0.2,
-#                 'WMu_Postscale'   : 1.0,
-#                 'SingMuon10_Prescale' : 0.01,
-#                 'SingMuon48_Prescale'  : 0.4,
-#                 'pT'     : 20.,
-#                 'pTlow'  : 15.,
-#                 'pTvlow' :  5.,
-#                 'SingMuon10_pT': 10.,
-#                 'SingMuon48_pT': 4.8
-#                 }
-
-#default_name = 'WMu'
 
 default_config = {
-    'NAME'        : 'WMu',
-    'WGs'         : ['QEE'],
-    'BUILDERTYPE' : 'WMuConf',
-    'CONFIG'      : { 'WMu_Prescale'    : 1.0,
-                      'WMuLow_Prescale' : 0.1,
-                      'STNB_Prescale' : 0.2,
-                      'WMu_Postscale'   : 1.0,
-                      'SingMuon10_Prescale' : 0.01,
-                      'SingMuon48_Prescale'  : 0.4,
-                      'pT'     : 20.,
-                      'pTlow'  : 15.,
-                      'pTvlow' :  5.,
-                      'SingMuon10_pT': 10.,
-                      'SingMuon48_pT': 4.8
-                    },
-    'STREAMS'     : [ 'EW' ]
-    }
+  'NAME'        : 'WMu',
+  'WGs'         : ['QEE'],
+  'BUILDERTYPE' : 'WMuConf',
+  'CONFIG'      : { 
+    'WMu_Prescale'        : 1.0,
+    'WMuLow_Prescale'     : 0.1,
+    'STNB_Prescale'       : 0.2,
+    'WMu_Postscale'       : 1.0,
+    'SingMuon10_Prescale' : 0.01,
+    'SingMuon48_Prescale' : 0.4,
+    'pT'                  : 20.,
+    'pTlow'               : 15.,
+    'pTvlow'              :  5.,
+    'SingMuon10_pT'       : 10.,
+    'SingMuon48_pT'       : 4.8,
+  },
+  'STREAMS'     : [ 'EW' ]
+}
 
 class WMuConf( LineBuilder ) :
 
@@ -73,9 +60,6 @@ class WMuConf( LineBuilder ) :
 
         LineBuilder.__init__( self, name, config )
 
-        self._myname = name
-
-
         # Define the cuts
 
         _pT     = '(PT>%(pT)s*GeV)'%config
@@ -86,126 +70,117 @@ class WMuConf( LineBuilder ) :
         _pTSingMuon10    = '(PT>%(SingMuon10_pT)s*GeV)'%config
         _pTSingMuon48    = '(PT>%(SingMuon48_pT)s*GeV)'%config
 
+        #---------------------------#
+        # Single Muon Control Lines #
+        #---------------------------#
 
-        #Single Muon Control Lines
-        self.sel_Mu10 = makeFilter( self._myname + 'Mu10',
-                                   StdAllLooseMuons,
-                                   "from LoKiTracks.decorators import *",
-                                   _pTSingMuon10
-                                   )
+        sel  = makeFilter(name+'Mu10', StdAllLooseMuons, _pTSingMuon10)
 
-        self.line_Mu10 = StrippingLine( self._myname + 'Control10Line',
+        line = StrippingLine( name + 'Control10Line',
                                        prescale  = config[ 'SingMuon10_Prescale' ],
                                        postscale = config[ 'WMu_Postscale' ],
                                        checkPV   = False,
                                        RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
-                                       HLT = "HLT_PASS('Hlt2SingleMuonHighPTDecision')",
-                                       selection = self.sel_Mu10
+                                       HLT2 = "HLT_PASS('Hlt2SingleMuonHighPTDecision')",
+                                       selection = sel
                                        )
 
-        self.registerLine( self.line_Mu10 )
-        
+        self.registerLine( line )
 
-        self.sel_Mu48 = makeFilter( self._myname + 'Mu48',
-                                   StdAllLooseMuons,
-                                   "from LoKiTracks.decorators import *",
-                                   _pTSingMuon48
-                                   )
+        #-----------------------------------------------------------------        
 
-        self.line_Mu48 = StrippingLine( self._myname + 'Control4800Line',
+        sel  = makeFilter(name+'Mu48', StdAllLooseMuons, _pTSingMuon48)
+
+        line = StrippingLine( name + 'Control4800Line',
                                        prescale  = config[ 'SingMuon48_Prescale' ],
                                        postscale = config[ 'WMu_Postscale' ],
                                        checkPV   = False,
                                        RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
-                                       HLT = "HLT_PASS('Hlt2SingleMuonLowPTDecision')",
-                                       selection = self.sel_Mu48
+                                       HLT2 = "HLT_PASS('Hlt2SingleMuonLowPTDecision')",
+                                       selection = sel
                                        )
 
-        self.registerLine( self.line_Mu48 )
+        self.registerLine( line )
 
+        #------------#
+        # WMu signal #
+        #------------#
 
-        # WMu signal
+        sel  = makeFilter(name+'Wmu', StdAllLooseMuons, _pT)
 
-        self.sel_WMu = makeFilter( self._myname + 'WMu',
-                                   StdAllLooseMuons,
-                                   "from LoKiTracks.decorators import *",
-                                   _pT
-                                   )
-
-        self.line_WMu = StrippingLine( self._myname + 'Line',
+        line = StrippingLine( name + 'Line',
                                        prescale  = config[ 'WMu_Prescale' ],
                                        postscale = config[ 'WMu_Postscale' ],
                                        checkPV   = False,
                                        RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
-                                       selection = self.sel_WMu
+                                       selection = sel,
                                        )
 
-        self.registerLine( self.line_WMu )
+        self.registerLine( line )
 
+        #-------------#
+        # WMu control #
+        #-------------#
 
-        # WMu control
+        sel  = makeFilter(name+'WMuLow', StdAllLooseMuons, _pTlow)
 
-        self.sel_WMuLow = makeFilter( self._myname + 'WMuLow',
-                                      StdAllLooseMuons,
-                                      "from LoKiTracks.decorators import *",
-                                      _pTlow
-                                      )
-
-        self.line_WMuLow = StrippingLine( self._myname + 'LowLine',
+        line = StrippingLine( name + 'LowLine',
                                           prescale  = config[ 'WMuLow_Prescale' ],
                                           postscale = config[ 'WMu_Postscale' ],
                                           checkPV   = False,
                                           RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
-                                          selection = self.sel_WMuLow
+                                          selection = sel
                                           )
 
-        self.registerLine( self.line_WMuLow )
+        self.registerLine( line )
 
+        #----------------#
+        # WMu background #
+        #----------------#
 
-        # WMu background
+        sel = makeFilter(name+'SingleTrackNoBias', StdAllNoPIDsMuons, _pTlow)
 
-        self.sel_SingleTrackNoBias = makeFilter( self._myname + 'SingleTrackNoBias',
-                                                 StdAllNoPIDsMuons,
-                                                 "from LoKiTracks.decorators import *",
-                                                 _pTlow
-                                                 )  
-
-        self.line_SingleTrackNoBias = StrippingLine( self._myname + 'SingleTrackNoBiasLine',
+        line = StrippingLine( name + 'SingleTrackNoBiasLine',
                                                      prescale  = config[ 'WMu_Prescale' ],
                                                      postscale = config[ 'WMu_Postscale' ],
                                                      checkPV   = False,
                                                      RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
-                                                     HLT       = "HLT_PASS( 'Hlt1MBNoBiasDecision' )",
-                                                     selection = self.sel_SingleTrackNoBias
+                                                     HLT1      = "HLT_PASS( 'Hlt1MBNoBiasDecision' )",
+                                                     selection = sel,
                                                      )
 
-        self.registerLine( self.line_SingleTrackNoBias )
+        self.registerLine( line )
 
+        #---------------------------
 
-        self.sel_SingleTrackNoBiasPS = makeFilter( self._myname + 'SingleTrackNoBiasPS',
-                                                 StdAllNoPIDsMuons,
-                                                 "from LoKiTracks.decorators import *",
-                                                 _pTvlow
-                                                 )
+        sel = makeFilter(name+'SingleTrackNoBiasPS', StdAllNoPIDsMuons, _pTvlow)
 
-        self.line_SingleTrackNoBiasPS = StrippingLine( self._myname + 'SingleTrackNoBiasLinePS',
+        line = StrippingLine( name + 'SingleTrackNoBiasLinePS',
                                                      prescale  = config[ 'STNB_Prescale' ],
                                                      postscale = config[ 'WMu_Postscale' ],
                                                      checkPV   = False,
                                                      RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
-                                                     HLT       = "HLT_PASS( 'Hlt1MBNoBiasDecision' )",
-                                                     selection = self.sel_SingleTrackNoBiasPS
+                                                     HLT1      = "HLT_PASS( 'Hlt1MBNoBiasDecision' )",
+                                                     selection = sel,
                                                      )
 
-        self.registerLine( self.line_SingleTrackNoBiasPS )
+        self.registerLine( line )
 
-def makeFilter( name, _input, _preambulo, _code ) :
 
-    _filter = FilterDesktop( Preambulo = [ _preambulo ],
-                             Code      = _code
-                             )
 
-    return Selection ( name,
-                       Algorithm          = _filter,
-                       RequiredSelections = [ _input ]
-                       )
+def makeFilter(name, single_input, code):
+  return SimpleSelection(name, FilterDesktop, [single_input], 'Sel'+name,
+    Preambulo = [ "from LoKiTracks.decorators import *" ],    
+    Code      = code,
+  )
+
+
+# def makeFilter( name, _input, _preambulo, _code ) :
+    # _filter = FilterDesktop( Preambulo = [ _preambulo ],
+    #                          Code      = _code
+    #                          )
+
+    # return Selection ( name,
+    #                    Algorithm          = _filter,
+    #                    RequiredSelections = [ _input ]
+    #                    )

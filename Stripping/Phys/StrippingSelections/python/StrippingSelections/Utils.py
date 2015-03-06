@@ -178,10 +178,10 @@ def buildStreams( src_scdb, request_keys=None ):
 
 
 def buildStreamsFromBuilder(conf, name):
-  log.exception('Function depreciated. Recommending `StrippingSelections.buildStreams` instead.')
+  log.info('Function `buildStreamsFromBuilder` depreciated. Recommending `StrippingSelections.buildStreams` instead.')
   return buildStreams(conf, name)
 
 def buildStream( *args, **kwargs ):
   # Via grep, I found no usage of this function anymore...
-  raise Exception('Function depreciated. Recommending `StrippingSelections.buildStreams` instead.')
+  raise Exception('Function `buildStream` depreciated. Recommending `StrippingSelections.buildStreams` instead.')
 
