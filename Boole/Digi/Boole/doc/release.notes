@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+- Changes to references to follow changes in underlying packages
+  . Minor differences arising from changed random number sequences after
+    move to VDT in OT and Velo geometry
+
 </PRE><H1><A NAME=v29r4>2015-02-26 Boole v29r4</A></H1><PRE>
 This version uses projects:
  LCG_74root6 (ROOT 6.02.05), Gaudi v26r1, LHCb v38r5, Lbcom v16r4
