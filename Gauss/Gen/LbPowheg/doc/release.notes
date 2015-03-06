@@ -4,7 +4,11 @@
 ! Purpose     : Implementation of the powheg-box in Gauss
 !-----------------------------------------------------------------------------
 
-!========================= LbPowheg v1r2 2015-01-20 ========================
+!========================== LbPowheg v2r0 2015-03-06 =========================
+! 2015-03-06 - Gloria Corti
+ - Increase major version number since some of the changes below rely on 
+   powheg-box-v2.
+
 ! 2015-01-20 - Marcin Kucharczyk
 - change m_topdecaymode to be string variable (this easy allow to set
    topdecaymode = 02000 for muonic decays)
