@@ -44,10 +44,10 @@ void MuonPIDPacker::pack( const Data & pid,
 void MuonPIDPacker::pack( const DataVector & pids,
                           PackedDataVector & ppids ) const
 {
-  ppids.data().reserve( pids.size() );
   const char ver = ppids.packingVersion();
   if ( 1 == ver || 0 == ver || 2 == ver )
   {
+    ppids.data().reserve( pids.size() );
     for ( const Data * pid : pids )
     {
       ppids.data().push_back( PackedData() );
@@ -103,16 +103,16 @@ void MuonPIDPacker::unpack( const PackedData       & ppid,
 void MuonPIDPacker::unpack( const PackedDataVector & ppids,
                             DataVector             & pids ) const
 {
-  pids.reserve( ppids.data().size() );
-  if ( 1 == ppids.packingVersion() ||
-       0 == ppids.packingVersion()  )
+  const char ver = ppids.packingVersion();
+  if ( 1 == ver || 0 == ver  )
   {
+    pids.reserve( ppids.data().size() );
     for ( const PackedData & ppid : ppids.data() )
     {
       // make and save new pid in container
       Data * pid  = new Data();
-      if ( ppids.packingVersion() == 0 ) { pids.add( pid ); }
-      else                  { pids.insert( pid, ppid.key ); }
+      if ( 0 == ver ) { pids.add( pid ); }
+      else            { pids.insert( pid, ppid.key ); }
       // Fill data from packed object
       unpack( ppid, *pid, ppids, pids );
     }
@@ -120,7 +120,7 @@ void MuonPIDPacker::unpack( const PackedDataVector & ppids,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << (int)ppids.packingVersion();
+    mess << "Unknown packed data version " << (int)ver;
     throw GaudiException( mess.str(), "MuonPIDPacker", StatusCode::FAILURE );
   }
 }

@@ -97,9 +97,9 @@ ProtoParticlePacker::pack( const Data & proto,
   pproto.firstExtra = pprotos.extras().size();
   const double high = boost::numeric::bounds<float>::highest();
   const double low  = boost::numeric::bounds<float>::lowest();
-  for ( const auto einfo : proto.extraInfo() )
+  for ( const auto& einfo : proto.extraInfo() )
   {
-    double info = einfo.second;
+    const double& info = einfo.second;
     if ( info > high || info < low )
     {
       std::ostringstream s;

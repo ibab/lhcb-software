@@ -14,9 +14,9 @@ void RichPIDPacker::pack( const DataVector & pids,
                           PackedDataVector & ppids ) const
 {
   const char ver = ppids.packingVersion();
-  ppids.data().reserve( pids.size() );
   if ( 0 <= ver && ver <= 3  )
   {
+    ppids.data().reserve( pids.size() );
     for ( const Data * pid : pids )
     {
       ppids.data().push_back( PackedData() );
@@ -54,9 +54,9 @@ void RichPIDPacker::unpack( const PackedDataVector & ppids,
                             DataVector       & pids ) const
 {
   const char ver = ppids.packingVersion();
-  pids.reserve( ppids.data().size() );
   if ( 0 <= ver && ver <= 3  )
   {
+    pids.reserve( ppids.data().size() );
     for ( const PackedData & ppid : ppids.data() )
     {
       // make and save new pid in container
