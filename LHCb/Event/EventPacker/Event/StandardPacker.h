@@ -6,8 +6,6 @@
 
 // Gaudi
 #include "GaudiKernel/DataObject.h"
-#include "GaudiKernel/LinkManager.h"
-#include "GaudiKernel/IRegistry.h"
 
 //---------------------------------------------------------------------------
 /** @class StandardPacker StandardPacker.h Event/StandardPacker.h
@@ -105,29 +103,11 @@ public:
 
   /// Returns the 'LinkID' 
   long linkID( DataObject* out,
-               const DataObject* parent ) const
-  {
-    LinkManager::Link* myLink = out->linkMgr()->link( parent );
-    if ( NULL == myLink )
-    {
-      out->linkMgr()->addLink( parent->registry()->identifier(),
-                               parent );
-    }
-    return out->linkMgr()->link(parent)->ID();
-  }
-
+               const DataObject* parent ) const;
+  
   /// Returns the 'LinkID'
   long linkID( DataObject* out,
-               const std::string& targetName ) const
-  {
-    LinkManager::Link* myLink = out->linkMgr()->link( targetName );
-    if ( NULL == myLink )
-    {
-      out->linkMgr()->addLink( targetName, 0 );
-      myLink = out->linkMgr()->link( targetName );
-    }
-    return myLink->ID();
-  }
+               const std::string& targetName ) const;
 
   //---------------------------------------------------------------------------
 
@@ -159,16 +139,11 @@ public:
   }
   
   /// Extracts the key and hint from a packed data word
-  void hintAndKey32( const int data,
+  bool hintAndKey32( const int data,
                      const DataObject* source,
                      DataObject* target,
                      int& hint,
-                     int& key ) const
-  {
-    int indx(0);
-    indexAndKey32(data,indx,key);
-    hint = target->linkMgr()->addLink( source->linkMgr()->link(indx)->path(), 0 );
-  }
+                     int& key ) const;
   
   //---------------------------------------------------------------------------
 
@@ -197,16 +172,11 @@ public:
   }
 
   /// Extracts the key and hint from a packed 64-bit data word
-  void hintAndKey64( const long long data,
+  bool hintAndKey64( const long long data,
                      const DataObject* source,
                      DataObject* target,
                      int& hint,
-                     int& key ) const
-  {
-    int indx(0);
-    indexAndKey64(data,indx,key);
-    hint = target->linkMgr()->addLink( source->linkMgr()->link(indx)->path(), 0 );
-  }
+                     int& key ) const;
 
   //---------------------------------------------------------------------------
 

@@ -271,7 +271,8 @@ StatusCode PackParticlesAndVertices::execute()
   if ( !names.empty() )
   {
     LHCb::PackedProtoParticles * pprotos = new LHCb::PackedProtoParticles();
-    pprotos->setVersion( 2 );
+    pprotos->setVersion( 2 ); // CRJ : Why set this ?
+    pprotos->setPackingVersion( LHCb::PackedProtoParticles::defaultPackingVersion() );
     put( pprotos, m_inputStream + LHCb::PackedProtoParticleLocation::InStream );
     if ( msgLevel( MSG::DEBUG ) )
       debug() << "=== Process ProtoParticle containers :" << endmsg;

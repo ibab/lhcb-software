@@ -4,6 +4,20 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2015-03-07 - Chris Jones
+ - Add protection to StandardPacker to prevent segmentation faults from a NULL
+   pointer dereference in the case of corrupted reference information, due
+   to truncation when attempting to pack it to a 32 bit int. Fixes issues
+   seen when running over Stripping21 MC samples where some Track references
+   in packed ProtoParticles have been corrupted due to data truncation. In 
+   these cases the smart refs are now just skipped (so set to NULL).
+ - Update the ProtoParticle packing to include versioning and define a new
+   version 1 that stores all SmartRefs as packed 64 bit ints, to avoid 
+   truncation that can occur when using only 32 bit ints.
+ - ToDo - The (poorly thought out) use of 32bit packed references should all
+          be migrated to use 64 bit packing instead, to finally prevent this
+          sort of issue happening again.
+
 !========================= EventPacker v4r7 2015-02-23 =========================
 ! 2015-02-12 - Heinrich Schindler
  - Add support for BCM and BLS hits.

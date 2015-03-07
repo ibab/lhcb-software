@@ -162,7 +162,7 @@ StatusCode WritePackedDst::execute()
       LHCb::PackedProtoParticles* in = get<LHCb::PackedProtoParticles>( *itC );
       PackedBank bank( in );
       storeInBlob( bank, &(*in->protos().begin()) , in->protos().size()    , sizeof( LHCb::PackedProtoParticle) );
-      storeInBlob( bank, &(*in->refs().begin())   , in->refs().size()      , sizeof( int ) );
+      storeInBlob( bank, &(*in->refs().begin())   , in->refs().size()      , sizeof( long long ) );
       storeInBlob( bank, &(*in->extras().begin()) , in->extras().size()    , sizeof( std::pair<int,int> ) );
       m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
 

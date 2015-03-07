@@ -195,7 +195,7 @@ StatusCode ReadPackedDst::execute() {
       put( protos, name + m_postfix );
       processLinks( protos, version );
       getFromBlob<LHCb::PackedProtoParticle> ( protos->protos() , blobs );
-      getFromBlob<int>                       ( protos->refs()   , blobs );
+      getFromBlob<long long>                 ( protos->refs()   , blobs );
       getFromBlob<std::pair<int,int> >       ( protos->extras() , blobs );
 
     } else if ( LHCb::CLID_PackedRecVertices     == classID ) {

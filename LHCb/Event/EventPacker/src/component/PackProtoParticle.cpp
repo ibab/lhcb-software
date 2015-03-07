@@ -49,7 +49,8 @@ StatusCode PackProtoParticle::execute()
 
   LHCb::PackedProtoParticles* out = new LHCb::PackedProtoParticles();
   put( out, m_outputName );
-  out->setVersion( 2 );
+  out->setVersion( 2 ); // CRJ : Why set this ?
+  out->setPackingVersion( LHCb::PackedProtoParticles::defaultPackingVersion() );
 
   // pack
   const LHCb::ProtoParticlePacker packer(*this);

@@ -45,9 +45,9 @@ namespace LHCb
     {}
 
     long long key;
-    int track;
-    int richPID;
-    int muonPID;
+    long long track;
+    long long richPID;
+    long long muonPID;
     unsigned short int firstHypo;
     unsigned short int lastHypo;
     unsigned short int firstExtra;
@@ -71,12 +71,15 @@ namespace LHCb
   public:
     
     /// Default Packing Version
-    static char defaultPackingVersion() { return 0; }
+    static char defaultPackingVersion() { return 1; }
     
   public: 
   
-    /// Standard constructor
-    PackedProtoParticles( ) : m_packingVersion(defaultPackingVersion()) { }
+    /** Standard constructor
+     *  Note the default packing version here must stay as zero, for compatibility
+     *  with data written before the packing version was added, to implicitly
+     *  define the version as 0 for this data  */
+    PackedProtoParticles( ) : m_packingVersion(0) { } 
 
     virtual ~PackedProtoParticles( ) {}; ///< Destructor
 
@@ -88,8 +91,8 @@ namespace LHCb
     std::vector<PackedProtoParticle>& protos()             { return m_vect; }
     const std::vector<PackedProtoParticle>& protos() const { return m_vect; }
 
-    std::vector<int>& refs()                               { return m_refs; }
-    const std::vector<int>& refs() const                   { return m_refs; }
+    std::vector<long long>& refs()                         { return m_refs; }
+    const std::vector<long long>& refs() const             { return m_refs; }
  
     std::vector<std::pair<int,int> >& extras()             { return m_extra; }
     const std::vector<std::pair<int,int> >& extras() const { return m_extra; }
@@ -105,7 +108,7 @@ namespace LHCb
   private:
 
     std::vector<PackedProtoParticle> m_vect;
-    std::vector<int>                 m_refs;
+    std::vector<long long>           m_refs;
     std::vector<std::pair<int,int> > m_extra;
 
     /// Data packing version

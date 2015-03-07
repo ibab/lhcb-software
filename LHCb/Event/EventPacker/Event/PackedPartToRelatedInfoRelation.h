@@ -17,6 +17,7 @@
 // Gaudi
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/LinkManager.h"
 
 class GaudiAlgorithm;
 
