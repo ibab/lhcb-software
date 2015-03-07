@@ -202,13 +202,13 @@ class TrackEffLines( object ):
                 'Hlt2NewTrackEffDiMuonVeloMuonPlusTaggedTurbo',
                 'Hlt2NewTrackEffDiMuonVeloMuonMinusTaggedTurbo',
                 'Hlt2NewTrackEffDiMuonDownstreamPlusTaggedTurbo',
-                'Hlt2NewTrackEffDiMuonDownstreamMinusTaggedTurbo'
-                #'Hlt2NewTrackEffDiMuonMuonTTPlusMatchedTurbo',
-                #'Hlt2NewTrackEffDiMuonMuonTTMinusMatchedTurbo',
-                #'Hlt2NewTrackEffDiMuonVeloMuonPlusMatchedTurbo',
-                #'Hlt2NewTrackEffDiMuonVeloMuonMinusMatchedTurbo',
-                #'Hlt2NewTrackEffDiMuonDownstreamPlusMatchedTurbo',
-                #'Hlt2NewTrackEffDiMuonDownstreamMinusMatchedTurbo'
+                'Hlt2NewTrackEffDiMuonDownstreamMinusTaggedTurbo',
+                'Hlt2NewTrackEffDiMuonMuonTTPlusMatchedTurbo',
+                'Hlt2NewTrackEffDiMuonMuonTTMinusMatchedTurbo',
+                'Hlt2NewTrackEffDiMuonVeloMuonPlusMatchedTurbo',
+                'Hlt2NewTrackEffDiMuonVeloMuonMinusMatchedTurbo',
+                'Hlt2NewTrackEffDiMuonDownstreamPlusMatchedTurbo',
+                'Hlt2NewTrackEffDiMuonDownstreamMinusMatchedTurbo'
                 ]
 
  
