@@ -11,7 +11,7 @@
 
 using namespace LHCb;
 
-void MCRichHitPacker::pack( const DataVector  & hits,
+void MCRichHitPacker::pack( const DataVector & hits,
                             PackedDataVector & phits ) const
 {
   phits.data().reserve( hits.size() );
@@ -32,9 +32,9 @@ void MCRichHitPacker::pack( const DataVector  & hits,
       phit.history    = hit.historyCode();
       if ( NULL != hit.mcParticle() )
       {
-        phit.mcParticle = m_pack.reference( &phits,
-                                            hit.mcParticle()->parent(),
-                                            hit.mcParticle()->key() );
+        phit.mcParticle = m_pack.reference32( &phits,
+                                              hit.mcParticle()->parent(),
+                                              hit.mcParticle()->key() );
       }
     }
   }
@@ -70,7 +70,7 @@ void MCRichHitPacker::unpack( const PackedDataVector & phits,
       if ( -1 != phit.mcParticle )
       {
         int hintID(0), key(0);
-        m_pack.hintAndKey( phit.mcParticle, &phits, &hits, hintID, key );
+        m_pack.hintAndKey32( phit.mcParticle, &phits, &hits, hintID, key );
         SmartRef<LHCb::MCParticle> ref(&hits,hintID,key);
         hit->setMCParticle( ref );
       }

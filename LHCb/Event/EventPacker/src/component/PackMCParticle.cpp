@@ -77,12 +77,12 @@ StatusCode PackMCParticle::execute() {
     newPart.pz   = pack.energy( part->momentum().pz() );
     newPart.mass = (float)part->virtualMass();
     newPart.PID  = part->particleID().pid();
-    newPart.originVertex = pack.reference( out,
-                                           part->originVertex()->parent(),
-                                           part->originVertex()->key() );
+    newPart.originVertex = pack.reference32( out,
+                                             part->originVertex()->parent(),
+                                             part->originVertex()->key() );
     for ( SmartRefVector<LHCb::MCVertex>::const_iterator itV = part->endVertices().begin();
           part->endVertices().end() != itV; ++itV ) {
-      int ref = pack.reference( out, (*itV)->parent(), (*itV)->key() );
+      int ref = pack.reference32( out, (*itV)->parent(), (*itV)->key() );
       newPart.endVertices.push_back( ref );
       if ( MSG::VERBOSE >= msgLevel() ) {
         verbose() << "Reference to endVertex       "

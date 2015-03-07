@@ -31,16 +31,16 @@ void MCRichTrackPacker::pack( const DataVector & tracks,
               track.mcSegments().begin();
             iS != track.mcSegments().end(); ++iS )
       {
-        ptrack.mcSegments.push_back( m_pack.reference( &ptracks,
-                                                       (*iS)->parent(),
-                                                       (*iS)->key() ) );
+        ptrack.mcSegments.push_back( m_pack.reference32( &ptracks,
+                                                         (*iS)->parent(),
+                                                         (*iS)->key() ) );
       }
 
       if ( NULL != track.mcParticle() )
       {
-        ptrack.mcParticle = m_pack.reference( &ptracks,
-                                              track.mcParticle()->parent(),
-                                              track.mcParticle()->key() );
+        ptrack.mcParticle = m_pack.reference32( &ptracks,
+                                                track.mcParticle()->parent(),
+                                                track.mcParticle()->key() );
       }
 
     }
@@ -72,14 +72,14 @@ void MCRichTrackPacker::unpack( const PackedDataVector & ptracks,
       for ( std::vector<int>::const_iterator iS = ptrack.mcSegments.begin();
             iS != ptrack.mcSegments.end(); ++iS )
       {
-        m_pack.hintAndKey( *iS, &ptracks, &tracks, hintID, key );
+        m_pack.hintAndKey32( *iS, &ptracks, &tracks, hintID, key );
         SmartRef<LHCb::MCRichSegment> ref(&tracks,hintID,key);
         track->addToMcSegments( ref );
       }
 
       if ( -1 != ptrack.mcParticle )
       {
-        m_pack.hintAndKey( ptrack.mcParticle, &ptracks, &tracks, hintID, key );
+        m_pack.hintAndKey32( ptrack.mcParticle, &ptracks, &tracks, hintID, key );
         SmartRef<LHCb::MCParticle> ref(&tracks,hintID,key);
         track->setMcParticle( ref );
       }

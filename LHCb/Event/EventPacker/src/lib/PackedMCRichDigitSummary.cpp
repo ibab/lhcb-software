@@ -29,9 +29,9 @@ void MCRichDigitSummaryPacker::pack( const DataVector & sums,
       psum.richSmartID = sum.richSmartID().key();
       if ( NULL != sum.mcParticle() )
       {
-        psum.mcParticle = m_pack.reference( &psums,
-                                            sum.mcParticle()->parent(),
-                                            sum.mcParticle()->key() );
+        psum.mcParticle = m_pack.reference32( &psums,
+                                              sum.mcParticle()->parent(),
+                                              sum.mcParticle()->key() );
       }
     }
   }
@@ -62,7 +62,7 @@ void MCRichDigitSummaryPacker::unpack( const PackedDataVector & psums,
       if ( -1 != psum.mcParticle )
       {
         int hintID(0), key(0);
-        m_pack.hintAndKey( psum.mcParticle, &psums, &sums, hintID, key );
+        m_pack.hintAndKey32( psum.mcParticle, &psums, &sums, hintID, key );
         SmartRef<LHCb::MCParticle> ref(&sums,hintID,key);
         sum->setMCParticle( ref );
       }

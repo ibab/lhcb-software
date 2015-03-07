@@ -62,9 +62,9 @@ void MCRichOpticalPhotonPacker::pack( const DataVector & phots,
 
       if ( NULL != phot.mcRichHit() )
       {
-        pphot.mcrichhit = m_pack.reference( &pphots,
-                                            phot.mcRichHit()->parent(),
-                                            phot.mcRichHit()->index() );
+        pphot.mcrichhit = m_pack.reference32( &pphots,
+                                              phot.mcRichHit()->parent(),
+                                              phot.mcRichHit()->index() );
       }
     }
   }
@@ -125,7 +125,7 @@ void MCRichOpticalPhotonPacker::unpack( const PackedDataVector & pphots,
       if ( -1 != pphot.mcrichhit )
       {
         int hintID(0), key(0);
-        m_pack.hintAndKey( pphot.mcrichhit, &pphots, &phots, hintID, key );
+        m_pack.hintAndKey32( pphot.mcrichhit, &pphots, &phots, hintID, key );
         SmartRef<LHCb::MCRichHit> ref(&phots,hintID,key);
         phot->setMcRichHit( ref );
       }

@@ -53,16 +53,16 @@ void MCRichSegmentPacker::pack( const DataVector & segs,
 
       if ( NULL != seg.mcParticle() )
       {
-        pseg.mcParticle  = m_pack.reference( &psegs,
-                                             seg.mcParticle()->parent(),
-                                             seg.mcParticle()->key() );
+        pseg.mcParticle  = m_pack.reference32( &psegs,
+                                               seg.mcParticle()->parent(),
+                                               seg.mcParticle()->key() );
       }
 
       if ( NULL != seg.mcRichTrack() )
       {
-        pseg.mcRichTrack = m_pack.reference( &psegs,
-                                             seg.mcRichTrack()->parent(),
-                                             seg.mcRichTrack()->key() );
+        pseg.mcRichTrack = m_pack.reference32( &psegs,
+                                               seg.mcRichTrack()->parent(),
+                                               seg.mcRichTrack()->key() );
       }
 
       pseg.mcPhotons.reserve( seg.mcRichOpticalPhotons().size() );
@@ -70,18 +70,18 @@ void MCRichSegmentPacker::pack( const DataVector & segs,
               seg.mcRichOpticalPhotons().begin();
             iP != seg.mcRichOpticalPhotons().end(); ++iP )
       {
-        pseg.mcPhotons.push_back( m_pack.reference( &psegs,
-                                                    (*iP)->parent(),
-                                                    (*iP)->key() ) );
+        pseg.mcPhotons.push_back( m_pack.reference32( &psegs,
+                                                      (*iP)->parent(),
+                                                      (*iP)->key() ) );
       }
 
       pseg.mcHits.reserve( seg.mcRichHits().size() );
       for ( SmartRefVector<LHCb::MCRichHit>::const_iterator iH = seg.mcRichHits().begin();
             iH != seg.mcRichHits().end(); ++iH )
       {
-        pseg.mcHits.push_back( m_pack.reference( &psegs,
-                                                 (*iH)->parent(),
-                                                 (*iH).linkID() ) );
+        pseg.mcHits.push_back( m_pack.reference32( &psegs,
+                                                   (*iH)->parent(),
+                                                   (*iH).linkID() ) );
       }
 
     }
@@ -130,14 +130,14 @@ void MCRichSegmentPacker::unpack( const PackedDataVector & psegs,
 
       if ( -1 != pseg.mcParticle )
       {
-        m_pack.hintAndKey( pseg.mcParticle, &psegs, &segs, hintID, key );
+        m_pack.hintAndKey32( pseg.mcParticle, &psegs, &segs, hintID, key );
         SmartRef<LHCb::MCParticle> refa(&segs,hintID,key);
         seg->setMcParticle( refa );
       }
 
       if ( -1 != pseg.mcRichTrack )
       {
-        m_pack.hintAndKey( pseg.mcRichTrack, &psegs, &segs, hintID, key );
+        m_pack.hintAndKey32( pseg.mcRichTrack, &psegs, &segs, hintID, key );
         SmartRef<LHCb::MCRichTrack> refb(&segs,hintID,key);
         seg->setMCRichTrack( refb );
       }
@@ -145,7 +145,7 @@ void MCRichSegmentPacker::unpack( const PackedDataVector & psegs,
       for ( std::vector<int>::const_iterator iP = pseg.mcPhotons.begin();
             iP != pseg.mcPhotons.end(); ++iP )
       {
-        m_pack.hintAndKey( *iP, &psegs, &segs, hintID, key );
+        m_pack.hintAndKey32( *iP, &psegs, &segs, hintID, key );
         SmartRef<LHCb::MCRichOpticalPhoton> ref(&segs,hintID,key);
         seg->addToMCRichOpticalPhotons( ref );
       }
@@ -153,7 +153,7 @@ void MCRichSegmentPacker::unpack( const PackedDataVector & psegs,
       for ( std::vector<int>::const_iterator iH = pseg.mcHits.begin();
             iH != pseg.mcHits.end(); ++iH )
       {
-        m_pack.hintAndKey( *iH, &psegs, &segs, hintID, key );
+        m_pack.hintAndKey32( *iH, &psegs, &segs, hintID, key );
         SmartRef<LHCb::MCRichHit> ref(&segs,hintID,key);
         seg->addToMCRichHits( ref );
       }

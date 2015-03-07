@@ -70,14 +70,14 @@ StatusCode UnpackMCVertex::execute() {
     int hintID;
     int key;
     if ( -1 != src.mother ) {
-      pack.hintAndKey( src.mother, dst, newMCVertices, hintID, key );
+      pack.hintAndKey32( src.mother, dst, newMCVertices, hintID, key );
       SmartRef<LHCb::MCParticle> ref( newMCVertices, hintID, key );
       vert->setMother( ref );
     }
     
     std::vector<int>::const_iterator itI;
     for ( itI = src.products.begin() ; src.products.end() != itI ; ++itI ) {
-      pack.hintAndKey( *itI, dst, newMCVertices, hintID, key );
+      pack.hintAndKey32( *itI, dst, newMCVertices, hintID, key );
       SmartRef<LHCb::MCParticle> ref( newMCVertices, hintID, key );
       vert->addToProducts( ref );
     }

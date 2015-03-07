@@ -76,14 +76,14 @@ StatusCode UnpackMCParticle::execute()
     part->setParticleID( PID );
 
     int hintID(0), key(0);
-    pack.hintAndKey( src.originVertex, dst, newMCParticles, hintID, key );
+    pack.hintAndKey32( src.originVertex, dst, newMCParticles, hintID, key );
     SmartRef<LHCb::MCVertex> ref( newMCParticles, hintID, key );
     part->setOriginVertex( ref );
 
     for ( std::vector<int>::const_iterator itI = src.endVertices.begin();
           src.endVertices.end() != itI ; ++itI )
     {
-      pack.hintAndKey( *itI, dst, newMCParticles, hintID, key );
+      pack.hintAndKey32( *itI, dst, newMCParticles, hintID, key );
       SmartRef<LHCb::MCVertex> refV( newMCParticles, hintID, key );
       part->addToEndVertices( refV );
     }

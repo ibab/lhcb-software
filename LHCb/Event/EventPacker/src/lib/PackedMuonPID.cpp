@@ -21,15 +21,15 @@ void MuonPIDPacker::pack( const Data & pid,
   ppid.status   = (int)pid.Status();
   if ( NULL != pid.idTrack() )
   {
-    ppid.idtrack = m_pack.reference( &ppids,
-                                     pid.idTrack()->parent(),
-                                     pid.idTrack()->key() );
+    ppid.idtrack = m_pack.reference32( &ppids,
+                                       pid.idTrack()->parent(),
+                                       pid.idTrack()->key() );
   }
   if ( NULL != pid.muonTrack() )
   {
-    ppid.mutrack = m_pack.reference( &ppids,
-                                     pid.muonTrack()->parent(),
-                                     pid.muonTrack()->key() );
+    ppid.mutrack = m_pack.reference32( &ppids,
+                                       pid.muonTrack()->parent(),
+                                       pid.muonTrack()->key() );
   }
 }
 
@@ -70,14 +70,14 @@ void MuonPIDPacker::unpack( const PackedData       & ppid,
   if ( -1 != ppid.idtrack )
   {
     int hintID(0), key(0);
-    m_pack.hintAndKey( ppid.idtrack, &ppids, &pids, hintID, key );
+    m_pack.hintAndKey32( ppid.idtrack, &ppids, &pids, hintID, key );
     SmartRef<LHCb::Track> ref(&pids,hintID,key);
     pid.setIDTrack( ref );
   }
   if ( -1 != ppid.mutrack )
   {
     int hintID(0), key(0);
-    m_pack.hintAndKey( ppid.mutrack, &ppids, &pids, hintID, key );
+    m_pack.hintAndKey32( ppid.mutrack, &ppids, &pids, hintID, key );
     SmartRef<LHCb::Track> ref(&pids,hintID,key);
     pid.setMuonTrack( ref );
   }

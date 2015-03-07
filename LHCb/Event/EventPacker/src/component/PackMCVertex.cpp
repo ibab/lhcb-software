@@ -112,12 +112,12 @@ StatusCode PackMCVertex::execute()
 
     newVert.mother = -1;
     if ( 0 != vert->mother() ) {
-      newVert.mother = pack.reference( out, vert->mother()->parent(),
+      newVert.mother = pack.reference32( out, vert->mother()->parent(),
                                        vert->mother()->key() );
     }
     for ( SmartRefVector<LHCb::MCParticle>::const_iterator itP = vert->products().begin();
           vert->products().end() != itP; ++itP ) {
-      int ref = pack.reference( out, (*itP)->parent(), (*itP)->key() );
+      int ref = pack.reference32( out, (*itP)->parent(), (*itP)->key() );
       newVert.products.push_back( ref );
     }
     if( msgLevel(MSG::VERBOSE) ) verbose() << "Vertex packed OK" << endmsg;

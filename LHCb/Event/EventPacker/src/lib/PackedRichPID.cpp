@@ -34,9 +34,9 @@ void RichPIDPacker::pack( const DataVector & pids,
         ppid.dllBt = m_pack.deltaLL( pid->particleDeltaLL(Rich::BelowThreshold) );
       if ( NULL != pid->track() )
       {
-        ppid.track = m_pack.reference( &ppids,
-                                       pid->track()->parent(),
-                                       pid->track()->key() );
+        ppid.track = m_pack.reference32( &ppids,
+                                         pid->track()->parent(),
+                                         pid->track()->key() );
       }
     }
   }
@@ -74,7 +74,7 @@ void RichPIDPacker::unpack( const PackedDataVector & ppids,
       if ( -1 != ppid.track )
       {
         int hintID(0), key(0);
-        m_pack.hintAndKey( ppid.track, &ppids, &pids, hintID, key );
+        m_pack.hintAndKey32( ppid.track, &ppids, &pids, hintID, key );
         SmartRef<LHCb::Track> ref(&pids,hintID,key);
         pid->setTrack( ref );
       }

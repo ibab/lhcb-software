@@ -75,7 +75,7 @@ StatusCode UnpackTwoProngVertex::execute() {
     int key;
     for ( int kk = src.firstTrack; src.lastTrack > kk; ++kk ) {
       int trk = *(dst->beginRefs()+kk);
-      pack.hintAndKey( trk, dst, newTwoProngVertices, hintID, key );
+      pack.hintAndKey32( trk, dst, newTwoProngVertices, hintID, key );
       SmartRef<LHCb::Track> ref( newTwoProngVertices, hintID, key );
       vert->addToTracks( ref );
     }

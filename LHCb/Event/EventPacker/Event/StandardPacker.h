@@ -136,74 +136,40 @@ public:
    *  @arg  parent : Pointer to the parent container of the SmartRef, method->parent()
    *  @arg  key    : returned by the method .linkID() of the SmartRef
    */
-  int reference( DataObject* out,
-                 const DataObject* parent,
-                 const int key ) const
-  {
-    if ( key != (key & 0x0FFFFFFF) )
-    {
-      std::cout << "************************* Key over 28 bits in StandardPacker ***********************" 
-                << " " << key
-                << std::endl;
-    }
-    const int rawLinkID = (int)linkID(out,parent);
-    if ( rawLinkID != (rawLinkID & 0x0000000F) )
-    {
-      std::cout << "************************* LinkID over 4 bits in StandardPacker ***********************" 
-                << " " << rawLinkID
-                << std::endl;
-    }
-    const int myLinkID = rawLinkID << 28;
-    return key + myLinkID;
-  }
+  int reference32( DataObject* out,
+                   const DataObject* parent,
+                   const int key ) const;
 
   /** returns an int for a Smart Ref.
    *  @arg  out : Output data object, to store the links
    *  @arg  targetName : Name of the target
    *  @arg  key : returned by the method .linkID() of the SmartRef
    */
-  int reference( DataObject* out,
-                 const std::string& targetName,
-                 const int key ) const
-  {
-    if ( key != (key & 0x0FFFFFFF) )
-    {
-      std::cout << "************************* Key over 28 bits in StandardPacker ***********************" 
-                << " " << key
-                << std::endl;
-    }
-    const int ID = (int)linkID(out,targetName);
-    if ( ID != (ID & 0x0000000F) )
-    {
-      std::cout << "************************* LinkID over 4 bits in StandardPacker ***********************" 
-                << " " << ID
-                << std::endl;
-    }
-    const int myLinkID = (ID << 28);
-    return key + myLinkID;
-  }
-
+  int reference32( DataObject* out,
+                   const std::string& targetName,
+                   const int key ) const;
+  
   /// Extracts the key and index from a packed data word
-  void indexAndKey( const int data,
-                    int& indx,
-                    int& key ) const
+  void indexAndKey32( const int data,
+                      int& indx,
+                      int& key ) const
   {
     indx = data >> 28;
     key  = data & 0x0FFFFFFF;
   }
-
+  
   /// Extracts the key and hint from a packed data word
-  void hintAndKey( const int data,
-                   const DataObject* source,
-                   DataObject* target,
-                   int& hint,
-                   int& key ) const
+  void hintAndKey32( const int data,
+                     const DataObject* source,
+                     DataObject* target,
+                     int& hint,
+                     int& key ) const
   {
     int indx(0);
-    indexAndKey(data,indx,key);
+    indexAndKey32(data,indx,key);
     hint = target->linkMgr()->addLink( source->linkMgr()->link(indx)->path(), 0 );
   }
-
+  
   //---------------------------------------------------------------------------
 
   /** returns a long long for a Smart Ref, with small key and large links.

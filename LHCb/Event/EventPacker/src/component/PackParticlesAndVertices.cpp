@@ -614,7 +614,7 @@ PackParticlesAndVertices::packAMuonPIDContainer ( const LHCb::MuonPIDs* pids,
     if ( unpacked )
     {
       int key(0),linkID(0);
-      m_pack.indexAndKey( ppid.key, linkID, key );
+      m_pack.indexAndKey32( ppid.key, linkID, key );
       LHCb::MuonPID* testObj = new LHCb::MuonPID();
       unpacked->insert( testObj, key );
       pPacker.unpack( ppid, *testObj, ppids, *unpacked );
@@ -673,7 +673,7 @@ PackParticlesAndVertices::packAProtoParticleContainer( const LHCb::ProtoParticle
     if ( unpacked )
     {
       int key(0),linkID(0);
-      m_pack.indexAndKey( pproto.key, linkID, key );
+      m_pack.indexAndKey32( pproto.key, linkID, key );
       LHCb::ProtoParticle* testObj = new LHCb::ProtoParticle();
       unpacked->insert( testObj, key );
       pPacker.unpack( pproto, *testObj, pprotos, *unpacked );
@@ -731,7 +731,7 @@ PackParticlesAndVertices::packATrackContainer( const LHCb::Tracks* tracks,
     if ( unpacked )
     {
       int key(0),linkID(0);
-      m_pack.indexAndKey( ptrack.key, linkID, key );
+      m_pack.indexAndKey32( ptrack.key, linkID, key );
       LHCb::Track* testObj = new LHCb::Track();
       unpacked->insert( testObj, key );
       tPacker.unpack( ptrack, *testObj, ptracks, *unpacked );

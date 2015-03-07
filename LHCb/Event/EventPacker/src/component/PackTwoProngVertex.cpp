@@ -164,7 +164,7 @@ StatusCode PackTwoProngVertex::execute() {
     pVert.firstTrack = out->sizeRefs();
     for ( SmartRefVector<LHCb::Track>::const_iterator itT = vert->tracks().begin();
           vert->tracks().end() != itT; ++itT ) {
-      int myRef = pack.reference( out, (*itT)->parent(), (*itT)->key() );
+      int myRef = pack.reference32( out, (*itT)->parent(), (*itT)->key() );
       out->addRef( myRef );
     }
     pVert.lastTrack = out->sizeRefs();

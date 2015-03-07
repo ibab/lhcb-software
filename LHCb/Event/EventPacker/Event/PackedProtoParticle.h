@@ -67,31 +67,49 @@ namespace LHCb
 
   class PackedProtoParticles : public DataObject 
   {
+
+  public:
+    
+    /// Default Packing Version
+    static char defaultPackingVersion() { return 0; }
     
   public: 
   
     /// Standard constructor
-    PackedProtoParticles( ) { }
+    PackedProtoParticles( ) : m_packingVersion(defaultPackingVersion()) { }
 
     virtual ~PackedProtoParticles( ) {}; ///< Destructor
 
     virtual const CLID& clID()  const { return PackedProtoParticles::classID(); }
     static  const CLID& classID()     { return CLID_PackedProtoParticles;       }
 
-    std::vector<PackedProtoParticle>& protos()                     { return m_vect; }
-    const std::vector<PackedProtoParticle>& protos() const         { return m_vect; }
+  public:
 
-    std::vector<int>& refs()                           { return m_refs; }
-    const std::vector<int>& refs() const               { return m_refs; }
+    std::vector<PackedProtoParticle>& protos()             { return m_vect; }
+    const std::vector<PackedProtoParticle>& protos() const { return m_vect; }
+
+    std::vector<int>& refs()                               { return m_refs; }
+    const std::vector<int>& refs() const                   { return m_refs; }
  
     std::vector<std::pair<int,int> >& extras()             { return m_extra; }
     const std::vector<std::pair<int,int> >& extras() const { return m_extra; }
+
+  public:
+
+    /// Set the packing version
+    void setPackingVersion( const char ver ) { m_packingVersion = ver; }
+
+    /// Access the packing version
+    char packingVersion() const { return m_packingVersion; }
 
   private:
 
     std::vector<PackedProtoParticle> m_vect;
     std::vector<int>                 m_refs;
     std::vector<std::pair<int,int> > m_extra;
+
+    /// Data packing version
+    char m_packingVersion;
 
   };
 
