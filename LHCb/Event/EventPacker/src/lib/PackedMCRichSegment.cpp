@@ -1,4 +1,3 @@
-// $Id: PackedMCRichSegment.cpp,v 1.5 2010-04-11 14:27:15 jonrob Exp $
 
 // local
 #include "Event/PackedMCRichSegment.h"
@@ -14,69 +13,65 @@ using namespace LHCb;
 void MCRichSegmentPacker::pack( const DataVector & segs,
                                 PackedDataVector & psegs ) const
 {
-  psegs.data().reserve( segs.size() );
   const char ver = psegs.packingVersion();
   if ( 0 == ver || 1 == ver )
   {
-    for ( DataVector::const_iterator iD = segs.begin();
-          iD != segs.end(); ++iD )
+    psegs.data().reserve( segs.size() );
+    for ( const Data * seg : segs )
     {
-      const Data & seg = **iD;
       psegs.data().push_back( PackedData() );
       PackedData & pseg = psegs.data().back();
 
-      pseg.key = seg.key();
+      pseg.key = seg->key();
 
-      pseg.history = seg.historyCode();
+      pseg.history = seg->historyCode();
 
-      pseg.trajPx.reserve( seg.trajectoryPoints().size() );
-      pseg.trajPy.reserve( seg.trajectoryPoints().size() );
-      pseg.trajPz.reserve( seg.trajectoryPoints().size() );
-      for ( std::vector<Gaudi::XYZPoint>::const_iterator iT = seg.trajectoryPoints().begin();
-            iT != seg.trajectoryPoints().end(); ++iT )
+      pseg.trajPx.reserve( seg->trajectoryPoints().size() );
+      pseg.trajPy.reserve( seg->trajectoryPoints().size() );
+      pseg.trajPz.reserve( seg->trajectoryPoints().size() );
+      for ( const auto& T : seg->trajectoryPoints() )
       {
-        pseg.trajPx.push_back( m_pack.position((*iT).x()) );
-        pseg.trajPy.push_back( m_pack.position((*iT).y()) );
-        pseg.trajPz.push_back( m_pack.position((*iT).z()) );
+        pseg.trajPx.push_back( m_pack.position(T.x()) );
+        pseg.trajPy.push_back( m_pack.position(T.y()) );
+        pseg.trajPz.push_back( m_pack.position(T.z()) );
       }
 
-      pseg.trajMx.reserve( seg.trajectoryMomenta().size() );
-      pseg.trajMy.reserve( seg.trajectoryMomenta().size() );
-      pseg.trajMz.reserve( seg.trajectoryMomenta().size() );
-      for ( std::vector<Gaudi::XYZVector>::const_iterator iM = seg.trajectoryMomenta().begin();
-            iM != seg.trajectoryMomenta().end(); ++iM )
+      pseg.trajMx.reserve( seg->trajectoryMomenta().size() );
+      pseg.trajMy.reserve( seg->trajectoryMomenta().size() );
+      pseg.trajMz.reserve( seg->trajectoryMomenta().size() );
+      for ( const auto& M : seg->trajectoryMomenta() )
       {
-        pseg.trajMx.push_back( m_pack.energy((*iM).x()) );
-        pseg.trajMy.push_back( m_pack.energy((*iM).y()) );
-        pseg.trajMz.push_back( m_pack.energy((*iM).z()) );
+        pseg.trajMx.push_back( m_pack.energy(M.x()) );
+        pseg.trajMy.push_back( m_pack.energy(M.y()) );
+        pseg.trajMz.push_back( m_pack.energy(M.z()) );
       }
 
-      if ( NULL != seg.mcParticle() )
+      if ( NULL != seg->mcParticle() )
       {
         pseg.mcParticle  = ( 0==ver ? 
                              m_pack.reference32( &psegs,
-                                                 seg.mcParticle()->parent(),
-                                                 seg.mcParticle()->key() ) :
+                                                 seg->mcParticle()->parent(),
+                                                 seg->mcParticle()->key() ) :
                              m_pack.reference64( &psegs,
-                                                 seg.mcParticle()->parent(),
-                                                 seg.mcParticle()->key() ) );
+                                                 seg->mcParticle()->parent(),
+                                                 seg->mcParticle()->key() ) );
       }
 
-      if ( NULL != seg.mcRichTrack() )
+      if ( NULL != seg->mcRichTrack() )
       {
         pseg.mcRichTrack = ( 0==ver ?
                              m_pack.reference32( &psegs,
-                                                 seg.mcRichTrack()->parent(),
-                                                 seg.mcRichTrack()->key() ) :
+                                                 seg->mcRichTrack()->parent(),
+                                                 seg->mcRichTrack()->key() ) :
                              m_pack.reference64( &psegs,
-                                                 seg.mcRichTrack()->parent(),
-                                                 seg.mcRichTrack()->key() ) );
+                                                 seg->mcRichTrack()->parent(),
+                                                 seg->mcRichTrack()->key() ) );
       }
 
-      pseg.mcPhotons.reserve( seg.mcRichOpticalPhotons().size() );
+      pseg.mcPhotons.reserve( seg->mcRichOpticalPhotons().size() );
       for ( SmartRefVector<LHCb::MCRichOpticalPhoton>::const_iterator iP =
-              seg.mcRichOpticalPhotons().begin();
-            iP != seg.mcRichOpticalPhotons().end(); ++iP )
+              seg->mcRichOpticalPhotons().begin();
+            iP != seg->mcRichOpticalPhotons().end(); ++iP )
       {
         pseg.mcPhotons.push_back( 0==ver ? 
                                   m_pack.reference32( &psegs,
@@ -87,9 +82,9 @@ void MCRichSegmentPacker::pack( const DataVector & segs,
                                                       (*iP)->key() ) );
       }
 
-      pseg.mcHits.reserve( seg.mcRichHits().size() );
-      for ( SmartRefVector<LHCb::MCRichHit>::const_iterator iH = seg.mcRichHits().begin();
-            iH != seg.mcRichHits().end(); ++iH )
+      pseg.mcHits.reserve( seg->mcRichHits().size() );
+      for ( SmartRefVector<LHCb::MCRichHit>::const_iterator iH = seg->mcRichHits().begin();
+            iH != seg->mcRichHits().end(); ++iH )
       {
         pseg.mcHits.push_back( 0==ver ? 
                                m_pack.reference32( &psegs,
@@ -117,11 +112,9 @@ void MCRichSegmentPacker::unpack( const PackedDataVector & psegs,
   const char ver = psegs.packingVersion();
   if ( 0 == ver || 1 == ver )
   {
-    for ( PackedDataVector::Vector::const_iterator iD = psegs.data().begin();
-          iD != psegs.data().end(); ++iD )
+    for ( const PackedData & pseg : psegs.data() )
     {
-      const PackedData & pseg = *iD;
-      Data * seg  = new Data();
+      Data * seg = new Data();
       segs.insert( seg, pseg.key );
 
       seg->setHistoryCode( pseg.history );

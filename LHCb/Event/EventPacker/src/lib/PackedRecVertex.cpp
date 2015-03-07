@@ -48,10 +48,9 @@ void RecVertexPacker::pack( const Data & vert,
 
   //== Handles the ExtraInfo
   pvert.firstInfo = pverts.extras().size();
-  for ( GaudiUtils::VectorMap<int,double>::iterator itE = vert.extraInfo().begin();
-        vert.extraInfo().end() != itE; ++itE )
+  for ( const auto& E : vert.extraInfo() )
   {
-    pverts.addExtra( (*itE).first, m_pack.fltPacked( (*itE).second ) );
+    pverts.addExtra( E.first, m_pack.fltPacked(E.second) );
   }
   pvert.lastInfo = pverts.extras().size();
 
@@ -62,20 +61,17 @@ void RecVertexPacker::pack( const DataVector & verts,
 {
   pverts.vertices().reserve(verts.size());
 
-  for ( DataVector::const_iterator iD = verts.begin();
-        iD != verts.end(); ++iD )
+  for ( const Data * vert : verts )
   {
-    const Data & vert = **iD;
-
     // new packed data object
     pverts.vertices().push_back( PackedData() );
     PackedData & pvert = pverts.vertices().back();
 
     // Key
-    pvert.key = vert.key();
+    pvert.key = vert->key();
 
     // fill physics info from vert to pvert
-    pack( vert, pvert, verts, pverts );
+    pack( *vert, pvert, verts, pverts );
   }
 
 }

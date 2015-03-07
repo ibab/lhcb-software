@@ -18,28 +18,26 @@ void MCRichHitPacker::pack( const DataVector & hits,
   phits.data().reserve( hits.size() );
   if ( 0 == ver || 1 == ver )
   {
-    for ( DataVector::const_iterator iD = hits.begin();
-          iD != hits.end(); ++iD )
+    for ( const Data * hit : hits )
     {
-      const Data & hit = **iD;
       phits.data().push_back( PackedData() );
       PackedData & phit = phits.data().back();
-      phit.x          = m_pack.position ( hit.entry().x() );
-      phit.y          = m_pack.position ( hit.entry().y() );
-      phit.z          = m_pack.position ( hit.entry().z() );
-      phit.energy     = m_pack.energy   ( hit.energy()    );
-      phit.tof        = m_pack.time     ( hit.timeOfFlight() );
-      phit.sensDetID  = hit.sensDetID().key();
-      phit.history    = hit.historyCode();
-      if ( NULL != hit.mcParticle() )
+      phit.x          = m_pack.position ( hit->entry().x() );
+      phit.y          = m_pack.position ( hit->entry().y() );
+      phit.z          = m_pack.position ( hit->entry().z() );
+      phit.energy     = m_pack.energy   ( hit->energy()    );
+      phit.tof        = m_pack.time     ( hit->timeOfFlight() );
+      phit.sensDetID  = hit->sensDetID().key();
+      phit.history    = hit->historyCode();
+      if ( NULL != hit->mcParticle() )
       {
         phit.mcParticle = ( 0==ver ?
                             m_pack.reference32( &phits,
-                                                hit.mcParticle()->parent(),
-                                                hit.mcParticle()->key() ) :
+                                                hit->mcParticle()->parent(),
+                                                hit->mcParticle()->key() ) :
                             m_pack.reference64( &phits,
-                                                hit.mcParticle()->parent(),
-                                                hit.mcParticle()->key() ) );
+                                                hit->mcParticle()->parent(),
+                                                hit->mcParticle()->key() ) );
       }
     }
   }
@@ -58,10 +56,8 @@ void MCRichHitPacker::unpack( const PackedDataVector & phits,
   hits.reserve( phits.data().size() );
   if ( 0 == ver || 1 == ver )
   {
-    for ( PackedDataVector::Vector::const_iterator iD = phits.data().begin();
-          iD != phits.data().end(); ++iD )
+    for ( const PackedData & phit : phits.data() )
     {
-      const PackedData & phit = *iD;
       // make and save new hit in container
       Data * hit  = new Data();
       hits.add( hit );
