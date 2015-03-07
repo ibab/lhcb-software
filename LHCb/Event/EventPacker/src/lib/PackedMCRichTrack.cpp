@@ -1,4 +1,3 @@
-// $Id: PackedMCRichTrack.cpp,v 1.5 2010-04-11 14:27:15 jonrob Exp $
 
 // local
 #include "Event/PackedMCRichTrack.h"
@@ -14,22 +13,20 @@ using namespace LHCb;
 void MCRichTrackPacker::pack( const DataVector & tracks,
                               PackedDataVector & ptracks ) const
 {
-  ptracks.data().reserve( tracks.size() );
   const char ver = ptracks.packingVersion();
   if ( 0 == ver || 1 == ver )
   {
-    for ( DataVector::const_iterator iD = tracks.begin();
-          iD != tracks.end(); ++iD )
+    ptracks.data().reserve( tracks.size() );
+    for ( const Data * track : tracks )
     {
-      const Data & track = **iD;
       ptracks.data().push_back( PackedData() );
       PackedData & ptrack = ptracks.data().back();
 
-      ptrack.key = track.key();
+      ptrack.key = track->key();
 
       for ( SmartRefVector<LHCb::MCRichSegment>::const_iterator iS =
-              track.mcSegments().begin();
-            iS != track.mcSegments().end(); ++iS )
+              track->mcSegments().begin();
+            iS != track->mcSegments().end(); ++iS )
       {
         ptrack.mcSegments.push_back( 0==ver ?
                                      m_pack.reference32( &ptracks,
@@ -40,15 +37,15 @@ void MCRichTrackPacker::pack( const DataVector & tracks,
                                                          (*iS)->key() ) );
       }
 
-      if ( NULL != track.mcParticle() )
+      if ( NULL != track->mcParticle() )
       {
         ptrack.mcParticle = ( 0==ver ?
                               m_pack.reference32( &ptracks,
-                                                  track.mcParticle()->parent(),
-                                                  track.mcParticle()->key() ) :
+                                                  track->mcParticle()->parent(),
+                                                  track->mcParticle()->key() ) :
                               m_pack.reference64( &ptracks,
-                                                  track.mcParticle()->parent(),
-                                                  track.mcParticle()->key() ) );
+                                                  track->mcParticle()->parent(),
+                                                  track->mcParticle()->key() ) );
       }
 
     }
@@ -64,14 +61,12 @@ void MCRichTrackPacker::pack( const DataVector & tracks,
 void MCRichTrackPacker::unpack( const PackedDataVector & ptracks,
                                 DataVector       & tracks ) const
 {
-  tracks.reserve( ptracks.data().size() );
   const char ver = ptracks.packingVersion();
   if ( 0 == ver || 1 == ver )
   {
-    for ( PackedDataVector::Vector::const_iterator iD = ptracks.data().begin();
-          iD != ptracks.data().end(); ++iD )
+    tracks.reserve( ptracks.data().size() );
+    for ( const PackedData & ptrack : ptracks.data() )
     {
-      const PackedData & ptrack = *iD;
       // make and save new hit in container
       Data * track  = new Data();
       tracks.insert( track, ptrack.key );
