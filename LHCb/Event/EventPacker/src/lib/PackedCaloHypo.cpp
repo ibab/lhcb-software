@@ -144,11 +144,8 @@ void CaloHypoPacker::unpack( const PackedDataVector & phypos,
   // packing version
   const char ver = phypos.packingVersion();
 
-  for ( std::vector<LHCb::PackedCaloHypo>::const_iterator itS = phypos.hypos().begin();
-        phypos.hypos().end() != itS; ++itS )
+  for ( const LHCb::PackedCaloHypo& src : phypos.hypos() )
   {
-    // packed object
-    const LHCb::PackedCaloHypo& src = (*itS);
 
     // make new unpacked object
     LHCb::CaloHypo* hypo = new LHCb::CaloHypo( );
