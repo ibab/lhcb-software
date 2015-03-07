@@ -5,10 +5,12 @@
 // STD & STL 
 // ============================================================================
 #include <algorithm>
+#include <memory>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/Chrono.h"
 // ============================================================================
 // Event 
 // ============================================================================
@@ -146,7 +148,104 @@ StatusCode LoKi::VertexFitter::_add
   if ( sc.isFailure() ) 
   { _Warning ("_add(): the error from _transport(), ignore", sc ) ; }
   return StatusCode::SUCCESS ;
-} 
+}
+// ============================================================================
+// stopping criteria for iterations 
+// ============================================================================
+bool LoKi::VertexFitter::stop_iter  
+( const Gaudi::Vector3&      dx   , 
+  const Gaudi::SymMatrix3x3& ci   , 
+  const size_t               iter ) const 
+{
+  // distance in the absolute position 
+  const double d1 = ROOT::Math::Mag        ( dx ) ;
+  // distance in the chi2 units 
+  double       d2 = ROOT::Math::Similarity ( dx , ci ) ;
+  //
+  static const StatusCode sc0 = StatusCode ( StatusCode::FAILURE , true ) ;
+  //
+  if ( d2 < 0 ) 
+  { 
+    if ( abs ( d2 ) < std::min ( m_DistanceChi2  , 0.01 ) || s_equal ( d2 , 0 ) ) 
+    {
+      d2 = 0 ; 
+      _Warning ( "stop_iter: small negative chi2 detected, adjusted" , sc0 , 0 ) ; 
+    }
+    else 
+    { 
+      _Warning ( "stop_iter: large negative chi2 detected, ignore"   , sc0 , 0 ) ;
+    }
+  }
+  //
+  // termination conditions:
+  //
+  //  (1) STOP if the distance is sufficiently small 
+  //       - either the absolute distance 
+  //       - or chi2 distance (if at least one iteration is performed) 
+  //
+  const bool ok1 = d1 < m_DistanceMax ;
+  const bool ok2 = 1  < iter && 0 <= d2 && d2 < m_DistanceChi2 ;
+  if ( ok1 || ok2 ) 
+  {
+    //    
+    // kalman smooth : could it be moved just before evalCov ? 
+    // @todo study the possibility to move smoothig out of iteration loop
+    StatusCode sc = LoKi::KalmanFilter::smooth ( m_entries ) ;
+    if ( sc.isFailure() ) 
+    { 
+      _Warning ( "stop_iter(): problem with smoother", sc, 0 ) ;
+      return false ;   // make more iterations ..
+    }
+    //
+    sc = LoKi::KalmanFilter::evalCov ( m_entries ) ;
+    if ( sc.isFailure() ) 
+    { 
+      _Warning ( "stop_iter(): problems with covariances", sc, 0 ) ; 
+      return false ;   // make more iterations ..
+    }
+    //
+    if ( ok1 ) { counter ( "#iterations/1" ) += iter ; }
+    if ( ok2 ) { counter ( "#iterations/2" ) += iter ; }
+    //
+    return true ;
+  }
+  //
+  return false ;
+}
+// ============================================================================
+
+ 
+// ============================================================================
+// make optimised fKalman filter iterations 
+// ============================================================================
+StatusCode LoKi::VertexFitter::_iterate_opt ( const size_t nMax ) const 
+{
+  Gaudi::Vector3  x0    ;
+  for ( size_t iIter = 0 ; iIter <= nMax + 1 ; ++iIter ) 
+  {
+    //
+    StatusCode sc = LoKi::KalmanFilter::steps ( m_entries , 0 ) ;
+    if ( sc.isFailure() ) { _Warning ( "_iterate_opt(): problem with steps"  , sc ) ; }    
+    // 
+    const Gaudi::Vector3&      x  = m_entries[0].m_x ;
+    const Gaudi::SymMatrix3x3& ci = m_entries[0].m_ci ;
+    //
+    if ( 1 <= iIter && stop_iter ( x - x0 , ci , iIter ) ) 
+    {
+      counter ( "#iterations/Opt") += ( iIter - 1 ) ; // the first one acts as seeding
+      return StatusCode::SUCCESS ; 
+    }
+    //
+    Gaudi::XYZPoint point ; 
+    Gaudi::Math::la2geo ( x , point ) ;
+    sc = _transport ( point ) ;
+    if ( sc.isFailure() ) { _Warning ( "_iterate_opt(): problem with transport", sc ) ; }
+    //
+    x0 = x ;
+  }
+  //
+  return _Warning( "_iterate_opt: No convergency has been reached", NoConvergency, 0 ) ; // RETURN
+}
 // ============================================================================
 // make few kalman iterations 
 // ============================================================================
@@ -252,49 +351,12 @@ StatusCode LoKi::VertexFitter::_iterate
       }
     }
     //
-    // distance in the absolute position 
-    const double d1 = ROOT::Math::Mag        ( (*x) - x0 ) ;
-    // distance in the chi2 units 
-    double d2 = ROOT::Math::Similarity ( (*x) - x0 , *ci ) ;
-    if ( d2 < 0 ) 
-    { 
-      if ( abs ( d2 ) < std::min ( m_DistanceChi2  , 0.01 ) || s_equal ( d2 , 0 ) ) 
-      {
-        d2 = 0 ; 
-        _Warning ( "_iterate: small negative chi2 detected, adjusted" , sc, 0 ) ; 
-      }
-      else 
-      { 
-        _Warning ( "_iterate: large negative chi2 detected, ignore"   , sc, 0 ) ; 
-      }
+    if ( stop_iter ( *x - x0 , *ci , iIter ) ) 
+    {
+      counter("#iterations/Gen") += iIter ;
+      return StatusCode::SUCCESS ; 
     }
     //
-    // termination conditions:
-    //
-    //  (1) STOP if the distance is sufficiently small 
-    //      - either the absolute distance 
-    //      - or chi2 distance (if at least one iteration is performed) 
-    //
-    if ( d1 < m_DistanceMax || ( 1 < iIter && 0 <= d2 && d2 < m_DistanceChi2 ) )
-    {
-      //    
-      // kalman smooth : could it be moved just before evalCov ? 
-      // @todo study the possibility to move smoothig out of iteration loop
-      sc = LoKi::KalmanFilter::smooth ( m_entries ) ;
-      if ( sc.isFailure() ) 
-      { 
-        _Warning ( "_iterate(): problem with smoother", sc, 0 ) ; 
-        continue ; // CONTINUE: continue iterations in case smoother fails 
-      }
-      //
-      sc = LoKi::KalmanFilter::evalCov ( m_entries ) ;
-      if ( sc.isFailure() ) 
-      { _Warning ( "_iterate(): problems with covariances", sc, 0 ) ; }
-      // 
-      counter ( "#iterations" ) += iIter ;
-      //
-      return StatusCode::SUCCESS ;                             // RETURN 
-    } 
   } // end of iterations
   //
   return _Warning( "No convergency has been reached", NoConvergency, 0 ) ; // RETURN 
@@ -304,6 +366,11 @@ StatusCode LoKi::VertexFitter::_iterate
 // ============================================================================
 StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
 {
+  // timing measurements 
+  std::unique_ptr<Chrono> timer ;
+  if ( m_timing || msgLevel ( MSG::INFO ) )  
+  { timer.reset( new Chrono( chronoSvc() , name() + ":seed" ) ) ; }
+  //
   // check if vertex could be used as a seed 
   const Gaudi::XYZPoint&     p = vertex->position  () ;
   const Gaudi::SymMatrix3x3& c = vertex->covMatrix () ;
@@ -329,16 +396,67 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
     } 
   }
   //
+  // specific cases:
+  //
+  StatusCode sc = StatusCode::FAILURE ;
+  if      ( m_use_twobody_branch   && LoKi::KalmanFilter::twoProngs   ( m_entries ) )  
+  { sc = LoKi::KalmanFilter::step ( m_entries[0] , m_entries[1] , 0 ) ; }
+  else if ( m_use_threebody_branch && LoKi::KalmanFilter::threeProngs ( m_entries ) )
+  { sc = LoKi::KalmanFilter::step ( m_entries[0] , m_entries[1] , m_entries[2] , 0 ) ; }
+  else if ( m_use_fourbody_branch  && LoKi::KalmanFilter::fourProngs   ( m_entries ) )
+  { sc = LoKi::KalmanFilter::step ( m_entries[0] , m_entries[1] , 
+                                    m_entries[2] , m_entries[3] , 0 ) ; }
+  if ( sc.isSuccess() ) 
+  {
+    m_seed   = m_entries[0].m_x  ;
+    m_seedci = m_entries[0].m_ci ;
+    Gaudi::Math::scale ( m_seedci , s_scale2 ) ;
+    ++counter("Seed:case(1)") ;
+    return StatusCode::SUCCESS ;                            // RETURN 
+  }
+  //
+  if ( m_use_shortlived_as_seed ) 
+  {
+    for ( EIT entry = m_entries.begin() ; m_entries.end() != entry ; ++entry )
+    {
+      if ( LoKi::KalmanFilter::ShortLivedParticle == entry->m_type ) 
+      {
+        m_seed   = entry->m_parx ;
+        m_seedci = entry->m_vxi  ;
+        Gaudi::Math::scale ( m_seedci , s_scale2 ) ;
+        ++counter("Seed:case(2)") ;
+        return StatusCode::SUCCESS ;                            // RETURN        
+      }
+    }
+  }
+  //
+  //
+  //
   const bool massage = forMassage ( m_entries ) ;
+  //
+  if ( !massage && okForVertex ( m_entries ) )
+  {
+    sc = LoKi::KalmanFilter::steps ( m_entries , 0 ) ;
+    if ( sc.isSuccess() ) 
+    {
+      m_seed   = m_entries[0].m_x  ;
+      m_seedci = m_entries[0].m_ci ;
+      Gaudi::Math::scale ( m_seedci , s_scale2 ) ;
+      ++counter("Seed:case(3)") ;
+      return StatusCode::SUCCESS ;                            // RETURN 
+    }
+  }
   //
   const Entries* entries = 0 ;
   //
   Entries e_good ;
   if ( massage ) 
   {
+    e_good.reserve ( m_entries.size() ) ;
     // pick up good entries:
     for ( EIT entry = m_entries.begin() ; m_entries.end() != entry ; ++entry ) 
-    { if ( !forMassage ( entry->m_p0 ) ) { e_good.push_back ( *entry ) ; } }
+    { if ( entry->regular() && !forMassage ( entry->m_p0 ) ) 
+      { e_good.push_back ( *entry ) ; } }
     //
     entries = &e_good ;
   }
@@ -346,10 +464,10 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
   //
   // relatively obvious case:
   //
-  if ( LoKi::KalmanFilter::okForVertex ( *entries ) ) 
+  if ( massage && LoKi::KalmanFilter::okForVertex ( *entries ) ) 
   {
     // estimate "seed" using only good components 
-    StatusCode sc = LoKi::KalmanFilter::seed ( *entries , m_seed , m_seedci , s_scale2 ) ;  
+    sc = LoKi::KalmanFilter::seed ( *entries , m_seed , m_seedci , s_scale2 ) ;  
     if ( sc.isSuccess() && seedOK ( m_seed ) ) 
     { 
       sc = _transport ( m_seed ) ; 
@@ -359,14 +477,14 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
         sc = LoKi::KalmanFilter::seed ( m_entries , m_seed , m_seedci , s_scale2 ) ;  
         if ( sc.isSuccess () && seedOK ( m_seed ) ) 
         { 
-          ++counter("Seed:case(1)") ;
+          ++counter("Seed:case(4)") ;
           return StatusCode::SUCCESS ; 
         }  
       }
     } 
   }
   //
-  // less trivial case: perform soem "massage" action 
+  // less trivial case: perform some "massage" action 
   //
   if ( massage && !m_massage.empty() ) 
   {
@@ -410,7 +528,7 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
           sc = LoKi::KalmanFilter::seed ( m_entries , m_seed , m_seedci , s_scale2 ) ;
           if ( sc.isSuccess() && seedOK ( m_seed ) ) 
           { 
-            ++counter("Seed:case(2)") ;
+            ++counter("Seed:case(5)") ;
             return StatusCode::SUCCESS ;
           }
         }   
@@ -420,10 +538,10 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
   //
   // the basic case 
   //
-  StatusCode sc = LoKi::KalmanFilter::seed ( m_entries , m_seed , m_seedci , s_scale2 ) ;  
+  sc = LoKi::KalmanFilter::seed ( m_entries , m_seed , m_seedci , s_scale2 ) ;  
   if ( sc.isSuccess() && seedOK ( m_seed ) ) 
   {
-    ++counter("Seed:case(3)") ;
+    ++counter("Seed:case(6)") ;
     return StatusCode::SUCCESS ; 
   }
   //
@@ -434,7 +552,7 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
   Gaudi::Math::setToUnit ( m_seedci , 1.0/s_middle2 ) ;
   m_seedci(2,2) = 1.0/s_large2 ;
   //
-  ++counter("Seed:case(4)") ;
+  ++counter("Seed:case(7)") ;
   //
   return _Warning( "No proper seed is found", StatusCode::SUCCESS, 0  ) ;
 }
@@ -445,18 +563,30 @@ StatusCode LoKi::VertexFitter::fit
 ( LHCb::Vertex&                      vertex    ,
   const LHCb::Particle::ConstVector& daughters ) const 
 {
+  // timing measurements 
+  std::unique_ptr<Chrono> timer ;
+  if ( m_timing || msgLevel ( MSG::INFO ) )  
+  { timer.reset( new Chrono( chronoSvc() , name() + ":fit" ) ) ; }
+  //
   // load the data 
   StatusCode sc = _load ( daughters ) ;
   if ( sc.isFailure() ) 
   { return _Error ( "fit(): failure from _load() ", sc, 0 ) ; }      // RETURN 
-  sc = _seed ( &vertex ) ; 
-  if ( sc.isFailure() ) 
-  { _Warning  ( "fit(): failure from _seed()"     , sc, 0 ) ; }
-  // make "m_nIterMax" iterations 
-  sc = _iterate ( m_nIterMaxI , m_seed ) ;
-  if ( sc.isFailure() ) { return sc; }
-  //{ return _Warning ( "fit(): failure from _iterate()", sc, 0 ) ; } // RETURN 
-  
+  //
+  // use opetima branch when possible 
+  const bool opt = m_use_optimized && okForVertex ( m_entries ) && !forMassage ( m_entries ) ;
+  if ( opt ) { sc = _iterate_opt ( m_nIterMaxI ) ; }
+  // use regular branch
+  if ( !opt || sc.isFailure() ) 
+  {
+    sc = _seed ( &vertex ) ; 
+    if ( sc.isFailure() ) 
+    { _Warning  ( "fit(): failure from _seed()"     , sc, 0 ) ; }
+    // make "m_nIterMax" iterations 
+    sc = _iterate ( m_nIterMaxI , m_seed ) ;
+    if ( sc.isFailure() ) { return sc; }
+    //{ return _Warning ( "fit(): failure from _iterate()", sc, 0 ) ; } // RETURN 
+  }
   // get the data from filter 
   const Entry&               entry = m_entries.back() ;
   const Gaudi::Vector3&      x     = entry.m_x         ;
@@ -507,6 +637,7 @@ StatusCode LoKi::VertexFitter::fit
   LHCb::Vertex&                      vertex    ,
   LHCb::Particle&                    particle  ) const 
 {
+  //
   using namespace ROOT::Math ;
   //
   // play a bit with extra-info
@@ -768,18 +899,25 @@ LoKi::VertexFitter::VertexFitter
   , m_seedZmax             (  3.0 * Gaudi::Units::meter      ) 
   , m_seedRhoZmax          ( 80.0 * Gaudi::Units::centimeter )
   , m_seedRhoZmin          ( 20.0 * Gaudi::Units::centimeter )
-/// Use the special branch for   two-body decays ?
-  , m_use_twobody_branch   ( true   ) // Use the special branch for   two-body decays?
-/// Use the special branch for three-body decays ?
-  , m_use_threebody_branch ( true   ) // Use the special branch for three-body decays?
-/// Use the special branch for  four-body decays ?
-  , m_use_fourbody_branch  ( true   ) // Use the special branch for  four-body decays?
-/// Allow "rho+"-like particles ?
-  , m_use_rho_like_branch  ( true   ) // allow "rho+"-like particles ?
-/// The transport tolerance  
-  , m_transport_tolerance  ( 10 * Gaudi::Units::micrometer ) 
-  , m_massage              (       ) 
-/// pure technical stuff: 
+    /// Use the special branch for   two-body decays ?
+  , m_use_twobody_branch      ( true   ) // Use the special branch for   two-body decays?
+    /// Use the special branch for three-body decays ?
+  , m_use_threebody_branch    ( true   ) // Use the special branch for three-body decays?
+    /// Use the special branch for  four-body decays ?
+  , m_use_fourbody_branch     ( true   ) // Use the special branch for  four-body decays?
+    /// Allow "rho+"-like particles ?
+  , m_use_rho_like_branch     ( true   ) // allow "rho+"-like particles ?
+    // Use short-lived particles as seeds 
+  , m_use_shortlived_as_seed  ( true   ) 
+    /// The transport tolerance  
+  , m_transport_tolerance     ( 10 * Gaudi::Units::micrometer )
+    /// perform CPU performance statistics 
+  , m_timing                  ( true   ) 
+    /// Use optimized algorithm ?
+  , m_use_optimized           ( false  ) 
+    ///
+  , m_massage                 (        ) 
+    /// pure technical stuff: 
   , m_entries (   ) 
   , m_vertex  ( 0 )
   , m_seed    (   ) 
@@ -800,6 +938,7 @@ LoKi::VertexFitter::VertexFitter
        std::string::npos != name.find ( "K0S"        ) || 
        std::string::npos != name.find ( "Lam"        ) || 
        std::string::npos != name.find ( "L0"         ) || 
+       std::string::npos != name.find ( "Gam"        ) || 
        std::string::npos != name.find ( "State"      ) || 
        std::string::npos != name.find ( "Master"     )  ) 
   {
@@ -809,6 +948,9 @@ LoKi::VertexFitter::VertexFitter
     m_massage.push_back (  10 * Gaudi::Units::cm ) ;    
     m_transporterName   = "DaVinci::ParticleTransporter:PUBLIC" ;
   }
+  //
+  if ( std::string::npos != name.find ( "Opt" ) || 
+       std::string::npos != name.find ( "OPT" ) ) { m_use_optimized = true ; }
   // ==========================================================================
   declareProperty 
     ( "MaxIterations"      , 
@@ -847,14 +989,26 @@ LoKi::VertexFitter::VertexFitter
       m_use_rho_like_branch       , 
       "Allow ``rho+''-like particles?" ) ;
   declareProperty 
+    ( "USeShortLivedParticlesAsSeed"     , 
+      m_use_shortlived_as_seed           , 
+      "Use shortlived particles as seed" ) ;
+  declareProperty 
     ( "TransportTolerance"  , 
       m_transport_tolerance , 
       "The tolerance for particle transport" ) ;
+  declareProperty 
+    ( "MeasureCPUPerformace"   , 
+      m_timing                 , 
+      "Measure CPU perormance" ) ;
+  declareProperty 
+    ( "UseOptimizedAlgorithm"   , 
+      m_use_optimized           , 
+      "Use optimised algorithm" ) ;
   // ========================================================================== 
   declareProperty 
     ( "Massage"          , 
       m_massage          , 
-      "Z-coordiates for downstream track massage" ) ;
+      "Z-coordinates for downstream track massage" ) ;
   // ===========================================================================
   declareProperty 
     ( "SeedZmin"         , 
@@ -923,6 +1077,9 @@ StatusCode LoKi::VertexFitter::initialize()
     info () << "Redefine 'TransportTolerance' property to " 
             << m_transport_tolerance << endmsg ;
   }
+  //
+  if ( m_use_optimized ) 
+  { info() << "Option for Optimised Kalman Filter fit is activated " << endmsg ; }
   //
   if ( !m_massage.empty() && std::string::npos == m_transporterName.find("DaVinci::") ) 
   {

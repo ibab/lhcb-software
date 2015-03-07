@@ -517,12 +517,18 @@ namespace LoKi
     /// transport all data to a certain position 
     StatusCode _transport ( const Gaudi::Vector3& p ) const 
     { return _transport ( Gaudi::XYZPoint( p[0] , p[1] , p[2] ) ) ; }
+    /// make optimised fKalman filter iterations 
+    StatusCode  _iterate_opt ( const size_t nMax ) const ;
+    /// stopping criteria for iterations 
+    bool        stop_iter    ( const Gaudi::Vector3&      dx   , 
+                               const Gaudi::SymMatrix3x3& ci   ,
+                               const size_t               iter ) const ;
     /// make few Kalman filter iterations 
-    StatusCode  _iterate   ( const size_t nMax , const Gaudi::Vector3& x ) const ;
+    StatusCode  _iterate     ( const size_t nMax , const Gaudi::Vector3& x ) const ;
     /// make a seed 
-    StatusCode  _seed      ( const LHCb::Vertex* vertex  ) const ;
+    StatusCode  _seed        ( const LHCb::Vertex* vertex  ) const ;
     /// is seed ok?
-    inline bool  seedOK    ( const Gaudi::XYZPoint& seed  ) const  
+    inline bool  seedOK      ( const Gaudi::XYZPoint& seed  ) const  
     {
       return
         seed.Z     () < m_seedZmax && 
@@ -602,15 +608,21 @@ namespace LoKi
     double                             m_seedRhoZmax     ;
     double                             m_seedRhoZmin     ;
     /// use the special branch for   two-body decays 
-    bool m_use_twobody_branch    ; // use the special branch for   two-body decays 
+    bool   m_use_twobody_branch     ; // use the special branch for   two-body decays 
     /// use the special branch for three-body decays 
-    bool m_use_threebody_branch  ; // use the special branch for three-body decays 
+    bool   m_use_threebody_branch   ; // use the special branch for three-body decays 
     /// use the special branch for  four-body decays 
-    bool m_use_fourbody_branch   ; // use the special branch for  four-body decays 
+    bool   m_use_fourbody_branch    ; // use the special branch for  four-body decays 
     /// allow "rho+"-like particles 
-    bool m_use_rho_like_branch   ; // allow "rho+"-like particles 
+    bool   m_use_rho_like_branch    ; // allow "rho+"-like particles 
+    /// use short-lived particles as seed 
+    bool   m_use_shortlived_as_seed ;
     /// transport tolerance 
-    double m_transport_tolerance ; // the transport tolerance 
+    double m_transport_tolerance    ; // the transport tolerance 
+    /// measure CPU performance 
+    bool   m_timing                 ; // perform timing measurements  
+    /// use optimized algorithm ?
+    bool m_use_optimized            ;
     // ========================================================================
   private:
     // ========================================================================

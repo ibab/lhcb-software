@@ -5,6 +5,18 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2015-03-07 - Vanya Belyaev
+ - VertexFitter:  
+   add option to allow CPU-performace measurement:   
+     - "MeasureCPUPerformace"   
+   implement optimized algoerithm  (but not yet fully tested, 
+   further optimization is still possible  and optimized)
+   my tests with B&W wG_Selection shows factor of 30-35% improvement 
+   in CPU for the vertex fit 
+   optimized algorithm is used when new option is actiavted:
+     - "UseOptimizedAlgorithm"   
+   
+
 !========================= LoKiFitters v4r12 2014-10-30 =========================
 
 ! 2014-10-23 - Vanya Belyaev
