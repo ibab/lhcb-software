@@ -17,6 +17,7 @@
 // LHCbMath
 // ============================================================================
 #include "LHCbMath/Power.h"
+#include "LHCbMath/LHCbMath.h"
 #include "LHCbMath/MatrixUtils.h"
 #include "LHCbMath/MatrixTransforms.h"
 // ============================================================================
@@ -61,6 +62,15 @@
 // ============================================================================
 namespace 
 {
+  // ==========================================================================
+  /** @var s_equal
+   *  equality criteria 
+   */
+  const LHCb::Math::Equal_To<double> s_equal ;
+  /** @var s_zero
+   *  equality criteria witrh zero
+   */
+  const LHCb::Math::Zero<double>     s_zero  ;
   // ==========================================================================
   /// inverse "large" error in position: used to avoid singularity
   const std::array<double,3> s_ERROR2_i  = { { 
@@ -447,7 +457,7 @@ StatusCode LoKi::KalmanFilter::step
   // OK ! 
   const Gaudi::Vector3 dx = entry.m_parx - entry.m_x ;  
   // OK !
-  entry.m_q = entry.m_parq - entry.m_p.posMomCovMatrix() * entry.m_vxi * dx ; 
+  entry.m_q = entry.m_parq - entry.m_p.posMomCovMatrix() * ( entry.m_vxi * dx ) ; 
   // OK ! 
   const double dchi2 = 
     ROOT::Math::Similarity ( entry.m_vxi  , dx            ) + 
@@ -679,6 +689,72 @@ StatusCode LoKi::KalmanFilter::step
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
+/*  make the special step of Kalman filter (similar to seeding) 
+ *  @param entries (update) input entries  to be updated 
+ *  @param chi2    (input)  the initial chi2 
+ *  @return status code 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2015-03-07
+ */
+// ============================================================================
+StatusCode LoKi::KalmanFilter::steps
+( LoKi::KalmanFilter::Entries& entries ,
+  const double                 chi2    )
+{
+  //
+  if ( !okForVertex ( entries ) ) 
+  { return StatusCode ( ErrorInInputData , true ) ; }
+  //
+  //
+  Gaudi::SymMatrix3x3        ci ;
+  Gaudi::Vector3             xi ;
+  Gaudi::Math::setToScalar ( ci , 0.0 ) ;
+  for ( Entries::const_iterator it = entries.begin() ; 
+        entries.end() != it ; ++it ) 
+  {
+    //
+    if ( !it->regular() ) { continue ; } // CONTINUE 
+    //
+    ci += it->m_vxi                ;
+    xi += it->m_vxi * it -> m_parx ;
+  }
+  //
+  Gaudi::SymMatrix3x3  c ; 
+  if ( 0 != Gaudi::Math::inverse ( ci , c ) ) 
+  { 
+    // try to recover using "soft" constraints 
+    _smooth ( ci ) ;
+    //
+    if ( 0 != Gaudi::Math::inverse ( ci , c ) )
+    { return StatusCode ( ErrorInMatrixInversion4 , true ) ; } 
+  }
+  //
+  const Gaudi::Vector3 x = c * xi ;
+  //
+  double _chi2 = chi2 ;
+  for ( Entries::iterator ientry = entries.begin() ; 
+        entries.end() != ientry ; ++ientry ) 
+  {
+    ientry -> m_x  = x  ;
+    ientry -> m_c  = c  ;
+    ientry -> m_ci = ci ; 
+    //
+    if ( ientry->regular() ) 
+    {
+      // update vector q 
+      const Gaudi::Vector3 dx = ientry->m_parx - ientry->m_x ;  
+      ientry -> m_q  = 
+        ientry -> m_parq - 
+        ientry -> m_p.posMomCovMatrix() *         ( ientry->m_vxi * dx ) ;  
+      // update chi2 
+      const double dchi2 = ROOT::Math::Similarity ( ientry->m_vxi , dx ) ;
+      _chi2 += dchi2 ;
+      ientry->m_chi2 = _chi2 ;
+    }
+  }
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
 // kalman smoothing  
 // ============================================================================
 StatusCode LoKi::KalmanFilter::smooth
@@ -711,8 +787,9 @@ StatusCode LoKi::KalmanFilter::smooth
     // 
     const Gaudi::Vector3 dx = entry->m_parx - entry->m_x ;
     /// \f$ \vec{q}^{n}_k = W_kB^T_{k}G_k\left[\vec{p}_k-A_k\vec{x}_{n}\right]\f$ 
-    entry -> m_q = entry -> m_parq 
-      - entry -> m_p.posMomCovMatrix() * entry -> m_vxi * dx ; 
+    entry -> m_q = 
+      entry -> m_parq - 
+      entry -> m_p.posMomCovMatrix() * ( entry -> m_vxi * dx ) ; 
   }
   return StatusCode::SUCCESS ;
 } 
@@ -791,7 +868,8 @@ StatusCode LoKi::KalmanFilter::seed
   //
   x = c * seed ; 
   //
-  Gaudi::Math::scale ( ci , scale ) ; // scale the gain matrix 
+  //if ( !s_equal ( scale , 1 ) ) 
+  Gaudi::Math::scale ( ci , scale ) ;  // scale the gain matrix if needed
   //
   return StatusCode::SUCCESS ;
 }

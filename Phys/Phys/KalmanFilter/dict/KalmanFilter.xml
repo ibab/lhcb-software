@@ -27,6 +27,7 @@
   <function name = "LoKi::KalmanFilter::transport"            />
   <function name = "LoKi::KalmanFilter::transportGamma"       />
   <function name = "LoKi::KalmanFilter::step"                 />
+  <function name = "LoKi::KalmanFilter::steps"                />
   <function name = "LoKi::KalmanFilter::smooth"               />
   <function name = "LoKi::KalmanFilter::evalCov"              />
   <function name = "LoKi::KalmanFilter::seed"                 />

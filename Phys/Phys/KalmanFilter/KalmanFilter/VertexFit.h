@@ -513,6 +513,18 @@ namespace LoKi
       LoKi::KalmanFilter::Entry&  entry4 , 
       const double                chi2   ) ;
     // ========================================================================    
+    /** make the special step of Kalman filter (similar to seeding) 
+     *  @param entries (update) input entries  to be updated 
+     *  @param chi2    (input)  the initial chi2 
+     *  @return status code 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-03-07
+     */
+    GAUDI_API 
+    StatusCode steps
+    ( LoKi::KalmanFilter::Entries& entries ,
+      const double                 chi2   ) ;
+    // ========================================================================    
     /** make the special step of Kalman filter for rho+-ilke combination 
      *  @param entries (update)  the entries 
      *  @param chi2    (input)   the initial chi2 
