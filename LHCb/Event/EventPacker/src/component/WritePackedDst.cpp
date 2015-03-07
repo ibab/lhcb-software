@@ -154,7 +154,7 @@ StatusCode WritePackedDst::execute()
       LHCb::PackedCaloHypos* in = get<LHCb::PackedCaloHypos>( *itC );
       PackedBank bank( in );
       storeInBlob( bank, &(*in->hypos().begin())  , in->hypos().size(), sizeof( LHCb::PackedCaloHypo) );
-      storeInBlob( bank, &(*in->refs().begin())   , in->refs().size() , sizeof( int ) );
+      storeInBlob( bank, &(*in->refs().begin())   , in->refs().size() , sizeof( long long ) );
       m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
 
     } else if ( LHCb::CLID_PackedProtoParticles  == myClID ) {
@@ -171,7 +171,7 @@ StatusCode WritePackedDst::execute()
       LHCb::PackedRecVertices* in = get<LHCb::PackedRecVertices>( *itC );
       PackedBank bank( in );
       storeInBlob( bank, &(*in->vertices().begin()) ,in->vertices().size(), sizeof( LHCb::PackedRecVertex) );
-      storeInBlob( bank, &(*in->refs().begin())     ,in->refs().size()    , sizeof( int ) );
+      storeInBlob( bank, &(*in->refs().begin())     ,in->refs().size()    , sizeof( long long ) );
       storeInBlob( bank, &(*in->extras().begin())   ,in->extras().size()  , sizeof( std::pair<int,int> ) );
       m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
 

@@ -87,6 +87,11 @@ namespace LHCb
   {
 
   public:
+    
+    /// Default Packing Version
+    static char defaultPackingVersion() { return 1; }
+
+  public:
 
     /// Vector of packed objects
     typedef std::vector<LHCb::PackedRecVertex> Vector;
@@ -94,7 +99,7 @@ namespace LHCb
   public:
   
     /// Standard constructor
-    PackedRecVertices( ) 
+    PackedRecVertices( ) : m_packingVersion(0)
     {
       m_vect.reserve(10);
       m_refs.reserve(200);
@@ -105,17 +110,17 @@ namespace LHCb
     virtual const CLID& clID()  const { return PackedRecVertices::classID(); }
     static  const CLID& classID()     { return CLID_PackedRecVertices;       }
 
+  public:
+
     void addEntry( PackedRecVertex& obj ) { m_vect.push_back( obj ); }
     std::vector<PackedRecVertex>& vertices()                   { return m_vect; }
     const std::vector<PackedRecVertex>& vertices() const       { return m_vect; }
 
-    void addRef( int i ) { m_refs.push_back( i ); }
-    /// Avoid hidden method
-    virtual unsigned long addRef() { return DataObject::addRef(); }
-    std::vector<int>& refs()                           { return m_refs; }
-    const std::vector<int>& refs() const               { return m_refs; }
+    void addRef( long long i ) { m_refs.push_back( i ); }
+    std::vector<long long>& refs()                         { return m_refs; }
+    const std::vector<long long>& refs() const             { return m_refs; }
 
-    void addExtra( int a, int b ) { std::pair<int,int> tmp( a, b ); m_extra.push_back( tmp ); }
+    void addExtra( const int a, const int b ) { m_extra.push_back( std::make_pair(a,b) ); }
     std::vector<std::pair<int,int> >& extras()             { return m_extra; }
     const std::vector<std::pair<int,int> >& extras() const { return m_extra; }
 
@@ -123,12 +128,28 @@ namespace LHCb
     std::vector<short int>& weights()             { return m_weights; }
     const std::vector<short int>& weights() const { return m_weights; }
 
+  public:
+
+    /// Avoid hidden method
+    virtual unsigned long addRef() { return DataObject::addRef(); }
+
+  public:
+
+    /// Set the packing version
+    void setPackingVersion( const char ver ) { m_packingVersion = ver; }
+
+    /// Access the packing version
+    char packingVersion() const { return m_packingVersion; }
+
   private:
 
     std::vector<PackedRecVertex>     m_vect;
-    std::vector<int>                 m_refs;
+    std::vector<long long>           m_refs;
     std::vector<std::pair<int,int> > m_extra;
     std::vector<short int>           m_weights;
+
+    /// Data packing version
+    char m_packingVersion;
 
   };
 

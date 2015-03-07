@@ -15,8 +15,8 @@ void MCRichSegmentPacker::pack( const DataVector & segs,
                                 PackedDataVector & psegs ) const
 {
   psegs.data().reserve( segs.size() );
-
-  if ( 0 == psegs.packingVersion() )
+  const char ver = psegs.packingVersion();
+  if ( 0 == ver || 1 == ver )
   {
     for ( DataVector::const_iterator iD = segs.begin();
           iD != segs.end(); ++iD )
@@ -53,16 +53,24 @@ void MCRichSegmentPacker::pack( const DataVector & segs,
 
       if ( NULL != seg.mcParticle() )
       {
-        pseg.mcParticle  = m_pack.reference32( &psegs,
-                                               seg.mcParticle()->parent(),
-                                               seg.mcParticle()->key() );
+        pseg.mcParticle  = ( 0==ver ? 
+                             m_pack.reference32( &psegs,
+                                                 seg.mcParticle()->parent(),
+                                                 seg.mcParticle()->key() ) :
+                             m_pack.reference64( &psegs,
+                                                 seg.mcParticle()->parent(),
+                                                 seg.mcParticle()->key() ) );
       }
 
       if ( NULL != seg.mcRichTrack() )
       {
-        pseg.mcRichTrack = m_pack.reference32( &psegs,
-                                               seg.mcRichTrack()->parent(),
-                                               seg.mcRichTrack()->key() );
+        pseg.mcRichTrack = ( 0==ver ?
+                             m_pack.reference32( &psegs,
+                                                 seg.mcRichTrack()->parent(),
+                                                 seg.mcRichTrack()->key() ) :
+                             m_pack.reference64( &psegs,
+                                                 seg.mcRichTrack()->parent(),
+                                                 seg.mcRichTrack()->key() ) );
       }
 
       pseg.mcPhotons.reserve( seg.mcRichOpticalPhotons().size() );
@@ -70,7 +78,11 @@ void MCRichSegmentPacker::pack( const DataVector & segs,
               seg.mcRichOpticalPhotons().begin();
             iP != seg.mcRichOpticalPhotons().end(); ++iP )
       {
-        pseg.mcPhotons.push_back( m_pack.reference32( &psegs,
+        pseg.mcPhotons.push_back( 0==ver ? 
+                                  m_pack.reference32( &psegs,
+                                                      (*iP)->parent(),
+                                                      (*iP)->key() ) :
+                                  m_pack.reference64( &psegs,
                                                       (*iP)->parent(),
                                                       (*iP)->key() ) );
       }
@@ -79,17 +91,21 @@ void MCRichSegmentPacker::pack( const DataVector & segs,
       for ( SmartRefVector<LHCb::MCRichHit>::const_iterator iH = seg.mcRichHits().begin();
             iH != seg.mcRichHits().end(); ++iH )
       {
-        pseg.mcHits.push_back( m_pack.reference32( &psegs,
+        pseg.mcHits.push_back( 0==ver ? 
+                               m_pack.reference32( &psegs,
+                                                   (*iH)->parent(),
+                                                   (*iH).linkID() ) :
+                               m_pack.reference64( &psegs,
                                                    (*iH)->parent(),
                                                    (*iH).linkID() ) );
       }
-
+      
     }
   }
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << (int)psegs.packingVersion();
+    mess << "Unknown packed data version " << (int)ver;
     throw GaudiException( mess.str(), "MCRichSegmentPacker", StatusCode::FAILURE );
   }
 }
@@ -98,8 +114,8 @@ void MCRichSegmentPacker::unpack( const PackedDataVector & psegs,
                                   DataVector       & segs ) const
 {
   segs.reserve( psegs.data().size() );
-
-  if ( 0 == psegs.packingVersion() )
+  const char ver = psegs.packingVersion();
+  if ( 0 == ver || 1 == ver )
   {
     for ( PackedDataVector::Vector::const_iterator iD = psegs.data().begin();
           iD != psegs.data().end(); ++iD )
@@ -130,32 +146,46 @@ void MCRichSegmentPacker::unpack( const PackedDataVector & psegs,
 
       if ( -1 != pseg.mcParticle )
       {
-        m_pack.hintAndKey32( pseg.mcParticle, &psegs, &segs, hintID, key );
-        SmartRef<LHCb::MCParticle> refa(&segs,hintID,key);
-        seg->setMcParticle( refa );
+        if ( ( 0==ver && m_pack.hintAndKey32(pseg.mcParticle,&psegs,&segs,hintID,key) ) ||
+             ( 0!=ver && m_pack.hintAndKey64(pseg.mcParticle,&psegs,&segs,hintID,key) ) )
+        {
+          SmartRef<LHCb::MCParticle> refa(&segs,hintID,key);
+          seg->setMcParticle( refa );
+        }
+        else { parent().Error( "Corrupt MCRichSegment MCParticle SmartRef detected." ).ignore(); }
       }
 
       if ( -1 != pseg.mcRichTrack )
       {
-        m_pack.hintAndKey32( pseg.mcRichTrack, &psegs, &segs, hintID, key );
-        SmartRef<LHCb::MCRichTrack> refb(&segs,hintID,key);
-        seg->setMCRichTrack( refb );
+        if ( ( 0==ver && m_pack.hintAndKey32(pseg.mcRichTrack,&psegs,&segs,hintID,key) ) ||
+             ( 0!=ver && m_pack.hintAndKey64(pseg.mcRichTrack,&psegs,&segs,hintID,key) ) )
+        {
+          SmartRef<LHCb::MCRichTrack> refb(&segs,hintID,key);
+          seg->setMCRichTrack( refb );
+        }
+        else { parent().Error( "Corrupt MCRichSegment MCRichTrack SmartRef detected." ).ignore(); }
       }
 
-      for ( std::vector<int>::const_iterator iP = pseg.mcPhotons.begin();
-            iP != pseg.mcPhotons.end(); ++iP )
+      for ( const auto& P : pseg.mcPhotons )
       {
-        m_pack.hintAndKey32( *iP, &psegs, &segs, hintID, key );
-        SmartRef<LHCb::MCRichOpticalPhoton> ref(&segs,hintID,key);
-        seg->addToMCRichOpticalPhotons( ref );
+        if ( ( 0==ver && m_pack.hintAndKey32(P,&psegs,&segs,hintID,key) ) ||
+             ( 0!=ver && m_pack.hintAndKey64(P,&psegs,&segs,hintID,key) ) )
+        {
+          SmartRef<LHCb::MCRichOpticalPhoton> ref(&segs,hintID,key);
+          seg->addToMCRichOpticalPhotons( ref );
+        }
+        else { parent().Error( "Corrupt MCRichSegment MCRichOpticalPhoton SmartRef detected." ).ignore(); }
       }
 
-      for ( std::vector<int>::const_iterator iH = pseg.mcHits.begin();
-            iH != pseg.mcHits.end(); ++iH )
+      for ( const auto& H : pseg.mcHits )
       {
-        m_pack.hintAndKey32( *iH, &psegs, &segs, hintID, key );
-        SmartRef<LHCb::MCRichHit> ref(&segs,hintID,key);
-        seg->addToMCRichHits( ref );
+        if ( ( 0==ver && m_pack.hintAndKey32( H, &psegs, &segs, hintID, key ) ) ||
+             ( 0!=ver && m_pack.hintAndKey64( H, &psegs, &segs, hintID, key ) ) )
+        {
+          SmartRef<LHCb::MCRichHit> ref(&segs,hintID,key);
+          seg->addToMCRichHits( ref );
+        }
+        else { parent().Error( "Corrupt MCRichSegment MCRichHit SmartRef detected." ).ignore(); }
       }
 
     }
@@ -163,7 +193,7 @@ void MCRichSegmentPacker::unpack( const PackedDataVector & psegs,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << (int)psegs.packingVersion();
+    mess << "Unknown packed data version " << (int)ver;
     throw GaudiException( mess.str(), "MCRichSegmentPacker", StatusCode::FAILURE );
   }
 }

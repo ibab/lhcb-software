@@ -41,9 +41,9 @@ namespace LHCb
     int history;
     std::vector<int> trajPx, trajPy, trajPz;
     std::vector<int> trajMx, trajMy, trajMz;
-    int mcParticle;
-    int mcRichTrack;
-    std::vector<int> mcPhotons, mcHits;
+    long long mcParticle;
+    long long mcRichTrack;
+    std::vector<long long> mcPhotons, mcHits;
   };
 
   // -----------------------------------------------------------------------
@@ -73,7 +73,7 @@ namespace LHCb
   public:
     
     /// Default Packing Version
-    static char defaultPackingVersion() { return 0; }
+    static char defaultPackingVersion() { return 1; }
 
   public:
 
@@ -107,7 +107,7 @@ namespace LHCb
 
   private:
 
-    /// Data packing version (not used as yet, but for any future schema evolution)
+    /// Data packing version
     char   m_packingVersion;
 
     /// The packed data objects

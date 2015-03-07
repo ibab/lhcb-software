@@ -13,6 +13,8 @@ void RecVertexPacker::pack( const Data & vert,
                             const DataVector & /* verts */,
                             PackedDataVector & pverts ) const
 {
+  const char ver = pverts.packingVersion();
+
   pvert.technique  = vert.technique();
   pvert.chi2       = m_pack.fltPacked( vert.chi2() );
   pvert.nDoF       = vert.nDoF();
@@ -37,7 +39,9 @@ void RecVertexPacker::pack( const Data & vert,
   for ( SmartRefVector<LHCb::Track>::const_iterator itT = vert.tracks().begin();
         vert.tracks().end() != itT; ++itT, ++iW )
   {
-    pverts.addRef( m_pack.reference32( &pverts, (*itT)->parent(), (*itT)->key() ) );
+    pverts.addRef( 0==ver ?
+                   m_pack.reference32( &pverts, (*itT)->parent(), (*itT)->key() ) :
+                   m_pack.reference64( &pverts, (*itT)->parent(), (*itT)->key() ) );
     pverts.addWeight( m_pack.fraction(*iW) );
   }
   pvert.lastTrack = pverts.refs().size();
@@ -81,6 +85,8 @@ void RecVertexPacker::unpack( const PackedData       & pvert,
                               const PackedDataVector & pverts,
                               DataVector             & verts ) const
 {
+  const char ver = pverts.packingVersion();
+
   vert.setTechnique( (LHCb::RecVertex::RecVertexType) pvert.technique );
   vert.setChi2AndDoF( m_pack.fltPacked( pvert.chi2), pvert.nDoF );
   vert.setPosition( Gaudi::XYZPoint( m_pack.position( pvert.x ),
@@ -104,14 +110,18 @@ void RecVertexPacker::unpack( const PackedData       & pvert,
   for ( unsigned short int kk = pvert.firstTrack; pvert.lastTrack > kk; ++kk )
   {
     // Get the track
-    const int trk = *(pverts.refs().begin()+kk);
-    m_pack.hintAndKey32( trk, &pverts, &verts, hintID, tKey );
-    SmartRef<LHCb::Track> ref( &verts, hintID, tKey );
-    // If available, get the weight
-    const float weight = (float)( (int)pverts.version()>1 ?
-                                  m_pack.fraction(pverts.weights()[kk]) : 1.0 );
-    // save with weight
-    vert.addToTracks( ref, weight );
+    const long long trk = *(pverts.refs().begin()+kk);
+    if ( ( 0==ver && m_pack.hintAndKey32( trk, &pverts, &verts, hintID, tKey ) ) ||
+         ( 0!=ver && m_pack.hintAndKey64( trk, &pverts, &verts, hintID, tKey ) ) )
+    {
+      SmartRef<LHCb::Track> ref( &verts, hintID, tKey );
+      // If available, get the weight
+      const float weight = (float)( (int)pverts.version()>1 ?
+                                    m_pack.fraction(pverts.weights()[kk]) : 1.0 );
+      // save with weight
+      vert.addToTracks( ref, weight );
+    }
+    else { parent().Error( "Corrupt RecVertex Track SmartRef detected." ).ignore(); }
   }
 
   //== Handles the ExtraInfo

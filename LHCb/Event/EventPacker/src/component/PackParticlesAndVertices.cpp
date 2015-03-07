@@ -157,6 +157,7 @@ StatusCode PackParticlesAndVertices::execute()
   if ( !names.empty() )
   {
     LHCb::PackedRecVertices* prverts = new LHCb::PackedRecVertices();
+    prverts->setPackingVersion( LHCb::PackedRecVertices::defaultPackingVersion() );
     put( prverts, m_inputStream + LHCb::PackedRecVertexLocation::InStream );
     prverts->setVersion( 2 ); // CRJ - Increment version for new RecVertex with weights
     if ( msgLevel( MSG::DEBUG ) )

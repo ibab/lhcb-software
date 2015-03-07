@@ -11,12 +11,10 @@
    seen when running over Stripping21 MC samples where some Track references
    in packed ProtoParticles have been corrupted due to data truncation. In 
    these cases the smart refs are now just skipped (so set to NULL).
- - Update the ProtoParticle packing to include versioning and define a new
-   version 1 that stores all SmartRefs as packed 64 bit ints, to avoid 
-   truncation that can occur when using only 32 bit ints.
- - ToDo - The (poorly thought out) use of 32bit packed references should all
-          be migrated to use 64 bit packing instead, to finally prevent this
-          sort of issue happening again.
+ - Update the packing of all remaining classes that still use 32 bit reference
+   packing to use 64 bit packing. Reading is backwards compatible with old data
+   using the packing data version flags. Consequently data written with this
+   update can only be read by this version.
 
 !========================= EventPacker v4r7 2015-02-23 =========================
 ! 2015-02-12 - Heinrich Schindler

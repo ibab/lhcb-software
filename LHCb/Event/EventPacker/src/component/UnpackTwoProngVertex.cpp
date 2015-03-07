@@ -49,7 +49,7 @@ StatusCode UnpackTwoProngVertex::execute() {
     getOrCreate<LHCb::PackedTwoProngVertices,LHCb::PackedTwoProngVertices>( m_inputName );
   
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "Size of PackedRecVertices = " << dst->end() - dst->begin() << endmsg;
+    debug() << "Size of PackedTwoProngVertices = " << dst->end() - dst->begin() << endmsg;
 
   LHCb::TwoProngVertices* newTwoProngVertices = new LHCb::TwoProngVertices();
   newTwoProngVertices->reserve(dst->vertices().size());

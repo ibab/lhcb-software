@@ -30,6 +30,7 @@ DECLARE_ALGORITHM_FACTORY( PackRecVertex )
   declareProperty( "DeleteInput",                m_deleteInput  = false     );
   declareProperty( "Version",                    m_version = 2              );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -50,6 +51,7 @@ StatusCode PackRecVertex::execute()
     getOrCreate<LHCb::RecVertices,LHCb::RecVertices>( m_inputName );
 
   LHCb::PackedRecVertices* out = new LHCb::PackedRecVertices();
+  out->setPackingVersion( LHCb::PackedRecVertices::defaultPackingVersion() );
   out->vertices().reserve(verts->size());
   put( out, m_outputName );
   out->setVersion( (unsigned char)m_version ); 

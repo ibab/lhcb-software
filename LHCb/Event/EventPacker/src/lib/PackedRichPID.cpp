@@ -13,10 +13,9 @@ using namespace LHCb;
 void RichPIDPacker::pack( const DataVector & pids,
                           PackedDataVector & ppids ) const
 {
+  const char ver = ppids.packingVersion();
   ppids.data().reserve( pids.size() );
-  if ( 2 == ppids.packingVersion() ||
-       1 == ppids.packingVersion() ||
-       0 == ppids.packingVersion()  )
+  if ( 0 <= ver && ver <= 3  )
   {
     for ( const Data * pid : pids )
     {
@@ -30,20 +29,23 @@ void RichPIDPacker::pack( const DataVector & pids,
       ppid.dllPi = m_pack.deltaLL( pid->particleDeltaLL(Rich::Pion)           );
       ppid.dllKa = m_pack.deltaLL( pid->particleDeltaLL(Rich::Kaon)           );
       ppid.dllPr = m_pack.deltaLL( pid->particleDeltaLL(Rich::Proton)         );
-      if ( ppids.packingVersion() > 0 )
-        ppid.dllBt = m_pack.deltaLL( pid->particleDeltaLL(Rich::BelowThreshold) );
+      if ( ver > 0 ) ppid.dllBt = m_pack.deltaLL( pid->particleDeltaLL(Rich::BelowThreshold) );
       if ( NULL != pid->track() )
       {
-        ppid.track = m_pack.reference32( &ppids,
-                                         pid->track()->parent(),
-                                         pid->track()->key() );
+        ppid.track = ( ver < 3 ? 
+                       m_pack.reference32( &ppids,
+                                           pid->track()->parent(),
+                                           pid->track()->key() ) :
+                       m_pack.reference64( &ppids,
+                                           pid->track()->parent(),
+                                           pid->track()->key() ) );
       }
     }
   }
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << (int)ppids.packingVersion();
+    mess << "Unknown packed data version " << (int)ver;
     throw GaudiException( mess.str(), "RichPIDPacker", StatusCode::FAILURE );
   }
 }
@@ -51,17 +53,16 @@ void RichPIDPacker::pack( const DataVector & pids,
 void RichPIDPacker::unpack( const PackedDataVector & ppids,
                             DataVector       & pids ) const
 {
+  const char ver = ppids.packingVersion();
   pids.reserve( ppids.data().size() );
-  if ( 2 == ppids.packingVersion() ||
-       1 == ppids.packingVersion() ||
-       0 == ppids.packingVersion()  )
+  if ( 0 <= ver && ver <= 3  )
   {
     for ( const PackedData & ppid : ppids.data() )
     {
       // make and save new pid in container
       Data * pid  = new Data();
-      if ( ppids.packingVersion() < 2 ) { pids.add( pid ); }
-      else                 { pids.insert( pid, ppid.key ); }
+      if ( ver < 2 ) { pids.add( pid ); }
+      else           { pids.insert( pid, ppid.key ); }
       // Fill data from packed object
       pid->setPidResultCode( ppid.pidResultCode );
       pid->setParticleDeltaLL( Rich::Electron,  (float)m_pack.deltaLL(ppid.dllEl) );
@@ -69,21 +70,24 @@ void RichPIDPacker::unpack( const PackedDataVector & ppids,
       pid->setParticleDeltaLL( Rich::Pion,      (float)m_pack.deltaLL(ppid.dllPi) );
       pid->setParticleDeltaLL( Rich::Kaon,      (float)m_pack.deltaLL(ppid.dllKa) );
       pid->setParticleDeltaLL( Rich::Proton,    (float)m_pack.deltaLL(ppid.dllPr) );
-      if ( ppids.packingVersion() > 0 )
-        pid->setParticleDeltaLL( Rich::BelowThreshold, (float)m_pack.deltaLL(ppid.dllBt) );
+      if ( ver > 0 ) pid->setParticleDeltaLL( Rich::BelowThreshold, (float)m_pack.deltaLL(ppid.dllBt) );
       if ( -1 != ppid.track )
       {
         int hintID(0), key(0);
-        m_pack.hintAndKey32( ppid.track, &ppids, &pids, hintID, key );
-        SmartRef<LHCb::Track> ref(&pids,hintID,key);
-        pid->setTrack( ref );
+        if ( ( ver <  3 && m_pack.hintAndKey32( ppid.track, &ppids, &pids, hintID, key ) ) ||
+             ( ver >= 3 && m_pack.hintAndKey64( ppid.track, &ppids, &pids, hintID, key ) ) )
+        {
+          SmartRef<LHCb::Track> ref(&pids,hintID,key);
+          pid->setTrack( ref );
+        }
+        else { parent().Error( "Corrupt RichPID Track SmartRef detected." ).ignore(); }
       }
     }
   }
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << (int)ppids.packingVersion();
+    mess << "Unknown packed data version " << (int)ver;
     throw GaudiException( mess.str(), "RichPIDPacker", StatusCode::FAILURE );
   }
 }

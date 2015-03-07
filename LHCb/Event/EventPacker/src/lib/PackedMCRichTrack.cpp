@@ -15,8 +15,8 @@ void MCRichTrackPacker::pack( const DataVector & tracks,
                               PackedDataVector & ptracks ) const
 {
   ptracks.data().reserve( tracks.size() );
-
-  if ( 0 == ptracks.packingVersion() )
+  const char ver = ptracks.packingVersion();
+  if ( 0 == ver || 1 == ver )
   {
     for ( DataVector::const_iterator iD = tracks.begin();
           iD != tracks.end(); ++iD )
@@ -31,16 +31,24 @@ void MCRichTrackPacker::pack( const DataVector & tracks,
               track.mcSegments().begin();
             iS != track.mcSegments().end(); ++iS )
       {
-        ptrack.mcSegments.push_back( m_pack.reference32( &ptracks,
+        ptrack.mcSegments.push_back( 0==ver ?
+                                     m_pack.reference32( &ptracks,
+                                                         (*iS)->parent(),
+                                                         (*iS)->key() ) :
+                                     m_pack.reference64( &ptracks,
                                                          (*iS)->parent(),
                                                          (*iS)->key() ) );
       }
 
       if ( NULL != track.mcParticle() )
       {
-        ptrack.mcParticle = m_pack.reference32( &ptracks,
-                                                track.mcParticle()->parent(),
-                                                track.mcParticle()->key() );
+        ptrack.mcParticle = ( 0==ver ?
+                              m_pack.reference32( &ptracks,
+                                                  track.mcParticle()->parent(),
+                                                  track.mcParticle()->key() ) :
+                              m_pack.reference64( &ptracks,
+                                                  track.mcParticle()->parent(),
+                                                  track.mcParticle()->key() ) );
       }
 
     }
@@ -48,7 +56,7 @@ void MCRichTrackPacker::pack( const DataVector & tracks,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << (int)ptracks.packingVersion();
+    mess << "Unknown packed data version " << (int)ver;
     throw GaudiException( mess.str(), "MCRichTrackPacker", StatusCode::FAILURE );
   }
 }
@@ -57,7 +65,8 @@ void MCRichTrackPacker::unpack( const PackedDataVector & ptracks,
                                 DataVector       & tracks ) const
 {
   tracks.reserve( ptracks.data().size() );
-  if ( 0 == ptracks.packingVersion() )
+  const char ver = ptracks.packingVersion();
+  if ( 0 == ver || 1 == ver )
   {
     for ( PackedDataVector::Vector::const_iterator iD = ptracks.data().begin();
           iD != ptracks.data().end(); ++iD )
@@ -69,19 +78,26 @@ void MCRichTrackPacker::unpack( const PackedDataVector & ptracks,
 
       int hintID(0), key(0);
 
-      for ( std::vector<int>::const_iterator iS = ptrack.mcSegments.begin();
-            iS != ptrack.mcSegments.end(); ++iS )
+      for ( const auto& S : ptrack.mcSegments )
       {
-        m_pack.hintAndKey32( *iS, &ptracks, &tracks, hintID, key );
-        SmartRef<LHCb::MCRichSegment> ref(&tracks,hintID,key);
-        track->addToMcSegments( ref );
+        if ( ( 0==ver && m_pack.hintAndKey32( S, &ptracks, &tracks, hintID, key ) ) ||
+             ( 0!=ver && m_pack.hintAndKey64( S, &ptracks, &tracks, hintID, key ) ) )
+        {
+          SmartRef<LHCb::MCRichSegment> ref(&tracks,hintID,key);
+          track->addToMcSegments( ref );
+        }
+        else { parent().Error( "Corrupt MCRichTrack MCRichSegment SmartRef detected." ).ignore(); }
       }
 
       if ( -1 != ptrack.mcParticle )
       {
-        m_pack.hintAndKey32( ptrack.mcParticle, &ptracks, &tracks, hintID, key );
-        SmartRef<LHCb::MCParticle> ref(&tracks,hintID,key);
-        track->setMcParticle( ref );
+        if ( ( 0==ver && m_pack.hintAndKey32( ptrack.mcParticle, &ptracks, &tracks, hintID, key ) ) ||
+             ( 0!=ver && m_pack.hintAndKey64( ptrack.mcParticle, &ptracks, &tracks, hintID, key ) ) )
+        {
+          SmartRef<LHCb::MCParticle> ref(&tracks,hintID,key);
+          track->setMcParticle( ref );
+        }
+        else { parent().Error( "Corrupt MCRichTrack MCParticle SmartRef detected." ).ignore(); }
       }
 
     }
@@ -89,7 +105,7 @@ void MCRichTrackPacker::unpack( const PackedDataVector & ptracks,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << (int)ptracks.packingVersion();
+    mess << "Unknown packed data version " << ver;
     throw GaudiException( mess.str(), "MCRichTrackPacker", StatusCode::FAILURE );
   }
 }

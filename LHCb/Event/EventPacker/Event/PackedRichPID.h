@@ -40,7 +40,7 @@ namespace LHCb
 
     int pidResultCode;                      
     int dllEl,dllMu,dllPi,dllKa,dllPr;
-    int track;          
+    long long track;          
     int dllBt;
     int key;
   };
@@ -73,7 +73,7 @@ namespace LHCb
   public:
 
     /// Default Packing Version
-    static char defaultPackingVersion() { return 2; }
+    static char defaultPackingVersion() { return 3; }
 
   public:
 
@@ -105,7 +105,7 @@ namespace LHCb
 
   private:
 
-    /// Data packing version (not used as yet, but for any future schema evolution)
+    /// Data packing version
     char   m_packingVersion;
 
     /// The packed data objects

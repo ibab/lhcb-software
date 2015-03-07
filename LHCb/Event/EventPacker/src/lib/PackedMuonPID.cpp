@@ -1,4 +1,3 @@
-// $Id: PackedMuonPID.cpp,v 1.4 2010-04-11 14:27:15 jonrob Exp $
 
 // local
 #include "Event/PackedMuonPID.h"
@@ -15,21 +14,30 @@ void MuonPIDPacker::pack( const Data & pid,
                           PackedData & ppid,
                           PackedDataVector & ppids ) const
 {
+  const char ver = ppids.packingVersion();
   ppid.MuonLLMu = m_pack.deltaLL(pid.MuonLLMu());
   ppid.MuonLLBg = m_pack.deltaLL(pid.MuonLLBg());
   ppid.nShared  = (int)pid.nShared();
   ppid.status   = (int)pid.Status();
   if ( NULL != pid.idTrack() )
   {
-    ppid.idtrack = m_pack.reference32( &ppids,
-                                       pid.idTrack()->parent(),
-                                       pid.idTrack()->key() );
+    ppid.idtrack = ( 0==ver || 1==ver ?
+                     m_pack.reference32( &ppids,
+                                         pid.idTrack()->parent(),
+                                         pid.idTrack()->key() ) :
+                     m_pack.reference64( &ppids,
+                                         pid.idTrack()->parent(),
+                                         pid.idTrack()->key() ) );
   }
   if ( NULL != pid.muonTrack() )
   {
-    ppid.mutrack = m_pack.reference32( &ppids,
-                                       pid.muonTrack()->parent(),
-                                       pid.muonTrack()->key() );
+    ppid.mutrack = ( 0==ver || 1==ver ?
+                     m_pack.reference32( &ppids,
+                                         pid.muonTrack()->parent(),
+                                         pid.muonTrack()->key() ) :
+                     m_pack.reference64( &ppids,
+                                         pid.muonTrack()->parent(),
+                                         pid.muonTrack()->key() ) );
   }
 }
 
@@ -37,8 +45,8 @@ void MuonPIDPacker::pack( const DataVector & pids,
                           PackedDataVector & ppids ) const
 {
   ppids.data().reserve( pids.size() );
-  if ( 1 == ppids.packingVersion() ||
-       0 == ppids.packingVersion()  )
+  const char ver = ppids.packingVersion();
+  if ( 1 == ver || 0 == ver || 2 == ver )
   {
     for ( const Data * pid : pids )
     {
@@ -53,7 +61,7 @@ void MuonPIDPacker::pack( const DataVector & pids,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << (int)ppids.packingVersion();
+    mess << "Unknown packed data version " << (int)ver;
     throw GaudiException( mess.str(), "MuonPIDPacker", StatusCode::FAILURE );
   }
 }
@@ -63,6 +71,7 @@ void MuonPIDPacker::unpack( const PackedData       & ppid,
                             const PackedDataVector & ppids,
                             DataVector             & pids ) const
 {
+  const char ver = ppids.packingVersion();
   pid.setMuonLLMu( m_pack.deltaLL(ppid.MuonLLMu) );
   pid.setMuonLLBg( m_pack.deltaLL(ppid.MuonLLBg) );
   pid.setNShared( ppid.nShared );
@@ -70,16 +79,24 @@ void MuonPIDPacker::unpack( const PackedData       & ppid,
   if ( -1 != ppid.idtrack )
   {
     int hintID(0), key(0);
-    m_pack.hintAndKey32( ppid.idtrack, &ppids, &pids, hintID, key );
-    SmartRef<LHCb::Track> ref(&pids,hintID,key);
-    pid.setIDTrack( ref );
+    if ( ( ( 0==ver || 1==ver ) && m_pack.hintAndKey32(ppid.idtrack,&ppids,&pids,hintID,key) ) ||
+         (   1<ver              && m_pack.hintAndKey64(ppid.idtrack,&ppids,&pids,hintID,key) ) )
+    {
+      SmartRef<LHCb::Track> ref(&pids,hintID,key);
+      pid.setIDTrack( ref );
+    }
+    else { parent().Error( "Corrupt MuonPID Track SmartRef detected." ).ignore(); }
   }
   if ( -1 != ppid.mutrack )
   {
     int hintID(0), key(0);
-    m_pack.hintAndKey32( ppid.mutrack, &ppids, &pids, hintID, key );
-    SmartRef<LHCb::Track> ref(&pids,hintID,key);
-    pid.setMuonTrack( ref );
+    if ( ( ( 0==ver || 1==ver ) && m_pack.hintAndKey32(ppid.mutrack,&ppids,&pids,hintID,key) ) ||
+         (   1<ver              && m_pack.hintAndKey64(ppid.mutrack,&ppids,&pids,hintID,key) ) )
+    {
+      SmartRef<LHCb::Track> ref(&pids,hintID,key);
+      pid.setMuonTrack( ref );
+    }
+    else { parent().Error( "Corrupt MuonPID MuTrack SmartRef detected." ).ignore(); }
   }
 }
 

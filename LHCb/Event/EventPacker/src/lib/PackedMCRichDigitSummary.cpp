@@ -15,7 +15,8 @@ void MCRichDigitSummaryPacker::pack( const DataVector & sums,
                                      PackedDataVector & psums ) const
 {
   psums.data().reserve( sums.size() );
-  if ( 0 == psums.packingVersion() )
+  const char ver = psums.packingVersion();
+  if ( 0 == ver || 1 == ver )
   {
     for ( DataVector::const_iterator iD = sums.begin();
           iD != sums.end(); ++iD )
@@ -29,16 +30,20 @@ void MCRichDigitSummaryPacker::pack( const DataVector & sums,
       psum.richSmartID = sum.richSmartID().key();
       if ( NULL != sum.mcParticle() )
       {
-        psum.mcParticle = m_pack.reference32( &psums,
-                                              sum.mcParticle()->parent(),
-                                              sum.mcParticle()->key() );
+        psum.mcParticle = ( 0 == ver ?
+                            m_pack.reference32( &psums,
+                                                sum.mcParticle()->parent(),
+                                                sum.mcParticle()->key() ) :
+                            m_pack.reference64( &psums,
+                                                sum.mcParticle()->parent(),
+                                                sum.mcParticle()->key() ) );
       }
     }
   }
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << (int)psums.packingVersion();
+    mess << "Unknown packed data version " << (int)ver;
     throw GaudiException( mess.str(), "MCRichDigitSummaryPacker", StatusCode::FAILURE );
   }
 }
@@ -46,8 +51,9 @@ void MCRichDigitSummaryPacker::pack( const DataVector & sums,
 void MCRichDigitSummaryPacker::unpack( const PackedDataVector & psums,
                                        DataVector       & sums ) const
 {
+  const char ver = psums.packingVersion();
   sums.reserve( psums.data().size() );
-  if ( 0 == psums.packingVersion() )
+  if ( 0 == ver || 1 == ver )
   {
     for ( PackedDataVector::Vector::const_iterator iD = psums.data().begin();
           iD != psums.data().end(); ++iD )
@@ -62,16 +68,20 @@ void MCRichDigitSummaryPacker::unpack( const PackedDataVector & psums,
       if ( -1 != psum.mcParticle )
       {
         int hintID(0), key(0);
-        m_pack.hintAndKey32( psum.mcParticle, &psums, &sums, hintID, key );
-        SmartRef<LHCb::MCParticle> ref(&sums,hintID,key);
-        sum->setMCParticle( ref );
+        if ( ( 0==ver && m_pack.hintAndKey32(psum.mcParticle,&psums,&sums,hintID,key) ) ||
+             ( 0!=ver && m_pack.hintAndKey64(psum.mcParticle,&psums,&sums,hintID,key) ) )
+        {
+          SmartRef<LHCb::MCParticle> ref(&sums,hintID,key);
+          sum->setMCParticle( ref );
+        }
+        else { parent().Error( "Corrupt MCRichDigitSummary MCParticle SmartRef detected." ).ignore(); }
       }
     }
   }
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << (int)psums.packingVersion();
+    mess << "Unknown packed data version " << (int)ver;
     throw GaudiException( mess.str(), "MCRichDigitSummaryPacker", StatusCode::FAILURE );
   }
 }

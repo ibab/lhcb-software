@@ -42,8 +42,8 @@ namespace LHCb
     int MuonLLBg;
     int nShared;
     int status;
-    int idtrack;
-    int mutrack;
+    long long idtrack;
+    long long mutrack;
     long long key;
   };
 
@@ -76,7 +76,7 @@ namespace LHCb
   public:
     
     /// Default Packing Version
-    static char defaultPackingVersion() { return 1; }
+    static char defaultPackingVersion() { return 2; }
     
   public:
 

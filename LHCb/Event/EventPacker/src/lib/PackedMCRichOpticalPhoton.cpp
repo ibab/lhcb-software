@@ -14,8 +14,9 @@ using namespace LHCb;
 void MCRichOpticalPhotonPacker::pack( const DataVector & phots,
                                       PackedDataVector & pphots ) const
 {
+  const char ver = pphots.packingVersion();
   pphots.data().reserve( phots.size() );
-  if ( 0 == pphots.packingVersion() )
+  if ( 0 == ver || 1 == ver )
   {
     for ( DataVector::const_iterator iD = phots.begin();
           iD != phots.end(); ++iD )
@@ -62,16 +63,20 @@ void MCRichOpticalPhotonPacker::pack( const DataVector & phots,
 
       if ( NULL != phot.mcRichHit() )
       {
-        pphot.mcrichhit = m_pack.reference32( &pphots,
-                                              phot.mcRichHit()->parent(),
-                                              phot.mcRichHit()->index() );
+        pphot.mcrichhit = ( 0==ver ? 
+                            m_pack.reference32( &pphots,
+                                                phot.mcRichHit()->parent(),
+                                                phot.mcRichHit()->index() ) :
+                            m_pack.reference64( &pphots,
+                                                phot.mcRichHit()->parent(),
+                                                phot.mcRichHit()->index() ) );
       }
     }
   }
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << (int)pphots.packingVersion();
+    mess << "Unknown packed data version " << (int)ver;
     throw GaudiException( mess.str(), "MCRichOpticalPhotonPacker", StatusCode::FAILURE );
   }
 }
@@ -79,8 +84,9 @@ void MCRichOpticalPhotonPacker::pack( const DataVector & phots,
 void MCRichOpticalPhotonPacker::unpack( const PackedDataVector & pphots,
                                         DataVector       & phots ) const
 {
+  const char ver = pphots.packingVersion();
   phots.reserve( pphots.data().size() );
-  if ( 0 == pphots.packingVersion() )
+  if ( 0 == ver || 1 == ver )
   {
     for ( PackedDataVector::Vector::const_iterator iD = pphots.data().begin();
           iD != pphots.data().end(); ++iD )
@@ -125,9 +131,13 @@ void MCRichOpticalPhotonPacker::unpack( const PackedDataVector & pphots,
       if ( -1 != pphot.mcrichhit )
       {
         int hintID(0), key(0);
-        m_pack.hintAndKey32( pphot.mcrichhit, &pphots, &phots, hintID, key );
-        SmartRef<LHCb::MCRichHit> ref(&phots,hintID,key);
-        phot->setMcRichHit( ref );
+        if ( ( 0==ver && m_pack.hintAndKey32(pphot.mcrichhit,&pphots,&phots,hintID,key) ) ||
+             ( 0!=ver && m_pack.hintAndKey64(pphot.mcrichhit,&pphots,&phots,hintID,key) ) )
+        {
+          SmartRef<LHCb::MCRichHit> ref(&phots,hintID,key);
+          phot->setMcRichHit( ref );
+        }
+        else { parent().Error( "Corrupt MCRichOpticalPhoton MCRichHit SmartRef detected." ).ignore(); }
       }
 
     }
@@ -135,7 +145,7 @@ void MCRichOpticalPhotonPacker::unpack( const PackedDataVector & pphots,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << (int)pphots.packingVersion();
+    mess << "Unknown packed data version " << (int)ver;
     throw GaudiException( mess.str(), "MCRichOpticalPhotonPacker", StatusCode::FAILURE );
   }
 

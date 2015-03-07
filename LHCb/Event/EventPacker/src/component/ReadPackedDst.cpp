@@ -187,7 +187,7 @@ StatusCode ReadPackedDst::execute() {
       put( caloHypos, name + m_postfix );
       processLinks( caloHypos, version );
       getFromBlob<LHCb::PackedCaloHypo> ( caloHypos->hypos() , blobs );
-      getFromBlob<int>                  ( caloHypos->refs()  , blobs );
+      getFromBlob<long long>            ( caloHypos->refs()  , blobs );
 
     } else if ( LHCb::CLID_PackedProtoParticles  == classID ) {
 
@@ -204,7 +204,7 @@ StatusCode ReadPackedDst::execute() {
       put( recVertices, name + m_postfix );
       processLinks( recVertices, version );
       getFromBlob<LHCb::PackedRecVertex> ( recVertices->vertices() , blobs );
-      getFromBlob<int>                   ( recVertices->refs()    , blobs );
+      getFromBlob<long long>             ( recVertices->refs()    , blobs );
       getFromBlob<std::pair<int,int> >   ( recVertices->extras() , blobs );
 
     } else if ( LHCb::CLID_PackedTwoProngVertices     == classID ) {

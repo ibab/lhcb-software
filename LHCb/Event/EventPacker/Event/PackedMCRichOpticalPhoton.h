@@ -55,7 +55,7 @@ namespace LHCb
     int   energy;
     int   pmomx, pmomy, pmomz;
     int   hpdqwx, hpdqwy, hpdqwz;
-    int   mcrichhit;
+    long long mcrichhit;
 
   };
 
@@ -86,7 +86,7 @@ namespace LHCb
   public:
     
     /// Default Packing Version
-    static char defaultPackingVersion() { return 0; }
+    static char defaultPackingVersion() { return 1; }
 
   public:
 
@@ -118,7 +118,7 @@ namespace LHCb
 
   private:
 
-    /// Data packing version (not used as yet, but for any future schema evolution)
+    /// Data packing version
     char   m_packingVersion;
 
     /// The packed data objects

@@ -53,6 +53,7 @@ StatusCode PackCaloHypo::execute()
   LHCb::PackedCaloHypos* out = new LHCb::PackedCaloHypos();
   put( out, m_outputName );
   out->setVersion( 1 );
+  out->setPackingVersion( LHCb::PackedCaloHypos::defaultPackingVersion() );
 
   // pack
   const LHCb::CaloHypoPacker packer(*this);
