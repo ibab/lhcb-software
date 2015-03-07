@@ -1,4 +1,3 @@
-// $Id: PackedMCRichOpticalPhoton.cpp,v 1.6 2010-04-11 14:27:15 jonrob Exp $
 
 // local
 #include "Event/PackedMCRichOpticalPhoton.h"
@@ -15,61 +14,59 @@ void MCRichOpticalPhotonPacker::pack( const DataVector & phots,
                                       PackedDataVector & pphots ) const
 {
   const char ver = pphots.packingVersion();
-  pphots.data().reserve( phots.size() );
   if ( 0 == ver || 1 == ver )
   {
-    for ( DataVector::const_iterator iD = phots.begin();
-          iD != phots.end(); ++iD )
+    pphots.data().reserve( phots.size() );
+    for ( const Data * phot : phots )
     {
-      const Data & phot = **iD;
 
       pphots.data().push_back( PackedData() );
       PackedData & pphot = pphots.data().back();
 
-      pphot.key   = phot.key();
+      pphot.key   = phot->key();
 
-      pphot.hpdx  = m_pack.position( phot.pdIncidencePoint().x() );
-      pphot.hpdy  = m_pack.position( phot.pdIncidencePoint().y() );
-      pphot.hpdz  = m_pack.position( phot.pdIncidencePoint().z() );
+      pphot.hpdx  = m_pack.position( phot->pdIncidencePoint().x() );
+      pphot.hpdy  = m_pack.position( phot->pdIncidencePoint().y() );
+      pphot.hpdz  = m_pack.position( phot->pdIncidencePoint().z() );
 
-      pphot.pmirx = m_pack.position( phot.sphericalMirrorReflectPoint().x() );
-      pphot.pmiry = m_pack.position( phot.sphericalMirrorReflectPoint().y() );
-      pphot.pmirz = m_pack.position( phot.sphericalMirrorReflectPoint().z() );
+      pphot.pmirx = m_pack.position( phot->sphericalMirrorReflectPoint().x() );
+      pphot.pmiry = m_pack.position( phot->sphericalMirrorReflectPoint().y() );
+      pphot.pmirz = m_pack.position( phot->sphericalMirrorReflectPoint().z() );
 
-      pphot.smirx = m_pack.position( phot.flatMirrorReflectPoint().x() );
-      pphot.smiry = m_pack.position( phot.flatMirrorReflectPoint().y() );
-      pphot.smirz = m_pack.position( phot.flatMirrorReflectPoint().z() );
+      pphot.smirx = m_pack.position( phot->flatMirrorReflectPoint().x() );
+      pphot.smiry = m_pack.position( phot->flatMirrorReflectPoint().y() );
+      pphot.smirz = m_pack.position( phot->flatMirrorReflectPoint().z() );
 
-      pphot.aerox = m_pack.position( phot.aerogelExitPoint().x() );
-      pphot.aeroy = m_pack.position( phot.aerogelExitPoint().y() );
-      pphot.aeroz = m_pack.position( phot.aerogelExitPoint().z() );
+      pphot.aerox = m_pack.position( phot->aerogelExitPoint().x() );
+      pphot.aeroy = m_pack.position( phot->aerogelExitPoint().y() );
+      pphot.aeroz = m_pack.position( phot->aerogelExitPoint().z() );
 
-      pphot.theta = m_pack.fltPacked( phot.cherenkovTheta() );
-      pphot.phi   = m_pack.fltPacked( phot.cherenkovPhi()   );
+      pphot.theta = m_pack.fltPacked( phot->cherenkovTheta() );
+      pphot.phi   = m_pack.fltPacked( phot->cherenkovPhi()   );
 
-      pphot.emisx = m_pack.position( phot.emissionPoint().x() );
-      pphot.emisy = m_pack.position( phot.emissionPoint().y() );
-      pphot.emisz = m_pack.position( phot.emissionPoint().z() );
+      pphot.emisx = m_pack.position( phot->emissionPoint().x() );
+      pphot.emisy = m_pack.position( phot->emissionPoint().y() );
+      pphot.emisz = m_pack.position( phot->emissionPoint().z() );
 
-      pphot.energy = m_pack.energy( phot.energyAtProduction() * PhotEnScale );
+      pphot.energy = m_pack.energy( phot->energyAtProduction() * PhotEnScale );
 
-      pphot.pmomx  = m_pack.energy( phot.parentMomentum().x() );
-      pphot.pmomy  = m_pack.energy( phot.parentMomentum().y() );
-      pphot.pmomz  = m_pack.energy( phot.parentMomentum().z() );
+      pphot.pmomx  = m_pack.energy( phot->parentMomentum().x() );
+      pphot.pmomy  = m_pack.energy( phot->parentMomentum().y() );
+      pphot.pmomz  = m_pack.energy( phot->parentMomentum().z() );
 
-      pphot.hpdqwx = m_pack.position( phot.hpdQWIncidencePoint().x() );
-      pphot.hpdqwy = m_pack.position( phot.hpdQWIncidencePoint().y() );
-      pphot.hpdqwz = m_pack.position( phot.hpdQWIncidencePoint().z() );
+      pphot.hpdqwx = m_pack.position( phot->hpdQWIncidencePoint().x() );
+      pphot.hpdqwy = m_pack.position( phot->hpdQWIncidencePoint().y() );
+      pphot.hpdqwz = m_pack.position( phot->hpdQWIncidencePoint().z() );
 
-      if ( NULL != phot.mcRichHit() )
+      if ( NULL != phot->mcRichHit() )
       {
         pphot.mcrichhit = ( 0==ver ? 
                             m_pack.reference32( &pphots,
-                                                phot.mcRichHit()->parent(),
-                                                phot.mcRichHit()->index() ) :
+                                                phot->mcRichHit()->parent(),
+                                                phot->mcRichHit()->index() ) :
                             m_pack.reference64( &pphots,
-                                                phot.mcRichHit()->parent(),
-                                                phot.mcRichHit()->index() ) );
+                                                phot->mcRichHit()->parent(),
+                                                phot->mcRichHit()->index() ) );
       }
     }
   }
@@ -85,13 +82,11 @@ void MCRichOpticalPhotonPacker::unpack( const PackedDataVector & pphots,
                                         DataVector       & phots ) const
 {
   const char ver = pphots.packingVersion();
-  phots.reserve( pphots.data().size() );
   if ( 0 == ver || 1 == ver )
   {
-    for ( PackedDataVector::Vector::const_iterator iD = pphots.data().begin();
-          iD != pphots.data().end(); ++iD )
+    phots.reserve( pphots.data().size() );
+    for ( const PackedData & pphot : pphots.data() )
     {
-      const PackedData & pphot = *iD;
       Data * phot  = new Data();
       phots.insert( phot, pphot.key );
 

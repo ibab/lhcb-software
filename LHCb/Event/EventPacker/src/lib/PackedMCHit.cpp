@@ -1,4 +1,3 @@
-// $Id: PackedMCHit.cpp,v 1.5 2010-04-11 14:27:14 jonrob Exp $
 
 // STL
 #include <sstream>
@@ -19,34 +18,32 @@ void MCHitPacker::pack( const DataVector & hits,
                         PackedDataVector & phits ) const
 {
   const char ver = phits.packingVersion();
-  phits.data().reserve( hits.size() );
   if ( 0 == ver || 1 == ver )
   {
-    for ( DataVector::const_iterator iD = hits.begin();
-          iD != hits.end(); ++iD )
+    phits.data().reserve( hits.size() );
+    for ( const Data * hit : hits )
     {
-      const Data & hit = **iD;
       phits.data().push_back( PackedData() );
       PackedData & phit = phits.data().back();
-      phit.sensDetID    = hit.sensDetID();
-      phit.entx         = m_pack.position ( hit.entry().x() );
-      phit.enty         = m_pack.position ( hit.entry().y() );
-      phit.entz         = m_pack.position ( hit.entry().z() );
-      phit.vtxx         = m_pack.position ( m_dispScale * hit.displacement().x() );
-      phit.vtxy         = m_pack.position ( m_dispScale * hit.displacement().y() );
-      phit.vtxz         = m_pack.position ( m_dispScale * hit.displacement().z() );
-      phit.energy       = m_pack.energy   ( m_enScale   * hit.energy() );
-      phit.tof          = m_pack.time     ( hit.time() );
-      phit.mp           = m_pack.energy   ( hit.p() );
-      if ( NULL != hit.mcParticle() )
+      phit.sensDetID    = hit->sensDetID();
+      phit.entx         = m_pack.position ( hit->entry().x() );
+      phit.enty         = m_pack.position ( hit->entry().y() );
+      phit.entz         = m_pack.position ( hit->entry().z() );
+      phit.vtxx         = m_pack.position ( m_dispScale * hit->displacement().x() );
+      phit.vtxy         = m_pack.position ( m_dispScale * hit->displacement().y() );
+      phit.vtxz         = m_pack.position ( m_dispScale * hit->displacement().z() );
+      phit.energy       = m_pack.energy   ( m_enScale   * hit->energy() );
+      phit.tof          = m_pack.time     ( hit->time() );
+      phit.mp           = m_pack.energy   ( hit->p() );
+      if ( NULL != hit->mcParticle() )
       {
         phit.mcParticle = ( 0==ver ? 
                             m_pack.reference32( &phits,
-                                                hit.mcParticle()->parent(),
-                                                hit.mcParticle()->key() ) :
+                                                hit->mcParticle()->parent(),
+                                                hit->mcParticle()->key() ) :
                             m_pack.reference64( &phits,
-                                                hit.mcParticle()->parent(),
-                                                hit.mcParticle()->key() ) );
+                                                hit->mcParticle()->parent(),
+                                                hit->mcParticle()->key() ) );
       }
     }
   }
@@ -62,13 +59,11 @@ void MCHitPacker::unpack( const PackedDataVector & phits,
                           DataVector       & hits ) const
 {
   const char ver = phits.packingVersion();
-  hits.reserve( phits.data().size() );
   if ( 0 == ver || 1 == ver )
   {
-    for ( PackedDataVector::Vector::const_iterator iD = phits.data().begin();
-          iD != phits.data().end(); ++iD )
+    hits.reserve( phits.data().size() );
+    for ( const PackedData & phit : phits.data() )
     {
-      const PackedData & phit = *iD;
       // make and save new hit in container
       Data * hit  = new Data();
       hits.add( hit );

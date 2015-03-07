@@ -15,9 +15,9 @@ void MCRichHitPacker::pack( const DataVector & hits,
                             PackedDataVector & phits ) const
 {
   const char ver = phits.packingVersion();
-  phits.data().reserve( hits.size() );
   if ( 0 == ver || 1 == ver )
   {
+    phits.data().reserve( hits.size() );
     for ( const Data * hit : hits )
     {
       phits.data().push_back( PackedData() );
@@ -53,9 +53,9 @@ void MCRichHitPacker::unpack( const PackedDataVector & phits,
                               DataVector             & hits ) const
 {
   const char ver = phits.packingVersion();
-  hits.reserve( phits.data().size() );
   if ( 0 == ver || 1 == ver )
   {
+    hits.reserve( phits.data().size() );
     for ( const PackedData & phit : phits.data() )
     {
       // make and save new hit in container
