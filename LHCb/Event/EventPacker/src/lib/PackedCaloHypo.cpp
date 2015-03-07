@@ -20,18 +20,17 @@ void CaloHypoPacker::pack( const DataVector & hypos,
   // packing version
   const char ver = phypos.packingVersion();
 
-  for ( LHCb::CaloHypos::const_iterator itH = hypos.begin();
-        hypos.end() != itH; ++itH )
+  for ( const auto* H : hypos )
   {
     // make new packed object
     phypos.hypos().push_back( LHCb::PackedCaloHypo() );
     LHCb::PackedCaloHypo & pH = phypos.hypos().back();
 
     // Save the data
-    pH.key        = (*itH)->key();
-    pH.hypothesis = (*itH)->hypothesis();
-    pH.lh         = m_pack.fltPacked( (*itH)->lh() );
-    if ( 0 == (*itH)->position() )
+    pH.key        = H->key();
+    pH.hypothesis = H->hypothesis();
+    pH.lh         = m_pack.fltPacked( H->lh() );
+    if ( 0 == H->position() )
     {
       pH.z      = 0;
       pH.posX   = 0;
@@ -51,7 +50,7 @@ void CaloHypoPacker::pack( const DataVector & hypos,
     }
     else
     {
-      LHCb::CaloPosition* pos = (*itH)->position();
+      const LHCb::CaloPosition* pos = H->position();
       pH.z    = m_pack.position( pos->z() );
       pH.posX = m_pack.position( pos->x() );
       pH.posY = m_pack.position( pos->y() );
@@ -81,8 +80,8 @@ void CaloHypoPacker::pack( const DataVector & hypos,
 
     //== Store the CaloDigits
     pH.firstDigit = phypos.refs().size();
-    for ( SmartRefVector<LHCb::CaloDigit>::const_iterator itD = (*itH)->digits().begin();
-          (*itH)->digits().end() != itD; ++itD )
+    for ( SmartRefVector<LHCb::CaloDigit>::const_iterator itD = H->digits().begin();
+          H->digits().end() != itD; ++itD )
     {
       if ( *itD )
       {
@@ -99,8 +98,8 @@ void CaloHypoPacker::pack( const DataVector & hypos,
 
     //== Store the CaloClusters
     pH.firstCluster = phypos.refs().size();
-    for ( SmartRefVector<LHCb::CaloCluster>::const_iterator itC = (*itH)->clusters().begin();
-          (*itH)->clusters().end() != itC; ++itC )
+    for ( SmartRefVector<LHCb::CaloCluster>::const_iterator itC = H->clusters().begin();
+          H->clusters().end() != itC; ++itC )
     {
       if ( *itC )
       {
@@ -117,8 +116,8 @@ void CaloHypoPacker::pack( const DataVector & hypos,
 
     //== Store the CaloHypos
     pH.firstHypo = phypos.refs().size();
-    for ( SmartRefVector<LHCb::CaloHypo>::const_iterator itO = (*itH)->hypos().begin();
-          (*itH)->hypos().end() != itO; ++itO )
+    for ( SmartRefVector<LHCb::CaloHypo>::const_iterator itO = H->hypos().begin();
+          H->hypos().end() != itO; ++itO )
     {
       if ( *itO )
       {
