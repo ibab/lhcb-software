@@ -28,8 +28,8 @@ long StandardPacker::linkID( DataObject* out,
   return out->linkMgr()->link(parent)->ID();
 }
 
-long StandardPacker::StandardPacker::linkID( DataObject* out,
-                                             const std::string& targetName ) const
+long StandardPacker::linkID( DataObject* out,
+                             const std::string& targetName ) const
 {
   LinkManager::Link* myLink = out->linkMgr()->link( targetName );
   if ( NULL == myLink )
