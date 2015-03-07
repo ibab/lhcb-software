@@ -14,30 +14,27 @@ using namespace LHCb;
 void MCCaloHitPacker::pack( const DataVector & hits,
                             PackedDataVector & phits ) const
 {
-  phits.data().reserve( hits.size() );
-
   const char ver = phits.packingVersion();
 
   if ( 0 == ver || 1 == ver )
   {
-    for ( DataVector::const_iterator iD = hits.begin();
-          iD != hits.end(); ++iD )
+    phits.data().reserve( hits.size() );
+    for ( const Data * hit : hits )
     {
-      const Data & hit = **iD;
       phits.data().push_back( PackedData() );
       PackedData & phit = phits.data().back();
-      phit.activeE      = m_pack.energy   ( hit.activeE() * m_energyScale );
-      phit.sensDetID    = hit.sensDetID();
-      phit.time         = hit.time();
-      if ( NULL != hit.particle() )
+      phit.activeE      = m_pack.energy   ( hit->activeE() * m_energyScale );
+      phit.sensDetID    = hit->sensDetID();
+      phit.time         = hit->time();
+      if ( NULL != hit->particle() )
       {
         phit.mcParticle = ( 0==ver ? 
                             m_pack.reference32( &phits,
-                                                hit.particle()->parent(),
-                                                hit.particle()->key() ) :
+                                                hit->particle()->parent(),
+                                                hit->particle()->key() ) :
                             m_pack.reference64( &phits,
-                                                hit.particle()->parent(),
-                                                hit.particle()->key() ) );
+                                                hit->particle()->parent(),
+                                                hit->particle()->key() ) );
       }
     }
   }
@@ -53,14 +50,11 @@ void MCCaloHitPacker::unpack( const PackedDataVector & phits,
                               DataVector       & hits ) const
 {
   const char ver = phits.packingVersion();
-
-  hits.reserve( phits.data().size() );
   if ( 0 == ver || 1 == ver )
   {
-    for ( PackedDataVector::Vector::const_iterator iD = phits.data().begin();
-          iD != phits.data().end(); ++iD )
+    hits.reserve( phits.data().size() );
+    for ( const PackedData & phit : phits.data() )
     {
-      const PackedData & phit = *iD;
       // make and save new hit in container
       Data * hit  = new Data();
       hits.add( hit );
