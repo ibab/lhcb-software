@@ -974,7 +974,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle& o
     debug() << "Adding non-basic particle" << endmsg;
     for( const auto&  p : daughters ) hos->addToSubstructure( store_( *p ) );
     // If the particle is not basic, then add the vertex to the substructure after the daughters
-    if(m_Turbo) hos->addToSubstructure( store_( *object.endVertex() ) ); // SB add
+    if(m_Turbo && object.endVertex() ) hos->addToSubstructure( store_( *object.endVertex() ) ); // SB add
   } else {
     debug() << "Adding basic particle" << endmsg;
     // particles with no daughters have substructure via ProtoParticle 
