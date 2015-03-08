@@ -1,0 +1,44 @@
+# Physical constants
+A = 0.045
+
+#HFAG-2014-Fall
+#DGs = 0.081
+#Gs = 0.6627
+#Gd = 0.6579
+
+#PDG-2014
+DGs = 0.091
+Gs = 0.6615
+Gd = 0.6583
+
+#Zhirui toys
+#DGs = 0.091
+#Gs = 0.66138
+#Gd = 0.65833
+
+#Program options
+Verbose = true
+
+#Fitter
+Blind = true
+xmin = 0
+xmax = 10
+xmin_norm = 0
+xmax_norm = 25
+FitResolutionBias = true
+MuPhi = 0.0060
+MuKst = 0.0048
+
+#Toys
+Ntoys = 10000
+
+#Acceptance
+accBs_mean_beta = 0.089
+accBs_mean_a = 1.99
+accBs_mean_n = 1.70
+accBs_mean_t0 = 0.268
+
+accBd_mean_beta = 0.089
+accBd_mean_a = 1.99
+accBd_mean_n = 1.70
+accBd_mean_t0 = 0.268

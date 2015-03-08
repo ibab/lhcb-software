@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="FF2.0" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="bin/Release/FF2" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-std=c++11" />
+					<Add option="`root-config --cflags --glibs`" />
+					<Add directory="include" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="`root-config --cflags --glibs`" />
+					<Add library="Minuit" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="Makefile" />
+		<Unit filename="config" />
+		<Unit filename="include/FFAux.h" />
+		<Unit filename="include/FFBinning.h" />
+		<Unit filename="include/FFBlind.h" />
+		<Unit filename="include/FFConfig.h" />
+		<Unit filename="include/FFFitter.h" />
+		<Unit filename="include/FFLoad.h" />
+		<Unit filename="include/FFPdfs.h" />
+		<Unit filename="include/FFPullHist.h" />
+		<Unit filename="include/TWeighter2D.h" />
+		<Unit filename="src/FFAux.cpp" />
+		<Unit filename="src/FFBinning.cpp" />
+		<Unit filename="src/FFBlind.cpp" />
+		<Unit filename="src/FFConfig.cpp" />
+		<Unit filename="src/FFFitter.cpp" />
+		<Unit filename="src/FFLoad.cpp" />
+		<Unit filename="src/FFPdfs.cpp" />
+		<Unit filename="src/FFPullHist.cpp" />
+		<Unit filename="src/main.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<DoxyBlocks>
+				<comment_style block="0" line="2" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

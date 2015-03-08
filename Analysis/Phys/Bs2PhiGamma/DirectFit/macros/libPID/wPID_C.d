@@ -1,0 +1,53 @@
+
+# DO NOT DELETE
+
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TH2.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TH1.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TAxis.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TNamed.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TObject.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/Rtypes.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/RConfig.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/RVersion.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/DllImport.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/Rtypeinfo.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/snprintf.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/strlcpy.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TGenericClassInfo.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TSchemaHelper.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TStorage.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TVersionCheck.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/Riosfwd.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TBuffer.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TString.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TMathBase.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TAttAxis.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TArrayD.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TArray.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TAttLine.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TAttFill.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TAttMarker.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TArrayC.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TArrayS.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TArrayI.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TArrayF.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/Foption.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TVectorFfwd.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TVectorDfwd.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TFitResultPtr.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TMatrixFBasefwd.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TMatrixDBasefwd.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TFile.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TDirectoryFile.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TDirectory.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TList.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TSeqCollection.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TCollection.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TIterator.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TDatime.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TUUID.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TMap.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/THashTable.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/TUrl.h
+./libPID/wPID_C.so: /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/cintdictversion.h /users_local1/lhcb/sw/LHCb/lcg/app/releases/ROOT/5.34.10/x86_64-slc5-gcc46-opt/root/include/RVersion.h
+wPID_C__ROOTBUILDVERSION= 5.34/10
