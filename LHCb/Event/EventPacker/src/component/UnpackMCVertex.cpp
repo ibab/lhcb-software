@@ -38,7 +38,8 @@ UnpackMCVertex::~UnpackMCVertex() {}
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode UnpackMCVertex::execute() {
+StatusCode UnpackMCVertex::execute()
+{
 
   // CRJ : If packed data does not exist just return (by default). Needed for packing of 
   //     : spillover which is not neccessarily available for each event
@@ -48,38 +49,50 @@ StatusCode UnpackMCVertex::execute() {
     getOrCreate<LHCb::PackedMCVertices,LHCb::PackedMCVertices>( m_inputName );
 
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "Size of PackedMCVertices = " << dst->end() - dst->begin() << endmsg;
+    debug() << "Size of PackedMCVertices = " << dst->mcVerts().size() << endmsg;
 
   LHCb::MCVertices* newMCVertices = new LHCb::MCVertices();
   put( newMCVertices, m_outputName );
 
-  StandardPacker pack;
-  
-  newMCVertices->reserve( dst->size() );
-  for ( std::vector<LHCb::PackedMCVertex>::const_iterator itS = dst->begin();
-        dst->end() != itS; ++itS ) {
-    const LHCb::PackedMCVertex& src = (*itS);
+  StandardPacker pack(this);
+
+  // Packing version
+  const char pVer = dst->packingVersion();
+
+  newMCVertices->reserve( dst->mcVerts().size() );
+  for ( const LHCb::PackedMCVertex& src : dst->mcVerts() )
+  {
 
     LHCb::MCVertex* vert = new LHCb::MCVertex( );
     newMCVertices->insert( vert, src.key );
-    const Gaudi::XYZPoint pt( pack.position( src.x ), pack.position( src.y ), pack.position( src.z) );
-    vert->setPosition( pt );
+    vert->setPosition( Gaudi::XYZPoint( pack.position( src.x ), 
+                                        pack.position( src.y ), 
+                                        pack.position( src.z ) ) );
     vert->setTime( src.tof );
     vert->setType( (LHCb::MCVertex::MCVertexType) src.type );
 
     int hintID;
     int key;
-    if ( -1 != src.mother ) {
-      pack.hintAndKey32( src.mother, dst, newMCVertices, hintID, key );
-      SmartRef<LHCb::MCParticle> ref( newMCVertices, hintID, key );
-      vert->setMother( ref );
+    if ( -1 != src.mother )
+    {
+      if ( ( 0==pVer && pack.hintAndKey32( src.mother, dst, newMCVertices, hintID, key ) ) ||
+           ( 0!=pVer && pack.hintAndKey64( src.mother, dst, newMCVertices, hintID, key ) ) )
+      {
+        SmartRef<LHCb::MCParticle> ref( newMCVertices, hintID, key );
+        vert->setMother( ref );
+      }
+      else { Error( "Corrupt MCVertex Mother MCParticle SmartRef detected" ).ignore(); }
     }
     
-    std::vector<int>::const_iterator itI;
-    for ( itI = src.products.begin() ; src.products.end() != itI ; ++itI ) {
-      pack.hintAndKey32( *itI, dst, newMCVertices, hintID, key );
-      SmartRef<LHCb::MCParticle> ref( newMCVertices, hintID, key );
-      vert->addToProducts( ref );
+    for ( const auto& I : src.products )
+    {
+      if ( ( 0==pVer && pack.hintAndKey32( I, dst, newMCVertices, hintID, key ) ) ||
+           ( 0!=pVer && pack.hintAndKey64( I, dst, newMCVertices, hintID, key ) ) )
+      {
+        SmartRef<LHCb::MCParticle> ref( newMCVertices, hintID, key );
+        vert->addToProducts( ref );
+      }
+      else { Error( "Corrupt MCVertex Daughter MCParticle SmartRef detected" ).ignore(); }
     }
   }
   

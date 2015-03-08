@@ -146,7 +146,7 @@ namespace LHCb
   public:
 
     /// Constructor
-    MCRichSegmentPacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
+    MCRichSegmentPacker( GaudiAlgorithm & p ) : m_pack(&p), m_parent(&p) {}
 
   public:
 

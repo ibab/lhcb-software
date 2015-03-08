@@ -156,7 +156,7 @@ namespace LHCb
 
     /// Constructor
     MCRichOpticalPhotonPacker( GaudiAlgorithm & parent )
-      : m_parent(&parent), PhotEnScale(5.0e8) {}
+      : m_pack(&parent), m_parent(&parent), PhotEnScale(5.0e8) {}
 
   public:
 

@@ -1,5 +1,3 @@
-// $Id: UnpackTwoProngVertex.cpp,v 1.4 2009-11-07 12:20:39 jonrob Exp $
-// Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -49,18 +47,19 @@ StatusCode UnpackTwoProngVertex::execute() {
     getOrCreate<LHCb::PackedTwoProngVertices,LHCb::PackedTwoProngVertices>( m_inputName );
   
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "Size of PackedTwoProngVertices = " << dst->end() - dst->begin() << endmsg;
+    debug() << "Size of PackedTwoProngVertices = " << dst->vertices().size() << endmsg;
 
   LHCb::TwoProngVertices* newTwoProngVertices = new LHCb::TwoProngVertices();
   newTwoProngVertices->reserve(dst->vertices().size());
   put( newTwoProngVertices, m_outputName );
 
-  StandardPacker pack;
+  // packing version
+  const char pVer = dst->packingVersion();
+
+  StandardPacker pack(this);
   
-  for ( std::vector<LHCb::PackedTwoProngVertex>::const_iterator itS = dst->begin();
-        dst->end() != itS; ++itS ) 
+  for ( const LHCb::PackedTwoProngVertex& src : dst->vertices() )
   {
-    const LHCb::PackedTwoProngVertex& src = (*itS);
 
     LHCb::TwoProngVertex* vert = new LHCb::TwoProngVertex( );
     newTwoProngVertices->insert( vert, src.key );
@@ -73,16 +72,21 @@ StatusCode UnpackTwoProngVertex::execute() {
     //== Store the Tracks
     int hintID;
     int key;
-    for ( int kk = src.firstTrack; src.lastTrack > kk; ++kk ) {
-      int trk = *(dst->beginRefs()+kk);
-      pack.hintAndKey32( trk, dst, newTwoProngVertices, hintID, key );
-      SmartRef<LHCb::Track> ref( newTwoProngVertices, hintID, key );
-      vert->addToTracks( ref );
+    for ( int kk = src.firstTrack; src.lastTrack > kk; ++kk ) 
+    {
+      const long long trk = *(dst->refs().begin()+kk);
+      if ( ( 0==pVer && pack.hintAndKey32( trk, dst, newTwoProngVertices, hintID, key ) ) ||
+           ( 0!=pVer && pack.hintAndKey64( trk, dst, newTwoProngVertices, hintID, key ) ) )
+      {
+        SmartRef<LHCb::Track> ref( newTwoProngVertices, hintID, key );
+        vert->addToTracks( ref );
+      }
+      else { Error( "Corrupt TwoProngVertex Track SmartRef detected." ).ignore(); }
     }
 
     //== Handles the ExtraInfo
     for ( int kEx = src.firstInfo; src.lastInfo > kEx; ++kEx ) {
-      std::pair<int,int> info = *(dst->beginExtra()+kEx);
+      const std::pair<int,int>& info = *(dst->extras().begin()+kEx);
       vert->addInfo( info.first, pack.fltPacked( info.second ) );
     }
 
@@ -169,7 +173,7 @@ StatusCode UnpackTwoProngVertex::execute() {
     std::vector<LHCb::ParticleID> pids;
     for ( int kk = src.firstPid; src.lastPid > kk; ++kk )
     {
-      pids.push_back( LHCb::ParticleID(*(dst->beginRefs()+kk)) );
+      pids.push_back( LHCb::ParticleID(*(dst->refs().begin()+kk)) );
     }
     vert->setCompatiblePIDs( pids );
 

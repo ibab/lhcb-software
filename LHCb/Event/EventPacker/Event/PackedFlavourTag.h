@@ -204,7 +204,7 @@ namespace LHCb
   public:
 
     /// Default Constructor
-    FlavourTagPacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
+    FlavourTagPacker( GaudiAlgorithm & p ) : m_pack(&p), m_parent(&p) {}
 
   public:
 

@@ -39,8 +39,8 @@ namespace LHCb
     int z;
     float tof;
     int type;
-    int mother;
-    std::vector<int> products;
+    long long mother;
+    std::vector<long long> products;
   };
 
   static const CLID CLID_PackedMCVertices = 1511;
@@ -63,24 +63,45 @@ namespace LHCb
   {
 
   public:
+    
+    /// Default Packing Version
+    static char defaultPackingVersion() { return 1; }
+
+  public:
 
     /// Standard constructor
-    PackedMCVertices( ) {}
+    PackedMCVertices( ) : m_packingVersion(0) {}
 
-    virtual ~PackedMCVertices( ) {}; ///< Destructor
+    virtual ~PackedMCVertices( ) {} ///< Destructor
+
     virtual const CLID& clID() const { return PackedMCVertices::classID(); }
     static  const CLID& classID()    { return CLID_PackedMCVertices;       }
 
-    void addEntry(  PackedMCVertex& obj ) { m_vect.push_back( obj ); }
-    std::vector<PackedMCVertex>::const_iterator begin() const { return m_vect.begin(); }
-    std::vector<PackedMCVertex>::const_iterator end()   const { return m_vect.end(); }
+    //void addEntry(  PackedMCVertex& obj ) { m_vect.push_back( obj ); }
+    //std::vector<PackedMCVertex>::const_iterator begin() const { return m_vect.begin(); }
+    //std::vector<PackedMCVertex>::const_iterator end()   const { return m_vect.end(); }
+    //void reserve( const unsigned int size ) { m_vect.reserve(size); }
+    //unsigned int size() const { return m_vect.size(); }
 
-    void reserve( const unsigned int size ) { m_vect.reserve(size); }
-    unsigned int size() const { return m_vect.size(); }
+  public:
+
+    std::vector<PackedMCVertex>&       mcVerts()       { return m_vect; }
+    const std::vector<PackedMCVertex>& mcVerts() const { return m_vect; }
+
+  public:
+    
+    /// Set the packing version
+    void setPackingVersion( const char ver ) { m_packingVersion = ver; }
+    
+    /// Access the packing version
+    char packingVersion() const { return m_packingVersion; }
 
   private:
 
     std::vector<PackedMCVertex> m_vect;
+
+    /// Data packing version
+    char   m_packingVersion;
 
   };
 

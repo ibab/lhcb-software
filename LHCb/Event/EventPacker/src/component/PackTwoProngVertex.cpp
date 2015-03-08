@@ -1,4 +1,3 @@
-// Include files
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -28,6 +27,7 @@ DECLARE_ALGORITHM_FACTORY( PackTwoProngVertex )
   declareProperty( "OutputName", m_outputName = LHCb::PackedTwoProngVertexLocation::Default );
   declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -36,7 +36,8 @@ PackTwoProngVertex::~PackTwoProngVertex() {}
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode PackTwoProngVertex::execute() {
+StatusCode PackTwoProngVertex::execute()
+{
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
@@ -49,14 +50,22 @@ StatusCode PackTwoProngVertex::execute() {
   put( out, m_outputName );
   out->setVersion( 1 );
 
-  StandardPacker pack;
-  for (  LHCb::TwoProngVertices::const_iterator itV = verts->begin();
-         verts->end() != itV ; ++itV )
+  // packing version
+  const char pVer = LHCb::PackedTwoProngVertices::defaultPackingVersion();
+  out->setPackingVersion(pVer);
+
+  StandardPacker pack(this);
+
+  for ( const LHCb::TwoProngVertex* vert : *verts )
   {
-    LHCb::TwoProngVertex*      vert = *itV;
-    LHCb::PackedTwoProngVertex pVert;
+  
+    // save the packed vertex
+    out->vertices().push_back( LHCb::PackedTwoProngVertex() );
+    LHCb::PackedTwoProngVertex & pVert = out->vertices().back();
+
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-      debug() << "Found vertex key " << (*itV)->key() << endmsg;
+      debug() << "Found vertex key " << vert->key() << endmsg;
+
     pVert.key        = vert->key();
     pVert.technique  = vert->technique();
     pVert.chi2       = pack.fltPacked( vert->chi2() );
@@ -141,51 +150,36 @@ StatusCode PackTwoProngVertex::execute() {
     pVert.cov86 = pack.fraction( vert->momcovB()   (2,0)/err8/err6 );
     pVert.cov87 = pack.fraction( vert->momcovB()   (2,1)/err8/err7 );
 
-    /*
-      info() << format( "cov %6d", pVert.cov00 ) << endmsg;
-      info() << format( "cov %6d %6d", pVert.cov10, pVert.cov11 ) << endmsg;
-      info() << format( "cov %6d %6d %6d", pVert.cov20, pVert.cov21, pVert.cov22 ) << endmsg;
-      info() << format( "cov %6d %6d %6d %6d", pVert.cov30, pVert.cov31, pVert.cov32, pVert.cov33 ) << endmsg;
-      info() << format( "cov %6d %6d %6d %6d %6d",
-      pVert.cov40, pVert.cov41, pVert.cov42, pVert.cov43, pVert.cov44 ) << endmsg;
-      info() << format( "cov %6d %6d %6d %6d %6d %6d",
-      pVert.cov50, pVert.cov51, pVert.cov52, pVert.cov53, pVert.cov54, pVert.cov55 ) << endmsg;
-      info() << format( "cov %6d %6d %6d %6d %6d %6d %6d",
-      pVert.cov60, pVert.cov61, pVert.cov62, pVert.cov63, pVert.cov64, pVert.cov65, pVert.cov66 ) << endmsg;
-      info() << format( "cov %6d %6d %6d %6d %6d %6d %6d %6d",
-      pVert.cov70, pVert.cov71, pVert.cov72, pVert.cov73, pVert.cov74, pVert.cov75,
-      pVert.cov76, pVert.cov77 ) << endmsg;
-      info() << format( "cov %6d %6d %6d %6d %6d %6d %6d %6d %6d",
-      pVert.cov80, pVert.cov81, pVert.cov82, pVert.cov83, pVert.cov84, pVert.cov85,
-      pVert.cov86, pVert.cov87, pVert.cov88 ) << endmsg;
-    */
-
     //== Store the Tracks
-    pVert.firstTrack = out->sizeRefs();
+    pVert.firstTrack = out->refs().size();
     for ( SmartRefVector<LHCb::Track>::const_iterator itT = vert->tracks().begin();
-          vert->tracks().end() != itT; ++itT ) {
-      int myRef = pack.reference32( out, (*itT)->parent(), (*itT)->key() );
-      out->addRef( myRef );
+          vert->tracks().end() != itT; ++itT ) 
+    {
+      out->refs().push_back( 0==pVer ? 
+                             pack.reference32( out, (*itT)->parent(), (*itT)->key() ) :
+                             pack.reference64( out, (*itT)->parent(), (*itT)->key() ) );
     }
-    pVert.lastTrack = out->sizeRefs();
+    pVert.lastTrack = out->refs().size();
 
     //== Store the ParticleID
-    pVert.firstPid = out->sizeRefs();
+    pVert.firstPid = out->refs().size();
     for ( std::vector<LHCb::ParticleID>::const_iterator itP = vert->compatiblePIDs().begin();
-          vert->compatiblePIDs().end() != itP; ++itP ) {
-      out->addRef( (*itP).pid() );
+          vert->compatiblePIDs().end() != itP; ++itP ) 
+    {
+      out->refs().push_back( (*itP).pid() );
     }
-    pVert.lastPid = out->sizeRefs();
+    pVert.lastPid = out->refs().size();
 
     //== Handles the ExtraInfo
-    pVert.firstInfo = out->sizeExtra();
+    pVert.firstInfo = out->extras().size();
     for ( GaudiUtils::VectorMap<int,double>::iterator itE = vert->extraInfo().begin();
           vert->extraInfo().end() != itE; ++itE ) {
-      out->addExtra( (*itE).first, pack.fltPacked( (*itE).second ) );
+      out->extras().push_back( std::make_pair((*itE).first,pack.fltPacked((*itE).second)) );
     }
-    pVert.lastInfo = out->sizeExtra();
-    out->addEntry( pVert );
+    pVert.lastInfo = out->extras().size();
+
   }
+
   return StatusCode::SUCCESS;
 }
 

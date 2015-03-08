@@ -158,7 +158,8 @@ namespace LHCb
 
     /// Constructor
     MCHitPacker( GaudiAlgorithm & parent ) 
-      : m_parent(&parent),
+      : m_pack(&parent),
+        m_parent(&parent),
         m_dispScale ( 1.0e2 ),
         m_enScale   ( 5.0e3 ) {}
     

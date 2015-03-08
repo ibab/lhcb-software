@@ -113,38 +113,47 @@ namespace LHCb
 
   public:
 
-    /// Standard constructor
-    PackedTwoProngVertices( ) { }
+    /// Default Packing Version
+    static char defaultPackingVersion() { return 1; }
+
+  public:
+
+    /** Standard constructor
+     *  Packing version must be set to 0 by default, for compatibility with
+     *  data written before the version was added */
+    PackedTwoProngVertices( ) : m_packingVersion(0) { }
 
     virtual ~PackedTwoProngVertices( ) {}; ///< Destructor
     virtual const CLID& clID()  const { return PackedTwoProngVertices::classID(); }
     static  const CLID& classID()     { return CLID_PackedTwoProngVertices;       }
 
-    void addEntry( PackedTwoProngVertex& obj ) { m_vect.push_back( obj ); }
-    std::vector<PackedTwoProngVertex>::const_iterator begin() const { return m_vect.begin(); }
-    std::vector<PackedTwoProngVertex>::const_iterator end()   const { return m_vect.end(); }
+  public:
+
     std::vector<PackedTwoProngVertex>& vertices()                   { return m_vect; }
     const std::vector<PackedTwoProngVertex>& vertices() const       { return m_vect; }
 
-    void addRef( int i ) { m_refs.push_back( i ); }
-    /// Avoid hidden method
-    virtual unsigned long addRef() { return DataObject::addRef(); }
-    std::vector<int>::const_iterator beginRefs() const { return m_refs.begin(); }
-    unsigned int  sizeRefs()                     const { return m_refs.size(); }
-    std::vector<int>& refs()                           { return m_refs; }
-    const std::vector<int>& refs() const               { return m_refs; }
+    std::vector<long long>& refs()                           { return m_refs; }
+    const std::vector<long long>& refs() const               { return m_refs; }
 
-    void addExtra( int a, int b ) { std::pair<int,int> tmp( a, b ); m_extra.push_back( tmp ); }
-    std::vector<std::pair<int,int> >::const_iterator beginExtra() const { return m_extra.begin(); }
-    unsigned int sizeExtra()                         const { return m_extra.size(); }
     std::vector<std::pair<int,int> >& extras()             { return m_extra; }
     const std::vector<std::pair<int,int> >& extras() const { return m_extra; }
 
+  public:
+
+    /// Set the packing version
+    void setPackingVersion( const char ver ) { m_packingVersion = ver; }
+    
+    /// Access the packing version
+    char packingVersion() const { return m_packingVersion; }
+    
   private:
 
-    std::vector<PackedTwoProngVertex>     m_vect;
-    std::vector<int>                 m_refs;
-    std::vector<std::pair<int,int> > m_extra;
+    std::vector<PackedTwoProngVertex>  m_vect;
+    std::vector<long long>             m_refs;
+    std::vector<std::pair<int,int> >   m_extra;
+
+    /// Data packing version
+    char m_packingVersion;
 
   };
 

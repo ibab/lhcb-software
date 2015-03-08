@@ -7,6 +7,7 @@
 
 // Gaudi
 #include "GaudiKernel/GaudiException.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : StandardPacker
@@ -14,10 +15,19 @@
 // 2015-03-07 : Chris Jones
 //-----------------------------------------------------------------------------
 
+void StandardPacker::Warning( const std::string & mess ) const
+{
+  if ( m_parent ) 
+  { m_parent->Warning( mess ).ignore(); }
+  else 
+  { std::cout << "WARNING : StandardPacker : " << mess << std::endl; }
+}
+
 int StandardPacker::reference32( DataObject* out,
                                  const DataObject* parent,
                                  const int key ) const
 {
+  Warning( "Creating obsolete 32bit packed reference" );
 
   if ( key != (key & 0x0FFFFFFF) )
   {
@@ -46,6 +56,8 @@ int StandardPacker::reference32( DataObject* out,
                                  const std::string& targetName,
                                  const int key ) const
 {
+  Warning( "Creating obsolete 32bit packed reference" );
+
   if ( key != (key & 0x0FFFFFFF) )
   {
     std::ostringstream mess;

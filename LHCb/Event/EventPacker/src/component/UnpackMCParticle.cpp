@@ -49,18 +49,19 @@ StatusCode UnpackMCParticle::execute()
     getOrCreate<LHCb::PackedMCParticles,LHCb::PackedMCParticles>( m_inputName );
 
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "Size of PackedMCParticles = " << dst->end() - dst->begin() << endmsg;
+    debug() << "Size of PackedMCParticles = " << dst->mcParts().size() << endmsg;
 
   LHCb::MCParticles* newMCParticles = new LHCb::MCParticles();
   put( newMCParticles, m_outputName );
 
-  StandardPacker pack;
+  StandardPacker pack(this);
 
-  newMCParticles->reserve( dst->size() );
-  for ( std::vector<LHCb::PackedMCParticle>::const_iterator itS = dst->begin();
-        dst->end() != itS; ++itS )
+  // Packing version
+  const char pVer = dst->packingVersion();
+
+  newMCParticles->reserve( dst->mcParts().size() );
+  for ( const LHCb::PackedMCParticle& src : dst->mcParts() )
   {
-    const LHCb::PackedMCParticle& src = (*itS);
 
     LHCb::MCParticle* part = new LHCb::MCParticle( );
     newMCParticles->insert( part, src.key );
@@ -72,22 +73,29 @@ StatusCode UnpackMCParticle::execute()
     const double E = std::sqrt( (px*px) + (py*py) + (pz*pz) + (mass*mass) );
     part->setMomentum( Gaudi::LorentzVector( px, py, pz , E ) );
 
-    const LHCb::ParticleID PID(src.PID);
-    part->setParticleID( PID );
+    part->setParticleID( LHCb::ParticleID(src.PID) );
 
     int hintID(0), key(0);
-    pack.hintAndKey32( src.originVertex, dst, newMCParticles, hintID, key );
-    SmartRef<LHCb::MCVertex> ref( newMCParticles, hintID, key );
-    part->setOriginVertex( ref );
-
-    for ( std::vector<int>::const_iterator itI = src.endVertices.begin();
-          src.endVertices.end() != itI ; ++itI )
+    if ( ( 0==pVer && pack.hintAndKey32( src.originVertex, dst, newMCParticles, hintID, key ) ) ||
+         ( 0!=pVer && pack.hintAndKey64( src.originVertex, dst, newMCParticles, hintID, key ) ) )
     {
-      pack.hintAndKey32( *itI, dst, newMCParticles, hintID, key );
-      SmartRef<LHCb::MCVertex> refV( newMCParticles, hintID, key );
-      part->addToEndVertices( refV );
+      SmartRef<LHCb::MCVertex> ref( newMCParticles, hintID, key );
+      part->setOriginVertex( ref );
+    }
+    else { Error( "Corrupt MCParticle Origin MCVertex SmartRef detected" ).ignore(); }
+
+    for ( const auto& I : src.endVertices )
+    {
+      if ( ( 0==pVer && pack.hintAndKey32( I, dst, newMCParticles, hintID, key ) ) ||
+           ( 0!=pVer && pack.hintAndKey64( I, dst, newMCParticles, hintID, key ) ) )
+      {
+        SmartRef<LHCb::MCVertex> refV( newMCParticles, hintID, key );
+        part->addToEndVertices( refV );
+      }
+      else { Error( "Corrupt MCParticle End MCVertex SmartRef detected" ).ignore(); }
     }
   }
+
   return StatusCode::SUCCESS;
 }
 

@@ -52,9 +52,9 @@ namespace LHCb
   public:
   
     /// Standard constructor
-    PackedRelations( ) {};
+    PackedRelations( ) {}
 
-    virtual ~PackedRelations( ) {}; ///< Destructor
+    virtual ~PackedRelations( ) {} ///< Destructor
 
     /// Class ID
     static const CLID& classID() { return CLID_PackedRelations; }

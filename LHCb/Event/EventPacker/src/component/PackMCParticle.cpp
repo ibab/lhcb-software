@@ -59,17 +59,20 @@ StatusCode PackMCParticle::execute() {
     debug() << m_inputName << " contains " << parts->size()
             << " MCParticles to convert." << endmsg;
 
-  StandardPacker pack;
+  StandardPacker pack(this);
 
   LHCb::PackedMCParticles* out = new LHCb::PackedMCParticles();
   put( out, m_outputName );
 
-  out->reserve( parts->size() );
-  for ( LHCb::MCParticles::const_iterator itP = parts->begin();
-        parts->end() != itP; ++itP )
+  // Packing version
+  const char pVer = LHCb::PackedMCParticles::defaultPackingVersion();
+  out->setPackingVersion(pVer);
+
+  out->mcParts().reserve( parts->size() );
+  for ( const LHCb::MCParticle * part : *parts )
   {
-    LHCb::MCParticle* part = (*itP);
-    LHCb::PackedMCParticle newPart;
+    out->mcParts().push_back( LHCb::PackedMCParticle() );
+    LHCb::PackedMCParticle& newPart = out->mcParts().back();
 
     newPart.key  = part->key();
     newPart.px   = pack.energy( part->momentum().px() );
@@ -77,19 +80,21 @@ StatusCode PackMCParticle::execute() {
     newPart.pz   = pack.energy( part->momentum().pz() );
     newPart.mass = (float)part->virtualMass();
     newPart.PID  = part->particleID().pid();
-    newPart.originVertex = pack.reference32( out,
-                                             part->originVertex()->parent(),
-                                             part->originVertex()->key() );
+    newPart.originVertex = ( 0==pVer ? 
+                             pack.reference32( out,
+                                               part->originVertex()->parent(),
+                                               part->originVertex()->key() ) :
+                             pack.reference64( out,
+                                               part->originVertex()->parent(),
+                                               part->originVertex()->key() ) );
     for ( SmartRefVector<LHCb::MCVertex>::const_iterator itV = part->endVertices().begin();
-          part->endVertices().end() != itV; ++itV ) {
-      int ref = pack.reference32( out, (*itV)->parent(), (*itV)->key() );
-      newPart.endVertices.push_back( ref );
-      if ( MSG::VERBOSE >= msgLevel() ) {
-        verbose() << "Reference to endVertex       "
-                  << format( "%8x",  ref ) << endmsg;
-      }
+          part->endVertices().end() != itV; ++itV ) 
+    {
+      newPart.endVertices.push_back( 0==pVer ? 
+                                     pack.reference32( out, (*itV)->parent(), (*itV)->key() ) :
+                                     pack.reference64( out, (*itV)->parent(), (*itV)->key() ) );
     }
-    out->addEntry( newPart );
+
   }
 
   // If requested, remove the input data from the TES and delete

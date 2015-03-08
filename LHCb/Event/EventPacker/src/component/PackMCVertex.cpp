@@ -33,6 +33,7 @@ DECLARE_ALGORITHM_FACTORY( PackMCVertex )
   declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
   declareProperty( "DeleteInput",                m_deleteInput  = false     );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -63,27 +64,32 @@ StatusCode PackMCVertex::execute()
     debug() << m_inputName << " contains " << verts->size()
             << " MCVertices to convert." << endmsg;
 
-  StandardPacker pack;
+  StandardPacker pack(this);
   static const double smallest = boost::numeric::bounds<float>::smallest();
   static const double largest  = boost::numeric::bounds<float>::highest();
-  static const double tiny = boost::numeric::bounds<double>::smallest();
+  static const double tiny     = boost::numeric::bounds<double>::smallest();
 
   LHCb::PackedMCVertices* out = new LHCb::PackedMCVertices();
   put( out, m_outputName );
 
-  out->reserve( verts->size() );
-  for ( LHCb::MCVertices::const_iterator itV = verts->begin();
-        verts->end() != itV; ++itV )
+  // Packing version
+  const char pVer = LHCb::PackedMCVertices::defaultPackingVersion();
+  out->setPackingVersion(pVer);
+
+  out->mcVerts().reserve( verts->size() );
+  for ( const LHCb::MCVertex* vert : *verts )
   {
-    LHCb::MCVertex* vert = (*itV);
-    LHCb::PackedMCVertex newVert;
+    out->mcVerts().push_back( LHCb::PackedMCVertex() );
+    LHCb::PackedMCVertex& newVert = out->mcVerts().back();
+
     newVert.key  = vert->key();
     newVert.x    = pack.position( vert->position().x() );
     newVert.y    = pack.position( vert->position().y() );
     newVert.z    = pack.position( vert->position().z() );
 
     // Protect crazy vertex times (no need for fabs, is always positive!)
-    if( vert->time() > 0. && vert->time() < smallest ) {
+    if( vert->time() > 0. && vert->time() < smallest ) 
+    {
       Warning( "PackedVertex.tof underflow, set to 0.", StatusCode::SUCCESS, 0 ).ignore();
 
       if( msgLevel(MSG::DEBUG) ) {
@@ -107,21 +113,30 @@ StatusCode PackMCVertex::execute()
       newVert.tof = (float)largest ;
     }
     else
+    {
       newVert.tof  = (float)vert->time();   // What scale ?
+    }
+
     newVert.type = vert->type();
 
     newVert.mother = -1;
-    if ( 0 != vert->mother() ) {
-      newVert.mother = pack.reference32( out, vert->mother()->parent(),
-                                       vert->mother()->key() );
+    if ( 0 != vert->mother() ) 
+    {
+      newVert.mother = ( 0==pVer ? 
+                         pack.reference32( out, vert->mother()->parent(),
+                                           vert->mother()->key() ) :
+                         pack.reference64( out, vert->mother()->parent(),
+                                           vert->mother()->key() ) );
     }
     for ( SmartRefVector<LHCb::MCParticle>::const_iterator itP = vert->products().begin();
-          vert->products().end() != itP; ++itP ) {
-      int ref = pack.reference32( out, (*itP)->parent(), (*itP)->key() );
-      newVert.products.push_back( ref );
+          vert->products().end() != itP; ++itP ) 
+    {
+      newVert.products.push_back( 0==pVer ? 
+                                  pack.reference32( out, (*itP)->parent(), (*itP)->key() ) :
+                                  pack.reference64( out, (*itP)->parent(), (*itP)->key() ) );
     }
+
     if( msgLevel(MSG::VERBOSE) ) verbose() << "Vertex packed OK" << endmsg;
-    out->addEntry( newVert );
   }
 
   // If requested, remove the input data from the TES and delete

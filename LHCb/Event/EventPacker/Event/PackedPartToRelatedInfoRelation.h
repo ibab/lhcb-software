@@ -184,7 +184,8 @@ namespace LHCb
 
     /// Default Constructor
     RelatedInfoRelationsPacker( GaudiAlgorithm & parent ) 
-      : m_parent(&parent),
+      : m_pack(&parent),
+        m_parent(&parent),
         m_srcContainer(NULL),
         m_prevSrcLink(-1)
     { }

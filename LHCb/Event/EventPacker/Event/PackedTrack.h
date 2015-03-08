@@ -202,8 +202,8 @@ namespace LHCb
   public:
 
     /// Default Constructor
-    TrackPacker( GaudiAlgorithm & parent ) : m_parent(&parent)
-    { resetWrappingCounts(); }
+    TrackPacker( GaudiAlgorithm & parent ) 
+      : m_pack(&parent), m_parent(&parent) { resetWrappingCounts(); }
 
   public:
 

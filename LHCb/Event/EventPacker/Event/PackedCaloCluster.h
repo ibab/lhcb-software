@@ -185,7 +185,7 @@ namespace LHCb
   public:
 
     /// Default Constructor
-    CaloClusterPacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
+    CaloClusterPacker( GaudiAlgorithm & p ) : m_pack(&p), m_parent(&p) {}
 
   public:
 

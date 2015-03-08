@@ -141,7 +141,7 @@ namespace LHCb
   public:
 
     /// Default Constructor
-    ProtoParticlePacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
+    ProtoParticlePacker( GaudiAlgorithm & parent ) : m_pack(&parent), m_parent(&parent) {}
 
   public:
 

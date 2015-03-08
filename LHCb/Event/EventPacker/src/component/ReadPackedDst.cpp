@@ -204,8 +204,8 @@ StatusCode ReadPackedDst::execute() {
       put( recVertices, name + m_postfix );
       processLinks( recVertices, version );
       getFromBlob<LHCb::PackedRecVertex> ( recVertices->vertices() , blobs );
-      getFromBlob<long long>             ( recVertices->refs()    , blobs );
-      getFromBlob<std::pair<int,int> >   ( recVertices->extras() , blobs );
+      getFromBlob<long long>             ( recVertices->refs()     , blobs );
+      getFromBlob<std::pair<int,int> >   ( recVertices->extras()   , blobs );
 
     } else if ( LHCb::CLID_PackedTwoProngVertices     == classID ) {
 
@@ -213,8 +213,8 @@ StatusCode ReadPackedDst::execute() {
       put( recVertices, name + m_postfix );
       processLinks( recVertices, version );
       getFromBlob<LHCb::PackedTwoProngVertex> ( recVertices->vertices() , blobs );
-      getFromBlob<int>                        ( recVertices->refs()    , blobs );
-      getFromBlob<std::pair<int,int> >        ( recVertices->extras() , blobs );
+      getFromBlob<long long>                  ( recVertices->refs()     , blobs );
+      getFromBlob<std::pair<int,int> >        ( recVertices->extras()   , blobs );
 
     } else if ( LHCb::CLID_RecSummary == classID ) {
 

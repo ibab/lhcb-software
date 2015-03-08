@@ -143,7 +143,7 @@ namespace LHCb
 
     /// Constructor
     MCCaloHitPacker( GaudiAlgorithm & parent )
-      : m_parent(&parent), m_energyScale( 1.0e2 ) { }
+      : m_pack(&parent), m_parent(&parent), m_energyScale( 1.0e2 ) { }
 
   public:
 

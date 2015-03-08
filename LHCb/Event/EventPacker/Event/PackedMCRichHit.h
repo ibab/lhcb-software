@@ -142,7 +142,7 @@ namespace LHCb
   public:
 
     /// Constructor
-    MCRichHitPacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
+    MCRichHitPacker( GaudiAlgorithm & p ) : m_pack(&p), m_parent(&p) {}
 
   public:
 

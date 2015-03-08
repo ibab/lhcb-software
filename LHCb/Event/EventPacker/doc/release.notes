@@ -4,6 +4,13 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2015-03-08 - Chris Jones
+ - Implement 64 bit reference packing for MCParticle, MCVertex and
+   TwoProngVertex classes.
+ - Add a warning message to reference32 to warn if any code is still creating
+   potentially problematic 32 bit packed references. Method is retained for
+   backwards compatibility...
+
 ! 2015-03-07 - Chris Jones
  - Add protection to StandardPacker to prevent segmentation faults from a NULL
    pointer dereference in the case of corrupted reference information, due

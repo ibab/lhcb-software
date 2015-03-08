@@ -9,6 +9,8 @@
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/IRegistry.h"
 
+class GaudiAlgorithm;
+
 //---------------------------------------------------------------------------
 /** @class StandardPacker StandardPacker.h Event/StandardPacker.h
  *
@@ -39,50 +41,50 @@ public:
   //---------------------------------------------------------------------------
 
   /// Standard constructor
-  StandardPacker( ) {}
+  StandardPacker( GaudiAlgorithm * p = NULL ) : m_parent(p) { }
 
   ~StandardPacker( ) {} ///< Destructor
 
   //---------------------------------------------------------------------------
 
   /** returns an int for a double energy */
-  int energy( const double e ) const
+  inline int energy( const double e ) const
   {
     return packDouble( e * Packer::ENERGY_SCALE );
   }
 
   /** returns an int for a double position */
-  int position( const double x ) const
+  inline int position( const double x ) const
   {
     return packDouble( x * Packer::POSITION_SCALE );
   }
 
   /** returns an int for a double slope */
-  int slope( const double x ) const
+  inline int slope( const double x ) const
   {
     return packDouble( x * Packer::SLOPE_SCALE );
   }
 
   /** returns an short int for a double fraction f */
-  short int fraction( const double f ) const
+  inline short int fraction( const double f ) const
   {
     return shortPackDouble( f * Packer::FRACTION_SCALE );
   }
 
   /** returns an short int for a double fraction top/bot */
-  short int fraction( const double top, const double bot ) const
+  inline short int fraction( const double top, const double bot ) const
   {
     return fraction( fabs(bot) > 0 ? top/bot : 0.0 );
   }
 
   /** returns an int for a double time (TOF) value */
-  int time( const double x ) const
+  inline int time( const double x ) const
   {
     return packDouble( x * Packer::TIME_SCALE );
   }
 
   /** returns an int for a double delta log likelihood value */
-  int deltaLL( const double x ) const
+  inline int deltaLL( const double x ) const
   {
     return packDouble( x * Packer::DELTALL_SCALE );
   }
@@ -94,7 +96,7 @@ public:
   }
 
   /** returns an int containing the float value of the double */
-  int fltPacked( const double& x ) const
+  inline int fltPacked( const double& x ) const
   {
     union fltInt { int i; float f; } convert;
     convert.f = (float)x;
@@ -104,8 +106,8 @@ public:
   //---------------------------------------------------------------------------
 
   /// Returns the 'LinkID' 
-  long linkID( DataObject* out,
-               const DataObject* parent ) const
+  inline long linkID( DataObject* out,
+                      const DataObject* parent ) const
   {
     LinkManager::Link * myLink = out->linkMgr()->link(parent);
     if ( NULL == myLink )
@@ -117,8 +119,8 @@ public:
   }
 
   /// Returns the 'LinkID'
-  long linkID( DataObject* out,
-               const std::string& targetName ) const
+  inline long linkID( DataObject* out,
+                      const std::string& targetName ) const
   {
     LinkManager::Link* myLink = out->linkMgr()->link( targetName );
     if ( NULL == myLink )
@@ -150,9 +152,9 @@ public:
                    const int key ) const;
   
   /// Extracts the key and index from a packed data word
-  void indexAndKey32( const int data,
-                      int& indx,
-                      int& key ) const
+  inline void indexAndKey32( const int data,
+                             int& indx,
+                             int& key ) const
   {
     indx = data >> 28;
     key  = data & 0x0FFFFFFF;
@@ -172,9 +174,9 @@ public:
    *  @arg  parent : Pointer to the parent container of the SmartRef, method ->parent()
    *  @arg  key    : returned by the method .linkID() of the SmartRef
    */
-  long long reference64( DataObject* out,
-                         const DataObject* parent,
-                         const int key ) const
+  inline long long reference64( DataObject* out,
+                                const DataObject* parent,
+                                const int key ) const
   {
     const long long ID( linkID(out,parent) );
     const long long myLinkID = (ID << 32);
@@ -182,9 +184,9 @@ public:
   }
 
   /// Extracts the key and index from a packed 64-bit data word
-  void indexAndKey64( const long long data,
-                      int& indx,
-                      int& key ) const
+  inline void indexAndKey64( const long long data,
+                             int& indx,
+                             int& key ) const
   {
     indx = data >> 32;
     const long long mask = 0x00000000FFFFFFFF;
@@ -201,28 +203,28 @@ public:
   //---------------------------------------------------------------------------
 
   /** returns the energy as double from the int value */
-  double energy( const int k )         const { return double(k) / Packer::ENERGY_SCALE; }
+  inline double energy( const int k )         const { return double(k) / Packer::ENERGY_SCALE; }
 
   /** returns the position as double from the int value */
-  double position( const int k )       const { return double(k) / Packer::POSITION_SCALE; }
+  inline double position( const int k )       const { return double(k) / Packer::POSITION_SCALE; }
 
   /** returns the slope as double from the int value */
-  double slope( const int k )          const { return double(k) / Packer::SLOPE_SCALE; }
+  inline double slope( const int k )          const { return double(k) / Packer::SLOPE_SCALE; }
 
   /** returns the fraction as double from the short int value */
-  double fraction( const short int k ) const { return double(k) / Packer::FRACTION_SCALE; }
+  inline double fraction( const short int k ) const { return double(k) / Packer::FRACTION_SCALE; }
 
   /** returns the time as double from the int value */
-  double time( const int k )           const { return double(k) / Packer::TIME_SCALE; }
+  inline double time( const int k )           const { return double(k) / Packer::TIME_SCALE; }
 
   /** returns the delta Log Likelihood as double from the int value */
-  double deltaLL( const int k )        const { return double(k) / Packer::DELTALL_SCALE; }
+  inline double deltaLL( const int k )        const { return double(k) / Packer::DELTALL_SCALE; }
 
   /** returns the mass as double from the int value */
-  double mass( const int k )           const { return double(k) / Packer::MASS_SCALE; }
+  inline double mass( const int k )           const { return double(k) / Packer::MASS_SCALE; }
 
   /** returns an double from a int containing in fact a float */
-  double fltPacked( const int k  ) const
+  inline double fltPacked( const int k  ) const
   {
     union fltInt { int i; float f; } convert;
     convert.i = k;
@@ -234,7 +236,7 @@ public:
 private:
 
   /// Pack a double to an int
-  int packDouble ( const double val ) const
+  inline int packDouble ( const double val ) const
   {
     return ( 2.e9  < val ?  2000000000         : // saturate 31 bits
              -2.e9 > val ? -2000000000         : // idem
@@ -243,13 +245,23 @@ private:
   }
 
   /// Pack a double to a short int
-  short int shortPackDouble ( const double val ) const
+  inline short int shortPackDouble ( const double val ) const
   {
     return ( 3.e4  < val ? (short int)  30000        : // saturate 15 bits
              -3.e4 > val ? (short int) -30000        : // idem
              0     < val ? (short int) ( val + 0.5 ) : // proper rounding
              (short int) ( val - 0.5 )               );
   }
+
+  /// Print a warning message
+  void Warning( const std::string & mess ) const;
+
+  //---------------------------------------------------------------------------
+
+private:
+
+  /// Pointer to parent algorithm
+  GaudiAlgorithm * m_parent;
 
   //---------------------------------------------------------------------------
 

@@ -1,4 +1,4 @@
-// $Id: PackedMCRichDigitSummary.h,v 1.4 2009-11-07 12:20:26 jonrob Exp $
+
 #ifndef EVENT_PackedMCRichDigitSummary_H
 #define EVENT_PackedMCRichDigitSummary_H 1
 
@@ -138,7 +138,7 @@ namespace LHCb
   public:
 
     /// Default Constructor
-    MCRichDigitSummaryPacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
+    MCRichDigitSummaryPacker( GaudiAlgorithm & p ) : m_pack(&p), m_parent(&p) {}
 
   public:
 

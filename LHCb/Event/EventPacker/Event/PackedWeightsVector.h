@@ -167,7 +167,8 @@ namespace LHCb
   public:
 
     /// Default Constructor
-    WeightsVectorPacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
+    WeightsVectorPacker( GaudiAlgorithm & parent ) 
+      : m_pack(&parent), m_parent(&parent) {}
 
   public:
 

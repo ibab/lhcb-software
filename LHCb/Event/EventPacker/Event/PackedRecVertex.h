@@ -183,7 +183,7 @@ namespace LHCb
   public:
 
     /// Constructor
-    RecVertexPacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
+    RecVertexPacker( GaudiAlgorithm & parent ) : m_pack(&parent), m_parent(&parent) {}
 
   public:
 
