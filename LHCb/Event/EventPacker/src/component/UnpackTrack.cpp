@@ -78,10 +78,8 @@ StatusCode UnpackTrack::execute()
                                        get<LHCb::Tracks>( m_ancestorSource ) );
   if ( targetTracks )
   {
-    for ( LHCb::Tracks::iterator iTk = newTracks->begin(); 
-          iTk != newTracks->end(); ++iTk )
+    for ( LHCb::Track * track : *newTracks )
     {
-      LHCb::Track * track = *iTk;
       //== Create an ancestor if needed
       const LHCb::Track* ancest = targetTracks->object( track->key() );
       if ( ancest )

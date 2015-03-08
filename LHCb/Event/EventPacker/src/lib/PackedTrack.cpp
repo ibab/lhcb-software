@@ -43,8 +43,8 @@ void TrackPacker::pack( const Data & track,
   ptrack.firstExtra = ptracks.extras().size();
   for ( const auto& E : track.extraInfo() )
   {
-    ptracks.extras().push_back( std::pair<int,int>( E.first,
-                                                    m_pack.fltPacked(E.second) ) );
+    ptracks.extras().push_back( std::make_pair( E.first,
+                                                m_pack.fltPacked(E.second) ) );
   }
   ptrack.lastExtra = ptracks.extras().size();
 
@@ -145,14 +145,11 @@ void TrackPacker::unpack( const PackedData       & ptrack,
   std::vector<LHCb::LHCbID>::iterator lhcbit = lhcbids.begin() ;
   for ( int kId = firstId; lastId > kId; ++kId, ++lhcbit )
   {
-    const unsigned int& id = *(ptracks.ids().begin()+kId);
-    *lhcbit = LHCb::LHCbID( id ) ;
+    *lhcbit = LHCb::LHCbID( *(ptracks.ids().begin()+kId) ) ;
   }
   // schema change: sorting no longer needed when we write DSTs with sorted lhcbids
   if ( ptracks.version() <= 1 )
-  {
-    std::sort( lhcbids.begin(), lhcbids.end() ) ;
-  }
+  { std::sort( lhcbids.begin(), lhcbids.end() ); }
   track.addSortedToLhcbIDs( lhcbids ) ;
 
   int firstState = ptrack.firstState;
@@ -197,7 +194,7 @@ void TrackPacker::unpack( const PackedData       & ptrack,
 
   for ( int kEx = firstExtra; lastExtra > kEx; ++kEx )
   {
-    const std::pair<int,int>& info = *(ptracks.extras().begin()+kEx);
+    const auto& info = *(ptracks.extras().begin()+kEx);
     track.addInfo( info.first, m_pack.fltPacked( info.second ) );
   }
 
