@@ -103,9 +103,12 @@ void FlavourTagPacker::unpack( const PackedData       & pft,
   if ( -1 != pft.taggedB )
   {
     int hintID(0), key(0);
-    m_pack.hintAndKey64( pft.taggedB, &pfts, &fts, hintID, key );
-    SmartRef<LHCb::Particle> ref(&fts,hintID,key);
-    ft.setTaggedB( ref );
+    if ( m_pack.hintAndKey64( pft.taggedB, &pfts, &fts, hintID, key ) )
+    {
+      SmartRef<LHCb::Particle> ref(&fts,hintID,key);
+      ft.setTaggedB( ref );
+    }
+    else { parent().Error("Corrupt FlavourTag Particle SmartRef found").ignore(); }
   }
 
   // Taggers
@@ -130,10 +133,13 @@ void FlavourTagPacker::unpack( const PackedData       & pft,
     for ( unsigned int iP = ptagger.firstTagP; iP < ptagger.lastTagP; ++iP )
     {
       int hintID(0), key(0);
-      m_pack.hintAndKey64( pfts.taggeringPs()[iP],
-                           &pfts, &fts, hintID, key );
-      SmartRef<LHCb::Particle> ref(&fts,hintID,key);
-      tagger.addToTaggerParts( ref );
+      if ( m_pack.hintAndKey64( pfts.taggeringPs()[iP],
+                                &pfts, &fts, hintID, key ) )
+      {
+        SmartRef<LHCb::Particle> ref(&fts,hintID,key);
+        tagger.addToTaggerParts( ref );
+      }
+      else { parent().Error("Corrupt FlavourTag Tagging Particle SmartRef found").ignore(); }
     }
   }
 

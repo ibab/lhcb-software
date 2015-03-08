@@ -10,6 +10,8 @@
  - Add a warning message to reference32 to warn if any code is still creating
    potentially problematic 32 bit packed references. Method is retained for
    backwards compatibility...
+ - Add checks for remaining calls to hintAndKey64 for ccorrupt references
+   (should be impossible for 64 bit packing).
 
 ! 2015-03-07 - Chris Jones
  - Add protection to StandardPacker to prevent segmentation faults from a NULL

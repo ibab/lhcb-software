@@ -141,9 +141,12 @@ void CaloClusterPacker::unpack( const PackedDataVector & pclus,
         if ( -1 != pEnt.digit )
         {
           int hintID(0), key(0);
-          m_pack.hintAndKey64( pEnt.digit, &pclus, &clus, hintID, key );
-          LHCb::CaloClusterEntry::Digit dig( &clus, hintID, key );
-          ent.setDigit( dig );
+          if ( m_pack.hintAndKey64( pEnt.digit, &pclus, &clus, hintID, key ) )
+          {
+            LHCb::CaloClusterEntry::Digit dig( &clus, hintID, key );
+            ent.setDigit( dig );
+          }
+          else { parent().Error("Corrupt CaloCluster Digit SmartRef found").ignore(); }
         }
         ent.setStatus( pEnt.status );
         ent.setFraction( m_pack.fraction( pEnt.fraction ) );

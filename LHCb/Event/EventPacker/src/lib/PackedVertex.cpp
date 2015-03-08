@@ -1,4 +1,3 @@
-// $Id: PackedVertex.cpp,v 1.3 2010-05-19 09:04:09 jonrob Exp $
 
 // STL
 #include <algorithm>
@@ -124,9 +123,12 @@ void VertexPacker::unpack( const PackedData       & pvert,
     {
       const long long & iP = pverts.outgoingParticles()[iiP];
       int hintID(0), key(0);
-      m_pack.hintAndKey64( iP, &pverts, &verts, hintID, key );
-      SmartRef<LHCb::Particle> ref(&verts,hintID,key);
-      vert.addToOutgoingParticles( ref );
+      if ( m_pack.hintAndKey64( iP, &pverts, &verts, hintID, key ) )
+      {
+        SmartRef<LHCb::Particle> ref(&verts,hintID,key);
+        vert.addToOutgoingParticles( ref );
+      }
+      else { parent().Error("Corrupt Vertex Particle SmartRef found").ignore(); }
     }
     //== Handles the ExtraInfo
     for ( unsigned short int kEx = pvert.firstInfo; pvert.lastInfo > kEx; ++kEx )
