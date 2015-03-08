@@ -4,6 +4,10 @@
 ! Purpose     : Hold link to Geant4 data files
 !-----------------------------------------------------------------------------
 
+!======================== Geant4Files v96r0 2015-03-08 =======================
+! 2015-03-08 - Gloria Corti
+ - Removed obsolete links
+
 ! 2015-02-05 - Gloria Corti
  - Updated links in data directory to locations of new data files
    . PhotonEvaporation(2.2->2.3)
