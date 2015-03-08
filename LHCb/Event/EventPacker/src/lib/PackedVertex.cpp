@@ -56,10 +56,9 @@ void VertexPacker::pack( const Data & vert,
 
     //== Handles the ExtraInfo
     pvert.firstInfo = pverts.extras().size();
-    for ( GaudiUtils::VectorMap<int,double>::iterator itE = vert.extraInfo().begin();
-          vert.extraInfo().end() != itE; ++itE )
+    for ( const auto& E : vert.extraInfo() )
     {
-      pverts.addExtra( (*itE).first, m_pack.fltPacked( (*itE).second ) );
+      pverts.addExtra( E.first, m_pack.fltPacked(E.second) );
     }
     pvert.lastInfo = pverts.extras().size();
   }
@@ -148,12 +147,9 @@ void VertexPacker::unpack( const PackedDataVector & pverts,
                            DataVector             & verts ) const
 {
   verts.reserve( pverts.data().size() );
-
-  for ( PackedDataVector::Vector::const_iterator iD = pverts.data().begin();
-        iD != pverts.data().end(); ++iD )
+  
+  for ( const auto & pvert : pverts.data() )
   {
-    const PackedData & pvert = *iD;
-
     // make and save new pid in container
     Data * vert = new Data();
     verts.insert( vert, pvert.key );

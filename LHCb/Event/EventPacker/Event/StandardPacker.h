@@ -6,6 +6,8 @@
 
 // Gaudi
 #include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/LinkManager.h"
+#include "GaudiKernel/IRegistry.h"
 
 //---------------------------------------------------------------------------
 /** @class StandardPacker StandardPacker.h Event/StandardPacker.h
@@ -103,12 +105,30 @@ public:
 
   /// Returns the 'LinkID' 
   long linkID( DataObject* out,
-               const DataObject* parent ) const;
-  
+               const DataObject* parent ) const
+  {
+    LinkManager::Link * myLink = out->linkMgr()->link(parent);
+    if ( NULL == myLink )
+    {
+      out->linkMgr()->addLink( parent->registry()->identifier(), parent );
+      myLink = out->linkMgr()->link(parent);
+    }
+    return ( myLink ? myLink->ID() : 0 );
+  }
+
   /// Returns the 'LinkID'
   long linkID( DataObject* out,
-               const std::string& targetName ) const;
-
+               const std::string& targetName ) const
+  {
+    LinkManager::Link* myLink = out->linkMgr()->link( targetName );
+    if ( NULL == myLink )
+    {
+      out->linkMgr()->addLink( targetName, 0 );
+      myLink = out->linkMgr()->link( targetName );
+    }
+    return ( myLink ? myLink->ID() : 0 );
+  }
+  
   //---------------------------------------------------------------------------
 
   /** returns an int for a Smart Ref.
@@ -156,7 +176,7 @@ public:
                          const DataObject* parent,
                          const int key ) const
   {
-    const long long ID = (long long)linkID(out,parent);
+    const long long ID( linkID(out,parent) );
     const long long myLinkID = (ID << 32);
     return (long long)key + myLinkID;
   }

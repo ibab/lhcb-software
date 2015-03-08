@@ -7,38 +7,12 @@
 
 // Gaudi
 #include "GaudiKernel/GaudiException.h"
-#include "GaudiKernel/LinkManager.h"
-#include "GaudiKernel/IRegistry.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : StandardPacker
 //
 // 2015-03-07 : Chris Jones
 //-----------------------------------------------------------------------------
-
-long StandardPacker::linkID( DataObject* out,
-                             const DataObject* parent ) const
-{
-  LinkManager::Link* myLink = out->linkMgr()->link( parent );
-  if ( NULL == myLink )
-  {
-    out->linkMgr()->addLink( parent->registry()->identifier(),
-                             parent );
-  }
-  return out->linkMgr()->link(parent)->ID();
-}
-
-long StandardPacker::linkID( DataObject* out,
-                             const std::string& targetName ) const
-{
-  LinkManager::Link* myLink = out->linkMgr()->link( targetName );
-  if ( NULL == myLink )
-  {
-    out->linkMgr()->addLink( targetName, 0 );
-    myLink = out->linkMgr()->link( targetName );
-  }
-  return myLink->ID();
-}
 
 int StandardPacker::reference32( DataObject* out,
                                  const DataObject* parent,
@@ -108,8 +82,7 @@ bool StandardPacker::hintAndKey32( const int data,
   if ( target && source && target->linkMgr() && source->linkMgr() )
   {
     // Extract the packed index and key from the data word
-    int indx(0);
-    indexAndKey32(data,indx,key);
+    int indx(0); indexAndKey32(data,indx,key);
 
     // Get the source link
     LinkManager::Link * sourceLink = source->linkMgr()->link(indx);
@@ -143,8 +116,7 @@ bool StandardPacker::hintAndKey64( const long long data,
   if ( target && source && target->linkMgr() && source->linkMgr() )
   {
     // Extract the packed index and key from the data word
-    int indx(0);
-    indexAndKey64(data,indx,key);
+    int indx(0); indexAndKey64(data,indx,key);
 
     // Get the source link
     LinkManager::Link * sourceLink = source->linkMgr()->link(indx);

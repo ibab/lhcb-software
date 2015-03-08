@@ -14,29 +14,27 @@ using namespace LHCb;
 void MCRichDigitSummaryPacker::pack( const DataVector & sums,
                                      PackedDataVector & psums ) const
 {
-  psums.data().reserve( sums.size() );
   const char ver = psums.packingVersion();
   if ( 0 == ver || 1 == ver )
   {
-    for ( DataVector::const_iterator iD = sums.begin();
-          iD != sums.end(); ++iD )
+    psums.data().reserve( sums.size() );
+    for ( const Data * sum : sums )
     {
-      const Data & sum = **iD;
       // make new packed data
       psums.data().push_back( PackedData() );
       PackedData & psum = psums.data().back();
       // fill packed data
-      psum.history     = sum.history().historyCode();
-      psum.richSmartID = sum.richSmartID().key();
-      if ( NULL != sum.mcParticle() )
+      psum.history     = sum->history().historyCode();
+      psum.richSmartID = sum->richSmartID().key();
+      if ( NULL != sum->mcParticle() )
       {
         psum.mcParticle = ( 0 == ver ?
                             m_pack.reference32( &psums,
-                                                sum.mcParticle()->parent(),
-                                                sum.mcParticle()->key() ) :
+                                                sum->mcParticle()->parent(),
+                                                sum->mcParticle()->key() ) :
                             m_pack.reference64( &psums,
-                                                sum.mcParticle()->parent(),
-                                                sum.mcParticle()->key() ) );
+                                                sum->mcParticle()->parent(),
+                                                sum->mcParticle()->key() ) );
       }
     }
   }
@@ -52,15 +50,13 @@ void MCRichDigitSummaryPacker::unpack( const PackedDataVector & psums,
                                        DataVector       & sums ) const
 {
   const char ver = psums.packingVersion();
-  sums.reserve( psums.data().size() );
   if ( 0 == ver || 1 == ver )
   {
-    for ( PackedDataVector::Vector::const_iterator iD = psums.data().begin();
-          iD != psums.data().end(); ++iD )
+    sums.reserve( psums.data().size() );
+    for ( const auto & psum : psums.data() )
     {
-      const PackedData & psum = *iD;
       // make and save new sum in container
-      Data * sum  = new Data();
+      Data * sum = new Data();
       sums.add( sum );
       // Fill data from packed object
       sum->setHistory( LHCb::MCRichDigitHistoryCode(psum.history) );

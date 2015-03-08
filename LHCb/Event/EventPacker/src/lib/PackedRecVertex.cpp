@@ -133,11 +133,8 @@ void RecVertexPacker::unpack( const PackedDataVector & pverts,
 {
   verts.reserve( pverts.vertices().size() );
 
-  for ( PackedDataVector::Vector::const_iterator iD = pverts.vertices().begin();
-        iD != pverts.vertices().end(); ++iD )
+  for ( const auto & pvert : pverts.vertices() )
   {
-    const PackedData & pvert = *iD;
-
     // make and save new pid in container
     Data * vert = new Data();
     verts.insert( vert, pvert.key );
