@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2015-03-08 - Andrea Contu
+ - Updated tests/refs/test_stripping20r1_collision11_reco14.ref
+
 ! 2015-03-06 - Andrea Contu
  - Updated references for stripping qmtests
 
