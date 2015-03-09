@@ -56,7 +56,7 @@ StatusCode SellmeirFunc::initialize()
 
 StatusCode SellmeirFunc::umsUpdate()
 {
-  info() << "Sellmeir parameter update triggered" << endmsg;
+  _ri_debug << "Sellmeir parameter update triggered" << endmsg;
 
   // Retrieve square of particle masses
   m_particleMassSq[Rich::Electron] = m_partProp->massSq( Rich::Electron );

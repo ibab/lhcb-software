@@ -43,12 +43,12 @@ GeomTool::GeomTool( const std::string& type,
 
 StatusCode GeomTool::initialize()
 {
-  // Sets up various tools and services
+  // Set s up various tools and services
   const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichDetParameters",  m_detParams );
+  acquireTool( "RichDetParameters",  m_detParams, NULL, true );
   acquireTool( "RichCherenkovAngle", m_ckAngle   );
 
   // Cache the acceptance data
@@ -57,7 +57,7 @@ StatusCode GeomTool::initialize()
   m_radOutLimLoc[Rich::Rich2Gas] = m_detParams->AvAcceptOuterLimitsLocal(Rich::Rich2Gas);
 
   // info printout
-  info() << "Av. optical distortion correction parameters : " << m_radScale << endmsg;
+  _ri_debug << "Av. optical distortion correction parameters : " << m_radScale << endmsg;
 
   return sc;
 }

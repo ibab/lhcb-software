@@ -87,11 +87,11 @@ StatusCode BackgroundEstiAvHPD::initialize()
   acquireTool( "RichGeomEff",             m_geomEff  );
 
   if ( m_ignoreExpSignal )
-    info() << "Will ignore expected signals when computing backgrounds" << endmsg;
+    _ri_debug << "Will ignore expected signals when computing backgrounds" << endmsg;
 
-  info() << "Minimum pixel background = " << m_minPixBkg << endmsg;
-  info() << "Min HPD background level for setting background levels = "
-         << m_minHPDbckForInc << endmsg;
+  _ri_debug << "Minimum pixel background = " << m_minPixBkg << endmsg;
+  _ri_debug << "Min HPD background level for setting background levels = "
+            << m_minHPDbckForInc << endmsg;
 
   // pre-cache creator tools
   pixelCreator();

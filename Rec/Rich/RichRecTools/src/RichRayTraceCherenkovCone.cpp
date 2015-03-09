@@ -52,12 +52,12 @@ StatusCode RayTraceCherenkovCone::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichRayTracing",     m_rayTrace );
+  acquireTool( "RichRayTracing",     m_rayTrace, NULL, true );
   acquireTool( "RichCherenkovAngle", m_ckAngle  );
-  acquireTool( "RichSmartIDTool",    m_smartIDTool, 0, true );
+  acquireTool( "RichSmartIDTool",    m_smartIDTool, NULL, true );
   acquireTool( "RichRecGeometry",    m_geomTool );
 
-  info() << "# ray tracing attempts before bailout = " << m_nBailout << endmsg;
+  _ri_debug << "# ray tracing attempts before bailout = " << m_nBailout << endmsg;
 
   return sc;
 }

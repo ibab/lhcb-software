@@ -54,12 +54,12 @@ StatusCode MassHypothesisRingCreator::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichCherenkovAngle", m_ckAngle   );
-  acquireTool( "RichRayTraceCKCone", m_coneTrace );
-  acquireTool( "RichParticleProperties",  m_richPartProp );
+  acquireTool( "RichCherenkovAngle",     m_ckAngle      );
+  acquireTool( "RichRayTraceCKCone",     m_coneTrace    );
+  acquireTool( "RichParticleProperties", m_richPartProp );
 
   m_pidTypes = m_richPartProp->particleTypes();
-  info() << "Particle types considered = " << m_pidTypes << endmsg;
+  _ri_debug << "Particle types considered = " << m_pidTypes << endmsg;
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
@@ -74,9 +74,9 @@ StatusCode MassHypothesisRingCreator::initialize()
   m_traceModeRad[Rich::Aerogel].setAeroRefraction(true);
   m_traceModeRad[Rich::Rich1Gas] = tmpMode;
   m_traceModeRad[Rich::Rich2Gas] = tmpMode;
-  info() << "Aerogel  Track " << m_traceModeRad[Rich::Aerogel]  << endmsg;
-  info() << "Rich1Gas Track " << m_traceModeRad[Rich::Rich1Gas] << endmsg;
-  info() << "Rich2Gas Track " << m_traceModeRad[Rich::Rich2Gas] << endmsg;
+  _ri_debug << "Aerogel  Track " << m_traceModeRad[Rich::Aerogel]  << endmsg;
+  _ri_debug << "Rich1Gas Track " << m_traceModeRad[Rich::Rich1Gas] << endmsg;
+  _ri_debug << "Rich2Gas Track " << m_traceModeRad[Rich::Rich2Gas] << endmsg;
 
   // only need to be rough
   m_nPointScale[Rich::Aerogel]  = m_maxPoint[Rich::Aerogel]  / 0.240;
@@ -84,8 +84,8 @@ StatusCode MassHypothesisRingCreator::initialize()
   m_nPointScale[Rich::Rich2Gas] = m_maxPoint[Rich::Rich2Gas] / 0.028;
 
   // ring info
-  info() << "Maximum # ray trace points = " << m_maxPoint << endmsg;
-  info() << "Minimum # ray trace points = " << m_minPoint << endmsg;
+  _ri_debug << "Maximum # ray trace points = " << m_maxPoint << endmsg;
+  _ri_debug << "Minimum # ray trace points = " << m_minPoint << endmsg;
 
   // Make sure we are ready for a new event
   InitNewEvent();
@@ -94,18 +94,16 @@ StatusCode MassHypothesisRingCreator::initialize()
 }
 
 // Method that handles various Gaudi "software events"
-void MassHypothesisRingCreator::handle ( const Incident& incident )
+void MassHypothesisRingCreator::handle ( const Incident& /* incident */ )
 {
-  if ( IncidentType::BeginEvent == incident.type() ) InitNewEvent();
+  // We only subscribe to one sort of incident, so no need to check type
+  //if ( IncidentType::BeginEvent == incident.type() ) 
+  InitNewEvent();
 }
 
 void MassHypothesisRingCreator::massHypoRings( LHCb::RichRecSegment * segment ) const
 {
-  for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
-        hypo != m_pidTypes.end(); ++hypo )
-  {
-    massHypoRing( segment, *hypo );
-  }
+  for ( const auto& hypo : m_pidTypes ) { massHypoRing( segment, hypo ); }
 }
 
 // Forms a new RichRecRing object from a RichRecSegment
@@ -115,7 +113,7 @@ MassHypothesisRingCreator::massHypoRing( LHCb::RichRecSegment * segment,
 {
   // does the ring already exist ?
   return ( segment ? ( segment->hypothesisRings().dataIsValid(id) ?
-                       segment->hypothesisRings()[id] : buildRing(segment, id) ) : NULL );
+                       segment->hypothesisRings()[id] : buildRing(segment,id) ) : NULL );
 }
 
 LHCb::RichRecRing *
@@ -192,8 +190,8 @@ LHCb::RichRecRings * MassHypothesisRingCreator::massHypoRings() const
       // Set smartref to TES Ring container
       m_rings = get<LHCb::RichRecRings>(m_ringLocation);
 
-      debug() << "Found " << m_rings->size() << " pre-existing RichRecRings in TES at "
-              << m_ringLocation << endmsg;
+      _ri_debug << "Found " << m_rings->size() << " pre-existing RichRecRings in TES at "
+                << m_ringLocation << endmsg;
 
     }
   }
