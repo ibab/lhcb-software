@@ -11,6 +11,7 @@ namespace LHCb
 {
  
   /** @class PackedCluster PackedCluster.h Event/PackedCluster.h
+   *
    *  Packed description of a cluster (Velo, ST) for mDST transmission
    *
    *  @author Olivier Callot
@@ -51,6 +52,14 @@ namespace LHCb
   {
     static const std::string& Default = "pRec/Track/Clusters";
   }
+
+  /** @class PackedClusters PackedCluster.h Event/PackedCluster.h
+   *
+   *  Container of packed Clusters
+   *
+   *  @author Olivier Callot
+   *  @date   2012-03-05
+   */
 
   class PackedClusters : public DataObject 
   {

@@ -73,6 +73,8 @@ namespace LHCb
 
     virtual ~PackedMCParticles( ) {}; ///< Destructor
 
+  public:
+
     virtual const CLID& clID() const { return PackedMCParticles::classID(); }
     static  const CLID& classID()    { return CLID_PackedMCParticles;       }
 

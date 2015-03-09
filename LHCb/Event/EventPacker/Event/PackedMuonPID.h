@@ -14,8 +14,6 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/StatusCode.h"
 
-class GaudiAlgorithm;
-
 namespace LHCb
 {
   // -----------------------------------------------------------------------
@@ -140,12 +138,12 @@ namespace LHCb
   private:
 
     /// Default Constructor hidden
-    MuonPIDPacker() : m_parent(NULL) {}
+    MuonPIDPacker() {}
 
   public:
 
     /// Default Constructor
-    MuonPIDPacker( GaudiAlgorithm & p ) : m_pack(&p), m_parent(&p) {}
+    MuonPIDPacker( GaudiAlgorithm & p ) : m_pack(&p) {}
 
   public:
 
@@ -179,15 +177,12 @@ namespace LHCb
   private:
 
     /// Access the parent algorithm
-    GaudiAlgorithm& parent() const { return *m_parent; }
+    GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
 
   private:
 
     /// Standard packing of quantities into integers ...
     StandardPacker m_pack;
-
-    /// Pointer to parent algorithm
-    GaudiAlgorithm * m_parent;
 
   };
 

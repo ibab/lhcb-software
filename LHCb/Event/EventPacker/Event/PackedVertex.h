@@ -14,8 +14,6 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/StatusCode.h"
 
-class GaudiAlgorithm;
-
 namespace LHCb
 {
   // -----------------------------------------------------------------------
@@ -193,13 +191,12 @@ namespace LHCb
   private:
 
     /// Default Constructor hidden
-    VertexPacker() : m_parent(NULL) {}
+    VertexPacker() {}
 
   public:
 
     /// Default Constructor
-    VertexPacker( GaudiAlgorithm & parent ) 
-      : m_pack(&parent), m_parent(&parent) {}
+    VertexPacker( GaudiAlgorithm & parent ) : m_pack(&parent) {}
     
   public:
 
@@ -233,7 +230,7 @@ namespace LHCb
   private:
 
     /// Access the parent algorithm
-    GaudiAlgorithm& parent() const { return *m_parent; }
+    GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
 
     /// Safe sqrt ...
     inline double safe_sqrt( const double x ) const
@@ -243,9 +240,6 @@ namespace LHCb
 
     /// Standard packing of quantities into integers ...
     StandardPacker m_pack;
-
-    /// Pointer to parent algorithm
-    GaudiAlgorithm * m_parent;
 
   };
 

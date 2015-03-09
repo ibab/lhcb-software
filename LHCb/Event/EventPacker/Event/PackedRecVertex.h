@@ -13,8 +13,6 @@
 // Event
 #include "Event/RecVertex.h"
 
-class GaudiAlgorithm;
-
 namespace LHCb
 {
 
@@ -83,6 +81,14 @@ namespace LHCb
     static const std::string& InStream = "/pPhys/RecVertices";
   }
 
+  /** @class PackedRecVertices Event/PackedRecVertex.h
+   *
+   *  COntainer of packed RecVertex objects
+   *
+   *  @author Olivier Callot
+   *  @date   2008-11-14
+   */
+
   class PackedRecVertices : public DataObject 
   {
 
@@ -112,11 +118,9 @@ namespace LHCb
 
   public:
 
-    void addEntry( PackedRecVertex& obj ) { m_vect.push_back( obj ); }
     std::vector<PackedRecVertex>& vertices()                   { return m_vect; }
     const std::vector<PackedRecVertex>& vertices() const       { return m_vect; }
 
-    void addRef( long long i ) { m_refs.push_back( i ); }
     std::vector<long long>& refs()                         { return m_refs; }
     const std::vector<long long>& refs() const             { return m_refs; }
 
@@ -124,14 +128,8 @@ namespace LHCb
     std::vector<std::pair<int,int> >& extras()             { return m_extra; }
     const std::vector<std::pair<int,int> >& extras() const { return m_extra; }
 
-    void addWeight( const short int weight ) { m_weights.push_back( weight ); }
     std::vector<short int>& weights()             { return m_weights; }
     const std::vector<short int>& weights() const { return m_weights; }
-
-  public:
-
-    /// Avoid hidden method
-    virtual unsigned long addRef() { return DataObject::addRef(); }
 
   public:
 
@@ -183,7 +181,7 @@ namespace LHCb
   public:
 
     /// Constructor
-    RecVertexPacker( GaudiAlgorithm & parent ) : m_pack(&parent), m_parent(&parent) {}
+    RecVertexPacker( GaudiAlgorithm & parent ) : m_pack(&parent) {}
 
   public:
 
@@ -210,7 +208,7 @@ namespace LHCb
   private:
 
     /// Access the parent algorithm
-    GaudiAlgorithm& parent() const { return *m_parent; }
+    inline GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
 
     /// Safe sqrt ...
     inline double safe_sqrt( const double x ) const
@@ -220,9 +218,6 @@ namespace LHCb
 
     /// Standard packing of quantities into integers ...
     StandardPacker m_pack;
-
-    /// Pointer to parent algorithm
-    GaudiAlgorithm * m_parent;
 
   };
 

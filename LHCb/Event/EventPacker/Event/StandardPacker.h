@@ -258,6 +258,13 @@ private:
 
   //---------------------------------------------------------------------------
 
+public:
+
+  /// Access the parent algorithm
+  GaudiAlgorithm * parent() const { return m_parent; }
+
+  //---------------------------------------------------------------------------
+
 private:
 
   /// Pointer to parent algorithm

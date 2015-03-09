@@ -15,8 +15,6 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/StatusCode.h"
 
-class GaudiAlgorithm;
-
 namespace LHCb
 {
 
@@ -137,6 +135,14 @@ namespace LHCb
     static const std::string& InStream = "/pRec/Track/Custom";
   }
 
+  /** @class PackedTracks PackedTrack.h Event/PackedTrack.h
+   *
+   *  Container of packed Tracks
+   *
+   *  @author Olivier Callot
+   *  @date   2009-08-26
+   */
+
   class PackedTracks : public DataObject
   {
 
@@ -153,26 +159,30 @@ namespace LHCb
 
     virtual ~PackedTracks( ) {} ///< Destructor
 
+  public:
+
     virtual const CLID& clID()  const { return PackedTracks::classID(); }
     static  const CLID& classID()     { return CLID_PackedTracks;       }
 
-    std::vector<PackedTrack>& tracks() { return m_vect; }
-    const std::vector<PackedTrack>& tracks() const { return m_vect; }
+  public:
 
-    std::vector<int>& ids() { return m_ids; }
-    const std::vector<int>& ids() const { return m_ids; }
+    std::vector<PackedTrack>&       tracks()               { return m_vect; }
+    const std::vector<PackedTrack>& tracks() const         { return m_vect; }
 
-    std::vector<PackedState>& states() { return m_state; }
-    const std::vector<PackedState>& states() const { return m_state; }
+    std::vector<int>&       ids()                          { return m_ids; }
+    const std::vector<int>& ids() const                    { return m_ids; }
 
-    std::vector<std::pair<int,int> >& extras() { return m_extra; }
+    std::vector<PackedState>&       states()               { return m_state; }
+    const std::vector<PackedState>& states() const         { return m_state; }
+
+    std::vector<std::pair<int,int> >&       extras()       { return m_extra; }
     const std::vector<std::pair<int,int> >& extras() const { return m_extra; }
 
   private:
 
-    std::vector<PackedTrack> m_vect;
-    std::vector<PackedState> m_state;
-    std::vector<int>    m_ids;
+    std::vector<PackedTrack>         m_vect;
+    std::vector<PackedState>         m_state;
+    std::vector<int>                 m_ids;
     std::vector<std::pair<int,int> > m_extra;
 
   };
@@ -197,13 +207,12 @@ namespace LHCb
   private:
 
     /// Default Constructor hidden
-    TrackPacker() : m_parent(NULL) { resetWrappingCounts(); }
+    TrackPacker() { resetWrappingCounts(); }
 
   public:
 
     /// Default Constructor
-    TrackPacker( GaudiAlgorithm & parent ) 
-      : m_pack(&parent), m_parent(&parent) { resetWrappingCounts(); }
+    TrackPacker( GaudiAlgorithm & p ) : m_pack(&p) { resetWrappingCounts(); }
 
   public:
 
@@ -250,7 +259,7 @@ namespace LHCb
   private:
 
     /// Access the parent algorithm
-    GaudiAlgorithm& parent() const { return * m_parent; }
+    inline GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
 
     /// Safe sqrt ...
     inline double safe_sqrt( const double x ) const
@@ -271,9 +280,6 @@ namespace LHCb
 
     /// Standard packing of quantities into integers ...
     StandardPacker m_pack;
-
-    /// Pointer to parent algorithm
-    GaudiAlgorithm * m_parent;
 
   private:
 

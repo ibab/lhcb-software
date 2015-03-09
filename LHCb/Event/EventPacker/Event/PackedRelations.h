@@ -56,15 +56,24 @@ namespace LHCb
 
     virtual ~PackedRelations( ) {} ///< Destructor
 
+  public:
+
     /// Class ID
     static const CLID& classID() { return CLID_PackedRelations; }
 
     /// Class ID
     virtual const CLID& clID() const { return PackedRelations::classID(); }
+
+  public:
     
-    std::vector<PackedRelation>& relations() { return m_relations; }
-    std::vector<long long>& sources()        { return m_source; }
-    std::vector<long long>& dests()          { return m_dest; }
+    std::vector<PackedRelation>&       relations()       { return m_relations; }
+    const std::vector<PackedRelation>& relations() const { return m_relations; }
+
+    std::vector<long long>&       sources()       { return m_source; }
+    const std::vector<long long>& sources() const { return m_source; }
+
+    std::vector<long long>&       dests()       { return m_dest; }
+    const std::vector<long long>& dests() const { return m_dest; }
 
   private:
 
@@ -73,5 +82,7 @@ namespace LHCb
     std::vector<long long> m_dest;
   
   };
+
 }
+
 #endif // EVENT_PACKEDRELATIONS_H

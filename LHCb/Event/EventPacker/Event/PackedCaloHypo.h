@@ -14,8 +14,6 @@
 #include <string>
 #include <vector>
 
-class GaudiAlgorithm;
-
 namespace LHCb
 {
 
@@ -168,12 +166,12 @@ namespace LHCb
   private:
 
     /// Default Constructor hidden
-    CaloHypoPacker() : m_parent(NULL) {}
+    CaloHypoPacker() {}
 
   public:
 
     /// Default Constructor
-    CaloHypoPacker( GaudiAlgorithm & p ) : m_pack(&p), m_parent(&p) {}
+    CaloHypoPacker( GaudiAlgorithm & p ) : m_pack(&p) {}
 
   public:
 
@@ -192,7 +190,7 @@ namespace LHCb
   private:
 
     /// Access the parent algorithm
-    GaudiAlgorithm& parent() const { return * m_parent; }
+    GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
 
     /// Safe sqrt ...
     inline double safe_sqrt( const double x ) const
@@ -202,9 +200,6 @@ namespace LHCb
 
     /// Standard packing of quantities into integers ...
     StandardPacker m_pack;
-
-    /// Pointer to parent algorithm
-    GaudiAlgorithm * m_parent;
 
   };
 

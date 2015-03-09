@@ -19,8 +19,6 @@
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/LinkManager.h"
 
-class GaudiAlgorithm;
-
 namespace LHCb
 {
   // -----------------------------------------------------------------------
@@ -175,8 +173,7 @@ namespace LHCb
 
     /// Default Constructor hidden
     RelatedInfoRelationsPacker() 
-      : m_parent(NULL),
-        m_srcContainer(NULL),
+      : m_srcContainer(NULL),
         m_prevSrcLink(-1) 
     { }
     
@@ -185,7 +182,6 @@ namespace LHCb
     /// Default Constructor
     RelatedInfoRelationsPacker( GaudiAlgorithm & parent ) 
       : m_pack(&parent),
-        m_parent(&parent),
         m_srcContainer(NULL),
         m_prevSrcLink(-1)
     { }
@@ -213,15 +209,12 @@ namespace LHCb
   private:
 
     /// Access the parent algorithm
-    GaudiAlgorithm& parent() const { return *m_parent; }
+    GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
 
   private:
 
     /// Standard packing of quantities into integers ...
     StandardPacker m_pack;
-
-    /// Pointer to parent algorithm
-    GaudiAlgorithm * m_parent;
 
     // cached Pointer to the location container the FROM object (Particle)
     mutable LHCb::Particles * m_srcContainer;

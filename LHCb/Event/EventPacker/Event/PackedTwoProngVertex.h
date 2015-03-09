@@ -108,6 +108,14 @@ namespace LHCb
 
   static const CLID CLID_PackedTwoProngVertices = 1554;
 
+  /** @class PackedTwoProngVertices Event/PackedTwoProngVertex.h
+   *
+   *  Container of packed LHCb::TwoProngVertex objects.
+   * 
+   *  @author Olivier Callot
+   *  @date   2009-01-21
+   */
+
   class PackedTwoProngVertices : public DataObject
   {
 
@@ -124,19 +132,22 @@ namespace LHCb
     PackedTwoProngVertices( ) : m_packingVersion(0) { }
 
     virtual ~PackedTwoProngVertices( ) {}; ///< Destructor
+
+  public:
+
     virtual const CLID& clID()  const { return PackedTwoProngVertices::classID(); }
     static  const CLID& classID()     { return CLID_PackedTwoProngVertices;       }
 
   public:
 
-    std::vector<PackedTwoProngVertex>& vertices()                   { return m_vect; }
-    const std::vector<PackedTwoProngVertex>& vertices() const       { return m_vect; }
+    std::vector<PackedTwoProngVertex>&       vertices()          { return m_vect; }
+    const std::vector<PackedTwoProngVertex>& vertices() const    { return m_vect; }
 
-    std::vector<long long>& refs()                           { return m_refs; }
-    const std::vector<long long>& refs() const               { return m_refs; }
+    std::vector<long long>&       refs()                         { return m_refs; }
+    const std::vector<long long>& refs() const                   { return m_refs; }
 
-    std::vector<std::pair<int,int> >& extras()             { return m_extra; }
-    const std::vector<std::pair<int,int> >& extras() const { return m_extra; }
+    std::vector<std::pair<int,int> >&       extras()             { return m_extra; }
+    const std::vector<std::pair<int,int> >& extras() const       { return m_extra; }
 
   public:
 

@@ -14,7 +14,8 @@
 //=============================================================================
 PackParticlesAndVertices::PackParticlesAndVertices( const std::string& name,
                                                     ISvcLocator* pSvcLocator )
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_pack ( this )
 {
   declareProperty( "InputStream",        m_inputStream   = "/Event" );
   declareProperty( "AlwaysCreateOutput", m_alwaysOutput  = false    );

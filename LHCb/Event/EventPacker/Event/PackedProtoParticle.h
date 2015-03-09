@@ -14,12 +14,11 @@
 // Event
 #include "Event/ProtoParticle.h"
 
-class GaudiAlgorithm;
-
 namespace LHCb
 {
 
   /** @class PackedProtoParticle PackedProtoParticle.h Event/PackedProtoParticle.h
+   *
    *  This is the packed version of the ProtoParticle
    *
    *  @author Olivier Callot
@@ -65,6 +64,13 @@ namespace LHCb
     static const std::string& InStream = "/pRec/ProtoP/Custom";
   }
 
+  /** @class PackedProtoParticles PackedProtoParticle.h Event/PackedProtoParticle.h
+   *
+   *  Container of PackedProtoParticle objects
+   *
+   *  @author Olivier Callot
+   *  @date   2008-11-13
+   */
   class PackedProtoParticles : public DataObject 
   {
 
@@ -136,12 +142,12 @@ namespace LHCb
   private:
 
     /// Default Constructor hidden
-    ProtoParticlePacker() : m_parent(NULL) {}
+    ProtoParticlePacker() {}
 
   public:
 
     /// Default Constructor
-    ProtoParticlePacker( GaudiAlgorithm & parent ) : m_pack(&parent), m_parent(&parent) {}
+    ProtoParticlePacker( GaudiAlgorithm & p ) : m_pack(&p) {}
 
   public:
 
@@ -175,15 +181,12 @@ namespace LHCb
   private:
 
     /// Access the parent algorithm
-    GaudiAlgorithm& parent() const { return * m_parent; }
+    inline GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
 
   private:
 
     /// Standard packing of quantities into integers ...
     StandardPacker m_pack;
-
-    /// Pointer to parent algorithm
-    GaudiAlgorithm * m_parent;
 
   };
 

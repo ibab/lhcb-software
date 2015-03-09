@@ -13,8 +13,6 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/StatusCode.h"
 
-class GaudiAlgorithm;
-
 namespace LHCb
 {
   // -----------------------------------------------------------------------
@@ -180,12 +178,12 @@ namespace LHCb
   private:
 
     /// Default Constructor hidden
-    CaloClusterPacker() : m_parent(NULL) {}
+    CaloClusterPacker() {}
 
   public:
 
     /// Default Constructor
-    CaloClusterPacker( GaudiAlgorithm & p ) : m_pack(&p), m_parent(&p) {}
+    CaloClusterPacker( GaudiAlgorithm & p ) : m_pack(&p) {}
 
   public:
 
@@ -208,7 +206,7 @@ namespace LHCb
   public:
 
     /// Access the parent algorithm
-    GaudiAlgorithm& parent() const { return *m_parent; }
+    GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
 
     /// Safe sqrt ...
     inline double safe_sqrt( const double x ) const
@@ -218,9 +216,6 @@ namespace LHCb
 
     /// Standard packing of quantities into integers ...
     StandardPacker m_pack;
-
-    /// Pointer to parent algorithm
-    GaudiAlgorithm * m_parent;
 
   };
 

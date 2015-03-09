@@ -77,12 +77,6 @@ namespace LHCb
     virtual const CLID& clID() const { return PackedMCVertices::classID(); }
     static  const CLID& classID()    { return CLID_PackedMCVertices;       }
 
-    //void addEntry(  PackedMCVertex& obj ) { m_vect.push_back( obj ); }
-    //std::vector<PackedMCVertex>::const_iterator begin() const { return m_vect.begin(); }
-    //std::vector<PackedMCVertex>::const_iterator end()   const { return m_vect.end(); }
-    //void reserve( const unsigned int size ) { m_vect.reserve(size); }
-    //unsigned int size() const { return m_vect.size(); }
-
   public:
 
     std::vector<PackedMCVertex>&       mcVerts()       { return m_vect; }

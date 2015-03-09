@@ -86,7 +86,7 @@ StatusCode PackDecReport::execute()
       myLink = out->linkMgr()->link( (*itR).first );
     }
     tmp.setIntDecisionID( myLink->ID()+1 ); // Store numbers starting at 1 as HltDecReport dislike 0!
-    out->addReport( tmp.decReport() );
+    out->reports().push_back( tmp.decReport() );
     if ( msgLevel( MSG::DEBUG ) ) 
     {
       debug() << format( "Stored report %8.8x  link ID %3d", tmp.decReport(), myLink->ID() ) 

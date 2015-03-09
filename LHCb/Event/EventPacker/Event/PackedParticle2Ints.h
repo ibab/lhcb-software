@@ -6,6 +6,13 @@
 namespace LHCb
 {
 
+  /** @class PackedParticle2Int PackedParticle2Ints.h Event/PackedParticle2Ints.h
+   *
+   *  Packed Particle to int
+   *
+   *  @author Olivier Callot
+   *  @date   2012-01-30
+   */
   class PackedParticle2Int
   {
   public:
@@ -20,14 +27,6 @@ namespace LHCb
     int end;
   };
 
-  /** @class PackedParticle2Ints PackedParticle2Ints.h Event/PackedParticle2Ints.h
-   *
-   *  Packed Particle to int(s)
-   *
-   *  @author Olivier Callot
-   *  @date   2012-01-30
-   */
-
   static const CLID CLID_PackedParticle2Ints = 1591;
 
   /// Namespace for locations in TES
@@ -36,6 +35,13 @@ namespace LHCb
     static const std::string& InStream = "/pPhys/Particle2Int";
   }
 
+  /** @class PackedParticle2Ints PackedParticle2Ints.h Event/PackedParticle2Ints.h
+   *
+   *  Packed Particle to int(s)
+   *
+   *  @author Olivier Callot
+   *  @date   2012-01-30
+   */
   class PackedParticle2Ints : public DataObject
   {
 
@@ -50,6 +56,8 @@ namespace LHCb
     static const CLID& classID() { return CLID_PackedParticle2Ints; }
     /// Class ID
     virtual const CLID& clID() const { return PackedParticle2Ints::classID(); }
+
+  public:
 
     std::vector<PackedParticle2Int>& relations() { return m_relations; }
 

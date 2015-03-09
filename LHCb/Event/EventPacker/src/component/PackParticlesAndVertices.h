@@ -120,7 +120,7 @@ private:
   bool m_enableCheck;       ///< Flag to turn on automatic unpacking and checking of the output post-packing
   bool m_listRemaining;     ///< list the remaining objects after packing
   std::vector<std::string> m_vetoedConts; ///< Vetoed containers. Will not be packed.
-  StandardPacker m_pack;
+  StandardPacker m_pack;    ///< Standard packer
 
 };
 

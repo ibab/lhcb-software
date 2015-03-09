@@ -39,10 +39,10 @@ void RecVertexPacker::pack( const Data & vert,
   for ( SmartRefVector<LHCb::Track>::const_iterator itT = vert.tracks().begin();
         vert.tracks().end() != itT; ++itT, ++iW )
   {
-    pverts.addRef( 0==ver ?
-                   m_pack.reference32( &pverts, (*itT)->parent(), (*itT)->key() ) :
-                   m_pack.reference64( &pverts, (*itT)->parent(), (*itT)->key() ) );
-    pverts.addWeight( m_pack.fraction(*iW) );
+    pverts.refs().push_back( 0==ver ?
+                             m_pack.reference32( &pverts, (*itT)->parent(), (*itT)->key() ) :
+                             m_pack.reference64( &pverts, (*itT)->parent(), (*itT)->key() ) );
+    pverts.weights().push_back( m_pack.fraction(*iW) );
   }
   pvert.lastTrack = pverts.refs().size();
 

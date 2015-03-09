@@ -17,8 +17,8 @@
 
 void StandardPacker::Warning( const std::string & mess ) const
 {
-  if ( m_parent ) 
-  { m_parent->Warning( mess, StatusCode::SUCCESS ).ignore(); }
+  if ( parent() ) 
+  { parent()->Warning( mess, StatusCode::SUCCESS ).ignore(); }
   else 
   { std::cout << "WARNING : StandardPacker : " << mess << std::endl; }
 }
