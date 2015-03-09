@@ -49,7 +49,7 @@ StatusCode HPDAnalysisAlg::initialize()
   if ( sc.isFailure() ) return sc;
 
   // get decoder tool
-  acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, 0, true );
+  acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, NULL, true );
 
   // HPD tools
   if ( m_toolNames.empty() ) return Warning( "No HPD analysis tools configured" );

@@ -51,7 +51,7 @@ StatusCode AddBackground::initialize()
 
   // tools
   acquireTool( "RichAddBackground", m_background, this );
-  acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, 0, true );
+  acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, NULL, true );
 
   return sc;
 }
