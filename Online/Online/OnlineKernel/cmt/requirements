@@ -45,7 +45,7 @@ macro_append OnlineKernelDict_cppflags      " $(OnlineDictionary_cppflags) "
 
 # Gnerate dictionary rootmap file
 #apply_pattern generate_rootmap library=OnlineKernelDict
-#apply_pattern declare_python_modules files=*.py
+apply_pattern install_python_modules
 
 apply_pattern QMTest
 apply_pattern QMTestSummarize

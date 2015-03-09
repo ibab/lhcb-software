@@ -266,7 +266,10 @@ class Service:
   #===============================================================================
   def readFile(self, fname, req_path, mime_type=None):
     """ Open file and read content """
-    path = self.mount() + fname
+    nam = fname
+    if nam.find('?')>0:
+      nam = nam[:nam.find('?')]
+    path = self.mount() + nam
     obj = None
     try:
       if os.path.isdir(path):
@@ -282,7 +285,7 @@ class Service:
       fp.close()
       obj = (req_path, path, mime_type, os.stat(path)[6], buf)
     except Exception, X:
-      log(['Service: Error reading file:'+req_path,str(X)],0,0)
+      log(['Service: Error reading file:'+nam+' -> '+req_path,str(X)],0,0)
       raise X
     return obj
 
@@ -295,7 +298,10 @@ class Service:
     interface the same as for send_head().
     
     """
-    path = self.mount()+fname
+    nam = fname
+    if nam.find('?')>0:
+      nam = nam[:nam.find('?')]
+    path = self.mount()+nam
     try:
       list = os.listdir(path)
     except os.error:
@@ -1231,7 +1237,7 @@ class DataManagementServer(SocketServer.ThreadingTCPServer):
   allow_reuse_address = 1    # Seems to make sense in testing environment
 
   #===============================================================================
-  def __init__(self, port, name=None, lg=1):
+  def __init__(self, port, name=None, logging=1):
     """  Standard Constructor.
          port number of the local server
          lg   Flag wether or not to log requests
@@ -1246,7 +1252,7 @@ class DataManagementServer(SocketServer.ThreadingTCPServer):
     self.port = port
     self.servlets = {}
     self.services = {}
-    self.logRequests  = lg
+    self.logRequests  = logging
     self.continue_handling = 1
     if ( nam is None ): 
       nam = socket.gethostname()
@@ -1428,14 +1434,18 @@ class DataManagementServer(SocketServer.ThreadingTCPServer):
       for line in lines[:-1]:
         log([line], 0, 0)
 
-if ( __name__ == "__main__"):
-  opt = '..'
-  if ( len(sys.argv) > 1):
-    opt = sys.argv[1]
-  server  = DataManagementServer(8081, 1)
-  server.registerServlet   ('html',   FileServlet('html', opt+os.sep+'html'))
-  server.registerMountpoint('images', opt+os.sep+'images')
-  server.registerServlet('Manager', ManagementServlet('Manager', 0))
+def gaudiweb(opt):
+  server = DataManagementServer(8081, logging=1)
+  server.registerServlet   ('html',     FileServlet('html', opt+os.sep+'html'))
+  server.registerMountpoint('images',   opt+os.sep+'images')
+  server.registerServlet('Manager',     ManagementServlet('Manager', 0))
   server.registerServlet('favicon.ico', FavIconServer(opt+os.sep+'images'+os.sep+'favicon.ico'))
   server.welcome()
   server.serve_forever()
+
+if ( __name__ == "__main__"):
+  opt = '..'
+  print 'Argslen:',len(sys.argv),sys.argv
+  if ( len(sys.argv) > 1 and sys.argv[0] != '-c'):
+    opt = sys.argv[1]
+  gaudiweb(opt)

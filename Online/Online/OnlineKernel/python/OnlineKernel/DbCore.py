@@ -82,17 +82,22 @@ class DbCore:
     elif self._name[0:7]=='sqlite:':
       import sqlite3
       return sqlite3.connect(self._name[7:])
+    elif self._name[0:7]=='oracle:' and self._name.find('@')>0 and self._name.find('/')>0:
+      import cx_Oracle
+      rest,password = self._name[7:].split('/')
+      username,database = rest.split('@')
+      return cx_Oracle.Connection(username, password, database)
     elif self._name.find('@')>0 and self._name.find('/')>0:
       import cx_Oracle
-      rest,password = database.split('/')
+      rest,password = self._name.split('/')
       username,database = rest.split('@')
       return cx_Oracle.Connection(username, password, database)
     else:
       import cx_Oracle
       return cx_Oracle.Connection(self._name)
 
-  def database(self):
-    return self._db()
+  def connection(self):
+    return self._DB
   
   def executeQuery(self, sql, *parms, **kws):
     try:

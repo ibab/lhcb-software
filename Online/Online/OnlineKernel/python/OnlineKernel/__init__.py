@@ -6,21 +6,25 @@ QioEvent  = 5
 TkEvent   = 6
 PVSSEvent = 7
 
-import sys, platform, PyCintex as Dict
+import sys, platform
+try:
+  import cppyy as Dict
+  if platform.system()=='Linux':
+    Dict.loadDictionary('libOnlineKernelDict')
+  else:
+    Dict.loadDictionary('OnlineKernelDict.dll')
 
-if platform.system()=='Linux':
-  Dict.loadDictionary('libOnlineKernelDict.so')
-else:
-  Dict.loadDictionary('OnlineKernelDict.dll')
+  CPP = Dict.makeNamespace('CPP')
+  gbl = Dict.gbl
+  std = gbl.std
 
-CPP = Dict.makeNamespace('CPP')
-gbl = Dict.makeNamespace('')
-
-Interactor           = CPP.PyInteractor
-Event                = gbl.Event
-BaseSensor           = gbl.Sensor
-Sensor               = gbl.UpiSensor
-IocSensor            = gbl.IocSensor
-TimeSensor           = gbl.TimeSensor
-
+  Interactor           = CPP.PyInteractor
+  Event                = CPP.Event
+  BaseSensor           = CPP.Sensor
+  IocSensor            = CPP.IocSensor
+  TimeSensor           = CPP.TimeSensor
+  Sensor               = gbl.UpiSensor
+  UpiSensor            = gbl.UpiSensor
+except Exception,X:
+  print 'OnlineKernel: Failed to use cppyy - you need to live without. [%s]'%(str(X),)
 
