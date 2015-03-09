@@ -1538,7 +1538,8 @@ class Hlt2Line(object):
             _s = GaudiSequencer( hltentryName( line, 'Hlt2') + 'Sequence' 
                                , Members = [ decoder.setup(), HDRFilter  ( hltentryName ( line,'Hlt2' ) , Code = self._HLT , Location = decoder.listOutputs()[0]  )  ]
                                ) 
-            mdict.update( HLT1 =  _s )
+            ## Change to HLT1 for next release
+            mdict.update( HLT =  _s )
         from Configurables import LoKi__VoidFilter
         if self._VoidFilter : 
             mdict.update( Filter0 = LoKi__VoidFilter( voidName( line, 'Hlt2' ), Code = self._VoidFilter ) )
