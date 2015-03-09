@@ -4,6 +4,10 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
+! 2015-03-09 - Chris Jones
+ - Add some logic to the alignment configurable to extract the correct
+   context to use for a given set of tracks from the RichRecSys configurable.
+
 !========================= RichAlignment v1r9 2014-06-10 =======================
 ! 2014-05-24 - Chris Jones
  - Update various alignment scripts and data files.

@@ -29,6 +29,19 @@ class RichAlignmentConf(RichConfigurableUser):
         ,"HPDList"          : [ [], [], [] ] # list of HPDs for histograms
         }
 
+    ## Access the Reconstruction configurable
+    def recoConf(self):
+        from Configurables import RichRecSysConf
+        # Hardcoded name for the moment
+        return RichRecSysConf('RichOfflineRec')
+
+    ## Get the context to use for a monitoring algorithm using a given track location
+    def getTrackContext(self,tkType):
+        cont = self.getProp("Context")
+        if self.recoConf().usingTrackGroups() :
+            cont = self.recoConf().getContextForTrackType(tkType)
+        return cont
+
     ## Apply the configuration
     def applyConf(self):
 
@@ -40,12 +53,16 @@ class RichAlignmentConf(RichConfigurableUser):
 
         from Configurables import ( Rich__Rec__MC__AlignmentMonitor )
 
+        trackTyps = [ "Match","Forward" ]
+
         # Mirror Alignment monitor for Aerogel
         #-------------------------------------------------------------------------------
         if "Aerogel" in self.getProp("Radiators") :
 
             RichAlignMoniAerogel = Rich__Rec__MC__AlignmentMonitor("RichAlignMoniAerogel")
             sequence.Members += [RichAlignMoniAerogel]
+
+            RichAlignMoniAerogel.Context = self.getTrackContext(trackTyps)
 
             RichAlignMoniAerogel.UseMCTruth      = self.getProp("WithMC")
             RichAlignMoniAerogel.Radiator        = 0   # Aerogel = 0, Rich1Gas = 1, Rich2Gas = 2
@@ -55,7 +72,7 @@ class RichAlignmentConf(RichConfigurableUser):
             trselname = "TrackSelector"
             RichAlignMoniAerogel.addTool( self.richTools().trackSelector(trselname), name=trselname )
 
-            RichAlignMoniAerogel.TrackSelector.TrackAlgs = [ "Match","Forward" ]
+            RichAlignMoniAerogel.TrackSelector.TrackAlgs = trackTyps
             aeroMinPCut = self.getProp("MinTrackMomentum")[0]
             if aeroMinPCut < 0: aeroMinPCut = 5
             RichAlignMoniAerogel.TrackSelector.MinPCut   = aeroMinPCut
@@ -77,6 +94,8 @@ class RichAlignmentConf(RichConfigurableUser):
             RichAlignMoniR1 = Rich__Rec__MC__AlignmentMonitor("RichAlignMoniR1Gas")
             sequence.Members += [RichAlignMoniR1]
 
+            RichAlignMoniR1.Context = self.getTrackContext(trackTyps)
+
             RichAlignMoniR1.UseMCTruth      = self.getProp("WithMC")
             RichAlignMoniR1.Radiator        = 1   # Aerogel = 0, Rich1Gas = 1, Rich2Gas = 2
             RichAlignMoniR1.DeltaThetaRange = self.getProp("DeltaThetaRange")[1]
@@ -85,7 +104,7 @@ class RichAlignmentConf(RichConfigurableUser):
             trselname = "TrackSelector"
             RichAlignMoniR1.addTool( self.richTools().trackSelector(trselname), name=trselname )
 
-            RichAlignMoniR1.TrackSelector.TrackAlgs = [ "Match","Forward" ]
+            RichAlignMoniR1.TrackSelector.TrackAlgs = trackTyps
             r1MinPCut = self.getProp("MinTrackMomentum")[1]
             if r1MinPCut < 0: r1MinPCut = 5
             RichAlignMoniR1.TrackSelector.MinPCut   = r1MinPCut
@@ -107,6 +126,8 @@ class RichAlignmentConf(RichConfigurableUser):
             RichAlignMoniR2 = Rich__Rec__MC__AlignmentMonitor("RichAlignMoniR2Gas")
             sequence.Members += [RichAlignMoniR2]
 
+            RichAlignMoniR2.Context = self.getTrackContext(trackTyps)
+
             RichAlignMoniR2.UseMCTruth      = self.getProp("WithMC")
             RichAlignMoniR2.Radiator        = 2   # Aerogel = 0, Rich1Gas = 1, Rich2Gas = 2
             RichAlignMoniR2.DeltaThetaRange = self.getProp("DeltaThetaRange")[2]
@@ -115,7 +136,7 @@ class RichAlignmentConf(RichConfigurableUser):
             trselname = "TrackSelector"
             RichAlignMoniR2.addTool( self.richTools().trackSelector(trselname), name=trselname )
 
-            RichAlignMoniR2.TrackSelector.TrackAlgs = [ "Match","Forward" ]
+            RichAlignMoniR2.TrackSelector.TrackAlgs = trackTyps
             r2MinPCut = self.getProp("MinTrackMomentum")[2]
             if r2MinPCut < 0: r2MinPCut = 10
             RichAlignMoniR2.TrackSelector.MinPCut   = r2MinPCut
