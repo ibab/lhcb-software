@@ -4,6 +4,8 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!========================= HltBase v15r6 2015-03-09 =========================
+
 ! 2015-03-09 - Roel Aaij
  - Remove VertexBase from the classes that can be stored in an HltStage.
 
