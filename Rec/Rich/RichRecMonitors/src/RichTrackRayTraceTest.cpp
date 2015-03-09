@@ -43,8 +43,8 @@ StatusCode TrackRayTraceTest::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichRayTracing",    m_rayTrace       );
-  acquireTool( "RichSmartIDTool",   m_idTool,   0, true );
+  acquireTool( "RichRayTracing",    m_rayTrace, NULL, true );
+  acquireTool( "RichSmartIDTool",   m_idTool,   NULL, true );
   acquireTool( "TrackSelector",     m_trSelector, this );
 
   // initialise variables

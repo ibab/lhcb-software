@@ -48,8 +48,8 @@ StatusCode PixelPositionMonitor::initialize()
 
   // Acquire instances of tools
   acquireTool( "RichRecMCTruthTool", m_richRecMCTruth );
-  acquireTool( "RichMCTruthTool", m_mcTool,   0, true );
-  acquireTool( "RichSmartIDTool", m_idTool,   0, true );
+  acquireTool( "RichMCTruthTool", m_mcTool,   NULL, true );
+  acquireTool( "RichSmartIDTool", m_idTool,   NULL, true );
 
   // RichDet
   m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );

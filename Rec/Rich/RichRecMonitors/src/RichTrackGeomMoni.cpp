@@ -45,12 +45,12 @@ StatusCode TrackGeomMoni::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichRayTracing",       m_rayTrace       );
+  acquireTool( "RichRayTracing",       m_rayTrace, NULL, true );
   acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth );
   acquireTool( "RichRecGeometry",      m_geomTool       );
   acquireTool( "RichGeomEff",          m_geomEffic      );
   acquireTool( "RichMCTrackInfoTool",  m_mcTkInfo       );
-  acquireTool( "RichSmartIDTool",      m_idTool,   0, true );
+  acquireTool( "RichSmartIDTool",      m_idTool,   NULL, true );
   acquireTool( "TrackSelector",        m_trSelector,  this );
 
   // initialise variables

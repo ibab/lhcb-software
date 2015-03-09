@@ -53,8 +53,8 @@ StatusCode PhotonRecoRayTraceTest::initialize()
   acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth   );
   acquireTool( "RichCherenkovAngle",   m_ckAngle          );
   acquireTool( "TrackSelector",        m_trSelector, this );
-  acquireTool( "RichRayTracing",       m_rayTracing       );
-  acquireTool( "RichSmartIDTool",      m_idTool,  0, true );
+  acquireTool( "RichRayTracing",       m_rayTracing, NULL, true );
+  acquireTool( "RichSmartIDTool",      m_idTool,  NULL, true );
 
   // ray tracing options
   m_mode = LHCb::RichTraceMode( LHCb::RichTraceMode::RespectHPDTubes,
