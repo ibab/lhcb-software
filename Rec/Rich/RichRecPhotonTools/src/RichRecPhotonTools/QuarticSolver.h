@@ -30,8 +30,8 @@
 // Vector Class
 #include "VectorClass/complexvec.h"
 
-// RichKernel
-#include "RichKernel/FastRoots.h"
+// LHCb Maths
+#include "LHCbMath/FastRoots.h"
 
 namespace Rich
 {
@@ -79,6 +79,16 @@ namespace Rich
 
     private:
 
+      /// The cube root implementaton to use
+      template < class TYPE >
+      inline TYPE my_cbrt( const TYPE& x ) const
+      {
+        // STL
+        //return std::cbrt(x);
+        // LHCbMath FastRoots
+        return FastRoots::cbrt(x);
+      }
+
       //----------------------------------------------------------------------
       /** Solves the quartic equation x^4 + a x^3 + b x^2 + c x + d = 0
        *
@@ -95,7 +105,6 @@ namespace Rich
                                        const TYPE& c,
                                        const TYPE& d ) const
       {
-        using namespace Rich::Maths::FastRoots;
 
         const auto r4 = 1.0f / 4.0f;
         const auto q2 = 1.0f / 2.0f;
@@ -123,10 +132,9 @@ namespace Rich
         const auto R2 = R * R;
 
         const auto sgnR = ( R >= 0 ? -1 : 1 );
-        //const auto A = sgnR * std::cbrt( fabs(R) + std::sqrt( fabs(R2-Q3) ) );
-        //const auto A = sgnR * std::cbrt( (TYPE)( fabs(R) + std::sqrt( fabs(R2-Q3) ) ) );
-        const auto A = sgnR * fast_cbrt( (TYPE)( fabs(R) + std::sqrt( fabs(R2-Q3) ) ) );
-        //const auto A = sgnR * vfast_cbrt( (TYPE)( fabs(R) + std::sqrt( fabs(R2-Q3) ) ) );
+
+        const auto A = sgnR * my_cbrt( (TYPE)( fabs(R) + std::sqrt( fabs(R2-Q3) ) ) );
+        
         const auto B = Q / A;
 
         const auto u1 = -0.5f * (A + B) - rc / 3.0f;
@@ -233,7 +241,6 @@ namespace Rich
                                const TYPE radius,
                                Gaudi::XYZPoint& sphReflPoint ) const
       {
-        using namespace Rich::Maths::FastRoots;
 
         typedef Eigen::Matrix< TYPE , 3 , 1 > Eigen3Vector;
         typedef LHCb::Math::Eigen::XYZVector  Eigen4Vector;

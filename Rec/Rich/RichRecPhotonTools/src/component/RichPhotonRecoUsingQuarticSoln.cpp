@@ -85,8 +85,8 @@ StatusCode PhotonRecoUsingQuarticSoln::initialize()
   m_rich[Rich::Rich2] = getDet<DeRich>( DeRichLocations::Rich2 );
 
   // Get tools
-  acquireTool( "RichMirrorSegFinder",     m_mirrorSegFinder    );
-  acquireTool( "RichRayTracing",          m_rayTracing         );
+  acquireTool( "RichMirrorSegFinder",     m_mirrorSegFinder, NULL, true );
+  acquireTool( "RichRayTracing",          m_rayTracing,      NULL, true );
   acquireTool( "RichSmartIDTool",         m_idTool, NULL, true );
   acquireTool( "RichPhotonEmissionPoint", m_emissPoint         );
 
@@ -104,24 +104,24 @@ StatusCode PhotonRecoUsingQuarticSoln::initialize()
 
     // information printout about configuration
     if ( m_testForUnambigPhots[*rad] )
-    {      info() << "Will test for unambiguous     " << *rad << " photons" << endmsg; }
-    else { info() << "Will not test for unambiguous " << *rad << " photons" << endmsg; }
+    {      _ri_debug << "Will test for unambiguous     " << *rad << " photons" << endmsg; }
+    else { _ri_debug << "Will not test for unambiguous " << *rad << " photons" << endmsg; }
 
     if ( m_rejectAmbigPhots[*rad] )
-    {      info() << "Will reject ambiguous " << *rad << " photons" << endmsg; }
-    else { info() << "Will accept ambiguous " << *rad << " photons" << endmsg; }
+    {      _ri_debug << "Will reject ambiguous " << *rad << " photons" << endmsg; }
+    else { _ri_debug << "Will accept ambiguous " << *rad << " photons" << endmsg; }
 
     if ( m_useAlignedMirrSegs[*rad] )
-    {      info() << "Will use fully alligned mirror segments for " << *rad << " reconstruction" << endmsg;  }
-    else { info() << "Will use nominal mirrors for " << *rad << " reconstruction" << endmsg; }
+    {      _ri_debug << "Will use fully alligned mirror segments for " << *rad << " reconstruction" << endmsg;  }
+    else { _ri_debug << "Will use nominal mirrors for " << *rad << " reconstruction" << endmsg; }
 
     if ( m_checkBeamPipe[*rad] )
-    {      info() << "Will check for " << *rad << " photons that hit the beam pipe" << endmsg; }
+    {      _ri_debug << "Will check for " << *rad << " photons that hit the beam pipe" << endmsg; }
 
     if ( m_checkPrimMirrSegs[*rad] )
-    {      info() << "Will check for full intersecton with mirror segments for " << *rad << endmsg; }
+    {      _ri_debug << "Will check for full intersecton with mirror segments for " << *rad << endmsg; }
 
-    info() << "Minimum active " << *rad << " segment fraction = " << m_minActiveFrac[*rad] << endmsg;
+    _ri_debug << "Minimum active " << *rad << " segment fraction = " << m_minActiveFrac[*rad] << endmsg;
 
   }
 
@@ -143,8 +143,8 @@ StatusCode PhotonRecoUsingQuarticSoln::initialize()
       if ( m_nQits[Rich::Aerogel]  < 1 ) return Error( "# Aerogel  iterations < 1" );
       if ( m_nQits[Rich::Rich1Gas] < 1 ) return Error( "# Rich1Gas iterations < 1" );
       if ( m_nQits[Rich::Rich2Gas] < 1 ) return Error( "# Rich2Gas iterations < 1" );
-      info() << "Assuming spherical secondary mirrors : # iterations (Aero/R1Gas/R2Gas) = "
-             << m_nQits << endmsg;
+      _ri_debug << "Assuming spherical secondary mirrors : # iterations (Aero/R1Gas/R2Gas) = "
+                << m_nQits << endmsg;
     }
   }
 

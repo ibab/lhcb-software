@@ -54,7 +54,7 @@ StatusCode PhotonRecoUsingCKEstiFromRadius::initialize()
   const StatusCode sc = PhotonRecoBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  acquireTool( "RichSmartIDTool",     m_idTool, 0, true  );
+  acquireTool( "RichSmartIDTool",     m_idTool, NULL, true  );
   acquireTool( "RichMassHypoRings",   m_massHypoRings    );
   acquireTool( "RichCherenkovAngle",  m_ckAngle          );
   acquireTool( "RichParticleProperties",  m_richPartProp );

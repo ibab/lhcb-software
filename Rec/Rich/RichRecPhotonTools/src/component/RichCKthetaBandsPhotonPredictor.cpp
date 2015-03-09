@@ -89,14 +89,14 @@ StatusCode CKthetaBandsPhotonPredictor::initialize()
     // printout for this rad
     std::string trad = Rich::text((Rich::RadiatorType)rad);
     trad.resize(8,' ');
-    info() << trad << " : Sep. range     "
-           << boost::format("%5.1f") % m_minROI[rad] << " -> "
-           << boost::format("%5.1f") % m_maxROI[rad] << " mm  : Tol. "
-           << boost::format("%5.1f") % m_nSigma[rad] << " # sigma" << endmsg;
+    _ri_debug << trad << " : Sep. range     "
+              << boost::format("%5.1f") % m_minROI[rad] << " -> "
+              << boost::format("%5.1f") % m_maxROI[rad] << " mm  : Tol. "
+              << boost::format("%5.1f") % m_nSigma[rad] << " # sigma" << endmsg;
   }
 
   m_pidTypes = m_richPartProp->particleTypes();
-  info() << "Particle types considered = " << m_pidTypes << endmsg;
+  _ri_debug << "Particle types considered = " << m_pidTypes << endmsg;
 
   return sc;
 }

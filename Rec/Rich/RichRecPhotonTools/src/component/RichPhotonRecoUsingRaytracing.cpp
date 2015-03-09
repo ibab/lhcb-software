@@ -77,9 +77,9 @@ StatusCode PhotonRecoUsingRaytracing::initialize()
   if ( sc.isFailure() ) return sc;
 
   // get tools
-  acquireTool( "RichSmartIDTool",     m_idTool, 0, true  );
-  acquireTool( "RichCherenkovAngle",  m_ckAngle          );
-  acquireTool( "RichRayTracing",      m_raytrace         );
+  acquireTool( "RichSmartIDTool",     m_idTool,   NULL, true );
+  acquireTool( "RichCherenkovAngle",  m_ckAngle );
+  acquireTool( "RichRayTracing",      m_raytrace, NULL, true );
 
   // ray tracing mode
   m_mode.setAeroRefraction(true);

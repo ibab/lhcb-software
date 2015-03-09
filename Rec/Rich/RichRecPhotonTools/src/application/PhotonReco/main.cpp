@@ -62,7 +62,7 @@ void solve( const Data::Vector & dataV )
     if ( solve(data) ) 
     {
       ++ok;
-      std::cout << sphReflPoint << std::endl;
+      //std::cout << sphReflPoint << std::endl;
     }
   }
 
@@ -73,7 +73,7 @@ void solve( const Data::Vector & dataV )
 int main ( int /*argc*/, char** /*argv*/ )
 {
 
-  const unsigned int nPhotons = 10;
+  const unsigned int nPhotons = 1e6;
   
   Data::Vector dataV;
   dataV.reserve( nPhotons );

@@ -4,6 +4,14 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-03-09 - Chris Jones
+ - Downgrade some info level printout messages to debug level.
+ - Load some tools as shared instances to avoid unneccesary duplication of
+   tools when running the reconstruction with the split track groups enabled.
+
+! 2015-03-03 - Chris Jones
+ - Use LHCbMaths FastRoots implementation instead of one from RichKernel.
+
 !========================= RichRecPhotonTools v1r16 2015-02-23 =======================
 ! 2015-02-22 - Chris Jones
  - Revert back to std::sqrt(x) instead of vdt::fast_isqrt(x) as its actually 
