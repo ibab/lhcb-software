@@ -13,7 +13,7 @@ branches cmt doc
 use MDF                 v3r40    DAQ
 use MDF_ROOT            v1r9     DAQ
 use DAQEvent            v9r17    Event
-use GaudiObjDesc        v11r20p1
+use GaudiObjDesc        v11r21
 #=======================================================
 # LHCb Online packages
 #=======================================================

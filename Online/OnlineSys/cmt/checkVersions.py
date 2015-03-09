@@ -50,11 +50,13 @@ for line in lines:
     dir = items[2][1:-1]
     path = dir+package
     pkg = package
+    pkg_print = package
   else:
     head = items[2]
     dir = items[3][1:-1]
     path = dir+head+os.sep+package
     pkg = head+os.sep+package
+    pkg_print = head+' '+os.sep+' '+package
   if with_versions: path = path+os.sep+version
   #print dir,pkg,path,dir==dir2,dir2
   tags = ''
@@ -103,7 +105,7 @@ for line in lines:
     diffs = pipe[1].readlines()
     new = pipe[2].readlines()
     changes = 0
-    prefix = '%s %-28s %-10s'%(proto,pkg,'['+version+']',)
+    prefix = '%s %-28s %-10s'%(proto,pkg_print,'['+version+']',)
     if len(diffs) > 0:
       for d in diffs:
         if d[:2] == '? ': continue
@@ -111,14 +113,14 @@ for line in lines:
     if changes == 0:
       for n in new:
         if n.find('cvs diff: tag')==0:
-	  idx = n.find('not in file')
-	  print prefix,'New file:     ',pkg+os.sep+n[idx+len('not in file '):-1]
+          idx = n.find('not in file')
+          print prefix,'New file:     ',pkg+os.sep+n[idx+len('not in file '):-1]
           changes = 1
         elif n.find('no longer exists') > 0:
-	  print prefix,'File removed: ',pkg+n.split(' ')[2]
-	  changes = 1
+          print prefix,'File removed: ',pkg+n.split(' ')[2]
+          changes = 1
         elif n.find('cvs diff: Diffing') == 0:
-	  pass
+          pass
         else:
           print 'Nothing abnormal:',n[:-1]
     vsn = "%-8s"%version
