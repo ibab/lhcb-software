@@ -44,7 +44,7 @@ StatusCode SimpleChargeSharing::initialize()
   }
 
   // tools
-  acquireTool( "RichSmartIDTool", m_smartIDTool, 0, true );
+  acquireTool( "RichSmartIDTool", m_smartIDTool, NULL, true );
 
   // printout
   info() << "Will add charge sharing at " << 100*m_shareFrac << " % level" << endmsg;

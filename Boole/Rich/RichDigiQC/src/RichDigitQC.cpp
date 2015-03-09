@@ -48,8 +48,8 @@ StatusCode DigitQC::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // acquire tools
-  acquireTool( "RichSmartIDTool" ,     m_smartIDs,   0, true );
-  acquireTool( "RichMCTruthTool",      m_mcTool,     0, true );
+  acquireTool( "RichSmartIDTool" ,     m_smartIDs,   NULL, true );
+  acquireTool( "RichMCTruthTool",      m_mcTool,     NULL, true );
 
   // RichDet
   m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );

@@ -49,8 +49,8 @@ StatusCode AlgMoni::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // get tools
-  acquireTool( "RichSmartIDTool", m_smartIDTool, 0, true );
-  acquireTool( "RichMCTruthTool", m_mcTool,      0, true );
+  acquireTool( "RichSmartIDTool", m_smartIDTool, NULL, true );
+  acquireTool( "RichMCTruthTool", m_mcTool,      NULL, true );
 
   // RichDet
   m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );

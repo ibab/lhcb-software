@@ -50,7 +50,7 @@ StatusCode MCRichDigitSummaryAlg::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // tool
-  acquireTool( "RichMCTruthTool", m_truth, 0, true       );
+  acquireTool( "RichMCTruthTool", m_truth, NULL, true );
 
   if ( !m_storeSpill )
     info() << "Will only store MCParticle references for main event" << endreq;

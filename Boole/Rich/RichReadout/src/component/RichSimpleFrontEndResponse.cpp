@@ -50,7 +50,7 @@ StatusCode SimpleFrontEndResponse::initialize()
 
   // create a collection of all pixels
   const Rich::ISmartIDTool * smartIDs = NULL;
-  acquireTool( "RichSmartIDTool" , smartIDs, 0, true );
+  acquireTool( "RichSmartIDTool" , smartIDs, NULL, true );
   const LHCb::RichSmartID::Vector & pixels = smartIDs->readoutChannelList();
   actual_base = theRegistry.GetNewBase( pixels );
   releaseTool( smartIDs );
