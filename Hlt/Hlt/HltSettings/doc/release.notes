@@ -4,6 +4,8 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v6r11 2015-03-09 =========================
+
 ! 2015-03-06 - Michael Kolpin
  - Updated names of Turbo lines in TrackEffLines.py
 
