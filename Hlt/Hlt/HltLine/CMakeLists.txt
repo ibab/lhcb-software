@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltLine
 ################################################################################
-gaudi_subdir(HltLine v7r7)
+gaudi_subdir(HltLine v7r8)
 
 gaudi_depends_on_subdirs(DAQ/DAQSys
                          GaudiAlg

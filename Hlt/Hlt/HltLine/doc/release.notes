@@ -5,6 +5,8 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================= HltLine v7r8 2015-03-09 =========================
+
 ! 2015-03-06 - Sascha Stahl
  - Added "outputLocation" to possible outputs in HltLine.
 
