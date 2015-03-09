@@ -18,11 +18,11 @@ from Configurables import GaudiSequencer
 
 # ----------------------------------------------------------------------------------
 
-## @class RichRecSysConf
+## @class RichRecSysBaseConf
 #  Configurable for RICH reconstruction
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
-class RichRecSysConf(RichConfigurableUser):
+class RichRecSysBaseConf(RichConfigurableUser):
 
     ## Possible used Configurables
     __used_configurables__ = [ (RichENNRingFinderConf,None),
@@ -40,20 +40,23 @@ class RichRecSysConf(RichConfigurableUser):
        ,"Context":    "Offline"   # The context within which to run
        ,"Radiators": None         # The radiators to use
        ,"Particles": None         # The particle species to consider. Default is (el,mu,pi,ka,pr,bt)
+       ,"ConfigurePrelims": True  # Configure some 'preliminary' items
        ,"ConfigureTools":  True   # Configure the general RICH reconstruction tools
        ,"ConfigureAlgs":   True   # Configure the reconstruction algorithms
        ,"PreloadRawEvent": False  # Preload the RawEvent prior to the RICH algorithms
        ,"PreloadTracks":   False  # Preload the input tracks prior to the RICH algorithms
        ,"RefitTracks":     False  # Refit the tracks first. Useful for running on DSTs.
+       ,"InitDecoding":    True   # Run an initialisation algorithm to decode the Rich RawBuffer
        ,"InitPixels":      True   # Run an initialisation algorithm to create the pixels
        ,"InitTracks":      True   # Run an initialisation algorithm to create the tracks
        ,"InitPhotons":     True   # Run an initialisation algorithm to create the photons
+       ,"TrackTypeGroups": [ ] # Track type groupings. Empty list means all at once.
        ,"TracklessRingAlgs": ["ENN"] # Run the given Trackless ring finding algorithms
        ,"CheckProcStatus": True   # Check the status of the ProcStatus object
        ,"PidConfig": "FullGlobal" # The PID algorithm configuration
        ,"MakeSummaryObjects": False # Make the reconstruction summary TES data objects
        ,"HpdRandomBackgroundProb" : -1.0 # If positive, will add additional random background to the data at the given pixel percentage
-       ,"SpecialData"   : []       # Various special data processing options. See KnownSpecialData in RecSys for all options
+       ,"SpecialData"   : []      # Various special data processing options. See KnownSpecialData in RecSys for all options
        ,"RecoSequencer" : None    # The sequencer to add the RICH reconstruction algorithms to
        ,"Simulation"    : False   # Simulated data
        ,"DataType"      : ""      # Type of data, propagated from application
@@ -67,8 +70,10 @@ class RichRecSysConf(RichConfigurableUser):
     def initialize(self):
         
         # default values
-        self.setRichDefault("Particles","Offline",["electron","muon","pion","kaon","proton","belowThreshold"] )
-        self.setRichDefault("Particles","HLT",    ["electron","muon","pion","kaon","proton","belowThreshold"] )
+        self.setRichDefault("Particles","Offline", ["electron","muon","pion","kaon",
+                                                    "proton","belowThreshold"] )
+        self.setRichDefault("Particles","HLT",     ["electron","muon","pion","kaon",
+                                                    "proton","belowThreshold"] )
         self.setRichDefault("Radiators","Offline", ["Rich1Gas","Rich2Gas"] )
         self.setRichDefault("Radiators","HLT",     ["Rich1Gas","Rich2Gas"] )
 
@@ -106,6 +111,9 @@ class RichRecSysConf(RichConfigurableUser):
 
     ## Access the global PID configurable
     def gpidConfig(self) : return self.getRichCU(RichGlobalPIDConfig)
+
+    ## Access the CK theta resolution configurable
+    def ckResConfig(self) : return self.getRichCU(CKThetaResolutionConfig)
 
     ## @brief Apply any tweaks to the default configuration that vary by DataType
     def dataTypeTweaks(self):
@@ -150,66 +158,133 @@ class RichRecSysConf(RichConfigurableUser):
             "Conditions/Environment/Rich2/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;"
             ]
 
-    ## @brief Apply the configuration to the configured GaudiSequencer
-    def applyConf(self) :
+    ## Common initialisation stuff
+    def applyCommonConf(self):
 
         # DataType specific tweaks
         self.dataTypeTweaks()
 
         # Online mode ?
         if self.getProp("OnlineMode") : self.setupOnlineMode()
-
-        # Check the sequencer is set
-        if not self.isPropertySet("RecoSequencer") :
-            raise RuntimeError("ERROR : Reconstruction Sequence not set")
-        recoSequencer = self.getProp("RecoSequencer")
          
         # Tools. (Should make this automatic in the base class somewhere)
         self.setOtherProps(self.richTools(),["Context","OutputLevel"])
 
-        # Do the configuration
+        # Set the context
+        cont = self.getProp("Context")
+        sequence = self.getRecoSeq()
+        sequence.Context = cont
+
+        # Setup tools
         if self.getProp("ConfigureTools") : self.configTools()
-        if self.getProp("ConfigureAlgs")  : self.configAlgorithms(recoSequencer)
+
+    ## Get the sequence to fill
+    def getRecoSeq(self):
+        # Check the sequencer is set
+        if not self.isPropertySet("RecoSequencer") :
+            raise RuntimeError("ERROR : Reconstruction Sequence not set")
+        return self.getProp("RecoSequencer")
+
+    ## @brief Apply the configuration to the configured GaudiSequencer
+    def applyConf(self) :
+
+        self.applyCommonConf()
+        if self.getProp("ConfigureAlgs") : self.configAlgorithms( self.getRecoSeq() )
+
+    ## Propagate select options to used configurables
+    def setupToolOptions(self) :
         
+        # Tracks and segments
+        tkConf = self.trackConfig()
+        tkConf.setProp("Radiators",self.usedRadiators())
+        for prop in ["DataType","OutputLevel","Context","SpecialData"]:
+            tkConf.setProp( prop, self.getProp(prop) )
+        
+        # Pixels
+        pixConf = self.pixelConfig()
+        pixConf.setProp("Detectors",self.usedDetectors())
+        for prop in ["DataType","OutputLevel","Context","SpecialData"]:
+            pixConf.setProp( prop, self.getProp(prop) )
+        
+        # Photons
+        photConf = self.photonConfig()
+        photConf.setProp("Radiators",self.usedRadiators())
+        for prop in ["DataType","OutputLevel","SpecialData","Context","Simulation"]:
+            photConf.setProp( prop, self.getProp(prop) )
+        
+        # CK theta resolution
+        ckResConf = self.ckResConfig()
+        for prop in ["OutputLevel","Context"]:
+            ckResConf.setProp( prop, self.getProp(prop) )
+        
+        # Print Config
+        self.printInfo(tkConf)
+        self.printInfo(pixConf)
+        self.printInfo(photConf)
+        self.printInfo(ckResConf)
+
+    ## Propagate all options to used configurables
+    def propagateAllOptions(self,groupConfig) :
+        
+        # Main options
+        self.copyOptions( self, groupConfig )
+        
+        # clone options for used configurables
+        self.copyOptions( self.trackConfig(),  groupConfig.trackConfig()  )
+        self.copyOptions( self.pixelConfig(),  groupConfig.pixelConfig()  )
+        self.copyOptions( self.photonConfig(), groupConfig.photonConfig() )
+        self.copyOptions( self.gpidConfig(),   groupConfig.gpidConfig()   )
+        self.copyOptions( self.ckResConfig(),  groupConfig.ckResConfig()  )
+  
+    ## Copy all options from A to B
+    def copyOptions(self,a,b):
+        for option in a.__slots__.keys() :
+            if a.isPropertySet(option) :
+                value = a.getProp(option)
+                #print "Cloning option", option, "=", value, "from", a.name(), "to", b.name()
+                b.setProp(option,value)
+
+    ## Construct the track group name for a given list of types
+    def trackGroupName(self,tkTypeGroup) :
+        name = ""
+        for tk in tkTypeGroup : name = name + tk
+        if name == "ForwardMatch" or name == "MatchForward" : name = "Long"
+        return name
+
+    ## Gets the configurable name for a given track group
+    def getConfName(self,tkTypeGroup):
+        return self.name() + self.trackGroupName(tkTypeGroup)
+
+    ## Gets the configurable context for a given track group
+    def getConfContext(self,tkTypeGroup):
+        return self.getProp("Context") + self.trackGroupName(tkTypeGroup)
+
+    ## Returns the context name to use for a given track type
+    def getContextForTrackType(self,tktype):
+        if type(tktype) is list : tktype = self.trackGroupName(tktype)
+        # Loop over the groups to find the one this track type is in
+        cont = ""
+        for tkGroup in self.getProp("TrackTypeGroups"):
+            if tktype in tkGroup or tktype == self.trackGroupName(tkGroup) :
+                cont = self.getConfContext(tkGroup)
+        return cont
+
+    ## Returns true of the given track type is active
+    def trackTypeIsActive(self,type) :
+        return self.getContextForTrackType(type) != ""
+
+    ## Are we running with split track groupings ?
+    def usingTrackGroups(self) :
+        return 0 != len( self.getProp("TrackTypeGroups") )
+            
     ## @brief Configure the RICH algorithms
     #  @param sequence The GaudiSequencer to add the RICH reconstruction to      
     def configAlgorithms(self,sequence):
 
-        from Configurables import ( Rich__DAQ__RawBufferToRichDigitsAlg,
-                                    Rich__Rec__Initialise )
+        from Configurables import Rich__Rec__Initialise 
 
-        # Set the context
-        cont = self.getProp("Context")
-        sequence.Context = cont
-
-        #-----------------------------------------------------------------------------
-        # Enable these to make sure data (tracks and raw event) are in memory
-        # Useful for timing studies
-        #-----------------------------------------------------------------------------
-        if self.getProp("PreloadRawEvent"):
-            from Configurables import Rich__DAQ__LoadRawEvent
-            raw = self.makeRichAlg( Rich__DAQ__LoadRawEvent, "LoadRawRichEvent"+cont )
-            sequence.Members += [ raw ]
-        if self.getProp("PreloadTracks"):
-            trackInit = self.makeRichAlg( Rich__Rec__Initialise, "LoadRawTracks"+cont )
-            trackInit.LoadRawTracks = True
-            sequence.Members += [ trackInit ]
-
-        #-----------------------------------------------------------------------------
-        # Enable this to run a full track refit prior to processing
-        # Useful for running on DSTs.
-        #-----------------------------------------------------------------------------
-        if self.getProp("RefitTracks") :
-            from DAQSys.Decoders import DecoderDB
-            from DAQSys.DecoderClass import decodersForBank
-            for det in ["Velo","TT","IT"] :
-                sequence.Members += [ d.setup() for d in decodersForBank(DecoderDB,det) ]
-            from TrackFitter.ConfiguredFitters import ConfiguredFit
-            from Configurables import TrackStateInitAlg
-            tracksLoc = self.trackConfig().getProp("InputTracksLocation")
-            sequence.Members += [ TrackStateInitAlg( name = "InitRichTrackStates",
-                                                     TrackLocation = tracksLoc ),
-                                  ConfiguredFit("RefitRichTracks",tracksLoc) ]  
+        cont     = self.getProp("Context")
+        sequence = self.getRecoSeq()
 
         #-----------------------------------------------------------------------------
         # Initialisation
@@ -217,32 +292,27 @@ class RichRecSysConf(RichConfigurableUser):
         initSeq = self.makeRichAlg(GaudiSequencer,"RichRecInit"+cont+"Seq")
         sequence.Members += [ initSeq ]
 
+        #-----------------------------------------------------------------------------
+        # Check processing status
+        #-----------------------------------------------------------------------------
         if self.getProp("CheckProcStatus") :
             procStat = self.makeRichAlg( Rich__Rec__Initialise, "CheckProc"+cont+"Status" )
             initSeq.Members += [ procStat ]
 
+        #-----------------------------------------------------------------------------
+        # Preload the tracks
+        #-----------------------------------------------------------------------------
+        if self.getProp("PreloadTracks"):
+            trackInit = self.makeRichAlg( Rich__Rec__Initialise, "LoadRawTracks"+cont )
+            trackInit.LoadRawTracks = True
+            initSeq.Members += [ trackInit ]
+
         if self.getProp("InitPixels") :
+            
             # Make a pixel sequence
             pixelSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"PixelsSeq")
             initSeq.Members += [ pixelSeq ]
-            # Raw decoding algorithm
-            # Parasite in on this with my database so that the
-            # automatic reconfiguration of locations is spawned
-            from DAQSys.Decoders import DecoderDB
-            from DAQSys.DecoderClass import decodersForBank
-            aname="DecodeRawRich"+cont
-            #clone the pre-existing alg in the database first...
-            decodeRich =DecoderDB["Rich::DAQ::RawBufferToRichDigitsAlg/RichRawEventToDigits"].clone("Rich::DAQ::RawBufferToRichDigitsAlg/"+aname)
-            decodeRich.Properties["DecodeBufferOnly"]=True
-            #with ["DecodeBufferOnly"]=True, alg produces no output ...
-            decodeRich.Outputs=[]
-            #set "Active" to auto reconfigure the input location if needed
-            decodeRich.Active=True 
-            decodeRich=decodeRich.setup()
-            #call the makeRichAlg anyway, even though it is already "made..."
-            #just in case it is adapted to do other things in the future
-            decodeRich = self.makeRichAlg( Rich__DAQ__RawBufferToRichDigitsAlg, aname )
-            pixelSeq.Members += [ decodeRich ]
+            
             # Add random background ?
             pixBackPercent = self.getProp("HpdRandomBackgroundProb")
             if pixBackPercent > 0 :
@@ -252,14 +322,17 @@ class RichRecSysConf(RichConfigurableUser):
                 bkgAlg.addTool( Rich__RandomPixelBackgroundTool, name="RichAddBackground" )
                 bkgAlg.RichAddBackground.PixelBackgroundProb = pixBackPercent
                 pixelSeq.Members += [ bkgAlg ]
+                
             # Make RichRecPixels
             recoPixs = self.makeRichAlg( Rich__Rec__Initialise, "Create"+cont+"Pixels" )
             recoPixs.CheckProcStatus   = False
             recoPixs.CreatePixels      = True
+            
             # Add algs to sequence
             pixelSeq.Members += [ recoPixs ]
 
         if self.getProp("InitTracks") :
+            
             # Make a track sequence
             trackSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"TracksSeq")
             initSeq.Members += [ trackSeq ]
@@ -292,18 +365,16 @@ class RichRecSysConf(RichConfigurableUser):
         # Trackless rings
         #-----------------------------------------------------------------------------
         ringalgs = self.getProp("TracklessRingAlgs")
-
         if "ENN" in ringalgs :
             ennfinderSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"ENNRingFinderSeq")
-            sequence.Members                      += [ ennfinderSeq ]
+            sequence.Members += [ ennfinderSeq ]
             ennConf = self.getRichCU(RichENNRingFinderConf)
             self.setOtherProps(ennConf,["Context","OutputLevel"])
             ennConf.setProp("Sequencer",ennfinderSeq)
             self.printInfo(ennConf)
-           
         if "Template" in ringalgs :
             tfinderSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"TemplateRingFinderSeq")
-            sequence.Members                    += [ tfinderSeq ]
+            sequence.Members += [ tfinderSeq ]
             tempConf = self.getRichCU(RichTemplateRingFinderConf)
             self.setOtherProps(tempConf,["Context","OutputLevel"])
             tempConf.setProp("Sequencer",tfinderSeq)
@@ -324,6 +395,8 @@ class RichRecSysConf(RichConfigurableUser):
                 gpidSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"GPIDSeq")
                 pidSeq.Members += [ gpidSeq ]
                 pidConf.PidSequencer = gpidSeq
+                if self.trackConfig().isPropertySet("TrackCuts") :
+                    self.trackConfig().setOtherProps(pidConf,["TrackCuts"])
             else:
                 raise RuntimeError("ERROR : Unknown PID config '%s'"%pidConf)
 
@@ -356,37 +429,13 @@ class RichRecSysConf(RichConfigurableUser):
         # The context
         context = self.getProp("Context")
 
-        #--------------------------------------------------------------------
-                
-        # Tracks and segments
-        tkConf = self.trackConfig()
-        tkConf.setProp("Radiators",self.usedRadiators())
-        self.setOtherProps(tkConf,["DataType","OutputLevel","Context","SpecialData",
-                                   "UseCaloMomentumTracks"])
-
-        # Pixels
-        pixConf = self.pixelConfig()
-        pixConf.setProp("Detectors",self.usedDetectors())
-        self.setOtherProps(pixConf,["DataType","OutputLevel","Context","SpecialData"])
- 
-        # Photons
-        photConf = self.photonConfig()
-        photConf.setProp("Radiators",self.usedRadiators())
-        self.setOtherProps(photConf,["DataType","OutputLevel","SpecialData","Context","Simulation"])
-
-        #--------------------------------------------------------------------
-
-        # Misc. items
-
         # NB : Need to instanciate the configurables, even if we do nothing with
         #    : them in order to get properties (like output levels) set correctly.
+
+        self.setupToolOptions()
         
         # geometrical efficiency
         self.richTools().geomEff()
-
-        # CK theta resolution
-        ckResConf = self.getRichCU(CKThetaResolutionConfig)
-        self.setOtherProps(ckResConf,["OutputLevel","Context"])
 
         # Particle Types
         from Configurables import Rich__ParticleProperties
@@ -427,11 +476,179 @@ class RichRecSysConf(RichConfigurableUser):
             elif self.getProp("OutputLevel") == VERBOSE :
                 msgSvc.setVerbose += dets
 
-        # Print Config
-        self.printInfo(tkConf)
-        self.printInfo(pixConf)
-        self.printInfo(photConf)
-        self.printInfo(ckResConf)
         self.printInfo(self.richTools())
                
         #--------------------------------------------------------------------
+
+## @class RichRecSysConf
+#  Configurable for RICH reconstruction
+#  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
+#  @date   15/08/2008
+class RichRecSysConf(RichRecSysBaseConf) :
+
+    def setTrackGroups( self, tkGroups ):
+        # Set the property
+        self.setProp("TrackTypeGroups",tkGroups)
+        # Configure the used configurables
+        for tkTypeGroup in tkGroups:
+            # Group name
+            name = self.getConfName(tkTypeGroup)
+            self._ConfigurableUser__addActiveUseOf( RichRecSysBaseConf(name,_enabled=False) )
+
+    ## Get the configurable for a given track type
+    def getTrackGroupConf(self,tktype):
+        if type(tktype) is list : tktype = self.trackGroupName(tktype)
+        for tkGroup in self.getProp("TrackTypeGroups"):
+            print "Baa", tkGroup
+            if tktype in tkGroup or tktype == self.trackGroupName(tkGroup) :
+                return RichRecSysBaseConf( self.getConfName(tkGroup) )
+        return None
+
+    ## Get all active track group configurables
+    def getAllTrackGroupConfs(self):
+        confs = [ ]
+        for tkTypeGroup in self.getProp("TrackTypeGroups"):
+            name = self.getConfName(tkTypeGroup)
+            confs += [ RichRecSysBaseConf(name) ]
+        return confs
+
+    ## Get the 'best' context to use for an algorithm without a clear track type (so pixel based etc.)
+    def getBestContext(self):
+        cont = self.getProp("Context")
+        confs = self.getAllTrackGroupConfs()
+        if len(confs) > 0 : cont = confs[0].getProp("Context")
+        return cont
+
+    ## @brief Apply the configuration to the configured GaudiSequencer
+    def applyConf(self) :
+        
+        # Common stuff
+        self.applyCommonConf()
+
+        # Get the sequence to fill
+        sequence = self.getRecoSeq()
+
+        # Get the context
+        cont = self.getProp("Context")
+
+        # Some preliminary stuff
+        if self.getProp("ConfigurePrelims") :
+
+            #-----------------------------------------------------------------------------
+            # Preload the raw event
+            #-----------------------------------------------------------------------------
+            if self.getProp("PreloadRawEvent"):
+                from Configurables import Rich__DAQ__LoadRawEvent
+                raw = self.makeRichAlg( Rich__DAQ__LoadRawEvent, "LoadRawRichEvent"+cont )
+                sequence.Members += [ raw ]
+
+            #-----------------------------------------------------------------------------
+            # Enable this to run a full track refit prior to processing
+            # Useful for running on DSTs.
+            #-----------------------------------------------------------------------------
+            if self.getProp("RefitTracks") :
+                from DAQSys.Decoders import DecoderDB
+                from DAQSys.DecoderClass import decodersForBank
+                for det in ["Velo","TT","IT"] :
+                    sequence.Members += [ d.setup() for d in decodersForBank(DecoderDB,det) ]
+                from TrackFitter.ConfiguredFitters import ConfiguredFit
+                from Configurables import TrackStateInitAlg
+                tracksLoc = self.trackConfig().getProp("InputTracksLocation")
+                sequence.Members += [ TrackStateInitAlg( name = "InitRichTrackStates",
+                                                         TrackLocation = tracksLoc ),
+                                      ConfiguredFit("RefitRichTracks",tracksLoc) ]
+
+            #-----------------------------------------------------------------------------
+            # RICH RawEvent decoding
+            #-----------------------------------------------------------------------------
+            if self.getProp("InitDecoding") :
+
+                # Raw decoding algorithm
+                # Parasite in on this with my database so that the
+                # automatic reconfiguration of locations is spawned
+                from DAQSys.Decoders import DecoderDB
+                from DAQSys.DecoderClass import decodersForBank
+                aname="DecodeRawRich"+cont
+                # clone the pre-existing alg in the database first...
+                decodeRich =DecoderDB["Rich::DAQ::RawBufferToRichDigitsAlg/RichRawEventToDigits"].clone("Rich::DAQ::RawBufferToRichDigitsAlg/"+aname)
+                decodeRich.Properties["DecodeBufferOnly"]=True
+                # with ["DecodeBufferOnly"]=True, alg produces no output ...
+                decodeRich.Outputs=[]
+                # set "Active" to auto reconfigure the input location if needed
+                decodeRich.Active=True 
+                decodeRich=decodeRich.setup()
+                # call the makeRichAlg anyway, even though it is already "made..."
+                # just in case it is adapted to do other things in the future
+                from Configurables import Rich__DAQ__RawBufferToRichDigitsAlg
+                decodeRich = self.makeRichAlg( Rich__DAQ__RawBufferToRichDigitsAlg, aname )
+                sequence.Members += [ decodeRich ]
+
+        # Configure the RICH processing
+        if not self.usingTrackGroups() :
+
+            # Run a single sequence for all track types
+            if self.getProp("ConfigureAlgs")  : self.configAlgorithms(sequence)
+
+        else:
+
+            # Run a seperate sequence for each track grouping
+
+            # Get the track groupings
+            tkGroups = self.getProp("TrackTypeGroups")
+
+            # Global tracking cuts
+            globalTkCuts = self.trackConfig().getProp("TrackCuts")
+
+            # Seperated PID location s
+            pidLocs = [ ]
+
+            # Split by track type
+            for tkTypeGroup in tkGroups:
+
+                # Build the reco sequence for this group
+                groupConfig = RichRecSysBaseConf( self.getConfName(tkTypeGroup) )
+
+                # Propagate all options
+                self.propagateAllOptions( groupConfig )
+                
+                # Then tweak things for this track group
+                # Turn off stuff run once for all
+                groupConfig.setProp("CheckProcStatus",False)
+                groupConfig.setProp("PreloadRawEvent",False)
+                groupConfig.setProp("PreloadTracks",False)
+                groupConfig.setProp("RefitTracks",False)
+                groupConfig.setProp("InitDecoding",False)
+                # Turn off splitting again
+                groupConfig.setProp("TrackTypeGroups",[])
+
+                # Set context with group name
+                groupConfig.setProp("Context",self.getConfContext(tkTypeGroup))
+
+                # PID Output location
+                pidLoc = self.getProp("RichPIDLocation")+self.trackGroupName(tkTypeGroup)
+                groupConfig.setProp("RichPIDLocation",pidLoc)
+                pidLocs += [pidLoc]
+
+                # Construct the track selection cuts for this group
+                tkCuts = { }
+                for tkType in tkTypeGroup : tkCuts[tkType] = globalTkCuts[tkType]
+                
+                # Set the track selection for this group
+                groupConfig.trackConfig().setProp("TrackCuts",tkCuts)
+
+                # Make a sequence for this track group
+                tkGroupSeq = self.makeRichAlg(GaudiSequencer,
+                                              "RichRec"+self.getConfContext(tkTypeGroup)+"Seq")
+                sequence.Members += [tkGroupSeq]
+                groupConfig.setProp("RecoSequencer",tkGroupSeq)
+
+            #-------------------------------------------------------------------------
+            # Finalise (merge results from various algorithms)
+            #-------------------------------------------------------------------------
+            from Configurables import Rich__Rec__PIDMerge
+            pidMerge = self.makeRichAlg(Rich__Rec__PIDMerge,"Merge"+cont+"RichPIDs")
+            pidMerge.OutputLocation = self.getProp("RichPIDLocation")
+            pidMerge.InputLocations = pidLocs
+            sequence.Members += [pidMerge]
+
+

@@ -96,22 +96,20 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         self.setRichDefaults("HPDBackMinForInc",
                              { "Offline" : [ 0,0,0,0 ],
                                "HLT"     : [ 0,0,0,0 ] } )
-        
+
     ## @brief Apply the configuration
     #  @param sequence The sequencer to add the PID algorithms to
     def applyConf(self):
 
-        # DataType specific tweaks
-        self.dataTypeTweaks()
+        # Only configure if PID sequencer is set
+        if self.isPropertySet("PidSequencer") :
 
-        # Are we properly configured
-        if not self.isPropertySet("PidSequencer") :
-            raise RuntimeError("ERROR : PID Sequence not set")
-        sequence = self.getProp("PidSequencer")
+            # DataType specific tweaks
+            self.dataTypeTweaks()
                 
-        # Setup the tools and algs
-        if self.getProp("InitAlgorithms") : self.applyConfAlgs(sequence)
-        if self.getProp("InitTools")      : self.applyConfTools()
+            # Setup the tools and algs
+            if self.getProp("InitAlgorithms") : self.applyConfAlgs(self.getProp("PidSequencer"))
+            if self.getProp("InitTools")      : self.applyConfTools()
 
     ## @brief Apply any tweaks to the default configuration that vary by DataType
     def dataTypeTweaks(self):
@@ -155,7 +153,7 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         gTrkSel.addTool( self.richTools().trackSelector(trselname), name=trselname )
         import TrackSelectorTools
         TrackSelectorTools.configureTrackSelectorCuts(gTrkSel.TrackSelector,self.getProp("TrackCuts"))
-        
+
         # Likelihood minimisation
         likSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"GPIDLLSeq")
         sequence.Members += [ likSeq ]

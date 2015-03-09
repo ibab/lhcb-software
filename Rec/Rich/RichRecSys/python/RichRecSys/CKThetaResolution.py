@@ -17,7 +17,10 @@ from RichKernel.Configuration import *
 #  @date   15/08/2008
 class CKThetaResolutionConfig(RichConfigurableUser):
 
-    __slots__ = { "Context" : "Offline" }
+    __slots__ = {
+        "Context" : "Offline"   # The context within which to run
+       ,"OutputLevel"   : INFO  # The output level to set all algorithms and tools to use
+        }
 
     ## @brief Apply the configuration
     #

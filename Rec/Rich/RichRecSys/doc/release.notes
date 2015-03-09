@@ -4,6 +4,18 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2015-03-09 - Chris Jones
+ - Update the python configurable to support running with seperate processing
+   sequences for different track groups. Enabled by calling the method
+        
+        richConf = RichRecSysConf(self.richRecConfName)
+        richConf.setTrackGroups( [ ["Forward","Match"],
+                                   ["VeloTT"], ["KsTrack"] ] )
+
+   Important - This *must* be done before any applyCOnf method is called.
+   Default mode is to work as before, with all track types considered at
+   the same time in the likelihood minimisation.
+
 !========================= RichRecSys v5r5 2015-02-23 =========================
 ! 2015-02-20 - Chris Jones
  - Add a new configuration option "RefitTracks" which enables a full refit of
