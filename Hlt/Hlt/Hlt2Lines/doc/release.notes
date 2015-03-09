@@ -7,6 +7,8 @@
 !           ALWAYS also edit Hlt/HltSettings
 !
 !----------------------------------------------------------------------------
+! 2015-03-09 - Dan Johnson
+ - First commit of CEP lines module
 
 !========================= Hlt2Lines v9r6 2015-03-09 =========================
 
