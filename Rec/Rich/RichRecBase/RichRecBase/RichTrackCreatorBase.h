@@ -171,7 +171,7 @@ namespace Rich
       /// Returns a pointer to the ray tracing tool
       const Rich::IRayTracing * rayTraceTool() const
       {
-        if ( !m_rayTrace ) { acquireTool( "RichRayTracing",  m_rayTrace ); }
+        if ( !m_rayTrace ) { acquireTool( "RichRayTracing", m_rayTrace, NULL, true ); }
         return m_rayTrace;
       }
 

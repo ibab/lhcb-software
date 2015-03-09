@@ -67,7 +67,7 @@ namespace Rich
       }
 
       // tools
-      acquireTool( "RichSmartIDTool", m_smartIDTool, 0, true );
+      acquireTool( "RichSmartIDTool", m_smartIDTool, NULL, true );
       acquireTool( "TrackSelector", m_trSelector, this       );
 
       // Setup incident services
@@ -76,11 +76,11 @@ namespace Rich
 
       // track ray tracing
       m_traceModeRad[Rich::Aerogel].setAeroRefraction(true);
-      info() << "Aerogel  Track " << m_traceModeRad[Rich::Aerogel]  << endmsg;
-      info() << "Rich1Gas Track " << m_traceModeRad[Rich::Rich1Gas] << endmsg;
-      info() << "Rich2Gas Track " << m_traceModeRad[Rich::Rich2Gas] << endmsg;
+      _ri_debug << "Aerogel  Track " << m_traceModeRad[Rich::Aerogel]  << endmsg;
+      _ri_debug << "Rich1Gas Track " << m_traceModeRad[Rich::Rich1Gas] << endmsg;
+      _ri_debug << "Rich2Gas Track " << m_traceModeRad[Rich::Rich2Gas] << endmsg;
 
-      info() << "Maximum number of RICH tracks per event = " << m_maxSelTracks << endmsg;
+      _ri_debug << "Maximum number of RICH tracks per event = " << m_maxSelTracks << endmsg;
 
       return sc;
     }
@@ -123,24 +123,26 @@ namespace Rich
         info() << "=================================================================================" << endmsg;
         info() << "                     Track Selection Summary : " << m_Nevts << " events" << endmsg;
         info() << "---------------------------------------------------------------------------------" << endmsg;
-        for ( TrackTypeCount::iterator i = m_nTracksAll.begin();
-              i != m_nTracksAll.end(); ++i )
+        for ( const auto & i : m_nTracksAll )
         {
-          std::string name =
-            ( (*i).first.second ? "Unique " : "NonUnique " ) + Rich::text( (*i).first.first );
-          name.resize(18,' ');
-          info() << "  " << name << " :" << occ((*i).second.selectedTracks,m_Nevts)
-                 << " tracks/event : RICH eff " << eff((*i).second.selectedTracks,(*i).second.triedTracks)
-                 << " % " << endmsg;
-          if ( (*i).second.aeroSegs>0 )
-            info() << "                     :"
-                   << occ((*i).second.aeroSegs,m_Nevts)  << " Aerogel  segments/event" << endmsg;
-          if ( (*i).second.rich1GasSegs>0 )
-            info() << "                     :"
-                   << occ((*i).second.rich1GasSegs,m_Nevts) << " Rich1Gas segments/event" << endmsg;
-          if ( (*i).second.rich2GasSegs>0 )
-            info() << "                     :"
-                   << occ((*i).second.rich2GasSegs,m_Nevts)   << " Rich2Gas segments/event" << endmsg;
+          if ( i.second.selectedTracks > 0 )
+          {
+            std::string name =
+              ( i.first.second ? "Unique " : "NonUnique " ) + Rich::text( i.first.first );
+            name.resize(18,' ');
+            info() << "  " << name << " :" << occ(i.second.selectedTracks,m_Nevts)
+                   << " tracks/event : RICH eff " << eff(i.second.selectedTracks,i.second.triedTracks)
+                   << " % " << endmsg;
+            if ( i.second.aeroSegs>0 )
+              info() << "                     :"
+                     << occ(i.second.aeroSegs,m_Nevts)  << " Aerogel  segments/event" << endmsg;
+            if ( i.second.rich1GasSegs>0 )
+              info() << "                     :"
+                     << occ(i.second.rich1GasSegs,m_Nevts) << " Rich1Gas segments/event" << endmsg;
+            if ( i.second.rich2GasSegs>0 )
+              info() << "                     :"
+                     << occ(i.second.rich2GasSegs,m_Nevts)   << " Rich2Gas segments/event" << endmsg;
+          }
         }
         info() << "=================================================================================" << endmsg;
 

@@ -4,6 +4,12 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2015-03-09 - Chris Jones
+ - Make some tools shared instances to avoid unneccesary duplication when
+   running the RICH reconstruction with the split track groups.
+ - Skip summary printouts for empty selections.
+ - Downgrade some info level printout to debug.
+
 !========================= RichRecBase v4r19 2015-02-23 =========================
 ! 2015-02-06 - Chris Jones
  - Add a new method to IRichPhotonSignal to allow a client to request the

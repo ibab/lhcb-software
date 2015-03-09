@@ -103,7 +103,7 @@ namespace Rich
       // load clustering tools
       if ( !m_noClusterFinding ) { hpdClusTool(Rich::Rich1); hpdClusTool(Rich::Rich2); }
 
-      info() << "Maximum number of pixels per event = " << m_maxPixels << endmsg;
+      _ri_debug << "Maximum number of pixels per event = " << m_maxPixels << endmsg;
 
       return sc;
     }

@@ -198,14 +198,14 @@ namespace Rich
       /// Access the RichSmartIDTool
       inline const ISmartIDTool * smartIDTool() const
       {
-        if (!m_idTool) { acquireTool( "RichSmartIDTool",    m_idTool,  0, true ); }
+        if (!m_idTool) { acquireTool( "RichSmartIDTool", m_idTool, NULL, true ); }
         return m_idTool;
       }
 
       /// Access the RichSmartIDDecoder
       inline const Rich::DAQ::IRawBufferToSmartIDsTool * smartIDdecoder() const
       {
-        if (!m_decoder) { acquireTool( "RichSmartIDDecoder", m_decoder, 0, true ); }
+        if (!m_decoder) { acquireTool( "RichSmartIDDecoder", m_decoder, NULL, true ); }
         return m_decoder;
       }
 

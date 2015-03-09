@@ -216,14 +216,17 @@ void PhotonCreatorBase::printStats() const
 
     // Print out final stats
     info() << "=================================================================" << endmsg
-           << "  Photon candidate summary : " << nEvents() << " events :-" << endmsg
-           << "    Aerogel   : "
-           << occ(m_photCount[Rich::Aerogel],nEvents())  << "  photons/event" << endmsg
-           << "    Rich1Gas  : "
-           << occ(m_photCount[Rich::Rich1Gas],nEvents()) << "  photons/event" << endmsg
-           << "    Rich2Gas  : "
-           << occ(m_photCount[Rich::Rich2Gas],nEvents()) << "  photons/event" << endmsg
-           << "=================================================================" << endmsg;
+           << "  Photon candidate summary : " << nEvents() << " events :-" << endmsg;
+    if ( m_photCount[Rich::Aerogel]>0 )
+      info() << "    Aerogel   : "
+             << occ(m_photCount[Rich::Aerogel],nEvents())  << "  photons/event" << endmsg;
+    if ( m_photCount[Rich::Rich1Gas]>0 )
+      info() << "    Rich1Gas  : "
+             << occ(m_photCount[Rich::Rich1Gas],nEvents()) << "  photons/event" << endmsg;
+    if ( m_photCount[Rich::Rich2Gas]>0 )
+      info() << "    Rich2Gas  : "
+             << occ(m_photCount[Rich::Rich2Gas],nEvents()) << "  photons/event" << endmsg;
+    info() << "=================================================================" << endmsg;
 
   }
 }
@@ -253,7 +256,7 @@ StatusCode PhotonCreatorBase::reconstructPhotons() const
       // abort flag for too many photons
       bool abortPhotonReco(false);
 
-      // Need to loop twice over segments, first over gas and then ver aerogel
+      // Need to loop twice over segments, first over gas and then over aerogel
       // in order to allow aerogel photons to be rejected based on the presence
       // of a good gas photon for the same pixel
 
@@ -284,7 +287,7 @@ StatusCode PhotonCreatorBase::reconstructPhotons() const
             iSegment != richSegments()->end(); ++iSegment )
       {
 
-        // is this a gas radiator segment ?
+        // is this a aerogel radiator segment ?
         if ( Rich::Aerogel == (*iSegment)->trackSegment().radiator() )
         {
 
