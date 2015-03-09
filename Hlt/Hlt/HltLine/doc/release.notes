@@ -7,7 +7,7 @@
 
 ! 2015-03-09 - Roel Aaij
  - Adapt to changes in SelectionLine.
- - Rename HLT property of Hlt1Line to HLT1.
+ - Deprecate HLT constructor argument of Hlt2Line in favour of HLT1.
 
 !========================= HltLine v7r8 2015-03-09 =========================
 
