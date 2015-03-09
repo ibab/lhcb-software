@@ -80,15 +80,15 @@ StatusCode TracklessRingIsolationAlg::initialize()
   const StatusCode sc = Rich::Rec::AlgBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  info() << "Input Rings                 : " << m_inputRings  << endmsg;
-  info() << "Output Rings                : " << m_outputRings << endmsg;
-  info() << "Pixel Search Window         : " << m_pixelWin << endmsg;
-  info() << "Ring centre cut             : " << m_sizesepcut  << endmsg;
-  info() << "Ring width cut              : " << m_sizeringwidth << endmsg;
-  info() << "Fraction outside ring cut   : " << m_sizepixelcut << endmsg;
-  info() << "# Phi regions               : " << m_nPhiRegions << endmsg;
-  info() << "Max fraction per phi region : " << m_sizephicut << endmsg;
-  info() << "Max Fit Variance            : " << m_maxFitVariance << endmsg;
+  _ri_debug << "Input Rings                 : " << m_inputRings  << endmsg;
+  _ri_debug << "Output Rings                : " << m_outputRings << endmsg;
+  _ri_debug << "Pixel Search Window         : " << m_pixelWin << endmsg;
+  _ri_debug << "Ring centre cut             : " << m_sizesepcut  << endmsg;
+  _ri_debug << "Ring width cut              : " << m_sizeringwidth << endmsg;
+  _ri_debug << "Fraction outside ring cut   : " << m_sizepixelcut << endmsg;
+  _ri_debug << "# Phi regions               : " << m_nPhiRegions << endmsg;
+  _ri_debug << "Max fraction per phi region : " << m_sizephicut << endmsg;
+  _ri_debug << "Max Fit Variance            : " << m_maxFitVariance << endmsg;
 
   // loop over radiators
   for ( int radi = 0; radi < Rich::NRadiatorTypes; ++radi )

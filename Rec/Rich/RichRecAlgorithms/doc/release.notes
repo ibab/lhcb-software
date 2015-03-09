@@ -4,6 +4,9 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+! 2015-03-09 - Chris Jones
+ - Downgrade some info messages (not really needed all the time) to debug level.
+
 !========================= RichRecAlgorithms v2r20p1 2013-07-18 ======================
 ! 2013-06-18 - Marco Cattaneo
  - Add missing dependency on TrackInterfaces

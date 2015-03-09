@@ -39,8 +39,8 @@ StatusCode TracklessRingSegmentAssociationAlg::initialize()
   const StatusCode sc = Rich::Rec::AlgBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  info() << "Input Rings                 : " << m_inputRings  << endmsg;
-  info() << "Max. seperation             : " << m_maxDist << endmsg;
+  _ri_debug << "Input Rings                 : " << m_inputRings  << endmsg;
+  _ri_debug << "Max. seperation             : " << m_maxDist << endmsg;
 
   return sc;
 }

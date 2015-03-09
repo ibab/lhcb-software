@@ -42,10 +42,10 @@ StatusCode TracklessRingFilterAlg::initialize()
   const StatusCode sc = Rich::Rec::AlgBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  info() << "Input Rings                 : " << m_inputRings  << endmsg;
-  info() << "Output Rings                : " << m_outputRings << endmsg;
-  info() << "Min. # pixels per ring      : " << m_minNumHits  << endmsg;
-  info() << "Min. average prob.          : " << m_minAvProb   << endmsg;
+  _ri_debug << "Input Rings                 : " << m_inputRings  << endmsg;
+  _ri_debug << "Output Rings                : " << m_outputRings << endmsg;
+  _ri_debug << "Min. # pixels per ring      : " << m_minNumHits  << endmsg;
+  _ri_debug << "Min. average prob.          : " << m_minAvProb   << endmsg;
 
   return sc;
 }
