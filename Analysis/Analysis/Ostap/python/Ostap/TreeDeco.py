@@ -184,23 +184,30 @@ ROOT.TChain     . sumVar_ = _sum_var_old_
 #  @code
 #
 #  >>> dataset = ...
+#
 #  ## get corrected number of events 
-#  >>> n_corr  = dataset.sumVar ( "S_sw/effic" )
+#  >>> n_corr     = dataset.sumVar ( "S_sw/effic" )
+#
+#  ## get corrected number of events 
+#  >>> n_corr_pt  = dataset.sumVar ( "S_sw/effic" , 'pt>1')
 #
 #  @endcode
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-09-15
-def _sum_var_ ( tree , expression ) :
+def _sum_var_ ( tree , expression , *cuts ) :
     """
     Make a sum over expression in Tree/Dataset
     
     >>> dataset = ...
-    ## get corrected number of signale events  
-    >>> n_corr  = dataset.sumVar ( 'S_sw/effic' )
+    ## get corrected number of signal events  
+    >>> n_corr     = dataset.sumVar ( 'S_sw/effic' )
+    
+    ## get corrected number of signal events  
+    >>> n_corr_pt  = dataset.sumVar ( 'S_sw/effic' , 'pt>1')
     
     """
-    w = tree.statVar ( expression )
+    w = tree.statVar ( expression , *cuts )
     return VE ( w.sum() , w.sum2() )
 
 ROOT.TTree      . sumVar = _sum_var_

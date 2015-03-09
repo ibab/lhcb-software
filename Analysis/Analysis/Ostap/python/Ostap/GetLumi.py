@@ -121,12 +121,18 @@ def getLumi ( data , *args ) :
         try:
             #
             ## @attention here we are using sumVar! 
-            l1 = data.sumVar ( '1.0*IntegratedLuminosity+0.0*IntegratedLuminosityErr' )
-            l2 = data.sumVar ( '1.0*IntegratedLuminosity+1.0*IntegratedLuminosityErr' )
-            l3 = data.sumVar ( '1.0*IntegratedLuminosity-1.0*IntegratedLuminosityErr' )            
+            l1 = data.sumVar ( '1.0*IntegratedLuminosity+0.0*IntegratedLuminosityErr' , '0<=IntegratedLuminosity' )
+            l2 = data.sumVar ( '1.0*IntegratedLuminosity+1.0*IntegratedLuminosityErr' , '0<=IntegratedLuminosity' )
+            l3 = data.sumVar ( '1.0*IntegratedLuminosity-1.0*IntegratedLuminosityErr' , '0<=IntegratedLuminosity' )            
             #
             l1.setError ( 0.5 * abs ( l2.value () - l3.value () ) )
             #
+            l0 = data.sumVar ( 'IntegratedLuminosity' , '0 >IntegratedLuminosity'      )
+            if 0 != l0.value() : logger.error( 'Something weird happens with Lumi/1: %s' % l0 )  
+            l0 = data.sumVar ( 'IntegratedLuminosity' , 'IntegratedLuminosity>100000'  )
+            if 0 != l0.value() : logger.error( 'Something weird happens with Lumi/2: %s' % l0 )  
+            l0 = data.sumVar ( 'IntegratedLuminosity' , '0>IntegratedLuminosityErr'    )
+            if 0 != l0.value() : logger.error( 'Something weird happens with Lumi/3: %s' % l0 )  
             # 
             return l1
         except :

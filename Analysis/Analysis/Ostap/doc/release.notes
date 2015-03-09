@@ -9,6 +9,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-03-09 - Vanya Belyaev
+ - GetLumi: improve a bit lumi treatment - add checks for bad-cases 
+  
+! 2015-03-09 - Vanya Belyaev
  - tiny fix
 
 ! 2015-03-06 - Vanya Belyaev
