@@ -33,6 +33,8 @@
 #include "LHCbMath/WStatEntity.h"
 #include "LHCbMath/BSpline.h"
 #include "LHCbMath/Bernstein.h"
+#include "LHCbMath/Polynomials.h"
+#include "LHCbMath/Choose.h"
 // ============================================================================
 /** @file LHCbMathDict.h
  *

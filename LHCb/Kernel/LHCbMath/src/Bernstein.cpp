@@ -7,7 +7,9 @@
 #include "LHCbMath/LHCbMath.h"
 #include "LHCbMath/NSphere.h"
 #include "LHCbMath/Power.h"
+#include "LHCbMath/Choose.h"
 #include "LHCbMath/Bernstein.h"
+#include "LHCbMath/Polynomials.h"
 // ============================================================================
 /** @file 
  *  Implementation file for functions, related to BErnstein's polynomnials 
@@ -308,6 +310,175 @@ double Gaudi::Math::Bernstein::operator () ( const double x ) const
   return _casteljau_ ( dcj.begin() , dcj.end() , t0 , t1 ) ;
 }
 // ============================================================================
+#include "iostream"
+namespace 
+{
+  inline short signm1 ( const long i ) { return 0 == i%2 ? 1 : -1 ; }
+  // ==========================================================================
+  /** transformation matrix from legendre to bernstein basis 
+   *  @see http://www.sciencedirect.com/science/article/pii/S0377042700003769 eq.20 
+   */
+  inline 
+  double l2b_mtrx ( const unsigned short j , 
+                    const unsigned short k ,
+                    const unsigned short n ) 
+  {
+    //
+    const unsigned short imin = std::max ( 0 , j + k - n ) ;
+    const unsigned short imax = std::min ( j ,     k     ) ;
+    long long r = 0 ;
+    for ( unsigned short i = imin ; i <= imax ; ++i ) 
+    {
+      0 == ( k + i ) % 2 ? 
+        r +=
+        Gaudi::Math::choose ( j     , i     ) * 
+        Gaudi::Math::choose ( k     , i     ) * 
+        Gaudi::Math::choose ( n - j , k - i ) :
+        r -=
+        Gaudi::Math::choose ( j     , i     ) * 
+        Gaudi::Math::choose ( k     , i     ) * 
+        Gaudi::Math::choose ( n - j , k - i ) ;
+    }
+    //
+    return r / double ( Gaudi::Math::choose ( n , k ) ) ;
+  }
+  // ==========================================================================
+  /** transformation matrix from chebyshev to bernstein basis 
+   *  http://www.degruyter.com/view/j/cmam.2003.3.issue-4/cmam-2003-0038/cmam-2003-0038.xml  eq. 15
+   */
+  inline 
+  double c2b_mtrx ( const unsigned short j , 
+                    const unsigned short k ,
+                    const unsigned short n ) 
+  {
+    const unsigned short imin = std::max ( 0 , j + k - n ) ;
+    const unsigned short imax = std::min ( j ,     k     ) ;
+    long long r = 0 ;
+    for ( unsigned short i = imin ; i <= imax ; ++i ) 
+    {
+      0 == ( k - i ) % 2 ? 
+        r +=
+        Gaudi::Math::choose ( 2 * k , 2 * i ) * 
+        Gaudi::Math::choose ( n - k , j - i ) :
+        r -=
+        Gaudi::Math::choose ( 2 * k , 2 * i ) * 
+        Gaudi::Math::choose ( n - k , j - i ) ;
+    }
+    //
+    return r / double ( Gaudi::Math::choose ( n , j ) ) ;
+  }
+  // ==========================================================================
+  /** transformation matrix from monomial to bernstein basis
+   */
+  inline 
+  double m2b_mtrx ( const unsigned short j , 
+                    const unsigned short k ,
+                    const unsigned short n ) 
+  {
+    //
+    return
+      j < k ? 0.0 : 
+      (double) ( Gaudi::Math::choose ( j , k ) ) / 
+      (double) ( Gaudi::Math::choose ( n , k ) ) ; 
+  }
+  // ==========================================================================
+  /// affine transformation of polynomial
+  inline 
+  double m2m_mtrx_2
+  ( const unsigned short j , 
+    const unsigned short k ) 
+  {
+    if ( k < j ) { return 0 ; }
+    const double c = 
+      Gaudi::Math::choose ( k , j ) * Gaudi::Math::pow ( 2 , j ) ;
+    //
+    return 0 == ( k - j ) % 2 ?  c : -c ;
+  }
+  // ==========================================================================
+}
+// ============================================================================
+// constructor from Legendre polynomial
+// ============================================================================
+Gaudi::Math::Bernstein::Bernstein
+( const Gaudi::Math::LegendreSum& poly )  
+  : Gaudi::Math::PolySum ( poly.degree () ) 
+  , m_xmin ( poly.xmin() ) 
+  , m_xmax ( poly.xmax() ) 
+{
+  for ( unsigned short i = 0 ; i < npars() ; ++i ) 
+  { 
+    for ( unsigned short k = 0 ; k < npars() ; ++k ) 
+    { 
+      const double p = poly.par ( k ) ;
+      if ( s_zero ( p ) ) { continue ; }
+      m_pars[i] += l2b_mtrx ( i , k , degree() ) * p ; 
+    } 
+  }
+}
+// ============================================================================
+// constructor from Chebyshev polynomial
+// ============================================================================
+Gaudi::Math::Bernstein::Bernstein
+( const Gaudi::Math::ChebyshevSum& poly )  
+  : Gaudi::Math::PolySum ( poly.degree () ) 
+  , m_xmin ( poly.xmin() ) 
+  , m_xmax ( poly.xmax() ) 
+{
+  //
+  for ( unsigned short i = 0 ; i < npars() ; ++i ) 
+  { 
+    for ( unsigned short k = 0 ; k < npars() ; ++k ) 
+    { 
+      const double p = poly.par ( k ) ;
+      if ( s_zero ( p ) ) { continue ; }
+      m_pars[i] += c2b_mtrx ( i , k , degree() ) * p ; 
+    } 
+  }
+  //
+}
+// ============================================================================
+// constructor from simple monomial form 
+// ============================================================================
+Gaudi::Math::Bernstein::Bernstein
+( const Gaudi::Math::Polynomial& poly )  
+  : Gaudi::Math::PolySum ( poly.degree () ) 
+  , m_xmin ( poly.xmin() ) 
+  , m_xmax ( poly.xmax() ) 
+{
+  //
+  const unsigned short np = npars() ;
+  // 2-step transformation
+  //
+  // 1: affine transform to [0,1]
+  //
+  std::vector<double> _pars ( np ) ;
+  for ( unsigned short i = 0 ; i < np ; ++i ) 
+  { 
+    for ( unsigned short k = i ; k < np ; ++k )  
+    { 
+      const double p = poly.par ( k )  ;
+      if ( s_zero ( p ) ) { continue ; }
+      _pars[i] += m2m_mtrx_2 ( i , k ) * p ; 
+    } 
+  }  
+  //
+  // 2: tramnform from shifted poly basis:
+  //
+  for ( unsigned short i = 0 ; i < np ; ++i ) 
+  { 
+    for ( unsigned short k = 0 ; k <= i ;  ++k )  // ATTENTION!!
+    { 
+      const double p = _pars[ k ] ;
+      if ( s_zero ( p ) ) { continue ; }
+      m_pars[i] += m2b_mtrx ( i , k , degree() ) * p ; 
+    } 
+  }
+  //
+}
+// ============================================================================
+
+
+
 
 
 // ============================================================================

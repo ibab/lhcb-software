@@ -214,6 +214,11 @@
   <function name    = "Gaudi::Math::interpolate_2D"        />
   <function pattern = "Gaudi::Math::Jackson::jackson*"     />
   
+  <function name = "Gaudi::Math::choose"           />  
+  <function name = "Gaudi::Math::gen_choose"       />  
+  <function name = "Gaudi::Math::choose_half"      />  
+  <function name = "Gaudi::Math::choose_double"    />
+  <function name = "Gaudi::Math::affine_transform" />
   
   <class name = "Gaudi::Math::Chi2Fit"   />
 

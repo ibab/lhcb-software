@@ -5,6 +5,8 @@
 // STD&STL
 // ============================================================================
 #include <vector>
+#include <cmath>
+#include <algorithm>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -15,6 +17,8 @@
 #include "LHCbMath/LHCbMath.h"
 #include "LHCbMath/Polynomials.h"
 #include "LHCbMath/Power.h"
+#include "LHCbMath/Choose.h"
+#include "LHCbMath/Bernstein.h"
 // ============================================================================
 /** @file Implementation file for classes from file LHcbMath/Polynomials.h
  *  @see LHCbMath/Polynomials.h
@@ -30,7 +34,7 @@ namespace
   /// zero for doubles  
   LHCb::Math::Zero<double>     s_zero  ;       // zero for doubles
   /// zero fo vectors 
-  LHCb::Math::Zero< std::vector<double> > s_vzero ; // zero foro vectors
+  LHCb::Math::Zero< std::vector<double> > s_vzero ; // zero for vectors
   // ==========================================================================
 }
 // ============================================================================
@@ -370,26 +374,6 @@ Gaudi::Math::PolySum::operator/=( const double a )
   return *this ;
 }
 // ============================================================================
-// simple  manipulations with polynoms: shift it! 
-// ============================================================================
-Gaudi::Math::PolySum&
-Gaudi::Math::PolySum::operator+=( const double a ) 
-{
-  for ( std::vector<double>::iterator it = m_pars.begin() ; m_pars.end() != it ; ++it ) 
-  {  (*it ) += a ; }
-  return *this ;
-}
-// ============================================================================
-// simple  manipulations with polynoms: shift it! 
-// ============================================================================
-Gaudi::Math::PolySum&
-Gaudi::Math::PolySum::operator-=( const double a ) 
-{
-  for ( std::vector<double>::iterator it = m_pars.begin() ; m_pars.end() != it ; ++it ) 
-  {  (*it ) -= a ; }
-  return *this ;
-}
-// ============================================================================
 namespace 
 {
   // ==========================================================================
@@ -518,8 +502,61 @@ double Gaudi::Math::horner_aN
   const double               x    ) 
 { return _clenshaw_monomial_ ( pars.begin() , pars.end() , x ).first ; }
 // ============================================================================
-
-
+namespace 
+{
+  // ==========================================================================
+  /// affine tranformation of polynomial coeffficients  
+  inline double _affine_ 
+  ( const unsigned short j , 
+    const unsigned short k , 
+    const double         a , 
+    const double         b ) 
+  {
+    return 
+      k < j ? 0.0 : 
+      Gaudi::Math::choose ( k , j     ) * 
+      Gaudi::Math::pow    ( a , j     ) *  
+      Gaudi::Math::pow    ( b , k - j ) ;
+  }
+  // ==========================================================================
+}
+// ============================================================================
+/* affine transformation of polynomial
+ *  \f$ x ^{\prime} = \alpha x + \beta \f$
+ *  @param input  (INPUT)  input polynomial coeffeicients 
+ *  @param output (UPDATE) coefficinects of transformed polynomial 
+ *  @param alpha  (INPUT)  alpha
+ *  @param beta   (INPUT)  beta
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2015-03-09
+ */
+// ============================================================================
+bool Gaudi::Math::affine_transform
+( const std::vector<double>& input  , 
+  std::vector<double>&       result ,  
+  const double               alpha  , 
+  const double               beta   ) 
+{
+  /// invalid transform 
+  if      ( s_zero  ( alpha     ) ) { return false ; } // invalid transform 
+  else if ( s_equal ( alpha , 1 ) && s_zero ( beta ) ) 
+  { result = input ;                  return true  ; } // trivial transformation 
+  //
+  result.resize ( input.size() ) ;
+  std::fill ( result.begin() , result.end() , 0 ) ;
+  //
+  for ( unsigned int i = 0 ; i < input.size() ; ++i ) 
+  { 
+    for ( unsigned short k = i ; k < input.size () ; ++k ) // ATTENTNION!!! 
+    { 
+      const double p = input[  k ] ;
+      if ( s_zero ( p ) ) { continue ; }  // SKIP nulls... 
+      result[i] += _affine_ ( i , k , alpha , beta ) * p ; 
+    } 
+  }  
+  return true ;
+}
+// ============================================================================
 namespace 
 {
   // ==========================================================================
@@ -575,22 +612,22 @@ namespace
 // ============================================================================
 Gaudi::Math::Polynomial::Polynomial
 ( const unsigned short       degree , 
-  const double               low    , 
-  const double               high   )  
+  const double               xmin   , 
+  const double               xmax   )  
   : Gaudi::Math::PolySum ( degree ) 
-  , m_xmin ( std::min ( low , high ) ) 
-  , m_xmax ( std::max ( low , high ) ) 
+  , m_xmin ( std::min ( xmin, xmax ) )
+  , m_xmax ( std::max ( xmin, xmax ) )
 {}
 // ============================================================================
 // constructor from parameters 
 // ============================================================================
 Gaudi::Math::Polynomial::Polynomial
 ( const std::vector<double>& pars  , 
-  const double               low   , 
-  const double               high  )  
+  const double               xmin  , 
+  const double               xmax  )  
   : Gaudi::Math::PolySum ( pars ) 
-  , m_xmin ( std::min ( low , high ) ) 
-  , m_xmax ( std::max ( low , high ) ) 
+  , m_xmin ( std::min ( xmin, xmax ) )
+  , m_xmax ( std::max ( xmin, xmax ) )
 {}
 // ============================================================================
 // get the value
@@ -704,22 +741,22 @@ Gaudi::Math::Polynomial::derivative          () const
 // ============================================================================
 Gaudi::Math::ChebyshevSum::ChebyshevSum
 ( const unsigned short degree , 
-  const double         low    , 
-  const double         high   )  
+  const double         xmin   , 
+  const double         xmax   )  
   : Gaudi::Math::PolySum ( degree ) 
-  , m_xmin ( std::min ( low , high ) ) 
-  , m_xmax ( std::max ( low , high ) ) 
+  , m_xmin ( std::min ( xmin, xmax ) )
+  , m_xmax ( std::max ( xmin, xmax ) )
 {}
 // ============================================================================
 // constructor from parameters 
 // ============================================================================
 Gaudi::Math::ChebyshevSum::ChebyshevSum
 ( const std::vector<double>& pars  , 
-  const double               low   , 
-  const double               high  )  
+  const double               xmin  , 
+  const double               xmax  )  
   : Gaudi::Math::PolySum ( pars ) 
-  , m_xmin ( std::min ( low , high ) ) 
-  , m_xmax ( std::max ( low , high ) ) 
+  , m_xmin ( std::min ( xmin, xmax ) )
+  , m_xmax ( std::max ( xmin, xmax ) )
 {}
 // ============================================================================
 // get the value
@@ -899,22 +936,22 @@ Gaudi::Math::ChebyshevSum::derivative () const
 // ============================================================================
 Gaudi::Math::LegendreSum::LegendreSum
 ( const unsigned short degree , 
-  const double         low    , 
-  const double         high   )  
+  const double         xmax   , 
+  const double         xmin   )  
   : Gaudi::Math::PolySum ( degree ) 
-  , m_xmin ( std::min ( low , high ) )
-  , m_xmax ( std::max ( low , high ) )
+  , m_xmin ( std::min ( xmin, xmax ) )
+  , m_xmax ( std::max ( xmin, xmax ) )
 {}
 // ============================================================================
 // constructor from parameters
 // ============================================================================
 Gaudi::Math::LegendreSum::LegendreSum
 ( const std::vector<double>& pars , 
-  const double               low   , 
-  const double               high  )  
+  const double               xmin , 
+  const double               xmax )  
   : Gaudi::Math::PolySum ( pars ) 
-  , m_xmin ( std::min ( low , high ) )
-  , m_xmax ( std::max ( low , high ) )
+  , m_xmin ( std::min ( xmin, xmax ) )
+  , m_xmax ( std::max ( xmin, xmax ) )
 {}
 // ============================================================================
 // get the value
@@ -1051,9 +1088,233 @@ Gaudi::Math::LegendreSum::derivative () const
   //
   return Gaudi::Math::LegendreSum ( npars , m_xmin , m_xmax ) ;
 }
+// ============================================================================
+
+/// legendre to bernstein transformation 
+namespace 
+{
+  // ==========================================================================
+  /** transformation matrix from bernstein to legendre basis 
+   *  @see http://www.sciencedirect.com/science/article/pii/S0377042700003769 eq.21
+   */
+  inline 
+  double b2l_mtrx 
+  ( const unsigned short j , 
+    const unsigned short k ,
+    const unsigned short n ) 
+  {
+    //
+    long long r = 0 ;
+    for ( unsigned short i = 0 ; i <= j ; ++i ) 
+    {
+      0 == ( j + i ) % 2 ?
+        r +=
+        Gaudi::Math::choose ( j              , i     ) * 
+        Gaudi::Math::choose ( k + i          , k     ) * 
+        Gaudi::Math::choose ( n - k + j - i  , n - k ) : 
+        r -=
+        Gaudi::Math::choose ( j              , i     ) * 
+        Gaudi::Math::choose ( k + i          , k     ) * 
+        Gaudi::Math::choose ( n - k + j - i  , n - k ) ;
+    }
+    //
+    return r * ( 2* j + 1 ) / double ( Gaudi::Math::choose ( n + j , n ) ) / ( n + j + 1 ) ;
+  }
+  // ==========================================================================
+  /** transformation matrix from bernstein basic to monomial basis 
+   *  @see http://www.sciencedirect.com/science/article/pii/S0377042700003769 eq.21
+   */
+  inline 
+  long long b2m_mtrx 
+  ( const unsigned short j , 
+    const unsigned short k ,
+    const unsigned short n ) 
+  {
+    const long long r = 
+      Gaudi::Math::choose ( n , j ) * 
+      Gaudi::Math::choose ( j , k ) ;
+    return 0 == ( j + k ) % 2 ? r : -r ;
+  }
+  // ==========================================================================
+  /// affine transformation of polynomial
+  inline 
+  double m2m_mtrx_1
+  ( const unsigned short j , 
+    const unsigned short k ) 
+  {
+    if ( k < j ) { return 0 ; }
+    const double c = Gaudi::Math::choose ( k , j ) ;
+    return c / Gaudi::Math::pow ( 2 , k ) ;
+  }
+  // ==========================================================================
+  /// transformation matrix from monomial to chebyshev basis 
+  inline 
+  double m2c_mtrx 
+  ( const unsigned short j , 
+    const unsigned short k )
+  {
+    return 
+      ( 1 == ( j + k ) % 2 ) ? 0. :
+      Gaudi::Math::choose ( k , ( k - j ) / 2 ) * ( j == 0 ? 1. : 2. ) / Gaudi::Math::pow ( 2 , k ) ;
+  }
+  // ============================================================================
+  /// transformation matrix from legendre basic to monomial basis 
+  inline 
+  double l2m_mtrx 
+  ( const unsigned short j , 
+    const unsigned short k )
+  {
+    return 
+      1 == ( j + k ) % 2 ? 0.0 : 
+      Gaudi::Math::choose       ( k         , j ) * 
+      Gaudi::Math::choose_half  ( j + k - 1 , k ) *
+      Gaudi::Math::pow          ( 2         , k ) ;
+  }
+  // ==========================================================================
+}
+// ============================================================================
+// constructor from bernstein polynomial
+// ============================================================================
+Gaudi::Math::LegendreSum::LegendreSum
+( const Gaudi::Math::Bernstein& poly )  
+  : Gaudi::Math::PolySum ( poly.degree () ) 
+  , m_xmin ( poly.xmin() ) 
+  , m_xmax ( poly.xmax() ) 
+{
+  const unsigned short np = npars  () ;
+  const unsigned short d  = degree () ;
+  for ( unsigned short i  = 0 ; i < np ; ++i ) 
+  { 
+    for ( unsigned short k = 0 ; k < np ; ++k ) 
+    { 
+      const double p = poly.par ( k ) ;
+      if ( s_zero ( p ) ) { continue ; }
+      m_pars[i] += b2l_mtrx ( i , k , d ) * p ; 
+    } 
+  }
+}
+// ============================================================================
+// constructor from bernstein polynomial
+// ============================================================================
+Gaudi::Math::Polynomial::Polynomial
+( const Gaudi::Math::Bernstein& poly )  
+  : Gaudi::Math::PolySum ( poly.degree () ) 
+  , m_xmin ( poly.xmin() ) 
+  , m_xmax ( poly.xmax() ) 
+{
+  //
+  const unsigned short np = npars  () ;
+  const unsigned short d  = degree () ;
+  //
+  // 2-step tranfromation
+  //
+  // 1: tranfrom to 'regular' ponynomial basic 
+  std::vector<double> _pars( m_pars.size() ) ;
+  for ( unsigned short i = 0 ; i < np ; ++i ) 
+  { 
+    for ( unsigned short k = 0 ; k <= i ; ++k )  // ATTENTION!!! 
+    { 
+      const double p = poly.par ( k ) ;
+      if ( s_zero ( p ) ) { continue ; }
+      _pars[i] += b2m_mtrx ( i , k , d ) * p ; 
+    } 
+  }
+  //
+  // 2: affine tranform to use [-1,-1] range 
+  for ( unsigned short i = 0 ; i < np ; ++i ) 
+  { 
+    for ( unsigned short k = i ; k < np ; ++k )  // ATTENTION!!!
+    { 
+      const double p = _pars[  k ] ;
+      if ( s_zero ( p ) ) { continue ; }
+      m_pars[i] += m2m_mtrx_1 ( i , k ) * p ; 
+    } 
+  }  
+}
+// ============================================================================
+// constructor from legendre polynomial
+// ============================================================================
+Gaudi::Math::Polynomial::Polynomial
+( const Gaudi::Math::LegendreSum& poly )  
+  : Gaudi::Math::PolySum ( poly.degree () ) 
+  , m_xmin ( poly.xmin() ) 
+  , m_xmax ( poly.xmax() ) 
+{
+  //
+  const unsigned short np = npars  () ;
+  //
+  for ( unsigned short i = 0 ; i < np ; ++i ) 
+  { 
+    for ( unsigned short k = i ; k < np ; ++k )   // ATTENTION!!!
+    { 
+      const double p = poly.par ( k ) ;
+      if ( s_zero ( p ) ) { continue ; }
+      m_pars[i] += l2m_mtrx ( i , k ) * p ; 
+    } 
+  }
+}
+// =============================================================================
+//  constructor from Polinomial 
+// =============================================================================
+Gaudi::Math::ChebyshevSum::ChebyshevSum
+( const Gaudi::Math::Polynomial& poly )  
+  : Gaudi::Math::PolySum ( poly.degree () ) 
+  , m_xmin ( poly.xmin() ) 
+  , m_xmax ( poly.xmax() ) 
+{
+  const unsigned short np = npars  () ;
+  for ( unsigned short i = 0 ; i < np ; ++i ) 
+  { 
+    for ( unsigned short k = i ; k < np  ; ++k )
+    { 
+      const double p = poly.par ( k ) ;
+      if ( s_zero ( p ) ) { continue ; }
+      m_pars[i] += m2c_mtrx ( i , k ) * p ; 
+    } 
+  }  
+}
+// ============================================================================
 
 
+// ============================================================================
+// Delegation
+// ============================================================================
 
+// ============================================================================
+// constructor from chebyshev polynomial (delegation)
+// ============================================================================
+Gaudi::Math::Polynomial::Polynomial
+( const Gaudi::Math::ChebyshevSum& poly )  
+  : Gaudi::Math::Polynomial ( Gaudi::Math::Bernstein ( poly ) ) 
+{}
+// ============================================================================
+// constructor from bernstein polynomial (deleghation)
+// ============================================================================
+Gaudi::Math::ChebyshevSum::ChebyshevSum
+( const Gaudi::Math::Bernstein& poly )  
+  : Gaudi::Math::ChebyshevSum ( Gaudi::Math::Polynomial ( poly ) ) 
+{}
+// ============================================================================
+// constructor from legendre polynomial (delegation)
+// ============================================================================
+Gaudi::Math::ChebyshevSum::ChebyshevSum
+( const Gaudi::Math::LegendreSum& poly )  
+  : Gaudi::Math::ChebyshevSum ( Gaudi::Math::Polynomial ( poly ) ) 
+{}
+// ============================================================================
+// constructor from polynomial (delegation)
+// ============================================================================
+Gaudi::Math::LegendreSum::LegendreSum
+( const Gaudi::Math::Polynomial& poly )  
+  : Gaudi::Math::LegendreSum ( Gaudi::Math::Bernstein ( poly ) ) 
+{}
+// ============================================================================
+// constructor from chebyshev polynomial (delegation)
+// ============================================================================
+Gaudi::Math::LegendreSum::LegendreSum
+( const Gaudi::Math::ChebyshevSum& poly )  
+  : Gaudi::Math::LegendreSum ( Gaudi::Math::Bernstein ( poly ) ) 
+{}
 
 
 // ============================================================================

@@ -38,6 +38,11 @@ namespace Gaudi
   namespace Math
   {
     // ========================================================================
+    /// forward declaration 
+    class LegendreSum  ; // forward declaration 
+    class ChebyshevSum ; // forward declaration 
+    class Polynomial   ; // forward declaration 
+    // ========================================================================
     /** @class Bernstein
      *  The sum of bernstein's polynomial of order N
      *  \f$f(x) = \sum_i a_i B^n_i(x)\f$, where 
@@ -90,14 +95,25 @@ namespace Gaudi
       // ======================================================================
       /// template constructor from sequence of parameters 
       template <class ITERATOR>
-        Bernstein ( ITERATOR                 first     , 
-                    ITERATOR                 last      , 
-                    const double             xmin  = 0 , 
-                    const double             xmax  = 1 ) 
+        Bernstein ( ITERATOR                 first , 
+                    ITERATOR                 last  , 
+                    const double             xmin  , 
+                    const double             xmax  ) 
         : Gaudi::Math::PolySum ( first , last ) 
         , m_xmin ( std::min ( xmin, xmax ) )
         , m_xmax ( std::max ( xmin, xmax ) )
       {}
+      // ======================================================================
+      /** constructor from Legendre polynomial
+       *  @see http://www.sciencedirect.com/science/article/pii/S0377042700003769 eq.20 
+       */
+      explicit Bernstein ( const LegendreSum&  poly ) ;
+      // ======================================================================
+      /// constructor from Chebyshev polynomial
+      explicit Bernstein ( const ChebyshevSum& poly ) ;
+      // ======================================================================
+      /// constructor from simple monomial form 
+      explicit Bernstein ( const Polynomial&   poly ) ;
       // ======================================================================
     public:
       // ======================================================================

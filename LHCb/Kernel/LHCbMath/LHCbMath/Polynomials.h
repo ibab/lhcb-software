@@ -409,6 +409,26 @@ namespace Gaudi
     ( const std::vector<double>& pars , 
       const double               x    ) ;
     // ========================================================================
+    /** affine transformation of polynomial
+     *  \f$ x ^{\prime} = \alpha x + \beta \f$
+     *  @param input  (INPUT)  input polynomial coeffeicients 
+     *  @param output (UPDATE) coefficinects of transformed polynomial 
+     *  @param alpha  (INPUT)  alpha
+     *  @param beta   (INPUT)  beta
+     *  @return true for valid transformations
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-03-09
+     */
+    GAUDI_API 
+    bool affine_transform
+    ( const std::vector<double>& input      , 
+      std::vector<double>&       result     ,  
+      const double               alpha  = 1 , 
+      const double               beta   = 0 ) ;              
+    // ========================================================================
+    /// forward declarations 
+    class Bernstein ; // forward declarations 
+    // ========================================================================
     /** @class PolySum
      *  Base class for polynomial sums 
      *  \f$ f(x) = \sum_i \alpha_i P_i(x) \f$
@@ -421,7 +441,7 @@ namespace Gaudi
       // ======================================================================
       /// constructor from polynomial degree 
       PolySum ( const unsigned short degree = 0 ) ;
-      /// constructor fomr vector of parameters 
+      /// constructor from vector of parameters 
       PolySum ( const std::vector<double>& pars ) ;
       /// constructor from sequence of parameters 
       template <class ITERATOR>
@@ -466,10 +486,6 @@ namespace Gaudi
       PolySum& operator *= ( const double a ) ;     // scale it! 
       /// simple  manipulations with polynoms: scale it! 
       PolySum& operator /= ( const double a ) ;     // scale it! 
-      /// simple  manipulations with polynoms: shift it! 
-      PolySum& operator += ( const double a ) ;     // shift it! 
-      /// simple  manipulations with polynoms: shift it! 
-      PolySum& operator -= ( const double a ) ;     // shift it! 
       // ======================================================================
     protected :
       // ======================================================================
@@ -477,6 +493,12 @@ namespace Gaudi
       std::vector<double>  m_pars ; // parameters 
       // ======================================================================
     } ;  
+    // ========================================================================
+    /// forward declarations 
+    class Bernstein    ; // forward declarations 
+    class Polynomial   ; // forward declarations 
+    class LegendreSum  ; // forward declarations 
+    class ChebyshevSum ; // forward declarations 
     // ========================================================================
     // Polynomial sums
     // ========================================================================
@@ -491,14 +513,31 @@ namespace Gaudi
     public:
       // =====================================================================
       /// constructor from the degree  
-      Polynomial ( const unsigned short       degree =  0 , 
-                   const double               low    =  0 , 
-                   const double               high   =  1 )  ;
+      Polynomial ( const unsigned short       degree =   0  , 
+                   const double               xmin   =  -1  , 
+                   const double               xmax   =   1  ) ;
       // ======================================================================
       /// constructor from the parameter list 
-      Polynomial ( const std::vector<double>& pars       , 
-                   const double               low   =  0 , 
-                   const double               high  =  1 )  ;
+      Polynomial ( const std::vector<double>& pars          , 
+                   const double               low    =  -1  , 
+                   const double               high   =   1  ) ;
+      /// template constructor from sequence of parameters 
+      template <class ITERATOR>
+        Polynomial ( ITERATOR                 first , 
+                     ITERATOR                 last  , 
+                     const double             xmin  , 
+                     const double             xmax  ) 
+        : Gaudi::Math::PolySum ( first , last ) 
+        , m_xmin ( std::min ( xmin, xmax ) )
+        , m_xmax ( std::max ( xmin, xmax ) )
+      {}
+      // ======================================================================
+      ///  constructor from Bernstein polinomial (efficient) 
+      explicit Polynomial ( const Bernstein&     poly ) ;
+      ///  constructor from Legendre polinomial  (efficient)
+      explicit Polynomial ( const LegendreSum&   poly ) ;
+      ///  constructor from Chebyshev polinomial (delegation) 
+      explicit Polynomial ( const ChebyshevSum&  poly ) ;
       // ======================================================================
     public:
       // ======================================================================
@@ -508,11 +547,9 @@ namespace Gaudi
     public:
       // ======================================================================
       /// get lower edge
-      double xmin () const { return m_xmin ; }
+      double xmin  () const { return m_xmin ; }
       /// get upper edge
-      double xmax () const { return m_xmax ; }
-      // ======================================================================
-    public:
+      double xmax  () const { return m_xmax ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -558,13 +595,30 @@ namespace Gaudi
       // =====================================================================
       /// constructor from the degree  
       ChebyshevSum ( const unsigned short       degree =  0 , 
-                     const double               low    = -1 , 
-                     const double               high   =  1 )  ;
+                     const double               xmin   = -1 , 
+                     const double               xmax   =  1 )  ;
       // ======================================================================
       /// constructor from the parameter list 
       ChebyshevSum ( const std::vector<double>& pars       , 
-                     const double               low   = -1 , 
-                     const double               high  =  1 )  ;
+                     const double               xmin  = -1 , 
+                     const double               xmax  =  1 )  ;
+      /// template constructor from sequence of parameters 
+      template <class ITERATOR>
+        ChebyshevSum ( ITERATOR                 first , 
+                       ITERATOR                 last  , 
+                       const double             xmin  , 
+                       const double             xmax  ) 
+        : Gaudi::Math::PolySum ( first , last ) 
+        , m_xmin ( std::min ( xmin, xmax ) )
+        , m_xmax ( std::max ( xmin, xmax ) )
+      {}
+      // ======================================================================
+      ///  constructor from Polinomial           (efficient)
+      explicit ChebyshevSum ( const Polynomial&  poly ) ;
+      ///  constructor from Bernstein            (delegation) 
+      explicit ChebyshevSum ( const Bernstein&   poly ) ;
+      ///  constructor from Legendre             (delegation) 
+      explicit ChebyshevSum ( const LegendreSum& poly ) ;
       // ======================================================================
     public:
       // ======================================================================
@@ -621,14 +675,33 @@ namespace Gaudi
     public:
       // =====================================================================
       /// constructor from the degree 
-      LegendreSum ( const unsigned short degree =  0 , 
-                    const double         low    = -1 , 
-                    const double         high   =  1 )  ;
+      LegendreSum ( const unsigned short        degree =  0 , 
+                    const double                xmin   = -1 , 
+                    const double                xmax   =  1 )  ;
       // ======================================================================
       /// constructor from the parameter list 
-      LegendreSum ( const std::vector<double>& pars       , 
-                    const double               low   = -1 , 
-                    const double               high  =  1 )  ;
+      LegendreSum ( const std::vector<double>&  pars       , 
+                    const double                xmin   = -1 , 
+                    const double                xmax   =  1 )  ;
+      /// template constructor from sequence of parameters 
+      template <class ITERATOR>
+        LegendreSum ( ITERATOR                  first , 
+                      ITERATOR                  last  , 
+                      const double              xmin  , 
+                      const double              xmax  ) 
+        : Gaudi::Math::PolySum ( first , last ) 
+        , m_xmin ( std::min ( xmin, xmax ) )
+        , m_xmax ( std::max ( xmin, xmax ) )
+      {}
+      // ======================================================================
+      /**  constructor from Bernstein polinomial (efficient)
+       *  @see http://www.sciencedirect.com/science/article/pii/S0377042700003769 eq.21
+       */
+      explicit LegendreSum ( const Bernstein&     poly ) ;
+      /// constructor from polynoimial            (delegation)
+      explicit LegendreSum ( const Polynomial&    poly ) ;
+      /// constructor from Chebyshev              (delegation)
+      explicit LegendreSum ( const ChebyshevSum&  poly ) ;
       // ======================================================================
     public:
       // ======================================================================

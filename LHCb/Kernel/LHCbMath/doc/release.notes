@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-03-09 - Vanya Belyaev
+ - add conversions of polynomial bases  
+
 ! 2015-03-05 - Vanya Belyaev
  - nSphere: use vtd::fast_sincos...  
    For real case situation the gain is questionable...
