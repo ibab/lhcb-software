@@ -6,13 +6,10 @@ branches doc cmt
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v23r4      Hlt
+use  Moore               v23r5      Hlt
 use  IndependenceTests   v1r10      Hlt
-use  HltMonitor          v1r5	    Hlt   # Diego Martinez
-use  L0App               v2r3       L0    # 
-use  HltBase             v15r5p1    Hlt
-use  LoKiTracks          v2r10p3    Phys
-use  LoKiTrigger         v15r4p1    Phys
+use  HltMonitor          v1r5       Hlt   # Diego Martinez
+use  L0App               v2r4       L0
 
 # Declare this as a container package
 apply_pattern container_package
