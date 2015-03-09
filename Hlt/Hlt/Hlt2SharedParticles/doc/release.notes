@@ -4,6 +4,8 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!========================= Hlt2SharedParticles v7r4 2015-03-09 =========================
+
 ! 2015-03-05 - Michael Kolpin
  - Added dedicated long muons for association to TagAndProbeParticles.py
 
