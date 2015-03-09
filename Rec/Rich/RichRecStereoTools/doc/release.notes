@@ -4,6 +4,10 @@
 ! Purpose     : Stereographic tools
 !-----------------------------------------------------------------------------
 
+! 2015-03-09 - Chris Jones
+ - Load some tools as shared instances to avoid unneccesary duplication of
+   tools when running the reconstruction with the split track groups enabled.
+
 !========================= RichRecStereoTools v1r9 2012-11-28 =========================
 ! 2012-11-23 - Marco Clemencic
  - Added CMake configuration file.

@@ -118,7 +118,7 @@ StatusCode StereoFitter::initialize()
   acquireTool( "RichGeomEff",             m_geomEffic );
   acquireTool( "RichPhotonSignal",        m_photonSig );
   acquireTool( "RichTrackEffectiveRefIndex", m_refIndex );
-  acquireTool( "RichDetParameters", m_detParams );
+  acquireTool( "RichDetParameters",        m_detParams, NULL, true );
 
   return sc;
 }
