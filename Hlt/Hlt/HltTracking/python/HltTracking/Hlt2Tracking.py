@@ -948,7 +948,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 ghostIDName = self.getProp("Prefix") +"TrackAddNNGhostID"
             addNNGhostId = TrackAddNNGhostId(self.__trackfitAlgosAndToolsPrefix()+"TrackAddNNGhostID",GhostIdTool="Run2GhostId")
             addNNGhostId.inputLocation = hlt2StagedFastFitOutputLocation
-            bm_members += [ addNNGhostId ]
+            from HltLine.HltDecodeRaw import DecodeVELO, DecodeTT, DecodeIT
+            bm_members += [ DecodeVELO, DecodeTT, DecodeIT, addNNGhostId ]
         # Build the bindMembers        
         bm_name         = self.__trackfitAlgosAndToolsPrefix()+"FastFitSeq"
         bm_output       = hlt2StagedFastFitOutputLocation
