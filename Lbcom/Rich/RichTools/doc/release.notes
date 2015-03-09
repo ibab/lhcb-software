@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2015-03-09 - Chris Jones
+ - Make some tools shared instances, to avoid unneccessary duplicates when
+   running the reconstruction with the split track groups.
+
 !========================= RichTools v2r46 2015-02-23 =========================
 ! 2015-02-20 - Marco Clemencic
  - fixed the name of the LCG_Interfaces/eigen package

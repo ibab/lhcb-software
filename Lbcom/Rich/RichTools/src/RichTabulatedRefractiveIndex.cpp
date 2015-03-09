@@ -41,7 +41,7 @@ StatusCode Rich::TabulatedRefractiveIndex::initialize()
   if ( sc.isFailure() ) return sc;
 
   // Get tools
-  acquireTool( "RichDetParameters", m_detParams );
+  acquireTool( "RichDetParameters", m_detParams, NULL, true );
 
   // Rich1 and Rich2
   m_riches[Rich::Rich1] = getDet<DeRich1>( DeRichLocations::Rich1 );
@@ -85,11 +85,10 @@ refractiveIndex ( const Rich::RadIntersection::Vector & intersections,
   // loop over all radiator intersections and calculate the weighted average
   // according to the path length in each radiator
   double refIndex(0), totPathL(0);
-  for ( Rich::RadIntersection::Vector::const_iterator iR = intersections.begin();
-        iR != intersections.end(); ++iR )
+  for ( const auto& R : intersections )
   {
-    const double pLength = (*iR).pathLength();
-    refIndex += pLength * (*iR).radiator()->refractiveIndex(energy,m_hltMode);
+    const double pLength = R.pathLength();
+    refIndex += pLength * R.radiator()->refractiveIndex(energy,m_hltMode);
     totPathL += pLength;
   }
   return ( totPathL>0 ? refIndex/totPathL : refIndex );
@@ -102,12 +101,11 @@ refractiveIndex ( const Rich::RadIntersection::Vector & intersections ) const
   // loop over all radiator intersections and calculate the weighted average
   // according to the path length in each radiator
   double refIndex(0), totPathL(0);
-  for ( Rich::RadIntersection::Vector::const_iterator iR = intersections.begin();
-        iR != intersections.end(); ++iR )
+  for ( const auto& R : intersections )
   {
-    const double energy  = m_detParams->meanPhotonEnergy((*iR).radiator()->radiatorID());
-    const double pLength = (*iR).pathLength();
-    refIndex += pLength * (*iR).radiator()->refractiveIndex(energy,m_hltMode);
+    const double energy  = m_detParams->meanPhotonEnergy(R.radiator()->radiatorID());
+    const double pLength = R.pathLength();
+    refIndex += pLength * R.radiator()->refractiveIndex(energy,m_hltMode);
     totPathL += pLength;
   }
   return ( totPathL>0 ? refIndex/totPathL : refIndex );
@@ -120,11 +118,10 @@ refractiveIndexRMS ( const Rich::RadIntersection::Vector & intersections ) const
   // loop over all radiator intersections and calculate the weighted average
   // according to the path length in each radiator
   double refIndexRMS(0), totPathL(0);
-  for ( Rich::RadIntersection::Vector::const_iterator iR = intersections.begin();
-        iR != intersections.end(); ++iR )
+  for ( const auto& R : intersections )
   {
-    const double pLength = (*iR).pathLength();
-    const Rich::TabulatedProperty1D * index = (*iR).radiator()->refIndex(m_hltMode);
+    const double pLength = R.pathLength();
+    const Rich::TabulatedProperty1D * index = R.radiator()->refIndex(m_hltMode);
     refIndexRMS += pLength * index->rms( index->minX(), index->maxX(), 100 );
     totPathL += pLength;
   }
@@ -138,11 +135,10 @@ refractiveIndexSD ( const Rich::RadIntersection::Vector & intersections ) const
   // loop over all radiator intersections and calculate the weighted average
   // according to the path length in each radiator
   double refIndexSD(0), totPathL(0);
-  for ( Rich::RadIntersection::Vector::const_iterator iR = intersections.begin();
-        iR != intersections.end(); ++iR )
+  for ( const auto& R : intersections )
   {
-    const double pLength = (*iR).pathLength();
-    const Rich::TabulatedProperty1D * index = (*iR).radiator()->refIndex(m_hltMode);
+    const double pLength = R.pathLength();
+    const Rich::TabulatedProperty1D * index = R.radiator()->refIndex(m_hltMode);
     refIndexSD += pLength * index->standardDeviation( index->minX(), index->maxX(), 100 );
     totPathL   += pLength;
   }

@@ -99,7 +99,7 @@ void SnellsLawRefraction::buildAeroPlaneInfo() const
 {
   // load the radiator tool
   const IRadiatorTool * radiatorTool = NULL;
-  acquireTool( "RichRadiatorTool", radiatorTool );
+  acquireTool( "RichRadiatorTool", radiatorTool, NULL, true );
 
   // get three points in exit plane
   Rich::RadIntersection::Vector intersections;

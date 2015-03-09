@@ -69,7 +69,7 @@ StatusCode Rich::RayTracing::initialize()
   if ( sc.isFailure() ) return sc;
 
   // get tools
-  acquireTool( "RichMirrorSegFinder", m_mirrorSegFinder );
+  acquireTool( "RichMirrorSegFinder", m_mirrorSegFinder, NULL, true );
 
   // RICH detector elements
   m_rich[Rich::Rich1] = getDet<DeRich>( DeRichLocations::Rich1 );

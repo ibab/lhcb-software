@@ -71,7 +71,7 @@ StatusCode HPDOccupancyTool::initialize()
   m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
 
   // get tools
-  acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, 0, true );
+  acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, NULL, true );
 
   // initialise data map
   sc = initOccMap();

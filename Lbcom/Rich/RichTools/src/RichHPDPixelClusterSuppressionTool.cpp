@@ -89,7 +89,7 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
     // Print message
     std::ostringstream hpd;
     hpd << hpdID;
-    Warning( "Partially suppressed "+hpd.str(), StatusCode::SUCCESS, 0 );
+    Info( "Partially suppressed "+hpd.str(), StatusCode::SUCCESS, 0 );
   }
 
   // cleanup

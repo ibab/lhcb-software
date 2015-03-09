@@ -38,6 +38,7 @@ Rich::ParticleProperties::ParticleProperties ( const std::string& type,
   declareInterface<IParticleProperties>(this);
   // PID types
   declareProperty( "ParticleTypes", m_pidTypesJO );
+  //setProperty( "OutputLevel", 2 );
 }
 
 StatusCode Rich::ParticleProperties::initialize()
@@ -68,9 +69,6 @@ StatusCode Rich::ParticleProperties::initialize()
   m_particleMassSq[Rich::Kaon]     = gsl_pow_2( m_particleMass[Rich::Kaon]     );
   m_particleMassSq[Rich::Proton]   = gsl_pow_2( m_particleMass[Rich::Proton]   );
 
-  // Informational Printout
-  debug() << " Particle masses (MeV/c^2)     = " << m_particleMass << endmsg;
-
   // release service
   sc = release(ppSvc);
 
@@ -80,24 +78,37 @@ StatusCode Rich::ParticleProperties::initialize()
   {
     hasPion = false;
     m_pidTypes.clear();
-    for ( std::vector<std::string>::const_iterator iS = m_pidTypesJO.begin();
-          iS != m_pidTypesJO.end(); ++iS )
+    for ( const auto& S : m_pidTypesJO )
     {
-      if      ( "electron"       == *iS ) { m_pidTypes.push_back(Rich::Electron); }
-      else if ( "muon"           == *iS ) { m_pidTypes.push_back(Rich::Muon); }
-      else if ( "pion"           == *iS ) { m_pidTypes.push_back(Rich::Pion); hasPion = true; }
-      else if ( "kaon"           == *iS ) { m_pidTypes.push_back(Rich::Kaon); }
-      else if ( "proton"         == *iS ) { m_pidTypes.push_back(Rich::Proton); }
-      else if ( "belowThreshold" == *iS ) { m_pidTypes.push_back(Rich::BelowThreshold); }
+      if      ( "electron"       == S ) { m_pidTypes.push_back(Rich::Electron); }
+      else if ( "muon"           == S ) { m_pidTypes.push_back(Rich::Muon); }
+      else if ( "pion"           == S ) { m_pidTypes.push_back(Rich::Pion); hasPion = true; }
+      else if ( "kaon"           == S ) { m_pidTypes.push_back(Rich::Kaon); }
+      else if ( "proton"         == S ) { m_pidTypes.push_back(Rich::Proton); }
+      else if ( "belowThreshold" == S ) { m_pidTypes.push_back(Rich::BelowThreshold); }
       else
       {
-        return Error( "Unknown particle type from options " + *iS );
+        return Error( "Unknown particle type from options " + S );
       }
     }
   }
   info() << "Particle types considered = " << m_pidTypes << endmsg;
   if ( m_pidTypes.empty() ) return Error( "No particle types specified" );
   if ( !hasPion )           return Error( "Pion hypothesis must be included in list" );
+
+  // Informational Printout
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << " Particle masses (MeV/c^2)     = " << m_particleMass << endmsg;
+    for ( const auto& pid : m_pidTypes )
+    {
+      debug() << pid << " Momentum Thresholds (GeV/c) :"
+        //<< " Aero=" << thresholdMomentum(pid,Rich::Aerogel)/Gaudi::Units::GeV
+              << " R1Gas=" << thresholdMomentum(pid,Rich::Rich1Gas)/Gaudi::Units::GeV
+              << " R2Gas=" << thresholdMomentum(pid,Rich::Rich2Gas)/Gaudi::Units::GeV
+              << endmsg;
+    }
+  }
 
   return sc;
 }
