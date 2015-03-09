@@ -3,9 +3,6 @@
  *
  *  Header file for RICH algorithm : Rich::Rec::HierarchicalPIDMerge
  *
- *  CVS Log :-
- *  $Id: RichHierarchicalPIDMerge.h,v 1.6 2009-06-11 14:21:10 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
  */
@@ -36,7 +33,8 @@ namespace Rich
      *  Currently, there is only one PID algorithm - RichGlobalPID...
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
-     *  @date   2002-07-10     *
+     *  @date   2002-07-10    
+     *
      *  @todo Rewrite this algorithm in a more generic way
      *  @todo Review if it is needed at all
      */
@@ -68,7 +66,7 @@ namespace Rich
       /// Flag to turn on/off use of Global PID results
       bool m_useGlobalPIDs;
 
-      /// Flag to turn on/off the fulling of summary information into the ProcStat object
+      /// Flag to turn on/off the filling of summary information into the ProcStat object
       bool m_fillProcStat;
 
       /// PID version

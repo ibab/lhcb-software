@@ -29,9 +29,11 @@ HierarchicalPIDMerge::HierarchicalPIDMerge( const std::string& name,
 
   // Output location in TDS for RichPIDs
   declareProperty( "OutputPIDLocation", m_richPIDLocation );
+
   // Input location in TDS for RichGlobalPIDs
   declareProperty( "InputGlobalPIDLocation", 
                    m_richGlobalPIDLocation = contextSpecificTES(LHCb::RichGlobalPIDLocation::Default) );
+
   // Location of processing status object in TES
   declareProperty( "ProcStatusLocation",
                    m_procStatLocation = LHCb::ProcStatusLocation::Default );
@@ -69,7 +71,7 @@ StatusCode HierarchicalPIDMerge::execute()
   // See if PIDs already exist at requested output location
   LHCb::RichPIDs * newPIDs = NULL;
   bool pidsExist = false;
-  unsigned int originalSize = 0;
+  unsigned long originalSize = 0;
   SmartDataPtr<LHCb::RichPIDs> outPIDs( eventSvc(), m_richPIDLocation );
   if ( outPIDs )
   {
@@ -78,7 +80,9 @@ StatusCode HierarchicalPIDMerge::execute()
     newPIDs = outPIDs;
     originalSize = newPIDs->size();
     newPIDs->clear();
-  } else {
+  } 
+  else
+  {
     // Form new container for output PIDs
     newPIDs = new LHCb::RichPIDs();
     put( newPIDs, m_richPIDLocation );
@@ -96,7 +100,7 @@ StatusCode HierarchicalPIDMerge::execute()
   }
 
   // tallies of number of PID results used of each type
-  unsigned int nUsedglobalPIDs(0);
+  unsigned long nUsedglobalPIDs(0);
 
   if ( m_useGlobalPIDs )
   {
