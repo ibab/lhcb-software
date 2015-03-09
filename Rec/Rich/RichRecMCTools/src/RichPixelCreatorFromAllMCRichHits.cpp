@@ -45,7 +45,7 @@ StatusCode PixelCreatorFromAllMCRichHits::initialize()
     return Error( "Pixel Book-keeping cannot work with this pixel creator" );
 
   // Acquire instances of tools
-  acquireTool( "RichMCTruthTool", m_mcTool, 0, true );
+  acquireTool( "RichMCTruthTool", m_mcTool, NULL, true );
 
   return sc;
 }

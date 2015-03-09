@@ -37,7 +37,7 @@ StatusCode PixelCreatorFromCheatedRawBuffer::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichMCTruthTool", m_mcTool, 0, true );
+  acquireTool( "RichMCTruthTool", m_mcTool, NULL, true );
 
   return sc;
 }

@@ -4,6 +4,10 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2015-03-09 - Chris Jones
+ - Make some tools shared instances to avoid unneccesary duplication when
+   running the RICH reconstruction with the split track groups.
+
 !========================= RichRecMCTools v2r31 2013-06-03 =========================
 ! 2013-05-24 - Chris Jones
  - Remove unused data member from TrSegMakerFromMCRichTracks (clang warning).

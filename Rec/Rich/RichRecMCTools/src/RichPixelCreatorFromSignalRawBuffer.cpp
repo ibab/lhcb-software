@@ -45,7 +45,7 @@ StatusCode PixelCreatorFromSignalRawBuffer::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichMCTruthTool",     m_mcTool    );
+  acquireTool( "RichMCTruthTool",     m_mcTool, NULL, true );
   acquireTool( "RichRecMCTruthTool",  m_mcRecTool );
 
   if ( m_trackFilter )

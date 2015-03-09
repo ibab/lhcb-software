@@ -56,7 +56,7 @@ StatusCode MCTruthTool::initialize()
   if ( sc.isFailure() ) return sc;
 
   // Acquire instances of tools
-  acquireTool( "RichMCTruthTool", m_truth );
+  acquireTool( "RichMCTruthTool", m_truth, NULL, true );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );

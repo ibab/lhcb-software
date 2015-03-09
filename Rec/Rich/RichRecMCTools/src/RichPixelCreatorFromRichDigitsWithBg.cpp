@@ -44,7 +44,7 @@ StatusCode PixelCreatorFromRichDigitsWithBg::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichMCTruthTool", m_mcTool, 0, true      );
+  acquireTool( "RichMCTruthTool", m_mcTool, NULL, true );
 
   // warn that this background adding creator is being used
   info() << "Using background adding pixel creator : Will add " << m_numBgTracksToAdd[Rich::Rich1]
