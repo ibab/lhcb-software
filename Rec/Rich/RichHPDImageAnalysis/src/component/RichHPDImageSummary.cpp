@@ -48,7 +48,7 @@ StatusCode Summary::initialize()
 
   m_RichSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
 
-  acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, 0, true );
+  acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, NULL, true );
 
   const LHCb::RichSmartID::Vector & allHPDs = m_RichSys->allPDRichSmartIDs();
 
