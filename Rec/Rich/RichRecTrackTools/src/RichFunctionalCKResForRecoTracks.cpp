@@ -84,16 +84,15 @@ StatusCode FunctionalCKResForRecoTracks::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichCherenkovAngle",      m_ckAngle      );
-  acquireTool( "RichTrackEffectiveRefIndex", m_refIndex  );
-  acquireTool( "RichParticleProperties",  m_richPartProp );
-  acquireTool( "RichDetParameters", m_detParams );
+  acquireTool( "RichCherenkovAngle",         m_ckAngle      );
+  acquireTool( "RichTrackEffectiveRefIndex", m_refIndex     );
+  acquireTool( "RichParticleProperties",     m_richPartProp );
+  acquireTool( "RichDetParameters", m_detParams, NULL, true );
 
   m_pidTypes = m_richPartProp->particleTypes();
-  info() << "Particle types considered = " << m_pidTypes << endmsg;
+  _ri_debug << "Particle types considered = " << m_pidTypes << endmsg;
 
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << "Aerogel  Asymptopic Errors : " << m_asmpt[Rich::Aerogel]  << endmsg
+  _ri_debug << "Aerogel  Asymptopic Errors : " << m_asmpt[Rich::Aerogel]  << endmsg
             << "Rich1Gas Asymptopic Errors : " << m_asmpt[Rich::Rich1Gas] << endmsg
             << "Rich2Gas Asymptopic Errors : " << m_asmpt[Rich::Rich2Gas] << endmsg;
 

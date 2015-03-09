@@ -73,9 +73,11 @@ StatusCode ExpectedTrackSignal::initialize()
   acquireTool( "RichGasQuartzWindow",    m_gasQuartzWin );
 
   m_pidTypes = m_richPartProp->particleTypes();
-  info() << "Particle types considered = " << m_pidTypes << endmsg;
+  _ri_debug << "Particle types considered = " << m_pidTypes << endmsg;
 
-  info() << "Minimum number of expected photons (Aero/R1Gas/R2Gas) : " << m_minPhotonsPerRad << endmsg;
+  _ri_debug << "Minimum number of expected photons (Aero/R1Gas/R2Gas) : " 
+            << m_minPhotonsPerRad 
+            << endmsg;
 
   return sc;
 }

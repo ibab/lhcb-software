@@ -48,7 +48,7 @@ DetailedTrSegMakerFromRecoTracks( const std::string& type,
   declareProperty( "ExtrapolateFromReference", m_extrapFromRef = false );
 
   // Minimum move in z to bother with
-  declareProperty( "MinimumZMove",             m_minZmove = 1*mm       );
+  declareProperty( "MinimumZMove", m_minZmove = 1*mm );
 
   // Nominal z positions of states at RICHes
   m_nomZstates[0] =   990*mm; // Place to look for Rich1 entry state
@@ -81,7 +81,7 @@ DetailedTrSegMakerFromRecoTracks( const std::string& type,
   declareProperty( "UseTrackTraj", m_useTrackTraj = false );
 
   // Use the State provider instead of the extrapolator to move states
-  declareProperty( "UseStateProvider", m_useStateProvider = true );
+  declareProperty( "UseStateProvider", m_useStateProvider = false );
 
   // Radiators to skip by track type, when using the track provider tool
   m_radsToSkip[LHCb::Track::Ttrack]   = { Rich::Aerogel, Rich::Rich1Gas };
@@ -114,9 +114,9 @@ StatusCode DetailedTrSegMakerFromRecoTracks::initialize()
   if ( m_createMissingStates || m_useStateProvider ) { stateProvider(); }
 
   // Get the RICH tools
-  acquireTool( "RichRayTracing",          m_rayTracing   );
+  acquireTool( "RichRayTracing",          m_rayTracing, NULL, true );
   acquireTool( "RichParticleProperties",  m_richPartProp );
-  acquireTool( "RichRadiatorTool",        m_radTool      );
+  acquireTool( "RichRadiatorTool",        m_radTool, NULL, true );
 
   // get Detector elements for RICH1 and RICH2
   m_rich[Rich::Rich1] = getDet<DeRich>( DeRichLocations::Rich1 );
@@ -132,12 +132,12 @@ StatusCode DetailedTrSegMakerFromRecoTracks::initialize()
 
   if ( m_useStateProvider )
   {
-    info() << "Will use StateProvider instead of extrapolator to move states" << endmsg;
+    _ri_debug << "Will use StateProvider instead of extrapolator to move states" << endmsg;
   }
 
   if ( m_useTrackTraj )
   {
-    info() << "Will use TrackTraj instead of extrapolator to move states" << endmsg;
+    _ri_debug << "Will use TrackTraj instead of extrapolator to move states" << endmsg;
     if ( m_useStateProvider )
     {
       return Error( "Cannot use both TrackTraj and StateProvider at the same time !" );
@@ -146,7 +146,7 @@ StatusCode DetailedTrSegMakerFromRecoTracks::initialize()
 
   if ( m_extrapFromRef )
   {
-    info() << "Will perform all track extrapolations from reference states" << endmsg;
+    _ri_debug << "Will perform all track extrapolations from reference states" << endmsg;
     if ( m_useTrackTraj )
     {
       return Error( "TrackTraj and 'extrapolations from reference states' are incompatible options" );
@@ -156,21 +156,21 @@ StatusCode DetailedTrSegMakerFromRecoTracks::initialize()
   // Define the segment type
   if      ( "AllStateVectors" == m_trSegTypeJO )
   {
-    info() << "Will create track segments using all State information" << endmsg;
+    _ri_debug << "Will create track segments using all State information" << endmsg;
     m_trSegType = LHCb::RichTrackSegment::UseAllStateVectors;
   }
   else if ( "Chord" == m_trSegTypeJO )
   {
-    info() << "Will create track segments using the 'chord' direction definition" << endmsg;
+    _ri_debug << "Will create track segments using the 'chord' direction definition" << endmsg;
     m_trSegType = LHCb::RichTrackSegment::UseChordBetweenStates;
-  }
+  } 
   else
   {
     return Error( "Unknown RichTrackSegment type " + m_trSegTypeJO );
   }
 
-  info() << "Min radiator path lengths (aero/R1Gas/R2Gas) : "
-         << m_minRadLength << " mm " << endmsg;
+  _ri_debug << "Min radiator path lengths (aero/R1Gas/R2Gas) : "
+            << m_minRadLength << " mm " << endmsg;
 
   return sc;
 }

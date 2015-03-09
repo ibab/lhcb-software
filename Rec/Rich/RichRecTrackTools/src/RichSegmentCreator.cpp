@@ -60,7 +60,7 @@ StatusCode SegmentCreator::initialize()
 
   // tools
   acquireTool( "RichExpectedTrackSignal", m_signal );
-  acquireTool( "RichDetParameters",    m_detParams );
+  acquireTool( "RichDetParameters",    m_detParams, NULL, true );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );

@@ -42,15 +42,15 @@ StatusCode CherenkovAngle::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichRayTracing",          m_rayTrace     );
-  acquireTool( "RichSmartIDTool",         m_smartIDTool, 0, true );
+  acquireTool( "RichRayTracing",          m_rayTrace,    NULL, true );
+  acquireTool( "RichSmartIDTool",         m_smartIDTool, NULL, true );
   acquireTool( "RichExpectedTrackSignal", m_signal       );
   acquireTool( "RichRefractiveIndex",     m_refIndex     );
   acquireTool( "RichParticleProperties",  m_richPartProp );
   acquireTool( "RichTrackEffectiveRefIndex", m_tkIndex   );
 
   m_pidTypes = m_richPartProp->particleTypes();
-  info() << "Particle types considered = " << m_pidTypes << endmsg;
+  _ri_debug << "Particle types considered = " << m_pidTypes << endmsg;
 
   return sc;
 }

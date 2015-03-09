@@ -109,7 +109,7 @@ StatusCode FastTrSegMakerFromRecoTracks::initialize()
   if ( sc.isFailure() ) return sc;
 
   // Get the ray tracing tool
-  acquireTool( "RichRayTracing", m_rayTracing );
+  acquireTool( "RichRayTracing", m_rayTracing, NULL, true );
 
   // The following forms a simple radiator description
   // The values do not need to be very precise, but should still be eventually

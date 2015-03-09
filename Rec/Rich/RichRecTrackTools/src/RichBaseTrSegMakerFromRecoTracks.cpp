@@ -73,7 +73,7 @@ StatusCode BaseTrSegMakerFromRecoTracks::initialize()
     Warning("Track segments for Rich2Gas are disabled",StatusCode::SUCCESS).ignore();
   }
 
-  info() << "Beam pipe intersection test (Aero/R1Gas/R2Gas) = " << m_checkBeamP << endmsg;
+  _ri_debug << "Beam pipe intersection test (Aero/R1Gas/R2Gas) = " << m_checkBeamP << endmsg;
   if ( m_checkBeamP[Rich::Aerogel]  ) deBeam(Rich::Aerogel);
   if ( m_checkBeamP[Rich::Rich1Gas] ) deBeam(Rich::Rich1Gas);
   if ( m_checkBeamP[Rich::Rich2Gas] ) deBeam(Rich::Rich2Gas);

@@ -56,7 +56,7 @@ StatusCode TrackCreatorFromRecoTracks::initialize()
   if ( m_buildHypoRings )
   {
     acquireTool( "RichMassHypoRings", m_massHypoRings );
-    info() << "Will create Mass hypothesis rings for each track" << endmsg;
+    _ri_debug << "Will create Mass hypothesis rings for each track" << endmsg;
   }
 
   return sc;

@@ -53,7 +53,7 @@ StatusCode GeomEffPhotonTracing::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichRayTracing",     m_rayTrace );
+  acquireTool( "RichRayTracing",     m_rayTrace, NULL, true );
   acquireTool( "RichCherenkovAngle", m_ckAngle  );
   if ( m_hpdCheck )
   {
@@ -78,7 +78,7 @@ StatusCode GeomEffPhotonTracing::initialize()
                                        LHCb::RichTraceMode::FullHPDs : 
                                        LHCb::RichTraceMode::SimpleHPDs ) );
   if ( m_checkBeamPipe ) { m_traceMode.setBeamPipeIntersects(true); }
-  info() << "Sampling Mode : " << m_traceMode << endmsg;
+  _ri_debug << "Sampling Mode : " << m_traceMode << endmsg;
 
   return sc;
 }

@@ -48,7 +48,7 @@ StatusCode GeomEffCKMassRing::initialize()
   acquireTool( "RichParticleProperties",  m_richPartProp );
 
   m_pidTypes = m_richPartProp->particleTypes();
-  info() << "Particle types considered = " << m_pidTypes << endmsg;
+  _ri_debug << "Particle types considered = " << m_pidTypes << endmsg;
 
   return sc;
 }
