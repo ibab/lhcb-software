@@ -15,6 +15,7 @@
 // STL
 #include <map>
 #include <string>
+#include <sstream>
 
 // base class and interface
 #include "GaudiAlg/GaudiTool.h"

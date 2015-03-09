@@ -5,6 +5,10 @@
 !------------------------------------------------------------------------------
 
 ! 2015-03-09 - Chris Jones
+ - Suppress info messages about MC Association tool type change from the tool
+   registry, as this change is normal and always happens when running on data.
+
+! 2015-03-09 - Chris Jones
  - Add an additional iteration to the calculation in fast_cbrt.
 
 !========================= RichKernel v7r58 2015-02-23 =========================
