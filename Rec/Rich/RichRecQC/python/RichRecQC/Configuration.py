@@ -419,7 +419,7 @@ class RichRecQCConf(RichConfigurableUser):
                             "Rich::Rec::MC::NULLMCTruthTool/RichRecMCTruthTool" ]
             self.toolRegistry().Tools += nullMCtools
             for conf in self.recoConf().getAllTrackGroupConfs():
-                conff.toolRegistry().Tools += nullMCtools
+                conf.toolRegistry().Tools += nullMCtools
 
         # The list of monitors to run
         monitors = self.getHistoOptions("Monitors")
