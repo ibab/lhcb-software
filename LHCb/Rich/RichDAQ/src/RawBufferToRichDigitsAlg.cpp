@@ -40,7 +40,7 @@ StatusCode RawBufferToRichDigitsAlg::initialize()// RICH software
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire tools
-  acquireTool( "RichSmartIDDecoder", m_decoder, 0, true );
+  acquireTool( "RichSmartIDDecoder", m_decoder, NULL, true );
 
   if ( m_decodeOnly )
   { info() << "Will only decode Raw Buffer -> No RichDigits produced" << endmsg; }
