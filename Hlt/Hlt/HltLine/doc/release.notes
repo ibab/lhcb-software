@@ -5,6 +5,10 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2015-03-09 - Roel Aaij
+ - Adapt to changes in SelectionLine.
+ - Rename HLT property of Hlt1Line to HLT1.
+
 !========================= HltLine v7r8 2015-03-09 =========================
 
 ! 2015-03-06 - Sascha Stahl

@@ -1416,7 +1416,7 @@ class Hlt2Line(object):
     #    - 'prescale'  : the prescaler factor
     #    - 'ODIN'      : the list of ODINtype names for ODINFilter 
     #    - 'L0DU'      : the list of L0Channels names for L0Filter 
-    #    - 'HLT'       : the list of HLT selections for HLTFilter
+    #    - 'HLT1'      : the list of HLT1 selections for HLTFilter
     #    - 'PV'        : insert PV reconstruction (or not)
     #    - 'algos'     : the list of actual members 
     #    - 'postscale' : the postscale factor
@@ -1425,7 +1425,7 @@ class Hlt2Line(object):
                    prescale  = 1    ,   # prescale factor
                    ODIN      = None ,   # ODIN predicate
                    L0DU      = None ,   # L0DU predicate  
-                   HLT       = None ,   # HltDecReports predicate
+                   HLT1      = None ,   # HltDecReports predicate
                    VoidFilter = None ,   # extra VoidFilter
                    algos     = []   ,   # the list of algorithms/members
                    postscale = 1    ,   # postscale factor
@@ -1440,7 +1440,7 @@ class Hlt2Line(object):
         - 'prescale'  : the prescaler factor
         - 'ODIN'      : the list of ODIN types for ODINFilter
         - 'L0DU'      : the list of L0Channels names for L0Filter
-        - 'HLT'       : the list of HLT selections for HLTFilter
+        - 'HLT1'      : the list of HLT1 selections for HLTFilter
         - 'algos'     : the list of actual members 
         - 'Turbo'     : flag for Turbo stream 
         - 'postscale' : the postscale factor
@@ -1451,12 +1451,21 @@ class Hlt2Line(object):
         #if not L0DU :
         #    L0DU = "L0_DECISION"
         #    L0DU = "L0_ALL" # protects against missing/invalid L0DU 
-        if not HLT :
+        if 'HLT' in args:
+            if not HLT1:
+                print ('# WARNING: HLT constructor argument to Hlt2Line is deprecated, ' +
+                       'please replace with HLT1.')
+                HLT1 = args.pop('HLT')
+            else:
+                raise AttributeError('Both HLT and HLT1 constructor argument to Hlt2Line specified, ' +
+                                     'this is undefined.')
+
+        if not HLT1 :
             #  ODIN and L0 should be 'harmless' as only a small fraction (or small rate)
             #  VELO on the other hand is dangerous during 'velo open' running...
             #  the veto of NoPV removes the high rate of L0 low mult 
             #  and please note the trailing 'Decision' which is there to skip Hlt1Global!
-            HLT = "HLT_PASS_RE('Hlt1(?!Lumi)(?!Velo)(?!NoPV)(?!MB).*Decision')"
+            HLT1 = "HLT_PASS_RE('Hlt1(?!Lumi)(?!Velo)(?!NoPV)(?!MB).*Decision')"
 
         if VoidFilter == None : # distguish between None and "" -- if we write 'if not VoidFilter' then "" would get overruled...
             code = self.getDefaultVoidFilter()
@@ -1466,7 +1475,7 @@ class Hlt2Line(object):
         name  = deepcopy ( name  )
         ODIN  = deepcopy ( ODIN  )
         L0DU  = deepcopy ( L0DU  )
-        HLT   = deepcopy ( HLT   )
+        HLT1  = deepcopy ( HLT1  )
         VoidFilter = deepcopy ( VoidFilter )
         algos = deepcopy ( algos )
         Turbo = deepcopy ( Turbo )
@@ -1481,7 +1490,7 @@ class Hlt2Line(object):
         self._priority  = priority
         self._ODIN      = ODIN
         self._L0DU      = L0DU
-        self._HLT       = HLT
+        self._HLT1      = HLT1
         self._Turbo     = Turbo
         self._VoidFilter       = VoidFilter
         self._algos     = algos
@@ -1523,23 +1532,15 @@ class Hlt2Line(object):
             _s = GaudiSequencer( l0entryName(line, 'Hlt2') + 'Sequence'
                                , Members = DecodeL0DU.members() + [ L0Filter( l0entryName( line, 'Hlt2' ) , Code = self._L0DU  ) ] )
             mdict.update( L0DU = _s  )
-        ## TODO: in case of HLT, we have a dependency... dangerous, as things become order dependent... 
-        ## This is OK, as long as it only pertains to Hlt1 results...
-        if self._HLT  : 
-            # TODO: insert Hlt1 decreports decoding... -- but this should ONLY be done in the split scenario!!!!
-            #  so we need to make it optional... 
-            #  Note: do it the 'other way around': always insert, and, if NOT split, globally remove the decoder ;-)
-            # TODO  Note Note: we always insert, and then we can (unconditionally!) set the 'VetoObjects' property
-            #  so that it won't execute when the target TES location already exists...
+        if self._HLT1 : 
             from DAQSys.Decoders import DecoderDB
             decoder = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
             decoder.VetoObjects = decoder.listOutputs()
             decoder.active = True
             _s = GaudiSequencer( hltentryName( line, 'Hlt2') + 'Sequence' 
-                               , Members = [ decoder.setup(), HDRFilter  ( hltentryName ( line,'Hlt2' ) , Code = self._HLT , Location = decoder.listOutputs()[0]  )  ]
+                               , Members = [ decoder.setup(), HDRFilter  ( hltentryName ( line,'Hlt2' ) , Code = self._HLT1 , Location = decoder.listOutputs()[0]  )  ]
                                ) 
-            ## Change to HLT1 for next release
-            mdict.update( HLT =  _s )
+            mdict.update( HLT1 =  _s )
         from Configurables import LoKi__VoidFilter
         if self._VoidFilter : 
             mdict.update( Filter0 = LoKi__VoidFilter( voidName( line, 'Hlt2' ), Code = self._VoidFilter ) )
@@ -1671,7 +1672,7 @@ class Hlt2Line(object):
         __prescale   = deepcopy ( args.get ( 'prescale'  , self._prescale  ) ) 
         __ODIN       = deepcopy ( args.get ( 'ODIN'      , self._ODIN      ) )        
         __L0DU       = deepcopy ( args.get ( 'L0DU'      , self._L0DU      ) )        
-        __HLT        = deepcopy ( args.get ( 'HLT'       , self._HLT       ) )        
+        __HLT1       = deepcopy ( args.get ( 'HLT1'      , self._HLT1      ) )        
         __postscale  = deepcopy ( args.get ( 'postscale' , self._postscale ) ) 
         __Turbo      = deepcopy ( args.get ( 'Turbo' , self._Turbo  ) ) 
         __priority   = deepcopy ( args.get ( 'priority ' , self._priority  ) ) 
@@ -1703,7 +1704,7 @@ class Hlt2Line(object):
                           prescale  = __prescale   ,
                           ODIN      = __ODIN       ,
                           L0DU      = __L0DU       ,
-                          HLT       = __HLT        ,
+                          HLT1      = __HLT1       ,
                           postscale = __postscale  ,
                           priority  = __priority   ,
                           Turbo     = __Turbo   ,
