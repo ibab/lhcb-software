@@ -1,8 +1,11 @@
-!------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
+
+! 2015-03-09 - Chris Jones
+ - Add an additional iteration to the calculation in fast_cbrt.
 
 !========================= RichKernel v7r58 2015-02-23 =========================
 ! 2015-02-08 - Chris Jones

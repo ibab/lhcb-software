@@ -24,7 +24,7 @@ namespace Rich
           Gives the correct result (inf) for x = inf.
           Gives the correct result (NaN) for x = NaN. 
       */
-      inline float vfast_cbrt(const float x0 )
+      inline float vfast_cbrt( const float x0 )
       {
         union {int ix; float x;};
         x = x0;                      // x can be viewed as int.
@@ -48,8 +48,9 @@ namespace Rich
         ix = ix + ix/16;
         ix = ix + ix/256;
         ix = 0x2a5137a0 + ix;        // Initial guess.
-        x  = 0.33333333f*(2.0f*x + x0/(x*x));  // Newton step.
-        x  = 0.33333333f*(2.0f*x + x0/(x*x));  // Newton step again.
+        x  = 0.33333333f*(2.0f*x + x0/(x*x));  // Newton step 1
+        x  = 0.33333333f*(2.0f*x + x0/(x*x));  // Newton step 2
+        x  = 0.33333333f*(2.0f*x + x0/(x*x));  // Newton step 3
         return x;
       }
       

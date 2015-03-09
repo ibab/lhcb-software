@@ -42,4 +42,3 @@ gaudi_add_dictionary(RichKernel
 #endif()
 
 gaudi_install_python_modules()
-

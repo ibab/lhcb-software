@@ -29,6 +29,8 @@ Rich::ToolRegistry::ToolRegistry( const std::string& type,
 
   // job option for mapping between nickname and class name
   declareProperty( "Tools", m_names );
+
+  //setProperty( "OutputLevel", 1 );
 }
 
 StatusCode Rich::ToolRegistry::initialize()

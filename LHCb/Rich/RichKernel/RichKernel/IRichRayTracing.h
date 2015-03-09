@@ -4,8 +4,6 @@
  *
  *  Header file for tool interface : Rich::IRayTracing
  *
- *  $Id: IRichRayTracing.h,v 1.32 2008-02-17 13:29:48 jonrob Exp $
- *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
  */
