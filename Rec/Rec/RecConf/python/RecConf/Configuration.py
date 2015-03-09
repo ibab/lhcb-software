@@ -56,6 +56,14 @@ class RecSysConf(LHCbConfigurableUser):
        ,"SkipTracking" : False         # Skip the tracking sequence
         }
 
+    ## Initialisation. Needed to set RICH option before applyConf method starts.
+    def __init__(self, name=Configurable.DefaultName, *args, **kwargs):
+        LHCbConfigurableUser.__init__(self, name=Configurable.DefaultName,  *args, **kwargs)
+        # Activate the RICH processing mode where Long, Downstream and Upstream
+        # tracks are processed independently of each other
+        richConf = RichRecSysConf(self.richRecConfName)
+        richConf.setTrackGroups( [ ["Forward","Match"], ["VeloTT"], ["KsTrack"] ] )
+
     def expertHistos(self): return self.getProp("Histograms") == "Expert"
 
     ## Apply the configuration
@@ -93,7 +101,7 @@ class RecSysConf(LHCbConfigurableUser):
                 PVConf.LoosePV().configureAlg()
             elif ( not ( self.getProp("Simulation") and
                          self.getProp("DataType") in ["2008","2009","2010","MC09"] ) ):
-                # Deafult setting uses beam spot constraint from DB, available from 2011. Prior to 2011 stability of beam spot is not certain
+                # Default setting uses beam spot constraint from DB, available from 2011. Prior to 2011 stability of beam spot is not certain
                 from PatPV import PVConf
                 PVConf.StandardPV().configureAlg()
                 
@@ -129,16 +137,23 @@ class RecSysConf(LHCbConfigurableUser):
 
             # The main sequence
             seq = GaudiSequencer("RecoRICHSeq")
-            # Create the top level Conf object and set some general options
+            
+            # Create the top level Conf object 
             richConf = RichRecSysConf(self.richRecConfName)
+            
+            # set some general options
             self.setOtherProps(richConf,["SpecialData","Context","OutputLevel",
                                          "Simulation","DataType","OnlineMode"])
+            
             # Set the sequencer the RICH reco algs should be added to
             richConf.RecoSequencer = seq
+            
             # Input Tracks (would be better to not hard code this. Get from TrackSys() or DstConf())
             richConf.trackConfig().InputTracksLocation = "Rec/Track/Best"
-            # Output PID Location (Same again. maybe get this location from DstConf() 
+            
+            # Output PID Location (Same again. maybe get this location from DstConf())
             richConf.RichPIDLocation = "Rec/Rich/PIDs"
+            
             # Printout
             import GaudiKernel.ProcessJobOptions
             GaudiKernel.ProcessJobOptions.PrintOn()

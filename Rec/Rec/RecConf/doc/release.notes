@@ -4,10 +4,16 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2015-03-09 - Chris Jones
+ - Activate by default the seperate track type groups in the RICH 
+   reconstruction. Must be done before any 'applyConf' methods are called, in
+   order for the Configurable dependences to be correctly set up, and thus this
+   is done from a new custom __init__ method of the RecSysConf Configurable.
+
 !========================= RecConf v2r20 2015-02-23 =========================
 ! 2015-01-31 - Michel De Cian
- - Add 'pGun' to KnownSpecialData, replace normal vertex finder with PGPrimaryVertex
-   when pGun is in SpecialData
+ - Add 'pGun' to KnownSpecialData, replace normal vertex finder with 
+   PGPrimaryVertex when pGun is in SpecialData.
 
 !========================= RecConf v2r19 2014-12-11 =========================
 ! 2014-11-13 - Marco Cattaneo
