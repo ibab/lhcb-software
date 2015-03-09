@@ -1,3 +1,7 @@
+2015-03-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-deployment-checklist: fixed problem with the check of old tarballs
+
 2015-02-20  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	LBCORE-751: add support for data packages checked out in a CMake-based project

@@ -257,7 +257,7 @@ def tarballs(project, version):
     missing = set(rpm_platforms) - set(tar_platforms)
     assert not missing, 'missing tarballs for %s' % ', '.join(missing)
 
-    md5sums = set([f.replace('.tar.gz', '.md5')])
+    md5sums = set([f.replace('.tar.gz', '.md5') for f in tarfiles])
     missing = md5sums - set(alltars)
     assert not missing, 'missing some md5 files'
 
