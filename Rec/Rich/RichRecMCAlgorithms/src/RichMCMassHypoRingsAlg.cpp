@@ -73,7 +73,7 @@ StatusCode MCMassHypoRingsAlg::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // acquire tools
-  acquireTool( "RichMCTruthTool",     m_truth    );
+  acquireTool( "RichMCTruthTool",     m_truth, NULL, true );
   acquireTool( "RichMCTrackInfoTool", m_mcTkInfo );
   acquireTool( "RichRayTraceCKCone",  m_rayTrace );
 

@@ -47,7 +47,7 @@ StatusCode DumpRichHitsToTextFileAlg::initialize()
   if ( sc.isFailure() ) return sc;
 
   // acquire tools
-  acquireTool( "RichMCTruthTool", m_truth );
+  acquireTool( "RichMCTruthTool", m_truth, NULL, true );
 
   return sc;
 }

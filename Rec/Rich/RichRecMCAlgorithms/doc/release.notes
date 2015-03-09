@@ -4,6 +4,10 @@
 ! Purpose     : RICH reconstruction algorithms that use MC information
 !-----------------------------------------------------------------------------
 
+! 2015-03-09 - Chris Jones
+ - Load some tools as shared instances to avoid unneccesary duplication of
+   tools when running the reconstruction with the split track groups enabled.
+
 !========================= RichRecMCAlgorithms v1r5 2013-10-01 ======================
 ! 2013-07-23 - Chris Jones
  - DumpRichHitsToTextFileAlg.cpp + DumpRichTracksToTextFileAlg.cpp
