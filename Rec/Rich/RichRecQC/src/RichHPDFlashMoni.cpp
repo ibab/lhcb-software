@@ -67,8 +67,8 @@ StatusCode HPDFlashMoni::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichSmartIDDecoder", m_decoder, 0, true );
-  acquireTool( "RichSmartIDTool",    m_idTool,         0, true );
+  acquireTool( "RichSmartIDDecoder", m_decoder, NULL, true );
+  acquireTool( "RichSmartIDTool",    m_idTool,  NULL, true );
 
   m_HpdOccupancyTool =
     tool<IHPDOccupancyTool>("Rich::HPDOccupancyTool","HPDOccupancy",this);

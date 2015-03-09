@@ -169,6 +169,8 @@ StatusCode RecoQC::prebookHistograms()
                      "(Rec-Exp)/Res CKtheta Versus CKtheta | Isolated Tracks",
                      m_ckThetaMin[rad], m_ckThetaMax[rad], nBins1D(),
                      "Cherenkov Theta / rad", "Cherenkov Theta pull" );
+      richHisto1D( HID("tkMomentum",rad), "Track Segment Momentum",
+                   0, 100, nBins1D(), "Track Segment Momentum / GeV" );
       if ( m_aeroTilePlots && rad == Rich::Aerogel )
       {
         // Book a few plots for each aerogel tile
@@ -333,6 +335,7 @@ StatusCode RecoQC::execute()
 
     // segment momentum
     const double pTot = std::sqrt(segment->trackSegment().bestMomentum().Mag2());
+    richHisto1D( HID("tkMomentum",rad) ) -> fill( pTot / Gaudi::Units::GeV );
 
     double thetaExpTrue(0.0), resExpTrue(0.0);
     Rich::ParticleIDType mcType = Rich::Pion; // If MC not available, assume pion

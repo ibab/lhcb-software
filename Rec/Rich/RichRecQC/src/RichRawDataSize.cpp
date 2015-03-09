@@ -58,7 +58,7 @@ StatusCode RawDataSize::initialize()
   if ( sc.isFailure() ) return sc;
 
   // get tools
-  acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, 0, true );
+  acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, NULL, true );
 
   // RichDet
   m_RichSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );

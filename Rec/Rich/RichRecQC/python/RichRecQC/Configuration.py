@@ -8,8 +8,8 @@ __version__ = "$Id: Configuration.py,v 1.47 2010-02-12 14:12:24 ryoung Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
-from Configurables import RichAlignmentConf
-from Configurables import ( GaudiSequencer, MessageSvc )
+from Configurables import ( RichAlignmentConf, RichRecSysConf,
+                            GaudiSequencer, MessageSvc )
 
 # -------------------------------------------------------------------------------------------
 # Workaround for Configurables problem
@@ -31,8 +31,7 @@ from Configurables import ( GaudiSequencer, MessageSvc )
 class RichRecQCConf(RichConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ (RichAlignmentConf,None) ]
-    #__used_configurables__ = [ (RichAlignmentConf,None), ('RichPIDQCConf',None) ]
+    __used_configurables__ = [ (RichAlignmentConf,None), (RichRecSysConf,None) ]
 
     ## Default Histogram set
     __default_histo_set__ = "OfflineFull"
@@ -110,14 +109,14 @@ class RichRecQCConf(RichConfigurableUser):
                                "Online"         : [ [2,100] ]
                                }
        ,"MinTrackBeta"     : [ 0.9999, 0.9999, 0.9999 ]
-       ,"PidTrackTypes":  { "Expert"         : [ ["All"],["Forward","Match"],
+       ,"PidTrackTypes":  { "Expert"         : [ ["Forward","Match"],
                                                  ["Forward"],["Match"],["KsTrack"],
                                                  ["VeloTT"],["Seed"] ],
                             "OfflineFull"    : [ ["Forward","Match"] ],
                             "OfflineExpress" : [ ["Forward","Match"] ],
                             "Online"         : [ ["Forward","Match"] ]
                             }
-       ,"RecoTrackTypes": { "Expert"         : [ ["All"],["Forward","Match"],
+       ,"RecoTrackTypes": { "Expert"         : [ ["Forward","Match"],
                                                  ["Forward"],["Match"],
                                                  ["KsTrack"],["VeloTT"],["Seed"] ],
                             "OfflineFull"    : [ ["Forward","Match"],
@@ -175,14 +174,25 @@ class RichRecQCConf(RichConfigurableUser):
     def alignmentConf(self):
         return self.getRichCU(RichAlignmentConf)
 
+    ## Access the Reconstruction configurable
+    def recoConf(self):
+        # Hardcoded name for the moment
+        return RichRecSysConf('RichOfflineRec')
+
     ## Get the given option
     def getHistoOptions(self,optionname):
         histoset = self.getProp("Histograms")
         option = self.getProp(optionname)
+        
         if option.has_key(histoset) :
             return option[histoset]
         else :
             return option[ self.__default_histo_set__ ]
+
+    ## Get track type list
+    def getTrackTypes(self,optionname):
+        types = self.getHistoOptions(optionname)
+        return [ tk for tk in types if self.trackTypeIsActive(tk) ]
 
     ## Add a monitor to a given histo set
     def addMonitor(self,monitor):
@@ -209,13 +219,20 @@ class RichRecQCConf(RichConfigurableUser):
 
     ## Configure a default monitor algorithm of given type
     def createMonitor(self,type,name,trackType=None,tkCuts="None"):
+        
         mon = type(name)
         self.setHistosTupleOpts(mon)
+        
         if self.isPropertySet("OutputLevel") : mon.OutputLevel = self.getProp("OutputLevel")
+        
         if trackType != None :
             mon.addTool( self.richTools().trackSelector(nickname="TrackSelector",private=True),
                          name="TrackSelector" )
             if trackType != ["All"] : mon.TrackSelector.TrackAlgs = trackType
+            mon.Context = self.getTrackContext( trackType )
+        else:
+            mon.Context = self.getBestContext()
+            
         if tkCuts == "None" :
             pass
         elif tkCuts == "All" :
@@ -250,6 +267,7 @@ class RichRecQCConf(RichConfigurableUser):
             mon.TrackSelector.AcceptClones    = False
         else:
             raise RuntimeError("ERROR : Unknown track selection "+tkCuts)
+        
         return mon
 
     ## Returns a configured list of L0 filters
@@ -262,7 +280,7 @@ class RichRecQCConf(RichConfigurableUser):
                                     GaudiSequencer )
         from DAQSys.Decoders import DecoderDB 
         from DAQSys.DecoderClass import decodersForBank
-        l0dec = [d.setup() for d in decodersForBank(DecoderDB,'L0DU')]
+        l0dec = [ d.setup() for d in decodersForBank(DecoderDB,'L0DU') ]
         hltdec=DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].setup()
 
         return l0dec+ [
@@ -283,10 +301,7 @@ class RichRecQCConf(RichConfigurableUser):
 
     ## Create the track selection name from a list of track alg types
     def trackSelName(self,types) :
-        name = ""
-        for type in types : name += type
-        if name == "ForwardMatch" or name == "MatchForward" : name = "Long"
-        return name
+        return self.recoConf().trackGroupName(types)
 
     ## Sanity checks
     def sanityChecks(self):
@@ -343,6 +358,21 @@ class RichRecQCConf(RichConfigurableUser):
         imageSummary.Keep2DHistograms = True
         imageSummary.FinalHPDFit = False
 
+    ## Get the context to use for a monitoring algorithm using a given track location
+    def getTrackContext(self,tkType):
+        cont = self.getProp("Context")
+        if self.recoConf().usingTrackGroups() :
+            cont = self.recoConf().getContextForTrackType( tkType )
+        return cont
+
+    ## Get the 'best' context to use for a monitor without a clear track type (so pixel based etc.)
+    def getBestContext(self):
+        return self.recoConf().getBestContext()
+
+    ## Is the given track type active
+    def trackTypeIsActive(self,type):
+        return self.recoConf().trackTypeIsActive( self.trackSelName(type) )
+
     ## Apply the configuration to the given sequence
     def applyConf(self):
 
@@ -385,8 +415,11 @@ class RichRecQCConf(RichConfigurableUser):
 
         # Do we need MC access or not
         if not self.getProp("WithMC") :
-            self.toolRegistry().Tools += [ "Rich::MC::NULLMCTruthTool/RichMCTruthTool",
-                                           "Rich::Rec::MC::NULLMCTruthTool/RichRecMCTruthTool" ]
+            nullMCtools = [ "Rich::MC::NULLMCTruthTool/RichMCTruthTool",
+                            "Rich::Rec::MC::NULLMCTruthTool/RichRecMCTruthTool" ]
+            self.toolRegistry().Tools += nullMCtools
+            for conf in self.recoConf().getAllTrackGroupConfs():
+                conff.toolRegistry().Tools += nullMCtools
 
         # The list of monitors to run
         monitors = self.getHistoOptions("Monitors")
@@ -466,15 +499,13 @@ class RichRecQCConf(RichConfigurableUser):
 
         # Trackless rings angles
         if "TracklessRingAngles" in monitors :
-            from Configurables import RichRecSysConf
-            types = RichRecSysConf('RichOfflineRec').TracklessRingAlgs
+            types = self.recoConf().TracklessRingAlgs
             for type in types :
                 self.ringsMoni(type,self.newSeq(sequence,"Rich"+type+"TracklessRingsMoni"))
 
         # Trackless rings peak search
         if "TracklessRingPeakSearch" in monitors :
-            from Configurables import RichRecSysConf
-            types = RichRecSysConf('RichOfflineRec').TracklessRingAlgs
+            types = self.recoConf().TracklessRingAlgs
             for type in types :
                 self.ringsPeakSearch(type,self.newSeq(sequence,"Rich"+type+"TracklessRingsPeaks"))
 
@@ -515,7 +546,7 @@ class RichRecQCConf(RichConfigurableUser):
                 raise RuntimeError("ERROR : Unknown trackless ring finder type")
             conf.enableHistos( True )
 
-        context = self.getProp("Context")
+        context = self.getBestContext()
 
         histoSet = self.getProp("Histograms")
  
@@ -556,7 +587,7 @@ class RichRecQCConf(RichConfigurableUser):
         from Configurables import ( Rich__Rec__MC__PIDQC )
 
         # Track Types
-        for trackType in self.getHistoOptions("PidTrackTypes") :
+        for trackType in self.getTrackTypes("PidTrackTypes") :
 
             # Momentum ranges
             for pRange in self.getHistoOptions("PidMomentumRanges") :
@@ -565,26 +596,26 @@ class RichRecQCConf(RichConfigurableUser):
                 # and momentum range
                 tkName = self.trackSelName(trackType)
                 name = basename + tkName + `pRange[0]` + "To" + `pRange[1]`
-
+                
                 # Make a monitor alg
                 pidMon = self.createMonitor(Rich__Rec__MC__PIDQC,name,trackType)
-
+                
                 # Trackselector momentum cuts
                 pidMon.TrackSelector.MinPCut = pRange[0]
                 pidMon.TrackSelector.MaxPCut = pRange[1]
-
+                
                 if useDLLcut : pidMon.KaonDLLCut = 0;
-
+                
                 # RichPID location
                 pidMon.InputPIDs = self.getProp("RichPIDLocation")
-
+                
                 # Extra plots in Expert mode
                 if "Expert" == self.getProp("Histograms"):
                     pidMon.ExpertPlots = True
-
+                    
                 # MC mode
                 pidMon.MCTruth = self.getProp("WithMC")
-
+                
                 # Add to sequence
                 sequence.Members += [pidMon]
 
@@ -594,7 +625,7 @@ class RichRecQCConf(RichConfigurableUser):
         from Configurables import Rich__Rec__MC__TrackSelEff
 
         # Track Types
-        for trackType in self.getHistoOptions("EffTrackTypes") :
+        for trackType in self.getTrackTypes("EffTrackTypes") :
 
             # Construct the name for this monitor
             name = "Ri" + self.trackSelName(trackType) + "TrkEff"
@@ -612,7 +643,7 @@ class RichRecQCConf(RichConfigurableUser):
         from Configurables import Rich__Rec__MC__RecoQC
         
         # Track Types
-        for trackType in self.getHistoOptions("RecoTrackTypes") :
+        for trackType in self.getTrackTypes("RecoTrackTypes") :
             
             # Construct the name for this monitor
             tkShortName = self.trackSelName(trackType)
@@ -711,7 +742,7 @@ class RichRecQCConf(RichConfigurableUser):
             NTupleSvc().Output += ["RICHTUPLE1 DATAFILE='rich.tuples.root' TYP='ROOT' OPT='NEW'"]
 
         checks  = self.getHistoOptions("Monitors")
-        tkTypes = self.getHistoOptions("RecoTrackTypes")
+        tkTypes = self.getTrackTypes("RecoTrackTypes")
 
         check = "RichFuncCKResPlots"
         if check in checks :
@@ -794,27 +825,30 @@ class RichRecQCConf(RichConfigurableUser):
         check = "PhotonRecoEfficiency"
         if check in checks :
 
-            self.richTools().toolRegistry().Tools += [ "Rich::Rec::PhotonCreator/ForcedRichPhotonCreator" ]
-            self.richTools().toolRegistry().Tools += [ "Rich::Rec::PhotonRecoUsingQuarticSoln/ForcedPhotonReco" ]
-            self.richTools().toolRegistry().Tools += [ "Rich::Rec::SimplePhotonPredictor/ForcedRichPhotonPredictor" ]
-
-            context = self.getProp("Context")
-
-            from Configurables import ( Rich__Rec__PhotonCreator, Rich__Rec__SimplePhotonPredictor )
-            forcedCreator = Rich__Rec__PhotonCreator(context+".ForcedRichPhotonCreator")
-            forcedCreator.MinAllowedCherenkovTheta = [  0.0,     0.0,     0.0    ]
-            forcedCreator.MaxAllowedCherenkovTheta = [  999,     999,     999    ]
-            forcedCreator.MinPhotonProbability     = [  1e-99,   1e-99,   1e-99  ]
-            forcedCreator.NSigma                   = [  999,    999,      999    ]
-            forcedCreator.PhotonPredictor = "ForcedRichPhotonPredictor"
-            forcedCreator.PhotonRecoTool  = "ForcedPhotonReco"
-            forcedPredictor = Rich__Rec__SimplePhotonPredictor(context+".ForcedRichPhotonPredictor")
-            forcedPredictor.MinTrackROI            = [  0.0,   0.0,    0.0   ]
-            forcedPredictor.MaxTrackROI            = [  9999,  9999,   9999  ]
-
-            from Configurables import Rich__Rec__MC__PhotonRecoEffMonitor
             seq = self.newSeq(sequence,check)
+
             for trackType in tkTypes :
+
+                toolReg = self.recoConf().getTrackGroupConf(trackType).richTools().toolRegistry()
+                toolReg.Tools += [ "Rich::Rec::PhotonCreator/ForcedRichPhotonCreator",
+                                   "Rich::Rec::PhotonRecoUsingQuarticSoln/ForcedPhotonReco",
+                                   "Rich::Rec::SimplePhotonPredictor/ForcedRichPhotonPredictor" ]
+
+                context = self.getTrackContext( trackType )
+
+                from Configurables import ( Rich__Rec__PhotonCreator, Rich__Rec__SimplePhotonPredictor )
+                forcedCreator = Rich__Rec__PhotonCreator(context+".ForcedRichPhotonCreator")
+                forcedCreator.MinAllowedCherenkovTheta = [  0.0,     0.0,     0.0    ]
+                forcedCreator.MaxAllowedCherenkovTheta = [  999,     999,     999    ]
+                forcedCreator.MinPhotonProbability     = [  1e-99,   1e-99,   1e-99  ]
+                forcedCreator.NSigma                   = [  999,    999,      999    ]
+                forcedCreator.PhotonPredictor = "ForcedRichPhotonPredictor"
+                forcedCreator.PhotonRecoTool  = "ForcedPhotonReco"
+                forcedPredictor = Rich__Rec__SimplePhotonPredictor(context+".ForcedRichPhotonPredictor")
+                forcedPredictor.MinTrackROI            = [  0.0,   0.0,    0.0   ]
+                forcedPredictor.MaxTrackROI            = [  9999,  9999,   9999  ]
+                
+                from Configurables import Rich__Rec__MC__PhotonRecoEffMonitor                
                 name = "RiRecPhotEff" + self.trackSelName(trackType) + "TkMoni"
                 seq.Members += [ self.createMonitor(Rich__Rec__MC__PhotonRecoEffMonitor,name,trackType) ]
 

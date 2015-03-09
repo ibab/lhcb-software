@@ -39,7 +39,7 @@ StatusCode DataDecodingErrorMoni::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichSmartIDDecoder", m_decoder, 0, true );
+  acquireTool( "RichSmartIDDecoder", m_decoder, NULL, true );
 
   // RichDet
   m_RichSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );

@@ -4,6 +4,12 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2015-03-09 - Chris Jones
+ - Add a new histogram to RichRecoQC for the track momentum distribution.
+ - Update the python configurable to use the reconstuction configurable
+   RichRecSysConf to determine the correct context to use for each monitor,
+   based on the tracks it is monitoring.
+
 !========================= RichRecQC v2r68 2014-12-11 =========================
 ! 2014-12-03 - Gerhard Raven
  - adapt to split HLT setup

@@ -43,8 +43,8 @@ StatusCode PixelQC::initialize()
 
   // Acquire instances of tools
   acquireTool( "RichRecMCTruthTool", m_richRecMCTruth   );
-  acquireTool( "RichMCTruthTool",    m_truth );
-  acquireTool( "RichSmartIDDecoder", m_decoder, 0, true );
+  acquireTool( "RichMCTruthTool",    m_truth,   NULL, true );
+  acquireTool( "RichSmartIDDecoder", m_decoder, NULL, true );
 
   // RichDet
   m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
