@@ -62,8 +62,8 @@ StatusCode HPDIonFeedbackMoni::initialize()
   if ( sc.isFailure() ) return sc;
 
   //Tools to get the data and to analyse it for clusters
-  acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, 0, true );
-  acquireTool( "RichSmartIDTool", m_idTool,            0, true );
+  acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, NULL, true );
+  acquireTool( "RichSmartIDTool", m_idTool,            NULL, true );
   acquireTool( "RichHPDPixelClusterFinder", m_clusterTool, this );
 
   m_nEvts = 0;
