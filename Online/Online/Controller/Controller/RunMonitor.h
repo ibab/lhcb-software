@@ -139,6 +139,7 @@ namespace FiniteStateMachine {
   public:
     typedef std::map<std::string,std::string> Properties;
     Properties  properties;
+    std::string runInfo;
     std::string dataDirectory;
     std::string eventSelectorOpts;
     long        runNumber;

@@ -18,10 +18,12 @@
 #include "CPP/Event.h"
 #include "RTL/readdir.h"
 #include "RTL/rtl.h"
+#include "RTL/Sys.h"
 #include "dis.hxx"
 
 // C/C++ include files
 #include <cstring>
+#include <stdexcept>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -321,39 +323,73 @@ bool RunMonitorCoordinator::prepareTask(RunMonitorItem* item)   {
     return false;
   }
 
-  char data_dir[PATH_MAX], text[PATH_MAX];
+  char data_dir[PATH_MAX], path[PATH_MAX], text[512*1024];
   ::snprintf(data_dir,sizeof(data_dir),"%s/%s/%s/%ld",
 	     m_config->dataDirectory.c_str(),
 	     item->properties["partitionname"].c_str(),
 	     item->properties["runtype"].c_str(),
 	     item->runNumber);
-  ::snprintf(text,sizeof(text),"%s/%ld/EventSelector.opts",m_config->running.c_str(),item->runNumber);
-  int fd = ::open(text,O_WRONLY|O_CREAT|O_TRUNC,S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH);
-  if ( fd )  {
-    item->eventSelectorOpts = text;
+  item->dataDirectory = data_dir;
+  ::snprintf(text,sizeof(text),
+	     "// Options for Run %ld  generated at %s.\n"
+	     "EventSelector.Input       = \"%s\";\n"
+	     "EventSelector.FilePrefix  = \"\";\n"
+	     "EventSelector.DeleteFiles = false;\n"
+	     "EventSelector.EvtMax      = %ld;\n"
+	     "ApplicationMgr.EvtMax     = %ld;\n",
+	     item->runNumber, ::lib_rtl_timestr(), data_dir, 
+	     long(m_config->numEventsPerRun),
+	     long(m_config->numEventsPerRun)
+	     );
+  try {
+    ::snprintf(path,sizeof(path),"%s/%ld/EventSelector.opts",m_config->running.c_str(),item->runNumber);
+    RTL::SysFile(path).write(text,strlen(text),S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH);
+    item->eventSelectorOpts = path;
+  }
+  catch(const exception& e)  {
+    printf("FAILURE: Cannot write %s :  %s\n",path,e.what());
+    return false;
+  }
+
+  try {
+    char param_data[255*1024];
+    RTL::SysFile(item->properties["params"].c_str()).read(param_data,sizeof(param_data));
     ::snprintf(text,sizeof(text),
-	       "// Options for Run %ld  generated at %s.\n"
-	       "EventSelector.Input       = \"%s\";\n"
-	       "EventSelector.FilePrefix  = \"\";\n"
-	       "EventSelector.DeleteFiles = false;\n"
-	       "EventSelector.EvtMax      = %ld;\n"
-	       "ApplicationMgr.EvtMax     = %ld;\n",
-	       item->runNumber, ::lib_rtl_timestr(), data_dir, 
-	       long(m_config->numEventsPerRun),
+	       "# Python options generated for run %ld for the HLT2 monitoring.\n"
+	       "# DO NEVER EDIT !! Generated at:%s\n"
+	       "PartitionName   = \"%s\"\n"
+	       "PartitionID     = %s\n"
+	       "PartitionIDName = \"%s\"\n"
+	       "Activity        = \"%s\"\n"
+	       "RunType         = \"%s\"\n"
+	       "OutputLevel     = 3\n"
+	       "TAE             = 0\n"
+	       "# Run specific setup options:\n%s"
+	       "# Data input options:\n"
+	       "Input           = \"%s\"\n"
+	       "FilePrefix      = \"\"\n"
+	       "DeleteFiles     = False\n"
+	       "EvtMax          = %ld\n",
+	       item->runNumber, ::lib_rtl_timestr(),
+	       item->properties["partitionname"].c_str(),
+	       item->properties["partitionid"].c_str(),
+	       item->properties["partitionid"].c_str(),
+	       item->properties["activity"].c_str(),
+	       item->properties["runtype"].c_str(),
+	       param_data,
+	       data_dir, 
 	       long(m_config->numEventsPerRun)
 	       );
-    int to_write = ::strlen(text);
-    int wr = ::write(fd,text,to_write);
-    if ( wr < to_write )  {
-      printf("FAILURE: Write:%d bytes of %d bytes  %s   %s\n",wr, to_write, text,RTL::errorString());
-    }
-    ::close(fd);
-    item->dataDirectory = data_dir;
-    return true;
+    ::snprintf(path,sizeof(path),"%s/%ld/OnlineEnvBase.py",m_config->running.c_str(),item->runNumber);
+    RTL::SysFile(path).write(text,strlen(text),S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH);
+    item->runInfo = path;
   }
-  display(ALWAYS,item->c_name(),"Failed to write options file for:%s error:%s",
-	  item->c_name(),RTL::errorString());
-  return false;
+  catch(const std::exception& e)  {
+    display(ALWAYS,item->c_name(),"Failed to write options file for:%s error:%s",
+	    item->c_name(),e.what());
+    return false;
+  }
+  return true;
 }
 
 /// Handle failed work item

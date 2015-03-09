@@ -109,20 +109,19 @@ namespace {
 				 false);
     RunMonitorItem* work = controller->work();
     string opts;
-    string partition = "LHCb";//work->properties["partitionname"];
+    string partition = work->properties["partitionname"];
     string args = " -DUTGID="+controller->machine()->name();
     string fifo = "/tmp/logSrv.fifo";
     args += " -E "+fifo;
     args += " -O "+fifo;
-    args += " -D EVENTSELECTOR_OPTIONS="+string(basename((char*)(opts=work->eventSelectorOpts).c_str()));
+    args += " -D EVENTSELECTOR_OPTIONS="+work->eventSelectorOpts;
     args += " -D WORKING_DIRECTORY="+string(::dirname((char*)(opts=work->eventSelectorOpts).c_str()));
     args += " -n online";
     fmc->setFmcArgs(args);
 
     args  = " -type="+controller->config()->taskType;
     args += " -partition="+partition;
-    //args += " -runinfo=/group/online/dataflow/options/"+partition+"/HLT/OnlineEnvBase.py";
-    args += " -runinfo=/home/frankm/cmtuser/Online_v5r14/Online/Controller/cmt/OnlineEnvBase.py";
+    args += " -runinfo="+work->runInfo;
     fmc->setCommand("/group/online/dataflow/scripts/runFarmTask.sh");
     fmc->setArgs(args);
     fmc->setTimeout(30);
@@ -182,7 +181,7 @@ static void help_ctrl() {
 
 extern "C" int run_monitor_test(int argc, char** argv)  {
   RunMonitorConfig cfg;
-  string runinfo;
+  string runinfo, base;
   int    print = 0, secs_sleep=0;
   RTL::CLI cli(argc, argv, help_ctrl);
   cfg.name         = RTL::processName();
@@ -195,6 +194,7 @@ extern "C" int run_monitor_test(int argc, char** argv)  {
   cli.getopt("print",2,          print);
   cli.getopt("runinfo",2,        runinfo);
 
+  cli.getopt("base",4,           base);
   cli.getopt("name",4,           cfg.name);
   cli.getopt("slave_type",4,     cfg.slaveType);
   cli.getopt("task_type",4,      cfg.taskType);
@@ -221,7 +221,13 @@ extern "C" int run_monitor_test(int argc, char** argv)  {
     for(secs_sleep *= 1000; secs_sleep >= 0; secs_sleep -= 100)
       ::lib_rtl_sleep(100);
   }
-
+  if ( !base.empty() )  {
+    if ( 0 != ::chdir(base.c_str()) )  {
+      ::fprintf(stdout,"Failed to change to base directory:%s [%s]\n",
+		base.c_str(),RTL::errorString());
+      return EINVAL;
+    }
+  }
   cfg.make_dirs();
   Type* typ = fsm_type("DAQ");
   RunMonitorCoordinator coordinator(typ, &cfg);
