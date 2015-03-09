@@ -1,29 +1,32 @@
 package HltSys
-version           v23r4
+version           v23r5
 
 branches cmt doc
 
-use Hlt1Lines           v7r7     Hlt   # Gerhard Raven, Vava Gligorov, Johannes Albrecht
+use Hlt1Lines           v7r8     Hlt   # Gerhard Raven, Vava Gligorov, Johannes Albrecht
 use Hlt1Muons           v1r12    Hlt   # Christoph Langenbruch
-use Hlt2Lines           v9r5     Hlt   # Vava Gligorov, Johannes Albrecht, Gerhard Raven
-use Hlt2SharedParticles v7r3     Hlt   # Vava Gligorov
-use HltBase             v15r5    Hlt   # Gerhard Raven
+use Hlt2Lines           v9r6     Hlt   # Vava Gligorov, Johannes Albrecht, Gerhard Raven
+use Hlt2SharedParticles v7r4     Hlt   # Vava Gligorov
+use HltBase             v15r6    Hlt   # Gerhard Raven
 use HltBeamGasAlley     v4r1     Hlt   # Rosen Matev
 use HltCommon           v10r4    Hlt   # Gerhard Raven
-use HltConf             v12r5    Hlt   # Vanya Belyaev, Gerhard Raven
+use HltConf             v12r6    Hlt   # Vanya Belyaev, Gerhard Raven
 use HltCosmics          v1r3     Hlt   # Stephan Nies
 use HltDisplVertices    v4r2     Hlt   # Pieter Norbert Y David, Victor Coco
 use HltGlobalMonitor    v4r6     Hlt   # Eric van Herwijnen
 use HltL0Conf           v4r2     Hlt   # Johannes Albrecht
-use HltLine             v7r7     Hlt   # Vanya Belyaev, Gerhard Raven
+use HltLine             v7r8     Hlt   # Vanya Belyaev, Gerhard Raven
 use HltLuminosity       v4r3     Hlt   # Jaap Panman
-use HltRawData          v5r2     Hlt   # Tomasz Skwarnicki
+use HltRawData          v5r3     Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v3r2     Hlt   # Jose Angel Hernando-Morata
-use HltSettings         v6r10    Hlt   # Parick Koppenburg, Gerhard Raven
-use HltTisTosTobbing    v3r2     Hlt   # Tomasz Skwarnicki
-use HltTracking         v13r4    Hlt   # Johannes Albrecht, Vava Gligorov
-use TCKUtils            v1r14    Hlt   # Gerhard Raven
-use LoKiTrigger         v15r4    Phys  # Vanya Belyaev
+use HltSettings         v6r11    Hlt   # Parick Koppenburg, Gerhard Raven
+use HltTracking         v13r5    Hlt   # Johannes Albrecht, Vava Gligorov
+use TCKUtils            v1r15    Hlt   # Gerhard Raven
+use LoKiTrigger         v15r5    Phys  # Vanya Belyaev
+
+# Extra packages for v23r5
+use SelectionLine       v1r4     Kernel
+use TrackTools          v5r7p1   Tr
 
 # Declare this as a container package
 apply_pattern container_package
