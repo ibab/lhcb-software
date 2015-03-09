@@ -249,7 +249,9 @@ def ConfiguredHltInitFitter( parent ):
         fitter.NumberFitIterations = HltRecoConf().getProp("FitIterationsInHltFit")
     else:
         ConfiguredMasterFitter( fitter , SimplifiedGeometry = True, LiteClusters = True)
-        fitter.MeasProvider.IgnoreMuon = True
+    # Ignore Muon and TT hits
+    fitter.MeasProvider.IgnoreMuon = True
+    fitter.MeasProvider.IgnoreTT = True
     return fitter
 
 def ConfiguredHltEventFitter( name,
