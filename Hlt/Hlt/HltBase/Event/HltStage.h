@@ -127,8 +127,7 @@ class GAUDI_API Stage : public ContainedObject
         HltMultiTrack = 6,
         HltParticle = 7,
         HltProtoParticle = 8,
-        HltVertex = 9,
-        HltStage = 10
+        HltStage = 9
     };
     // ========================================================================
   public:
@@ -438,8 +437,7 @@ class GAUDI_API Stage : public ContainedObject
                   , SmartRef<Hlt::MultiTrack>         // 6
                   , SmartRef<LHCb::Particle>          // 7
                   , SmartRef<LHCb::ProtoParticle>     // 8
-                  , SmartRef<LHCb::Vertex>            // 9
-                  , SmartRef<Hlt::Stage> >  m_object; // 10
+                  , SmartRef<Hlt::Stage> >  m_object; // 9
     /// cache
     Cache m_cache; // cache
     /// history

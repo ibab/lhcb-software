@@ -412,13 +412,6 @@ struct CandidateType2Id<LHCb::ProtoParticle>
     };
 };
 template <>
-struct CandidateType2Id<LHCb::Vertex>
-{
-    enum {
-        value = Hlt::Stage::HltVertex
-    };
-};
-template <>
 struct CandidateType2Id<Hlt::MultiTrack>
 {
     enum {
@@ -480,11 +473,6 @@ template <>
 struct CandidateId2Type<Hlt::Stage::HltProtoParticle>
 {
     typedef LHCb::ProtoParticle Type;
-};
-template <>
-struct CandidateId2Type<Hlt::Stage::HltVertex>
-{
-    typedef LHCb::Vertex Type;
 };
 template <>
 struct CandidateId2Type<Hlt::Stage::HltStage>
