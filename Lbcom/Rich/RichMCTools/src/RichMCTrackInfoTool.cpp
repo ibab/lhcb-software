@@ -38,8 +38,8 @@ StatusCode MCTrackInfoTool::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichRayTracing",   m_rayTrace             );
-  acquireTool( "RichSmartIDTool",  m_smartIDTool, 0, true );
+  acquireTool( "RichRayTracing",   m_rayTrace                );
+  acquireTool( "RichSmartIDTool",  m_smartIDTool, NULL, true );
 
   // Configure the ray-tracing mode
   m_traceMode.setAeroRefraction ( true );

@@ -91,7 +91,7 @@ namespace Rich
       /// Access the MC Truth Tool on-demand
       inline const Rich::MC::IMCTruthTool * mcTruthTool() const
       {
-        if ( !m_mcTruth ) { acquireTool( "RichMCTruthTool", m_mcTruth, 0, true ); }
+        if ( !m_mcTruth ) { acquireTool( "RichMCTruthTool", m_mcTruth, NULL, true ); }
         return m_mcTruth;
       }
 
