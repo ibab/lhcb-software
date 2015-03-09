@@ -110,8 +110,13 @@ def _f1_draw_ ( self , *opts ) :
                     self._tf1.SetParameter ( i , self.par ( i ) )
                     
             else : self._tf1  = _tf1_ ( self , self.xmin() , self.xmax() )
-
-            if not type(self) in ( Gaudi.Math.Bernstein , Gaudi.Math.BSpline ) : 
+            
+            if type(self) in ( Gaudi.Math.Positive         ,
+                               Gaudi.Math.Monothonic       , 
+                               Gaudi.Math.Convex           , 
+                               Gaudi.Math.PositiveSpline   , 
+                               Gaudi.Math.MonothonicSpline , 
+                               Gaudi.Math.ConvexSpline     ) :
                 self._tf1.SetMinimum(0)
             
     return self._tf1.Draw ( *opts )
