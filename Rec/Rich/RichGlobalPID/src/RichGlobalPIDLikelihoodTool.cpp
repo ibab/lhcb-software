@@ -98,11 +98,11 @@ StatusCode LikelihoodTool::initialize()
   m_logExpLookUp.init( m_minSig, 1.0, 10000 );
 
   // Printout some initialisation info
-  info() << "Maximum event iterations                  = " << m_maxEventIterations << endmsg;
-  info() << "Minimum signal for LL calculation         = " << m_minSig << endmsg;
-  info() << "Track freeze-out DLL value                = " << freezeOutDll() << endmsg;
-  info() << "Track forced change DLL value             = " << forceChangeDll() << endmsg;
-  info() << "Maximum track changes per event iteration = " << m_maxTkChanges << endmsg;
+  _ri_debug << "Maximum event iterations                  = " << m_maxEventIterations << endmsg;
+  _ri_debug << "Minimum signal for LL calculation         = " << m_minSig << endmsg;
+  _ri_debug << "Track freeze-out DLL value                = " << freezeOutDll() << endmsg;
+  _ri_debug << "Track forced change DLL value             = " << forceChangeDll() << endmsg;
+  _ri_debug << "Maximum track changes per event iteration = " << m_maxTkChanges << endmsg;
 
   return sc;
 }
