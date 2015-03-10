@@ -1,5 +1,5 @@
-# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@4/build/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
-# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@4/build/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
+# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@3/build/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
+# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@3/build/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
 # applying configuration of Brunel
 # /***** User Brunel/Brunel **************************************************************************
 # |-DatasetName         = 'Brunel'
@@ -86,6 +86,9 @@
 # |-OnlineMode   = False
 # |-CheckEnabled = False
 # \----- (End of User RecMoniConf/RecMoniConf) -------------------------------------------------------
+############ CONFIGURING RawEventFormatConf!! ###############
+# DstWriter.ItemList=['/Event/Rec/Header#1', '/Event/Rec/Status#1', '/Event/Rec/Summary#1', '/Event/pRec/Track/Best#1', '/Event/pRec/Rich/PIDs#1', '/Event/pRec/Muon/MuonPID#1', '/Event/pRec/Calo/Electrons#1', '/Event/pRec/Calo/Photons#1', '/Event/pRec/Calo/MergedPi0s#1', '/Event/pRec/Calo/SplitPhotons#1', '/Event/pRec/ProtoP/Charged#1', '/Event/pRec/ProtoP/Neutrals#1', '/Event/pRec/Vertex/Primary#1', '/Event/pRec/Vertex/V0#1', '/Event/pRec/Track/Muon#1', '/Event/Calo/RawEvent#1', '/Event/Unstripped/RawEvent#1', '/Event/Trigger/RawEvent#1', '/Event/Velo/RawEvent#1', '/Event/Muon/RawEvent#1', '/Event/Rich/RawEvent#1', '/Event/Tracker/RawEvent#1']
+# DstWriter.OptItemList=[]
 # Apply CaloProcessor configuration for ['Digits', 'Clusters', 'Photons', 'MergedPi0s', 'SplitPhotons', 'Electrons'] and ['InAcceptance', 'Match', 'Energy', 'Chi2', 'DLL', 'NeutralPID']
 # Configured Ecal Clusters Reco : ClusterReco
 # Configured Single Photons Reco : PhotonReco
@@ -94,9 +97,6 @@
 # Configured Calo PIDs           : CaloPIDsCaloPIDsForCaloProcessor
 # Configure caloSequencer  : CaloProcessorCaloSeq
 # ConfiguredMuonIDs: Loaded configuration info M_2011_def
-############ CONFIGURING RawEventFormatConf!! ###############
-# DstWriter.ItemList=['/Event/Rec/Header#1', '/Event/Rec/Status#1', '/Event/Rec/Summary#1', '/Event/pRec/Track/Best#1', '/Event/pRec/Rich/PIDs#1', '/Event/pRec/Muon/MuonPID#1', '/Event/pRec/Calo/Electrons#1', '/Event/pRec/Calo/Photons#1', '/Event/pRec/Calo/MergedPi0s#1', '/Event/pRec/Calo/SplitPhotons#1', '/Event/pRec/ProtoP/Charged#1', '/Event/pRec/ProtoP/Neutrals#1', '/Event/pRec/Vertex/Primary#1', '/Event/pRec/Vertex/V0#1', '/Event/pRec/Track/Muon#1', '/Event/Calo/RawEvent#1', '/Event/Unstripped/RawEvent#1', '/Event/Trigger/RawEvent#1', '/Event/Velo/RawEvent#1', '/Event/Muon/RawEvent#1', '/Event/Rich/RawEvent#1', '/Event/Tracker/RawEvent#1']
-# DstWriter.OptItemList=[]
 # No Writer defined for DIGI
 # WARNING: Using default tag dddb-20150119-2 for partition DDDB
 # WARNING: Using default tag cond-20150119 for partition LHCBCOND
@@ -104,7 +104,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version HEAD
-                                          running on lbbuild04.cern.ch on Wed Feb 25 11:46:36 2015
+                                          running on lbbuild08.cern.ch on Tue Mar 10 10:59:23 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -113,7 +113,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   2.57 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.33 times the speed of a 2.8 GHz Xeon.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
@@ -216,106 +216,56 @@ FindTrackClones      INFO Will build clone table for z=[0, 990, 9450]mm at 'Rec/
 FindTrackClones      INFO Max Kullbeck Liebler Distance = 5000
 TrackEraseExtra...   INFO Member list: TrackEraseExtraInfo, with context 'Offline'
 RecoVertexSeq        INFO Member list: PatPVOffline, TrackV0Finder, with context 'Offline'
-RecoRICHSeq          INFO Member list: GaudiSequencer/RichRecInitOfflineSeq, GaudiSequencer/RichOfflineENNRingFinderSeq, GaudiSequencer/RichOfflinePIDSeq, with context 'Offline'
-RichRecInitOffl...   INFO Member list: Rich::Rec::Initialise/CheckProcOfflineStatus, GaudiSequencer/RichOfflinePixelsSeq, GaudiSequencer/RichOfflineTracksSeq, GaudiSequencer/RichOfflinePhotonsSeq, with context 'Offline'
-RichOfflinePixe...   INFO Member list: Rich::DAQ::RawBufferToRichDigitsAlg/DecodeRawRichOffline, Rich::Rec::Initialise/CreateOfflinePixels, with context 'Offline'
-ToolSvc.Offline...   INFO Rich::ToolRegistry:: Nickname 'RichMCTruthTool' mapping changed : 'Rich::MC::MCTruthTool' to 'Rich::MC::NULLMCTruthTool'
-ToolSvc.Offline...   INFO Rich::ToolRegistry:: Nickname 'RichRecMCTruthTool' mapping changed : 'Rich::Rec::MC::MCTruthTool' to 'Rich::Rec::MC::NULLMCTruthTool'
+RecoRICHSeq          INFO Member list: Rich::DAQ::RawBufferToRichDigitsAlg/DecodeRawRichOffline, GaudiSequencer/RichRecOfflineLongSeq, GaudiSequencer/RichRecOfflineVeloTTSeq, GaudiSequencer/RichRecOfflineKsTrackSeq, Rich::Rec::PIDMerge/MergeOfflineRichPIDs, with context 'Offline'
 ToolSvc.RichSma...   INFO Using [DAQ/RawEvent] as search path for the RawEvent object
 DecodeRawRichOf...   INFO Will only decode Raw Buffer -> No RichDigits produced
-ToolSvc.Offline...   INFO # ray tracing attempts before bailout = [50, 50, 50]
+RichRecOfflineL...   INFO Member list: GaudiSequencer/RichRecInitOfflineLongSeq, GaudiSequencer/RichOfflineLongENNRingFinderSeq, GaudiSequencer/RichOfflineLongPIDSeq, with context 'OfflineLong'
+RichRecInitOffl...   INFO Member list: GaudiSequencer/RichOfflineLongPixelsSeq, GaudiSequencer/RichOfflineLongTracksSeq, GaudiSequencer/RichOfflineLongPhotonsSeq, with context 'OfflineLong'
+RichOfflineLong...   INFO Member list: Rich::Rec::Initialise/CreateOfflineLongPixels, with context 'OfflineLong'
 ToolSvc.Offline...   INFO Particle types considered = [electron, muon, pion, kaon, proton, below_threshold]
-ToolSvc.Offline...   INFO Particle types considered = [electron, muon, pion, kaon, proton, below_threshold]
-ToolSvc.Offline...   INFO Aerogel  Track RichTraceMode[ DetectionPrecision=SimpleHPDs DetPlaneBoundaries=RespectHPDTubes [Will Test for intersections with beampipe] [Will correct for refraction at Aerogel/Rich1Gas boundary] ]
-ToolSvc.Offline...   INFO Rich1Gas Track RichTraceMode[ DetectionPrecision=SimpleHPDs DetPlaneBoundaries=RespectHPDTubes [Will Test for intersections with beampipe] ]
-ToolSvc.Offline...   INFO Rich2Gas Track RichTraceMode[ DetectionPrecision=SimpleHPDs DetPlaneBoundaries=RespectHPDTubes [Will Test for intersections with beampipe] ]
-ToolSvc.Offline...   INFO Maximum # ray trace points = [100, 100, 100]
-ToolSvc.Offline...   INFO Minimum # ray trace points = [100, 100, 100]
-ToolSvc.Offline...   INFO Particle types considered = [electron, muon, pion, kaon, proton, below_threshold]
-ToolSvc.Offline...   INFO Sellmeir parameter update triggered
-ToolSvc.Offline...   INFO Particle types considered = [electron, muon, pion, kaon, proton, below_threshold]
-ToolSvc.Offline...   INFO Minimum number of expected photons (Aero/R1Gas/R2Gas) : [0, 0, 0]
-ToolSvc.Offline...   INFO Particle types considered = [electron, muon, pion, kaon, proton, below_threshold]
-ToolSvc.Offline...   INFO Av. optical distortion correction parameters : [0.03, 0.017, -0.014]
-ToolSvc.Offline...   INFO Maximum number of pixels per event = 30000
-RichOfflineTrac...   INFO Member list: Rich::Rec::Initialise/CreateOfflineTracks, with context 'Offline'
-ToolSvc.Offline...   INFO Track Selection : [Forward, KsTrack, Match, Seed, VeloTT]
+RichOfflineLong...   INFO Member list: Rich::Rec::Initialise/CreateOfflineLongTracks, with context 'OfflineLong'
+ToolSvc.Offline...   INFO Track Selection : [Forward, Match]
 ToolSvc.Offline...   INFO  Forward     : P = 0.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
-ToolSvc.Offline...   INFO  KsTrack     : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
 ToolSvc.Offline...   INFO  Match       : P = 0.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
-ToolSvc.Offline...   INFO  Seed        : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
+RichOfflineLong...   INFO Member list: Rich::Rec::Initialise/CreateOfflineLongPhotons, with context 'OfflineLong'
+RichOfflineLong...   INFO Member list: Rich::Rec::ENNRingFinder::Rich1GasTopPanel/OfflineLongENNFinderR1GasTop, Rich::Rec::ENNRingFinder::Rich1GasBottomPanel/OfflineLongENNFinderR1GasBottom, Rich::Rec::ENNRingFinder::Rich2GasLeftPanel/OfflineLongENNFinderR2GasLeft, Rich::Rec::ENNRingFinder::Rich2GasRightPanel/OfflineLongENNFinderR2GasRight, Rich::Rec::TracklessRingSegmentAssociationAlg/OfflineLongENNRingsSegAssoc, Rich::Rec::TracklessRingFilterAlg/OfflineLongBestENNRings, Rich::Rec::TracklessRingIsolationAlg/OfflineLongIsolatedENNRings, with context 'OfflineLong'
+RichOfflineLong...   INFO Member list: GaudiSequencer/RichOfflineLongGPIDSeq, Rich::Rec::HierarchicalPIDMerge/MergeOfflineLongRichPIDs, with context 'OfflineLong'
+RichOfflineLong...   INFO Member list: GaudiSequencer/RichOfflineLongGPIDInitSeq, GaudiSequencer/RichOfflineLongGPIDLLSeq, Rich::Rec::GlobalPID::Finalize/RichOfflineLongGPIDFin, with context 'OfflineLong'
+RichOfflineLong...   INFO Member list: Rich::Rec::GlobalPID::Initialize/RichOfflineLongGPIDInit, Rich::Rec::GlobalPID::DigitSel/RichOfflineLongGPIDDigSel, Rich::Rec::GlobalPID::TrackSel/RichOfflineLongGPIDTrSel, with context 'OfflineLong'
+RichOfflineLong...   INFO Track Selection : [Forward, Match]
+RichOfflineLong...   INFO  Forward     : P = 0.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
+RichOfflineLong...   INFO  Match       : P = 0.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
+RichOfflineLong...   INFO Member list: Rich::Rec::PixelBackgroundAlg/RichOfflineLongBckEstIt0, Rich::Rec::GlobalPID::Likelihood/RichOfflineLongGPIDLLIt0, Rich::Rec::PixelBackgroundAlg/RichOfflineLongBckEstIt1, Rich::Rec::GlobalPID::Likelihood/RichOfflineLongGPIDLLIt1, with context 'OfflineLong'
+RichRecOfflineV...   INFO Member list: GaudiSequencer/RichRecInitOfflineVeloTTSeq, GaudiSequencer/RichOfflineVeloTTENNRingFinderSeq, GaudiSequencer/RichOfflineVeloTTPIDSeq, with context 'OfflineVeloTT'
+RichRecInitOffl...   INFO Member list: GaudiSequencer/RichOfflineVeloTTPixelsSeq, GaudiSequencer/RichOfflineVeloTTTracksSeq, GaudiSequencer/RichOfflineVeloTTPhotonsSeq, with context 'OfflineVeloTT'
+RichOfflineVelo...   INFO Member list: Rich::Rec::Initialise/CreateOfflineVeloTTPixels, with context 'OfflineVeloTT'
+ToolSvc.Offline...   INFO Particle types considered = [electron, muon, pion, kaon, proton, below_threshold]
+RichOfflineVelo...   INFO Member list: Rich::Rec::Initialise/CreateOfflineVeloTTTracks, with context 'OfflineVeloTT'
+ToolSvc.Offline...   INFO Track Selection : [VeloTT]
 ToolSvc.Offline...   INFO  VeloTT      : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
-ToolSvc.Offline...   INFO Aerogel  Track RichTraceMode[ DetectionPrecision=SimpleHPDs DetPlaneBoundaries=IgnoreHPDAcceptance [Will correct for refraction at Aerogel/Rich1Gas boundary] ]
-ToolSvc.Offline...   INFO Rich1Gas Track RichTraceMode[ DetectionPrecision=SimpleHPDs DetPlaneBoundaries=IgnoreHPDAcceptance ]
-ToolSvc.Offline...   INFO Rich2Gas Track RichTraceMode[ DetectionPrecision=SimpleHPDs DetPlaneBoundaries=IgnoreHPDAcceptance ]
-ToolSvc.Offline...   INFO Maximum number of RICH tracks per event = 1000
-ToolSvc.Offline...   INFO Beam pipe intersection test (Aero/R1Gas/R2Gas) = [0, 1, 0]
-ToolSvc.Offline...   INFO Will use StateProvider instead of extrapolator to move states
-ToolSvc.Offline...   INFO Will create track segments using all State information
-ToolSvc.Offline...   INFO Min radiator path lengths (aero/R1Gas/R2Gas) : [0, 500, 1500] mm
-RichOfflinePhot...   INFO Member list: Rich::Rec::Initialise/CreateOfflinePhotons, with context 'Offline'
+RichOfflineVelo...   INFO Member list: Rich::Rec::Initialise/CreateOfflineVeloTTPhotons, with context 'OfflineVeloTT'
+RichOfflineVelo...   INFO Member list: Rich::Rec::ENNRingFinder::Rich1GasTopPanel/OfflineVeloTTENNFinderR1GasTop, Rich::Rec::ENNRingFinder::Rich1GasBottomPanel/OfflineVeloTTENNFinderR1GasBottom, Rich::Rec::ENNRingFinder::Rich2GasLeftPanel/OfflineVeloTTENNFinderR2GasLeft, Rich::Rec::ENNRingFinder::Rich2GasRightPanel/OfflineVeloTTENNFinderR2GasRight, Rich::Rec::TracklessRingSegmentAssociationAlg/OfflineVeloTTENNRingsSegAssoc, Rich::Rec::TracklessRingFilterAlg/OfflineVeloTTBestENNRings, Rich::Rec::TracklessRingIsolationAlg/OfflineVeloTTIsolatedENNRings, with context 'OfflineVeloTT'
+RichOfflineVelo...   INFO Member list: GaudiSequencer/RichOfflineVeloTTGPIDSeq, Rich::Rec::HierarchicalPIDMerge/MergeOfflineVeloTTRichPIDs, with context 'OfflineVeloTT'
+RichOfflineVelo...   INFO Member list: GaudiSequencer/RichOfflineVeloTTGPIDInitSeq, GaudiSequencer/RichOfflineVeloTTGPIDLLSeq, Rich::Rec::GlobalPID::Finalize/RichOfflineVeloTTGPIDFin, with context 'OfflineVeloTT'
+RichOfflineVelo...   INFO Member list: Rich::Rec::GlobalPID::Initialize/RichOfflineVeloTTGPIDInit, Rich::Rec::GlobalPID::DigitSel/RichOfflineVeloTTGPIDDigSel, Rich::Rec::GlobalPID::TrackSel/RichOfflineVeloTTGPIDTrSel, with context 'OfflineVeloTT'
+RichOfflineVelo...   INFO Track Selection : [VeloTT]
+RichOfflineVelo...   INFO  VeloTT      : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
+RichOfflineVelo...   INFO Member list: Rich::Rec::PixelBackgroundAlg/RichOfflineVeloTTBckEstIt0, Rich::Rec::GlobalPID::Likelihood/RichOfflineVeloTTGPIDLLIt0, Rich::Rec::PixelBackgroundAlg/RichOfflineVeloTTBckEstIt1, Rich::Rec::GlobalPID::Likelihood/RichOfflineVeloTTGPIDLLIt1, with context 'OfflineVeloTT'
+RichRecOfflineK...   INFO Member list: GaudiSequencer/RichRecInitOfflineKsTrackSeq, GaudiSequencer/RichOfflineKsTrackENNRingFinderSeq, GaudiSequencer/RichOfflineKsTrackPIDSeq, with context 'OfflineKsTrack'
+RichRecInitOffl...   INFO Member list: GaudiSequencer/RichOfflineKsTrackPixelsSeq, GaudiSequencer/RichOfflineKsTrackTracksSeq, GaudiSequencer/RichOfflineKsTrackPhotonsSeq, with context 'OfflineKsTrack'
+RichOfflineKsTr...   INFO Member list: Rich::Rec::Initialise/CreateOfflineKsTrackPixels, with context 'OfflineKsTrack'
 ToolSvc.Offline...   INFO Particle types considered = [electron, muon, pion, kaon, proton, below_threshold]
-ToolSvc.Offline...   INFO Aerogel  : Sep. range     230.0 -> 540.0 mm  : Tol.  17.0 # sigma
-ToolSvc.Offline...   INFO Rich1Gas : Sep. range       0.0 ->  86.0 mm  : Tol.   6.0 # sigma
-ToolSvc.Offline...   INFO Rich2Gas : Sep. range       0.0 -> 165.0 mm  : Tol.  10.0 # sigma
-ToolSvc.Offline...   INFO Particle types considered = [electron, muon, pion, kaon, proton, below_threshold]
-ToolSvc.Offline...   INFO Will test for unambiguous     Aerogel photons
-ToolSvc.Offline...   INFO Will accept ambiguous Aerogel photons
-ToolSvc.Offline...   INFO Will use fully alligned mirror segments for Aerogel reconstruction
-ToolSvc.Offline...   INFO Will check for Aerogel photons that hit the beam pipe
-ToolSvc.Offline...   INFO Minimum active Aerogel segment fraction = 0.2
-ToolSvc.Offline...   INFO Will test for unambiguous     Rich1Gas photons
-ToolSvc.Offline...   INFO Will accept ambiguous Rich1Gas photons
-ToolSvc.Offline...   INFO Will use fully alligned mirror segments for Rich1Gas reconstruction
-ToolSvc.Offline...   INFO Will check for Rich1Gas photons that hit the beam pipe
-ToolSvc.Offline...   INFO Minimum active Rich1Gas segment fraction = 0.2
-ToolSvc.Offline...   INFO Will test for unambiguous     Rich2Gas photons
-ToolSvc.Offline...   INFO Will accept ambiguous Rich2Gas photons
-ToolSvc.Offline...   INFO Will use fully alligned mirror segments for Rich2Gas reconstruction
-ToolSvc.Offline...   INFO Will check for Rich2Gas photons that hit the beam pipe
-ToolSvc.Offline...   INFO Minimum active Rich2Gas segment fraction = 0.2
-ToolSvc.Offline...   INFO Assuming spherical secondary mirrors : # iterations (Aero/R1Gas/R2Gas) = [3, 3, 3]
-RichOfflineENNR...   INFO Member list: Rich::Rec::ENNRingFinder::Rich1GasTopPanel/OfflineENNFinderR1GasTop, Rich::Rec::ENNRingFinder::Rich1GasBottomPanel/OfflineENNFinderR1GasBottom, Rich::Rec::ENNRingFinder::Rich2GasLeftPanel/OfflineENNFinderR2GasLeft, Rich::Rec::ENNRingFinder::Rich2GasRightPanel/OfflineENNFinderR2GasRight, Rich::Rec::TracklessRingSegmentAssociationAlg/OfflineENNRingsSegAssoc, Rich::Rec::TracklessRingFilterAlg/OfflineBestENNRings, Rich::Rec::TracklessRingIsolationAlg/OfflineIsolatedENNRings, with context 'Offline'
-OfflineENNRings...   INFO Input Rings                 : Rec/Rich/ENN/Offline/RingsAll
-OfflineENNRings...   INFO Max. seperation             : [50, 50, 50]
-OfflineBestENNR...   INFO Input Rings                 : Rec/Rich/ENN/Offline/RingsAll
-OfflineBestENNR...   INFO Output Rings                : Rec/Rich/ENN/Offline/RingsBest
-OfflineBestENNR...   INFO Min. # pixels per ring      : [5, 5, 5]
-OfflineBestENNR...   INFO Min. average prob.          : [0.7, 0.7, 0.7]
-OfflineIsolated...   INFO Input Rings                 : Rec/Rich/ENN/Offline/RingsBest
-OfflineIsolated...   INFO Output Rings                : Rec/Rich/ENN/Offline/RingsIsolated
-OfflineIsolated...   INFO Pixel Search Window         : [200, 100, 200]
-OfflineIsolated...   INFO Ring centre cut             : [150, 150, 260]
-OfflineIsolated...   INFO Ring width cut              : [0.01, 0.01, 0.00944]
-OfflineIsolated...   INFO Fraction outside ring cut   : [0.20001, 0.20001, 0.20001]
-OfflineIsolated...   INFO # Phi regions               : [8, 8, 8]
-OfflineIsolated...   INFO Max fraction per phi region : [0.2, 0.5, 0.5]
-OfflineIsolated...   INFO Max Fit Variance            : [100, 100, 100]
-RichOfflinePIDSeq    INFO Member list: GaudiSequencer/RichOfflineGPIDSeq, Rich::Rec::HierarchicalPIDMerge/MergeOfflineRichPIDs, with context 'Offline'
-RichOfflineGPIDSeq   INFO Member list: GaudiSequencer/RichOfflineGPIDInitSeq, GaudiSequencer/RichOfflineGPIDLLSeq, Rich::Rec::GlobalPID::Finalize/RichOfflineGPIDFin, with context 'Offline'
-RichOfflineGPID...   INFO Member list: Rich::Rec::GlobalPID::Initialize/RichOfflineGPIDInit, Rich::Rec::GlobalPID::DigitSel/RichOfflineGPIDDigSel, Rich::Rec::GlobalPID::TrackSel/RichOfflineGPIDTrSel, with context 'Offline'
-RichOfflineGPID...   INFO Track Selection : [Forward, KsTrack, Match, Seed, VeloTT]
-RichOfflineGPID...   INFO  Forward     : P = 0.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
-RichOfflineGPID...   INFO  KsTrack     : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
-RichOfflineGPID...   INFO  Match       : P = 0.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
-RichOfflineGPID...   INFO  Seed        : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
-RichOfflineGPID...   INFO  VeloTT      : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
-RichOfflineGPID...   INFO Member list: Rich::Rec::PixelBackgroundAlg/RichOfflineBckEstIt0, Rich::Rec::GlobalPID::Likelihood/RichOfflineGPIDLLIt0, Rich::Rec::PixelBackgroundAlg/RichOfflineBckEstIt1, Rich::Rec::GlobalPID::Likelihood/RichOfflineGPIDLLIt1, with context 'Offline'
-RichOfflineBckE...   INFO Will ignore expected signals when computing backgrounds
-RichOfflineBckE...   INFO Minimum pixel background = 0
-RichOfflineBckE...   INFO Min HPD background level for setting background levels = 0
-RichOfflineGPID...   INFO Maximum event iterations                  = 500
-RichOfflineGPID...   INFO Minimum signal for LL calculation         = 0.001
-RichOfflineGPID...   INFO Track freeze-out DLL value                = 2
-RichOfflineGPID...   INFO Track forced change DLL value             = -1
-RichOfflineGPID...   INFO Maximum track changes per event iteration = 5
-RichOfflineBckE...   INFO Minimum pixel background = 0
-RichOfflineBckE...   INFO Min HPD background level for setting background levels = 0
-RichOfflineGPID...   INFO Maximum event iterations                  = 500
-RichOfflineGPID...   INFO Minimum signal for LL calculation         = 0.001
-RichOfflineGPID...   INFO Track freeze-out DLL value                = 4
-RichOfflineGPID...   INFO Track forced change DLL value             = -2
-RichOfflineGPID...   INFO Maximum track changes per event iteration = 5
+RichOfflineKsTr...   INFO Member list: Rich::Rec::Initialise/CreateOfflineKsTrackTracks, with context 'OfflineKsTrack'
+ToolSvc.Offline...   INFO Track Selection : [KsTrack]
+ToolSvc.Offline...   INFO  KsTrack     : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
+RichOfflineKsTr...   INFO Member list: Rich::Rec::Initialise/CreateOfflineKsTrackPhotons, with context 'OfflineKsTrack'
+RichOfflineKsTr...   INFO Member list: Rich::Rec::ENNRingFinder::Rich1GasTopPanel/OfflineKsTrackENNFinderR1GasTop, Rich::Rec::ENNRingFinder::Rich1GasBottomPanel/OfflineKsTrackENNFinderR1GasBottom, Rich::Rec::ENNRingFinder::Rich2GasLeftPanel/OfflineKsTrackENNFinderR2GasLeft, Rich::Rec::ENNRingFinder::Rich2GasRightPanel/OfflineKsTrackENNFinderR2GasRight, Rich::Rec::TracklessRingSegmentAssociationAlg/OfflineKsTrackENNRingsSegAssoc, Rich::Rec::TracklessRingFilterAlg/OfflineKsTrackBestENNRings, Rich::Rec::TracklessRingIsolationAlg/OfflineKsTrackIsolatedENNRings, with context 'OfflineKsTrack'
+RichOfflineKsTr...   INFO Member list: GaudiSequencer/RichOfflineKsTrackGPIDSeq, Rich::Rec::HierarchicalPIDMerge/MergeOfflineKsTrackRichPIDs, with context 'OfflineKsTrack'
+RichOfflineKsTr...   INFO Member list: GaudiSequencer/RichOfflineKsTrackGPIDInitSeq, GaudiSequencer/RichOfflineKsTrackGPIDLLSeq, Rich::Rec::GlobalPID::Finalize/RichOfflineKsTrackGPIDFin, with context 'OfflineKsTrack'
+RichOfflineKsTr...   INFO Member list: Rich::Rec::GlobalPID::Initialize/RichOfflineKsTrackGPIDInit, Rich::Rec::GlobalPID::DigitSel/RichOfflineKsTrackGPIDDigSel, Rich::Rec::GlobalPID::TrackSel/RichOfflineKsTrackGPIDTrSel, with context 'OfflineKsTrack'
+RichOfflineKsTr...   INFO Track Selection : [KsTrack]
+RichOfflineKsTr...   INFO  KsTrack     : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
+RichOfflineKsTr...   INFO Member list: Rich::Rec::PixelBackgroundAlg/RichOfflineKsTrackBckEstIt0, Rich::Rec::GlobalPID::Likelihood/RichOfflineKsTrackGPIDLLIt0, Rich::Rec::PixelBackgroundAlg/RichOfflineKsTrackBckEstIt1, Rich::Rec::GlobalPID::Likelihood/RichOfflineKsTrackGPIDLLIt1, with context 'OfflineKsTrack'
 RecoCALOSeq          INFO Member list: GaudiSequencer/CaloProcessorCaloSeq, with context 'Offline'
 CaloProcessorCa...   INFO Member list: GaudiSequencer/CaloRecoForCaloProcessor, GaudiSequencer/CaloPIDsCaloPIDsForCaloProcessor, with context 'Offline'
 CaloRecoForCalo...   INFO Member list: GaudiSequencer/CaloDigits, GaudiSequencer/ClusterReco, GaudiSequencer/PhotonReco, GaudiSequencer/MergedPi0Reco, GaudiSequencer/ElectronReco, with context 'Offline'
@@ -448,7 +398,7 @@ RichRawMoni          INFO Member list: Rich::DAQ::RawDataSize/RichRawDataSize, G
 RichRawDataSize...   INFO Member list: L0DUFromRawAlg/L0DUFromRaw, LoKi::L0Filter/RichL0Filter, HltDecReportsDecoder/Hlt1DecReportsDecoder, LoKi::HDRFilter/RichHlt1Filter, Rich::DAQ::RawDataSize/RichRawDataSizeL0, with context 'Offline'
 RichHotPixels        INFO Loading HPD Analysis tools : [RichHotPixelFinder]
 RichPixelMoni        INFO Member list: Rich::Rec::MC::PixelQC/RichRecPixelQC, Rich::Rec::PixelClusterMoni/RichRecPixelClusters, with context 'Offline'
-RichTrackMoni        INFO Member list: Rich::Rec::MC::TrackSelEff/RiLongTrkEff, Rich::Rec::MC::TrackSelEff/RiForwardTrkEff, Rich::Rec::MC::TrackSelEff/RiMatchTrkEff, Rich::Rec::MC::TrackSelEff/RiKsTrackTrkEff, Rich::Rec::MC::TrackSelEff/RiVeloTTTrkEff, Rich::Rec::MC::TrackSelEff/RiSeedTrkEff, with context 'Offline'
+RichTrackMoni        INFO Member list: Rich::Rec::MC::TrackSelEff/RiLongTrkEff, Rich::Rec::MC::TrackSelEff/RiForwardTrkEff, Rich::Rec::MC::TrackSelEff/RiMatchTrkEff, Rich::Rec::MC::TrackSelEff/RiKsTrackTrkEff, Rich::Rec::MC::TrackSelEff/RiVeloTTTrkEff, with context 'Offline'
 RiLongTrkEff.Tr...   INFO Track Selection : [Forward, Match]
 RiLongTrkEff.Tr...   INFO  Forward     : P = 0.00e+00->1.00e+30 GeV : Pt = 0.00e+00->1.00e+30 GeV : fitchi2 = 0.00e+00->1.00e+30 : Likelihood = -1.00e+30->1.00e+30 : CloneCut = -1.00e+30->1.00e+30 : GhostProb = -1.00e+30->1.00e+30 clonesOK
 RiLongTrkEff.Tr...   INFO  Match       : P = 0.00e+00->1.00e+30 GeV : Pt = 0.00e+00->1.00e+30 GeV : fitchi2 = 0.00e+00->1.00e+30 : Likelihood = -1.00e+30->1.00e+30 : CloneCut = -1.00e+30->1.00e+30 : GhostProb = -1.00e+30->1.00e+30 clonesOK
@@ -460,16 +410,13 @@ RiKsTrackTrkEff...   INFO Track Selection : [KsTrack]
 RiKsTrackTrkEff...   INFO  KsTrack     : P = 0.00e+00->1.00e+30 GeV : Pt = 0.00e+00->1.00e+30 GeV : fitchi2 = 0.00e+00->1.00e+30 : Likelihood = -1.00e+30->1.00e+30 : CloneCut = -1.00e+30->1.00e+30 : GhostProb = -1.00e+30->1.00e+30 clonesOK
 RiVeloTTTrkEff....   INFO Track Selection : [VeloTT]
 RiVeloTTTrkEff....   INFO  VeloTT      : P = 0.00e+00->1.00e+30 GeV : Pt = 0.00e+00->1.00e+30 GeV : fitchi2 = 0.00e+00->1.00e+30 : Likelihood = -1.00e+30->1.00e+30 : CloneCut = -1.00e+30->1.00e+30 : GhostProb = -1.00e+30->1.00e+30 clonesOK
-RiSeedTrkEff.Tr...   INFO Track Selection : [Seed]
-RiSeedTrkEff.Tr...   INFO  Seed        : P = 0.00e+00->1.00e+30 GeV : Pt = 0.00e+00->1.00e+30 GeV : fitchi2 = 0.00e+00->1.00e+30 : Likelihood = -1.00e+30->1.00e+30 : CloneCut = -1.00e+30->1.00e+30 : GhostProb = -1.00e+30->1.00e+30 clonesOK
-RichRecoMoni         INFO Member list: Rich::Rec::MC::RecoQC/RiCKResLong, Rich::Rec::MC::RecoQC/RiCKResForward, Rich::Rec::MC::RecoQC/RiCKResMatch, Rich::Rec::MC::RecoQC/RiCKResKsTrack, Rich::Rec::MC::RecoQC/RiCKResVeloTT, Rich::Rec::MC::RecoQC/RiCKResSeed, with context 'Offline'
+RichRecoMoni         INFO Member list: Rich::Rec::MC::RecoQC/RiCKResLong, Rich::Rec::MC::RecoQC/RiCKResForward, Rich::Rec::MC::RecoQC/RiCKResMatch, Rich::Rec::MC::RecoQC/RiCKResKsTrack, Rich::Rec::MC::RecoQC/RiCKResVeloTT, with context 'Offline'
 RiCKResLong.Tra...   INFO Track Selection : [Forward, Match]
 RiCKResForward....   INFO Track Selection : [Forward]
 RiCKResMatch.Tr...   INFO Track Selection : [Match]
 RiCKResKsTrack....   INFO Track Selection : [KsTrack]
 RiCKResVeloTT.T...   INFO Track Selection : [VeloTT]
-RiCKResSeed.Tra...   INFO Track Selection : [Seed]
-RichRecoMoniTight    INFO Member list: Rich::Rec::MC::RecoQC/RiCKResLongTight, Rich::Rec::MC::RecoQC/RiCKResForwardTight, Rich::Rec::MC::RecoQC/RiCKResMatchTight, Rich::Rec::MC::RecoQC/RiCKResKsTrackTight, Rich::Rec::MC::RecoQC/RiCKResVeloTTTight, Rich::Rec::MC::RecoQC/RiCKResSeedTight, with context 'Offline'
+RichRecoMoniTight    INFO Member list: Rich::Rec::MC::RecoQC/RiCKResLongTight, Rich::Rec::MC::RecoQC/RiCKResForwardTight, Rich::Rec::MC::RecoQC/RiCKResMatchTight, Rich::Rec::MC::RecoQC/RiCKResKsTrackTight, Rich::Rec::MC::RecoQC/RiCKResVeloTTTight, with context 'Offline'
 RiCKResLongTigh...   INFO Track Selection : [Forward, Match]
 RiCKResLongTigh...   INFO  Forward     : P = 1.00e+01->1.00e+30 GeV : Pt = 5.00e-01->1.00e+30 GeV : fitchi2 = 0.00e+00->2.00e+00 : Likelihood = -4.00e+01->1.00e+30 : CloneCut = 5.00e+03->1.00e+30 : GhostProb = -1.00e+30->8.00e-01
 RiCKResLongTigh...   INFO  Match       : P = 1.00e+01->1.00e+30 GeV : Pt = 5.00e-01->1.00e+30 GeV : fitchi2 = 0.00e+00->2.00e+00 : Likelihood = -4.00e+01->1.00e+30 : CloneCut = 5.00e+03->1.00e+30 : GhostProb = -1.00e+30->8.00e-01
@@ -481,8 +428,6 @@ RiCKResKsTrackT...   INFO Track Selection : [KsTrack]
 RiCKResKsTrackT...   INFO  KsTrack     : P = 1.00e+01->1.00e+30 GeV : Pt = 5.00e-01->1.00e+30 GeV : fitchi2 = 0.00e+00->2.00e+00 : Likelihood = -4.00e+01->1.00e+30 : CloneCut = 5.00e+03->1.00e+30 : GhostProb = -1.00e+30->8.00e-01
 RiCKResVeloTTTi...   INFO Track Selection : [VeloTT]
 RiCKResVeloTTTi...   INFO  VeloTT      : P = 1.00e+01->1.00e+30 GeV : Pt = 5.00e-01->1.00e+30 GeV : fitchi2 = 0.00e+00->2.00e+00 : Likelihood = -4.00e+01->1.00e+30 : CloneCut = 5.00e+03->1.00e+30 : GhostProb = -1.00e+30->8.00e-01
-RiCKResSeedTigh...   INFO Track Selection : [Seed]
-RiCKResSeedTigh...   INFO  Seed        : P = 1.00e+01->1.00e+30 GeV : Pt = 5.00e-01->1.00e+30 GeV : fitchi2 = 0.00e+00->2.00e+00 : Likelihood = -4.00e+01->1.00e+30 : CloneCut = 5.00e+03->1.00e+30 : GhostProb = -1.00e+30->8.00e-01
 RichPIDMoni          INFO Member list: Rich::Rec::MC::PIDQC/RiPIDMonLong2To100, Rich::Rec::MC::PIDQC/RiPIDMonLong2To10, Rich::Rec::MC::PIDQC/RiPIDMonLong10To70, Rich::Rec::MC::PIDQC/RiPIDMonLong70To100, with context 'Offline'
 RiPIDMonLong2To...   INFO Track Selection : [Forward, Match]
 RiPIDMonLong2To...   INFO  Forward     : P = 2.00e+00->1.00e+02 GeV
@@ -607,19 +552,16 @@ RiForwardTrkEff   SUCCESS Booked 20 Histogram(s) : 1D=14 1DProf=6
 RiMatchTrkEff     SUCCESS Booked 20 Histogram(s) : 1D=14 1DProf=6
 RiKsTrackTrkEff   SUCCESS Booked 20 Histogram(s) : 1D=14 1DProf=6
 RiVeloTTTrkEff    SUCCESS Booked 20 Histogram(s) : 1D=14 1DProf=6
-RiSeedTrkEff      SUCCESS Booked 20 Histogram(s) : 1D=14 1DProf=6
-RiCKResLong       SUCCESS Booked 723 Histogram(s) : 1D=717 1DProf=6
-RiCKResForward    SUCCESS Booked 42 Histogram(s) : 1D=39 1DProf=3
-RiCKResMatch      SUCCESS Booked 42 Histogram(s) : 1D=39 1DProf=3
-RiCKResKsTrack    SUCCESS Booked 42 Histogram(s) : 1D=39 1DProf=3
-RiCKResVeloTT     SUCCESS Booked 42 Histogram(s) : 1D=39 1DProf=3
-RiCKResSeed       SUCCESS Booked 42 Histogram(s) : 1D=39 1DProf=3
-RiCKResLongTight  SUCCESS Booked 723 Histogram(s) : 1D=717 1DProf=6
-RiCKResForwardT...SUCCESS Booked 42 Histogram(s) : 1D=39 1DProf=3
-RiCKResMatchTight SUCCESS Booked 42 Histogram(s) : 1D=39 1DProf=3
-RiCKResKsTrackT...SUCCESS Booked 42 Histogram(s) : 1D=39 1DProf=3
-RiCKResVeloTTTightSUCCESS Booked 42 Histogram(s) : 1D=39 1DProf=3
-RiCKResSeedTight  SUCCESS Booked 42 Histogram(s) : 1D=39 1DProf=3
+RiCKResLong       SUCCESS Booked 726 Histogram(s) : 1D=720 1DProf=6
+RiCKResForward    SUCCESS Booked 45 Histogram(s) : 1D=42 1DProf=3
+RiCKResMatch      SUCCESS Booked 45 Histogram(s) : 1D=42 1DProf=3
+RiCKResKsTrack    SUCCESS Booked 45 Histogram(s) : 1D=42 1DProf=3
+RiCKResVeloTT     SUCCESS Booked 45 Histogram(s) : 1D=42 1DProf=3
+RiCKResLongTight  SUCCESS Booked 726 Histogram(s) : 1D=720 1DProf=6
+RiCKResForwardT...SUCCESS Booked 45 Histogram(s) : 1D=42 1DProf=3
+RiCKResMatchTight SUCCESS Booked 45 Histogram(s) : 1D=42 1DProf=3
+RiCKResKsTrackT...SUCCESS Booked 45 Histogram(s) : 1D=42 1DProf=3
+RiCKResVeloTTTightSUCCESS Booked 45 Histogram(s) : 1D=42 1DProf=3
 ENNRingMoniAll    SUCCESS Booked 12 Histogram(s) : 1D=12
 ENNRingMoniBest   SUCCESS Booked 12 Histogram(s) : 1D=12
 ENNRingMoniIsol...SUCCESS Booked 12 Histogram(s) : 1D=12
@@ -715,11 +657,17 @@ ToolSvc.FastVel...   INFO Maximum number of Velo hits 0
 ToolSvc.Offline...SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "Number of tracks seen"                         |         1 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ToolSvc.Offline...SUCCESS Number of counters : 1
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "Number of tracks seen"                         |         1 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ToolSvc.Offline...SUCCESS Number of counters : 1
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "Number of tracks seen"                         |         1 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
 ToolSvc.L0DUCon...   INFO --------------- TCK = 0x10000------------------
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   2.57 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.33 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -820,36 +768,95 @@ TimingAuditor.T...   INFO     RecoVertexSeq             |     0.000 |     0.000 
 TimingAuditor.T...   INFO      PatPVOffline             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackV0Finder            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     RecoRICHSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      RichRecInitOfflineSeq    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       CheckProcOfflineStatus  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       RichOfflinePixelsSeq    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        DecodeRawRichOffline   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        CreateOfflinePixels    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       RichOfflineTracksSeq    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        CreateOfflineTracks    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       RichOfflinePhotonsSeq   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        CreateOfflinePhotons   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      RichOfflineENNRingFinderS|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       OfflineENNFinderR1GasTop|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       OfflineENNFinderR1GasBot|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       OfflineENNFinderR2GasLef|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       OfflineENNFinderR2GasRig|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       OfflineENNRingsSegAssoc |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       OfflineBestENNRings     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       OfflineIsolatedENNRings |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      RichOfflinePIDSeq        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       RichOfflineGPIDSeq      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        RichOfflineGPIDInitSeq |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         RichOfflineGPIDInit   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         RichOfflineGPIDDigSel |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         RichOfflineGPIDTrSel  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        RichOfflineGPIDLLSeq   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         RichOfflineBckEstIt0  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         RichOfflineGPIDLLIt0  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         RichOfflineBckEstIt1  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         RichOfflineGPIDLLIt1  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        RichOfflineGPIDFin     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       MergeOfflineRichPIDs    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      DecodeRawRichOffline     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      RichRecOfflineLongSeq    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       RichRecInitOfflineLongSe|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        RichOfflineLongPixelsSe|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO         CreateOfflineLongPixel|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        RichOfflineLongTracksSe|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO         CreateOfflineLongTrack|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        RichOfflineLongPhotonsS|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO         CreateOfflineLongPhoto|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       RichOfflineLongENNRingFi|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        OfflineLongENNFinderR1G|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        OfflineLongENNFinderR1G|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        OfflineLongENNFinderR2G|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        OfflineLongENNFinderR2G|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        OfflineLongENNRingsSegA|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        OfflineLongBestENNRings|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        OfflineLongIsolatedENNR|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       RichOfflineLongPIDSeq   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        RichOfflineLongGPIDSeq |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO         RichOfflineLongGPIDIni|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO          RichOfflineLongGPIDIn|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO          RichOfflineLongGPIDDi|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO          RichOfflineLongGPIDTr|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO         RichOfflineLongGPIDLLS|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO          RichOfflineLongBckEst|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO          RichOfflineLongGPIDLL|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO          RichOfflineLongBckEst|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO          RichOfflineLongGPIDLL|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO         RichOfflineLongGPIDFin|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        MergeOfflineLongRichPID|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      RichRecOfflineVeloTTSeq  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       RichRecInitOfflineVeloTT|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        RichOfflineVeloTTPixels|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO         CreateOfflineVeloTTPix|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        RichOfflineVeloTTTracks|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO         CreateOfflineVeloTTTra|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        RichOfflineVeloTTPhoton|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO         CreateOfflineVeloTTPho|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       RichOfflineVeloTTENNRing|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        OfflineVeloTTENNFinderR|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        OfflineVeloTTENNFinderR|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        OfflineVeloTTENNFinderR|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        OfflineVeloTTENNFinderR|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        OfflineVeloTTENNRingsSe|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        OfflineVeloTTBestENNRin|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        OfflineVeloTTIsolatedEN|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       RichOfflineVeloTTPIDSeq |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        RichOfflineVeloTTGPIDSe|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO         RichOfflineVeloTTGPIDI|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO          RichOfflineVeloTTGPID|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO          RichOfflineVeloTTGPID|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO          RichOfflineVeloTTGPID|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO         RichOfflineVeloTTGPIDL|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO          RichOfflineVeloTTBckE|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO          RichOfflineVeloTTGPID|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO          RichOfflineVeloTTBckE|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO          RichOfflineVeloTTGPID|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO         RichOfflineVeloTTGPIDF|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        MergeOfflineVeloTTRichP|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      RichRecOfflineKsTrackSeq |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       RichRecInitOfflineKsTrac|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        RichOfflineKsTrackPixel|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO         CreateOfflineKsTrackPi|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        RichOfflineKsTrackTrack|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO         CreateOfflineKsTrackTr|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        RichOfflineKsTrackPhoto|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO         CreateOfflineKsTrackPh|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       RichOfflineKsTrackENNRin|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        OfflineKsTrackENNFinder|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        OfflineKsTrackENNFinder|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        OfflineKsTrackENNFinder|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        OfflineKsTrackENNFinder|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        OfflineKsTrackENNRingsS|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        OfflineKsTrackBestENNRi|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        OfflineKsTrackIsolatedE|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       RichOfflineKsTrackPIDSeq|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        RichOfflineKsTrackGPIDS|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO         RichOfflineKsTrackGPID|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO          RichOfflineKsTrackGPI|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO          RichOfflineKsTrackGPI|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO          RichOfflineKsTrackGPI|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO         RichOfflineKsTrackGPID|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO          RichOfflineKsTrackBck|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO          RichOfflineKsTrackGPI|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO          RichOfflineKsTrackBck|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO          RichOfflineKsTrackGPI|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO         RichOfflineKsTrackGPID|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        MergeOfflineKsTrackRich|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      MergeOfflineRichPIDs     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     RecoCALOSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      CaloProcessorCaloSeq     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       CaloRecoForCaloProcessor|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -986,21 +993,18 @@ TimingAuditor.T...   INFO       RiForwardTrkEff         |     0.000 |     0.000 
 TimingAuditor.T...   INFO       RiMatchTrkEff           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RiKsTrackTrkEff         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RiVeloTTTrkEff          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       RiSeedTrkEff            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      RichRecoMoni             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RiCKResLong             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RiCKResForward          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RiCKResMatch            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RiCKResKsTrack          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RiCKResVeloTT           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       RiCKResSeed             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      RichRecoMoniTight        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RiCKResLongTight        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RiCKResForwardTight     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RiCKResMatchTight       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RiCKResKsTrackTight     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RiCKResVeloTTTight      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       RiCKResSeedTight        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      RichPIDMoni              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RiPIDMonLong2To100      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RiPIDMonLong2To10       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
