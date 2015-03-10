@@ -4,6 +4,9 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2015-03-10 - Chris Jones
+ - Add common option to toolRegistry() method.
+
 ! 2015-03-09 - Chris Jones
  - Suppress info messages about MC Association tool type change from the tool
    registry, as this change is normal and always happens when running on data.

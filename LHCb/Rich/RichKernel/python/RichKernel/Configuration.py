@@ -31,14 +31,15 @@ class RichConfigurableUser(LHCbConfigurableUser):
     #  @return the RichTools object
     def richTools(self):
         from Configurables import RichTools
-        tools = RichTools(LHCbConfigurableUser.getProp(self,"Context")+"ToolRegistry")
+        name = LHCbConfigurableUser.getProp(self,"Context")+"ToolRegistry"
+        tools = RichTools(name)
         return tools
 
     ## @brief Returns the Rich Tool registry configuration object for the current context
     #  @return The tool registry configuration object
-    def toolRegistry(self) :
+    def toolRegistry(self,common=False) :
         from Configurables import RichTools
-        return self.richTools().toolRegistry()
+        return self.richTools().toolRegistry(common)
 
     ## @brief Checks in a given property is properly configured for all three RICH radiators
     #  @param option The option name to check
