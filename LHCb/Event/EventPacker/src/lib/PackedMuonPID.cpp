@@ -45,7 +45,7 @@ void MuonPIDPacker::pack( const DataVector & pids,
                           PackedDataVector & ppids ) const
 {
   const char ver = ppids.packingVersion();
-  if ( 1 == ver || 0 == ver || 2 == ver )
+  if ( 2 == ver || 1 == ver || 0 == ver )
   {
     ppids.data().reserve( pids.size() );
     for ( const Data * pid : pids )
@@ -104,7 +104,7 @@ void MuonPIDPacker::unpack( const PackedDataVector & ppids,
                             DataVector             & pids ) const
 {
   const char ver = ppids.packingVersion();
-  if ( 1 == ver || 0 == ver  )
+  if ( 2 == ver || 1 == ver || 0 == ver )
   {
     pids.reserve( ppids.data().size() );
     for ( const PackedData & ppid : ppids.data() )

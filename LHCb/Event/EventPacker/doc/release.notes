@@ -4,6 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2015-03-10 - Chris Jones
+ - Fix typo in MuonPIDPacker where version 2 was not declared as a known 
+   packing version in MuonPIDPacker::unpack
+
 ! 2015-03-08 - Chris Jones
  - Implement 64 bit reference packing for MCParticle, MCVertex and
    TwoProngVertex classes.
