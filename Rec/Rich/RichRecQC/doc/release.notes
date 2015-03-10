@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2015-03-10 - Chris Jones
+ - Remove all calls that required access to the underlying group configurables
+   in RichRecSys.
+
 ! 2015-03-09 - Chris Jones
  - Add a new histogram to RichRecoQC for the track momentum distribution.
  - Update the python configurable to use the reconstuction configurable

@@ -31,7 +31,7 @@ from Configurables import ( RichAlignmentConf, RichRecSysConf,
 class RichRecQCConf(RichConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ (RichAlignmentConf,None), (RichRecSysConf,None) ]
+    __used_configurables__ = [ (RichAlignmentConf,None), (RichRecSysConf,'RichOfflineRec') ]
 
     ## Default Histogram set
     __default_histo_set__ = "OfflineFull"
@@ -376,6 +376,9 @@ class RichRecQCConf(RichConfigurableUser):
     ## Apply the configuration to the given sequence
     def applyConf(self):
 
+        # Configure dependency on Reco conf
+        self.recoConf()
+
         # DataType specific tweaks
         self.dataTypeTweaks()
 
@@ -418,8 +421,6 @@ class RichRecQCConf(RichConfigurableUser):
             nullMCtools = [ "Rich::MC::NULLMCTruthTool/RichMCTruthTool",
                             "Rich::Rec::MC::NULLMCTruthTool/RichRecMCTruthTool" ]
             self.toolRegistry().Tools += nullMCtools
-            for conf in self.recoConf().getAllTrackGroupConfs():
-                conf.toolRegistry().Tools += nullMCtools
 
         # The list of monitors to run
         monitors = self.getHistoOptions("Monitors")
@@ -825,16 +826,17 @@ class RichRecQCConf(RichConfigurableUser):
         check = "PhotonRecoEfficiency"
         if check in checks :
 
+            recotools = [ "Rich::Rec::PhotonCreator/ForcedRichPhotonCreator",
+                          "Rich::Rec::PhotonRecoUsingQuarticSoln/ForcedPhotonReco",
+                          "Rich::Rec::SimplePhotonPredictor/ForcedRichPhotonPredictor" ]
+            self.toolRegistry().Tools += recotools
+            self.recoConf().toolRegistry().Tools += recotools
+
             seq = self.newSeq(sequence,check)
 
             for trackType in tkTypes :
-
-                toolReg = self.recoConf().getTrackGroupConf(trackType).richTools().toolRegistry()
-                toolReg.Tools += [ "Rich::Rec::PhotonCreator/ForcedRichPhotonCreator",
-                                   "Rich::Rec::PhotonRecoUsingQuarticSoln/ForcedPhotonReco",
-                                   "Rich::Rec::SimplePhotonPredictor/ForcedRichPhotonPredictor" ]
-
-                context = self.getTrackContext( trackType )
+                
+                context = self.getTrackContext(trackType)
 
                 from Configurables import ( Rich__Rec__PhotonCreator, Rich__Rec__SimplePhotonPredictor )
                 forcedCreator = Rich__Rec__PhotonCreator(context+".ForcedRichPhotonCreator")
@@ -850,7 +852,8 @@ class RichRecQCConf(RichConfigurableUser):
                 
                 from Configurables import Rich__Rec__MC__PhotonRecoEffMonitor                
                 name = "RiRecPhotEff" + self.trackSelName(trackType) + "TkMoni"
-                seq.Members += [ self.createMonitor(Rich__Rec__MC__PhotonRecoEffMonitor,name,trackType) ]
+                mon = self.createMonitor(Rich__Rec__MC__PhotonRecoEffMonitor,name,trackType)
+                seq.Members += [ mon ]
 
         check = "RichRayTracingTests"
         if check in checks :
