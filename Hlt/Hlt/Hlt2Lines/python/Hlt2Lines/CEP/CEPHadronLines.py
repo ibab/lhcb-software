@@ -12,7 +12,7 @@ class CEPHadronLines(Hlt2LinesConfigurableUser) :
                                      'AMmin'          :     1036.0 * MeV,
                                      'AMmax'          :     1196.0 * MeV}
 
-                    'D2KPi'     :   {'APTmin'         :     0.0 * MeV, 
+                  , 'D2KPi'     :   {'APTmin'         :     0.0 * MeV, 
                                      'APTmax'         :     100.0 * TeV,
                                      'APmin'          :     10000.0 * MeV,
                                      'ADOCAmax'       :     0.5 * mm,
