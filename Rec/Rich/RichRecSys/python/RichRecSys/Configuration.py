@@ -499,7 +499,6 @@ class RichRecSysConf(RichRecSysBaseConf) :
     def getTrackGroupConf(self,tktype):
         if type(tktype) is list : tktype = self.trackGroupName(tktype)
         for tkGroup in self.getProp("TrackTypeGroups"):
-            print "Baa", tkGroup
             if tktype in tkGroup or tktype == self.trackGroupName(tkGroup) :
                 return RichRecSysBaseConf( self.getConfName(tkGroup) )
         return None
