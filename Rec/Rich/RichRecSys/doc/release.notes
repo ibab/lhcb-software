@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2015-03-10 - Chris Jones
+ - Rework things to avoid assumptions based on the order things are applied.
+
 ! 2015-03-09 - Chris Jones
  - Update the python configurable to support running with seperate processing
    sequences for different track groups. Enabled by calling the method

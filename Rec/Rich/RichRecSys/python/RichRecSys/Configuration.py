@@ -168,7 +168,8 @@ class RichRecSysBaseConf(RichConfigurableUser):
         if self.getProp("OnlineMode") : self.setupOnlineMode()
          
         # Tools. (Should make this automatic in the base class somewhere)
-        self.setOtherProps(self.richTools(),["Context","OutputLevel"])
+        for prop in ["OutputLevel","Context"]:
+            self.richTools().setProp( prop, self.getProp(prop) )
 
         # Set the context
         cont = self.getProp("Context")
@@ -433,6 +434,10 @@ class RichRecSysBaseConf(RichConfigurableUser):
         #    : them in order to get properties (like output levels) set correctly.
 
         self.setupToolOptions()
+
+        # Tool registory
+        self.richTools().toolRegistry()
+        self.richTools().toolRegistry(common=True)
         
         # geometrical efficiency
         self.richTools().geomEff()
@@ -453,10 +458,6 @@ class RichRecSysBaseConf(RichConfigurableUser):
 
         # Ray tracing
         self.richTools().rayTracing()
-
-        # Tool registory
-        self.richTools().toolRegistry()
-        self.richTools().toolRegistry(common=True)
 
         # Decoding
         self.richTools().smartIDTool()
@@ -497,25 +498,19 @@ class RichRecSysConf(RichRecSysBaseConf) :
 
     ## Get the configurable for a given track type
     def getTrackGroupConf(self,tktype):
+        conf = None
         if type(tktype) is list : tktype = self.trackGroupName(tktype)
         for tkGroup in self.getProp("TrackTypeGroups"):
             if tktype in tkGroup or tktype == self.trackGroupName(tkGroup) :
-                return RichRecSysBaseConf( self.getConfName(tkGroup) )
-        return None
-
-    ## Get all active track group configurables
-    def getAllTrackGroupConfs(self):
-        confs = [ ]
-        for tkTypeGroup in self.getProp("TrackTypeGroups"):
-            name = self.getConfName(tkTypeGroup)
-            confs += [ RichRecSysBaseConf(name) ]
-        return confs
+                conf = RichRecSysBaseConf( self.getConfName(tkGroup) )
+        return conf
 
     ## Get the 'best' context to use for an algorithm without a clear track type (so pixel based etc.)
     def getBestContext(self):
         cont = self.getProp("Context")
-        confs = self.getAllTrackGroupConfs()
-        if len(confs) > 0 : cont = confs[0].getProp("Context")
+        #confs = self.getAllTrackGroupConfs()
+        groups = self.getProp("TrackTypeGroups")
+        if len(groups) > 0 : cont += self.trackGroupName(groups[0])
         return cont
 
     ## @brief Apply the configuration to the configured GaudiSequencer
@@ -607,6 +602,12 @@ class RichRecSysConf(RichRecSysBaseConf) :
                 # Build the reco sequence for this group
                 groupConfig = RichRecSysBaseConf( self.getConfName(tkTypeGroup) )
 
+                # Context for this group
+                groupcont = self.getConfContext(tkTypeGroup)
+
+                 # Set context with group name
+                groupConfig.setProp("Context",groupcont)
+
                 # Propagate all options
                 self.propagateAllOptions( groupConfig )
                 
@@ -619,9 +620,12 @@ class RichRecSysConf(RichRecSysBaseConf) :
                 groupConfig.setProp("InitDecoding",False)
                 # Turn off splitting again
                 groupConfig.setProp("TrackTypeGroups",[])
-
-                # Set context with group name
-                groupConfig.setProp("Context",self.getConfContext(tkTypeGroup))
+                # Proper context for this group
+                groupConfig.setProp("Context",groupcont)
+                groupConfig.richTools().setProp("Context",groupcont)
+ 
+                # Clone tool registry tool list
+                groupConfig.toolRegistry().Tools = self.toolRegistry().Tools
 
                 # PID Output location
                 pidLoc = self.getProp("RichPIDLocation")+self.trackGroupName(tkTypeGroup)
