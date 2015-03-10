@@ -414,8 +414,10 @@ bool RelInfoBstautauTauIsolation::calcValue( const LHCb::Particle * part
     if (angle <m_angle && fc<m_fc && (2*doca)<m_doca_iso && ipchisqany>m_ips &&
         svDistGeometric>m_svdis && svDistGeometric<m_svdis_h && pvDistGeometric>m_pvdis && pvDistGeometric<m_pvdis_h
         && track->type()==m_tracktype) {
-      isolation2+=1;}
-    if (Indecay) isolation1+=1;
+      isolation2+=1;
+      if (Indecay) isolation1+=1;
+    }
+    
   }
   m_bdt1 = isolation1 ;
   m_bdt2 = isolation2 ;
