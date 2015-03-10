@@ -557,7 +557,7 @@ bool RelInfoBstautauTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
     var_ipchisqany = calcIPToAnyPV(track) ;
     var_fc = fc ;
     var_angle = angle ;
-    var_doca = 2*doca ;
+    var_doca = doca ;
     var_PVdist = pvDistGeometric ;
     var_SVdist = svDistGeometric ;
     var_pt = track->pt() ;
