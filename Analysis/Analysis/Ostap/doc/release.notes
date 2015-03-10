@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-03-10 - Vanya Belyaev
+ - remove png from format list for canvas print 
+
 ! 2015-03-09 - Vanya Belyaev
  - GetLumi: improve a bit lumi treatment - add checks for bad-cases 
   

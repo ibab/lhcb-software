@@ -100,24 +100,23 @@ else :
     
 # =============================================================================
 ## define simplified print for TCanvas 
-def _cnv_print_ ( cnv , fname , exts = [ 'pdf' , 'png' , 'eps', 'C' ] ) :
+def _cnv_print_ ( cnv , fname , exts = [ 'pdf' , 'gif' , 'eps', 'C' ] ) :
     """
     A bit simplified version for TCanvas print
-
+    
     >>> canvas.print ( 'fig' )    
     """
     #
     p = fname.rfind ('.')
     #
     if 0 < p :
-        
         if p+4 == len ( fname ) or fname[p:] in ( '.C', '.ps', '.jpeg', '.JPEG') :
             cnv.Print( fname )
             return cnv 
-
+        
     for e in exts :
         cnv.Print ( fname + '.' + e )
-        
+            
     return cnv 
 
 # =============================================================================
