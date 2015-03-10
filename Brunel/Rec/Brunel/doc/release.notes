@@ -5,6 +5,7 @@ Purpose: LHCb reconstruction program
 
 - Changes to references to reflect changes since v47r5
   . Follow further tracking and geometry optimisations
+  . Follow separation of track type groups in the RICH reconstruction
 
 </PRE><H1><A NAME=v47r5>2015-02-27 Brunel v47r5</A></H1><PRE>
 This version uses projects LHCb v38r5, Lbcom v16r4, Rec v17r5, Gaudi v26r1
