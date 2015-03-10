@@ -510,7 +510,7 @@ bool RelInfoBstautauTrackIsolation::calcValue( const LHCb::Particle * part
      }
      
     ipchisqany = calcIPToAnyPV(track) ;
-    if (angle <m_angle && fc<m_fc && (2*doca)<m_doca_iso && ipchisqany>m_ips &&
+    if (angle <m_angle && fc<m_fc && (doca)<m_doca_iso && ipchisqany>m_ips &&
         svDistGeometric>m_svdis && svDistGeometric<m_svdis_h && pvDistGeometric>m_pvdis && pvDistGeometric<m_pvdis_h
         && track->type()==m_tracktype) {
       if ( msgLevel(MSG::VERBOSE) )   debug()<<"Tool6*** - entered in the if statement "<<endreq;//
