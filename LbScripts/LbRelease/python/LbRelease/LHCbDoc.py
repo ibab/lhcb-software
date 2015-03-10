@@ -527,6 +527,16 @@ class Doc(object):
             #self._log.debug("Mark the directory as to be built")
             self.toBeBuilt = True
 
+    def _ensureAFSquota(self, required):
+        if self.isAfsVolume:
+            output = Popen(["fs", "lq", self.path], stdout = PIPE).communicate()[0].splitlines()[-1].split()
+            quota = int(output[1])
+            used = int(output[2])
+            reqsize = int(1.1 * (used + required))
+            if quota < reqsize:
+                self._log.info("Increasing AFS volume size to %d", reqsize)
+                output = Popen(["afs_admin", "sq", self.path, str(reqsize)], stdout = PIPE).wait()
+
     def _generateDoxygenMainPage(self, depgraphsize = (0,0)):
         """
         Generate the main page file for the documentation directory and return
@@ -975,6 +985,8 @@ class Doc(object):
         if self.locked:
             self._log.warning("Cannot build in a locked directory")
             return
+        # ensure we have enough space for the files we need to generate
+        self._ensureAFSquota(10000) # 10MB
         # create lockfile
         self._log.debug("Creating lock file '%s'", self._lockFile)
         open(self._lockFile, "w").write("%s - %s\n" % (os.getpid(),
@@ -1015,13 +1027,8 @@ class Doc(object):
                 shutil.rmtree(self.output + ".bk")
             if self.isAfsVolume:
                 usage = _diskUsage(tempdir) / 1024
-                output = Popen(["fs", "lq", self.path], stdout = PIPE).communicate()[0].splitlines()[-1].split()
-                quota = int(output[1])
-                used = int(output[2])
-                reqsize = int(1.1 * (used + usage))
-                if quota < reqsize:
-                    self._log.info("Increasing AFS volume size to %d", reqsize)
-                    output = Popen(["afs_admin", "sq", self.path, str(reqsize)], stdout = PIPE).wait()
+                self._ensureAFSquota(usage)
+
             # copy the documentation from the temporary directory to the final place with a temporary name
             self._log.info("Copy generated files from temporary directory")
             if self._hasCpp():

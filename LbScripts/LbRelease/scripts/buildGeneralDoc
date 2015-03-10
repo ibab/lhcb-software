@@ -30,22 +30,23 @@ logmsg Starting $0
 # Get the location of the script
 basedir=`dirname "$0"`
 
-
 # Prepare the environment
 logcmd . $basedir/LbLogin.sh
 
-# Log file
-[ ! -d $LHCB_USERLOGS/doxygen ] && mkdir -p $LHCB_USERLOGS/doxygen
-outlog=$LHCB_USERLOGS/doxygen/doxygen.`date -Im`.log
-mv -f $tmplog $outlog
-
 # Location of the documentation directories
 export DOCROOT=$LHCBDOC/doxygen
+
+# Log file
+[ ! -d $DOCROOT/logs ] && mkdir -p $DOCROOT/logs
+outlog=$DOCROOT/logs/doxygen.`date -Im`.log
+mv -f $tmplog $outlog
 
 # Chack if we are asked not to run
 if [ ! -e $DOCROOT/stop_cron ] ; then
     # Fine tuning of the environment
     logcmd . SetupProject.sh LbScripts --no-user --runtime LCGCMT graphviz
+    # ensure that we get the correct version of the Python module
+    export PYTHONPATH=${basedir}/../python:$PYTHONPATH
     # Run the main script
     logcmd python -m LbRelease.LHCbDoc --debug --clean-archived --remove-unused --timeout 23
     if [ $? != 0 ] ; then

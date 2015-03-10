@@ -1,3 +1,7 @@
+2015-03-10  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* LbRelease.LHCbDoc: fixed LBCORE-763
+
 2015-03-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* lb-deployment-checklist: added support for Gaudi (special case)
