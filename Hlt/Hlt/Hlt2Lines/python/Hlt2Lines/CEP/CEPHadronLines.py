@@ -3,7 +3,16 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 
 class CEPHadronLines(Hlt2LinesConfigurableUser) :
     def localcuts(self) :
-        localStages={    'D2KPi'     :   {'APTmin'         :     0.0 * MeV, 
+        localStages={'L2pPi'    :   {'APTmin'         :     0.0 * MeV, 
+                                     'APTmax'         :     100.0 * TeV,
+                                     'APmin'          :     10000.0 * MeV,
+                                     'ADOCAmax'       :     0.5 * mm,
+                                     'VtxChi2DoFmax'  :     15.0,
+                                     'nVeloTracksmax' :     12,
+                                     'AMmin'          :     1036.0 * MeV,
+                                     'AMmax'          :     1196.0 * MeV}
+
+                    'D2KPi'     :   {'APTmin'         :     0.0 * MeV, 
                                      'APTmax'         :     100.0 * TeV,
                                      'APmin'          :     10000.0 * MeV,
                                      'ADOCAmax'       :     0.5 * mm,
@@ -77,7 +86,10 @@ class CEPHadronLines(Hlt2LinesConfigurableUser) :
                           LowMultLMR2HHFilter, LowMultLMR2HHHHFilter,
                           LowMultChiC2HHFilter, LowMultChiC2HHHHFilter, LowMultChiC2PPFilter,
                           LowMultChiC2HHWSFilter, LowMultChiC2HHHHWSFilter)
-      stages = { # First the D0 -> K pi lines
+      stages = { # First the Lambda0 -> p pi lines
+                 'LowMultL2pPi'       : [LowMultL2pPiFilter('L2pPi')],
+                 'LowMultL2pPiWS'     : [LowMultL2pPiWSFilter('L2pPi')],
+                 # First the D0 -> K pi lines
                  'LowMultD2KPi'       : [LowMultD2KPiFilter('D2KPi')],
                  'LowMultD2KPiWS'     : [LowMultD2KPiWSFilter('D2KPi')],
                  # Then the D+ -> K pi pi and K K pi lines

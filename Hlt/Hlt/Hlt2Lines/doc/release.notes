@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-10 - Dan Johnson
+ - Added Lambda0 -> p pi (+WS) CEP HLT2 line
+ - Added Low mass resonance -> p+ p~- (+WS) CEP HLT2 line
+
 ! 2015-03-10 - Mika Vesterinen
  - Fix a couple of syntax errors in CEP module
 

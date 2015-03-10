@@ -73,6 +73,19 @@ class HadronicCombiner(Hlt2Combiner):
                               dependencies = [TrackGEC(linePrefix + 'TrackGEC')],
                               CombinationCut = cc, MotherCut = mc, Preambulo = [])
 
+# Lambda -> p pi
+class LowMultL2pPiFilter(Hlt2ParticleFilter):
+    def __init__(self, name):
+        decay   = "[Lambda0 -> p+ pi-]cc",
+        inputs  = [InFilter("SharedInFilter_p"), InFilter("SharedInFilter_pi")],
+        HadronicCombiner.__init__(self,name,decay,inputs)
+
+class LowMultL2pPiWSFilter(Hlt2ParticleFilter):
+    def __init__(self, name):
+        decay   = "[D0 -> p+ pi+]cc",
+        inputs  = [InFilter("SharedInFilter_p"), InFilter("SharedInFilter_pi")],
+        HadronicCombiner.__init__(self,name,decay,inputs)
+
 # D0 -> K pi
 class LowMultD2KPiFilter(Hlt2ParticleFilter):
     def __init__(self, name):
@@ -170,13 +183,13 @@ class LowMultChiC2PPWSFilter(Hlt2ParticleFilter):
 # LMR -> hh
 class LowMultLMR2HHFilter(Hlt2ParticleFilter):
     def __init__(self, name):
-        decay   = ["phi(1020) -> K+ K-","[phi(1020) -> K+ pi-]cc","phi(1020) -> pi+ pi-"],
+        decay   = ["phi(1020) -> K+ K-","[phi(1020) -> K+ pi-]cc","phi(1020) -> pi+ pi-","phi(1020) -> p+ p~-"],
         inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi")],
         HadronicCombiner.__init__(self,name,decay,inputs)
 
 class LowMultLMR2HHWSFilter(Hlt2ParticleFilter):
     def __init__(self, name):
-        decay   = ["phi(1020) -> K+ K+","[phi(1020) -> K+ pi+]cc","phi(1020) -> pi+ pi+"],
+        decay   = ["[phi(1020) -> K+ K+]cc","[phi(1020) -> K+ pi+]cc","[phi(1020) -> pi+ pi+]","[phi(1020) -> p+ p+]cc"],
         inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi")],
         HadronicCombiner.__init__(self,name,decay,inputs)
 

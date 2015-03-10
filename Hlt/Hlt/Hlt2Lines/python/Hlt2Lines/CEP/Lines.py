@@ -4,7 +4,9 @@ from CEPPhotonLines import CEPPhotonLines
 from CEPElectronLines import CEPElectronLines
 from GaudiKernel.SystemOfUnits import GeV, MeV, mm
 
-theseSlots =      { 'Prescale' : { 'Hlt2LowMultD2KPi'       : 1.0
+theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
+                                 , 'Hlt2LowMultL2pPiWS'     : 0.1
+                                 , 'Hlt2LowMultD2KPi'       : 1.0
                                  , 'Hlt2LowMultD2KPiWS'     : 0.1
                                  , 'Hlt2LowMultD2KPiPi'     : 1.0
                                  , 'Hlt2LowMultD2KPiPiWS'   : 0.1
@@ -30,7 +32,9 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultD2KPi'       : 1.0
                                  # Electron lines
                                  , 'Hlt2LowMultElectron'    : 1.0
                                  }
-                  , 'Postscale' : { 'Hlt2LowMultD2KPi'         : 1.0
+                  , 'Postscale' : {   'Hlt2LowMultL2pPi'       : 1.0
+                                    , 'Hlt2LowMultL2pPiWS'     : 1.0
+                                    , 'Hlt2LowMultD2KPi'       : 1.0
                                     , 'Hlt2LowMultD2KPiWS'     : 1.0
                                     , 'Hlt2LowMultD2KPiPi'     : 1.0
                                     , 'Hlt2LowMultD2KPiPiWS'   : 1.0
