@@ -111,15 +111,25 @@ StatusCode RelInfoBstautauMuonIsolationBDT::calculateRelatedInfo( const LHCb::Pa
 
 
 
- const LHCb::Particle* part;
+ const LHCb::Particle* part=NULL;
  
- LHCb::Particle::ConstVector Daughters = m_descend->descendants(top);
- if ( msgLevel(MSG::DEBUG) ) debug()<<"Number of ID "<<top->particleID().pid()<<" : "<<Daughters.size()<<endmsg;
+ LHCb::Particle::ConstVector Daughters = m_descend->descendants(top,1);
+ if ( msgLevel(MSG::DEBUG) ) debug()<<"Number of ID's daughters "<<top->particleID().pid()<<" : "<<Daughters.size()<<endmsg;
  LHCb::Particle::ConstVector::const_iterator i_daug; 
  for ( i_daug = Daughters.begin(); i_daug != Daughters.end(); i_daug++){
      const LHCb::Particle* Part = *i_daug;
+     if ( msgLevel(MSG::DEBUG) ) debug()<<"Part ID : "<<Part->particleID().pid()<<endmsg;
+
     if ( Part->isBasicParticle() ) part=*i_daug;
  }
+
+  bool test = true;
+  if( !part )
+  {
+    if ( msgLevel(MSG::WARNING) ) Warning( "The particle in question is not valid" );
+    //return StatusCode::FAILURE;
+  }else{
+
  if ( msgLevel(MSG::DEBUG) ) debug()<<"part ID : "<<part->particleID().pid()<<endreq;
  
  
@@ -147,7 +157,7 @@ StatusCode RelInfoBstautauMuonIsolationBDT::calculateRelatedInfo( const LHCb::Pa
     return StatusCode::FAILURE;
   }
 
-  bool test = true;
+ 
 
   //set PV and SV of the mother
   //
@@ -158,18 +168,21 @@ StatusCode RelInfoBstautauMuonIsolationBDT::calculateRelatedInfo( const LHCb::Pa
     m_vertices = get<LHCb::RecVertex::Container>(m_PVInputLocation);
   }
 
-  if( part )
-  {
+
 
     if ( msgLevel(MSG::VERBOSE) ) verbose() << "Filling variables with particle " << part << endmsg;
-
     // -- process -- iterate over tracks
     //
-
     calcBDTValue( part, tracks, PV, SV ) ;
     if ( msgLevel(MSG::DEBUG) ) debug() << m_bdt1 << '\t'  << m_bdt2 << '\t' << m_bdt3 << endmsg ;
     //
-    //store
+
+
+
+ 
+  }
+
+   //store
     m_map.clear();
 
     std::vector<short int>::const_iterator ikey;
@@ -185,14 +198,7 @@ StatusCode RelInfoBstautauMuonIsolationBDT::calculateRelatedInfo( const LHCb::Pa
 
       m_map.insert( std::make_pair( *ikey, value) );
     }
-
-  }
-
-  else
-  {
-    if ( msgLevel(MSG::WARNING) ) Warning( "The particle in question is not valid" );
-    return StatusCode::FAILURE;
-  }
+   	
 
   return StatusCode(test);
 }
@@ -326,7 +332,7 @@ bool RelInfoBstautauMuonIsolationBDT::calcBDTValue( const LHCb::Particle * part
     var_ipchisqany = calcIPToAnyPV(track) ;
     var_fc = fc ;
     var_angle = angle ;
-    var_doca = 2*doca ;
+    var_doca = doca ;
     var_PVdist = pvDistGeometric ;
     var_SVdist = svDistGeometric ;
     var_pt = track->pt() ;
