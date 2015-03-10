@@ -7,6 +7,10 @@
 !           ALWAYS also edit Hlt/HltSettings
 !
 !----------------------------------------------------------------------------
+
+! 2015-03-10 - Mika Vesterinen
+ - Fix a couple of syntax errors in CEP module
+
 ! 2015-03-09 - Dan Johnson
  - First commit of CEP lines module
 

@@ -13,8 +13,7 @@ class TrackGEC(Hlt2VoidFilter):
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking 
         velotracks = Hlt2BiKalmanFittedForwardTracking().hlt2VeloTracking()
         VT = velotracks.outputSelection()
-        code = ("CONTAINS('%s')" % VT) + " < %(nVeloTracksmax)s"+
-                ("TrNUM('%s', TrBACKWARD)" % VT) + " < %(nBackTracksmax)s"
+        code = ("CONTAINS('%s')" % VT) + (" < %(nVeloTracksmax)s") + ("TrNUM('%s', TrBACKWARD)" % VT) + (" < %(nBackTracksmax)s")
         Hlt2VoidFilter.__init__(self, linePrefix + 'Track', 'GEC', code, [velotracks])
 
 # create filters for pions, kaons and protons

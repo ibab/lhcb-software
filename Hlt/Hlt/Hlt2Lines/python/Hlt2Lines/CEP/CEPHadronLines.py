@@ -98,7 +98,7 @@ class CEPHadronLines(Hlt2LinesConfigurableUser) :
                  # Then low mass lines
                  'LowMultLMR2HH'      : [LowMultLMR2HHFilter('LMR2HH')],
                  'LowMultLMR2HHWS'    : [LowMultLMR2HHWSFilter('LMR2HH')],
-                 'LowMultLMR2HHHH'    : [LowMultLMR2HHHHFilter('LMR2HHHH')]
+                 'LowMultLMR2HHHH'    : [LowMultLMR2HHHHFilter('LMR2HHHH')],
                  'LowMultLMR2HHHHWS'  : [LowMultLMR2HHHHWSFilter('LMR2HHHH')]
                }
       return stages
