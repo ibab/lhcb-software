@@ -128,26 +128,33 @@ StatusCode RelInfoBstautauMuonIsolation::calculateRelatedInfo( const LHCb::Parti
 
 
 
-  const LHCb::Particle* part;
+  const LHCb::Particle* part=NULL;
   
-  LHCb::Particle::ConstVector Daughters = m_descend->descendants(top);
- if ( msgLevel(MSG::DEBUG) ) debug()<<"Number of ID "<<top->particleID().pid()<<" : "<<Daughters.size()<<endmsg;
-
+  LHCb::Particle::ConstVector Daughters = m_descend->descendants(top,1);
+ if ( msgLevel(MSG::DEBUG) ) debug()<<"Number of ID's daughters "<<top->particleID().pid()<<" : "<<Daughters.size()<<endmsg;
   LHCb::Particle::ConstVector::const_iterator i_daug; 
   for ( i_daug = Daughters.begin(); i_daug != Daughters.end(); i_daug++){
-    const LHCb::Particle* Part = *i_daug;
-    if ( Part->isBasicParticle() ) part = *i_daug;
+    //const LHCb::Particle* Part = *i_daug;
+    if ( (*i_daug)->isBasicParticle() ) part = *i_daug;
   }
   
+   bool test = true;
+
+  if( !part )
+  {
+    if ( msgLevel(MSG::WARNING) ) Warning( "The particle in question is not valid" );
+    //return StatusCode::FAILURE;
+  }else  {
 
 
-  // -- The vector m_decayParticles contains all the particles that belong to the given decay
+ // -- The vector m_decayParticles contains all the particles that belong to the given decay
   // -- according to the decay descriptor.
 
   // -- Clear the vector with the particles in the specific decay
   m_decayParticles.clear();
 
   saveDecayParticles(top);
+
   if ( ! part->isBasicParticle() ) {
     if ( msgLevel(MSG::DEBUG) ) debug() << "Running muon isolation on non-final state particle, skipping" << endmsg;
     return StatusCode::SUCCESS ;
@@ -162,7 +169,7 @@ StatusCode RelInfoBstautauMuonIsolation::calculateRelatedInfo( const LHCb::Parti
     return StatusCode::FAILURE;
   }
 
-  bool test = true;
+ 
 
   //set PV and SV of the mother
   //
@@ -172,10 +179,6 @@ StatusCode RelInfoBstautauMuonIsolation::calculateRelatedInfo( const LHCb::Parti
   if(exist<LHCb::RecVertex::Container>(m_PVInputLocation)){
     m_vertices = get<LHCb::RecVertex::Container>(m_PVInputLocation);
   }
-
-  if( part )
-  {
-
     if ( msgLevel(MSG::VERBOSE) ) verbose() << "Filling variables with particle " << part << endmsg;
 
     // -- process -- iterate over tracks
@@ -185,7 +188,11 @@ StatusCode RelInfoBstautauMuonIsolation::calculateRelatedInfo( const LHCb::Parti
     if ( msgLevel(MSG::DEBUG) ) debug() << m_bdt1 << '\t'  << m_bdt2 << '\t' << endmsg ;
     //
     //store
-    m_map.clear();
+ 
+
+  }
+ 
+   m_map.clear();
 
     std::vector<short int>::const_iterator ikey;
     for (ikey = m_keys.begin(); ikey != m_keys.end(); ikey++) {
@@ -199,15 +206,7 @@ StatusCode RelInfoBstautauMuonIsolation::calculateRelatedInfo( const LHCb::Parti
 
       m_map.insert( std::make_pair( *ikey, value) );
     }
-
-  }
-
-  else
-  {
-    if ( msgLevel(MSG::WARNING) ) Warning( "The particle in question is not valid" );
-    return StatusCode::FAILURE;
-  }
-
+ 
   return StatusCode(test);
 }
 
@@ -344,11 +343,13 @@ bool RelInfoBstautauMuonIsolation::calcValue( const LHCb::Particle * part
 
 
     ipchisqany = calcIPToAnyPV(track) ;
-    if (angle <m_angle && fc<m_fc && (2*doca)<m_doca_iso && ipchisqany>m_ips &&
+    if (angle <m_angle && fc<m_fc && (doca)<m_doca_iso && ipchisqany>m_ips &&
         svDistGeometric>m_svdis && svDistGeometric<m_svdis_h && pvDistGeometric>m_pvdis && pvDistGeometric<m_pvdis_h
         && track->type()==m_tracktype) {
-      isolation2+=1;}
-    if (Indecay) isolation1+=1;
+      isolation2+=1;
+      if (Indecay) isolation1+=1;
+    }
+    
   }
   m_bdt1 = isolation1 ;
   m_bdt2 = isolation2 ;
