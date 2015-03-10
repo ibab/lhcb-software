@@ -4,6 +4,8 @@
 ! Purpose     : Decision Tree classifier for Hlt2 topological trigger
 ! -----------------------------------------------------------------------------
 
+!========================= BBDecTreeTool v1r7 2015-03-10 =========================
+
 ! 2015-Mar-04 - Patrick Spradlin
  - Reintegrate development branch v1r6p2-VarGeneralization.
    This generalizes the BBDecTreeTool and BBDTSimpleTool to accommodate
