@@ -71,7 +71,14 @@ class Hlt2Conf(LHCbConfigurableUser):
         from functools import partial
         from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
         map( partial(  setThresholds, self.getProp("ThresholdSettings") ) , _hlt2linesconfs )
-        Hlt2Line( "Global", HLT= "HLT_PASS_SUBSTR('Hlt2') ", priority = 255, VoidFilter = '' )
+        from Configurables import LoKi__HDRFilter   as HDRFilter
+        from DAQSys.Decoders import DecoderDB
+        decoder = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
+        Hlt2Line( 'Global', priority = 255, VoidFilter = ''
+                 , algos = [HDRFilter('Hlt2GlobalFilter' ,
+                            Code = "HLT_PASS_SUBSTR('Hlt2') ",
+                            Location = decoder.listOutputs()[0])]
+              )
        
 ###################################################################################
 #

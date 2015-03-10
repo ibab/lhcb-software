@@ -66,7 +66,7 @@ class Hlt1Conf(LHCbConfigurableUser):
       from DAQSys.Decoders import DecoderDB
       decoder = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
       Hlt1Line( 'Global', priority = 255
-                 , algos = [HDRFilter('Filter' ,
+                 , algos = [HDRFilter('Hlt1GlobalFilter' ,
                             Code = "HLT_PASS_SUBSTR('Hlt1') ",
                             Location = decoder.listOutputs()[0])]
               )

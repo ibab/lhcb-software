@@ -4,7 +4,10 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
-!========================= HltConf v12r6 2015-03-09 =========================
+!! 2015-03-09 - Roel Aaij
+ - Adapt to changes in HltLine.
+
+========================= HltConf v12r6 2015-03-09 =========================
 
 ! 2015-03-06 - Sascha Stahl
  - Changed used_configurables of Hlt2Conf to be inline with name changes in
