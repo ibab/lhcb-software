@@ -6,20 +6,19 @@ from Configurables import ConfigTreeEditor, PropertyConfigSvc
 
 # pick the default config access svc 
 import os.path
-def cdb_file() :
-    __cfg_cdb = ConfigCDBAccessSvc()
-    cdb_file = os.path.basename( __cfg_cdb.getProp('File') )
-    return os.path.join( os.environ['HLTTCKROOT'], cdb_file )
+def cdb_file(filename) :
+    return os.path.join( os.environ['HLTTCKROOT'], filename )
 
-def cdb_file_exists():
-    return os.path.isfile( cdb_file() )
+def cdb_file_exists(filename):
+    return os.path.isfile( cdb_file(filename) )
 
-if cdb_file_exists() :
+if cdb_file_exists('config.cdb') :
     from Configurables import ConfigCDBAccessSvc as ConfigAccessSvc
 else :
     from Configurables import ConfigTarFileAccessSvc as ConfigAccessSvc
 
-print 'using %s as input.' % cdb_file()
+cdb_filename = cdb_file('config.cdb') if cdb_file_exists('config.cdb') else cdb_file('config.tar')
+print 'using %s as input.' % cdb_filename
 
 from pprint import pprint
 
