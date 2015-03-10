@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-03-10 - 
+ - fix a bug in the interration of product of Bernstein polynomial and exponent 
+
 ! 2015-03-09 - Vanya Belyaev
  - add conversions of polynomial bases  
 

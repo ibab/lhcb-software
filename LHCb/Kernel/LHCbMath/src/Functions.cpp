@@ -8596,10 +8596,10 @@ double Gaudi::Math::Bernstein::integrate
   const double high ) 
 {
   //
-  if      ( s_equal ( tau , 0    )           ) { return poly.integral ( low  , high         ) ; } 
+  if      ( s_equal ( tau , 0    )           ) { return  poly.integral ( low  , high         ) ; } 
   else if ( s_equal ( low , high )           ) { return 0 ; }
   else if ( poly.zero ()                     ) { return 0 ; }
-  else if ( low  >  high                     ) { return integrate ( poly , tau , high , low ) ; }
+  else if ( low  >  high                     ) { return -integrate ( poly , tau , high , low ) ; }
   else if ( high <  poly.xmin () || 
             low  >  poly.xmax () ) { return  0 ; }
   //
