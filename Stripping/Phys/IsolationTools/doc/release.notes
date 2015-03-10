@@ -1,7 +1,13 @@
- anche a!============================================================================
+!============================================================================
 ! Package     : IsolationTools
 ! Responsible : Alex Shires
 !============================================================================
+
+
+! 2015-03-10 - Alessandro Mordà
+Submitted new version of RelInfo for Bstautau analysis, after fixing of bugs
+
+
 
 ! 2015-02-16 - Stefano Perazzini
  - Put an ERROR message in RelInfoBs2MuMuIsolation.cpp saying that the tool is
@@ -11,6 +17,7 @@
 
 ! 2014-10-13 - Anton Poluektov
  - Modify Bs2MuMuTrackIsolation not to produce warning when applied to combined particles
+
 
 ! 2014-10-07 - Alessandro Mordà
 - Modified all the RelInfoBstautau* tools (exept the RelInfoBstautauCDFiso*) to solve issues related to the RecursionLevel
