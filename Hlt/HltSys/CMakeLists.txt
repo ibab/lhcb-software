@@ -24,6 +24,7 @@ gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Hlt/TCKUtils
                          Phys/LoKiTrigger
                          Tr/TrackTools
-                         Kernel/SelectionLine)
+                         Kernel/SelectionLine
+						 Phys/BBDecTreeTool)
 
 gaudi_add_test(QMTest QMTEST)

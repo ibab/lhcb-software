@@ -27,6 +27,7 @@ use LoKiTrigger         v15r5    Phys  # Vanya Belyaev
 # Extra packages for v23r5
 use SelectionLine       v1r4     Kernel
 use TrackTools          v5r7p1   Tr
+use BBDecTreeTool       v1r7     Phys
 
 # Declare this as a container package
 apply_pattern container_package
