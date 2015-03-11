@@ -8,7 +8,6 @@
 
 ! 2015-03-09 - Roel Aaij
  - Add explicit Velo, TT and IT decoding to GhostID sequence.
- - Ignore TT when track fitting.
 
 ! 2015-03-06 - Sascha Stahl
  - Hlt2TrackingConfigurations: Changed name of configurations to be shorter.
