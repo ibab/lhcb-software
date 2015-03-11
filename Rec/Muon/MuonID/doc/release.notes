@@ -3,6 +3,15 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2015-03-11 - Kevin Dungs
+ - Merge efforts of the MuonID task force from branch LHCbPS-1372.
+  - Implement CommonMuonTool that offers the same functionality for both Offline
+    and Hlt1.
+  - Implement a DLLMuonTool that can calculate Muon DLLs using the information
+    from CommonMuonTool
+  - Implement MuonIDAlgLite that does the same as MuonIDAlg but using the new
+    tools.
+
 !========================= MuonID v9r13 2015-02-23 =========================
 ! 2015-01-15 - Gerhard Raven
  - speed up MuonIDAlg by a factor of 1.8 by only computing the FOI once per

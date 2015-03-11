@@ -1,10 +1,10 @@
 package           MuonID
 version           v9r13
 
-branches src cmt doc python
+branches src cmt doc python MuonID
 
 # include directory
-include_path none
+include_dirs none
 
 # add "use" statements
 use GaudiAlg           v*
@@ -19,7 +19,9 @@ use vdt                v* LCG_Interfaces
 # build a MuonID library
 library MuonID ../src/*.cpp
 
+apply_pattern install_more_includes more=MuonID
 apply_pattern component_library library=MuonID
+apply_pattern linker_library library=MuonID
 apply_pattern install_python_modules
 
 macro_append ROOT_linkopts " -lHist -lGpad -lGraf" \
