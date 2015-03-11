@@ -19,8 +19,8 @@ gaudi_add_library(dim
                     src/open_dns.c src/sll.c src/swap.c src/tcpip.c
                     src/utilities.c src/diccpp.cxx src/dimcpp.cxx src/discpp.cxx
                     src/tokenstring.cxx
-                  PUBLIC_HEADERS dim
-                  INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/dim ${CMAKE_CURRENT_SOURCE_DIR}/src/did
+                  PUBLIC_HEADERS dim/.
+                  INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/dim
                   LINK_LIBRARIES ${CMAKE_DL_LIBS} -lrt)
 #set_property(TARGET dim APPEND PROPERTY COMPILE_DEFINITIONS f2cFortran)
 
@@ -31,6 +31,7 @@ endmacro()
 dim_exe(dns src/dns.c)
 
 include_directories(${MOTIF_INCLUDE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/did)
 dim_exe(did src/did/make_did.c)
 target_link_libraries(did ${MOTIF_LIBRARIES} ${X11_LIBRARIES} ${X11_Xt_LIB})
 
@@ -52,6 +53,3 @@ dim_exe(dim_get_service src/util/dim_get_service.c)
 dim_exe(dim_send_command src/util/dim_send_command.c)
 # dim_exe(bigServer src/benchmark/bigServer.cxx)
 # dim_exe(bigClient src/benchmark/bigClient.cxx)
-
-
-message(WARNING "DIM headers are used from 'inside' the dim directory")

@@ -1,8 +1,11 @@
 !-----------------------------------------------------------------------------
 ! Package     : Online/DIM
 ! Responsible : Pere Mato Vila
-! Purpose     : CMT Interface to DIM 
+! Purpose     : CMT Interface to DIM
 !-----------------------------------------------------------------------------
+
+! 2014-03-11 - Marco Clemencic
+ - Fixed installation/use of DIM headers.
 
 ! 2014-01-08 - Marco Clemencic
  - Ignore "-pedantic" warnings (in CMake).
@@ -33,7 +36,7 @@
 
 !=========================== DIM v16r8p1 2007-06-19 ============================
 ! 2007-06-19 Markus Frank
- - add tags for i486 for credit card PC builds: 
+ - add tags for i486 for credit card PC builds:
    slc3_i486_gcc323      slc3_gcc323 i486
    slc3_i486_gcc323_dbg  slc3_gcc323 i486 debug
    slc4_i486_gcc34       slc3_gcc34  i486
@@ -49,7 +52,7 @@
 
 !=========================== DIM v16r5 2006-09-11 ============================
 ! 2006-09-11 - Florence Ranjard
- - remove setting of DIM_release_area, 
+ - remove setting of DIM_release_area,
    it is set as an environment variable in (Ext)CMT.(c)sh
 
 ! 2006-08-21 - Markus Frank
@@ -67,4 +70,4 @@
   Use latest version released by Clara with common file structure (v15r11)
 
 ! 2004-09-20 - Pere Mato Vila
- -New package 
+ -New package
