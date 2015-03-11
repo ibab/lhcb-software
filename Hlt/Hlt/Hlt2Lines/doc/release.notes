@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-11 - Karlis Dreimanis
+ - Added Single and Di Lepton Lines for EW group
+
 ! 2015-03-11 - Christian Linn
  - Added DiMuonPsi2S and DiMuonB Turbo lines to Turbo module
 
