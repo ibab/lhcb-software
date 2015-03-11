@@ -28,7 +28,6 @@ HltANNSvc().InfoID = {
 prefix = "Hlt2IncPhi"
 
 Tesla().TriggerLines = ["Hlt2IncPhi"]
-Tesla().ReportVersion = 2
 Tesla().OutputLevel = 2
 Tesla().EvtMax = -1
 Tesla().Pack = False
