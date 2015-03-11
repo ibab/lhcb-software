@@ -27,8 +27,6 @@ class Tesla(LHCbConfigurableUser):
           , "outputFile" 	: 'Tesla.dst' 	# output filename
           , 'WriteFSR'    	: False 	# copy FSRs as required
           , 'PV'	        : "Offline"      # Associate to the PV chosen by the HLT or the offline one
-          , 'PreSplit'	        : False         # Are you looking at a time before the HLT was split?
-          , 'ReportVersion'	: 2	        # Do we have the normal or extendedselection reports
           , 'TriggerLines'	: ["Hlt2IncPhi"]# Which trigger line
           , 'Mode'	        : "Offline"     # "Online" (strip unnecessary banks and run lumi algorithms) or "Offline"?
           , 'Pack'	        : True          # Do we want to pack the objects?
@@ -46,8 +44,6 @@ class Tesla(LHCbConfigurableUser):
             , "outputFile" 	: 'output filename, automatically selects MDF or InputCopyStream'
             , 'WriteFSR'    	: 'copy FSRs as required'
             , 'PV'     	        : 'Associate to the PV chosen by the HLT or the offline one'
-            , 'PreSplit'     	: 'Are you looking at a time before the HLT was split?'
-            , 'ReportVersion'   : '1: Normal HLT reports, 2: New extended reports'
             , 'TriggerLines'    : 'Which trigger line to process'
             , 'Mode'     	: '"Online" (strip unnecessary banks and run lumi algorithms) or "Offline"?'
             , 'Pack'     	: 'Do we want to pack the object?'
@@ -140,9 +136,6 @@ class Tesla(LHCbConfigurableUser):
         iox=IOExtension(persistency)
         
         writer = InputCopyStream(self.writerName)
-        #DstConf().Writer     = self.writerName
-        #DstConf().AlwaysCreate=True
-        #DstConf().DstType="DST"
 
         seq=GaudiSequencer('TeslaReportAlgoSeq')
         writer.RequireAlgs += ['TeslaReportAlgoSeq']
@@ -166,6 +159,7 @@ class Tesla(LHCbConfigurableUser):
                         , self.base + l + "/RichPIDs#99"
                         , self.base + l + "/MuonPIDs#99"
                         , self.base + "Primary#99"
+                        , self.base + l + "/_ReFitPVs#99"
                         , self.base + l + "/Particle2VertexRelations#99"
                         ]
 
@@ -206,10 +200,8 @@ class Tesla(LHCbConfigurableUser):
         from Configurables import TeslaReportAlgo
         trig1 = TeslaReportAlgo("TeslaReportAlgo"+line)
         trig1.OutputPrefix=self.base+line
-        trig1.ReportVersion=self.getProp('ReportVersion')
         trig1.PV=self.getProp('PV')
         trig1.PVLoc=self.base+"Primary"
-        trig1.PreSplit=self.getProp('PreSplit')
         trig1.TriggerLine=line
         trig1.OutputLevel=self.getProp('OutputLevel')
         return trig1
