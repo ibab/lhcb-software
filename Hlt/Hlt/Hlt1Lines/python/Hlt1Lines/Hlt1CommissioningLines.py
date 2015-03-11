@@ -82,7 +82,7 @@ class Hlt1CommissioningLinesConf(HltLinesConfigurableUser):
         decoder = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
         # TODO: just want presence, so HLT_ERRORBITS(0xffff) would be nice to have...
         Line('ErrorEvent',prescale = self.prescale, postscale = self.postscale
-            , algos = [HDRFilter('Counter' ,
+            , algos = [HDRFilter('Hlt1ErrorEventCounter' ,
                                   Code = "HLT_COUNT_ERRORBITS_RE('^Hlt1.*',0xffff) > 0",
                                   Location = decoder.listOutputs()[0])]
             , priority = 254

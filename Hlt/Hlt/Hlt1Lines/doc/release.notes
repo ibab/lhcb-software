@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-03-11 - Roel Aaij
+ - Rename Counter to Hlt1ErrorEventCounter.
+ - Allow ODINTriggers to be ommitted from __slots__ in Hlt1TrackLines.
+
 !========================= Hlt1Lines v7r8 2015-03-09 =========================
 
 ! 2015-03-06 - V. Gligorov

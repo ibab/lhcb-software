@@ -182,8 +182,10 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             return l0
 
     def __odin(self, nickname):
-        import collections
+        if 'ODINTriggers' not in self.getProps():
+            return None
         odin = self.getProp( 'ODINTriggers' )[nickname]
+        import collections
         if isinstance(odin, collections.Iterable) and not isinstance(odin, basestring):
             return "|".join(["(ODIN_TRGTYP == %s)" % chan for chan in odin])
         else:
