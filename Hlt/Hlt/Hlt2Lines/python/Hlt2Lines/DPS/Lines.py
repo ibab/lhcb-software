@@ -77,7 +77,6 @@ class DPSLines(Hlt2LinesConfigurableUser) :
 
         for ( linename , algos ) in self.algorithms(stages).iteritems():
             from HltLine.HltLine import Hlt2Line
-            import pdb; pdb.set_trace()
             Hlt2Line( 'DPS' + linename          ,
                       prescale  = self.prescale  , 
                       algos     = algos          ,
