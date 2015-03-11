@@ -854,8 +854,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
             self.setProp("RichTrackCuts", OfflineRichDefaultTrackCuts)
             self.setProp("RichHypos",  OfflineRichDefaultHypos)
             self.setProp("RichPidConfig", "FullGlobal")
-            self.setProp("RichTracklessRingAlgs", ['ENN'])
-            self.setProp("RichFindClusters", True)
+            self.setProp("RichTracklessRingAlgs", [])
+            self.setProp("RichFindClusters", False)
         
         from HltLine.HltLine import bindMembers
         from Configurables import RichRecSysConf

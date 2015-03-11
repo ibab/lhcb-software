@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-03-11 - Roel Aaij
+ - Disable RICH trackless ring finding and pixel clustering.
+
 !========================= HltTracking v13r5 2015-03-09 =========================
 
 ! 2015-03-09 - Roel Aaij
