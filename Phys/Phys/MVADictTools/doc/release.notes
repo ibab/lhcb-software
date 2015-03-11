@@ -4,7 +4,9 @@
 ! Purpose     : Generic MVA classifier backends for DictTransform
 !---------------------------------------------------------------------------
 
-!========================= MVADictTools v1r9 2015-03-06 =========================
+! 2015-03-11 - Egor Khairullin
+ - Add support for BBDT models (from Phys/BBDecTreeTool) and example of usage
+       (options/mvaDfromB_bbdt.py)
 
 ! 2015-03-06 - Andrey Ustyuzhanin
  - fix eos URL to sample file for mvaDfromB scripts

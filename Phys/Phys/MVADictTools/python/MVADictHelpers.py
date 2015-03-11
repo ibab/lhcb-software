@@ -98,3 +98,51 @@ def addMatrixnetclassifierTuple(Branch, MatrixnetFile, Variables,
     MVAResponse.Matrixnet.MVAdict.Variables = Variables
     # end of function
 
+# Matrixnet Value (to be used for cutting)
+def addBBDecTreeclassifierValue(Component, BBDecTreeFile, Variables, ToolName) :
+    from Configurables import LoKi__Hybrid__DictValue as DictValue
+    Component.addTool(DictValue,ToolName)
+    MVAResponse = getattr(Component,ToolName)
+    Key = "BDT"
+    MVAResponse.Key = Key
+    MVAResponse.Source = "LoKi::Hybrid::DictTransform<BBDecTreeTransform>/BBDecTree"
+    Options = {
+        "BBDecTreeFile"    : BBDecTreeFile,
+        "Name"       : Key,
+        "KeepVars"   : "0"}
+
+    from Configurables import LoKi__Hybrid__DictTransform_BBDecTreeTransform_ as BBDecTreetransform
+    from Configurables import LoKi__Hybrid__DictOfFunctors
+
+    MVAResponse.addTool(BBDecTreetransform,"BBDecTree")
+    MVAResponse.BBDecTree.Options = Options
+    MVAResponse.BBDecTree.Source = "LoKi::Hybrid::DictOfFunctors/MVAdict"
+    MVAResponse.BBDecTree.addTool(LoKi__Hybrid__DictOfFunctors,"MVAdict")
+    MVAResponse.BBDecTree.MVAdict.Variables = Variables
+    # end of function
+
+# BBDecTree tuple (to be added to the HybridTupleTool)
+def addBBDecTreeclassifierTuple(Branch, BBDecTreeFile, Variables,
+                           Name="BDT", Keep=False, Preambulo=[]) :
+    from Configurables import LoKi__Hybrid__Dict2Tuple as Dict2Tuple
+    Branch.addTupleTool(Dict2Tuple,Name)
+    MVAResponse = getattr(Branch,Name)
+    #Key = "BDT"
+    #MVAResponse.Key = Key
+
+    MVAResponse.Source = "LoKi::Hybrid::DictTransform<BBDecTreeTransform>/BBDecTree"
+    Options = {
+        "BBDecTreeFile"    : BBDecTreeFile,
+        "Name"       : Name,
+        "KeepVars"   : "1" if Keep else "0"}
+
+    from Configurables import LoKi__Hybrid__DictTransform_BBDecTreeTransform_ as BBDecTreetransform
+    from Configurables import LoKi__Hybrid__DictOfFunctors
+
+    MVAResponse.addTool(BBDecTreetransform,"BBDecTree")
+    MVAResponse.BBDecTree.Options = Options
+    MVAResponse.BBDecTree.Source = "LoKi::Hybrid::DictOfFunctors/MVAdict"
+    MVAResponse.BBDecTree.addTool(LoKi__Hybrid__DictOfFunctors,"MVAdict")
+    MVAResponse.BBDecTree.MVAdict.Preambulo = Preambulo
+    MVAResponse.BBDecTree.MVAdict.Variables = Variables
+    # end of function
