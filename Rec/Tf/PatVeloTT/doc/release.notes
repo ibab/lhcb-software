@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-03-11 - Espen Eie Bowen
+ - Add protection in case of empty layers
+
 !========================= PatVeloTT v4r5 2015-02-23 =========================
 ! 2015-02-05 - Espen Eie Bowen
  - Add code to account for overlap hits, change default value of PassHoleSize

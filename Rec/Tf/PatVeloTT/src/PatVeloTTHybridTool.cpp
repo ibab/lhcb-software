@@ -280,6 +280,9 @@ bool PatVeloTTHybridTool::findHits(){
     if( (i == 6 || i == 2) && nHits == 0){
       return false;
     }
+
+    //Protect against empty layers
+    if(m_hitsLayers[i].empty()) continue;
     
     float dxDy   = m_hitsLayers[i].front()->hit()->dxDy();
     float yLayer = 0.0;
