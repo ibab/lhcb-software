@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2015-03-11 - Chris Jones
+ - Fix a small pronlem in the configurables that cause custom settings to
+   not always be properly propagated.
+
 ! 2015-03-10 - Chris Jones
  - Rework things to avoid assumptions based on the order things are applied.
 

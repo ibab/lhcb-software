@@ -192,58 +192,52 @@ class RichRecSysBaseConf(RichConfigurableUser):
         self.applyCommonConf()
         if self.getProp("ConfigureAlgs") : self.configAlgorithms( self.getRecoSeq() )
 
+    ## Propagate options
+    def passOption(self,other,name):
+        if not other.isPropertySet(name) :
+            #print "PassOption", self.name(), other.name(), name
+            self.propagateProperty(name,other)
+
+    ## Propagate options
+    def passOptions(self,other,names):
+        for name in names : self.passOption(other,name)
+        
     ## Propagate select options to used configurables
     def setupToolOptions(self) :
         
         # Tracks and segments
         tkConf = self.trackConfig()
         tkConf.setProp("Radiators",self.usedRadiators())
-        for prop in ["DataType","OutputLevel","Context","SpecialData"]:
-            tkConf.setProp( prop, self.getProp(prop) )
+        self.passOptions(tkConf,["DataType","OutputLevel","Context","SpecialData"])
         
         # Pixels
         pixConf = self.pixelConfig()
         pixConf.setProp("Detectors",self.usedDetectors())
-        for prop in ["DataType","OutputLevel","Context","SpecialData"]:
-            pixConf.setProp( prop, self.getProp(prop) )
+        self.passOptions(pixConf,["DataType","OutputLevel","Context","SpecialData"])
         
         # Photons
         photConf = self.photonConfig()
         photConf.setProp("Radiators",self.usedRadiators())
-        for prop in ["DataType","OutputLevel","SpecialData","Context","Simulation"]:
-            photConf.setProp( prop, self.getProp(prop) )
+        self.passOptions(photConf,["DataType","OutputLevel","SpecialData","Context","Simulation"])
         
         # CK theta resolution
         ckResConf = self.ckResConfig()
-        for prop in ["OutputLevel","Context"]:
-            ckResConf.setProp( prop, self.getProp(prop) )
+        self.passOptions(ckResConf,["OutputLevel","Context"])
         
         # Print Config
         self.printInfo(tkConf)
         self.printInfo(pixConf)
         self.printInfo(photConf)
         self.printInfo(ckResConf)
-
-    ## Propagate all options to used configurables
-    def propagateAllOptions(self,groupConfig) :
-        
-        # Main options
-        self.copyOptions( self, groupConfig )
-        
-        # clone options for used configurables
-        self.copyOptions( self.trackConfig(),  groupConfig.trackConfig()  )
-        self.copyOptions( self.pixelConfig(),  groupConfig.pixelConfig()  )
-        self.copyOptions( self.photonConfig(), groupConfig.photonConfig() )
-        self.copyOptions( self.gpidConfig(),   groupConfig.gpidConfig()   )
-        self.copyOptions( self.ckResConfig(),  groupConfig.ckResConfig()  )
   
     ## Copy all options from A to B
     def copyOptions(self,a,b):
         for option in a.__slots__.keys() :
             if a.isPropertySet(option) :
                 value = a.getProp(option)
-                #print "Cloning option", option, "=", value, "from", a.name(), "to", b.name()
-                b.setProp(option,value)
+                if not b.isPropertySet(option):
+                    #print "Cloning option", option, "=", value, "from", a.name(), "to", b.name()
+                    b.setProp(option,value)
 
     ## Construct the track group name for a given list of types
     def trackGroupName(self,tkTypeGroup) :
@@ -486,6 +480,19 @@ class RichRecSysBaseConf(RichConfigurableUser):
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 class RichRecSysConf(RichRecSysBaseConf) :
+
+    ## Propagate all options to used configurables
+    def propagateAllOptions(self,groupConfig) :
+        
+        # Main options
+        self.copyOptions( self, groupConfig )
+        
+        # clone options for used configurables
+        self.copyOptions( self.trackConfig(),  groupConfig.trackConfig()  )
+        self.copyOptions( self.pixelConfig(),  groupConfig.pixelConfig()  )
+        self.copyOptions( self.photonConfig(), groupConfig.photonConfig() )
+        self.copyOptions( self.gpidConfig(),   groupConfig.gpidConfig()   )
+        self.copyOptions( self.ckResConfig(),  groupConfig.ckResConfig()  )
 
     def setTrackGroups( self, tkGroups ):
         # Set the property
