@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-11 - Christian Linn
+ - Added DiMuonPsi2S and DiMuonB Turbo lines to Turbo module
+
 ! 2015-03-10 - Dan Johnson
  - Added Lambda0 -> p pi (+WS) CEP HLT2 line
  - Added Low mass resonance -> p+ p~- (+WS) CEP HLT2 line
