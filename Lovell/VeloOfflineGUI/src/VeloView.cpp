@@ -3,7 +3,7 @@
 
 //_____________________________________________________________________________
 
-veloview::veloview(int runMode, QWidget *parent) :
+veloview::veloview(int runMode, std::vector<std::string> * ops, QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::veloview),
   m_printOption(0),
@@ -14,7 +14,8 @@ veloview::veloview(int runMode, QWidget *parent) :
   m_logoText("Default GUI"),
   m_plotOps(NULL),
   m_runProxy(NULL),
-  m_verbose(false)
+  m_verbose(false),
+  m_dataDir("/afs/cern.ch/work/a/apearce/public/VetraOutput")
 {
   QFile stylesheet("styleSheet.qss");
   stylesheet.open(QFile::ReadOnly);
@@ -40,7 +41,27 @@ veloview::veloview(int runMode, QWidget *parent) :
     QPixmap plogo(QString("Logos/veloLogo.png"));
     ui->m_logo->setPixmap(plogo);
   }
+  m_ops = ops;
+  setOps();
+  std::cout<<"Data directory: "<<m_dataDir<<std::endl;
 }
+
+
+//_____________________________________________________________________________
+
+void veloview::setOps(){
+  for (std::vector<std::string>::iterator iOp = m_ops->begin();
+  		iOp != m_ops->end(); iOp++) {
+  	if ((*iOp).size() > 14) {
+  		if ((*iOp).substr(0, 14) == "--run-data-dir")
+  			m_dataDir = (*iOp).substr(15, (*iOp).size());
+
+  		else std::cout<<"Unknown option: "<<(*iOp)<<std::endl;
+  	}
+  	else std::cout<<"Unknown option: "<<(*iOp)<<std::endl;
+  }
+}
+
 
 
 //_____________________________________________________________________________
@@ -72,7 +93,8 @@ void veloview::setVeloOptionsWidg() {
   char buff[512];
   std::string command;
   std::cout<<"Retriving run list..."<<std::endl;
-  if (m_runMode == 0) command = "" + m_VVinterfaceScript + " run_list --run-data-dir=/afs/cern.ch/work/a/apearce/public/VetraOutput";
+  if (m_runMode == 0) command = "" + m_VVinterfaceScript + " run_list --run-data-dir="
+  		+ m_dataDir;
   else command = "dummyDataGetter.py run_list";
   std::cout<<"Proccessing..."<<std::endl;
   in = popen(command.c_str(), "r");
@@ -119,7 +141,7 @@ void veloview::filterWildcard(QString s) {
 void veloview::setContent() {
   if (!m_ran) {
     ui->w_plotOps->setEnabled(true);
-    m_plotOps = new VPlotOps(ui->w_plotOps);
+    m_plotOps = new VPlotOps(ui->w_plotOps, &m_dataDir);
     m_plotOps->b_moduleSelector1 = ui->b_selector1;
     m_plotOps->b_moduleSelector2 = ui->b_selector2;
     m_plotOps->b_veloRunNumber = b_veloRunNumber;

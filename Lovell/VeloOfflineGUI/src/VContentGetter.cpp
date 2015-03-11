@@ -19,7 +19,8 @@ public:
     std::string command = "retrieve_run_view_plot.py " +
         m_plot->m_plotOps->b_veloRunNumber->currentText().toStdString() + " '" +
         m_retrivalCommand + "' '" + m_plot->m_plotOps->currentModuleStr() + "'";
-    command += " --run-data-dir=/afs/cern.ch/work/a/apearce/public/VetraOutput";
+    std::string * dataDir = m_plot->m_plotOps->m_dataDir;
+    command += " --run-data-dir=" + (*dataDir);
     std::cout<<"Sending command: "<<std::endl;
     std::cout<<command<<std::endl;
     in = popen(command.c_str(), "r");

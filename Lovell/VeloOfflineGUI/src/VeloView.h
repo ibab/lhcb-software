@@ -35,9 +35,11 @@ public:
   std::string m_VVinterfaceScript;
   QSortFilterProxyModel * m_runProxy;
   bool m_verbose;
+  std::vector<std::string> * m_ops;
+  std::string m_dataDir;
 
   // Methods___________________________________________________________________
-  explicit veloview(int, QWidget *parent = 0);
+  explicit veloview(int, std::vector<std::string> *, QWidget *parent = 0);
   ~veloview();
   void VPrint(std::string); // Overloaded.
   void VPrint(int);
@@ -49,6 +51,7 @@ public:
   void setOptionsWidg();
   void setVeloOptionsWidg();
   void addModuleSelector();
+  void setOps();
 
   // Optional settings ________________________________________________________
   QComboBox * b_veloRunNumber;

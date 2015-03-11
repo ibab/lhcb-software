@@ -28,8 +28,9 @@ public:
   QComboBox * b_moduleSelector2;
   QComboBox * b_veloRunNumber;
   QGroupBox * m_moduleSelector;
+  std::string * m_dataDir;
 
-  VPlotOps(QGroupBox*);
+  VPlotOps(QGroupBox*, std::string *);
   void newSelection(VPlot*, bool);
   std::string currentModuleStr() {
     std::stringstream ss;

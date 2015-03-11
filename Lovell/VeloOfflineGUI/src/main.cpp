@@ -3,12 +3,17 @@
 #include <sstream>
 
 int main(int argc, char *argv[]) {
-  int mode = 0; // 0 for VeloView
-  if (argc == 2) mode = atoi(argv[1]);
+	std::vector<std::string> ops;
+	for (int i=1; i<argc; i++) {
+		std::string op(argv[i]);
+		std::cout<<"Adding option: "<<op<<std::endl;
+		ops.push_back(op);
+	}
+
   QApplication a(argc, argv);
   a.setStyle("plastique");
 
-  veloview w(mode);
+  veloview w(0, &ops);
   w.show();
 
   std::cout<<"Done."<<std::endl;
