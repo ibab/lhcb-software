@@ -12,10 +12,11 @@ include_path      none
 
 # Used packages
 #============================================================================
-use GaudiAlg            v*
-use TrackEvent		v*    Event
-use MuonDet             v*    Det
-use TrackInterfaces     v*    Tr
+use GaudiAlg           v*
+use TrackEvent		   v*    Event
+use MuonDet            v*    Det
+use TrackInterfaces    v*    Tr
+use MuonID             v*    Muon
 
 #============================================================================
 # Install headers

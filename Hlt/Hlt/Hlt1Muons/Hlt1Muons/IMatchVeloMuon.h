@@ -14,7 +14,7 @@ class Candidate;
 /** @class IMatchVeloMuon IMatchVeloMuon.h Hlt1Muons/IMatchVeloMuon.h
  *  
  *
- *  @author 
+ *  @author Roel Aaij
  *  @date   2014-06-04
  */
 class GAUDI_API IMatchVeloMuon : virtual public extend_interfaces1<ITracksFromTrack> {

@@ -4,6 +4,26 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+! 2015-03-11 - Kevin Dungs
+ - Merge efforts from the MuonID task force (from branch LHCbPS-1372)
+   - Hlt1MuonTool now uses Rec/Muon/MuonID/CommonMuonTool internally
+   - Add MatchVeloTTMuon (see release notes from Vasileios below)
+
+! 2015-03-10 - Vasileios Syropoulos
+ - Prepare and clean up MatchVeloTTMuon.{cpp,h} to go into the head:
+   - Start from veloTTCandidates.
+   - Use offline FoI.
+   - Use ITrackExtrapolator/ParabolicExtrapolator.
+   - Added configurable for vertical plane in the chi2 fit.
+   - Efficiency and chi2 not optimised yet.
+
+! 2015-01-31 - Vasileios Syropoulos
+ - Modified MatchVeloTTMuon.{cpp,h}, to account for veloTT candidates w/o TT hits.
+
+! 2014-12-18 - Vasileios Syropoulos
+ - Added scripts MatchVeloTTMuon.{cpp,h}. Start from VeloTT tracks and 
+   propagate to M3 using Tr/ITrackExtrapolator/TrackMasterExtrapolator.
+
 !========================= Hlt1Muons v1r12 2015-01-20 =========================
 
 ! 2014-12-16 - Roel Aaij
@@ -23,6 +43,13 @@
  - Fix bad commit. Missing ; in MatchVeloMuon.cpp line: 174
 
 ! 2014-11-26 - Vasileios Syropoulos
+ - Fix small bug in MatchVeloMuon:
+   accidentally reintroduced bug that was fixed before (2014-10-08 - Roel Aaij).
+
+! 2014-11-20 - Vasileios Syropoulos
+ - Fix bad commit. Missing ; in MatchVeloMuon.cpp line: 174
+
+! 2014-11-20 - Vasileios Syropoulos
  - Fix small bug in MatchVeloMuon:
    accidentally reintroduced bug that was fixed before (2014-10-08 - Roel Aaij).
 

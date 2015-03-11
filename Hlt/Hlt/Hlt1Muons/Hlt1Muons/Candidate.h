@@ -26,18 +26,24 @@ class Candidate final
 {
   public:
     /// Standard constructor
-    Candidate( const LHCb::Track* track, Hlt1ConstMuonHits hits )
+     Candidate( const LHCb::Track* track, Hlt1ConstMuonHits hits, LHCb::State::Location stateLocation )
         : m_track(track)
         , m_hits( std::move(hits) )
     {
-        const LHCb::State* state = track->stateAt( LHCb::State::EndVelo );
-        if ( !state ) state = &( track->closestState( 5000 ) );
-        m_params = {{ state->x(),  state->y(), state->z(), state->tx(), state->ty(),
-                      state->errTx2(), state->errTy2() }};
+      const LHCb::State* state = track->stateAt( stateLocation );
+      if ( !state ) state = &( track->closestState( 5000 ) );
+      m_params = {{ state->x(),  state->y(), state->z(), state->tx(), state->ty(),
+		    state->errTx2(), state->errTy2() }};
     }
 
-    Candidate( const LHCb::Track* track )
-        : Candidate( track, Hlt1ConstMuonHits() )
+     Candidate( const LHCb::Track* track )
+       : Candidate( track, Hlt1ConstMuonHits(), LHCb::State::EndVelo )
+    {
+        m_hits.reserve( 5 );
+    }
+
+     Candidate( const LHCb::Track* track, LHCb::State::Location stateLocation )
+       : Candidate( track, Hlt1ConstMuonHits(), stateLocation )
     {
         m_hits.reserve( 5 );
     }
@@ -131,6 +137,14 @@ class Candidate final
     {
         return m_slope;
     }
+    double& slopeY()
+    {
+        return m_slopeY;
+    }
+    double slopeY() const
+    {
+        return m_slopeY;
+    }
     double& p()
     {
         return m_p;
@@ -172,7 +186,8 @@ class Candidate final
     const LHCb::Track* m_track;
     std::array<double,7> m_params;
 
-    double m_slope = 0;
+    double m_slope  = 0;
+    double m_slopeY = 0;
     double m_p = 0;
 
     Hlt1ConstMuonHits m_hits;
