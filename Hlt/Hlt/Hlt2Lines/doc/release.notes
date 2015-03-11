@@ -14,7 +14,8 @@
  - Add Hlt2ExternalStage, to be used when using stages from another
    configurable.
  - Add first version of DPS lines for Vanya.
- 
+ - Use explicit HDRFilter in Hlt2ErrorEvent.
+
 ! 2015-03-11 - Karlis Dreimanis
  - Added Single and Di Lepton Lines for EW group
 

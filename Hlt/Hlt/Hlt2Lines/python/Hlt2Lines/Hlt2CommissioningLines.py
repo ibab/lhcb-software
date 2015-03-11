@@ -62,8 +62,13 @@ class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
                       ]
             )
 
+        from DAQSys.Decoders import DecoderDB
+        from Configurables import LoKi__HDRFilter   as HDRFilter
+        decoder = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
         Line('ErrorEvent',prescale = self.prescale, postscale = self.postscale
-            , HLT1 = "HLT_COUNT_ERRORBITS_RE('^Hlt2.*',0xffff) > 0" # HLT_ERRORBITS(0xffff) would be nice... don't want to count...
+            , algos = [HDRFilter('Hlt2ErrorEventCounter' ,
+                                  Code = "HLT_COUNT_ERRORBITS_RE('^Hlt2.*',0xffff) > 0",
+                                  Location = decoder.listOutputs()[0])]
             , VoidFilter = '' 
             , priority = 254
             )

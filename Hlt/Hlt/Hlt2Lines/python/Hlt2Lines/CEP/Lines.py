@@ -99,6 +99,6 @@ class CEPLines(Hlt2LinesConfigurableUser) :
             for linename, algos in self.algorithms(lns).iteritems():
                 Hlt2Line(linename, prescale = self.prescale,
                          L0DU = self.__l0du(l0nick),
-                         HLT = self.getProp('HLT'),
+                         HLT1 = self.getProp('HLT'),
                          algos = algos, postscale = self.postscale) 
         
