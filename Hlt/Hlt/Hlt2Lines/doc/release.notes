@@ -10,7 +10,11 @@
 
 ! 2015-03-11 - Roel Aaij
  - Fix common cuts being required in Hlt2Combiner.
-
+ - Change HLT to HLT1 in construction of Hlt2Line.
+ - Add Hlt2ExternalStage, to be used when using stages from another
+   configurable.
+ - Add first version of DPS lines for Vanya.
+ 
 ! 2015-03-11 - Karlis Dreimanis
  - Added Single and Di Lepton Lines for EW group
 
