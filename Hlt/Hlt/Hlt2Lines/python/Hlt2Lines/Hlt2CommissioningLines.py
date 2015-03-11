@@ -26,17 +26,17 @@ class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
                }
    def __apply_configuration__(self):
         from HltLine.HltLine import Hlt2Line   as Line
-        Line('PassThrough' ,  HLT = "HLT_PASS_RE('^Hlt1(?!Lumi).*Decision$')"
+        Line('PassThrough' ,  HLT1 = "HLT_PASS_RE('^Hlt1(?!Lumi).*Decision$')"
             , VoidFilter = '' # make sure we DO NOT get a filter thrown on top of us!!!
             , prescale = self.prescale
             , postscale = self.postscale
             )
-        Line('Transparent' ,  HLT = "HLT_PASS_RE('^Hlt1(ODIN.*|L0.*|MB.*|BeamGas.*|Velo.*|NZS.*|Incident|Tell1Error|ErrorEvent)Decision$')"
+        Line('Transparent' ,  HLT1 = "HLT_PASS_RE('^Hlt1(ODIN.*|L0.*|MB.*|BeamGas.*|Velo.*|NZS.*|Incident|Tell1Error|ErrorEvent)Decision$')"
             , VoidFilter = '' # make sure we DO NOT get a filter thrown on top of us!!!
             , prescale = self.prescale
             , postscale = self.postscale
             )
-        Line('Lumi' ,  HLT = "HLT_PASS_SUBSTR('Hlt1Lumi')"
+        Line('Lumi' ,  HLT1 = "HLT_PASS_SUBSTR('Hlt1Lumi')"
             , VoidFilter = '' # make sure we DO NOT get a filter thrown on top of us!!!
             , prescale = self.prescale
             , postscale = self.postscale
@@ -55,7 +55,7 @@ class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
         from Configurables import HltIncidentGenerator, HltSelReportsMaker
         HltSelReportsMaker().DebugIncident = 'RequestDebugEvent'
         Line('DebugEvent', prescale = self.prescale, postscale = self.postscale
-            , HLT = "HLT_PASS_RE('^Hlt1(?!Lumi).*Decision$')" # do not want debug events on lumi-exclusive Hlt1 events...
+            , HLT1 = "HLT_PASS_RE('^Hlt1(?!Lumi).*Decision$')" # do not want debug events on lumi-exclusive Hlt1 events...
             , algos = [ HltIncidentGenerator('Hlt2DebugEventDecision'
                                             , Incident = HltSelReportsMaker().DebugIncident
                                             )
@@ -63,7 +63,7 @@ class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
             )
 
         Line('ErrorEvent',prescale = self.prescale, postscale = self.postscale
-            , HLT = "HLT_COUNT_ERRORBITS_RE('^Hlt2.*',0xffff) > 0" # HLT_ERRORBITS(0xffff) would be nice... don't want to count...
+            , HLT1 = "HLT_COUNT_ERRORBITS_RE('^Hlt2.*',0xffff) > 0" # HLT_ERRORBITS(0xffff) would be nice... don't want to count...
             , VoidFilter = '' 
             , priority = 254
             )

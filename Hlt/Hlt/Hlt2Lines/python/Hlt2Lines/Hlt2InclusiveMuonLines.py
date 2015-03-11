@@ -99,7 +99,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         
         line = Hlt2Line('MuonFromHLT1'
                         , prescale = self.prescale
-                        , HLT =Hlt1AllMuons
+                        , HLT1 =Hlt1AllMuons
                         , VoidFilter = '' # explicitly require NO pile up filter... 
                         , postscale = self.postscale
                         )
@@ -109,7 +109,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line('Hlt2MuonFromHLT1Bs2MuMu'
                         , prescale = self.prescale
-                        , HLT = "HLT_PASS_RE('Hlt1.*4BsMuMu.*Decision')"
+                        , HLT1 = "HLT_PASS_RE('Hlt1.*4BsMuMu.*Decision')"
                         , VoidFilter = '' # explicitly require NO pile up filter... 
                         , postscale = self.postscale
                         )
@@ -153,7 +153,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                
         line = Hlt2Line('SingleMuon'
                         , prescale = self.prescale 
-                        , HLT =self.getProp("SingleMuHLT1Filter")
+                        , HLT1 =self.getProp("SingleMuHLT1Filter")
                         , algos = [ PV3D('Hlt2'), BiKalmanFittedMuons, 
                                     Hlt2SelSingleMuonFilter,DecodeHlt1SelRep,TOSInputMuonsFilter, 
                                     Hlt2SelSingleMuonMoni ]
@@ -256,7 +256,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                    )
         line = Hlt2Line('MuTrackNoIP'
                         , prescale = self.prescale 
-                        , HLT = Hlt1UnbMuon
+                        , HLT1 = Hlt1UnbMuon
                         , algos = [BiKalmanFittedMuons, BiKalmanFittedPions, combine_noip]
                         , postscale = self.postscale
                         )

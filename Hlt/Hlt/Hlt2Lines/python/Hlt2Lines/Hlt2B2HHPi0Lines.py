@@ -98,7 +98,7 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
         
         line = Hlt2Line('B2HHPi0_Merged'
                         , L0DU = "|".join(["L0_CHANNEL('%s')" % channel for channel in l0filter])
-                        , HLT = hltfilter         
+                        , HLT1 = hltfilter         
                         , prescale = self.prescale
                         , algos = [ PV3D('Hlt2'), BiKalmanFittedPions, Hlt2Rho4HHPi0, MergedPi0s, Hlt2B2HHPi0 ]
                         , postscale = self.postscale
@@ -110,7 +110,7 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
         ############################################################################
         line.clone('B2HHPi0_Resolved'
                    , L0DU = "|".join(["L0_CHANNEL('%s')" % channel for channel in l0filter])
-                   , HLT = hltfilter
+                   , HLT1 = hltfilter
                    , prescale = self.prescale
                    , algos = [ PV3D('Hlt2'), BiKalmanFittedPions, Hlt2Rho4HHPi0, ResolvedPi0s, Hlt2B2HHPi0 ]
                    , CombineB =

@@ -58,7 +58,7 @@ class Hlt2HighPtJetsLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line('HighPtJets'
                         , prescale = self.prescale
-                        , HLT = Hlt1HighPtJets
+                        , HLT1 = Hlt1HighPtJets
                         , algos = DVSeq + [Hlt2TrkFinder]
                         , postscale = self.getProp('PostScale')
                         )

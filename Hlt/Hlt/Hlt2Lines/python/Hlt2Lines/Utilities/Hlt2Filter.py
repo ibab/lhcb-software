@@ -11,6 +11,9 @@ class Hlt2ParticleFilter(Hlt2TisTosStage):
         super(Hlt2ParticleFilter, self).__init__(name, inputs, dependencies,
                                                  tistos, nickname, shared)
 
+    def hasOutput(self):
+        return True
+        
     def clone(self, name, **kwargs):
         args = deepcopy(self.__kwargs)
         args['name'] = name

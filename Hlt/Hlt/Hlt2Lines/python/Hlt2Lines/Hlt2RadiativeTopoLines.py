@@ -268,13 +268,13 @@ class Hlt2RadiativeTopoLinesConf(HltLinesConfigurableUser):
     algoListPhoton.extend([PV3D('Hlt2'), BiKalmanFittedKaons, ditracksSoft, DecodeL0CALO, photonsHard, softTracksAndHardPhoton])
     lineTOS = Hlt2Line('RadiativeTopoTrack' ,
                        L0DU=l0filtertrack      ,
-                       HLT=hltfilter           ,
+                       HLT1 =hltfilter           ,
                        prescale=1.0            ,
                        algos=algoListTrack       ,
                        postscale=1.0  )
     lineL0 = Hlt2Line('RadiativeTopoPhoton'  ,
                        L0DU=l0filterphoton     ,
-                       HLT=hltfilter           ,
+                       HLT1 =hltfilter           ,
                        prescale=1.0            ,
                        algos=algoListPhoton        ,
                        postscale=1.0  )

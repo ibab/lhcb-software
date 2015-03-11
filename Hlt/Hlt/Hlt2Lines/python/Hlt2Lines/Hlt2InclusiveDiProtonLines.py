@@ -140,7 +140,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         line = Hlt2Line('DiProton'
                         , prescale = self.prescale
                         , L0DU = "(L0_DATA('Spd(Mult)') < %(SpdMult)s )" % self.getProps()
-                        , HLT  = Hlt1Req
+                        , HLT1 = Hlt1Req
                         , algos = [ BiKalmanFittedProtons
                                     , TFCombine
                                     , BiKalmanFittedRichProtons
@@ -155,7 +155,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         line = Hlt2Line('DiProtonTF'
                         , prescale = self.prescale
                         , L0DU = "(L0_DATA('Spd(Mult)') < %(SpdMult)s )" % self.getProps()
-                        , HLT  = Hlt1Req
+                        , HLT1 = Hlt1Req
                         , algos = [ BiKalmanFittedProtons
                                     , TFCombine
                                     ]
@@ -227,7 +227,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         line = Hlt2Line('DiProtonLowMult'
                         , prescale = self.prescale
                         , L0DU = "(L0_DATA('Spd(Mult)') < %(LowMult_SpdMult)s )" % self.getProps()
-                        , HLT  = Hlt1Req
+                        , HLT1 = Hlt1Req
                         , algos = [ BiKalmanFittedProtons
                                     , TFCombine
                                     , BiKalmanFittedRichProtons
@@ -242,7 +242,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         line = Hlt2Line('DiProtonLowMultTF'
                         , prescale = self.prescale
                         , L0DU = "(L0_DATA('Spd(Mult)') < %(LowMult_SpdMult)s )" % self.getProps()
-                        , HLT  = Hlt1Req
+                        , HLT1 = Hlt1Req
                         , algos = [ BiKalmanFittedProtons
                                     , TFCombine
                                     ]

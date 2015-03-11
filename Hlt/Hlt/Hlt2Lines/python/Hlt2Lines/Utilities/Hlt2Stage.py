@@ -31,7 +31,7 @@ class Hlt2Stage(object):
 
     def _shared(self):
         return self.__shared
-                                                
+    
     def inputStages(self, cuts):
         if self.__inputStages == None:
             self.__inputStages = [i.stage(cuts) if hasattr(i, 'stage') else i for i in self._inputs()]
@@ -49,7 +49,9 @@ class Hlt2Stage(object):
         def __flatten(l):
             import collections
             for i in l:
-                if isinstance(i, Hlt2Stage):
+                if not i:
+                    continue
+                elif isinstance(i, Hlt2Stage):
                     for j in __flatten(i._deps()): yield j
                     for j in __flatten(i._inputs()): yield j
                     yield i
@@ -61,4 +63,27 @@ class Hlt2Stage(object):
         deps = list(__flatten(self.__deps)) + list(__flatten(self.__inputs))
         if self in deps:
             print 'WARNING: Circular dependency %s %s %s.' % (self.__name, self.__deps, self.__inputs)
-        return [i.stage(cuts) if hasattr(i, 'stage') else i for i in deps] + [stage]
+        stages = [i.stage(cuts) if hasattr(i, 'stage') else i for i in deps]
+        if stage:
+            stages += [stage]
+        return stages
+
+class Hlt2ExternalStage(Hlt2Stage):
+    def __init__(self, configurable, stage):
+        self.__conf = configurable
+        super(Hlt2ExternalStage, self).__init__(stage._name(), stage._inputs(),
+                                                stage._deps(), stage._nickname(),
+                                                stage._shared())
+        
+    def stage(self, cuts):
+        return None
+
+    def stages(self, cuts):
+        from copy import deepcopy
+        # Get a local instance of the cuts
+        common = self.__conf.getProps().get('Common', {})
+        cuts = deepcopy(self.__conf.getProps())
+        for k, v in cuts.iteritems():
+            if k != 'Common': v.update(common)
+
+        super(Hlt2ExternalStage, self).stages(cuts)

@@ -159,7 +159,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line( 'SingleHighPTElectron'
                          , prescale = self.prescale
                          , L0DU = "L0_CHANNEL('Electron')"
-                         , HLT = "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"
+                         , HLT1 = "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"
                          , algos = [ BiKalmanFittedElectrons, Hlt2SelSingleHighPTElectron]
                          , postscale = self.postscale
                          )
@@ -183,7 +183,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         line1 = Hlt2Line( 'DYeh1'
                           , prescale = self.prescale
                           , L0DU = "L0_CHANNEL('Electron')"
-                          , HLT = "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"
+                          , HLT1 = "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"
                           , algos = [BiKalmanFittedElectrons, NoCutsPions, combine_DY1]
                           , postscale = self.postscale
                           )
@@ -202,7 +202,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         line2 = Hlt2Line( 'DYeh2'
                           , prescale = self.prescale
                           , L0DU = "L0_CHANNEL('Electron')"
-                          , HLT = "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"
+                          , HLT1 = "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"
                           , algos = [BiKalmanFittedElectrons, NoCutsPions, combine_DY2]
                           , postscale = self.postscale
                           )
@@ -316,7 +316,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         SingleElectronLine = Hlt2Line("SingleElectron"
                                       , prescale = self.prescale
                                       , L0DU = L0Req
-                                      , HLT  = Hlt1Req
+                                      , HLT1 = Hlt1Req
                                       , algos = [ PV3D('Hlt2')
                                                   , Electrons
                                                   , FilterSingleElectron ]
@@ -380,7 +380,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         ElectronPlusTrackLine = Hlt2Line("ElectronPlusTrack"
                                          , prescale = self.prescale
                                          , L0DU = L0Req
-                                         , HLT  = Hlt1Req
+                                         , HLT1 = Hlt1Req
                                          , algos = [ PV3D('Hlt2')
                                                      , Electrons
                                                      , NoCutsKaons
@@ -448,7 +448,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         SingleTFElectronLine = Hlt2Line("SingleTFElectron"
                                         , prescale = self.prescale
                                         , L0DU = L0Req
-                                        , HLT = Hlt1Req
+                                        , HLT1 = Hlt1Req
                                         , algos = [ PV3D('Hlt2')
                                                     , DecodeL0CALO
                                                     , BiKalmanFittedElectronsFromL0
@@ -473,7 +473,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         SingleTFLowPtElectronLine = Hlt2Line("SingleElectronTFLowPt"
                                              , prescale = self.prescale
                                              , L0DU = L0Req
-                                             , HLT = Hlt1Req
+                                             , HLT1 = Hlt1Req
                                              , algos = electronAlgos + [ FilterSingleTFLowPtElectron ]
                                              , postscale = self.postscale
                                              )
@@ -495,7 +495,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         SingleTFHighPtElectronLine = Hlt2Line("SingleElectronTFHighPt"
                                               , prescale = self.prescale
                                               , L0DU = L0Req
-                                              , HLT = Hlt1Req
+                                              , HLT1 = Hlt1Req
                                               , algos = electronAlgos + [ FilterSingleTFHighPtElectron ]
                                               , postscale = self.postscale
                                               )
@@ -513,7 +513,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         SingleTFVHighPtElectronLine = Hlt2Line("SingleTFVHighPtElectron"
                                                , prescale = self.prescale
                                                , L0DU = L0Req
-                                               , HLT = Hlt1Req
+                                               , HLT1 = Hlt1Req
                                                , algos = electronAlgos + [ FilterSingleTFVHighPtElectron ]
                                                , postscale = self.postscale
                                                )
@@ -574,7 +574,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         TFElectronPlusTrackLine = Hlt2Line("TFElectronPlusTrack"
                                            , prescale = self.prescale
                                            , L0DU = L0Req
-                                           , HLT  = Hlt1Req 
+                                           , HLT1 = Hlt1Req 
                                            , algos = [ PV3D('Hlt2')
                                                        , BiKalmanFittedElectrons
                                                        , BiKalmanFittedKaons
@@ -639,7 +639,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         TFElectronPlusTrackNoIPLine = Hlt2Line("TFElectronPlusTrackNoIP"
                                                , prescale = self.prescale
                                                , L0DU = L0Req
-                                               , HLT  = Hlt1Req 
+                                               , HLT1 = Hlt1Req 
                                                , algos = [ BiKalmanFittedElectrons
                                                            , BiKalmanFittedKaons
                                                            , CombineTFElectronTrack ]

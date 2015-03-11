@@ -224,7 +224,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
 
       line = Hlt2Line('ExpressJPsiTagProbe'
                       , prescale = self.prescale
-                      , HLT = "HLT_PASS_RE('Hlt1.*SingleMuon.*Decision')"
+                      , HLT1 = "HLT_PASS_RE('Hlt1.*SingleMuon.*Decision')"
                       , algos = [ PV3D('Hlt2'), TagAndProbeMuons, TagAndProbePions, JPsiCombine ]
                       , postscale = self.postscale
                       )
@@ -495,7 +495,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                       )
       # line = Hlt2Line('ExpressD02KPi'
       #                 , prescale = self.prescale
-      #                 , HLT= "HLT_PASS_SUBSTR('Hlt2CharmHadD02HH_D02KPi')"
+      #                 , HLT1 = "HLT_PASS_SUBSTR('Hlt2CharmHadD02HH_D02KPi')"
       #                 , priority = 255
       #                 , VoidFilter = ''
       #                 , postscale = self.postscale
@@ -508,7 +508,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       Hlt1Physics = "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"
       line = Hlt2Line('ExpressHLT1Physics'
                       , prescale = self.prescale
-                      , HLT = Hlt1Physics
+                      , HLT1 = Hlt1Physics
                       , VoidFilter = '' # explicitly require NO pile up filter... 
                       , postscale = self.postscale
                       )

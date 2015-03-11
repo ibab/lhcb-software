@@ -114,7 +114,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
         
         line = Hlt2Line( 'diPhotonDiMuon'
                        , prescale = self.prescale
-                       , HLT =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"  
+                       , HLT1 =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"  
                        , L0DU = "L0_CHANNEL('Muon,lowMult')|L0_CHANNEL('DiMuon,lowMult')"
                        , algos = [  BiKalmanFittedMuons,FilterDiMu ]
                        , postscale = self.postscale
@@ -122,7 +122,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line( 'LowMultMuon'
                        , prescale = self.prescale
-                       , HLT =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"    
+                       , HLT1 =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"    
                        , L0DU = "L0_CHANNEL('Muon,lowMult')|L0_CHANNEL('DiMuon,lowMult')"
                        , algos = [ velotracks,  MuBackTrackFilter,  FilterNumVeloTracks, BiKalmanFittedMuons,FilterMu ]
                        , postscale = self.postscale
@@ -131,7 +131,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
         
         line = Hlt2Line( 'LowMultHadron'
                        , prescale = self.prescale
-                       , HLT =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"    
+                       , HLT1 =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"    
                        , L0DU = "L0_CHANNEL('DiHadron,lowMult')"
                        , algos = [ velotracks, HadBackTrackFilter, FilterNumVeloTracksHad, BiKalmanFittedKaons, FilterH]
                        , postscale = self.postscale
@@ -139,7 +139,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line( 'LowMultHadron_nofilter'
                        , prescale = self.prescale
-                       , HLT =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"    
+                       , HLT1 =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"    
                        , L0DU = "L0_CHANNEL('DiHadron,lowMult')"
                        , algos = [ BiKalmanFittedKaons, FilterH]
                        , postscale = self.postscale
@@ -147,7 +147,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
         
         line = Hlt2Line( 'LowMultPhoton'
                        , prescale = self.prescale
-                       , HLT =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"    
+                       , HLT1 =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"    
                        , L0DU = "L0_CHANNEL('Photon,lowMult')|L0_CHANNEL('DiEM,lowMult')"
                        , algos = [ DecodeL0CALO,BiKalmanFittedPhotonsFromL0Low,AllPi0sFromL0,FilterPhFilter ]  
                        , postscale = self.postscale
@@ -155,7 +155,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
         
         line = Hlt2Line( 'LowMultElectron'
                        , prescale = self.prescale
-                       , HLT =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"    
+                       , HLT1 =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"    
                        , L0DU = "L0_CHANNEL('Electron,lowMult')|L0_CHANNEL('DiEM,lowMult')"
                        , algos = [ velotracks,  ElBackTrackFilter, FilterNumVeloTracksEl, DecodeL0CALO, BiKalmanFittedElectronsFromL0,FilterEl]   
                        , postscale = self.postscale
@@ -163,7 +163,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
         
         line = Hlt2Line( 'LowMultElectron_nofilter'
                        , prescale = self.prescale
-                       , HLT =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"    
+                       , HLT1 =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"    
                        , L0DU = "L0_CHANNEL('Electron,lowMult')|L0_CHANNEL('DiEM,lowMult')"
                        , algos = [ DecodeL0CALO,BiKalmanFittedElectronsFromL0,FilterEl]   
                        , postscale = self.postscale

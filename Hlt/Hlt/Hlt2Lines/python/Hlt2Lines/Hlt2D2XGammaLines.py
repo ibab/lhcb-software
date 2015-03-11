@@ -115,7 +115,7 @@ class Hlt2D2XGammaLinesConf(HltLinesConfigurableUser) :
         ############################################################################
         line = Hlt2Line('D2PhiGamma'
                         , prescale = self.prescale
-                        , HLT = hltfilter
+                        , HLT1 = hltfilter
                         , L0DU = l0filter
                         , algos = [ PV3D('Hlt2'), BiKalmanFittedKaons, Hlt2Phi4D2PhiGamma ] + photonAlgos + [ Hlt2DtoPhiGamma ]
                         , postscale = self.postscale

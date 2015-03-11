@@ -121,7 +121,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
             
         from HltLine.HltLine import Hlt2Line
         Hlt2Line(lineName, prescale=self.prescale,
-                 postscale=self.postscale,algos=lclAlgos,L0DU=l0,HLT=hlt) 
+                 postscale=self.postscale,algos=lclAlgos,L0DU=l0,HLT1 =hlt) 
         self.__updateHltANNSvc(lineName)
 
     def __seqGEC(self):  

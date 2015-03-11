@@ -3,10 +3,9 @@ class Hlt2LinesConfigurableUser(HltLinesConfigurableUser):
     __slots__ = {'_stages' : {},
                  'Prescale'  : {},
                  'Postscale' : {}}
-            
-    def algorithms(self, stages):
+
+    def algorithms(self, stages, flatten = True):
         from copy import deepcopy
-        algos = []
         # Get a local instance of the cuts
         common = self.getProps().get('Common', {})
         cuts = deepcopy(self.getProps())
@@ -16,21 +15,22 @@ class Hlt2LinesConfigurableUser(HltLinesConfigurableUser):
         from HltLine.HltLine import bindMembers
         def __flatten(l):
             for i in l:
-                if isinstance(i, bindMembers):
+                if flatten and isinstance(i, bindMembers):
                     for j in __flatten(i.members()): yield j
                 else:
                     yield i
                 
         sd = {}
         from Hlt2Lines.Utilities.Utilities import uniqueEverseen
-        for name, stages in stages.iteritems():
+        for name, stg in stages.iteritems():
             sl = []
-            for i in stages:
+            for i in stg:
                 if hasattr(i, 'stages'):
                     sl.extend(i.stages(cuts))
                 else:
                     sl.append(i)
             sd[name] = list(uniqueEverseen(__flatten(sl)))
-        # import pdb; pdb.set_trace()
+
+        import pdb; pdb.set_trace()
         return sd
 

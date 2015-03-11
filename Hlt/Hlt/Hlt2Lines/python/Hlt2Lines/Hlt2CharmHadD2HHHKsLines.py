@@ -111,7 +111,7 @@ class Hlt2CharmHadD2HHHKsLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale
                         , postscale = self.postscale
                         , algos = lclAlgos
-                        , HLT = hlt
+                        , HLT1 = hlt
                        )
         self.__updateHltANNSvc(lineName)
     # }

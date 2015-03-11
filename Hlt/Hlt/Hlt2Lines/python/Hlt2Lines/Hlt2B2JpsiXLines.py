@@ -390,7 +390,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         # Final Wide Selection
         line = Hlt2Line('Bs2JpsieePhiUnbiasedPT'
                         , L0DU = L0Req
-                        , HLT  = Hlt1Req
+                        , HLT1 = Hlt1Req
                         , prescale = self.prescale
                         , algos = [Electrons, JpsiCombine, NoCutsKaons, PhiCombine, BsCombine]
                         , postscale = self.postscale
@@ -411,7 +411,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         line.clone('Bs2JpsieePhiSignal'
                    , prescale = self.prescale
                    , L0DU = L0Req
-                   , HLT  = Hlt1Req
+                   , HLT1 = Hlt1Req
                    , algos = [ PV3D('Hlt2'), Bs2JpsieePhiUnbiased, FilterBs2JpsieePhi ]
                    , postscale = self.postscale
                    )    
@@ -499,7 +499,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('TFBs2JpsieePhiUnbiasedPT'
                         , prescale = self.prescale
                         , L0DU = L0Req
-                        , HLT  = Hlt1Req
+                        , HLT1 = Hlt1Req
                         , algos = [BiKalmanFittedElectrons, JpsiCombine, BiKalmanFittedKaons, PhiCombine, BsCombine]
                         , postscale = self.postscale
                         )
@@ -520,7 +520,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         line.clone('TFBs2JpsieePhiSignal'
                    , prescale = self.prescale
                    , L0DU = L0Req
-                   , HLT  = Hlt1Req
+                   , HLT1 = Hlt1Req
                    , algos = [ PV3D('Hlt2'), TFBs2JpsieePhiUnbiased, FilterTFBs2JpsieePhi ]
                    , postscale = self.postscale
                    )    

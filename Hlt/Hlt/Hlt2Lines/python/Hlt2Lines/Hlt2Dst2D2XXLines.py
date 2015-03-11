@@ -201,7 +201,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
                                , postscale = self.postscale
                                , algos = [ PV3D('Hlt2'), BiKalmanFittedElectrons, BiKalmanFittedMuons, D2EMuComb ]
                                , L0DU = "L0_CHANNEL('Electron')"
-                               , HLT  = "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"
+                               , HLT1 = "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"
                                )
 
         ###########################################################        
@@ -210,7 +210,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
                                , postscale = self.postscale
                                , algos = [ PV3D('Hlt2'), BiKalmanFittedElectrons, BiKalmanFittedPions, D2EPiComb ]
                                , L0DU = "L0_CHANNEL('Electron')"
-                               , HLT  = "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"
+                               , HLT1 = "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"
                                )
 
         ###########################################################        
@@ -219,7 +219,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
                                , postscale = self.postscale
                                , algos = [ PV3D('Hlt2'), BiKalmanFittedElectrons, BiKalmanFittedKaons, D2EKComb ]
                                , L0DU = "L0_CHANNEL('Electron')"
-                               , HLT  = "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"
+                               , HLT1 = "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"
                                )
         
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Dst2PiD02PiPiDecision" : 50420 } )

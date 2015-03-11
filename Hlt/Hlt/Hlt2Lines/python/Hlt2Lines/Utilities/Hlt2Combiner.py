@@ -61,11 +61,12 @@ class Hlt2Combiner(Hlt2TisTosStage):
         
         ## Copy args and substitute cut values
         args = deepcopy(self.__kwargs)
+        common = cuts.get('Common', {})
         for k, v in self.__cuts.iteritems():
             if k == 'DaughtersCuts':
-                args[k] = dict((l, w % cuts.get(self._nickname(), cuts['Common'])) for l, w in v.iteritems())
+                args[k] = {l : w % cuts.get(self._nickname(), common) for l, w in v.iteritems()}
             else:
-                args[k] = v % cuts.get(self._nickname(), cuts['Common'])
+                args[k] = v % cuts.get(self._nickname(), common)
 
         if not self._tistos():
             ## Return combiner if no tistos is required

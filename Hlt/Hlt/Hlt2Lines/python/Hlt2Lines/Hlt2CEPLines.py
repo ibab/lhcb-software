@@ -420,7 +420,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         
         line = Hlt2Line( 'LowMultD2KPi'
                          , prescale = self.prescale
-                         , HLT = HLTreq
+                         , HLT1 = HLTreq
                          , L0DU = L0req
                          , algos = [ velotracks, FilterNumVeloTracks, FilterNumBackTracks, Kaons, Pions, D2KPi ]
                          , postscale = self.postscale
@@ -428,7 +428,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line( 'LowMultD2KPiPi'
                          , prescale = self.prescale
-                         , HLT = HLTreq    
+                         , HLT1 = HLTreq    
                          , L0DU = L0req
                          , algos = [ velotracks, FilterNumVeloTracks, FilterNumBackTracks, Kaons, Pions, D2KPiPi ]
                          , postscale = self.postscale
@@ -436,7 +436,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line( 'LowMultD2K3Pi'
                          , prescale = self.prescale
-                         , HLT = HLTreq
+                         , HLT1 = HLTreq
                          , L0DU = L0req
                          , algos = [ velotracks, FilterNumVeloTracks, FilterNumBackTracks, Kaons, Pions, D2K3Pi ]
                          , postscale = self.postscale
@@ -444,7 +444,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line( 'LowMultChiC2HH'
                          , prescale = self.prescale
-                         , HLT = HLTreq    
+                         , HLT1 = HLTreq    
                          , L0DU = L0req
                          , algos = [ velotracks, FilterNumVeloTracksChiC2HH, FilterNumBackTracks, Kaons, Pions, ChiC2HH ]
                          , postscale = self.postscale
@@ -452,7 +452,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line( 'LowMultChiC2HHHH'
                          , prescale = self.prescale
-                         , HLT = HLTreq    
+                         , HLT1 = HLTreq    
                          , L0DU = L0req
                          , algos = [ velotracks, FilterNumVeloTracksChiC2HHHH, FilterNumBackTracks, Kaons, Pions, ChiC2HHHH ]
                          , postscale = self.postscale
@@ -460,7 +460,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line( 'LowMultChiC2PP'
                          , prescale = self.prescale
-                         , HLT = HLTreq    
+                         , HLT1 = HLTreq    
                          , L0DU = L0req
                          , algos = [ velotracks, FilterNumVeloTracksChiC2HH, FilterNumBackTracks, Protons, ChiC2PP ]
                          , postscale = self.postscale
@@ -468,7 +468,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line( 'LowMultD2KPiWS'
                          , prescale = self.prescale
-                         , HLT = HLTreq
+                         , HLT1 = HLTreq
                          , L0DU = L0req
                          , algos = [ velotracks, FilterNumVeloTracks, FilterNumBackTracks, Kaons, Pions, D2KPiWS ]
                          , postscale = self.postscale
@@ -476,7 +476,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line( 'LowMultD2KPiPiWS'
                          , prescale = self.prescale
-                         , HLT = HLTreq    
+                         , HLT1 = HLTreq    
                          , L0DU = L0req
                          , algos = [ velotracks, FilterNumVeloTracks, FilterNumBackTracks, Kaons, Pions, D2KPiPiWS ]
                          , postscale = self.postscale
@@ -484,7 +484,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line( 'LowMultD2K3PiWS'
                          , prescale = self.prescale
-                         , HLT = HLTreq
+                         , HLT1 = HLTreq
                          , L0DU = L0req
                          , algos = [ velotracks, FilterNumVeloTracks, FilterNumBackTracks, Kaons, Pions, D2K3PiWS ]
                          , postscale = self.postscale
@@ -492,7 +492,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line( 'LowMultChiC2HHWS'
                          , prescale = self.prescale
-                         , HLT = HLTreq    
+                         , HLT1 = HLTreq    
                          , L0DU = L0req
                          , algos = [ velotracks, FilterNumVeloTracksChiC2HH, FilterNumBackTracks, Kaons, Pions, ChiC2HHWS ]
                          , postscale = self.postscale
@@ -500,7 +500,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line( 'LowMultChiC2HHHHWS'
                          , prescale = self.prescale
-                         , HLT = HLTreq    
+                         , HLT1 = HLTreq    
                          , L0DU = L0req
                          , algos = [ velotracks, FilterNumVeloTracksChiC2HHHH, FilterNumBackTracks, Kaons, Pions, ChiC2HHHHWS ]
                          , postscale = self.postscale
@@ -508,7 +508,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line( 'LowMultDDIncCP'
                          , prescale = self.prescale
-                         , HLT = HLTreq    
+                         , HLT1 = HLTreq    
                          , L0DU = L0req
                          , algos = [ velotracks, FilterNumVeloTracksDDInc, FilterNumBackTracks, Kaons, DDIncCP ]
                          , postscale = self.postscale
@@ -516,7 +516,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line( 'LowMultDDIncVF'
                          , prescale = self.prescale
-                         , HLT = HLTreq    
+                         , HLT1 = HLTreq    
                          , L0DU = L0req
                          , algos = [ velotracks, FilterNumVeloTracksDDInc, FilterNumBackTracks, Kaons, DDIncVF ]
                          , postscale = self.postscale
@@ -524,7 +524,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line( 'LowMultLMR2HH'
                          , prescale = self.prescale
-                         , HLT = HLTreq    
+                         , HLT1 = HLTreq    
                          , L0DU = L0req
                          , algos = [ velotracks, FilterNumVeloTracksChiC2HH, FilterNumBackTracks, Kaons, Pions, LMR2HH ]
                          , postscale = self.postscale
