@@ -310,7 +310,24 @@ double Gaudi::Math::Bernstein::operator () ( const double x ) const
   return _casteljau_ ( dcj.begin() , dcj.end() , t0 , t1 ) ;
 }
 // ============================================================================
-#include "iostream"
+Gaudi::Math::Bernstein&
+Gaudi::Math::Bernstein::operator+=( const double a ) 
+{
+  for ( std::vector<double>::iterator ip = m_pars.begin() ; m_pars.end() != ip ; ++ip ) 
+  { (*ip) += a ; }
+  //
+  return *this ;
+}
+// ============================================================================
+Gaudi::Math::Bernstein&
+Gaudi::Math::Bernstein::operator-=( const double a ) 
+{
+  for ( std::vector<double>::iterator ip = m_pars.begin() ; m_pars.end() != ip ; ++ip ) 
+  { (*ip) -= a ; }
+  //
+  return *this ;
+}
+// ============================================================================
 namespace 
 {
   inline short signm1 ( const long i ) { return 0 == i%2 ? 1 : -1 ; }

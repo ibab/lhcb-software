@@ -7,7 +7,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-03-10 - 
- - fix a bug in the interration of product of Bernstein polynomial and exponent 
+ - fix a bug in the interration of the product
+   of Bernstein polynomial and an exponential function  
 
 ! 2015-03-09 - Vanya Belyaev
  - add conversions of polynomial bases  

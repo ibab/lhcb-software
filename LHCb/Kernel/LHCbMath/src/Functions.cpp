@@ -8580,6 +8580,30 @@ double Gaudi::Math::Expo2DPolSym::integrateX
 // ============================================================================
 // Bernstein
 // ============================================================================
+namespace 
+{
+  // ==========================================================================
+  inline double _integrate_ 
+  ( const Gaudi::Math::Bernstein& poly , 
+    const double tau  , 
+    const double low  , 
+    const double high ) 
+  {
+    const double xlow  = std::max ( low  , poly.xmin() ) ;
+    const double xhigh = std::min ( high , poly.xmax() ) ;
+    //
+    const double p1 = ( poly ( xhigh ) * my_exp ( tau * xhigh ) - 
+                        poly ( xlow  ) * my_exp ( tau * xlow  ) ) / tau ;
+    //
+    if ( poly.npars  ()  <= 1  ) { return p1 / tau ; } // RETURN 
+    //
+    const Gaudi::Math::Bernstein  b_prime ( poly.derivative() ) ;
+    if ( b_prime.zero()        ) { return p1 / tau ; } // RETURN
+    //
+    return ( p1 - _integrate_ ( b_prime , tau , xlow , xhigh ) )  / tau ;
+  }
+  // ==========================================================================
+}
 /* get the integral between low and high for a product of Bernstein function
  * and the exponential function with exponent tau
  *  \f[  \int_{low}^{high} \mathcal{B} e^{\tau x } \mathrm{d}x \f] 
@@ -8596,25 +8620,14 @@ double Gaudi::Math::Bernstein::integrate
   const double high ) 
 {
   //
-  if      ( s_equal ( tau , 0    )           ) { return  poly.integral ( low  , high         ) ; } 
-  else if ( s_equal ( low , high )           ) { return 0 ; }
-  else if ( poly.zero ()                     ) { return 0 ; }
-  else if ( low  >  high                     ) { return -integrate ( poly , tau , high , low ) ; }
+  if      ( s_equal ( tau , 0    )  ) { return  poly.integral ( low  , high         ) ; } 
+  else if ( s_equal ( low , high )  ) { return 0 ; }
+  else if ( poly.zero ()            ) { return 0 ; }
+  else if ( low  >  high            ) { return -integrate ( poly , tau , high , low ) ; }
   else if ( high <  poly.xmin () || 
             low  >  poly.xmax () ) { return  0 ; }
   //
-  const double xlow  = std::max ( low  , poly.xmin() ) ;
-  const double xhigh = std::min ( high , poly.xmax() ) ;
-  //
-  const double p1 = ( poly ( xhigh ) * my_exp ( tau * xhigh ) - 
-                      poly ( xlow  ) * my_exp ( tau * xlow  ) ) / tau ;
-  //
-  if ( poly.npars ()  <= 1   ) { return p1 ; } // RETURN 
-  //
-  const Gaudi::Math::Bernstein  b_prime ( poly.derivative() ) ;
-  if ( b_prime.zero()        ) { return p1 ; } // RETURN
-  //
-  return p1 - integrate ( b_prime , tau , xlow , xhigh ) / tau ;
+  return _integrate_ ( poly , tau , low , high );
 }
 // ============================================================================
 
@@ -8749,12 +8762,22 @@ double Gaudi::Math::Sigmoid::integral
   //
   return result ;
 }
+// ============================================================================
 
 
-  
-
-
-
+// ============================================================================
+// simple  manipulations with polynoms: shift it! 
+// ============================================================================
+Gaudi::Math::LegendreSum& 
+Gaudi::Math::LegendreSum::operator += ( const double a ) 
+{ m_pars[0] += a ; return *this ; }
+// ============================================================================
+// simple  manipulations with polynoms: shift it! 
+// ============================================================================
+Gaudi::Math::LegendreSum& 
+Gaudi::Math::LegendreSum::operator -= ( const double a ) 
+{ m_pars[0] -= a ; return *this ; }
+// ============================================================================
 
 
 

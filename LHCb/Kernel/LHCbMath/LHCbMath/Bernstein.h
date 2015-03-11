@@ -182,6 +182,13 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
+      /// simple  manipulations with polynoms: shift it! 
+      Bernstein& operator += ( const double a ) ;
+      /// simple  manipulations with polynoms: shift it!
+      Bernstein& operator -= ( const double a ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
       /// get the underlying Bernstein polynomial  (self here)
       const Gaudi::Math::Bernstein& bernstein () const { return *this ; }
       // ======================================================================      

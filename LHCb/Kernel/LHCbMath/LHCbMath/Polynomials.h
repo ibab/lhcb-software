@@ -574,6 +574,13 @@ namespace Gaudi
       /// get the derivative
       Polynomial derivative          () const ;
       // ======================================================================
+    public:
+      // ======================================================================
+      /// simple  manipulations with polynoms: shift it! 
+      Polynomial& operator += ( const double a ) ; 
+      /// simple  manipulations with polynoms: shift it! 
+      Polynomial& operator -= ( const double a ) ; 
+      // ======================================================================
     private:
       // ======================================================================
       /// x-min 
@@ -654,6 +661,13 @@ namespace Gaudi
       ChebyshevSum indefinite_integral ( const double C = 0 ) const ;
       /// get the derivative 
       ChebyshevSum derivative          () const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// simple  manipulations with polynoms: shift it! 
+      ChebyshevSum& operator += ( const double a ) ; 
+      /// simple  manipulations with polynoms: shift it! 
+      ChebyshevSum& operator -= ( const double a ) ; 
       // ======================================================================
     private:
       // ======================================================================
@@ -737,6 +751,13 @@ namespace Gaudi
       LegendreSum indefinite_integral ( const double C = 0 ) const ;
       /// get the derivative 
       LegendreSum derivative          () const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// simple  manipulations with polynoms: shift it! 
+      LegendreSum& operator += ( const double a ) ;
+      /// simple  manipulations with polynoms: shift it! 
+      LegendreSum& operator -= ( const double a ) ;
       // ======================================================================
     private:
       // ======================================================================
