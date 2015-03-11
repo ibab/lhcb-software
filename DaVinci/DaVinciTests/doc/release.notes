@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2015-03-11 - Eduardo Rodrigues
+ - Removed obsolete/redundant file tests/options/mc09_testdata.py.
+
 ! 2015-03-08 - Andrea Contu
  - Updated tests/refs/test_stripping20r1_collision11_reco14.ref
 
