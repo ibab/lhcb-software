@@ -330,7 +330,7 @@ double DLLMuonTool::calcDist( const CommonMuonTool::MuonTrackExtrapolation& extr
   //std::array<unsigned, CommonMuonTool::nStations> occupancies;
   //std::tie(hits, occupancies) = muonTool_->hitsAndOccupancies(track, extrapolation);
 
-  double m_dist = -1.;
+  double m_dist = 0.;
   double mCoordX[5] = {0.,0.,0.,0.,0.};
   double mCoordY[5] = {0.,0.,0.,0.,0.};
   double mCoordDX[5] = {0.,0.,0.,0.,0.};
@@ -345,17 +345,27 @@ double DLLMuonTool::calcDist( const CommonMuonTool::MuonTrackExtrapolation& extr
           // difference between x,y and the extrapolated x,y
           mCoordDX[s] = ( hit->x() - extrapolation[s].first ) / hit->dx();
           mCoordDY[s] = ( hit->y() - extrapolation[s].second ) / hit->dy();
+          if(msgLevel(MSG::DEBUG)) debug() << "calcDist : In station " << s << endmsg;
+          if(msgLevel(MSG::DEBUG)) debug() << "calcDist : x = " << hit->x() << ", m_trackX[station] = " << extrapolation[s].first << ", dx = " << hit->dx() << endmsg;
+          if(msgLevel(MSG::DEBUG)) debug() << "calcDist : y = " << hit->y() << ", m_trackY[station] = " << extrapolation[s].second << ", dy = " << hit->dy() << endmsg; 
         } else{
           // get best match in X and Y
+          if(msgLevel(MSG::DEBUG)) debug() << "(x - m_trackX[station])*(x - m_trackX[station]) = " << (hit->x() - extrapolation[s].first)*(hit->x() - extrapolation[s].first) << endmsg;
+          if(msgLevel(MSG::DEBUG)) debug() << "(y - m_trackY[station])*(y - m_trackY[station]) = " << (hit->y() - extrapolation[s].second)*(hit->y() - extrapolation[s].second) << endmsg;
+          if(msgLevel(MSG::DEBUG)) debug() << "pow((mCoordX[station] - m_trackX[station]),2) = " << pow((mCoordX[s] - extrapolation[s].first),2) << endmsg;
+          if(msgLevel(MSG::DEBUG)) debug() << "pow((mCoordY[station] - m_trackY[station]),2) = " << pow((mCoordY[s] - extrapolation[s].second),2) << endmsg;
           if( pow((hit->x() - extrapolation[s].first),2) + 
               pow((hit->y() - extrapolation[s].second),2) <
-              pow((mCoordX[s]*hit->dx() - extrapolation[s].first),2) + 
-              pow((mCoordY[s]*hit->dy() - extrapolation[s].second),2) ){
+              pow((mCoordX[s] - extrapolation[s].first),2) + 
+              pow((mCoordY[s] - extrapolation[s].second),2) ){
             // this Coord is a better match
             mCoordX[s] = hit->x();
             mCoordY[s] = hit->y();
             mCoordDX[s] = ( hit->x() - extrapolation[s].first ) / hit->dx();
             mCoordDY[s] = ( hit->y() - extrapolation[s].second ) / hit->dy();
+            if(msgLevel(MSG::DEBUG)) debug() << "calcDist : In station " << s << endmsg;
+            if(msgLevel(MSG::DEBUG)) debug() << "calcDist : x = " << hit->x() << ", m_trackX[station] = " << extrapolation[s].first << ", dx = " << hit->dx() << endmsg;
+            if(msgLevel(MSG::DEBUG)) debug() << "calcDist : y = " << hit->y() << ", m_trackY[station] = " << extrapolation[s].second << ", dy = " << hit->dy() << endmsg; 
           }
         } 
       }
@@ -373,10 +383,11 @@ double DLLMuonTool::calcDist( const CommonMuonTool::MuonTrackExtrapolation& extr
       if(msgLevel(MSG::DEBUG)) debug() << "mCoordDX[stn]*mCoordDX[stn] = " << mCoordDX[stn]*mCoordDX[stn] << endmsg;
       if(msgLevel(MSG::DEBUG)) debug() << "mCoordDY[stn]*mCoordDY[stn] = " << mCoordDY[stn]*mCoordDY[stn] << endmsg;
       nstn++;
+      if(msgLevel(MSG::DEBUG)) debug() << "m_dist = " << m_dist <<endmsg;
       m_dist += mCoordDX[stn]*mCoordDX[stn] + mCoordDY[stn]*mCoordDY[stn];
     }
   }
-  if(msgLevel(MSG::DEBUG)) debug() << "m_dist = " << m_dist <<endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "m_dist Total = " << m_dist <<endmsg;
   m_dist = m_dist / nstn; //divide by the number of station
 
   return m_dist;
@@ -385,30 +396,38 @@ double DLLMuonTool::calcDist( const CommonMuonTool::MuonTrackExtrapolation& extr
 /** Calculate the number of tracks that share hits 
  */
 
-int DLLMuonTool::calcNShared( LHCb::MuonPID* muonid, LHCb::MuonPIDs* pMuids, CommonConstMuonHits& hits, const CommonMuonTool::MuonTrackExtrapolation& extr, std::map< LHCb::MuonPID*, CommonConstMuonHits > m_muonMap) {
+bool DLLMuonTool::calcNShared( LHCb::MuonPID* muonid, LHCb::MuonPIDs* pMuids, CommonConstMuonHits& hits, const CommonMuonTool::MuonTrackExtrapolation& extr, std::map< LHCb::MuonPID*, CommonConstMuonHits > m_muonMap) {
   
-  int nNSH = 100;
+  int nNSH;
 
   double dsquare1 = calcDist(extr, hits);
-  if(msgLevel(MSG::DEBUG)) debug() << "For track with momentum p = " << (muonid->idTrack())->p() << ". Dist 1 = " << dsquare1 << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "     For ORIGINAL track with momentum p = " << (muonid->idTrack())->p() << ". Dist 1 = " << dsquare1 << ". The track container has " << pMuids->size() << "tracks." << endmsg;
   if( dsquare1<0. ) {
     muonid->setNShared(100);
     return Warning( "calcDist 1 failure", false );
   }
+
+  CommonConstMuonHits hits2;
+  std::array<unsigned, CommonMuonTool::nStations> occupancies2;
+
   // loop over the muonIDs
   LHCb::MuonPIDs::const_iterator iMuon;
   for( iMuon = pMuids->begin(); pMuids->end() != iMuon; ++iMuon ) {
     // skip if this muonID is the same as the input or if IsMuonLoose is false
     if ( *iMuon == muonid ) continue;
+    if(msgLevel(MSG::DEBUG)) debug() << "---------> Start the computation of Dist 2 for track with p = " << (*iMuon)->idTrack()->p()<< " <----------" << endmsg;
     // see if there are shared hits between the muonIDs
+    if(msgLevel(MSG::DEBUG)) debug() << "Comparing primary with p = " << (muonid->idTrack())->p() << " with secondary of p = " << (*iMuon)->idTrack()->p() << endmsg;  
     if ( compareHits( muonid, *iMuon, m_muonMap ) ){
     // need to check better the function
     //
       // get dist for this muonID
       const LHCb::Track* track2 = (*iMuon)->idTrack(); // get the track of the muonID
       const auto extr2 = muonTool_->extrapolateTrack(*track2);
-      double dsquare2 = calcDist(extr2, hits);
-      if(msgLevel(MSG::DEBUG)) debug() << " For track with p = " << track2->p() << ". Dist 2 = " << dsquare2 << endmsg;
+      // the hit container must be the one belonging to the second Muid
+      std::tie(hits2, occupancies2) = muonTool_->hitsAndOccupancies(*track2, extr2);
+      double dsquare2 = calcDist(extr2, hits2);
+      if(msgLevel(MSG::DEBUG)) debug() << "            For SECONDARY track with momentum = " << track2->p() << ". Dist 2 = " << dsquare2 << endmsg;
       if( dsquare2<0. ) {
         Warning(" calcDist 2 failure",StatusCode::SUCCESS,0).ignore();
         continue;
@@ -418,17 +437,19 @@ int DLLMuonTool::calcNShared( LHCb::MuonPID* muonid, LHCb::MuonPIDs* pMuids, Com
       // which has the biggest dist
       if( dsquare2 < dsquare1 ) {
         nNSH = muonid->nShared();
+        if(msgLevel(MSG::DEBUG)) debug() << "Setting the nShared to the original track. NShared =  " << nNSH << endmsg;
         muonid->setNShared(nNSH+1);
       }
       else{
         nNSH = (*iMuon)->nShared();
+        if(msgLevel(MSG::DEBUG)) debug() << "Setting the nShared to the secondary track. NShared =  " << nNSH << endmsg;
         (*iMuon)->setNShared(nNSH+1);
       }
     }
   }
-  if (msgLevel(MSG::DEBUG)) debug() << "nShared = " << muonid->nShared() << endmsg;
+  if (msgLevel(MSG::INFO)) info() << "nShared = " << muonid->nShared() << endmsg;
 
-  return nNSH;
+  return true;
 }
 
 // Get the bin for the given P
@@ -886,12 +907,14 @@ std::pair<double,double> DLLMuonTool::calcMuonLL_tanhdist_landau(const LHCb::Tra
 bool DLLMuonTool::compareHits(LHCb::MuonPID* muonid1, LHCb::MuonPID* muonid2, std::map< LHCb::MuonPID*, CommonConstMuonHits > m_muonMap ){
 
   bool theSame = false;
-  unsigned m_iM2 = 2;
+  unsigned m_iM2 = 1; // this is to start from M2
   CommonConstMuonHits hits1 = m_muonMap[muonid1];
   CommonConstMuonHits hits2 = m_muonMap[muonid2];
   std::for_each(std::begin(hits1), std::end(hits1), [&](const CommonMuonHit* hit1){ // first hits
     std::for_each(std::begin(hits2), std::end(hits2), [&](const CommonMuonHit* hit2){ // second hits
+      if(msgLevel(MSG::DEBUG)) debug() << "compareHits:   The hit1 is = " << hit1->tile().key() << ". The hit2 is = " << hit2->tile().key() << endmsg;
       if(hit1->tile().key() == hit2->tile().key()){
+        if(msgLevel(MSG::DEBUG)) debug() << "For hits that are the same, the station is = " << hit1->tile().station() << endmsg;
         if(hit1->tile().station() >= m_iM2) theSame = true;
       }
     });

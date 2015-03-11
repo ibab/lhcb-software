@@ -85,7 +85,6 @@ StatusCode MuonIDAlgLite::execute() {
   counter("nIsMuonTight");
   counter("nHitAndOcc");
   double ProbMu, ProbNonMu;
-  int nShared;
   // Iterate over all tracks and do the offline identification for each of them
   LHCb::Tracks::const_iterator iTrack;
   for( iTrack = tracks->begin() ; iTrack != tracks->end() ; iTrack++){
@@ -100,6 +99,7 @@ StatusCode MuonIDAlgLite::execute() {
     muPid->setIsMuon(0);
     muPid->setIsMuonLoose(0);
     muPid->setIsMuonTight(0);
+    muPid->setNShared(0);
 
     if(msgLevel(MSG::DEBUG)) debug() << "################# New track with p = " << track->p() << "##################" << endmsg;
     if (!isGoodOfflineTrack(*track)) {
@@ -133,6 +133,8 @@ StatusCode MuonIDAlgLite::execute() {
     if (isMuonTight==1) counter("nIsMuonTight")++;
     if (isMuonLoose==1) {
       counter("nIsMuonLoose")++;
+      if(msgLevel(MSG::DEBUG)) debug() << "Inserting the track with momentum = " << track->p() << " into muonPids" << endmsg;
+      muPids->insert(muPid,(*track).key()); // insert only the tracks that pass the isMuonLoose as afterwards this requirement is asked
       //auto muPid = LHCb::MuonPID{};
       //if(muPid.empty()){
       //  if(msgLevel(MSG::DEBUG)) debug() << "No valid muPid for the considered track" << endmsg;
@@ -151,21 +153,17 @@ StatusCode MuonIDAlgLite::execute() {
       std::tie(ProbMu, ProbNonMu) = DLLTool_->calcMuonLL_tanhdist_landau(*track,extrapolation,hits,occupancies);
       muPid->setMuonLLMu(log(ProbMu));
       muPid->setMuonLLBg(log(ProbNonMu));
-      muPids->insert(muPid,(*track).key()); // insert only the tracks that pass the isMuonLoose as afterwards this requirement is asked
       
-      // all the NShared part needs to be rethought and optimised
-      nShared = DLLTool_->calcNShared(muPid,&(*muPids),hits,extrapolation,m_muonMap);
+      // compute the NShared
+      DLLTool_->calcNShared(muPid,&(*muPids),hits,extrapolation,m_muonMap);
     
     } // end calculations for isMuonLoose tracks  
-    
+    if(msgLevel(MSG::DEBUG)) debug() << " ProbMu = " << exp(muPid->MuonLLMu()) << ", ProbNonMu = " << exp(muPid->MuonLLBg()) << ". Momentum p = " << track->p() << endmsg;  
+
     // the value of nShared is set inside the function
     
     //muPid.insert(&muPid, track->key());
     //muTracks->insert(&muTrack, track.key());
-    
-    // write to counters for debugging
-    if(msgLevel(MSG::DEBUG)) debug() << " ProbMu = " << exp(muPid->MuonLLMu()) << endmsg;
-    if(msgLevel(MSG::DEBUG)) debug() << " ProbNonMu = " << exp(muPid->MuonLLBg()) << endmsg;
   
   } // end loop over tracks
   //if(msgLevel(MSG::DEBUG)) debug() << "The size of pMuids is = " << muPids->size() << endmsg;

@@ -3,6 +3,9 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2015-03-11 - Ricardo Vazquez Gomez
+ - Bug fix the NShared computation in the DLLMuonTool. 
+
 ! 2015-03-11 - Kevin Dungs
  - Merge efforts of the MuonID task force from branch LHCbPS-1372.
   - Implement CommonMuonTool that offers the same functionality for both Offline

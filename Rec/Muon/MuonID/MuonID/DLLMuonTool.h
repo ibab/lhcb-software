@@ -40,7 +40,7 @@ class DLLMuonTool final : public GaudiTool {
                  const IInterface* parent);
   ~DLLMuonTool() override = default;
   StatusCode initialize() override;
-  int calcNShared( LHCb::MuonPID* muonid, LHCb::MuonPIDs* pMuids, CommonConstMuonHits&, const MuonTrackExtrapolation&, std::map< LHCb::MuonPID*, CommonConstMuonHits >);
+  bool calcNShared( LHCb::MuonPID* muonid, LHCb::MuonPIDs* pMuids, CommonConstMuonHits&, const MuonTrackExtrapolation&, std::map< LHCb::MuonPID*, CommonConstMuonHits >);
   double calcDist( const MuonTrackExtrapolation&, CommonConstMuonHits& ) const; 
   int GetPbin(double p, int region);
   std::vector<int> findTrackRegions(const MuonTrackExtrapolation&);
