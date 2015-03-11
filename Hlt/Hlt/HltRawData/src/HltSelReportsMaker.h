@@ -248,6 +248,7 @@ private:
   bool m_SuppressPostscale;
   bool m_SuppressPostscaleDebug;
 
+  int bookmark;
 };
 
 

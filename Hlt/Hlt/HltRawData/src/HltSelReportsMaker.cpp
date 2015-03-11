@@ -279,7 +279,7 @@ StatusCode HltSelReportsMaker::execute() {
 
 #ifdef DEBUGCODE
   if ( msgLevel(MSG::VERBOSE) ){
-    verbose() << " Selection " << selname <<  " found in dataSvc decison=" << sel->decision() << endmsg;          
+    verbose() << " Selection " << selName <<  " found in dataSvc decison=" << sel->decision() << endmsg;          
   }
 #endif
 
@@ -356,6 +356,7 @@ StatusCode HltSelReportsMaker::execute() {
   for( const auto&  s : sortedSelections ) {
     
      const std::string& selName(s.second.id.str());     
+     
      // don't bother if duplicate selection 
      if( outputSummary->hasSelectionName(selName) ){
          Warning( " duplicate selection ignored selectionName=" + selName,StatusCode::SUCCESS, 10 );
@@ -382,7 +383,7 @@ StatusCode HltSelReportsMaker::execute() {
      }
      // Check if the Hlt line has been marked for Turbo level output
      m_Turbo = turbo_signature;
-
+     bookmark=0;
 
      std::vector<const ContainedObject*> candidates; candidates.reserve( sel->size() );
      
@@ -967,15 +968,42 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle& o
 
   HltObjectSummary::Info theseInfo = infoToSave( *hos );
 
-  // no subobject code implemented since so far Hlt2 does not save intermediate selections
-
   const auto& daughters = object.daughtersVector();
   if( !daughters.empty() ){    
     debug() << "Adding non-basic particle" << endmsg;
     for( const auto&  p : daughters ) hos->addToSubstructure( store_( *p ) );
     // If the particle is not basic, then add the vertex to the substructure after the daughters
-    if(m_Turbo && object.endVertex() ) hos->addToSubstructure( store_( *object.endVertex() ) ); // SB add
-  } else {
+    if(m_Turbo && object.endVertex() ) hos->addToSubstructure( store_( *object.endVertex() ) ); 
+    // If we are storing the mother particle, and the PV has been refitted, persist that too
+    if(m_Turbo && bookmark==0 ){
+      // we only do this for the mother
+      bookmark+=1;
+
+      // See if relations point to the normal Hlt PV
+      // If not, assume refitted and persist
+      const DataObject* container = object.parent();
+      IRegistry* registry = ( container ? container->registry() : nullptr ) ;
+      if( registry ){
+        std::string path = registry->identifier() ;
+        boost::replace_last(path,"/Particles","/Particle2VertexRelations");
+        debug() << "Looking for relations table in " << path << endmsg;
+        Particle2Vertex::Table* table = getIfExists< Particle2Vertex::Table >(path);
+        LHCb::RecVertex::Container* pv_hlt = getIfExists< LHCb::RecVertex::Container >("Hlt/Vertex/PV3D");
+        if(table) {
+          LHCb::RecVertex* pv_maybesave = (LHCb::RecVertex*)table->relations(&object)[0].to();
+          debug() << "Refitted PV" << pv_maybesave << endmsg;
+          bool save=true;
+          for ( LHCb::RecVertex::Container::const_iterator pv = pv_hlt->begin() ; pv!=pv_hlt->end() ; ++pv){
+            debug() << "HLT PV" << *pv << endmsg;
+            if(*pv==pv_maybesave) save=false;
+          }
+          if(save) hos->addToSubstructure( store_( *pv_maybesave ) );
+        }
+        else debug() << "No refitted PVs found" << endmsg;
+      }
+    }
+  } 
+  else {
     debug() << "Adding basic particle" << endmsg;
     // particles with no daughters have substructure via ProtoParticle 
     // we don't save Protoparticles, only things they lead to
@@ -984,16 +1012,17 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle& o
       std::string w { " Particle with no daughters and no protoparticle " };
       const ObjectContainerBase *p = object.parent();
       if (p) { 
-          IRegistry* r = p->registry();
-          if (r) {
-              w += " with id " ; w += r->identifier();
-          } else {
-              w += " in " ; w += p->name() ; 
-          }
+        IRegistry* r = p->registry();
+        if (r) {
+          w += " with id " ; w += r->identifier();
+        } else {
+          w += " in " ; w += p->name() ; 
+        }
       }
       w+= ", skipped";
       Warning(w,StatusCode::SUCCESS, 10 );
-    } else {
+    } 
+    else {
       const Track* track=pp->track();
       if( track ){
         // charged track particle
@@ -1001,44 +1030,45 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle& o
         debug() << "requesting track store" << endmsg;
         if(m_Turbo) {
           hos->addToSubstructure( store_( *pp ) );  
-          debug() << "requesting proto-particle store" << endmsg;// SB add
+          debug() << "requesting proto-particle store" << endmsg;
         }
         if(m_Turbo && pp->richPID() ) {
           hos->addToSubstructure( store_( *pp->richPID() ) );
-          debug() << "requesting RichPID store" << endmsg;// SB add
+          debug() << "requesting RichPID store" << endmsg;
         }
         if(m_Turbo && pp->muonPID() ) {
           hos->addToSubstructure( store_( *pp->muonPID() ) );
-          debug() << "requesting MuonPID store" << endmsg;// SB add
+          debug() << "requesting MuonPID store" << endmsg;
         }
         // if muon add muon stub too        
         const LHCb::MuonPID* muid = pp->muonPID();
         if ( muid && object.particleID().abspid()==13  &&  muid->IsMuon() ){
-            const LHCb::Track*  muStub=muid->muonTrack();
-            if (!muStub ){
-              if( !m_HLTmuonTracks ) { 
-                //Now we need to derive the muon segment container from
-                //the track container
-                m_HltMuonTracksLocation.clear() ;
-                const DataObject* obj = track->parent() ;
-                const IRegistry* reg = ( obj ? obj->registry() : nullptr );
-                if ( reg ) m_HltMuonTracksLocation = reg->identifier() + m_muonIDSuffix;
-                m_HLTmuonTracks = ( !m_HltMuonTracksLocation.empty() ? getIfExists<LHCb::Tracks>(m_HltMuonTracksLocation) : nullptr);
-                if( !m_HLTmuonTracks) {
-                  Warning(" Found Particle which is a muon but no muon tracks at " + m_HltMuonTracksLocation 
-                          ,StatusCode::SUCCESS,10 );
-                }
+          const LHCb::Track*  muStub=muid->muonTrack();
+          if (!muStub ){
+            if( !m_HLTmuonTracks ) { 
+              //Now we need to derive the muon segment container from
+              //the track container
+              m_HltMuonTracksLocation.clear() ;
+              const DataObject* obj = track->parent() ;
+              const IRegistry* reg = ( obj ? obj->registry() : nullptr );
+              if ( reg ) m_HltMuonTracksLocation = reg->identifier() + m_muonIDSuffix;
+              m_HLTmuonTracks = ( !m_HltMuonTracksLocation.empty() ? getIfExists<LHCb::Tracks>(m_HltMuonTracksLocation) : nullptr);
+              if( !m_HLTmuonTracks) {
+                Warning(" Found Particle which is a muon but no muon tracks at " + m_HltMuonTracksLocation 
+                    ,StatusCode::SUCCESS,10 );
               }
-              muStub = ( m_HLTmuonTracks ?  m_HLTmuonTracks->object(track->key()) : nullptr );      
             }
-            if( muStub ){
-              hos->addToSubstructure( store_( *muStub ) );
-            } else {
-              Warning(" Found Particle which is a muon but could not reach muon lhcbids "
-                          ,StatusCode::SUCCESS,10 );
-            }            
+            muStub = ( m_HLTmuonTracks ?  m_HLTmuonTracks->object(track->key()) : nullptr );      
+          }
+          if( muStub ){
+            hos->addToSubstructure( store_( *muStub ) );
+          } else {
+            Warning(" Found Particle which is a muon but could not reach muon lhcbids "
+                ,StatusCode::SUCCESS,10 );
+          }            
         }
-      } else {
+      } 
+      else {
         // neutral particle ?
         // Ecal via CaloHypo
         const auto& caloVec = pp->calo();
@@ -1047,7 +1077,8 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle& o
           if( LHCb::CaloHypo::Photon == hypo->hypothesis() ){
             // Photon
             hos->addToSubstructure( store_( *hypo->clusters().front() ) );
-          } else if (  LHCb::CaloHypo::Pi0Merged == hypo->hypothesis() ){
+          } 
+          else if (  LHCb::CaloHypo::Pi0Merged == hypo->hypothesis() ){
             // Split Photons
             const SmartRefVector<LHCb::CaloHypo>& hypos = hypo->hypos();
             const LHCb::CaloHypo* g1 = hypos.front();
@@ -1094,7 +1125,7 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary& h
   }
   break;
   
-  case LHCb::CLID_RichPID: // SB add RichPID
+  case LHCb::CLID_RichPID: // Only for Turbo
     {      
       const RichPID* candi = dynamic_cast<const RichPID*>(hos.summarizedObject());
       if( !candi )return infoPersistent; 
@@ -1103,7 +1134,7 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary& h
       }    
     }    
     break;
-  case LHCb::CLID_MuonPID: // SB add MuonPID
+  case LHCb::CLID_MuonPID: // Only for Turbo
     {      
       const MuonPID* candi = dynamic_cast<const MuonPID*>(hos.summarizedObject());
       if( !candi )return infoPersistent; 
@@ -1112,7 +1143,7 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary& h
       }    
     }
     break;
-  case LHCb::CLID_ProtoParticle: // SB add ProtoParticle
+  case LHCb::CLID_ProtoParticle: // Only for Turbo
     {      
       const ProtoParticle* candi = dynamic_cast<const ProtoParticle*>(hos.summarizedObject());
       if( !candi )return infoPersistent; 
@@ -1121,7 +1152,7 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary& h
       }    
     }    
     break;
-  case LHCb::CLID_Vertex: // SB add Vertex
+  case LHCb::CLID_Vertex: // Intermediate vertices, only for Turbo
     {      
       const Vertex* candi = dynamic_cast<const Vertex*>(hos.summarizedObject());
       if( !candi )return infoPersistent; 

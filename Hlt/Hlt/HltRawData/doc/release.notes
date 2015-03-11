@@ -5,6 +5,9 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+! 2015-03-11 - Sean Benson
+ - Support for persistence of refitted PVs (provided in right place).
+
 !========================= HltRawData v5r3 2015-03-09 =========================
 
 ! 2015-03-07 - Michael Kolpin
