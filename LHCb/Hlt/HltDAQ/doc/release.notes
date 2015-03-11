@@ -4,6 +4,11 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2015-03-11 - Sean Benson
+ - Moved to version 4 of sel. reports (in writer and decoder).
+ - Full support for RecVertex bank (anticipating PV refitting).
+ - Expanded protoparticle bank.
+
 ! 2015-03-06 - Sascha Stahl
  - HltTrackReportsWriter: Added property (WriteStates) to write or not write out states.
    Default is true to keep the old behaviour.

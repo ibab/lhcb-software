@@ -50,6 +50,16 @@ int ReportConvertTool::getReportVersion(){
   return m_version;
 }
 
+int ReportConvertTool::getLatestVersion(){
+  return m_LatestVersion;
+}
+
+int ReportConvertTool::getSizeSelRepParticleLatest(){
+  int sum=0;
+  sum+=m_particle_unordered_map2.at(m_LatestVersion).size();
+  return sum;
+}
+
 void ReportConvertTool::SummaryFromRaw(HltObjectSummary::Info* info, HltSelRepRBStdInfo::StdInfo* subbank, int classID) {
   
   // Version number that we use to ensure backwards compatibility with Run 1
@@ -254,7 +264,55 @@ void ReportConvertTool::ProtoParticleObject2Summary( HltObjectSummary::Info* inf
   for(it_unordered_map proto_it = (used_map.at(m_version)).begin(); proto_it!=(used_map.at(m_version)).end(); proto_it++){
     switch( proto_it->second.second )
     {
-      case 0: info->insert( proto_it->first, float( object->info( 381, -1000 ) ) ); break;
+      case 0:  info->insert( proto_it->first, float( object->info( 381, -1000 ) ) ); break;
+      case 1:  info->insert( proto_it->first, float( object->info( 382, -1000 ) ) ); break;
+      case 2:  info->insert( proto_it->first, float( object->info( 383, -1000 ) ) ); break;
+      case 3:  info->insert( proto_it->first, float( object->info( 360, -1000 ) ) ); break;
+      case 4:  info->insert( proto_it->first, float( object->info( 361, -1000 ) ) ); break;
+      case 5:  info->insert( proto_it->first, float( object->info( 362, -1000 ) ) ); break;
+      case 6:  info->insert( proto_it->first, float( object->info( 363, -1000 ) ) ); break;
+      case 7:  info->insert( proto_it->first, float( object->info( 364, -1000 ) ) ); break;
+      case 8:  info->insert( proto_it->first, float( object->info( 365, -1000 ) ) ); break;
+      case 9:  info->insert( proto_it->first, float( object->info( 310, -1000 ) ) ); break;
+      case 10: info->insert( proto_it->first, float( object->info( 311, -1000 ) ) ); break;
+      case 11: info->insert( proto_it->first, float( object->info( 312, -1000 ) ) ); break;
+      case 12: info->insert( proto_it->first, float( object->info( 323, -1000 ) ) ); break;
+      case 13: info->insert( proto_it->first, float( object->info( 324, -1000 ) ) ); break;
+      case 14: info->insert( proto_it->first, float( object->info( 325, -1000 ) ) ); break;
+      case 15: info->insert( proto_it->first, float( object->info( 326, -1000 ) ) ); break;
+      case 16: info->insert( proto_it->first, float( object->info( 327, -1000 ) ) ); break;
+      case 17: info->insert( proto_it->first, float( object->info( 328, -1000 ) ) ); break;
+      case 18: info->insert( proto_it->first, float( object->info( 320, -1000 ) ) ); break;
+      case 19: info->insert( proto_it->first, float( object->info( 321, -1000 ) ) ); break;
+      case 20: info->insert( proto_it->first, float( object->info( 322, -1000 ) ) ); break;
+      case 21: info->insert( proto_it->first, float( object->info( 330, -1000 ) ) ); break;
+      case 22: info->insert( proto_it->first, float( object->info( 331, -1000 ) ) ); break;
+      case 23: info->insert( proto_it->first, float( object->info( 332, -1000 ) ) ); break;
+      case 24: info->insert( proto_it->first, float( object->info( 333, -1000 ) ) ); break;
+      case 25: info->insert( proto_it->first, float( object->info( 334, -1000 ) ) ); break;
+      case 26: info->insert( proto_it->first, float( object->info( 335, -1000 ) ) ); break;
+      case 27: info->insert( proto_it->first, float( object->info( 336, -1000 ) ) ); break;
+      case 28: info->insert( proto_it->first, float( object->info( 343, -1000 ) ) ); break;
+      case 29: info->insert( proto_it->first, float( object->info( 344, -1000 ) ) ); break;
+      case 30: info->insert( proto_it->first, float( object->info( 345, -1000 ) ) ); break;
+      case 31: info->insert( proto_it->first, float( object->info( 346, -1000 ) ) ); break;
+      case 32: info->insert( proto_it->first, float( object->info( 347, -1000 ) ) ); break;
+      case 33: info->insert( proto_it->first, float( object->info( 348, -1000 ) ) ); break;
+      case 34: info->insert( proto_it->first, float( object->info( 349, -1000 ) ) ); break;
+      case 35: info->insert( proto_it->first, float( object->info( 350, -1000 ) ) ); break;
+      case 36: info->insert( proto_it->first, float( object->info( 351, -1000 ) ) ); break;
+      case 37: info->insert( proto_it->first, float( object->info( 352, -1000 ) ) ); break;
+      case 38: info->insert( proto_it->first, float( object->info( 353, -1000 ) ) ); break;
+      case 39: info->insert( proto_it->first, float( object->info( 354, -1000 ) ) ); break;
+      case 40: info->insert( proto_it->first, float( object->info( 355, -1000 ) ) ); break;
+      case 41: info->insert( proto_it->first, float( object->info( 356, -1000 ) ) ); break;
+      case 42: info->insert( proto_it->first, float( object->info( 357, -1000 ) ) ); break;
+      case 43: info->insert( proto_it->first, float( object->info( 358, -1000 ) ) ); break;
+      case 44: info->insert( proto_it->first, float( object->info( 600, -1000 ) ) ); break;
+      case 45: info->insert( proto_it->first, float( object->info( 601, -1000 ) ) ); break;
+      case 46: info->insert( proto_it->first, float( object->info( 602, -1000 ) ) ); break;
+      case 47: info->insert( proto_it->first, float( object->info( 603, -1000 ) ) ); break;
+      case 48: info->insert( proto_it->first, float( object->info( 604, -1000 ) ) ); break;
     }
   }
 
@@ -313,6 +371,7 @@ void ReportConvertTool::RichPIDObject2Summary( HltObjectSummary::Info* info, con
       case 3: info->insert( rpid_it->first, float( object->particleDeltaLL( Rich::ParticleIDType::Pion ) ) ); break;
       case 4: info->insert( rpid_it->first, float( object->particleDeltaLL( Rich::ParticleIDType::Kaon ) ) ); break;
       case 5: info->insert( rpid_it->first, float( object->particleDeltaLL( Rich::ParticleIDType::Proton ) ) ); break;
+      case 6: info->insert( rpid_it->first, float( object->particleDeltaLL( Rich::ParticleIDType::BelowThreshold ) ) ); break;
     }
   }
 
@@ -381,6 +440,14 @@ void ReportConvertTool::RecVertexObject2Summary( HltObjectSummary::Info* info, c
       case 1: info->insert( recvertex_it->first, float( object->position().y() ) ); break;
       case 2: info->insert( recvertex_it->first, float( object->position().z() ) ); break;
       case 3: info->insert( recvertex_it->first, float( object->chi2() ) ); break;
+      case 4: info->insert( recvertex_it->first, float( object->nDoF() ) ); break;
+      case 5: info->insert( recvertex_it->first, float( object->technique() ) ); break;
+      case 6: info->insert( recvertex_it->first, float( object->covMatrix()(0,0) ) ); break;
+      case 7: info->insert( recvertex_it->first, float( object->covMatrix()(1,1) ) ); break;
+      case 8: info->insert( recvertex_it->first, float( object->covMatrix()(2,2) ) ); break;
+      case 9: info->insert( recvertex_it->first, float( object->covMatrix()(1,0) ) ); break;
+      case 10: info->insert( recvertex_it->first, float( object->covMatrix()(2,0) ) ); break;
+      case 11: info->insert( recvertex_it->first, float( object->covMatrix()(2,1) ) ); break;
     }
   }
 
@@ -520,7 +587,55 @@ void ReportConvertTool::ProtoParticleObjectFromSummary( const HltObjectSummary::
   for(it_unordered_map proto_it = (used_map.at(m_version)).begin(); proto_it!=(used_map.at(m_version)).end(); proto_it++){
     switch( proto_it->second.second )
     {
-      case 0: object->addInfo( 381, int( (*info)[ proto_it->first ] ) ); break;
+      case 0: object->addInfo( 381, ( (*info)[ proto_it->first ] ) ); break;
+      case 1: object->addInfo( 382, ( (*info)[ proto_it->first ] ) ); break;
+      case 2: object->addInfo( 383, ( (*info)[ proto_it->first ] ) ); break;
+      case 3: object->addInfo( 360, ( (*info)[ proto_it->first ] ) ); break;
+      case 4: object->addInfo( 361, ( (*info)[ proto_it->first ] ) ); break;
+      case 5: object->addInfo( 362, ( (*info)[ proto_it->first ] ) ); break;
+      case 6: object->addInfo( 363, ( (*info)[ proto_it->first ] ) ); break;
+      case 7: object->addInfo( 364, ( (*info)[ proto_it->first ] ) ); break;
+      case 8: object->addInfo( 365, ( (*info)[ proto_it->first ] ) ); break;
+      case 9: object->addInfo( 310, ( (*info)[ proto_it->first ] ) ); break;
+      case 10: object->addInfo( 311, ( (*info)[ proto_it->first ] ) ); break;
+      case 11: object->addInfo( 312, ( (*info)[ proto_it->first ] ) ); break;
+      case 12: object->addInfo( 323, ( (*info)[ proto_it->first ] ) ); break;
+      case 13: object->addInfo( 324, ( (*info)[ proto_it->first ] ) ); break;
+      case 14: object->addInfo( 325, ( (*info)[ proto_it->first ] ) ); break;
+      case 15: object->addInfo( 326, ( (*info)[ proto_it->first ] ) ); break;
+      case 16: object->addInfo( 327, ( (*info)[ proto_it->first ] ) ); break;
+      case 17: object->addInfo( 328, ( (*info)[ proto_it->first ] ) ); break;
+      case 18: object->addInfo( 320, ( (*info)[ proto_it->first ] ) ); break;
+      case 19: object->addInfo( 321, ( (*info)[ proto_it->first ] ) ); break;
+      case 20: object->addInfo( 322, ( (*info)[ proto_it->first ] ) ); break;
+      case 21: object->addInfo( 330, ( (*info)[ proto_it->first ] ) ); break;
+      case 22: object->addInfo( 331, ( (*info)[ proto_it->first ] ) ); break;
+      case 23: object->addInfo( 332, ( (*info)[ proto_it->first ] ) ); break;
+      case 24: object->addInfo( 333, ( (*info)[ proto_it->first ] ) ); break;
+      case 25: object->addInfo( 334, ( (*info)[ proto_it->first ] ) ); break;
+      case 26: object->addInfo( 335, ( (*info)[ proto_it->first ] ) ); break;
+      case 27: object->addInfo( 336, ( (*info)[ proto_it->first ] ) ); break;
+      case 28: object->addInfo( 343, ( (*info)[ proto_it->first ] ) ); break;
+      case 29: object->addInfo( 344, ( (*info)[ proto_it->first ] ) ); break;
+      case 30: object->addInfo( 345, ( (*info)[ proto_it->first ] ) ); break;
+      case 31: object->addInfo( 346, ( (*info)[ proto_it->first ] ) ); break;
+      case 32: object->addInfo( 347, ( (*info)[ proto_it->first ] ) ); break;
+      case 33: object->addInfo( 348, ( (*info)[ proto_it->first ] ) ); break;
+      case 34: object->addInfo( 349, ( (*info)[ proto_it->first ] ) ); break;
+      case 35: object->addInfo( 350, ( (*info)[ proto_it->first ] ) ); break;
+      case 36: object->addInfo( 351, ( (*info)[ proto_it->first ] ) ); break;
+      case 37: object->addInfo( 352, ( (*info)[ proto_it->first ] ) ); break;
+      case 38: object->addInfo( 353, ( (*info)[ proto_it->first ] ) ); break;
+      case 39: object->addInfo( 354, ( (*info)[ proto_it->first ] ) ); break;
+      case 40: object->addInfo( 355, ( (*info)[ proto_it->first ] ) ); break;
+      case 41: object->addInfo( 356, ( (*info)[ proto_it->first ] ) ); break;
+      case 42: object->addInfo( 357, ( (*info)[ proto_it->first ] ) ); break;
+      case 43: object->addInfo( 358, ( (*info)[ proto_it->first ] ) ); break;
+      case 44: object->addInfo( 600, ( (*info)[ proto_it->first ] ) ); break;
+      case 45: object->addInfo( 601, ( (*info)[ proto_it->first ] ) ); break;
+      case 46: object->addInfo( 602, ( (*info)[ proto_it->first ] ) ); break;
+      case 47: object->addInfo( 603, ( (*info)[ proto_it->first ] ) ); break;
+      case 48: object->addInfo( 604, ( (*info)[ proto_it->first ] ) ); break;
     }
   }
 
@@ -601,6 +716,7 @@ void ReportConvertTool::RichPIDObjectFromSummary( const HltObjectSummary::Info*i
       case 3: object->setParticleDeltaLL( Rich::ParticleIDType::Pion, (*info)[ rpid_it->first ] ); break;
       case 4: object->setParticleDeltaLL( Rich::ParticleIDType::Kaon, (*info)[ rpid_it->first ] ); break;
       case 5: object->setParticleDeltaLL( Rich::ParticleIDType::Proton, (*info)[ rpid_it->first ] ); break;
+      case 6: object->setParticleDeltaLL( Rich::ParticleIDType::BelowThreshold, (*info)[ rpid_it->first ] ); break;
     }
   }
 
@@ -688,6 +804,7 @@ void ReportConvertTool::RecVertexObjectFromSummary( const HltObjectSummary::Info
   }
 
   Gaudi::XYZPoint xyz;
+  Gaudi::SymMatrix3x3 & cov = *(const_cast<Gaudi::SymMatrix3x3*>(&object->covMatrix()));
   for(it_unordered_map recvertex_it = (used_map.at(m_version)).begin(); recvertex_it!=(used_map.at(m_version)).end(); recvertex_it++){
     switch( recvertex_it->second.second )
     {
@@ -695,6 +812,14 @@ void ReportConvertTool::RecVertexObjectFromSummary( const HltObjectSummary::Info
       case 1: xyz.SetY( (*info)[ recvertex_it->first ] ); break;
       case 2: xyz.SetZ( (*info)[ recvertex_it->first ] ); break;
       case 3: object->setChi2( (*info)[ recvertex_it->first ] ); break;
+      case 4: object->setNDoF( int( (*info)[ recvertex_it->first ] ) ); break;
+      case 5: object->setTechnique( static_cast<LHCb::RecVertex::RecVertexType>( (*info)[ recvertex_it->first ] ) ); break;
+      case 6: cov(0,0) = (*info)[ recvertex_it->first ] ; break;
+      case 7: cov(1,1) = (*info)[ recvertex_it->first ] ; break;
+      case 8: cov(2,2) = (*info)[ recvertex_it->first ] ; break;
+      case 9: cov(1,0) = (*info)[ recvertex_it->first ] ; break;
+      case 10: cov(2,0) = (*info)[ recvertex_it->first ] ; break;
+      case 11: cov(2,1) = (*info)[ recvertex_it->first ] ; break;
     }
   }
   object->setPosition( xyz );

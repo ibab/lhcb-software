@@ -27,7 +27,9 @@ class IReportConvert : virtual public IAlgTool {
     virtual void setReportVersion(int) = 0;
     virtual void setReportVersionLatest() = 0;
     virtual int  getReportVersion() = 0;
-
+    virtual int getLatestVersion() = 0;
+    virtual int getSizeSelRepParticleLatest() = 0;
+    
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IReportConvert; } // Actual operator function
     

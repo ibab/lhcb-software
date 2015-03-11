@@ -59,6 +59,8 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
     void setReportVersion(int);
     void setReportVersionLatest();
     int getReportVersion();
+    int getLatestVersion();
+    int getSizeSelRepParticleLatest();
 
     float floatFromInt(unsigned int);
 
@@ -135,6 +137,46 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
           , {"36#Particle.posCov20",                   {30,36}}
           , {"37#Particle.posCov21",                   {31,37}}}
       }
+      , { 4
+        , {{"0#Particle.particleID.pid",                {0, 0}}
+          , {"1#Particle.measuredMass",                 {1, 1}}
+          , {"2#Particle.referencePoint.z",            {12, 2}}
+          , {"3#Particle.referencePoint.x",            {23, 3}}
+          , {"4#Particle.referencePoint.y",            {32, 4}}
+          , {"5#Particle.slopes.x",                    {33, 5}}
+          , {"6#Particle.slopes.y",                    {34, 6}}
+          , {"7#Particle.1/p",                         {35, 7}}
+          , {"8#Particle.conflevel",                   {36, 8}}
+          , {"9#Particle.massErr",                     {37, 9}}
+          , {"10#Particle.momCov00",                   {2, 10}}
+          , {"11#Particle.momCov11",                   {3, 11}}
+          , {"12#Particle.momCov22",                   {4, 12}}
+          , {"13#Particle.momCov33",                    {5,13}}
+          , {"14#Particle.momCov10",                    {6,14}}
+          , {"15#Particle.momCov20",                    {7,15}}
+          , {"16#Particle.momCov21",                    {8,16}}
+          , {"17#Particle.momCov30",                    {9,17}}
+          , {"18#Particle.momCov31",                   {10,18}}
+          , {"19#Particle.momCov32",                   {11,19}}
+          , {"20#Particle.posmomCov00",                {13,20}}
+          , {"21#Particle.posmomCov11",                {14,21}}
+          , {"22#Particle.posmomCov22",                {15,22}}
+          , {"23#Particle.posmomCov10",                {16,23}}
+          , {"24#Particle.posmomCov01",                {17,24}}
+          , {"25#Particle.posmomCov20",                {18,25}}
+          , {"26#Particle.posmomCov02",                {19,26}}
+          , {"27#Particle.posmomCov21",                {20,27}}
+          , {"28#Particle.posmomCov12",                {21,28}}
+          , {"29#Particle.posmomCov30",                {22,29}}
+          , {"30#Particle.posmomCov31",                {24,30}}
+          , {"31#Particle.posmomCov32",                {25,31}}
+          , {"32#Particle.posCov00",                   {26,32}}
+          , {"33#Particle.posCov11",                   {27,33}}
+          , {"34#Particle.posCov22",                   {28,34}}
+          , {"35#Particle.posCov10",                   {29,35}}
+          , {"36#Particle.posCov20",                   {30,36}}
+          , {"37#Particle.posCov21",                   {31,37}}}
+      }
     };
     //===========================================================================
     /// Version unordered_map for LHCb::Particle in the Full stream
@@ -169,6 +211,16 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
           , {"6#Particle.slopes.y",         {6,6}}
           , {"7#Particle.1/p",              {7,7}}}
       }
+      , { 4
+        , {{"0#Particle.particleID.pid",   {0,0}}
+          , {"1#Particle.measuredMass",     {1,1}}
+          , {"2#Particle.referencePoint.z", {2,2}}
+          , {"3#Particle.referencePoint.x", {3,3}}
+          , {"4#Particle.referencePoint.y", {4,4}}
+          , {"5#Particle.slopes.x",         {5,5}}
+          , {"6#Particle.slopes.y",         {6,6}}
+          , {"7#Particle.1/p",              {7,7}}}
+      }
     };
 
     //===========================================================================
@@ -176,6 +228,57 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
     unordered_map<int, unordered_map<string,pair<int,int> > > const m_proto_unordered_map2_Turbo {
       { 3
         , {{"0#Proto.extraInfo.IsPhoton",               {0,0}}}
+      }
+      , { 4
+        , {{"0#Proto.extraInfo.IsPhoton",               {0,0}}
+        ,  {"1#Proto.extraInfo.IsNotE",                 {1,1}}
+        ,  {"2#Proto.extraInfo.IsNotH",                 {12,2}}
+        ,  {"3#Proto.extraInfo.EcalPIDe",               {23,3}}
+        ,  {"4#Proto.extraInfo.PrsPIDe",                {34,4}}
+        ,  {"5#Proto.extraInfo.BremPIDe",               {44,5}}
+        ,  {"6#Proto.extraInfo.HcalPIDe",               {45,6}}
+        ,  {"7#Proto.extraInfo.HcalPIDmu",              {46,7}}
+        ,  {"8#Proto.extraInfo.EcalPIDmu",              {47,8}}
+        ,  {"9#Proto.extraInfo.CaloTrMatch",            {48,9}}
+        ,  {"10#Proto.extraInfo.CaloElectronMatch",     {2,10}}
+        ,  {"11#Proto.extraInfo.CaloBremMatch",         {3,11}}
+        ,  {"12#Proto.extraInfo.CaloNeutralSpd",        {4,12}}
+        ,  {"13#Proto.extraInfo.CaloNeutralPrs",        {5,13}}
+        ,  {"14#Proto.extraInfo.CaloNeutralEcal",       {6,14}}
+        ,  {"15#Proto.extraInfo.CaloNeutralHcal2Ecal",  {7,15}}
+        ,  {"16#Proto.extraInfo.CaloNeutralE49",        {8,16}}
+        ,  {"17#Proto.extraInfo.CaloNeutralID",         {9,17}}
+        ,  {"18#Proto.extraInfo.CaloDepositID",         {10,18}}
+        ,  {"19#Proto.extraInfo.ShowerShape",           {11,19}}
+        ,  {"20#Proto.extraInfo.ClusterMass",           {13,20}}
+        ,  {"21#Proto.extraInfo.CaloSpdE",              {14,21}}
+        ,  {"22#Proto.extraInfo.CaloPrsE",              {15,22}}
+        ,  {"23#Proto.extraInfo.CaloEcalE",             {16,23}}
+        ,  {"24#Proto.extraInfo.CaloHcalE",             {17,24}}
+        ,  {"25#Proto.extraInfo.CaloEcalChi2",          {18,25}}
+        ,  {"26#Proto.extraInfo.CaloBremChi2",          {19,26}}
+        ,  {"27#Proto.extraInfo.CaloClusChi2",          {20,27}}
+        ,  {"28#Proto.extraInfo.CaloNeutralPrsM",       {21,28}}
+        ,  {"29#Proto.extraInfo.CaloShapeFr2r4",        {22,29}}
+        ,  {"30#Proto.extraInfo.CaloShapeKappa",        {24,30}}
+        ,  {"31#Proto.extraInfo.CaloShapeAsym",         {25,31}}
+        ,  {"32#Proto.extraInfo.CaloShapeE1",           {26,32}}
+        ,  {"33#Proto.extraInfo.CaloShapeE2",           {27,33}}
+        ,  {"34#Proto.extraInfo.CaloPrsShapeE2",        {28,34}}
+        ,  {"35#Proto.extraInfo.CaloPrsShapeEmax",      {29,35}}
+        ,  {"36#Proto.extraInfo.CaloPrsShapeFr2",       {30,36}}
+        ,  {"37#Proto.extraInfo.CaloPrsShapeAsym",      {31,37}}
+        ,  {"38#Proto.extraInfo.CaloPrsM",              {32,38}}
+        ,  {"39#Proto.extraInfo.CaloPrsM15",            {33,39}}
+        ,  {"40#Proto.extraInfo.CaloPrsM30",            {35,40}}
+        ,  {"41#Proto.extraInfo.CaloPrsM45",            {36,41}}
+        ,  {"42#Proto.extraInfo.CaloClusterCode",       {37,42}}
+        ,  {"43#Proto.extraInfo.CaloClusterFrac",       {38,43}}
+        ,  {"44#Proto.extraInfo.CombDLLe",              {39,44}}
+        ,  {"45#Proto.extraInfo.CombDLLmu",             {40,45}}
+        ,  {"46#Proto.extraInfo.CombDLLpi",             {41,46}}
+        ,  {"47#Proto.extraInfo.CombDLLk",              {42,47}}
+        ,  {"48#Proto.extraInfo.CombDLLp",              {43,48}}}
       }
     };
     //===========================================================================
@@ -187,6 +290,25 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
     /// Version unordered_map for LHCb::Track for the Turbo stream
     unordered_map<int, unordered_map<string,pair<int,int> > > const m_track_unordered_map2_Turbo {
       { 3
+        , {{"0#Track.firstState.z",             {0,0}}
+          , {"1#Track.firstState.x",            {1,1}}
+          , {"2#Track.firstState.y",            {9,2}}
+          , {"3#Track.firstState.tx",          {10,3}}
+          , {"4#Track.firstState.ty",          {11,4}}
+          , {"5#Track.firstState.qOverP",      {12,5}}
+          , {"6#Track.chi2PerDoF",             {13,6}}
+          , {"7#Track.nDoF",                   {14,7}}
+          , {"8#Track.Likelihood",             {15,8}}
+          , {"9#Track.GhostProb",              {16,9}}
+          , {"10#Track.flags",                 {2,10}}
+          , {"11#Track.lastState.z",           {3,11}}
+          , {"12#Track.lastState.x",           {4,12}}
+          , {"13#Track.lastState.y",           {5,13}}
+          , {"14#Track.lastState.tx",          {6,14}}
+          , {"15#Track.lastState.ty",          {7,15}}
+          , {"16#Track.lastState.qOverP",      {8,16}}}
+      }
+      , { 4
         , {{"0#Track.firstState.z",             {0,0}}
           , {"1#Track.firstState.x",            {1,1}}
           , {"2#Track.firstState.y",            {9,2}}
@@ -237,6 +359,16 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
           , {"6#Track.chi2PerDoF",              {6,6}}
           , {"7#Track.nDoF",                    {7,7}}}
       }
+      , { 4
+        , {{"0#Track.firstState.z",             {0,0}}
+          , {"1#Track.firstState.x",            {1,1}}
+          , {"2#Track.firstState.y",            {2,2}}
+          , {"3#Track.firstState.tx",           {3,3}}
+          , {"4#Track.firstState.ty",           {4,4}}
+          , {"5#Track.firstState.qOverP",       {5,5}}
+          , {"6#Track.chi2PerDoF",              {6,6}}
+          , {"7#Track.nDoF",                    {7,7}}}
+      }
     };
 
     //===========================================================================
@@ -249,6 +381,15 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
           , {"3#Rich.DLLpi",                    {3,3}}
           , {"4#Rich.DLLK",                     {4,4}}
           , {"5#Rich.DLLp",                     {5,5}}}
+      }
+      , { 4
+        , {{"0#Rich.pidResultCode",             {0,0}}
+          , {"1#Rich.DLLe",                     {1,1}}
+          , {"2#Rich.DLLmu",                    {2,2}}
+          , {"3#Rich.DLLpi",                    {3,3}}
+          , {"4#Rich.DLLK",                     {4,4}}
+          , {"5#Rich.DLLp",                     {5,5}}
+          , {"6#Rich.BelowThreshold",           {6,6}}}
       }
     };
     //===========================================================================
@@ -268,6 +409,15 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
           , {"5#Muon.IsMuonLoose",              {5,5}}
           , {"6#Muon.IsMuonTight",              {6,6}}}
       }
+      , { 4
+        , {{"0#Muon.MuonLLMu",                  {0,0}}
+          , {"1#Muon.MuonLLBg",                 {1,1}}
+          , {"2#Muon.NShared",                  {2,2}}
+          , {"3#Muon.Status",                   {3,3}}
+          , {"4#Muon.IsMuon",                   {4,4}}
+          , {"5#Muon.IsMuonLoose",              {5,5}}
+          , {"6#Muon.IsMuonTight",              {6,6}}}
+      }
     };
     //===========================================================================
     /// Version unordered_map for LHCb::MuonPID in the Full stream
@@ -278,6 +428,12 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
     /// Version unordered_map for LHCb::CaloCluster in the Turbo stream
     unordered_map<int, unordered_map<string,pair<int,int> > > const m_calo_unordered_map2_Turbo {
       { 3
+        , {{"0#CaloCluster.e",                        {0,0}}
+          , {"1#CaloCluster.position.x",              {1,1}}
+          , {"2#CaloCluster.position.y",              {2,2}}
+          , {"3#CaloCluster.position.z",              {3,3}}}
+      }
+      , { 4
         , {{"0#CaloCluster.e",                        {0,0}}
           , {"1#CaloCluster.position.x",              {1,1}}
           , {"2#CaloCluster.position.y",              {2,2}}
@@ -305,6 +461,12 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
           , {"2#CaloCluster.position.y",              {2,2}}
           , {"3#CaloCluster.position.z",              {3,3}}}
       }
+      , { 4
+        , {{"0#CaloCluster.e",                        {0,0}}
+          , {"1#CaloCluster.position.x",              {1,1}}
+          , {"2#CaloCluster.position.y",              {2,2}}
+          , {"3#CaloCluster.position.z",              {3,3}}}
+      }
     };
 
     //===========================================================================
@@ -315,6 +477,20 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
           , {"1#RecVertex.position.y",                {1,1}}
           , {"2#RecVertex.position.z",                {2,2}}
           , {"3#RecVertex.chi2",                      {3,3}}}
+      }
+      , { 4
+        , {{"0#RecVertex.position.x",                 {0,0}}
+          , {"1#RecVertex.position.y",                {1,1}}
+          , {"2#RecVertex.position.z",                {4,2}}
+          , {"3#RecVertex.chi2",                      {5,3}}
+          , {"4#RecVertex.ndf",                       {6,4}}
+          , {"5#RecVertex.technique",                 {7,5}}
+          , {"6#RecVertex.cov00",                     {8,6}}
+          , {"7#RecVertex.cov11",                     {9,7}}
+          , {"8#RecVertex.cov22",                     {10,8}}
+          , {"9#RecVertex.cov10",                     {11,9}}
+          , {"10#RecVertex.cov20",                    {2,10}}
+          , {"11#RecVertex.cov21",                    {3,11}}}
       }
     };
     //===========================================================================
@@ -337,12 +513,32 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
           , {"2#RecVertex.position.z",                {2,2}}
           , {"3#RecVertex.chi2",                      {3,3}}}
       }
+      , { 4
+        , {{"0#RecVertex.position.x",                 {0,0}}
+          , {"1#RecVertex.position.y",                {1,1}}
+          , {"2#RecVertex.position.z",                {2,2}}
+          , {"3#RecVertex.chi2",                      {3,3}}}
+      }
     };
 
     //===========================================================================
     /// Version unordered_map for LHCb::Vertex in the Turbo stream
     unordered_map<int, unordered_map<string,pair<int,int> > > const m_vertex_unordered_map2_Turbo {
       { 3
+        , {{"0#Vertex.chi2",                {0,0}}
+          , {"1#Vertex.ndf",                {1,1}}
+          , {"2#Vertex.position.x",         {4,2}}
+          , {"3#Vertex.position.y",         {5,3}}
+          , {"4#Vertex.position.z",         {6,4}}
+          , {"5#Vertex.technique",          {7,5}}
+          , {"6#Vertex.cov00",              {8,6}}
+          , {"7#Vertex.cov11",              {9,7}}
+          , {"8#Vertex.cov22",             {10,8}}
+          , {"9#Vertex.cov10",             {11,9}}
+          , {"10#Vertex.cov20",             {2,10}}
+          , {"11#Vertex.cov21",             {3,11}}}
+      }
+      , { 4
         , {{"0#Vertex.chi2",                {0,0}}
           , {"1#Vertex.ndf",                {1,1}}
           , {"2#Vertex.position.x",         {4,2}}
