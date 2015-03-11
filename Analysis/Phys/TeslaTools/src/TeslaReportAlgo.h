@@ -47,7 +47,16 @@ public:
 
   	StatusCode initialize();    ///< Algorithm initialization
   	StatusCode execute   ();    ///< Algorithm execution
- 
+
+        StatusCode ProcessObject(int,int,LHCb::Particle*, const LHCb::HltObjectSummary*
+            ,LHCb::RecVertex::Container*
+            ,LHCb::Vertex::Container*
+            ,LHCb::Particle::Container*
+            ,LHCb::ProtoParticle::Container*
+            ,LHCb::RichPID::Container*
+            ,LHCb::MuonPID::Container*
+            ,LHCb::Track::Container*
+            ,Particle2Vertex::Table*);
         void fillParticleInfo(std::vector<ContainedObject*>,const LHCb::HltObjectSummary*,bool);
         void fillVertexInfo(LHCb::Vertex*,const LHCb::HltObjectSummary*);
 
@@ -63,9 +72,10 @@ private:
 	std::string m_inputName;
 	std::string m_PV;
 	std::string m_PVLoc;
-	bool m_PreSplit;
 	std::string m_OutputPref;
-	int m_ReportVersion; // 1=OldSelReports, 2=Extended (GaudiMap)
+       
+        bool turbo;
+
         IDistanceCalculator *   m_dist;
         IReportCheck*   m_check;
         IReportConvert* m_conv;

@@ -27,8 +27,6 @@ TeslaReportAlgo::TeslaReportAlgo( const std::string& name,
 {
   declareProperty( "TriggerLine" ,          m_inputName    = "Hlt2CharmHadD02HH_D02KK" );
   declareProperty( "OutputPrefix" ,         m_OutputPref   = "Tesla" );
-  declareProperty( "ReportVersion" ,        m_ReportVersion= 2 );
-  declareProperty( "PreSplit" ,             m_PreSplit= false );
   declareProperty( "PV" ,                   m_PV = "Offline" );
   declareProperty( "PVLoc" ,                m_PVLoc = "Turbo/Primary" );
 }
@@ -43,7 +41,7 @@ TeslaReportAlgo::~TeslaReportAlgo() {}
 //=============================================================================
 StatusCode TeslaReportAlgo::initialize()
 {
-
+  turbo=false;
   StatusCode sc = GaudiAlgorithm::initialize(); 
   if ( sc.isFailure() ) return sc;
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
@@ -73,35 +71,18 @@ StatusCode TeslaReportAlgo::initialize()
 StatusCode TeslaReportAlgo::execute()
 {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-  // First thing's first, let's check the reports against the
-  // requested version
-  int init_ReportVersion = m_ReportVersion;
-  bool toolow=false;
+  
   std::stringstream HltLoc;
   HltLoc << m_inputName << "Decision";
   //
   std::string RepLoc = "Hlt2/SelReports";
-  if(m_PreSplit == true) RepLoc = LHCb::HltSelReportsLocation::Default;
   std::string VertRepLoc = "Hlt1/VertexReports";
-  if(m_PreSplit == true) VertRepLoc = LHCb::HltVertexReportsLocation::Default;
-  //
-  int versionNum = m_check->VersionTopLevel( HltLoc.str(), RepLoc );
   
+  // For jobs with multiple versions, need to check bank header
+  int versionNum = m_check->checkBankVersion();
   debug() << "VersionNum = " << versionNum << endmsg;
-
-  if( versionNum != 99 ){
-    if( versionNum != m_ReportVersion ) {
-      warning() << "Requested version number does not equal checker response" << endmsg;
-      debug() << "versionNum = " << versionNum << ", m_ReportVersion = " << m_ReportVersion << endmsg;
-      if( versionNum < m_ReportVersion ) {
-        m_ReportVersion = versionNum;
-        warning() << "For your own safety, I will give you less information than requested, please check report generation" << endmsg;
-      }
-      else toolow = true;
-    }
-  }
-	
-
+  m_conv->setReportVersion(versionNum);
+  
   const LHCb::HltSelReports* selReports;
   const LHCb::HltVertexReports* vtxReports;
   const LHCb::HltVertexReports::HltVertexReport* vtxRep;
@@ -113,17 +94,14 @@ StatusCode TeslaReportAlgo::execute()
     if ( msgLevel(MSG::DEBUG) ){
       std::vector<std::string> vnames = vtxReports->selectionNames();
       debug() << "Available vertex reports:" << endmsg;
-      for(std::vector<std::string>::iterator vname_it=vnames.begin();vname_it!=vnames.end();vname_it++){
-        debug() << *vname_it << endmsg;
+      for( auto vname_it : vnames ){
+        debug() << vname_it << endmsg;
       }
     }
   } else{
     warning() << "Vertex reports do not exist!!!" << endmsg;
     //
-    // Needed to overcome situation of missing reports for some events
-    m_ReportVersion = init_ReportVersion;
     return StatusCode::SUCCESS;
-    //return StatusCode::RECOVERABLE;
   }
 
   // Selection reports
@@ -132,24 +110,18 @@ StatusCode TeslaReportAlgo::execute()
     if ( msgLevel(MSG::DEBUG) ){
       std::vector<std::string> selnames = selReports->selectionNames();
       debug() << "Available reports:" << endmsg;
-      for(std::vector<std::string>::iterator selname_it=selnames.begin();selname_it!=selnames.end();selname_it++){
-        debug() << *selname_it << endmsg;
+      for( auto selname_it : selnames ){
+        debug() << selname_it << endmsg;
       }
     }
   } else{
     warning() << "Sel. reports do not exist!!!" << endmsg;
     //
-    // Needed to overcome situation of missing reports for some events
-    m_ReportVersion = init_ReportVersion;
     return StatusCode::SUCCESS;
-    //return StatusCode::RECOVERABLE;
   }
 	
   
   
-  // ODIN
-  //const LHCb::ODIN* odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default);
-  //
   // Go and get the information from the Hlt
   const LHCb::HltObjectSummary * MotherRep = selReports->selReport(HltLoc.str().c_str());
 
@@ -198,6 +170,36 @@ StatusCode TeslaReportAlgo::execute()
   LHCb::MuonPID::Container* cont_MPID = new LHCb::MuonPID::Container() ;
   put( cont_MPID , ss_MPIDLoc.str().c_str() );
   //
+  // PV situation:
+  // Need to detect if a refitted PV has been stored.
+  // Logic flow:
+  // - If a refitted PVs are stored, put them in lines private container
+  // - If no refitted PVs => First algorithm creates shared PV container
+  // - else algorithm uses the already created shared PV container
+
+  // Detect refitted PV
+  bool refitted=false;
+  LHCb::RecVertex* refit_PV = new LHCb::RecVertex();
+  SmartRefVector <LHCb::HltObjectSummary> substructure_PVdet = MotherRep->substructure()[0]->substructure();
+  debug() << "Checking for refitted PV" << endmsg;
+  for( auto child : substructure_PVdet ){
+    const LHCb::HltObjectSummary * Obj = child.target();
+    debug() << " - Object has ID: " << Obj->summarizedObjectCLID() << endmsg;
+    if(Obj->summarizedObjectCLID()==LHCb::RecVertex::classID()) {
+      debug() << "Refitted PV detected, resurrecting that one" << endmsg;
+      refitted=true;
+      const LHCb::HltObjectSummary::Info PV_info = Obj->numericalInfo();
+      std::vector<std::string> vec_keys = Obj->numericalInfoKeys();
+      debug() << "Saved Rec::Vertex information: " << endmsg;
+      for(std::vector<std::string>::iterator it = vec_keys.begin(); it!=vec_keys.end(); it++) debug() << *it << " = " << PV_info[(*it)] << endmsg;
+      m_conv->RecVertexObjectFromSummary(&PV_info,refit_PV,true);
+      std::stringstream ss_PVrefit;
+      ss_PVrefit << m_OutputPref << "/_ReFitPVs";
+      m_PVLoc=ss_PVrefit.str().c_str();
+    }
+  }
+  if(refitted==false) delete refit_PV;
+
   LHCb::RecVertex::Container* cont_PV = getIfExists<LHCb::RecVertex::Container>( m_PVLoc.c_str() );
   bool reusePV = true;
   if( !cont_PV ) {
@@ -206,23 +208,28 @@ StatusCode TeslaReportAlgo::execute()
     put( cont_PV , m_PVLoc.c_str() );
     reusePV = false;
   }
-  if( !reusePV ){
-    for( LHCb::HltVertexReports::HltVertexReport::const_iterator iv=vtxRep->begin();iv!=vtxRep->end(); ++iv){
-      const LHCb::VertexBase* v = *iv;
+  if( !reusePV && !refitted ){
+    for( auto iv : *vtxRep ){
+      const LHCb::VertexBase v = *(iv.target());
       LHCb::RecVertex* vnew = new LHCb::RecVertex();
-      debug() <<"Vertex chi2= " << v->chi2()<< ", ndf =" << v->nDoF()<< endmsg;
-      debug() <<"Vertex key= " << v->key() << endmsg;
+      debug() <<"Vertex chi2= " << v.chi2()<< ", ndf =" << v.nDoF()<< endmsg;
+      debug() <<"Vertex key= " << v.key() << endmsg;
       // Turn the VertexBase from the vertex reports in to a RecVertex for packing
-      vnew->setChi2( v->chi2() );
-      vnew->setNDoF( v->nDoF() );
-      vnew->setPosition( v->position() );
-      vnew->setCovMatrix( v->covMatrix() );
-      vnew->setExtraInfo( v->extraInfo() );
+      vnew->setChi2( v.chi2() );
+      vnew->setNDoF( v.nDoF() );
+      vnew->setPosition( v.position() );
+      vnew->setCovMatrix( v.covMatrix() );
+      vnew->setExtraInfo( v.extraInfo() );
 
       // Fill PV container
       cont_PV->insert( vnew );
     } 
   }
+  else if(refitted) {
+    debug() << "Inserting refitted PV to container" << endmsg;
+    cont_PV->insert(refit_PV);
+  }
+
   //
   Particle2Vertex::Table* cont_P2PV = new Particle2Vertex::Table() ;
   put( cont_P2PV , ss_P2PVLoc.str().c_str() );
@@ -249,21 +256,24 @@ StatusCode TeslaReportAlgo::execute()
     int nCandidate = -1;
 
     // loop over the trigger candidates
-    for(SmartRefVector <LHCb::HltObjectSummary>::const_iterator child = substructure.begin();child!=substructure.end();++child){      
+    for( auto child : substructure ){
       nCandidate++;
       debug() << "Starting loop over triggered candidates" << endmsg;
-      debug() << "Mother object CLASS ID = " << (*child)->summarizedObjectCLID() << endmsg;
-      const LHCb::HltObjectSummary * Obj = child->target();
-      
+      debug() << "Mother object CLASS ID = " << child.target()->summarizedObjectCLID() << endmsg;
+      LHCb::HltObjectSummary* Obj = child.target();
+     
+      // Check we have turbo level information
+      if(m_conv->getSizeSelRepParticleLatest()<(int)Obj->numericalInfo().size()) turbo=true;
+
       // do we have a basic particle?
-      // Assess basic by ID
+      // Assess basic by seeing if daughter particles present
       double motherID = (int)Obj->numericalInfo()["0#Particle.particleID.pid"];
       debug() << "Found mother with ID: " << motherID << endmsg;
-      bool motherBasic = false;
-      if( TMath::Abs(motherID)==11 || TMath::Abs(motherID)==211 || TMath::Abs(motherID)==321 || TMath::Abs(motherID)==22 || TMath::Abs(motherID)==13 ) motherBasic = true;
+      bool motherBasic = true;
       debug() << "Mother has substructure consisting of:" << endmsg;
-      for(SmartRefVector <LHCb::HltObjectSummary>::const_iterator it = Obj->substructure().begin();it!=Obj->substructure().end();++it){
-        debug() << (*it)->summarizedObjectCLID() << endmsg;
+      for( auto it : Obj->substructure() ){
+        debug() << (it).target()->summarizedObjectCLID() << endmsg;
+        if((it).target()->summarizedObjectCLID()==LHCb::Particle::classID()) motherBasic=false;
       }
       
       // make the objects to be stored
@@ -271,7 +281,7 @@ StatusCode TeslaReportAlgo::execute()
       LHCb::Particle* Part = new LHCb::Particle();
       newObjects_mother.push_back(Part);
       //
-      if( motherBasic == true) {
+      if( motherBasic == true ){
         //
         LHCb::Track* track = new LHCb::Track();
         newObjects_mother.push_back(track);
@@ -289,13 +299,7 @@ StatusCode TeslaReportAlgo::execute()
         newObjects_mother.push_back(muon);
         cont_MPID->insert( muon );
         //  
-      } //else {
-        //
-        //LHCb::Vertex* vert = new LHCb::Vertex();
-        //newObjects_mother.push_back(vert);
-        //cont_Vert->insert( vert );
-        //  
-      //}
+      } 
       
       fillParticleInfo( newObjects_mother , Obj , motherBasic );
       cont_Part->insert( Part );
@@ -303,165 +307,124 @@ StatusCode TeslaReportAlgo::execute()
       // Which PV is best for the mother???
       double min_var = -1.0;
       int key = 0;
-      for ( LHCb::RecVertex::Container::const_iterator pv = cont_PV->begin() ; pv!=cont_PV->end() ; ++pv){
-        double ip, chi2;
-        StatusCode test = m_dist->distance ( Part, *pv, ip, chi2 );
-        if(m_PV=="Offline"){
-          if( (chi2<min_var) || (min_var<0.)){
-            min_var = chi2 ;
-            key = (*pv)->key();
+      if(!refitted){
+        for( auto pv : *cont_PV ){
+          double ip, chi2;
+          StatusCode test = m_dist->distance ( Part, pv, ip, chi2 );
+          if(m_PV=="Offline"){
+            if( (chi2<min_var) || (min_var<0.)){
+              min_var = chi2 ;
+              key = (pv)->key();
+            }
           }
-        }
-        else if(m_PV=="Online"){
-          if( (ip<min_var) || (min_var<0.)){
-            min_var = ip;
-            key = (*pv)->key();
+          else if(m_PV=="Online"){
+            if( (ip<min_var) || (min_var<0.)){
+              min_var = ip;
+              key = (pv)->key();
+            }
           }
-        }
-        else{
-          warning() << "Choose a valid PV requirement or use the default (online)" << endmsg;
-          return StatusCode::FAILURE;
+          else{
+            warning() << "Choose a valid PV requirement or use the default (online)" << endmsg;
+            return StatusCode::FAILURE;
+          }
         }
       }
+      else key = refit_PV->key();
       cont_P2PV->relate( Part , (LHCb::RecVertex*)cont_PV->containedObject( key ) );
 
-      if( motherBasic == false ){
-        LHCb::Vertex* vert_mother = new LHCb::Vertex();
-        cont_Vert->insert( vert_mother );
-
-        // loop over the first generation daughters
-        for(SmartRefVector <LHCb::HltObjectSummary>::const_iterator child2 = Obj->substructure().begin();child2!=Obj->substructure().end();++child2){
-          debug() << "Daughter level 1 CLASS ID = " << (*child2)->summarizedObjectCLID() << endmsg;
-          
-          const LHCb::HltObjectSummary * Obj_d1 = child2->target();
-
-          // is this the last element?
-          bool mothersubloop_last = is_last(child2,Obj->substructure());
-          if ((mothersubloop_last==true) && (m_ReportVersion==2) ){
-            // for a non-basic particle, the end vertex is the last
-            // element of the substructure
-            fillVertexInfo( vert_mother , Obj_d1 );
-            Part->setEndVertex( vert_mother );
-            debug() << "Setting mother decay vertex" << endmsg;
-            continue;
-          }
-          if( (mothersubloop_last==true) && (toolow == true) ) continue;
-
-          // do we have a basic particle?
-          double d1_ID = (int)Obj_d1->numericalInfo()["0#Particle.particleID.pid"];
-          debug() << "1st Gen. Daughter ID: " << Obj_d1->numericalInfo()["0#Particle.particleID.pid"] << endmsg;
-          bool d1_Basic = false;
-          if( TMath::Abs(d1_ID)==11 || TMath::Abs(d1_ID)==211 || TMath::Abs(d1_ID)==321 || TMath::Abs(d1_ID)==22 || TMath::Abs(d1_ID)==13 ) d1_Basic = true;
-          
-          // make the objects to be stored
-          std::vector<ContainedObject*> newObjects_d1;
-          
-          LHCb::Particle* Part_d1 = new LHCb::Particle();
-          newObjects_d1.push_back(Part_d1);
-          Part->addToDaughters(Part_d1);
-          cont_Part->insert( Part_d1 );
-          cont_P2PV->relate( Part_d1 , (LHCb::RecVertex*)cont_PV->containedObject( key ) );
-
-          //
-          if( d1_Basic == true ){
-            debug() << "Basic daughter level 1 has substructure consisting of:" << endmsg;
-            for(SmartRefVector <LHCb::HltObjectSummary>::const_iterator basic_it = Obj_d1->substructure().begin();basic_it!=Obj_d1->substructure().end();++basic_it){
-              debug() << (*basic_it)->summarizedObjectCLID() << endmsg;
-            }
-            //
-            LHCb::Track* track_d1 = new LHCb::Track();
-            newObjects_d1.push_back(track_d1);
-            cont_Track->insert( track_d1 );
-            //
-            LHCb::ProtoParticle* proto_d1 = new LHCb::ProtoParticle();
-            newObjects_d1.push_back(proto_d1);
-            cont_Proto->insert( proto_d1 );
-            //
-            LHCb::RichPID* rich_d1 = new LHCb::RichPID();
-            newObjects_d1.push_back(rich_d1);
-            cont_RPID->insert( rich_d1 );
-            //
-            LHCb::MuonPID* muon_d1 = new LHCb::MuonPID();
-            newObjects_d1.push_back(muon_d1);
-            cont_MPID->insert( muon_d1 );
-            //  
-          } 
-          
-          vert_mother->addToOutgoingParticles( Part_d1 );
-
-          fillParticleInfo( newObjects_d1 , Obj_d1 , d1_Basic );
-          
-          if( d1_Basic == false ){
-            LHCb::Vertex* vert_d1 = new LHCb::Vertex();
-            cont_Vert->insert( vert_d1 );
-            // loop over the second generation daughters
-            for(SmartRefVector <LHCb::HltObjectSummary>::const_iterator child3 = Obj_d1->substructure().begin();child3!=Obj_d1->substructure().end();++child3){
-              debug() << "Daughter level 2 CLASS ID = " << (*child3)->summarizedObjectCLID() << endmsg;
-              
-              const LHCb::HltObjectSummary * Obj_d2 = child3->target();
-              
-              // is this the last element?
-              bool d1_subloop_last = is_last(child3,Obj_d1->substructure());
-              if((d1_subloop_last == true) && (m_ReportVersion==2) ){
-                // for a non-basic particle, the end vertex is the last
-                // element of the substructure
-                fillVertexInfo( vert_d1, Obj_d2 );
-                Part_d1->setEndVertex( vert_d1 );
-                debug() << "Setting first generation daughter decay vertex" << d1_ID << endmsg;
-                continue;
-              }
-              if( (d1_subloop_last==true) && (toolow == true) ) continue;
-              
-              debug() << "2nd Gen. Daughter ID: " << Obj_d2->numericalInfo()["0#Particle.particleID.pid"] << endmsg;
-              // We should have a basic particle now
-              double d2_ID = (int)Obj_d2->numericalInfo()["0#Particle.particleID.pid"];
-              bool d2_Basic = false;
-              if( TMath::Abs(d2_ID)==11 || TMath::Abs(d2_ID)==211 || TMath::Abs(d2_ID)==321 || TMath::Abs(d2_ID)==22 || TMath::Abs(d2_ID)==13 ) d2_Basic = true;
-              if(d2_Basic == false){
-                warning() << "I am not made to cascade further!!!" << endmsg;    
-                //return StatusCode::RECOVERABLE;
-              }
-              
-              // make the objects to be stored
-              LHCb::Particle* Part_d2 = new LHCb::Particle();
-              cont_Part->insert( Part_d2 );
-              cont_P2PV->relate( Part_d2 , (LHCb::RecVertex*)cont_PV->containedObject( key ) );
-              //
-              std::vector<ContainedObject*> newObjects_d2;
-              newObjects_d2.push_back(Part_d2);
-              if( (d2_Basic==true) ){
-                LHCb::Track* track_d2 = new LHCb::Track();
-                newObjects_d2.push_back(track_d2);
-                cont_Track->insert( track_d2 );
-                //
-                LHCb::ProtoParticle* proto_d2 = new LHCb::ProtoParticle();
-                newObjects_d2.push_back(proto_d2);
-                cont_Proto->insert( proto_d2 );
-                //
-                LHCb::RichPID* rich_d2 = new LHCb::RichPID();
-                newObjects_d2.push_back(rich_d2);
-                cont_RPID->insert( rich_d2 );
-                //
-                LHCb::MuonPID* muon_d2 = new LHCb::MuonPID();
-                newObjects_d2.push_back(muon_d2);
-                cont_MPID->insert( muon_d2 );
-        
-                //  
-                Part_d1->addToDaughters(Part_d2);
-              }
-
-              vert_d1->addToOutgoingParticles(Part_d2);
-
-              fillParticleInfo( newObjects_d2 , Obj_d2 , d2_Basic );
-            } // second gen (loop)
-          } // d1 basic (if)
-        } // first gen (loop)
-      } // motherBasic (if)
+      if( motherBasic == false ) ProcessObject( 0, key, Part, Obj, cont_PV, cont_Vert, cont_Part,
+                    cont_Proto, cont_RPID, cont_MPID, cont_Track, cont_P2PV);
     } // candidate (loop)
   } // report exists (if)
 	
   setFilterPassed(true);  // Mandatory. Set to true if event is accepted. 
   debug() << "End of algorithm execution" << endmsg;
+  return StatusCode::SUCCESS;
+}
+
+StatusCode TeslaReportAlgo::ProcessObject(int n, int key, LHCb::Particle* Part, const LHCb::HltObjectSummary* Obj
+    ,LHCb::RecVertex::Container* cont_PV
+    ,LHCb::Vertex::Container* cont_Vert
+    ,LHCb::Particle::Container* cont_Part
+    ,LHCb::ProtoParticle::Container* cont_Proto
+    ,LHCb::RichPID::Container* cont_RPID
+    ,LHCb::MuonPID::Container* cont_MPID
+    ,LHCb::Track::Container* cont_Track
+    ,Particle2Vertex::Table* cont_P2PV
+    ){
+
+  n+=1;
+  LHCb::Vertex* vert_mother = new LHCb::Vertex();
+  cont_Vert->insert( vert_mother );
+
+  for( auto child : Obj->substructure() ){
+    debug() << "Daughter CLASS ID (level " << n << ") = " << (child).target()->summarizedObjectCLID() << endmsg;
+
+    const LHCb::HltObjectSummary * Obj_d = child.target();
+
+    if( Obj_d->summarizedObjectCLID()==LHCb::RecVertex::classID() ) {
+      if(n!=1) {
+        warning() << "RecVertex should not be here!!!" << endmsg;
+        return StatusCode::FAILURE;
+      }
+      else continue;
+    }
+    if( Obj_d->summarizedObjectCLID()==LHCb::Vertex::classID() ){
+      // for a non-basic particle, the end vertex is the last
+      // element of the substructure
+      fillVertexInfo( vert_mother , Obj_d );
+      Part->setEndVertex( vert_mother );
+      debug() << "Setting mother decay vertex" << endmsg;
+      continue;
+    }
+
+    // do we have a basic particle?
+    debug() << "Daughter ID (level " << n << "): " << Obj_d->numericalInfo()["0#Particle.particleID.pid"] << endmsg;
+    bool d_Basic = true;
+    debug() << "Daughter (level " << n <<") has substructure consisting of:" << endmsg;
+    for( auto it : Obj_d->substructure() ){
+      debug() << (it).target()->summarizedObjectCLID() << endmsg;
+      if((it).target()->summarizedObjectCLID()==LHCb::Particle::classID()) d_Basic=false;
+    }
+
+    // make the objects to be stored
+    std::vector<ContainedObject*> newObjects_d;
+
+    LHCb::Particle* Part_d = new LHCb::Particle();
+    newObjects_d.push_back(Part_d);
+    Part->addToDaughters(Part_d);
+    cont_Part->insert( Part_d );
+    cont_P2PV->relate( Part_d , (LHCb::RecVertex*)cont_PV->containedObject( key ) );
+
+    //
+    if( d_Basic == true ){
+      //
+      LHCb::Track* track_d = new LHCb::Track();
+      newObjects_d.push_back(track_d);
+      cont_Track->insert( track_d );
+      //
+      LHCb::ProtoParticle* proto_d = new LHCb::ProtoParticle();
+      newObjects_d.push_back(proto_d);
+      cont_Proto->insert( proto_d );
+      //
+      LHCb::RichPID* rich_d = new LHCb::RichPID();
+      newObjects_d.push_back(rich_d);
+      cont_RPID->insert( rich_d );
+      //
+      LHCb::MuonPID* muon_d = new LHCb::MuonPID();
+      newObjects_d.push_back(muon_d);
+      cont_MPID->insert( muon_d );
+      //  
+      vert_mother->addToOutgoingParticles( Part_d );
+      fillParticleInfo( newObjects_d , Obj_d , d_Basic );
+    }
+    else {
+      vert_mother->addToOutgoingParticles( Part_d );
+      fillParticleInfo( newObjects_d , Obj_d , d_Basic );
+      ProcessObject( n, key, Part_d, Obj_d, cont_PV, cont_Vert, cont_Part,
+          cont_Proto, cont_RPID, cont_MPID, cont_Track, cont_P2PV);
+    }
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -491,8 +454,7 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
   // PARTICLE *******************************************************
   // ID/Mass/Kinematics
   LHCb::Particle* part = (LHCb::Particle*)vec_obj[0];
-  bool turbo=true;
-  if(m_ReportVersion!=2) turbo=false;
+  
   m_conv->ParticleObjectFromSummary(&HLT_info,part,turbo);
   debug() << "p = " << part->p() << endmsg;
   debug() << "p (par_mom) = " << part->p() << endmsg; // duplicate to make test match ref
@@ -584,15 +546,17 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
             // LHCb RichPID  members:
             // unsigned int   m_pidResultCode
             // std::vector< float >   m_particleLLValues
-            // SmartRef< LHCb::Track >  m_track (NOT INCLUDED)
+            // SmartRef< LHCb::Track >  m_track 
             //
             proto->setRichPID( rich );
             rich->setTrack( track );
+            /*
             proto->addInfo(LHCb::ProtoParticle::CombDLLe,rich->particleDeltaLL(Rich::ParticleIDType::Electron));
             proto->addInfo(LHCb::ProtoParticle::CombDLLmu,rich->particleDeltaLL(Rich::ParticleIDType::Muon));
             proto->addInfo(LHCb::ProtoParticle::CombDLLpi,rich->particleDeltaLL(Rich::ParticleIDType::Pion));
             proto->addInfo(LHCb::ProtoParticle::CombDLLk,rich->particleDeltaLL(Rich::ParticleIDType::Kaon));
             proto->addInfo(LHCb::ProtoParticle::CombDLLp,rich->particleDeltaLL(Rich::ParticleIDType::Proton));
+            */ 
             //
             debug() << "RichPID details added" << endmsg; 
             break;
@@ -615,6 +579,7 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
             // SmartRef< LHCb::Track >  m_muonTrack (NOT INCLUDED)
             m_conv->MuonPIDObjectFromSummary(&Muon_info,muon,turbo);
             debug() << "Muon LLMu = " << muon->MuonLLMu() << endmsg;
+            muon->setIDTrack( track );
             proto->setMuonPID( muon );
             debug() << "MuonPID details added" << endmsg; 
             break;

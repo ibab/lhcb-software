@@ -18,6 +18,8 @@
 #include "Event/HltSelReports.h"
 #include "Event/HltVertexReports.h"
 #include "Event/HltDecReports.h"
+#include "Event/RawEvent.h"
+#include "Event/RawBank.h"
 
 using std::map;
 using std::string;
@@ -42,6 +44,9 @@ class ReportCheckTool : public GaudiTool, virtual public IReportCheck
     //===========================================================================
     /// Check version of the reports from an HltSelReports object.
     int VersionTopLevel(string,string); 
+    //===========================================================================
+    /// Check version of the reports from an HltSelReports object.
+    int checkBankVersion();
 
   protected:
   

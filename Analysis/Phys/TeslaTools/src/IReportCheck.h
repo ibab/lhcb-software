@@ -11,6 +11,7 @@ class IReportCheck : virtual public IAlgTool {
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IReportCheck; } // Actual operator function
     virtual int VersionTopLevel( std::string, std::string ) = 0;
+    virtual int checkBankVersion() = 0;
 };
 
 #endif

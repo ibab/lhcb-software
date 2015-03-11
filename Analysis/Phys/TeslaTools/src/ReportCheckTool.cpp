@@ -105,3 +105,25 @@ int ReportCheckTool::VersionTopLevel(string trigger,string RepLoc)
   return vnum;
 }
 
+//===========================================================================
+/// ReportCheckTool::checkBankVersion finds report version from HltSelReports.
+//===========================================================================
+int ReportCheckTool::checkBankVersion(){
+  LHCb::RawEvent* raw = getIfExists<LHCb::RawEvent>(LHCb::RawEventLocation::Trigger);
+  if(!raw) raw = getIfExists<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
+  if(!raw) {
+    debug() << "Cannot get raw event, returning 0" << endmsg;
+    return 0;
+  }
+  for(int j=0; j<256; ++j)  
+  {
+    LHCb::RawBank::BankType i = LHCb::RawBank::BankType(j);
+    if(i!=LHCb::RawBank::HltSelReports) continue;
+    else {
+      debug() << "Found selection report banks" << endmsg;
+      const std::vector<LHCb::RawBank*>& b = raw->banks(i);
+      if ( b.size() > 0 ) return b[0]->version();
+    }
+  }
+  return 0;
+}    
