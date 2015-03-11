@@ -375,7 +375,7 @@ _types_ = { MoveVerticesForSwimming : 'MoveVerticesForSwimming'
 ## protected attributes 
 _protected_ = ( 'IgnoreFilterPassed' , 'Members' , 'ModeOR', 'DecisionName', 'Prescale','Postscale','Filter1' )
 ## own slots for HltLine 
-_myslots_   = ( 'name' , 'prescale'  , 'priority', 'postscale' , 'ODIN' , 'L0DU' , 'HLT' , 'algos' , 'PV' , 'Turbo') 
+_myslots_   = ( 'name' , 'prescale'  , 'priority', 'postscale' , 'ODIN' , 'L0DU' , 'HLT1' , 'algos' , 'PV' , 'Turbo') 
 
 # =============================================================================
 ## Get the full algorithm type from short nick
