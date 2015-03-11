@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-03-11 - Chris Jones
- - Fix a small pronlem in the configurables that cause custom settings to
+ - Fix a small problem in the configurables that cause custom settings to
    not always be properly propagated.
 
 ! 2015-03-10 - Chris Jones
