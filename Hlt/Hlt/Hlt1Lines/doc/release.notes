@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-03-12 - Matthew Kenzie
+ - Bug fix for previous commit
+
+! 2015-03-12 - Matthew Kenzie
  - Updates to lifetime unbiased lines
 
 ! 2015-03-11 - Roel Aaij

@@ -141,13 +141,13 @@ class Hlt1JpsiPhiLinesConf( HltLinesConfigurableUser ) :
         #Code = TrackUnitLineCode
         #)
 
-    #hlt1JpsiPhiLine_KaonUnit = HltUnit(
-        #'Hlt1'+name+'KaonUnit',
-        ##OutputLevel = 1,
-        #Monitor = True,
-        #Preambulo = self.hlt1JpsiPhiLine_Preambulo( props ),
-        #Code = KaonUnitLineCode
-        #)
+    hlt1JpsiPhiLine_KaonUnit = HltUnit(
+        'Hlt1'+name+'KaonUnit',
+        #OutputLevel = 1,
+        Monitor = True,
+        Preambulo = self.hlt1JpsiPhiLine_Preambulo( props ),
+        Code = KaonUnitLineCode
+        )
 
     hlt1JpsiPhiLine_MuonUnit = HltUnit(
         'Hlt1'+name+'MuonUnit',
