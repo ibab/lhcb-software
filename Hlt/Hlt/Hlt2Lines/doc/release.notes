@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-12 - Patrick Spradlin
+ - Added replacement lines for Hlt2CharmHadD02HHLines.py to Hlt2Lines/CharmHad
+
 ! 2015-03-11 - Roel Aaij
  - Fix common cuts being required in Hlt2Combiner.
  - Change HLT to HLT1 in construction of Hlt2Line.

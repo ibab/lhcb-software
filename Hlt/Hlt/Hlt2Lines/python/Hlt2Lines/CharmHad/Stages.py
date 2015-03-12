@@ -32,6 +32,7 @@ class TagDecay(Hlt2Combiner):
         DecayRHS = DecayRHS.rstrip(']cc').rstrip(' ')
         DecayRHS = DecayRHS.lstrip(' ')
         DecayRHS = DecayRHS.split(' ')
+        ## ALL should be the default; this should be unneceesary.
         for part in DecayRHS :
             dc[part] = "ALL"
         cc =    ('in_range( %(DeltaM_AM_MIN)s, (AM - AM1), %(DeltaM_AM_MAX)s )')
@@ -62,6 +63,8 @@ class DetachedInParticleFilter(Hlt2ParticleFilter):
                            "inputs" : [Hlt2LooseProtons]}
                   }
 
+        ## This is soooo unsafe.  There has to be an easier and safer way
+        ##    to do this.
         cut = pidinfo[name.split('_')[1]]["cut"] + cut
         inputs = pidinfo[name.split('_')[1]]["inputs"]
 
@@ -86,6 +89,8 @@ class InParticleFilter(Hlt2ParticleFilter):
                            "inputs" : [Hlt2LooseProtons]}
                   }   
 
+        ## This is soooo unsafe.  There has to be an easier and safer way
+        ##    to do this.
         cut = pidinfo[name.split('_')[1]]["cut"] + cut 
         inputs = pidinfo[name.split('_')[1]]["inputs"]
 
@@ -109,6 +114,8 @@ class NoPIDInParticleFilter(Hlt2ParticleFilter):
                            "inputs" : [Hlt2NoPIDsProtons]}
                   } 
 
+        ## This is soooo unsafe.  There has to be an easier and safer way
+        ##    to do this.
         inputs = pidinfo[name.split('_')[1]]["inputs"]
 
         from HltTracking.HltPVs import PV3D
@@ -130,6 +137,8 @@ class SoftTagInParticleFilter(Hlt2ParticleFilter):
                            "inputs" : [Hlt2NoPIDsProtons]}
                   }   
 
+        ## This is soooo unsafe.  There has to be an easier and safer way
+        ##    to do this.
         inputs = pidinfo[name.split('_')[1]]["inputs"]
 
         from HltTracking.HltPVs import PV3D
@@ -205,6 +214,48 @@ class DetachedV0V0Combiner(Hlt2Combiner):
                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                               tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
                               MotherCut = mc, Preambulo = [])
+
+
+## Combiner class for D0 -> h h' decays
+class D02HHCombiner(Hlt2Combiner) : # {
+    def __init__(self, name, decay, inputs, slotName = None, shared = False) : # {
+
+        incuts = "(TRCHI2DOF< %(Trk_TRCHI2DOF_MAX)s )" \
+                  "& (PT> %(Trk_PT_MIN)s)" \
+                  "& (P> %(Trk_P_MIN)s)" \
+                  "& (MIPCHI2DV(PRIMARY)> %(Trk_MIPCHI2DV_MIN)s )"
+
+        dc = {   'pi+' : incuts
+               , 'K+' : incuts
+             }
+
+        ## Assume that the wide mass range is wider than the narrow range.
+        combcuts = "in_range(%(WideMass_M_MIN)s,  AM, %(WideMass_M_MAX)s)" \
+                   "& ((APT1 > %(Trk_Max_APT_MIN)s) " \
+                       "| (APT2 > %(Trk_Max_APT_MIN)s))" \
+                   "& (APT > %(D0_PT_MIN)s)" \
+                   "& (AMINDOCA('LoKi::TrgDistanceCalculator') " \
+                       "< %(Pair_AMINDOCA_MAX)s )"
+
+        parentcuts = "(VFASPF(VCHI2PDOF) < %(D0_VCHI2PDOF_MAX)s)" \
+                     "& (BPVVDCHI2> %(D0_BPVVDCHI2_MIN)s )" \
+                     "& (BPVDIRA > %(D0_BPVDIRA_MIN)s )"
+
+        from HltTracking.HltPVs import PV3D
+        ## The name passed to the base class constructor determines the
+        ##   configuration dictionary that is picked up.
+        Hlt2Combiner.__init__( self, name, decay, inputs,
+                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                               tistos = 'TisTosSpec',
+                               nickname = slotName,
+                               shared = shared,
+                               DaughtersCuts = dc,
+                               CombinationCut = combcuts,
+                               MotherCut = parentcuts,
+                               Preambulo = [] )
+    # }
+# }
+
 
 class D2KPiPi_SS(DetachedHHHCombiner) :
     def __init__(self,name) :
