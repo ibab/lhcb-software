@@ -4,6 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2015-03-12 - Roel Aaij
+ - Add IParticleValue to dictionary for interactive tests.
+
 !========================= DaVinciInterfaces v2r23 2014-07-25 =========================
 
 ! 2014-07-16 - Anton Poluektov 

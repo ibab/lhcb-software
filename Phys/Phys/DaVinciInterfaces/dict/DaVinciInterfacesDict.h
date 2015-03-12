@@ -42,6 +42,7 @@
 #include "Kernel/IParticleTisTos.h"
 #include "Kernel/IParticleTransporter.h"
 #include "Kernel/IParticleTupleTool.h"
+#include "Kernel/IParticleValue.h"
 #include "Kernel/IPlotTool.h"
 #include "Kernel/IProtoParticleFilter.h"
 #include "Kernel/IPVReFitter.h"
