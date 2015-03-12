@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-03-12 - Vanya Belyaev
+ - add fake source 
+
 !========================= LoKiNumbers v10r8 2015-02-23 =========================
 ! 2015-01-19 - Vanya Belyaev
  -  few more steps towards autogeneration of C++ code from functors 

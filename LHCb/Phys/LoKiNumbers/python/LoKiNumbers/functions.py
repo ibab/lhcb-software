@@ -166,7 +166,8 @@ BLIND     = LoKi.Random.Blind
 ## @see LoKi::Cuts::XBLIND
 XBLIND    = LoKi.Random.XBlind
 
-
+XFAKESOURCE   = LoKi.Functors.FakeSource( 'double' )
+                                           
 # =============================================================================
 ## The iterator function for the vector of something
 def _vct_iter_ ( self ) :

@@ -33,8 +33,9 @@
   <class name = "LoKi::Functor<void,std::vector<double> >"             />
   <class name = "LoKi::FunctorFromFunctor<void,std::vector<double> >"  />
 
-  <class name = "LoKi::Functors::Empty<double>"   />
-  <class name = "LoKi::Functors::Size<double>"    />
+  <class name = "LoKi::Functors::Empty<double>"      />
+  <class name = "LoKi::Functors::Size<double>"       />
+  <class name = "LoKi::Functors::FakeSource<double>" />
 
 
   <class pattern   = "LoKi::Constant<*>"           />
