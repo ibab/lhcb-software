@@ -11,7 +11,8 @@
 #include "Event/Track.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/ToolFactory.h"
-#include "MuonID/CommonMuonTool.h"
+#include "MuonID/ICommonMuonTool.h"
+#include "MuonID/ICommonMuonTool.h"
 #include "TrackInterfaces/ITracksFromTrack.h"
 
 DECLARE_TOOL_FACTORY(IsMuonTool)
@@ -32,7 +33,7 @@ StatusCode IsMuonTool::initialize() {
   if (sc.isFailure()) {
     return sc;
   }
-  m_muonTool = tool<CommonMuonTool>("CommonMuonTool");
+  m_muonTool = tool<ICommonMuonTool>("CommonMuonTool");
   return sc;
 }
 
@@ -47,7 +48,7 @@ StatusCode IsMuonTool::tracksFromTrack(const LHCb::Track& track,
     return StatusCode::SUCCESS;
   }
   CommonConstMuonHits hits;
-  std::array<unsigned, CommonMuonTool::nStations> occupancies;
+  std::array<unsigned, ICommonMuonTool::nStations> occupancies;
   std::tie(hits, occupancies) =
       m_muonTool->hitsAndOccupancies(track, extrapolation);
   if (m_muonTool->isMuon(occupancies, track.p())) {

@@ -4,6 +4,11 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+! 2015-03-12 - Roel Aaij, Kevin Dungs
+ - Add dependency on Muon/MuonID to CMakeLists.txt.
+ - Fix several mistakes in the infrastructure as pointed out by Roel.
+   - Add ICommonMuonTool as a separate class in Muon/MuonID
+
 ! 2015-03-11 - Kevin Dungs
  - Merge efforts from the MuonID task force (from branch LHCbPS-1372)
    - Hlt1MuonTool now uses Rec/Muon/MuonID/CommonMuonTool internally

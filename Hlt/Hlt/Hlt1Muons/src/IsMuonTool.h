@@ -6,7 +6,7 @@
 
 #include "Event/Track.h"
 #include "GaudiAlg/GaudiTool.h"
-#include "MuonID/CommonMuonTool.h"
+#include "MuonID/ICommonMuonTool.h"
 #include "TrackInterfaces/ITracksFromTrack.h"
 
 /** Tool for identifying muons in the HLT. Makes use of the CommonMuonTool.
@@ -23,7 +23,7 @@ class IsMuonTool : public GaudiTool, virtual public ITracksFromTrack {
                              std::vector<LHCb::Track*>&) override;
 
  private:
-  CommonMuonTool* m_muonTool;
+  ICommonMuonTool* m_muonTool;
 };
 
 #endif  // ISMUONTOOL_H
