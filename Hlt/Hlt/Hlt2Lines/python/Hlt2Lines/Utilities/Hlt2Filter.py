@@ -39,7 +39,8 @@ class Hlt2ParticleFilter(Hlt2TisTosStage):
             return self.__stage
 
         localCuts = self._localCuts(cuts)
-        args = {'Code' : self.__code % localCuts}
+        args = deepcopy(self.__kwargs)
+        args['Code'] = self.__code % localCuts
         if 'Preambulo' in args:
             args['Preambulo'] = [p % localCuts for p in args['Preambulo']]
 

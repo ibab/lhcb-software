@@ -11,7 +11,8 @@
 ! 2015-03-12 - Roel Aaij
  - Add some checks in Hlt2Stage.
  - Make CharmHad.Stages.DetachedHHHCombiner shared.
-
+ - Add first version of Topo lines from Phil.
+ 
 ! 2015-03-12 - Stefano Perazzini
  - Added python/Hlt2Lines/B2HH directory for B->hh trigger lines.
 
