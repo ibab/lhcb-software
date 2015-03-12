@@ -81,7 +81,7 @@ class Hlt2TisTosGlobalTagger(Hlt2Stage):
         return self.__stage
 
 class Hlt2TisTosParticleTagger(Hlt2Stage):
-    def __init__(self, name, tistos, inputs = [], nickname = None, shared = False, **kwargs):
+    def __init__(self, name, tistos, inputs, nickname = None, shared = False, **kwargs):
         specsOrKeys = makeList(tistos)
         self.__specs = set()
         self.__keys = set()
@@ -126,11 +126,13 @@ class Hlt2TisTosParticleTagger(Hlt2Stage):
     def stage(self, cuts):
         if self.__stage != None:
             return self.__stage
-        
+
+        common = cuts.get('Common', {})
+        localCuts = cuts.get(self._nickname(), common)
         if self.__keys:
             specs = []
             for k in self.__keys:
-                tmp = cuts[k]
+                tmp = localCuts[k]
                 if isinstance(tmp, basestring):
                     specs.append(tmp)
                 else:

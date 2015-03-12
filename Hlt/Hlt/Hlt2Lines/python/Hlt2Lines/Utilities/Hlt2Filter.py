@@ -37,7 +37,13 @@ class Hlt2ParticleFilter(Hlt2TisTosStage):
     def stage(self, cuts):
         if self.__stage != None:
             return self.__stage
-        args = {'Code' : self.__code % cuts.get(self._nickname(), cuts['Common'])}
+
+        common = cuts.get('Common', {})
+        localCuts = cuts.get(self._nickname(), common)
+        args = {'Code' : self.__code % localCuts}
+        if 'Preambulo' in args:
+            args['Preambulo'] = [p % localCuts for p in args['Preambulo']]
+
         if not self._tistos():
             ## Return combiner if no tistos is required
             self.__stage = self._makeMember(cuts, args)

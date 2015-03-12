@@ -50,7 +50,7 @@ class Hlt2Combiner(Hlt2TisTosStage):
 
     def _makeMember(self, cuts, args):
         from HltLine.HltLine import Hlt2Member
-        decays = [self.__decay] if type(self.__decay) == str else self.__decay
+        decays = [self.__decay] if type(self.__decay) == str else self.__decay            
         return Hlt2Member(self.__combiner, self._name() + 'Combiner', shared = self._shared(),
                           DecayDescriptors = decays, Inputs = self.inputStages(cuts),
                           **args)
@@ -62,12 +62,16 @@ class Hlt2Combiner(Hlt2TisTosStage):
         ## Copy args and substitute cut values
         args = deepcopy(self.__kwargs)
         common = cuts.get('Common', {})
+        localCuts = cuts.get(self._nickname(), common)
         for k, v in self.__cuts.iteritems():
             if k == 'DaughtersCuts':
-                args[k] = {l : w % cuts.get(self._nickname(), common) for l, w in v.iteritems()}
+                args[k] = {l : w % localCuts for l, w in v.iteritems()}
             else:
-                args[k] = v % cuts.get(self._nickname(), common)
-
+                args[k] = v % localCuts
+    
+        if 'Preambulo' in args:
+            args['Preambulo'] = [p % localCuts for p in args['Preambulo']]
+                
         if not self._tistos():
             ## Return combiner if no tistos is required
             self.__stage = self._makeMember(cuts, args)

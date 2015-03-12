@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-12 - Roel Aaij
+ - Allow substitution in the Preambulo.
+ - Fix cut substitution for TisTosTagger.
+
 ! 2015-03-12 - Patrick Spradlin
  - Added replacement lines for Hlt2CharmHadD02HHLines.py to Hlt2Lines/CharmHad
 
