@@ -2198,6 +2198,42 @@ namespace LoKi
     Dump_<double>::result_type 
     Dump_<double>::operator() ( Dump_<double>::argument a ) const ;
     // ========================================================================
+    /** @class FakeSource
+     *  simple "fake" source, useful for variuous debugging, fake streams, etc
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2015-03-12
+     */
+    template <class TYPE>
+    class FakeSource : public LoKi::Functor<void,std::vector<TYPE> >
+    {
+    private: 
+      // ======================================================================
+      typedef LoKi::Functor<void,std::vector<TYPE> >                  Source_ ;
+      typedef typename Source_::result_type                       result_type ;
+      // ======================================================================
+    public:
+      // =====================================================================
+      /// the constructor 
+      FakeSource ( const unsigned short n = 0      )
+        : LoKi::AuxFunBase ( std::tie ( n ) )  
+        , LoKi::Functor<void, std::vector<TYPE> >() 
+        , m_n     ( n ) 
+      {}
+      /// MANDATORY: virtual destructor 
+      virtual ~FakeSource () {}
+      /// MANDATORY: clone method("virtual constructor")
+      virtual  FakeSource* clone() const { return new FakeSource ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( /* argument a */ ) const 
+      { return std::vector<TYPE> ( m_n )  ; }  
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// data 
+      unsigned short m_n   ;                                     // the length 
+      // ======================================================================
+    } ;
+    // ========================================================================
   } //                                          end of namespace LoKi::Functors  
   // ==========================================================================
   /** simple "filter" function

@@ -662,6 +662,7 @@ namespace
     // trivia 
     LoKi::Functors::Empty<double>                                      m_e    ;
     LoKi::Functors::Size<double>                                       m_s    ;
+    LoKi::Functors::FakeSource<double>                                 m_f    ;
     // ========================================================================
     // function& predicate  
     LoKi::FunctorFromFunctor<void,double>                              m_101  ;
