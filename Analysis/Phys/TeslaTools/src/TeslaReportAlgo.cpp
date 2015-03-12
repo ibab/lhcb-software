@@ -208,19 +208,19 @@ StatusCode TeslaReportAlgo::execute()
     reusePV = false;
   }
   if( !reusePV && !refitted ){
-    for( auto iv : *vtxRep ){
-      const LHCb::VertexBase v = *(iv.target());
+    for( auto iv = vtxRep->begin(); iv!=vtxRep->end(); iv++){
+      const LHCb::VertexBase* v = *iv;
       LHCb::RecVertex* vnew = new LHCb::RecVertex();
       if ( msgLevel(MSG::DEBUG) ) {
-        debug() <<"Vertex chi2= " << v.chi2()<< ", ndf =" << v.nDoF()<< endmsg;
-        debug() <<"Vertex key= " << v.key() << endmsg;
+        debug() << "Vertex chi2= " << v->chi2()<< ", ndf =" << v->nDoF()<< endmsg;
+        debug() << "Vertex key= " << v->key() << endmsg;
       }
       // Turn the VertexBase from the vertex reports in to a RecVertex for packing
-      vnew->setChi2( v.chi2() );
-      vnew->setNDoF( v.nDoF() );
-      vnew->setPosition( v.position() );
-      vnew->setCovMatrix( v.covMatrix() );
-      vnew->setExtraInfo( v.extraInfo() );
+      vnew->setChi2( v->chi2() );
+      vnew->setNDoF( v->nDoF() );
+      vnew->setPosition( v->position() );
+      vnew->setCovMatrix( v->covMatrix() );
+      vnew->setExtraInfo( v->extraInfo() );
 
       // Fill PV container
       cont_PV->insert( vnew );
