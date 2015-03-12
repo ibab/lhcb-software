@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-12 - Albert Puig
+ - Add first batch of Radiative lines.
+
 ! 2015-03-12 - Roel Aaij
  - Add some checks in Hlt2Stage.
  - Make CharmHad.Stages.DetachedHHHCombiner shared.
