@@ -51,7 +51,9 @@ LoKi::Particles::Value::Value
   SmartIF<IAlgContextSvc> context ( loki ) ;
   GaudiAlgorithm* alg = Gaudi::Utils::getGaudiAlg ( context ) ;
   if ( 0 != alg ) 
-  { m_function = alg->tool<IParticleValue> ( function , alg , true ) ; }
+  { 
+    m_function = alg->tool<IParticleValue> ( function , alg , true ) ; 
+  }
   else 
   { 
     /// 2. use tool service 
@@ -62,8 +64,8 @@ LoKi::Particles::Value::Value
       const IInterface* parent = 0 ;
       StatusCode sc = tsvc->retrieveTool 
         ( function , _func , parent , true ) ;
-      Assert ( sc.isSuccess() , "Unable to retrieve the tool " + function , sc ) ;
-      Assert ( 0 != _func     , "Unable to retrieve the tool " + function      ) ;
+      Assert ( sc.isSuccess() , "Unable to retrieve the tool/1: '" + function +"'", sc ) ;
+      Assert ( 0 != _func     , "Unable to retrieve the tool/2: '" + function +"'"     ) ;
       m_function = _func ;
     }
   }
