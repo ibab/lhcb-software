@@ -10,6 +10,6 @@
     </set>
   </argument>
   <argument name="timeout">
-    <integer>60</integer>
+    <integer>300</integer>
   </argument>
 </extension>
