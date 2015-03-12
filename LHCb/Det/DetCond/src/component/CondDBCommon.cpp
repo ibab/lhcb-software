@@ -21,7 +21,7 @@ const cool::RecordSpecification& getXMLStorageSpec() {
 
 namespace {
   inline bool ends_with(const std::string& s, const std::string &suff) {
-    constexpr auto count = suff.size();
+    const auto count = suff.size();
     const auto size = s.size();
     return (size >= count) &&
            (s.compare(size - count, count, suff) == 0);
