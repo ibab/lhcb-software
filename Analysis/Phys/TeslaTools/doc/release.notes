@@ -3,6 +3,9 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-3-12 - Sean Benson
+ - Fix non-debug mode running.
+
 ! 2015-3-11 - Sean Benson
  - Support persistence of refitted PV.
  - Removed limitation of 2 level resurrection.
