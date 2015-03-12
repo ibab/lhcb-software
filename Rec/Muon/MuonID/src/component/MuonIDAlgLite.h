@@ -7,8 +7,8 @@
 #include "Event/Track.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-#include "MuonID/CommonMuonTool.h"
-#include "MuonID/DLLMuonTool.h"
+#include "MuonID/ICommonMuonTool.h"
+#include "DLLMuonTool.h"
 
 /** @class MuonIDAlgLite MuonIDAlgLite.h
  * A lightweight version of MuonIDAlg that uses the CommonMuonTool.
@@ -34,7 +34,7 @@ class MuonIDAlgLite final : public GaudiAlgorithm {
   bool isGoodOfflineTrack(const LHCb::Track &) const;
   LHCb::Track makeMuonTrack(const LHCb::MuonPID &) const;
   // Members
-  CommonMuonTool *muonTool_;
+  ICommonMuonTool *muonTool_;
   DLLMuonTool *DLLTool_;
   bool useTTrack_;
   std::string tesPathInputTracks_, tesPathOutputMuonPid_,

@@ -2,8 +2,8 @@
  *
  * 2015-01-12: Ricardo Vazquez Gomez
  */
-#include "MuonID/DLLMuonTool.h"
-#include "MuonID/CommonMuonTool.h"
+#include "DLLMuonTool.h"
+#include "CommonMuonTool.h"
 
 #include <algorithm>
 #include <array>
@@ -125,7 +125,7 @@ StatusCode DLLMuonTool::initialize() {
   }
 
   hitManager_ = tool<CommonMuonHitManager>("CommonMuonHitManager");
-  muonTool_ = tool<CommonMuonTool>("CommonMuonTool");
+  muonTool_ = tool<ICommonMuonTool>("CommonMuonTool");
   det_ = getDet<DeMuonDetector>(DeMuonLocation::Default);
 
   // Load station information from detector description

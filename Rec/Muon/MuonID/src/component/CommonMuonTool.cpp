@@ -2,7 +2,7 @@
  *
  * 2015-01-06: Kevin Dungs
  */
-#include "MuonID/CommonMuonTool.h"
+#include "CommonMuonTool.h"
 
 #include <algorithm>
 #include <array>
@@ -21,7 +21,7 @@
 
 #include "MuonID/CommonMuonHitManager.h"
 
-DECLARE_TOOL_FACTORY(CommonMuonTool)
+DECLARE_COMPONENT(CommonMuonTool)
 
 /** C'tor
  * Also declares an interface to that the tool can be obtained in Gaudi via
@@ -29,8 +29,8 @@ DECLARE_TOOL_FACTORY(CommonMuonTool)
  */
 CommonMuonTool::CommonMuonTool(const std::string& type, const std::string& name,
                                const IInterface* parent)
-    : GaudiTool(type, name, parent), m_foiFactor{1.0} {
-  declareInterface<CommonMuonTool>(this);
+    : base_class(type, name, parent), m_foiFactor{1.0} {
+  declareInterface<ICommonMuonTool>(this);
 }
 
 /** Initialises the tool.
@@ -97,8 +97,8 @@ auto CommonMuonTool::initialize() -> StatusCode {
  * Returns a std::array that contains the coordinates for each station.
  */
 auto CommonMuonTool::extrapolateTrack(const LHCb::Track& track) const
-    -> CommonMuonTool::MuonTrackExtrapolation {
-  CommonMuonTool::MuonTrackExtrapolation extrapolation;
+    -> ICommonMuonTool::MuonTrackExtrapolation {
+  MuonTrackExtrapolation extrapolation;
   const auto& state = track.closestState(9450.0);  // state closest to M1
 
   // Project the state into the muon stations
@@ -117,7 +117,7 @@ auto CommonMuonTool::extrapolateTrack(const LHCb::Track& track) const
  */
 auto CommonMuonTool::preSelection(
     const LHCb::Track& track,
-    const CommonMuonTool::MuonTrackExtrapolation& extrapolation) const noexcept
+    const ICommonMuonTool::MuonTrackExtrapolation& extrapolation) const noexcept
     -> bool {
   if (track.p() < m_preSelMomentum) {
     return false;
@@ -151,8 +151,8 @@ auto CommonMuonTool::preSelection(
  */
 auto CommonMuonTool::hitsAndOccupancies(
     const LHCb::Track& track,
-    const CommonMuonTool::MuonTrackExtrapolation& extrapolation) const
-    -> std::tuple<CommonConstMuonHits, CommonMuonTool::MuonTrackOccupancies> {
+    const ICommonMuonTool::MuonTrackExtrapolation& extrapolation) const
+    -> std::tuple<CommonConstMuonHits, ICommonMuonTool::MuonTrackOccupancies> {
   using xy_t = std::pair<double, double>;
 
   /* Define an inline callable that makes it easier to check whether a hit is
@@ -234,7 +234,7 @@ auto CommonMuonTool::hitsAndOccupancies(
  */
 auto CommonMuonTool::extractCrossed(const CommonConstMuonHits& hits) const
     noexcept
-    -> std::tuple<CommonConstMuonHits, CommonMuonTool::MuonTrackOccupancies> {
+    -> std::tuple<CommonConstMuonHits, ICommonMuonTool::MuonTrackOccupancies> {
   auto res = CommonConstMuonHits{};
   res.reserve(hits.size());
   std::copy_if(std::begin(hits), std::end(hits), std::back_inserter(res),
@@ -264,7 +264,7 @@ auto CommonMuonTool::extractCrossed(const CommonConstMuonHits& hits) const
  * track's momentum. The requirement differs in bins of p.
  */
 auto CommonMuonTool::isMuon(
-    const CommonMuonTool::MuonTrackOccupancies& occupancies, double p) const
+    const ICommonMuonTool::MuonTrackOccupancies& occupancies, double p) const
     noexcept -> bool {
   const double pr1 = m_preSelMomentum, pr2 = m_momentumCuts[0],
                pr3 = m_momentumCuts[1];
@@ -292,7 +292,7 @@ auto CommonMuonTool::isMuon(
  * Aug 2011.
  */
 auto CommonMuonTool::isMuonLoose(
-    const CommonMuonTool::MuonTrackOccupancies& occupancies, double p) const
+    const ICommonMuonTool::MuonTrackOccupancies& occupancies, double p) const
     noexcept -> bool {
   const double pr1 = m_preSelMomentum, pr2 = m_momentumCuts[0], magic1 = 3500,
                magic2 = 4200;
@@ -316,10 +316,15 @@ auto CommonMuonTool::isMuonLoose(
   return id;
 }
 
+auto CommonMuonTool::foi(int station, int region, double p) const
+    noexcept -> std::pair<double, double> {
+  return i_foi(station, region, p);
+}
+
 /** Helper function that returns the x, y coordinates of the FoI for a
  * given station and region and a track's momentum.
  */
-auto CommonMuonTool::foi(int station, int region, double p) const noexcept
+auto CommonMuonTool::i_foi(int station, int region, double p) const noexcept
     -> std::pair<double, double> {
   auto i = station * nRegions + region;
   if (p < 1000000) {

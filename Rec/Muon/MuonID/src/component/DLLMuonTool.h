@@ -12,7 +12,7 @@
 #include "MuonDet/DeMuonDetector.h"
 
 #include "MuonID/CommonMuonHitManager.h"
-#include "MuonID/CommonMuonTool.h"
+#include "CommonMuonTool.h"
 
 #include "TMath.h"
 #include "Math/ProbFuncMathCore.h"
@@ -63,7 +63,7 @@ class DLLMuonTool final : public GaudiTool {
   // Members
   CommonMuonHitManager* hitManager_;
   DeMuonDetector* det_;
-  CommonMuonTool* muonTool_;
+  ICommonMuonTool* muonTool_;
   double foiFactor_, preSelMomentum_;
   std::array<double, nStations> stationZ_;
   std::array<std::pair<double, double>, nStations * nRegions> padSize_;
