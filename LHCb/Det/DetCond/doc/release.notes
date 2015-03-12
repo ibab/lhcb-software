@@ -4,6 +4,13 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2015-03-12 - Marco Clemencic
+ - Changed the policy of CondDB::generateXMLCatalog to exclude folders with
+   names ending with ".xml" from the generated catalog.
+   This is required to allow mixed content in the Online CondDB partition for
+   the split Hlt, where the files with ".xml" are not meant to be automatically
+   mapped.
+
 !========================= DetCond v12r40p1 2015-01-14 =========================
 ! 2015-01-07 - Marco Cattaneo
  - Fix gcc49 unused function warning in DQScanTest.cpp
@@ -23,9 +30,9 @@
 
 !========================= DetCond v12r38 2014-09-30 =========================
 ! 2014-09-30 - Gerhard Raven
- - DetCond configurable: combine the RunChangeHandlerConditions and XMLFilename 
-   properties into a single dictioary of filename -> list of conditions so that 
-   the RunChangeHandler can be configured to use multiple <subsystem>_<runnr>.xml 
+ - DetCond configurable: combine the RunChangeHandlerConditions and XMLFilename
+   properties into a single dictioary of filename -> list of conditions so that
+   the RunChangeHandler can be configured to use multiple <subsystem>_<runnr>.xml
    files.
  - avoid a spurios warning about ONLINE tag
 
@@ -36,7 +43,7 @@
 ! 2014-09-01 - Liang Sun
  - Changes in Configuration.py:
    - Removal of the support for Oracle by commenting out the lines related to the option "UseOracle"
-   - Added a layer of CALIBOFF above LHCBCOND when LoadCALIBDB option is OFFLINE 
+   - Added a layer of CALIBOFF above LHCBCOND when LoadCALIBDB option is OFFLINE
 
 ! 2014-07-24 - Liang Sun
  - Added qmtest module "detcond.check_db_reading" to check the db reading functionality in Tools/CondDBUI
@@ -55,10 +62,10 @@
  - make the (last part of the) filename used by the RunChangeHandlerSvc a property
 
 ! 2014-03-26 - Liang Sun
- - CondDB preparation for 2015 in Configuration.py: new CondDB partitions 'CALIB' 
-   and 'CALIBOFF' as additional layers above 'ONLINE' partition. New options for 
-   'LoadCALIBDB' to enable/disable loading the new layers. The default option is 
-   to add the new layers from $SQLITEDBPATH/CALIB-[YEAR].db and $SQLITEDBPATH/CALIBOFF.db 
+ - CondDB preparation for 2015 in Configuration.py: new CondDB partitions 'CALIB'
+   and 'CALIBOFF' as additional layers above 'ONLINE' partition. New options for
+   'LoadCALIBDB' to enable/disable loading the new layers. The default option is
+   to add the new layers from $SQLITEDBPATH/CALIB-[YEAR].db and $SQLITEDBPATH/CALIBOFF.db
    files automatically if exist.
 
 !========================= DetCond v12r33 2014-02-17 =========================

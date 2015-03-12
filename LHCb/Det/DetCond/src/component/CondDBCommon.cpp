@@ -19,6 +19,15 @@ const cool::RecordSpecification& getXMLStorageSpec() {
   return *s_XMLStorageSpec;
 }
 
+namespace {
+  inline bool ends_with(const std::string& s, const std::string &suff) {
+    constexpr auto count = suff.size();
+    const auto size = s.size();
+    return (size >= count) &&
+           (s.compare(size - count, count, suff) == 0);
+  }
+}
+
 void generateXMLCatalog(const std::string &name,
                         const std::vector<std::string> &fldrs,
                         const std::vector<std::string> &fldrsets,
@@ -32,18 +41,17 @@ void generateXMLCatalog(const std::string &name,
 
   // sub-folders are considered as container of conditions
   std::vector<std::string>::const_iterator f;
-  for ( f = fldrs.begin(); f != fldrs.end(); ++f ) {
-    xml << "<conditionref href=\"" << name << '/' << *f;
-    // If the folder has a ".xml" extension, we remove it for the actual object
-    // name
-    if ((f->size() > 4) && (f->substr(f->size()-4) == ".xml")){
-      xml << "#" << f->substr(0,f->size()-4);
+  for (const auto& f: fldrs) {
+    // Ignore folders with the .xml extension.
+    // We never used .xml for Online conditions and after the Hlt1/Hlt2 split
+    // we need to avoid automatic mapping for the .xml files.
+    if (!ends_with(f, ".xml")) {
+      xml << "<conditionref href=\"" << name << '/' << f << "\"/>";
     }
-    xml << "\"/>";
   }
   // sub-foldersets are considered as catalogs
-  for ( f = fldrsets.begin(); f != fldrsets.end(); ++f ) {
-    xml << "<catalogref href=\"" << name << '/' << *f << "\"/>";
+  for (const auto& f: fldrsets) {
+    xml << "<catalogref href=\"" << name << '/' << f << "\"/>";
   }
   // catalog and root element final tag
   xml << "</catalog></DDDB>";
