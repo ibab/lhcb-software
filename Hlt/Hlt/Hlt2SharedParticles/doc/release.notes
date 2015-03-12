@@ -4,6 +4,11 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-03-02 - Jibo He
+ - python/Hlt2SharedParticles/Phi.py
+  . Switched to RichKaons for both Hlt2SharedPhi2KK and Hlt2SharedUnbiasedPhi2KK
+  . Tightened the PIDK cut of Hlt2SharedUnbiasedPhi2KK to PIDK>0.
+
 !========================= Hlt2SharedParticles v7r4 2015-03-09 =========================
 
 ! 2015-03-05 - Michael Kolpin
