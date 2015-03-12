@@ -76,6 +76,13 @@ class Hlt2ExternalStage(Hlt2Stage):
                                                 stage._shared())
         
     def stage(self, cuts):
+        from copy import deepcopy
+        # Get a local instance of the cuts
+        common = self.__conf.getProps().get('Common', {})
+        cuts = deepcopy(self.__conf.getProps())
+        for k, v in cuts.iteritems():
+            if k != 'Common': v.update(common)
+
         return self.__stage.stage(cuts)
 
     def stages(self, cuts):

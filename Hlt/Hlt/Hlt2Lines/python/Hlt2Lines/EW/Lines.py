@@ -139,5 +139,5 @@ class EWLines(Hlt2LinesConfigurableUser) :
         for (nickname, algos) in self.algorithms(stages).iteritems():
             cuts = self.getProp(nickname)
             linename = 'EW' + nickname if nickname != 'EW' else nickname
-            Hlt2Line(linename, prescale = self.prescale,L0DU = cuts.get('L0Req', None), HLT = cuts.get('Hlt1Req', None),
+            Hlt2Line(linename, prescale = self.prescale,L0DU = cuts.get('L0Req', None), HLT1 = cuts.get('Hlt1Req', None),
                      algos = algos, postscale = self.postscale)

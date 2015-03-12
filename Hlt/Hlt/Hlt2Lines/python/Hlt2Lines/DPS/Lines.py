@@ -58,13 +58,9 @@ class DPSLines(Hlt2LinesConfigurableUser) :
         
         ##charm_stages = charm.stages()
         jpsi  = dimu .stages ( 'JPsi'  )[0]
-        print '****** JPSI(jpsi ):', jpsi._shared()
         psi2s = dimu .stages ( 'Psi2S' )[0]
-        print '****** JPSI(psi2s):',  psi2s._shared()
         B     = dimu .stages ( 'B'     )[0]
-        print '****** JPSI(B)    :',  B ._shared()
         Z0    = dimu .stages ( 'Z'     )[0]
-        print '****** JPSI(Z0)   :',  Z0._shared()        
 
         ## all  interesting dimuons
         from Hlt2Lines.Utilities.Hlt2Stage import Hlt2ExternalStage
