@@ -11,18 +11,7 @@ def run():
     state = State.NOT_READY
     com.set_status(state)
 
-    gROOT.Reset()
-    myEvents = std.vector('double')()
-    rand = TRandom3()
-    mean=2.
-    sigma=1.5
-
-    for iev in range (0,1000):
-        myEvents.push_back(rand.Gaus(mean,sigma))
-  
-  
-    opt= TString("PopSize=5:Steps=3:Cycles=2:ConvCrit=0.01:SaveBestCycle=5") 
-#    opt= TString("PopSize=20:Steps=30:Cycles=3:ConvCrit=0.01:SaveBestCycle=5") 
+    opt= TString("PopSize=5:Steps=3:Cycles=3:ConvCrit=0.01:SaveBestCycle=5") 
     name = TString("FitterGA") 
 
 
@@ -34,18 +23,36 @@ def run():
     hi.push_back(100.)
     lo.push_back(600.)	
     hi.push_back(1300.)
-    # lo.push_back(-10.)	
-    # hi.push_back(10.)
-    # lo.push_back(0.1)	
-    # hi.push_back(10.)
-    # lo.push_back(0.)	
-    # hi.push_back(2000.)
 
 
-#    fitter = TMVA.GeneticFitterMod(myEvents,name,lo,hi, opt)
-    fitter = TMVA.GeneticFitterMod(name,lo,hi, opt)
+    Channels = std.vector('int')()
+    Channels.push_back(1)
+    Channels.push_back(2)	
+    Channels.push_back(6)
 
-    pars = std.vector('Double_t')(2)
+
+    DefParameters = std.vector('double')()
+    DefParameters.push_back(179.)
+    DefParameters.push_back(240.)
+    DefParameters.push_back(600.)
+    DefParameters.push_back(600.)
+    DefParameters.push_back(900.)
+    DefParameters.push_back(600.)
+    DefParameters.push_back(60.)
+    DefParameters.push_back(900.)
+
+    UsedParameters = std.vector('int')()
+    UsedParameters.push_back(1)
+    UsedParameters.push_back(6)
+    UsedParameters.push_back(7)
+
+    fitter = TMVA.GeneticFitterMod(name,lo,hi, Channels,opt,DefParameters,UsedParameters)
+#fitter.CheckForUnusedOptions()
+
+    pars = std.vector('double')(2)
+
+    gROOT.ProcessLine('.! rm -rf $OUTPUTDIR/*.root')
+  
 
     cycle = 0
     firstEntry = True  
@@ -62,8 +69,6 @@ def run():
             state = State.READY
 
         elif command == 'start' and state == State.READY:
-            state = State.RUNNING
-            print 'iteration %d' % cycle
             fitter.CycleInit(cycle)
             fitter.ga.WriteParamsToFile(cycle)
             StartIterationFirstTime=True

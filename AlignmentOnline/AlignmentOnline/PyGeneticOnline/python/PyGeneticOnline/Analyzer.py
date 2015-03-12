@@ -2,7 +2,7 @@ from time import sleep
 from Communicator import *
 import random
 import struct
-import sys
+import sys, os
 
 def run(index):
     # Start the communicator:
@@ -12,20 +12,18 @@ def run(index):
     state = State.NOT_READY
     com.set_status(state)
     n_it = 0
-    n_workers = 5
+    n_workers = 1
     sleep(0.2)
     while True:
         command = com.get_command()
         if command == 'configure' and state == State.NOT_READY:
-            sys.path.insert(0, '/home/ausachov/Trigger/TMVA/test')
+            sys.path.insert(0, os.environ['TMVASYS']+'/test')
             import L0_noHlt1_histosGen_Multi
             state = State.READY
         elif command == 'start' and state == State.READY:
             state = State.RUNNING
             com.set_status(state)
-#            print index
-#            print 'AAAAA'
-            L0_noHlt1_histosGen_Multi.MultiRun(index, n_workers) 
+            L0_noHlt1_histosGen_Multi.MultiRun(index, 1, 1, [0,1,2])  
             sleep(2)
             state = State.PAUSED
         elif command == 'stop' and state == State.PAUSED:
