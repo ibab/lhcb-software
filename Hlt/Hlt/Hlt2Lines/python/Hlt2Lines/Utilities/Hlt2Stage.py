@@ -1,8 +1,11 @@
+import collections
 from copy import deepcopy
 from Utilities import makeList, splitSpecs
 
 class Hlt2Stage(object):
     def __init__(self, name, inputs, dependencies = [], nickname = None, shared = False):
+        if type(name) != str:
+            raise RuntimeError("Hlt2Stage: name must be a string, not a %s." % name)
         self.__name = name
         self.__nickname = name if nickname == None else nickname
         self.__inputs = inputs
@@ -10,7 +13,11 @@ class Hlt2Stage(object):
         self.__shared = shared
         self.__depStages = None
         self.__inputStages = None
-        
+
+        for arg, msg in ((self.__inputs, "inputs"), (self.__deps, "dependencies")):
+            if not isinstance(arg, collections.Iterable) or isinstance(arg, basestring):
+                raise RuntimeError("Hlt2Stage: %s must be an iterable, not a %s." % (msg, inputs))
+                
     def _name(self):
         return self.__name
 
@@ -32,6 +39,10 @@ class Hlt2Stage(object):
     def _shared(self):
         return self.__shared
     
+    def _localCuts(self, cuts):
+        common = cuts.get('Common', {})
+        return cuts.get(self._nickname(), common)
+
     def inputStages(self, cuts):
         if self.__inputStages == None:
             self.__inputStages = [i.stage(cuts) if hasattr(i, 'stage') else i for i in self._inputs()]
@@ -41,7 +52,8 @@ class Hlt2Stage(object):
         if self.__depStages == None:
             self.__depStages = [i.stage(cuts) if hasattr(i, 'stage') else i for i in self._deps()]
         return self.__depStages
-    
+
+        
     def stages(self, cuts):
         from Hlt2Filter import Hlt2ParticleFilter
         from Hlt2Combiner import Hlt2Combiner

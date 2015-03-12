@@ -61,8 +61,7 @@ class Hlt2Combiner(Hlt2TisTosStage):
         
         ## Copy args and substitute cut values
         args = deepcopy(self.__kwargs)
-        common = cuts.get('Common', {})
-        localCuts = cuts.get(self._nickname(), common)
+        localCuts = self._localCuts(cuts)
         for k, v in self.__cuts.iteritems():
             if k == 'DaughtersCuts':
                 args[k] = {l : w % localCuts for l, w in v.iteritems()}

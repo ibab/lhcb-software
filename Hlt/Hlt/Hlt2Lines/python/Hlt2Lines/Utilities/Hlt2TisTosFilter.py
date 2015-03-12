@@ -127,8 +127,7 @@ class Hlt2TisTosParticleTagger(Hlt2Stage):
         if self.__stage != None:
             return self.__stage
 
-        common = cuts.get('Common', {})
-        localCuts = cuts.get(self._nickname(), common)
+        localCuts = self._localCuts(cuts)
         if self.__keys:
             specs = []
             for k in self.__keys:

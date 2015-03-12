@@ -38,8 +38,7 @@ class Hlt2ParticleFilter(Hlt2TisTosStage):
         if self.__stage != None:
             return self.__stage
 
-        common = cuts.get('Common', {})
-        localCuts = cuts.get(self._nickname(), common)
+        localCuts = self._localCuts(cuts)
         args = {'Code' : self.__code % localCuts}
         if 'Preambulo' in args:
             args['Preambulo'] = [p % localCuts for p in args['Preambulo']]
@@ -83,6 +82,6 @@ class Hlt2VoidFilter(Hlt2Stage):
         from HltLine.HltLine import bindMembers
         from Configurables import LoKi__VoidFilter as VoidFilter
         vfilter = VoidFilter('Hlt2' + self._name(),
-                             Code = self.__code % cuts.get(self._nickname(), cuts['Common']))
+                             Code = self.__code % self._localCuts(cuts))
         self.__stage = bindMembers(None, self.dependencies(cuts) + self.inputStages(cuts) + [vfilter])
         return self.__stage

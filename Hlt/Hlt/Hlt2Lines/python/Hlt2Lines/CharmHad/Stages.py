@@ -145,7 +145,7 @@ class SoftTagInParticleFilter(Hlt2ParticleFilter):
         Hlt2ParticleFilter.__init__(self, name, cut, inputs, shared = True)
 
 class DetachedHHHCombiner(Hlt2Combiner):
-    def __init__(self, name, decay,inputs):
+    def __init__(self, name, decay, inputs):
         if name.find('PIDCALIB')>-1 :
             dc =    {'pi+' : "(MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)",
                      'K+'  : "(MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)",
@@ -161,10 +161,10 @@ class DetachedHHHCombiner(Hlt2Combiner):
                  " & (BPVVDCHI2 > %(BPVVDCHI2_MIN)s )" +
                  " & (BPVLTIME() > %(BPVLTIME_MIN)s )")
         from HltTracking.HltPVs import PV3D
-        Hlt2Combiner.__init__(self, name, decay, inputs,
-                              dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
-                              tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
-                              MotherCut = mc, Preambulo = [])
+        Hlt2Combiner.__init__(self, "CharmHad" + type(self).__name__, decay, inputs,
+                              nickname = name, dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                              shared = True, tistos = 'TisTosSpec', DaughtersCuts = dc,
+                              CombinationCut = cc, MotherCut = mc, Preambulo = [])
 
 class HHHCombiner(Hlt2Combiner):
     def __init__(self, name, decay,inputs):
