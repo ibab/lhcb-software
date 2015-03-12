@@ -18,12 +18,11 @@ class Hlt1PhiLinesConf( HltLinesConfigurableUser ) :
   __slots__ = {  'TrackPT'             : 800     # MeV
                 ,'TrackP'              : 4000    # MeV
                 ,'TrackChi2DOF'       : 5       # dimensionless
-                ,'TrackIPChi2'        : 5       # dimensionless
                 ,'ParticlePT'         : 800     # MeV
                 ,'PhiMassWinLoose'    : 80      # MeV
                 ,'PhiMassWin'         : 50      # MeV
                 ,'PhiDOCA'            : 0.2     # mm
-                ,'PhiVCHI2'           : 20      # dimensionless
+                ,'PhiVCHI2DOF'        : 4      # dimensionless
                 ,'PhiPT'              : 1800    # MeV
                 ,'Velo_Qcut'          : 3       # dimensionless
                 ,'TrNTHits'           : 16.
@@ -34,13 +33,13 @@ class Hlt1PhiLinesConf( HltLinesConfigurableUser ) :
 
     from HltTracking.Hlt1Tracking import ( TrackCandidates, FitTrack)
 
-    preambulo = [ TrackCandidates('TrackAllL0'),
+    preambulo = [ TrackCandidates('Phi'),
                   FitTrack,
                   "from LoKiArrayFunctors.decorators import APT, ADAMASS, ACUTDOCA",
                   "from LoKiPhys.decorators import PT",
                   "CombinationConf = LoKi.Hlt1.Hlt1CombinerConf( 'phi(1020) -> K+ K-' \
                           , (APT>%(PhiPT)s*MeV) & (ADAMASS('phi(1020)')<%(PhiMassWinLoose)s*MeV) \
-                          , (ADMASS('phi(1020)')<%(PhiMassWin)s*MeV) & (VFASPF(VCHI2/VDOF)<%(PhiVCHI2)s) )" % props ,
+                          , (ADMASS('phi(1020)')<%(PhiMassWin)s*MeV) & (VFASPF(VCHI2/VDOF)<%(PhiVCHI2DOF)s) )" % props ,
                  ]
 
     return preambulo
@@ -94,7 +93,7 @@ class Hlt1PhiLinesConf( HltLinesConfigurableUser ) :
 
     hlt1PhiLine_PhiUnit = HltUnit(
         'Hlt1'+name+'Unit',
-        #PVSelection = "PV3D",
+        PVSelection = "PV3D",
         #OutputLevel = 1,
         Monitor = True,
         Preambulo = self.hlt1PhiLine_Preambulo( props ),

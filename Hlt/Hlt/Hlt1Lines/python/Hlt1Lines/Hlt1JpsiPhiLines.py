@@ -36,7 +36,7 @@ class Hlt1JpsiPhiLinesConf( HltLinesConfigurableUser ) :
 
     from HltTracking.Hlt1Tracking import ( TrackCandidates, FitTrack, IsMuon)
 
-    preambulo = [ TrackCandidates('TrackAllL0'),
+    preambulo = [ TrackCandidates('JpsiPhi'),
                   FitTrack,
                   IsMuon,
                   "from LoKiArrayFunctors.decorators import APT, ADAMASS, AMAXCHILD",
@@ -176,8 +176,7 @@ class Hlt1JpsiPhiLinesConf( HltLinesConfigurableUser ) :
         Code = TotalUnitLineCode
         )
 
-    return [ Hlt1GECUnit( 'Loose' ), PV3D('Hlt1'), hlt1JpsiPhiLine_MuonUnit, hlt1JpsiPhiLine_JpsiUnit ]
-    #return [ Hlt1GECUnit( 'Loose' ), PV3D('Hlt1'), hlt1JpsiPhiLine_MuonUnit, hlt1JpsiPhiLine_JpsiUnit, hlt1JpsiPhiLine_KaonUnit, hlt1JpsiPhiLine_TotalUnit ]
+    return [ Hlt1GECUnit( 'Loose' ), PV3D('Hlt1'), hlt1JpsiPhiLine_MuonUnit, hlt1JpsiPhiLine_JpsiUnit, hlt1JpsiPhiLine_KaonUnit, hlt1JpsiPhiLine_TotalUnit ]
 
   def __apply_configuration__(self) :
 
