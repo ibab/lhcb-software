@@ -4,8 +4,8 @@
 // ============================================================================
 // STD&STL
 // ============================================================================
-#include <vector>
 #include <cmath>
+#include <vector>
 #include <algorithm>
 // ============================================================================
 // GaudiKernel
@@ -1316,6 +1316,139 @@ Gaudi::Math::LegendreSum::LegendreSum
   : Gaudi::Math::LegendreSum ( Gaudi::Math::Bernstein ( poly ) ) 
 {}
 
+
+// ============================================================================
+// integation with an exponent 
+// ============================================================================
+namespace 
+{
+  // ===========================================================================
+  // integation with an exponent 
+  // ==========================================================================
+  template <class POLYNOMIAL>
+  inline double _integrate_
+  ( const POLYNOMIAL& poly , 
+    const double      tau  , 
+    const double      low  , 
+    const double      high ) 
+  {
+    const double xlow  = std::max ( low  , poly.xmin() ) ;
+    const double xhigh = std::min ( high , poly.xmax() ) ;
+    //
+    const double p1 = ( poly ( xhigh ) * std::exp ( tau * xhigh ) - 
+                        poly ( xlow  ) * std::exp ( tau * xlow  ) ) / tau ;
+    //
+    if ( 1 >= poly.npars  () ) { return p1 / tau ; } // RETURN 
+    //
+    return ( p1 - _integrate_ ( poly.derivative() , tau , xlow , xhigh ) )  / tau ;
+  }
+  // ==========================================================================
+}
+// ============================================================================
+/* get the integral between low and high for a product of Bernstein
+ *  polynom and the exponential function with the exponent tau
+ *  \f[  \int_{a}^{b} \mathcal{B} e^{\tau x } \mathrm{d}x \f] 
+ *  @param poly  bernstein polynomial
+ *  @param tau   slope parameter for exponential 
+ *  @param low   low  integration range 
+ *  @param high  high integration range 
+ */
+// ============================================================================
+double Gaudi::Math::integrate 
+( const Gaudi::Math::Bernstein& poly ,
+  const double                  tau  ,
+  const double                  low  , 
+  const double                  high ) 
+{
+  //
+  if      ( s_equal ( tau , 0    )  ) { return  poly.integral ( low  , high         ) ; } 
+  else if ( s_equal ( low , high )  ) { return 0 ; }
+  else if ( poly.zero ()            ) { return 0 ; }
+  else if ( low  >  high            ) { return -integrate ( poly , tau , high , low ) ; }
+  else if ( high <  poly.xmin () || 
+            low  >  poly.xmax ()    ) { return  0 ; }
+  //
+  return _integrate_ ( poly , tau , low , high );
+}
+// ============================================================================
+/* get the integral between low and high for a product of
+ *  polynom and the exponential function with the exponent tau
+ *  \f[  \int_{a}^{b} \mathcal{P} e^{\tau x } \mathrm{d}x \f] 
+ *  @param poly  polynomial
+ *  @param tau   slope parameter for exponential 
+ *  @param low   low  integration range 
+ *  @param high  high integration range 
+ */
+// ============================================================================
+double Gaudi::Math::integrate 
+( const Gaudi::Math::Polynomial& poly ,
+  const double                   tau  ,
+  const double                   low  , 
+  const double                   high ) 
+{
+  //
+  if      ( s_equal ( tau , 0    )  ) { return  poly.integral ( low  , high         ) ; } 
+  else if ( s_equal ( low , high )  ) { return 0 ; }
+  else if ( poly.zero ()            ) { return 0 ; }
+  else if ( low  >  high            ) { return -integrate ( poly , tau , high , low ) ; }
+  else if ( high <  poly.xmin () || 
+            low  >  poly.xmax ()    ) { return  0 ; }
+  //
+  return _integrate_ ( poly , tau , low , high );
+}
+// ============================================================================
+/*  get the integral between low and high for a product of
+ *  Chebyshev polynom and the exponential function with the exponent tau
+ *  \f[  \int_{a}^{b} \mathcal{T} e^{\tau x } \mathrm{d}x \f] 
+ *  @param poly  chebyshev polynomial
+ *  @param tau   slope parameter for exponential 
+ *  @param low   low  integration range 
+ *  @param high  high integration range 
+ */
+// ============================================================================
+double Gaudi::Math::integrate 
+( const Gaudi::Math::ChebyshevSum& poly ,
+  const double                     tau  ,
+  const double                     low  , 
+  const double                     high ) 
+{
+  //
+  if      ( s_equal ( tau , 0    )  ) { return  poly.integral ( low  , high         ) ; } 
+  else if ( s_equal ( low , high )  ) { return 0 ; }
+  else if ( poly.zero ()            ) { return 0 ; }
+  else if ( low  >  high            ) { return -integrate ( poly , tau , high , low ) ; }
+  else if ( high <  poly.xmin () || 
+            low  >  poly.xmax ()    ) { return  0 ; }
+  //
+  return _integrate_ ( poly , tau , low , high );
+}
+// ========================================================================    
+/** get the integral between low and high for a product of
+ *  Legendre polynom and the exponential function with the exponent tau
+ *  \f[  \int_{a}^{b} \mathcal{L} e^{\tau x } \mathrm{d}x \f] 
+ *  @param poly  Legendre polynomial
+ *  @param tau   slope parameter for exponential 
+ *  @param a     low  integration range 
+ *  @param b     high integration range 
+ */
+// ============================================================================
+double Gaudi::Math::integrate 
+( const Gaudi::Math::LegendreSum& poly ,
+  const double                    tau  ,
+  const double                    low  , 
+  const double                    high ) 
+{
+  //
+  if      ( s_equal ( tau , 0    )  ) { return  poly.integral ( low  , high         ) ; } 
+  else if ( s_equal ( low , high )  ) { return 0 ; }
+  else if ( poly.zero ()            ) { return 0 ; }
+  else if ( low  >  high            ) { return -integrate ( poly , tau , high , low ) ; }
+  else if ( high <  poly.xmin () || 
+            low  >  poly.xmax ()    ) { return  0 ; }
+  //
+  return _integrate_ ( poly , tau , low , high );
+}
+// ============================================================================
 
 // ============================================================================
 // The END  

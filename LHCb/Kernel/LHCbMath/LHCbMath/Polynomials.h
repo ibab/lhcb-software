@@ -767,8 +767,79 @@ namespace Gaudi
       double              m_xmax ; // x-max
       // ======================================================================      
     } ;
-    // ========================================================================
   } //                                             end of namespace Gaudi::Math
+  // ==========================================================================
+} //                                                     end of namespace Gaudi
+// ============================================================================
+namespace Gaudi
+{
+  // ==========================================================================
+  namespace Math 
+  {
+    // ========================================================================
+    // helper utilities for integrtation of product of polynomial and an exponent
+    // ========================================================================
+    /** get the integral between low and high for a product of Bernstein
+     *  polynom and the exponential function with the exponent tau
+     *  \f[  \int_{a}^{b} \mathcal{B} e^{\tau x } \mathrm{d}x \f] 
+     *  @param poly  bernstein polynomial
+     *  @param tau   slope parameter for exponential 
+     *  @param a     low  integration range 
+     *  @param b     high integration range 
+     */
+    GAUDI_API 
+    double integrate 
+    ( const Gaudi::Math::Bernstein& poly ,
+      const double                  tau  ,
+      const double                  a    , 
+      const double                  b    ) ;
+    // ========================================================================    
+    /** get the integral between low and high for a product of
+     *  polynom and the exponential function with the exponent tau
+     *  \f[  \int_{a}^{b} \mathcal{P} e^{\tau x } \mathrm{d}x \f] 
+     *  @param poly  polynomial
+     *  @param tau   slope parameter for exponential 
+     *  @param a     low  integration range 
+     *  @param b     high integration range 
+     */
+    GAUDI_API 
+    double integrate 
+    ( const Gaudi::Math::Polynomial& poly ,
+      const double                   tau  ,
+      const double                   a    , 
+      const double                   b    ) ;
+    // ========================================================================    
+    /** get the integral between low and high for a product of
+     *  Chebyshev polynom and the exponential function with the exponent tau
+     *  \f[  \int_{a}^{b} \mathcal{T} e^{\tau x } \mathrm{d}x \f] 
+     *  @param poly  chebyshev polynomial
+     *  @param tau   slope parameter for exponential 
+     *  @param a     low  integration range 
+     *  @param b     high integration range 
+     */
+    GAUDI_API 
+    double integrate 
+    ( const Gaudi::Math::ChebyshevSum& poly ,
+      const double                     tau  ,
+      const double                     a    , 
+      const double                     b    ) ;
+    // ========================================================================    
+    /** get the integral between low and high for a product of
+     *  Legendre polynom and the exponential function with the exponent tau
+     *  \f[  \int_{a}^{b} \mathcal{L} e^{\tau x } \mathrm{d}x \f] 
+     *  @param poly  Legendre polynomial
+     *  @param tau   slope parameter for exponential 
+     *  @param a     low  integration range 
+     *  @param b     high integration range 
+     */
+    GAUDI_API 
+    double integrate 
+    ( const Gaudi::Math::LegendreSum& poly ,
+      const double                    tau  ,
+      const double                    a    , 
+      const double                    b    ) ;
+    // ========================================================================    
+  } //                                             end of namespace Gaudi::Math 
   // ==========================================================================
 } //                                                     end of namespace Gaudi
 // ============================================================================

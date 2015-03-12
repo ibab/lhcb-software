@@ -199,23 +199,31 @@ namespace Gaudi
       /// the right edge of interval
       double m_xmax  ;                             // the right edge of interval
       // ======================================================================
-    public:
-      // ======================================================================
-      /** get the integral between low and high for a product of Bernstein
-       *  polynom and the exponential function with the exponent tau
-       *  \f[  \int_{a}^{b} \mathcal{B} e^{\tau x } \mathrm{d}x \f] 
-       *  @param poly  bernstein polynomial
-       *  @param tau   slope parameter for exponential 
-       *  @param a     low  integration range 
-       *  @param b     high integration range 
-       */
-      static double integrate 
-        ( const Bernstein& poly ,
-          const double     tau  ,
-          const double     a    , 
-          const double     b    ) ;
-      // ======================================================================
-    } ;
+    };
+    // ========================================================================
+    /** get the integral between low and high for a product of Bernstein
+     *  polynom and the exponential function with the exponent tau
+     *  \f[  \int_{a}^{b} \mathcal{B} e^{\tau x } \mathrm{d}x \f] 
+     *  @param poly  bernstein polynomial
+     *  @param tau   slope parameter for exponential 
+     *  @param a     low  integration range 
+     *  @param b     high integration range 
+     */
+    GAUDI_API 
+    double integrate 
+    ( const Gaudi::Math::Bernstein& poly ,
+      const double                  tau  ,
+      const double                  a    , 
+      const double                  b    ) ;
+    // ========================================================================
+    /** de Casteljau algorithm for summation of Bernstein polynomials 
+     *  \f$ f(x) = \sum_i p_i B_ik(x) \f$
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-02-10
+     */
+    GAUDI_API double casteljau
+    ( const std::vector<double>& pars , 
+      const double               x    ) ;
     // ========================================================================
     /** @class Positive
      *  The "positive" polynomial of order N

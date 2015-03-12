@@ -328,6 +328,24 @@ Gaudi::Math::Bernstein::operator-=( const double a )
   return *this ;
 }
 // ============================================================================
+/* de Casteljau algorithm for summation of Bernstein polynomials 
+ *  \f$ f(x) = \sum_i p_i B_ik(x) \f$
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2015-02-10
+ */
+// ============================================================================
+double Gaudi::Math::casteljau
+( const std::vector<double>& pars , 
+  const double               x    ) 
+{
+  std::vector<double> _tmp ( pars ) ;
+  //
+  const double t0 =     x  ;
+  const double t1 = 1 - t0 ;
+  //
+  return _casteljau_ ( _tmp.begin() , _tmp.end  () , t0 , t1 ) ;
+}
+// ============================================================================
 namespace 
 {
   inline short signm1 ( const long i ) { return 0 == i%2 ? 1 : -1 ; }
@@ -479,7 +497,7 @@ Gaudi::Math::Bernstein::Bernstein
     } 
   }  
   //
-  // 2: tramnform from shifted poly basis:
+  // 2: tramsform from shifted poly basis:
   //
   for ( unsigned short i = 0 ; i < np ; ++i ) 
   { 
@@ -493,9 +511,6 @@ Gaudi::Math::Bernstein::Bernstein
   //
 }
 // ============================================================================
-
-
-
 
 
 // ============================================================================

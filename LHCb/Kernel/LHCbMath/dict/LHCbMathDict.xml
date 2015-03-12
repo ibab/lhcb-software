@@ -196,6 +196,7 @@
   <function name = "Gaudi::Math::zechEff"         />
   <function name = "Gaudi::Math::effJackknife"    />
 
+  <function name = "Gaudi::Math::casteljau"          />  
   <function name = "Gaudi::Math::clenshaw_chebyshev" />
   <function name = "Gaudi::Math::clenshaw_legendre"  />
   <function name = "Gaudi::Math::clenshaw_polynom"   />
@@ -214,6 +215,8 @@
   <function name    = "Gaudi::Math::interpolate_2D"        />
   <function pattern = "Gaudi::Math::Jackson::jackson*"     />
   
+  <function name = "Gaudi::Math::integrate"        />  
+
   <function name = "Gaudi::Math::choose"           />  
   <function name = "Gaudi::Math::gen_choose"       />  
   <function name = "Gaudi::Math::choose_half"      />  

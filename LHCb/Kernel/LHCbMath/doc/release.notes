@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-03-12 - Vanya Belyaev
+ - add one more test
+
 ! 2015-03-10 - 
  - fix a bug in the interration of the product
    of Bernstein polynomial and an exponential function  

@@ -6243,7 +6243,7 @@ double Gaudi::Math::ExpoPositive::operator () ( const double x ) const
 double Gaudi::Math::ExpoPositive::integral ( const double low  , 
                                              const double high ) const 
 {
-  return Gaudi::Math::Bernstein::integrate ( m_positive.bernstein() , m_tau , low ,high ) ;
+  return Gaudi::Math::integrate ( m_positive.bernstein() , m_tau , low ,high ) ;
 }
 // ============================================================================
 
@@ -8171,7 +8171,7 @@ double Gaudi::Math::ExpoPS2DPol::integral
   //
   std::vector<double> fx ( nx + 1 , 0 ) ;
   for  ( unsigned short i = 0 ; i <= nx ; ++i )
-  { fx[i] = Gaudi::Math::Bernstein::integrate ( b2d.basicX ( i ) , m_tau , x_low , x_high ) ; }
+  { fx[i] = Gaudi::Math::integrate ( b2d.basicX ( i ) , m_tau , x_low , x_high ) ; }
   //
   double result = 0 ;
   for  ( unsigned short ix = 0 ; ix <= nx ; ++ix ) 
@@ -8252,7 +8252,7 @@ double Gaudi::Math::ExpoPS2DPol::integrateX
   //
   std::vector<double> fx ( nx + 1 , 0 ) ;
   for  ( unsigned short i = 0 ; i <= nx ; ++i )
-  { fx[i] = Gaudi::Math::Bernstein::integrate ( b2d.basicX ( i ) , m_tau , x_low , x_high ) ; }
+  { fx[i] = Gaudi::Math::integrate ( b2d.basicX ( i ) , m_tau , x_low , x_high ) ; }
   //
   double result = 0 ;
   for  ( unsigned short ix = 0 ; ix <= nx ; ++ix ) 
@@ -8350,11 +8350,11 @@ double Gaudi::Math::Expo2DPol::integral
   //
   std::vector<double> fy ( ny + 1 , 0 ) ;
   for ( unsigned short i = 0 ; i <= ny ; ++i ) 
-  { fy[i] =  Gaudi::Math::Bernstein::integrate ( b2d.basicY ( i ) , m_tauY , y_low , y_high ) ; }
+  { fy[i] =  Gaudi::Math::integrate ( b2d.basicY ( i ) , m_tauY , y_low , y_high ) ; }
   //
   std::vector<double> fx ( nx + 1 , 0 ) ;
   for  ( unsigned short i = 0 ; i <= nx ; ++i ) 
-  { fx[i] =  Gaudi::Math::Bernstein::integrate ( b2d.basicX ( i ) , m_tauX , x_low , x_high  ) ; }
+  { fx[i] =  Gaudi::Math::integrate ( b2d.basicX ( i ) , m_tauX , x_low , x_high  ) ; }
   //
   double result = 0 ;
   for  ( unsigned short ix = 0 ; ix <= nx ; ++ix ) 
@@ -8390,7 +8390,7 @@ double Gaudi::Math::Expo2DPol::integrateY
   //
   std::vector<double> fy ( ny + 1 , 0 ) ;
   for ( unsigned short i = 0 ; i <= ny ; ++i ) 
-  { fy[i] =  Gaudi::Math::Bernstein::integrate ( b2d.basicY ( i ) , m_tauY , y_low , y_high ) ; }
+  { fy[i] =  Gaudi::Math::integrate ( b2d.basicY ( i ) , m_tauY , y_low , y_high ) ; }
   //
   std::vector<double> fx ( nx + 1 , 0 ) ;
   for  ( unsigned short i = 0 ; i <= nx ; ++i ) 
@@ -8434,7 +8434,7 @@ double Gaudi::Math::Expo2DPol::integrateX
   //
   std::vector<double> fx ( nx + 1 , 0 ) ;
   for  ( unsigned short i = 0 ; i <= nx ; ++i ) 
-  { fx[i] =  Gaudi::Math::Bernstein::integrate ( b2d.basicX ( i ) , m_tauX , x_low , x_high  ) ; }
+  { fx[i] =  Gaudi::Math::integrate ( b2d.basicX ( i ) , m_tauX , x_low , x_high  ) ; }
   //
   double result = 0 ;
   for  ( unsigned short ix = 0 ; ix <= nx ; ++ix ) 
@@ -8514,11 +8514,11 @@ double Gaudi::Math::Expo2DPolSym::integral
   //
   std::vector<double> fy ( ny + 1 , 0 ) ;
   for ( unsigned short i = 0 ; i <= ny ; ++i ) 
-  { fy[i] = Gaudi::Math::Bernstein::integrate ( b2d.basic ( i ) , m_tau , y_low , y_high ) ; }
+  { fy[i] = Gaudi::Math::integrate ( b2d.basic ( i ) , m_tau , y_low , y_high ) ; }
   //
   std::vector<double> fx ( nx + 1 , 0 ) ;
   for  ( unsigned short i = 0 ; i <= nx ; ++i )
-  { fx[i] = Gaudi::Math::Bernstein::integrate ( b2d.basic ( i ) , m_tau , x_low , x_high ) ; }
+  { fx[i] = Gaudi::Math::integrate ( b2d.basic ( i ) , m_tau , x_low , x_high ) ; }
   //
   double result = 0 ;
   for  ( unsigned short ix = 0 ; ix <= nx ; ++ix ) 
@@ -8554,7 +8554,7 @@ double Gaudi::Math::Expo2DPolSym::integrateY
   //
   std::vector<double> fy ( ny + 1 , 0 ) ;
   for ( unsigned short i = 0 ; i <= ny ; ++i ) 
-  { fy[i] = Gaudi::Math::Bernstein::integrate ( b2d.basic ( i ) , m_tau , y_low , y_high ) ; }
+  { fy[i] = Gaudi::Math::integrate ( b2d.basic ( i ) , m_tau , y_low , y_high ) ; }
   //
   std::vector<double> fx ( nx + 1 , 0 ) ;
   for  ( unsigned short i = 0 ; i <= nx ; ++i )
@@ -8574,61 +8574,6 @@ double Gaudi::Math::Expo2DPolSym::integrateX
 ( const double y    , 
   const double xlow , const double xhigh ) const 
 { return integrateY ( y , xlow , xhigh ) ; }
-// ============================================================================
-
-
-// ============================================================================
-// Bernstein
-// ============================================================================
-namespace 
-{
-  // ==========================================================================
-  inline double _integrate_ 
-  ( const Gaudi::Math::Bernstein& poly , 
-    const double tau  , 
-    const double low  , 
-    const double high ) 
-  {
-    const double xlow  = std::max ( low  , poly.xmin() ) ;
-    const double xhigh = std::min ( high , poly.xmax() ) ;
-    //
-    const double p1 = ( poly ( xhigh ) * my_exp ( tau * xhigh ) - 
-                        poly ( xlow  ) * my_exp ( tau * xlow  ) ) / tau ;
-    //
-    if ( poly.npars  ()  <= 1  ) { return p1 / tau ; } // RETURN 
-    //
-    const Gaudi::Math::Bernstein  b_prime ( poly.derivative() ) ;
-    if ( b_prime.zero()        ) { return p1 / tau ; } // RETURN
-    //
-    return ( p1 - _integrate_ ( b_prime , tau , xlow , xhigh ) )  / tau ;
-  }
-  // ==========================================================================
-}
-/* get the integral between low and high for a product of Bernstein function
- * and the exponential function with exponent tau
- *  \f[  \int_{low}^{high} \mathcal{B} e^{\tau x } \mathrm{d}x \f] 
- *  @param poly  bernstein polynomial
- *  @param tau   slope parameter for exponential 
- *  @param low   low  integration range 
- *  @param high  high integration range 
- */
-// ============================================================================
-double Gaudi::Math::Bernstein::integrate  
-( const Gaudi::Math::Bernstein& poly , 
-  const double tau  , 
-  const double low  , 
-  const double high ) 
-{
-  //
-  if      ( s_equal ( tau , 0    )  ) { return  poly.integral ( low  , high         ) ; } 
-  else if ( s_equal ( low , high )  ) { return 0 ; }
-  else if ( poly.zero ()            ) { return 0 ; }
-  else if ( low  >  high            ) { return -integrate ( poly , tau , high , low ) ; }
-  else if ( high <  poly.xmin () || 
-            low  >  poly.xmax () ) { return  0 ; }
-  //
-  return _integrate_ ( poly , tau , low , high );
-}
 // ============================================================================
 
 
