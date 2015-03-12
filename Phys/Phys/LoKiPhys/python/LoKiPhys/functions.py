@@ -1164,6 +1164,9 @@ SUMCONE      = LoKi.Particles.SumInR2ConeWithSource
 
 
 
+FAKESOURCE  = LoKi.Functors.FakeSource( _RCP )
+VFAKESOURCE = LoKi.Functors.FakeSource( _RCV )
+
 # =============================================================================
 if '__main__' == __name__ :
 

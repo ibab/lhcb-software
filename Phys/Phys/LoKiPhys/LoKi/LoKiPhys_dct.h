@@ -665,6 +665,9 @@ namespace
     LoKi::Functors::Empty<const LHCb::VertexBase*>      m_ee2 ;
     LoKi::Functors::Size<const LHCb::Particle*>         m_es1 ;
     LoKi::Functors::Size<const LHCb::VertexBase*>       m_es2 ;
+    //
+    LoKi::Functors::FakeSource<const LHCb::Particle*>   m_fs1 ;
+    LoKi::Functors::FakeSource<const LHCb::VertexBase*> m_fs2 ;
     // decay funders:
     Decays::Tree_<const LHCb::Particle*>                m_tree1 ;
     Decays::Trees::Any_<const LHCb::Particle*>          m_tree2 ;

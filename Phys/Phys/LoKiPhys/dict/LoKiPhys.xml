@@ -95,12 +95,12 @@
   <class pattern   = "LoKi::FunctorFromFunctor<*LHCb::Pa*>" />
   <class pattern   = "LoKi::FunctorFromFunctor<*LHCb::Ve*>" />
   
-  <class pattern   = "LoKi::Valid<*LHCb::*>"           />
-  <class pattern   = "LoKi::TheSame<*LHCb::*>"         />
-  <class pattern   = "LoKi::Functors::Empty<*LHCb::*>" />
-  <class pattern   = "LoKi::Functors::Size<*LHCb::*>"  />
+  <class pattern   = "LoKi::Valid<*LHCb::*>"                />
+  <class pattern   = "LoKi::TheSame<*LHCb::*>"              />
+  <class pattern   = "LoKi::Functors::Empty<*LHCb::*>"      />
+  <class pattern   = "LoKi::Functors::Size<*LHCb::*>"       />
+  <class pattern   = "LoKi::Functors::FakeSource<*LHCb::*>" />
   
-
   <class pattern   = "LoKi::Dicts::FunCalls<*LHCb::Ve*>"  />
   <class pattern   = "LoKi::Dicts::CutCalls<*LHCb::Ve*>"  />
   <class pattern   = "LoKi::Dicts::FunCalls<*LHCb::Pa*>"  />
