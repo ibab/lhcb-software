@@ -8,10 +8,13 @@ gaudi_depends_on_subdirs(Phys/LoKiArrayFunctors
 
 find_package(ROOT COMPONENTS TMVA)
 
+find_package(Boost COMPONENTS system filesystem)
+
 gaudi_add_library(MVADictToolsLib
                   src/lib/*.cpp
                   PUBLIC_HEADERS MVADictTools
-                  LINK_LIBRARIES ROOT LoKiArrayFunctorsLib)
+                  INCLUDE_DIRS Boost
+                  LINK_LIBRARIES Boost ROOT LoKiArrayFunctorsLib)
 
 gaudi_add_module(MVADictTools
                  src/component/*.cpp

@@ -20,6 +20,8 @@ use   LoKiArrayFunctors  v*    Phys
 use   ROOT               v*    LCG_Interfaces -no_auto_imports
 use   Boost              v*    LCG_Interfaces -no_auto_imports
 
+macro_append Boost_linkopts " $(Boost_linkopts_system) $(Boost_linkopts_filesystem) "
+
 #============================================================================
 # Public incudes
 #============================================================================

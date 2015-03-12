@@ -1,4 +1,5 @@
 #include "MVADictTools/MatrixnetTransform.h"
+#include "Utils.h"
 
 #include <fstream>
 #include <alloca.h>
@@ -185,7 +186,7 @@ MatrixnetTransform::operator()(const DICT& in, DICT& out) const {
 
 bool
 MatrixnetTransform::checkWeightsFile(std::ostream& info) {
-  std::ifstream fin(m_matrixnet_file.c_str());
+  std::ifstream fin(resolveEnv(m_matrixnet_file).c_str());
   // Check existence of WeightFile: locally
   if (fin.good()) {
     return true;
@@ -193,7 +194,7 @@ MatrixnetTransform::checkWeightsFile(std::ostream& info) {
   fin.close();
   // Check existence of WeightFile: in path
   m_matrixnet_file = m_default_path + "/" + m_matrixnet_file;
-  fin.open(m_matrixnet_file.c_str());
+  fin.open(resolveEnv(m_matrixnet_file).c_str());
   if (fin.good()) {
     return true;
   }

@@ -4,6 +4,10 @@
 ! Purpose     : Generic MVA classifier backends for DictTransform
 !---------------------------------------------------------------------------
 
+! 2015-03-12 - Roel Aaij
+ - Return tool configurable from helper functions
+ - Add utility function to resolve environment variable in filename.
+ 
 ! 2015-03-11 - Egor Khairullin
  - Add support for BBDT models (from Phys/BBDecTreeTool) and example of usage
        (options/mvaDfromB_bbdt.py)

@@ -21,7 +21,7 @@ def addTMVAclassifierValue(Component, XMLFile, Variables, ToolName) :
     MVAResponse.TMVA.Source = "LoKi::Hybrid::DictOfFunctors/MVAdict"
     MVAResponse.TMVA.addTool(LoKi__Hybrid__DictOfFunctors,"MVAdict")
     MVAResponse.TMVA.MVAdict.Variables = Variables
-    # end of function
+    return MVAResponse
 
 # TMVA tuple (to be added to the HybridTupleTool)
 def addTMVAclassifierTuple(Branch, XMLFile, Variables,
@@ -47,10 +47,11 @@ def addTMVAclassifierTuple(Branch, XMLFile, Variables,
     MVAResponse.TMVA.addTool(LoKi__Hybrid__DictOfFunctors,"MVAdict")
     MVAResponse.TMVA.MVAdict.Preambulo = Preambulo
     MVAResponse.TMVA.MVAdict.Variables = Variables
-    # end of function
+    return MVAResponse
 
 # Matrixnet Value (to be used for cutting)
-def addMatrixnetclassifierValue(Component, MatrixnetFile, Variables, ToolName) :
+def addMatrixnetclassifierValue(Component, MatrixnetFile, Variables, ToolName,
+                                Preambulo = []) :
     from Configurables import LoKi__Hybrid__DictValue as DictValue
     Component.addTool(DictValue,ToolName)
     MVAResponse = getattr(Component,ToolName)
@@ -69,12 +70,13 @@ def addMatrixnetclassifierValue(Component, MatrixnetFile, Variables, ToolName) :
     MVAResponse.Matrixnet.Options = Options
     MVAResponse.Matrixnet.Source = "LoKi::Hybrid::DictOfFunctors/MVAdict"
     MVAResponse.Matrixnet.addTool(LoKi__Hybrid__DictOfFunctors,"MVAdict")
+    MVAResponse.Matrixnet.MVAdict.Preambulo = Preambulo
     MVAResponse.Matrixnet.MVAdict.Variables = Variables
-    # end of function
+    return MVAResponse
 
 # Matrixnet tuple (to be added to the HybridTupleTool)
 def addMatrixnetclassifierTuple(Branch, MatrixnetFile, Variables,
-                           Name="BDT", Keep=False, Preambulo=[]) :
+                                Name="BDT", Keep=False, Preambulo=[]) :
     from Configurables import LoKi__Hybrid__Dict2Tuple as Dict2Tuple
     Branch.addTupleTool(Dict2Tuple,Name)
     MVAResponse = getattr(Branch,Name)
@@ -96,10 +98,11 @@ def addMatrixnetclassifierTuple(Branch, MatrixnetFile, Variables,
     MVAResponse.Matrixnet.addTool(LoKi__Hybrid__DictOfFunctors,"MVAdict")
     MVAResponse.Matrixnet.MVAdict.Preambulo = Preambulo
     MVAResponse.Matrixnet.MVAdict.Variables = Variables
-    # end of function
+    return MVAResponse
 
 # Matrixnet Value (to be used for cutting)
-def addBBDecTreeclassifierValue(Component, BBDecTreeFile, Variables, ToolName) :
+def addBBDecTreeclassifierValue(Component, BBDecTreeFile, Variables, ToolName,
+                                Preambulo = []) :
     from Configurables import LoKi__Hybrid__DictValue as DictValue
     Component.addTool(DictValue,ToolName)
     MVAResponse = getattr(Component,ToolName)
@@ -118,8 +121,9 @@ def addBBDecTreeclassifierValue(Component, BBDecTreeFile, Variables, ToolName) :
     MVAResponse.BBDecTree.Options = Options
     MVAResponse.BBDecTree.Source = "LoKi::Hybrid::DictOfFunctors/MVAdict"
     MVAResponse.BBDecTree.addTool(LoKi__Hybrid__DictOfFunctors,"MVAdict")
+    MVAResponse.BBDecTree.MVAdict.Preambulo = Preambulo
     MVAResponse.BBDecTree.MVAdict.Variables = Variables
-    # end of function
+    return MVAResponse
 
 # BBDecTree tuple (to be added to the HybridTupleTool)
 def addBBDecTreeclassifierTuple(Branch, BBDecTreeFile, Variables,

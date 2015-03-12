@@ -1,7 +1,7 @@
 // Include files 
 
 #include "MVADictTools/TMVATransform.h"
-
+#include "Utils.h"
 
 #include "TXMLEngine.h"
 #include "TXMLDocument.h"
@@ -81,7 +81,7 @@ TMVATransform::operator()(const IParticleDictTool::DICT& in, IParticleDictTool::
 
 bool
 TMVATransform::checkWeightsFile(std::ostream& info) {
-  std::ifstream fin(m_weightfile.c_str());
+  std::ifstream fin(resolveEnv(m_weightfile.c_str()));
   // Check existence of WeightFile: locally
   if (fin.good()) {
     return true;
@@ -89,7 +89,7 @@ TMVATransform::checkWeightsFile(std::ostream& info) {
   fin.close();
   // Check existence of WeightFile: in path
   m_weightfile = m_default_path + "/" + m_weightfile;
-  fin.open(m_weightfile.c_str());
+  fin.open(resolveEnv(m_weightfile.c_str()));
   if (fin.good()) {
     return true;
   }

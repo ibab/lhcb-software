@@ -1,4 +1,5 @@
 #include "MVADictTools/BBDecTreeTransform.h"
+#include "Utils.h"
 
 #include <fstream>
 #include <alloca.h>
@@ -60,7 +61,7 @@ BBDecTreeTransform::operator()(const DICT& in, DICT& out) const {
 
 bool
 BBDecTreeTransform::checkWeightsFile(std::ostream& info) {
-  std::ifstream fin(m_bbdt_file.c_str());
+  std::ifstream fin(resolveEnv(m_bbdt_file.c_str()));
   // Check existence of WeightFile: locally
   if (fin.good()) {
     return true;
@@ -68,7 +69,7 @@ BBDecTreeTransform::checkWeightsFile(std::ostream& info) {
   fin.close();
   // Check existence of WeightFile: in path
   m_bbdt_file = m_default_path + "/" + m_bbdt_file;
-  fin.open(m_bbdt_file.c_str());
+  fin.open(resolveEnv(m_bbdt_file.c_str()));
   if (fin.good()) {
     return true;
   }
