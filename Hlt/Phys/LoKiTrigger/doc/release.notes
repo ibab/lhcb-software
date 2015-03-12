@@ -4,6 +4,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-03-12 - Vanya Belyaev
+ - add FakeSorce: useful for debugging, in particular for fake streams 
+
 !========================= LoKiTrigger v15r5 2014-03-09 =========================
 
 ! 2015-03-06 - Vanya Belyaev

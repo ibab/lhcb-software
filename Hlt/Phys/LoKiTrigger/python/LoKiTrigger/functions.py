@@ -332,6 +332,7 @@ LoKi.Hlt1.Hlt1CombinerConf . __repr__ =  LoKi.Hlt1.Hlt1CombinerConf. toString
 ## _vd       = 'std::vector<double>'           ## std.vector ( 'double')
 #
 
+TC_FAKESOURCE  = LoKi.Functors.FakeSource ( _TC )
 # =============================================================================
 if '__main__' == __name__ :
     print 80*'*'

@@ -776,6 +776,10 @@ namespace
     // ========================================================================
     LoKi::Dicts::InfoOps <const Hlt::Candidate*> m_o10 ;
     LoKi::Dicts::InfoOps <const Hlt::Stage*>     m_o12 ;
+    //
+    LoKi::Functors::Size      <const Hlt::Candidate*> m_q1 ;
+    LoKi::Functors::Empty     <const Hlt::Candidate*> m_q2 ;
+    LoKi::Functors::FakeSource<const Hlt::Candidate*> m_q3 ;
     // ========================================================================
     /// needed for various Hlt interfaces
     LoKi::Interface<Hlt::IRegister>          m_htl1 ;

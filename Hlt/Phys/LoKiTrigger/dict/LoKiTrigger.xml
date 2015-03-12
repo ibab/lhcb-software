@@ -24,6 +24,7 @@
   <class name    = "LoKi::Constant<const Hlt::Candidate*,bool>"   />
   <class name    = "LoKi::Functors::Size<const Hlt::Candidate*>"  />
   <class name    = "LoKi::Functors::Empty<const Hlt::Candidate*>" />
+  <class name    = "LoKi::Functors::FakeSource<const Hlt::Candidate*>" />
 
   <class pattern = "LoKi::Dicts::FunCalls<*Hlt::Candidate*>"    />
   <class pattern = "LoKi::Dicts::CutCalls<*Hlt::Candidate*>"    />
