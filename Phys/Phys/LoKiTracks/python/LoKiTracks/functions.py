@@ -232,6 +232,10 @@ TrSIZE         = LoKi.Functors.Size  ( _T ) ()
 
 TrNUM          = LoKi.Tracks.TESCounter
 
+
+TrFAKESOURCE   = LoKi.Functors.FakeSource( _T )
+TrVALID        = LoKi.Valid              ( _T )()
+
 # =============================================================================
 ## helper function to create ``smart'' RecSumary functor 
 #  @see HASRECSUMMARY

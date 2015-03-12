@@ -19,6 +19,7 @@
   
   <class name = "LoKi::Functors::Empty<const LHCb::Track*>" /> 
   <class name = "LoKi::Functors::Size<const LHCb::Track*>"  /> 
+  <class name = "LoKi::Functors::FakeSource<const LHCb::Track*>" /> 
 
   <class pattern   = "LoKi::Tracks::*"                      />
   

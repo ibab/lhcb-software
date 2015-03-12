@@ -250,8 +250,9 @@ namespace
     LoKi::Dicts::FunCalls<LHCb::Track>                        m_cf1  ;
     LoKi::Dicts::CutCalls<LHCb::Track>                        m_cc1  ;
     /// trivia:
-    LoKi::Functors::Empty <const LHCb::Track*>                m_e1   ;
-    LoKi::Functors::Size  <const LHCb::Track*>                m_s1   ;
+    LoKi::Functors::Empty     <const LHCb::Track*>            m_e1   ;
+    LoKi::Functors::Size      <const LHCb::Track*>            m_s1   ;
+    LoKi::Functors::FakeSource<const LHCb::Track*>            m_fs   ;
     /// fictive constructor 
     _Instantiations () ;
     // ========================================================================
