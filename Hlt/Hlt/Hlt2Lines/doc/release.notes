@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-13 - Michael Kolpin
+ - Cleared up naming conventions and added comments in TrackEffDiMuon
+ - Enabled sharing for TrackEffDiMuon stages
+
 ! 2015-03-13 - Stefano Perazzini
  - Bug fix to python/Hlt2Lines/B2HH/Stages.py
 
