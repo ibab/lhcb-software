@@ -5,6 +5,56 @@ Purpose     : LHCb stripping packages
 
 !========================= StrippingSys v9r5 2015-03-13 =========================
 
+* Phys/StrippingArchive
+ - Removed reference to StrippingSelections in the import of DisplVertices_Utils
+   inside python/StrippingArchive/StrippingXX/StrippingDisplVertices.py
+ - Update tests/refs/instantiate-all-strip.ref
+
+* Phys/IsolationTools
+ - Fixed weird characters in release.notes
+ - Submitted new version of RelInfo for Bstautau analysis, after fixing of bugs
+ - Put an ERROR message in RelInfoBs2MuMuIsolation.cpp saying that the tool is
+   obsolete
+
+* Phys/StrippingSelections
+ - Reverted python/StrippingSelections/Utils.py to r184919
+
+ - Start putting QEE EM Stripping request to the package.
+ - Refactored redundant codes in StrippingSelection.Utils
+ - With corresponding pytest in tests/liasons/QEE
+ - Apply Hlt-split patch to QEE lines.
+
+ - Drafted line builders for Calib lines
+
+ - Added three modules to the StrippingSL
+ - Split some functions from StrippingB2DMuNuX.py into StrippingB2DMuNuXUtils.py
+
+ - New structure of StrippingSelections, the directory python/StrippingSelections
+   contains a subdirectory for each WG where lines should be added
+ - New dedicated tests directories for users, liaisons, and coordinators (to be completed)
+ - Complete cleanup of all existing stripping lines
+ - Complete cleanup of all testing scripts
+
+* Phys/StrippingConf
+ - Bug fix to StrippingStream.py
+ - Modification to StrippingLine and StrippingStream in order to insert
+   BadEvent selection inside the line filter sequence
+   TODO: prepare a workaround to keep BadEvents (short circuit line's filter
+   only when the event is bad)
+ - Bug fix to StrippingLine.py
+ - Changed configuration of trigger filter in StrippingLine in order to cope with
+   split HltDecReports for Hlt1 and Hlt2
+
+* Phys/StrippingUtils
+ - Bug fix to Phys/StrippingUtils/Utils.py
+ - Updated python/StrippingUtils/Utils.py to accont for changes in Phys/StrippingSelections
+
+* Phys/DisplVertices
+ - changed the workarounds for the Kernel/JetEnums dictionary
+   (explicit GaudiPython.loaddict call (for ROOT5) does not work with ROOT6,
+   so try this only if the ROOT6 workaround failed)
+
+
 ! 2015-02-05 - Eduardo Rodrigues
  - Removed Phys/MvaPreSelB2DH from StrippingSys
    (package to be removed from the STRIPPING project).
