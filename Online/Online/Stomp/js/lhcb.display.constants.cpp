@@ -64,7 +64,7 @@ if ( !_lhcb().constants ) {
       ramses:           this.mkStaticImage('LHCb/Ramses_icon.png'),
       beams:            this.mkImage('Beams','jpg'),
       beams_department: this.mkImage('BE-BeamsDep','jpg'),
-      cern:             this.mkAbsImage('cern-logo.jpg'),
+      cern:             this.mkImage('cern-logo','jpg'),
       alarmScreen:	this.mkImage('AlarmScreen', 'png')
     };
     this.images.dirac.iconSize = { 
