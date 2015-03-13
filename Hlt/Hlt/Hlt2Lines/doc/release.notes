@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-13 - Maurizio Martinelli
+ - Added replacement lines for D2HHHKs to Hlt2Lines/CharmHad
+ - Removed optional request of specific algorithms in LoKi functors
+
 ! 2015-03-13 - Michael Kolpin
  - Cleared up naming conventions and added comments in TrackEffDiMuon
  - Enabled sharing for TrackEffDiMuon stages

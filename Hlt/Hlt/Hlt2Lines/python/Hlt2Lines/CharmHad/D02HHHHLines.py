@@ -3,14 +3,14 @@
 #  Set of Hlt2-lines suitable for the study of charm decay channels with
 #  four particles in the final state.
 #
-#  @author Simone STRACKA simone.stracka@cern.ch
 #  @author Maurizio MARTINELLI maurizio.martinelli@cern.ch
+#  @author Simone STRACKA simone.stracka@cern.ch
 #=============================================================================
 """ Set of Hlt2-lines suitable for the study of charm decay channels with
     four particles in the final state.
 """
 #=============================================================================
-__author__  = "Simone STRACKA simone.stracka@cern.ch ; Maurizio MARTINELLI maurizio.martinelli@cern.ch"
+__author__  = "Maurizio MARTINELLI maurizio.martinelli@cern.ch ; Simone STRACKA simone.stracka@cern.ch"
 
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
@@ -90,7 +90,7 @@ class CharmHadD02HHHHLines() :
   
     def locallines(self):
         from Stages import MassFilter, SoftTagInParticleFilter, NoPIDInParticleFilter
-        from Stages import DetachedHHChild, HHHHCombiner, Dst2D0pi
+        from Stages import DetachedHHChild, D2HHHHCombiner, Dst2D0pi
         stages = {
             # First the 2-body line
             'DetachedPiPi_forD2HHHH' : [DetachedHHChild('DetachedPiPi_forD2HHHH',["[K*(892)+ -> pi+ pi+]cc","K*(892)0 -> pi+ pi-"])],
@@ -101,43 +101,43 @@ class CharmHadD02HHHHLines() :
             stages.update( {
                 # Then the D2HHHH lines
                 'D02PiPiPiPi'+des    : [MassFilter('D02PiPiPiPi'+des,
-                                                   inputs=[HHHHCombiner('D02PiPiPiPi'+des,
+                                                   inputs=[D2HHHHCombiner('D02PiPiPiPi'+des,
                                                                         inputs=[DetachedHHChild('DetachedPiPi_forD2HHHH'),
                                                                                 NoPIDInParticleFilter("SharedNoPIDDetachedD0Child_pi")],
                                                                         decay=['D0 -> K*(892)0 pi+ pi-',
                                                                                'D0 -> K*(892)+ pi- pi-', 'D0 -> K*(892)- pi+ pi+'])])],
                 'D02KPiPiPi'+des     : [MassFilter('D02KPiPiPi'+des,
-                                                   inputs=[HHHHCombiner('D02KPiPiPi'+des,
+                                                   inputs=[D2HHHHCombiner('D02KPiPiPi'+des,
                                                                         inputs=[DetachedHHChild('DetachedKPi_forD2HHHH'),
                                                                                 NoPIDInParticleFilter("SharedNoPIDDetachedD0Child_pi")],
                                                                         decay=['D0 -> K*(892)0 pi+ K-', 'D0 -> K*(892)~0 pi- K+']),
-                                                           HHHHCombiner('D02KPiPiPiFromPiPi'+des,
+                                                           D2HHHHCombiner('D02KPiPiPiFromPiPi'+des,
                                                                         inputs=[DetachedHHChild('DetachedPiPi_forD2HHHH'),
                                                                                 NoPIDInParticleFilter("SharedNoPIDDetachedD0Child_pi"),
                                                                                 NoPIDInParticleFilter("SharedNoPIDDetachedD0Child_K")],
                                                                         decay=['D0 -> K*(892)+ pi- pi-', 'D0 -> K*(892)- pi+ pi+'])])],
                 'D02KKPiPi'+des     : [MassFilter('D02KKPiPi'+des,
-                                                   inputs=[HHHHCombiner('D02KKPiPi'+des,
+                                                   inputs=[D2HHHHCombiner('D02KKPiPi'+des,
                                                                         inputs=[DetachedHHChild('DetachedPiPi_forD2HHHH'),
                                                                                 NoPIDInParticleFilter("SharedNoPIDDetachedD0Child_K")],
                                                                         decay=['D0 -> K*(892)0 K+ K-',
                                                                                'D0 -> K*(892)+ K- K-', 'D0 -> K*(892)- K+ K+']),
-                                                           HHHHCombiner('D02KKPiPiFromKPi'+des,
+                                                           D2HHHHCombiner('D02KKPiPiFromKPi'+des,
                                                                         inputs=[DetachedHHChild('DetachedKPi_forD2HHHH'),
                                                                                 NoPIDInParticleFilter("SharedNoPIDDetachedD0Child_pi"),
                                                                                 NoPIDInParticleFilter("SharedNoPIDDetachedD0Child_K")],
                                                                         decay=['D0 -> K*(892)0 K- pi+', 'D0 -> K*(892)~0 pi- K+']),
-                                                           HHHHCombiner('D02KKPiPiFromKK'+des,
+                                                           D2HHHHCombiner('D02KKPiPiFromKK'+des,
                                                                         inputs=[DetachedHHChild('DetachedKK_forD2HHHH'),
                                                                                 NoPIDInParticleFilter("SharedNoPIDDetachedD0Child_pi")],
                                                                         decay=['D0 -> K*(892)0 pi+ pi-',
                                                                                'D0 -> K*(892)+ pi- pi-', 'D0 -> K*(892)- pi+ pi+'])])],
                 'D02KKKPi'+des     : [MassFilter('D02KKKPi'+des,
-                                                   inputs=[HHHHCombiner('D02KKKPi'+des,
+                                                   inputs=[D2HHHHCombiner('D02KKKPi'+des,
                                                                         inputs=[DetachedHHChild('DetachedKPi_forD2HHHH'),
                                                                                 NoPIDInParticleFilter("SharedNoPIDDetachedD0Child_K")],
                                                                         decay=['D0 -> K*(892)0 K- K+', 'D0 -> K*(892)~0 K- K+']),
-                                                           HHHHCombiner('D02KKKPiFromKK'+des,
+                                                           D2HHHHCombiner('D02KKKPiFromKK'+des,
                                                                         inputs=[DetachedHHChild('DetachedKK_forD2HHHH'),
                                                                                 NoPIDInParticleFilter("SharedNoPIDDetachedD0Child_pi"),
                                                                                 NoPIDInParticleFilter("SharedNoPIDDetachedD0Child_K")],
