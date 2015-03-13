@@ -4,13 +4,30 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+!======================== LbPythia8 v10r0 2015-03-13 =========================
+! 2014-12-11 - Philip Ilten
+ - Updated XML counters. Included resonance bosons in MCParticle record (again)
+
+! 2014-12-08 - Philip Ilten
+- Fixed Pythia initialization order to allow particle updates
+
 ! 2014-12-02 - Gloria Corti
  - Trying to fix compilation warnings with --pedantic
 
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
 
-!======================== LbPythia8 v9r0 2014-10-08 ========================
+! 2014-09-30 - Philip Ilten
+ - Updated to use LHAPDF6
+
+!======================== LbPythia8 v9r0 2014-10-08 ==========================
+! 2014-09-12 - Philip Ilten
+ - Updated intitialization failure output
+ - Fixed compilation issue with SC.
+
+! 2014-09-11 - Philip Ilten
+ - Fix for beam tool error
+
 ! 2014-09-08 - Alex Grecu
  - correct access to codesHard hard process id vector in Pythia8::Pythia which 
    is now in Pythia8::Pythia.info Info object. Patched Pythia8Production.cpp. 
