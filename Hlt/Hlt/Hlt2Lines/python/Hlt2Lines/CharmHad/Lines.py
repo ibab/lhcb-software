@@ -2,6 +2,8 @@ from D2V0HLines import CharmHadD2V0HLines
 from D2HHHLines import CharmHadD2HHHLines
 from D2V0V0Lines import CharmHadD2V0V0Lines
 from D02HHLines import CharmHadD02HHLines
+from D2HHPi0Lines import CharmHadD2HHPi0Lines
+from D02HHHHLines import CharmHadD02HHHHLines
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
@@ -9,6 +11,8 @@ D2HHHLines = CharmHadD2HHHLines()
 D2V0HLines = CharmHadD2V0HLines()
 D2V0V0Lines = CharmHadD2V0V0Lines()
 D02HHLines = CharmHadD02HHLines()
+D2HHPi0Lines = CharmHadD2HHPi0Lines()
+D02HHHHLines = CharmHadD02HHHHLines()
 
 theseslots = {   'Prescale' : {}, 
                  'TrackGEC' : {'NTRACK_MAX'           : 10000},
@@ -68,12 +72,28 @@ theseslots = {   'Prescale' : {},
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  9.0,
                                           },
+                 # NoPID particles for D -> HHX lines 
+                 'SharedNoPIDDetachedD0Child_pi' : {
+                                 'Trk_ALL_PT_MIN'           :  300,
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  6.0,
+                                          },
+                 'SharedNoPIDDetachedD0Child_K' : {
+                                 'Trk_ALL_PT_MIN'           :  300,
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  6.0,
+                                          },
+                 # Neutral particles for D -> HHX lines
+                 'SharedNeutralChild_pi0R' : {
+                                 'Trk_ALL_PT_MIN'           : 500.0,
+                                 'Pi0_ALL_DMASS_MAX'        : 30.0,
+                                          },
                 }
 
 theseslots.update(D2HHHLines.localcuts())
 theseslots.update(D2V0HLines.localcuts())
 theseslots.update(D2V0V0Lines.localcuts())
 theseslots.update(D02HHLines.slots())
+theseslots.update(D2HHPi0Lines.localcuts())
+theseslots.update(D02HHHHLines.localcuts())
 
 class CharmHadLines(Hlt2LinesConfigurableUser):
     __slots__ = theseslots
@@ -84,6 +104,8 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
         self.__lines__.update(D2V0HLines.locallines())
         self.__lines__.update(D2V0V0Lines.locallines())
         self.__lines__.update(D02HHLines.stages())
+        self.__lines__.update(D2HHPi0Lines.locallines())
+        self.__lines__.update(D02HHHHLines.locallines())
 
         from HltLine.HltLine import Hlt2Line
         for nickname, algos in self.algorithms(self.__lines__).iteritems():

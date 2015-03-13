@@ -27,6 +27,11 @@ class MassFilter(Hlt2ParticleFilter):
 class TagDecay(Hlt2Combiner):
     def __init__(self, name, decay, inputs):
         dc =    {}
+        ''' # This adds problems. When creating the D0 candidate, using always D0 reduces combinatoric, 
+            # by calling [D*+ -> D0 pi+]cc, one looks for the D~0 with the pi- and never finds it if not 
+            # defined in the D0 decay descriptor, which comes at a cost of 2-times the combinatoric for 
+            # self-conjugate final states. 
+            # Possibly this could be still implemented by asking DecayRHS to be produced after a list - M.Martinelli 12/3/2015
         # OK, a bit of syntax parsing
         DecayRHS = decay.split('->')[1]
         DecayRHS = DecayRHS.rstrip(']cc').rstrip(' ')
@@ -35,6 +40,7 @@ class TagDecay(Hlt2Combiner):
         ## ALL should be the default; this should be unneceesary.
         for part in DecayRHS :
             dc[part] = "ALL"
+        '''
         cc =    ('in_range( %(DeltaM_AM_MIN)s, (AM - AM1), %(DeltaM_AM_MAX)s )')
         mc =    ("(VFASPF(VCHI2PDOF) < %(TagVCHI2PDOF_MAX)s)" +
                  "& in_range( %(DeltaM_MIN)s, (M - M1), %(DeltaM_MAX)s )")
@@ -144,6 +150,22 @@ class SoftTagInParticleFilter(Hlt2ParticleFilter):
         from HltTracking.HltPVs import PV3D
         Hlt2ParticleFilter.__init__(self, name, cut, inputs, shared = True)
 
+class NeutralInParticleFilter(Hlt2ParticleFilter):
+    def __init__(self, name):
+        cut = ("  (PT > %(Trk_ALL_PT_MIN)s)" )
+
+        from Inputs import Hlt2ResolvedPi0
+ 
+        pidinfo = {"pi0R" : {"cut"    : "(ADMASS('pi0') < %(Pi0_ALL_DMASS_MAX)s) &",
+                           "inputs" : [Hlt2ResolvedPi0]},
+                  }   
+
+        cut = pidinfo[name.split('_')[1]]["cut"] + cut 
+        inputs = pidinfo[name.split('_')[1]]["inputs"]
+
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs, shared = True)
+
+# Particle combiners
 class DetachedHHHCombiner(Hlt2Combiner):
     def __init__(self, name, decay, inputs):
         if name.find('PIDCALIB')>-1 :
@@ -256,6 +278,73 @@ class D02HHCombiner(Hlt2Combiner) : # {
     # }
 # }
 
+class DetachedHHChildCombiner(Hlt2Combiner):
+    # combiner for 2-body displaced tracks to be used in multi-body D decays
+    def __init__(self, name, decay, inputs):
+        dc = {} 
+        cc = (" ( AM < %(AM_MAX)s ) " +              
+              "&( (APT1+APT2) > %(ASUMPT_MIN)s )" +
+              "&( ACUTDOCA( %(ADOCA_MAX)s,'LoKi::TrgDistanceCalculator' ) )" +
+              "&( AALLSAMEBPV )" )
+        mc = (" ( VFASPF(VCHI2)<%(VCHI2_MAX)s ) " +
+              "&( BPVVD > %(BPVVD_MIN)s )" +
+              "&( BPVCORRM < %(BPVCORRM_MAX)s )" +
+              "&( BPVVDCHI2 > %(BPVVDCHI2_MIN)s )")
+        
+        from HltTracking.HltPVs import PV3D
+        Hlt2Combiner.__init__(self, name, decay, inputs,                              
+                              dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                              tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
+                              MotherCut = mc, Preambulo = [])
+
+class AttachNeutral(Hlt2Combiner):
+    def __init__(self, name, decay,inputs):
+        dc =    {}
+        cc =    ("  ( in_range( %(AM_MIN)s, AM, %(AM_MAX)s ) " +
+                 "& ( APT > %(APT_MIN)s ) " + 
+                 "& ( (ACHILD(PT,1) > %(ADAU1PT_MIN)s) & (ACHILD(BPVIPCHI2(),1) > %(ADAU1BPVIPCHI2_MIN)s) ) " + 
+                 "& ( (ACHILD(PT,2) > %(ADAU2PT_MIN)s) & (ACHILD(BPVIPCHI2(),2) > %(ADAU2BPVIPCHI2_MIN)s) ) )"
+                 )
+        mc =    ("   ( in_range( %(DMASS_MIN)s, M, %(DMASS_MAX)s ) " +
+                 " & ( BPVIPCHI2()< %(BPVIPCHI2_MAX)s )" +
+                 " & ( BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 " & ( BPVLTIME('PropertimeFitter/properTime:PUBLIC') > %(BPVLTIME_MIN)s ) )")
+        from HltTracking.HltPVs import PV3D
+        Hlt2Combiner.__init__(self, name, decay, inputs,
+                              dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                              tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
+                              MotherCut = mc, Preambulo = [])
+
+class HHHHCombiner(Hlt2Combiner):
+    def __init__(self, name, decay,inputs):
+        dc = {}
+        cc = (" ( AM < %(AM_MAX)s ) " +
+              "&( (APT1+APT2+APT3+APT4) > %(ASUMPT_MIN)s)" +
+              "&( AMINDOCA('LoKi::TrgDistanceCalculator') < %(AMINDOCA_MAX)s )" +
+              "&( AMAXDOCA('LoKi::TrgDistanceCalculator') < %(AMAXDOCA_MAX)s )" +
+              "& (AALLSAMEBPV)" )
+        mc = (" ( VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
+              "&( BPVCORRM < %(BPVCORRM_MAX)s )" +
+              "&( BPVVDCHI2> %(BPVVDCHI2_MIN)s )" +
+              "&( BPVVDR> %(BPVVDR_MIN)s )" +
+              "&( BPVDIRA > %(BPVDIRA_MIN)s )" +
+              "&( BPVIPCHI2() < %(BPVIPCHI2_MAX)s )")
+        from HltTracking.HltPVs import PV3D
+        Hlt2Combiner.__init__(self, name, decay, inputs,
+                              dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                              tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
+                              MotherCut = mc, Preambulo = [])
+
+# Lines definitions
+class DetachedHHChild(DetachedHHChildCombiner):
+    def __init__(self,name,decay=["K*(892)0 -> K+ pi-"]) :
+        # decay descriptors could be optimised : we only need a pair of oppositely charged or same-charged tracks
+        # could stay like this only if pid is added already here.
+        #        decay =  ["[K*(892)0 -> K+ pi-]cc", "[K*(892)+ -> pi+ pi+]cc", "[K*(892)+ -> K+ K+]cc",
+        #          "K*(892)0 -> pi+ pi-", "K*(892)0 -> K+ K-"]
+        inputs = [NoPIDInParticleFilter("SharedNoPIDDetachedD0Child_pi"),
+                  NoPIDInParticleFilter("SharedNoPIDDetachedD0Child_K")]
+        DetachedHHChildCombiner.__init__(self,name,decay,inputs)
 
 class D2KPiPi_SS(DetachedHHHCombiner) :
     def __init__(self,name) :
@@ -431,3 +520,9 @@ class D2KS0KS0_2LL(DetachedV0V0Combiner) :
         decay = "D0 -> KS0 KS0"
         inputs = [KS0_LL]
         DetachedV0V0Combiner.__init__(self,name,decay,inputs)
+
+class Dst2D0pi(TagDecay):
+    def __init__(self,name,d0) :
+        decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"]
+        inputs = [d0, SoftTagInParticleFilter("SharedSoftTagChild_pi")]
+        TagDecay.__init__(self,name,decay,inputs)
