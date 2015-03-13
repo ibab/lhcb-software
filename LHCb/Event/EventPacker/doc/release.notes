@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v5r0 2015-03-13 =========================
 ! 2015-03-10 - Chris Jones
  - Fix typo in MuonPIDPacker where version 2 was not declared as a known 
    packing version in MuonPIDPacker::unpack
