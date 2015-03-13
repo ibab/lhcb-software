@@ -35,10 +35,10 @@ protected:
 
 private:
   /// Property to set the first event number, if event header is missing
-  int           m_firstEvent;
+  longlong      m_firstEvent;
 
   /// Property to set the run number, if event header is missing
-  int           m_runNumber;
+  unsigned int  m_runNumber;
 
   IGenericTool* m_memoryTool;   ///< Pointer to (private) memory histogram tool
   
