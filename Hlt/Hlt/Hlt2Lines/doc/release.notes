@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-13 - Stefano Perazzini
+ - Bug fix to python/Hlt2Lines/B2HH/Stages.py
+
 ! 2015-03-13 - Maurizio Martinelli
  - Added replacement lines for D02HHPi0 and D02HHHH to Hlt2Lines/CharmHad 
 

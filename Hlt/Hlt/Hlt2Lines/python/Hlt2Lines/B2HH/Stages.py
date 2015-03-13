@@ -106,5 +106,5 @@ SelB2KK   = SelB2PiPi.clone('B2KK', decay = 'B0 -> K+ K-',
 SelLb2PK  = SelB2PiPi.clone('Lb2PK',decay = '[Lambda_b0 -> p+ K-]cc',
                             inputs = [ Hlt2RichProtons, Hlt2RichKaons ] )
 SelLb2PPi = SelB2PiPi.clone('Lb2PPi',decay = '[Lambda_b0 -> p+ pi-]cc',
-                            inputs = [ Hlt2RichKaons, Hlt2RichPions ] )
+                            inputs = [ Hlt2RichProtons, Hlt2RichPions ] )
  
