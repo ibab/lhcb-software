@@ -44,6 +44,7 @@ LoKi::HltUnit::HltUnit
   , m_lokiSvc    { nullptr }                //                        LoKi Service
   //
   , m_monitor    { false }
+  , m_decode     { false }
   , m_in         {}
   , m_out        {}
   //
@@ -67,12 +68,17 @@ LoKi::HltUnit::HltUnit
     ( "Tools",
       m_toolNames = std::map<std::string, std::string> {
       { "DistanceCalculator", "LoKi::DistanceCalculator:PUBLIC" },
+      { "LoKi::DistanceCalculator", "LoKi::DistanceCalculator:PUBLIC" },
       { "LifetimeFitter", "LoKi::LifetimeFitter:PUBLIC" },
       { "LoKi::LifetimeFitter/lifetime:PUBLIC", "LoKi::LifetimeFitter/lifetime:PUBLIC"},
       { "VertexFitter", "LoKi::VertexFitter:PUBLIC" },
       { "ParticleCombiner", "LoKi::VertexFitter:PUBLIC" },
       { "RelatedPVFinder",  "GenericParticle2PVRelator<_p2PVWithIPChi2, OfflineDistanceCalculatorName>/P2PVWithIPChi2:PUBLIC"}},
       "Types/Names of tools" ) ;
+  declareProperty
+    ( "PreloadTools",
+      m_preloadTools = std::vector<std::string> {},
+      "Types/Names of tools to preload" ) ;
   // set the code string
   StatusCode sc = setProperty ( "Code" , "FNONE" ) ;
   Assert ( sc.isSuccess () , "Unable (re)set property 'Code'"    , sc ) ;
@@ -183,10 +189,11 @@ const Hlt::Selection* LoKi::HltUnit::selection ( const Key& key ) const
 // ============================================================================
 StatusCode LoKi::HltUnit::decode()
 {
+  if (!m_decode) return StatusCode::SUCCESS;
   StatusCode sc = defineCode () ;
   Assert ( sc.isSuccess() , "Unable to defineCode for functor!" ) ;
   // =========================================================================
-  return StatusCode::SUCCESS ;
+  return sc;
 }
 // ============================================================================
 /*  define the code
@@ -201,7 +208,7 @@ StatusCode LoKi::HltUnit::defineCode ()
   StatusCode sc = i_decode<LoKi::Hybrid::ICoreFactory> ( m_cut ) ;
   Assert ( sc.isSuccess() , "Unable to decode the functor!" ) ;
   // =========================================================================
-  return StatusCode::SUCCESS ;
+  return sc;
 }
 // ============================================================================
 /*  define the stream
@@ -286,6 +293,13 @@ StatusCode LoKi::HltUnit::initialize ()
   /// decode & initialize the functors
   StatusCode sc = LoKi::FilterAlg::initialize();
   if ( !sc.isSuccess() ) return sc;
+  /// preload tools
+  for (const auto& preload : m_preloadTools) {
+     auto loaded = tool<IAlgTool>(preload, this);
+     Info(std::string("Preloaded ") + loaded->type() + "/" + loaded->name());
+  }
+  m_decode = true;
+  decode();
   // We have a dummy that is equal to the default in case no PVs are needed
   if ( m_pvSelection != s_NOPVS ) {
     declareInput( m_pvSelection, LoKi::Constant<void,bool>( true ) ) ;

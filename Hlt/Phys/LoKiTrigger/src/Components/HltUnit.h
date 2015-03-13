@@ -343,7 +343,10 @@ namespace LoKi
     // ========================================================================
     ToolMap  m_toolNames ; // HLT PV selection
     // ========================================================================
-    // Actual tools
+    // ========================================================================
+    std::vector<std::string>  m_preloadTools ; // Tools to preload
+    bool m_decode;
+     // Actual tools
     mutable Tools m_tools ;
     // ========================================================================
     // P2PV table

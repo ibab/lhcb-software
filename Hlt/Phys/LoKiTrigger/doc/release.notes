@@ -4,8 +4,12 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-03-13 - Roel Aaij
+ - Add option to HltUnit to preload tools.
+ - Add entry to tool names for LoKi::DistanceCalculator.
+
 ! 2015-03-12 - Vanya Belyaev
- - add FakeSorce: useful for debugging, in particular for fake streams 
+ - add FakeSource: useful for debugging, in particular for fake streams 
 
 !========================= LoKiTrigger v15r5 2014-03-09 =========================
 
