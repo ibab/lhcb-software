@@ -2,6 +2,11 @@
 ! Package     : Gen/BcVegPy
 ! Responsible : 
 
+!========================= BcVegPy v4r0 2015-03-13 ===========================
+! 2015-03-13 - Gloria Corti
+ - Remove dependency from GenXicc in cmake configuration, since it should now
+   work with Jibo fixes
+
 ! 2015-03-05 - Jibo He 
  - To switch to LHAPDF6, removed MRST PDF related things from 
   . src/genevnt_mod.F
