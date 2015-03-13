@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-13 - Patrick Spradlin
+ - python/Hlt2Lines/CharmHad
+   . Stages.py, Lines.py, D2HHHLines.py, D02HHHHLines.py, and D2HHHKsLines.py
+     Begin to clean up input charged particle filtering.
+
 ! 2015-03-13 - Jibo He
  - python/Hlt2Lines/CcDiHadron
   . Hlt2DiProton(LowMult) and Hlt2DiPhi lines adapted to new template

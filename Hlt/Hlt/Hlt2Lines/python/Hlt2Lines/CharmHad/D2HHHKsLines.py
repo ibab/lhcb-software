@@ -79,7 +79,7 @@ class CharmHadD2HHHKsLines() :
         }
   
     def locallines(self):
-        from Stages import MassFilter, NoPIDInParticleFilter
+        from Stages import MassFilter
         from Stages import DetachedHHHChild, D2KsHHH_KSLL, D2KsHHH_KSDD
         stages = {
             # First the detached HHH lines - KS LL

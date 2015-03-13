@@ -25,43 +25,43 @@ theseslots = {   'Prescale' : {},
                             },  
                  # Particles for the "Detached" CPV lines
                  'SharedDetachedDpmChild_K' : { 
-                                 'Kaon_ALL_PIDK_MIN'        :  0,  
+                                 'PID_LIM'                  :  0,  
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                               },  
                  'SharedDetachedDpmChild_pi' : { 
-                                 'Pion_ALL_PIDK_MAX'        :  10, 
+                                 'PID_LIM'                  :  10, 
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                               },  
                  'SharedDetachedLcChild_K' : { 
-                                 'Kaon_ALL_PIDK_MIN'        :  0,  
+                                 'PID_LIM'                  :  0,  
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  2.0,
                                               },  
                  'SharedDetachedLcChild_pi' : { 
-                                 'Pion_ALL_PIDK_MAX'        :  10, 
+                                 'PID_LIM'                  :  10, 
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  2.0,
                                               },  
                  'SharedDetachedLcChild_p' : {
-                                 'Proton_ALL_PIDp_MIN'      :  0,
+                                 'PID_LIM'                  :  0,
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  2.0,
                                               },
                  # Particles for the 'Prompt' CF lifetime unbiased lines for the 
                  # lifetime measurements
                  'SharedPromptChild_K' : {
-                                 'Kaon_ALL_PIDK_MIN'        :  5,
-                                 'Trk_ALL_PT_MIN'           :  500.0,
+                                 'PID_LIM'                  :  5,
+                                 'Trk_ALL_PT_MIN'           :  500.0 * MeV,
                                               },
                  'SharedPromptChild_pi' : {
-                                 'Pion_ALL_PIDK_MAX'        :  0,
-                                 'Trk_ALL_PT_MIN'           :  500.0,
+                                 'PID_LIM'                  :  0,
+                                 'Trk_ALL_PT_MIN'           :  500.0 * MeV,
                                               },
                  'SharedPromptChild_p' : {
-                                 'Proton_ALL_PIDp_MIN'      :  5,
-                                 'Trk_ALL_PT_MIN'           :  500.0,
+                                 'PID_LIM'                  :  5,
+                                 'Trk_ALL_PT_MIN'           :  500.0 * MeV,
                                               },
                  # Soft particles for tagging decays
                  'SharedSoftTagChild_pi' : {
@@ -70,7 +70,7 @@ theseslots = {   'Prescale' : {},
                  # NoPID protons for the Sigma_c tagged Lambda_c line for PID calibration
                  # the IPCHI2 cut is tight because the PT/PT cuts have to be loose to give
                  # a useful sample, and we need to reduce the combinatorics
-                 'SharedNoPIDLcChild_p' : {
+                 'SharedNoPIDDetachedLcChild_p' : {
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  9.0,
                                           },

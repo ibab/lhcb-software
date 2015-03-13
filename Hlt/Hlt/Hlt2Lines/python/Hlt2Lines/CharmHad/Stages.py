@@ -1,11 +1,17 @@
-# Each stage must specify its own inputs
+## Each stage must specify its own inputs
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2VoidFilter
 from Hlt2Lines.Utilities.Hlt2Combiner import Hlt2Combiner
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
 from Inputs import KS0_LL, KS0_DD, Lambda_LL, Lambda_DD
 
-# The GEC
+## ========================================================================= ##
+## Global event cuts
+## ========================================================================= ##
 class TrackGEC(Hlt2VoidFilter):
+    '''
+    Cut on the number of reconstructed long tracks.
+    Historically useful, may be obsolete.
+    '''
     def __init__(self, name):
         from Configurables import LoKi__Hybrid__CoreFactory as Factory
         modules =  Factory().Modules
@@ -17,12 +23,156 @@ class TrackGEC(Hlt2VoidFilter):
         code = ("CONTAINS('%s')" % tracks.outputSelection()) + " < %(NTRACK_MAX)s"
         Hlt2VoidFilter.__init__(self, 'TrackGEC', code, [tracks], shared = True)
 
+
+
+## ========================================================================= ##
+## Filters for basic particles
+## ========================================================================= ##
+
+## ------------------------------------------------------------------------- ##
+class InParticleFilter(Hlt2ParticleFilter) : # {
+    '''
+    Filter charged particles on TRCHI2DOF, PT, P, and (optionally) a PID
+    variable.  Does NOT filter on IP or IPCHI2.
+
+    Always creates a shared instance of the filter.
+
+    Configuration dictionaries must contain the following keys:
+        'Trk_ALL_TRCHI2DOF_MAX' :  upper limit on TRCHI2DOF
+        'Trk_ALL_PT_MIN'        :  lower limit on PT
+        'Trk_ALL_P_MIN'         :  lower limit on P
+
+    If filtering on a PID variable, the pidVar parameter must be set to the
+    name of the PID functor on which to cut and the configuration dictionary
+    must contain the key 'PID_LIM' defining the one-sided limit for that
+    variable.  By default the cut on the PID variable is a lower limit.
+    It may be changed to an upper limit by setting the parameter
+    pidULim = True.
+    '''
+    def __init__(self, name, inputs, pidVar = None, pidULim = False): # {
+        cut = ("  (TRCHI2DOF < %(Trk_ALL_TRCHI2DOF_MAX)s )" +
+               "& (PT > %(Trk_ALL_PT_MIN)s)" +
+               "& (P > %(Trk_ALL_P_MIN)s)" )
+        if pidVar : # {
+            pidCut = "& (%s %s %%(PID_LIM)s)" % (pidVar, ('<' if pidULim else '>'))
+            cut = cut + pidCut
+        # }
+
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs, shared = True)
+    # }
+# }
+
+
+## Shared instances of InParticleFilter
+## If these are not made into central shared particles, their names should
+##   be updated to flag them as CharmHad shared particles to avoid name
+##   conflicts with other subdirectories.
+## ------------------------------------------------------------------------- ##
+from Inputs import Hlt2LoosePions, Hlt2LooseKaons, Hlt2LooseProtons
+from Inputs import Hlt2NoPIDsPions, Hlt2NoPIDsKaons, Hlt2NoPIDsProtons
+SharedPromptChild_pi = InParticleFilter( 'SharedPromptChild_pi',
+                                         [Hlt2LoosePions], 'PIDK', True )
+SharedPromptChild_K = InParticleFilter( 'SharedPromptChild_K',
+                                        [Hlt2LooseKaons], 'PIDK' )
+SharedPromptChild_p = InParticleFilter( 'SharedPromptChild_p',
+                                        [Hlt2LooseProtons], 'PIDp' )
+SharedSoftTagChild_pi = InParticleFilter( 'SharedSoftTagChild_pi',
+                                          [Hlt2NoPIDsPions] )
+
+
+## ------------------------------------------------------------------------- ##
+class DetachedInParticleFilter(Hlt2ParticleFilter) : # {
+    '''
+    Filter charged particles on TRCHI2DOF, PT, P, MIPCHI2DV(PRIMARY),
+    and (optionally) a PID variable.
+
+    Always creates a shared instance of the filter.
+
+    Configuration dictionaries must contain the following keys:
+        'Trk_ALL_TRCHI2DOF_MAX' :  upper limit on TRCHI2DOF
+        'Trk_ALL_PT_MIN'        :  lower limit on PT
+        'Trk_ALL_P_MIN'         :  lower limit on P
+        'Trk_ALL_MIPCHI2DV_MIN' :  lower limit on MIPCHI2DV(PRIMARY)
+
+    If filtering on a PID variable, the pidVar parameter must be set to the
+    name of the PID functor on which to cut and the configuration dictionary
+    must contain the key 'PID_LIM' defining the one-sided limit for that
+    variable.  By default the cut on the PID variable is a lower limit.
+    It may be changed to an upper limit by setting the parameter
+    pidULim = True.
+    '''
+    def __init__(self, name, inputs, pidVar = None, pidULim = False): # {
+        cut = ("  (TRCHI2DOF < %(Trk_ALL_TRCHI2DOF_MAX)s )" +
+               "& (PT > %(Trk_ALL_PT_MIN)s)" +
+               "& (P > %(Trk_ALL_P_MIN)s)" +
+               "& (MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)")
+
+        if pidVar : # {
+            pidCut = "& (%s %s %%(PID_LIM)s)" % (pidVar, ('<' if pidULim else '>'))
+            cut = cut + pidCut
+        # }
+
+        from HltTracking.HltPVs import PV3D
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs, shared = True, 
+                                    dependencies = [PV3D('Hlt2')],
+                                    UseP2PVRelations = False)
+
+    # }
+# }
+
+
+## Shared instances of DetachedInParticleFilter
+## These are all associated with specific combiners and should perhaps be
+##   defined closer to that context.
+## ------------------------------------------------------------------------- ##
+SharedDetachedDpmChild_pi = DetachedInParticleFilter( 'SharedDetachedDpmChild_pi', [Hlt2LoosePions], 'PIDK', True )
+SharedDetachedDpmChild_K = DetachedInParticleFilter( 'SharedDetachedDpmChild_K',
+                                                     [Hlt2LooseKaons], 'PIDK' )
+SharedDetachedLcChild_pi = DetachedInParticleFilter('SharedDetachedLcChild_pi',
+                                                    [Hlt2LoosePions], 'PIDK', True )
+SharedDetachedLcChild_K = DetachedInParticleFilter( 'SharedDetachedLcChild_K',
+                                                    [Hlt2LooseKaons], 'PIDK' )
+SharedDetachedLcChild_p = DetachedInParticleFilter('SharedDetachedLcChild_p',
+                                                   [Hlt2LooseProtons], 'PIDp' )
+
+SharedNoPIDDetachedD0Child_pi = DetachedInParticleFilter( 'SharedNoPIDDetachedD0Child_pi', [Hlt2NoPIDsPions] )
+SharedNoPIDDetachedD0Child_K = DetachedInParticleFilter( 'SharedNoPIDDetachedD0Child_K', [Hlt2NoPIDsKaons] )
+SharedNoPIDDetachedLcChild_p = DetachedInParticleFilter( 'SharedNoPIDDetachedLcChild_p', [Hlt2NoPIDsProtons] )
+
+
+
+
+## ------------------------------------------------------------------------- ##
+class NeutralInParticleFilter(Hlt2ParticleFilter):
+    def __init__(self, name):
+        cut = ("  (PT > %(Trk_ALL_PT_MIN)s)" )
+
+        from Inputs import Hlt2ResolvedPi0
+ 
+        pidinfo = {"pi0R" : {"cut"    : "(ADMASS('pi0') < %(Pi0_ALL_DMASS_MAX)s) &",
+                           "inputs" : [Hlt2ResolvedPi0]},
+                  }   
+
+        cut = pidinfo[name.split('_')[1]]["cut"] + cut 
+        inputs = pidinfo[name.split('_')[1]]["inputs"]
+
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs, shared = True)
+
+
+## ========================================================================= ##
+## Filters for composite particles
+## ========================================================================= ##
+
 # Mass filter
 class MassFilter(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
         cut = "in_range( %(Mass_M_MIN)s , M , %(Mass_M_MAX)s )"
         Hlt2ParticleFilter.__init__(self, name, cut, inputs)
 
+
+## ========================================================================= ##
+## Combiners
+## ========================================================================= ##
 # A "universal" filter which implements a soft pion tag
 class TagDecay(Hlt2Combiner):
     def __init__(self, name, decay, inputs):
@@ -51,119 +201,6 @@ class TagDecay(Hlt2Combiner):
                               tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc, 
                               MotherCut = mc, Preambulo = []) 
 
-# The filter for the input particles
-class DetachedInParticleFilter(Hlt2ParticleFilter):
-    def __init__(self, name):
-        cut = ("  (TRCHI2DOF < %(Trk_ALL_TRCHI2DOF_MAX)s )" +
-               "& (PT > %(Trk_ALL_PT_MIN)s)" +
-               "& (P > %(Trk_ALL_P_MIN)s)" +
-               "& (MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)")
-
-        from Inputs import Hlt2LoosePions, Hlt2LooseKaons,Hlt2LooseProtons       
- 
-        pidinfo = {"pi" : {"cut"    : "(PIDK < %(Pion_ALL_PIDK_MAX)s) &",
-                           "inputs" : [Hlt2LoosePions]},
-                   "K"  : {"cut"    : "(PIDK > %(Kaon_ALL_PIDK_MIN)s) &",
-                           "inputs" : [Hlt2LooseKaons]},
-                   "p"  : {"cut"    : "(PIDp > %(Proton_ALL_PIDp_MIN)s) &",
-                           "inputs" : [Hlt2LooseProtons]}
-                  }
-
-        ## This is soooo unsafe.  There has to be an easier and safer way
-        ##    to do this.
-        cut = pidinfo[name.split('_')[1]]["cut"] + cut
-        inputs = pidinfo[name.split('_')[1]]["inputs"]
-
-        from HltTracking.HltPVs import PV3D
-        Hlt2ParticleFilter.__init__(self, name, cut, inputs, shared = True, 
-                                    dependencies = [PV3D('Hlt2')],
-                                    UseP2PVRelations = False)
-
-class InParticleFilter(Hlt2ParticleFilter):
-    def __init__(self, name):
-        cut = ("  (TRCHI2DOF < %(Trk_ALL_TRCHI2DOF_MAX)s )" +
-               "& (PT > %(Trk_ALL_PT_MIN)s)" +
-               "& (P > %(Trk_ALL_P_MIN)s)" )
-
-        from Inputs import Hlt2LoosePions, Hlt2LooseKaons,Hlt2LooseProtons    
- 
-        pidinfo = {"pi" : {"cut"    : "(PIDK < %(Pion_ALL_PIDK_MAX)s) &",
-                           "inputs" : [Hlt2LoosePions]},
-                   "K"  : {"cut"    : "(PIDK > %(Kaon_ALL_PIDK_MIN)s) &",
-                           "inputs" : [Hlt2LooseKaons]},
-                   "p"  : {"cut"    : "(PIDp > %(Proton_ALL_PIDp_MIN)s) &",
-                           "inputs" : [Hlt2LooseProtons]}
-                  }   
-
-        ## This is soooo unsafe.  There has to be an easier and safer way
-        ##    to do this.
-        cut = pidinfo[name.split('_')[1]]["cut"] + cut 
-        inputs = pidinfo[name.split('_')[1]]["inputs"]
-
-        from HltTracking.HltPVs import PV3D
-        Hlt2ParticleFilter.__init__(self, name, cut, inputs, shared = True)
-
-class NoPIDInParticleFilter(Hlt2ParticleFilter):
-    def __init__(self, name):
-        cut = ("  (TRCHI2DOF < %(Trk_ALL_TRCHI2DOF_MAX)s )" +
-               "& (PT > %(Trk_ALL_PT_MIN)s)" +
-               "& (P > %(Trk_ALL_P_MIN)s)" +
-               "& (MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)")
-
-        from Inputs import Hlt2NoPIDsPions, Hlt2NoPIDsKaons,Hlt2NoPIDsProtons
-
-        pidinfo = {"pi" : {"cut"    : "",
-                           "inputs" : [Hlt2NoPIDsPions]},
-                   "K"  : {"cut"    : "",
-                           "inputs" : [Hlt2NoPIDsKaons]},
-                   "p"  : {"cut"    : "",
-                           "inputs" : [Hlt2NoPIDsProtons]}
-                  } 
-
-        ## This is soooo unsafe.  There has to be an easier and safer way
-        ##    to do this.
-        inputs = pidinfo[name.split('_')[1]]["inputs"]
-
-        from HltTracking.HltPVs import PV3D
-        Hlt2ParticleFilter.__init__(self, name, cut, inputs, shared = True)
-
-class SoftTagInParticleFilter(Hlt2ParticleFilter):
-    def __init__(self, name):
-        cut = ("  (TRCHI2DOF < %(Trk_ALL_TRCHI2DOF_MAX)s )" +
-               "& (PT > %(Trk_ALL_PT_MIN)s)" +
-               "& (P > %(Trk_ALL_P_MIN)s)" )
-
-        from Inputs import Hlt2NoPIDsPions, Hlt2NoPIDsKaons,Hlt2NoPIDsProtons
-
-        pidinfo = {"pi" : {"cut"    : "", 
-                           "inputs" : [Hlt2NoPIDsPions]},
-                   "K"  : {"cut"    : "", 
-                           "inputs" : [Hlt2NoPIDsKaons]},
-                   "p"  : {"cut"    : "", 
-                           "inputs" : [Hlt2NoPIDsProtons]}
-                  }   
-
-        ## This is soooo unsafe.  There has to be an easier and safer way
-        ##    to do this.
-        inputs = pidinfo[name.split('_')[1]]["inputs"]
-
-        from HltTracking.HltPVs import PV3D
-        Hlt2ParticleFilter.__init__(self, name, cut, inputs, shared = True)
-
-class NeutralInParticleFilter(Hlt2ParticleFilter):
-    def __init__(self, name):
-        cut = ("  (PT > %(Trk_ALL_PT_MIN)s)" )
-
-        from Inputs import Hlt2ResolvedPi0
- 
-        pidinfo = {"pi0R" : {"cut"    : "(ADMASS('pi0') < %(Pi0_ALL_DMASS_MAX)s) &",
-                           "inputs" : [Hlt2ResolvedPi0]},
-                  }   
-
-        cut = pidinfo[name.split('_')[1]]["cut"] + cut 
-        inputs = pidinfo[name.split('_')[1]]["inputs"]
-
-        Hlt2ParticleFilter.__init__(self, name, cut, inputs, shared = True)
 
 # Particle combiners
 class DetachedHHHCombiner(Hlt2Combiner):
@@ -242,7 +279,7 @@ class DetachedV0V0Combiner(Hlt2Combiner):
 class D02HHCombiner(Hlt2Combiner) : # {
     def __init__(self, name, decay, inputs, slotName = None, shared = False) : # {
 
-        incuts = "(TRCHI2DOF< %(Trk_TRCHI2DOF_MAX)s )" \
+        incuts = "(TRCHI2DOF< %(Trk_ALL_TRCHI2DOF_MAX)s )" \
                   "& (PT> %(Trk_PT_MIN)s)" \
                   "& (P> %(Trk_P_MIN)s)" \
                   "& (MIPCHI2DV(PRIMARY)> %(Trk_MIPCHI2DV_MIN)s )"
@@ -381,8 +418,8 @@ class DetachedHHChild(DetachedHHChildCombiner):
         # could stay like this only if pid is added already here.
         #        decay =  ["[K*(892)0 -> K+ pi-]cc", "[K*(892)+ -> pi+ pi+]cc", "[K*(892)+ -> K+ K+]cc",
         #          "K*(892)0 -> pi+ pi-", "K*(892)0 -> K+ K-"]
-        inputs = [NoPIDInParticleFilter("SharedNoPIDDetachedD0Child_pi"),
-                  NoPIDInParticleFilter("SharedNoPIDDetachedD0Child_K")]
+        inputs = [SharedNoPIDDetachedD0Child_pi,
+                  SharedNoPIDDetachedD0Child_K]
         DetachedHHChildCombiner.__init__(self,name,decay,inputs)
 
 class DetachedHHHChild(DetachedHHHChildCombiner):
@@ -391,80 +428,80 @@ class DetachedHHHChild(DetachedHHHChildCombiner):
         # could stay like this only if pid is added already here.
         #        decay =  ["[K*(892)0 -> K+ pi-]cc", "[K*(892)+ -> pi+ pi+]cc", "[K*(892)+ -> K+ K+]cc",
         #          "K*(892)0 -> pi+ pi-", "K*(892)0 -> K+ K-"]
-        inputs = [NoPIDInParticleFilter("SharedNoPIDDetachedD0Child_pi"),
-                  NoPIDInParticleFilter("SharedNoPIDDetachedD0Child_K")]
+        inputs = [SharedNoPIDDetachedD0Child_pi,
+                  SharedNoPIDDetachedD0Child_K]
         DetachedHHHChildCombiner.__init__(self,name,decay,inputs)
 
 class D2KPiPi_SS(DetachedHHHCombiner) :
     def __init__(self,name) :
         decay = "[D+ -> K- pi+ pi+]cc"
-        kaonsForD2DetachedHHHCombiner = DetachedInParticleFilter("SharedDetachedDpmChild_K")
-        pionsForD2DetachedHHHCombiner = DetachedInParticleFilter("SharedDetachedDpmChild_pi")
+        kaonsForD2DetachedHHHCombiner = SharedDetachedDpmChild_K
+        pionsForD2DetachedHHHCombiner = SharedDetachedDpmChild_pi
         inputs = [kaonsForD2DetachedHHHCombiner,pionsForD2DetachedHHHCombiner]
         DetachedHHHCombiner.__init__(self,name,decay,inputs)
 
 class D2KPiPi_OS(DetachedHHHCombiner) :
     def __init__(self,name) :
         decay = "[D+ -> K+ pi- pi+]cc"
-        inputs = [DetachedInParticleFilter("SharedDetachedDpmChild_K"),
-                  DetachedInParticleFilter("SharedDetachedDpmChild_pi")]
+        inputs = [SharedDetachedDpmChild_K,
+                  SharedDetachedDpmChild_pi]
         DetachedHHHCombiner.__init__(self,name,decay,inputs)
 
 class D2KKPi_SS(DetachedHHHCombiner) :
     def __init__(self,name) :
         decay = "[D+ -> K+ K+ pi-]cc"
-        inputs = [DetachedInParticleFilter("SharedDetachedDpmChild_K"),
-                  DetachedInParticleFilter("SharedDetachedDpmChild_pi")]
+        inputs = [SharedDetachedDpmChild_K,
+                  SharedDetachedDpmChild_pi]
         DetachedHHHCombiner.__init__(self,name,decay,inputs)
 
 class D2KKPi_OS(DetachedHHHCombiner) :
     def __init__(self,name) :
         decay = "[D+ -> K- K+ pi+]cc"
-        inputs = [DetachedInParticleFilter("SharedDetachedDpmChild_K"),
-                  DetachedInParticleFilter("SharedDetachedDpmChild_pi")]
+        inputs = [SharedDetachedDpmChild_K,
+                  SharedDetachedDpmChild_pi]
         DetachedHHHCombiner.__init__(self,name,decay,inputs)
 
 class D2PiPiPi(DetachedHHHCombiner) :
     def __init__(self,name) :
         decay = "[D+ -> pi- pi+ pi+]cc"
-        inputs = [DetachedInParticleFilter("SharedDetachedDpmChild_pi")]
+        inputs = [SharedDetachedDpmChild_pi]
         DetachedHHHCombiner.__init__(self,name,decay,inputs)
 
 class D2KKK(DetachedHHHCombiner) :
     def __init__(self,name) :
         decay = "[D+ -> K- K+ K+]cc"
-        inputs = [DetachedInParticleFilter("SharedDetachedDpmChild_K")]
+        inputs = [SharedDetachedDpmChild_K]
         DetachedHHHCombiner.__init__(self,name,decay,inputs)
 
 class Lc2KPPi(DetachedHHHCombiner) :
     def __init__(self,name) :
         decay = "[Lambda_c+ -> K- p+ pi+]cc"
-        kaonsForLc2DetachedHHHCombiner = DetachedInParticleFilter("SharedDetachedLcChild_K")
-        pionsForLc2DetachedHHHCombiner = DetachedInParticleFilter("SharedDetachedLcChild_pi")
-        protonsForLc2DetachedHHHCombiner = DetachedInParticleFilter("SharedDetachedLcChild_p")
+        kaonsForLc2DetachedHHHCombiner = SharedDetachedLcChild_K
+        pionsForLc2DetachedHHHCombiner = SharedDetachedLcChild_pi
+        protonsForLc2DetachedHHHCombiner = SharedDetachedLcChild_p
         inputs = [kaonsForLc2DetachedHHHCombiner,pionsForLc2DetachedHHHCombiner,protonsForLc2DetachedHHHCombiner]
         DetachedHHHCombiner.__init__(self,name,decay,inputs)
 
 class Lc2KPK(DetachedHHHCombiner) :
     def __init__(self,name) :
         decay = "[Lambda_c+ -> K- p+ K+]cc"
-        inputs = [DetachedInParticleFilter("SharedDetachedLcChild_K"),
-                  DetachedInParticleFilter("SharedDetachedLcChild_p")]
+        inputs = [SharedDetachedLcChild_K,
+                  SharedDetachedLcChild_p]
         DetachedHHHCombiner.__init__(self,name,decay,inputs)
 
 class Lc2PiPPi(DetachedHHHCombiner) :
     def __init__(self,name) :
         decay = "[Lambda_c+ -> pi- p+ pi+]cc"
-        inputs = [DetachedInParticleFilter("SharedDetachedLcChild_pi"),
-                  DetachedInParticleFilter("SharedDetachedLcChild_p")]
+        inputs = [SharedDetachedLcChild_pi,
+                  SharedDetachedLcChild_p]
         DetachedHHHCombiner.__init__(self,name,decay,inputs)
 
 class Lc2PiPK(DetachedHHHCombiner) :
     def __init__(self,name) :
         decay = "[Lambda_c+ -> pi- p+ K+]cc"
-        inputs = [DetachedInParticleFilter("SharedDetachedLcChild_K"),
-                  DetachedInParticleFilter("SharedDetachedLcChild_pi"),
-                  DetachedInParticleFilter("SharedDetachedLcChild_p")]
+        inputs = [SharedDetachedLcChild_K,
+                  SharedDetachedLcChild_pi,
+                  SharedDetachedLcChild_p]
         DetachedHHHCombiner.__init__(self,name,decay,inputs)
 
 # The lifetime unbiased lines now
@@ -472,24 +509,24 @@ class Lc2PiPK(DetachedHHHCombiner) :
 class D2KPiPi_SS_LTUNB(HHHCombiner) :
     def __init__(self,name) :
         decay = "[D+ -> K- pi+ pi+]cc"
-        kaonsForPromptHHHCombiner = InParticleFilter("SharedPromptChild_K")
-        pionsForPromptHHHCombiner = InParticleFilter("SharedPromptChild_pi")
+        kaonsForPromptHHHCombiner = SharedPromptChild_K
+        pionsForPromptHHHCombiner = SharedPromptChild_pi
         inputs = [kaonsForPromptHHHCombiner,pionsForPromptHHHCombiner]
         HHHCombiner.__init__(self,name,decay,inputs)
 
 class D2KKPi_OS_LTUNB(HHHCombiner) :
     def __init__(self,name) :
         decay = "[D+ -> K- K+ pi+]cc"
-        inputs = [InParticleFilter("SharedPromptChild_K"),
-                  InParticleFilter("SharedPromptChild_pi")]
+        inputs = [SharedPromptChild_K,
+                  SharedPromptChild_pi]
         HHHCombiner.__init__(self,name,decay,inputs)
 
 class Lc2KPPi_LTUNB(HHHCombiner) :
     def __init__(self,name) :
         decay = "[Lambda_c+ -> K- p+ pi+]cc"
-        protonsForPromptHHHCombiner = InParticleFilter("SharedPromptChild_p")
-        inputs = [InParticleFilter("SharedPromptChild_K"),
-                  InParticleFilter("SharedPromptChild_pi"),
+        protonsForPromptHHHCombiner = SharedPromptChild_p
+        inputs = [SharedPromptChild_K,
+                  SharedPromptChild_pi,
                   protonsForPromptHHHCombiner]
         HHHCombiner.__init__(self,name,decay,inputs)
 
@@ -498,10 +535,9 @@ class Lc2KPPi_LTUNB(HHHCombiner) :
 class Lc2KPPi_PIDCALIB(DetachedHHHCombiner) :
     def __init__(self,name) :
         decay = "[Lambda_c+ -> K- p+ pi+]cc"
-        protonsForLc2KPPiPIDCALIBCombiner = NoPIDInParticleFilter("SharedNoPIDLcChild_p")
-        inputs = [DetachedInParticleFilter("SharedDetachedLcChild_K"),
-                  DetachedInParticleFilter("SharedDetachedLcChild_pi"),
-                  protonsForLc2KPPiPIDCALIBCombiner]
+        inputs = [SharedDetachedLcChild_K,
+                  SharedDetachedLcChild_pi,
+                  SharedNoPIDDetachedLcChild_p ]
         DetachedHHHCombiner.__init__(self,name,decay,inputs)
 
 # The V0H lines now
@@ -509,56 +545,56 @@ class Lc2KPPi_PIDCALIB(DetachedHHHCombiner) :
 class D2KS0Pi_LL(DetachedV0HCombiner) :
     def __init__(self,name) :
         decay = "[D+ -> pi+ KS0]cc"
-        inputs = [DetachedInParticleFilter("SharedDetachedDpmChild_pi"),
+        inputs = [SharedDetachedDpmChild_pi,
                   KS0_LL]
         DetachedV0HCombiner.__init__(self,name,decay,inputs)
 
 class D2KS0K_LL(DetachedV0HCombiner) :
     def __init__(self,name) :
         decay = "[D+ -> K+ KS0]cc"
-        inputs = [DetachedInParticleFilter("SharedDetachedDpmChild_K"),
+        inputs = [SharedDetachedDpmChild_K,
                   KS0_LL]
         DetachedV0HCombiner.__init__(self,name,decay,inputs)        
 
 class D2KS0Pi_DD(DetachedV0HCombiner) :
     def __init__(self,name) :
         decay = "[D+ -> pi+ KS0]cc"
-        inputs = [DetachedInParticleFilter("SharedDetachedDpmChild_pi"),
+        inputs = [SharedDetachedDpmChild_pi,
                   KS0_DD]
         DetachedV0HCombiner.__init__(self,name,decay,inputs)
 
 class D2KS0K_DD(DetachedV0HCombiner) :
     def __init__(self,name) :
         decay = "[D+ -> K+ KS0]cc"
-        inputs = [DetachedInParticleFilter("SharedDetachedDpmChild_K"),
+        inputs = [SharedDetachedDpmChild_K,
                   KS0_DD]
         DetachedV0HCombiner.__init__(self,name,decay,inputs)
 
 class Lc2LambdaPi_LL(DetachedV0HCombiner) :
     def __init__(self,name) :
         decay = "[Lambda_c+ -> pi+ Lambda0]cc"
-        inputs = [DetachedInParticleFilter("SharedDetachedLcChild_pi"),
+        inputs = [SharedDetachedLcChild_pi,
                   Lambda_LL]
         DetachedV0HCombiner.__init__(self,name,decay,inputs)
 
 class Lc2LambdaK_LL(DetachedV0HCombiner) :
     def __init__(self,name) :
         decay = "[Lambda_c+ -> K+ Lambda0]cc"
-        inputs = [DetachedInParticleFilter("SharedDetachedLcChild_K"),
+        inputs = [SharedDetachedLcChild_K,
                   Lambda_LL]
         DetachedV0HCombiner.__init__(self,name,decay,inputs)
 
 class Lc2LambdaPi_DD(DetachedV0HCombiner) :
     def __init__(self,name) :
         decay = "[Lambda_c+ -> pi+ Lambda0]cc"
-        inputs = [DetachedInParticleFilter("SharedDetachedLcChild_pi"),
+        inputs = [SharedDetachedLcChild_pi,
                   Lambda_DD]
         DetachedV0HCombiner.__init__(self,name,decay,inputs)
 
 class Lc2LambdaK_DD(DetachedV0HCombiner) :
     def __init__(self,name) :
         decay = "[Lambda_c+ -> K+ Lambda0]cc"
-        inputs = [DetachedInParticleFilter("SharedDetachedLcChild_K"),
+        inputs = [SharedDetachedLcChild_K,
                   Lambda_DD]
         DetachedV0HCombiner.__init__(self,name,decay,inputs)
 
@@ -573,7 +609,7 @@ class D2KS0KS0_2LL(DetachedV0V0Combiner) :
 class Dst2D0pi(TagDecay):
     def __init__(self,name,d0) :
         decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"]
-        inputs = [d0, SoftTagInParticleFilter("SharedSoftTagChild_pi")]
+        inputs = [d0, SharedSoftTagChild_pi]
         TagDecay.__init__(self,name,decay,inputs)
 
 class D2KsHHH_KSLL(D2HHHKsCombiner) :

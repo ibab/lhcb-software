@@ -82,11 +82,12 @@ class CharmHadD2HHHLines() :
                 }
     
     def locallines(self):
-        from Stages import MassFilter,TagDecay, SoftTagInParticleFilter
+        from Stages import MassFilter,TagDecay
         from Stages import D2KPiPi_SS,D2KPiPi_OS,D2KKPi_SS,D2KKPi_OS,D2PiPiPi,D2KKK
         from Stages import Lc2KPPi, Lc2KPK, Lc2PiPPi, Lc2PiPK
         from Stages import D2KPiPi_SS_LTUNB,D2KKPi_OS_LTUNB,Lc2KPPi_LTUNB
         from Stages import Lc2KPPi_PIDCALIB
+        from Stages import SharedSoftTagChild_pi
         stages = {# First the CPV D2HHH lines
                   'D2KPiPi_SS'        : [MassFilter('D2HHH',inputs=[D2KPiPi_SS('D2HHH')])],
                   'D2KPiPi_OS'        : [MassFilter('D2HHH',inputs=[D2KPiPi_OS('D2HHH')])],
@@ -107,7 +108,7 @@ class CharmHadD2HHHLines() :
                   'Lc2KPPi_PIDCALIB'  : [TagDecay('Lc2KPPi_PIDCALIB_TAG', "[Sigma_c0 -> Lambda_c+ pi-]cc",
                                                   inputs = [ MassFilter('Lc2KPPi_PIDCALIB', 
                                                                         inputs = [Lc2KPPi_PIDCALIB('Lc2KPPi_PIDCALIB')]),
-                                                             SoftTagInParticleFilter('SharedSoftTagChild_pi')]
+                                                             SharedSoftTagChild_pi]
                                                  )]
                  }
         return stages
