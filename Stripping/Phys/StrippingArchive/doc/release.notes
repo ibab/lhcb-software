@@ -4,6 +4,8 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingArchive v1r27 2015-03-13 =========================
+
 ! 2015-03-04 - Stefano Perazzini
  - Removed reference to StrippingSelections in the import of DisplVertices_Utils
    inside python/StrippingArchive/StrippingXX/StrippingDisplVertices.py
@@ -11,9 +13,9 @@
 ! 2015-02-20 - Andrea Contu
  - Update tests/refs/instantiate-all-strip.ref
 
-!========================= StrippingArchive v1r26 2014-01-19 =========================
+!========================= StrippingArchive v1r26 2015-01-19 =========================
 
-! 2014-01-19 - Stefano Perazzini
+! 2015-01-19 - Stefano Perazzini
  -  Update tests/refs/instantiate-all-strip.ref
 
 !========================= StrippingArchive v1r25 2014-11-25 =========================
