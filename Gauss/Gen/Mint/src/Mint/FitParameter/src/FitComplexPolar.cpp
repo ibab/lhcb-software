@@ -79,10 +79,19 @@ std::complex<double> FitComplexPolar::getVal()const{
   if(0.0 == a) return 0;
   double p(phase());
   p*=degFac();
-  return std::polar(a,p);
+  /*
+  bool dbThis=true;
+  if(dbThis){
+    cout << "FitComplexPolar::getVal(): calling PolarMint(" 
+	 << a << ", " << p << ")" << endl;
+    cout << "FitComplexPolar::getVal(): getting: " 
+	 <<  PolarMint(a,p) << endl;
+  }
+  */
+  return PolarMint(a,p);
 }
 std::complex<double> FitComplexPolar::getValInit()const{
-  return std::polar( amp().meanInit(), phase().meanInit() * degFac());
+  return PolarMint( amp().meanInit(), phase().meanInit() * degFac());
 }
 
 void FitComplexPolar::defaultInit(){

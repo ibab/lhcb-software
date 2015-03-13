@@ -8,6 +8,7 @@
 #include "Mint/FitComplex.h"
 #include "Mint/FitComplexPolar.h"
 #include "Mint/FitComplexCart.h"
+#include "Mint/Utils.h"
 
 using namespace std;
 using namespace MINT;
@@ -33,7 +34,7 @@ counted_ptr<FitComplex> MINT::FitComplexMaker(const std::string& name
   if( ptr_polar->gotInitialised()){
     if(dbThis){
       cout << " FitComplexMaker for " << name
-	   << " found polar co-ordinates." << endl;
+	   << " found polar co-ordinates: " << ptr_polar->ComplexVal() << endl;
     }
     return_ptr = ptr_polar;
     count++;

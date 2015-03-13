@@ -460,11 +460,10 @@ std::complex<double> FitAmplitude::getVal(IDalitzEvent* evt){
 
 
 std::complex<double> FitAmplitude::getVal(){
-  //bool dbThis=false;
+  //bool dbThis=true;
   if(isZero()) return 0;
   complex<double> ap(AmpPhase());
   if(0.0 == ap) return 0;
-
 
   /*
   if(dbThis){
@@ -481,6 +480,7 @@ std::complex<double> FitAmplitude::getVal(){
 	 << endl;
   }
   */
+
   return  ap * getValWithoutFitParameters();
 }
 
