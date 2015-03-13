@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-13 - Francesco Dettori
+ - Added SingleMuon directory with inclusive single muon lines (conversion of Hlt2InclusiveMuonLines) 
+ - Added RareCharm directory with exclusive rare charm decays lines 
+ - Added RareStrange directory with exclusive rare strange lines
+	 
 ! 2015-03-13 - Maurizio Martinelli
  - Added replacement lines for D2HHHKs to Hlt2Lines/CharmHad
  - Removed optional request of specific algorithms in LoKi functors
