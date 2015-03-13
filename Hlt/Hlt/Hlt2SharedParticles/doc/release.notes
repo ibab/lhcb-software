@@ -6,6 +6,10 @@
 
 ! 2015-03-02 - Jibo He
  - python/Hlt2SharedParticles/Phi.py
+  . Changed to use Hlt2Member, to make things more clear
+
+! 2015-03-02 - Jibo He
+ - python/Hlt2SharedParticles/Phi.py
   . Switched to RichKaons for both Hlt2SharedPhi2KK and Hlt2SharedUnbiasedPhi2KK
   . Tightened the PIDK cut of Hlt2SharedUnbiasedPhi2KK to PIDK>0.
 
