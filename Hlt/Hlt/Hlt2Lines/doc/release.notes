@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-13 - Jibo He
+ - python/Hlt2Lines/CcDiHadron
+  . Hlt2DiProton(LowMult) and Hlt2DiPhi lines adapted to new template
+
 ! 2015-03-13 - Francesco Dettori
  - Added SingleMuon directory with inclusive single muon lines (conversion of Hlt2InclusiveMuonLines) 
  - Added RareCharm directory with exclusive rare charm decays lines 
