@@ -3,10 +3,11 @@
 ! Responsible : Alex Shires
 !============================================================================
 
+! 2015-03-13 - Andrea Contu
+ - Fixed weird characters in release.notes
 
-! 2015-03-10 - Alessandro Mordà
-Submitted new version of RelInfo for Bstautau analysis, after fixing of bugs
-
+! 2015-03-10 - Alessandro Morda
+ - Submitted new version of RelInfo for Bstautau analysis, after fixing of bugs
 
 
 ! 2015-02-16 - Stefano Perazzini
@@ -19,8 +20,8 @@ Submitted new version of RelInfo for Bstautau analysis, after fixing of bugs
  - Modify Bs2MuMuTrackIsolation not to produce warning when applied to combined particles
 
 
-! 2014-10-07 - Alessandro Mordà
-- Modified all the RelInfoBstautau* tools (exept the RelInfoBstautauCDFiso*) to solve issues related to the RecursionLevel
+! 2014-10-07 - Alessandro Morda
+ - Modified all the RelInfoBstautau* tools (exept the RelInfoBstautauCDFiso*) to solve issues related to the RecursionLevel
 
 ! 2014-09-24 - Ricardo Vazquez Gomez
  - changed doca to log_doca in RelInfoTrackIsolationBDT.cpp
