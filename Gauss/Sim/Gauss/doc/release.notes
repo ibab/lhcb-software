@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2015-03-13 - Gloria Corti
+ - Change random number engine from Ranlux to MTwist, following report by
+   Matt King (MoEDAL) of correlations in Ranlux. 
+   See https://its.cern.ch/jira/browse/LHCBGAUSS-411
+
 ! 2015-03-05 - Gloria Corti
  - Use LHAPDFSet v2r* compatible with LHAPDF6
 
