@@ -4,9 +4,12 @@
 ! Purpose     : Implementation of the powheg-box in Gauss
 !-----------------------------------------------------------------------------
 
-!========================== LbPowheg v2r0 2015-03-13 =========================
+!========================== LbPowheg v3r0 2015-03-13 =========================
 ! 2015-03-06 - Gloria Corti
  - Adapt to LHADPDF 6
+
+!========================== LbPowheg v2r0 2015-03-06 =========================
+! 2015-03-06 - Gloria Corti
  - Increase major version number since some of the changes below rely on 
    powheg-box-v2. NOTE THAT THEY CANNOT BE USED YET!
 
