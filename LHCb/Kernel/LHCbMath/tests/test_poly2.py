@@ -20,8 +20,9 @@ __version__ = "$Revision: 183195 $"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2015-02-10"
 # =============================================================================
-import ROOT, random 
+import ROOT, random, math 
 from LHCbMath.Types import cpp
+from LHCbMath.deriv import Integral
 # =============================================================================    
 try :
     ## just as a sugar, not really needed for the test  
@@ -38,10 +39,16 @@ xmax      =    4
 xminmax   = xmin,xmax
 
 _integrate_exp_ = cpp.Gaudi.Math.integrate
+_exponent_      = 3.7
 
 def integrate_exp ( poly , low , high ) :
-    return _integrate_exp_ ( poly , 1.0 , low , high ) 
-    
+    return _integrate_exp_ ( poly , _exponent_ , low , high ) 
+
+scale     = 2**20 
+SE        = cpp.StatEntity 
+counters  = {}
+integrals = {}
+
 for T in ( cpp.Gaudi.Math.Polynomial   ,
            cpp.Gaudi.Math.Bernstein    ,
            cpp.Gaudi.Math.LegendreSum  ,
@@ -75,37 +82,73 @@ for T in ( cpp.Gaudi.Math.Polynomial   ,
         l._tf1.SetLineColor(4)
         b._tf1.SetLineColor(8)
 
+    n1 = type(o).__name__
+    n1 = n1[ n1.rfind('::') + 2 :]
+    
+    for t in ( p , c , l , b ) :
 
-    for i in range( 0, 1000 ) :
+        n2 = type(t).__name__ 
+        n2 = n2[ n2.rfind('::') +2 : ]
         
-        x = random.uniform ( xmin , xmax )
-        
-        vo = o ( x )
-        vp = p ( x )
-        vc = c ( x )
-        vl = l ( x )
-        vb = b ( x )
-        if abs ( vp  - vo ) > 5.e-14 or \
-           abs ( vc  - vo ) > 5.e-14 or \
-           abs ( vl  - vo ) > 5.e-14 or \
-           abs ( vb  - vo ) > 5.e-14 :
-            print T.__name__, x , vo , vp-vo , vc-vo , vl-vo , vb-vo
+        counters  [ n1 , n2 ] = SE() 
+        integrals [ n1 , n2 ] = SE() 
 
-    ilow  = xmin + 0.3 * ( xmax - xmin )
-    ihigh = xmin + 0.7 * ( xmax - xmin )
+    integrals [ n1 , 'Numeric' ] = SE() 
+
+    def i_fun ( x ) :
+        return o ( x ) * math.exp ( _exponent_ * x )
     
-    io = integrate_exp ( o , ilow , ihigh ) 
-    ip = integrate_exp ( p , ilow , ihigh ) 
-    ic = integrate_exp ( c , ilow , ihigh ) 
-    il = integrate_exp ( l , ilow , ihigh ) 
-    ib = integrate_exp ( b , ilow , ihigh ) 
+    for i in range( 0, 10000 ) :
+        
+        x  = random.uniform ( xmin , xmax )
+        x2 = random.uniform ( xmin , xmax )
+        
+        vo = o ( x )        
+        io = integrate_exp ( o , x , x2 )
+
+        # numerical integral 
+        IN = Integral     ( i_fun , x ) 
+        ni = IN           ( x2        )
+        
+        integrals [ n1 , 'Numeric' ] += (ni-io) * scale 
+
+        for t in ( p , c , l , b ) :
+            
+            n2 = type(t).__name__ 
+            n2 = n2[ n2.rfind('::') +2 : ]
+            
+            vt = t(x)
+            d  = vt - vo
+            counters [ n1 , n2 ] += d * scale 
+            
+            it = integrate_exp ( t , x , x2 )
+            
+            integrals [ n1 , n2 ] += (it-io) * scale 
+            
+
+
+def summary ( cnts ) :
     
-    if abs ( ip  - io ) > 5.e-13 or \
-       abs ( ic  - io ) > 5.e-13 or \
-       abs ( il  - io ) > 5.e-13 or \
-       abs ( ib  - io ) > 5.e-13 :
-        print 'INTEGRALS:', T.__name__, io , ip-io , ic-io , il-io , ib-io
-    
+    keys = cnts.keys()
+    keys.sort() 
+    for k in keys :
+        
+        cnt = cnts[k]
+        
+        m      = cnt.mean() / scale
+        r      = cnt.rms () / scale
+        mn, mx = cnt.minmax()
+        mn    /= scale
+        mx    /= scale
+        m      = m.toString ( '( %0.4g +- %0.4g)' )
+        print " %12s -> %-12s : %-20s %.3g min/max=%.3g/%.3g" % ( k[0], k[1] , m , r , mn , mx )
+        
+        
+print 'VALUES '
+summary ( counters   )
+print 'INTEGRALS'
+summary ( integrals  )
+
 # =============================================================================
 if '__main__' == __name__ :
 

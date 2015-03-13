@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-03-13 - Vanya Belyaev
+ - fix stupid recently introduced bug 
+
 ! 2015-03-12 - Vanya Belyaev
  - add one more test
 

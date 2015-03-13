@@ -380,19 +380,20 @@ namespace
   /// Clenshaw algorithm for summation of Chebyshev polynomials 
   inline double _clenshaw_chebyshev_ 
   ( const std::vector<double>& pars , 
-    const double               x    ) 
+    const long double          x    ) 
   {
     if ( pars.empty() ) { return 0 ; }
     //
-    double b2 = 0 ;
-    double b1 = 0 ;
-    double b0 = 0 ;
+    long double b2 = 0 ;
+    long double b1 = 0 ;
+    long double b0 = 0 ;
     for ( std::vector<double>::const_reverse_iterator ia = 
             pars.rbegin() ; pars.rend() != ia ; ++ia ) 
     {
       b2 = b1 ;
       b1 = b0 ;
-      b0 = (*ia) + 2 * x * b1 - b2 ;
+      // b0 = (*ia) + 2 * x * b1 - b2 ;
+      b0 = std::fma ( 2 * x , b1 , (*ia) - b2 ) ;
     }
     //
     b0 += pars[0] ;
@@ -403,13 +404,13 @@ namespace
   /// clenshaw algorithm for summation of Legendre series 
   inline double _clenshaw_legendre_  
   ( const std::vector<double>& pars , 
-    const double               x    ) 
+    const long double          x    ) 
   {
     if ( pars.empty() ) { return 0 ; }
     //
-    double b2 = 0 ;
-    double b1 = 0 ;
-    double b0 = 0 ;
+    long double b2 = 0 ;
+    long double b1 = 0 ;
+    long double b0 = 0 ;
     for ( int j = pars.size() - 1 ; 0 <= j ; --j ) 
     {
       b2 = b1 ;
@@ -429,8 +430,8 @@ namespace
   {
     if ( first == last ) { return std::make_pair(0.,0.0) ; }
     //
-    double p = *first ;
-    double q = 0      ;
+    long double p = *first ;
+    long double q = 0      ;
     while ( ++first != last ) 
     {
       q = std::fma ( x , q ,  p     ) ; // x * q + p       ;
@@ -509,8 +510,8 @@ namespace
   inline double _affine_ 
   ( const unsigned short j , 
     const unsigned short k , 
-    const double         a , 
-    const double         b ) 
+    const long double    a , 
+    const long double    b ) 
   {
     return 
       k < j ? 0.0 : 
@@ -565,10 +566,10 @@ namespace
    *  @param low  low edge of integration 
    *  @param high high edge of integration 
    */  
-  inline double _monomial_int_ 
+  inline long double _monomial_int_ 
   ( const unsigned int N    ,
-    const double       low  , 
-    const double       high ) 
+    const long double  low  , 
+    const long double  high ) 
   {
     // trivial cases 
     if      ( s_equal ( low , high ) ) { return 0          ; }
@@ -578,8 +579,8 @@ namespace
     else if ( high < low ) 
     { return -_monomial_int_ ( N ,  high , low )  ; }
     //
-    const double ihigh = Gaudi::Math::pow ( high , N + 1 ) ;
-    const double ilow  = Gaudi::Math::pow ( low  , N + 1 ) ;
+    const long double ihigh = Gaudi::Math::pow ( high , N + 1 ) ;
+    const long double ilow  = Gaudi::Math::pow ( low  , N + 1 ) ;
     //
     return ( ihigh - ilow ) / ( N + 1 ) ;
   }
@@ -588,7 +589,7 @@ namespace
    *  @param N the polynomial degree
    *  @param x the point 
    */
-  inline double _monomial_der_
+  inline long double _monomial_der_
   ( const unsigned int N ,
     const double       x )  
   {
@@ -1245,7 +1246,7 @@ Gaudi::Math::Polynomial::Polynomial
   //
   for ( unsigned short i = 0 ; i < np ; ++i ) 
   { 
-    for ( unsigned short k = i ; k < np ; ++k )   // ATTENTION!!!
+    for ( unsigned short k = i ; k < np ; k+=2 )   // ATTENTION!!! 2!
     { 
       const double p = poly.par ( k ) ;
       if ( s_zero ( p ) ) { continue ; }
@@ -1265,7 +1266,7 @@ Gaudi::Math::ChebyshevSum::ChebyshevSum
   const unsigned short np = npars  () ;
   for ( unsigned short i = 0 ; i < np ; ++i ) 
   { 
-    for ( unsigned short k = i ; k < np  ; ++k )
+    for ( unsigned short k = i ; k < np  ; k+=2 ) // ATTENTION !!! 2!
     { 
       const double p = poly.par ( k ) ;
       if ( s_zero ( p ) ) { continue ; }
@@ -1328,15 +1329,15 @@ namespace
   template <class POLYNOMIAL>
   inline double _integrate_
   ( const POLYNOMIAL& poly , 
-    const double      tau  , 
-    const double      low  , 
-    const double      high ) 
+    const long double tau  , 
+    const long double low  , 
+    const long double high ) 
   {
-    const double xlow  = std::max ( low  , poly.xmin() ) ;
-    const double xhigh = std::min ( high , poly.xmax() ) ;
+    const long double xlow  = std::max ( low  , (long double) poly.xmin() ) ;
+    const long double xhigh = std::min ( high , (long double) poly.xmax() ) ;
     //
-    const double p1 = ( poly ( xhigh ) * std::exp ( tau * xhigh ) - 
-                        poly ( xlow  ) * std::exp ( tau * xlow  ) ) / tau ;
+    const long double p1 = ( poly ( xhigh ) * std::exp ( tau * xhigh ) - 
+                             poly ( xlow  ) * std::exp ( tau * xlow  ) ) ;
     //
     if ( 1 >= poly.npars  () ) { return p1 / tau ; } // RETURN 
     //

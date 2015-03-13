@@ -2,6 +2,10 @@
 // ============================================================================
 // Include files 
 // ============================================================================
+// STD& STL
+// ============================================================================
+#include <array>
+// ============================================================================
 // LHCbMath 
 // ============================================================================
 #include "LHCbMath/LHCbMath.h"
@@ -35,11 +39,11 @@ namespace
   // ==========================================================================
   // De Casteljau's algorithm
   template <class ITERATOR>
-  double _casteljau_
-  ( ITERATOR     first ,
-    ITERATOR     last  ,
-    const double t0    ,
-    const double t1    )
+  long double _casteljau_
+  ( ITERATOR          first ,
+    ITERATOR          last  ,
+    const long double t0    ,
+    const long double t1    )
   {
     // the trivial cases
     if      ( first == last    ) { return 0       ; }
@@ -213,14 +217,14 @@ Gaudi::Math::Bernstein::indefinite_integral
 ( const double C ) const 
 {
   //
-  std::vector<double> ck ( npars() + 1 , 0.0 ) ;
+  std::vector<long double> ck ( npars() + 1 , 0.0 ) ;
   std::partial_sum   ( m_pars.begin () , m_pars.end   () ,  ck.begin() + 1 ) ;
   Gaudi::Math::scale ( ck , ( m_xmax - m_xmin ) / npars() ) ;
   //
   // add the integration constant 
   if ( !s_zero ( C ) ) 
   {
-    for ( std::vector<double>::iterator ic = ck.begin() ; ck.end() != ic ; ++ic ) 
+    for ( std::vector<long double>::iterator ic = ck.begin() ; ck.end() != ic ; ++ic ) 
     { (*ic) += C ; }
   }
   //
@@ -247,7 +251,7 @@ double Gaudi::Math::Bernstein::integral ( const double low  ,
   //
   // make integration: 
   //
-  std::vector<double> ck ( npars() + 1 , 0.0 ) ;
+  std::vector<long double> ck ( npars() + 1 , 0.0 ) ;
   std::partial_sum ( m_pars.begin () , m_pars.end   () ,  ck.begin() + 1 ) ;
   Gaudi::Math::scale ( ck , ( m_xmax - m_xmin ) / npars() ) ;
   //
@@ -260,7 +264,7 @@ Gaudi::Math::Bernstein
 Gaudi::Math::Bernstein::derivative () const 
 {
   //
-  std::vector<double>   ck ( npars() , 0 ) ;
+  std::vector<long double>   ck ( npars() , 0 ) ;
   std::adjacent_difference ( m_pars.begin () , m_pars.end() , ck.begin() ) ;
   Gaudi::Math::scale ( ck , ( npars() - 1 )/ ( m_xmax - m_xmin ) ) ;
   //
@@ -272,7 +276,7 @@ double Gaudi::Math::Bernstein::derivative ( const double x   ) const
   if      ( m_pars.size() <= 1       ) { return 0 ; }
   else if ( x < m_xmin || x > m_xmax ) { return 0 ; }
   //
-  std::vector<double>   ck ( npars() , 0 ) ;
+  std::vector<long double>   ck ( npars() , 0 ) ;
   std::adjacent_difference ( m_pars.begin () , m_pars.end() , ck.begin() ) ;
   //
   // get the t-values
@@ -301,12 +305,20 @@ double Gaudi::Math::Bernstein::operator () ( const double x ) const
   //
   // get the t-values
   //
-  const double t0 = t ( x ) ;
-  const double t1 = 1 - t0  ;
+  const long double t0 = t ( x ) ;
+  const long double t1 = 1 - t0  ;
   //
   // start de casteljau algorithm:
   //
-  std::vector<double> dcj ( m_pars ) ;
+  // use fixed size: 
+  if (  npars() < 16 ) 
+  {
+    std::array<long double,16> _pars;
+    std::copy( m_pars.begin() , m_pars.end() , _pars.begin() ) ;
+    return _casteljau_ ( _pars.begin() , _pars.begin() + npars() , t0 , t1 ) ;
+  }
+  // generic case:
+  std::vector<long double> dcj ( m_pars.begin() , m_pars.end() ) ;
   return _casteljau_ ( dcj.begin() , dcj.end() , t0 , t1 ) ;
 }
 // ============================================================================
@@ -338,10 +350,10 @@ double Gaudi::Math::casteljau
 ( const std::vector<double>& pars , 
   const double               x    ) 
 {
-  std::vector<double> _tmp ( pars ) ;
+  std::vector<long double> _tmp ( pars.begin() , pars.end () ) ;
   //
-  const double t0 =     x  ;
-  const double t1 = 1 - t0 ;
+  const long double t0 =     x  ;
+  const long double t1 = 1 - t0 ;
   //
   return _casteljau_ ( _tmp.begin() , _tmp.end  () , t0 , t1 ) ;
 }
@@ -382,9 +394,9 @@ namespace
    *  http://www.degruyter.com/view/j/cmam.2003.3.issue-4/cmam-2003-0038/cmam-2003-0038.xml  eq. 15
    */
   inline 
-  double c2b_mtrx ( const unsigned short j , 
-                    const unsigned short k ,
-                    const unsigned short n ) 
+  long double c2b_mtrx ( const unsigned short j , 
+                         const unsigned short k ,
+                         const unsigned short n ) 
   {
     const unsigned short imin = std::max ( 0 , j + k - n ) ;
     const unsigned short imax = std::min ( j ,     k     ) ;
@@ -400,15 +412,16 @@ namespace
         Gaudi::Math::choose ( n - k , j - i ) ;
     }
     //
-    return r / double ( Gaudi::Math::choose ( n , j ) ) ;
+    return r / (  (long double)  Gaudi::Math::choose ( n , j ) ) ;
   }
   // ==========================================================================
   /** transformation matrix from monomial to bernstein basis
    */
   inline 
-  double m2b_mtrx ( const unsigned short j , 
-                    const unsigned short k ,
-                    const unsigned short n ) 
+  long double m2b_mtrx 
+  ( const unsigned short j , 
+    const unsigned short k ,
+    const unsigned short n ) 
   {
     //
     return
@@ -419,12 +432,12 @@ namespace
   // ==========================================================================
   /// affine transformation of polynomial
   inline 
-  double m2m_mtrx_2
+  long double m2m_mtrx_2
   ( const unsigned short j , 
     const unsigned short k ) 
   {
     if ( k < j ) { return 0 ; }
-    const double c = 
+    const long double c = 
       Gaudi::Math::choose ( k , j ) * Gaudi::Math::pow ( 2 , j ) ;
     //
     return 0 == ( k - j ) % 2 ?  c : -c ;
