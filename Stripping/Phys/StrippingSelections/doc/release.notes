@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingSelections v4r0 2015-03-13 ===============
+
 ! 2015-03-07 - Stefano Perazzini
  - Reverted python/StrippingSelections/Utils.py to r184919
 
