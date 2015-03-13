@@ -95,7 +95,7 @@ std::pair<M, bool> compareSMatrix(M& A, M& B, bool symetric=true,
   for (int i=0; i< A.kCols; i++)
     for (int j=(symetric==true?i:0); j< A.kRows; j++) 
     { 
-      cmpres(i, j) = (A(i,j) - B(i,j)) /B(i,j);
+      cmpres(i, j) = (A(i,j) - B(i,j));
       if (TMath::Abs(cmpres(i,j)) > diffThreshold)
       {
         hasDiff = true;
