@@ -730,11 +730,11 @@ var RunStatusDisplay = function(partition,provider,logger) {
     prop.add(prefix+'general.dataType',           'Data type',1);
     prop.add(prefix+'Storage.storeFlag',          'Data destination',1);
 
-    prop.add(prefix+'TFC.nTriggers',              'Number of L0 events',1);
+    prop.add(prefix+'TFC.nTriggers',              'Number of L&Oslash; events',1);
     prop.add(prefix+'HLTFarm.hltNTriggers',       'Number of HLT Accept events',1);
 
-    prop.addFormat(prefix+'TFC.triggerRate',      'L0 Trigger Rate',1,'%8.2f Hz');
-    prop.addFormat(prefix+'TFC.runTriggerRate',   'Integrated L0 trigger rate',1,'%8.2f Hz');
+    prop.addFormat(prefix+'TFC.triggerRate',      'L&Oslash; Trigger Rate',1,'%8.2f Hz');
+    prop.addFormat(prefix+'TFC.runTriggerRate',   'Integrated L&Oslash; trigger rate',1,'%8.2f Hz');
 
     prop.addFormat(prefix+'HLTFarm.hltRate',      'HLT Accept Rate',1,'%8.2f Hz');
     prop.addFormat(prefix+'HLTFarm.runHltRate',   'Integrated HLT accept rate',1,'%8.2f Hz');
@@ -751,9 +751,9 @@ var RunStatusDisplay = function(partition,provider,logger) {
     prop.addFormat(prefix+'TFC.runDeadTime',      'Integrated dead-time',1,'%8.2f %%');
 
     if ( this._partition=='LHCb' || this._partition=='TRG' )  {
-      prop.add(prefix+'Trigger.L0Type',             'L0 configuration',1);
+      prop.add(prefix+'Trigger.L0Type',           'L&Oslash; configuration  (L&Oslash;-TCK)',2);
     }
-    prop.add(prefix+'Trigger.TCKLabel',           'HLT configuration (TCK)',2);
+    prop.add(prefix+'Trigger.TCKLabel',           'HLT configuration (HLT-TCK)',2);
 
     prop.build_horizontal();
     this.run_properties.appendChild(this.runPropertyDisplay);

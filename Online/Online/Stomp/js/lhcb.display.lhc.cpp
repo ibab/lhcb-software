@@ -578,7 +578,7 @@ var LHCStatus = function(msg)   {
 
     tb.className = tab.className = 'MonitorInnerFrame';
     this.heading = document.createElement('tr');
-    var cell = Cell('<IMG src="http://lhc.web.cern.ch/lhc/images/LHC.gif" height="64"/> LHC machine and beam status',1,'MonitorBigHeader');
+    var cell = Cell('<IMG src="'+_fileBase+'/Images/lhc-logo.gif" height="64"/> LHC machine and beam status',1,'MonitorBigHeader');
     cell.style.textAlign = 'left';
     cell.style.width = '60%';
     this.heading.appendChild(cell);

@@ -70,6 +70,7 @@ var OutputLogger = function(parent, len, level, style)  {
   };
 
   this.print = function(level, msg) {
+    /*
     if ( this.lines != null && level <= this.level && this.length>0 ) {
      if ( this.lines.length < this.length ) {
 	this.lines.length = this.lines.length+1;
@@ -93,6 +94,7 @@ var OutputLogger = function(parent, len, level, style)  {
       this.showMessages();
       this.curr = this.curr + 1;
     }
+    */
     return this;
   };
 

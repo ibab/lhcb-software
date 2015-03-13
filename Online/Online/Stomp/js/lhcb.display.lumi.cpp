@@ -26,37 +26,26 @@ var LumiStatus = function(msg)   {
     this.lhc_state   = lhcb.widgets.LHCStateSummary(opts);
     this.shift       = lhcb.widgets.LHC_operator_comments();
     this.plan        = lhcb.widgets.LHCb_PlanOfDay({style:'MonitorDataHeader',legend:true,logger:this.logger});
-    this.magnet      = lhcb.widgets.MagnetSummary(opts);
     this.velo        = lhcb.widgets.velo.positionSummary(opts);
-    this.bkg         = lhcb.widgets.BackgroundSummary(opts);
+    this.trg         = lhcb.widgets.TriggerSetup(opts);
     this.run         = lhcb.widgets.RateSummary(opts);
     this.effi_1      = lhcb.widgets.DAQEfficiency(opts);
     opts.efficiency_type = 'Time';
     //opts.style = null;
     this.effi_2      = lhcb.widgets.DAQEfficiency(opts);
-    /*
-    this.lhcb        = lhcb.widgets.SystemSummary({style:'Arial12pt',
-						      system: 'LHCb',
-						      title: 'LHCb Subsystem State',
-						      split: false,
-						      items: ['DCS','DAI','DAQ','RunInfo','HLT','TFC','Storage'],
-						      legend:true,
-						      rowing:true,
-						      logger:this.logger});
-
-    this.left.addItem(this.lhcb);
-    */
+    this.deferred    = lhcb.widgets.DeferredHLT(opts);
     this.left.addItem(this.run);
-    this.left.addItem(this.shift);
-    //this.left.addItem(this.plan);
+    this.left.addSpacer('30px');
+    this.left.addItem(this.effi_1);
+    this.left.addItem(this.effi_2);
+    this.left.addItem(this.deferred);
+
 
     this.right.addItem(this.lhc_state);
-    this.right.addItem(this.magnet);
+    this.right.addItem(this.trg);
     this.right.addItem(this.velo);
-    this.right.addItem(this.bkg);
-    //this.right.addSpacer('90px');
-    this.right.addItem(this.effi_1);
-    this.right.addItem(this.effi_2);
+    this.right.addItem(this.shift);
+    this.right.addItem(this.plan);
   };
   return table;
 };

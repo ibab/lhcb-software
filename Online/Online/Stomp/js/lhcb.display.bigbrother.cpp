@@ -236,8 +236,9 @@ function _loadWidgets() {
     tab.lumiNOW     = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_GP','Text-Right','%9.2f');
     tab.neventsRec  = StyledItem('lbWeb.LHCb_RunInfo.HLTFarm.hltNTriggers','Text-Right',null);
     tab.neventsIn   = StyledItem('lbWeb.LHCb_RunInfo.TFC.nTriggers','Text-Right',null);
-    tab.lumiYearDel = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntDel_annual_3500','Text-Right',"%9.2f");
-    tab.lumiYearRec = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntRec_annual_3500','Text-Right',"%9.2f");
+    tab.lumiYearDel = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntDel_annual_4000','Text-Right',"%9.2f");
+    tab.lumiYearRec = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntRec_annual_4000','Text-Right',"%9.2f");
+    tab.neventsIn.style.width = '40%';
 
     tab.lumi = StyledItem('lbWeb.LHCbPerformance.CurrentLuminosities',null,null);
     tab.lumi.parent = tab;
@@ -285,12 +286,12 @@ function _loadWidgets() {
     tb.appendChild(tr = document.createElement('tr'));
     tr.appendChild(Cell('No. L&Oslash; events',null,'MonitorDataHeader'));
     tr.appendChild(tab.neventsIn);
-    tr.appendChild(Cell('',null,null));
+    tab.neventsIn.colSpan = 2;
 
     tb.appendChild(tr = document.createElement('tr'));
     tr.appendChild(Cell('Evts.recorded',null,'MonitorDataHeader'));
     tr.appendChild(tab.neventsRec);
-    tr.appendChild(Cell('',null,null));
+    tab.neventsRec.colSpan = 2;
 
     if ( options.style ) {
       tb.appendChild(tr = document.createElement('tr'));
@@ -366,7 +367,7 @@ function _loadWidgets() {
     if ( options.fontSize )
       tab.style.fontSize = tb.style.fontSize = options.fontSize;
     if ( options.style )
-      tr.appendChild(Cell('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Instantaneous Luminosity Measurements&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',3,options.style));
+      tr.appendChild(Cell('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Instantaneous Luminosity and Event Rates&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',3,options.style));
     else
       tr.appendChild(Cell('',3,null));
     tb.appendChild(tr);
@@ -376,8 +377,8 @@ function _loadWidgets() {
     //cell.style.width = '30%';
     tr.appendChild(tab.lumiBLSA);
     tr.appendChild(tab.lumiBLSC);
-    tab.lumiBLSA.style.width = '30%';
-    tab.lumiBLSC.style.width = '30%';
+    tab.lumiBLSA.style.width = '33%';
+    tab.lumiBLSC.style.width = '33%';
 
     /*
     tb.appendChild(tr = document.createElement('tr'));
@@ -402,7 +403,7 @@ function _loadWidgets() {
     tr.appendChild(tab.lumiGP);
 
     tb.appendChild(tr = document.createElement('tr'));
-    tr.appendChild(Cell('Interaction rate', null,'MonitorDataHeader'));
+    tr.appendChild(Cell('Interactions', null,'MonitorDataHeader'));
     tr.appendChild(tab.lumiRate);
     tr.appendChild(Cell('', null,'Text-Right'));
 
@@ -422,7 +423,7 @@ function _loadWidgets() {
     tr.appendChild(tab.LumiIn);
 
     tb.appendChild(tr = document.createElement('tr'));
-    tr.appendChild(Cell('Beam gas rate', null,'MonitorDataHeader'));
+    tr.appendChild(Cell('Beamgas rate', null,'MonitorDataHeader'));
     tr.appendChild(tab.BeamGasEx);
     tr.appendChild(tab.BeamGasIn);
 
@@ -551,7 +552,7 @@ function _loadWidgets() {
 
     tb.appendChild(tr = document.createElement('tr'));
     tr.appendChild(cell=Cell('Delivered',1,'MonitorDataHeader'));
-    cell.style.width = "30%";
+    cell.style.width = "20%";
     tr.appendChild(tab.lumi_DELIVERED=Cell('',1,'Text-Right'));
     tr.appendChild(Cell('&mu;b<sup>-1</sup>',1,null));
     if ( options.style )
@@ -867,14 +868,16 @@ var BigBrother = function(msg)   {
 
     tr.vAlign='top';
     tr.appendChild(td=document.createElement('td'));
-    td.style.width = '35%';
+    td.style.width = '40%';
     td.appendChild(fillTimes);
 
     tr.appendChild(td=document.createElement('td'));
     td.appendChild(interactionRates);
     td.rowSpan = 2;
+    td.style.width = '40%';
     tr.appendChild(td=document.createElement('td'));
     td.appendChild(fillLumi);
+    td.style.width = '30%';
     td.rowSpan = 2;
 
     tab = document.createElement('table');

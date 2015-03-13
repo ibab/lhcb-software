@@ -42,7 +42,15 @@ var RamsesStatus = function(msg)   {
       this.style.backgroundColor = 'orange';
     else 
       this.style.backgroundColor = '#bbbbcc';
-    return data;
+    return table.format_conversion(data);
+  };
+
+  table.format_conversion = function(data) {
+    var v = parseFloat(data);
+    if ( data > 999.0 )  {
+      return sprintf('%7.3f mSv/h',v/1000.0);
+    }
+    return sprintf('%7.3f &mu;Sv/h',v);
   };
 
   /// Install sensor as table item on the display
@@ -57,17 +65,21 @@ var RamsesStatus = function(msg)   {
     }
   };
 
-  table.bindSensor = function(name, cnv) {
-    this[name+'_rate'] = StyledItem('lbWeb.ExternalApps/RAMSES/LHCb/'+name+'.DoseRate',   'Dose',   '%7.3f &mu;Sv/h');
+  table.bindSensor = function(name, cnv_rate, cnv_avg, alarms) {
+    this[name+'_rate'] = StyledItem('lbWeb.ExternalApps/RAMSES/LHCb/'+name+'.DoseRate',   'Dose',   null);//'%7.3f &mu;Sv/h');
     document.getElementById(name+'_curr').appendChild(this[name+'_rate']);
     this.items.push(this[name+'_rate']);
-    this[name+'_avg'] = StyledItem('lbWeb.ExternalApps/RAMSES/LHCb/'+name+'.MeanDoseRate','Average','%7.3f &mu;Sv/h');
+    this[name+'_avg'] = StyledItem('lbWeb.ExternalApps/RAMSES/LHCb/'+name+'.MeanDoseRate','Average',null);//'%7.3f &mu;Sv/h');
     document.getElementById(name+'_avg').appendChild(this[name+'_avg']);
     this.items.push(this[name+'_avg']);
 
-    if ( cnv )   {
-      // Enable the display of alarms for specified items
-      this[name+'_avg'].conversion = cnv;
+    if ( cnv_avg )   {      // Enable the display of alarms for specified items
+      this[name+'_avg'].conversion = cnv_avg;
+    }
+    if ( cnv_rate )   {      // Enable the display of alarms for specified items
+      this[name+'_rate'].conversion = cnv_rate;
+    }
+    if ( alarms ) {
       // Set tooltips
       tooltips.set(document.getElementById(name+'_tab'),'Radiation sensor '+name+':<br>High alarm threshold:'+this.high_threshold+' &mu;Sv/h<br>Low alarm threshold:'+this.low_threshold+' &mu;Sv/h');
     }
@@ -113,7 +125,8 @@ var RamsesStatus = function(msg)   {
     this.jg.setColor('blue');
     this.jg.drawLine( 90+offset_x,120+offset_y,160+offset_x,250+offset_y); // PAXL6501
     this.jg.drawLine(200+offset_x,180+offset_y,230+offset_x,285+offset_y); // PAXL8521
-    this.jg.drawLine(270+offset_x,120+offset_y,300+offset_x,295+offset_y); // PAXL8502_CabOnly
+    this.jg.drawLine( 90+offset_x,480+offset_y,250+offset_x,330+offset_y); // PAXL8531
+    this.jg.drawLine(270+offset_x,120+offset_y,300+offset_x,295+offset_y); // PMIL8502
     this.jg.drawLine(440+offset_x,120+offset_y,440+offset_x,250+offset_y); // PMIL8513
     this.jg.drawLine(350+offset_x,180+offset_y,430+offset_x,295+offset_y); // PMIL8514
     this.jg.setColor('green');
@@ -126,13 +139,14 @@ var RamsesStatus = function(msg)   {
     this.jg.drawLine(400+offset_x,600+offset_y,510+offset_x,470+offset_y); // PMIL8515
     this.jg.drawLine(400+offset_x,480+offset_y,430+offset_x,420+offset_y); // PMIL8511
     this.jg.drawLine(400+offset_x,350+offset_y,480+offset_x,370+offset_y); // PMIL8501
-    this.jg.drawLine(200+offset_x,480+offset_y,230+offset_x,400+offset_y); // PAXL8512
+    this.jg.drawLine(230+offset_x,480+offset_y,230+offset_x,400+offset_y); // PAXL8512
 
     this.jg.setStroke(1);
     this.jg.drawString(this.installSensor('PAXL8501'), 60+offset_x,70+offset_y);
-    this.jg.drawString(this.installSensor('PAXL8502_CabOnly'),200+offset_x,70+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8502'),200+offset_x,70+offset_y);
     this.jg.drawString(this.installSensor('PAXL8521'),170+offset_x,150+offset_y);
-    this.jg.drawString(this.installSensor('PAXL8512'),150+offset_x,470+offset_y);
+    this.jg.drawString(this.installSensor('PAXL8531'), 70+offset_x,470+offset_y);
+    this.jg.drawString(this.installSensor('PAXL8512'),200+offset_x,470+offset_y);
     this.jg.drawString(this.installSensor('PATL8511'),750+offset_x,470+offset_y);
     this.jg.drawString(this.installSensor('PMIL8411'),550+offset_x,570+offset_y);
     this.jg.drawString(this.installSensor('PMIL8501'),350+offset_x,320+offset_y);
@@ -156,20 +170,20 @@ var RamsesStatus = function(msg)   {
     tooltips.set(document.getElementById('Env_tab'),'Display of environmental parameters in the cavern.');
     this.items.push(s);
 
-    this.bindSensor('PAXL8501',this.sensor_conversion);
-    this.bindSensor('PAXL8502_CabOnly',this.sensor_conversion);
-    this.bindSensor('PAXL8512',this.sensor_conversion);
-    this.bindSensor('PAXL8521',this.sensor_conversion);
-    this.bindSensor('PATL8511',this.sensor_conversion);
-    this.bindSensor('PMIL8411',null);
-    this.bindSensor('PMIL8501',null);
-    this.bindSensor('PMIL8511',null);
-    this.bindSensor('PMIL8512',null);
-    this.bindSensor('PMIL8513',null);
-    this.bindSensor('PMIL8514',null);
-    this.bindSensor('PMIL8515',null);
-    this.bindSensor('PMIL8531',null);
-    this.bindSensor('PMIL8611',null);
+    this.bindSensor('PAXL8501',this.format_conversion,this.sensor_conversion,true);
+    this.bindSensor('PAXL8512',this.format_conversion,this.sensor_conversion,true);
+    this.bindSensor('PAXL8521',this.format_conversion,this.sensor_conversion,true);
+    this.bindSensor('PATL8511',this.format_conversion,this.sensor_conversion,true);
+    this.bindSensor('PMIL8411',this.format_conversion,this.format_conversion,false);
+    this.bindSensor('PMIL8501',this.format_conversion,this.format_conversion,false);
+    this.bindSensor('PMIL8502',this.format_conversion,this.format_conversion,false);
+    this.bindSensor('PMIL8511',this.format_conversion,this.format_conversion,false);
+    this.bindSensor('PMIL8512',this.format_conversion,this.format_conversion,false);
+    this.bindSensor('PMIL8513',this.format_conversion,this.format_conversion,false);
+    this.bindSensor('PMIL8514',this.format_conversion,this.format_conversion,false);
+    this.bindSensor('PMIL8515',this.format_conversion,this.format_conversion,false);
+    this.bindSensor('PMIL8531',this.format_conversion,this.format_conversion,false);
+    this.bindSensor('PMIL8611',this.format_conversion,this.format_conversion,false);
 
     // Add Legend
     document.getElementById('Legend_curr').appendChild(Cell('Current Rate',null,'Dose'));
