@@ -1550,9 +1550,10 @@ class Gauss(LHCbConfigurableUser):
     ##
     def configureRndmEngine( self ):
         # Random number service
-        from Configurables import HepRndm__Engine_CLHEP__RanluxEngine_    
         rndmSvc = RndmGenSvc()
-        engine = HepRndm__Engine_CLHEP__RanluxEngine_("RndmGenSvc.Engine")
+        rndmSvc.Engine = "HepRndm::Engine<CLHEP::MTwistEngine>"
+        from Configurables import HepRndm__Engine_CLHEP__MTwistEngine_
+        engine = HepRndm__Engine_CLHEP__MTwistEngine_("RndmGenSvc.Engine")
         engine.SetSingleton = True
 
 
