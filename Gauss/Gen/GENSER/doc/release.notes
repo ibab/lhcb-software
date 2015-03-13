@@ -4,6 +4,10 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================= GENSER v16r0p1 2015-03-13 =========================
+! 2015-03-13 - Gloria Corti
+ - Dummy release for building distribution with LCG_71root6
+
 !========================== GENSER v16r0 2015-03-13 ==========================
 ! 2014-11-20 - Gloria Corti
  - Use of lhapdf 6 is now as a version of lhapdf and not a separate package
