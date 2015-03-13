@@ -555,9 +555,12 @@ class RichRecSysConf(RichRecSysBaseConf) :
                 from TrackFitter.ConfiguredFitters import ConfiguredFit
                 from Configurables import TrackStateInitAlg
                 tracksLoc = self.trackConfig().getProp("InputTracksLocation")
-                sequence.Members += [ TrackStateInitAlg( name = "InitRichTrackStates",
-                                                         TrackLocation = tracksLoc ),
-                                      ConfiguredFit("RefitRichTracks",tracksLoc) ]
+                init = TrackStateInitAlg( name = "InitRichTrackStates",
+                                          TrackLocation = tracksLoc )
+                fit = ConfiguredFit("RefitRichTracks",tracksLoc)
+                #init.OutputLevel = 1
+                #fit.OutputLevel = 1
+                sequence.Members += [ init, fit ]
 
             #-----------------------------------------------------------------------------
             # RICH RawEvent decoding
@@ -655,10 +658,12 @@ class RichRecSysConf(RichRecSysBaseConf) :
             #-------------------------------------------------------------------------
             # Finalise (merge results from various algorithms)
             #-------------------------------------------------------------------------
-            from Configurables import Rich__Rec__PIDMerge
-            pidMerge = self.makeRichAlg(Rich__Rec__PIDMerge,"Merge"+cont+"RichPIDs")
-            pidMerge.OutputLocation = self.getProp("RichPIDLocation")
-            pidMerge.InputLocations = pidLocs
-            sequence.Members += [pidMerge]
+            pidMode = self.getProp("PidConfig")
+            if pidMode != "None" :
+                from Configurables import Rich__Rec__PIDMerge
+                pidMerge = self.makeRichAlg(Rich__Rec__PIDMerge,"Merge"+cont+"RichPIDs")
+                pidMerge.OutputLocation = self.getProp("RichPIDLocation")
+                pidMerge.InputLocations = pidLocs
+                sequence.Members += [pidMerge]
 
 
