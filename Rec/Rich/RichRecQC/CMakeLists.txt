@@ -6,7 +6,8 @@ gaudi_subdir(RichRecQC v2r68)
 gaudi_depends_on_subdirs(Event/MCEvent
                          Kernel/MCInterfaces
                          Rich/RichAlignment
-                         Rich/RichRecBase)
+                         Rich/RichRecBase
+                         Rich/RichRecSys)
 
 gaudi_add_module(RichRecQC
                  src/*.cpp

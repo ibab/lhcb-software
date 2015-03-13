@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2015-03-13 - Chris Jones
+ - Add package dependency on RichRecSys.
+
 ! 2015-03-10 - Chris Jones
  - Remove all calls that required access to the underlying group configurables
    in RichRecSys.

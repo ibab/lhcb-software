@@ -16,6 +16,7 @@ branches          cmt doc src python
 #=====================================================================
 use MCEvent              v*    Event
 use RichRecBase          v*    Rich
+use RichRecSys           v*    Rich
 use MCInterfaces         v*    Kernel
 use RichAlignment        v*    Rich
 
