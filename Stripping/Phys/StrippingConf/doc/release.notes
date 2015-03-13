@@ -4,6 +4,8 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingConf v4r15 2015-03-13 =========================
+
 ! 2015-03-03 - Stefano Perazzini
  - Bug fix to StrippingStream.py
 
