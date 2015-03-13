@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-13 - Stefano Perazzini
+ - Some polishing in python/Hlt2Lines/B2HH directory.
+
 ! 2015-03-12 - Albert Puig
  - Add first batch of Radiative lines.
 

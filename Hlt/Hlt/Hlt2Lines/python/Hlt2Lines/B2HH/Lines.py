@@ -1,3 +1,38 @@
+# =============================================================================
+# $Id:$
+# =============================================================================
+## @file
+#  Implementation of Hlt2-lines devoted to charmless 2-body B decays.
+#  Two kind of lines are present:
+#    1) An inclusive line of all the modes done under the pi+pi- final 
+#       state hypothesis. This line use cuts that introduce an acceptance in
+#       the decay-time.
+#    2) A set of exclusive lines for all the modes. This stage
+#       don't use cuts that may introduce an acceptance in the decay-time.
+#       In order to achieve this the usage of PID variables is necessary.
+#
+#
+#  @author Stefano Perazzini Stefano.Perazzini@cern.ch
+#  @date   2015-03-13
+#  
+#                    $Revision:$
+#  Last modification $Date:$
+#  by                $Author:$
+# =============================================================================
+""" Implementation of Hlt2-lines devoted to charmless 2-body B decays.
+    Two kind of lines are present:
+      1) An inclusive line of all the modes done under the pi+pi- final 
+         state hypothesis. This line use cuts that introduce an acceptance in
+         the decay-time.
+      2) A set of exclusive lines for all the modes. This stage
+         don't use cuts that may introduce an acceptance in the decay-time.
+         In order to achieve this the usage of PID variables is necessary.
+"""
+__version__ = "$Revision: $"
+__author__  = "Stefano Perazzini Stefano.Perazzini@cern.ch"
+__date__    = "2015-03-13"
+__all__     = ( 'B2HHLines'  )
+
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
@@ -13,7 +48,7 @@ class B2HHLines(Hlt2LinesConfigurableUser):
                                 'SumPT'         : 4500 * MeV,  
                                 'PionIPCHI2'    : 9,  
                                 'DOCACHI2'      : 25,   
-                                'BIPCHI2'       : 9,  
+                                'BIPCHI2'       : 16,  
                                 'BDIRA'         : 0.9,  
                                 'BPT'           : 1200 * MeV,  
                                 'BFDCHI2'       : 100,
