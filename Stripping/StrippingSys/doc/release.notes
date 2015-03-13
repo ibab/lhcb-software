@@ -3,6 +3,7 @@ Package     : StrippingSys
 Package Coordinator : Andrea.Contu@cern.ch, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v9r5 2015-03-13 =========================
 
 ! 2015-02-05 - Eduardo Rodrigues
  - Removed Phys/MvaPreSelB2DH from StrippingSys
