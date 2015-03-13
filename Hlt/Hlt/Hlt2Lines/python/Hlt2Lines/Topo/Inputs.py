@@ -1,4 +1,6 @@
 from Hlt2SharedParticles.TrackFittedBasicParticles import \
     BiKalmanFittedKaonsWithMuonID
-from HltTracking.Hlt2TrackingConfigurations import \
-    Hlt2BiKalmanFittedForwardTracking
+from Hlt2SharedParticles.TrackFittedBasicParticles import \
+    BiKalmanFittedKaonsWithEID
+from Hlt2SharedParticles.TrackFittedBasicParticles import \
+    BiKalmanFittedPhotonsFromL0
