@@ -4,6 +4,8 @@
 ! Purpose     : Helpers for safely building stripping components.
 !-----------------------------------------------------------------------------
 
+!========================= StrippingUtils v1r10 2015-03-13 =========================
+
 ! 2015-03-04 - Stefano Perazzini
  - Bug fix to Phys/StrippingUtils/Utils.py
 

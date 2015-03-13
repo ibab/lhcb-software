@@ -1,7 +1,7 @@
 ################################################################################
 # Package: StrippingUtils
 ################################################################################
-gaudi_subdir(StrippingUtils v1r9)
+gaudi_subdir(StrippingUtils v1r10)
 
 gaudi_depends_on_subdirs(Phys/StrippingConf
                          PhysSel/PhysSelPython)
