@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-13 - Jibo He
+ - python/Hlt2Lines/CcDiHadron/Lines.py
+  . Updated DiPhi cuts, as "(INTREE( ('K+'==ABSID)...)" seems to only cut on one of kaons.
+  . Now new-template lines select same number of events as the old-style lines
+
 ! 2015-03-14 - Mika Vesterinen
  - python/Hlt2Lines/TrackEff
    TrackEff/Inputs.py now uses RevivedVelo for the velo tracks

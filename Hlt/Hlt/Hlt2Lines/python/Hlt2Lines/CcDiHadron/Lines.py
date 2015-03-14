@@ -44,7 +44,9 @@ class CcDiHadronLines(Hlt2LinesConfigurableUser):
                                 'L0Req'   : "(L0_DATA('Spd(Mult)') < 600 )",
                                 'Hlt1Req' : None, 
                                 'DauCuts' : """
-                                            (INTREE( ('K+'==ABSID) & (PT > 0.65*GeV)
+                                            (INTREE( ('K+'==ID) & (PT > 0.65*GeV)
+                                            & (P > 3.*GeV) & (TRCHI2DOF < 3.) & (PIDK > 0.)))
+                                            & (INTREE( ('K-'==ID) & (PT > 0.65*GeV)
                                             & (P > 3.*GeV) & (TRCHI2DOF < 3.) & (PIDK > 0.)))
                                             & (PT > 0.8*GeV)
                                             & (VFASPF(VCHI2PDOF) < 9)
