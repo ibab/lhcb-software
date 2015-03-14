@@ -111,7 +111,7 @@ def l0entryName    ( line, level = 'Hlt1' ) :
 ## Convention: the name of 'HLTFilter' algorithm inside HltLine
 def hltentryName    ( line, level = 'Hlt1' ) :
     """ Convention: the name of 'HLTFilter' algorithm inside HltLine """
-    return '%s%sHltFilter'   % (level,line)
+    return '%s%sHlt1Filter'   % (level,line)
 
 ## Convention: the name of 'VoidFilter' algorithm inside HltLine
 def voidName    ( line, level = 'Hlt1' ) :
@@ -794,13 +794,14 @@ class Hlt1Tool (object ) :
         if configurableExists('.'.join( [ parent.getName() ,self.Name ])) :
                 raise NameError('Configurable %s already exists, oh dear!'%name)
 
-        parent.addTool( self.Type, name = self.Name  ) 
+        parent.addTool(self.Type, name = self.Name)
         instance = getattr( parent, self.Name )
-        for k,v in self.Args.iteritems() : setattr(instance,k,v)
-        for tool in self.Tools :  
-                if type(tool) is not Hlt1Tool : 
+        for k,v in self.Args.iteritems():
+            setattr(instance, k,v)
+        for tool in self.Tools :
+                if type(tool) is not Hlt1Tool :
                     raise AttributeError, "The type %s is not an Hlt1Tool"%type(tool)
-                tool.createConfigurable( instance )
+                tool.createConfigurable(instance)
         return instance
         
    
@@ -1348,8 +1349,8 @@ class Hlt2Member ( object ) :
                 prev = Configurable.allConfigurables.get(_name)
                 for arg, val in args.iteritems():
                     if getattr(prev, arg) != val:
-                        raise AttributeError('%s is not the same for previously created ' +
-                            'configurable %s and new instance: %s %s' % (arg, _name, getattr(prev, arg), val))
+                        raise AttributeError(('%s is not the same for previously created ' % arg) +
+                            'configurable %s and new instance: %s %s' % (_name, getattr(prev, arg), val))
                 return prev
             else:
                 raise NameError('Configurable %s already exists, oh dear!'%_name)
@@ -1453,7 +1454,7 @@ class Hlt2Line(object):
         #    L0DU = "L0_ALL" # protects against missing/invalid L0DU 
         if 'HLT' in args:
             if not HLT1:
-                print ('# WARNING: HLT constructor argument to Hlt2Line is deprecated, ' +
+                print ('# WARNING: Hlt2%s HLT constructor argument to Hlt2Line is deprecated, ' % name +
                        'please replace with HLT1.')
                 HLT1 = args.pop('HLT')
             else:
@@ -1538,7 +1539,7 @@ class Hlt2Line(object):
             decoder.VetoObjects = decoder.listOutputs()
             decoder.active = True
             _s = GaudiSequencer( hltentryName( line, 'Hlt2') + 'Sequence' 
-                               , Members = [ decoder.setup(), HDRFilter  ( hltentryName ( line,'Hlt2' ) , Code = self._HLT1 , Location = decoder.listOutputs()[0]  )  ]
+                               , Members = [decoder.setup(), HDRFilter(hltentryName(line, 'Hlt2'), Code = self._HLT1, Location = decoder.listOutputs()[0])]
                                ) 
             mdict.update( HLT1 =  _s )
         from Configurables import LoKi__VoidFilter

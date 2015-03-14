@@ -5,6 +5,12 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2015-03-14 - Roel Aaij
+ - Improve/fix error messages.
+
+! 2015-03-11 - Roel Aaij
+ - Add HLT1 to known slots of Hlt2Line.
+
 ! 2015-03-09 - Roel Aaij
  - Adapt to changes in SelectionLine.
  - Deprecate HLT constructor argument of Hlt2Line in favour of HLT1.
