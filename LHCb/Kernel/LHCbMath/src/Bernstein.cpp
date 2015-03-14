@@ -5,6 +5,8 @@
 // STD& STL
 // ============================================================================
 #include <array>
+#include <climits>
+#include <cassert>
 // ============================================================================
 // LHCbMath 
 // ============================================================================
@@ -36,6 +38,15 @@ namespace
   const LHCb::Math::Zero<double>     s_zero  ; // zero for doubles
   /// zero fo vectors 
   const LHCb::Math::Zero< std::vector<double> > s_vzero ; // zero for vectors
+  ///
+  static_assert( std::numeric_limits<double>::is_specialized , 
+                 "std::numeric_limits<double> is not specialized" ) ;
+  static_assert( std::numeric_limits<long double>::is_specialized , 
+                 "std::numeric_limits<long double> is not specialized" ) ;
+  /// machine epsilon (double)
+  const double s_epsilon = std::numeric_limits<double>::epsilon() ;
+  /// machine epsilon (long double) 
+  const double s_ld_epsilon = std::numeric_limits<long double>::epsilon() ;
   // ==========================================================================
   // De Casteljau's algorithm
   template <class ITERATOR>
@@ -525,7 +536,180 @@ Gaudi::Math::Bernstein::Bernstein
 }
 // ============================================================================
 
+// ============================================================================
+namespace 
+{
+  // ====================================================================
+  /// get the value  B(k,N)
+  inline long double bb_value
+  ( const unsigned short k , 
+    const unsigned short N , 
+    const long double    x ) 
+  { 
+    return N  < k ? 0 : 0 == N ? 1 : 
+      bb_value ( k - 1 , N - 1 , x ) * x + bb_value ( k , N - 1 , x ) * ( 1 - x ) ;  
+  }
+  /// get the derivative   B'(k,N)
+  inline long double bb_deriv 
+  ( const unsigned short k         , 
+    const unsigned short N         , 
+    const long double    x         , 
+    const unsigned short order = 1 ) 
+  {
+    return 0 == order ? bb_value ( k , N , x ) : 
+      N * ( bb_deriv ( k - 1 , N - 1 , x , order - 1 ) -
+            bb_deriv ( k     , N - 1 , x , order - 1 ) ) ; 
+  }
+  /// get B(k,N) at x=0
+  inline int bb_at_0
+  ( const unsigned short    k    ,
+    const unsigned short /* N */ ) { return 0 == k ? 1 : 0 ; }        
+  /// get B(k,N) at x=1
+  inline int bb_at_1 
+  ( const unsigned short    k    ,
+    const unsigned short    N    ) { return N == k ? 1 : 0 ; }
+  // ====================================================================
+  
 
+  // ==========================================================================
+  inline 
+  long double _small_tau_integrate_ 
+  ( const unsigned short k   , 
+    const unsigned short N   , 
+    const long double    tau )
+  {
+    //
+    if ( N - k < k ) 
+    { return _small_tau_integrate_  ( N - k , N , -tau ) * std::exp ( tau ) ; }
+    //
+    long double    result   = 1 ;
+    result                 /= ( N + 1 ) ;
+    long double    term     = 1 ;
+    unsigned short i        = 0 ;
+    long double    tmax     = 1.e-4 * s_ld_epsilon / ( N + 1 ) ;
+    while ( std::abs ( term ) > tmax && i < 1000 ) 
+    {
+      ++i ;
+      term   *= ( k + i )     ;
+      term   /= ( N + i ) * i ;
+      term   *=    tau        ;
+      result += term / ( N + i + 1 ) ;
+    }
+    return result ;
+  }
+  // ===========================================================================
+  inline 
+  long double _integrate_
+  ( const unsigned short k   , 
+    const unsigned short N   , 
+    const long double    tau , 
+    const long double    _c1 , 
+    const long double    _c2 )
+  {
+    //
+    if ( N < k     ) { return 0 ; }
+    if ( N - k < k ) 
+    {
+      const long double _c3 = std::expm1 ( -tau ) ;
+      return _c2 * _integrate_ ( N - k , N , -tau , _c3 , _c3 + 1 ) ;
+    }
+    //
+    long double res = 
+      0 == N ? _c1  / tau : 
+      N == k ? _c2  / tau :
+      0 == k ? -1.0 / tau : 0.0 ;
+    //
+    const long double res0 = res ;
+    if ( 0 < N ) 
+    { 
+      const long double I1 = 
+        0 == k ? 0 : 
+        _integrate_ ( k - 1 , N - 1 , tau , _c1 , _c2 ) ;
+      const long double I2 = 
+        _integrate_ ( k     , N - 1 , tau , _c1 , _c2 ) ;
+      //
+      res -= N * ( I1 - I2 ) / tau ;
+    }
+    //                                                       
+    return res ; // / tau ;
+  }  
+  // ==========================================================================
+}
+// ============================================================================
+/* get the integral between 0 and 1 for a product of basic  Bernstein
+ *  polynom and the exponential function with the exponent tau
+ *  \f[  \int_{0}^{1} \mathcal{B}_{ik} e^{\tau x } \mathrm{d}x \f] 
+ *  @param poly  bernstein polynomial
+ *  @param tau   slope parameter for an exponential function
+ */
+// ============================================================================
+double Gaudi::Math::integrate 
+( const Gaudi::Math::Bernstein::Basic& b    ,
+  const double                         tau  ) 
+{
+  //
+  if ( b.k() > b.N()  ) { return 0                   ; }
+  if ( s_zero ( tau ) ) { return 1.0 / ( b.N() + 1 ) ; }
+  //
+  // small tau ? 
+  const double atau = std::abs ( tau ) ;
+  //if ( atau < 0.5 && Gaudi::Math::pow ( atau , b.N() + 1 ) < 2 * s_epsilon ) 
+  if ( atau < 5 ) 
+  { return  _small_tau_integrate_ ( b.k()  , b.N() , tau ) ; }
+  //
+  const long double _tau = tau ;
+  const long double _c1  = std::expm1 ( _tau ) ;
+  const long double _c2  = _c1 + 1 ; // std::exp   ( _tau ) ;
+  //
+  return _integrate_ ( b.k() , b.N() , _tau , _c1 , _c2 ) ;
+}
+// ============================================================================
+/* get the integral between \f$x_{min}\f$ and \f$x_{max}\f$ for a product of Bernstein
+ *  polynom and the exponential function with the exponent tau
+ *  \f[  \int_{x_{min}}^{x_{max}} \mathcal{B} e^{\tau x } \mathrm{d}x \f] 
+ *  @param poly  bernstein polynomial
+ *  @param tau   slope parameter for exponential 
+ */
+// ============================================================================
+double Gaudi::Math::integrate 
+( const Gaudi::Math::Bernstein& poly ,
+  const double                  tau  ) 
+{
+  if ( s_zero ( tau ) ) { return poly.integral() ; }
+  //
+  const long double xmin = poly.xmin () ;
+  const long double xmax = poly.xmax () ;
+  //
+  const long double _tau =            ( xmax - xmin ) * tau ;
+  const long double _fac = std::exp   (  tau * xmin ) ;
+  //
+  long double result = 0 ;
+  const unsigned short       N    = poly.degree () ;
+  const std::vector<double>& pars = poly.pars   () ;
+  // small tau ? 
+  const double atau = std::abs ( _tau ) ;
+  if ( atau < 5 ) 
+  {
+    for ( std::vector<double>::const_iterator ip = pars.begin() ; pars.end() != ip ; ++ip ) 
+    {
+      if ( s_zero ( *ip ) ) { continue ; } // skip zeroes 
+      const unsigned short k = ip - pars.begin() ;
+      result += (*ip) * _small_tau_integrate_ ( k , N , _tau )  ;
+    }
+    return result * ( xmax - xmin ) * _fac ;          // RETURN
+  }
+  //
+  const long double _c1  = std::expm1 ( _tau ) ;
+  const long double _c2  = _c1 + 1             ;   // exp(_tau) 
+  for ( std::vector<double>::const_iterator ip = pars.begin() ; pars.end() != ip ; ++ip ) 
+  {
+    if ( s_zero ( *ip ) ) { continue ; } // skip zeroes 
+    const unsigned short k = ip - pars.begin() ;
+    //
+    result += (*ip) * _integrate_ ( k , N , _tau , _c1 , _c2 ) ;
+  }
+  return result * ( xmax - xmin ) * _fac ;
+}
 // ============================================================================
 // constructor from the order
 // ============================================================================

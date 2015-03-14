@@ -6,8 +6,11 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-03-14 - Vanya Belyaev
+ - improve numerial stability
+
 ! 2015-03-13 - Vanya Belyaev
- - fix stupid recently introduced bug 
+ - fix stupid recently introduced bug, update tests  
 
 ! 2015-03-12 - Vanya Belyaev
  - add one more test

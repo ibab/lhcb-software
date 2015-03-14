@@ -1336,8 +1336,14 @@ namespace
     const long double xlow  = std::max ( low  , (long double) poly.xmin() ) ;
     const long double xhigh = std::min ( high , (long double) poly.xmax() ) ;
     //
-    const long double p1 = ( poly ( xhigh ) * std::exp ( tau * xhigh ) - 
-                             poly ( xlow  ) * std::exp ( tau * xlow  ) ) ;
+    // a bit esoteric way to get numerically correct resuls...
+    //
+    const long double eH = std::expm1 ( tau * xhigh ) ;
+    const long double eL = std::expm1 ( tau * xlow  ) ;
+    const long double pH = poly       (       xhigh ) ;
+    const long double pL = poly       (       xlow  ) ;
+    //
+    const long double p1 = ( eH * pH - eL * pL ) + ( pH - pL ) ;
     //
     if ( 1 >= poly.npars  () ) { return p1 / tau ; } // RETURN 
     //
@@ -1368,6 +1374,9 @@ double Gaudi::Math::integrate
   else if ( low  >  high            ) { return -integrate ( poly , tau , high , low ) ; }
   else if ( high <  poly.xmin () || 
             low  >  poly.xmax ()    ) { return  0 ; }
+  //
+  if ( s_equal ( low  , poly.xmin() ) && 
+       s_equal ( high , poly.xmax() ) ) { return integrate ( poly , tau ) ; }               
   //
   return _integrate_ ( poly , tau , low , high );
 }

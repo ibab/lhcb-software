@@ -20,7 +20,7 @@
 #include "LHCbMath/NSphere.h"
 #include "LHCbMath/Polynomials.h"
 // ============================================================================
-/** @file LHCbMath/Bersstein.h
+/** @file LHCbMath/Bernstein.h
  *  Set of useful math-functions, related to Bernstein polynomials 
  *
  *  @see http://en.wikipedia.org/wiki/Bernstein_polynomial
@@ -65,6 +65,8 @@ namespace Gaudi
           : m_k ( k ) 
           , m_N ( N ) 
         {}
+        // ====================================================================
+      public :
         // ====================================================================
         unsigned short k () const { return m_k ; }
         unsigned short N () const { return m_N ; }
@@ -215,6 +217,28 @@ namespace Gaudi
       const double                  tau  ,
       const double                  a    , 
       const double                  b    ) ;
+    // ========================================================================
+    /** get the integral between 0 and 1 for a product of basic  Bernstein
+     *  polynom and the exponential function with the exponent tau
+     *  \f[  \int_{0}^{1} \mathcal{B} e^{\tau x } \mathrm{d}x \f] 
+     *  @param b     basic bernstein polynomial
+     *  @param tau   slope parameter for exponential 
+     */
+    GAUDI_API 
+    double integrate 
+    ( const Gaudi::Math::Bernstein::Basic& b    ,
+      const double                         tau  ) ;
+    // =======================================================================
+    /** get the integral between \f$x_{min}\f$ and \f$x_{max}\f$ for a product of Bernstein
+     *  polynom and the exponential function with the exponent tau
+     *  \f[  \int_{x_{min}}^{x_{max}} \mathcal{B} e^{\tau x } \mathrm{d}x \f] 
+     *  @param poly  bernstein polynomial
+     *  @param tau   slope parameter for exponential 
+     */
+    GAUDI_API 
+    double integrate 
+    ( const Gaudi::Math::Bernstein& poly ,
+      const double                  tau  ) ;
     // ========================================================================
     /** de Casteljau algorithm for summation of Bernstein polynomials 
      *  \f$ f(x) = \sum_i p_i B_ik(x) \f$
