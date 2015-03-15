@@ -4,7 +4,14 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
-!! 2015-03-09 - Roel Aaij
+! 2015-03-15 - Roel Aaij
+ - Add Hlt1 to lumi stripper filter name to adhere to HDRFilter naming
+   convention.
+ - Use only Hlt1 in LumiBankKillerPredicate. Hlt2Lumi line filters on Hlt1Lumi
+   decision anyway.
+ - Add useful modules to factory used by MVA tools.
+
+! 2015-03-09 - Roel Aaij
  - Adapt to changes in HltLine.
 
 ========================= HltConf v12r6 2015-03-09 =========================

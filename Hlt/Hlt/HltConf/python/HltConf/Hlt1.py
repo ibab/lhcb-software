@@ -41,20 +41,21 @@ class Hlt1Conf(LHCbConfigurableUser):
       ## New event model
       import HltTracking.Hlt1Tracking
       from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
-      factory = CoreFactory( "Hlt1Factory" )
-      for m in [ "LoKiCore.decorators"    ,
-                 "LoKiTracks.decorators"  ,
-                 "LoKiTrigger.decorators" ,
-                 "LoKiNumbers.decorators" ,
-                 "LoKiCore.functions"     ,
-                 "LoKiCore.math"          ,
-                 "LoKiHlt.algorithms"     ,
-                 "LoKiPhys.decorators"    ] :
-         if not m in factory.Modules : factory.Modules.append ( m )
-      factory.Lines += [
-         "from GaudiKernel.SystemOfUnits import GeV, MeV, mm" ,
-         "import HltTracking.Hlt1StreamerConf"
-         ]
+      from Configurables import LoKi__Hybrid__Tool as HybridFactory
+      coreFactory = CoreFactory("Hlt1Factory")
+      hybridFactory = HybridFactory("HybridFactory")
+      for factory in (coreFactory, hybridFactory):
+          for m in [ "LoKiPhys.decorators"    ,
+                     "LoKiCore.decorators"    ,
+                     "LoKiTracks.decorators"  ,
+                     "LoKiTrigger.decorators" ,
+                     "LoKiNumbers.decorators" ,
+                     "LoKiCore.functions"     ,
+                     "LoKiCore.math"          ,
+                     "LoKiHlt.algorithms"     ] :
+              if not m in factory.Modules : factory.Modules.append ( m )
+          factory.Lines += ["from GaudiKernel.SystemOfUnits import GeV, MeV, mm",
+                            "import HltTracking.Hlt1StreamerConf"]
 
       ## Existing stuff
       from ThresholdUtils import setThresholds

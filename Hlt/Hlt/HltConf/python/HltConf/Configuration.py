@@ -81,7 +81,7 @@ class HltConf(LHCbConfigurableUser):
                 , 'RequireRoutingBits'             : [] # to require not lumi exclusive, set to [ 0x0, 0x4, 0x0 ]
                 , 'VetoRoutingBits'                : []
                 , 'SkipHltRawBankOnRejectedEvents' : True
-                , 'LumiBankKillerPredicate'        : "(HLT_PASS_SUBSTR('Hlt1Lumi') & ~HLT_PASS_RE('Hlt1(?!Lumi).*Decision'))|(HLT_PASS_SUBSTR('Hlt2Lumi') & ~HLT_PASS_RE('Hlt2(?!Lumi).*Decision'))"
+                , 'LumiBankKillerPredicate'        : "(HLT_PASS_SUBSTR('Hlt1Lumi') & ~HLT_PASS_RE('Hlt1(?!Lumi).*Decision'))"
                 , 'BeetleSyncMonitorRate'          : 5000
                 , "LumiBankKillerAcceptFraction"   : 0.9999     # fraction of lumi-only events where raw event is stripped down
                                                                 # (only matters if EnablelumiEventWriting = True)
@@ -277,7 +277,7 @@ class HltConf(LHCbConfigurableUser):
                       , 17 : "L0_CHANNEL_RE('.*,lowMult')"
                       , 18 : "L0_CHANNEL('DiMuon')" if 'DiMuon' in L0Channels() else ""
                       , 32 : "HLT_PASS('Hlt1Global')"
-                      , 33 : "HLT_PASS_RE('^Hlt[12]Lumi.*Decision$')"  # lumi stream
+                      , 33 : "HLT_PASS_RE('^Hlt1Lumi.*Decision$')"  # lumi stream
                       , 34 : " ~ ( %s ) " % self.getProp('LumiBankKillerPredicate') #  this must be the opposite of the LumiStripper, i.e. if 34 is set, the event should NEVER be a nanoevent...
                       , 35 : "HLT_PASS_SUBSTR('Hlt1BeamGas')" # beamgas stream
                       , 36 : "scale(%s,RATE(%s))" % ( "HLT_PASS_RE('Hlt2Express.*Decision')", self.getProp('ExpressStreamRateLimit') )  # express stream
@@ -802,13 +802,14 @@ class HltConf(LHCbConfigurableUser):
             End.Members += [ HltLumiWriter()
                            , Sequence( 'LumiStripper' , Members =
                                        [ decoder.setup()
-                                       , HltFilter('LumiStripperFilter', Code = self.getProp('LumiBankKillerPredicate'), Location = decoder.listOutputs()[0])
+                                       , HltFilter('LumiStripperHlt1Filter', Code = self.getProp('LumiBankKillerPredicate')
+                                                  , Location = decoder.listOutputs()[0])
                                        , Prescale('LumiStripperPrescaler', AcceptFraction=self.getProp('LumiBankKillerAcceptFraction'))
                                        , bankKiller('LumiStripperBankKiller', BankTypes=self.getProp('NanoBanks'),  DefaultIsKill=True )
                                        ] )
                            ]
 
-        if self.getProp( 'RequireL0ForEndSequence') :
+        if self.getProp('RequireL0ForEndSequence') :
             from Configurables import LoKi__L0Filter as L0Filter
             from HltLine.HltDecodeRaw import DecodeL0DU
             L0accept = Sequence(name='HltEndSequenceFilter', Members = DecodeL0DU.members() + [ L0Filter( 'L0Pass', Code = "L0_DECISION_PHYSICS" )])
