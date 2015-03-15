@@ -77,9 +77,17 @@ LoKi::Particles::Value::Value
 // ============================================================================
 LoKi::Particles::Value::Value
 ( const IParticleValue* function ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+  : LoKi::AuxFunBase () 
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_function ( function )
 {} 
+// ============================================================================
+LoKi::Particles::Value::Value
+( const LoKi::Particles::Value& right ) 
+  : LoKi::AuxFunBase( right )
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function( right ) 
+  , m_function ( right.m_function )
+{}
 // ============================================================================
 // MANDATORY: virtual destructor
 // ============================================================================

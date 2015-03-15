@@ -6123,7 +6123,7 @@ namespace LoKi
      *  @author Sebastian Neubert
      *  @date 2013-08-05
      */
-    typedef LoKi::Particles::Value                                    VALUE ;    
+    typedef LoKi::Particles::Value                                    VALUE ;
     // ========================================================================
     /** @typedef VD 
      *  Evaluator of the GEOMETRY 

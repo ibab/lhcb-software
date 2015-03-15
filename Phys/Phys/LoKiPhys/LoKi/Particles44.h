@@ -54,6 +54,8 @@ namespace LoKi
       Value ( const std::string&      tool ) ;
       /// constructor from the tool 
       Value ( const IParticleValue*  tool ) ;
+      /// copy constructor
+      Value ( const Value& right ) ;
       /// MANDATORY: virtual destructor
       virtual ~Value() ;
       /// MANDATORY: clone method ("virtual constructor")

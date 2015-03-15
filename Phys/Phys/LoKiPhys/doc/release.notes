@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2015-03-15 - Roel Aaij
+ - Add copy constructor to LoKi::Particles::Value.
+
 ! 2015-03-12 - Vanya Belyaev
  - add fake sources 
 
