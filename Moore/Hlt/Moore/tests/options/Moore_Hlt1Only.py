@@ -19,9 +19,4 @@ Moore().EnableTimer = 'hlt1_timer.csv'
 Moore().Split='Hlt1'
 
 # kill input DecReports
-from Configurables import ApplicationMgr, GaudiSequencer, DecodeRawEvent, RawEventFormatConf, RawEventJuggler, RecombineRawEvent
-ApplicationMgr().TopAlg+= [GaudiSequencer("JuggleSeq")]
-RawEventJuggler().Input="Pit"
-RawEventJuggler().Output="Moore"
-RawEventJuggler().Sequencer = GaudiSequencer("JuggleSeq")
-RawEventJuggler().KillInputBanksBefore = ('Hlt')
+Moore().RemoveInputHltRawBanks = True

@@ -39,12 +39,12 @@ if not os.path.exists(expp(configsource)) or not os.path.exists(expp(configdest)
     print configsource, configdest, expp(os.getcwd())
     raise IOError("Local filesystem not like install area, aborting")
 
-if not os.path.exists(os.path.join(expp(configdest),"config.tar")):
+if not os.path.exists(os.path.join(expp(configdest),"config.cdb")):
     print "copying config file"
     import shutil
-    shutil.copy2(os.path.join(expp(configsource),"config.tar"), os.path.join(expp(configdest),"config.tar"))
+    shutil.copy2(os.path.join(expp(configsource),"config.cdb"), os.path.join(expp(configdest),"config.cdb"))
 
-print "modified config in: "+ os.path.join(expp(configdest),"config.tar")
+print "modified config in: "+ os.path.join(expp(configdest),"config.cdb")
 
 #run events
 print "running",numEvents
@@ -77,15 +77,15 @@ print "===================================================="
 
 #
 from TCKUtils.utils import *
-from Configurables import ConfigTarFileAccessSvc as ctas
-ctas(File=os.sep.join([configdest,"config.tar"]))
+from Configurables import ConfigCDBAccessSvc as ctas
+ctas(File=os.sep.join([configdest,"config.cdb"]))
 configs=getConfigurations()
 search="/".join(["TOPLEVEL",release,threshold,configuration])
 if search not in configs.keys():
     raise KeyError("Configuration I just created has not been found... looking for"+search)
 
-createTCKEntries({targetTCK:configuration},ctas(Mode='ReadWrite',File=os.sep.join([configdest,"config.tar"])))
-ctas(Mode='ReadOnly',File=os.sep.join([configdest,"config.tar"]))
+createTCKEntries({targetTCK:configuration},ctas(Mode='ReadWrite',File=os.sep.join([configdest,"config.cdb"])))
+ctas(Mode='ReadOnly',File=os.sep.join([configdest,"config.cdb"]))
 
 configs=getConfigurations()
 if search not in configs.keys():

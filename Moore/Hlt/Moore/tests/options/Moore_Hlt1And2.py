@@ -11,10 +11,6 @@ from Moore.Configuration import Moore
 
 Moore().EvtMax = 1200
 
-#from PRConfig.TestFileDB import test_file_db
-#input = test_file_db['2012_raw_default']
-#input.run(configurable=Moore())
-
 Moore().ForceSingleL0Configuration=False
 
 from Configurables import LHCbTimingAuditor, LHCbSequencerTimerTool

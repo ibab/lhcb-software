@@ -4,7 +4,7 @@
 # SUMMARY OF THIS TEST
 # ...................
 # Author: rlambert
-# Purpose: Check that the behaviour of Moore when processing the same dataset with the same threshold setting remains approximately constant
+# Purpose: Check that Moore still runs on the 2012 dataset.
 # Prerequisites: 
 # Common failure modes, severities and cures: 
 #               . SEVERE: Segfault or raised exception, stderr, nonzero return code

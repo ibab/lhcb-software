@@ -4,6 +4,13 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2015-03-15 - Roel Aaij
+ - Update tests to:
+   - not use Physics_September2012
+	 - use CDB
+	 - Don't use Independent, we rerun by default anyway.
+ - References to be updated.
+
 !========================= Moore v23r5 2015-03-09 =========================
 
 ! 2015-02-17 - Roel Aaij
