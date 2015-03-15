@@ -88,27 +88,33 @@ class CharmHadD2HHHLines() :
         from Stages import D2KPiPi_SS_LTUNB,D2KKPi_OS_LTUNB,Lc2KPPi_LTUNB
         from Stages import Lc2KPPi_PIDCALIB
         from Stages import SharedSoftTagChild_pi
+        
         stages = {# First the CPV D2HHH lines
-                  'D2KPiPi_SS'        : [MassFilter('D2HHH',inputs=[D2KPiPi_SS('D2HHH')])],
-                  'D2KPiPi_OS'        : [MassFilter('D2HHH',inputs=[D2KPiPi_OS('D2HHH')])],
-                  'D2KKPi_SS'         : [MassFilter('D2HHH',inputs=[D2KKPi_SS('D2HHH')])],
-                  'D2KKPi_OS'         : [MassFilter('D2HHH',inputs=[D2KKPi_OS('D2HHH')])],
-                  'D2PiPiPi'          : [MassFilter('D2HHH',inputs=[D2PiPiPi('D2HHH')])],
-                  'D2KKK'             : [MassFilter('D2HHH',inputs=[D2KKK('D2HHH')])],
-                  # Now the CPV Lc2HHH lines
-                  'Lc2KPPi'           : [MassFilter('Lc2HHH',inputs=[Lc2KPPi('Lc2HHH')])],
-                  'Lc2KPK'            : [MassFilter('Lc2HHH',inputs=[Lc2KPK('Lc2HHH')])],
-                  'Lc2PiPPi'          : [MassFilter('Lc2HHH',inputs=[Lc2PiPPi('Lc2HHH')])],
-                  'Lc2PiPK'           : [MassFilter('Lc2HHH',inputs=[Lc2PiPK('Lc2HHH')])], 
-                  # Now the three CF lifetime unbiased lines
-                  'D2KPiPi_SS_LTUNB'  : [MassFilter('Dpm2HHH_LTUNB',inputs=[D2KPiPi_SS_LTUNB('Dpm2HHH_LTUNB')])],
-                  'D2KKPi_OS_LTUNB'   : [MassFilter('Ds2HHH_LTUNB',inputs=[D2KKPi_OS_LTUNB('Ds2HHH_LTUNB')])],
-                  'Lc2KPPi_LTUNB'     : [MassFilter('Lc2HHH_LTUNB',inputs=[Lc2KPPi_LTUNB('Lc2HHH_LTUNB')])],
-                  # Now the PID calib Sigma_c->Lambda_c(pKpi)pi line
-                  'Lc2KPPi_PIDCALIB'  : [TagDecay('Lc2KPPi_PIDCALIB_TAG', "[Sigma_c0 -> Lambda_c+ pi-]cc",
-                                                  inputs = [ MassFilter('Lc2KPPi_PIDCALIB', 
-                                                                        inputs = [Lc2KPPi_PIDCALIB('Lc2KPPi_PIDCALIB')]),
-                                                             SharedSoftTagChild_pi]
-                                                 )]
-                 }
+            'D2KPiPi_SS'        : [MassFilter('D2KPiPi_SS', nickname = 'D2HHH',
+                                              inputs=[D2KPiPi_SS('D2HHH')], shared = True)],
+            'D2KPiPi_OS'        : [MassFilter('D2HHH', inputs=[D2KPiPi_OS('D2HHH')])],
+            'D2KKPi_SS'         : [MassFilter('D2HHH',inputs=[D2KKPi_SS('D2HHH')])],
+            'D2KKPi_OS'         : [MassFilter('D2KKPi_OS', nickname = 'D2HHH',
+                                              inputs=[D2KKPi_OS('D2HHH')], shared = True)],
+            'D2PiPiPi'          : [MassFilter('D2HHH',inputs=[D2PiPiPi('D2HHH')])],
+            'D2KKK'             : [MassFilter('D2HHH',inputs=[D2KKK('D2HHH')])],
+            # Now the CPV Lc2HHH lines
+            'Lc2KPPi'           : [MassFilter('Lc2KPPi', nickname = 'Lc2HHH',
+                                              inputs=[Lc2KPPi('Lc2HHH')], shared = True)],
+            'Lc2KPK'            : [MassFilter('Lc2HHH',inputs=[Lc2KPK('Lc2HHH')])],
+            'Lc2PiPPi'          : [MassFilter('Lc2HHH',inputs=[Lc2PiPPi('Lc2HHH')])],
+            'Lc2PiPK'           : [MassFilter('Lc2HHH',inputs=[Lc2PiPK('Lc2HHH')])], 
+            # Now the three CF lifetime unbiased lines
+            'D2KPiPi_SS_LTUNB'  : [MassFilter('Dpm2HHH_LTUNB',inputs=[D2KPiPi_SS_LTUNB('Dpm2HHH_LTUNB')])],
+            'D2KKPi_OS_LTUNB'   : [MassFilter('Ds2HHH_LTUNB',inputs=[D2KKPi_OS_LTUNB('Ds2HHH_LTUNB')])],
+            'Lc2KPPi_LTUNB'     : [MassFilter('Lc2HHH_LTUNB',inputs=[Lc2KPPi_LTUNB('Lc2HHH_LTUNB')])],
+            # Now the PID calib Sigma_c->Lambda_c(pKpi)pi line
+            'Lc2KPPi_PIDCALIB'  : [TagDecay('Lc2KPPi_PIDCALIB_TAG', "[Sigma_c0 -> Lambda_c+ pi-]cc",
+                                            inputs = [ MassFilter('Lc2KPPi_PIDCALIB', 
+                                                                  inputs = [Lc2KPPi_PIDCALIB('Lc2KPPi_PIDCALIB')]),
+                                                       SharedSoftTagChild_pi ]
+                                            )]
+            }
+        
+        
         return stages

@@ -165,9 +165,12 @@ class NeutralInParticleFilter(Hlt2ParticleFilter):
 
 # Mass filter
 class MassFilter(Hlt2ParticleFilter):
-    def __init__(self, name, inputs):
+    def __init__(self, name, inputs, nickname = None, shared = False ):
         cut = "in_range( %(Mass_M_MIN)s , M , %(Mass_M_MAX)s )"
-        Hlt2ParticleFilter.__init__(self, name, cut, inputs)
+        nickname = name if nickname == None else nickname
+        name     = name if not shared       else 'CharmHad%sMass' % name
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs,
+                                    nickname = nickname , shared = shared )
 
 
 ## ========================================================================= ##
@@ -303,6 +306,7 @@ class D02HHCombiner(Hlt2Combiner) : # {
         from HltTracking.HltPVs import PV3D
         ## The name passed to the base class constructor determines the
         ##   configuration dictionary that is picked up.
+        name = name if not shared else 'CharmHad' + name
         Hlt2Combiner.__init__( self, name, decay, inputs,
                                dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                                tistos = 'TisTosSpec',
