@@ -1,9 +1,12 @@
 ! $Id: release.notes,v 1.221 2010-09-08 14:55:56 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
-! Responsible : Gerhard Raven
+! Responsible : Roel Aaij, Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+! 2015-03-13 - Roel Aaij
+ - Add Hlt1MVALines, containing Hlt1TrackMVA and Hlt1TwoTrackMVA.
 
 ! 2015-03-12 - Matthew Kenzie
  - Bug fix for previous commit
