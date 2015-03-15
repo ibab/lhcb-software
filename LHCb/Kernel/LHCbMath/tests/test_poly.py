@@ -117,9 +117,32 @@ for t in [
             print 'Derivatives 1/3 are not equal: %s %g %g %g' % ( _t.__name__ , delta(d1,d3) , d1, d3 )
             
         
-        
-        
-    
+
+#
+## Test integration with exponential 
+#
+BP      = cpp.Gaudi.Math.Bernstein
+BB      = cpp.Gaudi.Math.Bernstein.Basic
+integra = cpp.Gaudi.Math.integrate
+
+xmin =  0
+xmax =  1
+
+tau  = +2.0 
+bb   = BB ( 7 , 16 )
+bp   = BP ( bb    , xmin , xmax )
+
+def i_fun ( x ) :
+    return bp ( x ) * math.exp( tau * x )
+
+II = Integral( i_fun , x0 = xmin )
+a1 = integra ( bb , tau )
+a2 = integra ( bp , tau , xmin , xmax )
+a3 = integra ( bp , tau )
+a4 = II(xmax)  
+
+print 'R!' , a1  , a2 , a3 , a4 
+
     
 
 # =============================================================================
