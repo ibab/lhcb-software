@@ -1,6 +1,6 @@
-from GaudiKernel.SystemOfUnits import GeV, MeV 
+from GaudiKernel.SystemOfUnits import GeV, mm, MeV 
 
-class Muons_February2015(object) :
+class Muons_March2015(object) :
     """
     Threshold settings for Hlt2 muon lines: setting for high lumi running in 2012
     
@@ -45,27 +45,11 @@ class Muons_February2015(object) :
             #'Hlt2DiMuonNoPV',#remove on request buy Dermot Morgan, May3, 2011
 
             # control rate via: prescale
-            'Hlt2DiMuonDY1',
-            'Hlt2DiMuonDY2',
-            'Hlt2DiMuonDY3',
-            'Hlt2DiMuonDY4',
-                       
-            'Hlt2TriMuonDetached',
-            'Hlt2TriMuonTau',
-            'Hlt2DiMuonAndMuon',
-            'Hlt2DoubleDiMuon',
-                 
-            'Hlt2TFBc2JpsiMuX',
-            'Hlt2TFBc2JpsiMuXSignal',
-
-            #JPSi+X lines 
-            'Hlt2DiMuonAndGamma',
-            'Hlt2DiMuonAndD0',
-            'Hlt2DiMuonAndDp',
-            'Hlt2DiMuonAndDs',
-            'Hlt2DiMuonAndLc'
-
-            ]
+            'Hlt2EWDiMuonDY1',
+            'Hlt2EWDiMuonDY2',
+            'Hlt2EWDiMuonDY3',
+            'Hlt2EWDiMuonDY4',
+                                   ]
             
         return lines
 
@@ -78,11 +62,7 @@ class Muons_February2015(object) :
         # keep pass through thresholds
         d = { }
 
-        from Hlt2Lines.Hlt2InclusiveMuonLines import Hlt2InclusiveMuonLinesConf
-        from Hlt2Lines.Hlt2InclusiveDiMuonLines import Hlt2InclusiveDiMuonLinesConf
-        from Hlt2Lines.DiMuon.Lines import DiMuonLines
-        from Hlt2Lines.Hlt2Dst2D2XXLines import Hlt2Dst2D2XXLinesConf
-
+        from Hlt2Lines.DiMuon.Lines     import DiMuonLines            
         d.update({DiMuonLines :
                   {'Common' :              {'TrChi2'      :   10,
                                             'TrChi2Tight' :    4},
@@ -126,40 +106,18 @@ class Muons_February2015(object) :
                   }
                  })
         
-        d.update( { Hlt2InclusiveDiMuonLinesConf : { 
-            ## Cut values
-            'TrChi2'                   : 10
-            ,'TrChi2Tight'              : 4
-            ,'UnbiasedJPsiMassWindow'  :  120
-            ,'UnbiasedJPsiPt'          :    0
-            ,'UnbiasedJPsiMuPt'        :    0
-            ,'UnbiasedJPsiVertexChi2'  :   25
-            ,'MultiMu_GoodMuon_Chi2_IP'   : 9
-            ,'MultiMu_TightMuon_Chi2_IP'  : 36
-            ,'MultiMu_DiMuon_DLS'         : 6
-            ,'MultiMu_Tau3Mu_MassWindow'  : 300   #MeV
-            ,'MultiMu_Tau3Mu_max_PT'      : 0
-            ,'MultiMu_Tau3Mu_ctau'        : 75
-           
-            , 'Prescale'   : {   'Hlt2DiMuonDY1'             :  0.005
-                               , 'Hlt2DiMuonDY2'             :  0.03
-                               , 'Hlt2DiMuonAndGamma'        :  0
-                               }           
-            }}
-                  )
+        from Hlt2Lines.EW.Lines import EWLines
+        d.update({EWLines : {'Prescale' : {'Hlt2DiMuonDY1' :  0.005,
+                                           'Hlt2DiMuonDY2' :  0.03}
+                            }
+                 })
 
-        d.update( { Hlt2InclusiveMuonLinesConf : {
-            'SingleMuonPt'         : 1300      # MeV
-            ,'SingleMuonIP'        : 0.5     # mm
-            , 'SingleMuonIPChi2'   : 200
-            ,'SingleMuonHighPt'    : 10000     # MeV
-            ,'Prescale'   : { 'Hlt2MuonFromHLT1'       : 0.0
-                              ,'Hlt2SingleMuon'        : 0.5
-                              ,'Hlt2SingleHighPTMuon'  : 1.0
-                              ,'Hlt2SingleMuonLowPT'   : 0.002
-                              }
-            }}
-                  )
+        from Hlt2Lines.SingleMuon.Lines import SingleMuonLines
+        d.update({SingleMuonLines : {'Prescale'   : { 'Hlt2SingleMuon'      : 0.5
+                                                    , 'Hlt2SingleHighPT'    : 1.0
+                                                    , 'Hlt2SingleMuonLowPT' : 0.002}
+                                    }
+                 })
            
         return d
     

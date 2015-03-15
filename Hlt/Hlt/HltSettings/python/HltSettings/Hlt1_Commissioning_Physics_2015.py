@@ -42,7 +42,7 @@ class Hlt1_Commissioning_Physics_2015( object ):
             raise RuntimeError( 'Must update HltType when modifying ActiveHlt.Lines()' )
         
     def L0TCK(self) :
-        return '0x0044'
+        return '0x0046'
 
     def HltType(self) :
         self.verifyType( Hlt1_Commissioning_Physics_2015 ) 
@@ -204,7 +204,8 @@ class Hlt1_Commissioning_Physics_2015( object ):
                   , 'Hlt1SingleElectronNoIP'
                   , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
                   , 'Hlt1DiProtonLowMult', 'Hlt1DiProton'
-                  , 'Hlt1L0HighSumETJet','Hlt1HighPtJetsSinglePV']
+                  , 'Hlt1L0HighSumETJet','Hlt1HighPtJetsSinglePV',
+                  , 'Hlt1TrackMVA', 'Hlt1TwoTrackMVA' ]
         
         #from Hlt1TechnicalLines import Hlt1TechnicalLines 
         #lines.extend( Hlt1TechnicalLines().ActiveHlt1Lines() )

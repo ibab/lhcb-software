@@ -60,11 +60,7 @@ class Commissioning_Physics_2015( object ):
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
         from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
         from Hlt1Lines.Hlt1DisplVertexLines    import Hlt1DisplVertexLinesConf
-        from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
         from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
-        from Hlt2Lines.Hlt2diphotonDiMuonLines import Hlt2diphotonDiMuonLinesConf
-        from Hlt2Lines.Hlt2InclusiveDiProtonLines import Hlt2InclusiveDiProtonLinesConf
-        from Hlt2Lines.Hlt2DisplVerticesLines  import Hlt2DisplVerticesLinesConf
 
         thresholds = { Hlt1TrackLinesConf :    {'AllL0_Velo_NHits'   : 9
                                                , 'AllL0_Velo_Qcut'   : 3
@@ -178,10 +174,6 @@ class Commissioning_Physics_2015( object ):
                        , Hlt1CommissioningLinesConf : { 'Postscale' : { 'Hlt1ErrorEvent'   : 'RATE(0.01)'
 
                                                                         } }
-                       , Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 0.0001 
-                                                                       , 'Hlt2Forward'      : 0.00001
-                                                                       , 'Hlt2DebugEvent'   : 0.000001  }
-                                                        , 'Postscale' : { 'Hlt2ErrorEvent'   : 'RATE(0.01)' } }
                        # micro bias lines switched off for high mu physics running              
                        , Hlt1MBLinesConf :     { 'Prescale' : { 'Hlt1MBMicroBiasVelo'                : 0
                                                               , 'Hlt1MBMicroBiasTStation'            : 0
@@ -189,47 +181,21 @@ class Commissioning_Physics_2015( object ):
                                                               , 'Hlt1MBMicroBiasTStationRateLimited' : 0 }
                                                , 'MaxNoBiasRate' : 1000000.
                                                }
-                       , Hlt2diphotonDiMuonLinesConf : { 'Prescale' : { 'Hlt2LowMultHadron'     :  1.0 # for 0x0035, this is already done in L0
-                                                                      , 'Hlt2LowMultPhoton'     : 0.01
-                                                                      } } 
+                     }
 
-                       #, Hlt2InclusiveDiProtonLinesConf: { 'Prescale' : { 'Hlt2DiProton'           :       0.001
-                       #                                                   , 'Hlt2DiProtonLowMult'  :       0.001
-                       #                                               } } 
+        from Hlt2Lines.Commissioning.Lines  import CommissioningLines
+        thresholds.update({CommissioningLines : { 'Prescale' : { 'Hlt2PassThrough'  : 0.0001 
+                                                               , 'Hlt2Forward'      : 0.00001
+                                                               , 'Hlt2DebugEvent'   : 0.000001  }
+                                                , 'Postscale' : { 'Hlt2ErrorEvent'   : 'RATE(0.01)' }
+                                                }
+                          })
 
-                       , Hlt2DisplVerticesLinesConf : {  'Prescale' : 
-                                                            { 'Hlt2DisplVerticesHighMassSingle'               : 1
-                                                              , 'Hlt2DisplVerticesSingle'                     : 1
-                                                              , 'Hlt2DisplVerticesDouble'                     : 1
-                                                              , 'Hlt2DisplVerticesHighMassSingle'             : 1 
-                                                              , 'Hlt2DisplVerticesHighFDSingle'               : 1
-                                                              , 'Hlt2DisplVerticesSinglePostScaled'           : 1
-                                                              , 'Hlt2DisplVerticesSingleDown'                 : 1
-                                                              , 'Hlt2DisplVerticesDoublePostScaled'           : 1
-                                                              , 'Hlt2DisplVerticesSingleHighMassPostScaled'   : 1
-                                                              , 'Hlt2DisplVerticesSingleHighFDPostScaled'     : 1
-                                                              , 'Hlt2DisplVerticesSingleMVPostScaled'         : 1    }               
-                                                         }
+        from Muons_March2015 import Muons_March2015
+        __update_conf__(thresholds,  Muons_March2015().Thresholds() )
 
-                       }
-
-        from Express_Hlt2_draft2012 import Express_Hlt2_draft2012
-        __update_conf__(thresholds, Express_Hlt2_draft2012().Thresholds() )
-
-        from Muons_February2015 import Muons_February2015
-        __update_conf__(thresholds,  Muons_February2015().Thresholds() )
-
-        from Electrons_July2011 import Electrons_July2011
-        __update_conf__(thresholds,  Electrons_July2011().Thresholds() )
-
-        from Hadrons_September2012 import Hadrons_September2012
-        __update_conf__(thresholds,  Hadrons_September2012().Thresholds() )
-
-        from DV_draft2012 import DV_draft2012
-        __update_conf__(thresholds,  DV_draft2012().Thresholds() )
-
-        from CharmLeptonic_draft2012 import CharmLeptonic_draft2012
-        __update_conf__(thresholds, CharmLeptonic_draft2012().Thresholds() )
+        from Hadrons_March2015 import Hadrons_March2015
+        __update_conf__(thresholds,  Hadrons_March2015().Thresholds() )
 
         return thresholds
                        
@@ -238,34 +204,14 @@ class Commissioning_Physics_2015( object ):
         Returns a list of active lines
         """
         hlt2 = ['Hlt2PassThrough','Hlt2Lumi','Hlt2DebugEvent',
-                'Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent',
-                'Hlt2HighPtJets'
-                ]
+                'Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent']
 
-        from Express_Hlt2_draft2012 import Express_Hlt2_draft2012
-        hlt2.extend( Express_Hlt2_draft2012().ActiveHlt2Lines() )
+        from Muons_March2015 import Muons_March2015
+        hlt2.extend( Muons_March2015().ActiveHlt2Lines() )
 
-        from Muons_February2015 import Muons_February2015
-        hlt2.extend( Muons_February2015().ActiveHlt2Lines() )
-
-        from Electrons_July2011 import Electrons_July2011
-        hlt2.extend( Electrons_July2011().ActiveHlt2Lines() )
-
-        from Hadrons_September2012 import Hadrons_September2012
-        hlt2.extend( Hadrons_September2012().ActiveHlt2Lines() )
+        from Hadrons_March2015 import Hadrons_March2015
+        hlt2.extend( Hadrons_March2015().ActiveHlt2Lines() )
        
-        from DV_draft2012 import DV_draft2012 
-        hlt2.extend( DV_draft2012().ActiveHlt2Lines() )
-
-        from CharmLeptonic_draft2012 import CharmLeptonic_draft2012
-        hlt2.extend( CharmLeptonic_draft2012().ActiveHlt2Lines() )
-
-        ## from CharmCEP_September2012 import CharmCEP_September2012
-        ## hlt2.extend( CharmCEP_September2012().ActiveHlt2Lines() )
-
-        from KshortMuMuPiPi_July2012 import KshortMuMuPiPi_July2012
-        hlt2.extend( KshortMuMuPiPi_July2012().ActiveHlt2Lines() )
- 
         return hlt2
        
     def ActiveHlt1Lines(self) :
@@ -276,7 +222,8 @@ class Commissioning_Physics_2015( object ):
                  , 'Hlt1VertexDisplVertex'
                  , 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
                  , 'Hlt1SingleElectronNoIP'
-                 , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass' ]
+                 , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
+                 , 'Hlt1TrackMVA', 'Hlt1TwoTrackMVA' ]
                  ## [ 'Hlt1L0HighSumETJet','Hlt1HighPtJetsSinglePV']
         
         ## from Hlt1TechnicalLines import Hlt1TechnicalLines 

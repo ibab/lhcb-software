@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-03-15 - Roel Aaij
+ - Remove settings that are obsolete after removes of "old-style" configurables
+   from Hlt2Lines.
+
 !========================= HltSettings v6r11 2015-03-09 =========================
 
 ! 2015-03-06 - Michael Kolpin

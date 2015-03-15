@@ -1,4 +1,4 @@
-class TopoLines :
+class TopoLines_March2015 :
     """
     Threshold settings for Hlt2 topological lines.
     
@@ -46,16 +46,8 @@ class TopoLines :
         fdChi2 = "FDCHI2"
 
         # NB: All vars are positive so negative = "no cut"
-
-        simple_cuts2 = [{'M':(2500,7000),doca:(-1,0.2),fdChi2:(1000,-1),
-                         ptSum:(7000,-1)}]
-        simple_cuts3 = [{'M':(3000,7000),doca:(-1,0.2),fdChi2:(1000,-1),
-                         ptSum:(8000,-1)}]
-        simple_cuts4 = [{'M':(3500,7000),doca:(-1,0.2),fdChi2:(1000,-1),
-                         ptSum:(9000,-1)}]
-
-        from Hlt2Lines.Hlt2TopologicalLines  import Hlt2TopologicalLinesConf
-        d.update( { Hlt2TopologicalLinesConf : {
+        from Hlt2Lines.Topo.Lines  import TopoLines
+        d.update( { TopoLines : {'Common' : {
             # single track cuts
             'ALL_PT_MIN'        : 500.0,  # MeV
             'ALL_P_MIN'         : 5000.0, # MeV
@@ -95,19 +87,7 @@ class TopoLines :
             'BDT_3BODY_PARAMS'  : 'v1r0',
             'BDT_4BODY_PARAMS'  : 'v1r0',
             # electron filters & cuts
-            'PIDE_MIN'          : -2.0,
-            'L0_ELECTRON_FILTER': "L0_CHANNEL('Electron')",
-            'HLT1_ELECTRON_FILT': "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')",
-            # radiative filters
-            'L0_RAD_FILTER'     : "L0_CHANNEL('Electron') | L0_CHANNEL('Photon')",
-            'RAD_TOS'           : True,
-            # global event cuts
-            'USE_GEC'           : True,
-            'GEC_MAX'           : 500,
-            # "simple" cuts            
-            'SIMPLE_2BODY_CUTS' : simple_cuts2,
-            'SIMPLE_3BODY_CUTS' : simple_cuts3,
-            'SIMPLE_4BODY_CUTS' : simple_cuts4,            
+            'PIDE_MIN'          : -2.0},
             # pre and post scales
             'Prescale'   : {'Hlt2Topo2BodySimple' : 0.0,  
                             'Hlt2Topo3BodySimple' : 0.0,

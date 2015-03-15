@@ -1,4 +1,4 @@
-class Hadrons_September2012 :
+class Hadrons_March2015 :
     """
     Threshold settings for Hlt2 hadronic lines: minimal Sept for 2011
     
@@ -38,10 +38,6 @@ class Hadrons_September2012 :
             'Hlt2Bd2KstGamma',
             'Hlt2Bd2KstGammaWideBMass',
             'Hlt2Bd2KstGammaWideKMass',
-            'Hlt2RadiativeTopoTrack',
-            'Hlt2RadiativeTopoPhoton',
-            # HHPi0
-            'Hlt2B2HHPi0_Merged',
             # B2HH
             'Hlt2B2HH',
             # DiProtons
@@ -54,11 +50,11 @@ class Hadrons_September2012 :
             ]
 
         # For inclusive phi extend using Albert's new setting
-        from Phi_draft2012 import Phi_draft2012 as PhiLines
-        lines.extend ( PhiLines().ActiveHlt2Lines() )
+        # from Phi_draft2012 import Phi_draft2012 as PhiLines
+        # lines.extend ( PhiLines().ActiveHlt2Lines() )
 
-        from CharmHadronLines_September2012 import CharmHadronLines
-        lines.extend ( CharmHadronLines().ActiveHlt2Lines() )
+        # from CharmHadronLines_March2012 import CharmHadronLines
+        # lines.extend ( CharmHadronLines().ActiveHlt2Lines() )
 
         return lines
 
@@ -66,13 +62,7 @@ class Hadrons_September2012 :
 
         d = {}
  
-        from TopoLines_June2012 import TopoLines
-        d.update ( TopoLines().Thresholds() )
-
-        from Phi_draft2012 import Phi_draft2012 as PhiLines
-        d.update ( PhiLines().Thresholds() )
-
-        from CharmHadronLines_September2012 import CharmHadronLines
-        d.update ( CharmHadronLines().Thresholds() )
+        from TopoLines_March2015 import TopoLines_March2015
+        d.update ( TopoLines_March2015().Thresholds() )
 
         return d
