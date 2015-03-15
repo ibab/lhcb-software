@@ -1,4 +1,3 @@
-// $Id: PackedWeightsVector.cpp,v 1.9 2010-04-11 14:27:15 jonrob Exp $
 
 // local
 #include "Event/PackedWeightsVector.h"
@@ -14,8 +13,8 @@ using namespace LHCb;
 void WeightsVectorPacker::pack( const DataVector & weightsV,
                                 PackedDataVector & pweightsV ) const
 {
-  if ( 1 == pweightsV.packingVersion() ||
-       0 == pweightsV.packingVersion() )
+  const char pVer = pweightsV.packingVersion();
+  if ( 1 == pVer || 0 == pVer )
   {
     pweightsV.data().reserve( weightsV.size() );
     for ( const Data * weights : weightsV )
@@ -42,7 +41,7 @@ void WeightsVectorPacker::pack( const DataVector & weightsV,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << (int)pweightsV.packingVersion();
+    mess << "Unknown packed data version " << (int)pVer;
     throw GaudiException( mess.str(), "WeightsVectorPacker", StatusCode::FAILURE );
   }
 }
@@ -50,22 +49,16 @@ void WeightsVectorPacker::pack( const DataVector & weightsV,
 void WeightsVectorPacker::unpack( const PackedDataVector & pweightsV,
                                   DataVector       & weightsV ) const
 {
-  if ( 1 == pweightsV.packingVersion() ||
-       0 == pweightsV.packingVersion() )
+  const char pVer = pweightsV.packingVersion();
+  if ( 1 == pVer || 0 == pVer )
   {
     weightsV.reserve( pweightsV.data().size() );
     for ( const PackedData & pweights : pweightsV.data() )
     {
       // make and save new unpacked data
       Data * weights  = new Data();
-      if ( 0 == pweightsV.packingVersion() )
-      {
-        weightsV.insert( weights );
-      }
-      else
-      { 
-        weightsV.insert( weights, pweights.pvKey );
-      }
+      if ( 0 == pVer ) { weightsV.insert( weights ); }
+      else             { weightsV.insert( weights, pweights.pvKey ); }
 
       // fill the unpacked weights vector
       LHCb::WeightsVector::WeightDataVector & wWeights = 
@@ -83,7 +76,7 @@ void WeightsVectorPacker::unpack( const PackedDataVector & pweightsV,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << (int)pweightsV.packingVersion();
+    mess << "Unknown packed data version " << (int)pVer;
     throw GaudiException( mess.str(), "WeightsVectorPacker", StatusCode::FAILURE );
   }
 }

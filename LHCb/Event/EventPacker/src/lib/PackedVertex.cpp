@@ -60,6 +60,7 @@ void VertexPacker::pack( const Data & vert,
       pverts.addExtra( E.first, m_pack.fltPacked(E.second) );
     }
     pvert.lastInfo = pverts.extras().size();
+
   }
   else
   {
@@ -136,6 +137,7 @@ void VertexPacker::unpack( const PackedData       & pvert,
       const PackedDataVector::ExtraInfo& info = *(pverts.extras().begin()+kEx);
       vert.addInfo( info.first, m_pack.fltPacked( info.second ) );
     }
+
   }
   else
   {
@@ -143,6 +145,7 @@ void VertexPacker::unpack( const PackedData       & pvert,
     mess << "Unknown packed data version " << (int)pverts.packingVersion();
     throw GaudiException( mess.str(), "VertexPacker", StatusCode::FAILURE );
   }
+
 }
 
 void VertexPacker::unpack( const PackedDataVector & pverts,

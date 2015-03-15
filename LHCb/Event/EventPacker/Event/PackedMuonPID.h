@@ -98,6 +98,8 @@ namespace LHCb
     /// Read access to the data vector
     const Vector & data() const { return m_vect; }
 
+  public:
+
     /// Set the packing version
     void setPackingVersion( const char ver ) { m_packingVersion = ver; }
 
@@ -178,6 +180,19 @@ namespace LHCb
 
     /// Access the parent algorithm
     GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
+
+    /// Check if the given packing version is supported
+    bool isSupportedVer( const char& ver ) const
+    {
+      const bool OK = ( 2 == ver || 1 == ver || 0 == ver );
+      if ( !OK )
+      {
+        std::ostringstream mess;
+        mess << "Unknown packed data version " << (int)ver;
+        throw GaudiException( mess.str(), "MuonPIDPacker", StatusCode::FAILURE );
+      }
+      return OK;
+    }
 
   private:
 

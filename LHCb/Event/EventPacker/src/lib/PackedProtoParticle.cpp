@@ -23,95 +23,106 @@ ProtoParticlePacker::pack( const Data & proto,
                            PackedData & pproto,
                            PackedDataVector & pprotos ) const
 {
-  if ( parent().msgLevel(MSG::VERBOSE) )
-    parent().verbose() << "Packing ProtoParticle " << proto.key() << endmsg;
-
   // packing version
   const char ver = pprotos.packingVersion();
-
-  if ( 0 != proto.track() )
+  if ( 1 == ver || 0 == ver )
   {
-    pproto.track = ( 0==ver ? 
-                     m_pack.reference32( &pprotos, proto.track()->parent(), proto.track()->key() ) :
-                     m_pack.reference64( &pprotos, proto.track()->parent(), proto.track()->key() ) );
+
     if ( parent().msgLevel(MSG::VERBOSE) )
-      parent().verbose() << " -> Track " << proto.track() << " "
-                         << proto.track()->parent()->registry()->identifier() << " "
-                         << pproto.track
-                         << endmsg;
-  }
-  else
-  {
-    pproto.track = -1;
-  }
+      parent().verbose() << "Packing ProtoParticle " << proto.key() << endmsg;
 
-  if ( 0 != proto.richPID() )
-  {
-    pproto.richPID = ( 0==ver ? 
-                       m_pack.reference32( &pprotos, proto.richPID()->parent(), proto.richPID()->key() ) :
-                       m_pack.reference64( &pprotos, proto.richPID()->parent(), proto.richPID()->key() ) ); 
-    if ( parent().msgLevel(MSG::VERBOSE) )
-      parent().verbose() << " -> RichPID " << proto.richPID() << " "
-                         << proto.richPID()->parent()->registry()->identifier() << " "
-                         << pproto.richPID
-                         << endmsg;
-  }
-  else
-  {
-    pproto.richPID = -1;
-  }
-
-  if ( 0 != proto.muonPID() )
-  {
-    pproto.muonPID = ( 0==ver ? 
-                       m_pack.reference32( &pprotos, proto.muonPID()->parent(), proto.muonPID()->key() ) :
-                       m_pack.reference64( &pprotos, proto.muonPID()->parent(), proto.muonPID()->key() ) );
-    if ( parent().msgLevel(MSG::VERBOSE) )
-      parent().verbose() << " -> MuonPID " << proto.muonPID() << " "
-                         << proto.muonPID()->parent()->registry()->identifier() << " "
-                         << pproto.muonPID
-                         << endmsg;
-  }
-  else
-  {
-    pproto.muonPID = -1;
-  }
-
-  //== Store the CaloHypos
-  pproto.firstHypo = pprotos.refs().size();
-  for ( SmartRefVector<LHCb::CaloHypo>::const_iterator itO = proto.calo().begin();
-        proto.calo().end() != itO; ++itO )
-  {
-    pprotos.refs().push_back( 0==ver ? 
-                              m_pack.reference32( &pprotos, (*itO)->parent(), (*itO)->key() ) :
-                              m_pack.reference64( &pprotos, (*itO)->parent(), (*itO)->key() ) );
-    if ( parent().msgLevel(MSG::VERBOSE) )
-      parent().verbose() << " -> CaloHypo " << *itO << " "
-                         << (*itO)->parent()->registry()->identifier() << " "
-                         << pprotos.refs().back()
-                         << endmsg;
-  }
-  pproto.lastHypo = pprotos.refs().size();
-
-  //== Handles the ExtraInfo
-  pproto.firstExtra = pprotos.extras().size();
-  const double high = boost::numeric::bounds<float>::highest();
-  const double low  = boost::numeric::bounds<float>::lowest();
-  for ( const auto& einfo : proto.extraInfo() )
-  {
-    const double& info = einfo.second;
-    if ( info > high || info < low )
+    if ( 0 != proto.track() )
     {
-      std::ostringstream s;
-      s << (LHCb::ProtoParticle::additionalInfo)einfo.first;
-      parent().Warning( "ExtraInfo '" + s.str() +
-                        "' out of floating point range. Truncating value." ).ignore();
-      // if      ( info > high ) { info = high; }
-      // else if ( info < low  ) { info = low;  }
+      pproto.track = ( 0==ver ?
+                       m_pack.reference32( &pprotos, proto.track()->parent(), proto.track()->key() ) :
+                       m_pack.reference64( &pprotos, proto.track()->parent(), proto.track()->key() ) );
+      if ( parent().msgLevel(MSG::VERBOSE) )
+        parent().verbose() << " -> Track " << proto.track() << " "
+                           << proto.track()->parent()->registry()->identifier() << " "
+                           << pproto.track
+                           << endmsg;
     }
-    pprotos.extras().push_back( std::make_pair(einfo.first,m_pack.fltPacked(info)) );
+    else
+    {
+      pproto.track = -1;
+    }
+
+    if ( 0 != proto.richPID() )
+    {
+      pproto.richPID = ( 0==ver ?
+                         m_pack.reference32( &pprotos, proto.richPID()->parent(), proto.richPID()->key() ) :
+                         m_pack.reference64( &pprotos, proto.richPID()->parent(), proto.richPID()->key() ) );
+      if ( parent().msgLevel(MSG::VERBOSE) )
+        parent().verbose() << " -> RichPID " << proto.richPID() << " "
+                           << proto.richPID()->parent()->registry()->identifier() << " "
+                           << pproto.richPID
+                           << endmsg;
+    }
+    else
+    {
+      pproto.richPID = -1;
+    }
+
+    if ( 0 != proto.muonPID() )
+    {
+      pproto.muonPID = ( 0==ver ?
+                         m_pack.reference32( &pprotos, proto.muonPID()->parent(), proto.muonPID()->key() ) :
+                         m_pack.reference64( &pprotos, proto.muonPID()->parent(), proto.muonPID()->key() ) );
+      if ( parent().msgLevel(MSG::VERBOSE) )
+        parent().verbose() << " -> MuonPID " << proto.muonPID() << " "
+                           << proto.muonPID()->parent()->registry()->identifier() << " "
+                           << pproto.muonPID
+                           << endmsg;
+    }
+    else
+    {
+      pproto.muonPID = -1;
+    }
+
+    //== Store the CaloHypos
+    pproto.firstHypo = pprotos.refs().size();
+    for ( SmartRefVector<LHCb::CaloHypo>::const_iterator itO = proto.calo().begin();
+          proto.calo().end() != itO; ++itO )
+    {
+      pprotos.refs().push_back( 0==ver ?
+                                m_pack.reference32( &pprotos, (*itO)->parent(), (*itO)->key() ) :
+                                m_pack.reference64( &pprotos, (*itO)->parent(), (*itO)->key() ) );
+      if ( parent().msgLevel(MSG::VERBOSE) )
+        parent().verbose() << " -> CaloHypo " << *itO << " "
+                           << (*itO)->parent()->registry()->identifier() << " "
+                           << pprotos.refs().back()
+                           << endmsg;
+    }
+    pproto.lastHypo = pprotos.refs().size();
+
+    //== Handles the ExtraInfo
+    pproto.firstExtra = pprotos.extras().size();
+    const double high = boost::numeric::bounds<float>::highest();
+    const double low  = boost::numeric::bounds<float>::lowest();
+    for ( const auto& einfo : proto.extraInfo() )
+    {
+      const double& info = einfo.second;
+      if ( info > high || info < low )
+      {
+        std::ostringstream s;
+        s << (LHCb::ProtoParticle::additionalInfo)einfo.first;
+        parent().Warning( "ExtraInfo '" + s.str() +
+                          "' out of floating point range. Truncating value." ).ignore();
+        // if      ( info > high ) { info = high; }
+        // else if ( info < low  ) { info = low;  }
+      }
+      pprotos.extras().push_back( std::make_pair(einfo.first,m_pack.fltPacked(info)) );
+    }
+    pproto.lastExtra = pprotos.extras().size();
+
   }
-  pproto.lastExtra = pprotos.extras().size();
+  else
+  {
+    std::ostringstream mess;
+    mess << "Unknown packed data version " << (int)ver;
+    throw GaudiException( mess.str(), "ProtoParticlePacker", StatusCode::FAILURE );
+  }
+
 }
 
 void
@@ -137,110 +148,120 @@ ProtoParticlePacker::unpack( const PackedData       & pproto,
                              const PackedDataVector & pprotos,
                              DataVector             & protos ) const
 {
-  if ( parent().msgLevel(MSG::VERBOSE) )
-    parent().verbose() << "UnPacking ProtoParticle " << pproto.key << endmsg;
-
   // packing version
   const char ver = pprotos.packingVersion();
-
-  int hintID(0), key(0);
-
-  if ( -1 != pproto.track )
+  if ( 1 == ver || 0 == ver )
   {
-    if ( ( 0==ver && m_pack.hintAndKey32(pproto.track,&pprotos,&protos,hintID,key) ) ||
-         ( 0!=ver && m_pack.hintAndKey64(pproto.track,&pprotos,&protos,hintID,key) ) )
+
+    if ( parent().msgLevel(MSG::VERBOSE) )
+      parent().verbose() << "UnPacking ProtoParticle " << pproto.key << endmsg;
+
+    int hintID(0), key(0);
+
+    if ( -1 != pproto.track )
     {
-      SmartRef<LHCb::Track> ref( &protos, hintID, key );
-      proto.setTrack( ref );
-      if ( parent().msgLevel(MSG::VERBOSE) )
+      if ( ( 0==ver && m_pack.hintAndKey32(pproto.track,&pprotos,&protos,hintID,key) ) ||
+           ( 0!=ver && m_pack.hintAndKey64(pproto.track,&pprotos,&protos,hintID,key) ) )
       {
-        parent().verbose() << " -> Track PackedRef " << pproto.track
-                           << " hintID " << hintID << " key " << key
-                           << " -> SmartRef " << proto.track();
-        if ( proto.track() ) 
-        parent().verbose() << " " << proto.track()->parent()->registry()->identifier();
-        parent().verbose() << endmsg;
+        SmartRef<LHCb::Track> ref( &protos, hintID, key );
+        proto.setTrack( ref );
+        if ( parent().msgLevel(MSG::VERBOSE) )
+        {
+          parent().verbose() << " -> Track PackedRef " << pproto.track
+                             << " hintID " << hintID << " key " << key
+                             << " -> SmartRef " << proto.track();
+          if ( proto.track() )
+            parent().verbose() << " " << proto.track()->parent()->registry()->identifier();
+          parent().verbose() << endmsg;
+        }
+      }
+      else
+      {
+        parent().Error( "Corrupt ProtoParticle Track SmartRef detected." ).ignore();
       }
     }
-    else
-    {
-      parent().Error( "Corrupt ProtoParticle Track SmartRef detected." ).ignore();
-    }
-  }
 
-  if ( -1 != pproto.richPID )
-  {
-    if ( ( 0==ver && m_pack.hintAndKey32(pproto.richPID,&pprotos,&protos,hintID,key) ) ||
-         ( 0!=ver && m_pack.hintAndKey64(pproto.richPID,&pprotos,&protos,hintID,key) ) )
+    if ( -1 != pproto.richPID )
     {
-      SmartRef<LHCb::RichPID> ref( &protos, hintID, key );
-      proto.setRichPID( ref );
-      if ( parent().msgLevel(MSG::VERBOSE) )
+      if ( ( 0==ver && m_pack.hintAndKey32(pproto.richPID,&pprotos,&protos,hintID,key) ) ||
+           ( 0!=ver && m_pack.hintAndKey64(pproto.richPID,&pprotos,&protos,hintID,key) ) )
       {
-        parent().verbose() << " -> RichPID PackedRef " << pproto.richPID
-                           << " hintID " << hintID << " key " << key
-                           << " -> SmartRef " << proto.richPID();
-        if ( proto.richPID() )
-          parent().verbose() << " " << proto.richPID()->parent()->registry()->identifier();
-        parent().verbose() << endmsg;
+        SmartRef<LHCb::RichPID> ref( &protos, hintID, key );
+        proto.setRichPID( ref );
+        if ( parent().msgLevel(MSG::VERBOSE) )
+        {
+          parent().verbose() << " -> RichPID PackedRef " << pproto.richPID
+                             << " hintID " << hintID << " key " << key
+                             << " -> SmartRef " << proto.richPID();
+          if ( proto.richPID() )
+            parent().verbose() << " " << proto.richPID()->parent()->registry()->identifier();
+          parent().verbose() << endmsg;
+        }
+      }
+      else
+      {
+        parent().Error( "Corrupt ProtoParticle RichPID SmartRef detected." ).ignore();
       }
     }
-    else
-    {
-      parent().Error( "Corrupt ProtoParticle RichPID SmartRef detected." ).ignore();
-    }
-  }
 
-  if ( -1 != pproto.muonPID )
-  {
-    if ( ( 0==ver && m_pack.hintAndKey32(pproto.muonPID,&pprotos,&protos,hintID,key) ) ||
-         ( 0!=ver && m_pack.hintAndKey64(pproto.muonPID,&pprotos,&protos,hintID,key) ) )
+    if ( -1 != pproto.muonPID )
     {
-      SmartRef<LHCb::MuonPID> ref( &protos, hintID, key );
-      proto.setMuonPID( ref );
-      if ( parent().msgLevel(MSG::VERBOSE) )
+      if ( ( 0==ver && m_pack.hintAndKey32(pproto.muonPID,&pprotos,&protos,hintID,key) ) ||
+           ( 0!=ver && m_pack.hintAndKey64(pproto.muonPID,&pprotos,&protos,hintID,key) ) )
       {
-        parent().verbose() << " -> MuonPID PackedRef " << pproto.muonPID 
-                           << " hintID " << hintID << " key " << key
-                           << " -> SmartRef " << proto.muonPID();
-        if ( proto.muonPID() )
-          parent().verbose() << " " << proto.muonPID()->parent()->registry()->identifier();
-        parent().verbose() << endmsg;
+        SmartRef<LHCb::MuonPID> ref( &protos, hintID, key );
+        proto.setMuonPID( ref );
+        if ( parent().msgLevel(MSG::VERBOSE) )
+        {
+          parent().verbose() << " -> MuonPID PackedRef " << pproto.muonPID
+                             << " hintID " << hintID << " key " << key
+                             << " -> SmartRef " << proto.muonPID();
+          if ( proto.muonPID() )
+            parent().verbose() << " " << proto.muonPID()->parent()->registry()->identifier();
+          parent().verbose() << endmsg;
+        }
+      }
+      else
+      {
+        parent().Error( "Corrupt ProtoParticle MuonPID SmartRef detected." ).ignore();
       }
     }
-    else
-    {
-      parent().Error( "Corrupt ProtoParticle MuonPID SmartRef detected." ).ignore();
-    }
-  }
-  
-  for ( int kk = pproto.firstHypo; pproto.lastHypo > kk; ++kk )
-  {
-    const long long reference = *(pprotos.refs().begin()+kk);
-    if ( ( 0==ver && m_pack.hintAndKey32(reference,&pprotos,&protos,hintID,key) ) ||
-         ( 0!=ver && m_pack.hintAndKey64(reference,&pprotos,&protos,hintID,key) ) )
-    {
-      SmartRef<LHCb::CaloHypo> ref( &protos, hintID, key );
-      proto.addToCalo( ref );
-      if ( parent().msgLevel(MSG::VERBOSE) )
-      {
-        parent().verbose() << " -> CaloHypo PackedRef " << reference
-                           << " hintID " << hintID << " key " << key
-                           << " -> SmartRef " << ref << " "
-                           << ref->parent()->registry()->identifier()
-                           << endmsg;
-      }
-    }  
-    else
-    {
-      parent().Error( "Corrupt ProtoParticle CaloHypo SmartRef detected." ).ignore();
-    }
-  }
 
-  for ( int kk = pproto.firstExtra; pproto.lastExtra > kk; ++kk )
+    for ( int kk = pproto.firstHypo; pproto.lastHypo > kk; ++kk )
+    {
+      const long long reference = *(pprotos.refs().begin()+kk);
+      if ( ( 0==ver && m_pack.hintAndKey32(reference,&pprotos,&protos,hintID,key) ) ||
+           ( 0!=ver && m_pack.hintAndKey64(reference,&pprotos,&protos,hintID,key) ) )
+      {
+        SmartRef<LHCb::CaloHypo> ref( &protos, hintID, key );
+        proto.addToCalo( ref );
+        if ( parent().msgLevel(MSG::VERBOSE) )
+        {
+          parent().verbose() << " -> CaloHypo PackedRef " << reference
+                             << " hintID " << hintID << " key " << key
+                             << " -> SmartRef " << ref << " "
+                             << ref->parent()->registry()->identifier()
+                             << endmsg;
+        }
+      }
+      else
+      {
+        parent().Error( "Corrupt ProtoParticle CaloHypo SmartRef detected." ).ignore();
+      }
+    }
+
+    for ( int kk = pproto.firstExtra; pproto.lastExtra > kk; ++kk )
+    {
+      const std::pair<int,int>& info = *(pprotos.extras().begin()+kk);
+      proto.addInfo( info.first, m_pack.fltPacked( info.second ) );
+    }
+
+  }
+  else
   {
-    const std::pair<int,int>& info = *(pprotos.extras().begin()+kk);
-    proto.addInfo( info.first, m_pack.fltPacked( info.second ) );
+    std::ostringstream mess;
+    mess << "Unknown packed data version " << (int)ver;
+    throw GaudiException( mess.str(), "ProtoParticlePacker", StatusCode::FAILURE );
   }
 
 }

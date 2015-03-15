@@ -4,6 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2015-03-15 - Chris Jones
+ - Add some future proofing packing version checks to packers which had
+   versioning added in the last commit.
+
 !========================= EventPacker v5r0 2015-03-13 =========================
 ! 2015-03-10 - Chris Jones
  - Fix typo in MuonPIDPacker where version 2 was not declared as a known 
@@ -15,7 +19,7 @@
  - Add a warning message to reference32 to warn if any code is still creating
    potentially problematic 32 bit packed references. Method is retained for
    backwards compatibility...
- - Add checks for remaining calls to hintAndKey64 for ccorrupt references
+ - Add checks for remaining calls to hintAndKey64 for corrupt references
    (should be impossible for 64 bit packing).
 
 ! 2015-03-07 - Chris Jones
