@@ -102,16 +102,23 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
     __slots__ = theseslots
     __lines__ = {}
 
-    def __apply_configuration__(self):
-        self.__lines__.update(D2HHHLines.locallines())
-        self.__lines__.update(D2V0HLines.locallines())
-        self.__lines__.update(D2V0V0Lines.locallines())
-        self.__lines__.update(D02HHLines.stages())
-        self.__lines__.update(D2HHPi0Lines.locallines())
-        self.__lines__.update(D02HHHHLines.locallines())
-        self.__lines__.update(D2HHHKsLines.locallines())
+    def stages ( self , nickname = '' ) :
 
+        if not self.__lines__ :
+            self.__lines__.update(D2HHHLines.locallines())
+            self.__lines__.update(D2V0HLines.locallines())
+            self.__lines__.update(D2V0V0Lines.locallines())
+            self.__lines__.update(D02HHLines.stages())
+            self.__lines__.update(D2HHPi0Lines.locallines())
+            self.__lines__.update(D02HHHHLines.locallines())
+            self.__lines__.update(D2HHHKsLines.locallines())
+
+        return self.__lines__[nickname] if nickname else self.__lines__
+            
+    def __apply_configuration__(self):
+        
+        _stages = self.stages()
         from HltLine.HltLine import Hlt2Line
-        for nickname, algos in self.algorithms(self.__lines__).iteritems():
+        for nickname, algos in self.algorithms( _stages ).iteritems():
             Hlt2Line(nickname, prescale = self.prescale,
                      algos = algos, postscale = self.postscale)

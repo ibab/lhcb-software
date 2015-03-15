@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-15 - Vanya Belyaev
+ - CharmHad/Lines.py 
+   add 'stages' to allow exporting the shared stages into another directory/lines  
+
 ! 2015-03-13 - Jibo He
  - python/Hlt2Lines/CcDiHadron/Lines.py
   . Updated DiPhi cuts, as "(INTREE( ('K+'==ABSID)...)" seems to only cut on one of kaons.
