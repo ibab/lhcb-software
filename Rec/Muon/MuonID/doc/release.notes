@@ -3,6 +3,9 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2015-03-15 - Roel Aaij
+ - Fix requirements after reorganisation of code.
+
 ! 2015-03-11 - Ricardo Vazquez Gomez
  - Bug fix the NShared computation in the DLLMuonTool. 
 

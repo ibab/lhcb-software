@@ -17,11 +17,12 @@ use vdt                v* LCG_Interfaces
 
 
 # build a MuonID library
-library MuonID ../src/*.cpp
+library MuonIDLib ../src/lib/*.cpp
+library MuonID ../src/component/*.cpp
 
 apply_pattern install_more_includes more=MuonID
+apply_pattern linker_library library=MuonIDLib
 apply_pattern component_library library=MuonID
-apply_pattern linker_library library=MuonID
 apply_pattern install_python_modules
 
 macro_append ROOT_linkopts " -lHist -lGpad -lGraf" \
