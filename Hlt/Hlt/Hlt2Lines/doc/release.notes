@@ -9,6 +9,10 @@
 !----------------------------------------------------------------------------
 
 ! 2015-03-15 - Vanya Belyaev
+ - DPS/Lines.py 
+   update lnes for associative production
+
+! 2015-03-15 - Vanya Belyaev
  - CharmHad/D2HHHLines.py 
    CharmHad/Stages.py
    propagate  fixes by Roel to allow use of basic charm for other lines   

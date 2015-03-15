@@ -25,8 +25,10 @@ The primary goal is to ``protect'' these events from prescaling
 __version__ = "$Revision: $"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2015-03-10"
-__all__     = ( 'MergeCharm'  ,
-                'DiCharm'     )
+__all__     = ( 'MergeCharm'     ,
+                'DoubleDiMuon'   ,
+                'DoubleCharm'    ,
+                'DiMuonAndCharm' )
 # =============================================================================
 from Hlt2Lines.Utilities.Hlt2Combiner    import Hlt2Combiner
 from Hlt2Lines.Utilities.Hlt2Filter      import Hlt2ParticleFilter
@@ -58,13 +60,66 @@ class DiCharm(Hlt2Combiner) :
                                        MotherCut      = 'ALL'  )
 
 # ==============================================================================
+decays_2x2mu = [ 'chi_b0(1P) -> J/psi(1S) J/psi(1S)'          ] 
+decays_2muHc = [ "[ chi_b1(1P) -> J/psi(1S) D0        ]cc"    ,
+                 "[ chi_b1(1P) -> J/psi(1S) D+        ]cc"    ,
+                 "[ chi_b1(1P) -> J/psi(1S) D_s+      ]cc"    ,
+                 "[ chi_b1(1P) -> J/psi(1S) Lambda_c+ ]cc"    ]
+decays_2xHc  = [ "   psi(3770) -> D0        D~0            "  ,
+                 " [ psi(3770) -> D0        D-         ]cc "  ,
+                 " [ psi(3770) -> D0        D_s-       ]cc "  ,
+                 " [ psi(3770) -> D0        Lambda_c~- ]cc "  ,
+                 #
+                 "   psi(3770) -> D+        D-             "  ,
+                 " [ psi(3770) -> D+        D_s-       ]cc "  ,
+                 " [ psi(3770) -> D+        Lambda_c~- ]cc "  ,
+                 #
+                 "   psi(3770) -> D_s+      D_s-           "  ,
+                 " [ psi(3770) -> D_s+      Lambda_c~- ]cc "  ,
+                 #
+                 "   psi(3770) -> Lambda_c+ Lambda_c~-     "  ,
+                 # double charm
+                 " [ psi(3770) -> D0        D0         ]cc"   ,
+                 " [ psi(3770) -> D0        D+         ]cc "  ,
+                 " [ psi(3770) -> D0        D_s+       ]cc "  ,
+                 " [ psi(3770) -> D0        Lambda_c+  ]cc "  ,
+                 #
+                 " [ psi(3770) -> D+        D+         ]cc "  ,
+                 " [ psi(3770) -> D+        D_s+       ]cc "  ,
+                 " [ psi(3770) -> D+        Lambda_c+  ]cc "  ,
+                 #
+                 " [ psi(3770) -> D_s+      D_s+       ]cc "  ,
+                 " [ psi(3770) -> D_s+      Lambda_c+  ]cc "  ,
+                 #
+                 " [ psi(3770) -> Lambda_c+ Lambda_c+  ]cc "  ]
+
+# =============================================================================
+class DoubleDiMuon  (DiCharm) :
+    def __init__ ( self , name , inputs ) :
+        DiCharm.__init__ ( self , name , decays_2x2mu , inputs )
+        
+# =============================================================================
+class DiMuonAndCharm(DiCharm) :
+    def __init__ ( self , name , inputs ) :
+        DiCharm.__init__ ( self , name , decays_2muHc , inputs )
+
+# =============================================================================
+class DoubleCharm(DiCharm) :
+    def __init__ ( self , name , inputs ) :
+        DiCharm.__init__ ( self , name , decays_2xHc  , inputs )
+        
+# ==============================================================================
 if '__main__' == __name__ :
 
-    from Gaudi.Configuration import log    
-    log.info ( 'I am here!!!' )
-
+    print 100*'*'
     print __doc__ 
-    print __all__ 
+    print 100*'*'
+    print 'Symbols : %s ' % list( __all__ ) 
+    print 'Author  : %s ' % __author__ 
+    print 'Date    : %s ' % __date__ 
+    print 'Verison : %s ' % __version__
+    print 100*'*'
+    
 # =============================================================================
 # The END 
 # =============================================================================
