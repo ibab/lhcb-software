@@ -33,5 +33,5 @@ class LambdaCLines(Hlt2LinesConfigurableUser):
 
         from HltLine.HltLine import Hlt2Line
         for nickname, algos in self.algorithms(stages).iteritems():
-            Hlt2Line('NewLambdaC2' + nickname, prescale = self.prescale,
+            Hlt2Line('TestLambdaC2' + nickname, prescale = self.prescale,
                      algos = algos, postscale = self.postscale)

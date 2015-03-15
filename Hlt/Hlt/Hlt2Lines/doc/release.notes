@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-15 - Roel Aaij
+ - Convert commissioning lines and CaloTest lines to new template.
+ - Remove all "old style" configurables.
+ - Remove "New" from line names.
+ 
 ! 2015-03-15 - Vanya Belyaev
  - DPS/Lines.py 
    update lnes for associative production
@@ -15,7 +20,7 @@
 ! 2015-03-15 - Vanya Belyaev
  - CharmHad/D2HHHLines.py 
    CharmHad/Stages.py
-   propagate  fixes by Roel to allow use of basic charm for other lines   
+   propagate fixes by Roel to allow use of basic charm for other lines   
 
 ! 2015-03-15 - Vanya Belyaev
  - CharmHad/Lines.py 

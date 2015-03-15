@@ -11,14 +11,14 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 class SingleMuonLines(Hlt2LinesConfigurableUser) :
     __slots__ = {'_stages' : {},
                  'Prescale' : {},
-                 'HltReq'  : {"NewSingleMuon" :  "HLT_PASS_RE('Hlt1TrackMuonDecision')"
+                 'HltReq'  : {"SingleMuon" :  "HLT_PASS_RE('Hlt1TrackMuonDecision')"
                               },
                  'Common' :        {'TrChi2'     :   5,    # Adimensional
                                     'Pt':            1000 * MeV },
 
-                 'NewSingleMuon' :    {'IP'     : 0.25 * mm,
-                                       'IPChi2' : 100, # Adimensional
-                                       },
+                 'SingleMuon' :    {'IP'     : 0.25 * mm,
+                                    'IPChi2' : 100, # Adimensional
+                                   },
 
                  'HighPT':         { 'HighPt' : 10000 *MeV },
                  
@@ -44,12 +44,12 @@ class SingleMuonLines(Hlt2LinesConfigurableUser) :
 
         from Stages import (SingleMuonFilter, DetachedSingleMuonFilter, SingleMuonHighPTFilter, SingleMuonRareFilter)
 
-        self._stages = { 'SharedSingleMuon' : [SingleMuonFilter('SharedSingleMuon')],
-                         'NewSingleMuon'        : [DetachedSingleMuonFilter('NewSingleMuon')],
-                        'HighPT'            : [SingleMuonHighPTFilter('HighPT')],
-                        'VHighPT'           : [SingleMuonHighPTFilter('VHighPT')],
-                        'LowPT'             : [SingleMuonHighPTFilter('LowPT')],
-                        'Rare'              : [SingleMuonRareFilter('Rare')]
+        self._stages = {'SharedSingleMuon' : [SingleMuonFilter('SharedSingleMuon')],
+                        'SingleMuon'       : [DetachedSingleMuonFilter('SingleMuon')],
+                        'HighPT'           : [SingleMuonHighPTFilter('HighPT')],
+                        'VHighPT'          : [SingleMuonHighPTFilter('VHighPT')],
+                        'LowPT'            : [SingleMuonHighPTFilter('LowPT')],
+                        'Rare'             : [SingleMuonRareFilter('Rare')]
                         }
         if nickname:
             return self._stages[nickname]
@@ -63,13 +63,12 @@ class SingleMuonLines(Hlt2LinesConfigurableUser) :
             else:
                 return ""
 
-
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line
         from Configurables import HltANNSvc
         stages = self.stages()
         for (nickname, algos) in self.algorithms(stages).iteritems():
-            linename = 'NewSingleMuon' + nickname if nickname != 'NewSingleMuon' else nickname
+            linename = 'SingleMuon' + nickname if nickname != 'SingleMuon' else nickname
 
             Hlt2Line(linename, prescale = self.prescale,
                      HLT1 = self.hlt_req(nickname) ,

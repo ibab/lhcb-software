@@ -12,7 +12,7 @@ class FilterParts(Hlt2ParticleFilter):
         elif pid == 'E':  pc += " & (PIDe > %(PIDE_MIN)s)))"
         else:             pc += '))'
         from HltTracking.HltPVs import PV3D
-        Hlt2ParticleFilter.__init__(self, 'NewTopoInput' + name + pid, pc,
+        Hlt2ParticleFilter.__init__(self, 'TopoInput' + name + pid, pc,
                                     inputs, shared = True, 
                                     dependencies = [PV3D('Hlt2')])
 
@@ -25,7 +25,7 @@ class FilterMforN(Hlt2ParticleFilter):
         if m == 2: pc = ("(M < %f) & (VFASPF(VCHI2) < %%(V2BODYCHI2_MAX)s)" %
                          (5000 * MeV if n == 4 else 6000 * MeV))
         else:      pc = '(M < %f)' % (6000 * MeV)
-        Hlt2ParticleFilter.__init__(self, 'NewTopo%s%iFor%i' % (tag, m, n),
+        Hlt2ParticleFilter.__init__(self, 'Topo%s%iFor%i' % (tag, m, n),
                                     pc, inputs, shared = True)
 
 class FilterNforN(Hlt2ParticleFilter):
@@ -45,7 +45,7 @@ class FilterNforN(Hlt2ParticleFilter):
               "& %s, TRCHI2DOF) < %%(MIN_TRCHI2DOF_MAX)s)"
               % (pids, pt, n, pids))
         from HltTracking.HltPVs import PV3D
-        Hlt2ParticleFilter.__init__(self, 'NewTopo%s%ifor%i' % (tag, n, n),
+        Hlt2ParticleFilter.__init__(self, 'Topo%s%ifor%i' % (tag, n, n),
                                     pc, inputs, shared = True,
                                     tistos = 'TisTosSpec',
                                     dependencies = [PV3D('Hlt2')])
@@ -148,7 +148,7 @@ class CombineN(Hlt2Combiner):
         mc = "(BPVDIRA > 0) & (BPVVDCHI2 > %(BPVVDCHI2_MIN)s)"
         if tag == 'RAD': decays = ['B+ -> K*(892)0  gamma']; cc = "AM > 0"
         from HltTracking.HltPVs import PV3D
-        Hlt2Combiner.__init__(self, 'NewTopo%s%iBody' % (tag, n), decays,
+        Hlt2Combiner.__init__(self, 'Topo%s%iBody' % (tag, n), decays,
                               inputs, shared = True, 
                               dependencies = [PV3D('Hlt2')],
                               CombinationCut = cc, MotherCut = mc)

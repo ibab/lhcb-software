@@ -85,13 +85,13 @@ class TopoLines(Hlt2LinesConfigurableUser):
                 einputs.append(FilterMforN('E', n, n + 1, [ecombos[-1]]))
             params = self.getProps()['Common']['BDT_%iBODY_PARAMS' % n]
             stages  = {}
-            stages['NewTopo%iBodySimple' % n] = [
+            stages['Topo%iBodySimple' % n] = [
                 FilterSimple(n, [mfiltered], varmap)]
-            stages['NewTopo%iBodyBBDT' % n] = [
+            stages['Topo%iBodyBBDT' % n] = [
                 FilterBDT('', n, [mfiltered], varmap, params)]
-            stages['NewTopoMu%iBodyBBDT' % n] = [
+            stages['TopoMu%iBodyBBDT' % n] = [
                 FilterBDT('MU', n, [mfiltered], varmap, params)]
-            stages['NewTopoE%iBodyBBDT' % n] = [
+            stages['TopoE%iBodyBBDT' % n] = [
                 FilterBDT('E', n, [efiltered], varmap, params)]
             from HltLine.HltLine import Hlt2Line
             for (name, algos) in self.algorithms(stages).iteritems():
@@ -103,9 +103,9 @@ class TopoLines(Hlt2LinesConfigurableUser):
         stages = {}
         params = self.getProps()['Common']['BDT_2BODY_PARAMS']
         combos = CombineN('RAD', 3, [minputs[0], BiKalmanFittedPhotonsFromL0])
-        stages['NewTopoRad2BodyBBDT'] = [
+        stages['TopoRad2BodyBBDT'] = [
             FilterBDT('RAD', 2, [mcombos[0]], varmap, params)]
-        stages['NewTopoRad2plus1BodyBBDT'] = [
+        stages['TopoRad2plus1BodyBBDT'] = [
             FilterBDT('RAD', 3, [combos], varmap, params)]
         from HltLine.HltLine import Hlt2Line
         for (name, algos) in self.algorithms(stages).iteritems():

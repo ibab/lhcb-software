@@ -36,8 +36,8 @@ class TurboLines(Hlt2LinesConfigurableUser) :
             for line in lines:
                 stages = conf.stages(line)
                 algos = conf.algorithms({'Turbo' : stages})
-                Hlt2Line('New' + module + line + 'Turbo', prescale = self.prescale,
+                Hlt2Line(module + line + 'Turbo', prescale = self.prescale,
                          algos = algos['Turbo'], postscale = self.postscale, Turbo = True)
                 if module is 'DiMuon':
                     if line is 'JPsi':
-                        HltANNSvc().Hlt2SelectionID.update( { 'Hlt2New'+module+line+'Turbo'+'Decision':  50212 } ) 
+                        HltANNSvc().Hlt2SelectionID.update( { 'Hlt2'+module+line+'Turbo'+'Decision':  50212 } ) 
