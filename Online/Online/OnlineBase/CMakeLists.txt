@@ -13,9 +13,9 @@ gaudi_add_library(OnlineBase
                     src/SCR/*.cpp
                     src/TAN/*.cpp
                     src/WT/*.cpp
-                  PUBLIC_HEADERS OnlineBase
+                  PUBLIC_HEADERS OnlineBase/.
                   INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/OnlineBase
                   LINK_LIBRARIES ${CMAKE_DL_LIBS} -lrt)
 
 message(WARNING "OnlineBase is used in CMT to define compile options")
-message(WARNING "OnlineBase headers are used from 'inside' the OnlineBase directory")
+

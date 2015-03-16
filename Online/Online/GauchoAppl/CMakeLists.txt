@@ -14,7 +14,6 @@ gaudi_add_library(GauchoApplLib src/*.cpp
 
 gaudi_add_module(GauchoAppl src/components/*.cpp
                  LINK_LIBRARIES GauchoApplLib GaudiOnline ROOT)
-
 macro(ga_test name)
   gaudi_add_executable(${name} ${ARGN}
                        LINK_LIBRARIES GauchoApplLib)
