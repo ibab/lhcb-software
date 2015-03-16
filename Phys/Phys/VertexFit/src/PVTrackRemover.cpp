@@ -41,7 +41,9 @@ PVTrackRemover::PVTrackRemover( const std::string& type,
 StatusCode PVTrackRemover::initialize() 
 {
   m_pvTool = tool<IPVOfflineTool>(m_pvToolType);
-  
+  warning() << "PVTrackRemover is no longer maintained and thus deprecated." 
+            << endmsg;
+
   if (0==m_pvTool) {
     return Error("Could not load IPVOfflineTool " + m_pvToolType);
   }

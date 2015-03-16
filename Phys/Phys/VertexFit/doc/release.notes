@@ -4,6 +4,9 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+! 2015-03-16 - Sascha Stahl
+ - Added deprecation warning to PVTrackRemover.
+
 ! 2015-03-16 - Chris Jones
  - Add depreciation warnings to AdaptivePVReFitter and PVReFitter.
 
