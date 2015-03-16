@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-03-16 - Christian Linn
+ - Updated Physics_draftEM2015 to run with converted HLT2 lines
+
 ! 2015-03-15 - Roel Aaij
  - Remove settings that are obsolete after removes of "old-style" configurables
    from Hlt2Lines.

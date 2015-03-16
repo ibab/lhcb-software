@@ -41,7 +41,7 @@ class Physics_draftEM2015( object ):
             raise RuntimeError( 'Must update HltType when modifying ActiveHlt.Lines()' )
         
     def L0TCK(self) :
-        return '0x0046'
+        return '0x0046' 
 
     def HltType(self) :
         self.verifyType( Physics_draftEM2015 ) 
@@ -60,19 +60,19 @@ class Physics_draftEM2015( object ):
         from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
         from Hlt1Lines.Hlt1CalibRICHMirrorLines     import Hlt1CalibRICHMirrorLinesConf
 
-        from Hlt2Lines.Hlt2InclusiveMuonLines   import Hlt2InclusiveMuonLinesConf
-        from Hlt2Lines.Hlt2InclusiveDiMuonLines import Hlt2InclusiveDiMuonLinesConf
-        from Hlt2Lines.Hlt2CommissioningLines   import Hlt2CommissioningLinesConf
+        from Hlt2Lines.Commissioning.Lines      import CommissioningLines
         from Hlt2Lines.DiMuon.Lines             import DiMuonLines
-        from Hlt2Lines.Hlt2TrackingEfficiencyLines import Hlt2TrackingEfficiencyLinesConf
+        from Hlt2Lines.SingleMuon.Lines         import SingleMuonLines
+        from Hlt2Lines.TrackEffDiMuon.Lines     import TrackEffDiMuonLines
+        from Hlt2Lines.TrackEff.Lines           import TrackEffLines
         from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 
-        thresholds = { Hlt1TrackLinesConf :    {'AllL0_Velo_NHits'   : 0   #OFF
+        thresholds = { Hlt1TrackLinesConf :    {'AllL0_Velo_NHits'   : 9   #OFF
                                                , 'AllL0_Velo_Qcut'   : 999 #OFF
                                                , 'AllL0_TrNTHits'    : 0   #PFF
-                                               , 'AllL0_PT'          : 1000.
+                                               , 'AllL0_PT'          : 800.
                                                , 'AllL0_P'           : 3000.
-                                               , 'AllL0_IPChi2'      : 9.0
+                                               , 'AllL0_IPChi2'      : 10.0
                                                , 'AllL0_TrChi2'      : 3.0
                                                , 'AllL0_GEC'         : 'Loose'
                                                , 'Muon_TrNTHits'     : 0 #OFF
@@ -83,8 +83,8 @@ class Physics_draftEM2015( object ):
                                                , 'Muon_IPChi2'       : 4.0
                                                , 'Muon_TrChi2'       : 3.0
                                                , 'Muon_GEC'          : 'Loose'
-                                               , 'ODINTriggers'      : {'AllL0'  : ['LHCb.ODIN.PhysicsTrigger']}
-                                               , 'L0Channels'        : {'AllL0'  : '',
+                                               , 'ODINTriggers'      : {'AllL0'  : ''}
+                                               , 'L0Channels'        : {'AllL0'  : ('CALO',),
                                                                         'Muon'   : ('Muon',)}
                                                }
                      , Hlt1CalibRICHMirrorLinesConf : {     'RICHMirror_Velo_NHits'  : 0 
@@ -146,12 +146,6 @@ class Physics_draftEM2015( object ):
 
                                                , 'MaxNoBiasRate' : 1000000.
                                                }
-        	    , Hlt2InclusiveDiMuonLinesConf : {'TrChi2Tight'              : 4
-                                                     ,'UnbiasedJPsiPt'          : 0.0      # MeV
-                                                     ,'UnbiasedJPsiMuPt'        : 0.0      # MeV
-                                                     ,'UnbiasedJPsiMassWindow'  : 150      # MeV
-                                                     ,'UnbiasedJPsiVertexChi2'  :   25
-                                                        }
                     , DiMuonLines : {'Common' :        {'TrChi2Tight':    4},
                                      'JPsi' :          {'MassWindow' :   150 * MeV,
                                                         'Pt'         :     0 * MeV,
@@ -175,74 +169,99 @@ class Physics_draftEM2015( object ):
                                                    , 'Hlt2DiMuonB'        : 1.0}
 
                     }
-                    ,Hlt2InclusiveMuonLinesConf : { 'TrChi2VeryTight'     :    3      #chi2PerDof 
-                                                    ,'SingleMuonPt'        : 1500      # MeV
-                                                    ,'SingleMuonIP'        : 0.0       # mm #0.5
-                                                    ,'SingleMuonIPChi2'    : 16         # 200
-                                                    ,'SingleMuHLT1Filter'  :  "HLT_PASS_RE('Hlt1TrackMuonDecision')"            
-                                                    ,'SingleMuonHighPt'    : 10000     # MeV
-                                                    ,'Prescale'   : { 'Hlt2SingleMuon'        : 1.0
-                                                                      ,'Hlt2SingleHighPTMuon'  : 1.0
-                                                                      }
-                                                  }   
-						      
-                      , Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 0.0001
-                                                                       , 'Hlt2Forward'      : 0.00001
-                                                                       , 'Hlt2DebugEvent'   : 0.000001  }
-                                                        , 'Postscale' : { 'Hlt2ErrorEvent'   : 'RATE(0.01)' } 
-						      }
-                      , Hlt2TrackingEfficiencyLinesConf : { 'Prescale'   : { 'Hlt2TrackEffMuonTT1'      	    : 1.0
+		, SingleMuonLines : 	{'Prescale' : {},
+                			 'HltReq'  : {"SingleMuon" :  "HLT_PASS_RE('Hlt1TrackMuonDecision')"
+			                              },
+                			 'Common' :        {'TrChi2'     :   3,    # Adimensional
+                                    			'Pt':            1500 * MeV },
+
+			                 'SingleMuon' :    {'IP'     : 0.0 * mm,
+                        			            'IPChi2' : 16, # Adimensional
+                                  			 },
+
+			                 'HighPT':         { 'HighPt' : 10000 *MeV },
+
+			                 'VHighPT':        { 'HighPt' : 15000 *MeV },
+
+			                 'LowPT'   :       { 'HighPt' : 4800 * MeV },
+
+			                 'Rare'    :       { 'RarePtMin'          : 5000 * MeV,
+                        			             'RarePtMax'       : 40000* MeV,
+			                                     'RareIPChi2'      : 400, # Adimensional
+                        			             'RareTrChi2Tight' : 3 ,
+			                                     'RarePMax'  : 500 * GeV,
+                       			              }
+
+                			 }
+
+			,CommissioningLines :  {'Prescale'    : {'Hlt2PassThrough' : 0.0001,
+			                                  'Hlt2Forward'     : 0.00001,
+                        			          'Hlt2DebugEvent'  : 0.00001},
+			                 'Postscale'   : {'Hlt2ErrorEvent'  : 'RATE(0.01)'}
+			                }
+
+                     , TrackEffDiMuonLines : { 'Prescale'   : { 'Hlt2TrackEffMuonTT1'      	    : 1.0
 				   ,'Hlt2TrackEffMuonTT2'      	    : 1.0
 				   ,'Hlt2TrackEffVeloMuon1'   	    : 1.0
 				   ,'Hlt2TrackEffVeloMuon2'   	    : 1.0
 				   ,'Hlt2TrackEffDownstream1'	    : 1.0
 				   ,'Hlt2TrackEffDownstream2'	    : 1.0
-                                   }
-                  
-		  # Muon TT cuts
-                  ,'MuonTTProbeP'              :    0 #MeV
-                  ,'MuonTTProbePt'             :    0 #MeV
-                  ,'MuonTTLongMuonPID'         :    2 #dimensionless
-                  ,'MuonTTLongP'               :10000 #MeV
-                  ,'MuonTTLongPt'              : 1300 #MeV
-                  ,'MuonTTLongTrChi2'          :    5 #dimensionless
-                  ,'MuonTTJPsiP'               : 1000 #MeV
-                  ,'MuonTTJPsiPt'              : 1000 #MeV
-                  ,'MuonTTJPsiMaxIP'           :    1 #mm
-                  ,'MuonTTJPsiVtxChi2'         :    5 #dimensionless
-                  ,'MuonTTMassWindow'          :  500 #MeV
-		  # VeloMuon cuts
-                  ,'VeloProbePt'                  :   0 #MeV
-		  ,'VeloProbeTrChi2'		  :   5 #dimensionless
-                  ,'VeloLongMuonPID'              :   1 #dimensionless
-                  ,'VeloLongPt'                   :   0 #MeV
-                  ,'VeloLongP'                    :7000 #MeV
-		  ,'VeloLongTrchi2'		  :   3 #dimensionless
-                  ,'VeloMassWindow'               : 500 #MeV
-                  ,'VeloJPsiPt'                   : 500 #MeV
-		  ,'VeloVertchi2'		  :   2 #dimensionless
-		  # DownstreamMuon cuts
-                  ,'DownstreamProbePt'                  : 200 #MeV
-                  ,'DownstreamProbeP'                   :3000 #MeV
-		  ,'DownstreamProbeTrchi2'	        :  10 #dimensionless
-                  ,'DownstreamLongPt'                   : 700 #MeV
-                  ,'DownstreamLongP'                    :5000 #MeV
-		  ,'DownstreamLongTrchi2'		:  10 #dimensionless
-                  ,'DownstreamLongMuonPID'	        :   2 #dimensionless
-                  ,'DownstreamLongMinIP'	        : 0.5 #mm
-                  ,'DownstreamJPsiDOCA'                 :   5 #mm
-                  ,'DownstreamMassWindow'               : 200 #MeV
-                  ,'DownstreamJPsiPt'                   :   0 #MeV
-		  ,'DownstreamVertchi2'			:   5 #dimensionless
-                  }
-                        
+                                   },
+			'Common'   :  {'TisTosSpec'    : "Hlt1TrackMuonDecision%TOS",
+                                'L0Filter'      : "L0_CHANNEL('Muon') | L0_CHANNEL('DiMuon')",
+                                'OverlapTT'     : 0.4,
+                                'OverlapIT'     : 0.4,
+                                'OverlapOT'     : 0.4,
+                                'OverlapMuon'   : 0.4,
+                                'OverlapVelo'   : 0.5},
+                 'MuonTT'   :  {'TagMuonID'     : 2,
+                                'TagP'          : 10 * GeV,
+                                'TagPt'         : 1300 * MeV,
+                                'TagTrChi2'     : 5,
+                                'TagMinIP'      : 0 * mm,
+                                'ProbeP'        : 0 * GeV,
+                                'ProbePt'       : 0 * MeV,
+                                'ProbeTrChi2'   : 9999, #dummy
+                                'JPsiPt'        : 1000 * MeV,
+                                'JPsiDOCA'      : 9999 * mm, #dummy
+                                'JPsiMaxIP'     : 1 * mm,
+                                'JPsiVtxChi2'   : 2,
+                                'JPsiMassWin'   : 500 * MeV},
+                 'VeloMuon' :  {'TagMuonID'     : 1,
+                                'TagP'          : 7 * GeV,
+                                'TagPt'         : 0 * MeV,
+                                'TagTrChi2'     : 3,
+                                'TagMinIP'      : 0 * mm,
+                                'ProbeP'        : 0 * GeV,
+                                'ProbePt'       : 0 * MeV,
+                                'ProbeTrChi2'   : 5,
+                                'JPsiPt'        : 500 * MeV,
+                                'JPsiDOCA'      : 9999 * mm, #dummy
+                                'JPsiMaxIP'     : 9999 * mm, #dummy
+                                'JPsiVtxChi2'   : 2,
+                                'JPsiMassWin'   : 500 * MeV},
+		                 'Downstream': {'TagMuonID'     : 2,
+                                'TagP'          : 5 * GeV,
+                                'TagPt'         : 700 * MeV,
+                                'TagTrChi2'     : 10,
+                                'TagMinIP'      : 0.5 * mm,
+                                'ProbeP'        : 3 * GeV,
+                                'ProbePt'       : 200 * MeV,
+                                'ProbeTrChi2'   : 10,
+                                'JPsiPt'        : 0 * MeV,
+                                'JPsiDOCA'      : 5 * mm,
+                                'JPsiMaxIP'     : 9999 * mm, #dummy
+                                'JPsiVtxChi2'   : 5,
+                                'JPsiMassWin'   : 200 * MeV}
+                }               
 
-        }
+    }
 
 
 
         return thresholds
-                       
+    
+                   
     def ActiveHlt2Lines(self) :
         """
         Returns a list of active lines
@@ -250,17 +269,37 @@ class Physics_draftEM2015( object ):
         hlt2 = ['Hlt2SingleMuon',
                 'Hlt2SingleMuonHighPT',
                 'Hlt2DiMuonJPsi',
-                'Hlt2DiMuonJPsiTurbo',
                 'Hlt2DiMuonPsi2S',
                 'Hlt2DiMuonB',
 	        'Hlt2PassThrough', 'Hlt2Lumi','Hlt2DebugEvent','Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent', # technical lines
-                'Hlt2TrackEffMuonTT1', # track efficiency lines
-                'Hlt2TrackEffMuonTT2',
-                'Hlt2TrackEffVeloMuon1',
-                'Hlt2TrackEffVeloMuon2',
-                'Hlt2TrackEffDownstream1',
-                'Hlt2TrackEffDownstream2',
-         ]
+		'Hlt2TrackEffMuonTTPlusTagged',  # trackeff lines      
+		'Hlt2TrackEffMuonTTMinusTagged',
+		'Hlt2TrackEffVeloMuonPlusTagged',                
+		'Hlt2TrackEffVeloMuonMinusTagged',                
+		'Hlt2TrackEffDownstreamPlusTagged',                
+		'Hlt2TrackEffDownstreamMinusTagged',                
+		'Hlt2TrackEffMuonTTPlusMatched',                
+		'Hlt2TrackEffMuonTTMinusMatched',
+		'Hlt2TrackEffVeloMuonPlusMatched',                
+		'Hlt2TrackEffVeloMuonMinusMatched',                
+		'Hlt2TrackEffDownstreamPlusMatched',                
+		'Hlt2TrackEffDownstreamMinusMatched',                
+		'Hlt2DiMuonJPsiTurbo', # Turbo Lines
+                'Hlt2DiMuonPsi2STurbo',
+		'Hlt2DiMuonBTurbo',
+		'Hlt2TrackEffDiMuonMuonTTPlusTaggedTurbo',                
+		'Hlt2TrackEffDiMuonMuonTTMinusTaggedTurbo',
+		'Hlt2TrackEffDiMuonVeloMuonPlusTaggedTurbo',                
+		'Hlt2TrackEffDiMuonVeloMuonMinusTaggedTurbo',                
+		'Hlt2TrackEffDiMuonDownstreamPlusTaggedTurbo',                
+		'Hlt2TrackEffDiMuonDownstreamMinusTaggedTurbo',                
+		'Hlt2TrackEffDiMuonMuonTTPlusMatchedTurbo',                
+		'Hlt2TrackEffDiMuonMuonTTMinusMatchedTurbo',
+		'Hlt2TrackEffDiMuonVeloMuonPlusMatchedTurbo',                
+		'Hlt2TrackEffDiMuonVeloMuonMinusMatchedTurbo',                
+		'Hlt2TrackEffDiMuonDownstreamPlusMatchedTurbo',                
+		'Hlt2TrackEffDiMuonDownstreamMinusMatchedTurbo'                
+          ]
 
 
         return hlt2
