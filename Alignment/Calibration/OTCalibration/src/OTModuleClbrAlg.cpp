@@ -301,6 +301,7 @@ StatusCode OTModuleClbrAlg::finalize()
 
 StatusCode OTModuleClbrAlg::fitT0s()
 {
+
   // read current module T0's
   BOOST_FOREACH(const DeOTModule* module, detector->modules())
   {
@@ -742,7 +743,7 @@ StatusCode OTModuleClbrAlg::readCondXMLs()
       LHCb::OTChannelID id(s + 1, l, q, m + 1, 1);
       DeOTModule* module = detector->findModule(id);
       module->setStrawT0s(cT0[m]);
-      OTDet::RtRelation rt(2.45, cRt[m], cRtErr[m], 50);
+      OTDet::RtRelation rt(2.45, cRt[m], cRtErr[m]);
       module->setRtRelation(rt);
     }
   }

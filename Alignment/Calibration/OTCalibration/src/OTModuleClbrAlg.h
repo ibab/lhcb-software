@@ -132,8 +132,8 @@ private:
    */
   bool fitTR;
 
-  std::vector<double> tcoeff;
-  std::vector<double> terrcoeff;
+  std::vector<float> tcoeff;
+  std::vector<float> terrcoeff;
 
   double t0s[3][4][4][9];
 

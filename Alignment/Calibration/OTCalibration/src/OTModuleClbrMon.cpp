@@ -689,7 +689,7 @@ StatusCode OTModuleClbrMon::readCondDB(double read_t0s[3][4][4][9])
 {
    std::string subDet = "OT";
 
-   double Module_t0;
+   double Module_t0=0;
 
    for(int s = 0; s < 3; s++) for(int l = 0; l < 4; l++) for(int q = 0; q < 4; q++)
    {
@@ -704,7 +704,7 @@ StatusCode OTModuleClbrMon::readCondDB(double read_t0s[3][4][4][9])
  
       if(simulation){
 	std::vector<double> TZeroVec = myCond->paramAsDoubleVect( "TZero" );
-	for(int i = 0; i<TZeroVec.size();i++){
+	for(size_t i = 0; i<TZeroVec.size();i++){
 	  //std::cout << "t0 per straw = "<<TZeroVec.at(i)<<std::endl; // for check
 	  Module_t0 +=TZeroVec.at(i); 
 	}
@@ -866,7 +866,7 @@ StatusCode OTModuleClbrMon::readCondXMLs(double t0s[3][4][4][9])
       LHCb::OTChannelID id(s + 1, l, q, m + 1, 1);
       DeOTModule* module = detector->findModule(id);
       module->setStrawT0s(cT0[m]);
-      OTDet::RtRelation rt(2.45, cRt[m], cRtErr[m], 50);
+      OTDet::RtRelation rt(2.45, cRt[m], cRtErr[m]);
       module->setRtRelation(rt);
       if(cWalk[m].size() == 4)
       {

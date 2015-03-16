@@ -96,7 +96,7 @@ StatusCode OTCalibrationIOTool::writeToFile(const std::string& filename,
     outfile << "RtRelation: " 
 	    << mod.rtRelation().rmax() << " " 
 	    << mod.rtRelation().tcoeff() << " "
-	    << mod.rtRelation().terrcoeff() << " " << mod.rtRelation().nbins() << std::endl ;
+	    << mod.rtRelation().terrcoeff() << std::endl ;
     // write the t0
     const std::vector<double>& t0vec = mod.getStrawT0s() ;
     if( !t0vec.empty() ) {
@@ -191,10 +191,9 @@ OTCalibrationIOTool::readFromFile(const std::string& filename) const
 	  // this must be a line with constants
 	  std::vector<double> tcoeff,terrcoeff ;
 	  double rmax(0) ;
-	  size_t nbins(0) ;
 	  std::istringstream is(line+11) ;
-	  is >> rmax >> tcoeff >> terrcoeff >> nbins ;
-	  OTDet::RtRelation rt(rmax,tcoeff,terrcoeff, nbins) ;
+	  is >> rmax >> tcoeff >> terrcoeff ;
+	  OTDet::RtRelation rt(rmax,tcoeff,terrcoeff ) ;
 	  for( std::vector<DeOTModule*>::const_iterator it = selectedmodules.begin() ;
 	       it != selectedmodules.end(); ++it) 
 	    (*it)->setRtRelation( rt ) ;
