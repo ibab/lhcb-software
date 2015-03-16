@@ -619,7 +619,6 @@ namespace
       N == k ? _c2  / tau :
       0 == k ? -1.0 / tau : 0.0 ;
     //
-    const long double res0 = res ;
     if ( 0 < N ) 
     { 
       const long double I1 = 

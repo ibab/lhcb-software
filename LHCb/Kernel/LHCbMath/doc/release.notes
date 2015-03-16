@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-03-16 - Vanya Belyaev
+ - remove compiation warning
+
 ! 2015-03-15 - Vanya Belyaev
  - update test 
 
