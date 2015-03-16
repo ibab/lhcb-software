@@ -69,6 +69,9 @@ StatusCode AdaptivePVReFitter::initialize()
   m_fullExtrapolator = tool<ITrackExtrapolator>( m_fullExtrapolatorName );
   m_veloExtrapolator = tool<ITrackExtrapolator>( m_veloExtrapolatorName );
 
+  warning() << "AdaptivePVReFitter is no longer maintained and thus depreciated." 
+            << endmsg;
+
   return sc;
 }
 
