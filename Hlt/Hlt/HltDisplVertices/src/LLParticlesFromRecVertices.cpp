@@ -48,6 +48,10 @@ LLParticlesFromRecVertices::LLParticlesFromRecVertices( const std::string& name,
     m_RVLocations.push_back( "Rec/Vertices/RV" );
 
     // PV selection
+    declareProperty("RequireUpstreamPV"
+                   , m_requireUpstreamPV = false
+                   , "Require a PV upstream of the candidate in a fiducial volumee (MinZ,MaxZ, MaxRho, #tracks)");
+
     declareProperty(
         "FirstPVMinNumTracks", m_FirstPVNumTracks = 10,
         "Minimal number of tracks required in the \"most upstream\" PV" );
@@ -66,7 +70,7 @@ LLParticlesFromRecVertices::LLParticlesFromRecVertices( const std::string& name,
     declareProperty( "MinMass", m_LLPMinMass = 0.0,
                      "Minimal reconstructed mass of the LLP" );
 
-    declareProperty( "MinR", m_LLPMinR = 0.3 * Gaudi::Units::mm,
+    declareProperty( "MinRho", m_LLPMinR = 0.3 * Gaudi::Units::mm,
                      "Minimal LLP RHO distance to the beam line" );
 
     declareProperty( "MinNumTracks", m_LLPMinNumTracks = 1,
@@ -295,6 +299,9 @@ StatusCode LLParticlesFromRecVertices::execute()
     if ( m_verbose ) {
         printUpPVZSelection( verbose(), primaryVertices(), m_FirstPVMaxZ,
                              m_FirstPVNumTracks );
+    }
+    if ( ! m_requireUpstreamPV ) {
+      upPVZ = -LoKi::Constants::HugeDistance; // will make all candidates pass
     }
 
     int nInputVertices = 0;

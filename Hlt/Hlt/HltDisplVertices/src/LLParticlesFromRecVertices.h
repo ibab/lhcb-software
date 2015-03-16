@@ -57,6 +57,7 @@ class LLParticlesFromRecVertices : public DaVinciAlgorithm
     std::vector<std::string> m_RVLocations; ///< Minimal number of tracks required in
                                             ///the "most upstream\"
 
+    bool m_requireUpstreamPV;
     unsigned int m_FirstPVNumTracks; ///< Allow Velo-only daughters
     // More cut values for the most upstream PV (hard-coded)
     // const double m_FirstPVMaxRho;
