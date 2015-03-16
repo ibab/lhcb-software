@@ -3,6 +3,61 @@ Package             : DaVinciSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v36r5>2015-03-16 DaVinci v36r5</A></H1><PRE>
+
+Development release for 2015 data taking, based on Gaudi v26r0,
+LHCb v38r4, Lbcom v16r3, Rec v17r4, Phys v19r4, Analysis v13r3
+and Stripping v9r4. Uses LCG_72root6 with ROOT 6.02.03.
+
+- Refer to the release notes of Phys, Analysis and Stripping for details
+  on updates to these dependency projects.
+
+- Packages updated :
+  DaVinciTests v2r30, Phys/DaVinci v36r5, Phys/KaliCalo v4r17, Phys/Tesla v1r3.
+
+- Packages added :
+  Major new version v5r0 of Event/EventPacker added only for this release,
+  to solve seg faults observed when reading Strip21 MC.
+
+- In DaVinciTests v2r30 :
+  . Various reference files updated, notably those related to tagging and stripping.
+
+- In Phys/DaVinci v36r5 :
+  . Fixed PFN specified in DaVinci-Simplest.py so that file actually runs.
+  . Removed trivial and obsolete option file DaVinci-MC09.py,
+    and also DC06_v4_BB_lumi2_rdst.py.
+
+- In Phys/KaliCalo v4r17 :
+  . Package responsible updated.
+
+- In Phys/Tesla v1r3 :
+  . TES objects moved down one level, now under /Event/Turbo/HLTLINE/OBJECT
+   .ROOT compression factor of LZMA:6 added.
+  . Tesla created objects are now packed.
+  . Containers are only written when created.
+  . PV selection harmonised with offline.
+  . PVs now the same for all resurrections in each event.
+
+- In Event/EventPacker v5r0 :
+  . Add protection to StandardPacker to prevent segmentation faults from a NULL
+    pointer dereference in the case of corrupted reference information, due
+    to truncation when attempting to pack it to a 32 bit int. Fixes issues
+    seen when running over Stripping21 MC samples where some Track references
+    in packed ProtoParticles have been corrupted due to data truncation. In
+    these cases the smart refs are now just skipped (so set to NULL).
+  . Update the packing of all remaining classes that still use 32 bit reference
+    packing to use 64 bit packing. Reading is backwards compatible with old data
+    using the packing data version flags. Consequently data written with this
+    update can only be read by this version.
+  . Implement 64 bit reference packing for MCParticle, MCVertex and TwoProngVertex classes.
+  . Add a warning message to reference32 to warn if any code is still creating
+    potentially problematic 32 bit packed references. Method is retained for
+    backwards compatibility.
+  . Add checks for remaining calls to hintAndKey64 for corrupt references
+    (should be impossible for 64 bit packing).
+  . Fix typo in MuonPIDPacker where version 2 was not declared as a known
+    packing version in MuonPIDPacker::unpack.
+
 </PRE><H1><A NAME=v36r4p1>2015-01-20 DaVinci v36r4p1</A></H1><PRE>
 
 Patch release otherwise identical to DaVinci v36r4. Only change:
