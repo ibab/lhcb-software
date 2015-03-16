@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-16 - Pieter David
+ - DisplVertices: first version using the new template
+   (Single and Double Velo-vertex based lines with 2012 tuning)
+
 ! 2015-03-16 - Roel Aaij
  - Remove LambaC example directory.
 
