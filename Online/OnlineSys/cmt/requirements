@@ -1,5 +1,5 @@
 package OnlineSys
-version v5r16
+version v5r17
 ###
 ### Note: 
 ### last v4 release: v4r69 based on Gaudi v23r7
@@ -26,12 +26,12 @@ use Controller          v0r17    Online
 use ControllerTests     v0r3     Online
 use DailyReport         v1r3     Online
 use DefHLTUtils         v1r11    Online
-use DIM                 v20r7p3  Online
+use DIM                 v20r7p4  Online
 use EventBuilder        v0r7     Online
 use FarmConfig          v0r13    Online
 use FarmMonitor         v2r13    Online
 use Gaucho              v7r37    Online
-use GauchoAppl          v1r21    Online
+use GauchoAppl          v1r22    Online
 use GaudiCheckpointing  v0r21    Online
 use GaudiOnline         v2r78    Online
 use GaudiOnlineTests    v1r4     Online
@@ -43,9 +43,9 @@ use InsertDB            v1r10    Online
 use MBMDump             v1r16    Online
 use OMAlib              v4r4     Online
 use OnlineAlign         v0r4     Online
-use OnlineBase          v1r30    Online
+use OnlineBase          v1r31    Online
 use OnlineHistDB        v8r2     Online
-use OnlineKernel        v2r20    Online
+use OnlineKernel        v2r21    Online
 use OnlineTools         v1r5     Online
 use OnlineTasks         v1r54    Online
 use Presenter           v3r11    Online
