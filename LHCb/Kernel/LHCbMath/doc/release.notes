@@ -6,8 +6,12 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-03-16 - Chris Jones
+ - Turn off AVX implementation of LHCbMath Filter method, to test if this is
+   the cause of compiler instabilities observed in the nightlies.
+
 ! 2015-03-16 - Vanya Belyaev
- - remove compiation warning
+ - remove compilation warning
 
 ! 2015-03-15 - Vanya Belyaev
  - update test 

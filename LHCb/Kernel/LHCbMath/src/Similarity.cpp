@@ -106,9 +106,11 @@ bool average(const double* X1, const double* C1,
 double filter(double* X, double* C,
               const double* Xref, const double* H,
               double refResidual, double errorMeas2 ) {
-    auto vtbl = { std::make_pair( 7, avx::filter ),
-                  std::make_pair( 0, generic::filter ) };
-    return dispatch_fn( vtbl, LHCb::Math::filter, X, C, Xref, H, refResidual, errorMeas2 );
+  //auto vtbl = { std::make_pair( 7, avx::filter ),
+  //                std::make_pair( 0, generic::filter ) };
+  auto vtbl = { std::make_pair( 7, generic::filter ),
+                std::make_pair( 0, generic::filter ) };
+  return dispatch_fn( vtbl, LHCb::Math::filter, X, C, Xref, H, refResidual, errorMeas2 );
 }
 
 }
