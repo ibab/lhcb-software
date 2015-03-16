@@ -4,6 +4,9 @@
 ! Purpose     : Distribution of parametrization data files
 !-----------------------------------------------------------------------------
 
+! 2015-03-16 - Murilo Rangel
+ - Added two jet energy correction files for RunI, for cone size 0.7 and 0.5
+
 ! 2015-03-16 - Roel Aaij
  - Add initial version of MatrixNet files for Hlt1MVALines.
 
