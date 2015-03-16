@@ -4,6 +4,9 @@
 ! Purpose     : Distribution of parametrization data files
 !-----------------------------------------------------------------------------
 
+! 2015-03-16 - Roel Aaij
+ - Add initial version of MatrixNet files for Hlt1MVALines.
+
 !======================= ParamFiles v8r12 2014-05-13 =========================
 ! 2014-05-09 - Murilo Rangel
  - Added jet energy correction file for Reco14 cone size 0.7
