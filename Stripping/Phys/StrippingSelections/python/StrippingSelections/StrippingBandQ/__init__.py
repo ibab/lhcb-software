@@ -3,7 +3,9 @@ Module importing stripping selection line builder modules
 for BandQ WG.
 """
 
-_selections = [ ]
+_selections = ['StrippingDiMuonForXsection',
+               'StrippingB2JpsiXforEM_s'
+               ]
 
 for _sel in _selections :
     try :
