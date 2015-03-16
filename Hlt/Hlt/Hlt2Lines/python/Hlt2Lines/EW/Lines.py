@@ -1,3 +1,14 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#=============================================================================
+#  QEE: ElectroWeak High pT lepton and di-lepton lines.
+#  Set of Hlt2Lines put in place to enable the ElectroWeak physics program.
+#
+#  author: Kārlis DREIMANIS k.dreimanis@liv.ac.uk
+#  date:   2015-03-16
+#=============================================================================
+
+
 from GaudiKernel.SystemOfUnits import GeV, MeV, mm 
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 class EWLines(Hlt2LinesConfigurableUser) :
