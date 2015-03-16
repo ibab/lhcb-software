@@ -1,7 +1,7 @@
 ################################################################################
 # Package: OnlineKernel
 ################################################################################
-gaudi_subdir(OnlineKernel v2r20)
+gaudi_subdir(OnlineKernel v2r21)
 
 gaudi_depends_on_subdirs(Online/OnlineBase)
 
@@ -12,7 +12,7 @@ gaudi_add_library(OnlineKernel
                     src/RTL/*.cpp
                     src/MBM/*.cpp
                     src/MICFSM/*.cpp
-                  PUBLIC_HEADERS OnlineKernel
+                  PUBLIC_HEADERS OnlineKernel/.
                   INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/OnlineKernel
                   LINK_LIBRARIES OnlineBase)
 
