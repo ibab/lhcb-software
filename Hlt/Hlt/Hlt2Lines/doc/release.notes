@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-16 - Roel Aaij
+ - Remove LambaC example directory.
+
 ! 2015-03-15 - Roel Aaij
  - Convert commissioning lines and CaloTest lines to new template.
  - Remove all "old style" configurables.
