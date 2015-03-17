@@ -24,6 +24,7 @@
 // LHCbKernel
 // ============================================================================
 #include "Kernel/CaloCellIDHash.h"
+#include "Kernel/CountIterator.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -394,37 +395,6 @@ namespace
       0 == N ? 0.0 : 
       n == N ? 1.0 : double  ( n ) / N ;
   }
-  // ==========================================================================
-  template<typename TYPE>
-  class count_iterator
-    : public std::iterator<std::output_iterator_tag, void, void, void, void>
-  {
-  public:
-    // ========================================================================
-    /// Constructor 
-    count_iterator() : m_count ( 0 ) {}
-    //
-    count_iterator& operator = ( const TYPE& /* value */ )
-    {
-      ++m_count ;
-      return *this ;
-    }
-    //
-    count_iterator& operator*  ()    { return *this; }
-    count_iterator& operator++ ()    { return *this; }
-    count_iterator& operator++ (int) { return *this; }
-    // 
-    // ========================================================================
-  public:
-    // ========================================================================
-    /// the the counter 
-    unsigned long count() const { return m_count ; }
-    // ========================================================================    
-  private:
-    ///
-    unsigned long m_count ;
-    // ========================================================================
-  };
   // ==========================================================================
   /// calculate the overlap 
   inline std::pair<double,double> 

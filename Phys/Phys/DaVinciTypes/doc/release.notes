@@ -5,6 +5,9 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2015-03-17 - Vanya Belyaev
+ - move count_iterator to LHCbKernel
+
 !======================== DaVinciTypes v2r10 2015-02-24 ======================
 ! 2015-02-14 - Vanya Belyaev
  - HashIDs.h: extend various methods for overlap 
