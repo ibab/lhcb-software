@@ -5,6 +5,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
+#include "TrackInterfaces/ITrackExtrapolator.h"
 // Interfaces
 #include "IPVFitter.h"
 #include "PVUtils.h"
@@ -34,6 +35,7 @@ private:
   int    m_Iterations;    // Number of iterations for minimisation
   int    m_minIter;       // iterate at least m_minIter times
   double m_maxIP2PV;      // Maximum IP of a track to accept track
+  double m_maxRDPV;       // Maximum Radial Distance of PV 
   double m_maxDeltaZ;     // Fit convergence condition
   double m_minTrackWeight;// Minimum Tukey's weight to accept a track
   double m_TrackErrorScaleFactor;
@@ -42,13 +44,19 @@ private:
   double m_trackMaxChi2;  // maximum chi2 track to accept track in PV fit
   double m_trackMaxChi2Remove; // Max chi2 tracks to be removed from next PV search
   double m_trackChi;      // sqrt of m_trackMaxChi2
-  bool   m_AddMultipleScattering;
-  bool   m_CalculateMultipleScattering;
-  double m_scatCons;      // calculated from m_x0MS
+  double m_maxChi2;       // maximal chi2 to accept track
+  bool   m_AddMultipleScattering; // add multiple scattering calculation to not fitted tracks
+  bool   m_CalculateMultipleScattering; // calculate multiple scattering
+  bool   m_UseFittedTracks; // use tracks fitted by kalman fit 
+  double m_scatCons;      // calculated from m_x0MS and 3 GeV
+  double m_scatConsNoMom; // calculated from m_x0MS to be divided by momemntum [MeV]
   double m_myZero;        //myzero=1E-12 small number
   double m_zVtxShift;
+  // double m_factor; 
 
   PVTracks m_pvTracks;
+  ITrackExtrapolator* m_linExtrapolator;   // Linear extrapolator                                                                                                                
+  ITrackExtrapolator* m_fullExtrapolator;  // Full extrapolator 
   
   // Add track for PV
   void addTrackForPV(const LHCb::Track* str, PVTracks& pvTracks,
