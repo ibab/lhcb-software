@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-03-17 - Roel Aaij
+ - Adapt to change of property name in PatPV, now UseFittedTracks.
+
 ! 2015-03-11 - Roel Aaij
  - Disable RICH trackless ring finding and pixel clustering.
 

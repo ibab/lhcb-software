@@ -69,7 +69,7 @@ def PV3D(where):
     recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.maxIP2PV = 0.3
     from Configurables import HltRecoConf
     if HltRecoConf().getProp("FitVelo"):
-        recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.UseLongKalman = True
+        recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.UseFittedTracks = True
     #recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.zVtxShift = 0.0
     recoPV3D.OutputVerticesName = proto3DVertices
     
