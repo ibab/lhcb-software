@@ -152,43 +152,43 @@ def decisions ( self             ,
                 l1tistos  = None ,
                 l2tistos  = None ) : 
     """
-    Collect the important trigger lines
+    ## Collect the important trigger lines
 
-    ... 
-    particles = ...
-    for D in particles : 
-        self.decisions ( D               ,
-        triggers        ,
-        self.l0tistos   ,
-        self.l1tistos   ,
-        self.l2tistos   )
+    ## ... 
+    ## particles = ...
+    ## for D in particles : 
+    ##     self.decisions ( D               ,
+    ##     triggers        ,
+    ##     self.l0tistos   ,
+    ##     self.l1tistos   ,
+    ##     self.l2tistos   )
         
-    ``triggers'' here is in/out-argument (dictionary) that accumulates the
-    information abot trigger lines ...
+    ## ``triggers'' here is in/out-argument (dictionary) that accumulates the
+    ## information abot trigger lines ...
     
-    Technically it is useful to keep it as ``per-particle-type''
-    dictionary
+    ## Technically it is useful to keep it as ``per-particle-type''
+    ## dictionary
     
-    def initialize ( self ) :
-        ...
-        self.triggers        = {}
-        self.triggers['B']   = {}
-        self.triggers['H']   = {}
-        self.triggers['psi'] = {}
-        ...
-        return SUCCESS
+    ## def initialize ( self ) :
+    ##     ...
+    ##     self.triggers        = {}
+    ##     self.triggers['B']   = {}
+    ##     self.triggers['H']   = {}
+    ##     self.triggers['psi'] = {}
+    ##     ...
+    ##     return SUCCESS
     
-    def analyse ( self ) :
-        ... 
-        particles = ...
-        for B in particles : 
-            self.decisions ( B                  ,
-                             self.triggers['B'] ,
-                             self.l0tistos      ,
-                             self.l1tistos      ,
-                             self.l2tistos      )
-        ...
-        return SUCCESS
+    ## def analyse ( self ) :
+    ##     ... 
+    ##     particles = ...
+    ##     for B in particles : 
+    ##         self.decisions ( B                  ,
+    ##                          self.triggers['B'] ,
+    ##                          self.l0tistos      ,
+    ##                          self.l1tistos      ,
+    ##                          self.l2tistos      )
+    ##     ...
+    ##     return SUCCESS
     """
     
     if not triggers.has_key ( 'L0_TOS'   ) : triggers [ 'L0_TOS'   ] = {}
@@ -443,75 +443,75 @@ def tisTos ( self              ,
              l2tistos  = None  ,
              verbose   = False ) :
     """
-    Fill TisTos information into n-tuple
+    ## Fill TisTos information into n-tuple
     
-    for d in particles : 
-       self.tisTos ( d     ,
-                     tup   ,
-                    'd0_' ,
-                    self.lines ['D0'] , 
-                    self.l0tistos     ,
-                    self.l1tistos     ,
-                    self.l2tistos     )
+    ## for d in particles : 
+    ##    self.tisTos ( d     ,
+    ##                  tup   ,
+    ##                 'd0_' ,
+    ##                 self.lines ['D0'] , 
+    ##                 self.l0tistos     ,
+    ##                 self.l1tistos     ,
+    ##                 self.l2tistos     )
     
 
   
-    ``lines'' here is a dictionary of lines (or regex-patterns) with
-    following keys:
-    - L0TOS
-    - L0TIS
-    - Hlt1TOS
-    - Hlt1TIS
-    - Hlt2TOS
-    - Hlt2TIS
+    ## ``lines'' here is a dictionary of lines (or regex-patterns) with
+    ## following keys:
+    ## - L0TOS
+    ## - L0TIS
+    ## - Hlt1TOS
+    ## - Hlt1TIS
+    ## - Hlt2TOS
+    ## - Hlt2TIS
     
-    e.g.
+    ## e.g.
     
-    lines = {}
-    lines ['L0TOS'  ] = 'L0HadronDecision'
-    lines ['L0TIS'  ] = 'L0(Hadron|Muon|DiMuon)Decision'
-    lines ['Hlt1TOS'] = ...
-    lines ['Hlt1TIS'] = 'Hlt1Topo.*Decision'
-    lines ['Hlt2TOS'] = ...
-    lines ['Hlt2TIS'] = ...
+    ## lines = {}
+    ## lines ['L0TOS'  ] = 'L0HadronDecision'
+    ## lines ['L0TIS'  ] = 'L0(Hadron|Muon|DiMuon)Decision'
+    ## lines ['Hlt1TOS'] = ...
+    ## lines ['Hlt1TIS'] = 'Hlt1Topo.*Decision'
+    ## lines ['Hlt2TOS'] = ...
+    ## lines ['Hlt2TIS'] = ...
     
-    Technically it is useful to keep it as ``per-particle-type'' dictionary
+    ## Technically it is useful to keep it as ``per-particle-type'' dictionary
     
-    def initialize ( self ) :
-        ...
-        self.lines           = {}
-        self.lines ['B'  ]   = {}
-        self.lines ['B'  ]['L0TOS'] = ...
-        self.lines ['B'  ]['L0TOS'] = ...
-        ...
-        self.lines ['psi']   = {}
-        self.lines ['psi']['L0TOS'] = ...
-        ...
-        return SUCCESS
+    ## def initialize ( self ) :
+    ##     ...
+    ##     self.lines           = {}
+    ##     self.lines ['B'  ]   = {}
+    ##     self.lines ['B'  ]['L0TOS'] = ...
+    ##     self.lines ['B'  ]['L0TOS'] = ...
+    ##     ...
+    ##     self.lines ['psi']   = {}
+    ##     self.lines ['psi']['L0TOS'] = ...
+    ##     ...
+    ##     return SUCCESS
     
-    def analyse ( self ) : 
+    ## def analyse ( self ) : 
         
-        particles = ...
+    ##     particles = ...
         
-        for B in particles : 
-            self.tisTos ( B     ,
-                          tup   ,
-                          'B0_' ,
-                          self.lines['B']   , 
-                          self.l0tistos     ,
-                          self.l1tistos     ,
-                          self.l2tistos     )
+    ##     for B in particles : 
+    ##         self.tisTos ( B     ,
+    ##                       tup   ,
+    ##                       'B0_' ,
+    ##                       self.lines['B']   , 
+    ##                       self.l0tistos     ,
+    ##                       self.l1tistos     ,
+    ##                       self.l2tistos     )
 
-        ...
-        return SUCCESS
+    ##     ...
+    ##     return SUCCESS
     
-    The function adds few columns to n-tuple, the most important are
-    <label>l0tos_1  that corresponds to   'L0-TOS'  
-    <label>l0tis_2  that corresponds to   'L0-TIS'  
-    <label>l1tos_1  that corresponds to 'Hlt1-TOS'  
-    <label>l1tis_2  that corresponds to 'Hlt1-TIS'  
-    <label>l2tos_1  that corresponds to 'Hlt2-TOS'  
-    <label>l2tis_2  that corresponds to 'Hlt2-TIS'
+    ## The function adds few columns to n-tuple, the most important are
+    ## <label>l0tos_1  that corresponds to   'L0-TOS'  
+    ## <label>l0tis_2  that corresponds to   'L0-TIS'  
+    ## <label>l1tos_1  that corresponds to 'Hlt1-TOS'  
+    ## <label>l1tis_2  that corresponds to 'Hlt1-TIS'  
+    ## <label>l2tos_1  that corresponds to 'Hlt2-TOS'  
+    ## <label>l2tis_2  that corresponds to 'Hlt2-TIS'
     
     """
     if hasattr ( p , 'particle' ) :  p = p.particle()
@@ -537,7 +537,11 @@ def tisTos ( self              ,
     l2_tis  = TisTosTob () 
     l2_phys = TisTosTob ()  ## physics 
     l2_glob = TisTosTob ()  ## global 
-    ## 
+    ##
+
+    
+    tistosdata = {}
+    
     if p and l0tistos and l1tistos and l2tistos : 
 
         #
@@ -567,6 +571,8 @@ def tisTos ( self              ,
         l1tistos . setTriggerInput ( lines [ 'Hlt1Global' ]  )
         l1_glob  = l1tistos.tisTosTobTrigger () 
         #
+
+        #
         ## L2
         #
         l2tistos . setTriggerInput ( lines [ 'Hlt2TOS'    ]  )
@@ -577,6 +583,20 @@ def tisTos ( self              ,
         l2_phys  = l2tistos.tisTosTobTrigger () 
         l2tistos . setTriggerInput ( lines [ 'Hlt2Global' ]  )
         l2_glob  = l2tistos.tisTosTobTrigger ()
+        
+        tistosdata [ 'L0TOS'      ] = l0_tos
+        tistosdata [ 'L0TIS'      ] = l0_tis
+        tistosdata [ 'L0Phys'     ] = l0_phys
+        
+        tistosdata [ 'Hlt1TOS'    ] = l1_tos
+        tistosdata [ 'Hlt1TIS'    ] = l1_tis
+        tistosdata [ 'Hlt1Phys'   ] = l1_phys
+        tistosdata [ 'Hlt1Global' ] = l1_glob
+        
+        tistosdata [ 'Hlt2TOS'    ] = l2_tos
+        tistosdata [ 'Hlt2TIS'    ] = l2_tis
+        tistosdata [ 'Hlt2Phys'   ] = l2_phys
+        tistosdata [ 'Hlt2Global' ] = l2_glob
         
     #
     ## fill n-tuples
@@ -595,6 +615,12 @@ def tisTos ( self              ,
     ntuple.column_aux ( label + 'l2phys' , l2_phys , verbose )
     ntuple.column_aux ( label + 'l2glob' , l2_glob , verbose )
     #
+    # keep data for debugging
+    #
+    if not hasattr ( self , 'tistos_map' ) : self._tistos_map = {}
+    self.tistos_map[ label ] = tistosdata
+    #
+    
     return SUCCESS
 
 # =============================================================================
