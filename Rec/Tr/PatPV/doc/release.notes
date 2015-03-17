@@ -4,6 +4,14 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2015-03-16 - Agnieszka Dziurda
+ - add new functionality to LSAdaptPV3DFitter which 
+ -- allow to use kalman fitter tracks, option UseFittedTracks
+ -- add option for radial distance cut of PV - maxRDPV 
+ -- to make offline and online algorithms consistent: 
+        remove maxIP2PV cut, instead trackMaxChi2 is recommended
+
+
 !========================= PatPV v3r26p1 2013-04-30 =========================
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake
