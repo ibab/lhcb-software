@@ -15,7 +15,7 @@ namespace LHCb {
 class PVTrack 
 {
 public:
-  PVTrack():refTrack(0),stateG(),unitVect(),isUsed(false),vd0(),d0(0),err2d0(0),chi2(0),weight(0){};
+ PVTrack():refTrack(0),stateG(),unitVect(),isUsed(false),vd0(),d0(0),err2d0(0),chi2(0),weight(0),type(LHCb::Track::Velo){};
   
   const LHCb::Track* refTrack;
   // Current state of the track at the current point
@@ -31,6 +31,7 @@ public:
   double err2d0;                 // IP error squared
   double chi2;                   // chi2 = d02 / d0err**2
   double weight;                 // Weight assigned to track
+  LHCb::Track::Types  type;
 
   inline double zClose() { 
     return stateG.z() - unitVect.z() * 
