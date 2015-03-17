@@ -12,6 +12,9 @@
 
 
 class IClassifierReader;
+namespace Rich{
+  class TabulatedFunction1D;
+}
 
 
 /** @class UpgradeGhostId UpgradeGhostId.h
@@ -59,6 +62,7 @@ protected:
 private:
   IVPExpectation   *m_vpExpectation;
   std::vector<IClassifierReader*> m_readers;
+  std::vector<Rich::TabulatedFunction1D*> m_flatters;
 
 
   std::vector<IHitExpectation*> m_Expectations;

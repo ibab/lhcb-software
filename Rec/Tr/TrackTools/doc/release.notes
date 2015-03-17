@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-03-17 - Paul Seyfert
+ - Run2GhostId: Add "flattening" (response distribution for ghosts
+   approximately constant between 0 and 1)
+
 !========================= TrackTools v5r7p1 2015-03-09 =========================
 
 ! 2015-02-24 - Sascha Stahl
