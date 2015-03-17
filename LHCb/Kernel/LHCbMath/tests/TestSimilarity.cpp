@@ -88,7 +88,7 @@ void fillRandomSMatrix(Mat &F, TRandom& r, bool symmetric=false)
  */
 template <typename M>
 std::pair<M, bool> compareSMatrix(M& A, M& B, bool symetric=true, 
-                                  double diffThreshold=1e-15)
+                                  double diffThreshold=1e-14)
 {
   M cmpres;
   bool hasDiff = false;
