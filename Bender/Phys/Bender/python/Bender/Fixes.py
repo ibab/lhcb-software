@@ -74,15 +74,53 @@ def _bender_at_exit_ () :
     logger.debug ( 'custom "atexit" handler is being invoked' ) 
     logger.debug ( '*'*120 ) 
     
-    from GaudiPython.Bindings import _gaudi 
+    from GaudiPython.Bindings import _gaudi
+    rc = None 
     if _gaudi :
-        logger.debug ( 'AppMgr.exit() is being invoked' ) 
+        logger.debug ( 'AppMgr.exit() is being invoked' )
+        rc = _gaudi.ReturnCode 
         _gaudi.exit  ()
 
     logger.debug ( '*'*120 ) 
     logger.debug ( 'custom "atexit" handler has been invoked' ) 
-    logger.debug ( '*'*120 ) 
+    logger.debug ( '*'*120 )
 
+    if rc :
+
+        """     
+        const int Success                  = 0x00;
+        const int GenericFailure           = 0x01;
+        /// @defgroup loop_stop Loop termination
+        /// Error codes for abnormal loop termination.
+        /// @{
+        const int FailInput                = 0x02; //< Error opening file
+        const int AlgorithmFailure         = 0x03; //<
+        const int ScheduledStop            = 0x04; //< Loop terminated because of user request
+        const int IncidentFailure          = 0x05; //< Fatal error in Incident handling
+        const int UnhandledException       = 0x06; //<
+        const int CorruptedInput           = 0x10; //< Input file showed a corruption
+        /// @}
+        /// @{
+        /// Error codes for operation failures.
+        const int FinalizationFailure      = 0x0b;
+        /// @}
+        const int SignalOffset             = 0x80; //< Offset for signal-related return codes
+        """
+        
+        nc = '0x%x' % rc 
+        if   0x00 == rc : nc = 'Success'
+        elif 0x01 == rc : nc = 'GenericFailure'
+        elif 0x02 == rc : nc = 'FailInput'
+        elif 0x03 == rc : nc = 'AlgorithmFailure'
+        elif 0x04 == rc : nc = 'ScheduledStop'
+        elif 0x05 == rc : nc = 'IncidentFailure'
+        elif 0x06 == rc : nc = 'UnhandledException'
+        elif 0x10 == rc : nc = 'CorruptedInput'
+        elif 0x0b == rc : nc = 'FinalizationFailure'
+        
+        logger.info ( 'Call sys.exit ("%s")' % nc )
+        import sys 
+        sys.exit ( rc ) 
 
 import atexit
 atexit.register( _bender_at_exit_ )
