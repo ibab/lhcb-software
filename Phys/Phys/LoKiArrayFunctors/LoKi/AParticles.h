@@ -1596,8 +1596,22 @@ namespace LoKi
      *  related PV.  The related PV for each daughter is obtained from the
      *  IPhysDesktop tool.
      *
-     *  @see LoKi::Cuts::AALLSAMEBPV
+     *  Four algorithms for the vertex comparison are available:
+     *  - comparison of C++ pointers 
+     *  - comparison by the vertex distance 
+     *  - comparison by the vertex chi2-distance 
+     *  - comparison by the fraction of 
+     * 
+     *  @attention
+     *  In case property 'ReFitPVs' is not activated, the first algorithm is 
+     *  perfectly fine and optimal, otherwise at least one of "extra" 
+     *  algorithms MUST be activated to get correct answer
+     *  @see https://indico.cern.ch/event/355682/
+     *  @see https://indico.cern.ch/event/355682/contribution/1/material/slides/
+     *  @thanks to Jianchun Wang  
      *
+     *  @see LoKi::Cuts::AALLSAMEBPV
+     *  @see LoKi::Cuts::AALLSAMEBPV_
      *  @author  Patrick SPRADLIN
      *  @date   2009-03-10
      */
@@ -1628,6 +1642,11 @@ namespace LoKi
       result_type operator() ( argument v ) const ;
       /// OPTIONAL: specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// check refitting property
+      void checkReFit() const ; // check refitting property
       // ======================================================================
     private:
       // ======================================================================

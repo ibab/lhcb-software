@@ -6,6 +6,11 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-03-17 - Vanya Belyaev
+ - ALLSAMEBPV: implement more complicated logic, 
+   - check if property ReFitPVs for the algorithm is activated 
+   - check if some elements do not provide the proper PV-association 
+
+! 2015-03-17 - Vanya Belyaev
 
  - rewrite  AllSameBestPV
 

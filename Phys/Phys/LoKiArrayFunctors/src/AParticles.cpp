@@ -13,6 +13,8 @@
 // GaudiKernel
 // ===========================================================================
 #include "GaudiKernel/ToStream.h"
+#include "GaudiKernel/IProperty.h"
+#include "GaudiKernel/Property.h"
 // ===========================================================================
 // PartProp
 // ===========================================================================
@@ -2210,7 +2212,9 @@ LoKi::AParticles::AllSameBestPV::AllSameBestPV
   , m_maxdist ( 0 <= maxdist ? maxdist : -1 ) 
   , m_maxchi2 ( 0 <= maxchi2 ? maxchi2 : -1 ) 
   , m_maxfrac ( 0 <= maxfrac ? maxfrac : -1 ) 
-{}
+{
+  if ( gaudi() && desktop() ) { checkReFit() ; }
+}
 // ============================================================================
 // copy constructor
 // ============================================================================
@@ -2218,11 +2222,39 @@ LoKi::AParticles::AllSameBestPV::AllSameBestPV ( const AllSameBestPV& right)
   : AuxFunBase ( right ) 
   , LoKi::AuxDesktopBase( right )
   , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate ( right ) 
-{}
+{
+  if ( gaudi() && desktop() ) { checkReFit() ; }
+}
 // ============================================================================
-// MANDATORY: virual destructor
+// MANDATORY: virtual destructor
 // ============================================================================
 LoKi::AParticles::AllSameBestPV::~AllSameBestPV(){}
+// ============================================================================
+void LoKi::AParticles::AllSameBestPV::checkReFit() const 
+{
+  SmartIF<IProperty> iprop ( getDesktop() )    ;
+  BooleanProperty refit ( "ReFitPVs" , false ) ;
+  if ( !iprop ) 
+  { Warning ( "Unable to check property 'ReFitPVs'!" ) ; }
+  else 
+  {
+    StatusCode sc = iprop->getProperty( &refit ) ;
+    if        ( sc.isFailure () ) 
+    { Error   ( "Unable to get property 'ReFitPVs'!" , sc ) ; }    
+    else if   ( refit.value  () 
+                && m_maxdist <= 0 
+                && m_maxchi2 <= 0 
+                && m_maxfrac <= 0 )
+    { Error   ( "Property 'ReFitPVs' is activated!"       ) ; }
+    else if   ( refit.value  () )
+    { Warning ( "Property 'ReFitPVs' is activated!"       ) ; }
+    else if   ( !refit.value  () && 
+                ( 0 < m_maxdist ||
+                  0 < m_maxchi2 || 
+                  0 < m_maxfrac  ) )
+    { Warning ( "Extra algorithms are activated - not optimal...." ) ; }
+  } 
+}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
@@ -2255,6 +2287,25 @@ namespace
     return trks.size() ;
   }
   // ==========================================================================
+  inline bool good_for_pv ( const LHCb::Particle* p ) 
+  {
+    if ( 0 == p     ) { return false ; }
+    //
+    if ( p->isBasicParticle () ) 
+    {
+      const LHCb::ParticleID& pid = p->particleID() ;
+      /// gamma and merged pi0 
+      return  ( 22 != pid.abspid () ) && ( 111 != pid.abspid() ) ; // RETURN 
+    }
+    //
+    typedef SmartRefVector<LHCb::Particle>  DAUGS ;
+    const DAUGS& children = p->daughters() ;
+    for ( DAUGS::const_iterator id = children.begin() ; children.end() != id ; ++id ) 
+    { if ( good_for_pv ( *id ) ) { return true ; } }
+    //
+    return false ;
+  }
+  // ==========================================================================
 }
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -2263,16 +2314,27 @@ LoKi::AParticles::AllSameBestPV::result_type
 LoKi::AParticles::AllSameBestPV::operator()
   ( LoKi::AParticles::AllSameBestPV::argument v ) const
 {
-  // load the desktop if needed
-  if ( !validDesktop() ) { loadDesktop() ; }
+  // load the desktop if needed (and check for ReFitPVs option!)
+  if ( !validDesktop() ) { loadDesktop() ; checkReFit() ;  }
   // check it!
   Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   //
   // no way to get mulptiple PVS for single candidate 
   // no way to get mulptiple PVs for events with single PV 
-  if ( v.size() <= 1 || primaryVertices().size() <= 1 ) { return true ; }
+  if ( v.size() <= 1 || primaryVertices().size() <= 1 ) { return true ; } // RETURN
   //
-  const LHCb::RecVertex* pv1 = recVertex ( bestVertex ( v.front() ) ) ;
+  // copy the paricles that COULD HAVE THE PROPER PV-association 
+  // e.g. there is no sense to check PV for photons or any of photonic cases 
+  LHCb::Particle::ConstVector vct ; vct.reserve( v.size() ) ;
+  std::copy_if ( v.begin () , v.end ()         , 
+                 std::back_inserter( vct )     ,
+                 std::ptr_fun ( &good_for_pv ) ) ;
+  if ( vct.size() != v.size() ) 
+  { Warning ("Not all elements are good for PV-association!") ; }
+  //
+  if ( vct.size() <= 1 ) { return true ; }                               // RETURN
+  //
+  const LHCb::RecVertex* pv1 = recVertex ( bestVertex ( vct.front() ) ) ;
   if ( 0 == pv1 ) 
   {
     Warning ( "Invalid PV for the first element! return false" ) ;
@@ -2283,7 +2345,7 @@ LoKi::AParticles::AllSameBestPV::operator()
   if ( 0 < m_maxfrac ) { get_tracks ( pv1 , tracks1 ) ; }
   ///
   /// loop over all other elements:
-  for (  LoKi::ATypes::Combination::const_iterator j = v.begin() + 1 ; v.end() != j ; ++j ) 
+  for ( LHCb::Particle::ConstVector::const_iterator j = vct.begin() + 1 ; vct.end() != j ; ++j ) 
   {
     const LHCb::VertexBase* vb = bestVertex ( *j ) ;
     if ( 0 == vb ) 
