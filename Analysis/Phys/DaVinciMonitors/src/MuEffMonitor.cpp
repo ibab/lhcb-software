@@ -556,7 +556,7 @@ StatusCode MuEffMonitor::fillCoordVectors(){
     unsigned int station = tile.station();
     unsigned int region = tile.region();
     if(m_ignoreM1 && 0==station) continue;
-    double uncross = (station == 0 || ((station>2)&&(region==0))) ? false : (*iCoord)->uncrossed();
+    bool uncross = (station == 0 || ((station>2)&&(region==0))) ? false : (*iCoord)->uncrossed();
     if(uncross && m_mustCross) continue;
     if (!uncross) { //use FastPosTool
       sc = m_posTool->calcTilePos(tile,x,dx,y,dy,z,dz);
@@ -855,7 +855,7 @@ bool MuEffMonitor::DoHitsInPad(){
            itPos != m_coordPos[station*m_NRegion + region].end();
            itPos++) {
 
-        double uncross = (station == 0 || ((station>2)&&(region==0))) ? false : itPos->m_pCoord->uncrossed();
+        bool uncross = (station == 0 || ((station>2)&&(region==0))) ? false : itPos->m_pCoord->uncrossed();
         if (uncross && m_mustCross) continue;
         if (uncross && crossedHitFound) continue; // always prefer crossed hits
         
