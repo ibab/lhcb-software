@@ -2207,9 +2207,9 @@ LoKi::AParticles::AllSameBestPV::AllSameBestPV
   : LoKi::AuxFunBase ( std::tie ( maxdist , maxchi2 , maxfrac ) )
   , LoKi::AuxDesktopBase()
   , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate ()
-  , m_maxdist ( std::max ( maxdist , -1. ) ) 
-  , m_maxchi2 ( std::max ( maxchi2 , -1. ) ) 
-  , m_maxfrac ( std::max ( maxfrac , -1. ) ) 
+  , m_maxdist ( 0 <= maxdist ? maxdist : -1 ) 
+  , m_maxchi2 ( 0 <= maxchi2 ? maxchi2 : -1 ) 
+  , m_maxfrac ( 0 <= maxfrac ? maxfrac : -1 ) 
 {}
 // ============================================================================
 // copy constructor
