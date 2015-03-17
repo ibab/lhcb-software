@@ -4,6 +4,9 @@
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-03-17 - Vanya Belyaev
+ - fix compliation warning 
+
 ! 2015-03-13 - Vanya Belyaev
  - HDRFilter : add two special cases 
      1) Hlt2*Hlt1* name  for filtering of Hlt1 decisions 

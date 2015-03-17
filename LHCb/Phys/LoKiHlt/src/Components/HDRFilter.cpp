@@ -185,7 +185,7 @@ LoKi::HDRFilter::HDRFilter
   { m_location =  LHCb::HltDecReportsLocation::Hlt2Default ; }
   else if ( std::string::npos != name.find ( "Strip" ) ||  
             std::string::npos != name.find ( "STRIP" ) ) 
-  { m_location =  'Strip/Phys/DecReports'                  ; }
+  { m_location =  "Strip/Phys/DecReports"                  ; }
   //
   declareProperty 
     ( "Location" , 
