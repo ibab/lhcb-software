@@ -19,6 +19,15 @@
 #include "Kernel/ParticleProperty.h"
 #include "Kernel/IParticlePropertySvc.h"
 // ===========================================================================
+// LHCbMath
+// ===========================================================================
+#include "LHCbMath/MatrixUtils.h"
+#include "LHCbMath/MatrixTransforms.h"
+// ===========================================================================
+// LHCbKernel
+// ===========================================================================
+#include "Kernel/CountIterator.h"
+// ===========================================================================
 // DavinciTypes 
 // ===========================================================================
 #include "Kernel/HashIDs.h"
@@ -2182,11 +2191,25 @@ LoKi::AParticles::MinDOCA::fillStream ( std::ostream& s ) const
 
 
 // ============================================================================
-// the default constructor (creates the object in invalid state)
+/*  constructor 
+ *  @param maxdist maximal distance      for two vertices to be considered as identical 
+ *  @param maxchi2 maximal distance-chi2 for two vertices to be considered as identical
+ *  @param maxfrac maximal fraction of common tracks 
+ *                         for two vertices to be considered as identical
+ *  - criteria are appied in "OR" mode
+ *  - negative value means criterion is not applied 
+ */
 // ============================================================================
-LoKi::AParticles::AllSameBestPV::AllSameBestPV()
-  : LoKi::AuxDesktopBase()
+LoKi::AParticles::AllSameBestPV::AllSameBestPV
+( const double maxdist , 
+  const double maxchi2 , 
+  const double maxfrac ) 
+  : LoKi::AuxFunBase ( std::tie ( maxdist , maxchi2 , maxfrac ) )
+  , LoKi::AuxDesktopBase()
   , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate ()
+  , m_maxdist ( std::max ( maxdist , -1. ) ) 
+  , m_maxchi2 ( std::max ( maxchi2 , -1. ) ) 
+  , m_maxfrac ( std::max ( maxfrac , -1. ) ) 
 {}
 // ============================================================================
 // copy constructor
@@ -2196,6 +2219,43 @@ LoKi::AParticles::AllSameBestPV::AllSameBestPV ( const AllSameBestPV& right)
   , LoKi::AuxDesktopBase( right )
   , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate ( right ) 
 {}
+// ============================================================================
+// MANDATORY: virual destructor
+// ============================================================================
+LoKi::AParticles::AllSameBestPV::~AllSameBestPV(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::AParticles::AllSameBestPV* 
+LoKi::AParticles::AllSameBestPV::clone() const 
+{ return new LoKi::AParticles::AllSameBestPV(*this) ; }
+// ============================================================================
+namespace 
+{
+  // ==========================================================================
+  inline 
+  const LHCb::RecVertex* recVertex 
+  ( const LHCb::VertexBase* vb ) 
+  { return 0 == vb ? nullptr : static_cast<const LHCb::RecVertex*> ( vb ) ; }
+  // ==========================================================================
+  inline 
+  unsigned long  get_tracks 
+  ( const LHCb::RecVertex*    rv   , 
+    LHCb::Track::ConstVector& trks )
+  {
+    trks.clear() ;
+    if ( 0 == rv || rv->tracks().empty() ) { return trks.size() ; }
+    typedef LHCb::RecVertex::TrackWithWeightVector TWV ;
+    TWV tw ( rv->tracksWithWeights() ) ;
+    trks.reserve ( tw.size() ) ;
+    for ( TWV::const_iterator it = tw.begin() ; tw.end() != it ; ++it ) 
+    { if ( 0 != it->first && 0 < it->second ) { trks.push_back ( it->first ) ; } }
+    std::stable_sort ( trks.begin() , trks.end()  ) ;
+    //
+    return trks.size() ;
+  }
+  // ==========================================================================
+}
 // ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================
@@ -2207,36 +2267,101 @@ LoKi::AParticles::AllSameBestPV::operator()
   if ( !validDesktop() ) { loadDesktop() ; }
   // check it!
   Assert ( validDesktop () , "No valid IPhysDesktop is found" );
-
-  // Get key for the related PV of each daughter.
-  // Key comparison assumes that all related PVs come from the same container.
-  bool havePVs = true;
-  std::vector< LHCb::VertexBase::key_type > pvkeys;
-  // Is there a way to derive this iterator type from the argument or base
-  //   class type?
-  LoKi::ATypes::Combination::const_iterator iter;
-  for( iter = v.begin(); iter != v.end(); ++iter )
+  //
+  // no way to get mulptiple PVS for single candidate 
+  // no way to get mulptiple PVs for events with single PV 
+  if ( v.size() <= 1 || primaryVertices().size() <= 1 ) { return true ; }
+  //
+  const LHCb::RecVertex* pv1 = recVertex ( bestVertex ( v.front() ) ) ;
+  if ( 0 == pv1 ) 
   {
-    // Does the desktop issue a warning if no PV is found, or should a
-    //   suppressable warning be included here?
-    const LHCb::VertexBase *relPV = desktop()->bestVertex( *iter );
-    if ( relPV ) { pvkeys.push_back ( relPV->key() ) ; }
-    else          { havePVs = false ; }
+    Warning ( "Invalid PV for the first element! return false" ) ;
+    return false ;
   }
-  
-  // Using sort and unique are unnecessary overhead here, but might be more
-  //   useful in a more general functor that would return the number of
-  //   unique best pv, but would that be useful?
-  std::sort(pvkeys.begin(), pvkeys.end());
-  std::vector< LHCb::Vertex::key_type >::iterator
-        enduniq = std::unique(pvkeys.begin(), pvkeys.end());
-
-  // Return true if all have the same related PV
-  return havePVs && (std::distance(pvkeys.begin(), enduniq) == 1);
+  ///
+  LHCb::Track::ConstVector tracks1 ;
+  if ( 0 < m_maxfrac ) { get_tracks ( pv1 , tracks1 ) ; }
+  ///
+  /// loop over all other elements:
+  for (  LoKi::ATypes::Combination::const_iterator j = v.begin() + 1 ; v.end() != j ; ++j ) 
+  {
+    const LHCb::VertexBase* vb = bestVertex ( *j ) ;
+    if ( 0 == vb ) 
+    {
+      Warning ( "Invalid PV for the next element! return false" ) ;
+      return false ;
+    }
+    // Check equality as pointers  
+    if ( vb == pv1 ) { continue ; }  // equal by pointers
+    //
+    // Try other equality criteria 
+    //
+    // 1) check by distance 
+    //
+    if ( 0 < m_maxdist  && 
+         ( vb->position() - pv1->position() ).Mag2() < m_maxdist * m_maxdist ) 
+    { continue ; }                                                         // CONTINUE 
+    //
+    // 2) check by chi2 
+    //
+    if ( 0 < m_maxchi2 ) 
+    {
+      const LoKi::Vector3D       delta  = vb ->position () - pv1->position () ;
+      const Gaudi::SymMatrix3x3& c1     = pv1->covMatrix() ;
+      const Gaudi::SymMatrix3x3& c2     = vb ->covMatrix() ;
+      // simple check before inversion of 3x3 matrix 
+      if ( delta.x() * delta.x() < 2 * m_maxchi2 * ( c1(0,0) + c2(0,0) ) &&
+           delta.y() * delta.y() < 2 * m_maxchi2 * ( c1(1,1) + c2(1,1) ) && 
+           delta.z() * delta.z() < 2 * m_maxchi2 * ( c1(2,2) + c2(2,2) ) ) 
+      {
+        const Gaudi::SymMatrix3x3 c  = c1 + c2 ;        
+        Gaudi::SymMatrix3x3       ci ;
+        const int ifail = Gaudi::Math::inverse ( c , ci ) ;
+        if ( 0 != ifail ) 
+        {
+          Warning ( "Enable to calculate chi2(vertex distance)! ignore element" ) ;
+          continue ;                                                      // CONTINUE 
+        }
+        const double chi2 =  Gaudi::Math::Similarity ( ci , delta ) ;
+        if ( chi2 < m_maxchi2 ) { continue ; }                               // CONTINUIE
+      }
+    }
+    //
+    // 3) check by the fraction of common tracks 
+    //
+    const LHCb::RecVertex* pv2 = recVertex ( vb ) ;
+    if ( 0 < m_maxfrac && !tracks1.empty() && 0 != pv2 && !pv2->tracks().empty() ) 
+    {
+      //
+      LHCb::Track::ConstVector tracks2 ;  
+      get_tracks ( pv2 , tracks2 ) ;
+      //
+      const unsigned long nCommon = std::set_intersection 
+        (  tracks1 . begin () , tracks1 . end () ,
+           tracks2 . begin () , tracks2 . end () , 
+           count_iterator<const LHCb::Track*>() ).count() ;
+      if ( nCommon >= m_maxfrac * tracks1.size() || 
+           nCommon >= m_maxfrac * tracks2.size() ) { continue ; }      // CONTINUE 
+    }
+    //
+    // finally two vertices are different... 
+    //
+    return false ;                                    // RETURN 
+  } // go to the next element in combinations 
+  //
+  return false ;                                      // RETURN 
 }
 // ============================================================================
-
-
+// OPTIONAL: specific printout 
+// ============================================================================
+std::ostream& LoKi::AParticles::AllSameBestPV::fillStream( std::ostream& s ) const
+{
+  return 
+    s << "AALLSAMEBPV_("
+      << m_maxdist    << ","
+      << m_maxchi2    << ","
+      << m_maxfrac    << ")" ;  
+}
 // ============================================================================
 // constructor 
 // ============================================================================

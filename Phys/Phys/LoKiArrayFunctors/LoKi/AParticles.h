@@ -1607,19 +1607,33 @@ namespace LoKi
     {
     public:
       // ======================================================================
-      /// the default constructor (creates the object in invalid state)
-      AllSameBestPV () ;
+      /** constructor 
+       *  @param maxdist maximal distance      for two vertices to be considered as identical 
+       *  @param maxchi2 maximal distance-chi2 for two vertices to be considered as identical
+       *  @param maxfrac maximal fraction of common tracks 
+       *                         for two vertices to be considered as identical
+       *  - criteria are appied in "OR" mode
+       *  - negative value means criterion is not applied 
+       */
+      AllSameBestPV ( const double maxdist = -1 , 
+                      const double maxchi2 = -1 , 
+                      const double maxfrac = -1 ) ;
       /// copy constructor 
       AllSameBestPV ( const AllSameBestPV& right) ;
       /// MANDATORY: virual destructor
-      virtual ~AllSameBestPV(){};
+      virtual ~AllSameBestPV () ;
       /// MANDATORY: clone method ("virtual constructor")
-      virtual  AllSameBestPV* clone() const { return new AllSameBestPV(*this) ; }
+      virtual  AllSameBestPV* clone() const ;
       /// MANDATORY: the only one essential method 
       result_type operator() ( argument v ) const ;
       /// OPTIONAL: specific printout 
-      virtual std::ostream& fillStream( std::ostream& s ) const
-      { return s << "AALLSAMEBPV" ; }
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      double m_maxdist ;
+      double m_maxchi2 ;
+      double m_maxfrac ;
       // ======================================================================
     };
     // ========================================================================

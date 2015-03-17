@@ -1,9 +1,18 @@
-\$Id$ 
+! $Id$ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
+
+! 2015-03-17 - Vanya Belyaev
+
+ - rewrite  AllSameBestPV
+
+   see https://indico.cern.ch/event/355682/
+   see https://indico.cern.ch/event/355682/contribution/1/material/slides/
+   
+
 
 ! 2015-03-12 - Vanya Belyaev
  - add "SpecialValue"

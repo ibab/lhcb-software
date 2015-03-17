@@ -239,6 +239,8 @@ ADOCAMIN      = LoKi.AParticles.MinDOCA
 ## @see LoKi::Cuts::AMINDOCA
 AMINDOCA      = LoKi.AParticles.MinDOCA
 
+## @see LoKi::Cuts::AALLSAMEBPV_
+AALLSAMEBPV_  = LoKi.AParticles.AllSameBestPV
 ## @see LoKi::Cuts::AALLSAMEBPV
 AALLSAMEBPV   = LoKi.AParticles.AllSameBestPV ()
 
