@@ -5,6 +5,7 @@
 #include "Event/Track.h"
 #include "Event/State.h"
 #include "Event/RecVertex.h"
+#include "TrackInterfaces/ITrackExtrapolator.h"
 // Local
 #include "LSAdaptPV3DFitter.h"
 
@@ -34,15 +35,19 @@ LSAdaptPV3DFitter::LSAdaptPV3DFitter(const std::string& type,
   declareProperty("MinTracks", m_minTr = 5);
   // Number of iterations
   declareProperty("Iterations", m_Iterations = 20);
+  // Chi2 of completely wrong tracks                                                                                                                                            
+  declareProperty("maxChi2", m_maxChi2 = 400.0);
   // Maximum IP of a track to accept track
   declareProperty("maxIP2PV", m_maxIP2PV = 2.0 * Gaudi::Units::mm);
   // Fit convergence condition
-  declareProperty("maxDeltaZ", m_maxDeltaZ = 0.001 * Gaudi::Units::mm);
+  declareProperty("maxDeltaZ", m_maxDeltaZ = 0.0005 * Gaudi::Units::mm); //m_maxDeltaZ = 0.001 * Gaudi::Units::mm);
   // Minimum Tukey's weight to accept a track
-  declareProperty("minTrackWeight", m_minTrackWeight = 0.00001);
+  declareProperty("minTrackWeight", m_minTrackWeight = 0.00000001); //0.00001);
+  declareProperty("maxRDPV", m_maxRDPV = 20.0 * Gaudi::Units::mm);
   declareProperty( "x0MS"            , m_x0MS          =  0.02          );
   declareProperty("TrackErrorScaleFactor", m_TrackErrorScaleFactor = 1.0 );
   declareProperty("CalculateMultipleScattering", m_CalculateMultipleScattering = true );
+  declareProperty("UseFittedTracks", m_UseFittedTracks = false );
   declareProperty("AddMultipleScattering", m_AddMultipleScattering = true );
   declareProperty("trackMaxChi2", m_trackMaxChi2 = 9.);
   // Max chi2 tracks to be removed from next PV search
@@ -63,7 +68,21 @@ StatusCode LSAdaptPV3DFitter::initialize()
   double X0 = m_x0MS;
   m_scatCons = (13.6*sqrt(X0)*(1.+0.038*log(X0))) / ( 3.0 * Gaudi::Units::GeV );
 
+  m_scatConsNoMom = (13.6*sqrt(X0)*(1.+0.038*log(X0)));
+
   m_trackChi = std::sqrt(m_trackMaxChi2);
+  m_linExtrapolator = tool<ITrackExtrapolator>("TrackLinearExtrapolator",this);
+  if(!m_linExtrapolator) {
+    err() << "Unable to retrieve the TrackLinearExtrapolator" << endmsg;
+    return  StatusCode::FAILURE;
+  }
+  // Full track extrapolator                                                                                                                                                   
+  m_fullExtrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator",this);
+  if(!m_fullExtrapolator) {
+    err() << "Unable to get TrackMasterExtrapolator" << endmsg;
+    return  StatusCode::FAILURE;
+  }
+
 
   return StatusCode::SUCCESS;
 }
@@ -107,6 +126,7 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
   ROOT::Math::SVector<double,3> d0vec;
 
   bool converged = false;
+  double maxdz = m_maxDeltaZ;
   int nbIter = 0;
   while( (nbIter < m_minIter) || (!converged && nbIter < m_Iterations) )
   {
@@ -128,16 +148,22 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
       Gaudi::XYZVector ipVector =
         impactParameterVector(xyzvtx, pvTrack->stateG.position(), pvTrack->unitVect);
       pvTrack->vd0 = ipVector;
-      pvTrack->d0 = ipVector.Mag2();
+      pvTrack->d0 = std::sqrt(ipVector.Mag2());
+      
+
       if(pvTrack->err2d0<m_myZero) 
       {
         if(msgLevel(MSG::DEBUG)) debug() << "fitVertex: pvTrack error is too small for computation" << endmsg;
-        pvTrack->chi2=pvTrack->d0/m_myZero;
+        pvTrack->chi2=(pvTrack->d0*pvTrack->d0)/m_myZero;
       }
-      else pvTrack->chi2 = pvTrack->d0/ pvTrack->err2d0;
+      else pvTrack->chi2 = (pvTrack->d0*pvTrack->d0)/ pvTrack->err2d0;
+
+      if(msgLevel(MSG::DEBUG)) debug() << format( "itr %d new track position: chi2 d0 w zc %7.2f %7.2f %7.2f %7.2f",
+                                                  nbIter, pvTrack->chi2, pvTrack->d0, pvTrack->err2d0, pvTrack->stateG.z()) << endmsg;
+
 
       pvTrack->weight = getTukeyWeight(pvTrack->chi2, nbIter);
-
+      
       if (  pvTrack->weight > m_minTrackWeight ) {
 	ntrin++;
 
@@ -165,7 +191,7 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
           d0vec[k] += vd0;
         }
 
-      } // if (  pvTrack->weight > m_minTrackWeight )
+      }
 
     }
 
@@ -180,7 +206,6 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
       if(msgLevel(MSG::DEBUG)) {
 
         debug() << "Error inverting hessian matrix" << endmsg;
-
         // typically 2 tracks (clones) left with identical slopes
         // dump all tracks used in hessian calculation
         int dntrin=0;
@@ -215,15 +240,24 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
     xyzvtx.SetY(xyzvtx.Y()+delta[1]);
     xyzvtx.SetZ(xyzvtx.Z()+delta[2]);
 
-    if(fabs(delta[2]) < m_maxDeltaZ) {
+    double r = std::sqrt((xyzvtx.x())*(xyzvtx.x())+(xyzvtx.y())*(xyzvtx.y()));
+    
+    // loose convergence criteria if close to end of iterations                                                                                                                 
+    if ( 1.*nbIter > 0.8*m_Iterations ) {
+      maxdz = 10.*m_maxDeltaZ;
+    }
+
+    if(fabs(delta[2]) < maxdz && r< m_maxRDPV) {
       converged = true;
     }
+
+
   } // end iteration loop
   if(!converged) return StatusCode::FAILURE;
-  // Check number of tracks and calculate chi2
   int outTracks = 0;
   int nDoF = -3;
   double chi2 = 0.0;
+
   for(PVTracks::iterator iFitTr = m_pvTracks.begin(); iFitTr != m_pvTracks.end(); iFitTr++) {
     if( iFitTr->weight > m_minTrackWeight) {
       outTracks++;
@@ -242,6 +276,7 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
   // accepted PV
   vtx.setChi2(chi2);
   vtx.setNDoF(nDoF);
+ 
 
   xyzvtx.SetZ(xyzvtx.z() + m_zVtxShift);
   vtx.setPosition(xyzvtx);
@@ -276,8 +311,8 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
     for(PVTracks::iterator iFitTr = m_pvTracks.begin(); iFitTr != m_pvTracks.end(); iFitTr++) {
       int invx = 0;
       if( iFitTr->weight > m_minTrackWeight) invx = 1;
-        debug() << format( "chi2 d0 w zc %7.2f %7.2f %7.2f %7.2f %3d",
-                   iFitTr->chi2, iFitTr->d0, iFitTr->weight, iFitTr->refTrack->firstState().z(),invx) << endmsg;
+        debug() << format( "chi2 d0 w zc %7.2f %7.2f %7.2f %7.2f %7.2f %3d",
+			   iFitTr->chi2, iFitTr->d0, iFitTr->weight, iFitTr->refTrack->firstState().z(),iFitTr->refTrack->pt(), invx) << endmsg;
 
     }
   }
@@ -295,12 +330,31 @@ void LSAdaptPV3DFitter::addTrackForPV(const LHCb::Track* pvtr,
   pvtrack.isUsed = false;
   pvtrack.stateG = pvtr->firstState();
   pvtrack.unitVect = pvtrack.stateG.slopes().Unit();
-  pvtrack.d0 = ( (impactParameterVector(seed,  pvtrack.stateG.position(),  pvtrack.unitVect)).Mag2() );
-  if(pvtrack.d0 > m_maxIP2PV*m_maxIP2PV) return;
-  pvtrack.err2d0 = err2d0(pvtr, seed);
+  pvtrack.vd0 =
+    impactParameterVector(seed,  pvtrack.stateG.position(),  pvtrack.unitVect);
+  pvtrack.d0 = std::sqrt( (impactParameterVector(seed,  pvtrack.stateG.position(),  pvtrack.unitVect)).Mag2() );
+ 
+  if ( m_UseFittedTracks )
+    {	 
+      Gaudi::XYZVector vd0Unit = pvtrack.vd0.unit();
+      ROOT::Math::SVector<double,2> xyVec;
+      xyVec[0] = vd0Unit.x();
+      xyVec[1] = vd0Unit.y();
+      Gaudi::SymMatrix2x2 covMatrix =
+	pvtrack.stateG.covariance().Sub<Gaudi::SymMatrix2x2>(0,0);
+      ROOT::Math::SVector<double,2> covMatrix_xyVec_product;
+      covMatrix_xyVec_product = covMatrix * xyVec;
+      pvtrack.err2d0 = xyVec[0] * covMatrix_xyVec_product[0]+ xyVec[1] * covMatrix_xyVec_product[1];
+    }
+  else
+    {
+      pvtrack.err2d0 = err2d0(pvtr, seed);
+    }
   pvtrack.chi2 = 0;
-  //does it make sense to add such an error... why is chi2 0 for this case? it should be a very big number
-  if(pvtrack.err2d0 > m_myZero) pvtrack.chi2 = (pvtrack.d0)/pvtrack.err2d0;
+  if(pvtrack.err2d0 > m_myZero) 
+    {
+      pvtrack.chi2 = (pvtrack.d0*pvtrack.d0)/pvtrack.err2d0;
+    }
   else
   {
     if(msgLevel(MSG::DEBUG)) debug() << "addTrackForPV: pvTrack error is too small for computation" << endmsg;
@@ -308,7 +362,10 @@ void LSAdaptPV3DFitter::addTrackForPV(const LHCb::Track* pvtr,
   }
   // Keep reference to the original track
   pvtrack.refTrack = pvtr;
-  pvTracks.push_back(pvtrack);
+  if ( pvtrack.chi2 < m_maxChi2 )
+    {
+      pvTracks.push_back(pvtrack);
+    }
   return;
 }
 
@@ -318,9 +375,6 @@ void LSAdaptPV3DFitter::addTrackForPV(const LHCb::Track* pvtr,
 double LSAdaptPV3DFitter::err2d0(const LHCb::Track* track, const Gaudi::XYZPoint& seed) {
 
   // fast parametrization of track parameters
-
-  //  double x     = track->firstState().x();
-  //  double y     = track->firstState().y();
   double z     = track->firstState().z();
   double tx    = track->firstState().tx();
   double ty    = track->firstState().ty();
@@ -346,22 +400,39 @@ double LSAdaptPV3DFitter::err2d0(const LHCb::Track* track, const Gaudi::XYZPoint
     err2 += et2; 
   }
 
-  // add multiple scattering if track errors do not contain it (Hlt case)
+  // add multiple scattering if track errors don't have it (HLT case)
   double corr2 = 0.;
   double l_scat2 = 0.;
+  //double qp = 0.;
+  
   if( m_AddMultipleScattering ) {
     if ( m_CalculateMultipleScattering) {
         // mutliple scattering from RF foil at r = 10 mm
-        double r_ms = 10.;
+     
+      double r_ms = 10.;
         l_scat2 = r_ms*r_ms/fsin2;
         corr2 = m_scatCons*m_scatCons*l_scat2;
+
+	if(msgLevel(MSG::DEBUG)) {
+           debug() << " Track printout " 
+		   << track->type() << " " << track->firstState().qOverP() << " "
+		   << endmsg;
+	}
         err2 += corr2;
     }
     else {
       err2 += 0.05*0.05;
     }
-  }
+   
 
+	if(msgLevel(MSG::DEBUG)) {
+           debug() << " Track printout " 
+		   << track->type() << " " << track->firstState().qOverP() << " " << corr2 << " " << err2 << " "
+		   << endmsg;
+	
+	}
+  }
+ 
   return (err2);
 }
 
