@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2015-03-17 - Vanya Belyaev
+ - move count_iterator form Phys/DaVinciTypes 
+
 ! 2015-02-26 - Manuel Tobias Schiller
  - CircleTraj: speed up distTo2ndError by factor 3 (fast cube root)
  - STDataFunctor: avoid call to exp and log from pow, as the exponent is integer
