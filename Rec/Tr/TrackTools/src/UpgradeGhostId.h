@@ -62,7 +62,6 @@ protected:
 private:
   IVPExpectation   *m_vpExpectation;
   std::vector<IClassifierReader*> m_readers;
-  std::vector<Rich::TabulatedFunction1D*> m_flatters;
 
 
   std::vector<IHitExpectation*> m_Expectations;

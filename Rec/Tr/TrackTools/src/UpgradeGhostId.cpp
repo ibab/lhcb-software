@@ -14,11 +14,6 @@
 #include "TMVA/TMVAUp_4_MLP_4.class.C"
 #include "TMVA/TMVAUp_5_MLP_5.class.C"
 #include "TMVA/TMVAUp_6_MLP_6.class.C"
-#include "TMVA/FlattenDownstream.C"
-#include "TMVA/FlattenLong.C"
-#include "TMVA/FlattenTtrack.C"
-#include "TMVA/FlattenUpstream.C"
-#include "TMVA/FlattenVelo.C"
 
 
 #include "TMath.h"
@@ -66,11 +61,6 @@ StatusCode UpgradeGhostId::finalize()
   delete m_readers[LHCb::Track::Downstream];
   delete m_readers[LHCb::Track::Long];
   delete m_readers[LHCb::Track::Ttrack];
-  delete m_flatters[LHCb::Track::Velo];
-  delete m_flatters[LHCb::Track::Upstream];
-  delete m_flatters[LHCb::Track::Downstream];
-  delete m_flatters[LHCb::Track::Long];
-  delete m_flatters[LHCb::Track::Ttrack];
   //IIncidentSvc* incsvc = svc<IIncidentSvc>("IncidentSvc") ;
   //incsvc->removeListener(this, IncidentType::BeginEvent);
   return GaudiTool::finalize();
@@ -113,12 +103,6 @@ StatusCode UpgradeGhostId::initialize()
   m_readers[LHCb::Track::Long] = new ReadMLP_3(names);
   names = ttrackVars();
   m_readers[LHCb::Track::Ttrack] = new ReadMLP_6(names);
-  m_flatters = std::vector<Rich::TabulatedFunction1D*> (largestTrackTypes,NULL);
-  m_flatters[LHCb::Track::Velo] = VeloTable();
-  m_flatters[LHCb::Track::Long] = LongTable();
-  m_flatters[LHCb::Track::Upstream] = UpstreamTable();
-  m_flatters[LHCb::Track::Downstream] = DownstreamTable();
-  m_flatters[LHCb::Track::Ttrack] = TtrackTable();
 
   return StatusCode::SUCCESS;
 }
@@ -238,8 +222,7 @@ StatusCode UpgradeGhostId::execute(LHCb::Track& aTrack) const
 
   //float netresponse = m_readers[aTrack.type()]->GetRarity(variables); // TODO rarity would be nice, see https://sft.its.cern.ch/jira/browse/ROOT-7050
   float netresponse = m_readers[aTrack.type()]->GetMvaValue(variables);
-  netresponse = m_flatters[aTrack.type()]->value(netresponse);
-  
+
   aTrack.setGhostProbability(1.-netresponse);
 
   return StatusCode::SUCCESS;

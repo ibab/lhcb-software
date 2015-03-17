@@ -8,6 +8,11 @@
 #include "Event/STCluster.h"
 #include "Event/VeloCluster.h"
 #include "Event/GhostTrackInfo.h" 
+#include "TMVA/FlattenDownstream.C"
+#include "TMVA/FlattenLong.C"
+#include "TMVA/FlattenTtrack.C"
+#include "TMVA/FlattenUpstream.C"
+#include "TMVA/FlattenVelo.C"
 
 class IClassifierReader {
 
@@ -100,6 +105,11 @@ StatusCode Run2GhostId::finalize()
   delete m_readers[LHCb::Track::Downstream];
   delete m_readers[LHCb::Track::Long];
   delete m_readers[LHCb::Track::Ttrack];
+  delete m_flatters[LHCb::Track::Velo];
+  delete m_flatters[LHCb::Track::Upstream];
+  delete m_flatters[LHCb::Track::Downstream];
+  delete m_flatters[LHCb::Track::Long];
+  delete m_flatters[LHCb::Track::Ttrack];
   //IIncidentSvc* incsvc = svc<IIncidentSvc>("IncidentSvc") ;
   //incsvc->removeListener(this, IncidentType::BeginEvent);
   return GaudiTool::finalize();
@@ -143,6 +153,12 @@ StatusCode Run2GhostId::initialize()
   m_readers[LHCb::Track::Downstream] = new DownGhostProb::ReadMLP(varnames);
   varnames = variableNames(LHCb::Track::Ttrack);
   m_readers[LHCb::Track::Ttrack]     = new TGhostProb::ReadMLP(varnames);
+  m_flatters = std::vector<Rich::TabulatedFunction1D*> (largestTrackTypes,NULL);
+  m_flatters[LHCb::Track::Velo] = VeloTable();
+  m_flatters[LHCb::Track::Long] = LongTable();
+  m_flatters[LHCb::Track::Upstream] = UpstreamTable();
+  m_flatters[LHCb::Track::Downstream] = DownstreamTable();
+  m_flatters[LHCb::Track::Ttrack] = TtrackTable();
 
   m_vectorsizes = new int[largestTrackTypes];
   m_vectorsizes[LHCb::Track::Velo] = 11 + 1;
@@ -221,7 +237,7 @@ StatusCode Run2GhostId::execute(LHCb::Track& aTrack) const
   std::vector<float> variables(netInputs(aTrack));
   //float netresponse = m_readers[aTrack.type()]->GetRarity(variables); // TODO rarity would be nice, see https://sft.its.cern.ch/jira/browse/ROOT-7050
   float netresponse = m_readers[aTrack.type()]->GetMvaValue(variables);
-
+  netresponse = m_flatters[aTrack.type()]->value(netresponse);
   aTrack.setGhostProbability(0.5*(1.-netresponse));
 
   return StatusCode::SUCCESS;

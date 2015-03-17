@@ -14,6 +14,9 @@
 
 
 class IClassifierReader;
+namespace Rich{
+  class TabulatedFunction1D;
+}
 
 
 /** @class Run2GhostId Run2GhostId.h
@@ -50,6 +53,7 @@ private:
   IOTRawBankDecoder* m_otdecoder;
   IVeloExpectation   *m_veloExpectation;
   std::vector<IClassifierReader*> m_readers;
+  std::vector<Rich::TabulatedFunction1D*> m_flatters;
 
   std::vector<varNameMethod> m_varNameMethods;
 
