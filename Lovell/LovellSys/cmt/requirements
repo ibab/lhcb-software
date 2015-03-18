@@ -5,21 +5,19 @@
 #
 #============================================================================
 package LovellSys
-version v1r1
+version v1r2
 #============================================================================
 
 branches cmt doc
 
 # Lovell core packages
-# Packages without Hat, cannot have comment field.
 # VeloAnalysisFramework 	# S Ali, L Bell
 # VeloOfflineGUI 		# D Saunders
 # VeloWebGUI		 	# A Pearce
-use VeloAnalysisFramework 	v1r1
-use VeloOfflineGUI 		v1r1
+use VeloAnalysisFramework 	v1r2
+use VeloOfflineGUI 		v1r2
 use VeloWebGUI		 	v1r1
 
 # Declare this as a container package
 apply_pattern container_package
-
 #============================================================================
