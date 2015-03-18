@@ -5,6 +5,10 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+! 2015-03-17 - Chris Jones
+ - Update python modules to use logging module instead of plain print.
+ - Set the output depending on if VERBOSE environment variable is set or not.
+
 ! 2015-03-06 - Chris Jones
  - Add new option to genClasses.py to generate boost pool allocators with
    threading support disabled. Avoids some mutex lock calls during new/delete 

@@ -55,9 +55,14 @@ class godII(object):
             self._parser.prog = args[0]
             args = args[1:]
         self.opts, self.args = self._parser.parse_args(args)
-        self._log = logging.getLogger(self._parser.get_prog_name())
 
-        logging.basicConfig(level=logging.INFO)
+        if "VERBOSE" in os.environ :
+            logging.basicConfig(level=logging.DEBUG)
+        else:
+            logging.basicConfig(level=logging.WARNING)
+                
+        #self._log = logging.getLogger(self._parser.get_prog_name())
+        self._log = logging.getLogger('GODII')
 
         # check options
         if self.opts.dtd == '':
@@ -217,7 +222,7 @@ class godII(object):
             elif os.path.isfile(src) and src.split('.')[-1] == 'xml':
                 srcFiles.append(src)
             else :
-                print '%s: ERROR: %s passed as source location is neither directory nor a .xml file' % (self.argv0, src)
+                self._log.error( self.argv0 + ': ERROR: '+src+' passed as source location is neither directory nor a .xml file' )
                 sys.exit(1)
 
         if self.gClasses : gClasses = genClasses.genClasses(self.godRoot)
@@ -244,32 +249,32 @@ class godII(object):
 
             package = genPackage.genPackage(godPackage)
 
-            print 'Processing package ' + package.dict['packagename']
+            self._log.debug( 'Processing package ' + package.dict['packagename'] )
 
             lname = self.findLongestName(godPackage)
 
             if godPackage.has_key('assoc') and self.gAssocDicts :
-                print '  Generating Dictionaries for Associations'
+                self._log.debug( '  Generating Dictionaries for Associations' )
                 gAssocDicts.doit(godPackage)
-                print '  - Done'
+                self._log.debug( '  - Done' )
 
             if godPackage.has_key('namespace') and self.gNamespaces :
-                print '  Generating Namespaces'
+                self._log.debug( '  Generating Namespaces' )
                 gNamespaces.doit(package,godPackage['namespace'],self.srcOutput,lname)
-                print '  - Done'
+                self._log.debug( '  - Done' )
 
             if godPackage.has_key('class'):
                 if self.gClasses :
-                    print '  Generating Header Files'
+                    self._log.debug( '  Generating Header Files' )
                     gClasses.doit(package,godPackage['class'],self.srcOutput,lname,self.allocatorType)
-                    print '  - Done'
+                    self._log.debug( '  - Done' )
 
                 if self.gClassDicts :
-                    print '  Generating Dictionaries'
+                    self._log.debug( '  Generating Dictionaries' )
                     gClassDicts.doit(godPackage)
-                    print '  - Done'
+                    self._log.debug( '  - Done' )
 
-            print '- Done '
+            self._log.debug( '- Done ' )
 
 if __name__ == '__main__':
     g = godII(sys.argv)

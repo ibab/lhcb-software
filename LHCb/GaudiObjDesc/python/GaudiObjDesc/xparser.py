@@ -91,7 +91,7 @@ class GODSrcParser(object):
             return result
         element = root.getroot()
         result = {element.tag: [el2dict(element)]}
-        self.log.info('Done')
+        self.log.debug('Done')
         return result
 
 #================================================================================

@@ -1,5 +1,6 @@
 import time, os, sys, string
 import genSrcUtils, gparser
+import logging
 
 #================================================================================
 class genClasses(genSrcUtils.genSrcUtils):
@@ -14,6 +15,7 @@ class genClasses(genSrcUtils.genSrcUtils):
         self.genOStream = 0
         self.genFillStream = 0
         self.isEventClass = 0
+        self.log = logging.getLogger('GODGenClasses')
 #--------------------------------------------------------------------------------
     def reset(self, package, godClass):
         genSrcUtils.genSrcUtils.reset(self,godClass)
@@ -786,7 +788,7 @@ namespace {
 
             fileName = '%s.h' % classname
 
-            print '    File %s' % fileName.ljust(lname),
+            mess = 'File ' + fileName.ljust(lname)
 
             classDict['classname']                    = classname
             classDict['classID']                      = self.genClassID(godClass)
@@ -837,7 +839,8 @@ namespace {
             file.write(g.stream)
             file.close()
 
-            print ' - Done'
+            mess += ' - Done'
+            self.log.info( mess )
 
 #================================================================================
 #import xparser

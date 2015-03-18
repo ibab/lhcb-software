@@ -1,5 +1,6 @@
 import time, os
 import genSrcUtils, tools, gparser
+import logging
 
 #================================================================================
 class genNamespaces(genSrcUtils.genSrcUtils):
@@ -13,6 +14,7 @@ class genNamespaces(genSrcUtils.genSrcUtils):
         self.forwardDeclLHCb = []
         self.forwardDeclGlob = {}
         self.forwardIncl = []
+        self.log = logging.getLogger('GODGenNamespaces')
 #--------------------------------------------------------------------------------
     def reset(self,package,godNamespace):
         genSrcUtils.genSrcUtils.reset(self,godNamespace)
@@ -34,7 +36,7 @@ class genNamespaces(genSrcUtils.genSrcUtils):
     def genClasses(self,godNamespace):
         s = ''
         if godNamespace.has_key('class'):
-            print ':ERROR: <class> element not implemented for namespaces yet'
+            self.log.error( ':ERROR: <class> element not implemented for namespaces yet' )
         return s
 #--------------------------------------------------------------------------------
     def doit(self,package,godNamespaces,outputDir,lname):
@@ -54,7 +56,7 @@ class genNamespaces(genSrcUtils.genSrcUtils):
 
             fileName = '%s.h' % namespacename
 
-            print '    File %s' % fileName.ljust(lname),
+            mess = 'File ' + fileName.ljust(lname)
 
             namespaceDict['namespacename']    = namespacename
             namespaceDict['desc']             = self.genDesc(godNamespace)
@@ -81,7 +83,8 @@ class genNamespaces(genSrcUtils.genSrcUtils):
             file.write(g.stream)
             file.close()
 
-            print ' - Done'
+            mess += ' - Done'
+            self.log.info( mess )
 
 #================================================================================
 #import xparser

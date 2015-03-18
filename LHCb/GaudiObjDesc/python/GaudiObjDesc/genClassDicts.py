@@ -1,5 +1,6 @@
 import os
 import gparser
+import logging
 
 #================================================================================
 class genClassDicts:
@@ -15,6 +16,7 @@ class genClassDicts:
         self.sDictInstances   = []
         self.sClassSelections = []
         self.sClassExclusions = []
+        self.log = logging.getLogger('GODGenClassDicts')
 #--------------------------------------------------------------------------------
     def conc(self, to, src):
         if src not in to : to.append(src)
@@ -224,9 +226,9 @@ class genClassDicts:
         # the file name is the package name plus the template name (. replaces _)
         fileName = '%s_%s' % (packagename,tmplname.replace('_','.'))
         fileFullName = self.dictOutputDir+os.sep+fileName
-        print '    File %s' % fileName,
+        mess = '    File ' + fileFullName
         if os.path.isfile(fileFullName):
-            print '(exists - appending)',
+            mess += '(exists - appending)'
             self.appendFile(fileFullName, tmplname)
         # a bit of sorting
         self.sIncludes.sort()
@@ -246,7 +248,8 @@ class genClassDicts:
         file = open(fileFullName,'w')
         file.write(g.stream)
         file.close()
-        print ' - Done'
+        mess += ' - Done'
+        self.log.info( mess )
 #--------------------------------------------------------------------------------
     def doit(self,godPackage):
         packagename = godPackage['attrs']['name']
