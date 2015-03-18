@@ -1,9 +1,8 @@
 ################################################################################
 # Package: VeloAnalysisFramework
 ################################################################################
-gaudi_subdir(VeloAnalysisFramework v1r1)
+gaudi_subdir(VeloAnalysisFramework v1r2)
 
-#Modify as necessary
 find_package(ROOT COMPONENTS Hist Matrix Graf)
 
 gaudi_depends_on_subdirs(GaudiKernel)

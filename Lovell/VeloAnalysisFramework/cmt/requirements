@@ -4,25 +4,18 @@
 #
 #============================================================================
 package 	VeloAnalysisFramework
-version 	v1r1
+version 	v1r2
 
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
 branches 	cmt doc src python tests
-#include_path 	none
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
 use GaudiKernel        v*
-#use ROOT        v*      LCG_Interfaces 
-#============================================================================
-# Component library building rule
-#============================================================================
-#library		VeloAnalysisFramework  -import=ROOT  ../src/*.cpp 
 #============================================================================
 # define component library link options
 #============================================================================
-#Below needs to be modified as necessary
 apply_pattern install_python_modules
 apply_pattern QMTest
