@@ -4,6 +4,7 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+!========================= GaussAlgs v8r1 2015-03-18 ==========================
 ! 2015-03-13 - Gloria Corti
  - Change type of properties RunNumber and FirstEventNumber to match types in 
    {Process,Gen}Header
