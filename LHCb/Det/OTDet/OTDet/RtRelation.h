@@ -44,8 +44,10 @@ namespace OTDet
       /// constructor from a polynomial t(r) and sigmat(r).  the
       /// coefficients are actually those of a polynomial in r/rmax,
       /// such that they all have unit [ns].
+      RtRelation(float rmax, const std::vector<float>& tcoeff, const std::vector<float>& terrcoeff);
       RtRelation(double rmax, const std::vector<double>& tcoeff, const std::vector<double>& terrcoeff);
       ///  constructor from a polynomial t(r) and a fixed error in r. this is only for convenience with MC.
+      RtRelation(float rmax, const std::vector<float>& tcoeff, float sigmaR);
       RtRelation(double rmax, const std::vector<double>& tcoeff, double sigmaR);
 
       // -------------------- various little helpers --------------------

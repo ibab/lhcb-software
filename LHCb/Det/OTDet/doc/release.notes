@@ -2,6 +2,10 @@
 ! Responsible : Alexandr Kozlinskiy, Lucia Grillo
 !--------------------------------------------------------------------------
 
+! 2015-03-18 - Manuel Tobias Schiller
+ - RtRelation: Wouter requested constructors which take vector<float> for the
+   alignment, so provide them
+
 ! 2015-02-26 - Manuel Tobias Schiller
  - DeOTModule: remove temporary variables, write somewhat leaner code to speed
    up the calculateHits method by another percent or so (shouldn't change the
