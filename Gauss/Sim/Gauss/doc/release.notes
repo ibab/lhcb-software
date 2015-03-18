@@ -4,6 +4,7 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================== Gauss v48r1 2015-03-18 ===========================
 ! 2015-03-13 - Gloria Corti
  - Change random number engine from Ranlux to MTwist, following report by
    Matt King (MoEDAL) of correlations in Ranlux. 
