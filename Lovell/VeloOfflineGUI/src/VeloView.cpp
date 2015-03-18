@@ -15,8 +15,12 @@ veloview::veloview(int runMode, std::vector<std::string> * ops, QWidget *parent)
   m_plotOps(NULL),
   m_runProxy(NULL),
   m_verbose(false),
-  m_dataDir("/afs/cern.ch/work/a/apearce/public/VetraOutput")
+  m_dataDir("/calib/velo/dqm/VeloView/VetraOutput")
 {
+  m_ops = ops;
+  setOps();
+  std::cout<<"Data directory: "<<m_dataDir<<std::endl;
+
   QFile stylesheet("styleSheet.qss");
   stylesheet.open(QFile::ReadOnly);
   QString setSheet = QLatin1String(stylesheet.readAll());
@@ -41,9 +45,6 @@ veloview::veloview(int runMode, std::vector<std::string> * ops, QWidget *parent)
     QPixmap plogo(QString("Logos/veloLogo.png"));
     ui->m_logo->setPixmap(plogo);
   }
-  m_ops = ops;
-  setOps();
-  std::cout<<"Data directory: "<<m_dataDir<<std::endl;
 }
 
 
