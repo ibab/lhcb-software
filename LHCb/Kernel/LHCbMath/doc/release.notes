@@ -9,10 +9,6 @@
 ! 2015-03-17 - Ben Couturier 
  - Updated check threshold for TestSimilarity
 
-! 2015-03-16 - Chris Jones
- - Turn off AVX implementation of LHCbMath Filter method, to test if this is
-   the cause of compiler instabilities observed in the nightlies.
-
 ! 2015-03-16 - Vanya Belyaev
  - remove compilation warning
 
