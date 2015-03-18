@@ -4,6 +4,7 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= GaussKine v6r5 2015-03-18 =========================
 ! 2015-02-11 - Heinrich Schindler
  - Add algorithm MaskParticles to set the status of high energy and rapidity
    particles to "DocumentationParticle". This is used in simulations of the  
