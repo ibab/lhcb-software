@@ -629,3 +629,17 @@ class D2KsHHH_KSDD(D2HHHKsCombiner) :
         inputs = [HHH,
                   KS0_DD]
         D2HHHKsCombiner.__init__(self,name,decay,inputs)
+
+# Hc->hhhh lines
+
+Hc2HHHHCombiner = HHHCombiner
+
+class Xic02PKKPi_LTUNB(Hc2HHHHCombiner) :
+    def __init__(self,name) :
+        decay = "[Xi_c0 -> p+ K- K- pi+]cc"
+        protonsForPromptHHHCombiner = SharedPromptChild_p
+        inputs = [SharedPromptChild_K,
+                  SharedPromptChild_pi,
+                  protonsForPromptHHHCombiner]
+        HHHCombiner.__init__(self,name,decay,inputs)
+

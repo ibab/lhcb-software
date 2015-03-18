@@ -50,11 +50,11 @@ class CharmHadD2HHHLines() :
                  'Lc2HHH_LTUNB'    : {
                                  'BPVLTIME_MIN'             :  0.1 * picosecond,
                                  'BPVDIRA_MIN'              :  0.9,
-                                 'ASUMPT_MIN'               :  3000 * MeV,
-                                 'AM_MIN'                   :  2201 * MeV,
-                                 'AM_MAX'                   :  2371 * MeV,
+                                 'ASUMPT_MIN'               :  3000. * MeV,
+                                 'AM_MIN'                   :  2201. * MeV,
+                                 'AM_MAX'                   :  2553. * MeV,
                                  'Mass_M_MIN'               :  2211.0 * MeV,
-                                 'Mass_M_MAX'               :  2361.0 * MeV,
+                                 'Mass_M_MAX'               :  2543.0 * MeV,
                                 },
                  # Now the combiner for the PID calib lines 
                  # The pointing cut is tight to ensure a purer signal even without
