@@ -1,5 +1,5 @@
-# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@5/build/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
-# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@5/build/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
+# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@6/build/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
+# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@6/build/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
 # applying configuration of Brunel
 # /***** User Brunel/Brunel **************************************************************************
 # |-DatasetName         = 'Brunel'
@@ -104,7 +104,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version HEAD
-                                          running on lbbuild02.cern.ch on Tue Mar 10 10:13:19 2015
+                                          running on lbbuild05.cern.ch on Wed Mar 18 07:50:33 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -113,7 +113,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.31 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.52 times the speed of a 2.8 GHz Xeon.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
@@ -667,7 +667,7 @@ ToolSvc.L0DUCon...   INFO --------------- TCK = 0x10000------------------
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.31 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.52 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1165,47 +1165,43 @@ Listing sources of Unprotected and Unseen messages
  RootCnvSvc                                                  |   DEBUG |        3
  RootHistSvc                                                 |   DEBUG |        1
  TimingAuditor.TIMER                                         |   DEBUG |        1
- ToolSvc.OfflineKsTrack_RichCherenkovAngle                   |   DEBUG |        3
+ ToolSvc.OfflineKsTrack_RichCherenkovAngle                   |   DEBUG |        2
  ToolSvc.OfflineKsTrack_RichCherenkovResolution              |   DEBUG |        1
- ToolSvc.OfflineKsTrack_RichExpectedTrackSignal              |   DEBUG |        5
+ ToolSvc.OfflineKsTrack_RichExpectedTrackSignal              |   DEBUG |        3
  ToolSvc.OfflineKsTrack_RichGeomEff                          |   DEBUG |        1
  ToolSvc.OfflineKsTrack_RichMassHypoRings                    |   DEBUG |        1
  ToolSvc.OfflineKsTrack_RichParticleProperties               |   DEBUG |        1
  ToolSvc.OfflineKsTrack_RichPhotonCreator                    |   DEBUG |        1
  ToolSvc.OfflineKsTrack_RichPhotonCreator.PhotonParams       |   DEBUG |        2
- ToolSvc.OfflineKsTrack_RichPhotonCreator.Predictor          |   DEBUG |        1
  ToolSvc.OfflineKsTrack_RichPixelCreator                     |   DEBUG |        1
  ToolSvc.OfflineKsTrack_RichPixelCreator.PixelSuppressRich1  |   DEBUG |        1
  ToolSvc.OfflineKsTrack_RichRecGeometry                      |   DEBUG |        2
  ToolSvc.OfflineKsTrack_RichTrackCreator.TrSegMaker          |   DEBUG |        1
- ToolSvc.OfflineLong_RichCherenkovAngle                      |   DEBUG |        3
+ ToolSvc.OfflineLong_RichCherenkovAngle                      |   DEBUG |        2
  ToolSvc.OfflineLong_RichCherenkovResolution                 |   DEBUG |        1
- ToolSvc.OfflineLong_RichExpectedTrackSignal                 |   DEBUG |        5
+ ToolSvc.OfflineLong_RichExpectedTrackSignal                 |   DEBUG |        3
  ToolSvc.OfflineLong_RichGeomEff                             |   DEBUG |        1
  ToolSvc.OfflineLong_RichMassHypoRings                       |   DEBUG |        1
  ToolSvc.OfflineLong_RichParticleProperties                  |   DEBUG |        1
  ToolSvc.OfflineLong_RichPhotonCreator                       |   DEBUG |        1
  ToolSvc.OfflineLong_RichPhotonCreator.PhotonParams          |   DEBUG |        2
- ToolSvc.OfflineLong_RichPhotonCreator.Predictor             |   DEBUG |        1
  ToolSvc.OfflineLong_RichPixelCreator                        |   DEBUG |        1
  ToolSvc.OfflineLong_RichPixelCreator.PixelSuppressRich1     |   DEBUG |        1
  ToolSvc.OfflineLong_RichRecGeometry                         |   DEBUG |        2
  ToolSvc.OfflineLong_RichTrackCreator.TrSegMaker             |   DEBUG |        1
- ToolSvc.OfflineVeloTT_RichCherenkovAngle                    |   DEBUG |        3
+ ToolSvc.OfflineVeloTT_RichCherenkovAngle                    |   DEBUG |        2
  ToolSvc.OfflineVeloTT_RichCherenkovResolution               |   DEBUG |        1
- ToolSvc.OfflineVeloTT_RichExpectedTrackSignal               |   DEBUG |        5
+ ToolSvc.OfflineVeloTT_RichExpectedTrackSignal               |   DEBUG |        3
  ToolSvc.OfflineVeloTT_RichGeomEff                           |   DEBUG |        1
  ToolSvc.OfflineVeloTT_RichMassHypoRings                     |   DEBUG |        1
  ToolSvc.OfflineVeloTT_RichParticleProperties                |   DEBUG |        1
  ToolSvc.OfflineVeloTT_RichPhotonCreator                     |   DEBUG |        1
  ToolSvc.OfflineVeloTT_RichPhotonCreator.PhotonParams        |   DEBUG |        2
- ToolSvc.OfflineVeloTT_RichPhotonCreator.Predictor           |   DEBUG |        1
  ToolSvc.OfflineVeloTT_RichPixelCreator                      |   DEBUG |        1
  ToolSvc.OfflineVeloTT_RichPixelCreator.PixelSuppressRich1   |   DEBUG |        1
  ToolSvc.OfflineVeloTT_RichRecGeometry                       |   DEBUG |        2
- ToolSvc.OfflineVeloTT_RichRecMCTruthTool                    |   DEBUG |        1
  ToolSvc.OfflineVeloTT_RichTrackCreator.TrSegMaker           |   DEBUG |        1
- ToolSvc.RichRayTracing                                      |   DEBUG |        5
+ ToolSvc.RichRayTracing                                      |   DEBUG |        3
  ToolSvc.SequencerTimerTool                                  |   DEBUG |        1
  ToolSvc.SequencerTimerTool                                  |    INFO |        4
 ===================================================================================
