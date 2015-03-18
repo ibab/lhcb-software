@@ -13,7 +13,8 @@ are available:
    - EventSelection     Wraps an algorithm that selects an event and produces no output data.
    - VoidEventSelection Selects event based on TES container properties, applying a LoKi__VoidFilter compatible cut to the data from a required selection.
    - PassThroughSelection
-"""
+   - PrintSelection     Specialization of PassThroughSelection to print the objects
+   """
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
 __all__ = ('DataOnDemand',
@@ -28,7 +29,8 @@ __all__ = ('DataOnDemand',
            'SelSequence',
            'NameError',
            'NonEmptyInputLocations',
-           'IncompatibleInputLocations'
+           'IncompatibleInputLocations',
+           'PrintSelection'
            )
 
 from copy import copy
@@ -519,6 +521,60 @@ def SimpleSelection (
         RequiredSelections = inputs
         )
 
+# =========================================================================
+## helper utility to create 'Print'-selection, useful for debugging
+#  Such object can be easily inserted into selection flow
+#
+#  @code 
+#
+#  ## some input selection
+#  selection =
+#    
+#  ## add ``Printer''
+#  selection = PrintSelection ( 'QUQU' , selection )
+#    
+#  @endcode 
+#
+#  @param name            unique selection name
+#  @param input           input selection
+#  @param printer         printer algorithm type
+#  @param InputDataSetter davinci....
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2015-03-18
+def PrintSelection (
+    name                       ,    ## UNIQUE seelction name 
+    input                      ,    ## input selection 
+    printer         =  None    ,    ## printer algorthm type
+    InputDataSetter = 'Inputs' ,    ## it is just DaVinci. 
+    *args                      ,    ## algorithm parameters 
+    **kwargs                   ) :  ## algorithm parameters 
+    """
+    
+    ## some input selection
+    selection =
+    
+    ## add ``Printer''
+    selection = PrintSelection ( 'QUQU' , selection )
+    
+    """
+    if printer is None :
+        from GaudiConfUtils.ConfigurableGenerators import PrintDecayTree as _Printer_
+        printer = _Printer_ 
+
+    #
+    ## create new "algorithm"
+    #
+    algo = printer ( *args , **kwargs )
+
+    #
+    ## finally construct valid "Selection"
+    #
+    return PassThroughSelection (
+        name                                ,
+        Algorithm         = algo            ,
+        RequiredSelection = input           ,
+        InputDataSetter   = InputDataSetter )
 
 # ========================================================================
 # The END 

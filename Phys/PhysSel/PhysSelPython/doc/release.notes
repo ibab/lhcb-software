@@ -5,6 +5,16 @@
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
 
+! 2015-03-18 - Vanya Belyaev
+ - add very simple "passthrough selection" for printing/debugging 
+  	    
+ 	  ## some input selection
+    selection =
+    
+    ## add ``Printer''
+    selection = PrintSelection ( 'QUQU' , selection )
+    
+
 !========================= PhysSelPython v9r5 2014-02-20 =========================
 
 ! 2014-02-12 - Vanya Belyaev
