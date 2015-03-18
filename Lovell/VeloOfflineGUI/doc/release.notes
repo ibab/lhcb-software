@@ -1,8 +1,18 @@
 !-----------------------------------------------------------------------------
-! Package     : VeloOfflineGUI 
+! Package     : VeloOfflineGUI
 ! Responsible : Daniel Saunders
 ! Purpose     : Offline GUI for analysis of VELO data
 !----------------------------------------------------------------------------
+
+!====================== VeloOfflineGUI v1r2 2015-03-18 ======================
+! 2015-03-18 - Alex Pearce
+ - Tweak setting of --run-data-dir option
+
+! 2015-03-11 - Dan Saunders
+ - Add --run-data-dir flag to VeloOfflineGUI.exe
+
+! 2015-03-05 - Alex Pearce
+ - Tidy up src files
 
 !====================== VeloOfflineGUI v1r1 2015-03-02 ======================
 ! 2015-02-25 - Marco Clemencic
