@@ -3,6 +3,8 @@
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+! 2015-03-18 - Liang Sun
+ - Fix the nightlies after the last commit. The XML extensions of the condition files within TESTDB?.db are now removed.
 
 ! 2015-03-12 - Marco Clemencic
  - Changed the policy of CondDB::generateXMLCatalog to exclude folders with

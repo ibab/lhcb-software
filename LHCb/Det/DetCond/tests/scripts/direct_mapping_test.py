@@ -32,7 +32,7 @@ def configure(version):
     elif version == 2:
         cdb.addAlternative(DBs[2],'/AutoMap/FolderSet3')
     elif version == 3:
-        cdb.addAlternative(DBs[1],'/AutoMap/FolderSet2/ObjectA.xml')
+        cdb.addAlternative(DBs[1],'/AutoMap/FolderSet2/ObjectA')
     elif version == 4:
         cdb.addLayer(DBs[1])
         cdb.addLayer(DBs[2])
