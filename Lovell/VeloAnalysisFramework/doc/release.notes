@@ -4,6 +4,19 @@
 ! Purpose     : Analysis framework and configuration for offline and web GUIs
 !----------------------------------------------------------------------------
 
+!=================== VeloAnalysisFramework v1r2 2015-03-18 ==================
+! 2015-03-15 - J Harrison
+  - Increase timeout of some QMTests
+
+! 2015-03-05 - A Pearce
+  - Fix ROOT dictionary compilation, and make it quieter
+
+! 2015-03-05 - A Pearce
+  - More robust temporary file creation in tests
+
+! 2015-03-04 - A Pearce
+  - Add run view configuration documentation and associated tests
+
 !=================== VeloAnalysisFramework v1r1 2015-03-02 ==================
 ! 2015-03-02 - J Harrison / A Pearce
   - Fixes for CMake building and C++ compilation
