@@ -22,15 +22,15 @@
 #
 # =============================================================================
 package       BenderSys
-version       v25r4
+version       v25r5
 author        Vanya BELYAEV
 
 
 # =========== Bender Application itself =======================================
-use           Bender         v25r3   Phys 
+use           Bender         v25r5   Phys 
   
 # =========== Bender-based tools and scripts ==================================
-use           BenderTools    v25r3   Phys 
+use           BenderTools    v25r5   Phys 
 
 # =========== examples of usage of Bender "in practice" =======================
 use           BenderExample  v25r3   Ex
