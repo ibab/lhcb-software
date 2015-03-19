@@ -5,6 +5,11 @@
 ! -----------------------------------------------------------------------------
 
 !========================== StrippingSelections v4r0 2015-03-13 ===============
+! 2015-03-19 - Wenbin Qian
+ - Added B2OC lines into the module; update particle combiner to DaVinci_N(x)bodydecays;
+   Update BBDecayTools to suit new configuration
+
+ - Added lines for BandQ EM: StrippingDiMuonForXsection.py and StrippingB2JpsiXforEM_s.py 
 
 ! 2015-03-16 - Roberta Cardinale for the BandQ WG
  - Added lines for BandQ EM: StrippingDiMuonForXsection.py and StrippingB2JpsiXforEM_s.py
