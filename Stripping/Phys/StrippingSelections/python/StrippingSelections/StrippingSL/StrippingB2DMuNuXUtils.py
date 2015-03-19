@@ -62,15 +62,18 @@ def BtoDlnuLine(module_name,
                           DaughtersCuts = B_DaugCuts,
                           CombinationCut = B_combinationCut,
                           MotherCut = B_motherCut)
-                     
+    
+    if CONFIG["Monitor"] == True :
+        _B.Preambulo    = [
+            "hdm1 = Gaudi.Histo1DDef ( 'D_M' , 1700 , 2800  , 200 )"
+            ]
+        _B.Monitor      = True  
+        _B.MotherMonitor  = "process ( monitor ( CHILD(M,1) , hdm1 , 'D_M' ) )  >> ~EMPTY """                                                                   
+    
     BSel = Selection ("BSelFor"+name+module_name,
                       Algorithm = _B,
                       RequiredSelections = [MUON,USED_CHARM])
     
-    ### invert the order for the fakes line
-    ### to be more efficient
-    if "Fake" in name:
-        BSel.RequiredSelections = [USED_CHARM,MUON]
     
     BSelTOS = TOSFilter( "BSelFor"+name+module_name+"TOS"
                          ,BSel

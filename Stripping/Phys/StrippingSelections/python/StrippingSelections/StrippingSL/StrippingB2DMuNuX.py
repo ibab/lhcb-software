@@ -23,11 +23,15 @@ default_config = {
                                "b2DsMuXFakes":0.05,
                                "b2D0MuXFakes":0.05,
                                "b2DpMuXFakes":0.05,
-                               "b2LcMuXFakes":0.05,
+                               "b2LcMuXFakes":0.05
+                               "OmegacMuXFakes":0.05,
+                               "XicMuXFakes":0.05,
+                               "Xic0MuXFakes":0.05,
                                'b2Ds3PiMuX':0.05}
             ,"GEC_nLongTrk" : 250 # adimensional
             ,"TTSpecs"      : {} #{'Hlt1.*Track.*Decision%TOS':0,'Hlt2Topo(2|3|4)Body.*Decision%TOS':0,'Hlt2.*SingleMuon.*Decision%TOS':0,"Hlt2Global%TIS":0} 
             ,"HLT_FILTER"   : "" #"HLT_PASS_RE('Hlt2.*SingleMuon.*Decision') | HLT_PASS_RE('Hlt2Topo(2|3|4)Body.*Decision')"
+            ,"Monitor"      : True
             ##### daughter particles
             ,"UseNoPIDsInputs":False
             ,"TRGHOSTPROB"   : 0.5   # adimensional
@@ -69,6 +73,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         "prescales"
         ,"GEC_nLongTrk"
         ,"HLT_FILTER"
+        ,"Monitor"
         ,"UseNoPIDsInputs"
         ,"TRGHOSTPROB"
         ,"TRCHI2"
@@ -330,6 +335,70 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                              LC2PHH_CONFIG,
                                              [self.selProton,self.selKaon,self.selPion],self.selMuonFakes)
         
+        ############################ others #####################################
+        XIC2PKPI_CONFIG = config.copy()
+        XIC2PKPI_CONFIG["ExtraMuonCuts"] = "(PT > 1000*MeV) & (MIPCHI2DV(PRIMARY)> 9)"
+        XIC2PKPI_CONFIG["CharmComboCuts"] = "(ADAMASS('Xi_c+') < %(D_AMassWin)s *MeV)"\
+            "& (APT > 2000*MeV) & (ADOCACHI2CUT( %(D_DocaChi2Max)s, ''))" % XIC2PKPI_CONFIG
+        XIC2PKPI_CONFIG["CharmMotherCuts"] = "(ADMASS('Xi_c+') < %(D_MassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(D_VCHI2DOF)s) " \
+            "& (BPVVDCHI2 > %(D_FDCHI2)s) & (PT>2100.*MeV) & (BPVDIRA> %(D_BPVDIRA)s)"  % XIC2PKPI_CONFIG
+
+        self.Xic_Line = BtoDlnuLine(name,
+                                        "XicMuX",
+                                        [ '[Xi_b0 -> Xi_c+ mu-]cc', '[Xi_b0 -> Xi_c+ mu+]cc'],
+                                        [ '[Xi_c+ -> K- p+ pi+]cc' ],
+                                        XIC2PKPI_CONFIG,
+                                        [self.selProton,self.selKaon,self.selPion],self.selmuon)
+        
+        self.Xic_Line_FakeMu = BtoDlnuLine(name,
+                                           "XicMuXFakes",
+                                           [ '[Xi_b0 -> Xi_c+ mu-]cc', '[Xi_b0 -> Xi_c+ mu+]cc'],
+                                           [ '[Xi_c+ -> K- p+ pi+]cc' ],
+                                           XIC2PKPI_CONFIG,
+                                           [self.selProton,self.selKaon,self.selPion],self.selMuonFakes)
+        
+        Xic0_CONFIG = config.copy()
+        Xic0_CONFIG["ExtraMuonCuts"] = "(PT > 1000*MeV) & (MIPCHI2DV(PRIMARY)> 9)"
+        Xic0_CONFIG["CharmComboCuts"] = "(ADAMASS('Xi_c+') < %(D_AMassWin)s *MeV)"\
+            "& (APT > 2000*MeV) & (ADOCACHI2CUT( %(D_DocaChi2Max)s, ''))" % Xic0_CONFIG
+        Xic0_CONFIG["CharmMotherCuts"] = "(ADMASS('Xi_c+') < %(D_MassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(D_VCHI2DOF)s) " \
+            "& (BPVVDCHI2 > %(D_FDCHI2)s) & (PT>2100.*MeV) & (BPVDIRA> %(D_BPVDIRA)s)"  % Xic0_CONFIG
+
+        self.Xic0_Line = BtoDlnuLine(name,
+                                     "Xic0MuX",
+                                     [ '[Xi_b- -> Xi_c0 mu-]cc', '[Xi_b+ -> Xi_c0 mu+]cc'],
+                                     [ '[Xi_c0 -> p+ K- K- pi+]cc' ],
+                                     Xic0_CONFIG,
+                                     [self.selProton,self.selKaon,self.selPion],self.selmuon)
+        
+        self.Xic0_Line_FakeMu = BtoDlnuLine(name,
+                                            "Xic0MuXFakes",
+                                            [ '[Xi_b- -> Xi_c0 mu-]cc', '[Xi_b+ -> Xi_c0 mu+]cc'],
+                                            [ '[Xi_c0 -> p+ K- K- pi+]cc' ],
+                                            Xic0_CONFIG,
+                                            [self.selProton,self.selKaon,self.selPion],self.selMuonFakes)
+        
+        ################### omega_c
+        XIC2PKPI_CONFIG = config.copy()
+        XIC2PKPI_CONFIG["ExtraMuonCuts"] = "(PT > 1000*MeV) & (MIPCHI2DV(PRIMARY)> 9)"
+        XIC2PKPI_CONFIG["CharmComboCuts"] = "(ADAMASS('Omega_c0') < %(D_AMassWin)s *MeV)"\
+            "& (APT > 2000*MeV) & (ADOCACHI2CUT( %(D_DocaChi2Max)s, ''))" % XIC2PKPI_CONFIG
+        XIC2PKPI_CONFIG["CharmMotherCuts"] = "(ADMASS('Omega_c0') < %(D_MassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(D_VCHI2DOF)s) " \
+            "& (BPVVDCHI2 > %(D_FDCHI2)s) & (PT>2100.*MeV) & (BPVDIRA> %(D_BPVDIRA)s)"  % XIC2PKPI_CONFIG
+        self.Omegac_Line = BtoDlnuLine(name,
+                                       "OmegacMuX",
+                                       [ '[Omega_b- -> Omega_c0 mu-]cc', '[Omega_b+ -> Omega_c0 mu+]cc'],
+                                       [ '[Omega_c0 -> p+ K- K- pi+]cc' ],
+                                       XIC2PKPI_CONFIG,
+                                       [self.selProton,self.selKaon,self.selPion],self.selmuon)
+        
+        self.Omegac_Line_FakeMu = BtoDlnuLine(name,
+                                              "OmegacMuXFakes",
+                                              [ '[Omega_b- -> Omega_c0 mu-]cc', '[Omega_b+ -> Omega_c0 mu+]cc'],
+                                              [ '[Omega_c0 -> p+ K- K- pi+]cc' ],
+                                              XIC2PKPI_CONFIG,
+                                              [self.selProton,self.selKaon,self.selPion],self.selMuonFakes)
+        
         ### cabibbo favoured D0, D+, Ds, Lc
         ### needed for the 2015 early measurements
         self.registerLine(self.b2D0MuXLine)        
@@ -341,6 +410,14 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         self.registerLine(self.b2DpMuXFakesLine)   
         self.registerLine(self.b2DsMuXFakesLine)   
         self.registerLine(self.lb2LcMuXFakesLine)
+        
+        ### new 
+        self.registerLine(self.Omegac_Line)
+        self.registerLine(self.Omegac_Line_FakeMu)
+        self.registerLine(self.Xic_Line)
+        self.registerLine(self.Xic_Line_FakeMu)
+        self.registerLine(self.Xic0_Line)
+        self.registerLine(self.Xic0_Line_FakeMu)
         
         ### SCS and other decays
         self.registerLine(self.b2DsKStarKMuXLine)        

@@ -7,6 +7,9 @@
 !========================== StrippingSelections v4r0 2015-03-13 ===============
 
 ! 2015-03-19 - Mika Vesterinen
+ - Added a few new baryon modes to StrippingB2DMuNuX for spectroscopy
+
+! 2015-03-19 - Mika Vesterinen
  - Update StrippingB2DMuNuX so that we can switch to no PIDs particles from the settings
 
 ! 2015-03-19 - Wenbin Qian
