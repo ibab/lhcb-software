@@ -133,7 +133,7 @@ namespace Analysis
                     const double         m1        , 
                     const double         m2        ,
                     const unsigned short L                         ,
-                    const Gaudi::Math::BreitWigner::JacksonRho rho ) ;
+                    const Gaudi::Math::FormFactors::JacksonRho rho ) ;
       /// constructor from main parameters and "shape"
       BreitWigner ( const char*          name      , 
                     const char*          title     , 
@@ -345,7 +345,7 @@ namespace Analysis
               const double         m1        , 
               const double         m2        ,
               const unsigned short l                         ,
-              const Gaudi::Math::BreitWigner::JacksonRho rho , 
+              const Gaudi::Math::FormFactors::JacksonRho rho , 
               //
               const double         m3        , 
               const double         m         , 

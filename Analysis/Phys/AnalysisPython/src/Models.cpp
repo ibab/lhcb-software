@@ -60,7 +60,7 @@ Analysis::Models::BreitWigner::BreitWigner
   const double         m1    , 
   const double         m2    ,
   const unsigned short L     , 
-  const Gaudi::Math::BreitWigner::JacksonRho rho ) 
+  const Gaudi::Math::FormFactors::JacksonRho rho ) 
   : RooAbsPdf  ( name , title ) 
 //
   , m_x     ( "x"  , "Observable" , this , x     ) 
@@ -179,15 +179,16 @@ Analysis::Models::Rho0::Rho0
   RooAbsReal&          mass      ,
   RooAbsReal&          width     ,
   const double         pi_mass   )
-  : Analysis::Models::BreitWigner ( name    , 
-                                    title   , 
-                                    x       , 
-                                    mass    ,
-                                    width   ,
-                                    pi_mass , 
-                                    pi_mass , 
-                                    1       , 
-                                    Gaudi::Math::BreitWigner::Jackson_A5 )
+  : Analysis::Models::BreitWigner 
+    ( name    , 
+      title   , 
+      x       , 
+      mass    ,
+      width   ,
+      pi_mass , 
+      pi_mass , 
+      1       , 
+      Gaudi::Math::FormFactors::Jackson_A5 )
 {}
 // ============================================================================
 // "copy" constructor 
@@ -221,15 +222,16 @@ Analysis::Models::Kstar::Kstar
   RooAbsReal&          width     ,
   const double         k_mass    ,
   const double         pi_mass   ) 
-  : Analysis::Models::BreitWigner ( name    , 
-                                    title   , 
-                                    x       , 
-                                    mass    ,
-                                    width   ,
-                                    k_mass  , 
-                                    pi_mass , 
-                                    1       , 
-                                    Gaudi::Math::BreitWigner::Jackson_A2 )
+  : Analysis::Models::BreitWigner 
+    ( name    , 
+      title   , 
+      x       , 
+      mass    ,
+      width   ,
+      k_mass  , 
+      pi_mass , 
+      1       , 
+      Gaudi::Math::FormFactors::Jackson_A2 )
 {}
 // ============================================================================
 // "copy" constructor 
@@ -261,15 +263,16 @@ Analysis::Models::Phi::Phi
   RooAbsReal&          mass      ,
   RooAbsReal&          width     ,
   const double         k_mass    )
-  : Analysis::Models::BreitWigner ( name    , 
-                                    title   , 
-                                    x       , 
-                                    mass    ,
-                                    width   ,
-                                    k_mass  , 
-                                    k_mass  , 
-                                    1       , 
-                                    Gaudi::Math::BreitWigner::Jackson_A2 )
+  : Analysis::Models::BreitWigner
+    ( name    , 
+      title   , 
+      x       , 
+      mass    ,
+      width   ,
+      k_mass  , 
+      k_mass  , 
+      1       , 
+      Gaudi::Math::FormFactors::Jackson_A2 )
 {}
 // ============================================================================
 // "copy" constructor 
@@ -328,7 +331,7 @@ Analysis::Models::BW23L::BW23L
   const double         m1        , 
   const double         m2        ,
   const unsigned short l                         ,
-  const Gaudi::Math::BreitWigner::JacksonRho rho , 
+  const Gaudi::Math::FormFactors::JacksonRho rho , 
   const double         m3        , 
   const double         m         , 
   const double         L         ) 
