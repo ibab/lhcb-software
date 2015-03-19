@@ -7,7 +7,8 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdLoosePions, StdLooseMuons, StdLooseKaons, StdLooseProtons, StdNoPIDsPions, StdLooseElectrons, StdNoPIDsMuons
+from StandardParticles import StdLoosePions, StdLooseMuons, StdLooseKaons, StdLooseProtons, StdLooseElectrons
+from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons,StdNoPIDsProtons,StdNoPIDsMuons
 from StrippingB2DMuNuXUtils import *
 
 __all__ = ('B2DMuNuXAllLinesConf',
@@ -28,6 +29,7 @@ default_config = {
             ,"TTSpecs"      : {} #{'Hlt1.*Track.*Decision%TOS':0,'Hlt2Topo(2|3|4)Body.*Decision%TOS':0,'Hlt2.*SingleMuon.*Decision%TOS':0,"Hlt2Global%TIS":0} 
             ,"HLT_FILTER"   : "" #"HLT_PASS_RE('Hlt2.*SingleMuon.*Decision') | HLT_PASS_RE('Hlt2Topo(2|3|4)Body.*Decision')"
             ##### daughter particles
+            ,"UseNoPIDsInputs":False
             ,"TRGHOSTPROB"   : 0.5   # adimensional
             ,"TRCHI2"        : 4     # adimensional
             ,"MuonGHOSTPROB" : 0.5   # adimensional
@@ -67,6 +69,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         "prescales"
         ,"GEC_nLongTrk"
         ,"HLT_FILTER"
+        ,"UseNoPIDsInputs"
         ,"TRGHOSTPROB"
         ,"TRCHI2"
         ,"MuonGHOSTPROB"
@@ -116,9 +119,32 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
             "& (TRGHOSTPROB < %(MuonGHOSTPROB)s)"\
             "& (MIPCHI2DV(PRIMARY)> %(MuonIPCHI2)s)" %config
         
+        inputs = {"muons":StdLooseMuons,
+                  "pions":StdLoosePions,
+                  "kaons":StdLooseKaons,
+                  "protons":StdLooseProtons}
+                  
+        if config["UseNoPIDsInputs"] == True:
+            inputs["muons"] = StdNoPIDsMuons
+            inputs["pions"] = StdNoPIDsPions
+            inputs["kaons"] = StdNoPIDsKaons
+            inputs["protons"] = StdNoPIDsProtons
+        
         self.selmuon = Selection("Mufor"+name,
                                  Algorithm=FilterDesktop(Code=self.MuonTrackCuts + " & (PIDmu > %(MuonPIDmu)s)" % config), 
-                                 RequiredSelections = [StdLooseMuons])
+                                 RequiredSelections = [inputs["muons"]])
+        
+        self.selKaon = Selection( "Kfor" + name,
+                                  Algorithm = FilterDesktop(Code=self.HadronCuts + " & (PIDK> %(KaonPIDK)s)" % config), 
+                                  RequiredSelections = [inputs["kaons"]])
+        
+        self.selPion = Selection( "Pifor" + name,
+                                  Algorithm = FilterDesktop(Code=self.HadronCuts + " & (PIDK< %(PionPIDK)s)" % config),
+                                  RequiredSelections = [inputs["pions"]])
+        
+        self.selProton = Selection( "ProtonsFor" + name,
+                                    Algorithm = FilterDesktop(Code=self.HadronCuts + " & (P>%(ProtonP)s*GeV) & (PIDp > %(ProtonPIDp)s)" % config),
+                                    RequiredSelections = [inputs["protons"]])
         
         self.selelectron = Selection("efor"+name,
                                      Algorithm=FilterDesktop(Code=self.MuonTrackCuts + " & (PIDe > %(ElectronPIDe)s)" % config), 
@@ -128,17 +154,6 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                        Algorithm = FilterDesktop(Code = self.MuonTrackCuts + " & (INMUON) & (PIDmu < %(MuonPIDmu)s)" % config),  
                                        RequiredSelections = [StdNoPIDsMuons])
         
-        self.selKaon = Selection( "Kfor" + name,
-                                  Algorithm = FilterDesktop(Code=self.HadronCuts + " & (PIDK> %(KaonPIDK)s)" % config), 
-                                  RequiredSelections = [StdLooseKaons])
-        
-        self.selPion = Selection( "Pifor" + name,
-                                  Algorithm = FilterDesktop(Code=self.HadronCuts + " & (PIDK< %(PionPIDK)s)" % config),
-                                  RequiredSelections = [StdLoosePions])
-        
-        self.selProton = Selection( "ProtonsFor" + name,
-                                    Algorithm = FilterDesktop(Code=self.HadronCuts + " & (P>%(ProtonP)s*GeV) & (PIDp > %(ProtonPIDp)s)" % config),
-                                    RequiredSelections = [StdLooseProtons])
         
         
         ####################### D0 -> HH LINES (inc D*->D0pi) ###############################
@@ -315,22 +330,23 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                              LC2PHH_CONFIG,
                                              [self.selProton,self.selKaon,self.selPion],self.selMuonFakes)
         
-        ### cabibbo favoured D0, D+, Ds, Lc, special Ds->phipi
+        ### cabibbo favoured D0, D+, Ds, Lc
+        ### needed for the 2015 early measurements
         self.registerLine(self.b2D0MuXLine)        
         self.registerLine(self.b2DpMuXLine)        
         self.registerLine(self.b2DsMuXLine)        
         self.registerLine(self.lb2LcMuXLine)
-        self.registerLine(self.b2DsPhiPiMuXLine)   
 
-        ### fake muons
         self.registerLine(self.b2D0MuXFakesLine)        
         self.registerLine(self.b2DpMuXFakesLine)   
         self.registerLine(self.b2DsMuXFakesLine)   
-        self.registerLine(self.b2DsPhiPiMuXFakesLine)   
         self.registerLine(self.lb2LcMuXFakesLine)
         
         ### SCS and other decays
         self.registerLine(self.b2DsKStarKMuXLine)        
+        
+        self.registerLine(self.b2DsPhiPiMuXLine)   
+        self.registerLine(self.b2DsPhiPiMuXFakesLine)   
         
         self.registerLine(self.b2D0MuXKKLine)        
         self.registerLine(self.b2D0MuXpipiLine)        

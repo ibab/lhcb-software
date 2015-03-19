@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 !========================== StrippingSelections v4r0 2015-03-13 ===============
+
+! 2015-03-19 - Mika Vesterinen
+ - Update StrippingB2DMuNuX so that we can switch to no PIDs particles from the settings
+
 ! 2015-03-19 - Wenbin Qian
  - Added B2OC lines into the module; update particle combiner to DaVinci_N(x)bodydecays;
    Update BBDecayTools to suit new configuration

@@ -171,10 +171,11 @@ sr.OnlyPositive = False
 from Configurables import AlgorithmCorrelationsAlg
 ac = AlgorithmCorrelationsAlg(Algorithms = sc.selections())
 
-DaVinci().HistogramFile = 'DVHistos.root'
-DaVinci().TupleFile = 'DVTuples.root'
-DaVinci().EvtMax = 500000
-DaVinci().PrintFreq = 2000
+DaVinci().HistogramFile = 'StrippingHistos.root'
+DaVinci().TupleFile = 'StrippingTuples.root'
+DaVinci().EvtMax = -1
+DaVinci().Lumi = True
+DaVinci().PrintFreq = 10000
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
 DaVinci().appendToMainSequence( [ ac ] )
@@ -209,3 +210,13 @@ Tup.Branches = {"B"      : "[B~0 ->  (D*(2010)+ ->  (D0 ->  K-  pi+)  pi+)  mu-]
                 "Slowpi" : "[B~0 ->  (D*(2010)+ ->  (D0 ->  K-  pi+) ^pi+)  mu-]CC",
                 "mu"     : "[B~0 ->  (D*(2010)+ ->  (D0 ->  K-  pi+)  pi+) ^mu-]CC"}
 DaVinci().appendToMainSequence( [ Tup ] )
+
+TupWS = DecayTreeTuple("Tup")
+TupWS.Inputs = ["Phys/B2DstMuNuInclWSLine/Particles"]
+TupWS.Decay = "[B~0 -> ^(D*(2010)- -> ^(D0 -> ^K- ^pi+) ^pi-) ^mu-]CC"
+TupWS.Branches = {"B"      : "[B~0 ->  (D*(2010)- ->  (D0 ->  K-  pi+)  pi-)  mu-]CC",
+                "Dst"    : "[B~0 -> ^(D*(2010)- ->  (D0 ->  K-  pi+)  pi-)  mu-]CC",
+                "D0"     : "[B~0 ->  (D*(2010)- -> ^(D0 ->  K-  pi+)  pi-)  mu-]CC",
+                "Slowpi" : "[B~0 ->  (D*(2010)- ->  (D0 ->  K-  pi+) ^pi-)  mu-]CC",
+                "mu"     : "[B~0 ->  (D*(2010)- ->  (D0 ->  K-  pi+)  pi-) ^mu-]CC"}
+DaVinci().appendToMainSequence( [ TupWS ] )
