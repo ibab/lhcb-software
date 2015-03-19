@@ -914,7 +914,7 @@ LoKi::VertexFitter::VertexFitter
     /// perform CPU performance statistics 
   , m_timing                  ( true   ) 
     /// Use optimized algorithm ?
-  , m_use_optimized           ( false  ) 
+  , m_use_optimized           ( true   )  // ATTENTION !!! 
     ///
   , m_massage                 (        ) 
     /// pure technical stuff: 

@@ -5,6 +5,9 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2015-03-19 - Vanya Belyaev
+ - activate optimized algorithm for default setting
+
 ! 2015-03-07 - Vanya Belyaev
  - VertexFitter:  
    add option to allow CPU-performace measurement:   
