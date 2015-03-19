@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+ - TupleToolGeometry: refitter algo. made configurable property, set to
+   LoKi::PVReFitter by default, and a public instance by default.
+
 !======================= DecayTreeTuple v4r13 2015-01-16 =====================
 
 ! 2015-01-16 - Eduardo Rodrigues

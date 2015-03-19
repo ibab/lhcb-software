@@ -156,5 +156,6 @@ private:
   IDVAlgorithm* m_dva;
 
   IPVReFitter* m_pvReFitter;
+  std::string  m_pvReFitterName;
 };
 #endif // JBOREL_TUPLETOOLGEOMETRY_H

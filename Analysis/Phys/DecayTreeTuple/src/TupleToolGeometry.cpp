@@ -39,10 +39,13 @@ DECLARE_TOOL_FACTORY( TupleToolGeometry )
     TupleToolBase ( type, name , parent )
     , m_dist(0)
     , m_dva(0)
+    , m_pvReFitterName(0)
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty("RefitPVs",m_refitPVs=false,
                   "Refit PVs when doing next best PV checks");
+  declareProperty("PVReFitter", m_pvReFitterName = "LoKi::PVReFitter:PUBLIC",
+                  "PV refitter algorithm name (':PUBLIC' at end of algo name makes sure a public instance is used)" );
   declareProperty("FillMultiPV",m_fillMultiPV=false,
                   "Fill Multi PV arrays");
 
@@ -68,10 +71,10 @@ StatusCode TupleToolGeometry::initialize()
     return Error("Unable to retrieve the IDistanceCalculator tool");
   }
 
-  m_pvReFitter = tool<IPVReFitter>( "AdaptivePVReFitter", this );
+  m_pvReFitter = tool<IPVReFitter>( m_pvReFitterName, this );
   if ( !m_pvReFitter )
   {
-    return Error( "Unable to retrieve AdaptivePVReFitter" );
+    return Error( "Unable to retrieve IPVReFitter instance" );
   }
 
   return sc;
