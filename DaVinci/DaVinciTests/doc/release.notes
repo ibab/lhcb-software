@@ -4,6 +4,12 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2015-03-19 - Eduardo Rodrigues
+  - Updated option files tests/options/DVTestWriteDst.py and
+    tests/options/DVReadKs.py since necessary DST files have been copied over
+    from CASTOR (a private user area deleted by CERN!) to
+    /eos/lhcb/grid/prod/lhcb/swtest/lhcb/swtest/.
+
 !======================= DaVinciTests v2r30 2015-03-16 =======================
 
 ! 2015-03-11 - Eduardo Rodrigues

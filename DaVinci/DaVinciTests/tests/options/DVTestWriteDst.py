@@ -87,4 +87,4 @@ MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 from Gaudi.Configuration import * 
 
 EventSelector().Input   = [
-  "DATAFILE='root://castorlhcb.cern.ch//castor/cern.ch/user/r/rlambert/testfiles/MC2010_BsJPsiPhi_00008405_00000506_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
+  "DATAFILE='PFN:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/swtest/lhcb/swtest/MC2010_BsJPsiPhi_00008405_00000506_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"]

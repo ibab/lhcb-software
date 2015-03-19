@@ -42,6 +42,6 @@ DaVinci().PrintFreq = 100
 # Real Data
 #
 EventSelector().Input   = [
-"DATAFILE='root://castorlhcb.cern.ch//castor/cern.ch/user/r/rlambert/testfiles/2009_00005803_00000001_1.V0.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+"DATAFILE='PFN:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/swtest/lhcb/swtest/2009_00005803_00000001_1.V0.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
