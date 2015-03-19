@@ -199,8 +199,8 @@ class AlignmentTask(Task):
         writertool = appMgr.toolsvc().create( "WriteMultiAlignmentConditionsTool", interface = "IWriteAlignmentConditionsTool" )
         writertool.write()
         # now call finalize to write the conditions. there must be a better way.
-        if self.output['otmonodata']:
-            det = appMgr.detsvc()
+        det = appMgr.detsvc()
+        if self.output['otmonodata'] and det['OTMonoLayerAlignData']:
             det['OTMonoLayerAlignData'].add( self.output['otmonodata'] )
             
         appMgr.finalize()
