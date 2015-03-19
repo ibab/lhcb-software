@@ -42,7 +42,10 @@ DECLARE_ALGORITHM_FACTORY( ProperTimeChecker )
   declareProperty( "fillNtuplePVReFit", m_reFitPV = true);
   declareProperty( "fillNtuplePVSignalBRemoval", m_removeBFromPV = true);
   declareProperty( "fillNtuplePVMCSecondaryRemoval", m_removeMCSecondaryFromPV = true);
-  declareProperty( "PVReFitterName", m_PVReFitterName = "AdaptivePVReFitter");
+  declareProperty( "PVReFitterName", m_PVReFitterName = "LoKi::PVReFitter:PUBLIC",
+                   "PV refitter algorithm name (':PUBLIC' at end of algo name makes sure a public instance is used)" );
+    
+
 
 }
 //=============================================================================
