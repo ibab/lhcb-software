@@ -8,7 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
-
+! 2015-03-19 - Jibo He
+ - python/Hlt2Lines/Bc2JpsiX
+  . Hlt2TFBc2JpsiMuX and Hlt2Bc2JpsiH adapted to new template  
+ - python/Hlt2Lines/CcDiHadron/Lines.py
+  . Added explanations, and author
 
 ! 2015-03-16 - Karlis Dreimanis
  - Add author as a header to EW/Lines.py as requested
@@ -38,7 +42,7 @@
  - CharmHad/Lines.py 
    add 'stages' to allow exporting the shared stages into another directory/lines  
 
-! 2015-03-13 - Jibo He
+! 2015-03-14 - Jibo He
  - python/Hlt2Lines/CcDiHadron/Lines.py
   . Updated DiPhi cuts, as "(INTREE( ('K+'==ABSID)...)" seems to only cut on one of kaons.
   . Now new-template lines select same number of events as the old-style lines

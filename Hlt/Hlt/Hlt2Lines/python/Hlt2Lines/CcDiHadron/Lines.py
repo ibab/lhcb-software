@@ -1,3 +1,12 @@
+"""
+Hlt2 lines for studying hadroproudction of Charmonium -> DiHadrons.
+Including the following lines:
+Hlt2DiProton
+Hlt2DiProtonLowMult
+Hlt2DiPhi
+"""
+__author__  = "Jibo He, Jibo.He@cern.ch"
+
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
 class CcDiHadronLines(Hlt2LinesConfigurableUser):
