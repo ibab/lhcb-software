@@ -1420,7 +1420,7 @@ namespace LoKi
       ( const LoKi::Functor <void,std::vector<TYPE2> >& fun1 , 
         const LoKi::Functor <void,std::vector<TYPE2> >& fun2 ) 
         : LoKi::AuxFunBase ( std::tie ( fun1 , fun2 ) ) 
-        , LoKi::Functors::Union<void,std::vector<TYPE2> > () 
+        , LoKi::Functors::Union<void,std::vector<TYPE2> > ( fun1 , fun2 ) 
       {}
       /// MANDATORY: virtual destructor 
       virtual ~NoEmptyUnion() {}
