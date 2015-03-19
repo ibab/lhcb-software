@@ -1,5 +1,5 @@
 package GaussSys
-version v48r1
+version v48r1p1
 
 branches cmt doc
 
@@ -8,10 +8,10 @@ branches cmt doc
 #==================================================================
 
 # Gauss application: the application is not built on Win32
-use Gauss               v48r1   Sim
+use Gauss               v48r1p1 Sim
 
 # LCG interfaces to generators, until available in LCGCMT
-use LCG_Settings        v71r0p1 
+use LCG_Settings        v71r0p1g1 
 use lhapdf              v71r0p1 LCG_GeneratorsInterfaces
 use photospp            v71r0p1 LCG_GeneratorsInterfaces
 use tauolapp            v71r0p1 LCG_GeneratorsInterfaces
@@ -26,7 +26,7 @@ use powhegbox           v71r0p1 LCG_GeneratorsInterfaces
 
 # Generator packages: Basic configuration
 use GenCuts             v3r10   Gen
-use GENSER              v16r0   Gen
+use GENSER              v16r0p1 Gen
 use EvtGen              v14r1   Gen
 use Mint                v3r3    Gen
 use EvtGenExtras        v3r11   Gen
