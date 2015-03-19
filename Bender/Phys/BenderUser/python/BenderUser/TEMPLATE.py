@@ -1,8 +1,7 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # =============================================================================
 # $Id$ 
-# =============================================================================
-# $URL$
 # =============================================================================
 ## @file
 #
@@ -68,14 +67,17 @@ class Template(Algo) :
         """
         Standard method for analysis
         """
-
+        
         return SUCCESS
 
 # =============================================================================
 ## job configuration:
 #  @attention the function with such signature is required
 #             by Ganga for submission of Grid jobs!
-def configure ( datafiles , catalogs = [] ) :
+def configure ( datafiles        ,
+                catalogs = []    ,
+                castor   = False ,
+                params   = {}    ) :
     """
     Configure the job
     """
@@ -83,21 +85,29 @@ def configure ( datafiles , catalogs = [] ) :
     ##
     ## 1. Static configuration using "Configurables"
     ##
-    
+
+    the_year = '2012'
     from Configurables import DaVinci
-    DaVinci (
-        DataType = '2010' ,
+    dv = DaVinci (
+        DataType = the_year ,
         ) 
     
-    from Gaudi.Configuration import HistogramPersistencySvc
-    HistogramPersistencySvc ( OutputFile = 'TEMPLATE_histos.root' )
+    alg_name = 'MyAlg'
+    davinci.UserAlgorithms += [ alg_name ]
+   
+    from Configurables import CondDB
+    CondDB ( LatestGlobalTagByDataType = the_year )
     
-    from Gaudi.Configuration import NTupleSvc
-    ntSvc = NTupleSvc()
-    ntSvc.Output += [ "MYLUN DATAFILE='TEMPLATE.root' OPT='NEW' TYP='ROOT'" ] 
+    from Configurables import LHCbApp
+    LHCbApp().XMLSummary = 'summary.xml'
+    
+    from BenderTools.Utils import silence
+    silence()
     
     ## define/set the input data 
     setData ( datafiles , catalogs )
+    
+
     
     ##
     ## jump into the wonderful world of the actual Gaudi components!
@@ -109,20 +119,9 @@ def configure ( datafiles , catalogs = [] ) :
     ## create local algorithm:
     
     alg = Template(
-        'MyAlg'               , ## algorithm instance name 
-        # Ntuples 
-        NTupleLUN = "MYLUN"     ## LogicalUnit for N-tuples 
+        alg_name          ## algorithm instance name 
         )
 
-    ## Use only *THIS* algorithm
-    # gaudi.setAlgorithms( [alg] )
-    
-    ## Add the algorithm to the TopAlgs-list:
-    # gaudi.addAlgorithm ( alg )
-
-    ## Inser the algorithm into DaVinci "User"-sequence
-    # userSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence',True)
-    # userSeq.Members += [ alg.name() ] 
     
     return SUCCESS
 
@@ -139,7 +138,7 @@ if __name__ == '__main__' :
     print '*'*120
     
     ## configure the job:
-    # configure ( ... )
+    ## configure ( ... )
     
     ## run the job
     run(1000)

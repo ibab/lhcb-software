@@ -1,7 +1,7 @@
 ################################################################################
 # Package: BenderUser
 ################################################################################
-gaudi_subdir(BenderUser v20r0)
+gaudi_subdir(BenderUser v25r5)
 
 gaudi_depends_on_subdirs(Phys/Bender)
 
