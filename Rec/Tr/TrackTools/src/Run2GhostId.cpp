@@ -237,8 +237,8 @@ StatusCode Run2GhostId::execute(LHCb::Track& aTrack) const
   std::vector<float> variables(netInputs(aTrack));
   //float netresponse = m_readers[aTrack.type()]->GetRarity(variables); // TODO rarity would be nice, see https://sft.its.cern.ch/jira/browse/ROOT-7050
   float netresponse = m_readers[aTrack.type()]->GetMvaValue(variables);
-  netresponse = m_flatters[aTrack.type()]->value(netresponse);
-  aTrack.setGhostProbability(0.5*(1.-netresponse));
+  netresponse = m_flatters[aTrack.type()]->value(0.5*(1.-netresponse));
+  aTrack.setGhostProbability(netresponse);
 
   return StatusCode::SUCCESS;
 }
