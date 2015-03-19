@@ -102,7 +102,7 @@ namespace LoKi
                          _b.begin () , _ib , std::back_inserter( _r ) ) ;
         //
         return _r ;
-      }  
+      }
       // ======================================================================
     } ;
     // ========================================================================
@@ -258,12 +258,6 @@ namespace LoKi
       // ======================================================================
       /// the main method 
       bool operator() ( const _Type& a , const _Type& b )  const
-      { return _union_ ( a , b ) ;}
-      // ======================================================================
-    protected:
-      // ======================================================================
-      /// the main method 
-      bool _union_ ( const _Type& a , const _Type& b )  const
       {
         // 
         if ( &a == &b ) { return true ; }                         // RETURN 
@@ -281,7 +275,7 @@ namespace LoKi
           ( _a.begin () , _ia , 
             _b.begin () , _ib ) ;
         //
-      }
+      } 
       // ======================================================================
     } ;
     // ========================================================================
@@ -295,7 +289,9 @@ namespace LoKi
      *  @date 2010-06-05
      */
     template <class TYPE> 
-    struct NoEmptyUnion : public Union<TYPE> 
+    struct NoEmptyUnion : public std::binary_function < std::vector<TYPE> , 
+                                                        std::vector<TYPE> , 
+                                                        std::vector<TYPE> >
     {
       // ======================================================================
       typedef std::vector<TYPE> _Type ;
@@ -309,9 +305,13 @@ namespace LoKi
         if      (  a.empty () ) { return a ; } // RETURN EMPTY  
         else if (  b.empty () ) { return b ; } // RETURN EMPTY 
         //
-        return _union_ ( a , b ) ;
-      }  
+        return m_union ( a , b ) ;
+      }
       // ======================================================================
+    private:
+      // ======================================================================
+      Union<TYPE> m_union ;
+      // = ====================================================================
     } ;
     // ========================================================================
   } //                                    the end of namespace LoKi::Operations 
