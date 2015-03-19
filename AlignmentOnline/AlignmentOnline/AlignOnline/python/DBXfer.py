@@ -70,30 +70,47 @@ class WriterConf:#(LHCbConfigurableUser):
     print '================ Configuring XML writer for offline alignment ====================='
     alg.XmlWriters = []
     listOfCondToWrite = self.getProp( "WriteCondSubDetList" )
-    if 'Velo' in listOfCondToWrite:
+    if 'velo' in listOfCondToWrite:
       self.addXmlWriter( alg, 'Velo', 'Global', [0,1] )
       self.addXmlWriter( alg, 'Velo','Modules', [2] )
       self.addXmlWriter( alg, 'Velo','Detectors', [4] )
-    if 'TT' in listOfCondToWrite:
+    if 'tt' in listOfCondToWrite:
       self.addXmlWriter( alg, 'TT','Detectors', [0,1,2] )
       self.addXmlWriter( alg, 'TT','Modules', [3] )
       self.addXmlWriter( alg, 'TT','Sensors', [4,5] )
-    if 'IT' in listOfCondToWrite:
+    if 'it' in listOfCondToWrite:
       self.addXmlWriter( alg, 'IT','Detectors', [] )
-    if 'OT' in listOfCondToWrite:
+    if 'ot' in listOfCondToWrite:
       self.addXmlWriter( alg, 'OT','Elements', [] )
-    if 'Muon' in listOfCondToWrite:
+    if 'muon' in listOfCondToWrite:
       #self.addXmlWriter( alg, 'Muon','Detectors', [] )
       self.addXmlWriter( alg, 'Muon','Global', [0,1,2] )
-    if 'Ecal' in listOfCondToWrite:
+    if 'ecal' in listOfCondToWrite:
       self.addXmlWriter( alg, 'Ecal','alignment', [] )
+    if 'otglobaltzero' in listOfCondToWrite:
+     from Configurables import WriteOTCalibrationsTool
+     alg.addTool( WriteOTCalibrationsTool, "WriteOTCalibrations")
+     alg.XmlWriters.append("WriteOTCalibrations")
+     alg.WriteOTCalibrations.Directory = self.getProp('CondFilePrefix')
+     alg.WriteOTCalibrations.WriteGlobalCalibration = True
 
 
 from Gaudi.Configuration import *
 from Configurables import LHCbAlgsTests__TestTimeDecoderOdin as TimeDecoder
 from Configurables import (RunChangeHandlerSvc, DBXferAlg ,XmlCnvSvc, DDDBConf, CondDB, EventClockSvc, FakeEventTime)
 import RunOption
-import All
+import CondMap
+ks = CondMap.ConditionMap.keys()
+dets = []
+for i in range(len(ks)):
+  k = ks[i]
+  if k.find('online.xml') >= 0:
+    continue
+  detxml = k[k.rfind('/')+1:]
+  det = detxml[:detxml.rfind('.xml')]
+  det = det.lower()
+  dets.append(det)
+print "Moving to Offline DB the following detector Data ",dets
 ecs = EventClockSvc()
 ecs.InitialTime = RunOption.RunStartTime*1000000000
 ecs.addTool(FakeEventTime,"EventTimeDecoder")
@@ -105,7 +122,7 @@ DDDBConf()
 #detDataSvc = DetectorDataSvc()
 #DetectorPersistencySvc( CnvServices = [ xmlCnvSvc ] )
 cdb = CondDB()
-cdb.RunChangeHandlerConditions=All.ConditionMap
+cdb.RunChangeHandlerConditions=CondMap.ConditionMap
 cdb.EnableRunChangeHandler = True
 cdb.UseDBSnapshot = True
 cdb.Tags = { "DDDB" : RunOption.DDDBTag,
@@ -116,8 +133,8 @@ dbxalg = DBXferAlg()
 dbxalg.RunNumber = RunOption.RunNumber
 dbxalg.RunStartTime = RunOption.RunStartTime*1000000000
 dbxalg.OnlineXmlDir = RunOption.OutputDirectory
-wrconf = WriterConf("wconf",["Velo","IT","TT","OT"])
-wrconf.CondFilePrefix = RunOption.OutputDirectory+"/offl/Conditions"
+wrconf = WriterConf("wconf",dets)#["Velo","IT","TT","OT"])
+wrconf.CondFilePrefix = RunOption.OutputDirectory+"/offl/Conditions/Online"
 from Configurables import WriteMultiAlignmentConditionsTool
 xmlwriter = WriteMultiAlignmentConditionsTool()#"AlignWriterTool")
 wrconf.addXmlWriters(xmlwriter)
@@ -142,12 +159,15 @@ Gaudi.exit()
 print "===================== Updating the Database ========================"
 import CondDBUI
 import CondDBUI.Admin
-DBString = "sqlite_file:/home/beat/LHCBCOND_cond.db/LHCBCOND"
-db = CondDBUI.CondDB(DBString, create_new_db = True, readOnly=False)
+DBString = "CondDBOnline(owner)/ONLINE" # use the central Oracle Database...
+
+db = CondDBUI.CondDB(DBString, create_new_db = False, readOnly=False)
 status = CondDBUI.Admin.MakeDBFromFiles(RunOption.OutputDirectory+"/offl", db,
                                    includes = [], excludes = [],
                                    verbose = True,
-                                   since = RunOption.RunStartTime*1000000000, until = None
+                                   since = RunOption.RunStartTime*1000000000
+                                   , until = None
+                                   ,writeDuplicate = False
                                    )
 print "===================== Updated the Database ======================== Status = ",status
 
