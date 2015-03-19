@@ -1691,6 +1691,38 @@ namespace Gaudi
       // ======================================================================
     } ;
     // ========================================================================
+    /// base class for formfactors 
+    class FormFactor ;
+    // ========================================================================
+    namespace FormFactors
+    {
+      // ======================================================================
+      /** @typedef rho_fun
+       *  the \f$\rho(\omega)\f$ function from Jackson
+       *  Arguments
+       *    - the        mass
+       *    - the pole   mass
+       *    - the first  daughter mass
+       *    - the second daughter mass
+       */
+      typedef double (*rho_fun) ( double , double , double , double ) ;
+      // ======================================================================
+      /** parameterization for \f$\rho(\omega)\f$-function from (A.1)
+       *  J.D.Jackson,
+       *  "Remarks on the Phenomenological Analysis of Resonances",
+       *  In Nuovo Cimento, Vol. XXXIV, N.6
+       */
+      enum JacksonRho {
+        Jackson_0  = 0 ,/// \f$\rho(\omega) = 1 \f$
+        Jackson_A2 ,/// \f$ 1^- \rightarrow 0^- 0^- \f$ , l = 1
+        Jackson_A3 ,/// \f$          1^- \rightarrow 0^- 1^- \f$ , l = 1
+        Jackson_A4 ,/// \f$ \frac{3}{2}+ \rightarrow 0^- \frac{1}{2}^+ \f$ , l = 1
+        Jackson_A5 ,/// \f$ \frac{3}{2}- \rightarrow 0^- \frac{1}{2}^+ \f$ , l = 2
+        Jackson_A7 /// recommended for rho0 -> pi+ pi-
+      } ;
+      // ======================================================================
+    }
+    // ========================================================================
     /** @class BreitWigner
      *
      *  J.D.Jackson,
@@ -1707,47 +1739,30 @@ namespace Gaudi
     {
     public:
       // ======================================================================
-      /** parameterization for \f$\rho(\omega)\f$-function from (A.1)
-       *  J.D.Jackson,
-       *  "Remarks on the Phenomenological Analysis of Resonances",
-       *  In Nuovo Cimento, Vol. XXXIV, N.6
-       */
-      enum JacksonRho {
-        Jackson_0  = 0 ,/// \f$\rho(\omega) = 1 \f$
-        Jackson_A2 ,/// \f$ 1^- \rightarrow 0^- 0^- \f$ , l = 1
-        Jackson_A3 ,/// \f$          1^- \rightarrow 0^- 1^- \f$ , l = 1
-        Jackson_A4 ,/// \f$ \frac{3}{2}+ \rightarrow 0^- \frac{1}{2}^+ \f$ , l = 1
-        Jackson_A5 ,/// \f$ \frac{3}{2}- \rightarrow 0^- \frac{1}{2}^+ \f$ , l = 2
-        Jackson_A7 /// recommended for rho0 -> pi+ pi-
-      } ;
-      // ======================================================================
-    protected:
-      // ======================================================================
-      /** @typedef rho
-       *  the \f$\rho(\omega)\f$ function from Jackson
-       *  Arguments
-       *    - the        mass
-       *    - the pole   mass
-       *    - the first  daughter mass
-       *    - the second daughter mass
-       */
-      typedef double (*rho_fun) ( double , double , double , double ) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      // constructor from all parameters
+      /// constructor from all parameters
       BreitWigner ( const double         m0     = 0.770 ,
                     const double         gam0   = 0.150 ,
                     const double         m1     = 0.139 ,
                     const double         m2     = 0.139 ,
                     const unsigned short L      = 0     ) ;
-      // constructor from all parameters
+      /// constructor from all parameters
       BreitWigner ( const double         m0       ,
                     const double         gam0     ,
                     const double         m1       ,
                     const double         m2       ,
                     const unsigned short L        ,
-                    const JacksonRho     r        ) ;
+                    const FormFactors::JacksonRho     r ) ;
+      /// constructor from all parameters
+      BreitWigner ( const double         m0       ,
+                    const double         gam0     ,
+                    const double         m1       ,
+                    const double         m2       ,
+                    const unsigned short L        ,
+                    const FormFactor&    f ) ;
+      /// copy constructor 
+      BreitWigner ( const BreitWigner&  bw ) ;
+      /// move constructor 
+      BreitWigner (       BreitWigner&& bw ) ;
       /// destructor
       virtual ~BreitWigner () ;
       // ======================================================================
@@ -1793,13 +1808,16 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      /// set rho-function
-      void setRhoFun ( rho_fun rho ) { m_rho_fun = rho ; }
+      /// calculate the current width
+      double gamma ( const double x ) const ;
       // ======================================================================
     public:
       // ======================================================================
-      /// calculate the current width
-      double gamma ( const double x ) const ;
+      /// get the value of formfactor at given m 
+      double            formfactor ( const double m ) const ;
+      /// get the formfactor itself 
+      const FormFactor* 
+        formfactor () const { return m_formfactor ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -1819,13 +1837,18 @@ namespace Gaudi
     private:
       // ======================================================================
       /// the mass of the first  particle
-      double       m_m1      ;
+      double            m_m1         ;
       /// the mass of the second particle
-      double       m_m2      ;
+      double            m_m2         ;
       /// the orbital momentum
-      unsigned int m_L       ; // the orbital momentum
-      /// the Jackson-Rho function
-      rho_fun      m_rho_fun ; // the Jackson-Rho function
+      unsigned int      m_L          ; // the orbital momentum
+      /// the formfactor 
+      const FormFactor* m_formfactor ; // the formfactor 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// assignement operator is disabled 
+      BreitWigner& operator=( const BreitWigner& ) ; // no assignement 
       // ======================================================================
     private:
       // ======================================================================
@@ -2257,6 +2280,104 @@ namespace Gaudi
                           double    m2    ) ;
       // ======================================================================
     } //                                               end of namespace Jackson
+    // ========================================================================
+    /** @class FormFactor
+     *  abstract class to implement various formfactors 
+     */
+    class FormFactor 
+    {
+    public :
+      // ======================================================================
+      /// the only important method 
+      virtual double operator()
+      ( const double m  , const double m0 ,
+        const double m1 , const double m2 ) const  = 0 ;
+      /// virtual destructor 
+      virtual ~FormFactor () ;
+      /// clone method ("virtual constructor" ) 
+      virtual  FormFactor* clone() const = 0 ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    namespace FormFactors 
+    {
+      // ======================================================================
+      /** Formfactor for Breit-Wigner amplitude 
+       *  parameterization for \f$\rho(\omega)\f$-function from (A.1)
+       *  J.D.Jackson,
+       *  "Remarks on the Phenomenological Analysis of Resonances",
+       *  In Nuovo Cimento, Vol. XXXIV, N.6
+       */
+      class Jackson : public Gaudi::Math::FormFactor
+      {
+      public:
+        // ====================================================================
+        /// default constructor 
+        Jackson () ;
+        /// constructor from enum
+        Jackson ( const Gaudi::Math::FormFactors::JacksonRho rho ) ;
+        /// constructor from rho-function 
+        Jackson (       Gaudi::Math::FormFactors::rho_fun    rho ) ;
+        /// virtual destructor 
+        virtual ~Jackson  () ; 
+        /// clone method ("virtual constructor")
+        virtual  Jackson* clone() const  ;
+        /// the only important method 
+        virtual double operator() ( const double m  , const double m0 ,
+                                    const double m1 , const double m2 ) const ;
+        // ====================================================================
+      private:
+        // ====================================================================
+        /// the finction itself 
+        Gaudi::Math::FormFactors::rho_fun m_rho ; // the finction itself 
+        // ====================================================================
+      } ;
+      // ======================================================================
+      /** Blatt-Weisskopf formfactor/barrier factor
+       *  actually it is "traslation" of 
+       *  Blatt-Weiskopf barrier factor into in Jackson's "rho"-function 
+       */
+      class BlattWeisskopf : public Gaudi::Math::FormFactor
+      {
+      public:
+        // ====================================================================
+        /// orbital momentum 
+        enum Case {
+          Zero = 0 , 
+          One  = 1 , 
+          Two  = 2 
+        } ;
+        // ====================================================================
+      public:
+        // ====================================================================
+        /// constructor from enum and barrier factor 
+        BlattWeisskopf ( const Case   L , const double b ) ;
+        /// virtual destructor 
+        virtual ~BlattWeisskopf () ; 
+        /// clone method ("virtual constructor")
+        virtual  BlattWeisskopf* clone() const  ;
+        /// the only important method 
+        virtual double operator() ( const double m  , const double m0 ,
+                                    const double m1 , const double m2 ) const ;
+        // ====================================================================
+      protected:
+        // ====================================================================
+        /// get the barrier factor 
+        double   b ( const double z , const double z0 ) const ;
+        // ====================================================================
+      private:
+        // ====================================================================
+        /// default constructor is disabled 
+        BlattWeisskopf () ; // default constructor is disabled        
+        // ====================================================================
+      private:
+        // ====================================================================
+        Case   m_L ;
+        double m_b ;
+        // ====================================================================
+      } ;
+      // ======================================================================
+    } // end of namespace Gaudi:Math::FormFactors
     // ========================================================================
     /** @class LASS
      *  The LASS parameterization (Nucl. Phys. B296, 493 (1988))
@@ -2776,7 +2897,7 @@ namespace Gaudi
               const double         m        ,
               const unsigned short L1       ,
               const unsigned short L2       ,
-              const Gaudi::Math::BreitWigner::JacksonRho r ) ;
+              const Gaudi::Math::FormFactors::JacksonRho r ) ;
       /// constructor from BreitWigner
       BW23L ( const Gaudi::Math::BreitWigner& bw ,
               const double                    m3 ,

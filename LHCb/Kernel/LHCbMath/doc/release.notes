@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-03-19 - Vanya Belyaev
+ - minor fix 
+
 ! 2015-03-17 - Ben Couturier 
  - Updated check threshold for TestSimilarity
 

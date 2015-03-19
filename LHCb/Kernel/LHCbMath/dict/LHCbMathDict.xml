@@ -52,9 +52,10 @@
   <class name    = "Gaudi::Math::PhaseSpaceNL"            />
   <class name    = "Gaudi::Math::PhaseSpacePol"           />
   <class name    = "Gaudi::Math::PhaseSpace23L"           />
-  <class name    = "Gaudi::Math::BreitWigner">
-    <field name = "m_rho_fun" transient = "true"/>      
-  </class>
+  <class name    = "Gaudi::Math::BreitWigner"             />
+  <class name    = "Gaudi::Math::FormFactor"              />
+  <class name    = "Gaudi::Math::FormFactors::Jackson"        />
+  <class name    = "Gaudi::Math::FormFactors::BlattWeisskopf" />
   <class name    = "Gaudi::Math::LASS"                    />
   <class name    = "Gaudi::Math::Bugg"                    />
   <class name    = "Gaudi::Math::Flatte"                  />
@@ -121,6 +122,8 @@
   <class name    = "Gaudi::Math::PositiveSpline"   />
   <class name    = "Gaudi::Math::MonothonicSpline" />
   <class name    = "Gaudi::Math::ConvexSpline"     />
+
+  <enum name = "GaudiMath::FormFactors::JacksonRho" />
 
   <class name    = "Gaudi::Math::Linear"       />
   <class name    = "Gaudi::Math::LinearErr"    />
@@ -273,10 +276,6 @@
       <field name = "m_b"/>      
     </class>
     
-    <class name = "Gaudi::Math::BreitWigner::rho_fun"/>  
-    <class name = "Gaudi::Math::BreitWigner">  
-      <field name = "m_rho_fun"/>      
-    </class>
     <class name = "Gaudi::Math::Chi2Fit">  
       <field name = "m_solu" />      
       <field name = "m_cov2" />      

@@ -12,6 +12,10 @@
 #include <algorithm>
 #include <numeric>
 // ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/GaudiException.h"
+// ============================================================================
 // LHCbMath
 // ============================================================================
 #include "LHCbMath/Functions.h"
@@ -130,7 +134,7 @@ double Gaudi::Math::Jackson::jackson_A4
  *  @see Gaudi::Math::BreitWigner::rho_fun
  *  @param m the invariant mass
  *  @param m1 the invariant mass of the first  (spinor) particle
- *  @param m2 the invariant mass of the secodn (scalar) particle
+ *  @param m2 the invariant mass of the second (scalar) particle
  *  @return the value of rho-function
  *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
  *  @date 2011-11-30
@@ -152,8 +156,10 @@ double Gaudi::Math::Jackson::jackson_A5
  *  $\rho(\omega)= \left[ q_0^2 + q^2 \right]^{-1}f$
  *  @see Gaudi::Math::BreitWigner
  *  @see Gaudi::Math::BreitWigner::rho_fun
- *  @param m the invariant mass
- *  @param m the nominam   mass
+ *  @param m  the invariant mass
+ *  @param m0 the nominal   mass
+ *  @param m1 the invariant mass of the first  particle
+ *  @param m2 the invariant mass of the second particle
  *  @return the value of rho-function
  *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
  *  @date 2011-11-30
@@ -1105,15 +1111,15 @@ namespace
     return  1.0 / v ;
   }
   // ==========================================================================
-  typedef double (*rho_fun) ( double , double , double , double ) ;
   //// calculate the current width
-  double gamma_run ( const double gam0    ,
-                     const double x       ,
-                     const double m1      ,
-                     const double m2      ,
-                     const double m0      ,
-                     const unsigned int L ,
-                     rho_fun fun = 0      )
+  double gamma_run 
+  ( const double gam0    ,
+    const double x       ,
+    const double m1      ,
+    const double m2      ,
+    const double m0      ,
+    const unsigned int L ,
+    const Gaudi::Math::FormFactor* fun  = 0 )
   {
     //
     if ( m1 + m2 >= x ) { return 0 ; }   // RETURN
@@ -4007,6 +4013,7 @@ double  Gaudi::Math::PhaseSpacePol::integral
   //
   return result ;
 }
+// ============================================================================
 // constructor
 // ============================================================================
 Gaudi::Math::BreitWigner::BreitWigner
@@ -4016,16 +4023,16 @@ Gaudi::Math::BreitWigner::BreitWigner
   const double         m2   ,
   const unsigned short L    )
   : std::unary_function<double,double> ()
-//
-  , m_m0        (             m0    )
-  , m_gam0      ( std::abs ( gam0 ) )
-  , m_m1        ( std::abs (   m1 ) )
-  , m_m2        ( std::abs (   m2 ) )
-  , m_L         (              L    )
-  , m_rho_fun   ( &Gaudi::Math::Jackson::jackson_0 )
-//
-  , m_workspace ()
-//
+    //
+  , m_m0         (             m0    )
+  , m_gam0       ( std::abs ( gam0 ) )
+  , m_m1         ( std::abs (   m1 ) )
+  , m_m2         ( std::abs (   m2 ) )
+  , m_L          (              L    )
+  , m_formfactor ( nullptr ) 
+    //
+  , m_workspace  ()
+    //
 {}
 // ============================================================================
 // constructor
@@ -4036,44 +4043,84 @@ Gaudi::Math::BreitWigner::BreitWigner
   const double                                m1   ,
   const double                                m2   ,
   const unsigned short                        L    ,
-  const Gaudi::Math::BreitWigner::JacksonRho  r    )
+  const Gaudi::Math::FormFactors::JacksonRho  r    )
   : std::unary_function<double,double> ()
-//
-  , m_m0        (             m0    )
-  , m_gam0      ( std::abs ( gam0 ) )
-  , m_m1        ( std::abs (   m1 ) )
-  , m_m2        ( std::abs (   m2 ) )
-  , m_L         (              L    )
-//
-  , m_rho_fun   ( &Gaudi::Math::Jackson::jackson_0 )
-//
-  , m_workspace ()
-//
+    //
+  , m_m0         (             m0    )
+  , m_gam0       ( std::abs ( gam0 ) )
+  , m_m1         ( std::abs (   m1 ) )
+  , m_m2         ( std::abs (   m2 ) )
+  , m_L          (              L    )
+    //
+  , m_formfactor ( new Gaudi::Math::FormFactors::Jackson ( r ) ) 
+    //
+  , m_workspace  ()
+    //
+{}
+// ============================================================================
+// constructor
+// ============================================================================
+Gaudi::Math::BreitWigner::BreitWigner
+( const double                   m0   ,
+  const double                   gam0 ,
+  const double                   m1   ,
+  const double                   m2   ,
+  const unsigned short           L    ,
+  const Gaudi::Math::FormFactor& ff   )
+  : std::unary_function<double,double> ()
+    //
+  , m_m0         (             m0    )
+  , m_gam0       ( std::abs ( gam0 ) )
+  , m_m1         ( std::abs (   m1 ) )
+  , m_m2         ( std::abs (   m2 ) )
+  , m_L          (              L    )
+    //
+  , m_formfactor ( ff.clone() ) 
+    //
+  , m_workspace  ()
+    //
+{}
+// ============================================================================
+// copy constructor 
+// ============================================================================
+Gaudi::Math::BreitWigner::BreitWigner 
+( const Gaudi::Math::BreitWigner& bw ) 
+  : std::unary_function<double,double> ( bw )
+  , m_m0         ( bw.m_m0    )
+  , m_gam0       ( bw.m_gam0  )
+  , m_m1         ( bw.m_m1    )
+  , m_m2         ( bw.m_m2    )
+  , m_L          ( bw.m_L     )
+    //
+  , m_formfactor ( nullptr == bw.m_formfactor ? nullptr : bw.m_formfactor->clone() ) 
+    //
+  , m_workspace  ()
+    //
+{}
+// ============================================================================
+// move constructor 
+// ============================================================================
+Gaudi::Math::BreitWigner::BreitWigner 
+( Gaudi::Math::BreitWigner&& bw ) 
+  : std::unary_function<double,double> ( bw )
+  , m_m0         ( bw.m_m0    )
+  , m_gam0       ( bw.m_gam0  )
+  , m_m1         ( bw.m_m1    )
+  , m_m2         ( bw.m_m2    )
+  , m_L          ( bw.m_L     )
+    //
+  , m_formfactor ( bw.m_formfactor ) 
+    //
+  , m_workspace  ()
+    //
 {
-  //
-  switch ( r )
-  {
-  case Jackson_0  :
-    m_rho_fun = &Gaudi::Math::Jackson::jackson_0  ; break ;
-  case Jackson_A2 :
-    m_rho_fun = &Gaudi::Math::Jackson::jackson_A2 ; break ;
-  case Jackson_A3 :
-    m_rho_fun = &Gaudi::Math::Jackson::jackson_A3 ; break ;
-  case Jackson_A4 :
-    m_rho_fun = &Gaudi::Math::Jackson::jackson_A4 ; break ;
-  case Jackson_A5 :
-    m_rho_fun = &Gaudi::Math::Jackson::jackson_A5 ; break ;
-  case Jackson_A7 :
-    m_rho_fun = &Gaudi::Math::Jackson::jackson_A7 ; break ;
-  default         :
-    m_rho_fun = &Gaudi::Math::Jackson::jackson_0  ; break ;
-  }
-  //
+  bw.m_formfactor = nullptr ;
 }
 // ============================================================================
 // destructor
 // ============================================================================
-Gaudi::Math::BreitWigner::~BreitWigner (){}
+Gaudi::Math::BreitWigner::~BreitWigner ()
+{ if ( 0 != m_formfactor ) { delete m_formfactor ; m_formfactor = nullptr ; } }
 // ============================================================================
 //  calculate the Breit-Wigner amplitude
 // ============================================================================
@@ -4124,15 +4171,27 @@ double Gaudi::Math::BreitWigner::operator() ( const double x ) const
 double Gaudi::Math::BreitWigner::gamma ( const double x ) const
 {
   //
-  return gamma_run ( m_gam0    ,
-                     x         ,
-                     m_m1      ,
-                     m_m2      ,
-                     m_m0      ,
-                     m_L       ,
-                     m_rho_fun ) ;
+  return gamma_run ( m_gam0       ,
+                     x            ,
+                     m_m1         ,
+                     m_m2         ,
+                     m_m0         ,
+                     m_L          ,
+                     m_formfactor ) ;
   //
 }
+// ===========================================================================
+// get the value of formfactor at given m 
+// ============================================================================
+double Gaudi::Math::BreitWigner::formfactor ( const double m ) const 
+{ 
+  return 
+    nullptr == m_formfactor ? 1. : 
+    (*m_formfactor)( m , m_m0 , m_m1 , m_m2 ) ; 
+}
+// ============================================================================
+
+
 // ============================================================================
 bool Gaudi::Math::BreitWigner::setM0     ( const double x )
 {
@@ -4274,6 +4333,145 @@ double  Gaudi::Math::BreitWigner::integral () const
   return result + integral ( m_m1 + m_m2 , x_high );
 }
 // ============================================================================
+// virtual destructor 
+// ============================================================================
+Gaudi::Math::FormFactor::~FormFactor (){}
+// ============================================================================
+// default constructor
+// ============================================================================
+Gaudi::Math::FormFactors::Jackson::Jackson() 
+  : Gaudi::Math::FormFactor() 
+  , m_rho ( nullptr ) 
+{}
+// ============================================================================
+// constructor from enum
+// ============================================================================
+Gaudi::Math::FormFactors::Jackson::Jackson
+( const Gaudi::Math::FormFactors::JacksonRho rho ) 
+  : Gaudi::Math::FormFactor() 
+  , m_rho ( nullptr ) 
+{
+  switch ( rho )
+  {
+  case   Gaudi::Math::FormFactors::Jackson_0  :
+    m_rho = &Gaudi::Math::Jackson::jackson_0  ; break ;
+  case   Gaudi::Math::FormFactors::Jackson_A2 :
+    m_rho = &Gaudi::Math::Jackson::jackson_A2 ; break ;
+  case   Gaudi::Math::FormFactors::Jackson_A3 :
+    m_rho = &Gaudi::Math::Jackson::jackson_A3 ; break ;
+  case   Gaudi::Math::FormFactors::Jackson_A4 :
+    m_rho = &Gaudi::Math::Jackson::jackson_A4 ; break ;
+  case   Gaudi::Math::FormFactors::Jackson_A5 :
+    m_rho = &Gaudi::Math::Jackson::jackson_A5 ; break ;
+  case   Gaudi::Math::FormFactors::Jackson_A7 :
+    m_rho = &Gaudi::Math::Jackson::jackson_A7 ; break ;
+  default         :
+    m_rho = nullptr ; 
+  }
+  //
+}
+// ============================================================================
+// constructor from function itself 
+// ============================================================================
+Gaudi::Math::FormFactors::Jackson::Jackson
+( const Gaudi::Math::FormFactors::rho_fun rho ) 
+  : Gaudi::Math::FormFactor() 
+  , m_rho ( rho ) 
+{ if ( !m_rho ) { m_rho = &Gaudi::Math::Jackson::jackson_0 ; } }
+// ============================================================================
+// virtual destructor 
+// ============================================================================
+Gaudi::Math::FormFactors::Jackson::~Jackson(){}
+// ============================================================================
+// clone method ("virtual constructor")
+// ============================================================================
+Gaudi::Math::FormFactors::Jackson* 
+Gaudi::Math::FormFactors::Jackson:: clone() const 
+{ return new Gaudi::Math::FormFactors::Jackson ( *this ) ; }
+// ============================================================================
+// the only important method 
+// ============================================================================
+double Gaudi::Math::FormFactors::Jackson::operator() 
+  ( const double m  , const double m0 ,
+    const double m1 , const double m2 ) const
+{ 
+  return nullptr == m_rho ? 1.0 : (*m_rho)( m , m0 , m1 , m2 ) ; 
+}
+
+
+// ============================================================================
+// constructor
+// ============================================================================
+Gaudi::Math::FormFactors::BlattWeisskopf::BlattWeisskopf
+( const Gaudi::Math::FormFactors::BlattWeisskopf::Case L , 
+  const double                                         b )
+  : Gaudi::Math::FormFactor() 
+  , m_L ( L ) 
+  , m_b ( b )
+{
+  switch ( L ) 
+  {
+  case Zero : break ;
+  case One  : break ;
+  case Two  : break ;
+  default:   
+    throw GaudiException( "Illegal Blatt-Weisskopf form factor" , 
+                          "LHCbMath" , StatusCode::FAILURE      ) ;
+  }
+}
+// ============================================================================
+// destructor 
+// ============================================================================
+Gaudi::Math::FormFactors::BlattWeisskopf::~BlattWeisskopf(){}
+// ============================================================================
+// clone method ("virtual constructor")
+// ============================================================================
+Gaudi::Math::FormFactors::BlattWeisskopf*
+Gaudi::Math::FormFactors::BlattWeisskopf::clone() const 
+{ return new Gaudi::Math::FormFactors::BlattWeisskopf(*this) ; }
+// ============================================================================
+// get the barrier factor 
+// ============================================================================
+double Gaudi::Math::FormFactors::BlattWeisskopf::b 
+( const double z   , 
+  const double z0  ) const 
+{
+  if     ( Zero == m_L ) { return 1 ; }
+  //
+  return 
+    One == m_L ? std::sqrt (   ( 1 + z0 ) / ( 1  + z ) ) : 
+    Two == m_L ? std::sqrt ( ( ( z0 - 3 ) * ( z0 - 3 ) + 9 * z0 ) / 
+                             ( ( z  - 3 ) * ( z  - 3 ) + 9 * z  ) ) : 1.0 ;  
+}
+// ============================================================================
+// the only important method 
+// ============================================================================
+double Gaudi::Math::FormFactors::BlattWeisskopf::operator() 
+  ( const double m  , const double m0 ,
+    const double m1 , const double m2 ) const 
+{
+  //
+  if  ( s_equal ( m , m0 ) ) { return 1 ; }
+  //
+  /// get the momenta 
+  const double q  = Gaudi::Math::PhaseSpace2::q ( m  , m1 , m2 ) ;
+  const double q0 = Gaudi::Math::PhaseSpace2::q ( m0 , m1 , m2 ) ;
+  ///
+  const double _z  = q  * m_b ;
+  const double _z0 = q0 * m_b ;
+  //
+  return ( m0 / m ) * b ( _z * _z , _z0 * _z0 ) ;
+}
+// ============================================================================
+
+
+
+
+
+
+
+
+// ============================================================================
 // constructor from all parameters
 // ============================================================================
 Gaudi::Math::Rho0::Rho0
@@ -4285,7 +4483,7 @@ Gaudi::Math::Rho0::Rho0
                                pi_mass    ,
                                pi_mass    ,
                                1          ,
-                               Jackson_A7 )
+                               Gaudi::Math::FormFactors::Jackson_A7 )
 {}
 // ============================================================================
 // destructor
@@ -4305,7 +4503,7 @@ Gaudi::Math::Kstar0::Kstar0
                                k_mass     ,
                                pi_mass    ,
                                1          ,
-                               Jackson_A2 )
+                               Gaudi::Math::FormFactors::Jackson_A2 )
 {}
 // ============================================================================
 // destructor
@@ -4324,7 +4522,7 @@ Gaudi::Math::Phi0::Phi0
                                k_mass     ,
                                k_mass     ,
                                1          ,
-                               Jackson_A2 )
+                               Gaudi::Math::FormFactors::Jackson_A2 )
 {}
 // ============================================================================
 // destructor
@@ -5754,7 +5952,7 @@ Gaudi::Math::BW23L::BW23L
   const double                               m    ,
   const unsigned short                       L1   ,
   const unsigned short                       L2   ,
-  const Gaudi::Math::BreitWigner::JacksonRho r    )
+  const Gaudi::Math::FormFactors::JacksonRho r    )
   : std::unary_function<double,double>()
 //
   , m_bw ( m0 , gam0 , m1  , m2 , L1 , r  )
