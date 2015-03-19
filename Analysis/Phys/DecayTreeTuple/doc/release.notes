@@ -4,6 +4,7 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2015-03-19 - Eduardo Rodrigues
  - TupleToolGeometry: refitter algo. made configurable property, set to
    LoKi::PVReFitter by default, and a public instance by default.
 
