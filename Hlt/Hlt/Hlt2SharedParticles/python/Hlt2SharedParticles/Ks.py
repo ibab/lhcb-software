@@ -20,7 +20,7 @@ Hlt2SharedKsLLTF = Hlt2Member( CombineParticles, "KsLLTF"
                            , DecayDescriptor = "KS0 -> pi+ pi-" 
                            , DaughtersCuts = { "pi+" : "(TRCHI2DOF<3.)& (MIPCHI2DV(PRIMARY)>36)" } 
                            , CombinationCut = "(ADAMASS('KS0')<50*MeV) "
-                           , MotherCut = "(ADMASS('KS0')<35*MeV) & (VFASPF(VCHI2PDOF)<30) & (BPVLTIME('PropertimeFitter/properTime:PUBLIC') > 2.0*ps) "
+                           , MotherCut = "(ADMASS('KS0')<35*MeV) & (VFASPF(VCHI2PDOF)<30) & (BPVLTIME() > 2.0*ps) "
                            , Inputs = [ BiKalmanFittedPions ]
                            )
 

@@ -4,6 +4,9 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-03-19 - V. Gligorov
+ - Remove use of PropertimeFitter in Ks/Lambdas
+
 ! 2015-03-19 - Olli Lupton
  - Add extra NoPID leptons to TrackFittedBasicParticles.py
   . BiKalmanFittedNoPIDsMuons
