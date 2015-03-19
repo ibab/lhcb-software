@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2015-03-19 - Liang Sun
+ - QMTest: Update DQFLAGS.db to remove the xml extension in one of its node paths
+
 ! 2015-02-26 - Manuel Tobias Schiller
  - TrajPoca: polish code and methods a little, speeds up TrajPoca by 7.7%
 
