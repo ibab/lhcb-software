@@ -6,6 +6,7 @@ from D2HHPi0Lines import CharmHadD2HHPi0Lines
 from D02HHHHLines import CharmHadD02HHHHLines
 from D2HHHKsLines import CharmHadD2HHHKsLines
 from Hc2HHHHLines import CharmHadHc2HHHHLines
+from XSecLines import CharmHadXSecLines 
 
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
@@ -18,6 +19,7 @@ D2HHPi0Lines = CharmHadD2HHPi0Lines()
 D02HHHHLines = CharmHadD02HHHHLines()
 D2HHHKsLines = CharmHadD2HHHKsLines()
 Hc2HHHHLines = CharmHadHc2HHHHLines()
+XSecLines = CharmHadXSecLines()
 
 theseslots = {   'Prescale' : {}, 
                  'TrackGEC' : {'NTRACK_MAX'           : 10000},
@@ -28,29 +30,29 @@ theseslots = {   'Prescale' : {},
                             },  
                  # Particles for the "Detached" CPV lines
                  'SharedDetachedDpmChild_K' : { 
-                                 'PID_LIM'                  :  0,  
+                                 'PID_LIM'                  :  2,  
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                               },  
                  'SharedDetachedDpmChild_pi' : { 
-                                 'PID_LIM'                  :  10, 
+                                 'PID_LIM'                  :  5, 
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                               },  
                  'SharedDetachedLcChild_K' : { 
-                                 'PID_LIM'                  :  0,  
+                                 'PID_LIM'                  :  2,  
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
-                                 'Trk_ALL_MIPCHI2DV_MIN'    :  2.0,
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                               },  
                  'SharedDetachedLcChild_pi' : { 
-                                 'PID_LIM'                  :  10, 
+                                 'PID_LIM'                  :  5, 
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
-                                 'Trk_ALL_MIPCHI2DV_MIN'    :  2.0,
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                               },  
                  'SharedDetachedLcChild_p' : {
-                                 'PID_LIM'                  :  0,
+                                 'PID_LIM'                  :  5,
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
-                                 'Trk_ALL_MIPCHI2DV_MIN'    :  2.0,
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                               },
                  # Particles for the 'Prompt' CF lifetime unbiased lines for the 
                  # lifetime measurements
@@ -73,22 +75,25 @@ theseslots = {   'Prescale' : {},
                  # NoPID protons for the Sigma_c tagged Lambda_c line for PID calibration
                  # the IPCHI2 cut is tight because the PT/PT cuts have to be loose to give
                  # a useful sample, and we need to reduce the combinatorics
-                 'SharedNoPIDDetachedLcChild_p' : {
+                 'SharedNoPIDDetachedChild_p' : {
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
-                                 'Trk_ALL_MIPCHI2DV_MIN'    :  9.0,
-                                          },
-                 # NoPID particles for D -> HHX lines 
-                 'SharedNoPIDDetachedD0Child_pi' : {
-                                 'Trk_ALL_PT_MIN'           :  300,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  6.0,
                                           },
-                 'SharedNoPIDDetachedD0Child_K' : {
-                                 'Trk_ALL_PT_MIN'           :  300,
+                 # NoPID particles for other charm lines 
+                 'SharedNoPIDDetachedChild_pi' : {
+                                 'Trk_ALL_PT_MIN'           :  200 * MeV,
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  6.0,
+                                          },
+                 'SharedNoPIDDetachedChild_K' : {
+                                 'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  6.0,
                                           },
                  # Neutral particles for D -> HHX lines
+                 # 
+                 # MAYBE BETTER TO RENAME Trk_ALL_PT_MIN HERE AS THIS IS
+                 # NOT A TRACK BUT A PI0?
                  'SharedNeutralChild_pi0R' : {
-                                 'Trk_ALL_PT_MIN'           : 500.0,
+                                 'Trk_ALL_PT_MIN'           : 500.0 * MeV,
                                  'Pi0_ALL_DMASS_MAX'        : 30.0,
                                           },
                 }
@@ -101,6 +106,7 @@ theseslots.update(D2HHPi0Lines.localcuts())
 theseslots.update(D02HHHHLines.localcuts())
 theseslots.update(D2HHHKsLines.localcuts())
 theseslots.update(Hc2HHHHLines.localcuts())
+theseslots.update(XSecLines.localcuts())
 
 class CharmHadLines(Hlt2LinesConfigurableUser):
     __slots__ = theseslots
@@ -117,7 +123,8 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
             self.__lines__.update(D02HHHHLines.locallines())
             self.__lines__.update(D2HHHKsLines.locallines())
             self.__lines__.update(Hc2HHHHLines.locallines())
-
+            self.__lines__.update(XSecLines.locallines())
+    
         return self.__lines__[nickname] if nickname else self.__lines__
             
     def __apply_configuration__(self):

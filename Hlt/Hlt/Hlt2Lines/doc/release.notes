@@ -8,6 +8,21 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-19 - V. Gligorov
+ - Add 3-body XSection lines to CharmHad
+ - Following discussions at the charm meeting and looking into the stripping lines, 
+   tighten the shared particle PID cuts in CharmHad a bit (still looser than current stripping cuts!)
+   to reduce combinatorics timing. We may want to tighten these further still, but let's discuss as we go along. 
+ - Tighten shared particle IPCHI2 cuts to at least > 4 everywhere in CharmHad 
+   (except for lifetime unbiased of course) again to help reduce combinatorics timing
+ - Rename the D02HHCombiner in Stages.py to be the DetachedD02HH..., in line with naming convention,
+   propagate this through and add a different D02HHCombiner for the eventual lifetime unbiased lines. 
+ - Add the 2DD and LLDD D->KS0KS0 lines
+ - Add a D->3h line for KPi calibration for Mika
+ - Introduce ALL, >= 1, >= 2 layered PT cuts for the D->3H lines in line with the layered IPCHI2 cuts
+   and set to the minimal values used in the 2015 draft XSec stripping lines throughout
+ - Tighten non-XSec D->HHH/Lc->HHH lines to come closer to what is done in the stripping, modulo differences in logic.
+
 ! 2015-03-19 - Jibo He
  - python/Hlt2Lines/Bc2JpsiX
   . Hlt2TFBc2JpsiMuX and Hlt2Bc2JpsiH adapted to new template  

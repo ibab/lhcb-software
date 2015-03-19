@@ -46,20 +46,20 @@ class CharmHadD02HHLines : # {
         ##   __apply_configuration__ method of the Hlt2LinesConfigurableUser
         ##   that uses these lines.
         if len(self.__stages) == 0 : # {
-            from Stages import MassFilter, D02HHCombiner
+            from Stages import MassFilter, DetachedD02HHCombiner
 
             ## Move to the shared filtered input particles when they make sense
             ##    to me.
             from Inputs import Hlt2NoPIDsPions, Hlt2NoPIDsKaons
-            D02KPiWideMass  = D02HHCombiner( 'D02KPi', decay = "[D0 -> K- pi+]cc"
+            D02KPiWideMass  = DetachedD02HHCombiner( 'D02KPi', decay = "[D0 -> K- pi+]cc"
                                     , inputs = [ Hlt2NoPIDsPions, Hlt2NoPIDsKaons ]
                                     , slotName = self.__slotname
                                     , shared = True )
-            D02KKWideMass   = D02HHCombiner( 'D02KK', decay = "D0 -> K- K+"
+            D02KKWideMass   = DetachedD02HHCombiner( 'D02KK', decay = "D0 -> K- K+"
                                     , inputs = [ Hlt2NoPIDsKaons ]
                                     , slotName = self.__slotname
                                     , shared = True )
-            D02PiPiWideMass = D02HHCombiner( 'D02PiPi', decay = "D0 -> pi- pi+"
+            D02PiPiWideMass = DetachedD02HHCombiner( 'D02PiPi', decay = "D0 -> pi- pi+"
                                     , inputs = [ Hlt2NoPIDsPions ]
                                     , slotName = self.__slotname
                                     , shared = True )
