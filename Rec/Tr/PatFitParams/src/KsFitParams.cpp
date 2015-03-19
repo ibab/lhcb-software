@@ -10,7 +10,6 @@
 #include "Event/MCHit.h"
 
 // local
-#include "FwdFitPolinomial.h"
 #include "KsFitParams.h"
 
 //-----------------------------------------------------------------------------

@@ -4,6 +4,13 @@
 ! Purpose     : Fit MC tracks to compute the PatForward parameters
 !-----------------------------------------------------------------------------
 
+! 2015-03-19 - Manuel Tobias Schiller
+ - new class LinParFit for fits which are linear in their parameters, much
+   more flexible and general than anything previously available
+ - adapt various classes to take advantage of LinParFit, retire
+   FwdFitPolinomial class which serves little purpose now 
+ - modernise code in SeedFitParams
+
 !========================= PatFitParams v4r3 2015-01-14 =========================
 ! 2015-01-02 - Michel De Cian
  - Fix bug in 'MatchFitParams', which lead to wrong momentum estimate.

@@ -11,6 +11,7 @@
 
 #include "Event/StateParameters.h"
 
+#include <unordered_map>
 #include <boost/assign/list_of.hpp>
 #include <boost/array.hpp>
 
@@ -102,48 +103,67 @@ StatusCode SeedFitParams::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-  m_nEvent += 1;
+  ++m_nEvent;
 
-  LHCb::MCParticles* partCtnr = get<LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
+  const auto* partCtnr = get<LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
 
   MCTrackInfo trackInfo( evtSvc(), msgSvc() );
 
-  // Get the IT  hits
-  LHCb::MCHits* itHits = get<LHCb::MCHits>( LHCb::MCHitLocation::IT );
-  LHCb::MCHits* TTHits = get<LHCb::MCHits>( LHCb::MCHitLocation::TT );
+  // Get the MC hits, and create our own "linkers"
+  std::unordered_map<const LHCb::MCParticle*, std::vector<const LHCb::MCHit*> > tlinker;
+  std::unordered_map<const LHCb::MCParticle*, std::vector<const LHCb::MCHit*> > ttlinker;
+  {
+    const auto* itHits = get<LHCb::MCHits>(LHCb::MCHitLocation::IT);
+    const auto* otHits = get<LHCb::MCHits>(LHCb::MCHitLocation::OT);
+    const auto* ttHits = get<LHCb::MCHits>(LHCb::MCHitLocation::TT);
+    for (const auto* hit: *itHits) tlinker[hit->mcParticle()].push_back(hit);
+    for (const auto* hit: *otHits) tlinker[hit->mcParticle()].push_back(hit);
+    for (const auto* hit: *ttHits) ttlinker[hit->mcParticle()].push_back(hit);
+    // sanitise linker table(s) - MCHits must be unique; free up unused memory
+    for (auto& kvpair: tlinker) {
+      std::sort(std::begin(kvpair.second), std::end(kvpair.second));
+      kvpair.second.erase(std::unique(
+	    std::begin(kvpair.second), std::end(kvpair.second)),
+	  std::end(kvpair.second));
+      std::vector<const LHCb::MCHit*> tmp(std::begin(kvpair.second), std::end(kvpair.second));
+      kvpair.second.swap(tmp);
+      // sort by increasing z
+      std::sort(std::begin(kvpair.second), std::end(kvpair.second),
+	      [] (const LHCb::MCHit* h1, const LHCb::MCHit* h2) {
+	      return h1->midPoint().z() < h2->midPoint().z(); });
+    }
+    for (auto& kvpair: ttlinker) {
+      std::sort(std::begin(kvpair.second), std::end(kvpair.second));
+      kvpair.second.erase(std::unique(
+	    std::begin(kvpair.second), std::end(kvpair.second)),
+	  std::end(kvpair.second));
+      std::vector<const LHCb::MCHit*> tmp(std::begin(kvpair.second), std::end(kvpair.second));
+      kvpair.second.swap(tmp);
+      // sort by increasing z
+      std::sort(std::begin(kvpair.second), std::end(kvpair.second),
+	      [] (const LHCb::MCHit* h1, const LHCb::MCHit* h2) {
+	      return h1->midPoint().z() < h2->midPoint().z(); });
+    }
+  }
 
-  // Get the OT hits
-  LHCb::MCHits* otHits = get<LHCb::MCHits>( LHCb::MCHitLocation::OT );
-
-  LHCb::MCParticles::const_iterator pItr;
-  const LHCb::MCParticle* part;
-  const LHCb::MCParticle* mother;
-  const LHCb::MCVertex* vOrigin;
-  SmartRefVector<LHCb::MCVertex> vDecay;
-  
-  for ( pItr = partCtnr->begin(); partCtnr->end() != pItr; pItr++ ) {
-    part = *pItr;
-    if ( 0 == trackInfo.fullInfo( part ) ) continue;
-    if ( !trackInfo.hasT( part ) ) continue;
-    if ( !trackInfo.hasTT( part ) && !trackInfo.hasVelo( part ) ) continue;
-    vOrigin = part->originVertex();
-    if ( 0 == vOrigin ) continue;
+  for (const auto part: *partCtnr) {
+    if (!trackInfo.fullInfo(part)) continue;
+    if (!trackInfo.hasT(part)) continue;
+    if (!trackInfo.hasTT(part) && !trackInfo.hasVelo(part)) continue;
+    const auto* vOrigin = part->originVertex();
+    if (!vOrigin) continue;
     //== No velo -> request that the mother comes from near the beam line
-    if ( !trackInfo.hasVelo( part ) ) {
-      mother = vOrigin->mother();
-      if ( 0 == mother ) continue;
-      if ( 0 == mother->originVertex() ) continue;
-      double rOrigin = mother->originVertex()->position().rho();
-      if ( fabs( rOrigin ) > 4. ) continue;
+    if (!trackInfo.hasVelo(part)) {
+      const auto* mother = vOrigin->mother();
+      if (!mother) continue;
+      if (!mother->originVertex()) continue;
+      if (std::abs(mother->originVertex()->position().rho()) > 4.) continue;
     }
-    bool hasInteractionVertex = false;
-    SmartRefVector<LHCb::MCVertex> endV = part->endVertices();
-    for ( SmartRefVector<LHCb::MCVertex>::const_iterator itV = endV.begin() ;
-          endV.end() != itV; itV++ ) {
-      if ( (*itV)->position().z() > StateParameters::ZEndT ) continue;
-      hasInteractionVertex = true;
-    }
-    if ( hasInteractionVertex ) continue;
+    const bool hasInteractionVertex = std::end(part->endVertices()) ==
+      std::find_if(std::begin(part->endVertices()), std::end(part->endVertices()),
+	  [] (const LHCb::MCVertex* vtx) {
+	  return vtx->position().z() <= StateParameters::ZEndT; });
+    if (hasInteractionVertex) continue;
 
     double momentum = part->momentum().R();
     if ( 0 > part->particleID().threeCharge() ) {
@@ -154,31 +174,16 @@ StatusCode SeedFitParams::execute() {
     std::vector<Gaudi::XYZPoint> trHits;
     std::vector<Gaudi::XYZPoint> ttHits;
 
-    // Get the IT hits
-    for ( LHCb::MCHits::const_iterator iHitIt = itHits->begin() ; 
-          itHits->end() != iHitIt ; iHitIt++ ) {
-      if ( (*iHitIt)->mcParticle() ==  part ) {
-        trHits.push_back( (*iHitIt)->midPoint() );
-      }
+    if (std::end(tlinker) != tlinker.find(part)) {
+      trHits.reserve(tlinker[part].size());
+      for (const auto* hit: tlinker[part]) trHits.push_back(hit->midPoint());
     }
-   
-    // Get the OT hits
-    for ( LHCb::MCHits::const_iterator oHitIt = otHits->begin() ; 
-          otHits->end() != oHitIt ; oHitIt++ ) {
-      if ( (*oHitIt)->mcParticle() ==  part ) {
-        trHits.push_back( (*oHitIt)->midPoint() );
-      }
-    }
-
-    // Get the TT hits
-    for ( LHCb::MCHits::const_iterator iHittt = TTHits->begin() ; 
-          TTHits->end() != iHittt ; iHittt++ ) {
-      if ( (*iHittt)->mcParticle() ==  part ) {
-        ttHits.push_back( (*iHittt)->midPoint() );
-      }
+    if (std::end(ttlinker) != ttlinker.find(part)) {
+      ttHits.reserve(ttlinker[part].size());
+      for (const auto* hit: ttlinker[part]) ttHits.push_back(hit->midPoint());
     }
     
-    m_nTrack += 1;
+    ++m_nTrack;
     if ( msgLevel( MSG::DEBUG ) ) {
       debug() << format( "Track MC %4d z0 %7.2f p%8.2f Velo%2d TT%2d T%2d",
                          part->key(), vOrigin->position().z(), momentum/1000,

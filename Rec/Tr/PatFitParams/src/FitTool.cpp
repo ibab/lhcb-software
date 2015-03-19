@@ -22,7 +22,8 @@ DECLARE_TOOL_FACTORY( FitTool )
 FitTool::FitTool( const std::string& type,
                   const std::string& name,
                   const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ),
+    m_fit2(2), m_fit3(3), m_fit4(4)
 {
   declareInterface<FitTool>(this);
 }
@@ -34,60 +35,41 @@ FitTool::~FitTool() {}
 //=========================================================================
 //  Fit a simple line in the specified projection
 //=========================================================================
-void FitTool::fitLine ( std::vector<Gaudi::XYZPoint>& hits, int mode,
-                        double z0, double& a, double& b ) {
-  FwdFitPolinomial line(1);
-  for ( std::vector<Gaudi::XYZPoint>::const_iterator itP = hits.begin(); 
-        hits.end() > itP; itP++ ) {
-    double dz = (*itP).z() - z0;
-    double x =  (*itP).x();
-    if ( 0 != mode ) x = (*itP).y();
-    line.fill( x, dz );
-  }
-  line.solve();
-  a = line.param( 0 );
-  b = line.param( 1 );
+bool FitTool::fitLine ( const std::vector<Gaudi::XYZPoint>& hits, int mode,
+                        double z0, double& a, double& b )
+{
+  m_fit2.clear();
+  for (const auto& p: hits)
+      m_fit2.accumulate((mode ? p.y() : p.x()), 1., p.z() - z0);
+  if (!m_fit2.solve()) return false;
+  a = m_fit2[0], b = m_fit2[1];
+  return true;
 }
 //=========================================================================
 //  Fit a parabola in the specified projection
 //=========================================================================
-void FitTool::fitParabola ( std::vector<Gaudi::XYZPoint>& hits, int mode,
-                            double z0, double& a, double& b, double& c ) {
-  
-  FwdFitPolinomial parab( 2 );
-  
-  for ( std::vector<Gaudi::XYZPoint>::const_iterator itP = hits.begin(); 
-        hits.end() > itP; itP++ ) {
-    double dz = ( (*itP).z() - z0 ) * 1.e-3;
-    double X;
-    if ( 0 == mode ) { X = (*itP).x(); } else { X = (*itP).y(); }
-    parab.fill( X, dz );
-  }
-  parab.solve();
-  a = parab.param(0);
-  b = parab.param(1) * 1.e-3;
-  c = parab.param(2) * 1.e-6;
+bool FitTool::fitParabola ( const std::vector<Gaudi::XYZPoint>& hits, int mode,
+                            double z0, double& a, double& b, double& c )
+{
+  m_fit3.clear();
+  for (const auto& p: hits)
+      m_fit3.accumulate((mode ? p.y() : p.x()), 1., 1e-3 * (p.z() - z0));
+  if (!m_fit3.solve()) return false;
+  a = m_fit3[0], b = 1e-3 * m_fit3[1], c = 1e-6 * m_fit3[2];
+  return true;
 }
 //=========================================================================
 //  Fit a Cubic in the specified projection
 //=========================================================================
-void FitTool::fitCubic ( std::vector<Gaudi::XYZPoint>& hits, int mode,
-                         double z0, double& a, double& b, double& c, double& d ){
-
-  FwdFitPolinomial cubic( 3 );
-  for ( std::vector<Gaudi::XYZPoint>::const_iterator itP = hits.begin(); 
-        hits.end() > itP; itP++ ) {
-    double dz = ( (*itP).z() - z0 ) * 1.e-3;
-    double X;
-    if ( 0 == mode ) { X = (*itP).x(); } else { X = (*itP).y(); }
-    cubic.fill( X, dz );
-  }
-  cubic.solve();
-
-  a = cubic.param(0);
-  b = cubic.param(1) * 1.e-3;
-  c = cubic.param(2) * 1.e-6;
-  d = cubic.param(3) * 1.e-9;
+bool FitTool::fitCubic ( const std::vector<Gaudi::XYZPoint>& hits, int mode,
+                         double z0, double& a, double& b, double& c, double& d )
+{
+  m_fit4.clear();
+  for (const auto& p: hits)
+      m_fit4.accumulate((mode ? p.y() : p.x()), 1., 1e-3 * (p.z() - z0));
+  if (!m_fit4.solve()) return false;
+  a = m_fit4[0], b = 1e-3 * m_fit4[1], c = 1e-6 * m_fit4[2], d = 1e-9 * m_fit4[3];
+  return true;
 }
 
 //=============================================================================

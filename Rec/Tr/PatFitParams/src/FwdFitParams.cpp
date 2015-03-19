@@ -21,7 +21,7 @@
 
 // local
 #include "FwdFitParams.h"
-#include "FwdFitPolinomial.h"
+#include "FitTool.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : FwdFitParams
@@ -37,6 +37,7 @@ DECLARE_ALGORITHM_FACTORY( FwdFitParams )
 FwdFitParams::FwdFitParams( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator )
+  , m_fitTool(nullptr)  
   , m_minMomentum         (   2.0 * Gaudi::Units::GeV )
   , m_maxZVertex          (  500. * Gaudi::Units::mm )
   , m_zVelo               ( 1190. * Gaudi::Units::mm )
@@ -91,6 +92,8 @@ StatusCode FwdFitParams::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
+
+  m_fitTool = tool<FitTool>( "FitTool" );
 
   unsigned int i;
 
@@ -206,22 +209,14 @@ StatusCode FwdFitParams::execute() {
       }
       if ( vPoints.size() >= 6 ) {
         veloFound = true;
-        FwdFitPolinomial fitX( 1 );
-        FwdFitPolinomial fitY( 1 );
-        for ( std::vector<Gaudi::XYZPoint>::iterator pt = vPoints.begin() ; 
-              vPoints.end() != pt  ; pt++ ) {
-          dz = (*pt).z() - m_zVelo;
-          fitX.fill(  (*pt).x(), dz );
-          fitY.fill(  (*pt).y(), dz );
-        }
-        fitX.solve();
-        fitY.solve();
-        
-        origin.SetX( fitX.param(0) );
-        origin.SetY( fitY.param(0) );
+	double a, b, ay, by;
+	m_fitTool->fitLine(vPoints, 0, m_zVelo, a, b);
+	m_fitTool->fitLine(vPoints, 1, m_zVelo, ay, by);
+        origin.SetX( a );
+        origin.SetY( ay );
         origin.SetZ( m_zVelo );
-        slope.SetX( fitX.param(1) );
-        slope.SetY( fitY.param(1) );
+        slope.SetX( b );
+        slope.SetY( by );
         slope.SetZ( 1. );
       }   
     } else {      
@@ -356,38 +351,14 @@ StatusCode FwdFitParams::execute() {
       //                               track measured parameters.
       // Compute the parameters: First compute the various sums
 
-      FwdFitPolinomial fitX( 3 );
-
-      for ( pt = trHits.begin() ; trHits.end() != pt  ; pt++ ) {
-        if ( m_zMag < (*pt).Z() ) {
-          dz = ( (*pt).z() - m_zRef ) * 1.e-3;      // Keep numbers reasonable !
-          fitX.fill(  (*pt).X(), dz );
-        }
-      }
-      if ( fitX.solve() ) {
-        AX = fitX.param( 0 );
-        BX = fitX.param( 1 ) * 1.e-3 ;
-        CX = fitX.param( 2 ) * 1.e-6 ;
-        DX = fitX.param( 3 ) * 1.e-9 ;
-      } else {
+      if (!m_fitTool->fitCubic(trHits, 0, m_zRef, AX, BX, CX, DX)) {
         err() << " X matrix is singular " << endmsg;
         continue;
       }
 
       // For Y also
 
-      FwdFitPolinomial fitY( 1 );
-
-      for ( pt = trHits.begin() ; trHits.end() != pt  ; pt++ ) {
-        if ( m_zMag < (*pt).Z() ) {
-          dz = ( (*pt).Z() - m_zRef ) * 1.e-3;      // Keep numbers reasonable !
-          fitY.fill(  (*pt).Y(), dz );
-        }
-      }
-      if ( fitY.solve() ) {
-        AY = fitY.param( 0 );
-        BY = fitY.param( 1 ) * 1.e-3 ;
-      } else {
+      if (!m_fitTool->fitLine(trHits, 1, m_zRef, AY, BY)) {
         err() << " X matrix is singular " << endmsg;
         continue;
       }

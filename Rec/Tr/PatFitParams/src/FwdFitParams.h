@@ -7,6 +7,8 @@
 
 #include "FwdParameters.h"
 
+class FitTool;
+
 /** @class FwdFitParams FwdFitParams.h
  *  Analyse the MC to produce Ltracking parameters
  *
@@ -29,6 +31,8 @@ public:
 protected:
 
 private:
+  FitTool* m_fitTool;
+
   // Parameters to control the algorithm, accessible by jobOptions
 
   double m_minMomentum;               ///< Momentum cut to consider tracks

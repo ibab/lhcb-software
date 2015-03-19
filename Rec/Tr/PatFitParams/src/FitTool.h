@@ -8,7 +8,7 @@
 
 #include "GaudiKernel/Point3DTypes.h"
 
-#include "FwdFitPolinomial.h"
+#include "LinParFit.h"
 
 static const InterfaceID IID_FitTool ( "FitTool", 1, 0 );
 
@@ -31,19 +31,23 @@ public:
 
   virtual ~FitTool( ); ///< Destructor
 
-  void fitLine( std::vector<Gaudi::XYZPoint>& hit, int mode, 
+  bool fitLine( const std::vector<Gaudi::XYZPoint>& hit, int mode, 
                 double z0, double& a, double& b);
 
-  void fitParabola( std::vector<Gaudi::XYZPoint>& hit, int mode, 
+  bool fitParabola( const std::vector<Gaudi::XYZPoint>& hit, int mode, 
                     double z0, double& a, double& b, double& c);
 
-  void fitCubic( std::vector<Gaudi::XYZPoint>& hit, int mode, 
+  bool fitCubic( const std::vector<Gaudi::XYZPoint>& hit, int mode, 
                  double x0, double& a, double& b, double& c, double& d);
 
 
 protected:
 
 private:
+  // avoid frequent reallocation of vectors etc.
+  LinParFit<double> m_fit2;
+  LinParFit<double> m_fit3;
+  LinParFit<double> m_fit4;
 
 };
 #endif // FITTOOL_H
