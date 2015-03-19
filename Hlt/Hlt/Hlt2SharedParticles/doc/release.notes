@@ -4,6 +4,12 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-03-19 - Olli Lupton
+ - Add extra NoPID leptons to TrackFittedBasicParticles.py
+  . BiKalmanFittedNoPIDsMuons
+  . BiKalmanFittedNoPIDsElectrons, BiKalmanFittedNoPIDsDownElectrons
+  . BiKalmanFittedNoDLLCutElectronsFromL0 (not PID-free but no DLL or acceptance cuts)
+
 ! 2015-03-02 - Jibo He
  - python/Hlt2SharedParticles/Phi.py
   . Changed to use Hlt2Member, to make things more clear

@@ -74,6 +74,18 @@ Hlt2BiKalmanFittedMuons = CombinedParticleMaker("Hlt2BiKalmanFittedMuons"
                                             )
 Hlt2BiKalmanFittedMuons.addTool(ProtoParticleMUONFilter('Muon'))
 Hlt2BiKalmanFittedMuons.Muon.Selection 			= ["RequiresDet='MUON' IsMuon=True"]
+
+##########################################################################
+#
+# Make muons without PID requirements (e.g. for PID calibration lines)
+#
+Hlt2BiKalmanFittedNoPIDsMuons = NoPIDsParticleMaker("Hlt2BiKalmanFittedNoPIDsMuons"
+                                            , Particle                      = "muon"
+                                            , Input                         = BiKalmanFittedMuonProtoMaker.outputSelection()
+                                            , Output                        = "Hlt2/Hlt2BiKalmanFittedNoPIDsMuons/Particles"
+                                            , WriteP2PVRelations            = False
+                                            )
+
 ##########################################################################
 #
 # Make the pions
@@ -211,6 +223,18 @@ Hlt2BiKalmanFittedElectrons	= CombinedParticleMaker("Hlt2BiKalmanFittedElectrons
                                             )
 Hlt2BiKalmanFittedElectrons.addTool(ProtoParticleCALOFilter('Electron'))
 Hlt2BiKalmanFittedElectrons.Electron.Selection 		= ["RequiresDet='CALO' CombDLL(e-pi)>'-2.0'"]
+
+##########################################################################
+#
+# Make electrons without PID requirements (e.g. for PID calibration lines)
+#
+Hlt2BiKalmanFittedNoPIDsElectrons = NoPIDsParticleMaker("Hlt2BiKalmanFittedNoPIDsElectrons"
+                                            , Particle                      = "electron"
+                                            , Input                         = BiKalmanFittedChargedCaloProtoMaker.outputSelection()
+                                            , Output                        = "Hlt2/Hlt2BiKalmanFittedNoPIDsElectrons/Particles"
+                                            , WriteP2PVRelations            = False
+                                            )
+
 ##########################################################################
 #
 # Make the downstream electrons
@@ -223,6 +247,18 @@ Hlt2BiKalmanFittedDownElectrons = CombinedParticleMaker("Hlt2BiKalmanFittedDownE
                                             )
 Hlt2BiKalmanFittedDownElectrons.addTool(ProtoParticleCALOFilter('Electron'))
 Hlt2BiKalmanFittedDownElectrons.Electron.Selection 		= ["RequiresDet='CALO' CombDLL(e-pi)>'-2.0'"]
+
+##########################################################################
+#
+# Make downstream electrons without PID requirements (e.g. for PID calibration lines)
+#
+Hlt2BiKalmanFittedNoPIDsDownElectrons = NoPIDsParticleMaker("Hlt2BiKalmanFittedNoPIDsDownElectrons"
+                                            , Particle                      = "electron"
+                                            , Input                         = BiKalmanFittedChargedCaloDownProtoMaker.outputSelection()
+                                            , Output                        = "Hlt2/Hlt2BiKalmanFittedNoPIDsDownElectrons/Particles"
+                                            , WriteP2PVRelations            = False
+                                            )
+
 ########################################################################
 #
 # Make the electrons from L0
@@ -235,6 +271,18 @@ Hlt2BiKalmanFittedElectronsFromL0	= CombinedParticleMaker("Hlt2BiKalmanFittedEle
                                             )
 Hlt2BiKalmanFittedElectronsFromL0.addTool(ProtoParticleCALOFilter('Electron'))
 Hlt2BiKalmanFittedElectronsFromL0.Electron.Selection 		= ["RequiresDet='CALO' CombDLL(e-pi)>'-2.0'"]
+
+##########################################################################
+#
+# Make electrons from L0 without a DLL requirements (e.g. for PID calibration lines)
+#
+Hlt2BiKalmanFittedNoDLLCutElectronsFromL0 = NoPIDsParticleMaker("Hlt2BiKalmanFittedNoDLLCutElectronsFromL0"
+                                            , Particle                      = "electron"
+                                            , Input                         = BiKalmanFittedElectronFromL0Maker.outputSelection()
+                                            , Output                        = "Hlt2/Hlt2BiKalmanFittedNoDLLCutElectronsFromL0/Particles"
+                                            , WriteP2PVRelations            = False
+                                            )
+
 ##########################################################################
 # Make the photons
 #
@@ -277,10 +325,14 @@ Hlt2BiKalmanFittedPhotonsFromL0Low.PhotonMaker.PtCut = 200.* MeV
 # from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedMuons
 #
 
-__all__ = ( 	'BiKalmanFittedMuons', 
-              'BiKalmanFittedElectrons', 
-              'BiKalmanFittedElectronsFromL0', 
+__all__ = (   'BiKalmanFittedMuons',
+              'BiKalmanFittedNoPIDsMuons',
+              'BiKalmanFittedElectrons',
+              'BiKalmanFittedNoPIDsElectrons',
+              'BiKalmanFittedElectronsFromL0',
+              'BiKalmanFittedNoDLLCutElectronsFromL0', 
               'BiKalmanFittedDownElectrons', 
+              'BiKalmanFittedNoPIDsDownElectrons',
               'BiKalmanFittedKaons', 
               'BiKalmanFittedPions',
               'BiKalmanFittedDownPions',
@@ -303,9 +355,13 @@ BiKalmanFittedDownPions     = bindMembers( None, [ BiKalmanFittedChargedDownProt
 BiKalmanFittedProtons       = bindMembers( None, [ BiKalmanFittedChargedRichHadronProtoMaker, Hlt2BiKalmanFittedProtons 	] )
 BiKalmanFittedDownProtons   = bindMembers( None, [ BiKalmanFittedChargedDownProtoMaker      , Hlt2BiKalmanFittedDownProtons ] )
 BiKalmanFittedMuons         = bindMembers( None, [ BiKalmanFittedMuonProtoMaker				, Hlt2BiKalmanFittedMuons 	] )
-BiKalmanFittedElectrons           = bindMembers( None, [ BiKalmanFittedChargedCaloProtoMaker		, Hlt2BiKalmanFittedElectrons 	] ) 
+BiKalmanFittedNoPIDsMuons   = bindMembers( None, [ BiKalmanFittedMuonProtoMaker                         , Hlt2BiKalmanFittedNoPIDsMuons ] )
+BiKalmanFittedElectrons           = bindMembers( None, [ BiKalmanFittedChargedCaloProtoMaker		, Hlt2BiKalmanFittedElectrons 	] )
+BiKalmanFittedNoPIDsElectrons     = bindMembers( None, [ BiKalmanFittedChargedCaloProtoMaker            , Hlt2BiKalmanFittedNoPIDsElectrons ] )
 BiKalmanFittedElectronsFromL0     = bindMembers( None, [ BiKalmanFittedElectronFromL0Maker	   	, Hlt2BiKalmanFittedElectronsFromL0 	] ) 
+BiKalmanFittedNoDLLCutElectronsFromL0 = bindMembers( None, [ BiKalmanFittedElectronFromL0Maker                  , Hlt2BiKalmanFittedNoDLLCutElectronsFromL0 ] )
 BiKalmanFittedDownElectrons           = bindMembers( None, [ BiKalmanFittedChargedCaloDownProtoMaker		, Hlt2BiKalmanFittedDownElectrons 	] ) 
+BiKalmanFittedNoPIDsDownElectrons     = bindMembers( None, [ BiKalmanFittedChargedCaloDownProtoMaker            , Hlt2BiKalmanFittedNoPIDsDownElectrons ] )
 BiKalmanFittedRichPions     = bindMembers( None, [ BiKalmanFittedChargedRichHadronProtoMaker, Hlt2BiKalmanFittedRichPions 	] )
 BiKalmanFittedRichKaons     = bindMembers( None, [ BiKalmanFittedChargedRichHadronProtoMaker, Hlt2BiKalmanFittedRichKaons 	] )
 BiKalmanFittedRichProtons   = bindMembers( None, [ BiKalmanFittedChargedRichHadronProtoMaker , Hlt2BiKalmanFittedRichProtons ] )
