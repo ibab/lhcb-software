@@ -39,7 +39,7 @@ use           BenderExample  v25r3   Ex
 use           BenderTutor    v25r3   Tutorial
 
 # =========== template of user module/script ==================================
-use           BenderUser     v20r0   Phys 
+use           BenderUser     v25r5   Phys 
 
 # Declare this as a container package
 apply_pattern container_package
