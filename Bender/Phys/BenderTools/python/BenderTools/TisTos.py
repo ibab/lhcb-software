@@ -852,7 +852,7 @@ def tistos_merge ( dbase , tistos = {} ) :
             trigs   = dbase  [ particle ]
             trigs_m = merged [ particle ]
             ## loop over trigger-sets 
-            for t in trigs_n :
+            for t in trigs_m :
                 ## new key?
                 if not trigs_m.has_key ( t ) :
                     trigs_m [ t ] = copy.deepcopy ( trigs[t] )
