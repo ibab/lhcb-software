@@ -4,9 +4,13 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2015-03-19 - Chris Jones
+ - Forcibly set the Context correctly before anything else, in all used 
+   configurables.
+
 ! 2015-03-13 - Chris Jones
  - Do not append final RichPID merger to algorithm sequence if PID is 
-   globallly turned off.
+   globally turned off.
 
 ! 2015-03-11 - Chris Jones
  - Fix a small problem in the configurables that cause custom settings to

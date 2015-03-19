@@ -481,6 +481,25 @@ class RichRecSysBaseConf(RichConfigurableUser):
 #  @date   15/08/2008
 class RichRecSysConf(RichRecSysBaseConf) :
 
+    ## Set context correctly in all configurables
+    def propagateContext(self,groupConfig,context) :
+        # Main configurable
+        groupConfig.setProp("Context",context)
+        # sub configurables
+        groupConfig.trackConfig().setProp("Context",context)
+        groupConfig.pixelConfig().setProp("Context",context)
+        groupConfig.photonConfig().setProp("Context",context)
+        groupConfig.gpidConfig().setProp("Context",context)
+        groupConfig.ckResConfig().setProp("Context",context)
+        # Main configurable RichTools
+        groupConfig.richTools().setProp("Context",context)
+        # sub configurables RichTools
+        groupConfig.trackConfig().richTools().setProp("Context",context)
+        groupConfig.pixelConfig().richTools().setProp("Context",context)
+        groupConfig.photonConfig().richTools().setProp("Context",context)
+        groupConfig.gpidConfig().richTools().setProp("Context",context)
+        groupConfig.ckResConfig().richTools().setProp("Context",context)
+        
     ## Propagate all options to used configurables
     def propagateAllOptions(self,groupConfig) :
         
@@ -515,14 +534,13 @@ class RichRecSysConf(RichRecSysBaseConf) :
     ## Get the 'best' context to use for an algorithm without a clear track type (so pixel based etc.)
     def getBestContext(self):
         cont = self.getProp("Context")
-        #confs = self.getAllTrackGroupConfs()
         groups = self.getProp("TrackTypeGroups")
         if len(groups) > 0 : cont += self.trackGroupName(groups[0])
         return cont
 
     ## @brief Apply the configuration to the configured GaudiSequencer
     def applyConf(self) :
-        
+
         # Common stuff
         self.applyCommonConf()
 
@@ -559,7 +577,7 @@ class RichRecSysConf(RichRecSysBaseConf) :
                                           TrackLocation = tracksLoc )
                 fit = ConfiguredFit("RefitRichTracks",tracksLoc)
                 #init.OutputLevel = 1
-                #fit.OutputLevel = 1
+                #fit.OutputLevel  = 1
                 sequence.Members += [ init, fit ]
 
             #-----------------------------------------------------------------------------
@@ -615,8 +633,8 @@ class RichRecSysConf(RichRecSysBaseConf) :
                 # Context for this group
                 groupcont = self.getConfContext(tkTypeGroup)
 
-                 # Set context with group name
-                groupConfig.setProp("Context",groupcont)
+                # Set context with group name
+                self.propagateContext( groupConfig, groupcont )
 
                 # Propagate all options
                 self.propagateAllOptions( groupConfig )
@@ -631,8 +649,7 @@ class RichRecSysConf(RichRecSysBaseConf) :
                 # Turn off splitting again
                 groupConfig.setProp("TrackTypeGroups",[])
                 # Proper context for this group
-                groupConfig.setProp("Context",groupcont)
-                groupConfig.richTools().setProp("Context",groupcont)
+                self.propagateContext( groupConfig, groupcont )
  
                 # Clone tool registry tool list
                 groupConfig.toolRegistry().Tools = self.toolRegistry().Tools
@@ -650,8 +667,7 @@ class RichRecSysConf(RichRecSysBaseConf) :
                 groupConfig.trackConfig().setProp("TrackCuts",tkCuts)
 
                 # Make a sequence for this track group
-                tkGroupSeq = self.makeRichAlg(GaudiSequencer,
-                                              "RichRec"+self.getConfContext(tkTypeGroup)+"Seq")
+                tkGroupSeq = self.makeRichAlg(GaudiSequencer,"RichRec"+groupcont+"Seq")
                 sequence.Members += [tkGroupSeq]
                 groupConfig.setProp("RecoSequencer",tkGroupSeq)
 
