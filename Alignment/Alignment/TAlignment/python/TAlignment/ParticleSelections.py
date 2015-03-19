@@ -24,6 +24,7 @@ class ParticleSelection:
 # cuts here as well.
 ##################################################################
 def configuredParticleListFromDST( ParticleLocation ) :
+    from Configurables import TrackParticleRefitter
     # create a sequence to refit and monitor
     name = ParticleLocation
     name.replace("Event","")
@@ -85,9 +86,9 @@ def MinimalRichSequence():
     richSeqName         = Escher()._instanceName(RichRecSysConf)
     richSeq             = GaudiSequencer(richSeqName+"Seq")
     richSeq.MeasureTime = True
-    richConf            = RichRecSysConf(RecSysConf().richRecConfName)
+    richConf            = RichRecSysConf( "RichOfflineRec" )
     richConf.DataType   = Escher().getProp( "DataType" )
-    richConf.Context    = "HLT"
+#    richConf.Context    = "HLT"
     #enable 'fast' PID settings
     richConf.PidConfig          = "FastGlobal"
     # only consider the Pion and Kaon hypos (instead of the full list. This means you will
