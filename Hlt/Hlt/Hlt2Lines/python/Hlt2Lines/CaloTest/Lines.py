@@ -20,5 +20,5 @@ class CaloTestLines(Hlt2LinesConfigurableUser) :
         stages = {'Photons' : [Photons(self.getProp('UseFullCalo'))]}
         line = Hlt2Line('CaloTest',
                         prescale  = self.prescale,
-                        algos     = self.algorithms(stages)['Photons']
+                        algos     = self.algorithms(stages)['Photons'],
                         postscale = self.postscale)
