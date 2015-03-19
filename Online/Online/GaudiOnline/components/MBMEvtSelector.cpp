@@ -39,6 +39,8 @@ namespace LHCb  {
     MBMEvtSelector*       m_onlineSel;
     MBM::Consumer*        m_consumer;
     int                   m_partID;
+    bool                  m_decodeValue;
+
     /// Connect to regular MBM buffer
     StatusCode connectMBM(const std::string& input);
   public:
@@ -106,6 +108,9 @@ namespace LHCb  {
       */
     virtual StatusCode resetCriteria(const std::string& cr,Context& c)const;
 
+    bool beIntelligent() const {  return m_intelligentSetup;  }
+    bool processTAE() const    {  return m_tae;               }
+
     /// Service Constructor
     MBMEvtSelector(const std::string& name, ISvcLocator* svcloc);
 
@@ -114,14 +119,18 @@ namespace LHCb  {
 
   protected:
     /// Data Members
-    /// Reference to MEP manager service
-    LHCb::IMEPManager*  m_mepMgr;
-    /// Maximum retries for consecutive events before going to error
-    int                 m_maxRetry;
     /// Property: Name of the MEP manager (Defule=MEPManager)
     std::string         m_mepManagerName;
+    /// Reference to MEP manager service
+    LHCb::IMEPManager*  m_mepMgr;
     /// Current context
     mutable OnlineContext* m_currContext;
+    /// Maximum retries for consecutive events before going to error
+    int                 m_maxRetry;
+    /// Have intelligent setup and recognize data input
+    bool                m_intelligentSetup;
+    /// Need to if TAEs should be processed (from run-info)
+    bool                m_tae;
   };
 }
 #endif // GAUDIONLINE_MBMEVTSELECTOR_H
@@ -203,6 +212,7 @@ using namespace LHCb;
 MBMContext::MBMContext(MBMEvtSelector* s)
   : OnlineContext(s), m_onlineSel(s), m_consumer(0), m_partID(0)
 {
+  m_decodeValue = s->mustDecode();
 }
 
 StatusCode MBMContext::releaseEvent()  {
@@ -271,6 +281,19 @@ StatusCode MBMContext::receiveEvent()  {
 	}
       }
       const MBM::EventDesc& e = m_consumer->event();
+#if 0
+      if ( m_onlineSel->beIntelligent() )   {
+	if ( m_onlineSel->processTAE() && e.type == EVENT_TYPE_MEP )  {
+	  m_sel->setDecode(false);
+	}
+	else if ( e.type == EVENT_TYPE_EVENT )  {
+	  m_sel->setDecode(false);
+	}
+	else {
+	  m_sel->setDecode(m_decodeValue);
+	}
+      }
+#endif
       // The event is a MEP with multiple events, which must be decoded:
       if ( m_sel->mustDecode() && e.type == EVENT_TYPE_MEP )  {
         return convertMEP(m_partID,e);
@@ -379,6 +402,8 @@ MBMEvtSelector::MBMEvtSelector(const string& nam, ISvcLocator* svc)
 {
   m_input = "Events";
   m_decode = true;
+  declareProperty("IntelligentSetup",m_intelligentSetup=false);
+  declareProperty("TAE",m_tae=false);
   declareProperty("MaxRetry",m_maxRetry=-1);
   declareProperty("MEPManager",m_mepManagerName="MEPManager");
 }
