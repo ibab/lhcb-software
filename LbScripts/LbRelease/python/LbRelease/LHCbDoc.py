@@ -723,6 +723,7 @@ class Doc(object):
             "*/doc/MainPage.h",
             "*/Panoramix/doc/doxygen/*",
             "*/Panoramix/doc/h/*",
+            "*/qcustomplot.cpp",
             ]
         doxycfg["EXCLUDE_PATTERNS"] = excludes
         files = []
