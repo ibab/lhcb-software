@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2015-03-20 - Liang Sun
+ - QMTest: Condition path changed in the scripts for the Updated DQFLAGS.db
+
 ! 2015-03-19 - Liang Sun
  - QMTest: Update DQFLAGS.db to remove the xml extension in one of its node paths
 

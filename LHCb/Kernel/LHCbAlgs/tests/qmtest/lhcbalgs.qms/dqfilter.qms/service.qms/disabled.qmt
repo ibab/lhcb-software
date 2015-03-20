@@ -23,7 +23,7 @@ dqf.AcceptTool = DQAcceptTool(OutputLevel = VERBOSE) # public tool
 dqf.AcceptTool.addTool(BasicDQFilter, "Filter")
 #dqf.AcceptTool.Filter.IgnoredFlags = ["OtherDET"]
 dqf.AcceptTool.addTool(CondDBDQScanner, "Scanner")
-dqf.AcceptTool.Scanner.ConditionPath = "/Conditions/DQ/Flags.xml" # path in the DB
+dqf.AcceptTool.Scanner.ConditionPath = "/Conditions/DQ/Flags" # path in the DB
 dqf.AcceptTool.Scanner.OutputLevel = VERBOSE
 
 testCond = TestCond("TestCond")
