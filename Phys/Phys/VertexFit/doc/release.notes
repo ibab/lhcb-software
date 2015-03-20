@@ -4,6 +4,9 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+! 2015-03-20 - Eduardo Rodrigues
+ - Fixed typo in forward reference of PVReFitterAlg.h.
+
 ! 2015-03-16 - Sascha Stahl
  - Added deprecation warning to PVTrackRemover.
 

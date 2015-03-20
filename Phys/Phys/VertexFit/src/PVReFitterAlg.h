@@ -9,7 +9,7 @@
 // From LHCb
 #include "Kernel/Particle2Vertex.h"
 
-class IPVReffitter;
+class IPVReFitter;
 class IPVOfflineTool;
 class ILifetimeFitter;
 
