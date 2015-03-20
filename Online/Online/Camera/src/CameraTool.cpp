@@ -14,8 +14,8 @@
 #include <boost/regex.hpp>
 
 // DIM
-#include "dim/dis.hxx"
-#include "OnlineBase/RTL/rtl.h"
+#include "dis.hxx"
+#include "RTL/rtl.h"
 
 #include <sstream>
 

@@ -4,6 +4,9 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+! 2015-03-20 - Chris Jones
+ - Fix DIM header location.
+
 ! 2014-09-09 - Marco Clemencic
  - Minor change to the CMake configuration to avoid pointless rebuilds.
 
