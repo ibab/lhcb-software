@@ -17,7 +17,6 @@ def run(index):
     while True:
         command = com.get_command()
         if command == 'configure' and state == State.NOT_READY:
-            sys.path.insert(0, os.environ['TMVASYS']+'/test')
             import L0_noHlt1_histosGen_Multi
             state = State.READY
         elif command == 'start' and state == State.READY:
