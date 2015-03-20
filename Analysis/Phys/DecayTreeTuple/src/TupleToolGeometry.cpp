@@ -39,12 +39,12 @@ DECLARE_TOOL_FACTORY( TupleToolGeometry )
     TupleToolBase ( type, name , parent )
     , m_dist(0)
     , m_dva(0)
-    , m_pvReFitterName(0)
+    , m_pvReFitterName( "LoKi::PVReFitter:PUBLIC" )
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty("RefitPVs",m_refitPVs=false,
                   "Refit PVs when doing next best PV checks");
-  declareProperty("PVReFitter", m_pvReFitterName = "LoKi::PVReFitter:PUBLIC",
+  declareProperty("PVReFitter", m_pvReFitterName,
                   "PV refitter algorithm name (':PUBLIC' at end of algo name makes sure a public instance is used)" );
   declareProperty("FillMultiPV",m_fillMultiPV=false,
                   "Fill Multi PV arrays");
