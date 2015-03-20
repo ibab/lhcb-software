@@ -4,12 +4,15 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2015-03-20 - Eduardo Rodrigues
+ - Test commonparticles.qms/test_standardintermediate_reco14_run.qmt updated.
+
 ! 2015-03-19 - Eduardo Rodrigues
-  - Updated option files tests/options/DVTestWriteDst.py and
-    tests/options/DVReadKs.py since necessary DST files have been copied over
-    from CASTOR (a private user area deleted by CERN!) to
-    /eos/lhcb/grid/prod/lhcb/swtest/lhcb/swtest/.
-  - Test commonparticles.qms/test_standardintermediate_reco14_run.qmt updated.
+ - Updated option files tests/options/DVTestWriteDst.py and
+   tests/options/DVReadKs.py since necessary DST files have been copied over
+   from CASTOR (a private user area deleted by CERN!) to
+   /eos/lhcb/grid/prod/lhcb/swtest/lhcb/swtest/.
+ - Test commonparticles.qms/test_standardintermediate_reco14_run.qmt updated.
 
 !======================= DaVinciTests v2r30 2015-03-16 =======================
 
