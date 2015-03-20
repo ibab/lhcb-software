@@ -4,6 +4,10 @@
 ! Purpose     : Distribution of parametrization data files
 !-----------------------------------------------------------------------------
 
+! 2015-03-20 - Patrick Spradlin
+ + data/Hlt2Dst2PiD02HHX_BDTParams_v0r0.txt
+   Added initial version of lookup table for an inclusive D* trigger in Hlt2.
+
 ! 2015-03-16 - Murilo Rangel
  - Added two jet energy correction files for RunI, for cone size 0.7 and 0.5
 
