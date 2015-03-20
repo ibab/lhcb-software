@@ -115,8 +115,28 @@ if __name__ == '__main__' :
     print '*'*120  
     
     ## configure the job:
+    '/MC/2012/Beam4000GeV-2012-MagUp-Nu2.5-Pythia6/Sim08e/Digi13/Trig0x409f0045/Reco14a/Stripping20NoPrescalingFlagged/13144004/ALLSTREAMS.DST'
     inputdata = [
-        '/lhcb/MC/MC10/ALLSTREAMS.DST/00008919/0000/00008919_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 90 ) 
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000245_1.allstreams.dst' ,
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000090_1.allstreams.dst' ,
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000046_1.allstreams.dst' ,
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000038_1.allstreams.dst' ,
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000051_1.allstreams.dst' , 
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000012_1.allstreams.dst' ,
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000275_1.allstreams.dst' ,
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000186_1.allstreams.dst' ,
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000262_1.allstreams.dst' ,
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000103_1.allstreams.dst' ,
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000025_1.allstreams.dst' ,
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000269_1.allstreams.dst' ,
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000095_1.allstreams.dst' , 
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000124_1.allstreams.dst' ,
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000149_1.allstreams.dst' ,
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000089_1.allstreams.dst' ,
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000120_1.allstreams.dst' ,
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000070_1.allstreams.dst' ,
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000184_1.allstreams.dst' ,
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000018_1.allstreams.dst'
         ]
     
     configure( inputdata , castor  = True )  

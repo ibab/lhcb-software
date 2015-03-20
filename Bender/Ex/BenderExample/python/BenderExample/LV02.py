@@ -106,7 +106,7 @@ class LV02Alg(AlgoMC) :
             m123 = d.mass(1,2,3) / Units.GeV
             if not 1.8 < m123 < 2.1 : continue
             chi2 = VCHI2 ( d )
-            if not 0.0 <= chi2 < 25 : continue 
+            if not 0.0 <= chi2 < 16 : continue 
             mc1 = mcBsK  ( d )
             mc2 = mcBsPi ( d )
             if mc1 or mc2 : 
@@ -247,7 +247,7 @@ if __name__ == '__main__' :
     configure( inputdata , castor = True )
     
     ## run the job
-    run(1000)
+    run(600)
     
 # =============================================================================
 # The END 

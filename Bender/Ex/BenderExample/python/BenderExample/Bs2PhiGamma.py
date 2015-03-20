@@ -168,6 +168,22 @@ def configure ( datafiles , catalogs  = [] , castor = False ) :
     setData ( datafiles , catalogs , castor ) 
     
     daVinci.UserAlgorithms  = [ 'Bs2PhiGamma']
+    
+    from PhysConf.Filters import LoKi_Filters
+    fltrs = LoKi_Filters(
+        HLT1_Code  = "HLT_PASS_RE('Hlt1.*(Gamma|Photon).*')"  ,
+        HLT2_Code  = "HLT_PASS_RE('Hlt2.*(Gamma|Photon).*')"  ,
+        STRIP_Code = "HLT_PASS_RE('.*(Gamma|Photon).*')"          
+        )
+    
+    daVinci.EventPreFilters = fltrs.filters ('RequireL0')
+
+    
+    from StandardParticles import StdTightKaons 
+    InputParticles = [
+        StdTightKaons  . outputLocation ()  ,
+        'Phys/StdLooseAllPhotons/Particles'
+        ]
 
     ##
     ## Dynamic Configuration: Jump into the wonderful world of GaudiPython 
@@ -182,10 +198,7 @@ def configure ( datafiles , catalogs  = [] , castor = False ) :
         # print histos 
         HistoPrint     = True ,
         # input particles 
-        Inputs = [
-        'Phys/StdLooseKaons/Particles'      ,
-        'Phys/StdLooseAllPhotons/Particles'
-        ]
+        Inputs = InputParticles
         )
     
     return SUCCESS 
@@ -208,7 +221,7 @@ if '__main__' == __name__ :
     
     configure ( inputdata , castor = True ) 
     
-    run(500) 
+    run(1000) 
 
 # =============================================================================
 # The END 
