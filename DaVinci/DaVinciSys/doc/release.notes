@@ -5,9 +5,9 @@ Purpose             : LHCb physics analysis application
 
 </PRE><H1><A NAME=v36r5>2015-03-16 DaVinci v36r5</A></H1><PRE>
 
-Development release for 2015 data taking, based on Gaudi v26r0,
-LHCb v38r4, Lbcom v16r3, Rec v17r4, Phys v19r4, Analysis v13r3
-and Stripping v9r4. Uses LCG_72root6 with ROOT 6.02.03.
+Development release for 2015 data taking, based on Gaudi v26r1,
+LHCb v38r5, Lbcom v16r4, Rec v17r5, Phys v19r5, Analysis v13r4
+and Stripping v9r5. Uses LCG_74root6 with ROOT 6.02.05.
 
 - Refer to the release notes of Phys, Analysis and Stripping for details
   on updates to these dependency projects.
