@@ -4,6 +4,6 @@
   <class name = "std::vector<Candidate*>" />
   <class name = "std::vector<const Candidate*>" />
   <!-- class name = "Hlt1MuonHit" / -->
-  <class name = "std::vector<Hlt1MuonHit*>" />
-  <class name = "std::vector<const Hlt1MuonHit*>" />
+  <!-- class name = "std::vector<Hlt1MuonHit*>" / -->
+  <!-- class name = "std::vector<const Hlt1MuonHit*>" / -->
 </lcgdict>

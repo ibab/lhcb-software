@@ -30,7 +30,9 @@ public:
 
    virtual void clean() = 0;
 
-   virtual const std::vector<Candidate> seeds() const = 0;
-   
+   virtual const std::vector<Candidate>& seeds() const = 0;
+
+   virtual const std::array<std::pair<double,double>,4>& foiInfo() const = 0;
+
 };
 #endif // HLT1MUONS_IMATCHVELOMUON_H

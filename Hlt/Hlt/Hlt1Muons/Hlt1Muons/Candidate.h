@@ -13,8 +13,8 @@
 #include <Event/Track.h>
 #include <Event/State.h>
 
-// Include files
-#include "Hlt1MuonHit.h"
+// from MuonID
+#include <MuonID/CommonMuonHit.h>
 
 /** @class Candidate Candidate.h
  *  Hlt1Muons candidate.
@@ -26,7 +26,7 @@ class Candidate final
 {
   public:
     /// Standard constructor
-     Candidate( const LHCb::Track* track, Hlt1ConstMuonHits hits, LHCb::State::Location stateLocation )
+     Candidate( const LHCb::Track* track, CommonConstMuonHits hits, LHCb::State::Location stateLocation )
         : m_track(track)
         , m_hits( std::move(hits) )
     {
@@ -37,13 +37,13 @@ class Candidate final
     }
 
      Candidate( const LHCb::Track* track )
-       : Candidate( track, Hlt1ConstMuonHits(), LHCb::State::EndVelo )
+       : Candidate( track, CommonConstMuonHits(), LHCb::State::EndVelo )
     {
         m_hits.reserve( 5 );
     }
 
      Candidate( const LHCb::Track* track, LHCb::State::Location stateLocation )
-       : Candidate( track, Hlt1ConstMuonHits(), stateLocation )
+       : Candidate( track, CommonConstMuonHits(), stateLocation )
     {
         m_hits.reserve( 5 );
     }
@@ -102,24 +102,24 @@ class Candidate final
         return 1. / sqrt( 1 + ty2() );
     }
 
-    Hlt1ConstMuonHits::iterator hitsBegin()
+    CommonConstMuonHits::iterator hitsBegin()
     {
         return m_hits.begin();
     }
-    Hlt1ConstMuonHits::iterator hitsEnd()
+    CommonConstMuonHits::iterator hitsEnd()
     {
         return m_hits.end();
     }
 
-    void addHit( const Hlt1MuonHit* hit )
+    void addHit( const CommonMuonHit* hit )
     {
         m_hits.push_back( hit );
     }
-    Hlt1ConstMuonHits& hits()
+    CommonConstMuonHits& hits()
     {
         return m_hits;
     }
-    const Hlt1ConstMuonHits& hits() const
+    const CommonConstMuonHits& hits() const
     {
         return m_hits;
     }
@@ -190,7 +190,7 @@ class Candidate final
     double m_slopeY = 0;
     double m_p = 0;
 
-    Hlt1ConstMuonHits m_hits;
+    CommonConstMuonHits m_hits;
 
     double m_chi2 = 0;
     unsigned int m_nDoF = 0;

@@ -15,13 +15,15 @@
 
 // Hlt1Muons
 #include <Hlt1Muons/Candidate.h>
-#include <Hlt1Muons/Hlt1MuonHit.h>
+
+// from MuonID
+#include <MuonID/CommonMuonHit.h>
 
 namespace LHCb
 {
 class Track;
 }
-class Hlt1MuonHitManager;
+class CommonMuonHitManager;
 class Candidate;
 
 namespace Hlt
@@ -68,7 +70,7 @@ class HltVeloIsMuon : public extends1<GaudiHistoTool, ITracksFromTrack>
     bool m_setQOverP;
 
     // Tools and services
-    Hlt1MuonHitManager* m_hitManager;
+    CommonMuonHitManager* m_hitManager;
     ILHCbMagnetSvc* m_fieldSvc;
 
     // Muon Detector
@@ -94,7 +96,7 @@ class HltVeloIsMuon : public extends1<GaudiHistoTool, ITracksFromTrack>
 
 
     // Temporary storage
-    std::unique_ptr<Hlt1MuonHit> m_magnetHit;
+    std::unique_ptr<CommonMuonHit> m_magnetHit;
     std::vector<Candidate>  m_seeds;
 
     std::array<double,nRegions> m_regionFoIX;

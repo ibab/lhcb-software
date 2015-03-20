@@ -12,14 +12,16 @@
 // Hlt1Muons
 #include <Hlt1Muons/Candidate.h>
 #include <Hlt1Muons/IMatchVeloMuon.h>
-#include <Hlt1Muons/Hlt1MuonHit.h>
+
+// from MuonID
+#include <MuonID/CommonMuonHit.h>
 
 namespace LHCb
 {
    class Track;
 }
 class ILHCbMagnetSvc;
-class Hlt1MuonHitManager;
+class CommonMuonHitManager;
 class Candidate;
 
 /** @class MatchVeloMuon MatchVeloMuon.h
@@ -40,7 +42,7 @@ public:
 
    StatusCode tracksFromTrack( const LHCb::Track& seed,
                                std::vector<LHCb::Track*>& tracks ) ;
- 
+
 private:
 
    // Properties
@@ -61,14 +63,15 @@ private:
    bool m_setQOverP;
 
    // Tools
-   Hlt1MuonHitManager* m_hitManager;
+   CommonMuonHitManager* m_hitManager;
 
    // Services
    ILHCbMagnetSvc* m_fieldSvc;
 
    // Temporary storage
-   std::unique_ptr<Hlt1MuonHit> m_magnetHit;
+   std::unique_ptr<CommonMuonHit> m_magnetHit;
    std::vector<Candidate> m_seeds;
+   std::array<std::pair<double,double>,4> m_foiInfo;
 
    // Helper methods
    void i_findSeeds( const Candidate& seed, const unsigned int seedStation );
@@ -89,11 +92,14 @@ private:
       return m_kickScale / fabs( dtx ) + m_kickOffset;
    }
  
-   const std::vector<Candidate> seeds() const {
+   const std::vector<Candidate>& seeds() const {
       return m_seeds;
    }
 
-
+   const std::array<std::pair<double,double>,4>& foiInfo() const override {
+     return m_foiInfo;
+   }
+ 
     // Interface methods
     void findSeeds( const Candidate& seed, const unsigned int seedStation ) override;
 

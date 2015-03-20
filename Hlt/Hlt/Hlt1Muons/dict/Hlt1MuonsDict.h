@@ -14,8 +14,8 @@ namespace
     // begin instantiations
     std::vector<Candidate*>         _i1;
     std::vector<const Candidate*>   _i2;
-    std::vector<Hlt1MuonHit*>       _i3;
-    std::vector<const Hlt1MuonHit*> _i4;
+    // std::vector<Hlt1MuonHit*>       _i3;
+    // std::vector<const Hlt1MuonHit*> _i4;
     // end instantiations
   };
 }

@@ -16,12 +16,14 @@
 
 // Hlt1Muons
 #include <Hlt1Muons/Candidate.h>
-#include <Hlt1Muons/Hlt1MuonHit.h>
 
 // local
 #include "HltVeloIsMuon.h"
-#include "Hlt1MuonHitManager.h"
-#include "Hlt1MuonStation.h"
+
+// from MuonID
+#include "MuonID/CommonMuonHitManager.h"
+#include "MuonID/CommonMuonStation.h"
+#include <MuonID/CommonMuonHit.h>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltVeloIsMuon
@@ -70,7 +72,7 @@ StatusCode Hlt::HltVeloIsMuon::initialize()
     StatusCode sc = GaudiHistoTool::initialize();
     if ( sc.isFailure() ) return sc;
 
-    m_hitManager = tool<Hlt1MuonHitManager>( "Hlt1MuonHitManager" );
+    m_hitManager = tool<CommonMuonHitManager>( "CommonMuonHitManager" );
 
     // Magnetic Field
     m_fieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
@@ -209,11 +211,10 @@ void Hlt::HltVeloIsMuon::findSeeds( const Candidate& veloSeed,
     double yMagnet = 0., errYMagnet = 0.;
     veloSeed.yStraight( zMagnet, yMagnet, errYMagnet );
 
-    m_magnetHit.reset(new Hlt1MuonHit{LHCb::MuonTileID{}, xMagnet, errXMagnet, yMagnet,
-                                  errYMagnet,         zMagnet, 0.});
+    m_magnetHit.reset(new CommonMuonHit{LHCb::MuonTileID{}, xMagnet, errXMagnet, yMagnet, errYMagnet, zMagnet, 0., false});
 
     double dSlope = dtx( m_minMomentum );
-    const Hlt1MuonStation& station = m_hitManager->station( seedStation );
+    const CommonMuonStation& station = m_hitManager->station( seedStation );
     double zStation = station.z();
 
     // Use sum rule for tan and approximate tan( dSlope ) with dSlope to
@@ -238,7 +239,7 @@ void Hlt::HltVeloIsMuon::findSeeds( const Candidate& veloSeed,
                 << yMax << ")" << endmsg;
         debug() << "Hits in seed station:" << endmsg;
         for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
-            Hlt1MuonHitRange hits = m_hitManager->hits( xMin, xMax, seedStation, r );
+            CommonMuonHitRange hits = m_hitManager->hits( xMin, xMax, seedStation, r );
             for ( const auto& hit : hits ) {
                 debug() << hit.x() << " " << hit.y() << endmsg;
             }
@@ -284,7 +285,7 @@ void Hlt::HltVeloIsMuon::addHits( Candidate& seed )
         unsigned int s = order[i] - 1;
 
         // Get the station we're looking at.
-        const Hlt1MuonStation& station = m_hitManager->station( s );
+        const CommonMuonStation& station = m_hitManager->station( s );
         double zStation = station.z();
 
         // Clear and cache region FoIs
@@ -311,7 +312,7 @@ void Hlt::HltVeloIsMuon::addHits( Candidate& seed )
         const double xMax = xMuon + maxFoIX;
 
         // Look for the closest hit inside the search window
-        const Hlt1MuonHit* closest = nullptr;
+        const CommonMuonHit* closest = nullptr;
         double minDist2 = 0;
         for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
             if ( !station.overlaps( r,  xMin, xMax, yMin, yMax ) ) continue; // TODO: move into loop control...
@@ -344,11 +345,11 @@ void Hlt::HltVeloIsMuon::addHits( Candidate& seed )
 //=============================================================================
 void Hlt::HltVeloIsMuon::fitCandidate( Candidate& candidate ) const
 {
-    const Hlt1ConstMuonHits& hits = candidate.hits();
+    const CommonConstMuonHits& hits = candidate.hits();
 
     double sumWeights = 0., sumZ = 0., sumX = 0.;
 
-    for ( const Hlt1MuonHit* hit : hits ) {
+    for ( const CommonMuonHit* hit : hits ) {
         double err = 0.5 * hit->dx();
         double weight = 1.0 / ( err * err );
         sumWeights += weight;
@@ -358,7 +359,7 @@ void Hlt::HltVeloIsMuon::fitCandidate( Candidate& candidate ) const
     double ZOverWeights = sumZ / sumWeights;
 
     double b = 0, sumTmp2 = 0;
-    for ( const Hlt1MuonHit* hit : hits ) {
+    for ( const CommonMuonHit* hit : hits ) {
         double err = hit->dx() / 2.;
         double tmp = ( hit->z() - ZOverWeights ) / err;
         sumTmp2 += tmp * tmp;
@@ -372,7 +373,7 @@ void Hlt::HltVeloIsMuon::fitCandidate( Candidate& candidate ) const
     // double errB = sqrt( 1. / sumTmp2 );
 
     double chi2 = std::accumulate( std::begin(hits), std::end(hits), 0.0, 
-                                   [=](double chi2, const Hlt1MuonHit* hit)  {
+                                   [=](double chi2, const CommonMuonHit* hit)  {
                                         double err = hit->dx() / 2.;
                                         double tmp = ( hit->x() - a - b * hit->z() ) / err;
                                         return chi2 += tmp * tmp;

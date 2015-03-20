@@ -14,12 +14,14 @@
 
 // Hlt1Muons
 #include <Hlt1Muons/Candidate.h>
-#include <Hlt1Muons/Hlt1MuonHit.h>
 
 // local
 #include "MatchVeloMuon.h"
-#include "Hlt1MuonHitManager.h"
-#include "Hlt1MuonStation.h"
+
+// from MuonID
+#include "MuonID/CommonMuonHitManager.h"
+#include "MuonID/CommonMuonStation.h"
+#include <MuonID/CommonMuonHit.h>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MatchVeloMuon
@@ -69,7 +71,7 @@ StatusCode MatchVeloMuon::initialize()
    StatusCode sc = GaudiHistoTool::initialize();
    if ( sc.isFailure() ) return sc;
 
-   m_hitManager = tool<Hlt1MuonHitManager>( "Hlt1MuonHitManager" );
+   m_hitManager = tool<CommonMuonHitManager>( "CommonMuonHitManager" );
 
    if ( m_setQOverP ) {
       // Magnetic Field
@@ -158,10 +160,10 @@ void MatchVeloMuon::i_findSeeds( const Candidate& veloSeed,
     veloSeed.yStraight( zMagnet, yMagnet, errYMagnet );
 
     LHCb::MuonTileID id;
-    m_magnetHit.reset( new Hlt1MuonHit( id, xMagnet, errXMagnet, yMagnet, errYMagnet, zMagnet, 0. ) );
+    m_magnetHit.reset( new CommonMuonHit( id, xMagnet, errXMagnet, yMagnet, errYMagnet, zMagnet, 0., false ) );
 
     double dSlope = dtx( m_minMomentum );
-    const Hlt1MuonStation& station = m_hitManager->station( seedStation );
+    const CommonMuonStation& station = m_hitManager->station( seedStation );
     double zStation = station.z();
 
     // Use sum rule for tan and approximate tan( dSlope ) with dSlope to
@@ -172,7 +174,7 @@ void MatchVeloMuon::i_findSeeds( const Candidate& veloSeed,
     double xMin = xMagnet + dz * tanMin - m_xWindow;
     double tanMax = ( veloSeed.tx() + dSlope ) / ( 1 - veloSeed.tx() * dSlope );
     double xMax = xMagnet + dz * tanMax + m_xWindow;
-    
+
     // Calculate window in y
     double yMuon = 0., yRange = 0;
     veloSeed.yStraight( zStation, yMuon, yRange );
@@ -180,6 +182,11 @@ void MatchVeloMuon::i_findSeeds( const Candidate& veloSeed,
 
     double yMin = yMuon - yRange;
     double yMax = yMuon + yRange;
+
+    // store foi information (this info is used for visaling the M3 foi)
+    m_foiInfo[0] = std::make_pair( (xMax-xMin)/2.,yMuon );
+    m_foiInfo[1] = std::make_pair( xMin,xMax );
+    m_foiInfo[2] = std::make_pair( yMin,yMax );
 
     if ( msgLevel( MSG::DEBUG ) ) {
         debug() << "Window: (" << xMin << "," << yMin << ") -> (" << xMax << ","
@@ -223,13 +230,13 @@ void MatchVeloMuon::i_addHits( Candidate& seed )
         unsigned int s = order[i] ;
 
         // Get the station we're looking at.
-        const Hlt1MuonStation& station = m_hitManager->station( s );
+        const CommonMuonStation& station = m_hitManager->station( s );
         double zStation = station.z();
 
         // Calculate window in x and y for this station
         double yMuon = 0., yRange = 0;
         seed.yStraight( zStation, yMuon, yRange );
-        yRange = m_yWindow; // TODO: isn't this supposed to by yRange += m_yWindow ??
+        yRange = m_yWindow;
 
         const double yMin = yMuon - yRange;
         const double yMax = yMuon + yRange;
@@ -241,7 +248,7 @@ void MatchVeloMuon::i_addHits( Candidate& seed )
         const double xMax = xMuon + xRange;
 
         // Look for the closest hit inside the search window
-        const Hlt1MuonHit* closest = nullptr;
+        const CommonMuonHit* closest = nullptr;
         double minDist2 = 0;
 
         for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
@@ -272,11 +279,11 @@ void MatchVeloMuon::i_addHits( Candidate& seed )
 //=============================================================================
 void MatchVeloMuon::i_fitCandidate( Candidate& candidate ) const
 {
-    const Hlt1ConstMuonHits& hits = candidate.hits();
+    const CommonConstMuonHits& hits = candidate.hits();
 
     double sumWeights = 0., sumZ = 0., sumX = 0.;
 
-    for ( const Hlt1MuonHit* hit : hits ) {
+    for ( const CommonMuonHit* hit : hits ) {
         double dx = hit->dx();
         double weight = 4.0 / ( dx * dx );
         sumWeights += weight;
@@ -287,7 +294,7 @@ void MatchVeloMuon::i_fitCandidate( Candidate& candidate ) const
 
     double sumTmp2 = 0.;
     double b = 0.;
-    for ( const Hlt1MuonHit* hit : hits ) {
+    for ( const CommonMuonHit* hit : hits ) {
         double err = hit->dx() / 2.;
         double tmp = ( hit->z() - ZOverWeights ) / err;
         sumTmp2 += tmp * tmp;
@@ -301,7 +308,7 @@ void MatchVeloMuon::i_fitCandidate( Candidate& candidate ) const
     // double errB = sqrt( 1. / sumTmp2 );
 
     double chi2 = 0.;
-    for ( const Hlt1MuonHit* hit : hits ) {
+    for ( const CommonMuonHit* hit : hits ) {
         double err = hit->dx() / 2.;
         double tmp = ( hit->x() - a - b * hit->z() ) / err;
         chi2 += tmp * tmp;

@@ -17,12 +17,14 @@
 
 // Hlt1Muons
 #include <Hlt1Muons/Candidate.h>
-#include <Hlt1Muons/Hlt1MuonHit.h>
 
 // local
 #include "MatchVeloTTMuon.h"
-#include "Hlt1MuonHitManager.h"
-#include "Hlt1MuonStation.h"
+
+// from MuonID
+#include "MuonID/CommonMuonHitManager.h"
+#include "MuonID/CommonMuonStation.h"
+#include <MuonID/CommonMuonHit.h>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MatchVeloTTMuon
@@ -46,9 +48,9 @@ MatchVeloTTMuon::MatchVeloTTMuon( const std::string& type, const std::string& na
 {
    declareInterface<ITracksFromTrack>( this ); 
 
-   declareProperty( "FoITolerance",    m_FoITolerance = 6. );
-   declareProperty( "ScaleLowMomXFoI",   m_scaleLowMomXFoI = 1.0     );
-
+   declareProperty( "FoIToleranceX",    m_FoIToleranceX = 6.  );
+   declareProperty( "FoIToleranceY",    m_FoIToleranceY = 1.5 );
+ 
    declareProperty( "MaxChi2DoFX",       m_maxChi2DoFX = 30          );
    declareProperty( "Chi2withVertPlane", m_chi2withVertPlane = false );
  
@@ -77,7 +79,7 @@ StatusCode MatchVeloTTMuon::initialize()
    if ( sc.isFailure() ) return sc;
  
    // init hit manager
-   m_hitManager = tool<Hlt1MuonHitManager>( "Hlt1MuonHitManager" );
+   m_hitManager = tool<CommonMuonHitManager>( "CommonMuonHitManager" );
    
    // init track extrapolator
    m_extrapolator = tool<ITrackExtrapolator>( "TrackParabolicExtrapolator" );
@@ -117,7 +119,8 @@ StatusCode MatchVeloTTMuon::initialize()
     }
 
     // get FoI parameters locally
-    m_FoIFactor = m_FoITolerance * FoIFactor->param<double>( "FOIfactor" );
+    m_FoIFactorX = m_FoIToleranceX * FoIFactor->param<double>( "FOIfactor" );
+    m_FoIFactorY = m_FoIToleranceY * FoIFactor->param<double>( "FOIfactor" );
     
     m_xFoIParam1 = xFOIParameters->paramVect<double>( "XFOIParameters1" );
     m_xFoIParam2 = xFOIParameters->paramVect<double>( "XFOIParameters2" );
@@ -150,8 +153,6 @@ StatusCode MatchVeloTTMuon::tracksFromTrack( const LHCb::Track& seed,
       //  Thus in each case, TT/noTT, a different implementation is called.
       //  This is the best strategy that I could come up with that does not require
       //  a new Interface for MatchVeloTTMuon. Later we try to find something better.
-      //  Note: Performance in time is low when running the public mthods findSeeds
-      //  and addHits by hand.
 
     // Check if track has a state at TT.
     if( seed.hasTT() ) { 
@@ -168,6 +169,7 @@ StatusCode MatchVeloTTMuon::tracksFromTrack( const LHCb::Track& seed,
     // if not fall back to MatchVeloMuon
     else {
         warning()<<"MatchVeloTTMuon::tracksFromTrack(): No state at TT found. Fall back to MatchVeloMuon."<< endmsg;
+
 	m_trackStateLoc = LHCb::State::EndVelo ;
       
 	Candidate veloSeed{ &seed }; 
@@ -235,7 +237,7 @@ void MatchVeloTTMuon::i_findSeeds( const Candidate& veloSeed,
 				   const unsigned int seedStation )
 {
     // extrapolation from TT to M3 station
-    const Hlt1MuonStation& station = m_hitManager->station( seedStation );
+    const CommonMuonStation& station = m_hitManager->station( seedStation );
     
     const double zStation = station.z();
     const LHCb::State* state = veloSeed.track()->stateAt( m_trackStateLoc );
@@ -247,36 +249,29 @@ void MatchVeloTTMuon::i_findSeeds( const Candidate& veloSeed,
     // Find the maximum FoI to use as a search window.
     double maxFoIX = 0, maxFoIY = 0;
     for ( unsigned int region = 0; region < nRegions; ++region ) {
-      auto foiX = m_FoIFactor * FoIX( seedStation, region, stateAtM3.p() );
-      auto foiY = m_FoIFactor * FoIY( seedStation, region, stateAtM3.p() );
+      auto foiX = m_FoIFactorX * FoIX( seedStation, region, stateAtM3.p() );
+      auto foiY = m_FoIFactorY * FoIY( seedStation, region, stateAtM3.p() );
       if ( foiX > maxFoIX ) maxFoIX = foiX;
       if ( foiY > maxFoIY ) maxFoIY = foiY;
     }
 
     // FoI boundaries
     double xMin = stateAtM3.x() - maxFoIX;
-    double xMax = stateAtM3.x() + maxFoIX;
-    // double yMin = stateAtM3.y() - maxFoIY
-    // double yMax = stateAtM3.y() + maxFoIY
-    //   reduce yFoIs. (for now m_FoITolerance is too big)
-    double yMin = stateAtM3.y() - (maxFoIY / m_FoITolerance) * (m_FoITolerance/2.);
-    double yMax = stateAtM3.y() + (maxFoIY / m_FoITolerance) * (m_FoITolerance/2.);
+    double xMax = stateAtM3.x() + maxFoIX;   
+    double yMin = stateAtM3.y() - maxFoIY;
+    double yMax = stateAtM3.y() + maxFoIY;
 
-    // Use sign information to reduce xFoI for low p tracks.
-    double down = m_fieldSvc->isDown() ? -1 :  1;
-    double q    = state->qOverP() > 0  ?  1 : -1;
-    
-    if ( stateAtM3.p() < 2 * Gaudi::Units::GeV && q * down < 0 ){
-      xMax -= m_scaleLowMomXFoI * maxFoIX;
-    }
-    if ( stateAtM3.p() < 2 * Gaudi::Units::GeV && q * down > 0 ){
-      xMin += m_scaleLowMomXFoI * maxFoIX;
-    }
-      
+    // store foi information (this info is used for visaling the M3 foi)
+    double field  = m_fieldSvc->isDown() ? -1 :  1;
+    double charge = state->qOverP() > 0  ?  1 : -1;
+    m_foiInfo[0] = std::make_pair( stateAtM3.x(),stateAtM3.y() );
+    m_foiInfo[1] = std::make_pair( xMin,xMax );
+    m_foiInfo[2] = std::make_pair( yMin,yMax );
+    m_foiInfo[3] = std::make_pair( charge, field );
+
     // debug info: print hits in M3
     if ( msgLevel( MSG::DEBUG ) ) {
-        debug() << "Window: (" << xMin << "," << yMin << ") -> (" << xMax << ","
-                << yMax << ")" << endmsg;
+        debug() << "Window: (" << xMin << "," << yMin << ") -> (" << xMax << "," << yMax << ")" << endmsg;
         debug() << "Hits in seed station:" << endmsg;
         for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
             for ( const auto& hit : m_hitManager->hits( xMin, xMax, seedStation, r ) ) {
@@ -317,10 +312,10 @@ void MatchVeloTTMuon::i_findSeeds_noTT( const Candidate& veloSeed,
     veloSeed.yStraight( zMagnet, yMagnet, errYMagnet );
 
     LHCb::MuonTileID id;
-    m_magnetHit.reset( new Hlt1MuonHit( id, xMagnet, errXMagnet, yMagnet, errYMagnet, zMagnet, 0. ) );
+    m_magnetHit.reset( new CommonMuonHit( id, xMagnet, errXMagnet, yMagnet, errYMagnet, zMagnet, 0., false ) );
 
     double dSlope = dtx( m_minMomentum );
-    const Hlt1MuonStation& station = m_hitManager->station( seedStation );
+    const CommonMuonStation& station = m_hitManager->station( seedStation );
     double zStation = station.z();
 
     // Use sum rule for tan and approximate tan( dSlope ) with dSlope to
@@ -339,6 +334,12 @@ void MatchVeloTTMuon::i_findSeeds_noTT( const Candidate& veloSeed,
 
     double yMin = yMuon - yRange;
     double yMax = yMuon + yRange;
+    
+    // store foi information
+    m_foiInfo[0] = std::make_pair( (xMax-xMin)/2.,yMuon );
+    m_foiInfo[1] = std::make_pair( xMin,xMax );
+    m_foiInfo[2] = std::make_pair( yMin,yMax );
+    m_foiInfo[3] = std::make_pair( 0, 0 );
 
     if ( msgLevel( MSG::DEBUG ) ) {
         debug() << "Window: (" << xMin << "," << yMin << ") -> (" << xMax << ","
@@ -377,11 +378,11 @@ void MatchVeloTTMuon::i_addHits( Candidate& seed )
         unsigned int s = order[i] ;
 
         // get the station we're looking at.
-        const Hlt1MuonStation& station = m_hitManager->station( s );
+        const CommonMuonStation& station = m_hitManager->station( s );
         double zStation = station.z();
 	
 	// get last hit of current seed
-	const Hlt1MuonHit* last_hit = seed.hits().back();
+	const CommonMuonHit* last_hit = seed.hits().back();
 
 	// str. line extrapolation from last hit position to the current station 
 	double dz = zStation - last_hit->z() ;
@@ -391,22 +392,23 @@ void MatchVeloTTMuon::i_addHits( Candidate& seed )
 	// Find the maximum FoI to use as a search window.
 	double maxFoIX = 0, maxFoIY = 0;
 	for ( unsigned int region = 0; region < nRegions; ++region ) {
-	  auto foiX = m_FoIFactor * FoIX( s, region, seed.p() );
-	  auto foiY = m_FoIFactor * FoIY( s, region, seed.p() );
+	  auto foiX = m_FoIFactorX * FoIX( s, region, seed.p() );
+	  auto foiY = m_FoIFactorY * FoIY( s, region, seed.p() );
 	  if ( foiX > maxFoIX ) maxFoIX = foiX;
 	  if ( foiY > maxFoIY ) maxFoIY = foiY;
 	}
 
+	// fois in subsequent stations are not scaled up, since the momentum estimate is improved after M3 seeding 
 	// y window
-        const double yMin  = yMuon - maxFoIY / m_FoITolerance;
-        const double yMax  = yMuon + maxFoIY / m_FoITolerance;
+        const double yMin  = yMuon - maxFoIY / m_FoIToleranceY;
+        const double yMax  = yMuon + maxFoIY / m_FoIToleranceY;
 
 	// x window
-	const double xMin = xMuon - maxFoIX / m_FoITolerance;
-        const double xMax = xMuon + maxFoIX / m_FoITolerance;
+	const double xMin = xMuon - maxFoIX / m_FoIToleranceX;
+        const double xMax = xMuon + maxFoIX / m_FoIToleranceX;
 
         // Look for the closest hit inside the search window
-        const Hlt1MuonHit* closest = nullptr;
+        const CommonMuonHit* closest = nullptr;
         double minDist2 = 0;
 
         for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
@@ -448,7 +450,7 @@ void MatchVeloTTMuon::i_addHits_noTT( Candidate& seed )
         unsigned int s = order[i] ;
 
         // Get the station we're looking at.
-        const Hlt1MuonStation& station = m_hitManager->station( s );
+        const CommonMuonStation& station = m_hitManager->station( s );
         double zStation = station.z();
 
         // Calculate window in x and y for this station
@@ -466,7 +468,7 @@ void MatchVeloTTMuon::i_addHits_noTT( Candidate& seed )
         const double xMax = xMuon + xRange;
 
         // Look for the closest hit inside the search window
-        const Hlt1MuonHit* closest = nullptr;
+        const CommonMuonHit* closest = nullptr;
         double minDist2 = 0;
 
         for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
@@ -498,12 +500,12 @@ void MatchVeloTTMuon::i_addHits_noTT( Candidate& seed )
 void MatchVeloTTMuon::i_fitCandidate( Candidate& candidate ) const
 {
   if ( m_chi2withVertPlane ) { 
-        const Hlt1ConstMuonHits& hits = candidate.hits();
+        const CommonConstMuonHits& hits = candidate.hits();
 
         double sumWeightsX = 0., sumZ_x = 0., sumX = 0.;
 	double sumWeightsY = 0., sumZ_y = 0., sumY = 0.;
 
-        for ( const Hlt1MuonHit* hit : hits ) {
+        for ( const CommonMuonHit* hit : hits ) {
 	    // xz plane
             double dx = hit->dx();
             double weightX = 4.0 / ( dx * dx );
@@ -523,7 +525,7 @@ void MatchVeloTTMuon::i_fitCandidate( Candidate& candidate ) const
 
         double sumTmp2X = 0., sumTmp2Y = 0.;
         double b_xz = 0., b_yz = 0.;
-        for ( const Hlt1MuonHit* hit : hits ) {
+        for ( const CommonMuonHit* hit : hits ) {
             // xz plane
 	    double errX = hit->dx() / 2.;
             double tmpX = ( hit->z() - ZOverWeightsX ) / errX;
@@ -545,7 +547,7 @@ void MatchVeloTTMuon::i_fitCandidate( Candidate& candidate ) const
         // double errB = sqrt( 1. / sumTmp2 );
         
         double chi2 = 0.;
-        for ( const Hlt1MuonHit* hit : hits ) {
+        for ( const CommonMuonHit* hit : hits ) {
 	    // xz plane
             double errX = hit->dx() / 2.;
             double tmpX = ( hit->x() - a_xz - b_xz * hit->z() ) / errX;
@@ -564,11 +566,11 @@ void MatchVeloTTMuon::i_fitCandidate( Candidate& candidate ) const
   }
 
   else {
-    const Hlt1ConstMuonHits& hits = candidate.hits();
+    const CommonConstMuonHits& hits = candidate.hits();
 
     double sumWeights = 0., sumZ = 0., sumX = 0.;
 
-    for ( const Hlt1MuonHit* hit : hits ) {
+    for ( const CommonMuonHit* hit : hits ) {
         double dx = hit->dx();
         double weight = 4.0 / ( dx * dx );
         sumWeights += weight;
@@ -579,7 +581,7 @@ void MatchVeloTTMuon::i_fitCandidate( Candidate& candidate ) const
 
     double sumTmp2 = 0.;
     double b = 0.;
-    for ( const Hlt1MuonHit* hit : hits ) {
+    for ( const CommonMuonHit* hit : hits ) {
         double err = hit->dx() / 2.;
         double tmp = ( hit->z() - ZOverWeights ) / err;
         sumTmp2 += tmp * tmp;
@@ -590,7 +592,7 @@ void MatchVeloTTMuon::i_fitCandidate( Candidate& candidate ) const
     double a = ( sumX - sumZ * b ) / sumWeights;
 
     double chi2 = 0.;
-    for ( const Hlt1MuonHit* hit : hits ) {
+    for ( const CommonMuonHit* hit : hits ) {
         double err = hit->dx() / 2.;
         double tmp = ( hit->x() - a - b * hit->z() ) / err;
         chi2 += tmp * tmp;

@@ -4,6 +4,13 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+! 2015-03-20 - Vasileios Syropoulos
+ - MatchVeloMuon, MatchVeloTTMuon, HltVeloIsMuon use the Common code base of Muon/MuonID.
+ - In MatchVeloMuon.h, MatchVeloTTMuon.h: seeds() method return by reference and not by value. 
+ - In MatchVeloMuon, MatchVeloTTMuon:
+   - Added foiInfo method, for visualising foi.
+ - MatchVeloTTMuon: Different FoITolerance factor for x and y foi.
+ 
 ! 2015-03-12 - Roel Aaij, Kevin Dungs
  - Add dependency on Muon/MuonID to CMakeLists.txt.
  - Fix several mistakes in the infrastructure as pointed out by Roel.
