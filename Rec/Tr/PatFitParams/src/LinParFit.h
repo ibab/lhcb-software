@@ -135,6 +135,9 @@ class LinParFit
 	    m_nptsSolved = -1;
 	}
 
+	/// return number of parameters of fit
+	size_t size() const noexcept { return m_rhs.size(); }
+
 	/// return the number of data points accumulated so far
 	size_t npoints() const noexcept
 	{ return m_npts; }
@@ -440,7 +443,8 @@ class LinParFit
 	    for (unsigned i = 0; i != m_sol.size(); ++i) {
 		tmpbuf << std::setw(4) << i;
 		for (unsigned j = 0; j <= i; ++j) {
-		    tmpbuf << std::setw(6) << std::setprecision(3) << std::fixed <<
+		    tmpbuf << " " <<
+			std::setw(6) << std::setprecision(3) << std::fixed <<
 			std::right << (m_cov[(i * (i + 1)) / 2 + j] /
 				std::sqrt(m_cov[(i * (i + 1)) / 2 + i] *
 				    m_cov[(j * (j + 1)) / 2 + j]));
