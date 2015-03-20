@@ -14,7 +14,6 @@ def run():
     opt= TString("PopSize=5:Steps=3:Cycles=3:ConvCrit=0.01:SaveBestCycle=5") 
     name = TString("FitterGA") 
 
-
     lo = std.vector('double')()
     hi = std.vector('double')()
     lo.push_back(100.)	
@@ -24,12 +23,10 @@ def run():
     lo.push_back(600.)	
     hi.push_back(1300.)
 
-
     Channels = std.vector('int')()
     Channels.push_back(1)
     Channels.push_back(2)	
     Channels.push_back(6)
-
 
     DefParameters = std.vector('double')()
     DefParameters.push_back(179.)
@@ -46,12 +43,31 @@ def run():
     UsedParameters.push_back(6)
     UsedParameters.push_back(7)
 
-    fitter = TMVA.GeneticFitterMod(name,lo,hi, Channels,opt,DefParameters,UsedParameters)
-#fitter.CheckForUnusedOptions()
+    MaxEfficiencies = std.vector('double')()
+    MaxEfficiencies.push_back(0.4)
+    MaxEfficiencies.push_back(0.9)
+    MaxEfficiencies.push_back(0.9)
+    MaxEfficiencies.push_back(0.6)
+    MaxEfficiencies.push_back(0.9)
+    MaxEfficiencies.push_back(0.6)
+    MaxEfficiencies.push_back(0.3)
+    MaxEfficiencies.push_back(0.3)
+    MaxEfficiencies.push_back(0.3)
+    MaxEfficiencies.push_back(0.2)
+    MaxEfficiencies.push_back(0.7)
+    MaxEfficiencies.push_back(0.6)
 
+    RunType = TString("FULL")
+
+    fitter = TMVA.GeneticFitterMod(name,lo,hi, Channels,opt,DefParameters,UsedParameters,MaxEfficiencies,RunType)
+    #fitter.CheckForUnusedOptions()
+	    
     pars = std.vector('double')(2)
 
+
+    import L0_noHlt1_histosGen_Multi
     gROOT.ProcessLine('.! rm -rf $OUTPUTDIR/*.root')
+
   
 
     cycle = 0
@@ -61,7 +77,6 @@ def run():
 
 
     print type(cycle)
-    print 'AAAAAAAAAAAAAAAAAAA'
     while True:
         command = com.get_command()
         if command == 'configure' and state == State.NOT_READY:
