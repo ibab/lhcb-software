@@ -4,6 +4,9 @@ Package Coordinator : Johan Blouw and Rob Lambert
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+! 2015-03-20 - Giulio Dujany
+ - Added option in gaudipar.py and gaudipariter.py to run on Monte Carlo and update SIMCOND instead of LHCBCOND
+
 ! 2015-03-19 - Maurizio Martinelli
  - Solved a bug in gaudipar.py
 

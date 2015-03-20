@@ -13,6 +13,7 @@ parser.add_option("--conddb", action = 'append', dest="conddb",help="path to fil
 parser.add_option("--dddb", action = 'append', dest="dddb",help="path to file with DDDB database layer")
 parser.add_option("-r", "--roothistofile",dest="histofile",help="name of histogram file",default = "histograms.root")
 parser.add_option("--dryrun", action="store_true",help="dont do anything")
+parser.add_option("-s", "--simulation",action="store_true",dest="simtag",help="activate if running with MC",default=False)
 (opts, args) = parser.parse_args()
 
 import os
@@ -48,6 +49,9 @@ for i in range(opts.firstiter,opts.numiter) :
         if opts.aligndb :
             for db in opts.aligndb :
                 theseoptions += ' --aligndb ' + db
+
+    if opts.simtag:
+        theseoptions += ' -s '
  
     # add the remaining options
     for a in args:

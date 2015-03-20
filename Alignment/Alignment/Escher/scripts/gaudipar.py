@@ -11,6 +11,7 @@ parser.add_option("-i", "--iter",type="int", dest="iter",help="number of iterati
 parser.add_option("-r", "--roothistofile",dest="histofile",help="name of histogram file",default = "histograms.root")
 parser.add_option("-c", "--derivativefile",dest="derivativefile",help="name of derivative file",default = "")
 parser.add_option("--stagefiles",action = 'store', help="stage files locally")
+parser.add_option("-s", "--simulation",action="store_true",dest="simtag",help="activate if running with MC",default=False)
 (opts, args) = parser.parse_args()
 
 # Prepare the "configuration script" to parse (like this it is easier than
@@ -39,13 +40,16 @@ from Configurables import GaudiSequencer, CountingPrescaler
 prescalername = "EscherPrescaler"
 GaudiSequencer("EscherSequencer").Members.insert(0,CountingPrescaler(prescalername) )
 
+#set COND-tag
+condtag = "/SIMCOND" if opts.simtag else "/LHCBCOND"
+
 # set the database layer
 if opts.aligndb:
    counter = 1
    for db in opts.aligndb:
       from Configurables import ( CondDB, CondDBAccessSvc )
       alignCond = CondDBAccessSvc( 'AlignCond' + str(counter) )
-      alignCond.ConnectionString = 'sqlite_file:' + db + '/LHCBCOND'
+      alignCond.ConnectionString = 'sqlite_file:' + db + condtag
       CondDB().addLayer( alignCond )
       counter += 1
    print 'added databases: ', opts.aligndb
@@ -206,7 +210,7 @@ class AlignmentTask(Task):
         appMgr.finalize()
         # finally create a database layer
         import os
-        os.system("copy_files_to_db.py -c sqlite_file:Alignment.db/LHCBCOND -s xml")
+        os.system("copy_files_to_db.py -c sqlite_file:Alignment.db{0} -s xml".format(condtag))
 
 ############################################################################
 
