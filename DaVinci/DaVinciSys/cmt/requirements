@@ -9,10 +9,6 @@ use  DaVinciTests    v2r30
 use  KaliCalo        v4r17    Phys   # Olivier Deschamps
 use  Tesla           v1r3     Phys   # Sean Benson
 
-# Extra package just for this release,
-# to deal with seg faults seen when reading Strip21 MC
-use  EventPacker     v5r0     Event
-
 # Declare this as a container package
 apply_pattern container_package
 
