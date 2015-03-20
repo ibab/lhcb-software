@@ -22,6 +22,19 @@
 // ============================================================================
 #include "LoKi/KinTypes.h"
 // ============================================================================
+/** @file LoKi/ToCpp.h
+ *  set of utilities used fro autogeneration of C++ code for LoKi-functors 
+ *  @see LoKi::AuxFunBase 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2015-03-30
+ * 
+ *                    $Revision:$
+ *  Last modification $Date:$
+ *                 by $Author:$ 
+ */
+// ============================================================================
+// Forward declarations 
+// ============================================================================
 namespace LoKi 
 { 
   class AuxFunBase ; 
@@ -41,11 +54,13 @@ namespace LoKi
     std::string m_data ;
   } ;  
 }
+// ============================================================================
 namespace LHCb 
 {
   class ParticleID ;
   class LHCbID     ;
 }
+// ============================================================================
 namespace Gaudi
 {
   class StringKey  ;
@@ -58,6 +73,7 @@ namespace Decays
 {
   class iNode ;
 }
+// ============================================================================
 namespace GaudiAlg 
 {
   class ID ;
@@ -103,19 +119,28 @@ namespace Gaudi
   namespace Utils 
   {
     // ========================================================================
-    inline std::string toCpp ( const char s ) { return "'" + std::string( 1 , s )  + "'"; }
-    inline std::string toCpp ( const std::string&  s ) { return '"' + s + '"'; }
+    // strings and chars 
+    // ========================================================================
+    inline std::string toCpp ( const char          s ) { return "'" + std::string ( 1 , s )  + "'"; }
+    inline std::string toCpp ( const std::string&  s ) { return '"' + s + '"' ; }
     template <unsigned N>
-    inline std::string toCpp ( const char (&s)[N]    ) { return '"' + s + '"'; }
+    inline std::string toCpp 
+    ( const char (&s)[N]    ) { return toCpp ( std::string ( s , s + N ) ) ; }
     template <unsigned N>
-    inline std::string toCpp (       char (&s)[N]    ) { return '"' + s + '"'; }  
-    inline std::string toCpp ( const int    o        ) { return toString ( o ) ; }
-    inline std::string toCpp ( const unsigned int  o ) { return toString ( o ) ; }
-    inline std::string toCpp ( const long   o        ) { return toString ( o ) ; }
-    inline std::string toCpp ( const unsigned long o ) { return toString ( o ) ; }
-    inline std::string toCpp ( bool o ) { return o ? "true" : "false" ; }
-    inline std::string toCpp ( const long long   o        ) { return toString ( o ) ; }
+    inline std::string toCpp 
+    (       char (&s)[N]    ) { return toCpp ( std::string ( s , s + N ) ) ; }  
+    // ========================================================================
+    inline std::string toCpp ( const short              o ) { return toString ( o ) ; }
+    inline std::string toCpp ( const unsigned short     o ) { return toString ( o ) ; }
+    inline std::string toCpp ( const int                o ) { return toString ( o ) ; }
+    inline std::string toCpp ( const unsigned int       o ) { return toString ( o ) ; }
+    inline std::string toCpp ( const long               o ) { return toString ( o ) ; }
+    inline std::string toCpp ( const unsigned long      o ) { return toString ( o ) ; }
+    // ========================================================================
+    inline std::string toCpp ( const long long          o ) { return toString ( o ) ; }
     inline std::string toCpp ( const unsigned long long o ) { return toString ( o ) ; }
+    inline std::string toCpp ( const bool               o ) { return o ? "true" : "false" ; }
+    // ========================================================================
     //
     GAUDI_API 
     std::string toCpp ( const long double o , const unsigned short p = 16 ) ;
@@ -125,28 +150,21 @@ namespace Gaudi
     std::string toCpp ( const float   o ) { return toCpp ( o  , 12 ) ; }
     // ========================================================================
     GAUDI_API 
-    std::string        toCpp ( const LoKi::AuxFunBase& o  ) ;
+    std::string toCpp ( const LoKi::AuxFunBase& o  ) ;
     // ========================================================================
+    // declarations (1) 
+    // ========================================================================
+    // std::vector 
     template <class TYPE>
     inline std::string toCpp ( const std::vector<TYPE>&     v ) ;
+    // std::map
     template <class TYPE1, class TYPE2>
     inline std::string toCpp ( const std::map<TYPE1,TYPE2>& v ) ;
+    // std::tuple 
+    template<typename... Args>
+    inline std::string toCpp ( const std::tuple<Args...>&   t ) ;
     // ========================================================================
-    // declarations 
-    // ========================================================================
-    inline std::string toCpp( const std::tuple<>& /* o */ ) { return std::string() ; } 
-    template <class TYPE1>
-    inline std::string toCpp( const std::tuple<TYPE1>& o ) ;
-    template <class TYPE1, class TYPE2>
-    inline std::string toCpp( const std::tuple<TYPE1,TYPE2>& o ) ;
-    template <class TYPE1, class TYPE2, class TYPE3>
-    inline std::string toCpp( const std::tuple<TYPE1,TYPE2,TYPE3>& o ) ;
-    template <class TYPE1, class TYPE2, class TYPE3, class TYPE4>
-    inline std::string toCpp( const std::tuple<TYPE1,TYPE2,TYPE3,TYPE4>& o ) ;
-    template <class TYPE1, class TYPE2, class TYPE3, class TYPE4, class TYPE5>
-    inline std::string toCpp( const std::tuple<TYPE1,TYPE2,TYPE3,TYPE4,TYPE5>& o ) ;
-    template <class TYPE1, class TYPE2, class TYPE3, class TYPE4, class TYPE5, class TYPE6>
-    inline std::string toCpp( const std::tuple<TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6>& o ) ;
+    // implementations 
     // ========================================================================
     template <class TYPE>
     inline std::string toCpp ( const std::vector<TYPE>& v )
@@ -170,70 +188,43 @@ namespace Gaudi
       return o + '}' ;  
     }
     // ========================================================================
-    template <class TYPE1>
-    inline std::string toCpp( const std::tuple<TYPE1>& o ) 
-    { return toCpp ( std::get<0> ( o ) ) ; } 
-    //
-    template <class TYPE1, class TYPE2>
-    inline std::string toCpp( const std::tuple<TYPE1,TYPE2>& o ) 
-    { return 
-        toCpp ( std::get<0> ( o ) ) + ", " + 
-        toCpp ( std::get<1> ( o ) ) ; } 
-    //
-    template <class TYPE1, class TYPE2, class TYPE3>
-    inline std::string toCpp( const std::tuple<TYPE1,TYPE2,TYPE3>& o ) 
+    namespace details 
     {
-      return 
-        toCpp ( std::get<0> ( o ) ) + ", " + 
-        toCpp ( std::get<1> ( o ) ) + ", " + 
-        toCpp ( std::get<2> ( o ) ) ;
+      // ======================================================================
+      /// recursive print of std::tuple
+      template<class Tuple, std::size_t N>
+      struct TupleCppPrinter 
+      {
+        static std::string toCpp ( const Tuple& t ) 
+        { return 
+            TupleCppPrinter<Tuple, N-1>::toCpp ( t ) 
+            + " , " 
+            + Gaudi::Utils::toCpp ( std::get<N-1>( t ) ) ; } 
+      } ;
+      /// stopping criteria for compile-time recursion
+      template<class Tuple>
+      struct TupleCppPrinter<Tuple,1> 
+      {
+        static std::string toCpp ( const Tuple& t ) 
+        { return Gaudi::Utils::toCpp ( std::get<0> ( t ) ) ; }
+      } ;
+      /// stopping criteria for compile-time recursion
+      template<class Tuple>
+      struct TupleCppPrinter<Tuple,0> 
+      {
+        static std::string toCpp ( const Tuple& t ) { return ""; }
+      } ;
+      // ======================================================================
     }
-    //
-    template <class TYPE1, class TYPE2, class TYPE3, class TYPE4>
-    inline std::string toCpp( const std::tuple<TYPE1,TYPE2,TYPE3,TYPE4>& o ) 
-    {
-      return 
-        toCpp ( std::get<0> ( o ) ) + ", " + 
-        toCpp ( std::get<1> ( o ) ) + ", " + 
-        toCpp ( std::get<2> ( o ) ) + ", " + 
-        toCpp ( std::get<3> ( o ) ) ;
-    }
-    //
-    template <class TYPE1, class TYPE2, class TYPE3, class TYPE4, class TYPE5>
-    inline std::string toCpp( const std::tuple<TYPE1,TYPE2,TYPE3,TYPE4,TYPE5>& o ) 
-    {
-      return 
-        toCpp ( std::get<0> ( o ) ) + ", " + 
-        toCpp ( std::get<1> ( o ) ) + ", " + 
-        toCpp ( std::get<2> ( o ) ) + ", " + 
-        toCpp ( std::get<3> ( o ) ) + ", " + 
-        toCpp ( std::get<4> ( o ) ) ;
-    }
-    template <class TYPE1, class TYPE2, class TYPE3, class TYPE4, class TYPE5,class TYPE6>
-    inline std::string toCpp( const std::tuple<TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6>& o ) 
-    {
-      return 
-        toCpp ( std::get<0> ( o ) ) + ", " + 
-        toCpp ( std::get<1> ( o ) ) + ", " + 
-        toCpp ( std::get<2> ( o ) ) + ", " + 
-        toCpp ( std::get<3> ( o ) ) + ", " + 
-        toCpp ( std::get<4> ( o ) ) + ", " + 
-        toCpp ( std::get<5> ( o ) ) ;
-    }
-    template <class TYPE1, class TYPE2, 
-              class TYPE3, class TYPE4, 
-              class TYPE5, class TYPE6, class TYPE7>
-    inline std::string toCpp( const std::tuple<TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7>& o ) 
-    {
-      return 
-        toCpp ( std::get<0> ( o ) ) + ", " + 
-        toCpp ( std::get<1> ( o ) ) + ", " + 
-        toCpp ( std::get<2> ( o ) ) + ", " + 
-        toCpp ( std::get<3> ( o ) ) + ", " + 
-        toCpp ( std::get<4> ( o ) ) + ", " + 
-        toCpp ( std::get<5> ( o ) ) + ", " + 
-        toCpp ( std::get<6> ( o ) ) ;
-    }
+    // ========================================================================
+    /// std::tuple as comma-separated list - what we need for AuxFunBase 
+    template<typename... Args>
+    inline std::string toCpp_lst ( const std::tuple<Args...>& t ) 
+    { return details::TupleCppPrinter<decltype(t), sizeof...(Args)>::toCpp ( t ) ; }
+    /// std::tuple, just for completness 
+    template<typename... Args>
+    inline std::string toCpp ( const std::tuple<Args...>& t ) 
+    { return System::typeinfoName ( typeid(t) ) + "{" + toCpp_lst ( t ) + "}" ; }
     // ========================================================================
   } //                                               The end of namespace Gaudi 
   // ==========================================================================

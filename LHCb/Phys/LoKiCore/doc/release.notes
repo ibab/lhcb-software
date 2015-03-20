@@ -13,9 +13,15 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-03-20 - Vanya Belyaev
+ - ToCpp:
+   Using nice example by Sascha MAzurov, 
+   extend maximal number of arguments from 7 to (compile-time) infinity 
+   (And it is important: Matt Kenzie has 8-argument functor in LoKiTrigger)
+   
 ! 2015-03-19 - Vanya Belyaev
  - fix stupid bug in Operations.h
- 
+
 
 ! 2015-03-12 - Vanya Belyaev
  - add "FakeSource" , useful for testing, 

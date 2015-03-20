@@ -52,16 +52,13 @@ namespace LoKi
   class GAUDI_API AuxFunBase
   {
   protected:
-    // public:    // to please Visual C++ compiler
     // ========================================================================
     /// default constructor 
     AuxFunBase  () ; 
     /// constructor with arguments : 
     template <typename ... ARGS>
       AuxFunBase ( const std::tuple<ARGS...>& tup ) : AuxFunBase ()
-    { m_cargs = Gaudi::Utils::toCpp ( tup ) ; }
-    // ,  m_cargs ( Gaudi::Utils::toCpp ( tup ) ) 
-    // {}
+    { m_cargs = Gaudi::Utils::toCpp_lst ( tup ) ; }
     // ========================================================================
     /// copy consructor
     AuxFunBase  ( const AuxFunBase&  right      ) ;          // copy consructor
