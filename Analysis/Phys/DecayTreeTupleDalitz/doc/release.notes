@@ -4,6 +4,9 @@
 ! Purpose     : Dalitz tools
 !-----------------------------------------------------------------------------
 
+ 2015-03-15 - O. Deschamps
+ - make the branch name CC-independant
+
 !=================== DecayTreeTupleDalitz v1r2 2015-02-26 ====================
 
 ! 2015-02-24 - O. Deschamps

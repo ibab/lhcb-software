@@ -13,17 +13,17 @@ template<class TYPE> StatusCode fill( const std::vector<const TYPE*>& dauts     
 
   const std::string prefix = fullName(head);
   bool test = true;
-
-  std::set<std::string> usedNames;
-  unsigned int add = 0;
-  
   // sort out daughters vector
   std::vector<const TYPE*> daughters(dauts); // local copies to sort
-  std::stable_sort(daughters.begin(), daughters.end(), [revert](const TYPE* c1, const TYPE* c2){
-      bool comp=std::make_pair(c1->particleID().pid(),c1->key()) > std::make_pair(c2->particleID().pid(),c2->key());
-      return (revert) ? !comp : comp;
+  const LHCb::IParticlePropertySvc* pp=ppSvc() ;
+  std::stable_sort(daughters.begin(), daughters.end(), [revert,pp](const TYPE* c1, const TYPE* c2){
+      int sign=(revert) ? -1 : 1;
+      int p1 = ( pp->find( c1->particleID())->selfcc() ) ? c1->particleID().pid() : sign*c1->particleID().pid();
+      int p2 = ( pp->find( c2->particleID())->selfcc() ) ? c2->particleID().pid() : sign*c2->particleID().pid();
+      bool comp=std::make_pair(p1,c1->key()) > std::make_pair(p2,c2->key());
+      return comp;
     });
-              
+  std::map<std::string,unsigned int> used;              
               
   for ( typename std::vector<const TYPE*>::const_iterator i = daughters.begin();i != daughters.end(); ++i )  {
     const std::string n1 = particleName( (*i)->particleID(), revert );
@@ -33,17 +33,13 @@ template<class TYPE> StatusCode fill( const std::vector<const TYPE*>& dauts     
       const Gaudi::LorentzVector p = p1 + (*j)->momentum();
       const std::string basename = prefix+"_Dalitz_"+n1+"_"+n2+"_M2";
       std::string name = basename;
-      bool renamed = false;
-      while ( usedNames.find(name) != usedNames.end() ){
-        renamed = true;
-        name = basename + "_" + boost::lexical_cast<std::string>(add++);
-      }
-      usedNames.insert(name);
-      if ( renamed ) Info("Renaming duplicate to "+name,StatusCode::SUCCESS,1);
-      if (msgLevel(MSG::VERBOSE))
-      {
-        verbose() << (*i)->particleID().pid() << " " << (*j)->particleID().pid() 
-                  << " " << name << " " << revert << endmsg ;
+      if(used.find(basename) != used.end() ){
+        unsigned int add=used[basename];
+        name = basename+"_"+boost::lexical_cast<std::string>(add);
+        used[basename]=add+1;
+        Info("Renaming duplicate to "+name,StatusCode::SUCCESS,1);
+      }else{
+        used[basename]=1;
       }
       test &= tuple->column( name, p .M2() );
     }
