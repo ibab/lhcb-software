@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-03-20 - Stefano Perazzini
+ - Introduced tests/test_strippingselections.py
+
 ! 2015-03-20 - Andrea Contu
  - Moved private users test scripts to the liaisons directory
  - Fixing release.notes
