@@ -1,3 +1,7 @@
+2015-03-11  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-deployment-checklist: minor fix to the check of "release pending" flag
+
 2015-03-10  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* LbRelease.LHCbDoc: fixed LBCORE-763

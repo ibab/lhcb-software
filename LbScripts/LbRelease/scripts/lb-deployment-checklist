@@ -269,7 +269,7 @@ def soft_db(project, version):
     #print set(sdb_platforms), set(rpm_platforms)
     assert set(sdb_platforms) == set(rpm_platforms), 'platforms list not complete'
     to_be_released = check_output(['lb-sdb-query', '--readonly', 'listReleases'], stderr=PIPE)
-    assert not re.search(r'%s\s+%s' % (project.upper(), version), to_be_released), \
+    assert not re.search(r'%s\s+%s$' % (project.upper(), version), to_be_released), \
            'still flagged as "release pending"'
 
 
