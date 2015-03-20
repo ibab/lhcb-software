@@ -448,7 +448,7 @@ def tisTos ( self              ,
     ## for d in particles : 
     ##    self.tisTos ( d     ,
     ##                  tup   ,
-    ##                 'd0_' ,
+    ##                 'd0_'  ,
     ##                 self.lines ['D0'] , 
     ##                 self.l0tistos     ,
     ##                 self.l1tistos     ,
@@ -617,11 +617,8 @@ def tisTos ( self              ,
     #
     # keep data for debugging
     #
-    if not hasattr ( self , 'tistos_map' ) : self._tistos_map = {}
-    self.tistos_map[ label ] = tistosdata
-    #
     
-    return SUCCESS
+    return SUCCESS, tistosdata 
 
 # =============================================================================
 ## initialize TisTos, acquire tools, etc...
@@ -753,7 +750,7 @@ def _tisTosFini ( self , triggers = None ) :
                 self.Print ( '-  %-10s  :  %s ' % ( t , lns[t]  ) , SUCCESS , 7 )
         if not parts :
             self.Warning ( 'No PARTICLES are defined for Tis/Tos' , SUCCESS )
-            
+
     return SUCCESS 
 
 # =============================================================================
