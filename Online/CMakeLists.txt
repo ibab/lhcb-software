@@ -9,11 +9,8 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/Online/RootCnv)
   set(override_subdirs RootCnv)
 endif()
 
+add_definitions(-DDD4HEP_USE_TINYXML)
+
 # Declare project name and version
-# Syntax:
-#    gaudi_project(this_project this_version
-#                  USE dep_project_1 version_1 [project_2 version_2 ...]
-#                  [DATA pkg1 [VERSION vers1] [pkg2 ...])
-gaudi_project(OnlineDevNightly HEAD
-              USE GaudiDevNightly HEAD
-                  Online HEAD)
+gaudi_project(Online v5r17
+              USE Gaudi v26r1)
