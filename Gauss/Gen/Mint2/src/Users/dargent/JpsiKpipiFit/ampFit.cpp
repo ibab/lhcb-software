@@ -198,6 +198,9 @@ int ampFit(){
 		_InputFile->Close();
   }
 
+  DalitzHistoSet datH = eventList.histoSet();
+  datH.draw("data_","eps");
+
   AmpsPdf amps(pat, &fas, integPrecision,integMethod, (std::string) IntegratorEventFile);
   amps.setIntegratorFileName(IntegratorInputFile);
 
@@ -236,10 +239,9 @@ int ampFit(){
     }
 */
 
-  DalitzHistoSet datH = eventList.histoSet();
+
   DalitzHistoSet fitH = amps.histoSet();
   //fitH.save("plotsFromIntegrator.root");
-  //datH.draw("dataPlots_2011","pdf");
   //fitH.draw("fitPlots_","pdf");
   datH.drawWithFitNorm(fitH, "datFit_","eps");
       

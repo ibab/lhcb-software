@@ -10,11 +10,13 @@ FastAmplitude::FastAmplitude( const DecayTree& decay
 			      , const std::string& opt
 			      )
   : Amplitude(decay, SPD_Wave, opt)
+  ,_rememberNumber(-9999)
 {}
 
 FastAmplitude::FastAmplitude( const AmpInitialiser& ampInit
 			      )
   : Amplitude(ampInit)
+  ,_rememberNumber(-9999)
 {}
 
 FastAmplitude::FastAmplitude( const FastAmplitude& other)
@@ -22,10 +24,12 @@ FastAmplitude::FastAmplitude( const FastAmplitude& other)
   , IReturnComplexForEvent<IDalitzEvent>()
   , Amplitude(other)
   , _resultMap(other._resultMap)
+  ,_rememberNumber(-9999)
 {}
 
 FastAmplitude::FastAmplitude( const Amplitude& other)
   : Amplitude(other)
+  ,_rememberNumber(-9999)
 {
   _resultMap.clear();
 }

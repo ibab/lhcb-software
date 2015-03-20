@@ -9,7 +9,7 @@
 
 "IntegPrecision"        1.0e-2
 "IntegMethod"           "efficient"
-*IntegratorSource       "New"
+IntegratorSource       "new"
 
 IntegratorInputFile     "sgIntegrator"
 
@@ -21,18 +21,20 @@ OutputRootFile  "GeneratedMC.root"
 *
 *K1(1270)
 *-------
-*"B+->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Jpsi0_Frac"                            	 0.6
-"B+->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Jpsi0_Amp"                            	 2	1.	0.01	0.0	0.0
-"B+->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Jpsi0_Phase"                          	 2	0.	0.01	0.0	0.0
+*"SBW_10323_B+->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Jpsi0_Amp"                          2	1.	0.01	0.0	0.0
+*"SBW_10323_B+->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Jpsi0_Phase"                        2	0.	0.01	0.0	0.0
+*
+"B+->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Jpsi0_Amp"                          		  2	1.	0.01	0.0	0.0
+"B+->K(1)(1270)+(->K*(892)0(->K+,pi-),pi+),Jpsi0_Phase"                        		  2	0.	0.01	0.0	0.0
 *
 *"B+->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Jpsi0_Amp"                           	 0	1.81	0.05	0.0	0.0
-*"B+->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Jpsi0_Phase"                         	 0	-0.76	0.05	0.0	0.0
+*"B+->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Jpsi0_Phase"                         	 0	90	1	0.0	0.0
 *
-*"GSB+->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Jpsi0_Amp"                           	 2	2.5	0.05	0.0	0.0
-*"GSB+->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Jpsi0_Phase"                          	 2	0.	0.05	0.0	0.0
+"GSB+->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Jpsi0_Amp"                           	 0	1.5	0.05	0.0	0.0
+"GSB+->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Jpsi0_Phase"                          	 0	90	1	0.0	0.0
 *
 *"RHO_OMEGAB+->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Jpsi0_Amp"                         0	1.5	0.01	0.0	0.0
-*"RHO_OMEGAB+->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Jpsi0_Phase"                         	 0	0.	0.01	0.0	0.0
+*"RHO_OMEGAB+->K(1)(1270)+(->rho(770)0(->pi+,pi-),K+),Jpsi0_Phase"                       0	0.	0.01	0.0	0.0
 *
 *"B+->K(1)(1270)+(->omega(782)0(->pi+,pi-),K+),Jpsi0_Amp"                          	 0	0.5	0.05	0.0	0.0
 *"B+->K(1)(1270)+(->omega(782)0(->pi+,pi-),K+),Jpsi0_Phase"                  	      	 0	0.1	0.05	0.0	0.0
@@ -42,11 +44,11 @@ OutputRootFile  "GeneratedMC.root"
 *
 *K1(1400)
 *-----------
-*"B+->K(1)(1400)+(->K*(892)0(->K+,pi-),pi+),Jpsi0_Amp"                            	 0	0.89	0.01	0.0	0.0
-*"B+->K(1)(1400)+(->K*(892)0(->K+,pi-),pi+),Jpsi0_Phase"                          	 0	-2.3	0.01	0.0	0.0
+*"B+->K(1)(1400)+(->K*(892)0(->K+,pi-),pi+),Jpsi0_Amp"                            	 0	0.89	0.05	0.0	0.0
+*"B+->K(1)(1400)+(->K*(892)0(->K+,pi-),pi+),Jpsi0_Phase"                          	 0	2.3	0.1	0.0	0.0
 *
-"B+->K(1)(1400)+(->rho(770)0(->pi+,pi-),K+),Jpsi0_Amp"                       		  0	0.5	0.05	0.0	0.0
-"B+->K(1)(1400)+(->rho(770)0(->pi+,pi-),K+),Jpsi0_Phase"                     		  0	0.	0.05	0.0	0.0
+*"B+->K(1)(1400)+(->rho(770)0(->pi+,pi-),K+),Jpsi0_Amp"                       		  0	0.5	0.05	0.0	0.0
+*"B+->K(1)(1400)+(->rho(770)0(->pi+,pi-),K+),Jpsi0_Phase"                     		  0	0.	0.05	0.0	0.0
 *
 *"B+->K(1)(1400)+(->omega(782)0(->pi+,pi-),K+),Jpsi0_Amp"                          	 1	0.0	0.0	0.0	0.0
 *"B+->K(1)(1400)+(->omega(782)0(->pi+,pi-),K+),Jpsi0_Phase"                      	 1	0.0	0.0	0.0	0.0
@@ -103,7 +105,6 @@ OutputRootFile  "GeneratedMC.root"
 *
 *psi(2S)
 *--------
-*"B+->psi(2S)0(->NonResS0(->pi+,pi-),Jpsi0),K+_Frac"                                     0.2
 *"B+->psi(2S)0(->NonResS0(->pi+,pi-),Jpsi0),K+_Amp"                                    	 2	0	0.01	0.0	0.0
 *"B+->psi(2S)0(->NonResS0(->pi+,pi-),Jpsi0),K+_Phase"                                  	 2	4.0	0.01	0.0	0.0
 *

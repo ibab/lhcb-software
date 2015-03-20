@@ -6,6 +6,14 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+2015-03-19 - Philippe d'Argent
+ - Added new spinfactors for P->VPPP
+ - Added new decay trees for B->J/psi K pi pi
+ - Added new simple (NON relativistic) BW lineshape;
+   in steering file, indicate with keyword "SBW_" + PID of resonance;
+   e.g. "SBW_10323_" for K1(1270)
+
+
 2014-07-22 - Jeremy
  - Added two new lineshapes for the non-resonant component
   . Exponential and power law
@@ -109,7 +117,7 @@
  - Fix coverity warnings
 
 ! 2013-02-20 - Matthew Coombes
- - Added CLEO-c model for D->KK¹¹ decays.
+ - Added CLEO-c model for D->KKï¿½ï¿½ decays.
  - Added alternative models from arXiv:1201.5716
  - See Models/ModelNotes.txt
 

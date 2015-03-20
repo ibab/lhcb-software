@@ -8,6 +8,7 @@
 #include "Mint/AssociatedDecayTree.h"
 //#include "Mint/IDalitzEventAccess.h"
 #include "Mint/BW_BW.h"
+#include "Mint/SBW.h"
 #include "Mint/GounarisSakurai.h"
 #include "Mint/Lass.h"
 #include "Mint/Flatte.h"
@@ -22,12 +23,13 @@ using namespace MINT;
 
 /* 
    possible options
-   AWAYS_BW
+   ALWAYS_BW
    RHO_OMEGA
    Flatte
    GS
    ExpNonRes
    PowNonRes
+   SBW
 */
 
 ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
@@ -51,6 +53,11 @@ ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
 	 << endl;
   }
       
+
+  if(A_is_in_B("SBW_"+anythingToString(abs(tree->getVal().pdg())), lopt)){
+    if(dbThis) cout << "LineshapeMaker returns SBW for PID="<<  abs(tree->getVal().pdg())<< endl;
+    return new SBW(*tree);
+  }
 
   if(A_is_in_B("ALWAYS_BW", lopt)){
     if(dbThis) cout << "LineshapeMaker returns BW_BW" << endl;
