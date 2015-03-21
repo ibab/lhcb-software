@@ -24,6 +24,8 @@ private
 use LHCbAlgs             v*     Kernel
 end_private
 
+use graphviz v* LCG_Interfaces 
+
 # Component library building rule
 #============================================================================
 

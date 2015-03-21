@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-03-21 - Vanya Belyaev
+ - add StrippingPromptCharm 
+
 ! 2015-03-20 - Stefano Perazzini
  - Introduced tests/test_strippingselections.py
 
