@@ -38,6 +38,7 @@ PrCounter::PrCounter( const std::string& type,
   m_selectId    = 0;
   m_fracGhost   = 0.;
   m_nEvent      = 0.;
+  m_ghostProbCut = 999;
   m_trackType   = LHCb::Track::TypeUnknown;
   declareProperty( "TitleSize", m_titleSize = 30 );
 
@@ -103,9 +104,11 @@ void PrCounter::initEvent(const IHistoTool* htool = NULL, const int nPV = 0){
   for ( auto track  : tracks) {
     if ( track->checkFlag( LHCb::Track::Invalid ) ) continue;
     if ( (m_trackType!=LHCb::Track::TypeUnknown) && (track->type()!=m_trackType) ) continue;
+    if ( track->ghostProbability() > m_ghostProbCut && track->ghostProbability() < 999) continue;
     bool eta25 = !m_eta25cut || (track->pseudoRapidity() > 2. && track->pseudoRapidity() < 5.);
     if(!eta25)continue;
     Range range = table->relations( track );
+    // --
     if ( range.empty() ){
       m_nbGhost++;
       if(htool && m_writeHistos>0 ){
@@ -118,6 +121,7 @@ void PrCounter::initEvent(const IHistoTool* htool = NULL, const int nPV = 0){
        }
       }
     }
+    // --
     if(htool && m_writeHistos>0 ){
       htool->plot1D(nPV,m_title+"/nPV_Total","nPV_Total",-0.5,20.5,21);
       htool->plot1D(track->pseudoRapidity(),m_title+"/Eta_Total","Eta_Total",0.,7.,50);
@@ -127,6 +131,7 @@ void PrCounter::initEvent(const IHistoTool* htool = NULL, const int nPV = 0){
         htool->plot1D(track->p(),m_title+"/P_Total","P_Total",0.,100000.,50);
       }
     }
+    // --
     m_totTrack++;
     nbTracks++;
     if(m_triggerNumbers && (track->type() != LHCb::Track::Velo) && track->p() > 3000. && track->pt() > 500.){
@@ -189,7 +194,7 @@ int PrCounter::countAndPlot(const IHistoTool* htool,const LHCb::MCParticle* part
   if ( LHCb::Track::TypeUnknown == m_trackType ){
     //TODO loop
 
-    if ( trackList.size() != 0 ) {
+    if ( trackList.size() != 0){
       found = true;
       clone = trackList.size() - 1;
       key = trackList.begin()->to()->key();  
@@ -198,10 +203,10 @@ int PrCounter::countAndPlot(const IHistoTool* htool,const LHCb::MCParticle* part
      // etameas = trackList.begin()->to()->pseudoRapidity();//
      // phimeas = trackList.begin()->to()->phi();//
     }
-  }
-  else{
+  }else{
     for ( InvIterator it = trackList.begin(); trackList.end() != it; ++it ) {
       const LHCb::Track* tr = it->to();
+      if (tr->ghostProbability() > m_ghostProbCut && tr->ghostProbability() < 999) continue;
       if (tr->type()==m_trackType) {
         found = true;
         clone = trackList.size() - 1;
@@ -242,6 +247,7 @@ int PrCounter::countAndPlot(const IHistoTool* htool,const LHCb::MCParticle* part
         for ( InvIterator it = trackList.begin(); trackList.end() != it; ++it ) {
           const LHCb::Track* tr = it->to();
           if ( (m_trackType!=LHCb::Track::TypeUnknown) && (tr->type()!=m_trackType) ) continue;
+          if ( tr->ghostProbability() > m_ghostProbCut && tr->ghostProbability() < 999) continue;
           m_purity[kk] += it->weight();
           unsigned int nbMeas = 0;
           for ( std::vector<LHCb::LHCbID>::const_iterator itId = tr->lhcbIDs().begin();

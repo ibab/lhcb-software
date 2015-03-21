@@ -106,6 +106,7 @@ private:
   bool m_triggerNumbers;
   bool m_useElectrons;
   
+  double m_ghostProbCut;
 
   //== Vector of the counters
   std::vector<IPrCounter*> m_allCounters;

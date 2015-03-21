@@ -79,6 +79,7 @@ PrChecker::PrChecker( const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty( "Eta25Cut",           m_eta25cut             = false    );
   declareProperty( "TriggerNumbers",     m_triggerNumbers       = false    );
   declareProperty( "UseElectrons",       m_useElectrons         = false    );
+  declareProperty( "GhostProbCut",       m_ghostProbCut         = 1.0      );
   
 
 }
@@ -219,6 +220,7 @@ StatusCode PrChecker::initialize()
   m_best->setContainer( m_bestTracks );
   m_best->setWriteHistos(m_writeBestHistos);
   m_best->setSelectId( 15 );
+  m_best->setGhostProbCut( m_ghostProbCut );
   m_best->addSelection( "long" ,true);
   m_best->addSelection( "long>5GeV" ,true);
   m_best->addSelection( "long_strange" ,false);
@@ -234,6 +236,7 @@ StatusCode PrChecker::initialize()
   m_bestLong->setContainer( m_bestTracks );
   m_bestLong->setWriteHistos(m_writeBestLongHistos);
   m_bestLong->setSelectId( 15 );
+  m_bestLong->setGhostProbCut( m_ghostProbCut );
   m_bestLong->setTrackType( LHCb::Track::Long );
   m_bestLong->addSelection( "long" ,true);
   m_bestLong->addSelection( "long>5GeV" ,true);
@@ -250,6 +253,7 @@ StatusCode PrChecker::initialize()
   m_bestDownstream->setContainer( m_bestTracks );
   m_bestDownstream->setWriteHistos(m_writeBestDownstreamHistos);
   m_bestDownstream->setSelectId( 12 );
+  m_bestDownstream->setGhostProbCut( m_ghostProbCut );
   m_bestDownstream->setTrackType( LHCb::Track::Downstream ); 
   m_bestDownstream->addSelection( "UT+T" ,true);
   m_bestDownstream->addSelection( "UT+T>5GeV" ,true);
