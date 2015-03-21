@@ -44,14 +44,17 @@ public:
 
   virtual void addSelection ( std::string name, bool writeHisto ) = 0;
 
-  void setContainer( std::string name )  { m_container = name; };
-  void setWriteHistos(int write){ m_writeHistos = write; };
-  void setUseEta25Cut(bool cut){ m_eta25cut = cut;};
-  void setTriggerNumbers(bool numbers){ m_triggerNumbers = numbers;};
-  void setTrackExtrapolation(bool extra){m_trackextrapolation = extra;};
-  void setSelectId( int data )   { m_selectId = data; };
-  void setTrackType( LHCb::Track::Types type)  { m_trackType = type; };
-
+  void setContainer( std::string name )         { m_container = name; };
+  void setWriteHistos(int write)                { m_writeHistos = write; };
+  void setUseEta25Cut(bool cut)                 { m_eta25cut = cut;};
+  void setTriggerNumbers(bool numbers)          { m_triggerNumbers = numbers;};
+  void setTrackExtrapolation(bool extra)        { m_trackextrapolation = extra;};
+  void setSelectId( int data )                  { m_selectId = data; };
+  void setTrackType( LHCb::Track::Types type)   { m_trackType = type; };
+  void setGhostProbCut(double cutVal)           { m_ghostProbCut = cutVal;};
+  
+  
+    
   //virtual void setUse3MCLayerCut( bool cut) = 0;
     
   virtual void printStatistics() = 0;
@@ -65,7 +68,8 @@ protected:
   bool         m_trackextrapolation;
   int          m_selectId;
   std::string  m_container;
-
+  double       m_ghostProbCut;
+  
 
   LHCb::Track::Types m_trackType;
 

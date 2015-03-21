@@ -4,6 +4,9 @@
 ! Purpose     : Basic tools for Pattern for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2015-03-21 - Michel De Cian
+ - Add method and variable for cutting on ghost probability to IPrCounter.
+
 !========================= PrKernel v1r8 2015-02-23 =========================
 ! 2015-01-17 - Svende Braun
  - Add modified version of IPrCounter for efficiency studies.
