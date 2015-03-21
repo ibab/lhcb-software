@@ -38,6 +38,10 @@ option(GAUDI_CMT_RELEASE
        "use CMT deafult release flags instead of the CMake ones"
        ON)
 
+option(GAUDI_SLOW_DEBUG
+       "turn off all optimizations in debug builds"
+       OFF)
+
 if(DEFINED GAUDI_CPP11)
   message(WARNING "GAUDI_CPP11 is an obsolete option, use GAUDI_CXX_STANDARD=c++11 instead")
 endif()
@@ -96,7 +100,7 @@ if(NOT GAUDI_FLAGS_SET)
           FORCE)
     endif()
 
-    if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND LCG_COMPVERS VERSION_GREATER "47")
+    if (LCG_COMPVERS VERSION_GREATER "47")
       # Use -Og with Debug builds in gcc >= 4.8
       set(CMAKE_CXX_FLAGS_DEBUG "-Og -g"
           CACHE STRING "Flags used by the compiler during Debug builds."
@@ -104,7 +108,7 @@ if(NOT GAUDI_FLAGS_SET)
       set(CMAKE_C_FLAGS_DEBUG "-Og -g"
           CACHE STRING "Flags used by the compiler during Debug builds."
           FORCE)
-      set(CMAKE_C_FLAGS_DEBUG "-Og -g"
+      set(CMAKE_Fortran_FLAGS_DEBUG "-Og -g"
           CACHE STRING "Flags used by the compiler during Debug builds."
           FORCE)
     endif()
@@ -256,6 +260,12 @@ if(GAUDI_HIDE_WARNINGS)
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs")
     endif()
   endif()
+endif()
+
+if(GAUDI_SLOW_DEBUG)
+  string(REPLACE "-Og" "-O0" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
+  string(REPLACE "-Og" "-O0" CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}")
+  string(REPLACE "-Og" "-O0" CMAKE_Fortran_FLAGS_DEBUG "${CMAKE_Fortran_FLAGS_DEBUG}")
 endif()
 
 #--- Special flags -------------------------------------------------------------

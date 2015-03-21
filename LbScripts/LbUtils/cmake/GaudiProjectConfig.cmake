@@ -3,7 +3,7 @@
 #
 # Authors: Pere Mato, Marco Clemencic
 #
-# Commit Id: 557a8bb456f995aaf881e21ea73d4bb572335e7a
+# Commit Id: a03ef41014725741a760e5bb709777e70a91c430
 
 cmake_minimum_required(VERSION 2.8.5)
 
@@ -2267,8 +2267,11 @@ function(gaudi_add_test name)
     # add .qmt files as tests
     message(STATUS "Addind QMTest tests...")
     set(qmtest_root_dir ${CMAKE_CURRENT_SOURCE_DIR}/tests/qmtest)
-    file(GLOB_RECURSE qmt_files RELATIVE ${qmtest_root_dir} *.qmt)
+    file(GLOB_RECURSE qmt_files RELATIVE ${qmtest_root_dir} ${qmtest_root_dir}/*.qmt)
     string(TOLOWER "${subdir_name}" subdir_name_lower)
+    # ensure that the tests in a directory are declared in alphabetical order
+    # (see GAUDI-1007)
+    list(SORT qmt_files)
     foreach(qmt_file ${qmt_files})
       string(REPLACE ".qms/" "." qmt_name "${qmt_file}")
       string(REPLACE ".qmt" "" qmt_name "${qmt_name}")
@@ -2909,8 +2912,12 @@ macro(gaudi_external_project_environment)
 
       set(executable ${${_pack_upper}_EXECUTABLE})
       # special cases
-      if(pack MATCHES "^Qt")
+      if(pack MATCHES "^Qt4?\$")
         set(executable ${QT_QMAKE_EXECUTABLE})
+      elseif(pack MATCHES "^Qt5")
+        if(TARGET "Qt5::qmake")
+          get_property(executable TARGET Qt5::qmake PROPERTY IMPORTED_LOCATION)
+        endif()
       elseif(pack STREQUAL "Oracle")
         set(executable ${SQLPLUS_EXECUTABLE})
       elseif(pack STREQUAL "GCCXML")
@@ -2926,6 +2933,24 @@ macro(gaudi_external_project_environment)
         list(APPEND binary_path ${bin_path})
       endif()
 
+      if(pack MATCHES "^Qt5")
+        string(REPLACE "Qt5" "Qt5::" tgt_name "${pack}")
+        if(TARGET "${tgt_name}")
+          # FIXME: I'm not sure it's good to rely on the "_RELEASE" suffix
+          get_property(lib_path TARGET "${tgt_name}" PROPERTY IMPORTED_LOCATION_RELEASE)
+          get_filename_component(${pack}_LIBRARY_DIR "${lib_path}" PATH)
+          # FIXME: this should be handled in qt.conf
+          if(NOT environment MATCHES QT_QPA_PLATFORM_PLUGIN_PATH)
+            get_filename_component(plugin_path "${${pack}_LIBRARY_DIR}" PATH)
+            list(APPEND environment SET QT_QPA_PLATFORM_PLUGIN_PATH "${plugin_path}/plugins")
+          endif()
+          # FIXME: this should not be needed, but it seems that LCG Qt5 requires it
+          if(NOT environment MATCHES QT_XKB_CONFIG_ROOT)
+            list(APPEND environment SET QT_XKB_CONFIG_ROOT "/usr/share/X11/xkb")
+          endif()
+        endif()
+      endif()
+
       list(APPEND binary_path   ${${pack}_BINARY_PATH})
       list(APPEND python_path   ${${pack}_PYTHON_PATH})
       list(APPEND environment   ${${pack}_ENVIRONMENT})
@@ -2938,6 +2963,7 @@ macro(gaudi_external_project_environment)
         list(APPEND environment   ${${_pack_upper}_ENVIRONMENT})
         list(APPEND library_path2 ${${_pack_upper}_LIBRARY_DIR} ${${_pack_upper}_LIBRARY_DIRS})
       endif()
+
       # use also the libraries variable
       foreach(_lib ${${pack}_LIBRARIES} ${${_pack_upper}_LIBRARIES})
         if(EXISTS ${_lib})

@@ -1,5 +1,5 @@
 '''
-Test to check the correct override order of projects.
+Test relocatability of data packages.
 '''
 import os
 from subprocess import Popen, PIPE

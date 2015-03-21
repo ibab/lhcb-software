@@ -1,3 +1,78 @@
+! 2015-03-20 - Marco Clemencic (9e4e0b7)
+
+ - completed fix to LBCORE-766 (simultaneous use of Qt4 and Qt5)
+
+   * Ignore Qt5 when using CMake < 2.12
+   * Support the environment for Qt5:
+    LD_LIBRARY_PATH, PATH, QT_QPA_PLATFORM_PLUGIN_PATH, QT_XKB_CONFIG_ROOT
+
+
+! 2015-03-13 - Marco Clemencic (e45f973)
+
+ - partial fix to LBCORE-766 (simultaneous use of Qt4 and Qt5)
+
+   The remaining problems are:
+   * LD_LIBRARY_PATH not set (automatically) for Qt5 (LBCORE-768)
+   * it does not work with CMake 2.8.9
+
+
+! 2015-03-11 - Marco Clemencic (028fcc7)
+
+ - minor fix in a comment
+
+   
+
+! 2015-03-11 - Marco Clemencic (22ab9f5)
+
+ - fixed GAUDI-991: toolchain.cmake should fail when a project is missing
+
+   Unfortunately the fix is a bit of a hack, but a cleaner fix would require a
+   reimplementation of find_file(), which first looks in the PATH_SUFFIXES and
+   then in the regular search path (we want to look only in the suffixes).
+
+! 2015-02-24 - Marco Clemencic (c1d33a4)
+
+ - GAUDI-1012: disable optimization in debug if GAUDI_SLOW_DEBUG=TRUE
+
+   Setting the CMake option GAUDI_SLOW_DEBUG to true replaces the -Og 
+   optimization level with -O0 in debug builds.
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7732
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2015-02-24 - Marco Clemencic (9eeb37a)
+
+ - minor fix in debug flags
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7731
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2015-02-23 - Marco Clemencic (adcb44e)
+
+ - fixed GAUDI-1010: too aggressive search of .qmt files
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7730
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2015-02-19 - Marco Clemencic (1984f00)
+
+ - fixed GAUDI-1007: tests in a directory are added in alphabetical order
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7727
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
 ! 2015-02-13 - Marco Clemencic (721fcf2)
 
  - removed references to (real) QMTest from CMake configuration

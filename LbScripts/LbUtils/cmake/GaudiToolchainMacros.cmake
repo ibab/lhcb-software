@@ -114,6 +114,12 @@ function(_internal_find_projects projects_var tools_var config_file)
                                    ${name})
         # recursion
         if(${name_upper}_CONFIG_FILE)
+            # if the CMakeLists.txt of the other project was not found in the
+            # suffixes, we get the CMakeLists.txt we started from (GAUDI-991)
+            if(${name_upper}_CONFIG_FILE STREQUAL ${top_config_file} AND
+               NOT proj_name STREQUAL name_upper)
+              message(FATAL_ERROR "Cannot find project ${name} ${version}")
+            endif()
             # protect against infinit recursion
             list(FIND collected_config ${${name_upper}_CONFIG_FILE} conf_pos)
             if(NOT conf_pos EQUAL -1)
@@ -134,6 +140,8 @@ function(find_projects projects_var tools_var config_file)
     set(projects)
     set(tools)
     set(collected_config)
+    # this is used to detect if a dependency is missing
+    get_filename_component(top_config_file "${config_file}" ABSOLUTE)
     _internal_find_projects(projects tools ${config_file})
     if(projects)
         list(REMOVE_DUPLICATES projects)
