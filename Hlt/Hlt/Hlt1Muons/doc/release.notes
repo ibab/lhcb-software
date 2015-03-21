@@ -1,9 +1,15 @@
-!-----------------------------------------------------------------------------
+! 2015-03-20 - Vasileios Syropoulos!-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Muons
 ! Responsible : Roel Aaij
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+! 2015-03-21 - Vasileios Syropoulos
+  - MatchVeloTTMuon: Improved fall back to normal MatchVeloMuon for veloTT candidates w/o TT hits,
+     by instantiating MatchVeloMuon inside MatchVeloTTMuon.
+  - MatchVeloTTMuon: Switch to MasterExtrapolator for now. To be revisited.
+  - MatchVeloMuon: Updated configuables to according to HltTracking/HltRecoConf.py
+ 
 ! 2015-03-20 - Vasileios Syropoulos
  - MatchVeloMuon, MatchVeloTTMuon, HltVeloIsMuon use the Common code base of Muon/MuonID.
  - In MatchVeloMuon.h, MatchVeloTTMuon.h: seeds() method return by reference and not by value. 

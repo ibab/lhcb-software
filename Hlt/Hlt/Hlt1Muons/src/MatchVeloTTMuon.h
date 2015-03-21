@@ -58,23 +58,10 @@ private:
 
    bool m_setQOverP;
 
-   // Properties for veloTT candidates w/o TT hits
-     double m_xWindow;
-     double m_yWindow;
-
-     double m_za;
-     double m_zb;
-
-     double m_minMomentum;
-     double m_kickScale;
-     double m_kickOffset;
-
-   // state info
-   LHCb::State::Location  m_trackStateLoc ;
-
    // Tools
    CommonMuonHitManager* m_hitManager;
    ITrackExtrapolator* m_extrapolator;
+   IMatchVeloMuon* m_matchVeloMuon;
 
    // Services
    ILHCbMagnetSvc* m_fieldSvc;
@@ -109,11 +96,6 @@ private:
  
    void i_addHits( Candidate& seed );
 
-     // methods for veloTT candidateds w/o TT hits.
-     void i_findSeeds_noTT( const Candidate& seed, const unsigned int seedStation );
-    
-     void i_addHits_noTT( Candidate& seed );
-
    void i_fitCandidate( Candidate& seed ) const;
 
    void i_clean();
@@ -130,25 +112,14 @@ private:
    double FoIX( const int station, const int region, const double p ) const;
    double FoIY( const int station, const int region, const double p ) const;
 
-   // mothods for veloTT candidates w/o TT hits
-      inline double dtx( const double p ) const
-      {
-	return m_kickScale / ( p - m_kickOffset );
-      } 
-      
-      inline double momentum( const double dtx ) const
-      {
-	return m_kickScale / fabs( dtx ) + m_kickOffset;
-      }
-      
-    // Interface methods
-    void findSeeds( const Candidate& seed, const unsigned int seedStation ) override;
+   // Interface methods
+   void findSeeds( const Candidate& seed, const unsigned int seedStation ) override;
 
-    void addHits( Candidate& seed ) override;
+   void addHits( Candidate& seed ) override;
 
-    void fitCandidate( Candidate& seed ) const override;
+   void fitCandidate( Candidate& seed ) const override;
 
-    void clean() override;
+   void clean() override;
 
 };
 #endif // MATCHVELOTTMUON_H

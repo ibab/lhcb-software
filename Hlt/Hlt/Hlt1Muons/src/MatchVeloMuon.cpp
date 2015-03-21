@@ -45,8 +45,8 @@ MatchVeloMuon::MatchVeloMuon( const std::string& type, const std::string& name,
 {
    declareInterface<ITracksFromTrack>( this ); 
 
-   declareProperty( "XWindow", m_xWindow = 300 );
-   declareProperty( "YWindow", m_yWindow = 300 );
+   declareProperty( "XWindow", m_xWindow = 200 );
+   declareProperty( "YWindow", m_yWindow = 200 );
 
    declareProperty( "MinMomentum", m_minMomentum = 6 * Gaudi::Units::GeV );
    declareProperty( "KickScale", m_kickScale = 1255 * Gaudi::Units::MeV );
