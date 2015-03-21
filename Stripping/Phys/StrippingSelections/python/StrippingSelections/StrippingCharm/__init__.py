@@ -3,7 +3,10 @@ Module importing stripping selection line builder modules
 for Charm WG.
 """
 
-_selections = [ "StrippingB2ppipiSigmacmm_Lcpi" ]
+_selections = (
+    "StrippingB2ppipiSigmacmm_Lcpi" ,
+    'StrippingPromptCharm'
+    )
 
 for _sel in _selections :
     try :
