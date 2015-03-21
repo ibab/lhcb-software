@@ -13,6 +13,7 @@ use   GaudiPolicy v*
 use   Python      v* LCG_Interfaces -no_auto_imports
 use   pytools     v* LCG_Interfaces -no_auto_imports
 use   pygraphics  v* LCG_Interfaces -no_auto_imports
+use   graphviz    v* LCG_Interfaces -no_auto_imports 
 #============================================================================
 apply_pattern install_python_modules
 #============================================================================

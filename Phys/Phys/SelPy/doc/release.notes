@@ -4,6 +4,10 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+! 2015-03-21 - Vanya Belyaev
+ - python/SelPy/graph.py 
+   improve DOT-graphs for selections and vizualization of selelctions 
+ 
 !========================= SelPy v4r2p2 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic
