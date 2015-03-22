@@ -34,41 +34,26 @@ else                       : logger = getLogger( __name__ )
 logger.debug ( 'Some specific comparison of histo-objects')
 # =============================================================================
 ## Can 1D-histogram can be considered as ``constant'' ?  
-def _h1_constant_ ( h1 , mn , mx , prob = 0.90 , delta = 0.001 ) :
+def _h1_constant_ ( h1 , prob = 0.50 , opts = '0Q' ) :
     """
     Can  1D-historgam be considered as constant ? 
     """
     # 
     if not isinstance ( h1 , ( ROOT.TH1D , ROOT.TH1F ) ) : return False 
     #
-    r  = h1.Fit ( 'pol0','S0Q' )
+    r  = h1.Fit ( 'pol0', 'S' + opts )
     if 0 != r.Status() : 
         logger.warning("Can't fit with constant function %s" % r.Status() )
-        return False
+        r  = h1.Fit ( 'pol0', 'S' + opts )
+        if 0 != r.Status() : return False
     #
-    for i in range ( 0 , 5 ) :
-        ##
-        v   = r[0]
-        if  0 != v.value() :
-            logger.warning("Can't fit with non-zero constant function" )
-            return False
-        ##
-        h1 /= v
-        r   = h1.Fit ( 'pol0','S0Q' )
-        if 0 != r.Status() : 
-            logger.warning("Can't fit with constant function %s" % r.Status() )
-            return False
-        ## compare!
-        v = r[0]
-        if abs ( v - 1.0 ) < delta and r.Prob() >= prob : return r
-        
-    return False
+    return prob <= r.Prob()
 
 ROOT.TH1D.is_constant = _h1_constant_
 ROOT.TH1F.is_constant = _h1_constant_
 
 # =============================================================================
-## compare the 1D-historgams trying to fit one with other
+## compare the 1D-histograms trying to fit one with other
 def _h1_cmp_fit_ ( h1              ,
                    h2              ,
                    rescale = False ,  
@@ -94,7 +79,6 @@ def _h1_cmp_fit_ ( h1              ,
     f2.ReleaseParameter ( 0 ) 
 
     rf = h1.Fit ( f2 , 'S0Q' + opts ) 
-
     if 0 != rf.Status() :
         logger.warning("Can't fit with function " % rf.Status() )
         return None
@@ -248,7 +232,6 @@ def _h1_cmp_dist_ ( h1              ,
 
 ROOT.TH1D.cmp_dist = _h1_cmp_dist_
 ROOT.TH1F.cmp_dist = _h1_cmp_dist_ 
-
 
 # =============================================================================
 ## calculate the norm of difference of scaled histograms/functions 

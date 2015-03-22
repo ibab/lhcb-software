@@ -289,7 +289,8 @@ class PDF (object) :
     #  r,f = model.fitTo ( dataset , ncpu     = 10   )    
     #  r,f = model.fitTo ( dataset , draw = True , nbins = 300 )    
     #  @endcode 
-    def fitTo ( self , dataset , draw = False , nbins = 100 , silent = False , refit = False , *args , **kwargs ) :
+    def fitTo ( self , dataset , draw = False , nbins = 100 ,
+                silent = False , refit = False , *args , **kwargs ) :
         """
         Perform the actual fit (and draw it)
         >>> r,f = model.fitTo ( dataset )
@@ -907,7 +908,7 @@ class H1D_dset(object) :
 ## simple convertor of 1D-histogram into PDF
 #  @author Vanya Belyaev Ivan.Belyaev@itep.ru
 #  @date 2013-12-01
-class H1D_pdf(H1D_dset) :
+class H1D_pdf(H1D_dset,PDF) :
     """
     Simple convertor of 1D-histogram into PDF 
     """
@@ -917,17 +918,20 @@ class H1D_pdf(H1D_dset) :
                    mass  = None ) :
         
         H1D_dset.__init__ ( self , name , histo , mass )
-        
-        self.vset  = ROOT.RooArgSet  ( self.mass )
+        PDF     .__init__ ( self , name )
         
         #
         ## finally create PDF :
         #
-        self.pdf    = ROOT.RooHistPdf (
+        self.vset  = ROOT.RooArgSet  ( self.mass )        
+        self.pdf   = ROOT.RooHistPdf (
             'hpdf_%s'            % name ,
             'HistoPDF(%s/%s/%s)' % ( name , histo.GetName() , histo.GetTitle() ) , 
             self.vset  , 
-            self.dset  ) 
+            self.dset  )
+        
+        ## and declare it be be a "signal"
+        self.signals().add ( self.pdf ) 
         
 # =============================================================================
 ## simple convertor of 2D-histo to data set
