@@ -5,7 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-03-22 - Vanya Belyaev
- - add two modules in StrippingBandQ, both are fro WG-production
+ - one more module in StrippingBandQ for WG-production
+
+! 2015-03-22 - Vanya Belyaev
+ - add two modules in StrippingBandQ, both are for WG-production
 
 ! 2015-03-21 - Vanya Belyaev
  - add StrippingPromptCharm 

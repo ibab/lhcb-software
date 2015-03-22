@@ -8,6 +8,7 @@ _selections = (
     'StrippingB2JpsiXforEM_s'   ,
     'StrippingPsiX0'            , ## no need to run in production 
     'StrippingPsiXForBandQ'     , ## no need to run in production
+    'StrippingUpsilonExotic'    , ## no need to run in production
     )
 
 for _sel in _selections :

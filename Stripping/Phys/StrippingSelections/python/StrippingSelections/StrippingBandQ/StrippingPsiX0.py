@@ -259,9 +259,6 @@ class PsiX0Conf(LineBuilder) :
     """
     __configuration_keys__ = tuple ( _default_configuration_.keys() )
     
-    def __getitem__ ( self , item ) :
-        return self.configurationParameter ( item )
-    
     ## get the default configuration 
     @staticmethod
     def defaultConfiguration( key = None ) :
@@ -458,47 +455,6 @@ class PsiX0Conf(LineBuilder) :
         
         return self._add_selection ( 'Selections' , sel )
 
-    # =========================================================================
-    ## pure technical method for creation of selections
-    # =========================================================================
-    def make_selection ( self      ,
-                         tag       , 
-                         algotype  ,
-                         inputs    , 
-                         *args     ,
-                         **kwargs  ) :
-        """
-        Technical method for creation of 1-step selections 
-        """
-        sel_tag  = '%s_Selection' % tag
-        sel_name = 'Sel%sFor%s'   % ( tag , self.name() )
-        #
-        ## check existing selection
-        #
-        sel      = self._selection ( sel_tag )
-        if sel : return sel 
-
-        #
-        ## adjust a bit the arguments
-        if not kwargs.has_key('Preambulo')           :
-            kwargs ['Preambulo'        ] = self['Preambulo']
-
-        if not kwargs.has_key( 'ParticleCombiners' ) :
-            kwargs ['ParticleCombiners'] = { '' : 'LoKi::VertexFitter:PUBLIC' } 
-            
-        #
-        ## create new seleciton
-        #
-        alg = algotype ( *args , **kwargs )
-        # 
-        from PhysSelPython.Wrappers import Selection
-        sel = Selection (
-            sel_name                    , 
-            Algorithm          = alg    ,
-            RequiredSelections = inputs
-            )
-        # 
-        return self._add_selection( sel_tag , sel ) 
 
     # =========================================================================
     ## get all lines  
