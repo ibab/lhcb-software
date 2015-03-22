@@ -184,10 +184,6 @@ _default_configuration_ = {
     HASRICH                      &
     ( MIPCHI2DV()  > 9         ) 
     """ ,
-    ## PID-cut for pions 
-    'PionPIDCut'   : " PROBNNpi > 0.1" ,
-    'KaonPIDCut'   : " PROBNNk  > 0.1" ,
-    'ProtonPIDCut' : " PROBNNp  > 0.1" ,
     ##
     'MuonCut'   : """
     ISMUON &
@@ -358,7 +354,7 @@ class StrippingPromptCharmConf(LineBuilder) :
         for key in keys :
 
             if not key in _default_configuration_ :
-                raise KeyError("Invalid key is specified: '%s'" % key )
+                raise KeyError ("Invalid key is specified: '%s'" % key )
 
             val = _config[key]
             if val != _default_configuration_ [ key ] :
