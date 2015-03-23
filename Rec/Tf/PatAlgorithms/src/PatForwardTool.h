@@ -67,11 +67,13 @@ private:
   void buildXCandidatesList( PatFwdTrackCandidate& track ) const;
 
   class XInterval {
-      double m_xscale,m_offset,m_xmin,m_xmax;
+    double m_zMagnet,m_xMagnet,m_txMin,m_txMax,m_xmin,m_xmax;
   public:
-      XInterval(double xScale, double xOffset, double xMin, double xMax) 
-          : m_xscale{xScale}, m_offset{xOffset}, m_xmin{xMin}, m_xmax{xMax} {}
-      double xKick(double z) const { return m_xscale*z-m_offset; }
+    XInterval(double zMagnet,double xMagnet, double txMin, double txMax, double xMinRef, double xMaxRef) 
+      : m_zMagnet{zMagnet}, m_xMagnet{xMagnet}, m_txMin{txMin}, m_txMax{txMax}, m_xmin {xMinRef},m_xmax{xMaxRef} {}
+      double xMinAtZ(double z) const { return m_txMin*(z-m_zMagnet)+m_xMagnet; }
+      double xMaxAtZ(double z) const { return m_txMax*(z-m_zMagnet)+m_xMagnet; }
+      //== This is the range at the reference plane
       double xMin() const { return m_xmin; }
       double xMax() const { return m_xmax; }
       bool inside(double x) const { return m_xmin <= x && x < m_xmax; }
@@ -87,6 +89,7 @@ private:
       }
   };
 
+
   template <typename T> T dSlope_kick( T pt, T sinTrack ) const {
       return sinTrack * m_magnetKickParams.first / ( pt - sinTrack * m_magnetKickParams.second );
   }
@@ -100,6 +103,8 @@ private:
       const double dz     = m_fwdTool->zReference() - zMagnet;
       const double maxRange = dSlope*dz;
       double xMin = xExtrap - maxRange;
+      double dSlopeMin = -dSlope;
+      double dSlopeMax =  dSlope;
       double xMax = xExtrap + maxRange;
       
       //== based on momentum a wrong-charge sign window size is defined
@@ -111,15 +116,24 @@ private:
                   << " q/p " << track.qOverP()
                   << " predict " << xExtrap + kickRange << endmsg;
         }
+        //== In the case of a given charge estimate, the search window is not symmetric 
+        //== around the velo track extrapolation.
         if ( std::signbit( track.qOverP() ) != std::signbit( m_fwdTool->magscalefactor() ) ) {
           xMin = xExtrap - kickRange;
+          dSlopeMin = -kickRange/dz;
         } else {
           xMax = xExtrap + kickRange;
+          dSlopeMax = kickRange/dz;
         }
       }
       // compute parameters of deltaX as a function of z
-      return { dSlope, dSlope*zMagnet, xMin, xMax };
+      return { zMagnet, track.xStraight( zMagnet ), 
+          track.slX()+dSlopeMin, 
+          track.slX()+dSlopeMax, 
+          xMin, xMax };
   };
+
+
 
 
   boost::iterator_range<typename PatFwdHits::const_iterator>

@@ -746,10 +746,10 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
     auto yRegion = track.yStraight( z );
     if (!regionB->isYCompatible( yRegion, yCompat )) continue;
     // TODO: yRegion * regionB->sinT() should contribute to the central value, not the width...
-    auto xRange = symmetricRange( track.xStraight(z),
-                                  interval.xKick( z ) + fabs( yRegion * regionB->sinT() ) + 20. );
-    auto hitRange = m_tHitManager->hitsInXRange(xRange.min(), xRange.max(),
+    auto tol = ( fabs( yRegion * regionB->sinT() ) + 20.);
+    auto hitRange = m_tHitManager->hitsInXRange(interval.xMinAtZ(z) - tol,  interval.xMaxAtZ(z) + tol,
                                                 region.station(), region.layer(), region.region());
+
     // break loop here, store (hitRange,yRegion,region.isOT()) ???
 
     // grow capacity so that things don't move around afterwards...
