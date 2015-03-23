@@ -8,6 +8,19 @@
 !
 !----------------------------------------------------------------------------
 
+| 2015-03-24 - Olli Lupton
+ - First commit for PID calibration lines:
+  . Detached J/psi -> mumu and B+ -> (J/psi -> mumu)K+
+  . Same with J/psi -> ee
+  . Same with electrons from L0 candidates only
+  . Detached phi -> mumu and Ds+ -> (phi -> mumu)pi+
+  . KS0 long-long
+  . Lambda0 long-long: filtered from common particles, highP, isMuon lines
+  . downstream-downstream KS0 and Lambda0 lines turned off by default
+ - These all run but cuts are not tuned (currently affected by bugs breaking
+   L0 TISTOS and lack of muon ID for non-muon tracks).
+ - These will mainly be cloned to the Turbo stream but this is not done yet.
+
 ! 2015-03-23 - V. Gligorov
  - Commit retuning of cuts in CharmHad to get a "realistic" rate for the D->HHH 
    and Lc->HHH lines.
