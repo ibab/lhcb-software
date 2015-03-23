@@ -23,7 +23,7 @@ __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2014-06-08"
 __all__     = ()  ## nothing to be imported 
 # =============================================================================
-import ROOT
+import ROOT,os 
 import Ostap.PyRoUts 
 from   Ostap.Data    import Data, DataAndLumi  
 # =============================================================================
@@ -37,8 +37,11 @@ else :
 # =============================================================================
 logger.info('Test  Data')
 # =============================================================================
-# data patterns: 
+# data patterns:
 ganga = '/afs/cern.ch/work/i/ibelyaev/public/GANGA/workspace/ibelyaev/LocalXML'
+if os.path.exists ( '/mnt/shared/VMDATA/LocalXML' ) :
+    ganga = '/mnt/shared/VMDATA/LocalXML'
+# =============================================================================
 patterns = [
     ganga + '/358/*/output/CY.root' , ## 2k+11,down
     ganga + '/359/*/output/CY.root' , ## 2k+11,up

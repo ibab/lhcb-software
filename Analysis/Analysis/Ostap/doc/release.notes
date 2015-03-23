@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-03-23 - Vanya Belyaev
+ -fix tests/TestData.py to work also on my local CERNVM 
+
 ! 2015-03-22 - Vanya Belyaev
  - improve histogram fits 
 
