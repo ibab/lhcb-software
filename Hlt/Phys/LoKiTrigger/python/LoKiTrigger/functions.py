@@ -244,6 +244,8 @@ TC_VXMAKE4     = LoKi.Hlt1.VxMaker4
 TC_TOPROTOPARTICLES = LoKi.Hlt1.ToProtoParticles
 ## @see LoKi::Cuts::TC_TOPARTICLES
 TC_TOPARTICLES = LoKi.Hlt1.ToParticles
+## @see LoKi::Cuts::TC_FROMCALOTOPARTICLES
+TC_FROMCALOTOPARTICLES = LoKi.Hlt1.FromCaloToParticles
 ## @see LoKi::Cuts::TC_HLT1COMBINER
 TC_HLT1COMBINER = LoKi.Hlt1.Hlt1Combiner
 ## @see LoKi::Cuts::TC_HLT1COMBINER2

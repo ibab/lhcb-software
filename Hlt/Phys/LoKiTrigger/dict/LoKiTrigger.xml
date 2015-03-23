@@ -94,6 +94,7 @@
   <class name    = "LoKi::Hlt1::MatchTVelo"          />
   <class name    = "LoKi::Hlt1::ToProtoParticles"    />
   <class name    = "LoKi::Hlt1::ToParticles"         />
+  <class name    = "LoKi::Hlt1::FromCaloToParticles" />
   <class name    = "LoKi::Hlt1::Hlt1CombinerConf">
     <field name = "m_acut"      transient = "true"/>
     <field name = "m_cut"       transient = "true"/>
