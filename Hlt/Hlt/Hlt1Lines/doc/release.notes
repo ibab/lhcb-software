@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-03-23 - Albert Puig
+ - Add Bs->gamma gamma line.
+
 ! 2015-03-16 - Roel Aaij
  - Update MatrixNet filenames used in Hlt1MVALines.
 
