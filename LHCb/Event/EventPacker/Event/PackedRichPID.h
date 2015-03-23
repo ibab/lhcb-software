@@ -3,6 +3,7 @@
 #define EVENT_PACKEDRICHPID_H 1
 
 #include <string>
+#include <sstream>
 
 // Kernel
 #include "Event/StandardPacker.h"
@@ -13,6 +14,7 @@
 // Gaudi
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/GaudiException.h"
 
 namespace LHCb
 {
@@ -161,6 +163,19 @@ namespace LHCb
 
     /// Access the parent algorithm
     GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
+
+    /// Check if the given packing version is supported
+    bool isSupportedVer( const char& ver ) const
+    {
+      const bool OK = ( 0 <= ver && ver <= 3 );
+      if ( !OK )
+      {
+        std::ostringstream mess;
+        mess << "Unknown packed data version " << (int)ver;
+        throw GaudiException( mess.str(), "RichPIDPacker", StatusCode::FAILURE );
+      }
+      return OK;
+    }
 
   private:
 

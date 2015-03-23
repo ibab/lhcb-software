@@ -4,6 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2015-03-23 - Chris Jones
+ - Various small cleanups.
+ - Tune a bit better than reserved vector sizes in PackedRecVertex.
+
 ! 2015-03-15 - Chris Jones
  - Add some future proofing packing version checks to packers which had
    versioning added in the last commit.

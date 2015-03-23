@@ -250,13 +250,6 @@ namespace LHCb
     }
     static const std::string packedLocation()   { return LHCb::PackedMCHitLocation::VP; }
     static const std::string unpackedLocation() { return LHCb::MCHitLocation::VP;       }
-    /*
-    void pack( const DataVector & hits,
-               PackedDataVector & phits ) const
-    { printf("MCVPHitPacker::pack(%d hits):\n", hits.size() );
-      // printf("MCVPHitPacker::pack(%d): %s => %s\n", hits.size(), LHCb::MCHitLocation::VP, LHCb::PackedMCHitLocation::VP );
-      MCHitPacker::pack(hits, phits); }
-    */
   };
 
   /** @class MCTTHitPacker Event/PackedMCHit.h

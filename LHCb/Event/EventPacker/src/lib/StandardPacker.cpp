@@ -97,7 +97,7 @@ bool StandardPacker::hintAndKey32( const int data,
     int indx(0); indexAndKey32(data,indx,key);
 
     // Get the source link
-    LinkManager::Link * sourceLink = source->linkMgr()->link(indx);
+    const auto * sourceLink = source->linkMgr()->link(indx);
     if ( sourceLink )
     {
       // If link is valid, saved to target and get the hint
@@ -131,7 +131,7 @@ bool StandardPacker::hintAndKey64( const long long data,
     int indx(0); indexAndKey64(data,indx,key);
 
     // Get the source link
-    LinkManager::Link * sourceLink = source->linkMgr()->link(indx);
+    const auto * sourceLink = source->linkMgr()->link(indx);
     if ( sourceLink )
     {
       // If link is valid, saved to target and get the hint

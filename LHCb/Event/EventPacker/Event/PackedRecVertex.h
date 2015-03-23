@@ -107,9 +107,10 @@ namespace LHCb
     /// Standard constructor
     PackedRecVertices( ) : m_packingVersion(0)
     {
-      m_vect.reserve(10);
-      m_refs.reserve(200);
-      m_extra.reserve(500);
+      m_vect.reserve    ( 5   );
+      m_refs.reserve    ( 100 );
+      m_weights.reserve ( 100 );
+      m_extra.reserve   ( 250 );
     }
 
     virtual ~PackedRecVertices( ) {}; ///< Destructor

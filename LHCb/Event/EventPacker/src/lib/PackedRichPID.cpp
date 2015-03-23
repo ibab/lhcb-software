@@ -14,7 +14,7 @@ void RichPIDPacker::pack( const DataVector & pids,
                           PackedDataVector & ppids ) const
 {
   const char ver = ppids.packingVersion();
-  if ( 0 <= ver && ver <= 3  )
+  if ( isSupportedVer(ver) )
   {
     ppids.data().reserve( pids.size() );
     for ( const Data * pid : pids )
@@ -42,19 +42,13 @@ void RichPIDPacker::pack( const DataVector & pids,
       }
     }
   }
-  else
-  {
-    std::ostringstream mess;
-    mess << "Unknown packed data version " << (int)ver;
-    throw GaudiException( mess.str(), "RichPIDPacker", StatusCode::FAILURE );
-  }
 }
 
 void RichPIDPacker::unpack( const PackedDataVector & ppids,
                             DataVector       & pids ) const
 {
   const char ver = ppids.packingVersion();
-  if ( 0 <= ver && ver <= 3  )
+  if ( isSupportedVer(ver) )
   {
     pids.reserve( ppids.data().size() );
     for ( const PackedData & ppid : ppids.data() )
@@ -70,12 +64,13 @@ void RichPIDPacker::unpack( const PackedDataVector & ppids,
       pid->setParticleDeltaLL( Rich::Pion,      (float)m_pack.deltaLL(ppid.dllPi) );
       pid->setParticleDeltaLL( Rich::Kaon,      (float)m_pack.deltaLL(ppid.dllKa) );
       pid->setParticleDeltaLL( Rich::Proton,    (float)m_pack.deltaLL(ppid.dllPr) );
-      if ( ver > 0 ) pid->setParticleDeltaLL( Rich::BelowThreshold, (float)m_pack.deltaLL(ppid.dllBt) );
+      if ( ver > 0 ) pid->setParticleDeltaLL( Rich::BelowThreshold, 
+                                              (float)m_pack.deltaLL(ppid.dllBt) );
       if ( -1 != ppid.track )
       {
         int hintID(0), key(0);
-        if ( ( ver <  3 && m_pack.hintAndKey32( ppid.track, &ppids, &pids, hintID, key ) ) ||
-             ( ver >= 3 && m_pack.hintAndKey64( ppid.track, &ppids, &pids, hintID, key ) ) )
+        if ( ( ver <  3 && m_pack.hintAndKey32(ppid.track,&ppids,&pids,hintID,key) ) ||
+             ( ver >= 3 && m_pack.hintAndKey64(ppid.track,&ppids,&pids,hintID,key) ) )
         {
           SmartRef<LHCb::Track> ref(&pids,hintID,key);
           pid->setTrack( ref );
@@ -83,12 +78,6 @@ void RichPIDPacker::unpack( const PackedDataVector & ppids,
         else { parent().Error( "Corrupt RichPID Track SmartRef detected." ).ignore(); }
       }
     }
-  }
-  else
-  {
-    std::ostringstream mess;
-    mess << "Unknown packed data version " << (int)ver;
-    throw GaudiException( mess.str(), "RichPIDPacker", StatusCode::FAILURE );
   }
 }
 
