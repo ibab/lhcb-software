@@ -59,9 +59,16 @@ namespace LoKi
       // =====================================================================
       ///  constructor from the decay descriptor and cuts
       Hlt1CombinerConf
-      ( std::string                                                       decay ,
+      ( std::string                                                       decay   ,
         const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut ,
         const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut ) ;
+      // =====================================================================
+      ///  constructor from the decay descriptor, cuts and combiner
+      Hlt1CombinerConf
+      ( std::string                                                       decay    ,
+        const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut  ,
+        const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut  ,
+        std::string                                                       combiner ) ;
       /// virtual destructor
       virtual ~Hlt1CombinerConf () ;                           // virtual destructor
       // ======================================================================
@@ -87,6 +94,9 @@ namespace LoKi
       /// the mother cut
       const LoKi::Functor<const LHCb::Particle*,bool>&     cut() const
       { return m_cut ; }
+      /// the combiner tool
+      const std::string                                    combiner() const
+      { return m_combinertool ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -110,6 +120,8 @@ namespace LoKi
       LoKi::FunctorFromFunctor<const LHCb::Particle*, bool>     m_cut            ;
       /// decay descriptor decoder tool
       IDecodeSimpleDecayString*                                 m_dsds           ;
+      /// the combiner tool name
+      std::string                                               m_combinertool   ;
       // ======================================================================
     public:
       // ======================================================================

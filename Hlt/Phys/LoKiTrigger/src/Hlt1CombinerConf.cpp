@@ -38,6 +38,26 @@ LoKi::Hlt1::Hlt1CombinerConf::Hlt1CombinerConf
   : m_decstring ( decay )
   , m_acut ( combcut )
   , m_cut  ( mothcut )
+  , m_combinertool ( "LoKi::FastVertexFitter:PUBLIC" )
+{
+  LoKi::ILoKiSvc* svc = LoKi::AuxFunBase::lokiSvc() ;
+  SmartIF<IToolSvc> tsvc ( svc ) ;
+  StatusCode sc = tsvc->retrieveTool("DecodeSimpleDecayString:PUBLIC", m_dsds);
+  m_decays = Decays::decays ( m_decstring, m_dsds ) ;
+  Assert ( !m_decays.empty(), "Unable to decode DecayDescriptor" );
+}
+// ============================================================================
+//  consructor from the decay, combination, mother cuts and combiner
+// ============================================================================
+LoKi::Hlt1::Hlt1CombinerConf::Hlt1CombinerConf
+( std::string                                                       decay      ,
+  const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut    ,
+  const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut    ,
+  std::string                                                       combiner   )
+  : m_decstring ( decay )
+  , m_acut ( combcut )
+  , m_cut  ( mothcut )
+  , m_combinertool ( combiner )
 {
   LoKi::ILoKiSvc* svc = LoKi::AuxFunBase::lokiSvc() ;
   SmartIF<IToolSvc> tsvc ( svc ) ;
@@ -59,6 +79,8 @@ std::ostream& LoKi::Hlt1::Hlt1CombinerConf::fillStream
   m_acut.fillStream( s );
   s << "," ;
   m_cut.fillStream( s ) ;
+  s << "," ;
+  combiner() ;
   s << ")" ;
   return s;
 }
@@ -77,7 +99,8 @@ std::string Gaudi::Utils::toCpp ( const LoKi::Hlt1::Hlt1CombinerConf& o )
   std::string s = "LoKi::Hlt1::Hlt1CombinerConf( ";
   s += toCpp ( o.decay() ) + ", " ;
   s += toCpp ( o.acut() )  + ", " ;
-  s += toCpp ( o.cut() )          ;
+  s += toCpp ( o.cut() )   + ", " ;
+  s += toCpp ( o.combiner() )     ;
   s += ")" ;
   return s ;
 }

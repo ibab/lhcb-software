@@ -77,7 +77,7 @@ StatusCode LoKi::Hlt1::Hlt1Combiner::setup()
   // get required tools
   LoKi::ILoKiSvc* svc = lokiSvc() ;
   SmartIF<IToolSvc> tsvc ( svc ) ;
-  StatusCode sc = tsvc->retrieveTool("LoKi::FastVertexFitter:PUBLIC", m_pc);
+  StatusCode sc = tsvc->retrieveTool(m_conf.combiner(), m_pc);
   //sc = tsvc->retrieveTool("DaVinci::DefaultTools::ParticleCombiner", m_pc);
   return sc ;
 }
