@@ -87,7 +87,7 @@ parser.add_option("--relPVFinder",     action = "store", type = "string", dest =
 parser.add_option("--distCalc",        action = "store", type = "string", dest = "distCalc",
                   default = "LoKi::DistanceCalculator")
 parser.add_option("--tauCalc",         action = "store", type = "string", dest = "tauCalc",
-                  default = "PropertimeFitter")
+                  default = "LoKi::LifetimeFitter")
 # The options for the swimming granularity etc.
 # Because we do not apriori know how many turning points there are in each event,
 # we need to swim in two steps. First we scan the Velo end-to-end with some given

@@ -61,7 +61,7 @@ class Swimming(LHCbConfigurableUser) :
         , "OutPVSel"           : 'PV3D'          # The name of the HLT1 PV3D 'selection' 
         , "RelPVFinder"        : 'GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2' # Related PV finder
         , "DistCalc"           : 'LoKi::DistanceCalculator' # The distance calculator
-        , "TauCalc"            : 'PropertimeFitter'         # The decay time calculator
+        , "TauCalc"            : 'LoKi::LifetimeFitter'         # The decay time calculator
         , "LifetimeFitter"     : ['LifetimeFitter']
         , "DecayTreeFitterConstraints" : { 'DTF' : { } }     # List of particles whose masses should be constrained in the lifetime fit.
         , "RefitPVs"           : False
