@@ -12,7 +12,7 @@ def run(index):
     state = State.NOT_READY
     com.set_status(state)
     n_it = 0
-    n_workers = 1
+    n_workers = 2
     sleep(0.2)
     while True:
         command = com.get_command()
@@ -22,7 +22,7 @@ def run(index):
         elif command == 'start' and state == State.READY:
             state = State.RUNNING
             com.set_status(state)
-            L0_noHlt1_histosGen_Multi.MultiRun(index, 1, 1, [0,1,2])  
+            L0_noHlt1_histosGen_Multi.MultiRun(index, 2, 1, [0,1])  
             sleep(2)
             state = State.PAUSED
         elif command == 'stop' and state == State.PAUSED:

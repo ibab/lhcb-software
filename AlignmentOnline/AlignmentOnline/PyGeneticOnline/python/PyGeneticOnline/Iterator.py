@@ -11,23 +11,6 @@ def run():
     state = State.NOT_READY
     com.set_status(state)
 
-    opt= TString("PopSize=5:Steps=3:Cycles=3:ConvCrit=0.01:SaveBestCycle=5") 
-    name = TString("FitterGA") 
-
-    lo = std.vector('double')()
-    hi = std.vector('double')()
-    lo.push_back(100.)	
-    hi.push_back(400.)
-    lo.push_back(20.)	
-    hi.push_back(100.)
-    lo.push_back(600.)	
-    hi.push_back(1300.)
-
-    Channels = std.vector('int')()
-    Channels.push_back(1)
-    Channels.push_back(2)	
-    Channels.push_back(6)
-
     DefParameters = std.vector('double')()
     DefParameters.push_back(179.)
     DefParameters.push_back(240.)
@@ -37,11 +20,6 @@ def run():
     DefParameters.push_back(600.)
     DefParameters.push_back(60.)
     DefParameters.push_back(900.)
-
-    UsedParameters = std.vector('int')()
-    UsedParameters.push_back(1)
-    UsedParameters.push_back(6)
-    UsedParameters.push_back(7)
 
     MaxEfficiencies = std.vector('double')()
     MaxEfficiencies.push_back(0.4)
@@ -55,17 +33,93 @@ def run():
     MaxEfficiencies.push_back(0.3)
     MaxEfficiencies.push_back(0.2)
     MaxEfficiencies.push_back(0.7)
-    MaxEfficiencies.push_back(0.6)
+    MaxEfficiencies.push_back(0.6)  
 
-    RunType = TString("FULL")
+    LineNames = std.vector('string')()
+    LineNames.push_back('mbias')
+    LineNames.push_back('Bs2Dsmunu')
+    LineNames.push_back('Lb2pmunu')
+    LineNames.push_back('Bs2phigamma')
+    LineNames.push_back('Bs2mumu')
+    LineNames.push_back('Bs2Kstee')
+    LineNames.push_back('Bd2Kstmumu')
+    LineNames.push_back('Bd2Kpi')
+    LineNames.push_back('Bs2phiphi')
+    LineNames.push_back('DD')
+    LineNames.push_back('Bs2DsPi')
+    LineNames.push_back('Bs2JpsiPhi')
+    LineNames.push_back('Bs2Jpsikkpipi')
+    LineNames.push_back('D2kkpi')
+    LineNames.push_back('Dst2Dpi2kskk')
 
-    fitter = TMVA.GeneticFitterMod(name,lo,hi, Channels,opt,DefParameters,UsedParameters)
+    LineTypes = std.vector('int')()
+    LineTypes.push_back(0)
+    LineTypes.push_back(1)
+    LineTypes.push_back(1)
+    LineTypes.push_back(3)
+    LineTypes.push_back(2)
+    LineTypes.push_back(3)
+    LineTypes.push_back(2)
+    LineTypes.push_back(1)
+    LineTypes.push_back(1)
+    LineTypes.push_back(1)
+    LineTypes.push_back(1)
+    LineTypes.push_back(2)
+    LineTypes.push_back(2)
+    LineTypes.push_back(1)
+    LineTypes.push_back(1)
+
+
+    opt= TString("PopSize=5:Steps=3:Cycles=3:ConvCrit=0.01:SaveBestCycle=5") 
+    name = TString("FitterGA") 
+
+
+    Channels = std.vector('int')()
+    Channels.push_back(1)
+    Channels.push_back(2)
+    # Channels.push_back(3)
+    # Channels.push_back(4)
+    # Channels.push_back(5)
+    # Channels.push_back(6)
+    # Channels.push_back(7)
+    # Channels.push_back(8)
+    # Channels.push_back(9)
+    # Channels.push_back(10)	
+    # Channels.push_back(11)
+    # Channels.push_back(12)
+    # Channels.push_back(13)
+    # Channels.push_back(14)	
+    # Channels.push_back(15)
+
+    
+
+
+    lo = std.vector('double')()
+    hi = std.vector('double')()
+    lo.push_back(100.)	
+    hi.push_back(400.)
+    # lo.push_back(20.)	
+    # hi.push_back(100.)
+    # lo.push_back(600.)	
+    # hi.push_back(1300.)
+
+
+    
+    UsedParameters = std.vector('int')()
+    #UsedParameters.push_back(1)
+    UsedParameters.push_back(2)
+    # UsedParameters.push_back(3)
+    # UsedParameters.push_back(4)
+    # UsedParameters.push_back(5)
+    # UsedParameters.push_back(6)
+    # UsedParameters.push_back(7)
+
+    fitter = TMVA.GeneticFitterMod(name,lo,hi, Channels,opt,DefParameters,UsedParameters,MaxEfficiencies,LineNames,LineTypes)
     #fitter.CheckForUnusedOptions()
-	    
+
     pars = std.vector('double')(2)
 
 
-    import L0_noHlt1_histosGen_Multi
     gROOT.ProcessLine('.! rm -rf $OUTPUTDIR/*.root')
 
   
@@ -89,6 +143,7 @@ def run():
             StartIterationFirstTime=True
             StartNewCycle=False
             FinishIterationAndStartNew=False
+            state = State.RUNNING
             print 'WANT TO CALCULATE FITNESS FIRST TIME' 
 
     
