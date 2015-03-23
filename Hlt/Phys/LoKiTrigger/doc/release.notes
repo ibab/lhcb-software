@@ -4,6 +4,11 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+
+! 2015-03-23 - Albert Puig
+ - Add the possibility to specify the particle combiner in Hlt1Combiner
+ - Add FromCaloToParticles pipe
+
 ! 2015-03-13 - Roel Aaij
  - Add option to HltUnit to preload tools.
  - Add entry to tool names for LoKi::DistanceCalculator.
