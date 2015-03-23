@@ -38,7 +38,7 @@ HltMoveVerticesForSwimming::HltMoveVerticesForSwimming( const std::string& name,
     declareProperty( "Bcontainer", m_Bcontainer = "/Event/SeqD2KK/Phys/SelD2KK" );
     declareProperty( "OfflinePVs", m_offlinePVs = "/Event/Rec/Vertex/Primary" );
 
-    declareProperty( "lifetimeFitter", m_lifeToolName = "PropertimeFitter" );
+    declareProperty( "lifetimeFitter", m_lifeToolName = "LoKi::LifetimeFitter" );
     declareProperty( "distanceCalculator",
                      m_distToolName = "LoKi::DistanceCalculator" );
     declareProperty( "relatedPVFinder", m_finderToolName = "GenericParticle2PVRelato"
