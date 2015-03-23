@@ -59,7 +59,7 @@ def run():
 
     RunType = TString("FULL")
 
-    fitter = TMVA.GeneticFitterMod(name,lo,hi, Channels,opt,DefParameters,UsedParameters,MaxEfficiencies,RunType)
+    fitter = TMVA.GeneticFitterMod(name,lo,hi, Channels,opt,DefParameters,UsedParameters)
     #fitter.CheckForUnusedOptions()
 	    
     pars = std.vector('double')(2)
