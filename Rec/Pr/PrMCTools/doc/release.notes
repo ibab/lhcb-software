@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2015-03-23 - Michel De Cian
+ - Add algorithm 'PrCheatedSciFiTracking' that performs an ideal pattern recognition in the SciFi.
+
 ! 2015-03-21 - Michel De Cian
  - Add cut on ghost probability to PrCounter. This is only set for 'Best' category tracks in the PrChecker. The default cut is such that it has no effect.
 
