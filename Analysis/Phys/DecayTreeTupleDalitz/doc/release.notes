@@ -4,6 +4,9 @@
 ! Purpose     : Dalitz tools
 !-----------------------------------------------------------------------------
 
+ 2015-03-23 - O. Deschamps
+ - reduce verbosity and fix compilation error
+
  2015-03-15 - O. Deschamps
  - make the branch name CC-independant
 

@@ -51,10 +51,12 @@ StatusCode TupleToolDalitz::fill( const LHCb::Particle* mother
   if (0==part) return StatusCode::FAILURE ;
   const LHCb::Particle::ConstVector& dauts = part->daughtersVector() ;
   if ( 2 >= dauts.size() ){
-    return Debug("Will not fill Dalitz of two body decay "+prefix,StatusCode::SUCCESS,0);
+    debug() << "Will not fill Dalitz of two body decay " << prefix << endmsg;
+    return StatusCode::SUCCESS;
   }
   if (part->particleID().abspid()==98){
-    return Debug("Will not fill Dalitz for particle type CELLjet ",StatusCode::SUCCESS,0);
+    debug() << "Will not fill Dalitz for particle type CELLjet " << endmsg;
+    return StatusCode::SUCCESS;
   }
    
   return fill(dauts,head,tuple,(part->particleID().pid()<0)) ;
