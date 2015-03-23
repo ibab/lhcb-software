@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-23 - Maurizio Martinelli
+ - CharmHad: added D2HHHPi0 lines
+
 ! 2015-03-23 - Pieter David
  - DisplVertices: adapt to PatPV (LSAdaptPV3DFitter) changes
 
