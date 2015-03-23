@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-03-23 - Mika Vesterinen
+ - fix syntax error in StrippingSL/StrippingB2DMuNuX.py
+
 ! 2015-03-22 - Vanya Belyaev
  - one more module in StrippingBandQ for WG-production
 
