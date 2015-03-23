@@ -13,7 +13,7 @@ class CharmHadXSecLines() :
                                  'Trk_1OF3_MIPCHI2DV_MIN'   :  50.0,
                                  'Trk_ALL_PT_MIN'           :  200.0 * MeV,
                                  'Trk_2OF3_PT_MIN'          :  400.0 * MeV,
-                                 'Trk_1OF3_PT_MIN'          :  400.0 * MeV,
+                                 'Trk_1OF3_PT_MIN'          :  1000.0 * MeV,
                                  'VCHI2PDOF_MAX'            :  25.0,
                                  'BPVVDCHI2_MIN'            :  16.0,
                                  'BPVLTIME_MIN'             :  0.15 * picosecond,

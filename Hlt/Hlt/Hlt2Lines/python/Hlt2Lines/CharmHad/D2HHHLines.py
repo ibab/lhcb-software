@@ -7,14 +7,14 @@ class CharmHadD2HHHLines() :
                  'D2HHH' : {
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                  'Trk_2OF3_MIPCHI2DV_MIN'   :  10.0,
-                                 'Trk_1OF3_MIPCHI2DV_MIN'   :  36.0,
+                                 'Trk_1OF3_MIPCHI2DV_MIN'   :  50.0,
                                  'Trk_ALL_PT_MIN'           :  200.0 * MeV,
                                  'Trk_2OF3_PT_MIN'          :  400.0 * MeV,
                                  'Trk_1OF3_PT_MIN'          :  1000.0 * MeV,
                                  'BPVVDCHI2_MIN'            :  20.0,
-                                 'BPVLTIME_MIN'             :  0.2 * picosecond,
-                                 'BPVDIRA_MIN'              :  0.9999,
-                                 'ASUMPT_MIN'               :  2500 * MeV,
+                                 'BPVLTIME_MIN'             :  0.3 * picosecond,
+                                 'BPVDIRA_MIN'              :  0.99995,
+                                 'ASUMPT_MIN'               :  3000 * MeV,
                                  'AM_MIN'                   :  1779 * MeV,
                                  'AM_MAX'                   :  2059 * MeV,
                                  'Mass_M_MIN'               :  1789.0 * MeV,
@@ -24,15 +24,15 @@ class CharmHadD2HHHLines() :
                  # wide enough to catch the Xi_c as well.
                  'Lc2HHH'    : {
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
-                                 'Trk_2OF3_MIPCHI2DV_MIN'   :  6.0,
-                                 'Trk_1OF3_MIPCHI2DV_MIN'   :  9.0,
+                                 'Trk_2OF3_MIPCHI2DV_MIN'   :  8.0,
+                                 'Trk_1OF3_MIPCHI2DV_MIN'   :  12.0,
                                  'Trk_ALL_PT_MIN'           :  200.0 * MeV,
                                  'Trk_2OF3_PT_MIN'          :  400.0 * MeV,
                                  'Trk_1OF3_PT_MIN'          :  1000.0 * MeV,
                                  'BPVVDCHI2_MIN'            :  10.0,
                                  'BPVLTIME_MIN'             :  0.1 * picosecond,
-                                 'BPVDIRA_MIN'              :  0.9999,
-                                 'ASUMPT_MIN'               :  2500 * MeV,
+                                 'BPVDIRA_MIN'              :  0.99995,
+                                 'ASUMPT_MIN'               :  3000 * MeV,
                                  'AM_MIN'                   :  2201 * MeV,
                                  'AM_MAX'                   :  2553. * MeV,
                                  'Mass_M_MIN'               :  2211.0 * MeV,
@@ -40,6 +40,7 @@ class CharmHadD2HHHLines() :
                                 },
                  # The combiner for the lifetime unbiased lines 
                  'Dpm2HHH_LTUNB' : {
+                                 'TisTosSpec'               : "Hlt1Track.*Decision%TIS",
                                  'BPVLTIME_MIN'             :  0.5 * picosecond,
                                  'BPVDIRA_MIN'              :  0.9,
                                  'ASUMPT_MIN'               :  3000 * MeV,
@@ -49,6 +50,7 @@ class CharmHadD2HHHLines() :
                                  'Mass_M_MAX'               :  1949.0 * MeV,
                                 },
                  'Ds2HHH_LTUNB' : { 
+                                 'TisTosSpec'               : "Hlt1Track.*Decision%TIS",
                                  'BPVLTIME_MIN'             :  0.25 * picosecond,
                                  'BPVDIRA_MIN'              :  0.9,
                                  'ASUMPT_MIN'               :  3000 * MeV,
@@ -59,6 +61,7 @@ class CharmHadD2HHHLines() :
                                 },
                  # Wide mass window accomodates the Xi_c+ 
                  'Lc2HHH_LTUNB'    : {
+                                 'TisTosSpec'               : "Hlt1Track.*Decision%TIS",
                                  'BPVLTIME_MIN'             :  0.1 * picosecond,
                                  'BPVDIRA_MIN'              :  0.9,
                                  'ASUMPT_MIN'               :  3000. * MeV,

@@ -28,11 +28,11 @@ theseslots = {   'Prescale' : {},
                  'Common' : {'TisTosSpec'               : "Hlt1Track.*Decision%TOS",
                              'Trk_ALL_TRCHI2DOF_MAX'    :  3.0,    
                              'Trk_ALL_P_MIN'            :  1000 * MeV,
-                             'VCHI2PDOF_MAX'            :  20.0,
+                             'VCHI2PDOF_MAX'            :  10.0,
                             },  
                  # Particles for the "Detached" CPV lines
                  'SharedDetachedDpmChild_K' : { 
-                                 'PID_LIM'                  :  2,  
+                                 'PID_LIM'                  :  5,  
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                               },  
@@ -42,7 +42,7 @@ theseslots = {   'Prescale' : {},
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                               },  
                  'SharedDetachedLcChild_K' : { 
-                                 'PID_LIM'                  :  2,  
+                                 'PID_LIM'                  :  5,  
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                               },  
@@ -59,7 +59,7 @@ theseslots = {   'Prescale' : {},
                  # Particles for the 'Prompt' CF lifetime unbiased lines for the 
                  # lifetime measurements
                  'SharedPromptChild_K' : {
-                                 'PID_LIM'                  :  5,
+                                 'PID_LIM'                  :  10,
                                  'Trk_ALL_PT_MIN'           :  500.0 * MeV,
                                               },
                  'SharedPromptChild_pi' : {
@@ -67,7 +67,7 @@ theseslots = {   'Prescale' : {},
                                  'Trk_ALL_PT_MIN'           :  500.0 * MeV,
                                               },
                  'SharedPromptChild_p' : {
-                                 'PID_LIM'                  :  5,
+                                 'PID_LIM'                  :  10,
                                  'Trk_ALL_PT_MIN'           :  500.0 * MeV,
                                               },
                  # Soft particles for tagging decays

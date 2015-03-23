@@ -7,6 +7,7 @@ def LTUNB_Cuts(motherMasses, massWindow = 75., aMassExtra = 10.,
     motherMassMin = min(motherMasses) - massWindow
     motherMassMax = max(motherMasses) + massWindow
     return {
+        'TisTosSpec'               : "Hlt1Track.*Decision%TIS",
         'BPVLTIME_MIN'             :  minTime, 
         'BPVDIRA_MIN'              :  minDira,
         'ASUMPT_MIN'               :  minASumPt, 
