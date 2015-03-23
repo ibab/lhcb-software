@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-03-23 - Sascha Stahl
+ - HltSharedTracking and Hlt2Tracking: Fixed warning in configuration when running
+   PatSeeding on all hits.
+
 ! 2015-03-17 - Roel Aaij
  - Adapt to change of property name in PatPV, now UseFittedTracks.
 

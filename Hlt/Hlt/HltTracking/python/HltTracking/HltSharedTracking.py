@@ -186,10 +186,11 @@ def ConfiguredForwardComplement(name
     forward.addTool(PatForwardTool(**opts), name='PatForwardTool')
 
     from Configurables import TrackUsedLHCbID
-    forward.PatForwardTool.addTool(TrackUsedLHCbID, name='TrackUsedLHCbID')
-    forward.PatForwardTool.UsedLHCbIDToolName="TrackUsedLHCbID"
-    forward.PatForwardTool.TrackUsedLHCbID.inputContainers= VetoSeedLocations
-    forward.PatForwardTool.VeloVetoTracksNames =  VetoSeedLocations
+    if VetoSeedLocations != None and  len(VetoSeedLocations) != 0:
+        forward.PatForwardTool.addTool(TrackUsedLHCbID, name='TrackUsedLHCbID')
+        forward.PatForwardTool.UsedLHCbIDToolName="TrackUsedLHCbID"
+        forward.PatForwardTool.TrackUsedLHCbID.inputContainers= VetoSeedLocations
+        forward.PatForwardTool.VeloVetoTracksNames =  VetoSeedLocations
     # make them a bit more verbose
     forward.StatPrint = True
     forward.PatForwardTool.StatPrint = True
@@ -208,7 +209,7 @@ def ConfiguredPatSeeding(name
     recoSeeding = PatSeeding(name, OutputTracksName = OutputTracksName )
     recoSeeding.addTool(PatSeedingTool, name="PatSeedingTool")
     # New tool
-    if VetoTrackLocations != None:
+    if VetoTrackLocations != None and  len(VetoTrackLocations) != 0:
         from Configurables import TrackUsedLHCbID
         recoSeeding.PatSeedingTool.UsedLHCbIDToolName = "TrackUsedLHCbID"
         recoSeeding.PatSeedingTool.addTool( TrackUsedLHCbID, name="TrackUsedLHCbID" )

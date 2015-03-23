@@ -1144,7 +1144,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         vetoTrackLocations = [ fwdtracks.outputSelection() ]
         from Configurables import HltRecoConf
         if HltRecoConf().getProp("OfflineSeeding"):
-            vetoTrackLocations = []
+            vetoTrackLocations = None
         from HltTracking.HltSharedTracking import ConfiguredPatSeeding
         recoSeeding = ConfiguredPatSeeding(self.getProp("Prefix")+'Seeding',
                                            OutputTracksName = seedTrackOutputLocation,
