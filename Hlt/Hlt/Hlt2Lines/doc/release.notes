@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-23 - Pieter David
+ - DisplVertices: adapt to PatPV (LSAdaptPV3DFitter) changes
+
 ! 2015-03-19 - V. Gligorov
  - Add 3-body XSection lines to CharmHad
  - Following discussions at the charm meeting and looking into the stripping lines, 
