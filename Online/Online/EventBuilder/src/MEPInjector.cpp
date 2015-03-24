@@ -737,8 +737,8 @@ StatusCode MEPInjector::getEvent(int nbEv) {
     char *ccur = (((char *) m_OdinMEP) + MEPEVENTOFFSET);
     OnlineRunInfo *ori = ( OnlineRunInfo *) (ccur+IPHDRSZ+MEPHDRSZ+nbEv*(ODFRAGSZ) + FRAGHDRSZ + BKHDRSZ);
 
-    int eventActual = 0;
 #if 0   
+    int eventActual = 0;
     do 
 #endif
     {

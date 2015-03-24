@@ -26,7 +26,7 @@ StatusCode PublishSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
 
 PublishSvc::PublishSvc(CSTR name, ISvcLocator* svcLoc): Service(name, svcLoc), m_started(false)
 {
-};
+}
 
 StatusCode PublishSvc::initialize() {
   StatusCode sc = Service::initialize();
