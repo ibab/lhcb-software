@@ -5,6 +5,11 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+! 2015-03-24 - Vanya Belyaev
+
+ - wrongmass 
+   make use of LoKi::Particles::WrongMass 
+
 ! 2015-03-18 - Vanya Belyaev
  - add missing tool... 
 

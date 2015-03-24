@@ -1318,11 +1318,8 @@ LoKi::AParticles::WrongMass:: WrongMass
   const double m2 ) 
   : LoKi::AuxFunBase ( std::tie  ( m1 , m2 ) ) 
   , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
-  , m_masses () 
-{
-  m_masses.push_back ( m1 ) ;
-  m_masses.push_back ( m2 ) ;  
-}
+  , m_wm ( m1 , m2 ) 
+{}
 // ============================================================================
 // constructor from three masses 
 // ============================================================================
@@ -1332,12 +1329,8 @@ LoKi::AParticles::WrongMass:: WrongMass
   const double m3 ) 
   : LoKi::AuxFunBase ( std::tie  ( m1 , m2 , m3 ) ) 
   , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
-  , m_masses () 
-{
-  m_masses.push_back ( m1 ) ;
-  m_masses.push_back ( m2 ) ;  
-  m_masses.push_back ( m3 ) ;  
-}
+  , m_wm ( m1 , m2 , m3 ) 
+{}
 // ============================================================================
 // constructor from four masses 
 // ============================================================================
@@ -1348,13 +1341,8 @@ LoKi::AParticles::WrongMass::WrongMass
   const double m4 ) 
   : LoKi::AuxFunBase ( std::tie  ( m1 , m2 , m3 , m4 ) ) 
   , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
-  , m_masses () 
-{
-  m_masses.push_back ( m1 ) ;
-  m_masses.push_back ( m2 ) ;  
-  m_masses.push_back ( m3 ) ;
-  m_masses.push_back ( m4 ) ;  
-}
+  , m_wm ( m1 , m2 , m3 , m4 ) 
+{}
 // ============================================================================
 // constructor from the vector of masses 
 // ============================================================================
@@ -1362,7 +1350,7 @@ LoKi::AParticles::WrongMass::WrongMass
 ( const std::vector<double>& masses ) 
   : LoKi::AuxFunBase ( std::tie  ( masses ) ) 
   , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
-  , m_masses ( masses ) 
+  , m_wm ( masses ) 
 {}
 // ============================================================================
 // constructor from two pids 
@@ -1372,11 +1360,8 @@ LoKi::AParticles::WrongMass::WrongMass
   const LHCb::ParticleID& pid2 ) 
   : LoKi::AuxFunBase ( std::tie  ( pid1 , pid2 ) ) 
   , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
-  , m_masses () 
-{
-  m_masses.push_back ( LoKi::Particles::massFromPID ( pid1 ) ) ;
-  m_masses.push_back ( LoKi::Particles::massFromPID ( pid2 ) ) ;
-}
+  , m_wm ( pid1 , pid2 ) 
+{}
 // ============================================================================
 // constructor from three pids 
 // ============================================================================
@@ -1386,12 +1371,8 @@ LoKi::AParticles::WrongMass::WrongMass
   const LHCb::ParticleID& pid3 ) 
   : LoKi::AuxFunBase ( std::tie  ( pid1 , pid2 , pid3 ) ) 
   , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
-  , m_masses () 
-{
-  m_masses.push_back ( LoKi::Particles::massFromPID ( pid1 ) ) ;
-  m_masses.push_back ( LoKi::Particles::massFromPID ( pid2 ) ) ;
-  m_masses.push_back ( LoKi::Particles::massFromPID ( pid3 ) ) ;
-}
+  , m_wm ( pid1 , pid2 , pid3 ) 
+{}
 // ============================================================================
 // constructor from four pids 
 // ============================================================================
@@ -1402,13 +1383,8 @@ LoKi::AParticles::WrongMass::WrongMass
   const LHCb::ParticleID& pid4 ) 
   : LoKi::AuxFunBase ( std::tie  ( pid1 , pid2 , pid3 , pid4 ) ) 
   , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
-  , m_masses () 
-{
-  m_masses.push_back ( LoKi::Particles::massFromPID ( pid1 ) ) ;
-  m_masses.push_back ( LoKi::Particles::massFromPID ( pid2 ) ) ;
-  m_masses.push_back ( LoKi::Particles::massFromPID ( pid3 ) ) ;
-  m_masses.push_back ( LoKi::Particles::massFromPID ( pid4 ) ) ;
-}
+  , m_wm ( pid1 , pid2 , pid3 , pid4 ) 
+{}
 // ============================================================================
 // constructor from the vector of pids  
 // ============================================================================
@@ -1416,14 +1392,8 @@ LoKi::AParticles::WrongMass::WrongMass
 ( const std::vector<LHCb::ParticleID>& pids ) 
   : LoKi::AuxFunBase ( std::tie  ( pids ) ) 
   , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
-  , m_masses ( pids.size() ) 
-{
-  std::transform 
-    ( pids.begin     () , 
-      pids.end       () , 
-      m_masses.begin () , 
-      std::ptr_fun(&LoKi::Particles::massFromPID) ) ;
-}
+  , m_wm ( pids ) 
+{}
 // ============================================================================
 // constructor from two names  
 // ============================================================================
@@ -1432,11 +1402,8 @@ LoKi::AParticles::WrongMass::WrongMass
   const std::string& name2 ) 
   : LoKi::AuxFunBase ( std::tie  ( name1 , name2 ) ) 
   , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
-  , m_masses () 
-{
-  m_masses.push_back ( LoKi::Particles::massFromName ( name1 ) ) ;
-  m_masses.push_back ( LoKi::Particles::massFromName ( name2 ) ) ;
-}
+  , m_wm ( name1 , name2 ) 
+{}
 // ============================================================================
 // constructor from three names  
 // ============================================================================
@@ -1446,12 +1413,8 @@ LoKi::AParticles::WrongMass::WrongMass
   const std::string& name3 ) 
   : LoKi::AuxFunBase ( std::tie  ( name1 , name2 , name3 ) ) 
   , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
-  , m_masses () 
-{
-  m_masses.push_back ( LoKi::Particles::massFromName ( name1 ) ) ;
-  m_masses.push_back ( LoKi::Particles::massFromName ( name2 ) ) ;
-  m_masses.push_back ( LoKi::Particles::massFromName ( name3 ) ) ;
-}
+  , m_wm ( name1 , name2 , name3 ) 
+{}
 // ============================================================================
 // constructor from four  names  
 // ============================================================================
@@ -1462,13 +1425,8 @@ LoKi::AParticles::WrongMass::WrongMass
   const std::string& name4 ) 
   : LoKi::AuxFunBase ( std::tie  ( name1 , name2 , name3 , name4 ) ) 
   , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
-  , m_masses () 
-{
-  m_masses.push_back ( LoKi::Particles::massFromName ( name1 ) ) ;
-  m_masses.push_back ( LoKi::Particles::massFromName ( name2 ) ) ;
-  m_masses.push_back ( LoKi::Particles::massFromName ( name3 ) ) ;
-  m_masses.push_back ( LoKi::Particles::massFromName ( name4 ) ) ;
-}
+  , m_wm ( name1 , name2 , name3 , name4 ) 
+{}
 // ============================================================================
 // constructor from the vector of names 
 // ============================================================================
@@ -1476,14 +1434,8 @@ LoKi::AParticles::WrongMass::WrongMass
 ( const std::vector<std::string>& names ) 
   : LoKi::AuxFunBase ( std::tie  ( names ) ) 
   , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
-  , m_masses ( names.size() ) 
-{
-  std::transform 
-    ( names.begin    () , 
-      names.end      () , 
-      m_masses.begin () , 
-      std::ptr_fun(&LoKi::Particles::massFromName) ) ;
-}
+  , m_wm ( names ) 
+{}
 // ============================================================================
 // copy constructor 
 // ============================================================================
@@ -1491,7 +1443,7 @@ LoKi::AParticles::WrongMass::WrongMass
 ( const LoKi::AParticles::WrongMass& right )
   : LoKi::AuxFunBase                                         ( right ) 
   , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function ( right ) 
-  , m_masses ( right.m_masses ) 
+  , m_wm ( right.m_wm ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -1500,17 +1452,13 @@ LoKi::AParticles::WrongMass::result_type
 LoKi::AParticles::WrongMass::operator() 
   ( LoKi::AParticles::WrongMass::argument a ) const 
 {
-  if ( m_masses.size() != a.size() ) 
+  if ( masses().size() != a.size() ) 
   {
-    Error ( "Mismatch in contaienr size(s), return InvaidMass" ) ;
+    Error ( "Mismatch in container size(s), return InvaidMass" ) ;
     return LoKi::Constants::InvalidMass ;
   }
-  // evaluate the mass 
-  LoKi::LorentzVector vct = 
-    LoKi::Kinematics::wrongMass 
-    ( a.begin() , a.end() , m_masses.begin() , LoKi::Objects::_VALID_ ) ;
-  //
-  return vct.M() ;
+  // evaluate wrong mass
+  return m_wm.wmass ( a ) ;
 }
 // ============================================================================
 // OPTIONAL: specific printout 
@@ -1518,19 +1466,48 @@ LoKi::AParticles::WrongMass::operator()
 std::ostream& 
 LoKi::AParticles::WrongMass::fillStream( std::ostream& s ) const 
 {
-  s << "AWM(" ;
-  if ( 4 < m_masses.size() )
-  { s << Gaudi::Utils::toStream ( m_masses , s ) ; }
-  else 
+  if      ( !names().empty () ) 
   {
-    for ( std::vector<double>::const_iterator im = m_masses.begin() ;
-          m_masses.end() != im ; ++im ) 
+    if      ( 4 == names().size() ) 
     {
-      if ( m_masses.begin() != im ) { s << " , " ; }
-      s <<  (*im) ;
+      return 
+        s << "AWM(" 
+          << Gaudi::Utils::toString ( names()[0] ) << ","
+          << Gaudi::Utils::toString ( names()[1] ) << ","
+          << Gaudi::Utils::toString ( names()[2] ) << ","
+          << Gaudi::Utils::toString ( names()[3] ) << ")" ;
+    }  
+    else if ( 3 == names().size() ) 
+    {
+      return 
+        s << "AWM(" 
+          << Gaudi::Utils::toString ( names()[0] ) << ","
+          << Gaudi::Utils::toString ( names()[1] ) << ","
+          << Gaudi::Utils::toString ( names()[2] ) << ")" ;
+    } 
+    else if ( 2 == names().size() ) 
+    {
+      return 
+        s << "AWM(" 
+          << Gaudi::Utils::toString ( names()[0] ) << ","
+          << Gaudi::Utils::toString ( names()[1] ) << ")" ;
     }
+    //
+    return s << "AWM(" << Gaudi::Utils::toString ( names ()  ) << ")" ; 
   }
-  return s << ")" ;
+  else if ( !pids().empty  () )
+  {
+    s << "WMASS([" ;
+    typedef std::vector<LHCb::ParticleID> PIDs ;
+    for ( PIDs::const_iterator ipid = pids().begin() ; 
+          pids().end () != ipid ; ++ipid )
+    {
+      if ( pids().begin() != ipid ) { s << "," ; }
+      s << "LHCb.ParticleID( " << ipid->pid() << ")" ;
+    }
+    return s << "])" ;                                              // RETURN 
+  }
+  return s << "AWM(" << Gaudi::Utils::toString ( masses() ) << ")" ; 
 }
 // ============================================================================
 

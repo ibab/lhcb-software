@@ -27,6 +27,7 @@
 #include "LoKi/AKinematics.h"
 #include "LoKi/AuxDesktopBase.h"
 #include "LoKi/Particles3.h"
+#include "LoKi/Particles23.h"
 #include "LoKi/Particles26.h"
 // ============================================================================
 namespace LHCb 
@@ -1242,54 +1243,6 @@ namespace LoKi
                    const std::string& name4 ) ;
       /// constructor from the vector of names 
       WrongMass ( const std::vector<std::string>& names ) ;
-      /** templated constructor from the sequence and functor 
-       * 
-       *  e.g. to "clone" the mass -assigements form other sequnce 
-       *  of particles:
-       *  @code
-       *
-       *  const LHCb::Particle::ConstVector& sample = ... ; 
-       *  
-       *  AFun wm = WrongMass ( sample.begin ()                  , 
-       *                        sample.end   ()                  ,
-       *                        std::mem_fun(&LHCb::Particle::m) ) ;
-       *
-       *  @endcode 
-       *
-       *  Or to close the mass-assigements from MC-truth:
-       *
-       *  @code
-       *
-       *  const LHCb::MCParticle::Vector& sample = ... ; 
-       *  
-       *  AFun wm = WrongMass ( sample.begin ()                    , 
-       *                        sample.end   ()                    ,
-       *                        std::mem_fun(&LHCb::MCParticle::m) ) ;
-       *
-       *  @endcode 
-       *
-       *  Or get the masses from ParticleProperty:
-       *
-       *  @code
-       *
-       *  const std::vector<ParticleProperty*>& sample = ... ; 
-       *  
-       *  AFun wm = WrongMass ( sample.begin ()                       , 
-       *                        sample.end   ()                       ,
-       *                        std::mem_fun(&ParticleProperty::mass) ) ;
-       *
-       *  @endcode 
-       */
-      template <class OBJECT, class FUNCTOR>
-      WrongMass ( OBJECT  begin , 
-                  OBJECT  end   , 
-                  FUNCTOR func  , 
-                  const   int /* a */ ) // fictive argument  
-        : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
-        , m_masses ( end - begin ) 
-      {
-        std::transform ( begin , end , m_masses.begin() , func ) ;
-      }
       /// copy constructor 
       WrongMass ( const WrongMass& right ) ;
       /// MANDATORY: virtual destructor 
@@ -1301,15 +1254,16 @@ namespace LoKi
       /// OPTIONAL: specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;      
       // ======================================================================
-   public:
+    public:
       // ======================================================================
-      /// get all masses:
-      const std::vector<double>& masses() const { return m_masses ; }
+      const std::vector<double>&           masses () const { return m_wm.masses() ; }
+      const std::vector<std::string>&      names  () const { return m_wm.names () ; }      
+      const std::vector<LHCb::ParticleID>& pids   () const { return m_wm.pids  () ; }      
       // ======================================================================
     private:
       // ======================================================================
-      /// the list of masses to be used 
-      std::vector<double> m_masses ; ///< the list of masses to be used 
+      /// the actual functor 
+      LoKi::Particles::WrongMass m_wm ; // the actual functor 
       // ======================================================================
     };
     // ========================================================================    
