@@ -111,9 +111,8 @@ IGauchoMonitorSvc *AlignDrv::getMonSvc()
 }
 void AlignDrv::writeReference()
 {
-  FILE *f;
-  f = fopen(m_RefFileName.c_str(), "r+");
-  unsigned long ref;
+  long ref;
+  FILE *f = fopen(m_RefFileName.c_str(), "r+");
   if (f == 0)
   {
     ref = 0;

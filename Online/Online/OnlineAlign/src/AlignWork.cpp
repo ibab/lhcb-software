@@ -25,7 +25,7 @@ extern "C"
     }
     return 1;
   }
-};
+}
 
 StatusCode LHCb::AlignWork::stop()
 {
@@ -125,13 +125,14 @@ LHCb::AlignWork::AlignWork(const std::string& name, ISvcLocator* sl) : base_clas
   m_runonce = false;
   service("MonitorSvc",m_MonSvc,true);
 }
+
 LHCb::AlignWork::~AlignWork()
 {
 }
+
 void LHCb::AlignWork::readReference()
 {
-  FILE *f;
-  f = fopen(m_RefFileName.c_str(),"r");
-  fscanf(f,"%ld",&m_Reference);
+  FILE *f = fopen(m_RefFileName.c_str(),"r");
+  fscanf(f,"%lu",&m_Reference);
   fclose(f);
 }
