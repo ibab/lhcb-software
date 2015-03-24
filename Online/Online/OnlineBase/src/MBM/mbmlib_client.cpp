@@ -511,7 +511,7 @@ int mbm_wait_space(BMID bm)    {
     bm->cancelled = false;
   }
   else {
-    ::lib_rtl_output(LIB_RTL_FATAL,"MBM Error: Got message with bad status",msg.status);
+    ::lib_rtl_output(LIB_RTL_FATAL,"MBM Error: Got message with bad status:%d.",msg.status);
   }
   return status;
 }
@@ -553,7 +553,7 @@ static int _mbm_declare_event (BMID bm, int len, int evtype, const unsigned int*
       bm->cancelled = false;
     }
     else {
-      ::lib_rtl_output(LIB_RTL_FATAL,"MBM Error: _mbm_declare_event got message with bad status",msg.status);
+      ::lib_rtl_output(LIB_RTL_FATAL,"MBM Error: _mbm_declare_event got message with bad status:%d.",msg.status);
     }
   }
   return status;

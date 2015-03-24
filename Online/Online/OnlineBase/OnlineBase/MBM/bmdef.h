@@ -59,9 +59,10 @@ typedef void  BufferMemory;
 #define MBM_INV_MEMORY ((BufferMemory*)-1)
 
 #ifdef __cplusplus
-#include <vector>
+#include <map>
+#include <string>
 #ifdef __cplusplus
-  std::vector<ServerBMID> mbm_multi_install(int argc , char** argv);
+std::map<std::string,ServerBMID> mbm_multi_install(int argc , char** argv);
 #endif
 #define __MBM_CONST const
 extern "C"  {
@@ -71,6 +72,11 @@ extern "C"  {
   int  mbm_qmtest_check_start();
 
   ServerBMID  mbm_install_server(int argc , char** argv);
+  /// Add consumer requirement to server
+  int mbmsrv_require_consumer(ServerBMID bm, const char* name, int partid, int evtype, const unsigned int mask[]);
+  /// Deregister consumer requirement from server
+  int mbmsrv_unrequire_consumer(ServerBMID bm, const char* name, int partid, int evtype, const unsigned int mask[]);
+
   int  mbm_deinstall(int argc , char** argv);
   int  mbm_dump(int argc , char** argv);
   int  mbm_mon(int argc , char** argv);

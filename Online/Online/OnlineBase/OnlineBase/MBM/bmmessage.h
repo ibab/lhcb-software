@@ -21,7 +21,7 @@ struct MBMMessage {
   enum msg_type {
     INCLUDE        = 1,
     EXCLUDE        = 2,
-    //Consummer part
+    // Consummer commands
     ADD_REQUEST    = 103,
     DEL_REQUEST    = 104,
     GET_EVENT      = 105,
@@ -29,7 +29,7 @@ struct MBMMessage {
     FREE_EVENT     = 107,
     STOP_CONSUMER  = 108,
     PAUSE          = 109,
-    //Producer part
+    // Producer commands
     GET_SPACE_TRY  = 201,
     GET_SPACE      = 202,
     WAIT_SPACE_A   = 204,
@@ -40,6 +40,9 @@ struct MBMMessage {
     CANCEL_REQUEST = 209,
     STOP_PRODUCER  = 210,
     GRANT_UPDATE   = 211,
+    // Server commands
+    REQUIRE_CONS   = 401,
+    UNREQUIRE_CONS = 402,
     //
     //statistics
     PROCESS_EXISTS       = 301,
@@ -67,11 +70,18 @@ struct MBMMessage {
   struct requirement_t  {  // size: 16+16+20=52
     unsigned int mask[BM_MASK_SIZE];
     unsigned int veto[BM_MASK_SIZE];
-    int   masktype;
-    int   usertype;
-    int   freqmode;
-    int   evtype;
-    float frequency;
+    int          masktype;
+    int          usertype;
+    int          freqmode;
+    int          evtype;
+    float        frequency;
+  };
+
+  struct cons_requirement_t  {  // size: 64+16+8 = 88
+    char          name[64];
+    unsigned int  mask[BM_MASK_SIZE];
+    int           evtype;
+    int           partid;
   };
 
   struct get_event_t { // size: 28
@@ -86,7 +96,7 @@ struct MBMMessage {
     int           offset;
   }; 
 
-  struct declare_event_t : public get_event_t { // size: 84
+  struct declare_event_t : public get_event_t { // size: 28+72
     int           freeAddr;
     int           freeSize;
     int           wait;
@@ -104,6 +114,7 @@ struct MBMMessage {
   union  msg_structs  {
     include_t          include;
     requirement_t      requirement;
+    cons_requirement_t cons_requirement;
     get_space_t        get_space;
     declare_event_t    declare_event;
     send_event_t       send_event;

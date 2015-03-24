@@ -7,6 +7,7 @@
  Module version 0
  Compiled on  7-MAR-1995 16:24
 */
+#define MBM_NO_CONS    0X9CA807C
 #define MBM_NO_FREE_SL 0X9CA8072
 #define MBM_NO_FREE_US 0X9CA806A
 #define MBM_NO_FREE_EV 0X9CA806C
@@ -27,6 +28,7 @@
 #define MBM_NO_PRIV    0X9CA801A
 #define MBM_ILL_CALL   0X9CA801C
 #define MBM_INACTIVE   0X9CA8012
+
 #define MBM_NO_REPLY   0X9CA8001
 #define MBM_NORMAL 1
 #define MBM_ERROR  0

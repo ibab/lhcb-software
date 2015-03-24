@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <stdexcept>
 #include "RTL/Lock.h"
+#include "RTL/strdef.h"
 #include "RTL/DoubleLinkedQueue.h"
 #include "RTL/DoubleLinkedQueueScan.h"
 #include "MBM/bmstruct.h"
@@ -83,6 +84,17 @@ int mbmsrv_send_space(ServerBMID bm, MSG& msg);
 int mbmsrv_cancel_request(ServerBMID bm, MSG& msg);
 /// Consumer interface: stop consumer
 int mbmsrv_stop_consumer(ServerBMID bm, MSG& msg);
+/// Add consumer requirement to server
+int mbmsrv_req_consumer(ServerBMID bm, MSG& msg);
+/// Deregister consumer requirement from server
+int mbmsrv_unreq_consumer(ServerBMID bm, MSG& msg);
+
+/// Evaluate consumer rules
+int _mbmsrv_evaluate_rules(ServerBMID bm);
+/// Match single consumer requirement
+int _mbmsrv_match_cons_req(const MSG::cons_requirement_t& rq, 
+			   const ServerBMID_t::ConsumerREQ& cr);
+
 /// Server interface: Connect server process
 int _mbmsrv_connect(ServerBMID bm);
 /// Server interface: Server dispatch function
@@ -160,7 +172,8 @@ BufferMemory::BufferMemory() : qentry_t(0,0), gbl_add(0), buff_add(0) {
 }
 
 ServerBMID_t::ServerBMID_t() : BufferMemory(), client_thread(0) {
-  ::memset(server,0,sizeof(server));
+  ::memset(server,  0, sizeof(server));
+  ::memset(cons_req,0, sizeof(cons_req));
   free_event        = 0;
   free_event_param  = 0;
   alloc_event       = 0;
@@ -169,6 +182,7 @@ ServerBMID_t::ServerBMID_t() : BufferMemory(), client_thread(0) {
   lockid            = 0;
   clientfd          = 0;
   num_threads       = 0;
+  allow_declare     = 1;
 }
 
 ServerBMID_t::~ServerBMID_t()  {
@@ -713,6 +727,7 @@ int _mbmsrv_uclean(ServerBMID bm, USER* u)  {
   }
   _mbmsrv_ufree(u);                     // de-allocate user slot
   bm->ctrl->i_users--;
+  _mbmsrv_evaluate_rules(bm);
   return MBM_NORMAL;
 }
 
@@ -768,6 +783,7 @@ int _mbmsrv_check_freqmode (ServerBMID bm, USER* u)  {
 /*
  * Misc. routines
  */
+
 /// Interface routine: unmap memory
 int mbmsrv_unmap_memory(BufferMemory* bmid) {
   return _mbmsrv_unmap_sections(bmid);
@@ -805,6 +821,118 @@ int mbmsrv_map_memory(const char* bm_name, BufferMemory* bm)  {
     }
   }
   return MBM_ERROR;
+}
+
+/// Evaluate consumer rules
+int _mbmsrv_evaluate_rules(ServerBMID bm)   {
+  CONTROL* c = bm->ctrl;
+  // Check all rules
+  for(size_t j=0; j<BM_MAX_REQS; ++j)  {
+    const ServerBMID_t::ConsumerREQ& cr = bm->cons_req[j];
+    if ( 0 != cr.name[0] )  {
+      USER* u = bm->user;
+      const REQ& req = cr.requirement;
+      for (int i = 0; i < c->p_umax; ++i, ++u)  {
+	if(u->magic == MBM_USER_MAGIC && u->busy == 1 && u->partid == req.user_type)  {
+	  bool match = req.masktype || ::str_match_wild(u->name,cr.name);
+	  if ( match )  {
+	    for(int k=0; match && k<u->n_req; ++k)  {
+	      if ( req.ev_type == u->req[k].ev_type )  {
+		if ( u->req[k].tr_mask.mask_or(req.tr_mask) )  {
+		  goto Match_Next_requirement;
+		}
+	      }
+	    }
+	  }
+	}
+      }
+      // If we get here at least one active requirement was not matched.
+      // This means event declaration must be forbidden.
+      bm->allow_declare = false;
+      return MBM_NORMAL;
+    }
+  Match_Next_requirement:
+    continue;
+  }
+  bm->allow_declare = true;
+  return MBM_NORMAL;
+}
+
+/// Match single consumer requirement
+int _mbmsrv_match_cons_req(const ServerBMID_t::ConsumerREQ& cr,
+			   const char* nam, int partid, int evtype, const unsigned int mask[])   {
+  if ( 0 != cr.name[0] )
+    if ( partid == cr.requirement.user_type )
+      if ( evtype == cr.requirement.ev_type )
+	if ( cr.requirement.tr_mask.mask_or(mask) )
+	  if ( cr.requirement.masktype || ::str_match_wild(nam,cr.name) )
+	    return MBM_NORMAL;
+  return MBM_ILL_REQ;
+}
+
+int _mbmsrv_add_req_consumer(ServerBMID bm, const char* name, int partid, int evtype, const unsigned int mask[])   {
+  // No similar request found. Insert new one....
+  for(size_t i=0; i<BM_MAX_REQS; ++i)  {
+    ServerBMID_t::ConsumerREQ& cr = bm->cons_req[i];
+    if ( 0 == cr.name[0] )  {
+      ::memset(&cr,0,sizeof(ServerBMID_t::ConsumerREQ));
+      ::strncpy(cr.name,name,sizeof(cr.name));
+      cr.requirement.tr_mask = mask;
+      cr.requirement.ev_type = evtype;
+      cr.requirement.user_type = partid;
+      cr.requirement.masktype = (0 == ::strcmp(name,"*"));
+      cr.count = 1;
+      return _mbmsrv_evaluate_rules(bm);
+    }
+  }
+  return MBM_ERROR;
+}
+
+/// Add consumer requirement to server
+int mbmsrv_req_consumer(ServerBMID bm, MSG& msg)   {
+  const MSG::cons_requirement_t& rq = msg.data.cons_requirement;
+  return mbmsrv_require_consumer(bm,rq.name,rq.partid,rq.evtype,rq.mask);
+}
+
+/// Deregister consumer requirement from server
+int mbmsrv_unreq_consumer(ServerBMID bm, MSG& msg)   {
+  const MSG::cons_requirement_t& rq = msg.data.cons_requirement;
+  return mbmsrv_unrequire_consumer(bm,rq.name,rq.partid,rq.evtype,rq.mask);
+}
+
+/// Add consumer requirement to server
+int mbmsrv_require_consumer(ServerBMID bm, const char* name, int partid, int evtype, const unsigned int mask[])   {
+  LOCK lock(bm->lockid);
+  // Check if a similar request is already present.
+  // If yes, just increase reference count.
+  for(size_t i=0; i<BM_MAX_REQS; ++i)  {
+    ServerBMID_t::ConsumerREQ& cr = bm->cons_req[i];
+    if ( MBM_NORMAL == _mbmsrv_match_cons_req(cr,name,partid,evtype,mask) )  {
+      cr.requirement.tr_mask.apply_or(mask);
+      ++cr.count;
+      return MBM_NORMAL;
+    }
+  }
+  return _mbmsrv_add_req_consumer(bm,name,partid,evtype,mask);
+}
+
+/// Deregister consumer requirement from server
+int mbmsrv_unrequire_consumer(ServerBMID bm, const char* name, int partid, int evtype, const unsigned int mask[])   {
+  LOCK lock(bm->lockid);
+  // Check if a similar request is already present.
+  // If yes, just increase reference count.
+  for(size_t i=0; i<BM_MAX_REQS; ++i)  {
+    ServerBMID_t::ConsumerREQ& cr = bm->cons_req[i];
+    if ( MBM_NORMAL == _mbmsrv_match_cons_req(cr,name,partid,evtype,mask) )  {
+      // Cannot change mask, because we do no longer know the value before
+      // the last add. If refcount is NULL, reset the slot....
+      if ( 0 == --cr.count )   {
+	::memset(&cr,0,sizeof(ServerBMID_t::ConsumerREQ));
+      }
+      return _mbmsrv_evaluate_rules(bm);
+    }
+  }
+  return MBM_ILL_REQ;
 }
 
 int mbmsrv_send_include_error(ServerBMID bm, MSG& msg, int status)   {
@@ -884,7 +1012,7 @@ int mbmsrv_include (ServerBMID bm, MSG& msg) {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to client fifo %s to epoll descriptor.\n",u->fifoName);
     return mbmsrv_send_include_error(bm,msg,MBM_INTERNAL);
   }
-  return MBM_NORMAL;
+  return _mbmsrv_evaluate_rules(bm);
 }
 
 /// Exclude client from buffer manager
@@ -1129,7 +1257,11 @@ int mbmsrv_declare_event(ServerBMID bm, MSG& msg)    {
   CONTROL* c   = bm->ctrl;
   LOCK lock(bm->lockid);
 
-  if ( !u->space_size )
+  if ( !bm->allow_declare )   {
+    // Testing only: int res = _mbmsrv_evaluate_rules(bm);
+    return MBM_NO_CONS;
+  }
+  else if ( !u->space_size )
     return MBM_NO_EVENT;
   else if ( len <= 0 )
     return MBM_ZERO_LEN;
@@ -1519,6 +1651,14 @@ int mbmsrv_dispatch_call(ServerBMID bm, int which)  {
 	break;
       case MSG::EXCLUDE:
 	msg.status = mbmsrv_exclude(bm,msg);
+	break;
+
+	// Server command handlers
+      case MSG::REQUIRE_CONS:
+	msg.status = mbmsrv_req_consumer(bm,msg);
+	break;
+      case MSG::UNREQUIRE_CONS:
+	msg.status = mbmsrv_unreq_consumer(bm,msg);
 	break;
 
 	// Consumer routines

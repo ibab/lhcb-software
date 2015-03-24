@@ -336,9 +336,9 @@ extern "C" int mbm_install_qmtest(int argc , char** argv) {
   return bm ? 0 : 1;
 }
 
-std::vector<ServerBMID> mbm_multi_install(int argc , char** argv) {
+std::map<std::string,ServerBMID> mbm_multi_install(int argc , char** argv) {
   std::vector<char*> opts;
-  std::vector<ServerBMID> bmids;
+  std::map<std::string,ServerBMID> bmids;
   static char type[64] = "mbm_install";
 
   opts.push_back(type);
@@ -352,7 +352,7 @@ std::vector<ServerBMID> mbm_multi_install(int argc , char** argv) {
         ::lib_rtl_output(LIB_RTL_ERROR,"Unable to install MBM buffers...\n");
         throw std::runtime_error("Unable to install MBM buffers...");
       }
-      bmids.push_back(bmid);
+      bmids[bmid->bm_name] = bmid;
       opts.clear();
       opts.push_back(type);
     }
@@ -363,7 +363,7 @@ std::vector<ServerBMID> mbm_multi_install(int argc , char** argv) {
       ::lib_rtl_output(LIB_RTL_ERROR,"Unable to install MBM buffers...\n");
       throw std::runtime_error("Unable to install MBM buffers...");
     }
-    bmids.push_back(bmid);
+    bmids[bmid->bm_name] = bmid;
   }
   return bmids;
 }

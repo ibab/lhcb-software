@@ -25,8 +25,11 @@ extern "C" {
   }
   int mask_and2   (const unsigned int* mask1,const unsigned int* mask2,unsigned int* mask3,int mask_size);
   int mask_and3   (const unsigned int* mask1,const unsigned int* mask2,const unsigned int* mask3,unsigned int* mask4,int mask_size);
+  int mask_and4   (const unsigned int* mask1,const unsigned int* mask2,const unsigned int* mask3,const unsigned int* mask4,unsigned int* mask5,int mask_size);
+
   int mask_or2    (const unsigned int* mask1,const unsigned int* mask2,unsigned int* mask3,const int mask_size);
-  int mask_or3    (const unsigned int* mask1,const unsigned int* mask2,const unsigned int* mask3,unsigned int* mask4,const int mask_size);
+  int mask_or3    (const unsigned int* mask1,const unsigned int* mask2,const unsigned int* mask3,unsigned int* mask4,unsigned int* mask5,const int mask_size);
+  int mask_or4    (const unsigned int* mask1,const unsigned int* mask2,const unsigned int* mask3,const unsigned int* mask4,const int mask_size);
   int mask_and_ro2(const unsigned int* mask1,const unsigned int* mask2,const int mask_size);
   int mask_and_ro3(const unsigned int* mask1,const unsigned int* mask2,const unsigned int* mask3,const int mask_size);
   int mask_or_ro2 (const unsigned int* mask1,const unsigned int* mask2,const int mask_size);
@@ -55,6 +58,10 @@ namespace Bits  {
     explicit BitMask(int def) {
       for(int j=0; j<i;++j) m_mask[j]=def;
     }
+    /// Initializing bitfield constructor
+    explicit BitMask(const unsigned int vals[]) {
+      for(int j=0; j<i;++j) m_mask[j]=vals[j];
+    }
     /// Number of digits for the bitfield
     static unsigned int digits() {
       return i*sizeof(unsigned int)*CHAR_BIT;
@@ -67,23 +74,65 @@ namespace Bits  {
     void clear()  {
       ::memset(m_mask, 0, i * sizeof(m_mask[0]));
     }
+    /// Apply OR operator  of one other mask to the current mask
+    inline int apply_or(const BitMask<i>& mask)     {
+      return ::mask_or2(mask.m_mask, m_mask, m_mask, i);
+    }
+    /// Apply OR operator  of bitarray to the current mask
+    int apply_or(const unsigned int mask[])     {
+      return ::mask_or2(mask, m_mask, m_mask, i);
+    }
+    /// Apply OR operator  of two other masks to the current mask
+    int apply_or(const BitMask<i>& mask1, const BitMask<i>& mask2)     {
+      return ::mask_or3(mask1.m_mask, mask2.m_mask, m_mask, m_mask, i);
+    }
+    /// Apply OR operator  of three other masks to the current mask
+    int apply_or(const BitMask<i>& mask1, const BitMask<i>& mask2, const BitMask<i>& mask3)   {
+      return ::mask_or4(mask1.m_mask, mask2.m_mask, mask3.m_mask, m_mask, m_mask, i);
+    }
+
+    /// Calculate the OR operator  with another mask and return result.
     int mask_or(const BitMask<i>& mask)  const   {
       return ::mask_or_ro2(m_mask, mask.m_mask, i);
     }
+    /// Calculate the OR operator  with a bitfield and return result.
+    int mask_or(const unsigned int mask[])  const   {
+      return ::mask_or_ro2(m_mask, mask, i);
+    } 
+    /// Calculate the OR operator  with two other masks and return result.
     int mask_or(const BitMask<i>& mask1, const BitMask<i>& mask2)  const   {
       return ::mask_or_ro3(m_mask, mask1.m_mask, mask2.m_mask, i);
     }
+    /// Calculate the OR operator  with three other masks and return result.
     int mask_or(const BitMask<i>& mask1, const BitMask<i>& mask2, const BitMask<i>& mask3)  const   {
       return ::mask_or_ro4(m_mask, mask1.m_mask, mask2.m_mask, mask3.m_mask, i);
     }
-    int mask_summ()  const    {
-      return ::mask_summ(m_mask,i);
+
+    /// Apply AND operator  of one other mask to the current mask
+    int apply_and(const BitMask<i>& mask)  {
+      return ::mask_and2(mask.m_mask, m_mask, m_mask, i);
+    }
+    /// Apply AND operator  of bitarray to the current mask
+    int apply_and(const unsigned int mask[])     {
+      return ::mask_and2(mask, m_mask, m_mask, i);
+    }
+    /// Apply AND operator  of two other masks to the current mask
+    int apply_and(const BitMask<i>& mask1, const BitMask<i>& mask2)  {
+      return ::mask_and3(mask1.m_mask, mask2.m_mask, m_mask, m_mask, i);
+    }
+    /// Apply AND operator  of three other masks to the current mask
+    int apply_and(const BitMask<i>& mask1, const BitMask<i>& mask2, const BitMask<i>& mask3)  {
+      return ::mask_and4(mask1.m_mask, mask2.m_mask, mask3.m_mask, m_mask, m_mask, i);
     }
     int mask_and(const BitMask<i>& mask1, const BitMask<i>& mask2)  {
       return ::mask_and2(mask1.m_mask, mask2.m_mask, m_mask, i);
     }
     int mask_and(const BitMask<i>& mask1, const BitMask<i>& mask2, const BitMask<i>& mask3)  {
       return ::mask_and3(mask1.m_mask, mask2.m_mask, mask3.m_mask, m_mask, i);
+    }
+
+    int mask_summ()  const    {
+      return ::mask_summ(m_mask,i);
     }
     void set(int which)  {
       ::bit_set(m_mask,which);

@@ -34,7 +34,16 @@ int mask_and3 (const unsigned int* mask1,const unsigned int* mask2,const unsigne
   int result=0;
   for (int i=0; i<mask_size; ++i)  {
     mask4[i] = ((mask1[i] & mask2[i]) & mask3[i]);
-    result  |= mask3[i];
+    result  |= mask4[i];
+  }
+  return result;
+}
+
+int mask_and4(const unsigned int* mask1,const unsigned int* mask2,const unsigned int* mask3,const unsigned int* mask4,unsigned int* mask5,int mask_size)  {
+  int result=0;
+  for (int i=0; i<mask_size; ++i)  {
+    mask5[i] = (((mask1[i] & mask2[i]) & mask3[i]) & mask4[i]);
+    result  |= mask5[i];
   }
   return result;
 }
@@ -53,6 +62,15 @@ int mask_or3 (const unsigned int* mask1, const unsigned int* mask2,const unsigne
   for (int i=0;i<mask_size;++i)  {
     mask4[i] = mask1[i] | mask2[i] | mask3[i];
     result  |= mask3[i];
+  }
+  return result;
+}
+
+int mask_or4   (const unsigned int* mask1,const unsigned int* mask2,const unsigned int* mask3,const unsigned int* mask4,unsigned int* mask5,int mask_size)  {
+  int result=0;
+  for (int i=0; i<mask_size; ++i)  {
+    mask5[i] = (((mask1[i] | mask2[i]) | mask3[i]) | mask4[i]);
+    result  |= mask5[i];
   }
   return result;
 }

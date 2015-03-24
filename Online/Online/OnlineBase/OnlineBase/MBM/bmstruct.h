@@ -124,7 +124,7 @@ struct USER : public qentry_t  {
   int   get_sp_calls;
   int   free_calls;
   int   alloc_calls;
-  REQ   req[8];                    // 8 requirement maximum     
+  REQ   req[BM_MAX_REQS];          // BM_MAX_REQS requirement maximum     
   //char  __spare[8];
   enum { BID = MBM::BID_USER };
   typedef bm_iterator<USER> iterator;
@@ -243,6 +243,7 @@ struct ServerBMID_t : public BufferMemory {
   int              clientfd;
   int              num_threads;
   int              stop;
+  int              allow_declare;
   RTL_ast_t        free_event;
   void*            free_event_param;
   RTL_ast_t        alloc_event;
@@ -255,6 +256,12 @@ struct ServerBMID_t : public BufferMemory {
     int              poll;
     lib_rtl_thread_t dispatcher;
   } server[BM_MAX_THREAD];
+
+  struct ConsumerREQ {
+    REQ      requirement;
+    char     name[BM_USER_NAME_LEN];     // user name match
+    int      count;
+  } cons_req[BM_MAX_REQS];
   ServerBMID_t();
   ~ServerBMID_t();
 };
