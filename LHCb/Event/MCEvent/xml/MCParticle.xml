@@ -100,7 +100,7 @@
         type="const LHCb::MCParticle*"
        >
          <code>
-  return ( originVertex() ? originVertex()->mother() : NULL ) ;
+           return ( originVertex() ? originVertex()->mother() : NULL ) ;
          </code>
        </method>
        <method
@@ -110,7 +110,7 @@
         type="double"
        >
          <code>
-  return ( m_momentum.E() > 0. ? m_momentum.R()/m_momentum.E() : 1.) ;
+           return ( m_momentum.E() > 0. ? m_momentum.R()/m_momentum.E() : 1.) ;
          </code>
        </method>
        <method
@@ -120,7 +120,7 @@
         type="double"
        >
          <code>
-  return ( m_momentum.M() > 0. ? m_momentum.E()/m_momentum.M() : -999.) ;
+           return ( m_momentum.M() > 0. ? m_momentum.E()/m_momentum.M() : -999.) ;
          </code>
        </method>
        <method
@@ -130,7 +130,7 @@
         type="double"
        >
          <code>
-  return ( m_momentum.M() > 0. ? m_momentum.R()/m_momentum.M() : -999.) ;
+           return ( m_momentum.M() > 0. ? m_momentum.R()/m_momentum.M() : -999.) ;
          </code>
        </method>
        <method
@@ -168,7 +168,7 @@
         type="const LHCb::MCVertex*"
        >
          <code> 
-  return ( originVertex() ? originVertex()->primaryVertex() : NULL ) ;
+           return ( originVertex() ? originVertex()->primaryVertex() : NULL ) ;
          </code>
        </method>
 
@@ -189,6 +189,14 @@
             type = "std::ostream"
             name = "s"/>
        </method>
+
+      <attribute 
+                name = "flags"
+                desc = "Bit-packed information on how this MCParticle was produced" 
+                init = "0"
+                type = "bitfield">
+      <bitfield desc="Flag to indicate if this particle was produced as part of the signal decay tree" length="1" name="fromSignal" />
+      </attribute>
 
      </class>
   </package>
