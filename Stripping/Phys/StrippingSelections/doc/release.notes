@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-03-24 - Pablo Ruiz Valls
+ - Migration of RD lines
+
 ! 2015-03-23 - Lucio Anderlini
  - update to StrippingCalib/StrippingPIDCalib.py (several bug-fixes)
 
