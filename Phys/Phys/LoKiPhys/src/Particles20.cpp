@@ -1690,6 +1690,43 @@ LoKi::Particles::TrgPointingScoreWithBestPV::operator()
 }
 // ============================================================================
 
+// ============================================================================
+// the default constructor: create the object in invalid state
+// ============================================================================
+LoKi::Particles::PseudoRapidityWithTheBestPV::
+PseudoRapidityWithTheBestPV()
+  : LoKi::AuxDesktopBase                  (          )
+  , LoKi::Particles::PseudoRapidityFromVertex ( s_VERTEX )
+{}
+// ============================================================================
+// MANDATORY: the clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::PseudoRapidityWithTheBestPV*
+LoKi::Particles::PseudoRapidityWithTheBestPV::clone() const
+{ return new PseudoRapidityWithTheBestPV ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method
+// ============================================================================
+LoKi::Particles::PseudoRapidityWithTheBestPV::result_type
+LoKi::Particles::PseudoRapidityWithTheBestPV::operator()
+  ( LoKi::Particles::PseudoRapidityWithTheBestPV::argument p ) const
+{
+  if ( 0 == p )
+  {
+    Error ( "LHCb::Particle* points to NULL, return -1000" ) ;
+    return -1000 ;                                                     // RETURN
+  }
+  //
+  // get the best vertex from desktop and use it
+  setVertex ( bestVertex ( p ) ) ;
+  //
+  return eta ( p ) ;
+}
+// ============================================================================
+// OPTIONAL: the specific printout
+// ============================================================================
+std::ostream& LoKi::Particles::PseudoRapidityWithTheBestPV::fillStream
+( std::ostream& s ) const { return s << "BPVETA" ; }
  
 
 

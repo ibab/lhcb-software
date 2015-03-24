@@ -453,6 +453,8 @@ VALUE    = LoKi.Particles.Value
 DANG     = LoKi.Particles.CosineDirectionAngle 
 ## @see LoKi::Cuts::DIRA
 DIRA     = LoKi.Particles.CosineDirectionAngle 
+## @see LoKi::Cuts::VETA
+VETA     = LoKi.Particles.PseudoRapidityFromVertex
 ## @see LoKi::Cuts::DETA
 DETA     = LoKi.Particles.DeltaEta
 ## @see LoKi::Cuts::DPHI
@@ -726,6 +728,9 @@ BPVLT                 = LoKi.Particles.LifeTimeDV
 BPVLTCHI2             = LoKi.Particles.LifeTimeChi2DV
 BPVLTSIGNCHI2         = LoKi.Particles.LifeTimeSignedChi2DV
 BPVLTFITCHI2          = LoKi.Particles.LifeTimeFitChi2DV
+
+BPVETA                = LoKi.Particles.PseudoRapidityWithTheBestPV()      ## by Albert Puig
+BESTPVETA             = LoKi.Particles.PseudoRapidityWithTheBestPV()      ## by Albert Puig
 
 # =============================================================================
 # Functions for Lisa Dwyer 

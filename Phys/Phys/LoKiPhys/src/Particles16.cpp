@@ -216,7 +216,85 @@ LoKi::Particles::TrgPointingScore::pointing
 
   return pstheta / denom ;
 } 
+
+
+
 // ============================================================================
+// constructor from the vertex
+// ============================================================================
+LoKi::Particles::PseudoRapidityFromVertex::PseudoRapidityFromVertex
+( const LHCb::VertexBase* vertex )
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  , LoKi::Vertices::VertexHolder ( vertex )
+{}
+// ============================================================================
+// constructor from the point
+// ============================================================================
+LoKi::Particles::PseudoRapidityFromVertex::PseudoRapidityFromVertex
+( const LoKi::Point3D& point )
+  : LoKi::AuxFunBase ( std::tie ( point ) )
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  , LoKi::Vertices::VertexHolder ( point )
+{}
+// ============================================================================
+// constructor from the holder
+// ============================================================================
+LoKi::Particles::PseudoRapidityFromVertex::PseudoRapidityFromVertex
+( const LoKi::Vertices::VertexHolder& holder )
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  , LoKi::Vertices::VertexHolder ( holder )
+{}
+// ============================================================================
+// copy constructor
+// ============================================================================
+LoKi::Particles::PseudoRapidityFromVertex::PseudoRapidityFromVertex
+( const LoKi::Particles::PseudoRapidityFromVertex& right )
+  : LoKi::AuxFunBase                      ( right )
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right )
+  , LoKi::Vertices::VertexHolder          ( right )
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+LoKi::Particles::PseudoRapidityFromVertex::~PseudoRapidityFromVertex(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual destructor")
+// ============================================================================
+LoKi::Particles::PseudoRapidityFromVertex*
+LoKi::Particles::PseudoRapidityFromVertex::clone() const
+{ return new LoKi::Particles::PseudoRapidityFromVertex(*this) ; }
+// ============================================================================
+LoKi::Particles::PseudoRapidityFromVertex::result_type
+LoKi::Particles::PseudoRapidityFromVertex::eta
+( LoKi::Particles::PseudoRapidityFromVertex::argument p ) const
+{
+  if ( 0 == p )
+  {
+    Error ( "LHCb::Particle* points to NULL, return -1000");
+    return -1000 ;
+  }
+  const LHCb::VertexBase* v = p->endVertex() ;
+  if ( 0 == v )
+  {
+    Error ( "LHCb::Particle::endVertex points to NULL, return -2000");
+    return -2000 ;
+  }
+  if ( !valid() )
+  {
+    Error ( "VertexHolder base is invalid, return -3000");
+    return -3000 ;
+  }
+  const LoKi::ThreeVector d = v->position()-position() ;
+  return d.Eta() ;
+}
+// ============================================================================
+// OPTIONAL: printout
+// ============================================================================
+std::ostream&
+LoKi::Particles::PseudoRapidityFromVertex::fillStream ( std::ostream& s ) const
+{ return s << "VETA" ; }
+// ============================================================================
+
 // ============================================================================
 // The END 
 // ============================================================================

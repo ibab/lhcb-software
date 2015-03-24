@@ -130,6 +130,48 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class PseudoRapidityFromVertex
+     *  evaluator of the pseudorapidity obtained from the direction
+     *  from the reference vertex/point to the particle decay vertex
+     *  @see LoKi::Cuts::VETA
+     *  @author Albert Puig
+     *  @date   2015-03-03
+     */
+    class GAUDI_API PseudoRapidityFromVertex
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+      , public LoKi::Vertices::VertexHolder
+    {
+    public:
+      // ======================================================================
+      /// constructor form vertex
+      PseudoRapidityFromVertex ( const LHCb::VertexBase* vertex ) ;
+      /// constructor form the point
+      PseudoRapidityFromVertex ( const LoKi::Point3D&    point  ) ;
+      /// constructor from the holder
+      PseudoRapidityFromVertex ( const LoKi::Vertices::VertexHolder& holder ) ;
+      /// copy constructor
+      PseudoRapidityFromVertex ( const PseudoRapidityFromVertex& right ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~PseudoRapidityFromVertex() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  PseudoRapidityFromVertex* clone() const ;
+      /// MANDATORY: the only one essential method
+      virtual result_type operator() ( argument p ) const
+      { return eta ( p ) ; }
+      /// OPTIONAL: the specific printout
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      result_type eta ( argument p ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// default constructor is private
+      PseudoRapidityFromVertex();
+      // ======================================================================
+    } ;
+
   } //                                         end of namespace LoKi::Particles
   // ==========================================================================
 } //                                                      end of namespace LoKi

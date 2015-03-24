@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2015-03-25 - Albert Puig
+ - Add functors for Pseudorapidity calculated from the PV->SV direction.
+
 ! 2015-03-24 - Vanya Belyaev
  - Warning -> Error for wrong pid/name in WrongMass functor 
 

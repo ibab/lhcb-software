@@ -1388,6 +1388,37 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class PseudoRapidityWithTheBestPV
+     *  A special version of the LoKi::Particles::PseudoRapidityFromVertex functor,
+     *  which gets the related primary vertex from IPhysDesktop tool
+     *
+     *  @see LoKi::Cuts::BPVETA
+     *  @see IPhysDesktop
+     *  @see LoKi::getPhysDesktop
+     *  @see LoKi::Particles::PseudoRapidityFromVertex
+     *
+     *  @author Albert Puig (albert.puig@epfl.ch)
+     *  @date 2015-03-03
+     */
+    class GAUDI_API PseudoRapidityWithTheBestPV
+      : public LoKi::Particles::PseudoRapidityFromVertex
+      , public virtual LoKi::AuxDesktopBase
+    {
+    public:
+      // ======================================================================
+      /// the default constructor, creates the object in invalid state
+      PseudoRapidityWithTheBestPV () ;
+      /// MANDATORY: virtual destructor
+      virtual ~PseudoRapidityWithTheBestPV () {} ;
+      /// MANDATORY: the clone method ("virtual constructor")
+      virtual  PseudoRapidityWithTheBestPV* clone() const ;
+      /// MANDATORY: the only one essential method
+      virtual  result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    } ;
+    // ========================================================================
   } //                                         end of namespace LoKi::Particles
   // ==========================================================================
 } //                                                      end of namespace LoKi   
