@@ -4,6 +4,12 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-03-24 - Matthew Kenzie
+ - Change Hlt1Combiner from Pipe to Source
+ - Hlt1Combiner accepts between 1 and 3 Sources in single constructor
+ - Hlt1Combiner now does optimised 3 and 4 body combinations
+ - Hlt1CombinerConf now takes optional combination_cut12, combination_cut123 for N>2 body combinations
+ - Hlt1CombinerConf now accepts multiple decay strings
 
 ! 2015-03-23 - Albert Puig
  - Add the possibility to specify the particle combiner in Hlt1Combiner

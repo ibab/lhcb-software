@@ -248,10 +248,6 @@ TC_TOPARTICLES = LoKi.Hlt1.ToParticles
 TC_FROMCALOTOPARTICLES = LoKi.Hlt1.FromCaloToParticles
 ## @see LoKi::Cuts::TC_HLT1COMBINER
 TC_HLT1COMBINER = LoKi.Hlt1.Hlt1Combiner
-## @see LoKi::Cuts::TC_HLT1COMBINER2
-TC_HLT1COMBINER2 = LoKi.Hlt1.Hlt1Combiner2
-## @see LoKi::Cuts::TC_HLT1COMBINER3
-TC_HLT1COMBINER3 = LoKi.Hlt1.Hlt1Combiner3
 
 # =============================================================================
 ## di-tracks makers

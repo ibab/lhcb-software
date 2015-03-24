@@ -125,7 +125,7 @@ LoKi::Hlt1::FromCaloToParticles::operator()
                                                           p * pos.z()/distance,
                                                           e) ;
     particle->setMomentum(mom) ;
-    std::cout << (*particle) << std::endl ;
+    //std::cout << (*particle) << std::endl ;
     // cuts here
     if ( ! m_cut ( particle ) ) {
       delete particle;

@@ -69,6 +69,83 @@ namespace LoKi
         const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut  ,
         const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut  ,
         std::string                                                       combiner ) ;
+      // =====================================================================
+      ///  constructor from vector of decay descriptors and cuts
+      Hlt1CombinerConf
+      ( std::vector<std::string>                                          decays  ,
+        const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut ,
+        const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut ) ;
+      // =====================================================================
+      ///  constructor from vector of decay descriptors, cuts and combiner
+      Hlt1CombinerConf
+      ( std::vector<std::string>                                          decays   ,
+        const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut  ,
+        const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut  ,
+        std::string                                                       combiner ) ;
+      // =====================================================================
+      ///  constructor from the decay descriptor and cuts
+      Hlt1CombinerConf
+      ( std::string                                                       decay     ,
+        const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut   ,
+        const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut12 ,
+        const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut   ) ;
+      // =====================================================================
+      ///  constructor from the decay descriptor, cuts and combiner
+      Hlt1CombinerConf
+      ( std::string                                                       decay     ,
+        const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut   ,
+        const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut12 ,
+        const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut   ,
+        std::string                                                       combiner  ) ;
+      // =====================================================================
+      ///  constructor from vector of decay descriptors and cuts
+      Hlt1CombinerConf
+      ( std::vector<std::string>                                          decays  ,
+        const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut ,
+        const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut12 ,
+        const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut ) ;
+      // =====================================================================
+      ///  constructor from vector of decay descriptors, cuts and combiner
+      Hlt1CombinerConf
+      ( std::vector<std::string>                                          decays   ,
+        const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut  ,
+        const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut12 ,
+        const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut  ,
+        std::string                                                       combiner ) ;
+      // =====================================================================
+      ///  constructor from the decay descriptor and cuts
+      Hlt1CombinerConf
+      ( std::string                                                       decay      ,
+        const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut    ,
+        const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut12  ,
+        const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut123 ,
+        const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut    ) ;
+      // =====================================================================
+      ///  constructor from the decay descriptor, cuts and combiner
+      Hlt1CombinerConf
+      ( std::string                                                       decay      ,
+        const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut    ,
+        const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut12  ,
+        const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut123 ,
+        const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut    ,
+        std::string                                                       combiner   ) ;
+      // =====================================================================
+      ///  constructor from vector of decay descriptors and cuts
+      Hlt1CombinerConf
+      ( std::vector<std::string>                                          decays     ,
+        const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut    ,
+        const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut12  ,
+        const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut123 ,
+        const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut    ) ;
+      // =====================================================================
+      ///  constructor from vector of decay descriptors, cuts and combiner
+      Hlt1CombinerConf
+      ( std::vector<std::string>                                          decays     ,
+        const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut    ,
+        const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut12  ,
+        const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut123 ,
+        const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut    ,
+        std::string                                                       combiner   ) ;
       /// virtual destructor
       virtual ~Hlt1CombinerConf () ;                           // virtual destructor
       // ======================================================================
@@ -80,29 +157,38 @@ namespace LoKi
     public: // the properties
       // ======================================================================
       /// the decay string
-      const std::string&                                              decay() const
-      { return m_decstring ; }
+      const std::vector<std::string>&                       decaystrs() const
+      { return m_decstrings ; }
       /// the decays
-      const std::vector<Decays::Decay>                                decays() const
+      const std::vector<Decays::Decay>                      decays() const
       { return m_decays ; }
-      /// decay decoder
-      IDecodeSimpleDecayString*                                       dsds()
-      { return m_dsds; }
       /// the combination cut
-      const LoKi::Functor<LoKi::ATypes::Combination,bool>& acut() const
+      const LoKi::Functor<LoKi::ATypes::Combination,bool>&  acut() const
       { return m_acut ; }
+      /// the combination12 cut
+      const LoKi::Functor<LoKi::ATypes::Combination,bool>&  acut12() const
+      { return m_acut12 ; }
+      /// the combination123 cut
+      const LoKi::Functor<LoKi::ATypes::Combination,bool>&  acut123() const
+      { return m_acut123 ; }
       /// the mother cut
-      const LoKi::Functor<const LHCb::Particle*,bool>&     cut() const
+      const LoKi::Functor<const LHCb::Particle*,bool>&      cut() const
       { return m_cut ; }
       /// the combiner tool
-      const std::string                                    combiner() const
+      const std::string                                     combiner() const
       { return m_combinertool ; }
+      /// setup
+      StatusCode                                            setup() ;          
       // ======================================================================
     public:
       // ======================================================================
       /// apply the cuts
       bool combcut ( const LoKi::ATypes::Combination c ) const
       { return m_acut.fun ( c ) ; }
+      bool combcut12 ( const LoKi::ATypes::Combination c ) const
+      { return m_acut12.fun ( c ) ; }
+      bool combcut123 ( const LoKi::ATypes::Combination c ) const
+      { return m_acut123.fun ( c ) ; }
       bool mothcut ( const LHCb::Particle* p ) const
       { return m_cut.fun ( p ) ; }
       // ======================================================================
@@ -111,17 +197,19 @@ namespace LoKi
       // combination criteria
       // ======================================================================
       /// the decay string
-      std::string                                               m_decstring      ;
+      std::vector<std::string>                                  m_decstrings   ;
       /// the decay
-      std::vector<Decays::Decay>                                m_decays         ;
+      std::vector<Decays::Decay>                                m_decays       ;
       /// the combination cut
-      LoKi::FunctorFromFunctor<LoKi::ATypes::Combination, bool> m_acut           ;
+      LoKi::FunctorFromFunctor<LoKi::ATypes::Combination, bool> m_acut         ;
+      /// the combination cut for N>2 combinations
+      LoKi::FunctorFromFunctor<LoKi::ATypes::Combination, bool> m_acut12       ;
+      /// the combination cut for N>3 combinations
+      LoKi::FunctorFromFunctor<LoKi::ATypes::Combination, bool> m_acut123      ;
       /// the mother cut
-      LoKi::FunctorFromFunctor<const LHCb::Particle*, bool>     m_cut            ;
-      /// decay descriptor decoder tool
-      IDecodeSimpleDecayString*                                 m_dsds           ;
+      LoKi::FunctorFromFunctor<const LHCb::Particle*, bool>     m_cut          ;
       /// the combiner tool name
-      std::string                                               m_combinertool   ;
+      std::string                                               m_combinertool ;
       // ======================================================================
     public:
       // ======================================================================
