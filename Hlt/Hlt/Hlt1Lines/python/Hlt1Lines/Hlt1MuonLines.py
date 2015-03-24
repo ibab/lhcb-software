@@ -236,12 +236,12 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             Code = """
             TrackCandidates
             >>  ( ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s  * MeV ) )
-            >>  IsMuon
-            >>  tee  ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
-            >>  tee  ( monitor( TC_SIZE , 'nIsMuon' , LoKi.Monitoring.ContextSvc ) )
             >>  FitTrack
             >>  tee  ( monitor( TC_SIZE > 0, '# pass fit', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nFitted' , LoKi.Monitoring.ContextSvc ) )
+            >>  IsMuon
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nIsMuon' , LoKi.Monitoring.ContextSvc ) )
             >>  ( TrCHI2PDOF < %(TrChi2)s )
             >>  SINK( 'Hlt1%(name)sDecision' )
             >> ~TC_EMPTY
