@@ -31,10 +31,10 @@
  */
 // ============================================================================
 LoKi::Particles::WrongMass::WrongMass
-( const double m1 ,
-  const double m2 , 
+( const double                m1 ,
+  const double                m2 , 
   const IParticleTransporter* t  , 
-  const double                dz )
+  const double                dz ) 
   : LoKi::AuxFunBase ( std::tie ( m1 ,m2 , dz ) ) 
   , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
@@ -50,9 +50,9 @@ LoKi::Particles::WrongMass::WrongMass
 }
 // ============================================================================
 LoKi::Particles::WrongMass::WrongMass
-( const double m1 ,
-  const double m2 ,
-  const double m3 ,
+( const double                m1 ,
+  const double                m2 ,
+  const double                m3 ,
   const IParticleTransporter* t  , 
   const double                dz ) 
   : LoKi::AuxFunBase ( std::tie ( m1 , m2 , m3 , dz ) ) 
@@ -71,10 +71,10 @@ LoKi::Particles::WrongMass::WrongMass
 }
 // ============================================================================
 LoKi::Particles::WrongMass::WrongMass
-( const double m1 ,
-  const double m2 ,
-  const double m3 ,
-  const double m4 ,
+( const double           m1 ,
+  const double                m2 ,
+  const double                m3 ,
+  const double                m4 ,
   const IParticleTransporter* t  , 
   const double                dz ) 
   : LoKi::AuxFunBase ( std::tie ( m1 , m2 , m3 , m4 , dz ) ) 
@@ -94,9 +94,9 @@ LoKi::Particles::WrongMass::WrongMass
 }
 // ============================================================================
 LoKi::Particles::WrongMass::WrongMass
-( const std::vector<double>& masses ,
-  const IParticleTransporter* t  , 
-  const double                dz ) 
+( const std::vector<double>&  masses ,
+  const IParticleTransporter* t      , 
+  const double                dz     ) 
   : LoKi::AuxFunBase ( std::tie ( masses , dz ) ) 
   , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses ( masses ) 
@@ -109,8 +109,8 @@ LoKi::Particles::WrongMass::WrongMass
 {}
 // ============================================================================
 LoKi::Particles::WrongMass::WrongMass 
-( const LHCb::ParticleID& p1 , 
-  const LHCb::ParticleID& p2 ,
+( const LHCb::ParticleID&     p1 , 
+  const LHCb::ParticleID&     p2 ,
   const double                dz ,
   const IParticleTransporter* t  ) 
   : LoKi::AuxFunBase ( std::tie ( p1 , p2  , dz ) ) 
@@ -125,13 +125,13 @@ LoKi::Particles::WrongMass::WrongMass
 {
   m_pids.push_back ( p1 ) ;
   m_pids.push_back ( p2 ) ;  
-  decode().ignore () ;
+  if ( gaudi() ) { Assert ( decode().isSuccess() , "Error from decode()" ) ; }
 }
 // ============================================================================
 LoKi::Particles::WrongMass::WrongMass 
-( const LHCb::ParticleID& p1 , 
-  const LHCb::ParticleID& p2 ,
-  const LHCb::ParticleID& p3 ,
+( const LHCb::ParticleID&     p1 , 
+  const LHCb::ParticleID&     p2 ,
+  const LHCb::ParticleID&     p3 ,
   const double                dz ,
   const IParticleTransporter* t  ) 
   : LoKi::AuxFunBase ( std::tie ( p1 , p2 , p3 , dz ) ) 
@@ -147,14 +147,14 @@ LoKi::Particles::WrongMass::WrongMass
   m_pids.push_back ( p1 ) ;
   m_pids.push_back ( p2 ) ;  
   m_pids.push_back ( p3 ) ;  
-  decode().ignore () ;
+  if ( gaudi() ) { Assert ( decode().isSuccess() , "Error from decode()" ) ; }
 }
 // ============================================================================
 LoKi::Particles::WrongMass::WrongMass 
-( const LHCb::ParticleID& p1 , 
-  const LHCb::ParticleID& p2 ,
-  const LHCb::ParticleID& p3 ,  
-  const LHCb::ParticleID& p4 ,
+( const LHCb::ParticleID&     p1 , 
+  const LHCb::ParticleID&     p2 ,
+  const LHCb::ParticleID&     p3 ,  
+  const LHCb::ParticleID&     p4 ,
   const double                dz ,
   const IParticleTransporter* t  ) 
   : LoKi::AuxFunBase ( std::tie ( p1 , p2 , p3 , p4 , dz ) ) 
@@ -171,13 +171,13 @@ LoKi::Particles::WrongMass::WrongMass
   m_pids.push_back ( p2 ) ;  
   m_pids.push_back ( p3 ) ;
   m_pids.push_back ( p4 ) ;  
-  decode().ignore () ;
+  if ( gaudi() ) { Assert ( decode().isSuccess() , "Error from decode()" ) ; }
 }
 // ============================================================================
 LoKi::Particles::WrongMass::WrongMass 
 ( const std::vector<LHCb::ParticleID>& pids ,
-  const double                dz ,
-  const IParticleTransporter* t  ) 
+  const double                         dz   ,
+  const IParticleTransporter*          t    ) 
   : LoKi::AuxFunBase ( std::tie ( pids  , dz ) ) 
   , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
@@ -188,12 +188,12 @@ LoKi::Particles::WrongMass::WrongMass
   , m_dz          ( dz )
 //
 {
-  decode().ignore () ;
+  if ( gaudi() ) { Assert ( decode().isSuccess() , "Error from decode()" ) ; }
 }
 // ============================================================================
 LoKi::Particles::WrongMass::WrongMass 
-( const std::string& p1 , 
-  const std::string& p2 ,
+( const std::string&          p1 , 
+  const std::string&          p2 ,
   const double                dz ,
   const IParticleTransporter* t  )
   : LoKi::AuxFunBase ( std::tie ( p1 , p2   , dz ) ) 
@@ -208,13 +208,13 @@ LoKi::Particles::WrongMass::WrongMass
 {
   m_names.push_back ( p1 ) ;
   m_names.push_back ( p2 ) ;  
-  decode().ignore () ;
+  if ( gaudi() ) { Assert ( decode().isSuccess() , "Error from decode()" ) ; }
 }
 // ============================================================================
 LoKi::Particles::WrongMass::WrongMass 
-( const std::string& p1 , 
-  const std::string& p2 ,
-  const std::string& p3 ,
+( const std::string&          p1 , 
+  const std::string&          p2 ,
+  const std::string&          p3 ,
   const double                dz ,
   const IParticleTransporter* t  ) 
   : LoKi::AuxFunBase ( std::tie ( p1 , p2 , p3 , dz ) ) 
@@ -230,7 +230,7 @@ LoKi::Particles::WrongMass::WrongMass
   m_names.push_back ( p1 ) ;
   m_names.push_back ( p2 ) ;  
   m_names.push_back ( p3 ) ;  
-  decode().ignore () ;
+  if ( gaudi() ) { Assert ( decode().isSuccess() , "Error from decode()" ) ; }
 }
 // ============================================================================
 LoKi::Particles::WrongMass::WrongMass 
@@ -254,13 +254,13 @@ LoKi::Particles::WrongMass::WrongMass
   m_names.push_back ( p2 ) ;  
   m_names.push_back ( p3 ) ;  
   m_names.push_back ( p4 ) ;  
-  decode().ignore () ;
+  if ( gaudi() ) { Assert ( decode().isSuccess() , "Error from decode()" ) ; }
 }
 // ============================================================================
 LoKi::Particles::WrongMass::WrongMass 
 ( const std::vector<std::string>& names ,
-  const double                dz ,
-  const IParticleTransporter* t  ) 
+  const double                    dz    ,
+  const IParticleTransporter*     t     ) 
   : LoKi::AuxFunBase ( std::tie ( names , dz ) ) 
   , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_masses () 
@@ -271,7 +271,7 @@ LoKi::Particles::WrongMass::WrongMass
   , m_dz          ( dz )
 //
 {
-  decode().ignore () ;
+  if ( gaudi() ) { Assert ( decode().isSuccess() , "Error from decode()" ) ; }
 }
 // ============================================================================
 // MANDATORY : virtual destructor 
@@ -280,7 +280,7 @@ LoKi::Particles::WrongMass::~WrongMass()
 {
   if ( m_transporter && !gaudi() )
   {
-    // Warning("IParticleTRansporter: manual reset") ;
+    // Warning("IParticleTransporter: manual reset") ;
     m_transporter.reset () ;
   }
 }
@@ -301,9 +301,8 @@ StatusCode LoKi::Particles::WrongMass::decode () const
       if ( 0 == pp ) 
       {
         m_masses.clear() ;
-        Warning ("decode(): invalid pid " + 
-                 boost::lexical_cast<std::string>( ipid->pid() ) ) ;
-        return StatusCode::FAILURE ;
+        Error ("decode(): invalid pid " + boost::lexical_cast<std::string>( ipid->pid() ) ) ;
+        return InvalidParticleID  ;
       }
       m_masses. push_back ( pp->mass() ) ;  
     }
@@ -320,8 +319,8 @@ StatusCode LoKi::Particles::WrongMass::decode () const
       if ( 0 == pp ) 
       {
         m_masses.clear() ;
-        Warning ("decode(): invalid name '" + (*iname) + "'" ) ;
-        return StatusCode::FAILURE ;
+        Error ("decode(): invalid name '" + (*iname) + "'" ) ;
+        return InvalidParticleName ;
       }
       m_masses. push_back ( pp->mass() ) ;  
     }
@@ -329,7 +328,7 @@ StatusCode LoKi::Particles::WrongMass::decode () const
   //
   if ( m_masses.empty() ) 
   { 
-    Warning ( "decode(): empty lits of mass hypotheses" ) ; 
+    Error ( "decode(): empty list of mass hypotheses" ) ; 
     return StatusCode::FAILURE ;
   }
   //
@@ -381,8 +380,7 @@ LoKi::Particles::WrongMass::wmass
   
   LoKi::LorentzVector sum  = LoKi::LorentzVector() ;
   //
-  for ( DAUGS::const_iterator id1 = daughters.begin() ; 
-        daughters.end() != id1 ; ++id1 ) 
+  for ( DAUGS::const_iterator id1 = daughters.begin() ; daughters.end() != id1 ; ++id1 ) 
   {
     //
     const std::size_t index   = id1 - daughters.begin() ;
@@ -394,30 +392,29 @@ LoKi::Particles::WrongMass::wmass
       Error ("Daughter particle points to NULL") ; 
       continue ;                                             // CONTINUE 
     }
-    
+    //
     // no need to be extrapolated? 
     if ( std::fabs ( dau->referencePoint().Z() - refPoint.Z() ) <= m_dz ) 
     {
       sum += LoKi::Kinematics::wrongMass ( dau->momentum() , newmass ) ;
       continue ;  // CONTINUE 
     }
-    
-    // extrapolate it! 
-    static LHCb::Particle s_particle ;
     //
-    const StatusCode ssc = m_transporter->transport ( dau , refPoint.Z() , s_particle ) ;
-    if ( ssc.isSuccess() ) 
+    // extrapolate it! 
+    LHCb::Particle   _particle ;
+    StatusCode sc1 = m_transporter->transport ( dau , refPoint.Z() , _particle ) ;
+    if ( sc1.isSuccess() ) 
     { 
-      sum += LoKi::Kinematics::wrongMass ( s_particle.momentum() , newmass ) ; 
+      sum += LoKi::Kinematics::wrongMass ( _particle.momentum() , newmass ) ; 
     }
     else 
     {
-      Warning ( "Unable to transport daughter particle, use non-extrapolated" , sc ) ;
+      Warning ( "Unable to transport daughter particle, use non-extrapolated" , sc1 ) ;
       sum += LoKi::Kinematics::wrongMass ( dau->momentum() , newmass ) ;
     }
-    
+    //
   } // end of the exlicit loop over daughter particles  
-  
+  //
   return sum.M() ;
 }
 // ============================================================================

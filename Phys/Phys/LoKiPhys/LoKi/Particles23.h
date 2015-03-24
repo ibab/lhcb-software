@@ -43,6 +43,13 @@ namespace LoKi
     class GAUDI_API WrongMass 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
     {
+    protected:
+      // =====================================================================
+      enum {
+        InvalidParticleID   = 310 , 
+        InvalidParticleName = 311 
+      } ;
+      // =====================================================================      
     public:
       // ======================================================================
       /// constructor from masses 
@@ -50,7 +57,7 @@ namespace LoKi
                   const double                m2                        , 
                   const IParticleTransporter* t  = 0                    , 
                   const double                dz = 5 * Gaudi::Units::mm ) ;
-      //
+      
       WrongMass ( const double                m1                        , 
                   const double                m2                        , 
                   const double                m3                        , 
@@ -138,6 +145,9 @@ namespace LoKi
       double wmass ( const LHCb::Particle::ConstVector&    p ) const 
       { return wmass ( p.begin() , p.end() ) ; }
       /// evaluate the wrong mass 
+      double wmass ( const LHCb::Particle::Range&          p ) const 
+      { return wmass ( p.begin() , p.end() ) ; }
+      /// evaluate the wrong mass 
       double wmass ( const SmartRefVector<LHCb::Particle>& p ) const 
       { return wmass ( p.begin() , p.end() ) ; }
       // ======================================================================
@@ -163,7 +173,7 @@ namespace LoKi
     public:
       // ======================================================================
       template <class DAUGHTER>
-      double wmass ( DAUGHTER first , DAUGHTER last ) const 
+        double wmass ( DAUGHTER first , DAUGHTER last ) const 
       {
         StatusCode sc = check ( first , last ) ;
         if ( sc.isFailure() ) 
@@ -206,6 +216,12 @@ namespace LoKi
         { return Error ( " #masses != #daughters" ) ; }
         return StatusCode::SUCCESS ;
       }
+      // ======================================================================
+    public:
+      // ======================================================================
+      const std::vector<double>&           masses () const { return m_masses ; }
+      const std::vector<std::string>&      names  () const { return m_names  ; }      
+      const std::vector<LHCb::ParticleID>& pids   () const { return m_pids   ; }      
       // ======================================================================
     private:
       // ======================================================================

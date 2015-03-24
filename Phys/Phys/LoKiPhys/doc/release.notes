@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2015-03-24 - Vanya Belyaev
+ - Warning -> Error for wrong pid/name in WrongMass functor 
+
 ! 2015-03-15 - Roel Aaij
  - Add copy constructor to LoKi::Particles::Value.
 
