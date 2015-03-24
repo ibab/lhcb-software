@@ -1,0 +1,29 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ....................
+# Author: rlambert
+# Purpose: Check that Escher can align from D0 decays
+# Prerequisites: None
+# Common failure modes, severities and cures: 
+#               . SEVERE: Segfault or raised exception
+#               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
+#               . MINOR: extra WARNING messages should always be checked, and suppressed if they are actually not a problem.
+#               . EXPECTED:  There are always small differences in output from one stack to the next, if there are such small differences the reference files need to be updated.
+#######################################################
+-->
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudipar.py</text></argument>
+  <argument name="timeout"><integer>2400</integer></argument>
+  <argument name="args"><set>
+    <text>-e 100 -p 1</text>
+    <text>$ESCHEROPTS/Escher-AlignHltD0.py</text>
+    <text>$ESCHEROPTS/COLLISION12-Tests.py</text>
+  </set></argument>
+  <argument name="reference"><text>../refs/escherhltd0-par.ref</text></argument>
+  <argument name="validator"><text>
+from Escher.QMTest.EscherExclusions import preprocessor
+validateWithReference(preproc = preprocessor)
+</text></argument>
+</extension>
