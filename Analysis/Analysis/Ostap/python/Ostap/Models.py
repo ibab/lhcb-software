@@ -276,10 +276,13 @@ for model in ( Gaudi.Math.Chebyshev              ,
                Gaudi.Math.LogGamma               ,
                Gaudi.Math.BetaPrime              ,
                Gaudi.Math.Landau                 ,
+               Gaudi.Math.TwoExpos               ,
+               Gaudi.Math.Sigmoid                ,
                #
                Gaudi.Math.BSpline                , 
                Gaudi.Math.PositiveSpline         ,
                Gaudi.Math.MonothonicSpline       ,
+               Gaudi.Math.ConvexSpline           ,
                #
                ) :
     model . tf1 = _tf1_ 

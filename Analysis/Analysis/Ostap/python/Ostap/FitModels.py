@@ -124,7 +124,8 @@ __all__ = (
     'LogGamma_pdf'        , ## 
     'BetaPrime_pdf'       , ## Beta-prime distribution 
     'Landau_pdf'          , ## Landau distribution 
-    'Argus_pdf'           , ## Landau distribution 
+    'Argus_pdf'           , ## Argus distribution 
+    'TwoExpos_pdf'        , ## Difference of two exponents
     'SinhAsinh_pdf'       , ## "Sinh-asinh" distribution
      #
     ## 1D-background models

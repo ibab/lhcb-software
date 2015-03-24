@@ -283,6 +283,23 @@ else :
     print  "\tArgusA:      p0   = %s " % result( m_argusa . p0_value  .GetName()  )[0]   
 
 
+# =============================================================================
+logger.info("Test  2-expo-distribution")
+# =============================================================================
+m_2expo = Models.TwoExpos_pdf( '2exp' , x )
+
+with rooSilent() : 
+    result,f  = m_2expo.fitTo ( dataset2 )  
+    result,f  = m_2expo.fitTo ( dataset2 )  
+
+if 0 != result.status() or 3 != result.covQual() :
+    logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
+    print result
+else :
+    print  "\t2expo:       alpha= %s " % result( m_2expo . alpha     .GetName()  )[0]   
+    print  "\t2expo:       delta= %s " % result( m_2expo . delta     .GetName()  )[0]   
+    print  "\t2expo:          x0= %s " % result( m_2expo . x0        .GetName()  )[0]   
+
 
 # =============================================================================
 logger.info("Test  Poly(6)-Distribution")

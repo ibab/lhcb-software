@@ -29,6 +29,7 @@ __all__     = (
     'BetaPrime_pdf'      , ## Beta-prime distribution 
     'Landau_pdf'         , ## Landau distribution 
     'Argus_pdf'          , ## ARGUS distribution 
+    'TwoExpos_pdf'       , ## difference of two exponents 
     )
 # =============================================================================
 import ROOT, math
@@ -610,6 +611,70 @@ class Argus_pdf(PDF) :
             self.low   )
 
 models.append ( Argus_pdf ) 
+
+
+# =============================================================================
+## @class TwoExpos_pdf
+#  simple difference of two exponents
+#  \f$ f \propto 
+#        \mathrm{e}^{-a_1    x}       -\mathrm{e}^{-a_2 x} = 
+#        \mathrm{e}^{-\alpha x}\left(1-\mathrm{e}^{-\delta x}\right) \f$
+#  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+#  @see Analysis::Models::TwoExpos
+#  @see Gaudi::Math::TwoExpos
+class TwoExpos_pdf(PDF) :
+    """
+    Simple difference of two exponents
+    # \f$ f \propto 
+    #        \mathrm{e}^{-a_1    x}       -\mathrm{e}^{-a_2 x} = 
+    #        \mathrm{e}^{-\alpha x}\left(1-\mathrm{e}^{-\delta x}\right) \f$
+    """
+    ## constructor
+    def __init__ ( self             ,
+                   name             ,   ## the name 
+                   x                ,   ## the variable
+                   alpha = None     ,   ## shape-parameter 
+                   delta = None     ,   ## high-parameter 
+                   x0    = 0        ) : ## low-parameter 
+        #
+        PDF.__init__ ( self , name ) 
+        #
+        self.x     = x
+        self.mass  = x  ## ditto
+        #
+        self.alpha  = makeVar ( alpha      ,
+                                'alpha_%s'        % name ,
+                                '#alpha_{2e}(%s)' % name , alpha ,
+                                1     ,
+                                1.e-4 , 50 )
+        self.delta  = makeVar ( delta     ,
+                                'delta_%s'        % name ,
+                                '#delta_{2e}(%s)' % name , delta ,
+                                1     ,
+                                1.e-4 , 50 )
+        
+        xmin = self.x.getMin()
+        xmax = self.x.getMin()
+        dx   = xmax - xmin 
+        self.x0     = makeVar ( x0    ,
+                                'x0_%s'       % name ,
+                                'x0_{2e}(%s)' % name , x0 ,
+                                xmin ,
+                                xmin -0.1 * dx , xmax + 0.1 * dx )
+
+        logger.debug ('2expos alpha  %s' % self.alpha  )
+        logger.debug ('2expos delta  %s' % self.delta  )
+        logger.debug ('2expos x0     %s' % self.x0     )
+
+        self.pdf  = cpp.Analysis.Models.TwoExpos (
+            'exp2_%s'    % name ,
+            '2Expos(%s)' % name ,
+            self.x     ,
+            self.alpha ,
+            self.delta ,
+            self.x0    )
+
+models.append ( TwoExpos_pdf ) 
 # =============================================================================
 if '__main__' == __name__ :
     
