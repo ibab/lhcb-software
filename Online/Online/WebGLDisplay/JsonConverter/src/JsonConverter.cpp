@@ -13,7 +13,7 @@
 #include "Event/ODIN.h"
 #include "Event/RecVertex.h"
 #include "Event/MuonCoord.h"
-#include "Event/OTTime.h"
+//#include "Event/OTTime.h"
 #include "Event/STCluster.h"
 #include "Event/VeloCluster.h"
 #include "Event/CaloDigit.h"
@@ -29,7 +29,10 @@
 #include "VeloDet/DeVeloSensor.h"
 #include "CaloDet/DeCalorimeter.h"
 
-#include "Kernel/OTChannelID.h"           
+#include "TfKernel/OTHit.h"
+#include "TfKernel/IOTHitCreator.h"
+
+//#include "Kernel/OTChannelID.h"           
 #include "Kernel/LHCbID.h"           
 
 #include "TrackInterfaces/ITrackExtrapolator.h"
@@ -176,32 +179,20 @@ StatusCode JsonConverter::execute() {
   }
   
   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting OT Hits " << endmsg;
-  const LHCb::OTTimes* otTimes = getIfExists<LHCb::OTTimes>("Raw/OT/Times");
-  if( NULL == otTimes ) {
-    if(msgLevel(MSG::INFO)) info()<<" Container Raw/OT/Times doesn't exist"<<endmsg;    
-  } else 
-  {    
+  // Using the Hit creator as recommended y W.Hulsbergen
+  auto hitcreator = tool<Tf::IOTHitCreator>("Tf::OTHitCreator/OTHitCreator") ;
+  if (hitcreator != NULL) 
+  {
+    Tf::OTHitRange othits = hitcreator->hits();
     Stream otJson(Container::LIST);
-    DeOTDetector* otDetector=getDet<DeOTDetector>("/dd/Structure/LHCb/AfterMagnetRegion/T/OT");
-    
-    for_each(otTimes->begin(),
-             otTimes->end(),
-             [this, &otJson, &otDetector] (LHCb::OTTime *c) 
-             {
-
-               if (nullptr == c)
-                 return;
-
-               LHCb::OTChannelID cid = c->channel();
-               LHCb::LHCbID id(cid);
-               std::auto_ptr<LHCb::Trajectory> t = otDetector->trajectory(id, 0.0);
-	       if ( t.get() )  {
-		 Stream othit(Container::LIST);
-		 othit << t->beginPoint().x() << t->beginPoint().y() << t->beginPoint().z()
-		       << t->endPoint().x() << t->endPoint().y() << t->endPoint().z();
-		 otJson << othit;
-	       }
-             });
+    for( const auto& othit : othits ) {
+      Stream sothit(Container::LIST);
+      auto beginPoint = othit->beginPoint();
+      auto endPoint =  othit->position( othit->yEnd());    
+      sothit << beginPoint.x() << beginPoint.y() << beginPoint.z()
+             << endPoint.x() << endPoint.y() << endPoint.z();
+      otJson << sothit;
+    }
     jsonStream << std::make_pair("OT", otJson);
   }
   

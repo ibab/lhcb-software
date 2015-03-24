@@ -4,6 +4,9 @@
 ! Purpose     : JSON file ouput
 !-----------------------------------------------------------------------------
 
+! 2015-03-24 - Use OtHitCreator tool to get the hits as Raw/OT/Times isn't 
+               filled in anymore. 
+
 ! 2015-02-23 - Check vertices before trying to serialize them to JSON. 
 
 !========================= JsonConverter v1r0 2014-12-03 =======================
