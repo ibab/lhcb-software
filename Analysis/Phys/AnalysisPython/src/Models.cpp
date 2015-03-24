@@ -5265,6 +5265,99 @@ Double_t Analysis::Models::Argus::analyticalIntegral
 
 
 
+
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::TwoExpos::TwoExpos 
+( const char*          name   , 
+  const char*          title  ,
+  RooAbsReal&          x      ,
+  RooAbsReal&          alpha  ,
+  RooAbsReal&          delta  ,
+  RooAbsReal&          x0     )
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x       ( "x"      , "Observable" , this , x     ) 
+  , m_alpha   ( "alpha"  , "alpha"      , this , alpha ) 
+  , m_delta   ( "delta"  , "delta"      , this , delta ) 
+  , m_x0      ( "x0"     , "x0"         , this , x0    ) 
+    //
+  , m_2expos  ( 1 , 1 , 0 )
+{
+  setPars() ;
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::TwoExpos::TwoExpos 
+( const Analysis::Models::TwoExpos&  right ,
+  const char*                     name  ) 
+  : RooAbsPdf ( right , name ) 
+    //
+  , m_x      ( "x"      , this , right.m_x     ) 
+  , m_alpha  ( "alpha"  , this , right.m_alpha ) 
+  , m_delta  ( "delta"  , this , right.m_delta ) 
+  , m_x0     ( "x0"      , this , right.m_x0    ) 
+    //
+  , m_2expos (                   right.m_2expos ) 
+{
+  setPars () ;
+}
+// ============================================================================
+// destructor
+// ============================================================================
+Analysis::Models::TwoExpos::~TwoExpos (){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::TwoExpos*
+Analysis::Models::TwoExpos::clone( const char* name ) const 
+{ return new Analysis::Models::TwoExpos ( *this , name) ; }
+// ============================================================================
+void Analysis::Models::TwoExpos::setPars () const 
+{
+  //
+  m_2expos.setAlpha  ( m_alpha  ) ;
+  m_2expos.setDelta  ( m_delta  ) ;
+  m_2expos.setX0     ( m_x0     ) ;
+  //
+}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::TwoExpos::evaluate() const 
+{
+  //
+  setPars () ;
+  //
+  return m_2expos( m_x ) ;
+}
+// ============================================================================
+Int_t Analysis::Models::TwoExpos::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if ( matchArgs ( allVars , analVars , m_x ) ) { return 1 ; }
+  return 0 ;
+}
+// ============================================================================
+Double_t Analysis::Models::TwoExpos::analyticalIntegral 
+( Int_t       code      , 
+  const char* rangeName ) const 
+{
+  assert ( code == 1 ) ;
+  if ( 1 != code ) {}
+  //
+  setPars () ;
+  //
+  return m_2expos.integral ( m_x.min(rangeName) , m_x.max(rangeName) ) ;
+}
+// ============================================================================
+
+
+
 // ============================================================================
 // generic polinomial
 // ============================================================================

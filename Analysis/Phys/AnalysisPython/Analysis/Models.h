@@ -3564,6 +3564,79 @@ namespace Analysis
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class TwoExpos
+     *  simple difference of two exponents
+     *  \f$ f \propto 
+     *        \mathrm{e}^{-a_1    x}       -\mathrm{e}^{-a_2 x} = 
+     *        \mathrm{e}^{-\alpha x}\left(1-\mathrm{e}^{-\delta x}\right) \f$
+     *  @author Vanya BElyaev Ivan.Belyaev@itep.ru
+     *  @date 2015-02-07
+     */
+    class GAUDI_API TwoExpos : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::TwoExpos, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters
+      TwoExpos 
+        ( const char*           name  , 
+          const char*           title ,
+          RooAbsReal&           x     , 
+          RooAbsReal&           alpha ,
+          RooAbsReal&           delta ,
+          RooAbsReal&           x0    ) ;
+      /// "copy constructor"
+      TwoExpos
+        ( const TwoExpos&          right     , 
+          const char*           name  = 0 )  ;
+      /// destructor 
+      virtual ~TwoExpos () ;
+      /// clone 
+      virtual  TwoExpos* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::TwoExpos& function() const { return m_2expos ; }
+      // ======================================================================
+    protected: 
+      // ======================================================================
+      RooRealProxy m_x     ;
+      RooRealProxy m_alpha ;
+      RooRealProxy m_delta ;
+      RooRealProxy m_x0    ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function
+      mutable Gaudi::Math::TwoExpos m_2expos ; // the actual function
+      // ======================================================================
+    } ;
+    // ========================================================================
 
     // ========================================================================
     // 1D-splines 
