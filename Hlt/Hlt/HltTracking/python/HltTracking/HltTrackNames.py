@@ -136,6 +136,7 @@ Hlt2NeutralProtoParticleSuffix 		= "Neutrals"
 # 
 HltSharedPIDPrefix			= "PID"
 HltNoPIDSuffix				= "NoPID"
+HltAllPIDsSuffix                        = "AllPIDs"
 HltMuonIDSuffix				= "Muon"
 HltRICHIDSuffix				= "RICH"
 HltCALOIDSuffix				= "CALO"
@@ -144,6 +145,7 @@ HltCALOIDSuffix				= "CALO"
 # using e.g. different options for the RICH reco (radiators, hypotheses) 
 # don't clash with each other 
 #
+HltAllPIDsProtosSuffix                  = "WithAllPIDs"
 HltCaloProtosSuffix			= "WithCaloID"
 HltMuonProtosSuffix			= "WithMuonID"
 HltRichProtosSuffix			= "WithRichID"
@@ -196,7 +198,8 @@ __all__ = (
 		Hlt2NeutralProtoParticleSuffix,
 		#	
 		HltSharedPIDPrefix,
-		HltNoPIDSuffix, 
+		HltNoPIDSuffix,
+                HltAllPIDsSuffix,
 		HltMuonIDSuffix,   
 		HltRICHIDSuffix,   
 		HltCALOIDSuffix,
@@ -204,6 +207,7 @@ __all__ = (
 		#HltRichDefaultHypos,
 		#HltRichDefaultRadiators,
 		#
+                HltAllPIDsProtosSuffix,
 		HltCaloProtosSuffix,               
 		HltMuonProtosSuffix,                     
 		HltRichProtosSuffix,                   

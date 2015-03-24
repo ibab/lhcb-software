@@ -22,7 +22,7 @@ from HltTrackNames import Hlt2TrackingRecognizedFitTypes
 from HltTrackNames import _baseTrackLocation, _baseProtoPLocation
 from HltTrackNames import HltMuonTracksName, HltAllMuonTracksName
 from HltTrackNames import HltMuonIDSuffix, HltRICHIDSuffix, HltCALOIDSuffix, HltSharedPIDPrefix 
-from HltTrackNames import HltNoPIDSuffix, HltCaloProtosSuffix, HltMuonProtosSuffix, HltRichProtosSuffix
+from HltTrackNames import HltNoPIDSuffix, HltAllPIDsSuffix, HltCaloProtosSuffix, HltMuonProtosSuffix, HltRichProtosSuffix, HltAllPIDsProtosSuffix
 from HltTrackNames import HltDefaultFitSuffix
 from HltTrackNames import HltGlobalTrackLocation                
 from HltTrackNames import Hlt2ChargedProtoParticleSuffix, Hlt2NeutralProtoParticleSuffix  
@@ -86,6 +86,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 , "__hlt2ChargedRichProtosSeq__"    : 0
                 , "__hlt2ChargedMuonProtosSeq__"    : 0
                 , "__hlt2ChargedMuonWithCaloProtosSeq__": 0
+                , "__hlt2ChargedAllPIDsProtosSeq__": 0
                 , "__hlt2NeutralProtosSeq__"        : 0
                 , "__hlt2PhotonsFromL0Seq__"        : 0
                 , "__hlt2Pi0FromL0Seq__"            : 0
@@ -152,6 +153,15 @@ class Hlt2Tracking(LHCbConfigurableUser):
         Charged protoparticles using Muon (=Muons)
         """
         return self.getProp("__hlt2ChargedMuonWithCaloProtosSeq__")
+    #############################################################################################
+    #
+    # Charged ProtoParticles with all PID information
+    #
+    def hlt2ChargedAllPIDsProtos(self):
+        """
+        Charged protoparticles all PID information
+        """
+        return self.getProp("__hlt2ChargedAllPIDsProtosSeq__")
     #############################################################################################
     #
     # Neutral ProtoParticles
@@ -353,6 +363,9 @@ class Hlt2Tracking(LHCbConfigurableUser):
             #
             # The protoparticles
             #
+            self.setProp(    "__hlt2ChargedAllPIDsProtosSeq__"        ,
+                             self.__hlt2ChargedAllPIDsProtos()        )
+
             self.setProp(    "__hlt2ChargedCaloProtosSeq__"        ,
                              self.__hlt2ChargedCaloProtos()        )
     
@@ -696,6 +709,87 @@ class Hlt2Tracking(LHCbConfigurableUser):
         bm_output       = chargedProtosOutputLocation
 
         return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
+
+    #########################################################################################
+    #
+    # Charged ProtoParticles with all pid information
+    # 
+    #
+    def __hlt2ChargedAllPIDsProtos(self):
+        """
+        Charged hadron protoparticles = pion, kaon, proton
+        If RICH is on, then requires rich (this is off by default)
+        """
+        #
+        # The charged protoparticles and their output location
+        #
+        #tracks                      = self.__hlt2StagedFastFit()
+        #chargedProtos               = self.__hlt2ChargedProtos(HltAllPIDsProtosSuffix)       
+        #chargedProtosOutputLocation = chargedProtos.outputSelection()
+        
+        from Configurables import ( ChargedProtoParticleAddRichInfo,ChargedProtoParticleAddMuonInfo,
+                                    ChargedProtoCombineDLLsAlg)
+    
+        #The different add PID algorithms
+        #
+        # Now set up the pid sequence 
+        #
+        # Fill the CALO sequence first, this will make the charged protoparticles
+        # and add the CALO ID to them, ugly...
+        myCALOProcessorChargedSeq       = self.__getCALOSeq("Charged")
+        chargedProtosOutputLocation = myCALOProcessorChargedSeq.outputSelection()
+        doRICHReco              = self.__hlt2RICHID()
+        muonID                  = self.__hlt2MuonID()
+        #myCALOProcessorChargedSeq       = self.__getCALOSeq("PID")
+
+        #
+        # Add the rich info to the DLL
+        #
+        richDLL_name            = self.__pidAlgosAndToolsPrefix()+"ChargedHadronProtoPAddRich"+HltAllPIDsSuffix
+        richDLL                 = ChargedProtoParticleAddRichInfo(richDLL_name)
+        richDLL.InputRichPIDLocation    = doRICHReco.outputSelection()
+        richDLL.ProtoParticleLocation   = chargedProtosOutputLocation
+        #
+        # Add the muon info to the DLL
+        #
+        muon_name           = self.__pidAlgosAndToolsPrefix()+"ChargedProtoPAddMuon"+HltAllPIDsSuffix
+        muon                = ChargedProtoParticleAddMuonInfo(muon_name)
+        muon.ProtoParticleLocation  = chargedProtosOutputLocation
+        muon.InputMuonPIDLocation   = muonID.outputSelection()
+
+        #
+        # Add the Calo info to the DLL
+        #
+        #myCALOProcessorAddInfoSeq       = self.__getCALOSeq("AddInfo")  
+        #
+        # The combined DLL with all PID information
+        # We do this twice, do we know which effect it has? 
+        from Configurables import ChargedProtoCombineDLLsAlg
+        combine_name                    = self.__pidAlgosAndToolsPrefix()+"CombDLLs"+HltAllPIDsSuffix
+        combine                         = ChargedProtoCombineDLLsAlg(combine_name)
+        combine.ProtoParticleLocation   = chargedProtosOutputLocation
+
+        #
+        # What are we returning?
+        #
+
+        sequenceToReturn = [ myCALOProcessorChargedSeq ]
+        sequenceToReturn += [ doRICHReco, muonID ]
+        #sequenceToReturn += [ myCALOProcessorChargedSeq ]
+        #sequenceToReturn += [ chargedProtos ]
+        sequenceToReturn += [ richDLL, muon ]
+        #sequenceToReturn += [ myCALOProcessorAddInfoSeq ]
+        sequenceToReturn += [combine]
+
+        from HltLine.HltLine import bindMembers
+        # Build the bindMembers 
+        bm_name         = self.__pidAlgosAndToolsPrefix()+"ChargedAllPIDsProtosSeq"
+        bm_members      = sequenceToReturn
+        bm_output       = chargedProtosOutputLocation
+
+        return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
+   
+
     #########################################################################################
     #
     # Charged ProtoParticles
@@ -733,6 +827,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
         bm_members      = [tracks, charged]
         bm_output       = chargedProtosOutputLocation
         return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
+
+
     #########################################################################################
     #
     # Neutral ProtoParticles
@@ -819,6 +915,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         HltMuonIDAlg.MuonTrackLocationAll   = self._trackifiedAllMuonIDLocation() 
         # CRJ : Disable FindQuality in HLT since it increases CPU time for MuonID by
         #       a factor 3-4
+        # TODO: Do we want to keep this? Which difference does it make.
         HltMuonIDAlg.FindQuality            = False
         
         # Build the bindMembers        
@@ -1184,6 +1281,10 @@ class Hlt2Tracking(LHCbConfigurableUser):
         # We depend on the forward tracking
         fwdtracks = self.__hlt2ForwardTracking()
         recoMatch.PatMatchTool.VeloVetoTracksName = [ fwdtracks.outputSelection() ]
+        if HltRecoConf().getProp("OfflineSeeding"):
+            recoMatch.PatMatchTool.VeloVetoTracksName = []
+
+        
         if self.getProp("DoCleanups"):
             from HltTracking.HltSharedTracking import ( ConfiguredHltEventFitter, ConfiguredGoodTrackFilter )
             fitHlt2MatchTracks = ConfiguredHltEventFitter(name = self.getProp("Prefix") + 'FitHlt2MatchTracks',
@@ -1386,3 +1487,9 @@ class Hlt2Tracking(LHCbConfigurableUser):
             bm_members      = [tracks, myPIDSeq, chargedProtos, myChargedSeq]
             bm_output       = chargedProtosOutputLocation
             return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
+        
+        #if ( mode == "AddInfo" ) :
+        #    bm_name         += "CaloAddInfoSeq"
+        #    bm_members      = [ myChargedSeq ]
+        #    bm_output       = chargedProtosOutputLocation
+        #    return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)

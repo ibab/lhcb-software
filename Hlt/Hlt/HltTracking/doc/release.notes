@@ -4,6 +4,12 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-03-24 - Sascha Stahl
+ - Hlt2Tracking: Fixed that PatMatch runs on all Velo tracks if the seeding
+   runs on all hits (offline mode).
+ - Hlt2Tracking: Added function which adds the PID information from all sub detectors
+   to the proto particles (hlt2ChargedAllPIDsProtos()).
+
 ! 2015-03-23 - Sascha Stahl
  - HltSharedTracking and Hlt2Tracking: Fixed warning in configuration when running
    PatSeeding on all hits.
