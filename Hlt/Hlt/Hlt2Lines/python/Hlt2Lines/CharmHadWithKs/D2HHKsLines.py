@@ -9,6 +9,9 @@ class CharmHadD2HHKsLines(Hlt2LinesConfigurableUser):
                              'Trk_TRCHI2DOF_MAX'        :  3.0,
                              'Trk_PT_MIN'               :  200 * MeV,
                              'Trk_P_MIN'                :  1000 * MeV,
+                             'Trk_ALL_TRCHI2DOF_MAX'    :  3.0,
+                             'Trk_ALL_P_MIN'            :  1000 * MeV,
+                             'VCHI2PDOF_MAX'            :  20.0,
                              'Trk_ALL_MIPCHI2DV_MIN'    :  1.0,
                              'Trk_2OF3_MIPCHI2DV_MIN'   :  4.0,
                              'Trk_1OF3_MIPCHI2DV_MIN'   :  4.0,
@@ -24,7 +27,9 @@ class CharmHadD2HHKsLines(Hlt2LinesConfigurableUser):
                              'D_BPVLTIME_MIN'           :  0.2 * picosecond,
                              'D_Mass_M_MIN'             :  1789.0 * MeV,
                              'D_Mass_M_MAX'             :  2049.0 * MeV
-                             , 'KshhTFHHTrkPLL'          : 1500.0 * MeV
+                             , 'MaxDOCA'                :  0.200 * mm
+                             , 'HHMass_MAX'             :  1450. * MeV
+                             , 'KshhTFHHTrkPLL'         :  1500.0 * MeV
                              , 'KshhTFHHTrkChi2UL'       : 5.0        # unitless -- 14 Jan: Mat changed from 20.0 to 5.0
                              , 'KshhTFHHVtxChi2UL'       : 10.0       # unitless -- 14 Jan: Mat changed from 20.0 to 10.0
                              , 'KshhTFHHPtLL'            : 1000.0 * MeV
@@ -70,26 +75,60 @@ class CharmHadD2HHKsLines(Hlt2LinesConfigurableUser):
                              , 'HLT1FILTER'               : ''
                              , 'TisTosParticleTaggerSpecs': { "Hlt1Track.*Decision%TOS":0 }
                              , 'name_prefix'              : 'CharmHadD02HHKs'
-                            }  ## end of 'Common' : { ... }
+                            },  ## end of 'Common' : { ... }
+                 'SharedDetachedCFChild_K' : {
+                                             'PID_LIM'                  :  0,
+                                             'Trk_ALL_PT_MIN'           :  200 * MeV,
+                                             'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
+                                                          },
+                 'SharedDetachedCFChild_pi' : {
+                                             'PID_LIM'                  :  10,
+                                             'Trk_ALL_PT_MIN'           :  200 * MeV,
+                                             'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
+                                                          },
+                 'SharedDetachedSCSChild_K' : {
+                                             'PID_LIM'                  :  0,
+                                             'Trk_ALL_PT_MIN'           :  200 * MeV,
+                                             'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
+                                                          },
+                 'SharedDetachedSCSChild_pi' : {
+                                             'PID_LIM'                  :  10,
+                                             'Trk_ALL_PT_MIN'           :  200 * MeV,
+                                             'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
+                                                          },
+                 'SharedDetachedDCSChild_K' : {
+                                             'PID_LIM'                  :  0,
+                                             'Trk_ALL_PT_MIN'           :  200 * MeV,
+                                             'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
+                                                          },
+                 'SharedDetachedDCSChild_pi' : {
+                                             'PID_LIM'                  :  10,
+                                             'Trk_ALL_PT_MIN'           :  200 * MeV,
+                                             'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
+                                                          }
         }
 
     def __apply_configuration__(self):
 ##
 ## notation:  Ksh  <--> Kshort
-##            Kam  <--> K-
-##            Kap  <--> K+
-##            Pim  <--> pi-
-##            Pip  <--> pi+
 ##            LL, DD  <-->  both Kshort daughters are long or downstream tracks
         from Stages import MassFilterD_LL,MassFilterD_DD     
-        from Stages import Dz2KshPimPip_LL, Dz2KshPimPip_DD, Dz2KshKPi_LL, Dz2KshKPi_DD
+        from Stages import Dz2KshPiPi_LL, Dz2KshPiPi_DD, Dz2KshKPi_LL, Dz2KshKPi_DD
         from Stages import Dz2KshKK_LL, Dz2KshKK_DD
-        stages = {'Dz2KshPimPip_LL'   : [MassFilterD_LL('Dz2KshPimPip_LL',inputs=[Dz2KshPimPip_LL])],
-                  'Dz2KshPimPip_DD'   : [MassFilterD_DD('Dz2KshPimPip_DD',inputs=[Dz2KshPimPip_DD])],
+        from Stages import D02KshPiPi_LL, D02KshPiPi_DD, D02KshKPi_LL, D02KshKPi_DD
+        from Stages import D02KshKK_LL, D02KshKK_DD
+        stages = {'Dz2KshPiPi_LL'   : [MassFilterD_LL('Dz2KshPiPi_LL',inputs=[Dz2KshPiPi_LL])],
+                  'Dz2KshPiPi_DD'   : [MassFilterD_DD('Dz2KshPiPi_DD',inputs=[Dz2KshPiPi_DD])],
                   'Dz2KshKPi_LL'      : [MassFilterD_LL('Dz2KshKPi_LL',inputs=[Dz2KshKPi_LL])],
                   'Dz2KshKPi_DD'      : [MassFilterD_DD('Dz2KshKPi_DD',inputs=[Dz2KshKPi_DD])],
                   'Dz2KshKK_LL'       : [MassFilterD_LL('Dz2KshKK_LL',inputs=[Dz2KshKK_LL])],
-                  'Dz2KshKK_DD'       : [MassFilterD_DD('Dz2KshKK_DD',inputs=[Dz2KshKK_DD])] }
+                  'Dz2KshKK_DD'       : [MassFilterD_DD('Dz2KshKK_DD',inputs=[Dz2KshKK_DD])],
+                  'D02KshPiPi_LL'     : [MassFilterD_LL('D02KshPiPi_LL',inputs=[D02KshPiPi_LL])],
+                  'D02KshPiPi_DD'     : [MassFilterD_DD('D02KshPiPi_DD',inputs=[D02KshPiPi_DD])],
+                  'D02KshKPi_LL'      : [MassFilterD_LL('D02KshKPi_LL',inputs=[D02KshKPi_LL])],
+                  'D02KshKPi_DD'      : [MassFilterD_DD('D02KshKPi_DD',inputs=[D02KshKPi_DD])],
+                  'D02KshKK_LL'       : [MassFilterD_LL('D02KshKK_LL',inputs=[D02KshKK_LL])],
+                  'D02KshKK_DD'       : [MassFilterD_DD('D02KshKK_DD',inputs=[D02KshKK_DD])] }
 
         from HltLine.HltLine import Hlt2Line
         for nickname, algos in self.algorithms(stages).iteritems():
