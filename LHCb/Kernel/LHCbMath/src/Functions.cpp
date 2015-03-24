@@ -8782,7 +8782,7 @@ Gaudi::Math::Sigmoid::Sigmoid
 ( const Gaudi::Math::Positive& poly  , 
   const double                 alpha ,
   const double                 x0    ) 
-  : std::binary_function<double,double,double>() 
+  : std::unary_function<double,double>() 
   , m_positive ( poly  )
   , m_alpha    ( alpha )
   , m_x0       ( x0    )
@@ -8797,7 +8797,7 @@ Gaudi::Math::Sigmoid::Sigmoid
   const double                 xmax  , 
   const double                 alpha , 
   const double                 x0    ) 
-  : std::binary_function<double,double,double>() 
+  : std::unary_function<double,double>() 
   , m_positive ( N , xmin , xmax )
   , m_alpha    ( alpha )
   , m_x0       ( x0    )
@@ -8812,7 +8812,7 @@ Gaudi::Math::Sigmoid::Sigmoid
   const double                 xmax  , 
   const double                 alpha , 
   const double                 x0    ) 
-  : std::binary_function<double,double,double>() 
+  : std::unary_function<double,double>() 
   , m_positive ( pars , xmin , xmax )
   , m_alpha    ( alpha )
   , m_x0       ( x0    )
@@ -8908,6 +8908,166 @@ double Gaudi::Math::Sigmoid::integral
 // ============================================================================
 
 
+// ============================================================================
+Gaudi::Math::TwoExpos::TwoExpos
+( const double alpha ,
+  const double delta , 
+  const double x0    ) 
+  : std::unary_function<double,double>() 
+  , m_alpha ( std::abs ( alpha ) ) 
+  , m_delta ( std::abs ( delta ) ) 
+  , m_x0    ( x0 ) 
+{}
+// ============================================================================
+// set new value for x0
+// ============================================================================
+bool Gaudi::Math::TwoExpos::setX0 ( const double value )
+{
+  if ( s_equal ( m_x0, value ) ) { return false ; }
+  m_x0 = value ;
+  //
+  return true ;
+}
+// ============================================================================
+// set new value for alpha
+// ============================================================================
+bool Gaudi::Math::TwoExpos::setAlpha ( const double value )
+{
+  const double nv = std::abs ( value ) ;
+  if ( s_equal ( m_alpha, nv ) ) { return false ; }
+  m_alpha = nv ;
+  //
+  return true ;
+}
+// ============================================================================
+// set new value for delta
+// ============================================================================
+bool Gaudi::Math::TwoExpos::setDelta ( const double value )
+{
+  const double nv = std::abs ( value ) ;
+  if ( s_equal ( m_delta, nv ) ) { return false ; }
+  m_delta = nv ;
+  //
+  return true ;
+}
+// ============================================================================
+// get the value 
+// ============================================================================
+double Gaudi::Math::TwoExpos::operator() ( const double x ) const 
+{ return x < m_x0 ? 0 : derivative ( x , 0 ) ; }
+// ============================================================================
+// get the integral between -inf and +inf
+// ============================================================================
+double Gaudi::Math::TwoExpos::integral   () const { return 1 ; }
+// ============================================================================
+// get the integral between low and high 
+// ============================================================================
+double Gaudi::Math::TwoExpos::integral   
+( const double low  , 
+  const double high ) const 
+{
+  //
+  if      ( s_equal ( low , high ) ) { return 0 ; }
+  else if ( low  > high            ) { return -integral ( high , low  ) ; }
+  else if ( high <= m_x0           ) { return 0 ; }
+  else if ( low  <  m_x0           ) { return  integral ( m_x0 , high ) ; }
+  //
+  const double a     = m_alpha            ;
+  const double b     = m_alpha + m_delta  ;
+  //
+  const double xlow  = low  - m_x0 ;
+  const double xhigh = high - m_x0 ;  
+  //
+  const double norm  = 1.0 / m_alpha - 1.0 / ( m_alpha + m_delta ) ;
+  return 
+    ( ( std::exp ( -b * xhigh ) - std::exp ( -b * xlow ) ) / b -
+      ( std::exp ( -a * xhigh ) - std::exp ( -a * xlow ) ) / a ) / norm ;
+}
+// ============================================================================
+namespace 
+{
+  // ==========================================================================
+  inline unsigned long long _factorial_ ( const unsigned short N ) 
+  {
+    return 
+      0 == N ?  1 : 
+      0 == N ?  1 : 
+      2 == N ?  2 : 
+      3 == N ?  6 : 
+      4 == N ? 24 : N * _factorial_ ( N - 1 ) ;
+  }
+  // ==========================================================================
+  /// get (un-normalized) moment 
+  inline double _moment_ 
+  ( const double         alpha , 
+    const double         delta , 
+    const unsigned short N     ) 
+  {
+    return _factorial_ ( N ) *  
+      ( 1 / Gaudi::Math::pow ( alpha         , N + 1 ) - 
+        1 / Gaudi::Math::pow ( alpha + delta , N + 1 ) ) ;  
+  }
+  // ==========================================================================
+}
+// ============================================================================
+// mean-value (for -inf,+inf) interval 
+// ============================================================================
+double Gaudi::Math::TwoExpos::mean  () const 
+{
+  const double n0 = _moment_ ( m_alpha , m_delta , 0 ) ;
+  const double n1 = _moment_ ( m_alpha , m_delta , 1 ) ;
+  //
+  return m_x0 + n1 / n0 ;
+}
+// ============================================================================
+// mode 
+// ============================================================================
+double  Gaudi::Math::TwoExpos::mode  () const 
+{ return m_x0 + std::log1p ( m_delta / m_alpha ) / m_delta ; }
+// ============================================================================
+// variance 
+// ============================================================================
+double Gaudi::Math::TwoExpos::variance () const 
+{
+  const double n0 = _moment_ ( m_alpha , m_delta , 0 ) ;
+  const double n1 = _moment_ ( m_alpha , m_delta , 1 ) ;
+  const double n2 = _moment_ ( m_alpha , m_delta , 2 ) ;
+  //
+  return ( n2 * n0 - n1 * n1 ) / ( n0 * n0 )  ;
+}
+// ============================================================================
+// sigma 
+// ============================================================================
+double Gaudi::Math::TwoExpos::sigma () const { return std::sqrt ( variance() ) ; }
+// ============================================================================
+// get the derivative at given value 
+// ============================================================================
+double Gaudi::Math::TwoExpos::derivative  ( const double x    ) const 
+{ return x < m_x0 ? 0 : derivative ( x , 1 ) ; }
+// ============================================================================
+// get the second derivative at given value
+// ============================================================================
+double Gaudi::Math::TwoExpos::derivative2 ( const double x    ) const
+{ return x < m_x0 ? 0 : derivative ( x , 2 ) ; }
+// ============================================================================
+// get the Nth derivative at given value
+// ============================================================================
+double Gaudi::Math::TwoExpos::derivative
+( const double   x , 
+  const unsigned N ) const 
+{
+  if      ( x <  m_x0 ) { return            0 ; }
+  //
+  const double n0 = _moment_ ( m_alpha , m_delta , 0 ) ;
+  const double dx = x - m_x0 ;
+  //
+  const double a  = -a1 () ;
+  const double b  = -a2 () ;
+  //
+  return 
+    ( Gaudi::Math::pow ( a , N ) *  std::exp ( a * dx ) - 
+      Gaudi::Math::pow ( b , N ) *  std::exp ( b * dx ) ) / n0 ;
+} 
 // ============================================================================
 // simple  manipulations with polynoms: shift it! 
 // ============================================================================

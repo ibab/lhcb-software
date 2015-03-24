@@ -89,6 +89,7 @@
   <class name    = "Gaudi::Math::Positive2DSym"    />
   <class name    = "Gaudi::Math::Bernstein2DSym"   />
   <class name    = "Gaudi::Math::Sigmoid"          />
+  <class name    = "Gaudi::Math::TwoExpos"         />
   <class name    = "Gaudi::Math::PS2DPol"          />
   <class name    = "Gaudi::Math::PS2DPolSym"       />
   <class name    = "Gaudi::Math::ExpoPS2DPol"      />

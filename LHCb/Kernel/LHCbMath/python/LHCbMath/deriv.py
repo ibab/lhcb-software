@@ -371,6 +371,117 @@ class Integral(object) :
         from scipy import integrate
         result = integrate.quad ( self._func , self._x0 , x )
         return VE ( result[0] , result[1] * result[1] ) if self._err else result[0] 
+
+# =============================================================================
+## @class Moment
+#  Calculate the N-th moment for the distribution 
+#  @code
+#   xmin,xmax = 0,math.pi 
+#   mean  = Moment(1,xmin,xmax)  ## specify min/max
+#   value = mean  ( math.sin )
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-06-06
+class Moment(object) :
+    """
+    Calculate the N-th moment for the distribution
+    
+    >>> xmin,xmax = 0,math.pi 
+    >>> mean  = Moment(1,xmin,xmax)  ## specify min/max
+    >>> value = mean  ( math.sin )
+    
+    """
+    ## constructor
+    def __init__ ( self , N , xmin , xmax , err = False , x0 = 0 ) :
+        """
+        Contructor 
+        """
+        if not isinstance ( N , ( int , long ) ) :
+            raise TypeError('Moment: illegal order')
+        
+        self._N    = N 
+        self._xmin = xmin
+        self._xmax = xmax
+        self._x0   = x0  
+        self._err  = err
+
+    ## calculate un-normalized k-moment  
+    def _moment0_ ( self , func , *args ) :
+        from scipy import integrate
+        return integrate.quad ( func , self._xmin , self._xmax , args = args )
+    
+    ## calculate un-normalized k-moment  
+    def _momentK_ ( self , k , func , *args ) :
+        from scipy import integrate
+        x0     = self._x0 
+        func_N = lambda x,*a : func( x , *a ) * ( ( x - x0 ) ** k  )
+        return integrate.quad ( func_N , self._xmin , self._xmax , args = args )
+    
+    ## calculate the moment 
+    def __call__ ( self , func , *args ) :
+        ## 
+        n0  = self._moment0_ (            func , *args ) 
+        nN  = self._momentK_ ( self._N  , func , *args ) 
+        ##
+        if not self._err : return nN[0]/n0[0]
+        ##
+        n_0    = VE ( n0[0] , n0[1] * n0[1] )
+        n_N    = VE ( nN[0] , nN[1] * nN[1] )
+        ##
+        return n_N/n_0
+
+# =============================================================================
+## get the mean-value
+#  Calculate the mean-value for the distribution 
+#  @code
+#   xmin,xmax = 0,math.pi 
+#   mean  = Mean(xmin,xmax)  ## specify min/max
+#   value = mean  ( math.sin )
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-06-06
+class Mean(Moment) :
+    """
+    Calculate the N-th moment for the distribution
+    
+    >>> xmin,xmax = 0,math.pi 
+    >>> mean  = Mean ( xmin , xmax )  ## specify min/max
+    >>> value = mean ( math.sin    )
+    
+    """
+    def __init__ ( self , xmin , xmax , err = False , x0  = 0 ) :
+        Moment.__init__ ( self , 1 , xmin , xmax , err , x0 )
+
+# =============================================================================
+## get the variance
+#  Calculate the mean-value for the distribution 
+#  @code
+#   xmin,xmax = 0,math.pi 
+#   variance  = Variance ( xmin,xmax )  ## specify min/max
+#   value     = variance ( math.sin  )
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-06-06
+class Variance(Moment) :
+    def __init__ ( self , xmin , xmax , err = False , x0  = 0 ) :
+        Moment.__init__ ( self , 2 , xmin , xmax , err , x0 )
+    ## calculate the variance 
+    def __call__ ( self , func , *args ) :
+        ## 
+        n0 = self._moment0_ (     func , *args ) 
+        n1 = self._momentK_ ( 1 , func , *args ) 
+        n2 = self._momentK_ ( 2 , func , *args ) 
+        ##
+        if not self._err :
+            n_0 = n0[0]
+            n_1 = n1[0]
+            n_2 = n2[0]
+        else : 
+            n_0 = VE ( n0[0] , n0[1] * n0[1] )
+            n_1 = VE ( n1[0] , n1[1] * n1[1] )
+            n_2 = VE ( n2[0] , n2[1] * n2[1] )
+        ##
+        return (n_2*n_0 - n_1*n_1)/(n_0*n_0)
     
 # =============================================================================
 if '__main__' == __name__ :

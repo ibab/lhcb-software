@@ -4644,8 +4644,7 @@ namespace Gaudi
      *  @author Vanya BElyaev Ivan.Belyaev@itep.ru
      *  @date 2015-02-07
      */
-    class GAUDI_API Sigmoid 
-      : public std::binary_function<double,double,double>
+    class GAUDI_API Sigmoid : public std::unary_function<double,double>
     {
     public:
       // ============================================================
@@ -4734,6 +4733,82 @@ namespace Gaudi
       Gaudi::Math::WorkSpace m_workspace ;
       // ======================================================================    
     };
+    // ========================================================================
+    /** @class TwoExpos
+     *  simple difference of two exponents
+     *  \f$ f \propto 
+     *        \mathrm{e}^{-a_1    x}       -\mathrm{e}^{-a_2 x} = 
+     *        \mathrm{e}^{-\alpha x}\left(1-\mathrm{e}^{-\delta x}\right) \f$
+     *  @author Vanya BElyaev Ivan.Belyaev@itep.ru
+     *  @date 2015-02-07
+     */
+    class GAUDI_API TwoExpos : public std::unary_function<double,double>
+    {
+    public:
+      // ======================================================================
+      TwoExpos ( const double alpha = 1 , 
+                 const double delta = 1 , 
+                 const double x0    = 0 ) ;
+      // ======================================================================
+    public:
+      // ======================================================================   
+      /// get the value 
+      double operator() ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get alpha 
+      double alpha () const { return m_alpha ; }
+      /// get delta 
+      double delta () const { return m_delta ; }
+      /// get x0 
+      double x0    () const { return m_x0    ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// slope for the first  exponent 
+      double a1         () const { return m_alpha           ; }
+      /// slope for the second exponent  
+      double a2         () const { return m_alpha + m_delta ; }
+      /// mean-value (for -inf,+inf) interval 
+      double mean       () const ;
+      /// mode 
+      double mode       () const ;
+      /// variance  
+      double variance   () const ;
+      /// dispersion 
+      double dispersion () const { return variance () ; }
+      /// sigma 
+      double sigma      () const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      bool setAlpha ( const double value ) ;
+      bool setDelta ( const double value ) ;      
+      bool setX0    ( const double value ) ;      
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integral between -inf and +inf 
+      double integral    () const ;
+      /// get the integral between low and high 
+      double integral    ( const double low  , 
+                           const double high ) const ;
+      /// get the derivative at given value 
+      double derivative  ( const double x    ) const ;
+      /// get the second at given value 
+      double derivative2 ( const double x    ) const ;
+      /// get the Nth derivative at given value 
+      double derivative  ( const double   x  , 
+                           const unsigned N  ) const ;
+      // ======================================================================
+    private: 
+      // ======================================================================
+      double m_alpha ;
+      double m_delta ;
+      double m_x0    ;
+      // ======================================================================
+    } ;  
     // ========================================================================
   } //                                             end of namespace Gaudi::Math
   // ==========================================================================
