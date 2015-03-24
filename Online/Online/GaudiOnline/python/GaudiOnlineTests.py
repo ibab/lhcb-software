@@ -10,7 +10,9 @@ def runDimReader(buffer):                    return _run(dimFileReaderApp(pid,pn
 #------------------------------------------------------------------------------------------------
 # HLT sender with input from MEP RESULT buffer, with decoding of fragments.
 def runSender(target,partitionBuffers=False):
-  return _run(dataSenderApp(pid,pnam,target,'Send',partitionBuffers=partitionBuffers,decode=False,request='ONE'))
+  app  = dataSenderApp(pid,pnam,target,'Send',partitionBuffers=partitionBuffers,decode=False,request='ONE')
+  app.Runable.NumErrorToStop = 1
+  return _run(app)
 #------------------------------------------------------------------------------------------------
 # Typical sender with input from partitioned buffers, no MEP decoding.
 def runDataSender(target,buffer,req='ALL'):  return _run(dataSenderApp(pid,pnam,target,buffer,True,False,req))
@@ -28,8 +30,10 @@ def runReproSender(target,buffer,req='ALL'):
 def runReceiver(buffer='OUT',partitionBuffers=True):
   return _run(dataReceiverApp(pid,pnam,buffer,partitionBuffers=partitionBuffers))
 #------------------------------------------------------------------------------------------------
-def runMBMRead(percent=1,print_freq=0.0001,partitionBuffers=False):
-  return _run(hltApp(pid,pnam,percent=percent,print_freq=print_freq,buffers=['Events','Send'],type='ONE',decode=True,event_type=1,partitionBuffers=partitionBuffers))
+def runMBMRead(percent=1,print_freq=0.0001,partitionBuffers=False,event_type=1):
+  app = hltApp(pid,pnam,percent=percent,print_freq=print_freq,buffers=['Events','Send'],type='ONE',decode=True,event_type=event_type,partitionBuffers=partitionBuffers)
+  app.Runable.NumErrorToStop = 1
+  return _run(app)
   #return _run(defaultFilterApp(pid,pnam,percent=percent,print_freq=print_freq))
 #------------------------------------------------------------------------------------------------
 def runMBMReadTimeout(percent=1,print_freq=0.0001):
@@ -137,7 +141,14 @@ def runPanoramixSim(source,load=1,print_freq=1.0):
 #------------------------------------------------------------------------------------------------
 def runMepBuffer(partitionBuffers=True):
   flags = '-s=7000 -e=100 -u=32 -b=12 -f -i=Events -c -s=200 -e=500 -u=32 -f -i=Send -c -s=200 -e=100 -u=32 -f -i=Overflow -c'
-  return _run(mbmInitApp(pid,pnam,flags,partitionBuffers=partitionBuffers))
+  app = mbmInitApp(pid,pnam,flags,partitionBuffers=partitionBuffers)
+  mep = Configs.LHCb__MEPManager('MEPManager')
+  mep.ConsumerRequirements = {\
+    'Events': ['*_Moore_*','EvType=1,TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff'],\
+    'Send':   ['*_Sender*','EvType=2,TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff']\
+    }
+  return _run(app)
+  #return _run()
 #------------------------------------------------------------------------------------------------
 #  New HLT architecture with Hlt1 and Hlt2 separation
 #------------------------------------------------------------------------------------------------

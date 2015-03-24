@@ -18,6 +18,7 @@
 namespace MBM {
   class Producer;
   class Consumer;
+  class Requirement;
 }
 
 // Declaration of the interface ID. 
@@ -37,8 +38,17 @@ namespace LHCb    {
     * @date    01/01/2005
     */
   class MEPManager : public Service  {
+  protected:
+    typedef std::vector<std::string>               ConsRequirement;
+    typedef std::map<std::string, ConsRequirement> ConsRequirements;
+    typedef std::map<std::string,ServerBMID>       ServedBuffers;
+    typedef std::map<std::string,BMID>             MappedBuffers;
+    
     /// Property: Container of buffer names to connect on initialize
-    std::vector<std::string>   m_buffers;
+    std::vector<std::string>   m_buffers;    
+    /// Property: Container of consumer requirements. Only valid if the buffers are held!
+    ConsRequirements           m_consRequirements;
+
     /// Property: Process name used to include into MEP/MBM buffers
     std::string                m_procName;
     /// Property: Initialization flags to possibly install MBM/MEP buffers
@@ -58,7 +68,9 @@ namespace LHCb    {
     /// Buffer to store MBM identifiers
     std::vector<BMID>          m_bmIDs;
     /// Map between buffer identifiers and the corresponding name
-    std::map<std::string,BMID> m_buffMap;
+    MappedBuffers              m_buffMap;
+    /// Map of server BMIDs
+    ServedBuffers              m_srvBMIDs;
 
     std::string                m_input;
 
@@ -130,8 +142,16 @@ namespace LHCb    {
     /// Connect to optional MBM buffer
     StatusCode connectBuffer(const std::string& nam);
 
-    /// Initialize buffers for MEP usage
+    /// Initialize buffers for MBM usage
     StatusCode initializeBuffers();
+
+    /// Apply consumer requirements to MBM buffers
+    StatusCode setConsumerRequirements();
+
+    /// Apply single consumer reuirement to buffer
+    StatusCode setConsumerRequirement(ServerBMID srvBM, 
+				      const std::string& task_match, 
+				      const MBM::Requirement& req);
 
     /// Connect to specified buffers
     StatusCode connectBuffers();

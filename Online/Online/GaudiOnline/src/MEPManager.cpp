@@ -13,6 +13,7 @@
 #include "MBM/bmdef.h"
 #include "MBM/Producer.h"
 #include "MBM/Consumer.h"
+#include "MBM/Requirement.h"
 #include <stdexcept>
 #include <cctype>
 #include <cstdio>
@@ -25,14 +26,15 @@ MEPManager::MEPManager(const string& nam, ISvcLocator* loc)
 : Service(nam, loc), m_partitionID(0x103)
 {
   m_procName = RTL::processName();
-  declareProperty("Buffers",          m_buffers);
-  declareProperty("PartitionID",      m_partitionID);
-  declareProperty("PartitionName",    m_partitionName="");
-  declareProperty("InitFlags",        m_initFlags);
-  declareProperty("PartitionBuffers", m_partitionBuffers=false);
-  declareProperty("MapUnusedBuffers", m_mapUnused=true);
-  declareProperty("HandleSignals",    m_handleSignals=false);
-  declareProperty("ConnectWhen",      m_connectWhen="initialize");
+  declareProperty("Buffers",              m_buffers);
+  declareProperty("PartitionID",          m_partitionID);
+  declareProperty("PartitionName",        m_partitionName="");
+  declareProperty("InitFlags",            m_initFlags);
+  declareProperty("PartitionBuffers",     m_partitionBuffers=false);
+  declareProperty("MapUnusedBuffers",     m_mapUnused=true);
+  declareProperty("HandleSignals",        m_handleSignals=false);
+  declareProperty("ConnectWhen",          m_connectWhen="initialize");
+  declareProperty("ConsumerRequirements", m_consRequirements);
 }
 
 /// Default destructor
@@ -82,13 +84,44 @@ StatusCode MEPManager::initializeBuffers()  {
         *strchr(items[i],' ') = 0;
       }
     }
-    std::vector<ServerBMID> bmids = mbm_multi_install(ikey, items);
+    m_srvBMIDs = mbm_multi_install(ikey, items);
     for(size_t j=0; j<ikey; ++j)
       delete [] items[j];
-    if ( bmids.empty() ) {
+    if ( m_srvBMIDs.empty() ) {
       return error("Failed to initialize MBM buffers.");
     }
     return StatusCode::SUCCESS;
+  }
+  return StatusCode::SUCCESS;
+}
+
+/// Apply single consumer reuirement to buffer
+StatusCode MEPManager::setConsumerRequirement(ServerBMID srvBM, const string& task, const MBM::Requirement& r)  {
+  int status = mbmsrv_require_consumer(srvBM, task.c_str(), m_partitionID, r.evtype, r.trmask);
+  if ( status != MBM_NORMAL )
+    return error("Failed to set BM consumer requirements");
+  return StatusCode::SUCCESS;
+}
+
+/// Apply consumer requirements to MBM buffers
+StatusCode MEPManager::setConsumerRequirements()   {
+  for(auto i=begin(m_consRequirements); i!=end(m_consRequirements);++i)  {    
+    const string& buf = bufferName((*i).first);
+    ServedBuffers::const_iterator j=m_srvBMIDs.find(buf);
+    if ( j == m_srvBMIDs.end() )  {
+      return error("Buffer "+buf+" does not exist. Failed to set consumer requirement.");
+    }
+    else if ( (*i).second.size() < 2 )  {
+      return error("Insufficient information from job-option. Failed to set consumer requirement.");
+    }
+    const string& tsk = (*i).second[0];
+    const string& req = (*i).second[1];
+    MBM::Requirement r;
+    r.parse(req);
+    StatusCode sc = setConsumerRequirement((*j).second, tsk, r);
+    if ( !sc.isSuccess() )   {
+      return error("Failed to set consumer requirement: "+req);
+    }
   }
   return StatusCode::SUCCESS;
 }
@@ -167,10 +200,13 @@ StatusCode MEPManager::i_init()  {
   m_bmIDs.clear();
   m_buffMap.clear();
   if ( !initializeBuffers().isSuccess() )  {
-    return error("Failed to initialize MEP buffers!");
+    return error("Failed to initialize MBM buffers!");
+  }
+  if ( !setConsumerRequirements().isSuccess() )  {
+    return error("Failed to apply consumer requirements to MBM buffers!");
   }
   if ( !connectBuffers().isSuccess() )  {
-    return error("Failed to connect to MEP buffers!");
+    return error("Failed to connect to MBM buffers!");
   }
   return StatusCode::SUCCESS;
 }

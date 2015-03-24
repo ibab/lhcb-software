@@ -58,6 +58,7 @@ StatusCode EventRunable::initialize()   {
   incidentSvc()->addListener(this,"DAQ_PROCESS_EVENT");
   incidentSvc()->addListener(this,m_tmoIncident);
   declareInfo("EvtCount",m_evtCount=0,"Number of events processed");
+  m_nerr = 0;
   return sc;
 }
 
@@ -154,11 +155,15 @@ StatusCode EventRunable::run()   {
 	    return StatusCode::FAILURE;
 	  }
 	}
+	/// We cannot correct if the event flow is OK again. 
+	/// Moore may deliver holes (ie events thrown away.	
+#if 0
         if ( m_nerr > 0 )  {
           Incident incident(name(),"DAQ_ERROR_CLEAR");
           m_incidentSvc->fireIncident(incident);
         }
         m_nerr = 0;
+#endif
         if ( !m_dataSvc->findObject("/Event",pObj).isSuccess() )  {
           info("End of event input reached.");
           break;
@@ -177,7 +182,7 @@ StatusCode EventRunable::run()   {
       /// Consecutive errors: go into error state
       error("Failed to process event.");
       m_nerr++;
-      if ( (m_nerrStop > 0) && (m_nerr > m_nerrStop) )  {
+      if ( (m_nerrStop > 0) && (m_nerr >= m_nerrStop) )  {
         Incident incident(name(),"DAQ_ERROR");
         m_incidentSvc->fireIncident(incident);
         return StatusCode::FAILURE;

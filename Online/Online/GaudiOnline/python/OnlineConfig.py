@@ -185,9 +185,10 @@ def evtServerRunable(mepMgr,buffer,request=None,name='Runable'):
   return svc  
   
 #------------------------------------------------------------------------------------------------
-def evtRunable(mepMgr,name='Runable'):
+def evtRunable(mepMgr=None,name='Runable'):
   svc = Configs.LHCb__EventRunable(name)
-  svc.MEPManager        = mepMgr
+  if mepMgr is not None:
+    svc.MEPManager        = mepMgr
   return svc
   
 #------------------------------------------------------------------------------------------------

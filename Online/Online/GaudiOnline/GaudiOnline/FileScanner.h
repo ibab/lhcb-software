@@ -17,6 +17,7 @@
 // C/C++ include files
 #include <sys/stat.h>
 #include <cstdlib>
+#include <vector>
 #include <ctime>
 #include <set>
 
