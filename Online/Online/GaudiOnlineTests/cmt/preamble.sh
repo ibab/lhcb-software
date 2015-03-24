@@ -1,6 +1,6 @@
 #!/bin/sh
 #killall test.exe
-killall GaudiOnlineExe.exe
+killall GaudiOnlineExe
 #killall gentest.exe
 #rm /dev/shm/bm_* /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
 #
@@ -122,7 +122,7 @@ start_mbmdump()
 #
 start_meps()
 {
-  bash -c "export UTGID=${NODENAME}_Prod_\$$; exec -a \${UTGID} $gaudi_run libGaudiOnline.so mep2mbm_producer -n=prod_0 -p=333 -s=500 -r=2 -f=./mepData_0.dat -i=Events_LHCb"
+  bash -c "export UTGID=${NODENAME}_Prod_\$$; exec -a \${UTGID} $gaudi_run libGaudiOnline.so mep2mbm_producer -n=prod_0 -p=333 -s=500 -r=2 -f=./mepData_0.dat -i=Events_LHCb -e=1"
 }
 #
 # -------------------------------------------------------------------------------------

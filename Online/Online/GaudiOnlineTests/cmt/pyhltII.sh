@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "All args: $*"
-. ${GAUDIONLINEROOT}/tests/cmt/preamble.sh
+. ${GAUDIONLINETESTSROOT}/cmt/preamble.sh
 #
 start_py_task MBMBuffers "import GaudiOnlineTests;GaudiOnlineTests.runHlt2Buffer()"
 #

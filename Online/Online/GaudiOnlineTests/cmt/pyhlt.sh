@@ -1,23 +1,25 @@
 #!/bin/bash
 echo "All args: $*"
-. preamble.sh
+. ./preamble.sh
 #rm /dev/shm/bm_* /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
 #
 start_py_task MepInit   "import GaudiOnlineTests;GaudiOnlineTests.runMepBuffer(partitionBuffers=True)"
 #
 start_tan_server;
 #
-sleep 6
+sleep 6;
+ps -ef | grep MepInit;
+##sleep 30
 #
 #  Monitors:
 #
 start_mbmmon;
 #start_tanmon;
 #
-start_py_task Moore_0     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(partitionBuffers=True)"
-start_py_task Moore_1     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(partitionBuffers=True)"
-start_py_task Moore_2     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(partitionBuffers=True)"
-start_py_task Moore_3     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(partitionBuffers=True)"
+start_py_task Moore_0     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(event_type=1,partitionBuffers=True)"
+start_py_task Moore_1     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(event_type=1,partitionBuffers=True)"
+start_py_task Moore_2     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(event_type=1,partitionBuffers=True)"
+start_py_task Moore_3     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(event_type=1,partitionBuffers=True)"
 #start_py_task Moore_4    "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(partitionBuffers=True)"
 #start_py_task Moore_5    "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(partitionBuffers=True)"
 #start_py_task Moore_6    "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(partitionBuffers=True)"
