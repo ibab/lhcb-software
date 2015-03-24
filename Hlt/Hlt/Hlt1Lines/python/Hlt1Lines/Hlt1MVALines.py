@@ -131,7 +131,7 @@ class Hlt1MVALinesConf( HltLinesConfigurableUser ) :
         props['name']  = name
         preambulo = self.mvaPreambulo()
         preambulo += [ "from LoKiArrayFunctors.decorators import APT, ACUTDOCA",
-                      ("%(name)sCombinationConf = LoKi.Hlt1.Hlt1CombinerConf( '[K*(892)0 -> pi- pi+]cc'," +
+                      ("%(name)sCombinationConf = LoKi.Hlt1.Hlt1CombinerConf(strings(['K*(892)0 -> pi- pi+]', 'K*(892)0 -> pi+ pi+]CC'])," +
                        "((APT > %(PT)s) & (ACUTDOCA(%(DOCA)s,'LoKi::DistanceCalculator'))), ALL)") % props]
 
         from Configurables import LoKi__HltUnit as HltUnit
@@ -145,12 +145,11 @@ class Hlt1MVALinesConf( HltLinesConfigurableUser ) :
 
         props['tool'] = tool.getFullName()
         code = """
-        SELECTION('%(input)s')
-        >> ( ( PT > %(PT)s * MeV ) & ( P  > %(P)s  * MeV ) & \
-             ( BPVIPCHI2() > %(IPChi2)s ) )
-        >> TC_HLT1COMBINER('', %(name)sCombinationConf)
-        >> tee(monitor(TC_SIZE > 0, '# pass ToV0', LoKi.Monitoring.ContextSvc))
-        >> tee(monitor(TC_SIZE    , 'nV0s',        LoKi.Monitoring.ContextSvc))
+        TC_HLT1COMBINER('', %(name)sCombinationConf,
+                        '%(input)s', ((PT > %(PT)s * MeV) & (P  > %(P)s * MeV) & \
+                                      (BPVIPCHI2() > %(IPChi2)s)))
+        >> tee(monitor(TC_SIZE > 0, '# V0', LoKi.Monitoring.ContextSvc))
+        >> tee(monitor(TC_SIZE    , 'nV0s', LoKi.Monitoring.ContextSvc))
         >> ((VFASPF(VCHI2) < %(VxChi2)s) & \
             (in_range(%(MinETA)s,  ETA,      %(MaxETA)s)) & \
             (in_range(%(MinMCOR)s, BPVCORRM, %(MaxMCOR)s)) & \
@@ -164,7 +163,7 @@ class Hlt1MVALinesConf( HltLinesConfigurableUser ) :
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from HltTracking.HltPVs import PV3D
 
-        return [ Hlt1GECUnit( props['GEC'] ), PV3D('Hlt1'), inputParticles, unit ]
+        return [Hlt1GECUnit(props['GEC']), PV3D('Hlt1'), inputParticles, unit]
 
     def __l0du(self, nickname):
         import collections

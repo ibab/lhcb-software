@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-03-24 - Roel Aaij
+ - Update Hlt1MVALines to take changes in Hlt1Combiner into account.
+
 ! 2015-03-24 - Matthew Kenzie
  - Nuked Hlt1PhiLines.py (now included as part of Hlt1CalibTrackingLines.py) 
  - Nuked Hlt1JpsiPhiLines.py (not necessary)
