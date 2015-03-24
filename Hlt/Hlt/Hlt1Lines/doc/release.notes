@@ -5,6 +5,14 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-03-24 - Matthew Kenzie
+ - Nuked Hlt1PhiLines.py (now included as part of Hlt1CalibTrackingLines.py) 
+ - Nuked Hlt1JpsiPhiLines.py (not necessary)
+ - Updated Hlt1CalibTrackingLines to include new Hlt1Combiner config
+ - Updated Hlt1B2GammaGammaLines to include new Hlt1Combiner config
+ - Added separate B->hh lines in Hlt1CalibTracking
+ - Added Hlt1IncPhi, Hlt1B2PhiPhi and Hlt1B2PhiGamma lines to Hlt1CalibTracking
+
 ! 2015-03-24 - William Barter
  - Update Hl1SingleMuonHighPT with a bug workaround suggested by Roel Aaij. Not a long term solution.
 ! 2015-03-23 - Albert Puig

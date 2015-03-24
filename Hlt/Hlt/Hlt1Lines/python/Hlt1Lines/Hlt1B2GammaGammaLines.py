@@ -47,8 +47,10 @@ class Hlt1B2GammaGammaLinesConf(HltLinesConfigurableUser) :
         """ % props
 
         BUnitLineCode = """
-        SELECTION('Hlt1B2GammaGammaPhotons')
-        >>  TC_HLT1COMBINER('', CombinationConf)
+        TC_HLT1COMBINER('', 
+                        CombinationConf,
+                        'Hlt1B2GammaGammaPhotons',
+                        ALL)
         >>  tee ( monitor( TC_SIZE > 0, '# pass SV', LoKi.Monitoring.ContextSvc ) )
         >>  tee ( monitor( TC_SIZE    , 'nSV',       LoKi.Monitoring.ContextSvc ) )
         >>  SINK ('Hlt1B2GammaGammaDecision')
