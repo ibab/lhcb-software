@@ -106,8 +106,8 @@ def run():
 
     
     UsedParameters = std.vector('int')()
-    #UsedParameters.push_back(1)
-    UsedParameters.push_back(2)
+    #UsedParameters.push_back(0)
+    UsedParameters.push_back(1)
     # UsedParameters.push_back(3)
     # UsedParameters.push_back(4)
     # UsedParameters.push_back(5)
