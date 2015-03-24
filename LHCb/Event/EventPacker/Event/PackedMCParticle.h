@@ -22,14 +22,23 @@ namespace LHCb
 
     /// Default Constructor
     PackedMCParticle() :
-      key(0), px(0), py(0), pz(0), mass(0), PID(0),
-      originVertex(-1)
+      key(0), 
+      px(0), py(0), pz(0), 
+      mass(0), 
+      PID(0),
+      originVertex(-1),
+      flags(0)
     {}
 
     /// copy constructor
     PackedMCParticle( const PackedMCParticle& c ) :
-      key( c.key), px( c.px), py(c.py), pz(c.pz), mass(c.mass), PID( c.PID),
-      originVertex( c.originVertex ), endVertices( c.endVertices )
+      key(c.key), 
+      px(c.px), py(c.py), pz(c.pz), 
+      mass(c.mass), 
+      PID(c.PID),
+      originVertex(c.originVertex), 
+      endVertices(c.endVertices),
+      flags(c.flags)
     {}
 
     int key;
@@ -40,6 +49,7 @@ namespace LHCb
     int PID;
     long long originVertex;
     std::vector<long long> endVertices;
+    unsigned int flags;
 
   };
 

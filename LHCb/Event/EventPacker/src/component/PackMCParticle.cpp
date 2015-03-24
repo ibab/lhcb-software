@@ -74,12 +74,13 @@ StatusCode PackMCParticle::execute() {
     out->mcParts().push_back( LHCb::PackedMCParticle() );
     LHCb::PackedMCParticle& newPart = out->mcParts().back();
 
-    newPart.key  = part->key();
-    newPart.px   = pack.energy( part->momentum().px() );
-    newPart.py   = pack.energy( part->momentum().py() );
-    newPart.pz   = pack.energy( part->momentum().pz() );
-    newPart.mass = (float)part->virtualMass();
-    newPart.PID  = part->particleID().pid();
+    newPart.key   = part->key();
+    newPart.px    = pack.energy( part->momentum().px() );
+    newPart.py    = pack.energy( part->momentum().py() );
+    newPart.pz    = pack.energy( part->momentum().pz() );
+    newPart.mass  = (float)part->virtualMass();
+    newPart.PID   = part->particleID().pid();
+    newPart.flags = part->flags();
     newPart.originVertex = ( 0==pVer ? 
                              pack.reference32( out,
                                                part->originVertex()->parent(),

@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2015-03-24 - Chris Jones
+ - Add support for the new flags data member in MCParticle.
+
 ! 2015-03-23 - Chris Jones
  - Various small cleanups.
  - Tune a bit better than reserved vector sizes in PackedRecVertex.

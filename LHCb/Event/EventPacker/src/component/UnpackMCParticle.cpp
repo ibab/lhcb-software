@@ -2,9 +2,11 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
+// Event model
 #include "Event/MCParticle.h"
 #include "Event/StandardPacker.h"
 #include "Event/PackedMCParticle.h"
+
 // local
 #include "UnpackMCParticle.h"
 
@@ -74,6 +76,8 @@ StatusCode UnpackMCParticle::execute()
     part->setMomentum( Gaudi::LorentzVector( px, py, pz , E ) );
 
     part->setParticleID( LHCb::ParticleID(src.PID) );
+
+    part->setFlags( src.flags );
 
     int hintID(0), key(0);
     if ( ( 0==pVer && pack.hintAndKey32( src.originVertex, dst, newMCParticles, hintID, key ) ) ||
