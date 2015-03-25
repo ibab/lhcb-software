@@ -18,6 +18,7 @@ use TrackEvent          v* Event
 use RecEvent            v* Event
 use PhysEvent           v* Event
 use MCEvent             v* Event
+use LinkerEvent         v* Event
 use GSL                 v* LCG_Interfaces
 
 # build a components kibrary

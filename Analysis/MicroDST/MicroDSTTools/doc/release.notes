@@ -4,6 +4,10 @@
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
 
+! 2015-03-25 - Chris Jones
+ - Update Track and CaloHypo cloners to optionally, when running on MC uDSTs,
+   also clone the Linker tables to MCParticles.
+
 !========================= MicroDSTTools v2r11 2014-10-30 =========================
 
 ! 2014-10-22 - Chris Jones

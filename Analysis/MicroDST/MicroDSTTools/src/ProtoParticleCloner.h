@@ -14,6 +14,9 @@
 #include "Event/ProtoParticle.h"
 #include "Event/Track.h"
 
+// MC association
+#include "Kernel/Particle2MCLinker.h"
+
 /** @class ProtoParticleCloner ProtoParticleCloner.h src/ProtoParticleCloner.h
  *
  *  Clone an LHCb::ProtoParticle, it's associated LHCb::Track, LHCb::RichPID
@@ -44,6 +47,7 @@ public:
 
 private:
 
+  /// Clone the given ProtoParticle
   LHCb::ProtoParticle* clone(const LHCb::ProtoParticle* protoParticle);
 
 private:

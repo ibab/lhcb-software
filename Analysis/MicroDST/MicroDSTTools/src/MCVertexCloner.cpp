@@ -46,6 +46,7 @@ StatusCode MCVertexCloner::initialize()
 LHCb::MCVertex* MCVertexCloner::operator() (const LHCb::MCVertex* vertex)
 {
   if ( !vertex ) return NULL;
+
   LHCb::MCVertex* clone = getStoredClone<LHCb::MCVertex>(vertex);
 
   const size_t nProd      = vertex->products().size();
@@ -58,15 +59,13 @@ LHCb::MCVertex* MCVertexCloner::operator() (const LHCb::MCVertex* vertex)
 
 LHCb::MCVertex* MCVertexCloner::clone(const LHCb::MCVertex* vertex)
 {
-  LHCb::MCVertex* clone =
-    cloneKeyedContainerItem<BasicCloner>(vertex);
-
-  clone->setMother((*m_particleCloner)(vertex->mother()));
-
-  clone->clearProducts();
-
-  cloneDecayProducts( vertex->products(), clone );
-
+  LHCb::MCVertex * clone = cloneKeyedContainerItem<BasicCloner>(vertex);
+  if ( clone )
+  {
+    clone->setMother((*m_particleCloner)(vertex->mother()));
+    clone->clearProducts();
+    cloneDecayProducts( vertex->products(), clone );
+  }
   return clone;
 }
 
@@ -79,7 +78,7 @@ MCVertexCloner::cloneDecayProducts(const SmartRefVector<LHCb::MCParticle>& produ
   for ( SmartRefVector<LHCb::MCParticle>::const_iterator iProd = products.begin();
         iProd != products.end(); ++iProd )
   {
-    LHCb::MCParticle* productClone = (*m_particleCloner)(*iProd);
+    LHCb::MCParticle * productClone = (*m_particleCloner)(*iProd);
     if ( productClone )
     {
       productClone->setOriginVertex( clonedVertex );

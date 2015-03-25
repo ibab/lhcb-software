@@ -1,5 +1,3 @@
-// $Id: MCParticleCloner.cpp,v 1.9 2010-08-11 12:52:52 jpalac Exp $
-// Include files
 
 // from Gaudi
 #include <GaudiKernel/ToolFactory.h>
