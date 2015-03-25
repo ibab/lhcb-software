@@ -5,6 +5,11 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2015-03-25 - Vanya Belyaev
+
+ - fix get_dbtags and get_meta_info scripts 
+
+
 ! ==================== Phys/BenderTools v25r5p1   2015-03-20 ==================
 
 ! 2015-03-20 - Vanya Belyaev

@@ -206,12 +206,11 @@ def getDBTags ( file_name      ,
     logger.info ( "Use the file %s " % file_name )
 
     from subprocess import Popen, PIPE
-
     serr =  open ( '/dev/null' )
-    pipe = Popen ( [ '_dump_db_tags_2_'  , file_name ] ,
-                   env    = os.environ ,
-                   stdout = PIPE       ,
-                   stderr = serr       )
+    pipe = Popen ( [ '_dump_db_tags_2_' , file_name ] ,
+                   env    = os.environ  ,
+                   stdout = PIPE        ,
+                   stderr = serr        )
     
     stdout = pipe.stdout 
     ts = {}
@@ -272,7 +271,7 @@ def getMetaInfo ( file_name      ,
         
         stdout = pipe.stdout
         
-        ## Format = 'DBTags: { dictionary} '
+        ## Format = 'MetaInfo: { dictionary} '
         key  = 'MetaInfo:'
         info = {} 
         for line in stdout :
@@ -352,12 +351,12 @@ def extractTags ( args ) :
                            options.Verbose ) 
         if tags : break
 
-    print 12*'-'+'+'+77*'-'
-    print ' Tags: '
-    print 12*'-'+'+'+77*'-'
+    logger.info ( 12*'-'+'+'+57*'-' )
+    logger.info ( ' Tags: '         )
+    logger.info ( 12*'-'+'+'+57*'-' )
     for k in tags :
-        print '%11s : %-s ' % ( k , tags[k] ) 
-    print 12*'-'+'+'+77*'-'
+        logger.info ( '%11s : %-s ' % ( k , tags[k] ) ) 
+    logger.info ( 12*'-'+'+'+57*'-' )
 
 
 # =============================================================================
@@ -418,29 +417,30 @@ def extractMetaInfo ( args ) :
                              options.Verbose ) 
         if info : break
 
-
     
-    print 12*'-'+'+'+77*'-'
-    print ' MetaInfo: '
-    print 12*'-'+'+'+77*'-'
     keys = info.keys()
     keys.sort()
     
     from GaudiPython.Bindings import gbl as cpp
-    Time = cpp.Gaudi.Time 
+    Time = cpp.Gaudi.Time
+
+    
+    logger.info ( 12*'-'+'+'+57*'-' )
+    logger.info ( ' MetaInfo: '     ) 
+    logger.info ( 12*'-'+'+'+57*'-' )
     for k in keys :
         if  0<= k.find('Time') :
             ## @attention: note 1000 here! 
             time   = Time ( 1000 * info [k] )
-            print '%11s : %-s (%s) ' % ( k , info[k] , time.format(False) )
+            logger.info ( '%11s : %-s (%s) ' % ( k , info[k] , time.format(False) ) ) 
         elif 'TCK'  == k or 'Tck' == k :
-            print '%11s : 0x%08x '   % ( k ,        info[k]   )            
+            logger.info ( '%11s : 0x%08x '   % ( k ,        info[k]   ) )
         elif isinstance ( info[k] , set ) : 
-            print '%11s : %-s '      % ( k , list ( info[k] ) ) 
+            logger.info ( '%11s : %-s '      % ( k , list ( info[k] ) ) ) 
         else : 
-            print '%11s : %-s '      % ( k ,        info[k]   )
+            logger.info ( '%11s : %-s '      % ( k ,        info[k]   ) ) 
             
-    print 12*'-'+'+'+77*'-'
+    logger.info ( 12*'-'+'+'+57*'-' )
 
 # =============================================================================
 if '__main__' == __name__ :

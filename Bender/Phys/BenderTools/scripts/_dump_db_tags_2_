@@ -100,13 +100,11 @@ def get_db_tags ( silent = True , files = [] ) :
 
     try:
         
-        from AnalysisPython.Utils import mute 
+        from Ostap.Utils import mute 
         with mute ( silent , silent ) :
             tags = _get_db_tags_ ( files )
-            
-    except:
 
-        tags = {}
+    except: tags = {}
                     
     return tags
 

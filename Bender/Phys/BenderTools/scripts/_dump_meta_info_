@@ -139,22 +139,21 @@ def get_meta_info ( silent = True , files = [] ) :
     if not files : return {}
     
     info = {}
-    
+
     try:
     
-        from AnalysisPython.Utils import mute
+        from Ostap.Utils import mute
         with mute ( silent , silent ) :
             info = _get_meta_info_ ( files )
             
-    except:
-        info = {}
-                    
+    except : info = {}
+    
     return info
 
 
 # =============================================================================
 if __name__ == '__main__' :
-    
+
     print 'MetaInfo: %s ' % get_meta_info ( silent = False  ) 
         
 # =============================================================================
