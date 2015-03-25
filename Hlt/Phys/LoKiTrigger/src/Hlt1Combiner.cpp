@@ -150,9 +150,7 @@ LoKi::Hlt1::Hlt1Combiner::getDaughters
   const CANDIDATES a = source() () ;
   const CANDIDATES* arg1 = &a;
 
-  //std::cout << "Hlt1Combiner::getDaughters()" << std::endl;
-  // loop over the selections and add daughters
-  // Source 1
+  // loop candidates in source and add to daughters 
   for ( ITERATOR icand1 = arg1->begin(); icand1 != arg1->end(); icand1++ )
   {
     const Hlt::Candidate* cand1 = *icand1 ;
@@ -168,11 +166,8 @@ LoKi::Hlt1::Hlt1Combiner::getDaughters
 // ============================================================================
 void // should return a StatusCode instead?
 LoKi::Hlt1::Hlt1Combiner::executeCombineParticles
-  ( LoKi::Hlt1::Hlt1Combiner::result_type& output, const Decays::Decay& decay ) const
+  ( LoKi::Hlt1::Hlt1Combiner::result_type& output, const Selected& daughters, const Decays::Decay& decay ) const
 {
-  // get daughters from the input sources 
-  Selected daughters;
-  getDaughters( daughters ) ;
 
   // the combination tools
   typedef LoKi::Combiner_<LHCb::Particle::ConstVector> Combiner ;
@@ -220,7 +215,7 @@ LoKi::Hlt1::Hlt1Combiner::executeCombineParticles
       combiner -> combine ( combination , *mother , *vertex ) ;
 
       //std::cout << i << ": Created mother particle: " << LoKi::Particles::nameFromPID(mother->particleID()) << " PID: " << mother->particleID().pid() << " M: " << mother->momentum().M() << " P: " << mother->p() << " PT: " << mother->pt() << std::endl;
-      //std::cout << i << ": Used primary vertex: (" << vertex->position().X() << "," << vertex->position().Y() << "," << vertex->position().Z() << ")" << std::endl;
+      //std::cout << i << ": Used decay vertex: (" << vertex->position().X() << "," << vertex->position().Y() << "," << vertex->position().Z() << ")" << std::endl;
 
       // apply mother cuts
       if ( ! mothcut ( mother ) ) {
@@ -251,12 +246,8 @@ LoKi::Hlt1::Hlt1Combiner::executeCombineParticles
 // ============================================================================
 void
 LoKi::Hlt1::Hlt1Combiner::execute3BodyCombination 
-  ( LoKi::Hlt1::Hlt1Combiner::result_type& output, const Decays::Decay& decay ) const
+  ( LoKi::Hlt1::Hlt1Combiner::result_type& output, const Selected& daughters, const Decays::Decay& decay ) const
 {
-  
-  // get daughters from the input sources 
-  Selected daughters;
-  getDaughters( daughters ) ;
 
   // the combination tools
   const IParticleCombiner* combiner = pc() ;
@@ -397,12 +388,8 @@ LoKi::Hlt1::Hlt1Combiner::execute3BodyCombination
 // ============================================================================
 void
 LoKi::Hlt1::Hlt1Combiner::execute4BodyCombination 
-  ( LoKi::Hlt1::Hlt1Combiner::result_type& output, const Decays::Decay& decay ) const
+  ( LoKi::Hlt1::Hlt1Combiner::result_type& output, const Selected& daughters, const Decays::Decay& decay ) const
 {
-  
-  // get daughters from the input sources 
-  Selected daughters;
-  getDaughters( daughters ) ;
 
   const IParticleCombiner* combiner = pc() ; // get the particle combiner
   
@@ -581,6 +568,10 @@ LoKi::Hlt1::Hlt1Combiner::operator()
   // the output selection
   CANDIDATES output;
 
+  // get daughters from the input sources 
+  Selected daughters ;
+  getDaughters( daughters ) ;
+
   const std::vector<Decays::Decay> decays = m_conf.decays();
 
   for ( std::vector<Decays::Decay>::const_iterator idecay = decays.begin() ; idecay != decays.end() ; idecay ++ ) {
@@ -588,116 +579,16 @@ LoKi::Hlt1::Hlt1Combiner::operator()
     const unsigned short N = idecay->children().size();
 
     if ( N == 3 ) {
-      execute3BodyCombination(output, *idecay);
+      execute3BodyCombination(output, daughters, *idecay);
     }
     else if ( N == 4 ) {
-      execute4BodyCombination(output, *idecay);
+      execute4BodyCombination(output, daughters, *idecay);
     }
     else { // fine for 2 body (not at all optimal for N>4 body)
-      executeCombineParticles(output, *idecay);
+      executeCombineParticles(output, daughters, *idecay);
     }
-  
   }
-  /*
-  //std::cout << "Daughters:" << std::endl;
-  for ( Selected::map_iterator idaught = daughters.begin(); idaught != daughters.end(); idaught++){
-    //std::cout << idaught->first << " : " << idaught->second.size() << std::endl;
-    //for ( std::vector<LHCb::Particles>::const_iterator ipart = idaught->second.begin(); ipart != idaught->second.end(); ++ipart) {
-    //  const LHCb::Particle* part = *ipart1;
-    //  std::cout << "\t" << "PID: " << part->particleID().pid() << " P: " << part->p() << " PT: " << part->pt() << std::endl;
-    //}
-  }
-  */
   
-  /*
-  // the output selection
-  CANDIDATES output;
-
-  // the combination tools
-  typedef LoKi::Combiner_<LHCb::Particle::ConstVector> Combiner ;
-  const IParticleCombiner* combiner = pc() ;
-  const LoKi::Particles::PidCompare compare = LoKi::Particles::PidCompare () ;
-
-  // loop over all decays
-  //std::cout << "The decay string is: " << std::endl;
-  //std::cout << m_conf.decay() << std::endl;
-  const std::vector<Decays::Decay> decays = m_conf.decays();
-  for ( std::vector<Decays::Decay>::const_iterator idecay = decays.begin();
-        idecay != decays.end(); idecay++)
-  {
-
-    //std::cout << "In decay loop for decay: " << std::endl;
-    //std::cout << idecay->toString() << std::endl;
-    //idecay->fillStream(std::cout); std::cout << std::endl;
-
-    Combiner loop ;
-    const Decays::Decay::Items& dec_items = idecay->children() ;
-    for ( Decays::Decay::Items::const_iterator child = dec_items.begin() ;
-          child != dec_items.end(); child++)
-    {
-      //std::cout << "Added daughters of type " << child->name() << " to loop" << std::endl;
-      //child->fillStream(std::cout); std::cout << std::endl;
-      loop.add( daughters ( child->name() ) ) ;
-    }
-
-    // now do actual loop of combinations
-    //std::cout << "Will run " << loop.size() << " combinations " << std::endl;
-    int i=-1;
-    for ( ; loop.valid() ; loop.next() )
-    {
-        i++;
-        if ( !loop.unique( compare ) ) {
-          //std::cout << "  -- " << i << " fail PID compare" << std::endl;
-          continue ;
-        }
-
-        // get current combination
-        LHCb::Particle::ConstVector combination ( loop.dim() );
-        loop.current ( combination.begin() ) ;
-
-        // apply comb cuts
-        if ( ! combcut ( combination ) ) {
-          //std::cout << " -- " << i << " fail COMB cut" << std::endl;
-          continue ;
-        }
-
-        LHCb::Vertex*     vertex = new LHCb::Vertex();
-        LHCb::Particle*   mother = new LHCb::Particle();
-        mother->setParticleID( idecay->mother().pid() );
-
-        // do combination
-        combiner -> combine ( combination , *mother , *vertex ) ;
-
-        //std::cout << i << ": Created mother particle: " << LoKi::Particles::nameFromPID(mother->particleID()) << " PID: " << mother->particleID().pid() << " M: " << mother->momentum().M() << " P: " << mother->p() << " PT: " << mother->pt() << std::endl;
-        //std::cout << i << ": Used primary vertex: (" << vertex->position().X() << "," << vertex->position().Y() << "," << vertex->position().Z() << ")" << std::endl;
-
-        // apply mother cuts
-        if ( ! mothcut ( mother ) ) {
-          delete vertex;
-          delete mother;
-          //std::cout << " -- " << i << " fail MOTH cut" << std::endl;
-          continue ;
-        }
-        //std::cout << " -- PASS" << std::endl;
-
-        // store in TES
-        _storeParticle( mother ) ;
-
-        // add new candidate
-        Hlt::Candidate *candidate = newCandidate();
-        candidate->addToWorkers ( alg() ) ;
-        // add new stage
-        Hlt::Stage* stage = newStage () ;
-        candidate->addToStages( stage ) ;
-        Hlt::Stage::Lock lock { stage, alg() } ;
-        stage->set( mother ) ;
-        output.push_back ( candidate ) ;
-        // ====================================================================
-      } //                                         end loop over combinations
-    // ========================================================================
-    } //                                           end of loop over decays
-  // ==========================================================================
-  */
   // register the selection in Hlt Data Service
   return !m_sink ? output : m_sink ( output ) ;
   // ==========================================================================

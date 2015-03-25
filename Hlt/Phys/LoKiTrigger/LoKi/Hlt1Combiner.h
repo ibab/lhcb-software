@@ -149,9 +149,9 @@ namespace LoKi
         const IParticleCombiner*          m_pc             ;
         // user functions
         bool                      getDaughters( Selected& daughters ) const;
-        void                      executeCombineParticles( result_type& output, const Decays::Decay& decay ) const;
-        void                      execute3BodyCombination( result_type& output, const Decays::Decay& decay ) const;
-        void                      execute4BodyCombination( result_type& output, const Decays::Decay& decay ) const;
+        void                      executeCombineParticles( result_type& output, const Selected& daughters, const Decays::Decay& decay ) const;
+        void                      execute3BodyCombination( result_type& output, const Selected& daughters, const Decays::Decay& decay ) const;
+        void                      execute4BodyCombination( result_type& output, const Selected& daughters, const Decays::Decay& decay ) const;
         unsigned long             m_maxCand;
         bool                      m_maxCandStop;
         unsigned long             m_maxComb;

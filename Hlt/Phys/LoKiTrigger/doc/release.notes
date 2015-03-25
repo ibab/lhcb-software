@@ -4,6 +4,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-03-25 - Matthew Kenzie
+ - Only getDaughters() once when using Hlt1Combiner
+
 ! 2015-03-25 - Roel Aaij
  - Add AlgContext lock to HltUnit::initialize().
 
