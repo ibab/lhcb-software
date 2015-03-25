@@ -131,7 +131,7 @@ class Hlt1MVALinesConf( HltLinesConfigurableUser ) :
         props['name']  = name
         preambulo = self.mvaPreambulo()
         preambulo += [ "from LoKiArrayFunctors.decorators import APT, ACUTDOCA",
-                      ("%(name)sCombinationConf = LoKi.Hlt1.Hlt1CombinerConf(strings(['K*(892)0 -> pi- pi+]', 'K*(892)0 -> pi+ pi+]CC'])," +
+                      ("%(name)sCombinationConf = LoKi.Hlt1.Hlt1CombinerConf(strings(['K*(892)0 -> pi- pi+', '[K*(892)0 -> pi+ pi+]cc'])," +
                        "((APT > %(PT)s) & (ACUTDOCA(%(DOCA)s,'LoKi::DistanceCalculator'))), ALL)") % props]
 
         from Configurables import LoKi__HltUnit as HltUnit

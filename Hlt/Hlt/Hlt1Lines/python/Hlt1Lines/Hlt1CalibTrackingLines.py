@@ -418,7 +418,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
   
     return hlt1CalibTrackingLine_B2PiPiUnit
 
-  def IncPhi_Unit( self, name, props ) :
+  def IncPhi_Unit( self, props ) :
 
     IncPhi_LineCode = """
     SELECTION( 'Hlt1CalibTrackingKKs' )
@@ -434,7 +434,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     from HltTracking.HltPVs import PV3D
 
     hlt1CalibTrackingLine_IncPhiUnit = HltUnit(
-        'Hlt1'+name+'IncPhiUnit',
+        'Hlt1IncPhiUnit',
         #OutputLevel = 1,
         Monitor = True,
         Code = IncPhi_LineCode
@@ -612,7 +612,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
   def IncPhi_Streamer(self,name,props):
 
-    return self.KK_Streamer(name,props) + [ self.IncPhi_Unit(name,props) ]
+    return self.KK_Streamer(name,props) + [ self.IncPhi_Unit(props) ]
 
   def B2PhiPhi_Streamer(self,name,props):
 
