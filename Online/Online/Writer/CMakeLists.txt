@@ -9,6 +9,5 @@ gaudi_depends_on_subdirs(DAQ/MDF
                          Online/OnlineKernel)
 
 gaudi_add_module(Writer src/*.cpp
-                 PUBLIC_HEADERS Writer
                  LINK_LIBRARIES DAQEventLib MDFLib OnlineKernel dim)
 set_property(TARGET Writer APPEND PROPERTY COMPILE_DEFINITIONS BUILD_WRITER=1)
