@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-03-25 - Matthew Kenzie
+ - Added Kaons to Hlt1SharedParticles
+ - Changed Hlt1CalibTrackingLines to pick up Hlt1SharedParticles
+
 ! 2015-03-24 - Roel Aaij
  - Update Hlt1MVALines to take changes in Hlt1Combiner into account.
  - Fix warning in Hlt1CalibTrackingLines.

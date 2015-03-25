@@ -62,3 +62,27 @@ class Hlt1SharedParticles(HltLinesConfigurableUser):
         from HltLine.HltLine import bindMembers
         bm = bindMembers(None, [protoUnit, pionUnit]).setOutputSelection(selection)
         return bm
+
+    def kaonUnit(self):
+        protoUnit = self.protoParticleUnit()
+        selection = 'Hlt1SharedKaons'
+        props = {'selection' : selection,
+                 'input'     : protoUnit.outputSelection()}
+        code = """
+        SELECTION( '%(input)s' )
+        >>  TC_TOPARTICLES( 'K+', '', ALL )
+        >>  tee ( monitor( TC_SIZE > 0, '# pass ToKaons', LoKi.Monitoring.ContextSvc ) )
+        >>  tee ( monitor( TC_SIZE    , 'nKaons',         LoKi.Monitoring.ContextSvc ) )
+        >>  SINK(  '%(selection)s' )
+        >>  ~TC_EMPTY
+        """ % props
+
+        from Configurables import LoKi__HltUnit as HltUnit
+        kaonUnit = HltUnit(
+            'Hlt1SharedKaonUnit',
+            Monitor = True,
+            Code = code)
+
+        from HltLine.HltLine import bindMembers
+        bm = bindMembers(None, [protoUnit, kaonUnit]).setOutputSelection(selection)
+        return bm

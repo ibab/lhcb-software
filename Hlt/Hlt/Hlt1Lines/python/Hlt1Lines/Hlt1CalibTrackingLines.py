@@ -15,11 +15,13 @@ __version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 0.01 $"
 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
+# =============================================================================
+# Note that tracking, kaons and pions get picked up from Hlt1SharedParticles
+# =============================================================================
+
 class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
-  __slots__ = {  'TrackPT'           : 500     # MeV
-                ,'TrackP'            : 3000    # MeV
-                ,'TrackChi2DOF'      : 4       # dimensionless
-                ,'ParticlePT'        : 500     # MeV
+  __slots__ = {  'ParticlePT'        : 600     # MeV
+                ,'ParticleP'         : 4000    # MeV 
                 ,'CombMaxDaughtPT'   : 800     # MeV
                 ,'CombMaxDaughtP'    : 8000    # MeV
                 ,'CombAPT'           : 1500    # MeV
@@ -35,6 +37,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
                 ,'PhiMassWinLoose'   : 80      # MeV
                 ,'PhiMassWin'        : 40      # MeV
                 ,'PhiPT'             : 1800    # MeV
+                ,'PhiIPCHI2'         : 5       # dimensionless
                 ,'B0SUMPT'           : 4000    # MeV
                 ,'GAMMA_PT_MIN'      : 3000    # MeV
                 ,'Velo_Qcut'         : 3       # dimensionless
@@ -42,95 +45,10 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
                 ,'ValidateTT'        : False
       }
 
-  # Tracking stuff
-  def hh_TrackingUnit( self, name, props ) :
-
-    from HltTracking.Hlt1Tracking import ( TrackCandidates, FitTrack )
-    hh_Preambulo = [  TrackCandidates('CalibTracking'),
-                      FitTrack ]
-
-    hh_LineCode = """
-    TrackCandidates
-    >>  FitTrack
-    >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
-    >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
-    >>  ( ( TrNVELOMISS < %(Velo_Qcut)s ) )
-    >>  tee  ( monitor( TC_SIZE > 0, '# pass Velo', LoKi.Monitoring.ContextSvc ) )
-    >>  tee  ( monitor( TC_SIZE    , 'nVelo' , LoKi.Monitoring.ContextSvc ) )
-    >>  ( (TrTNORMIDC > %(TrNTHits)s ) & ( TrPT > %(TrackPT)s * MeV ) & ( TrP  > %(TrackP)s  * MeV ) )
-    >>  tee  ( monitor( TC_SIZE > 0, '# pass Kaon P/PT', LoKi.Monitoring.ContextSvc ) )
-    >>  tee  ( monitor( TC_SIZE    , 'nP' , LoKi.Monitoring.ContextSvc ) )
-    >>  ( ( TrCHI2PDOF < %(TrackChi2DOF)s ) )
-    >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackChi2', LoKi.Monitoring.ContextSvc ) )
-    >>  tee  ( monitor( TC_SIZE    , 'nChi2' , LoKi.Monitoring.ContextSvc ) )
-    >>  TC_TOPROTOPARTICLES( '' )
-    >>  SINK( 'Hlt1CalibTrackingProtos' )
-    >>  ~TC_EMPTY
-    """ %props
-
-    from Configurables import LoKi__HltUnit as HltUnit
-
-    hlt1CalibTrackingLine_TrackUnit = HltUnit(
-        'Hlt1'+name+'TrackUnit',
-        #OutputLevel = 1,
-        Monitor = True,
-        Preambulo = hh_Preambulo,
-        Code = hh_LineCode
-        )
-
-    return hlt1CalibTrackingLine_TrackUnit
-
-  # Kaon stuff
-  def hh_KaonUnit( self, name, props ) :
-
-    kaon_LineCode = """
-    SELECTION( 'Hlt1CalibTrackingProtos' )
-    >>  TC_TOPARTICLES( 'K-',  '', (PT>%(ParticlePT)s*MeV) )
-    >>  tee ( monitor( TC_SIZE > 0, '# pass ToKaons', LoKi.Monitoring.ContextSvc ) )
-    >>  tee ( monitor( TC_SIZE    , 'nKaons',         LoKi.Monitoring.ContextSvc ) )
-    >>  SINK ( 'Hlt1CalibTrackingKaons' )
-    >>  ~TC_EMPTY
-    """ %props
-
-    from Configurables import LoKi__HltUnit as HltUnit
-
-    hlt1CalibTrackingLine_KaonUnit = HltUnit(
-        'Hlt1'+name+'KaonUnit',
-        #OutputLevel = 1,
-        Monitor = True,
-        #Preambulo = [],
-        Code = kaon_LineCode 
-        )
-
-    return hlt1CalibTrackingLine_KaonUnit
-
-  def hh_PionUnit( self, name, props ) :
+  def KPi_Unit( self, props ) :
     
-    pion_LineCode = """
-    SELECTION( 'Hlt1CalibTrackingProtos' )
-    >>  TC_TOPARTICLES( 'pi+', '', (PT>%(ParticlePT)s*MeV) )
-    >>  tee ( monitor( TC_SIZE > 0, '# pass ToPions', LoKi.Monitoring.ContextSvc ) )
-    >>  tee ( monitor( TC_SIZE    , 'nPions',         LoKi.Monitoring.ContextSvc ) )
-    >>  SINK ( 'Hlt1CalibTrackingPions' )
-    >>  ~TC_EMPTY
-    """ %props
-
-    from Configurables import LoKi__HltUnit as HltUnit
-
-    hlt1CalibTrackingLine_PionUnit = HltUnit(
-        'Hlt1'+name+'PionUnit',
-        #OutputLevel = 1,
-        Monitor = True,
-        #Preambulo = [],
-        Code = pion_LineCode
-        )
-
-    return hlt1CalibTrackingLine_PionUnit
-
-  def KPi_Unit( self, name, props ) :
-    
-    props['KaonCuts']        = 'ALL' 
-    props['PionCuts']        = 'ALL'
+    props['KaonCuts']        = ("( (PT>%(ParticlePT)s) & (P>%(ParticleP)s) )")%props 
+    props['PionCuts']        = ("( (PT>%(ParticlePT)s) & (P>%(ParticleP)s) )")%props 
     props['KPiDecay']        = '\'[D0 -> K- pi+]cc\'' #'strings( [ \'[D0 -> K- pi+]cc\', \'D0 -> K+ K-\', \'D0 -> pi+ pi-\' ] )'
     props['KPiCombCut']      = ("( (ADAMASS('D0')<%(D0MassWinLoose)s*MeV) " +
                                 "| ( (DAMASS('B0')>-%(B0MassWinLoose)s*MeV) " +
@@ -155,8 +73,8 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     KPi_LineCode = """
     TC_HLT1COMBINER( 'Hlt1CalibTrackingKPis', 
                      KPiCombinationConf, 
-                     'Hlt1CalibTrackingKaons', %(KaonCuts)s ,
-                     'Hlt1CalibTrackingPions', %(PionCuts)s )
+                     'Hlt1SharedKaons', %(KaonCuts)s ,
+                     'Hlt1SharedPions', %(PionCuts)s )
     >>  tee ( monitor( TC_SIZE > 0, '# pass ToKPis', LoKi.Monitoring.ContextSvc ) )
     >>  tee ( monitor( TC_SIZE    , 'nKPis',         LoKi.Monitoring.ContextSvc ) )
     >>  ~TC_EMPTY
@@ -166,7 +84,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     from HltTracking.HltPVs import PV3D
 
     hlt1CalibTrackingLine_KPiUnit = HltUnit(
-        'Hlt1'+name+'KPiUnit',
+        'Hlt1CalibTrackingKPiUnit',
         PVSelection = "PV3D",
         #OutputLevel = 1,
         Monitor = True,
@@ -176,9 +94,9 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
     return hlt1CalibTrackingLine_KPiUnit
 
-  def KK_Unit( self, name, props ) :
+  def KK_Unit( self, props ) :
     
-    props['KaonCuts']        = 'ALL' 
+    props['KaonCuts']        = ("( (PT>%(ParticlePT)s) & (P>%(ParticleP)s) )")%props 
     props['KKDecay']         = '\'D0 -> K+ K-\''
     props['KKCombCut']       = ("( (ADAMASS('D0')<%(D0MassWinLoose)s*MeV) " +
                                 "| (ADAMASS('phi(1020)')<%(PhiMassWinLoose)s*MeV) " +
@@ -204,7 +122,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     KK_LineCode = """
     TC_HLT1COMBINER( 'Hlt1CalibTrackingKKs', 
                      KKCombinationConf, 
-                     'Hlt1CalibTrackingKaons', %(KaonCuts)s ) 
+                     'Hlt1SharedKaons', %(KaonCuts)s ) 
     >>  tee ( monitor( TC_SIZE > 0, '# pass ToKKs', LoKi.Monitoring.ContextSvc ) )
     >>  tee ( monitor( TC_SIZE    , 'nKKs',         LoKi.Monitoring.ContextSvc ) )
     >>  ~TC_EMPTY
@@ -214,7 +132,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     from HltTracking.HltPVs import PV3D
 
     hlt1CalibTrackingLine_KKUnit = HltUnit(
-        'Hlt1'+name+'KKUnit',
+        'Hlt1CalibTrackingKKUnit',
         PVSelection = "PV3D",
         #OutputLevel = 1,
         Monitor = True,
@@ -224,9 +142,9 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
     return hlt1CalibTrackingLine_KKUnit
 
-  def PiPi_Unit( self, name, props ) :
+  def PiPi_Unit( self, props ) :
     
-    props['PionCuts']        = 'ALL' 
+    props['PionCuts']        = ("( (PT>%(ParticlePT)s) & (P>%(ParticleP)s) )")%props 
     props['PiPiDecay']       = '\'D0 -> pi+ pi-\''
     props['PiPiCombCut']     = ("( (ADAMASS('D0')<%(D0MassWinLoose)s*MeV) " +
                                 "| ( (DAMASS('B0')>-%(B0MassWinLoose)s*MeV) " +
@@ -251,7 +169,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     PiPi_LineCode = """
     TC_HLT1COMBINER( 'Hlt1CalibTrackingPiPis', 
                      PiPiCombinationConf, 
-                     'Hlt1CalibTrackingPions', %(PionCuts)s )
+                     'Hlt1SharedPions', %(PionCuts)s )
     >>  tee ( monitor( TC_SIZE > 0, '# pass ToPiPis', LoKi.Monitoring.ContextSvc ) )
     >>  tee ( monitor( TC_SIZE    , 'nPiPis',         LoKi.Monitoring.ContextSvc ) )
     >>  ~TC_EMPTY
@@ -261,7 +179,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     from HltTracking.HltPVs import PV3D
 
     hlt1CalibTrackingLine_PiPiUnit = HltUnit(
-        'Hlt1'+name+'PiPiUnit',
+        'Hlt1CalibTrackingPiPiUnit',
         PVSelection = "PV3D",
         #OutputLevel = 1,
         Monitor = True,
@@ -271,7 +189,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
     return hlt1CalibTrackingLine_PiPiUnit
 
-  def D2KPi_Unit( self, name, props ) :
+  def D2KPi_Unit( self, props ) :
 
     D2KPi_LineCode = """
     SELECTION( 'Hlt1CalibTrackingKPis' )
@@ -286,7 +204,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     from HltTracking.HltPVs import PV3D
 
     hlt1CalibTrackingLine_D2KPiUnit = HltUnit(
-        'Hlt1'+name+'D2KPiUnit',
+        'Hlt1CalibTrackingD2KPiUnit',
         PVSelection = "PV3D",
         #OutputLevel = 1,
         Monitor = True,
@@ -295,7 +213,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
     return hlt1CalibTrackingLine_D2KPiUnit
 
-  def D2KK_Unit( self, name, props ) :
+  def D2KK_Unit( self, props ) :
 
     D2KK_LineCode = """
     SELECTION( 'Hlt1CalibTrackingKKs' )
@@ -310,7 +228,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     from HltTracking.HltPVs import PV3D
 
     hlt1CalibTrackingLine_D2KKUnit = HltUnit(
-        'Hlt1'+name+'D2KKUnit',
+        'Hlt1CalibTrackingD2KKUnit',
         PVSelection = "PV3D",
         #OutputLevel = 1,
         Monitor = True,
@@ -319,7 +237,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     
     return hlt1CalibTrackingLine_D2KKUnit
 
-  def D2PiPi_Unit( self, name, props ) :
+  def D2PiPi_Unit( self, props ) :
 
     D2PiPi_LineCode = """
     SELECTION( 'Hlt1CalibTrackingPiPis' )
@@ -334,7 +252,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     from HltTracking.HltPVs import PV3D
 
     hlt1CalibTrackingLine_D2PiPiUnit = HltUnit(
-        'Hlt1'+name+'D2PiPiUnit',
+        'Hlt1CalibTrackingD2PiPiUnit',
         PVSelection = "PV3D",
         #OutputLevel = 1,
         Monitor = True,
@@ -343,7 +261,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
     return hlt1CalibTrackingLine_D2PiPiUnit
 
-  def B2KPi_Unit( self, name, props ) :
+  def B2KPi_Unit( self, props ) :
 
     B2KPi_LineCode = """
     SELECTION( 'Hlt1CalibTrackingKPis' )
@@ -359,7 +277,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     from HltTracking.HltPVs import PV3D
 
     hlt1CalibTrackingLine_B2KPiUnit = HltUnit(
-        'Hlt1'+name+'B2KPiUnit',
+        'Hlt1CalibTrackingB2KPiUnit',
         PVSelection = "PV3D",
         #OutputLevel = 1,
         Monitor = True,
@@ -368,7 +286,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     
     return hlt1CalibTrackingLine_B2KPiUnit
 
-  def B2KK_Unit( self, name, props ) :
+  def B2KK_Unit( self, props ) :
 
     B2KK_LineCode = """
     SELECTION( 'Hlt1CalibTrackingKKs' )
@@ -384,7 +302,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     from HltTracking.HltPVs import PV3D
 
     hlt1CalibTrackingLine_B2KKUnit = HltUnit(
-        'Hlt1'+name+'B2KKUnit',
+        'Hlt1CalibTrackingB2KKUnit',
         PVSelection = "PV3D",
         #OutputLevel = 1,
         Monitor = True,
@@ -393,7 +311,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     
     return hlt1CalibTrackingLine_B2KKUnit
 
-  def B2PiPi_Unit( self, name, props ) :
+  def B2PiPi_Unit( self, props ) :
 
     B2PiPi_LineCode = """
     SELECTION( 'Hlt1CalibTrackingPiPis' )
@@ -409,7 +327,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     from HltTracking.HltPVs import PV3D
 
     hlt1CalibTrackingLine_B2PiPiUnit = HltUnit(
-        'Hlt1'+name+'B2PiPiUnit',
+        'Hlt1CalibTrackingB2PiPiUnit',
         PVSelection = "PV3D",
         #OutputLevel = 1,
         Monitor = True,
@@ -422,7 +340,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
     IncPhi_LineCode = """
     SELECTION( 'Hlt1CalibTrackingKKs' )
-    >>  (ADMASS('phi(1020)')<%(PhiMassWin)s*MeV)
+    >>  ( (ADMASS('phi(1020)')<%(PhiMassWin)s*MeV) & (BPVIPCHI2()>%(PhiIPCHI2)s) )
     >>  tee ( monitor( TC_SIZE > 0, '# pass IncPhi', LoKi.Monitoring.ContextSvc ) )
     >>  tee ( monitor( TC_SIZE, 'nIncPhis',          LoKi.Monitoring.ContextSvc ) )
     >>  SINK ('Hlt1IncPhiDecision')
@@ -434,7 +352,8 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     from HltTracking.HltPVs import PV3D
 
     hlt1CalibTrackingLine_IncPhiUnit = HltUnit(
-        'Hlt1IncPhiUnit',
+        'Hlt1CalibTrackingIncPhiUnit',
+        PVSelection = "PV3D",
         #OutputLevel = 1,
         Monitor = True,
         Code = IncPhi_LineCode
@@ -442,7 +361,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     
     return hlt1CalibTrackingLine_IncPhiUnit
 
-  def LTUNBPhi_Unit( self, name, props ) :
+  def LTUNBPhi_Unit( self, props ) :
 
     LTUNBPhi_LineCode = """
     SELECTION( 'Hlt1CalibTrackingKKs' )
@@ -456,7 +375,8 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     from Configurables import LoKi__HltUnit as HltUnit
 
     hlt1CalibTrackingLine_LTUNBPhiUnit = HltUnit(
-        'Hlt1'+name+'IncPhiUnit',
+        'Hlt1CalibTrackingLTUNBPhiUnit',
+        PVSelection = "PV3D",
         #OutputLevel = 1,
         Monitor = True,
         Code = LTUNBPhi_LineCode
@@ -464,7 +384,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     
     return hlt1CalibTrackingLine_LTUNBPhiUnit
 
-  def B2PhiPhi_Unit( self, name, props ) :
+  def B2PhiPhi_Unit( self, props ) :
     
     props['PhiCuts']        = ("(PT>%(PhiPT)s*MeV)") %props
     props['PhiPhiDecay']    = '\'B_s0 -> phi(1020) phi(1020)\''
@@ -490,7 +410,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     from HltTracking.HltPVs import PV3D
 
     hlt1CalibTrackingLine_B2PhiPhiUnit = HltUnit(
-        'Hlt1'+name+'B2PhiPhiUnit',
+        'Hlt1CalibTrackingB2PhiPhiUnit',
         PVSelection = "PV3D",
         #OutputLevel = 1,
         Monitor = True,
@@ -500,7 +420,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
     return hlt1CalibTrackingLine_B2PhiPhiUnit
 
-  def Gamma_Unit( self, name, props ) :
+  def Gamma_Unit( self, props ) :
     
     from HltTracking.Hlt1Tracking import L0CaloCandidates
 
@@ -520,7 +440,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     from Configurables import LoKi__HltUnit as HltUnit
 
     hlt1CalibTrackingLine_GammaUnit = HltUnit(
-        'Hlt1'+name+'GammaUnit',
+        'Hlt1CalibTrackingGammaUnit',
         #OutputLevel = 1,
         Monitor = True,
         Preambulo = Gamma_Preambulo,
@@ -529,7 +449,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
     return hlt1CalibTrackingLine_GammaUnit
 
-  def B2PhiGamma_Unit( self, name, props ) :
+  def B2PhiGamma_Unit( self, props ) :
     
     props['PhiCuts']          = ("(PT>%(PhiPT)s*MeV)") %props
     props['GammaCuts']        = 'ALL'
@@ -557,7 +477,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     from HltTracking.HltPVs import PV3D
 
     hlt1CalibTrackingLine_B2PhiGammaUnit = HltUnit(
-        'Hlt1'+name+'B2PhiGammaUnit',
+        'Hlt1CalibTrackingB2PhiGammaUnit',
         PVSelection = "PV3D",
         #OutputLevel = 1,
         Monitor = True,
@@ -567,133 +487,93 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
     return hlt1CalibTrackingLine_B2PhiGammaUnit
 
-  def Tracking_Streamer(self,name,props):
-    
-    from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
-    from HltTracking.HltPVs import PV3D
-
-    return [ Hlt1GECUnit( 'Loose' ), PV3D('Hlt1'), self.hh_TrackingUnit(name, props) ]
-
-  def KPi_Streamer(self,name,props):
-
-    return self.Tracking_Streamer(name,props) + [ self.hh_KaonUnit(name,props), self.hh_PionUnit(name,props), self.KPi_Unit(name,props) ]
-
-  def KK_Streamer(self,name,props):
-
-    return self.Tracking_Streamer(name,props) + [ self.hh_KaonUnit(name,props), self.KK_Unit(name,props) ]
-
-  def PiPi_Streamer(self,name,props):
-
-    return self.Tracking_Streamer(name,props) + [ self.hh_PionUnit(name,props), self.PiPi_Unit(name,props) ]
-
-  def D2KPi_Streamer(self,name,props):
-    
-    return self.KPi_Streamer(name,props) + [ self.D2KPi_Unit(name,props) ]
-
-  def D2KK_Streamer(self,name,props):
-
-    return self.KK_Streamer(name,props) + [ self.D2KK_Unit(name,props) ]
-  
-  def D2PiPi_Streamer(self,name,props):
-
-    return self.PiPi_Streamer(name,props) + [ self.D2PiPi_Unit(name,props) ]
-
-  def B2KPi_Streamer(self,name,props):
-    
-    return self.KPi_Streamer(name,props) + [ self.B2KPi_Unit(name,props) ]
-
-  def B2KK_Streamer(self,name,props):
-
-    return self.KK_Streamer(name,props) + [ self.B2KK_Unit(name,props) ]
-  
-  def B2PiPi_Streamer(self,name,props):
-
-    return self.PiPi_Streamer(name,props) + [ self.B2PiPi_Unit(name,props) ]
-
-  def IncPhi_Streamer(self,name,props):
-
-    return self.KK_Streamer(name,props) + [ self.IncPhi_Unit(props) ]
-
-  def B2PhiPhi_Streamer(self,name,props):
-
-    return self.KK_Streamer(name,props) + [ self.LTUNBPhi_Unit(name,props), self.B2PhiPhi_Unit(name,props) ]
-
-  def B2PhiGamma_Streamer(self,name,props):
-
-    return self.KK_Streamer(name,props) + [ self.LTUNBPhi_Unit(name,props), self.Gamma_Unit(name,props), self.B2PhiGamma_Unit(name,props) ]
-
-  def __apply_configuration__(self) :
+  def build_line(self, name, algos):
 
     from HltLine.HltLine import Hlt1Line
 
-    Hlt1Line ( 'CalibTrackingKPi'
-           , prescale = self.prescale
-           , postscale = self.postscale
-           , L0DU = "L0_ALL"
-           , ODIN = ''
-           , algos = self.D2KPi_Streamer( 'CalibTracking', self.getProps() )
+    line = Hlt1Line (
+          name ,
+          prescale = self.prescale ,
+          postscale = self.postscale ,
+          L0DU = "L0_ALL" ,
+          ODIN = '' ,
+          algos = algos 
           )
 
-    Hlt1Line ( 'CalibTrackingKK'
-           , prescale = self.prescale
-           , postscale = self.postscale
-           , L0DU = "L0_ALL"
-           , ODIN = ''
-           , algos = self.D2KK_Streamer( 'CalibTracking', self.getProps() )
-          )
+  def __apply_configuration__(self) :
 
-    Hlt1Line ( 'CalibTrackingPiPi'
-           , prescale = self.prescale
-           , postscale = self.postscale
-           , L0DU = "L0_ALL"
-           , ODIN = ''
-           , algos = self.D2PiPi_Streamer( 'CalibTracking', self.getProps() )
-          )
+    from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
+    gec = Hlt1GECUnit('Loose')
+    
+    from HltTracking.HltPVs import PV3D
+    pvs = PV3D('Hlt1')
 
-    Hlt1Line ( 'B2HH_LTUNB_KPi'
-           , prescale = self.prescale
-           , postscale = self.postscale
-           , L0DU = "L0_ALL"
-           , ODIN = ''
-           , algos = self.B2KPi_Streamer( 'CalibTracking', self.getProps() )
-          )
+    from Hlt1SharedParticles import Hlt1SharedParticles
+    sharedParticles = Hlt1SharedParticles()
+    pions = sharedParticles.pionUnit()
+    kaons = sharedParticles.kaonUnit()
+   
+    to_build = {  'CalibTrackingKPi'  : [ gec, 
+                                          pvs, 
+                                          pions, 
+                                          kaons, 
+                                          self.KPi_Unit(self.getProps()),   
+                                          self.D2KPi_Unit(self.getProps())  
+                                        ] , 
+                  'CalibTrackingKK'   : [ gec, 
+                                          pvs, 
+                                          kaons,        
+                                          self.KK_Unit(self.getProps()),    
+                                          self.D2KK_Unit(self.getProps())   
+                                        ] ,
+                  'CalibTrackingPiPi' : [ gec, 
+                                          pvs, 
+                                          pions,        
+                                          self.PiPi_Unit(self.getProps()),  
+                                          self.D2PiPi_Unit(self.getProps()) 
+                                        ] ,
+                  'B2HH_LTUNB_KPi'    : [ gec, 
+                                          pvs, 
+                                          pions, 
+                                          kaons, 
+                                          self.KPi_Unit(self.getProps()),   
+                                          self.B2KPi_Unit(self.getProps())  
+                                        ] ,
+                  'B2HH_LTUNB_KK'     : [ gec, 
+                                          pvs, 
+                                          kaons,        
+                                          self.KK_Unit(self.getProps()),    
+                                          self.B2KK_Unit(self.getProps())   
+                                        ] ,
+                  'B2HH_LTUNB_PiPi'   : [ gec, 
+                                          pvs, 
+                                          pions,        
+                                          self.PiPi_Unit(self.getProps()),  
+                                          self.B2PiPi_Unit(self.getProps()) 
+                                        ] ,
+                  'IncPhi'            : [ gec, 
+                                          pvs, 
+                                          kaons,
+                                          self.KK_Unit(self.getProps()),
+                                          self.IncPhi_Unit(self.getProps())                         
+                                        ] ,
+                  'B2PhiPhi_LTUNB'    : [ gec, 
+                                          pvs, 
+                                          kaons,        
+                                          self.KK_Unit(self.getProps()),    
+                                          self.LTUNBPhi_Unit(self.getProps()), 
+                                          self.B2PhiPhi_Unit(self.getProps()) 
+                                        ] , 
+                  'B2PhiGamma_LTUNB'  : [ gec, 
+                                          pvs, 
+                                          kaons,        
+                                          self.Gamma_Unit(self.getProps()), 
+                                          self.KK_Unit(self.getProps()), 
+                                          self.LTUNBPhi_Unit(self.getProps()), 
+                                          self.B2PhiGamma_Unit(self.getProps()) 
+                                        ]
+               }
 
-    Hlt1Line ( 'B2HH_LTUNB_KK'
-           , prescale = self.prescale
-           , postscale = self.postscale
-           , L0DU = "L0_ALL"
-           , ODIN = ''
-           , algos = self.B2KK_Streamer( 'CalibTracking', self.getProps() )
-          )
+    for line, algos in to_build.iteritems():
+      self.build_line( line, algos )
 
-    Hlt1Line ( 'B2HH_LTUNB_PiPi'
-           , prescale = self.prescale
-           , postscale = self.postscale
-           , L0DU = "L0_ALL"
-           , ODIN = ''
-           , algos = self.B2PiPi_Streamer( 'CalibTracking', self.getProps() )
-          )
-
-    Hlt1Line ( 'IncPhi'
-           , prescale = self.prescale
-           , postscale = self.postscale
-           , L0DU = "L0_ALL"
-           , ODIN = ''
-           , algos = self.IncPhi_Streamer( 'CalibTracking', self.getProps() )
-          )
-
-    Hlt1Line ( 'B2PhiPhi_LTUNB'
-           , prescale = self.prescale
-           , postscale = self.postscale
-           , L0DU = "L0_ALL"
-           , ODIN = ''
-           , algos = self.B2PhiPhi_Streamer( 'CalibTracking', self.getProps() )
-          )
-
-    Hlt1Line ( 'B2PhiGamma_LTUNB'
-           , prescale = self.prescale
-           , postscale = self.postscale
-           , L0DU = "L0_ALL"
-           , ODIN = ''
-           , algos = self.B2PhiGamma_Streamer( 'CalibTracking', self.getProps() )
-          )
