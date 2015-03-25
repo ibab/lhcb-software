@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-03-24 - Pablo Ruiz Valls
+ - Migration of RD lines - Rollback (as per WG discussion)
+
+! 2015-03-24 - Pablo Ruiz Valls
  - Migration of RD lines
 
 ! 2015-03-23 - Lucio Anderlini
