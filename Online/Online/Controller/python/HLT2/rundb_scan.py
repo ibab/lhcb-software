@@ -1,4 +1,5 @@
 import os, sys, time, traceback
+import rundb_params
 
 _debug = False
 
@@ -46,8 +47,7 @@ def run():
     make_directory('Done')
     make_directory('Failed')
     os.chdir('ToDo')
-    db=_createConnection('rundb_admin','adm1n','lhcbonr_rundb')
-    #db=_createConnection('rundb_admin','adm1n','rundb')
+    db=_createConnection(rundb_params.logon,rundb_params.pwd,rundb_params.tns)
     cursor = db.cursor()
     stmt = """SELECT * FROM (
                  SELECT r.runid AS runid,

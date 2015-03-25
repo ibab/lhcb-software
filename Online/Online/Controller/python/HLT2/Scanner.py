@@ -28,6 +28,7 @@ class Scanner:
   # ----------------------------------------------------------------------------
   def __init__(self, config, **keys):
     """ Initializing constructor
+
         \author  M.Frank
         \version 1.0
     """
@@ -71,6 +72,7 @@ class Scanner:
   # ----------------------------------------------------------------------------
   def lastRunReady(self):
     """ Retrieve the last run scanned in conditions area.
+
         \author  M.Frank
         \version 1.0
     """
@@ -103,6 +105,7 @@ class Scanner:
   # ----------------------------------------------------------------------------
   def addTodo(self,run_no, params):
     """ Insert a new record into the HLT2 monitroing database for work....
+
         \author  M.Frank
         \version 1.0
     """
@@ -135,6 +138,7 @@ class Scanner:
   # ----------------------------------------------------------------------------
   def createWork(self):
     """ Insert a new record into the HLT2 monitroing database for work....
+
         \author  M.Frank
         \version 1.0
     """
@@ -157,6 +161,7 @@ class Scanner:
   # ----------------------------------------------------------------------------
   def populate(self):
     """ Populate the database from the content of the conditons directory
+
         \author  M.Frank
         \version 1.0
     """

@@ -1,4 +1,5 @@
 import os, sys, time, traceback
+import rundb_params
 
 _debug = False
 
@@ -56,8 +57,7 @@ def run_init():
 
 def dump_db_runs():
     run_init()
-    db=_createConnection('rundb_admin','adm1n','lhcbonr_rundb')
-    #db=_createConnection('rundb_admin','adm1n','rundb')
+    db=_createConnection(rundb_params.logon,rundb_params.pwd,rundb_params.tns)
     cursor = db.cursor()
     stmt = """SELECT * FROM (
                  SELECT r.runid AS runid,
@@ -103,7 +103,7 @@ def dump_disk_runs():
   runs.sort()
   runs = sys.argv[1:]
   
-  db=_createConnection('rundb_admin','adm1n','lhcbonr_rundb')
+  db=_createConnection(rundb_params.logon,rundb_params.pwd,rundb_params.tns)
   for run in runs:
     stmt =     """SELECT r.runid AS runid,
                         TO_CHAR(r.starttime,'YYYY') AS year,
@@ -181,7 +181,7 @@ def move_run(from_dir , to_dir, run):
 
 def prepare_run(run):
   runs = [str(run)]
-  db=_createConnection('rundb_admin','adm1n','lhcbonr_rundb')
+  db=_createConnection(rundb_params.logon,rundb_params.pwd,rundb_params.tns)
   for run in runs:
     stmt = """SELECT r.runid AS runid,
                      TO_CHAR(r.starttime,'YYYY') AS year,
