@@ -1,7 +1,7 @@
 Hlt lines to be used: 
 ['Hlt2ExpressD02KPiDecision']
 # setting LC_ALL to "C"
-[?1034h# WARNING: Using default tag dq-20140822 for partition DQFLAGS
+# WARNING: Using default tag dq-20140822 for partition DQFLAGS
 # WARNING: Property 'DataType' is set in both 'RecSysConf' and 'RichOfflineRec', using 'RecSysConf.DataType'
 # WARNING: Property 'Context' is set in both 'RichOfflineRecLong' and 'RichOfflineRecLong_RichGlobalPIDConfig', using 'RichOfflineRecLong.Context'
 # WARNING: Property 'Context' is set in both 'RichOfflineRecKsTrack' and 'RichOfflineRecKsTrack_RichGlobalPIDConfig', using 'RichOfflineRecKsTrack.Context'

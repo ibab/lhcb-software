@@ -4,7 +4,7 @@
 from optparse import OptionParser
 parser = OptionParser(usage = "%prog [options] <opts_file> ...")
 parser.add_option("-e","--numevents",type="int", dest="numevents",help="number of events", default=-1)
-parser.add_option("-p","--numprocesses",type="int", dest="numprocs",help="number of processes", default=8)
+parser.add_option("-p","--numprocesses",type="int", dest="numprocs",help="number of processes", default=1)
 parser.add_option("-d", "--aligndb", action = 'append', dest="aligndb",help="path to file with LHCBCOND database layer")
 parser.add_option("--dddb", action = 'append', dest="dddb",help="path to file with DDDB database layer")
 parser.add_option("-i", "--iter",type="int", dest="iter",help="number of iteration (used for loggin)", default=0)
