@@ -5,6 +5,10 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+! 2015-03-25 - Roel Aaij
+ - Warning on absence of ReFitPVs property by assumption of no refitting. This
+   fixes the spurious warning when importing from LoKiArrayFunctors in HltUnit.
+
 ! 2015-03-24 - Vanya Belyaev
 
  - wrongmass 

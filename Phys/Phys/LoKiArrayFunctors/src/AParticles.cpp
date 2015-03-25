@@ -2216,8 +2216,11 @@ void LoKi::AParticles::AllSameBestPV::checkReFit() const
   else 
   {
     StatusCode sc = iprop->getProperty( &refit ) ;
-    if        ( sc.isFailure () ) 
-    { Error   ( "Unable to get property 'ReFitPVs'!" , sc ) ; }    
+    if        ( sc.isFailure () && 
+                ( 0 < m_maxdist ||
+                  0 < m_maxchi2 || 
+                  0 < m_maxfrac  ) )
+    { Warning ( "Extra algorithms are activated - not optimal...." ) ; }
     else if   ( refit.value  () 
                 && m_maxdist <= 0 
                 && m_maxchi2 <= 0 
