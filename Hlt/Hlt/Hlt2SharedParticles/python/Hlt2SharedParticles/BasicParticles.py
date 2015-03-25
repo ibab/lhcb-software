@@ -28,9 +28,15 @@ tracking =  Hlt2BiKalmanFittedForwardTracking()
 #
 # Charged protoparticles -> pulls all the pid
 #
-caloProtos 	= tracking.hlt2ChargedCaloProtos( )
-muonProtos 	= tracking.hlt2ChargedMuonProtos( )
-hadronProtos 	= tracking.hlt2ChargedNoPIDsProtos( )
+#caloProtos 	= tracking.hlt2ChargedCaloProtos( )
+#muonProtos 	= tracking.hlt2ChargedMuonProtos( )
+#hadronProtos 	= tracking.hlt2ChargedNoPIDsProtos( )
+
+caloProtos 	= tracking.hlt2ChargedAllPIDsProtos()
+muonProtos 	= tracking.hlt2ChargedAllPIDsProtos()
+hadronProtos 	= tracking.hlt2ChargedAllPIDsProtos()
+
+
 ##########################################################################
 #
 # Neutral protoparticles

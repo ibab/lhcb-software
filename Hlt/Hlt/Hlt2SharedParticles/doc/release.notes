@@ -4,6 +4,11 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-03-25 - Sascha Stahl
+ - TrackFittedBasicParticles.py and BasicParticles.py: All charged protoparticles 
+ 	 except the L0 ones are now created from hlt2ChargedAllPIDsProtos(). 
+   These protoparticles have the PID information from RICH, CALO ad Muon stations.
+
 ! 2015-03-19 - V. Gligorov
  - Remove use of PropertimeFitter in Ks/Lambdas
 
