@@ -91,6 +91,16 @@ namespace LoKi
       : m_fun1  ( f1 ) 
       , m_fun2  ( f2 ) 
     {}
+    /// copy constructor 
+    TwoFunctors ( const TwoFunctors&  right ) 
+      : m_fun1  ( right.m_fun1 ) 
+      , m_fun2  ( right.m_fun2 ) 
+    {}    
+    /// move  constructor 
+    TwoFunctors (       TwoFunctors&& right ) 
+      : m_fun1  ( std::move ( right.m_fun1 ) ) 
+      , m_fun2  ( std::move ( right.m_fun2 ) )  
+    {}
     /// destructor 
     virtual ~TwoFunctors() {}
     // ========================================================================
@@ -102,6 +112,25 @@ namespace LoKi
     /// evaluate the first functor 
     typename functor::result_type fun2 
     ( argument_a_unless_void ) const { return m_fun2.fun ( a_unless_void ) ; }
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// assignement operator 
+    TwoFunctors& operator=( const TwoFunctors&  right ) 
+    {
+      if ( &right == this ) { return *this ; }
+      m_fun1 = right.m_fun1 ;
+      m_fun2 = right.m_fun2 ;
+      return *this ;
+    }
+    /// move assignement operator 
+    TwoFunctors& operator=(       TwoFunctors&& right ) 
+    {
+      if ( &right == this ) { return *this ; }
+      m_fun1 = std::move ( right.m_fun1 ) ;
+      m_fun2 = std::move ( right.m_fun2 ) ;
+      return *this ;
+    }
     // ========================================================================
   public:
     // ========================================================================
@@ -176,6 +205,18 @@ namespace LoKi
       : LoKi::AuxFunBase ( std::tie ( f1 , f2 ) ) 
       , LoKi::Functor<TYPE,bool>()
       , m_two ( f1 , f2 ) 
+    {}
+    /// copy constructor
+    And ( const And&  right ) 
+      : LoKi::AuxFunBase         ( right ) 
+      , LoKi::Functor<TYPE,bool> ( right )
+      , m_two ( right.m_two ) 
+    {}    
+    /// move constructor 
+    And (       And&& right ) 
+      : LoKi::AuxFunBase         ( right ) 
+      , LoKi::Functor<TYPE,bool> ( right )
+      , m_two ( std::move ( right.m_two ) )
     {}
     /// virtual constructor
     virtual ~And(){}
@@ -500,17 +541,17 @@ namespace LoKi
       , LoKi::Functor<TYPE,bool>() 
       , m_two ( f1 , f2 )
     {}
-    /// constructor from the functor and constant 
-    Less ( const LoKi::Functor<TYPE,TYPE2>& f1 , T2 f2 ) 
-      : LoKi::AuxFunBase ( std::tie ( f1 , f2 ) ) 
-      , LoKi::Functor<TYPE,bool>() 
-      , m_two ( f1 , LoKi::Constant<TYPE,TYPE2> ( f2 ) ) 
+    /// copy constructor 
+    Less ( const Less&  right ) 
+      : LoKi::AuxFunBase        ( right ) 
+      , LoKi::Functor<TYPE,bool>( right ) 
+      , m_two ( right.m_two )
     {}
-    /// constructor from the functor and constant 
-    Less ( T2 f1 , const LoKi::Functor<TYPE,TYPE2>& f2 ) 
-      : LoKi::AuxFunBase ( std::tie ( f1 , f2 ) ) 
-      , LoKi::Functor<TYPE,bool>() 
-      , m_two ( LoKi::Constant<TYPE,TYPE2> ( f1 ) , f2 ) 
+    /// move constructor 
+    Less (       Less&& right ) 
+      : LoKi::AuxFunBase        ( right ) 
+      , LoKi::Functor<TYPE,bool>( right ) 
+      , m_two ( std::move ( right.m_two ) ) 
     {}
     /// virtual destructor 
     virtual ~Less() {}
@@ -610,16 +651,6 @@ namespace LoKi
       : LoKi::AuxFunBase ( std::tie ( f1 , f2 ) ) 
       , LoKi::Less<TYPE,TYPE2> ( f1 , f2 )
     {}
-    /// constructor from the functor and constant 
-    Equal ( const LoKi::Functor<TYPE,TYPE2>& f1 , T2 f2 ) 
-      : LoKi::AuxFunBase ( std::tie ( f1 , f2 ) ) 
-      , LoKi::Less<TYPE,TYPE2> ( f1 , f2 ) 
-    {}
-    /// constructor from the functor and constant 
-    Equal ( T2 f1 , const LoKi::Functor<TYPE,TYPE2>& f2 ) 
-      : LoKi::AuxFunBase ( std::tie ( f1 , f2 ) ) 
-      , LoKi::Less<TYPE,TYPE2> ( f1 , f2  ) 
-    {}
     /// virtual destructor 
     virtual ~Equal() {}
     /// clone method (mandatory)
@@ -709,16 +740,6 @@ namespace LoKi
       : LoKi::AuxFunBase ( std::tie ( f1 , f2 ) ) 
       , LoKi::Equal<TYPE,TYPE2>( f1 , f2 ) 
     {}
-    /// constructor from the functor and constant 
-    LessOrEqual ( const LoKi::Functor<TYPE,TYPE2>& f1 , T2 f2 ) 
-      : LoKi::AuxFunBase ( std::tie ( f1 , f2 ) ) 
-      , LoKi::Equal<TYPE,TYPE2>( f1 , f2 ) 
-    {}
-    /// constructor from the functor and constant 
-    LessOrEqual ( T2 f1 , const LoKi::Functor<TYPE,TYPE2>& f2 ) 
-      : LoKi::AuxFunBase ( std::tie ( f1 , f2 ) ) 
-      , LoKi::Equal<TYPE,TYPE2>( f1  , f2  ) 
-    {}
     /// virtual destructor 
     virtual ~LessOrEqual() {}
     /// clone method (mandatory)
@@ -795,16 +816,6 @@ namespace LoKi
                const LoKi::Functor<TYPE,TYPE2>& f2 ) 
       : LoKi::AuxFunBase ( std::tie ( f1 , f2 ) ) 
       , LoKi::Equal<TYPE,TYPE2>( f1 , f2 ) 
-    {}
-    /// constructor from the functor and constant 
-    NotEqual ( const LoKi::Functor<TYPE,TYPE2>& f1 , T2 f2 ) 
-      : LoKi::AuxFunBase ( std::tie ( f1 , f2 ) ) 
-      , LoKi::Equal<TYPE,TYPE2> ( f1 , f2 ) 
-    {}
-    /// constructor from the functor and constant 
-    NotEqual ( T2 f1 , const LoKi::Functor<TYPE,TYPE2>& f2 ) 
-      : LoKi::AuxFunBase ( std::tie ( f1 , f2 ) ) 
-      , LoKi::Equal<TYPE,TYPE2> ( f1  , f2  ) 
     {}
     /// virtual destructor 
     virtual ~NotEqual() {}
@@ -885,18 +896,6 @@ namespace LoKi
       , LoKi::Functor<TYPE,TYPE2>()
       , m_two ( f1 , f2 ) 
     {}
-    // /// constructor from the functor and constant 
-    // Plus ( const LoKi::Functor<TYPE,TYPE2>& f1 , T2 f2 ) 
-    //   : LoKi::AuxFunBase ( std::tie ( f1 , f2 ) ) 
-    //   , LoKi::Functor<TYPE,TYPE2>()
-    //   , m_two ( f1 , LoKi::Constant<TYPE,TYPE2> ( f2 ) )
-    // {}
-    // /// constructor from the functor and constant 
-    // Plus ( T2 f1 , const LoKi::Functor<TYPE,TYPE2>& f2) 
-    //   : LoKi::AuxFunBase ( std::tie ( f1 , f2 ) ) 
-    //   , LoKi::Functor<TYPE,TYPE2>()
-    //   , m_two ( LoKi::Constant<TYPE,TYPE2> ( f1 ) , f2 ) 
-    // {}
     /// virtual destructor 
     virtual ~Plus() {}
     /// clone method (mandatory)
@@ -997,16 +996,6 @@ namespace LoKi
       : LoKi::AuxFunBase ( std::tie ( f1 , f2 ) ) 
       , LoKi::Plus<TYPE,TYPE2>( f1 , f2 ) 
     {}
-    // /// constructor from the functor and constant 
-    // Minus ( const LoKi::Functor<TYPE,TYPE2>& f1 , T2 f2 ) 
-    //   : LoKi::AuxFunBase ( std::tie ( f1 , f2 ) ) 
-    //   , LoKi::Plus<TYPE,TYPE2>( f1 , f2 ) 
-    // {}
-    // /// constructor from the functor and constant 
-    // Minus ( T2 f1 , const LoKi::Functor<TYPE,TYPE2>& f2 ) 
-    //   : LoKi::AuxFunBase ( std::tie ( f1 , f2 ) ) 
-    //   , LoKi::Plus<TYPE,TYPE2>( f1 , f2 ) 
-    // {}
     /// virtual destructor 
     virtual ~Minus() {}
     /// clone method (mandatory)
@@ -1085,16 +1074,6 @@ namespace LoKi
       : LoKi::AuxFunBase ( std::tie ( f1 , f2 ) ) 
       , LoKi::Minus<TYPE,TYPE2>( f1 , f2 ) 
     {}
-    // /// constructor from the functor adn the constant 
-    // Divide ( const LoKi::Functor<TYPE,TYPE2>& f1 , T2 f2 ) 
-    //   : LoKi::AuxFunBase ( std::tie ( f1 , f2 ) ) 
-    //   , LoKi::Minus<TYPE,TYPE2>( f1 , f2 ) 
-    // {}
-    // /// constructor from the functor adn the constant 
-    // Divide ( T2 f1 , const LoKi::Functor<TYPE,TYPE2>& f2) 
-    //   : LoKi::AuxFunBase ( std::tie ( f1 , f2 ) ) 
-    //   , LoKi::Minus<TYPE,TYPE2>( f1 , f2 )
-    // {}
     /// virtual destructor 
     virtual ~Divide() {}
     /// clone method (mandatory)
@@ -1173,16 +1152,6 @@ namespace LoKi
       : LoKi::AuxFunBase ( std::tie ( f1 , f2 ) ) 
       , LoKi::Divide<TYPE,TYPE2>( f1 , f2 ) 
     {}
-    // /// constructor from the functor and constant 
-    // Multiply ( const LoKi::Functor<TYPE,TYPE2>& f1 , T2 f2 ) 
-    //   : LoKi::AuxFunBase ( std::tie ( f1 , f2 ) ) 
-    //   , LoKi::Divide<TYPE,TYPE2>( f1 , f2 ) 
-    // {}
-    // /// constructor from the functor and constant 
-    // Multiply ( T2 f1 , const LoKi::Functor<TYPE,TYPE2>& f2) 
-    //   : LoKi::AuxFunBase ( std::tie ( f1 , f2 ) ) 
-    //   , LoKi::Divide<TYPE,TYPE2>( f1 , f2 ) 
-    // {}
     /// virtual destructor 
     virtual ~Multiply() {}
     /// clone method (mandatory)
@@ -2129,12 +2098,18 @@ namespace LoKi
     {}
     // ========================================================================
     /// copy constructor 
-    EqualToValue 
-    ( const EqualToValue& right )
+    EqualToValue ( const EqualToValue&  right )
       : LoKi::AuxFunBase          ( right ) 
       , LoKi::Functor<TYPE,bool>  ( right )
       , m_fun ( right.m_fun ) 
       , m_val ( right.m_val )
+    {}    
+    /// move constructor 
+    EqualToValue (       EqualToValue&& right )
+      : LoKi::AuxFunBase          ( right ) 
+      , LoKi::Functor<TYPE,bool>  ( right )
+      , m_fun ( std::move ( right.m_fun ) ) 
+      , m_val ( std::move ( right.m_val ) )
     {}
     // ========================================================================
     /// MANDATORY: virtual destructor 

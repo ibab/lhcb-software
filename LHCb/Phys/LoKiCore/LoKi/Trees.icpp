@@ -47,9 +47,19 @@ inline Decays::Trees::Marked_<PARTICLE>::Marked_
 // ============================================================================
 template <class PARTICLE>
 inline Decays::Trees::Marked_<PARTICLE>::Marked_ 
-( const Decays::Trees::Marked_<PARTICLE>& right ) 
+( const Decays::Trees::Marked_<PARTICLE>&  right ) 
   : Decays::iTree_<PARTICLE> ( right ) 
   , m_tree ( right.m_tree ) 
+  , m_particle ( 0 ) 
+{}
+// ============================================================================
+// move constructor (ignore the marked particle)
+// ============================================================================
+template <class PARTICLE>
+inline Decays::Trees::Marked_<PARTICLE>::Marked_ 
+(       Decays::Trees::Marked_<PARTICLE>&& right ) 
+  : Decays::iTree_<PARTICLE> ( right ) 
+  , m_tree ( std::move ( right.m_tree ) )  
   , m_particle ( 0 ) 
 {}
 // ============================================================================
@@ -216,6 +226,28 @@ inline Decays::Trees::Op_<PARTICLE>::Op_ ()
   , m_trees ()
 {}   
 // ============================================================================
+// copy constructor  
+// ============================================================================
+template <class PARTICLE>
+inline Decays::Trees::Op_<PARTICLE>::Op_
+( const Decays::Trees::Op_<PARTICLE>&  right ) 
+  : Decays::iTree_<PARTICLE> ( right ) 
+  , m_trees ( right.m_trees )
+{}
+// ============================================================================
+// move constructor  
+// ============================================================================
+template <class PARTICLE>
+inline Decays::Trees::Op_<PARTICLE>::Op_
+(       Decays::Trees::Op_<PARTICLE>&& right ) 
+  : Decays::iTree_<PARTICLE> ( right ) 
+  , m_trees ( std::move ( right.m_trees )  )
+{}
+// ============================================================================
+
+ 
+
+// ============================================================================
 // MANDATORY: check the validness 
 // ============================================================================
 template <class PARTICLE>
@@ -284,6 +316,22 @@ inline Decays::Trees::Or_<PARTICLE>::Or_
   this->addTree ( n1 ) ;
   this->addTree ( n2 ) ;
 }
+// ============================================================================
+// copy constructor 
+// ============================================================================
+template <class PARTICLE>
+inline Decays::Trees::Or_<PARTICLE>::Or_ 
+( const Decays::Trees::Or_<PARTICLE>&  right ) 
+  : Decays::Trees::Op_<PARTICLE> ( right )  
+{}
+// ============================================================================
+// move constructor 
+// ============================================================================
+template <class PARTICLE>
+inline Decays::Trees::Or_<PARTICLE>::Or_ 
+(       Decays::Trees::Or_<PARTICLE>&& right ) 
+  : Decays::Trees::Op_<PARTICLE> ( std::move ( right ) )  
+{}
 // ============================================================================
 // constructor from list of sub-trees 
 // ============================================================================
@@ -369,6 +417,22 @@ inline Decays::Trees::And_<PARTICLE>::And_
   this->addTree ( n1 ) ;
   this->addTree ( n2 ) ;  
 }
+// ============================================================================
+// copy constructor
+// ============================================================================
+template <class PARTICLE>
+inline Decays::Trees::And_<PARTICLE>::And_ 
+( const Decays::Trees::And_<PARTICLE>& right ) 
+  : Decays::Trees::Op_<PARTICLE> ( right )  
+{}
+// ============================================================================
+// move constructor
+// ============================================================================
+template <class PARTICLE>
+inline Decays::Trees::And_<PARTICLE>::And_ 
+(       Decays::Trees::And_<PARTICLE>&& right ) 
+  : Decays::Trees::Op_<PARTICLE> ( std::move ( right ) )  
+{}
 // ============================================================================
 // constructor from list of sub-trees 
 // ============================================================================

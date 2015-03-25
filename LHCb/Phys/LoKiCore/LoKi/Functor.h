@@ -110,7 +110,7 @@ namespace LoKi
    *  @date 2007-10-30
    */
   template <class TYPE,class TYPE2>
-  class FunctorFromFunctor : public LoKi::Functor<TYPE,TYPE2>
+  class FunctorFromFunctor final : public LoKi::Functor<TYPE,TYPE2>
   {
   public:
     // ========================================================================
@@ -133,23 +133,25 @@ namespace LoKi
     FunctorFromFunctor ( const FunctorFromFunctor& right )
       : LoKi::AuxFunBase          ( right )
       , LoKi::Functor<TYPE,TYPE2> ( right )
-      , m_fun ( 0 )
-    {
-      m_fun = typeid ( Self ) == typeid ( right ) ?
-        right.m_fun -> clone () : right.clone() ;
-    }
+      , m_fun ( right.m_fun->clone()  )
+    {}
+    // ========================================================================
 #ifndef __GCCXML__
+    // ========================================================================
     /// move constructor (avoid cloning)
     FunctorFromFunctor ( FunctorFromFunctor&& right )
       : LoKi::AuxFunBase          ( right )
       , LoKi::Functor<TYPE,TYPE2> ( right )
       , m_fun ( right.m_fun )
     {
-      right.m_fun = 0 ; // ATTENTION!
+      right.m_fun = nullptr ; // ATTENTION!
     }
+    // ========================================================================
 #endif
+    // ========================================================================
     /// MANDATORY: virtual destructor
-    virtual ~FunctorFromFunctor() { delete m_fun ; }
+    virtual ~FunctorFromFunctor() 
+    { if ( 0 != m_fun ) { delete m_fun ; m_fun = 0 ; } }
     // ========================================================================
   public:
     // ========================================================================
@@ -177,15 +179,20 @@ namespace LoKi
     {
       if ( this == &right ) { return *this ; }                        // RETURN
       // set new pointer
-      LoKi::Functor<TYPE,TYPE2>* newf = 0 ;
-      if ( typeid ( Self ) != typeid ( right ) )
-      { newf = right.         clone() ; }                              // CLONE!
-      else
-      { newf = right.m_fun -> clone() ; }                              // CLONE!
+      LoKi::Functor<TYPE,TYPE2>* newf = right.m_fun -> clone() ;      // CLONE!
       // delete own pointer
       delete m_fun ;
       // assign the new pointer
       m_fun = newf ;
+      return *this ;                                                  // RETURN
+    }
+    /// move  assignement operator is enabled
+    FunctorFromFunctor& operator= ( FunctorFromFunctor&& right )
+    {
+      if ( this == &right ) { return *this ; }                        // RETURN
+      delete m_fun ;
+      m_fun       = right.m_fun ;
+      right.m_fun = nullptr     ;
       return *this ;                                                  // RETURN
     }
     /// the assignement operator is enabled
@@ -200,6 +207,11 @@ namespace LoKi
       m_fun = newf ;
       return *this ;                                                  // RETURN
     }
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// swap two functors 
+    void swap ( FunctorFromFunctor& right ) { std::swap ( m_fun , right.m_fun ) ; }
     // ========================================================================
   public:
     // ========================================================================
@@ -229,7 +241,7 @@ namespace LoKi
    *  @date   2002-07-15
    */
   template <class TYPE,class TYPE2>
-  class Constant : public LoKi::Functor<TYPE,TYPE2>
+  class Constant final : public LoKi::Functor<TYPE,TYPE2>
   {
   public:
     // ========================================================================
@@ -339,7 +351,7 @@ namespace LoKi
   // ==========================================================================
   /// the specialization for "void"-argument
   template <class TYPE2>
-  class FunctorFromFunctor<void,TYPE2>: public LoKi::Functor<void,TYPE2>
+  class FunctorFromFunctor<void,TYPE2> final : public LoKi::Functor<void,TYPE2>
   {
   public:
     // ========================================================================
@@ -356,29 +368,30 @@ namespace LoKi
     /// constructor
     FunctorFromFunctor ( const Functor<void,TYPE2>& right )
       : LoKi::Functor<void,TYPE2> ()
-        , m_fun ( right.clone() )
+      , m_fun ( right.clone() )
     {}
     /// copy constructor (deep copy)
     FunctorFromFunctor ( const FunctorFromFunctor& right )
       : LoKi::AuxFunBase          ( right )
       , LoKi::Functor<void,TYPE2> ( right )
-      , m_fun ( 0 )
-    {
-      m_fun = typeid ( Self ) == typeid ( right ) ?
-        right.m_fun -> clone () : right.clone() ;
-    }
+      , m_fun ( right.m_fun->clone()  )
+    {}
+    // ========================================================================
 #ifndef __GCCXML__
+    // ========================================================================
     /// move constructor (avoid cloning)
     FunctorFromFunctor ( FunctorFromFunctor&& right )
       : LoKi::AuxFunBase          ( right )
       , LoKi::Functor<void,TYPE2> ( right )
       , m_fun ( right.m_fun )
     {
-      right.m_fun = 0 ; // ATTENTION!
+      right.m_fun = nullptr ; // ATTENTION!
     }
+    // ========================================================================
 #endif
     /// MANDATORY: virtual destructor
-    virtual ~FunctorFromFunctor() { delete m_fun ; }
+    virtual ~FunctorFromFunctor() 
+    { if ( 0 != m_fun ) { delete m_fun ; m_fun = 0 ; } }
     // ========================================================================
   public:
     // ========================================================================
@@ -405,15 +418,20 @@ namespace LoKi
     {
       if ( this == &right ) { return *this ; }                        // RETURN
       // set new pointer
-      LoKi::Functor<void,TYPE2>* newf = 0 ;
-      if ( typeid ( Self ) != typeid ( right ) )
-      { newf = right.         clone() ; }                             // CLONE!
-      else
-      { newf = right.m_fun -> clone() ; }                             // CLONE!
+      LoKi::Functor<void,TYPE2>* newf = right.m_fun -> clone() ;      // CLONE
       // delete own pointer
       delete m_fun ;
       // assign the new pointer
       m_fun = newf ;
+      return *this ;                                                  // RETURN
+    }
+    /// move  assignement operator is enabled
+    FunctorFromFunctor& operator= ( FunctorFromFunctor&& right )
+    {
+      if ( this == &right ) { return *this ; }                        // RETURN
+      delete m_fun ;
+      m_fun       = right.m_fun ;
+      right.m_fun = nullptr     ;
       return *this ;                                                  // RETURN
     }
     /// the assignement operator is enabled
@@ -428,6 +446,11 @@ namespace LoKi
       m_fun = newf ;
       return *this ;                                                  // RETURN
     }
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// swap two functors 
+    void swap ( FunctorFromFunctor& right ) { std::swap ( m_fun , right.m_fun ) ; }
     // ========================================================================
   public:
     // ========================================================================
@@ -451,7 +474,7 @@ namespace LoKi
   // ==========================================================================
   /// specialization for "void"
   template <class TYPE2>
-  class Constant<void,TYPE2> : public LoKi::Functor<void,TYPE2>
+  class Constant<void,TYPE2> final : public LoKi::Functor<void,TYPE2>
   {
   public:
     // ========================================================================
@@ -522,6 +545,12 @@ namespace LoKi
   inline std::ostream&
   Constant<void,TYPE2>::fillStream( std::ostream& s ) const
   { return  Gaudi::Utils::toStream ( this->m_value , s ) ; }
+  // ==========================================================================
+  /// swap two functors 
+  template <class TYPE1,class TYPE2>
+  inline void swap
+  ( LoKi::FunctorFromFunctor<TYPE1,TYPE2>& a , 
+    LoKi::FunctorFromFunctor<TYPE1,TYPE2>& b ) { a.swap ( b ) ; }   
   // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================

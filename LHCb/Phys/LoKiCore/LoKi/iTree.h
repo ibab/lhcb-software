@@ -158,7 +158,7 @@ namespace Decays
    *  @date 2008-04-13
    */
   template <class PARTICLE>
-  class Tree_ : public Decays::iTree_<PARTICLE>
+  class Tree_ final : public Decays::iTree_<PARTICLE>
   {
   public:
     // ======================================================================
@@ -166,14 +166,16 @@ namespace Decays
     Tree_ ( const Decays::iTree_<PARTICLE>& tree ) ;
     // ======================================================================
     /// copy constructor
-    Tree_ ( const Tree_& tree ) ;
+    Tree_ ( const Tree_&  tree ) ;
+    /// move constructor
+    Tree_ (       Tree_&& tree ) ;
     /// MANDATORY: virtual destructor
-    virtual ~Tree_ () { delete m_tree ; }
+    virtual ~Tree_ () ;
     /// MANDATORY: clone method ("virtual constructor")
     virtual  Tree_* clone () const { return new Tree_(*this) ; }
     /// MANDATORY: the only one essential method
     virtual  bool operator()
-      ( typename  Decays::iTree_<PARTICLE>:: argument p ) const
+    ( typename  Decays::iTree_<PARTICLE>:: argument p ) const
     { return tree ( p ) ; }
     /// MANDATORY: the specific printout
     virtual  std::ostream& fillStream( std::ostream& s ) const
@@ -215,14 +217,21 @@ namespace Decays
     // ======================================================================
   public:
     // ======================================================================
+    /// swap two trees: it can reduce CPU for decay mathching 
+    void swap ( Tree_& another ) { std::swap ( m_tree , another.m_tree ) ; }
+    // ======================================================================
+  public:
+    // ======================================================================
     /// assignment operator
     Tree_& operator=( const  Tree_&           right ) ; // assignment
-      /// pseudo-assignment operator
+    /// move assignment oerator 
+    Tree_& operator=(        Tree_&&          right ) ; // assignment
+    /// pseudo-assignment operator
     Tree_& operator=( const iTree_<PARTICLE>& right ) ; // assignment
     // ======================================================================
   private:
     // ======================================================================
-    /// the default constructor is private obe
+    /// the default constructor is private one
     Tree_ () ; // no  default constructor
     // ======================================================================
   private:
@@ -238,6 +247,14 @@ namespace Decays
    *  @return the reference to the output stream
    */
   std::ostream& operator<<( std::ostream& s , const iTree& o ) ;
+  // ==========================================================================
+  /** swap two decay trees 
+   *  useful to reduce unnesessary cloning 
+   *  @author Vanya  BELYAEV Ivan.Belyaev@itep.ru
+   *  @date 2015-03-25
+   */
+  template <class PARTICLE> 
+  inline void swap ( Tree_<PARTICLE>& a , Tree_<PARTICLE>& b ) { a.swap ( b ) ; }
   // ==========================================================================
 } // end of namespace Decays
 // ============================================================================
@@ -259,10 +276,27 @@ Decays::Tree_<PARTICLE>::Tree_
 // ============================================================================
 template <class PARTICLE>
 Decays::Tree_<PARTICLE>::Tree_
-( const Decays::Tree_<PARTICLE>& tree )
+( const Decays::Tree_<PARTICLE>&  tree )
   : Decays::iTree_<PARTICLE> ( tree )
   , m_tree ( tree.m_tree -> clone() )
 {}
+// ============================================================================
+// move constructor
+// ============================================================================
+template <class PARTICLE>
+Decays::Tree_<PARTICLE>::Tree_
+(       Decays::Tree_<PARTICLE>&& tree )
+  : Decays::iTree_<PARTICLE> ( tree  )
+  , m_tree ( tree.m_tree )
+{
+  tree.m_tree = nullptr ;
+}
+// ============================================================================
+// MANDATORY: virtual destructor
+// ============================================================================
+template <class PARTICLE>
+Decays::Tree_<PARTICLE>::~Tree_ () 
+{ if ( 0 != m_tree ) { delete m_tree ; m_tree = 0 ; } }
 // ============================================================================
 // assignment operator
 // ============================================================================
@@ -273,8 +307,22 @@ Decays::Tree_<PARTICLE>::operator=
 {
   if ( &right == this ) { return *this ; }
   Decays::iTree_<PARTICLE>* tree = right.m_tree->clone() ;
-  delete m_tree ;
+  delete m_tree ; 
   m_tree = tree ;
+  return  *this ;
+}
+// ============================================================================
+// move assignment operator  (avoid cloning)
+// ============================================================================
+template <class PARTICLE>
+Decays::Tree_<PARTICLE>&
+Decays::Tree_<PARTICLE>::operator=
+(       Decays::Tree_<PARTICLE>&& right )                         // assignment
+{
+  if ( &right == this   ) { return *this  ; }
+  if ( 0      != m_tree ) { delete m_tree ; m_tree = 0 ; }
+  m_tree = right.m_tree ;
+  right.m_tree = 0 ;
   return *this ;
 }
 // ============================================================================

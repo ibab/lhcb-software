@@ -57,7 +57,9 @@ namespace Decays
       /// constructor from the tree
       Marked_ ( const Decays::iTree_<PARTICLE>& tree ) ;
       /// copy constructor (ignore the marked particle)
-      Marked_ ( const Marked_& right ) ;
+      Marked_ ( const Marked_&  right ) ;
+      /// move  constructor (ignore the marked particle)
+      Marked_ (       Marked_&& right ) ;
       /// MANDATORY: virtual destructor
       virtual ~Marked_ () {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -267,7 +269,7 @@ namespace Decays
     /** @class _Tree_
      *  Helper class needed to hold temporary Tree-objects
      *  and for the proper permutations
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhed.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-05-08
      */
     template <class PARTICLE>
@@ -281,7 +283,7 @@ namespace Decays
       // ======================================================================
     public:
       // ======================================================================
-      /// the default constructor   (Assing invalid ID)
+      /// the default constructor   (Assign invalid ID)
       _Tree_ ()
         : m_tree ( Invalid() ) , m_id ( 0 )  {}
       /// the constructor from the tree (Assign unique ID)
@@ -289,10 +291,16 @@ namespace Decays
         : m_tree ( tree        ) , m_id ( 0 )  { m_id = getID() ; }
       /// the constructor from the tree (Assign unique ID)
       _Tree_ ( const Decays::Tree_<PARTICLE>&  tree )
-        : m_tree ( tree        ) , m_id ( 0 )  { m_id = getID() ; }
+        : m_tree (             tree   ) , m_id ( 0 )  { m_id = getID() ; }
+      /// the constructor from the tree (Assign unique ID)
+      _Tree_ (       Decays::Tree_<PARTICLE>&& tree )
+        : m_tree ( std::move ( tree ) ) , m_id ( 0 )  { m_id = getID() ; }
       /// copy constructor  (Copy the unique ID)
-      _Tree_ ( const _Tree_& tree )
-        : m_tree ( tree.m_tree ) , m_id ( tree.m_id ) {}
+      _Tree_ ( const _Tree_&  tree )
+        : m_tree (             tree.m_tree   ) , m_id ( tree.m_id ) {}
+      /// move constructor  (Copy the unique ID)
+      _Tree_ (       _Tree_&& tree )
+        : m_tree ( std::move ( tree.m_tree ) ) , m_id ( tree.m_id ) {}
       // ======================================================================
     public:
       // ======================================================================
@@ -332,11 +340,20 @@ namespace Decays
       // ======================================================================
     public:
       // ======================================================================
-      /// assignement operator, Copy the unique ID
+      /// assignement operator, copy the unique ID
       _Tree_& operator=( const _Tree_& right )
       {
         if ( &right == this ) { return *this ; }
         m_tree = right.m_tree ;
+        /// copy the unique ID
+        m_id   = right.m_id ;                     // NB! Copy the unique ID
+        return *this ;
+      }
+      /// move assignement operator, copy the unique ID
+      _Tree_& operator=(     _Tree_&& right )
+      {
+        if ( &right == this ) { return *this ; }
+        m_tree = std::move ( right.m_tree ) ;
         /// copy the unique ID
         m_id   = right.m_id ;                     // NB! Copy the unique ID
         return *this ;
@@ -347,9 +364,9 @@ namespace Decays
       _Tree_& operator&= ( const Decays::iTree_<PARTICLE>& right ) ;
       _Tree_& operator|= ( const Decays::iTree_<PARTICLE>& right ) ;
       _Tree_& operator&= ( const _Tree_& right )
-      { return (*this) &= right.tree() ; }
+      { return (*this)&= right.tree() ; }
       _Tree_& operator|= ( const _Tree_& right )
-      { return (*this) |= right.tree() ; }
+      { return (*this)|= right.tree() ; }
       // ====================================================================
     public:
       // ======================================================================
@@ -361,6 +378,15 @@ namespace Decays
       operator const Decays::iTree_<PARTICLE>& () const { return tree() ; }
       /// non-const cast to the tree-holder
       operator       Decays::Tree_<PARTICLE>&  ()       { return m_tree ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// swapping: makes container operations (e.g. sorting) much faster 
+      void swap ( _Tree_& another ) 
+      {
+        Decays::swap ( m_tree , another.m_tree ) ;
+        std::swap    ( m_id   , another.m_id   ) ;        
+      }
       // ======================================================================
     public:
       // ======================================================================
@@ -382,6 +408,16 @@ namespace Decays
       static size_t getID () ; // the source of IDs
       // ======================================================================
     } ;
+    // ========================================================================
+    /** swap two elements to speed-up sorting and other manipulations 
+     *  with arrays of trees 
+     *  @author Vanya BELYAEV Ivan.Belyave@nikhef.nl
+     *  @date 2015-03-25
+     */
+    template <class PARTICLE>
+    inline void swap 
+    ( _Tree_<PARTICLE>& a , 
+      _Tree_<PARTICLE>& b ) { a.swap ( b ) ; }
     // ========================================================================
     /** @struct CheckTree
      *  Helper struture to use the whole power of STL algorithms
@@ -410,7 +446,7 @@ namespace Decays
   } //                                           end of namespace Decays::Trees
   // ==========================================================================
   /** @class TreeList_
-   *  helper class torepreset the helepr list of trees
+   *  helper class to represent the list of trees
    *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
    *  @date 2009-05-23
    */
@@ -435,6 +471,12 @@ namespace Decays
     TreeList_ ( const Trees_& trees ) : m_trees ( trees ) {}
     /// default constructor
     TreeList_ () : m_trees () {}
+    /// copy constructor
+    TreeList_ ( const TreeList_&  right ) 
+      : m_trees (             right.m_trees   ) {}
+    /// move constructor
+    TreeList_ (       TreeList_&& right ) 
+      : m_trees ( std::move ( right.m_trees ) ) {}
     // ========================================================================
   public:
     // ========================================================================
@@ -446,13 +488,39 @@ namespace Decays
     // ========================================================================
   public:
     // ========================================================================
-    TreeList_& operator+= ( const _Tree_& tree )
+    /// assignement operator
+    TreeList_& operator=( const TreeList_&  right ) 
+    {
+      if ( &right == this ){ return *this ; }
+      m_trees = right.m_trees ;
+      return *this ;
+    }
+    /// move assignement operator
+    TreeList_& operator=(       TreeList_&& right ) 
+    {
+      if ( &right == this ){ return *this ; }
+      m_trees = std::move ( right.m_trees ) ;
+      return *this ;
+    }    
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// swapping
+    void swap ( TreeList_& right ) { std::swap ( m_trees , right.m_trees ) ; }
+    // ========================================================================
+  public:
+    // ========================================================================
+    TreeList_& operator+= ( const _Tree_&  tree )
     { m_trees.push_back ( tree  ) ;  return *this ; }
-    TreeList_& operator+= ( const  Tree& tree )
+    TreeList_& operator+= (       _Tree_&& tree )        // movable 
     { m_trees.push_back ( tree  ) ;  return *this ; }
-    TreeList_& operator+= ( const iTree& tree )
+    TreeList_& operator+= ( const  Tree&   tree )
     { m_trees.push_back ( tree  ) ;  return *this ; }
-    TreeList_& operator+= ( const  Trees_&   trees )
+    TreeList_& operator+= (        Tree&&  tree )        // movable ? 
+    { m_trees.push_back ( tree  ) ;  return *this ; }
+    TreeList_& operator+= ( const iTree&   tree )
+    { m_trees.push_back ( tree  ) ;  return *this ; }
+    TreeList_& operator+= ( const  Trees_& trees )
     {
       m_trees.insert ( m_trees.end () , trees.begin() , trees.end() ) ;
       return *this ;
@@ -480,7 +548,7 @@ namespace Decays
     // ========================================================================
   public:
     // ========================================================================
-    const Trees_& trees () const { return m_trees ; }
+    const Trees_&  trees  () const { return m_trees  ; }
     operator const Trees_&() const { return trees () ; }
     // ========================================================================
   private:
@@ -488,7 +556,13 @@ namespace Decays
     ///  the actual container of trees
     Trees_    m_trees ;                       //  the actual container of trees
     // ========================================================================
-  } ;
+  } ;  
+  // ==========================================================================
+  /// swap two lists 
+  template <class PARTICLE>
+  inline void swap 
+  ( TreeList_<PARTICLE>& a , 
+    TreeList_<PARTICLE>& b ) { a.swap ( b ) ; }
   // ==========================================================================
   namespace Trees
   {
@@ -515,7 +589,11 @@ namespace Decays
       // ======================================================================
       /// constructor from two sub-trees
       Op_ () ;
-      /// MANDATORY: virtual destrcutor
+      /// copy constructor  
+      Op_ ( const Op_&  right ) ;
+      /// move constructor  
+      Op_ (       Op_&& right ) ;
+      /// MANDATORY: virtual destructor
       virtual ~Op_() {}
       // ======================================================================
     public:
@@ -553,7 +631,7 @@ namespace Decays
       /// inline form of reset
       inline void i_reset() const ;
       // ======================================================================
-    private:
+    protected: 
       // ======================================================================
       /// the actual list of trees
       mutable TreeList m_trees ;                    // the actual list of trees
@@ -590,6 +668,10 @@ namespace Decays
              const Decays::iTree_<PARTICLE>& n2 ) ;
       /// constructor from list of sub-trees
       And_ ( const TreeList& trees ) ;
+      /// copy constructor 
+      And_ ( const And_&  right ) ;
+      /// move constructor 
+      And_ (       And_&& right ) ;
       /// MANDATORY: virtual destrcutor
       virtual ~And_ () {}
       // ======================================================================
@@ -660,7 +742,11 @@ namespace Decays
       Or_ ( const Decays::iTree_<PARTICLE>& n1 ,
             const Decays::iTree_<PARTICLE>& n2 ) ;
       /// constructor from list of sub-trees
-      Or_ ( const TreeList& trees ) ;
+      Or_ ( const TreeList&  trees ) ;
+      /// copy constructor 
+      Or_ ( const Or_&  right ) ;
+      /// move constructor 
+      Or_ (       Or_&& right ) ;      
       /// MANDATORY: virtual destrcutor
       virtual ~Or_() {}
       // ======================================================================
@@ -736,6 +822,12 @@ namespace Decays
       List_ ( const TreeList& trees )
         : Decays::Trees::Or_<PARTICLE>  ( trees )
       {}
+      /// copy constructor 
+      List_ ( const List_&  right ) 
+        : Decays::Trees::Or_<PARTICLE>  (             right   ) {}
+      /// move constructor 
+      List_ (       List_&& right ) 
+        : Decays::Trees::Or_<PARTICLE>  ( std::move ( right ) ) {}
       /// MANDATORY: virtual destrcutor
       virtual ~List_() {}
       // ======================================================================
@@ -745,6 +837,11 @@ namespace Decays
       virtual  List_* clone() const { return new List_ ( *this ) ; }
       /// MANDATORY: the specific printout
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// swap two lists 
+      void swap ( List_& right ) { swap ( this->m_trees , right->m_trees ) ; }    
       // ======================================================================
     public:
       // ======================================================================
@@ -769,6 +866,12 @@ namespace Decays
       // ======================================================================
     } ;
     // ========================================================================
+    /// swap two lists 
+    template <class PARTICLE>
+    inline void swap 
+    ( List_<PARTICLE>& a , 
+      List_<PARTICLE>& b ) { a.swap ( b ) ; }
+    // ========================================================================
     /** @class  Not_
      *
      *  @attention Not_ blocks the marked elements!
@@ -786,6 +889,21 @@ namespace Decays
       Not_ ( const Decays::iTree_<PARTICLE>& tree )
         : Decays::iTree_<PARTICLE> ()
         , m_tree ( tree )
+      {}
+      /// constructor from the tree
+      Not_ ( const Decays::Tree_<PARTICLE>&  tree )
+        : Decays::iTree_<PARTICLE> ()
+        , m_tree ( tree )
+      {}
+      /// constructor from the tree
+      Not_ (       Decays::Tree_<PARTICLE>&& tree )
+        : Decays::iTree_<PARTICLE> ()
+        , m_tree ( std::move ( tree ) )
+      {}
+      /// move constructor 
+      Not_ ( Not_&& right  )
+        : Decays::iTree_<PARTICLE> ( right )
+        , m_tree ( std::move ( right.m_tree  ) )
       {}
       /// MANDATORY: virtual destrcutor
       virtual ~Not_ () {}

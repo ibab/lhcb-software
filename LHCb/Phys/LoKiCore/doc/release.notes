@@ -13,6 +13,12 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-03-25 - Vanya Belyaev
+ -  Functors and Trees
+     add some "move" constructors/assignements 
+     add swapping methods 
+   for decay matching some non-negligible speedup could be expected 
+
 ! 2015-03-20 - Vanya Belyaev
  - ToCpp:
    Using nice example by Sascha MAzurov, 
