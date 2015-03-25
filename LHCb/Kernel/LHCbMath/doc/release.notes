@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-03-25 - Vanya Belyaev
+ - minor reshuffling 
+
 ! 2015-03-24 - Vanya Belyaev
  - minor update 
 

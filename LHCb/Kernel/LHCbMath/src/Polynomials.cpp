@@ -732,8 +732,18 @@ Gaudi::Math::Polynomial::derivative          () const
   return Gaudi::Math::Polynomial ( npars , m_xmin , m_xmax ) ;
 }
 // ============================================================================ 
-
-
+// simple  manipulations with polynoms: shift it! 
+// ============================================================================
+Gaudi::Math::Polynomial& 
+Gaudi::Math::Polynomial::operator+= ( const double a ) 
+{ m_pars[0] += a ; return *this ; }
+// ============================================================================
+// simple  manipulations with polynoms: shift it! 
+// ============================================================================
+Gaudi::Math::Polynomial& 
+Gaudi::Math::Polynomial::operator-= ( const double a ) 
+{ m_pars[0] -= a ; return *this ; }
+// ============================================================================
 
 // ============================================================================
 // Chebyshev sum 
@@ -928,6 +938,18 @@ Gaudi::Math::ChebyshevSum::derivative () const
   return Gaudi::Math::ChebyshevSum ( npars , m_xmin , m_xmax ) ;
 }
 // ============================================================================
+// simple  manipulations with polynoms: shift it! 
+// ============================================================================
+Gaudi::Math::ChebyshevSum& 
+Gaudi::Math::ChebyshevSum::operator+= ( const double a ) 
+{ m_pars[0] += a ; return *this ; }
+// ============================================================================
+// simple  manipulations with polynoms: shift it! 
+// ============================================================================
+Gaudi::Math::ChebyshevSum& 
+Gaudi::Math::ChebyshevSum::operator-= ( const double a ) 
+{ m_pars[0] -= a ; return *this ; }
+// ============================================================================
 
 
 // ============================================================================
@@ -1090,7 +1112,23 @@ Gaudi::Math::LegendreSum::derivative () const
   return Gaudi::Math::LegendreSum ( npars , m_xmin , m_xmax ) ;
 }
 // ============================================================================
+// simple  manipulations with polynoms: shift it! 
+// ============================================================================
+Gaudi::Math::LegendreSum& 
+Gaudi::Math::LegendreSum::operator+= ( const double a ) 
+{ m_pars[0] += a ; return *this ; }
+// ============================================================================
+// simple  manipulations with polynoms: shift it! 
+// ============================================================================
+Gaudi::Math::LegendreSum& 
+Gaudi::Math::LegendreSum::operator-= ( const double a ) 
+{ m_pars[0] -= a ; return *this ; }
+// ============================================================================
 
+
+
+
+// ============================================================================
 /// legendre to bernstein transformation 
 namespace 
 {

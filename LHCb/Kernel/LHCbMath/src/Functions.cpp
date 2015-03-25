@@ -9067,21 +9067,8 @@ double Gaudi::Math::TwoExpos::derivative
   return 
     ( Gaudi::Math::pow ( a , N ) *  std::exp ( a * dx ) - 
       Gaudi::Math::pow ( b , N ) *  std::exp ( b * dx ) ) / n0 ;
-} 
+}
 // ============================================================================
-// simple  manipulations with polynoms: shift it! 
-// ============================================================================
-Gaudi::Math::LegendreSum& 
-Gaudi::Math::LegendreSum::operator += ( const double a ) 
-{ m_pars[0] += a ; return *this ; }
-// ============================================================================
-// simple  manipulations with polynoms: shift it! 
-// ============================================================================
-Gaudi::Math::LegendreSum& 
-Gaudi::Math::LegendreSum::operator -= ( const double a ) 
-{ m_pars[0] -= a ; return *this ; }
-// ============================================================================
-
 
 
 

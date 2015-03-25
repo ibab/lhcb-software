@@ -1761,8 +1761,11 @@ namespace Gaudi
                     const FormFactor&    f ) ;
       /// copy constructor 
       BreitWigner ( const BreitWigner&  bw ) ;
+      ///
+      // ======================================================================
       /// move constructor 
       BreitWigner (       BreitWigner&& bw ) ;
+      // ======================================================================
       /// destructor
       virtual ~BreitWigner () ;
       // ======================================================================
