@@ -284,6 +284,8 @@ StatusCode LoKi::HltUnit::queryInterface
 // ============================================================================
 StatusCode LoKi::HltUnit::initialize ()
 {
+  /// lock the context
+  Gaudi::Utils::AlgContext lock { this , contextSvc() } ;
   // ==========================================================================
   // ensure the validity of Hlt registration service
   Assert ( regSvc() , "Hlt::IRegister is not available" ) ;
