@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-03-25 - Michael Kolpin
+ - Migration of tracking efficiency lines
+ - Added Z and Upsilon lines to VeloMuon and DownMuon modules
+
 ! 2015-03-24 - Pablo Ruiz Valls
  - Migration of RD lines - Rollback (as per WG discussion)
 

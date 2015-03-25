@@ -8,7 +8,10 @@ _selections = [
     "StrippingMuIDCalib",
     "StrippingNoPIDDstarWithD02RSKPi",
     "StrippingPIDCalib",
-    "StrippingV0ForPID"
+    "StrippingV0ForPID",
+    "StrippingTrackEffMuonTT",
+    "StrippingTrackEffVeloMuon",
+    "StrippingTrackEffDownMuon"
  ]
 
 for _sel in _selections :
