@@ -174,7 +174,9 @@ def configure ( options , arguments ) :
         dtype = '2012'
         
     # 
-    if ext in ( 'gen' , 'xgen' , 'GEN' , 'XGEN' ) and not simu : simu = True 
+    if ext in ( 'gen'  , 'xgen' ,
+                'GEN'  , 'XGEN' ,
+                'ldst' , 'LDST' ) and not simu : simu = True 
         
     if dtype and dtype != options.DataType :
         logger.info ( 'Redefine DataType from  %s to %s '   % ( options.DataType, dtype ) )
