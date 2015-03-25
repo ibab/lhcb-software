@@ -12,7 +12,6 @@ from Configurables import ConfigTarFileAccessSvc
 ConfigTarFileAccessSvc().File='/afs/cern.ch/work/s/sbenson/public/forTeslaExtendedReps/config.tar'
 
 Tesla().TriggerLine = "Hlt2IncPhi"
-Tesla().ReportVersion=2
 Tesla().EvtMax = -1
 
 from GaudiConf.IOHelper import IOHelper
