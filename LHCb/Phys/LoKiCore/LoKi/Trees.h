@@ -900,11 +900,6 @@ namespace Decays
         : Decays::iTree_<PARTICLE> ()
         , m_tree ( std::move ( tree ) )
       {}
-      /// move constructor 
-      Not_ ( Not_&& right  )
-        : Decays::iTree_<PARTICLE> ( right )
-        , m_tree ( std::move ( right.m_tree  ) )
-      {}
       /// MANDATORY: virtual destrcutor
       virtual ~Not_ () {}
       // ======================================================================
