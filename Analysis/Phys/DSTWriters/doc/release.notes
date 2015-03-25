@@ -4,6 +4,18 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2015-03-25 - Chris Jones
+ - Add support for forced inclusion of 'signal' MCParticles in uDST MC streams.
+   Uses a new flag saved in the data objects, set by Gauss, to identify what
+   is signal.
+ - In addition the algorithm which saves the 'signal' MCParticles also 
+   (optinally) saves the ProtoParticles and related reconstruction objects, 
+   related to them. Currently enabled by default, but to be reviewed once Gauss
+   is setting the flags such that a realistic estimate of the event size can
+   be made.
+ - Update the Track and CaloHypo cloners to also clone the Linker tables to
+   MCParticles, when creating MC uDST streams.
+
 !========================= DSTWriters v4r18 2014-11-26 =========================
 
 ! 2014-11-12 - Chris Jones

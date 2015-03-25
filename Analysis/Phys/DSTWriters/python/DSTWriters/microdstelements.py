@@ -19,6 +19,7 @@ __all__ = ( 'CloneRecHeader',
             'ClonePVs',
             'CloneSwimmingReports',
             'CloneParticleMCInfo',
+            'CloneSignalMCParticles',
             'CloneBTaggingInfo',
             'ClonePVRelations',
             'CloneTPRelations',
@@ -85,11 +86,12 @@ class CloneSwimmingReports(MicroDSTElement):
 class CloneParticleTrees(MicroDSTElement) :
 
     def __init__( self,
-                  branch='',
-                  TESVetoList = [ ] ) :
+                  branch = '',
+                  TESVetoList = [ ],
+                  isMC = False ) :
         MicroDSTElement.__init__(self, branch)
-        #self.ppCloner    = "ProtoParticleCloner"
         self.tesVetoList = TESVetoList
+        self.isMC        = isMC
 
     def __call__(self, sel) :
         
@@ -112,10 +114,12 @@ class CloneParticleTrees(MicroDSTElement) :
         cloner.ProtoParticleCloner.TESVetoList = self.tesVetoList
 
         cloner.addTool(TrackCloner,name="TrackCloner")
-        cloner.TrackCloner.TESVetoList = self.tesVetoList
+        cloner.TrackCloner.TESVetoList  = self.tesVetoList
+        cloner.TrackCloner.CloneMCLinks = self.isMC
 
         cloner.addTool(CaloHypoCloner,name="CaloHypoCloner")
         cloner.CaloHypoCloner.TESVetoList = self.tesVetoList
+        cloner.CaloHypoCloner.CloneMCLinks = self.isMC
 
         cloner.addTool(CaloClusterCloner,name="CaloClusterCloner")
         cloner.CaloClusterCloner.TESVetoList = self.tesVetoList
@@ -152,17 +156,6 @@ class ClonePVs(MicroDSTElement) :
             algs += [cloneWeights]
         return algs
 
-class CloneChargedMCInfo(MicroDSTElement) :
-    """
-    Creates linker tables for Charged Tracks
-    """
-    def __call__(self, sel) :
-        from Configurables import TrackAssociator
-        # Work in progress. Links are to original MCPs,
-        # not the stream dependant ones under self.branch. Needs fixing ....
-        return [ TrackAssociator( name = self.personaliseName(sel,"TrackMCLinks"),
-                                  TracksInContainer = self.branch + "/Rec/Track/Best" ) ]
-
 class CloneParticleMCInfo(MicroDSTElement) :
     """
     Generator returning list of P2MCRelatorAlg and CopyParticle2MCRelations.
@@ -172,9 +165,7 @@ class CloneParticleMCInfo(MicroDSTElement) :
         """
         Copy related MC particles of candidates plus daughters
         """
-        from Configurables import ( P2MCRelatorAlg, CopyParticle2MCRelations,
-                                    MCParticleCloner, MCVertexCloner,
-                                    CopyMCHeader )
+        from Configurables import ( P2MCRelatorAlg, CopyParticle2MCRelations )
         
         # first, get matches MCParticles for selected Particle candidates.
         # This will make a relations table in mainLocation+"/P2MCPRelations"
@@ -186,8 +177,35 @@ class CloneParticleMCInfo(MicroDSTElement) :
         cloner.RemoveOriginals = True
         cloner.InputLocations = self.dataLocations(sel,'Particles')
         self.setOutputPrefix(cloner)
-        
+
         return [p2mcRelator,cloner]
+
+class CloneSignalMCParticles(MicroDSTElement) :
+    """
+    Clones all MCParticles that are flagged as 'signal'
+    """
+    def __init__( self,
+                  branch='',
+                  TESVetoList = [ ] ) :
+        MicroDSTElement.__init__(self, branch)
+        self.tesVetoList = TESVetoList
+        
+    def __call__(self, sel) :
+
+        # Clone all MCParticles that are flagged as 'signal'
+        from Configurables import ( TrackCloner, ProtoParticleCloner,
+                                    CopySignalMCParticles )
+
+        cloner = CopySignalMCParticles( self.personaliseName(sel,"CopySignalMCPs") )
+        self.setOutputPrefix(cloner)
+        cloner.addTool(ProtoParticleCloner,name="ProtoParticleCloner")
+        cloner.ProtoParticleCloner.TESVetoList = self.tesVetoList
+
+        cloner.addTool(TrackCloner,name="TrackCloner")
+        cloner.TrackCloner.TESVetoList  = self.tesVetoList
+        cloner.TrackCloner.CloneMCLinks = True # This is only ever run on MC...
+        
+        return [cloner]
 
 class CloneBTaggingInfo(MicroDSTElement) :
     """
@@ -198,10 +216,12 @@ class CloneBTaggingInfo(MicroDSTElement) :
     def __init__( self,
                   branch               = '',
                   CloneTaggerParticles = False,
-                  TESVetoList = [ ] ) :
+                  TESVetoList = [ ],
+                  isMC = False ) :
         MicroDSTElement.__init__(self, branch)
         self.clonerTaggerPs = CloneTaggerParticles
         self.tesVetoList    = TESVetoList
+        self.isMC           = isMC
     
     def __call__(self, sel) :
         
@@ -224,10 +244,12 @@ class CloneBTaggingInfo(MicroDSTElement) :
         cloner.ProtoParticleCloner.TESVetoList = self.tesVetoList
 
         cloner.addTool(TrackCloner,name="TrackCloner")
-        cloner.TrackCloner.TESVetoList = self.tesVetoList
+        cloner.TrackCloner.TESVetoList  = self.tesVetoList
+        cloner.TrackCloner.CloneMCLinks = self.isMC
 
         cloner.addTool(CaloHypoCloner,name="CaloHypoCloner")
         cloner.CaloHypoCloner.TESVetoList = self.tesVetoList
+        cloner.CaloHypoCloner.CloneMCLinks = self.isMC
 
         cloner.addTool(CaloClusterCloner,name="CaloClusterCloner")
         cloner.CaloClusterCloner.TESVetoList = self.tesVetoList

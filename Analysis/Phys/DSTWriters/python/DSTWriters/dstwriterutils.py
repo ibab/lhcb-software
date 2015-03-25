@@ -110,6 +110,8 @@ class MicroDSTElementList(object) :
         output = rootInTES + '/' + branch + '#99'
         output = output.replace('//', '/')
         self.output += [output]
+        # For MC add links. Never found for real data so just do it all the time...
+        self.output += [output.replace('Event','Event/Link')]
         for c in self.callables :
             c.branch = self.branch
     def __getitem__(self, index) :
