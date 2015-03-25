@@ -1,3 +1,7 @@
+2015-02-25 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbConfiguration/Package.py: (re)Added package B2CCConfig
+
 2015-02-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* updated lb-run/lb-dev tests and fixed LBCORE-758
