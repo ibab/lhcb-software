@@ -4,10 +4,12 @@
 #include "GaudiKernel/Vector3DTypes.h"
 #include "RecoParticle.h"
 #include "Configuration.h"
+#include "Event/State.h"
 
 class ITrackStateProvider ;
 namespace LHCb {
   class TrackTraj ;
+  class Track ;
 }
 
 namespace DecayTreeFitter
@@ -39,12 +41,20 @@ namespace DecayTreeFitter
     void setFlightLength(double flt) { m_flt = flt ; }
     const LHCb::Track& track() const { return *m_track ; }
     const LHCb::State& state() const { return m_state ; }
+
+    // return a trajectory (declared by base class)
+    const LHCb::Trajectory* trajectory() const  ;
+
+    // return a tracktraj
+    const LHCb::TrackTraj* tracktraj() const ;
+
   private:
     const Gaudi::XYZVector m_bfield ;
     const LHCb::Track* m_track ;
     const ITrackStateProvider* m_stateprovider ;
     bool m_useTrackTraj ;
     const LHCb::TrackTraj* m_tracktraj ;
+    bool m_ownstracktraj ;
     bool m_cached ;
     double m_flt ;
     LHCb::State m_state ;

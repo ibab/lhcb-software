@@ -12,12 +12,18 @@ namespace {
 			    double bremEnergyCov )
   {
     int charge = state.qOverP() > 0 ? 1 : -1 ;
-    double momentum       = charge/state.qOverP();
-    double momentumCov = state.covariance()(4,4) * std::pow(momentum,4) ;
-    momentum += bremEnergy ;
-    momentumCov += bremEnergyCov ;
-    state.setQOverP( charge / momentum ) ;
-    state.covariance()(4,4) = momentumCov / std::pow(momentum,4) ;
+    double qop = state.qOverP() ;
+    double qopnew = 1.0/(1.0/qop + charge * bremEnergy) ; // =  qop / (1 + qop * charge * bremEnergy )
+    // update the state
+    state.setQOverP( qopnew ) ;
+    // update the covariance matrix (multiply left/right with matrix diag(1,1,1,1,dqopnewdqop)
+    double dqopnewdqop = qopnew*qopnew / (qop*qop ) ;
+    for( unsigned int i=0; i<4; ++i )
+      state.covariance()(4,i) *= dqopnewdqop ;
+    state.covariance()(4,4) *= dqopnewdqop * dqopnewdqop ;
+    // add the contribution from the bremenergy
+    double dqopnewdbremE = qopnew*qopnew*charge ;
+    state.covariance()(4,4) += dqopnewdbremE * dqopnewdbremE * bremEnergyCov ;
   }
 }
 
@@ -34,6 +40,7 @@ namespace DecayTreeFitter
       m_stateprovider( config.stateProvider() ),
       m_useTrackTraj( config.useTrackTraj() ),
       m_tracktraj(0),
+      m_ownstracktraj(false),
       m_cached(false),
       m_flt(0),
       m_bremEnergy(0),
@@ -68,7 +75,10 @@ namespace DecayTreeFitter
     }
   }
   
-  RecoTrack::~RecoTrack() {}
+  RecoTrack::~RecoTrack()
+  {
+    if(m_ownstracktraj) delete m_tracktraj ;
+  }
 
   ErrCode
   RecoTrack::initPar2(FitParams* fitparams)
@@ -133,22 +143,16 @@ namespace DecayTreeFitter
 	  //std::cout << "Updating state for: " 
 	  //	    << name() << " " << z << " " << prevstatez << " " << m_state.z() << " "
 	  //	    << m_stateprovider << " " << m_tracktraj << std::endl ;
-	  if( m_stateprovider ) {
-	    if( !m_useTrackTraj ) {
+	  if( m_stateprovider && !m_useTrackTraj ) {
 	      StatusCode sc = m_stateprovider->state( m_state,*m_track,z,ztolerance) ;
 	      if( !sc.isSuccess() ) rc = ErrCode::badsetup ;
-	    } else {
-	      // cache the tracktraj
-	      if( m_tracktraj==0 ) m_tracktraj = m_stateprovider->trajectory(*m_track) ;
-	      // if nothing failed, use it.
-	      if(m_tracktraj)
-		m_state = m_stateprovider->trajectory(*m_track)->state(z) ;
-	      else rc = ErrCode::badsetup ;
-	    }
 	  } else {
-	    // create a trajectory on the fly
-	    LHCb::TrackTraj traj( *m_track ) ;
-	    m_state = traj.state( z ) ;	  
+	    const LHCb::TrackTraj* traj = tracktraj() ;
+	    if( traj ) {
+	      m_state = traj->state( z ) ;	  
+	    } else {
+	      rc = ErrCode::badsetup ;
+	    }
 	  }
 	}
       }
@@ -160,6 +164,25 @@ namespace DecayTreeFitter
     
     m_cached = true ;
     return rc ;
+  }
+
+  const LHCb::TrackTraj* RecoTrack::tracktraj() const
+  {
+    if( m_tracktraj == 0 ) {
+      RecoTrack* me = const_cast<RecoTrack*>(this) ;
+      if ( m_stateprovider ) {
+	me->m_tracktraj = m_stateprovider->trajectory(*m_track) ;
+      } else {
+	me->m_tracktraj = new LHCb::TrackTraj( *m_track ) ;
+	me->m_ownstracktraj = true ;
+      }
+    }
+    return m_tracktraj ;
+  }
+
+  const LHCb::Trajectory* RecoTrack::trajectory() const
+  {
+    return tracktraj() ;
   }
 
   HepVector symdiag(const HepSymMatrix& m) {
