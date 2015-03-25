@@ -45,17 +45,16 @@ __all__     = (
     'takeIt'         , ## take and later delete ...
     )
 # =============================================================================
-import ROOT, cppyy, time, os,sys ## attention here!!
+import ROOT,cppyy, time, os,sys ## attention here!!
 cpp = cppyy.makeNamespace('')
-## needed ??? 
-if not hasattr ( ROOT , 'ostream' ) : 
-    ROOT.gROOT.ProcessLine("#include <ostream>")
+ROOT_RooFit_ERROR = 4 
 # =============================================================================
 # logging 
 # =============================================================================
 from   AnalysisPython.Logger import getLogger
 if '__main__' ==  __name__ : logger = getLogger( 'Ostap.Utils' )
 else                       : logger = getLogger( __name__ )    
+
 # =============================================================================
 ## @class Memory
 #  Simple context manager to measure the virtual memory increase
@@ -104,7 +103,7 @@ class Memory(object):
         self.memory = cpp.System.virtualMemory()
         return self 
     def __exit__  ( self, *_ ) :
-        self.delta = cpp.System.virtualMemory() - self.memory
+        self.delta  = cpp.System.virtualMemory() - self.memory
         print  '%s Memory %.1fMB ' % ( self.name , 0.001*self.delta ) 
         
 
@@ -228,6 +227,7 @@ class Timer(object):
         print  '%s Time   %s ' % ( self.name , self.delta ) 
         
 
+
 # =============================================================================
 ## Simple context manager to measure the clock counts
 #
@@ -312,6 +312,7 @@ def timing ( name = '' ) :
 # =============================================================================
 ## ditto 
 timer = timing   # ditto
+
 
 # ============================================================================
 ## @class MutePy
@@ -562,7 +563,7 @@ class TeePy(object) :
 #  @attention: Python&C-printouts probably  are not affected 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  date 2012-07-07
-class TeeCpp(cpp.Gaudi.Utils.Tee) :
+class TeeCpp(object) :
     """
     very simple context manager to duplicate C++-printout into file 
     into separate file
@@ -572,15 +573,17 @@ class TeeCpp(cpp.Gaudi.Utils.Tee) :
     
     """
     def __init__ ( self , fname ) :
-        cpp.Gaudi.Utils.Tee.__init__ ( self , fname )
-
+        self._tee = cpp.Gaudi.Utils.Tee ( fname )
+        
     ## context manager
     def __enter__ ( self      ) :
-        self.enter ()
+        self._tee.enter ()
         return self 
     ## context manager
-    def __exit__  ( self , *_ ) : self.exit  ()
-
+    def __exit__  ( self , *_ ) :
+        self._tee.exit  ()
+        del self._tee
+        
 # =============================================================================
 ## very simple context manager to suppress RooFit printout
 #
@@ -607,7 +610,7 @@ class RooSilent(object) :
     #  @param level  (INPUT) print level 
     #  @param silent (print level 
     # 
-    def __init__ ( self , level = ROOT.RooFit.ERROR , silent = True ) :
+    def __init__ ( self , level = ROOT_RooFit_ERROR , silent = True ) :
         """
         Constructor
         
@@ -739,7 +742,8 @@ def tee_cpp ( filename ) :
     Unfortunately only Python printouts are grabbed 
     """
     return TeeCpp ( filename ) 
-    
+
+
 # =============================================================================
 ## simple context manager to redirect all (C/C++/Python) printotu
 #  into separate file
@@ -812,7 +816,7 @@ silence     = mute     # ditto
 #  @see RooMgsService::silentMode 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-07-09
-def rooSilent ( level = ROOT.RooFit.ERROR , silent = True ) :
+def rooSilent ( level = ROOT_RooFit_ERROR , silent = True ) :
     """
     very simple context manager to suppress RooFit printout
     
