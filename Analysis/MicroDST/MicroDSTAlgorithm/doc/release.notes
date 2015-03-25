@@ -3,6 +3,9 @@
 ! Responsible : Juan Palacios
 !==============================================================================
 
+! 2015-03-25 - Chris Jones
+ - Add a new algorithm that clones 'signal' MCParticles.
+
 !========================= MicroDSTAlgorithm v5r9 2014-06-13 =========================
 
 ! 2014-06-08 - Anton Poluektov 
