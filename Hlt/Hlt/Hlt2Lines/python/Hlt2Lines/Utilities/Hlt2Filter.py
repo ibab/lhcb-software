@@ -7,7 +7,7 @@ class Hlt2ParticleFilter(Hlt2TisTosStage):
                  nickname = None, shared = False, **kwargs):
         self.__code = code
         self.__kwargs = kwargs
-        self.__stage = None
+        self.__cache = {}
         super(Hlt2ParticleFilter, self).__init__(name, inputs, dependencies,
                                                  tistos, nickname, shared)
 
@@ -28,15 +28,20 @@ class Hlt2ParticleFilter(Hlt2TisTosStage):
 
         return Hlt2ParticleFilter(**args)
 
-    def _makeMember(self, cuts, args):
+    def _makeMember(self, stages, cuts, args):
         from HltLine.HltLine import Hlt2Member
         from Configurables import FilterDesktop
+        inputs = self.inputStages(stages, cuts)
+        stages += inputs
         return Hlt2Member(FilterDesktop, self._name() + 'Filter', shared = self._shared(),
-                          Inputs = self.inputStages(cuts), **args)
+                          Inputs = inputs, **args)
                                      
-    def stage(self, cuts):
-        if self.__stage != None:
-            return self.__stage
+    def stage(self, stages, cuts):
+        key = self._hashCuts(cuts)
+        if key in self.__cache:
+            cached = self.__cache[key]
+            stages += cached[1]
+            return cached[0]
 
         localCuts = self._localCuts(cuts)
         args = deepcopy(self.__kwargs)
@@ -45,24 +50,32 @@ class Hlt2ParticleFilter(Hlt2TisTosStage):
             args['Preambulo'] = [p % localCuts for p in args['Preambulo']]
 
         if not self._tistos():
-            ## Return combiner if no tistos is required
-            self.__stage = self._makeMember(cuts, args)
-            return self.__stage
+            ## Return filter if no tistos is required
+            deps = self.dependencies(cuts)
+            stage = self._makeMember(deps, cuts, args)
+            stages += deps
+            self.__cache[key] = (stage, deps)
+            return stage
 
         ## define the callback used to insert the right extra cut.
         def __partCutHandler(tagger, specs, args):
             tisTosCut = tagger.particleCut(specs.values())
-            args['Code'] = '{0} & {1}'.format(tisTosCut, args['Code'])
- 
-        self.__stage = self._handleTisTos(cuts, args, __partCutHandler)
-        return self.__stage
+            args['Code'] = '({0} & ({1}))'.format(tisTosCut, args['Code'])
+
+        ## HandleTisTos adds inputs to stages, we have to add dependencies and
+        ## return our own stage.
+        deps = self.dependencies(cuts)
+        stage = self._handleTisTos(deps, cuts, args, __partCutHandler)
+        stages += deps
+        self.__cache[key] = (stage, deps)
+        return stage
     
 class Hlt2VoidFilter(Hlt2Stage):
     def __init__(self, name, code, inputs, dependencies = [], nickname = None,
                  shared = False, **kwargs):
         self.__code = code
         self.__kwargs = kwargs
-        self.__stage = None
+        self.__cache = {}
         super(Hlt2VoidFilter, self).__init__(name, inputs, dependencies, nickname, shared)
 
     def clone(self, name, **kwargs):
@@ -77,12 +90,22 @@ class Hlt2VoidFilter(Hlt2Stage):
         args.update(kwargs)
         return Hlt2VoidFilter(**args)
                                  
-    def stage(self, cuts):
-        if self.__stage != None:
-            return self.__stage
-        from HltLine.HltLine import bindMembers
+    def stage(self, stages, cuts):
+        key = self._hashCuts(cuts)
+        if key in self.__cache:
+            cached = self.__cache[key]
+            stages += cached[1]
+            return cached[0]
+        
         from Configurables import LoKi__VoidFilter as VoidFilter
-        vfilter = VoidFilter('Hlt2' + self._name(),
-                             Code = self.__code % self._localCuts(cuts))
-        self.__stage = bindMembers(None, self.dependencies(cuts) + self.inputStages(cuts) + [vfilter])
-        return self.__stage
+        cuts = self._localCuts(cuts)
+        code = self.__code % cuts
+        vfilter = VoidFilter('Hlt2' + self._name(), Code = code)
+
+        ## Add inputs and dependencies to stages and return our own stage.
+        deps =self.dependencies(cuts)
+        inputs = self.inputStages(deps, cuts)
+        stages += deps
+        self.__cache[key] = (vfilter, deps)
+        from HltLine.HltLine import bindMembers
+        return bindMembers(None, [vfilter]).ignoreOutputSelection()

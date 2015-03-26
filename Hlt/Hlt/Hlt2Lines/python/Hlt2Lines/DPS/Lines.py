@@ -42,14 +42,12 @@ class DPSLines(Hlt2LinesConfigurableUser) :
     The primary goal is to ``protect'' these events from prescaling 
     """
     
-    __slots__ = { 'Prescale'   : {} ,
-                  'Postscale'  : {} ,
-                  'Common'     : {} }
-    __lines__ = {}
+    __slots__ = { '_stages'    : {} ,
+                  'Prescale'   : {} ,
+                  'Postscale'  : {} }
     
     def stages ( self , nickname = '' ) :
-
-        if not self.__lines__ :
+        if not (hasattr(self, '_stages') and self._stages):
 
             from Hlt2Lines.Utilities.Hlt2Stage import Hlt2ExternalStage
             from Hlt2Lines.DPS.Stages import MergeCharm 
@@ -73,16 +71,16 @@ class DPSLines(Hlt2LinesConfigurableUser) :
             Ds  = charm.stages ( 'D2KKPi_OS'      ) [0]
             Lc  = charm.stages ( 'Lc2KPPi'        ) [0]
             
-            Hc  = MergeCharm ( 'Hc', [ Hlt2ExternalStage ( charm, s ) for s in ( D0 , D , Ds , Lc ) ] )
+            Hc  = MergeCharm ( 'MergedHc', [ Hlt2ExternalStage ( charm, s ) for s in ( D0 , D , Ds , Lc ) ] )
             
             from Hlt2Lines.DPS.Stages import DoubleDiMuon, DiMuonAndCharm, DoubleCharm 
-            __lines__  = {
+            self._stages  = {
                 '2x2mu'  : [ DoubleDiMuon   ('2x2mu'  , [ mu2      ] ) ] , 
                 '2xHc'   : [ DoubleCharm    ('2xHc'   , [       Hc ] ) ] , 
                 '2mu&Hc' : [ DiMuonAndCharm ('2mu&Hc' , [ mu2 , Hc ] ) ]
                 }
             
-        return self.__lines__[nickname] if nickname else self.__lines__ 
+        return self._stages[nickname] if nickname else self._stages
             
     def __apply_configuration__( self ):
         

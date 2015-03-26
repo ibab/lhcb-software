@@ -1,9 +1,11 @@
 import collections
 from copy import deepcopy
-from Utilities import makeList, splitSpecs
+from Utilities import makeList, splitSpecs, makeStages
+
 
 class Hlt2Stage(object):
-    def __init__(self, name, inputs, dependencies = [], nickname = None, shared = False):
+    def __init__(self, name, inputs, dependencies = [], nickname = None, shared = False,
+                 configurable = None):
         if type(name) != str:
             raise RuntimeError("Hlt2Stage: name must be a string, not a %s." % name)
         self.__name = name
@@ -11,13 +13,20 @@ class Hlt2Stage(object):
         self.__inputs = inputs
         self.__deps = dependencies
         self.__shared = shared
-        self.__depStages = None
-        self.__inputStages = None
-
+        self.__depStages = {}
+        self.__inputStages = {}
+        self.__configurable = configurable
+        
         for arg, msg in ((self.__inputs, "inputs"), (self.__deps, "dependencies")):
             if not isinstance(arg, collections.Iterable) or isinstance(arg, basestring):
                 raise RuntimeError("Hlt2Stage: %s must be an iterable, not a %s." % (msg, inputs))
-                
+
+    def _hashCuts(self, cuts):
+        return hash(str(self._localCuts(cuts)))
+
+    def _configurable(self):
+        return self.__configurable
+            
     def _name(self):
         return self.__name
 
@@ -43,66 +52,63 @@ class Hlt2Stage(object):
         common = cuts.get('Common', {})
         return cuts.get(self._nickname(), common)
 
-    def inputStages(self, cuts):
-        if self.__inputStages == None:
-            self.__inputStages = [i.stage(cuts) if hasattr(i, 'stage') else i for i in self._inputs()]
-        return self.__inputStages
+    def outputStages(self, stages, cuts):
+        outs = self.stage(stages, cuts)
+        if type(outs) not in (list, tuple):
+            outs = [outs]
+        stages += list(outs)
+        return outs
+    
+    def inputStages(self, stages, cuts):
+        key = self._hashCuts(cuts)
+        if key in self.__inputStages:
+            inputs, deps = self.__inputStages[key]
+            stages += deps
+            return inputs
+        
+        from itertools import chain
+        deps = []
+        inputs = []
+        for i in self._inputs():
+            if isinstance(i, Hlt2Stage):
+                inputs += i.outputStages(deps, cuts)
+            else:
+                deps.append(i)
+                inputs.append(i)
+        self.__inputStages[key] = (inputs, deps)
+        stages += deps
+        return inputs
 
     def dependencies(self, cuts):
-        if self.__depStages == None:
-            self.__depStages = [i.stage(cuts) if hasattr(i, 'stage') else i for i in self._deps()]
-        return self.__depStages
+        key = self._hashCuts(cuts)
+        if key not in self.__depStages:
+            deps = []
+            deps += makeStages(deps, self._deps(), cuts)
+            self.__depStages[key] = deps
+        return self.__depStages[key]
 
-        
-    def stages(self, cuts):
-        from Hlt2Filter import Hlt2ParticleFilter
-        from Hlt2Combiner import Hlt2Combiner
-        # Flatten everything
-        def __flatten(l):
-            for i in l:
-                if isinstance(i, Hlt2Stage):
-                    for j in __flatten(i._deps()):
-                        yield j
-                    for j in __flatten(i._inputs()):
-                        yield j
-                    if i: yield i
-                elif i:
-                    yield i
-        ## Make our own stage first, this might update deps/inputs!!
-        stage = self.stage(cuts)
-        ## Flatten the list of deps and inputs and create stages to return.
-        deps = list(__flatten(self.__deps)) + list(__flatten(self.__inputs))
-        if self in deps:
-            print 'WARNING: Circular dependency %s %s %s.' % (self.__name, self.__deps, self.__inputs)
-        stages = filter(lambda i: bool(i), [i.stage(cuts) if hasattr(i, 'stage') else i for i in deps])
-        if stage:
-            stages += [stage]
-        return stages
 
 class Hlt2ExternalStage(Hlt2Stage):
     def __init__(self, configurable, stage):
-        self.__conf = configurable
         self.__stage = stage
-        super(Hlt2ExternalStage, self).__init__(stage._name(), stage._inputs(),
-                                                stage._deps(), stage._nickname(),
-                                                stage._shared())
+        self.__cache = {}
+        super(Hlt2ExternalStage, self).__init__(stage._name(), [],
+                                                [], stage._nickname(),
+                                                stage._shared(), configurable)
         
-    def stage(self, cuts):
-        from copy import deepcopy
-        # Get a local instance of the cuts
-        common = self.__conf.getProps().get('Common', {})
-        cuts = deepcopy(self.__conf.getProps())
-        for k, v in cuts.iteritems():
-            if k != 'Common': v.update(common)
+    def stage(self, stages, cuts):
+        ## Return what we create directly and add dependencies to stages.
+        ## Get a local instance of the cuts
+        from Utilities import allCuts
+        cuts = allCuts(self._configurable())
+        key = self._hashCuts(cuts)
+        if key in self.__cache:
+            cached = self.__cache[key]
+            stages += cached[1]
+            return cached[0]
 
-        return self.__stage.stage(cuts)
-
-    def stages(self, cuts):
-        from copy import deepcopy
-        # Get a local instance of the cuts
-        common = self.__conf.getProps().get('Common', {})
-        cuts = deepcopy(self.__conf.getProps())
-        for k, v in cuts.iteritems():
-            if k != 'Common': v.update(common)
-
-        super(Hlt2ExternalStage, self).stages(cuts)
+        deps = []
+        stage = self.__stage.stage(deps, cuts)
+        self.__cache[key] = (stage, deps)
+        stages += deps
+        return stage

@@ -43,3 +43,41 @@ def splitSpecs(specs, globalSpecs):
         localSpecs = dict((s, 0) for s in specs)
         
     return localSpecs, globSpecs
+
+def flatten(l):
+    from Hlt2Stage import Hlt2Stage
+    for i in l:
+        if isinstance(i, Hlt2Stage):
+            for j in flatten(i._deps()):
+                yield j
+            for j in flatten(i._inputs()):
+                yield j
+            if i: yield i
+        elif i:
+            yield i
+
+def makeStages(stages, source, cuts):
+    ## Return what we create directly and add what we depend on to stages.
+    direct_stages = []
+    for i in source:
+        if hasattr(i, 'stage'):
+            stgs = i.stage(stages, cuts)
+            if type(stgs) in (list, tuple):
+                direct_stages += list(stgs)
+            else:
+                direct_stages.append(stgs)
+        else:
+            stages.append(i)
+    return direct_stages
+            
+def allCuts(conf):
+    from copy import deepcopy
+    # Get a local instance of the cuts
+    cuts = deepcopy(conf.getProps())
+    common = cuts.get('Common', {})
+    for k, v in cuts.iteritems():
+        com = deepcopy(common)
+        if k != 'Common':
+            com.update(v)
+            cuts[k] = com
+    return cuts

@@ -11,7 +11,7 @@ class EventFilter(Hlt2VoidFilter):
         from Inputs import Hlt2BiKalmanFittedForwardTracking
         inputs = Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks()
         ec = "CONTAINS('%s') < %%(GEC_MAX)s" % inputs.outputSelection()
-        Hlt2VoidFilter.__init__(self, 'NewTopoEvent', ec, [inputs],
+        Hlt2VoidFilter.__init__(self, 'TopoEvent', ec, [inputs],
                                 shared = True)
 
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
@@ -33,7 +33,7 @@ class FilterParts(Hlt2ParticleFilter):
                   "%(MIN_V0_LT)s)")
         from HltTracking.HltPVs import PV3D
         deps = [EventFilter(), PV3D('Hlt2')] if gec else [PV3D('Hlt2')]
-        Hlt2ParticleFilter.__init__(self, 'NewTopoInput' + pid + tag, pc,
+        Hlt2ParticleFilter.__init__(self, 'TopoInput' + pid + tag, pc,
                                     inputs, shared = True, dependencies = deps)
 
 class FilterMforN(Hlt2ParticleFilter):
@@ -45,7 +45,7 @@ class FilterMforN(Hlt2ParticleFilter):
         if m == 2: pc = ("(M < %f) & (VFASPF(VCHI2) < %%(V2BODYCHI2_MAX)s)" %
                          (5000 * MeV if n == 4 else 6000 * MeV))
         else:      pc = '(M < %f)' % (6000 * MeV)
-        Hlt2ParticleFilter.__init__(self, 'NewTopo%s%iFor%i' % (tag, m, n),
+        Hlt2ParticleFilter.__init__(self, 'Topo%s%iFor%i' % (tag, m, n),
                                     pc, inputs, shared = True)
 
 class FilterNforN(Hlt2ParticleFilter):
@@ -65,7 +65,7 @@ class FilterNforN(Hlt2ParticleFilter):
               "& %s, TRCHI2DOF) < %%(MIN_TRCHI2DOF_MAX)s)"
               % (pids, pt, n, pids))
         from HltTracking.HltPVs import PV3D
-        Hlt2ParticleFilter.__init__(self, 'NewTopo%s%ifor%i' % (tag, n, n),
+        Hlt2ParticleFilter.__init__(self, 'Topo%s%ifor%i' % (tag, n, n),
                                     pc, inputs, shared = True, 
                                     tistos = 'TisTosSpec',
                                     dependencies = [PV3D('Hlt2')])
@@ -139,11 +139,11 @@ class FilterBDT(Hlt2ParticleFilter):
             LoKi__Hybrid__DictTransform_BBDecTreeTransform_ as Transform
         key        = 'BDT'
         options    = {'BBDecTreeFile': params, 'Name': key, 'KeepVars': '0'}
-        funcdict   = Tool(type = DictOfFunctors, name = 'MVAdict',
+        funcdict   = Tool(type = DictOfFunctors, name = 'TopoMVAdict',
                         Preambulo = preambulo, Variables = varmap)
         transform  = Tool(type = Transform, name = 'BBDecTree',
                           tools = [funcdict], Options = options, 
-                          Source = "LoKi::Hybrid::DictOfFunctors/MVAdict")
+                          Source = "LoKi::Hybrid::DictOfFunctors/TopoMVAdict")
         classifier = Tool(type = DictValue, name = name, tools = [transform],
                           Key = key, Source = 'LoKi::Hybrid::DictTransform'
                           '<BBDecTreeTransform>/BBDecTree')
@@ -178,6 +178,8 @@ class CombineN(Hlt2Combiner):
         if tag == 'RAD':
             from HltLine.HltDecodeRaw import DecodeL0CALO
             dep.append(DecodeL0CALO)
-        Hlt2Combiner.__init__(self, 'NewTopo%s%iBody' % (tag, n), decays,
-                              inputs, shared = True, dependencies = dep,
+        from Hlt2Lines.Utilities.Hlt2MergedStage import Hlt2MergedStage
+        mergedInputs = Hlt2MergedStage('Topo%s%iBody' % (tag, n), inputs, shared = True)
+        Hlt2Combiner.__init__(self, 'Topo%s%iBody' % (tag, n), decays,
+                              [mergedInputs], shared = True, dependencies = dep,
                               CombinationCut = cc, MotherCut = mc)

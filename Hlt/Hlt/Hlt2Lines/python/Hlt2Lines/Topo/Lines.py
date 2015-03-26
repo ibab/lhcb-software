@@ -131,7 +131,7 @@ class TopoLines(Hlt2LinesConfigurableUser):
                     hlt = props['HLT1_ELECTRON_FILT']
                 else: l0 = None; hlt = None
                 Hlt2Line(name, prescale = self.prescale, algos = algos,
-                         L0DU = l0, HLT = hlt, postscale = self.postscale)
+                         L0DU = l0, HLT1 = hlt, postscale = self.postscale)
 
         # Build and register the radiative lines.
         from Inputs import BiKalmanFittedPhotonsFromL0

@@ -1,8 +1,9 @@
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
-class CharmHadD2HHKsLines(Hlt2LinesConfigurableUser):
-    __slots__ = {'Prescale'                 : {},
+class CharmHadD2HHKsLines(object):
+    def localcuts(self):
+        return { 'Prescale'                 : {},
                  'Postscale'                : {}
                 ,'TrackGEC' : {'NTRACK_MAX'      : 10000}
                 ,'Common' : {'TisTosSpec'   : "Hlt1Track.*Decision%TOS",
@@ -106,9 +107,9 @@ class CharmHadD2HHKsLines(Hlt2LinesConfigurableUser):
                                              'Trk_ALL_PT_MIN'           :  200 * MeV,
                                              'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                                           }
-        }
+               }
 
-    def __apply_configuration__(self):
+    def locallines(self):
 ##
 ## notation:  Ksh  <--> Kshort
 ##            LL, DD  <-->  both Kshort daughters are long or downstream tracks
@@ -129,8 +130,4 @@ class CharmHadD2HHKsLines(Hlt2LinesConfigurableUser):
                   'D02KshKPi_DD'      : [MassFilterD_DD('D02KshKPi_DD',inputs=[D02KshKPi_DD])],
                   'D02KshKK_LL'       : [MassFilterD_LL('D02KshKK_LL',inputs=[D02KshKK_LL])],
                   'D02KshKK_DD'       : [MassFilterD_DD('D02KshKK_DD',inputs=[D02KshKK_DD])] }
-
-        from HltLine.HltLine import Hlt2Line
-        for nickname, algos in self.algorithms(stages).iteritems():
-            Hlt2Line(nickname, prescale = self.prescale,
-                     algos = algos, postscale = self.postscale)
+        return stages

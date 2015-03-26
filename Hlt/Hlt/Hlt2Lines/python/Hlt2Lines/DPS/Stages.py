@@ -32,17 +32,18 @@ __all__     = ( 'MergeCharm'     ,
 # =============================================================================
 from Hlt2Lines.Utilities.Hlt2Combiner    import Hlt2Combiner
 from Hlt2Lines.Utilities.Hlt2Filter      import Hlt2ParticleFilter
+from Hlt2Lines.Utilities.Hlt2MergedStage import Hlt2MergedStage
 # =============================================================================
 ## @class MergedCharm
 #  make ``merged'' container of charm 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-03-10
-class MergeCharm(Hlt2ParticleFilter) :
+class MergeCharm(Hlt2MergedStage) :
     """
     Make ``merged'' container of charm
     """
     def __init__ ( self , name , inputs ) :
-        super(MergeCharm, self).__init__( name, "ALL ", inputs )
+        super(MergeCharm, self).__init__( name, inputs )
 
 # =============================================================================
 ## @class DiCharm

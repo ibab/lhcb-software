@@ -15,7 +15,7 @@ class Hlt2VeloTracks(Hlt2Stage):
     def clone(self, name):
         return Hlt2VeloTracks(name)
 
-    def stage(self, cuts):
+    def stage(self, stages, cuts):
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
         return Hlt2BiKalmanFittedForwardTracking().hlt2VeloTracking()
 
@@ -23,6 +23,7 @@ class VeloVertexFinder(Hlt2Stage):
     def __init__(self, prefix=linePrefix, name="VeloVertexFinder", dependencies=[], **kwargs):
         self.__prefix = prefix
         self.__kwargs = kwargs
+        self.__cache = {}
         self.outrv = "Rec/Vertex/{0}Velo".format(linePrefix)
         dependencies = dependencies + [ PV3D("Hlt2"), Hlt2VeloTracks() ]
         super(VeloVertexFinder, self).__init__( name, inputs=[], dependencies=dependencies )
@@ -35,7 +36,7 @@ class VeloVertexFinder(Hlt2Stage):
         args.update(kwargs)
         return VeloVertexFinder(**args)
 
-    def stage(self, cuts):
+    def stage(self, stages, cuts):
         algs = []
         from HltTracking.HltTrackNames import HltSharedTrackLoc
         tracksForVertexing = HltSharedTrackLoc["Velo"]
@@ -78,4 +79,5 @@ class VeloVertexFinder(Hlt2Stage):
         vx.addTool(vf, name="PVOfflineTool")
         algs.append(vx)
 
-        return bindMembers(None, self.dependencies(cuts) + self.inputStages(cuts) + algs)
+        stages += self.dependencies(cuts)
+        return algs

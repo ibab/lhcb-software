@@ -2,7 +2,6 @@ from copy import deepcopy
 from Hlt2TisTosFilter import Hlt2TisTosStage
 from Configurables import CombineParticles
 
-
 class Hlt2Combiner(Hlt2TisTosStage):
     def __counter(n):
         m = 3
@@ -16,7 +15,7 @@ class Hlt2Combiner(Hlt2TisTosStage):
     def __init__(self, name, decay, inputs, dependencies = [], tistos = [],
                  combiner = CombineParticles, nickname = None, shared = False, **kwargs):
         self.__decay = decay
-        self.__stage = None
+        self.__cache = {}
 
         ## Allow cuts to specified as kwargs
         cuts = {}
@@ -43,21 +42,25 @@ class Hlt2Combiner(Hlt2TisTosStage):
                              ('dependencies', self._deps()),
                              ('combiner', self.__combiner),
                              ('nickname', self._nickname())):
-            args[arg] = kwargs.pop(arg) if arg in kwargs else default
+            args[arg] = kwargs.pop(arg, default)
         args.update(kwargs)
         
         return Hlt2Combiner(**args)
 
-    def _makeMember(self, cuts, args):
+    def _makeMember(self, stages, cuts, args):
+        ## Return what we create directly and add what we depend on to stages.
         from HltLine.HltLine import Hlt2Member
         decays = [self.__decay] if type(self.__decay) == str else self.__decay            
+        inputs = self.inputStages(stages, cuts)
         return Hlt2Member(self.__combiner, self._name() + 'Combiner', shared = self._shared(),
-                          DecayDescriptors = decays, Inputs = self.inputStages(cuts),
-                          **args)
+                          DecayDescriptors = decays, Inputs = inputs, **args)
                                      
-    def stage(self, cuts):
-        if self.__stage != None:
-            return self.__stage
+    def stage(self, stages, cuts):
+        key = self._hashCuts(cuts)
+        if key in self.__cache:
+            cached = self.__cache[key]
+            stages += cached[1]
+            return cached[0]
         
         ## Copy args and substitute cut values
         args = deepcopy(self.__kwargs)
@@ -73,18 +76,24 @@ class Hlt2Combiner(Hlt2TisTosStage):
                 
         if not self._tistos():
             ## Return combiner if no tistos is required
-            self.__stage = self._makeMember(cuts, args)
-            return self.__stage
+            deps = self.dependencies(cuts)
+            member = self._makeMember(deps, cuts, args)
+            stages += deps
+            self.__cache[key] = (member, deps)
+            return member
 
         ## define the callback used to insert the right extra cut.
         def __combCutHandler(tagger, specs, args):
             tisTosCut = tagger.combinationCut(specs.values())
             if 'CombinationCut' in args:
-                args['CombinationCut'] = '{0} & {1}'.format(tisTosCut, args['CombinationCut'])
+                args['CombinationCut'] = '({0} & ({1}))'.format(tisTosCut, args['CombinationCut'])
             else:
                 args['CombinationCut'] = tisTosCut
 
-        self.__stage = self._handleTisTos(cuts, args, __combCutHandler)
-        return self.__stage
-        ## Convenience function to create the actual particle combiner
-
+        ## HandleTisTos adds inputs to stages, we have to add dependencies and
+        ## return our own stage.
+        deps = self.dependencies(cuts)
+        stage = self._handleTisTos(deps, cuts, args, __combCutHandler)
+        stages += deps
+        self.__cache[key] = (stage, deps)
+        return stage

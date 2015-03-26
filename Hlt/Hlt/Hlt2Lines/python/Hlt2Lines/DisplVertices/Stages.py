@@ -38,6 +38,7 @@ class VeloGEC(Hlt2Stage):
     def __init__(self, prefix=linePrefix, name="VeloGEC", **kwargs):
         self.__prefix = __prefix
         self.__kwargs = kwargs
+        self.__cache = {}
         super(VeloGEC, self).__init__(name, inputs=[], dependencies=[])
 
     def clone(self, name, **kwargs):
@@ -48,14 +49,19 @@ class VeloGEC(Hlt2Stage):
         args.update(kwargs)
         return VeloGEC(**args)
 
-    def stage(self, cuts):
+    def stage(self, stages, cuts):
+        key = self._hashCuts(cuts)
+        if key in self.__cache:
+            cached = self.__cache[key]
+            return cached
+
         from Configurables import Hlt__GEC
         gec = Hlt__GEC("Hlt2"+self.__prefix+self._name(),
                     IsActivity = False, MaxVeloHits = -1, MaxITHits = -1, MaxOTHits = -1,
                     MaxVeloBalance=cuts.get(self._name(), "MaxVeloBalance")
                     )
-        return bindMembers(None, self.dependencies(cuts) + self.inputStages(cuts) + [gec])
-
+        self.__cache[key] = gec
+        return gec
 
 class RecVertex2ParticleVelo(Hlt2TisTosStage):
     def __init__(self, prefix=linePrefix, name="RV2P", dependencies=[], **kwargs):
@@ -64,7 +70,8 @@ class RecVertex2ParticleVelo(Hlt2TisTosStage):
         inputs = [ BiKalmanFittedPions ]
         dependencies = dependencies + [ PV3D("Hlt2"), VeloVertexFinder(prefix) ]
         super(RecVertex2ParticleVelo, self).__init__(name, inputs=inputs, dependencies=dependencies, shared=True)
-
+        self.__cache = {}
+        
     def clone(self, name, **kwargs):
         args = deepcopy(self.__kwargs)
         args["name"] = name
@@ -73,10 +80,18 @@ class RecVertex2ParticleVelo(Hlt2TisTosStage):
         args.update(kwargs)
         return RecVertex2ParticleVelo(**args)
 
-    def stage(self, cuts):
+    def stage(self, stages, cuts):
+        key = self._hashCuts(cuts)
+        if key in self.__cache:
+            cached = self.__cache[key]
+            stages += cached[1]
+            return cached[0]
+
         from Configurables import LLParticlesFromRecVertices
+        deps = []
+        inputStages = self.inputStages(deps, cuts)
         rv2p = LLParticlesFromRecVertices("Hlt2"+self.__prefix+self._name(),
-                        Inputs             = [ i.outputSelection() for i in self.inputStages(cuts) ],
+                        Inputs             = [ i.outputSelection() for i in inputStages ],
                         RecVertexLocations = [ VeloVertexFinder(self.__prefix).outrv ],
                         Output             = "Hlt2/{0}{1}/Particles".format(self.__prefix, self._name()),
                         WriteP2PVRelations = False,
@@ -87,7 +102,10 @@ class RecVertex2ParticleVelo(Hlt2TisTosStage):
             if prop in rv2p.properties():
                 rv2p.setProp(prop, rv2pCuts[prop])
 
-        return bindMembers(None, self.dependencies(cuts) + self.inputStages(cuts) + [rv2p]).setOutputSelection(rv2p.getProp("Output"))
+        deps = self.dependencies(cuts)
+        stages += deps + inputStages
+        self.__cache[key] = (rv2p, deps)
+        return rv2p
 
 class SingleFilter(Hlt2ParticleFilter):
     def __init__(self, name="SingleFilter", tistos=[]):

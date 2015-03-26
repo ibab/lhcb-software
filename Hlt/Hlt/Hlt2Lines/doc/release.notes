@@ -8,6 +8,14 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-26 - Roel Aaij
+ - Add Hlt2MergedStage to allow merger of inputs.
+ - Remove a few more "New" from Topo stages.
+ - Use merged input stages in Topo and DPS lines.
+ - Adapt stages in DisplVertices to changes.
+ - Fix CharmHadWithKs to run.
+ - Fix Commissioning.Stages.
+
 ! 2015-03-26 - Tom Hadavizadeh
  -Added new lines to python/Hlt2Lines/CharmHad/
    -Added D2HHLines.py
@@ -15,7 +23,7 @@
    -All of the form D+ -> h+ h0 with h0 = pi0, eta, eta', or D0
    -h0 decays to either (e+ e- gamma) or (pi+ pi- gamma) depending on the decay.
 
-| 2015-03-24 - Olli Lupton
+! 2015-03-24 - Olli Lupton
  - First commit for PID calibration lines:
   . Detached J/psi -> mumu and B+ -> (J/psi -> mumu)K+
   . Same with J/psi -> ee
