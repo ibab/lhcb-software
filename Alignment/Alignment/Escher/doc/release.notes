@@ -1,8 +1,11 @@
 <PRE>
 Package : Escher
-Package Coordinator : Johan Blouw and Rob Lambert
+Package Coordinator : Maurizio Martinelli
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
+
+! 2015-03-26 - Maurizio Martinelli
+ - fixed a qmtest reference
 
 ! 2015-03-25 - Maurizio Martinelli
  - updated qmtests and references
