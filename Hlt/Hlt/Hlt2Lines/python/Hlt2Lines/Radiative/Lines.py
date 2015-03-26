@@ -13,7 +13,7 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 from B2XGamma import B2XGammaLines
 from B2GammaGamma import B2GammaGammaLines
 
-cuts = {'Common': {'TrackTisTos': 'Hlt1Track.*Decision%TOS',
+cuts = {'Common': {'TrackTisTos': 'Hlt1(Two)?Track(MVA)?.*Decision%TOS',
                    'PhotonTisTos': 'L0(Photon|Electron).*Decision%TOS',
                    'NTRACK_MAX': 300} }
 
