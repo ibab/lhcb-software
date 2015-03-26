@@ -363,56 +363,10 @@ namespace Gaudi
       // ======================================================================
     } ;
     // ========================================================================
-    /** Clenshaw algorithm for summation of Chebyshev polynomials 
-     *  \f$ f(x) = \sum_i p_i T_i(x)\f$
-     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date 2015-02-10
-     */
-    GAUDI_API double clenshaw_chebyshev 
-    ( const std::vector<double>& pars , 
-      const double               x    ) ;
-    // =========================================================================
-    /** Clenshaw algorithm for summation of Legendre polynomials 
-     *  \f$ f(x) = \sum_i p_i P_i(x) \f$
-     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date 2015-02-10
-     */
-    GAUDI_API double clenshaw_legendre
-    ( const std::vector<double>& pars , 
-      const double               x    ) ;
-    // ========================================================================
-    /** Clenshaw algorithm for summation of monomial series 
-     *  (aka Horner rule) 
-     *  \f$ f(x) = \sum_i a_i x^i \f$
-     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date 2015-02-10
-     */
-    GAUDI_API double clenshaw_polynom
-    ( const std::vector<double>& pars , 
-      const double               x    ) ;
-    // ========================================================================
-    /** Clenshaw algorithm for summation of monomial series (aka Horner rule) 
-     *  \f$ f(x) = \sum_i a_i x^i \f$, such as \f$f(0)= a_0\f$
-     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date 2015-02-10
-     */
-    GAUDI_API double horner_a0
-    ( const std::vector<double>& pars , 
-      const double               x    ) ;
-    // ========================================================================
-    /** Clenshaw algorithm for summation of monomial series (aka Horner rule) 
-     *  \f$ f(x) = \sum_i a_i x^i \f$, such as \f$f(0)= a_n\f$
-     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date 2015-02-10
-     */
-    GAUDI_API double horner_aN 
-    ( const std::vector<double>& pars , 
-      const double               x    ) ;
-    // ========================================================================
     /** affine transformation of polynomial
      *  \f$ x ^{\prime} = \alpha x + \beta \f$
-     *  @param input  (INPUT)  input polynomial coeffeicients 
-     *  @param output (UPDATE) coefficinects of transformed polynomial 
+     *  @param input  (INPUT)  input polynomial coefficients 
+     *  @param output (UPDATE) coefficients of transformed polynomial 
      *  @param alpha  (INPUT)  alpha
      *  @param beta   (INPUT)  beta
      *  @return true for valid transformations

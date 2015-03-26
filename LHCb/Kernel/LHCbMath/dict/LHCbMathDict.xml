@@ -192,6 +192,11 @@
   <function name = "Gaudi::Math::sumabs"          />
   <function name = "Gaudi::Math::abssum"          />
   <function name = "Gaudi::Math::horner_aN"       />
+  <function name = "Gaudi::Math::continued_fraction"       />
+  <function name = "Gaudi::Math::continued_fraction_simple"/>
+  <function name = "Gaudi::Math::continued_fraction_b"     />
+  <function name = "Gaudi::Math::exp_N"           />
+  <function name = "Gaudi::Math::exp_rel_N"       />
   <function name = "Gaudi::Math::binomEff"        />
   <function name = "Gaudi::Math::binomEff2"       />
   <function name = "Gaudi::Math::wilsonEff"       />

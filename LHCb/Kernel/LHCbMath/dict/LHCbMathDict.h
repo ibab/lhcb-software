@@ -35,6 +35,7 @@
 #include "LHCbMath/Bernstein.h"
 #include "LHCbMath/Polynomials.h"
 #include "LHCbMath/Choose.h"
+#include "LHCbMath/MoreFunctions.h"
 // ============================================================================
 /** @file LHCbMathDict.h
  *

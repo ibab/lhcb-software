@@ -19,6 +19,7 @@
 #include "LHCbMath/Power.h"
 #include "LHCbMath/Choose.h"
 #include "LHCbMath/Bernstein.h"
+#include "LHCbMath/MoreFunctions.h"
 // ============================================================================
 /** @file Implementation file for classes from file LHcbMath/Polynomials.h
  *  @see LHCbMath/Polynomials.h
