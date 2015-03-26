@@ -4,6 +4,10 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-03-26 - Stefano Perazzini
+ - Update of Beauty2Charm_Utils.py in Stripping{20,20r1,20r0p1,20r0p2,20r0p3,21} in
+   order to backport compatibility with new implementation of BBDT 
+
 !========================= StrippingArchive v1r27 2015-03-13 =========================
 
 ! 2015-03-04 - Stefano Perazzini

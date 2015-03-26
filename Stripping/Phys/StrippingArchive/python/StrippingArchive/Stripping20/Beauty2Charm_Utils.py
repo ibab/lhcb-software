@@ -130,6 +130,20 @@ def makeB2XSels(decays,xtag,inputs,config,useIP=True,resVert=True):
         bbdt = BBDT(sel.name()+'.B2CBBDT')
         bbdt.Threshold = config['B2CBBDT_MIN']
         bbdt.ParamFile = 'Beauty2Charm_BDTParams_v1r0.txt'
+        bbdt.ParticleDictTool='LoKi::Hybrid::DictOfFunctors/VarHandler'
+        from Configurables import LoKi__Hybrid__DictOfFunctors as VarHandler
+        varHandler = VarHandler( bbdt.name() + '.VarHandler' )
+        heavyIDs = "( (5 == ((ABSID / 1000) % 10)) " \
+                   + "| (4 == ((ABSID / 1000) % 10))" \
+                   + "| (5 == ((ABSID / 100) % 10))" \
+                   + "| (4 == ((ABSID / 100) % 10)) )"
+        hvChi2DOFTot = "SUMTREE(VFASPF(VCHI2),%s,0.0) / SUMTREE(VFASPF(VDOF),%s,0.0)" % (heavyIDs, heavyIDs)
+        varHandler.Variables = {
+                                   "FDCHI2"     :  "BPVVDCHI2"
+                                 , "PT"         :  "PT"
+                                 , "HVCHI2DOFTOT" : hvChi2DOFTot
+                               }
+
         sels.append(sel)
     return sels
 
