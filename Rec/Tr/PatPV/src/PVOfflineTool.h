@@ -79,7 +79,9 @@ private:
   double m_beamSpotX;
   double m_beamSpotY;
   std::string m_beamSpotCond;
-  
+  double m_resolverBound;
+  bool m_veloClosed;
+   
   StatusCode matchVtxByTracks(const LHCb::RecVertex& invtx,  
 			      std::vector<LHCb::RecVertex>& outvtxvec, 
 			      LHCb::RecVertex& outvtx);
@@ -112,5 +114,6 @@ private:
   int   m_timeTotal;
   int   m_timeSeeding;
   int   m_timeFitting;
+
 };
 #endif // PVOFFLINETOOL_H

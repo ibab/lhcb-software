@@ -37,6 +37,7 @@ PVOfflineTool::PVOfflineTool(const std::string& type,
     m_beamSpotX(0.),
     m_beamSpotY(0.),
     m_beamSpotCond(""),
+    m_veloClosed(false),
     m_timerTool(0)
 {
   declareInterface<IPVOfflineTool>(this);
@@ -49,9 +50,10 @@ PVOfflineTool::PVOfflineTool(const std::string& type,
   declareProperty("LookForDisplaced" , m_lookForDisplaced = false);
   declareProperty("PVsChi2Separation", m_pvsChi2Separation = 25.);
   declareProperty("PVsChi2SeparationLowMult", m_pvsChi2SeparationLowMult = 91.);
-  declareProperty("UseBeamSpotRCut",  m_useBeamSpotRCut  = false );
-  declareProperty("BeamSpotRCut",     m_beamSpotRCut = 0.3 );
-  declareProperty( "TimingMeasurement" , m_doTiming       = false     );
+  declareProperty("UseBeamSpotRCut",   m_useBeamSpotRCut  = false );
+  declareProperty("BeamSpotRCut",      m_beamSpotRCut = 0.3 );
+  declareProperty("ResolverBound",     m_resolverBound = 5 * Gaudi::Units::mm );
+  declareProperty("TimingMeasurement", m_doTiming       = false     );
   
 }
 
@@ -269,18 +271,17 @@ StatusCode PVOfflineTool::reconstructMultiPVFromTracks(std::vector<const LHCb::T
         m_timerTool->stop( m_timeFitting );
       }
 
-      removeTracks(rtracks, tracks2remove);
-      
       if(scvfit == StatusCode::SUCCESS) {
         bool isSepar = separatedVertex(recvtx,outvtxvec);
         bool inR = true;
-        if ( m_useBeamSpotRCut ) {
+        if ( m_useBeamSpotRCut && m_veloClosed ) {
           double dx = recvtx.position().x() - m_beamSpotX; 
           double dy = recvtx.position().y() - m_beamSpotY; 
           if ( std::sqrt(dx*dx + dy*dy) > m_beamSpotRCut ) inR = false;
-	}
+        }
         if ( isSepar && inR ) {
           outvtxvec.push_back(recvtx);
+          removeTracks(rtracks, tracks2remove);
         }
       }
     }//iterate on seeds
@@ -599,5 +600,9 @@ StatusCode PVOfflineTool::UpdateBeamSpot()
   //
   m_beamSpotX = ( xRC + xLA ) / 2;
   m_beamSpotY = Y ;
+
+  m_veloClosed = (std::abs ( xRC - m_beamSpotX ) < m_resolverBound && 
+                  std::abs ( xLA - m_beamSpotX ) < m_resolverBound);
+
   return StatusCode::SUCCESS;
 }

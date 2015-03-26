@@ -4,6 +4,12 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2015-03-26 - Roel Aaij
+ - Remove left-over possibility to apply R-cut in LSAdaptPV3DFitter
+ - Add bound on Velo distance to beam, above which the beam-spot R cut is not
+   applied. Once the BeamSpotRho functor is available in Rec, use that
+   instead.
+
 ! 2015-03-16 - Agnieszka Dziurda
  - add new functionality to LSAdaptPV3DFitter which 
  -- allow to use kalman fitter tracks, option UseFittedTracks

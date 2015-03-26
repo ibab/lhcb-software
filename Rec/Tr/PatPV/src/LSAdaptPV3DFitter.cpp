@@ -43,7 +43,6 @@ LSAdaptPV3DFitter::LSAdaptPV3DFitter(const std::string& type,
   declareProperty("maxDeltaZ", m_maxDeltaZ = 0.0005 * Gaudi::Units::mm); //m_maxDeltaZ = 0.001 * Gaudi::Units::mm);
   // Minimum Tukey's weight to accept a track
   declareProperty("minTrackWeight", m_minTrackWeight = 0.00000001); //0.00001);
-  declareProperty("maxRDPV", m_maxRDPV = 20.0 * Gaudi::Units::mm);
   declareProperty( "x0MS"            , m_x0MS          =  0.02          );
   declareProperty("TrackErrorScaleFactor", m_TrackErrorScaleFactor = 1.0 );
   declareProperty("CalculateMultipleScattering", m_CalculateMultipleScattering = true );
@@ -240,14 +239,14 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
     xyzvtx.SetY(xyzvtx.Y()+delta[1]);
     xyzvtx.SetZ(xyzvtx.Z()+delta[2]);
 
-    double r = std::sqrt((xyzvtx.x())*(xyzvtx.x())+(xyzvtx.y())*(xyzvtx.y()));
+    // double r = std::sqrt((xyzvtx.x())*(xyzvtx.x())+(xyzvtx.y())*(xyzvtx.y()));
     
     // loose convergence criteria if close to end of iterations                                                                                                                 
     if ( 1.*nbIter > 0.8*m_Iterations ) {
       maxdz = 10.*m_maxDeltaZ;
     }
 
-    if(fabs(delta[2]) < maxdz && r< m_maxRDPV) {
+    if(fabs(delta[2]) < maxdz) {
       converged = true;
     }
 
