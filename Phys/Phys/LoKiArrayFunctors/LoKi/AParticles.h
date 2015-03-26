@@ -1576,6 +1576,9 @@ namespace LoKi
     public:
       // ======================================================================
       /** constructor 
+       */
+      AllSameBestPV ( ) ;
+      /** constructor 
        *  @param maxdist maximal distance      for two vertices to be considered as identical 
        *  @param maxchi2 maximal distance-chi2 for two vertices to be considered as identical
        *  @param maxfrac maximal fraction of common tracks 
@@ -1583,9 +1586,9 @@ namespace LoKi
        *  - criteria are appied in "OR" mode
        *  - negative value means criterion is not applied 
        */
-      AllSameBestPV ( const double maxdist = -1 , 
-                      const double maxchi2 = -1 , 
-                      const double maxfrac = -1 ) ;
+      AllSameBestPV ( const double maxdist, 
+                      const double maxchi2, 
+                      const double maxfrac ) ;
       /// copy constructor 
       AllSameBestPV ( const AllSameBestPV& right) ;
       /// MANDATORY: virual destructor

@@ -6,6 +6,7 @@
 // ===========================================================================
 // STD & STL 
 // ===========================================================================
+#include <string>
 #include <climits>
 #include <algorithm>
 #include <functional>
@@ -2171,6 +2172,15 @@ LoKi::AParticles::MinDOCA::fillStream ( std::ostream& s ) const
 
 // ============================================================================
 /*  constructor 
+ */
+// ============================================================================
+LoKi::AParticles::AllSameBestPV::AllSameBestPV()
+   : AllSameBestPV (-1., -1., -1. )
+{
+
+}
+// ============================================================================
+/*  constructor 
  *  @param maxdist maximal distance      for two vertices to be considered as identical 
  *  @param maxchi2 maximal distance-chi2 for two vertices to be considered as identical
  *  @param maxfrac maximal fraction of common tracks 
@@ -2186,9 +2196,9 @@ LoKi::AParticles::AllSameBestPV::AllSameBestPV
   : LoKi::AuxFunBase ( std::tie ( maxdist , maxchi2 , maxfrac ) )
   , LoKi::AuxDesktopBase()
   , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate ()
-  , m_maxdist ( 0 <= maxdist ? maxdist : -1 ) 
-  , m_maxchi2 ( 0 <= maxchi2 ? maxchi2 : -1 ) 
-  , m_maxfrac ( 0 <= maxfrac ? maxfrac : -1 ) 
+  , m_maxdist ( 0 <= maxdist ? maxdist : -1. ) 
+  , m_maxchi2 ( 0 <= maxchi2 ? maxchi2 : -1. ) 
+  , m_maxfrac ( 0 <= maxfrac ? maxfrac : -1. ) 
 {
   if ( gaudi() && desktop() ) { checkReFit() ; }
 }
@@ -2198,7 +2208,10 @@ LoKi::AParticles::AllSameBestPV::AllSameBestPV
 LoKi::AParticles::AllSameBestPV::AllSameBestPV ( const AllSameBestPV& right)
   : AuxFunBase ( right ) 
   , LoKi::AuxDesktopBase( right )
-  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate ( right ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate ( right )
+  , m_maxdist ( right.m_maxdist ) 
+  , m_maxchi2 ( right.m_maxchi2 ) 
+  , m_maxfrac ( right.m_maxfrac ) 
 {
   if ( gaudi() && desktop() ) { checkReFit() ; }
 }
@@ -2225,14 +2238,18 @@ void LoKi::AParticles::AllSameBestPV::checkReFit() const
                 && m_maxdist <= 0 
                 && m_maxchi2 <= 0 
                 && m_maxfrac <= 0 )
-    { Error   ( "Property 'ReFitPVs' is activated!"       ) ; }
+    { Error   ( "Property 'ReFitPVs' is activated without "
+                "additional algorithms!" ) ; }
     else if   ( refit.value  () )
     { Warning ( "Property 'ReFitPVs' is activated!"       ) ; }
     else if   ( !refit.value  () && 
                 ( 0 < m_maxdist ||
                   0 < m_maxchi2 || 
                   0 < m_maxfrac  ) )
-    { Warning ( "Extra algorithms are activated - not optimal...." ) ; }
+    { Warning ( "Extra algorithms are activated - not optimal.... "
+                + std::to_string(m_maxdist) + std::string(" ")
+                + std::to_string(m_maxchi2) + std::string(" ")
+                + std::to_string(m_maxfrac) ) ; }
   } 
 }
 // ============================================================================
