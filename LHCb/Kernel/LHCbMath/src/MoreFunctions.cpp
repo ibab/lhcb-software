@@ -7,10 +7,6 @@
 #include <climits>
 #include <cassert>
 // ============================================================================
-// GSL 
-// ============================================================================
-#include "gsl/gsl_sf_exp.h"
-// ============================================================================
 // LHCbMath
 // ============================================================================
 #include "LHCbMath/MoreFunctions.h"
@@ -95,7 +91,6 @@ double Gaudi::Math::exp_N ( const double x , const unsigned short N )
     s_zero ( x ) ? 1. : _exp_N_ ( x , N ) ;
 }
 // ============================================================================
-#include <iostream>
 namespace 
 {
   // ==========================================================================
@@ -120,7 +115,7 @@ namespace
     long double k0  = 1  ;
     long double hp1 = h0 ;
     long double kp1 = k0 ;
-    for ( unsigned long n = 2 ; n <= 40 ; ++n ) 
+    for ( unsigned long n = 2 ; n <= 100000 ; ++n ) 
     {
       const long double   an = ( 0 == n % 2 ?  x * n / 2 :  -x*( N + ( n - 1 ) / 2 ) ) ;
       const unsigned long bn = n + N ;
@@ -169,7 +164,6 @@ namespace
 double Gaudi::Math::exp_rel_N ( const double x , const unsigned short N ) 
 {
   const long double y = x ;
-  std::cout << "GSL: " << gsl_sf_exprel_n( N , x ) << std::endl ;
   return 
     0 == N ?  std::exp ( y ) :  
     s_zero ( x ) ? 1 : 
