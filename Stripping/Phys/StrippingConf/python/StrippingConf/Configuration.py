@@ -29,6 +29,7 @@ class StrippingConf ( object ) :
                   AcceptBadEvents = True,
                   MaxCandidates = None, 
                   MaxCombinations = None,
+                  ActiveMDSTStream = False,
                   Verbose = False ) :
         
         log.info("Initialising StrippingConf "+ name)
@@ -38,6 +39,7 @@ class StrippingConf ( object ) :
             self._name = name
 
         self._verbose = Verbose
+        self._activeMDST = ActiveMDSTStream
         self._streams = []
         self._streamSequencers = []
         self._sequence = None
@@ -73,6 +75,14 @@ class StrippingConf ( object ) :
 
         for stream in Streams :
             self.appendStream(stream)
+
+        if self._activeMDST:
+            mdstLines = []
+            for stream in self.activeStreams():
+              mdstLines = [ line for line in stream.lines if line.MDSTFlag == True ]
+
+            mdstStream = StrippingStream( "MDST", Lines = mdstLines )
+            self.appendStream(mdstStream)
 
 	# Global FT locations have to be filled after appending streams, 
 	# because outputLocations of lines can be redefined

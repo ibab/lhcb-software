@@ -4,6 +4,9 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2015-03-26 - Stefano Perazzini
+ - Introduced a flag to activate the MDST stream.
+
 !========================= StrippingConf v4r15 2015-03-13 =========================
 
 ! 2015-03-03 - Stefano Perazzini
