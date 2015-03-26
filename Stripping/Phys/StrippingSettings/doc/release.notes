@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-03-15 - Andrea Contu
+ - Added Stripping22 folder and LineConfig file for EM stripping
+
 !========================= StrippingSettings v2r34 2015-01-19 =========================
 
 ! 2015-01-15 - Eduardo Rodrigues
