@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-03-26 - Roel Aaij
+ - Put Mike's hyperbolic 2D classifier in Hlt1TrackMVA.
+
 ! 2015-03-25 - Matthew Kenzie
  - Added Kaons to Hlt1SharedParticles
  - Changed Hlt1CalibTrackingLines to pick up Hlt1SharedParticles

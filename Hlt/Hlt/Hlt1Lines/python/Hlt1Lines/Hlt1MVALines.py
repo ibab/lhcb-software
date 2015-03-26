@@ -20,11 +20,12 @@ class Hlt1MVALinesConf( HltLinesConfigurableUser ) :
     #
     # V. Gligorov
     __slots__ = {'DoTiming'          : False,
-                 'TrackMVA' :    {'Threshold' :     0.4,
-                                  'P'         :  3000. * MeV,
-                                  'PT'        :   500. * MeV,
-                                  'IPChi2'    :     4.,
-                                  'File'      : '$PARAMFILESROOT/data/Hlt1TrackMVA.mx',
+                 'TrackMVA' :    {'MinPT'     :  1000.  * MeV,
+                                  'MaxPT'     : 25000.  * MeV,
+                                  'MinIPChi2' :     7.4,
+                                  'Param1'    :     0.5,
+                                  'Param2'    :     1.0,
+                                  'Param3'    :     1.0,
                                   'GEC'       : 'Loose'},
                  'TwoTrackMVA' : {'P'         :  3000. * MeV,
                                   'PT'        :   500. * MeV,
@@ -103,22 +104,18 @@ class Hlt1MVALinesConf( HltLinesConfigurableUser ) :
             'Hlt1%sUnit' % name,
             PVSelection = "PV3D",
             Monitor = True,
-            )
-
-        tool = self.matrixNetClassifier(unit, name, self.oneTrackVars)
-        props['tool'] = tool.getFullName()
-
-        unit.Preambulo = (self.mvaPreambulo())
-        code = """
-        SELECTION('%(input)s')
-        >> ( ( PT > %(PT)s * MeV ) & ( P  > %(P)s  * MeV ) & \
-             ( BPVIPCHI2() > %(IPChi2)s ) )
-        >> (VALUE('%(tool)s') > %(Threshold)s)
-        >> SINK('Hlt1%(name)sDecision')
-        >> ~TC_EMPTY
-        """ % props
-        unit.Code = code
-        unit.PreloadTools = [tool.getFullName()]
+            Code = """
+            SELECTION('%(input)s')
+            >> (((PT > %(MaxPT)s) & (BPVIPCHI2() > %(MinIPChi2)s))
+                | ( in_range( %(MinPT)s, PT, %(MaxPT)s) &
+                   (log(BPVIPCHI2()) > (%(Param1)s / ((PT / GeV - %(Param2)s) ** 2)  + 
+                                       (%(Param3)s / %(MaxPT)s) * (%(MaxPT)s   - PT) +
+                                        math.log(%(MinIPChi2)s)))))
+            >> SINK('Hlt1%(name)sDecision')
+            >> ~TC_EMPTY
+            """ % props,
+            Preambulo = self.mvaPreambulo()
+        )
                 
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from HltTracking.HltPVs import PV3D
@@ -150,8 +147,8 @@ class Hlt1MVALinesConf( HltLinesConfigurableUser ) :
                                       (BPVIPCHI2() > %(IPChi2)s)))
         >> tee(monitor(TC_SIZE > 0, '# V0', LoKi.Monitoring.ContextSvc))
         >> tee(monitor(TC_SIZE    , 'nV0s', LoKi.Monitoring.ContextSvc))
-        >> ((VFASPF(VCHI2) < %(VxChi2)s) & \
-            (in_range(%(MinETA)s,  ETA,      %(MaxETA)s)) & \
+        >> ( HASVERTEX & (VFASPF(VCHI2) < %(VxChi2)s)      & \
+            (in_range(%(MinETA)s,  ETA,      %(MaxETA)s))  & \
             (in_range(%(MinMCOR)s, BPVCORRM, %(MaxMCOR)s)) & \
             (VALUE('%(tool)s') > %(Threshold)s))
         >> SINK ('Hlt1%(name)sDecision')
@@ -198,7 +195,7 @@ class Hlt1MVALinesConf( HltLinesConfigurableUser ) :
             algos = algos)
 
     def mvaPreambulo(self):
-        return []
+        return ["import math"]
         
     def __apply_configuration__(self) : 
         from HltLine.HltLine import Hlt1Line
