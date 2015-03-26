@@ -1,10 +1,9 @@
 #!/usr/bin/env py.test
 
-## Agile-dev PATCH
-
+## Agile-dev patch (for small test without need to call `make purge; make`)
 import os
 import sys 
-os.environ['STRIPPINGSELECTIONSROOT'] = '/home/khurewat/cmtuser/DaVinciDev_v36r4p1/Phys/StrippingSelections'
+os.environ['STRIPPINGSELECTIONSROOT'] = os.path.abspath(os.getcwd()+'/../../..')
 sys.path.insert(0, os.environ['STRIPPINGSELECTIONSROOT']+'/python')
 
 import pytest  # Sadly, there's no fixture in 2.2.4, too old!!
@@ -25,8 +24,7 @@ def clean():
   UniquelyNamedObject._UniquelyNamedObject__used_names = []
 
 
-
-#--------------
+#------------------------------------------------------------------
 
 def test_buildStreams_from_bad():
   with pytest.raises(ValueError):

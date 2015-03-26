@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-03-26 - Chitsanu Khurewathanakul
+ - Added StrippingQEE/StrippingInclbJets.py
+
 ! 2015-03-25 - Michael Kolpin
  - Migration of tracking efficiency lines
  - Added Z and Upsilon lines to VeloMuon and DownMuon modules

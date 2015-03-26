@@ -4,7 +4,10 @@ from Gaudi.Configuration import *
 
 
 # Specify the name of your configuration
-confname = 'QEE' #FOR USERS
+# from StrippingSelections import lineBuilders
+# print lineBuilders(['QEE'])
+# confname = [ s.replace('Conf','') for s in lineBuilders(['QEE']).keys() ]
+# confname = 'QEE' #FOR USERS
 
 
 # Tighten Trk Chi2 to <3
@@ -24,8 +27,9 @@ juggler = RawEventJuggler( DataOnDemand=True, Input=2.0, Output=4.0 )
 # default_config dictionary in the code where your LineBuilder 
 # is defined.
 from StrippingSelections import buildersConf
-from StrippingSelections.Utils import buildStreamsFromBuilder
-streams = buildStreamsFromBuilder(buildersConf(), confname)
+from StrippingSelections.Utils import buildStreamsFromBuilder, buildStreams
+# streams = buildStreamsFromBuilder(buildersConf(), confname)
+streams = buildStreams(buildersConf(), 'QEE')
 
 leptonicMicroDSTname   = 'Leptonic'
 charmMicroDSTname      = 'Charm'

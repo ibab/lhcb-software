@@ -9,6 +9,8 @@ _selections = (
   'StrippingMuMuSS',
   'StrippingWMu',
   'StrippingSingleTrackTIS',
+  #
+  'StrippingInclbJets',
   # 'StrippingMBNoBias',     # Chitsanu: where are you... Hmm, I'm come back later
 )
 
@@ -19,4 +21,3 @@ for _sel in _selections :
     print '[WARNING] Submodule %s.%s raises the excetpion "%s" and will be skipped !' % ( __name__,_sel,x )
 
 _strippingModules = [ val for key,val in dict(locals()).iteritems() if key.startswith('Stripping') ]
-
