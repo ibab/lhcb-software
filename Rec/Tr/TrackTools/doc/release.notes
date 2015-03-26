@@ -4,6 +4,12 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-03-26 - Sascha Stahl
+ - TrackStateInitTool: Added option to use the FastMomentumEstimateTool to
+   get a momentum estimate for Long tracks. This reduces the timing
+   of the tool by roughly 30%. Current default is false but no effect is visible
+	 after the full Kalman fit.
+
 ! 2015-03-19 - Sascha Stahl
  - Run2GhostId: Fix bug in calculation of flattening.
 

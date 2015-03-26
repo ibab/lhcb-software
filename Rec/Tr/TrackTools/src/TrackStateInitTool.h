@@ -37,6 +37,7 @@
  */
 
 class DeSTDetector ;
+class ITrackMomentumEstimate;
 
 static const InterfaceID IID_TrackStateInitTool ( "TrackStateInitTool", 1, 0 );
 
@@ -62,10 +63,13 @@ protected:
   
 private:
   std::string   m_veloFitterName ;  
+  std::string m_fastMomentumToolName ;
   double m_ptVelo ;
+  bool m_useFastMomentumEstimate;
   IPatSeedFit* m_seedFit ;
   ITrackFitter* m_veloFitter ;  
   IPatVeloTTFit* m_veloTTFit ;
+	ITrackMomentumEstimate* m_fastMomentumTool;
   const ITrackExtrapolator* m_extrapolator;
   const DeSTDetector* m_ttdetector ;
 } ;
