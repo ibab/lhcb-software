@@ -42,9 +42,9 @@ class Hlt1Conf(LHCbConfigurableUser):
       import HltTracking.Hlt1Tracking
       from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
       from Configurables import LoKi__Hybrid__Tool as HybridFactory
-      coreFactory = CoreFactory("Hlt1Factory")
-      hybridFactory = HybridFactory("HybridFactory")
-      for factory in (coreFactory, hybridFactory):
+      for factory in (CoreFactory("Hlt1Factory"),
+                      HybridFactory("HybridFactory"),
+                      HybridFactory("Hlt1HybridFactory")):
           for m in [ "LoKiPhys.decorators"    ,
                      "LoKiCore.decorators"    ,
                      "LoKiTracks.decorators"  ,
@@ -71,13 +71,23 @@ class Hlt1Conf(LHCbConfigurableUser):
                             Code = "HLT_PASS_SUBSTR('Hlt1') ",
                             Location = decoder.listOutputs()[0])]
               )
-         
+
       # add a few thing to our printout
+      def __counter(n):
+         m = 3
+         while m <= n:
+            yield ''.join(str(i) for i in range(1, m))
+            m += 1
+      
       from HltLine.HltLine import addHlt1Prop
       addHlt1Prop([ 'RoutingBits', 'Accept', 'FilterDescriptor'
-                  , 'Code', 'Preambulo', 'InputLocations', 'Input','Inputs', 'Output','OutputProtoParticleLocation','InputTrackLocation'
+                  , 'Code', 'Preambulo', 'InputLocations', 'Input','Inputs', 'Output'
+                  , 'OutputProtoParticleLocation','InputTrackLocation'
                   , 'DaughtersCuts', 'CombinationCut', 'MotherCut', 'DecayDescriptor'
-                  , 'OutputSelection','Context' ])
+                  , 'OutputSelection','Context', 'TisTosSpecs' ] +
+                  [ 'Combination%sCut' % s for s in __counter(8) ])
+
+
       
       ## finally, define the Hlt1 sequence!!
       from Configurables import GaudiSequencer as Sequence

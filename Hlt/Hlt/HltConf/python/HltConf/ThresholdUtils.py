@@ -50,16 +50,18 @@ def Name2Threshold(name) :
     return Name2Threshold._dict[name]
 
 def importLineConfigurables(pkg, endsWithLines = False) :
-    # import all modules in Hlt{1,2}Lines, and require each file xyz to contain a class xyzConf
-    # i.e. do the equivalent of 
-    #    import HltXLines.HltXSomeLines, ...
-    #    return [ HltXLines.HltXSomeLines.HltXSomeLinesConf , ... ]
-    #
+    # import all modules in Hlt{1,2}Lines
+    # For Hlt1 do the equivalent of:
+    #    import Hlt1Lines.HltXSomeLines, ...
+    #    return [ Hlt1Lines.HltXSomeLines.HltXSomeLinesConf , ... ]
+    # For Hlt2 do the equivalent of:
+    #    import Hlt2Lines.SomeFolder.Lines, ...
+    #    return [ Hlt2Lines.SomeFolder.Lines.SomeLines , ... ]
     import os.path, pkgutil, importlib
     old_style = [getattr(importlib.import_module(pkg.__name__ + '.' + name), name + 'Conf')
                  for _, name, is_pkg in pkgutil.iter_modules(pkg.__path__[:2])
                  if (not endsWithLines or (endsWithLines and name.endswith('Lines'))) and not is_pkg]
     new_style = [getattr(importlib.import_module(pkg.__name__ + '.' + name + '.Lines'), name + 'Lines')
                  for _, name, is_pkg in pkgutil.iter_modules(pkg.__path__[:2])
-                 if is_pkg if name not in ('Utilities')]
+                 if is_pkg and name != 'Utilities']
     return old_style + new_style

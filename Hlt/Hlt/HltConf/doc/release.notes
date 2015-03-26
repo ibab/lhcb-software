@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2015-03-26 - Roel Aaij
+ - Updates to verbose printing and a bit of documentation on importing modules.
+
 ! 2015-03-15 - Roel Aaij
  - Add Hlt1 to lumi stripper filter name to adhere to HDRFilter naming
    convention.
