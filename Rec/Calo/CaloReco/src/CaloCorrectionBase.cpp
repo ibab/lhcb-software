@@ -31,13 +31,13 @@ CaloCorrectionBase::CaloCorrectionBase( const std::string& type   ,
   , m_prs        (DeCalorimeterLocation::Prs  )
   , m_detData    (DeCalorimeterLocation::Ecal )
   , m_det(0)
-  , m_origin     (Gaudi::XYZPoint())
+  , m_origin     ()
   , m_pileup(0)
   , m_correctCovariance( false )
   , m_caloElectron(0)
+  , m_cond    ( nullptr )
+  , m_tables  ( nullptr )
   , m_useCondDB( true )
-  , m_cond    ( NULL )
-  , m_tables  ( NULL )
   , m_update  (false )
 {
 
@@ -198,15 +198,13 @@ StatusCode CaloCorrectionBase::updParams(){
 
 CaloCorrection::Parameters CaloCorrectionBase::getParams(CaloCorrection::Type type, const LHCb::CaloCellID id) const{
 
-  // define empty Parameters
-  CaloCorrection::Parameters pdef{  CaloCorrection::Unknown, std::vector<double>{} };
   const std::string& name = CaloCorrection::typeName[ type ];
   auto it = m_params.find( name );
-  if( m_params.end() == it )return pdef;
+  if( m_params.end() == it )return {  CaloCorrection::Unknown, std::vector<double>{} };
 
   // get parameters
   const std::vector<double>& pars = it->second;
-  if( pars.size() < 2 )return pdef;
+  if( pars.size() < 2 )return {  CaloCorrection::Unknown, std::vector<double>{} };
   
   // consistency of pars checked elsewhere - straight parsing here
   int func = pars[0];
@@ -220,7 +218,7 @@ CaloCorrection::Parameters CaloCorrectionBase::getParams(CaloCorrection::Type ty
     v.push_back( pars[ pos ] );
     pos += narea;
   }
-  return { (CaloCorrection::Function) func , v }; 
+  return { (CaloCorrection::Function) func , std::move(v) }; 
 }
 
 
@@ -228,15 +226,14 @@ double CaloCorrectionBase::getCorrection(CaloCorrection::Type type,  const LHCb:
 
   CaloCorrection::Parameters pars = getParams( type , id );
 
-  const std::string& name =  CaloCorrection::typeName[ type ];
+  const auto& name =  CaloCorrection::typeName[ type ];
   if ( UNLIKELY(msgLevel( MSG::DEBUG) ) )
     debug() << "Correction type " << name << " to be applied on cluster (seed = " << id << ") is a '" 
             << CaloCorrection::funcName[ pars.first ] << "' function with params = " << pars.second << endmsg;
 
 
   // compute correction 
-  double cor = def; 
-  if( pars.first == CaloCorrection::Unknown ||  pars.second.empty() ) return cor; 
+  if( pars.first == CaloCorrection::Unknown ||  pars.second.empty() ) return def; 
 
   // list accessor - not correction :
   if( pars.first == CaloCorrection::ParamList || pars.first == CaloCorrection::GlobalParamList){
@@ -244,6 +241,7 @@ double CaloCorrectionBase::getCorrection(CaloCorrection::Type type,  const LHCb:
     return def;
   }
 
+  double cor = def; 
   // polynomial correction 
   const std::vector<double>& temp = pars.second;
 
@@ -325,7 +323,7 @@ double CaloCorrectionBase::getCorrection(CaloCorrection::Type type,  const LHCb:
     }
   }
   
-  counter(name + " correction processing (" + id.areaName() + ")") += cor;
+  kounter(type, id.areaName()) += cor;
   return cor;
 }
       

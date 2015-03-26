@@ -4,6 +4,14 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2015-03-26 - Gerhard Raven
+  -  CaloCorrectionBase::getParams: 
+   o don't create an empty vector if it won't be needed
+   o cache counters by (type, areaName) instead of creating a string containing
+      both every single time, and then looking them up by string
+   This reduces the # of calls to new/delete in the HLT by ~10% (!), and speeds up 
+   the HLT (in its preliminary 2015 configuration) by ~1%.
+
 !========================= CaloReco v5r23 2015-02-23 =========================
 ! 2015-01-21 - Daria Savrina
  - Corrected a typo in Calo/CaloReco/python/CaloReco/Reconstruction.py, line 160

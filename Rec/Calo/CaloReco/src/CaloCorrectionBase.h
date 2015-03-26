@@ -230,15 +230,41 @@ private:
   StatusCode setOptParams();
   StatusCode setDBParams();
   void checkParams();
-  
-  
 
   std::map<std::string, std::vector<double> > m_params;
-  bool m_useCondDB;
   std::map<std::string, std::vector<double> > m_optParams;
+  mutable std::array< GaudiUtils::VectorMap<std::string, StatEntity* >, CaloCorrection::lastType+1 > m_counters;
   Condition* m_cond;
   std::string m_cmLoc;
   ICaloRelationsGetter*    m_tables;
+  bool m_useCondDB;
   bool m_update;
+
+  // Cache counters, as looking them up as 
+  //    counter( CaloCorrection::typeName[ type ] + " correction processing (" + areaName + ")" )
+  // requires the creation of a temporary string every time, which in turn
+  // involves (eventually) a call to 'new' and 'delete'  -- and the above was the source of 10% (!) 
+  // of the # of calls to 'new' and 'delete' in the HLT!!!! (FYI: there are, on average, 1K calls 
+  // per event to this method!!!)
+  //
+  // On top of that, this also speeds up the actual search for the correct counter, 
+  // by making it a two-step process, and the first step is a direct lookup
+  // instead of a 'find'.
+  //
+  // in the end, this change alone speeds up the total HLT by about 1%...
+  StatEntity& kounter(CaloCorrection::Type type, const std::string& areaName) const {
+      assert( type < CaloCorrection::lastType+1 );
+      auto a = m_counters[type].find(areaName);
+      if ( UNLIKELY( a == std::end(m_counters[type]) ) ) {
+          std::string name = CaloCorrection::typeName[ type ] + " correction processing (" + areaName + ")";
+          auto r = m_counters[type].insert( areaName, &counter(name) );
+          assert(r.second);
+          assert(r.first);
+          a = r.first;
+      }
+      assert(a->second);
+      return *(a->second);
+  }
+
 };
 #endif // CALOCORRECTIONBASE_H
