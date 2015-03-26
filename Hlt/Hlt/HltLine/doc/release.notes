@@ -5,6 +5,9 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2015-03-26 - Roel Aaij
+ - Add and support Hlt2SubSequence.
+
 ! 2015-03-14 - Roel Aaij
  - Improve/fix error messages.
 

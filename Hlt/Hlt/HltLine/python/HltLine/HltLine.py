@@ -564,7 +564,7 @@ class bindMembers (object) :
     """
     Simple class to represent a set of Hlt1Members which are bound to a line
     """
-    __slots__ = ('_members','_outputsel','output')
+    __slots__ = ('_parent', '_members', '_outputsel', 'output')
 
     def outputSelection( self ) : 
         return self._outputsel
@@ -606,10 +606,16 @@ class bindMembers (object) :
                     #if hasattr(type(alg),'Output') and not hasattr(alg,'Output') :
                     #    log.warning('Algorithm %s of type %s did not specify Output'% (alg.name(),alg.getType()))
                     return [ alg.name() ]
-            for i in self._members: 
-                 known_inputs += _OutputLocationsGetter(i)
+            def _addMembers(members, bm):
+                if bm._parent: _addMembers(members, bm._parent)
+                members += bm._members
+            members = []
+            _addMembers(members, self)
+            for i in members:
+                known_inputs += _OutputLocationsGetter(i)
             missing = set(req_inputs) - set(known_inputs)
             if missing :
+                import pdb; pdb.set_trace()
                 extra = set(known_inputs) - set(req_inputs) - set(  _OutputLocationsGetter(alg) )
                 log.warning( ' input/output matchmaker for  %s generated warnings' %(alg.name()) )
                 log.warning( ' ---> missing requests: ' + str(missing)  )
@@ -618,7 +624,7 @@ class bindMembers (object) :
                     log.warning( ' this might be OK if eg. the extra requests produce the output of the missing requests... but this can not yet be verified automatically')
                 #raise AttributeError, 'I/O mismatch detected'
 
-    def _default_handler_( self, line, alg ) :
+    def _default_handler_( self, line, alg, parent ) :
         # if not known, blindly copy -- not much else we can do
         self._members += [ alg ]
         # try to guess where the output goes...
@@ -658,29 +664,34 @@ class bindMembers (object) :
         _CheckForOutputOverlap(alg)
 
     # allow chaining of previously bound members...
-    def _handle_bindMembers( self, line, alg ) :
+    def _handle_bindMembers( self, line, alg, parent ) :
         self._members  += alg.members()
         # do NOT update the current outputselection if
         # the new member doesn't have one...
         if alg.outputSelection() : self._outputsel = alg.outputSelection()
 
-    def _handle_Selection(self, line, alg) :
+    def _handle_Selection(self, line, alg, parent ) :
         members = flatAlgorithmList(alg)
         for a in members :
             self._members += [a]
         self._outputsel = alg.outputLocation()
 
-
-    # if Hlt2Member, ask it to creats a configurable instance for this line..
+    # if Hlt2Member, ask it to create a configurable instance for this line..
     # then it's bussines as usual..
-    #@TODO: handle expansion/substitution
-    def _handle_Hlt2Member( self, line, alg ) :
+    def _handle_Hlt2Member( self, line, alg, parent ) :
         if line == None: raise AttributeError, 'Must have a line name to bind to'
         alg = alg.createConfigurable( line, **alg.Args )
-        return self._default_handler_( line,  alg )
+        return self._default_handler_( line, alg, parent )
+
+    # if Hlt2SubSequence, ask it to create a configurable instance for this line
+    # Then it's bussines as usual.
+    def _handle_Hlt2SubSequence( self, line, seq, parent ) :
+        if line == None: raise AttributeError, 'Must have a line name to bind to'
+        seq = seq.createConfigurable( line, parent = parent if parent else self, **seq.Args )
+        return self._default_handler_( line, seq, parent )
 
     # if Hlt1Member, verify, expand, and chain
-    def _handle_Hlt1Member( self, line, alg ) :
+    def _handle_Hlt1Member( self, line, alg, parent ) :
         if line == None: raise AttributeError, 'Must have a line name to bind to'
         margs = alg.Args.copy() 
         #### TODO: use _checkSelection to make sure the result is valid!!!
@@ -751,17 +762,18 @@ class bindMembers (object) :
         # create (the configurable for) the algorithm and add it to the sequencer:
         self._members += [ alg.createConfigurable( line , **margs ) ]
 
-    def _handle_NoneType( self, line, alg ) :
+    def _handle_NoneType( self, line, alg, parent ) :
         pass
 
-    def __init__( self, line, algos ) :
+    def __init__( self, line, algos, parent = None ) :
         self._members = []
         self._outputsel = None
+        self._parent = parent
         for alg in algos:
             # dispatch according to the type of alg...
             x = '_handle_' + type(alg).__name__
             handle = getattr(self, x if hasattr(self, x) else '_default_handler_')
-            handle(line,alg)
+            handle(line, alg, parent)
 
 # =============================================================================
 ## @class Hlt1Tool
@@ -1291,9 +1303,6 @@ class Hlt2Member ( object ) :
                          , shared = self.Shared
                          , **args )
 
-    def subtype( self )        :
-        " Return the 'subtype' of the member "
-        return self.Type.__name__
     def name   ( self , line ) :
         " Return the full name of the member "
         if self.Shared:
@@ -1331,8 +1340,12 @@ class Hlt2Member ( object ) :
                     else:
                         return 'Hlt2/Hlt2' + line + i.subname() + '/Particles'
                 else :
-                       from re import sub
-                       return sub('^%', 'Hlt2' + line, i )
+                    try:
+                        return re.sub('^%', 'Hlt2' + line, i )
+                    except TypeError:
+                        import pdb
+                        pdb.set_trace()
+
             inputLocations = [ _adapt(i,line) for i in inputLocations ]
             # deal with nested lists, keep order invariant
             args['Inputs'] = [ i for i in flatten(inputLocations) ]
@@ -1360,6 +1373,91 @@ class Hlt2Member ( object ) :
             for tool in self.Tools : tool.createConfigurable( instance )
             return instance
 
+# =============================================================================
+## @class Hlt2SubSequence
+#  Simple class to represent a sub-sequence that is part of an Hlt2 line.
+#  @author Roel Aaij roel.aaij@cern.ch
+#  @date   2015-03-19
+class Hlt2SubSequence ( object ) :
+    __slots__ = ( 'Name' , 'Members', 'Args', 'Shared' )
+    
+    ### The standard constructor to create the  Hlt1Member instance:
+    def __init__ ( self          ,    ## ...
+                   name          ,    ## the specific part of the algorithm name 
+                   members       ,
+                   shared = False,    ## If shared, do not inject the line name in the name
+                   **Args        ) :  ## arguments 
+        """
+        The standard constructor to create the  Hlt2SubSequence instance:
+        >>> subSeq = Hlt2SubSequence ('SubSequence', MoreOR = '...', Members = [...])
+        """
+        from Configurables import GaudiSequencer
+        ## verify Args
+        for key in Args :
+            if  key not in GaudiSequencer.__slots__  :
+                raise AttributeError, "The key %s is not allowed for %s"%(key,GaudiSequencer.__name__)
+
+        ## "clone" all agruments
+        self.Name    = deepcopy ( name   )
+        self.Args    = deepcopy ( Args   )
+        self.Members = [m for m in members]
+        self.Shared  = deepcopy ( shared )
+
+    def clone( self, name, **mods ) :
+        args = deepcopy( self.Args )
+        args.update( mods )
+        members = args.pop('members', self.Members)
+        return Hlt2SubSequence(name, members = members, shared = self.Shared, **args)
+    
+    ## def subtype( self )        :
+    ##     " Return the 'subtype' of the member "
+    ##     return "Sequencer"
+    def name   ( self , line ) :
+        " Return the full name of the member "
+        if self.Shared:
+            return memberName ( self , '', level = 'Hlt2' ) 
+        else:
+            return memberName ( self , line, level = 'Hlt2' ) 
+    def id     ( self )        :
+        " Return the ID of the member "        
+        return self.Name
+    def subname( self )        :
+        " Return the specific part of the name "        
+        return self.id()
+
+    def createConfigurable( self, line, parent = None, **args ) :
+        """
+        Create the configurable
+        """
+        ## clone the arguments
+        line = deepcopy ( line )
+        args = deepcopy ( args ) 
+
+        _name = self.name( line )
+        from GaudiConfUtils import configurableExists
+        if configurableExists(_name):
+            if self.Shared:
+                from GaudiKernel.Configurable import Configurable
+                prev = Configurable.allConfigurables.get(_name)
+                for arg, val in args.iteritems():
+                    if getattr(prev, arg) != val:
+                        raise AttributeError(('%s is not the same for previously created ' % arg) +
+                            'configurable %s and new instance: %s %s' % (_name, getattr(prev, arg), val))
+                if len(self.Members) != len(prev.Members):
+                    raise AttributeError(('Members is not the same for previously created ') +
+                        'SubSequence %s and new instance: %s %s' % (_name, prev.Members, self.Members))
+                for (pm, m) in zip(prev.Members, self.Members):
+                    if not pm.name().endswith(m.id()):
+                        raise AttributeError(('Name of member %s of previously created SubSequence' % pm.name()) +
+                                             ' is does not end the same as new member with name %s.' % m.name())
+                return prev
+            else:
+                raise NameError('Configurable %s already exists, oh dear!'%_name)
+        else:
+            from Configurables import GaudiSequencer
+            bm = bindMembers(line, self.Members, parent = parent)
+            return GaudiSequencer( _name, Members = bm.members(), **args)
+        
 # ============================================================================
 ## @class Hlt2Line
 #  The major class which represent the Hlt2 Line, the sequence.
