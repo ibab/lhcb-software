@@ -103,6 +103,9 @@ LoKi::Hlt1::FromCaloToParticles::operator()
     const LHCb::L0CaloCandidate* calo = cand1->get<LHCb::L0CaloCandidate> () ;
     if ( !calo ) { continue ; }
 
+    // Filter calo candidates for photon
+    if ( 22 == m_pp->particleID().pid() && !isPhotonCand(calo) ) { continue ; }
+
     // create Particle
     LHCb::Particle* particle = caloRecoChain( calo, m_pp->particleID() ) ;
 

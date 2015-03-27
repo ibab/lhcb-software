@@ -101,6 +101,12 @@ namespace LoKi
         /// Calo parameters
         const double m_z ;
         ICaloDataProvider*  m_calo ;
+        /// Determine if a L0CaloCandidate is a photon or not
+        bool isPhotonCand ( const LHCb::L0CaloCandidate* cand ) const
+        {
+            const int type = cand->type() ;
+            return ( type == L0DUBase::CaloType::Photon || type == L0DUBase::CaloType::Electron ) ;
+        } ;
         LHCb::Particle* caloRecoChain( const LHCb::L0CaloCandidate* cand ,
                                        const LHCb::ParticleID particleID ) const ;
         // ======================================================================

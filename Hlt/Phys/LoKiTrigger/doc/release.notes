@@ -6,6 +6,7 @@
 
 ! 2015-03-27 - Albert Puig
  - Fixed FromCaloToParticles to be HltSelReports-compliant.
+ - Add filter of L0CaloCandidate type for photons in FromCaloToParticles.
 
 ! 2015-03-25 - Matthew Kenzie
  - Only getDaughters() once when using Hlt1Combiner
