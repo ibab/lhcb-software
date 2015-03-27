@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-03-27- Michel De Cian
+ - Rename 'PatVeloConf' to 'PatVeloTTConf'
+
 ! 2015-03-11 - Espen Eie Bowen
  - Add protection in case of empty layers
 
