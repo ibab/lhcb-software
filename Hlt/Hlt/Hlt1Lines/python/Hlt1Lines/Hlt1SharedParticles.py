@@ -13,7 +13,7 @@ class Hlt1SharedParticles(HltLinesConfigurableUser):
         TrackCandidates
         >>  FitTrack
         >>  ( ( TrPT > %(PT)s * MeV ) & \
-            ( TrP  > %(P)s  * MeV ) )
+              ( TrP  > %(P)s  * MeV ) )
         >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
         >>  ( TrCHI2PDOF < %(TrackChi2DOF)s )

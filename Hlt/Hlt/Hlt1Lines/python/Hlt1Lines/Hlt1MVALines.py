@@ -19,34 +19,37 @@ class Hlt1MVALinesConf( HltLinesConfigurableUser ) :
     #--------------------------------
     #
     # V. Gligorov
-    __slots__ = {'DoTiming'          : False,
-                 'TrackMVA' :    {'MinPT'     :  1000.  * MeV,
-                                  'MaxPT'     : 25000.  * MeV,
-                                  'MinIPChi2' :     7.4,
-                                  'Param1'    :     0.5,
-                                  'Param2'    :     1.0,
-                                  'Param3'    :     1.0,
-                                  'GEC'       : 'Loose'},
-                 'TwoTrackMVA' : {'P'         :  3000. * MeV,
-                                  'PT'        :   500. * MeV,
-                                  'IPChi2'    :     4.,
-                                  'MinMCOR'   :  1000. * MeV,
-                                  'MaxMCOR'   :   1e9  * MeV,
-                                  'MinETA'    :     2.,
-                                  'MaxETA'    :     5.,
-                                  'DOCA'      :  1000. * mm,
-                                  'V0PT'      :  2000. * MeV,
-                                  'VxChi2'    :    10.,
-                                  'MvaVars'   : {'pt'     : 'PT',
-                                                 'chi2'   : 'VFASPF(VCHI2)',
-                                                 'ipchi2' : 'BPVIPCHI2()',
-                                                 'fdchi2' : 'BPVVDCHI2',
-                                                 'mcor'   : 'BPVCORRM',
-                                                 'minpt'  : 'MINTREE(PT, ISBASIC)',
-                                                 'nlt16'  : 'NINTREE(ISBASIC & (BPVIPCHI2() < 16))'},
-                                  'Threshold' :     0.4,
-                                  'File'      : '$PARAMFILESROOT/data/Hlt1TwoTrackMVA.mx',
-                                  'GEC'       : 'Loose'},
+    __slots__ = {'DoTiming'                     : False,
+                 'TrackMVA' :    {'MinPT'       :  1000.  * MeV,
+                                  'MaxPT'       : 25000.  * MeV,
+                                  'MinIPChi2'   :     7.4,
+                                  'Param1'      :     0.5,
+                                  'Param2'      :     1.0,
+                                  'Param3'      :     1.0,
+                                  'GEC'         : 'Loose'},
+                 'TwoTrackMVA' : {'P'           :  5000. * MeV,
+                                  'PT'          :   500. * MeV,
+                                  'TrChi2'      :     2.5,
+                                  'IPChi2'      :     4.,
+                                  'MinMCOR'     :  1000. * MeV,
+                                  'MaxMCOR'     :   1e9  * MeV,
+                                  'MinETA'      :     2.,
+                                  'MaxETA'      :     5.,
+                                  'MinDirA'     :     0.,
+                                  'DOCA'        :  1000. * mm,
+                                  'V0PT'        :  2000. * MeV,
+                                  'VxChi2'      :    10.,
+                                  'MvaVars'     : {'pt'     : 'PT',
+                                                   'chi2'   : 'VFASPF(VCHI2)',
+                                                   'ipchi2' : 'BPVIPCHI2()',
+                                                   'fdchi2' : 'BPVVDCHI2',
+                                                   'mcor'   : 'BPVCORRM',
+                                                   'minpt'  : 'MINTREE(PT, ISBASIC)',
+                                                   'nlt16'  : 'NINTREE(ISBASIC & (BPVIPCHI2() < 16))'},
+                                  'Classifier'  : {'Type' : 'MatrixNet',
+                                                   'File' : '$PARAMFILESROOT/data/Hlt1TwoTrackMVA.mx'},
+                                  'Threshold'   :     0.4,
+                                  'GEC'         : 'Loose'},
                  'L0Channels'  : {'TrackMVA'    : 'L0_DECISION_PHYSICS',
                                   'TwoTrackMVA' : 'L0_DECISION_PHYSICS'},
                  'Priorities'  : {'TrackMVA'    : 20,
@@ -85,10 +88,16 @@ class Hlt1MVALinesConf( HltLinesConfigurableUser ) :
                 mvaVars.update({var : fun.format(daughterNum)})
         return mvaVars
     
-    def matrixNetClassifier(self, unit, name, varFun):
-        from MVADictHelpers import addMatrixnetclassifierValue
-        return addMatrixnetclassifierValue(unit, self.getProp(name)['File'], varFun(),
-                                           name + 'MatrixNetTool')
+    def classifier(self, unit, name, varFun):
+        classifier = self.getProps()[name]['Classifier']
+        from MVADictHelpers import (addMatrixnetclassifierValue,
+                                    addBBDecTreeclassifierValue)
+        known = {'BBDT'      : addBBDecTreeclassifierValue,
+                 'MatrixNet' : addMatrixnetclassifierValue}
+        configClassifier = known.get(classifier['Type'])
+        return configClassifier(unit, classifier['File'], varFun(),
+                                name + 'MatrixNetTool')
+        
     def oneTrackStreamer(self, name, props, inputParticles) :
         from copy import deepcopy
         props = deepcopy(props)
@@ -125,7 +134,7 @@ class Hlt1MVALinesConf( HltLinesConfigurableUser ) :
         preambulo = self.mvaPreambulo()
         preambulo += [ "from LoKiArrayFunctors.decorators import APT, ACUTDOCA",
                       ("%(name)sCombinationConf = LoKi.Hlt1.Hlt1CombinerConf(strings(['K*(892)0 -> pi- pi+', '[K*(892)0 -> pi+ pi+]cc'])," +
-                       "((APT > %(PT)s) & (ACUTDOCA(%(DOCA)s,'LoKi::DistanceCalculator'))), ALL)") % props]
+                       "((APT > %(V0PT)s) & (ACUTDOCA(%(DOCA)s,'LoKi::DistanceCalculator'))), ALL)") % props]
 
         from Configurables import LoKi__HltUnit as HltUnit
         unit = HltUnit(
@@ -134,18 +143,21 @@ class Hlt1MVALinesConf( HltLinesConfigurableUser ) :
             Monitor = True,
             Preambulo = preambulo
             )
-        tool = self.matrixNetClassifier(unit, name, lambda : self.twoTrackVars(name))
+        tool = self.classifier(unit, name, lambda : self.twoTrackVars(name))
 
         props['tool'] = tool.getFullName()
         code = """
         TC_HLT1COMBINER('', %(name)sCombinationConf,
-                        '%(input)s', ((PT > %(V0PT)s * MeV) & (P  > %(P)s * MeV) & \
+                        '%(input)s', ((PT          > %(PT)s * MeV) & \
+                                      (P           > %(P)s    * MeV) & \
+                                      (TRCHI2DOF   < %(TrChi2)s) & \
                                       (BPVIPCHI2() > %(IPChi2)s)))
         >> tee(monitor(TC_SIZE > 0, '# V0', LoKi.Monitoring.ContextSvc))
         >> tee(monitor(TC_SIZE    , 'nV0s', LoKi.Monitoring.ContextSvc))
         >> ( HASVERTEX & (VFASPF(VCHI2) < %(VxChi2)s)      & \
             (in_range(%(MinETA)s,  BPVETA,    %(MaxETA)s))  & \
             (in_range(%(MinMCOR)s, BPVCORRM, %(MaxMCOR)s)) & \
+            (BPVDIRA           > %(MinDirA)s) & \
             (VALUE('%(tool)s') > %(Threshold)s))
         >> SINK ('Hlt1%(name)sDecision')
         >> ~TC_EMPTY
