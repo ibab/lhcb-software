@@ -95,6 +95,7 @@ APACHECONF=/etc/httpd/conf/httpd.conf
 # Alter default global configuration
 sudo sed -i 's/Listen 80/Listen 8008/' $APACHECONF
 sudo sed -i 's/#NameVirtualHost \*:80/NameVirtualHost *:8008/' $APACHECONF
+sudo sed -i 's/#Sendfile off/Sendfile Off/' $APACHECONF
 # Add configuration for the VELO site
 sudo cat > /etc/httpd/conf.d/VeloWebGUI.conf << EOF
 LoadModule proxy_uwsgi_module /usr/lib64/httpd/modules/mod_proxy_uwsgi.so
