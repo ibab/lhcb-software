@@ -4,6 +4,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-03-27 - Albert Puig
+ - Fixed FromCaloToParticles to be HltSelReports-compliant.
+
 ! 2015-03-25 - Matthew Kenzie
  - Only getDaughters() once when using Hlt1Combiner
 

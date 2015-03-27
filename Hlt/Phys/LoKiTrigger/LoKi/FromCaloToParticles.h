@@ -20,6 +20,10 @@
 // ============================================================================
 #include "Event/ProtoParticle.h"
 #include "Event/Particle.h"
+#include "Event/L0DUBase.h"
+#include "Event/L0CaloCandidate.h"
+#include "CaloUtils/CaloParticle.h"
+#include "CaloDAQ/ICaloDataProvider.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -94,6 +98,11 @@ namespace LoKi
         /// members which store pid hypoth and ptcut
         const LHCb::ParticleProperty* m_pp ;
         LoKi::FunctorFromFunctor<const LHCb::Particle*, bool> m_cut;
+        /// Calo parameters
+        const double m_z ;
+        ICaloDataProvider*  m_calo ;
+        LHCb::Particle* caloRecoChain( const LHCb::L0CaloCandidate* cand ,
+                                       const LHCb::ParticleID particleID ) const ;
         // ======================================================================
     };
     // ==========================================================================
