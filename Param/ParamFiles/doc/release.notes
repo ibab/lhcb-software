@@ -4,6 +4,11 @@
 ! Purpose     : Distribution of parametrization data files
 !-----------------------------------------------------------------------------
 
+! 2015-03-27 - Roel Aaij
+ - Update MatrixNet file for for Hlt1TwoTrackMVA and remove the one
+   previously committed for Hlt1TrackMVA, as it will not be used.
+ - Add BBDT file for Hlt1TwoTrackMVA.
+
 ! 2015-03-20 - Patrick Spradlin
  + data/Hlt2Dst2PiD02HHX_BDTParams_v0r0.txt
    Added initial version of lookup table for an inclusive D* trigger in Hlt2.
