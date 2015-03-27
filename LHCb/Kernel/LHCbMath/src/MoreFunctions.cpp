@@ -136,7 +136,7 @@ namespace
         hm1 = std::ldexp ( hm1 , s_imax ) ;
         km1 = std::ldexp ( km1 , s_imax ) ;
       }
-      // check convergency 
+      // time-to-time check the convergency 
       if ( 0 == n % 5 ) 
       {
         const long double delta  =  ( hm1 / km1 ) / ( h0 / k0 ) - 1 ;
