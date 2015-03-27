@@ -75,6 +75,16 @@ class PhotonFilter(Hlt2TisTosParticleTagger):
                                            [Hlt2Photons],
                                            shared=True)
 
+# CALO photons builder (some cuts needed on non-converted photons only,
+# before pairing with converted counterparts
+class CALOPhotonFilter(Hlt2ParticleFilter):
+    def __init__(self, name, inputs):
+        photon_cut = "( (PT > %(CALO_PT)s*MeV) & (P > %(CALO_P)s*MeV) )"
+        super(CALOPhotonFilter, self).__init__('RadiativeCALOHardPhoton_%s' % name,
+                                               photon_cut,
+                                               inputs,
+                                               nickname=name,
+                                               shared=True)
 
 # Converted photons builder
 class ConvPhotonFilter(Hlt2ParticleFilter):
@@ -143,13 +153,21 @@ class B2XGammaCombiner(Hlt2Combiner):
 
 class B2GammaGammaCombiner(Hlt2Combiner):
     def __init__(self, name, decay, inputs):
-        mother_cut = ("(ADMASS('B_s0')<%(BsMassWin)s*MeV) & "
+        mother_cut = ("(M<%(BsMax)s*MeV) & "
+                      "(M > %(BsMin)s*MeV) & "
                       "(PT > %(B_PT)s*MeV) & "
                       "(P > %(B_P)s*MeV)")
+        if "LL" in name:
+            mother_cut += " & ((INTREE( (ID=='gamma') & (ISBASIC) )) & (INTREE( HASTRACK & ISLONG )))"
+        elif "DD" in name:
+            mother_cut += " & ((INTREE( (ID=='gamma') & (ISBASIC) )) & (INTREE( HASTRACK & ISDOWN )))"
+        comb_cut = "((ACHILD(PT,1)+ACHILD(PT,2)) > %(SUM_PT)s*MeV)"
         super(B2GammaGammaCombiner, self).__init__('RadiativeB2GammaGammaCombiner_%s' % name,
                                                    decay,
                                                    inputs,
                                                    nickname=name,
-                                                   MotherCut=mother_cut)
+                                                   CombinationCut=comb_cut,
+                                                   MotherCut=mother_cut,
+                                                   ParticleCombiners={ '' : 'ParticleAdder'})
 
 # EOF

@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-27 - Sean Benson
+ - Latest savepoint of the Bs->gammagamma lines.
+
 ! 2015-03-27 - Pieter David
  - DisplVertices: LSAdaptPV3DFitter.maxRDPV -> PVOfflineTool.UseBeamSpotRCut
 

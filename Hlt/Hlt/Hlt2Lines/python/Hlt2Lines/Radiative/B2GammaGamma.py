@@ -12,11 +12,15 @@ class B2GammaGammaLines(object):
     @staticmethod
     def get_stages():
         from Stages import TrackGEC
-        from Stages import ConvPhotonFilter
+        from Stages import CALOPhotonFilter, ConvPhotonFilter
         from Stages import PhotonFilter, ConvPhotonLL, ConvPhotonDD
         from Stages import B2GammaGammaCombiner
         from HltTracking.HltPVs import PV3D
 
+        # Make hard non-converted photons
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPhotons     as Hlt2Photons
+        HardCALOGamma = CALOPhotonFilter('HardCALO',[Hlt2Photons])
+        
         # Build Bs -> gamma gamma (double conversion)
         bs2gammagammaDouble = B2GammaGammaCombiner('B2GammaGammaDouble',
                                                    'B_s0 -> gamma gamma',
@@ -24,14 +28,14 @@ class B2GammaGammaLines(object):
         # Build Bs -> gamma gamma (single conversion)
         bs2gammagammaLL = B2GammaGammaCombiner('B2GammaGammaLL',
                                                'B_s0 -> gamma gamma',
-                                               [ConvPhotonLL()])
+                                               [HardCALOGamma,ConvPhotonLL()])
         bs2gammagammaDD = B2GammaGammaCombiner('B2GammaGammaDD',
                                                'B_s0 -> gamma gamma',
-                                               [ConvPhotonDD()])
+                                               [HardCALOGamma,ConvPhotonDD()])
         # Build Bs -> gamma gamma (all calo)
         bs2gammagamma = B2GammaGammaCombiner('B2GammaGamma',
                                              'B_s0 -> gamma gamma',
-                                             [PhotonFilter()])
+                                             [HardCALOGamma])
 
         return {'B2GammaGammaLL'     : [TrackGEC(), PV3D('Hlt2'), bs2gammagammaLL],
                 'B2GammaGammaDD'     : [TrackGEC(), PV3D('Hlt2'), bs2gammagammaDD],
@@ -41,18 +45,51 @@ class B2GammaGammaLines(object):
     @staticmethod
     def get_cuts():
         cuts = {}
+        # Hard CALO photons
+        cuts['HardCALO'] = {
+                'CALO_P'    : 5000.0,
+                'CALO_PT'   : 3000.0
+                }
         # Converted photons
-        for converted in ['ConvLL', 'ConvDD']:
-            cuts[converted] = {'ee_Mass' : 40,
-                               'ee_P'    : 2,
-                               'ee_PT'   : 200}
+        cuts['ConvLL'] = {
+                'ee_Mass' : 50.0,
+                'ee_P'    : 5000.0,
+                'ee_PT'   : 200.0
+                }
+        cuts['ConvDD'] = {
+                'ee_Mass' : 100.0,
+                'ee_P'    : 5000.0,
+                'ee_PT'   : 200.0
+                }
         # Bs
-        for line in ['B2GammaGamma', 'B2GammaGammaLL', 'B2GammaGammaDD', 'B2GammaGammaDouble']:
-            cuts[line] = {'BsMassWin' : 2200,
-                          'B_PT'      : 1000,
-                          'B_P'       : 3000}
-        # Special case
-        cuts['B2GammaGammaDouble']['BsMassWin'] = 1500
+        cuts['B2GammaGamma'] = {
+                'BsMin'     : 4300.0,
+                'BsMax'     : 6800.0,
+                'SUM_PT'    : 6000.0,
+                'B_PT'      : 3000.0,
+                'B_P'       : 5000.0,
+                }
+        cuts['B2GammaGammaLL'] = {
+                'BsMin'     : 4000.0,
+                'BsMax'     : 7000.0,
+                'SUM_PT'    : 6000.0,
+                'B_PT'      : 2500.0,
+                'B_P'       : 4000.0,
+                }
+        cuts['B2GammaGammaDD'] = {
+                'BsMin'     : 4200.0,
+                'BsMax'     : 7000.0,
+                'SUM_PT'    : 4000.0,
+                'B_PT'      : 2500.0,
+                'B_P'       : 4000.0,
+                }
+        cuts['B2GammaGammaDouble'] = {
+                'BsMin'     : 4000.0,
+                'BsMax'     : 7000.0,
+                'SUM_PT'    : 2000.0,
+                'B_PT'      : 1000.0,
+                'B_P'       : 5000.0,
+                }
         return cuts
 
 # EOF

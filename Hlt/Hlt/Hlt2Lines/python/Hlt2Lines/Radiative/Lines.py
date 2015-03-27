@@ -31,10 +31,17 @@ class RadiativeLines(Hlt2LinesConfigurableUser):
         stages.update(B2GammaGammaLines.get_stages())
         # Build lines
         for (linename, algos) in self.algorithms(stages).iteritems():
-            Hlt2Line(linename,
-                     algos=algos,
-                     prescale=self.prescale,
-                     postscale=self.postscale)
+            if(linename=='B2GammaGamma'):
+                Hlt2Line(linename,
+                        HLT="HLT_PASS_RE('Hlt1B2GammaGammaDecision')",
+                        algos=algos,
+                        prescale=self.prescale,
+                        postscale=self.postscale)
+            else:
+                Hlt2Line(linename,
+                        algos=algos,
+                        prescale=self.prescale,
+                        postscale=self.postscale)
 
 
 # EOF
