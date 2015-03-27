@@ -8,6 +8,7 @@
 ! 2015-03-27 - Roel Aaij
  - Add a few preselection cuts to Hlt1TwoTrackMVA and allow usage of BBDT or
    MatrixNet.
+ - Update MVA input variables.
 
 ! 2015-03-27 Christian Linn
  - Fixed Odin filter in Hlt1TrackAllL0
