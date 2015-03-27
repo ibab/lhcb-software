@@ -41,6 +41,9 @@ default_config = {
       'Jpsi2MuMu'       : { # Replaces old StrippingMuIDCalib_JpsiKFromBNoPIDNoMip
         'Prescale'      : 1.0
         , 'CheckPV'     : True
+        , 'RawEvent'    : ['Muon']
+        , 'MDST.DST'    : True
+        , 'RefitPV'     : False
         , 'DecayDescriptor'    : "J/psi(1S) -> mu+ mu-"
         , 'TagAndProbeIndices' : [ 1, 2 ]
         , 'InputTES'    : [ 'Phys/StdNoPIDsMuons/Particles' ]
@@ -59,6 +62,9 @@ default_config = {
       'Bu2KMuMu'       : {
         'Prescale'      : 1.0
         , 'CheckPV'     : True
+        , 'RawEvent'    : ['Muon']
+        , 'MDST.DST'    : True
+        , 'RefitPV'     : False
         , 'DecayDescriptor'    : "[B+ -> mu+ mu- K+]cc"
         , 'TagAndProbeIndices' : [ 1, 2 ]
         , 'InputTES'    : [ 'Phys/StdNoPIDsKaons/Particles', 'Phys/StdNoPIDsMuons/Particles' ]
@@ -74,13 +80,16 @@ default_config = {
             "(in_range(5279-500, AM, 5279+500)) & (ACHI2DOCA(1,3) < 100) & (ACHI2DOCA(2,3) < 100)"
         , 'MotherCut'          :
 #            "(VFASPF(VCHI2)<10)"
-            "(VFASPF(VCHI2)<100) & (BPVDLS > 4) & (BPVIPCHI2()<25)"
+            "(VFASPF(VCHI2)<100) & (BPVVDCHI2 > 25) & (BPVIPCHI2()<25)"
       },
 
 
       'L02ppiLowP' : {
         'Prescale'      : .14
         , 'CheckPV'     : True
+        , 'RawEvent'    : ['Muon']
+        , 'MDST.DST'    : False
+        , 'RefitPV'     : False
         , 'DecayDescriptor'    : "[Lambda0 -> p+ pi-]cc"
         , 'InputTES'    : [ 'Phys/StdAllNoPIDsPions/Particles', 
                                    'Phys/StdAllNoPIDsProtons/Particles' ]
@@ -95,7 +104,6 @@ default_config = {
             " & ( in_range ( 0 , VFASPF ( VCHI2 ) , 16 ) )" + 
             " & ( VFASPF ( VZ ) < 2200 ) "  +
             " & ( in_range ( 0 , BPVLTFITCHI2() , 49 ) )" + 
-#            " & ( BPVDLS > 100  ) " +
             " & ( BPVLTIME() * c_light > 5  ) " +
             " & ( ADWM( 'KS0' , WM( 'pi+' , 'pi-') ) > 20 )"
           )
@@ -136,6 +144,9 @@ default_config = {
       'Jpsi2ee'       : { 
         'Prescale'      : 1.0
         , 'CheckPV'     : True
+        , 'RawEvent'    : ['Calo']
+        , 'MDST.DST'    : True
+        , 'RefitPV'     : False
         , 'DecayDescriptor'    : "J/psi(1S) -> e+ e-"
         , 'TagAndProbeIndices' : [ 1, 2 ]
         , 'InputTES'           : [ 'Phys/StdNoPIDsElectrons/Particles' ]
@@ -145,34 +156,95 @@ default_config = {
         , 'TagAndProbeCut'     :
             "(ACHILD(PIDe, #tag) > 5.0) & (ACHILD(PT, #tag) > 1500*MeV) & (ACHILD(P, #tag) > 6*GeV) "
         , 'CombinationCut'     :
-            "(in_range(2100, AM, 4300)) & (ACHI2DOCA(1,2) < 18)"
+            "(APT > 1.2*GeV) & (in_range(2100, AM, 4300)) & (ACHI2DOCA(1,2) < 18)"
         , 'MotherCut'          :
-            "(VFASPF(VCHI2)<18) & (BPVDLS > 50) & (PT > 2*GeV)"
+            "(VFASPF(VCHI2)<9) & (PT > 2*GeV) & (BPVVDCHI2 > 50)"
       },
 
       'Bu2Kee'       : {
         'Prescale'      : 1.0
         , 'CheckPV'     : True
+        , 'RawEvent'    : ['Calo']
+        , 'MDST.DST'    : True
+        , 'RefitPV'     : False
         , 'DecayDescriptor'    : "[B+ -> e+ e- K+]cc"
         , 'TagAndProbeIndices' : [ 1, 2 ]
-        , 'InputTES'           : [ 'Phys/StdNoPIDsKaons/Particles', 'Phys/StdNoPIDsElectrons/Particles' ]
+        , 'InputTES'           : [ 'Phys/StdTightKaons/Particles', 'Phys/StdNoPIDsElectrons/Particles' ]
         , 'DaughtersCuts'       : {
             'e+'  : "( P  > 3*GeV )   & ( PT > 500*MeV ) & (BPVIPCHI2()> 9.0) ",
-            'K+'  : "( PT > 1.0*GeV ) & ( PIDK > 0 )& (BPVIPCHI2()> 9.0) " 
+            'K+'  : "( PT > 1.0*GeV ) & (BPVIPCHI2()> 9.0) & (PIDK > 0)"
           }
         , 'TagAndProbeCut'     :
             "(ACHILD(PIDe, #tag) > 5.0) & (ACHILD(PT, #tag) > 1500) & (ACHILD(P, #tag) > 6*GeV) "
         , 'Combination12Cut'   :
-            "(in_range(2100, AM, 4300)) & (ACHI2DOCA(1,2) < 18)"
+            "(in_range(2100, AM, 4300)) & (ACHI2DOCA(1,2) < 9)"
         , 'CombinationCut'     :
             "(in_range(5279-1200, AM, 5279+1000)) & (ACHI2DOCA(1,3) < 18) & (ACHI2DOCA(2,3) < 18)"
         , 'MotherCut'          :
             "(VFASPF(VCHI2)<18) & (BPVVDCHI2 > 25)"
       },
 
+      'Bu2Jpsi_mumuK' :  {
+        'Prescale'       : 1.0
+        , 'CheckPV'      : True
+        , 'RawEvent'    : ['Calo']
+        , 'MDST.DST'    : True
+        , 'RefitPV'     : False
+        , 'DecayDescriptor'    : "[B+ -> J/psi(1S) K+]cc"
+        , 'DecayDescriptorJpsi': "J/psi(1S) -> mu+ mu-"
+        , 'InputTES'    : [ 'Phys/StdNoPIDsKaons/Particles' ]
+        , 'InputTESJpsi': [ 'Phys/StdNoPIDsMuons/Particles' ]
+        , 'DaughtersCuts'       : {
+            'mu+' : "(BPVIPCHI2()> 10.0) ",
+            'K+'  : "(MIPCHI2DV(PRIMARY)>25)"
+          }
+        , 'TagAndProbeCut'     :
+            "(ACHILDCUT(ISMUON, #tag)) & (ACHILD(P, #tag) > 6*GeV) & (ACHILD(PT, #tag) > 1.5*GeV) & (ACHILD(MIPCHI2DV(PRIMARY), #tag) > 25)"
+        , 'JpsiCombinationCut' :
+            "(ADAMASS('J/psi(1S)')<200*MeV)"
+        , 'JpsiMotherCut'      :
+            "(VFASPF(VCHI2/VDOF)<5) & (BPVVDCHI2 > 225) "
+        , 'CombinationCut'     :
+            "ADAMASS('B+') < 500.*MeV"
+        , 'MotherCut'          :
+            "(BPVIPCHI2()<25)"
+      },
+
+      'Bu2Jpsi_eeK' :  {
+        'Prescale'       : 1.0
+        , 'CheckPV'      : True
+        , 'RawEvent'    : ['Muon']
+        , 'MDST.DST'    : True
+        , 'RefitPV'     : False
+        , 'DecayDescriptor'    : "[B+ -> J/psi(1S) K+]cc"
+        , 'DecayDescriptorJpsi': "J/psi(1S) -> e+ e-"
+        , 'InputTES'           : [ 'Phys/StdTightKaons/Particles' ]
+        , 'InputTESJpsi'       : [ 'Phys/StdNoPIDsElectrons/Particles' ]
+        , 'DaughtersCuts'       : {
+            'e+'  : "( P  > 3*GeV )   & ( PT > 500*MeV ) & (BPVIPCHI2()> 9.0) ",
+            'K+'  : "( PT > 1.0*GeV ) & (BPVIPCHI2()> 9.0) & ( PIDK > 0 )",
+            'J/psi(1S)' : "(BPVDLS > 5)"
+
+          }
+        , 'TagAndProbeCut'     :
+            "(ACHILD(PIDe, #tag) > 5.0) & (ACHILD(PT, #tag) > 1500) & (ACHILD(P, #tag) > 6*GeV) "
+        , 'JpsiCombinationCut' :
+            "(in_range(2100, AM, 4300))"
+        , 'JpsiMotherCut'      :
+            "(VFASPF(VCHI2)< 9.0) & (in_range(2200.0 *MeV, MM, 4200.0 *MeV)) "
+        , 'CombinationCut'     :
+            "in_range(4.1*GeV,AM,6.1*GeV)"
+        , 'MotherCut'          :
+            "(VFASPF(VCHI2PDOF)<9) & in_range(4.2*GeV,M, 6.0*GeV)"
+      },
+
+
       'Ks02pipi'      :{
         'Prescale'      : 0.024
         , 'CheckPV'     : True
+        , 'RawEvent'    : ['Muon']
+        , 'MDST.DST'    : False
+        , 'RefitPV'     : False
         , 'DecayDescriptor'       : "KS0 -> pi+ pi-"
         , 'InputTES'              : ['Phys/StdNoPIDsPions']
         , 'DaughtersCuts'         : {
@@ -193,6 +265,9 @@ default_config = {
         'CloneLine'    : 'Ks02pipi'
         , 'Prescale'   : 0.024
         , 'CheckPV'     : True
+        , 'RawEvent'    : ['Muon']
+        , 'MDST.DST'    : False
+        , 'RefitPV'     : False
         , 'InputTES'   : ['Phys/StdNoPIDsDownPions']
         , 'MotherCut'             : (
             "( ADMASS ( 'KS0') < 50 ) & "+
@@ -207,6 +282,9 @@ default_config = {
       'Lc2pKpi' : {
         'Prescale':   1.0
         , 'CheckPV'     : True
+        , 'RawEvent'    : ['Muon']
+        , 'MDST.DST'    : False
+        , 'RefitPV'     : False
         , 'InputTES' : [  'Phys/StdNoPIDsKaons/Particles' , 
                           'Phys/StdNoPIDsPions/Particles' , 
                           'Phys/StdNoPIDsProtons/Particles' 
@@ -252,6 +330,8 @@ class PIDCalibLineBuilder(LineBuilder):
         'L02ppiIsMuon', 
         'Jpsi2ee',
         'Bu2Kee',
+        'Bu2Jpsi_mumuK',
+        'Bu2Jpsi_eeK',
         'Ks02pipi',
         'Ks02pipiDD',
         'Lc2pKpi'
@@ -267,31 +347,20 @@ class PIDCalibLineBuilder(LineBuilder):
       self.name = name 
       self.config = config
 
-      print 1
       self.registerLine ( self.buildPIDLine ( 'Jpsi2MuMu'    , bodies = 2) )
-      print 2
       self.registerLine ( self.buildPIDLine ( 'Bu2KMuMu'     , bodies = 3) )
-      print 3
       self.registerLine ( self.buildPIDLine ( 'L02ppiLowP'   , bodies = 2) )
-      print 4
       self.registerLine ( self.buildPIDLine ( 'L02ppiHighP'  , bodies = 2) )
-      print 5
       self.registerLine ( self.buildPIDLine ( 'L02ppiDDLowP' , bodies = 2) )
-      print 6
       self.registerLine ( self.buildPIDLine ( 'L02ppiDDHighP', bodies = 2) )
-      print 7
       self.registerLine ( self.buildPIDLine ( 'L02ppiIsMuon' , bodies = 2) )
-      print 8
       self.registerLine ( self.buildPIDLine ( 'Jpsi2ee'      , bodies = 2) )
-      print 9
       self.registerLine ( self.buildPIDLine ( 'Bu2Kee'       , bodies = 3) )
-      print 10
       self.registerLine ( self.buildPIDLine ( 'Ks02pipi'     , bodies = 2) )
-      print 11
       self.registerLine ( self.buildPIDLine ( 'Ks02pipiDD'   , bodies = 2) )
-      print 12
       self.registerLine ( self.buildPIDLine ( 'Lc2pKpi'      , bodies = 3) )
-      print 13
+      self.registerLine ( self.buildPIDLineWithJpsi ( 'Bu2Jpsi_mumuK' ) )
+      self.registerLine ( self.buildPIDLineWithJpsi (  'Bu2Jpsi_eeK'  ) )
 
 
 ##==============================================================================
@@ -312,24 +381,36 @@ class PIDCalibLineBuilder(LineBuilder):
 
 
 ##==============================================================================
+## PIDCalibLineBuilder::_resolveCloning 
+##    check if the config declares a "CloneLine" keyword, if yes it clones the 
+##    pointed line, if the latter declares a "CloneLine" keyword imports from
+##    that the missing keywords and so on.
+##    Returns a _copy_ of the updated dictionary
+##==============================================================================
+    def _resolveCloning(self, configRowId):
+      from copy import copy
+      _config = copy(self.config [ configRowId ])
+      ## If the line inherit another line clones and updates the dictionary
+      while 'CloneLine' in _config:
+###        print "Cloning " + configRowId + " from " + _config['CloneLine']
+        _newConfig = {}
+        _newConfig.update ( self.config[_config['CloneLine']] ) 
+        del _config['CloneLine']
+        _newConfig.update ( _config )
+        _config = _newConfig
+      return _config
+
+
+##==============================================================================
 ## PIDCalibLineBuilder::buildPIDLine
 ##   Parses the configuration dictionary to build the lines as defined in the 
 ##   configuration dictionaries
 ##==============================================================================
     def buildPIDLine(self, configRowId, bodies):
       "Parses the configuration dictionary to build the line"
-      
-      from copy import copy
-      _config = copy(self.config [ configRowId ])
 
-      ## If the line inherit another line clones and updates the dictionary
-      while 'CloneLine' in _config:
-        print "Cloning " + configRowId + " from " + _config['CloneLine']
-        _newConfig = {}
-        _newConfig.update ( self.config[_config['CloneLine']] ) 
-        del _config['CloneLine']
-        _newConfig.update ( _config )
-        _config = _newConfig
+      ## Resolves possible clone statements
+      _config = self._resolveCloning(configRowId)
       
       ## Selects the algorithm according to the number of bodies
       _algorithm = None
@@ -346,7 +427,7 @@ class PIDCalibLineBuilder(LineBuilder):
         _combinationCut += ' & '
         _combinationCut += self._buildTagProbeCut(_config['TagAndProbeCut'], _id)
 
-        print _combinationCut
+###        print _combinationCut
 
       _algorithm.CombinationCut  = _combinationCut
       _algorithm.DaughtersCuts   = _config['DaughtersCuts']
@@ -362,8 +443,68 @@ class PIDCalibLineBuilder(LineBuilder):
       _line = StrippingLine( self.name + configRowId + 'Line'
                               , prescale = _config['Prescale']
                               , checkPV  = _config['CheckPV']
+                              , EnableFlavourTagging = False
+                              , RequiredRawEvents    = _config['RawEvent']
+                              , MDSTFlag             = _config['MDST.DST']
                               , algos    = [ _selection ]
                            )
       
       return _line
 
+##==============================================================================
+## PIDCalibLineBuilder::buildPIDLineWithJpsi
+##   Parses the configuration dictionary to build the lines as defined in the 
+##   configuration dictionaries, this function allows two subsequent fits,
+##   and uses the output of the former as input of the latter
+##==============================================================================
+    def buildPIDLineWithJpsi(self, configRowId):
+      ## Resolves possible clone statements
+      _config = self._resolveCloning(configRowId)
+
+      ## Prepares the tag&probe cut if needed
+      _combinationCutJpsi = _config['JpsiCombinationCut']
+      _combinationCut     = _config['CombinationCut']
+
+      if 'TagAndProbeCut' in _config:
+        _id = ["1", "2"]
+        _combinationCutJpsi += ' & '
+        _combinationCutJpsi += self._buildTagProbeCut(_config['TagAndProbeCut'], _id)
+
+        ###print _combinationCut
+
+      _algorithmJpsi = CombineParticles(self.name + configRowId + 'JpsiAlgorithm')
+
+      _algorithmJpsi.CombinationCut  = _combinationCutJpsi
+      _algorithmJpsi.DaughtersCuts   = _config['DaughtersCuts']
+      _algorithmJpsi.MotherCut       = _config['JpsiMotherCut']
+      _algorithmJpsi.DecayDescriptor = _config['DecayDescriptorJpsi']
+      
+      _requiredSelections = [DataOnDemand(x) for x in _config['InputTESJpsi']]
+      _selectionJpsi = Selection(self.name + configRowId + 'SelectionJpsi'
+                                  , Algorithm = _algorithmJpsi
+                                  , RequiredSelections = _requiredSelections
+                                )
+
+      _algorithm = CombineParticles(self.name + configRowId + 'Algorithm')
+
+      _algorithm.CombinationCut  = _combinationCut
+      _algorithm.DaughtersCuts   = _config['DaughtersCuts']
+      _algorithm.MotherCut       = _config['MotherCut']
+      _algorithm.DecayDescriptor = _config['DecayDescriptor']
+      
+      _requiredSelections = [_selectionJpsi] + [DataOnDemand(x) for x in _config['InputTES']]
+      _selection = Selection(self.name + configRowId + 'Selection'
+                              , Algorithm = _algorithm
+                              , RequiredSelections = _requiredSelections
+                            )
+
+      _line = StrippingLine( self.name + configRowId + 'Line'
+                              , prescale = _config['Prescale']
+                              , checkPV  = _config['CheckPV']
+                              , EnableFlavourTagging = False
+                              , RequiredRawEvents    = _config['RawEvent']
+                              , MDSTFlag             = _config['MDST.DST']
+                              , algos    = [ _selection ]
+                           )
+      
+      return _line

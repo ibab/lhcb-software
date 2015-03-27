@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-03-27 - Lucio Anderlini
+ - Several bug-fixes to StrippingCalib/StrippingPIDCalib.py
+ - Added two lines in StrippingCalib/StrippingPIDCalib.py to keep the 
+   intermediate J/psi in the decay descriptor B -> llK  (l = e,mu)
+ - Created folder test/liasons/Calibrations
+ - Created test file test/liasons/Calibrations/TestCalibLines.py
+
 ! 2015-03-26 - Chitsanu Khurewathanakul
  - Added StrippingQEE/StrippingInclbJets.py
 
