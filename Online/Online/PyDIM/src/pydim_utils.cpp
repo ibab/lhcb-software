@@ -17,35 +17,30 @@
 
 // includes
 extern "C" {
-#ifdef _XOPEN_SOURCE
-#undef _XOPEN_SOURCE
-#endif
 #include <Python.h>
 #include "structmember.h"
 }
 #include <cstdlib>
 #include <cstdio>
 
-//#ifdef _WIN32
-#include <cstdarg> 
-static inline void ___print(const char* fmt,...)   {
-  va_list args; 
-  va_start(args,fmt); 
-  vprintf(fmt,args); 
-  va_end(args); 
-  printf("\n"); 
-}
-#define print printf("DIM Wrapper: %s:%d ::%s: ", __FILE__, (int)__LINE__, __FUNCTION__); ___print 
-//#else
-//#define print(...) printf("DIM Wrapper: %s:%u ::%s: ", __FILE__, __LINE__, __FUNCTION__); printf(__VA_ARGS__); printf("\n");
-//#endif
+#ifdef _WIN32
+ #include <cstdarg> 
+  static inline void ___print(const char* fmt,...)
+  {
+    va_list args; va_start(args,fmt); 
+    vprintf(fmt,args); printf("\n"); va_end(args); 
+  }
+ #define print printf("DIM Wrapper: %s:%u ::%s: ", __FILE__, __LINE__, __FUNCTION__); ___print 
+#else
+ #define print(...) printf("DIM Wrapper: %s:%u ::%s: ", __FILE__, __LINE__, __FUNCTION__); printf(__VA_ARGS__); printf("\n");
+#endif
 
 #ifdef __DEBUG
  #define debug print
  #define debugPyObject printPyObject
 #else
-inline void debug(const char*,...) {}
-inline void debugPyObject(PyObject*) {}
+ #define debug(...) /* __VA_ARGS__ */
+ #define debugPyObject(...) /* __VA_ARGS__ */
 #endif
 
 #ifndef HOST_NAME_MAX
@@ -210,7 +205,7 @@ static int verify_dim_format(const char *format)
   const char digits[]="0123456789";
 
   while (ptr<size) {
-    for (newptr=ptr; newptr<size && format[newptr]!=delimiter; newptr++){}
+    for (newptr=ptr; newptr<size && format[newptr]!=delimiter; newptr++);
     /* We have found a new group of parameters */
     if (!strchr(itemtypes, format[ptr]))
       /* This means the type letter is unknown */

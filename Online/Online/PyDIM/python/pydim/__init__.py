@@ -1,14 +1,34 @@
+#! /usr/bin/env python
+
+"""
+PyDIM is a Python interface to DIM.
+
+PyDIM could be used to create DIM clients and servers, using an API very similar
+to the one that is used for C.
+"""
+
+import random
+import string
+import time
+import types
+import threading
+import logging
+
 from dimc import *
 from dimcpp import *
 from debug import *
-import string, time
+
+_version = '1.3.4'
 
 # ###########################################################################
 # The DIM RPC proxy class.
 # ###########################################################################
 class PyDimRpcProxy (DimRpc):
     """
-Accepts a string in the format:
+Class that facilitates publishing of random python functions using a single 
+DIM RPC. At creation it receives a lost of callable objects wo which the calls 
+will be passed. It creates a single string DIM RPC and accepts a string with 
+the format:
   'function_name/par1_name=par1_value1,par1_value2/par2_name=par2_value/.../'
 or
   'function_name/par1_value,par2_value/.../' for possitional arguments
@@ -16,6 +36,9 @@ The appropiate function is called with the appropiate parameters and the
 result is returned in the same format.
 The special characters (',', '=' and '/') must be excaped.
 Identifiers must contain alfanumeric characters plus the '_' and '-' chars.
+It makes the assumption that the python functions will return always a tuple
+in the format (STATUSCODE, RESULTS). All the return parameters are converted 
+to a string and are returned to the client. 
     """
     def __init__(self, funcs, rpcName='testRPC'):
         DimRpc.__init__(self, rpcName, 'C', 'C')
@@ -149,7 +172,8 @@ Identifiers must contain alfanumeric characters plus the '_' and '-' chars.
                             ret = "%s%s/" %(ret, self.convert(x))
                     else:
                         ret = "%s%s/" %(ret, self.convert(res))
-        ret += '\0' 
+	    # this is particularly usefull if on the other side are C/C++ clients
+        ret += '\0'
         # setting result
         DEBUG('Sending result: %s' %ret)
         self.setData(ret)
@@ -157,7 +181,7 @@ Identifiers must contain alfanumeric characters plus the '_' and '-' chars.
 
 
 # ###########################################################################
-# The DIM RPC proxy class.
+# The DIM DNS abstraction class
 # ###########################################################################
 class Dns:
     def __init__(self):
@@ -177,13 +201,15 @@ class Dns:
             else:
                 type = s[i + 1:(len(s))]
             self.services.append([ s[0:j], s[j+1:i], type]) 
-        self.service_update = True 
+        self.service_update = True
+ 
     def servers_update(self, srv):
         self.servers = []; self.server_host = []
         for s in string.split(srv[0], '|'):
             [server, host ] = string.split(s, '@')
             self.servers.append(server)
             self.server_host.append([server, host])
+
     def get_services(self, server):
         if (not server in self.servers): return None;
         self.service_update = False
@@ -199,8 +225,129 @@ class Dns:
             time.sleep(0.1)
         return self.servers
 
+def dim_service(fn):
+    """
+    A decorator function that makes easier to use normal functions as callbacks
+    for DIM services.
+    
+    'fn' is a function (in general, a callable object) that doesn't 
+    receive arguments, and returns a function that is suited for DIM callbacks.
+    """
+    def svc(tag):
+        # Tag argument is declared but not used
+        rtn = fn()
+        # The returned value must be tuple, so we try to convert simple values
+        if not rtn in (types.ListType, types.TupleType):
+            rtn = (rtn,)
+        return rtn
+
+    return svc
+
+def dim_service_tag(fn):
+    """
+    A decorator function that makes easier to use function with an argument as
+    callbacks for DIM services.
+    
+    'fn' is a function (in general, a callable object) that receives one 
+    argument, and returns a function that is suited for DIM callbacks. The 
+    argument used is the tag of the service tag registerd with DIM.
+    """
+    def svc(tag):
+        rtn = fn(tag)
+        if not rtn in (types.ListType, types.TupleType):
+            rtn = (rtn,)
+        return rtn
+    
+    return svc
+
+
+def dic_sync_info_service(name, description, timeout=None, default_value=None):
+    """
+    A synchronous call for getting the value of a service.
+    
+    This function is equivalent to `dic_info_service`, but it waits until the
+    value is retrieved and returns the value of the service. For this reason a
+    callback function is not needed.
+    
+    Arguments are:
+
+       *name* Service name. same name used by server when declaring the service.
+    
+       *description* The description string of the service.
+    
+       *timeout* The number of seconds after which the service is considered to
+        have failed. Optional, by default there is no timeout.  
+    
+       *default_value* The value that will be returned in case the service 
+        doesn't succeed. Optional, default is `None`.
+    """
+    executed = threading.Event()
+    state = dict(value=None)
+
+    def create_callback(st):
+        def _callback(*args):
+            st['value'] = args
+            executed.set()
+    
+        return _callback
+    
+    callback = create_callback(state)
+    dim_timeout = 0 
+    tag = random.randint(0,100000)
+    sid = dic_info_service(name, description, callback, ONCE_ONLY, dim_timeout, tag, default_value)
+    
+    executed.wait(timeout)
+
+    dic_release_service(sid)
+
+    return state['value']
+
+def dic_sync_cmnd_service(name, arguments, description, timeout=None):
+    """
+    A synchronous call for executing a command.
+    
+    This function works in the same way as `dic_cmnd_service`, but it waits
+    until the command is executed.
+    
+    Arguments are:
+        
+       *name* Command name, same name used by server when declaring the command
+       service. 
+    
+       *arguments* A tuple with the values that are sent to the command as 
+       arguments.
+    
+       *description* The description string of the command.
+       
+       *timeout* The number of seconds after which the command is considered 
+       to have failed. Optional, by default there is no timeout.  
+
+    It returns an integer which indicates if the command was executed 
+    successfully; 1 if it was correctly sent to the server, 0 otherwise.   
+
+    """
+    executed = threading.Event()
+    state = dict(retcode=None)
+
+    def create_callback(st):
+        def _callback(tag, retcode):
+            state['retcode'] = retcode
+            executed.set()
+    
+        return _callback
+    
+    callback = create_callback(state)
+    tag = 0
+    dic_cmnd_callback(name, arguments, description, callback, tag)
+    
+    executed.wait(timeout)
+
+    return state['retcode']
+
+
 if __name__ == "__main__":
-    #dns = Dns()
-    #print dns.get_servers()
+    # in case the file is executed directly
+    dns = Dns()
+    print dns.get_servers()
     pass    
     
