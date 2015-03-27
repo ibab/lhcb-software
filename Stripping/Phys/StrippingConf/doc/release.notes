@@ -4,6 +4,9 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2015-03-27 - Stefano Perazzini
+ - Bug fix to the function used to create MDST stream
+
 ! 2015-03-26 - Stefano Perazzini
  - Introduced a flag to activate the MDST stream.
 

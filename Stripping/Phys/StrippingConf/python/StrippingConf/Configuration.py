@@ -76,14 +76,6 @@ class StrippingConf ( object ) :
         for stream in Streams :
             self.appendStream(stream)
 
-        if self._activeMDST:
-            mdstLines = []
-            for stream in self.activeStreams():
-              mdstLines = [ line for line in stream.lines if line.MDSTFlag == True ]
-
-            mdstStream = StrippingStream( "MDST", Lines = mdstLines )
-            self.appendStream(mdstStream)
-
 	# Global FT locations have to be filled after appending streams, 
 	# because outputLocations of lines can be redefined
         if self._GlobalFlavourTagging:
@@ -99,7 +91,17 @@ class StrippingConf ( object ) :
         if self._verbose:
           self.checkRawEventRequests()
           self.checkMDSTFlag()
-        
+       
+        if self._activeMDST:
+            mdstLines = [ line for line in self.activeLines(self.MicroDSTStreams) if line.MDSTFlag ]
+            if self._verbose:
+                mdstLinesNames = [ line.name() for line in mdstLines ]
+                log.warning("The lines going to MDST.DST are")
+                print mdstLinesNames
+                
+            mdstStream = StrippingStream( "MDST", Lines = mdstLines )
+            self.appendStream(mdstStream)
+ 
         from Gaudi.Configuration import appendPostConfigAction
         appendPostConfigAction ( defaultToolConfigCheck )
 
