@@ -6,32 +6,39 @@
 #
 ##
 from Gaudi.Configuration import *
-from Configurables import CombineParticles
+from GaudiKernel.SystemOfUnits import *
+from Configurables import CombineParticles, DiElectronMaker, BremAdder
 from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectrons as Electrons
+from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectronsFromL0 as L0Electrons
+from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPhotons as Photons
 from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedDownElectrons as DownElectrons
 from HltLine.HltLine import bindMembers, Hlt2Member
 from HltTracking.HltPVs import PV3D
+from HltLine.HltLine import Hlt1Tool as Tool
 
 __all__ = ( 'ConvPhotonLL', 'ConvPhotonDD' )
  
-Hlt2DiEl_LL = Hlt2Member( CombineParticles
-        , "ConvPhotonLL"
-        , DecayDescriptors = [ "gamma -> e+ e-" ]
-        , DaughtersCuts = { "e+": "(TRCHI2DOF<4.0) & (PT>200.0*MeV)",
-            "e-": "(TRCHI2DOF<4.0) & (PT>200.0*MeV)" }
-        , CombinationCut = "(AM<100.0*MeV)" 
-        , MotherCut = "(VFASPF(VCHI2)<25.0)"
-        , Inputs = [ Electrons ]
+BA = Tool(type = BremAdder, name = 'BremAdder', BremInput = "Hlt2/Hlt2BiKalmanFittedPhotons/Particles")
+Hlt2DiEl_LL = Hlt2Member(DiElectronMaker
+        ,'ConvPhotonLL'
+        , DecayDescriptor = "gamma -> e+ e-"
+        , ElectronInputs = [Electrons.outputSelection()]
+        , DeltaY = 3.
+        , DeltaYmax = 200. * mm
+        , DiElectronMassMax = 80.*MeV
+        , DiElectronPtMin = 200.*MeV
+        , tools = [BA]
         )
-Hlt2DiEl_DD = Hlt2Member( CombineParticles
-        , "ConvPhotonDD"
-        , DecayDescriptors = [ "gamma -> e+ e-" ]
-        , DaughtersCuts = { "e+": "(TRCHI2DOF<4.0) & (PT>200.0*MeV)",
-            "e-": "(TRCHI2DOF<4.0) & (PT>200.0*MeV)"}
-        , CombinationCut = "(AM<100.0*MeV)"
-        , MotherCut = "(VFASPF(VCHI2)<25.0)"
-        , Inputs = [ DownElectrons ]
+Hlt2DiEl_DD = Hlt2Member(DiElectronMaker
+        ,'ConvPhotonDD'
+        , DecayDescriptor = "gamma -> e+ e-"
+        , ElectronInputs = [DownElectrons.outputSelection()]
+        , DeltaY = 3.
+        , DeltaYmax = 200. * mm
+        , DiElectronMassMax = 100.*MeV
+        , DiElectronPtMin = 200.*MeV
+        , tools = [BA]
         )
 
-ConvPhotonLL = bindMembers( "Shared", [ PV3D('Hlt2'), Electrons, Hlt2DiEl_LL ] )
-ConvPhotonDD = bindMembers( "Shared", [ PV3D('Hlt2'), DownElectrons, Hlt2DiEl_DD ] )
+ConvPhotonLL = bindMembers( "ConvPhotonLL", [ PV3D('Hlt2'), Photons, Electrons, Hlt2DiEl_LL ] )
+ConvPhotonDD = bindMembers( "ConvPhotonDD", [ PV3D('Hlt2'), Photons, DownElectrons, Hlt2DiEl_DD ] )
