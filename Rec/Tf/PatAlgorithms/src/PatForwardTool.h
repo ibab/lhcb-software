@@ -64,76 +64,74 @@ public:
   void prepareHits();
 
 private:
-  void buildXCandidatesList( PatFwdTrackCandidate& track ) const;
+  void buildXCandidatesList( PatFwdTrackCandidate& track , boost::iterator_range<typename PatFwdHits::const_iterator> rng) const;
 
   class XInterval {
     double m_zMagnet,m_xMagnet,m_txMin,m_txMax,m_xmin,m_xmax;
   public:
-    XInterval(double zMagnet,double xMagnet, double txMin, double txMax, double xMinRef, double xMaxRef) 
+    XInterval(double zMagnet,double xMagnet, double txMin, double txMax, double xMinRef, double xMaxRef)
       : m_zMagnet{zMagnet}, m_xMagnet{xMagnet}, m_txMin{txMin}, m_txMax{txMax}, m_xmin {xMinRef},m_xmax{xMaxRef} {}
-      double xMinAtZ(double z) const { return m_txMin*(z-m_zMagnet)+m_xMagnet; }
-      double xMaxAtZ(double z) const { return m_txMax*(z-m_zMagnet)+m_xMagnet; }
-      //== This is the range at the reference plane
-      double xMin() const { return m_xmin; }
-      double xMax() const { return m_xmax; }
-      bool inside(double x) const { return m_xmin <= x && x < m_xmax; }
-      bool outside(double x) const { return x < m_xmin || m_xmax <= x ; }
-      template <typename Range, typename Projection> 
-      Range inside(const Range& r, Projection p) const {
-            // TODO: linear search from the edges is probably faster given the typical input...
-            auto f = std::partition_point( std::begin(r), std::end(r),
-                                           [&]( const typename Range::value_type& i ) { return p(i)<m_xmin; } );
-            auto l = std::partition_point( f, std::end(r),
-                                           [&]( const typename Range::value_type& i ) { return p(i)<m_xmax; } );
-            return { f, l };
-      }
+    double xMinAtZ(double z) const { return m_txMin*(z-m_zMagnet)+m_xMagnet; }
+    double xMaxAtZ(double z) const { return m_txMax*(z-m_zMagnet)+m_xMagnet; }
+    //== This is the range at the reference plane
+    double xMin() const { return m_xmin; }
+    double xMax() const { return m_xmax; }
+    bool inside(double x) const { return m_xmin <= x && x < m_xmax; }
+    bool outside(double x) const { return x < m_xmin || m_xmax <= x ; }
+    template <typename Range, typename Projection>
+    Range inside(const Range& r, Projection p) const {
+      // TODO: linear search from the edges is probably faster given the typical input...
+      auto f = std::partition_point( std::begin(r), std::end(r),
+                                     [&]( const typename Range::value_type& i ) { return p(i)<m_xmin; } );
+      auto l = std::partition_point( f, std::end(r),
+                                     [&]( const typename Range::value_type& i ) { return p(i)<m_xmax; } );
+      return { f, l };
+    }
   };
 
 
   template <typename T> T dSlope_kick( T pt, T sinTrack ) const {
-      return sinTrack * m_magnetKickParams.first / ( pt - sinTrack * m_magnetKickParams.second );
+    return sinTrack * m_magnetKickParams.first / ( pt - sinTrack * m_magnetKickParams.second );
   }
 
   XInterval make_XInterval(const PatFwdTrackCandidate& track) const {
-      double xExtrap = track.xStraight( m_fwdTool->zReference() );
-      //== calculate center of magnet from Velo track
-      const double zMagnet =  m_fwdTool->zMagnet( track );
-      //== calculate if minPt or minMomentum sets the window size
-      const double dSlope =  dSlope_kick( m_minPt, track.sinTrack() );
-      const double dz     = m_fwdTool->zReference() - zMagnet;
-      const double maxRange = dSlope*dz;
-      double xMin = xExtrap - maxRange;
-      double dSlopeMin = -dSlope;
-      double dSlopeMax =  dSlope;
-      double xMax = xExtrap + maxRange;
-      
-      //== based on momentum a wrong-charge sign window size is defined
-      if (m_useMomentumEstimate && !m_withoutBField && track.qOverP() != 0 ) {
-        bool useKick { m_UseWrongSignWindow && track.track()->pt()>m_WrongSignPT };
-        double kickRange = useKick ? dSlope_kick(m_WrongSignPT, track.sinTrack())*dz : 0;
-        if ( UNLIKELY( msgLevel( MSG::DEBUG ) ) ) {
-          debug() << "   xExtrap = " << xExtrap
-                  << " q/p " << track.qOverP()
-                  << " predict " << xExtrap + kickRange << endmsg;
-        }
-        //== In the case of a given charge estimate, the search window is not symmetric 
-        //== around the velo track extrapolation.
-        if ( std::signbit( track.qOverP() ) != std::signbit( m_fwdTool->magscalefactor() ) ) {
-          xMin = xExtrap - kickRange;
-          dSlopeMin = -kickRange/dz;
-        } else {
-          xMax = xExtrap + kickRange;
-          dSlopeMax = kickRange/dz;
-        }
+    double xExtrap = track.xStraight( m_fwdTool->zReference() );
+    //== calculate center of magnet from Velo track
+    const double zMagnet =  m_fwdTool->zMagnet( track );
+    //== calculate if minPt or minMomentum sets the window size
+    const double dSlope =  dSlope_kick( m_minPt, track.sinTrack() );
+    const double dz     = m_fwdTool->zReference() - zMagnet;
+    const double maxRange = dSlope*dz;
+    double xMin = xExtrap - maxRange;
+    double dSlopeMin = -dSlope;
+    double dSlopeMax =  dSlope;
+    double xMax = xExtrap + maxRange;
+
+    //== based on momentum a wrong-charge sign window size is defined
+    if (m_useMomentumEstimate && !m_withoutBField && track.qOverP() != 0 ) {
+      bool useKick { m_UseWrongSignWindow && track.track()->pt()>m_WrongSignPT };
+      double kickRange = useKick ? dSlope_kick(m_WrongSignPT, track.sinTrack())*dz : 0;
+      if ( UNLIKELY( msgLevel( MSG::DEBUG ) ) ) {
+        debug() << "   xExtrap = " << xExtrap
+                << " q/p " << track.qOverP()
+                << " predict " << xExtrap + kickRange << endmsg;
       }
-      // compute parameters of deltaX as a function of z
-      return { zMagnet, track.xStraight( zMagnet ), 
-          track.slX()+dSlopeMin, 
-          track.slX()+dSlopeMax, 
+      //== In the case of a given charge estimate, the search window is not symmetric
+      //== around the velo track extrapolation.
+      if ( std::signbit( track.qOverP() ) != std::signbit( m_fwdTool->magscalefactor() ) ) {
+        xMin = xExtrap - kickRange;
+        dSlopeMin = -kickRange/dz;
+      } else {
+        xMax = xExtrap + kickRange;
+        dSlopeMax = kickRange/dz;
+      }
+    }
+    // compute parameters of deltaX as a function of z
+    return { zMagnet, track.xStraight( zMagnet ),
+          track.slX()+dSlopeMin,
+          track.slX()+dSlopeMax,
           xMin, xMax };
   };
-
-
 
 
   boost::iterator_range<typename PatFwdHits::const_iterator>
@@ -146,21 +144,21 @@ private:
   void debugFwdHits( const PatFwdTrackCandidate& track, MsgStream& msg ) const;
 
 
-  bool driftInRange( const PatFwdHit& hit )  const {  
-     auto drift = hit.driftDistance(); 
-     return m_minOTDrift < drift && drift < m_maxOTDrift ; 
+  bool driftInRange( const PatFwdHit& hit )  const {
+    auto drift = hit.driftDistance();
+    return m_minOTDrift < drift && drift < m_maxOTDrift ;
   }
 
-  double allowedXSpread(const PatFwdHit *hit, double xExtrap ) const { 
+  double allowedXSpread(const PatFwdHit *hit, double xExtrap ) const {
     auto spreadSl = ( hit->projection() - xExtrap ) * m_maxSpreadSlopeX;
-    return m_maxSpreadX + 
-           fabs( spreadSl ) + 
-           int(hit->hit()->type() == Tf::RegionID::OT) * 1.5;  // OT drift ambiguities...
+    return m_maxSpreadX +
+        fabs( spreadSl ) +
+        int(hit->isOT()) * 1.5;  // OT drift ambiguities...
   }
 
-  double allowedStereoSpread(const PatFwdHit *hit) const { 
+  double allowedStereoSpread(const PatFwdHit *hit) const {
     // in case of OT, add 1.5 to account for OT drift ambiguities...
-    return  3. + int(hit->hit()->type() == Tf::RegionID::OT)*1.5;
+    return  3. + int(hit->isOT())*1.5;
   }
 
   bool inCenter(const PatFwdTrackCandidate& cand) const {
@@ -184,7 +182,7 @@ private:
   }
 
   template <typename T> T computeStereoTol( T qOverP) const {
-     return m_maxSpreadY + m_maxSpreadSlopeY * qOverP *  qOverP;
+    return m_maxSpreadY + m_maxSpreadSlopeY * qOverP *  qOverP;
   }
 
   bool hasEnoughStereo( const PatFwdTrackCandidate& c) const {
@@ -194,10 +192,10 @@ private:
   }
 
   bool passMomentum(const PatFwdTrackCandidate& c, double sinTrack) const {
-          const double momentum=1.0/fabs(m_fwdTool->qOverP( c ));
-          const double pt = sinTrack*momentum;
-          //== reject if below threshold
-          return  m_withoutBField || ( momentum>m_minMomentum && pt>m_minPt) ;
+    const double momentum=1.0/fabs(m_fwdTool->qOverP( c ));
+    const double pt = sinTrack*momentum;
+    //== reject if below threshold
+    return  m_withoutBField || ( momentum>m_minMomentum && pt>m_minPt) ;
   }
 
 
@@ -208,7 +206,7 @@ private:
   std::string                                 m_addTtToolName;
   std::string                                 m_addUtToolName;
 
-  std::string      m_trackSelectorName;  
+  std::string      m_trackSelectorName;
   ITrackSelector*      m_trackSelector;
 
   //== Parameters of the algorithm
@@ -259,8 +257,8 @@ private:
   double m_WrongSignPT;
   //bool  m_FlagUsedSeeds;              // flag velo seeds as used if a track is upgraded
   std::vector<std::string>      m_veloVetoTracksNames;
-  bool  m_skipUsedSeeds;              // skip seeds which are flagged as "used" 
-  bool  m_skipUsedHits;              // skip hits which are flagged as "used" 
+  bool  m_skipUsedSeeds;              // skip seeds which are flagged as "used"
+  bool  m_skipUsedHits;              // skip hits which are flagged as "used"
   std::string                                 m_LHCbIDToolName;
   IUsedLHCbID*                                m_usedLHCbIDTool; ///< Tool to check if hits are already being used
 

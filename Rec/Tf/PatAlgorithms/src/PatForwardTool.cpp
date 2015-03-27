@@ -29,13 +29,13 @@ DECLARE_TOOL_FACTORY( PatForwardTool )
 #define AUTO_RETURN(...) noexcept(noexcept(__VA_ARGS__)) -> decltype(__VA_ARGS__) {return (__VA_ARGS__);}
 
 constexpr struct proj_distance_t {
-       template <typename Range> 
-       auto operator()(const Range& range) const //TODO: use C++14 auto return deduction instead
-       AUTO_RETURN( range.back()->projection() - range.front()->projection() )
+  template <typename Range>
+  auto operator()(const Range& range) const //TODO: use C++14 auto return deduction instead
+      AUTO_RETURN( range.back()->projection() - range.front()->projection() )
 
-       template <typename Iter>
-       auto operator()(Iter&& f, Iter&& l) const //TODO: use C++14 auto return deduction instead
-       AUTO_RETURN( (*std::prev(std::forward<Iter>(l)))->projection() - (*std::forward<Iter>(f))->projection() )
+      template <typename Iter>
+      auto operator()(Iter&& f, Iter&& l) const //TODO: use C++14 auto return deduction instead
+      AUTO_RETURN( (*std::prev(std::forward<Iter>(l)))->projection() - (*std::forward<Iter>(f))->projection() )
 } proj_distance {};
 
 constexpr struct sortQuality_t {
@@ -54,11 +54,11 @@ constexpr struct sortQuality_t {
 } sortQuality{};
 
 struct MaxSpread {
-    double spread;
-    MaxSpread(double spread_) : spread { spread_ } {}
-    bool operator()(const PatForwardHit* first, const PatForwardHit *last) const {
-            return last->projection() < first->projection() + spread;
-    }
+  double spread;
+  MaxSpread(double spread_) : spread { spread_ } {}
+  bool operator()(const PatForwardHit* first, const PatForwardHit *last) const {
+    return last->projection() < first->projection() + spread;
+  }
 };
 
 //== Count how many weighted hits
@@ -67,154 +67,154 @@ template <typename C>
 int nbT(const C& c) { return 2*c.nbIT()+c.nbOT(); }
 
 int nT(const PatFwdTrackCandidate& c) {
-    return nbT( PatFwdRegionCounter{  std::begin(c), std::end(c) } );
+  return nbT( PatFwdRegionCounter{  std::begin(c), std::end(c) } );
 }
 
 template <typename Iterator>
 int nbDifferent( Iterator first, Iterator last)  {
-    return PatFwdPlaneCounter{ first, last }.nbDifferent();
+  return PatFwdPlaneCounter{ first, last }.nbDifferent();
 }
 template <typename Container>
 int nbDifferent( const Container& c) {
-    return nbDifferent( std::begin(c), std::end(c) );
+  return nbDifferent( std::begin(c), std::end(c) );
 }
 
 template <typename Iter>
 class RangeGenerator {
-    Iter m_last;
-    int m_minPlanes;
-    Iter next(Iter current) const { return std::next( std::move(current), m_minPlanes-1 ); }
+  Iter m_last;
+  int m_minPlanes;
+  Iter next(Iter current) const { return std::next( std::move(current), m_minPlanes-1 ); }
 public:
-    RangeGenerator( int minPlanes, Iter last ) :  m_last{ std::move(last) }, m_minPlanes{minPlanes} { }
-    template <typename Iterator> bool operator()(Iterator&& first, Iterator&& last) const { return std::distance(std::forward<Iterator>(first),std::forward<Iterator>(last)) > m_minPlanes-1; }
-    template <typename Iterator> bool operator()(Iterator&& first ) const { return std::distance(std::forward<Iterator>(first),m_last) > m_minPlanes-1; }
+  RangeGenerator( int minPlanes, Iter last ) :  m_last{ std::move(last) }, m_minPlanes{minPlanes} { }
+  template <typename Iterator> bool operator()(Iterator&& first, Iterator&& last) const { return std::distance(std::forward<Iterator>(first),std::forward<Iterator>(last)) > m_minPlanes-1; }
+  template <typename Iterator> bool operator()(Iterator&& first ) const { return std::distance(std::forward<Iterator>(first),m_last) > m_minPlanes-1; }
 
-    template <typename Iterator, typename Predicate>
-    boost::iterator_range<Iterator> next_range(Iterator first, Predicate predicate)
-    {
-        auto mid = this->next(first);
-        using reference = typename std::iterator_traits<Iterator>::reference;
-        //== If not enough hits in the maximum spread, skip
-        if ( !predicate(*first,*mid)  ) {
-          // first increment first, as we KNOW the current first fails predicate..
-          first = std::find_if(++first, mid, [&](reference i) { return predicate(i,*mid);});
-          return { first, first };
-        }
-        //== Add all hits inside the maximum spread.
-        // first increment mid, as we KNOW the current mid passes predicate..
-        // typically, we find something after 2 steps -- which is smaller than the 2log(size_of_range)
-        //  hence, the linear std::find_if is expected to outperform logarithmic  std::partition_point...
-        // (typically in 5% of the cases, 2^distance_to_first_match will be larger than range_size)
-        mid = std::find_if( ++mid, m_last, [&](reference i) { return !predicate(*first,i); } );
-        // mid = std::partition_point( ++mid, m_last, [&](reference i) { return predicate(*first,i); } );
-
-        //== Enough different planes?
-        // Note: at this point, only 'selected' hits are used, so we can omit
-        //       the check inside the plane counter....
-        PatFwdPlaneCounter_<PatFwdPlaneCounter_Policy::OmitSelectedCheck> counter{ first, mid };
-        auto enough_planes = [&]() { return counter.nbDifferent() >= m_minPlanes; } ;
-        if ( !enough_planes() ) {
-          ++first;
-          return { first, first };
-        }
-        //== Try to make a single zone, by removing the first and adding other as
-        //   long as the spread and minPlanes conditions are met.
-        auto j = mid;
-        auto i = first;
-        while ( std::distance(i,mid) != (m_minPlanes-1) && j != m_last ) {
-          counter.removeHit(*i);
-          ++i;
-          j = counter.addHitsWhile( j, m_last, [&](reference k) { return predicate(*i,k); } );
-          if ( enough_planes() ) mid = j;
-        }
-        return { first, mid };
+  template <typename Iterator, typename Predicate>
+  boost::iterator_range<Iterator> next_range(Iterator first, Predicate predicate)
+  {
+    auto mid = this->next(first);
+    using reference = typename std::iterator_traits<Iterator>::reference;
+    //== If not enough hits in the maximum spread, skip
+    if ( !predicate(*first,*mid)  ) {
+      // first increment first, as we KNOW the current first fails predicate..
+      first = std::find_if(++first, mid, [&](reference i) { return predicate(i,*mid);});
+      return { first, first };
     }
+    //== Add all hits inside the maximum spread.
+    // first increment mid, as we KNOW the current mid passes predicate..
+    // typically, we find something after 2 steps -- which is smaller than the 2log(size_of_range)
+    //  hence, the linear std::find_if is expected to outperform logarithmic  std::partition_point...
+    // (typically in 5% of the cases, 2^distance_to_first_match will be larger than range_size)
+    mid = std::find_if( ++mid, m_last, [&](reference i) { return !predicate(*first,i); } );
+    // mid = std::partition_point( ++mid, m_last, [&](reference i) { return predicate(*first,i); } );
+
+    //== Enough different planes?
+    // Note: at this point, only 'selected' hits are used, so we can omit
+    //       the check inside the plane counter....
+    PatFwdPlaneCounter_<PatFwdPlaneCounter_Policy::OmitSelectedCheck> counter{ first, mid };
+    auto enough_planes = [&]() { return counter.nbDifferent() >= m_minPlanes; } ;
+    if ( !enough_planes() ) {
+      ++first;
+      return { first, first };
+    }
+    //== Try to make a single zone, by removing the first and adding other as
+    //   long as the spread and minPlanes conditions are met.
+    auto j = mid;
+    auto i = first;
+    while ( std::distance(i,mid) != (m_minPlanes-1) && j != m_last ) {
+      counter.removeHit(*i);
+      ++i;
+      j = counter.addHitsWhile( j, m_last, [&](reference k) { return predicate(*i,k); } );
+      if ( enough_planes() ) mid = j;
+    }
+    return { first, mid };
+  }
 };
 
 template <typename Iterator>
 RangeGenerator<typename std::decay<Iterator>::type>
 make_RangeGenerator( int nPlanes, Iterator&& last)
 {
-    return { nPlanes, std::forward<Iterator>(last) };
+  return { nPlanes, std::forward<Iterator>(last) };
 }
 
 template <typename Range>
 struct  BestRangeSelector {
-    std::tuple<Range,double,int> operator()(std::tuple<Range,double,int> prev, Range&& r) { 
-      if (!r.empty()) {
-        auto cnt = nbDifferent(r);
-        if ( cnt >= std::get<2>(prev) ) {
-          auto delta = proj_distance(r);
-          if ( cnt > std::get<2>(prev) || delta < std::get<1>(prev) ) {
-            return { std::forward<Range>(r), delta, cnt };
-          }
+  std::tuple<Range,double,int> operator()(std::tuple<Range,double,int> prev, Range&& r) {
+    if (!r.empty()) {
+      auto cnt = nbDifferent(r);
+      if ( cnt >= std::get<2>(prev) ) {
+        auto delta = proj_distance(r);
+        if ( cnt > std::get<2>(prev) || delta < std::get<1>(prev) ) {
+          return { std::forward<Range>(r), delta, cnt };
         }
       }
-      return prev;
     }
+    return prev;
+  }
 };
 
 
 template <typename Range>
 class  BestRangeFinder {
-    Range m_range;
-    double m_size;
-    int m_nbDifferent;
+  Range m_range;
+  double m_size;
+  int m_nbDifferent;
 public:
-    BestRangeFinder(Range&& r, int n, double s) : 
-        m_range( std::forward<Range>(r) ), 
-        m_size(s), 
-        m_nbDifferent(n) {}
+  BestRangeFinder(Range&& r, int n, double s) :
+    m_range( std::forward<Range>(r) ),
+    m_size(s),
+    m_nbDifferent(n) {}
 
-    const Range& range() const { return m_range; }
+  const Range& range() const { return m_range; }
 
-    void update(const Range& r) { 
-        if (r.empty()) return;
-        auto cnt = nbDifferent(r);
-        if ( cnt >= m_nbDifferent ) {
-          auto delta = proj_distance(r);
-          if ( cnt > m_nbDifferent || delta < m_size ) {
-            m_nbDifferent = cnt;
-            m_size = delta;
-            m_range = r;
-          }
-        }
+  void update(const Range& r) {
+    if (r.empty()) return;
+    auto cnt = nbDifferent(r);
+    if ( cnt >= m_nbDifferent ) {
+      auto delta = proj_distance(r);
+      if ( cnt > m_nbDifferent || delta < m_size ) {
+        m_nbDifferent = cnt;
+        m_size = delta;
+        m_range = r;
+      }
     }
+  }
 };
 
 template <typename Range>
 BestRangeFinder<Range> make_BestRangeFinder(Range&& r, int n, double s) {
-    return { std::forward<Range>(r), n, s};
+  return { std::forward<Range>(r), n, s};
 }
 
 constexpr unsigned int nReg() { return  Tf::RegionID::OTIndex::kNRegions + Tf::RegionID::ITIndex::kNRegions; }
 
 template <bool stereo>
 struct regions {
-    class iterator {
-        friend class regions;
-        unsigned m_index;
-        iterator( unsigned i ) : m_index{i} {}
-    public:
-        const iterator& operator*() const { return *this; } 
-        iterator& operator++() { ++m_index; return *this; }
+  class iterator {
+    friend class regions;
+    unsigned m_index;
+    iterator( unsigned i ) : m_index{i} {}
+  public:
+    const iterator& operator*() const { return *this; }
+    iterator& operator++() { ++m_index; return *this; }
 
-        unsigned region() const { return m_index%nReg(); }
-        static_assert(Tf::RegionID::ITIndex::kNLayers == 4, "expecting exactly four IT layers" );
-        static_assert(Tf::RegionID::OTIndex::kNLayers == 4, "expecting exactly four OT layers" );
-        unsigned layer() const { return stereo ? ( 1+ (m_index/nReg())%2  )  // {1,2} -- stereo only...
-                                               : ( 3*((m_index/nReg())%2) ); // X layers only: {0,3} // base 0, stride 3, extent between 3 and 5
-                               }
-        unsigned station() const { return m_index/(2*nReg()); }
-        bool isOT() const { return region() < Tf::RegionID::OTIndex::kNRegions; }
+    unsigned region() const { return m_index%nReg(); }
+    static_assert(Tf::RegionID::ITIndex::kNLayers == 4, "expecting exactly four IT layers" );
+    static_assert(Tf::RegionID::OTIndex::kNLayers == 4, "expecting exactly four OT layers" );
+    unsigned layer() const { return stereo ? ( 1+ (m_index/nReg())%2  )  // {1,2} -- stereo only...
+                                           : ( 3*((m_index/nReg())%2) ); // X layers only: {0,3} // base 0, stride 3, extent between 3 and 5
+                           }
+    unsigned station() const { return m_index/(2*nReg()); }
+    bool isOT() const { return region() < Tf::RegionID::OTIndex::kNRegions; }
 
-        friend bool operator!=(const iterator& lhs, const iterator& rhs) {
-            return lhs.m_index != rhs.m_index;
-        }
-    };
-    constexpr unsigned size()  const { return Tf::RegionID::OTIndex::kNStations*Tf::RegionID::OTIndex::kNLayers*nReg()/2; }
-    constexpr iterator begin() const { return { 0 }; }
-    constexpr iterator end()   const { return { size() }; }
+    friend bool operator!=(const iterator& lhs, const iterator& rhs) {
+      return lhs.m_index != rhs.m_index;
+    }
+  };
+  constexpr unsigned size()  const { return Tf::RegionID::OTIndex::kNStations*Tf::RegionID::OTIndex::kNLayers*nReg()/2; }
+  constexpr iterator begin() const { return { 0 }; }
+  constexpr iterator end()   const { return { size() }; }
 };
 
 static const auto stereo_regions = regions<true>{};
@@ -230,7 +230,7 @@ PatForwardTool::PatForwardTool( const std::string& type,
                                 const IInterface* parent )
   : base_class( type, name , parent )
   , m_trackSelector(nullptr)
-    
+
 {
   declareInterface<IPatForwardTool>(this);
   declareInterface<ITracksFromTrack>(this);
@@ -284,7 +284,7 @@ PatForwardTool::PatForwardTool( const std::string& type,
   //declareProperty("SkipUsedHits",m_skipUsedHits = false);
   declareProperty( "VeloVetoTracksNames", m_veloVetoTracksNames = {});
   declareProperty( "UsedLHCbIDToolName",m_LHCbIDToolName = "");
-  //declareProperty( "UnusedVeloSeeds", m_unusedVeloSeeds = false); 
+  //declareProperty( "UnusedVeloSeeds", m_unusedVeloSeeds = false);
   declareProperty( "TrackSelectorName",  m_trackSelectorName   = "None");
 
 }
@@ -312,7 +312,7 @@ StatusCode PatForwardTool::initialize ( ) {
   } else {
     m_addTTClusterTool = nullptr;
   }
-  
+
   if (!m_LHCbIDToolName.empty()){
     m_skipUsedHits = true;
     m_usedLHCbIDTool =  tool<IUsedLHCbID>(m_LHCbIDToolName, this);
@@ -320,9 +320,9 @@ StatusCode PatForwardTool::initialize ( ) {
     m_skipUsedHits = false;
     m_usedLHCbIDTool = nullptr;
   }
-  
+
   m_skipUsedSeeds = !m_veloVetoTracksNames.empty();
-                         
+
   return StatusCode::SUCCESS;
 }
 
@@ -332,9 +332,9 @@ StatusCode PatForwardTool::initialize ( ) {
 // -- as this handle runs before decoding the clusters
 //=============================================================================
 void PatForwardTool::handle ( const Incident& incident ) {
-  
+
   if ( IncidentType::BeginEvent == incident.type() ) m_newEvent = true;
-  
+
 }
 
 //=========================================================================
@@ -342,14 +342,14 @@ void PatForwardTool::handle ( const Incident& incident ) {
 //=========================================================================
 void PatForwardTool::prepareHits()
 {
-  m_tHitManager->prepareHits(); 
+  m_tHitManager->prepareHits();
   //== if any hits to be flagged as used, do so now...
   if ( m_usedLHCbIDTool ) {
     auto hits =   m_tHitManager->hits();
     std::for_each( std::begin(hits), std::end(hits), [&](PatFwdHit* hit) {
-        //make sure we set all hits to false
-        hit->setIsUsed(false);
-        if (m_usedLHCbIDTool->used(hit->hit()->lhcbID())) hit->setIsUsed(true);
+      //make sure we set all hits to false
+      hit->setIsUsed(false);
+      if (m_usedLHCbIDTool->used(hit->hit()->lhcbID())) hit->setIsUsed(true);
     } );
   }
   m_newEvent = false;
@@ -372,11 +372,11 @@ bool PatForwardTool::acceptTrack(const LHCb::Track& track) const
         if( UNLIKELY( msgLevel(MSG::ERROR) ) ) error()<<"Location "<<itNames<<" does not exist!"<<endmsg;
         continue;
       }
-      LHCb::Track::Range vetoTracks = get<LHCb::Track::Range>( itNames ); 
-      for (auto it : vetoTracks ) { 
+      LHCb::Track::Range vetoTracks = get<LHCb::Track::Range>( itNames );
+      for (auto it : vetoTracks ) {
         if (it == &track ) return false;
         auto ancestors = it->ancestors();
-        if (!std::none_of( std::begin( ancestors ), std::end( ancestors ), 
+        if (!std::none_of( std::begin( ancestors ), std::end( ancestors ),
                            [&](const LHCb::Track* t) { return t == &track; } )){
           counter("#SkippedUsedSeeds") += 1;
           return false;
@@ -396,20 +396,6 @@ void PatForwardTool::forwardTrack( const LHCb::Track* tr, LHCb::Tracks* output )
   std::vector<LHCb::Track*> outvec;
   tracksFromTrack(*tr,outvec).ignore();
 
-  if (outvec.empty() && m_secondLoop) {
-
-      int minXPlanes = m_minXPlanes;
-      m_minXPlanes = minXPlanes - 1;
-
-      int minPlanes = m_minPlanes;
-      m_minPlanes =  minPlanes - 1;
-
-      tracksFromTrack(*tr,outvec).ignore();
-
-      m_minXPlanes = minXPlanes;
-      m_minPlanes = minPlanes;
-
-  }
   output->reserve(output->size()+outvec.size());
   for ( const auto& i : outvec ) output->insert(i);
 }
@@ -438,259 +424,298 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
   // correct.
   if(m_newEvent) prepareHits();
   //m_tHitManager->prepareHits();
+  boost::iterator_range<typename PatFwdHits::const_iterator> rng = fillXList( track ) ;
 
-  //== Build the initial list of X candidates
-  buildXCandidatesList( track );
+  bool processingSecondLoop = false;
+  bool processedSecondLoop = false;
 
-  int minPlanes = m_minPlanes;  //== Initial value, can be updated later...
+  while (!processedSecondLoop) {
 
-  std::vector<PatFwdTrackCandidate> xCandidates; xCandidates.reserve( m_candidates.size() );
+    if(processingSecondLoop){
+      auto ty = track.slY();
+      auto y0 = track.yStraight( 0. );
+      for(auto it = m_xHitsAtReference.begin(); it != m_xHitsAtReference.end(); ++it){
+        auto hit = *it;
+        if(hit->isOT()){
+          approxUpdateOTHitForTrack( hit, y0, ty);
+          hit->setIgnored( false );
+          hit->setRlAmb( 0 );
+          hit->setSelected( this->driftInRange(*hit) );
+          if(not_selected(hit))m_xHitsAtReference.erase(it);
+        }
+        else{
+          updateNonOTHitForTrack( hit, y0, ty);
+          hit->setIgnored( false );
+          hit->setRlAmb( 0 );
+          hit->setSelected( true );
+        }
+      }
+    }
 
-  int minOTX = int( 1.5 * m_minXPlanes );
-  auto accept = [=](const PatFwdTrackCandidate& cnd) {
+    //== Build the initial list of X candidates
+    buildXCandidatesList( track, rng );
+
+    int minPlanes = m_minPlanes;  //== Initial value, can be updated later...
+
+    std::vector<PatFwdTrackCandidate> xCandidates; xCandidates.reserve( m_candidates.size() );
+
+    int minOTX = int( 1.5 * m_minXPlanes );
+    auto accept = [=](const PatFwdTrackCandidate& cnd) {
       //== Check the chi2 with magnet center constraint.
       //== Count how many weighted hits
       //== reject if below threshold
       return cnd.chi2PerDoF() < m_maxChi2Track &&
-             ( !m_withoutBField || fabs(cnd.slX()-cnd.xSlope(0.))<0.005) &&
-             ( nT(cnd) >= minOTX || inCenter(cnd) ) &&
-             passMomentum( cnd, track.sinTrack() );
-  };
+          ( !m_withoutBField || fabs(cnd.slX()-cnd.xSlope(0.))<0.005) &&
+          ( nT(cnd) >= minOTX || inCenter(cnd) ) &&
+          passMomentum( cnd, track.sinTrack() );
+    };
 
+    for( auto& icand : m_candidates ) {
+      //== Fit the candidate, and store them (fitXCandidate also updates the hits
+      while ( m_fwdTool->fitXCandidate( icand, m_maxChi2, m_minXPlanes ) ) {
 
-  for( auto& icand : m_candidates ) {
-    //== Fit the candidate, and store them (fitXCandidate also updates the hits
-    while ( m_fwdTool->fitXCandidate( icand, m_maxChi2, m_minXPlanes ) ) {
+        // Copy the whole stuff, keep only used ones and store it.
+        PatFwdTrackCandidate temp = icand;
+        temp.cleanCoords();
+        m_fwdTool->chi2PerDoF( temp );  // Compute and store chi2/dof
+        if ( UNLIKELY(isDebug) ) {
+          debug() << "Chi2/nDof = " << temp.chi2PerDoF() << " nDoF " << temp.nDoF()
+                  << " dist at center " << m_fwdTool->distAtMagnetCenter( temp )
+                  << endmsg;
+          debugFwdHits( temp );
+        }
+        if ( accept(temp) ) xCandidates.push_back( std::move(temp) );
 
-      // Copy the whole stuff, keep only used ones and store it.
-      PatFwdTrackCandidate temp = icand;
+        //== tag these coordinates in the original, so that we don't find the same track again
+        std::for_each( std::begin(icand), std::end(icand), [](PatFwdHit* hit) {
+          if ( hit->isSelected() ) hit->setIgnored( true );
+        } );
+      }
+    }
+
+    if ( UNLIKELY(isDebug) ) {
+      debug() << "************ List of X candidates , N = " << xCandidates.size() << endmsg;
+      unsigned nCand=0;
+      for ( const auto& itL : xCandidates ) {
+        debug() << "Candidate " << nCand++
+                << " Chi2/nDof = " << itL.chi2PerDoF() << endmsg;
+        debugFwdHits( itL );
+      }
+      if ( !xCandidates.empty() ) debug() << "---- Now get the stereo hits on these ---" << endmsg;
+      nCand=0;
+      for ( PatFwdTrackCandidate& temp :  xCandidates ) {
+        debug() << "--- Candidate " << ++nCand
+                << "  X cord size " << temp.coords().size()
+                << endmsg;
+      }
+    }
+
+    //== Now try to get space track from these X track.
+    std::vector<PatFwdTrackCandidate> goodCandidates;
+    int maxPlanes = 0;
+
+    for ( PatFwdTrackCandidate& temp :  xCandidates ) { //TODO: make this one big 'remove_if'?
+
+      std::for_each( std::begin( temp.coords() ), std::end( temp.coords() ),
+                     [](PatForwardHit* h) { h->setIgnored(false); } );// restore normal flag.
+      temp.setSelectedCoords( );
+
+      auto qOverP = computeQOverP(temp);  // in 1/GeV
+      if ( !fillStereoList( temp, computeStereoTol(qOverP) ) ) continue; // Get the stereo coordinates
+
+      if ( UNLIKELY(isDebug) )  debugFwdHits( temp );
+      temp.setSelectedCoords( );
+
+      //== Fit and reject if not good enough
+      if ( !m_fwdTool->fitStereoCandidate( temp, m_maxChi2, minPlanes ) ) continue;
+
       temp.cleanCoords();
-      m_fwdTool->chi2PerDoF( temp );  // Compute and store chi2/dof
+      m_fwdTool->chi2PerDoF( temp );  //== compute and store Chi2PerDoF
       if ( UNLIKELY(isDebug) ) {
-        debug() << "Chi2/nDof = " << temp.chi2PerDoF() << " nDoF " << temp.nDoF()
+        debug() << "  ... fit OK  chi2 " << temp.chi2PerDoF() << " nDoF " << temp.nDoF()
                 << " dist at center " << m_fwdTool->distAtMagnetCenter( temp )
                 << endmsg;
         debugFwdHits( temp );
       }
-      if ( accept(temp) ) xCandidates.push_back( std::move(temp) );
 
-      //== tag these coordinates in the original, so that we don't find the same track again
-      std::for_each( std::begin(icand), std::end(icand), [](PatFwdHit* hit) {
-        if ( hit->isSelected() ) hit->setIgnored( true );
-      } );
-    }
-  }
+      //== Remove stereo coordinates incompatible in Y
+      if ( !m_fwdTool->removeYIncompatible( temp, m_yCompatibleTolFinal, minPlanes ) ) continue;
+      temp.cleanCoords();
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug() << "  ... Y is compatible" << endmsg;
 
-  if ( UNLIKELY(isDebug) ) {
-    debug() << "************ List of X candidates , N = " << xCandidates.size() << endmsg;
-    unsigned nCand=0;
-    for ( const auto& itL : xCandidates ) {
-      debug() << "Candidate " << nCand++
-              << " Chi2/nDof = " << itL.chi2PerDoF() << endmsg;
-      debugFwdHits( itL );
-    }
-    if ( !xCandidates.empty() ) debug() << "---- Now get the stereo hits on these ---" << endmsg;
-    nCand=0;
-    for ( PatFwdTrackCandidate& temp :  xCandidates ) {
-      debug() << "--- Candidate " << ++nCand
-              << "  X cord size " << temp.coords().size()
-              << endmsg;
-    }
-  }
-
-  //== Now try to get space track from these X track.
-  std::vector<PatFwdTrackCandidate> goodCandidates;
-  int maxPlanes = 0;
-
-  for ( PatFwdTrackCandidate& temp :  xCandidates ) { //TODO: make this one big 'remove_if'?
-
-    std::for_each( std::begin( temp.coords() ), std::end( temp.coords() ),
-                   [](PatForwardHit* h) { h->setIgnored(false); } );// restore normal flag.
-    temp.setSelectedCoords( );
-
-    auto qOverP = computeQOverP(temp);  // in 1/GeV
-    if ( !fillStereoList( temp, computeStereoTol(qOverP) ) ) continue; // Get the stereo coordinates
-
-    if ( UNLIKELY(isDebug) )  debugFwdHits( temp );
-    temp.setSelectedCoords( );
-
-    //== Fit and reject if not good enough
-    if ( !m_fwdTool->fitStereoCandidate( temp, m_maxChi2, minPlanes ) ) continue;
-
-    temp.cleanCoords();
-    m_fwdTool->chi2PerDoF( temp );  //== compute and store Chi2PerDoF
-    if ( UNLIKELY(isDebug) ) {
-      debug() << "  ... fit OK  chi2 " << temp.chi2PerDoF() << " nDoF " << temp.nDoF()
-              << " dist at center " << m_fwdTool->distAtMagnetCenter( temp )
-              << endmsg;
-      debugFwdHits( temp );
-    }
-
-    //== Remove stereo coordinates incompatible in Y
-    if ( !m_fwdTool->removeYIncompatible( temp, m_yCompatibleTolFinal, minPlanes ) ) continue;
-    temp.cleanCoords();
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-      debug() << "  ... Y is compatible" << endmsg;
-
-     // Enough stereo planes
-    PatFwdPlaneCounter fullCount( std::begin(temp), std::end(temp) );
-    int nbY = fullCount.nbStereo();
-    if ( nbY < 4 ) {
-      if( UNLIKELY( isDebug ) ) debug() << "Not enough Y planes : " << nbY << endmsg;
-      continue;
-    }
-
-    if ( m_maxDeltaY + m_maxDeltaYSlope * qOverP *qOverP < fabs(  m_fwdTool->changeInY( temp ) ))  {
-      if( UNLIKELY( isDebug ) ) debug() << "  --- Too big change in Y : " <<  m_fwdTool->changeInY( temp ) << endmsg;
-      continue;
-    }
-
-    temp.setQuality( computeQuality(temp, qOverP) );
-
-    //== Verify if enough OT measurements, counting IT for 2/plane
-    //== Ignore the y central region, OT inefficient there.
-
-    PatFwdRegionCounter regions( std::begin(temp), std::end(temp) );
-    temp.setNbIT( regions.nbIT() );
-    temp.setNbOT( regions.nbOT() );
-
-    if ( !inCenter(temp) ) {
-      if ( m_minHits > nbT(temp) ){
-        if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-          debug() << "  --- Not enough hits : " << nbT(temp) << endmsg;
+      // Enough stereo planes
+      PatFwdPlaneCounter fullCount( std::begin(temp), std::end(temp) );
+      int nbY = fullCount.nbStereo();
+      if ( nbY < 4 ) {
+        if( UNLIKELY( isDebug ) ) debug() << "Not enough Y planes : " << nbY << endmsg;
         continue;
       }
-      if ( temp.nbIT() == 0 && temp.nbOT() < m_minOTHits ) {
-        if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-          debug() << " Too few OT for OT only track : " << temp.nbOT() << endmsg;
+
+      if ( m_maxDeltaY + m_maxDeltaYSlope * qOverP *qOverP < fabs(  m_fwdTool->changeInY( temp ) ))  {
+        if( UNLIKELY( isDebug ) ) debug() << "  --- Too big change in Y : " <<  m_fwdTool->changeInY( temp ) << endmsg;
         continue;
       }
+
+      temp.setQuality( computeQuality(temp, qOverP) );
+
+      //== Verify if enough OT measurements, counting IT for 2/plane
+      //== Ignore the y central region, OT inefficient there.
+
+      PatFwdRegionCounter regions( std::begin(temp), std::end(temp) );
+      temp.setNbIT( regions.nbIT() );
+      temp.setNbOT( regions.nbOT() );
+
+      if ( !inCenter(temp) ) {
+        if ( m_minHits > nbT(temp) ){
+          if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+            debug() << "  --- Not enough hits : " << nbT(temp) << endmsg;
+          continue;
+        }
+        if ( temp.nbIT() == 0 && temp.nbOT() < m_minOTHits ) {
+          if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+            debug() << " Too few OT for OT only track : " << temp.nbOT() << endmsg;
+          continue;
+        }
+      }
+      maxPlanes = std::max(maxPlanes, fullCount.nbDifferent());
+
+      //== reject if below threshold
+      if (!passMomentum( temp, track.sinTrack())) continue;
+
+      //== Update requirement according to already found good solutions...
+      minPlanes = std::max( minPlanes,   nbDifferent(temp)-1 );
+      goodCandidates.push_back( std::move(temp) );
     }
-    maxPlanes = std::max(maxPlanes, fullCount.nbDifferent());
-
-    //== reject if below threshold
-    if (!passMomentum( temp, track.sinTrack())) continue;
-
-    //== Update requirement according to already found good solutions...
-    minPlanes = std::max( minPlanes,   nbDifferent(temp)-1 );
-    goodCandidates.push_back( std::move(temp) );
-  }
 
 
-  // added for Tr/NNTools -- sort all candidates with respect to PatQuality
-  if( this->nnSwitch()){
-    std::stable_sort( std::begin(goodCandidates), std::end(goodCandidates), sortQuality);
-    // loop over all candidates
-    for( auto& all : goodCandidates ) {
-	  all.setCand1stQuality(all.quality());
-      if(goodCandidates.size() == 1) {
-	    all.setCand2ndQuality(0.);
-      } else {
-        auto i2 = std::find_if( std::begin(goodCandidates), std::end(goodCandidates),
-                                [&](const PatFwdTrackCandidate& c) { return c.quality() != all.quality(); } );
-        if (i2!=std::end(goodCandidates)) { all.setCand2ndQuality( i2->quality() ); }
+    // added for Tr/NNTools -- sort all candidates with respect to PatQuality
+    if( this->nnSwitch()){
+      std::stable_sort( std::begin(goodCandidates), std::end(goodCandidates), sortQuality);
+      // loop over all candidates
+      for( auto& all : goodCandidates ) {
+        all.setCand1stQuality(all.quality());
+        if(goodCandidates.size() == 1) {
+          all.setCand2ndQuality(0.);
+        } else {
+          auto i2 = std::find_if( std::begin(goodCandidates), std::end(goodCandidates),
+                                  [&](const PatFwdTrackCandidate& c) { return c.quality() != all.quality(); } );
+          if (i2!=std::end(goodCandidates)) { all.setCand2ndQuality( i2->quality() ); }
+        }
       }
     }
-  }
-  // end of NNTools loop
-  //================================================================================
-  //  Now some filtering of tracks, in case of multiple candidates.
-  //================================================================================
+    // end of NNTools loop
+    //================================================================================
+    //  Now some filtering of tracks, in case of multiple candidates.
+    //================================================================================
 
-  if ( goodCandidates.size() > 1  ) {
+    if ( goodCandidates.size() > 1  ) {
 
-    // remove track with sensibly lower number of planes
-    int minPlanes = maxPlanes - 1;
-    auto last = std::remove_if( std::begin(goodCandidates), std::end(goodCandidates),
-                                [=](const PatFwdTrackCandidate& t) { return nbDifferent(t) < minPlanes; } );
-    // remove worst quality
-    auto bestQuality = std::accumulate( std::begin(goodCandidates), last, 1000.,
-                                  [](double m, const PatFwdTrackCandidate& t) { return std::min(m,t.quality()); } );
-    bestQuality += 1.0;
-    last = std::remove_if( std::begin(goodCandidates), last,
-                           [=](const PatFwdTrackCandidate& t) { return t.quality()  >= bestQuality; }  );
-    // remove if sensibly less OT
-    auto maxOT = std::accumulate( std::begin(goodCandidates), last, 0,
-                                  [](int m, const PatFwdTrackCandidate& t) { return std::max(m,nbT(t)); } );
-    maxOT = std::min(24,maxOT)-3;
-    last = std::remove_if( std::begin(goodCandidates), last,
-                           [=](const PatFwdTrackCandidate& t) { return nbT(t)  <= maxOT; }  );
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+      // remove track with sensibly lower number of planes
+      int minPlanes = maxPlanes - 1;
+      auto last = std::remove_if( std::begin(goodCandidates), std::end(goodCandidates),
+                                  [=](const PatFwdTrackCandidate& t) { return nbDifferent(t) < minPlanes; } );
+      // remove worst quality
+      auto bestQuality = std::accumulate( std::begin(goodCandidates), last, 1000.,
+                                          [](double m, const PatFwdTrackCandidate& t) { return std::min(m,t.quality()); } );
+      bestQuality += 1.0;
+      last = std::remove_if( std::begin(goodCandidates), last,
+                             [=](const PatFwdTrackCandidate& t) { return t.quality()  >= bestQuality; }  );
+      // remove if sensibly less OT
+      auto maxOT = std::accumulate( std::begin(goodCandidates), last, 0,
+                                    [](int m, const PatFwdTrackCandidate& t) { return std::max(m,nbT(t)); } );
+      maxOT = std::min(24,maxOT)-3;
+      last = std::remove_if( std::begin(goodCandidates), last,
+                             [=](const PatFwdTrackCandidate& t) { return nbT(t)  <= maxOT; }  );
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
         debug() << "Ignoring " << std::distance(last,std::end(goodCandidates))
                 << " candidates -- either not enough planes, or bad quality, or not enough OT" << endmsg;
+      }
+      goodCandidates.erase(last,std::end(goodCandidates));
     }
-    goodCandidates.erase(last,std::end(goodCandidates));
-  }
 
-  if( UNLIKELY( isDebug ) )
-    debug() << "Storing " << goodCandidates.size() << " good tracks " << endmsg;
-  //=== Store tracks...
-  for (const auto&  cand : goodCandidates ) {
-    output.push_back( seed.clone() );
-    LHCb::Track* fwTra = output.back();
-    //fwTra->clearAncestors();
-    fwTra->addToAncestors( seed );  // Set the Velo track as only ancestor of the Forward track
-    fwTra->setType( LHCb::Track::Long );
-    fwTra->setHistory( LHCb::Track::PatForward );
+    if( UNLIKELY( isDebug ) )
+      debug() << "Storing " << goodCandidates.size() << " good tracks " << endmsg;
+    //=== Store tracks...
+    for (const auto&  cand : goodCandidates ) {
+      output.push_back( seed.clone() );
+      LHCb::Track* fwTra = output.back();
+      //fwTra->clearAncestors();
+      fwTra->addToAncestors( seed );  // Set the Velo track as only ancestor of the Forward track
+      fwTra->setType( LHCb::Track::Long );
+      fwTra->setHistory( LHCb::Track::PatForward );
 
-    //== Add a new state in the T stations ...
-    auto qOverP = m_fwdTool->qOverP( cand );
-    // set q/p in all of the existing states
-    std::for_each( std::begin( fwTra->states() ), std::end( fwTra->states() ),
-                   [qOverP]( LHCb::State* state ) {
-      state->setQOverP(qOverP);
-      state->setErrQOverP2(qOverP*qOverP*0.012*0.012);
-    } );
+      //== Add a new state in the T stations ...
+      auto qOverP = m_fwdTool->qOverP( cand );
+      // set q/p in all of the existing states
+      std::for_each( std::begin( fwTra->states() ), std::end( fwTra->states() ),
+                     [qOverP]( LHCb::State* state ) {
+        state->setQOverP(qOverP);
+        state->setErrQOverP2(qOverP*qOverP*0.012*0.012);
+      } );
 
-    Gaudi::TrackSymMatrix cov;
-    cov(0,0) = m_stateErrorX2;
-    cov(1,1) = m_stateErrorY2;
-    cov(2,2) = m_stateErrorTX2;
-    cov(3,3) = m_stateErrorTY2;
-    auto errQOverP = m_stateErrorP*qOverP;
-    cov(4,4) = errQOverP * errQOverP;
+      Gaudi::TrackSymMatrix cov;
+      cov(0,0) = m_stateErrorX2;
+      cov(1,1) = m_stateErrorY2;
+      cov(2,2) = m_stateErrorTX2;
+      cov(3,3) = m_stateErrorTY2;
+      auto errQOverP = m_stateErrorP*qOverP;
+      cov(4,4) = errQOverP * errQOverP;
 
-    for ( const auto& z : m_fwdTool->zOutputs() ) {
-      auto  dz = z - m_fwdTool->zReference();
-      LHCb::State temp;
-      temp.setLocation( LHCb::State::AtT );
-      temp.setState( cand.x( dz ), cand.y( dz ), z,
-		             cand.xSlope( dz ), cand.ySlope( dz ), qOverP );
-      //== overestimated covariance matrix, as input to the Kalman fit
-      temp.setCovariance( cov );
-      fwTra->addToStates( std::move(temp) );
-    }
-    //== New information, on the track fit.
-    fwTra->setChi2PerDoF( cand.chi2PerDoF() );
-    fwTra->setNDoF(       cand.nDoF() );
-    fwTra->addInfo(LHCb::Track::PatQuality, cand.quality());
-    // added for NNTools
-    fwTra->addInfo(LHCb::Track::Cand1stQPat, cand.cand1stquality());
-    fwTra->addInfo(LHCb::Track::Cand2ndQPat, cand.cand2ndquality());
+      for ( const auto& z : m_fwdTool->zOutputs() ) {
+        auto  dz = z - m_fwdTool->zReference();
+        LHCb::State temp;
+        temp.setLocation( LHCb::State::AtT );
+        temp.setState( cand.x( dz ), cand.y( dz ), z,
+                       cand.xSlope( dz ), cand.ySlope( dz ), qOverP );
+        //== overestimated covariance matrix, as input to the Kalman fit
+        temp.setCovariance( cov );
+        fwTra->addToStates( std::move(temp) );
+      }
+      //== New information, on the track fit.
+      fwTra->setChi2PerDoF( cand.chi2PerDoF() );
+      fwTra->setNDoF(       cand.nDoF() );
+      fwTra->addInfo(LHCb::Track::PatQuality, cand.quality());
+      // added for NNTools
+      fwTra->addInfo(LHCb::Track::Cand1stQPat, cand.cand1stquality());
+      fwTra->addInfo(LHCb::Track::Cand2ndQPat, cand.cand2ndquality());
 
-    //== Add reference to the used clusters/, T stations
-    std::for_each( std::begin(cand), std::end(cand),
-                   [&fwTra](PatForwardHit *myHit) {
-           fwTra->addToLhcbIDs( myHit->hit()->lhcbID() );
-           myHit->hit()->setStatus(Tf::HitBase::UsedByPatForward);
-           //S.Stahl: This flag was nowhere used. Now used for hit flagging.
-           //myHit->setIsUsed(true);
-    } );
-    fwTra -> setPatRecStatus( LHCb::Track::PatRecIDs );
-    ///== Add TT hits. Do not do this if the seed is an Upstream track.
-    if ( m_addTTClusterTool && !seed.checkType(LHCb::Track::Upstream) ) {
-      StatusCode sc = m_addTTClusterTool->addTTClusters( *fwTra );
-      if ( UNLIKELY(sc.isFailure()) && UNLIKELY( isDebug ) )
+      //== Add reference to the used clusters/, T stations
+      std::for_each( std::begin(cand), std::end(cand),
+                     [&fwTra](PatForwardHit *myHit) {
+        fwTra->addToLhcbIDs( myHit->hit()->lhcbID() );
+        myHit->hit()->setStatus(Tf::HitBase::UsedByPatForward);
+        //S.Stahl: This flag was nowhere used. Now used for hit flagging.
+        //myHit->setIsUsed(true);
+      } );
+      fwTra -> setPatRecStatus( LHCb::Track::PatRecIDs );
+      ///== Add TT hits. Do not do this if the seed is an Upstream track.
+      if ( m_addTTClusterTool && !seed.checkType(LHCb::Track::Upstream) ) {
+        StatusCode sc = m_addTTClusterTool->addTTClusters( *fwTra );
+        if ( UNLIKELY(sc.isFailure()) && UNLIKELY( isDebug ) )
           debug()<<" Failure in adding TT clusters to track"<<endmsg;
+      }
     }
+    // S.Stahl: At this point you don't know if you actually want to flag the seed.
+    // mark the input tracks and all ancestors as used
+    //if(m_FlagUsedSeeds && !output.empty()){
+    //  const_cast<LHCb::Track&>(seed).setFlag(LHCb::Track::Used,true);
+    // std::for_each( std::begin(seed.ancestors()), std::end(seed.ancestors()),
+    //                 [](const LHCb::Track* anc) { const_cast<LHCb::Track*>(anc)->setFlag(LHCb::Track::Used,true); } );
+    //}
+
+    if(processingSecondLoop){
+      m_minXPlanes += 1;
+      m_minPlanes += 1;
+      processedSecondLoop = true;
+    }
+    if(output.empty() && m_secondLoop && !processingSecondLoop){
+      m_minXPlanes -= 1;
+      m_minPlanes -= 1;
+      processingSecondLoop = true;
+    }
+    else break;
   }
-  // S.Stahl: At this point you don't know if you actually want to flag the seed.
-  // mark the input tracks and all ancestors as used
-  //if(m_FlagUsedSeeds && !output.empty()){
-  //  const_cast<LHCb::Track&>(seed).setFlag(LHCb::Track::Used,true);
-  // std::for_each( std::begin(seed.ancestors()), std::end(seed.ancestors()),
-  //                 [](const LHCb::Track* anc) { const_cast<LHCb::Track*>(anc)->setFlag(LHCb::Track::Used,true); } );
-  //}
 
   counter("#FinishedTracks") += output.size();
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "Finished track" << endmsg;
@@ -700,7 +725,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 //  Fill the vector of hit pointer, sorted by projection.
 //=========================================================================
 
-boost::iterator_range<typename PatFwdHits::const_iterator> 
+boost::iterator_range<typename PatFwdHits::const_iterator>
 PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
 {
   m_xHitsAtReference.clear();
@@ -712,35 +737,35 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
 
   auto yCompat = m_yCompatibleTol + 50 * fabs(track.slY());
   auto not_ignored_and_y_compatible = [yCompat,this](double yRegion) {
-        return [yRegion,yCompat,this](const PatForwardHit* hit) {
-                              return !hit->hit()->ignore() && !(m_skipUsedHits && hit->isUsed()) &&
-                                      hit->hit()->isYCompatible( yRegion, yCompat );
-        };
+    return [yRegion,yCompat,this](const PatForwardHit* hit) {
+      return !hit->hit()->ignore() && !(m_skipUsedHits && hit->isUsed()) &&
+          hit->hit()->isYCompatible( yRegion, yCompat );
+    };
   };
 
   //TODO: use C++14 generalized capture...
   auto ty = track.slY();
   auto y0 = track.yStraight( 0. );
   auto updateOTHitsForTrack = [&](PatFwdHits::iterator first, PatFwdHits::iterator last) {
-        std::for_each( first, last, [=](PatForwardHit* hit) { 
-                           approxUpdateOTHitForTrack( hit, y0, ty);
-                           hit->setIgnored( false );
-                           hit->setRlAmb( 0 );
-                           hit->setSelected( this->driftInRange(*hit) );
-                       } ); 
-        return std::remove_if( first, last, not_selected );
+    std::for_each( first, last, [=](PatForwardHit* hit) {
+      approxUpdateOTHitForTrack( hit, y0, ty);
+      hit->setIgnored( false );
+      hit->setRlAmb( 0 );
+      hit->setSelected( this->driftInRange(*hit) );
+    } );
+    return std::remove_if( first, last, not_selected );
   };
   auto updateITHitsForTrack = [&](PatFwdHits::iterator first, PatFwdHits::iterator last) {
-        std::for_each( first, last, [=](PatForwardHit* hit) { 
-                           updateNonOTHitForTrack( hit, y0, ty);
-                           hit->setIgnored( false );
-                           hit->setRlAmb( 0 );
-                           hit->setSelected( true );
-                       } ); 
-        return last;
+    std::for_each( first, last, [=](PatForwardHit* hit) {
+      updateNonOTHitForTrack( hit, y0, ty);
+      hit->setIgnored( false );
+      hit->setRlAmb( 0 );
+      hit->setSelected( true );
+    } );
+    return last;
   };
 
-  for ( const auto& region : x_regions ) { 
+  for ( const auto& region : x_regions ) {
     const auto* regionB = m_tHitManager->region(region.station(),region.layer(),region.region());
     auto z = regionB->z();
     auto yRegion = track.yStraight( z );
@@ -755,8 +780,8 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
     // grow capacity so that things don't move around afterwards...
     m_xHitsAtReference.reserve( m_xHitsAtReference.size() + hitRange.size() );
     auto first = std::end(m_xHitsAtReference);
-    std::copy_if( std::begin(hitRange), std::end(hitRange), 
-                  std::back_inserter(m_xHitsAtReference), 
+    std::copy_if( std::begin(hitRange), std::end(hitRange),
+                  std::back_inserter(m_xHitsAtReference),
                   not_ignored_and_y_compatible( yRegion ) );
     auto last = region.isOT() ? updateOTHitsForTrack( first, std::end(m_xHitsAtReference) )
                               : updateITHitsForTrack( first, std::end(m_xHitsAtReference) );
@@ -766,11 +791,11 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
     // are ordered by xAtYEq0, which isn't quite the same as by xAtReferencePlane...
     // so this sort is actually needed (not always though...), for both IT and OT...
     std::sort( first, last, Tf::increasingByProjection<PatForwardHit>() );
-    std::inplace_merge( std::begin(m_xHitsAtReference),first,last, 
+    std::inplace_merge( std::begin(m_xHitsAtReference),first,last,
                         Tf::increasingByProjection<PatForwardHit>() );
   }
   // select the subrange of m_xHitsAtReference which is within the interval...
-  return interval.inside( boost::make_iterator_range( std::begin(m_xHitsAtReference), std::end(m_xHitsAtReference) ), 
+  return interval.inside( boost::make_iterator_range( std::begin(m_xHitsAtReference), std::end(m_xHitsAtReference) ),
                           [](const PatForwardHit* h) { return h->projection(); } );
 }
 
@@ -779,7 +804,7 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
 //=========================================================================
 bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) const {
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-      debug() << "Adding stereo coordinates, tol = " << tol << endmsg;
+    debug() << "Adding stereo coordinates, tol = " << tol << endmsg;
 
   PatFwdHits temp; // no need actually for PatFwdHits -- a container with objects which have 'projection', 'planeCode','selected' (and pointer to hit) suffices
 
@@ -815,8 +840,8 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
     auto minProj = tol + int(ot) * 1.5;
 
     for ( auto* hit : m_tHitManager->hitsWithMinX(xHitMin, region.station(), region.layer(), region.region()) ) {
-      if (hit->hit()->ignore() 
-          || (m_skipUsedHits && hit->isUsed()) 
+      if (hit->hit()->ignore()
+          || (m_skipUsedHits && hit->isUsed())
           || !hit->hit()->isYCompatible( yRegion, m_yCompatibleTol ) ) continue;
       hit->setIgnored( false );
       bool ok = ot ? updateOTHit(hit) : updateITHit(hit);
@@ -867,8 +892,8 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
 
   // assert( bestList.size() >= minYPlanes );
   if ( bestList.size() < minYPlanes ) {
-      // error() << " this should never happen! " << endmsg;
-      return false;
+    // error() << " this should never happen! " << endmsg;
+    return false;
   }
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
@@ -915,11 +940,10 @@ void PatForwardTool::debugFwdHits ( const PatFwdTrackCandidate& track, MsgStream
 //=========================================================================
 //  Build the list of vector of X hit candidates.
 //=========================================================================
-void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) const{
+void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track,
+                                            boost::iterator_range<typename PatFwdHits::const_iterator> rng ) const{
 
   m_candidates.clear();
-
-  auto rng = fillXList( track ) ;
 
   auto iter = std::begin(rng);
   auto sentinel = make_RangeGenerator( m_minXPlanes, std::end(rng) );
