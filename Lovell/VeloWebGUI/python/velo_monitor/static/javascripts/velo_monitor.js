@@ -29,6 +29,17 @@ var VeloMonitor = (function(window, undefined) {
     };
   }
 
+  // Return a string of random alphanumeric characters.
+  //
+  // http://stackoverflow.com/a/8084248/596068
+  // Accepts:
+  //   length: Length of string to return (default: 7)
+  // Returns:
+  //   String object of length `length`
+  var randomString = function(length) {
+    return (1 + Math.random()).toString(36).substring(7);
+  };
+
   // Display msg inside container, styled as a red error box
   // Accepts:
   //   msg: HTML message to display inside container
@@ -78,7 +89,7 @@ var VeloMonitor = (function(window, undefined) {
           var resultData = result[i]['data'],
               keyData = resultData['data'];
           // Add the key name and title on to the data passed to the plotter
-          keyData.name = resultData['name'];
+          keyData.name = resultData['name'] + randomString();
           keyData.title = resultData['title'];
           plotTypes.push(resultData['object_class']);
           plotData.push(keyData);
