@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-03-27 - Michel De Cian
+ - Replace 'PatVeloConf' with 'PatVeloTTConf' (change in name only) in RecoTracking.py
+
 !========================= TrackSys v9r5 2015-02-23 =========================
 ! 2015-01-28 - Michel De Cian
  - Add GhostProbability to RecoUpgradeTracking.py

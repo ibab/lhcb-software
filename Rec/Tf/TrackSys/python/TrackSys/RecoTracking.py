@@ -250,8 +250,8 @@ def RecoTracking(exclude=[]):
       else :
          from Configurables import PatVeloTT
          GaudiSequencer("TrackVeloTTPatSeq").Members += [ PatVeloTT("PatVeloTT")]
-         from PatVeloTT import PatVeloConf
-         PatVeloConf.PatVeloTTConf().configureAlg()
+         from PatVeloTT import PatVeloTTConf
+         PatVeloTTConf.PatVeloTTConf().configureAlg()
          if TrackSys().timing() :
             PatVeloTT("PatVeloTT").TimingMeasurement = True;
       tracklists += ["Rec/Track/VeloTT"]
