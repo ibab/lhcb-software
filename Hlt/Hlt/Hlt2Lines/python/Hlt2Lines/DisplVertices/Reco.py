@@ -65,6 +65,7 @@ class VeloVertexFinder(Hlt2Stage):
                           , InputTracks   = [tracksForVertexing]
                           , PVSeedingName = "PVSeed3DTool"
                           , PVFitterName  = "LSAdaptPV3DFitter"
+                          , UseBeamSpotRCut = False
                           )
         vf.addTool(PVSeed3DTool)
         vf.PVSeed3DTool.TrackPairMaxDistance = 0.2*units.mm
@@ -72,7 +73,6 @@ class VeloVertexFinder(Hlt2Stage):
         vf.PVSeed3DTool.MinCloseTracks       = 3
         vf.addTool(LSAdaptPV3DFitter)
         vf.LSAdaptPV3DFitter.maxChi2         = 400.  ## default value, to be tuned
-        vf.LSAdaptPV3DFitter.maxRDPV         = 1000. ## do not veto highly displaced vertices
         vf.LSAdaptPV3DFitter.MinTracks       = 4
 
         vx = PatPV3D("Hlt2"+self.__prefix+self._name()+"3DVelo", OutputVerticesName=self.outrv)
