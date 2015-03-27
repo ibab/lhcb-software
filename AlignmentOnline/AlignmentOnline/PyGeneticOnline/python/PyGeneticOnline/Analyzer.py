@@ -4,7 +4,20 @@ import random
 import struct
 import sys, os
 
-def run(index):
+
+def run_online(index = 0):
+    fifo = os.environ.get('LOGFIFO', None)
+    if not fifo:
+        run(index)
+    else:
+        old_stdout = os.dup( sys.stdout.fileno() ) 
+        fd = os.open(fifo, os.O_WRONLY) 
+        os.dup2( fd, sys.stdout.fileno() ) 
+        run()
+        os.close( fd ) 
+        os.dup2( old_stdout, sys.stdout.fileno() )
+
+def run(index = 0):
     # Start the communicator:
     com = Communicator("ALIGNWORK_%02d" % index)
     
@@ -12,17 +25,17 @@ def run(index):
     state = State.NOT_READY
     com.set_status(state)
     n_it = 0
-    n_workers = 2
     sleep(0.2)
     while True:
         command = com.get_command()
         if command == 'configure' and state == State.NOT_READY:
             import L0_noHlt1_histosGen_Multi
             state = State.READY
+
         elif command == 'start' and state == State.READY:
             state = State.RUNNING
             com.set_status(state)
-            L0_noHlt1_histosGen_Multi.MultiRun(index, 2, 1, [0,1])  
+            L0_noHlt1_histosGen_Multi.MultiRun()
             sleep(2)
             state = State.PAUSED
         elif command == 'stop' and state == State.PAUSED:

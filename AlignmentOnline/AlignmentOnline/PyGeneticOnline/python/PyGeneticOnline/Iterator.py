@@ -1,11 +1,27 @@
+import sys, os
 from time import sleep
 from Communicator import *
+import subprocess
+import ctypes
 from ROOT import gROOT, std, TRandom3, TROOT, gSystem, TMVA, TString
 
 
+def run_online():
+    fifo = os.environ.get('LOGFIFO', None)
+    if not fifo:
+        run()
+    else:
+        old_stdout = os.dup( sys.stdout.fileno() ) 
+        fd = os.open(fifo) 
+        os.dup2( fd, sys.stdout.fileno() ) 
+        run()
+        os.close( fd ) 
+        os.dup2( old_stdout, sys.stdout.fileno() )
+
 def run():
     # Start the communicator:
-    com = Communicator('ALIGNITER')
+    utgid = os.environ.get('UTGID', 'ALIGNITER')
+    com = Communicator(utgid)
 
     # FSM loop
     state = State.NOT_READY
@@ -21,20 +37,7 @@ def run():
     DefParameters.push_back(60.)
     DefParameters.push_back(900.)
 
-    MaxEfficiencies = std.vector('double')()
-    MaxEfficiencies.push_back(0.4)
-    MaxEfficiencies.push_back(0.9)
-    MaxEfficiencies.push_back(0.9)
-    MaxEfficiencies.push_back(0.6)
-    MaxEfficiencies.push_back(0.9)
-    MaxEfficiencies.push_back(0.6)
-    MaxEfficiencies.push_back(0.3)
-    MaxEfficiencies.push_back(0.3)
-    MaxEfficiencies.push_back(0.3)
-    MaxEfficiencies.push_back(0.2)
-    MaxEfficiencies.push_back(0.7)
-    MaxEfficiencies.push_back(0.6)  
-
+ 
     LineNames = std.vector('string')()
     LineNames.push_back('mbias')
     LineNames.push_back('Bs2Dsmunu')
@@ -51,6 +54,12 @@ def run():
     LineNames.push_back('Bs2Jpsikkpipi')
     LineNames.push_back('D2kkpi')
     LineNames.push_back('Dst2Dpi2kskk')
+
+
+
+
+
+
 
     LineTypes = std.vector('int')()
     LineTypes.push_back(0)
@@ -69,8 +78,20 @@ def run():
     LineTypes.push_back(1)
     LineTypes.push_back(1)
 
+    MaxEfficiencies = std.vector('double')()
+    MaxEfficiencies.push_back(0.4)
+    MaxEfficiencies.push_back(0.9)
+    MaxEfficiencies.push_back(0.9)
+    MaxEfficiencies.push_back(0.6)
+    MaxEfficiencies.push_back(0.9)
+    MaxEfficiencies.push_back(0.6)
+    MaxEfficiencies.push_back(0.3)
+    MaxEfficiencies.push_back(0.3)
+    MaxEfficiencies.push_back(0.3)
+    MaxEfficiencies.push_back(0.2)
+    MaxEfficiencies.push_back(0.7)
+    MaxEfficiencies.push_back(0.6) 
 
-    opt= TString("PopSize=5:Steps=3:Cycles=3:ConvCrit=0.01:SaveBestCycle=5") 
     name = TString("FitterGA") 
 
 
@@ -114,13 +135,11 @@ def run():
     # UsedParameters.push_back(6)
     # UsedParameters.push_back(7)
 
-    fitter = TMVA.GeneticFitterMod(name,lo,hi, Channels,opt,DefParameters,UsedParameters,MaxEfficiencies,LineNames,LineTypes)
+
     #fitter.CheckForUnusedOptions()
 
     pars = std.vector('double')(2)
-
-
-    gROOT.ProcessLine('.! rm -rf $OUTPUTDIR/*.root')
+    subprocess.call('rm -rf $OUTPUTDIR/*.root',shell=True)
 
   
 
@@ -134,6 +153,21 @@ def run():
     while True:
         command = com.get_command()
         if command == 'configure' and state == State.NOT_READY:
+
+
+            import pickle
+
+            f=open('BWTest.pkl')
+            channels=pickle.load(f)
+            trigger_lines=pickle.load(f)
+            trigger_thresholds=pickle.load(f)
+            statistics=pickle.load(f)
+            f.close()
+
+
+
+            opt= TString("PopSize=3:Steps=2:Cycles=2:ConvCrit=0.01:SaveBestCycle=5") 
+            fitter = TMVA.GeneticFitterMod(name,lo,hi, Channels,opt,DefParameters,UsedParameters,MaxEfficiencies,LineNames,LineTypes)
             fitter.RunInit(pars)
             state = State.READY
 
@@ -141,7 +175,6 @@ def run():
             fitter.CycleInit(cycle)
             fitter.ga.WriteParamsToFile(cycle)
             StartIterationFirstTime=True
-            StartNewCycle=False
             FinishIterationAndStartNew=False
             state = State.RUNNING
             print 'WANT TO CALCULATE FITNESS FIRST TIME' 
@@ -152,17 +185,12 @@ def run():
             print 'FITNESS CALCULATED'
             com.set_status(state)
             if cycle < fitter.GenNcycles():
-                if StartNewCycle:
-                    fitter.CycleInit(cycle)
-                    fitter.ga.WriteParamsToFile(cycle)
-                    StartNewCycle=False
-                    state = State.RUNNING
-                    StartIterationFirstTime=True
-                    print 'WANT TO CALCULATE FITNESS FIRST TIME' 
-                elif StartIterationFirstTime:
+                if StartIterationFirstTime:
                     print 'CYCLE %d' % cycle
                     print 'FIRST ITERATION'
-                    gROOT.ProcessLine('.! hadd -f $OUTPUTDIR/bwdhistosRESULT.root $OUTPUTDIR/bwdhistosRes*')
+#                    subprocess.call('rm -rf $OUTPUTDIR/bwdhistosRESULT.root',shell=True)
+                    subprocess.call('hadd -f $OUTPUTDIR/bwdhistosRESULT.root $OUTPUTDIR/bwdhistosRes*',shell=True)
+
                     fitter.ga.CalculateFitness()
                     fitter.ga.GetGeneticPopulation().TrimPopulation()
                     fitter.IterationInit(cycle)
@@ -172,7 +200,8 @@ def run():
                     state = State.RUNNING
                     print 'WANT TO CALCULATE FITNESS'
                 elif FinishIterationAndStartNew:
-                    gROOT.ProcessLine('.! hadd -f $OUTPUTDIR/bwdhistosRESULT.root $OUTPUTDIR/bwdhistosRes*')
+ #                   subprocess.call('rm -rf $OUTPUTDIR/bwdhistosRESULT.root',shell=True)
+                    subprocess.call('hadd -f $OUTPUTDIR/bwdhistosRESULT.root $OUTPUTDIR/bwdhistosRes*',shell=True)
                     fitter.ga.CalculateFitness()
                     fitter.IterationExit(cycle)
                     if not fitter.ga.HasConverged(fitter.GetNsteps(),fitter.GetConvCrit()):
@@ -185,12 +214,24 @@ def run():
                         cycle += 1
                         if not cycle < fitter.GenNcycles():
                             fitter.gstore.WriteParamsToFile(1)
+                            print 'AAAAAAAA 1111'
+                        else:
+                            fitter.CycleInit(cycle)
+                            fitter.ga.WriteParamsToFile(cycle)
+                            StartIterationFirstTime=True  
+                            print 'CYCLE %d' % cycle  
+                            print 'WANT TO CALCULATE FITNESS FIRST TIME'                    
                         FinishIterationAndStartNew = False
-                        StartNewCycle = True
+                        StartIterationFirstTime=True
+                        print 'AAAAAAAA 2222'
                     state = State.RUNNING
             else:
-                gROOT.ProcessLine('.! hadd -f $OUTPUTDIR/bwdhistosRESULT.root $OUTPUTDIR/bwdhistosRes*')
+#                subprocess.call('rm -rf $OUTPUTDIR/bwdhistosRESULT.root',shell=True)
+                print 'AAAAAAAA 3333'
+                subprocess.call('hadd -f $OUTPUTDIR/bwdhistosRESULT.root $OUTPUTDIR/bwdhistosRes*',shell=True)
+                print 'AAAAAAAA 4444'
                 fitness = fitter.RunExit()  
+                print 'AAAAAAAA 5555'
                 print 'iterator done'
                 state = State.READY
             sleep(2)

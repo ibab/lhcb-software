@@ -33,7 +33,11 @@ class Communicator(object):
         return socket.gethostname().split('.')[0]
 
     def utgid(self, suffix):
-        return '_'.join((self.partition(), self.hostname().upper(), suffix))
+        utgid = os.environ.get('UTGID', '')
+        if utgid:
+            return utgid
+        else:
+            return '_'.join((self.partition(), self.hostname().upper(), suffix))
                 
     def has_command(self, *args):
         if len(args) == 0:
