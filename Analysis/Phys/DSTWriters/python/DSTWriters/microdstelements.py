@@ -194,7 +194,7 @@ class CloneSignalMCParticles(MicroDSTElement) :
 
         # Clone all MCParticles that are flagged as 'signal'
         from Configurables import ( TrackCloner, ProtoParticleCloner,
-                                    CopySignalMCParticles )
+                                    CaloHypoCloner, CopySignalMCParticles )
 
         cloner = CopySignalMCParticles( self.personaliseName(sel,"CopySignalMCPs") )
         self.setOutputPrefix(cloner)
@@ -204,6 +204,10 @@ class CloneSignalMCParticles(MicroDSTElement) :
         cloner.addTool(TrackCloner,name="TrackCloner")
         cloner.TrackCloner.TESVetoList  = self.tesVetoList
         cloner.TrackCloner.CloneMCLinks = True # This is only ever run on MC...
+
+        cloner.addTool(CaloHypoCloner,name="CaloHypoCloner")
+        cloner.CaloHypoCloner.TESVetoList  = self.tesVetoList
+        cloner.CaloHypoCloner.CloneMCLinks = True # This is only ever run on MC...
         
         return [cloner]
 
