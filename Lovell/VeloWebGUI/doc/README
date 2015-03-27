@@ -1,0 +1,89 @@
+VELO web GUI
+============
+
+A web-based monitoring application for the LHCb Vertex Locator.
+
+Requirements
+------------
+
+The monitor depends on the Python modules defined in doc/requirements.txt.
+To install all of them in one go, use pip like
+
+    $ pip install -r doc/requirements.txt
+
+A Redis [1] server is used to queuing jobs and storing their results.
+The VeloAnalysisFramework module within the Lovell project defines the available jobs as well as several configuration options for the GUI.
+
+[1]: http://redis.io/
+
+Setup
+-----
+
+The simplest way to get up and running is to use Vagrant [2], a virtual machine (VM) manager.
+This effectively allows each developer to work on the GUI on an identical machine, which is also very similar to the production environment.
+The VM image defined in the Vagrantfile scripts/vagrant requires VirtualBox [3], and it is recommmended to install the vagrant-vbguest Vagrant plugin to get the VirtualBox additions up-to-date
+
+    $ vagrant plugin install vagrant-vbguest
+
+[2]: https://www.vagrantup.com/
+[3]: https://www.virtualbox.org/
+
+The repository can be obtain with git
+
+    $ git svn clone -r 180955 --no-minimize-url --stdlayout svn+ssh://svn.cern.ch/reps/lhcb/Lovell
+    $ cd Lovell
+    $ git svn fetch
+    $ git svn rebase
+
+This will clone the entire Lovell project in to a folder called Lovell.
+
+To create the development VM with Vagrant, do
+
+    $ cd VeloWebGUI/scripts/vagrant
+    $ vagrant up --provision
+
+This will download the template Scientific Linux 6 [4] ISO image, install the operating system in a new VM, and run a couple of scripts that set up the VM with the environment needed to run the GUI, including installing the dependencies.
+
+[4]: https://www.scientificlinux.org/
+
+When returning to development, you only need
+
+    $ vagrant up
+    $ vagrant ssh
+
+to SSH into the VM.
+
+Development
+-----------
+
+Once the VM is set up, the application can be started from within the VM with
+
+    $ cd /Lovell/VeloWebGUI/scripts/vagrant
+    $ mkdir log
+    $ workon VeloWebGUI
+    $ honcho start
+
+and will be available on the host machine, the computer running the VM, not the VM itself, at http://localhost:8008.
+
+Deployment
+----------
+
+The VELO monitor will be deployed on a machine running Scientific Linux, but should by deployable on any Linux distribution.
+The commands used during the Vagrant VM provisioning stage should serve as a good starting point for setting up a production machine.
+To also set up the machine with CERN SSO integration, follow the guide at [5].
+
+[5]: https://alexpearce.me/2014/10/setting-up-flask-with-apache-and-shibboleth/
+
+With a copy/clone of this repository on the machine, first install the required Python packages, and then generate the appropriate init files.
+
+  # Inside the VeloWebGUI folder
+  $ pip install -r doc/requirements.txt
+  $ honcho export -a VeloWebGUI -u deploy -c web=1,worker=4,redis=1 -p 8000 -s /bin/bash upstart ./init
+
+This example Honcho command creates init files, in the `init/` directory, for upstart [6], a service/task manager available in several distributions.
+Once these files are copied to the appropriate location for your distribution (/etc/init on Scientific Linux), you can start the 'VeloWebGUI' process, which will start the workers, web server, and Redis database.
+
+    $ sudo cp init/* /etc/init
+    $ sudo start VeloWebGUI
+
+[6]: http://upstart.ubuntu.com/
