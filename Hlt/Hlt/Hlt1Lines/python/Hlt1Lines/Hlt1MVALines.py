@@ -31,12 +31,19 @@ class Hlt1MVALinesConf( HltLinesConfigurableUser ) :
                                   'PT'        :   500. * MeV,
                                   'IPChi2'    :     4.,
                                   'MinMCOR'   :  1000. * MeV,
-                                  'MaxMCOR'   : 10000. * MeV,
+                                  'MaxMCOR'   :   1e9  * MeV,
                                   'MinETA'    :     2.,
                                   'MaxETA'    :     5.,
                                   'DOCA'      :  1000. * mm,
-                                  'V0PT'      :   500. * MeV,
+                                  'V0PT'      :  2000. * MeV,
                                   'VxChi2'    :    10.,
+                                  'MvaVars'   : {'pt'     : 'PT',
+                                                 'chi2'   : 'VFASPF(VCHI2)',
+                                                 'ipchi2' : 'BPVIPCHI2()',
+                                                 'fdchi2' : 'BPVVDCHI2',
+                                                 'mcor'   : 'BPVCORRM',
+                                                 'minpt'  : 'MINTREE(PT, ISBASIC)',
+                                                 'nlt16'  : 'NINTREE(ISBASIC & (BPVIPCHI2() < 16))'},
                                   'Threshold' :     0.4,
                                   'File'      : '$PARAMFILESROOT/data/Hlt1TwoTrackMVA.mx',
                                   'GEC'       : 'Loose'},
@@ -63,26 +70,15 @@ class Hlt1MVALinesConf( HltLinesConfigurableUser ) :
         }
         return mvaVars
 
-    def twoTrackVars(self):
+    def twoTrackVars(self, nickname):
         """Return all variables required for the BDT
         Variable names MUST correspond exactly to what is needed by classifier (xml)
         If they are unknown: they are in the xml, and they will be shown in stdout
         """
-        mvaVars = {}
-        # Variables for D and daughters; labX_ prefix added later
-        combVars = {
-            'pt'     : 'PT',
-            'chi2'   : 'VFASPF(VCHI2)',
-            'ipchi2' : 'BPVIPCHI2()',
-            'fdchi2' : 'BPVVDCHI2',
-            'mcor'   : 'BPVCORRM',
-            'minpt'  : 'MINTREE(PT, ISBASIC)',
-            'nlt16'  : 'NINTREE(ISBASIC & (TRFUN(TrNTHITS) >= 16))'
-        }
-        daughterVars = {}
+        props = self.getProps()
+        mvaVars = props[nickname]['MvaVars']
+        daughterVars = props[nickname].get('DaughterVars', {})
 
-        # Add all parent variables to output
-        mvaVars.update(combVars)
         # Add all daughter variables to output
         for child, daughterNum in enumerate(range(1, 3)):
             for var, fun in daughterVars.iteritems():
@@ -138,17 +134,17 @@ class Hlt1MVALinesConf( HltLinesConfigurableUser ) :
             Monitor = True,
             Preambulo = preambulo
             )
-        tool = self.matrixNetClassifier(unit, name, self.twoTrackVars)
+        tool = self.matrixNetClassifier(unit, name, lambda : self.twoTrackVars(name))
 
         props['tool'] = tool.getFullName()
         code = """
         TC_HLT1COMBINER('', %(name)sCombinationConf,
-                        '%(input)s', ((PT > %(PT)s * MeV) & (P  > %(P)s * MeV) & \
+                        '%(input)s', ((PT > %(V0PT)s * MeV) & (P  > %(P)s * MeV) & \
                                       (BPVIPCHI2() > %(IPChi2)s)))
         >> tee(monitor(TC_SIZE > 0, '# V0', LoKi.Monitoring.ContextSvc))
         >> tee(monitor(TC_SIZE    , 'nV0s', LoKi.Monitoring.ContextSvc))
         >> ( HASVERTEX & (VFASPF(VCHI2) < %(VxChi2)s)      & \
-            (in_range(%(MinETA)s,  ETA,      %(MaxETA)s))  & \
+            (in_range(%(MinETA)s,  BPVETA,    %(MaxETA)s))  & \
             (in_range(%(MinMCOR)s, BPVCORRM, %(MaxMCOR)s)) & \
             (VALUE('%(tool)s') > %(Threshold)s))
         >> SINK ('Hlt1%(name)sDecision')
