@@ -56,7 +56,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                     ,   'L0Channels'        : {'AllL0'  : ['CALO'],#'L0_DECISION_PHYSICS',
                                                'Muon'   : ('Muon', 'DiMuon'),
                                                'Photon' : ("Photon", "Electron")}
-                    ,   'ODINTriggers'      : {'AllL0'  : ''}
+                    ,   'ODINFilter'        : {'AllL0'  : ''}
                     ,   'Priorities'        : {'AllL0'  : 1,
                                                'Muon'   : 2,
                                                'Photon' : 3}
@@ -182,14 +182,10 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             return l0
 
     def __odin(self, nickname):
-        if 'ODINTriggers' not in self.getProps():
+        if 'ODINFilter' not in self.getProps():
             return None
-        odin = self.getProp( 'ODINTriggers' )[nickname]
-        import collections
-        if isinstance(odin, collections.Iterable) and not isinstance(odin, basestring):
-            return "|".join(["(ODIN_TRGTYP == %s)" % chan for chan in odin])
-        else:
-            return odin
+        odin = self.getProp( 'ODINFilter' )[nickname]
+        return odin
 
     def __apply_configuration__(self) : 
         from HltLine.HltLine import Hlt1Line

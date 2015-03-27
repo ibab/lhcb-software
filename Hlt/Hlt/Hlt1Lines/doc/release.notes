@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-03-27 Christian Linn
+ - Fixed Odin filter in Hlt1TrackAllL0
+
 ! 2015-03-27 - Roel Aaij
  - Fixes to Hlt1TwoTrackMVA.
 
