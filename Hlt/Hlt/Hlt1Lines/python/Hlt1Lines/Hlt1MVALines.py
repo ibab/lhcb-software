@@ -39,6 +39,7 @@ class Hlt1MVALinesConf( HltLinesConfigurableUser ) :
                                   'DOCA'        :  1000. * mm,
                                   'V0PT'        :  2000. * MeV,
                                   'VxChi2'      :    10.,
+                                  'Threshold'   :     0.937,
                                   'MvaVars'     : {'pt'     : 'PT',
                                                    'chi2'   : 'VFASPF(VCHI2)',
                                                    'ipchi2' : 'BPVIPCHI2()',
@@ -46,9 +47,8 @@ class Hlt1MVALinesConf( HltLinesConfigurableUser ) :
                                                    'mcor'   : 'BPVCORRM',
                                                    'minpt'  : 'MINTREE(PT, ISBASIC)',
                                                    'nlt16'  : 'NINTREE(ISBASIC & (BPVIPCHI2() < 16))'},
-                                  'Classifier'  : {'Type' : 'MatrixNet',
-                                                   'File' : '$PARAMFILESROOT/data/Hlt1TwoTrackMVA.mx'},
-                                  'Threshold'   :     0.4,
+                                  'Classifier'  : {'Type'   : 'MatrixNet',
+                                                   'File'   : '$PARAMFILESROOT/data/Hlt1TwoTrackMVA.mx'},
                                   'GEC'         : 'Loose'},
                  'L0Channels'  : {'TrackMVA'    : 'L0_DECISION_PHYSICS',
                                   'TwoTrackMVA' : 'L0_DECISION_PHYSICS'},
@@ -94,9 +94,10 @@ class Hlt1MVALinesConf( HltLinesConfigurableUser ) :
                                     addBBDecTreeclassifierValue)
         known = {'BBDT'      : addBBDecTreeclassifierValue,
                  'MatrixNet' : addMatrixnetclassifierValue}
-        configClassifier = known.get(classifier['Type'])
+        toolType = classifier['Type']
+        configClassifier = known.get(toolType)
         return configClassifier(unit, classifier['File'], varFun(),
-                                name + 'MatrixNetTool')
+                                name + toolType + 'Tool')
         
     def oneTrackStreamer(self, name, props, inputParticles) :
         from copy import deepcopy
