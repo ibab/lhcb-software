@@ -69,6 +69,10 @@ sidebar .sensor-detail {
   margin-bottom: 20px;
 }
 
+.toggle {
+  text-align: center;
+}
+
 /* Hint that the statistics boxes are draggable */
 .TextBox {
   cursor: move;
