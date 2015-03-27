@@ -22,7 +22,7 @@ var VeloMonitor = (function(window, undefined) {
   // We need to check if a job result is an array or not, so polyfill the
   // isArray method on the Array object in case it isn't available
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray
-  if(!Array.isArray) {
+  if (!Array.isArray) {
     JobMonitor.log('Applying polyfill for Array.isArray')
     Array.isArray = function(arg) {
       return Object.prototype.toString.call(arg) === '[object Array]';
