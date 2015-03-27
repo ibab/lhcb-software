@@ -281,7 +281,5 @@ var VeloMonitor = (function(window, undefined) {
 })(window);
 
 $(function() {
-  // Adjust some JobMonitor settings before initialisation
-  JobMonitor.settings.debug = true;
   VeloMonitor.init(activePage);
 });

@@ -1,3 +1,5 @@
+import os
+
 # Application name, used in page titles etc.
 APP_NAME = 'VELO Monitor'
 
@@ -28,3 +30,8 @@ DEFAULT_CHILDREN = {
     # Special analysis
     'special_analyses': 'special_analyses/iv_scans',
 }
+
+try:
+    DEBUG = True if os.environ['DEBUG'] else False
+except:
+    DEBUG = False

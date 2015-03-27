@@ -1,7 +1,15 @@
-"""Configuration constants for the veloview module."""
+"""Configuration constants for the veloview module.
+
+The run_data_dir key will take the value of the RUN_DATA_DIR environment
+variable, if it is set, else will use a default.
+"""
+import os
 
 # Absolute path to the directory containing per-run data
-run_data_dir = "/calib/velo/dqm/VeloView/VetraOutput"
+try:
+    run_data_dir = os.environ['RUN_DATA_DIR']
+except KeyError:
+    run_data_dir = "/calib/velo/dqm/VeloView/VetraOutput"
 
 # Absolute path to the text file containing the list of processed run numbers
 processed_run_list_file = "{0}/RunList.txt".format(run_data_dir)

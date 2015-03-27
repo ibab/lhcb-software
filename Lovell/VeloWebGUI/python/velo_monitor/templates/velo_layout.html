@@ -14,6 +14,10 @@
     {{ list_link_tag('special_analyses', 'Special analyses') }}
 {% endblock %}
 {% block javascripts %}
+  <script>
+    // Enable JS debug mode if the app's in enabled
+    JobMonitor.settings.debug = {{ 'true' if config.DEBUG else 'false' }};
+  </script>
   {{ javascript_tag('lib/string-format', blueprint='velo_monitor') }}
   {{ javascript_tag('velo_plotter', blueprint='velo_monitor') }}
   {{ javascript_tag('velo_monitor', blueprint='velo_monitor') }}
