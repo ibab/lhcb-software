@@ -59,14 +59,23 @@ def protoParticlesFromHLTSelSequence( Name, HltDecision,
     from Configurables import HltTrackConverter
     hltTrackConv = HltTrackConverter(Name + "HltTrackConv")
     hltTrackConv.ReadHltLinesFrom1stEvent = HltDecision
-    hltTrackConv.TrackDestignation = 'Rec/Track/' + Name + 'All'
+    hltTrackConv.TrackDestination = 'Rec/Track/' + Name + 'All'
+    if Escher().DataType in ['2015']: hltTrackConv.SelReportsLocation = 'Hlt1/SelReports'
+    
     ## TODO: Watch out for the HLT1/2 Split here!!
-    ## probably the decoder DB will take care of it for you... 
+    ## probably the decoder DB will take care of it for you...
     from DAQSys.Decoders import DecoderDB
-    from DAQSys.DecoderClass import decodersForBank
-    hltdecs=decodersForBank(DecoderDB,"HltSelReports")
-    seq.Members += [ d.setup() for d in hltdecs ]
-    seq.Members += [ hltTrackConv ]
+    hltdecs = []
+    if Escher().DataType in ['2015']:
+        decDec = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
+        selDec = DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"]
+        hltdecs += [decDec, selDec]
+    else:
+        from DAQSys.DecoderClass import decodersForBank
+        hltdecs=decodersForBank(DecoderDB,"HltSelReports")
+    trackseq.Members += [ d.setup() for d in hltdecs ]
+    trackseq.Members += [ hltTrackConv ]
+
     # now fit those tracks and apply a selection
     from TAlignment.Utils import configuredFitAndHitAdderSequence
     fitseq = configuredFitAndHitAdderSequence( Name + 'Fit',
@@ -121,20 +130,27 @@ def ReviveHltTracks(TriggerLines=[]):
     from Configurables import HltTrackConverter
     hltTrackConv = HltTrackConverter("HltTrackConv")
     hltTrackConv.HltLinesToUse = HltLines
-    hltTrackConv.TrackDestignation = 'Rec/Track/AllBest'
+    hltTrackConv.TrackDestination = 'Rec/Track/AllBest'
+    if Escher().DataType in ['2015']: hltTrackConv.SelReportsLocation = 'Hlt1/SelReports'
     
     ## TODO: Watch out for the HLT1/2 Split here!!
-    ## probably the decoder DB will take care of it for you... 
+    ## probably the decoder DB will take care of it for you...
     from DAQSys.Decoders import DecoderDB
-    from DAQSys.DecoderClass import decodersForBank
-    hltdecs=decodersForBank(DecoderDB,"HltSelReports")
+    hltdecs = []
+    if Escher().DataType in ['2015']:
+        decDec = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
+        selDec = DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"]
+        hltdecs += [decDec, selDec]
+    else:
+        from DAQSys.DecoderClass import decodersForBank
+        hltdecs=decodersForBank(DecoderDB,"HltSelReports")
     trackseq.Members += [ d.setup() for d in hltdecs ]
     trackseq.Members += [ hltTrackConv ]
 
     # create a sequence that fits the tracks and does the hit-adding
     from TAlignment.Utils import configuredFitAndHitAdderSequence
-    fitseq =  configuredFitAndHitAdderSequence( Name = 'Hlt2Best', 
-                                                InputLocation = hltTrackConv.TrackDestignation,
+    fitseq =  configuredFitAndHitAdderSequence( Name = 'HltBest', 
+                                                InputLocation = hltTrackConv.TrackDestination,
                                                 OutputLocation = 'Rec/Track/Best' )
     trackseq.Members.append( fitseq )
     # now make sure that there are at least 2 tracks left

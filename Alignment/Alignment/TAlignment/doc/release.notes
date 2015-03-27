@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2015-03-27 - Maurizio Martinelli
+ - Modified python scripts to read Hlt1 SelReports when running on 2015 data
+
 ! 2015-03-19 - Maurizio Martinelli
  - Fixed a bug caused by a change in RICH reconstruction sequence
 

@@ -188,7 +188,7 @@ class NoPIDTracksFromHlt(TrackSelection):
         self._runVelo = RerunVeloTracking
 
     def algorithm( self ):
-        from Configurables import GaudiSequencer, HltTrackConverter, TrackContainerCopy
+        from Configurables import GaudiSequencer, HltTrackConverter, TrackContainerCopy, Escher
         from TAlignment.Utils import configuredFitAndHitAdderSequence
         seq = GaudiSequencer(self.name() + "Seq")
 
@@ -197,8 +197,9 @@ class NoPIDTracksFromHlt(TrackSelection):
         # hits on the tracks. adding Hlt1Global does rather
         # little. (if you do, make sure to put it after Hlt2Global,
         # since the clone rejection takes the first track.)
-        hltTrackConvAll = HltTrackConverter("HltTrackConvAll",TrackDestignation = 'Rec/Track/NoPIDBest',
+        hltTrackConvAll = HltTrackConverter("HltTrackConvAll",TrackDestination = 'Rec/Track/NoPIDBest',
                                             HltLinesToUse = ['Hlt2Global'])
+        if Escher().DataType in ['2015']: hltTrackConvAll.SelReportsLocation = 'Hlt1/SelReports'
         seq.Members += [ hltTrackConvAll ]
         # configure algorithm to run Velo standalone reconstruction
         if self._runVelo:
