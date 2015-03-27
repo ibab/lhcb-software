@@ -8,6 +8,10 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+! 2015-03-25 - Wouter Hulsbergen
+ - Bug fix in dealing with bremstralung in RecoTrack.cpp
+ - Added new class 'ConvertedPhoton' that implements 'soft' constraint on conversion vertex
+
 !========================= DecayTreeFitter v1r18 2014-09-30 =========================
 
 ! 2014-09-11 - Chris Jones
