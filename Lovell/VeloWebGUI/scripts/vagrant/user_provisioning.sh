@@ -23,6 +23,9 @@ source \$ROOT/bin/thisroot.sh
 PATH=\$PYTHON/bin:\$HOME/.local/bin:\$PATH
 LD_LIBRARY_PATH=\$PYTHON/lib:\$LD_LIBRARY_PATH
 
+# Add Lovell modules
+PYTHONPATH=/Lovell/VeloWebGUI/python:/Lovell/VeloAnalysisFramework/python:\$PYTHONPATH
+
 export PATH
 export LD_LIBRARY_PATH
 
@@ -39,5 +42,10 @@ WORKON_HOME=$HOME/virtualenvs
 echo "export WORKON_HOME=$WORKON_HOME" >> .bashrc
 echo "source \$HOME/.local/bin/virtualenvwrapper.sh" >> .bashrc
 mkdir -p $WORKON_HOME
+
+source $HOME/.bash_profile
+
+mkvirtualenv VeloWebGUI
+pip install -r /Lovell/VeloWebGUI/doc/requirements.txt
 
 echo "User provisioning complete!"

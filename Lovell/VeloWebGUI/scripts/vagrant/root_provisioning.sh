@@ -24,10 +24,11 @@ YUM=/usr/bin/yum
 sudo cat > /etc/yum.repos.d/xrootd-stable-slc6.repo << EOF
 [xrootd-stable]
 name=XRootD Stable repository
-baseurl=http://xrootd.org/binaries/stable/slc/6/\$basearch http://xrootd.cern.ch/sw/repos/stable/slc/6/\$basearch
-gpgcheck=0
+baseurl=http://xrootd.org/binaries/stable/slc/6/$basearch http://xrootd.cern.ch/sw/repos/stable/slc/6/$basearch
+gpgcheck=1
 enabled=1
 protect=0
+gpgkey=http://xrootd.cern.ch/sw/releases/RPM-GPG-KEY.txt
 EOF
 
 echo "Updating packages"
@@ -92,15 +93,15 @@ sudo /sbin/service afs start
 echo "Configuring Apache"
 APACHECONF=/etc/httpd/conf/httpd.conf
 # Alter default global configuration
-sudo sed -i 's/Listen 80/Listen 5000/' $APACHECONF
-sudo sed -i 's/#NameVirtualHost \*:80/NameVirtualHost *:5000/' $APACHECONF
+sudo sed -i 's/Listen 80/Listen 8008/' $APACHECONF
+sudo sed -i 's/#NameVirtualHost \*:80/NameVirtualHost *:8008/' $APACHECONF
 # Add configuration for the VELO site
-sudo cat > /etc/httpd/conf.d/velo-monitor.conf << EOF
-LoadModule proxy_uwsgi_module /usr/lib64/httpd/modules/mod_proxy_uwsgi.s
-<VirtualHost *:5000>
-  DocumentRoot "/vagrant"
+sudo cat > /etc/httpd/conf.d/VeloWebGUI.conf << EOF
+LoadModule proxy_uwsgi_module /usr/lib64/httpd/modules/mod_proxy_uwsgi.so
+<VirtualHost *:8008>
+  DocumentRoot "/var/www/html"
 
-    <Directory "/vagrant">
+    <Directory "/var/www/html">
       Options Indexes FollowSymLinks MultiViews
       AllowOverride None
       Order allow,deny
@@ -122,13 +123,12 @@ sudo rm -rf uwsgi
 sudo chkconfig --levels 345 httpd on
 sudo service httpd start
 
-echo "Setting up VELO data directory structure"
-VELODATA=/calib/velo/dqm/VeloView/VetraOutput
-sudo mkdir -p $VELODATA/100000s/120000s/127000s/127100s/127193
-sudo mkdir -p $VELODATA/100000s/130000s/130000s/130500s/130560
-sudo ln -s /afs/cern.ch/user/s/sali/public/veloview/data/VELODQM_127193_2012-09-05_02.00.09_NZS_ZS.root $VELODATA/100000s/120000s/127000s/127100s/127193
-sudo ln -s /afs/cern.ch/user/s/sali/public/veloview/data/VELODQM_130560_2012-10-18_04.45.10_NZS_ZS.root $VELODATA/100000s/130000s/130000s/130500s/130560
-sudo sh -c 'echo -e "127193\n130560" > /calib/velo/dqm/VeloView/VetraOutput/RunList.txt'
+# We don't need the firewall for the VM
+sudo service iptables stop
+sudo chkconfig iptables off
+
+# Relax permissions so Apache can talk to the uWSGI proxy
+sudo setsebool httpd_can_network_connect 1
 
 # Run the user provision as the vagrant user
 su vagrant -c '/vagrant/user_provisioning.sh'
