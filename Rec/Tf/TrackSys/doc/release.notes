@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-03-27 - Michel De Cian
+ - Add 'RecoTrackingRun2.py' that will contain the tracking options for run2. This is not in a working state at the moment, but is also not called anywhere
+
+! 2015-03-27 - Michel De Cian
  - Replace 'PatVeloConf' with 'PatVeloTTAlgConf' (change in name only) in RecoTracking.py
 
 !========================= TrackSys v9r5 2015-02-23 =========================
