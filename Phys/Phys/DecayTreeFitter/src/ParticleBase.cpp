@@ -15,6 +15,7 @@
 #include "MissingParticle.h"
 #include "JetMomentum.h"
 #include "InternalRecoTrack.h"
+#include "ConvertedPhoton.h"
 #include "FitParams.h"
 #include "Configuration.h"
 
@@ -103,8 +104,6 @@ namespace DecayTreeFitter
     const LHCb::ParticleProperty* prop =
       LoKi::Particles::ppFromPID(particle.particleID()) ;
 
-    if(vtxverbose>=2)
-      std::cout << "ParticleBase::createParticle: " << config.forceFitAll() << std::endl ;
     ParticleBase* rc=0 ;
     //bool bsconstraint = false ;
 
@@ -116,6 +115,7 @@ namespace DecayTreeFitter
       && particle.endVertex()->covMatrix()(2,2)>0 ;
     bool iscomposite = particle.daughters().size()>0 ;
     bool isresonance = iscomposite && prop && isAResonance(*prop) ;
+    bool isconversion = iscomposite && prop->particleID().pid()==22 ;
     const LHCb::ProtoParticle* proto = particle.proto() ;
     bool hastrack = proto && proto->track() ;
     bool hascalo  = proto && !(proto->calo().empty()) ;
@@ -159,7 +159,9 @@ namespace DecayTreeFitter
         else
           rc = new RecoComposite(particle,mother) ;
       } else {         // unfited composites
-        if( isresonance )
+	if( isconversion ) 
+	  rc = new ConvertedPhoton(particle,mother,config) ;
+        else if( isresonance )
           rc = new Resonance(particle,mother,config) ;
         else
           rc = new InternalParticle(particle,mother,config) ;
@@ -167,8 +169,9 @@ namespace DecayTreeFitter
     }
 
     if(vtxverbose>=2)
-      std::cout << "ParticleBase::createParticle returns " << rc->type()
-                << " " << rc->index() << std::endl ;
+      std::cout << "ParticleBase::createParticle returns " 
+	        << rc->name() << " " 
+                << rc->type() << " " << rc->index() << std::endl ;
     return rc ;
   }
 
@@ -206,7 +209,10 @@ namespace DecayTreeFitter
   ParticleBase::initCov(FitParams* fitparams) const
   {
     ErrCode status ;
-
+    for(daucontainer::const_iterator it = m_daughters.begin() ;
+        it != m_daughters.end() ; ++it)
+      status |= (*it)->initCov(fitparams) ;
+    
     if(vtxverbose>=2) {
       std::cout << "ParticleBase::initCov for " << name() << std::endl ;
     }
@@ -225,11 +231,25 @@ namespace DecayTreeFitter
     // momentum
     int momindex = momIndex() ;
     if(momindex>=0) {
-      // TODO: calo at high energy?
-      const double sigmom = 10 * Gaudi::Units::GeV ; // GeV
-      int maxrow = hasEnergy() ? 4 : 3 ;
-      for(int row=momindex+1; row<=momindex+maxrow; ++row)
-        fitparams->cov() .fast (row,row) = sigmom*sigmom ;
+      if( daughters().empty() ) {
+	// TODO: calo at high energy?!
+	const double sigmom = 10 * Gaudi::Units::GeV ; // GeV
+	int maxrow = hasEnergy() ? 4 : 3 ;
+	for(int row=momindex+1; row<=momindex+maxrow; ++row)
+	  fitparams->cov() .fast (row,row) = sigmom*sigmom ;
+      } else {
+	// what a mess!
+	for(int row=1; row<=3; ++row) 
+	  fitparams->cov().fast(momindex+row,momindex+row) = 0 ;
+	for(daucontainer::const_iterator it = m_daughters.begin() ;
+	    it != m_daughters.end() ; ++it) {
+	  int daumomindex = (*it)->momIndex() ;
+	  for(int row=1; row<=3; ++row)
+	    fitparams->cov().fast(momindex+row,momindex+row) += fitparams->cov().fast(daumomindex+row,daumomindex+row) ;
+	}
+	if(hasEnergy())
+	  fitparams->cov().fast(momindex+4,momindex+4) = fitparams->cov().fast(momindex+3,momindex+3) ;
+      }
     }
 
     // lifetime
@@ -239,9 +259,6 @@ namespace DecayTreeFitter
       fitparams->cov().fast (lenindex+1,lenindex+1) = sigz*sigz ;
     }
 
-    for(daucontainer::const_iterator it = m_daughters.begin() ;
-        it != m_daughters.end() ; ++it)
-      status |= (*it)->initCov(fitparams) ;
     return status ;
   }
 
@@ -284,18 +301,21 @@ namespace DecayTreeFitter
       double py = fitpar->par()(momindex+2) ;
       double pz = fitpar->par()(momindex+3) ;
       double mass2 = E*E-px*px-py*py-pz*pz ;
-      double mass = mass2>0 ? sqrt(mass2) : -sqrt(-mass2) ;
+      double mass = mass2>0 ? std::sqrt(mass2) : -std::sqrt(-mass2) ;
 
-      HepSymMatrix cov = fitpar->cov().sub(momindex+1,momindex+4) ;
-      HepVector G(4,0) ;
-      G(1) = -px/mass ;
-      G(2) = -py/mass ;
-      G(3) = -pz/mass ;
-      G(4) =   E/mass ;
-      double massvar = cov.similarity(G) ;
+      double masserr = 0 ;
+      if( !hasMassConstraint() ) {
+	HepSymMatrix cov = fitpar->cov().sub(momindex+1,momindex+4) ;
+	HepVector G(4,0) ;
+	G(1) = -px/mass ;
+	G(2) = -py/mass ;
+	G(3) = -pz/mass ;
+	G(4) =   E/mass ;
+	masserr = std::sqrt(cov.similarity(G)) ;
+      }
       os << std::setw(2) << std::setw(20) << "mass: "
-                << std::setw(15) << mass
-	 << std::setw(15) << sqrt(massvar) << std::endl ;
+	 << std::setw(15) << mass
+	 << std::setw(15) << masserr << std::endl ;
     }
     
     for(daucontainer::const_iterator it = m_daughters.begin() ;

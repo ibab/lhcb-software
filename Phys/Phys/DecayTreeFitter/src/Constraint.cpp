@@ -178,7 +178,7 @@ namespace DecayTreeFitter
     case massEnergy:   rc = "massEnergy" ; break ;
     case lifetime:     rc = "lifetime" ; break ;
     case merged:       rc = "merged" ; break ;
-    case conversion:   rc = "conversion" ; break ;
+    case convertedphotonposition:   rc = "convertedphotonposition" ; break ;
     case externalmomentum:   rc = "externalmomentum" ; break ;
     case ntypes:
     case unknown:

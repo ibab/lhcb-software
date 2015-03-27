@@ -42,7 +42,6 @@ namespace DecayTreeFitter
       addDaughter(*daughter,config) ;
     // copy constraints
     m_lifetimeconstraint = false ; //bc && bc->constraint(BtaConstraint::Life) ;
-    m_isconversion = daughters().size()==2 &&  bc.particleID().pid() == 22 ;
   }
 
   bool compTrkTransverseMomentum(const RecoTrack* lhs, const RecoTrack* rhs)
@@ -389,40 +388,6 @@ namespace DecayTreeFitter
     return ErrCode::success ;
   }
 
-  ErrCode
-  InternalParticle::projectConversionConstraint(const FitParams& fitparams,
-                                                Projection& p) const
-  {
-    // only works if there are two daughters. constraint those to be parallel:
-    // p1.in(p2) - |p1||p2|=0
-    assert(m_isconversion) ;
-    const ParticleBase* dauA = daughters()[0] ;
-    const ParticleBase* dauB = daughters()[1] ;
-    int daumomindexA = dauA->momIndex() ;
-    int daumomindexB = dauB->momIndex() ;
-
-    // first calculate the total momenta
-    double momA2(0),momB2(0) ;
-    for(int irow=1; irow<=3; ++irow) {
-      double pxA =  fitparams.par(daumomindexA+irow) ;
-      momA2 += pxA*pxA ;
-      double pxB =  fitparams.par(daumomindexB+irow) ;
-      momB2 += pxB*pxB ;
-    }
-    double momA(sqrt(momA2)), momB(sqrt(momB2)) ;
-
-    // now fill r and H
-    p.r(1) = -momA*momB ;
-    for(int irow=1; irow<=3; ++irow) {
-      double pxA =  fitparams.par(daumomindexA+irow) ;
-      double pxB =  fitparams.par(daumomindexB+irow) ;
-      p.r(1) += pxA*pxB ;
-      p.H(1,daumomindexA+irow) = pxB - pxA/momA * momB ;
-      p.H(1,daumomindexB+irow) = pxA - pxB/momB * momA ;
-    }
-
-    return ErrCode::success ;
-  }
 
   ErrCode
   InternalParticle::projectConstraint(Constraint::Type type,
@@ -449,9 +414,6 @@ namespace DecayTreeFitter
       break ;
     case Constraint::lifetime:
       status |= projectLifeTimeConstraint(fitparams,p) ;
-      break ;
-    case Constraint::conversion:
-      status |= projectConversionConstraint(fitparams,p) ;
       break ;
     default:
       status |= ParticleBase::projectConstraint(type,fitparams,p) ;
@@ -529,12 +491,8 @@ namespace DecayTreeFitter
     if(mother() && lenIndex()>=0)
       alist.push_back(Constraint(this,Constraint::geometric,depth,3,3)) ;
     // the mass constraint. FIXME: move to ParticleBase
-    if(hasMassConstraint()) {
-      if( !m_isconversion )
-        alist.push_back(Constraint(this,Constraint::mass,depth,1,10)) ;
-      else
-        alist.push_back(Constraint(this,Constraint::conversion,depth,1,3)) ;
-    }
+    if(hasMassConstraint())
+      alist.push_back(Constraint(this,Constraint::mass,depth,1,3)) ;
   }
 
 

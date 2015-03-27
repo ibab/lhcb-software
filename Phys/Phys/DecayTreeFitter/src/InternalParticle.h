@@ -30,7 +30,6 @@ namespace DecayTreeFitter
     // constraints
     ErrCode projectKineConstraint(const FitParams&, Projection&) const ;
     ErrCode projectLifeTimeConstraint(const FitParams&, Projection&) const ;
-    ErrCode projectConversionConstraint(const FitParams&,Projection& p) const ;
     ErrCode projectMassConstraintTwoBody(const FitParams& fitparams,Projection& p) const ;
     virtual ErrCode projectConstraint(Constraint::Type type,
 				      const FitParams& fitparams,Projection& p) const ;
@@ -44,7 +43,6 @@ namespace DecayTreeFitter
     ErrCode initMom( FitParams* fitparams ) const ;
   private:
     bool m_lifetimeconstraint ;
-    bool m_isconversion ;
   } ;
 
 }

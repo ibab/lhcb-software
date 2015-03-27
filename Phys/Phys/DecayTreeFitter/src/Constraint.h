@@ -25,13 +25,13 @@ namespace DecayTreeFitter
 		btacomposite,
 		track,
 		photon,
-		conversion,
+		convertedphotonposition,
+		externalmomentum,
 		kinematic,
 		massEnergy,
 		geometric,
 		mass,
 		merged,
-		externalmomentum,
 		ntypes} ;
     
     bool operator<(const Constraint& rhs) const ;
