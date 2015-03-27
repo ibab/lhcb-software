@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-03-27 - Maurizio Martinelli
+ - HltTrackConverter: Added option for reading specific SelReports location
+
 !========================= TrackUtils v1r58 2015-02-23 =========================
 ! 2015-02-09 - Sascha Stahl
  - TrackListRefiner: Prevented algorithm from creating a new location in case

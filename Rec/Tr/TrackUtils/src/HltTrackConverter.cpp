@@ -35,14 +35,14 @@ HltTrackConverter::HltTrackConverter( const std::string& name,
                    m_HltObjectSummaryLocation = LHCb::HltObjectSummaryLocation::Default
 		   // LHCb::HltSelReportsLocation::Default
                    , "Location of the HltObjectSummary in TES" );
-  declareProperty( "TrackDestignation", m_ConvertedTracksDestignation = "Rec/Track/ConvertedHltTracks" 
+  declareProperty( "TrackDestination", m_ConvertedTracksDestination = "Rec/Track/ConvertedHltTracks"
                    , "Location in TES the convertet tracks are supposed to end up." );
   //  double CloneOverlapTreshold = 0.01;
   declareProperty( "CloneOverlapTreshold",m_CloneOverlapTreshold = 0.7 
                    , "Remove every track if there is another track with 'CloneOverlapTreshold' overlap. The other track is then kept." );
   declareProperty( "MinimalHits",m_MinimalHits = 3 
                    , "Remove every track having less than this number of hits (in the selected tracking stations)" );
-  
+ 
  {
     std::vector<std::string> UseHitsFromDefault;
     UseHitsFromDefault.push_back("AllTrackingStations");
@@ -106,6 +106,8 @@ HltTrackConverter::HltTrackConverter( const std::string& name,
 		   , "Require that the HLTObjectSummaryClID is equal to LHCb::Track::classID()" );
   declareProperty( "AddFirstState", m_addFirstState = true
 		   , "Add a state to the track." ) ;
+  declareProperty( "SelReportsLocation", m_selRepLoc = LHCb::HltSelReportsLocation::Default
+		   , "Manually set the SelReports location." ) ;
 }
 
 StatusCode HltTrackConverter::initializeTriggerLists()
@@ -238,7 +240,7 @@ StatusCode HltTrackConverter::execute()
   if ( msgLevel(MSG::DEBUG) ) 
     debug() << "==> Execute" << endmsg;
   LHCb::Track::Vector tracks ;
-  const LHCb::HltSelReports* selReports = get<LHCb::HltSelReports>(LHCb::HltSelReportsLocation::Default);
+  const LHCb::HltSelReports* selReports = get<LHCb::HltSelReports>(m_selRepLoc);
   if ( msgLevel(MSG::DEBUG) ) 
     debug() << "Retrieved HltSelReports with size: " << selReports->size() << endmsg ;
   for (std::vector<std::string>::const_iterator s = m_HltLines.begin();s!= m_HltLines.end();++s) {
@@ -255,8 +257,8 @@ StatusCode HltTrackConverter::execute()
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug() << "Inserting track collection with "  << trackcontainer->size()
-            <<" tracks to " << m_ConvertedTracksDestignation << endmsg;
-  put(trackcontainer,m_ConvertedTracksDestignation );
+            <<" tracks to " << m_ConvertedTracksDestination << endmsg;
+  put(trackcontainer,m_ConvertedTracksDestination );
   return StatusCode::SUCCESS;
 }
 

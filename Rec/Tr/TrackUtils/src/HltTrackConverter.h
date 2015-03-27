@@ -28,7 +28,7 @@ public:
 
  private:
   std::string m_HltObjectSummaryLocation; // in TES
-  std::string m_ConvertedTracksDestignation; // in TES
+  std::string m_ConvertedTracksDestination; // in TES
   std::vector<std::string> m_UseHitsFrom ; //See LHCb::LHCbID::channelIDype for the values.
   bool m_UseHitsFromLookupTable[9] ; //may cause segfault in case LHCb::LHCbID::channelIDype is changed
   std::vector<std::string> m_HltLines;
@@ -41,6 +41,7 @@ public:
   LHCb::Track::Types  SetTrackType(const LHCb::Track& ) const ;
   void RemoveClones(LHCb::Track::Vector& tracks) const ;
   StatusCode initializeTriggerLists();
+  std::string m_selRepLoc;
 };
 #endif // HLTTRACKCONVERTER_H
  
