@@ -246,6 +246,8 @@ TC_TOPROTOPARTICLES = LoKi.Hlt1.ToProtoParticles
 TC_TOPARTICLES = LoKi.Hlt1.ToParticles
 ## @see LoKi::Cuts::TC_FROMCALOTOPARTICLES
 TC_FROMCALOTOPARTICLES = LoKi.Hlt1.FromCaloToParticles
+## @see LoKi::Cuts::TC_HLT1DIPHOTON
+TC_HLT1DIPHOTON = LoKi.Hlt1.Hlt1DiPhoton
 ## @see LoKi::Cuts::TC_HLT1COMBINER
 TC_HLT1COMBINER = LoKi.Hlt1.Hlt1Combiner
 

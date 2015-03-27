@@ -37,6 +37,7 @@
 #include "LoKi/ToProtoParticles.h"
 #include "LoKi/ToParticles.h"
 #include "LoKi/FromCaloToParticles.h"
+#include "LoKi/Hlt1DiPhoton.h"
 #include "LoKi/Hlt1CombinerConf.h"
 #include "LoKi/Hlt1Combiner.h"
 #include "LoKi/UpgradeVertices.h"
