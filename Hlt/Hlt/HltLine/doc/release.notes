@@ -5,6 +5,9 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2015-03-27 - Sean Benson
+ - Allow DiElectronMaker to be an Hlt2Member.
+
 ! 2015-03-26 - Roel Aaij
  - Add and support Hlt2SubSequence.
 

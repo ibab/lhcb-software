@@ -1271,13 +1271,14 @@ class Hlt2Member ( object ) :
         """
         from Configurables import FilterDesktop, CombineParticles, TisTosParticleTagger
         from Configurables import DaVinci__N3BodyDecays, DaVinci__N4BodyDecays, DaVinci__N5BodyDecays, DaVinci__N6BodyDecays, DaVinci__N7BodyDecays
+        from Configurables import DiElectronMaker
         ## (0) verify input
         # Type must be a (configurable) class name, and only
         # a limited set is allowed (which must be DVAlgorithms...)
         if Type not in [ FilterDesktop, CombineParticles, TisTosParticleTagger
                          , DaVinci__N3BodyDecays, DaVinci__N4BodyDecays
                          , DaVinci__N5BodyDecays, DaVinci__N6BodyDecays
-                         , DaVinci__N7BodyDecays ] :
+                         , DaVinci__N7BodyDecays, DiElectronMaker ] :
             raise AttributeError, "The type  %s is not known for Hlt2Member"%Type
         for key in Args :
             if  key not in Type.__slots__  :
