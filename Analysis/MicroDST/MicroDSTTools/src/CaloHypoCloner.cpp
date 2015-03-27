@@ -54,16 +54,8 @@ StatusCode CaloHypoCloner::initialize()
   m_caloClusterCloner = tool<ICloneCaloCluster>( m_caloClusterClonerName,
                                                  this->parent() );
 
-  if ( m_cloneMCLinks )
-  {
-    info() << "Will clone MC Links" << endmsg;
-    m_mcPcloner = tool<ICloneMCParticle>( m_mcpClonerName, this->parent() );
-  }
-  else
-  {
-    info() << "Will NOT clone MC Links" << endmsg;
-  }
-
+  if ( m_cloneMCLinks ) { debug() << "Will clone MC Links" << endmsg; }
+ 
   return sc;
 }
 
@@ -78,14 +70,14 @@ void CaloHypoCloner::handle ( const Incident& /* incident */ )
 
 //=============================================================================
 
-LHCb::CaloHypo* CaloHypoCloner::operator() (const LHCb::CaloHypo* hypo)
+LHCb::CaloHypo* CaloHypoCloner::operator() ( const LHCb::CaloHypo* hypo )
 {
   return this->clone(hypo);
 }
 
 //=============================================================================
 
-LHCb::CaloHypo* CaloHypoCloner::clone(const LHCb::CaloHypo* hypo)
+LHCb::CaloHypo* CaloHypoCloner::clone( const LHCb::CaloHypo* hypo )
 {
   if ( !hypo )
   {
@@ -111,16 +103,14 @@ LHCb::CaloHypo* CaloHypoCloner::clone(const LHCb::CaloHypo* hypo)
   clone->clearHypos();
   if ( m_cloneHypos )
   {
-    const SmartRefVector<LHCb::CaloHypo> & hypos = hypo->hypos();
-    if ( !hypos.empty() )
+    if ( !hypo->hypos().empty() )
     {
       SmartRefVector<LHCb::CaloHypo> clonedHypos;
-      for ( SmartRefVector<LHCb::CaloHypo>::const_iterator iCalo = hypos.begin();
-            iCalo != hypos.end(); ++iCalo )
+      for ( const auto& h :hypo->hypos() )
       {
-        if ( *iCalo )
+        if ( h.target() )
         {
-          LHCb::CaloHypo * _hypo = (*this)(*iCalo);
+          LHCb::CaloHypo * _hypo = (*this)(h);
           if ( _hypo ) { clonedHypos.push_back(_hypo); }
         }
         else
@@ -138,17 +128,15 @@ LHCb::CaloHypo* CaloHypoCloner::clone(const LHCb::CaloHypo* hypo)
   clone->clearDigits();
   if ( m_cloneDigits )
   {
-    const SmartRefVector<LHCb::CaloDigit> & digits = hypo->digits();
-    if ( !digits.empty() )
+    if ( !hypo->digits().empty() )
     {
       SmartRefVector<LHCb::CaloDigit> clonedDigits;
-      for ( SmartRefVector<LHCb::CaloDigit>::const_iterator iCalo = digits.begin();
-            iCalo != digits.end(); ++iCalo )
+      for ( const auto& dig : hypo->digits() )
       {
-        if ( *iCalo )
+        if ( dig.target() )
         {
           LHCb::CaloDigit * _digit =
-            cloneKeyedContainerItem<BasicCaloDigitCloner>(*iCalo);
+            cloneKeyedContainerItem<BasicCaloDigitCloner>(dig);
           if ( _digit ) { clonedDigits.push_back( _digit ); }
         }
         else
@@ -166,16 +154,14 @@ LHCb::CaloHypo* CaloHypoCloner::clone(const LHCb::CaloHypo* hypo)
   clone->clearClusters();
   if ( m_cloneClusters )
   {
-    const SmartRefVector<LHCb::CaloCluster> & clusters = hypo->clusters();
-    if ( !clusters.empty() )
+    if ( !hypo->clusters().empty() )
     {
       SmartRefVector<LHCb::CaloCluster> clonedClusters;
-      for ( SmartRefVector<LHCb::CaloCluster>::const_iterator iCalo = clusters.begin();
-            iCalo != clusters.end(); ++iCalo )
+      for ( const auto& clus : hypo->clusters() )
       {
-        if ( *iCalo )
+        if ( clus.target() )
         {
-          LHCb::CaloCluster * _cluster = (*m_caloClusterCloner)(*iCalo);
+          LHCb::CaloCluster * _cluster = (*m_caloClusterCloner)(clus);
           if ( _cluster ) { clonedClusters.push_back( _cluster ); }
         }
         else
@@ -234,7 +220,7 @@ void CaloHypoCloner::cloneMCLinks( const LHCb::CaloHypo* hypo,
       for ( const auto& Rentry : table->relations(hypo) )
       {
         // get cloned MCParticle
-        const LHCb::MCParticle * clonedMCP = (*m_mcPcloner)( Rentry.to() );
+        const LHCb::MCParticle * clonedMCP = mcPCloner()( Rentry.to() );
         if ( clonedMCP )
         {
           // if cloning worked, fill relation in linker with original weight

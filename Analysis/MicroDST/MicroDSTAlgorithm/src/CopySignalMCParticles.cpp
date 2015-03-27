@@ -48,13 +48,13 @@ StatusCode CopySignalMCParticles::initialize()
   // If required, load the MC association objects and proto cloner
   if ( m_saveRecoInfo )
   {
+    m_ppCloner = tool<ICloneProtoParticle>( m_ppClonerName, this );
     m_pCPPAsct = new ProtoParticle2MCLinker( this, 
                                              Particle2MCMethod::ChargedPP, 
                                              LHCb::ProtoParticleLocation::Charged );
     m_pNPPAsct = new ProtoParticle2MCLinker( this,
                                              Particle2MCMethod::NeutralPP, 
                                              LHCb::ProtoParticleLocation::Neutrals );
-    m_ppCloner = tool<ICloneProtoParticle>( m_ppClonerName, this );
   }
 
   return sc;
@@ -66,17 +66,20 @@ StatusCode CopySignalMCParticles::initialize()
 CopySignalMCParticles::ProtosVector
 CopySignalMCParticles::getProtos(const LHCb::MCParticle* mcp) const
 {
-  ProtoParticle2MCLinker * asct = ( mcp->particleID().threeCharge()==0 ? 
+  // Pcik the correct association for charge/neutral
+  ProtoParticle2MCLinker * asct = ( mcp->particleID().threeCharge() == 0 ? 
                                     m_pNPPAsct : m_pCPPAsct );
   if ( !asct ) Exception("Null PP asociator");
-  CopySignalMCParticles::ProtosVector ppv ;
+
+  // vector to return
+  CopySignalMCParticles::ProtosVector ppv;
+
+  // deal with weird Linker syntax to gather associated Protos...
   double w = 0;
   const LHCb::ProtoParticle * pp = asct->firstP(mcp,w);
-  while( pp )
-  {
-    ppv.push_back(pp);
-    pp = asct->nextP(w);
-  }
+  while ( pp ) { ppv.push_back(pp); pp = asct->nextP(w); }
+
+  // return the protos
   return ppv;
 }
 
@@ -86,8 +89,8 @@ CopySignalMCParticles::getProtos(const LHCb::MCParticle* mcp) const
 StatusCode CopySignalMCParticles::finalize()
 {
   // clean up
-  delete m_pCPPAsct;
-  delete m_pNPPAsct;
+  delete m_pCPPAsct; m_pCPPAsct = NULL;
+  delete m_pNPPAsct; m_pNPPAsct = NULL; 
   // call base class and return
   return MicroDSTAlgorithm::finalize(); 
 }
@@ -107,15 +110,13 @@ StatusCode CopySignalMCParticles::execute()
     std::vector<const LHCb::MCParticle *> clonedMCPs;
 
     // Loop over them and look for signal
-    for ( const LHCb::MCParticle * mcP : *mcPs )
+    for ( const auto * mcP : *mcPs )
     {
       if ( mcP->fromSignal() )
       {
         // First clone the MCParticle
-        if ( msgLevel(MSG::VERBOSE) ) verbose() << "Found Signal MCParticle" << endmsg;
-        const LHCb::MCParticle * cloneMCP = (*m_cloner)(mcP);
-        if ( msgLevel(MSG::VERBOSE) ) verbose() << "  -> Cloned " << *cloneMCP << endmsg;
-        // save this in the list
+        (*m_cloner)(mcP);
+        // save the original MCP in the list
         clonedMCPs.push_back(mcP);
       }
     }
@@ -124,17 +125,12 @@ StatusCode CopySignalMCParticles::execute()
     if ( m_saveRecoInfo )
     {
       // Loop over all selected MCPs and clone reco level info for them
-      for ( const LHCb::MCParticle * mcP : clonedMCPs )
+      for ( const auto * mcP : clonedMCPs )
       {
-        const ProtosVector protos = getProtos(mcP);
-        for ( const LHCb::ProtoParticle * proto : protos )
-        {
-          // Clone this Proto
-          if ( proto ) { (*m_ppCloner)(proto); }
-        }
+        for ( const auto * pp : getProtos(mcP) ) { (*m_ppCloner)(pp); }
       }
     }
-
+    
   }
 
   return StatusCode::SUCCESS;

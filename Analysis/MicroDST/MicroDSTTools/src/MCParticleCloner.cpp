@@ -88,12 +88,9 @@ LHCb::MCParticle* MCParticleCloner::clone( const LHCb::MCParticle* mcp )
 
     // Add the cloned MCP to the cloned origin vertex, if not already there
     bool found = false;
-    for ( SmartRefVector<LHCb::MCParticle>::const_iterator i 
-            = originVertexClone->products().begin();
-          i != originVertexClone->products().end(); ++i )
+    for ( const auto& mcP : originVertexClone->products() )
     {
-      const LHCb::MCParticle * c = *i;
-      if ( c == clone ) { found = true; break; }
+      if ( mcP.target() == clone ) { found = true; break; }
     }
     if ( !found ) { originVertexClone->addToProducts(clone); }
 
@@ -116,29 +113,23 @@ void
 MCParticleCloner::cloneDecayVertices( const SmartRefVector<LHCb::MCVertex>& endVertices,
                                       LHCb::MCParticle* clonedParticle )
 {
-  for ( SmartRefVector<LHCb::MCVertex>::const_iterator iEndVtx = endVertices.begin();
-        iEndVtx!=endVertices.end(); ++iEndVtx )
+  for ( const SmartRef<LHCb::MCVertex>& endVtx : endVertices )
   {
-    if ( (*iEndVtx)->isDecay() && !((*iEndVtx)->products().empty()) )
+    if ( endVtx->isDecay() && !(endVtx->products().empty()) )
     {
       if ( m_vertexCloner )
       {
         if ( msgLevel(MSG::VERBOSE) )
-          verbose() << "Cloning Decay Vertex " << *(*iEndVtx)
-                    << " with " << (*iEndVtx)->products().size()
-                    << " products!"<< endmsg;
-
-        LHCb::MCVertex* decayVertexClone = (*m_vertexCloner)(*iEndVtx);
-        clonedParticle->addToEndVertices(decayVertexClone);
-
-        if ( msgLevel(MSG::VERBOSE) )
-          verbose() << "Cloned it! " << *(*iEndVtx) << endmsg;
+          verbose() << "Cloning Decay Vertex " << *endVtx
+                    << " with " << endVtx->products().size()
+                    << " products!" << endmsg;
+        clonedParticle->addToEndVertices( (*m_vertexCloner)(endVtx) );
       }
       else
       {
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << "Copying decay vertex SmartRefs" << endmsg;
-        clonedParticle->addToEndVertices(*iEndVtx);
+        clonedParticle->addToEndVertices(endVtx);
       }
     }
   }

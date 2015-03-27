@@ -74,6 +74,14 @@ private:
   /// Static list of cloned tracks
   TrackList & clonedTrackList() { static TrackList list; return list; }
 
+  /// Access on demand the MCParticle cloner
+  ICloneMCParticle & mcPCloner() 
+  {
+    if ( !m_mcPcloner ) 
+    { m_mcPcloner = tool<ICloneMCParticle>( m_mcpClonerName, this->parent() ); }
+    return *m_mcPcloner;
+  }
+
 private:
 
   /// Type of MCParticle cloner

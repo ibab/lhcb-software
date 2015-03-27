@@ -40,15 +40,7 @@ StatusCode TrackCloner::initialize()
   incSvc()->addListener( this, IncidentType::BeginEvent );
 
   // MC stuff
-  if ( m_cloneMCLinks )
-  {
-    info() << "Will clone MC Links" << endmsg;
-    m_mcPcloner = tool<ICloneMCParticle>( m_mcpClonerName, this->parent() );
-  }
-  else
-  {
-    info() << "Will NOT clone MC Links" << endmsg;
-  }
+  if ( m_cloneMCLinks ) { debug() << "Will clone MC Links" << endmsg; }
 
   return sc;
 }
@@ -71,7 +63,7 @@ LHCb::Track* TrackCloner::operator() ( const LHCb::Track* track )
 
 //=============================================================================
 
-LHCb::Track* TrackCloner::clone( const LHCb::Track* track )
+LHCb::Track* TrackCloner::clone ( const LHCb::Track* track )
 {
   if ( !track )
   {
@@ -152,7 +144,7 @@ void TrackCloner::cloneMCLinks( const LHCb::Track* track,
       for ( const auto& Rentry : table->relations(track) )
       {
         // get cloned MCParticle
-        const LHCb::MCParticle * clonedMCP = (*m_mcPcloner)( Rentry.to() );
+        const LHCb::MCParticle * clonedMCP = mcPCloner()( Rentry.to() );
         if ( clonedMCP )
         {
           // if cloning worked, fill relation in linker with original weight

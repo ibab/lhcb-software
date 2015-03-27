@@ -81,6 +81,14 @@ private:
   /// Static list of cloned hypos
   HypoList & clonedHypoList() { static HypoList list; return list; }
 
+  /// Access on demand the MCParticle cloner
+  ICloneMCParticle & mcPCloner() 
+  {
+    if ( !m_mcPcloner ) 
+    { m_mcPcloner = tool<ICloneMCParticle>( m_mcpClonerName, this->parent() ); }
+    return *m_mcPcloner;
+  }
+
 private:
 
   ICloneCaloCluster* m_caloClusterCloner;
