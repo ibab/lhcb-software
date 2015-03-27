@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+
+! 2015-03-27 - Christian Linn
+ - Set odin event type configuration: EventType = 1<<2 
+
 !========================= DigiAlg v5r2 2014-05-15 =========================
 ! 2014-04-08 - Heinrich Schindler
  - Remove functor and sorting of VP digits from BuildMCTrackInfo 
