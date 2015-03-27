@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-27 Christian Linn
+ - Added CharmXsec lines to Turbo module
+
 ! 2015-03-26 - Roel Aaij
  - Add Hlt2MergedStage to allow merger of inputs.
  - Remove a few more "New" from Topo stages.
