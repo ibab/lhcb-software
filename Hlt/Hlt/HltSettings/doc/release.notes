@@ -6,6 +6,10 @@
 
 ! 2015-03-28 - Roel Aaij
  - Add Commissioning_Physics_MC2015.
+ - Remove L0 NoSPD channels from Commissioning_Physics_2015.
+ - Add D0 based CalibTracking lines to settings for tests.
+ - Add Hlt1MVALines cuts to settings.
+ - Switch Radiative Topo on.
 
 ! 2015-03-16 - Christian Linn
  - Updated Physics_draftEM2015 to run with converted HLT2 lines

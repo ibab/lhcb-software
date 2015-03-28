@@ -92,7 +92,8 @@ class TopoLines_March2015 :
             'Prescale'   : {'Hlt2Topo2BodySimple' : 0.0,  
                             'Hlt2Topo3BodySimple' : 0.0,
                             'Hlt2Topo4BodySimple' : 0.0,
-                            'Hlt2TopoRad2BodyBBDT' : 0.0, 'Hlt2TopoRad2plus1BodyBBDT' : 0.0}, 
+                            'Hlt2TopoRad2BodyBBDT' : 1.0,
+                            'Hlt2TopoRad2plus1BodyBBDT' : 1.0}, 
             'Postscale'  : {}
             }})
 

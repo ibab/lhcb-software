@@ -1,3 +1,5 @@
+from GaudiKernel.SystemOfUnits import GeV, MeV, mm
+
 def __update_conf__( current, extra ) :
     for (conf,d) in extra.iteritems() :
         if conf not in current : 
@@ -61,8 +63,9 @@ class Commissioning_Physics_2015( object ):
         from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
         from Hlt1Lines.Hlt1DisplVertexLines    import Hlt1DisplVertexLinesConf
         from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
-
-        thresholds = { Hlt1TrackLinesConf :    {'AllL0_Velo_NHits'   : 9
+        from Hlt1Lines.Hlt1MVALines            import Hlt1MVALinesConf
+        
+        thresholds = { Hlt1TrackLinesConf :   {  'AllL0_Velo_NHits'  : 9
                                                , 'AllL0_Velo_Qcut'   : 3
                                                , 'AllL0_TrNTHits'    : 16
                                                , 'AllL0_PT'          : 1300.
@@ -86,6 +89,39 @@ class Commissioning_Physics_2015( object ):
                                                , 'L0Channels'        : {'AllL0'  : 'L0_DECISION_PHYSICS',
                                                                         'Muon'   : ('Muon', 'DiMuon'),
                                                                         'Photon' : ("Photon", "Electron")}
+                                               }
+                     , Hlt1MVALinesConf :     {'DoTiming'                     : False,
+                                               'TrackMVA' :    {'TrChi2'      :     2.5,
+                                                                'MinPT'       :  1000.  * MeV,
+                                                                'MaxPT'       : 25000.  * MeV,
+                                                                'MinIPChi2'   :     7.4,
+                                                                'Param1'      :     0.6,
+                                                                'Param2'      :     1.0,
+                                                                'Param3'      :     1.1,
+                                                                'GEC'         : 'Loose'},
+                                               'TwoTrackMVA' : {'P'           :  5000. * MeV,
+                                                                'PT'          :   500. * MeV,
+                                                                'TrChi2'      :     2.5,
+                                                                'IPChi2'      :     4.,
+                                                                'MinMCOR'     :  1000. * MeV,
+                                                                'MaxMCOR'     :   1e9  * MeV,
+                                                                'MinETA'      :     2.,
+                                                                'MaxETA'      :     5.,
+                                                                'MinDirA'     :     0.,
+                                                                'V0PT'        :  2000. * MeV,
+                                                                'VxChi2'      :    10.,
+                                                                'Threshold'   :     0.937,
+                                                                'MvaVars'     : {'chi2'   : 'VFASPF(VCHI2)',
+                                                                                 'fdchi2' : 'BPVVDCHI2',
+                                                                                 'sumpt'  : 'SUMTREE(PT, ISBASIC, 0.0)',
+                                                                                 'nlt16'  : 'NINTREE(ISBASIC & (BPVIPCHI2() < 16))'},
+                                                                'Classifier'  : {'Type'   : 'MatrixNet',
+                                                                                 'File'   : '$PARAMFILESROOT/data/Hlt1TwoTrackMVA.mx'},
+                                                                'GEC'         : 'Loose'},
+                                               'L0Channels'  : {'TrackMVA'    : 'L0_DECISION_PHYSICS',
+                                                                'TwoTrackMVA' : 'L0_DECISION_PHYSICS'},
+                                               'Priorities'  : {'TrackMVA'    : 20,
+                                                                'TwoTrackMVA' : 21}
                                                }
                      , Hlt1ElectronLinesConf : { 'SingleElectronNoIP_P'          : 20000
                                                , 'SingleElectronNoIP_PT'         : 10000
@@ -124,13 +160,11 @@ class Commissioning_Physics_2015( object ):
                                                , 'MultiMuonNoIP_TrChi2'     :    3.
                                                , 'MultiMuonNoIP_GT'         :  2.5
                                                , 'MultiMuonNoIP_GEC'        : 'Loose'
-                                               ,'L0Channels'               : {
-                                                   'SingleMuonHighPT' : ( 'Muon', 'MuonNoSPD'),
-                                                   'SingleMuonNoIP'   : ( 'Muon', 'MuonNoSPD'),
-                                                   'DiMuonLowMass'    : ( 'Muon', 'MuonNoSPD', 'DiMuon', 'DiMuonNoSPD' ),
-                                                   'DiMuonHighMass'   : ( 'Muon', 'MuonNoSPD', 'DiMuon', 'DiMuonNoSPD' ),
-                                                   'MultiMuonNoIP'    : ( 'Muon', 'MuonNoSPD', 'DiMuon', 'DiMuonNoSPD' ) }
-
+                                               ,'L0Channels'               : {'SingleMuonHighPT' : ( 'Muon',),
+                                                                              'SingleMuonNoIP'   : ( 'Muon',),
+                                                                              'DiMuonLowMass'    : ( 'Muon', 'DiMuon' ),
+                                                                              'DiMuonHighMass'   : ( 'Muon', 'DiMuon' ),
+                                                                              'MultiMuonNoIP'    : ( 'Muon', 'DiMuon' ) }
                                                , 'Prescale'                 : { 'Hlt1SingleMuonNoIP' : 0.01,
                                                                                 'Hlt1MultiMuonNoIP'  : 0.0 }
                                                }
@@ -223,7 +257,9 @@ class Commissioning_Physics_2015( object ):
                  , 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
                  , 'Hlt1SingleElectronNoIP'
                  , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
-                 , 'Hlt1TrackMVA', 'Hlt1TwoTrackMVA' ]
+                 , 'Hlt1TrackMVA', 'Hlt1TwoTrackMVA'
+                 , 'Hlt1CalibTrackingKK', 'Hlt1CalibTrackingKPi'
+                 , 'Hlt1CalibTrackingPiPi' ]
                  ## [ 'Hlt1L0HighSumETJet','Hlt1HighPtJetsSinglePV']
         
         ## from Hlt1TechnicalLines import Hlt1TechnicalLines 
