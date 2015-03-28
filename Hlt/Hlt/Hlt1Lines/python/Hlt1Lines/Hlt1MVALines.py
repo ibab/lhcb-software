@@ -23,9 +23,10 @@ class Hlt1MVALinesConf( HltLinesConfigurableUser ) :
                  'TrackMVA' :    {'MinPT'       :  1000.  * MeV,
                                   'MaxPT'       : 25000.  * MeV,
                                   'MinIPChi2'   :     7.4,
-                                  'Param1'      :     0.5,
+                                  'TrChi2'      :     2.5,
+                                  'Param1'      :     0.6,
                                   'Param2'      :     1.0,
-                                  'Param3'      :     1.0,
+                                  'Param3'      :     1.1,
                                   'GEC'         : 'Loose'},
                  'TwoTrackMVA' : {'P'           :  5000. * MeV,
                                   'PT'          :   500. * MeV,
@@ -36,7 +37,6 @@ class Hlt1MVALinesConf( HltLinesConfigurableUser ) :
                                   'MinETA'      :     2.,
                                   'MaxETA'      :     5.,
                                   'MinDirA'     :     0.,
-                                  'DOCA'        :  1000. * mm,
                                   'V0PT'        :  2000. * MeV,
                                   'VxChi2'      :    10.,
                                   'Threshold'   :     0.937,
@@ -109,11 +109,13 @@ class Hlt1MVALinesConf( HltLinesConfigurableUser ) :
             Monitor = True,
             Code = """
             SELECTION('%(input)s')
-            >> (((PT > %(MaxPT)s) & (BPVIPCHI2() > %(MinIPChi2)s))
-                | ( in_range( %(MinPT)s, PT, %(MaxPT)s) &
-                   (log(BPVIPCHI2()) > (%(Param1)s / ((PT / GeV - %(Param2)s) ** 2)  + 
-                                       (%(Param3)s / %(MaxPT)s) * (%(MaxPT)s   - PT) +
-                                        math.log(%(MinIPChi2)s)))))
+            >> (TRCHI2DOF < %(TrChi2)s)
+            >> (((PT > %(MaxPT)s) &
+                 (BPVIPCHI2() > %(MinIPChi2)s)) |
+                ( in_range( %(MinPT)s, PT, %(MaxPT)s) &
+                 (log(BPVIPCHI2()) > (%(Param1)s / ((PT / GeV - %(Param2)s) ** 2)  + 
+                                     (%(Param3)s / %(MaxPT)s) * (%(MaxPT)s   - PT) +
+                                     math.log(%(MinIPChi2)s)))))
             >> SINK('Hlt1%(name)sDecision')
             >> ~TC_EMPTY
             """ % props,
@@ -130,9 +132,9 @@ class Hlt1MVALinesConf( HltLinesConfigurableUser ) :
         props['input'] = inputParticles.outputSelection()
         props['name']  = name
         preambulo = self.mvaPreambulo()
-        preambulo += [ "from LoKiArrayFunctors.decorators import APT, ACUTDOCA",
+        preambulo += [ "from LoKiArrayFunctors.decorators import APT, ACUTDOCACHI2",
                       ("%(name)sCombinationConf = LoKi.Hlt1.Hlt1CombinerConf(strings(['K*(892)0 -> pi- pi+', '[K*(892)0 -> pi+ pi+]cc'])," +
-                       "((APT > %(V0PT)s) & (ACUTDOCA(%(DOCA)s,'LoKi::DistanceCalculator'))), ALL)") % props]
+                       "((APT > %(V0PT)s) & (ACUTDOCACHI2(%(VxChi2)s,''))), ALL)") % props]
 
         from Configurables import LoKi__HltUnit as HltUnit
         unit = HltUnit(

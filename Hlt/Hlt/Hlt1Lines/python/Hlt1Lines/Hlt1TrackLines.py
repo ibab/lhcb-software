@@ -96,11 +96,11 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         >>  tee  ( monitor( TC_SIZE > 0, '# pass track quality', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nTrQ' , LoKi.Monitoring.ContextSvc ) )
         >>  ( ( TrPT > %(PT)s * MeV ) & \
-        ( TrP  > %(P)s  * MeV ) )
+              ( TrP  > %(P)s  * MeV ) )
         >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nP' , LoKi.Monitoring.ContextSvc ) )
         >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & \
-        ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
+              ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
         >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackChi2/IPChi2', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nChi2' , LoKi.Monitoring.ContextSvc ) )
         >> SINK( 'Hlt1%(name)sDecision' )
@@ -131,11 +131,11 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         >>  tee  ( monitor( TC_SIZE > 0, '# pass VeloQ/IP', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nVeloIP' , LoKi.Monitoring.ContextSvc ) )
         >>  ( ( TrPT > %(PT)s * MeV ) & \
-        ( TrP  > %(P)s  * MeV ) )
+              ( TrP  > %(P)s  * MeV ) )
         >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nP' , LoKi.Monitoring.ContextSvc ) )
         >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & \
-        ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
+              ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
         >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackChi2/IPChi2', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nChi2' , LoKi.Monitoring.ContextSvc ) )
         >>  IsMuon

@@ -5,9 +5,13 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-03-28 - Roel Aaij
+ - Update TrackMVA parameters and add track chi^2 cut.
+ - Replace DOCA with DOCACHI2 in TwoTrackMVA.
+
 ! 2015-03-27 - Roel Aaij
- - Add a few preselection cuts to Hlt1TwoTrackMVA and allow usage of BBDT or
-   MatrixNet.
+ - Add a few preselection cuts to Hlt1TwoTrackMVA and allow usage of
+   BBDT or MatrixNet.
  - Update MVA input variables.
 
 ! 2015-03-27 Christian Linn
