@@ -116,7 +116,9 @@ def _f1_draw_ ( self , *opts ) :
                                Gaudi.Math.Convex           , 
                                Gaudi.Math.PositiveSpline   , 
                                Gaudi.Math.MonothonicSpline , 
-                               Gaudi.Math.ConvexSpline     ) :
+                               Gaudi.Math.ConvexSpline     ,
+                               Gaudi.Math.ExpoPositive     ,
+                               Gaudi.Math.TwoExpoPositive  ) :                                
                 self._tf1.SetMinimum(0)
             
     return self._tf1.Draw ( *opts )
@@ -297,10 +299,12 @@ for model in ( Gaudi.Math.Bernstein         ,
                Gaudi.Math.ChebyshevSum      ,               
                Gaudi.Math.LegendreSum       ,               
                Gaudi.Math.Polynomial        ,               
+               Gaudi.Math.ExpoPositive      , 
+               Gaudi.Math.TwoExpoPositive   , 
                #
                Gaudi.Math.BSpline           ,
-               Gaudi.Math.PositiveSpline    ,
-               Gaudi.Math.MonothonicSpline  ) :
+               Gaudi.Math.MonothonicSpline  ,
+               Gaudi.Math.PositiveSpline    ) : 
     
     model.draw = _f1_draw_
     
@@ -351,6 +355,7 @@ for pdf in ( Analysis.Models.BreitWigner          ,
              Analysis.Models.BW23L              , 
              Analysis.Models.PolyPositive       ,
              Analysis.Models.ExpoPositive       ,
+             Analysis.Models.TwoExpoPositive    ,
              Analysis.Models.PositiveSpline     ,
              Analysis.Models.MonothonicSpline   , 
              

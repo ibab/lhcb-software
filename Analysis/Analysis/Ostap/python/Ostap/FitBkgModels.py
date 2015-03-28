@@ -20,22 +20,23 @@ __version__ = "$Revision:"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-07-25"
 __all__     = (
-    'Bkg_pdf'        , ## An exponential function, modulated by positiev polynomial
-    'PSPol_pdf'      , ## A phase space  function, modulated by positive polynomial
-    'PolyPos_pdf'    , ## A positive polynomial
-    'Monothonic_pdf' , ## A positive monothonic polynomial
-    'Convex_pdf'     , ## A positive polynomial with fixed sign first and second derivatives 
-    'Sigmoid_pdf'    , ## Background: sigmoid modulated by positive polynom 
+    'Bkg_pdf'         , ## An exponential function, modulated by positiev polynomial
+    'PSPol_pdf'       , ## A phase space  function, modulated by positive polynomial
+    'PolyPos_pdf'     , ## A positive polynomial
+    'Monothonic_pdf'  , ## A positive monothonic polynomial
+    'Convex_pdf'      , ## A positive polynomial with fixed sign first and second derivatives 
+    'Sigmoid_pdf'     , ## Background: sigmoid modulated by positive polynom 
+    'TwoExpoPoly_pdf' , ## difference of two exponents, modulated by positive polynomial
     ##
-    'PSpline_pdf' , ## positive            spline 
-    'MSpline_pdf' , ## positive monothonic spline 
-    'CSpline_pdf' , ## positive monothonic convex or concave spline 
+    'PSpline_pdf'     , ## positive            spline 
+    'MSpline_pdf'     , ## positive monothonic spline 
+    'CSpline_pdf'     , ## positive monothonic convex or concave spline 
     ##
-    'PS2_pdf'     , ## 2-body phase space (no parameters)
-    'PSLeft_pdf'  , ## Low  edge of N-body phase space 
-    'PSRight_pdf' , ## High edge of L-body phase space from N-body decays  
-    'PSNL_pdf'    , ## L-body phase space from N-body decays  
-    'PS23L_pdf'   , ## 2-body phase space from 3-body decays with orbital momenta
+    'PS2_pdf'         , ## 2-body phase space (no parameters)
+    'PSLeft_pdf'      , ## Low  edge of N-body phase space 
+    'PSRight_pdf'     , ## High edge of L-body phase space from N-body decays  
+    'PSNL_pdf'        , ## L-body phase space from N-body decays  
+    'PS23L_pdf'       , ## 2-body phase space from 3-body decays with orbital momenta
     )
 # =============================================================================
 import ROOT, math
@@ -163,6 +164,88 @@ class PSPol_pdf(PDF) :
             self.phi_list        )
 
 models.append ( PSPol_pdf ) 
+# =============================================================================
+## @class  TwoExpoPoly_pdf
+#  Difference of two exponents, modulated by positive polynomial 
+#  @see Analysis::Models::TwoExpoPositive
+#  @see Gaudi::Math::TwoExpoPositive
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2015-03-26
+class TwoExpoPoly_pdf(PDF) :
+    """
+    Difference of two exponential function, modulated by the positive polynomial:
+    
+    f(x) ~ ( exp(-alpha*x) - exp(-(alpha_delta)*x) *  Pol_n(x)
+    where Pol_n(x) is POSITIVE polynomial (Pol_n(x)>=0 over the whole range) 
+    
+    >>>  mass = ROOT.RooRealVar( ... ) 
+    >>>  bkg  = TwoExpoPolu_pdf ( 'B' , mass , alpah = 1 , delta = 1 , x0 = 0 , power = 3 )
+    
+    """
+    ## constructor
+    def __init__ ( self             ,
+                   name             ,   ## the name 
+                   mass             ,   ## the variable
+                   alpha = None     ,   ## the slope of the first exponent 
+                   delta = None     ,   ## (alpha+delta) is the slope of the first exponent
+                   x0    = 0        ,   ## f(x)=0 for x<x0 
+                   power = 0        ,   ## degree of polynomial
+                   tau   = None     ) : ##  
+        #
+        PDF.__init__  ( self , name )
+        #                
+        self.mass  = mass
+        self.power = power
+        #
+        mn,mx   = mass.minmax()
+        mc      = 0.5 * ( mn + mx )
+        taumax  = 100
+        #
+        if not iszero ( mn ) : taumax =                100.0 / abs ( mn ) 
+        if not iszero ( mc ) : taumax = min ( taumax , 100.0 / abs ( mc ) )
+        if not iszero ( mx ) : taumax = min ( taumax , 100.0 / abs ( mx ) )
+        # 
+        ## the exponential slope
+        #
+        self.alpha  = makeVar ( alpha               ,
+                                "alpha_%s"   % name ,
+                                "#alpha(%s)" % name , alpha , 1 , 0 , taumax )
+        
+        self.delta  = makeVar ( delta               ,
+                                "delta_%s"   % name ,
+                                "#delta(%s)" % name , delta , 1 , 0 , taumax )
+        
+        self.x0     = makeVar ( x0                 ,
+                                "x0_%s"     % name ,
+                                "x_{0}(%s)" % name , x0  ,
+                                mn , mn-0.5*(mx-mn) , mx+0.5*(mx-mn) ) 
+        #
+        # 
+        if 0 >= self.power :
+            
+            self.phis     = []
+            self.phi_list = ROOT.RooArgList ()
+            self.pdf      = ROOT.RooExponential (
+                'exp_%s' % name  , 'exp(%s)' % name , mass , self.tau )
+            
+        else :
+            
+            # 
+            self.makePhis ( power ) 
+            #
+            
+            self.pdf  = cpp.Analysis.Models.TwoExpoPositive (
+                '2expopos_%s'  % name ,
+                '2expopos(%s)' % name ,
+                mass                  ,
+                self.alpha            ,
+                self.delta            ,
+                self.x0               ,
+                self.phi_list         ,
+                mass.getMin()         ,
+                mass.getMax()         )
+
+models.append ( TwoExpoPoly_pdf ) 
 # =============================================================================
 ## @class  PolyPos_pdf
 #  A positive polynomial 

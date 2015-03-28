@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-03-28 - Vanya Belyaev
+ - extend  the tests 
+
 ! 2015-03-25 - Vanya Belyaev
  - reduce printout from Utils 
 

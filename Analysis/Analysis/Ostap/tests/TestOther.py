@@ -302,6 +302,25 @@ else :
 
 
 # =============================================================================
+logger.info("Test  Poly(2)*Expo2 -Distribution")
+# =============================================================================
+m_p2e2 = Models.TwoExpoPoly_pdf('P2e2'  , x , power = 2 )
+m_p2e2.x0.fix(0)
+with rooSilent() : 
+    result,f  = m_p2e2.fitTo ( dataset2 )  
+    result,f  = m_p2e2.fitTo ( dataset2 )  
+    
+if 0 != result.status() or 3 != result.covQual() :
+    logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
+    print result
+else :
+    print  "\tPoly2e2    alpha=  %s " % result( m_p2e2. alpha      .GetName()  )[0]   
+    print  "\tPoly2e2    delta=  %s " % result( m_p2e2. delta     .GetName()  )[0]   
+    for phi in m_p2e2.phis : 
+        print  "\tPoly2e2:      phi=  %s " % phi.ve() 
+
+
+# =============================================================================
 logger.info("Test  Poly(6)-Distribution")
 # =============================================================================
 m_p6 = Models.PolyPos_pdf('P6'  , x , power = 6 )
