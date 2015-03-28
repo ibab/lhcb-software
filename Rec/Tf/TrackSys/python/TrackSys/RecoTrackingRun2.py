@@ -118,9 +118,9 @@ def RecoTrackingHLT1(exclude=[]):
       track.DetectorList += ["VeloTTPatHLT1"]
       from Configurables import PatVeloTTHybrid
       GaudiSequencer("TrackVeloTTPatSeq").Members += [ PatVeloTTHybrid("PatVeloTTHybrid")]
-       from PatVeloTTAlgConf import PatVeloTTConf
-       PatVeloTTConf.PatVeloTTConf().configureAlgRunII()
-       if TrackSys().timing() :
+      from PatVeloTTAlgConf import PatVeloTTConf
+      PatVeloTTConf.PatVeloTTConf().configureAlgRunII()
+      if TrackSys().timing() :
          PatVeloTTHybrid("PatVeloTTHybrid").TimingMeasurement = True;
       tracklists += ["Rec/Track/VeloTTHybrid"]
       

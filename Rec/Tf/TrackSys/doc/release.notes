@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-03-28 - Michel De Cian
+ - Fix indentation error in 'RecoTrackingRun2.py'
+
 ! 2015-03-27 - Michel De Cian
  - Add 'RecoTrackingRun2.py' that will contain the tracking options for run2. This is not in a working state at the moment, but is also not called anywhere
 
