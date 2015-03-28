@@ -57,6 +57,7 @@ BooleInit::BooleInit( const std::string& name,
   declareProperty ( "ThresDiffractive",  m_thresDiffractive );
   declareProperty ( "ThresElastic",  m_thresElastic );
   declareProperty ( "ThresTiggerType",  m_threstrigger= 0.05 );
+  declareProperty ( "SetOdinRndTrigger",  m_odinRndTrig= false );
 
 }
 //=============================================================================
@@ -170,7 +171,6 @@ void BooleInit::simpleOdin(LHCb::ODIN* odin) {
   LHCb::ODIN::TriggerType TriggerType  = LHCb::ODIN::LumiTrigger;
   LHCb::ODIN::BXTypes     BXType       = LHCb::ODIN::BeamCrossing;
   unsigned int            BunchCurrent = 8 + (8<<4);
-  unsigned int            EventType = 1 << 2;
   
   if(msgLevel(MSG::DEBUG)) debug() <<"Bunch crossing type: " << BXType 
                                    << " TriggerType " << TriggerType 
@@ -180,7 +180,11 @@ void BooleInit::simpleOdin(LHCb::ODIN* odin) {
   odin->setBunchCrossingType( BXType );
   odin->setTriggerType( TriggerType );
   odin->setBunchCurrent( BunchCurrent );
-  odin->setEventType(EventType);
+
+   if(m_odinRndTrig){
+     unsigned int EventType = 1 << 2;
+     odin->setEventType(EventType);
+   }
 }
 
 void BooleInit::modifyOdin(LHCb::ODIN* odin) {
@@ -230,7 +234,6 @@ void BooleInit::modifyOdin(LHCb::ODIN* odin) {
   // set the types
   LHCb::ODIN::TriggerType TriggerType  = LHCb::ODIN::LumiTrigger;
   LHCb::ODIN::BXTypes     BXType       = LHCb::ODIN::NoBeam;
-  unsigned int            EventType = 1 << 2;
   unsigned int            BunchCurrent = 0;
   if (interaction==2) {
     if (trigRandNumber > m_threstrigger){
@@ -271,7 +274,11 @@ void BooleInit::modifyOdin(LHCb::ODIN* odin) {
   odin->setBunchCrossingType( BXType );
   odin->setTriggerType( TriggerType );
   odin->setBunchCurrent( BunchCurrent );
-  odin->setEventType(EventType);
+  
+  if(m_odinRndTrig){
+     unsigned int EventType = 1 << 2;
+     odin->setEventType(EventType);
+   }
   
 }
 //=============================================================================

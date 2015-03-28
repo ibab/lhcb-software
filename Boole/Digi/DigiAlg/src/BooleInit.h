@@ -42,5 +42,6 @@ private:
   std::vector<double> m_thresDiffractive;
   std::vector<double> m_thresElastic;
   double m_threstrigger;
+  bool m_odinRndTrig;
 };
 #endif // BOOLEINIT_H

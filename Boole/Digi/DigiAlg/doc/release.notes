@@ -4,6 +4,8 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-03-28 - Christian Linn
+ - Added property SetOdinRndTrigger to switch on ODIN random trigger via event type bit
 
 ! 2015-03-27 - Christian Linn
  - Set odin event type configuration: EventType = 1<<2 
