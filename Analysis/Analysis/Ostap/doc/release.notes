@@ -9,6 +9,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-03-28 - Vanya Belyaev
+ - remove creation of helper temporary canvas
+
+! 2015-03-28 - Vanya Belyaev
  - extend  the tests 
 
 ! 2015-03-25 - Vanya Belyaev

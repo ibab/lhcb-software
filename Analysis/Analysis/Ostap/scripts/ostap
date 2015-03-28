@@ -1,6 +1,7 @@
 #!/usr/bin/env python 
+# -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: pyroot 135439 2012-02-16 11:54:25Z ibelyaev $ 
+# $Id:$ 
 # =============================================================================
 ## @file ostap
 #  
@@ -15,7 +16,7 @@
 #                                           o888o      
 #                                                    
 #  Simple interactive PyRoot-based analysis environment to provide access
-#  to zillions useful decorators for ROOT (and not only ROOT) objects&classes  
+#  to zillions useful decorators for ROOT (and not only ROOT!) objects&classes  
 # 
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
@@ -34,12 +35,12 @@
 #  @date   2012-02-15
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #
-#                    $Revision: 135439 $
-#  Last modification $Date: 2012-02-16 12:54:25 +0100 (Thu, 16 Feb 2012) $
-#                 by $Author: ibelyaev $
+#                    $Revision:$
+#  Last modification $Date:$
+#                 by $Author:$
 # =============================================================================
-""" Simple interactibe PyRoot-based analysis environment to provide access to zillion
-    useful decorators for ROOT (and not only ROOT) objects&classes  
+""" Simple interactive PyRoot-based analysis environment to provide access to zillion
+    useful decorators for ROOT (and not only ROOT!) objects&classes  
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
@@ -47,22 +48,17 @@ __date__    = "2012-09-10"
 __version__ = '$Revision: 135439 $'
 # =============================================================================
 import ROOT
-print 'WARNING/TEMPORARY solution: create temporary Canvas'
-ctmp = ROOT.TCanvas('cTMP','cTMP',100,100)
 # =============================================================================
 # logging 
 # =============================================================================
 from AnalysisPython.Logger import getLogger 
 _my_name_ = __name__
-if '__main__' == _my_name_ : _my_name_ = 'ostap'
+if _my_name_ in ( '__main__' , '__builtins__' ) : _my_name_ = 'ostap'
 # =============================================================================
 logger = getLogger( _my_name_ )
 # =============================================================================
-# import everythinng from Ostap  
+# import everything from Ostap  
 from   Ostap.OstapBender import * 
-#  and delete the temporary canvas 
-logger.warning ( 'TEMPORARY solution: delete temporary Canvas')
-del ctmp
 # =============================================================================
 ## execute the files, defined as arguments
 import sys,os, glob 
@@ -119,7 +115,11 @@ if sys.argv[1:] :
     del _skept
     del _mykeys 
     del _myself 
-    
+
+
+#
+## here we need interactive prompt
+#
 import IPython
 IPython.embed()
 exit() 
