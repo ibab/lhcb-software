@@ -4347,6 +4347,139 @@ Double_t Analysis::Models::ExpoPositive::analyticalIntegral
 
 
 // ============================================================================
+// generic polinomial times exponent 
+// ============================================================================
+Analysis::Models::TwoExpoPositive::TwoExpoPositive
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          alpha     , 
+  RooAbsReal&          delta     , 
+  RooAbsReal&          x0        , 
+  const RooArgList&    phis      , 
+  const double         xmin      , 
+  const double         xmax      ) 
+  : RooAbsPdf ( name , title ) 
+  , m_x        ( "x"       , "Observable"   , this , x     ) 
+  , m_alpha    ( "alpha"   , "slope 1"      , this , alpha )
+  , m_delta    ( "delta"   , "delta slope"  , this , delta )
+  , m_x0       ( "x0"      , "threshold"    , this , x0    )
+  , m_phis     ( "phi"     , "Coefficients" , this )
+//
+  , m_iterator ( 0 ) 
+    //
+  , m_2expopos ( phis.getSize() , 1 , 2 , 1 , xmin , xmax ) 
+{
+  //
+  TIterator* tmp  = phis.createIterator() ;
+  RooAbsArg* coef = 0 ;
+  while ( ( coef = (RooAbsArg*) tmp->Next() ) )
+  {
+    RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
+    if ( 0 == r ) { continue ; }
+    m_phis.add ( *coef ) ;
+  }
+  delete tmp ;
+  //
+  m_iterator = m_phis.createIterator() ;
+  setPars () ;
+  //
+}
+// ============================================================================
+// copy constructor
+// ============================================================================
+Analysis::Models::TwoExpoPositive::TwoExpoPositive
+( const Analysis::Models::TwoExpoPositive&  right ,      
+  const char*                               name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x        ( "x"      , this , right.m_x     ) 
+  , m_alpha    ( "alpha"  , this , right.m_alpha )
+  , m_delta    ( "delta"  , this , right.m_delta )
+  , m_x0       ( "x0"     , this , right.m_x0    )
+  , m_phis     ( "phis"   , this , right.m_phis  ) 
+//
+  , m_iterator ( 0 ) 
+//
+  , m_2expopos ( right.m_2expopos ) 
+{
+  m_iterator = m_phis.createIterator () ;
+  setPars () ;
+  //
+}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::TwoExpoPositive::~TwoExpoPositive() { delete m_iterator ; }
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::TwoExpoPositive*
+Analysis::Models::TwoExpoPositive::clone( const char* name ) const 
+{ return new Analysis::Models::TwoExpoPositive(*this,name) ; }
+// ============================================================================
+void Analysis::Models::TwoExpoPositive::setPars () const 
+{
+  //
+  m_iterator->Reset () ;
+  //
+  RooAbsArg*       phi   = 0 ;
+  const RooArgSet* nset  = m_phis.nset() ;
+  //
+  std::vector<double> sin2phi ;
+  //
+  unsigned short k = 0 ;
+  while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
+  {
+    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
+    if ( 0 == r ) { continue ; }
+    //
+    const double phi   = r->getVal ( nset ) ;
+    //
+    m_2expopos.setPar ( k  , phi ) ;
+    //
+    ++k ;
+  }
+  //
+  m_2expopos.setAlpha ( m_alpha ) ;
+  m_2expopos.setDelta ( m_delta ) ;
+  m_2expopos.setX0    ( m_x0    ) ;
+}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::TwoExpoPositive::evaluate() const 
+{
+  //
+  setPars () ;
+  //
+  return m_2expopos( m_x   ) ;
+}
+// ============================================================================
+Int_t Analysis::Models::TwoExpoPositive::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if ( matchArgs ( allVars , analVars , m_x ) ) { return 1 ; }
+  return 0 ;
+}
+// ============================================================================
+Double_t Analysis::Models::TwoExpoPositive::analyticalIntegral 
+( Int_t       code      , 
+  const char* rangeName ) const 
+{
+  assert ( code == 1 ) ;
+  if ( 1 != code ) {}
+  //
+  setPars () ;
+  //
+  return m_2expopos.integral ( m_x.min(rangeName) , m_x.max(rangeName) ) ;
+}
+// ============================================================================
+
+
+// ============================================================================
 // constructor from all parameters 
 // ============================================================================
 Analysis::Models::GammaDist::GammaDist

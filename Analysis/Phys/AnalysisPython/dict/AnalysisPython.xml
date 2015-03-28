@@ -53,6 +53,7 @@
   <class name = "Analysis::Models::PolyConvex"        />
   <class name = "Analysis::Models::PolySigmoid"       />
   <class name = "Analysis::Models::ExpoPositive"      />
+  <class name = "Analysis::Models::TwoExpoPositive"   />
   <class name = "Analysis::Models::PositiveSpline"    />
   <class name = "Analysis::Models::MonothonicSpline"  />
   <class name = "Analysis::Models::ConvexSpline"      />

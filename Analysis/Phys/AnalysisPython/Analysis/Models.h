@@ -2736,6 +2736,11 @@ namespace Analysis
       /// set all parameters 
       void setPars () const ; // set all parameters 
       // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::ExpoPositive& function() const { return m_positive ; }
+      // ======================================================================
     protected :
       // ======================================================================
       RooRealProxy m_x    ;
@@ -2825,6 +2830,88 @@ namespace Analysis
       // ======================================================================
       /// the actual function 
       mutable Gaudi::Math::Sigmoid m_sigmoid ;                 // the function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class TwoExpoPositive
+     *  simple difference of two exponents modulated with positive polynomials 
+     *  \f$ f(x) = e_2(x) * p_n(x) \f$, where 
+     *  \f$ e_2(x) \propto 
+     *        \mathrm{e}^{-a_1    x}       -\mathrm{e}^{-a_2 x} = 
+     *        \mathrm{e}^{-\alpha x}\left(1-\mathrm{e}^{-\delta x}\right) \f$
+     *  @see Gaudi::Math::TwoExpoPositive
+     *  @see Gaudi::Math::ExpoPositive
+     *  @see Gaudi::Math::Positive
+     *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
+     *  @date 2011-05-25
+     */
+    class GAUDI_API TwoExpoPositive: public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::TwoExpoPositive, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// general 
+      TwoExpoPositive
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          alpha     , 
+        RooAbsReal&          delta     , 
+        RooAbsReal&          x0        , 
+        const RooArgList&    coeffs    ,
+        const double         xmin      , 
+        const double         xmax      ) ;
+      /// copy
+      TwoExpoPositive
+        ( const TwoExpoPositive& right     , 
+          const char*           name = 0  ) ;
+      /// destructor 
+      virtual ~TwoExpoPositive() ;
+      /// clone 
+      virtual  TwoExpoPositive* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      const Gaudi::Math::TwoExpoPositive& function() const { return m_2expopos ; }
+      // ======================================================================
+    protected :
+      // ======================================================================
+      RooRealProxy m_x     ;
+      RooRealProxy m_alpha ;
+      RooRealProxy m_delta ;
+      RooRealProxy m_x0    ;
+      RooListProxy m_phis  ;
+      // ======================================================================
+      TIterator* m_iterator;  //! do not persist
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::TwoExpoPositive m_2expopos;         // the function 
       // ======================================================================
     } ;
     // ========================================================================
