@@ -118,8 +118,8 @@ def RecoTrackingHLT1(exclude=[]):
       track.DetectorList += ["VeloTTPatHLT1"]
       from Configurables import PatVeloTTHybrid
       GaudiSequencer("TrackVeloTTPatSeq").Members += [ PatVeloTTHybrid("PatVeloTTHybrid")]
-      from PatVeloTTAlgConf import PatVeloTTConf
-      PatVeloTTConf.PatVeloTTConf().configureAlgRunII()
+      from PatVeloTT import PatVeloTTAlgConf
+      PatVeloTTAlgConf.PatVeloTTConf().configureAlgRunII()
       if TrackSys().timing() :
          PatVeloTTHybrid("PatVeloTTHybrid").TimingMeasurement = True;
       tracklists += ["Rec/Track/VeloTTHybrid"]
@@ -139,6 +139,8 @@ def RecoTrackingHLT1(exclude=[]):
       
 def RecoTrackingHLT2(exclude=[]):
    '''Function that defines the pattern recognition algorithms for the HLT2 sequence of the Run 2 offline tracking'''
+
+   tracklists = []
    
    ## Forward pattern
    if "Forward" in trackAlgs :
@@ -200,17 +202,17 @@ def RecoTrackingHLT2(exclude=[]):
    track.DetectorList += ["Fit"]
    
    # complete the list of track lists
-      if "Velo" in trackAlgs or "FastVelo" in trackAlgs :
-         tracklists += ["Rec/Track/Velo"]
-      # create the best track creator
-      from Configurables import TrackBestTrackCreator
-      bestTrackCreator = TrackBestTrackCreator( TracksInContainers = tracklists )
-      # configure its fitter and stateinittool
-      ConfiguredMasterFitter( bestTrackCreator.Fitter )
-      if "FastVelo" in trackAlgs :
-         bestTrackCreator.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
-      # add to the sequence
-      GaudiSequencer("TrackFitSeq").Members.append( bestTrackCreator )
+   if "FastVelo" in trackAlgs :
+      tracklists += ["Rec/Track/Velo"]
+   # create the best track creator
+   from Configurables import TrackBestTrackCreator
+   bestTrackCreator = TrackBestTrackCreator( TracksInContainers = tracklists )
+   # configure its fitter and stateinittool
+   ConfiguredMasterFitter( bestTrackCreator.Fitter )
+   if "FastVelo" in trackAlgs :
+      bestTrackCreator.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
+   # add to the sequence
+   GaudiSequencer("TrackFitSeq").Members.append( bestTrackCreator )
 
    ### Change dEdx correction for simulated data
    if TrackSys().getProp("Simulation"):

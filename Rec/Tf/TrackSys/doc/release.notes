@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-03-28 - Michel De Cian
+ - Fix another renaming and indentation error in 'RecoTrackingRun2.py'
+
 ! 2015-03-28 - Roel Aaij
  - Fix renaming error for DataType != "2015".
 
