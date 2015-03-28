@@ -39,11 +39,11 @@ class Hlt2TisTosGlobalTagger(Hlt2Stage):
 
     def particleCut(self, keys):
         keys = makeList(keys)
-        return ' & '.join(('(MAXTREE(ISBASIC, TINFO({0}, -1)) > 0.5)'.format(k) for k in keys))
+        return ' & '.join(('(MAXTREE(HASTRACK, TINFO({0}, -1)) > 0.5)'.format(k) for k in keys))
 
     def combinationCut(self, keys):
         keys = makeList(keys)
-        return ' & '.join(("(AMAXCHILD(MAXTREE(ISBASIC, TINFO({0}, -1))) > 0.5)".format(k) for k in keys))
+        return ' & '.join(("(AMAXCHILD(MAXTREE(HASTRACK, TINFO({0}, -1))) > 0.5)".format(k) for k in keys))
 
     def infoKeys(self, specs):
         specs = makeList(specs)

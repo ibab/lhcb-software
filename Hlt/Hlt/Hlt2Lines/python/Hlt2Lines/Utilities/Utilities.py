@@ -67,7 +67,7 @@ def makeStages(stages, source, cuts):
             else:
                 direct_stages.append(stgs)
         else:
-            stages.append(i)
+            direct_stages.append(i)
     return direct_stages
             
 def allCuts(conf):
