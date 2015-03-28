@@ -323,7 +323,7 @@ class Derivative(object) :
 #  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-06-06
-def integral ( func , x0 , x , err = False ) :
+def integral ( func , x0 , x , err = False , *args ) :
     """
     Calculate the integral for the 1D-function using scipy
     
@@ -331,7 +331,7 @@ def integral ( func , x0 , x , err = False ) :
     >>> i = integral(func,0,1)
     """
     from scipy import integrate
-    result = integrate.quad ( func , x0 , x )
+    result = integrate.quad ( func , x0 , x , args = args )
     return VE( result[0] , result[1] * result[1] ) if err else result[0] 
 
 # =============================================================================
@@ -349,7 +349,7 @@ class Integral(object) :
     Calculate the integral for the 1D-function using scipy
     """
     ## Calculate the integral for the 1D-function using scipy
-    def __init__ ( self , func , x0 = 0 , err = False ) :
+    def __init__ ( self , func , x0 = 0 , err = False , *args ) :
         """
         Calculate the integral for the 1D-function using scipy
         
@@ -358,9 +358,11 @@ class Integral(object) :
         """
         self._func   = func 
         self._x0     = x0
-        self._err    = err 
+        self._err    = err
+        self._args   = args
+        
     ## Calculate the integral for the 1D-function using scipy
-    def __call__ ( self , x ) :
+    def __call__ ( self , x , *args ) :
         """
         Calculate the integral for the 1D-function using scipy
         
@@ -369,7 +371,8 @@ class Integral(object) :
         >>> func_0 ( 10 ) 
         """
         from scipy import integrate
-        result = integrate.quad ( self._func , self._x0 , x )
+        args   = args if args else self._args 
+        result = integrate.quad ( self._func , self._x0 , x , args = args )
         return VE ( result[0] , result[1] * result[1] ) if self._err else result[0] 
 
 # =============================================================================
@@ -392,7 +395,7 @@ class Moment(object) :
     
     """
     ## constructor
-    def __init__ ( self , N , xmin , xmax , err = False , x0 = 0 ) :
+    def __init__ ( self , N , xmin , xmax , err = False , x0 = 0 , *args ) :
         """
         Contructor 
         """
@@ -404,17 +407,21 @@ class Moment(object) :
         self._xmax = xmax
         self._x0   = x0  
         self._err  = err
-
+        self._args = args
+        
     ## calculate un-normalized k-moment  
     def _moment0_ ( self , func , *args ) :
         from scipy import integrate
+        args = args if args else self._args 
         return integrate.quad ( func , self._xmin , self._xmax , args = args )
-    
+        
     ## calculate un-normalized k-moment  
     def _momentK_ ( self , k , func , *args ) :
         from scipy import integrate
         x0     = self._x0 
         func_N = lambda x,*a : func( x , *a ) * ( ( x - x0 ) ** k  )
+        ##
+        args = args if args else self._args 
         return integrate.quad ( func_N , self._xmin , self._xmax , args = args )
     
     ## calculate the moment 

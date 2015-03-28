@@ -174,13 +174,16 @@ namespace LHCb
     template <class TYPE>
     struct Equal_To : public std::binary_function<TYPE,TYPE,bool>
     {
+      // ======================================================================
       typedef typename boost::call_traits<const TYPE>::param_type T ;
+      // ======================================================================
       /// comparison
       inline bool operator() ( T v1 , T v2 ) const
       {
         std::equal_to<TYPE> cmp ;
         return cmp ( v1 , v2 ) ;
       }
+      // ======================================================================
     } ;
     // ========================================================================
     /** @struct Zero
@@ -191,12 +194,16 @@ namespace LHCb
     template <class TYPE>
     struct Zero : public std::unary_function<TYPE,bool>
     {
+      // ======================================================================
       typedef typename boost::call_traits<const TYPE>::param_type T ;
       /// comparison
       inline bool operator() ( T v ) const { return m_cmp ( v , 0 ) ; }
+      // ======================================================================
     private:
+      // ======================================================================
       // the comparizon criteria 
       Equal_To<TYPE> m_cmp ;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @struct NotZero
@@ -207,12 +214,16 @@ namespace LHCb
     template <class TYPE>
     struct NotZero : public std::unary_function<TYPE,bool>
     {
+      // ======================================================================
       typedef typename boost::call_traits<const TYPE>::param_type T ;
       /// comparison
       inline bool operator() ( T v ) const { return !m_zero ( v ) ; }
+      // ======================================================================
     private:
+      // ======================================================================
       // the comparison criteria 
       Zero<TYPE> m_zero ;
+      // ======================================================================
     } ;
     // ========================================================================
     /// partial specialization for const-types
@@ -429,6 +440,61 @@ using namespace std;
       // ======================================================================
     } ;
     // ========================================================================
+    /// Is value sufficiently  small ?
+    template <class TYPE>
+    struct Small : public std::unary_function<TYPE,bool>
+    {
+      // ======================================================================
+      typedef  TYPE   Inner ;
+      // ======================================================================
+      // constructor with threshold 
+      Small ( const TYPE& a ) : m_a ( std::abs ( a ) ) {}
+      // the opnly one important method   
+      inline bool operator() ( const TYPE& a ) const
+      { return std::abs ( a ) <= m_a ; }
+      // ======================================================================
+    private :
+      // ======================================================================
+      /// default constructor is disabled 
+      Small () ;  // default constructor is disabled 
+      // ======================================================================
+    private :
+      // ======================================================================
+      TYPE m_a ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** specialization for vectors 
+     *  vector is small, if empty or all elements are small 
+     */ 
+    template <class TYPE>
+    struct Small<std::vector<TYPE> > : 
+      public std::unary_function<std::vector<TYPE>,bool>
+    {
+      // ======================================================================
+      typedef TYPE Inner ;
+      // ======================================================================
+      // constructor with threshold 
+      Small ( const typename Small<TYPE>::Inner & a ) : m_cmp ( a ) {}
+      // the only one important method   
+      inline bool operator() ( const std::vector<TYPE>& v ) const
+      {
+        return 
+          v.empty() || v.end() == std::find_if 
+          ( v.begin() , v.end() , std::not1 ( m_cmp ) ) ;
+      }
+      // ======================================================================
+    private :
+      // ======================================================================
+      /// default constructor is disabled 
+      Small () ;  // default constructor is disabled 
+      // ======================================================================
+    private :
+      // ======================================================================
+      Small<TYPE> m_cmp ;
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @struct  NumLess 
      *  useful structure for sorting  
      *  @see Gaudi::Math::Equal_To
@@ -491,12 +557,26 @@ using namespace std;
     GAUDI_API
     bool islong ( const double x ) ;
     // ========================================================================
+    /** is the value actually long ?
+     *  @author Vanya BELYAEV Ivan.Belyaev       
+     *  @date 2011-07-18
+     */
+    GAUDI_API
+    bool islong ( const float  x ) ;
+    // ========================================================================
     /** is the value actually int ?
      *  @author Vanya BELYAEV Ivan.Belyaev       
      *  @date 2011-07-18
      */
     GAUDI_API 
     bool isint  ( const double x ) ;
+    // ========================================================================    
+    /** is the value actually int ?
+     *  @author Vanya BELYAEV Ivan.Belyaev       
+     *  @date 2011-07-18
+     */
+    GAUDI_API 
+    bool isint  ( const float  x ) ;
     // ========================================================================    
     /** check if the double value is actually equal to the integer value  
      *  @param val value to be compared with the integer 

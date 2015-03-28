@@ -652,8 +652,7 @@ double Gaudi::Math::integrate
   //
   // small tau ? 
   const double atau = std::abs ( tau ) ;
-  //if ( atau < 0.5 && Gaudi::Math::pow ( atau , b.N() + 1 ) < 2 * s_epsilon ) 
-  if ( atau < 5 ) 
+  if ( atau < 5 || Gaudi::Math::pow ( atau , b.N() + 1 ) < 2 * s_epsilon ) 
   { return  _small_tau_integrate_ ( b.k()  , b.N() , tau ) ; }
   //
   const long double _tau = tau ;
@@ -687,7 +686,7 @@ double Gaudi::Math::integrate
   const std::vector<double>& pars = poly.pars   () ;
   // small tau ? 
   const double atau = std::abs ( _tau ) ;
-  if ( atau < 5 ) 
+  if ( atau < 5 || Gaudi::Math::pow ( atau , poly.degree() + 1  ) < 2 * s_epsilon ) 
   {
     for ( std::vector<double>::const_iterator ip = pars.begin() ; pars.end() != ip ; ++ip ) 
     {

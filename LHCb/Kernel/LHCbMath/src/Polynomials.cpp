@@ -4,6 +4,8 @@
 // ============================================================================
 // STD&STL
 // ============================================================================
+#include <climits>
+#include <cassert>
 #include <cmath>
 #include <vector>
 #include <algorithm>
@@ -29,6 +31,8 @@
 // ============================================================================
 namespace 
 {
+  static_assert ( std::numeric_limits<double>::is_specialized           , 
+                  "mumeric_limits are not specialized for doubles"      ) ;
   // ==========================================================================
   /// equality criteria for doubles
   LHCb::Math::Equal_To<double> s_equal ;       // equality criteria for doubles
@@ -36,6 +40,22 @@ namespace
   LHCb::Math::Zero<double>     s_zero  ;       // zero for doubles
   /// zero fo vectors 
   LHCb::Math::Zero< std::vector<double> > s_vzero ; // zero for vectors
+  /// small element 
+  const long double            s_epsilon =  2 * std::numeric_limits<double>::epsilon() ;
+  /// small element 
+  LHCb::Math::Small<double>    s_small ( s_epsilon ) ;
+  // ==========================================================================
+  /// get a factorial 
+  inline long double 
+  _factorial_d_ ( const unsigned short N ) 
+  {
+    return 
+      0 == N ?  1 : 
+      0 == N ?  1 : 
+      2 == N ?  2 : 
+      3 == N ?  6 : 
+      4 == N ? 24 : N * _factorial_d_ ( N - 1 ) ;
+  }
   // ==========================================================================
 }
 // ============================================================================
@@ -677,25 +697,6 @@ double Gaudi::Math::Polynomial::integral
   return result  * 0.5 * ( m_xmax - m_xmin ) ;
 }
 // ============================================================================
-// get the derivative at point "x" 
-// ============================================================================
-double Gaudi::Math::Polynomial::derivative ( const double x     ) const 
-{
-  if ( x < m_xmin || x > m_xmax ) { return 0 ; }
-  //
-  const double tx = t ( x  ) ;
-  //
-  const double dx = 2 / ( m_xmax - m_xmin ) ;
-  std::vector<double> npars ( m_pars.size() - 1 , 0 ) ;
-  for ( unsigned int i = 0 ; i < npars.size() ; ++i ) 
-  {
-    if ( s_zero ( m_pars[i] ) ) { continue ; }           // CONTINUE 
-    npars [i] = ( i + 1 ) * m_pars[i+1] * dx ; 
-  }
-  //
-  return clenshaw_polynom ( npars , tx ) ;
-}
-// ============================================================================
 // get indefinte integral 
 // ============================================================================
 Gaudi::Math::Polynomial 
@@ -714,6 +715,26 @@ Gaudi::Math::Polynomial::indefinite_integral ( const double C ) const
   return Gaudi::Math::Polynomial( npars , m_xmin , m_xmax ) ;
 }
 // ============================================================================
+// get the derivative at point "x" 
+// ============================================================================
+double Gaudi::Math::Polynomial::derivative ( const double x     ) const 
+{
+  if ( x < m_xmin || x > m_xmax ) { return 0 ; }
+  //
+  const double tx = t ( x  ) ;
+  //
+  const double dx = 2 / ( m_xmax - m_xmin ) ;
+  std::vector<double> npars ( m_pars.size() - 1 , 0 ) ;
+  for ( unsigned int i = 0 ; i < npars.size() ; ++i ) 
+  {
+    const double p = m_pars[i+1] ;
+    if ( s_zero ( p ) ) { continue ; }      // CONTINUE 
+    npars [i] = ( i + 1 ) * p * dx ; 
+  }
+  //
+  return clenshaw_polynom ( npars , tx ) ;
+}
+// ============================================================================
 // get the derivative 
 // ============================================================================
 Gaudi::Math::Polynomial 
@@ -725,9 +746,10 @@ Gaudi::Math::Polynomial::derivative          () const
   const double dx = 2 / ( m_xmax - m_xmin ) ;
   std::vector<double> npars ( m_pars.size() - 1 , 0 ) ;
   for ( unsigned int i = 0 ; i < npars.size() ; ++i ) 
-  { 
-    if ( s_zero ( m_pars[i] ) ) { continue ; }           // CONTINUE
-    npars [i] = ( i + 1 ) * m_pars[i+1] * dx ; 
+  {    
+    const double p = m_pars[i+1] ;
+    if ( s_zero ( p ) ) { continue ; }       // CONTINUE
+    npars [i] = ( i + 1 ) * p * dx ; 
   }
   //
   return Gaudi::Math::Polynomial ( npars , m_xmin , m_xmax ) ;
@@ -994,7 +1016,7 @@ double Gaudi::Math::LegendreSum::operator () ( const double x ) const
 // get the integral between xmin and xmax
 // ============================================================================
 double Gaudi::Math::LegendreSum::integral   () const 
-{ return m_pars[0] * 2 / ( m_xmax - m_xmin ) ; }
+{ return m_pars[0] * ( m_xmax - m_xmin ) ; }
 // ============================================================================
 // get the integral between low and high 
 // ============================================================================
@@ -1407,7 +1429,8 @@ double Gaudi::Math::integrate
   const double                  high ) 
 {
   //
-  if      ( s_equal ( tau , 0    )  ) { return  poly.integral ( low  , high         ) ; } 
+  if      ( s_zero  ( tau )         ) { return  poly.integral ( low  , high         ) ; } 
+  else if ( s_small ( tau )         ) { return  poly.integral ( low  , high         ) ; } 
   else if ( s_equal ( low , high )  ) { return 0 ; }
   else if ( poly.zero ()            ) { return 0 ; }
   else if ( low  >  high            ) { return -integrate ( poly , tau , high , low ) ; }
@@ -1416,6 +1439,20 @@ double Gaudi::Math::integrate
   //
   if ( s_equal ( low  , poly.xmin() ) && 
        s_equal ( high , poly.xmax() ) ) { return integrate ( poly , tau ) ; }               
+  //
+  // check if special "small-tau" algorithm is needed here 
+  // 
+  const long double  xmin = poly.xmin () ;
+  const long double  xmax = poly.xmax () ;
+  const long double  _tau = ( xmax - xmin ) * tau / 2   ;
+  const unsigned int N    = poly.degree() ;
+  const long double  t1   = Gaudi::Math::pow ( std::abs (  tau ) , N + 1 ) ;
+  const long double  t2   = Gaudi::Math::pow ( std::abs ( _tau ) , N + 1 ) ;
+  if ( s_small ( t1 ) || s_small ( t2 ) )
+  { 
+    const Gaudi::Math::Polynomial p ( poly ) ;
+    return integrate ( p , tau , low , high ) ; 
+  }
   //
   return _integrate_ ( poly , tau , low , high );
 }
@@ -1436,13 +1473,55 @@ double Gaudi::Math::integrate
   const double                   high ) 
 {
   //
-  if      ( s_equal ( tau , 0    )  ) { return  poly.integral ( low  , high         ) ; } 
+  // the exponent is totally redundant...
+  if      ( s_zero  ( tau )         ) { return  poly.integral ( low  , high         ) ; } 
+  else if ( s_small ( tau )         ) { return  poly.integral ( low  , high         ) ; } 
+  // zero range 
   else if ( s_equal ( low , high )  ) { return 0 ; }
+  // ingertaion of zeros is simple 
   else if ( poly.zero ()            ) { return 0 ; }
+  // invert range 
   else if ( low  >  high            ) { return -integrate ( poly , tau , high , low ) ; }
+  // our the range 
   else if ( high <  poly.xmin () || 
             low  >  poly.xmax ()    ) { return  0 ; }
+  // nice range to use analytic expression 
+  else if ( s_equal ( low  , poly.xmin() ) && 
+            s_equal ( high , poly.xmax() ) ) { return integrate ( poly , tau )  ; }
   //
+  // check if special "small-tau" algorithm is needed here 
+  // 
+  const long double  xmin = poly.xmin () ;
+  const long double  xmax = poly.xmax () ;
+  const long double  _tau = ( xmax - xmin ) * tau / 2   ;
+  const unsigned int N    = poly.degree() ;
+  const long double  t1   = Gaudi::Math::pow ( std::abs (  tau ) , N + 1 ) ;
+  const long double  t2   = Gaudi::Math::pow ( std::abs ( _tau ) , N + 1 ) ;
+  if ( s_small ( t1 ) || s_small ( t2 ) )
+  {
+    const long double _fac = std::exp   ( ( xmax + xmin ) * tau / 2 ) ;
+    const long double tmin = poly.t ( low ) ;
+    const long double tmax = poly.t ( high ) ;    
+    //
+    long double result = 0 ;
+    //
+    const std::vector<double>& pars = poly.pars() ;
+    for ( unsigned short i = 0 ; i < pars.size() ; ++i )
+    { 
+      const long double p = pars[i] ;
+      if ( s_zero ( p ) ) { continue ; }                 // CONTINUE 
+      const long double tl = Gaudi::Math::pow ( tmin , i + 1 ) ;
+      const long double th = Gaudi::Math::pow ( tmax , i + 1 ) ;
+      result += p * _factorial_d_ ( i ) * 
+        ( th * Gaudi::Math::gamma_star ( i + 1 , -_tau * tmax ) -
+          tl * Gaudi::Math::gamma_star ( i + 1 , -_tau * tmin ) ) ;
+    }
+    //
+    result *= ( xmax - xmin ) * _fac / 2 ;
+    //
+    return result ;
+  }
+  // try generic recursive efficient, but numericaly highly unstable scheme  
   return _integrate_ ( poly , tau , low , high );
 }
 // ============================================================================
@@ -1462,13 +1541,29 @@ double Gaudi::Math::integrate
   const double                     high ) 
 {
   //
-  if      ( s_equal ( tau , 0    )  ) { return  poly.integral ( low  , high         ) ; } 
+  if      ( s_zero  ( tau )         ) { return  poly.integral ( low  , high         ) ; } 
+  else if ( s_small ( tau )         ) { return  poly.integral ( low  , high         ) ; } 
   else if ( s_equal ( low , high )  ) { return 0 ; }
   else if ( poly.zero ()            ) { return 0 ; }
   else if ( low  >  high            ) { return -integrate ( poly , tau , high , low ) ; }
   else if ( high <  poly.xmin () || 
             low  >  poly.xmax ()    ) { return  0 ; }
   //
+  // check if special "small-tau" algorithm is needed here 
+  // 
+  const long double  xmin = poly.xmin () ;
+  const long double  xmax = poly.xmax () ;
+  const long double  _tau = ( xmax - xmin ) * tau / 2   ;
+  const unsigned int N    = poly.degree() ;
+  const long double  t1   = Gaudi::Math::pow ( std::abs (  tau ) , N + 1 ) ;
+  const long double  t2   = Gaudi::Math::pow ( std::abs ( _tau ) , N + 1 ) ;
+  if ( s_small ( t1 ) || s_small ( t2 ) )
+  { 
+    const Gaudi::Math::Polynomial p ( poly ) ;
+    return integrate ( p , tau , low , high ) ; 
+  }
+  //
+  // try generic recursive, but numericaly highly unstable scheme  
   return _integrate_ ( poly , tau , low , high );
 }
 // ========================================================================    
@@ -1488,16 +1583,75 @@ double Gaudi::Math::integrate
   const double                    high ) 
 {
   //
-  if      ( s_equal ( tau , 0    )  ) { return  poly.integral ( low  , high         ) ; } 
+  if      ( s_zero  ( tau )         ) { return  poly.integral ( low  , high         ) ; } 
+  else if ( s_small ( tau )         ) { return  poly.integral ( low  , high         ) ; } 
   else if ( s_equal ( low , high )  ) { return 0 ; }
   else if ( poly.zero ()            ) { return 0 ; }
   else if ( low  >  high            ) { return -integrate ( poly , tau , high , low ) ; }
   else if ( high <  poly.xmin () || 
             low  >  poly.xmax ()    ) { return  0 ; }
   //
+  //
+  // check if special "small-tau" algorithm is needed here 
+  // 
+  const long double  xmin = poly.xmin () ;
+  const long double  xmax = poly.xmax () ;
+  const long double  _tau = ( xmax - xmin ) * tau / 2   ;
+  const unsigned int N    = poly.degree() ;
+  const long double  t1   = Gaudi::Math::pow ( std::abs (  tau ) , N + 1 ) ;
+  const long double  t2   = Gaudi::Math::pow ( std::abs ( _tau ) , N + 1 ) ;
+  if ( s_small ( t1 ) || s_small ( t2 ) )
+  { 
+    const Gaudi::Math::Polynomial p ( poly ) ;
+    return integrate ( p , tau , low , high ) ; 
+  }
+  //
+  // try generic recursive, but numericaly highly unstable scheme  
   return _integrate_ ( poly , tau , low , high );
 }
 // ============================================================================
+
+
+// ============================================================================
+/*  get the integral between low and high for a product of
+ *  polynom and the exponential function with the exponent tau
+ *  \f[  \int \mathcal{P} e^{\tau x } \mathrm{d}x \f] 
+ *  @param poly  polynomial
+ *  @param tau   slope parameter for exponential 
+ */
+// ============================================================================
+double Gaudi::Math::integrate 
+( const Gaudi::Math::Polynomial& poly ,
+  const double                   tau  ) 
+{
+  //
+  if      ( s_zero  ( tau ) || s_small ( tau ) ) 
+  { return  poly.integral ( poly.xmin() , poly.xmax() ) ; } 
+  else if ( poly.zero()                        ) { return  0 ; }
+  //
+  const long double xmin = poly.xmin () ;
+  const long double xmax = poly.xmax () ;
+  //
+  const long double _tau =              ( xmax - xmin ) * tau / 2   ;
+  const long double _fac = std::exp   ( ( xmax + xmin ) * tau / 2 ) ;
+  //
+  if      ( s_zero  ( _tau ) || s_small ( _tau ) ) 
+  { return  poly.integral ( poly.xmin() , poly.xmax() ) * _fac ; }
+  //
+  long double result = 0 ;
+  const std::vector<double>& pars = poly.pars() ;
+  for ( unsigned short i = 0 ; i < pars.size() ; ++i )
+  { 
+    const long double p = pars[i] ;
+    if ( s_zero ( p ) ) { continue ; }                 // CONTINUE 
+    //
+    result += p * Gaudi::Math::beta_N ( i , -_tau ) ;  // NOTE THE SIGN!!
+  }
+  //
+  return result * ( xmax - xmin ) * _fac / 2 ;
+}
+// ============================================================================
+
 
 // ============================================================================
 // The END  

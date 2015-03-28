@@ -793,6 +793,25 @@ namespace Gaudi
       const double                    a    , 
       const double                    b    ) ;
     // ========================================================================    
+
+    // ========================================================================    
+    // special cases:
+    // ========================================================================    
+    
+    // ========================================================================    
+    /** get the integral between low and high for a product of
+     *  polynom and the exponential function with the exponent tau
+     *  \f[  \int_{a}^{b} \mathcal{P} e^{\tau x } \mathrm{d}x \f] 
+     *  @param poly  polynomial
+     *  @param tau   slope parameter for exponential 
+     */
+    GAUDI_API 
+    double integrate 
+    ( const Gaudi::Math::Polynomial& poly ,
+      const double                   tau  ) ;
+    // ========================================================================    
+    
+    // ========================================================================    
   } //                                             end of namespace Gaudi::Math 
   // ==========================================================================
 } //                                                     end of namespace Gaudi

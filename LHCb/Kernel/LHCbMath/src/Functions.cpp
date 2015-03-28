@@ -8998,9 +8998,9 @@ namespace
   }
   // ==========================================================================
   /// get (un-normalized) moment 
-  inline double _moment_ 
-  ( const double         alpha , 
-    const double         delta , 
+  inline long double _moment_ 
+  ( const long double    alpha , 
+    const long double    delta , 
     const unsigned short N     ) 
   {
     return _factorial_ ( N ) *  
@@ -9010,12 +9010,17 @@ namespace
   // ==========================================================================
 }
 // ============================================================================
+// get normalization constant
+// ============================================================================
+double Gaudi::Math::TwoExpos::norm () const 
+{ return 1.L / _moment_ ( m_alpha , m_delta , 0 ) ; } 
+// ============================================================================
 // mean-value (for -inf,+inf) interval 
 // ============================================================================
 double Gaudi::Math::TwoExpos::mean  () const 
 {
-  const double n0 = _moment_ ( m_alpha , m_delta , 0 ) ;
-  const double n1 = _moment_ ( m_alpha , m_delta , 1 ) ;
+  const long double n0 = _moment_ ( m_alpha , m_delta , 0 ) ;
+  const long double n1 = _moment_ ( m_alpha , m_delta , 1 ) ;
   //
   return m_x0 + n1 / n0 ;
 }
@@ -9023,15 +9028,18 @@ double Gaudi::Math::TwoExpos::mean  () const
 // mode 
 // ============================================================================
 double  Gaudi::Math::TwoExpos::mode  () const 
-{ return m_x0 + std::log1p ( m_delta / m_alpha ) / m_delta ; }
+{
+  const long double delta = m_delta ;
+  return m_x0 + std::log1p ( delta / m_alpha ) / delta ; 
+}
 // ============================================================================
 // variance 
 // ============================================================================
 double Gaudi::Math::TwoExpos::variance () const 
 {
-  const double n0 = _moment_ ( m_alpha , m_delta , 0 ) ;
-  const double n1 = _moment_ ( m_alpha , m_delta , 1 ) ;
-  const double n2 = _moment_ ( m_alpha , m_delta , 2 ) ;
+  const long double n0 = _moment_ ( m_alpha , m_delta , 0 ) ;
+  const long double n1 = _moment_ ( m_alpha , m_delta , 1 ) ;
+  const long double n2 = _moment_ ( m_alpha , m_delta , 2 ) ;
   //
   return ( n2 * n0 - n1 * n1 ) / ( n0 * n0 )  ;
 }
@@ -9058,11 +9066,11 @@ double Gaudi::Math::TwoExpos::derivative
 {
   if      ( x <  m_x0 ) { return            0 ; }
   //
-  const double n0 = _moment_ ( m_alpha , m_delta , 0 ) ;
-  const double dx = x - m_x0 ;
+  const long double n0 = _moment_ ( m_alpha , m_delta , 0 ) ;
+  const long double dx = x - m_x0 ;
   //
-  const double a  = -a1 () ;
-  const double b  = -a2 () ;
+  const long double a  = tau1 () ;
+  const long double b  = tau2 () ;
   //
   return 
     ( Gaudi::Math::pow ( a , N ) *  std::exp ( a * dx ) - 
@@ -9071,9 +9079,92 @@ double Gaudi::Math::TwoExpos::derivative
 // ============================================================================
 
 
-
-
-
+// ============================================================================
+Gaudi::Math::TwoExpoPositive::TwoExpoPositive  
+( const unsigned short N     , 
+  const double         alpha , 
+  const double         delta , 
+  const double         x0    ,
+  const double         xmin  , 
+  const double         xmax  ) 
+  : std::unary_function<double,double> () 
+  , m_positive ( N , xmin , xmax    )
+  , m_2exp     ( alpha , delta , x0 )
+{}
+// ============================================================================
+Gaudi::Math::TwoExpoPositive::TwoExpoPositive  
+( const std::vector<double>& pars  ,
+  const double               alpha , 
+  const double               delta , 
+  const double               x0    ,
+  const double               xmin  , 
+  const double               xmax  ) 
+  : std::unary_function<double,double> () 
+  , m_positive ( pars  , xmin  , xmax )
+  , m_2exp     ( alpha , delta , x0   )
+{}
+// ============================================================================
+Gaudi::Math::TwoExpoPositive::TwoExpoPositive  
+( const Gaudi::Math::Positive& poly  ,  
+  const double                 alpha , 
+  const double                 delta , 
+  const double                 x0    ) 
+  : std::unary_function<double,double> () 
+  , m_positive ( poly                 )
+  , m_2exp     ( alpha , delta , x0   )
+{}
+// ============================================================================
+Gaudi::Math::TwoExpoPositive::TwoExpoPositive  
+( const Gaudi::Math::Positive& poly   , 
+  const Gaudi::Math::TwoExpos& expos  ) 
+  : std::unary_function<double,double> () 
+  , m_positive ( poly  )
+  , m_2exp     ( expos )
+{}
+// ============================================================================
+Gaudi::Math::TwoExpoPositive::TwoExpoPositive  
+( const Gaudi::Math::TwoExpos& expos  , 
+  const Gaudi::Math::Positive& poly   )
+  : std::unary_function<double,double> () 
+  , m_positive ( poly  )
+  , m_2exp     ( expos )
+{}
+// ============================================================================
+// get the value 
+// ============================================================================
+double Gaudi::Math::TwoExpoPositive::operator() ( const double x ) const 
+{
+  return 
+    x < x0   () ? 0 :  
+    x < xmin () ? 0 : 
+    x > xmax () ? 0 : m_positive ( x ) * m_2exp ( x ) ;
+}
+// ============================================================================
+// get the integral between xmin and xmax
+// ============================================================================ 
+double Gaudi::Math::TwoExpoPositive::integral () const
+{
+  const double xlow = std::max ( x0() , xmin () ) ;
+  return xlow < xmax() ? integral ( xlow , xmax () ) : 0 ;
+}
+// ============================================================================
+// get the integral between low and high
+// ============================================================================
+double Gaudi::Math::TwoExpoPositive::integral 
+( const double low  , 
+  const double high ) const 
+{
+  //
+  if      ( s_equal ( low, high ) ) { return 0 ; }
+  else if ( low > high            ) { return -integral ( high , low ) ; }
+  //
+  const long double r1 = 
+    Gaudi::Math::integrate ( m_positive.bernstein() , tau1 () , low , high ) ;
+  const long double r2 = 
+    Gaudi::Math::integrate ( m_positive.bernstein() , tau2 () , low , high ) ;
+  //
+  return ( r1 - r2 ) / _moment_ ( alpha() , delta () , 0 ) ;
+}
 // ============================================================================
 // The END
 // ============================================================================

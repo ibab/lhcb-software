@@ -31,6 +31,7 @@ namespace Gaudi
     // ========================================================================
     /** sum of N-terms in the exponential expansion 
      *  \f$ f (x) = \sum_{n=0}^{N} \frac{x^k}{k!}\f$
+     *  Abramowitz & Stegun, 6.5.11
      *  @param x  INPUT the argument 
      *  @param N  INPUT N-terms to be used 
      *  @return partial exponential sum 
@@ -43,15 +44,72 @@ namespace Gaudi
      *  \f$f(x) = N! ( e^{x} - \sum_{k=0}^{N-1} \frac{x^k}{k!})/x^{N} \f$ 
      *  it also can be written as :
      *  \f$ f(x) =  =  \frac{e^x n!}{x^n} (1 - \Gamma(n,x)/\Gamma(n)) \f$ 
+     *  Abramowitz & Stegun, 4.2.41
      *  @param x  INPUT the argument 
      *  @param N  INPUT N-terms to be used 
      *  @return the value of "reduced exponent"
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2015-03-26
      */
-    GAUDI_API double exp_rel_N ( const double x , const unsigned short N ) ;
+    GAUDI_API double exp_rel_N  ( const double x , const unsigned short N ) ;
     // ========================================================================
-    
+    /** regularized incomplete gamma function 
+     *  \f$ \gamma^{\ast}(a,x) = \frac{x^{-a}\gamma(a,x) {\Gamma(a)}\f$, 
+     *  where \f$ \gamma(a,x) = \int_0^x e^{-t}t^{a-1}dt\f$, 
+     *  Abramowitz & Stegun, 6.5.4
+     *  @param a INPUT a-parameter 
+     *  @param x INPUT x-argument 
+     *  @return the value of regularized incomplete gamma function 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-03-27
+     */
+    GAUDI_API double gamma_star ( const double a , const double x ) ;
+    // ========================================================================
+    /** regularized incomplete gamma function 
+     *  \f$ \gamma^{\ast}(n,x) = \frac{x^{-n}}{\Gamma(n)\gamma(n,x) }\f$, 
+     *  where 
+     *  \f$ \gamma(n,x) = \Gamma(n) - \Gamma(n,x) = \int_0^x e^{-t}t^{n-1}dt\f$, 
+     *  Abramowitz & Stegun, 6.5.4
+     *  @param n INPUT n-parameter 
+     *  @param x INPUT x-argument 
+     *  @return the value of regularized incomplete gamma function 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-03-27
+     */
+    GAUDI_API double gamma_star ( const int n , const double x ) ;
+    // ========================================================================
+    /** alpha_n 
+     *  \f$\alpha_n(x) = \int_1^\inf t^n e^{-tx}dt \f$ for $x>0$
+     *  Abramowitz & Stegun, 5.1.5
+     *  @param n INPUT n-parameter 
+     *  @param x INPUT x-argument 
+     *  @return the function value 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-03-27
+     */
+    GAUDI_API double alpha_N ( const unsigned short n , const double x ) ;
+    // ========================================================================
+    /** complementary function to alpha_n 
+     *  \f$\alpha^{\prime}_n(x) = \int_0^1 t^n e^{-tx}dt \f$
+     *  @param n INPUT n-parameter 
+     *  @param x INPUT x-argument 
+     *  @return the function value 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-03-27
+     */
+    GAUDI_API double alpha_prime_N ( const unsigned short n , const double x ) ;
+    // ========================================================================
+    /** beta_n 
+     *  \f$\beta_n(x) = \int_{-1}^{+1} t^n e^{-tx}dt \f$
+     *  Abramowitz & Stegun, 5.1.6
+     *  @param n INPUT n-parameter 
+     *  @param x INPUT x-argument 
+     *  @return the function value 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-03-27
+     */
+    GAUDI_API double beta_N ( const unsigned short n , const double x ) ;
+
     // ========================================================================
     // summation algorithms 
     // ========================================================================
@@ -128,7 +186,7 @@ namespace Gaudi
     ( const std::vector<double>& b ) ;
     // ========================================================================
     /** evaluate the continued fraction 
-     *  \f$f(x) = b_0 + \frac{a_1}{ b_1 + \frac{a_2}{ b_2 + ...}} \f$
+     *  \f$f(x) = [b_0+]  \frac{a_1}{ b_1 + \frac{a_2}{ b_2 + ...}} \f$
      *  @param a  INPUT  coefficients, (length = N  )
      *  @param b  INPUT  coefficients, (length = N or N+1)
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru

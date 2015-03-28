@@ -4783,6 +4783,15 @@ namespace Gaudi
       double dispersion () const { return variance () ; }
       /// sigma 
       double sigma      () const ;
+      // get normalization constant
+      double norm       () const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// slope for the first  exponent 
+      double tau1       () const { return -a1() ; }
+      /// slope for the second exponent  
+      double tau2       () const { return -a2() ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -4810,6 +4819,139 @@ namespace Gaudi
       double m_alpha ;
       double m_delta ;
       double m_x0    ;
+      // ======================================================================
+    } ;  
+    // ========================================================================
+    /** @class TwoExpoPositive
+     *  simple difference of two exponents modulated with positive polynomials 
+     *  @see TwoExpos 
+     *  @see Positive 
+     *  @see ExpoPositive 
+     *  \f$ f(x) = e_2(x) * p_n(x) \f$, where 
+     *  \f$ e_2(x) \propto 
+     *        \mathrm{e}^{-a_1    x}       -\mathrm{e}^{-a_2 x} = 
+     *        \mathrm{e}^{-\alpha x}\left(1-\mathrm{e}^{-\delta x}\right) \f$
+     *  and $p_2(s)$ is positive polynomial function 
+     *  @author Vanya BElyaev Ivan.Belyaev@itep.ru
+     *  @date 2015-03-28
+     */
+    class GAUDI_API TwoExpoPositive : public std::unary_function<double,double>
+    {
+    public:
+      // ======================================================================
+      TwoExpoPositive  
+        ( const unsigned short N , 
+          const double alpha = 1 , 
+          const double delta = 1 , 
+          const double x0    = 0 ,
+          const double xmin  = 0 , 
+          const double xmax  = 1 ) ;
+      // ======================================================================
+      TwoExpoPositive  
+        ( const std::vector<double>& pars , 
+          const double alpha  = 1 , 
+          const double delta  = 1 , 
+          const double x0     = 0 ,
+          const double xmin   = 0 , 
+          const double xmax   = 1 ) ;
+      // ======================================================================
+      TwoExpoPositive  
+        ( const Positive& poly    ,  
+          const double alpha  = 1 , 
+          const double delta  = 1 , 
+          const double x0     = 0 ) ;
+      // ======================================================================
+      TwoExpoPositive  
+        ( const Positive& poly   , 
+          const TwoExpos& expos  ) ;
+      // ======================================================================
+      TwoExpoPositive  
+        ( const TwoExpos& expos  , 
+          const Positive& poly   ) ;
+      // ======================================================================
+    public:
+      // ======================================================================   
+      /// get the value 
+      double operator() ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get number of polinomial parameters
+      std::size_t npars () const { return 3 + m_positive.npars() ; }
+      /// set k-parameter
+      bool setPar       ( const unsigned short k , const double value ) 
+      { return 
+          m_positive.npars()     == k ? setAlpha ( value ) : 
+          m_positive.npars() + 1 == k ? setDelta ( value ) : 
+          m_positive.npars() + 2 == k ? setX0    ( value ) : 
+          m_positive.setPar ( k , value ) ; }
+      /// set k-parameter
+      bool setParameter ( const unsigned short k , const double value )
+      { return setPar   ( k , value ) ; }
+      /// get the parameter value 
+      double  par       ( const unsigned short k ) const 
+      { return 
+          m_positive.npars()     == k ? alpha () :
+          m_positive.npars() + 1 == k ? delta () :
+          m_positive.npars() + 2 == k ? x0    () : m_positive.par ( k ) ; }
+      /// get the parameter value
+      double  parameter ( const unsigned short k ) const { return par ( k ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get lower edge
+      double xmin () const { return m_positive.xmin () ; }
+      /// get upper edge
+      double xmax () const { return m_positive.xmax () ; }
+      /// transform variables 
+      double x ( const double t ) const { return m_positive. x ( t )  ; }
+      double t ( const double x ) const { return m_positive. t ( x )  ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get alpha 
+      double alpha () const { return m_2exp.alpha () ; }
+      /// get delta 
+      double delta () const { return m_2exp.delta () ; }
+      /// get x0 
+      double x0    () const { return m_2exp.x0    () ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// slope for the first  exponent 
+      double a1         () const { return m_2exp.a1   () ; }
+      /// slope for the second exponent  
+      double a2         () const { return m_2exp.a2   () ; }
+      /// slope for the first  exponent 
+      double tau1       () const { return m_2exp.tau1 () ; }
+      /// slope for the second exponent  
+      double tau2       () const { return m_2exp.tau2 () ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      bool setAlpha ( const double value ) { return m_2exp.setAlpha ( value ) ; }
+      bool setDelta ( const double value ) { return m_2exp.setDelta ( value ) ; }
+      bool setX0    ( const double value ) { return m_2exp.setX0    ( value ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integral between xmin and xmax 
+      double integral    () const ;
+      /// get the integral between low and high 
+      double integral    ( const double low  , 
+                           const double high ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the underlying positive function 
+      const Gaudi::Math::Positive&  positive  () const { return m_positive  ; }
+      /// get the underlying exponents       
+      const Gaudi::Math::TwoExpos&  twoexpos  () const { return m_2exp      ; }
+      // ======================================================================
+    private: 
+      // ======================================================================
+      Gaudi::Math::Positive m_positive ;
+      Gaudi::Math::TwoExpos m_2exp     ;
       // ======================================================================
     } ;  
     // ========================================================================

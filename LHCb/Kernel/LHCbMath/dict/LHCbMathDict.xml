@@ -109,6 +109,7 @@
   <class name    = "Gaudi::Math::Landau"           />
   <class name    = "Gaudi::Math::Argus"            />
   <class name    = "Gaudi::Math::ExpoPositive"     />
+  <class name    = "Gaudi::Math::TwoExpoPositive"  />
   
   <class name    = "Gaudi::Math::GenGaussV1"       />
   <class name    = "Gaudi::Math::GenGaussV2"       />
@@ -197,6 +198,10 @@
   <function name = "Gaudi::Math::continued_fraction_b"     />
   <function name = "Gaudi::Math::exp_N"           />
   <function name = "Gaudi::Math::exp_rel_N"       />
+  <function name = "Gaudi::Math::gamma_star"      />
+  <function name = "Gaudi::Math::alpha_N"         />
+  <function name = "Gaudi::Math::alpha_prime_N"   />
+  <function name = "Gaudi::Math::beta_N"          />
   <function name = "Gaudi::Math::binomEff"        />
   <function name = "Gaudi::Math::binomEff2"       />
   <function name = "Gaudi::Math::wilsonEff"       />

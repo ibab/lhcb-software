@@ -12,7 +12,6 @@
 // ============================================================================
 // Boost 
 // ============================================================================
-#include "boost/static_assert.hpp"
 #include "boost/integer_traits.hpp"
 // ============================================================================
 /** @file 
@@ -52,13 +51,15 @@ namespace
 {
   // ==========================================================================
   /// check the specialization 
-  BOOST_STATIC_ASSERT( boost::integer_traits<long> ::is_specialized ) ;
-  BOOST_STATIC_ASSERT( boost::integer_traits<int>  ::is_specialized ) ;
+  static_assert ( boost::integer_traits<long> ::is_specialized     , 
+                  "boost::integer_traits<long> is not specialized" ) ;
+  static_assert ( boost::integer_traits<int>  ::is_specialized     , 
+                  "boost::integer_traits<int>  is not specialized" ) ;
   // ==========================================================================
   const double s_MAX_L =  0.1 + boost::integer_traits<long>::const_max ;
   const double s_MIN_L = -0.1 - boost::integer_traits<long>::const_max ;
-  const double s_MAX_I =  0.1 + boost::integer_traits<int>::const_max ;
-  const double s_MIN_I = -0.1 - boost::integer_traits<int>::const_max ;
+  const double s_MAX_I =  0.1 + boost::integer_traits<int>::const_max  ;
+  const double s_MIN_I = -0.1 - boost::integer_traits<int>::const_max  ;
   // ==========================================================================
 }
 // ============================================================================
@@ -77,6 +78,21 @@ bool LHCb::Math::islong ( const double x )
                                          mULPS_double            ) ;
 }
 // ============================================================================
+/*  is the value actually long ?
+ *  @author Vanya BELYAEV Ivan.Belyaev       
+ *  @date 2011-07-18
+ */
+// ============================================================================
+bool LHCb::Math::islong ( const float x ) 
+{
+  return 
+    x <= s_MIN_L  ? false :
+    x >= s_MAX_L  ? false :
+    Gaudi::Math::lomont_compare_double ( x                       , 
+                                         LHCb::Math::round ( x ) , 
+                                         mULPS_float             ) ;
+}
+// ============================================================================
 /*  is the value actually int ?
  *  @author Vanya BELYAEV Ivan.Belyaev       
  *  @date 2011-07-18
@@ -90,6 +106,21 @@ bool LHCb::Math::isint ( const double x )
     Gaudi::Math::lomont_compare_double ( x                       , 
                                          LHCb::Math::round ( x ) , 
                                          mULPS_double            ) ;
+}
+// ============================================================================
+/*  is the value actually int ?
+ *  @author Vanya BELYAEV Ivan.Belyaev       
+ *  @date 2011-07-18
+ */
+// ============================================================================
+bool LHCb::Math::isint ( const float x ) 
+{
+  return 
+    x <= s_MIN_I  ? false :
+    x >= s_MAX_I  ? false :
+    Gaudi::Math::lomont_compare_double ( x                       , 
+                                         LHCb::Math::round ( x ) , 
+                                         mULPS_float             ) ;
 }
 // ============================================================================
 /* check if the double value is actually equal to the integer value  
