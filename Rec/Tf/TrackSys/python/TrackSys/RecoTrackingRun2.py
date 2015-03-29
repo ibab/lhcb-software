@@ -115,20 +115,20 @@ def RecoTrackingHLT1(exclude=[]):
 
    ## Velo-TT pattern
    if "VeloTT" in trackAlgs :
-      track.DetectorList += ["VeloTTPatHLT1"]
+      track.DetectorList += ["VeloTTPat"]
       from Configurables import PatVeloTTHybrid
       GaudiSequencer("TrackVeloTTPatSeq").Members += [ PatVeloTTHybrid("PatVeloTTHybrid")]
       from PatVeloTT import PatVeloTTAlgConf
-      PatVeloTTAlgConf.PatVeloTTConf().configureAlgRunII()
+      PatVeloTTAlgConf.PatVeloTTConf().configureAlgRun2HLT1()
       if TrackSys().timing() :
          PatVeloTTHybrid("PatVeloTTHybrid").TimingMeasurement = True;
       tracklists += ["Rec/Track/VeloTTHybrid"]
       
    ## Forward pattern
-   if "Forward" in trackAlgs :
+   if "ForwardHLT1" in trackAlgs :
       track.DetectorList += [ "ForwardPatHLT1" ]
       from Configurables import PatForward
-      GaudiSequencer("TrackForwardPatSeq").Members +=  [ PatForward("PatForwardHLT1") ]
+      GaudiSequencer("TrackForwardPatHLT1Seq").Members +=  [ PatForward("PatForwardHLT1") ]
       # should be replaced by more 'global' tracking configuration
       from PatAlgorithms import PatAlgConf
       PatAlgConf.ForwardConf().configureAlgRun2HLT1()
@@ -143,14 +143,14 @@ def RecoTrackingHLT2(exclude=[]):
    tracklists = []
    
    ## Forward pattern
-   if "Forward" in trackAlgs :
+   if "ForwardHLT2" in trackAlgs :
       track.DetectorList += [ "ForwardPatHLT2" ]
       from Configurables import PatForward
-      GaudiSequencer("TrackForwardPatSeq").Members +=  [ PatForward("PatForwardHLT2") ]
+      GaudiSequencer("TrackForwardPatHLT2Seq").Members +=  [ PatForward("PatForwardHLT2") ]
       from PatAlgorithms import PatAlgConf
       PatAlgConf.ForwardConf().configureAlgRun2HLT2()
       if TrackSys().timing() :
-         PatForward("PatForwardHLT1").TimingMeasurement = True;    
+         PatForward("PatForwardHLT2").TimingMeasurement = True;    
       tracklists += ["Rec/Track/ForwardHLT2"]
 
       #merge forward from HLT1 and HLT2
@@ -158,6 +158,7 @@ def RecoTrackingHLT2(exclude=[]):
       merger = TrackListMerger("MergeForwardHLT1HLT2")
       merger.inputLocations = [ "Rec/Track/ForwardHLT1", "Rec/Track/ForwardHLT2" ]
       merger.outputLocation =  "Rec/Track/Forward"
+      GaudiSequencer("TrackForwardPatHLT2Seq").Members +=  [ merger ]
 
    ## Seed pattern
    if "PatSeed" in trackAlgs :
