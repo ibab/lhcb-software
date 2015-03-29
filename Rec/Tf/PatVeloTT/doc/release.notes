@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-03-29 - Michel De Cian
+ - Add configuration for PatVeloTTHybrid in HLT1 in 2015 to 'PatVeloTTAlgConf'
+
 ! 2015-03-27- Michel De Cian
  - Rename 'PatVeloConf' to 'PatVeloTTAlgConf'
 
