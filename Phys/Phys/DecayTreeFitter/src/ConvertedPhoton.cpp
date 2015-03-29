@@ -154,7 +154,6 @@ namespace DecayTreeFitter
   {
     // only works if there are two daughters. constraint those to be parallel:
     // p1.in(p2) - |p1||p2|=0
-    assert(m_isconversion) ;
     const ParticleBase* dauA = daughters()[0] ;
     const ParticleBase* dauB = daughters()[1] ;
     int daumomindexA = dauA->momIndex() ;

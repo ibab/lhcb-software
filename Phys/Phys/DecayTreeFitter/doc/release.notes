@@ -8,6 +8,9 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+! 2015-03-29 - Roel Aaij
+ - Remove bad assert.
+
 ! 2015-03-25 - Wouter Hulsbergen
  - Bug fix in dealing with bremstralung in RecoTrack.cpp
  - Added new class 'ConvertedPhoton' that implements 'soft' constraint on conversion vertex
