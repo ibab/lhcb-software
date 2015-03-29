@@ -259,7 +259,6 @@ private:
           std::string name = CaloCorrection::typeName[ type ] + " correction processing (" + areaName + ")";
           auto r = m_counters[type].insert( areaName, &counter(name) );
           assert(r.second);
-          assert(r.first);
           a = r.first;
       }
       assert(a->second);

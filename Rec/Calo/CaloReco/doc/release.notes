@@ -4,6 +4,9 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2015-03-29 - Roel Aaij
+ - Fix bad assert.
+
 ! 2015-03-26 - Gerhard Raven
   -  CaloCorrectionBase::getParams: 
    o don't create an empty vector if it won't be needed
