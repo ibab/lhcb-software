@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-03-29 - Sascha Stahl
+ - TrackStateInitTool: Fix small typo in previous commit.
+
 ! 2015-03-26 - Sascha Stahl
  - TrackStateInitTool: Added option to use the FastMomentumEstimateTool to
    get a momentum estimate for Long tracks. This reduces the timing

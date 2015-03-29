@@ -183,8 +183,8 @@ StatusCode TrackStateInitTool::createTStationStates( LHCb::Track& track ) const
     const LHCb::State& t2state = newStates[1] ; // this is middle of T
 
     if (m_fastMomentumTool){
-      StatusCode sc = m_fastMomentumTool->calculate(velostate, &t2state,
-                                                    qOverP, errQOverP, true);
+      sc = m_fastMomentumTool->calculate(velostate, &t2state,
+                                         qOverP, errQOverP, true);
       // Factor of 2.5 to scale the error up for the Kalman fit.
       // However, it does not seem to have any effect.
       errQOverP = errQOverP*errQOverP*2.5;
