@@ -32,9 +32,9 @@ Tesla().OutputLevel = 2
 Tesla().EvtMax = -1
 Tesla().Pack = False
 
-from GaudiConf.IOHelper import IOHelper
-IOHelper().inputFiles( [ "PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/s/sbenson/TempTestFiles/RemadeReports_HEAD_14-1-15_Bsphiphi_1k.dst" ] ) 
-#Tesla().outputFile = "Turbo.dst"
+from PRConfig.TestFileDB import test_file_db
+input = test_file_db['Tesla_Bsphiphi_MC12wTurbo']
+input.run(configurable=Tesla())
 
 import GaudiPython
 from Gaudi.Configuration import ApplicationMgr
