@@ -3,7 +3,6 @@ from Configurables import ( PatForward, PatForwardTool, PatFwdTool)
 from Configurables import  (PatDownstream, Tf__OTHitCreator)
 from Configurables import (PatSeeding, PatSeedingTool)
 
-
 class ForwardConf(object):
   '''Configure a forward algorithm'''
   def configureAlg(self, PFAlg=PatForward("PatForward")):
@@ -23,7 +22,37 @@ class ForwardConf(object):
     if TrackSys().fieldOff():
       PFTool.PatFwdTool.withoutBField  = True
       PFTool.WithoutBField = True
-  
+
+  def configureAlgRun2HLT1(self, PFAlg = PatForward("PatForwardHLT1")):
+    '''Configure forward algorithm for HLT1 stage of run II offline tracking'''
+    
+    PFAlg.InputTracksName =  "Rec/Track/VeloTTHybrid"
+    PFAlg.addTool(PatForwardTool, name = "PatForwardToolHLT1")
+    PFAlg.PatForwardToolHLT1.MinPt = 500.
+    PFAlg.PatForwardToolHLT1.MinMomentum = 3000.
+    PFAlg.PatForwardToolHLT1.SecondLoop = False
+    PFAlg.PatForwardToolHLT1.UseMomentumEstimate = True
+    PFAlg.PatForwardToolHLT1.UseWrongSignWindow = True
+    PFAlg.PatForwardToolHLT1.WrongSignPT = 2000.
+    PFAlg.PatForwardToolHLT1.PreselectionPT = 0.8*500.
+    PFAlg.PatForwardToolHLT1.Preselection = True   
+
+    globalCuts = TrackSys().getProp("GlobalCuts")
+    if("IT" in globalCuts): PFAlg.maxITHits = globalCuts["IT"]
+    if("OT" in globalCuts): PFAlg.maxOTHits = globalCuts["OT"]
+    # Remove velo track cut if hits already suppressed in Velo decoding
+    if("Velo" in globalCuts): PFAlg.MaxNVelo = 999999
+
+  def configureAlgRun2HLT2(self, PFAlg = PatForward("PatForwardHLT2")):
+    '''Configure forward algorithm for HLT2 stage of run II offline tracking'''
+    
+    PFAlg.addTool(PatForwardTool, name = "PatForwardToolHLT2")
+    #PFAlg.PatForwardToolHLT1.MinPt = 500.
+    #PFAlg.PatForwardToolHLT1.MinMomentum = 3000.
+    PFAlg.PatForwardToolHLT2.SecondLoop = True
+    
+
+    
 #class DownstreamConf(object):
 #  '''Configure a downstream algorithm'''
 #  def configureAlg(self, PDAlg=PatDownstream("PatDownstream")):

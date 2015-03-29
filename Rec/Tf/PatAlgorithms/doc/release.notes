@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-03-29 - Michel De Cian
+ - Add configuration for PatForward in HLT1 in 2015 to 'PatAlgConf'.
+
 ! 2015-03-23 - Sascha Stahl
  - PatForwardTool: The ranges to project hits into the reference plane take
    now the charge estimate properly into account. This speeds up the HLT1
