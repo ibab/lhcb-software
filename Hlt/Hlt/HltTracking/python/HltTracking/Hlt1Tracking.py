@@ -76,12 +76,14 @@ def ConfiguredFastKalman( parent = None, name = None ) :
         parent.Fit.addTool(TrackMasterFitter, name="Fitter")
         fitter = parent.Fit.Fitter
     # configure the fitter
-    if not HltRecoConf().getProp("MoreOfflineLikeFit"):
-        ConfiguredHltFitter( fitter )
-        fitter.NumberFitIterations = HltRecoConf().getProp("FitIterationsInHltFit")
-    else:
-        ConfiguredMasterFitter( fitter , SimplifiedGeometry = True, LiteClusters = True)
-        fitter.MeasProvider.IgnoreMuon = True
+    from HltSharedTracking import ConfigureFitter
+    ConfigureFitter( fitter )
+    #if not HltRecoConf().getProp("MoreOfflineLikeFit"):
+    #    ConfiguredHltFitter( fitter )
+    #    fitter.NumberFitIterations = HltRecoConf().getProp("FitIterationsInHltFit")
+    #else:
+    #    ConfiguredMasterFitter( fitter , SimplifiedGeometry = True, LiteClusters = True)
+    #    fitter.MeasProvider.IgnoreMuon = True
     
 
 def ConfiguredFastVeloOnlyFit( parent = None, name = None ) :

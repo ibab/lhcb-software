@@ -65,10 +65,13 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 , "Hlt2Tracks"                      : "Long" # type of HLT2 tracks
                 , "Prefix"                          : "Hlt2"                 # Why should we need this? It's never changed
                 , "FastFitType"                     : HltDefaultFitSuffix
-                , "DoSeeding"                       : False  
+                , "DoSeeding"                       : False  # TODO: Remove not used anymore
                 , "DoCleanups"                      : True   # Intended default True. Development options
                 , "RestartForward"                  : False  # Intended default False. Development options
                 , "CreateBestTracks"                : True  # Intended default True. Development options
+                , "UseTrackBestTrackCreator"        : True  # Intended default True. Development options
+                                                             # This one disables separate fitting of Hlt2 Forward, Match
+                                                             # and Downstream tracks. Leave DoCleanups true for Hlt1 track filtering
                 , "RichHypos"                       : HltRichDefaultHypos
                 , "RichRadiators"                   : HltRichDefaultRadiators
                 , "RichTrackCuts"                   : HltRichDefaultTrackCuts
@@ -314,6 +317,10 @@ class Hlt2Tracking(LHCbConfigurableUser):
         #
         if (self.getProp("FastFitType") not in Hlt2TrackingRecognizedFitTypes) :
             self.__fatalErrorUnknownTrackFitType()
+            return []
+        if (self.getProp("UseTrackBestTrackCreator") and not self.getProp("CreateBestTracks")):
+            log.fatal( '#############################################################')
+            log.fatal( 'Set CreateBestTracks to true if UseTrackBestTrackCreator true')
             return []
         #
         # The base tracking sequences
@@ -1092,15 +1099,32 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 hlt2TracksToMerge   +=    [ self.__hlt2DownstreamTracking().outputSelection()  ]
             from Configurables import TrackEventCloneKiller, TrackCloneFinder
             #cloneKiller = TrackEventCloneKiller( self.__trackingAlgosAndToolsPrefix()+'FastCloneKiller'
-            cloneKiller = TrackEventCloneKiller( self.getProp("Prefix") +'FastCloneKiller'
-                                                 , TracksInContainers         = hlt2TracksToMerge
-                                                 , TracksOutContainer         = hlt2TrackingOutput
-                                                 , SkipSameContainerTracks    = False
-                                                 , CopyTracks                 = True)
-            cloneKiller.addTool(TrackCloneFinder, name = 'CloneFinderTool')
-            cloneKiller.CloneFinderTool.RestrictedSearch = True
-            trackRecoSequence        +=      [cloneKiller]
-
+            if self.getProp("UseTrackBestTrackCreator"):
+                from Configurables import TrackBestTrackCreator
+                bestTrackCreator = TrackBestTrackCreator( self.getProp("Prefix") + "TrackBestTrackCreator" )
+                from Configurables import TrackMasterFitter
+                from TrackFitter.ConfiguredFitters import ConfiguredHltFitter, ConfiguredMasterFitter
+                bestTrackCreator.addTool(TrackMasterFitter, name="Fitter")
+                from HltSharedTracking import ConfigureFitter
+                ConfigureFitter( getattr(bestTrackCreator,"Fitter") )
+                #ConfiguredMasterFitter( getattr(bestTrackCreator,"Fitter") , SimplifiedGeometry = True, LiteClusters = True)
+                from Configurables import HltRecoConf
+                bestTrackCreator.MaxChi2DoF = HltRecoConf().getProp("MaxTrCHI2PDOF")
+                bestTrackCreator.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
+                #bestTrackCreator.DoNotRefit = True
+                bestTrackCreator.TracksInContainers =  hlt2TracksToMerge
+                bestTrackCreator.TracksOutContainer = hlt2TrackingOutput
+                trackRecoSequence        +=      [bestTrackCreator]
+            else:
+                cloneKiller = TrackEventCloneKiller( self.getProp("Prefix") +'FastCloneKiller'
+                                                     , TracksInContainers         = hlt2TracksToMerge
+            	                                     , TracksOutContainer         = hlt2TrackingOutput
+            	                                     , SkipSameContainerTracks    = False
+            	                                     , CopyTracks                 = True)
+                cloneKiller.addTool(TrackCloneFinder, name = 'CloneFinderTool')
+                cloneKiller.CloneFinderTool.RestrictedSearch = True
+                trackRecoSequence        +=      [cloneKiller]
+                        
         elif (self.__trackType() == "Downstream" ) :
             trackRecoSequence         =    [self.__hlt2DownstreamTracking()]
   
@@ -1170,6 +1194,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         if self.getProp("RestartForward"):
             VetoTracksLocation = [  ]
 
+        
         recoForward = ConfiguredForwardComplement(name = self.getProp("Prefix") + "ForwardComplement"
                                                   , InputTracksName = HltSharedTrackLoc["Velo"]
                                                   , OutputTracksName = Hlt2TrackLoc["ForwardComp"]
@@ -1177,7 +1202,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                                                   , MinMomentum = HltRecoConf().getProp("Forward_LPT_MinP")
                                                   , MinPt = HltRecoConf().getProp("Forward_LPT_MinPt"))
 
-        if self.getProp("DoCleanups"):
+        if self.getProp("DoCleanups") and not self.getProp("UseTrackBestTrackCreator"):
             fitHlt2ForwardTracks = ConfiguredHltEventFitter(name = self.getProp("Prefix") + 'FitHlt2ForwardTracks',
                                                             TracksInContainer = recoForward.OutputTracksName)
             filterHlt2ForwardTracks  = ConfiguredGoodTrackFilter( self.getProp("Prefix") + 'FilterHlt2ForwardTracks',
@@ -1188,11 +1213,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
             forwardLocations = [ HltSharedTrackLoc["ForwardHPT"], Hlt2TrackLoc["ForwardComp"] ]
         if self.getProp("RestartForward"):
             forwardLocations = [ Hlt2TrackLoc["ForwardComp"] ]
-        # Add dumper for debugging if needed    
-        #forwardDumper = DumpTracks('ForwardDumper',TracksLocation = forwardTrackOutputLocation )
-        #forwardDecoDumper = DumpTracks('ForwardDecoDumper',TracksLocation = "Hlt2/Track/Forward" )
-        #bm_members += [forwardDecoDumper]
-        #bm_members +=  [forwardDumper]
 
         from Configurables import TrackListMerger
         # We don't need a CloneKiller here, as by construction no clones are created in the two forward instances.
@@ -1206,12 +1226,12 @@ class Hlt2Tracking(LHCbConfigurableUser):
         # Build the sequences according to whether or not we reuse tracks from HLT1
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"ForwardTracking"
-        #bm_members      = self.__hlt2VeloTracking().members() + self.__hlt2TrackerDecoding().members()
-        #if Hlt1TrackOption in ['Decode','Encode-Decode'] :
         bm_members =  self.__hlt2VeloTracking().members() + RevivedForward.members()
         if self.getProp("DoCleanups"):
             bm_members +=  [ fitHlt1ForwardTracks, filterHlt1ForwardTracks ]
-            bm_members +=  [ recoForward, fitHlt2ForwardTracks, filterHlt2ForwardTracks ]
+            bm_members += [ recoForward ]
+            if not self.getProp("UseTrackBestTrackCreator"):
+                bm_members +=  [ fitHlt2ForwardTracks, filterHlt2ForwardTracks ]
         else:
             bm_members +=  [ recoForward ] 
         bm_members +=  [ forwardMerger ]
@@ -1284,27 +1304,25 @@ class Hlt2Tracking(LHCbConfigurableUser):
         if HltRecoConf().getProp("OfflineSeeding"):
             recoMatch.PatMatchTool.VeloVetoTracksName = []
 
-        
-        if self.getProp("DoCleanups"):
+
+        # Build the bindMembers        
+        bm_name         = self.getProp("Prefix")+"MatchTracking"
+        bm_members      = self.__hlt2VeloTracking().members() + self.__hlt2ForwardTracking().members() +self.__hlt2SeedTracking().members()
+        if self.getProp("DoCleanups") and not self.getProp("UseTrackBestTrackCreator"):
             from HltTracking.HltSharedTracking import ( ConfiguredHltEventFitter, ConfiguredGoodTrackFilter )
             fitHlt2MatchTracks = ConfiguredHltEventFitter(name = self.getProp("Prefix") + 'FitHlt2MatchTracks',
                                                           TracksInContainer = matchTrackOutputLocation)
             filterHlt2MatchTracks = ConfiguredGoodTrackFilter( self.getProp("Prefix") + 'FilterHlt2MatchTracks',
                                                                InputLocation = matchTrackOutputLocation )
             matchTrackOutputLocation = filterHlt2MatchTracks.outputLocation
-            
-        if self.getProp("EarlyDataTracking") :
-            # Do something special in case of early data
-            # For the moment just a dummy setting
-            dummy = 0
-
-        # Build the bindMembers        
-        bm_name         = self.getProp("Prefix")+"MatchTracking"
-        bm_members      = self.__hlt2VeloTracking().members() + self.__hlt2ForwardTracking().members() +self.__hlt2SeedTracking().members()
-        if self.getProp("DoCleanups"):
             bm_members += [ recoMatch, fitHlt2MatchTracks, filterHlt2MatchTracks ]
         else:
             bm_members += [ recoMatch ]
+        if self.getProp("EarlyDataTracking") :
+            # Do something special in case of early data
+            # For the moment just a dummy setting
+            pass
+
         bm_output       = matchTrackOutputLocation
 
         return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
@@ -1339,7 +1357,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
 
         bm_members      = self.__hlt2MatchTracking().members() + [PatDownstream]
         #TODO: If we merge them, we don't need to fit the Downstream tracks which are obviously clones of good long tracks.
-        if self.getProp("CreateBestTracks"):
+        #DONE: use TrackBestTrackCreator. TODO: Clean this up, once the reconstruction is fixed forever
+        if self.getProp("CreateBestTracks") and not self.getProp("UseTrackBestTrackCreator"):
             from HltTracking.HltSharedTracking import ( ConfiguredHltEventFitter, ConfiguredGoodTrackFilter )
             fitHlt2DownstreamTracks = ConfiguredHltEventFitter(name = self.getProp("Prefix") + 'FitHlt2DownstreamTracks',
                                                                TracksInContainer = downstreamTrackOutputLocation)

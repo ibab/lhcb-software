@@ -230,9 +230,20 @@ def ConfiguredPatSeeding(name
     return recoSeeding
 
 #TODO: Move this to TrackFitter package?
+def ConfigureFitter( fitter ):
+    from TrackFitter.ConfiguredFitters import ConfiguredHltFitter, ConfiguredMasterFitter
+    # configure the fitter
+    if not HltRecoConf().getProp("MoreOfflineLikeFit"):
+        ConfiguredHltFitter( fitter )
+        fitter.NumberFitIterations = HltRecoConf().getProp("FitIterationsInHltFit")
+    else:
+        ConfiguredMasterFitter( fitter , SimplifiedGeometry = True, LiteClusters = True)
+    # Ignore Muon hits
+    fitter.MeasProvider.IgnoreMuon = True
+    return fitter
+
 def ConfiguredHltInitFitter( parent ):
     from Configurables import ( TrackEventFitter, TrackMasterFitter, TrackInitFit, TrackStateInitTool )
-    from TrackFitter.ConfiguredFitters import ConfiguredHltFitter, ConfiguredMasterFitter
     if not HltRecoConf().getProp("InitFits"):
         parent.addTool( TrackMasterFitter, name="Fitter")
         fitter = parent.Fitter
@@ -244,23 +255,19 @@ def ConfiguredHltInitFitter( parent ):
         parent.Fitter.Fit = "TrackMasterFitter/Fitter"
         parent.Fitter.addTool(TrackMasterFitter, name="Fitter")
         fitter = parent.Fitter.Fitter
-    # configure the fitter
-    if not HltRecoConf().getProp("MoreOfflineLikeFit"):
-        ConfiguredHltFitter( fitter )
-        fitter.NumberFitIterations = HltRecoConf().getProp("FitIterationsInHltFit")
-    else:
-        ConfiguredMasterFitter( fitter , SimplifiedGeometry = True, LiteClusters = True)
-    # Ignore Muon hits
-    fitter.MeasProvider.IgnoreMuon = True
+    ConfigureFitter( fitter )
     return fitter
 
 def ConfiguredHltEventFitter( name,
-                              TracksInContainer ):
+                              TracksInContainer,
+                              TracksOutContainer = None):
     # create the event fitter
     from Configurables import ( TrackEventFitter, TrackMasterFitter, TrackInitFit, TrackStateInitTool )
     
     eventfitter = TrackEventFitter(name)
     eventfitter.TracksInContainer = TracksInContainer
+    if TracksOutContainer != None:
+        eventfitter.TracksOutContainer = TracksOutCountainer
     ConfiguredHltInitFitter(eventfitter)
     return eventfitter
 

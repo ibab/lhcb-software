@@ -4,6 +4,11 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-03-29 - Sascha Stahl
+ - Hlt2Tracking: Include the TrackBestTrackCreator in the default sequence.
+   Remove intermediate track fitting as TrackBestTrackCreator takes care of that.
+   Only Hlt1 Forward tracks are fitted to filter them before the Hlt2 Forward complement.
+   
 ! 2015-03-24 - Sascha Stahl
  - Hlt2Tracking: Fixed that PatMatch runs on all Velo tracks if the seeding
    runs on all hits (offline mode).
