@@ -8,6 +8,11 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+
+! 2015-03-29 - Vanya Belyaev
+ - add generic "import" models 
+   add chi2-fit 
+
 ! 2015-03-28 - Vanya Belyaev
  - remove creation of helper temporary canvas
 

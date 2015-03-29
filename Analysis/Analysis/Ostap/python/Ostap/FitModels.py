@@ -127,7 +127,7 @@ __all__ = (
     'Argus_pdf'           , ## Argus distribution 
     'TwoExpos_pdf'        , ## Difference of two exponents
     'SinhAsinh_pdf'       , ## "Sinh-asinh" distribution
-     #
+    #
     ## 1D-background models
     # 
     'Bkg_pdf'              , ## Background: exponential modified by positive polynom
@@ -161,16 +161,21 @@ __all__ = (
     'ExpoPol2Dsym_pdf', ## Symmetric version of above
     'Spline2Dsym_pdf' , ## Symmetric 2D positive spline 
     #
-    # 2S
     ## helpers
     #
-    'H1D_dset'             , ## convertor of 1D-histogram to dataset 
-    'H1D_pdf'              , ## convertor of 1D-histogram to PDF 
-    'H2D_dset'             , ## convertor of 2D-histogram to dataset 
-    'H2D_pdf'              , ## convertor of 2D-histogram to PDF 
+    'H1D_dset'        , ## convertor of 1D-histogram to dataset 
+    'H1D_pdf'         , ## convertor of 1D-histogram to PDF 
+    'H2D_dset'        , ## convertor of 2D-histogram to dataset 
+    'H2D_pdf'         , ## convertor of 2D-histogram to PDF 
     #
-    'Fit1D'   , ## generic model for 1D-fit
-    'Fit2D'   , ## generic model for 2D-fit
+    'Adjust1D'        , ## adjust PDF to avoid zeroes (well, actually add a flat component)
+    'Convolution'     , ## helper uitlity to build convolution 
+    # 
+    'Fit1D'           , ## generic model for 1D-fit
+    'Fit2D'           , ## generic model for 2D-fit
+    ##
+    'Generic1D_pdf'   , ## wrapper over imported RooFit (1D)-pdf  
+    'Generic2D_pdf'   , ## wrapper over imported RooFit (2D)-pdf  
     )
 # =============================================================================
 import ROOT, math

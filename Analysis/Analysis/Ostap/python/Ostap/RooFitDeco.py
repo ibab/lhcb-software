@@ -147,21 +147,21 @@ ROOT.RooArgSet . __str__   = lambda s : str ( tuple ( _rs_list_ ( s ) ) )
 ROOT.RooArgSet . __repr__  = lambda s : str ( tuple ( _rs_list_ ( s ) ) )  
 
 # =============================================================================
-## iterator for RooDataSet
+## iterator for RooAbsData
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
-def _rds_iter_ ( self ) :
+def _rad_iter_ ( self ) :
     """
-    Iterator for RooDataSet 
+    Iterator for RooAbsData
     """
     _l = len ( self )
     for i in xrange ( 0 , _l ) : yield self.get ( i )
 
 # =============================================================================
-## access to the entries in  RooDataSet
+## access to the entries in  RooAbsData
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-03-31
-def _rds_getitem_ ( self , i ) :
+def _rad_getitem_ ( self , i ) :
     """
     Get the entry from RooDataSet 
     """
@@ -173,7 +173,7 @@ def _rds_getitem_ ( self , i ) :
 ## Get variables in form of RooArgList 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-03-31
-def _rds_vlist_ ( self ) :
+def _rad_vlist_ ( self ) :
     """
     Get variables in form of RooArgList 
     """
@@ -187,7 +187,7 @@ def _rds_vlist_ ( self ) :
 ## check the presence of variable with given name in dataset 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-03-31
-def _rds_contains_ ( self , aname ) :
+def _rad_contains_ ( self , aname ) :
     """
     Check the presence of variable in dataset
     
@@ -197,17 +197,17 @@ def _rds_contains_ ( self , aname ) :
     return aname in vset 
 
 ## some decoration over RooDataSet 
-ROOT.RooDataSet . __len__       = lambda s   : s.numEntries()
-ROOT.RooDataSet . __iter__      = _rds_iter_ 
-ROOT.RooDataSet . __getitem__   = _rds_getitem_ 
-ROOT.RooDataSet . __nonzero__   = lambda s   : 0 != len ( s ) 
-ROOT.RooDataSet . __contains__  = _rds_contains_
-ROOT.RooDataSet . varlist       = _rds_vlist_
-ROOT.RooDataSet . varlst        = _rds_vlist_
-ROOT.RooDataSet . vlist         = _rds_vlist_
-ROOT.RooDataSet . vlst          = _rds_vlist_
-ROOT.RooDataSet . varset        = lambda s : s.get()
+ROOT.RooAbsData . varlist       = _rad_vlist_
+ROOT.RooAbsData . varlst        = _rad_vlist_
+ROOT.RooAbsData . vlist         = _rad_vlist_
+ROOT.RooAbsData . vlst          = _rad_vlist_
+ROOT.RooAbsData . varset        = lambda s : s.get()
 
+ROOT.RooAbsData . __len__       = lambda s   : s.numEntries()
+ROOT.RooAbsData . __nonzero__   = lambda s   : 0 != len ( s ) 
+ROOT.RooAbsData . __contains__  = _rad_contains_
+ROOT.RooAbsData . __iter__      = _rad_iter_ 
+ROOT.RooAbsData . __getitem__   = _rad_getitem_ 
 
 from Ostap.TreeDeco import _stat_var_, _sum_var_, _sum_var_old_
 ROOT.RooAbsData . statVar       = _stat_var_ 
