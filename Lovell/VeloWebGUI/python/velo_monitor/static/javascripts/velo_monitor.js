@@ -350,17 +350,18 @@ var VeloMonitor = (function(window, undefined) {
         return false;
       });
     },
-    // Adjust tabbed navigation to accommodate long tab labels and singular plots
+    // Adjust tabbed navigation to accommodate long tab labels and singular
+    // plots
     //
-    // The navigation doesn't display correctly with long labels, i.e. that have
-    // multiple lines. This fixes that by making all tabs have the same height
-    // as the tallest one, and also hides the navigation if there's only tab.
+    // The navigation doesn't display correctly with long labels, i.e. that
+    // have multiple lines. This fixes that by making all tabs have the same
+    // height as the tallest one, and also hides the navigation if there's only
+    // tab.
     // Returns:
     //   undefined
     fixNavigationOverflow: function() {
       var navItems = $('.nav-tabs.nav-justified').find('li');
       if (navItems.length == 1) {
-          console.log('hidden nav');
           navItems.hide();
       }
       // Find the tallest list item (the <li> element wraps the <a>)
