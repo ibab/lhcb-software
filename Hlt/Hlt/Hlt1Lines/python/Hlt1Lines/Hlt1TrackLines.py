@@ -40,10 +40,10 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                     ,   'Muon_TrNTHits'     : 0 #OFF
                     ,   'Muon_Velo_NHits'   : 0 #OFF
                     ,   'Muon_Velo_Qcut'    : 999 #OFF
-                    ,   'Muon_PT'           : 800.
+                    ,   'Muon_PT'           : 600.
                     ,   'Muon_P'            : 6000.
-                    ,   'Muon_IPChi2'       : 6.
-                    ,   'Muon_TrChi2'       : 2.
+                    ,   'Muon_IPChi2'       : 7.4
+                    ,   'Muon_TrChi2'       : 3.
                     ,   'Muon_GEC'          : 'Loose'
                     ,   'Photon_Velo_NHits' : 0
                     ,   'Photon_Velo_Qcut'  : 999

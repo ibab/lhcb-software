@@ -5,6 +5,11 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-03-30 - Roel Aaij
+ - Cleanup Muon lines and use complement upgrade.
+ - Add reasonable 1TrackMuon tuning.
+ - Cleanup CEP lines.
+
 ! 2015-03-28 - Roel Aaij
  - Update TrackMVA parameters and add track chi^2 cut.
  - Replace DOCA with DOCACHI2 in TwoTrackMVA.

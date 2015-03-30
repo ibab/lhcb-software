@@ -5,45 +5,49 @@ from HltLine.HltLinesConfigurableUser import *
 
 class Hlt1CEPLinesConf( HltLinesConfigurableUser ):
     __slots__ = {
-          'CEP_SpdMult'    :    30.   # dimensionless, Spd Multiplicy cut
-        , 'CEP_MaxNVelo'   :    15.   # dimensionless, 
-        , 'CEP_PT'         :   500.   # MeV
-        , 'CEP_P'          :  6000.   # MeV 
+          'SpdMult'    :    30.   # dimensionless, Spd Multiplicy cut
+        , 'MaxNVelo'   :    15.   # dimensionless, 
+        , 'TrChi2'     :     5.   # dimensionless, 
+        , 'PT'         :   500.   # MeV
+        , 'P'          :  6000.   # MeV 
         }
-
     
-    def CEP_preambulo( self ):
-        from HltTracking.Hlt1Tracking import ( VeloCandidates,
-                                                       LooseForward )
-        
+    def preambulo( self ):
         ## define some "common" preambulo 
-        Preambulo = [ VeloCandidates( "CEP" ),                      
-                      LooseForward ]
-        return Preambulo
+        from HltTracking.Hlt1Tracking import TrackCandidates
+        return [ TrackCandidates( "CEP" ) ]
     
-    
-    def CEP_streamer( self ):
+    def streamer( self ):
+
+        props = self.getProps()
+
+        ## VoidFilter to cut on the number of Velo tracks.
+        from Configurables import LoKi__VoidFilter as VoidFilter
+        from HltTracking.HltSharedTracking import MinimalVelo
+        props['Velo'] = MinimalVelo.outputSelection()
+        code = "CONTAINS('%(Velo)s') < %(MaxNVelo)s" % props
+        veloFilter = VoidFilter('Hlt1CEPNVeloFilter', Code = code)
+
+        ## Streamer
         from Configurables import LoKi__HltUnit as HltUnit
-        CEP_unit = HltUnit(
-            'CEPStreamer',
+        unit = HltUnit(
+            'Hlt1CEPStreamer',
             ##OutputLevel = 1 ,
-            Preambulo = self.CEP_preambulo(),
+            Preambulo = self.preambulo(),
             Code = """
-            VeloCandidates
-            >>  ( TC_SIZE <= %(CEP_MaxNVelo)s )
-            >>  LooseForward
-            >>  tee  ( monitor( TC_SIZE > 0, '# pass loose forward', LoKi.Monitoring.ContextSvc ) )
-            >>  tee  ( monitor( TC_SIZE , 'nLooseForward' , LoKi.Monitoring.ContextSvc ) )
-            >>  ( ( TrPT > %(CEP_PT)s * MeV ) & ( TrP  > %(CEP_P)s * MeV ) )
+            TrackCandidates
+            >>  FitTrack
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) ) 
+            >>  ( ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s * MeV ) )
             >>  tee  ( monitor( TC_SIZE > 0, '# pass PT', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nPT' , LoKi.Monitoring.ContextSvc ) )               
+            >>  ( TrCHI2PDOF < %(TrChi2)s )
+            >>  SINK("Hlt1CEPDecision")
             >> ~TC_EMPTY
-            """ % self.getProps()
+            """ % props
             )
-        return CEP_unit
-
-    
-    
+        return [veloFilter, unit]
     
     def __apply_configuration__( self ) : 
         from HltLine.HltLine import Hlt1Line
@@ -53,7 +57,7 @@ class Hlt1CEPLinesConf( HltLinesConfigurableUser ):
             ##
             prescale  = self.prescale,
             postscale = self.postscale,
-            L0DU = "( L0_DATA('Spd(Mult)') < %(CEP_SpdMult)s )" % self.getProps(),   
+            L0DU = "( L0_DATA('Spd(Mult)') < %(SpdMult)s )" % self.getProps(),   
             ##
-            algos     = [ self.CEP_streamer() ] 
+            algos     = self.streamer()
             )
