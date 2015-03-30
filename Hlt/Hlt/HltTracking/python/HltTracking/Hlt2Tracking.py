@@ -1111,7 +1111,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 from Configurables import HltRecoConf
                 bestTrackCreator.MaxChi2DoF = HltRecoConf().getProp("MaxTrCHI2PDOF")
                 bestTrackCreator.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
-                #bestTrackCreator.DoNotRefit = True
+                bestTrackCreator.DoNotRefit = True
                 bestTrackCreator.TracksInContainers =  hlt2TracksToMerge
                 bestTrackCreator.TracksOutContainer = hlt2TrackingOutput
                 trackRecoSequence        +=      [bestTrackCreator]

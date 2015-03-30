@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-03-30 - Sascha Stahl
+ - Hlt2Tracking: TrackBestTrackCreator skips already fitted tracks.
+
 ! 2015-03-29 - Sascha Stahl
  - Hlt2Tracking: Include the TrackBestTrackCreator in the default sequence.
    Remove intermediate track fitting as TrackBestTrackCreator takes care of that.
