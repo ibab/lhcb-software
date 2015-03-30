@@ -71,10 +71,9 @@ private:
    // Temporary storage
    std::unique_ptr<CommonMuonHit> m_magnetHit;
    std::vector<Candidate> m_seeds;
-   std::array<std::pair<double,double>,4> m_foiInfo;
 
    // Helper methods
-   void i_findSeeds( const Candidate& seed, const unsigned int seedStation );
+   void i_findSeeds( const LHCb::Track& seed, const unsigned int seedStation );
 
    void i_addHits( Candidate& seed );
 
@@ -95,19 +94,15 @@ private:
    const std::vector<Candidate>& seeds() const {
       return m_seeds;
    }
-
-   const std::array<std::pair<double,double>,4>& foiInfo() const override {
-     return m_foiInfo;
-   }
  
     // Interface methods
-    void findSeeds( const Candidate& seed, const unsigned int seedStation ) override;
+   void findSeeds( const LHCb::Track& seed, const unsigned int seedStation );
 
-    void addHits( Candidate& seed ) override;
+   void addHits( Candidate& seed ) override;
 
-    void fitCandidate( Candidate& seed ) const override;
+   void fitCandidate( Candidate& seed ) const override;
 
-    void clean() override;
+   void clean() override;
 
 };
 #endif // MATCHVELOMUON_H

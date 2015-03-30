@@ -96,11 +96,9 @@ StatusCode MatchVeloMuon::tracksFromTrack( const LHCb::Track& seed,
     // Clean start
     i_clean();
 
-    // Make a Candidate from the track
-    Candidate veloSeed{ &seed }; 
-
+    // Find seeds
     unsigned int seedStation = order[0] ;
-    i_findSeeds( veloSeed, seedStation );
+    i_findSeeds( seed, seedStation );
 
     for ( Candidate& c : m_seeds ) i_addHits( c );
 
@@ -149,9 +147,12 @@ StatusCode MatchVeloMuon::tracksFromTrack( const LHCb::Track& seed,
 }
 
 //=============================================================================
-void MatchVeloMuon::i_findSeeds( const Candidate& veloSeed,
-                               const unsigned int seedStation )
+void MatchVeloMuon::i_findSeeds( const LHCb::Track& seed,
+                                 const unsigned int seedStation )
 {
+    // Make a Candidate from the track
+    Candidate veloSeed{ &seed }; 
+
     // forward extrapolation, make seed point
     double zMagnet = m_zb + m_za * veloSeed.tx2();
     double xMagnet = 0., errXMagnet = 0.;
@@ -182,11 +183,6 @@ void MatchVeloMuon::i_findSeeds( const Candidate& veloSeed,
 
     double yMin = yMuon - yRange;
     double yMax = yMuon + yRange;
-
-    // store foi information (this info is used for visaling the M3 foi)
-    m_foiInfo[0] = std::make_pair( (xMax-xMin)/2.,yMuon );
-    m_foiInfo[1] = std::make_pair( xMin,xMax );
-    m_foiInfo[2] = std::make_pair( yMin,yMax );
 
     if ( msgLevel( MSG::DEBUG ) ) {
         debug() << "Window: (" << xMin << "," << yMin << ") -> (" << xMax << ","
@@ -329,7 +325,7 @@ void MatchVeloMuon::i_clean()
 }
 
 //=============================================================================
-void MatchVeloMuon::findSeeds( const Candidate& seed, const unsigned int seedStation )
+void MatchVeloMuon::findSeeds( const LHCb::Track& seed, const unsigned int seedStation )
 {
    i_findSeeds( seed, seedStation );
 }

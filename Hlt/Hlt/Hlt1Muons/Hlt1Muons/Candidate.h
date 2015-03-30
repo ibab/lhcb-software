@@ -26,7 +26,8 @@ class Candidate final
 {
   public:
     /// Standard constructor
-     Candidate( const LHCb::Track* track, CommonConstMuonHits hits, LHCb::State::Location stateLocation )
+     Candidate( const LHCb::Track* track, CommonConstMuonHits hits,
+                LHCb::State::Location stateLocation )
         : m_track(track)
         , m_hits( std::move(hits) )
     {

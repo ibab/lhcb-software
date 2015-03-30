@@ -22,7 +22,7 @@ public:
    // interface ID
    DeclareInterfaceID( IMatchVeloMuon, 2, 0 );
 
-   virtual void findSeeds( const Candidate& seed, const unsigned int seedStation ) = 0;
+   virtual void findSeeds( const LHCb::Track& seed, const unsigned int seedStation ) = 0;
 
    virtual void addHits( Candidate& seed ) = 0;
 
@@ -31,8 +31,6 @@ public:
    virtual void clean() = 0;
 
    virtual const std::vector<Candidate>& seeds() const = 0;
-
-   virtual const std::array<std::pair<double,double>,4>& foiInfo() const = 0;
 
 };
 #endif // HLT1MUONS_IMATCHVELOMUON_H

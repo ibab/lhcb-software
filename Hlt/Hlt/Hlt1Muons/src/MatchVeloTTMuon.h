@@ -47,21 +47,32 @@ public:
 
 private:
 
-   // Properties
+   // Properties for Velo seeds
+   double m_za;
+   double m_zb;
+
+   double m_xWindow;
+   double m_yWindow;
+
+   double m_minMomentum;
+   double m_kickScale;
+   double m_kickOffset;
+
+   // Properties for VeloTT seeds
    double m_FoIToleranceX;
    double m_FoIToleranceY;
 
    bool  m_chi2withVertPlane;
    double m_maxChi2DoFX;
 
+   // General properties
    unsigned int m_maxMissed;
-
    bool m_setQOverP;
 
    // Tools
+   std::string m_extrapolatorName;
    CommonMuonHitManager* m_hitManager;
    ITrackExtrapolator* m_extrapolator;
-   IMatchVeloMuon* m_matchVeloMuon;
 
    // Services
    ILHCbMagnetSvc* m_fieldSvc;
@@ -89,11 +100,12 @@ private:
    // Temporary storage
    std::unique_ptr<CommonMuonHit> m_magnetHit;
    std::vector<Candidate> m_seeds;
-   std::array<std::pair<double,double>,4> m_foiInfo;
-   
+    
    // Helper methods
-   void i_findSeeds( const Candidate& seed, const unsigned int seedStation );
- 
+   void i_findSeeds      ( const LHCb::Track& seed, const unsigned int seedStation );
+   void i_findVeloSeeds  ( const Candidate& seed,   const unsigned int seedStation );
+   void i_findVeloTTSeeds( const Candidate& seed,   const unsigned int seedStation );
+
    void i_addHits( Candidate& seed );
 
    void i_fitCandidate( Candidate& seed ) const;
@@ -104,16 +116,12 @@ private:
       return m_seeds;
    }
 
-   const std::array<std::pair<double,double>,4>& foiInfo() const override {
-     return m_foiInfo;
-   }
-
    // FoI formulas
    double FoIX( const int station, const int region, const double p ) const;
    double FoIY( const int station, const int region, const double p ) const;
 
    // Interface methods
-   void findSeeds( const Candidate& seed, const unsigned int seedStation ) override;
+   void findSeeds( const LHCb::Track& seed, const unsigned int seedStation ) override;
 
    void addHits( Candidate& seed ) override;
 
