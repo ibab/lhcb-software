@@ -116,6 +116,8 @@ class TrackBestTrackCreator :
     bool m_initTrackStates;
     /// use ancestor information to identify obvious clones
     bool m_useAncestorInfo;
+    /// Do not refit already fitted tracks
+    bool m_doNotRefit;
     bool m_debugLevel;
 
   protected:
@@ -226,8 +228,12 @@ TrackData TrackBestTrackCreator::TrackDataGen::operator()()
       // clone track
       std::unique_ptr<LHCb::Track> tr(oldtr->clone());
       // pre-initialise (if required)
-      StatusCode sc(m_parent.m_initTrackStates ?
-	  m_parent.m_stateinittool->fit(*tr, true) : StatusCode::SUCCESS);
+      const bool fitted = m_parent.m_doNotRefit && ( tr->fitStatus() == LHCb::Track::Fitted ||
+                                               tr->fitStatus() == LHCb::Track::FitFailed );
+      if (fitted && tr->fitStatus() == LHCb::Track::FitFailed )
+        continue;
+      StatusCode sc(m_parent.m_initTrackStates  && !fitted ?
+                    m_parent.m_stateinittool->fit(*tr, true) : StatusCode::SUCCESS);
       // if successful, return new TrackData object
       if (sc.isSuccess()) {
 	if (m_parent.m_useAncestorInfo) {
@@ -291,6 +297,7 @@ TrackBestTrackCreator::TrackBestTrackCreator( const std::string& name,
   declareProperty( "MinLongLongDeltaQoP", m_minLongLongDeltaQoP = -1 );
   declareProperty( "MinLongDownstreamDeltaQoP", m_minLongDownstreamDeltaQoP = 5e-6 );
   declareProperty("UseAncestorInfo", m_useAncestorInfo = true);
+  declareProperty( "DoNotRefit", m_doNotRefit = false);
 }
 
 //=============================================================================
@@ -491,36 +498,52 @@ StatusCode TrackBestTrackCreator::fit( LHCb::Track& track ) const
   StatusCode sc = StatusCode::FAILURE;
   bool badinput  = false;
   bool fitfailed = false;
-
-  if( track.nStates()==0 ||
-      track.checkFlag( LHCb::Track::Invalid ) )  {
-    track.setFlag( LHCb::Track::Invalid, true );
-    badinput = true;
-  } else {
-    double qopBefore = track.firstState().qOverP();
-    sc = m_fitter -> fit( track );
-    if ( sc.isSuccess() ) {
-      // Update counters
-      std::string prefix = Gaudi::Utils::toString(track.type());
-      if( track.checkFlag( LHCb::Track::Backward ) ) prefix += "Backward";
-      prefix += '.';
-      if( track.nDoF()>0) {
-	double chisqprob = track.probChi2();
-	counter(prefix + "chisqprobSum") += chisqprob;
-	counter(prefix + "badChisq") += bool(chisqprob<0.01);
-      }
-      counter(prefix + "flipCharge") += bool( qopBefore * track.firstState().qOverP() <0);
-      counter(prefix + "numOutliers") += track.nMeasurementsRemoved();
-    }
-    else {
+  if (m_doNotRefit && (track.fitStatus() == LHCb::Track::Fitted
+                       || track.fitStatus() == LHCb::Track::FitFailed) ){
+    if (track.fitStatus() == LHCb::Track::Fitted){
+      counter("FittedBefore") += 1;
+      sc = StatusCode::SUCCESS;
+    }else {
+      /// fit failed before
+      /// This should always be 0 as this type is filtered out when initializing the tracks
       track.setFlag( LHCb::Track::Invalid, true );
-      fitfailed = true;
+      counter("FitFailedBefore") += 1;
+      sc = StatusCode::FAILURE;
     }
+  }else{
+    if( track.nStates()==0 ||
+  	    track.checkFlag( LHCb::Track::Invalid ) )  {
+  	  track.setFlag( LHCb::Track::Invalid, true );
+  	  badinput = true;
+  	} else {
+  	  double qopBefore = track.firstState().qOverP();
+  	  /// Fit the track 
+  	  sc =  m_fitter -> fit( track );
+  	  if ( sc.isSuccess()) {
+  	    // Update counters
+  	    std::string prefix = Gaudi::Utils::toString(track.type());
+  	    if( track.checkFlag( LHCb::Track::Backward ) ) prefix += "Backward";
+  	    prefix += '.';
+  	    if( track.nDoF()>0) {
+  	      double chisqprob = track.probChi2();
+  	      counter(prefix + "chisqprobSum") += chisqprob;
+  	      counter(prefix + "badChisq") += bool(chisqprob<0.01);
+  	    }
+  	    counter(prefix + "flipCharge") += bool( qopBefore * track.firstState().qOverP() <0);
+  	    counter(prefix + "numOutliers") += track.nMeasurementsRemoved();
+        counter(prefix + "nFitted") += 1;
+        
+  	  }
+  	  else {
+  	    track.setFlag( LHCb::Track::Invalid, true );
+  	    fitfailed = true;
+  	  }
+  	}
   }
+  
   // stick as close as possible to whatever EventFitter prints
   counter("BadInput")  += int(badinput);
   counter("FitFailed") += int(fitfailed);
-
   return sc;
 }
 
