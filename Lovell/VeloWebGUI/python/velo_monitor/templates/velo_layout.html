@@ -19,6 +19,7 @@
     JobMonitor.settings.debug = {{ 'true' if config.DEBUG else 'false' }};
   </script>
   {{ javascript_tag('lib/string-format', blueprint='velo_monitor') }}
+  {{ javascript_tag('job_cache', blueprint='velo_monitor') }}
   {{ javascript_tag('velo_plotter', blueprint='velo_monitor') }}
   {{ javascript_tag('velo_monitor', blueprint='velo_monitor') }}
 {% endblock %}

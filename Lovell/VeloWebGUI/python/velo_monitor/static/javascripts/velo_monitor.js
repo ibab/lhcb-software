@@ -73,13 +73,26 @@ var VeloMonitor = (function(window, undefined) {
   // Returns:
   //   Polling job task
   var loadRunViewPlotInContainer = function(args, opts, container) {
-    var task = JobMonitor.createTask('runview.plots.get_run_plot', args),
-        spinner = appendSpinner(container),
-        failure = function(msg) { displayFailure(msg, container); };
+    var spinner = appendSpinner(container);
+    var failure = function(msg) { displayFailure(msg, container); };
+
+    // Use cached job result if available, else create a job
+    // Promises used to unify resolution/failure logic
+    var cacheKey = args.name + '_' + args.run;
+    var cacheResult = JobCache.getItem(cacheKey);
+    var task;
+    if (cacheResult !== null) {
+      JobMonitor.log('Cache hit for key ' + cacheKey + '')
+      task = $.Deferred();
+      // Can always resolve as only successful jobs are cached
+      task.resolve(cacheResult);
+    } else {
+      task = JobMonitor.createTask('runview.plots.get_run_plot', args);
+    }
 
     task.done(function(job) {
       spinner.stop();
-
+      JobCache.setItem(cacheKey, job);
       var result = job['result'];
       // Need to treat multiple plots differently from a single one
       if (Array.isArray(result) === true) {
