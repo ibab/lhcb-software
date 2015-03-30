@@ -224,15 +224,21 @@ var VeloMonitor = (function(window, undefined) {
         var id = $(e.target).attr('href').substr(1);
         window.location.hash = '/{0}'.format(id);
       });
+
       // Make the tab specified by the window hash active, or activate the
       // first tab if no hash is present
       // We need to strip the '/' off of the URL hash to match the anchor href
-      var hash = window.location.hash.substr(2);
-      if (hash === '') {
-        $tabs.first().children('a').click();
-      } else {
-        $tabs.children('a[href="#{0}"]'.format(hash)).click();
-      }
+      var onHashChange = function() {
+        var hash = window.location.hash.substr(2);
+        if (hash === '') {
+          $tabs.first().children('a').click();
+        } else {
+          $tabs.children('a[href="#{0}"]'.format(hash)).click();
+        }
+      };
+
+      window.onhashchange = onHashChange;
+      onHashChange();
     },
     // Set up the run selector form.
     //
@@ -262,17 +268,71 @@ var VeloMonitor = (function(window, undefined) {
     // Returns:
     //   undefined
     setupSensorSelector: function() {
-      var $veloLayout = $('.velo-layout'),
+      // Make sure this function is imdempotent, as we don't want to
+      // duplicate these bindings
+      if (this.sensorSelectorReady === true) {
+        return;
+      }
+      this.sensorSelectorReady = true;
+      var $veloLayout = $('#velo-layout'),
           // Grab any form as they all submit to the same place
-          $form = $('form').first();
+          $form = $('.sensor-selector'),
+          $input = $form.find('input[type=text]');
+
+      // Submit the sensor number form when a sensor number is clicked
       $veloLayout.find('button:not([disabled])').on('click', function(e) {
-        e.preventDefault();
         var $target = $(e.target);
         // Don't reload the page if we're already on that sensor
         if ($target.hasClass('active') === true) return;
         // Otherwise, fill in the sensor selector form and submit it
-        $form.find('input[type=text]').val($target.text());
+        $input.val($target.text());
+        $veloLayout.modal('hide');
         $form.submit();
+        return false;
+      });
+
+      // If the previous/next button is clicked, decrement/increment the sensor
+      // number in the input Because the button's are type=submit, the click
+      // event on button will fire first, then the submit event on the form,
+      // using the updated sensor number
+      $form.find('button[type=submit]').on('click', function() {
+        // $form is all forms, so find the form elements of the button that was clicked
+        var $target = $(this);
+        var $parentForm = $target.closest('.sensor-selector');
+        var $siblingInput = $parentForm.find('input[type=text]');
+        var diff = 0;
+        var sensorNumber = parseInt($siblingInput.val(), 10);
+
+        // Increment/decrement the sensor number as requested, unless the
+        // sensor number would become invalid or the text field is focused, in
+        // which case the form should be submitted with the current value
+        if ($target.hasClass('previous') === true && sensorNumber !== 0) {
+          diff = -1;
+        } else if ($target.hasClass('next') === true && sensorNumber !== 105) {
+          diff = 1;
+        }
+        if ($siblingInput.is(':focus') === true) {
+          diff = 0;
+        }
+
+        // We want to update *all* forms with the new value,
+        // as all plots will be updated
+        $input.val(parseInt($siblingInput.val(), 10) + diff);
+      });
+
+      // Reload any sensor-dependent plots when the sensor selector is submitted
+      $form.on('submit', function() {
+        // Must be an integer so it can formatted in to strings in setupPlots
+        var sensorNumber = parseInt($input.val(), 10);
+        // Build the new URL, preserving the hash (i.e. the tab state)
+        var url = $form.attr('action') + '/' + sensorNumber + window.location.hash;
+        // We don't set attr data-sensor as it's data('sensor') that's used
+        // elsewhere, and jQuery caches calls to data so won't see the updated
+        // the DOM
+        $('.plot').empty().data('sensor', sensorNumber);
+        window.history.pushState(null, null, url);
+        runView.setupPlots();
+        return false;
       });
     },
     // Adjust tabbed navigation to accommodate long tab labels and singular plots
