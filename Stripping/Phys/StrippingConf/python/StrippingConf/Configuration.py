@@ -99,8 +99,11 @@ class StrippingConf ( object ) :
                 log.warning("The lines going to MDST.DST are")
                 print mdstLinesNames
                 
-            mdstStream = StrippingStream( "MDST", Lines = mdstLines )
-            self.appendStream(mdstStream)
+            if mdstLines != []:
+              mdstStream = StrippingStream( "MDST", Lines = mdstLines )
+              self.appendStream(mdstStream)
+            else:
+              log.warning("No line has been selected to go to the MDST stream, thus it will be skipped")
  
         from Gaudi.Configuration import appendPostConfigAction
         appendPostConfigAction ( defaultToolConfigCheck )
