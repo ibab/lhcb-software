@@ -94,8 +94,8 @@ def RecoTrackingHLT1(exclude=[]):
       
    ## Tracking sequence
    from Configurables import ProcessPhase
-   track = ProcessPhase("Track");
-   GaudiSequencer("RecoTrSeq").Members += [ track ]
+   track = ProcessPhase("TrackHLT1");
+   GaudiSequencer("RecoTrHLT1Seq").Members += [ track ]
 
    from Configurables import MagneticFieldSvc
    if TrackSys().fieldOff() : MagneticFieldSvc().ForcedSignedCurrentScaling = 0.
@@ -117,54 +117,84 @@ def RecoTrackingHLT1(exclude=[]):
    if "VeloTT" in trackAlgs :
       track.DetectorList += ["VeloTTPat"]
       from Configurables import PatVeloTTHybrid
-      GaudiSequencer("TrackVeloTTPatSeq").Members += [ PatVeloTTHybrid("PatVeloTTHybrid")]
+      GaudiSequencer("TrackHLT1VeloTTPatSeq").Members += [ PatVeloTTHybrid("PatVeloTTHybrid")]
       from PatVeloTT import PatVeloTTAlgConf
       PatVeloTTAlgConf.PatVeloTTConf().configureAlgRun2HLT1()
       if TrackSys().timing() :
          PatVeloTTHybrid("PatVeloTTHybrid").TimingMeasurement = True;
-      tracklists += ["Rec/Track/VeloTTHybrid"]
+      tracklists += ["Rec/Track/VeloTT"]
       
    ## Forward pattern
    if "ForwardHLT1" in trackAlgs :
+      if "VeloTT" not in trackAlgs:
+         raise RuntimeError("Cannot run HLT1 forward without VeloTT")
+      
       track.DetectorList += [ "ForwardPatHLT1" ]
-      from Configurables import PatForward
-      GaudiSequencer("TrackForwardPatHLT1Seq").Members +=  [ PatForward("PatForwardHLT1") ]
+      from Configurables import PatForward, PatForwardTool
+      GaudiSequencer("TrackHLT1ForwardPatHLT1Seq").Members +=  [ PatForward("PatForwardHLT1") ]
+      
       # should be replaced by more 'global' tracking configuration
       from PatAlgorithms import PatAlgConf
       PatAlgConf.ForwardConf().configureAlgRun2HLT1()
       if TrackSys().timing() :
          PatForward("PatForwardHLT1").TimingMeasurement = True;    
       tracklists += ["Rec/Track/ForwardHLT1"]
+      
+   ## Fitting all HLT1 tracks
+   track.DetectorList += ["FitHLT1"]
 
+   from TrackFitter.ConfiguredFitters import ConfiguredMasterFitter, ConfiguredHltFitter, ConfiguredForwardFitter 
+   from Configurables import TrackBestTrackCreator
+   
+   creator = TrackBestTrackCreator("HLT1TrackFitter")
+   creator.TracksInContainers = ["Rec/Track/Velo","Rec/Track/ForwardHLT1" ]
+   creator.TracksOutContainer = "Rec/Track/FittedHLT1Tracks"
+   ConfiguredForwardFitter( creator.Fitter )
+   GaudiSequencer("TrackHLT1FitHLT1Seq").Members += [ creator ]
+   
       
 def RecoTrackingHLT2(exclude=[]):
    '''Function that defines the pattern recognition algorithms for the HLT2 sequence of the Run 2 offline tracking'''
 
+   ## Tracking sequence
+   from Configurables import ProcessPhase
+   track = ProcessPhase("TrackHLT2");
+   GaudiSequencer("RecoTrHLT2Seq").Members += [ track ]
+
+
    tracklists = []
+
+   # Which algs to run ?
+   trackAlgs = TrackSys().getProp("TrackPatRecAlgorithms")
+
+   # Which data type is it?
+   dataType = TrackSys().getProp("DataType")
+
    
    ## Forward pattern
    if "ForwardHLT2" in trackAlgs :
       track.DetectorList += [ "ForwardPatHLT2" ]
       from Configurables import PatForward
-      GaudiSequencer("TrackForwardPatHLT2Seq").Members +=  [ PatForward("PatForwardHLT2") ]
+      GaudiSequencer("TrackHLT2ForwardPatHLT2Seq").Members +=  [ PatForward("PatForwardHLT2") ]
       from PatAlgorithms import PatAlgConf
       PatAlgConf.ForwardConf().configureAlgRun2HLT2()
       if TrackSys().timing() :
          PatForward("PatForwardHLT2").TimingMeasurement = True;    
-      tracklists += ["Rec/Track/ForwardHLT2"]
+         #tracklists += ["Rec/Track/ForwardHLT2"]
 
       #merge forward from HLT1 and HLT2
       from Configurables import TrackListMerger
       merger = TrackListMerger("MergeForwardHLT1HLT2")
       merger.inputLocations = [ "Rec/Track/ForwardHLT1", "Rec/Track/ForwardHLT2" ]
       merger.outputLocation =  "Rec/Track/Forward"
-      GaudiSequencer("TrackForwardPatHLT2Seq").Members +=  [ merger ]
+      GaudiSequencer("TrackHLT2ForwardPatHLT2Seq").Members +=  [ merger ]
+      tracklists += ["Rec/Track/Forward"]
 
    ## Seed pattern
    if "PatSeed" in trackAlgs :
       track.DetectorList += [ "SeedPat" ]
       from Configurables import PatSeeding
-      GaudiSequencer("TrackSeedPatSeq").Members += [PatSeeding("PatSeeding")]
+      GaudiSequencer("TrackHLT2SeedPatSeq").Members += [PatSeeding("PatSeeding")]
       # should be replaced by more 'global' tracking configuration
       from PatAlgorithms import PatAlgConf
       PatAlgConf.SeedingConf().configureAlg()
@@ -182,7 +212,7 @@ def RecoTrackingHLT2(exclude=[]):
    if "PatMatch" in trackAlgs :
       track.DetectorList += [ "MatchPat" ]
       from Configurables import PatMatch
-      GaudiSequencer("TrackMatchPatSeq").Members += [ PatMatch("PatMatch") ]
+      GaudiSequencer("TrackHLT2MatchPatSeq").Members += [ PatMatch("PatMatch") ]
       # timing?
       # global conf?
       tracklists  += ["Rec/Track/Match"]
@@ -191,21 +221,27 @@ def RecoTrackingHLT2(exclude=[]):
    if "Downstream" in trackAlgs :
       track.DetectorList += [ "DownstreamPat" ]
       from Configurables import PatDownstream
-      GaudiSequencer("TrackDownstreamPatSeq").Members += [ PatDownstream("PatDownstream") ];
+      GaudiSequencer("TrackHLT2DownstreamPatSeq").Members += [ PatDownstream("PatDownstream") ];
       from PatAlgorithms import PatAlgConf
       # global conf?
       #PatAlgConf.DownstreamConf().configureAlg()
       if TrackSys().timing() :
          PatDownstream("PatDownstream").TimingMeasurement = True;
       tracklists += ["Rec/Track/Downstream"]
-      
+
+
+
+   fit = ProcessPhase("FitHLT2");
+   GaudiSequencer("RecoTrHLT2Seq").Members += [ fit ]
    ### Clean clone and fit
-   track.DetectorList += ["Fit"]
+   fit.DetectorList += ["Best"]
    
    # complete the list of track lists
    if "FastVelo" in trackAlgs :
       tracklists += ["Rec/Track/Velo"]
+      
    # create the best track creator
+   from TrackFitter.ConfiguredFitters import ConfiguredMasterFitter  
    from Configurables import TrackBestTrackCreator
    bestTrackCreator = TrackBestTrackCreator( TracksInContainers = tracklists )
    # configure its fitter and stateinittool
@@ -213,7 +249,7 @@ def RecoTrackingHLT2(exclude=[]):
    if "FastVelo" in trackAlgs :
       bestTrackCreator.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
    # add to the sequence
-   GaudiSequencer("TrackFitSeq").Members.append( bestTrackCreator )
+   GaudiSequencer("FitHLT2BestSeq").Members += [ bestTrackCreator ]
 
    ### Change dEdx correction for simulated data
    if TrackSys().getProp("Simulation"):
@@ -222,18 +258,24 @@ def RecoTrackingHLT2(exclude=[]):
       fitter = TrackBestTrackCreator().Fitter
       fitter.MaterialLocator.addTool(StateDetailedBetheBlochEnergyCorrectionTool("GeneralDedxTool"))
       fitter.MaterialLocator.GeneralDedxTool.EnergyLossFactor = 0.76
+
+
+   addExtraInfo = ProcessPhase("AddExtraInfo");
+   GaudiSequencer("RecoTrHLT2Seq").Members += [ addExtraInfo ]
       
    ## Extra track information sequence
    extraInfos = TrackSys().getProp("TrackExtraInfoAlgorithms")
    if len(extraInfos) > 0 :
       
-      track.DetectorList += ["AddExtraInfo"]
+      
       
       ## Clone finding and flagging
       if "CloneFlagging" in extraInfos :
+
+         addExtraInfo.DetectorList += ["Clones"]
+         
          from Configurables import TrackBuildCloneTable, TrackCloneCleaner
-         trackClones = GaudiSequencer("TrackClonesSeq")
-         GaudiSequencer("TrackAddExtraInfoSeq").Members += [ trackClones ]
+         #trackClones = GaudiSequencer("TrackClonesSeq")
          if TrackSys().timing() :
             trackClones.MeasureTime = True
          cloneTable = TrackBuildCloneTable("FindTrackClones")
@@ -242,18 +284,24 @@ def RecoTrackingHLT2(exclude=[]):
          cloneTable.klCut   = 5e3
          cloneCleaner = TrackCloneCleaner("FlagTrackClones")
          cloneCleaner.CloneCut = 5e3
-         trackClones.Members += [ cloneTable, cloneCleaner ]
+         #trackClones.Members += [ cloneTable, cloneCleaner ]
+         GaudiSequencer("AddExtraInfoClonesSeq").Members += [ cloneTable, cloneCleaner ]
          
       ## ghost probability using a Neural Net
       if "GhostProbability" in extraInfos :
+
+         addExtraInfo.DetectorList += ["GhostProb"]
+         
          from Configurables import TrackAddNNGhostId
          nn = TrackAddNNGhostId("TrackAddNNGhostdId")
          nn.GhostIdTool = "Run2GhostId" # to be decided
-         GaudiSequencer("TrackAddExtraInfoSeq").Members += [ nn ]
-         
-   track.DetectorList += ["EraseExtraInformation"]
+         GaudiSequencer("AddExtraInfoGhostProbSeq").Members += [ nn ]
+
+   # this is very misleading (naming wise), but it will erase extra info that is put on the track by some algorithms
+   # (not of the ones beforehand).
+   addExtraInfo.DetectorList += ["EraseExtraInfo"]
    from Configurables import TrackEraseExtraInfo
-   GaudiSequencer("TrackEraseExtraInformationSeq").Members += [ TrackEraseExtraInfo("TrackEraseExtraInfo") ]
+   GaudiSequencer("AddExtraInfoEraseExtraInfoSeq").Members += [ TrackEraseExtraInfo("TrackEraseExtraInfo") ]
    
    
    ## Muon alignment tracks

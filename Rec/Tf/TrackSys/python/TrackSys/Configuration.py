@@ -50,6 +50,8 @@ class TrackSys(LHCbConfigurableUser):
     DefaultGlobalCuts_old      = {}
     ## Default track pattern recognition algorithms to run in 2011
     DefaultPatRecAlgorithms    = ["FastVelo","Forward","PatSeed","PatMatch","Downstream","VeloTT"]
+    ## Default track pattern recognition algorithms to run in Run II
+    DefaultPatRecAlgorithmsRun2    = ["FastVelo","ForwardHLT1","ForwardHLT2","PatSeed","PatMatch","Downstream","VeloTT"]
     ## Default global cuts from 2011
     DefaultGlobalCuts          = { 'Velo':6000, 'IT':999999, 'OT':15000 }
     ## Global cuts for pA, from 2013
@@ -79,7 +81,8 @@ class TrackSys(LHCbConfigurableUser):
           if track not in self.DefaultTrackTypes:
               log.warning("Using non-default track type: '%s'" %track)
               log.warning("Default track types are: %s" %self.DefaultTrackTypes)
-    
+
+                  
       if "cosmics" not in self.getProp("SpecialData"):
           # Defaults changes starting in 2011
           if "MC09" == self.getProp("DataType") or "2008" == self.getProp("DataType") or "2009" == self.getProp("DataType") :
@@ -90,6 +93,9 @@ class TrackSys(LHCbConfigurableUser):
               defaultGlobalCuts       = self.DefaultGlobalCuts
           if "pA" in  self.getProp("SpecialData"):
               defaultGlobalCuts       = self.DefaultpAGlobalCuts
+
+          if "2015Dev" in self.getProp("SpecialData"):
+              defaultPatRecAlgorithms = self.DefaultPatRecAlgorithmsRun2
 
           if len(self.getProp("TrackPatRecAlgorithms")) == 0 :
               self.setProp("TrackPatRecAlgorithms",defaultPatRecAlgorithms)
@@ -170,15 +176,22 @@ class TrackSys(LHCbConfigurableUser):
             from TrackSys import RecoUpgradeTracking
             RecoUpgradeTracking.RecoUpgradeTracking()
         else:
-            if self.getProp( "FilterBeforeFit" ) :
-                from TrackSys import RecoTracking
-                RecoTracking.RecoTracking()
+            if self.getProp( "FilterBeforeFit" ):
+                if  "2015Dev" not in self.getProp("SpecialData"):
+                    from TrackSys import RecoTracking
+                    RecoTracking.RecoTracking()
+                else:
+                    from TrackSys import RecoTrackingRun2
+                    RecoTrackingRun2.RecoTrackingHLT1()
+                    RecoTrackingRun2.RecoTrackingHLT2()
+                    
+            else:
+                raise RuntimeError("'FilterBeforeFit' needs to be set...")
+                #RecoTracking.RecoTracking()
             #if self.upgrade():
             #    from RecoUpgrade import RecoTrackingUpgrade
             #    RecoTrackingUpgrade.RecoTrackingUpgrade()
-            else :
-                from TrackSys import RecoTrackingOld
-                RecoTrackingOld.RecoTracking()
+            
 
         if self.getProp( "WithMC" ):
             if useUpgrade :
