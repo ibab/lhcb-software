@@ -15,10 +15,15 @@
 // encoding and decoding objects so that they can be stored as strings, the
 // only format storable per the sessionStorage spec.
 //
-// If sessionStorage is not supported by the browser, a basic JavaScript object
-// is used as an alternative 'backend', but the API remains identical.
+// If sessionStorage is supported, objects are stored as JSON strings,
+// compressed with lz-string [1]. They are compressed to mitigate the 5 MB
+// limit on local storage.
 //
-// https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
+// If sessionStorage is not supported by the browser, a basic JavaScript object
+// is used as an alternative 'backend', but the API [2] remains identical.
+//
+// [1]: http://pieroxy.net/blog/pages/lz-string/index.html
+// [2]: https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
 var JobCache = (function(window, undefined) {
   'use strict';
 
@@ -27,6 +32,16 @@ var JobCache = (function(window, undefined) {
   var store = window.sessionStorage || {};
   // Need to keep track of insertion order if sessionStorage is not available
   var keys = [];
+
+  // Return a compressed JSON string representing obj
+  var objectToJSON = function(obj) {
+    return LZString.compressToUTF16(JSON.stringify(obj));
+  };
+
+  // Return the object represented by the compressed JSON string
+  var jsonToObject = function(obj) {
+    return JSON.parse(LZString.decompressFromUTF16(obj));
+  }
 
   // See sessionStorage.key
   var key = function(index) {
@@ -58,23 +73,32 @@ var JobCache = (function(window, undefined) {
     if (value === null || value === undefined) {
       return null;
     }
-    return JSON.parse(value);
+    return jsonToObject(value);
   };
 
   // Store the value object and reference it with key
   //
-  // The value is assumed to be JSON encodable, and is stored
-  // as a JSON string
+  // The value is assumed to be JSON encodable, and is stored as a JSON string.
+  // sessionStorage is limited to about 5 MB of disk space in most browsers, so
+  // we must deal with attempting to add an item when we're at the limit.  We
+  // take a very brute-force approach and empty the cache, then re-add the item
   // Accepts:
   //   key: Key to store the value under
   //   value: Object to store
   // Returns:
   //   undefined
   var setItem = function(key, value)  {
+    var v = objectToJSON(value);
     if (hasSessionStorage === true) {
-      store.setItem(key, JSON.stringify(value));
+      try {
+        store.setItem(key, v);
+      } catch (e) {
+        // Most likely error is 'cache full', so clear and try again
+        store.clear();
+        store.setItem(key, v);
+      }
     } else {
-      store[key] = JSON.stringify(value);
+      store[key] = v;
       keys.push(key);
     }
   };
