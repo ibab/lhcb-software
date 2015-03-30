@@ -1197,7 +1197,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         
         recoForward = ConfiguredForwardComplement(name = self.getProp("Prefix") + "ForwardComplement"
                                                   , InputTracksName = HltSharedTrackLoc["Velo"]
-                                                  , OutputTracksName = Hlt2TrackLoc["ForwardComp"]
+                                                  , OutputTracksName = Hlt2TrackLoc["ComplementForward"]
                                                   , VetoSeedLocations = VetoTracksLocation 
                                                   , MinMomentum = HltRecoConf().getProp("Forward_LPT_MinP")
                                                   , MinPt = HltRecoConf().getProp("Forward_LPT_MinPt"))
@@ -1210,9 +1210,9 @@ class Hlt2Tracking(LHCbConfigurableUser):
             forwardLocations = [ filterHlt1ForwardTracks.outputLocation, filterHlt2ForwardTracks.outputLocation ]
         else:
             # If we do not clean up hits, we do not need to fit tracks, can do that later
-            forwardLocations = [ HltSharedTrackLoc["ForwardHPT"], Hlt2TrackLoc["ForwardComp"] ]
+            forwardLocations = [ HltSharedTrackLoc["ForwardHPT"], Hlt2TrackLoc["ComplementForward"] ]
         if self.getProp("RestartForward"):
-            forwardLocations = [ Hlt2TrackLoc["ForwardComp"] ]
+            forwardLocations = [ Hlt2TrackLoc["ComplementForward"] ]
 
         from Configurables import TrackListMerger
         # We don't need a CloneKiller here, as by construction no clones are created in the two forward instances.

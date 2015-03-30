@@ -4,6 +4,12 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-03-30 - Roel Aaij
+ - Remove unused algorithms.
+ - Add FillHlt1Cache to fill Hlt1 upgrade relations tables from track ancestors.
+ - Remove all DetailedMaterial tools from Hlt1.
+ - Update Hlt1StreamerConf with complement tools.
+
 ! 2015-03-30 - Sascha Stahl
  - Hlt2Tracking: TrackBestTrackCreator skips already fitted tracks.
 

@@ -19,10 +19,9 @@ use HltBase             v*  Hlt
 use HltEvent            v*  Event
 use TrackEvent          v*  Event
 use TrackInterfaces     v*  Tr
-
-#use Boost               v*  LCG_Interfaces
+use Relations           v*  Kernel
 use Python              v*  LCG_Interfaces
-#use SelPy               v*  Phys
+
 # our python uses various instances defined in HltCommon and HltLine...
 use HltCommon           v*  Hlt
 use HltLine             v*  Hlt -no_auto_imports

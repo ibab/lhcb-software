@@ -68,6 +68,12 @@ from HltTrackNames import Hlt1TrackLoc, HltSharedTrackLoc, Hlt2TrackLoc
 from Configurables import Tf__PatVeloSpaceTracking, Tf__PatVeloSpaceTool
 from Configurables import FastVeloHitManager, DecodeVeloRawBuffer
 from Configurables import TrackStateInitAlg, TrackStateInitTool
+from Configurables import ToolSvc, TrackMasterExtrapolator
+from Configurables import SimplifiedMaterialLocator
+
+## Simplified Material for public MasterExtrapolator
+ToolSvc().addTool(TrackMasterExtrapolator, "TrackMasterExtrapolator")
+ToolSvc().TrackMasterExtrapolator.addTool(SimplifiedMaterialLocator, name="MaterialLocator")
 
 #### Velo Tracking
 
@@ -102,6 +108,12 @@ recoVeloTT = PatVeloTTHybrid( 'PatVeloTTHlt',
                         OutputTracksName = HltSharedTrackLoc["VeloTTHPT"],
                         **VeloTTOptions )
 recoVeloTT.addTool(PatVeloTTHybridTool(**VeloTTToolOptions), name="PatVeloTTTool")
+## Even if the fit is turned off, use simplified material.
+from Configurables import TrackStateInitTool, TrackMasterFitter
+from TrackFitter.ConfiguredFitters import ConfiguredMasterFitter
+recoVeloTT.addTool(TrackMasterFitter, "Fitter")
+ConfiguredMasterFitter(recoVeloTT.Fitter, SimplifiedGeometry = True, LiteClusters = True)
+
 recoVeloTT.PatVeloTTTool.StatPrint = True
 recoVeloTT.VetoObjects = [ recoVeloTT.OutputTracksName ]
 
@@ -140,15 +152,18 @@ def fittedVelo(inputTracks, outputTracks):
     fa = TrackEventFitter('VeloOnlyFitterAlg')
     fa.TracksInContainer = inputTracks
     fa.TracksOutContainer = outputTracks
-    fa.Fitter = "TrackInitFit/VeloInitFit"
-    fa.addTool(TrackInitFit, "VeloInitFit")
-    fa.VeloInitFit.Init = "TrackStateInitTool/VeloOnlyStateInit"
-    fa.VeloInitFit.addTool(TrackStateInitTool, "VeloOnlyStateInit")
-    fa.VeloInitFit.VeloOnlyStateInit.VeloFitterName = "FastVeloFitLHCbIDs"
-    fa.VeloInitFit.Fit = "TrackMasterFitter/VeloOnlyFitter"
-    fa.VeloInitFit.addTool(TrackMasterFitter, name = "VeloOnlyFitter")
-    from TrackFitter.ConfiguredFitters import ConfiguredForwardFitter
-    fitter = ConfiguredForwardFitter(fa.VeloInitFit.VeloOnlyFitter)
+    fa.Fitter = "TrackInitFit/Fit"
+    fa.addTool(TrackInitFit, "Fit")
+    fa.Fit.Init = "TrackStateInitTool/VeloOnlyStateInit"
+    fa.Fit.addTool(TrackStateInitTool, "VeloOnlyStateInit")
+    fa.Fit.VeloOnlyStateInit.VeloFitterName = "FastVeloFitLHCbIDs"
+    fa.Fit.VeloOnlyStateInit.addTool(TrackMasterExtrapolator, "Extrapolator")
+    fa.Fit.VeloOnlyStateInit.Extrapolator.addTool(SimplifiedMaterialLocator,
+                                                          name="MaterialLocator")
+    fa.Fit.Fit = "TrackMasterFitter/Fit"
+    fa.Fit.addTool(TrackMasterFitter, name = "Fit")
+    from TrackFitter.ConfiguredFitters import ConfiguredForwardStraightLineFitter
+    fitter = ConfiguredForwardStraightLineFitter(fa.Fit.Fit)
     return fa
 
 #############################################################################################

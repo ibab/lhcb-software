@@ -53,7 +53,8 @@ def PV3D(where):
 
     from Configurables import PatPV3D
     from Configurables import PVOfflineTool, LSAdaptPV3DFitter
-
+    from Configurables import SimplifiedMaterialLocator, TrackMasterExtrapolator
+    
     if where.upper() not in ['HLT1','HLT2'] : raise KeyError('PV3D: where must be either HLT1 or HLT2')
 
     #TODO: Move these options to HltRecoConf
@@ -67,6 +68,14 @@ def PV3D(where):
     recoPV3D.PVOfflineTool.addTool(LSAdaptPV3DFitter, "LSAdaptPV3DFitter")
     recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.TrackErrorScaleFactor = 2.
     recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.maxIP2PV = 0.3
+    ## Simplified Material for TrackMasterExtrapolator
+    recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.addTool(TrackMasterExtrapolator, "TrackMasterExtrapolator")
+    recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.TrackMasterExtrapolator.addTool(SimplifiedMaterialLocator, name="MaterialLocator")
+    ## Simplified Material for Recalculate. Not used, but let's not load
+    from Configurables import PVOfflineRecalculate
+    recoPV3D.PVOfflineTool.addTool(PVOfflineRecalculate, "PVOfflineRecalculate")
+    recoPV3D.PVOfflineTool.PVOfflineRecalculate.addTool(TrackMasterExtrapolator, "TrackMasterExtrapolator")
+    recoPV3D.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator.addTool(SimplifiedMaterialLocator, name="MaterialLocator")
     from Configurables import HltRecoConf
     if HltRecoConf().getProp("FitVelo"):
         recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.UseFittedTracks = True

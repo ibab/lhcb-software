@@ -63,9 +63,10 @@ class HltRecoConf(LHCbConfigurableUser):
 
 MaxOTHits = 15000 #--> move to CommonForwardOptions, this one is used e.g. in Hlt1GECs.py or Hlt1BeamGasLines.py
 
-CommonMatchVeloMuonOptions = {"MaxChi2DoFX" : 10.,
-                              "XWindow" : 200.,
-                              "YWindow" : 200.  }
+MatchVeloMuonOptions = {"MaxChi2DoFX" : 10.,
+                        "XWindow" : 200.,
+                        "YWindow" : 200.  }
+MatchVeloTTMuonOptions = MatchVeloMuonOptions
 
 VeloTTToolOptions = {"minMomentum" : 0.0,
                      "minPT" : 100.0 ,

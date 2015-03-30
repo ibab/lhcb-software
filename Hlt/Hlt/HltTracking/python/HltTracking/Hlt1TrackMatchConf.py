@@ -8,8 +8,9 @@ from Configurables import Hlt__Track2L0CaloMatch
 from HltLine.HltLine import Hlt1Tool
 
 ## Helper functions
-def to_name( conf ):
-    return conf.mTool().split( '/' )[ -1 ].split( '::' )[ -1 ].split( ':' )[ 0 ]
+from Hlt1TrackNames import Hlt1Tools
+def to_name( key ):
+    return Hlt1Tools[key]
 
 def ConfiguredVeloL0Calo( parent, name = None, chi2 = 9 ):
     if name == None: name = Hlt__MatchVeloL0Calo.__name__
@@ -18,8 +19,7 @@ def ConfiguredVeloL0Calo( parent, name = None, chi2 = 9 ):
                      , MaxMatchChi2 = chi2 ).createConfigurable( parent )
 
 ## Configure tool, set the match chi2
-import Hlt1StreamerConf as Conf
-ConfiguredVeloL0Calo( ToolSvc(), to_name( Conf.VeloL0Calo ), 9 )
+ConfiguredVeloL0Calo( ToolSvc(), to_name( "VeloL0Calo" ), 9 )
 
 ## Streamer symbol
 def FilterVeloL0Calo( selection ):
@@ -39,8 +39,7 @@ def ConfiguredTrackL0Calo( parent, name = None, chi2 = 9 ):
                      ).createConfigurable( parent )
 
 ## Configure tool, set the match chi2
-import Hlt1StreamerConf as Conf
-ConfiguredTrackL0Calo( ToolSvc(), to_name( Conf.TrackL0Calo ), 9 )
+ConfiguredTrackL0Calo( ToolSvc(), to_name( "TrackL0Calo" ), 9 )
 
 ## Streamer symbol
 def FilterTrackL0Calo( selection ):
