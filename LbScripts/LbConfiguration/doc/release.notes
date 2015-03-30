@@ -1,3 +1,7 @@
+2015-03-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* data/Makefile-cmt.mk: added other (fake) targets for consistecy with CMake
+
 2015-03-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* fixed CMake part of LBCORE-771

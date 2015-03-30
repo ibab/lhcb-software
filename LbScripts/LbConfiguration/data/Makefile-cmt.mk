@@ -60,6 +60,14 @@ ifeq ($(container),)
 endif
 	cmt -pack=$(container) TestProject
 
+# dummy targets to comply with CMake Makefile interface
+install: all
+	true
+unsafe-install:
+	true
+post-install:
+	true
+
 # backward compatibiliy
 tests: all
 	$(MAKE) test
