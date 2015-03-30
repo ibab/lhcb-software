@@ -4,6 +4,10 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2015-03-30 - Michel De Cian
+ - Change Configuration such that 2015 online-like tracking sequence can be run by using '2015Dev' 
+   in SpecialData (temporary solution to allow development)
+
 ! 2015-03-09 - Chris Jones
  - Activate by default the seperate track type groups in the RICH 
    reconstruction. Must be done before any 'applyConf' methods are called, in

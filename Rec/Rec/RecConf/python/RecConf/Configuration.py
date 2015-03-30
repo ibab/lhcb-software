@@ -32,14 +32,18 @@ class RecSysConf(LHCbConfigurableUser):
                                (RichRecSysConf,richRecConfName)
                                ]
 
-    ## Default tracking Sub-detector processing sequence
+    ## Default tracking Sub-detector processing sequence (Run I )
     DefaultTrackingSubdets = ["VELO","TT","IT","OT","Tr","Vertex"]
+    ## Default tracking Sub-detector processing sequence (Run II)
+    DefaultTrackingSubdetsRun2 = ["VELO","TT","IT","OT","TrHLT1","Vertex", "TrHLT2"]
     ## Default reconstruction sequence for field-on data
     DefaultSubDetsFieldOn  = ["Decoding"] + DefaultTrackingSubdets+["RICH","CALO","MUON","PROTO","SUMMARY"]
+    ## Default reconstruction sequence for field-on data (Run II)
+    DefaultSubDetsFieldOnRun2  = ["Decoding"] + DefaultTrackingSubdetsRun2 + ["RICH","CALO","MUON","PROTO","SUMMARY"]
     ## Default reconstruction sequence for field-off data
     DefaultSubDetsFieldOff = ["Decoding"] + DefaultTrackingSubdets+["CALO","RICH","MUON","PROTO","SUMMARY"]
     ## List of known special data processing options
-    KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff", "beamGas", "microBiasTrigger", "pA", "pGun" ]
+    KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff", "beamGas", "microBiasTrigger", "pA", "pGun", "2015Dev" ]
 
     ## Steering options
     __slots__ = {
@@ -76,10 +80,12 @@ class RecSysConf(LHCbConfigurableUser):
         
         # Phases
         if not self.isPropertySet("RecoSequence"):
+            self.setProp("RecoSequence",self.DefaultSubDetsFieldOn)
             if "fieldOff" in self.getProp("SpecialData"):
                 self.setProp("RecoSequence",self.DefaultSubDetsFieldOff)
-            else:
-                self.setProp("RecoSequence",self.DefaultSubDetsFieldOn)
+            if "2015Dev" in self.getProp("SpecialData"):
+                self.setProp("RecoSequence",self.DefaultSubDetsFieldOnRun2)
+        
         recoSeq = self.getProp("RecoSequence")
         if self.getProp("SkipTracking"):
             for det in self.DefaultTrackingSubdets:
@@ -89,7 +95,7 @@ class RecSysConf(LHCbConfigurableUser):
         ProcessPhase("Reco").DetectorList += recoSeq
 
         # Primary Vertex and V0 finding
-        if "Vertex" in recoSeq:
+        if "Vertex" in recoSeq  and "2015Dev" not in self.getProp("SpecialData"):
             from Configurables import PatPVOffline, TrackV0Finder
             pvAlg = PatPVOffline()
             if "2009" == self.getProp("DataType"):
@@ -115,6 +121,27 @@ class RecSysConf(LHCbConfigurableUser):
                 
             trackV0Finder = TrackV0Finder()
             GaudiSequencer("RecoVertexSeq").Members += [ trackV0Finder ]
+
+        # for Run 2, we run a different algorithm and don't want to have
+        # the V0 finder in the vertex sequence (which is now after HLT1)
+        if "Vertex" in recoSeq and "2015Dev" in self.getProp("SpecialData"):
+            from Configurables import PatPV3D, PVOfflineTool, LSAdaptPV3DFitter
+            pvAlg = PatPV3D("PatPV3D")
+            ## this should go in a configuration file when we know what to use
+            pvAlg.addTool(PVOfflineTool,"PVOfflineTool")
+            pvAlg.PVOfflineTool.addTool(LSAdaptPV3DFitter, "LSAdaptPV3DFitter")
+            pvAlg.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
+            pvAlg.PVOfflineTool.LSAdaptPV3DFitter.UseFittedTracks = True
+            pvAlg.PVOfflineTool.LSAdaptPV3DFitter.AddMultipleScattering = False
+            pvAlg.PVOfflineTool.LSAdaptPV3DFitter.TrackErrorScaleFactor = 1.0
+            pvAlg.PVOfflineTool.LSAdaptPV3DFitter.MinTracks = 4
+            pvAlg.PVOfflineTool.LSAdaptPV3DFitter.trackMaxChi2 = 12.0
+            pvAlg.PVOfflineTool.UseBeamSpotRCut = True
+            pvAlg.PVOfflineTool.BeamSpotRCut = 0.2
+            pvAlg.PVOfflineTool.InputTracks = [ "Rec/Track/FittedHLT1Tracks" ]
+            pvAlg.OutputVerticesName = "Rec/Vertex/Primary"
+            GaudiSequencer("RecoVertexSeq").Members += [ pvAlg ];
+
 
         ## Upgrade type?
         if self.getProp("DataType") == 'Upgrade' :
