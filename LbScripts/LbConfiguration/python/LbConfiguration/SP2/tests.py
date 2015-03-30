@@ -411,3 +411,39 @@ def test_LBCORE_522():
         assert False, 'exception expected'
     except ValueError:
         pass
+
+def test_SearchPath():
+    from LbConfiguration.SP2 import (SearchPath, SearchPathEntry,
+                                     EnvSearchPathEntry)
+
+    if 'DUMMY_ENV_VAR' in os.environ:
+        del os.environ['DUMMY_ENV_VAR']
+    try:
+        EnvSearchPathEntry('DUMMY_ENV_VAR')
+        assert False, 'exception expected'
+    except ValueError:
+        pass
+
+    assert os.environ['PATH'] == str(EnvSearchPathEntry('PATH'))
+
+    path = SearchPath([SearchPathEntry(p)
+                       for p in os.environ['PATH'].split(os.pathsep)])
+    assert os.environ['PATH'] == str(path)
+    assert os.environ['PATH'].split(os.pathsep) == list(path)
+
+    path2 = SearchPath([EnvSearchPathEntry('PATH')])
+    assert os.environ['PATH'].split(os.pathsep) == list(path2)
+
+    path3 = SearchPath([SearchPathEntry('b')])
+    path3.insert(0, 'a')
+    path3.append('c')
+    assert os.pathsep.join('abc') == str(path3)
+
+    path4 = path3 + list('123')
+    assert os.pathsep.join('abc123') == str(path4)
+
+    path5 = path3 + SearchPath('123')
+    assert os.pathsep.join('abc123') == str(path5)
+
+    assert not SearchPath([])
+    assert SearchPath(['a'])

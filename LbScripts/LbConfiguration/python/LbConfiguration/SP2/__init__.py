@@ -12,19 +12,96 @@ __author__ = 'Marco Clemencic <marco.clemencic@cern.ch>'
 
 import sys
 assert sys.version_info >= (2, 6), "Python >= 2.6 is required"
+import os
+
+def _cmakeStr(txt):
+    return ' '.join('"%s"' % entry.replace('"', '\\"')
+                    for entry in str(txt).split(os.pathsep))
+
+
+class SearchPathEntry(object):
+    def __init__(self, path):
+        self.path = path
+    def __str__(self):
+        return str(self.path)
+    def toCMake(self):
+        return 'list(INSERT CMAKE_PREFIX_PATH 0 {0})\n'.format(_cmakeStr(self))
+    def __repr__(self):
+        return '{0}({1!r})'.format(self.__class__.__name__, self.path)
+
+class EnvSearchPathEntry(SearchPathEntry):
+    def __init__(self, envname, default=None):
+        if default is None and not envname in os.environ:
+            raise ValueError('environment variable %s not defined' % envname)
+        self.envname = envname
+        self.default = default
+    def __str__(self):
+        return str(os.environ.get(self.envname, self.default))
+    def toCMake(self):
+        return (('if(NOT ENV{{{0}}})\n'
+                 '  # use a default value\n'
+                 '  set(ENV{{{0}}} {1})\n'
+                 'endif()\n'
+                 'list(INSERT CMAKE_PREFIX_PATH 0 "$ENV{{{0}}}")\n')
+                .format(self.envname, _cmakeStr(self)))
+    def __repr__(self):
+        return '{0}({1!r}, {2!r})'.format(self.__class__.__name__,
+                                          self.envname, str(self))
+
+class SearchPath(object):
+    def __init__(self, entries):
+        self.entries = list(entries)
+    def __iter__(self):
+        def generator():
+            for entry in self.entries:
+                paths = str(entry).split(os.pathsep)
+                for path in paths:
+                    yield path
+        return generator()
+    def insert(self, index, value):
+        return self.entries.insert(index, value)
+    def append(self, value):
+        return self.entries.append(value)
+    def __setitem__(self, index, value):
+        if isinstance(value, SearchPath):
+            value = value.entries
+        return self.entries.__setitem__(index, value)
+    def __str__(self):
+        return os.pathsep.join(self)
+    def __nonzero__(self):
+        return bool(self.entries)
+    def __add__(self, other):
+        if isinstance(other, SearchPath):
+            other = other.entries
+        return SearchPath(self.entries + other)
+    def toCMake(self):
+        # we need to add them in reverse order because the 'prepend'
+        def toEntry(entry):
+            '''ensure that the entry is a SearchPathEntry'''
+            if isinstance(entry, SearchPathEntry):
+                return entry
+            return SearchPathEntry(entry)
+        return '\n'.join(toEntry(entry).toCMake()
+                         for entry in self.entries[::-1])
+    def __repr__(self):
+        return '{0}({1!r})'.format(self.__class__.__name__,
+                                   self.entries)
 
 def _defaultPath():
     '''
     Return the default search path, based on the variables CMAKE_PREFIX_PATH and
     CMTPROJECTPATH.
     '''
-    import os
-    env_vars = ['CMAKE_PREFIX_PATH', 'CMTPROJECTPATH', 'LHCBPROJECTPATH']
-    is_set = lambda v: os.environ.get(v)
-    var2path = lambda v: os.environ[v].split(os.pathsep)
-    return sum(map(var2path, filter(is_set, env_vars)), [])
+    env_vars = ['CMTPROJECTPATH', 'LHCBPROJECTPATH', 'CMAKE_PREFIX_PATH']
+    path = []
+    for name in env_vars:
+        try:
+            path.append(EnvSearchPathEntry(name))
+        except ValueError:
+            pass # ignore undefined variables
+    return path
 
-path = _defaultPath()
+path = SearchPath(_defaultPath())
 
 class Error(RuntimeError):
     '''

@@ -64,7 +64,11 @@ def main():
     project = FixProjectCase(project)
 
     if opts.user_area and not opts.no_user_area:
-        LbConfiguration.SP2.path.insert(0, opts.user_area)
+        from LbConfiguration.SP2 import EnvSearchPathEntry, SearchPathEntry
+        if os.environ['User_release_area'] == opts.user_area:
+            opts.dev_dirs.insert(0, EnvSearchPathEntry('User_release_area'))
+        else:
+            opts.dev_dirs.insert(0, SearchPathEntry(opts.user_area))
 
     # FIXME: we need to handle common options like --list in a single place
     if opts.list:
@@ -89,7 +93,7 @@ def main():
 
     # prepend dev dirs to the search path
     if opts.dev_dirs:
-        LbConfiguration.SP2.path[:] = map(str, opts.dev_dirs) + LbConfiguration.SP2.path
+        LbConfiguration.SP2.path[:] = opts.dev_dirs + LbConfiguration.SP2.path
 
     try:
         projectDir = findProject(project, version, opts.platform)
@@ -114,7 +118,7 @@ def main():
                 search_path=' '.join(['"%s"' % p for p in LbConfiguration.SP2.path]),
                 search_path_repr=repr(LbConfiguration.SP2.path),
                 search_path_env=os.pathsep.join(LbConfiguration.SP2.path),
-                use_cmake=(use_cmake and 'yes' or ''),
+                build_tool=('cmake' if use_cmake else 'cmt'),
                 PROJECT=project.upper(),
                 local_project=local_project,
                 local_version=local_version,
@@ -123,15 +127,15 @@ def main():
     # FIXME: improve generation of searchPath files, so that they match the command line
     templateDir = os.path.join(os.path.dirname(__file__), 'templates')
     templates = ['CMakeLists.txt', 'toolchain.cmake', 'Makefile',
-                 'searchPath.py', 'searchPath.cmake',
+                 'searchPath.py',
                  'build.conf', 'run']
     # generated files that need exec permissions
     execTemplates = set(['run'])
 
     if opts.nightly:
-        data['slot'], data['day'] = opts.nightly
+        data['slot'], data['day'], data['base'] = opts.nightly
     else:
-        data['slot'] = data['day'] = ''
+        data['slot'] = data['day'] = data['base'] = ''
 
     # for backward compatibility, we create the CMT configuration and env helpers
     if not use_cmake:
@@ -149,6 +153,13 @@ def main():
                     stat.S_IXUSR | stat.S_IXGRP)
             os.chmod(dest, mode)
 
+    # generate toolchain.cmake
+    if opts.dev_dirs:
+        logging.debug('creating "%s"', 'searchPath.cmake')
+        dest = os.path.join(devProjectDir, 'searchPath.cmake')
+        with open(dest, 'w') as f:
+            f.write('# Search path defined from lb-dev command line\n')
+            f.write(opts.dev_dirs.toCMake())
 
     # When the project name is not the same as the local project name, we need a
     # fake *Sys package for SetupProject (CMT only).

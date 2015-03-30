@@ -1,13 +1,13 @@
 #!/bin/sh
 
-USE_CMAKE=${use_cmake}
+build_tool=${build_tool}
 
 if [ -z "$$CMTCONFIG" ] ; then
   echo "error: CMTCONFIG not defined"
   exit 1
 fi
 
-if [ -n "$$USE_CMAKE" ] ; then
+if [ "$build_tool" = "cmake" ] ; then
   run_cmd=$$(dirname $$0)/build.$$CMTCONFIG/run
   if [ -e "$$run_cmd" ] ; then
     exec $$run_cmd "$$@"

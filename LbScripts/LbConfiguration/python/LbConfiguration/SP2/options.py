@@ -15,35 +15,61 @@ __author__ = 'Marco Clemencic <marco.clemencic@cern.ch>'
 
 import os
 
-class SearchPathEntry(object):
-    def __init__(self, path):
-        self.path = path
-    def __str__(self):
-        return str(self.path)
+from LbConfiguration.SP2 import SearchPathEntry, EnvSearchPathEntry, SearchPath
 
-class LHCbDevPathEntry(object):
-    def __str__(self):
-        return str(os.environ['LHCBDEV'])
+class LHCbDevPathEntry(EnvSearchPathEntry):
+    def __init__(self):
+        EnvSearchPathEntry.__init__(self, 'LHCBDEV')
+    def __repr__(self):
+        return '{0}()'.format(self.__class__.__name__)
 
-class NightlyPathEntry(object):
+class NightlyPathEntry(SearchPathEntry):
     def __init__(self, base, slot, day):
         self.base, self.slot, self.day = base, slot, day
+    @property
+    def path(self):
+        return os.path.join(self.base, self.slot, self.day)
     def __str__(self):
-        return str(os.path.join(self.base, self.slot, self.day))
-
-def getNightlyExtraPath(path, slot, day):
-    extra_path = []
-    confSumm_file = os.path.join(path, 'confSummary.py')
-    config_file = os.path.join(path, 'configuration.xml')
-    if os.path.exists(confSumm_file): # Try with the python digested version
-        data = {'__file__': confSumm_file}
-        exec open(confSumm_file).read() in data #IGNORE:W0122
-        # Get the list and convert it to strings
-        extra_path = filter(str, data.get('cmtProjectPathList',[]))
-    elif os.path.exists(config_file): # Try with the XML configuration
-        from LbConfiguration.SetupProject import getNightlyCMTPROJECTPATH
-        extra_path = getNightlyCMTPROJECTPATH(config_file, slot, day)
-    return extra_path
+        search_path = map(str, [self.path] + self.getNightlyExtraPath())
+        return os.pathsep.join(search_path)
+    def getNightlyExtraPath(self):
+        extra_path = []
+        path = self.path
+        confSumm_file = os.path.join(path, 'confSummary.py')
+        config_file = os.path.join(path, 'configuration.xml')
+        if os.path.exists(confSumm_file): # Try with the python digested version
+            data = {'__file__': confSumm_file}
+            exec open(confSumm_file).read() in data #IGNORE:W0122
+            # Get the list and convert it to strings
+            extra_path = data.get('cmtProjectPathList',[])
+        elif os.path.exists(config_file): # Try with the XML configuration
+            from LbConfiguration.SetupProject import getNightlyCMTPROJECTPATH
+            extra_path = getNightlyCMTPROJECTPATH(config_file,
+                                                  self.slot, self.day)
+        return map(SearchPathEntry, extra_path)
+    def toCMake(self):
+        return ('# Use the nightly builds search path if needed.\n'
+                'if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/build.conf)\n'
+                '  file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/build.conf build_conf)\n'
+                '  foreach(l ${build_conf})\n'
+                '    if(l MATCHES "^ *([a-zA-Z_][a-zA-Z0-9_]*)=([^ ]*) *$$")\n'
+                '      set(${CMAKE_MATCH_1} "${CMAKE_MATCH_2}")\n'
+                '    endif()\n'
+                '  endforeach()\n'
+                'endif()\n'
+                'if(NOT nightly_base)\n'
+                '  set(nightly_base "$ENV{LHCBNIGHTLIES}")\n'
+                'endif()\n'
+                '\n'
+                'if(nightly_slot)\n'
+                '  if(EXISTS ${nightly_base}/${nightly_slot}/${nightly_day}/searchPath.cmake)\n'
+                '    include(${nightly_base}/${nightly_slot}/${nightly_day}/searchPath.cmake)\n'
+                '  list(INSERT CMAKE_PREFIX_PATH 0 "${nightly_base}/${nightly_slot}/${nightly_day}")\n'
+                '  endif()\n'
+                'endif()\n')
+    def __repr__(self):
+        return '{0}({1!r}, {2!r}, {3!r})'.format(self.__class__.__name__,
+                                                 self.base, self.slot, self.day)
 
 def addSearchPath(parser):
     '''
@@ -53,9 +79,9 @@ def addSearchPath(parser):
 
     def dev_dir_cb(option, opt_str, value, parser):
         if value is None:
-            if 'LHCBDEV' in os.environ:
+            try:
                 value = LHCbDevPathEntry()
-            else:
+            except ValueError:
                 raise OptionValueError('--dev used, but LHCBDEV is not defined')
         else:
             value = SearchPathEntry(value)
@@ -83,37 +109,41 @@ def addSearchPath(parser):
         try:
             slot = rargs.pop(0)
         except IndexError:
-            raise OptionValueError('%s must be followed by the slot of the nightlies and optionally by the day' % opt_str)
+            raise OptionValueError('%s must be followed by the slot of the '
+                                   'nightlies and optionally by the day'
+                                   % opt_str)
 
         if rargs and rargs[0].capitalize() in days:
             day = rargs.pop(0).capitalize()
 
         # Locate the requested slot in the know nightlies directories
-        nightly_bases = [os.environ.get('LHCBNIGHTLIES', '/afs/cern.ch/lhcb/software/nightlies'),
-                         os.environ.get('LCG_nightlies_area', '/afs/cern.ch/sw/lcg/app/nightlies')]
+        nightly_bases = [os.environ.get('LHCBNIGHTLIES',
+                                        '/afs/cern.ch/lhcb/software/nightlies'),
+                         os.environ.get('LCG_nightlies_area',
+                                        '/afs/cern.ch/sw/lcg/app/nightlies')]
 
         slot_dir = None
         for nightly_base, slot_id in [(nightly_base, slot_id)
                                       for slot_id in (slot, 'lhcb-' + slot)
                                       for nightly_base in nightly_bases]:
             slot_dir = os.path.join(nightly_base, slot_id)
-            if os.path.isdir(slot_dir): break # exit from the loop as soon as the slot is found
+            if os.path.isdir(slot_dir):
+                break # exit from the loop as soon as the slot is found
         else:
-            raise OptionValueError('Cannot find slot %s in %s. Check the values of the option %s' % (slot, nightly_bases, opt_str))
+            raise OptionValueError('Cannot find slot %s in %s. '
+                                   'Check the values of the option %s'
+                                   % (slot, nightly_bases, opt_str))
         # set slot to the actual slot name
         slot = slot_id
 
         path = os.path.join(slot_dir, day)
         if not os.path.isdir(path):
-            raise OptionValueError('The directory %s does not exists. Check the values of the option %s' % (path, opt_str))
+            raise OptionValueError('The directory %s does not exists. '
+                                   'Check the values of the option %s'
+                                   % (path, opt_str))
 
         parser.values.dev_dirs.append(NightlyPathEntry(nightly_base, slot, day))
-        parser.values.nightly = (slot, day)
-
-        # Get the extra CMTPROJECTPATH entries needed for the nightlies
-        extra_path = getNightlyExtraPath(path, slot, day)
-        if extra_path:
-            parser.values.dev_dirs += map(SearchPathEntry, extra_path)
+        parser.values.nightly = (slot, day, nightly_base)
 
     parser.add_option('--nightly', action='callback',
                       metavar='SLOT [DAY]', type='string',
@@ -133,7 +163,7 @@ def addSearchPath(parser):
     parser.add_option('--no-user-area', action='store_true',
                       help='Ignore the user release area when looking for projects.')
 
-    parser.set_defaults(dev_dirs=[],
+    parser.set_defaults(dev_dirs=SearchPath([]),
                         user_area=os.environ.get('User_release_area'),
                         no_user_area=False,
                         nightly=None)

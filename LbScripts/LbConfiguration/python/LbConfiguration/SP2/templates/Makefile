@@ -1,9 +1,9 @@
-USE_CMAKE=${use_cmake}
+build_tool=cmake
 ifeq ($$(wildcard build.conf),build.conf)
 include build.conf
 endif
 
-ifneq ($$(USE_CMAKE),)
+ifeq ($$(build_tool),cmake)
 ######## CMake case ########
 
 include $$(LBUTILSROOT)/data/Makefile-cmake.mk
