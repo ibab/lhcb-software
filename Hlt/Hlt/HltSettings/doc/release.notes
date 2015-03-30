@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-03-31 - Roel Aaij
+ - Update 1TrackMuon cuts.
+
 ! 2015-03-28 - Roel Aaij
  - Add Commissioning_Physics_MC2015.
  - Remove L0 NoSPD channels from Commissioning_Physics_2015.
