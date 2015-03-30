@@ -4,8 +4,17 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-03-30 - Marian Stahl
+  - release.notes: Didn't enter release note for my commit on 2015-03-27
+
 ! 2015-03-29 - Michel De Cian
  - Add configuration for PatForward in HLT1 in 2015 to 'PatAlgConf'.
+
+! 2015-03-27 - Marian Stahl
+ - PatForwardTool: New implementation of SecondLoop.
+   Moved it from forwardTrack into tracksFromTrack and pulled out
+   fillXList while processing SecondLoop. Speeds up the code by 6%, 
+   no changes in efficiency/ghost rate
 
 ! 2015-03-23 - Sascha Stahl
  - PatForwardTool: The ranges to project hits into the reference plane take
