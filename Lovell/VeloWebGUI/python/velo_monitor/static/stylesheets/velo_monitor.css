@@ -4,9 +4,16 @@ sidebar h1 {
 }
 
 sidebar .run-number {
-  margin: -20px -20px 0 -20px;
-  padding: 20px;
+  margin: -2px 0 0 0;
+  padding: 10px 10px 15px 10px;
   border-bottom: 1px solid #eee;
+}
+
+@media only screen and (min-width : 768px) {
+  sidebar .run-number {
+    margin: -20px -20px 0 -20px;
+    padding: 20px;
+  }
 }
 
 sidebar .run-number:hover {
@@ -74,8 +81,29 @@ sidebar .sensor-detail {
 }
 
 .sensor-selector {
-  margin: 20px 0;
+  margin: 10px 0;
   text-align: center;
+}
+
+.sensor-selector .input-group {
+  width: 100%;
+  margin: 10px;
+}
+
+.sensor-selector .previous, .sensor-selector .next {
+  width: 100%;
+}
+
+@media only screen and (min-width : 768px) {
+  .sensor-selector .input-group {
+    width: auto;
+  }
+}
+
+@media only screen and (min-width : 992px) {
+  .sensor-selector .previous, .sensor-selector .next {
+    width: auto;
+  }
 }
 
 /* Hint that the statistics boxes are draggable */
