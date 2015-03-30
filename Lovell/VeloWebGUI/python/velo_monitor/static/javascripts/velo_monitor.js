@@ -11,8 +11,8 @@ var VeloMonitor = (function(window, undefined) {
   TEMPLATES.failureMsg = '<p>There was a problem retrieving plot '
     + '<code>{0}</code>'
     + 'Please contact the administrator. Error message:</p>';
-  TEMPLATES.row = '<div class="row"></div>';
-  TEMPLATES.togglesContainer = '<div class="toggles col-md-4 col-md-offset-4">{0}</div>';
+  TEMPLATES.div = '<div></div>';
+  TEMPLATES.togglesContainer = '<div class="toggles">{0}</div>';
   TEMPLATES.togglesToggle = '<div class="toggle">'
     + '<label for="{0}">'
     + '<input type="checkbox" id="{0}" checked> <span style="color: {2}">{1}</span>'
@@ -112,7 +112,7 @@ var VeloMonitor = (function(window, undefined) {
         // Set up the plotable toggles after the .plot element
         // As the .plot element has a fixed height, inserting them inside it will
         // cause them to overflow outside the div, so insert after
-        setupPlotablesToggler(chart, $(TEMPLATES.row).insertAfter(container));
+        setupPlotablesToggler(chart, $(TEMPLATES.div).insertAfter(container));
       } else {
         var resultData = result['data'],
             plotType = resultData['object_class'],
@@ -344,7 +344,7 @@ var VeloMonitor = (function(window, undefined) {
         // We don't set attr data-sensor as it's data('sensor') that's used
         // elsewhere, and jQuery caches calls to data so won't see the updated
         // the DOM
-        $('.plot').empty().data('sensor', sensorNumber);
+        $('.plot, .toggles').empty().data('sensor', sensorNumber);
         window.history.pushState(null, null, url);
         runView.setupPlots();
         return false;
