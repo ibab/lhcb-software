@@ -147,13 +147,12 @@ class CaloRecoConf(LHCbConfigurableUser):
     def digits   ( self ) :
         """
         Configure processing of Digits
-        
-        """        
-	digitConf = CaloDigitConf()
-	digitConf.Context 		= "Offline"
-	digitConf.OutputLevel 		= self.getProp ('OutputLevel'       )
-	digitConf.EnableDigitsOnDemand 	= self.getProp ('EnableRecoOnDemand')
-	digitConf.CreateADCs		= self.getProp ('CreateADCs'        )
+        """
+        digitConf=CaloDigitConf()
+        digitConf.Context="Offline"
+        digitConf.OutputLevel 		= self.getProp ('OutputLevel'       )
+        digitConf.EnableDigitsOnDemand 	= self.getProp ('EnableRecoOnDemand')
+        digitConf.CreateADCs		= self.getProp ('CreateADCs'        )
         digitConf.Verbose               = self.getProp ('Verbose'           )
         if self.getProp('NoSpdPrs') :
             digitConf.Detectors = ['Ecal','Hcal']            
@@ -162,7 +161,7 @@ class CaloRecoConf(LHCbConfigurableUser):
             from DAQSys.DecoderClass import Decoder
             Decoder("CaloDigitsFromRaw/SpdFromRaw",active=False,conf=DecoderDB)
             Decoder("CaloDigitsFromRaw/PrsFromRaw",active=False,conf=DecoderDB)
-
+            
         return digitConf.digits()
     
     ## Configure reconstruction of Ecal Clusters
@@ -677,7 +676,7 @@ class CaloProcessor( CaloRecoConf,LHCbConfigurableUser ):
 
 
         #  add only the requested components to the sequence
-	if 'Digits'     in recList :
+        if 'Digits'     in recList :
             addAlgs ( recoSeq , self.digits() ) 
             CaloDigitConf().printConf()
         if 'Clusters'   in recList :
@@ -744,13 +743,14 @@ class CaloProcessor( CaloRecoConf,LHCbConfigurableUser ):
 
         # ChargedProtoParticle
         if not self.getProp('SkipCharged') :
-            ecal = getAlgo( ChargedProtoParticleAddEcalInfo,"ChargedProtoPAddEcal", context)
-            brem = getAlgo( ChargedProtoParticleAddBremInfo,"ChargedProtoPAddBrem", context)
-            hcal = getAlgo( ChargedProtoParticleAddHcalInfo,"ChargedProtoPAddHcal", context)
+            suffix="For"+self.getName()                
+            ecal = getAlgo( ChargedProtoParticleAddEcalInfo,"ChargedProtoPAddEcal"+suffix, context)
+            brem = getAlgo( ChargedProtoParticleAddBremInfo,"ChargedProtoPAddBrem"+suffix, context)
+            hcal = getAlgo( ChargedProtoParticleAddHcalInfo,"ChargedProtoPAddHcal"+suffix, context)
             if not self.getProp('NoSpdPrs') :
-                prs  = getAlgo( ChargedProtoParticleAddPrsInfo ,"ChargedProtoPAddPrs" , context)
-                spd  = getAlgo( ChargedProtoParticleAddSpdInfo ,"ChargedProtoPAddSpd" , context)            
-            comb = getAlgo( ChargedProtoCombineDLLsAlg, "ChargedProtoPCombineDLLs", context)
+                prs  = getAlgo( ChargedProtoParticleAddPrsInfo ,"ChargedProtoPAddPrs"+suffix , context)
+                spd  = getAlgo( ChargedProtoParticleAddSpdInfo ,"ChargedProtoPAddSpd"+suffix , context)            
+            comb = getAlgo( ChargedProtoCombineDLLsAlg, "ChargedProtoPCombineDLLs"+suffix, context)
 
             # ChargedProtoP Maker on demand (not in any sequencer)  ####
             maker = getAlgo( ChargedProtoParticleMaker, "ChargedProtoMaker" , context, cloc , pdod )
@@ -799,7 +799,7 @@ class CaloProcessor( CaloRecoConf,LHCbConfigurableUser ):
                     spd.ProtoParticleLocation = cloc            
                 comb.ProtoParticleLocation = cloc            
             # Fill the sequence
-            cpSeq = getAlgo( GaudiSequencer , "ChargedProtoPCaloUpdateSeq", context )            
+            cpSeq = getAlgo( GaudiSequencer , self.getName()+"ChargedProtoPCaloUpdateSeq", context )            
             cpSeq.Members = [ ecal,brem,hcal ]
             if not self.getProp('NoSpdPrs') :
                 cpSeq.Members += [ prs,spd ]

@@ -4,6 +4,9 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2015-03-30 - Olivier Deschamps
+ - python/CaloReco/Configuration : in CaloProcessor : give CaloProcessor-name-dependent naming for the algorithms updating charged ProtoP
+
 ! 2015-03-29 - Roel Aaij
  - Fix bad assert.
 
