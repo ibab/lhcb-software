@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-03-30 - Carlos Vazquez Sierra
+ - Migration of B2CC lines
+
 ! 2015-03-27 - Lucio Anderlini
  - Several bug-fixes to StrippingCalib/StrippingPIDCalib.py
  - Added two lines in StrippingCalib/StrippingPIDCalib.py to keep the 
