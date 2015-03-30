@@ -101,9 +101,14 @@ def main():
     except MissingProjectError, x:
         parser.error(str(x))
 
+    # Check if it is a CMake-enabled project
     use_cmake = os.path.exists(os.path.join(projectDir, project + 'Config.cmake'))
     if not use_cmake:
         logging.warning('%s %s does not seem a CMake project', project, version)
+
+    # Check if it is a CMT-enabled projects
+    use_cmt = os.path.exists(os.path.join(projectDir, os.pardir, os.pardir,
+                                          'cmt', 'project.cmt'))
 
     # Create the dev project
     if not os.path.exists(opts.dest_dir):
@@ -118,6 +123,7 @@ def main():
                 search_path=' '.join(['"%s"' % p for p in LbConfiguration.SP2.path]),
                 search_path_repr=repr(LbConfiguration.SP2.path),
                 search_path_env=os.pathsep.join(LbConfiguration.SP2.path),
+                # we use cmake if available
                 build_tool=('cmake' if use_cmake else 'cmt'),
                 PROJECT=project.upper(),
                 local_project=local_project,
@@ -138,7 +144,7 @@ def main():
         data['slot'] = data['day'] = data['base'] = ''
 
     # for backward compatibility, we create the CMT configuration and env helpers
-    if not use_cmake:
+    if use_cmt:
         templates += ['cmt/project.cmt', 'build_env.sh', 'build_env.csh']
         os.makedirs(os.path.join(devProjectDir, 'cmt'))
 
@@ -163,15 +169,20 @@ def main():
 
     # When the project name is not the same as the local project name, we need a
     # fake *Sys package for SetupProject (CMT only).
-    if not use_cmake and project != local_project:
+    if use_cmt and project != local_project:
         t = Template(open(os.path.join(templateDir, 'cmt/requirements_')).read())
         templateName = os.path.join(local_project + 'Sys', 'cmt/requirements')
         os.makedirs(os.path.dirname(os.path.join(devProjectDir, templateName)))
         logging.debug('creating "%s"', templateName)
         open(os.path.join(devProjectDir, templateName), 'w').write(t.substitute(data))
+        if use_cmake: # add a CMakeLists.txt to it
+            with open(os.path.join(devProjectDir, local_project + 'Sys',
+                                   'CMakeLists.txt'), 'w') as cml:
+                cml.write('gaudi_subdir({0} {1})\n'
+                          .format(local_project + 'Sys', local_version))
 
     # Success report
-    finalMessage = '''
+    msg = '''
 Successfully created the local project {0} in {1}
 
 To start working:
@@ -180,24 +191,16 @@ To start working:
   > getpack MyPackage vXrY
 
 then
-'''
 
-    finalMessageCMake = finalMessage + '''
   > make
   > make test
 
-and optionally
+and optionally (CMake only)
 
   > make install
 
-You can customize the configuration by editing the files 'CMakeLists.txt'
-(see http://cern.ch/gaudi/CMake for details).
+You can customize the configuration by editing the files 'build.conf' and
+'CMakeLists.txt' (see http://cern.ch/gaudi/CMake for details).
 '''
 
-    finalMessageCMT = finalMessage + '''
-  > make
-  > make test
-'''
-
-    msg = use_cmake and finalMessageCMake or finalMessageCMT
     print msg.format(opts.name, opts.dest_dir, devProjectDir)
