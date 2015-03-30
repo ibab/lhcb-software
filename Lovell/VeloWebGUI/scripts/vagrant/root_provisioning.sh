@@ -129,7 +129,7 @@ sudo service iptables stop
 sudo chkconfig iptables off
 
 # Relax permissions so Apache can talk to the uWSGI proxy
-sudo setsebool httpd_can_network_connect 1
+sudo setsebool -P httpd_can_network_connect 1
 
 # Run the user provision as the vagrant user
 su vagrant -c '/vagrant/user_provisioning.sh'
