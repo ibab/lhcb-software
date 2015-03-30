@@ -81,7 +81,8 @@ def projectExtraPath(projroot):
     '''
     Return any extra search path required by the project at 'projroot'.
     '''
-    extra_path = []
+    from LbConfiguration.SP2.options import SearchPath, NightlyPathEntry
+    extra_path = SearchPath([])
     # drop the 'InstallArea' part of the path
     while 'InstallArea' in projroot:
         projroot = os.path.dirname(projroot)
@@ -95,24 +96,29 @@ def projectExtraPath(projroot):
         else:
             return []
 
-    # check for a requested nightly slot
-    nightly = os.path.join(projroot, 'nightly.cmake')
-    if os.path.exists(nightly):
-        exp = re.compile('^\s*set\s*\(\s*nightly_(slot|day)\s+(\S*)\s*\)', re.I)
-        vals = dict([l.groups() for l in filter(None, map(exp.match, open(nightly)))])
-        try:
-            slot = vals['slot']
-            day = vals['day']
-            nd = os.path.join(os.environ.get('LHCBNIGHTLY', ''), slot, day)
-            extra_path.append(nd)
-            from options import getNightlyExtraPath
-            extra_path.extend(getNightlyExtraPath(nd, slot, day))
-        except KeyError:
-            logging.warning('invalid content of %s: ignored', nightly)
-
     # check for the Python digested search path
     spFile = os.path.join(projroot, 'searchPath.py')
-    extra_path.extend(extractList(spFile, 'path'))
+    if os.path.exists(spFile):
+        data = {}
+        exec open(spFile).read() in data #IGNORE:W0122
+        extra_path = data['path']
+
+    # check for a requested nightly slot
+    build_conf = os.path.join(projroot, 'build.conf')
+    if os.path.exists(build_conf):
+        vals = dict(l.strip().split('=', 1)
+                    for l in map(str.strip, open(build_conf))
+                    if l and not l.startswith('#'))
+        slot = vals.get('nightly_slot')
+        day = vals.get('nightly_day')
+        base = vals.get('nightly_base') or os.environ.get('LHCBNIGHTLY', '')
+        if slot and day and base:
+            for p in extra_path:
+                if isinstance(p, NightlyPathEntry):
+                    p.base, p.slot, p.day = base, slot, day
+                    break
+            else: # else clause for the 'for' statement
+                extra_path.insert(0, NightlyPathEntry(base, slot, day))
 
     return extra_path
 
@@ -193,13 +199,13 @@ class SP2(EnvConfig.Script):
 
     def _makeEnv(self):
         # FIXME: when we drop Python 2.4, this should become 'from . import path'
-        from LbConfiguration.SP2 import path
+        from LbConfiguration.SP2 import path, SearchPathEntry
         # prepend dev dirs to the search path
         if self.opts.dev_dirs:
-            path[:] = map(str, self.opts.dev_dirs) + path
+            path[:] = self.opts.dev_dirs + path
 
         if self.opts.user_area and not self.opts.no_user_area:
-            path.insert(0, self.opts.user_area)
+            path.insert(0, SearchPathEntry(self.opts.user_area))
 
         # FIXME: we need to handle common options like --list in a single place
         if self.opts.list:

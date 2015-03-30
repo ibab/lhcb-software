@@ -1,5 +1,9 @@
 2015-03-30  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* lb-run: fixed after changes to fix LBCORE-771
+
+2015-03-30  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* improved fix to CMT part of LBCORE-771 (no need changes to LbNightlyTools)
 
 2015-03-27  Marco Clemencic  <Marco.Clemencic@cern.ch>

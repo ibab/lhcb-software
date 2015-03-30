@@ -103,6 +103,11 @@ class SearchPath(object):
         if isinstance(value, SearchPath):
             value = value.entries
         return self.entries.__setitem__(index, value)
+    def __getitem__(self, index):
+        if isinstance(index, slice):
+            return self.__class__(self.entries[index])
+        else:
+            return self.entries[index]
     def __str__(self):
         return os.pathsep.join(self)
     def __nonzero__(self):
@@ -123,6 +128,8 @@ class SearchPath(object):
     def __repr__(self):
         return '{0}({1!r})'.format(self.__class__.__name__,
                                    self.entries)
+    def __len__(self):
+        return len(self.entries)
 
 def _defaultPath():
     '''
