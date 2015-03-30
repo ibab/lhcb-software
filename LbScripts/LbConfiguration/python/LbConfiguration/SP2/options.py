@@ -71,7 +71,7 @@ class NightlyPathEntry(SearchPathEntry):
         if shell == 'csh':
             return '''# Use the nightly builds search path if needed.
 if ( -e build.conf ) then
-    eval `sed -n '/^[^#]/{{s/^/set /;s/$$/ ;/p}}' build.conf`
+    eval `sed -n '/^[^#]/{{s/^/set /;s/$/ ;/p}}' build.conf`
 endif
 if ( ! $?nightly_base ) then
     if ( $?LHCBNIGHTLIES ) then
@@ -82,16 +82,19 @@ if ( ! $?nightly_base ) then
 endif
 
 if ( $?nightly_slot && $?nightly_day ) then
-    if ( -e ${nightly_base}/${nightly_slot}/${nightly_day}/searchPath.csh ) then
-        source ${nightly_base}/${nightly_slot}/${nightly_day}/searchPath.csh
+    if ( $?CMTPROJECTPATH ) then
+        set SAVED_CMTPROJECTPATH = ":$CMTPROJECTPATH"
+    else
+        set SAVED_CMTPROJECTPATH = ""
     endif
-    if ( -e ${nightly_base}/${nightly_slot}/${nightly_day} ) then
-        if ( $?CMTPROJECTPATH ) then
-            setenv CMTPROJECTPATH "${nightly_base}/${nightly_slot}/${nightly_day}:$CMTPROJECTPATH"
-        else
-            setenv CMTPROJECTPATH "${nightly_base}/${nightly_slot}/${nightly_day}"
-        endif
+    if ( -e ${nightly_base}/${nightly_slot}/${nightly_day}/setupSearchPath.csh ) then
+        source ${nightly_base}/${nightly_slot}/${nightly_day}/setupSearchPath.csh
+    else
+        setenv CMTPROJECTPATH "${nightly_base}/${nightly_slot}/${nightly_day}"
     endif
+    # This a temporary work around because setupSearchPath.csh overrides CMTPROJECTPATH
+    # instead of extending it.
+    setenv CMTPROJECTPATH "${CMTPROJECTPATH}${SAVED_CMTPROJECTPATH}"
 endif
 '''
         return '''# Use the nightly builds search path if needed.
@@ -103,10 +106,15 @@ if [ -z "$nightly_base" ] ; then
 fi
 
 if [ -e ${nightly_base}/${nightly_slot}/${nightly_day} ] ; then
-    if [ -e ${nightly_base}/${nightly_slot}/${nightly_day}/searchPath.sh ] ; then
-        . ${nightly_base}/${nightly_slot}/${nightly_day}/searchPath.sh
+    if [ -e ${nightly_base}/${nightly_slot}/${nightly_day}/setupSearchPath.sh ] ; then
+        SAVED_CMTPROJECTPATH="${CMTPROJECTPATH:+:$CMTPROJECTPATH}"
+        . ${nightly_base}/${nightly_slot}/${nightly_day}/setupSearchPath.sh
+        # This a temporary work around because setupSearchPath.sh overrides CMTPROJECTPATH
+        # instead of extending it.
+        export CMTPROJECTPATH="${CMTPROJECTPATH}${SAVED_CMTPROJECTPATH}"
+    else
+        export CMTPROJECTPATH="${nightly_base}/${nightly_slot}/${nightly_day}${CMTPROJECTPATH:+:$CMTPROJECTPATH}"
     fi
-    export CMTPROJECTPATH="${nightly_base}/${nightly_slot}/${nightly_day}${CMTPROJECTPATH:+:$CMTPROJECTPATH}"
 fi
 '''
     def __repr__(self):
