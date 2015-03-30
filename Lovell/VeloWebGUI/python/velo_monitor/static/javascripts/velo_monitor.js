@@ -280,6 +280,7 @@ var VeloMonitor = (function(window, undefined) {
           $input = $form.find('input[type=text]');
 
       // Submit the sensor number form when a sensor number is clicked
+      // TODO active sensor is not updated when new sensor is AJAX'd in
       $veloLayout.find('button:not([disabled])').on('click', function(e) {
         var $target = $(e.target);
         // Don't reload the page if we're already on that sensor
@@ -321,6 +322,7 @@ var VeloMonitor = (function(window, undefined) {
       });
 
       // Reload any sensor-dependent plots when the sensor selector is submitted
+      // TODO corresponding r/phi sensor is not updated when new sensor is AJAX'd in
       $form.on('submit', function() {
         // Must be an integer so it can formatted in to strings in setupPlots
         var sensorNumber = parseInt($input.val(), 10);
