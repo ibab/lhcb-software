@@ -6,8 +6,9 @@ display them.
 
 Each page is defined by a key in the top level of run_view_pages. The `title`
 key must be defined as a string of the name to show for the page. An optional
-`plots` key can define a list of dictionaries, each defining a plot within
-a Vetra output file. An example page dictionary might look like this:
+`plots` key can define a list of dictionaries, each defining a plot within a
+Vetra output file. The optional `layout` key defines the matrix dimensions with
+which to display the plots in. An example page dictionary might look like this:
 
     {
         'title': 'Foo Things',
@@ -21,7 +22,9 @@ a Vetra output file. An example page dictionary might look like this:
                 'title': 'Plot B',
                 'name': 'folder/subfolder/plot_name_B'
             },
-        ]
+        ],
+        # Display plots in a 2x3 (horizontal x vertical) grid
+        layout: (2, 3)
     }
 
 For each plot dictionary, the following keys can be defined:
