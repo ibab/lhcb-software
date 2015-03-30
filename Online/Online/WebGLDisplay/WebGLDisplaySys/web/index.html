@@ -115,7 +115,7 @@
       var wiremode = false;
 
       //global material definitions
-      var otmaterial = new THREE.LineBasicMaterial( { color: 0x0000a0, opacity: 1.0, linewidth: 1, visible: false } );
+      var otmaterial = new THREE.LineBasicMaterial( { color: 0x0000a0, opacity: 1.0, linewidth: 1, visible: true } );
       var itmaterial = new THREE.LineBasicMaterial( { color: 0xa000a0, opacity: 1.0, linewidth: 1 } );
       var ttmaterial = new THREE.LineBasicMaterial( { color: 0xa000a0, opacity: 1.0, linewidth: 1 } );
       var velomaterial = new THREE.LineBasicMaterial( { color: 0xa000a0, opacity: 1.0, linewidth: 1 } );
@@ -240,7 +240,7 @@
         velohits: true, 
         tthits: true, 
         ithits: true, 
-        othits: false, 
+        othits: true, 
         ecalhits: true, 
         hcalhits: true, 
         muonhits: true, 
