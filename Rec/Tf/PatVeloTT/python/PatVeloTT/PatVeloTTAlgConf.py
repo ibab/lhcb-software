@@ -29,7 +29,7 @@ class PatVeloTTConf(object):
       Note the the output container has VeloTT tracks and Velo tracks which pass
       through the hole in the TT around the beam pipe'''
       
-      patVTT.OutputTracksName = "Rec/Track/VeloTTHybrid"
+      patVTT.OutputTracksName = "Rec/Track/VeloTT"
       patVTT.addTool(PatVeloTTHybridTool, name="PatVeloTTHybridTool")
       patVTT.PatVeloTTHybridTool.PassTracks = True
          
