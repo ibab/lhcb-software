@@ -116,7 +116,8 @@ LoKi::Hlt1::HelperTool::HelperTool( const int /* dummy */ )
     , m_hlt_protoparticles( nullptr )
     , m_hlt_particles( nullptr )
     //
-    , m_myname()
+    , m_myname{}
+    , m_cached{}
 {
     // get GaudiAlgorithm
     GaudiAlgorithm* alg = LoKi::Hlt1::Utils::getGaudiAlg( *this );
@@ -153,7 +154,8 @@ LoKi::Hlt1::HelperTool::HelperTool( const LoKi::Hlt1::HelperTool& right )
     , m_hlt_protoparticles( nullptr )
     , m_hlt_particles( nullptr )
     //
-    , m_myname()
+    , m_myname{}
+    , m_cached{}
 {
     // get GaudiAlgorithm
     GaudiAlgorithm* alg = LoKi::Hlt1::Utils::getGaudiAlg( *this );
@@ -176,6 +178,7 @@ LoKi::Hlt1::HelperTool::~HelperTool()
     m_hlt_recvertices = nullptr;
     m_hlt_protoparticles = nullptr;
     m_hlt_particles = nullptr;
+    m_cached.clear();
     //
     m_alg = nullptr;
 }
@@ -194,6 +197,7 @@ void LoKi::Hlt1::HelperTool::handle( const Incident& /* incident */ )
     m_hlt_recvertices = nullptr;
     m_hlt_protoparticles = nullptr;
     m_hlt_particles = nullptr;
+    m_cached.clear();
 }
 
 // ============================================================================

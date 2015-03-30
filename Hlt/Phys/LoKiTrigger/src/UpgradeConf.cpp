@@ -4,6 +4,7 @@
 // ============================================================================
 // STD & STL
 // ============================================================================
+#include <string>
 #include <sstream>
 // ============================================================================
 // LoKi
@@ -33,6 +34,7 @@
 LoKi::Hlt1::UpgradeConf::UpgradeConf 
 ( std::string         trTool   ,     //        ITrackFromTrack  tool name
   std::string         address  ,     //   TES location of upgraded tracks 
+  std::string         cached   ,     //         TES location of the cache
   LHCb::Track::Types  trType   ,     //                        track type 
   bool                owner    ,     //                           owner ? 
   bool                moveIDs  ,     //                    transfer IDs ? 
@@ -40,21 +42,24 @@ LoKi::Hlt1::UpgradeConf::UpgradeConf
   bool                moveInfo ,     //             transfer extra info ?
   bool                ptOrder  )     //                         order pt?
   : LoKi::Hlt1::TrackTool () 
-  , m_trTool   { std::move(trTool)   }
-  , m_address  { std::move(address)  }
+  , m_trTool   { std::move(trTool)  }
+  , m_address  { std::move(address) }
+  , m_cache    { std::move(cached)  }
   , m_trType   { trType   }
   , m_owner    { owner    }
   , m_moveIDs  { moveIDs  } 
   , m_moveAncs { moveAncs } 
   , m_moveInfo { moveInfo } 
   , m_ptOrder  { ptOrder  }
-{}
+{
+}
 // ============================================================================
 // constructor 
 // ============================================================================
 LoKi::Hlt1::UpgradeConf::UpgradeConf 
 ( std::string         trTool   ,     //        ITrackFromTrack  tool name
   std::string         address  ,     //   TES location of upgraded tracks 
+  std::string         cached   ,     //         TES location of the cache
   LHCb::Track::Types  trType   ,     //                        track type 
   bool                owner    ,     //                           owner ? 
   bool                moveIDs  ,     //                    transfer IDs ? 
@@ -65,6 +70,7 @@ LoKi::Hlt1::UpgradeConf::UpgradeConf
   : LoKi::Hlt1::TrackTool ( cut ) 
   , m_trTool   { std::move(trTool)  } 
   , m_address  { std::move(address) }
+  , m_cache    { std::move(cached)  }
   , m_trType   { trType   }
   , m_owner    { owner    }
   , m_moveIDs  { moveIDs  } 
@@ -72,7 +78,8 @@ LoKi::Hlt1::UpgradeConf::UpgradeConf
   , m_moveInfo { moveInfo } 
   , m_ptOrder  { ptOrder  }
 //
-{}  
+{
+}  
 // ============================================================================
 // output operator 
 // ============================================================================
@@ -80,6 +87,7 @@ std::ostream& LoKi::Hlt1::UpgradeConf::fillStream ( std::ostream& s ) const
 {
   s << "LoKi.Hlt1.UpgradeConf('" << trTool  () << "'"
     << ",'"                      << address () << "'"
+    << ",'"                      << cache   () << "'"
     << ",LHCb.Track."            << trType  ()
     << "," <<  ( owner    () ? "True" : "False" ) 
     << "," <<  ( moveIDs  () ? "True" : "False" ) 
@@ -106,6 +114,7 @@ std::string Gaudi::Utils::toCpp ( const LoKi::Hlt1::UpgradeConf& o )
   std::string s = " LoKi::Hlt1::UpgradeConf( "
     + toCpp ( o.trTool   () ) + ", "
     + toCpp ( o.address  () ) + ", "
+    + toCpp ( o.cache    () ) + ", "
     + "LHCb::Track::" + LHCb::Track::TypesToString ( o.trType () ) + ","
     + toCpp ( o.owner    () ) + ", "
     + toCpp ( o.moveIDs  () ) + ", "
@@ -116,8 +125,6 @@ std::string Gaudi::Utils::toCpp ( const LoKi::Hlt1::UpgradeConf& o )
   //
   return s + ") " ;
 }
-
- 
 // ============================================================================
 // The END 
 // ============================================================================

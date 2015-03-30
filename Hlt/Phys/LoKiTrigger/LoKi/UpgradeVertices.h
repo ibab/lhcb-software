@@ -46,7 +46,7 @@ namespace LoKi
      *  @author Pieter David pieter.david@cern.ch
      *  @date 2012-02-24
      */
-    class GAUDI_API UpgradeVertices : public Upgrade
+    class GAUDI_API UpgradeVertices : public UpgradeTracks
     {
     public:
       // ======================================================================

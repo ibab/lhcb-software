@@ -5,11 +5,17 @@
 // ============================================================================
 // Include files
 // ============================================================================
+// STD & STL
+// ============================================================================
+#include <unordered_map>
+// ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/KeyedContainer.h"
 #include "GaudiKernel/ObjectVector.h"
+#include "Relations/Relation1D.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 // ============================================================================
 // TrackEvent/RecEvent
 // ============================================================================
@@ -28,8 +34,6 @@
 #include "LoKi/AuxFunBase.h"
 #include "LoKi/TrackTypes.h"
 #include "LoKi/Listener.h"
-// ============================================================================
-class GaudiAlgorithm ;
 // ============================================================================
 /** @file
  *
@@ -113,6 +117,13 @@ namespace LoKi
         return _new ;
       }
       // ======================================================================
+      template<class OBJECT>
+      LHCb::Relation1D<OBJECT, OBJECT>*
+      _createCache( const std::string& location ) const
+      {
+         using OBJECTS = LHCb::Relation1D<OBJECT, OBJECT>;
+         return alg()->getOrCreate<OBJECTS, OBJECTS>( location );
+      }
     protected:
       // ======================================================================
       /// get the own name
@@ -135,6 +146,27 @@ namespace LoKi
       {
         if ( ! m_hlt_tracks ) { m_hlt_tracks = _createTracks ( location ) ; }
         return m_hlt_tracks ;
+      }
+      // ======================================================================
+      /// get the cache
+      template<class Object>
+      inline LHCb::Relation1D<Object, Object>* cache
+      ( std::string location ) const
+      {
+         using Cache = LHCb::Relation1D<Object, Object>*;
+         if (location.empty()) {
+            alg()->error() << "Got empty cache location for "
+                           << alg()->name() << endmsg;
+            return nullptr;
+         }
+         auto found = m_cached.find(location);
+         if (found == end(m_cached)) {
+            IRelationBase* relation = _createCache<Object>(location);
+            m_cached.emplace(std::make_pair(std::move(location), relation));
+            return static_cast<Cache>(relation);
+         } else {
+            return static_cast<Cache>(found->second);
+         }
       }
       // ======================================================================
     protected:
@@ -248,8 +280,9 @@ namespace LoKi
       /// container of Particles
       mutable LHCb::Particle::Container*       m_hlt_particles ;
       // ======================================================================
-      mutable std::string                 m_myname          ;
+      mutable std::string                      m_myname          ;
       // ======================================================================
+      mutable std::unordered_map<std::string, IRelationBase*> m_cached;
     };
     // ========================================================================
   } //                                              end of namespace LoKi::Hlt1

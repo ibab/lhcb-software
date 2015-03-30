@@ -25,10 +25,7 @@
 // ============================================================================
 /** @file
  *  The implementation file for 'upgrade' functors 
- *  @see LoKi:Hlt::Upgrade 
  *  @see LoKi:Hlt::UpgradeTr 
- *  @see LoKi:Hlt::UpgradeMTr 
- *  @see LoKi:Hlt::TrUpgradeTr 
  * 
  *  This file is a part of 
  *  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
@@ -52,87 +49,29 @@
  *  @param config  the tool configuration 
  */
 // ============================================================================
-LoKi::Hlt1::Upgrade::Upgrade 
+LoKi::Hlt1::UpgradeTracks::UpgradeTracks 
 ( const std::string&             output  ,         // output selection name/key 
   const LoKi::Hlt1::UpgradeConf& config  )         //             configuration 
-  : LoKi::AuxFunBase ( std::tie ( output , config ) ) 
+  : LoKi::AuxFunBase ( std::tie ( output, config ) ) 
   , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe () 
   , LoKi::Hlt1::UpgradeTool ( config ) 
-  , m_sink                  ( output ) 
+  , m_sink                  ( output )
 {}
 // ============================================================================
 /*  constructor from all configuration parameters 
- *  @param output  the output selection name 
- *  @param config  the tool configuration 
- */
-// ============================================================================
-LoKi::Hlt1::Upgrade::Upgrade 
-( const std::string&             output  ,         // output selection name/key 
-  const LoKi::Hlt1::UpgradeTool& config  )         //             configuration 
-  : LoKi::AuxFunBase ( std::tie ( output , config ) ) 
-  , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe () 
-  , LoKi::Hlt1::UpgradeTool ( config ) 
-  , m_sink                  ( output ) 
-{}
-// ============================================================================
-// MANDATORY: virtual destructor 
-// ============================================================================
-LoKi::Hlt1::Upgrade::~Upgrade(){}
-// ============================================================================
-// MANDATORY: clone method ("virtual constructor")
-// ============================================================================
-LoKi::Hlt1::Upgrade* 
-LoKi::Hlt1::Upgrade::clone() const 
-{ return new LoKi::Hlt1::Upgrade { *this } ; }
-// ============================================================================
-// OPTIONAL:: nice printout 
-// ============================================================================
-std::ostream& LoKi::Hlt1::Upgrade::fillStream ( std::ostream& s ) const 
-{
-  return
-    s  << "TC_UPGRADE_ALL('" << selName() 
-       << "',"               << config () << ")";  
-}
-// ============================================================================
-// MANDATORY : the only essential method 
-// ============================================================================
-LoKi::Hlt1::Upgrade::result_type 
-LoKi::Hlt1::Upgrade::operator() 
-  ( LoKi::Hlt1::Upgrade::argument a ) const
-{
-  result_type output ;
-  if ( !a.empty() ) 
-  {
-    // StatusCode sc = upgrade ( a , output ) ;
-    StatusCode sc = upgradeAll ( a , output ) ;
-    if ( sc.isFailure() ) { Error(" error from upgrade" , sc, 0 ) ; }
-  }
-  // register the selection 
-  return !m_sink ? output : m_sink ( output ) ;
-}
-// ============================================================================
-/*  constructor from all configuration parameters 
+ *  the location is used to search for pre-upgraded tracks
  *  @param output  the output selection name 
  *  @param config  the tool configuration 
  */
 // ============================================================================
 LoKi::Hlt1::UpgradeTracks::UpgradeTracks 
-( const std::string&             output  ,         // output selection name/key 
-  const LoKi::Hlt1::UpgradeConf& config  )         //             configuration 
-  : LoKi::AuxFunBase ( std::tie ( output , config ) ) 
-  , LoKi::Hlt1::Upgrade( output , config ) 
-{}
-// ============================================================================
-/*  constructor from all configuration parameters 
- *  @param output  the output selection name 
- *  @param config  the tool configuration 
- */
-// ============================================================================
-LoKi::Hlt1::UpgradeTracks::UpgradeTracks 
-( const std::string&             output  ,         // output selection name/key 
-  const LoKi::Hlt1::UpgradeTool& config  )         //             configuration 
-  : LoKi::AuxFunBase ( std::tie ( output , config ) ) 
-  , LoKi::Hlt1::Upgrade( output , config ) 
+( const std::string&             output ,          // output selection name/key 
+  const LoKi::Hlt1::UpgradeConf& config ,          //             configuration 
+  const std::string&         complement )          // complement cache location
+  : LoKi::AuxFunBase ( std::tie ( output, config, complement ) ) 
+  , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe () 
+  , LoKi::Hlt1::UpgradeTool ( config, complement )
+  , m_sink                  ( output )
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -149,9 +88,12 @@ LoKi::Hlt1::UpgradeTracks::clone() const
 // ============================================================================
 std::ostream& LoKi::Hlt1::UpgradeTracks::fillStream ( std::ostream& s ) const 
 {
-  return
-    s  << "TC_UPGRADE_TR('" << selName() 
-       << "',"              << config () << ")";  
+   s  << "TC_UPGRADE_TR('" << selName() 
+      << "',"              << config ();
+   if (!complement().empty())
+     s  << "',"            << complement();
+  s  << "')";
+  return s;
 }
 // ============================================================================
 // MANDATORY : the only essential method 
@@ -170,76 +112,4 @@ LoKi::Hlt1::UpgradeTracks::operator()
   // register the selection 
   return !m_sink ? output : m_sink ( output ) ;
 }
-// ============================================================================
-
-// ============================================================================
-/*  constructor from all configuration parameters 
- *  @param output  the output selection name 
- *  @param config  the tool configuration 
- */
-// ============================================================================
-LoKi::Hlt1::UpgradeMultiTracks::UpgradeMultiTracks 
-( const std::string&             output  ,         // output selection name/key 
-  const int                      index   ,         //   track index for upgrade  
-  const LoKi::Hlt1::UpgradeConf& config  )         //             configuration 
-  : LoKi::AuxFunBase ( std::tie ( output , index , config ) ) 
-  , LoKi::Hlt1::Upgrade( output , config ) 
-  , m_index ( index ) 
-{}
-// ============================================================================
-/*  constructor from all configuration parameters 
- *  @param output  the output selection name 
- *  @param config  the tool configuration 
- */
-// ============================================================================
-LoKi::Hlt1::UpgradeMultiTracks::UpgradeMultiTracks 
-( const std::string&             output  ,         // output selection name/key 
-  const int                      index   ,   //   track index for upgrade  
-  const LoKi::Hlt1::UpgradeTool& config  )         //             configuration 
-  : LoKi::AuxFunBase ( std::tie ( output , index , config ) ) 
-  , LoKi::Hlt1::Upgrade( output , config ) 
-  , m_index ( index ) 
-{}
-// ============================================================================
-// MANDATORY: virtual destructor 
-// ============================================================================
-LoKi::Hlt1::UpgradeMultiTracks::~UpgradeMultiTracks(){}
-// ============================================================================
-// MANDATORY: clone method ("virtual constructor")
-// ============================================================================
-LoKi::Hlt1::UpgradeMultiTracks* 
-LoKi::Hlt1::UpgradeMultiTracks::clone() const 
-{ return new LoKi::Hlt1::UpgradeMultiTracks { *this } ; }
-// ============================================================================
-// OPTIONAL:: nice printout 
-// ============================================================================
-std::ostream& LoKi::Hlt1::UpgradeMultiTracks::fillStream ( std::ostream& s ) const 
-{
-  return
-    s  << "TC_UPGRADE_MT('" << selName() << "'"
-       << ","               << m_index   
-       << ","               << config () << ")";  
-}
-// ============================================================================
-// MANDATORY : the only essential method 
-// ============================================================================
-LoKi::Hlt1::UpgradeMultiTracks::result_type 
-LoKi::Hlt1::UpgradeMultiTracks::operator() 
-  ( LoKi::Hlt1::UpgradeMultiTracks::argument a ) const
-{
-  result_type output ;
-  if ( !a.empty() ) 
-  {
-    // NB: upgrade multi tracks only!!!
-    StatusCode sc = 
-      m_index < 0 ?  
-      upgradeMultiTracks ( a ,           output ) : 
-      upgradeMultiTracks ( a , m_index , output ) ;
-    if ( sc.isFailure() ) { Error ( "Error from upgrade" , sc, 0 ) ; }
-  }
-  // register the selection 
-  return !m_sink ? output : m_sink ( output ) ;
-}
-// ============================================================================
-// The END 
 // ============================================================================

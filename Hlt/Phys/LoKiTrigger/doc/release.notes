@@ -4,10 +4,17 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
-! 2015-03-27 - Albert Puig
- - Fixed FromCaloToParticles to be HltSelReports-compliant.
- - Add filter of L0CaloCandidate type for photons in FromCaloToParticles.
- - Add Hlt1DiPhoton pipe.
+! 2015-03-30 - Roel Aaij
+   Significant changes in Hlt1 upgrade code.
+ - Remove previous mechanism of double work prevention and replace it with
+   relations tables.
+ - Remove unused and probably broken MultiTrack upgrade code.
+ - Simplify inheritance structure of UpgradeTracks.
+ - Allow an TES location to be passed to the constructor of UpgradeTracks. This
+   will be interpreted as an external cache that is checked for the existence of
+   previously upgraded seeds. This implements the complement upgrade.
+
+   Move development of photons in Hlt1 to branch v15r5b.
 
 ! 2015-03-25 - Matthew Kenzie
  - Only getDaughters() once when using Hlt1Combiner

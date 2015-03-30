@@ -6,6 +6,7 @@ gaudi_subdir(LoKiTrigger v15r5)
 gaudi_depends_on_subdirs(Det/DetDesc
                          Event/L0Event
                          Event/TrackEvent
+                         Kernel/Relations
                          Hlt/HltBase
                          Phys/DaVinciKernel
                          Phys/KalmanFilter
@@ -24,7 +25,7 @@ gaudi_add_library(LoKiTriggerLib
 gaudi_add_module(LoKiTrigger
                  src/Components/*.cpp
                  INCLUDE_DIRS Tr/TrackInterfaces
-                 LINK_LIBRARIES DetDescLib L0Event TrackEvent HltBase KalmanFilter DaVinciKernelLib LoKiCoreLib LoKiTracksLib LoKiTriggerLib)
+                 LINK_LIBRARIES DetDescLib L0Event TrackEvent RelationsLib HltBase KalmanFilter DaVinciKernelLib LoKiCoreLib LoKiTracksLib LoKiTriggerLib)
 
 gaudi_add_dictionary(LoKiTrigger
                      dict/LoKiTriggerDict.h

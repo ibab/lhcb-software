@@ -53,9 +53,7 @@
   <class name = "LoKi::Hlt1::Match2"              />
   <class name = "LoKi::Hlt1::FilterMatch"         />
   <class name = "LoKi::Hlt1::FilterMatch2"        />
-  <class name = "LoKi::Hlt1::Upgrade"             />
   <class name = "LoKi::Hlt1::UpgradeTracks"       />
-  <class name = "LoKi::Hlt1::UpgradeMultiTracks"  />
   <class name = "LoKi::Hlt1::UpgradeVertices"     />
   <class name = "LoKi::Hlt1::FilterTracks"        />
   <class name = "LoKi::Hlt1::MatchTracks"        />
@@ -86,7 +84,6 @@
 
   <class name    = "LoKi::Hlt1::HelperTool"          />
   <class name    = "LoKi::Hlt1::MatchTool"           />
-  <class name    = "LoKi::Hlt1::UpgradeTool"         />
   <class name    = "LoKi::Hlt1::TrackTool"           />
   <class name    = "LoKi::Hlt1::UpgradeConf"         />
   <class name    = "LoKi::Hlt1::MatchConf"           />
@@ -95,7 +92,6 @@
   <class name    = "LoKi::Hlt1::ToProtoParticles"    />
   <class name    = "LoKi::Hlt1::ToParticles"         />
   <class name    = "LoKi::Hlt1::FromCaloToParticles" />
-  <class name    = "LoKi::Hlt1::Hlt1DiPhoton" />
   <class name    = "LoKi::Hlt1::Hlt1CombinerConf">
     <field name = "m_acut"      transient = "true"/>
     <field name = "m_cut"       transient = "true"/>

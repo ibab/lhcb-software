@@ -60,13 +60,7 @@ LoKi::Hlt1::FromCaloToParticles::FromCaloToParticles
   , m_sink ( location )
   , m_pp   ( LoKi::Particles::ppFromName(pid) )
   , m_cut  ( cut      )
-  , m_z (12300.0)
-  , m_calo (NULL)
-{
- LoKi::ILoKiSvc* svc = lokiSvc() ;
- SmartIF<IToolSvc> tsvc ( svc ) ;
- StatusCode sc = tsvc->retrieveTool("CaloDataProvider", "EcalReadoutTool", m_calo);
-}
+{}
 // ============================================================================
 // virtual destructor
 // ============================================================================
@@ -87,6 +81,9 @@ LoKi::Hlt1::FromCaloToParticles::operator()
 
   typedef result_type           CANDIDATES ;
 
+  LoKi::ILoKiSvc* svc = lokiSvc() ;
+  SmartIF<IToolSvc> tsvc ( svc );
+
   if ( a.empty() ) { return result_type () ; }
 
   const CANDIDATES* arg1 = &a;
@@ -103,17 +100,39 @@ LoKi::Hlt1::FromCaloToParticles::operator()
     const LHCb::L0CaloCandidate* calo = cand1->get<LHCb::L0CaloCandidate> () ;
     if ( !calo ) { continue ; }
 
-    // Filter calo candidates for photon
-    if ( 22 == m_pp->particleID().pid() && !isPhotonCand(calo) ) { continue ; }
-
     // create Particle
-    LHCb::Particle* particle = caloRecoChain( calo, m_pp->particleID() ) ;
+    LHCb::Particle* particle = new LHCb::Particle();
+    // Do I need this?
+    //particle->setProto(proto);
 
+    // set PID
+    particle->setParticleID(m_pp->particleID()) ;
+
+    // set mass
+    const double mass = m_pp->mass() ;
+    particle->setMeasuredMass(mass);
+    particle->setMeasuredMassErr(0);
+
+    // Calculate momentum
+    const Gaudi::XYZPoint pos = calo->position() ;
+    const double distance = pos.R() ;
+    const double et = calo->et() ;
+    // Assume the particle comes from (0, 0, 0)
+    const double e = et * distance / std::sqrt(pos.x()*pos.x() + pos.y()*pos.y()) ;
+    const double p = std::sqrt(e*e-mass*mass) ;
+    const Gaudi::LorentzVector mom = Gaudi::LorentzVector(p * pos.x()/distance,
+                                                          p * pos.y()/distance,
+                                                          p * pos.z()/distance,
+                                                          e) ;
+    particle->setMomentum(mom) ;
+    //std::cout << (*particle) << std::endl ;
     // cuts here
     if ( ! m_cut ( particle ) ) {
       delete particle;
       continue ;
+      //std::cout << std::endl;
     }
+    //std::cout << " -- PASS " << std::endl;
 
     // store in TES
     _storeParticle( particle ) ;
@@ -133,60 +152,6 @@ LoKi::Hlt1::FromCaloToParticles::operator()
   // register the selection in Hlt Data Service
   return !m_sink ? output : m_sink ( output ) ;
   // ==========================================================================
-}
-// ============================================================================
-// Create a full LHCb particle from L0CaloCandidate ============================================================================
-LHCb::Particle* LoKi::Hlt1::FromCaloToParticles::caloRecoChain( const LHCb::L0CaloCandidate* cand,
-                                                                const LHCb::ParticleID particleID ) const
-{
-    const Gaudi::XYZPoint pos = cand->position() ;
-    double x = pos.x() ;
-    double y = pos.y() ;
-    double r = pos.rho() ;
-    const LHCb::CaloCellID id = cand->id() ;
-
-    // Make CaloCluster with some minimal energy/position
-    LHCb::CaloCluster* cluster = new LHCb::CaloCluster() ;
-    cluster->position().setZ(m_z) ;
-    cluster->setSeed(id) ;
-    cluster->position().parameters()(LHCb::CaloPosition::E) = cand->et()*m_z/r ;
-    cluster->position().parameters()(LHCb::CaloPosition::X) = x ;
-    cluster->position().parameters()(LHCb::CaloPosition::Y) = y ;
-
-    // Make CaloDigits and populate cluster entries if needed
-    LHCb::CaloDigitStatus::Status used = LHCb::CaloDigitStatus::UseForEnergy ;
-    LHCb::CaloCellID id1(id.calo(),id.area(),id.row()  , id.col()+1) ;
-    LHCb::CaloCellID id2(id.calo(),id.area(),id.row()+1, id.col()  ) ;
-    LHCb::CaloCellID id3(id.calo(),id.area(),id.row()+1, id.col()+1) ;
-
-    LHCb::CaloDigit *d  = new LHCb::CaloDigit( id  , m_calo->digit( id ,  0.) ) ;
-    LHCb::CaloDigit *d1 = new LHCb::CaloDigit( id1 , m_calo->digit( id1 , 0.) ) ;
-    LHCb::CaloDigit *d2 = new LHCb::CaloDigit( id2 , m_calo->digit( id2 , 0.) ) ;
-    LHCb::CaloDigit *d3 = new LHCb::CaloDigit( id3 , m_calo->digit( id3 , 0.) ) ;
-
-    LHCb::CaloCluster::Entries& entries = cluster->entries() ;
-    entries.push_back(LHCb::CaloClusterEntry(d, LHCb::CaloDigitStatus::SeedCell | used )) ;
-    entries.push_back(LHCb::CaloClusterEntry(d1, used)) ;
-    entries.push_back(LHCb::CaloClusterEntry(d2, used)) ;
-    entries.push_back(LHCb::CaloClusterEntry(d3, used)) ;
-
-    // Make CaloHypo
-    LHCb::CaloHypo *hypo = new LHCb::CaloHypo() ;
-    hypo->setHypothesis( LHCb::CaloHypo::Photon ) ;
-    hypo->addToClusters( cluster ) ;
-    hypo->setPosition( new LHCb::CaloPosition(cluster->position()) ) ;
-
-    // Make ProtoParticle
-    LHCb::ProtoParticle* proto = new LHCb::ProtoParticle() ;
-    proto->addToCalo( hypo ) ;
-
-    // Make Particle
-    LHCb::Particle* p = new LHCb::Particle();
-    p->setParticleID( particleID );
-    p->setProto( proto );
-    LHCb::CaloParticle calopart( p );
-    calopart.updateParticle();
-    return p ;
 }
 // ============================================================================
 // OPTIONAL: nice printout

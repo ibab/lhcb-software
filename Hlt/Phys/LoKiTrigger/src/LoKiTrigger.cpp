@@ -41,7 +41,6 @@
 #include "LoKi/ToProtoParticles.h"
 #include "LoKi/ToParticles.h"
 #include "LoKi/FromCaloToParticles.h"
-#include "LoKi/Hlt1DiPhoton.h"
 #include "LoKi/TrackCutAsRecVertexCut.h"
 #include "LoKi/TrackTool.h"
 #include "LoKi/TrFilter.h"

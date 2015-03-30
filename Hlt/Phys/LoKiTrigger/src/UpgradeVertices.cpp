@@ -41,7 +41,7 @@ LoKi::Hlt1::UpgradeVertices::UpgradeVertices
   const bool                      allow1Fail ,
   const std::string&              clonedTracksLocation )
   : LoKi::AuxFunBase ( std::tie ( output , config , allow1Fail , clonedTracksLocation ) ) 
-  , LoKi::Hlt1::Upgrade    ( output, config )
+  , LoKi::Hlt1::UpgradeTracks( output, config )
   , m_allow1Fail           ( allow1Fail     )
   , m_clonedTracksLocation ( clonedTracksLocation )
 { 
@@ -59,9 +59,9 @@ LoKi::Hlt1::UpgradeVertices::UpgradeVertices
   const bool                     allow1Fail ,
   const std::string&             clonedTracksLocation )
   : LoKi::AuxFunBase ( std::tie ( output , config , allow1Fail , clonedTracksLocation ) ) 
-  , LoKi::Hlt1::Upgrade( output, config )
-  , m_allow1Fail          ( allow1Fail     )
-  , m_clonedTracksLocation( clonedTracksLocation) 
+  , LoKi::Hlt1::UpgradeTracks( output, config )
+  , m_allow1Fail           ( allow1Fail     )
+  , m_clonedTracksLocation ( clonedTracksLocation )
 { 
   if ( m_allow1Fail ) { retrieveFailKey() ; } 
 }

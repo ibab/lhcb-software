@@ -68,7 +68,8 @@ namespace LoKi
       // ======================================================================
       /** constructor 
        *  @param trTool the name of ITracksFromTrack tool 
-       *  @param address TES location of the upgdarded tracks 
+       *  @param address TES location of the upgraded tracks 
+       *  @param cache   TES location of cached upgraded
        *  @param trType   the track type for upgrade 
        *  @param owner    ownership ? 
        *  @param moveIDs  transfer IDs ?
@@ -79,6 +80,7 @@ namespace LoKi
       UpgradeConf 
       ( std::string         trTool   ,    //   ITrackFromTrack  tool name
         std::string         address  ,    //   TES location of the tracks 
+        std::string         cache    ,    //    TES location of the cache
         LHCb::Track::Types  trType   ,    //                   track type 
         bool                owner    ,    //                      owner ? 
         bool                moveIDs  ,    //               transfer IDs ? 
@@ -88,7 +90,8 @@ namespace LoKi
       // ======================================================================
       /** constructor 
        *  @param trTool the name of ITracksFromTrack tool 
-       *  @param address TES location of the upgdarded tracks 
+       *  @param address TES location of upgraded tracks 
+       *  @param cache   TES location of cached upgraded
        *  @param trType   the track type for upgrade 
        *  @param owner    ownership ? 
        *  @param moveIDs  transfer IDs ?
@@ -99,6 +102,7 @@ namespace LoKi
       UpgradeConf 
       ( std::string         trTool   ,    //   ITrackFromTrack  tool name
         std::string         address  ,    //   TES location of the tracks 
+        std::string         cache    ,    //    TES location of the cache
         LHCb::Track::Types  trType   ,    //                   track type 
         bool                owner    ,    //                      owner ? 
         bool                moveIDs  ,    //               transfer IDs ? 
@@ -113,6 +117,8 @@ namespace LoKi
       const std::string& trTool   () const { return m_trTool    ; }
       /// TES  location of upgraded tracks 
       const std::string& address  () const { return m_address   ; }
+      /// TES  location of cached tracks 
+      const std::string& cache    () const { return m_cache     ; }
       /// track type 
       LHCb::Track::Types trType   () const { return m_trType    ; }
       /// owner ?
@@ -142,6 +148,8 @@ namespace LoKi
       std::string m_trTool ;                 //         Track->Tracks tool name 
       /// TES location of upgraded tracks 
       std::string m_address ;                // TES location of upgraded tracks 
+      /// TES location of cached results 
+      std::string m_cache ;                  //   TES location of cached tracks 
       /// track type 
       LHCb::Track::Types m_trType ;          //                      track type 
       /// owner ? 

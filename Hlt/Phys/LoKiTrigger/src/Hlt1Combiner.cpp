@@ -252,9 +252,6 @@ LoKi::Hlt1::Hlt1Combiner::execute3BodyCombination
   // the combination tools
   const IParticleCombiner* combiner = pc() ;
   
-  // the counter of recontructed/selected decays:
-  size_t nTotal = 0 ;
-  
   // Flag to indicate if processing is aborted
   bool problem = false ;
   
@@ -392,9 +389,6 @@ LoKi::Hlt1::Hlt1Combiner::execute4BodyCombination
 {
 
   const IParticleCombiner* combiner = pc() ; // get the particle combiner
-  
-  // the counter of recontructed/selected decays:
-  size_t nTotal = 0 ;
   
   // Flag to indicate if processing is aborted
   bool problem = false ;

@@ -40,9 +40,23 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// the copy constructor is default
+      UpgradeTool ( const UpgradeTool& ) = default;
+      // ======================================================================
+      /// the assignment operator is default
+      UpgradeTool& operator=( const UpgradeTool& ) = default;
+      // ======================================================================
       /// create the tool from configuration info
       UpgradeTool ( const LoKi::Hlt1::UpgradeConf& info ) ;
       // ======================================================================
+      /// create the tool from configuration info and complement cache location
+      UpgradeTool ( const LoKi::Hlt1::UpgradeConf& info,
+                    const std::string& complement ) ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is private
+      UpgradeTool ();
     protected:
       // ======================================================================
       /** upgrade the set of seeds          
@@ -70,37 +84,8 @@ namespace LoKi
        *  @param otracks output container of upgraded tracks (cumulative) 
        *  @return status code 
        */
-      StatusCode upgradeAll 
-      ( const Hlt::Candidate::ConstVector& input  , 
-        Hlt::Candidate::ConstVector&       output ) const ;
-      // ======================================================================      
-      /** upgrade the candidates          
-       *  @param itrack  input track/seeds 
-       *  @param otracks output container of upgraded tracks (cumulative) 
-       *  @return status code 
-       */
       StatusCode upgradeTracks 
       ( const Hlt::Candidate::ConstVector& input  , 
-        Hlt::Candidate::ConstVector&       output ) const ;
-      // ======================================================================      
-      /** upgrade the candidates          
-       *  @param itrack  input track/seeds 
-       *  @param otracks output container of upgraded tracks (cumulative) 
-       *  @return status code 
-       */
-      StatusCode upgradeMultiTracks 
-      ( const Hlt::Candidate::ConstVector& input  , 
-        Hlt::Candidate::ConstVector&       output ) const ;
-      // ======================================================================      
-      /** upgrade the candidates          
-       *  @param itrack  input track/seeds 
-       *  @param inedx   the track index to be upgraded 
-       *  @param otracks output container of upgraded tracks (cumulative) 
-       *  @return status code 
-       */
-      StatusCode upgradeMultiTracks 
-      ( const Hlt::Candidate::ConstVector& input  , 
-        const unsigned int                 index  , 
         Hlt::Candidate::ConstVector&       output ) const ;
       // ======================================================================      
     private:
@@ -115,72 +100,43 @@ namespace LoKi
         Hlt::Candidate::ConstVector&       output     , 
         LHCb::Track::Container*            otracks    ) const ;
       // ======================================================================      
-      /** upgrade the all tracks form multi-track candidate          
-       *  @param itrack  input track/seeds 
-       *  @param otracks output container of upgraded tracks (cumulative) 
-       *  @return status code 
-       */
-      StatusCode _i_upgrade_multi_track 
-      ( const Hlt::Candidate*              input        , 
-        Hlt::Candidate::ConstVector&       output       , 
-        LHCb::Track::Container*            otracks      ) const ;
-      // ======================================================================      
-      /** upgrade tracsk by index in multitrack candidate 
-       *  @param itrack  input track/seeds 
-       *  @param inedx   the index of tarcj to be upgraded 
-       *  @param otracks output container of upgraded tracks (cumulative) 
-       *  @return status code 
-       */
-      StatusCode _i_upgrade_multi_track_j
-      ( const Hlt::Candidate*              input        , 
-        const unsigned int                 index        , // the index 
-        Hlt::Candidate::ConstVector&       output       , 
-        LHCb::Track::Container*            otracks      ) const ;
-      // ======================================================================      
     public:
       // ======================================================================
       /// ITracksFromTrack tool name 
-      const std::string& trTool   () const { return config().trTool   () ; }
+      const std::string& trTool     () const { return config().trTool   () ; }
       /// TES  location of upgraded tracks 
-      const std::string& address  () const { return config().address  () ; }
+      const std::string& address    () const { return config().address  () ; }
       /// track type 
-      LHCb::Track::Types trType   () const { return config().trType   () ; }
+      LHCb::Track::Types trType     () const { return config().trType   () ; }
       /// owner ? 
-      bool               owner    () const { return config().owner    () ; }
+      bool               owner      () const { return config().owner    () ; }
       /// transfer IDs ?
-      bool               moveIDs  () const { return config().moveIDs  () ; }
+      bool               moveIDs    () const { return config().moveIDs  () ; }
       /// transfer Ancestors 
-      bool               moveAncs () const { return config().moveAncs () ; }
+      bool               moveAncs   () const { return config().moveAncs () ; }
       // transfer extra info? 
-      bool               moveInfo () const { return config().moveInfo () ; }
+      bool               moveInfo   () const { return config().moveInfo () ; }
       // pt-ordering ?
-      bool               ptOrder  () const { return config().ptOrder  () ; }
+      bool               ptOrder    () const { return config().ptOrder  () ; }
+      /// TES  location of complement cache
+      const std::string& complement () const { return m_complement         ; }
       // ======================================================================
     public:
       // ======================================================================
-      /// recoID 
-      int recoID    () const { return m_recoID ; }
       /// configuration 
       const LoKi::Hlt1::UpgradeConf& config  () const { return m_config    ; }      
       /// configuration 
-      operator const LoKi::Hlt1::UpgradeConf&() const { return  config () ; }      
+      operator const LoKi::Hlt1::UpgradeConf&() const { return  config ()  ; }      
       // ======================================================================      
     public:
       // ======================================================================
       /// access the tool 
       ITracksFromTrack* upgradeTool() const { return m_upgrade ; }
       // ======================================================================
-    private:
-      // ======================================================================
-      /// the default constructrio is disabled 
-      UpgradeTool () ;
-      // ======================================================================
     protected:
       // ======================================================================
       /** upgrade one track. 
-       *  - If the seed  has "right" type, just copy it it output
-       *  - else if it is not yet reconstucted ( info(recoID() ), upgrade it
-       *  - else find the tracks in "otracks", which have seed as ancestor
+       *  - else if it is not yet reconstucted upgrade it
        * @param seed     the track to be upgraded
        * @param output   list of upgraded tracks (cumulative)
        * @param otrack   TES container 
@@ -208,27 +164,14 @@ namespace LoKi
        *  @param otracks TES-container 
        *  @return number of added tracks 
        */
-      size_t find
-      ( const LHCb::Track*         seed    , 
-        LHCb::Track::ConstVector& tracks  , 
-        LHCb::Track::Container*    otracks ) const ;
-      /** same as find, but for direct ancestors
-       *  @param seed   the seed to be upgraded 
-       *  @param tracks container of output tracks (cumulative)
-       *  @param otracks TES-container 
-       *  @return number of added tracks 
-       */
-      size_t findDirect
-      ( const LHCb::Track*         seed    , 
-        LHCb::Track::ConstVector& tracks  , 
-        LHCb::Track::Container*    otracks ) const ;
       // ======================================================================
     private:
       // ======================================================================      
       /// the actual configuration of the tool 
       LoKi::Hlt1::UpgradeConf m_config ;       // the configuration of the tool 
-      /// ID of the reconstruction/upgrade tool 
-      mutable int m_recoID ;                    // ID of the recontruction tool 
+      // ======================================================================
+      /// Complement cache location
+      std::string m_complement ;                            // complement cache
       // ======================================================================
     private:
       // ======================================================================
