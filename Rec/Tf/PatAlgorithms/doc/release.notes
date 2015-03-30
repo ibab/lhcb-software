@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-03-30 - Michel De Cian
+ - Changes to 2015 configuration of forward tracking.
+
 ! 2015-03-30 - Marian Stahl
   - release.notes: Didn't enter release note for my commit on 2015-03-27
 

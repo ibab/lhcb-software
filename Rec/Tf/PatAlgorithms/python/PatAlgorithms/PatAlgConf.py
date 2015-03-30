@@ -26,8 +26,11 @@ class ForwardConf(object):
   def configureAlgRun2HLT1(self, PFAlg = PatForward("PatForwardHLT1")):
     '''Configure forward algorithm for HLT1 stage of run II offline tracking'''
     
-    PFAlg.InputTracksName =  "Rec/Track/VeloTTHybrid"
-    PFAlg.addTool(PatForwardTool, name = "PatForwardToolHLT1")
+    PFAlg.InputTracksName =  "Rec/Track/VeloTT"
+    PFAlg.OutputTracksName = "Rec/Track/ForwardHLT1"
+    PFAlg.ForwardToolName = "PatForwardTool/PatForwardToolHLT1"
+    PFAlg.addTool( PatForwardTool("PatForwardToolHLT1") ) 
+
     PFAlg.PatForwardToolHLT1.MinPt = 500.
     PFAlg.PatForwardToolHLT1.MinMomentum = 3000.
     PFAlg.PatForwardToolHLT1.SecondLoop = False
@@ -36,6 +39,7 @@ class ForwardConf(object):
     PFAlg.PatForwardToolHLT1.WrongSignPT = 2000.
     PFAlg.PatForwardToolHLT1.PreselectionPT = 0.8*500.
     PFAlg.PatForwardToolHLT1.Preselection = True   
+    PFAlg.PatForwardToolHLT1.AddTTClusterName = "PatAddTTCoord"
 
     globalCuts = TrackSys().getProp("GlobalCuts")
     if("IT" in globalCuts): PFAlg.maxITHits = globalCuts["IT"]
@@ -45,13 +49,13 @@ class ForwardConf(object):
 
   def configureAlgRun2HLT2(self, PFAlg = PatForward("PatForwardHLT2")):
     '''Configure forward algorithm for HLT2 stage of run II offline tracking'''
-    
+    PFAlg.ForwardToolName = "PatForwardTool/PatForwardToolHLT2"
     PFAlg.addTool(PatForwardTool, name = "PatForwardToolHLT2")
+    PFAlg.OutputTracksName = "Rec/Track/ForwardHLT2"
     #PFAlg.PatForwardToolHLT1.MinPt = 500.
     #PFAlg.PatForwardToolHLT1.MinMomentum = 3000.
     PFAlg.PatForwardToolHLT2.SecondLoop = True
     
-
     
 #class DownstreamConf(object):
 #  '''Configure a downstream algorithm'''
