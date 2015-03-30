@@ -65,6 +65,25 @@ var VeloMonitor = (function(window, undefined) {
     return spinner;
   }
 
+  // Keep track of running jobs, disabling all forms if there are any running
+  // This is the simplest way of ensuring that there aren't multiple Promises
+  // waiting to replace the current plots with new ones, i.e. ensuring there's
+  // only one set of Promises at a time by not allowing the creation of new
+  // ones via form submission
+  var JobCounter = {
+    _njobs: 0,
+    increment: function() {
+      this._njobs += 1;
+      $('form :input').prop('disabled', true);
+    },
+    decrement: function() {
+      this._njobs -= 1;
+      if (this._njobs == 0) {
+        $('form :input').prop('disabled', false);
+      }
+    }
+  };
+
   // Load the plot(s) returned by the job 'runview.plots.get_run_plot' in to container.
   // Accepts:
   //   args: Object of keyword arguments to pass to the job
@@ -88,10 +107,10 @@ var VeloMonitor = (function(window, undefined) {
       task.resolve(cacheResult);
     } else {
       task = JobMonitor.createTask('runview.plots.get_run_plot', args);
+      JobCounter.increment();
     }
 
     task.done(function(job) {
-      spinner.stop();
       JobCache.setItem(cacheKey, job);
       var result = job['result'];
       // Need to treat multiple plots differently from a single one
@@ -126,10 +145,19 @@ var VeloMonitor = (function(window, undefined) {
     });
 
     task.fail(function(message) {
-      spinner.stop();
       var msg = TEMPLATES.failureMsg.format(args.name) + message;
       displayFailure(msg, container);
     });
+
+    task.always(function() {
+      spinner.stop();
+      // Don't need to touch the counter if there was a cache hit, i.e. no new
+      // job created
+      if (cacheResult === null) {
+        JobCounter.decrement();
+      }
+    });
+
     return task;
   };
 
