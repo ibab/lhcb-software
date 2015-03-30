@@ -145,7 +145,7 @@ def main():
 
     # for backward compatibility, we create the CMT configuration and env helpers
     if use_cmt:
-        templates += ['cmt/project.cmt', 'build_env.sh', 'build_env.csh']
+        templates += ['cmt/project.cmt']
         os.makedirs(os.path.join(devProjectDir, 'cmt'))
 
     for templateName in templates:
@@ -159,13 +159,22 @@ def main():
                     stat.S_IXUSR | stat.S_IXGRP)
             os.chmod(dest, mode)
 
-    # generate toolchain.cmake
-    if opts.dev_dirs:
+    # generate searchPath.cmake
+    if opts.dev_dirs and use_cmake:
         logging.debug('creating "%s"', 'searchPath.cmake')
         dest = os.path.join(devProjectDir, 'searchPath.cmake')
         with open(dest, 'w') as f:
             f.write('# Search path defined from lb-dev command line\n')
             f.write(opts.dev_dirs.toCMake())
+
+    if opts.dev_dirs and use_cmt:
+        for shell in ('sh', 'csh'):
+            build_env_name = 'build_env.' + shell
+            logging.debug('creating "%s"', build_env_name)
+            dest = os.path.join(devProjectDir, build_env_name)
+            with open(dest, 'w') as f:
+                f.write('# Search path defined from lb-dev command line\n')
+                f.write(opts.dev_dirs.toCMT(shell))
 
     # When the project name is not the same as the local project name, we need a
     # fake *Sys package for SetupProject (CMT only).

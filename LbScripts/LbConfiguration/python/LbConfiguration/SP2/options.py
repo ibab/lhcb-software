@@ -67,6 +67,48 @@ class NightlyPathEntry(SearchPathEntry):
                 '  list(INSERT CMAKE_PREFIX_PATH 0 "${nightly_base}/${nightly_slot}/${nightly_day}")\n'
                 '  endif()\n'
                 'endif()\n')
+    def toCMT(self, shell='sh'):
+        if shell == 'csh':
+            return '''# Use the nightly builds search path if needed.
+if ( -e build.conf ) then
+    eval `sed -n '/^[^#]/{{s/^/set /;s/$$/ ;/p}}' build.conf`
+endif
+if ( ! $?nightly_base ) then
+    if ( $?LHCBNIGHTLIES ) then
+        set nightly_base = "$LHCBNIGHTLIES"
+    else
+        set nightly_base = ""
+    endif
+endif
+
+if ( $?nightly_slot && $?nightly_day ) then
+    if ( -e ${nightly_base}/${nightly_slot}/${nightly_day}/searchPath.csh ) then
+        source ${nightly_base}/${nightly_slot}/${nightly_day}/searchPath.csh
+    endif
+    if ( -e ${nightly_base}/${nightly_slot}/${nightly_day} ) then
+        if ( $?CMTPROJECTPATH ) then
+            setenv CMTPROJECTPATH "${nightly_base}/${nightly_slot}/${nightly_day}:$CMTPROJECTPATH"
+        else
+            setenv CMTPROJECTPATH "${nightly_base}/${nightly_slot}/${nightly_day}"
+        endif
+    endif
+endif
+'''
+        return '''# Use the nightly builds search path if needed.
+if [ -e ./build.conf ] ; then
+    . ./build.conf
+fi
+if [ -z "$nightly_base" ] ; then
+    nightly_base="$LHCBNIGHTLIES"
+fi
+
+if [ -e ${nightly_base}/${nightly_slot}/${nightly_day} ] ; then
+    if [ -e ${nightly_base}/${nightly_slot}/${nightly_day}/searchPath.sh ] ; then
+        . ${nightly_base}/${nightly_slot}/${nightly_day}/searchPath.sh
+    fi
+    export CMTPROJECTPATH="${nightly_base}/${nightly_slot}/${nightly_day}${CMTPROJECTPATH:+:$CMTPROJECTPATH}"
+fi
+'''
     def __repr__(self):
         return '{0}({1!r}, {2!r}, {3!r})'.format(self.__class__.__name__,
                                                  self.base, self.slot, self.day)

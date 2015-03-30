@@ -1,5 +1,9 @@
 2015-03-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* fixed CMT part of LBCORE-771 (require small change in LbNightlyTools)
+
+2015-03-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* lb-dev: allow local projects that support both CMT and CMake
 
 2015-03-27  Marco Clemencic  <Marco.Clemencic@cern.ch>

@@ -18,6 +18,17 @@ def _cmakeStr(txt):
     return ' '.join('"%s"' % entry.replace('"', '\\"')
                     for entry in str(txt).split(os.pathsep))
 
+_CMTPROJECTPATH_FMT_SH = ('export CMTPROJECTPATH="{0}'
+                          '${{CMTPROJECTPATH:+:${{CMTPROJECTPATH}}}}"\n')
+_CMTPROJECTPATH_FMTS = {
+'csh': '''if ( $?CMTPROJECTPATH ) then
+  setenv CMTPROJECTPATH "{0}:${{CMTPROJECTPATH}}"
+else
+  setenv CMTPROJECTPATH "{0}"
+endif
+''',
+'sh': _CMTPROJECTPATH_FMT_SH
+}
 
 class SearchPathEntry(object):
     def __init__(self, path):
@@ -26,6 +37,9 @@ class SearchPathEntry(object):
         return str(self.path)
     def toCMake(self):
         return 'list(INSERT CMAKE_PREFIX_PATH 0 {0})\n'.format(_cmakeStr(self))
+    def toCMT(self, shell='sh'):
+        # FIXME: should we escape quotes?
+        return _CMTPROJECTPATH_FMTS[shell].format(self)
     def __repr__(self):
         return '{0}({1!r})'.format(self.__class__.__name__, self.path)
 
@@ -44,9 +58,32 @@ class EnvSearchPathEntry(SearchPathEntry):
                  'endif()\n'
                  'list(INSERT CMAKE_PREFIX_PATH 0 "$ENV{{{0}}}")\n')
                 .format(self.envname, _cmakeStr(self)))
+    def toCMT(self, shell='sh'):
+        if self.envname == 'CMAKE_PREFIX_PATH':
+            return '' # ignore CMAKE_PREFIX_PATH for CMT builds
+        if shell == 'csh':
+            fmt = ('if ( ! $?{0} ) then\n'
+                   '  # use a default value\n'
+                   '  setenv {0} "{1}"\n'
+                   'endif\n')
+        else:
+            fmt = ('if [ -z "${0}" ] ; then\n'
+                   '  # use a default value\n'
+                   '  export {0}="{1}"\n'
+                   'fi\n')
+        # FIXME: should we escape quotes?
+        return (fmt.format(self.envname, self) +
+                _CMTPROJECTPATH_FMTS[shell].format('${' + self.envname+ '}'))
     def __repr__(self):
         return '{0}({1!r}, {2!r})'.format(self.__class__.__name__,
                                           self.envname, str(self))
+
+
+def _toEntry(entry):
+    '''ensure that the entry is a SearchPathEntry'''
+    if isinstance(entry, SearchPathEntry):
+        return entry
+    return SearchPathEntry(entry)
 
 class SearchPath(object):
     def __init__(self, entries):
@@ -76,13 +113,13 @@ class SearchPath(object):
         return SearchPath(self.entries + other)
     def toCMake(self):
         # we need to add them in reverse order because the 'prepend'
-        def toEntry(entry):
-            '''ensure that the entry is a SearchPathEntry'''
-            if isinstance(entry, SearchPathEntry):
-                return entry
-            return SearchPathEntry(entry)
-        return '\n'.join(toEntry(entry).toCMake()
+        return '\n'.join(_toEntry(entry).toCMake()
                          for entry in self.entries[::-1])
+    def toCMT(self, shell='sh'):
+        # we need to add them in reverse order because the 'prepend'
+        return '\n'.join(_toEntry(entry).toCMT(shell)
+                         for entry in self.entries[::-1])
+
     def __repr__(self):
         return '{0}({1!r})'.format(self.__class__.__name__,
                                    self.entries)
