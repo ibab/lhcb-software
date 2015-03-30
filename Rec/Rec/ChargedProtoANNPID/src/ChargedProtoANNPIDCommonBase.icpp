@@ -331,9 +331,9 @@ getOutput( const LHCb::ProtoParticle * proto )
   // Fill the array of network inputs
   {
     unsigned int i = 0;
-    for ( const auto * input : this->inputs() ) 
+    for ( const auto * input : this->inputs() )
     {
-      m_vars[i++] = input->value(proto); 
+      m_vars[i++] = input->value(proto);
     }
   }
 
@@ -351,16 +351,19 @@ NetConfig( const std::string & tkType,
            const std::string & netVersion,
            const bool suppressANNPrintout,
            const ChargedProtoANNPIDCommonBase<PBASE> * parent )
-  : m_OK(true), m_netHelper(NULL)
+  : m_netHelper(NULL)
 {
+
+  // Assume init will go OK until proved otherwise
+  bool OK = true;
 
   // Check the configuration
   if ( tkType.empty() )
-  { parent->Error( "No TrackType specified" ).ignore(); m_OK = false; }
+  { parent->Error( "No TrackType specified" ).ignore(); OK = false; }
   if ( pidType.empty() )
-  { parent->Error( "No PIDType specified" ).ignore(); m_OK = false; }
+  { parent->Error( "No PIDType specified" ).ignore(); OK = false; }
   if ( netVersion.empty() )
-  { parent->Error( "No NetVersion specified" ).ignore(); m_OK = false; }
+  { parent->Error( "No NetVersion specified" ).ignore(); OK = false; }
 
   // Config file name
   const std::string configFile = "GlobalPID_" + pidType + "_" + tkType + "_ANN.txt";
@@ -368,7 +371,8 @@ NetConfig( const std::string & tkType,
   // Determine where to load the data files from.
   // First try via env var.
   const std::string paramEnv = "CHARGEDPROTOANNPIDROOT";
-  if ( !getenv(paramEnv.c_str()) ) parent->Error( "$"+paramEnv+" not set" ).ignore();
+  if ( !getenv(paramEnv.c_str()) )
+  { OK = false; parent->Error( "$"+paramEnv+" not set" ).ignore(); }
   std::string paramRoot = ( std::string(getenv(paramEnv.c_str())) +
                             "/data/" + netVersion + "/" );
   std::ifstream config( (paramRoot+configFile).c_str() );
@@ -386,18 +390,18 @@ NetConfig( const std::string & tkType,
   {
     // Read the particle type
     config >> m_particleType;
-    // if ( m_particleType != pidType )
-    // {
-    //   m_OK = false;
-    //   parent -> Error( "Mis-match in particle types " + m_particleType +
-    //                    " != " + pidType ).ignore();
-    // }
+    if ( !boost::iequals(m_particleType,pidType) )
+    {
+      OK = false;
+      parent -> Error( "Mis-match in particle types " + m_particleType +
+                       " != " + pidType ).ignore();
+    }
 
     // Read the track Type
     config >> m_trackType;
-    if ( m_trackType != tkType )
+    if ( !boost::iequals(m_trackType,tkType) )
     {
-      m_OK = false;
+      OK = false;
       parent -> Error( "Mis-match in track types " + m_trackType +
                        " != " + tkType ).ignore();
     }
@@ -417,11 +421,14 @@ NetConfig( const std::string & tkType,
       for ( const auto & file : files )
       {
 
+        // open cuts file
         const std::string fullFile = paramRoot + file;
-        std::ifstream cuts(fullFile.c_str());
+        std::ifstream cuts( fullFile.c_str() );
+
+        // If OK, read
         if ( !cuts.is_open() )
         {
-          m_OK = false;
+          OK = false;
           parent -> Error( "Track Selection cuts file '" +
                            fullFile + "' cannot be opened" ).ignore();
         }
@@ -439,8 +446,8 @@ NetConfig( const std::string & tkType,
               m_cuts.push_back( new Cut(cut,parent) );
               if ( !m_cuts.back()->isOK() )
               {
-                m_OK = false;
-                parent -> Error( "Failed to decode selection cut '" + cut + "'" ).ignore(); 
+                OK = false;
+                parent -> Error( "Failed to decode selection cut '" + cut + "'" ).ignore();
               }
             }
           }
@@ -466,25 +473,25 @@ NetConfig( const std::string & tkType,
       config >> trackPreSel;
 
       // Create cut objects
-      bool ok = true;
+      bool _ok = true;
       m_cuts.push_back( new Cut( "TrackP                > "+minP,         parent ) );
-      ok &= m_cuts.back()->isOK();
+      _ok &= m_cuts.back()->isOK();
       m_cuts.push_back( new Cut( "TrackPt               > "+minPt,        parent ) );
-      ok &= m_cuts.back()->isOK();
+      _ok &= m_cuts.back()->isOK();
       m_cuts.push_back( new Cut( "TrackChi2PerDof       < "+maxChiSq,     parent ) );
-      ok &= m_cuts.back()->isOK();
+      _ok &= m_cuts.back()->isOK();
       m_cuts.push_back( new Cut( "TrackLikelihood       > "+minLikeli,    parent ) );
-      ok &= m_cuts.back()->isOK();
+      _ok &= m_cuts.back()->isOK();
       m_cuts.push_back( new Cut( "TrackGhostProbability < "+maxGhostProb, parent ) );
-      ok &= m_cuts.back()->isOK();
+      _ok &= m_cuts.back()->isOK();
       if ( trackPreSel == "TrackPreSelIsMuon" )
       {
         m_cuts.push_back( new Cut( "MuonIsMuon > 0.5", parent ) );
-        ok &= m_cuts.back()->isOK();
+        _ok &= m_cuts.back()->isOK();
       }
-      if ( !ok ) 
+      if ( !_ok )
       {
-        m_OK = false;
+        OK = false;
         parent -> Error( "Failed to decode old style track cuts" ).ignore();
       }
 
@@ -494,18 +501,22 @@ NetConfig( const std::string & tkType,
     std::string annType;
     config >> annType;
 
-    // Read network parameters file name
+    // read parameters file name
     std::string paramFileName;
     config >> paramFileName;
-    paramFileName = paramRoot+paramFileName;
-    std::ifstream netparamtest(paramFileName.c_str());
-    if ( !netparamtest.is_open() ) 
+    paramFileName = paramRoot+paramFileName; // add full path
+
+    // test opening of network parameters file
     {
-      parent -> Error( "Network parameters file '" +
-                       paramFileName + "' cannot be opened" ).ignore();
-      m_OK = false;
+      std::ifstream netparamtest( paramFileName.c_str() );
+      if ( !netparamtest.is_open() )
+      {
+        parent -> Error( "Network parameters file '" +
+                         paramFileName + "' cannot be opened" ).ignore();
+        OK = false;
+      }
+      netparamtest.close();
     }
-    netparamtest.close();
 
     // Read the list of inputs
     std::string input;
@@ -519,71 +530,89 @@ NetConfig( const std::string & tkType,
       }
     }
 
-    // Load the network helper object
-    if ( "TMVA" == annType )
+    // if all is OK so far, Load the network helper object
+    if ( OK )
     {
-      // First see if we have a built in C++ implementation for this case
-      m_netHelper = new TMVAImpANN( netVersion, 
-                                    particleType(), trackType(),
-                                    inputs, parent );
-      if ( !m_netHelper->isOK() )
+      if ( "TMVA" == annType )
       {
-        // No, so try again with a TMVA Reader
-        parent -> warning() << "Compiled TMVA implementation not available for "
-                            << netVersion << " " << particleType() << " " << trackType()
-                            << " -> Reverting to XML Reader"
-                            << endmsg;
-        delete m_netHelper;
-        m_netHelper = new TMVAReaderANN( paramFileName, inputs, parent,
+        // First see if we have a built in C++ implementation for this case
+        m_netHelper = new TMVAImpANN( netVersion,
+                                      particleType(), trackType(),
+                                      inputs, parent );
+        if ( !m_netHelper->isOK() )
+        {
+          // No, so try again with a TMVA Reader
+          parent -> warning() << "Compiled TMVA implementation not available for "
+                              << netVersion << " " << particleType() << " " << trackType()
+                              << " -> Reverting to Generic XML Reader"
+                              << endmsg;
+          delete m_netHelper;
+          m_netHelper = new TMVAReaderANN( paramFileName, inputs, parent,
+                                           suppressANNPrintout );
+        }
+      }
+#ifdef _ENABLE_NEUROBAYES
+      else if ( "NeuroBayes" == annType )
+      {
+        if ( parent->msgLevel(MSG::DEBUG) )
+          parent->debug() << "Using NeuroBayes Expert implementation" << endmsg;
+        // FPE Guard for NB call
+        FPE::Guard guard(true);
+        m_netHelper = new NeuroBayesANN( paramFileName, inputs, parent,
                                          suppressANNPrintout );
       }
-    }
-#ifdef _ENABLE_NEUROBAYES
-    else if ( "NeuroBayes" == annType )
-    {
-      if ( parent->msgLevel(MSG::DEBUG) )
-        parent->debug() << "Using NeuroBayes Expert implementation" << endmsg;
-      // FPE Guard for NB call
-      FPE::Guard guard(true);
-      m_netHelper = new NeuroBayesANN( paramFileName, inputs, parent,
-                                       suppressANNPrintout );
-    }
 #endif
-    else
-    {
-      parent -> Error( "Unknown ANN type '"+annType+"'" );
-      m_OK = false;
-    }
+      else
+      {
+        parent -> Error( "Unknown ANN type '"+annType+"'" ).ignore();
+        OK = false;
+      }
 
-    // print a summary of the configuration
-    const std::string sF = "ANNPID : Tune=%-13s TrackType=%-12s Particle=%-12s";
-    parent->info() << boost::format(sF) % netVersion % trackType() % particleType() << endmsg;
-    if ( parent->msgLevel(MSG::DEBUG) )
-    {
-      parent->debug() << "Network type     = " << annType << endmsg
-                      << "ConfigFile       = " << paramRoot << configFile << endmsg
-                      << "ParamFile        = " << paramFileName << endmsg
-                      << "ANN inputs (" << inputs.size() << ")  = " << inputs << endmsg
-                      << "Preselection Cuts (" << m_cuts.size() << ") = " << m_cuts
-                      << endmsg;
-    }
+      // is the final helper OK ?
+      if ( OK && m_netHelper && m_netHelper->isOK() )
+      {
+        // print a summary of the configuration
+        const std::string sF = "ANNPID : Tune=%-13s TrackType=%-12s Particle=%-12s";
+        parent->info() << boost::format(sF) % netVersion % trackType() % particleType() << endmsg;
+        if ( parent->msgLevel(MSG::DEBUG) )
+        {
+          parent->debug() << "Network type     = " << annType << endmsg
+                          << "ConfigFile       = " << paramRoot << configFile << endmsg
+                          << "ParamFile        = " << paramFileName << endmsg
+                          << "ANN inputs (" << inputs.size() << ")  = " << inputs << endmsg
+                          << "Preselection Cuts (" << m_cuts.size() << ") = " << m_cuts
+                          << endmsg;
+        }
+      }
+      else
+      {
+        parent -> Error( "Problem configuring network" ).ignore();
+        OK = false;
+      }
+
+    } // all OK
 
   }
   else
   {
-    m_OK = false;
+    OK = false;
     parent->Error( "Failed to open configuration file '"+paramRoot+configFile+"'" ).ignore();
   }
 
   // Close the config file
   config.close();
 
+  // If something went wrong, clean up
+  if ( !OK ) { cleanUp(); }
+
 }
 
 template <class PBASE>
-ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::NetConfig::~NetConfig() 
-{ 
-  delete m_netHelper; 
+void
+ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::NetConfig::cleanUp()
+{
+  delete m_netHelper;
+  m_netHelper = NULL;
   for ( auto * cut : m_cuts ) { delete cut; }
   m_cuts.clear();
 }

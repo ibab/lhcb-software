@@ -721,13 +721,13 @@ namespace ANNGlobalPID
                  const ChargedProtoANNPIDCommonBase<PBASE> * parent );
 
       /// Destructor
-      ~NetConfig();
-
-      /// Status
-      inline bool isOK() const { return m_OK; }
+      ~NetConfig() { cleanUp(); }
 
       /// Access the Network object
       inline const ANNHelper * netHelper() const { return m_netHelper; }
+
+      /// Status
+      inline bool isOK() const { return netHelper() && netHelper()->isOK(); }
 
       /// Access the track type
       inline const std::string& trackType() const { return m_trackType; }
@@ -740,8 +740,10 @@ namespace ANNGlobalPID
 
     private:
 
-      /// Status
-      bool m_OK;
+      /// Clean up
+      void cleanUp();
+
+    private:
 
       /// Network Helper
       ANNHelper * m_netHelper;
@@ -765,7 +767,7 @@ namespace ANNGlobalPID
     const Input * getInput( const std::string& name ) const;
 
     /** Get a vector of input objects for a given set of names
-     *  @attention Created on the heap, and user takes ownership
+     *  @attention Created on the heap therefore user takes ownership
      */
     typename Input::ConstVector getInputs( const StringInputs& names ) const;
 

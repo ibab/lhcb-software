@@ -34,6 +34,7 @@ ChargedProtoANNPIDAlg::ChargedProtoANNPIDAlg( const std::string& name,
   setProperty( "HistoProduce",   false );
   setProperty( "NTupleProduce",  false );
   setProperty( "EvtColsProduce", false );
+  //setProperty( "OutputLevel", 1 );
 }
 
 //=============================================================================
