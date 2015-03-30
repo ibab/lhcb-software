@@ -1,0 +1,53 @@
+# ============================================================================
+# Created    : 2007-06-08
+# Maintainer : Vanya BELYAEV
+# ============================================================================
+package           LoKiTrigger
+version           v15r5
+
+# =============================================================================
+branches          cmt doc src dict python LoKi
+
+# =============== dependencies ================================================
+use               HltBase           v*    Hlt
+use               TrackEvent        v*    Event
+use               L0Event           v*    Event
+use               TrackInterfaces   v*    Tr
+use               DaVinciKernel     v*    Phys
+use               DaVinciInterfaces v*    Phys
+use               LoKiCore          v*    Phys
+use               LoKiNumbers       v*    Phys
+use               LoKiTracks        v*    Phys
+use               LoKiArrayFunctors v*    Phys
+use               KalmanFilter      v*    Phys
+use               DetDesc           v*    Det
+
+
+# ================ own includes ===============================================
+apply_pattern install_more_includes  more=LoKi
+apply_pattern install_python_modules
+
+# =============== constituents ================================================
+library           LoKiTriggerLib ../src/*.cpp
+library           LoKiTrigger    ../src/Components/*.cpp
+
+macro_append LoKiTrigger_dependencies      " LoKiTriggerLib "
+macro_append LoKiTriggerDict_dependencies  " LoKiTriggerLib "
+
+# ============== Produce LCG dictionary =======================================
+apply_pattern    reflex_dictionary                                         \
+                 dictionary=LoKiTrigger                                    \
+                 headerfiles=$(LOKITRIGGERROOT)/dict/LoKiTriggerDict.h     \
+                 selectionfile=$(LOKITRIGGERROOT)/dict/LoKiTrigger.xml     \
+                 options=" -U__MINGW32__ "
+
+# ============== patterns =====================================================
+apply_pattern    linker_library    library=LoKiTriggerLib
+apply_pattern    component_library library=LoKiTrigger
+apply_pattern    QMTest
+
+macro LoKiTriggerDict_use_linkopts $(use_linkopts)
+
+# =============================================================================
+# The END
+# =============================================================================
