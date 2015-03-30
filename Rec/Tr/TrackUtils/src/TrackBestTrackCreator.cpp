@@ -39,6 +39,8 @@
 #include "TrackInterfaces/ITrackCloneFinder.h"
 #include "TrackInterfaces/ITrackFitter.h"
 #include "TrackInterfaces/ITrackStateInit.h"
+#include "TrackInterfaces/IGhostProbability.h"
+
 #include "TrackKernel/TrackCloneData.h"
 
 #include "remove_if_partitioned.h"
@@ -94,6 +96,8 @@ class TrackBestTrackCreator :
   private:
     ToolHandle<ITrackStateInit> m_stateinittool;
     ToolHandle<ITrackFitter> m_fitter;
+    ToolHandle<IGhostProbability> m_ghostTool;
+  
 
     // job options
     // -----------
@@ -110,16 +114,20 @@ class TrackBestTrackCreator :
     double m_maxChi2DoFVelo;
     double m_maxChi2DoFT;
     double m_maxChi2DoFMatchAndTT;
+    double m_maxGhostProb;
     /// fit the tracks using the Kalman filter?
     bool m_fitTracks;
     /// initialise track states using m_stateinittool?
     bool m_initTrackStates;
+    /// Add the Ghost Probability to a track
+    bool m_addGhostProb;
     /// use ancestor information to identify obvious clones
     bool m_useAncestorInfo;
     /// Do not refit already fitted tracks
     bool m_doNotRefit;
     bool m_debugLevel;
-
+    
+  
   protected:
     /// are tracks clones in VeloR and VeloPhi
     bool veloClones(const TrackData&, const TrackData&) const;
@@ -271,7 +279,8 @@ TrackBestTrackCreator::TrackBestTrackCreator( const std::string& name,
   GaudiAlgorithm ( name , pSvcLocator ),
 #endif
   m_stateinittool("TrackStateInitTool",this),
-  m_fitter("TrackMasterFitter",this)
+  m_fitter("TrackMasterFitter",this),
+  m_ghostTool("Run2GhostId",this)
 {
   // default list of input containers
   m_tracksInContainers.push_back( LHCb::TrackLocation::Forward    );
@@ -296,8 +305,12 @@ TrackBestTrackCreator::TrackBestTrackCreator( const std::string& name,
   declareProperty( "MaxChi2DoFMatchTT", m_maxChi2DoFMatchAndTT = 999 );
   declareProperty( "MinLongLongDeltaQoP", m_minLongLongDeltaQoP = -1 );
   declareProperty( "MinLongDownstreamDeltaQoP", m_minLongDownstreamDeltaQoP = 5e-6 );
-  declareProperty("UseAncestorInfo", m_useAncestorInfo = true);
+  declareProperty( "MaxGhostProb", m_maxGhostProb = 99999); // The default value is 999
+  declareProperty( "UseAncestorInfo", m_useAncestorInfo = true);
   declareProperty( "DoNotRefit", m_doNotRefit = false);
+  declareProperty( "AddGhostProb", m_addGhostProb = false);
+  declareProperty( "GhostIdTool", m_ghostTool );
+    
 }
 
 //=============================================================================
@@ -329,7 +342,13 @@ StatusCode TrackBestTrackCreator::initialize()
     sc = m_fitter.retrieve();
     if ( sc.isFailure() ) return sc; 
   }
+  if (m_addGhostProb){
+    sc =  m_ghostTool.retrieve();
+    if ( sc.isFailure() ) return sc; 
+  }
+  
 
+  
   // Print out the user-defined settings
   // -----------------------------------
   if( m_debugLevel ) 
@@ -372,7 +391,9 @@ StatusCode TrackBestTrackCreator::finalize()
 StatusCode TrackBestTrackCreator::execute()
 {  
   if ( m_debugLevel ) debug() << "==> Execute" << endmsg;
-
+  if (m_addGhostProb){
+    m_ghostTool->beginEvent().ignore();
+  }
   // create pool for TrackData objects for all input tracks 
   std::vector<TrackData> trackdatapool;
   // keep a record of which track goes where
@@ -475,11 +496,14 @@ bool TrackBestTrackCreator::fitAndSelect(LHCb::Track& track ) const
 	LHCb::ChiSquare chi2Velo = kalfit->chi2Velo();
 	// note: this includes TT hit contribution
 	LHCb::ChiSquare chi2MatchAndTT = chi2 - chi2T - chi2Velo;
+  //always()<< track.ghostProbability ()<<"  "<< m_maxGhostProb<<endmsg;
+  
 	accept = 
 	  chi2.chi2PerDoF() < m_maxChi2DoF &&
 	  chi2T.chi2PerDoF() < m_maxChi2DoFT &&
 	  chi2Velo.chi2PerDoF() < m_maxChi2DoFVelo &&
-	  chi2MatchAndTT.chi2PerDoF() < m_maxChi2DoFMatchAndTT;
+	  chi2MatchAndTT.chi2PerDoF() < m_maxChi2DoFMatchAndTT &&
+    ( !m_addGhostProb || track.ghostProbability () < m_maxGhostProb);
       }
       //   //if(!m_selector.accept( *track ) ) sc = StatusCode::FAILURE;
     } else {
@@ -503,7 +527,11 @@ StatusCode TrackBestTrackCreator::fit( LHCb::Track& track ) const
     if (track.fitStatus() == LHCb::Track::Fitted){
       counter("FittedBefore") += 1;
       sc = StatusCode::SUCCESS;
-    }else {
+      if (m_addGhostProb){
+        m_ghostTool->execute(track).ignore();
+      }
+    }
+    else {
       /// fit failed before
       /// This should always be 0 as this type is filtered out when initializing the tracks
       track.setFlag( LHCb::Track::Invalid, true );
@@ -519,8 +547,11 @@ StatusCode TrackBestTrackCreator::fit( LHCb::Track& track ) const
   	  double qopBefore = track.firstState().qOverP();
   	  /// Fit the track 
   	  sc =  m_fitter -> fit( track );
-  	  if ( sc.isSuccess()) {
-  	    // Update counters
+  	  if ( sc.isSuccess()){
+         if (m_addGhostProb){
+           m_ghostTool->execute(track).ignore();
+         }
+        // Update counters
   	    std::string prefix = Gaudi::Utils::toString(track.type());
   	    if( track.checkFlag( LHCb::Track::Backward ) ) prefix += "Backward";
   	    prefix += '.';
@@ -539,7 +570,7 @@ StatusCode TrackBestTrackCreator::fit( LHCb::Track& track ) const
   	    fitfailed = true;
   	  }
   	}
-  }
+}
   
   // stick as close as possible to whatever EventFitter prints
   counter("BadInput")  += int(badinput);

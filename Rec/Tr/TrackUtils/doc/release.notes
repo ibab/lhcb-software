@@ -7,6 +7,8 @@
 ! 2015-03-29 - Sascha Stahl
  - TrackBestTrackCreator: Added option to skip fit of already fitted tracks.
    False by default.
+ - TrackBestTrackCreator: Added option to add ghost probability and to use 
+   it in the selection of good tracks. False by default.
 
 ! 2015-03-27 - Maurizio Martinelli
  - HltTrackConverter: Added option for reading specific SelReports location
