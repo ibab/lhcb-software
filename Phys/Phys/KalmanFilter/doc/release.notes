@@ -1,9 +1,12 @@
+
 ! $Id$ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KalmanFilter
 ! Responsible : Vanya Belyaev  Ivan.Belyaev@itep.ru
 ! Purpose     : Kalman filter Utilities for Vertex fit 
 ! -----------------------------------------------------------------------------
+
+!========================= KalmanFilter v1r11 2015-03-31 ======================
 
 ! 2015-03-07 - Vanya Belyaev
  - add new function, that allows significinat optimization of vertex fit 
