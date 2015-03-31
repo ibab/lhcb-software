@@ -4,6 +4,8 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiTrigger v15r6 2015-03-31 =========================
+
 ! 2015-03-31 - Vanya Belyaev
 
  - reshuffle a bit Hlt1Combiner & Hlt1CombinerConf 
