@@ -283,6 +283,7 @@ Decoder("L0MuonCandidatesFromRaw/L0MuonFromRaw",
         active=True, banks=["L0Muon","L0MuonProcCand"],
         privateTools=["L0MuonOutputs/OutputTool"],
         required=["createODIN"], #needed in TAE mode
+        properties={"DAQMode" : 1},
         inputs={"RawEventLocations" : None},
         conf=DecoderDB)
 
