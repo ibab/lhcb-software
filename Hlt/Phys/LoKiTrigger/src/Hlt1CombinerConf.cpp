@@ -7,8 +7,6 @@
 #include "LoKi/Hlt1CombinerConf.h"
 #include "LoKi/ToCpp.h"
 #include "LoKi/AuxFunBase.h"
-#include "LTTools.h"
-#include "GaudiKernel/IToolSvc.h"
 // ============================================================================
 /** @file
  *
@@ -29,238 +27,132 @@
  *                 by $Author: mkenzie $
  */
 // ============================================================================
-// CONSTRUCTORS FOR 2 body combinations
-// ============================================================================
-// ============================================================================
-//  consructor from the decay, combination and mother cuts
-// ============================================================================
-LoKi::Hlt1::Hlt1CombinerConf::Hlt1CombinerConf
-( std::string                                                       decay      ,
-  const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut    ,
-  const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut    )
-  : m_decstrings { decay }
-  , m_acut ( combcut )
-  , m_acut12 ( LoKi::BasicFunctors<LoKi::ATypes::Combination>::BooleanConstant ( true ) )
-  , m_acut123 ( LoKi::BasicFunctors<LoKi::ATypes::Combination>::BooleanConstant ( true ) )
-  , m_cut  ( mothcut )
-  , m_combinertool ( "LoKi::FastVertexFitter:PUBLIC" )
+namespace 
 {
-  setup();
+  // ==========================================================================
+  /** @var s_combiner 
+   *  default particle combiner 
+   *  @see IParticleCombiner
+   */
+  const std::string s_combiner = "LoKi::FastVertexFitter:PUBLIC" ;
+  // ==========================================================================
 }
+// ============================================================================
+// CONSTRUCTORS FOR 2 body combinations
 // ============================================================================
 //  consructor from the decay, combination, mother cuts and combiner
 // ============================================================================
 LoKi::Hlt1::Hlt1CombinerConf::Hlt1CombinerConf
-( std::string                                                       decay      ,
+( const std::string&                                                decay      ,
   const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut    ,
   const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut    ,
-  std::string                                                       combiner   )
-  : m_decstrings { decay }
-  , m_acut ( combcut )
-  , m_acut12 ( LoKi::BasicFunctors<LoKi::ATypes::Combination>::BooleanConstant ( true ) )
+  const std::string&                                                combiner   )
+  : m_decstrings ( 1 , decay )
+  , m_acut    ( combcut )
+  , m_acut12  ( LoKi::BasicFunctors<LoKi::ATypes::Combination>::BooleanConstant ( true ) )
   , m_acut123 ( LoKi::BasicFunctors<LoKi::ATypes::Combination>::BooleanConstant ( true ) )
-  , m_cut  ( mothcut )
-  , m_combinertool ( combiner )
-{
-  setup();
-}
+  , m_cut     ( mothcut )
+  , m_combinertool ( combiner.empty() ? s_combiner : combiner )
+  , m_toCpp   ( Gaudi::Utils::toCpp_lst ( std::tie (  decay , combcut , mothcut , combiner ) ) ) 
+{}
 // ============================================================================
 //  consructor from the decay, combination and mother cuts
 // ============================================================================
 LoKi::Hlt1::Hlt1CombinerConf::Hlt1CombinerConf
-( std::vector<std::string>                                          decay      ,
+( const std::vector<std::string>&                                   decay      ,
   const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut    ,
   const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut    ,
-  std::string                                                       combiner   )
-  : m_decstrings { decay }
-  , m_acut ( combcut )
-  , m_acut12 ( LoKi::BasicFunctors<LoKi::ATypes::Combination>::BooleanConstant ( true ) )
-  , m_acut123 ( LoKi::BasicFunctors<LoKi::ATypes::Combination>::BooleanConstant ( true ) )
-  , m_cut  ( mothcut )
-  , m_combinertool ( combiner )
-{
-  setup();
-}
-// ============================================================================
-//  consructor from the decay, combination and mother cuts
-// ============================================================================
-LoKi::Hlt1::Hlt1CombinerConf::Hlt1CombinerConf
-( std::vector<std::string>                                          decay      ,
-  const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut    ,
-  const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut    )
-  : m_decstrings { decay }
-  , m_acut ( combcut )
-  , m_acut12 ( LoKi::BasicFunctors<LoKi::ATypes::Combination>::BooleanConstant ( true ) )
-  , m_acut123 ( LoKi::BasicFunctors<LoKi::ATypes::Combination>::BooleanConstant ( true ) )
-  , m_cut  ( mothcut )
-  , m_combinertool ( "LoKi::FastVertexFitter:PUBLIC" )
-{
-  setup();
-}
+  const std::string&                                                combiner   )
+  : m_decstrings   ( decay ) 
+  , m_acut         ( combcut )
+  , m_acut12       ( LoKi::BasicFunctors<LoKi::ATypes::Combination>::BooleanConstant ( true ) )
+  , m_acut123      ( LoKi::BasicFunctors<LoKi::ATypes::Combination>::BooleanConstant ( true ) )
+  , m_cut          ( mothcut )
+  , m_combinertool ( combiner.empty() ? s_combiner : combiner )
+  , m_toCpp   ( Gaudi::Utils::toCpp_lst ( std::tie (  decay , combcut , mothcut , combiner ) ) ) 
+{}
 // ============================================================================
 // CONSTRUCTORS FOR 3 body combinations
 // ============================================================================
-// ============================================================================
-//  consructor from the decay, combination and mother cuts
-// ============================================================================
-LoKi::Hlt1::Hlt1CombinerConf::Hlt1CombinerConf
-( std::string                                                       decay      ,
-  const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut    ,
-  const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut12  ,
-  const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut    )
-  : m_decstrings { decay }
-  , m_acut ( combcut )
-  , m_acut12 ( combcut12 )
-  , m_acut123 ( LoKi::BasicFunctors<LoKi::ATypes::Combination>::BooleanConstant ( true ) )
-  , m_cut  ( mothcut )
-  , m_combinertool ( "LoKi::FastVertexFitter:PUBLIC" )
-{
-  setup();
-}
-// ============================================================================
 //  consructor from the decay, combination, mother cuts and combiner
 // ============================================================================
 LoKi::Hlt1::Hlt1CombinerConf::Hlt1CombinerConf
-( std::string                                                       decay      ,
+( const std::string&                                                decay      ,
   const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut    ,
   const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut12  ,
   const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut    ,
-  std::string                                                       combiner   )
-  : m_decstrings { decay }
-  , m_acut ( combcut )
-  , m_acut12 ( combcut12 )
-  , m_acut123 ( LoKi::BasicFunctors<LoKi::ATypes::Combination>::BooleanConstant ( true ) )
-  , m_cut  ( mothcut )
-  , m_combinertool ( combiner )
-{
-  setup();
-}
+  const std::string&                                                combiner   )
+  : m_decstrings   ( 1 , decay )
+  , m_acut         ( combcut )
+  , m_acut12       ( combcut12  )
+  , m_acut123      ( LoKi::BasicFunctors<LoKi::ATypes::Combination>::BooleanConstant ( true ) )
+  , m_cut          ( mothcut )
+  , m_combinertool ( combiner.empty() ? s_combiner : combiner )
+  , m_toCpp   ( Gaudi::Utils::toCpp_lst ( std::tie (  decay     , combcut , 
+                                                     combcut12 , 
+                                                     mothcut   , combiner ) ) ) 
+{}
 // ============================================================================
 //  consructor from the decay, combination and mother cuts
 // ============================================================================
 LoKi::Hlt1::Hlt1CombinerConf::Hlt1CombinerConf
-( std::vector<std::string>                                          decay      ,
+( const std::vector<std::string>&                                   decay      ,
   const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut    ,
   const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut12  ,
   const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut    ,
-  std::string                                                       combiner   )
-  : m_decstrings { decay }
-  , m_acut ( combcut )
-  , m_acut12 ( combcut12 )
-  , m_acut123 ( LoKi::BasicFunctors<LoKi::ATypes::Combination>::BooleanConstant ( true ) )
-  , m_cut  ( mothcut )
-  , m_combinertool ( combiner )
-{
-  setup();
-}
-// ============================================================================
-//  consructor from the decay, combination and mother cuts
-// ============================================================================
-LoKi::Hlt1::Hlt1CombinerConf::Hlt1CombinerConf
-( std::vector<std::string>                                          decay      ,
-  const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut    ,
-  const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut12  ,
-  const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut    )
-  : m_decstrings { decay }
-  , m_acut ( combcut )
-  , m_acut12 ( combcut12 )
-  , m_acut123 ( LoKi::BasicFunctors<LoKi::ATypes::Combination>::BooleanConstant ( true ) )
-  , m_cut  ( mothcut )
-  , m_combinertool ( "LoKi::FastVertexFitter:PUBLIC" )
-{
-  setup();
-}
+  const std::string&                                                combiner   )
+  : m_decstrings   ( decay      ) 
+  , m_acut         ( combcut    )
+  , m_acut12       ( combcut12  )
+  , m_acut123      ( LoKi::BasicFunctors<LoKi::ATypes::Combination>::BooleanConstant ( true ) )
+  , m_cut          ( mothcut    )
+  , m_combinertool ( combiner.empty() ? s_combiner : combiner )
+  , m_toCpp   ( Gaudi::Utils::toCpp_lst ( std::tie (  decay     , combcut ,
+                                                     combcut12 , 
+                                                     mothcut   , combiner ) ) ) 
+{}
 // ============================================================================
 // CONSTRUCTORS FOR 4 body combinations
 // ============================================================================
-// ============================================================================
-//  consructor from the decay, combination and mother cuts
-// ============================================================================
-LoKi::Hlt1::Hlt1CombinerConf::Hlt1CombinerConf
-( std::string                                                       decay      ,
-  const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut    ,
-  const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut12  ,
-  const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut123 ,
-  const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut    )
-  : m_decstrings { decay }
-  , m_acut ( combcut )
-  , m_acut12 ( combcut12 )
-  , m_acut123 ( combcut123 )
-  , m_cut  ( mothcut )
-  , m_combinertool ( "LoKi::FastVertexFitter:PUBLIC" )
-{
-  setup();
-}
-// ============================================================================
 //  consructor from the decay, combination, mother cuts and combiner
 // ============================================================================
 LoKi::Hlt1::Hlt1CombinerConf::Hlt1CombinerConf
-( std::string                                                       decay      ,
+( const std::string&                                                decay      ,
   const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut    ,
   const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut12  ,
   const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut123 ,
   const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut    ,
-  std::string                                                       combiner   )
-  : m_decstrings { decay }
-  , m_acut ( combcut )
-  , m_acut12 ( combcut12 )
-  , m_acut123 ( combcut123 )
-  , m_cut  ( mothcut )
-  , m_combinertool ( combiner )
-{
-  setup();
-}
+  const std::string&                                                combiner   )
+  : m_decstrings   ( 1 , decay  )
+  , m_acut         ( combcut    )
+  , m_acut12       ( combcut12  )
+  , m_acut123      ( combcut123 )
+  , m_cut          ( mothcut    )
+  , m_combinertool ( combiner.empty() ? s_combiner : combiner )
+  , m_toCpp   ( Gaudi::Utils::toCpp_lst ( std::tie (  decay     , combcut    , 
+                                                     combcut12 , combcut123 , 
+                                                     mothcut   , combiner   ) ) ) 
+{}
 // ============================================================================
 //  consructor from the decay, combination and mother cuts
 // ============================================================================
 LoKi::Hlt1::Hlt1CombinerConf::Hlt1CombinerConf
-( std::vector<std::string>                                          decay      ,
+( const std::vector<std::string>&                                   decay      ,
   const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut    ,
   const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut12  ,
   const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut123 ,
   const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut    ,
-  std::string                                                       combiner   )
-  : m_decstrings { decay }
-  , m_acut ( combcut )
-  , m_acut12 ( combcut12 )
-  , m_acut123 ( combcut123 )
-  , m_cut  ( mothcut )
-  , m_combinertool ( combiner )
-{
-  setup();
-}
-// ============================================================================
-//  consructor from the decay, combination and mother cuts
-// ============================================================================
-LoKi::Hlt1::Hlt1CombinerConf::Hlt1CombinerConf
-( std::vector<std::string>                                          decay      ,
-  const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut    ,
-  const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut12  ,
-  const LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate&  combcut123 ,
-  const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&      mothcut    )
-  : m_decstrings { decay }
-  , m_acut ( combcut )
-  , m_acut12 ( combcut12 )
-  , m_acut123 ( combcut123 )
-  , m_cut  ( mothcut )
-  , m_combinertool ( "LoKi::FastVertexFitter:PUBLIC" )
-{
-  setup();
-}
-// ============================================================================
-// setup
-// ============================================================================
-StatusCode LoKi::Hlt1::Hlt1CombinerConf::setup()
-{
-  LoKi::ILoKiSvc* svc = LoKi::AuxFunBase::lokiSvc() ;
-  SmartIF<IToolSvc> tsvc ( svc ) ;
-  IDecodeSimpleDecayString *dsds ;
-  StatusCode sc = tsvc->retrieveTool("DecodeSimpleDecayString:PUBLIC", dsds) ;
-  m_decays = Decays::decays ( m_decstrings, dsds ) ;
-  release(dsds);
-  Assert ( !m_decays.empty(), "Unable to decode DecayDescriptor" );
-  return sc;
-}
+  const std::string&                                                combiner   )
+  : m_decstrings   ( decay      ) 
+  , m_acut         ( combcut    )
+  , m_acut12       ( combcut12  )
+  , m_acut123      ( combcut123 )
+  , m_cut          ( mothcut    )
+  , m_combinertool ( combiner.empty() ? s_combiner : combiner )
+  , m_toCpp   ( Gaudi::Utils::toCpp_lst ( std::tie (  decay     , combcut    , 
+                                                     combcut12 , combcut123 , 
+                                                     mothcut   , combiner   ) ) ) 
+{}
 // ============================================================================
 // virtual destructor
 // ============================================================================
@@ -272,19 +164,20 @@ std::ostream& LoKi::Hlt1::Hlt1CombinerConf::fillStream
 ( std::ostream& s ) const
 {
   s << "LoKi.Hlt1.Hlt1CombinerConf(";
-  s << " [ ";
-  for (unsigned int i = 0; i < m_decstrings.size()-1; i++) {
-    s << m_decstrings[i] << ",";
+  if ( 1 == m_decstrings.size() ) 
+  { Gaudi::Utils::toStream ( m_decstrings[0] , s ) ; }
+  else 
+  { Gaudi::Utils::toStream ( m_decstrings    , s ) ; }
+  s << "," << m_acut 
+    << "," << m_acut12  
+    << "," << m_acut123 
+    << "," << m_cut     ;
+  if ( s_combiner != m_combinertool )
+  {
+    s << "," ;
+    Gaudi::Utils::toStream ( m_combinertool , s ) ;
   }
-  s << m_decstrings[m_decstrings.size()-1] << " ] " ;
-  s << "," ; 
-  m_acut.fillStream( s );
-  s << "," ;
-  m_cut.fillStream( s ) ;
-  s << "," ;
-  combiner() ;
-  s << ")" ;
-  return s;
+  return s << ")" ;
 }
 // ============================================================================
 // conversion to the string
@@ -296,13 +189,11 @@ std::string LoKi::Hlt1::Hlt1CombinerConf::toString () const
   return s.str() ;
 }
 // ============================================================================
+std::string LoKi::Hlt1::Hlt1CombinerConf::toCpp() const
+{ return "LoKi::Hlt1::Hlt1CombinerConf(" + m_toCpp + ")" ; }
+// ============================================================================
 std::string Gaudi::Utils::toCpp ( const LoKi::Hlt1::Hlt1CombinerConf& o )
-{
-  std::string s = "LoKi::Hlt1::Hlt1CombinerConf( ";
-  s += toCpp ( o.decaystrs() ) + ", " ;
-  s += toCpp ( o.acut() )  + ", " ;
-  s += toCpp ( o.cut() )   + ", " ;
-  s += toCpp ( o.combiner() )     ;
-  s += ")" ;
-  return s ;
-}
+{  return o.toCpp() ; }
+// ============================================================================
+// The END
+// ============================================================================

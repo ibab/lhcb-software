@@ -30,8 +30,9 @@
 #include "LoKi/Constants.h"
 #include "LoKi/ParticleProperties.h"
 #include "LoKi/CompareParticles.h"
-#include  "LTTools.h"
+#include "LoKi/NBodyCompare.h"
 // ============================================================================
+#include  "LTTools.h"
 #ifdef __INTEL_COMPILER
 #pragma warning(pop)
 #endif
@@ -58,16 +59,17 @@
 //   constructor from decay string, output location, sources and cuts 
 // ============================================================================
 LoKi::Hlt1::Hlt1Combiner::Hlt1Combiner
-( const std::string                                              output  ,
+( const std::string&                                             output  ,
   const LoKi::Hlt1::Hlt1CombinerConf&                            config  ,
   const std::string&                                             source1 ,
   const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&   cut1    )
   : LoKi::AuxFunBase  ( std::tie ( output , config , source1 , cut1 ) )
   , LoKi::BasicFunctors<const Hlt::Candidate*>::Source ()
   , LoKi::Hlt1::HelperTool( 1 )
-  , m_sink { std::move(output) }
-  , m_conf ( config )
-  , m_source ( LoKi::Hlt1::Selection( source1 , cut1 ) )
+  , m_sink   ( output ) 
+  , m_conf   ( config )
+  , m_source ( LoKi::Hlt1::Selection ( source1 , cut1 ) )
+  , m_pc     () 
 {
   setup();
 }
@@ -75,19 +77,22 @@ LoKi::Hlt1::Hlt1Combiner::Hlt1Combiner
 //   constructor from decay string, output location, sources and cuts 
 // ============================================================================
 LoKi::Hlt1::Hlt1Combiner::Hlt1Combiner
-( const std::string                                              output  ,
+( const std::string&                                             output  ,
   const LoKi::Hlt1::Hlt1CombinerConf&                            config  ,
   const std::string&                                             source1 ,
   const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&   cut1    ,
   const std::string&                                             source2 ,
   const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&   cut2    )
-  : LoKi::AuxFunBase  ( std::tie ( output , config , source1 , cut1 , source2 , cut2 ) )
+  : LoKi::AuxFunBase  ( std::tie ( output  , config , 
+                                   source1 , cut1   , 
+                                   source2 , cut2   ) )
   , LoKi::BasicFunctors<const Hlt::Candidate*>::Source ()
   , LoKi::Hlt1::HelperTool( 1 )
-  , m_sink { std::move(output) }
+  , m_sink ( output ) 
   , m_conf ( config )
   , m_source ( no_empty_union ( LoKi::Hlt1::Selection( source1 , cut1 ) ,
                                 LoKi::Hlt1::Selection( source2 , cut2 ) ) )
+  , m_pc     () 
 {
   setup();
 }
@@ -95,22 +100,26 @@ LoKi::Hlt1::Hlt1Combiner::Hlt1Combiner
 //   constructor from decay string, output location, sources and cuts 
 // ============================================================================
 LoKi::Hlt1::Hlt1Combiner::Hlt1Combiner
-( const std::string                                              output  ,
+( const std::string&                                             output  ,
   const LoKi::Hlt1::Hlt1CombinerConf&                            config  ,
   const std::string&                                             source1 ,
   const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&   cut1    ,
   const std::string&                                             source2 ,
   const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&   cut2    ,
   const std::string&                                             source3 ,
-  const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&   cut3    ) 
-  : LoKi::AuxFunBase  ( std::tie ( output , config , source1 , cut1 , source2 , cut2 , source3 , cut3 ) )
+  const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&   cut3    )
+  : LoKi::AuxFunBase  ( std::tie ( output  , config , 
+                                   source1 , cut1   , 
+                                   source2 , cut2   , 
+                                   source3 , cut3   ) )
   , LoKi::BasicFunctors<const Hlt::Candidate*>::Source ()
   , LoKi::Hlt1::HelperTool( 1 )
-  , m_sink { std::move(output) }
+  , m_sink ( output ) 
   , m_conf ( config )
   , m_source ( no_empty_union ( LoKi::Hlt1::Selection( source1 , cut1 ) ,
                                 LoKi::Hlt1::Selection( source2 , cut2 ) ,
                                 LoKi::Hlt1::Selection( source3 , cut3 ) ) )
+  , m_pc     () 
 {
   setup();
 }
@@ -119,20 +128,46 @@ LoKi::Hlt1::Hlt1Combiner::Hlt1Combiner
 // ============================================================================
 StatusCode LoKi::Hlt1::Hlt1Combiner::setup()
 {
-  m_maxCand = 0 ;
+  m_maxCand     = 0     ;
   m_maxCandStop = false ;
-  m_maxComb = 0 ;
+  m_maxComb     = 0     ;
   m_maxCombStop = false ;
+  //
   // get required tools
+  //
   LoKi::ILoKiSvc* svc = lokiSvc() ;
   SmartIF<IToolSvc> tsvc ( svc ) ;
-  StatusCode sc = tsvc->retrieveTool(m_conf.combiner(), m_pc);
+  IParticleCombiner*  _pc = 0 ;
+  StatusCode sc = tsvc->retrieveTool ( m_conf.combiner() , _pc ) ;
+  m_pc = _pc ;
+  Assert ( sc.isSuccess() && m_pc , 
+           "Unable to get Particle Combiner'" + m_conf.combiner() + "'" ) ;
+  //
+  IDecodeSimpleDecayString *dsds ;
+  sc = tsvc->retrieveTool("DecodeSimpleDecayString:PUBLIC", dsds ) ;
+  Assert ( sc.isSuccess() && 0 != dsds  , 
+           "Unable to get DecodeSimpleDecayString:PUBLIC " ) ;
+  //
+  m_decays = Decays::decays ( m_conf.decaystrs () , dsds ) ;
+  LoKi::release ( dsds ) ;
+  Assert ( !m_decays.empty(), "Unable to decode DecayDescriptor" );
+  //
+  for ( std::vector<Decays::Decay>::const_iterator idecay = m_decays.begin() ; 
+        m_decays.end() != idecay ; ++idecay )
+  {
+    const Decays::Decay::Items& children  = idecay->children () ;
+    for ( const Decays::Decay::Item& item : children )
+    { m_items  [ item.pid() ] = item.name() ; }
+  }
+  //
+  Assert ( !m_items.empty(), "Unable to collect all daughters!" );
   return sc ;
 }
 // ============================================================================
 // virtual destructor
 // ============================================================================
-LoKi::Hlt1::Hlt1Combiner::~Hlt1Combiner () {}
+LoKi::Hlt1::Hlt1Combiner::~Hlt1Combiner () 
+{ if ( m_pc && !gaudi() ) { m_pc.reset() ; } }
 // ============================================================================
 // clone method ("virtual constructor")
 // ============================================================================
@@ -141,24 +176,29 @@ LoKi::Hlt1::Hlt1Combiner* LoKi::Hlt1::Hlt1Combiner::clone() const
 // ============================================================================
 // getDaughters helper function
 // ============================================================================
-bool
+bool 
 LoKi::Hlt1::Hlt1Combiner::getDaughters
-  ( LoKi::Hlt1::Hlt1Combiner::Selected& daughters ) const
-{
-  typedef result_type                CANDIDATES ;
+( const  LoKi::Hlt1::Hlt1Combiner::CANDIDATES& input     , 
+  LoKi::Hlt1::Hlt1Combiner::Selected&          daughters ) const 
+{ 
+  //
   typedef CANDIDATES::const_iterator ITERATOR   ;
-  const CANDIDATES a = source() () ;
-  const CANDIDATES* arg1 = &a;
-
-  // loop candidates in source and add to daughters 
-  for ( ITERATOR icand1 = arg1->begin(); icand1 != arg1->end(); icand1++ )
+  //
+  // loop input candidates and add to daughters 
+  //
+  for ( ITERATOR icand = input.begin(); icand != input.end(); ++icand )
   {
-    const Hlt::Candidate* cand1 = *icand1 ;
-    if ( !cand1 ) { continue ; }
-    const LHCb::Particle* particle1 = cand1->get<LHCb::Particle> () ;
-    if ( !particle1 ) { continue ; }
-    daughters.add ( LoKi::Particles::nameFromPID(particle1->particleID()) , particle1 ) ;
+    const Hlt::Candidate* cand     = *icand ;
+    if ( !cand      ) { continue ; }                                  // SKIP 
+    const LHCb::Particle* particle = cand->get<LHCb::Particle> () ;
+    if ( !particle  ) { continue ; }                                  // SKIP 
+    //
+    MAP::const_iterator ifind = m_items.find ( particle->particleID() ) ;
+    if ( m_items.end() == ifind ) { continue ; }                         // SKIP 
+    //
+    daughters.add ( ifind->second , particle ) ;
   }
+  //
   return true ;
 }
 // ============================================================================
@@ -166,14 +206,16 @@ LoKi::Hlt1::Hlt1Combiner::getDaughters
 // ============================================================================
 void // should return a StatusCode instead?
 LoKi::Hlt1::Hlt1Combiner::executeCombineParticles
-  ( LoKi::Hlt1::Hlt1Combiner::result_type& output, const Selected& daughters, const Decays::Decay& decay ) const
+( LoKi::Hlt1::Hlt1Combiner::CANDIDATES&       output    , 
+  const LoKi::Hlt1::Hlt1Combiner::Selected&   daughters , 
+  const Decays::Decay&                        decay     ) const
 {
-
+  // 
   // the combination tools
   typedef LoKi::Combiner_<LHCb::Particle::ConstVector> Combiner ;
   const IParticleCombiner* combiner = pc() ;
-  const LoKi::Particles::PidCompare compare = LoKi::Particles::PidCompare () ;
-  
+  const LoKi::Particles::PidCompare compare ; //  = LoKi::Particles::PidCompare () ;
+  //
   // the combiner itself
   Combiner loop ;
   // loop children and add daughters of this type to the combiner
@@ -246,9 +288,13 @@ LoKi::Hlt1::Hlt1Combiner::executeCombineParticles
 // ============================================================================
 void
 LoKi::Hlt1::Hlt1Combiner::execute3BodyCombination 
-  ( LoKi::Hlt1::Hlt1Combiner::result_type& output, const Selected& daughters, const Decays::Decay& decay ) const
+( LoKi::Hlt1::Hlt1Combiner::CANDIDATES&     output    , 
+  const LoKi::Hlt1::Hlt1Combiner::Selected& daughters , 
+  const Decays::Decay&                      decay     ) const
 {
-
+  // 
+  const LoKi::Particles::NBodyCompare compare ; // = LoKi::Particles::NBodyCompare () ;
+  //
   // the combination tools
   const IParticleCombiner* combiner = pc() ;
   
@@ -385,9 +431,14 @@ LoKi::Hlt1::Hlt1Combiner::execute3BodyCombination
 // ============================================================================
 void
 LoKi::Hlt1::Hlt1Combiner::execute4BodyCombination 
-  ( LoKi::Hlt1::Hlt1Combiner::result_type& output, const Selected& daughters, const Decays::Decay& decay ) const
+( LoKi::Hlt1::Hlt1Combiner::CANDIDATES&     output    , 
+  const LoKi::Hlt1::Hlt1Combiner::Selected& daughters , 
+  const Decays::Decay&                      decay     ) const
 {
-
+  
+  
+  const LoKi::Particles::NBodyCompare compare ; // = LoKi::Particles::NBodyCompare () ;
+  
   const IParticleCombiner* combiner = pc() ; // get the particle combiner
   
   // Flag to indicate if processing is aborted
@@ -554,35 +605,31 @@ LoKi::Hlt1::Hlt1Combiner::operator()
   ( /*LoKi::Hlt1::Hlt1Combiner::argument a*/ ) const
 {
   Assert ( alg() , "Invalid setup!" );
-
+  
   typedef result_type                CANDIDATES ;
-  const CANDIDATES a = source() () ;
-  if ( a.empty() ) { return result_type () ; } // no action for EMPTY input
-
-  // the output selection
+  const CANDIDATES input = source() () ;
+  if ( input.empty() ) { return result_type () ; } // no action for EMPTY input
+  
+  /// the output selection
   CANDIDATES output;
-
+  
   // get daughters from the input sources 
   Selected daughters ;
-  getDaughters( daughters ) ;
-
-  const std::vector<Decays::Decay> decays = m_conf.decays();
-
-  for ( std::vector<Decays::Decay>::const_iterator idecay = decays.begin() ; idecay != decays.end() ; idecay ++ ) {
-    
-    const unsigned short N = idecay->children().size();
-
-    if ( N == 3 ) {
-      execute3BodyCombination(output, daughters, *idecay);
-    }
-    else if ( N == 4 ) {
-      execute4BodyCombination(output, daughters, *idecay);
-    }
-    else { // fine for 2 body (not at all optimal for N>4 body)
-      executeCombineParticles(output, daughters, *idecay);
-    }
-  }
+  getDaughters ( input , daughters ) ;
   
+  //
+  for ( std::vector<Decays::Decay>::const_iterator idecay = m_decays.begin() ; 
+        idecay != m_decays.end() ; idecay ++ ) 
+  {
+    //
+    const unsigned short N = idecay->children().size();
+    //
+    if      ( 3 == N ) { execute3BodyCombination(output, daughters, *idecay) ; }
+    else if ( 4 == N ) { execute4BodyCombination(output, daughters, *idecay) ; }
+    // fine for 2 body (not at all optimal for N>4 body)
+    else { executeCombineParticles(output, daughters, *idecay); }
+  }
+  //
   // register the selection in Hlt Data Service
   return !m_sink ? output : m_sink ( output ) ;
   // ==========================================================================
@@ -594,5 +641,9 @@ std::ostream& LoKi::Hlt1::Hlt1Combiner::fillStream ( std::ostream& s ) const
 {
   return
     s << "TC_HLT1COMBINER("
-      << "'" << location () << "')" ;
+      << "'" << location () << "', " 
+      << m_conf             << ")" ;  
 }
+// ============================================================================
+// The END 
+// ============================================================================

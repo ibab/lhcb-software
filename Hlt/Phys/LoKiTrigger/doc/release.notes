@@ -4,6 +4,10 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-03-31 - Vanya Belyaev
+
+ - reshuffle a bit Hlt1Combiner & Hlt1CombinerConf 
+
 ! 2015-03-30 - Roel Aaij
    Significant changes in Hlt1 upgrade code.
  - Remove previous mechanism of double work prevention and replace it with
