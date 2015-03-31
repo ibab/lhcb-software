@@ -5,6 +5,9 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+! 2015-03-31 - Chris Jones
+ - Remove method from HybridFilterParticles now inlined in interface.
+
 ! 2015-03-26 - Roel Aaij
  - Fix copy constructor of AllSameBestPV and add default constructor using
    constructor delegation.

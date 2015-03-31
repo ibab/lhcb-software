@@ -49,9 +49,6 @@ namespace LoKi
       /// Test if filter is satisfied on ensemble of particles
       virtual bool isSatisfied
       ( const LHCb::Particle::ConstVector& a ) const { return m_cut ( a ) ; }
-      /// Test if filter is satisfied on ensemble of particles
-      virtual bool operator()
-      ( const LHCb::Particle::ConstVector& a ) const { return m_cut ( a ) ; }
       // ======================================================================
     public:
       // ======================================================================
