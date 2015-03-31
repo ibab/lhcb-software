@@ -16,7 +16,7 @@ GaussGen = GenInit("GaussGen")
 GaussGen.FirstEventNumber = 1
 GaussGen.RunNumber        = 1082
 
-LHCbApp().EvtMax = 250
+LHCbApp().EvtMax = 500
 LHCbApp().OutputLevel = WARNING
 Gauss().Histograms = "NONE"
 Gauss().OutputType = "NONE"

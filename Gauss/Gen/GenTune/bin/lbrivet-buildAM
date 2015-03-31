@@ -1,0 +1,146 @@
+#!/usr/bin/env bash
+## -*- sh -*-
+## bin/rivet-buildplugin.  Generated from rivet-buildplugin.in by configure.
+## LHCb specific fork of the original script from rivet to benefit from CMT system
+
+pushd . >/dev/null
+
+cd "$(dirname $0)/../cmt"
+
+## Print help
+PROG=$(basename $0)
+tmp=$(echo $* | egrep -- '--\<help\>|-\<h\>')
+if test $# -lt 1 || test -n "$tmp"; then
+    echo "$PROG: compilation helper for Rivet analysis plugins"
+    echo
+    echo "Usage: $PROG [<libname>] <source1> [<source2> [compiler_flags] ...]"
+    echo
+    echo "<libname> can be a path, provided the filename is of the form 'Rivet*.so'"
+    echo "If <libname> is not specified, the default name is 'RivetAnalysis.so'."
+    echo
+    echo "To make special build variations you can add appropriate compiler flags"
+    echo "to the arguments and these will be passed directly to the compiler. For"
+    echo "example, for a debug build of your plugin library, add '-g', and for a"
+    echo "32 bit build on a 64 bit system add '-m32'."
+    echo
+    echo "Options:"
+    echo "  -h | --help: display this help message"
+    echo "  --with-root: add ROOT link options (requires root-config on system)"
+    echo
+    echo "TODO:"
+    echo "  * is there a GCC option to parallelise the single-command compilation?"
+    test -n "$tmp"
+    exit $?
+fi
+
+## Work out shared library build flags by platform
+shared_flags=
+SWVERS=$(which sw_vers 2> /dev/null)
+if test "$SWVERS" && test -x "$SWVERS"; then
+  ## Mac OS X
+  shared_flags="-undefined dynamic_lookup -bundle"
+else
+  ## Unix
+  shared_flags="-shared -fPIC"
+fi
+
+## Get Rivet system C++ compiler (fall back to $CXX and then g++ if needed)
+mycxx=g++
+rivetcxx=$(which c++ 2> /dev/null)
+
+abscxx=$(which "$CXX" 2> /dev/null)
+
+if [[ -x "$rivetcxx" ]]; then
+    mycxx="$rivetcxx"
+elif [[ -x "$abscxx" ]]; then
+    mycxx=$CXX
+fi
+
+## Get Rivet system C++ compiler flags
+mycxxflags=""
+if [[ -n " -pedantic -ansi -Wall -Wno-long-long -Wno-format" ]]; then
+    mycxxflags=" -pedantic -ansi -Wall -Wno-long-long -Wno-format"
+fi
+if [[ -n "-O2" ]]; then
+    mycxxflags="$mycxxflags -O2"
+fi
+
+gccRE='.+-gcc46-.+'
+#alternativ:
+##if [ $(echo $CMTCONFIG | grep -cE '.+-gcc46-.+') -eq 0 ]; then
+if [[ ! $CMTCONFIG =~ $gccRE ]]; then 
+  mycxxflags="$mycxxflags -Wno-unused-local-typedefs"
+fi
+
+## Get Rivet system C preprocessor flags (duplicating that in rivet-config.in)
+mycppflags=""
+# Get PATHs from LHCb CMT system
+prefix=$(readlink -f $(cmt show macro_value rivet_home))
+hepmcHome=$(readlink -f $(cmt show macro_value HepMC_home))
+fastjetHome=$(readlink -f $(cmt show macro_value fastjet_home))
+gslHome=$(readlink -f $(cmt show macro_value GSL_home))
+
+irivet="${prefix}/include"
+exec_prefix=${prefix}
+test -n "$irivet" && mycppflags="$mycppflags -I${irivet}"
+ihepmc="${hepmcHome}/include"
+test -n "$ihepmc" && mycppflags="$mycppflags -I${ihepmc}"
+ifastjet="${fastjetHome}/include"
+test -n "$ifastjet" && mycppflags="$mycppflags -I${ifastjet}"
+igsl="${gslHome}/include"
+test -n "$igsl" && mycppflags="$mycppflags -I${igsl}"
+iboost="$(readlink -f $(cmt show macro_value Boost_home))/include/boost-1_55"
+ifastjet="$(readlink -f $(cmt show macro_value fastjet_home))/include"
+test -n "$iboost" && mycppflags="$mycppflags -I${iboost}"
+
+popd
+
+## Get Rivet system linker flags (duplicating that in rivet-config.in)
+myldflags=""
+lrivet="${exec_prefix}/lib"
+test -n "$lrivet" && myldflags="$myldflags -L${lrivet}"
+lhepmc="${hepmcHome}/lib"
+test -n "$lhepmc" && myldflags="$myldflags -L${lhepmc}"
+lfastjet="${fastjetHome}/lib"
+test -n "$lfastjet" && myldflags="$myldflags -L${lfastjet}"
+## Detect whether the linker accepts the --no-as-needed flag and prepend the linker flag with it if possible
+if (cd /tmp && echo -e 'int main() { return 0; }' > $$.cc; $mycxx -Wl,--no-as-needed $$.cc -o $$ 2> /dev/null); then
+  myldflags="-Wl,--no-as-needed $myldflags"
+fi
+
+## Link against ROOT if requested
+with_root=$(echo $* | egrep -- '--\<with-root\>')
+# echo $with_root
+tmp=${@//--with-root/}
+set $tmp
+
+
+## Get and check the library name
+libname=$1
+match1=$(basename "$libname" | egrep '^.*\.so')
+match2=$(basename "$libname" | egrep '^Rivet.*\.so')
+if test -n "$match1"; then
+    if test -z "$match2"; then
+        echo "Library name '$libname' does not have the required 'Rivet*.so' name pattern" 1>&2
+        exit 1
+    fi
+    ## If we're using the first arg as the library name, shift it off the positional list
+    shift
+else
+    echo "Using default library name 'RivetAnalysis.so'"
+    libname="RivetAnalysis.so"
+fi
+
+
+## Get the source files (and more flags)
+sources_and_flags="$@ -lRivet"
+if [[ -n $with_root ]]; then
+    root_flags=$(root-config --libs --cflags 2> /dev/null)
+    # echo $root_flags
+    sources_and_flags="$root_flags $sources_and_flags"
+fi
+
+## Build
+cmd="$mycxx -o \"$libname\" $shared_flags $mycppflags $mycxxflags $myldflags $sources_and_flags"
+echo $cmd
+eval $cmd

@@ -5,6 +5,13 @@
 !               using Professor/Rivet system. 
 !-----------------------------------------------------------------------------
 
+! 2015-04-01 - Alex Grecu
+ - Adapted rivet-buildplugin from original RIVET distribution to work with 
+   LHCb specific configuration retrieved via CMT. Added bin directory containing
+   the build script named lbrivet-buildAM. Adjusted requirements to apply 
+   set_bin_path pattern for the package.
+ - Remove exec_prefix env variable definition in requirements
+
 !========================== GenTune v2r2p1 2014-12-19 ========================
 ! 2014-12-01 - Gloria Corti
  - Fixes for compilation warnings with --pedantic
