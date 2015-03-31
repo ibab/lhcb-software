@@ -24,7 +24,7 @@ __version__ = ""
 from Gaudi.Configuration import * 
 from LHCbKernel.Configuration import *
 
-from GaudiKernel.SystemOfUnits import MeV, mm
+from GaudiKernel.SystemOfUnits import MeV, mm, m
 
 class HltRecoConf(LHCbConfigurableUser):
    __slots__ = { "Forward_HPT_MinPt"            :  500. * MeV
@@ -35,7 +35,6 @@ class HltRecoConf(LHCbConfigurableUser):
                  ,"MatchVeloMuon_MinP"          : 6000. * MeV
                  ,"GoodTrCHI2PDOF"              : 5.0  # This TrCHI2PDOF is used in the sequence to mark hits of good tracks.
                  ,"MaxTrCHI2PDOF"               : 5.0  # This TrCHI2PDOF is used in the making of protoparticles.
-                 ,"PVBeamspotRho"               : 0.3 * mm
                  ,"VeloSelectionCut"            : "(~TrBACKWARD) & ( TrNVELOMISS < 100 )"
                  ,"FitVelo"                     : False
                  ,"OfflineSeeding"              : True
@@ -75,6 +74,12 @@ VeloTTToolOptions = {"minMomentum" : 0.0,
                      }
                           
 VeloTTOptions = { "fitTracks" : False }
+
+CommonPVOptions = {"UseBeamSpotCut" : True,
+                   "BeamSpotRCut" : 0.2 * mm,
+                   "TrackErrorScaleFactor" : 1.,
+                   "MinTracks" : 4.,
+                   "maxChi2" : 12.}
 
 CommonForwardOptions = { "MaxOTHits" : 150000 , #Why do we have this three times?
                          "MaxITHits" : 999999 ,

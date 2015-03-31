@@ -159,11 +159,11 @@ def fittedVelo(inputTracks, outputTracks):
     fa.Fit.VeloOnlyStateInit.VeloFitterName = "FastVeloFitLHCbIDs"
     fa.Fit.VeloOnlyStateInit.addTool(TrackMasterExtrapolator, "Extrapolator")
     fa.Fit.VeloOnlyStateInit.Extrapolator.addTool(SimplifiedMaterialLocator,
-                                                          name="MaterialLocator")
+                                                  name = "MaterialLocator")
     fa.Fit.Fit = "TrackMasterFitter/Fit"
     fa.Fit.addTool(TrackMasterFitter, name = "Fit")
-    from TrackFitter.ConfiguredFitters import ConfiguredForwardStraightLineFitter
-    fitter = ConfiguredForwardStraightLineFitter(fa.Fit.Fit)
+    from TrackFitter.ConfiguredFitters import ConfiguredForwardFitter
+    fitter = ConfiguredForwardFitter(fa.Fit.Fit)
     return fa
 
 #############################################################################################

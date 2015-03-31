@@ -62,12 +62,18 @@ def PV3D(where):
     proto3DVertices = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,ProtoPV3DSelection)
     recoPV3D = PatPV3D('HltPVsPV3D' )
     recoPV3D.addTool(PVOfflineTool,"PVOfflineTool")
-    recoPV3D.PVOfflineTool.UseBeamSpotRCut = True
     recoPV3D.PVOfflineTool.PVSeedingName = "PVSeedTool"
     recoPV3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
     recoPV3D.PVOfflineTool.addTool(LSAdaptPV3DFitter, "LSAdaptPV3DFitter")
-    recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.TrackErrorScaleFactor = 2.
-    recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.maxIP2PV = 0.3
+    offlineTool = recoPV3D.PVOfflineTool
+    fitter = recoPV3D.PVOfflineTool.LSAdaptPV3DFitter
+    # Set options from HltRecoConf
+    from HltRecoConf import CommonPVOptions
+    for opt, value in CommonPVOptions.iteritems():
+        for tool in (fitter, offlineTool):
+            if hasattr(tool, opt):
+                setattr(tool, opt, value)
+
     ## Simplified Material for TrackMasterExtrapolator
     recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.addTool(TrackMasterExtrapolator, "TrackMasterExtrapolator")
     recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.TrackMasterExtrapolator.addTool(SimplifiedMaterialLocator, name="MaterialLocator")
@@ -100,15 +106,11 @@ def PV3D(where):
                       'from LoKiHlt.algorithms import *' ],
         Code = """
         execute( %(algo)s ) * VSOURCE( '%(tesInput)s' )
-        >> VX_SINK( '%(hltProto)s' )
-        >> ( VX_BEAMSPOTRHO( 1 * mm ) < %(rhoCut)s )
         >> RV_SINKTES( '%(tesFinal)s' )
         >> VX_SINK( '%(hltFinal)s' )
         >> ~VEMPTY
         """ % { 'algo'     : pv3dAlgos,
                 'tesInput' : recoPV3D.OutputVerticesName,
-                'hltProto' : ProtoPV3DSelection,
-                'rhoCut'   : HltRecoConf().getProp("PVBeamspotRho"),
                 'tesFinal' : output3DVertices,
                 'hltFinal' : PV3DSelection   }
         )
