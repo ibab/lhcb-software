@@ -4,6 +4,8 @@
 ! Purpose     : Generic MVA classifier backends for DictTransform
 !---------------------------------------------------------------------------
 
+!========================= MVADictTools v1r9 2015-03-31 =========================
+
 ! 2015-03-12 - Roel Aaij
  - Return tool configurable from helper functions
  - Add utility function to resolve environment variable in filename.
