@@ -1,11 +1,21 @@
 <PRE>
 Package: HltSys
-Package Coordinator: Gerhard Raven, S. Benson
+Package Coordinator: Roel Aaij, Gerhard Raven
 Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger
 
-</PRE><H1><A NAME=v23r3>2015-01-20 HltSys v23r4</A></H1><PRE>
+</PRE><H1><A NAME=v23r5p1>2015-03-20 HltSys v23r5p1</A></H1><PRE>
+
+Release on stack v38r5. Depends on Phys v19r5.
+
+Main changes:
+   Release for tuning Hlt2.
+   More lines converted to new template.
+   Run calorimeter reconstruction up front.
+   Hlt1 complement upgrade implemented.
+
+</PRE><H1><A NAME=v23r5>2015-01-20 HltSys v23r5</A></H1><PRE>
 
 Release on stack v38r5. Depends on Phys v19r5.
 
@@ -16,7 +26,7 @@ Main changes:
    HLT2 tracking sequence updated to be much more offline-like.
    Functor caching available; to be commissioned.
 
-</PRE><H1><A NAME=v23r3>2015-01-20 HltSys v23r4</A></H1><PRE>
+</PRE><H1><A NAME=v23r4>2015-01-20 HltSys v23r4</A></H1><PRE>
 
 Release on stack v38r4. Depends on Phys v19r4p1.
 

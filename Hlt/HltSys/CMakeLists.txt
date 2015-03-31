@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltSys
 ################################################################################
-gaudi_subdir(HltSys v23r5)
+gaudi_subdir(HltSys v23r5p1)
 
 gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Hlt/Hlt1Muons
@@ -23,8 +23,16 @@ gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Hlt/HltTracking
                          Hlt/TCKUtils
                          Phys/LoKiTrigger
-                         Tr/TrackTools
-                         Kernel/SelectionLine
-						 Phys/BBDecTreeTool)
+                         # Extra packages
+                         PatPV
+                         MuonID
+                         LoKiCore
+                         LoKiPhys
+                         LoKiFitters
+                         LoKiArrayFunctors
+                         MVADictTools
+                         CaloReco
+                         KalmanFilter
+                         TrackUtils
 
 gaudi_add_test(QMTest QMTEST)
