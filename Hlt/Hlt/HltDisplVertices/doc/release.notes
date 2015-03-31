@@ -4,6 +4,8 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+!========================= HltDisplVertices v4r3 2015-03-31 =========================
+
 ! 2015-03-16 - Pieter David
  - remove upstream PV requirement
 
