@@ -70,8 +70,8 @@ StatusCode TrackAssociator::initialize() {
 StatusCode TrackAssociator::execute() {
 
   // Retrieve the Tracks
-  Tracks* tracks = getOrCreate<Tracks,Tracks> ( m_tracksInContainer );
-
+  LHCb::Track::Range tracks = getIfExists<LHCb::Track::Range> ( m_tracksInContainer );
+  
   // Retrieve the MCParticles
   MCParticles* mcParts = get<MCParticles> ( MCParticleLocation::Default );
 
@@ -131,8 +131,8 @@ StatusCode TrackAssociator::execute() {
   }
 
   // Loop over the Tracks
-  Tracks::const_iterator it;
-  for( it = tracks->begin(); tracks->end() != it; ++it ) {
+  LHCb::Track::Range::const_iterator it;
+  for( it = tracks.begin(); tracks.end() != it; ++it ) {
     const Track* tr = *it;
     m_nTotVelo = 0.;
     m_nTotTT1  = 0.;
