@@ -5,6 +5,7 @@ gaudi_subdir(Tesla v1r3)
 
 gaudi_depends_on_subdirs(Event/HltEvent
                          Event/MicroDst
+                         Det/DDDB
                          GaudiConfUtils
                          Hlt/HltDAQ
                          Phys/TeslaTools
