@@ -5,7 +5,8 @@ Purpose             : Turbo Stream Analysis
 !-----------------------------------------------------------------------------
 
 ! 2015-3-31 - Sean Benson
- - Fix CMake for DDDB tags..
+ - Fix CMake for DDDB tags.
+ - Add previously private lumi tests.
 
 ! 2015-3-29 - Sean Benson
  - Files in TestFileDB.
