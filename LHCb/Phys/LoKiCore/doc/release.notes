@@ -13,6 +13,7 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v11r23 2015-03-31 =========================
 ! 2015-03-25 - Vanya Belyaev
  -  Functors and Trees
      add some "move" constructors/assignements 
