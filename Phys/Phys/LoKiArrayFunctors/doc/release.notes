@@ -8,6 +8,8 @@
 ! 2015-03-31 - Chris Jones
  - Remove method from HybridFilterParticles now inlined in interface.
 
+!================== LoKiArrayFunctors v11r1 2015-03-31 ======================
+
 ! 2015-03-26 - Roel Aaij
  - Fix copy constructor of AllSameBestPV and add default constructor using
    constructor delegation.
@@ -36,8 +38,6 @@
    see https://indico.cern.ch/event/355682/
    see https://indico.cern.ch/event/355682/contribution/1/material/slides/
    
-
-
 ! 2015-03-12 - Vanya Belyaev
  - add "SpecialValue"
 
