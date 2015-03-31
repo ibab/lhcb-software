@@ -522,6 +522,11 @@ StatusCode TrackBestTrackCreator::fit( LHCb::Track& track ) const
   StatusCode sc = StatusCode::FAILURE;
   bool badinput  = false;
   bool fitfailed = false;
+  /// for counters
+  std::string prefix = Gaudi::Utils::toString(track.type());
+  if( track.checkFlag( LHCb::Track::Backward ) ) prefix += "Backward";
+  prefix += '.';
+
   if (m_doNotRefit && (track.fitStatus() == LHCb::Track::Fitted
                        || track.fitStatus() == LHCb::Track::FitFailed) ){
     if (track.fitStatus() == LHCb::Track::Fitted){
@@ -548,30 +553,25 @@ StatusCode TrackBestTrackCreator::fit( LHCb::Track& track ) const
   	  /// Fit the track 
   	  sc =  m_fitter -> fit( track );
   	  if ( sc.isSuccess()){
-         if (m_addGhostProb){
-           m_ghostTool->execute(track).ignore();
-         }
+        if (m_addGhostProb){
+          m_ghostTool->execute(track).ignore();
+        }
         // Update counters
-  	    std::string prefix = Gaudi::Utils::toString(track.type());
-  	    if( track.checkFlag( LHCb::Track::Backward ) ) prefix += "Backward";
-  	    prefix += '.';
-  	    if( track.nDoF()>0) {
+        if( track.nDoF()>0) {
   	      double chisqprob = track.probChi2();
   	      counter(prefix + "chisqprobSum") += chisqprob;
   	      counter(prefix + "badChisq") += bool(chisqprob<0.01);
   	    }
   	    counter(prefix + "flipCharge") += bool( qopBefore * track.firstState().qOverP() <0);
   	    counter(prefix + "numOutliers") += track.nMeasurementsRemoved();
-        counter(prefix + "nFitted") += 1;
-        
-  	  }
+      }
   	  else {
   	    track.setFlag( LHCb::Track::Invalid, true );
   	    fitfailed = true;
-  	  }
+        counter(prefix + "FitFailed") += int(fitfailed);
+      }
   	}
-}
-  
+  }
   // stick as close as possible to whatever EventFitter prints
   counter("BadInput")  += int(badinput);
   counter("FitFailed") += int(fitfailed);

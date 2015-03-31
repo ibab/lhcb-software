@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-03-31 - Sascha Stahl
+ - TrackBestTrackCreator: Added counters of failed fits for each track type.
+
 ! 2015-03-29 - Sascha Stahl
  - TrackBestTrackCreator: Added option to skip fit of already fitted tracks.
    False by default.
