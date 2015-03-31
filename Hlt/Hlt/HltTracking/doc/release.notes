@@ -1,8 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
-! Responsible : Vladimir Gligorov / Johannes Albrecht
+! Responsible : Sascha Stahl, Vladimir Gligorov 
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+!========================= HltTracking v13r6 2015-03-31 =========================
 
 ! 2015-03-31 - Sascha Stahl
  - Hlt2Tracking: Fix all PID sequence. Remove unnecessary Combine DLLs.
