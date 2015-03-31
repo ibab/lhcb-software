@@ -78,6 +78,7 @@ VeloTTOptions = { "fitTracks" : False }
 CommonPVOptions = {"UseBeamSpotCut" : True,
                    "BeamSpotRCut" : 0.2 * mm,
                    "TrackErrorScaleFactor" : 1.,
+                   "ResolverBound" : 1 * mm,
                    "MinTracks" : 4.,
                    "maxChi2" : 12.}
 
