@@ -45,7 +45,7 @@ class TrackEffChecker : public TrackCheckerBase {
   
   bool m_requireLong;
 
-  void ghostInfo(const LHCb::Tracks* tracks);
+  void ghostInfo(const LHCb::Track::Range tracks);
 
   void effInfo();
 

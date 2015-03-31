@@ -4,6 +4,9 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+! 2015-03-31 - Michel De Cian
+ - Introduce Ranges in TrackEffChecker, such that input container can also be of type LHCb::Track::Selection.
+
 !========================= TrackCheckers v4r21 2014-12-11 =========================
 ! 2014-11-14 - Michel De Cian
  - Remove 'TrackMatchChecker', as 'TrackMatching' was put in 'obsolete' (the code can be found under 

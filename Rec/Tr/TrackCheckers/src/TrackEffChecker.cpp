@@ -72,12 +72,11 @@ StatusCode TrackEffChecker::execute()
   }
 
   // get the input data
-  LHCb::Tracks* tracks = get<LHCb::Tracks>(inputContainer());
+  LHCb::Track::Range tracks = getIfExists<LHCb::Track::Range> ( inputContainer() );
 
 
-
-  LHCb::Tracks::const_iterator iterT = tracks->begin();
-  for (; iterT != tracks->end(); ++iterT){
+  LHCb::Track::Range::const_iterator iterT = tracks.begin();
+  for (; iterT != tracks.end(); ++iterT){
     if ((*iterT)->type() != LHCb::Track::Long && m_requireLong )
       continue;
     counter("nTracksInThisEvent") += 1;
@@ -97,12 +96,12 @@ StatusCode TrackEffChecker::execute()
   return StatusCode::SUCCESS;
 }
 
-void TrackEffChecker::ghostInfo(const LHCb::Tracks* tracks) {
+void TrackEffChecker::ghostInfo(const LHCb::Track::Range tracks) {
 
   unsigned int nGhost = 0;
   std::string type = "";
-  LHCb::Tracks::const_iterator iterT = tracks->begin();
-  for (; iterT != tracks->end(); ++iterT){
+  LHCb::Track::Range::const_iterator iterT = tracks.begin();
+  for (; iterT != tracks.end(); ++iterT){
 
     if ((*iterT)->type() != LHCb::Track::Long && m_requireLong )
       continue;
