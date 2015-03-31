@@ -9,7 +9,7 @@ from Inputs import BiKalmanFittedPions
 from Inputs import BiKalmanFittedDownPions
 from Reco import VeloVertexFinder
 
-linePrefix = "NDisplVertices"
+linePrefix = "DisplVertices"
 LLPLHCbName = "~chi_10"
 
 SingleCuts = [ "MinNumTracks", "MinRho", "MinMass", "MinSumPT", "ApplyMatterVeto", "MaxFractE1Track", "MaxFractTrwHitBefore" ]

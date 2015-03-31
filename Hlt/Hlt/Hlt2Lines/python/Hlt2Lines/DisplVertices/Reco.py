@@ -24,7 +24,7 @@ class VeloVertexFinder(Hlt2Stage):
         self.__prefix = prefix
         self.__kwargs = kwargs
         self.__cache = {}
-        self.outrv = "Rec/Vertex/{0}Velo".format(linePrefix)
+        self.outrv = "Rec/Vertex/{0}Velo".format(prefix)
         dependencies = dependencies + [ PV3D("Hlt2"), Hlt2VeloTracks() ]
         super(VeloVertexFinder, self).__init__( name, inputs=[], dependencies=dependencies )
 

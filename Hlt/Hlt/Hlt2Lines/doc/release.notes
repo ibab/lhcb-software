@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-31 - Pieter David
+ - consistent linePrefix in DisplVertices/Stages and DisplVertices/Reco
+
 ! 2015-03-27 - Sean Benson
  - Latest savepoint of the Bs->gammagamma lines.
 
