@@ -5,6 +5,8 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiFitters v4r13 2015-03-31 =========================
+
 ! 2015-03-19 - Vanya Belyaev
  - activate optimized algorithm for default setting
 
