@@ -1,7 +1,11 @@
 <PRE>
-Package     : MooreOnlineSys
+Package             : MooreOnlineSys
 Package Coordinator : R. Aaij
-Purpose     : Running and testing Moore in the online environment
+Purpose             : Running and testing Moore in the online environment
+
+</PRE><H1><A NAME=v23r5p1>2015-03-31 MooreOnlineSys v23r5p1</A></H1><PRE>
+
+Depends on Moore v23r5p1 and Online v5r17.
 
 </PRE><H1><A NAME=v23r4>2015-01-26 MooreOnlineSys v23r4</A></H1><PRE>
 
