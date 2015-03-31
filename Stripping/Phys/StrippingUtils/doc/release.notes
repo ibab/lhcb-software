@@ -4,6 +4,9 @@
 ! Purpose     : Helpers for safely building stripping components.
 !-----------------------------------------------------------------------------
 
+! 2015-03-31 - Andrea Contu
+ - Added check of keys validity in default_config dictionaries
+
 !========================= StrippingUtils v1r10 2015-03-13 =========================
 
 ! 2015-03-04 - Stefano Perazzini

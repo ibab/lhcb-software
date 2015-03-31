@@ -202,12 +202,20 @@ def getBuilderConfFromModule(confModule) :
     lbs = filter(lambda lb : inspect.isclass(lb), lbs)
     lbs = filter(lambda lb : issubclass(lb, LineBuilder), lbs)
     builderConfDict = {}
+    allowedkeys = ['BUILDERTYPE', 'CONFIG', 'NAME', 'STREAMS', 'WGs']
+    allowedkeysshort = ['BUILDERTYPE', 'CONFIG', 'STREAMS', 'WGs']
     if confModule.__dict__.has_key('default_config'):
       if isinstance(confModule.__dict__['default_config'],dict):
         tmpKeys = confModule.default_config.keys()
         tmpKeys.sort(key=lambda x: x[0])
-        if tmpKeys == ['BUILDERTYPE', 'CONFIG', 'NAME', 'STREAMS', 'WGs']:
-          builderConfDict[confModule.default_config['NAME']] = confModule.default_config
+        if "NAME" in tmpKeys:
+          for tmpKey in tmpKeys:
+            if tmpKey not in allowedkeys:
+              log.error("The key %(wk)s is not allowed in the default_config for %(mn)s"%{'wk':tmpKey, 'mn':confModule.__name__})
+              log.error("Allowed keys are: "+",".join(allowedkeys))
+              break
+          if tmpKeys == allowedkeys:
+            builderConfDict[confModule.default_config['NAME']] = confModule.default_config
         else:
           for k,d in confModule.default_config.iteritems():
             if not isinstance(d,dict):
@@ -215,7 +223,12 @@ def getBuilderConfFromModule(confModule) :
               break
             tmpKeys = d.keys()
             tmpKeys.sort(key=lambda x: x[0])
-            if not tmpKeys == ['BUILDERTYPE', 'CONFIG', 'STREAMS', 'WGs']:
+            for tmpKey in tmpKeys:
+              if tmpKey not in allowedkeysshort:
+                log.error("The key %(wk)s is not allowed in the default_config for %(mn)s"%{'wk':tmpKey, 'mn':confModule.__name__})
+                log.error("Allowed keys are: "+",".join(allowedkeysshort))
+                break
+            if not tmpKeys == allowedkeysshort:
               log.error("The default_config of %s.py has incorrect keys"%confModule.__name__)
               break
             builderConfDict[k] = d
