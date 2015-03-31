@@ -58,26 +58,26 @@ class CharmHadD2HHHPi0Lines() :
   
     def locallines(self):
         from Stages import DetachedHHHChild, AttachNeutral, NeutralInParticleFilter
-        stages = {
+        inputs = {
             # First the detached HHH lines - KS LL
             'DetachedPiPiPi_forD2HHHPi0' : [DetachedHHHChild('DetachedPiPiPi_forD2HHHPi0', decay = ["[K*(892)+ -> pi+ pi+ pi-]cc"])],
             'DetachedKPiPi_forD2HHHPi0'  : [DetachedHHHChild('DetachedKPiPi_forD2HHHPi0', decay = ["[K*(892)+ -> K- pi+ pi+]cc","[K*(892)+ -> K+ pi- pi+]cc"])],
             'DetachedKKPi_forD2HHHPi0'   : [DetachedHHHChild('DetachedKKPi_forD2HHHPi0',decay = ["[K*(892)+ -> K+ K- pi+]cc","[K*(892)+ -> K+ K+ pi-]cc"]) ],
             'DetachedKKK_forD2HHHPi0'    : [DetachedHHHChild('DetachedKKK_forD2HHHPi0',decay = ["[K*(892)+ -> K+ K- K+]cc"]) ],
         }
-        stages.update( {
+        stages ={
           # Then we attach the neutral
             'D2PiPiPiPi0'   : [AttachNeutral('D2PiPiPiPi0', "[D+ -> K*(892)+ pi0]cc",
-                                             inputs = [ stages['DetachedPiPiPi_forD2HHHPi0'][0],
+                                             inputs = [ inputs['DetachedPiPiPi_forD2HHHPi0'][0],
                                                         NeutralInParticleFilter("SharedNeutralChild_pi0R")] )],
             'D2KPiPiPi0'    : [AttachNeutral('D2KPiPiPi0', "[D+ -> K*(892)+ pi0]cc",
-                                             inputs = [ stages['DetachedKPiPi_forD2HHHPi0'][0],
+                                             inputs = [ inputs['DetachedKPiPi_forD2HHHPi0'][0],
                                                         NeutralInParticleFilter("SharedNeutralChild_pi0R")] )],
             'D2KKPiPi0'     : [AttachNeutral('D2KKPiPi0', "[D+ -> K*(892)+ pi0]cc",
-                                             inputs = [ stages['DetachedKKPi_forD2HHHPi0'][0],
+                                             inputs = [ inputs['DetachedKKPi_forD2HHHPi0'][0],
                                                         NeutralInParticleFilter("SharedNeutralChild_pi0R")] )],
             'D2KKKPi0'      : [AttachNeutral('D2KKKPi0', "[D+ -> K*(892)+ pi0]cc",
-                                             inputs = [ stages['DetachedKKK_forD2HHHPi0'][0],
+                                             inputs = [ inputs['DetachedKKK_forD2HHHPi0'][0],
                                                         NeutralInParticleFilter("SharedNeutralChild_pi0R")] )],
-        } )
+        }
         return stages
