@@ -23,3 +23,13 @@ std::ostream& LHCb::VertexBase::fillStream(std::ostream& s) const
   }
   return s << " ] }";
 }
+
+LHCb::VertexBase* LHCb::VertexBase::clone() const 
+{
+  return new VertexBase(*this);
+}
+
+bool LHCb::VertexBase::isPrimary() const 
+{
+  return false;
+}

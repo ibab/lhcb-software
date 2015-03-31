@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output)
 !-----------------------------------------------------------------------------
 
+! 2015-03-31 - Chris Jones
+ - Avoid inline virtual methods, move implementations to cpp files.
+
 !========================= RecEvent v2r53 2014-09-12 =========================
 ! 2014-09-04 - O. Deschamps
   - ProtoParticle.xml : add ClusterCode & ClusterFrac as extra info

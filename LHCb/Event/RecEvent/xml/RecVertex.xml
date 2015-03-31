@@ -90,7 +90,6 @@
         const="TRUE"
 	virtual="TRUE"
 	>
-	<code>  return new RecVertex(*this); </code>
       </method>
 
       <method
@@ -100,7 +99,6 @@
         const="TRUE"
 	virtual="TRUE"
 	>
-        <code>  return ( Primary == technique() ); </code>
       </method>
 
       <attribute

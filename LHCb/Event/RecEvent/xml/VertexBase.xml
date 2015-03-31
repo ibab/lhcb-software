@@ -63,9 +63,6 @@
         const="TRUE"
 	virtual="TRUE"
 	>
-	<code>
-          return new VertexBase(*this);
-	</code>
       </method>
 
       <method
@@ -208,9 +205,6 @@
         const="TRUE"
 	virtual="TRUE"
 	>
-        <code>
-          return false;
-        </code>
       </method>
 
       <method 

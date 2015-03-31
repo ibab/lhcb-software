@@ -121,11 +121,7 @@
  const   = "TRUE"
  virtual = "TRUE"
  access  = "PUBLIC" > 
-<code>
-return new LHCb::CaloClusterEntry( *this );
-</code>
 </method>
-
  
 </class>
 </package>

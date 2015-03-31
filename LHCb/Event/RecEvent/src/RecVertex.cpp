@@ -154,3 +154,13 @@ std::ostream& LHCb::RecVertex::fillStream(std::ostream& s) const
   if ( !testLocation.empty() ) { s << "TES=" << testLocation; }
   return s << " }";
 }
+
+bool LHCb::RecVertex::isPrimary() const 
+{
+  return ( Primary == technique() ); 
+}
+
+LHCb::RecVertex* LHCb::RecVertex::clone() const 
+{
+  return new RecVertex(*this); 
+}

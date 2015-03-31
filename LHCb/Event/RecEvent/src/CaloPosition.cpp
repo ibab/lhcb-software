@@ -1,6 +1,5 @@
-// $Id: $
 
-// local
+// Event
 #include "Event/CaloPosition.h"
 
 //-----------------------------------------------------------------------------
@@ -14,4 +13,9 @@ std::ostream& LHCb::CaloPosition::fillStream(std::ostream& s) const
     << "center : " << m_center << std::endl
     << "spread :" << std::endl << m_spread << std::endl << " }";
   return s;
+}
+
+LHCb::CaloPosition* LHCb::CaloPosition::clone() const 
+{
+  return new CaloPosition( *this );
 }

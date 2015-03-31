@@ -137,7 +137,6 @@
  const   = "TRUE"
  virtual = "TRUE"
  access  = "PUBLIC" >
-<code> return new CaloPosition( *this );</code>
 </method>
 
 <method

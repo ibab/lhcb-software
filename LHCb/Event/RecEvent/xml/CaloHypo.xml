@@ -195,11 +195,6 @@
  const   = "TRUE"
  virtual = "TRUE"
  access  = "PUBLIC" >
-<code>
- CaloHypo* hypo = new CaloHypo( *this ); 
- if ( 0 != position() ) { hypo->setPosition( position()->clone() ); } 
- return hypo;
-</code>
 </method>
 
 <method
