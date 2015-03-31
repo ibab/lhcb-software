@@ -5,6 +5,8 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================= Hlt1Lines v7r9 2015-03-31 =========================
+
 ! 2015-04-01 - Roel Aaij
  - Update Rich Mirror calibration line with track phi cuts from Paras and
    use minimum number of accepted tracks to control rate. Might need prescale.
