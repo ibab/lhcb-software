@@ -4,6 +4,8 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+!========================= Moore v23r5p1 2015-03-31 =========================
+
 ! 2015-03-31 - Roel Aaij
  - Make timing table with configurable with a default of 90.
 
