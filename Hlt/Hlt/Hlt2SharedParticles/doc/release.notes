@@ -4,6 +4,8 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!========================= Hlt2SharedParticles v7r5 2015-03-31 =========================
+
 ! 2015-03-27 - Sean Benson
  - Converted photons use the DiElectronMaker.
 
