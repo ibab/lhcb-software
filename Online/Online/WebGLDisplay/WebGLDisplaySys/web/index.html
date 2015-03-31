@@ -216,6 +216,7 @@
 
       var currentevent = -1;
       var allevents = [];
+      var refreshInterval // Used to set/reset the refresh interval
 
       stats = new Stats();
       stats.domElement.style.position = 'absolute';
@@ -274,7 +275,15 @@
       //epublic.domElement.parentNode.parentNode.style.backgroundImage = "url(logo20.png)";
       //epublic.domElement.parentNode.parentNode.style.backgroundRepeat = "no-repeat";
       var fev = gui.addFolder('Event navigation');
-      var eupdate = fev.add(params, "update").name("Online mode").onChange( function() { autoupdate = params.update; } );
+      var eupdate = fev.add(params, "update").name("Online mode").onChange( function() { autoupdate = params.update;
+          if (autoupdate) {
+              refreshInterval = setInterval(function () {
+                  checkforupdates("events/events.json");
+              }, 100000);
+          } else {
+              clearInterval(refreshInterval)
+          }
+      } );
       var enext = fev.add(params, "next").name("Next event"); 
       var eprev = fev.add(params, "prev").name("Previous event"); 
 
@@ -926,6 +935,7 @@
       //loadNames("events/events.json")
       
       render();
+
       </script>
     </body>
 </html>
