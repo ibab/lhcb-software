@@ -99,12 +99,28 @@ from Gaudi.Configuration import *
 from Configurables import LHCbAlgsTests__TestTimeDecoderOdin as TimeDecoder
 from Configurables import (RunChangeHandlerSvc, DBXferAlg ,XmlCnvSvc, DDDBConf, CondDB, EventClockSvc, FakeEventTime)
 import RunOption
-import CondMap
+import sys
+excludeFiles =[]
+excludeFiles.append('online.xml')
+try:
+  import CondMap
+except:
+  print "Cannot Import CondMap. Trying All"
+  try:
+    import All as CondMap
+  except:
+    print "Cannot Import All either. Exiting with status code 2"
+    sys.exit(2)
 ks = CondMap.ConditionMap.keys()
 dets = []
 for i in range(len(ks)):
   k = ks[i]
-  if k.find('online.xml') >= 0:
+  excl=False;
+  for j in range(len(excludeFiles)):
+    if k.find(excludeFiles[j]) >= 0:
+      excl = True
+      break
+  if excl :
     continue
   detxml = k[k.rfind('/')+1:]
   det = detxml[:detxml.rfind('.xml')]
@@ -152,10 +168,25 @@ EventDataSvc(ForceLeaves = True)
 from GaudiPython.Bindings import AppMgr
 Gaudi=AppMgr()
 print "===================== Running the XML conversion ========================"
-Gaudi.run(1)
-Gaudi.stop()
-Gaudi.finalize()
-Gaudi.exit()
+stat = Gaudi.run(1)
+print "============= Status :",stat
+if stat.isFailure():
+  sys.exit(44)
+print "===================== Stopping the XML conversion ========================"
+stat = Gaudi.stop()
+print "============= Status :",stat
+if stat.isFailure():
+  sys.exit(44)
+print "===================== Finalizing the XML conversion ========================"
+stat = Gaudi.finalize()
+print "============= Status :",stat
+if stat.isFailure():
+  sys.exit(44)
+print "===================== Exiting the XML conversion ========================"
+stat = Gaudi.exit()
+print "============= Status :",stat
+if stat.isFailure():
+  sys.exit(44)
 print "===================== Updating the Database ========================"
 import CondDBUI
 import CondDBUI.Admin
