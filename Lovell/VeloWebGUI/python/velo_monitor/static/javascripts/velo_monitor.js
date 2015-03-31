@@ -362,6 +362,14 @@ var VeloMonitor = (function(window, undefined) {
         $input.val(parseInt($siblingInput.val(), 10) + diff);
       });
 
+      var updateSensorNumber = function(sensorNumber) {
+        // We don't set attr data-sensor as it's data('sensor') that's used
+        // elsewhere, and jQuery caches calls to data so won't see the updated
+        // the DOM
+        $('.plot, .toggles').empty().data('sensor', sensorNumber);
+        runView.setupPlots();
+      };
+
       // Reload any sensor-dependent plots when the sensor selector is submitted
       // TODO corresponding r/phi sensor is not updated when new sensor is AJAX'd in
       $form.on('submit', function() {
@@ -369,14 +377,19 @@ var VeloMonitor = (function(window, undefined) {
         var sensorNumber = parseInt($input.val(), 10);
         // Build the new URL, preserving the hash (i.e. the tab state)
         var url = $form.attr('action') + '/' + sensorNumber + window.location.hash;
-        // We don't set attr data-sensor as it's data('sensor') that's used
-        // elsewhere, and jQuery caches calls to data so won't see the updated
-        // the DOM
-        $('.plot, .toggles').empty().data('sensor', sensorNumber);
-        window.history.pushState(null, null, url);
-        runView.setupPlots();
+        // Store the sensor number so it can be accessed on window popstate
+        window.history.pushState({sensorNumber: sensorNumber}, null, url);
+        updateSensorNumber(sensorNumber);
         return false;
       });
+
+      // When the user hits the 'back' button, reload the sensor plots with
+      // the 'old' sensor number
+      window.onpopstate = function(e) {
+        if (e.state !== null && e.state.sensorNumber !== undefined) {
+          updateSensorNumber(e.state.sensorNumber);
+        }
+      };
     },
     // Adjust tabbed navigation to accommodate long tab labels and singular
     // plots
