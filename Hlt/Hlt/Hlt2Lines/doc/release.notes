@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-03-31 - Roel Aaij
+ - Fix badly constructed lines in RareCharm and CharmHad.D2HHHKsLines.
+
 ! 2015-03-31 - Pieter David
  - consistent linePrefix in DisplVertices/Stages and DisplVertices/Reco
 

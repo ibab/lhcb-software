@@ -81,7 +81,7 @@ class CharmHadD2HHHKsLines() :
     def locallines(self):
         from Stages import MassFilter
         from Stages import DetachedHHHChild, D2KsHHH_KSLL, D2KsHHH_KSDD
-        stages = {
+        inputs = {
             # First the detached HHH lines - KS LL
             'DetachedPiPiPi_forD2HHHKsLL' : [DetachedHHHChild('DetachedPiPiPi_forD2HHHKsLL', decay = ["[K*(892)+ -> pi+ pi+ pi-]cc"])],
             'DetachedKPiPi_forD2HHHKsLL' :  [DetachedHHHChild('DetachedKPiPi_forD2HHHKsLL', decay = ["[K*(892)+ -> K- pi+ pi+]cc","[K*(892)+ -> K+ pi- pi+]cc"])],
@@ -91,14 +91,14 @@ class CharmHadD2HHHKsLines() :
             'DetachedKPiPi_forD2HHHKsDD'  : [DetachedHHHChild('DetachedKPiPi_forD2HHHKsDD',decay = ["[K*(892)+ -> K- pi+ pi+]cc", "[K*(892)+ -> K+ pi- pi+]cc"]) ],
             'DetachedKKPi_forD2HHHKsDD'   : [DetachedHHHChild('DetachedKKPi_forD2HHHKsDD',decay = ["[K*(892)+ -> K+ K- pi+]cc","[K*(892)+ -> K+ K+ pi-]cc"]) ],
         }
-        stages.update( {
+        stages = {
           # First the KS LL lines
-            'D2KsPiPiPi_KsLL'   : [MassFilter('D2KsPiPiPi_KsLL', inputs = [D2KsHHH_KSLL('D2KsPiPiPi_KsLL', stages['DetachedPiPiPi_forD2HHHKsLL'][0])])],
-            'D2KsKPiPi_KsLL'    : [MassFilter('D2KsKPiPi_KsLL',  inputs = [D2KsHHH_KSLL('D2KsKPiPi_KsLL',  stages['DetachedKPiPi_forD2HHHKsLL' ][0])])],
-            'D2KsKKPi_KsLL'     : [MassFilter('D2KsKKPi_KsLL',   inputs = [D2KsHHH_KSLL('D2KsKKPi_KsLL',   stages['DetachedKKPi_forD2HHHKsLL'  ][0])])],
+            'D2KsPiPiPi_KsLL'   : [MassFilter('D2KsPiPiPi_KsLL', inputs = [D2KsHHH_KSLL('D2KsPiPiPi_KsLL', inputs['DetachedPiPiPi_forD2HHHKsLL'][0])])],
+            'D2KsKPiPi_KsLL'    : [MassFilter('D2KsKPiPi_KsLL',  inputs = [D2KsHHH_KSLL('D2KsKPiPi_KsLL',  inputs['DetachedKPiPi_forD2HHHKsLL' ][0])])],
+            'D2KsKKPi_KsLL'     : [MassFilter('D2KsKKPi_KsLL',   inputs = [D2KsHHH_KSLL('D2KsKKPi_KsLL',   inputs['DetachedKKPi_forD2HHHKsLL'  ][0])])],
           # Then the KS DD lines
-            'D2KsPiPiPi_KsDD'   : [MassFilter('D2KsPiPiPi_KsDD', inputs = [D2KsHHH_KSDD('D2KsPiPiPi_KsDD', stages['DetachedPiPiPi_forD2HHHKsDD'][0])])],
-            'D2KsKPiPi_KsDD'    : [MassFilter('D2KsKPiPi_KsDD',  inputs = [D2KsHHH_KSDD('D2KsKPiPi_KsDD',  stages['DetachedKPiPi_forD2HHHKsDD' ][0])])],
-            'D2KsKKPi_KsDD'     : [MassFilter('D2KsKKPi_KsDD',   inputs = [D2KsHHH_KSDD('D2KsKKPi_KsDD',   stages['DetachedKKPi_forD2HHHKsDD'  ][0])])],
-        } )
+            'D2KsPiPiPi_KsDD'   : [MassFilter('D2KsPiPiPi_KsDD', inputs = [D2KsHHH_KSDD('D2KsPiPiPi_KsDD', inputs['DetachedPiPiPi_forD2HHHKsDD'][0])])],
+            'D2KsKPiPi_KsDD'    : [MassFilter('D2KsKPiPi_KsDD',  inputs = [D2KsHHH_KSDD('D2KsKPiPi_KsDD',  inputs['DetachedKPiPi_forD2HHHKsDD' ][0])])],
+            'D2KsKKPi_KsDD'     : [MassFilter('D2KsKKPi_KsDD',   inputs = [D2KsHHH_KSDD('D2KsKKPi_KsDD',   inputs['DetachedKKPi_forD2HHHKsDD'  ][0])])],
+        }
         return stages
