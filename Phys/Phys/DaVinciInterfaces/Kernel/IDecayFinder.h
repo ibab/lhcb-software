@@ -1,5 +1,5 @@
 // $Id: IDecayFinder.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
-#ifndef TOOLS_IDECAYFINDER_H 
+#ifndef TOOLS_IDECAYFINDER_H
 #define TOOLS_IDECAYFINDER_H 1
 
 // Include files
@@ -13,7 +13,7 @@
 #include "Event/Particle.h"
 
 /** @class IDecayFinder IDecayFinder.h Kernel/IDecayFinder.h
- *  
+ *
  *  Please see the file DecayFinder.h
  *  in the src directory of package Phys/DaVinciTools.
  *
@@ -23,10 +23,10 @@
 class GAUDI_API IDecayFinder : virtual public IAlgTool
 {
 
-public:
+ public:
 
   DeclareInterfaceID(IDecayFinder, 4, 0);
-  
+
   /// Get the decay string to find
   virtual const std::string& decay( void ) = 0;
 
@@ -66,19 +66,22 @@ public:
 
   /// Templated hasDecay method working on particle container iterators.
   template <class PARTICLE>
-  inline StatusCode  hasDecay( PARTICLE begin,
-                               PARTICLE end  ) {
-    return hasDecay ( LHCb::Particle::ConstVector ( begin , end ));
+    inline StatusCode  hasDecay( PARTICLE begin,
+                                 PARTICLE end  )
+  {
+    return hasDecay ( LHCb::Particle::ConstVector ( begin , end ) );
   }
 
   /// Templated findDecay method working on particle container iterators.
   template <class PARTICLE>
-  inline StatusCode findDecay( PARTICLE begin,
-                               PARTICLE end,
-                               const LHCb::Particle*& previous_result ) {
+    inline StatusCode findDecay( PARTICLE begin,
+                                 PARTICLE end,
+                                 const LHCb::Particle*& previous_result ) 
+  {
     return findDecay ( LHCb::Particle::ConstVector ( begin , end ),
                        previous_result );
   }
 
 };
+
 #endif // TOOLS_IDECAYFINDER_H

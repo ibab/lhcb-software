@@ -1,5 +1,5 @@
 // $Id: $
-#ifndef IPARTICLEVETO_H 
+#ifndef IPARTICLEVETO_H
 #define IPARTICLEVETO_H 1
 
 // Include files
@@ -13,20 +13,27 @@
 static const InterfaceID IID_IParticleVeto ( "IParticleVeto", 1, 0 );
 
 /** @class IParticleVeto IParticleVeto.h
- *  
+ *
  *
  *  @author Olivier Deschamps
  *  @date   2012-04-25
  */
-class IParticleVeto : virtual public IAlgTool {
-public: 
+class IParticleVeto : virtual public IAlgTool
+{
+
+public:
 
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IParticleVeto; }
+
+public:
+
   virtual bool foundOverlap(const LHCb::Particle* particle, std::vector<std::string> containers,int mode=0)=0;
   virtual bool foundOverlap(const LHCb::Particle* particle, std::string container,int mode=0)=0;
   virtual bool foundOverlap(const LHCb::Particle* particle, const LHCb::Particle* p2,int mode=0)=0;
+
 protected:
+
   virtual ~IParticleVeto() ;               // virtual and protected destructors
 
 private:

@@ -33,10 +33,14 @@ public:
 
   DeclareInterfaceID(ICaloParticleMaker, 2, 0);
 
+ public:
+
   /// Dispatch the making of particles
   virtual StatusCode makeParticles( LHCb::Particle::Vector & parts ) = 0;
   virtual void setPoint ( const Gaudi::XYZPoint cov )  = 0;
   virtual void setPoint ( const Gaudi::XYZPoint pos, const Gaudi::SymMatrix3x3 cov )  = 0;
   virtual void setPoint ( const LHCb::Vertex* vert )  = 0;
+
 };
+
 #endif // DAVINCIKERNEL_ICALOPARTICLEMAKER_H

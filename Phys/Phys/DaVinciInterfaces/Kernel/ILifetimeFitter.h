@@ -15,10 +15,14 @@
  *  @date   05/07/2002
  */
 
-class GAUDI_API ILifetimeFitter : virtual public IAlgTool {
+class GAUDI_API ILifetimeFitter : virtual public IAlgTool 
+{
+ 
  public:
 
   DeclareInterfaceID(ILifetimeFitter, 2, 0);
+
+ public:
   
   /// Get lifetime
   /// inputs: Vertex corresponding to the assumed production point

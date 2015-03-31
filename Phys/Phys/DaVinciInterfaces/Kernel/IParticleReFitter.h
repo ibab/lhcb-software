@@ -101,10 +101,9 @@ public:
     PARTICLE        end   ) const 
   {
     StatusCode code = StatusCode::SUCCESS ;
-    for( ; begin != end ; ++begin ) 
+    for ( ; begin != end ; ++begin ) 
     {
-      StatusCode sc = reFit( *begin ) ;
-      if ( sc.isFailure() ) { code = sc ; }
+      code = reFit(*begin) && code;
     }
     return code ;
   } 

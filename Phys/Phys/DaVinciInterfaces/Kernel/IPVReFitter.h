@@ -18,20 +18,24 @@ namespace LHCb
  *  @author Yuehong Xie
  *  @date   17/08/2005
  */
-class GAUDI_API IPVReFitter : virtual public IAlgTool {
+class GAUDI_API IPVReFitter : virtual public IAlgTool 
+{
 
-public:
-
+ public:
+  
   DeclareInterfaceID(IPVReFitter, 2, 0);
+  
+ public:
   
   /// refit PV
   virtual StatusCode reFit(LHCb::VertexBase*) const = 0;
-
+  
   /// remove track used for a (B) LHCb::Particle and refit PV
   virtual StatusCode remove(const LHCb::Particle*,  
                             LHCb::VertexBase*) const = 0;
-
+  
 };
+
 #endif // KERNEL_IPVREFITTER_H
 
 

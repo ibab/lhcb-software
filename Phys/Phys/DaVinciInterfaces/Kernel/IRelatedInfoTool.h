@@ -18,7 +18,8 @@
  *  @date   2012-02-18
  */
 
-class GAUDI_API IRelatedInfoTool : virtual public IAlgTool {
+class GAUDI_API IRelatedInfoTool : virtual public IAlgTool 
+{
 
 public:
 
@@ -30,10 +31,6 @@ public:
 
   /// Get the value of calculated parameters
   virtual LHCb::RelatedInfoMap* getInfo(void) = 0;
-  
-//protected:
-
-//  virtual ~IRelatedInfoTool();
 
 };
 

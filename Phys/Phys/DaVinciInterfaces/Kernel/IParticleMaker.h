@@ -26,6 +26,8 @@ public:
 
   DeclareInterfaceID(IParticleMaker, 2, 0);
 
+ public:
+
   /// Dispatch the making of particles
   virtual StatusCode makeParticles( LHCb::Particle::ConstVector & parts ) = 0;
 

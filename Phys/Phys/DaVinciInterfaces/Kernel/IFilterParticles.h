@@ -19,15 +19,24 @@
  *  @author Juan Palacios
  *  @date   2007-07-20
  */
-class GAUDI_API IFilterParticles : virtual public IAlgTool {
-public: 
+class GAUDI_API IFilterParticles : virtual public IAlgTool 
+{
+
+ public: 
 
   DeclareInterfaceID(IFilterParticles, 2, 0);
 
+ public:
+
   /// Test if filter is satisfied on ensemble of particles
-  virtual bool isSatisfied( const LHCb::Particle::ConstVector& ) const = 0;
+  virtual bool isSatisfied( const LHCb::Particle::ConstVector& parts ) const = 0;
+ 
   /// Test if filter is satisfied on ensemble of particles
-  virtual bool operator()( const LHCb::Particle::ConstVector& ) const = 0;
+  inline bool operator()( const LHCb::Particle::ConstVector& parts ) const
+  {
+    return this -> isSatisfied( parts );
+  }
 
 };
+
 #endif // KERNEL_IFILTERPARTICLES_H

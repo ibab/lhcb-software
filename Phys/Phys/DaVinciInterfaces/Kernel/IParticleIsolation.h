@@ -30,6 +30,9 @@ public:
   
   /// interface machinery
   DeclareInterfaceID(IParticleIsolation, 1, 0);
+
+ public:
+
   /** The method for the evaluation of the degree of isolation ("number 
    *  of non-isolating tracks") of the input set of particles.
    *  
@@ -58,15 +61,17 @@ public:
    *  @param SV       (input) (optional) secondary vertex (of mother)
    *  
    *  @return status code
-   */
-  
+   */  
   virtual StatusCode getIso(LHCb::Particle::ConstVector& parts, 
                             int* iso, float* massiso=0, float* chi2iso=0,
                             const LHCb::VertexBase* PV=0, 
                             const LHCb::VertexBase* SV=0) const = 0 ;
   
 protected:
+
   // ==========================================================================
   virtual ~IParticleIsolation() ;         ///< virtual and protected destructor 
+
 };
+
 #endif // DAVINCIKERNEL_IPARTICLEISOLATION_H

@@ -32,6 +32,8 @@ public:
 
   /// Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ISubstitutePID; }
+
+public:
   
   /// substitute PID for particles
   virtual StatusCode substitute( const LHCb::Particle::ConstVector& input,

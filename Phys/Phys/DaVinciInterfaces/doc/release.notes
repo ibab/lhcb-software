@@ -4,6 +4,10 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2015-03-31 - Chris Jones
+ - Various interface cleanups. In particular avoid some virtual methods, that
+   instead should be just inlined.
+
 ! 2015-03-12 - Roel Aaij
  - Add IParticleValue to dictionary for interactive tests.
 

@@ -24,13 +24,19 @@ namespace LHCb {
  *  @author Marco Musy (Milano)
  *  @date   2004-12-14
  */
-class GAUDI_API ISecondaryVertexTool : virtual public IAlgTool {
-public:
+class GAUDI_API ISecondaryVertexTool : virtual public IAlgTool
+{
+
+ public:
   
   DeclareInterfaceID(ISecondaryVertexTool, 2, 0);
   
+ public:
+
   virtual std::vector<LHCb::Vertex> 
   buildVertex( const LHCb::RecVertex&, 
                const LHCb::Particle::ConstVector& ) = 0; 
+
 };
+
 #endif // SECONDARYVERTEXTOOL_ISECONDARYVERTEXTOOL_H

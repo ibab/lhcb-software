@@ -1,5 +1,5 @@
 // $Id: IChangePIDTool.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
-#ifndef KERNEL_ICHANGEPIDTOOL_H 
+#ifndef KERNEL_ICHANGEPIDTOOL_H
 #define KERNEL_ICHANGEPIDTOOL_H 1
 
 // Include files
@@ -12,18 +12,22 @@
 #include "Event/Particle.h"
 
 /** @class IChangePIDTool IChangePIDTool.h Kernel/IChangePIDTool.h
- *   
+ *
  *  Interface for ChangePIDTool.
  *  Changes the PID of a Particle or of every element of a list of Particles.
  *
  *  @author Patrick Spradlin
  *  @date   2006-12-13
  */
-class GAUDI_API IChangePIDTool : virtual public IAlgTool {
-public: 
+class GAUDI_API IChangePIDTool : virtual public IAlgTool
+{
+
+ public:
 
   DeclareInterfaceID(IChangePIDTool, 2, 0);
-  
+
+ public:
+
   /// Change the PID of a single particle
   virtual LHCb::Particle changePID( const LHCb::Particle & ) = 0;
 
@@ -32,12 +36,11 @@ public:
 
   /// Templated findDecay method working on particle container iterators.
   template <class PARTICLE>
-  inline std::vector<LHCb::Particle> changePID( PARTICLE begin,
-                                                PARTICLE end    )  {
+    inline std::vector<LHCb::Particle> changePID( PARTICLE begin,
+                                                  PARTICLE end    )
+  {
     return changePID ( LHCb::Particle::ConstVector ( begin , end ) );
   }
-
-private:
-
+  
 };
 #endif // KERNEL_ICHANGEPIDTOOL_H

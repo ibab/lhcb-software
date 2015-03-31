@@ -25,15 +25,18 @@ namespace LHCb {
  * @author Jeremie Borel
  * @date November 2007
  */
-class GAUDI_API IParticleTupleTool : virtual public IAlgTool {
+class GAUDI_API IParticleTupleTool : virtual public IAlgTool 
+{
+
  public:
 
   DeclareInterfaceID(IParticleTupleTool, 2, 0);
   
   virtual ~IParticleTupleTool(){};
 
-  //! Fill the tuple. 
+ public:
 
+  //! Fill the tuple. 
   //! - \b top  : may be used to provide additional information about \b part, like the top particle of the decay.
   //! - \b part : the particle about which some info are filled.
   //! - \b head : prefix for the tuple column name.

@@ -16,11 +16,14 @@
  *  @date   2004-12-14
  */
 
-class GAUDI_API IBTaggingTool : virtual public IAlgTool {
+class GAUDI_API IBTaggingTool : virtual public IAlgTool 
+{
 
 public:
 
   DeclareInterfaceID(IBTaggingTool, 2, 0);
+
+ public:
 
   virtual StatusCode tag( LHCb::FlavourTag&, 
                           const LHCb::Particle* ) = 0;
@@ -32,4 +35,5 @@ public:
                           const LHCb::RecVertex*,
                           LHCb::Particle::ConstVector& ) = 0;
 };
+
 #endif // BTAGGINGTOOL_IBTAGGINGTOOL_H

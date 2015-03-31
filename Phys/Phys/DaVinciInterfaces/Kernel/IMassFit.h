@@ -100,7 +100,7 @@ public:
    *  @param mass     (in)     mass to be constrained 
    *  @return status code 
    */
-  virtual StatusCode fit 
+  inline StatusCode fit 
   ( LHCb::Particle& particle , const double mass ) const
   { return fit ( &particle , mass ) ; }
   // ==========================================================================
@@ -120,7 +120,7 @@ public:
    *  @param particle  (in/out) reference to the particle 
    *  @return status code 
    */
-  virtual StatusCode fit ( LHCb::Particle& particle ) const 
+  inline StatusCode fit ( LHCb::Particle& particle ) const 
   { return fit ( &particle ) ; }
   // ==========================================================================
 public:
@@ -168,7 +168,7 @@ public:
    *  @param chi2     (in/out) chi2 of the mass constrained fit 
    *  @return status code 
    */
-  virtual StatusCode fit 
+  inline StatusCode fit 
   ( LHCb::Particle& particle , const double mass , double& chi2 ) const 
   { return fit ( &particle, mass, chi2 ) ; }
   // ==========================================================================
@@ -200,10 +200,9 @@ public:
     const double    mass  ) const 
   {
     StatusCode code = StatusCode::SUCCESS ;
-    for( ; begin != end ; ++begin ) 
+    for ( ; begin != end ; ++begin ) 
     {
-      StatusCode sc = fit ( *begin , mass ) ;
-      if ( sc.isFailure() ) { code = sc ; }
+      code = fit ( *begin , mass ) && code;
     }
     return code ;
   } 
@@ -234,8 +233,7 @@ public:
     StatusCode code = StatusCode::SUCCESS ;
     for( ; begin != end ; ++begin ) 
     {
-      StatusCode sc = fit ( *begin ) ;
-      if ( sc.isFailure() ) { code = sc ; }
+      code = fit ( *begin ) && code;
     }
     return code ;
   } 

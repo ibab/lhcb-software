@@ -23,10 +23,14 @@
  *  @date   15/04/2008
  */
 
-class GAUDI_API IParticleTransporter : virtual public IAlgTool {
-public:
+class GAUDI_API IParticleTransporter : virtual public IAlgTool
+{
+
+ public:
 
   DeclareInterfaceID(IParticleTransporter, 4, 0);
+
+ public:
 
   /// Transport a Particle to specified z position.
   virtual StatusCode transport(const LHCb::Particle*, 

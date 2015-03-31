@@ -55,12 +55,13 @@ public:
     PARTICLE           end          , 
     const std::string& trailer = "" ) 
   {
+    StatusCode sc = StatusCode::SUCCESS ;
     for ( ; begin != end ; ++begin ) 
     {
-      StatusCode sc = this->fillPlots ( *begin , trailer ) ;
-      if ( sc.isFailure() ) { return sc ; }                          // RETURN
+      sc = sc && this->fillPlots ( *begin , trailer ) ;
+      if ( sc.isFailure() ) { break ; }                              // RETURN
     } 
-    return StatusCode::SUCCESS ;                                     // RETURN
+    return sc;                                                       // RETURN
   }
   // ==========================================================================
   

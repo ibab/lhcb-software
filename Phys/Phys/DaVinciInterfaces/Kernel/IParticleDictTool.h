@@ -20,21 +20,25 @@ static const InterfaceID IID_IParticleDictTool ( "IParticleDictTool", 1, 0 );
  *
  */
 
-class IParticleDictTool : virtual public IAlgTool {
+class IParticleDictTool : virtual public IAlgTool
+{
+
 public: 
 
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IParticleDictTool; }
 
+public:
+
+  /// Dict definition
   typedef GaudiUtils::VectorMap<std::string,double> DICT;
   
   /** fill the dictionary: 
    *  @param p (INPUT) the particle
    *  @param dict (UPDATE) the dictionary to be filled  
    */
-  virtual StatusCode  fill ( const LHCb::Particle* p , DICT& dict ) const =0;
-
-
+  virtual StatusCode fill ( const LHCb::Particle* p , DICT& dict ) const =0;
 
 };
+
 #endif // IPARTICLEDICTTOOL_H
