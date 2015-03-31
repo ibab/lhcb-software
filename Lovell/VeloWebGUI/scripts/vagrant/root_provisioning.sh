@@ -100,16 +100,28 @@ sudo sed -i 's/#Sendfile off/Sendfile Off/' $APACHECONF
 sudo cat > /etc/httpd/conf.d/VeloWebGUI.conf << EOF
 LoadModule proxy_uwsgi_module /usr/lib64/httpd/modules/mod_proxy_uwsgi.so
 <VirtualHost *:8008>
-  DocumentRoot "/var/www/html"
+  DocumentRoot "/Lovell/VeloWebGUI/python"
 
-    <Directory "/var/www/html">
-      Options Indexes FollowSymLinks MultiViews
-      AllowOverride None
-      Order allow,deny
-      Allow from all
-    </Directory>
+  # Serve VELO monitor static content with Apache
+  Alias /velo_monitor /Lovell/VeloWebGUI/python/velo_monitor/static
+  # Replace the jobmonitor favicon with our own
+  Alias /static/favicon.ico /Lovell/VeloWebGUI/python/velo_monitor/static/images/favicon.ico
 
-  ProxyPass / uwsgi://127.0.0.1:8000/
+  <Directory "/Lovell/VeloWebGUI/python">
+    Options -Indexes -FollowSymLinks -MultiViews
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+  </Directory>
+
+  # gzip CSS and JS
+  <Directory "/Lovell/VeloWebGUI/python/velo_monitor/static">
+    AddOutputFilterByType DEFLATE text/css text/javascript 
+  </Directory>
+
+  ProxyPass /velo_monitor !
+  ProxyPass /static/favicon.ico !
+  ProxyPass / uwsgi://127.0.0.1:5000/
 </VirtualHost>
 EOF
 
@@ -129,7 +141,14 @@ sudo service iptables stop
 sudo chkconfig iptables off
 
 # Relax permissions so Apache can talk to the uWSGI proxy
-sudo setsebool -P httpd_can_network_connect 1
+# Disable SELinux is bad, so in production there might be two things you need
+# to do instead:
+#   1. Allow httpd to connect to the uWSGI server
+#     sudo setsebool -P httpd_can_network_connect 1
+#   2. Allow httpd read access to the static files
+#     sudo chcon -R -t httpd_sys_content_t /path/to/static
+# but here we'll just disable it as it's only a local VM
+sudo sed -i s/SELINUX=enforcing/SELINUX=disabled/g /etc/selinux/config
 
 # Run the user provision as the vagrant user
 su vagrant -c '/vagrant/user_provisioning.sh'
