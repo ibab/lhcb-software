@@ -223,16 +223,18 @@ def find_boundary_plots(db, boundary):
 
 
 def run_boundaries(args):
+    from veloview.core import config
+
     if sum([args.add, args.remove, args.update]) > 1:
         fatal('Cannot add, remove, or update boundaries simultaneously')
 
     # Print list of run boundaries in the DB if we're not manipulating them
     if not args.run_number:
-        with ReferenceDatabase(args.run_data_dir) as db:
+        with ReferenceDatabase(config.reference_db) as db:
             pjson(db.run_boundaries())
         return
 
-    with ReferenceDatabase(args.run_data_dir) as db:
+    with ReferenceDatabase(config.reference_db) as db:
         run = args.run_number
         up, down = args.up_run, args.down_run
         if args.add:
@@ -246,6 +248,8 @@ def run_boundaries(args):
 
 
 def boundary_plots(args):
+    from veloview.core import config
+
     nactions = sum([args.add, args.remove, args.update])
     if nactions > 1:
         fatal('Cannot add, remove, or update boundary plots simultaneously')
@@ -260,7 +264,7 @@ def boundary_plots(args):
     # Print list of plots defined on the boundary if no plot name and no
     # actions are given
     if run and not plot and nactions == 0:
-        with ReferenceDatabase(args.run_data_dir) as db:
+        with ReferenceDatabase(config.reference_db) as db:
             pjson(find_boundary_plots(db, run))
         return
 
@@ -270,7 +274,7 @@ def boundary_plots(args):
     if nactions == 0:
         return pjson(ret_dict(failure='No action specified, e.g. --add'))
 
-    with ReferenceDatabase(args.run_data_dir) as db:
+    with ReferenceDatabase(config.reference_db) as db:
         up, down = args.up_run, args.down_run
         if args.add:
             pjson(add_boundary_plot(db, run, plot, up, down))
@@ -281,6 +285,8 @@ def boundary_plots(args):
 
 
 def dereference(args):
+    from veloview.core import config
+
     if args.plot and not args.run:
         fatal('Cannot deference a plot without specifying a run')
 
@@ -293,10 +299,10 @@ def dereference(args):
     down = polarity == DOWN
 
     if run and not plot:
-        with ReferenceDatabase(args.run_data_dir) as db:
+        with ReferenceDatabase(config.reference_db) as db:
             run = db.reference_run(run, up=up, down=down)
     if run and plot:
-        with ReferenceDatabase(args.run_data_dir) as db:
+        with ReferenceDatabase(config.reference_db) as db:
             run = db.reference_run_for_plot(run, plot, up=up, down=down)
 
     ret = ret_dict(success='')
@@ -357,5 +363,7 @@ def create_parser():
 if __name__ == '__main__':
     parser = create_parser()
     args = parser.parse_args()
+    from veloview.core import config
+    config.update_run_data_dir(args.run_data_dir)
     args.func(args)
     exit_success()

@@ -60,6 +60,8 @@ haverun 18 as its reference.
 """
 import sqlite3
 
+from veloview.core import config
+
 
 class InvalidBoundary(Exception):
     pass
@@ -77,7 +79,7 @@ class ReferenceDatabase(object):
     environment is a pain, and as we only deal with two resources here, we
     just use SQL statements.
     """
-    def __init__(self, path):
+    def __init__(self, path=config.reference_db):
         """Initialise a ReferenceDatabase at path.
 
         The database is loaded if present, else a new one is created using
