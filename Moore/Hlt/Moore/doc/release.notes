@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2015-03-31 - Roel Aaij
+ - Make timing table with configurable with a default of 90.
+
 ! 2015-03-15 - Roel Aaij
  - Update tests to:
    - not use Physics_September2012

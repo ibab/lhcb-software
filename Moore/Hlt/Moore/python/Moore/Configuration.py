@@ -83,6 +83,7 @@ class Moore(LHCbConfigurableUser):
         , "outputFile" :       '' # output filename
         , "inputFiles" :       [ ] # input
         , "EnableTimer" :       None
+        , "TimingTableWidth" :   90
         , "EnableDataOnDemand": False
         , "OutputLevel" : WARNING #if this is set to WARNING (or higher) Moore will become almost silent.
                              #if this is set to DEBUG or VERBOSE, this mimics the previous verbose setting
@@ -163,6 +164,7 @@ class Moore(LHCbConfigurableUser):
         , "outputFile" :       'output filename'
         , "inputFiles" :       "input, can be a simple list of files"
         , "EnableTimer" :      "Turn on the timing table, set this to the name of a file you'd like the timing to write out to. True does not create a file."
+        , "TimingTableWidth" :      "Width of the first column of the printed timing table."
         , "EnableDataOnDemand": "Activate the DataOnDemand service, sometimes needed during testing"
         , "OutputLevel" : """Multi-level option, keeps same logic as standard OutputLevel.
         if this is set to WARNING (or higher) Moore will become almost silent.
@@ -584,19 +586,15 @@ class Moore(LHCbConfigurableUser):
     def _profile(self) :
         ApplicationMgr().AuditAlgorithms = 1
         auditors = self.getProp('EnableAuditor')
-        #print "!!!!!!!!!!!!!!!!!!   IN PROFILE"
         if hasattr(self, "EnableTimer") and self.getProp('EnableTimer') is not None: 
-            #print "!!!!!!!!!!!!!!!!!!   IN ENABLE"
             #print self.getProp('EnableTimer')
             from Configurables import LHCbTimingAuditor, LHCbSequencerTimerTool
             LHCbTimingAuditor('TIMER').addTool(LHCbSequencerTimerTool, name="TIMER")
-            LHCbTimingAuditor('TIMER').TIMER.NameSize=150
-            #minimum printing length to catch the long names of algs
+            LHCbTimingAuditor('TIMER').TIMER.NameSize = self.getProp("TimingTableWidth")
             auditors = [ LHCbTimingAuditor('TIMER') ] + auditors
             if type(self.getProp('EnableTimer')) is not bool and len(self.getProp('EnableTimer')):
                 LHCbTimingAuditor('TIMER').TIMER.SummaryFile=self.getProp('EnableTimer')
                 #LHCbSequencerTimerTool().SummaryFile=self.getProp('EnableTimer')
-                #print "!!!!!!!!!!!!!!    YEEEEEAAAAH SETTTTTING IIIIIT"
         
         for i in auditors : self.addAuditor( i )
 
