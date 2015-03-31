@@ -72,5 +72,8 @@ private:
 
   std::vector<TruthCounter> m_truthCounters; ///< vector of counters of associated MC particles
   TruthCounter m_total;                      ///< total number of measurements
+  /// classIDs of track containers. Needed as not all containers have the same (LHCb::Tracks, LHCb::Track::Selection,...)
+  std::vector<unsigned int> m_containerIDs;  
+  
 };
 #endif // PRTRACKASSOCIATOR_H

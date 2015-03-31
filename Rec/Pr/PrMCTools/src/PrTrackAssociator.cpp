@@ -28,6 +28,9 @@ DECLARE_ALGORITHM_FACTORY( PrTrackAssociator )
   declareProperty( "RootOfContainers",  m_rootOfContainers = "/Event/Rec/Track" );
   declareProperty( "SingleContainer",   m_singleContainer  = "" );
   declareProperty( "FractionOK"    ,    m_fractionOK       = 0.70 );
+  declareProperty( "TrackContainerIDs", m_containerIDs = { LHCb::Track::classID() + 0x60000, LHCb::Track::Selection::classID() });
+  
+        
 }
 
 //=============================================================================
@@ -79,7 +82,6 @@ StatusCode PrTrackAssociator::execute() {
       return StatusCode::SUCCESS;
     }
 
-    unsigned int trackContainerId = LHCb::Track::classID() + 0x60000;
     SmartIF<IDataManagerSvc> mgr( eventSvc() );
     typedef std::vector<IRegistry*> Leaves;
     Leaves leaves;
@@ -90,8 +92,10 @@ StatusCode PrTrackAssociator::execute() {
         DataObject* tmp(NULL);
         sc = eventSvc()->findObject( id, tmp );
         if ( sc && NULL != tmp ) {
-          if ( tmp->clID() == trackContainerId ) {
-            trackContainers.push_back( id );
+          for( unsigned int clID : m_containerIDs){
+            if ( tmp->clID() == clID ) {
+              trackContainers.push_back( id );
+            }
           }
         }
       }

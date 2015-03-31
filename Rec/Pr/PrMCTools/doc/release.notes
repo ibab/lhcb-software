@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2015-03-31 - Michel De Cian
+ - Adapt 'PrTrackAssociator' such that the list of classID it understands can be configured. Give it per default for LHCb::Track and LHCb::Track::Selection.
+
 ! 2015-03-23 - Michel De Cian
  - Add algorithm 'PrCheatedSciFiTracking' that performs an ideal pattern recognition in the SciFi.
 
