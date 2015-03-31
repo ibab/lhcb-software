@@ -61,7 +61,6 @@ class Commissioning_Physics_2015( object ):
         from Hlt1Lines.Hlt1L0Lines             import Hlt1L0LinesConf
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
         from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
-        from Hlt1Lines.Hlt1DisplVertexLines    import Hlt1DisplVertexLinesConf
         from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
         from Hlt1Lines.Hlt1MVALines            import Hlt1MVALinesConf
         
@@ -189,19 +188,6 @@ class Commissioning_Physics_2015( object ):
                                                        , 'Hlt1BeamGasHighRhoVertices'        : 'RATE(4)'
                                                        }
                                                 }
-                       , Hlt1DisplVertexLinesConf: { "VertexDisplVertex_DOCABL"    : "2.0*mm"
-                                                   , "VertexDisplVertex_VELO_NSP"  : "3"
-                                                   , "VertexDisplVertex_VELO_NCSP" : "2"
-                                                   , "VertexDisplVertex_VELOTrChi2": "2.5"
-                                                   , "VertexDisplVertex_VX_DOCA"   : "0.3*mm"
-                                                   , "VertexDisplVertex_VX_CHI2"   : "1000000000.0"
-                                                   , "VertexDisplVertex_VX_RHO"    : "12.0*mm"
-                                                   , "VertexDisplVertex_Tr_P"      : "10.0*GeV"
-                                                   , "VertexDisplVertex_Tr_PT"     : "1.7*GeV"
-                                                   , "VertexDisplVertex_Tr_CHI2"   : "2.5"
-                                                   , "VertexDisplVertex_GEC"       : "Loose"
-                                                   , "Prescale" : {'Hlt1VertexDisplVertex':1.0 }
-                                                   }
                        #, Hlt1ProtonLinesConf        : { 'Prescale' : {  'Hlt1DiProtonLowMult'        : 0.01, 
                        #                                                 'Hlt1DiProton'               : 0.01
                        #                                                } } 
@@ -252,14 +238,11 @@ class Commissioning_Physics_2015( object ):
         """
         Returns a list of active lines
         """
-        lines =  [ 'Hlt1TrackAllL0', 'Hlt1TrackMuon',  'Hlt1TrackPhoton'
-                 , 'Hlt1VertexDisplVertex'
+        lines =  [ 'Hlt1TrackAllL0', 'Hlt1TrackMuon'
                  , 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
                  , 'Hlt1SingleElectronNoIP'
                  , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
-                 , 'Hlt1TrackMVA', 'Hlt1TwoTrackMVA'
-                 , 'Hlt1CalibTrackingKK', 'Hlt1CalibTrackingKPi'
-                 , 'Hlt1CalibTrackingPiPi' ]
+                 , 'Hlt1TrackMVA', 'Hlt1TwoTrackMVA']
                  ## [ 'Hlt1L0HighSumETJet','Hlt1HighPtJetsSinglePV']
         
         ## from Hlt1TechnicalLines import Hlt1TechnicalLines 
