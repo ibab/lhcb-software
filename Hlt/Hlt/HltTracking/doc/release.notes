@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-03-31 - Sascha Stahl
+ - Hlt2Tracking: Fix all PID sequence. Remove unnecessary Combine DLLs.
+
 ! 2015-03-31 - Roel Aaij
  - Fix PV options.
  - Estimate material in velo only fit for PVs.

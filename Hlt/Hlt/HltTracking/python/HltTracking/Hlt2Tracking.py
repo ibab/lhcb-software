@@ -730,9 +730,9 @@ class Hlt2Tracking(LHCbConfigurableUser):
         #
         # The charged protoparticles and their output location
         #
-        #tracks                      = self.__hlt2StagedFastFit()
-        #chargedProtos               = self.__hlt2ChargedProtos(HltAllPIDsProtosSuffix)       
-        #chargedProtosOutputLocation = chargedProtos.outputSelection()
+        tracks                      = self.__hlt2StagedFastFit()
+        chargedProtos               = self.__hlt2ChargedProtos(HltAllPIDsProtosSuffix)       
+        chargedProtosOutputLocation = chargedProtos.outputSelection()
         
         from Configurables import ( ChargedProtoParticleAddRichInfo,ChargedProtoParticleAddMuonInfo,
                                     ChargedProtoCombineDLLsAlg)
@@ -741,13 +741,28 @@ class Hlt2Tracking(LHCbConfigurableUser):
         #
         # Now set up the pid sequence 
         #
-        # Fill the CALO sequence first, this will make the charged protoparticles
-        # and add the CALO ID to them, ugly...
-        myCALOProcessorChargedSeq       = self.__getCALOSeq("Charged")
-        chargedProtosOutputLocation = myCALOProcessorChargedSeq.outputSelection()
         doRICHReco              = self.__hlt2RICHID()
         muonID                  = self.__hlt2MuonID()
-        #myCALOProcessorChargedSeq       = self.__getCALOSeq("PID")
+
+        #TODO: Create a new function containing the setup of the Calo Reco
+        #      The old one has some problems, setting everything up correctly
+        from Configurables    import CaloProcessor
+        from HltLine.HltLine    import bindMembers
+        caloProcessorName         = self._instanceName(CaloProcessor)   
+        myCALOProcessor         = CaloProcessor(caloProcessorName+"_AllPids")
+        outputCALOPID            = self.__caloIDLocation()
+        myCALOProcessor.Context     = outputCALOPID
+        # Do the reconstruction and the PID but do not make or update the
+        # protoparticles here! 
+        myCALOProcessor.CaloReco     = True 
+        myCALOProcessor.CaloPIDs     = True
+        #
+        # Check if we are making neutrals or not
+        #
+        myCALOProcessor.SkipNeutrals    = False
+        myCALOProcessor.SkipCharged     = False
+        # The sequences are given the track and protoparticle locations when initializing 
+        doCaloReco         = myCALOProcessor.caloSequence( [tracks.outputSelection()] )
 
         #
         # Add the rich info to the DLL
@@ -767,7 +782,12 @@ class Hlt2Tracking(LHCbConfigurableUser):
         #
         # Add the Calo info to the DLL
         #
-        #myCALOProcessorAddInfoSeq       = self.__getCALOSeq("AddInfo")  
+        addCaloInfo = myCALOProcessor.chargedProtoSequence(    [tracks.outputSelection()],    chargedProtosOutputLocation    )
+        from Configurables import GaudiSequencer
+        #Remove the combine, a bit hackish
+        cheatedAddCaloInfo = GaudiSequencer(addCaloInfo.name()+"NoComb")
+        cheatedAddCaloInfo.Members = [ alg for alg in addCaloInfo.Members if alg.name().find("CombineDLLs")==-1 ]
+        
         #
         # The combined DLL with all PID information
         # We do this twice, do we know which effect it has? 
@@ -776,16 +796,14 @@ class Hlt2Tracking(LHCbConfigurableUser):
         combine                         = ChargedProtoCombineDLLsAlg(combine_name)
         combine.ProtoParticleLocation   = chargedProtosOutputLocation
 
+
         #
         # What are we returning?
         #
-
-        sequenceToReturn = [ myCALOProcessorChargedSeq ]
+        sequenceToReturn = [tracks, chargedProtos]
         sequenceToReturn += [ doRICHReco, muonID ]
-        #sequenceToReturn += [ myCALOProcessorChargedSeq ]
-        #sequenceToReturn += [ chargedProtos ]
-        sequenceToReturn += [ richDLL, muon ]
-        #sequenceToReturn += [ myCALOProcessorAddInfoSeq ]
+        sequenceToReturn += [ doCaloReco ]
+        sequenceToReturn += [ richDLL, muon , cheatedAddCaloInfo ]
         sequenceToReturn += [combine]
 
         from HltLine.HltLine import bindMembers
@@ -795,8 +813,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         bm_output       = chargedProtosOutputLocation
 
         return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
-   
-
+ 
     #########################################################################################
     #
     # Charged ProtoParticles
