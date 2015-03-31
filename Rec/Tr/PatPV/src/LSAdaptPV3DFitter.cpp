@@ -20,7 +20,6 @@ LSAdaptPV3DFitter::LSAdaptPV3DFitter(const std::string& type,
   : GaudiTool(type,name,parent),
     m_minTr(0),
     m_Iterations(0),
-    m_maxIP2PV(0.),
     m_maxDeltaZ(0.),
     m_minTrackWeight(0.),
     m_TrackErrorScaleFactor(0.),
@@ -37,8 +36,6 @@ LSAdaptPV3DFitter::LSAdaptPV3DFitter(const std::string& type,
   declareProperty("Iterations", m_Iterations = 20);
   // Chi2 of completely wrong tracks                                                                                                                                            
   declareProperty("maxChi2", m_maxChi2 = 400.0);
-  // Maximum IP of a track to accept track
-  declareProperty("maxIP2PV", m_maxIP2PV = 2.0 * Gaudi::Units::mm);
   // Fit convergence condition
   declareProperty("maxDeltaZ", m_maxDeltaZ = 0.0005 * Gaudi::Units::mm); //m_maxDeltaZ = 0.001 * Gaudi::Units::mm);
   // Minimum Tukey's weight to accept a track

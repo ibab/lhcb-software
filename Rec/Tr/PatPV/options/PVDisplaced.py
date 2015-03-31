@@ -19,5 +19,4 @@ RV.PVOfflineTool.addTool(PVSeed3DTool())
 RV.PVOfflineTool.PVSeed3DTool.TrackPairMaxDistance = 0.2*mm
 RV.PVOfflineTool.PVSeed3DTool.zMaxSpread = 1*mm
 RV.PVOfflineTool.addTool( LSAdaptPV3DFitter())
-RV.PVOfflineTool.LSAdaptPV3DFitter.maxIP2PV = 2*mm
 RV.OutputVerticesName = "Rec/Vertices/RV"
