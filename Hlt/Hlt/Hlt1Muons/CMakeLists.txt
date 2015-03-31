@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Hlt1Muons
 ################################################################################
-gaudi_subdir(Hlt1Muons v1r12)
+gaudi_subdir(Hlt1Muons v1r13)
 
 gaudi_depends_on_subdirs(Det/MuonDet
                          Event/TrackEvent
