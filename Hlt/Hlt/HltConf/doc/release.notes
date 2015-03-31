@@ -4,6 +4,8 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================= HltConf v12r7 2015-03-31 =========================
+
 ! 2015-03-26 - Roel Aaij
  - Updates to verbose printing and a bit of documentation on importing modules.
 
