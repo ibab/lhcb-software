@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LoKiPhys
 ################################################################################
-gaudi_subdir(LoKiPhys v11r0)
+gaudi_subdir(LoKiPhys v11r1)
 
 gaudi_depends_on_subdirs(Event/PhysEvent
                          Phys/DaVinciInterfaces
