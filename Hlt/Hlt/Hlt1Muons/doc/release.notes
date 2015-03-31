@@ -1,8 +1,11 @@
 ! 2015-03-20 - Vasileios Syropoulos!-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Muons
-! Responsible : Roel Aaij
+! Responsible : Vasilis Syropoulos, Roel Aaij
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
+
+! 2015-04-01 - Roel Aaij
+ - Copy Velo seed finding into MatchVeloTTMuon, simplify code.
 
 ! 2015-03-21 - Vasileios Syropoulos
   - MatchVeloTTMuon: Improved fall back to normal MatchVeloMuon for veloTT candidates w/o TT hits,
