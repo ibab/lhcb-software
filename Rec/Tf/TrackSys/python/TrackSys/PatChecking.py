@@ -36,7 +36,7 @@ def PatChecking():
       TrackAssociator("AssocVeloTT").TracksInContainer     = "Rec/Track/VeloTT";
       TrackEffChecker("Velo").GhostClassification = "UpstreamGhostClassification"
 
-   if "Forward" in trackAlgs :
+   if "Forward" in trackAlgs or "ForwardHLT2" in trackAlgs:
       GaudiSequencer("CheckPatSeq").Members += [ TrackAssociator("AssocForward") ]
       GaudiSequencer("CheckPatSeq").Members += [ TrackEffChecker("Forward") ]
       TrackAssociator("AssocForward").TracksInContainer    = "Rec/Track/Forward";
