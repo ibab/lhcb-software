@@ -90,7 +90,6 @@ $ velo_reference_db.py dereference --run RUN_NUMBER --plot PLOT_NAME
 import argparse
 import sys
 import json
-import urllib
 
 import ROOT
 # Stop ROOT processing command line arguments (breaks argparse --help)
@@ -103,15 +102,7 @@ from veloview.runview.reference_database import (
     InvalidBoundary,
     InvalidPlot
 )
-
-
-# String constants describing magnet polarity
-UP = 'up'
-DOWN = 'down'
-
-# Template URL for retrieving response from LHCb RunDB JSON API
-# Template parameter {0}: Run number, e.g. 123987
-RUNDB_API_URL = 'http://lbrundb.cern.ch/api/run/{0}/'
+from veloview.utils.rundb import RunDB, UP, DOWN
 
 
 def exit_success():
@@ -148,46 +139,6 @@ def ret_dict(success=None, failure=None):
         {'success': False, 'message': 'No!'}
     """
     return {'success': failure is None, 'message': failure or success}
-
-
-def query_rundb(run):
-    """Return dictionary of response from LHCb RunDB JSON API.
-
-    If there is any failure, such as the RunDB being uncontactable, or the run
-    is invalid (i.e. not found in the RunDB), None is returned.
-    For information on the RunDB JSON API and the format of the response, see
-    https://lbtwiki.cern.ch/bin/view/Online/RunDataBase.
-    """
-    request = urllib.urlopen(RUNDB_API_URL.format(run))
-    # Make sure the request was OK, not e.g. 404 not found
-    if request.getcode() != 200:
-        return None
-    try:
-        d = json.load(request)
-    except ValueError:
-        # Couldn't decode the response
-        return None
-    return d
-
-
-def run_polarity(run):
-    """Return the polarity of the run, one of UP or DOWN constants.
-
-    If any error occurs, such as the RunDB being uncontactable or an invalid
-    run is passed (not found in the RunDB), None is returned.
-    """
-    response = query_rundb(run)
-    try:
-        polarity = response['magnetState']
-    except KeyError:
-        # Polarity not included in JSON response
-        return None
-    # API returns UP for magnet up, DOWN for magnet down
-    # Map these to our string constants and return the appropriate one
-    return {
-        'UP': UP,
-        'DOWN': DOWN
-    }[polarity]
 
 
 def add_boundary_run(db, boundary, up_run=None, down_run=None):
@@ -335,7 +286,7 @@ def dereference(args):
 
     run = args.run
     plot = args.plot
-    polarity = run_polarity(run)
+    polarity = RunDB().polarity(run)
     if not polarity:
         fatal('Could not resolve polarity of run {0}'.format(run))
     up = polarity == UP
