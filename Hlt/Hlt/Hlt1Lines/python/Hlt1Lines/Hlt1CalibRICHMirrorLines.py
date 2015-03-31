@@ -28,21 +28,16 @@ class Hlt1CalibRICHMirrorLinesConf( HltLinesConfigurableUser ) :
     #--------------------------------
     #
     # V. Gligorov
-    __slots__ = {       'DoTiming'          : False
-                    ,   'RICHMirror_Velo_NHits'  : 0
-                    ,   'RICHMirror_Velo_Qcut'   : 3
-                    ,   'RICHMirror_TrNTHits'    : 16
-                    ,   'RICHMirror_PT'          : 500.
-                    ,   'RICHMirror_P'           : 1000.
-                    ,   'RICHMirror_ETA'         : 2.7
-                    ,   'RICHMirror_TrChi2'      : 2.
-                    ,   'RICHMirror_GEC'         : 'Loose'
+    __slots__ = { 'DoTiming' : False
+                , 'PT'       : 500.
+                , 'P'        : 1000.
+                , 'MinETA'   : 2.59
+                , 'MaxETA'   : 2.97
+                , 'Phis'     : [(-2.69, -2.29 ), (-0.85, -0.45), (0.45, 0.85), (2.29, 2.69)]
+                , 'TrChi2'   : 2.
+                , 'MinTr'    : 5.5
+                , 'GEC'      : 'Loose'
                 }
-
-    def localise_props( self, prefix ):
-        ps = self.getProps()
-        # get the list of options belonging to this prefix
-        return { key.replace(prefix + "_", "") : ps[key] for key in ps if key.find(prefix) >= 0 } 
 
     def hltRICHMirror_Preambulo( self ) :
         from HltTracking.Hlt1Tracking import ( VeloCandidates, TrackCandidates, FitTrack )
@@ -55,27 +50,23 @@ class Hlt1CalibRICHMirrorLinesConf( HltLinesConfigurableUser ) :
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from Configurables import LoKi__HltUnit as HltUnit
         props['name'] = name
-        
+        props['PhiCuts'] = ' | '.join(('in_range(%3.2f, TrPHI, %3.2f)' % box for box in props['Phis']))
         lineCode = """ 
         TrackCandidates
         >>  FitTrack
         >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
-        >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
-              ( TrTNORMIDC > %(TrNTHits)s ) & \
-              ( TrNVELOMISS < %(Velo_Qcut)s ) )
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass track quality', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nTrQ' , LoKi.Monitoring.ContextSvc ) )
-        >>  ( ( TrPT  > %(PT)s * MeV ) & \
-              ( TrP   > %(P)s  * MeV ) & \
-              ( TrETA < %(ETA)s      ) )
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT/ETA', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nP' , LoKi.Monitoring.ContextSvc ) )
-        >>  ( ( TrCHI2PDOF < %(TrChi2)s ) )
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackChi2', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nChi2' , LoKi.Monitoring.ContextSvc ) )
-        >> SINK( 'Hlt1%(name)sDecision' )
-        >> ~TC_EMPTY
+        >>  ( ( TrPT  > %(PT)s * MeV ) &
+              ( TrP   > %(P)s  * MeV ) &
+              ( TrCHI2PDOF < %(TrChi2)s ) )
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT/TrackChi2', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nP/PT/Chi2' , LoKi.Monitoring.ContextSvc ) )
+        >>  ( ( in_range(%(MinETA)s, TrETA, %(MaxETA)s) ) &
+              ( %(PhiCuts)s ) )
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT/ETA/PHI', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , '      nP/PT/ETA/PHI', LoKi.Monitoring.ContextSvc ) )
+        >>  SINK( 'Hlt1%(name)sDecision' )
+        >>  (TC_SIZE > %(MinTracks)s)
         """ % props
         hltRICHMirrorBlock_Unit = HltUnit(
             'Hlt1'+name+'Unit',
@@ -112,5 +103,5 @@ class Hlt1CalibRICHMirrorLinesConf( HltLinesConfigurableUser ) :
             postscale = self.postscale,
             L0DU = 'L0_DECISION_PHYSICS',
             algos = [ self.do_timing( unit ) if doTiming else unit for unit in \
-                      self.hltRICHMirrorBlock_Streamer( 'CalibRICHMirror', self.localise_props( 'RICHMirror' ) ) ]
+                      self.hltRICHMirrorBlock_Streamer( 'CalibRICHMirror', self.getProps() ) ]
             )
