@@ -8,6 +8,7 @@
  - Update 1TrackMuon cuts.
  - Remove CalibTracking lines and Hlt1VertexDisplVertex.
  - Add Hlt1(Two)TrackMVA.
+ - Add settings with all current Hlt2 lines.
 
 ! 2015-03-28 - Roel Aaij
  - Add Commissioning_Physics_MC2015.
