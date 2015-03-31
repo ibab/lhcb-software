@@ -287,8 +287,8 @@ def boundary_plots(args):
 def dereference(args):
     from veloview.core import config
 
-    if args.plot and not args.run:
-        fatal('Cannot deference a plot without specifying a run')
+    if not args.run:
+        fatal('Nominal run not specified')
 
     run = args.run
     plot = args.plot
