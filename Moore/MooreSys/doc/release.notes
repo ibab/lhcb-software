@@ -1,16 +1,15 @@
 <PRE>
-Package     : MooreSys
+Package             : MooreSys
 Package Coordinator : R. Aaij
-Purpose     : LHCb HLT application
+Purpose             : LHCb HLT application
 
-</PRE><H1><A NAME=v23r5>2015-03-09 MooreSys v23r5</A></H1><PRE>
+</PRE><H1><A NAME=v23r5p1>2015-03-31 MooreSys v23r5p1</A></H1><PRE>
 
 Patch Release as part of stack based on Gaudi v26r1.
-Depends on Hlt v23r5.
+Depends on Hlt v23r5p1.
 
 Main changes:
-     Release for development of Hlt lines with new template.
-     Hlt2Tracking much more offline-line.
+     Release for tuning of Hlt2 lines.
 
 </PRE><H1><A NAME=v23r4p1>2015-03-04 MooreSys v23r4p1</A></H1><PRE>
 
