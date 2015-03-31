@@ -43,7 +43,7 @@ class Hlt1CEPLinesConf( HltLinesConfigurableUser ):
             >>  tee  ( monitor( TC_SIZE > 0, '# pass PT', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nPT' , LoKi.Monitoring.ContextSvc ) )               
             >>  ( TrCHI2PDOF < %(TrChi2)s )
-            >>  SINK("Hlt1CEPDecision")
+            >>  SINK('Hlt1CEPDecision')
             >> ~TC_EMPTY
             """ % props
             )

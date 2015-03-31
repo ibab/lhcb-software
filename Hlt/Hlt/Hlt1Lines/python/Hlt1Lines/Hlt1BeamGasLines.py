@@ -202,7 +202,6 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         ## fitter tool
         myPV3D.PVOfflineTool.PVFitterName = 'LSAdaptPV3DFitter'
         myPV3D.PVOfflineTool.addTool(LSAdaptPV3DFitter, 'LSAdaptPV3DFitter')
-        myPV3D.PVOfflineTool.LSAdaptPV3DFitter.maxIP2PV = 4. # dflt 2.
         myPV3D.PVOfflineTool.LSAdaptPV3DFitter.TrackErrorScaleFactor = 2. #dflt 1.
         ##
         myPV3D.PVOfflineTool.InputTracks = [InpTracksName]

@@ -5,6 +5,11 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-03-31 - Roel Aaij
+ - Use 1TrackAllL0 only on ODIN random triggers.
+ - Remove 1TrackPhoton.
+ - Fix final selection of CEP line.
+ 
 ! 2015-03-30 - Roel Aaij
  - Cleanup Muon lines and use complement upgrade.
  - Add reasonable 1TrackMuon tuning.

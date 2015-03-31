@@ -54,12 +54,10 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                     ,   'Photon_TrChi2'     : 2.
                     ,   'Photon_GEC'        : 'Loose'
                     ,   'L0Channels'        : {'AllL0'  : ['CALO'],#'L0_DECISION_PHYSICS',
-                                               'Muon'   : ('Muon', 'DiMuon'),
-                                               'Photon' : ("Photon", "Electron")}
-                    ,   'ODINFilter'        : {'AllL0'  : ''}
+                                               'Muon'   : ('Muon', 'DiMuon')}
+                    ,   'ODINFilter'        : {'AllL0'  : 'jbit( ODIN_EVTTYP, 2)'}
                     ,   'Priorities'        : {'AllL0'  : 1,
-                                               'Muon'   : 2,
-                                               'Photon' : 3}
+                                               'Muon'   : 2}
                 }
 
     def localise_props( self, prefix ):
@@ -208,12 +206,4 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             L0DU = self.__l0du('Muon'),
             algos = [ self.do_timing( unit ) if doTiming else unit for unit in \
                       self.hlt1TrackMuon_Streamer( 'TrackMuon', self.localise_props( 'Muon' ) ) ]
-            )
-        Hlt1Line('TrackPhoton',
-            prescale  = self.prescale,
-            postscale = self.postscale,
-            priority  = priorities[ 'Photon' ] if 'Photon' in priorities else None,
-            L0DU = self.__l0du('Photon'),
-            algos = [ self.do_timing( unit ) if doTiming else unit for unit in \
-                      self.hlt1TrackBlock_Streamer( 'TrackPhoton', self.localise_props( 'Photon' ) ) ]
             )
