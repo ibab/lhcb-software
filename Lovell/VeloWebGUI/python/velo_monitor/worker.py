@@ -11,7 +11,10 @@ except ImportError:
 import redis
 import rq
 
-listen = ['default']
+# List of rq.Queue instances to create
+QUEUES = ['default']
+# Default options used when creating an rq.Queue
+QUEUE_OPTS = dict(default_timeout=15)
 
 
 def create_connection():
@@ -31,12 +34,19 @@ def create_connection():
     )
 
 
+def create_queue(name, **kwargs):
+    """Create an rq.Queue using QUEUE_OPTS merged with kwargs."""
+    opts = QUEUE_OPTS.copy()
+    opts.update(**kwargs)
+    return rq.Queue(name, **opts)
+
+
 def work():
     """Start an rq worker on the connection provided by create_connection."""
     # Preload ROOT module to reduce worker startup time
     import ROOT  # noqa
     with rq.Connection(create_connection()):
-        worker = rq.Worker(list(map(rq.Queue, listen)))
+        worker = rq.Worker(list(map(create_queue, QUEUES)))
         # Quiet workers to suppress large result output
         # https://github.com/nvie/rq/issues/136
         worker.log.setLevel(logging.WARNING)
