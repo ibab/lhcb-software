@@ -4,9 +4,11 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-03-31 - Michel De Cian
+ - Configured fitters in 'RecoTrackingRun2.py', options for simplified geometry and lite clusters in expertTracking in 'Configuration.py'
+
 ! 2015-03-30 - Michel De Cian
  - More Run 2 preparations in 'RecoTrackingRun2.py', changes in the configuration to use Run2 sequence when special data flag is set.
-
 
 ! 2015-03-29 - Michel De Cian
  - More Run 2 preparations in 'RecoTrackingRun2.py'

@@ -49,7 +49,7 @@ def DecodeTracking(trackAlgs):
    d.setup()
          
 
-def RecoTrackingHLT1(exclude=[]):
+def RecoTrackingHLT1(exclude=[], simplifiedGeometryFit = True, liteClustersFit = True):
    '''Function that defines the pattern recognition algorithms for the HLT1 sequence of the Run 2 offline tracking'''
    ## Start TransportSvc, needed by track fit
    ApplicationMgr().ExtSvc.append("TransportSvc")
@@ -143,17 +143,17 @@ def RecoTrackingHLT1(exclude=[]):
    ## Fitting all HLT1 tracks
    track.DetectorList += ["FitHLT1"]
 
-   from TrackFitter.ConfiguredFitters import ConfiguredMasterFitter, ConfiguredHltFitter, ConfiguredForwardFitter 
+   from TrackFitter.ConfiguredFitters import ConfiguredMasterFitter 
    from Configurables import TrackBestTrackCreator
    
    creator = TrackBestTrackCreator("HLT1TrackFitter")
    creator.TracksInContainers = ["Rec/Track/Velo","Rec/Track/ForwardHLT1" ]
    creator.TracksOutContainer = "Rec/Track/FittedHLT1Tracks"
-   ConfiguredForwardFitter( creator.Fitter )
+   ConfiguredMasterFitter( getattr(creator, "Fitter"), SimplifiedGeometry = simplifiedGeometryFit, LiteClusters = liteClustersFit )
    GaudiSequencer("TrackHLT1FitHLT1Seq").Members += [ creator ]
    
       
-def RecoTrackingHLT2(exclude=[]):
+def RecoTrackingHLT2(exclude=[], simplifiedGeometryFit = True, liteClustersFit = True):
    '''Function that defines the pattern recognition algorithms for the HLT2 sequence of the Run 2 offline tracking'''
 
    ## Tracking sequence
@@ -245,7 +245,7 @@ def RecoTrackingHLT2(exclude=[]):
    from Configurables import TrackBestTrackCreator
    bestTrackCreator = TrackBestTrackCreator( TracksInContainers = tracklists )
    # configure its fitter and stateinittool
-   ConfiguredMasterFitter( bestTrackCreator.Fitter )
+   ConfiguredMasterFitter( getattr(bestTrackCreator, "Fitter"), SimplifiedGeometry = simplifiedGeometryFit, LiteClusters = liteClustersFit )
    if "FastVelo" in trackAlgs :
       bestTrackCreator.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
    # add to the sequence
