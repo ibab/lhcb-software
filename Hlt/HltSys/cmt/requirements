@@ -34,7 +34,8 @@ use LoKiArrayFunctors   v1r11    Phys
 use MVADictTools        v1r9     Phys
 use CaloReco            v5r24    Calo
 use KalmanFilter        v1r11    Phys
-use TrackUtils          v1r59     Tr
+use TrackUtils          v1r59    Tr
+use DAQSys              v8r8     DAQ
 
 # Declare this as a container package
 apply_pattern container_package

@@ -23,16 +23,17 @@ gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Hlt/HltTracking
                          Hlt/TCKUtils
                          Phys/LoKiTrigger
-                         # Extra packages
-                         PatPV
-                         MuonID
-                         LoKiCore
-                         LoKiPhys
-                         LoKiFitters
-                         LoKiArrayFunctors
-                         MVADictTools
-                         CaloReco
-                         KalmanFilter
-                         TrackUtils
+                         # Extra packages for v23r5p1
+                         Tr/PatPV
+                         Muon/MuonID
+                         Phys/LoKiCore
+                         Phys/LoKiPhys
+                         Phys/LoKiFitters
+                         Phys/LoKiArrayFunctors
+                         Phys/MVADictTools
+                         Calo/CaloReco
+                         Phys/KalmanFilter
+                         Tr/TrackUtils
+                         DAQ/DAQSys)
 
 gaudi_add_test(QMTest QMTEST)
