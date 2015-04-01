@@ -45,7 +45,7 @@ class GAUDI_API IDVAlgorithm : virtual public INamedInterface
 {
 public: 
   // ==========================================================================
-  DeclareInterfaceID(IDVAlgorithm, 3, 0);
+  DeclareInterfaceID(IDVAlgorithm, 4, 0);
   // ==========================================================================
 public: // tools 
   // ==========================================================================
@@ -100,6 +100,8 @@ public: // data
   /// Return the best primary vertex for a given LHCb::Particle.
   virtual const LHCb::VertexBase*      
   bestVertex      ( const LHCb::Particle* ) const = 0 ;
+  /// unrelate related PV 
+  virtual void  unRelatePV ( const LHCb::Particle* ) const = 0 ;
   // ==========================================================================
 protected: 
   // ==========================================================================
