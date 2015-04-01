@@ -36,6 +36,7 @@ use CaloReco            v5r24    Calo
 use KalmanFilter        v1r11    Phys
 use TrackUtils          v1r59    Tr
 use DAQSys              v8r8     DAQ
+use BBDecTreeTool       v1r7     Phys
 
 # Declare this as a container package
 apply_pattern container_package

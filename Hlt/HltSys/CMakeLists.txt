@@ -34,6 +34,7 @@ gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Calo/CaloReco
                          Phys/KalmanFilter
                          Tr/TrackUtils
+                         Phys/BBDecTreeTool
                          DAQ/DAQSys)
 
 gaudi_add_test(QMTest QMTEST)
