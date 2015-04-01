@@ -1011,11 +1011,9 @@ class Hlt2Tracking(LHCbConfigurableUser):
         tracks                      = self.__hlt2StagedFastFit()
         richConf.trackConfig().InputTracksLocation = tracks.outputSelection()
 
-        if HltRecoConf().getProp("OfflineRich"):
-            richName = "Hlt2Tracking_RichRecSysConf"
-            from Configurables import RichTools
-            richTools = RichTools(richName + "ToolRegistry")
-            richTools.PhotonRecoType = "Quartic"
+        # Workaround for Rich dictionary loading.
+        import cppyy
+        cppyy.gbl.LHCb.RichRecSegment
         
         from HltLine.HltLine import bindMembers
         # Build the bindMembers        

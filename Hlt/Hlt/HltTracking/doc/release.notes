@@ -6,6 +6,10 @@
 
 !========================= HltTracking v13r6 2015-03-31 =========================
 
+! 2015-04-01 - Roel Aaij
+ - Work around dictionary bug by directly loading RICH dictionary during
+   configuration.
+
 ! 2015-03-31 - Sascha Stahl
  - Hlt2Tracking: Fix all PID sequence. Remove unnecessary Combine DLLs.
 
