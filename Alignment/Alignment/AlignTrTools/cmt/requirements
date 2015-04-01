@@ -5,7 +5,7 @@
 #		Adlene Hicheur, EPFL, Lausanne
 #============================================================================
 package           AlignTrTools
-version           v4r14
+version           v4r15
 
 #============================================================================
 # Structure, i.e. directories to process.

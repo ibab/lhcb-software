@@ -4,6 +4,8 @@ Package Coordinator : Wouter Hulsbergen
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+!========================= AlignTrTools v4r15 2015-04-01 =========================
+
 ! 2015-03-04 - Roel Aaij
  - Add an OnlineMode property to writer tools which indicates that when true,
    the header and footer in the XML should not be written. This is nominally set
@@ -365,4 +367,3 @@ Purpose: LHCb Alignment Tools
   - modified requirements file to reflect Louis' code dependencies
 
 </PRE>
-
