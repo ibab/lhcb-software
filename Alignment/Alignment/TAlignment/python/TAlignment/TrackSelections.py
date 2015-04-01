@@ -222,3 +222,139 @@ class NoPIDTracksFromHlt(TrackSelection):
                                                           InputLocation = tracksel.location() + 'Owned',
                                                           OutputLocation = self.location() ) ]
         return seq
+
+
+# This configures a complete sequence to get the tracks from the HLT
+# event. It puts them in a different location than usual.
+class BestMuonTracks(TrackSelection):    
+   # __slots__ = {
+   #     "_inputLocation" : "" # Location of input track list"
+   #     }
+    
+    def __init__( self, Name, InputLocation = "Rec/Track/Best" ) :  # ????  where is defined _runVelo ??        
+        TrackSelection.__init__(self, "BestMuonTracks")
+        self._inputLocation = InputLocation
+
+    def algorithm( self ):
+        Name = self._name
+        inputTrackLocation = self._inputLocation
+        from Configurables import GaudiSequencer, HltTrackConverter, TrackContainerCopy, Escher
+        from TAlignment.Utils import configuredFitAndHitAdderSequence
+        seq = GaudiSequencer(self.name() + "Seq")
+        ## Here starts Stefania's code ========================
+        from Configurables import MuonNNetRec, MuonPadRec, MuonClusterRec
+
+        muonTrackTool = MuonNNetRec(name="MuonNNetRec",
+                                    AssumeCosmics = False,
+                                    PhysicsTiming = False,
+                                    AssumePhysics = True, ## assume that tracks come from IP (only forward)
+                                    AddXTalk      = True,
+                                    XtalkRadius   = 1.5,
+                                    SkipStation   = 0,
+                                    #DecodingTool = "MuonMonHitDecode", # default is "MuonHitDecode"
+                                    ClusterTool   = "MuonClusterRec", # default is "MuonFakeClustering"
+                                    OutputLevel   = DEBUG )
+        
+        clusterTool = MuonClusterRec(name="MuonClusterRec",OutputLevel=DEBUG, MaxPadsPerStation=500) #default 1500
+        padRecTool  = MuonPadRec(name = "PadRecTool",OutputLevel=DEBUG)
+
+        from Configurables import MakeMuonTracks
+        copy  = MakeMuonTracks( name='MakeMuonTracks',
+                                OutputLevel     = DEBUG,
+                                SkipBigClusters = True )
+        copy.addTool( muonTrackTool, name = 'MuonRecTool' )
+        # ------------------------------------------------------------------
+        seq.Members +=[ copy ]          # Copy MuonTracks to LHCb tracks
+        # ------------------------------------------------------------------
+        from TrackFitter.ConfiguredFitters import ConfiguredForwardStraightLineEventFitter #, ConfiguredStraightLineFitter
+        from Configurables import MeasurementProvider,TrackKalmanFilter
+
+        muonTrackFit =  ConfiguredForwardStraightLineEventFitter(name="MuonTrackFit",TracksInContainer = "Rec/Track/Muon")
+        #muonTrackFit =  ConfiguredStraightLineFitter( 'MuonTrackFit' , TracksInContainer = 'Rec/Track/Muon' ) 
+
+        muonTrackFit.Fitter.OutputLevel             = outputlevel
+        muonTrackFit.Fitter.addTool( TrackKalmanFilter , 'NodeFitter' )
+        muonTrackFit.Fitter.addTool( MeasurementProvider, name = 'MeasProvider')
+        
+
+        muonTrackFit.Fitter.MeasProvider.MuonProvider.clusterize = True  #default False
+        muonTrackFit.Fitter.MeasProvider.MuonProvider.OutputLevel = DEBUG
+        muonTrackFit.Fitter.ErrorX                  = 1000
+        muonTrackFit.Fitter.ErrorY                  = 10000
+        muonTrackFit.Fitter.MaxNumberOutliers       = 0        
+        # ------------------------------------------------------------------
+        seq.Members+=[ muonTrackFit ]
+        # ------------------------------------------------------------------
+        from Configurables import TAlignment,GetElementsToBeAligned
+        from Configurables import TrackFilterAlg
+        trackFilterAlg = TrackFilterAlg(name="FilterTracks",
+                                        OutputLevel = DEBUG,
+                                        TracksInputContainer  = "Rec/Track/Muon",         # MuonTrackRec
+                                        TracksOutputContainer = "Rec/Track/SelectedMuon",  # Filtered tracks
+                                        MuonFilter   = True,   ###------------------------------ MUONTRACKSELECTOR
+                                        MuonPcut     = 6.*GeV,
+                                        MuonChisquareCut = 5,
+                                        inCaloAcceptance = True,
+                                        noOverlap        = False,
+                                        #TheRegion       = 10
+                                        minHitStation    = 3)  # >3
+        
+        ####???????
+        trackFilterAlg.addTool(GetElementsToBeAligned (OutputLevel = DEBUG,
+                                                       Elements  = TAlignment().ElementsToAlign ),
+                               name = "GetElementsToBeAligned")                               
+        # ------------------------------------------------------------------
+        seq.Members += [trackFilterAlg]
+        # ------------------------------------------------------------------
+        from Configurables import TrackMuonMatching, TrackMasterExtrapolator, TrackChi2Calculator
+        #, TrajOTCosmicsProjector, TrajOTProjector, TrackProjectorSelector
+        matching = TrackMuonMatching(name="TrackMuonMatching",
+                                     AllCombinations     = False, # default true
+                                     MatchAtFirstMuonHit = True,  # default false
+                                     FullDetail          = True,  #????
+                                     OutputLevel         = DEBUG,
+                                     TTracksLocation     = inputTrackLocation, # Best container + chisquare < 5
+                                     MuonTracksLocation  = 'Rec/Track/SelectedMuon', # MuonNNet
+                                     TracksOutputLocation= 'Rec/Track/Best/TMuon',
+                                     MatchChi2Cut        = 20.0 )
+        matching.addTool( TrackMasterExtrapolator, name         = 'Extrapolator' )
+        matching.Extrapolator.ApplyMultScattCorr                = True
+        matching.Extrapolator.ApplyEnergyLossCorr               = False
+        matching.Extrapolator.ApplyElectronEnergyLossCorr       = False
+        matching.addTool( TrackChi2Calculator, name             = 'Chi2Calculator' )
+        # ------------------------------------------------------------------
+        seq.Members+= [ matching ]     # Track-Muon  Matching
+        # ------------------------------------------------------------------
+
+        from TrackFitter.ConfiguredFitters import ConfiguredEventFitter        
+        #tmuonfit = ConfiguredFastEventFitter( 'TMuonFit', TracksInContainer = 'Rec/Track/Best/TMuon') # contains Best+Muon
+        tmuonfit = ConfiguredEventFitter(name="TMuonFit",                            
+                                         TracksInContainer = 'Rec/Track/Best/TMuon', # contains Best+Muon
+                                         OutputLevel       = DEBUG)
+        tmuonfit.Fitter.MakeNodes                               = True
+        tmuonfit.Fitter.MakeMeasurements                        = True
+        tmuonfit.Fitter.addTool( TrackKalmanFilter , 'NodeFitter' )
+        tmuonfit.Fitter.ErrorX                                 = 1000
+        tmuonfit.Fitter.ErrorY                                 = 10000
+        tmuonfit.Fitter.NumberFitIterations                    = 5
+        tmuonfit.Fitter.MaxDeltaChiSqConverged                 = 0.1
+        tmuonfit.Fitter.MaxNumberOutliers                       = 0
+        tmuonfit.Fitter.addTool( MeasurementProvider(), name    = 'MeasProvider')
+        tmuonfit.Fitter.MeasProvider.MuonProvider.clusterize    = True 
+        tmuonfit.Fitter.MeasProvider.MuonProvider.OutputLevel   = outputlevel
+        tmuonfit.Fitter.MeasProvider.IgnoreMuon = False              
+        # ------------------------------------------------------------------
+        seq.Members+= [ tmuonfit ]   # Fit TMuon tracks
+        # ------------------------------------------------------------------
+        from Configurables import TrackSelector,TrackContainerCopy
+        tmuonselectoralg  = TrackContainerCopy(name = "TmuonSelection",
+                                               inputLocation  =   'Rec/Track/Best/TMuon',
+                                               outputLocation =   self.location())  
+        tmuonselectoralg.addTool( TrackSelector, name = "Selector")
+        tmuonselectoralg.Selector.MaxChi2Cut = 10
+        tmuonselectoralg.Selector.OutputLevel = DEBUG        
+        # ------------------------------------------------------------------
+        trackFilterSeq.Members+= [tmuonselectoralg ] # selects good TMuon tracks
+        # ------------------------------------------------------------------
+
+        return seq

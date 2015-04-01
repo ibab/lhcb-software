@@ -432,3 +432,59 @@ def defaultMinBiasD0Selection():
                              Location = '/Event/Phys/AlignD02KPi/Particles',
                              Algorithm = recoD0Seq )
     return sel
+
+
+##################################################################
+# Create a selection based on HLT J/psi->mumu for muon track candidates == SV
+##################################################################
+def muonTracksFORmuonAlignment():
+
+    # this still needs to be worked out
+    from Configurables import Escher
+    Escher().RecoSequence = ["Hlt","Decoding","AlignTr","Vertex","RICH","CALO","MUON","PROTO" ] # ????
+    Escher().MoniSequence = ["Tr","OT"]
+
+    # if the Escher hlt filter is not set, set it here
+    if not hasattr(Escher(),"HltFilterCode") or not Escher().HltFilterCode :
+        Escher().HltFilterCode = "HLT_PASS_RE( 'Hlt1DiMuonHighMass*Decision' )" # Hlt2-->Hlt1 requirement
+
+    # revive only particles used for trigger 
+    print 'Hlt lines to be used: '
+    print ReviveHltTracks(['Hlt1DiMuonHighMassDecision'])
+
+    # Now create the J/psi candidates
+    from Configurables import CombineParticles, FilterDesktop
+    from CommonParticles.StdAllLooseMuons import StdAllLooseMuons    # requires IsMuon==1
+    from CommonParticles.StdLooseJpsi2MuMu import StdLooseJpsi2MuMu  # requires (ADAMASS('J/psi')<100.*MeV)&(ADOCACHI2CUT(30,'')) && "(VFASPF(VCHI2) < 25.)"
+
+    StdLooseJpsi2MuMu.DaughtersCuts = { "mu-": "( P> 6000*MeV)" }  # momentum cut
+    
+    ## tighten the mass window for candidates used in alignment
+    AlignJpsi2MuMu = FilterDesktop("AlignJpsi2MuMu",
+                                   Inputs = ["Phys/StdLooseJpsi2MuMu"],
+                                   Code = "(ADMASS('J/psi(1S)') < 35.*MeV) & (VFASPF(VCHI2) < 10.)")  # tighter requirements
+    
+    from Configurables import ChargedProtoParticleMaker, ChargedProtoParticleAddMuonInfo
+    #####, ChargedProtoCombineDLLsAlg
+    from Configurables import TrackParticleMonitor, GaudiSequencer
+    recoJpsiSeq= GaudiSequencer("RecoJpsiSeq")
+    recoJpsiSeq.Members = [ 
+        ChargedProtoParticleMaker('ChargedProtoPMaker'),
+        ChargedProtoParticleAddMuonInfo('ChargedProtoPAddMuon'),
+        ###ChargedProtoCombineDLLsAlg('ChargedProtoPCombDLLs'),
+        StdAllLooseMuons,  
+        StdLooseJpsi2MuMu, 
+        TrackParticleMonitor('StdLooseJpsi2MuMuMonitor', 
+                             InputLocation = '/Event/Phys/StdLooseJpsi2MuMu/Particles',
+                             MinMass = 3000, MaxMass = 3190),
+        AlignJpsi2MuMu,
+        TrackParticleMonitor('AlignJpsi2MuMuMonitor', 
+                             InputLocation = '/Event/Phys/AlignJpsi2MuMu/Particles',
+                             MinMass = 3000, MaxMass = 3190),
+        ]
+
+    sel = ParticleSelection( Name = 'MufromJpsiMuMu',
+                             Location = '/Event/Phys/AlignJpsi2MuMu/Particles',
+                             Algorithm = recoJpsiSeq )
+    return sel
+

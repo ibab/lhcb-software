@@ -242,6 +242,7 @@ def configureTrackerAlignment( fixQOverPBias = False, surveyVer = 'latest' ) :
     # make sure we fix the z-scale
     surveyconstraints.XmlUncertainties += ["OT/T3X1U : 0.5 0.5 0.00001 0.0001 0.0001 0.0001" ]
 
+
     
 # Alignment scenario used for 2012 data
 def configure2012DataAlignment( fixQOverPBias = False, surveyVer = 'latest' ) :
@@ -279,3 +280,49 @@ def configure2012DataAlignment( fixQOverPBias = False, surveyVer = 'latest' ) :
     surveyconstraints.All(surveyVer)
     # make sure we fix the z-scale
     surveyconstraints.XmlUncertainties += ["OT/T3X1U : 0.5 0.5 0.00001 0.0001 0.0001 0.0001" ]
+
+
+# Alignment scenario used for 2012 data
+def configureMuonAlignment( surveyVer = 'latest' ) :
+    TAlignment().WriteCondSubDetList += ['MUON']
+  
+    # define the alignment elements
+    elements = Alignables()
+    elements.Velo("None")
+    elements.VeloRight("None")
+    elements.VeloLeft("None")
+    elements.IT("None")
+    elements.ITBoxes("None")
+    elements.ITLayers("None")
+    elements.OT("None")
+    elements.OTCFrames("None")
+    elements.OTCFrameLayers("None")
+    elements.OTModules("None")
+    elements.TT("None")
+    elements.TTLayers("None")
+    elements.TTModules("None")
+    elements.Tracker("None")
+    elements.MuonHalfStations("TxTy")
+    TAlignment().ElementsToAlign = list(elements)
+
+    # make sure that the velo stays where it was
+    constraints = []
+    TAlignment().Constraints = constraints
+    
+    if surveyVer == None: return
+    # tweak the survey a little bit to fix the z-scale to survey
+    surveyconstraints = SurveyConstraints()
+    surveyconstraints.All(surveyVer)
+    """
+    surveyconstraints.MUON()
+    surveyconstraints.append("Muon/M1/M1ASide : 0 0 0 0 0 0 : 10 10 30 0.001 0.005 0.001")
+    surveyconstraints.append("Muon/M1/M1CSide : 0 0 0 0 0 0 : 10 10 30 0.001 0.005 0.001")
+    surveyconstraints.append("Muon/M2/M2ASide : 0 0 0 0 0 0 : 10 10 30 0.001 0.005 0.001")
+    surveyconstraints.append("Muon/M2/M2CSide : 0 0 0 0 0 0 : 10 10 30 0.001 0.005 0.001")
+    surveyconstraints.append("Muon/M3/M3ASide : 0 0 0 0 0 0 : 10 10 30 0.001 0.005 0.001")
+    surveyconstraints.append("Muon/M3/M3CSide : 0 0 0 0 0 0 : 10 10 30 0.001 0.005 0.001")
+    surveyconstraints.append("Muon/M4/M4ASide : 0 0 0 0 0 0 : 10 10 30 0.001 0.005 0.001")
+    surveyconstraints.append("Muon/M4/M4CSide : 0 0 0 0 0 0 : 10 10 30 0.001 0.005 0.001")
+    surveyconstraints.append("Muon/M5/M5ASide : 0 0 0 0 0 0 : 10 10 30 0.001 0.005 0.001")
+    surveyconstraints.append("Muon/M5/M5CSide : 0 0 0 0 0 0 : 10 10 30 0.001 0.005 0.001")
+    """
