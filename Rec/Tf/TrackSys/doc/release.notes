@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-04-01 - Michel De Cian
+ - Add 'TrackV0Finder' in 2015 sequence.
+
 ! 2015-03-31 - Michel De Cian
  - Slight modification in 'PatChecking.py' to run the checkers for the output of the merged forward.
 

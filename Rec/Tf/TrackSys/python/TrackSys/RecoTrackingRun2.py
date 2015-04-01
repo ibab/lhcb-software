@@ -259,7 +259,20 @@ def RecoTrackingHLT2(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
       fitter.MaterialLocator.addTool(StateDetailedBetheBlochEnergyCorrectionTool("GeneralDedxTool"))
       fitter.MaterialLocator.GeneralDedxTool.EnergyLossFactor = 0.76
 
+   # Make V0
+   # needs to be done after fitting, but before the extra infos
+   from Configurables import TrackV0Finder
+   V0 = ProcessPhase("RecV0");
+   GaudiSequencer("RecoTrHLT2Seq").Members += [ V0 ]
+   V0.DetectorList += [ "MakeV0" ]
+   ### Clean clone and fit
+   trackV0Finder = TrackV0Finder("TrackV0Finder")
+   GaudiSequencer("RecV0MakeV0Seq").Members += [ trackV0Finder ]
 
+
+   #########################################################
+   ##########################################################
+   
    addExtraInfo = ProcessPhase("AddExtraInfo");
    GaudiSequencer("RecoTrHLT2Seq").Members += [ addExtraInfo ]
       
@@ -302,6 +315,8 @@ def RecoTrackingHLT2(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
    addExtraInfo.DetectorList += ["EraseExtraInfo"]
    from Configurables import TrackEraseExtraInfo
    GaudiSequencer("AddExtraInfoEraseExtraInfoSeq").Members += [ TrackEraseExtraInfo("TrackEraseExtraInfo") ]
+
+   
    
    
    ## Muon alignment tracks
