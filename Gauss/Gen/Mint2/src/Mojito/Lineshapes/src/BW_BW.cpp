@@ -467,9 +467,9 @@ double BW_BW::daughterRecoMass2(int i) const{
     
     const_counted_ptr<AssociatedDecayTree> dgtr = _theDecay.getDgtrTreePtr(i);
     if(dgtr->isFinalState()){
-      //double m = daughterPDGMass(i);
-      //_daughterRecoMass2[i] = m*m;
-      _daughterRecoMass2[i] = daughterP4(i).M2();
+      double m = daughterPDGMass(i);
+      _daughterRecoMass2[i] = m*m;
+      //_daughterRecoMass2[i] = daughterP4(i).M2();
     }else{
       std::vector<int> asi = dgtr->getVal().asi();
       if(asi.size() < 2){

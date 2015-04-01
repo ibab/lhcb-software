@@ -6,6 +6,10 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+2015-04-01 - Philippe d'Argent
+ - Implemented photon polarisation vectors
+ - Added some B-> Kpipi gamma decay trees   
+
 2015-03-19 - Philippe d'Argent
  - Added new spinfactors for P->VPPP
  - Added new decay trees for B->J/psi K pi pi
