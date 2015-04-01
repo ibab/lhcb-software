@@ -21,9 +21,9 @@ class TopoLines(Hlt2LinesConfigurableUser):
             'MU_TRCHI2DOF_MAX'    : 2.5,
             'HAD_TRCHI2DOF_MAX'   : 2.5,
             'PIDE_MIN'            : -2.0,
-            # V0 usage flags (needs OR logic still).
-            'USE_KS'              : False,
-            'USE_LAMBDA'          : False,
+            # V0 usage flags.
+            'USE_KS'              : True,
+            'USE_LAMBDA'          : True,
             # Combo cuts.
             'AMAXDOCA_MAX'        : 0.2 * mm,
             'BPVVDCHI2_MIN'       : 100.0,
@@ -49,6 +49,7 @@ class TopoLines(Hlt2LinesConfigurableUser):
             'BDT_2BODYRAD_MIN'    : 0.1,
             'BDT_3BODYRAD_MIN'    : 0.1,
             'BDT_4BODYRAD_MIN'    : 0.1,
+            'BDT_OPT_MIN'         : 0.05,
             # BDT parameter file versions.
             'BDT_2BODY_PARAMS'    : 'v1r0',
             'BDT_3BODY_PARAMS'    : 'v1r0',
@@ -65,11 +66,63 @@ class TopoLines(Hlt2LinesConfigurableUser):
                  'DOCA': (-1, 0.2), 'M': (3000, 7000)}],
             'SIMPLE_4BODY_CUTS'   : [
                 {'PTSUM': (9000, -1), 'FDCHI2': (1000, -1), 
-                 'DOCA': (-1, 0.2), 'M': (3500, 7000)}]
-            }
+                 'DOCA': (-1, 0.2), 'M': (3500, 7000)}],
+            # Optimized parameters.
+            'OPT_BDT_PARAMS'        : 'hlt2_border_base.mx',
+            'OPT_TRK_PT_MIN'        : 200 * MeV,
+            'OPT_TRK_P_MIN'         : 5000 * MeV,
+            'OPT_TRK_CHI2_MAX'      : 3,
+            'OPT_TRK_IPCHI2_MIN'    : 4,
+            'OPT_CMB_TRK_PT_MIN'    : 500 * MeV,
+            'OPT_CMB_TRK_CHI2_MAX'  : 3,
+            'OPT_CMB_TRK_NLT16_MAX' : 2,
+            'OPT_CMB_PRT_PT_MIN'    : 2000 * MeV,
+            'OPT_CMB_VRT_DIRA_MIN'  : 0,
+            'OPT_CMB_VRT_VDCHI2_MIN': 0,
+            'OPT_CMB_VRT_CHI2_MAX'  : 10,
+            'OPT_CMB_VRT_ETA_MIN'   : 2,
+            'OPT_CMB_VRT_ETA_MAX'   : 5,
+            'OPT_CMB_VRT_MCOR_MIN'  : 1000 * MeV,
+            'OPT_CMB_VRT_MCOR_MAX'  : 15000 * MeV
+            },
         }
 
     def __apply_configuration__(self):
+        self.__apply_run1_configuration()
+        self.__apply_run2_configuration()
+
+    def __apply_run2_configuration(self):
+
+        # The variable map for the BBDT.
+        varmap = {
+            "chi2"   : "VFASPF(VCHI2)",
+            "sumpt"  : "SUMTREE(PT, ISBASIC, 0.0)",
+            "eta"    : "BPVETA",
+            "fdchi2" : "BPVVDCHI2",
+            "minpt"  : "MINTREE(ISBASIC, PT)/MeV",
+            "nlt16"  : "NINTREE(ISBASIC & (BPVIPCHI2() < 16))",
+            "ipchi2" : "BPVIPCHI2()",
+            "n1trk"  : "NINTREE(ISBASIC & (PT > 1*GeV) & (BPVIPCHI2() < 16))"
+            }
+        props = self.getProps()['Common']
+
+        # Filter the particle input.
+        from Inputs import BiKalmanFittedKaonsWithMuonID
+        from Stages import FilterParts
+        parts = FilterParts('Kaon', [BiKalmanFittedKaonsWithMuonID])
+
+        # Build the lines.
+        from Stages import FilterCombos, CombineN
+        stages = {}
+        for n in xrange(2, 5):
+            stages['OptTopo%iBody' % n] = [
+                FilterCombos([CombineN(n, [parts])], varmap, props)]
+        from HltLine.HltLine import Hlt2Line
+        for (name, algos) in self.algorithms(stages).iteritems():
+            Hlt2Line(name, prescale = self.prescale, algos = algos,
+                     postscale = self.postscale)
+
+    def __apply_run1_configuration(self):
         # The variable map for the BBDT.
         varmap = {
                "M"          :  "MM/MeV",
@@ -87,60 +140,65 @@ class TopoLines(Hlt2LinesConfigurableUser):
         from Inputs import (BiKalmanFittedKaonsWithMuonID, 
                             BiKalmanFittedKaonsWithEID, KsLLTF, KsDD,
                             LambdaLLTrackFitted, LambdaDDTrackFitted)
-        from Stages import FilterParts
-        mparts = [FilterParts('Kaon', 'MU', [BiKalmanFittedKaonsWithMuonID],
-                              props['USE_GEC'])]
-        eparts = [FilterParts('Kaon', 'E', [BiKalmanFittedKaonsWithEID],
-                              props['USE_GEC'])]
+        from Stages import Run1FilterParts
+        mparts = [Run1FilterParts('Kaon', 'MU', [BiKalmanFittedKaonsWithMuonID],
+                                  props['USE_GEC'])]
+        eparts = [Run1FilterParts('Kaon', 'E', [BiKalmanFittedKaonsWithEID],
+                                  props['USE_GEC'])]
         if props['USE_KS']:
-            mparts.append(FilterParts('KsLL', 'MU', [KsLLTF], props['USE_GEC']))
-            mparts.append(FilterParts('KsDD', 'MU', [KsDD], props['USE_GEC']))
+            mparts.append(Run1FilterParts('KsLL', 'MU', [KsLLTF], 
+                                          props['USE_GEC']))
+            mparts.append(Run1FilterParts('KsDD', 'MU', [KsDD], 
+                                          props['USE_GEC']))
         if props['USE_LAMBDA']:
-            mparts.append(FilterParts('LambdaLL', 'MU', [LambdaLLTrackFitted],
-                                      props['USE_GEC']))
-            mparts.append(FilterParts('LambdaDD', 'MU', [LambdaDDTrackFitted],
-                                      props['USE_GEC']))
+            mparts.append(Run1FilterParts('LambdaLL', 'MU', 
+                                          [LambdaLLTrackFitted],
+                                          props['USE_GEC']))
+            mparts.append(Run1FilterParts('LambdaDD', 'MU', 
+                                          [LambdaDDTrackFitted],
+                                          props['USE_GEC']))
 
         # Build and register the primary lines.
-        from Stages import (FilterMforN, FilterNforN, 
-                            FilterSimple, FilterBDT, CombineN)
+        from Stages import (Run1FilterMforN, Run1FilterNforN, 
+                            Run1FilterSimple, Run1FilterBDT, Run1CombineN)
         minputs = []; mcombos = []; einputs = []; ecombos = []
-        for n in range(2, 5):
-            mcombos.append(CombineN('All', n, mparts if n == 2 else 
-                                    mparts + [minputs[n - 3]]))
-            ecombos.append(CombineN('E', n, eparts if n == 2 else 
-                                    eparts + [einputs[n - 3]]))
-            mfiltered = FilterNforN('All', n, [mcombos[-1]])
-            efiltered = FilterNforN('E', n, [ecombos[-1]])
+        for n in xrange(2, 5):
+            mcombos.append(Run1CombineN('All', n, mparts if n == 2 else 
+                                        mparts + [minputs[n - 3]]))
+            ecombos.append(Run1CombineN('E', n, eparts if n == 2 else 
+                                        eparts + [einputs[n - 3]]))
+            mfiltered = Run1FilterNforN('All', n, [mcombos[-1]])
+            efiltered = Run1FilterNforN('E', n, [ecombos[-1]])
             if n < 4:
-                minputs.append(FilterMforN('All', n, n + 1, [mcombos[-1]]))
-                einputs.append(FilterMforN('E', n, n + 1, [ecombos[-1]]))
+                minputs.append(Run1FilterMforN('All', n, n + 1, [mcombos[-1]]))
+                einputs.append(Run1FilterMforN('E', n, n + 1, [ecombos[-1]]))
             stages = {}
             stages['Topo%iBodySimple' % n] = [
-                FilterSimple(n, [mfiltered], varmap, props)]
+                Run1FilterSimple(n, [mfiltered], varmap, props)]
             stages['Topo%iBodyBBDT' % n] = [
-                FilterBDT('', n, [mfiltered], varmap, props)]
+                Run1FilterBDT('', n, [mfiltered], varmap, props)]
             stages['TopoMu%iBodyBBDT' % n] = [
-                FilterBDT('MU', n, [mfiltered], varmap, props)]
+                Run1FilterBDT('MU', n, [mfiltered], varmap, props)]
             stages['TopoE%iBodyBBDT' % n] = [
-                FilterBDT('E', n, [efiltered], varmap, props)]
+                Run1FilterBDT('E', n, [efiltered], varmap, props)]
             from HltLine.HltLine import Hlt2Line
             for (name, algos) in self.algorithms(stages).iteritems():
                 if 'TopoE' in name:
-                    l0  = props['L0_ELECTRON_FILTER']
-                    hlt = props['HLT1_ELECTRON_FILT']
-                else: l0 = None; hlt = None
+                    l0   = props['L0_ELECTRON_FILTER']
+                    hlt1 = props['HLT1_ELECTRON_FILT']
+                else: l0 = None; hlt1 = None
                 Hlt2Line(name, prescale = self.prescale, algos = algos,
-                         L0DU = l0, HLT1 = hlt, postscale = self.postscale)
+                         L0DU = l0, HLT1 = hlt1, postscale = self.postscale)
 
         # Build and register the radiative lines.
         from Inputs import BiKalmanFittedPhotonsFromL0
         stages = {}
-        combos = CombineN('RAD', 3, [minputs[0], BiKalmanFittedPhotonsFromL0])
+        combos = Run1CombineN('RAD', 3, 
+                              [minputs[0], BiKalmanFittedPhotonsFromL0])
         stages['TopoRad2BodyBBDT'] = [
-            FilterBDT('RAD', 2, [mcombos[0]], varmap, props)]
+            Run1FilterBDT('RAD', 2, [mcombos[0]], varmap, props)]
         stages['TopoRad2plus1BodyBBDT'] = [
-            FilterBDT('RAD', 3, [combos], varmap, props)]
+            Run1FilterBDT('RAD', 3, [combos], varmap, props)]
         from HltLine.HltLine import Hlt2Line
         for (name, algos) in self.algorithms(stages).iteritems():
             Hlt2Line(name, prescale = self.prescale, algos = algos,

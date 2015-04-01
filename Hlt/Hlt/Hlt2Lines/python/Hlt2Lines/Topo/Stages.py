@@ -1,5 +1,5 @@
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2VoidFilter
-class EventFilter(Hlt2VoidFilter):
+class Run1EventFilter(Hlt2VoidFilter):
     """
     Filter for the topo events.
     """
@@ -15,7 +15,7 @@ class EventFilter(Hlt2VoidFilter):
                                 shared = True)
 
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
-class FilterParts(Hlt2ParticleFilter):
+class Run1FilterParts(Hlt2ParticleFilter):
     """
     Filter for the topo input particles.
     """
@@ -32,11 +32,11 @@ class FilterParts(Hlt2ParticleFilter):
             pc = ("(BPVLTIME('PropertimeFitter/properTime:PUBLIC') > "
                   "%(MIN_V0_LT)s)")
         from HltTracking.HltPVs import PV3D
-        deps = [EventFilter(), PV3D('Hlt2')] if gec else [PV3D('Hlt2')]
+        deps = [Run1EventFilter(), PV3D('Hlt2')] if gec else [PV3D('Hlt2')]
         Hlt2ParticleFilter.__init__(self, 'TopoInput' + pid + tag, pc,
                                     inputs, shared = True, dependencies = deps)
 
-class FilterMforN(Hlt2ParticleFilter):
+class Run1FilterMforN(Hlt2ParticleFilter):
     """
     Filter m-body combos for an n-body line.
     """
@@ -48,7 +48,7 @@ class FilterMforN(Hlt2ParticleFilter):
         Hlt2ParticleFilter.__init__(self, 'Topo%s%iFor%i' % (tag, m, n),
                                     pc, inputs, shared = True)
 
-class FilterNforN(Hlt2ParticleFilter):
+class Run1FilterNforN(Hlt2ParticleFilter):
     """
     Filter n-body combos for an n-body line.
     """
@@ -70,7 +70,7 @@ class FilterNforN(Hlt2ParticleFilter):
                                     tistos = 'TisTosSpec',
                                     dependencies = [PV3D('Hlt2')])
 
-def PrepVarMap(inputs, varmap):
+def Run1PrepVarMap(inputs, varmap):
     """
     Format the variable map for the BBDecTreeTool.
     """
@@ -84,7 +84,7 @@ def PrepVarMap(inputs, varmap):
     varmap["PTMIN"] = ptmin
     return varmap
 
-class FilterSimple(Hlt2ParticleFilter):
+class Run1FilterSimple(Hlt2ParticleFilter):
     """
     Filter for the simple lines.
     """
@@ -92,7 +92,7 @@ class FilterSimple(Hlt2ParticleFilter):
         from Configurables import BBDTSimpleTool
         from Configurables import LoKi__Hybrid__DictOfFunctors
         from HltLine.HltLine import Hlt1Tool
-        varmap  = PrepVarMap(['K+'], varmap)
+        varmap  = Run1PrepVarMap(['K+'], varmap)
         handler = Hlt1Tool(type = LoKi__Hybrid__DictOfFunctors, 
                            name = 'VarHandler', Variables = varmap)
         bdttool = Hlt1Tool(type = BBDTSimpleTool, name = 'TrgSimple',
@@ -105,14 +105,14 @@ class FilterSimple(Hlt2ParticleFilter):
                                     tools = [bdttool],
                                     dependencies = [PV3D('Hlt2')])
 
-class FilterBDT(Hlt2ParticleFilter):
+class Run1FilterBDT(Hlt2ParticleFilter):
     """
     Filter for the BDT lines.
     """
     def __init__(self, tag, n, inputs, varmap, props):
         pids = ['K+', 'KS0', 'Lambda0', 'Lambda~0']
         if tag == 'RAD' and n == 3: pids.append('gamma')
-        varmap  = PrepVarMap(pids, varmap)
+        varmap  = Run1PrepVarMap(pids, varmap)
         params  = ('$PARAMFILESROOT/data/Hlt2Topo%dBody_BDTParams_%s.txt' % 
                    (n, props['BDT_%iBODY_PARAMS' % (2 if tag == 'RAD' else n)]))
         bdttool = self.__classifier(params, varmap, "TrgBBDT")
@@ -150,7 +150,7 @@ class FilterBDT(Hlt2ParticleFilter):
         return classifier
 
 from Hlt2Lines.Utilities.Hlt2Combiner import Hlt2Combiner
-class CombineN(Hlt2Combiner):
+class Run1CombineN(Hlt2Combiner):
     """
     Combiner for all n-body combos.
     """
@@ -179,7 +179,83 @@ class CombineN(Hlt2Combiner):
             from HltLine.HltDecodeRaw import DecodeL0CALO
             dep.append(DecodeL0CALO)
         from Hlt2Lines.Utilities.Hlt2MergedStage import Hlt2MergedStage
-        mergedInputs = Hlt2MergedStage('Topo%s%iBody' % (tag, n), inputs, shared = True)
+        merged = Hlt2MergedStage('Topo%s%iBody' % (tag, n), inputs, 
+                                 shared = True)
         Hlt2Combiner.__init__(self, 'Topo%s%iBody' % (tag, n), decays,
-                              [mergedInputs], shared = True, dependencies = dep,
+                              [merged], shared = True, dependencies = dep,
+                              CombinationCut = cc, MotherCut = mc)
+
+################################################################################
+
+from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
+class FilterParts(Hlt2ParticleFilter):
+    """
+    Filter for the topo input particles.
+    """
+    def __init__(self, pid, inputs):
+        pc = ("(PT > %(OPT_TRK_PT_MIN)s) & (P > %(OPT_TRK_P_MIN)s) "
+              "& (TRCHI2DOF < %(OPT_TRK_CHI2_MAX)s) "
+              "& (MIPCHI2DV(PRIMARY) > %(OPT_TRK_IPCHI2_MIN)s)")
+        from HltTracking.HltPVs import PV3D
+        Hlt2ParticleFilter.__init__(self, 'TopoInput' + pid, pc,
+                                    inputs, shared = True, 
+                                    dependencies = [PV3D('Hlt2')])
+
+class FilterCombos(Hlt2ParticleFilter):
+    """
+    Filter for the BDT lines.
+    """
+    def __init__(self, inputs, varmap, props):
+        params  = ('$PARAMFILESROOT/data/%s' % props['OPT_BDT_PARAMS'])
+        bdttool = self.__classifier(params, varmap, "TrgBBDT")
+        pc = ("(VALUE('%s/%s') > %%(BDT_OPT_MIN)s)" % 
+              (bdttool.Type.getType(), bdttool.Name))
+        from HltTracking.HltPVs import PV3D
+        Hlt2ParticleFilter.__init__(self, 'BDT', pc, inputs,
+                                    shared = False, tools = [bdttool],
+                                    dependencies = [PV3D('Hlt2')])
+
+    def __classifier(self, params, varmap, name, preambulo = []):
+        from HltLine.HltLine import Hlt1Tool as Tool
+        from Configurables import LoKi__Hybrid__DictOfFunctors as DictOfFunctors
+        from Configurables import LoKi__Hybrid__DictValue as DictValue
+        from Configurables import \
+            LoKi__Hybrid__DictTransform_BBDecTreeTransform_ as Transform
+        key        = 'BDT'
+        options    = {'BBDecTreeFile': params, 'Name': key, 'KeepVars': '0'}
+        funcdict   = Tool(type = DictOfFunctors, name = 'TopoMVAdict',
+                        Preambulo = preambulo, Variables = varmap)
+        transform  = Tool(type = Transform, name = 'BBDecTree',
+                          tools = [funcdict], Options = options, 
+                          Source = "LoKi::Hybrid::DictOfFunctors/TopoMVAdict")
+        classifier = Tool(type = DictValue, name = name, tools = [transform],
+                          Key = key, Source = 'LoKi::Hybrid::DictTransform'
+                          '<BBDecTreeTransform>/BBDecTree')
+        return classifier
+
+from Hlt2Lines.Utilities.Hlt2Combiner import Hlt2Combiner
+class CombineN(Hlt2Combiner):
+    """
+    Combiner for all n-body combos.
+    """
+    def __init__(self, n, inputs):
+        if   n == 3: decays = ["[B0 -> K+ K+ K+]cc", "[B0 -> K+ K+ K-]cc"]
+        elif n == 4: decays = ["[B0 -> K+ K+ K+ K+]cc", "[B0 -> K+ K+ K+ K-]cc",
+                               "B0 -> K+ K+ K- K-"]
+        else:        decays = ["[B0 -> K+ K+]cc", "B0 -> K+ K-"]
+        cc = ("(APT > %(OPT_CMB_PRT_PT_MIN)s) "
+              "& (AMINCHILD(PT) > %(OPT_CMB_TRK_PT_MIN)s) "
+              "& (AMAXCHILD(TRCHI2DOF) < %(OPT_CMB_TRK_CHI2_MAX)s) "
+              "& (ANUM(MIPCHI2DV(PRIMARY) < 16) < %(OPT_CMB_TRK_NLT16_MAX)s)")
+        mc = ("(HASVERTEX) & (BPVDIRA > %(OPT_CMB_VRT_DIRA_MIN)s) "
+              "& (BPVVDCHI2 > %(OPT_CMB_VRT_VDCHI2_MIN)s) "
+              "& (VFASPF(VCHI2/VDOF) < %(OPT_CMB_VRT_CHI2_MAX)s) "
+              "& (in_range(%(OPT_CMB_VRT_ETA_MIN)s, BPVETA,"
+              " %(OPT_CMB_VRT_ETA_MAX)s)) "
+              "& (in_range(%(OPT_CMB_VRT_MCOR_MIN)s, BPVCORRM,"
+              " %(OPT_CMB_VRT_MCOR_MAX)s))")
+        from HltTracking.HltPVs import PV3D
+        Hlt2Combiner.__init__(self, 'OptTopo%iBody' % n, decays,
+                              inputs, shared = True, tistos = 'TisTosSpec',
+                              dependencies = [PV3D('Hlt2')],
                               CombinationCut = cc, MotherCut = mc)
