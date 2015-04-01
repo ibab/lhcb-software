@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 ! 2015-04-01 - Stefania Vecchi
+
+!========================= TAlignment v6r3 2015-04-01 =========================
+
  - Added code for MUON alignment online and offline with 2015 data
 
 ! 2015-03-27 - Maurizio Martinelli

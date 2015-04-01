@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TAlignment
 ################################################################################
-gaudi_subdir(TAlignment v6r2)
+gaudi_subdir(TAlignment v6r3)
 
 gaudi_depends_on_subdirs(Alignment/AlignEvent
                          Alignment/AlignKernel
