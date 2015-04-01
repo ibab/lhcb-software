@@ -615,7 +615,6 @@ class bindMembers (object) :
                 known_inputs += _OutputLocationsGetter(i)
             missing = set(req_inputs) - set(known_inputs)
             if missing :
-                import pdb; pdb.set_trace()
                 extra = set(known_inputs) - set(req_inputs) - set(  _OutputLocationsGetter(alg) )
                 log.warning( ' input/output matchmaker for  %s generated warnings' %(alg.name()) )
                 log.warning( ' ---> missing requests: ' + str(missing)  )
@@ -1341,11 +1340,7 @@ class Hlt2Member ( object ) :
                     else:
                         return 'Hlt2/Hlt2' + line + i.subname() + '/Particles'
                 else :
-                    try:
-                        return re.sub('^%', 'Hlt2' + line, i )
-                    except TypeError:
-                        import pdb
-                        pdb.set_trace()
+                    return re.sub('^%', 'Hlt2' + line, i )
 
             inputLocations = [ _adapt(i,line) for i in inputLocations ]
             # deal with nested lists, keep order invariant
