@@ -4,6 +4,9 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2015-04-01 - Marco Cattaneo
+ - Fix decoder-compare test following change of L0Muon decoding default
+
 !========================= DAQSys v8r8 2015-03-31 =========================
 ! 2015-03-31 - Roel Aaij
  - Enable full L0Muon decoding by default.

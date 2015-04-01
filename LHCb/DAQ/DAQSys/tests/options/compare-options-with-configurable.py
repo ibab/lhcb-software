@@ -10,7 +10,10 @@ known_diffs={}
 default_opts_diffs={'Raw/Ecal/Digits' : { 'CaloZSupAlg/EcalZSup': { 'Context': ['Offline', '-->', '']}},
                     'Raw/Prs/Digits' : { 'CaloDigitsFromRaw/PrsFromRaw': { 'Context': ['Offline', '-->', '']}},
                     'Raw/Hcal/Digits' : { 'CaloZSupAlg/HcalZSup': { 'Context': ['Offline', '-->', '']}},
-                    'Raw/Spd/Digits' : { 'CaloDigitsFromRaw/SpdFromRaw': { 'Context': ['Offline', '-->', '']}}
+                    'Raw/Spd/Digits' : { 'CaloDigitsFromRaw/SpdFromRaw': { 'Context': ['Offline', '-->', '']}},
+                    'Trig/L0/MuonBCSU' : { 'L0MuonCandidatesFromRaw/L0MuonFromRaw' : { 'DAQMode': [0, '-->', 1]}},
+                    'Trig/L0/MuonCtrl' : { 'L0MuonCandidatesFromRaw/L0MuonFromRaw' : { 'DAQMode': [0, '-->', 1]}},
+                    'Trig/L0/MuonData' : { 'L0MuonCandidatesFromRaw/L0MuonFromRaw' : { 'DAQMode': [0, '-->', 1]}}
                     }
 
 
