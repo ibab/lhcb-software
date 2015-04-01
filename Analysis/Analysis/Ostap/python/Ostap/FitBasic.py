@@ -31,7 +31,7 @@ __all__     = (
     'Fit1D'         , ## the model for 1D-fit: signal + background + optional components  
     'Fit2D'         , ## the model for 2D-fit: signal + background + optional components
     ##
-    'Adjust1D'      , ## addjust PDF to avoid zeroes (sometimes useful)
+    'Adjust'        , ## addjust PDF to avoid zeroes (sometimes useful)
     'Convolution'   , ## helper utility to build convolution
     ##
     'Generic1D_pdf' , ## wrapper over imported RooFit (1D)-pdf  
@@ -47,27 +47,31 @@ from   Ostap.Utils               import RooSilent, NoContext
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.FitBasic' )
 else                       : logger = getLogger ( __name__         )
 # =============================================================================
-_nemax = 80000  ## number of events per CPU-core 
+_nemax = 20000  ## number of events per CPU-core 
 _ncmax =     6  ## maximal number of CPUs: there are some problems with >= 7
                 ## @see https://sft.its.cern.ch/jira/browse/ROOT-4897
-#
 _ncpus = []
-# 
+#
+# =============================================================================
+## prepare "NumCPU" argument with reasonable choice of #cpu, depending on
+#  number of events in dataset 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-03-31
 def ncpu (  events ) :
-    #
-    #
-    ### return  ROOT.RooFit.Save()
+    """
+    Prepare 'NumCPU' argument with reasonable choice of #cpu, depending on
+    the number of events in dataset 
+    """
     #
     n  = events // _nemax
-    if n       <= 1 : return ROOT.RooFit.Save() ## fake!!! 
+    if n       <= 1 : return ROOT.RooFit.Save () ## fake!!! 
     # 
     import multiprocessing
     n_cores = multiprocessing.cpu_count()
     if n_cores <= 1 : return ROOT.RooFit.Save () ## fake!!! 
     #
     num = min ( n , n_cores , _ncmax )
-    if not _ncpus :
-        _ncpus.append ( num )   
+    if not _ncpus : _ncpus.append ( num )   
     #
     return ROOT.RooFit.NumCPU ( num )
 
@@ -233,6 +237,19 @@ class PDF (object) :
     ## get all declared backgrounds 
     def backgrounds ( self ) : return self._backgrounds 
 
+    ## adjust PDF a little bit to avoid zeroes 
+    def adjust ( self , value ) :
+        """
+        """
+        if hasattr ( self , 'adjusted' ) :
+            logger.warning ( "PDF is already adjusted!")
+            return
+        
+        self.adjusted = Adjust ( self.name , self.mass , self.pdf , value ) 
+        self.old_pdf  = self.adjusted.old_pdf
+        self.pdf      = self.adjusted.pdf
+        
+        
     ## Create vector of phases (needed for various polynomial forms)
     def makePhis    ( self , num ) :
         """
@@ -275,15 +292,9 @@ class PDF (object) :
         _args = fitArgs ( "PDF(%s).fitTo:" % self.name , dataset , *args , **kwargs )
         
         #
-        if silent : from Ostap.Utils import RooSilent as Context
-        else      : from Ostap.Utils import NoContext as Context
-        
-        #
         ## define silent context
-        #
-        context = Context ()         
-        with context :
-
+        with RooSilent() if silent else NoContext() :
+            
             result =  self.pdf.fitTo ( dataset   ,
                                        ROOT.RooFit.Save (   ) ,
                                        *_args     )
@@ -364,13 +375,11 @@ class PDF (object) :
         #
         ## again the context
         # 
-        if silent : from Ostap.Utils import RooSilent as Context
-        else      : from Ostap.Utils import NoContext as Context
-        #
-        context = Context () 
-        with context :
+        with RooSilent() if silent else NoContext() :
 
-            frame = self.mass.frame( nbins )
+            if nbins : frame = self.mass.frame( nbins )
+            else     : frame = self.mass.frame( )
+            
             if dataset : dataset  .plotOn ( frame ) 
             #
             iB = 0 
@@ -434,51 +443,59 @@ class PDF (object) :
         >>> r,f = model.fitHisto ( histo , draw = True ) 
         
         """
-        
-        if silent : from Ostap.Utils import RooSilent as Context
-        else      : from Ostap.Utils import NoContext as Context
-
         with RangeVar( self.mass , *(histo.xminmax()) ) : 
             
             ## convert it! 
-            context = Context () 
-            with context :
-                hdset     = H1D_dset ( histo , self.mass , density )
-                self.hset = hdset.dset
+            hdset     = H1D_dset ( histo , self.mass , density , silent )
+            self.hset = hdset.dset
+            
+            if chi2 : return self.chi2fitTo ( self.hset , draw , None , silent , density , *args , **kwargs )
+            else    : return self.fitTo     ( self.hset , draw , None , silent ,           *args , **kwargs )
 
-            if chi2 : return self.chi2fitTo ( self.hset , draw , len ( histo ) , silent , density , *args , **kwargs )
-            else    : return self.fitTo     ( self.hset , draw , len ( histo ) , silent ,           *args , **kwargs )
-
-    ## make chi2-fit for binned dataset/histogram
+    ## make chi2-fit for binned dataset or histogram
     #  @code
     #  histo = ...
     #  r,f = model.chi2FitTo ( histo , draw = True ) 
-    #  @endcode             
+    #  @endcode
+    #  @todo add proper parsion of arguments for RooChi2Var 
     def chi2fitTo ( self,  dataset , draw = False , silent = False , density = True , *args , **kwargs ) :
 
+        hdataset = dataset
+        histo    = None 
+        if isinstance  ( dataset , ROOT.TH1 ) :
+            # if histogram, convert it to RooDataHist object:
+            xminmax = dataset.xminmax() 
+            with RangeVar( self.mass , *xminmax ) :                
+                hdset     = H1D_dset ( dataset , self.mass , density , silent )
+                self.hset = hdset.dset
+                hdataset  = self.hset  
+                histo     = dataset 
+                
+        with RooSilent() if silent else NoContext() :
 
-        if silent : from Ostap.Utils import RooSilent as Context
-        else      : from Ostap.Utils import NoContext as Context
+            lst1 = list ( fitArgs ( self.name , hdataset , *args , **kwargs ) )
+            lst2 = []
+            
+            if       self.pdf.mustBeExtended () : lst2.append ( ROOT.RooFit.Extended ( True  ) )
+            elif not self.pdf.canBeExtended  () : lst2.append ( ROOT.RooFit.Extended ( False ) )
+            
+            if not silent : lst2.append ( ROOT.RooFit.Verbose  () )
+            if histo :
+                if histo.natural() : lst2.append ( ROOT.RooFit.DataError ( ROOT.RooAbsData.Poisson ) )
+                else               : lst2.append ( ROOT.RooFit.DataError ( ROOT.RooAbsData.SumW2   ) )  
 
-        hdataset = dataset 
-        if isinstance  ( hdataset , ROOT.TH1 ) :
-            with RangeVar( self.mass , *(histo.xminmax()) ) :                
-                context = Context ()
-                with context :
-                    hdset     = H1D_dset ( hdataset , self.mass , density )
-                    self.hset = hdset.dset
-                    hdataset  = self.hset  
-                    
-        chi2 = ROOT.RooChi2Var ( rootID ( "chi2_" ) , "chi2" , self.pdf , hdataset )
-        m    = ROOT.RooMinuit  ( chi2 ) 
-        m.migrad   () 
-        m.hesse    ()
-        result = m.save ()
-        
+            args_ = tuple ( lst2 + lst1  )
+            #
+            chi2 = ROOT.RooChi2Var ( rootID ( "chi2_" ) , "chi2(%s)" % self.name  , self.pdf , hdataset , *args_ )
+            m    = ROOT.RooMinuit  ( chi2 ) 
+            m.migrad   () 
+            m.hesse    ()
+            result = m.save ()
+            
         if not draw :
             return result, None 
         
-        return result, self.draw ( hdataset , nbins = len ( dataset ) , silent = silent )
+        return result, self.draw ( hdataset , nbins = None , silent = silent )
         
     ## perform sPlot-analysis 
     #  @code
@@ -652,14 +669,10 @@ class PDF2 (object) :
         _args = fitArgs ( "PDF2(%s).fitTo:" % self.name , dataset , *args , **kwargs )
         
         #
-        if silent : from Ostap.Utils import RooSilent as Context
-        else      : from Ostap.Utils import NoContext as Context
-        
-        #
+
         ## define silent context
         #
-        context = Context ()         
-        with context :
+        with RooSilent() if silent else NoContext() :
 
             result =  self.pdf.fitTo ( dataset             ,
                                        ROOT.RooFit.Save () ,
@@ -786,18 +799,16 @@ class PDF2 (object) :
         Make 1D-plot:
         """
         
-        context = NoContext () 
-        if silent : context = RooSilent()
-        
         if not dataset :
             if hasattr ( self , 'dataset' ) : dataset = self.dataset 
 
-        with context :
+        with RooSilent() if silent else NoContext() : 
                 
             if not drawvar :
                 return self.draw_H2D( dataset , nbins , ybins )
-            
-            frame = drawvar.frame( nbins )
+
+            if nbins : frame = drawvar.frame ( nbins )
+            else     : frame = drawwar.frame ( ) 
             
             if dataset :
                 if not in_range : dataset .plotOn ( frame ,                                     *args )
@@ -836,18 +847,14 @@ class PDF2 (object) :
         >>> r,f = model.fitHisto ( histo , draw = True )
         
         """
-        context = NoContext () 
-        if silent : context = RooSilent() 
 
         xminmax = histo.xminmax()
-        yminmax = histo.yminmax()
-        
+        yminmax = histo.yminmax()        
         with RangeVar( self.m1 , *xminmax ) , RantgeVar ( self.m2 , *yminmax ): 
             
             ## convert it! 
-            with context : 
-                self.hdset = H2D_dset ( histo , self.m1 , self.m2  , density )
-                self.hset  = self.hdset.dset
+            self.hdset = H2D_dset ( histo , self.m1 , self.m2  , density , silent )
+            self.hset  = self.hdset.dset
                 
             ## fit it!!
             return self.fitTo ( self.hset      ,
@@ -895,10 +902,11 @@ class H1D_dset(object) :
     h1   = ...
     dset = H1D_dset ( h1 )
     """
-    def __init__ ( self           ,
-                   histo          ,
-                   mass    = None ,
-                   density = True ) :
+    def __init__ ( self            , 
+                   histo           ,
+                   mass    = None  ,
+                   density = True  ,
+                   silent  = False ) :
         #
         ## use mass-variable
         #
@@ -907,17 +915,19 @@ class H1D_dset(object) :
         else    : self.mass = makeVar ( mass , 'm_%s' % name , 'mass(%s)' % name , None , *(histo.xminmax()) )
 
         self.impDens = density 
-
-        self.var1    = self.mass
-        self.x       = self.mass
-        self.vlst    = ROOT.RooArgList    ( self.mass )
-        self.vimp    = ROOT.RooFit.Import ( histo     , density )
-        self.dset    = ROOT.RooDataHist   (
-            rootID ( 'hds_' ) ,
-            "Data set for histogram '%s'" % histo.GetTitle() ,
-            self.vlst  ,
-            self.vimp  )
-    
+        
+        with RooSilent() if silent else NoContext() : 
+            
+            self.var1    = self.mass
+            self.x       = self.mass
+            self.vlst    = ROOT.RooArgList    ( self.mass )
+            self.vimp    = ROOT.RooFit.Import ( histo     , density )
+            self.dset    = ROOT.RooDataHist   (
+                rootID ( 'hds_' ) ,
+                "Data set for histogram '%s'" % histo.GetTitle() ,
+                self.vlst  ,
+                self.vimp  )
+            
 # =============================================================================
 ## simple convertor of 1D-histogram into PDF
 #  @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -926,25 +936,26 @@ class H1D_pdf(H1D_dset,PDF) :
     """
     Simple convertor of 1D-histogram into PDF 
     """
-    def __init__ ( self           ,
-                   name           ,
-                   histo          ,
-                   mass    = None ,
-                   density = True ) :
+    def __init__ ( self            ,
+                   name            ,
+                   histo           ,
+                   mass    = None  ,
+                   density = True  ,
+                   silent  = False ) :
         
-        H1D_dset.__init__ ( self , histo , mass , density )
+        H1D_dset.__init__ ( self , histo , mass , density , silent )
         PDF     .__init__ ( self , name  )
         
-        #
-        ## finally create PDF :
-        #
-        self.vset  = ROOT.RooArgSet  ( self.mass )        
-        self.pdf   = ROOT.RooHistPdf (
-            'hpdf_%s'            % name ,
-            'HistoPDF(%s/%s/%s)' % ( name , histo.GetName() , histo.GetTitle() ) , 
-            self.vset  , 
-            self.dset  )
-        
+        with RooSilent() if silent else NoContext() : 
+            #
+            ## finally create PDF :
+            self.vset  = ROOT.RooArgSet  ( self.mass )        
+            self.pdf   = ROOT.RooHistPdf (
+                'hpdf_%s'            % name ,
+                'HistoPDF(%s/%s/%s)' % ( name , histo.GetName() , histo.GetTitle() ) , 
+                self.vset  , 
+                self.dset  )
+            
         ## and declare it be be a "signal"
         self.signals().add ( self.pdf ) 
         
@@ -956,11 +967,12 @@ class H2D_dset(object) :
     """
     Simple convertor of 2D-histogram into data set
     """
-    def __init__ ( self           ,
-                   histo2         ,
-                   mass    = None ,
-                   mass2   = None ,
-                   density = True ) :
+    def __init__ ( self            ,
+                   histo2          ,
+                   mass    = None  ,
+                   mass2   = None  ,
+                   density = True  ,
+                   silent  = False ) :
         #
         ## use mass-variable
         #
@@ -973,16 +985,18 @@ class H2D_dset(object) :
         self.var1    = self.mass1
         self.var2    = self.mass2
         self.x       = self.var1 
-        self.y       =   self.var2 
+        self.y       =   self.var2
+        
+        with RooSilent() if silent else NoContext() : 
 
-        self.vlst  = ROOT.RooArgList    ( self.mass1 , self.mass2 )
-        self.vimp  = ROOT.RooFit.Import ( histo2 , density )
-        self.dset  = ROOT.RooDataHist   (
-            rootID ( 'hds_' ) ,
-            "Data set for histogram '%s'" % histo2.GetTitle() ,
-            self.vlst  ,
-            self.vimp  )
-
+            self.vlst  = ROOT.RooArgList    ( self.mass1 , self.mass2 )
+            self.vimp  = ROOT.RooFit.Import ( histo2 , density )
+            self.dset  = ROOT.RooDataHist   (
+                rootID ( 'hds_' ) ,
+                "Data set for histogram '%s'" % histo2.GetTitle() ,
+                self.vlst  ,
+                self.vimp  )
+            
 
 # =============================================================================
 ## simple convertor of 2D-histogram into PDF
@@ -992,14 +1006,15 @@ class H2D_pdf(H2D_dset,PDF2) :
     """
     Simple convertor of 2D-histogram into PDF 
     """
-    def __init__ ( self           ,
-                   name           ,
-                   histo2         ,
-                   mass    = None , 
-                   mass2   = None ,
-                   density = True ) :
+    def __init__ ( self            ,
+                   name            ,
+                   histo2          ,
+                   mass    = None  , 
+                   mass2   = None  ,
+                   density = True  ,
+                   silent  = False ) :
         
-        H2D_dset.__init__ ( self , histo2 ,      mass  ,      mass2 , density )
+        H2D_dset.__init__ ( self , histo2 ,      mass  ,      mass2 , density , silent )
         PDF2    .__init__ ( self , name   , self.mass1 , self.mass2 ) 
 
         self.vset  = ROOT.RooArgSet  ( self.mass , self.mass2 )
@@ -1007,11 +1022,12 @@ class H2D_pdf(H2D_dset,PDF2) :
         #
         ## finally create PDF :
         #
-        self.pdf    = ROOT.RooHistPdf (
-            'hpdf_%s'            % name ,
-            'HistoPDF(%s/%s/%s)' % ( name , histo2.GetName() , histo2.GetTitle() ) , 
-            self.vset  , 
-            self.dset  )
+        with RooSilent() if silent else NoContext() : 
+            self.pdf    = ROOT.RooHistPdf (
+                'hpdf_%s'            % name ,
+                'HistoPDF(%s/%s/%s)' % ( name , histo2.GetName() , histo2.GetTitle() ) , 
+                self.vset  , 
+                self.dset  )
 
 # =============================================================================
 ## @class Fit1D
@@ -1499,13 +1515,11 @@ class Fit2D (object) :
         Make 1D-plot:
         """
         
-        context = NoContext () 
-        if silent : context = RooSilent()
         
         if not dataset :
             if hasattr ( self , 'dataset' ) : dataset = self.dataset 
 
-        with context :
+        with RooSilent() if silent else NoContext () : 
                 
             if not drawvar :
                 
@@ -1526,8 +1540,9 @@ class Fit2D (object) :
                     hpdf .Draw ( 'same surf')
                 
                 return hpdf , hdata 
-            
-            frame = drawvar.frame( nbins )
+
+            if nbins : frame = drawvar.frame ( nbins )
+            else     : frame = drawvar.frame ()
             
             if dataset :
                 if not in_range : dataset .plotOn ( frame ,                                      *args )
@@ -1598,14 +1613,11 @@ class Fit2D (object) :
         >>> r,f = model.fitHisto ( histo , draw = True )
         
         """
-        context = NoContext () 
-        if silent : context = RooSilent() 
         
         ## convert it! 
-        with context : 
-            self.hdset = H2D_dset ( '',  histo , self.m1 , self.m2  )
-            self.hset  = self.hdset.dset
-            
+        self.hdset = H2D_dset ( '',  histo , self.m1 , self.m2  , silent )
+        self.hset  = self.hdset.dset
+        
         ## fit it!!
         return self.fitTo ( self.hset      ,
                             draw           ,
@@ -1640,45 +1652,38 @@ class Fit2D (object) :
 
 # =============================================================================
 ## simple class to adjust certaint PDF to avoid zeroes 
-class Adjust1D(object) :
+class Adjust(object) :
     """
-    Simple class to adjust certaint PDF to avoid zeroes 
+    Simple class to adjust certain PDF to avoid zeroes 
     """
     ## constructor
-    def __init__ ( self          ,
-                   name          ,
-                   mass          ,
-                   pdf           ,
-                   value = 1.e-3 ,
-                   frac  = True  ) :
-        
+    def __init__ ( self             ,
+                   name             ,
+                   mass             , 
+                   pdf              ,
+                   value    = 1.e-3 ) : 
+
+        self.name    = name 
         self.mass    = mass
         self.old_pdf = pdf
-
+        
         self.p0_pdf  = ROOT.RooPolynomial( 'p0_%s'     % name ,
                                            'poly0(%s)' % name , self.mass ) 
+
         
-        self.num_f   = makeVar ( None , 'valueT_%s'    % name ,
+        self.num_f   = makeVar ( None  , 'valueT_%s'   % name ,
                                  'value/true(%s)'      % name ,
-                                 None ,
-                                 0    , 1 )
+                                 None  ,
+                                 value , 
+                                 0     , 1 )
         
-        #self.num_v   = makeVar ( None , 'valF_%s'       % name ,
-        #                         'value/fixtive(%s)'    % name ,
-        #                         value ,
-        #                         value , 0 , 10 )  
-        
-        #
         self.alist1 = ROOT.RooArgList (
-            self.old_pdf ,
-            self.p0_pdf    
+            self.p0_pdf  ,   
+            self.old_pdf 
             )
         
         self.alist2 = ROOT.RooArgList (
             self.num_f    ,
-            # self.num_v
-            # self.num_s  ,
-            # self.num_v
             )
         #
         ## final PDF
@@ -1689,7 +1694,6 @@ class Adjust1D(object) :
                                       self.alist2 )
         
         
-
 # =============================================================================
 ## @class Convolution
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -1738,7 +1742,7 @@ class Convolution(object):
             if hasattr ( self , 'cnv_sigma' ) :
                 dm  = mass.getMax() - mass.getMin()
                 dm /= self.cnv_sigma
-                nb  = max ( nb , 10 * int (  dm ) )
+                nb  = max ( nb , 100 * int (  dm ) )
                 logger.debug('Convolution: choose #bins %d' % nb )
                 
             self.mass.setBins ( 20000 , 'cache' ) 
@@ -1751,7 +1755,7 @@ class Convolution(object):
                                             self.mass , self.orig_pdf , self.convolution )
             if isinstance ( self.convolution , ROOT.RooGaussian ) :
                 if hasattr ( self , 'cnv_mean' ) and hasattr ( self , 'cnv_sigma' ) :
-                    self.pdf.setConvolutonWindow( self.cnv_mean , self.cnv_sigma , 5 )
+                    self.pdf.setConvolutonWindow ( self.cnv_mean , self.cnv_sigma , 7 )
 
 
 

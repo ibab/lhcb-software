@@ -190,7 +190,7 @@ def _int ( ve , precision = 1.e-5 ) :
     #
     if isinstance  ( ve , float ) :
         if Gaudi.Math.isint ( ve ) or Gaudi.Math.islong ( ve ) : return True 
-        
+    # 
     if not hasattr ( ve , 'value' ) :
         return _int ( VE ( ve , abs ( ve ) ) , precision )  
     #
@@ -201,6 +201,67 @@ def _int ( ve , precision = 1.e-5 ) :
     if abs ( ve.value () -        ve.cov2  ()   ) > diff : return False
     #
     return True 
+
+# =============================================================================
+## check if  historgam is "natural" one, that represent event count
+#  @see Gaudi::Math::round 
+#  @see Gaudi::Math::islong
+#  @see Gaudi::Math::isint
+#  @author Vanya BELYAEV Ivan.Belayev@itep.ru
+#  @date   2015-03-31
+def _natural_ ( histo ) :
+    """
+    Check is the histogram is the ``natural'' one:
+    - entries are non-negative integers
+    - errors  are sqrt(entry)
+    [ for null entries, the errors of  0 or 1 ar ebnoth allowed] 
+    
+    >>> histo = ...
+    >>> print 'natural? ', histo.natural()
+    
+    """
+    _islong = cpp.Gaudi.Math.islong
+    _round  = cpp.Gaudi.Math.round
+    ## loop over all histogram bins 
+    for i in histo :
+        
+        v  = histo [ i ]
+        vv = v.value ()
+        if not _islong ( vv )             : return False  ## ingeger
+        vl = _round ( vv )
+        if 0 > vl                         : return False  ## non-negative 
+        #
+        ve = v.cov2  ()
+        if not _islong ( ve )             : return False  ## integer 
+        ## 
+        if isequal ( vv , ve )            : continue      ## OK
+        if 0 == vl and isequal ( ve , 1 ) : continue      ## OK 
+        #
+        return False   
+
+    return True
+
+ROOT.TH1.natural = _natural_
+
+# =============================================================================
+## check if histogram has uniform binnings
+def _uniform_bins_ ( histo ) :
+    """
+    Check if histogram has uniform binnings
+    >>> histo = ...
+    >>> uni   = histo.uniform_bins() 
+    """
+    axis = histo.GetXaxis()
+    if 1 <= len ( axis.GetXbins () ) : return False
+    axis = histo.GetYaxis()
+    if 1 <= len ( axis.GetXbins () ) : return False
+    axis = histo.GetZaxis()
+    if 1 <= len ( axis.GetXbins () ) : return False
+    #
+    return True
+
+ROOT.TH1.uniform_bins = _uniform_bins_
+ROOT.TH1.uniform      = _uniform_bins_
 
 # =============================================================================
 ## get the (gaussian) random number according to parameters
@@ -283,26 +344,25 @@ def _poisson_ ( s , fluctuate , accept = lambda s : True ) :
     
     """
     v = s.value() 
-    if v <= 0 and not fluctuate :
-        raise TypeError, 'Non-positive mean without fluctuations (1)'
-    if v <= 0 and s.cov2() <=0  :
-        raise TypeError, 'Non-positive mean without fluctuations (2)'
+    if v < 0 and not fluctuate :
+        raise TypeError, 'Negative mean without fluctuations (1)'
+    if v < 0 and s.cov2() <= 0 :
+        raise TypeError, 'Negative mean without fluctuations (2)'
 
     e = s.error() 
-    if abs(v)/e > 3 :
-        logger.warning ("Very inefficient mean fluctuations: %s" % s ) 
+    if v < 0 and abs(v) > 3 * e  :
+        logger.warning ( "Very inefficient mean fluctuations: %s" % s ) 
 
     mu = v
     if fluctuate :
         mu = s.gauss ()
-        while mu <= 0 :
+        while mu < 0 :
             mu = s.gauss ()
 
     from scipy import random
     _poisson = random.poisson
     
     return _poisson ( mu ) 
-    
     
 VE.gauss   = _gauss_
 VE.poisson = _poisson_ 

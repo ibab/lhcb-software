@@ -8,6 +8,8 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-04-01 - Vanya Belyaev
+ - improve PDF adjustment, fix test 
 
 ! 2015-03-29 - Vanya Belyaev
  - add generic "import" models 

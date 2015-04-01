@@ -168,7 +168,7 @@ __all__ = (
     'H2D_dset'        , ## convertor of 2D-histogram to dataset 
     'H2D_pdf'         , ## convertor of 2D-histogram to PDF 
     #
-    'Adjust1D'        , ## adjust PDF to avoid zeroes (well, actually add a flat component)
+    'Adjust'          , ## adjust PDF to avoid zeroes (well, actually add a flat component)
     'Convolution'     , ## helper uitlity to build convolution 
     # 
     'Fit1D'           , ## generic model for 1D-fit

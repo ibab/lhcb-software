@@ -269,8 +269,8 @@ m_argusa . adjust ( 0.001 )
 
 with rooSilent() : 
     result,f  = m_argusa.fitTo ( dataset2 )
-    m_argusa . low      .release   ()
-    m_argusa . p0_value .release ()
+    m_argusa . low      .release ()
+    ## m_argusa . p0_value .release ()
     result,f  = m_argusa.fitTo ( dataset2 )  
 
 if 0 != result.status() or 3 != result.covQual() :
@@ -280,7 +280,7 @@ else :
     print  "\tArgusA:      shape= %s " % result( m_argusa . shape     .GetName()  )[0]   
     print  "\tArgusA:      high = %s " % result( m_argusa . high      .GetName()  )[0]   
     print  "\tArgusA:      low  = %s " % result( m_argusa . low       .GetName()  )[0]   
-    print  "\tArgusA:      p0   = %s " % result( m_argusa . p0_value  .GetName()  )[0]   
+    ## print  "\tArgusA:      p0   = %s " % result( m_argusa . p0_value  .GetName()  )[0]   
 
 
 # =============================================================================
@@ -376,9 +376,9 @@ else :
 
 
 # =============================================================================
-logger.info ("Test positive spline: order 3 with 5 inner knots ")
+logger.info ("Test positive spline: order 3 with 4 inner knots ")
 # =============================================================================
-s3   = cpp.Gaudi.Math.PositiveSpline( x.xmin() , x.xmax() , 5 , 3 )
+s3   = cpp.Gaudi.Math.PositiveSpline( x.xmin() , x.xmax() , 4 , 3 )
 m_s3 = Models.PSpline_pdf ( 'S3' , x , s3 )
 
 with rooSilent() : 
