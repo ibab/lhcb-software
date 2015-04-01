@@ -199,7 +199,7 @@ StatusCode FileWriterSvc::start()
     if (m_SteeringSvc != 0)
     {
       std::string svcnam;
-      svcnam = m_PartitionName+"/"+name();
+      svcnam = m_PartitionName+"/"+name()+"/Control";
       m_SteeringSvc = new SteeringInfo(svcnam,m_Steeringdata);
     }
   }
