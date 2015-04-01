@@ -3,8 +3,11 @@ Package : Escher
 Package Coordinator : Maurizio Martinelli
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
+
+</PRE><H1><A NAME=v5r4>2015-04-01 Escher v5r4</A></H1><PRE>
 ! 2015-04-01 - Stefania Vecchi
  - added script for Muon Alignment offline options/Escher-AlignMUON.py
+
 ! 2015-03-26 - Maurizio Martinelli
  - fixed a qmtest reference
 
