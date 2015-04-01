@@ -30,8 +30,9 @@ use CommonParticles     		v8r19    Phys
 
 use OTCalibration			v1r8   Calibration # Wouter Hulsbergen
 
-#temporary segfault fix, from Rec
-#use TrackUtils v1r56 Tr # removed after update in Rec - MM, 23/1/2015
+#temporary segfault fix, from LHCb
+use OTDet v8r16 Det # Needed until release of LHCb v38r6 - MM, 1/4/2015
+use LHCbMath v3r55 Kernel # Needed until release of LHCb v38r6 - MM, 1/4/2015
 
 # Declare this as a container package
 apply_pattern container_package

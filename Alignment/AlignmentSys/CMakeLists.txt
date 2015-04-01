@@ -16,7 +16,9 @@ gaudi_depends_on_subdirs(Alignment/AlignEvent
                          Alignment/VeloAlignment
                          Calibration/OTCalibration
                          Phys/CommonParticles
-                         Tr/TrackUtils)
+#                         Tr/TrackUtils # Temporary
+			 Det/OTDet # Temporary until release of LHCb v38r6 - MM, 1/4/2015
+			 Kernel/LHCbMath) # Temporary until release of LHCb v38r6 - MM, 1/4/2015
 
 gaudi_install_python_modules()
 
