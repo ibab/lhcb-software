@@ -6,6 +6,7 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r55 2015-04-01 =========================
 ! 2015-03-28 - Vanya Belyaev
  - improve numerical stability 
 
@@ -1524,5 +1525,4 @@
 
 ! 2006-05-08 - Juan Palacios
  - First release of Kernel/LHCbMath
-
 
