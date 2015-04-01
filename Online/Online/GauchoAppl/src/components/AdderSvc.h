@@ -28,6 +28,7 @@ public:
   StatusCode finalize();
   void gotoPause();
   virtual void handle(const Incident&);
+  SaveTimer *m_SaveTimer;
 
 private:
   IMonitorSvc        *m_pMonitorSvc;
@@ -36,7 +37,6 @@ private:
   AdderSys  *m_AdderSys;
   MonAdder  *m_adder;
   MonAdder  *m_EoRadder;
-  SaveTimer *m_SaveTimer;
   SaveTimer *m_EoRSaver;
   int m_recvtmo;
   MyErrh *m_errh;
@@ -59,6 +59,7 @@ private:
   bool m_started;
   bool m_doPause;
   int  m_SaveInterval; //in seconds
+  bool m_SaveonUpdate;
   std::string m_MyServiceName;
 };
 #endif // ONLINE_GAUCHO_ADDERSVC_H

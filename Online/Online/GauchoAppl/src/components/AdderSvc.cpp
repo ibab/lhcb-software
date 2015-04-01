@@ -38,7 +38,7 @@ public:
   {
     if (m_flag)
       {
-	::lib_rtl_output(LIB_RTL_INFO,"DIM(AdderSvc): Code %d.%x %s\n",severity,code,msg);
+  ::lib_rtl_output(LIB_RTL_INFO,"DIM(AdderSvc): Code %d.%x %s\n",severity,code,msg);
       }
     return;
   }
@@ -74,6 +74,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl),
   declareProperty("ServicePattern",  m_ServicePattern);
   declareProperty("ReceiveTimeout",  m_recvtmo=0);
   declareProperty("GotoPause",  m_doPause=false);
+  declareProperty("SaveonUpdate",m_SaveonUpdate=false);
 
   m_started     = false;
   m_SaveTimer   = 0;
@@ -83,6 +84,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl),
   m_arrhist     = 0;
   m_MyServiceName = name;
   m_AdderSys = 0;
+  m_SaveonUpdate = false;
 }
 
 AdderSvc::~AdderSvc()
@@ -267,6 +269,7 @@ StatusCode AdderSvc::start()
   m_adder->m_rectmo = m_recvtmo;
   m_adder->m_monsvc = dynamic_cast<IGauchoMonitorSvc*>(m_pMonitorSvc);
   m_adder->m_MyServiceName = m_MyServiceName;
+  m_adder->setSaveonUpdate(m_SaveonUpdate);
   m_adder->Configure();
   m_AdderSys->Add(m_adder);
   if (m_isSaver)

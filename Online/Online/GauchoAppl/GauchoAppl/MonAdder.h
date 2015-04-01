@@ -191,6 +191,7 @@ public:
   bool           m_expandRate;
   bool           m_IsEOR;
   bool           m_noRPC;
+  bool 					m_SaveonUpdate;
   unsigned long long m_time0;
   DimBuffBase *m_RateBuff;
   bool m_locked;
@@ -220,6 +221,7 @@ public:
   void SetPauseFn(void Pause(void*),void *tis){PauseFn = Pause;PauseArg=tis;return;}
   void setPause(bool dopause) {m_doPause=dopause;return;}
   void setParent(AdderSvc *parent){m_parentAdderSvc = parent;return;}
+  void setSaveonUpdate(bool SaveonUpdate){m_SaveonUpdate = SaveonUpdate;return;}
   INServiceDescr *findINService(std::string);
 //  OUTServiceDescr *findOUTService(std::string servc);
   virtual void Configure();

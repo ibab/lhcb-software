@@ -9,6 +9,8 @@
 #include "GauchoAppl/AddTimer.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
 #include "AIDA/IHistogram1D.h"
+#include "components/AdderSvc.h"
+#include "GauchoAppl/SaveTimer.h"
 static int mpty;
 DimServerDns *MonAdder::m_ServiceDns = 0;
 typedef std::pair<std::string, MonObj*> MonPair;
@@ -450,6 +452,10 @@ void MonAdder::TimeoutHandler()
 //  printf("Timeout Handler after add... received %d expected %d\n",(int)m_received,(int)m_expected);
   m_timeout = true;
   Update();
+  if (m_SaveonUpdate)
+  {
+    this->m_parentAdderSvc->m_SaveTimer->timerHandler();
+  }
 //  printf("called Update...\n");
 }
 void MonAdder::i_update()
@@ -462,6 +468,10 @@ void MonAdder::i_update()
     }
     //    //printf("Finished one cycle. Updating our service... %d %d\n", m_received,expected);
     Update();
+    if (m_SaveonUpdate)
+    {
+      this->m_parentAdderSvc->m_SaveTimer->timerHandler();
+    }
     m_added = 0;
     m_received = 0;
     m_reference = 0;

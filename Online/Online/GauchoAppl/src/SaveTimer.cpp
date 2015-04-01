@@ -137,7 +137,7 @@ void SaveTimer::SavetoFile(void *buff)
     }
 
 //    printf("File Saver: Filename %s\n",fn);
-//  loclock->lockMutex();
+  loclock->lockMutex();
   m_Adder->Lock();
   TFile *f = TFile::Open(fn,"RECREATE");
   m_Adder->UnLock();
@@ -145,7 +145,7 @@ void SaveTimer::SavetoFile(void *buff)
   {
     printf("Root File %s cannot be opened or is Zombie\n",fn);
     fflush (stdout);
-//    loclock->unlockMutex();
+    loclock->unlockMutex();
     delete f;
     return;
   }
@@ -222,6 +222,6 @@ void SaveTimer::SavetoFile(void *buff)
   f->Close();
   delete f;
   m_Adder->UnLock();
-//  loclock->unlockMutex();
+  loclock->unlockMutex();
   if (m_filenamesvc != 0) m_filenamesvc->updateService(fn);
 }
