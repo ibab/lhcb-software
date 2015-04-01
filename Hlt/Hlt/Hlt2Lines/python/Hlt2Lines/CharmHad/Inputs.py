@@ -11,3 +11,5 @@ from Hlt2SharedParticles.Ks import KsDD   as KS0_DD
 from Hlt2SharedParticles.Lambda import LambdaLLTrackFitted as Lambda_LL
 from Hlt2SharedParticles.Lambda import LambdaDDTrackFitted as Lambda_DD
 from Hlt2SharedParticles.Pi0 import ResolvedPi0s as Hlt2ResolvedPi0
+from Hlt2SharedParticles.Pi0 import MergedPi0s as Hlt2MergedPi0
+

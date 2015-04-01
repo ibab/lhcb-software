@@ -57,7 +57,7 @@ class CharmHadD2HHHPi0Lines() :
         }
   
     def locallines(self):
-        from Stages import DetachedHHHChild, AttachNeutral, NeutralInParticleFilter
+        from Stages import DetachedHHHChild, AttachParticle, NeutralInParticleFilter
         inputs = {
             # First the detached HHH lines - KS LL
             'DetachedPiPiPi_forD2HHHPi0' : [DetachedHHHChild('DetachedPiPiPi_forD2HHHPi0', decay = ["[K*(892)+ -> pi+ pi+ pi-]cc"])],
@@ -67,16 +67,16 @@ class CharmHadD2HHHPi0Lines() :
         }
         stages ={
           # Then we attach the neutral
-            'D2PiPiPiPi0'   : [AttachNeutral('D2PiPiPiPi0', "[D+ -> K*(892)+ pi0]cc",
+            'D2PiPiPiPi0'   : [AttachParticle('D2PiPiPiPi0', "[D+ -> K*(892)+ pi0]cc",
                                              inputs = [ inputs['DetachedPiPiPi_forD2HHHPi0'][0],
                                                         NeutralInParticleFilter("SharedNeutralChild_pi0R")] )],
-            'D2KPiPiPi0'    : [AttachNeutral('D2KPiPiPi0', "[D+ -> K*(892)+ pi0]cc",
+            'D2KPiPiPi0'    : [AttachParticle('D2KPiPiPi0', "[D+ -> K*(892)+ pi0]cc",
                                              inputs = [ inputs['DetachedKPiPi_forD2HHHPi0'][0],
                                                         NeutralInParticleFilter("SharedNeutralChild_pi0R")] )],
-            'D2KKPiPi0'     : [AttachNeutral('D2KKPiPi0', "[D+ -> K*(892)+ pi0]cc",
+            'D2KKPiPi0'     : [AttachParticle('D2KKPiPi0', "[D+ -> K*(892)+ pi0]cc",
                                              inputs = [ inputs['DetachedKKPi_forD2HHHPi0'][0],
                                                         NeutralInParticleFilter("SharedNeutralChild_pi0R")] )],
-            'D2KKKPi0'      : [AttachNeutral('D2KKKPi0', "[D+ -> K*(892)+ pi0]cc",
+            'D2KKKPi0'      : [AttachParticle('D2KKKPi0', "[D+ -> K*(892)+ pi0]cc",
                                              inputs = [ inputs['DetachedKKK_forD2HHHPi0'][0],
                                                         NeutralInParticleFilter("SharedNeutralChild_pi0R")] )],
         }

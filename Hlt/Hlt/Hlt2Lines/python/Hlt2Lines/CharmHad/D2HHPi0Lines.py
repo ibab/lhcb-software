@@ -27,7 +27,7 @@ class CharmHadD2HHPi0Lines() :
                                  'BPVCORRM_MAX'   : 1000 * GeV,
                                  'BPVVDCHI2_MIN'  : 25.0,
                                  },
-                 'D2HHPi0' : {
+                 'D2HHPi0R' : {
                                  'AM_MIN'            : 1735 * MeV,
                                  'AM_MAX'            : 1995 * MeV,
                                  'APT_MIN'           : 2500.0,
@@ -40,17 +40,37 @@ class CharmHadD2HHPi0Lines() :
                                  'BPVIPCHI2_MAX'     : 50.0,
                                  'BPVDIRA_MIN'       : 0.9995,
                                  'BPVLTIME_MIN'      : 0.2, 
+                                 'VCHI2PDOF_MAX'     : 99999,
+                                },
+                 'D2HHPi0M' : {
+                                 'AM_MIN'            : 1735 * MeV,
+                                 'AM_MAX'            : 1995 * MeV,
+                                 'APT_MIN'           : 2500.0,
+                                 'ADAU1PT_MIN'       : 1700,
+                                 'ADAU1BPVIPCHI2_MIN': 36,
+                                 'ADAU2PT_MIN'       : 1700,
+                                 'ADAU2BPVIPCHI2_MIN': 36,
+                                 'DMASS_MIN'         : 1745 * MeV,
+                                 'DMASS_MAX'         : 1985 * MeV,
+                                 'BPVIPCHI2_MAX'     : 50.0,
+                                 'BPVDIRA_MIN'       : 0.9995,
+                                 'BPVLTIME_MIN'      : 0.2, 
+                                 'VCHI2PDOF_MAX'     : 99999,
                                 },
                 }
 
     def locallines(self):
-        from Stages import AttachNeutral, NeutralInParticleFilter, DetachedHHChild
+        from Stages import AttachParticle, NeutralInParticleFilter, DetachedHHChild
         
         stages = {
-                'D2HHPi0' : [AttachNeutral('D2HHPi0', "D0 -> K*(892)0 pi0",#"D0 -> (K*(892)0 -> K+ pi-) pi0",
+                'D2HHPi0R' : [AttachParticle('D2HHPi0R', "D0 -> K*(892)0 pi0",#"D0 -> (K*(892)0 -> K+ pi-) pi0",
                                              inputs = [ DetachedHHChild('DetachedHH_forD2HHPi0'),
                                                         NeutralInParticleFilter("SharedNeutralChild_pi0R")]
-                                             )]
+                                             )],
+                'D2HHPi0M' : [AttachParticle('D2HHPi0M', "D0 -> K*(892)0 pi0",#"D0 -> (K*(892)0 -> K+ pi-) pi0",
+                                           inputs = [ DetachedHHChild('DetachedHH_forD2HHPi0'),
+                                                      NeutralInParticleFilter("SharedNeutralChild_pi0M")]
+                                           )],
                   }
         return stages
 

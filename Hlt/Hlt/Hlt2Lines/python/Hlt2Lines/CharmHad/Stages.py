@@ -145,12 +145,16 @@ SharedNoPIDDetachedChild_p = DetachedInParticleFilter( 'SharedNoPIDDetachedChild
 ## ------------------------------------------------------------------------- ##
 class NeutralInParticleFilter(Hlt2ParticleFilter):
     def __init__(self, name):
-        cut = ("  (PT > %(Trk_ALL_PT_MIN)s)" )
+        cut = ("  (PT > %(Neut_ALL_PT_MIN)s)" )
 
-        from Inputs import Hlt2ResolvedPi0
- 
+        from Inputs import Hlt2ResolvedPi0, Hlt2MergedPi0, Hlt2NoPIDsPhotons
+        
         pidinfo = {"pi0R" : {"cut"    : "(ADMASS('pi0') < %(Pi0_ALL_DMASS_MAX)s) &",
                            "inputs" : [Hlt2ResolvedPi0]},
+                   "pi0M" : {"cut"    : "(ADMASS('pi0') < %(Pi0_ALL_DMASS_MAX)s) &",
+                           "inputs" : [Hlt2MergedPi0]},
+                   "gamma" : {"cut"    : "",
+                           "inputs" : [Hlt2NoPIDsPhotons]},
                   }   
 
         cut = pidinfo[name.split('_')[1]]["cut"] + cut 
@@ -400,7 +404,7 @@ class DetachedHHHChildCombiner(Hlt2Combiner):
                               tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
                               MotherCut = mc, Preambulo = [])
 
-class AttachNeutral(Hlt2Combiner):
+class AttachParticle(Hlt2Combiner):
     def __init__(self, name, decay,inputs):
         dc =    {}
         cc =    ("  ( in_range( %(AM_MIN)s, AM, %(AM_MAX)s ) " +
@@ -411,6 +415,7 @@ class AttachNeutral(Hlt2Combiner):
         mc =    ("   ( in_range( %(DMASS_MIN)s, M, %(DMASS_MAX)s ) " +
                  " & ( BPVIPCHI2()< %(BPVIPCHI2_MAX)s )" +
                  " & ( BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 " & ( VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +              
                  " & ( BPVLTIME() > %(BPVLTIME_MIN)s ) )")
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name, decay, inputs,

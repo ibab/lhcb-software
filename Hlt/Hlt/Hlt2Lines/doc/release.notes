@@ -8,6 +8,12 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-01 - Simone Stracka
+ - in CharmHad/Stages.py: renamed AttachNeutral into AttachParticle; modified key for Pt cut in NeutralInParticleFilter
+ - in CharmHad/Input.py: added merged pi0 for HHPi0 and HHHPi0 lines.
+ - in CharmHad/Lines.py: updated with cuts for merged pi0 and gamma; enlarged mass window for resolved pi0.
+ - in CharmHad/D2HHPi0Lines.py and CharmHad/D2HHHPi0Lines.py: included resolved pi0.
+
 ! 2015-04-01 - Jon Harrison
  - Added new lines for tau23mu and detached tri muons in TriMuon directory
 

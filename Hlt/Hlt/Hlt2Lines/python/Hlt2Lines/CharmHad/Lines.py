@@ -25,6 +25,7 @@ XSecLines = CharmHadXSecLines()
 D2HHHPi0Lines = CharmHadD2HHHPi0Lines()
 D2HHLines = CharmHadD2HHLines()
 
+
 theseslots = {   'Prescale' : {}, 
                  'TrackGEC' : {'NTRACK_MAX'           : 10000},
                  'Common' : {'TisTosSpec'               : "Hlt1Track.*Decision%TOS",
@@ -94,11 +95,16 @@ theseslots = {   'Prescale' : {},
                                           },
                  # Neutral particles for D -> HHX lines
                  # 
-                 # MAYBE BETTER TO RENAME Trk_ALL_PT_MIN HERE AS THIS IS
-                 # NOT A TRACK BUT A PI0?
                  'SharedNeutralChild_pi0R' : {
-                                 'Trk_ALL_PT_MIN'           : 500.0 * MeV,
-                                 'Pi0_ALL_DMASS_MAX'        : 30.0,
+                                 'Neut_ALL_PT_MIN'           : 500.0 * MeV,
+                                 'Pi0_ALL_DMASS_MAX'        : 60.0, # was 30.0
+                                          },
+                 'SharedNeutralChild_pi0M' : {
+                                 'Neut_ALL_PT_MIN'           : 500.0 * MeV,
+                                 'Pi0_ALL_DMASS_MAX'        : 60.0,
+                                          },
+                 'SharedNeutralChild_gamma' : {
+                                 'Neut_ALL_PT_MIN'           : 500.0 * MeV,
                                           },
                 }
 
