@@ -1,5 +1,5 @@
 package AlignmentSys
-version v10r2
+version v10r3
 
 branches cmt doc
  
@@ -15,20 +15,20 @@ use AlignmentTools      		v3r4    Alignment # Sebastien Viret
 use AlignEvent				v1r2    Alignment # Wouter Hulsbergen
 use AlignKernel				v3r7    Alignment # Adlene Hicheur, Wouter Hulsbergen
 use AlignSolvTools			v3r5    Alignment # A. Hicheur, W. Hulsbergen
-use AlignTrTools			v4r14	Alignment # Johan Blouw, Adlene Hicheur, Louis Nicolas
-use TAlignment				v6r2	Alignment # Jan Amoraal, Johan Blouw, Marc Deissenroth, Florin Maciuc
+use AlignTrTools			v4r15	Alignment # Johan Blouw, Adlene Hicheur, Louis Nicolas
+use TAlignment				v6r3	Alignment # Jan Amoraal, Johan Blouw, Marc Deissenroth, Florin Maciuc
 #AlignT2Velo Removed, 03.03.2010
 #use AlignT2Velo			v1r1    Alignment # Steve Blusk
 use VeloAlignment			v4r12	Alignment # Marco Gersabeck
 use MisAligner				v2r2	Alignment # Johan Blouw, Manuel Schiller
-use Escher				v5r3	Alignment # Johan Blouw
+use Escher				v5r4	Alignment # Johan Blouw
 use CommonParticles     		v8r19    Phys
 
 #=======================================================
 # LHCb Calibration packages
 #=======================================================
 
-use OTCalibration			v1r8   Calibration # Wouter Hulsbergen
+use OTCalibration			v1r9   Calibration # Wouter Hulsbergen
 
 #temporary segfault fix, from LHCb
 use OTDet v8r16 Det # Needed until release of LHCb v38r6 - MM, 1/4/2015
