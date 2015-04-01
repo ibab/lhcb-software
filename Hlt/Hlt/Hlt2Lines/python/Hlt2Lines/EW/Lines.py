@@ -1,14 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-#=============================================================================
-#  QEE: ElectroWeak High pT lepton and di-lepton lines.
-#  Set of Hlt2Lines put in place to enable the ElectroWeak physics program.
-#
-#  author: Kārlis DREIMANIS k.dreimanis@liv.ac.uk
-#  date:   2015-03-16
-#=============================================================================
-
-
 from GaudiKernel.SystemOfUnits import GeV, MeV, mm 
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 class EWLines(Hlt2LinesConfigurableUser) :
@@ -24,7 +13,10 @@ class EWLines(Hlt2LinesConfigurableUser) :
                                'Hlt2EWDiElectronHighMass'     : 1.0,
                                'Hlt2EWSingleTFElectronLowPt'  : 0.001, #or 0.1
                                'Hlt2EWSingleTFElectronHighPt' : 0.01,  #or none
-                               'Hlt2EWSingleTFElectronVHighPt': 1.0},
+                               'Hlt2EWSingleTFElectronVHighPt': 1.0,
+                               'Hlt2EWSingleTauHighPt2Prong'  : 1.0,
+                               'Hlt2EWSingleTauHighPt3Prong'  : 1.0,
+                               'Hlt2EWDiTauHighMass'          : 1.0},
                  'Common'    :{},
                  #=====DiMuon=====
                  'DiMuonZ' :                 {'MinMass'    : 40000 * MeV,
@@ -118,14 +110,48 @@ class EWLines(Hlt2LinesConfigurableUser) :
                                               'PrsMin'     :    50,
                                               'EcalMin'    :   0.1,
                                               'HcalMax'    :  0.05,
-                                              'TkChi2'     :    20}
+                                              'TkChi2'     :    20},
+                 ##tau makers
+                 'Tau3PiCombiner'       :  {'sumPT'          : 8 * GeV,
+                                            'PT'             : 5 * GeV,
+                                            'childPT'        : 1 * GeV,
+                                            'maxchildPT'     : 5 * GeV,
+                                            'FDCHI2_MIN'     : 10,
+                                            'FDT_MIN'        : 0.5,
+                                            'VCHI2_NDOF_MAX' : 20,
+                                            'DOCA_MAX'       : 0.2,
+                                            'CORRM_MIN'      : 1.2 * GeV,
+                                            'CORRM_MAX'      : 2.0 * GeV
+                                            },
+                 'TauPiPi0Combiner'       :  {'sumPT'      : 8 * GeV,
+                                              'PT'         : 5 * GeV,
+                                              'childPT'    : 1 * GeV,
+                                              'maxchildPT' : 5 * GeV,
+                                              'M_MIN'      : 0 * GeV,
+                                              'M_MAX'      : 1.5 * GeV
+                                              #'DR2_MAX'    : 0.25
+                                              },
+                 ## single tau
+                 'SingleTauHighPt2Prong'  : {'PT'         : 10 * GeV
+                                              },
+                 'SingleTauHighPt3Prong'  : {'PT'         : 10 * GeV,
+                                              }
+                                              
                  }                               
 
     def __apply_configuration__(self) :
         from Stages import (DiMuonZFilter,DiMuonDY1Filter,DiMuonDY2Filter,DiMuonDY3Filter,DiMuonDY4Filter,
                             SingleMuonLowPtFilter,SingleMuonHighPtFilter,SingleMuonVHighPtFilter,
                             DiElectronDYFilter,DiElectronHighMassFilter,
-                            SingleTFElectronFilter,SingleTFElectronLowPtFilter,SingleTFElectronHighPtFilter,SingleTFElectronVHighPtFilter)
+                            SingleTFElectronFilter,SingleTFElectronLowPtFilter,SingleTFElectronHighPtFilter,SingleTFElectronVHighPtFilter, HighPTTauCombiner, SingleTauFilter )
+        from Inputs import (Hlt2MergedPi0s, Hlt2ResolvedPi0s, BiKalmanFittedMuons, BiKalmanFittedElectronsFromL0, Hlt2BiKalmanFittedPions)
+
+        #create the taus first
+        taus_3prong = HighPTTauCombiner("Tau3PiCombiner",0, [Hlt2BiKalmanFittedPions])
+        taus_2prong = HighPTTauCombiner("TauPiPi0Combiner",1, [Hlt2BiKalmanFittedPions, Hlt2MergedPi0s, Hlt2ResolvedPi0s])
+
+        singletaus_3prong = SingleTauFilter("SingleTauHighPt3Prong",0, [taus_3prong])
+        singletaus_2prong = SingleTauFilter("SingleTauHighPt2Prong",1, [taus_2prong])
 
         stages = {'DiMuonZ'   : [DiMuonZFilter('DiMuonZ')],
                   'DiMuonDY1' : [DiMuonZFilter('DiMuonDY1')],
@@ -143,7 +169,11 @@ class EWLines(Hlt2LinesConfigurableUser) :
                   'SingleTFElectron'        : [SingleTFElectronFilter('SingleTFElectron')],
                   'SingleTFElectronLowPt'   : [SingleTFElectronLowPtFilter('SingleTFElectronLowPt')],
                   'SingleTFElectronHighPt'  : [SingleTFElectronHighPtFilter('SingleTFElectronHighPt')],
-                  'SingleTFElectronVHighPt' : [SingleTFElectronVHighPtFilter('SingleTFElectronVHighPt')]}
+                  'SingleTFElectronVHighPt' : [SingleTFElectronVHighPtFilter('SingleTFElectronVHighPt')],
+
+                  'SingleTauHighPt3Prong'         : [singletaus_3prong],
+                  'SingleTauHighPt2Prong'         : [singletaus_2prong]
+                  }
         
         from HltLine.HltLine import Hlt2Line
         from HltLine.HltDecodeRaw import DecodeL0CALO

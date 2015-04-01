@@ -1,4 +1,5 @@
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
+from Hlt2Lines.Utilities.Hlt2Combiner import Hlt2Combiner
 from Inputs import TrackFittedDiMuon
 from Inputs import BiKalmanFittedMuons
 from Inputs import TrackFittedDiElectronFromL0
@@ -131,3 +132,37 @@ class SingleTFElectronVHighPtFilter(Hlt2ParticleFilter):
                 "& (TRCHI2DOF < %(TkChi2)s)")
         inputs = [BiKalmanFittedElectronsFromL0]
         Hlt2ParticleFilter.__init__(self,name, code, inputs, dependencies = [DecodeL0CALO])
+
+class SingleTauFilter(Hlt2ParticleFilter):
+    def __init__(self,  name, n, inputs):
+        #any extra cuts for single tau
+        code = "(PT > %(PT)s)"
+        Hlt2ParticleFilter.__init__(self, name, code, inputs)
+
+class HighPTTauCombiner(Hlt2Combiner):
+    """
+    Combiner to make taus
+    """
+    def __init__(self, name, n, inputs):
+        decays = [
+            ["[tau- -> pi- pi+ pi-]cc"
+             ],
+            ["[tau- -> pi- pi0]cc"
+             ]
+            ]
+        cc = [
+            "(APT>%(sumPT)s) & (AMAXDOCA('')<%(DOCA_MAX)s) & (AMINCHILD(PT)> %(childPT)s) &(AMAXCHILD(PT)>%(maxchildPT)s)",
+            "(APT>%(sumPT)s) & (AMINCHILD(PT)> %(childPT)s) & (AMAXCHILD(PT)>%(maxchildPT)s)"]
+        mc = [
+            "(PT>%(PT)s) & (BPVVDCHI2 > %(FDCHI2_MIN)s) & (VFASPF(VCHI2/VDOF)<%(VCHI2_NDOF_MAX)s) & (BPVVDR > %(FDT_MIN)s) & (BPVCORRM>%(CORRM_MIN)s) & (BPVCORRM<%(CORRM_MAX)s)",
+            "(PT>%(PT)s) & (M>%(M_MIN)s) & (M<%(M_MAX)s)"
+            ]
+
+        kwargs = {}
+        #set combiner to be momentum combiner for pipi0
+        if n == 1: kwargs['ParticleCombiners'] = {"" : "MomentumCombiner"}
+
+        from HltTracking.HltPVs import PV3D
+        Hlt2Combiner.__init__(self, name, decays[n], inputs, shared = True,
+                              dependencies = [PV3D('Hlt2')],
+                              CombinationCut = cc[n], MotherCut = mc[n], **kwargs)
