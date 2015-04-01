@@ -21,6 +21,9 @@ ApplicationMgr.ExtSvc               += {
 ApplicationMgr.ExtSvc               += {
           "CntrPub"
                                        };
+ApplicationMgr.ExtSvc               += {
+          "CntrPub/HLT1Writer"
+                                       };
 
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
@@ -95,6 +98,15 @@ CntrPub.AdderClass          = "Counter";
 CntrPub.CounterPattern      = "(.*)AlignDataWriter_(.*)EvtsOut";
 CntrPub.InDNS               = "mona08";
 CntrPub.OutDNS              = "mona08";
+
+HLT1Writer.MyName              = "<part>_X_HLT1Writer";
+HLT1Writer.PartitionName       = @OnlineEnv.PartitionName;
+HLT1Writer.TaskPattern         = "MON_<part>_HLT01_PartAdder_(.*)";
+HLT1Writer.ServicePattern      = "MON_<part>_DskWriter_00/Counter/";
+HLT1Writer.AdderClass          = "Counter";
+HLT1Writer.CounterPattern      = "(.*)DskWriter(.*)EvtsOut";
+HLT1Writer.InDNS               = "mona08";
+HLT1Writer.OutDNS              = "mona08";
 
 //OvrPub.MyName              = "<part>_X_OvrPub";
 //OvrPub.PartitionName       = @OnlineEnv.PartitionName;

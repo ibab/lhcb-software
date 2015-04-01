@@ -201,6 +201,7 @@ MonitorSvc.CounterUpdateInterval     = 5;
             f.write(svc+".SaveRootDir = \"/hist/Savesets\";\n");
             f.write(svc+".IsSaver = true;\n");
             f.write(svc+".SaveInterval = 900;\n");
+            f.write(svc+".SaveonUpdate = false;\n");
             f.write(svc+".SaveSetTaskName= \""+svc+"\";\n");
             f.write("\n")
 

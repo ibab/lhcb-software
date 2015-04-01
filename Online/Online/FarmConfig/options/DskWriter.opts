@@ -8,23 +8,23 @@ ApplicationMgr.EvtSel                = "NONE";
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::FileWriteMgr/WrManager";
 ApplicationMgr.ExtSvc               += { "IncidentSvc", "LHCb::MEPManager/MepManager"};
-ApplicationMgr.ExtSvc               += { "LHCb::FileWriterSvc/LHCbFileWriter_Overflow"};
+ApplicationMgr.ExtSvc               += { "LHCb::FileWriterSvc/DskWriter"};
 //
 MEPManager.PartitionBuffers          = @OnlineEnv.PartitionBuffers;
 MEPManager.PartitionName             = @OnlineEnv.PartitionName;
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 MEPManager.Buffers                   = @OnlineEnv.DskWriter_Buffers;
 //
-//WrManager.WriterServicePatt          = "LHCbFileWriter_";
-WrManager.WriterList                += { "LHCb::FileWriterSvc/LHCbFileWriter_Overflow"};
+//WrManager.WriterServicePatt          = "DskWriter_";
+WrManager.WriterList                += { "LHCb::FileWriterSvc/DskWriter"};
 WrManager.Input                     = @OnlineEnv.DskWriter_Input;
-LHCbFileWriter_Overflow.SizeLimit                 = 1000;
-LHCbFileWriter_Overflow.PrintFreq                 = 1.0;
-LHCbFileWriter_Overflow.Requirements         = {
+DskWriter.SizeLimit                 = 1000;
+DskWriter.PrintFreq                 = 1.0;
+DskWriter.Requirements         = {
 "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
-LHCbFileWriter_Overflow.MEPFilePrefix         = "/localdisk/overflow/NewRun_";
-LHCbFileWriter_Overflow.EvtFilePrefix         = "/localdisk/hlt1/Run_";
+DskWriter.MEPFilePrefix         = "/localdisk/overflow/NewRun_";
+DskWriter.EvtFilePrefix         = "/localdisk/hlt1/Run_";
 MessageSvc.fifoPath              = "$LOGFIFO";
 MessageSvc.OutputLevel           = @OnlineEnv.OutputLevel;
 MonitorSvc.CounterUpdateInterval = 5;

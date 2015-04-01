@@ -4,4 +4,6 @@ EventSelector.Input                  = @OnlineEnv.PassThrough_Input;
 Merger.Buffer                        = @OnlineEnv.PassThrough_Output;
 EventSelector.REQ1                   = "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
 EventSelector.REQ2                   = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
-EventSelector.Decode = false;
+EventSelector.IntelligentSetup       = true;
+EventSelector.TAE                    = @OnlineEnv.TAE;
+
