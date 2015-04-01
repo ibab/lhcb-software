@@ -180,13 +180,14 @@ class Hlt1_Commissioning_Physics_2015( object ):
         """
         Returns a list of active lines
         """
-        lines =  [ 'Hlt1TrackAllL0', 'Hlt1TrackMuon',
+        lines =  [ 'Hlt1TrackAllL0', 'Hlt1TrackMuon'
                   , 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
                   , 'Hlt1SingleElectronNoIP'
                   , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
-                  , 'Hlt1DiProtonLowMult', 'Hlt1DiProton'
                   , 'Hlt1L0HighSumETJet','Hlt1HighPtJetsSinglePV'
-                  , 'Hlt1TrackMVA', 'Hlt1TwoTrackMVA' ]
+                  , 'Hlt1TrackMVA', 'Hlt1TwoTrackMVA'
+                  , 'Hlt1CalibRICHMirror' ]
+
         
         #from Hlt1TechnicalLines import Hlt1TechnicalLines 
         #lines.extend( Hlt1TechnicalLines().ActiveHlt1Lines() )

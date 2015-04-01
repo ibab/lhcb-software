@@ -242,8 +242,9 @@ class Commissioning_Physics_2015( object ):
                  , 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
                  , 'Hlt1SingleElectronNoIP'
                  , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
-                 , 'Hlt1TrackMVA', 'Hlt1TwoTrackMVA']
-                 ## [ 'Hlt1L0HighSumETJet','Hlt1HighPtJetsSinglePV']
+                 , 'Hlt1TrackMVA', 'Hlt1TwoTrackMVA'
+                 , 'Hlt1CalibRICHMirror' ]
+
         
         ## from Hlt1TechnicalLines import Hlt1TechnicalLines 
         ## lines.extend( Hlt1TechnicalLines().ActiveHlt1Lines() )
