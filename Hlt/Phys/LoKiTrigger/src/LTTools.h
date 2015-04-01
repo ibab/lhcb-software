@@ -31,6 +31,7 @@
 // forward declarations 
 // ============================================================================
 class GaudiAlgorithm ;
+class IDVAlgorithm   ;
 namespace LoKi { class AuxFunBase ; }
 // ============================================================================
 namespace LoKi
@@ -50,6 +51,10 @@ namespace LoKi
       // ======================================================================
       inline IAlgorithm*     getAlg ( const LoKi::AuxFunBase& base ) 
       { return LoKi::AlgUtils::getAlg ( base , true ) ; }
+      // ======================================================================
+      // get IDVAlgortihm 
+      // ======================================================================
+      IDVAlgorithm*          getPhysDesktop ( const LoKi::AuxFunBase& base ) ;
       // ======================================================================
       inline SmartIF<Hlt::IUnit> getUnit ( const LoKi::AuxFunBase& base )
       { return SmartIF<Hlt::IUnit>( getAlg ( base )  ) ; }

@@ -15,11 +15,8 @@
 // ============================================================================
 // Kernel
 // ============================================================================
-#include "Kernel/IDecodeSimpleDecayString.h"
 #include "Kernel/IParticleCombiner.h"
-#include "Kernel/IParticle2State.h"
-#include "Kernel/GetDecay.h"
-#include "Kernel/GetParticlesForDecay.h"
+#include "Kernel/IDVAlgorithm.h"
 // ============================================================================
 // HltBase/Event
 // ============================================================================
@@ -141,22 +138,6 @@ namespace LoKi
       bool mothcut    ( const LHCb::Particle*           p ) const
       { return m_conf.mothcut    ( p ) ; }
       // ======================================================================
-    private:
-      // ======================================================================
-      /// 'sink': the functor which register the selection in Hlt Data Svc
-      LoKi::Hlt1::Sink                      m_sink   ;
-      /// config
-      LoKi::Hlt1::Hlt1CombinerConf          m_conf   ;
-      /// source holder
-      LoKi::Assignable<Source>::Type        m_source ;
-      // tools
-      LoKi::Interface<IParticleCombiner>    m_pc     ;
-      /// the actual list of decays                         
-      std::vector<Decays::Decay>            m_decays ;
-      /// local map of all involved daughter particles 
-      typedef std::map<LHCb::ParticleID, std::string> MAP ;
-      MAP m_items  ;
-      // ======================================================================
     private: // load input data 
       // ======================================================================
       // user functions
@@ -166,25 +147,24 @@ namespace LoKi
       // ======================================================================
     private: // perform the actual creation of  decay trees 
       // ======================================================================
-      void executeCombineParticles 
+      unsigned long  
+        executeCombineParticles 
         ( CANDIDATES&          output    , 
           const Selected&      daughters , 
           const Decays::Decay& decay     ) const ;
-      void execute3BodyCombination
+      unsigned long  
+        execute3BodyCombination
         ( CANDIDATES&          output    , 
           const Selected&      daughters , 
           const Decays::Decay& decay     ) const ;
-      void execute4BodyCombination
+      unsigned long  
+        execute4BodyCombination
         ( CANDIDATES&          output    , 
           const Selected&      daughters , 
           const Decays::Decay& decay     ) const ;
       // ======================================================================
     private:
       // ======================================================================
-      unsigned long             m_maxCand;
-      bool                      m_maxCandStop;
-      unsigned long             m_maxComb;
-      bool                      m_maxCombStop;
       bool tooMuchCandidates ( const size_t nGood, const Decays::Decay& decay ) const
       {
         if ( 0 < m_maxCand && m_maxCand <= nGood )
@@ -210,6 +190,33 @@ namespace LoKi
       // ======================================================================
       StatusCode                        setup()         ;
       // ======================================================================
+    private:
+      // ======================================================================
+      /// 'sink': the functor which register the selection in Hlt Data Svc
+      LoKi::Hlt1::Sink                      m_sink   ;
+      /// config
+      LoKi::Hlt1::Hlt1CombinerConf          m_conf   ;
+      /// source holder
+      LoKi::Assignable<Source>::Type        m_source ;
+      // tools
+      LoKi::Interface<IParticleCombiner>    m_pc     ;
+      /// the actual list of decays                         
+      std::vector<Decays::Decay>            m_decays ;
+      /// local map of all involved daughter particles 
+      typedef std::map<LHCb::ParticleID, std::string> MAP ;
+      MAP m_items  ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// my IDValgorithm
+      LoKi::Interface<IDVAlgorithm>  m_dvAlg ;  // my IDValgorithm
+      // ======================================================================
+    private: // shoudld be this stuff be picked from Hlt1CombinerConf? 
+      // ======================================================================
+      unsigned long             m_maxCand     ;
+      bool                      m_maxCandStop ;
+      unsigned long             m_maxComb     ;
+      bool                      m_maxCombStop ;
     };
     // ==========================================================================
   } //                                                end of namespace LoKi::Hlt1

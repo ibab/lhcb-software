@@ -16,12 +16,20 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiAlg/GetAlgs.h"
 // ============================================================================
+// HltBase 
+// ============================================================================
+#include "HltBase/IHltUnit.h"
+// ============================================================================
+// DaVinciInterfaces
+// ============================================================================
+#include "Kernel/IDVAlgorithm.h"
+// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/AuxFunBase.h"
 #include "LoKi/ILoKiSvc.h"
 #include "LoKi/AlgUtils.h"
-#include "HltBase/IHltUnit.h"
+#include "LoKi/GetPhysDesktop.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -42,6 +50,20 @@ const Hlt::Selection* LoKi::Hlt1::Utils::getSelection
   SmartIF<Hlt::IUnit> unit ( getAlg ( base ) ) ;
   base.Assert( !(!unit) , "Hlt::IUnit* is invalid") ;
   return unit->selection ( key ) ;
+}
+// ======================================================================
+// get IDVAlgortihm 
+// ======================================================================
+IDVAlgorithm* LoKi::Hlt1::Utils::getPhysDesktop 
+( const LoKi::AuxFunBase& base ) 
+{
+  LoKi::ILoKiSvc* svc = base.lokiSvc() ;
+  base.Assert ( 0 != svc , "Unable to get LoKi Service"   ) ;
+  // get DValgorithm 
+  IDVAlgorithm* dv = LoKi::getPhysDesktop ( svc  ) ;
+  base.Assert ( 0 !=dv   , "Unable to find IDVAlgorithm"  ) ;
+  // 
+  return dv ;
 }
 // ==========================================================================
 // compare vald pointers 

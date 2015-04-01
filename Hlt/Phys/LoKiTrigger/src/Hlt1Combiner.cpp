@@ -2,6 +2,10 @@
 // ============================================================================
 // Include files
 // ============================================================================
+// STD&STL
+// ============================================================================
+#include <memory>
+// ============================================================================
 #ifdef __INTEL_COMPILER
 #pragma warning(disable:1572) // non-pointer conversion ... may lose significant bits
 #pragma warning(push)
@@ -20,17 +24,18 @@
 #include "Kernel/IParticleCombiner.h"
 #include "Kernel/DaVinciAlgorithm.h"
 #include "Kernel/IDecodeSimpleDecayString.h"
+#include "Kernel/PVSentry.h"
+#include "Kernel/GetDecay.h"
 // ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/TrgToCpp.h"
-#include "LoKi/Hlt1Combiner.h"
-#include "LoKi/ToParticles.h"
-#include "LoKi/Hlt1.h"
 #include "LoKi/Constants.h"
-#include "LoKi/ParticleProperties.h"
-#include "LoKi/CompareParticles.h"
+#include "LoKi/TrgToCpp.h"
+// #include "LoKi/Hlt1.h"
+#include "LoKi/Hlt1Combiner.h"
 #include "LoKi/NBodyCompare.h"
+#include "LoKi/CompareParticles.h"
+#include "LoKi/GetPhysDesktop.h"
 // ============================================================================
 #include  "LTTools.h"
 #ifdef __INTEL_COMPILER
@@ -70,6 +75,8 @@ LoKi::Hlt1::Hlt1Combiner::Hlt1Combiner
   , m_conf   ( config )
   , m_source ( LoKi::Hlt1::Selection ( source1 , cut1 ) )
   , m_pc     () 
+  , m_decays () 
+  , m_dvAlg  () 
 {
   setup();
 }
@@ -93,6 +100,8 @@ LoKi::Hlt1::Hlt1Combiner::Hlt1Combiner
   , m_source ( no_empty_union ( LoKi::Hlt1::Selection( source1 , cut1 ) ,
                                 LoKi::Hlt1::Selection( source2 , cut2 ) ) )
   , m_pc     () 
+  , m_decays () 
+  , m_dvAlg  () 
 {
   setup();
 }
@@ -120,6 +129,8 @@ LoKi::Hlt1::Hlt1Combiner::Hlt1Combiner
                                 LoKi::Hlt1::Selection( source2 , cut2 ) ,
                                 LoKi::Hlt1::Selection( source3 , cut3 ) ) )
   , m_pc     () 
+  , m_decays () 
+  , m_dvAlg  () 
 {
   setup();
 }
@@ -141,12 +152,12 @@ StatusCode LoKi::Hlt1::Hlt1Combiner::setup()
   StatusCode sc = tsvc->retrieveTool ( m_conf.combiner() , _pc ) ;
   m_pc = _pc ;
   Assert ( sc.isSuccess() && m_pc , 
-           "Unable to get Particle Combiner'" + m_conf.combiner() + "'" ) ;
+           "Unable to get Particle Combiner'" + m_conf.combiner() + "'" , sc ) ;
   //
   IDecodeSimpleDecayString *dsds ;
   sc = tsvc->retrieveTool("DecodeSimpleDecayString:PUBLIC", dsds ) ;
   Assert ( sc.isSuccess() && 0 != dsds  , 
-           "Unable to get DecodeSimpleDecayString:PUBLIC " ) ;
+           "Unable to get DecodeSimpleDecayString:PUBLIC " , sc ) ;
   //
   m_decays = Decays::decays ( m_conf.decaystrs () , dsds ) ;
   LoKi::release ( dsds ) ;
@@ -161,13 +172,22 @@ StatusCode LoKi::Hlt1::Hlt1Combiner::setup()
   }
   //
   Assert ( !m_items.empty(), "Unable to collect all daughters!" );
+  //
+  // get DValgorithm 
+  m_dvAlg = LoKi::Hlt1::Utils::getPhysDesktop ( *this ) ;
+  Assert ( m_dvAlg , "Unable to find IDVAlgorithm"  );
+  //
+  // ===========================================================
   return sc ;
 }
 // ============================================================================
 // virtual destructor
 // ============================================================================
 LoKi::Hlt1::Hlt1Combiner::~Hlt1Combiner () 
-{ if ( m_pc && !gaudi() ) { m_pc.reset() ; } }
+{ 
+  if ( m_pc    && !gaudi() ) { m_pc   .reset() ; } 
+  if ( m_dvAlg && !gaudi() ) { m_dvAlg.reset() ; } 
+}
 // ============================================================================
 // clone method ("virtual constructor")
 // ============================================================================
@@ -204,7 +224,7 @@ LoKi::Hlt1::Hlt1Combiner::getDaughters
 // ============================================================================
 // combine particles 
 // ============================================================================
-void // should return a StatusCode instead?
+unsigned long
 LoKi::Hlt1::Hlt1Combiner::executeCombineParticles
 ( LoKi::Hlt1::Hlt1Combiner::CANDIDATES&       output    , 
   const LoKi::Hlt1::Hlt1Combiner::Selected&   daughters , 
@@ -216,6 +236,7 @@ LoKi::Hlt1::Hlt1Combiner::executeCombineParticles
   const IParticleCombiner* combiner = pc() ;
   const LoKi::Particles::PidCompare compare ; //  = LoKi::Particles::PidCompare () ;
   //
+  
   // the combiner itself
   Combiner loop ;
   // loop children and add daughters of this type to the combiner
@@ -223,70 +244,68 @@ LoKi::Hlt1::Hlt1Combiner::executeCombineParticles
   for ( Decays::Decay::Items::const_iterator child = dec_items.begin() ;
         child != dec_items.end(); child++)
   {
-    //std::cout << "Added daughters of type " << child->name() << " to loop" << std::endl;
-    //child->fillStream(std::cout); std::cout << std::endl;
     loop.add( daughters ( child->name() ) ) ;
   }
-
+  
+  unsigned long nGood = 0 ;
   // now do actual loop of combinations
-  //std::cout << "Will run " << loop.size() << " combinations " << std::endl;
-  int i=-1;
   for ( ; loop.valid() ; loop.next() )
   {
-      i++;
-      if ( !loop.unique( compare ) ) {
-        //std::cout << "  -- " << i << " fail PID compare" << std::endl;
-        continue ;
-      }
-
-      // get current combination
-      LHCb::Particle::ConstVector combination ( loop.dim() );
-      loop.current ( combination.begin() ) ;
-
-      // apply comb cuts
-      if ( ! combcut ( combination ) ) {
-        //std::cout << " -- " << i << " fail COMB cut" << std::endl;
-        continue ;
-      }
-
-      LHCb::Vertex*     vertex = new LHCb::Vertex();
-      LHCb::Particle*   mother = new LHCb::Particle();
-      mother->setParticleID( decay.mother().pid() );
-
-      // do combination
-      combiner -> combine ( combination , *mother , *vertex ) ;
-
-      //std::cout << i << ": Created mother particle: " << LoKi::Particles::nameFromPID(mother->particleID()) << " PID: " << mother->particleID().pid() << " M: " << mother->momentum().M() << " P: " << mother->p() << " PT: " << mother->pt() << std::endl;
-      //std::cout << i << ": Used decay vertex: (" << vertex->position().X() << "," << vertex->position().Y() << "," << vertex->position().Z() << ")" << std::endl;
-
-      // apply mother cuts
-      if ( ! mothcut ( mother ) ) {
-        delete vertex;
-        delete mother;
-        //std::cout << " -- " << i << " fail MOTH cut" << std::endl;
-        continue ;
-      }
-      //std::cout << " -- PASS" << std::endl;
-
-      // store in TES
-      _storeParticle( mother ) ;
-
-      // add new candidate
-      Hlt::Candidate *candidate = newCandidate();
-      candidate->addToWorkers ( alg() ) ;
-      // add new stage
-      Hlt::Stage* stage = newStage () ;
-      candidate->addToStages( stage ) ;
-      Hlt::Stage::Lock lock { stage, alg() } ;
-      stage->set( mother ) ;
-      output.push_back ( candidate ) ;
-      // ====================================================================
-  } //                                         end loop over combinations
+    if ( !loop.unique( compare ) ) { continue ; }
+    
+    // get current combination
+    LHCb::Particle::ConstVector combination ( loop.dim() );
+    loop.current ( combination.begin() ) ;
+    
+    // apply comb cuts
+    if ( !combcut ( combination ) ) { continue ; }
+    
+    //
+    // create new particle and vertex 
+    //
+    std::unique_ptr<LHCb::Vertex>   vertex ( new LHCb::Vertex   () ) ;
+    std::unique_ptr<LHCb::Particle> mother ( new LHCb::Particle ( decay.mother().pid() ) ) ;
+    
+    // do combination
+    StatusCode sc = combiner -> combine ( combination , *mother , *vertex ) ;
+    if ( sc.isFailure() ) { continue ; }
+    
+    //
+    /// setup sentry before mother cuts 
+    //
+    DaVinci::PVSentry sentry ( m_dvAlg , mother.get() ) ;
+    
+    //
+    // apply mother cuts
+    //
+    if ( !mothcut ( mother.get() ) ) { continue ; }
+    
+    // add new candidate
+    Hlt::Candidate *candidate = newCandidate();
+    candidate->addToWorkers ( alg() ) ;
+    
+    // add new stage
+    Hlt::Stage* stage = newStage () ;
+    candidate->addToStages( stage ) ;
+    Hlt::Stage::Lock lock { stage, alg() } ;
+    stage->set ( mother.get()  ) ;
+    output.push_back ( candidate ) ;
+    
+    // store in TES
+    _storeParticle ( mother.release()  ) ;
+    _storeVertex   ( vertex.release()  ) ;
+    
+    ++nGood ;
+    // =======================================================================
+  } // end loop over combinations
+  // =========================================================================
+  //
+  return nGood ;
 }
 // ============================================================================
 // 3 body 
 // ============================================================================
-void
+unsigned long
 LoKi::Hlt1::Hlt1Combiner::execute3BodyCombination 
 ( LoKi::Hlt1::Hlt1Combiner::CANDIDATES&     output    , 
   const LoKi::Hlt1::Hlt1Combiner::Selected& daughters , 
@@ -301,26 +320,23 @@ LoKi::Hlt1::Hlt1Combiner::execute3BodyCombination
   // Flag to indicate if processing is aborted
   bool problem = false ;
   
-  LHCb::Particle::ConstVector saved ;
-  saved.reserve ( 100 ) ; // CRJ : Was 1000. Seems a bit big ?
-  
   // the counter of "good" selected decays
-  size_t nGood = 0 ;
+  unsigned long nGood = 0 ;
 
   // fill it with the input data
   const Decays::Decay::Items& items = decay.children() ;
   Selected::Range child1 = daughters ( items [0].name() ) ;
-  if ( child1.empty() ) { return ; }                  
+  if ( child1.empty() ) { return nGood ; }                  
   Selected::Range child2 = daughters ( items [1].name() ) ;
-  if ( child2.empty() ) { return ; }                 
+  if ( child2.empty() ) { return nGood ; }                 
   Selected::Range child3 = daughters ( items [2].name() ) ;
-  if ( child3.empty() ) { return ; }                 
+  if ( child3.empty() ) { return nGood ; }                 
 
   /// check  combinatoric 
   double ncomb = 1.0 * child1.size() * child2.size() * child3.size() ;
   problem = problem || tooMuchCombinations ( ncomb , decay ) ;
-  if ( problem ) { return  ; } 
-  
+  if ( problem ) { return  nGood ; } 
+
   //
   // make explicit 3-body loop
   //
@@ -381,30 +397,28 @@ LoKi::Hlt1::Hlt1Combiner::execute3BodyCombination
         //
         // check the combinations for overlaps and cuts 
         //
-        if ( ! combcut ( combination ) ) { 
-          continue ; 
-        }
+        if ( ! combcut ( combination ) ) { continue ; }
         
         // here we can create the mother particle, the vertex, 
         // check them and save in TES 
-        LHCb::Vertex*     vertex = new LHCb::Vertex();
-        LHCb::Particle*   mother = new LHCb::Particle();
+        
+        std::unique_ptr<LHCb::Vertex>   vertex ( new LHCb::Vertex   () ) ;
+        std::unique_ptr<LHCb::Particle> mother ( new LHCb::Particle ( decay.mother().pid() ) ) ;
+        
         mother->setParticleID( decay.mother().pid() );
         
         // do combination
-        combiner -> combine ( combination , *mother , *vertex ) ;
+        StatusCode sc = combiner -> combine ( combination , *mother , *vertex ) ;
+        if ( sc.isFailure() ) { continue ; }
+        
+        //
+        /// setup sentry before mother cuts 
+        //
+        DaVinci::PVSentry sentry ( m_dvAlg , mother.get()  ) ;
         
         // apply mother cuts
-        if ( ! mothcut ( mother ) ) {
-          delete vertex;
-          delete mother;
-          //std::cout << " -- " << i << " fail MOTH cut" << std::endl;
-          continue ;
-        }
+        if ( !mothcut ( mother.get() ) ) { continue ; }
         
-        // store in TES
-        _storeParticle( mother ) ;
-
         // add new candidate
         Hlt::Candidate *candidate = newCandidate();
         candidate->addToWorkers ( alg() ) ;
@@ -412,31 +426,36 @@ LoKi::Hlt1::Hlt1Combiner::execute3BodyCombination
         Hlt::Stage* stage = newStage () ;
         candidate->addToStages( stage ) ;
         Hlt::Stage::Lock lock { stage, alg() } ;
-        stage->set( mother ) ;
+        stage->set( mother.get() ) ;
         output.push_back ( candidate ) ;
+        
+        // store in TES
+        _storeParticle ( mother.release ()  ) ;
+        _storeVertex   ( vertex.release () ) ;
         
         // increment number of good decays
         ++nGood; 
 
-        // ==================================================================
-      }                                  // end of the loop over 3rd particle 
-      // ====================================================================
-    }                                    // end of the loop over 2nd particle 
-    // ======================================================================
-  }                                      // end of the loop over 1st particle
-  // ========================================================================
+        // ====================================================================
+      }                                    // end of the loop over 3rd particle 
+      // ======================================================================
+    }                                      // end of the loop over 2nd particle 
+    // ========================================================================
+  }                                        // end of the loop over 1st particle
+  // ==========================================================================
+  //
+  return nGood ;
+  // ==========================================================================
 }
 // ============================================================================
 // 4 body 
 // ============================================================================
-void
+unsigned long 
 LoKi::Hlt1::Hlt1Combiner::execute4BodyCombination 
 ( LoKi::Hlt1::Hlt1Combiner::CANDIDATES&     output    , 
   const LoKi::Hlt1::Hlt1Combiner::Selected& daughters , 
   const Decays::Decay&                      decay     ) const
-{
-  
-  
+{  
   const LoKi::Particles::NBodyCompare compare ; // = LoKi::Particles::NBodyCompare () ;
   
   const IParticleCombiner* combiner = pc() ; // get the particle combiner
@@ -444,28 +463,25 @@ LoKi::Hlt1::Hlt1Combiner::execute4BodyCombination
   // Flag to indicate if processing is aborted
   bool problem = false ;
   
-  LHCb::Particle::ConstVector saved ;
-  saved.reserve ( 100 ) ; // CRJ : Was 1000. Seems a bit big ?
-  
   // the counter of "good" selected decays
   size_t nGood = 0 ;
   
   // fill it with the input data
   const Decays::Decay::Items& items = decay.children() ;    
   Selected::Range child1 = daughters ( items [0].name() ) ;
-  if ( child1.empty() ) { return ; }                  
+  if ( child1.empty() ) { return nGood ; }                  
   Selected::Range child2 = daughters ( items [1].name() ) ;
-  if ( child2.empty() ) { return ; }                  
+  if ( child2.empty() ) { return nGood ; }                  
   Selected::Range child3 = daughters ( items [2].name() ) ;
-  if ( child3.empty() ) { return ; }                  
+  if ( child3.empty() ) { return nGood ; }                  
   Selected::Range child4 = daughters ( items [3].name() ) ;
-  if ( child4.empty() ) { return ; }                  
+  if ( child4.empty() ) { return nGood ; }                  
   
   /// check  combinatoric 
   double ncomb  = 1.0 * child1.size() * child2.size() ;
   ncomb        *=       child3.size() * child4.size() ;
   problem = problem || tooMuchCombinations ( ncomb , decay ) ;
-  if ( problem ) { return  ; } 
+  if ( problem ) { return nGood ; } 
   
   //
   // make explicit 4-body loop
@@ -549,30 +565,26 @@ LoKi::Hlt1::Hlt1Combiner::execute4BodyCombination
           //
           // check the combinations for overlaps and cuts 
           // 
-          if ( ! combcut ( combination ) ) { 
-            continue ; 
-          }
+          if ( ! combcut ( combination ) ) { continue ; }
           
           // here we can create the mother particle, the vertex, 
           // check them and save in TES 
-          LHCb::Vertex*     vertex = new LHCb::Vertex();
-          LHCb::Particle*   mother = new LHCb::Particle();
-          mother->setParticleID( decay.mother().pid() );
+          std::unique_ptr<LHCb::Vertex>   vertex ( new LHCb::Vertex   () ) ;
+          std::unique_ptr<LHCb::Particle> mother ( new LHCb::Particle ( decay.mother().pid() ) ) ;
           
           // do combination
-          combiner -> combine ( combination , *mother , *vertex ) ;
+          StatusCode sc = combiner -> combine ( combination , *mother , *vertex ) ;
+          if ( sc.isFailure() ) { continue ; }
+          
+          DaVinci::PVSentry sentry ( m_dvAlg , mother.get() ) ;
           
           // apply mother cuts
-          if ( ! mothcut ( mother ) ) {
-            delete vertex;
-            delete mother;
+          if ( !mothcut ( mother.get() ) ) 
+          {
             //std::cout << " -- " << i << " fail MOTH cut" << std::endl;
             continue ;
           }
           
-          // store in TES
-          _storeParticle( mother ) ;
-
           // add new candidate
           Hlt::Candidate *candidate = newCandidate();
           candidate->addToWorkers ( alg() ) ;
@@ -580,22 +592,28 @@ LoKi::Hlt1::Hlt1Combiner::execute4BodyCombination
           Hlt::Stage* stage = newStage () ;
           candidate->addToStages( stage ) ;
           Hlt::Stage::Lock lock { stage, alg() } ;
-          stage->set( mother ) ;
+          stage->set( mother.get() ) ;
           output.push_back ( candidate ) ;
           
+          // store in TES
+          _storeParticle ( mother.release () ) ;
+          _storeVertex   ( vertex.release () ) ;
+
           // increment number of good decays
           ++nGood; 
 
-          // ================================================================
-        }                                // end of the loop over 4th particle 
-        // ==================================================================
-      }                                  // end of the loop over 3rd particle 
-      // ====================================================================
-    }                                    // end of the loop over 2nd particle 
-    // ======================================================================
-  }                                      // end of the loop over 1st particle
-  // ========================================================================
-  return;
+          // ==================================================================
+        }                                  // end of the loop over 4th particle 
+        // ====================================================================
+      }                                    // end of the loop over 3rd particle 
+      // ======================================================================
+    }                                      // end of the loop over 2nd particle 
+    // ========================================================================
+  }                                        // end of the loop over 1st particle
+  // ==========================================================================
+  //
+  return nGood ;
+  // ==========================================================================
 }
 // ============================================================================
 // the only one important method
@@ -604,7 +622,7 @@ LoKi::Hlt1::Hlt1Combiner::result_type
 LoKi::Hlt1::Hlt1Combiner::operator()
   ( /*LoKi::Hlt1::Hlt1Combiner::argument a*/ ) const
 {
-  Assert ( alg() , "Invalid setup!" );
+  Assert ( m_dvAlg , "Invalid setup!" );
   
   typedef result_type                CANDIDATES ;
   const CANDIDATES input = source() () ;
@@ -616,7 +634,6 @@ LoKi::Hlt1::Hlt1Combiner::operator()
   // get daughters from the input sources 
   Selected daughters ;
   getDaughters ( input , daughters ) ;
-  
   //
   for ( std::vector<Decays::Decay>::const_iterator idecay = m_decays.begin() ; 
         idecay != m_decays.end() ; idecay ++ ) 

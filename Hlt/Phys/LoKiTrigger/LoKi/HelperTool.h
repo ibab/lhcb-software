@@ -71,7 +71,7 @@ namespace LoKi
       /// constructor with the fake argument
       HelperTool ( const int dummy ) ;
       // ======================================================================
-      /// non-trivial copy constructor
+      /// (very) non-trivial copy constructor
       HelperTool ( const HelperTool& right ) ;
       // ======================================================================
       /// virtual destructor
@@ -136,13 +136,13 @@ namespace LoKi
     protected:
       // ======================================================================
       /// get the algorithm
-      const GaudiAlgorithm* alg() const { return m_alg ; } // get the algorithm
+      const GaudiAlgorithm* alg   () const { return m_alg   ; } // get the algorithm
       // ======================================================================
     protected:
       // ======================================================================
       /// get the stored tracks
       inline LHCb::Track::Container* storedTracks
-      ( const std::string& location ) const
+        ( const std::string& location ) const
       {
         if ( ! m_hlt_tracks ) { m_hlt_tracks = _createTracks ( location ) ; }
         return m_hlt_tracks ;
@@ -150,23 +150,24 @@ namespace LoKi
       // ======================================================================
       /// get the cache
       template<class Object>
-      inline LHCb::Relation1D<Object, Object>* cache
-      ( std::string location ) const
+        inline LHCb::Relation1D<Object, Object>* cache
+        ( std::string location ) const
       {
-         using Cache = LHCb::Relation1D<Object, Object>*;
-         if (location.empty()) {
-            alg()->error() << "Got empty cache location for "
-                           << alg()->name() << endmsg;
-            return nullptr;
-         }
-         auto found = m_cached.find(location);
-         if (found == end(m_cached)) {
-            IRelationBase* relation = _createCache<Object>(location);
-            m_cached.emplace(std::make_pair(std::move(location), relation));
-            return static_cast<Cache>(relation);
-         } else {
-            return static_cast<Cache>(found->second);
-         }
+        using Cache = LHCb::Relation1D<Object, Object>*;
+        if (location.empty()) 
+        {
+          alg()->error() << "Got empty cache location for "
+                         << alg()->name() << endmsg;
+          return nullptr;
+        }
+        auto found = m_cached.find(location);
+        if (found == end(m_cached)) 
+        {
+          IRelationBase* relation = _createCache<Object>(location);
+          m_cached.emplace(std::make_pair(std::move(location), relation));
+          return static_cast<Cache>(relation);
+        } 
+        else { return static_cast<Cache>(found->second); }
       }
       // ======================================================================
     protected:
@@ -208,7 +209,7 @@ namespace LoKi
         return _create<LHCb::Particle> ( m_hlt_particles ) ;
       }
       // ======================================================================
-    protected:
+    protected: // store the stuff 
       // ======================================================================
       inline bool _store ( const LHCb::RecVertex* v ) const
       {
@@ -223,15 +224,6 @@ namespace LoKi
         return 0 != v->parent() ;
       }
       // ======================================================================
-      inline bool _storeParticle ( const LHCb::Particle* p ) const
-      {
-        if ( !p               ) { return false ; }
-        if ( !m_hlt_particles ) { m_hlt_particles = _createParticles () ; }
-        if ( !m_hlt_particles ) { return false ; }
-        LHCb::Particle* _p = const_cast<LHCb::Particle*> ( p ) ;
-        _add_ ( _p , m_hlt_particles ) ;
-        return 1;
-      }
       inline bool _storeProtoParticle ( const LHCb::ProtoParticle* p ) const
       {
         if ( !p               ) { return false ; }
@@ -242,28 +234,47 @@ namespace LoKi
         return 1;
       }
       // ======================================================================
+      inline bool _storeParticle ( const LHCb::Particle* p ) const
+      {
+        if ( !p               ) { return false ; }
+        if ( !m_hlt_particles ) { m_hlt_particles = _createParticles () ; }
+        if ( !m_hlt_particles ) { return false ; }
+        LHCb::Particle* _p = const_cast<LHCb::Particle*> ( p ) ;
+        _add_ ( _p , m_hlt_particles ) ;
+        return 1;
+      }
+      // ======================================================================
+      inline bool _storeVertex ( const LHCb::Vertex* v ) const
+      {
+        if ( !v               ) { return false ; }
+        if ( !m_hlt_vertices  ) { m_hlt_vertices = _createVertices () ; }
+        if ( !m_hlt_vertices  ) { return false ; }
+        LHCb::Vertex* _v = const_cast<LHCb::Vertex*> ( v ) ;
+        _add_ ( _v , m_hlt_vertices ) ;
+        return 1;
+      }
+      // ======================================================================
     private:
       // ======================================================================
       /// get the storage for tracks
-      LHCb::Track::Container*     _createTracks
-      ( const std::string& location ) const ;
+      LHCb::Track::Container*         _createTracks 
+        ( const std::string& location ) const ;
       /// get the storage for candidates
-      Hlt::Candidate::Container*  _createCandidates  () const ;
+      Hlt::Candidate::Container*      _createCandidates     () const ;
       /// get the storage for stages
-      Hlt::Stage::Container*      _createStages      () const ;
+      Hlt::Stage::Container*          _createStages         () const ;
       /// get the storage for multitracks
-      Hlt::MultiTrack::Container* _createMultiTracks () const ;
+      Hlt::MultiTrack::Container*     _createMultiTracks    () const ;
       /// get the storage for rec-vertices
-      LHCb::RecVertex::Container* _createRecVertices () const ;
+      LHCb::RecVertex::Container*     _createRecVertices    () const ;
       /// get the storage for proto-particles
       LHCb::ProtoParticle::Container* _createProtoParticles () const ;
       /// get the storage for particles
-      LHCb::Particle::Container* _createParticles () const ;
+      LHCb::Particle::Container*      _createParticles      () const ;
+      /// get the storage for particles
+      LHCb::Vertex::Container*        _createVertices       () const ;
       // ======================================================================
     private:
-      // ======================================================================
-      /// the algorithm
-      mutable const GaudiAlgorithm*       m_alg             ;  // the algorithm
       // ======================================================================
       /// container of Hlt-candidates
       mutable Hlt::Candidate::Container*       m_hlt_candidates  ;
@@ -276,13 +287,21 @@ namespace LoKi
       /// container of vertices
       mutable LHCb::RecVertex::Container*      m_hlt_recvertices ;
       /// container of ProtoParticles
-      mutable LHCb::ProtoParticle::Container*  m_hlt_protoparticles ;
+      mutable LHCb::ProtoParticle::Container*  m_hlt_protoparticles    ;
       /// container of Particles
-      mutable LHCb::Particle::Container*       m_hlt_particles ;
+      mutable LHCb::Particle::Container*       m_hlt_particles         ;
+      /// container of Vertices
+      mutable LHCb::Vertex::Container*         m_hlt_vertices          ;
       // ======================================================================
-      mutable std::string                      m_myname          ;
+      mutable std::string                      m_myname                ;
       // ======================================================================
-      mutable std::unordered_map<std::string, IRelationBase*> m_cached;
+      mutable std::unordered_map<std::string, IRelationBase*> m_cached ;
+      // ======================================================================
+    private: // algorith
+      // ======================================================================      
+      /// the algorithm
+      mutable const GaudiAlgorithm*       m_alg   ;  // the algorithm
+      // ======================================================================
     };
     // ========================================================================
   } //                                              end of namespace LoKi::Hlt1

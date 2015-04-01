@@ -4,6 +4,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-04-01 - Vanya Belyaev
+ - fix the issue with particle -> PV association 
+
 !========================= LoKiTrigger v15r6 2015-03-31 =========================
 
 ! 2015-03-31 - Vanya Belyaev

@@ -20,7 +20,7 @@ gaudi_add_library(LoKiTriggerLib
                   src/*.cpp
                   PUBLIC_HEADERS LoKi
                   INCLUDE_DIRS Tr/TrackInterfaces
-                  LINK_LIBRARIES DetDescLib L0Event TrackEvent HltBase KalmanFilter DaVinciKernelLib LoKiCoreLib LoKiTracksLib)
+                  LINK_LIBRARIES DetDescLib L0Event TrackEvent HltBase KalmanFilter DaVinciKernelLib LoKiCoreLib LoKiTracksLib LoKiPhysLib LoKiArrayFunctorsLib)
 
 gaudi_add_module(LoKiTrigger
                  src/Components/*.cpp

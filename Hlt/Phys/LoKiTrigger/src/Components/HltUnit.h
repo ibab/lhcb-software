@@ -49,10 +49,10 @@ namespace LoKi
    *  @date   2008-11-10
    */
   class HltUnit
-    : public LoKi::FilterAlg,
-      virtual public Hlt::IUnit,
-      virtual public IIncidentListener,
-      virtual public IDVAlgorithm
+    :         public LoKi::FilterAlg
+    , virtual public Hlt::IUnit
+    , virtual public IIncidentListener
+    , virtual public IDVAlgorithm
   {
     // ========================================================================
     // the friend factory for instantiation
@@ -165,7 +165,7 @@ namespace LoKi
     StatusCode queryInterface
     (const InterfaceID& iid, void** ppvi ) override;
     // ========================================================================
-  public:
+  public:  // IDVAlgorithm stuff 
     // ==========================================================================
     /// get the distance calculator tool
     virtual const IDistanceCalculator*
@@ -174,7 +174,7 @@ namespace LoKi
     /// get lifetime fitter tool
     virtual const ILifetimeFitter*
     lifetimeFitter        ( const std::string& nickname = "LifetimeFitter" ) const override
-    { return getTool<ILifetimeFitter>( nickname ); }
+    { return getTool<ILifetimeFitter>    ( nickname ); }
     /// get the vertex fitter tool
     virtual const IVertexFit*
     vertexFitter          ( const std::string& nickname = "VertexFitter" ) const override
@@ -205,7 +205,9 @@ namespace LoKi
     virtual IBTaggingTool* flavourTagging() const override { return 0; }
     // ==========================================================================
   public: // Incidents
+    // ==========================================================================
     void handle( const Incident& incident ) override;
+    // ==========================================================================
   public: // data
     // ==========================================================================
     /// Return a container of local LHCb::Particle*
@@ -217,6 +219,9 @@ namespace LoKi
     /// Return the best primary vertex for a given LHCb::Particle.
     virtual const LHCb::VertexBase*
     bestVertex      ( const LHCb::Particle* ) const override;
+    /// unrelated the related PV 
+    virtual void unRelatePV ( const LHCb::Particle* p ) const 
+    { m_p2PVMap.erase ( p ) ; }
     /// Return gaudi algorithm
     virtual const GaudiAlgorithm* gaudiAlg ( ) const override { return this; }
     // ==========================================================================
@@ -300,31 +305,38 @@ namespace LoKi
     typedef GaudiUtils::HashMap<const LHCb::Particle*, const LHCb::VertexBase*> P2PVMap;
     // ========================================================================
     template <class ToolInterface>
-    const ToolInterface* getTool( const std::string& nickname ) const {
-      if ( nickname == "" ) {
+    const ToolInterface* getTool( const std::string& nickname ) const 
+    {
+      if ( nickname == "" ) 
+      {
         // incase noname return DistanceCalculator
         auto it_nick = m_toolNames.find("DistanceCalculator");
-        if ( it_nick == m_toolNames.end() ) {
+        if ( it_nick == m_toolNames.end() ) 
+        {
           this->Exception(std::string("Default Tool DistanceCalulator tried and not found"));
         }
         auto tool = this->template tool<ToolInterface>(it_nick->second, this);
-        if ( !tool ) {
+        if ( !tool )
+        {
           this->Exception(std::string("Could not retrieve default tool of type DistanceCalulator"));
         }
         m_tools["DistanceCalulator"] = tool;
         return tool;
       }
       auto it_tool = m_tools.find(nickname);
-      if ( it_tool != m_tools.end() ) {
+      if ( it_tool != m_tools.end() ) 
+      {
         return dynamic_cast<const ToolInterface*>(it_tool->second);
       }
       auto it_nick = m_toolNames.find(nickname);
-      if ( it_nick == m_toolNames.end() ) {
+      if ( it_nick == m_toolNames.end() ) 
+      {
         this->Exception(std::string("No entry in Tools property for nickname ")
                         + nickname + std::string("."));
       }
       auto tool = this->template tool<ToolInterface>(it_nick->second, this);
-      if ( !tool ) {
+      if ( !tool ) 
+      {
         this->Exception(std::string("Could not retrieve tool of type ")
                         + it_nick->second + std::string("."));
       }
@@ -334,6 +346,7 @@ namespace LoKi
     // ========================================================================
     const IRelatedPVFinder* relatedPVFinder( const std::string& nickname = "RelatedPVFinder" ) const
     { return getTool<IRelatedPVFinder>( nickname ); }
+    // ========================================================================
   private:
     // ========================================================================
     /// the flag to switch on-of monitoring
@@ -343,14 +356,16 @@ namespace LoKi
     // ========================================================================
     ToolMap  m_toolNames ; // HLT PV selection
     // ========================================================================
+  private:
     // ========================================================================
     std::vector<std::string>  m_preloadTools ; // Tools to preload
     bool m_decode;
-     // Actual tools
+    // Actual tools
     mutable Tools m_tools ;
     // ========================================================================
     // P2PV table
     mutable P2PVMap m_p2PVMap ;
+    // ========================================================================
   private:
     // ========================================================================
     /// container of keys
