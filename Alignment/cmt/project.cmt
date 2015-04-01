@@ -1,7 +1,6 @@
 project ALIGNMENT
 
-use PHYS   PHYS_v19r4
-#use ONLINE ONLINE_v5r13
+use PHYS   PHYS_v19r5
 
 build_strategy	with_installarea
 setup_strategy	root
