@@ -3,6 +3,8 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Algorithm for OT rt and t0 calibration
 
+!========================= OTCalibration v1r9 2015-04-01 =========================
+
 ! 2015-03-16 - Wouter Hulsbergen
  - Adapted to interface change in OTDet/RtRelation
 
