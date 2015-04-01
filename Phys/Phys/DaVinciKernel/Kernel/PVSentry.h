@@ -11,7 +11,7 @@
 // ============================================================================
 // Forward declarations 
 // ============================================================================
-class DaVinciAlgorthm ;
+class IDVAlgorthm ;
 namespace LHCb { class Particle ; }
 // ===========================================================================
 namespace DaVinci
@@ -39,7 +39,7 @@ namespace DaVinci
      *  @param parent   the davinci algorithmthat holds relation tables  
      *  @param particle the particle
      */
-    PVSentry ( DaVinciAlgorithm*     parent,
+    PVSentry ( const IDVAlgorithm*   parent,
                const LHCb::Particle* particle ) ;
     /// destructor
     ~PVSentry() ; 
@@ -52,7 +52,7 @@ namespace DaVinci
   private:
     // ========================================================================
     /// the parent
-    DaVinciAlgorithm* m_parent ;             
+    const IDVAlgorithm*   m_parent   ;             
     /// the temporary particle
     const LHCb::Particle* m_particle ;  
     // ========================================================================

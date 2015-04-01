@@ -6,9 +6,9 @@
 // ============================================================================
 #include "Event/Particle.h"
 // ============================================================================
-// DaVinciKernel
+// DaVinciIntefraces
 // ============================================================================
-#include "Kernel/DaVinciAlgorithm.h"
+#include "Kernel/IDVAlgorithm.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -28,7 +28,7 @@
 // Constructor 
 // ============================================================================
 DaVinci::PVSentry::PVSentry
-( DaVinciAlgorithm*     parent,
+( const IDVAlgorithm*   parent,
   const LHCb::Particle* particle )
   : m_parent   ( parent   )
   , m_particle ( particle ) {}
