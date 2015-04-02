@@ -4,6 +4,7 @@ import os
 from operator import itemgetter
 
 from veloview.runview import reference_database
+from veloview.utils.rundb import UP, DOWN, OFF
 
 
 # Runs as boundary run mapped to (magnet up, magnet down) reference runs
@@ -195,8 +196,15 @@ class TestReferenceDatabase(unittest.TestCase):
         run_range = range(lowest[0], highest[0])
 
         # For runs below the lowest run boundary, should return 0
-        self.assertEqual(0, self.db.reference_run(lowest[0] - 1, up=True))
-        self.assertEqual(0, self.db.reference_run(lowest[0] - 1, down=True))
+        self.assertEqual(0, self.db.reference_run(lowest[0] - 1, UP))
+        self.assertEqual(0, self.db.reference_run(lowest[0] - 1, DOWN))
+        self.assertEqual(0, self.db.reference_run(lowest[0] - 1, OFF))
+
+        # Compare the reference runs that nominal off runs should resolve to
+        if reference_database.MAGNET_OFF_RESOLUTION == UP:
+            off_index = 1
+        else:
+            off_index = 2
 
         # Loop over every run in between the lowest and highest, compute their
         # reference run, and check the DB gets the same correct result
@@ -205,22 +213,25 @@ class TestReferenceDatabase(unittest.TestCase):
                 if boundary <= run < sorted_runs[idx + 1][0]:
                     break
             self.assertEqual(sorted_runs[idx][1],
-                             self.db.reference_run(run, up=True))
+                             self.db.reference_run(run, UP))
             self.assertEqual(sorted_runs[idx][2],
-                             self.db.reference_run(run, down=True))
+                             self.db.reference_run(run, DOWN))
+            self.assertEqual(sorted_runs[idx][off_index],
+                             self.db.reference_run(run, OFF))
+
 
         # For runs below the lowest run boundary, should return (highest, inf)
         self.assertEqual(highest[1],
-                         self.db.reference_run(highest[0] + 1, up=True))
+                         self.db.reference_run(highest[0] + 1, UP))
         self.assertEqual(highest[2],
-                         self.db.reference_run(highest[0] + 1, down=True))
+                         self.db.reference_run(highest[0] + 1, DOWN))
+        self.assertEqual(highest[off_index],
+                         self.db.reference_run(highest[0] + 1, OFF))
 
     def test_ambiguous_reference_run_resolution(self):
-        """Should raise a value error if up and down are True."""
+        """Should raise a value error if no polarity is given."""
         with self.assertRaises(ValueError):
-            self.db.reference_run(RUNS.keys()[0], up=True, down=True)
-        with self.assertRaises(ValueError):
-            self.db.reference_run(RUNS.keys()[0], up=False, down=False)
+            self.db.reference_run(RUNS.keys()[0], None)
 
     def test_plots(self):
         """Should return 3-tuple of plot name, up run, and down run."""
@@ -304,10 +315,19 @@ class TestReferenceDatabase(unittest.TestCase):
         lowest, highest = sorted_runs[0], sorted_runs[-1]
         run_range = range(lowest[0], highest[0])
 
+        # Compare the reference runs that nominal off runs should resolve to
+        if reference_database.MAGNET_OFF_RESOLUTION == UP:
+            off_index = 1
+            off_label = 'magnet_up_run_id'
+        else:
+            off_index = 2
+            off_label = 'magnet_down_run_id'
+
         # For runs below the lowest run boundary, should return 0 regardless
         # of the plot name because there's no boundary to define plots on
-        self.assertEqual(0, plot_ref(lowest[0] - 1, 'fake_plot', up=True))
-        self.assertEqual(0, plot_ref(lowest[0] - 1, 'fake_plot', down=True))
+        self.assertEqual(0, plot_ref(lowest[0] - 1, 'fake_plot', UP))
+        self.assertEqual(0, plot_ref(lowest[0] - 1, 'fake_plot', DOWN))
+        self.assertEqual(0, plot_ref(lowest[0] - 1, 'fake_plot', OFF))
 
         # Loop over every run in between the lowest and highest, compute their
         # boundary run, find all plots defined on that boundary, and check the
@@ -319,23 +339,24 @@ class TestReferenceDatabase(unittest.TestCase):
             plots = filter(lambda p: p['boundary_run_id'] == boundary, PLOTS)
             for plot in plots:
                 self.assertEqual(plot['magnet_up_run_id'],
-                                 plot_ref(run, plot['plot_name'], up=True))
+                                 plot_ref(run, plot['plot_name'], UP))
                 self.assertEqual(plot['magnet_down_run_id'],
-                                 plot_ref(run, plot['plot_name'], down=True))
+                                 plot_ref(run, plot['plot_name'], DOWN))
+                self.assertEqual(plot[off_label],
+                                 plot_ref(run, plot['plot_name'], OFF))
             # Check a plot not defined on the boundary
             self.assertEqual(sorted_runs[idx][1],
-                             plot_ref(run, 'fake_plot', up=True))
+                             plot_ref(run, 'fake_plot', UP))
             self.assertEqual(sorted_runs[idx][2],
-                             plot_ref(run, 'fake_plot', down=True))
+                             plot_ref(run, 'fake_plot', DOWN))
+            self.assertEqual(sorted_runs[idx][off_index],
+                             plot_ref(run, 'fake_plot', OFF))
 
     def test_ambiguous_reference_run_for_plot_resolution(self):
-        """Should raise a value error if up and down are True."""
+        """Should raise a value error if no polarity is given."""
         with self.assertRaises(ValueError):
             self.db.reference_run_for_plot(
-                RUNS.keys()[0], PLOTS[0]['plot_name'], up=True, down=True)
-        with self.assertRaises(ValueError):
-            self.db.reference_run_for_plot(
-                RUNS.keys()[0], PLOTS[0]['plot_name'], up=False, down=False)
+                RUNS.keys()[0], PLOTS[0]['plot_name'], None)
 
 
 if __name__ == "__main__":

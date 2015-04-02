@@ -102,7 +102,7 @@ from veloview.runview.reference_database import (
     InvalidBoundary,
     InvalidPlot
 )
-from veloview.utils.rundb import RunDB, UP, DOWN
+from veloview.utils.rundb import RunDB
 
 
 def exit_success():
@@ -295,15 +295,13 @@ def dereference(args):
     polarity = RunDB().polarity(run)
     if not polarity:
         fatal('Could not resolve polarity of run {0}'.format(run))
-    up = polarity == UP
-    down = polarity == DOWN
 
     if run and not plot:
         with ReferenceDatabase(config.reference_db) as db:
-            run = db.reference_run(run, up=up, down=down)
+            run = db.reference_run(run, polarity)
     if run and plot:
         with ReferenceDatabase(config.reference_db) as db:
-            run = db.reference_run_for_plot(run, plot, up=up, down=down)
+            run = db.reference_run_for_plot(run, plot, polarity)
 
     ret = ret_dict(success='')
     ret['data'] = run

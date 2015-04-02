@@ -3,13 +3,42 @@ import tempfile
 import shutil
 
 import unittest
+import mock
 
 from veloview.core import config
 from veloview.runview import utils
+from veloview.utils.rundb import UP, DOWN
 
 
 RUNS = [123987, 123998]
 SENSORS = range(0, 47) + range(64, 107)
+
+UP_RUN = RUNS[0]
+DOWN_RUN = RUNS[1]
+UP_REF_RUN = 123999
+DOWN_REF_RUN = 123998
+
+
+class MockedRunDB(object):
+    def __init__(self):
+        pass
+
+    def polarity(self, run):
+        if run == UP_RUN:
+            return UP
+        else:
+            return DOWN
+
+
+class MockedReferenceDatabase(object):
+    def __init__(self, path):
+        pass
+
+    def reference_run_for_plot(self, run, plot, polarity):
+        if run == UP_RUN:
+            return UP_REF_RUN
+        elif run == DOWN_RUN:
+            return DOWN_REF_RUN
 
 
 class TestRunViewUtils(unittest.TestCase):
@@ -59,11 +88,12 @@ class TestRunViewUtils(unittest.TestCase):
             if s not in SENSORS:
                 self.assertFalse(utils.valid_sensor(s))
 
-    # def test_reference_run(plot, run):
-    #     """Return the reference run number for the plot and nominal run number."""
-    #     # TODO need to implement the reference database
-    #     # The method can then query that DB and return the run number
-    #     return run
+    @mock.patch('veloview.runview.utils.ReferenceDatabase', MockedReferenceDatabase)
+    @mock.patch('veloview.runview.utils.rundb.RunDB', MockedRunDB)
+    def test_reference_run(self):
+        """Return the reference run number for the plot and nominal run number."""
+        self.assertEqual(UP_REF_RUN, utils.reference_run('ABC', UP_RUN))
+        self.assertEqual(DOWN_REF_RUN, utils.reference_run('ABC', DOWN_RUN))
 
     def test_run_file_path(self):
         """Should return path to ROOT file for the given run."""

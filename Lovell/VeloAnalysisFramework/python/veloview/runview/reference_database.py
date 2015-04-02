@@ -57,10 +57,29 @@ reference run, except the plot with name plot_name_A which has run 15 as its
 reference. Similarly, all plots in magnet down runs in the same RoV will have
 run 18 as its reference, except the plot with name plot_name_A which will
 haverun 18 as its reference.
+
+Magnet off runs
+---------------
+
+Two reference runs are stored per range of validity: one for magnet up nominal
+runs, and another for nominal magnet down runs. Runs are recorded with
+additional magnet state though, where the magnet is switched off.
+Our solution is to arbitrarily pick magnet up as the resolved reference
+polarity when a nominal run is magnet off, such that any run within a given
+range of validity with magnet off will the magnet up reference run defined
+within that range.
+No check is made that the reference run assigned to be the "up" or "down"
+reference within a given RoV was actually an up or down run, so for an RoV
+known to contain mostly magnet off runs, it is possible to assigned a magnet
+off run as a reference run.
 """
 import sqlite3
 
 from veloview.core import config
+from veloview.utils.rundb import UP, DOWN, OFF, POLARITIES
+
+# Resolve magnet off runs to magnet up reference runs
+MAGNET_OFF_RESOLUTION = UP
 
 
 class InvalidBoundary(Exception):
@@ -216,18 +235,22 @@ class ReferenceDatabase(object):
         upper = upper[0] if upper else float('inf')
         return [lower, upper]
 
-    def reference_run(self, run, up=False, down=False):
+    def reference_run(self, run, polarity):
         """Return reference run for the given run.
 
         The reference is resolved by finding the closest boundary below or
         equal to run, and inspecting the relevant polarity run number.
         If the run is below the lowest boundary in the database, zero is
         returned.
-        What polarity is used depends on what keyword argument is True. If both
-        are set as True, or both are set to False, a ValueError is raised.
+        Keyword arguments:
+        run -- Integer run number
+        polarity -- One of veloview.utils.rundb.POLARITIES
         """
-        if (up and down) or not (up or down):
-            raise ValueError('Must specify a single magnet polarity')
+        if polarity not in POLARITIES:
+            raise ValueError('Must specify a valid magnet polarity')
+        # Use resolution polarity for magnet off nominal runs
+        if polarity == OFF:
+            polarity = MAGNET_OFF_RESOLUTION
 
         references = self.conn.execute((
             'SELECT magnet_up_run_id, magnet_down_run_id '
@@ -236,7 +259,7 @@ class ReferenceDatabase(object):
         ), (run,)).fetchone()
         if not references:
             return 0
-        return references[0] if up else references[1]
+        return references[0] if polarity == UP else references[1]
 
     def boundary_plots(self, boundary):
         """Return a list of all plots defined on the boundary.
@@ -295,7 +318,7 @@ class ReferenceDatabase(object):
                 'WHERE boundary_run_id = ? AND plot_name = ? '
             ).format(', '.join(updates)), bindings)
 
-    def reference_run_for_plot(self, run, plot, up=False, down=False):
+    def reference_run_for_plot(self, run, plot, polarity):
         """Find the reference run for the given run and plot.
 
         The reference run is resolved by trying to find if a reference run has
@@ -305,9 +328,16 @@ class ReferenceDatabase(object):
         checked if any plots are specified at this boundary.
         If no plot is specified, the reference run at the boundary is returned.
         See reference_run for how this is done.
+        Keyword arguments:
+        run -- Integer run number
+        plot -- Plot name
+        polarity -- One of veloview.utils.rundb.POLARITIES
         """
-        if (up and down) or not (up or down):
-            raise ValueError('Must specify a single magnet polarity')
+        if polarity not in POLARITIES:
+            raise ValueError('Must specify a valid magnet polarity')
+        # Use resolution polarity for magnet off nominal runs
+        if polarity == OFF:
+            polarity = MAGNET_OFF_RESOLUTION
 
         boundaries = self.surrounding_boundaries(run)
         reference = self.conn.execute((
@@ -316,8 +346,8 @@ class ReferenceDatabase(object):
             'LIMIT 1'
         ), (boundaries[0], plot)).fetchone()
         if not reference:
-            return self.reference_run(run, up=up, down=down)
-        return reference[0] if up else reference[1]
+            return self.reference_run(run, polarity)
+        return reference[0] if polarity == UP else reference[1]
 
 
 # List of SQL commands to be executed one-by-one in order whenever the DB is

@@ -5,6 +5,8 @@ import urllib
 UP = 'up'
 DOWN = 'down'
 OFF = 'off'
+# Enumerate all possible polarity states
+POLARITIES = (UP, DOWN, OFF)
 
 # Template URL for retrieving response from LHCb RunDB JSON API
 # Template parameter {0}: Run number, e.g. 123987

@@ -1,6 +1,7 @@
 """Utilities for GUI run view pages."""
 from veloview.core import config
-from veloview.utils import paths
+from veloview.runview.reference_database import ReferenceDatabase
+from veloview.utils import paths, rundb
 
 
 def run_list():
@@ -30,9 +31,9 @@ def valid_sensor(sensor):
 
 def reference_run(plot, run):
     """Return the reference run number for the plot and nominal run number."""
-    # TODO need to implement the reference database
-    # The method can then query that DB and return the run number
-    return run
+    refdb = ReferenceDatabase(config.reference_db)
+    polarity = rundb.RunDB().polarity(run)
+    return refdb.reference_run_for_plot(run, plot, polarity)
 
 
 def run_file_path(run):
