@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-04-02 - Sascha Stahl
+ - HltRecoConf: Activated SecondLoop option in PatForward complement in Hlt2.
+
 !========================= HltTracking v13r6 2015-03-31 =========================
 
 ! 2015-04-01 - Roel Aaij

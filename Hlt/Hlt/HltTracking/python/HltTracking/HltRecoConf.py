@@ -102,7 +102,7 @@ ForwardTrackingOptions_MomEstimate = { "UseMomentumEstimate" : True,
                                        "SecondLoop" : False}
 
 ComplementForwardToolOptions = { "AddTTClusterName" : "PatAddTTCoord"
-                                 ,"SecondLoop" : False} # to be decided
+                                 ,"SecondLoop" : True} # to be decided
 
 OnlineSeedingToolOptions = { "NDblOTHitsInXSearch" : 2,
                              "MinMomentum" : 1000.}
