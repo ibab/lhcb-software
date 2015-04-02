@@ -170,16 +170,18 @@ var VeloMonitor = (function(window, undefined) {
   //   undefined
   var setupPlotablesContainer = function(chart, container) {
     var plotables = chart.plotables(),
+        names = [],
         containerHTML = '';
     for (var name in plotables) {
+      names.push(name);
+    }
+    // Display plotable labels in reverse order to match expectations
+    for (var i = names.length - 1; -1 < i; i--) {
+      var name = names[i];
       var title = plotables[name].title,
           // Use the plotables color for the label, if present
           color = plotables[name].color || 'inherit';
       containerHTML += TEMPLATES.plotablesItem.format(name, title, color);
-      // Bind to the checkbox's change event (i.e. when its state toggles)
-      // $(document).on('change', '#{0}'.format(name), function(e) {
-      //   $('svg g.{0}'.format(e.target.id)).toggle();
-      // });
     }
     // Add the container to the DOM
     container.append(TEMPLATES.plotablesContainer.format(containerHTML));
