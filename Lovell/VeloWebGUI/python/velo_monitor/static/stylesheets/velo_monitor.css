@@ -50,6 +50,15 @@ sidebar .sensor-detail {
 
 /* @endgroup Sidebar */
 
+/* @group Main content */
+
+.main {
+  /* Align the border-bottom of an h1.page-content with the run selector */
+  padding-top: 10px;
+}
+
+/* @endgroup Main content */
+
 /* Insert a thin space before units of measurement */
 .unit:before {
   content: " ";
