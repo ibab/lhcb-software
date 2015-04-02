@@ -1,5 +1,5 @@
 from TrackSys.Configuration import *
-from Configurables import ( PatForward, PatForwardTool, PatFwdTool)
+from Configurables import ( PatForward, PatForwardTool, PatFwdTool, TrackUsedLHCbID)
 from Configurables import  (PatDownstream, Tf__OTHitCreator)
 from Configurables import (PatSeeding, PatSeedingTool)
 
@@ -52,11 +52,14 @@ class ForwardConf(object):
     PFAlg.ForwardToolName = "PatForwardTool/PatForwardToolHLT2"
     PFAlg.addTool(PatForwardTool, name = "PatForwardToolHLT2")
     PFAlg.OutputTracksName = "Rec/Track/ForwardHLT2"
-    #PFAlg.PatForwardToolHLT1.MinPt = 500.
-    #PFAlg.PatForwardToolHLT1.MinMomentum = 3000.
+    PFAlg.PatForwardToolHLT2.MinMomentum = 1000.
     PFAlg.PatForwardToolHLT2.SecondLoop = True
-    
-    
+    PFAlg.PatForwardToolHLT2.addTool( TrackUsedLHCbID, name = "TrackUsedLHCbID")
+    PFAlg.PatForwardToolHLT2.UsedLHCbIDToolName = "TrackUsedLHCbID"
+    PFAlg.PatForwardToolHLT2.TrackUsedLHCbID.inputContainers = ["Rec/Track/ForwardHLT1"]
+    PFAlg.PatForwardToolHLT2.VeloVetoTracksNames = [ "Rec/Track/ForwardHLT1"]
+
+  
 #class DownstreamConf(object):
 #  '''Configure a downstream algorithm'''
 #  def configureAlg(self, PDAlg=PatDownstream("PatDownstream")):
