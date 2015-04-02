@@ -1,3 +1,16 @@
+body {
+  color: #2c3e50;
+  font-family: 'Lato', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+}
+
+/* @group Navigation bar */
+
+.navbar {
+  letter-spacing: -0.1px;
+}
+
+/* @endgroup Navigation bar */
+
 /* @group Sidebar */
 sidebar h1 {
   font-size: 1.2em;
@@ -7,6 +20,7 @@ sidebar .run-number {
   margin: -2px 0 0 0;
   padding: 10px 10px 15px 10px;
   border-bottom: 1px solid #eee;
+  font-weight: 700;
 }
 
 @media only screen and (min-width : 768px) {
