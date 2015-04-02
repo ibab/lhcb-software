@@ -1,4 +1,4 @@
-from Configurables import STOfflinePosition
+from Configurables import STOfflinePosition, STOnlinePosition
 
 class DefaultConfMC09(object):
     def configureTools(self,
@@ -24,7 +24,9 @@ class DefaultConf(object):
     def configureTools(self,
                        IT=STOfflinePosition('ToolSvc.ITClusterPosition'),
                        TT=STOfflinePosition('ToolSvc.STOfflinePosition'),
-                       UT=STOfflinePosition('ToolSvc.UTClusterPosition')
+                       UT=STOfflinePosition('ToolSvc.UTClusterPosition'),
+                       TTLite=STOnlinePosition('ToolSvc.STOnlinePosition'),
+                       ITLite=STOnlinePosition('ToolSvc.ITLiteClusterPosition'),
                        ):
         # New tune (JvT - 14.07.2010)
         if IT is not None:
@@ -35,6 +37,9 @@ class DefaultConf(object):
             IT.DetType = "IT"
             IT.ErrorVec =[ 0.253, 0.236, 0.273, 0.185 ];
             IT.APE = 0.0758 # corresponds to 15 um
+        if ITLite is not None:
+            ITLite.ErrorVec = [0.253, 0.236, 0.273]
+            ITLite.APE = 0.0758
             # Uncomment to switch to old settings
             #IT.LinSharingCorr2 = 0.61
             #IT.CubicSharingCorr2 = 7.4;
@@ -43,9 +48,11 @@ class DefaultConf(object):
             #IT.applyLorentzCorrection = False;
             #IT.ErrorVec =[  0.189, 0.117, 0.166, 0.037 ]
             #IT.DetType = "IT"
-
         if TT is not None:
             TT.APE = 0.197 # corresponds to 36 um
+        if TTLite is not None:
+            TTLite.ErrorVec=[0.257, 0.245, 0.277]
+            TTLite.APE = 0.197
             #pass
             # Uncomment to switch to old settings
             #TT.LinSharingCorr2 = 1.1
