@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-04-02 - Michel De Cian
+ - Change options of Fitter in 'RecoTrackingRun2.py': Don't refit, use FastMomentumEstimate, don't change dEdX in simulation.
+
 ! 2015-04-01 - Michel De Cian
  - Add 'TrackV0Finder' in 2015 sequence.
 

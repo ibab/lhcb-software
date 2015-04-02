@@ -144,13 +144,16 @@ def RecoTrackingHLT1(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
    track.DetectorList += ["FitHLT1"]
 
    from TrackFitter.ConfiguredFitters import ConfiguredMasterFitter 
-   from Configurables import TrackBestTrackCreator
+   from Configurables import TrackBestTrackCreator, TrackMasterFitter, TrackStateInitTool
    
-   creator = TrackBestTrackCreator("HLT1TrackFitter")
-   creator.TracksInContainers = ["Rec/Track/Velo","Rec/Track/ForwardHLT1" ]
-   creator.TracksOutContainer = "Rec/Track/FittedHLT1Tracks"
-   ConfiguredMasterFitter( getattr(creator, "Fitter"), SimplifiedGeometry = simplifiedGeometryFit, LiteClusters = liteClustersFit )
-   GaudiSequencer("TrackHLT1FitHLT1Seq").Members += [ creator ]
+   bestTrackCreator = TrackBestTrackCreator("HLT1TrackFitter")
+   bestTrackCreator.addTool( TrackMasterFitter, name = "Fitter" )
+   bestTrackCreator.TracksInContainers = ["Rec/Track/Velo","Rec/Track/ForwardHLT1" ]
+   bestTrackCreator.TracksOutContainer = "Rec/Track/FittedHLT1Tracks"
+   bestTrackCreator.addTool( TrackStateInitTool, name = "TrackStateInitTool")
+   bestTrackCreator.TrackStateInitTool.UseFastMomentumEstimate = True
+   ConfiguredMasterFitter( getattr(bestTrackCreator, "Fitter"), SimplifiedGeometry = simplifiedGeometryFit, LiteClusters = liteClustersFit )
+   GaudiSequencer("TrackHLT1FitHLT1Seq").Members += [ bestTrackCreator ]
    
       
 def RecoTrackingHLT2(exclude=[], simplifiedGeometryFit = True, liteClustersFit = True):
@@ -242,8 +245,12 @@ def RecoTrackingHLT2(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
       
    # create the best track creator
    from TrackFitter.ConfiguredFitters import ConfiguredMasterFitter  
-   from Configurables import TrackBestTrackCreator
+   from Configurables import TrackBestTrackCreator, TrackMasterFitter, TrackStateInitTool
    bestTrackCreator = TrackBestTrackCreator( TracksInContainers = tracklists )
+   bestTrackCreator.addTool( TrackMasterFitter, name = "Fitter" )
+   bestTrackCreator.DoNotRefit = True
+   bestTrackCreator.addTool( TrackStateInitTool, name = "TrackStateInitTool")
+   bestTrackCreator.TrackStateInitTool.UseFastMomentumEstimate = True
    # configure its fitter and stateinittool
    ConfiguredMasterFitter( getattr(bestTrackCreator, "Fitter"), SimplifiedGeometry = simplifiedGeometryFit, LiteClusters = liteClustersFit )
    if "FastVelo" in trackAlgs :
@@ -252,12 +259,12 @@ def RecoTrackingHLT2(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
    GaudiSequencer("FitHLT2BestSeq").Members += [ bestTrackCreator ]
 
    ### Change dEdx correction for simulated data
-   if TrackSys().getProp("Simulation"):
-      from Configurables import StateDetailedBetheBlochEnergyCorrectionTool,DetailedMaterialLocator
-      from Configurables import TrackBestTrackCreator
-      fitter = TrackBestTrackCreator().Fitter
-      fitter.MaterialLocator.addTool(StateDetailedBetheBlochEnergyCorrectionTool("GeneralDedxTool"))
-      fitter.MaterialLocator.GeneralDedxTool.EnergyLossFactor = 0.76
+   #if TrackSys().getProp("Simulation"):
+   #   from Configurables import StateDetailedBetheBlochEnergyCorrectionTool,DetailedMaterialLocator
+   #   from Configurables import TrackBestTrackCreator
+   #   fitter = TrackBestTrackCreator().Fitter
+   #   fitter.MaterialLocator.addTool(StateDetailedBetheBlochEnergyCorrectionTool("GeneralDedxTool"))
+   #   fitter.MaterialLocator.GeneralDedxTool.EnergyLossFactor = 0.76
 
    # Make V0
    # needs to be done after fitting, but before the extra infos
