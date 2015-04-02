@@ -105,6 +105,10 @@ if(GAUDI_BUILD_TESTS)
                        tests/TestSimilarity.cpp
                        INCLUDE_DIRS Boost GSL ROOT
                        LINK_LIBRARIES Boost GSL ROOT GaudiKernel LHCbMathLib)
+  gaudi_add_executable(TestSimilarityTiming
+                       tests/TestSimilarityTiming.cpp
+                       INCLUDE_DIRS Boost GSL ROOT
+                       LINK_LIBRARIES Boost GSL ROOT GaudiKernel LHCbMathLib)
   gaudi_add_executable(TestEigenGeometry   
                        tests/TestEigenGeometry.cpp
                        INCLUDE_DIRS Boost GSL ROOT VDT Eigen
