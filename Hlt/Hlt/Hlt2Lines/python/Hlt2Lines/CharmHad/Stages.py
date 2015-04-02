@@ -147,9 +147,11 @@ class NeutralInParticleFilter(Hlt2ParticleFilter):
     def __init__(self, name):
         cut = ("  (PT > %(Neut_ALL_PT_MIN)s)" )
 
-        from Inputs import Hlt2ResolvedPi0, Hlt2MergedPi0, Hlt2NoPIDsPhotons
+        from Inputs import Hlt2ResolvedPi0, Hlt2MergedPi0, Hlt2NoPIDsPhotons, Hlt2AllPi0
         
-        pidinfo = {"pi0R" : {"cut"    : "(ADMASS('pi0') < %(Pi0_ALL_DMASS_MAX)s) &",
+        pidinfo = {"pi0"  : {"cut"    : "(ADMASS('pi0') < %(Pi0_ALL_DMASS_MAX)s) &",
+                             "inputs" : [Hlt2AllPi0]},
+                   "pi0R" : {"cut"    : "(ADMASS('pi0') < %(Pi0_ALL_DMASS_MAX)s) &",
                            "inputs" : [Hlt2ResolvedPi0]},
                    "pi0M" : {"cut"    : "(ADMASS('pi0') < %(Pi0_ALL_DMASS_MAX)s) &",
                            "inputs" : [Hlt2MergedPi0]},
@@ -162,6 +164,11 @@ class NeutralInParticleFilter(Hlt2ParticleFilter):
 
         Hlt2ParticleFilter.__init__(self, name, cut, inputs, shared = True)
 
+SharedNeutralChild_pi0R = NeutralInParticleFilter("SharedNeutralChild_pi0R")
+SharedNeutralChild_pi0M = NeutralInParticleFilter("SharedNeutralChild_pi0M")
+SharedNeutralChild_pi0 = NeutralInParticleFilter("SharedNeutralChild_pi0")
+SharedNeutralChild_gamma = NeutralInParticleFilter("SharedNeutralChild_gamma")
+                                                        
 
 ## ========================================================================= ##
 ## Filters for composite particles

@@ -60,16 +60,16 @@ class CharmHadD2HHPi0Lines() :
                 }
 
     def locallines(self):
-        from Stages import AttachParticle, NeutralInParticleFilter, DetachedHHChild
+        from Stages import AttachParticle, DetachedHHChild, SharedNeutralChild_pi0R, SharedNeutralChild_pi0M
         
         stages = {
                 'D2HHPi0R' : [AttachParticle('D2HHPi0R', "D0 -> K*(892)0 pi0",#"D0 -> (K*(892)0 -> K+ pi-) pi0",
                                              inputs = [ DetachedHHChild('DetachedHH_forD2HHPi0'),
-                                                        NeutralInParticleFilter("SharedNeutralChild_pi0R")]
+                                                        SharedNeutralChild_pi0R ]
                                              )],
                 'D2HHPi0M' : [AttachParticle('D2HHPi0M', "D0 -> K*(892)0 pi0",#"D0 -> (K*(892)0 -> K+ pi-) pi0",
                                            inputs = [ DetachedHHChild('DetachedHH_forD2HHPi0'),
-                                                      NeutralInParticleFilter("SharedNeutralChild_pi0M")]
+                                                      SharedNeutralChild_pi0M ]
                                            )],
                   }
         return stages

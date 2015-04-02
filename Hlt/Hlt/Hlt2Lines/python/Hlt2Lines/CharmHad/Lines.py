@@ -97,9 +97,13 @@ theseslots = {   'Prescale' : {},
                                           },
                  # Neutral particles for D -> HHX lines
                  # 
+                 'SharedNeutralChild_pi0' : {
+                                 'Neut_ALL_PT_MIN'           : 500.0 * MeV,
+                                 'Pi0_ALL_DMASS_MAX'        : 60.0,
+                                          },
                  'SharedNeutralChild_pi0R' : {
                                  'Neut_ALL_PT_MIN'           : 500.0 * MeV,
-                                 'Pi0_ALL_DMASS_MAX'        : 60.0, # was 30.0
+                                 'Pi0_ALL_DMASS_MAX'        :  30.0, 
                                           },
                  'SharedNeutralChild_pi0M' : {
                                  'Neut_ALL_PT_MIN'           : 500.0 * MeV,

@@ -57,7 +57,7 @@ class CharmHadD2HHHPi0Lines() :
         }
   
     def locallines(self):
-        from Stages import DetachedHHHChild, AttachParticle, NeutralInParticleFilter
+        from Stages import DetachedHHHChild, AttachParticle, SharedNeutralChild_pi0
         inputs = {
             # First the detached HHH lines - KS LL
             'DetachedPiPiPi_forD2HHHPi0' : [DetachedHHHChild('DetachedPiPiPi_forD2HHHPi0', decay = ["[K*(892)+ -> pi+ pi+ pi-]cc"])],
@@ -69,15 +69,15 @@ class CharmHadD2HHHPi0Lines() :
           # Then we attach the neutral
             'D2PiPiPiPi0'   : [AttachParticle('D2PiPiPiPi0', "[D+ -> K*(892)+ pi0]cc",
                                              inputs = [ inputs['DetachedPiPiPi_forD2HHHPi0'][0],
-                                                        NeutralInParticleFilter("SharedNeutralChild_pi0R")] )],
+                                                        SharedNeutralChild_pi0 ] )],
             'D2KPiPiPi0'    : [AttachParticle('D2KPiPiPi0', "[D+ -> K*(892)+ pi0]cc",
                                              inputs = [ inputs['DetachedKPiPi_forD2HHHPi0'][0],
-                                                        NeutralInParticleFilter("SharedNeutralChild_pi0R")] )],
+                                                        SharedNeutralChild_pi0 ] )],
             'D2KKPiPi0'     : [AttachParticle('D2KKPiPi0', "[D+ -> K*(892)+ pi0]cc",
                                              inputs = [ inputs['DetachedKKPi_forD2HHHPi0'][0],
-                                                        NeutralInParticleFilter("SharedNeutralChild_pi0R")] )],
+                                                        SharedNeutralChild_pi0 ] )],
             'D2KKKPi0'      : [AttachParticle('D2KKKPi0', "[D+ -> K*(892)+ pi0]cc",
                                              inputs = [ inputs['DetachedKKK_forD2HHHPi0'][0],
-                                                        NeutralInParticleFilter("SharedNeutralChild_pi0R")] )],
+                                                        SharedNeutralChild_pi0 ] )],
         }
         return stages
