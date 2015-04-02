@@ -23,7 +23,7 @@ void MuonPIDPacker::pack( const Data & pid,
     ppid.status   = (int)pid.Status();
     if ( NULL != pid.idTrack() )
     {
-      ppid.idtrack = ( 0==ver || 1==ver ?
+      ppid.idtrack = ( UNLIKELY( 1 >= ver ) ?
                        m_pack.reference32( &ppids,
                                            pid.idTrack()->parent(),
                                            pid.idTrack()->key() ) :
@@ -33,7 +33,7 @@ void MuonPIDPacker::pack( const Data & pid,
     }
     if ( NULL != pid.muonTrack() )
     {
-      ppid.mutrack = ( 0==ver || 1==ver ?
+      ppid.mutrack = ( UNLIKELY( 1 >= ver ) ?
                        m_pack.reference32( &ppids,
                                            pid.muonTrack()->parent(),
                                            pid.muonTrack()->key() ) :
@@ -78,8 +78,8 @@ void MuonPIDPacker::unpack( const PackedData       & ppid,
     if ( -1 != ppid.idtrack )
     {
       int hintID(0), key(0);
-      if ( ( ( 0==ver || 1==ver ) && m_pack.hintAndKey32(ppid.idtrack,&ppids,&pids,hintID,key) ) ||
-           (   1<ver              && m_pack.hintAndKey64(ppid.idtrack,&ppids,&pids,hintID,key) ) )
+      if ( ( 1 <  ver && m_pack.hintAndKey64(ppid.idtrack,&ppids,&pids,hintID,key) ) ||
+           ( 1 >= ver && m_pack.hintAndKey32(ppid.idtrack,&ppids,&pids,hintID,key) ) )
       {
         SmartRef<LHCb::Track> ref(&pids,hintID,key);
         pid.setIDTrack( ref );
@@ -89,8 +89,8 @@ void MuonPIDPacker::unpack( const PackedData       & ppid,
     if ( -1 != ppid.mutrack )
     {
       int hintID(0), key(0);
-      if ( ( ( 0==ver || 1==ver ) && m_pack.hintAndKey32(ppid.mutrack,&ppids,&pids,hintID,key) ) ||
-           (   1<ver              && m_pack.hintAndKey64(ppid.mutrack,&ppids,&pids,hintID,key) ) )
+      if ( ( 1 <  ver && m_pack.hintAndKey64(ppid.mutrack,&ppids,&pids,hintID,key) ) ||
+           ( 1 >= ver && m_pack.hintAndKey32(ppid.mutrack,&ppids,&pids,hintID,key) ) )
       {
         SmartRef<LHCb::Track> ref(&pids,hintID,key);
         pid.setMuonTrack( ref );

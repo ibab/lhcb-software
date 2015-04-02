@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2015-04-02 - Chris Jones
+ - Optimise things a bit for the most likely (recent) packing versions.
+
 ! 2015-03-24 - Chris Jones
  - Add support for the new flags data member in MCParticle.
 

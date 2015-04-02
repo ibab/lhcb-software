@@ -19,20 +19,21 @@ void RichPIDPacker::pack( const DataVector & pids,
     ppids.data().reserve( pids.size() );
     for ( const Data * pid : pids )
     {
+      // create new packed PID object in container and get reference to it.
       ppids.data().push_back( PackedData() );
       PackedData & ppid = ppids.data().back();
       // fill data
       ppid.key   = pid->key();
       ppid.pidResultCode = (int)pid->pidResultCode();
-      ppid.dllEl = m_pack.deltaLL( pid->particleDeltaLL(Rich::Electron)       );
-      ppid.dllMu = m_pack.deltaLL( pid->particleDeltaLL(Rich::Muon)           );
-      ppid.dllPi = m_pack.deltaLL( pid->particleDeltaLL(Rich::Pion)           );
-      ppid.dllKa = m_pack.deltaLL( pid->particleDeltaLL(Rich::Kaon)           );
-      ppid.dllPr = m_pack.deltaLL( pid->particleDeltaLL(Rich::Proton)         );
+      ppid.dllEl = m_pack.deltaLL( pid->particleDeltaLL(Rich::Electron) );
+      ppid.dllMu = m_pack.deltaLL( pid->particleDeltaLL(Rich::Muon)     );
+      ppid.dllPi = m_pack.deltaLL( pid->particleDeltaLL(Rich::Pion)     );
+      ppid.dllKa = m_pack.deltaLL( pid->particleDeltaLL(Rich::Kaon)     );
+      ppid.dllPr = m_pack.deltaLL( pid->particleDeltaLL(Rich::Proton)   );
       if ( ver > 0 ) ppid.dllBt = m_pack.deltaLL( pid->particleDeltaLL(Rich::BelowThreshold) );
       if ( NULL != pid->track() )
       {
-        ppid.track = ( ver < 3 ? 
+        ppid.track = ( UNLIKELY( ver < 3 ) ? 
                        m_pack.reference32( &ppids,
                                            pid->track()->parent(),
                                            pid->track()->key() ) :
@@ -69,8 +70,8 @@ void RichPIDPacker::unpack( const PackedDataVector & ppids,
       if ( -1 != ppid.track )
       {
         int hintID(0), key(0);
-        if ( ( ver <  3 && m_pack.hintAndKey32(ppid.track,&ppids,&pids,hintID,key) ) ||
-             ( ver >= 3 && m_pack.hintAndKey64(ppid.track,&ppids,&pids,hintID,key) ) )
+        if ( ( ver >= 3 && m_pack.hintAndKey64(ppid.track,&ppids,&pids,hintID,key) ) ||
+             ( ver <  3 && m_pack.hintAndKey32(ppid.track,&ppids,&pids,hintID,key) ) )
         {
           SmartRef<LHCb::Track> ref(&pids,hintID,key);
           pid->setTrack( ref );

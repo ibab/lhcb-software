@@ -28,7 +28,7 @@ void MCCaloHitPacker::pack( const DataVector & hits,
       phit.time         = hit->time();
       if ( NULL != hit->particle() )
       {
-        phit.mcParticle = ( 0==ver ? 
+        phit.mcParticle = ( UNLIKELY( 0==ver ) ? 
                             m_pack.reference32( &phits,
                                                 hit->particle()->parent(),
                                                 hit->particle()->key() ) :
@@ -65,8 +65,8 @@ void MCCaloHitPacker::unpack( const PackedDataVector & phits,
       if ( -1 != phit.mcParticle )
       {
         int hintID(0), key(0);
-        if ( ( 0==ver && m_pack.hintAndKey32(phit.mcParticle,&phits,&hits,hintID,key) ) ||
-             ( 0!=ver && m_pack.hintAndKey64(phit.mcParticle,&phits,&hits,hintID,key) ) )
+        if ( ( 0!=ver && m_pack.hintAndKey64(phit.mcParticle,&phits,&hits,hintID,key) ) ||
+             ( 0==ver && m_pack.hintAndKey32(phit.mcParticle,&phits,&hits,hintID,key) ) )
         {
           SmartRef<LHCb::MCParticle> ref(&hits,hintID,key);
           hit->setParticle( ref );

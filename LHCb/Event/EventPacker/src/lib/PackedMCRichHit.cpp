@@ -31,7 +31,7 @@ void MCRichHitPacker::pack( const DataVector & hits,
       phit.history    = hit->historyCode();
       if ( NULL != hit->mcParticle() )
       {
-        phit.mcParticle = ( 0==ver ?
+        phit.mcParticle = ( UNLIKELY( 0==ver ) ?
                             m_pack.reference32( &phits,
                                                 hit->mcParticle()->parent(),
                                                 hit->mcParticle()->key() ) :
@@ -72,8 +72,8 @@ void MCRichHitPacker::unpack( const PackedDataVector & phits,
       if ( -1 != phit.mcParticle )
       {
         int hintID(0), key(0);
-        if ( ( 0==ver && m_pack.hintAndKey32(phit.mcParticle,&phits,&hits,hintID,key) ) ||
-             ( 0!=ver && m_pack.hintAndKey64(phit.mcParticle,&phits,&hits,hintID,key) ) )
+        if ( ( 0!=ver && m_pack.hintAndKey64(phit.mcParticle,&phits,&hits,hintID,key) ) ||
+             ( 0==ver && m_pack.hintAndKey32(phit.mcParticle,&phits,&hits,hintID,key) ) )
         {
           SmartRef<LHCb::MCParticle> ref(&hits,hintID,key);
           hit->setMCParticle( ref );

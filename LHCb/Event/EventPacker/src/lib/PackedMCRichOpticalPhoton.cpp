@@ -14,7 +14,7 @@ void MCRichOpticalPhotonPacker::pack( const DataVector & phots,
                                       PackedDataVector & pphots ) const
 {
   const char ver = pphots.packingVersion();
-  if ( 0 == ver || 1 == ver )
+  if ( 1 == ver || 0 == ver )
   {
     pphots.data().reserve( phots.size() );
     for ( const Data * phot : phots )
@@ -60,7 +60,7 @@ void MCRichOpticalPhotonPacker::pack( const DataVector & phots,
 
       if ( NULL != phot->mcRichHit() )
       {
-        pphot.mcrichhit = ( 0==ver ? 
+        pphot.mcrichhit = ( UNLIKELY( 0==ver ) ? 
                             m_pack.reference32( &pphots,
                                                 phot->mcRichHit()->parent(),
                                                 phot->mcRichHit()->index() ) :
@@ -82,7 +82,7 @@ void MCRichOpticalPhotonPacker::unpack( const PackedDataVector & pphots,
                                         DataVector       & phots ) const
 {
   const char ver = pphots.packingVersion();
-  if ( 0 == ver || 1 == ver )
+  if ( 1 == ver || 0 == ver )
   {
     phots.reserve( pphots.data().size() );
     for ( const PackedData & pphot : pphots.data() )
@@ -126,8 +126,8 @@ void MCRichOpticalPhotonPacker::unpack( const PackedDataVector & pphots,
       if ( -1 != pphot.mcrichhit )
       {
         int hintID(0), key(0);
-        if ( ( 0==ver && m_pack.hintAndKey32(pphot.mcrichhit,&pphots,&phots,hintID,key) ) ||
-             ( 0!=ver && m_pack.hintAndKey64(pphot.mcrichhit,&pphots,&phots,hintID,key) ) )
+        if ( ( 0!=ver && m_pack.hintAndKey64(pphot.mcrichhit,&pphots,&phots,hintID,key) ) ||
+             ( 0==ver && m_pack.hintAndKey32(pphot.mcrichhit,&pphots,&phots,hintID,key) ) )
         {
           SmartRef<LHCb::MCRichHit> ref(&phots,hintID,key);
           phot->setMcRichHit( ref );

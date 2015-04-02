@@ -33,7 +33,7 @@ ProtoParticlePacker::pack( const Data & proto,
 
     if ( 0 != proto.track() )
     {
-      pproto.track = ( 0==ver ?
+      pproto.track = ( UNLIKELY( 0==ver ) ?
                        m_pack.reference32( &pprotos, proto.track()->parent(), proto.track()->key() ) :
                        m_pack.reference64( &pprotos, proto.track()->parent(), proto.track()->key() ) );
       if ( parent().msgLevel(MSG::VERBOSE) )
@@ -49,7 +49,7 @@ ProtoParticlePacker::pack( const Data & proto,
 
     if ( 0 != proto.richPID() )
     {
-      pproto.richPID = ( 0==ver ?
+      pproto.richPID = ( UNLIKELY( 0==ver ) ?
                          m_pack.reference32( &pprotos, proto.richPID()->parent(), proto.richPID()->key() ) :
                          m_pack.reference64( &pprotos, proto.richPID()->parent(), proto.richPID()->key() ) );
       if ( parent().msgLevel(MSG::VERBOSE) )
@@ -65,7 +65,7 @@ ProtoParticlePacker::pack( const Data & proto,
 
     if ( 0 != proto.muonPID() )
     {
-      pproto.muonPID = ( 0==ver ?
+      pproto.muonPID = ( UNLIKELY( 0==ver ) ?
                          m_pack.reference32( &pprotos, proto.muonPID()->parent(), proto.muonPID()->key() ) :
                          m_pack.reference64( &pprotos, proto.muonPID()->parent(), proto.muonPID()->key() ) );
       if ( parent().msgLevel(MSG::VERBOSE) )
@@ -81,15 +81,14 @@ ProtoParticlePacker::pack( const Data & proto,
 
     //== Store the CaloHypos
     pproto.firstHypo = pprotos.refs().size();
-    for ( SmartRefVector<LHCb::CaloHypo>::const_iterator itO = proto.calo().begin();
-          proto.calo().end() != itO; ++itO )
+    for ( const SmartRef<LHCb::CaloHypo>& caloH : proto.calo() )
     {
-      pprotos.refs().push_back( 0==ver ?
-                                m_pack.reference32( &pprotos, (*itO)->parent(), (*itO)->key() ) :
-                                m_pack.reference64( &pprotos, (*itO)->parent(), (*itO)->key() ) );
+      pprotos.refs().push_back( UNLIKELY( 0==ver ) ?
+                                m_pack.reference32( &pprotos, caloH->parent(), caloH->key() ) :
+                                m_pack.reference64( &pprotos, caloH->parent(), caloH->key() ) );
       if ( parent().msgLevel(MSG::VERBOSE) )
-        parent().verbose() << " -> CaloHypo " << *itO << " "
-                           << (*itO)->parent()->registry()->identifier() << " "
+        parent().verbose() << " -> CaloHypo " << *caloH << " "
+                           << caloH->parent()->registry()->identifier() << " "
                            << pprotos.refs().back()
                            << endmsg;
     }
@@ -160,8 +159,8 @@ ProtoParticlePacker::unpack( const PackedData       & pproto,
 
     if ( -1 != pproto.track )
     {
-      if ( ( 0==ver && m_pack.hintAndKey32(pproto.track,&pprotos,&protos,hintID,key) ) ||
-           ( 0!=ver && m_pack.hintAndKey64(pproto.track,&pprotos,&protos,hintID,key) ) )
+      if ( ( 0!=ver && m_pack.hintAndKey64(pproto.track,&pprotos,&protos,hintID,key) ) ||
+           ( 0==ver && m_pack.hintAndKey32(pproto.track,&pprotos,&protos,hintID,key) ) )
       {
         SmartRef<LHCb::Track> ref( &protos, hintID, key );
         proto.setTrack( ref );
@@ -183,8 +182,8 @@ ProtoParticlePacker::unpack( const PackedData       & pproto,
 
     if ( -1 != pproto.richPID )
     {
-      if ( ( 0==ver && m_pack.hintAndKey32(pproto.richPID,&pprotos,&protos,hintID,key) ) ||
-           ( 0!=ver && m_pack.hintAndKey64(pproto.richPID,&pprotos,&protos,hintID,key) ) )
+      if ( ( 0!=ver && m_pack.hintAndKey64(pproto.richPID,&pprotos,&protos,hintID,key) ) ||
+           ( 0==ver && m_pack.hintAndKey32(pproto.richPID,&pprotos,&protos,hintID,key) ) )
       {
         SmartRef<LHCb::RichPID> ref( &protos, hintID, key );
         proto.setRichPID( ref );
@@ -206,8 +205,8 @@ ProtoParticlePacker::unpack( const PackedData       & pproto,
 
     if ( -1 != pproto.muonPID )
     {
-      if ( ( 0==ver && m_pack.hintAndKey32(pproto.muonPID,&pprotos,&protos,hintID,key) ) ||
-           ( 0!=ver && m_pack.hintAndKey64(pproto.muonPID,&pprotos,&protos,hintID,key) ) )
+      if ( ( 0!=ver && m_pack.hintAndKey64(pproto.muonPID,&pprotos,&protos,hintID,key) ) ||
+           ( 0==ver && m_pack.hintAndKey32(pproto.muonPID,&pprotos,&protos,hintID,key) ) )
       {
         SmartRef<LHCb::MuonPID> ref( &protos, hintID, key );
         proto.setMuonPID( ref );
@@ -230,8 +229,8 @@ ProtoParticlePacker::unpack( const PackedData       & pproto,
     for ( int kk = pproto.firstHypo; pproto.lastHypo > kk; ++kk )
     {
       const long long reference = *(pprotos.refs().begin()+kk);
-      if ( ( 0==ver && m_pack.hintAndKey32(reference,&pprotos,&protos,hintID,key) ) ||
-           ( 0!=ver && m_pack.hintAndKey64(reference,&pprotos,&protos,hintID,key) ) )
+      if ( ( 0!=ver && m_pack.hintAndKey64(reference,&pprotos,&protos,hintID,key) ) ||
+           ( 0==ver && m_pack.hintAndKey32(reference,&pprotos,&protos,hintID,key) ) )
       {
         SmartRef<LHCb::CaloHypo> ref( &protos, hintID, key );
         proto.addToCalo( ref );

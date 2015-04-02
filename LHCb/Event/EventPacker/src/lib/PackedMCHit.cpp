@@ -18,7 +18,7 @@ void MCHitPacker::pack( const DataVector & hits,
                         PackedDataVector & phits ) const
 {
   const char ver = phits.packingVersion();
-  if ( 0 == ver || 1 == ver )
+  if ( 1 == ver || 0 == ver )
   {
     phits.data().reserve( hits.size() );
     for ( const Data * hit : hits )
@@ -37,7 +37,7 @@ void MCHitPacker::pack( const DataVector & hits,
       phit.mp           = m_pack.energy   ( hit->p() );
       if ( NULL != hit->mcParticle() )
       {
-        phit.mcParticle = ( 0==ver ? 
+        phit.mcParticle = ( UNLIKELY( 0==ver ) ? 
                             m_pack.reference32( &phits,
                                                 hit->mcParticle()->parent(),
                                                 hit->mcParticle()->key() ) :
@@ -59,7 +59,7 @@ void MCHitPacker::unpack( const PackedDataVector & phits,
                           DataVector       & hits ) const
 {
   const char ver = phits.packingVersion();
-  if ( 0 == ver || 1 == ver )
+  if ( 1 == ver || 0 == ver )
   {
     hits.reserve( phits.data().size() );
     for ( const PackedData & phit : phits.data() )
@@ -75,14 +75,14 @@ void MCHitPacker::unpack( const PackedDataVector & phits,
       hit->setDisplacement( Gaudi::XYZVector( m_pack.position(phit.vtxx)/m_dispScale,
                                               m_pack.position(phit.vtxy)/m_dispScale,
                                               m_pack.position(phit.vtxz)/m_dispScale ) );
-      hit->setEnergy       ( m_pack.energy(phit.energy)/m_enScale );
-      hit->setTime         ( m_pack.time(phit.tof)                );
-      hit->setP            ( m_pack.energy(phit.mp)               );
+      hit->setEnergy ( m_pack.energy(phit.energy)/m_enScale );
+      hit->setTime   ( m_pack.time(phit.tof)                );
+      hit->setP      ( m_pack.energy(phit.mp)               );
       if ( -1 != phit.mcParticle )
       {
         int hintID(0), key(0);
-        if ( ( 0==ver && m_pack.hintAndKey32(phit.mcParticle,&phits,&hits,hintID,key) ) ||
-             ( 0!=ver && m_pack.hintAndKey64(phit.mcParticle,&phits,&hits,hintID,key) ) )
+        if ( ( 0!=ver && m_pack.hintAndKey64(phit.mcParticle,&phits,&hits,hintID,key) ) ||
+             ( 0==ver && m_pack.hintAndKey32(phit.mcParticle,&phits,&hits,hintID,key) ) )
         {
           SmartRef<LHCb::MCParticle> ref(&hits,hintID,key);
           hit->setMCParticle( ref );

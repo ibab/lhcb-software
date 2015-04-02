@@ -81,14 +81,13 @@ void CaloHypoPacker::pack( const DataVector & hypos,
 
       //== Store the CaloDigits
       pH.firstDigit = phypos.refs().size();
-      for ( SmartRefVector<LHCb::CaloDigit>::const_iterator itD = H->digits().begin();
-            H->digits().end() != itD; ++itD )
+      for ( const auto& dig : H->digits() )
       {
-        if ( *itD )
+        if ( dig.target() )
         {
-          phypos.refs().push_back( 0==ver ?
-                                   m_pack.reference32( &phypos, (*itD)->parent(), (*itD)->key().all() ) :
-                                   m_pack.reference64( &phypos, (*itD)->parent(), (*itD)->key().all() ) );
+          phypos.refs().push_back( UNLIKELY( 0==ver ) ?
+                                   m_pack.reference32( &phypos, dig->parent(), dig->key().all() ) :
+                                   m_pack.reference64( &phypos, dig->parent(), dig->key().all() ) );
         }
         else
         {
@@ -99,14 +98,13 @@ void CaloHypoPacker::pack( const DataVector & hypos,
 
       //== Store the CaloClusters
       pH.firstCluster = phypos.refs().size();
-      for ( SmartRefVector<LHCb::CaloCluster>::const_iterator itC = H->clusters().begin();
-            H->clusters().end() != itC; ++itC )
+      for ( const auto& clu : H->clusters() )
       {
-        if ( *itC )
+        if ( clu.target() )
         {
-          phypos.refs().push_back( 0==ver ?
-                                   m_pack.reference32( &phypos, (*itC)->parent(), (*itC)->key() ) :
-                                   m_pack.reference64( &phypos, (*itC)->parent(), (*itC)->key() ) );
+          phypos.refs().push_back( UNLIKELY( 0==ver ) ?
+                                   m_pack.reference32( &phypos, clu->parent(), clu->key() ) :
+                                   m_pack.reference64( &phypos, clu->parent(), clu->key() ) );
         }
         else
         {
@@ -117,14 +115,13 @@ void CaloHypoPacker::pack( const DataVector & hypos,
 
       //== Store the CaloHypos
       pH.firstHypo = phypos.refs().size();
-      for ( SmartRefVector<LHCb::CaloHypo>::const_iterator itO = H->hypos().begin();
-            H->hypos().end() != itO; ++itO )
+      for ( const auto& iH : H->hypos() )
       {
-        if ( *itO )
+        if ( iH.target() )
         {
-          phypos.refs().push_back( 0==ver ?
-                                   m_pack.reference32( &phypos, (*itO)->parent(), (*itO)->key() ) :
-                                   m_pack.reference64( &phypos, (*itO)->parent(), (*itO)->key() ) );
+          phypos.refs().push_back( UNLIKELY( 0==ver ) ?
+                                   m_pack.reference32( &phypos, iH->parent(), iH->key() ) :
+                                   m_pack.reference64( &phypos, iH->parent(), iH->key() ) );
         }
         else
         {
@@ -194,8 +191,8 @@ void CaloHypoPacker::unpack( const PackedDataVector & phypos,
       for ( int kk = src.firstDigit; src.lastDigit > kk; ++kk )
       {
         const long long reference = *(phypos.refs().begin()+kk);
-        if ( ( 0==ver && m_pack.hintAndKey32(reference,&phypos,&hypos,hintID,key) ) ||
-             ( 0!=ver && m_pack.hintAndKey64(reference,&phypos,&hypos,hintID,key) ) )
+        if ( ( 0!=ver && m_pack.hintAndKey64(reference,&phypos,&hypos,hintID,key) ) ||
+             ( 0==ver && m_pack.hintAndKey32(reference,&phypos,&hypos,hintID,key) ) )
         {
           SmartRef<LHCb::CaloDigit> ref( &hypos, hintID, key );
           hypo->addToDigits( ref );
@@ -205,8 +202,8 @@ void CaloHypoPacker::unpack( const PackedDataVector & phypos,
       for ( int kk = src.firstCluster; src.lastCluster > kk; ++kk )
       {
         const long long reference = *(phypos.refs().begin()+kk);
-        if ( ( 0==ver && m_pack.hintAndKey32(reference,&phypos,&hypos,hintID,key) ) ||
-             ( 0!=ver && m_pack.hintAndKey64(reference,&phypos,&hypos,hintID,key) ) )
+        if ( ( 0!=ver && m_pack.hintAndKey64(reference,&phypos,&hypos,hintID,key) ) ||
+             ( 0==ver && m_pack.hintAndKey32(reference,&phypos,&hypos,hintID,key) ) )
         {
           SmartRef<LHCb::CaloCluster> ref( &hypos, hintID, key );
           hypo->addToClusters( ref );
@@ -216,8 +213,8 @@ void CaloHypoPacker::unpack( const PackedDataVector & phypos,
       for ( int kk = src.firstHypo; src.lastHypo > kk; ++kk )
       {
         const long long reference = *(phypos.refs().begin()+kk);
-        if ( ( 0==ver && m_pack.hintAndKey32(reference,&phypos,&hypos,hintID,key) ) ||
-             ( 0!=ver && m_pack.hintAndKey64(reference,&phypos,&hypos,hintID,key) ) )
+        if ( ( 0!=ver && m_pack.hintAndKey64(reference,&phypos,&hypos,hintID,key) ) ||
+             ( 0==ver && m_pack.hintAndKey32(reference,&phypos,&hypos,hintID,key) ) )
         {
           SmartRef<LHCb::CaloHypo> ref( &hypos, hintID, key );
           hypo->addToHypos( ref );

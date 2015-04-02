@@ -41,7 +41,7 @@ void RecVertexPacker::pack( const Data & vert,
       for ( SmartRefVector<LHCb::Track>::const_iterator itT = vert.tracks().begin();
             vert.tracks().end() != itT; ++itT, ++iW )
       {
-        pverts.refs().push_back( 0==ver ?
+        pverts.refs().push_back( UNLIKELY( 0==ver ) ?
                                  m_pack.reference32( &pverts, (*itT)->parent(), (*itT)->key() ) :
                                  m_pack.reference64( &pverts, (*itT)->parent(), (*itT)->key() ) );
       pverts.weights().push_back( m_pack.fraction(*iW) );
@@ -120,8 +120,8 @@ void RecVertexPacker::unpack( const PackedData       & pvert,
     {
       // Get the track
       const long long trk = *(pverts.refs().begin()+kk);
-      if ( ( 0==ver && m_pack.hintAndKey32( trk, &pverts, &verts, hintID, tKey ) ) ||
-           ( 0!=ver && m_pack.hintAndKey64( trk, &pverts, &verts, hintID, tKey ) ) )
+      if ( ( 0!=ver && m_pack.hintAndKey64( trk, &pverts, &verts, hintID, tKey ) ) ||
+           ( 0==ver && m_pack.hintAndKey32( trk, &pverts, &verts, hintID, tKey ) ) )
       {
         SmartRef<LHCb::Track> ref( &verts, hintID, tKey );
         // If available, get the weight

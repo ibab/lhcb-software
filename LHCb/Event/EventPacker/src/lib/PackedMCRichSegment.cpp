@@ -14,7 +14,7 @@ void MCRichSegmentPacker::pack( const DataVector & segs,
                                 PackedDataVector & psegs ) const
 {
   const char ver = psegs.packingVersion();
-  if ( 0 == ver || 1 == ver )
+  if ( 1 == ver || 0 == ver )
   {
     psegs.data().reserve( segs.size() );
     for ( const Data * seg : segs )
@@ -48,7 +48,7 @@ void MCRichSegmentPacker::pack( const DataVector & segs,
 
       if ( NULL != seg->mcParticle() )
       {
-        pseg.mcParticle  = ( 0==ver ? 
+        pseg.mcParticle  = ( UNLIKELY( 0==ver ) ? 
                              m_pack.reference32( &psegs,
                                                  seg->mcParticle()->parent(),
                                                  seg->mcParticle()->key() ) :
@@ -59,7 +59,7 @@ void MCRichSegmentPacker::pack( const DataVector & segs,
 
       if ( NULL != seg->mcRichTrack() )
       {
-        pseg.mcRichTrack = ( 0==ver ?
+        pseg.mcRichTrack = ( UNLIKELY( 0==ver ) ?
                              m_pack.reference32( &psegs,
                                                  seg->mcRichTrack()->parent(),
                                                  seg->mcRichTrack()->key() ) :
@@ -69,30 +69,27 @@ void MCRichSegmentPacker::pack( const DataVector & segs,
       }
 
       pseg.mcPhotons.reserve( seg->mcRichOpticalPhotons().size() );
-      for ( SmartRefVector<LHCb::MCRichOpticalPhoton>::const_iterator iP =
-              seg->mcRichOpticalPhotons().begin();
-            iP != seg->mcRichOpticalPhotons().end(); ++iP )
+      for ( const auto& P : seg->mcRichOpticalPhotons() )
       {
-        pseg.mcPhotons.push_back( 0==ver ? 
+        pseg.mcPhotons.push_back( UNLIKELY( 0==ver ) ? 
                                   m_pack.reference32( &psegs,
-                                                      (*iP)->parent(),
-                                                      (*iP)->key() ) :
+                                                      P->parent(),
+                                                      P->key() ) :
                                   m_pack.reference64( &psegs,
-                                                      (*iP)->parent(),
-                                                      (*iP)->key() ) );
+                                                      P->parent(),
+                                                      P->key() ) );
       }
 
       pseg.mcHits.reserve( seg->mcRichHits().size() );
-      for ( SmartRefVector<LHCb::MCRichHit>::const_iterator iH = seg->mcRichHits().begin();
-            iH != seg->mcRichHits().end(); ++iH )
+      for ( const auto& H : seg->mcRichHits() )
       {
-        pseg.mcHits.push_back( 0==ver ? 
+        pseg.mcHits.push_back( UNLIKELY( 0==ver ) ? 
                                m_pack.reference32( &psegs,
-                                                   (*iH)->parent(),
-                                                   (*iH).linkID() ) :
+                                                   H->parent(),
+                                                   H.linkID() ) :
                                m_pack.reference64( &psegs,
-                                                   (*iH)->parent(),
-                                                   (*iH).linkID() ) );
+                                                   H->parent(),
+                                                   H.linkID() ) );
       }
       
     }
@@ -110,7 +107,7 @@ void MCRichSegmentPacker::unpack( const PackedDataVector & psegs,
 {
   segs.reserve( psegs.data().size() );
   const char ver = psegs.packingVersion();
-  if ( 0 == ver || 1 == ver )
+  if ( 1 == ver || 0 == ver )
   {
     for ( const PackedData & pseg : psegs.data() )
     {
@@ -139,8 +136,8 @@ void MCRichSegmentPacker::unpack( const PackedDataVector & psegs,
 
       if ( -1 != pseg.mcParticle )
       {
-        if ( ( 0==ver && m_pack.hintAndKey32(pseg.mcParticle,&psegs,&segs,hintID,key) ) ||
-             ( 0!=ver && m_pack.hintAndKey64(pseg.mcParticle,&psegs,&segs,hintID,key) ) )
+        if ( ( 0!=ver && m_pack.hintAndKey64(pseg.mcParticle,&psegs,&segs,hintID,key) ) ||
+             ( 0==ver && m_pack.hintAndKey32(pseg.mcParticle,&psegs,&segs,hintID,key) ) )
         {
           SmartRef<LHCb::MCParticle> refa(&segs,hintID,key);
           seg->setMcParticle( refa );
@@ -150,8 +147,8 @@ void MCRichSegmentPacker::unpack( const PackedDataVector & psegs,
 
       if ( -1 != pseg.mcRichTrack )
       {
-        if ( ( 0==ver && m_pack.hintAndKey32(pseg.mcRichTrack,&psegs,&segs,hintID,key) ) ||
-             ( 0!=ver && m_pack.hintAndKey64(pseg.mcRichTrack,&psegs,&segs,hintID,key) ) )
+        if ( ( 0!=ver && m_pack.hintAndKey64(pseg.mcRichTrack,&psegs,&segs,hintID,key) ) ||
+             ( 0==ver && m_pack.hintAndKey32(pseg.mcRichTrack,&psegs,&segs,hintID,key) ) )
         {
           SmartRef<LHCb::MCRichTrack> refb(&segs,hintID,key);
           seg->setMCRichTrack( refb );
@@ -161,8 +158,8 @@ void MCRichSegmentPacker::unpack( const PackedDataVector & psegs,
 
       for ( const auto& P : pseg.mcPhotons )
       {
-        if ( ( 0==ver && m_pack.hintAndKey32(P,&psegs,&segs,hintID,key) ) ||
-             ( 0!=ver && m_pack.hintAndKey64(P,&psegs,&segs,hintID,key) ) )
+        if ( ( 0!=ver && m_pack.hintAndKey64(P,&psegs,&segs,hintID,key) ) ||
+             ( 0==ver && m_pack.hintAndKey32(P,&psegs,&segs,hintID,key) ) )
         {
           SmartRef<LHCb::MCRichOpticalPhoton> ref(&segs,hintID,key);
           seg->addToMCRichOpticalPhotons( ref );
@@ -172,8 +169,8 @@ void MCRichSegmentPacker::unpack( const PackedDataVector & psegs,
 
       for ( const auto& H : pseg.mcHits )
       {
-        if ( ( 0==ver && m_pack.hintAndKey32( H, &psegs, &segs, hintID, key ) ) ||
-             ( 0!=ver && m_pack.hintAndKey64( H, &psegs, &segs, hintID, key ) ) )
+        if ( ( 0!=ver && m_pack.hintAndKey64( H, &psegs, &segs, hintID, key ) ) ||
+             ( 0==ver && m_pack.hintAndKey32( H, &psegs, &segs, hintID, key ) ) )
         {
           SmartRef<LHCb::MCRichHit> ref(&segs,hintID,key);
           seg->addToMCRichHits( ref );

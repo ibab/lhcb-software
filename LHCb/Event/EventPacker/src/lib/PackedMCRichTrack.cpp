@@ -14,7 +14,7 @@ void MCRichTrackPacker::pack( const DataVector & tracks,
                               PackedDataVector & ptracks ) const
 {
   const char ver = ptracks.packingVersion();
-  if ( 0 == ver || 1 == ver )
+  if ( 1 == ver || 0 == ver )
   {
     ptracks.data().reserve( tracks.size() );
     for ( const Data * track : tracks )
@@ -24,22 +24,20 @@ void MCRichTrackPacker::pack( const DataVector & tracks,
 
       ptrack.key = track->key();
 
-      for ( SmartRefVector<LHCb::MCRichSegment>::const_iterator iS =
-              track->mcSegments().begin();
-            iS != track->mcSegments().end(); ++iS )
+      for ( const auto& S : track->mcSegments() )
       {
-        ptrack.mcSegments.push_back( 0==ver ?
+        ptrack.mcSegments.push_back( UNLIKELY( 0==ver ) ?
                                      m_pack.reference32( &ptracks,
-                                                         (*iS)->parent(),
-                                                         (*iS)->key() ) :
+                                                         S->parent(),
+                                                         S->key() ) :
                                      m_pack.reference64( &ptracks,
-                                                         (*iS)->parent(),
-                                                         (*iS)->key() ) );
+                                                         S->parent(),
+                                                         S->key() ) );
       }
 
       if ( NULL != track->mcParticle() )
       {
-        ptrack.mcParticle = ( 0==ver ?
+        ptrack.mcParticle = ( UNLIKELY( 0==ver ) ?
                               m_pack.reference32( &ptracks,
                                                   track->mcParticle()->parent(),
                                                   track->mcParticle()->key() ) :
@@ -62,7 +60,7 @@ void MCRichTrackPacker::unpack( const PackedDataVector & ptracks,
                                 DataVector       & tracks ) const
 {
   const char ver = ptracks.packingVersion();
-  if ( 0 == ver || 1 == ver )
+  if ( 1 == ver || 0 == ver )
   {
     tracks.reserve( ptracks.data().size() );
     for ( const PackedData & ptrack : ptracks.data() )
@@ -75,8 +73,8 @@ void MCRichTrackPacker::unpack( const PackedDataVector & ptracks,
 
       for ( const auto& S : ptrack.mcSegments )
       {
-        if ( ( 0==ver && m_pack.hintAndKey32( S, &ptracks, &tracks, hintID, key ) ) ||
-             ( 0!=ver && m_pack.hintAndKey64( S, &ptracks, &tracks, hintID, key ) ) )
+        if ( ( 0!=ver && m_pack.hintAndKey64( S, &ptracks, &tracks, hintID, key ) ) ||
+             ( 0==ver && m_pack.hintAndKey32( S, &ptracks, &tracks, hintID, key ) ) )
         {
           SmartRef<LHCb::MCRichSegment> ref(&tracks,hintID,key);
           track->addToMcSegments( ref );
@@ -86,8 +84,8 @@ void MCRichTrackPacker::unpack( const PackedDataVector & ptracks,
 
       if ( -1 != ptrack.mcParticle )
       {
-        if ( ( 0==ver && m_pack.hintAndKey32( ptrack.mcParticle, &ptracks, &tracks, hintID, key ) ) ||
-             ( 0!=ver && m_pack.hintAndKey64( ptrack.mcParticle, &ptracks, &tracks, hintID, key ) ) )
+        if ( ( 0!=ver && m_pack.hintAndKey64( ptrack.mcParticle, &ptracks, &tracks, hintID, key ) ) ||
+             ( 0==ver && m_pack.hintAndKey32( ptrack.mcParticle, &ptracks, &tracks, hintID, key ) ) )
         {
           SmartRef<LHCb::MCParticle> ref(&tracks,hintID,key);
           track->setMcParticle( ref );

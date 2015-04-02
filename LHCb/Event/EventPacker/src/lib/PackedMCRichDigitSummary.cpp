@@ -28,7 +28,7 @@ void MCRichDigitSummaryPacker::pack( const DataVector & sums,
       psum.richSmartID = sum->richSmartID().key();
       if ( NULL != sum->mcParticle() )
       {
-        psum.mcParticle = ( 0 == ver ?
+        psum.mcParticle = ( UNLIKELY( 0 == ver ) ?
                             m_pack.reference32( &psums,
                                                 sum->mcParticle()->parent(),
                                                 sum->mcParticle()->key() ) :
@@ -64,8 +64,8 @@ void MCRichDigitSummaryPacker::unpack( const PackedDataVector & psums,
       if ( -1 != psum.mcParticle )
       {
         int hintID(0), key(0);
-        if ( ( 0==ver && m_pack.hintAndKey32(psum.mcParticle,&psums,&sums,hintID,key) ) ||
-             ( 0!=ver && m_pack.hintAndKey64(psum.mcParticle,&psums,&sums,hintID,key) ) )
+        if ( ( 0!=ver && m_pack.hintAndKey64(psum.mcParticle,&psums,&sums,hintID,key) ) ||
+             ( 0==ver && m_pack.hintAndKey32(psum.mcParticle,&psums,&sums,hintID,key) ) )
         {
           SmartRef<LHCb::MCParticle> ref(&sums,hintID,key);
           sum->setMCParticle( ref );

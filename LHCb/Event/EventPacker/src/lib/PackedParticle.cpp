@@ -103,11 +103,9 @@ void ParticlePacker::pack( const Data & part,
 
     // daughters
     ppart.firstDaughter = pparts.daughters().size();
-    for ( SmartRefVector<LHCb::Particle>::const_iterator iD1 = part.daughters().begin();
-          iD1 != part.daughters().end(); ++iD1 )
+    for ( const auto& P : part.daughters() )
     {
-      const LHCb::Particle * P = *iD1;
-      if ( P )
+      if ( P.target() )
       {
         pparts.daughters().push_back( m_pack.reference64( &pparts,
                                                           P->parent(),

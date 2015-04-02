@@ -1,4 +1,7 @@
 
+// STL
+//#include <random> // For flags tests. To be removed.
+
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -61,6 +64,10 @@ StatusCode UnpackMCParticle::execute()
   // Packing version
   const char pVer = dst->packingVersion();
 
+  // random generator for private tests of flags. 
+  //static std::default_random_engine gen;
+  //static std::uniform_real_distribution<float> uniform(0,1);
+
   newMCParticles->reserve( dst->mcParts().size() );
   for ( const LHCb::PackedMCParticle& src : dst->mcParts() )
   {
@@ -78,6 +85,8 @@ StatusCode UnpackMCParticle::execute()
     part->setParticleID( LHCb::ParticleID(src.PID) );
 
     part->setFlags( src.flags );
+    // for testing, randomly set 'fromSignal' to true 5% of the time.
+    //part->setFromSignal( uniform(gen) > 0.95 );
 
     int hintID(0), key(0);
     if ( ( 0==pVer && pack.hintAndKey32( src.originVertex, dst, newMCParticles, hintID, key ) ) ||

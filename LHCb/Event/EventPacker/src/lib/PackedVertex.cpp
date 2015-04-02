@@ -40,11 +40,9 @@ void VertexPacker::pack( const Data & vert,
 
     // outgoing particles
     pvert.firstOutgoingPart = pverts.outgoingParticles().size();
-    for ( SmartRefVector<LHCb::Particle>::const_iterator iP = vert.outgoingParticles().begin();
-          iP != vert.outgoingParticles().end(); ++iP )
+    for ( const auto& P : vert.outgoingParticles() )
     {
-      const LHCb::Particle * P = *iP;
-      if ( P )
+      if ( P.target() )
       {
         pverts.outgoingParticles().push_back( m_pack.reference64( &pverts,
                                                                   P->parent(),
@@ -75,20 +73,17 @@ void VertexPacker::pack( const DataVector & verts,
 {
   pverts.data().reserve( verts.size() );
 
-  for ( DataVector::const_iterator iD = verts.begin();
-        iD != verts.end(); ++iD )
+  for ( const Data * vert : verts )
   {
-    const Data & vert = **iD;
-
     // new packed data object
     pverts.data().push_back( PackedData() );
     PackedData & pvert = pverts.data().back();
 
     // Key
-    pvert.key = vert.key();
+    pvert.key = vert->key();
 
     // fill physics info from vert to pvert
-    pack( vert, pvert, pverts );
+    pack( *vert, pvert, pverts );
   }
 
 }

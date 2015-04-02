@@ -48,14 +48,13 @@ void FlavourTagPacker::pack( const Data & ft,
     // tagging particles
     ptagger.firstTagP = pfts.taggeringPs().size();
     pfts.taggeringPs().reserve( pfts.taggeringPs().size() + T.taggerParts().size() );
-    for ( SmartRefVector<LHCb::Particle>::const_iterator iTP = T.taggerParts().begin();
-          iTP != T.taggerParts().end(); ++iTP )
+    for ( const auto& TP : T.taggerParts() )
     {
-      if ( *iTP )
+      if ( TP.target() )
       {
         pfts.taggeringPs().push_back( m_pack.reference64( &pfts,
-                                                          (*iTP)->parent(),
-                                                          (*iTP)->key() ) );
+                                                          TP->parent(),
+                                                          TP->key() ) );
       }
     }
     ptagger.lastTagP = pfts.taggeringPs().size();
