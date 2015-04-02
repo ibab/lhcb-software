@@ -4,7 +4,7 @@
 ! Purpose     : define the Hlt2Lines
 !
 ! WARNING : When adding, removing or changing names of lines,
-!           ALWAYS also edit Hlt/HltSettings
+!           ALWAYS inform the Hlt group.
 !
 !----------------------------------------------------------------------------
 
