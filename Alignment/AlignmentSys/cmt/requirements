@@ -33,6 +33,7 @@ use OTCalibration			v1r9   Calibration # Wouter Hulsbergen
 #temporary segfault fix, from LHCb
 use OTDet v8r16 Det # Needed until release of LHCb v38r6 - MM, 1/4/2015
 use LHCbMath v3r55 Kernel # Needed until release of LHCb v38r6 - MM, 1/4/2015
+use TrackUtils v1r59 Tr # Needed until release of Rec v17r6 - MM, 2/4/2015
 
 # Declare this as a container package
 apply_pattern container_package

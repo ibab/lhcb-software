@@ -9,6 +9,10 @@ Purpose: LHCb Alignment packages.
 </PRE><H1><A NAME=v10r3>2015-04-01 AlignmentSys v10r3</A></H1><PRE>
 Depends on: Phys v19r5. For 2015 data.
 
+! 2015-04-02 - Maurizio Martinelli
+ - Added temporary dependences on TrackUtils
+ - Untagged and re-tagged package
+
 ! 2015-04-01 - Maurizio Martinelli
  - Added temporary dependences on OTDet and LHCbMath
 
