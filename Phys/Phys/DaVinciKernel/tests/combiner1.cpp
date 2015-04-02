@@ -64,6 +64,7 @@ int main()
   auto t_stop = std::chrono::high_resolution_clock::now();
   //
   std::cout 
+    << "Fraction:" << accept << ", "
     << "Wall clock time passed: "
     << std::chrono::duration<double, std::milli>(t_stop-t_start).count()
     << " ms\n";

@@ -38,3 +38,9 @@ gaudi_add_executable(Combiner2
                      tests/Combine.cpp
                      INCLUDE_DIRS   Event
                      LINK_LIBRARIES GaudiKernel LHCbKernel PhysEvent )
+
+gaudi_add_executable(Combiner3
+                     tests/combiner3.cpp  
+                     tests/Combine.cpp
+                     INCLUDE_DIRS   Event
+                     LINK_LIBRARIES GaudiKernel LHCbKernel PhysEvent )

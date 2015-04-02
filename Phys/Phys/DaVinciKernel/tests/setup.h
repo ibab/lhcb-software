@@ -6,7 +6,7 @@
 /// number of creations 
 const unsigned long long N      = 50000000 ;
 /// accept fraction
-const double             accept = 0.01     ;
+const double             accept = 0.00001  ;
 //
 // ============================================================================
 // The END 
