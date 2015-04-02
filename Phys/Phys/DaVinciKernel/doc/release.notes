@@ -4,6 +4,9 @@
 ! Responsible : DV Maintainer
 !============================================================================
 
+! 2015-04-02 - Vanya Belyaev
+ - add simple test for CPU performance fo two combiner strategies.
+
 ! 2015-04-01 - Vanya Belyaev
  - change PVSentry to deal with IDVAlgorithm insted of DaVinciAlgorithm 
 

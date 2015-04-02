@@ -27,3 +27,14 @@ gaudi_add_dictionary(DaVinciKernel
                      LINK_LIBRARIES PhysEvent GaudiAlgLib PartPropLib RelationsLib DaVinciInterfacesLib DaVinciKernelLib
                      OPTIONS "-U__MINGW32__")
 
+gaudi_add_executable(Combiner1
+                     tests/combiner1.cpp  
+                     tests/Combine.cpp
+                     INCLUDE_DIRS   Event
+                     LINK_LIBRARIES GaudiKernel LHCbKernel PhysEvent )
+
+gaudi_add_executable(Combiner2
+                     tests/combiner2.cpp  
+                     tests/Combine.cpp
+                     INCLUDE_DIRS   Event
+                     LINK_LIBRARIES GaudiKernel LHCbKernel PhysEvent )
