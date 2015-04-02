@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MooreSys
 ################################################################################
-gaudi_subdir(MooreSys v23r5p1)
+gaudi_subdir(MooreSys v23r5p2)
 
 gaudi_depends_on_subdirs(Hlt/HltMonitor
                          Hlt/IndependenceTests

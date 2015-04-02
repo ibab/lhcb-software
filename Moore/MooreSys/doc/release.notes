@@ -3,6 +3,14 @@ Package             : MooreSys
 Package Coordinator : R. Aaij
 Purpose             : LHCb HLT application
 
+</PRE><H1><A NAME=v23r5p2>2015-04-02 MooreSys v23r5p2</A></H1><PRE>
+
+Patch Release as part of stack based on Gaudi v26r1.
+Depends on Hlt v23r5p2.
+
+Main changes:
+     Release for tuning of Hlt2 lines.
+
 </PRE><H1><A NAME=v23r5p1>2015-03-31 MooreSys v23r5p1</A></H1><PRE>
 
 Patch Release as part of stack based on Gaudi v26r1.
