@@ -1,5 +1,5 @@
 package HltSys
-version           v23r5p1
+version           v23r5p2
 
 branches cmt doc
 
@@ -26,15 +26,16 @@ use LoKiTrigger         v15r6    Phys  # Vanya Belyaev
 
 # Extra packages for v23r5p1
 use PatPV               v3r27    Tr
+use TrackUtils          v1r59    Tr
+use TrackTools          v5r8     Tr
 use MuonID              v9r14    Muon
 use LoKiCore            v11r23   Phys
 use LoKiPhys            v11r1    Phys
 use LoKiFitters         v4r13    Phys
-use LoKiArrayFunctors   v1r11    Phys
+use LoKiArrayFunctors   v11r1    Phys
 use MVADictTools        v1r9     Phys
 use CaloReco            v5r24    Calo
 use KalmanFilter        v1r11    Phys
-use TrackUtils          v1r59    Tr
 use DAQSys              v8r8     DAQ
 use BBDecTreeTool       v1r7     Phys
 
