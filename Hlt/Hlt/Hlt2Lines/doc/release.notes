@@ -8,6 +8,12 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-02 - Patrick Spradlin
+  - Added initial version of an inclusive D*+ line.
+    + CharmHad/Dst2PiD02HHXBDTLines.py added to define line sequences and slots
+    . CharmHad/Stages.py modified to include the new stages
+    . CharmHad/Lines.py modified to include the lines.
+
 ! 2015-04-01 - Simone Stracka
  - in CharmHad/Stages.py: renamed AttachNeutral into AttachParticle; modified key for Pt cut in NeutralInParticleFilter
  - in CharmHad/Input.py: added merged pi0 for HHPi0 and HHHPi0 lines.

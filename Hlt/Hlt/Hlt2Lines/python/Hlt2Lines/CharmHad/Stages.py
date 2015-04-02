@@ -43,7 +43,7 @@ class InParticleFilter(Hlt2ParticleFilter) : # {
         'Trk_ALL_P_MIN'         :  lower limit on P
 
     If filtering on a PID variable, the pidVar parameter must be set to the
-    name of the PID functor on which to cut and the configuration dictionary
+    name of the PID functor on which to cut, and the configuration dictionary
     must contain the key 'PID_LIM' defining the one-sided limit for that
     variable.  By default the cut on the PID variable is a lower limit.
     It may be changed to an upper limit by setting the parameter
@@ -95,7 +95,7 @@ class DetachedInParticleFilter(Hlt2ParticleFilter) : # {
         'Trk_ALL_MIPCHI2DV_MIN' :  lower limit on MIPCHI2DV(PRIMARY)
 
     If filtering on a PID variable, the pidVar parameter must be set to the
-    name of the PID functor on which to cut and the configuration dictionary
+    name of the PID functor on which to cut, and the configuration dictionary
     must contain the key 'PID_LIM' defining the one-sided limit for that
     variable.  By default the cut on the PID variable is a lower limit.
     It may be changed to an upper limit by setting the parameter
@@ -875,4 +875,141 @@ class DStar2PiD0_ee(D2HD0_3Body_Combiner) :
         inputs = [Hlt2NoPIDsElectrons, Hlt2NoPIDsPions]
         D2HD0_3Body_Combiner.__init__(self, name, decay, inputs)        
 
+
+
+class DetachedD02HHInclCombiner(Hlt2Combiner) : # {
+    """
+    Displaced combiner for inclusive D*+ line.
+
+    Configuration dictionaries must contain the following keys:
+        'Trk_TRCHI2DOF_MAX' : upper limit on TRCHI2DOF of each input particle
+        'Trk_PT_MIN'        : lower limit on PT of each input particle
+        'Trk_MIPCHI2DV_MIN' : lower limit on MIPCHI2DV(PRIMARY) of each input
+        'D0_VCHI2PDOF_MAX'  : upper limit on VFASPF(VCHI2PDOF) in MotherCut
+        'D0_BPVVDCHI2_MIN'  : lower limit on BPVVDCHI2 in MotherCut
+        'D0_BPVCORRM_MAX'   : upper limit on BPVCORRM in MotherCut
+
+    It is expected that the cuts on input particles will eventually be removed
+    when the inputs are made into shared instances of DetachedInParticleFilter.
+    """
+    def __init__(self, name, decay, inputs, slotName = None) : # {
+
+        inPartCuts = "(TRCHI2DOF< %(Trk_TRCHI2DOF_MAX)s )" \
+                     "& (PT> %(Trk_PT_MIN)s)" \
+                     "& (MIPCHI2DV(PRIMARY)> %(Trk_MIPCHI2DV_MIN)s )"
+
+        dc = {   'pi+' : inPartCuts
+               , 'K+' : inPartCuts
+             }
+
+        combCut = "AALL"
+        parentCut = "(VFASPF(VCHI2PDOF) < %(D0_VCHI2PDOF_MAX)s)" \
+                    "& (BPVVDCHI2 > %(D0_BPVVDCHI2_MIN)s)" \
+                    "& (BPVCORRM < %(D0_BPVCORRM_MAX)s)"
+
+        from HltTracking.HltPVs import PV3D
+        Hlt2Combiner.__init__( self, name, decay, inputs,
+                               dependencies = [PV3D('Hlt2')],
+                               #tistos = 'TisTosSpec',
+                               nickname = slotName,
+                               DaughtersCuts = dc,
+                               CombinationCut = combCut,
+                               MotherCut = parentCut,
+                               Preambulo = [] )
+
+    # }
+# }
+
+
+class Dstp2D0PiInclCombiner(Hlt2Combiner) : # {
+    """
+    Combiner for inclusive D*+ line.
+
+    Configuration dictionaries must contain the following keys:
+        'Spi_TRCHI2DOF_MAX' : Upper limit of TRCHI2DOF on soft pion
+        'Spi_PT_MIN'        : Lower limit of PT on soft pion
+        'Dst_VCHI2PDOF_MAX' : Upper limit on VFASPF(VCHI2PDOF) in MotherCut
+        'Dst_PT_MIN'        : Lower limit on PT in MotherCut
+        'Dst_M_MAX'         : Upper limit on M in MotherCut
+        'Dst_D0_DeltaM_MAX' : Upper limit on M - M1 in MotherCut
+
+    It is expected that the cuts on input particles will eventually be removed
+    when the inputs are made into shared instances of DetachedInParticleFilter.
+    Use of a generic soft pion tagging combiner should be investigated.
+    """
+    def __init__(self, name, decay, inputs, slotName = None) : # {
+
+        inPartCuts = "(TRCHI2DOF< %(Spi_TRCHI2DOF_MAX)s )" \
+                     "& (PT> %(Spi_PT_MIN)s)"
+
+        dc = {  'pi+' : inPartCuts }
+
+        combCut = "AALL"
+
+        parentCut = "(VFASPF(VCHI2PDOF) < %(Dst_VCHI2PDOF_MAX)s)" \
+                    "& (PT > %(Dst_PT_MIN)s)" \
+                    "& (M < %(Dst_M_MAX)s)" \
+                    "& (M - M1 < %(Dst_D0_DeltaM_MAX)s)" \
+
+        Hlt2Combiner.__init__( self, name, decay, inputs,
+                               #tistos = 'TisTosSpec',
+                               nickname = slotName,
+                               DaughtersCuts = dc,
+                               CombinationCut = combCut,
+                               MotherCut = parentCut,
+                               Preambulo = [] )
+
+    # }
+# }
+
+
+class BDTFilter( Hlt2ParticleFilter ) : # {
+    """
+    Filter with a BBDecTreeTool.
+
+    Configuration dictionaries must be passed as constructor argument props
+    and must contain the following keys:
+        'BDT_Lookup_Filename' : the name of the file that contains the lookup
+                                table.  Assumed to be in $PARAMFILESROOT/data/.
+        'BDT_Lookup_VarMap'   : the map of nickname:functor strings to define
+                                the input variables of the lookup table.
+        'BDT_Threshold'       : Minimum response value accepted by the filter.
+
+
+        'Spi_TRCHI2DOF_MAX' : Upper limit of TRCHI2DOF on soft pion
+        'Spi_PT_MIN'        : Lower limit of PT on soft pion
+        'Dst_VCHI2PDOF_MAX' : Upper limit on VFASPF(VCHI2PDOF) in MotherCut
+        'Dst_PT_MIN'        : Lower limit on PT in MotherCut
+        'Dst_M_MAX'         : Upper limit on M in MotherCut
+        'Dst_D0_DeltaM_MAX' : Upper limit on M - M1 in MotherCut
+
+    """
+    def __init__( self, name, inputs, props ) : # {
+
+        ## Configure the DictOfFunctors variable handler
+        from HltLine.HltLine import Hlt1Tool
+        from Configurables import LoKi__Hybrid__DictOfFunctors
+        varHandler = Hlt1Tool( type = LoKi__Hybrid__DictOfFunctors
+                               , name = 'VarHandler'
+                               , Variables = props['BDT_Lookup_VarMap']
+                             )
+        from Configurables import BBDecTreeTool
+        bdtTool = Hlt1Tool( type = BBDecTreeTool
+                            , name = 'DstBBDT'
+                            , Threshold = props['BDT_Threshold']
+                            , ParamFile = props['BDT_Lookup_Filename']
+                            , ParticleDictTool = "%s/%s" % (varHandler.Type.getType(), varHandler.Name )
+                            , tools = [varHandler]
+                          )
+        filtCut = "FILTER('%s/%s')" % (bdtTool.Type.getType(), bdtTool.Name )
+        ## The dependence on PV3D('Hlt2') is there assuming that PVs might
+        ##   be needed for some of the input variables.
+        from HltTracking.HltPVs import PV3D
+        Hlt2ParticleFilter.__init__( self, name, filtCut, inputs
+                                     , dependencies = [ PV3D('Hlt2') ]
+                                     , tools = [bdtTool ] )
+    # }
+
+
+# }
 

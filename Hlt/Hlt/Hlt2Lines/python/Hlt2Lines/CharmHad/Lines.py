@@ -9,6 +9,7 @@ from Hc2HHHHLines import CharmHadHc2HHHHLines
 from XSecLines import CharmHadXSecLines 
 from D2HHHPi0Lines import CharmHadD2HHHPi0Lines
 from D2HHLines import CharmHadD2HHLines
+from Dst2PiD02HHXBDTLines import CharmHadDst2PiD02HHXBDTLines
 
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
@@ -24,6 +25,7 @@ Hc2HHHHLines = CharmHadHc2HHHHLines()
 XSecLines = CharmHadXSecLines()
 D2HHHPi0Lines = CharmHadD2HHHPi0Lines()
 D2HHLines = CharmHadD2HHLines()
+Dst2PiD02HHXBDTLines = CharmHadDst2PiD02HHXBDTLines()
 
 
 theseslots = {   'Prescale' : {}, 
@@ -119,6 +121,7 @@ theseslots.update(Hc2HHHHLines.localcuts())
 theseslots.update(XSecLines.localcuts())
 theseslots.update(D2HHHPi0Lines.localcuts())
 theseslots.update(D2HHLines.localcuts())
+theseslots.update(Dst2PiD02HHXBDTLines.slots())
 
 class CharmHadLines(Hlt2LinesConfigurableUser):
     __slots__ = theseslots
@@ -138,6 +141,7 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
             self.__lines__.update(XSecLines.locallines())
             self.__lines__.update(D2HHHPi0Lines.locallines())
             self.__lines__.update(D2HHLines.locallines())
+            self.__lines__.update(Dst2PiD02HHXBDTLines.stages())
             
         return self.__lines__[nickname] if nickname else self.__lines__
             
