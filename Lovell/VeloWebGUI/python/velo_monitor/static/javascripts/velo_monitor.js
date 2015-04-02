@@ -12,12 +12,12 @@ var VeloMonitor = (function(window, undefined) {
     + '<code>{0}</code>'
     + 'Please contact the administrator. Error message:</p>';
   TEMPLATES.div = '<div></div>';
-  TEMPLATES.togglesContainer = '<div class="toggles">{0}</div>';
-  TEMPLATES.togglesToggle = '<div class="toggle">'
-    + '<label for="{0}">'
-    + '<input type="checkbox" id="{0}" checked> <span style="color: {2}">{1}</span>'
-    + '</label>'
-    + '</div>';
+  TEMPLATES.plotablesContainer = '<ul class="plotables">{0}</ul>';
+  TEMPLATES.plotablesItem = '<li id="{0}" style="border-left-color: {2};">'
+    + '{1}'
+    + '<a class="plotable-toggle pull-right">Hide</a>'
+    + '</li>';
+  TEMPLATES.sortablePlaceholder = '<li>&nbsp</li>';
 
   // We need to check if a job result is an array or not, so polyfill the
   // isArray method on the Array object in case it isn't available
@@ -128,10 +128,10 @@ var VeloMonitor = (function(window, undefined) {
         }
 
         var chart = VeloPlotter.displayPlots(plotTypes, plotData, [opts], container, failure);
-        // Set up the plotable toggles after the .plot element
+        // Set up the plotable container after the .plot element
         // As the .plot element has a fixed height, inserting them inside it will
         // cause them to overflow outside the div, so insert after
-        setupPlotablesToggler(chart, $(TEMPLATES.div).insertAfter(container));
+        setupPlotablesContainer(chart, $(TEMPLATES.div).insertAfter(container));
       } else {
         var resultData = result['data'],
             plotType = resultData['object_class'],
@@ -161,27 +161,55 @@ var VeloMonitor = (function(window, undefined) {
     return task;
   };
 
-  // Display checkboxes, one per plotable in the chart, in container that toggle plotable visibility
+  // Display plotable label, one per plotable in the chart, in container that
+  // can be reordered and toggled to affect plotables in the chart
   // Accepts:
   //   chart: d3.chart.AxesChart instance
-  //   container: jQuery element to hold the toggles
+  //   container: jQuery element to hold the container
   // Returns:
   //   undefined
-  var setupPlotablesToggler = function(chart, container) {
+  var setupPlotablesContainer = function(chart, container) {
     var plotables = chart.plotables(),
-        toggles = '';
+        containerHTML = '';
     for (var name in plotables) {
       var title = plotables[name].title,
           // Use the plotables color for the label, if present
           color = plotables[name].color || 'inherit';
-      toggles += TEMPLATES.togglesToggle.format(name, title, color);
+      containerHTML += TEMPLATES.plotablesItem.format(name, title, color);
       // Bind to the checkbox's change event (i.e. when its state toggles)
-      $(document).on('change', '#{0}'.format(name), function(e) {
-        $('svg g.{0}'.format(e.target.id)).toggle();
-      });
+      // $(document).on('change', '#{0}'.format(name), function(e) {
+      //   $('svg g.{0}'.format(e.target.id)).toggle();
+      // });
     }
-    // Add the toggles to the DOM
-    container.append(TEMPLATES.togglesContainer.format(toggles));
+    // Add the container to the DOM
+    container.append(TEMPLATES.plotablesContainer.format(containerHTML));
+    // Activate sortable lists, adding sortable class to avoid binding drag-&-drop handlers twice
+    $('.plotables').not('.sortable')
+      .sortable({placeholder: TEMPLATES.sortablePlaceholder})
+      .addClass('sortable')
+      .bind('sortupdate', function(e, ui) {
+        // Get the plotables that the swapped list items represent
+        var id1 = ui.item.attr('id');
+        var id2 = $(this).find('li').eq(ui.oldindex).attr('id');
+        var el1 = $('svg g.' + id1).get(0);
+        var el2 = $('svg g.' + id2).get(0);
+        // Swap the order of the two plotable-containing <g> elements, using a
+        // dummy div and insertBefore to preserve event handlers
+        var temp = document.createElement("div");
+        el1.parentNode.insertBefore(temp, el1);
+        el2.parentNode.insertBefore(el1, el2);
+        temp.parentNode.insertBefore(el2, temp);
+        temp.parentNode.removeChild(temp);
+      })
+      .find('.plotable-toggle')
+        .on('click', function() {
+          // Toggle the SVG plotable visisbility
+          $('svg g.{0}'.format(this.parentNode.id)).toggle();
+          // Toggle plotable label opacity
+          $(this).parents('li').css('opacity', function(i, val) { return val === '0.7' ? 1.0 : 0.7; });
+          // Toggle anchor text
+          $(this).text(function(i, text) { return text === 'Show' ? 'Hide' : 'Show'; });
+        });
   };
 
   // Each child page in the run view has its contents set by the run view
@@ -366,6 +394,7 @@ var VeloMonitor = (function(window, undefined) {
         // We don't set attr data-sensor as it's data('sensor') that's used
         // elsewhere, and jQuery caches calls to data so won't see the updated
         // the DOM
+        // TODO this leaves empty ul.toggles in the DOM
         $('.plot, .toggles').empty().data('sensor', sensorNumber);
         runView.setupPlots();
       };
