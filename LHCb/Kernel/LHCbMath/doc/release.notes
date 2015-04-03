@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-04-03 - Vanya Belyaev
+ - add running counter 
+
 ! 2015-04-02 - Ben Couturier 
  - Added timing test for The Similarity functions 
 

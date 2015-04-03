@@ -1,3 +1,4 @@
+// $Id:$ 
 // ============================================================================
 #ifndef ANALYSIS_WSTATENTITY_H 
 #define ANALYSIS_WSTATENTITY_H 1
@@ -15,7 +16,7 @@ namespace Gaudi
   namespace Math
   {
     // ========================================================================
-    /** @class WStatEntity Analysis/WStatEntity.h
+    /** @class WStatEntity  LHCbMath/WStatEntity.h
      *  Statistic with weight
      *  @see StatEntity 
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
