@@ -93,7 +93,7 @@ macro_append LHCbMathDict_cppflags "" \
 macro        LHCbMath_use_linkopts $(use_linkopts)
 
 #=====================================================================
-macro_append Similarity_AVX_cppflags  " -mavx  -O3 " 
+macro_append Similarity_AVX_cppflags  " -mavx  -O3 -fabi-version=0 " 
 macro_append Similarity_SSE3_cppflags " -msse3 -O3 " 
 macro_append Similarity_generic_cppflags " -O3 " 
 

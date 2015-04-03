@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-04-03 - Gerhard Raven
+ - use VectorLib to improve Similarity_AVX
+
 ! 2015-04-03 - Vanya Belyaev
  - add running counter 
 
