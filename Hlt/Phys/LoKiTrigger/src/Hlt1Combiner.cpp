@@ -246,8 +246,15 @@ LoKi::Hlt1::Hlt1Combiner::executeCombineParticles
   {
     loop.add( daughters ( child->name() ) ) ;
   }
-  
+  //
+  StatEntity& cnt_c  =  alg()->counter ( "#pass combcut"    ) ;
+  StatEntity& cnt_m  =  alg()->counter ( "#pass mother cut" ) ;
+  //
   unsigned long nGood = 0 ;
+  
+  LHCb::Vertex   vertex  ;
+  LHCb::Particle mother ( decay.mother().pid() ) ;
+
   // now do actual loop of combinations
   for ( ; loop.valid() ; loop.next() )
   {
@@ -258,42 +265,51 @@ LoKi::Hlt1::Hlt1Combiner::executeCombineParticles
     loop.current ( combination.begin() ) ;
     
     // apply comb cuts
-    if ( !combcut ( combination ) ) { continue ; }
+    const bool pass_combination = combcut ( combination ) ;
+    cnt_c += pass_combination ;
+    if ( !pass_combination ) { continue ; }
     
-    //
-    // create new particle and vertex 
-    //
-    std::unique_ptr<LHCb::Vertex>   vertex ( new LHCb::Vertex   () ) ;
-    std::unique_ptr<LHCb::Particle> mother ( new LHCb::Particle ( decay.mother().pid() ) ) ;
     
     // do combination
-    StatusCode sc = combiner -> combine ( combination , *mother , *vertex ) ;
+    StatusCode sc = combiner -> combine ( combination , mother , vertex ) ;
     if ( sc.isFailure() ) { continue ; }
     
     //
     /// setup sentry before mother cuts 
     //
-    DaVinci::PVSentry sentry ( m_dvAlg , mother.get() ) ;
+    DaVinci::PVSentry sentry ( m_dvAlg , &mother ) ;
     
     //
     // apply mother cuts
     //
-    if ( !mothcut ( mother.get() ) ) { continue ; }
+    const bool pass_mother = mothcut ( &mother ) ;
+    cnt_m += pass_mother ;
+    if ( !pass_mother ) { continue ; }
     
+    //
+    // store in TES
+    //
+    LHCb::Particle* pnew = mother.clone() ;
+    LHCb::Vertex*   vnew = vertex.clone() ;
+    pnew->setEndVertex ( vnew ) ;
+    //
+    _storeParticle ( pnew ) ;
+    _storeVertex   ( vnew ) ;
+    
+    //
     // add new candidate
+    //
     Hlt::Candidate *candidate = newCandidate();
+    output.push_back ( candidate ) ;
     candidate->addToWorkers ( alg() ) ;
     
+    //
     // add new stage
+    //
     Hlt::Stage* stage = newStage () ;
     candidate->addToStages( stage ) ;
     Hlt::Stage::Lock lock { stage, alg() } ;
-    stage->set ( mother.get()  ) ;
-    output.push_back ( candidate ) ;
-    
-    // store in TES
-    _storeParticle ( mother.release()  ) ;
-    _storeVertex   ( vertex.release()  ) ;
+    stage->set            ( pnew  ) ;          // ATTENTION!!
     
     ++nGood ;
     // =======================================================================
@@ -336,7 +352,14 @@ LoKi::Hlt1::Hlt1Combiner::execute3BodyCombination
   double ncomb = 1.0 * child1.size() * child2.size() * child3.size() ;
   problem = problem || tooMuchCombinations ( ncomb , decay ) ;
   if ( problem ) { return  nGood ; } 
-
+  
+  StatEntity& cnt_c12 = alg()->counter ( "#pass comb12 cut"  ) ;
+  StatEntity& cnt_c   = alg()->counter ( "#pass combcut"     ) ;
+  StatEntity& cnt_m   = alg()->counter ( "#pass mother cut"  ) ;
+  //
+  
+  LHCb::Vertex   vertex  ;
+  LHCb::Particle mother ( decay.mother().pid() ) ;
   //
   // make explicit 3-body loop
   //
@@ -367,7 +390,7 @@ LoKi::Hlt1::Hlt1Combiner::execute3BodyCombination
       //
       const LHCb::Particle* c2 = *it2 ;
       //
-      // good and unique ? 
+      // good and unique ?
       if ( !compare ( c1 , c2 ) ) { continue ; }     // CONTINUE, next c2 
       //
       comb12      [1] = c2 ;
@@ -376,7 +399,9 @@ LoKi::Hlt1::Hlt1Combiner::execute3BodyCombination
       // Use combination cuts!  
       // it is a heart of all game: 
       // here we have the combination and can apply the cut:
-      if ( ! combcut12 ( comb12 ) ) { continue ; } // CONTINUE, next c2 
+      const bool pass_combination12 = combcut12 ( comb12 ) ;
+      cnt_c12 += pass_combination12 ;
+      if ( !pass_combination12 ) { continue ; }
       //
       //
       // loop over 3rd particle 
@@ -397,45 +422,54 @@ LoKi::Hlt1::Hlt1Combiner::execute3BodyCombination
         //
         // check the combinations for overlaps and cuts 
         //
-        if ( ! combcut ( combination ) ) { continue ; }
+        const bool pass_combination = combcut ( combination ) ;
+        cnt_c += pass_combination ;
+        if ( !pass_combination ) { continue ; }
         
         // here we can create the mother particle, the vertex, 
         // check them and save in TES 
         
-        std::unique_ptr<LHCb::Vertex>   vertex ( new LHCb::Vertex   () ) ;
-        std::unique_ptr<LHCb::Particle> mother ( new LHCb::Particle ( decay.mother().pid() ) ) ;
-        
-        mother->setParticleID( decay.mother().pid() );
-        
         // do combination
-        StatusCode sc = combiner -> combine ( combination , *mother , *vertex ) ;
+        StatusCode sc = combiner -> combine ( combination , mother , vertex ) ;
         if ( sc.isFailure() ) { continue ; }
         
         //
         /// setup sentry before mother cuts 
         //
-        DaVinci::PVSentry sentry ( m_dvAlg , mother.get()  ) ;
+        DaVinci::PVSentry sentry ( m_dvAlg , &mother ) ;
         
         // apply mother cuts
-        if ( !mothcut ( mother.get() ) ) { continue ; }
+        const bool pass_mother = mothcut ( &mother ) ;
+        cnt_m += pass_mother ;
+        if ( !pass_mother ) { continue ; }
+
+        //
+        // store in TES
+        //
+        LHCb::Particle* pnew = mother.clone() ;
+        LHCb::Vertex*   vnew = vertex.clone() ;
+        pnew->setEndVertex ( vnew ) ;
+        //
+        _storeParticle ( pnew ) ;
+        _storeVertex   ( vnew ) ;
         
+        //
         // add new candidate
+        //
         Hlt::Candidate *candidate = newCandidate();
+        output.push_back ( candidate ) ;        
         candidate->addToWorkers ( alg() ) ;
+        
+        //
         // add new stage
+        //
         Hlt::Stage* stage = newStage () ;
         candidate->addToStages( stage ) ;
         Hlt::Stage::Lock lock { stage, alg() } ;
-        stage->set( mother.get() ) ;
-        output.push_back ( candidate ) ;
-        
-        // store in TES
-        _storeParticle ( mother.release ()  ) ;
-        _storeVertex   ( vertex.release () ) ;
+        stage->set            ( pnew  ) ;  // ATTENTION! 
         
         // increment number of good decays
-        ++nGood; 
-
+        ++nGood;
         // ====================================================================
       }                                    // end of the loop over 3rd particle 
       // ======================================================================
@@ -483,6 +517,15 @@ LoKi::Hlt1::Hlt1Combiner::execute4BodyCombination
   problem = problem || tooMuchCombinations ( ncomb , decay ) ;
   if ( problem ) { return nGood ; } 
   
+  StatEntity& cnt_c12  = alg()->counter ( "#pass comb12 cut"  ) ;
+  StatEntity& cnt_c123 = alg()->counter ( "#pass comb123 cut" ) ;
+  StatEntity& cnt_c    = alg()->counter ( "#pass combcut"     ) ;
+  StatEntity& cnt_m    = alg()->counter ( "#pass mother cut"  ) ;
+
+  //
+  LHCb::Vertex   vertex  ;
+  LHCb::Particle mother ( decay.mother().pid() ) ;
+
   //
   // make explicit 4-body loop
   //
@@ -523,7 +566,9 @@ LoKi::Hlt1::Hlt1Combiner::execute4BodyCombination
       //
       // Use combination cuts! it is a heart of all game: 
       // here we have the combination and can apply the cut:
-      if ( ! combcut12 ( comb12 ) ) { continue ; } // CONTINUE, next c2 
+      const bool pass_combination12 = combcut12 ( comb12 ) ;
+      cnt_c12 += pass_combination12 ;
+      if ( !pass_combination12 ) { continue ; }
       //
       //
       // loop over 3rd particle 
@@ -544,7 +589,9 @@ LoKi::Hlt1::Hlt1Combiner::execute4BodyCombination
         
         // Use combination cuts! it is a heart of all game: 
         // here we have the combination and can apply the cut:
-        if ( ! combcut123 ( comb123 ) ) { continue ; } // CONTINUE, next c3
+        const bool pass_combination123 = combcut123 ( comb123 ) ;
+        cnt_c123 += pass_combination123 ;
+        if ( !pass_combination123 ) { continue ; }
         //
         
         // loop over 4th particle 
@@ -565,42 +612,51 @@ LoKi::Hlt1::Hlt1Combiner::execute4BodyCombination
           //
           // check the combinations for overlaps and cuts 
           // 
-          if ( ! combcut ( combination ) ) { continue ; }
+          const bool pass_combination = combcut ( combination ) ;
+          cnt_c += pass_combination ;
+          if ( !pass_combination ) { continue ; }
           
           // here we can create the mother particle, the vertex, 
           // check them and save in TES 
-          std::unique_ptr<LHCb::Vertex>   vertex ( new LHCb::Vertex   () ) ;
-          std::unique_ptr<LHCb::Particle> mother ( new LHCb::Particle ( decay.mother().pid() ) ) ;
           
           // do combination
-          StatusCode sc = combiner -> combine ( combination , *mother , *vertex ) ;
+          StatusCode sc = combiner -> combine ( combination , mother , vertex ) ;
           if ( sc.isFailure() ) { continue ; }
           
-          DaVinci::PVSentry sentry ( m_dvAlg , mother.get() ) ;
+          DaVinci::PVSentry sentry ( m_dvAlg , &mother ) ;
           
           // apply mother cuts
-          if ( !mothcut ( mother.get() ) ) 
-          {
-            //std::cout << " -- " << i << " fail MOTH cut" << std::endl;
-            continue ;
-          }
+          const bool pass_mother = mothcut ( &mother ) ;
+          cnt_m += pass_mother ;
+          if ( !pass_mother ) { continue ; }
           
+          //
+          // store in TES
+          //
+          LHCb::Particle* pnew = mother.clone() ;
+          LHCb::Vertex*   vnew = vertex.clone() ;
+          pnew->setEndVertex ( vnew ) ;
+          //
+          _storeParticle ( pnew ) ;
+          _storeVertex   ( vnew ) ;
+          
+          //
           // add new candidate
+          //
           Hlt::Candidate *candidate = newCandidate();
+          output.push_back ( candidate ) ;        
           candidate->addToWorkers ( alg() ) ;
+          
+          //
           // add new stage
+          //
           Hlt::Stage* stage = newStage () ;
           candidate->addToStages( stage ) ;
           Hlt::Stage::Lock lock { stage, alg() } ;
-          stage->set( mother.get() ) ;
-          output.push_back ( candidate ) ;
+          stage->set            ( pnew  ) ;  // ATTENTION! 
           
-          // store in TES
-          _storeParticle ( mother.release () ) ;
-          _storeVertex   ( vertex.release () ) ;
-
           // increment number of good decays
-          ++nGood; 
+          ++nGood;
 
           // ==================================================================
         }                                  // end of the loop over 4th particle 
@@ -626,14 +682,21 @@ LoKi::Hlt1::Hlt1Combiner::operator()
   
   typedef result_type                CANDIDATES ;
   const CANDIDATES input = source() () ;
-  if ( input.empty() ) { return result_type () ; } // no action for EMPTY input
-  
-  /// the output selection
-  CANDIDATES output;
   
   // get daughters from the input sources 
   Selected daughters ;
   getDaughters ( input , daughters ) ;
+  //
+  // a little bit of monitoring of input particles 
+  //
+  for ( Selected::map_iterator id = daughters.begin() ; daughters.end() != id ; ++id ) 
+  { alg()->counter("#input " + id->first ) += id->second.size() ; }
+  //
+  if ( input.empty() ) { return result_type () ; } // no action for EMPTY input
+  //
+  // the output selection
+  CANDIDATES output;
+  output.reserve ( 100 ) ;
   //
   for ( std::vector<Decays::Decay>::const_iterator idecay = m_decays.begin() ; 
         idecay != m_decays.end() ; idecay ++ ) 
@@ -644,7 +707,7 @@ LoKi::Hlt1::Hlt1Combiner::operator()
     if      ( 3 == N ) { execute3BodyCombination(output, daughters, *idecay) ; }
     else if ( 4 == N ) { execute4BodyCombination(output, daughters, *idecay) ; }
     // fine for 2 body (not at all optimal for N>4 body)
-    else { executeCombineParticles(output, daughters, *idecay); }
+    else               { executeCombineParticles(output, daughters, *idecay) ; }
   }
   //
   // register the selection in Hlt Data Service

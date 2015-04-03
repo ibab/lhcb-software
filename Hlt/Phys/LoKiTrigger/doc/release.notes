@@ -4,6 +4,12 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-04-03 - Vanya Belyaev
+ - add more counters to Hlt1COmbiners
+   (input paricles and rates for various filtering stages)
+ - replace std::uniqu_ptr with single automatic instabce
+   (actually move from strategy  2 to strategy 3  - see DaVinciKernel/tests)   
+
 ! 2015-04-01 - Vanya Belyaev
  - fix the issue with particle -> PV association 
 
