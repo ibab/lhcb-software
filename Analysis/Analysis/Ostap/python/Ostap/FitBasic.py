@@ -220,7 +220,7 @@ def fitArgs ( name , dataset = None , *args , **kwargs ) :
 #  @date 2014-08-21
 class PDF (object) :
     """
-    Useful helper base class for implementation of generic PDFs for 1D-fit
+    Useful helper base class for implementation of PDFs for 1D-fit
     """
     def __init__ ( self , name ) :
         self.name         = name
@@ -615,7 +615,7 @@ class MASS(PDF) :
 #  @date 2014-08-21
 class PDF2 (object) :
     """
-    Useful helper base class for implementation of generic PDFs for 2D-fit
+    Useful helper base class for implementation of PDFs for 2D-fit
     """
     def __init__ ( self , name , xvar = None , yvar = None ) : 
     
@@ -1765,7 +1765,7 @@ class Convolution(object):
 #  @code
 #     
 #  raw_pdf = RooGaussian  ( ...     )
-#  pdf     = RooFit1D_pdf ( raw_pdf , varx = x )  
+#  pdf     = Generic1D_pdf ( raw_pdf , varx = x )  
 # 
 #  @endcode 
 #  If more functionality is required , more actions are possible:
@@ -1799,7 +1799,7 @@ class Generic1D_pdf(PDF) :
 #  @code
 #     
 #  raw_pdf = 
-#  pdf     = RooFit1D_pdf ( raw_pdf )  
+#  pdf     = Generic1D_pdf ( raw_pdf )  
 # 
 #  @endcode 
 #  If more functionality is required , more actions are possible:
@@ -1822,7 +1822,8 @@ class Generic2D_pdf(PDF) :
         if not name : name = pdf.GetName()
         PDF2  . __init__ ( self , name , varx , vary )
         self.pdf = pdf
-        
+
+
 # =============================================================================
 if '__main__' == __name__ :
     

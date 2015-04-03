@@ -496,9 +496,10 @@ class Manca_pdf (PDF) :
         self.y2s   = self.Y2S.pdf
         self.y3s   = self.Y3S.pdf
         
-        
-        self.background = Bkg_pdf  ( 'Bkg%s' % name , self.mass , power = power )
-        
+        ## use helper function to create background  
+        from Ostap.FitBkgModels import makeBkg
+        self.background = makeBkg ( power , 'Bkg%s' % name , self.mass )
+
         self.n1s = makeVar ( None ,
                              "N1S" + name  ,
                              "Signal(Y1S)" ,  None , 1000 ,  0 ,  1.e+7 )
@@ -721,7 +722,10 @@ class Manca2_pdf (PDF) :
         self.y3s   = self.Y3S.pdf
         
         
-        self.background = Bkg_pdf  ( 'Bkg%s' % name , self.mass , power = power )
+        ## use helper function to create background  
+        from Ostap.FitBkgModels import makeBkg
+        self.background = makeBkg ( power , 'Bkg%s' % name , self.mass )
+
         
         self.n1s = makeVar ( None ,
                              "N1S" + name  ,
@@ -788,10 +792,21 @@ class MancaX_pdf(PDF2) :
         self.signal1 = manca  
         self.signal2 = charm
 
+        ## use helper function to create background  
+        from Ostap.FitBkgModels import makeBkg
+        self.background = makeBkg ( power , 'Bkg%s' % name , self.mass )
+        
+        #
+        ## background components
+        #
+        self.b_Y = makeBkg ( power1 , 'BkgY' + suffix , self.m1 )   
+        self.b_C = makeBkg ( power2 , 'BkgC' + suffix , self.m2 )   
+        self.b_A = makeBkg ( powerA , 'BkgA' + suffix , self.m1 )   
+        self.b_B = makeBkg ( powerB , 'BkgB' + suffix , self.m2 )   
+
         #
         ## pure signal components: 3 
         #
-        from Ostap.FitBkgModels import Bkg_pdf 
         RPP  = ROOT.RooProdPdf 
         
         self.y1s_c   = RPP     ( 'Y1SC' + suffix , 'Y(1S)(x)Charm' , manca.y1s , charm.pdf )
@@ -799,20 +814,14 @@ class MancaX_pdf(PDF2) :
         self.y3s_c   = RPP     ( 'Y3SC' + suffix , 'Y(3S)(x)Charm' , manca.y3s , charm.pdf )
         
         ## charm + background
-        self.b_Y     = Bkg_pdf ( 'BkgY' + suffix , power = power1   , mass = self.m1 )   
         self.bs_pdf  = RPP     ( 'BC'   + suffix , 'B(2mu)(x)Charm' , self.b_Y.pdf , charm.pdf ) 
         
         ## Y + background
-        self.b_C     = Bkg_pdf ( 'BkgC' + suffix , power = power2   , mass = self.m2 )   
         self.y1s_b   = RPP     ( 'Y1SB' + suffix , 'Y(1S)(x)Bkg'    , manca.y1s , self.b_C.pdf ) 
         self.y2s_b   = RPP     ( 'Y2SB' + suffix , 'Y(2S)(x)Bkg'    , manca.y2s , self.b_C.pdf ) 
         self.y3s_b   = RPP     ( 'Y3SB' + suffix , 'Y(3S)(x)Bkg'    , manca.y3s , self.b_C.pdf ) 
-        
+
         ## background + background
-        self.b_A     = Bkg_pdf  ( 'BkgA' + suffix , power = powerA  , mass = self.m1 )   
-        self.b_B     = Bkg_pdf  ( 'BkgB' + suffix , power = powerB  , mass = self.m2 )   
-        #self.b_A = self.b_Y 
-        #self.b_B = self.b_C 
         self.bb_pdf  = RPP ( 'BB'   + suffix , 'Bkg(x)Bkg'     , self.b_A.pdf , self.b_B.pdf ) 
         
         ## coefficients

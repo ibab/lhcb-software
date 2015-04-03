@@ -175,7 +175,9 @@ __all__ = (
     'Fit2D'           , ## generic model for 2D-fit
     ##
     'Generic1D_pdf'   , ## wrapper over imported RooFit (1D)-pdf  
-    'Generic2D_pdf'   , ## wrapper over imported RooFit (2D)-pdf  
+    'Generic2D_pdf'   , ## wrapper over imported RooFit (2D)-pdf
+    ##
+    'makeBkg'         , ## helper function to create "background" PDF  
     )
 # =============================================================================
 import ROOT, math
