@@ -9,6 +9,7 @@
 // local 
 // ============================================================================
 #include "CombineParticles.h"
+#include "Counters.h"
 // ============================================================================
 /** @file
  *  Attempt to make more fine instumentation of generic 
@@ -1133,6 +1134,9 @@ StatusCode DaVinci::N3BodyDecays::execute()
   LHCb::Particle::ConstVector saved ;
   saved.reserve ( 100 ) ; // CRJ : Was 1000. Seems a bit big ?
   
+  StatEntity& cnt_c12 = counter ( s_combination12 ) ;
+  StatEntity& cnt_c   = counter ( s_combination   ) ;
+  StatEntity& cnt_m   = counter ( s_mother        ) ;
   
   // loop over all decays
   for ( std::vector<Decays::Decay>::const_iterator idecay = m_decays.begin() ;
@@ -1194,7 +1198,9 @@ StatusCode DaVinci::N3BodyDecays::execute()
         // Use combination cuts!  
         // it is a heart of all game: 
         // here we have the combination and can apply the cut:
-        if ( !m_acut12.fun ( comb12 ) ) { continue ; } // CONTINUE, next c2 
+        const bool pass_comb12 = m_acut12.fun ( comb12 ) ;
+        cnt_c12 += pass_comb12 ;
+        if ( !pass_comb12 ) { continue ; } // CONTINUE, next c2 
         //
         //
         // loop over 3rd particle 
@@ -1215,15 +1221,18 @@ StatusCode DaVinci::N3BodyDecays::execute()
           //
           // check the combinations for overlaps and cuts 
           //
-          if ( !treat_combination ( combination ) ) { continue ; }
+          const bool pass_combination = treat_combination ( combination ) ;
+          cnt_c += pass_combination ;
+          if ( !pass_combination ) { continue ; }
           
           // here we can create the mother particle, the vertex, 
           // check them and save in TES 
-          if ( !treat_mother 
-               ( idecay->mother().pid() , 
-                 combination            , 
-                 combiner               , 
-                 saved                  ) ) { continue ; }
+          const bool pass_mother = treat_mother ( idecay->mother().pid() , 
+                                                  combination            , 
+                                                  combiner               ,
+                                                  saved                  ) ;
+          cnt_m += pass_mother ;
+          if ( !pass_mother ) { continue ; }
           
           // increment number of good decays
           ++nGood; 
@@ -1289,6 +1298,10 @@ StatusCode DaVinci::N4BodyDecays::execute()
   LHCb::Particle::ConstVector saved ;
   saved.reserve ( 100 ) ; // CRJ : Was 1000. Seems a bit big ?
   
+  StatEntity& cnt_c12  = counter ( s_combination12  ) ;
+  StatEntity& cnt_c123 = counter ( s_combination123 ) ;
+  StatEntity& cnt_c    = counter ( s_combination    ) ;
+  StatEntity& cnt_m    = counter ( s_mother         ) ;
   
   // loop over all decays
   for ( std::vector<Decays::Decay>::const_iterator idecay = m_decays.begin() ;
@@ -1354,7 +1367,9 @@ StatusCode DaVinci::N4BodyDecays::execute()
         //
         // Use combination cuts! it is a heart of all game: 
         // here we have the combination and can apply the cut:
-        if ( !m_acut12.fun ( comb12 ) ) { continue ; } // CONTINUE, next c2 
+        const bool pass_combination12 = m_acut12.fun ( comb12 ) ;
+        cnt_c12 += pass_combination12 ;
+        if ( !pass_combination12 ) { continue ; } // CONTINUE, next c2 
         //
         //
         // loop over 3rd particle 
@@ -1375,7 +1390,9 @@ StatusCode DaVinci::N4BodyDecays::execute()
           
           // Use combination cuts! it is a heart of all game: 
           // here we have the combination and can apply the cut:
-          if ( !m_acut123.fun ( comb123 ) ) { continue ; } // CONTINUE, next c3
+          const bool pass_combination123 = m_acut123.fun ( comb123 ) ;
+          cnt_c123 += pass_combination12 ;
+          if ( !pass_combination123 ) { continue ; } // CONTINUE, next c3 
           //
           
           // loop over 4th particle 
@@ -1396,19 +1413,21 @@ StatusCode DaVinci::N4BodyDecays::execute()
             //
             // check the combinations for overlaps and cuts 
             // 
-            if ( !treat_combination ( combination ) ) { continue ; }
+            const bool pass_combination = treat_combination ( combination ) ;
+            cnt_c += pass_combination ;
+            if ( !pass_combination ) { continue ; }
             
             // here we can create the mother particle, the vertex, 
             // check them and save in TES 
-            if ( !treat_mother 
-                 ( idecay->mother().pid() , 
-                   combination            , 
-                   combiner               , 
-                   saved                  ) ) { continue ; }
+            const bool pass_mother = treat_mother ( idecay->mother().pid() , 
+                                                    combination            , 
+                                                    combiner               ,
+                                                    saved                  ) ;
+            cnt_m += pass_mother ;
+            if ( !pass_mother ) { continue ; }
             
             // increment number of good decays
-            ++nGood;
-            
+            ++nGood;            
             // ================================================================
           }                                // end of the loop over 4th particle 
           // ==================================================================
@@ -1471,6 +1490,12 @@ StatusCode DaVinci::N5BodyDecays::execute()
   
   LHCb::Particle::ConstVector saved ;
   saved.reserve ( 100 ) ; // CRJ : Was 1000. Seems a bit big ?
+  
+  StatEntity& cnt_c12   = counter ( s_combination12   ) ;
+  StatEntity& cnt_c123  = counter ( s_combination123  ) ;
+  StatEntity& cnt_c1234 = counter ( s_combination1234 ) ;
+  StatEntity& cnt_c     = counter ( s_combination     ) ;
+  StatEntity& cnt_m     = counter ( s_mother          ) ;
   
   
   // loop over all decays
@@ -1543,7 +1568,9 @@ StatusCode DaVinci::N5BodyDecays::execute()
         //
         // Use combination cuts! it is a heart of all game: 
         // here we have the combination and can apply the cut:
-        if ( !m_acut12.fun ( comb12 ) ) { continue ; } // CONTINUE, next c2 
+        const bool pass_combination12 = m_acut12.fun ( comb12 ) ;
+        cnt_c12 += pass_combination12 ;
+        if ( !pass_combination12 ) { continue ; } // CONTINUE, next c2 
         //
         // loop over 3rd particle 
         for ( Selected::Range::const_iterator it3 = child3.begin() ;
@@ -1564,7 +1591,9 @@ StatusCode DaVinci::N5BodyDecays::execute()
           
           // Use combination cuts! it is a heart of all game: 
           // here we have the combination and can apply the cut:
-          if ( !m_acut123.fun ( comb123 ) ) { continue ; } // CONTINUE, next c3
+          const bool pass_combination123 = m_acut123.fun ( comb123 ) ;
+          cnt_c123 += pass_combination123 ;
+          if ( !pass_combination123 ) { continue ; } // CONTINUE, next c3 
           //
           
           // loop over 4th particle 
@@ -1585,7 +1614,9 @@ StatusCode DaVinci::N5BodyDecays::execute()
             
             // Use combination cuts! it is a heart of all game: 
             // here we have the combination and can apply the cut:
-            if ( !m_acut1234.fun ( comb1234 ) ) { continue ; } // CONTINUE, next c4
+            const bool pass_combination1234 = m_acut1234.fun ( comb1234 ) ;
+            cnt_c1234 += pass_combination1234 ;
+            if ( !pass_combination1234 ) { continue ; } // CONTINUE, next c4 
             //
             
             // loop over 5th particle 
@@ -1606,19 +1637,21 @@ StatusCode DaVinci::N5BodyDecays::execute()
               //
               // check the combinations for overlaps and cuts 
               // 
-              if ( !treat_combination ( combination ) ) { continue ; }
+              const bool pass_combination = treat_combination ( combination ) ;
+              cnt_c += pass_combination ;
+              if ( !pass_combination ) { continue ; }
               
               // here we can create the mother particle, the vertex, 
               // check them and save in TES 
-              if ( !treat_mother 
-                   ( idecay->mother().pid() , 
-                     combination            , 
-                     combiner               , 
-                     saved                  ) ) { continue ; }
+              const bool pass_mother = treat_mother ( idecay->mother().pid() , 
+                                                      combination            , 
+                                                      combiner               ,
+                                                      saved                  ) ;
+              cnt_m += pass_mother ;
+              if ( !pass_mother ) { continue ; }
               
               // increment number of good decays
               ++nGood;
-              
               // ==============================================================
             }                              // end of the loop over 5th particle 
             // ================================================================
@@ -1684,6 +1717,14 @@ StatusCode DaVinci::N6BodyDecays::execute()
   LHCb::Particle::ConstVector saved ;
   saved.reserve ( 100 ) ; // CRJ : Was 1000. Seems a bit big ?
   
+  // a bit of monitoring 
+  StatEntity& cnt_c12    = counter ( s_combination12    ) ;
+  StatEntity& cnt_c123   = counter ( s_combination123   ) ;
+  StatEntity& cnt_c1234  = counter ( s_combination1234  ) ;
+  StatEntity& cnt_c12345 = counter ( s_combination12345 ) ;
+  StatEntity& cnt_c      = counter ( s_combination      ) ;
+  StatEntity& cnt_m      = counter ( s_mother           ) ;
+
   
   // loop over all decays
   for ( std::vector<Decays::Decay>::const_iterator idecay = m_decays.begin() ;
@@ -1760,7 +1801,9 @@ StatusCode DaVinci::N6BodyDecays::execute()
         //
         // Use combination cuts! it is a heart of all game: 
         // here we have the combination and can apply the cut:
-        if ( !m_acut12.fun ( comb12 ) ) { continue ; } // CONTINUE, next c2 
+        const bool pass_combination12 = m_acut12.fun ( comb12 ) ;
+        cnt_c12 += pass_combination12 ;
+        if ( !pass_combination12 ) { continue ; } // CONTINUE, next c2 
         //
         //
         // loop over 3rd particle 
@@ -1783,7 +1826,9 @@ StatusCode DaVinci::N6BodyDecays::execute()
           
           // Use combination cuts! it is a heart of all game: 
           // here we have the combination and can apply the cut:
-          if ( !m_acut123.fun ( comb123 ) ) { continue ; } // CONTINUE, next c3
+          const bool pass_combination123 = m_acut123.fun ( comb123 ) ;
+          cnt_c123 += pass_combination123 ;
+          if ( !pass_combination123 ) { continue ; } // CONTINUE, next c3 
           //
           
           // loop over 4th particle 
@@ -1805,7 +1850,9 @@ StatusCode DaVinci::N6BodyDecays::execute()
             
             // Use combination cuts! it is a heart of all game: 
             // here we have the combination and can apply the cut:
-            if ( !m_acut1234.fun ( comb1234 ) ) { continue ; } // CONTINUE, next c4
+            const bool pass_combination1234 = m_acut1234.fun ( comb1234 ) ;
+            cnt_c1234 += pass_combination1234 ;
+            if ( !pass_combination1234 ) { continue ; } // CONTINUE, next c4 
             //
             
             // loop over 5th particle 
@@ -1826,7 +1873,9 @@ StatusCode DaVinci::N6BodyDecays::execute()
               
               // Use combination cuts! it is a heart of all game: 
               // here we have the combination and can apply the cut:
-              if ( !m_acut12345.fun ( comb12345 ) ) { continue ; } // CONTINUE, next c5
+              const bool pass_combination12345 = m_acut12345.fun ( comb12345 ) ;
+              cnt_c12345 += pass_combination12345 ;
+              if ( !pass_combination12345 ) { continue ; } // CONTINUE, next c5
               //
               
               // loop over 6th particle 
@@ -1848,19 +1897,21 @@ StatusCode DaVinci::N6BodyDecays::execute()
                 //
                 // check the combinations for overlaps and cuts 
                 // 
-                if ( !treat_combination ( combination ) ) { continue ; }
+                const bool pass_combination = treat_combination ( combination ) ;
+                cnt_c += pass_combination ;
+                if ( !pass_combination ) { continue ; }
                 
                 // here we can create the mother particle, the vertex, 
                 // check them and save in TES 
-                if ( !treat_mother 
-                     ( idecay->mother().pid() , 
-                       combination            , 
-                       combiner               , 
-                       saved                  ) ) { continue ; }
+                const bool pass_mother = treat_mother ( idecay->mother().pid() , 
+                                                        combination            , 
+                                                        combiner               ,
+                                                        saved                  ) ;
+                cnt_m += pass_mother ;
+                if ( !pass_mother ) { continue ; }
                 
                 // increment number of good decays
-                ++nGood;
-                
+                ++nGood;                
                 // ============================================================ 
               }                            // end of the loop over 6th particle 
               // ==============================================================
@@ -1928,6 +1979,14 @@ StatusCode DaVinci::N7BodyDecays::execute()
   LHCb::Particle::ConstVector saved ;
   saved.reserve ( 100 ) ; // CRJ : Was 1000. Seems a bit big ?
   
+  // a bit of monitoring
+  StatEntity& cnt_c12     = counter ( s_combination12     ) ;
+  StatEntity& cnt_c123    = counter ( s_combination123    ) ;
+  StatEntity& cnt_c1234   = counter ( s_combination1234   ) ;
+  StatEntity& cnt_c12345  = counter ( s_combination12345  ) ;
+  StatEntity& cnt_c123456 = counter ( s_combination123456 ) ;
+  StatEntity& cnt_c       = counter ( s_combination       ) ;
+  StatEntity& cnt_m       = counter ( s_mother            ) ;
   
   // loop over all decays
   for ( std::vector<Decays::Decay>::const_iterator idecay = m_decays.begin() ;
@@ -2010,7 +2069,9 @@ StatusCode DaVinci::N7BodyDecays::execute()
         //
         // Use combination cuts! it is a heart of all game: 
         // here we have the combination and can apply the cut:
-        if ( !m_acut12.fun ( comb12 ) ) { continue ; } // CONTINUE, next c2 
+        const bool pass_combination12 = m_acut12.fun ( comb12 ) ;
+        cnt_c12 += pass_combination12 ;
+        if ( !pass_combination12 ) { continue ; } // CONTINUE, next c2 
         //
         //
         // loop over 3rd particle 
@@ -2034,7 +2095,9 @@ StatusCode DaVinci::N7BodyDecays::execute()
           
           // Use combination cuts! it is a heart of all game: 
           // here we have the combination and can apply the cut:
-          if ( !m_acut123.fun ( comb123 ) ) { continue ; } // CONTINUE, next c3
+          const bool pass_combination123 = m_acut123.fun ( comb123 ) ;
+          cnt_c123 += pass_combination123 ;
+          if ( !pass_combination123 ) { continue ; } // CONTINUE, next c3
           //
           
           // loop over 4th particle 
@@ -2057,7 +2120,9 @@ StatusCode DaVinci::N7BodyDecays::execute()
             
             // Use combination cuts! it is a heart of all game: 
             // here we have the combination and can apply the cut:
-            if ( !m_acut1234.fun ( comb1234 ) ) { continue ; } // CONTINUE, next c4
+            const bool pass_combination1234 = m_acut1234.fun ( comb1234 ) ;
+            cnt_c1234 += pass_combination1234 ;
+            if ( !pass_combination1234 ) { continue ; } // CONTINUE, next c4
             //
             
             // loop over 5th particle 
@@ -2079,7 +2144,9 @@ StatusCode DaVinci::N7BodyDecays::execute()
               
               // Use combination cuts! it is a heart of all game: 
               // here we have the combination and can apply the cut:
-              if ( !m_acut12345.fun ( comb12345 ) ) { continue ; } // CONTINUE, next c5
+              const bool pass_combination12345 = m_acut12345.fun ( comb12345 ) ;
+              cnt_c12345 += pass_combination12345 ;
+              if ( !pass_combination12345 ) { continue ; } // CONTINUE, next c5
               //
               
               // loop over 6th particle 
@@ -2102,7 +2169,9 @@ StatusCode DaVinci::N7BodyDecays::execute()
              
                 // Use combination cuts! it is a heart of all game: 
                 // here we have the combination and can apply the cut:
-                if ( !m_acut123456.fun ( comb123456 ) ) { continue ; } // CONTINUE, next c7
+                const bool pass_combination123456 = m_acut123456.fun ( comb123456 ) ;
+                cnt_c123456 += pass_combination123456 ;
+                if ( !pass_combination123456 ) { continue ; } // CONTINUE, next c6
                 //
                 
                 // loop over 7th particle 
@@ -2124,19 +2193,21 @@ StatusCode DaVinci::N7BodyDecays::execute()
                   //
                   // check the combinations for overlaps and cuts 
                   // 
-                  if ( !treat_combination ( combination ) ) { continue ; }
+                  const bool pass_combination = treat_combination ( combination ) ;
+                  cnt_c += pass_combination ;
+                  if ( !pass_combination ) { continue ; }
                   
                   // here we can create the mother particle, the vertex, 
                   // check them and save in TES 
-                  if ( !treat_mother 
-                       ( idecay->mother().pid() , 
-                         combination            , 
-                         combiner               , 
-                         saved                  ) ) { continue ; }
+                  const bool pass_mother = treat_mother ( idecay->mother().pid() , 
+                                                          combination            , 
+                                                          combiner               ,
+                                                          saved                  ) ;
+                  cnt_m += pass_mother ;
+                  if ( !pass_mother ) { continue ; }
                   
                   // increment number of good decays
-                  ++nGood;
-                  
+                  ++nGood ;
                   // ==========================================================
                 }                          // end of the loop over 7th particle 
                 // ============================================================
@@ -2207,7 +2278,15 @@ StatusCode DaVinci::N8BodyDecays::execute()
   LHCb::Particle::ConstVector saved ;
   saved.reserve ( 100 ) ; // CRJ : Was 1000. Seems a bit big ?
   
-  
+  StatEntity& cnt_c12      = counter ( s_combination12      ) ;
+  StatEntity& cnt_c123     = counter ( s_combination123     ) ;
+  StatEntity& cnt_c1234    = counter ( s_combination1234    ) ;
+  StatEntity& cnt_c12345   = counter ( s_combination12345   ) ;
+  StatEntity& cnt_c123456  = counter ( s_combination123456  ) ;
+  StatEntity& cnt_c1234567 = counter ( s_combination1234567 ) ;
+  StatEntity& cnt_c        = counter ( s_combination        ) ;
+  StatEntity& cnt_m        = counter ( s_mother             ) ;
+
   // loop over all decays
   for ( std::vector<Decays::Decay>::const_iterator idecay = m_decays.begin() ;
         m_decays.end() != idecay && !problem ; ++idecay )
@@ -2294,7 +2373,9 @@ StatusCode DaVinci::N8BodyDecays::execute()
         //
         // Use combination cuts! it is a heart of all game: 
         // here we have the combination and can apply the cut:
-        if ( !m_acut12.fun ( comb12 ) ) { continue ; } // CONTINUE, next c2 
+        const bool pass_combination12 = m_acut12.fun ( comb12 ) ;
+        cnt_c12 += pass_combination12 ;
+        if ( !pass_combination12 ) { continue ; } // CONTINUE, next c2 
         //
         //
         // loop over 3rd particle 
@@ -2319,7 +2400,9 @@ StatusCode DaVinci::N8BodyDecays::execute()
           
           // Use combination cuts! it is a heart of all game: 
           // here we have the combination and can apply the cut:
-          if ( !m_acut123.fun ( comb123 ) ) { continue ; } // CONTINUE, next c3
+          const bool pass_combination123 = m_acut123.fun ( comb123 ) ;
+          cnt_c123 += pass_combination123 ;
+          if ( !pass_combination123 ) { continue ; } // CONTINUE, next c3 
           //
           
           // loop over 4th particle 
@@ -2343,7 +2426,9 @@ StatusCode DaVinci::N8BodyDecays::execute()
             
             // Use combination cuts! it is a heart of all game: 
             // here we have the combination and can apply the cut:
-            if ( !m_acut1234.fun ( comb1234 ) ) { continue ; } // CONTINUE, next c4
+            const bool pass_combination1234 = m_acut1234.fun ( comb1234 ) ;
+            cnt_c1234 += pass_combination1234 ;
+            if ( !pass_combination1234 ) { continue ; } // CONTINUE, next c4
             //
             
             // loop over 5th particle 
@@ -2366,7 +2451,9 @@ StatusCode DaVinci::N8BodyDecays::execute()
               
               // Use combination cuts! it is a heart of all game: 
               // here we have the combination and can apply the cut:
-              if ( !m_acut12345.fun ( comb12345 ) ) { continue ; } // CONTINUE, next c5
+              const bool pass_combination12345 = m_acut12345.fun ( comb12345 ) ;
+              cnt_c12345 += pass_combination12345 ;
+              if ( !pass_combination12345 ) { continue ; } // CONTINUE, next c5
               //
               
               // loop over 6th particle 
@@ -2389,7 +2476,9 @@ StatusCode DaVinci::N8BodyDecays::execute()
              
                 // Use combination cuts! it is a heart of all game: 
                 // here we have the combination and can apply the cut:
-                if ( !m_acut123456.fun ( comb123456 ) ) { continue ; } // CONTINUE, next c6
+                const bool pass_combination123456 = m_acut123456.fun ( comb123456 ) ;
+                cnt_c123456 += pass_combination123456 ;
+                if ( !pass_combination123456 ) { continue ; } // CONTINUE, next c6
                 //
                 
                 // loop over 7th particle 
@@ -2411,7 +2500,9 @@ StatusCode DaVinci::N8BodyDecays::execute()
                   
                   // Use combination cuts! it is a heart of all game: 
                   // here we have the combination and can apply the cut:
-                  if ( !m_acut1234567.fun ( comb1234567 ) ) { continue ; } // CONTINUE, next c7
+                  const bool pass_combination1234567 = m_acut1234567.fun ( comb1234567 ) ;
+                  cnt_c1234567 += pass_combination1234567 ;
+                  if ( !pass_combination1234567 ) { continue ; } // CONTINUE, next c7
                   //
                   
                   // loop over 8th particle 
@@ -2433,20 +2524,21 @@ StatusCode DaVinci::N8BodyDecays::execute()
                     //
                     // check the combinations for overlaps and cuts 
                     // 
-                    if ( !treat_combination ( combination ) ) { continue ; }
-                    
+                    const bool pass_combination = treat_combination ( combination ) ;
+                    cnt_c += pass_combination ;
+                    if ( !pass_combination ) { continue ; }
                     
                     // here we can create the mother particle, the vertex, 
                     // check them and save in TES 
-                    if ( !treat_mother 
-                         ( idecay->mother().pid() , 
-                           combination            , 
-                           combiner               , 
-                           saved                  ) ) { continue ; }
+                    const bool pass_mother = treat_mother ( idecay->mother().pid() , 
+                                                            combination            , 
+                                                            combiner               ,
+                                                            saved                  ) ;
+                    cnt_m += pass_mother ;
+                    if ( !pass_mother ) { continue ; }
                     
                     // increment number of good decays
                     ++nGood;
-                    
                     // ========================================================
                   }                        // end of the loop over 8th particle 
                   // ==========================================================

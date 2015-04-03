@@ -41,6 +41,7 @@
 // local
 // ============================================================================
 #include "CombineParticles.h"
+#include "Counters.h"
 // ============================================================================
 // Boost
 // ============================================================================
@@ -546,7 +547,7 @@ bool CombineParticles::treat_combination
 ( const LHCb::Particle::ConstVector& combination ) const 
 {
   //
-  if ( msgLevel(MSG::VERBOSE) )
+  if ( UNLIKELY ( msgLevel( MSG::VERBOSE ) ) ) 
   {
     for ( LHCb::Particle::ConstVector::const_iterator i = combination.begin();
           i != combination.end(); ++i )
@@ -669,8 +670,8 @@ StatusCode CombineParticles::post_action
   // Finally, if configured fire an incident
   if ( problem )
   {
-    if ( msgLevel(MSG::DEBUG) )
-      debug() <<  "A problem with combinatorics has occured"  << endmsg;
+    if ( UNLIKELY ( msgLevel( MSG::DEBUG ) ) ) 
+    { debug() <<  "A problem with combinatorics has occured"  << endmsg; }
     if ( !m_stopIncidentName.empty() )
     { incSvc()->fireIncident( Incident ( name() , m_stopIncidentName ) ) ; }
   }
@@ -717,7 +718,12 @@ StatusCode CombineParticles::execute()
   
   LHCb::Particle::ConstVector saved ;
   saved.reserve ( 100 ) ; // CRJ : Was 1000. Seems a bit big ?
-
+  
+  // a bit of monitoring
+  
+  StatEntity& cnt_c = counter ( s_combination ) ;
+  StatEntity& cnt_m = counter ( s_mother      ) ;
+  
   // loop over all decays
   for ( std::vector<Decays::Decay>::const_iterator idecay = m_decays.begin() ;
         m_decays.end() != idecay && !problem ; ++idecay )
@@ -737,13 +743,13 @@ StatusCode CombineParticles::execute()
           items.end() != child ; ++child ) { loop.add ( daughters ( child->name() ) ) ; }
 
     // check for max
-    if ( msgLevel( MSG::DEBUG ) || 0 < m_maxComb )
+    if ( msgLevel( MSG::DEBUG ) || 0 < m_maxComb ) 
     { counter ( "# max size" + idecay->toString() ) += loop.size() ; }
     //
     problem = problem || tooMuchCombinations ( loop.size() , *idecay ) ;
-    if ( problem ) { continue ; }  // CONITNUE 
-    //
+    if ( problem ) { continue ; }  // CONITNUE
     
+    //
     // here we can start the actual looping
     for ( ; loop.valid() ; loop.next() )  // we are in the loop!
     {
@@ -751,7 +757,7 @@ StatusCode CombineParticles::execute()
       problem = problem || tooMuchCandidates ( nGood , *idecay ) ;
       if ( problem ) { break ; }                                  // BREAK!!! 
       //
-      if ( !loop.unique ( compare ) ) { continue ; }              // CONTINUE
+      if ( !loop.unique ( compare )  ) { continue ; }              // CONTINUE
       
       // get the actual('current') combination:
       LHCb::Particle::ConstVector combination ( loop.dim() ) ;
@@ -760,17 +766,22 @@ StatusCode CombineParticles::execute()
       
       //
       // check the combinations for overlaps and cuts 
-      // 
-      if ( !treat_combination ( combination ) ) { continue ; }
+      //
+      const bool pass_combination = treat_combination ( combination ) ;
+      cnt_c += pass_combination ;
+      if ( !pass_combination ) { continue ; }
       
       //
       // here we can create the mother particle, the vertex, 
       // check them and save in TES 
-      if ( !treat_mother 
-           ( idecay->mother().pid() , 
-             combination            , 
-             combiner               , 
-             saved                  ) ) { continue ; }
+      const bool pass_mother = treat_mother
+        ( idecay->mother().pid() , 
+          combination            , 
+          combiner               , 
+          saved                  ) ;
+      //
+      cnt_m += pass_mother ;
+      if ( !pass_mother ) { continue ; }
       
       // increment number of good decays
       ++nGood; 
@@ -916,18 +927,21 @@ StatusCode CombineParticles::updateMajor  ()
         else if ( m_daughterMonitors.end() != j2 )
         { m_daughterMonitors[ *ipid ] = m_daughterMonitors[ anti  ] ; } // use the same monitor as particle
       }
-
+      
     }
-
-    debug () << "The updated map of daughter cuts is : "
-             << Gaudi::Utils::toString ( m_daughterCuts ) << endreq ;
-
-    if ( monitor() && !m_daughterMonitors.empty() )
+    
+    if ( UNLIKELY ( msgLevel ( MSG::DEBUG ) ) ) 
+    {
+      debug () << "The updated map of daughter cuts is : "
+               << Gaudi::Utils::toString ( m_daughterCuts ) << endreq ;
+    }
+    
+    if ( UNLIKELY ( msgLevel( MSG::DEBUG ) && monitor() && !m_daughterMonitors.empty() ) )
     {
       debug () << "The updated map of daughter monitors is : "
                << Gaudi::Utils::toString ( m_daughterMonitors ) << endreq ;
     }
-
+    
   }
   // 3) decode the cuts for the daughters:
   {

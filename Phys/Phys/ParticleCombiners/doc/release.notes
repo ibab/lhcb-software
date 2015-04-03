@@ -3,6 +3,9 @@
 ! Responsible : DV Maintainer
 ! Purpose     : Particle Combining components.
 !-----------------------------------------------------------------------------
+        
+! 2015-04-03 - Vanya Belyaev
+ - add several counters 
 
 !===================== ParticleCombiners v1r1 2015-02-24 =====================
 ! 2015-02-15 - Vanya Belyaev
