@@ -6,6 +6,11 @@
 
 !========================= Hlt1Muons v1r13 2015-03-31 =========================
 
+! 2015-04-03 - Vasileios Syropoulos
+ - When extrapolating from M3 to the next station, assume that y hit coordinates are on a 
+   straight line originating from TT. Nothing changes for the x hit coordinates.
+ - Fixed small error in the chi2 calculation.
+
 ! 2015-04-01 - Roel Aaij
  - Copy Velo seed finding into MatchVeloTTMuon, simplify code.
 

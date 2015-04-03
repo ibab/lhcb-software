@@ -98,6 +98,7 @@ private:
    double m_FoIFactorY;
    
    // Temporary storage
+   LHCb::StateVector m_stateAtM3;
    std::unique_ptr<CommonMuonHit> m_magnetHit;
    std::vector<Candidate> m_seeds;
     

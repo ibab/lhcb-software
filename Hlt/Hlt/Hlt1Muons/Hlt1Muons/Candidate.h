@@ -138,14 +138,6 @@ class Candidate final
     {
         return m_slope;
     }
-    double& slopeY()
-    {
-        return m_slopeY;
-    }
-    double slopeY() const
-    {
-        return m_slopeY;
-    }
     double& p()
     {
         return m_p;

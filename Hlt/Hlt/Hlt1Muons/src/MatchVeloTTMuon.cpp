@@ -232,25 +232,25 @@ void MatchVeloTTMuon::i_findVeloTTSeeds( const Candidate& veloSeed,
     
    const double zStation = station.z();
    const LHCb::State* state = veloSeed.track()->stateAt( LHCb::State::AtTT );
-   LHCb::StateVector stateAtM3( state->stateVector(), state->z() );
+   m_stateAtM3 = LHCb::StateVector( state->stateVector(), state->z() );
 
    Gaudi::TrackMatrix propmatrix ;
-   m_extrapolator->propagate(stateAtM3, zStation, &propmatrix) ; 
+   m_extrapolator->propagate(m_stateAtM3, zStation, &propmatrix) ; 
 
    // Find the maximum FoI to use as a search window.
    double maxFoIX = 0, maxFoIY = 0;
    for ( unsigned int region = 0; region < nRegions; ++region ) {
-      auto foiX = m_FoIFactorX * FoIX( seedStation, region, stateAtM3.p() );
-      auto foiY = m_FoIFactorY * FoIY( seedStation, region, stateAtM3.p() );
+      auto foiX = m_FoIFactorX * FoIX( seedStation, region, m_stateAtM3.p() );
+      auto foiY = m_FoIFactorY * FoIY( seedStation, region, m_stateAtM3.p() );
       if ( foiX > maxFoIX ) maxFoIX = foiX;
       if ( foiY > maxFoIY ) maxFoIY = foiY;
    }
 
    // FoI boundaries
-   double xMin = stateAtM3.x() - maxFoIX;
-   double xMax = stateAtM3.x() + maxFoIX;   
-   double yMin = stateAtM3.y() - maxFoIY;
-   double yMax = stateAtM3.y() + maxFoIY;
+   double xMin = m_stateAtM3.x() - maxFoIX;
+   double xMax = m_stateAtM3.x() + maxFoIX;   
+   double yMin = m_stateAtM3.y() - maxFoIY;
+   double yMax = m_stateAtM3.y() + maxFoIY;
 
    // debug info: print hits in M3
     if ( UNLIKELY( msgLevel( MSG::DEBUG ) ) ) {
@@ -273,9 +273,8 @@ void MatchVeloTTMuon::i_findVeloTTSeeds( const Candidate& veloSeed,
          Candidate& seed = m_seeds.back();
          seed.addHit( &hit );
 
-         seed.slope()  = stateAtM3.tx() ;
-         seed.slopeY() = stateAtM3.ty() ;
-         seed.p() = 1/std::abs( stateAtM3.qOverP() ) ;
+         seed.slope()  = m_stateAtM3.tx() ;
+	 seed.p() = m_kickScale / fabs( seed.slope() - seed.tx() ) + m_kickOffset;
 
       }
    }
@@ -317,6 +316,9 @@ void MatchVeloTTMuon::i_findVeloSeeds( const Candidate& veloSeed,
     double yMin = yMuon - yRange;
     double yMax = yMuon + yRange;
 
+    const LHCb::State* state = veloSeed.track()->stateAt( LHCb::State::EndVelo );
+    m_stateAtM3 = LHCb::StateVector( state->stateVector(), state->z() );
+
     if ( UNLIKELY( msgLevel( MSG::DEBUG ) ) ) {
         debug() << "Window: (" << xMin << "," << yMin << ") -> (" << xMax << ","
                 << yMax << ")" << endmsg;
@@ -349,6 +351,9 @@ void MatchVeloTTMuon::i_findVeloSeeds( const Candidate& veloSeed,
 //=============================================================================
 void MatchVeloTTMuon::i_addHits( Candidate& seed )
 {    
+   double xM3 = m_stateAtM3.x();
+   double zM3 = m_stateAtM3.z();
+
    unsigned int nMissed = 0;
    for ( unsigned int i = 1; i < g_order.size() && nMissed <= m_maxMissed; ++i ) {
       // find candidate hits
@@ -357,14 +362,15 @@ void MatchVeloTTMuon::i_addHits( Candidate& seed )
       // get the station we're looking at.
       const CommonMuonStation& station = m_hitManager->station( s );
       double zStation = station.z();
-	
-      // get last hit of current seed
-      const CommonMuonHit* last_hit = seed.hits().back();
 
-      // str. line extrapolation from last hit position to the current station 
-      double dz = zStation - last_hit->z() ;
-      const double yMuon = last_hit->y() + dz * seed.slopeY();
-      const double xMuon = last_hit->x() + dz * seed.slope() ;
+      // extrapolation to that station.
+      //  x extrapolation ( from M3 )
+      double dz = zStation - zM3 ;
+      const double xMuon = xM3 + seed.slope() * dz; 
+
+      //  y extrapolaton ( from TT )
+      double yMuon = 0., yErr = 0;
+      seed.yStraight( zStation, yMuon, yErr );
 
       // Find the maximum FoI to use as a search window.
       double maxFoIX = 0, maxFoIY = 0;
@@ -440,7 +446,7 @@ void MatchVeloTTMuon::i_fitCandidate( Candidate& candidate ) const
       for ( const CommonMuonHit* hit : hits ) {
          auto c = hitInfo(hit);
          // xz plane
-         double err = c.first / 2.;
+	 double err = c.second / 2.;
          double tmp = ( hit->z() - zow ) / err;
          st += tmp * tmp;
          b += tmp * c.first / err;
