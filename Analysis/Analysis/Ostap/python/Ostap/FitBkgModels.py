@@ -834,7 +834,7 @@ models.append ( PS23L_pdf )
 ## create simple background model
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2015-04-03
-def makeBkg ( bkg , name , var , **kwargs ) :
+def makeBkg ( bkg , name , xvar , **kwargs ) :
     """
     Helper function to create background models (around Bkg_pdf)
     
@@ -860,14 +860,14 @@ def makeBkg ( bkg , name , var , **kwargs ) :
     ## Regular case: degree of polynom in Bkg_pdf 
     if isinstance ( bkg , ( int , long ) ) and 0 <= bkg :
         
-        model = Bkg_pdf ( name , power = bkg , mass = var , **kwargs )
+        model = Bkg_pdf ( name , power = bkg , mass = xvar , **kwargs )
         return model
     
     ## native RooFit pdf ? 
     elif isinstance ( bkg , ROOT.RooAbsPdf ) :
         
         from Ostap.FitBasic import Generic1D_pdf 
-        model = Generic1D_pdf ( bkg , varx = var , name = name ) 
+        model = Generic1D_pdf ( bkg , varx = xvar , name = name ) 
         return model
     
     ## some Ostap-based model ?
@@ -879,7 +879,7 @@ def makeBkg ( bkg , name , var , **kwargs ) :
     ## interprete it as exponential slope for Bkg-pdf 
     elif isinstance ( bkg , ROOT.RooAbsReal ) :
 
-        model = Bkg_pdf ( name , mass = var , tau = bkg , **kwargs )
+        model = Bkg_pdf ( name , mass = xvar , tau = bkg , **kwargs )
         return model
     
     raise  TypeError("Wrong type of bkg object: %s/%s " % ( bkg , type(bkg) ) )
