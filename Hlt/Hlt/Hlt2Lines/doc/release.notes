@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-03 - Jason Andrews
+ - Initial commit of "Vertexless" lines with only B2Kpi0 implemented so far
+
 ! 2015-04-02 - Simone Stracka	
 	- Added initial version of D -> eta h exclusive line (eta -> pi+ pi- pi0).
 		+ CharmHad/D2EtaHLines.py added to define line sequences and slots
