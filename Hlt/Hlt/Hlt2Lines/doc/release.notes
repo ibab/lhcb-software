@@ -8,7 +8,13 @@
 !
 !----------------------------------------------------------------------------
 
-! 2015-04-02 - Simone Stracka
+! 2015-04-02 - Simone Stracka	
+	- Added initial version of D -> eta h exclusive line (eta -> pi+ pi- pi0).
+		+ CharmHad/D2EtaHLines.py added to define line sequences and slots
+	  + CharmHad/Stages.py modified to include the new stages
+		+ CharmHad/Lines.py modified to include the lines
+
+! 2015-04-02 - Simone Stracka	
   - CharmHad/Stages.py: Added shared instances of NeutralInParticleFilter
 	- CharmHad/Input.py and CharmHad/Lines.py: Added AllPi0s
 	- CharmHad/D2HHPi0Lines.py and CharmHad/D2HHHPi0Lines.py: Updated to use shared instances

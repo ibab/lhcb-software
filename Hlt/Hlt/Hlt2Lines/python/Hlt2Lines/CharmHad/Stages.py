@@ -168,7 +168,8 @@ SharedNeutralChild_pi0R = NeutralInParticleFilter("SharedNeutralChild_pi0R")
 SharedNeutralChild_pi0M = NeutralInParticleFilter("SharedNeutralChild_pi0M")
 SharedNeutralChild_pi0 = NeutralInParticleFilter("SharedNeutralChild_pi0")
 SharedNeutralChild_gamma = NeutralInParticleFilter("SharedNeutralChild_gamma")
-                                                        
+SharedNeutralLowPtChild_pi0 = NeutralInParticleFilter("SharedNeutralLowPtChild_pi0")
+SharedNeutralLowPtChild_gamma = NeutralInParticleFilter("SharedNeutralLowPtChild_gamma")
 
 ## ========================================================================= ##
 ## Filters for composite particles
@@ -592,6 +593,42 @@ class D2HH0_4Body_Combiner(Hlt2Combiner):
                               Combination12Cut = 'AALL', Combination123Cut = neutral_combination_cut,
                               Preambulo = [])
 
+# D2EtaH Combiners
+class D2RhoHG_3Body_Combiner(Hlt2Combiner):
+    def __init__(self, name, decay, inputs):
+        
+        daug_cuts =    {'rho(770)0'   : "ALL",
+                        'pi+'   : "ALL",
+                        'K+'    : "ALL",
+                        'gamma' : "ALL"
+                        }
+        
+        charged_combination_cut = ("(AM>%(AMRhoH_MIN)s) " +
+                                   "& (AM<%(AMRhoH_MAX)s) " )
+
+        D_combination_cut   = ("(AM>%(AM_MIN)s) &" +
+                               "(AM<%(AM_MAX)s) &" +
+                               "(APT > %(APT_MIN)s) &" +
+                               "(AM13>%(AMEta_MIN)s) &" +
+                               "(AM13<%(AMEta_MAX)s) " )
+        
+        D_mother_cut   = ("( in_range( %(DMASS_MIN)s, M, %(DMASS_MAX)s )" +
+                          " & ( VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
+                          " & ( BPVLTIME() > %(BPVLTIME_MIN)s ) )" )
+        
+        from HltTracking.HltPVs import PV3D
+        from Configurables import DaVinci__N3BodyDecays
+        
+        Hlt2Combiner.__init__(self, name, decay, inputs,
+                              dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                              tistos = 'TisTosSpec',
+                              combiner = DaVinci__N3BodyDecays, DaughtersCuts = daug_cuts,
+                              CombinationCut =  D_combination_cut,
+                              MotherCut = D_mother_cut,
+                              Combination12Cut = charged_combination_cut, Preambulo = [])
+
+                        
+
 
 # Lines definitions
 class DetachedHHChild(DetachedHHChildCombiner):
@@ -686,6 +723,14 @@ class Lc2PiPK(DetachedHHHCombiner) :
                   SharedDetachedLcChild_p]
         DetachedHHHCombiner.__init__(self,name,decay,inputs)
 
+
+class DetachedRhoPIDChild(DetachedHHChildCombiner):
+    def __init__(self,name):
+        decay=["rho(770)0 -> pi+ pi-"]
+        inputs = [SharedDetachedDpmChild_pi]
+        DetachedHHChildCombiner.__init__(self,name,decay,inputs)
+        
+                
 # The lifetime unbiased lines now
 
 class D2KPiPi_SS_LTUNB(HHHCombiner) :

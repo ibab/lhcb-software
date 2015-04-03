@@ -10,6 +10,7 @@ from XSecLines import CharmHadXSecLines
 from D2HHHPi0Lines import CharmHadD2HHHPi0Lines
 from D2HHLines import CharmHadD2HHLines
 from Dst2PiD02HHXBDTLines import CharmHadDst2PiD02HHXBDTLines
+from D2EtaHLines import CharmHadD2EtaHLines
 
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
@@ -26,7 +27,7 @@ XSecLines = CharmHadXSecLines()
 D2HHHPi0Lines = CharmHadD2HHHPi0Lines()
 D2HHLines = CharmHadD2HHLines()
 Dst2PiD02HHXBDTLines = CharmHadDst2PiD02HHXBDTLines()
-
+D2EtaHLines = CharmHadD2EtaHLines()
 
 theseslots = {   'Prescale' : {}, 
                  'TrackGEC' : {'NTRACK_MAX'           : 10000},
@@ -112,6 +113,14 @@ theseslots = {   'Prescale' : {},
                  'SharedNeutralChild_gamma' : {
                                  'Neut_ALL_PT_MIN'           : 500.0 * MeV,
                                           },
+                 #
+                 'SharedNeutralLowPtChild_gamma' : {
+                                 'Neut_ALL_PT_MIN'           : 350.0 * MeV,
+                                          },
+                 'SharedNeutralLowPtChild_pi0' : {
+                                 'Neut_ALL_PT_MIN'           : 350.0 * MeV,
+                                 'Pi0_ALL_DMASS_MAX'         :  60.0,
+                                          },
                 }
 
 theseslots.update(D2HHHLines.localcuts())
@@ -126,6 +135,7 @@ theseslots.update(XSecLines.localcuts())
 theseslots.update(D2HHHPi0Lines.localcuts())
 theseslots.update(D2HHLines.localcuts())
 theseslots.update(Dst2PiD02HHXBDTLines.slots())
+theseslots.update(D2EtaHLines.localcuts())
 
 class CharmHadLines(Hlt2LinesConfigurableUser):
     __slots__ = theseslots
@@ -146,6 +156,7 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
             self.__lines__.update(D2HHHPi0Lines.locallines())
             self.__lines__.update(D2HHLines.locallines())
             self.__lines__.update(Dst2PiD02HHXBDTLines.stages())
+            self.__lines__.update(D2EtaHLines.locallines())
             
         return self.__lines__[nickname] if nickname else self.__lines__
             
