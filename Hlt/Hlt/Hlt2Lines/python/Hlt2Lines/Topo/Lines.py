@@ -49,7 +49,6 @@ class TopoLines(Hlt2LinesConfigurableUser):
             'BDT_2BODYRAD_MIN'    : 0.1,
             'BDT_3BODYRAD_MIN'    : 0.1,
             'BDT_4BODYRAD_MIN'    : 0.1,
-            'BDT_OPT_MIN'         : 0.05,
             # BDT parameter file versions.
             'BDT_2BODY_PARAMS'    : 'v1r0',
             'BDT_3BODY_PARAMS'    : 'v1r0',
@@ -68,13 +67,14 @@ class TopoLines(Hlt2LinesConfigurableUser):
                 {'PTSUM': (9000, -1), 'FDCHI2': (1000, -1), 
                  'DOCA': (-1, 0.2), 'M': (3500, 7000)}],
             # Optimized parameters.
+            'OPT_TOS'               : 'Hlt1Track.*Decision%TOS',
+            'OPT_GEC_MAX'           : 500,
+            'OPT_BDT_MIN'           : 0.98,
             'OPT_BDT_PARAMS'        : 'hlt2_border_base.mx',
-            'OPT_TRK_PT_MIN'        : 200 * MeV,
+            'OPT_TRK_PT_MIN'        : 500 * MeV,
             'OPT_TRK_P_MIN'         : 5000 * MeV,
             'OPT_TRK_CHI2_MAX'      : 3,
             'OPT_TRK_IPCHI2_MIN'    : 4,
-            'OPT_CMB_TRK_PT_MIN'    : 500 * MeV,
-            'OPT_CMB_TRK_CHI2_MAX'  : 3,
             'OPT_CMB_TRK_NLT16_MAX' : 2,
             'OPT_CMB_PRT_PT_MIN'    : 2000 * MeV,
             'OPT_CMB_VRT_DIRA_MIN'  : 0,
@@ -108,15 +108,21 @@ class TopoLines(Hlt2LinesConfigurableUser):
 
         # Filter the particle input.
         from Inputs import BiKalmanFittedKaonsWithMuonID
-        from Stages import FilterParts
-        parts = FilterParts('Kaon', [BiKalmanFittedKaonsWithMuonID])
+        from Stages import FilterParts, CombineTos
+        parts  = FilterParts('Kaon', [BiKalmanFittedKaonsWithMuonID],
+                             props['OPT_GEC_MAX'] >= 0)
+        combos = CombineTos([parts])
 
         # Build the lines.
         from Stages import FilterCombos, CombineN
         stages = {}
         for n in xrange(2, 5):
+            if n == 2:
+                stages['OptTopo%iBody' % n] = [
+                    FilterCombos(n, [combos], varmap, props)]
+                continue
             stages['OptTopo%iBody' % n] = [
-                FilterCombos([CombineN(n, [parts])], varmap, props)]
+                FilterCombos(n, [CombineN(n, [combos, parts])], varmap, props)]
         from HltLine.HltLine import Hlt2Line
         for (name, algos) in self.algorithms(stages).iteritems():
             Hlt2Line(name, prescale = self.prescale, algos = algos,
