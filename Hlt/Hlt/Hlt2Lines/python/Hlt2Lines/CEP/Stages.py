@@ -51,6 +51,13 @@ class ElectronCombiner(Hlt2Combiner):
                               dependencies = [TrackGEC(linePrefix + 'TrackGEC')],
                               DaughtersCuts = dc, Preambulo = []);
 
+class ElectronCombiner_MinKinBias(Hlt2Combiner):
+    def __init__(self, name, decay, inputs):
+        dc = {'e+'   : "(PT > %(e_PTmin)s)",
+              'e-'   : "(PT > %(e_PTmin)s)"}
+        Hlt2Combiner.__init__(self, name, decay, inputs,
+                              DaughtersCuts = dc, Preambulo = []);
+
 class MuonCombiner(Hlt2Combiner):
     def __init__(self, name, decay, inputs):
         dc = {'mu+'   : "(PT > %(mu_PTmin)s)",
@@ -59,20 +66,32 @@ class MuonCombiner(Hlt2Combiner):
                               dependencies = [TrackGEC(linePrefix + 'TrackGEC')],
                               DaughtersCuts = dc, Preambulo = []);
 
-# The class that creates the Hlt2Combiner
+# The class that creates the hadronic Hlt2Combiners
 class HadronicCombiner(Hlt2Combiner):
     def __init__(self, name, decay, inputs):
         cc = ("(APT > %(APTmin)s)"+
               "(APT < %(APTmax)s)"+
               "(AP  > %(APmin)s)"+
-              "(ADOCAMAX('LoKi::DistanceCalculator') < %(ADOCAmax)s)"+
+              "(ADOCAMAX() < %(ADOCAmax)s)"+
               "(in_range( %(AMmin)s, AM, %(AMmax)s ))")
         mc =    ("(VFASPF(VCHI2PDOF) < %(VtxChi2DoFmax)s)")
         
         Hlt2Combiner.__init__(self, name, decay, inputs,
                               dependencies = [TrackGEC(linePrefix + 'TrackGEC')],
                               CombinationCut = cc, MotherCut = mc, Preambulo = [])
+class HadronicCombiner_MinKinBias(Hlt2Combiner):
+    def __init__(self, name, decay, inputs):
+        cc = ("(APT > %(APTmin)s)"+
+              "(APT < %(APTmax)s)")
+        mc =    ("ALL")
+        
+        Hlt2Combiner.__init__(self, name, decay, inputs,
+                              CombinationCut = cc, MotherCut = mc, Preambulo = [])
 
+
+##############################
+# HADRONIC FILTERS
+##############################
 # Lambda -> p pi
 class LowMultL2pPiFilter(Hlt2ParticleFilter):
     def __init__(self, name):
@@ -208,7 +227,17 @@ class LowMultLMR2HHHHWSFilter(Hlt2ParticleFilter):
                    "[phi(1020) -> pi+ pi+ pi+ pi+]cc"]
         inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi")],
         HadronicCombiner.__init__(self,name,decay,inputs)
-# CEP Muon lines
+
+class LowMultMinKinBiasHadronFilter(Hlt2ParticleFilter):
+    def __init__(self, name):
+        decay   = ["phi(1020) -> K+ K-","[phi(1020) -> K+ pi+]cc"],
+        from Inputs import Hlt2NoPIDsKaons
+        inputs  = [Hlt2NoPIDsKaons]
+        HadronicCombiner_MinKinBias.__init__(self,name,decay,inputs)
+
+##############################
+# MUON FILTERS
+##############################
 class LowMultDiMuonFilter(Hlt2ParticleFilter):
     def __init__(self, name):
         decay   = ["J/psi(1S) -> mu+ mu-","J/psi(1S) -> mu+ mu+","J/psi(1S) -> mu- mu-"]
@@ -224,13 +253,19 @@ class LowMultMuonFilter(Hlt2ParticleFilter):
         Hlt2ParticleFilter.__init__(self, name, cut, inputs,
                                     dependencies = [TrackGEC(linePrefix + 'TrackGEC')])
 
-# CEP Photon lines
+##############################
+# PHOTON FILTERS
+##############################
 class LowMultPhotonFilter(Hlt2ParticleFilter):
     def __init__(self, name):
-#    ???
+        cut = "(PT > %(gamma_PTmin)s)";
+        from Inputs import MergedPi0sFromL0, ResolvedPi0sFromL0, AllPi0sFromL0, BiKalmanFittedPhotonsFromL0Low
+        inputs = [MergedPi0sFromL0, ResolvedPi0sFromL0, AllPi0sFromL0, BiKalmanFittedPhotonsFromL0Low]
         Hlt2ParticleFilter.__init__(self, name, cut, inputs)
 
-# CEP Electron lines
+##############################
+# ELECTRON FILTERS
+##############################
 class LowMultElectronFilter(Hlt2ParticleFilter):
     def __init__(self, name):
         decay   = ["J/psi(1S) -> e+ e-","J/psi(1S) -> e+ e+","J/psi(1S) -> e- e-"]
@@ -239,3 +274,9 @@ class LowMultElectronFilter(Hlt2ParticleFilter):
         ElectronCombiner.__init__(self,name,decay,inputs,
                                   dependencies = [TrackGEC(linePrefix + 'TrackGEC')])
 
+class LowMultMinKinBiasElectronFilter(Hlt2ParticleFilter):
+    def __init__(self, name):
+        decay   = ["J/psi(1S) -> e+ e-","J/psi(1S) -> e+ e+","J/psi(1S) -> e- e-"]
+        from Inputs import BiKalmanFittedElectronsFromL0
+        inputs  = [BiKalmanFittedElectronsFromL0]
+        ElectronCombiner_MinKinBias.__init__(self,name,decay,inputs)

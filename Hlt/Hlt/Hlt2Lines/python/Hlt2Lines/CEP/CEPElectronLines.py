@@ -5,9 +5,11 @@ class CEPElectronLines(Hlt2LinesConfigurableUser) :
     def localcuts(self) :
         return {'Electron'      :   {'nVeloTracksmax'  :     8,
                                      'e_PTmin'         :     250 * MeV},
+                'MinKinBiasElectron':{'e_PTmin'        :     250 * MeV}
                }
 
     def locallines(self):
       from Stages import LowMultElectronFilter
-      stages = {'LowMultElectron'        : [LowMultElectronFilter('Electron')]}
+      stages = {'LowMultElectron'        : [LowMultElectronFilter('Electron')]
+                'LowMultMinKinBiasElectron': [LowMultMinKinBiasElectronFilter('Electron')]}
       return stages

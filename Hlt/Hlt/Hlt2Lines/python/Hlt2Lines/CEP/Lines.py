@@ -1,3 +1,17 @@
+# -*- coding: utf-8 -*-
+## @file
+#  Set of Hlt2-lines for study of low multiplicity processes. Lines 
+#  are organised according to L0 trigger dependence
+#
+#  @author Dan Johnson daniel.johnson@cern.ch
+=============================================================================
+""" Set of Hlt2-lines for study of low multiplicity processes. Lines
+are organised according to L0 trigger dependence
+
+"""
+=============================================================================
+__author__  = "Dan Johnson daniel.johnson@cern.ch"
+
 from CEPHadronLines import CEPHadronLines
 from CEPMuonLines import CEPMuonLines
 from CEPPhotonLines import CEPPhotonLines
@@ -24,6 +38,7 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                  , 'Hlt2LowMultLMR2HHWS'    : 0.05
                                  , 'Hlt2LowMultLMR2HHHH'    : 0.05
                                  , 'Hlt2LowMultLMR2HHHHWS'  : 0.05
+                                 , 'Hlt2MinKinBiasHadron'   : 0.01
                                  # Muon lines
                                  , 'Hlt2LowMultDiMuon'      : 1.0
                                  , 'Hlt2LowMultMuon'        : 0.1
@@ -31,6 +46,7 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                  , 'Hlt2LowMultPhoton'      : 1.0
                                  # Electron lines
                                  , 'Hlt2LowMultElectron'    : 1.0
+                                 , 'Hlt2LowMultMinKinBiasElectron': 0.05
                                  }
                   , 'Postscale' : {   'Hlt2LowMultL2pPi'       : 1.0
                                     , 'Hlt2LowMultL2pPiWS'     : 1.0
@@ -52,10 +68,15 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                     , 'Hlt2LowMultLMR2HHWS'    : 1.0
                                     , 'Hlt2LowMultLMR2HHHH'    : 1.0
                                     , 'Hlt2LowMultLMR2HHHHWS'  : 1.0
+                                    , 'Hlt2MinKinBiasHadron'   : 1.0
+                                    # Muon lines
                                     , 'Hlt2LowMultDiMuon'      : 1.0
                                     , 'Hlt2LowMultMuon'        : 1.0
+                                    # Photon lines
                                     , 'Hlt2LowMultPhoton'      : 1.0
+                                    # Electron lines
                                     , 'Hlt2LowMultElectron'    : 1.0
+                                    , 'Hlt2LowMultMinKinBiasElectron': 1.0
                                     }
                     , 'HLT'       : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"
                     , 'Common'    : {'nBackTracksmax' :     1,

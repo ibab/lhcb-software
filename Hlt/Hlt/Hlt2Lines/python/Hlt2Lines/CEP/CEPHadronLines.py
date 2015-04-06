@@ -66,8 +66,8 @@ class CEPHadronLines(Hlt2LinesConfigurableUser) :
                                      'ADOCAmax'       :     0.2 * mm,
                                      'VtxChi2DoFmax'  :     4.0,
                                      'nVeloTrackmax'  :     8,
-                                     'AMmin'          :     400.0 * MeV,
-                                     'AMmax'          :     5000.0 * MeV}
+                                     'AMmin'          :     0.0 * MeV,
+                                     'AMmax'          :     15000.0 * GeV}
                   , 'LMR2HHHH'  :   {'APTmin'         :     0.0 * MeV,
                                      'APTmax'         :     5000.0 * MeV,
                                      'APmin'          :     15000.0 * MeV,
@@ -76,6 +76,7 @@ class CEPHadronLines(Hlt2LinesConfigurableUser) :
                                      'nVeloTrackmax'  :     8,
                                      'AMmin'          :     400.0 * MeV,
                                      'AMmax'          :     5000.0 * MeV}
+                  , 'MinKinBiasHadron':{'APTmin'      :     1. * GeV}
                   } 
         return localStages
 
@@ -111,6 +112,8 @@ class CEPHadronLines(Hlt2LinesConfigurableUser) :
                  'LowMultLMR2HH'      : [LowMultLMR2HHFilter('LMR2HH')],
                  'LowMultLMR2HHWS'    : [LowMultLMR2HHWSFilter('LMR2HH')],
                  'LowMultLMR2HHHH'    : [LowMultLMR2HHHHFilter('LMR2HHHH')],
-                 'LowMultLMR2HHHHWS'  : [LowMultLMR2HHHHWSFilter('LMR2HHHH')]
+                 'LowMultLMR2HHHHWS'  : [LowMultLMR2HHHHWSFilter('LMR2HHHH')],
+                 # Unbiased hadron line
+                 'LowMultMinKinBiasHadron':  [LowMultMinKinBiasHadronFilter('MinKinBiasHadron')] 
                }
       return stages
