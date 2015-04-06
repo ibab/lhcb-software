@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-06 - Dan Johnson
+  - Small adjustments to the CEP lines
+
 ! 2015-04-03 - Jason Andrews
  - Initial commit of "Vertexless" lines with only B2Kpi0 implemented so far
 
