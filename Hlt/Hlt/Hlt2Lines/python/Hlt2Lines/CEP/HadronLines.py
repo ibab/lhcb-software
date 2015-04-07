@@ -41,7 +41,7 @@ class CEPHadronLines() :
                                      'APmin'          :     10000.0 * MeV,
                                      'ADOCAmax'       :     0.5 * mm,
                                      'VtxChi2DoFmax'  :     15.0,
-                                     'nVeloTrackmax'  :     6,
+                                     'nVeloTracksmax' :     6,
                                      'AMmin'          :     2850.0 * MeV,
                                      'AMmax'          :     3600.0 * MeV}
                   , 'ChiC2HHHH' :   {'APTmin'         :     0.0 * MeV,
@@ -49,7 +49,7 @@ class CEPHadronLines() :
                                      'APmin'          :     10000.0 * MeV,
                                      'ADOCAmax'       :     0.7 * mm,
                                      'VtxChi2DoFmax'  :     15.0,
-                                     'nVeloTrackmax'  :     8,
+                                     'nVeloTracksmax' :     8,
                                      'AMmin'          :     2850.0 * MeV,
                                      'AMmax'          :     4500.0 * MeV}
                   , 'ChiC2PP'   :   {'APTmin'         :     0.0 * MeV,
@@ -57,7 +57,7 @@ class CEPHadronLines() :
                                      'APmin'          :     10000.0 * MeV,
                                      'ADOCAmax'       :     0.5 * mm,
                                      'VtxChi2DoFmax'  :     15.0,
-                                     'nVeloTrackmax'  :     6,
+                                     'nVeloTracksmax' :     6,
                                      'AMmin'          :     2850.0 * MeV,
                                      'AMmax'          :     3600.0 * MeV}
                   , 'LMR2HH'    :   {'APTmin'         :     0.0 * MeV,
@@ -65,7 +65,7 @@ class CEPHadronLines() :
                                      'APmin'          :     15000.0 * MeV,
                                      'ADOCAmax'       :     0.2 * mm,
                                      'VtxChi2DoFmax'  :     4.0,
-                                     'nVeloTrackmax'  :     8,
+                                     'nVeloTracksmax' :     8,
                                      'AMmin'          :     0.0 * MeV,
                                      'AMmax'          :     15000.0 * GeV}
                   , 'LMR2HHHH'  :   {'APTmin'         :     0.0 * MeV,
@@ -73,7 +73,7 @@ class CEPHadronLines() :
                                      'APmin'          :     15000.0 * MeV,
                                      'ADOCAmax'       :     0.2 * mm,
                                      'VtxChi2DoFmax'  :     4.0,
-                                     'nVeloTrackmax'  :     8,
+                                     'nVeloTracksmax' :     8,
                                      'AMmin'          :     400.0 * MeV,
                                      'AMmax'          :     5000.0 * MeV}
                   , 'MinKinBiasHadron':{'APTmin'      :     1. * GeV}
@@ -81,12 +81,13 @@ class CEPHadronLines() :
         return localStages
 
     def locallines(self):
-      from Stages import (LowMultL2pPiFilter, LowMultD2KPiFilter, LowMultD2KPiPiFilter, LowMultD2K3PiFilter,
-                          LowMultL2pPiWSFilter, LowMultD2KPiWSFilter, LowMultD2KPiPiWSFilter, LowMultD2K3PiWSFilter,
+      from Stages import (LowMultL2pPiFilter, LowMultD2KPiFilter, LowMultD2KPiPiFilter, LowMultD2K3PiFilter, LowMultD2KKPiFilter,
+                          LowMultL2pPiWSFilter, LowMultD2KPiWSFilter, LowMultD2KPiPiWSFilter, LowMultD2K3PiWSFilter, LowMultD2KKPiWSFilter,
 #                          LowMultDDIncCPFilter, LowMultDDIncVFFilter, 
-                          LowMultLMR2HHFilter, LowMultLMR2HHHHFilter,
+                          LowMultLMR2HHFilter, LowMultLMR2HHHHFilter,LowMultLMR2HHWSFilter, LowMultLMR2HHHHWSFilter,
                           LowMultChiC2HHFilter, LowMultChiC2HHHHFilter, LowMultChiC2PPFilter,
-                          LowMultChiC2HHWSFilter, LowMultChiC2HHHHWSFilter)
+                          LowMultChiC2HHWSFilter, LowMultChiC2HHHHWSFilter,LowMultChiC2PPWSFilter,
+                          LowMultMinKinBiasHadronFilter)
       stages = { # First the Lambda0 -> p pi lines
                  'LowMultL2pPi'       : [LowMultL2pPiFilter('L2pPi')],
                  'LowMultL2pPiWS'     : [LowMultL2pPiWSFilter('L2pPi')],

@@ -83,8 +83,9 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                     , 'Hlt2LowMultElectron'    : 1.0
                                     , 'Hlt2LowMultMinKinBiasElectron': 1.0
                                     }
-                    , 'HLT'       : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"
-                    , 'Common'    : {'nBackTracksmax' :     1,
+                    , 'HLT'               :   {"ALL": "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"}
+                    , 'Common'    : {'HLT'            :     "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
+                                     'nBackTracksmax' :     1,
                                      'H_PTmin'        :     100.0 * MeV,
                                      'H_Pmin'         :     5000.0 * MeV,
                                      'H_TrkChi2max'   :     3.0,
@@ -112,18 +113,17 @@ class CEPLines(Hlt2LinesConfigurableUser) :
         else:
             return l0
     
-    lines = {'Hadron'  : _CEPHadronLines.locallines(),
-             'Muon'    : _CEPMuonLines.locallines(),
-             'Photon'  : _CEPPhotonLines.locallines(),
-             'Electron': _CEPElectronLines.locallines()
-            }
-    
     def __apply_configuration__(self) :
+        lines = {'Hadron'  : _CEPHadronLines.locallines(),
+                 'Muon'    : _CEPMuonLines.locallines(),
+                 'Photon'  : _CEPPhotonLines.locallines(),
+                 'Electron': _CEPElectronLines.locallines()
+                }
         from HltLine.HltLine import Hlt2Line
         for l0nick, lns in lines.iteritems():
             for linename, algos in self.algorithms(lns).iteritems():
                 Hlt2Line(linename, prescale = self.prescale,
                          L0DU = self.__l0du(l0nick),
-                         HLT1 = self.getProp('HLT'),
+                         HLT1 = self.getProp('HLT')["ALL"],
                          algos = algos, postscale = self.postscale) 
         

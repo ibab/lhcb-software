@@ -9,7 +9,7 @@ class CEPElectronLines() :
                }
 
     def locallines(self):
-      from Stages import LowMultElectronFilter
+      from Stages import LowMultElectronFilter, LowMultMinKinBiasElectronFilter
       stages = {'LowMultElectron'        : [LowMultElectronFilter('Electron')],
                 'LowMultMinKinBiasElectron': [LowMultMinKinBiasElectronFilter('Electron')]}
       return stages
