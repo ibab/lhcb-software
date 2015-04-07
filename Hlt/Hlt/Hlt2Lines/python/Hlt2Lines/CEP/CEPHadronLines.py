@@ -1,10 +1,10 @@
 from GaudiKernel.SystemOfUnits import GeV, MeV, mm
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
-class CEPHadronLines(Hlt2LinesConfigurableUser) :
+class CEPHadronLines() :
     def localcuts(self) :
         localStages={'L2pPi'    :   {'APTmin'         :     0.0 * MeV, 
-                                     'APTmax'         :     100.0 * TeV,
+                                     'APTmax'         :     100000.0 * GeV,
                                      'APmin'          :     10000.0 * MeV,
                                      'ADOCAmax'       :     0.5 * mm,
                                      'VtxChi2DoFmax'  :     15.0,
@@ -13,7 +13,7 @@ class CEPHadronLines(Hlt2LinesConfigurableUser) :
                                      'AMmax'          :     1196.0 * MeV}
 
                   , 'D2KPi'     :   {'APTmin'         :     0.0 * MeV, 
-                                     'APTmax'         :     100.0 * TeV,
+                                     'APTmax'         :     100000.0 * GeV,
                                      'APmin'          :     10000.0 * MeV,
                                      'ADOCAmax'       :     0.5 * mm,
                                      'VtxChi2DoFmax'  :     15.0,
@@ -21,7 +21,7 @@ class CEPHadronLines(Hlt2LinesConfigurableUser) :
                                      'AMmin'          :     1785.0 * MeV,
                                      'AMmax'          :     1945.0 * MeV}
                   , 'D2KPiPi'   :   {'APTmin'         :     0.0 * MeV, 
-                                     'APTmax'         :     100.0 * TeV,
+                                     'APTmax'         :     100000.0 * GeV,
                                      'APmin'          :     10000.0 * MeV,
                                      'ADOCAmax'       :     0.5 * mm,
                                      'VtxChi2DoFmax'  :     15.0,
@@ -29,7 +29,7 @@ class CEPHadronLines(Hlt2LinesConfigurableUser) :
                                      'AMmin'          :     1785.0 * MeV,
                                      'AMmax'          :     1945.0 * MeV}
                   , 'D2K3Pi'    :   {'APTmin'         :     0.0 * MeV, 
-                                     'APTmax'         :     100.0 * TeV,
+                                     'APTmax'         :     100000.0 * GeV,
                                      'APmin'          :     10000.0 * MeV,
                                      'ADOCAmax'       :     0.7 * mm,
                                      'VtxChi2DoFmax'  :     15.0,

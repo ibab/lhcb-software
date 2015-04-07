@@ -4,12 +4,12 @@
 #  are organised according to L0 trigger dependence
 #
 #  @author Dan Johnson daniel.johnson@cern.ch
-=============================================================================
+#=============================================================================
 """ Set of Hlt2-lines for study of low multiplicity processes. Lines
 are organised according to L0 trigger dependence
 
 """
-=============================================================================
+#=============================================================================
 __author__  = "Dan Johnson daniel.johnson@cern.ch"
 
 from CEPHadronLines import CEPHadronLines
@@ -17,6 +17,11 @@ from CEPMuonLines import CEPMuonLines
 from CEPPhotonLines import CEPPhotonLines
 from CEPElectronLines import CEPElectronLines
 from GaudiKernel.SystemOfUnits import GeV, MeV, mm
+
+_CEPHadronLines = CEPHadronLines();
+_CEPMuonLines = CEPMuonLines();
+_CEPPhotonLines = CEPPhotonLines();
+_CEPElectronLines = CEPElectronLines();
 
 theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                  , 'Hlt2LowMultL2pPiWS'     : 0.1
@@ -91,15 +96,14 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                               'Electron': ['Electron,lowMult','DiEM,lowMult']
                    }
 } 
-theseSlots.update(CEPHadronLines.localcuts())
-theseSlots.update(CEPMuonLines.localcuts())
-theseSlots.update(CEPPhotonLines.localcuts())
-theseSlots.update(CEPElectronLines.localcuts())
+theseSlots.update(_CEPHadronLines.localcuts())
+theseSlots.update(_CEPMuonLines.localcuts())
+theseSlots.update(_CEPPhotonLines.localcuts())
+theseSlots.update(_CEPElectronLines.localcuts())
 
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 class CEPLines(Hlt2LinesConfigurableUser) :
     __slots__ = theseSlots
-
     def __l0du(self, nickname):
         import collections
         l0 = self.getProp( 'L0Channels' )[nickname]
@@ -108,10 +112,10 @@ class CEPLines(Hlt2LinesConfigurableUser) :
         else:
             return l0
     
-    lines = {'Hadron'  : CEPHadronLines.locallines(),
-             'Muon'    : CEPMuonLines.locallines(),
-             'Photon'  : CEPPhotonLines.locallines(),
-             'Electron': CEPElectronLines.locallines()
+    lines = {'Hadron'  : _CEPHadronLines.locallines(),
+             'Muon'    : _CEPMuonLines.locallines(),
+             'Photon'  : _CEPPhotonLines.locallines(),
+             'Electron': _CEPElectronLines.locallines()
             }
     
     def __apply_configuration__(self) :
