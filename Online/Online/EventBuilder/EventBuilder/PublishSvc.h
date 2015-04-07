@@ -10,7 +10,7 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IPublishSvc.h"
 #include <map>
-#include "dim/dis.hxx"
+#include "dis.hxx"
 
 namespace LHCb
 {
