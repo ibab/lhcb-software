@@ -7,7 +7,7 @@ branches cmt doc tests
 # LHCb Alignment Online packages
 #=======================================================
 
-use AlignOnline v1r1 AlignmentOnline
+use AlignOnline v1r2 AlignmentOnline
 use PRConfig    v1r15
 use OMAlib      v4r5   Online
 # temporary requirement - MM, 7/4/2015  
