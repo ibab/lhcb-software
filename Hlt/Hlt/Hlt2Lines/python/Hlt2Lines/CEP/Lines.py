@@ -12,10 +12,10 @@ are organised according to L0 trigger dependence
 #=============================================================================
 __author__  = "Dan Johnson daniel.johnson@cern.ch"
 
-from CEPHadronLines import CEPHadronLines
-from CEPMuonLines import CEPMuonLines
-from CEPPhotonLines import CEPPhotonLines
-from CEPElectronLines import CEPElectronLines
+from HadronLines import CEPHadronLines
+from MuonLines import CEPMuonLines
+from PhotonLines import CEPPhotonLines
+from ElectronLines import CEPElectronLines
 from GaudiKernel.SystemOfUnits import GeV, MeV, mm
 
 _CEPHadronLines = CEPHadronLines();

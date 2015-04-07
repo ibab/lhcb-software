@@ -22,7 +22,7 @@ class TrackGEC(Hlt2VoidFilter):
 # e.g. D2KPiInputs_K or D2KPiInputs_pi
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
 class InFilter(Hlt2ParticleFilter):
-    def __init__(self, name, inputs):
+    def __init__(self, name):
         allTracksCut = ("(PT > %(H_PTmin)s)" +
                         "(P > %(H_Pmin)s)" +
                         "(TRCHI2DOF < %(H_TrkChi2max)s)")
@@ -144,7 +144,7 @@ class LowMultD2KKPiWSFilter(Hlt2ParticleFilter):
         HadronicCombiner.__init__(self,name,decay,inputs)
 
 # D -> K3pi
-class LowMultD2K3PiSSFilter(Hlt2ParticleFilter):
+class LowMultD2K3PiFilter(Hlt2ParticleFilter):
     def __init__(self, name):
         decay   = "[D0 -> K- pi+ pi+ pi+]cc",
         inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi")],

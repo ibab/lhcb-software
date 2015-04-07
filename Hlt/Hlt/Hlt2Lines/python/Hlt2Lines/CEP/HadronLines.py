@@ -81,9 +81,9 @@ class CEPHadronLines() :
         return localStages
 
     def locallines(self):
-      from Stages import (LowMultD2KPiFilter, LowMultD2KPiPiFilter, LowMultD2K3PiFilter,
-                          LowMultD2KPiWSFilter, LowMultD2KPiPiWSFilter, LowMultD2K3PiWSFilter,
-                          LowMultDDIncCPFilter, LowMultDDIncVFFilter, 
+      from Stages import (LowMultL2pPiFilter, LowMultD2KPiFilter, LowMultD2KPiPiFilter, LowMultD2K3PiFilter,
+                          LowMultL2pPiWSFilter, LowMultD2KPiWSFilter, LowMultD2KPiPiWSFilter, LowMultD2K3PiWSFilter,
+#                          LowMultDDIncCPFilter, LowMultDDIncVFFilter, 
                           LowMultLMR2HHFilter, LowMultLMR2HHHHFilter,
                           LowMultChiC2HHFilter, LowMultChiC2HHHHFilter, LowMultChiC2PPFilter,
                           LowMultChiC2HHWSFilter, LowMultChiC2HHHHWSFilter)
