@@ -90,21 +90,8 @@ namespace FileWriter
 }
 namespace LHCb
 {
+  class SteeringInfo;
   class MEPManager;
-  class SteeringInfo : DimInfo
-  {
-    public:
-      int *m_variable;
-      SteeringInfo(std::string nam, int &var) :DimInfo(nam.c_str(),-1)
-      {
-        m_variable = &var;
-      }
-      void infoHandler()
-      {
-        *m_variable = getInt();
-        return;
-      }
-  };
   class FileWriterSvc: public OnlineService,
       virtual public IRunable,
       virtual public IIncidentListener
@@ -177,6 +164,8 @@ namespace LHCb
     int m_DIMSteering;
   public:
     SteeringInfo *m_SteeringSvc;
+    ///Clear Counters
+    void clearCounters();
     /// Standard Constructor
     FileWriterSvc(const std::string& name, ISvcLocator* svc);
     /// Standard Destructor
@@ -224,6 +213,26 @@ namespace LHCb
     bool m_texit;
     pthread_t m_tid;
     int m_Steeringdata;
+  };
+  class SteeringInfo : DimInfo
+  {
+    public:
+      int *m_variable;
+      FileWriterSvc *m_parent;
+      SteeringInfo(std::string nam, int &var, FileWriterSvc *parent) :DimInfo(nam.c_str(),-1)
+      {
+        m_variable = &var;
+        m_parent = parent;
+      }
+      void infoHandler()
+      {
+        *m_variable = getInt();
+        if (*m_variable != 0)
+        {
+          m_parent->clearCounters();
+        }
+        return;
+      }
   };
 } // End namespace LHCb
 #endif //  GAUDIONLINE_FILEWRITERSVC_H

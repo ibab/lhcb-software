@@ -196,14 +196,24 @@ StatusCode FileWriterSvc::start()
   OnlineService::start();
   if (m_DIMSteering != 0)
   {
-    if (m_SteeringSvc != 0)
+    if (m_SteeringSvc == 0)
     {
       std::string svcnam;
       svcnam = m_PartitionName+"/"+name()+"/Control";
-      m_SteeringSvc = new SteeringInfo(svcnam,m_Steeringdata);
+      m_SteeringSvc = new SteeringInfo(svcnam,m_Steeringdata,this);
     }
+    m_maxevts = -1;
+    m_EvOut = 0;
   }
   return StatusCode::SUCCESS;
+}
+void FileWriterSvc::clearCounters()
+{
+  m_EvOut = 0;
+  m_EvIn = 0;
+  m_mepIn = 0;
+  m_mepOut = 0;
+  return;
 }
 StatusCode FileWriterSvc::stop()
 {
