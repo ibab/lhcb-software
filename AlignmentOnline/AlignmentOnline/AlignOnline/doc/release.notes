@@ -3,6 +3,9 @@ Package: AlignOnline
 Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
 
+! 2015-04-07 - Maurizio Martinelli
+ - Added a temporary dependency on EventBuilder, should be removed with Online v5r18
+
 ! 2015-03-04 - Roel Aaij
  - Add writeWrapper method to AlignOnlineIterator. Writes a wrapper that can
    be used by the Analyzers to read the generated XML. Otherwise the XML cannot
