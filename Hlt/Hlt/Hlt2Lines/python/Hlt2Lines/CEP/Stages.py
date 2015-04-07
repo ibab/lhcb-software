@@ -44,24 +44,27 @@ class ElectronCombiner(Hlt2Combiner):
     def __init__(self, name, decay, inputs):
         dc = {'e+'   : "(PT > %(e_PTmin)s)",
               'e-'   : "(PT > %(e_PTmin)s)"}
+        mc = "ALL"
         Hlt2Combiner.__init__(self, name, decay, inputs,
                               dependencies = [TrackGEC(name)],
-                              DaughtersCuts = dc, Preambulo = []);
+                              DaughtersCuts = dc, MotherCut = mc, Preambulo = []);
 
 class ElectronCombiner_MinKinBias(Hlt2Combiner):
     def __init__(self, name, decay, inputs):
         dc = {'e+'   : "(PT > %(e_PTmin)s)",
               'e-'   : "(PT > %(e_PTmin)s)"}
+        mc = "ALL"
         Hlt2Combiner.__init__(self, name, decay, inputs, 
-                              DaughtersCuts = dc, Preambulo = []);
+                              DaughtersCuts = dc, MotherCut = mc, Preambulo = []);
 
 class MuonCombiner(Hlt2Combiner):
     def __init__(self, name, decay, inputs):
         dc = {'mu+'   : "(PT > %(mu_PTmin)s)",
               'mu-'   : "(PT > %(mu_PTmin)s)"}
+        mc = "ALL"
         Hlt2Combiner.__init__(self, name, decay, inputs, 
                               dependencies = [TrackGEC(name)],
-                              DaughtersCuts = dc, Preambulo = []);
+                              DaughtersCuts = dc, MotherCut = mc, Preambulo = []);
 
 # The class that creates the hadronic Hlt2Combiners
 class HadronicCombiner(Hlt2Combiner):
