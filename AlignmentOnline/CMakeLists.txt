@@ -5,7 +5,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8.5)
 find_package(GaudiProject)
 #---------------------------------------------------------------
 
-# Declare project name and version and dependencies (LHCB v36r0 given as example)
-gaudi_project(AlignmentOnline v10r2
-              USE Online v5r15
-                  Alignment v10r2)
+# Declare project name and version and dependencies
+gaudi_project(AlignmentOnline v10r3
+              USE Online v5r17
+                  Alignment v10r3)
