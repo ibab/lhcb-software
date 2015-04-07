@@ -10,7 +10,7 @@
  */
 
 #include <string>
-#include <dim/dic.hxx>
+#include <dic.hxx>
 
 
 namespace OMAconstants {

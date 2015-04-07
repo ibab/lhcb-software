@@ -5,7 +5,7 @@
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
 #include "GaudiKernel/MsgStream.h"
-#include <dim/dis.hxx>
+#include <dis.hxx>
 //-----------------------------------------------------------------------------
 // Implementation file for class : OMAMsgInterface
 // 2008-02-29 : Giacomo Graziani

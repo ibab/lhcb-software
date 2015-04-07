@@ -1,6 +1,6 @@
 // $Id: AnalysisTask.cpp,v 1.26 2010-06-17 10:46:00 ggiacomo Exp $
 #include <cmath>
-#include <dim/dic.hxx>
+#include <dic.hxx>
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 // local

@@ -2,7 +2,7 @@
 #ifndef OMALIB_RUNINFO_H 
 #define OMALIB_RUNINFO_H 1
 
-#include <dim/dic.hxx>
+#include <dic.hxx>
 
 /** @class RunInfo RunInfo.h OMAlib/RunInfo.h
  *  
