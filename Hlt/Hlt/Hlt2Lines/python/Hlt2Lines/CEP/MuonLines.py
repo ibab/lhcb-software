@@ -3,15 +3,15 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 
 class CEPMuonLines() :
     def localcuts(self) :
-        return {    'DiMuon'    :   {'nVeloTracksmax'   :     4,
+        return {    'CEPDiMuon'    :   {'nVeloTracksmax'   :     4,
                                      'mu_PTmin'         :     400 * MeV},
-                    'Muon'      :   {'nVeloTracksmax'   :     4,
+                    'CEPMuon'      :   {'nVeloTracksmax'   :     4,
                                      'mu_PTmin'         :     400 * MeV},
                }
 
     def locallines(self):
       from Stages import LowMultDiMuonFilter, LowMultMuonFilter
-      stages = { 'LowMultDiMuon'      : [LowMultDiMuonFilter('DiMuon')],
-                 'LowMultMuon'        : [LowMultMuonFilter('Muon')],
+      stages = { 'LowMultDiMuon'      : [LowMultDiMuonFilter('CEPDiMuon')],
+                 'LowMultMuon'        : [LowMultMuonFilter('CEPMuon')],
                }
       return stages

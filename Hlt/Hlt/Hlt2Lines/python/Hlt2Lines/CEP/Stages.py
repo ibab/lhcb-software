@@ -201,29 +201,29 @@ class LowMultChiC2PPWSFilter(HadronicCombiner):
 # LMR -> hh
 class LowMultLMR2HHFilter(HadronicCombiner):
     def __init__(self, name):
-        decay   = ["phi(1020) -> K+ K-","[phi(1020) -> K+ pi-]cc","phi(1020) -> pi+ pi-","phi(1020) -> p+ p~-"]
-        inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi")]
+        decay   = ["chi_c1(1P) -> K+ K-","[chi_c1(1P) -> K+ pi-]cc","chi_c1(1P) -> pi+ pi-","chi_c1(1P) -> p+ p~-"]
+        inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi"), InFilter("SharedInFilter_p")]
         HadronicCombiner.__init__(self,name,decay,inputs)
 
 class LowMultLMR2HHWSFilter(HadronicCombiner):
     def __init__(self, name):
-        decay   = ["[phi(1020) -> K+ K+]cc","[phi(1020) -> K+ pi+]cc","[phi(1020) -> pi+ pi+]","[phi(1020) -> p+ p+]cc"]
-        inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi")]
+        decay   = ["[chi_c1(1P) -> K+ K+]cc","[chi_c1(1P) -> K+ pi+]cc","[chi_c1(1P) -> pi+ pi+]cc","[chi_c1(1P) -> p+ p+]cc"]
+        inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi"), InFilter("SharedInFilter_p")]
         HadronicCombiner.__init__(self,name,decay,inputs)
 
 # LMR -> hhhh
 class LowMultLMR2HHHHFilter(HadronicCombiner):
     def __init__(self, name):
-        decay   = ["phi(1020) -> pi+ pi- pi+ pi-","phi(1020) -> K+ K- K+ K-","phi(1020) -> K+ K- pi+ pi-"]
+        decay   = ["chi_c1(1P) -> pi+ pi- pi+ pi-","chi_c1(1P) -> K+ K- K+ K-","chi_c1(1P) -> K+ K- pi+ pi-"]
         inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi")]
         HadronicCombiner.__init__(self,name,decay,inputs)
 
 class LowMultLMR2HHHHWSFilter(HadronicCombiner):
     def __init__(self, name):
-        decay   = ["[phi(1020) -> K+ K+ K+ K+]cc", "[phi(1020) -> K+ K+ K+ K-]cc",
-                   "[phi(1020) -> K+ K+ pi+ pi+]cc", "[phi(1020) -> K+ K+ pi+ pi-]cc",
-                   "[phi(1020) -> K+ K- pi+ pi+]cc", "[phi(1020) -> pi+ pi+ pi+ pi-]cc",
-                   "[phi(1020) -> pi+ pi+ pi+ pi+]cc"]
+        decay   = ["[chi_c1(1P) -> K+ K+ K+ K+]cc", "[chi_c1(1P) -> K+ K+ K+ K-]cc",
+                   "[chi_c1(1P) -> K+ K+ pi+ pi+]cc", "[chi_c1(1P) -> K+ K+ pi+ pi-]cc",
+                   "[chi_c1(1P) -> K+ K- pi+ pi+]cc", "[chi_c1(1P) -> pi+ pi+ pi+ pi-]cc",
+                   "[chi_c1(1P) -> pi+ pi+ pi+ pi+]cc"]
         inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi")]
         HadronicCombiner.__init__(self,name,decay,inputs)
 
