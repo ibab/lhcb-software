@@ -5,6 +5,12 @@
 !               using Professor/Rivet system. 
 !-----------------------------------------------------------------------------
 
+! 2015-04-07 - Alex Grecu
+ - Include lbInjectMathJax to inject MathJax enabling JS code in HTML pages.
+   This tool may become obsolete when rivet-mkhtml will support this feature. 
+ - Changed use line for fastjet in requirements to let package properly set 
+   up its corresponding link/build flags.
+
 ! 2015-04-01 - Alex Grecu
  - Adapted rivet-buildplugin from original RIVET distribution to work with 
    LHCb specific configuration retrieved via CMT. Added bin directory containing

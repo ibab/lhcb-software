@@ -22,11 +22,11 @@ use GenEvent          v*     Event
 use Generators        v*     Gen  
 
 # Packages needed to resolve external dependencies at run time
-use fastjet           v*     LCG_Interfaces -no_auto_imports  #this should be transferred in the GENSER/rivet CMT interface
 use Python            v*     LCG_Interfaces -no_auto_imports
 use HepMC             v*     LCG_Interfaces -no_auto_imports
 use Boost             v*     LCG_Interfaces -no_auto_imports
-use ROOT              v*     LCG_Interfaces -no_auto_imports
+##use ROOT              v*     LCG_Interfaces -no_auto_imports
+use fastjet           v*     LCG_Interfaces #-no_auto_imports  #this should be transferred in the GENSER/rivet CMT interface
 
 #apply_tag ignore_installarea
 use rivet             v*     LCG_GeneratorsInterfaces -auto_imports

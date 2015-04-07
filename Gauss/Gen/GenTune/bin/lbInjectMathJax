@@ -1,0 +1,149 @@
+#!/usr/bin/env python
+
+# Author:   Alex Grecu <alexandru.grecu@gmail.com>
+# Last mod: 07/04/2015 (dd/mm/yyyy)
+
+# This script adds the necessary JS overhead to use MathJax in HTML pages.
+# User can choose which MathJax installation to use the CDS one or the one provided by MathJax developers.
+
+#TODO:
+# - use HTML parsing to better locate the page head (especially for badly formed pages).
+
+htmlFragment = """
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$']],
+            processEscapes: true},
+  showProcessingMessages: false,
+  messageStyle: "none"
+});
+</script>
+<script src="%s?%s" type="text/javascript">
+</script>
+"""
+
+import os
+import sys
+#import xml.dom.minidom as xdom
+#import datetime as dt
+#import re
+#from subprocess import Popen, STDOUT, PIPE
+import getopt
+import shutil
+
+
+sdtFormat = '%Y%m%d_%H%M%S'
+dtFormat = '%a, %d %b %Y @ %H:%M:%S' #to complete!
+
+mjSources = {'cern':'https://cds.cern.ch/MathJax/MathJax.js',
+			 'main':'https://cdn.mathjax.org/mathjax/latest/MathJax.js',
+			}
+mjArgs = ['config=TeX-AMS_HTML',]
+
+mjSrcId = 'cern'
+
+makeBaks = False
+
+def showHelp():
+	print("Usage:")
+	print("python %s [-h|--help] [-b|--baks] [-s|--source=<loc>] <html_file>" % (sys.argv[0]))
+	print('\t-h/--help - show this help message')	
+	print('\t-b/--baks - create back-ups of touched file(s)')
+	print('\t<loc> - specifies source of MathJaX installation. Currently defined:')
+	print('\t   \'cern\' - to use same location as CDS')
+	print('\t   \'main\' - to use default location on main server')
+	print('\t<html_file> - the path and file name of HTML file to process.')
+	pass
+
+
+if __name__ != '__main__':
+	showHelp()
+	exit(1)
+
+def simpleMakeBak(fPath):
+	if not os.path.exists(fPath) or not os.path.isfile(fPath):
+		return False
+	tt = os.path.abspath(fPath)
+	(fdir, fname) = os.path.split(tt)
+	if len(fname) == 0:
+		return False
+	(fnrt, fnex) = os.path.splitext(fname)
+	j = 1; tt = '%s.bak' % (fnrt)
+	while ( os.path.exists(os.path.join(fdir,(tt + fnex))) ):
+		tt = '%s.bak%d' % (fnrt, j)
+		j += 1
+	nwFilePath = os.path.join(fdir,(tt + fnex))
+	shutil.copy2(fPath, nwFilePath)
+	return True
+
+#Parsing arguments:
+if len(sys.argv) <= 1:
+	showHelp()
+	exit(2)
+try:
+	sOpts, sArgs = getopt.getopt(sys.argv[1:], "hbs:",["help","baks","source="])
+	for opt, val in sOpts:
+		if opt in ("-h","--help"):
+			showHelp()
+			sys.exit(0)
+		if opt in ("-b","--baks"):
+			makeBaks = True
+		elif opt in ("-s","--source"):
+			tt = val.lower()
+			if tt in mjSources.keys():
+				mjSrcId = tt
+			else:
+				print('Cannot find source with id \'%s\' using default \'cern\'.' % (tt))
+	if len(sArgs) < 1:
+		raise ArgumentError('Please, provide a HTML file to process..')
+	fn = sArgs[0]
+	fp = open(fn, 'rb')
+	fPath = os.path.abspath(fn)
+	fLines = fp.readlines()
+	fp.close()
+except getopt.GetoptError, exx:
+	print(exx.message)
+	showHelp()
+	sys.exit(11)
+except Exception, bex:
+	print(bex.message)
+	sys.exit(33)
+
+
+if makeBaks:
+	if not simpleMakeBak(fPath):
+		print("Could not create file backup. Aborting...")
+		exit(35)
+k = 0; p = -1;		
+for k in xrange(0,len(fLines)):
+	ln = fLines[k]
+	p = ln.strip().lower().find('</head>')
+	if p >= 0:
+		break
+if k == len(fLines):
+	print('Could not locate end of <head> in HTML...')
+	exit(37)
+tt = fLines[k].strip()
+if p > 0:
+	fLines.insert(k, tt[0:p] + "\n")
+	k += 1
+htFrg = htmlFragment % (mjSources[mjSrcId], '&'.join(mjArgs))
+fLines.insert(k, htFrg)
+fLines[k+1] = tt[p:] + "\n"
+fp = open(fPath, 'wb')
+fp.writelines(fLines)
+fp.flush()
+fp.close()
+
+print("File was sucessfully patched to use MathJax.")
+
+
+
+
+
+
+
+
+
+
+
