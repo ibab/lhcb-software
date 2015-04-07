@@ -1,4 +1,4 @@
-// $Id: FromCaloToParticles.cpp 180655 2015-03-19 apuignav $
+// $Id: L0CaloToParticles.cpp 180655 2015-03-19 apuignav $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -22,7 +22,7 @@
 // LoKi
 // ============================================================================
 #include "LoKi/Combiner.h"
-#include "LoKi/FromCaloToParticles.h"
+#include "LoKi/L0CaloToParticles.h"
 #include "LoKi/Hlt1.h"
 #include "LoKi/Constants.h"
 #include "LoKi/ParticleProperties.h"
@@ -35,7 +35,7 @@
 // ============================================================================
 /** @file
  *
- *  Implementation file for class LoKi::Hlt1::FromCaloToParticles
+ *  Implementation file for class LoKi::Hlt1::L0CaloToParticles
  *  This file is part of LoKi project:
  *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
  *
@@ -50,39 +50,40 @@
 // ============================================================================
 //  consructor from the pid hypothesis, name and LoKi basic functor
 // ============================================================================
-LoKi::Hlt1::FromCaloToParticles::FromCaloToParticles
+LoKi::Hlt1::L0CaloToParticles::L0CaloToParticles
 ( const std::string& pid         ,
   const std::string& location    ,
   const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&   cut )
   : LoKi::AuxFunBase ( std::tie ( pid , location , cut ) )
   , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
-  , LoKi::Hlt1::HelperTool ( 1 )
+  , LoKi::Hlt1::CaloHelperTool ( 1 )
   , m_sink ( location )
   , m_pp   ( LoKi::Particles::ppFromName(pid) )
   , m_cut  ( cut      )
-{}
+{
+ LoKi::ILoKiSvc* svc = lokiSvc() ;
+ SmartIF<IToolSvc> tsvc ( svc ) ;
+ StatusCode sc = tsvc->retrieveTool("CaloDataProvider", "EcalReadoutTool", m_calo);
+}
 // ============================================================================
 // virtual destructor
 // ============================================================================
-LoKi::Hlt1::FromCaloToParticles::~FromCaloToParticles () {}
+LoKi::Hlt1::L0CaloToParticles::~L0CaloToParticles () {}
 // ============================================================================
 // clone method ("virtual constructor")
 // ============================================================================
-LoKi::Hlt1::FromCaloToParticles* LoKi::Hlt1::FromCaloToParticles::clone() const
-{ return new LoKi::Hlt1::FromCaloToParticles { *this } ; }
+LoKi::Hlt1::L0CaloToParticles* LoKi::Hlt1::L0CaloToParticles::clone() const
+{ return new LoKi::Hlt1::L0CaloToParticles { *this } ; }
 // ============================================================================
 // the only one important method
 // ============================================================================
-LoKi::Hlt1::FromCaloToParticles::result_type
-LoKi::Hlt1::FromCaloToParticles::operator()
-  ( LoKi::Hlt1::FromCaloToParticles::argument a ) const
+LoKi::Hlt1::L0CaloToParticles::result_type
+LoKi::Hlt1::L0CaloToParticles::operator()
+  ( LoKi::Hlt1::L0CaloToParticles::argument a ) const
 {
   Assert ( alg() , "Invalid setup!" );
 
   typedef result_type           CANDIDATES ;
-
-  LoKi::ILoKiSvc* svc = lokiSvc() ;
-  SmartIF<IToolSvc> tsvc ( svc );
 
   if ( a.empty() ) { return result_type () ; }
 
@@ -100,39 +101,17 @@ LoKi::Hlt1::FromCaloToParticles::operator()
     const LHCb::L0CaloCandidate* calo = cand1->get<LHCb::L0CaloCandidate> () ;
     if ( !calo ) { continue ; }
 
+    // Filter calo candidates for photon
+    if ( 22 == m_pp->particleID().pid() && !isPhotonCand(calo) ) { continue ; }
+
     // create Particle
-    LHCb::Particle* particle = new LHCb::Particle();
-    // Do I need this?
-    //particle->setProto(proto);
+    LHCb::Particle* particle = caloCandidateToParticle( calo, m_pp->particleID() ) ;
 
-    // set PID
-    particle->setParticleID(m_pp->particleID()) ;
-
-    // set mass
-    const double mass = m_pp->mass() ;
-    particle->setMeasuredMass(mass);
-    particle->setMeasuredMassErr(0);
-
-    // Calculate momentum
-    const Gaudi::XYZPoint pos = calo->position() ;
-    const double distance = pos.R() ;
-    const double et = calo->et() ;
-    // Assume the particle comes from (0, 0, 0)
-    const double e = et * distance / std::sqrt(pos.x()*pos.x() + pos.y()*pos.y()) ;
-    const double p = std::sqrt(e*e-mass*mass) ;
-    const Gaudi::LorentzVector mom = Gaudi::LorentzVector(p * pos.x()/distance,
-                                                          p * pos.y()/distance,
-                                                          p * pos.z()/distance,
-                                                          e) ;
-    particle->setMomentum(mom) ;
-    //std::cout << (*particle) << std::endl ;
     // cuts here
     if ( ! m_cut ( particle ) ) {
       delete particle;
       continue ;
-      //std::cout << std::endl;
     }
-    //std::cout << " -- PASS " << std::endl;
 
     // store in TES
     _storeParticle( particle ) ;
@@ -156,11 +135,11 @@ LoKi::Hlt1::FromCaloToParticles::operator()
 // ============================================================================
 // OPTIONAL: nice printout
 // ============================================================================
-std::ostream& LoKi::Hlt1::FromCaloToParticles::fillStream ( std::ostream& s ) const
+std::ostream& LoKi::Hlt1::L0CaloToParticles::fillStream ( std::ostream& s ) const
 {
   return
-    s << "TC_FROMCALOTOPARTICLES("
-      <<        m_pp->name() << ","
+    s << "TC_L0CALOTOPARTICLES("
+      << "'" << m_pp->name() << "',"
       << "'" << location()   << "')" ;
 }
 // ============================================================================

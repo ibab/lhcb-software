@@ -1,7 +1,7 @@
-// $Id: FromCaloToParticles.h 2015-03-19 apuignav $
+// $Id: Hlt1DiPhotonMaker.h 2015-03-19 apuignav $
 // ============================================================================
-#ifndef LOKI_FROMCALOTOPARTICLES_H
-#define LOKI_FROMCALOTOPARTICLES_H 1
+#ifndef LOKI_HLT1DIPHOTONMAKER_H
+#define LOKI_HLT1DIPHOTONMAKER_H 1
 // ============================================================================
 // Include files
 // ============================================================================
@@ -20,19 +20,23 @@
 // ============================================================================
 #include "Event/ProtoParticle.h"
 #include "Event/Particle.h"
+#include "Event/L0DUBase.h"
+#include "Event/L0CaloCandidate.h"
+#include "CaloUtils/CaloParticle.h"
+#include "CaloDAQ/ICaloDataProvider.h"
 // ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/BasicFunctors.h"
 #include "LoKi/TrackTypes.h"
 #include "LoKi/Hlt1.h"
-#include "LoKi/HelperTool.h"
+#include "LoKi/CaloHelperTool.h"
 // ============================================================================
 // forward declaration
 // ============================================================================
 class GaudiAlgorithm;
 // ============================================================================
-/** @file  LoKi/FromCaloToParticles.h
+/** @file  LoKi/Hlt1DiPhotonMaker.h
  *
  *  This file is part of LoKi project:
  *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
@@ -53,26 +57,30 @@ namespace LoKi
   namespace Hlt1
   {
     // ========================================================================
-    /** @class FromCaloToParticles LoKi/FromCaloToParticles.h
-     *  Class to implement conversion of protos to particles in Hlt1
+    /** @class Hlt1DiPhotonMaker LoKi/Hlt1DiPhotonMaker.h
+     *  Class to build di-photon combinations in HLT1
      *  @author Albert Puig (albert.puig@cern.ch)
      *  @date   2015-03-19
      */
-    class GAUDI_API FromCaloToParticles
+    class GAUDI_API Hlt1DiPhotonMaker
       : public LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe
-      , public LoKi::Hlt1::HelperTool
+      , public LoKi::Hlt1::CaloHelperTool
     {
       public:
         // ======================================================================
         ///   constructor from pid hypothesis, name and LoKi basic functor
-        FromCaloToParticles
+        Hlt1DiPhotonMaker
           ( const std::string& pid          ,
             const std::string& location     ,
-            const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate&  cuts ) ;
+            const double photonEtMin        ,
+            const double photonEtSumMin     ,
+            const double diphotonMassMin    ,
+            const double diphotonMassMax    ,
+            const double diphotonEtMin      ) ;
         /// virtual destructor
-        virtual ~FromCaloToParticles() ;
+        virtual ~Hlt1DiPhotonMaker() ;
         /// clone method ("virtual constructor")
-        virtual FromCaloToParticles* clone() const ;
+        virtual Hlt1DiPhotonMaker* clone() const ;
         /// the only essential method
         virtual result_type operator() ( argument a ) const ;
         /// nice printout
@@ -81,7 +89,7 @@ namespace LoKi
       private:
         // ======================================================================
         /// the default constructor is disabled
-        FromCaloToParticles();
+        Hlt1DiPhotonMaker();
         // ======================================================================
       public:
         /// the output selection
@@ -91,9 +99,20 @@ namespace LoKi
         // ======================================================================
         /// 'sink': the functor which register the selection in Hlt Data Svc
         LoKi::Hlt1::Sink          m_sink      ;
-        /// members which store pid hypoth and ptcut
+        /// Output particle
         const LHCb::ParticleProperty* m_pp ;
-        LoKi::FunctorFromFunctor<const LHCb::Particle*, bool> m_cut;
+        /// Cuts
+        const double m_photonEtMin ;
+        const double m_photonEtSumMin ;
+        const double m_diPhotonMassSqMin ;
+        const double m_diPhotonMassSqMax ;
+        const double m_diphotonEtMin ;
+        /// Determine if a L0CaloCandidate is a photon or not
+        bool isPhotonCand ( const LHCb::L0CaloCandidate* cand ) const
+        {
+            const int type = cand->type() ;
+            return ( type == L0DUBase::CaloType::Photon || type == L0DUBase::CaloType::Electron ) ;
+        } ;
         // ======================================================================
     };
     // ==========================================================================
@@ -102,12 +121,12 @@ namespace LoKi
   namespace Cuts
   {
     // ==========================================================================
-    /** @typedef TC_FROMCALOTOPARTICLES
-     *  particle maker from L0CaloCandidates
+    /** @typedef TC_HLT1DIPHOTONMAKER
+     *  Build di-photon combinations in HLT1 from L0CaloCandidates
      *
      *  @code
      *
-     *  " ... >> TC_FROMCALOTOPARTICLES ( 'gamma', 'output', cuts ) >> ... "
+     *  " ... >> TC_HLT1DIPHOTONMAKER ( 'gamma', 'output', cuts ) >> ... "
      *
      *  @endcode
      *
@@ -117,7 +136,7 @@ namespace LoKi
      *  @author Albert Puig (albert.puig@epfl.ch)
      *  @date 2015-03-19
      */
-    typedef LoKi::Hlt1::FromCaloToParticles              TC_FROMCALOTOPARTICLES ;
+    typedef LoKi::Hlt1::Hlt1DiPhotonMaker                  TC_HLT1DIPHOTONMAKER ;
     // ==========================================================================
   } //                                                end of namespace LoKi::Cuts
   // ============================================================================
@@ -125,5 +144,5 @@ namespace LoKi
 // ==============================================================================
 //                                                                        The END
 // ==============================================================================
-#endif   // LOKI_FROMCALOTOPARTICLES_H
+#endif   // LOKI_HLT1DIPHOTONMAKER_H
 // ==============================================================================

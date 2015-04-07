@@ -4,11 +4,18 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-04-07 - Albert Puig
+ - Merged branch v15r5b
+     * Move all the calo-related HLT1 functionality to CaloHelperTool.
+     * Add L0CaloToParticles pipe to convert L0CaloCandidates to LHCb::Particles.
+     * Add Hlt1DiPhotonMaker pipe.
+
 ! 2015-04-03 - Vanya Belyaev
  - add more counters to Hlt1COmbiners
    (input paricles and rates for various filtering stages)
  - replace std::uniqu_ptr with single automatic instabce
    (actually move from strategy  2 to strategy 3  - see DaVinciKernel/tests)   
+
 
 ! 2015-04-01 - Vanya Belyaev
  - fix the issue with particle -> PV association 

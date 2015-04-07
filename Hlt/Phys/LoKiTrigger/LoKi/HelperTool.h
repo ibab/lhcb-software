@@ -89,7 +89,7 @@ namespace LoKi
        */
       virtual void handle ( const Incident& /* incident */ ) ;
       // ======================================================================
-    private:
+    protected:
       // ======================================================================
       template <class TYPE>
       inline const TYPE* _add_

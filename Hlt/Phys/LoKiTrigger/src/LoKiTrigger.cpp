@@ -8,6 +8,7 @@
 // ============================================================================
 #include "LoKi/CacheFuncs.h"
 #include "LoKi/HelperTool.h"
+#include "LoKi/CaloHelperTool.h"
 //
 // #include "LoKi/Hlt1Binders.h"
 //
@@ -40,7 +41,8 @@
 #include "LoKi/RecVertices.h"
 #include "LoKi/ToProtoParticles.h"
 #include "LoKi/ToParticles.h"
-#include "LoKi/FromCaloToParticles.h"
+#include "LoKi/L0CaloToParticles.h"
+#include "LoKi/Hlt1DiPhotonMaker.h"
 #include "LoKi/TrackCutAsRecVertexCut.h"
 #include "LoKi/TrackTool.h"
 #include "LoKi/TrFilter.h"
