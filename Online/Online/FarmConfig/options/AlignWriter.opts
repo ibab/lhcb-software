@@ -43,12 +43,16 @@ AlignDataWriter_D0.Requirements         = {
 AlignDataWriter_D0.MEPFilePrefix          = "/localdisk/Alignment/D0/Run_";
 AlignDataWriter_D0.EvtFilePrefix          = "/localdisk/Alignment/D0/Run_";
 AlignDataWriter_D0.MaxEvents              = 1000;
+AlignDataWriter_D0.DIMSteering = 1;
+AlignDataWriter_D0.PartitionName             = @OnlineEnv.PartitionName;
 
 AlignDataWriter_RICH.SizeLimit            = 1000;
 AlignDataWriter_RICH.PrintFreq            = 1.0;
+AlignDataWriter_RICH.PartitionName             = @OnlineEnv.PartitionName;
 //
 // Requirements for Physics
 //
+AlignDataWriter_RICH.DIMSteering = 1;
 AlignDataWriter_RICH.Requirements         = {
 "EvType=2;TriggerMask=0x0,0x400000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
@@ -64,6 +68,8 @@ AlignDataWriter_RICH.MaxEvents            = 1000;
 
 AlignDataWriter_VeLo.SizeLimit            = 1000;
 AlignDataWriter_VeLo.PrintFreq            = 1.0;
+AlignDataWriter_VeLo.PartitionName             = @OnlineEnv.PartitionName;
+AlignDataWriter_VeLo.DIMSteering = 1;
 //
 // Requirements for Physics
 //
@@ -82,6 +88,8 @@ AlignDataWriter_VeLo.MaxEvents            = 1000;
 
 AlignDataWriter_Tracker.SizeLimit         = 1000;
 AlignDataWriter_Tracker.PrintFreq         = 1.0;
+AlignDataWriter_Tracker.DIMSteering = 1;
+AlignDataWriter_Tracker.PartitionName             = @OnlineEnv.PartitionName;
 //
 // Requirements for Physics
 //
@@ -100,6 +108,8 @@ AlignDataWriter_Tracker.MaxEvents         = 1000;
 
 AlignDataWriter_Muons.SizeLimit            = 1000;
 AlignDataWriter_Muons.PrintFreq            = 1.0;
+AlignDataWriter_Muons.DIMSteering = 1;
+AlignDataWriter_Muons.PartitionName             = @OnlineEnv.PartitionName;
 //
 // Requirements for Physics
 //
@@ -115,3 +125,5 @@ AlignDataWriter_Muons.Requirements         = {
 AlignDataWriter_Muons.MEPFilePrefix        = "/localdisk/Alignment/Muons/Run_";
 AlignDataWriter_Muons.EvtFilePrefix        = "/localdisk/Alignment/Muons/Run_";
 AlignDataWriter_Muons.MaxEvents            = 1000;
+AlignDataWriter_Muons.DIMSteering = 1;
+AlignDataWriter_Muons.PartitionName             = @OnlineEnv.PartitionName;
