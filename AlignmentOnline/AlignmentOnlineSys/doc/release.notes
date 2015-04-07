@@ -3,6 +3,14 @@ Package: AlignmentOnlineSys
 Package Coordinator: Maurizio Martinelli
 Purpose: Running and testing Alignment in the online environment
 
+</PRE><H1><A NAME=v10r3>2015-04-07 AlignmentOnlineSys v10r3</A></H1><PRE>
+Released the project with the following new tags:
+   https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=AlignmentOnline&version=v10r3
+
+Follows update of Alignment to v10r3.
+Includes modules for configuring specific alignment scenarios.
+
+
 </PRE><H1><A NAME=v10r2>2015-01-23 AlignmentOnlineSys v10r2</A></H1><PRE>
 Released the project with the following new tags:
 	 https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=AlignmentOnline&version=v10r2

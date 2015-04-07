@@ -1,5 +1,5 @@
 package AlignmentOnlineSys
-version v10r2
+version v10r3
 
 branches cmt doc tests
  
@@ -8,8 +8,10 @@ branches cmt doc tests
 #=======================================================
 
 use AlignOnline v1r1 AlignmentOnline
-use PRConfig    v*
-use OMAlib      v*   Online
+use PRConfig    v1r15
+use OMAlib      v4r5   Online
+# temporary requirement - MM, 7/4/2015  
+use EventBuilder v0r8  Online
 
 # Declare this as a container package
 apply_pattern container_package

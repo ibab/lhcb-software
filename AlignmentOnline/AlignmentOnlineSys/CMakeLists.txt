@@ -1,9 +1,12 @@
 ################################################################################
 # Package: AlignmentOnlineSys
 ################################################################################
-gaudi_subdir(AlignmentOnlineSys v10r2)
+gaudi_subdir(AlignmentOnlineSys v10r3)
 
-gaudi_depends_on_subdirs(AlignmentOnline/AlignOnline)
+gaudi_depends_on_subdirs(AlignmentOnline/AlignOnline
+			 PRConfig
+			 Online/OMAlib
+			 Online/EventBuilder)
 
 gaudi_install_python_modules()
 
