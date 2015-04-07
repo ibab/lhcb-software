@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+
+! 2015-04-07 - Albert Puig
+ - Updated B2GammaGamma to make use of all the changes in LoKiTrigger.
+
 !========================= Hlt1Lines v7r9 2015-03-31 =========================
 
 ! 2015-04-01 - Roel Aaij
