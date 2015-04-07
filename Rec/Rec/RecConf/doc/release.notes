@@ -4,6 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2015-04-07 - Michel De Cian
+ - Set 'IgnoreFilterPassed' to True for PV reconstruction in 2015 to not abort processing the rest of the event.
+
 ! 2015-03-30 - Michel De Cian
  - Change Configuration such that 2015 online-like tracking sequence can be run by using '2015Dev' 
    in SpecialData (temporary solution to allow development)

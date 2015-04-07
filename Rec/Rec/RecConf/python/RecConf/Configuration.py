@@ -140,8 +140,9 @@ class RecSysConf(LHCbConfigurableUser):
             pvAlg.PVOfflineTool.BeamSpotRCut = 0.2
             pvAlg.PVOfflineTool.InputTracks = [ "Rec/Track/FittedHLT1Tracks" ]
             pvAlg.OutputVerticesName = "Rec/Vertex/Primary"
+            
             GaudiSequencer("RecoVertexSeq").Members += [ pvAlg ];
-
+            GaudiSequencer("RecoVertexSeq").IgnoreFilterPassed = True
 
         ## Upgrade type?
         if self.getProp("DataType") == 'Upgrade' :
