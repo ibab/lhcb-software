@@ -10,7 +10,7 @@ class TrackGEC(Hlt2VoidFilter):
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking 
         velotracks = Hlt2BiKalmanFittedForwardTracking().hlt2VeloTracking()
         VT = velotracks.outputSelection()
-        code = ("CONTAINS('%s')" % VT) + (" < %(nVeloTracksmax)s") + ("TrNUM('%s', TrBACKWARD)" % VT) + (" < %(nBackTracksmax)s")
+        code = ("(CONTAINS('%s')" % VT) + (" < %(nVeloTracksmax)s)") + " & " + ("(TrNUM('%s', TrBACKWARD)" % VT) + (" < %(nBackTracksmax)s)")
         Hlt2VoidFilter.__init__(self, name, code, [velotracks])
 
 # create filters for pions, kaons and protons
@@ -21,8 +21,8 @@ from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
 class InFilter(Hlt2ParticleFilter):
     def __init__(self, name):
         allTracksCut = ("(PT > %(H_PTmin)s)" +
-                        "(P > %(H_Pmin)s)" +
-                        "(TRCHI2DOF < %(H_TrkChi2max)s)")
+                        "& (P > %(H_Pmin)s)" +
+                        "& (TRCHI2DOF < %(H_TrkChi2max)s)")
 
         from Inputs import Hlt2NoPIDsPions, Hlt2LooseKaons,Hlt2LooseProtons       
  
@@ -67,10 +67,10 @@ class MuonCombiner(Hlt2Combiner):
 class HadronicCombiner(Hlt2Combiner):
     def __init__(self, name, decay, inputs):
         cc = ("(APT > %(APTmin)s)"+
-              "(APT < %(APTmax)s)"+
-              "(AP  > %(APmin)s)"+
-              "(ADOCAMAX() < %(ADOCAmax)s)"+
-              "(in_range( %(AMmin)s, AM, %(AMmax)s ))")
+              "& (APT < %(APTmax)s)"+
+              "& (AP  > %(APmin)s)"+
+              "& (ADOCAMAX('') < %(ADOCAmax)s)"+
+              "& (in_range( %(AMmin)s, AM, %(AMmax)s ))")
         mc =    ("(VFASPF(VCHI2PDOF) < %(VtxChi2DoFmax)s)")
         
         Hlt2Combiner.__init__(self, name, decay, inputs,
