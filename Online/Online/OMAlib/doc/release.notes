@@ -2,6 +2,10 @@
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
+! ======== v4r5 ===============
+! 2015-04-07 - Maurizio Martinelli
+ - Tagged	as v4r5 since previous tags were not documented
+
 ! 2015-04-07 - Maurizio Martinelli
  - Modified dim header to solve compilation errors
  
