@@ -27,7 +27,7 @@ def create_parser():
     parser.add_argument("--run-data-dir", default=veloview_config.run_data_dir,
                         help="Directory to search for run list and data")
     parser.add_argument("--reference", action="store_true",
-                        help="Return reference plot for the given arguments")
+                        help="Include reference plot for the given arguments")
     return parser
 
 
