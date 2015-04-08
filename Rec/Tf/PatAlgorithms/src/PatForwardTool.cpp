@@ -270,7 +270,7 @@ PatForwardTool::PatForwardTool( const std::string& type,
   declareProperty("StateErrorTY2", m_stateErrorTY2 =  1.e-4);
   declareProperty("StateErrorP",   m_stateErrorP   =  0.15);
 
-  declareProperty("AddTTClusterName", m_addTtToolName = "" );
+  declareProperty("AddTTClusterName", m_addTtToolName = "PatAddTTCoord" );
 
   declareProperty( "WithoutBField"         , m_withoutBField         = false);
 

@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-04-08 - Michel De Cian
+ - Make 'PatAddTTCoord' default for PatForwardTool.
+
 ! 2015-04-02 - Michel De Cian
  - Changes to 2015 configuration of forward tracking.
 
