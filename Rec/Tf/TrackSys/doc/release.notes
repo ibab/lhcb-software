@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-04-08 - Michel De Cian
+ - Change 'TrackListMerger' to (new) 'TrackContainerCopy' in 'RecoTrackingRun2.py', such that forward tracks can be stored on a DST.
+
 ! 2015-04-02 - Michel De Cian
  - Change options of Fitter in 'RecoTrackingRun2.py': Don't refit, use FastMomentumEstimate, don't change dEdX in simulation.
 

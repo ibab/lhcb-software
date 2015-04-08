@@ -274,7 +274,7 @@ def RecoTracking(exclude=[]):
 
       GaudiSequencer("TrackFitSeq").Members += [ConfiguredFit("FitBest","Rec/Track/AllBest")]      
       copyBest = TrackContainerCopy( "CopyBest" )
-      copyBest.inputLocation = "Rec/Track/AllBest";
+      copyBest.inputLocations = [ "Rec/Track/AllBest" ];
       GaudiSequencer("TrackFitSeq").Members += [ copyBest ]
                                  
       ## Velo fitting

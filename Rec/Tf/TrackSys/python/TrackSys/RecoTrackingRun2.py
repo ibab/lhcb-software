@@ -186,10 +186,11 @@ def RecoTrackingHLT2(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
          #tracklists += ["Rec/Track/ForwardHLT2"]
 
       #merge forward from HLT1 and HLT2
-      from Configurables import TrackListMerger
-      merger = TrackListMerger("MergeForwardHLT1HLT2")
+      from Configurables import TrackContainerCopy
+      merger = TrackContainerCopy("MergeForwardHLT1HLT2")
       merger.inputLocations = [ "Rec/Track/ForwardHLT1", "Rec/Track/ForwardHLT2" ]
       merger.outputLocation =  "Rec/Track/Forward"
+      merger.copyFailures = True
       GaudiSequencer("TrackHLT2ForwardPatHLT2Seq").Members +=  [ merger ]
       tracklists += ["Rec/Track/Forward"]
 
