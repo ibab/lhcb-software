@@ -76,7 +76,7 @@ class CEPHadronLines() :
                                      'nVeloTracksmax' :     8,
                                      'AMmin'          :     400.0 * MeV,
                                      'AMmax'          :     5000.0 * MeV}
-                  , 'MinKinBiasHadron':{'APTmin'      :     1. * GeV}
+                  , 'Hadron_noTrFilt':{'APTmin'      :     1. * GeV}
                   } 
         return localStages
 
@@ -87,7 +87,7 @@ class CEPHadronLines() :
                           LowMultLMR2HHFilter, LowMultLMR2HHHHFilter,LowMultLMR2HHWSFilter, LowMultLMR2HHHHWSFilter,
                           LowMultChiC2HHFilter, LowMultChiC2HHHHFilter, LowMultChiC2PPFilter,
                           LowMultChiC2HHWSFilter, LowMultChiC2HHHHWSFilter,LowMultChiC2PPWSFilter,
-                          LowMultMinKinBiasHadronFilter)
+                          LowMultHadron_noTrFiltFilter)
       stages = { # First the Lambda0 -> p pi lines
                  'LowMultL2pPi'       : [LowMultL2pPiFilter('L2pPi')],
                  'LowMultL2pPiWS'     : [LowMultL2pPiWSFilter('L2pPi')],
@@ -115,6 +115,6 @@ class CEPHadronLines() :
                  'LowMultLMR2HHHH'    : [LowMultLMR2HHHHFilter('LMR2HHHH')],
                  'LowMultLMR2HHHHWS'  : [LowMultLMR2HHHHWSFilter('LMR2HHHH')],
                  # Unbiased hadron line
-                 'LowMultMinKinBiasHadron':  [LowMultMinKinBiasHadronFilter('MinKinBiasHadron')] 
+                 'LowMultHadron_noTrFilt':  [LowMultHadron_noTrFiltFilter('Hadron_noTrFilt')] 
                }
       return stages

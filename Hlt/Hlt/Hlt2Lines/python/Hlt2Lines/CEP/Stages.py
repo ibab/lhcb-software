@@ -49,7 +49,7 @@ class ElectronCombiner(Hlt2Combiner):
                               dependencies = [TrackGEC(name)],
                               DaughtersCuts = dc, MotherCut = mc, Preambulo = []);
 
-class ElectronCombiner_MinKinBias(Hlt2Combiner):
+class ElectronCombiner_noTrFilt(Hlt2Combiner):
     def __init__(self, name, decay, inputs):
         dc = {'e+'   : "(PT > %(e_PTmin)s)",
               'e-'   : "(PT > %(e_PTmin)s)"}
@@ -79,7 +79,7 @@ class HadronicCombiner(Hlt2Combiner):
         Hlt2Combiner.__init__(self, name, decay, inputs,
                               dependencies = [TrackGEC(name)],
                               CombinationCut = cc, MotherCut = mc, Preambulo = [])
-class HadronicCombiner_MinKinBias(Hlt2Combiner):
+class HadronicCombiner_noTrFilt(Hlt2Combiner):
     def __init__(self, name, decay, inputs):
         cc = ("(APT > %(APTmin)s)")
         mc =    ("ALL")
@@ -227,12 +227,12 @@ class LowMultLMR2HHHHWSFilter(HadronicCombiner):
         inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi")]
         HadronicCombiner.__init__(self,name,decay,inputs)
 
-class LowMultMinKinBiasHadronFilter(HadronicCombiner_MinKinBias):
+class LowMultHadron_noTrFiltFilter(HadronicCombiner_noTrFilt):
     def __init__(self, name):
         decay   = ["phi(1020) -> K+ K-","[phi(1020) -> K+ pi+]cc"]
         from Inputs import Hlt2NoPIDsKaons
         inputs  = [Hlt2NoPIDsKaons]
-        HadronicCombiner_MinKinBias.__init__(self,name,decay,inputs)
+        HadronicCombiner_noTrFilt.__init__(self,name,decay,inputs)
 
 ##############################
 # MUON FILTERS
@@ -272,9 +272,9 @@ class LowMultElectronFilter(ElectronCombiner):
         inputs  = [BiKalmanFittedElectronsFromL0]
         ElectronCombiner.__init__(self,name,decay,inputs)
 
-class LowMultMinKinBiasElectronFilter(ElectronCombiner_MinKinBias):
+class LowMultElectron_noTrFiltFilter(ElectronCombiner_noTrFilt):
     def __init__(self, name):
         decay   = ["J/psi(1S) -> e+ e-","J/psi(1S) -> e+ e+","J/psi(1S) -> e- e-"]
         from Inputs import BiKalmanFittedElectronsFromL0
         inputs  = [BiKalmanFittedElectronsFromL0]
-        ElectronCombiner_MinKinBias.__init__(self,name,decay,inputs)
+        ElectronCombiner_noTrFilt.__init__(self,name,decay,inputs)
