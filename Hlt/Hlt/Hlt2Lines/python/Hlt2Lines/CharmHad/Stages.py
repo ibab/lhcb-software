@@ -140,36 +140,54 @@ SharedNoPIDDetachedChild_K = DetachedInParticleFilter( 'SharedNoPIDDetachedChild
 SharedNoPIDDetachedChild_p = DetachedInParticleFilter( 'SharedNoPIDDetachedChild_p', [Hlt2NoPIDsProtons] )
 
 
-
-
 ## ------------------------------------------------------------------------- ##
-class NeutralInParticleFilter(Hlt2ParticleFilter):
-    def __init__(self, name):
-        cut = ("  (PT > %(Neut_ALL_PT_MIN)s)" )
+class NeutralInParticleFilter(Hlt2ParticleFilter) : # {
+    '''
+    Filter neutral particles on PT and (optionally) an ADMASS window centered
+    on the database mass of a particle type identified in a constructor
+    argument.
 
-        from Inputs import Hlt2ResolvedPi0, Hlt2MergedPi0, Hlt2NoPIDsPhotons, Hlt2AllPi0
-        
-        pidinfo = {"pi0"  : {"cut"    : "(ADMASS('pi0') < %(Pi0_ALL_DMASS_MAX)s) &",
-                             "inputs" : [Hlt2AllPi0]},
-                   "pi0R" : {"cut"    : "(ADMASS('pi0') < %(Pi0_ALL_DMASS_MAX)s) &",
-                           "inputs" : [Hlt2ResolvedPi0]},
-                   "pi0M" : {"cut"    : "(ADMASS('pi0') < %(Pi0_ALL_DMASS_MAX)s) &",
-                           "inputs" : [Hlt2MergedPi0]},
-                   "gamma" : {"cut"    : "",
-                           "inputs" : [Hlt2NoPIDsPhotons]},
-                  }   
+    Always creates a shared instance of the filter.
 
-        cut = pidinfo[name.split('_')[1]]["cut"] + cut 
-        inputs = pidinfo[name.split('_')[1]]["inputs"]
+    Configuration dictionaries must contain the following keys:
+        'Neut_ALL_PT_MIN' :  lower limit on PT
+
+    If filtering on a ADMASS window, the massPart parameter must be set to
+    the name of the particle type (e.g. 'pi0'), and the configuration
+    dictionary must contain the key 'Neut_ALL_ADMASS_MAX' defining the window
+    half-width, which is the upper limit for ADMASS.
+    '''
+    def __init__(self, name, inputs, massPart = None) : # {
+        cut = "(PT > %(Neut_ALL_PT_MIN)s)"
+
+        if massPart : # {
+            masscut = "(ADMASS('%s') < %%(Neut_ALL_ADMASS_MAX)s) & " % (massPart)
+            cut = masscut + cut
+        # }
 
         Hlt2ParticleFilter.__init__(self, name, cut, inputs, shared = True)
+    # }
+# }
 
-SharedNeutralChild_pi0R = NeutralInParticleFilter("SharedNeutralChild_pi0R")
-SharedNeutralChild_pi0M = NeutralInParticleFilter("SharedNeutralChild_pi0M")
-SharedNeutralChild_pi0 = NeutralInParticleFilter("SharedNeutralChild_pi0")
-SharedNeutralChild_gamma = NeutralInParticleFilter("SharedNeutralChild_gamma")
-SharedNeutralLowPtChild_pi0 = NeutralInParticleFilter("SharedNeutralLowPtChild_pi0")
-SharedNeutralLowPtChild_gamma = NeutralInParticleFilter("SharedNeutralLowPtChild_gamma")
+
+## Shared instances of NeutralInParticleFilter
+## If these are not made into central shared particles, their names should
+##   be updated to flag them as CharmHad shared particles to avoid name
+##   conflicts with other subdirectories.
+## ------------------------------------------------------------------------- ##
+from Inputs import Hlt2ResolvedPi0, Hlt2MergedPi0, Hlt2NoPIDsPhotons, Hlt2AllPi0
+SharedNeutralChild_pi0R  = NeutralInParticleFilter("SharedNeutralChild_pi0R",
+                                                   [Hlt2ResolvedPi0], 'pi0' )
+SharedNeutralChild_pi0M  = NeutralInParticleFilter("SharedNeutralChild_pi0M",
+                                                   [Hlt2MergedPi0], 'pi0' )
+SharedNeutralChild_pi0   = NeutralInParticleFilter("SharedNeutralChild_pi0",
+                                                   [Hlt2AllPi0], 'pi0' )
+SharedNeutralChild_gamma = NeutralInParticleFilter("SharedNeutralChild_gamma",
+                                                   [Hlt2NoPIDsPhotons] )
+SharedNeutralLowPtChild_pi0 = NeutralInParticleFilter("SharedNeutralLowPtChild_pi0", [Hlt2AllPi0], 'pi0' )
+SharedNeutralLowPtChild_gamma = NeutralInParticleFilter("SharedNeutralLowPtChild_gamma", [Hlt2NoPIDsPhotons] )
+
+
 
 ## ========================================================================= ##
 ## Filters for composite particles

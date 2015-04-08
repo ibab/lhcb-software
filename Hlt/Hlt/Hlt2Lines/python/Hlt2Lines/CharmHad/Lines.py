@@ -100,15 +100,15 @@ theseslots = {   'Prescale' : {},
                  # 
                  'SharedNeutralChild_pi0' : {
                                  'Neut_ALL_PT_MIN'           : 500.0 * MeV,
-                                 'Pi0_ALL_DMASS_MAX'        : 60.0,
+                                 'Neut_ALL_ADMASS_MAX'       : 60.0,
                                           },
                  'SharedNeutralChild_pi0R' : {
                                  'Neut_ALL_PT_MIN'           : 500.0 * MeV,
-                                 'Pi0_ALL_DMASS_MAX'        :  30.0, 
+                                 'Neut_ALL_ADMASS_MAX'       :  30.0, 
                                           },
                  'SharedNeutralChild_pi0M' : {
                                  'Neut_ALL_PT_MIN'           : 500.0 * MeV,
-                                 'Pi0_ALL_DMASS_MAX'        : 60.0,
+                                 'Neut_ALL_ADMASS_MAX'       : 60.0,
                                           },
                  'SharedNeutralChild_gamma' : {
                                  'Neut_ALL_PT_MIN'           : 500.0 * MeV,
@@ -119,7 +119,7 @@ theseslots = {   'Prescale' : {},
                                           },
                  'SharedNeutralLowPtChild_pi0' : {
                                  'Neut_ALL_PT_MIN'           : 350.0 * MeV,
-                                 'Pi0_ALL_DMASS_MAX'         :  60.0,
+                                 'Neut_ALL_ADMASS_MAX'       :  60.0,
                                           },
                 }
 

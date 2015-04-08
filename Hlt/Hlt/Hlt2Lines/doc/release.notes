@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-08 - Patrick Spradlin
+  - Some code cleaning in CharmHad/Stages.py
+    . Modified NeutralInParticleFilter so that its logic does not rely on name
+      parsing.
+
 ! 2015-04-06 - Dan Johnson
   - Small adjustments to the CEP lines
 
