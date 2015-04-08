@@ -18,7 +18,7 @@ WrManager.Input                     = @OnlineEnv.AlignWriter_Input;
 WrManager.WriterList                += { "LHCb::FileWriterSvc/AlignDataWriter_Tracker"};
 WrManager.WriterList                += { "LHCb::FileWriterSvc/AlignDataWriter_Velo"};
 WrManager.WriterList                += { "LHCb::FileWriterSvc/AlignDataWriter_Rich"};
-WrManager.WriterList                += { "LHCb::FileWriterSvc/AlignDataWriter_Muons"};
+WrManager.WriterList                += { "LHCb::FileWriterSvc/AlignDataWriter_Muon"};
 
 MessageSvc.fifoPath              = "$LOGFIFO";
 MessageSvc.OutputLevel           = @OnlineEnv.OutputLevel;
@@ -85,24 +85,24 @@ AlignDataWriter_Velo.MEPFilePrefix        = "/localdisk/Alignment/Velo/Run_";
 AlignDataWriter_Velo.EvtFilePrefix        = "/localdisk/Alignment/Velo/Run_";
 AlignDataWriter_Velo.MaxEvents            = 1000;
 
-AlignDataWriter_Muons.SizeLimit            = 1000;
-AlignDataWriter_Muons.PrintFreq            = 1.0;
-AlignDataWriter_Muons.DIMSteering = 1;
-AlignDataWriter_Muons.PartitionName             = @OnlineEnv.PartitionName;
+AlignDataWriter_Muon.SizeLimit            = 1000;
+AlignDataWriter_Muon.PrintFreq            = 1.0;
+AlignDataWriter_Muon.DIMSteering = 1;
+AlignDataWriter_Muon.PartitionName             = @OnlineEnv.PartitionName;
 //
 // Requirements for Physics
 //
-AlignDataWriter_Muons.Requirements         = {
+AlignDataWriter_Muon.Requirements         = {
 "EvType=2;TriggerMask=0x0,0x00000400,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
 //
 // Requirements for TED and other stuff
 //
-//AlignDataWriter_Muons.Requirements         = {
+//AlignDataWriter_Muon.Requirements         = {
 //"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 //};
-AlignDataWriter_Muons.MEPFilePrefix        = "/localdisk/Alignment/Muons/Run_";
-AlignDataWriter_Muons.EvtFilePrefix        = "/localdisk/Alignment/Muons/Run_";
-AlignDataWriter_Muons.MaxEvents            = 1000;
-AlignDataWriter_Muons.DIMSteering = 1;
-AlignDataWriter_Muons.PartitionName             = @OnlineEnv.PartitionName;
+AlignDataWriter_Muon.MEPFilePrefix        = "/localdisk/Alignment/Muon/Run_";
+AlignDataWriter_Muon.EvtFilePrefix        = "/localdisk/Alignment/Muon/Run_";
+AlignDataWriter_Muon.MaxEvents            = 1000;
+AlignDataWriter_Muon.DIMSteering = 1;
+AlignDataWriter_Muon.PartitionName             = @OnlineEnv.PartitionName;
