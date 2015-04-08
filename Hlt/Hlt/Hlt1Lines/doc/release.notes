@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-04-08 - Matthew Kenzie
+ - Fix to Hlt1CalibTracking lines to match name change of L0CALOTOPARTICLES
+
+! 2015-04-08 - Matthew Kenzie
  - Updates to Hlt1CalibTracking lines
 
 ! 2015-04-07 - Albert Puig

@@ -433,7 +433,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     L0CaloCandidates
     >>  tee  ( monitor( TC_SIZE > 0, '# pass CaloCandidates', LoKi.Monitoring.ContextSvc ) )
     >>  tee  ( monitor( TC_SIZE    , 'nCaloCandidates' , LoKi.Monitoring.ContextSvc ) )
-    >>  TC_FROMCALOTOPARTICLES( 'gamma',  '', (PT>%(GAMMA_PT_MIN)s*MeV) )
+    >>  TC_L0CALOTOPARTICLES( 'gamma',  '', (PT>%(GAMMA_PT_MIN)s*MeV) )
     >>  tee ( monitor( TC_SIZE > 0, '# pass ToPhotons', LoKi.Monitoring.ContextSvc ) )
     >>  tee ( monitor( TC_SIZE    , 'nPhotons',         LoKi.Monitoring.ContextSvc ) )
     >>  SINK ('Hlt1B2PhiGamma_Photons')
