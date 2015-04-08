@@ -1122,10 +1122,10 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 bestTrackCreator.addTool(TrackMasterFitter, name="Fitter")
                 from HltSharedTracking import ConfigureFitter
                 ConfigureFitter( getattr(bestTrackCreator,"Fitter") )
-                #ConfiguredMasterFitter( getattr(bestTrackCreator,"Fitter") , SimplifiedGeometry = True, LiteClusters = True)
                 from Configurables import HltRecoConf
                 bestTrackCreator.MaxChi2DoF = HltRecoConf().getProp("MaxTrCHI2PDOF")
                 bestTrackCreator.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
+                bestTrackCreator.StateInitTool.UseFastMomentumEstimate = True
                 bestTrackCreator.DoNotRefit = True
                 bestTrackCreator.TracksInContainers =  hlt2TracksToMerge
                 bestTrackCreator.TracksOutContainer = hlt2TrackingOutput
@@ -1299,9 +1299,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
         """
         from Configurables    import PatMatch
         from HltLine.HltLine    import bindMembers
-    
+        fwdtracks = self.__hlt2ForwardTracking()
         matchTrackOutputLocation = Hlt2TrackLoc["Match"]
-
         # TODO: We can restrict the input of the matching by vetoing already used velo tracks.
         #### Matching
         recoMatch         = PatMatch(self.getProp("Prefix")+'Match'
@@ -1311,15 +1310,15 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from Configurables import PatMatchTool
         from Configurables import HltRecoConf
         recoMatch.addTool(PatMatchTool, name="PatMatchTool")
-        recoMatch.PatMatchTool.MinMomentum = HltRecoConf().getProp("Forward_LPT_MinP")
-        recoMatch.PatMatchTool.MinPt = HltRecoConf().getProp("Forward_LPT_MinPt")
         # We depend on the forward tracking
-        fwdtracks = self.__hlt2ForwardTracking()
-        recoMatch.PatMatchTool.VeloVetoTracksName = [ fwdtracks.outputSelection() ]
         if HltRecoConf().getProp("OfflineSeeding"):
             recoMatch.PatMatchTool.VeloVetoTracksName = []
-
-
+        else:
+            recoMatch.PatMatchTool.VeloVetoTracksName = [ fwdtracks.outputSelection() ]
+            recoMatch.PatMatchTool.MinMomentum = HltRecoConf().getProp("Forward_LPT_MinP")
+            recoMatch.PatMatchTool.MinPt = HltRecoConf().getProp("Forward_LPT_MinPt")
+        
+            
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"MatchTracking"
         bm_members      = self.__hlt2VeloTracking().members() + self.__hlt2ForwardTracking().members() +self.__hlt2SeedTracking().members()

@@ -103,18 +103,12 @@ veloSelector.StatPrint = True
 #### VeloTT Tracking
 from HltRecoConf import VeloTTOptions, VeloTTToolOptions
 from Configurables import PatVeloTTHybrid, PatVeloTTHybridTool
-recoVeloTT = PatVeloTTHybrid( 'PatVeloTTHlt', 
+recoVeloTT = PatVeloTTHybrid( 'PatVeloTTHybridHlt', 
                         InputTracksName = HltSharedTrackLoc["VeloSelection"],
                         OutputTracksName = HltSharedTrackLoc["VeloTTHPT"],
                         **VeloTTOptions )
-recoVeloTT.addTool(PatVeloTTHybridTool(**VeloTTToolOptions), name="PatVeloTTTool")
-## Even if the fit is turned off, use simplified material.
-from Configurables import TrackStateInitTool, TrackMasterFitter
-from TrackFitter.ConfiguredFitters import ConfiguredMasterFitter
-recoVeloTT.addTool(TrackMasterFitter, "Fitter")
-ConfiguredMasterFitter(recoVeloTT.Fitter, SimplifiedGeometry = True, LiteClusters = True)
-
-recoVeloTT.PatVeloTTTool.StatPrint = True
+recoVeloTT.addTool(PatVeloTTHybridTool(**VeloTTToolOptions), name="PatVeloTTHybridTool")
+recoVeloTT.PatVeloTTHybridTool.StatPrint = True
 recoVeloTT.VetoObjects = [ recoVeloTT.OutputTracksName ]
 
 #### Forward Tracking
@@ -267,6 +261,7 @@ def ConfiguredHltInitFitter( parent ):
         parent.Fitter.Init = "TrackStateInitTool/StateInit"
         parent.Fitter.addTool(TrackStateInitTool, name="StateInit")
         parent.Fitter.StateInit.VeloFitterName = "FastVeloFitLHCbIDs"
+        parent.Fitter.StateInit.UseFastMomentumEstimate = True
         parent.Fitter.Fit = "TrackMasterFitter/Fitter"
         parent.Fitter.addTool(TrackMasterFitter, name="Fitter")
         fitter = parent.Fitter.Fitter

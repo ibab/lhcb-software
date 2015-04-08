@@ -33,10 +33,10 @@ class HltRecoConf(LHCbConfigurableUser):
                  ,"Forward_LPT_MinP"            : 1000. * MeV # was 3000
                  ,"Forward_MaxOTHits"           : 15000
                  ,"MatchVeloMuon_MinP"          : 6000. * MeV
-                 ,"GoodTrCHI2PDOF"              : 5.0  # This TrCHI2PDOF is used in the sequence to mark hits of good tracks.
-                 ,"MaxTrCHI2PDOF"               : 5.0  # This TrCHI2PDOF is used in the making of protoparticles.
+                 ,"GoodTrCHI2PDOF"              : 3.0  # This TrCHI2PDOF is used in the sequence to mark hits of good tracks.
+                 ,"MaxTrCHI2PDOF"               : 3.0  # This TrCHI2PDOF is used in the making of protoparticles.
                  ,"VeloSelectionCut"            : "(~TrBACKWARD) & ( TrNVELOMISS < 100 )"
-                 ,"FitVelo"                     : False
+                 ,"FitVelo"                     : True
                  ,"OfflineSeeding"              : True
                  ,"OfflineRich"                 : True
                  ,"AddGhostProb"                : True
@@ -73,7 +73,7 @@ VeloTTToolOptions = {"minMomentum" : 0.0,
                      "PassHoleSize" : 40 * mm,  # Update to new default from 45 mm.
                      }
                           
-VeloTTOptions = { "fitTracks" : False }
+VeloTTOptions = { }
 
 CommonPVOptions = {"UseBeamSpotCut" : True,
                    "BeamSpotRCut" : 0.2 * mm,
