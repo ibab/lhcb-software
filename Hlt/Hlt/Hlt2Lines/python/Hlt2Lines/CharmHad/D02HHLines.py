@@ -1,3 +1,18 @@
+## Exclusive reconstruction of D0 -> h- h'+ modes, adapted directly from
+## the former Hlt2CharmHadD02HHLines.py configurable.
+##
+## Defines sets of stages for 6 lines:
+##      'D02KK'
+##      'D02KPi'
+##      'D02PiPi'
+##      'D02KKWideMass'
+##      'D02KPiWideMass'
+##      'D02PiPiWideMass'
+##
+## @author Patrick Spradlin
+__author__  = [ 'Patrick Spradlin' ]
+
+
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 
 class CharmHadD02HHLines : # {
