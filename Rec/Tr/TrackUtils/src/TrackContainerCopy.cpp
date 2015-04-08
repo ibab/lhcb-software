@@ -17,23 +17,31 @@ using namespace LHCb;
 
 DECLARE_ALGORITHM_FACTORY( TrackContainerCopy )
 
+//=============================================================================
+// Constructor
+//=============================================================================
 TrackContainerCopy::TrackContainerCopy(const std::string& name,
                        ISvcLocator* pSvcLocator):
   GaudiAlgorithm(name, pSvcLocator),
   m_selector("",this)
 {
   // constructor
-  declareProperty( "inputLocation",  m_inputLocation  = TrackLocation::Velo );
+  declareProperty( "inputLocations",  m_inputLocations  = { TrackLocation::Velo } );
   declareProperty( "outputLocation", m_outputLocation = TrackLocation::Default );
   declareProperty( "copyFailures",   m_copyFailures   = false );
   declareProperty( "Selector", m_selector );
 }
 
+//=============================================================================
+// Destructor
+//=============================================================================
 TrackContainerCopy::~TrackContainerCopy()
 {
   // destructor
 }
-
+//=============================================================================
+// Initialize
+//=============================================================================
 StatusCode TrackContainerCopy::initialize()
 {
   // Initializes TsaInitialization at the begin of program execution.
@@ -52,19 +60,42 @@ StatusCode TrackContainerCopy::initialize()
   
   return sc ;
 }
-
+//=============================================================================
+// Finalize
+//=============================================================================
 StatusCode TrackContainerCopy::finalize()
 {
   if( ! m_selector.empty() ) m_selector.release().ignore() ;
   return GaudiAlgorithm::finalize() ;
 }
-
+//=============================================================================
+// Execute
+//=============================================================================
 StatusCode TrackContainerCopy::execute(){
 
-  LHCb::Track::Range inCont = get<LHCb::Track::Range>(m_inputLocation);
+  
   Tracks* outCont = getOrCreate<Tracks,Tracks>(m_outputLocation);
-  // loop 
   size_t naccepted(0) ;
+
+  // loop 
+  for( const std::string inputLoc : m_inputLocations){
+    
+    LHCb::Track::Range inCont = getIfExists<LHCb::Track::Range>(inputLoc);
+    if( inCont.empty() ) continue;
+    
+    for( const LHCb::Track* track : inCont){
+      
+      if ( ( !track->checkFlag(Track::Invalid) || m_copyFailures ) &&
+           (m_selector.empty() || m_selector->accept(*track)) ) {
+        
+        Track* aTrack = track->clone();
+        outCont->insert(aTrack); 
+        ++naccepted ;
+      }
+    }
+  }
+  
+  /*
   BOOST_FOREACH( const LHCb::Track* track, inCont ) {
     if ( ( !track->checkFlag(Track::Invalid) || m_copyFailures ) &&
 	 (m_selector.empty() || m_selector->accept(*track)) ) {
@@ -73,6 +104,7 @@ StatusCode TrackContainerCopy::execute(){
       ++naccepted ;
     } // selected
   }
+  */
   //   counter("# tracks in")    += inCont->size() ;
   //   counter("# tracks out")   += outCont->size() ;
   //   counter("# tracks added") += naccepted ;

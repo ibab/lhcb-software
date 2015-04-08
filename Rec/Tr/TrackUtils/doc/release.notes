@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-04-08 - Michel De Cian
+ - TrackContainerCopy: Now can take more than one input location.
+
 !========================= TrackUtils v1r59 2015-03-31 =======================
 ! 2015-03-31 - Sascha Stahl
  - TrackBestTrackCreator: Added counters of failed fits for each track type.

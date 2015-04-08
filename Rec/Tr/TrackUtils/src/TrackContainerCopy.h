@@ -6,6 +6,13 @@
  *
  *  Copy a container of tracks. By default do not copy tracks that failed the fit
  *
+ *  Properties:
+ *
+ *  - inputLocations: Vector of input locations to copy.
+ *  - outputLocation: Output location to copy the tracks to.
+ *  - copyFailures: Also copy tracks that are flagged invalid?
+ *  - Selector: The selector to select a subsample of tracks to copy (e.g.  TrackSelector )
+ *
  *  @author M.Needham
  *  @date   30/05/2006
  */
@@ -30,7 +37,7 @@ public:
   virtual StatusCode execute();
 
 private:
-  std::string m_inputLocation;
+  std::vector<std::string> m_inputLocations;
   std::string m_outputLocation;
   bool        m_copyFailures;   ///< If true, copy also tracks that failed fit 
   ToolHandle<ITrackSelector> m_selector;
