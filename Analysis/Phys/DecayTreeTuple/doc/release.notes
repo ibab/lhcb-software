@@ -4,6 +4,14 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2015-03-20 - Komarov Ilya
+ - Added TupleToolTwoParticleMatching tool (.cpp and .h)
+   This tool allows to match candidates from different locations in dst
+   (Originally was developed for matching of Tesla and stripping candidates)
+  . Match candidates basing on track similarity
+  . Fills tuple with output of chosen tuple tools form matched candidates
+  . Not all tools are supported yet
+
 ! 2015-03-20 - Eduardo Rodrigues
  - Fixed trivial typo in TupleToolGeometry.cpp.
 
