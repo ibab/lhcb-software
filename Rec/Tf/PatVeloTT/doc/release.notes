@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-04-08 - Espen Eie Bowen
+ - Remove obsolete fitting options within PatVeloTTHybrid
+
 ! 2015-03-30 - Michel De Cian
  - Change VeloTT track location in 'PatVeloTTAlgConf'
 

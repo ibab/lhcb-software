@@ -52,13 +52,9 @@ protected:
 private:
   
   Tf::TTStationHitManager<PatTTHit> *      m_ttHitManager; ///< The hit manager for TT hits
-  std::string m_fitterName;                                ///< Name of the fitter 
-  ITrackFitter* m_tracksFitter;                            ///< The track fitter
   ITracksFromTrack* m_veloTTTool;                          ///< The tool that does the actual pattern recognition
   ISequencerTimerTool* m_timerTool;                        ///< Timing tool
   int  m_veloTTTime;                                       ///< Counter for timing tool
-  float m_maxChi2;                                         ///< Maximum chi2 of VeloTT candidate
-  bool m_fitTracks;                                        ///< Fit the tracks with a Kalman filter?
  
   std::string m_inputTracksName;                           ///< input container name
   std::string m_outputTracksName;                          ///< output container name

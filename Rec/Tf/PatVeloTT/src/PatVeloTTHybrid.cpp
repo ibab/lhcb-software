@@ -23,7 +23,6 @@ PatVeloTTHybrid::PatVeloTTHybrid( const std::string& name,
                       ISvcLocator* pSvcLocator)
 : GaudiAlgorithm ( name , pSvcLocator ),
   m_ttHitManager(nullptr),
-  m_tracksFitter(nullptr),
   m_veloTTTool(nullptr),
   m_timerTool(nullptr),
   m_veloTTTime(0)
@@ -38,9 +37,6 @@ PatVeloTTHybrid::PatVeloTTHybrid( const std::string& name,
 
   declareProperty("InputTracksName"       , m_inputTracksName                   );
   declareProperty("OutputTracksName"      , m_outputTracksName                  );
-  declareProperty("fitTracks"             , m_fitTracks = false                 );
-  declareProperty("Fitter"                , m_fitterName = "TrackMasterFitter"  );
-  declareProperty("maxChi2"               , m_maxChi2          = 1280.          ); 
   declareProperty("TimingMeasurement"     , m_doTiming = false                  );
     
 }
@@ -57,8 +53,6 @@ StatusCode PatVeloTTHybrid::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   m_veloTTTool = tool<ITracksFromTrack>("PatVeloTTHybridTool", "PatVeloTTHybridTool");
-
-  m_tracksFitter = tool<ITrackFitter>( m_fitterName, "Fitter", this );
 
   m_ttHitManager   = tool<Tf::TTStationHitManager <PatTTHit> >("PatTTStationHitManager");
 
@@ -104,38 +98,12 @@ StatusCode PatVeloTTHybrid::execute() {
     
     m_veloTTTool->tracksFromTrack(*veloTr, tmpTracks).ignore();
     
-    LHCb::Track* bestTrack = nullptr;
-    
-    float maxChi2 = m_maxChi2;
-
-    for ( LHCb::Track* fitTrack : tmpTracks ) {
-
-      if (m_fitTracks) {  
-        StatusCode sc = m_tracksFitter -> fit( *fitTrack );
-        if(msgLevel(MSG::DEBUG)) debug() << "chi2 after KF " << fitTrack->chi2PerDoF() << endmsg;
-
-        if( !sc ){
-          warning() << "Could not fit track" << endmsg;
-          delete fitTrack;
-          continue;
-        }
-        
-      }
-      
-      if( fitTrack->chi2PerDoF() < maxChi2){
-        maxChi2 = fitTrack->chi2PerDoF();
-        bestTrack = fitTrack;
-      }
-      
-    }
-
-    tmpTracks.clear();
-    
-    if( bestTrack != nullptr){
-      outputTracks->insert(bestTrack);
+    if(!tmpTracks.empty()){
+      LHCb::Track* outTrack = *tmpTracks.begin();
+      tmpTracks.clear();
+      outputTracks->insert(outTrack);
     }
   }
-  
 
   counter("#tracks") += outputTracks->size();
   if ( m_doTiming ) m_timerTool->stop( m_veloTTTime );
