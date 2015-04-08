@@ -1,0 +1,22 @@
+package VPCheckers
+version           v1r0
+
+# Structure, i.e. directories to process. 
+#=====================================================================
+branches          cmt doc src
+
+include_path none
+
+# Used packages
+#=====================================================================
+use  LHCbKernel    v*  Kernel
+use  MCEvent       v*  Event
+use  DigiEvent     v*  Event
+use  GaudiAlg      v*
+use  LinkerEvent   v*  Event
+use  VPDet         v*  Det
+
+# Component library building rule
+#=====================================================================
+library          VPCheckers      ../src/*.cpp -import=AIDA
+apply_pattern component_library library=VPCheckers
