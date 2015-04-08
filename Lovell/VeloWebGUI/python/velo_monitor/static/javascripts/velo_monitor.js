@@ -396,8 +396,8 @@ var VeloMonitor = (function(window, undefined) {
         // We don't set attr data-sensor as it's data('sensor') that's used
         // elsewhere, and jQuery caches calls to data so won't see the updated
         // the DOM
-        // TODO this leaves empty ul.toggles in the DOM
-        $('.plot, .toggles').empty().data('sensor', sensorNumber);
+        // TODO this leaves empty ul.plotables in the DOM
+        $('.plot, .plotables').empty().data('sensor', sensorNumber);
         runView.setupPlots();
       };
 
