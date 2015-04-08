@@ -75,6 +75,7 @@ def ConfiguredFastKalman( parent = None, name = None ) :
         parent.Fit.Init = "TrackStateInitTool/StateInit"
         parent.Fit.addTool(TrackStateInitTool, name="StateInit")
         parent.Fit.StateInit.VeloFitterName = "FastVeloFitLHCbIDs"
+        parent.Fit.StateInit.UseFastMomentumEstimate = True
         parent.Fit.StateInit.addTool(TrackMasterExtrapolator, "Extrapolator")
         parent.Fit.StateInit.Extrapolator.MaterialLocator = "SimplifiedMaterialLocator"
         parent.Fit.addTool(TrackMasterFitter, "Fit")
