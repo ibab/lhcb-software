@@ -14,7 +14,7 @@ class CommonParticlesArchiveConf ( object ) :
 
             # Standard file system
             import os
-            return os.path.exists(pth)
+            return os.path.exists(path)
 
         else :
 

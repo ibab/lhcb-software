@@ -4,6 +4,9 @@
 ! Purpose     : Archive of CommonParticle releases
 !-----------------------------------------------------------------------------
 
+! 2015-04-08 - Chris Jones
+ - Fix typo in isValidArchive when path is not a zip file.
+
 !========================= CommonParticlesArchive v1r2 2014-10-30 =========================
 
 ! 2014-10-29 - Andrea Contu
