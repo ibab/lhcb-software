@@ -52,7 +52,7 @@ StatusCode PatVeloTTHybrid::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  m_veloTTTool = tool<ITracksFromTrack>("PatVeloTTHybridTool", "PatVeloTTHybridTool");
+  m_veloTTTool = tool<ITracksFromTrack>("PatVeloTTHybridTool", this );
 
   m_ttHitManager   = tool<Tf::TTStationHitManager <PatTTHit> >("PatTTStationHitManager");
 

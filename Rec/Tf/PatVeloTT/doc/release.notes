@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-04-08 - Sascha Stahl
+ - Declare PatVeloTTHybridTool as a private instance of PatVeloTTHybrid.
+
 ! 2015-04-08 - Espen Eie Bowen
  - Remove obsolete fitting options within PatVeloTTHybrid
 
