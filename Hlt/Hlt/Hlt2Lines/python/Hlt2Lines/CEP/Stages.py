@@ -229,7 +229,7 @@ class LowMultLMR2HHHHWSFilter(HadronicCombiner):
 
 class LowMultHadron_noTrFiltFilter(HadronicCombiner_noTrFilt):
     def __init__(self, name):
-        decay   = ["phi(1020) -> K+ K-","[phi(1020) -> K+ pi+]cc"]
+        decay   = "phi(1020) -> K+ K-"
         from Inputs import Hlt2NoPIDsKaons
         inputs  = [Hlt2NoPIDsKaons]
         HadronicCombiner_noTrFilt.__init__(self,name,decay,inputs)
