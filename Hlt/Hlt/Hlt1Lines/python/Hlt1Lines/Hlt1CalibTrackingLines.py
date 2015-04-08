@@ -22,22 +22,24 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
   __slots__ = {  'ParticlePT'        : 600     # MeV
                 ,'ParticleP'         : 4000    # MeV 
-                ,'CombMaxDaughtPT'   : 800     # MeV
-                ,'CombMaxDaughtP'    : 8000    # MeV
+                ,'TrackCHI2DOF'      : 2       # dimensionless
+                ,'CombMaxDaughtPT'   : 900     # MeV
                 ,'CombAPT'           : 1500    # MeV
                 ,'CombDOCA'          : 0.2     # mm
-                ,'CombVCHI2'         : 20      # dimensionless
+                ,'CombVCHI2'         : 10      # dimensionless
                 ,'CombVCHI2DOF'      : 4       # dimensionless
+                ,'CombVCHI2Loose'    : 20      # dimensionless
+                ,'CombVCHI2DOFLoose' : 5       # dimensionless
                 ,'CombDIRA'          : 0.9     # dimensionless
                 ,'CombTAU'           : 0.2     # ps
                 ,'D0MassWinLoose'    : 150     # MeV
                 ,'D0MassWin'         : 100     # MeV
                 ,'B0MassWinLoose'    : 250     # MeV
                 ,'B0MassWin'         : 200     # MeV
-                ,'PhiMassWinLoose'   : 80      # MeV
-                ,'PhiMassWin'        : 40      # MeV
+                ,'PhiMassWinLoose'   : 50      # MeV
+                ,'PhiMassWin'        : 30      # MeV
                 ,'PhiPT'             : 1800    # MeV
-                ,'PhiIPCHI2'         : 5       # dimensionless
+                ,'PhiIPCHI2'         : 16      # dimensionless
                 ,'B0SUMPT'           : 4000    # MeV
                 ,'GAMMA_PT_MIN'      : 3000    # MeV
                 ,'Velo_Qcut'         : 3       # dimensionless
@@ -47,36 +49,34 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
   def KPi_Unit( self, props ) :
     
-    props['KaonCuts']        = ("( (PT>%(ParticlePT)s) & (P>%(ParticleP)s) )")%props 
-    props['PionCuts']        = ("( (PT>%(ParticlePT)s) & (P>%(ParticleP)s) )")%props 
-    props['KPiDecay']        = '\'[D0 -> K- pi+]cc\'' #'strings( [ \'[D0 -> K- pi+]cc\', \'D0 -> K+ K-\', \'D0 -> pi+ pi-\' ] )'
-    props['KPiCombCut']      = ("( (ADAMASS('D0')<%(D0MassWinLoose)s*MeV) " +
-                                "| ( (DAMASS('B0')>-%(B0MassWinLoose)s*MeV) " +
-                                "& (DAMASS('B_s0')<%(B0MassWinLoose)s*MeV) ) ) " +
-                                "& (APT>%(CombAPT)s*MeV) " +
-                                "& (AMAXCHILD(PT)>%(CombMaxDaughtPT)s*MeV) " +
-                                "& (AMAXCHILD(P)>%(CombMaxDaughtP)s*MeV) " +
-                                "& (ACUTDOCA(%(CombDOCA)s*mm,''))") %props
-    props['KPiMothCut']      = ("( (ADMASS('D0')<%(D0MassWin)s*MeV) " +
-                                "| ( (DMASS('B0')>-%(B0MassWin)s*MeV) " +
-                                "& (DMASS('B_s0')<%(B0MassWin)s*MeV) ) ) " +
-                                "& (BPVDIRA > %(CombDIRA)s) " +
-                                "& (VFASPF(VCHI2)<%(CombVCHI2)s) " +
-                                "& (VFASPF(VCHI2/VDOF)<%(CombVCHI2DOF)s) " +
-                                "& (BPVLTIME()>%(CombTAU)s*ps)") %props
+    props['KaonCuts']        = """( (PT>%(ParticlePT)s) & (P>%(ParticleP)s) & (TRCHI2DOF<%(TrackCHI2DOF)s) )""" %props 
+    props['PionCuts']        = """( (PT>%(ParticlePT)s) & (P>%(ParticleP)s) & (TRCHI2DOF<%(TrackCHI2DOF)s) )""" %props 
+    props['KPiDecay']        = """'[D0 -> K- pi+]cc'""" #'strings( [ \'[D0 -> K- pi+]cc\', \'D0 -> K+ K-\', \'D0 -> pi+ pi-\' ] )'
+    props['KPiCombCut']      = ("""( ( in_range( PDGM('D0') - %(D0MassWinLoose)s * MeV , AM , PDGM('D0')   + %(D0MassWinLoose)s * MeV ) )   """ +
+                                """| ( in_range( PDGM('B0') - %(B0MassWinLoose)s * MeV , AM , PDGM('B_s0') + %(B0MassWinLoose)s * MeV ) ) ) """ +
+                                """& (APT>%(CombAPT)s*MeV)  """ +
+                                """& (AMAXCHILD(PT)>%(CombMaxDaughtPT)s*MeV) """ +
+                                """& (ACUTDOCA(%(CombDOCA)s*mm,''))""") %props
+    props['KPiMothCut']      = ("""( ( in_range( PDGM('D0') - %(D0MassWin)s * MeV , M , PDGM('D0')   + %(D0MassWin)s * MeV ) )      """ +
+                                """| ( in_range( PDGM('B0') - %(B0MassWin)s * MeV , M , PDGM('B_s0') + %(B0MassWin)s * MeV ) ) )  """ +
+                                """& (BPVDIRA > %(CombDIRA)s)  """ +
+                                """& (VFASPF(VCHI2)<%(CombVCHI2)s)  """ +
+                                """& (VFASPF(VCHI2/VDOF)<%(CombVCHI2DOF)s)  """ +
+                                """& (BPVLTIME()>%(CombTAU)s*ps)""") %props
 
     KPi_Preambulo = [ "from LoKiArrayFunctors.decorators import AP, APT, ADAMASS, ACUTDOCA, DAMASS, ASUM, AMAXCHILD",
-                  "from LoKiPhys.decorators import PT",
-                  "KPiCombinationConf = LoKi.Hlt1.Hlt1CombinerConf( %(KPiDecay)s, %(KPiCombCut)s, %(KPiMothCut)s )" %props
+                      "from LoKiPhys.decorators import PT",
+                      "KPiCombinationConf = LoKi.Hlt1.Hlt1CombinerConf( %(KPiDecay)s, %(KPiCombCut)s, %(KPiMothCut)s )" %props
                     ]
 
     KPi_LineCode = """
-    TC_HLT1COMBINER( 'Hlt1CalibTrackingKPis', 
+    TC_HLT1COMBINER( '', 
                      KPiCombinationConf, 
                      'Hlt1SharedKaons', %(KaonCuts)s ,
                      'Hlt1SharedPions', %(PionCuts)s )
     >>  tee ( monitor( TC_SIZE > 0, '# pass ToKPis', LoKi.Monitoring.ContextSvc ) )
     >>  tee ( monitor( TC_SIZE    , 'nKPis',         LoKi.Monitoring.ContextSvc ) )
+    >>  SINK ( 'Hlt1CalibTrackingKPis' )
     >>  ~TC_EMPTY
     """ %props
 
@@ -95,36 +95,36 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     return hlt1CalibTrackingLine_KPiUnit
 
   def KK_Unit( self, props ) :
-    
-    props['KaonCuts']        = ("( (PT>%(ParticlePT)s) & (P>%(ParticleP)s) )")%props 
-    props['KKDecay']         = '\'D0 -> K+ K-\''
-    props['KKCombCut']       = ("( (ADAMASS('D0')<%(D0MassWinLoose)s*MeV) " +
-                                "| (ADAMASS('phi(1020)')<%(PhiMassWinLoose)s*MeV) " +
-                                "| ( (DAMASS('B0')>-%(B0MassWinLoose)s*MeV) " +
-                                "& (DAMASS('B_s0')<%(B0MassWinLoose)s*MeV) ) ) " +
-                                "& (APT>%(CombAPT)s*MeV) " +
-                                "& (AMAXCHILD(PT)>%(CombMaxDaughtPT)s*MeV) " +
-                                "& (AMAXCHILD(P)>%(CombMaxDaughtP)s*MeV) " +
-                                "& (ACUTDOCA(%(CombDOCA)s*mm,'')) ") %props
-    props['KKMothCut']       = ("( (ADMASS('D0')<%(D0MassWin)s*MeV) " +
-                                "| (ADMASS('phi(1020)')<%(PhiMassWin)s*MeV) " +
-                                "| ( (DMASS('B0')>-%(B0MassWin)s*MeV) " +
-                                "& (DMASS('B_s0')<%(B0MassWin)s*MeV) ) ) " +
-                                "& (BPVDIRA > %(CombDIRA)s) " +
-                                "& (VFASPF(VCHI2)<%(CombVCHI2)s) " +
-                                "& (VFASPF(VCHI2/VDOF)<%(CombVCHI2DOF)s)") %props
+   
+    # KK is special because need to also make phis out of it in various ways
+    # lifetime and vertex cuts get put in later where relevant
+
+    props['KaonCuts']   = """( (PT>%(ParticlePT)s) & (P>%(ParticleP)s) & (TRCHI2DOF<%(TrackCHI2DOF)s) )""" %props 
+    props['KKDecay']    = """'D0 -> K+ K-'"""
+    props['KKCombCut']  = ("""( ( in_range( PDGM('D0')        - %(D0MassWinLoose)s  * MeV , AM , PDGM('D0')        + %(D0MassWinLoose)s  * MeV ) )  """ +
+                           """| ( in_range( PDGM('phi(1020)') - %(PhiMassWinLoose)s * MeV , AM , PDGM('phi(1020)') + %(PhiMassWinLoose)s * MeV ) )   """ +
+
+                           """| ( in_range( PDGM('B0')        - %(B0MassWinLoose)s  * MeV , AM , PDGM('B_s0')      + %(B0MassWinLoose)s  * MeV ) ) )  """ +
+                           """& (APT>%(CombAPT)s*MeV)  """ +
+                           """& (AMAXCHILD(PT)>%(CombMaxDaughtPT)s*MeV)  """ +
+                           """& (ACUTDOCA(%(CombDOCA)s*mm,''))""") %props
+    props['KKMothCut']   = ("""( ( in_range( PDGM('D0')        - %(D0MassWin)s  * MeV , M , PDGM('D0')        + %(D0MassWin)s  * MeV ) )  """ +
+                            """| ( in_range( PDGM('phi(1020)') - %(PhiMassWin)s * MeV , M , PDGM('phi(1020)') + %(PhiMassWin)s * MeV ) )  """ +
+                            """| ( in_range( PDGM('B0')        - %(B0MassWin)s  * MeV , M , PDGM('B_s0')      + %(B0MassWin)s  * MeV ) ) )  """ +
+                            """& (BPVDIRA > %(CombDIRA)s) """) %props
 
     KK_Preambulo = [ "from LoKiArrayFunctors.decorators import AP, APT, ADAMASS, ACUTDOCA, DAMASS, ASUM, AMAXCHILD",
-                  "from LoKiPhys.decorators import PT",
-                  "KKCombinationConf = LoKi.Hlt1.Hlt1CombinerConf( %(KKDecay)s, %(KKCombCut)s, %(KKMothCut)s )" %props
+                     "from LoKiPhys.decorators import PT",
+                     "KKCombinationConf = LoKi.Hlt1.Hlt1CombinerConf( %(KKDecay)s, %(KKCombCut)s, %(KKMothCut)s )" %props
                     ]
 
     KK_LineCode = """
-    TC_HLT1COMBINER( 'Hlt1CalibTrackingKKs', 
+    TC_HLT1COMBINER( '', 
                      KKCombinationConf, 
                      'Hlt1SharedKaons', %(KaonCuts)s ) 
     >>  tee ( monitor( TC_SIZE > 0, '# pass ToKKs', LoKi.Monitoring.ContextSvc ) )
     >>  tee ( monitor( TC_SIZE    , 'nKKs',         LoKi.Monitoring.ContextSvc ) )
+    >>  SINK ( 'Hlt1CalibTrackingKKs' )
     >>  ~TC_EMPTY
     """ %props
 
@@ -144,34 +144,32 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
   def PiPi_Unit( self, props ) :
     
-    props['PionCuts']        = ("( (PT>%(ParticlePT)s) & (P>%(ParticleP)s) )")%props 
-    props['PiPiDecay']       = '\'D0 -> pi+ pi-\''
-    props['PiPiCombCut']     = ("( (ADAMASS('D0')<%(D0MassWinLoose)s*MeV) " +
-                                "| ( (DAMASS('B0')>-%(B0MassWinLoose)s*MeV) " +
-                                "& (DAMASS('B_s0')<%(B0MassWinLoose)s*MeV) ) ) " +
-                                "& (APT>%(CombAPT)s*MeV) " +
-                                "& (AMAXCHILD(PT)>%(CombMaxDaughtPT)s*MeV) " +
-                                "& (AMAXCHILD(P)>%(CombMaxDaughtP)s*MeV) " +
-                                "& (ACUTDOCA(%(CombDOCA)s*mm,'')) ") %props
-    props['PiPiMothCut']     = ("( (ADMASS('D0')<%(D0MassWin)s*MeV) " +
-                                "| ( (DMASS('B0')>-%(B0MassWin)s*MeV) " +
-                                "& (DMASS('B_s0')<%(B0MassWin)s*MeV) ) ) " +
-                                "& (BPVDIRA > %(CombDIRA)s) " +
-                                "& (VFASPF(VCHI2)<%(CombVCHI2)s) " +
-                                "& (VFASPF(VCHI2/VDOF)<%(CombVCHI2DOF)s) " +
-                                "& (BPVLTIME()>%(CombTAU)s*ps)") %props
+    props['PionCuts']      = """( (PT>%(ParticlePT)s) & (P>%(ParticleP)s) & (TRCHI2DOF<%(TrackCHI2DOF)s) )"""%props 
+    props['PiPiDecay']     = """'D0 -> pi+ pi-'"""
+    props['PiPiCombCut']   = ("""( ( in_range( PDGM('D0') - %(D0MassWinLoose)s * MeV , AM , PDGM('D0')   + %(D0MassWinLoose)s * MeV ) )  """ +
+                              """| ( in_range( PDGM('B0') - %(B0MassWinLoose)s * MeV , AM , PDGM('B_s0') + %(B0MassWinLoose)s * MeV ) ) )  """ +
+                              """& (APT>%(CombAPT)s*MeV)  """ +
+                              """& (AMAXCHILD(PT)>%(CombMaxDaughtPT)s*MeV)  """ +
+                              """& (ACUTDOCA(%(CombDOCA)s*mm,'')) """) %props
+    props['PiPiMothCut']   = ("""( ( in_range( PDGM('D0') - %(D0MassWin)s * MeV , M , PDGM('D0')   + %(D0MassWin)s * MeV ) )  """ +
+                              """| ( in_range( PDGM('B0') - %(B0MassWin)s * MeV , M , PDGM('B_s0') + %(B0MassWin)s * MeV ) ) )  """ +
+                              """& (BPVDIRA > %(CombDIRA)s)  """ +
+                              """& (VFASPF(VCHI2)<%(CombVCHI2)s)  """ +
+                              """& (VFASPF(VCHI2/VDOF)<%(CombVCHI2DOF)s)  """ +
+                              """& (BPVLTIME()>%(CombTAU)s*ps)""") %props
 
     PiPi_Preambulo = [ "from LoKiArrayFunctors.decorators import AP, APT, ADAMASS, ACUTDOCA, DAMASS, ASUM, AMAXCHILD",
-                  "from LoKiPhys.decorators import PT",
-                  "PiPiCombinationConf = LoKi.Hlt1.Hlt1CombinerConf( %(PiPiDecay)s, %(PiPiCombCut)s, %(PiPiMothCut)s )" %props
+                       "from LoKiPhys.decorators import PT",
+                       "PiPiCombinationConf = LoKi.Hlt1.Hlt1CombinerConf( %(PiPiDecay)s, %(PiPiCombCut)s, %(PiPiMothCut)s )" %props
                     ]
 
     PiPi_LineCode = """
-    TC_HLT1COMBINER( 'Hlt1CalibTrackingPiPis', 
+    TC_HLT1COMBINER( '', 
                      PiPiCombinationConf, 
                      'Hlt1SharedPions', %(PionCuts)s )
     >>  tee ( monitor( TC_SIZE > 0, '# pass ToPiPis', LoKi.Monitoring.ContextSvc ) )
     >>  tee ( monitor( TC_SIZE    , 'nPiPis',         LoKi.Monitoring.ContextSvc ) )
+    >>  SINK ( 'Hlt1CalibTrackingPiPis' )
     >>  ~TC_EMPTY
     """ %props
 
@@ -193,7 +191,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
     D2KPi_LineCode = """
     SELECTION( 'Hlt1CalibTrackingKPis' )
-    >>  (ADMASS('D0')<%(D0MassWin)s*MeV)
+    >>  in_range( PDGM('D0') - %(D0MassWin)s * MeV , M , PDGM('D0') + %(D0MassWin)s * MeV ) 
     >>  tee ( monitor( TC_SIZE > 0, '# pass D2KPi', LoKi.Monitoring.ContextSvc ) )
     >>  tee ( monitor( TC_SIZE, 'nD2KPis',          LoKi.Monitoring.ContextSvc ) )
     >>  SINK ('Hlt1CalibTrackingKPiDecision')
@@ -217,7 +215,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
     D2KK_LineCode = """
     SELECTION( 'Hlt1CalibTrackingKKs' )
-    >>  ( (ADMASS('D0')<%(D0MassWin)s*MeV) & (BPVLTIME()>%(CombTAU)s) ) 
+    >>  ( in_range( PDGM('D0') - %(D0MassWin)s * MeV , M , PDGM('D0') + %(D0MassWin)s * MeV ) & (BPVLTIME()>%(CombTAU)s*ps) & (VFASPF(VCHI2)<%(CombVCHI2)s) & (VFASPF(VCHI2/VDOF)<%(CombVCHI2DOF)s) ) 
     >>  tee ( monitor( TC_SIZE > 0, '# pass D2KK', LoKi.Monitoring.ContextSvc ) )
     >>  tee ( monitor( TC_SIZE, 'nD2KKs',          LoKi.Monitoring.ContextSvc ) )
     >>  SINK ('Hlt1CalibTrackingKKDecision')
@@ -241,7 +239,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
     D2PiPi_LineCode = """
     SELECTION( 'Hlt1CalibTrackingPiPis' )
-    >>  (ADMASS('D0')<%(D0MassWin)s*MeV)
+    >>  in_range( PDGM('D0') - %(D0MassWin)s * MeV , M , PDGM('D0') + %(D0MassWin)s * MeV )
     >>  tee ( monitor( TC_SIZE > 0, '# pass D2PiPi', LoKi.Monitoring.ContextSvc ) )
     >>  tee ( monitor( TC_SIZE, 'nD2PiPis',          LoKi.Monitoring.ContextSvc ) )
     >>  SINK ('Hlt1CalibTrackingPiPiDecision')
@@ -265,7 +263,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
     B2KPi_LineCode = """
     SELECTION( 'Hlt1CalibTrackingKPis' )
-    >>  ( (DMASS('B0')>-%(B0MassWin)s*MeV) & (DMASS('B_s0')<%(B0MassWin)s*MeV) & (SUMTREE(PT,(ISBASIC & HASTRACK))>%(B0SUMPT)s*MeV) )
+    >>  ( in_range( PDGM('B0') - %(B0MassWin)s * MeV , M , PDGM('B_s0') + %(B0MassWin)s * MeV ) & (SUMTREE(PT,(ISBASIC & HASTRACK))>%(B0SUMPT)s*MeV) )
     >>  tee ( monitor( TC_SIZE > 0, '# pass B2KPi', LoKi.Monitoring.ContextSvc ) )
     >>  tee ( monitor( TC_SIZE, 'nB2KPis',          LoKi.Monitoring.ContextSvc ) )
     >>  SINK ('Hlt1B2HH_LTUNB_KPiDecision')
@@ -290,7 +288,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
     B2KK_LineCode = """
     SELECTION( 'Hlt1CalibTrackingKKs' )
-    >>  ( (DMASS('B0')>-%(B0MassWin)s*MeV) & (DMASS('B_s0')<%(B0MassWin)s*MeV) & (SUMTREE(PT,(ISBASIC & HASTRACK))>%(B0SUMPT)s*MeV) & (BPVLTIME()>%(CombTAU)s) )
+    >>  ( in_range( PDGM('B0') - %(B0MassWin)s * MeV , M , PDGM('B_s0') + %(B0MassWin)s * MeV ) & (SUMTREE(PT,(ISBASIC & HASTRACK))>%(B0SUMPT)s*MeV) & (BPVLTIME()>%(CombTAU)s*ps) & (VFASPF(VCHI2)<%(CombVCHI2)s) & (VFASPF(VCHI2/VDOF)<%(CombVCHI2DOF)s) )
     >>  tee ( monitor( TC_SIZE > 0, '# pass B2KK', LoKi.Monitoring.ContextSvc ) )
     >>  tee ( monitor( TC_SIZE, 'nB2KKs',          LoKi.Monitoring.ContextSvc ) )
     >>  SINK ('Hlt1B2HH_LTUNB_KKDecision')
@@ -338,15 +336,17 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
   def IncPhi_Unit( self, props ) :
 
+    IncPhi_Preambulo = [ "from LoKiPhys.decorators import PT, IPCHI2, MINTREE" ]
+
     IncPhi_LineCode = """
     SELECTION( 'Hlt1CalibTrackingKKs' )
-    >>  ( (ADMASS('phi(1020)')<%(PhiMassWin)s*MeV) & (BPVIPCHI2()>%(PhiIPCHI2)s) )
+    >>  ( ( in_range( PDGM('phi(1020)') - %(PhiMassWin)s * MeV , M , PDGM('phi(1020)') + %(PhiMassWin)s * MeV ) ) & ( PT > %(PhiPT)s * MeV ) & (MINTREE(BPVIPCHI2(),(ISBASIC & HASTRACK))>%(PhiIPCHI2)s) & (VFASPF(VCHI2)<%(CombVCHI2)s) & (VFASPF(VCHI2/VDOF)<%(CombVCHI2DOF)s) )
     >>  tee ( monitor( TC_SIZE > 0, '# pass IncPhi', LoKi.Monitoring.ContextSvc ) )
     >>  tee ( monitor( TC_SIZE, 'nIncPhis',          LoKi.Monitoring.ContextSvc ) )
     >>  SINK ('Hlt1IncPhiDecision')
     >>  ~TC_EMPTY
     """ %props
-    
+
     from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
     from Configurables import LoKi__HltUnit as HltUnit
     from HltTracking.HltPVs import PV3D
@@ -356,6 +356,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
         PVSelection = "PV3D",
         #OutputLevel = 1,
         Monitor = True,
+        Preambulo = IncPhi_Preambulo,
         Code = IncPhi_LineCode
         )
     
@@ -365,9 +366,9 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
     LTUNBPhi_LineCode = """
     SELECTION( 'Hlt1CalibTrackingKKs' )
-    >>  (ADMASS('phi(1020)')<%(PhiMassWin)s*MeV)
-    >>  tee ( monitor( TC_SIZE > 0, '# pass IncPhi', LoKi.Monitoring.ContextSvc ) )
-    >>  tee ( monitor( TC_SIZE, 'nIncPhis',          LoKi.Monitoring.ContextSvc ) )
+    >>  ( ( in_range( PDGM('phi(1020)') - %(PhiMassWin)s * MeV , M , PDGM('phi(1020)') + %(PhiMassWin)s * MeV ) ) & ( PT > %(PhiPT)s * MeV ) ) 
+    >>  tee ( monitor( TC_SIZE > 0, '# pass LTUNBPhi', LoKi.Monitoring.ContextSvc ) )
+    >>  tee ( monitor( TC_SIZE, 'nLTUNBPhis',          LoKi.Monitoring.ContextSvc ) )
     >>  SINK ('Hlt1LTUNBPhis')
     >>  ~TC_EMPTY
     """ %props
@@ -386,11 +387,13 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
   def B2PhiPhi_Unit( self, props ) :
     
-    props['PhiCuts']        = ("(PT>%(PhiPT)s*MeV)") %props
-    props['PhiPhiDecay']    = '\'B_s0 -> phi(1020) phi(1020)\''
-    props['PhiPhiCombCut']  = "(ADAMASS('B_s0')<%(B0MassWinLoose)s*MeV)" %props
-    props['PhiPhiMothCut']  = ("( (ADMASS('B_s0')<%(B0MassWin)s*MeV) " +
-                               "& (BPVLTIME()>%(CombTAU)s) )") %props
+    props['PhiCuts']        = """(PT>%(PhiPT)s*MeV)""" %props
+    props['PhiPhiDecay']    = """'B_s0 -> phi(1020) phi(1020)'"""
+    props['PhiPhiCombCut']  = """( in_range( PDGM('B0') - %(B0MassWinLoose)s * MeV , AM , PDGM('B_s0') + %(B0MassWinLoose)s * MeV ) )""" %props
+    props['PhiPhiMothCut']  = ("""( ( in_range( PDGM('B0') - %(B0MassWin)s * MeV , M , PDGM('B_s0') + %(B0MassWin)s * MeV ) )  """ +
+                               """& (BPVLTIME()>%(CombTAU)s*ps) """ +
+                               """& (VFASPF(VCHI2)<%(CombVCHI2Loose)s)  """ +
+                               """& (VFASPF(VCHI2/VDOF)<%(CombVCHI2DOFLoose)s) )""") %props
 
     B2PhiPhi_Preambulo = [ "from LoKiArrayFunctors.decorators import AP, APT, ADAMASS, ACUTDOCA, DAMASS, ASUM, AMAXCHILD",
                            "from LoKiPhys.decorators import PT",
@@ -400,8 +403,8 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     TC_HLT1COMBINER( '',
                      B2PhiPhiCombinationConf,
                      'Hlt1LTUNBPhis', %(PhiCuts)s )
-    >>  tee ( monitor( TC_SIZE > 0, '# pass ToKKs', LoKi.Monitoring.ContextSvc ) )
-    >>  tee ( monitor( TC_SIZE    , 'nKKs',         LoKi.Monitoring.ContextSvc ) )
+    >>  tee ( monitor( TC_SIZE > 0, '# pass ToB2PhiPhis', LoKi.Monitoring.ContextSvc ) )
+    >>  tee ( monitor( TC_SIZE    , 'nB2PhiPhis',         LoKi.Monitoring.ContextSvc ) )
     >>  SINK ( 'Hlt1B2PhiPhi_LTUNBDecision' )
     >>  ~TC_EMPTY
     """ %props
@@ -451,12 +454,14 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
   def B2PhiGamma_Unit( self, props ) :
     
-    props['PhiCuts']          = ("(PT>%(PhiPT)s*MeV)") %props
-    props['GammaCuts']        = 'ALL'
-    props['PhiGammaDecay']    = '\'B_s0 -> phi(1020) gamma\''
-    props['PhiGammaCombCut']  = "(ADAMASS('B_s0')<%(B0MassWinLoose)s*MeV)" %props
-    props['PhiGammaMothCut']  = ("( (ADMASS('B_s0')<%(B0MassWin)s*MeV) " +
-                               "& (BPVLTIME()>%(CombTAU)s) )") %props
+    props['PhiCuts']          = """(PT>%(PhiPT)s*MeV)""" %props
+    props['GammaCuts']        = """ALL"""
+    props['PhiGammaDecay']    = """'B_s0 -> phi(1020) gamma'"""
+    props['PhiGammaCombCut']  = """( in_range( PDGM('B0') - %(B0MassWinLoose)s * MeV , AM , PDGM('B_s0') + %(B0MassWinLoose)s * MeV ) )""" %props
+    props['PhiGammaMothCut']  = ("""( ( in_range( PDGM('B0') - %(B0MassWin)s * MeV , M , PDGM('B_s0') + %(B0MassWin)s * MeV ) )   """ +
+                                 """& (BPVLTIME()>%(CombTAU)s*ps) """ +
+                                 """& (VFASPF(VCHI2)<%(CombVCHI2Loose)s) """ +
+                                 """& (VFASPF(VCHI2/VDOF)<%(CombVCHI2DOFLoose)s) )""") %props
 
     B2PhiGamma_Preambulo = [ "from LoKiArrayFunctors.decorators import AP, APT, ADAMASS, ACUTDOCA, DAMASS, ASUM, AMAXCHILD",
                              "from LoKiPhys.decorators import PT",
@@ -467,8 +472,8 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
                      B2PhiGammaCombinationConf,
                      'Hlt1LTUNBPhis',          %(PhiCuts)s   ,
                      'Hlt1B2PhiGamma_Photons', %(GammaCuts)s )
-    >>  tee ( monitor( TC_SIZE > 0, '# pass ToKKs', LoKi.Monitoring.ContextSvc ) )
-    >>  tee ( monitor( TC_SIZE    , 'nKKs',         LoKi.Monitoring.ContextSvc ) )
+    >>  tee ( monitor( TC_SIZE > 0, '# pass ToB2PhiGammas', LoKi.Monitoring.ContextSvc ) )
+    >>  tee ( monitor( TC_SIZE    , 'nB2PhiGammas',         LoKi.Monitoring.ContextSvc ) )
     >>  SINK ( 'Hlt1B2PhiGamma_LTUNBDecision' )
     >>  ~TC_EMPTY
     """ %props

@@ -5,6 +5,8 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-04-08 - Matthew Kenzie
+ - Updates to Hlt1CalibTracking lines
 
 ! 2015-04-07 - Albert Puig
  - Updated B2GammaGamma to make use of all the changes in LoKiTrigger.
