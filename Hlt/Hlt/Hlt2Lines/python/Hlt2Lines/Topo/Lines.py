@@ -67,29 +67,52 @@ class TopoLines(Hlt2LinesConfigurableUser):
                 {'PTSUM': (9000, -1), 'FDCHI2': (1000, -1), 
                  'DOCA': (-1, 0.2), 'M': (3500, 7000)}],
             # Optimized parameters.
-            #'OPT_TOS'               : ('Hlt1(Two)?Track(MVA)?(Muon)?'
-            #                           'Decision%TOS'),
-            'OPT_TOS'               : 'Hlt1Track(?!MVA).*Decision%TOS',
+            'OPT_TOS'               : ('Hlt1(Two)?Track(MVA)?(Muon)?'
+                                       'Decision%TOS'),
             'OPT_GEC_MAX'           : 500,
             'OPT_USE_KS'            : True,
             'OPT_USE_LAMBDA'        : True,
-            'OPT_BDT_MIN'           : 0.4,
+            'OPT_BDT_MIN'           : 0.98,
+            'OPT_BDT_VARMAP'        : {
+                "chi2"   : "VFASPF(VCHI2)",
+                "sumpt"  : "SUMTREE(PT, ISBASIC, 0.0)/MeV",
+                "eta"    : "BPVETA",
+                "fdchi2" : "BPVVDCHI2",
+                "minpt"  : "MINTREE(ISBASIC, PT)/MeV",
+                "nlt16"  : "NINTREE(ISBASIC & (BPVIPCHI2() < 16))",
+                "ipchi2" : "BPVIPCHI2()",
+                "n1trk"  : ("NINTREE(ISBASIC & (PT > 1*GeV) "
+                            "& (BPVIPCHI2() > 16))")
+                },
             'OPT_BDT_PARAMS'        : 'hlt2_border_base.mx',
-            'OPT_TRK_PT_MIN'        : 500 * MeV,
-            'OPT_TRK_P_MIN'         : 5000 * MeV,
+            #'OPT_BDT_MIN'           : 0.4,
+            #'OPT_BDT_VARMAP'        : {
+            #    "M"          :  "MM/MeV",
+            #    "DOCA"       :  "DOCAMAX_('', False)/mm",
+            #    "CANDIPCHI2" :  "BPVIPCHI2()",
+            #    "MCOR"       :  "BPVCORRM",
+            #    "FDCHI2"     :  "BPVVDCHI2",
+            #    "PT"         :  "PT",
+            #    "PTMIN"      :  "MINTREE(ISBASIC, PT)/MeV",
+            #    "PTSUM"      :  "SUMTREE(PT, ISBASIC, 0.0)/MeV",
+            #    },
+            #'OPT_BDT_2BODY_PARAMS'  : 'Hlt2Topo2Body_BDTParams_v1r0.txt',
+            #'OPT_BDT_3BODY_PARAMS'  : 'Hlt2Topo3Body_BDTParams_v1r0.txt',
+            #'OPT_BDT_4BODY_PARAMS'  : 'Hlt2Topo4Body_BDTParams_v1r0.txt',
+            'OPT_TRK_PT_MIN'        : 200 * MeV,
+            'OPT_TRK_P_MIN'         : 3000 * MeV,
             'OPT_TRK_CHI2_MAX'      : 3,
             'OPT_TRK_IPCHI2_MIN'    : 4,
-            'OPT_HYP_LT_MIN'        : 20 * picosecond,
-            'OPT_CMB_TRK_DOCA_MAX'  : 10,
+            'OPT_TRK_LT_MIN'        : 20 * picosecond,
             'OPT_CMB_TRK_NLT16_MAX' : 2,
             'OPT_CMB_PRT_PT_MIN'    : 2000 * MeV,
             'OPT_CMB_VRT_DIRA_MIN'  : 0,
             'OPT_CMB_VRT_VDCHI2_MIN': 0,
-            'OPT_CMB_VRT_CHI2_MAX'  : 10,
+            'OPT_CMB_VRT_CHI2_MAX'  : 1000,
             'OPT_CMB_VRT_ETA_MIN'   : 2,
             'OPT_CMB_VRT_ETA_MAX'   : 5,
             'OPT_CMB_VRT_MCOR_MIN'  : 1000 * MeV,
-            'OPT_CMB_VRT_MCOR_MAX'  : 15000 * MeV
+            'OPT_CMB_VRT_MCOR_MAX'  : 10000 * MeV
             },
         }
 
@@ -99,54 +122,29 @@ class TopoLines(Hlt2LinesConfigurableUser):
 
     def __apply_run2_configuration(self):
 
-        # The variable map for the BBDT.
-        varmap = {
-            "chi2"   : "VFASPF(VCHI2)",
-            "sumpt"  : "SUMTREE(PT, ISBASIC, 0.0)/MeV",
-            "eta"    : "BPVETA",
-            "fdchi2" : "BPVVDCHI2",
-            "minpt"  : "MINTREE(ISBASIC, PT)/MeV",
-            "nlt16"  : "NINTREE(ISBASIC & (BPVIPCHI2() < 16))",
-            "ipchi2" : "BPVIPCHI2()",
-            "n1trk"  : "NINTREE(ISBASIC & (PT > 1*GeV) & (BPVIPCHI2() > 16))"
-            }
-        props = self.getProps()['Common']
-
-        # Switch out the varmap.
-        varmap = {
-            "M"          :  "MM/MeV",
-            "DOCA"       :  "DOCAMAX_('', False)/mm",
-            "CANDIPCHI2" :  "BPVIPCHI2()",
-            "MCOR"       :  "BPVCORRM",
-            "FDCHI2"     :  "BPVVDCHI2",
-            "PT"         :  "PT",
-            "PTMIN"      :  "MINTREE(ISBASIC, PT)/MeV",
-            "PTSUM"      :  "SUMTREE(PT, ISBASIC, 0.0)/MeV",
-            }
-        
         # Filter the particle input.
         from Inputs import (BiKalmanFittedKaonsWithMuonID, KsLLTF, KsDD,
                             LambdaLLTrackFitted, LambdaDDTrackFitted)
-        from Stages import FilterParts, CombineTos
+        from Stages import FilterParts
+        props = self.getProps()['Common']
         gec   = props['OPT_GEC_MAX'] >= 0
         parts = [FilterParts('Kaon', [BiKalmanFittedKaonsWithMuonID], gec)]
-        if props['OPT_USE_KS']: 
-            parts += [FilterParts('Ks', [KsLLTF, KsDD], gec)]
+        if props['OPT_USE_KS']:
+            parts.append(FilterParts('KsLL', [KsLLTF], gec))
+            parts.append(FilterParts('KsDD', [KsDD], gec))
         if props['OPT_USE_LAMBDA']: 
-            parts += [FilterParts('Lambda', [LambdaLLTrackFitted, 
-                                             LambdaDDTrackFitted], gec)]
-        combos = [CombineTos(parts)]
+            parts.append(FilterParts('LambdaLL', [LambdaLLTrackFitted], gec))
+            parts.append(FilterParts('LambdaDD', [LambdaDDTrackFitted], gec))
 
         # Build the lines.
-        from Stages import FilterCombos, CombineN
+        from Stages import FilterCombos, CombineTos, CombineN
         stages = {}
+        combos = [CombineTos(parts)]
         for n in xrange(2, 5):
-            if n == 2:
-                stages['OptTopo%iBody' % n] = [
-                    FilterCombos(n, combos, varmap, props)]
-                continue
-            stages['OptTopo%iBody' % n] = [
-                FilterCombos(n, [CombineN(n, combos + parts)], varmap, props)]
+            if n == 2: stages['OptTopo%iBody' % n] = [
+                FilterCombos(n, combos, props)]
+            else: stages['OptTopo%iBody' % n] = [
+                FilterCombos(n, [CombineN(n, combos + parts)], props)]
         from HltLine.HltLine import Hlt2Line
         for (name, algos) in self.algorithms(stages).iteritems():
             Hlt2Line(name, prescale = self.prescale, algos = algos,

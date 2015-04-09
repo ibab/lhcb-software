@@ -207,11 +207,10 @@ class FilterParts(Hlt2ParticleFilter):
     Filter for the topo input particles.
     """
     def __init__(self, pid, inputs, gec):
-        #pc = ("(PT > %(OPT_TRK_PT_MIN)s) & (P > %(OPT_TRK_P_MIN)s) "
-        #      "& (TRCHI2DOF < %(OPT_TRK_CHI2_MAX)s) "
-        #      "& (MIPCHI2DV(PRIMARY) > %(OPT_TRK_IPCHI2_MIN)s)")
-        #if pid != 'Kaon': pc = ("(BPVLTIME('') > %(OPT_HYP_LT_MIN)s)")
-        pc = "ALL"
+        pc = ("(PT > %(OPT_TRK_PT_MIN)s) & (P > %(OPT_TRK_P_MIN)s) "
+              "& (TRCHI2DOF < %(OPT_TRK_CHI2_MAX)s) "
+              "& (MIPCHI2DV(PRIMARY) > %(OPT_TRK_IPCHI2_MIN)s)")
+        if pid != 'Kaon': pc = ("(BPVLTIME('') > %(OPT_TRK_LT_MIN)s)")
         from HltTracking.HltPVs import PV3D
         deps = [Run1FilterEvent(), PV3D('Hlt2')] if gec else [PV3D('Hlt2')]
         Hlt2ParticleFilter.__init__(self, 'OptTopoInput' + pid, pc, inputs,
@@ -221,25 +220,29 @@ class FilterCombos(Hlt2ParticleFilter):
     """
     Filter for the BDT lines.
     """
-    def __init__(self, n, inputs, varmap, props):
-        #params  = ('$PARAMFILESROOT/data/%s' % props['OPT_BDT_PARAMS'])
-        params  = ('$PARAMFILESROOT/data/Hlt2Topo%dBody_BDTParams_%s.txt' % 
-                   (n, props['BDT_%iBODY_PARAMS' % n]))
-        bdttool = self.__classifier_old(params, varmap, "TrgBBDT")
-        pc = ("(VALUE('%s/%s') > %%(OPT_BDT_MIN)s)" % 
-              (bdttool.Type.getType(), bdttool.Name))
-        #if n == 2:
-        #    pc = ("(PT > %(OPT_CMB_PRT_PT_MIN)s) "
-        #          "& (VFASPF(VCHI2/VDOF) < %(OPT_CMB_VRT_CHI2_MAX)s) "
-        #          "& (BPVVDCHI2 > %(OPT_CMB_VRT_VDCHI2_MIN)s) "
-        #          "& (in_range(%(OPT_CMB_VRT_ETA_MIN)s, BPVETA,"
-        #          " %(OPT_CMB_VRT_ETA_MAX)s)) "
-        #          "& (in_range(%(OPT_CMB_VRT_MCOR_MIN)s, BPVCORRM,"
-        #          " %(OPT_CMB_VRT_MCOR_MAX)s)) "
-        #          "& (BPVDIRA > %(OPT_CMB_VRT_DIRA_MIN)s) "
-        #          "& (NINTREE(MIPCHI2DV(PRIMARY) < 16) <"
-        #          " %(OPT_CMB_TRK_NLT16_MAX)s) "
-        #          "& " + pc)
+    def __init__(self, n, inputs, props):
+        params = props.get('OPT_BDT_%iBODY_PARAMS' % n)
+        if params == None: params = props['OPT_BDT_PARAMS']
+        params = '$PARAMFILESROOT/data/' + params
+        bdtcut = props.get('OPT_BDT_%iBODY_MIN' % n)
+        if bdtcut == None: bdtcut = props['OPT_BDT_MIN']
+        varmap = props.get('OPT_BDT_%iBODY_VARMAP' % n)
+        if varmap == None: varmap = props['OPT_BDT_VARMAP']
+        bdttool = self.__classifier(params, varmap, "TrgBBDT")
+        pc = ("(VALUE('%s/%s') > %s)" % 
+              (bdttool.Type.getType(), bdttool.Name, bdtcut))
+        if n == 2:
+            pc = ("(PT > %(OPT_CMB_PRT_PT_MIN)s) "
+                  "& (VFASPF(VCHI2) < %(OPT_CMB_VRT_CHI2_MAX)s) "
+                  "& (BPVVDCHI2 > %(OPT_CMB_VRT_VDCHI2_MIN)s) "
+                  "& (in_range(%(OPT_CMB_VRT_ETA_MIN)s, BPVETA,"
+                  " %(OPT_CMB_VRT_ETA_MAX)s)) "
+                  "& (in_range(%(OPT_CMB_VRT_MCOR_MIN)s, BPVCORRM,"
+                  " %(OPT_CMB_VRT_MCOR_MAX)s)) "
+                  "& (BPVDIRA > %(OPT_CMB_VRT_DIRA_MIN)s) "
+                  "& (NINTREE(MIPCHI2DV(PRIMARY) < 16) <"
+                  " %(OPT_CMB_TRK_NLT16_MAX)s) "
+                  "& " + pc)
         from HltTracking.HltPVs import PV3D
         Hlt2ParticleFilter.__init__(self, 'BDT', pc, inputs, shared = False, 
                                     tools = [bdttool], 
@@ -249,58 +252,41 @@ class FilterCombos(Hlt2ParticleFilter):
         from HltLine.HltLine import Hlt1Tool as Tool
         from Configurables import LoKi__Hybrid__DictOfFunctors as DictOfFunctors
         from Configurables import LoKi__Hybrid__DictValue as DictValue
-        from Configurables import \
-            LoKi__Hybrid__DictTransform_MatrixnetTransform_ as Transform
+        if params.endswith('.mx'): from Configurables import \
+                LoKi__Hybrid__DictTransform_MatrixnetTransform_ as Transform
+        else: from Configurables import \
+                LoKi__Hybrid__DictTransform_BBDecTreeTransform_ as Transform
+        tname      = 'Matrixnet' if params.endswith('.mx') else 'BBDecTree'
         key        = 'BDT'
-        options    = {'MatrixnetFile': params, 'Name': key, 'KeepVars': '0'}
+        options    = {tname + 'File': params, 'Name': key, 'KeepVars': '0'}
         funcdict   = Tool(type = DictOfFunctors, name = 'TopoMVAdict',
                         Preambulo = preambulo, Variables = varmap)
-        transform  = Tool(type = Transform, name = 'Matrixnet',
+        transform  = Tool(type = Transform, name = tname,
                           tools = [funcdict], Options = options, 
                           Source = "LoKi::Hybrid::DictOfFunctors/TopoMVAdict")
         classifier = Tool(type = DictValue, name = name, tools = [transform],
                           Key = key, Source = 'LoKi::Hybrid::DictTransform'
-                          '<MatrixnetTransform>/Matrixnet')
+                          '<' + tname + 'Transform>/' + tname)
         return classifier
-
-    def __classifier_old(self, params, varmap, name, preambulo = []):
-        from HltLine.HltLine import Hlt1Tool as Tool
-        from Configurables import LoKi__Hybrid__DictOfFunctors as DictOfFunctors
-        from Configurables import LoKi__Hybrid__DictValue as DictValue
-        from Configurables import \
-            LoKi__Hybrid__DictTransform_BBDecTreeTransform_ as Transform
-        key        = 'BDT'
-        options    = {'BBDecTreeFile': params, 'Name': key, 'KeepVars': '0'}
-        funcdict   = Tool(type = DictOfFunctors, name = 'TopoMVAdict',
-                        Preambulo = preambulo, Variables = varmap)
-        transform  = Tool(type = Transform, name = 'BBDecTree',
-                          tools = [funcdict], Options = options, 
-                          Source = "LoKi::Hybrid::DictOfFunctors/TopoMVAdict")
-        classifier = Tool(type = DictValue, name = name, tools = [transform],
-                          Key = key, Source = 'LoKi::Hybrid::DictTransform'
-                          '<BBDecTreeTransform>/BBDecTree')
-        return classifier
-
 
 from Hlt2Lines.Utilities.Hlt2Combiner import Hlt2Combiner
+from itertools import combinations_with_replacement
 class CombineTos(Hlt2Combiner):
     """
     Combiner for all 2-body HLT1 TOS combos.
     """
-    def __init__(self, inputs):
+    def __init__(self, inputs, decays = []):
         pids = ['K+', 'K-', 'KS0', 'Lambda0', 'Lambda~0']
-        decays = ['B0 -> %s %s' % (pid1, pid2) for (idx1, pid1)
-                  in enumerate(pids) for pid2 in pids[idx1:]]
-        #cc = ("(ACUTDOCACHI2(%(OPT_CMB_TRK_DOCA_MAX)s, '')) "
-        #      "& (AALLSAMEBPV | (AMINCHILD(MIPCHI2DV(PRIMARY)) > 16))")
-        #mc = ("(HASVERTEX)")
-        cc = ("AALL")
-        mc = ("ALL")
+        combos = list(combinations_with_replacement(pids, 2))
+        for combo in combos: decays.append('B0 -> ' + ' '.join(combo))
+        cc = ("(ACUTDOCACHI2(%(OPT_CMB_VRT_CHI2_MAX)s, '')) "
+              "& (AALLSAMEBPV | (AMINCHILD(MIPCHI2DV(PRIMARY)) > 16))")
+        mc = ("(HASVERTEX)")
         from Hlt2Lines.Utilities.Hlt2MergedStage import Hlt2MergedStage
         merged = [Hlt2MergedStage('OptTopo2BodyTos', inputs, shared = True)]
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, 'OptTopo2BodyTos', decays,
-                              merged, shared = True, #tistos = 'OPT_TOS',
+                              merged, shared = True, tistos = 'OPT_TOS',
                               dependencies = [PV3D('Hlt2')],
                               CombinationCut = cc, MotherCut = mc)
 
@@ -308,23 +294,22 @@ class CombineN(Hlt2Combiner):
     """
     Combiner for all n-body combos.
     """
-    def __init__(self, n, inputs):
+    def __init__(self, n, inputs, decays = []):
         pids = ['K+', 'K-', 'KS0', 'Lambda0', 'Lambda~0']
-        decays = ['B*0 -> B0 %s %s' % (pid1, pid2) for (idx1, pid1) in
-                  enumerate(pids) for pid2 in pids[idx1:]]
-        if n == 3: decays = ['B*0 -> B0 %s' % pid for pid in pids]
-        #cc = ("(APT > %(OPT_CMB_PRT_PT_MIN)s) "
-        #      "& (ANUM(MIPCHI2DV(PRIMARY) < 16) < %(OPT_CMB_TRK_NLT16_MAX)s)")
-        #mc = ("(HASVERTEX) "
-        #      "& (VFASPF(VCHI2/VDOF) < %(OPT_CMB_VRT_CHI2_MAX)s) "
-        #      "& (BPVVDCHI2 > %(OPT_CMB_VRT_VDCHI2_MIN)s) "
-        #      "& (in_range(%(OPT_CMB_VRT_ETA_MIN)s, BPVETA,"
-        #      " %(OPT_CMB_VRT_ETA_MAX)s)) "
-        #      "& (in_range(%(OPT_CMB_VRT_MCOR_MIN)s, BPVCORRM,"
-        #      " %(OPT_CMB_VRT_MCOR_MAX)s)) "
-        #      "& (BPVDIRA > %(OPT_CMB_VRT_DIRA_MIN)s)")
-        cc = ("AALL")
-        mc = ("ALL")
+        combos = list(combinations_with_replacement(pids, n - 2))
+        for combo in combos: decays.append('B*0 -> B0 ' + ' '.join(combo))
+        cc = ("(APT > %(OPT_CMB_PRT_PT_MIN)s) "
+              "& (ACUTDOCACHI2(%(OPT_CMB_VRT_CHI2_MAX)s, ''))"
+              "& (AALLSAMEBPV | (AMINCHILD(MIPCHI2DV(PRIMARY)) > 16)) "
+              "& (ANUM(MIPCHI2DV(PRIMARY) < 16) < %(OPT_CMB_TRK_NLT16_MAX)s)")
+        mc = ("(HASVERTEX) "
+              "& (VFASPF(VCHI2) < %(OPT_CMB_VRT_CHI2_MAX)s) "
+              "& (BPVVDCHI2 > %(OPT_CMB_VRT_VDCHI2_MIN)s) "
+              "& (in_range(%(OPT_CMB_VRT_ETA_MIN)s, BPVETA,"
+              " %(OPT_CMB_VRT_ETA_MAX)s)) "
+              "& (in_range(%(OPT_CMB_VRT_MCOR_MIN)s, BPVCORRM,"
+              " %(OPT_CMB_VRT_MCOR_MAX)s)) "
+              "& (BPVDIRA > %(OPT_CMB_VRT_DIRA_MIN)s)")
         from Hlt2Lines.Utilities.Hlt2MergedStage import Hlt2MergedStage
         merged = [Hlt2MergedStage('OptTopo%iBody' % n, inputs, shared = True)]
         from HltTracking.HltPVs import PV3D
