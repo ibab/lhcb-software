@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-09 - Sascha Stahl
+ - TrackEff/Inputs.py : Updated TrackContainerCopy to vector of input locations.
+
 ! 2015-04-08 - Patrick Spradlin
   - Some code cleaning in CharmHad/Stages.py
     . Modified NeutralInParticleFilter so that its logic does not rely on name

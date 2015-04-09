@@ -18,7 +18,7 @@ from TrackFitter.ConfiguredFitters import (ConfiguredEventFitter,
                                            ConfiguredForwardStraightLineEventFitter)
 
 copyVelo = TrackContainerCopy( "CopyVeloForFitForTrackEff" )
-copyVelo.inputLocation = RevivedVelo.outputSelection()
+copyVelo.inputLocations = [ RevivedVelo.outputSelection() ]
 copyVelo.outputLocation = Hlt2TrackEffRoot+'/FittedVelo/VeloTracks'
 preve = TrackStateInitAlg("PrepareVeloTracks",TrackLocation = copyVelo.outputLocation )
 preve.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
