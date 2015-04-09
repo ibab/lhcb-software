@@ -31,6 +31,9 @@ macro_append ROOT_linkopts " -lHist -lGraf -lGraf3d -lGpad -lRint -lPostscript -
 macro_append Boost_linkopts " $(Boost_linkopts_serialization) "
 end_private
 
+#=====================================================================
+# Linker library building rule
+#=====================================================================
 library RichHPDImageAnalysisLib ../src/lib/*.cpp
 apply_pattern linker_library library=RichHPDImageAnalysisLib
 
