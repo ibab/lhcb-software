@@ -56,8 +56,8 @@ class ForwardConf(object):
     PFAlg.PatForwardToolHLT2.SecondLoop = True
     PFAlg.PatForwardToolHLT2.addTool( TrackUsedLHCbID, name = "TrackUsedLHCbID")
     PFAlg.PatForwardToolHLT2.UsedLHCbIDToolName = "TrackUsedLHCbID"
-    PFAlg.PatForwardToolHLT2.TrackUsedLHCbID.inputContainers = ["Rec/Track/ForwardHLT1"]
-    PFAlg.PatForwardToolHLT2.VeloVetoTracksNames = [ "Rec/Track/ForwardHLT1"]
+    PFAlg.PatForwardToolHLT2.TrackUsedLHCbID.inputContainers = ["Rec/Track/FittedHLT1ForwardTracks"]
+    PFAlg.PatForwardToolHLT2.VeloVetoTracksNames = [ "Rec/Track/FittedHLT1ForwardTracks"]
 
   
 #class DownstreamConf(object):

@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-04-09 - Michel De Cian
+ - Change input location of long tracks to veto in PatForward for HLT2 for 2015.
+
 ! 2015-04-08 - Michel De Cian
  - Make 'PatAddTTCoord' default for PatForwardTool.
 
