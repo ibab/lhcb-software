@@ -75,6 +75,7 @@ class PhotonFilter(Hlt2TisTosParticleTagger):
                                            [Hlt2Photons],
                                            shared=True)
 
+
 # CALO photons builder (some cuts needed on non-converted photons only,
 # before pairing with converted counterparts
 class CALOPhotonFilter(Hlt2ParticleFilter):
@@ -85,6 +86,7 @@ class CALOPhotonFilter(Hlt2ParticleFilter):
                                                inputs,
                                                nickname=name,
                                                shared=True)
+
 
 # Converted photons builder
 class ConvPhotonFilter(Hlt2ParticleFilter):
@@ -129,19 +131,40 @@ class HHCombiner(Hlt2Combiner):
                                          Preambulo=['wide_mass = 1.5*%(MASS_WIN)s'])
 
 
+# Filter lambdas
+class LambdaL0Filter(Hlt2ParticleFilter):
+    """Filter L0."""
+    def __init__(self, name, inputs):
+        lambda0_cut = """(DOCA(1,2) < %(TRACK_DOCA_MAX)s) &
+                         (PT > %(L0_PT_MIN)s)
+                         (NINTREE( (ISBASIC) &
+                                  (P > %(TRACK_P_MIN)s) &
+                                  (MIPCHI2DV(PRIMARY) > %(TRACK_IPCHI2_MIN)s)
+                                 ) == 2) &
+                         (MIPDV(PRIMARY) > %(L0_IP_MIN)s)"""
+        super(LambdaL0Filter, self).__init__('RadiativeLambdaL0Filter_%s' % name,
+                                             lambda0_cut,
+                                             inputs,
+                                             nickname=name)
+
+
 # Build the B mesons
 class B2XGammaCombiner(Hlt2Combiner):
     """Build the B from photons and input vector mesons."""
-    def __init__(self, name, decay, vector_meson):
+    def __init__(self, name, decay, vector_meson, converted=False):
         combination_cut = "ADAMASS('%(PARTICLE)s') < wide_mass"
         mother_cut = ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)"
                       " & (PT > %(PT_MIN)s) "
                       " & (BPVDIRA > cos_dira_angle)"
                       " & (BPVIPCHI2() < %(BPVIPCHI2_MAX)s)"
                       " & (ADMASS('%(PARTICLE)s') < %(MASS_WIN)s)")
+        if converted:
+            photons = [ConvPhotonLL(), ConvPhotonDD()]
+        else:
+            photons = [PhotonFilter()]
         super(B2XGammaCombiner, self).__init__('RadiativeB2XGammaCombiner_%s' % name,
                                                decay,
-                                               [vector_meson, PhotonFilter()],
+                                               [vector_meson] + photons,
                                                nickname=name,
                                                DaughtersCuts={},
                                                CombinationCut=combination_cut,
@@ -153,7 +176,7 @@ class B2XGammaCombiner(Hlt2Combiner):
 
 class B2GammaGammaCombiner(Hlt2Combiner):
     def __init__(self, name, decay, inputs):
-        mother_cut = ("(M<%(BsMax)s*MeV) & "
+        mother_cut = ("(M < %(BsMax)s*MeV) & "
                       "(M > %(BsMin)s*MeV) & "
                       "(PT > %(B_PT)s*MeV) & "
                       "(P > %(B_P)s*MeV)")
@@ -169,5 +192,28 @@ class B2GammaGammaCombiner(Hlt2Combiner):
                                                    CombinationCut=comb_cut,
                                                    MotherCut=mother_cut,
                                                    ParticleCombiners={ '' : 'ParticleAdder'})
+
+class Lb2L0GammaCombiner(Hlt2Combiner):
+    """Build the Lb from photons and input lambda0 mesons.
+
+    Use ParticleAdder.
+
+    """
+    def __init__(self, name, decay, lambda0, converted=False):
+        mother_cut = "(MTDOCACHI2(1) < %(LB0_MTDOCACHI2_MAX)s)"
+        comb_cut = """(ASUM(PT) > %(LB0_SUM_PT)s) &
+                      (APT > %(LB0_PT)s) &
+                      (ADAMASS('Lambda_b0') < %(LB0_MASS_WINDOW)s )"""
+        if converted:
+            photons = [ConvPhotonLL(), ConvPhotonDD()]
+        else:
+            photons = [PhotonFilter()]
+        super(Lb2L0GammaCombiner, self).__init__('RadiativeLb2L0GammaCombiner_%s' % name,
+                                                 decay,
+                                                 [lambda0] + photons,
+                                                 nickname=name,
+                                                 CombinationCut=comb_cut,
+                                                 MotherCut=mother_cut,
+                                                 ParticleCombiners={ '' : 'ParticleAdder'})
 
 # EOF

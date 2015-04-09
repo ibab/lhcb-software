@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-09 - Albert Puig
+ - Add Lb2L0Gamma radiative line.
+ - Extra factorization of radiative lines to ensure proper configuration.
+
 ! 2015-04-09 - Sascha Stahl
  - TrackEff/Inputs.py : Updated TrackContainerCopy to vector of input locations.
 

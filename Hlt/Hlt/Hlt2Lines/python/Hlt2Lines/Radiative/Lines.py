@@ -12,36 +12,42 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 
 from B2XGamma import B2XGammaLines
 from B2GammaGamma import B2GammaGammaLines
+from Lb2L0Gamma import Lb2L0GammaLines
 
-cuts = {'Common': {'TrackTisTos': 'Hlt1(Two)?Track(MVA)?.*Decision%TOS',
+cuts = {'Common': {'TrackTisTos' : 'Hlt1(Two)?TrackMVADecision%TOS',
                    'PhotonTisTos': 'L0(Photon|Electron).*Decision%TOS',
-                   'NTRACK_MAX': 300} }
+                   'NTRACK_MAX'  : 300},
+        # Converted photons
+        'ConvLL': {'ee_Mass' : 50.0,
+                   'ee_P'    : 5000.0,
+                   'ee_PT'   : 200.0 },
+        'ConvDD': {'ee_Mass' : 100.0,
+                   'ee_P'    : 5000.0,
+                   'ee_PT'   : 200.0},
+       }
 
-cuts.update(B2GammaGammaLines.get_cuts())
+hlt1_dependencies = {}
 
-cuts.update(B2XGammaLines.get_cuts())
+stages = {}
 
 
 class RadiativeLines(Hlt2LinesConfigurableUser):
     __slots__ = cuts
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line
-        # Load stages
-        stages = B2XGammaLines.get_stages()
-        stages.update(B2GammaGammaLines.get_stages())
+        for line_conf in [B2GammaGammaLines, B2XGammaLines, Lb2L0GammaLines]:
+            # Get cuts
+            cuts.update(line_conf.get_cuts())
+            # Get HLT1 dependencies
+            hlt1_dependencies.update(line_conf.get_hlt1())
+            # Load stages
+            stages.update(line_conf.get_stages())
         # Build lines
         for (linename, algos) in self.algorithms(stages).iteritems():
-            if(linename=='B2GammaGamma'):
-                Hlt2Line(linename,
-                        HLT="HLT_PASS_RE('Hlt1B2GammaGammaDecision')",
-                        algos=algos,
-                        prescale=self.prescale,
-                        postscale=self.postscale)
-            else:
-                Hlt2Line(linename,
-                        algos=algos,
-                        prescale=self.prescale,
-                        postscale=self.postscale)
-
+            Hlt2Line(linename,
+                     HLT1=hlt1_dependencies.get(linename, None),
+                     algos=algos,
+                     prescale=self.prescale,
+                     postscale=self.postscale)
 
 # EOF

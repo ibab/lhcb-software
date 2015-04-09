@@ -7,8 +7,10 @@
 # =============================================================================
 """Bs -> Gamma Gamma lines."""
 
+from RadiativeLineBuilder import RadiativeLineBuilder
 
-class B2GammaGammaLines(object):
+
+class B2GammaGammaLines(RadiativeLineBuilder):
     @staticmethod
     def get_stages():
         from Stages import TrackGEC
@@ -20,7 +22,7 @@ class B2GammaGammaLines(object):
         # Make hard non-converted photons
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPhotons     as Hlt2Photons
         HardCALOGamma = CALOPhotonFilter('HardCALO',[Hlt2Photons])
-        
+
         # Build Bs -> gamma gamma (double conversion)
         bs2gammagammaDouble = B2GammaGammaCombiner('B2GammaGammaDouble',
                                                    'B_s0 -> gamma gamma',
@@ -49,17 +51,6 @@ class B2GammaGammaLines(object):
         cuts['HardCALO'] = {
                 'CALO_P'    : 5000.0,
                 'CALO_PT'   : 3000.0
-                }
-        # Converted photons
-        cuts['ConvLL'] = {
-                'ee_Mass' : 50.0,
-                'ee_P'    : 5000.0,
-                'ee_PT'   : 200.0
-                }
-        cuts['ConvDD'] = {
-                'ee_Mass' : 100.0,
-                'ee_P'    : 5000.0,
-                'ee_PT'   : 200.0
                 }
         # Bs
         cuts['B2GammaGamma'] = {
@@ -91,6 +82,10 @@ class B2GammaGammaLines(object):
                 'B_P'       : 5000.0,
                 }
         return cuts
+
+    @staticmethod
+    def get_hlt1():
+        return {'B2GammaGamma': "HLT_PASS_RE('Hlt1B2GammaGammaDecision')"}
 
 # EOF
 

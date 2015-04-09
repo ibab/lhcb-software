@@ -7,8 +7,10 @@
 # =============================================================================
 """Creation of exclusive HLT2 radiative lines."""
 
+from RadiativeLineBuilder import RadiativeLineBuilder
 
-class B2XGammaLines(object):
+
+class B2XGammaLines(RadiativeLineBuilder):
     @staticmethod
     def get_stages():
         from Stages import TrackGEC, ParticleFilter, MassWindowFilter, HHCombiner, B2XGammaCombiner
@@ -83,6 +85,7 @@ class B2XGammaLines(object):
         cuts['Bs2PhiGamma'] = {'PARTICLE': 'B_s0',
                                'MASS_WIN': 1000}
         return cuts
+
 
 
 # EOF
