@@ -177,6 +177,16 @@ def RecoTrackingHLT2(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
    ## Forward pattern
    if "ForwardHLT2" in trackAlgs :
       track.DetectorList += [ "ForwardPatHLT2" ]
+      # Need to filter out the Velo tracks of the fitted HLT1 tracks
+      from Configurables import TrackListRefiner, TrackSelector
+      refiner = TrackListRefiner("FilterForwardHLT1Tracks")
+      refiner.inputLocation = "Rec/Track/FittedHLT1Tracks"
+      refiner.outputLocation = "Rec/Track/FittedHLT1ForwardTracks"
+      refiner.Selector = "TrackSelector"
+      refiner.addTool(TrackSelector("TrackSelector"))
+      refiner.TrackSelector.TrackTypes = [ "Long" ]
+      GaudiSequencer("TrackHLT2ForwardPatHLT2Seq").Members +=  [ refiner ]
+
       from Configurables import PatForward
       GaudiSequencer("TrackHLT2ForwardPatHLT2Seq").Members +=  [ PatForward("PatForwardHLT2") ]
       from PatAlgorithms import PatAlgConf

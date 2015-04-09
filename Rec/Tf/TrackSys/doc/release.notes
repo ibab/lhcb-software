@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-04-9 - Michel De Cian
+ - Introduce 'TrackListRefiner' to only veto fitted long tracks in HLT 2 forward for 2015.
+
 ! 2015-04-08 - Michel De Cian
  - Change 'TrackListMerger' to (new) 'TrackContainerCopy' in 'RecoTrackingRun2.py', such that forward tracks can be stored on a DST.
 
