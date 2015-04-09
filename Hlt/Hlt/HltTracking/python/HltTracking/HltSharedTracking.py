@@ -24,49 +24,23 @@ __all__ = ( 'MinimalVelo'
 #############################################################################################
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
-from Configurables import Tf__PatVeloGeneric, Tf__PatVeloRTracking, FastVeloTracking
+from Configurables import FastVeloTracking
 from Configurables import PVOfflineTool
 from HltLine.HltLine import bindMembers
 from Configurables import PatSeeding, PatSeedingTool
 
-# New tune JvT 2010-07-14
-# globally set the resolutions for ST
-#when syntax errors there are fixed take from 
-#importOptions( "$STTOOLSROOT/options/Brunel_EarlyData.opts" )
-from Configurables import STOfflinePosition, STOnlinePosition
-
-STOnlinePosition().ErrorVec=[0.257, 0.245, 0.277]
-STOnlinePosition().APE = 0.197
-
-ITOnl = STOnlinePosition("ITLiteClusterPosition")
-ITOnl.ErrorVec=[0.253,0.236,0.273]
-ITOnl.APE=0.0758
-#ITOnl.DetType = "IT"
-
-STPos = STOfflinePosition("ITClusterPosition")
-STPos.LinSharingCorr2 = -0.0152  
-STPos.CubicSharingCorr2 = 12.33 
-STPos.CubicSharingCorr3 = 4.369 
-STPos.LinSharingCorr4 = 0.530 
-STPos.DetType = "IT"
-STPos.ErrorVec =[ 0.253, 0.236, 0.273, 0.185 ]
-STPos.APE = 0.0758
-
-STOfflinePosition().ErrorVec = [0.257, 0.245, 0.277, 0.208]
-STOfflinePosition().APE = 0.197
-
-from Configurables import OTRawBankDecoder
-OTRawBankDecoder().TimeWindow = ( -8.0, 56.0 ) # add units: ns!!
-
-
+#############################################################################################
+# Configure the position tool for lite (and full) clusters
+#############################################################################################
+from Configurables import STOnlinePosition
+from STTools import STOfflineConf
+STOfflineConf.DefaultConf().configureTools()
 #############################################################################################
 # Configure pattern recognition algorithms
 #############################################################################################
 
 from HltTrackNames import Hlt1TrackLoc, HltSharedTrackLoc, Hlt2TrackLoc
 
-from Configurables import Tf__PatVeloSpaceTracking, Tf__PatVeloSpaceTool
-from Configurables import FastVeloHitManager, DecodeVeloRawBuffer
 from Configurables import TrackStateInitAlg, TrackStateInitTool
 from Configurables import ToolSvc, TrackMasterExtrapolator
 from Configurables import SimplifiedMaterialLocator
@@ -305,7 +279,7 @@ def ConfiguredGoodTrackFilter (name,
 # Define modules for the reconstruction sequence 
 #############################################################################################
 from HltLine.HltDecodeRaw import DecodeVELO, DecodeTRACK, DecodeTT, DecodeIT
-from Configurables import DecodeVeloRawBuffer, HltConf, Hlt2Conf
+from Configurables import HltConf, Hlt2Conf
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 #This is the part which is shared between Hlt1 and Hlt2

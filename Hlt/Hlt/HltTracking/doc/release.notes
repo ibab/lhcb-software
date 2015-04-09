@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-04-09 - Sascha Stahl
+ - HltSharedTracking: Clean up configuration of StOnlinePostion tools and OTRawBankDecoder.
+
 ! 2015-04-08 - Sascha Stahl
  - Hlt2Tracking and HltSharedTracking: Moved track chi2 cut to 3 as done offline.
    Activated fit of velo tracks by default. Removed obsolete properties of PatVeloTTHybrid.
