@@ -4,6 +4,10 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2015-04-09 - Chris Jones
+ - Various small clean ups of the Image summary algorithm. C++11'ify things a bit.
+   Remove loading of ODIN simply to fill a counter...
+
 !========================= RichHPDImageAnalysis v1r14 2014-07-14 =================
 ! 2014-07-11 - Marco Clemencic
  - Removed duplicate dictionary entries.

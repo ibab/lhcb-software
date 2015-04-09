@@ -12,9 +12,6 @@
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 #include "RichDet/DeRichSystem.h"
 
-// Event Model
-#include "Event/ODIN.h"
-
 // Det Desc
 #include "DetDesc/IGeometryInfo.h"
 
@@ -93,7 +90,7 @@ namespace Rich
     private:
 
       /// Event Counter
-      int m_nEvt ;
+      unsigned long long m_nEvt ;
 
       /// Minimum number of hits required in HPD
       unsigned int m_minOccupancy ;

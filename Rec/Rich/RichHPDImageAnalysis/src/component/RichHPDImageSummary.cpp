@@ -50,21 +50,17 @@ StatusCode Summary::initialize()
 
   acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, NULL, true );
 
-  const LHCb::RichSmartID::Vector & allHPDs = m_RichSys->allPDRichSmartIDs();
-
-  for ( LHCb::RichSmartID::Vector::const_iterator iHPD = allHPDs.begin();
-        iHPD != allHPDs.end(); ++iHPD )
+  for ( const auto& HPD : m_RichSys->allPDRichSmartIDs() )
   {
-    const Rich::DAQ::HPDCopyNumber hpdID = m_RichSys->copyNumber( *iHPD );
+    const Rich::DAQ::HPDCopyNumber hpdID = m_RichSys->copyNumber( HPD );
 
     std::ostringstream name;
     name << "Rich_HPD_" << hpdID.data() << "_Image";
 
-    if ( m_histo.find(*iHPD) == m_histo.end() )
+    if ( m_histo.find(HPD) == m_histo.end() )
     {
-      m_histo[*iHPD] = create2D( name.str() );
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << "Created image histogram for " << *iHPD << endmsg;
+      m_histo[HPD] = create2D( name.str() );
+      _ri_verbo << "Created image histogram for " << HPD << endmsg;
     }
     else
     {
@@ -72,7 +68,7 @@ StatusCode Summary::initialize()
     }
   }
 
-  debug() << m_params << endmsg;
+  _ri_debug << m_params << endmsg;
 
   return sc;
 }
@@ -83,45 +79,26 @@ StatusCode Summary::initialize()
 
 StatusCode Summary::execute()
 {
+  // count processed events
   ++m_nEvt;
 
-  LHCb::ODIN* odin = get<LHCb::ODIN*>( LHCb::ODINLocation::Default );
-  if ( odin )
-  {
-    counter("RICH_EventTime") += odin->gpsTime() ;
-  }
-  else
-  {
-    Warning( "Unable to retrieve ODIN" ).ignore();
-  }
-
   // Standard loop over Rich Smart IDs
-  const Rich::DAQ::L1Map& mapUKL1 = m_SmartIDDecoder->allRichSmartIDs();
-
-  for ( Rich::DAQ::L1Map::const_iterator iUKL1 = mapUKL1.begin();
-        iUKL1 != mapUKL1.end(); ++iUKL1 )
+  for ( const auto& UKL1 : m_SmartIDDecoder->allRichSmartIDs() )
   {
-    const Rich::DAQ::IngressMap& mapIngress = iUKL1->second;
-
-    for ( Rich::DAQ::IngressMap::const_iterator iIngress = mapIngress.begin();
-          iIngress != mapIngress.end(); ++iIngress )
+    for ( const auto& Ingress : UKL1.second )
     {
-
-      const Rich::DAQ::HPDMap & mapHPD = (iIngress->second).hpdData();
-
-      for ( Rich::DAQ::HPDMap::const_iterator iHPD = mapHPD.begin();
-            iHPD != mapHPD.end(); ++iHPD )
+      for ( const auto& HPD : Ingress.second.hpdData() )
       {
-        const LHCb::RichSmartID smartID = (iHPD->second).hpdID();
+        const LHCb::RichSmartID smartID = HPD.second.hpdID();
 
         // Skip inhibited HPDs
-        if ( (iHPD->second).header().inhibit() ) { continue; }
+        if ( HPD.second.header().inhibit() ) { continue; }
         // skip bad HPD IDs
         if ( !smartID.isValid() ) { continue; }
 
         // Find an fill histogram image plot
         PD2Histo::iterator iHist = m_histo.find(smartID);
-        if ( iHist == m_histo.end() )
+        if ( UNLIKELY( iHist == m_histo.end() ) )
         {
           std::ostringstream mess;
           mess << "No HPD Image histogram for " << smartID;
@@ -130,11 +107,9 @@ StatusCode Summary::execute()
         }
         else
         {
-          const LHCb::RichSmartID::Vector & hitIDs = (iHPD->second).smartIDs() ;
-          for ( LHCb::RichSmartID::Vector::const_iterator iHit = hitIDs.begin();
-                iHit != hitIDs.end(); ++iHit )
+          for ( const auto& Hit : HPD.second.smartIDs() )
           {
-            iHist->second->Fill( iHit->pixelCol(), iHit->pixelRow() );
+            iHist->second->Fill( Hit.pixelCol(), Hit.pixelRow() );
           }
         }
 
@@ -151,28 +126,20 @@ StatusCode Summary::execute()
 
 StatusCode Summary::finalize()
 {
-
-  debug() << "==> Finalize" << endmsg;
-  debug() << "    Algorithm has seen " << m_nEvt << " events" << endmsg;
+  _ri_debug << "    Algorithm has seen " << m_nEvt << " events" << endmsg;
 
   // Make summary info
   if ( m_finalFit )
   {
-    verbose() << "Fitting histograms and making summaries" << endmsg;
-    for ( PD2Histo::iterator it = m_histo.begin(); it != m_histo.end(); ++it )
-    {
-      summaryINFO( it->first, it->second );
-    }
+    _ri_verbo << "Fitting histograms and making summaries" << endmsg;
+    for ( auto& it : m_histo ) { summaryINFO( it.first, it.second ); }
   }
 
   // Clean out histogram storage
   if ( !m_keep2Dhistos )
   {
-    verbose() << "Cleaning out histograms" << endmsg;
-    for ( PD2Histo::iterator it = m_histo.begin(); it != m_histo.end(); ++it )
-    {
-      delete it->second;
-    }
+    _ri_verbo << "Cleaning out histograms" << endmsg;
+    for ( auto& it : m_histo ) { delete it.second; }
   }
   m_histo.clear() ;
 
@@ -210,7 +177,7 @@ double Summary::distanceToCondDBValue( const Rich::DAQ::HPDCopyNumber copyNumber
 
   DetectorElement * dd = getDet<DetectorElement>( sensorpath.str() );
 
-  Gaudi::XYZPoint zero;
+  const Gaudi::XYZPoint zero(0,0,0);
   Gaudi::XYZPoint offsetCondDB = (dd->geometry()->ownMatrix())*zero;
 
   const double condDBx = -offsetCondDB.x();
@@ -232,8 +199,8 @@ void Summary::summaryINFO( const LHCb::RichSmartID id,
   const unsigned int nPix = (unsigned int) (hist->Integral());
   if ( nPix < m_minOccupancy )
   {
-    debug() << "Fit for HPD " << copyNumber
-            << " ABORTED -> Too few hits (" << nPix << ")" << endmsg;
+    _ri_debug << "Fit for HPD " << copyNumber
+              << " ABORTED -> Too few hits (" << nPix << ")" << endmsg;
     return;
   }
 
@@ -283,14 +250,14 @@ void Summary::summaryINFO( const LHCb::RichSmartID id,
 
   if ( m_compareCondDB && ( ds < m_maxMovement ) )
   {
-    if ( msgLevel(MSG::DEBUG) ) debug() << " Exisiting CondDB value ok for " << copyNumber <<  endmsg;
+    _ri_debug << " Exisiting CondDB value ok for " << copyNumber <<  endmsg;
   }
   else
   {
     std::ostringstream nameHPD;
     nameHPD << "RICH_HPD_" << copyNumber;
 
-    if ( msgLevel(MSG::DEBUG) ) debug() << "Adding counter " << nameHPD.str() << endmsg ;
+    _ri_debug << "Adding counter " << nameHPD.str() << endmsg ;
 
     const double x0ErrSq  = std::pow(xErr0,2);
     const double y0ErrSq  = std::pow(yErr0,2);
