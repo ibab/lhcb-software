@@ -144,7 +144,7 @@ LHCb::Particle* LoKi::Hlt1::CaloHelperTool::caloCandidateToParticle( const LHCb:
     LHCb::CaloCluster* cluster = newCluster() ;
     cluster->position().setZ(m_z) ;
     cluster->setSeed(id) ;
-    cluster->position().parameters()(LHCb::CaloPosition::E) = cand->et()*m_z/r ;
+    cluster->position().parameters()(LHCb::CaloPosition::E) = cand->et()*std::sqrt((m_z*m_z)/(r*r)+1) ;
     cluster->position().parameters()(LHCb::CaloPosition::X) = x ;
     cluster->position().parameters()(LHCb::CaloPosition::Y) = y ;
 
@@ -170,19 +170,17 @@ LHCb::Particle* LoKi::Hlt1::CaloHelperTool::caloCandidateToParticle( const LHCb:
     entries.push_back(LHCb::CaloClusterEntry(d3, used)) ;
 
     // Make CaloHypo
-    LHCb::CaloPosition *position = new LHCb::CaloPosition() ;
-    position->setParameters(cluster->position().parameters()) ;
     LHCb::CaloHypo *hypo = newHypo() ;
     hypo->setHypothesis( LHCb::CaloHypo::Photon ) ;
     hypo->addToClusters( cluster ) ;
-    hypo->setPosition( position ) ;
+    hypo->setPosition( new LHCb::CaloPosition(cluster->position()) ) ;
 
     // Make ProtoParticle
     LHCb::ProtoParticle* proto = newProtoParticle() ;
     proto->addToCalo( hypo ) ;
 
     // Make Particle
-    LHCb::Particle* p = newParticle();
+    LHCb::Particle* p = new LHCb::Particle();
     p->setParticleID( pid );
     p->setProto( proto );
     LHCb::CaloParticle calopart( p );

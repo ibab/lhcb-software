@@ -4,6 +4,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-04-10 - Albert Puig
+ - Fixed problems with inserting new calo particles in the TES.
+
 ! 2015-04-07 - Albert Puig
  - Merged branch v15r5b
      * Move all the calo-related HLT1 functionality to CaloHelperTool.
