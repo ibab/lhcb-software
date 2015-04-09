@@ -48,6 +48,9 @@ FTClusterCreator::FTClusterCreator( const std::string& name,
   declareProperty("ClusterMaxWidth" ,   m_clusterMaxWidth   = 4 , "Maximal allowed width for clusters");
   declareProperty("ClusterMinCharge" ,  m_clusterMinCharge  = 8 , "Minimal charge to keep cluster ~4 p.e.");
   declareProperty("ClusterMinADCPeak" , m_clusterMinADCPeak = 5 , "Minimal ADC for cluster peaks, ~2.5 pe.");
+  declareProperty("FixClusterWidth" ,   m_fixClusterWidth   = 0 , "Fix cluster width for tracking res. studies");
+  declareProperty("FixClusterCharge" ,  m_fixClusterCharge  = 0 , "Fix cluster charge for tracking res. studies");
+  declareProperty("FixFracPos" ,        m_fixFracPos        = 0., "Fix cluster frac. pos. for tracking res. studies");
 
   // MONITORING PURPOSES
   declareProperty("MakeSpillPlots"    , m_makeSpillPlots    = false , "In case of spillover, add extra monitoring");
@@ -362,9 +365,17 @@ StatusCode FTClusterCreator::execute(){
         }
         */
 
+
+        // Check to fix certain properties for tracking eff. studies
+        int newClusSize = (stopDigitIter-startDigitIter+1);
+        if(m_fixClusterWidth != 0)  { newClusSize = m_fixClusterWidth;  }
+        if(m_fixClusterCharge != 0) { totalCharge = m_fixClusterCharge; }
+        if(m_fixFracPos != 0.) { fractionChanPosition = m_fixFracPos; }
+
+        
         // Define new cluster
         //  FTCluster::FTCluster( LHCb::FTChannelID &id, double fraction, int size, int charge )
-        FTCluster *newCluster = new FTCluster(meanChanPosition,fractionChanPosition,(stopDigitIter-startDigitIter+1),totalCharge);
+        FTCluster *newCluster = new FTCluster(meanChanPosition,fractionChanPosition,newClusSize,totalCharge);
         ++m_nCluster;
         m_sumCharge += totalCharge;
 
@@ -636,6 +647,21 @@ StatusCode FTClusterCreator::execute(){
           plot(newCluster->channelID().layer(), "NoiseClusLayer", "Cluster Layer; Cluster layer" , 0. , 13. ,13);
           plot(newCluster->channelID().sipmId(), "NoiseClusSiPMID", "Cluster SiPMID; Cluster SiPMID" , 0. , 96. ,96);
           plot(newCluster->channelID().module(), "NoiseClusModule", "Cluster Module; Cluster Module" , 0. , 16. ,16);
+            
+          plot(newCluster->channelID(), "ClusChannelID", "Cluster ChannelID; Cluster ChannelID" , 0. , 589824. ,4608);
+          plot(newCluster->channelID().sipmCell(), "ClusSiPMCell", "Cluster SiPM Cell; Cluster SiPM Cell", 0. , 130. ,130);
+          plot(newCluster->channelID().sipmId(), "ClusSiPMID", "Cluster SiPMID; Cluster SiPMID" , 0. , 96. ,96);
+          plot(newCluster->channelID().module(), "ClusModule", "Cluster Module; Cluster Module" , 0. , 16. ,16);
+          plot(newCluster->channelID().mat(), "ClusMat", "Cluster Mat; Cluster Mat" , 0. , 2. ,2);
+          plot(newCluster->channelID().quarter(), "ClusQuarter", "Cluster Quarter; Cluster Quarter" , 0. , 4. ,4);
+          plot(newCluster->channelID().layer(), "ClusLayer", "Cluster Layer; Cluster layer" , 0. , 13. ,13);
+
+          plot(newCluster->size(),"ClusSize","Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 10., 10);
+          plot(newCluster->charge(),"ClusCharge","Cluster Charge Distribution;Cluster Charge;Nber of events" , 0., 50., 50);
+          plot(newCluster->fraction(), "ClusFraction", "Cluster Fraction Pos;Cluster Fraction; Nber of events" , -.5, .5 , 100);
+          plot2D(newCluster->size(), newCluster->charge(), "ClusChargevsSize",
+                 "Cluster charge vs. size;Cluster size [Nb of Channels];Cluster Charge [ADC counts]",
+                 0. , 16. , 0. , 100.,16, 100);
         }
 
 

@@ -4,6 +4,10 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2015-04-09 - Jacco de Vries
+ - turned on 2-bits ADC forcing of digits, noise implementation, and new SiPMResponse shape
+ - Added options to fix cluster size / fraction
+
 !========================= FTDigitisation v2r3 2015-02-23 =========================
 ! 2015-02-21 - Michel De Cian
  - Revert to fraction range [0,1[ for consistency in the release in FTClusterCreator.

@@ -54,10 +54,10 @@ MCFTDigitCreator::MCFTDigitCreator( const std::string& name,
   declareProperty("SiPMGainVariation",    m_sipmGainVariation    = 0.05 );  // relative fluctuation of the gain
   declareProperty("ADCNoise",             m_adcNoise             = 0.5  );
   declareProperty("IntegrationOffset",    m_integrationOffset    = tmp); // tof + full fiber propagation time
-  declareProperty("Force2bitADC"     ,    m_force2bitADC         = false); // force the use of 3-valued charges at the end
+  declareProperty("Force2bitADC"     ,    m_force2bitADC         = 1); // force the use of 3-valued charges at the end
 
   // noise-related
-  declareProperty("SimulateNoise",    m_doNoise          =   0,   "Simulate noise (thermal, crosstalk, afterpulses)");
+  declareProperty("SimulateNoise",    m_doNoise          =   1,   "Simulate noise (thermal, crosstalk, afterpulses)");
   declareProperty("SipmPedestal",     m_pedestal         =   0.0, "Sipm pedestal (only implemented for noise)");
   declareProperty("ClusterMinCharge", m_clusterMinCharge =   9,   "Minimum cluster charge (for noise calculation)");
   declareProperty("Temperature",      m_temperature      = -30.,  "Sipm temperature (deg.C)    (for noise)");

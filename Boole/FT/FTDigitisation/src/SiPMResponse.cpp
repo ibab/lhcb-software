@@ -42,7 +42,7 @@ SiPMResponse::SiPMResponse( const std::string& type,
   declareProperty("times",  m_times, "Times for user-defined function" );
   declareProperty("values", m_values, "Values for user-defined function" );
   declareProperty("splineType", m_splineType = "Cspline", "The spline type" );
-  declareProperty("useNewResponse", m_useNewResponse = false, "Use the new, data-driven electronics response shape" ); 
+  declareProperty("useNewResponse", m_useNewResponse = 1, "Use the new, data-driven electronics response shape" ); 
 }
 
 //=============================================================================

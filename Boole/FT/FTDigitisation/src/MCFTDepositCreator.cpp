@@ -74,6 +74,8 @@ MCFTDepositCreator::MCFTDepositCreator( const std::string& name,
   declareProperty( "AttenuationToolName"        , m_attenuationToolName         = "MCFTAttenuationTool"   );
   declareProperty( "UseAttenuation"             , m_useAttenuation              = true );
   
+  declareProperty( "PutMCParticlePcut"          , m_putMCParticlePcut           = 0. , "apply lower P cut on MCParticles");
+  
 
 
 }
@@ -170,6 +172,16 @@ StatusCode MCFTDepositCreator::execute() {
     if ( msgLevel( MSG::DEBUG) ) debug() << "ftMCHits->size() : " << ftMCHits->size()<< endmsg;
     
     for( MCHit* ftHit : *ftMCHits ){
+
+      // check if we need to apply a cut on MCParticle properties first
+      double MCP = ftHit -> mcParticle() -> p();
+      if(m_putMCParticlePcut != 0.) {
+        if( MCP < m_putMCParticlePcut ) { 
+          plot( MCP, "MCParticle_P_cutout", "MCParticle Momentum (per MCHit) cutout; P [GeV/c]; N MCHits", 0., 200., 200 );
+          continue;
+        }
+      }
+      plot( MCP, "MCParticle_P", "MCParticle Momentum (per MCHit); P [GeV/c]; N MCHits", 0., 200., 200 );
       
       counter("NbOfMCHits")++;
       

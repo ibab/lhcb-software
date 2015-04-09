@@ -90,7 +90,8 @@ private:
   // Fibre properties
   double       m_fiberPropagationTime;   ///< Light propagation time in fiber
   double       m_scintillationDecayTime; ///< Decay time of scintillation light release
-  
+ 
+  double       m_putMCParticlePcut;
   
   DeFTDetector* m_deFT; ///< pointer to FT detector description
   Rndm::Numbers m_flatDist; ///< random number generator 

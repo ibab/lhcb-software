@@ -41,6 +41,10 @@ private:
   int m_clusterMinCharge;           ///< Minimal total ADC for clusters
   int m_clusterMinADCPeak;          ///< Minimal ADC for cluster peaks
 
+  int m_fixClusterWidth;
+  int m_fixClusterCharge;
+  double m_fixFracPos;
+
   int m_removeITRegion;
   bool m_makeSpillPlots;
   float m_ITScale;
