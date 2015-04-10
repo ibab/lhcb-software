@@ -737,6 +737,26 @@ double Gaudi::Math::integrate
   return result * ( xmax - xmin ) * _fac ;
 }
 // ============================================================================
+namespace 
+{
+  // ==========================================================================
+  inline long double r_kNm  
+  ( const unsigned short k , 
+    const unsigned short N , 
+    const unsigned short m ) 
+  {
+    long double r = 1 ;
+    for ( unsigned short i = 1 ; i <= m ; ++i ) 
+    {
+      r *= ( k + i ) ;
+      r /= ( N + i ) ;
+      r /= i         ;
+    }    
+    return r ;
+  }
+  // ==========================================================================
+}
+// ============================================================================
 /* get the integral between 0 and 1 for a product of basic  Bernstein
  *  polynom and monomial or degree m 
  *  \f[  \int_{0}^{1} \mathcal{B} \frac{x^m}{m!} \mathrm{d}x \f] 
@@ -751,16 +771,81 @@ double Gaudi::Math::integrate_poly
   //
   const unsigned short N = b.N () ;
   const unsigned short k = b.k () ;
-  // result 
-  long double r = 1 ;
-  for ( unsigned short i = 1 ; i <= m ; ++i ) 
+  //
+  return r_kNm ( k , N , m ) / ( N + m + 1 ) ;
+}
+// ============================================================================ 
+/*  get the integral between xmin and xmax Bernstein
+ *  polynom and monomial or degree m 
+ *  \f[  \int_{x_min}^{x_max} \mathcal{B} \frac{x^m}{m!} \mathrm{d}x \f] 
+ *  @param b     basic bernstein polynomial
+ *  @param m     degree of monomial 
+ */
+// ============================================================================ 
+double Gaudi::Math::integrate_poly 
+( const Gaudi::Math::Bernstein& b ,
+  const unsigned short          m ) 
+{
+  //
+  if ( 0 == m ) { return b.integral () ; }
+  //
+  const std::vector<double>& pars = b.pars()   ;
+  const unsigned short       N    = b.degree() ;
+  std::vector<long double>   nc  ( pars.size() , 0.0L ) ;
+  for ( unsigned short k = 0 ; k < nc.size() ; ++k ) 
   {
-    r *= ( k + i ) ;
-    r /= ( N + i ) ;
-    r /= i         ;
+    const long double ci = pars[k] ;
+    if ( s_zero ( ci ) ) { continue ; }
+    nc[k] = r_kNm ( k , N , m ) * ci ;  
   }
   //
-  return r / ( N + m + 1 ) ;
+  return 
+    Gaudi::Math::pow ( b.xmax() - b.xmin()  , m + 1 ) * 
+    std::accumulate  ( nc.begin() , nc.end() , 0.0L ) / ( N + m + 1 ) ;
+}
+// ============================================================================ 
+/** get the integral between xmin and xmax Bernstein
+ *  polynom and monomial or degree m 
+ *  \f[  \int_{low}^{high} \mathcal{B} \frac{(x-x_min)^m}{m!} \mathrm{d}x \f] 
+ *  @param b     basic bernstein polynomial
+ *  @param m     degree of monomial 
+ *  @param low   low  integration limit 
+ *  @param high  high integtation limit 
+ */
+// ============================================================================ 
+double Gaudi::Math::integrate_poly 
+( const Gaudi::Math::Bernstein& b    ,
+  const unsigned short          m    , 
+  const double                  low  , 
+  const double                  high )
+{
+  //
+  if      ( s_equal ( low , high )      ) { return  0 ; }
+  else if ( 0 == m                      ) { return  b.integral ( low ,high ) ; }
+  else if ( low  > high                 ) { return -integrate_poly ( b , m , high , low ) ; }
+  else if ( high < b.xmin ()            ) { return  0 ; }
+  else if ( low  > b.xmax ()            ) { return  0 ; } 
+  else if ( low  < b.xmin ()            ) { return  integrate_poly ( b , m , b.xmin() , high     ) ; }
+  else if ( high > b.xmax ()            ) { return  integrate_poly ( b , m , low      , b.xmax() ) ; }
+  else if ( s_equal ( low  , b.xmin() ) && 
+            s_equal ( high , b.xmax() ) ) { return  integrate_poly ( b , m ) ; }
+  //
+  // make transformation 
+  //
+  const std::vector<double>& pars = b.pars()   ;
+  const unsigned short       N    = b.degree() ;
+  std::vector<long double>   nc  ( pars.size() + m , 0.0L ) ;
+  for ( unsigned short k = 0 ; k < pars.size() ; ++k ) 
+  {
+    const long double ci = pars[k] ;
+    if ( s_zero ( ci ) ) { continue ; }
+    nc[ k + m ] = r_kNm ( k , N , m ) * ci ;  
+  }
+  //
+  Gaudi::Math::Bernstein a ( nc.begin() , nc.end  () , b.xmax() , b.xmin() ) ;
+  //
+  return 
+    Gaudi::Math::pow ( b.xmax() - b.xmin()  , m ) * a.integral ( low , high ) ;
 }
 // ============================================================================
 // POSITIVE 
@@ -848,7 +933,6 @@ bool Gaudi::Math::Positive::updateBernstein ()
   return update ;
 }
 // ============================================================================
-
 
 
 // ============================================================================

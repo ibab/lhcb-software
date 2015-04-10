@@ -242,17 +242,6 @@ namespace Gaudi
     double integrate 
     ( const Gaudi::Math::Bernstein::Basic& b    ,
       const double                         tau  ) ;    
-    // ========================================================================
-    /** get the integral between 0 and 1 for a product of basic  Bernstein
-     *  polynom and monomial or degree m 
-     *  \f[  \int_{0}^{1} \mathcal{B} \frac{x^m}{m!} \mathrm{d}x \f] 
-     *  @param b     basic bernstein polynomial
-     *  @param m     degree of monomial 
-     */
-    GAUDI_API
-    double integrate_poly 
-    ( const Gaudi::Math::Bernstein::Basic& b ,
-      const unsigned short                 m ) ;
     // =======================================================================
     /** get the integral between \f$x_{min}\f$ and \f$x_{max}\f$ for 
      *  a product of Bernstein polynom and the exponential function 
@@ -265,20 +254,44 @@ namespace Gaudi
     double integrate 
     ( const Gaudi::Math::Bernstein& poly ,
       const double                  tau  ) ;
-    // =======================================================================
-    /** get the integral between 0 and 1 for a product Bernstein polynom 
-     *  and monomial or degree m 
-     *  \f[  \int_{low}^{high} \mathcal{B} \frac{x^m}{m!} \mathrm{d}x \f] 
+    // ========================================================================
+    /** get the integral between 0 and 1 for a product of basic  Bernstein
+     *  polynom and monomial or degree m 
+     *  \f[  \int_{0}^{1} \mathcal{B} \frac{x^m}{m!} \mathrm{d}x \f] 
      *  @param b     basic bernstein polynomial
      *  @param m     degree of monomial 
      */
     GAUDI_API
     double integrate_poly 
+    ( const Gaudi::Math::Bernstein::Basic& b ,
+      const unsigned short                 m ) ;
+    // =======================================================================
+    /** get the integral between xmin and xmax Bernstein
+     *  polynom and monomial or degree m 
+     *  \f[  \int_{x_min}^{x_max} \mathcal{B} \frac{(x-x_min)^m}{m!} \mathrm{d}x \f] 
+     *  @param b     basic bernstein polynomial
+     *  @param m     degree of monomial 
+     */
+    GAUDI_API
+    double integrate_poly 
+    ( const Gaudi::Math::Bernstein& b ,
+      const unsigned short          m ) ;
+    // ========================================================================
+    /** get the integral between xmin and xmax Bernstein
+     *  polynom and monomial or degree m 
+     *  \f[  \int_{low}^{high} \mathcal{B} \frac{(x-x_min)^m}{m!} \mathrm{d}x \f] 
+     *  @param b     basic bernstein polynomial
+     *  @param m     degree of monomial 
+     *  @param low   low  integration limit 
+     *  @param high  high integtation limit 
+     */
+    GAUDI_API
+    double integrate_poly 
     ( const Gaudi::Math::Bernstein& b    ,
-      const unsigned short          m    ,
+      const unsigned short          m    , 
       const double                  low  , 
       const double                  high ) ;
-    // ========================================================================
+    // =======================================================================
     /** de Casteljau algorithm for summation of Bernstein polynomials 
      *  \f$ f(x) = \sum_i p_i B_ik(x) \f$
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
