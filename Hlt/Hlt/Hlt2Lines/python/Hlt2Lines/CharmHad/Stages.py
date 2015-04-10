@@ -271,6 +271,29 @@ class HHHHCombiner(Hlt2Combiner):
                               tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc, 
                               MotherCut = mc, Preambulo = []) 
 
+class DetachedHHHHCombiner(Hlt2Combiner) :
+    def __init__(self, name, decay, inputs):
+        dc =    {}
+        for child in ['pi+','K+','p+'] :
+            dc[child] = "(PT > %(Trk_ALL_PT_MIN)s) & (MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)"
+        cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
+                 " & ((APT1+APT2+APT3+APT4) > %(ASUMPT_MIN)s )" +
+                 " & (AHASCHILD(PT > %(Trk_1OF4_PT_MIN)s))"+
+                 " & (ANUM(PT > %(Trk_2OF4_PT_MIN)s) >= 2)"+
+                 " & (AHASCHILD((MIPCHI2DV(PRIMARY)) > %(Trk_1OF4_MIPCHI2DV_MIN)s))"+
+                 " & (ANUM(MIPCHI2DV(PRIMARY) > %(Trk_2OF4_MIPCHI2DV_MIN)s) >= 2)")
+        mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
+                 " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 " & (BPVVDCHI2 > %(BPVVDCHI2_MIN)s )" +
+                 " & (BPVLTIME() > %(BPVLTIME_MIN)s )")
+
+        from HltTracking.HltPVs import PV3D
+        Hlt2Combiner.__init__(self, "CharmHad" + name + "_" + type(self).__name__, decay, inputs,
+                              nickname = name, dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                              shared = True, tistos = 'TisTosSpec', DaughtersCuts = dc,
+                              CombinationCut = cc, MotherCut = mc, Preambulo = [])
+
+
 class DetachedV0HCombiner(Hlt2Combiner):
     def __init__(self, name, decay,inputs):
         dc =    {'KS0'    : "ALL",
@@ -784,6 +807,14 @@ class Xic02PKKPi_LTUNB(HHHHCombiner) :
                   SharedPromptChild_pi,
                   SharedPromptChild_p]
         HHHHCombiner.__init__(self,name,decay,inputs)
+
+class Xic02PKKPi(DetachedHHHHCombiner) :
+    def __init__(self,name) :
+        decay = "[Xi_c0 -> p+ K- K- pi+]cc"
+        inputs = [SharedDetachedLcChild_K,
+                  SharedDetachedLcChild_pi,
+                  SharedDetachedLcChild_p]
+        DetachedHHHHCombiner.__init__(self,name,decay,inputs)
 
 # The PID calib lines now
 
