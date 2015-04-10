@@ -231,6 +231,7 @@
   <function pattern = "Gaudi::Math::Jackson::jackson*"     />
   
   <function name = "Gaudi::Math::integrate"        />  
+  <function name = "Gaudi::Math::integrate_poly"   />  
 
   <function name = "Gaudi::Math::choose"           />  
   <function name = "Gaudi::Math::gen_choose"       />  

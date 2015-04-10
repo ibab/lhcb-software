@@ -107,6 +107,28 @@ Gaudi::Math::NSphere::NSphere
   //
 }
 // ============================================================================
+// copy
+// ============================================================================
+Gaudi::Math::NSphere::NSphere 
+( const Gaudi::Math::NSphere&  right ) 
+  : m_rotated  ( right.m_rotated ) 
+  , m_delta    ( right.m_delta   ) 
+  , m_phases   ( right.m_phases  ) 
+  , m_sin_phi  ( right.m_sin_phi ) 
+  , m_cos_phi  ( right.m_cos_phi ) 
+{}
+// ============================================================================
+// move
+// ============================================================================
+Gaudi::Math::NSphere::NSphere 
+(       Gaudi::Math::NSphere&& right ) 
+  : m_rotated  ( right.m_rotated ) 
+  , m_delta    ( std::move ( right.m_delta   ) ) 
+  , m_phases   ( std::move ( right.m_phases  ) ) 
+  , m_sin_phi  ( std::move ( right.m_sin_phi ) )  
+  , m_cos_phi  ( std::move ( right.m_cos_phi ) ) 
+{}
+// ============================================================================
 // destructor 
 // ============================================================================
 Gaudi::Math::NSphere::~NSphere() {}
@@ -131,6 +153,49 @@ bool Gaudi::Math::NSphere::setPhase
   m_phases  [ index ] = value ;  // attention!! original values!! 
   //
   return true ;
+}
+// ============================================================================
+// copy assignement 
+// ============================================================================
+Gaudi::Math::NSphere& 
+Gaudi::Math::NSphere::operator=( const Gaudi::Math::NSphere&  right ) 
+{
+  if ( &right == this ) { return *this ; }
+  //
+  m_rotated   = right.m_rotated ;
+  m_delta     = right.m_delta   ;
+  m_phases    = right.m_phases  ;
+  m_sin_phi   = right.m_sin_phi ;
+  m_cos_phi   = right.m_cos_phi ;
+  //
+  return *this ;
+}
+// ============================================================================
+// move assignement 
+// ============================================================================
+Gaudi::Math::NSphere& 
+Gaudi::Math::NSphere::operator=(       Gaudi::Math::NSphere&& right ) 
+{
+  if ( &right == this ) { return *this ; }
+  //
+  m_rotated   = right.m_rotated ;
+  m_delta     = std::move ( right.m_delta   ) ;
+  m_phases    = std::move ( right.m_phases  ) ;
+  m_sin_phi   = std::move ( right.m_sin_phi ) ;
+  m_cos_phi   = std::move ( right.m_cos_phi ) ;
+  //
+  return *this ;
+}
+// ============================================================================
+// swap two spheres 
+// ============================================================================
+void Gaudi::Math::NSphere::swap ( Gaudi::Math::NSphere& right )  // swap two spheres 
+{
+  std::swap ( m_rotated , right.m_rotated ) ;
+  std::swap ( m_delta   , right.m_delta   ) ;
+  std::swap ( m_phases  , right.m_phases  ) ;
+  std::swap ( m_sin_phi , right.m_sin_phi ) ;
+  std::swap ( m_cos_phi , right.m_cos_phi ) ;
 }
 
 

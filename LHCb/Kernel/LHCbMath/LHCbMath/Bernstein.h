@@ -81,14 +81,14 @@ namespace Gaudi
     public:
       // ======================================================================
       /// constructor from the order
-      Bernstein ( const unsigned short       N     = 0 ,
-                  const double               xmin  = 0 ,
-                  const double               xmax  = 1 ) ;
+      Bernstein ( const unsigned short        N     = 0 ,
+                  const double                xmin  = 0 ,
+                  const double                xmax  = 1 ) ;
       // ======================================================================
       /// constructor from N+1 coefficients
-      Bernstein ( const std::vector<double>& pars      ,
-                  const double               xmin  = 0 ,
-                  const double               xmax  = 1 ) ;
+      Bernstein ( const std::vector<double>&  pars      ,
+                  const double                xmin  = 0 ,
+                  const double                xmax  = 1 ) ;
       // ======================================================================
       /// construct the basic bernstein polinomial  B(k,N)
       Bernstein  ( const Basic&              basic     ,
@@ -105,6 +105,11 @@ namespace Gaudi
         , m_xmin ( std::min ( xmin, xmax ) )
         , m_xmax ( std::max ( xmin, xmax ) )
       {}
+      // ======================================================================
+      /// copy
+      Bernstein ( const Bernstein&  ) = default ;
+      /// move
+      Bernstein (       Bernstein&& ) = default ;
       // ======================================================================
       /** constructor from Legendre polynomial
        *  @see http://www.sciencedirect.com/science/article/pii/S0377042700003769 eq.20 
@@ -182,6 +187,15 @@ namespace Gaudi
       /// get derivative as function object 
       Bernstein derivative          () const ;
       // ======================================================================
+    public : 
+      // ======================================================================
+      /** elevate it: 
+       *  represent as Bernstein polynomial of order N+r 
+       *  @param r  INPUT increase of degree 
+       *  @return new polynomial of order N+r 
+       */
+      Bernstein elevate ( const unsigned short r ) const ;
+      // ======================================================================
     public:
       // ======================================================================
       /// simple  manipulations with polynoms: shift it! 
@@ -227,10 +241,22 @@ namespace Gaudi
     GAUDI_API 
     double integrate 
     ( const Gaudi::Math::Bernstein::Basic& b    ,
-      const double                         tau  ) ;
+      const double                         tau  ) ;    
+    // ========================================================================
+    /** get the integral between 0 and 1 for a product of basic  Bernstein
+     *  polynom and monomial or degree m 
+     *  \f[  \int_{0}^{1} \mathcal{B} \frac{x^m}{m!} \mathrm{d}x \f] 
+     *  @param b     basic bernstein polynomial
+     *  @param m     degree of monomial 
+     */
+    GAUDI_API
+    double integrate_poly 
+    ( const Gaudi::Math::Bernstein::Basic& b ,
+      const unsigned short                 m ) ;
     // =======================================================================
-    /** get the integral between \f$x_{min}\f$ and \f$x_{max}\f$ for a product of Bernstein
-     *  polynom and the exponential function with the exponent tau
+    /** get the integral between \f$x_{min}\f$ and \f$x_{max}\f$ for 
+     *  a product of Bernstein polynom and the exponential function 
+     *   with the exponent tau
      *  \f[  \int_{x_{min}}^{x_{max}} \mathcal{B} e^{\tau x } \mathrm{d}x \f] 
      *  @param poly  bernstein polynomial
      *  @param tau   slope parameter for exponential 
@@ -239,6 +265,19 @@ namespace Gaudi
     double integrate 
     ( const Gaudi::Math::Bernstein& poly ,
       const double                  tau  ) ;
+    // =======================================================================
+    /** get the integral between 0 and 1 for a product Bernstein polynom 
+     *  and monomial or degree m 
+     *  \f[  \int_{low}^{high} \mathcal{B} \frac{x^m}{m!} \mathrm{d}x \f] 
+     *  @param b     basic bernstein polynomial
+     *  @param m     degree of monomial 
+     */
+    GAUDI_API
+    double integrate_poly 
+    ( const Gaudi::Math::Bernstein& b    ,
+      const unsigned short          m    ,
+      const double                  low  , 
+      const double                  high ) ;
     // ========================================================================
     /** de Casteljau algorithm for summation of Bernstein polynomials 
      *  \f$ f(x) = \sum_i p_i B_ik(x) \f$
@@ -272,6 +311,11 @@ namespace Gaudi
       Positive ( const std::vector<double>& pars       ,
                  const double               xmin  =  0 ,
                  const double               xmax  =  1 ) ;
+      // ======================================================================
+      /// copy 
+      Positive ( const Positive&  right ) ;
+      /// move 
+      Positive (       Positive&& right ) ;    
       // ======================================================================
       virtual ~Positive () ;
       // ======================================================================
@@ -380,7 +424,9 @@ namespace Gaudi
           const bool                 increasing        ) ;
       // ======================================================================
       /// copy  constructor  
-      Monothonic ( const Monothonic& spline ) ;
+      Monothonic ( const Monothonic&  right ) ;
+      /// move 
+      Monothonic (       Monothonic&& right ) = default ;
       // ======================================================================
       virtual ~Monothonic() ;
       // ======================================================================      
@@ -443,6 +489,8 @@ namespace Gaudi
       // ======================================================================
       /// copy constructor
       Convex ( const Convex&         right     ) ;
+      /// move 
+      Convex (       Convex&&        right     ) = default ;
       // ======================================================================
       virtual ~Convex() ;
       // ======================================================================

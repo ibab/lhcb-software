@@ -41,8 +41,11 @@ namespace Gaudi
        */
       NSphere ( const std::vector<double>& phases         ,
                 const bool                 rotated = true ) ;
-      
-      /// desctructor 
+      /// copy
+      NSphere ( const NSphere&  right ) ;
+      /// move
+      NSphere (       NSphere&& right ) ;
+      /// destructor 
       ~NSphere() ; 
       // ======================================================================
     public:
@@ -102,6 +105,18 @@ namespace Gaudi
       double delta    ( const unsigned short index ) const  
       { return m_rotated && ( index < nPhi() ) ? m_delta [index] : 0.0 ; }
       // ======================================================================
+    public:
+      // ======================================================================
+      /// copy assignement 
+      NSphere& operator=( const NSphere&  right ) ;
+      /// move assignement 
+      NSphere& operator=(       NSphere&& right ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// swap two spheres 
+      void swap ( NSphere& right ) ; // swap two spheres 
+      // ======================================================================
     private:
       // ======================================================================
       /// bias to equalize the x_i 
@@ -116,6 +131,9 @@ namespace Gaudi
       std::vector<double> m_cos_phi ; // vector of cos(phi)
       // ======================================================================
     };
+    // ========================================================================
+    /// swap two speheres 
+    inline void swap ( NSphere& a , NSphere& b ) { a.swap ( b ) ; }
     // ========================================================================
   } //                                         The end of namespace Gaudi::Math
   // ==========================================================================

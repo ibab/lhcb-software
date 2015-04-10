@@ -189,25 +189,6 @@ bool Gaudi::Math::Bernstein::constant () const
   return true ;
 }
 // ============================================================================
-// express the Bernstein polynomial in Bernstein basis of order n+r 
-// ============================================================================
-// Gaudi::Math::Bernstein::elevate ( const unsigned short r ) const 
-// {
-//   if ( 0 == r ) { return *this ; }
-//   //
-//   std::vector<double> ck ( npars() + r , 0 ) ;
-//   for ( unsigned short k = 0 ; k <= npars() + r ; ++k ) 
-//   {
-//     for ( unsigned j  = std::max ( 0 , k - r ) ; j <= std::min ( n,k ) ; ++ j ) 
-//     {
-//       ck[k] += m_pars[j] 
-//         * binom_ ( r     , k - j ) 
-//         * binom_ ( n     ,     j )
-//         / binom_ ( n + r , k     ) ;
-//     }
-//   } 
-// }
-// ============================================================================
 // get the integral between xmin and xmax
 // ============================================================================
 double Gaudi::Math::Bernstein::integral () const
@@ -239,7 +220,7 @@ Gaudi::Math::Bernstein::indefinite_integral
     { (*ic) += C ; }
   }
   //
-  return Gaudi::Math::Bernstein ( ck.begin() , ck.end() , m_xmin , m_xmax ) ;
+  return Gaudi::Math::Bernstein ( ck.begin() , ck.end  () , m_xmin , m_xmax ) ;
 }
 // ============================================================================
 double Gaudi::Math::Bernstein::integral ( const double low  ,
@@ -266,7 +247,8 @@ double Gaudi::Math::Bernstein::integral ( const double low  ,
   std::partial_sum ( m_pars.begin () , m_pars.end   () ,  ck.begin() + 1 ) ;
   Gaudi::Math::scale ( ck , ( m_xmax - m_xmin ) / npars() ) ;
   //
-  const Gaudi::Math::Bernstein b_int ( ck.begin() , ck.end() , m_xmin , m_xmax ) ;
+  const Gaudi::Math::Bernstein b_int ( ck.begin() ,
+                                       ck.end  ()  , m_xmin , m_xmax ) ;
   //
   return b_int ( xhigh ) - b_int ( xlow ) ;
 }
@@ -349,6 +331,52 @@ Gaudi::Math::Bernstein::operator-=( const double a )
   { (*ip) -= a ; }
   //
   return *this ;
+}
+// ============================================================================
+namespace 
+{
+  // ==========================================================================
+  inline long double
+  c_nk ( const unsigned short n , 
+         const unsigned short k ) 
+  {
+    return 
+      n < 63 ? 
+      Gaudi::Math::choose        ( n , k ) : 
+      Gaudi::Math::choose_double ( n , k ) ;  
+  }
+  // ==========================================================================
+}
+// ============================================================================
+/*  elevate it: 
+ *  represent as Bernstein polynomial of order N+r 
+ *  @param r  INPUT increase of degree 
+ *  @return new polynomial of order N+r 
+ */
+// ============================================================================
+Gaudi::Math::Bernstein
+Gaudi::Math::Bernstein::elevate ( const unsigned short r ) const 
+{
+  // no need in elevation 
+  if ( 0 == r ){ return *this ; }
+  //
+  std::vector<long double>    nc ( npars  () + r ) ; // new coefficients 
+  const std::vector<double>&  oc =  pars  () ;       // old coefficients 
+  const unsigned short         n = degree () ;
+  //
+  for ( unsigned short k = 0 ; k < nc.size() ; ++k ) 
+  {
+    const unsigned short jmax = std::min ( n , k ) ;
+    const unsigned short jmin = k <= r ? 0 : k - r ;
+    for ( unsigned short j = jmin ; j <= jmax ; ++j ) 
+    {
+      const long double  cj = oc[j] ;
+      if ( s_zero ( cj ) ) { continue ; }
+      //
+      nc[k] +=  c_nk ( r , k - j ) * c_nk ( n , j ) / c_nk ( n+r , k ) * cj ;
+    }
+  }
+  return Bernstein ( nc.begin() , nc.end  () , xmin() , xmax() ) ;
 }
 // ============================================================================
 /* de Casteljau algorithm for summation of Bernstein polynomials 
@@ -709,6 +737,37 @@ double Gaudi::Math::integrate
   return result * ( xmax - xmin ) * _fac ;
 }
 // ============================================================================
+/* get the integral between 0 and 1 for a product of basic  Bernstein
+ *  polynom and monomial or degree m 
+ *  \f[  \int_{0}^{1} \mathcal{B} \frac{x^m}{m!} \mathrm{d}x \f] 
+ *  @param b     basic bernstein polynomial
+ *  @param m     degree of monomial 
+ */
+// ============================================================================ 
+double Gaudi::Math::integrate_poly 
+( const Gaudi::Math::Bernstein::Basic& b ,
+  const unsigned short                 m )
+{
+  //
+  const unsigned short N = b.N () ;
+  const unsigned short k = b.k () ;
+  // result 
+  long double r = 1 ;
+  for ( unsigned short i = 1 ; i <= m ; ++i ) 
+  {
+    r *= ( k + i ) ;
+    r /= ( N + i ) ;
+    r /= i         ;
+  }
+  //
+  return r / ( N + m + 1 ) ;
+}
+// ============================================================================
+// POSITIVE 
+// ============================================================================
+
+
+// ============================================================================
 // constructor from the order
 // ============================================================================
 Gaudi::Math::Positive::Positive
@@ -739,6 +798,24 @@ Gaudi::Math::Positive::Positive
   // { std::cerr << " MISMATCH-(1)-!!! " << std::endl ; }
   //
 }
+// ============================================================================
+// copy 
+// ============================================================================
+Gaudi::Math::Positive::Positive
+( const Gaudi::Math::Positive&  right ) 
+  : std::unary_function<double,double> ( right )
+  , m_bernstein ( right.m_bernstein ) 
+  , m_sphere    ( right.m_sphere    ) 
+{}
+// ============================================================================
+// move 
+// ============================================================================
+Gaudi::Math::Positive::Positive
+(       Gaudi::Math::Positive&& right ) 
+  : std::unary_function<double,double> ( right )
+  , m_bernstein ( std::move ( right.m_bernstein ) ) 
+  , m_sphere    ( std::move ( right.m_sphere    ) ) 
+{}
 // ============================================================================
 Gaudi::Math::Positive::~Positive() {}
 // ============================================================================

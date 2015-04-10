@@ -396,7 +396,7 @@ namespace Gaudi
       /// constructor from polynomial degree 
       PolySum ( const unsigned short degree = 0 ) ;
       /// constructor from vector of parameters 
-      PolySum ( const std::vector<double>& pars ) ;
+      PolySum ( const std::vector<double>&  pars ) ;
       /// constructor from sequence of parameters 
       template <class ITERATOR>
         PolySum ( ITERATOR begin , 
@@ -404,6 +404,11 @@ namespace Gaudi
         : std::unary_function<double,double>() 
         , m_pars ( begin , end )
       { if ( m_pars.empty() ) { m_pars.push_back ( 0 ) ; } }
+      // ======================================================================
+      /// copy contructor
+      PolySum ( const PolySum&  right ) ;
+      /// move constructor 
+      PolySum (       PolySum&& right ) ;
       // ======================================================================
     public:
       // ======================================================================
@@ -485,6 +490,11 @@ namespace Gaudi
         , m_xmin ( std::min ( xmin, xmax ) )
         , m_xmax ( std::max ( xmin, xmax ) )
       {}
+      // ======================================================================
+      /// copy 
+      Polynomial ( const Polynomial&  ) = default ;
+      /// move 
+      Polynomial (       Polynomial&& ) = default ;
       // ======================================================================
       ///  constructor from Bernstein polinomial (efficient) 
       explicit Polynomial ( const Bernstein&     poly ) ;
@@ -574,6 +584,11 @@ namespace Gaudi
         , m_xmax ( std::max ( xmin, xmax ) )
       {}
       // ======================================================================
+      /// copy 
+      ChebyshevSum ( const ChebyshevSum&  ) = default ;
+      /// copy 
+      ChebyshevSum (       ChebyshevSum&& ) = default ;
+      // ======================================================================
       ///  constructor from Polinomial           (efficient)
       explicit ChebyshevSum ( const Polynomial&  poly ) ;
       ///  constructor from Bernstein            (delegation) 
@@ -661,6 +676,11 @@ namespace Gaudi
         , m_xmin ( std::min ( xmin, xmax ) )
         , m_xmax ( std::max ( xmin, xmax ) )
       {}
+      // ======================================================================
+      /// copy 
+      LegendreSum  ( const LegendreSum&  ) = default ;
+      /// move
+      LegendreSum  (       LegendreSum&& ) = default ;
       // ======================================================================
       /**  constructor from Bernstein polinomial (efficient)
        *  @see http://www.sciencedirect.com/science/article/pii/S0377042700003769 eq.21

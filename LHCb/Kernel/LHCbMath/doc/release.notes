@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-04-10 - Vanya Belyaev
+ - minor fix in bernstein 
+
 ! 2015-04-03 - Gerhard Raven
  - use VectorLib to improve Similarity_AVX
 

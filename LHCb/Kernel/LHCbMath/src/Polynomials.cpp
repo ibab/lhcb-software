@@ -360,6 +360,22 @@ Gaudi::Math::PolySum::PolySum ( const std::vector<double>& pars )
   , m_pars ( pars  ) 
 { if ( m_pars.empty() ) { m_pars.push_back ( 0 ) ; } }
 // ============================================================================
+// copy constructor 
+// ============================================================================
+Gaudi::Math::PolySum::PolySum 
+( const Gaudi::Math::PolySum&  right ) 
+  : std::unary_function<double,double>( right )
+ , m_pars ( right.m_pars ) 
+{}
+// ============================================================================
+// move constructor 
+// ============================================================================
+Gaudi::Math::PolySum::PolySum 
+(       Gaudi::Math::PolySum&& right ) 
+  : std::unary_function<double,double>( right )
+  , m_pars ( std::move ( right.m_pars ) )  
+{}
+// ============================================================================
 // all zero ?
 // ============================================================================
 bool Gaudi::Math::PolySum::zero  () const { return s_vzero ( m_pars ) ; }

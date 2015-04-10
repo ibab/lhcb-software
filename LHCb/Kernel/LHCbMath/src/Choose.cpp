@@ -48,7 +48,7 @@ namespace
   typedef std::numeric_limits<unsigned long long> ULLTYPE ;
   static_assert( ULLTYPE::is_specialized , "Unsigned long long is not specialized!" ) ;
   const unsigned long long s_ullmax = ULLTYPE::max    ()          ;
-  const double             s_emax   = std::log( 0.2 * s_ullmax )  ;
+  const long double        s_emax   = std::log( 0.2 * s_ullmax )  ;
   const unsigned short     s_digits = ULLTYPE::digits - 2         ;
   // ==========================================================================
   /// zero for doubles  
@@ -82,11 +82,11 @@ double Gaudi::Math::choose_double
   else if ( 0 == k || n == k ) { return 1 ; }
   else if ( n < s_digits     ) { return _choose_ ( n , k ) ; }
   //
-  double a = std::lgamma ( n     + 1 ) ;
+  long double a = std::lgamma ( (long double)     n + 1 )  ;
   if ( a < s_emax ) { return _choose_ ( n , k ) ; }
-  a       -= std::lgamma ( n - k + 1 ) ;
+  a            -= std::lgamma ( (long double) n - k + 1 ) ;
   if ( a < s_emax ) { return _choose_ ( n , k ) ; }
-  a       -= std::lgamma ( k     + 1 ) ;
+  a            -= std::lgamma ( (long double)     k + 1 ) ;
   if ( a < s_emax ) { return _choose_ ( n , k ) ; }
   //
   return std::exp ( a ) ;
