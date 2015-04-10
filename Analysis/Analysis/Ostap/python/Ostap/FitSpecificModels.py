@@ -204,14 +204,14 @@ class D0_pdf(Bukin_pdf) :
     """
     D0: Bukin function 
     """
-    def __init__ ( self                   ,
-                   mass                   , ## mass is mandatory here! 
-                   name     = 'D0'        ,
-                   mean     =  1.864      ,
-                   sigma    =  7.2037e-03 ,
-                   xi       =  2.4656e-03 ,
-                   rhoL     =  2.8583e-01 ,
-                   rhoR     =  2.7163e-01 ) :
+    def __init__ ( self                 ,
+                   mass                 , ## mass is mandatory here! 
+                   name   = 'D0'        ,
+                   mean   =  1.8648e+00 , 
+                   sigma  =  7.3651e-03 , 
+                   xi     = -1.7616e-03 , 
+                   rhoL   =  3.7311e-01 ,
+                   rhoR   =  4.4033e-01 ) : 
         
         Bukin_pdf.__init__ ( self          ,
                              name          ,

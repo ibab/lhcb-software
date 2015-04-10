@@ -280,7 +280,7 @@ ROOT.TH1.uniform      = _uniform_bins_
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-08-10
 # 
-def _gauss_ ( s , accept = lambda a : True ) : 
+def _gauss_ ( s , accept = lambda a : True , nmax = 1000 ) : 
     """
     Get the gaussian random number
 
@@ -302,12 +302,12 @@ def _gauss_ ( s , accept = lambda a : True ) :
     v = s.value ()
     e = s.error ()
     #
-    def _generate_ () :
+    for i in range( 0 , nmax ) : 
         r = v + e * _gauss ()
         if accept ( r ) : return r
-        return _generate_ ()
-    #
-    return _generate_ () 
+
+    logger.warning("Can'n generate proper random number %s" % s )
+    return v  
 
 # =============================================================================
 ## generate poisson random number according to parameters 
@@ -3878,7 +3878,7 @@ ROOT.TH2D. rescale_bins = _h2_rescale_
 #  @endcode
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  
-def _sample_ ( histo , accept = lambda s : True ) :
+def _sample_ ( histo , accept = lambda s : True , nmax = 1000 ) :
     """
     Sample the histogram using gaussian hypothesis
  
@@ -3897,7 +3897,7 @@ def _sample_ ( histo , accept = lambda s : True ) :
         v1 = histo[bin]
         
         ## sample it! 
-        v2 = VE( v1.gauss ( accept = accept ) )
+        v2 = VE( v1.gauss ( accept = accept , nmax = nmax ) )
         
         v2.setCov2 ( v1.cov2() )
         
