@@ -150,8 +150,8 @@ def RecoTrackingHLT1(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
    bestTrackCreator.addTool( TrackMasterFitter, name = "Fitter" )
    bestTrackCreator.TracksInContainers = ["Rec/Track/Velo","Rec/Track/ForwardHLT1" ]
    bestTrackCreator.TracksOutContainer = "Rec/Track/FittedHLT1Tracks"
-   bestTrackCreator.addTool( TrackStateInitTool, name = "TrackStateInitTool")
-   bestTrackCreator.TrackStateInitTool.UseFastMomentumEstimate = True
+   bestTrackCreator.addTool( TrackStateInitTool, name = "StateInitTool")
+   bestTrackCreator.StateInitTool.UseFastMomentumEstimate = True
    ConfiguredMasterFitter( getattr(bestTrackCreator, "Fitter"), SimplifiedGeometry = simplifiedGeometryFit, LiteClusters = liteClustersFit )
    GaudiSequencer("TrackHLT1FitHLT1Seq").Members += [ bestTrackCreator ]
    
@@ -260,8 +260,8 @@ def RecoTrackingHLT2(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
    bestTrackCreator = TrackBestTrackCreator( TracksInContainers = tracklists )
    bestTrackCreator.addTool( TrackMasterFitter, name = "Fitter" )
    bestTrackCreator.DoNotRefit = True
-   bestTrackCreator.addTool( TrackStateInitTool, name = "TrackStateInitTool")
-   bestTrackCreator.TrackStateInitTool.UseFastMomentumEstimate = True
+   bestTrackCreator.addTool( TrackStateInitTool, name = "StateInitTool")
+   bestTrackCreator.StateInitTool.UseFastMomentumEstimate = True
    # configure its fitter and stateinittool
    ConfiguredMasterFitter( getattr(bestTrackCreator, "Fitter"), SimplifiedGeometry = simplifiedGeometryFit, LiteClusters = liteClustersFit )
    if "FastVelo" in trackAlgs :

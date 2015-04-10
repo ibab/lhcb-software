@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-04-10 - Michel De Cian
+ - Fix bug with TrackStateInitTool in RecoTrackingRun2.py
+
 ! 2015-04-10 - Chris Jones
  - Fix a bug in TrackSys configure where TrackSys() was used instead of self.
 
