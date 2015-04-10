@@ -42,7 +42,7 @@ namespace LHCb
     int dllEl,dllMu,dllPi,dllKa,dllPr;
     long long track;          
     int dllBt;
-    int key;
+    long long key;
   };
 
   // -----------------------------------------------------------------------
