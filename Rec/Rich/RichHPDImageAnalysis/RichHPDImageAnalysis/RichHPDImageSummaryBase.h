@@ -83,9 +83,6 @@ namespace Rich
 
     private:
 
-      /// Event Counter
-      unsigned long long m_nEvt ;
-
       /// Minimum number of hits required in HPD
       unsigned int m_minOccupancy ;
 

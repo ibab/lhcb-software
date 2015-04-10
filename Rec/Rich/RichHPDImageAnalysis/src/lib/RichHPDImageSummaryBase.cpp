@@ -19,8 +19,7 @@ using namespace Rich::HPDImage;
 
 SummaryBase::SummaryBase( const std::string& name,
                           ISvcLocator* pSvcLocator )
-  : HistoAlgBase ( name , pSvcLocator ) ,
-    m_nEvt       ( 0    )
+  : HistoAlgBase ( name , pSvcLocator )
 {
   setProperty( "StatPrint", false );
   declareProperty( "MinHPDOccupancy",    m_minOccupancy = 1000 );
@@ -79,9 +78,6 @@ StatusCode SummaryBase::initialize()
 
 StatusCode SummaryBase::execute()
 {
-  // count processed events
-  ++m_nEvt;
-
   // Standard loop over Rich Smart IDs
   for ( const auto& UKL1 : m_SmartIDDecoder->allRichSmartIDs() )
   {
@@ -126,8 +122,6 @@ StatusCode SummaryBase::execute()
 
 StatusCode SummaryBase::finalize()
 {
-  _ri_debug << "    Algorithm has seen " << m_nEvt << " events" << endmsg;
-
   // Make summary info
   if ( m_finalFit )
   {
@@ -150,10 +144,10 @@ StatusCode SummaryBase::finalize()
 
 TH2D* SummaryBase::create2D( const std::string& name )
 {
-  using namespace Gaudi::Utils;
   TH2D * hist(NULL);
   if ( m_keep2Dhistos )
   {
+    using namespace Gaudi::Utils;
     hist = Aida2ROOT::aida2root(book2D(name,name,-0.5,31.5,32, -0.5,31.5,32));
   }
   else
