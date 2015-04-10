@@ -61,7 +61,9 @@ StatusCode TrackEventFitter::initialize() {
   
   if ( m_tracksOutContainer == "" ) {
     m_tracksOutContainer = m_tracksInContainer;
-    m_makeNewContainer   = false;
+  }
+  if ( m_tracksOutContainer == m_tracksInContainer ) {
+    m_makeNewContainer = false;
   }
 
   // Print out the user-defined settings
