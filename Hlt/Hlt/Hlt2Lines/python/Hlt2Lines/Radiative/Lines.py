@@ -26,18 +26,17 @@ cuts = {'Common': {'TrackTisTos' : 'Hlt1(Two)?TrackMVADecision%TOS',
                    'ee_PT'   : 200.0},
        }
 
-hlt1_dependencies = {}
-
-stages = {}
-
+for line_conf in [B2GammaGammaLines, B2XGammaLines, Lb2L0GammaLines]:
+    # Get cuts
+    cuts.update(line_conf.get_cuts())
 
 class RadiativeLines(Hlt2LinesConfigurableUser):
     __slots__ = cuts
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line
+        hlt1_dependencies = {}
+        stages = {}
         for line_conf in [B2GammaGammaLines, B2XGammaLines, Lb2L0GammaLines]:
-            # Get cuts
-            cuts.update(line_conf.get_cuts())
             # Get HLT1 dependencies
             hlt1_dependencies.update(line_conf.get_hlt1())
             # Load stages

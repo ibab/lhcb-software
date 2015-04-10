@@ -23,21 +23,21 @@ class Lb2L0GammaLines(RadiativeLineBuilder):
         # Build stages
         return {'Lb2L0GammaLL' : [TrackGEC(),
                                   PV3D('Hlt2'),
-                                  Lb2L0GammaCombiner('LL',
+                                  Lb2L0GammaCombiner('Lb2L0GammaLL',
                                                      '[Lambda_b0 -> Lambda0 gamma]cc',
                                                      lambda0_ll)]}
 
     @staticmethod
     def get_cuts():
-        cuts = {'TRACK_DOCA_MAX'     : '0.2*mm',
-                'TRACK_P_MIN'        : '2.0*GeV',
-                'TRACK_IPCHI2_MIN'   : '9',
-                'L0_PT_MIN'          : '1000*MeV',
-                'L0_IP_MIN'          : '0.05*mm',
-                'LB0_SUM_PT'         : '5000*MeV',
-                'LB0_PT'             : '1000*MeV',
-                'LB0_MASS_WINDOW'    : '1500*MeV',
-                'LB0_MTDOCACHI2_MAX' : '10'}
-        return {'Lb2L0GammaLL': cuts}
+        cuts = {'Lambda0LL': {'TRACK_DOCA_MAX'     : '0.2*mm',
+                              'TRACK_P_MIN'        : '2.0*GeV',
+                              'TRACK_IPCHI2_MIN'   : '9',
+                              'L0_PT_MIN'          : '1000*MeV',
+                              'L0_IP_MIN'          : '0.05*mm'},
+                'Lb2L0GammaLL': {'LB0_SUM_PT'         : '5000*MeV',
+                                 'LB0_PT'             : '1000*MeV',
+                                 'LB0_MASS_WINDOW'    : '1500*MeV',
+                                 'LB0_MTDOCACHI2_MAX' : '10'}}
+        return cuts
 
 # EOF

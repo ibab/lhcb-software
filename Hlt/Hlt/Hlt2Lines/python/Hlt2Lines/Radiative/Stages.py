@@ -7,8 +7,8 @@
 # =============================================================================
 """Candidate building stages for HLT2 radiative decays lines."""
 
-from Hlt2Lines.Utilities.Hlt2Filter import Hlt2VoidFilter
-from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
+from Hlt2Lines.Utilities.Hlt2Filter import Hlt2VoidFilter, Hlt2ParticleFilter
+from Hlt2Lines.Utilities.Hlt2MergedStage import Hlt2MergedStage
 from Hlt2Lines.Utilities.Hlt2TisTosFilter import Hlt2TisTosParticleTagger
 from Hlt2Lines.Utilities.Hlt2Combiner import Hlt2Combiner
 
@@ -92,7 +92,7 @@ class CALOPhotonFilter(Hlt2ParticleFilter):
 class ConvPhotonFilter(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
         photon_cut = "( (PT > %(ee_PT)s*MeV) & (P > %(ee_P)s*MeV) & (M < %(ee_Mass)s*MeV) )"
-        super(ConvPhotonFilter, self).__init__('RadiativeConvPhoton_%s' % name,
+        super(ConvPhotonFilter, self).__init__('RadiativePhoton_%s' % name,
                                                photon_cut,
                                                inputs,
                                                nickname=name,
@@ -109,6 +109,13 @@ class ConvPhotonDD(ConvPhotonFilter):
     def __init__(self):
         from Inputs import Hlt2DiElectron_DD
         super(ConvPhotonDD, self).__init__('ConvDD', [Hlt2DiElectron_DD])
+
+
+class ConvPhotonAll(Hlt2MergedStage):
+    def __init__(self):
+        super(ConvPhotonAll, self).__init__('RadiativePhoton_ConvAll',
+                                            [ConvPhotonLL(), ConvPhotonDD()],
+                                            shared=True)
 
 
 # Build the vector mesons

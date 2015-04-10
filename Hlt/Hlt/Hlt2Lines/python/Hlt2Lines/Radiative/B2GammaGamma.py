@@ -20,7 +20,7 @@ class B2GammaGammaLines(RadiativeLineBuilder):
         from HltTracking.HltPVs import PV3D
 
         # Make hard non-converted photons
-        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPhotons     as Hlt2Photons
+        from Inputs import Hlt2Photons
         HardCALOGamma = CALOPhotonFilter('HardCALO',[Hlt2Photons])
 
         # Build Bs -> gamma gamma (double conversion)

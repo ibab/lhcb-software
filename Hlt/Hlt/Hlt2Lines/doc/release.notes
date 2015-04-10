@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-10 - Albert Puig
+ - Bugfixes in Lb2L0Gamma radiative line.
+
 ! 2015-04-09 - Patrick Spradlin
   - CharmHad/Stages.py:  turned on TISTOS wrt Hlt1Track in
     DetachedD02HHInclCombiner.
