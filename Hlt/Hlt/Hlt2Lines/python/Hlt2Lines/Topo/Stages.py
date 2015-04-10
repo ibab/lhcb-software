@@ -240,7 +240,7 @@ class FilterCombos(Hlt2ParticleFilter):
                   "& (in_range(%(OPT_CMB_VRT_MCOR_MIN)s, BPVCORRM,"
                   " %(OPT_CMB_VRT_MCOR_MAX)s)) "
                   "& (BPVDIRA > %(OPT_CMB_VRT_DIRA_MIN)s) "
-                  "& (NINTREE(MIPCHI2DV(PRIMARY) < 16) <"
+                  "& (NINTREE(ISBASIC & (MIPCHI2DV(PRIMARY) < 16)) <"
                   " %(OPT_CMB_TRK_NLT16_MAX)s) "
                   "& " + pc)
         from HltTracking.HltPVs import PV3D
@@ -275,10 +275,10 @@ class CombineTos(Hlt2Combiner):
     """
     Combiner for all 2-body HLT1 TOS combos.
     """
-    def __init__(self, inputs, decays = []):
+    def __init__(self, inputs):
         pids = ['K+', 'K-', 'KS0', 'Lambda0', 'Lambda~0']
         combos = list(combinations_with_replacement(pids, 2))
-        for combo in combos: decays.append('B0 -> ' + ' '.join(combo))
+        decays = ['B0 -> ' + ' '.join(combo) for combo in combos]
         cc = ("(ACUTDOCACHI2(%(OPT_CMB_VRT_CHI2_MAX)s, '')) "
               "& (AALLSAMEBPV | (AMINCHILD(MIPCHI2DV(PRIMARY)) > 16))")
         mc = ("(HASVERTEX)")
@@ -294,14 +294,16 @@ class CombineN(Hlt2Combiner):
     """
     Combiner for all n-body combos.
     """
-    def __init__(self, n, inputs, decays = []):
+    def __init__(self, n, inputs):
         pids = ['K+', 'K-', 'KS0', 'Lambda0', 'Lambda~0']
         combos = list(combinations_with_replacement(pids, n - 2))
-        for combo in combos: decays.append('B*0 -> B0 ' + ' '.join(combo))
+        decays = ['B*0 -> B0 ' + ' '.join(combo) for combo in combos]
         cc = ("(APT > %(OPT_CMB_PRT_PT_MIN)s) "
-              "& (ACUTDOCACHI2(%(OPT_CMB_VRT_CHI2_MAX)s, ''))"
+              "& (AM < %(OPT_CMB_VRT_MCOR_MAX)s) "
+              "& (ACUTDOCACHI2(%(OPT_CMB_VRT_CHI2_MAX)s, '')) "
               "& (AALLSAMEBPV | (AMINCHILD(MIPCHI2DV(PRIMARY)) > 16)) "
-              "& (ANUM(MIPCHI2DV(PRIMARY) < 16) < %(OPT_CMB_TRK_NLT16_MAX)s)")
+              "& (ANUM(ISBASIC & (MIPCHI2DV(PRIMARY) < 16)) <"
+              " %(OPT_CMB_TRK_NLT16_MAX)s)")
         mc = ("(HASVERTEX) "
               "& (VFASPF(VCHI2) < %(OPT_CMB_VRT_CHI2_MAX)s) "
               "& (BPVVDCHI2 > %(OPT_CMB_VRT_VDCHI2_MIN)s) "

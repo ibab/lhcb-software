@@ -72,7 +72,7 @@ class TopoLines(Hlt2LinesConfigurableUser):
             'OPT_GEC_MAX'           : 500,
             'OPT_USE_KS'            : True,
             'OPT_USE_LAMBDA'        : True,
-            'OPT_BDT_MIN'           : 0.98,
+            'OPT_BDT_MIN'           : 0.985,
             'OPT_BDT_VARMAP'        : {
                 "chi2"   : "VFASPF(VCHI2)",
                 "sumpt"  : "SUMTREE(PT, ISBASIC, 0.0)/MeV",
