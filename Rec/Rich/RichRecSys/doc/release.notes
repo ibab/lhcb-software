@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2015-04-10 - Chris Jones
+ - Avoid creating reconstruction sequences for track groups that would fail
+   the tracking cuts (as their types are not included).
+
 ! 2015-03-19 - Chris Jones
  - Forcibly set the Context correctly before anything else, in all used 
    configurables.

@@ -50,7 +50,7 @@ class RichRecSysBaseConf(RichConfigurableUser):
        ,"InitPixels":      True   # Run an initialisation algorithm to create the pixels
        ,"InitTracks":      True   # Run an initialisation algorithm to create the tracks
        ,"InitPhotons":     True   # Run an initialisation algorithm to create the photons
-       ,"TrackTypeGroups": [ ] # Track type groupings. Empty list means all at once.
+       ,"TrackTypeGroups":  [ ] # Track type groupings. Empty list means all at once.
        ,"TracklessRingAlgs": ["ENN"] # Run the given Trackless ring finding algorithms
        ,"CheckProcStatus": True   # Check the status of the ProcStatus object
        ,"PidConfig": "FullGlobal" # The PID algorithm configuration
@@ -245,6 +245,14 @@ class RichRecSysBaseConf(RichConfigurableUser):
         for tk in tkTypeGroup : name = name + tk
         if name == "ForwardMatch" or name == "MatchForward" : name = "Long"
         return name
+    
+    ## Is this track group selected by the TrackCuts ?
+    def trackGroupSelected(self,tkTypeGroup) :
+        ok = False
+        for tk in tkTypeGroup :
+            if tk in self.trackConfig().getProp("TrackCuts").keys() :
+                ok = True
+        return ok
 
     ## Gets the configurable name for a given track group
     def getConfName(self,tkTypeGroup):
@@ -266,7 +274,8 @@ class RichRecSysBaseConf(RichConfigurableUser):
 
     ## Returns true of the given track type is active
     def trackTypeIsActive(self,type) :
-        return self.getContextForTrackType(type) != ""
+        return ( self.getContextForTrackType(type) != "" and
+                 type in self.trackConfig().getProp("TrackCuts").keys() )
 
     ## Are we running with split track groupings ?
     def usingTrackGroups(self) :
@@ -516,6 +525,7 @@ class RichRecSysConf(RichRecSysBaseConf) :
     def setTrackGroups( self, tkGroups ):
         # Set the property
         self.setProp("TrackTypeGroups",tkGroups)
+        selectedTkTypes = [ ]
         # Configure the used configurables
         for tkTypeGroup in tkGroups:
             # Group name
@@ -627,49 +637,52 @@ class RichRecSysConf(RichRecSysBaseConf) :
             # Split by track type
             for tkTypeGroup in tkGroups:
 
-                # Build the reco sequence for this group
-                groupConfig = RichRecSysBaseConf( self.getConfName(tkTypeGroup) )
+                # Is at least one of the track types in this group in the track selection cuts ?
+                if self.trackGroupSelected(tkTypeGroup) :
 
-                # Context for this group
-                groupcont = self.getConfContext(tkTypeGroup)
+                    # Build the reco sequence for this group
+                    groupConfig = RichRecSysBaseConf( self.getConfName(tkTypeGroup) )
 
-                # Set context with group name
-                self.propagateContext( groupConfig, groupcont )
+                    # Context for this group
+                    groupcont = self.getConfContext(tkTypeGroup)
 
-                # Propagate all options
-                self.propagateAllOptions( groupConfig )
+                    # Set context with group name
+                    self.propagateContext( groupConfig, groupcont )
+
+                    # Propagate all options
+                    self.propagateAllOptions( groupConfig )
                 
-                # Then tweak things for this track group
-                # Turn off stuff run once for all
-                groupConfig.setProp("CheckProcStatus",False)
-                groupConfig.setProp("PreloadRawEvent",False)
-                groupConfig.setProp("PreloadTracks",False)
-                groupConfig.setProp("RefitTracks",False)
-                groupConfig.setProp("InitDecoding",False)
-                # Turn off splitting again
-                groupConfig.setProp("TrackTypeGroups",[])
-                # Proper context for this group
-                self.propagateContext( groupConfig, groupcont )
+                    # Then tweak things for this track group
+                    # Turn off stuff run once for all
+                    groupConfig.setProp("CheckProcStatus",False)
+                    groupConfig.setProp("PreloadRawEvent",False)
+                    groupConfig.setProp("PreloadTracks",False)
+                    groupConfig.setProp("RefitTracks",False)
+                    groupConfig.setProp("InitDecoding",False)
+                    # Turn off splitting again
+                    groupConfig.setProp("TrackTypeGroups",[])
+                    # Proper context for this group
+                    self.propagateContext( groupConfig, groupcont )
  
-                # Clone tool registry tool list
-                groupConfig.toolRegistry().Tools = self.toolRegistry().Tools
+                    # Clone tool registry tool list
+                    groupConfig.toolRegistry().Tools = self.toolRegistry().Tools
 
-                # PID Output location
-                pidLoc = self.getProp("RichPIDLocation")+self.trackGroupName(tkTypeGroup)
-                groupConfig.setProp("RichPIDLocation",pidLoc)
-                pidLocs += [pidLoc]
+                    # PID Output location
+                    pidLoc = self.getProp("RichPIDLocation")+self.trackGroupName(tkTypeGroup)
+                    groupConfig.setProp("RichPIDLocation",pidLoc)
+                    pidLocs += [pidLoc]
 
-                # Construct the track selection cuts for this group
-                tkCuts = { }
-                for tkType in tkTypeGroup : tkCuts[tkType] = globalTkCuts[tkType]
+                    # Construct the track selection cuts for this group
+                    tkCuts = { }
+                    for tkType in tkTypeGroup : tkCuts[tkType] = globalTkCuts[tkType]
                 
-                # Set the track selection for this group
-                groupConfig.trackConfig().setProp("TrackCuts",tkCuts)
+                    # Set the track selection for this group
+                    groupConfig.trackConfig().setProp("TrackCuts",tkCuts)
 
-                # Make a sequence for this track group
-                tkGroupSeq = self.makeRichAlg(GaudiSequencer,"RichRec"+groupcont+"Seq")
-                sequence.Members += [tkGroupSeq]
-                groupConfig.setProp("RecoSequencer",tkGroupSeq)
+                    # Make a sequence for this track group
+                    tkGroupSeq = self.makeRichAlg(GaudiSequencer,"RichRec"+groupcont+"Seq")
+                    sequence.Members += [tkGroupSeq]
+                    groupConfig.setProp("RecoSequencer",tkGroupSeq)
 
             #-------------------------------------------------------------------------
             # Finalise (merge results from various algorithms)
