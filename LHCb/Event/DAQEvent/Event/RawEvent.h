@@ -29,6 +29,7 @@ namespace LHCb
     static const std::string& Other    = "Other/RawEvent";   ///< Copy of all banks except Calo, Muon, Rich and Trigger (now Obsolete)
     static const std::string& Velo     = "Velo/RawEvent";    ///< Copy of Velo banks
     static const std::string& Tracker  = "Tracker/RawEvent"; ///< Copy of IT, OT and TT banks
+    static const std::string& HC       = "HC/RawEvent";      ///< Copy of Herschel banks
     static const std::string& Unstripped = "Unstripped/RawEvent"; ///< Miscellaneous banks not required by stripping lines.
   }
 
