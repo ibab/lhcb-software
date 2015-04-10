@@ -307,8 +307,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
         log.debug('## INFO Rich hypos = %s'         % self.getProp("RichHypos"      ))
         log.debug('## INFO Rich radiators = %s'     % self.getProp("RichRadiators"  ))
         log.debug('#################################%##########################')
-        # Disable TrackSys
-        TrackSys().HLT = True
         #
         # First of all check that I have been called with a sensible set of options
         #
@@ -1014,8 +1012,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
         richConf.trackConfig().InputTracksLocation = tracks.outputSelection()
 
         # Workaround for Rich dictionary loading.
-        # import cppyy
-        # cppyy.gbl.LHCb.RichRecSegment
+        import cppyy
+        cppyy.gbl.LHCb.RichRecSegment
         
         from HltLine.HltLine import bindMembers
         # Build the bindMembers        
