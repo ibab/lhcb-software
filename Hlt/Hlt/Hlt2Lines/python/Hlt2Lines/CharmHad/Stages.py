@@ -980,7 +980,7 @@ class DetachedD02HHInclCombiner(Hlt2Combiner) : # {
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__( self, name, decay, inputs,
                                dependencies = [PV3D('Hlt2')],
-                               #tistos = 'TisTosSpec',
+                               tistos = 'TisTosSpec',
                                nickname = slotName,
                                DaughtersCuts = dc,
                                CombinationCut = combCut,

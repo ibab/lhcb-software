@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-09 - Patrick Spradlin
+  - CharmHad/Stages.py:  turned on TISTOS wrt Hlt1Track in
+    DetachedD02HHInclCombiner.
+
 ! 2015-04-09 - Albert Puig
  - Add Lb2L0Gamma radiative line.
  - Extra factorization of radiative lines to ensure proper configuration.
