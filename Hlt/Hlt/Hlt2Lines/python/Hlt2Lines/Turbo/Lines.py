@@ -25,7 +25,8 @@ class TurboLines(Hlt2LinesConfigurableUser) :
 					           'Ds2PiPiPi_XSec',
 					           'Lc2KPPi_XSec',
 					           'Lc2PiPPi_XSec',
-					           'Sigmac_2LcPi_XSec'], 	
+					           'Sigmac_2LcPi_XSec',
+                                                   'Lc2KPPi_PIDCALIB']
 			         }
                  }
 
@@ -47,4 +48,9 @@ class TurboLines(Hlt2LinesConfigurableUser) :
                          algos = algos['Turbo'], postscale = self.postscale, Turbo = True)
                 if module is 'DiMuon':
                     if line is 'JPsi':
-                        HltANNSvc().Hlt2SelectionID.update( { 'Hlt2'+module+line+'Turbo'+'Decision':  50212 } ) 
+                        HltANNSvc().Hlt2SelectionID.update( { 'Hlt2'+module+line+'Turbo'+'Decision':  50212 } )
+                if module is 'CharmHad' and line is 'Lc2KPPi_PIDCALIB':
+                    HltANNSvc().Hlt2SelectionID.update({
+                      'Hlt2Lc2KPPi_PIDCALIBDecision' : 50046,
+                      'Hlt2CharmHadLc2KPPi_PIDCALIBTurboDecision' : 50246
+                      })

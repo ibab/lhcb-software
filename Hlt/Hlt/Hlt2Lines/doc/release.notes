@@ -8,6 +8,17 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-10 - Olli Lupton
+  - CharmHad: Make the Lc candidates for PIDCALIB suitable for re-use in Lb->Lcpi
+              and Lb->Lcmu lines defined in the PID folder.
+  - Turbo: Run the CharmHad Lc line for PID calibration in the Turbo stream.
+  - PID: Add Lb->Lcpi/mu lines.
+  - PID: Minor cut tweaks.
+  - PID: Assorted tweaking to make sure the Turbo and non-Turbo copies of all of
+         the lines share all their selection logic.
+  - PID+CharmHad: add explicit ANNSvc IDs for all PID lines for use during
+                  development (running Tesla from threshold settings).
+
 ! 2015-04-10 - Michael Alexander
   - CharmHad/Hc2HHHH.py: Adding Xic0/Omegac0 -> pKKpi line with detachement cuts.
 

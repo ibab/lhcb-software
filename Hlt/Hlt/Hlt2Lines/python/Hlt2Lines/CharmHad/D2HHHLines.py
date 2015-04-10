@@ -82,19 +82,22 @@ class CharmHadD2HHHLines() :
                                  'Trk_1OF3_PT_MIN'          :  400.0 * MeV,
                                  'BPVVDCHI2_MIN'            :  10.0,
                                  'BPVLTIME_MIN'             :  0.1 * picosecond,
-                                 'BPVDIRA_MIN'              :  0.99985,
+                                 'BPVDIRA_MIN'              :  0.0,
                                  'ASUMPT_MIN'               :  2000 * MeV,
                                  'AM_MIN'                   :  2201 * MeV,
                                  'AM_MAX'                   :  2371 * MeV,
                                  'Mass_M_MIN'               :  2211.0 * MeV,
                                  'Mass_M_MAX'               :  2361.0 * MeV,
                                 },
+                 # Note the pointing cut is now in the tagger so that we can re-use
+                 # the Lc candidates in the PIDCALIB lines for Lb -> Lc pi and Lb -> Lc mu nu
                  'Lc2KPPi_PIDCALIB_TAG' : {
                                  'DeltaM_AM_MIN'            :  150.0 * MeV,
                                  'DeltaM_MIN'               :  155.0 * MeV,
                                  'DeltaM_AM_MAX'            :  180.0 * MeV,
                                  'DeltaM_MAX'               :  175.0 * MeV,
-                                 'TagVCHI2PDOF_MAX'         :  100.0
+                                 'TagVCHI2PDOF_MAX'         :  100.0,
+                                 'BPVDIRA_MIN'              :  0.99985
                                 },
                  # The combiner for a KPi asymmetry line
                  'Dpm2KPiPi_ForKPiAsym' : { 
@@ -146,8 +149,14 @@ class CharmHadD2HHHLines() :
                   # Now the PID calib Sigma_c->Lambda_c(pKpi)pi line
                   'Lc2KPPi_PIDCALIB'  : [TagDecay('Lc2KPPi_PIDCALIB_TAG', "[Sigma_c0 -> Lambda_c+ pi-]cc",
                                                   inputs = [ MassFilter('Lc2KPPi_PIDCALIB', 
-                                                                        inputs = [Lc2KPPi_PIDCALIB('Lc2KPPi_PIDCALIB')]),
-                                                             SharedSoftTagChild_pi ]
+                                                                        inputs = [Lc2KPPi_PIDCALIB('Lc2KPPi_PIDCALIB')],
+                                                                        shared = True),
+                                                             SharedSoftTagChild_pi ],
+                                                  DaughtersCuts = {
+                                                    "Lambda_c+" : "(BPVDIRA > %(BPVDIRA_MIN)s )",
+                                                    "Lambda_c~-": "(BPVDIRA > %(BPVDIRA_MIN)s )"
+                                                    },
+                                                  shared = True
                                                  )],
                   # Now the KPi asymmetry line
                   'Dpm2KPiPi_ForKPiAsym' : [MassFilter('Dpm2KPiPi_ForKPiAsym',

@@ -9,8 +9,8 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 class PIDLines(Hlt2LinesConfigurableUser):
     l0_muons = ['Muon','DiMuon']
     l0_electrons = ['Photon', 'Electron', 'Hadron', 'Muon', 'DiMuon']
-    hlt1_muons = 'Hlt1(TrackAllL0|TrackMVA|TrackMuon|SingleMuon).*Decision'
-    hlt1_electrons = 'Hlt1(TrackAllL0|TrackMVA|TrackMuon|SingleMuon|TrackPhoton|SingleElectron).*Decision'
+    hlt1_muons = 'Hlt1(TrackAllL0|TrackMuon|SingleMuon|DiMuon|TrackMVA|TwoTrackMVA).*Decision'
+    hlt1_electrons = 'Hlt1.*Decision'
     __slots__ = {'Prescale' :  {
                                 'Hlt2PIDLambda2PPiLL' : 1.0,
                                 'Hlt2PIDLambda2PPiDD' : 0.0,
@@ -19,9 +19,7 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                 'Hlt2PIDKs2PiPiLL'    : 1.0,
                                 'Hlt2PIDKs2PiPiDD'    : 0.0
                                 },
-                  'Common'   : {'L0ForMuons'    : [ ],
-                                'L0ForElectrons': [ ],
-                                'TagTrChi2'     : 3,
+                  'Common'   : {'TagTrChi2'     : 3,
                                 'TagP'          : 3 * GeV, # 6GeV in old stripping
                                 'TagPt'         : 500 * MeV, # 1.5GeV in old stripping
                                 'ProbeTrChi2'   : 5, # no cut for ee in old stripping, 3 for detached mumu
@@ -33,13 +31,13 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                 'LambdaProtonTrChi2' : 5,
                                 'LambdaPionP'   : 2.0 * GeV,
                                 'LambdaPionTrChi2' : 5,
-                                'LambdaAMWindow': 40 * MeV,
+                                'LambdaAMWindow': 50 * MeV,
                                 'LambdaMWindow' : 25 * MeV,
                                 'LambdaVChi2'   : 16,
                                 'LambdaVDChi2'  : 50,
-                                'LambdaKsVeto'  : 20 * MeV,
+                                'LambdaKsVeto'  : 0 * MeV,
                                 'LambdaLLTau'   : 2.0 * ps,
-                                'LambdaDDBPVVDZ': 2200 * mm
+                                'LambdaDDBPVVDZ': 400 * mm
                                 },
                  'Lambda2PPiLL' : {
                                 'LambdaProtonP' : 2.0 * GeV,
@@ -120,6 +118,16 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                 'DetLLVChi2'    : 25,
                                 'DetLLPt'       : 0 * GeV,
                                 'DetLLVDChi2'   : 25},
+                 'Lb2LcMuNu' : {'LLhCombMLow'   : (0) * MeV,
+                                'LLhCombMHigh'  : (5620 + 400) * MeV,
+                                'LLhVChi2'      : 25,
+                                'LLhVDChi2'     : 25,
+                                'LLhMaxIPChi2'  : 200},
+                 'Lb2LcPi'   : {'LLhCombMLow'   : (5620 - 400) * MeV,
+                                'LLhCombMHigh'  : (5620 + 400) * MeV,
+                                'LLhVChi2'      : 25,
+                                'LLhVDChi2'     : 25,
+                                'LLhMaxIPChi2'  : 25},
                  'Ks2PiPiLL' : {'KsMassWindow'  : 50 * MeV,
                                 'KsVChi2'       : 16,
                                 'KsDecayMaxZ'   : 2200 * mm,
@@ -141,45 +149,47 @@ class PIDLines(Hlt2LinesConfigurableUser):
                      'ElectronFromL0' : "HLT_PASS_RE('" + hlt1_electrons + "')"
                      }
                 }
-   
+  
     def __apply_configuration__(self):
         from Stages import DetachedLLFilter, BCombiner, JPsiMuMuPosTagged, JPsiMuMuNegTagged, \
             JPsiEEPosTagged, JPsiEENegTagged, JPsiEEL0PosTagged, JPsiEEL0NegTagged, \
             PhiMuMuPosTagged, PhiMuMuNegTagged, KSFilter, \
             LambdaCombiner, LambdaFilter
-        from Inputs import KsLL, KsDD, LambdaLL, LambdaDD, NoPIDsProtons, NoPIDsDownProtons
+        from Inputs import KsLL, KsDD, LambdaLL, LambdaDD, NoPIDsProtons, NoPIDsDownProtons, Muons
 
         from Hlt2Lines.CharmHad.Lines import CharmHadLines
-        from Hlt2Lines.CharmHad.Stages import SharedNoPIDDetachedChild_K, SharedNoPIDDetachedChild_pi
+        from Hlt2Lines.CharmHad.Stages import SharedNoPIDDetachedChild_K, SharedNoPIDDetachedChild_pi, Lc2KPPi_PIDCALIB
         from Hlt2Lines.Utilities.Hlt2Stage import Hlt2ExternalStage
         FilteredKaons = Hlt2ExternalStage(CharmHadLines(), SharedNoPIDDetachedChild_K)
         FilteredPions = Hlt2ExternalStage(CharmHadLines(), SharedNoPIDDetachedChild_pi)
+        Lc2KPPi = Hlt2ExternalStage(CharmHadLines(), Lc2KPPi_PIDCALIB('Lc2KPPi_PIDCALIB')) # The combination of these to make SigmaC is in CharmHad
 
         from Inputs import NoPIDsDownPions as FilteredDownPions # TODO maybe filter these, disabled for now we we don't even run the PID
 
         ds2phipi = "[D_s+ -> phi(1020) pi+]cc"
         stagemap = {
             'Muon' : {
-              'DetJPsiMuMuPosTagged'  : [ DetachedLLFilter("JPsiMuMu", JPsiMuMuPosTagged) ],
-              'DetJPsiMuMuNegTagged'  : [ DetachedLLFilter("JPsiMuMu", JPsiMuMuNegTagged) ],
-              'DetPhiMuMuPosTagged'   : [ DetachedLLFilter("PhiMuMu", PhiMuMuPosTagged) ],
-              'DetPhiMuMuNegTagged'   : [ DetachedLLFilter("PhiMuMu", PhiMuMuNegTagged) ],
-              'B2KJPsiMuMuSSTagged'   : [ BCombiner("JPsiMuMu", [ JPsiMuMuPosTagged, FilteredKaons ] ) ],
-              'B2KJPsiMuMuOSTagged'   : [ BCombiner("JPsiMuMu", [ JPsiMuMuNegTagged, FilteredKaons ] ) ],
-              'Ds2PiPhiMuMuSSTagged'  : [ BCombiner('PhiMuMu', [ PhiMuMuPosTagged, FilteredPions ], ds2phipi ) ],
-              'Ds2PiPhiMuMuOSTagged'  : [ BCombiner('PhiMuMu', [ PhiMuMuNegTagged, FilteredPions ], ds2phipi ) ]
+              'DetJPsiMuMuPosTagged'  : [ DetachedLLFilter("JPsiMuMuPos", JPsiMuMuPosTagged, nickname = "JPsiMuMu") ],
+              'DetJPsiMuMuNegTagged'  : [ DetachedLLFilter("JPsiMuMuNeg", JPsiMuMuNegTagged, nickname = "JPsiMuMu") ],
+              'DetPhiMuMuPosTagged'   : [ DetachedLLFilter("PhiMuMuPos", PhiMuMuPosTagged, nickname = "PhiMuMu") ],
+              'DetPhiMuMuNegTagged'   : [ DetachedLLFilter("PhiMuMuNeg", PhiMuMuNegTagged, nickname = "PhiMuMu") ],
+              'B2KJPsiMuMuSSTagged'   : [ BCombiner("JPsiMuMuSS", [ JPsiMuMuPosTagged, FilteredKaons ], nickname = "JPsiMuMu" ) ],
+              'B2KJPsiMuMuOSTagged'   : [ BCombiner("JPsiMuMuOS", [ JPsiMuMuNegTagged, FilteredKaons ], nickname = "JPsiMuMu" ) ],
+              'Ds2PiPhiMuMuSSTagged'  : [ BCombiner('PhiMuMuSS', [ PhiMuMuPosTagged, FilteredPions ], nickname = "PhiMuMu", decay = ds2phipi ) ],
+              'Ds2PiPhiMuMuOSTagged'  : [ BCombiner('PhiMuMuOS', [ PhiMuMuNegTagged, FilteredPions ], nickname = "PhiMuMu", decay = ds2phipi ) ],
+              'Lb2LcMuNu'             : [ BCombiner('Lb2LcMuNu', [ Lc2KPPi, Muons ], decay = '[Lambda_b0 -> Lambda_c+ mu-]cc') ]
               },
             'Electron' : {
-              'DetJPsiEEPosTagged'    : [ DetachedLLFilter("JPsiEE", JPsiEEPosTagged) ],
-              'DetJPsiEENegTagged'    : [ DetachedLLFilter("JPsiEE", JPsiEENegTagged) ],
-              'B2KJPsiEESSTagged'     : [ BCombiner('JPsiEE', [ JPsiEEPosTagged, FilteredKaons ] ) ],
-              'B2KJPsiEEOSTagged'     : [ BCombiner('JPsiEE', [ JPsiEENegTagged, FilteredKaons ] ) ]
+              'DetJPsiEEPosTagged'    : [ DetachedLLFilter("JPsiEEPos", JPsiEEPosTagged, nickname = "JPsiEE") ],
+              'DetJPsiEENegTagged'    : [ DetachedLLFilter("JPsiEENeg", JPsiEENegTagged, nickname = "JPsiEE") ],
+              'B2KJPsiEESSTagged'     : [ BCombiner('JPsiEESS', [ JPsiEEPosTagged, FilteredKaons ], nickname = "JPsiEE" ) ],
+              'B2KJPsiEEOSTagged'     : [ BCombiner('JPsiEEOS', [ JPsiEENegTagged, FilteredKaons ], nickname = "JPsiEE" ) ]
               },
             'ElectronFromL0' : {
-              'DetJPsiEEL0PosTagged'  : [ DetachedLLFilter("JPsiEE", JPsiEEL0PosTagged) ],
-              'DetJPsiEEL0NegTagged'  : [ DetachedLLFilter("JPsiEE", JPsiEEL0NegTagged) ],
-              'B2KJPsiEEL0SSTagged'   : [ BCombiner('JPsiEE', [ JPsiEEL0PosTagged, FilteredKaons ] ) ],
-              'B2KJPsiEEL0OSTagged'   : [ BCombiner('JPsiEE', [ JPsiEEL0NegTagged, FilteredKaons ] ) ]
+              'DetJPsiEEL0PosTagged'  : [ DetachedLLFilter("JPsiEEL0Pos", JPsiEEL0PosTagged, nickname = "JPsiEE") ],
+              'DetJPsiEEL0NegTagged'  : [ DetachedLLFilter("JPsiEEL0Neg", JPsiEEL0NegTagged, nickname = "JPsiEE") ],
+              'B2KJPsiEEL0SSTagged'   : [ BCombiner('JPsiEEL0SS', [ JPsiEEL0PosTagged, FilteredKaons ], nickname = "JPsiEE" ) ],
+              'B2KJPsiEEL0OSTagged'   : [ BCombiner('JPsiEEL0OS', [ JPsiEEL0NegTagged, FilteredKaons ], nickname = "JPsiEE" ) ]
               },
             'Other' : {
               'Ks2PiPiLL'             : [ KSFilter('Ks2PiPiLL', KsLL) ],
@@ -191,18 +201,54 @@ class PIDLines(Hlt2LinesConfigurableUser):
               'Lambda2PPiLLhighP'     : [ LambdaCombiner('Lambda2PPiLLhighP', [ NoPIDsProtons, FilteredPions ], ll = True) ],
               'Lambda2PPiDDhighP'     : [ LambdaCombiner('Lambda2PPiDDhighP', [ NoPIDsDownProtons, FilteredDownPions ], ll = False) ],
               'Lambda2PPiLLisMuon'    : [ LambdaCombiner('Lambda2PPiLLisMuon', [ NoPIDsProtons, FilteredPions ], ismuon = True, ll = True) ],
-              'Lambda2PPiDDisMuon'    : [ LambdaCombiner('Lambda2PPiDDisMuon', [ NoPIDsDownProtons, FilteredDownPions ], ismuon = True, ll = False ) ]
+              'Lambda2PPiDDisMuon'    : [ LambdaCombiner('Lambda2PPiDDisMuon', [ NoPIDsDownProtons, FilteredDownPions ], ismuon = True, ll = False ) ],
+              'Lb2LcPi'               : [ BCombiner('Lb2LcPi', [ Lc2KPPi, FilteredPions ], decay = '[Lambda_b0 -> Lambda_c+ pi-]cc') ]
               }
             }
         
         from HltLine.HltLine import Hlt2Line
-        for category, stages in stagemap.iteritems():
-          for (nickname, algos) in self.algorithms(stages).iteritems():
-              linename = 'PID' + nickname
-              l0cuts = self.getProp("L0Req").get(category, None)
-              hlt1cuts = self.getProp("Hlt1Req").get(category, None)
-              Hlt2Line(linename,
-                       prescale = self.prescale,
-                       algos = algos, postscale = self.postscale,
-                       L0DU = l0cuts,
-                       HLT1 = hlt1cuts)
+        for turbo in ['','Turbo']:
+          for category, stages in stagemap.iteritems():
+            for (nickname, algos) in self.algorithms(stages).iteritems():
+                linename = 'PID' + nickname
+                l0cuts = self.getProp("L0Req").get(category, None)
+                hlt1cuts = self.getProp("Hlt1Req").get(category, None)
+                Hlt2Line(linename + turbo,
+                         prescale = self.prescale,
+                         algos = algos, postscale = self.postscale,
+                         L0DU = l0cuts,
+                         HLT1 = hlt1cuts,
+                         Turbo = (len(turbo)>0))
+          from Configurables import HltANNSvc
+          HltANNSvc().Hlt2SelectionID.update({ 'Hlt2PID' + n + turbo + 'Decision' : v + 200*(len(turbo)>0) for n, v in {
+            'DetJPsiMuMuPosTagged'  : 50020,
+            'DetJPsiMuMuNegTagged'  : 50021,
+            'DetPhiMuMuPosTagged'   : 50022,
+            'DetPhiMuMuNegTagged'   : 50023,
+            'B2KJPsiMuMuSSTagged'   : 50024,
+            'B2KJPsiMuMuOSTagged'   : 50025,
+            'Ds2PiPhiMuMuSSTagged'  : 50026,
+            'Ds2PiPhiMuMuOSTagged'  : 50027,
+            'Lb2LcMuNu'             : 50028,
+            'DetJPsiEEPosTagged'    : 50029,
+            'DetJPsiEENegTagged'    : 50030,
+            'B2KJPsiEESSTagged'     : 50031,
+            'B2KJPsiEEOSTagged'     : 50032,
+            'DetJPsiEEL0PosTagged'  : 50033,
+            'DetJPsiEEL0NegTagged'  : 50034,
+            'B2KJPsiEEL0SSTagged'   : 50035,
+            'B2KJPsiEEL0OSTagged'   : 50036,
+            'Ks2PiPiLL'             : 50037,
+            'Ks2PiPiDD'             : 50038,
+            'Lambda2PPiLL'          : 50039,
+            'Lambda2PPiDD'          : 50040,
+            'Lambda2PPiLLhighP'     : 50041,
+            'Lambda2PPiDDhighP'     : 50042,
+            'Lambda2PPiLLisMuon'    : 50043,
+            'Lambda2PPiDDisMuon'    : 50044,
+            'Lb2LcPi'               : 50045
+            }.iteritems()})
+        HltANNSvc().Hlt2SelectionID.update({
+          'Hlt2Lc2KPPi_PIDCALIBDecision' : 50046,
+          'Hlt2CharmHadLc2KPPi_PIDCALIBTurboDecision' : 50246
+          })

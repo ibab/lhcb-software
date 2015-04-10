@@ -77,13 +77,17 @@ class LLCombiner(Hlt2Combiner):
 
 # Class to add a kaon to a J/psi
 class BCombiner(Hlt2Combiner):
-    def __init__(self, name, inputs, decay = "[B+ -> J/psi(1S) K+]cc"):
+    def __init__(self, name, inputs, nickname = None, decay = "[B+ -> J/psi(1S) K+]cc"):
         cc = ("(in_range(%(LLhCombMLow)s, AM, %(LLhCombMHigh)s))")
         mc = ("(VFASPF(VCHI2)<%(LLhVChi2)s) & (BPVVDCHI2 > %(LLhVDChi2)s) & (BPVIPCHI2()<%(LLhMaxIPChi2)s)")
+        if nickname is None:
+          nickname = name
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name,
             decay,
             inputs,
+            shared = True,
+            nickname = nickname,
             dependencies = [ PV3D('Hlt2') ],
             #tistos = 'LLhTisTos',
             DaughtersCuts = { },
@@ -106,14 +110,18 @@ class BachelorFilter(Hlt2ParticleFilter):
 
 # Extra filtering for the J/psi which are not combined with kaons to make B
 class DetachedLLFilter(Hlt2ParticleFilter):
-    def __init__(self, name, input):
+    def __init__(self, name, input, nickname = None):
+        if nickname is None:
+          nickname = name
         cut = ("(VFASPF(VCHI2)<%(DetLLVChi2)s)" +
                " & (PT > %(DetLLPt)s)" +
                " & (BPVVDCHI2 > %(DetLLVDChi2)s)")
         from HltTracking.HltPVs import PV3D
         Hlt2ParticleFilter.__init__(self, name, cut, [ input ],
                                     #tistos = 'LLhTisTos',
+                                    nickname = nickname,
                                     dependencies = [ PV3D('Hlt2') ],
+                                    shared = True,
                                     UseP2PVRelations = False)
 
 class KSFilter(Hlt2ParticleFilter):
@@ -125,16 +133,21 @@ class KSFilter(Hlt2ParticleFilter):
                "( ADWM( 'Lambda0' , WM( 'p+' , 'pi-') ) > %(KsLambdaVeto)s ) & " +
                "( ADWM( 'Lambda0' , WM( 'pi+' , 'p~-') ) > %(KsLambdaVeto)s )")
         from HltTracking.HltPVs import PV3D
-        Hlt2ParticleFilter.__init__(self, name, cut, [ input ],
+        Hlt2ParticleFilter.__init__(self, 'PID' + name, cut, [ input ],
                                     dependencies = [ PV3D('Hlt2') ],
+                                    shared = True,
+                                    nickname = name,
                                     UseP2PVRelations = False)
 
 class LambdaFilter(Hlt2ParticleFilter):
     def __init__(self, name, input):
-        cut = ("( ADWM( 'KS0' , WM( 'pi+' , 'pi-') ) > %(LambdaKsVeto)s )")
+        cut = ("( ADWM( 'KS0' , WM( 'pi+' , 'pi-') ) > %(LambdaKsVeto)s ) & " +
+               "(ADMASS('Lambda0') < %(LambdaMWindow)s )")
         from HltTracking.HltPVs import PV3D
-        Hlt2ParticleFilter.__init__(self, name, cut, [ input ],
+        Hlt2ParticleFilter.__init__(self, 'PID' + name, cut, [ input ],
                                     dependencies = [ PV3D('Hlt2') ],
+                                    shared = True,
+                                    nickname = name,
                                     UseP2PVRelations = False)
 
 class LambdaCombiner(Hlt2Combiner):
@@ -152,9 +165,11 @@ class LambdaCombiner(Hlt2Combiner):
               "(BPVVDCHI2 > %(LambdaVDChi2)s ) & " + 
               "( ADWM( 'KS0' , WM( 'pi+' , 'pi-') ) > %(LambdaKsVeto)s )")
         from HltTracking.HltPVs import PV3D
-        Hlt2Combiner.__init__(self, name,
+        Hlt2Combiner.__init__(self, 'PID' + name,
                               "[Lambda0 -> p+ pi-]cc",
                               inputs,
+                              shared = True,
+                              nickname = name,
                               dependencies = [ PV3D('Hlt2') ],
                               DaughtersCuts = dc,
                               CombinationCut = cc,

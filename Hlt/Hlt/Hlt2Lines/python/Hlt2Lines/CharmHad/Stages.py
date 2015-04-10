@@ -208,8 +208,7 @@ class MassFilter(Hlt2ParticleFilter):
 ## ========================================================================= ##
 # A "universal" filter which implements a soft pion tag
 class TagDecay(Hlt2Combiner):
-    def __init__(self, name, decay, inputs):
-        dc =    {}
+    def __init__(self, name, decay, inputs, DaughtersCuts = { }, shared = False):
         cc =    ('in_range( %(DeltaM_AM_MIN)s, (AM - AM1), %(DeltaM_AM_MAX)s )')
         mc =    ("(VFASPF(VCHI2PDOF) < %(TagVCHI2PDOF_MAX)s)" +
                  "& in_range( %(DeltaM_MIN)s, (M - M1), %(DeltaM_MAX)s )")
@@ -217,7 +216,8 @@ class TagDecay(Hlt2Combiner):
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name, decay, inputs,
                               dependencies = [TrackGEC('TrackGEC')],
-                              tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc, 
+                              tistos = 'TisTosSpec', DaughtersCuts = DaughtersCuts, CombinationCut = cc, 
+                              shared = shared,
                               MotherCut = mc, Preambulo = []) 
 
 # Particle combiners
