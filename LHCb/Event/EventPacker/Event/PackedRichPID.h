@@ -52,7 +52,8 @@ namespace LHCb
   /// Namespace for locations in TDS
   namespace PackedRichPIDLocation
   {
-    static const std::string& Default = "pRec/Rich/PIDs";
+    static const std::string& Default  = "pRec/Rich/PIDs";
+    static const std::string& InStream = "/pRec/Rich/CustomPIDs";
   }
 
   /** @class PackedRichPIDs Event/PackedRichPID.h
@@ -147,17 +148,32 @@ namespace LHCb
 
   public:
 
+    /// Pack a RichPID
+    void pack( const Data & pid,
+               PackedData & ppid,
+               PackedDataVector & ppids ) const;
+
     /// Pack RichPIDs
     void pack( const DataVector & pids,
                PackedDataVector & ppids ) const;
+
+    /// Unpack a single RichPID
+    void unpack( const PackedData       & ppid,
+                 Data                   & pid,
+                 const PackedDataVector & ppids,
+                 DataVector             & pids ) const;
 
     /// Unpack RichPIDs
     void unpack( const PackedDataVector & ppids,
                  DataVector             & pids ) const;
 
-    /// Compare two RichPIDs to check the packing -> unpacking performance
+    /// Compare two RichPID containers to check the packing -> unpacking performance
     StatusCode check( const DataVector & dataA,
                       const DataVector & dataB ) const;
+
+    /// Compare two MuonPIDs to check the packing -> unpacking performance
+    StatusCode check( const Data & dataA,
+                      const Data & dataB ) const;
 
   private:
 

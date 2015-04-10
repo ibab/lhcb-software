@@ -51,6 +51,7 @@ StatusCode PackParticlesAndVertices::execute()
   const unsigned int clIdTracks         = 0x60000 + LHCb::CLID_Track;
   const unsigned int clIdProtoParticles = 0x60000 + LHCb::CLID_ProtoParticle;
   const unsigned int clIdMuonPIDs       = 0x60000 + LHCb::CLID_MuonPID;
+  const unsigned int clIdRichPIDs       = 0x60000 + LHCb::CLID_RichPID;
   const unsigned int clIdPart2Vert      = 0xEA9168DC; // Particle to Vertex relation
   const unsigned int clIdPart2MCPart    = 0x7B880798; // Particle to MCParticle relations
   const unsigned int clIdPart2Int       = 0xF94852E4; // Particle to int relations
@@ -303,7 +304,7 @@ StatusCode PackParticlesAndVertices::execute()
     ppids->setPackingVersion( LHCb::PackedMuonPIDs::defaultPackingVersion() );
     put( ppids, m_inputStream + LHCb::PackedMuonPIDLocation::InStream );
     if ( msgLevel( MSG::DEBUG ) )
-      debug() << "=== Process ProtoParticle containers :" << endmsg;
+      debug() << "=== Process MuonPID containers :" << endmsg;
     toBeDeleted.reserve( names.size() + toBeDeleted.size() );
     for ( const auto& name : names )
     {
@@ -316,6 +317,32 @@ StatusCode PackParticlesAndVertices::execute()
     }
     if ( msgLevel( MSG::DEBUG ) )
       debug() << "Stored " << ppids->data().size() << " packed MuonPIDs" << endmsg;
+  }
+
+  //==============================================================================
+  // Find RichPIDs
+  //==============================================================================
+  names.clear();
+  selectContainers( root, names, clIdRichPIDs );
+  if ( !names.empty() )
+  {
+    LHCb::PackedRichPIDs * ppids = new LHCb::PackedRichPIDs();
+    ppids->setPackingVersion( LHCb::PackedRichPIDs::defaultPackingVersion() );
+    put( ppids, m_inputStream + LHCb::PackedRichPIDLocation::InStream );
+    if ( msgLevel( MSG::DEBUG ) )
+      debug() << "=== Process RichPID containers :" << endmsg;
+    toBeDeleted.reserve( names.size() + toBeDeleted.size() );
+    for ( const auto& name : names )
+    {
+      LHCb::RichPIDs * pids = get<LHCb::RichPIDs>( name );
+      if ( m_deleteInput ) toBeDeleted.push_back( pids );
+      if ( pids->empty() ) continue;
+      if ( msgLevel( MSG::DEBUG ) )
+        debug() << format( "%4d RichPIDs in ", pids->size() ) << name << endmsg;
+      packARichPIDContainer( pids, *ppids );
+    }
+    if ( msgLevel( MSG::DEBUG ) )
+      debug() << "Stored " << ppids->data().size() << " packed RichPIDs" << endmsg;
   }
 
   //==============================================================================
@@ -481,20 +508,17 @@ PackParticlesAndVertices::packAFTContainer ( const LHCb::FlavourTags* fts,
   LHCb::FlavourTags * unpacked = ( m_enableCheck ? new LHCb::FlavourTags() : NULL );
   if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsFTTest" ); }
 
-  for ( LHCb::FlavourTags::const_iterator iD = fts->begin();
-        iD != fts->end(); ++iD )
+  for ( const auto * ft : *fts )
   {
-    const LHCb::FlavourTag & ft = **iD;
-
     // Make a new packed data object and save
     pfts.data().push_back( LHCb::PackedFlavourTag() );
     LHCb::PackedFlavourTag& pft = pfts.data().back();
 
     // reference to original container and key
-    pft.key = m_pack.reference64( &pfts, ft.parent(), ft.key() );
+    pft.key = m_pack.reference64( &pfts, ft->parent(), ft->key() );
 
     // pack the physics info
-    ftPacker.pack( ft, pft, pfts );
+    ftPacker.pack( *ft, pft, pfts );
 
     // checks ?
     if ( unpacked )
@@ -504,7 +528,7 @@ PackParticlesAndVertices::packAFTContainer ( const LHCb::FlavourTags* fts,
       LHCb::FlavourTag * testObj = new LHCb::FlavourTag();
       unpacked->insert( testObj, key );
       ftPacker.unpack( pft, *testObj, pfts, *unpacked );
-      ftPacker.check( ft, *testObj ).ignore();
+      ftPacker.check( *ft, *testObj ).ignore();
     }
 
   }
@@ -539,20 +563,17 @@ PackParticlesAndVertices::packAParticleContainer ( const LHCb::Particles* parts,
   LHCb::Particles* unpacked = ( m_enableCheck ? new LHCb::Particles() : NULL );
   if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsParticleTest" ); }
 
-  for ( LHCb::Particles::const_iterator iD = parts->begin();
-        iD != parts->end(); ++iD )
+  for ( const auto * part : *parts )
   {
-    const LHCb::Particle& part = **iD;
-
     // Make a new packed data object and save
     pparts.data().push_back( LHCb::PackedParticle() );
     LHCb::PackedParticle& ppart = pparts.data().back();
 
     // reference to original container and key
-    ppart.key = m_pack.reference64( &pparts, part.parent(), part.key() );
+    ppart.key = m_pack.reference64( &pparts, part->parent(), part->key() );
 
     // pack the physics info
-    pPacker.pack( part, ppart, pparts );
+    pPacker.pack( *part, ppart, pparts );
 
     // checks ?
     if ( unpacked )
@@ -562,7 +583,7 @@ PackParticlesAndVertices::packAParticleContainer ( const LHCb::Particles* parts,
       LHCb::Particle* testObj = new LHCb::Particle();
       unpacked->insert( testObj, key );
       pPacker.unpack( ppart, *testObj, pparts, *unpacked );
-      pPacker.check( part, *testObj ).ignore();
+      pPacker.check( *part, *testObj ).ignore();
     }
 
   }
@@ -598,20 +619,17 @@ PackParticlesAndVertices::packAMuonPIDContainer ( const LHCb::MuonPIDs* pids,
   LHCb::MuonPIDs * unpacked = ( m_enableCheck ? new LHCb::MuonPIDs() : NULL );
   if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsMuonPIDTest" ); }
 
-  for ( LHCb::MuonPIDs::const_iterator iD = pids->begin();
-        iD != pids->end(); ++iD )
+  for ( const auto * pid : *pids )
   {
-    const LHCb::MuonPID& pid = **iD;
-
     // Make a new packed data object and save
     ppids.data().push_back( LHCb::PackedMuonPID() );
     LHCb::PackedMuonPID& ppid = ppids.data().back();
 
     // reference to original container and key
-    ppid.key = m_pack.reference64( &ppids, pid.parent(), pid.key() );
+    ppid.key = m_pack.reference64( &ppids, pid->parent(), pid->key() );
 
     // pack the physics info
-    pPacker.pack( pid, ppid, ppids );
+    pPacker.pack( *pid, ppid, ppids );
 
     // checks ?
     if ( unpacked )
@@ -621,7 +639,64 @@ PackParticlesAndVertices::packAMuonPIDContainer ( const LHCb::MuonPIDs* pids,
       LHCb::MuonPID* testObj = new LHCb::MuonPID();
       unpacked->insert( testObj, key );
       pPacker.unpack( ppid, *testObj, ppids, *unpacked );
-      pPacker.check( pid, *testObj ).ignore();
+      pPacker.check( *pid, *testObj ).ignore();
+    }
+
+  }
+
+  // clean up test data
+  if ( unpacked )
+  {
+    const StatusCode sc = evtSvc()->unregisterObject( unpacked );
+    if ( sc.isSuccess() )
+    {
+      delete unpacked;
+    }
+    else
+    {
+      Exception( "Failed to delete test data after unpacking check" );
+    }
+  }
+
+  if ( !m_deleteInput ) pids->registry()->setAddress( 0 );
+
+}
+
+//=========================================================================
+// Pack a container of RichPIDs
+//=========================================================================
+void
+PackParticlesAndVertices::packARichPIDContainer ( const LHCb::RichPIDs* pids,
+                                                  LHCb::PackedRichPIDs& ppids )
+{
+
+  const LHCb::RichPIDPacker pPacker(*this);
+
+  // checks
+  LHCb::RichPIDs * unpacked = ( m_enableCheck ? new LHCb::RichPIDs() : NULL );
+  if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsRichPIDTest" ); }
+
+  for ( const auto * pid : *pids )
+  {
+    // Make a new packed data object and save
+    ppids.data().push_back( LHCb::PackedRichPID() );
+    LHCb::PackedRichPID& ppid = ppids.data().back();
+
+    // reference to original container and key
+    ppid.key = m_pack.reference64( &ppids, pid->parent(), pid->key() );
+
+    // pack the physics info
+    pPacker.pack( *pid, ppid, ppids );
+
+    // checks ?
+    if ( unpacked )
+    {
+      int key(0),linkID(0);
+      m_pack.indexAndKey32( ppid.key, linkID, key );
+      LHCb::RichPID* testObj = new LHCb::RichPID();
+      unpacked->insert( testObj, key );
+      pPacker.unpack( ppid, *testObj, ppids, *unpacked );
+      pPacker.check( *pid, *testObj ).ignore();
     }
 
   }
@@ -657,20 +732,17 @@ PackParticlesAndVertices::packAProtoParticleContainer( const LHCb::ProtoParticle
   LHCb::ProtoParticles* unpacked = ( m_enableCheck ? new LHCb::ProtoParticles() : NULL );
   if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsProtoParticleTest" ); }
 
-  for ( LHCb::ProtoParticles::const_iterator iD = protos->begin();
-        iD != protos->end(); ++iD )
+  for ( const auto * proto : *protos )
   {
-    const LHCb::ProtoParticle& proto = **iD;
-
     // Make a new packed data object and save
     pprotos.protos().push_back( LHCb::PackedProtoParticle() );
     LHCb::PackedProtoParticle& pproto = pprotos.protos().back();
 
     // reference to original container and key
-    pproto.key = m_pack.reference64( &pprotos, proto.parent(), proto.key() );
+    pproto.key = m_pack.reference64( &pprotos, proto->parent(), proto->key() );
 
     // pack the physics info
-    pPacker.pack( proto, pproto, pprotos );
+    pPacker.pack( *proto, pproto, pprotos );
 
     // checks ?
     if ( unpacked )
@@ -680,7 +752,7 @@ PackParticlesAndVertices::packAProtoParticleContainer( const LHCb::ProtoParticle
       LHCb::ProtoParticle* testObj = new LHCb::ProtoParticle();
       unpacked->insert( testObj, key );
       pPacker.unpack( pproto, *testObj, pprotos, *unpacked );
-      pPacker.check( proto, *testObj ).ignore();
+      pPacker.check( *proto, *testObj ).ignore();
     }
 
   }
@@ -715,20 +787,17 @@ PackParticlesAndVertices::packATrackContainer( const LHCb::Tracks* tracks,
   LHCb::Tracks* unpacked = ( m_enableCheck ? new LHCb::Tracks() : NULL );
   if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsTrackTest" ); }
 
-  for ( LHCb::Tracks::const_iterator iD = tracks->begin();
-        iD != tracks->end(); ++iD )
+  for ( const auto * track : *tracks )
   {
-    const LHCb::Track& track = **iD;
-
     // Make a new packed data object and save
     ptracks.tracks().push_back( LHCb::PackedTrack() );
     LHCb::PackedTrack& ptrack = ptracks.tracks().back();
 
     // reference to original container and key
-    ptrack.key = m_pack.reference64( &ptracks, track.parent(), track.key() );
+    ptrack.key = m_pack.reference64( &ptracks, track->parent(), track->key() );
 
     // pack the physics info
-    tPacker.pack( track, ptrack, ptracks );
+    tPacker.pack( *track, ptrack, ptracks );
 
     // checks ?
     if ( unpacked )
@@ -738,7 +807,7 @@ PackParticlesAndVertices::packATrackContainer( const LHCb::Tracks* tracks,
       LHCb::Track* testObj = new LHCb::Track();
       unpacked->insert( testObj, key );
       tPacker.unpack( ptrack, *testObj, ptracks, *unpacked );
-      tPacker.check( track, *testObj ).ignore();
+      tPacker.check( *track, *testObj ).ignore();
     }
 
   }
@@ -772,20 +841,17 @@ void PackParticlesAndVertices::packAVertexContainer ( const LHCb::Vertices* vert
   LHCb::Vertices * unpacked = ( m_enableCheck ? new LHCb::Vertices() : NULL );
   if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsVertexTest" ); }
 
-  for ( LHCb::Vertices::const_iterator iD = verts->begin();
-        iD != verts->end(); ++iD )
+  for ( const auto * vert : *verts )
   {
-    const LHCb::Vertex& vert = **iD;
-
     // Make a new packed data object and save
     pverts.data().push_back( LHCb::PackedVertex() );
     LHCb::PackedVertex& pvert = pverts.data().back();
 
     // reference to original container and key
-    pvert.key = m_pack.reference64( &pverts, vert.parent(), vert.key() );
+    pvert.key = m_pack.reference64( &pverts, vert->parent(), vert->key() );
 
     // fill remaining physics info
-    vPacker.pack( vert, pvert, pverts );
+    vPacker.pack( *vert, pvert, pverts );
 
     // checks ?
     if ( unpacked )
@@ -795,7 +861,7 @@ void PackParticlesAndVertices::packAVertexContainer ( const LHCb::Vertices* vert
       LHCb::Vertex* testObj = new LHCb::Vertex();
       unpacked->insert( testObj, key );
       vPacker.unpack( pvert, *testObj, pverts, *unpacked );
-      vPacker.check( vert, *testObj ).ignore();
+      vPacker.check( *vert, *testObj ).ignore();
     }
   }
 
@@ -824,21 +890,18 @@ void PackParticlesAndVertices::packARecVertexContainer( const LHCb::RecVertices*
 {
   const LHCb::RecVertexPacker rvPacker(*dynamic_cast<GaudiAlgorithm*>(this));
 
-  for ( LHCb::RecVertices::const_iterator iD = rVerts->begin();
-        iD != rVerts->end(); ++iD )
+  for ( const auto * rVert : *rVerts )
   {
-    const LHCb::RecVertex& rVert = **iD;
-
     // Make a new packed data object and save
     pRVerts.vertices().push_back( LHCb::PackedRecVertex() );
     LHCb::PackedRecVertex& pRVert = pRVerts.vertices().back();
 
     // reference to original container and key
-    pRVert.key       = rVert.key();
-    pRVert.container = (int)m_pack.linkID( &pRVerts, rVert.parent() );
+    pRVert.key       = rVert->key();
+    pRVert.container = (int)m_pack.linkID( &pRVerts, rVert->parent() );
 
     // Physics info
-    rvPacker.pack( rVert, pRVert, *rVerts, pRVerts );
+    rvPacker.pack( *rVert, pRVert, *rVerts, pRVerts );
   }
 
   // Clear the registry address of the unpacked container, to prevent reloading

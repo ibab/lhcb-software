@@ -139,6 +139,56 @@ StatusCode UnpackParticlesAndVertices::execute()
   }
 
   //=================================================================
+  //== Process the RichPIDs
+  //=================================================================
+  {
+    int prevLink = -1;
+    unsigned int nbPartContainer(0), nbPart(0);
+    LHCb::PackedRichPIDs * ppids =
+      getIfExists<LHCb::PackedRichPIDs>( m_inputStream + LHCb::PackedRichPIDLocation::InStream );
+    if ( ppids )
+    {
+      const LHCb::RichPIDPacker tPacker(*dynamic_cast<GaudiAlgorithm*>(this));
+      LHCb::RichPIDs * pids = NULL;
+      for ( const LHCb::PackedRichPID& ppid : ppids->data() )
+      {
+        int key(0),linkID(0);
+        m_pack.indexAndKey64( ppid.key, linkID, key );
+        if ( linkID != prevLink )
+        {
+          prevLink = linkID;
+          const std::string & containerName = ppids->linkMgr()->link(linkID)->path() + m_postFix;
+          // Check to see if container already exists. If it does, unpacking has already been run this
+          // event so quit
+          if ( exist<LHCb::Tracks>(containerName) )
+          {
+            if ( msgLevel(MSG::DEBUG) )
+              debug() << " -> " << containerName << " exists" << endmsg;
+            return StatusCode::SUCCESS;
+          }
+          pids = new LHCb::RichPIDs();
+          put( pids, containerName );
+          ++nbPartContainer;
+        }
+
+        // Make new object and insert into the output container
+        LHCb::RichPID * pid = new LHCb::RichPID();
+        pids->insert( pid, key );
+        ++nbPart;
+
+        // Unpack the physics info
+        tPacker.unpack( ppid, *pid, *ppids, *pids );
+
+      }
+    }
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "Retrieved " << nbPart << " RichPIDs in " << nbPartContainer << " containers" << endmsg;
+    }
+    counter("# Unpacked RichPIDs") += nbPart;
+  }
+
+  //=================================================================
   //== Process the ProtoParticles
   //=================================================================
   {

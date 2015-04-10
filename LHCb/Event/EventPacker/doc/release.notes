@@ -4,6 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2015-04-10 - Chris Jones
+ - Add support for custom RichPID objects in the 'PackParticlesAndVertices'
+   packing.
+
 ! 2015-04-02 - Chris Jones
  - Optimise things a bit for the most likely (recent) packing versions.
 

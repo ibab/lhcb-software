@@ -17,6 +17,7 @@
 #include "Event/PackedTrack.h"
 #include "Event/PackedProtoParticle.h"
 #include "Event/PackedMuonPID.h"
+#include "Event/PackedRichPID.h"
 #include "Event/PackedParticle.h"
 #include "Event/PackedVertex.h"
 #include "Event/PackedRelations.h"
@@ -27,6 +28,7 @@
 #include "Event/Track.h"
 #include "Event/ProtoParticle.h"
 #include "Event/MuonPID.h"
+#include "Event/RichPID.h"
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
 #include "Event/FlavourTag.h"
@@ -76,9 +78,13 @@ private:
   void packAProtoParticleContainer ( const LHCb::ProtoParticles* protos,
                                      LHCb::PackedProtoParticles& pprotos );
 
-  /// Pack a Muon container
+  /// Pack a MuonPID container
   void packAMuonPIDContainer ( const LHCb::MuonPIDs* pids,
                                LHCb::PackedMuonPIDs& ppids );
+
+  /// Pack a RichPID container
+  void packARichPIDContainer ( const LHCb::RichPIDs* pids,
+                               LHCb::PackedRichPIDs& ppids );
 
   /// Pack a Track container
   void packATrackContainer ( const LHCb::Tracks* tracks,
