@@ -178,8 +178,8 @@ class TrackSys(LHCbConfigurableUser):
             if LHCbApp().isPropertySet("Detectors"):
                 upgradeDets = LHCbApp().upgradeDetectors()
                 useUpgrade = bool([det for det in upgradeDets if det in ['VP','UT','FT']])
-        if not TrackSys().isPropertySet("TrackTypes"):
-            TrackSys().setProp("TrackTypes", self.DefaultTrackTypes)
+        if not self.isPropertySet("TrackTypes"):
+            self.setProp("TrackTypes", self.DefaultTrackTypes)
         
         if useUpgrade :
             from TrackSys import RecoUpgradeTracking

@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-04-10 - Chris Jones
+ - Fix a bug in TrackSys configure where TrackSys() was used instead of self.
+
 ! 2015-04-9 - Michel De Cian
  - Introduce 'TrackListRefiner' to only veto fitted long tracks in HLT 2 forward for 2015.
 
