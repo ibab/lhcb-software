@@ -27,12 +27,11 @@ DECLARE_ALGORITHM_FACTORY(VPClusterMonitor)
 VPClusterMonitor::VPClusterMonitor(const std::string& name,
                                    ISvcLocator* pSvcLocator) :
     GaudiHistoAlg(name, pSvcLocator),
-    m_radDamageTool(NULL), m_vpDet(NULL) {
+    m_vpDet(NULL) {
 
   declareProperty("ClusterLocation", m_clusterCont = LHCb::VPClusterLocation::Default);
   declareProperty("MCHitLocation", m_hitCont = LHCb::MCHitLocation::VP);
   declareProperty("DataTaken", m_dataTaken = 0.);
-  declareProperty("Irradiated", m_irradiated = false);
 
 }
 
@@ -51,8 +50,6 @@ StatusCode VPClusterMonitor::initialize() {
   setHistoTopDir("VP/");
   // Get detector element
   m_vpDet = getDet<DeVP>(DeVPLocation::Default);
-  // Get radiation damage tool
-  if (m_irradiated) m_radDamageTool = tool<VPRadiationDamageTool>("VPRadiationDamageTool");
   return StatusCode::SUCCESS;
 }
 
@@ -148,13 +145,8 @@ void VPClusterMonitor::loopClusters() {
       plot2D(cluster_radius, pix1ToT/(pix1ToT+pix2ToT), "eta_distribution_pix1_versus_radius", 0, 100, 0, 1, 200, 100);
       plot2D(cluster_radius, pix2ToT/(pix1ToT+pix2ToT), "eta_distribution_pix2_versus_radius", 0, 100, 0, 1, 200, 100);
     }
-    // Plot fluence information
-    if (m_irradiated) {
-      double f = m_radDamageTool->fluence(cluster_point, m_dataTaken) / 1.e15;
-      plot(f, "global_fluence_e15", 0, 20, 200);
-      plot2D(cluster_radius, f, "fluence_e15_versus_r", 0, 100, 0, 20, 200, 200);
-      plot2D(cluster_point.z(), f, "fluence_e15_versus_z", -500, 1000, 0, 20, 1000, 200);
-    }
+ 
+
     // Get MC hit for this cluster and plot residuals
     LHCb::MCHit* hit = links.first(cluster->channelID());
     if (hit) {

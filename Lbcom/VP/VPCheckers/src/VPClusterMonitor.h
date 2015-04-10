@@ -8,8 +8,7 @@
 #include "Event/VPCluster.h"
 // Det/VPDet
 #include "VPDet/DeVP.h"
-// Local
-#include "VPRadiationDamageTool.h"
+
 
 /** @class VPClusterMonitor VPClusterMonitor.h
  *  
@@ -32,11 +31,9 @@ private:
   std::string m_clusterCont;
   std::string m_hitCont;
   
-  VPRadiationDamageTool* m_radDamageTool;
   DeVP* m_vpDet;
   
   double m_dataTaken;
-  bool m_irradiated;
 
   void loopClusters(); 
 
