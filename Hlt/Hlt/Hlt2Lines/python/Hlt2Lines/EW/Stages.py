@@ -12,7 +12,7 @@ class DiMuonZFilter(Hlt2ParticleFilter):
         code = ("(MM > %(MinMass)s) & (PT > %(Pt)s)")
         from HltLine.Hlt2Monitoring import Hlt2Monitor, Hlt2MonitorMinMax
         args = {'PreMonitor'  : Hlt2Monitor("M", "M(#mu#mu)",  3097,   200, 'M_in',  nbins = 25),
-                'PostMonitor' : Hlt2Monitor("M", "M(#mu#mu)", 85000, 95000, 'M_out', nbins=25)}
+                'PostMonitor' : Hlt2Monitor("M", "M(#mu#mu)", 85000, 95000, 'M_out', nbins = 25)}
         inputs = [TrackFittedDiMuon]
         Hlt2ParticleFilter.__init__(self, name, code, inputs, **args)
 
@@ -21,7 +21,7 @@ class DiMuonDY1Filter(Hlt2ParticleFilter):
         code = ("(MM > %(MinMass)s) & (PT > %(Pt)s) " +
                 "& ~in_range(%(MinExcMass)s, MM, %(MaxExcMass)s) " +
                 "& (MAXTREE('mu-' == ABSID, TRCHI2DOF) < %(TkChi2)s) " +
-                "& (MINTREE('mu-' == ABSID, PT) > %(MuPt)s")
+                "& (MINTREE('mu-' == ABSID, PT) > %(MuPt)s)")
         inputs = [TrackFittedDiMuon]
         Hlt2ParticleFilter.__init__(self, name, code, inputs)
 
@@ -29,21 +29,23 @@ class DiMuonDY2Filter(Hlt2ParticleFilter):
     def __init__(self, name):
         code = ("(MM > %(MinMass)s) & (PT > %(Pt)s) " +
                 "& (MAXTREE('mu-' == ABSID, TRCHI2DOF) < %(TkChi2)s) " +
-                "& (MINTREE('mu-' == ABSID, PT) > %(MuPt)s")
+                "& (MINTREE('mu-' == ABSID, PT) > %(MuPt)s)")
         inputs = [TrackFittedDiMuon]
         Hlt2ParticleFilter.__init__(self, name, code, inputs)
 
 class DiMuonDY3Filter(Hlt2ParticleFilter):
     def __init__(self, name):
-        code = ("(MM > %(MinMass)s) & (PT > %(Pt)s) " +
-                "& (MAXTREE('mu-' == ABSID, TRCHI2DOF) < %(TkChi2)s)")
+        code = ("(MM > %(MinMass)s) " +
+                "& (MAXTREE('mu-' == ABSID, TRCHI2DOF) < %(TkChi2)s) " +
+                "& (MINTREE('mu-' == ABSID, PT) > %(MuPt)s)")
         inputs = [TrackFittedDiMuon]
         Hlt2ParticleFilter.__init__(self, name, code, inputs)
 
 class DiMuonDY4Filter(Hlt2ParticleFilter):
     def __init__(self, name):
-        code = ("(MM > %(MinMass)s) & (PT > %(Pt)s) " +
-                "& (MAXTREE('mu-' == ABSID, TRCHI2DOF) < %(TkChi2)s)")
+        code = ("(MM > %(MinMass)s) " +
+                "& (MAXTREE('mu-' == ABSID, TRCHI2DOF) < %(TkChi2)s)" +
+                "& (MINTREE('mu-' == ABSID, PT) > %(MuPt)s)")
         inputs = [TrackFittedDiMuon]
         Hlt2ParticleFilter.__init__(self, name, code, inputs)
 
@@ -163,6 +165,4 @@ class HighPTTauCombiner(Hlt2Combiner):
         if n == 1: kwargs['ParticleCombiners'] = {"" : "MomentumCombiner"}
 
         from HltTracking.HltPVs import PV3D
-        Hlt2Combiner.__init__(self, name, decays[n], inputs, shared = True,
-                              dependencies = [PV3D('Hlt2')],
-                              CombinationCut = cc[n], MotherCut = mc[n], **kwargs)
+        Hlt2Combiner.__init__(self, name, decays[n], inputs, shared = True, dependencies = [PV3D('Hlt2')], CombinationCut = cc[n], MotherCut = mc[n], **kwargs)
