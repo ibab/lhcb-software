@@ -3,6 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+- Changes to references following changes in the FT digitisation.
+
 - Changes to references to follow changes in underlying packages
   . Minor differences arising from changed random number sequences after
     move to VDT in OT and Velo geometry
