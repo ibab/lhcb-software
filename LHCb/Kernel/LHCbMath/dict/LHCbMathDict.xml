@@ -203,6 +203,7 @@
   <function name = "Gaudi::Math::alpha_N"         />
   <function name = "Gaudi::Math::alpha_prime_N"   />
   <function name = "Gaudi::Math::beta_N"          />
+  <function name = "Gaudi::Math::kummer"          />  
   <function name = "Gaudi::Math::binomEff"        />
   <function name = "Gaudi::Math::binomEff2"       />
   <function name = "Gaudi::Math::wilsonEff"       />

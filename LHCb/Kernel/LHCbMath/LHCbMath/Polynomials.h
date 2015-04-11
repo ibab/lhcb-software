@@ -446,6 +446,13 @@ namespace Gaudi
       /// simple  manipulations with polynoms: scale it! 
       PolySum& operator /= ( const double a ) ;     // scale it! 
       // ======================================================================
+    protected:
+      // ======================================================================
+      /// copy assignement  
+      PolySum& operator=( const PolySum&  right ) ;
+      /// move assignement 
+      PolySum& operator=(       PolySum&& right ) ;
+      // ======================================================================
     protected :
       // ======================================================================
       /// parameters 

@@ -208,6 +208,13 @@ namespace Gaudi
       /// get the underlying Bernstein polynomial  (self here)
       const Gaudi::Math::Bernstein& bernstein () const { return *this ; }
       // ======================================================================      
+    public:
+      // ======================================================================
+      /// copy assignement  
+      Bernstein& operator=( const Bernstein&  right ) ;
+      /// move assignement 
+      Bernstein& operator=(       Bernstein&& right ) ;
+      // ======================================================================
     private:
       // ======================================================================
       /// the left edge of interval
@@ -392,6 +399,13 @@ namespace Gaudi
       /// get the derivative 
       Bernstein derivative          () const 
       { return m_bernstein.derivative          () ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// copy assignement 
+      Positive& operator=( const Positive&  right ) ;
+      /// move assignement 
+      Positive& operator=(       Positive&& right ) ;
       // ======================================================================
     protected:
       // ======================================================================

@@ -109,7 +109,18 @@ namespace Gaudi
      *  @date 2015-03-27
      */
     GAUDI_API double beta_N ( const unsigned short n , const double x ) ;
-
+    // ========================================================================
+    /** confluent hypergeometrical function  1F1 aka Kummer's function
+     *  \f$ f(a,b,x) = \sum_i  \frac{(a,i)}{((b,i)}\frac{x^i}{i!}\$f 
+     *  @param a INPUT a-parameter 
+     *  @param b INPUT b-argument  (b>0)
+     *  @param x argument
+     *  @retutrn value of Kummer function
+     */
+    GAUDI_API double kummer 
+    ( const unsigned short a ,
+      const unsigned short b , 
+      const double         x ) ;
     // ========================================================================
     // summation algorithms 
     // ========================================================================

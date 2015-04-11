@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-04-11 - Vanya Belyaev
+ - and one more fix in bernstein 
+
 ! 2015-04-10 - Vanya Belyaev
  - minor fix in bernstein 
 

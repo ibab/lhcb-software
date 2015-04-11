@@ -376,6 +376,26 @@ Gaudi::Math::PolySum::PolySum
   , m_pars ( std::move ( right.m_pars ) )  
 {}
 // ============================================================================
+// copy assignement  
+// ============================================================================
+Gaudi::Math::PolySum& 
+Gaudi::Math::PolySum::operator=( const Gaudi::Math::PolySum&  right ) 
+{
+  if ( &right == this ) { return *this ; }
+  m_pars = right.m_pars ;
+  return *this ;
+}
+// ============================================================================
+// move assignement 
+// ============================================================================
+Gaudi::Math::PolySum& 
+Gaudi::Math::PolySum::operator=(      Gaudi::Math::PolySum&& right ) 
+{
+  if ( &right == this ) { return *this ; }
+  m_pars = std::move ( right.m_pars ) ;
+  return *this ;
+}
+// ============================================================================
 // all zero ?
 // ============================================================================
 bool Gaudi::Math::PolySum::zero  () const { return s_vzero ( m_pars ) ; }
@@ -1427,50 +1447,6 @@ namespace
     return ( p1 - _integrate_ ( poly.derivative() , tau , xlow , xhigh ) )  / tau ;
   }
   // ==========================================================================
-}
-// ============================================================================
-/* get the integral between low and high for a product of Bernstein
- *  polynom and the exponential function with the exponent tau
- *  \f[  \int_{a}^{b} \mathcal{B} e^{\tau x } \mathrm{d}x \f] 
- *  @param poly  bernstein polynomial
- *  @param tau   slope parameter for exponential 
- *  @param low   low  integration range 
- *  @param high  high integration range 
- */
-// ============================================================================
-double Gaudi::Math::integrate 
-( const Gaudi::Math::Bernstein& poly ,
-  const double                  tau  ,
-  const double                  low  , 
-  const double                  high ) 
-{
-  //
-  if      ( s_zero  ( tau )         ) { return  poly.integral ( low  , high         ) ; } 
-  else if ( s_small ( tau )         ) { return  poly.integral ( low  , high         ) ; } 
-  else if ( s_equal ( low , high )  ) { return 0 ; }
-  else if ( poly.zero ()            ) { return 0 ; }
-  else if ( low  >  high            ) { return -integrate ( poly , tau , high , low ) ; }
-  else if ( high <  poly.xmin () || 
-            low  >  poly.xmax ()    ) { return  0 ; }
-  //
-  if ( s_equal ( low  , poly.xmin() ) && 
-       s_equal ( high , poly.xmax() ) ) { return integrate ( poly , tau ) ; }               
-  //
-  // check if special "small-tau" algorithm is needed here 
-  // 
-  const long double  xmin = poly.xmin () ;
-  const long double  xmax = poly.xmax () ;
-  const long double  _tau = ( xmax - xmin ) * tau / 2   ;
-  const unsigned int N    = poly.degree() ;
-  const long double  t1   = Gaudi::Math::pow ( std::abs (  tau ) , N + 1 ) ;
-  const long double  t2   = Gaudi::Math::pow ( std::abs ( _tau ) , N + 1 ) ;
-  if ( s_small ( t1 ) || s_small ( t2 ) )
-  { 
-    const Gaudi::Math::Polynomial p ( poly ) ;
-    return integrate ( p , tau , low , high ) ; 
-  }
-  //
-  return _integrate_ ( poly , tau , low , high );
 }
 // ============================================================================
 /* get the integral between low and high for a product of

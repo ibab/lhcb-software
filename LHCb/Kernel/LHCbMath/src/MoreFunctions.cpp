@@ -14,6 +14,14 @@
 #include "LHCbMath/LHCbMath.h"
 #include "LHCbMath/Power.h"
 // ============================================================================
+// GSL 
+// ============================================================================
+#include "gsl/gsl_sf_hyperg.h"
+// ============================================================================
+// Local
+// ============================================================================
+#include "GSL_sentry.h"
+// ============================================================================
 /** @file
  *  implementation file for function from file LHCbMath/MoreFunctions.h
  *  @see LHCbMath/MoreFunctions.h
@@ -557,7 +565,63 @@ double Gaudi::Math::continued_fraction
   //
   return std::numeric_limits<double>::quiet_NaN();
 }
-
+// ============================================================================
+/*  confluent hypergeometrical function  1F1 aka Kummer's function
+ *  \f$ f(a,b,x) = \sum_i  \frac{(a,i)}{((b,i)}\frac{x^i}{i!}\$f 
+ *  @param a INPUT a-parameter 
+ *  @param b INPUT b-argument  (b>0)
+ *  @param x argument
+ *  @retutrn value of Kummer function
+ */
+// ============================================================================
+double Gaudi::Math::kummer 
+( const unsigned short a ,
+  const unsigned short b , 
+  const double         x ) 
+{
+  //
+  // simple cases 
+  //
+  if      ( 0 == a || s_zero ( x ) ) { return 1 ; }
+  else if ( a == b ) 
+  {
+    const long double z = x ;
+    return std::abs ( x ) < 0.3 ? std::expm1 ( z ) + 1.0L : std::exp ( z ) ;
+  }
+  else if ( 1 == a && a < b        ) { return exp_rel_N  ( x , b - 1 ) ; }
+  else if ( a + 1 == b ) 
+  {
+    long double gs = gamma_star ( a , -x );
+    return gs * _factorial_d_ ( a ) ;
+  }
+  //
+  // use GSL: 
+  Gaudi::Math::GSL::GSL_Error_Handler sentry ;
+  //
+  gsl_sf_result result ;
+  const int ierror  = gsl_sf_hyperg_1F1_int_e ( a  , b , x, &result) ;
+  if ( ierror ) 
+  {
+    //
+    if      ( ierror == GSL_EDOM     ) // input domain error, e.g sqrt(-1)
+    { return std::numeric_limits<double>::quiet_NaN(); }
+    //
+    if ( ierror == GSL_ERANGE   ||    // output range error, e.g. exp(1e100)
+         ierror == GSL_EINVAL   ||    // invalid argument supplied by user
+         ierror == GSL_EUNDRFLW ||    // underflow
+         ierror == GSL_EOVRFLW  ||    // overflow
+         ierror == GSL_ELOSS    ||    // loss of accuracy
+         ierror == GSL_EROUND    )    // failed because of roundoff error
+    {}
+    else
+    {
+      gsl_error ( "Error from kummer function" ,
+                  __FILE__ , __LINE__ , ierror ) ;
+    } 
+  }
+  //
+  return result.val ;
+}
 // ============================================================================
 // The END 
 // ============================================================================
