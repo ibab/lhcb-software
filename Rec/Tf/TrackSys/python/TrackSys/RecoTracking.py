@@ -288,7 +288,7 @@ def RecoTracking(exclude=[]):
          ## copy the velo tracks to the "best" container (except in RDST case)
          if TrackSys().getProp( "OutputType" ).upper() != "RDST":
             copyVelo = TrackContainerCopy( "CopyVelo" )
-            copyVelo.inputLocation = "Rec/Track/PreparedVelo";
+            copyVelo.inputLocations = [ "Rec/Track/PreparedVelo" ];
             GaudiSequencer("TrackVeloFitSeq").Members += [ copyVelo ]
    else:
       # complete the list of track lists

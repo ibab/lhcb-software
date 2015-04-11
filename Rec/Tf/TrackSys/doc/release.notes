@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-04-11 - Michel De Cian
+ - Fix inputLocation(s) of another instance of TrackContainerCopy in RecoTracking.py
+
 ! 2015-04-10 - Michel De Cian
  - Fix bug with TrackStateInitTool in RecoTrackingRun2.py
 
