@@ -3,6 +3,9 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-4-11 - Sean Benson
+ - More populated protoparticles.
+
 ! 2015-3-12 - Sean Benson
  - Fix non-debug mode running.
 

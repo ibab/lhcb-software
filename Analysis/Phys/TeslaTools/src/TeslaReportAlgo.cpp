@@ -129,25 +129,25 @@ StatusCode TeslaReportAlgo::execute()
   
   // Set our output locations
   std::stringstream ss_PartLoc;
-  ss_PartLoc << m_OutputPref << "/Particles";
+  ss_PartLoc << m_OutputPref << m_inputName << "/Particles";
   //
   std::stringstream ss_ProtoLoc;
-  ss_ProtoLoc << m_OutputPref << "/Protos"; // NOT STORED BY ORIGINAL SELREPORTS
+  ss_ProtoLoc << m_OutputPref << m_inputName << "/Protos"; // NOT STORED BY ORIGINAL SELREPORTS
   //
   std::stringstream ss_VertLoc;
-  ss_VertLoc << m_OutputPref << "/Vertices"; // NOT STORED BY ORIGINAL SELREPORTS
+  ss_VertLoc << m_OutputPref << m_inputName << "/Vertices"; // NOT STORED BY ORIGINAL SELREPORTS
   //
   std::stringstream ss_TrackLoc;
-  ss_TrackLoc << m_OutputPref << "/Tracks";
+  ss_TrackLoc << m_OutputPref << m_inputName << "/Tracks";
   //
   std::stringstream ss_RPIDLoc;
-  ss_RPIDLoc << m_OutputPref << "/RichPIDs"; // NOT STORED BY ORIGINAL SELREPORTS
+  ss_RPIDLoc << m_OutputPref << m_inputName << "/RichPIDs"; // NOT STORED BY ORIGINAL SELREPORTS
   //
   std::stringstream ss_MPIDLoc;
-  ss_MPIDLoc << m_OutputPref << "/MuonPIDs"; // NOT STORED BY ORIGINAL SELREPORTS
+  ss_MPIDLoc << m_OutputPref << m_inputName << "/MuonPIDs"; // NOT STORED BY ORIGINAL SELREPORTS
   //
   std::stringstream ss_P2PVLoc;
-  ss_P2PVLoc << m_OutputPref << "/Particle2VertexRelations";
+  ss_P2PVLoc << m_OutputPref << m_inputName << "/Particle2VertexRelations";
   //
   LHCb::Particle::Container* cont_Part = new LHCb::Particle::Container() ;
   put( cont_Part , ss_PartLoc.str().c_str() );
@@ -193,7 +193,7 @@ StatusCode TeslaReportAlgo::execute()
       }
       m_conv->RecVertexObjectFromSummary(&PV_info,refit_PV,true);
       std::stringstream ss_PVrefit;
-      ss_PVrefit << m_OutputPref << "/_ReFitPVs";
+      ss_PVrefit << m_OutputPref << m_inputName << "/_ReFitPVs";
       m_PVLoc=ss_PVrefit.str().c_str();
     }
   }
@@ -522,7 +522,6 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
             m_conv->TrackObjectFromSummary(&Track_info,track,turbo);
             if ( msgLevel(MSG::DEBUG) ) debug() << "Track #chi^{2}/DoF = " << track->chi2PerDoF() << endmsg;
             track->setLhcbIDs( ObjBasic->lhcbIDs() );
-            proto->setTrack( track );
             
             if ( msgLevel(MSG::DEBUG) ) debug() << "Track details added" << endmsg; 
             break;
@@ -557,22 +556,13 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
               debug() << "Available information (rich)" << endmsg;
               for(std::vector<std::string>::iterator it = vec_keys_rich.begin(); it!=vec_keys_rich.end(); it++) debug() << *it << " = " << Rich_info[(*it)] << endmsg;
             }
-            m_conv->RichPIDObjectFromSummary(&Rich_info,rich,turbo);
             // 
             // LHCb RichPID  members:
             // unsigned int   m_pidResultCode
             // std::vector< float >   m_particleLLValues
             // SmartRef< LHCb::Track >  m_track 
             //
-            proto->setRichPID( rich );
-            rich->setTrack( track );
-            // If proto combined DLLs not set, set them to the RICH ones
-            if(proto->info( LHCb::ProtoParticle::CombDLLe,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::CombDLLe,rich->particleDeltaLL(Rich::ParticleIDType::Electron));
-            if(proto->info( LHCb::ProtoParticle::CombDLLmu,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::CombDLLmu,rich->particleDeltaLL(Rich::ParticleIDType::Muon));
-            if(proto->info( LHCb::ProtoParticle::CombDLLpi,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::CombDLLpi,rich->particleDeltaLL(Rich::ParticleIDType::Pion));
-            if(proto->info( LHCb::ProtoParticle::CombDLLk,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::CombDLLk,rich->particleDeltaLL(Rich::ParticleIDType::Kaon));
-            if(proto->info( LHCb::ProtoParticle::CombDLLp,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::CombDLLp,rich->particleDeltaLL(Rich::ParticleIDType::Proton));
-            //
+            m_conv->RichPIDObjectFromSummary(&Rich_info,rich,turbo);
             if ( msgLevel(MSG::DEBUG) ) debug() << "RichPID details added" << endmsg; 
             break;
           }
@@ -592,20 +582,53 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
             // double   m_MuonLLBg
             // int  m_NShared
             // unsigned int   m_Status
-            // SmartRef< LHCb::Track >  m_IDTrack (NOT INCLUDED)
+            // SmartRef< LHCb::Track >  
             // SmartRef< LHCb::Track >  m_muonTrack (NOT INCLUDED)
             m_conv->MuonPIDObjectFromSummary(&Muon_info,muon,turbo);
             debug() << "Muon LLMu = " << muon->MuonLLMu() << endmsg;
-            muon->setIDTrack( track );
-            proto->setMuonPID( muon );
             debug() << "MuonPID details added" << endmsg; 
             break;
           }
       }
-      // tie our pieces together
-      if ( msgLevel(MSG::DEBUG) ) debug() << "Starting to tie pieces together" << endmsg;
-      part->setProto( proto );
-      if ( msgLevel(MSG::DEBUG) ) debug() << "Pieces tied together" << endmsg;
+    }
+    // tie our pieces together and set cross class information
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Starting to tie pieces together" << endmsg;
+    part->setProto( proto );
+    proto->setMuonPID( muon );
+    proto->setRichPID( rich );
+    proto->setTrack( track );
+    muon->setIDTrack( track );
+    rich->setTrack( track );
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Pieces tied together" << endmsg;
+    // If proto combined DLLs not set, set them to the RICH ones
+    if(proto->info( LHCb::ProtoParticle::CombDLLe,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::CombDLLe,rich->particleDeltaLL(Rich::ParticleIDType::Electron));
+    if(proto->info( LHCb::ProtoParticle::CombDLLmu,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::CombDLLmu,rich->particleDeltaLL(Rich::ParticleIDType::Muon));
+    if(proto->info( LHCb::ProtoParticle::CombDLLpi,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::CombDLLpi,rich->particleDeltaLL(Rich::ParticleIDType::Pion));
+    if(proto->info( LHCb::ProtoParticle::CombDLLk,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::CombDLLk,rich->particleDeltaLL(Rich::ParticleIDType::Kaon));
+    if(proto->info( LHCb::ProtoParticle::CombDLLp,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::CombDLLp,rich->particleDeltaLL(Rich::ParticleIDType::Proton));
+    // Set track quantities in the protoparticle
+    if(proto->info( LHCb::ProtoParticle::TrackChi2PerDof,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::TrackChi2PerDof,track->chi2PerDoF());
+    if(proto->info( LHCb::ProtoParticle::TrackNumDof,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::TrackNumDof,track->nDoF());
+    if(proto->info( LHCb::ProtoParticle::TrackType,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::TrackType,track->type());
+    if(proto->info( LHCb::ProtoParticle::TrackHistory,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::TrackHistory,track->history());
+    if(proto->info( LHCb::ProtoParticle::TrackP,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::TrackP,track->p());
+    if(proto->info( LHCb::ProtoParticle::TrackPt,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::TrackPt,track->pt());
+    // Set rich quantities in the protoparticle
+    if(proto->info( LHCb::ProtoParticle::RichDLLe,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::RichDLLe,rich->particleDeltaLL(Rich::ParticleIDType::Electron));
+    if(proto->info( LHCb::ProtoParticle::RichDLLmu,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::RichDLLmu,rich->particleDeltaLL(Rich::ParticleIDType::Muon));
+    if(proto->info( LHCb::ProtoParticle::RichDLLpi,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::RichDLLpi,rich->particleDeltaLL(Rich::ParticleIDType::Pion));
+    if(proto->info( LHCb::ProtoParticle::RichDLLk,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::RichDLLk,rich->particleDeltaLL(Rich::ParticleIDType::Kaon));
+    if(proto->info( LHCb::ProtoParticle::RichDLLp,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::RichDLLp,rich->particleDeltaLL(Rich::ParticleIDType::Proton));
+    if(proto->info( LHCb::ProtoParticle::RichDLLbt,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::RichDLLbt,rich->particleDeltaLL(Rich::ParticleIDType::BelowThreshold));
+    if(proto->info( LHCb::ProtoParticle::RichPIDStatus,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::RichPIDStatus,rich->pidResultCode());
+    // Set muon quantities in the protoparticle
+    if(proto->info( LHCb::ProtoParticle::MuonMuLL,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::MuonMuLL,muon->MuonLLMu());
+    if(proto->info( LHCb::ProtoParticle::MuonBkgLL,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::MuonBkgLL,muon->MuonLLBg());
+    if(proto->info( LHCb::ProtoParticle::MuonNShared,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::MuonNShared,muon->nShared());
+    if(proto->info( LHCb::ProtoParticle::MuonPIDStatus,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::MuonPIDStatus,muon->Status());
+    if(proto->info( LHCb::ProtoParticle::InAccMuon,-1000)==-1000) {
+      if(muon->InAcceptance()==true) proto->addInfo(LHCb::ProtoParticle::InAccMuon,1.0);
+      else proto->addInfo(LHCb::ProtoParticle::InAccMuon,0.0);
     }
   }
 }
