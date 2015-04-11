@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2015-04-11 - Chris Jones
+ - Adapt to small change in RichRecSysConf trackTypeIsActive method.
+
 ! 2015-03-13 - Chris Jones
  - Add package dependency on RichRecSys.
 

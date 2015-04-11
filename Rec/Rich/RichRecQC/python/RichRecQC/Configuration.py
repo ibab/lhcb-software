@@ -371,7 +371,7 @@ class RichRecQCConf(RichConfigurableUser):
 
     ## Is the given track type active
     def trackTypeIsActive(self,type):
-        return self.recoConf().trackTypeIsActive( self.trackSelName(type) )
+        return self.recoConf().trackTypeIsActive(type)
 
     ## Apply the configuration to the given sequence
     def applyConf(self):

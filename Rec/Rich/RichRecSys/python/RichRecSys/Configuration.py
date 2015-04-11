@@ -272,10 +272,11 @@ class RichRecSysBaseConf(RichConfigurableUser):
                 cont = self.getConfContext(tkGroup)
         return cont
 
-    ## Returns true of the given track type is active
-    def trackTypeIsActive(self,type) :
-        return ( self.getContextForTrackType(type) != "" and
-                 type in self.trackConfig().getProp("TrackCuts").keys() )
+    ## Returns true if the given track group is active
+    def trackTypeIsActive(self,types) :
+        groupName = self.trackGroupName(types)
+        return ( self.getContextForTrackType(groupName) != "" and
+                 self.trackGroupSelected(types) )
 
     ## Are we running with split track groupings ?
     def usingTrackGroups(self) :

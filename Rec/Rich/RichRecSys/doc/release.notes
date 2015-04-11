@@ -4,6 +4,11 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2015-04-11 - Chris Jones
+ - Small change in the RichRecSysConf trackTypeIsActive method to fix a 
+   issue where the Long Track monitors in RichRecQC cwent missing after
+   the last commit.
+
 ! 2015-04-10 - Chris Jones
  - Avoid creating reconstruction sequences for track groups that would fail
    the tracking cuts (as their types are not included).
