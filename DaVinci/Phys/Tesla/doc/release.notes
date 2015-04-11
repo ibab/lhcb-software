@@ -4,6 +4,9 @@ Package Coordinator : Sean Benson
 Purpose             : Turbo Stream Analysis
 !-----------------------------------------------------------------------------
 
+! 2015-4-11 - Sean Benson
+ - Add relations table generation for XDSTs and LDSTs.
+
 ! 2015-3-31 - Sean Benson
  - Fix CMake for DDDB tags.
  - Add previously private lumi tests.

@@ -1,25 +1,22 @@
-"""
-High-level configuration tool for running L0Emulation
-"""
-
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import LHCbApp
-#, L0Conf, L0DUFromRawAlg
 import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
 GaudiSequencer, DstConf, L0Conf, CondDB, GlobalRecoConf, RawEventJuggler, DecodeRawEvent,
 RawEventFormatConf, LumiAlgsConf, InputCopyStream, RecombineRawEvent)
+from Configurables import TrackAssociator, ChargedPP2MC
 from Configurables import PackParticlesAndVertices
 
 class Tesla(LHCbConfigurableUser):
-    __used_configurables__ = [ LHCbApp, LumiAlgsConf, RawEventJuggler, DecodeRawEvent, RawEventFormatConf, DstConf, RecombineRawEvent, PackParticlesAndVertices]
+    __used_configurables__ = [ LHCbApp, LumiAlgsConf, RawEventJuggler, DecodeRawEvent, RawEventFormatConf, DstConf, RecombineRawEvent, PackParticlesAndVertices, TrackAssociator, ChargedPP2MC ]
 
     __slots__ = {
             "EvtMax"		: -1    	# Maximum number of events to process
           , "SkipEvents"	: 0		# Skip to event
           , "Simulation"	: True 		# True implies use SimCond
           , "DataType"		: '2012' 	# Data type, can be [ 'DC06','2008' etc...]
+          , "InputType"		: 'DST' 	# Input type, can be [ 'DST','LDST' etc...]
           , "DDDBtag" 		: 'default' 	# default as set in DDDBConf for DataType
           , "CondDBtag" 	: 'default' 	# default as set in DDDBConf for DataType
           , 'Persistency' 	: '' 		# None, Root or Pool?
@@ -37,6 +34,7 @@ class Tesla(LHCbConfigurableUser):
             , "SkipEvents"	: "Events to skip, default     0"
             , "Simulation"	: "True implies use SimCond"
             , "DataType"	: "Data type, can be [ 'DC06','2008' ...]"
+            , "InputType"	: "Input type, can be [ 'DST','LDST' ...]"
             , "DDDBtag" 	: "Databse tag, default as set in DDDBConf for DataType"
             , "CondDBtag" 	: "Databse tag, default as set in DDDBConf for DataType"
             , 'Persistency' 	: "Root or Pool?"
@@ -68,6 +66,28 @@ class Tesla(LHCbConfigurableUser):
             dod = DataOnDemandSvc()
         if dod not in ApplicationMgr().ExtSvc :
             ApplicationMgr().ExtSvc.append( dod ) 
+    
+    def _configureTruth(self,line) :
+        protocont = self.base + line + "/Protos"
+        trackcont = self.base + line + "/Tracks"
+        relloc = self.base + line + "/Protos"
+        assoctr = TrackAssociator(line+"TurboAssocTr")
+        assoctr.OutputLevel = self.getProp('OutputLevel')
+        assoctr.TracksInContainer = trackcont
+        assocpp=ChargedPP2MC(line+"TurboProtoAssocPP")
+        assocpp.OutputLevel = self.getProp('OutputLevel')
+        assocpp.TrackLocations = [ trackcont ]
+        assocpp.InputData = [ protocont ]
+        assocpp.OutputTable = relloc
+        # Add it to a selection sequence
+        seq = GaudiSequencer(line+'TurboSeqP2MC')
+        seq.Members += [assoctr,assocpp]
+        return seq,relloc
+
+    def _unpackMC(self):
+        DataOnDemandSvc().NodeMap['/Event/MC']   = 'DataObject'
+        DataOnDemandSvc().AlgMap["MC/Particles"] = "UnpackMCParticle"
+        DataOnDemandSvc().AlgMap["MC/Vertices"]  = "UnpackMCVertex"
 
     def _configureForOnline(self):
         #
@@ -136,6 +156,7 @@ class Tesla(LHCbConfigurableUser):
         iox=IOExtension(persistency)
         
         writer = InputCopyStream(self.writerName)
+        writer.OutputLevel = self.getProp('OutputLevel')
 
         seq=GaudiSequencer('TeslaReportAlgoSeq')
         writer.RequireAlgs += ['TeslaReportAlgoSeq']
@@ -153,31 +174,35 @@ class Tesla(LHCbConfigurableUser):
             # IF NOT PACKING NEED TO SET THE LOCATIONS IN THE REPORT ALGORITHM
             if not self.getProp('Pack'):
                 writer.OptItemList+=[ self.base + l + "/Particles#99" 
-                        , self.base + l + "/Protos#99"
                         , self.base + l + "/Vertices#99"
+                        , self.base + l + "/_ReFitPVs#99"
+                        , self.base + l + "/Particle2VertexRelations#99"
+                        , self.base + l + "/Protos#99"
                         , self.base + l + "/Tracks#99"
                         , self.base + l + "/RichPIDs#99"
                         , self.base + l + "/MuonPIDs#99"
-                        , self.base + "Primary#99"
-                        , self.base + l + "/_ReFitPVs#99"
-                        , self.base + l + "/Particle2VertexRelations#99"
                         ]
+        
+        inputType = self.getProp('InputType')
+        if (inputType=='XDST') or (inputType=='LDST'):
+            for l in lines:
+                truthSeq,locTruth = self._configureTruth(l)
+                seq.Members += [ truthSeq ]
+                if not self.getProp('Pack'):
+                    writer.OptItemList+=[
+                            "Relations/" + locTruth + '/PP2MC' + '#99'
+                            ]
+        
+        # Add shared places to writer
+        if not self.getProp('Pack'):
+            writer.OptItemList+=[
+                    self.base + "Primary#99"
+                    ]
 
         if self.getProp('Pack'):
-            for l in lines:
-                # Additional packer configuration for RichPIDs
-                # Temporary solution
-                from Configurables import DataPacking__Pack_LHCb__RichPIDPacker_
-                p = DataPacking__Pack_LHCb__RichPIDPacker_(name = "TurboRichPIDPacker"+l)
-                p.OutputName = "/Event/"+self.base+l+"/pRec/Rich/CustomPIDs"
-                p.InputName = "/Event/"+self.base+l+"/RichPIDs"
-                p.OutputLevel = self.getProp('OutputLevel')
-                writer.OptItemList+=[self.base+l+"/pRec/Rich/CustomPIDs"]
-                seq.Members += [p]
-
             packer = PackParticlesAndVertices( name = "TurboPacker",
                     InputStream        = "/Event"+"/"+self.base.rstrip('/'),
-                    DeleteInput        = True,
+                    DeleteInput        = False,
                     EnableCheck        = False,
                     AlwaysCreateOutput = True)
             seq.Members +=[packer]
@@ -189,9 +214,11 @@ class Tesla(LHCbConfigurableUser):
                     ,self.base+"pPhys/Relations#99"
                     ,self.base+"pRec/Track/Custom#99"
                     ,self.base+"pRec/Muon/CustomPIDs#99"
+                    ,self.base+"pRec/Rich/CustomPIDs#99"
                     ,self.base+"pRec/ProtoP/Custom#99"
                     ]
             packer.OutputLevel = self.getProp('OutputLevel')
+        
         
         self.teslaSeq.Members += [ seq ]
         IOHelper(persistency,persistency).outStream(fname,writer,writeFSR=self.getProp('WriteFSR'))
@@ -199,7 +226,7 @@ class Tesla(LHCbConfigurableUser):
     def _configureReportAlg(self,line):
         from Configurables import TeslaReportAlgo
         trig1 = TeslaReportAlgo("TeslaReportAlgo"+line)
-        trig1.OutputPrefix=self.base+line
+        trig1.OutputPrefix=self.base
         trig1.PV=self.getProp('PV')
         trig1.PVLoc=self.base+"Primary"
         trig1.TriggerLine=line
@@ -222,6 +249,8 @@ class Tesla(LHCbConfigurableUser):
         else:
             DecodeRawEvent().DataOnDemand=True
             RecombineRawEvent()
+            if self.getProp('Simulation')==True:
+                self._unpackMC()
         #
         self._configureOutput()
         #
