@@ -4,6 +4,9 @@
 ! Purpose: Tests reading and writing of legacy datasets
 !-------------------------------------------------------------------------------
 
+! 2015-04-12 - Marco Cattaneo
+ - Follow PackParticlesAndVertices packing changes
+
 !========================= IOExample v4r14 2014-09-08 =========================
 ! 2014-09-06 - Marco Cattaneo
  - Follow latest EventPacker changes
