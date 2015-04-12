@@ -5,7 +5,7 @@ import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
 GaudiSequencer, DstConf, L0Conf, CondDB, GlobalRecoConf, RawEventJuggler, DecodeRawEvent,
 RawEventFormatConf, LumiAlgsConf, InputCopyStream, RecombineRawEvent)
-from Configurables import TrackAssociator, ChargedPP2MC
+from Configurables import TrackAssociator, ChargedPP2MC, P2MCPFromProtoP
 from Configurables import PackParticlesAndVertices
 
 class Tesla(LHCbConfigurableUser):
@@ -68,9 +68,10 @@ class Tesla(LHCbConfigurableUser):
             ApplicationMgr().ExtSvc.append( dod ) 
     
     def _configureTruth(self,line) :
+        tesROOT="/Event/"+self.base
         protocont = self.base + line + "/Protos"
         trackcont = self.base + line + "/Tracks"
-        relloc = self.base + line + "/Protos"
+        relloc = line + "/PP2MC"
         assoctr = TrackAssociator(line+"TurboAssocTr")
         assoctr.OutputLevel = self.getProp('OutputLevel')
         assoctr.TracksInContainer = trackcont
@@ -79,10 +80,12 @@ class Tesla(LHCbConfigurableUser):
         assocpp.TrackLocations = [ trackcont ]
         assocpp.InputData = [ protocont ]
         assocpp.OutputTable = relloc
+        assocpp.RootInTES=tesROOT
+        outputPPLoc = tesROOT+'Relations/Turbo/'+relloc
         # Add it to a selection sequence
         seq = GaudiSequencer(line+'TurboSeqP2MC')
         seq.Members += [assoctr,assocpp]
-        return seq,relloc
+        return seq,outputPPLoc
 
     def _unpackMC(self):
         DataOnDemandSvc().NodeMap['/Event/MC']   = 'DataObject'
@@ -190,7 +193,7 @@ class Tesla(LHCbConfigurableUser):
                 seq.Members += [ truthSeq ]
                 if not self.getProp('Pack'):
                     writer.OptItemList+=[
-                            "Relations/" + locTruth + '/PP2MC' + '#99'
+                            locTruth + '#99'
                             ]
         
         # Add shared places to writer
