@@ -2,6 +2,10 @@
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
+            
+! 2015-04-12 - Marco Cattaneo
+ - Add RDST to DstConf. Resurrect RDST, same as DST without RawEvent, only
+   for real data Brunel output as alternative to FULL.DST
 
 !========================= GaudiConf v19r7 2015-02-23 =========================
 ! 2015-02-12 - Heinrich Schindler

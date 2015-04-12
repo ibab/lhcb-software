@@ -39,7 +39,7 @@ class DstConf(LHCbConfigurableUser):
          }
 
     _propertyDocDct = {
-        'DstType'         : """ Type of dst, can be ['DST','XDST','MDST', 'LDST' ] """
+        'DstType'         : """ Type of dst, can be ['DST', 'RDST', 'XDST','MDST', 'LDST' ] """
        ,'SimType'         : """ Type of simulation output, can be ['None','Minimal','Full'] """
        ,'EnableUnpack'    : """ List of DST container types to be set up for on demand unpacking. See KnownUnpackingTypes """
        ,'EnablePackingChecks' : """ Flag to turn on the running of various unpacking checks, to test the quality of the data packing """
@@ -62,7 +62,7 @@ class DstConf(LHCbConfigurableUser):
         ]
 
     KnownSimTypes       = ['None','Minimal','Full']
-    KnownDstTypes       = ['NONE','DST','XDST','SDST','MDST', 'LDST']
+    KnownDstTypes       = ['NONE','DST','RDST', 'XDST','SDST','MDST', 'LDST']
     KnownPackTypes      = ['NONE','TES','MDF']
     KnownUnpackingTypes = ["Reconstruction","Stripping","Tracking"]
 
@@ -136,17 +136,17 @@ class DstConf(LHCbConfigurableUser):
 
         # Additional objects not packable as MDF
         if pType != "MDF":
-            #get RawEventLocations from the new database
-            #copied code from the RawEventJuggler
-            RawEventFormatConf().loadIfRequired()
-            from RawEventCompat.Configuration import _replaceWrap, _getDict, ReverseDict
-            locs,rec=_getDict()
-            output_locations=ReverseDict(self.getProp("SplitRawEventOutput"),locs,rec)
-            for loc in output_locations:
-                if not loc.startswith("/Event/"):
-                    loc=("/Event/"+loc).replace("//","/")
-                writer.ItemList += [ _replaceWrap(loc)+"#1" ]
-            
+            #Add the RawEvent, except for RDST. get RawEventLocations from the RawEventFormat database
+            if dType != "RDST":
+                #copied code from the RawEventJuggler
+                RawEventFormatConf().loadIfRequired()
+                from RawEventCompat.Configuration import _replaceWrap, _getDict, ReverseDict
+                locs,rec=_getDict()
+                output_locations=ReverseDict(self.getProp("SplitRawEventOutput"),locs,rec)
+                for loc in output_locations:
+                    if not loc.startswith("/Event/"):
+                        loc=("/Event/"+loc).replace("//","/")
+                    writer.ItemList += [ _replaceWrap(loc)+"#1" ]
             
             # Add the simulation objects if simulation DST
             if sType != "None":
@@ -536,13 +536,16 @@ class DstConf(LHCbConfigurableUser):
         log.info(self)
 
         sType = self.getProp( "SimType" ).capitalize()
+        dType = self.getProp( "DstType" ).upper()
+        
         if sType not in self.KnownSimTypes:
             raise TypeError( "Unknown SimType '%s'"%sType )
         if sType != "None":
+            if dType == 'RDST':
+                raise TypeError( "Cannot have RDST for simulation!" )
             DigiConf().setProp("EnableUnpack",True )
             SimConf().setProp("EnableUnpack",DigiConf().getProp("EnableUnpack"))
 
-        dType = self.getProp( "DstType" ).upper()
         if dType not in self.KnownDstTypes:
             raise TypeError( "Unknown DstType '%s'"%dType )
         if dType == "SDST":
