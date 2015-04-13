@@ -2,6 +2,10 @@
 Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
+
+! 2015-04-13 - Fred Blanc
+ - Added IT Box survey alignment for 2015: surveyxml/IT/ITBoxSurvey20150413.xml
+
 ! 2015-04-01 - Stefania Vecchi
 
 !========================= TAlignment v6r3 2015-04-01 =========================
