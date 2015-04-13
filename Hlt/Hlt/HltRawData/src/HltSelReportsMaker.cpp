@@ -1024,19 +1024,17 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle& o
     } 
     else {
       const Track* track=pp->track();
+      hos->addToSubstructure( store_( *pp ) );  
+      debug() << "requesting proto-particle store" << endmsg;
       if( track ){
         // charged track particle
         hos->addToSubstructure( store_( *track ) ); 
         debug() << "requesting track store" << endmsg;
-        if(m_Turbo) {
-          hos->addToSubstructure( store_( *pp ) );  
-          debug() << "requesting proto-particle store" << endmsg;
-        }
-        if(m_Turbo && pp->richPID() ) {
+        if( m_Turbo && pp->richPID() ) {
           hos->addToSubstructure( store_( *pp->richPID() ) );
           debug() << "requesting RichPID store" << endmsg;
         }
-        if(m_Turbo && pp->muonPID() ) {
+        if( m_Turbo && pp->muonPID() ) {
           hos->addToSubstructure( store_( *pp->muonPID() ) );
           debug() << "requesting MuonPID store" << endmsg;
         }
