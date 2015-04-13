@@ -7,6 +7,11 @@
 #include "DecayTreeTupleBase/TupleToolBase.h"
 // Interface
 #include "Kernel/IParticleTupleTool.h"
+#include "CaloUtils/ICaloElectron.h"
+#include "Relations/IRelationWeighted2D.h"
+#include "CaloInterfaces/ICaloRelationsGetter.h"
+#include "Event/Track.h"
+#include "CaloDAQ/ICaloDigitFilterTool.h"
 
 #include "CaloInterfaces/ICaloHypoEstimator.h"
 
@@ -24,10 +29,15 @@ public:
   virtual StatusCode fill(const LHCb::Particle*, const LHCb::Particle*
                           ,  const std::string& ,Tuples::Tuple& );
 private:
+  double incidence(const LHCb::CaloHypo* hypo,bool straight=false) const;
   std::vector<std::string> m_dataList;
   bool useData( int id , int mask = 0x3);
   ICaloHypoEstimator* m_estimator;
   bool m_brem;
   bool m_charged;
+  bool m_daugh;
+  ICaloRelationsGetter*    m_tables;
+  ICaloElectron* m_caloElectron;
+  ICaloDigitFilterTool* m_pileup;
 };
 #endif // _TUPLETOOLECALOHYPO_H
