@@ -9,6 +9,7 @@ from Hc2HHHHLines import CharmHadHc2HHHHLines
 from XSecLines import CharmHadXSecLines 
 from D2HHHPi0Lines import CharmHadD2HHHPi0Lines
 from D2HHLines import CharmHadD2HHLines
+from D2HHKsLines import CharmHadD2HHKshLines
 from Dst2PiD02HHXBDTLines import CharmHadDst2PiD02HHXBDTLines
 from D2EtaHLines import CharmHadD2EtaHLines
 
@@ -26,6 +27,7 @@ Hc2HHHHLines = CharmHadHc2HHHHLines()
 XSecLines = CharmHadXSecLines()
 D2HHHPi0Lines = CharmHadD2HHHPi0Lines()
 D2HHLines = CharmHadD2HHLines()
+D2HHKsLines = CharmHadD2HHKshLines()
 Dst2PiD02HHXBDTLines = CharmHadDst2PiD02HHXBDTLines()
 D2EtaHLines = CharmHadD2EtaHLines()
 
@@ -62,6 +64,33 @@ theseslots = {   'Prescale' : {},
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                               },
+                 # long Kshorts, at least for  D0 --> HHKs
+                 'SharedKsLL' : {
+                                 'DecayTime_MIN'           : 0.5 * picosecond,
+                                 'VZ_MIN'                  : -100. * mm,
+                                 'VZ_MAX'                  : 500. * mm,
+                                             },
+                 # downstream Kshorts, at least for D0 --> HHKs
+                 'SharedKsDD' : {
+                                 'DecayTime_MIN'           : 0.5 * picosecond,
+                                 'VZ_MIN'                  : 300. * mm,
+                                 'VZ_MAX'                  : 2275. * mm,
+                                             },
+                 # generic D0 --> HHKs cuts
+                 'D02HHKsh' : {
+                             'TisTosSpec'               : "Hlt1.*MVA.*Decision%TOS",
+##                           'TisTosSpec'               : "Hlt1TwoTrackMVADecision%TOS",
+                             'AM_MIN'                   :  1740. * MeV,
+                             'AM_MAX'                   :  1990. * MeV,
+                             'ASUMPT_MIN'               :  1500 * MeV,
+                             'D_PT_MIN'                 :  1800 * MeV,
+                             'D_BPVDIRA_MIN'            :  0.9994,
+                             'D_BPVVDCHI2_MIN'          :  20.0,
+                             'D_VCHI2PDOF_MAX'          :  20.0,
+                             'D_BPVLTIME_MIN'           :  0.1 * picosecond,
+                             'HHMaxDOCA'                :  0.200 * mm,
+                             'HHMass_MAX'               :  1500. * MeV,
+                                          },
                  # Particles for the 'Prompt' CF lifetime unbiased lines for the 
                  # lifetime measurements
                  'SharedPromptChild_K' : {
@@ -134,6 +163,7 @@ theseslots.update(Hc2HHHHLines.localcuts())
 theseslots.update(XSecLines.localcuts())
 theseslots.update(D2HHHPi0Lines.localcuts())
 theseslots.update(D2HHLines.localcuts())
+theseslots.update(D2HHKsLines.localcuts())
 theseslots.update(Dst2PiD02HHXBDTLines.slots())
 theseslots.update(D2EtaHLines.localcuts())
 
@@ -155,6 +185,7 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
             self.__lines__.update(XSecLines.locallines())
             self.__lines__.update(D2HHHPi0Lines.locallines())
             self.__lines__.update(D2HHLines.locallines())
+            self.__lines__.update(D2HHKsLines.locallines())
             self.__lines__.update(Dst2PiD02HHXBDTLines.stages())
             self.__lines__.update(D2EtaHLines.locallines())
             
