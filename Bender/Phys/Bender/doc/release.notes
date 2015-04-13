@@ -24,6 +24,16 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2015-04-13 - Vanya Belyaev
+ - DataUtils.py
+   1. extend a bit treatment of raw/mdf files, in particular "mdf:"  prefix is added 
+   2. simplify usage of file from local EOS area (avodi confusion with GRID EOS area) 
+
+  now simple names are accepted, e.g.:
+
+     dst-explorer /eos/lhcb/user/j/johndan/Analysis/CEP/Trigger2015/150526_0000000001.raw
+     dst-explorer  eos/lhcb/user/j/johndan/Analysis/CEP/Trigger2015/150526_0000000001.raw
+     dst-explorer     /lhcb/user/j/johndan/Analysis/CEP/Trigger2015/150526_0000000001.raw
 
 ! ==================== Phys/Bender v25r5p1 2015-03-20 =========================
 ! ==================== Phys/Bender v25r5   2015-03-18 =========================

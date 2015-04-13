@@ -171,8 +171,10 @@ def inEOS ( fname            ,
     
     """
     # remove full
-    if 0 == fname.find ( prefix ) : fname = fname [ len(prefix) : ]
+    if 0 == fname.find (          prefix ) : fname = fname [   len(prefix) : ]
+    if 0 == fname.find ( 'mdf:' + prefix ) : fname = fname [ 4+len(prefix) : ]
     #
+    fname0 = str(fname)
     # check short prefix
     if   0 == fname.find ( '/lhcb/user/' ) :
         fname = _eos_u + fname
@@ -181,7 +183,7 @@ def inEOS ( fname            ,
     elif 0 == fname.find (  'eos' ) : fname = '/'  + fname 
     elif 0 != fname.find ( '/eos' ) :
         fname = '/eos' + fname 
-    ##    
+    ##
     import os 
     from subprocess import Popen, PIPE
     try:
@@ -196,11 +198,22 @@ def inEOS ( fname            ,
     #
     ## require empty stder
     #
-    for l in stderr : return ''   ## RETURN 
+    for l in stderr :
+        if 0 == fname0.find('/lhcb/user') :
+            # try user EOS area : 
+            return inEOS ( '/eos' + fname0 , prefix , eosls )
+        return ''
+    
+    #
+    ## play a bit with extension
+    #
+    for ext in ( '.raw' , '.RAW' , '.mdf' , '.MDF' ) :               
+        p = fname.find ( ext )
+        if 0<= p and len( ext ) + p == len ( fname ) :
+            fname = 'mdf:' + prefix + fname
+            break
     #
     ## Require non-empty std-out:
-    #
-    fname = prefix + fname 
     #
     for l in stdout : return fname    ##  RETURN 
     #
