@@ -4,6 +4,12 @@
 ! Purpose     : OT online calibration
 !-----------------------------------------------------------------------------
 
+! 2015-04-13 - Roel Aaij
+ - Large update to calibration algorithm.
+   - Anything that is not global T0 calibration has been removed.
+   - Algorithm tested with FEST.
+   - Correct XML is written.
+
 ! 2015-03-04 - Roel Aaij
  - Updates and fixes to run online. Configuration script and test script
    to launch additional log viewer.
