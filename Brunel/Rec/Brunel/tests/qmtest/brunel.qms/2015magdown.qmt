@@ -5,7 +5,8 @@
 # ...................
 # Author: M.Cattaneo
 # Purpose: Check that Brunel().DataType = "2015" is working correctly. Currently
-#          using 2012 raw data as input. To be updated with 2015 data, at which
+#          using 2012 raw data as input and specific 2015 DB tags that work with it.
+#          To be updated with 2015 data and tags, at which
 #          time should increase events to 200 and mimic the 2012 test 
 # Prerequisites: brunel.2015magdown-rdst, so that in case of failure the new 
 #                reference file of this test is the one that survives 
@@ -21,7 +22,7 @@
     <text>$PRCONFIGOPTS/Brunel/PR-COLLISION12-Beam4000GeV-VeloClosed-MagDown.py</text>
     <text>$APPCONFIGOPTS/Brunel/MonitorExpress.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; Brunel().EvtMax=10; Brunel().Monitors=["SC","FPE"]; Brunel().DatasetName="2015magdown"; Brunel().DataType="2015"</text>
+    <text>from Brunel.Configuration import *; Brunel().EvtMax=10; Brunel().Monitors=["SC","FPE"]; Brunel().DatasetName="2015magdown"; Brunel().DataType="2015"; from Configurables import LHCbApp; LHCbApp().CondDBtag="cond-20150119-1"; LHCbApp().DDDBtag="dddb-20150119-3"</text>
   </set></argument>
   <argument name="reference"><text>../refs/2015magdown.ref</text></argument>
   <argument name="validator"><text>

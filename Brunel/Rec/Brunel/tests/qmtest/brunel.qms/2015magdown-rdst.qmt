@@ -18,7 +18,7 @@
     <text>$PRCONFIGOPTS/Brunel/PR-COLLISION12-Beam4000GeV-VeloClosed-MagDown.py</text>
     <text>$APPCONFIGOPTS/Brunel/MonitorExpress.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; Brunel().EvtMax=10; Brunel().Monitors=["SC","FPE"]; Brunel().DatasetName="2015magdown"; Brunel().DataType="2015"; Brunel().OutputType="RDST"</text>
+    <text>from Brunel.Configuration import *; Brunel().EvtMax=10; Brunel().Monitors=["SC","FPE"]; Brunel().DatasetName="2015magdown"; Brunel().DataType="2015"; Brunel().OutputType="RDST"; from Configurables import LHCbApp; LHCbApp().CondDBtag="cond-20150119-1"; LHCbApp().DDDBtag="dddb-20150119-3"</text>
   </set></argument>
   <argument name="reference"><text>../refs/2015magdown.ref</text></argument>
   <argument name="validator"><text>
