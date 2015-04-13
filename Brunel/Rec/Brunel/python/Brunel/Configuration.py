@@ -132,7 +132,7 @@ class Brunel(LHCbConfigurableUser):
         ,"DBSnapshotDirectory" : """Local Directory where the snapshot is"""
         }
 
-    KnownInputTypes  = [ "MDF",  "DST", "SDST", "XDST", "DIGI" ]
+    KnownInputTypes  = [ "MDF",  "DST", "XDST", "DIGI" ]
     KnownHistograms  = [ "None", "Online", "OfflineExpress", "OfflineFull", "Expert" ]
 
     def defineGeometry(self):
@@ -207,12 +207,12 @@ class Brunel(LHCbConfigurableUser):
 
         withMC = self.getProp("WithMC")
         if withMC:
-            if inputType in [ "MDF", "SDST" ]:
+            if inputType in [ "MDF" ]:
                 log.warning( "WithMC = True, but InputType = '%s'. Forcing WithMC = False"%inputType )
-                withMC = False # Force it, MDF, SDST never contain MC truth
-            if outputType in [ "SDST" ]:
+                withMC = False # Force it, MDF never contains MC truth
+            if outputType in [ "RDST" ]:
                 log.warning( "WithMC = True, but OutputType = '%s'. Forcing WithMC = False"%inputType )
-                withMC = False # Force it, SDST never contains MC truth
+                withMC = False # Force it, RDST never contains MC truth
 
         if self.getProp("WriteFSR") and self.getProp("PackType").upper() in ["MDF"]:
             if hasattr( self, "WriteFSR" ): log.warning("Don't know how to write FSR to MDF output file")
@@ -479,7 +479,7 @@ class Brunel(LHCbConfigurableUser):
         banksToKill = []
         if self.isPropertySet( "RawBanksToKill" ):
             banksToKill  = self.getProp( "RawBanksToKill" )
-        if ("2009" == self.getProp("DataType")) and (inputType in ["MDF","SDST"]) and not self.getProp("Simulation") :
+        if ("2009" == self.getProp("DataType")) and (inputType in ["MDF"]) and not self.getProp("Simulation") :
             banksToKill += ["VeloFull", "L0PUFull"]
         if len(banksToKill) > 0 :
             from Configurables import bankKiller
@@ -547,14 +547,8 @@ class Brunel(LHCbConfigurableUser):
             else:
                 killer.Nodes += [ "pRec", "Rec" ]
             InitReprocSeq.Members.append( killer )
-            ### see configureOutput to see how the remainder of the juggler
-            ### is configured
+            ### see configureOutput to see how the remainder of the juggler is configured
             
-
-        if inputType in [ "SDST" ]:
-            # Allow navigation to ancestor file
-            IODataManager().AgeLimit += 1
-
         # Get the event time (for CondDb) from ODIN
         from Configurables import EventClockSvc
         EventClockSvc().EventTimeDecoder = "OdinTimeDecoder";
@@ -564,7 +558,7 @@ class Brunel(LHCbConfigurableUser):
         Set up output stream
         """
         
-        if dstType in [ "XDST", "DST", "SDST", "LDST" ]:
+        if dstType in [ "XDST", "DST", "LDST", "RDST" ]:
             writerName = "DstWriter"
             packType  = self.getProp( "PackType" )
 
@@ -591,7 +585,7 @@ class Brunel(LHCbConfigurableUser):
                 # Allow multiple files open at once (SIM,DST,DIGI etc.)
                 IODataManager().AgeLimit += 1
 
-            if dstType in ["SDST","DST","XDST","LDST"] and packType not in ["MDF"]:
+            if dstType in ["DST","XDST","LDST"] and packType not in ["MDF"]:
                 jseq=GaudiSequencer("RawEventSplitSeq")
                 #################################
                 # Split the Raw Event for the DST
@@ -856,7 +850,7 @@ class Brunel(LHCbConfigurableUser):
                 
 
     def _isReprocessing(self, inputType):
-        return inputType in [ "XDST", "DST", "SDST", "LDST" ]
+        return inputType in [ "XDST", "DST", "LDST" ]
 
     def _configureDBSnapshot(self):
         """
