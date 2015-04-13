@@ -4,6 +4,13 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+
+! 2015-04-13 - Olivier Deschamps
+
+  - TupleToolCaloHypo : add basic CaloHypo::CaloPosition() information 
+  - TupleToolSubMass  : add vertex information for all final-stat particle combination
+
+
 ! 2015-03-20 - Komarov Ilya
  - Added TupleToolTwoParticleMatching tool (.cpp and .h)
    This tool allows to match candidates from different locations in dst

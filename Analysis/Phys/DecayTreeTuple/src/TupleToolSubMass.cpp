@@ -8,6 +8,10 @@
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
 #include <boost/algorithm/string.hpp>
+#include <Kernel/IDVAlgorithm.h>
+#include <Kernel/GetIDVAlgorithm.h>
+#include "Kernel/IParticleCombiner.h"
+#include <Kernel/IDistanceCalculator.h>
 //-----------------------------------------------------------------------------
 // Implementation file for class : TupleToolSubMass
 //
@@ -24,11 +28,21 @@ DECLARE_TOOL_FACTORY( TupleToolSubMass )
 TupleToolSubMass::TupleToolSubMass( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : TupleToolBase ( type, name , parent ){
+: TupleToolBase ( type, name , parent )
+  ,m_dva(0)
+  ,m_vertex(true)
+  ,m_endTree(){
   declareInterface<IParticleTupleTool>(this);
-  declareProperty( "SetMax", m_max=0);
-  declareProperty( "Substitution", m_subst);
+  declareProperty( "SetMax"            , m_max=0);
+  declareProperty( "Substitution"      , m_subst);
   declareProperty( "DoubleSubstitution", m_subst2);
+  declareProperty( "SubVertexFit"      , m_vertex);
+  declareProperty( "EndTreePIDs"       , m_endTree);
+  
+  // converted photons and V0s are considered as basic particles
+  m_endTree.push_back(22); 
+  m_endTree.push_back(310); //
+  m_endTree.push_back(3122); //
 }
 
 //=============================================================================
@@ -38,6 +52,9 @@ StatusCode TupleToolSubMass::initialize()
   const StatusCode sc = TupleToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
+  // get parent DV
+  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc(), this ) ;
+  if ( !m_dva ) { return Error( "Couldn't get parent DVAlgorithm", StatusCode::FAILURE ); }
   // get property service
   m_ppsvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc",true) ;
 
@@ -108,8 +125,9 @@ StatusCode TupleToolSubMass::fill( const LHCb::Particle*
 
         //====  Mass for the current combination (no substition)
         std::pair<std::string,double> fMass = getMass( tree, map );
-
         if( fMass.first != "NONE")fill &= tuple->column( prefix + "_M"+fMass.first, fMass.second  );
+        if(m_vertex)fill &= fillVertexInfo(P,tree,map,tuple,prefix);
+
 
         //==== Try single substitution when requested
         for( std::vector<std::string>::const_iterator is = m_subst.begin(); m_subst.end() !=is ; ++is){
@@ -237,6 +255,49 @@ Gaudi::LorentzVector TupleToolSubMass::sMomentum(const LHCb::Particle* part , do
   return momentum; 
 } 
 
+
+//-------- compute vertex information for the combination :
+bool TupleToolSubMass::fillVertexInfo(const LHCb::Particle* P, 
+                                      std::vector<const LHCb::Particle*> tree, 
+                                      const std::vector<int> map ,
+                                      Tuples::Tuple& tuple,const std::string prefix){
+  bool fill=true;
+  LHCb::Vertex   vertex;
+  LHCb::Particle mother;
+  LHCb::Particle::ConstVector subTree ;
+  std::string flag;
+  for( std::vector<int>::const_iterator iv = map.begin(); iv != map.end(); ++iv){
+    int pos = *iv;
+    const LHCb::Particle* part = tree[ pos ];
+    subTree.push_back( part );
+    flag += Gaudi::Utils::toString( pos );
+  }
+
+  // Vertex chi2
+  StatusCode sc = m_dva->particleCombiner()->combine( subTree, mother, vertex );
+  double chi2= (sc.isSuccess()) ? vertex.chi2() : -1.;
+  double nDoF= (sc.isSuccess()) ? vertex.nDoF() :  0.;
+  fill &= tuple->column( prefix+"_VtxChi2_"+flag , chi2);
+  fill &= tuple->column( prefix+"_VtxnDoF"+flag  , nDoF);
+  fill &= tuple->column( prefix+"_VtxM"+flag     , mother.momentum().M());
+
+  // IP chi2
+  double ip=0;
+  double ipchi2=0;
+  const LHCb::VertexBase* PV = m_dva->bestVertex ( P );
+  bool ok = m_dva->distanceCalculator()->distance ( &mother, PV, ip, ipchi2 );
+  if (!ok){
+    ip=0;
+    ipchi2=-1.;
+  }
+  fill &= tuple->column( prefix+"_IP"+flag    , ip);
+  fill &= tuple->column( prefix+"_IPChi2_"+flag , ipchi2);
+  return fill;
+}
+
+
+
+
 //-------- compute the combination mass (possibly with PID substitution(s))
 std::pair<std::string,double> TupleToolSubMass::getMass(std::vector<const LHCb::Particle*> tree, const std::vector<int> map,
                                                         int sPos, double sMass,int sPos2, double sMass2){
@@ -263,11 +324,21 @@ std::pair<std::string,double> TupleToolSubMass::getMass(std::vector<const LHCb::
 }
 
 
+bool TupleToolSubMass::isEndTree(const LHCb::Particle* p){
+  if( p->isBasicParticle() )return true;
+  for(std::vector<int>::iterator it = m_endTree.begin(); m_endTree.end() != it ; ++it){
+    if( (int) p->particleID().abspid() ==  *it)return true;
+  }
+  return false;
+}
+
+
 
 //-------- get sorted tree (cc-independant)
 std::vector<const LHCb::Particle*> TupleToolSubMass::getTree( const LHCb::Particle* P ){
   std::vector<const LHCb::Particle*> tree;
-  if( P->isBasicParticle() ){
+  //if( P->isBasicParticle() ){
+  if( isEndTree(P) ){
     tree.push_back( P );
   }else{
     SmartRefVector<LHCb::Particle> daughters = P->daughters(); // local copy to sort

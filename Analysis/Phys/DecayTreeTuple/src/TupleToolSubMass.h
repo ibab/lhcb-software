@@ -8,6 +8,7 @@
 #include "Event/Particle.h"
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"
+class IDVAlgorithm;
 
 
 /** @class TupleToolSubMass TupleToolSubMass.h jborel/TupleToolSubMass.h
@@ -92,6 +93,9 @@ public:
 private :
   std::vector<std::vector<int> >     combine(std::vector<std::vector<int> >  vec, unsigned int level, int nfs);
   std::vector<const LHCb::Particle*> getTree(const LHCb::Particle* P );  
+  bool isEndTree(const LHCb::Particle* p);
+  bool fillVertexInfo(const LHCb::Particle* P, std::vector<const LHCb::Particle*> tree, const std::vector<int> map,
+                      Tuples::Tuple& tuple,const std::string prefix);
   std::pair<std::string,double>      getMass(std::vector<const LHCb::Particle*> tree , const std::vector<int> map,
                                              int sPos=-1, double sMass=0.,int sPos2=-1,double sMass2=0.);
   std::string                        getFlag(std::string from,std::string to,int pos,
@@ -108,6 +112,9 @@ private :
   const LHCb::ParticleProperty* property(std::string name){return (m_ppsvc) ? m_ppsvc->find( name ) : NULL;};    
   const LHCb::ParticleProperty* property(const LHCb::ParticleID pid){return (m_ppsvc) ? m_ppsvc->find( pid ) : NULL;};    
   const LHCb::Particle* m_ancestor;
+  IDVAlgorithm* m_dva;
+  bool m_vertex;
+  std::vector<int> m_endTree;
 };
 
 #endif // TUPLETOOLSUBMASS_H
