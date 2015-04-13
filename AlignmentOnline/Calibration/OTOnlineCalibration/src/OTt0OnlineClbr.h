@@ -126,13 +126,13 @@ private:
 
    boost::filesystem::path xmlFileName( FileVersion v ) const ;
    double readCondDB();
-   std::pair<unsigned int, double>  readXML(const FileVersion version);
+   std::pair<unsigned int, double> readXML(const boost::filesystem::path& xmlFile);
 
    boost::filesystem::path writeXML(FileVersion previous, unsigned int run, double global_t0);
    void fitHistogram(TH1D* hist, double& result, double& result_err, TFile* outFile);
 
    unsigned int latestVersion() const;
-   void publish(const std::vector<unsigned int> runs, const std::string filename,
+   void publish(const std::vector<unsigned int> runs, const FileVersion version,
                 const std::string status);
    std::unique_ptr<TH1D> getHistogram() const;
 

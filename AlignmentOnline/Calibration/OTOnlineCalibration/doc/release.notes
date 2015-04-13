@@ -9,6 +9,7 @@
    - Anything that is not global T0 calibration has been removed.
    - Algorithm tested with FEST.
    - Correct XML is written.
+   - Publish version in format expected by Clara.
 
 ! 2015-03-04 - Roel Aaij
  - Updates and fixes to run online. Configuration script and test script

@@ -120,8 +120,8 @@ StatusCode OTt0OnlineClbr::initialize()
 
    sc = serviceLocator()->service("LHCb::PublishSvc", m_pPublishSvc, false);
    if ( sc.isFailure() ) return sc;
-   m_pPublishSvc->declarePubItem("OTT0Calibration", m_pubString);
-   m_pPublishSvc->declarePubItem("OTT0Calibration_Status", m_pubStatus);
+   m_pPublishSvc->declarePubItem("OT/T0", m_pubString);
+   m_pPublishSvc->declarePubItem("OT/T0Status", m_pubStatus);
 
    return sc;
 }
@@ -134,15 +134,15 @@ StatusCode OTt0OnlineClbr::start()
    if (v == 0 || m_readFromDB) {
       // booststrap from DB
       double t0 = readCondDB();
-      auto xmlFile = writeXML(v + 1, 0, t0);
-      publish({0}, xmlFile.string(), "good");
+      writeXML(v + 1, 0, t0);
+      publish({0}, v + 1, "good");
    } else {
       // Read last xml
       auto xmlFile = xmlFileName(v);
-      pair<unsigned int, double> r = readXML(v);
+      pair<unsigned int, double> r = readXML(xmlFile);
       m_calibratedRuns.emplace(r.first);
       // Parse the file to get the previous run number.
-      publish({r.first}, xmlFile.string(), "good");
+      publish({r.first}, v, "good");
    }
    return StatusCode::SUCCESS;
 }
@@ -205,11 +205,12 @@ StatusCode OTt0OnlineClbr::analyze (string& SaveSet, string Task)
    double t0 = 0.0;
    double prevT0 = 0.0;
 
-   // Read lastest version
+   // Read latest version
    const FileVersion latest = latestVersion();
+   auto xmlFile = xmlFileName(latest);
 
    // Read last XML to get reference.
-   auto r = readXML(latest);
+   auto r = readXML(xmlFile);
    m_calibratedRuns.insert(r.first);
    prevT0 = r.second;
 
@@ -241,21 +242,19 @@ StatusCode OTt0OnlineClbr::analyze (string& SaveSet, string Task)
    // Check and improve condition for writing and publishing
    if (std::abs(t0) > m_threshold) {
       if (std::abs(t0) < m_maxDifference) {
-         auto xmlFile = writeXML(latest + 1, run, t0);
-         publish(std::move(runs), xmlFile.string(), "good");
+         writeXML(latest + 1, run, t0);
+         publish(std::move(runs), latest + 1, "good");
          debug() << "Wrote global t0 xml. global t0 = "<< t0
                  << ", global t0 threshold = " << m_threshold <<endmsg;
       } else {
          // Indicate problem and use previous threshold
-         auto xmlFile = xmlFileName(latest);
-         publish(std::move(runs), xmlFile.string(), "bad");
+         publish(std::move(runs), latest, "bad");
          debug() << "Did not write global t0 xml. global t0 = "<< t0
                  << ", global t0 threshold = " << m_threshold <<endmsg;
       }
    } else {
       // No update, publish last file.
-      auto xmlFile = xmlFileName(latest);
-      publish(std::move(runs), xmlFile.string(), "good");
+      publish(std::move(runs), latest, "good");
       debug() << "NOT writing global t0 xml. global t0 = "<< t0
               << ", global t0 threshold = " << m_threshold <<endmsg;
    }
@@ -364,7 +363,7 @@ unsigned int OTt0OnlineClbr::latestVersion() const
    };
 
    // Store filenames
-   std::vector<std::string> files;
+   vector<string> files;
    std::transform(fs::directory_iterator{fs::path{m_xmlFilePath}},
                   fs::directory_iterator{}, std::back_inserter(files),
                   [](const fs::directory_entry& e) {
@@ -373,8 +372,7 @@ unsigned int OTt0OnlineClbr::latestVersion() const
 
    // Find highest version
    auto v = std::max_element(begin(files), end(files),
-                             [version](const std::string& a,
-                                       const std::string& b) {
+                             [version](const string& a, const string& b) {
                                 return version(a) < version(b);
                              });
    if (v == end(files)) {
@@ -385,7 +383,7 @@ unsigned int OTt0OnlineClbr::latestVersion() const
 }
 
 //=============================================================================
-pair<unsigned int, double> OTt0OnlineClbr::readXML(const FileVersion version)
+pair<unsigned int, double> OTt0OnlineClbr::readXML(const fs::path& xmlFile)
 {
    namespace sp = boost::spirit;
    namespace qi = sp::qi;
@@ -401,7 +399,6 @@ pair<unsigned int, double> OTt0OnlineClbr::readXML(const FileVersion version)
    using sp::ascii::char_;
 
    // open file, disable skipping of whitespace
-   auto xmlFile = xmlFileName(version);
    std::ifstream in(xmlFile.string().c_str());
    in.unsetf(std::ios::skipws);
 
@@ -457,8 +454,8 @@ pair<unsigned int, double> OTt0OnlineClbr::readXML(const FileVersion version)
 }
 
 //=============================================================================
-void OTt0OnlineClbr::publish(const std::vector<unsigned int> runs,
-                             const string filename,
+void OTt0OnlineClbr::publish(const vector<unsigned int> runs,
+                             const FileVersion version,
                              const string status)
 {
    //static int Rn=0;
@@ -466,12 +463,12 @@ void OTt0OnlineClbr::publish(const std::vector<unsigned int> runs,
    auto pub = [&crn, this] (const unsigned int run,
                             const string& end, string& member,
                             const string& item) {
-      ::sprintf(crn, (string("Run ") + to_string(run) + ": " + end).c_str());
+      ::sprintf(crn, (to_string(run) + " " + end).c_str());
       member = crn;
       m_pPublishSvc->updateItem(item.c_str());
    };
    for (unsigned int run : runs) {
-      pub(run, filename, m_pubString, "OTT0Calibration");
+      pub(run, string("v") + to_string(version), m_pubString, "OTT0Calibration");
       pub(run, status, m_pubStatus, "OTT0Calibration_Status");
       debug() << "Publishing calibration status: " << m_pubStatus << endmsg;
       if (m_calibrating.size() > 1) {
@@ -483,7 +480,7 @@ void OTt0OnlineClbr::publish(const std::vector<unsigned int> runs,
 //=============================================================================
 unique_ptr<TH1D> OTt0OnlineClbr::getHistogram() const {
 
-   auto getHist = [this](const std::string& filename) {
+   auto getHist = [this](const string& filename) {
       unique_ptr<TFile> f{new TFile(filename.c_str(),"READ")};
       unique_ptr<TH1D> histo;
       if (f->IsZombie()) {
