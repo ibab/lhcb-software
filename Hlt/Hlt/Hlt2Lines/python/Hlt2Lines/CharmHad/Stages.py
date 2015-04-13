@@ -140,15 +140,53 @@ SharedNoPIDDetachedChild_K = DetachedInParticleFilter( 'SharedNoPIDDetachedChild
 SharedNoPIDDetachedChild_p = DetachedInParticleFilter( 'SharedNoPIDDetachedChild_p', [Hlt2NoPIDsProtons] )
 
 
+class KsFilterForHHKs(Hlt2ParticleFilter):
+    def __init__(self, name, inputs):
+        cut = (" (BPVLTIME() > %(DecayTime_MIN)s) " +
+               "& (VFASPF(VZ) > %(VZ_MIN)s)" +
+               "& (VFASPF(VZ) < %(VZ_MAX)s)")
+        from HltTracking.HltPVs import PV3D
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs, shared = True)
+
+SharedKsLL =  KsFilterForHHKs('SharedKsLL',[KS0_LL])
+SharedKsDD =  KsFilterForHHKs('SharedKsDD',[KS0_DD])
+
+## ------------------------------------------------------------------------- ##
+from Configurables import DaVinci__N3BodyDecays as N3BodyDecays
+class HHKshCombiner(Hlt2Combiner):
+    def __init__(self, name, decay, inputs):
+
+## HHKs mother cuts
+        mc =    ("(VFASPF(VCHI2PDOF) < %(D_VCHI2PDOF_MAX)s)" +
+                 " & (BPVDIRA > %(D_BPVDIRA_MIN)s )" +
+                 " & (BPVVDCHI2 > %(D_BPVVDCHI2_MIN)s )" +
+                 " & (PT > %(D_PT_MIN)s )" +
+                 " & (BPVLTIME() > %(D_BPVLTIME_MIN)s )")
+
+        c12Cut = ("(AM <  %(HHMass_MAX)s)" +
+                  " & (ADOCAMAX('') < %(HHMaxDOCA)s)")
+
+        cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
+                 " & ((APT1+APT2+APT3) > %(ASUMPT_MIN)s )")
+
+        from HltTracking.HltPVs import PV3D
+
+        Hlt2Combiner.__init__(self, 'D02HHKsh', decay, inputs,
+                     dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                     tistos = 'TisTosSpec', combiner = N3BodyDecays,
+                     Combination12Cut =  c12Cut,
+                     CombinationCut = cc, 
+                     MotherCut = mc, Preambulo = [])
+
 ## ------------------------------------------------------------------------- ##
 class NeutralInParticleFilter(Hlt2ParticleFilter) : # {
     '''
     Filter neutral particles on PT and (optionally) an ADMASS window centered
     on the database mass of a particle type identified in a constructor
     argument.
-
-    Always creates a shared instance of the filter.
-
+    class NeutralInParticleFilter(Hlt2ParticleFilter):
+    def __init__(self, name):
+        cut = ("  (PT > %(Trk_ALL_PT_MIN)s)" )
     Configuration dictionaries must contain the following keys:
         'Neut_ALL_PT_MIN' :  lower limit on PT
 
@@ -567,7 +605,7 @@ class D2HH0_3Body_Combiner(Hlt2Combiner):
                               Combination12Cut = neutral_combination_cut, Preambulo = [])
                               
 class D2HD0_3Body_Combiner(Hlt2Combiner):
-    def __init__(self, name, decay, inputs):                           
+    def __init__(self, name, decay, inputs):                        
         pi_daughters_cut = ("( PT > %(Daug_PT)s ) &" + 
                             "( P  > %(Daug_P)s  ) &" +
                             "(TRCHI2DOF< %(Track_Chi2)s ) &" +
@@ -976,6 +1014,20 @@ class DStar2PiD0_ee(D2HD0_3Body_Combiner) :
         inputs = [Hlt2NoPIDsElectrons, Hlt2NoPIDsPions]
         D2HD0_3Body_Combiner.__init__(self, name, decay, inputs)        
 
+##  the argument 'D02HHKs' defines the dictionary found in Lines.py
+##  to be used for the (generic) configurables used by the HHKshCombiner
+D02KsPiPi_LL = HHKshCombiner('D02HHKsh', decay="[D0 ->  pi- pi+ KS0]cc",
+                   inputs=[SharedKsLL, SharedDetachedDpmChild_pi])
+D02KsPiPi_DD = HHKshCombiner('D02HHKsh', decay="[D0 ->  pi- pi+ KS0]cc",
+                   inputs=[SharedKsDD, SharedDetachedDpmChild_pi])
+D02KsKPi_LL  = HHKshCombiner('D02HHKsh', decay="[D0 ->  K- pi+ KS0]cc",
+                   inputs=[SharedKsLL, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])
+D02KsKPi_DD  = HHKshCombiner('D02HHKsh', decay="[D0 ->  K- pi+ KS0]cc",
+                   inputs=[SharedKsDD, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])
+D02KsKK_LL   = HHKshCombiner('D02HHKsh', decay="[D0 ->  K- K+ KS0]cc",
+                   inputs=[SharedKsLL, SharedDetachedDpmChild_K])
+D02KsKK_DD   = HHKshCombiner('D02HHKsh', decay="[D0 ->  K- K+ KS0]cc",
+                   inputs=[SharedKsDD, SharedDetachedDpmChild_K])
 
 
 class DetachedD02HHInclCombiner(Hlt2Combiner) : # {
