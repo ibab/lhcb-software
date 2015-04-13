@@ -235,11 +235,11 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
         ,  {"2#Proto.extraInfo.IsNotH",                 {12,2}}
         ,  {"3#Proto.extraInfo.EcalPIDe",               {23,3}}
         ,  {"4#Proto.extraInfo.PrsPIDe",                {34,4}}
-        ,  {"5#Proto.extraInfo.BremPIDe",               {44,5}}
-        ,  {"6#Proto.extraInfo.HcalPIDe",               {45,6}}
-        ,  {"7#Proto.extraInfo.HcalPIDmu",              {46,7}}
-        ,  {"8#Proto.extraInfo.EcalPIDmu",              {47,8}}
-        ,  {"9#Proto.extraInfo.CaloTrMatch",            {48,9}}
+        ,  {"5#Proto.extraInfo.BremPIDe",               {45,5}}
+        ,  {"6#Proto.extraInfo.HcalPIDe",               {51,6}}
+        ,  {"7#Proto.extraInfo.HcalPIDmu",              {52,7}}
+        ,  {"8#Proto.extraInfo.EcalPIDmu",              {53,8}}
+        ,  {"9#Proto.extraInfo.CaloTrMatch",            {54,9}}
         ,  {"10#Proto.extraInfo.CaloElectronMatch",     {2,10}}
         ,  {"11#Proto.extraInfo.CaloBremMatch",         {3,11}}
         ,  {"12#Proto.extraInfo.CaloNeutralSpd",        {4,12}}
@@ -278,12 +278,26 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
         ,  {"45#Proto.extraInfo.CombDLLmu",             {40,45}}
         ,  {"46#Proto.extraInfo.CombDLLpi",             {41,46}}
         ,  {"47#Proto.extraInfo.CombDLLk",              {42,47}}
-        ,  {"48#Proto.extraInfo.CombDLLp",              {43,48}}}
+        ,  {"48#Proto.extraInfo.CombDLLp",              {43,48}}
+        ,  {"49#Proto.extraInfo.InAccBrem",             {44,49}}
+        ,  {"50#Proto.extraInfo.InAccSpd",              {46,50}}
+        ,  {"51#Proto.extraInfo.InAccPrs",              {47,51}}
+        ,  {"52#Proto.extraInfo.InAccEcal",             {48,52}}
+        ,  {"53#Proto.extraInfo.InAccHcal",             {49,53}}
+        ,  {"54#Proto.extraInfo.VeloCharge",            {50,54}}}
       }
     };
     //===========================================================================
     /// Version unordered_map for LHCb::ProtoParticle in the Full stream
     unordered_map<int, unordered_map<string,pair<int,int> > > const m_proto_unordered_map2 {
+      { 4
+        , {{"0#Proto.extraInfo.CombDLLe",              {0,44}}
+        ,  {"1#Proto.extraInfo.CombDLLmu",             {1,45}}
+        ,  {"2#Proto.extraInfo.CombDLLpi",             {2,46}}
+        ,  {"3#Proto.extraInfo.CombDLLk",              {3,47}}
+        ,  {"4#Proto.extraInfo.CombDLLp",              {4,48}}
+        ,  {"5#Proto.extraInfo.RichPIDStatus",         {5,55}}}
+      }
     };
 
     //===========================================================================
@@ -309,23 +323,29 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
           , {"16#Track.lastState.qOverP",      {8,16}}}
       }
       , { 4
-        , {{"0#Track.firstState.z",             {0,0}}
-          , {"1#Track.firstState.x",            {1,1}}
-          , {"2#Track.firstState.y",            {9,2}}
-          , {"3#Track.firstState.tx",          {10,3}}
-          , {"4#Track.firstState.ty",          {11,4}}
-          , {"5#Track.firstState.qOverP",      {12,5}}
-          , {"6#Track.chi2PerDoF",             {13,6}}
-          , {"7#Track.nDoF",                   {14,7}}
-          , {"8#Track.Likelihood",             {15,8}}
-          , {"9#Track.GhostProb",              {16,9}}
+        , {{"0#Track.firstState.z",            {0,0}}
+          , {"1#Track.firstState.x",           {1,1}}
+          , {"2#Track.firstState.y",           {12,2}}
+          , {"3#Track.firstState.tx",          {16,3}}
+          , {"4#Track.firstState.ty",          {17,4}}
+          , {"5#Track.firstState.qOverP",      {18,5}}
+          , {"6#Track.chi2PerDoF",             {19,6}}
+          , {"7#Track.nDoF",                   {20,7}}
+          , {"8#Track.Likelihood",             {21,8}}
+          , {"9#Track.GhostProb",              {22,9}}
           , {"10#Track.flags",                 {2,10}}
           , {"11#Track.lastState.z",           {3,11}}
           , {"12#Track.lastState.x",           {4,12}}
           , {"13#Track.lastState.y",           {5,13}}
           , {"14#Track.lastState.tx",          {6,14}}
           , {"15#Track.lastState.ty",          {7,15}}
-          , {"16#Track.lastState.qOverP",      {8,16}}}
+          , {"16#Track.lastState.qOverP",      {8,16}}
+          , {"17#Track.CloneDist",             {9,17}}
+          , {"18#Track.FitMatchChi2",          {10,18}}
+          , {"19#Track.FitVeloChi2",           {11,19}}
+          , {"20#Track.FitTChi2",              {13,20}}
+          , {"21#Track.FitVeloNDoF",           {14,21}}
+          , {"22#Track.FitTNDoF",              {15,22}}}
       }
     };
     //===========================================================================

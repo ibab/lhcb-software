@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2015-04-13 - Sean Benson
+ - Extra variables for ProbNNs.
+
 ! 2015-03-11 - Sean Benson
  - Update test to allow for bank version change.
 

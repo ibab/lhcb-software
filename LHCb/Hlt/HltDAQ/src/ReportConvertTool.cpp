@@ -264,55 +264,62 @@ void ReportConvertTool::ProtoParticleObject2Summary( HltObjectSummary::Info* inf
   for(it_unordered_map proto_it = (used_map.at(m_version)).begin(); proto_it!=(used_map.at(m_version)).end(); proto_it++){
     switch( proto_it->second.second )
     {
-      case 0:  info->insert( proto_it->first, float( object->info( 381, -1000 ) ) ); break;
-      case 1:  info->insert( proto_it->first, float( object->info( 382, -1000 ) ) ); break;
-      case 2:  info->insert( proto_it->first, float( object->info( 383, -1000 ) ) ); break;
-      case 3:  info->insert( proto_it->first, float( object->info( 360, -1000 ) ) ); break;
-      case 4:  info->insert( proto_it->first, float( object->info( 361, -1000 ) ) ); break;
-      case 5:  info->insert( proto_it->first, float( object->info( 362, -1000 ) ) ); break;
-      case 6:  info->insert( proto_it->first, float( object->info( 363, -1000 ) ) ); break;
-      case 7:  info->insert( proto_it->first, float( object->info( 364, -1000 ) ) ); break;
-      case 8:  info->insert( proto_it->first, float( object->info( 365, -1000 ) ) ); break;
-      case 9:  info->insert( proto_it->first, float( object->info( 310, -1000 ) ) ); break;
-      case 10: info->insert( proto_it->first, float( object->info( 311, -1000 ) ) ); break;
-      case 11: info->insert( proto_it->first, float( object->info( 312, -1000 ) ) ); break;
-      case 12: info->insert( proto_it->first, float( object->info( 323, -1000 ) ) ); break;
-      case 13: info->insert( proto_it->first, float( object->info( 324, -1000 ) ) ); break;
-      case 14: info->insert( proto_it->first, float( object->info( 325, -1000 ) ) ); break;
-      case 15: info->insert( proto_it->first, float( object->info( 326, -1000 ) ) ); break;
-      case 16: info->insert( proto_it->first, float( object->info( 327, -1000 ) ) ); break;
-      case 17: info->insert( proto_it->first, float( object->info( 328, -1000 ) ) ); break;
-      case 18: info->insert( proto_it->first, float( object->info( 320, -1000 ) ) ); break;
-      case 19: info->insert( proto_it->first, float( object->info( 321, -1000 ) ) ); break;
-      case 20: info->insert( proto_it->first, float( object->info( 322, -1000 ) ) ); break;
-      case 21: info->insert( proto_it->first, float( object->info( 330, -1000 ) ) ); break;
-      case 22: info->insert( proto_it->first, float( object->info( 331, -1000 ) ) ); break;
-      case 23: info->insert( proto_it->first, float( object->info( 332, -1000 ) ) ); break;
-      case 24: info->insert( proto_it->first, float( object->info( 333, -1000 ) ) ); break;
-      case 25: info->insert( proto_it->first, float( object->info( 334, -1000 ) ) ); break;
-      case 26: info->insert( proto_it->first, float( object->info( 335, -1000 ) ) ); break;
-      case 27: info->insert( proto_it->first, float( object->info( 336, -1000 ) ) ); break;
-      case 28: info->insert( proto_it->first, float( object->info( 343, -1000 ) ) ); break;
-      case 29: info->insert( proto_it->first, float( object->info( 344, -1000 ) ) ); break;
-      case 30: info->insert( proto_it->first, float( object->info( 345, -1000 ) ) ); break;
-      case 31: info->insert( proto_it->first, float( object->info( 346, -1000 ) ) ); break;
-      case 32: info->insert( proto_it->first, float( object->info( 347, -1000 ) ) ); break;
-      case 33: info->insert( proto_it->first, float( object->info( 348, -1000 ) ) ); break;
-      case 34: info->insert( proto_it->first, float( object->info( 349, -1000 ) ) ); break;
-      case 35: info->insert( proto_it->first, float( object->info( 350, -1000 ) ) ); break;
-      case 36: info->insert( proto_it->first, float( object->info( 351, -1000 ) ) ); break;
-      case 37: info->insert( proto_it->first, float( object->info( 352, -1000 ) ) ); break;
-      case 38: info->insert( proto_it->first, float( object->info( 353, -1000 ) ) ); break;
-      case 39: info->insert( proto_it->first, float( object->info( 354, -1000 ) ) ); break;
-      case 40: info->insert( proto_it->first, float( object->info( 355, -1000 ) ) ); break;
-      case 41: info->insert( proto_it->first, float( object->info( 356, -1000 ) ) ); break;
-      case 42: info->insert( proto_it->first, float( object->info( 357, -1000 ) ) ); break;
-      case 43: info->insert( proto_it->first, float( object->info( 358, -1000 ) ) ); break;
-      case 44: info->insert( proto_it->first, float( object->info( 600, -1000 ) ) ); break;
-      case 45: info->insert( proto_it->first, float( object->info( 601, -1000 ) ) ); break;
-      case 46: info->insert( proto_it->first, float( object->info( 602, -1000 ) ) ); break;
-      case 47: info->insert( proto_it->first, float( object->info( 603, -1000 ) ) ); break;
-      case 48: info->insert( proto_it->first, float( object->info( 604, -1000 ) ) ); break;
+      case 0:  info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::IsPhoton, -1000 ) ) ); break;
+      case 1:  info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::IsNotE, -1000 ) ) ); break;
+      case 2:  info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::IsNotH, -1000 ) ) ); break;
+      case 3:  info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::EcalPIDe, -1000 ) ) ); break;
+      case 4:  info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::PrsPIDe, -1000 ) ) ); break;
+      case 5:  info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::BremPIDe, -1000 ) ) ); break;
+      case 6:  info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::HcalPIDe, -1000 ) ) ); break;
+      case 7:  info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::HcalPIDmu, -1000 ) ) ); break;
+      case 8:  info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::EcalPIDmu, -1000 ) ) ); break;
+      case 9:  info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloTrMatch, -1000 ) ) ); break;
+      case 10: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloElectronMatch, -1000 ) ) ); break;
+      case 11: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloBremMatch, -1000 ) ) ); break;
+      case 12: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloNeutralSpd, -1000 ) ) ); break;
+      case 13: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloNeutralPrs, -1000 ) ) ); break;
+      case 14: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloNeutralEcal, -1000 ) ) ); break;
+      case 15: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloNeutralHcal2Ecal, -1000 ) ) ); break;
+      case 16: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloNeutralE49, -1000 ) ) ); break;
+      case 17: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloNeutralID, -1000 ) ) ); break;
+      case 18: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloDepositID, -1000 ) ) ); break;
+      case 19: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::ShowerShape, -1000 ) ) ); break;
+      case 20: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::ClusterMass, -1000 ) ) ); break;
+      case 21: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloSpdE, -1000 ) ) ); break;
+      case 22: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloPrsE, -1000 ) ) ); break;
+      case 23: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloEcalE, -1000 ) ) ); break;
+      case 24: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloHcalE, -1000 ) ) ); break;
+      case 25: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloEcalChi2, -1000 ) ) ); break;
+      case 26: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloBremChi2, -1000 ) ) ); break;
+      case 27: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloClusChi2, -1000 ) ) ); break;
+      case 28: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloNeutralPrsM, -1000 ) ) ); break;
+      case 29: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloShapeFr2r4, -1000 ) ) ); break;
+      case 30: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloShapeKappa, -1000 ) ) ); break;
+      case 31: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloShapeAsym, -1000 ) ) ); break;
+      case 32: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloShapeE1, -1000 ) ) ); break;
+      case 33: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloShapeE2, -1000 ) ) ); break;
+      case 34: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloPrsShapeE2, -1000 ) ) ); break;
+      case 35: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloPrsShapeEmax, -1000 ) ) ); break;
+      case 36: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloPrsShapeFr2, -1000 ) ) ); break;
+      case 37: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloPrsShapeAsym, -1000 ) ) ); break;
+      case 38: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloPrsM, -1000 ) ) ); break;
+      case 39: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloPrsM15, -1000 ) ) ); break;
+      case 40: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloPrsM30, -1000 ) ) ); break;
+      case 41: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloPrsM45, -1000 ) ) ); break;
+      case 42: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloClusterCode, -1000 ) ) ); break;
+      case 43: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloClusterFrac, -1000 ) ) ); break;
+      case 44: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CombDLLe, -1000 ) ) ); break;
+      case 45: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CombDLLmu, -1000 ) ) ); break;
+      case 46: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CombDLLpi, -1000 ) ) ); break;
+      case 47: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CombDLLk, -1000 ) ) ); break;
+      case 48: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CombDLLp, -1000 ) ) ); break;
+      case 49: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::InAccBrem, -1000 ) ) ); break;
+      case 50: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::InAccSpd, -1000 ) ) ); break;
+      case 51: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::InAccPrs, -1000 ) ) ); break;
+      case 52: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::InAccEcal, -1000 ) ) ); break;
+      case 53: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::InAccHcal, -1000 ) ) ); break;
+      case 54: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::VeloCharge, -1000 ) ) ); break;
+      case 55: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::RichPIDStatus, -1000 ) ) ); break;
     }
   }
 
@@ -348,6 +355,12 @@ void ReportConvertTool::TrackObject2Summary( HltObjectSummary::Info* info, const
       case 14: info->insert( track_it->first, float( object->states().back()->tx() ) ); break;
       case 15: info->insert( track_it->first, float( object->states().back()->ty() ) ); break;
       case 16: info->insert( track_it->first, float( object->states().back()->qOverP() ) ); break;
+      case 17: info->insert( track_it->first, float( object->info( LHCb::Track::CloneDist, -1000) ) ); break;
+      case 18: info->insert( track_it->first, float( object->info( LHCb::Track::FitMatchChi2, -1000) ) ); break;
+      case 19: info->insert( track_it->first, float( object->info( LHCb::Track::FitVeloChi2, -1000) ) ); break;
+      case 20: info->insert( track_it->first, float( object->info( LHCb::Track::FitTChi2, -1000) ) ); break;
+      case 21: info->insert( track_it->first, float( object->info( LHCb::Track::FitVeloNDoF, -1000) ) ); break;
+      case 22: info->insert( track_it->first, float( object->info( LHCb::Track::FitTNDoF, -1000) ) ); break;
     }
   }
 }
@@ -587,55 +600,62 @@ void ReportConvertTool::ProtoParticleObjectFromSummary( const HltObjectSummary::
   for(it_unordered_map proto_it = (used_map.at(m_version)).begin(); proto_it!=(used_map.at(m_version)).end(); proto_it++){
     switch( proto_it->second.second )
     {
-      case 0: object->addInfo( 381, ( (*info)[ proto_it->first ] ) ); break;
-      case 1: object->addInfo( 382, ( (*info)[ proto_it->first ] ) ); break;
-      case 2: object->addInfo( 383, ( (*info)[ proto_it->first ] ) ); break;
-      case 3: object->addInfo( 360, ( (*info)[ proto_it->first ] ) ); break;
-      case 4: object->addInfo( 361, ( (*info)[ proto_it->first ] ) ); break;
-      case 5: object->addInfo( 362, ( (*info)[ proto_it->first ] ) ); break;
-      case 6: object->addInfo( 363, ( (*info)[ proto_it->first ] ) ); break;
-      case 7: object->addInfo( 364, ( (*info)[ proto_it->first ] ) ); break;
-      case 8: object->addInfo( 365, ( (*info)[ proto_it->first ] ) ); break;
-      case 9: object->addInfo( 310, ( (*info)[ proto_it->first ] ) ); break;
-      case 10: object->addInfo( 311, ( (*info)[ proto_it->first ] ) ); break;
-      case 11: object->addInfo( 312, ( (*info)[ proto_it->first ] ) ); break;
-      case 12: object->addInfo( 323, ( (*info)[ proto_it->first ] ) ); break;
-      case 13: object->addInfo( 324, ( (*info)[ proto_it->first ] ) ); break;
-      case 14: object->addInfo( 325, ( (*info)[ proto_it->first ] ) ); break;
-      case 15: object->addInfo( 326, ( (*info)[ proto_it->first ] ) ); break;
-      case 16: object->addInfo( 327, ( (*info)[ proto_it->first ] ) ); break;
-      case 17: object->addInfo( 328, ( (*info)[ proto_it->first ] ) ); break;
-      case 18: object->addInfo( 320, ( (*info)[ proto_it->first ] ) ); break;
-      case 19: object->addInfo( 321, ( (*info)[ proto_it->first ] ) ); break;
-      case 20: object->addInfo( 322, ( (*info)[ proto_it->first ] ) ); break;
-      case 21: object->addInfo( 330, ( (*info)[ proto_it->first ] ) ); break;
-      case 22: object->addInfo( 331, ( (*info)[ proto_it->first ] ) ); break;
-      case 23: object->addInfo( 332, ( (*info)[ proto_it->first ] ) ); break;
-      case 24: object->addInfo( 333, ( (*info)[ proto_it->first ] ) ); break;
-      case 25: object->addInfo( 334, ( (*info)[ proto_it->first ] ) ); break;
-      case 26: object->addInfo( 335, ( (*info)[ proto_it->first ] ) ); break;
-      case 27: object->addInfo( 336, ( (*info)[ proto_it->first ] ) ); break;
-      case 28: object->addInfo( 343, ( (*info)[ proto_it->first ] ) ); break;
-      case 29: object->addInfo( 344, ( (*info)[ proto_it->first ] ) ); break;
-      case 30: object->addInfo( 345, ( (*info)[ proto_it->first ] ) ); break;
-      case 31: object->addInfo( 346, ( (*info)[ proto_it->first ] ) ); break;
-      case 32: object->addInfo( 347, ( (*info)[ proto_it->first ] ) ); break;
-      case 33: object->addInfo( 348, ( (*info)[ proto_it->first ] ) ); break;
-      case 34: object->addInfo( 349, ( (*info)[ proto_it->first ] ) ); break;
-      case 35: object->addInfo( 350, ( (*info)[ proto_it->first ] ) ); break;
-      case 36: object->addInfo( 351, ( (*info)[ proto_it->first ] ) ); break;
-      case 37: object->addInfo( 352, ( (*info)[ proto_it->first ] ) ); break;
-      case 38: object->addInfo( 353, ( (*info)[ proto_it->first ] ) ); break;
-      case 39: object->addInfo( 354, ( (*info)[ proto_it->first ] ) ); break;
-      case 40: object->addInfo( 355, ( (*info)[ proto_it->first ] ) ); break;
-      case 41: object->addInfo( 356, ( (*info)[ proto_it->first ] ) ); break;
-      case 42: object->addInfo( 357, ( (*info)[ proto_it->first ] ) ); break;
-      case 43: object->addInfo( 358, ( (*info)[ proto_it->first ] ) ); break;
-      case 44: object->addInfo( 600, ( (*info)[ proto_it->first ] ) ); break;
-      case 45: object->addInfo( 601, ( (*info)[ proto_it->first ] ) ); break;
-      case 46: object->addInfo( 602, ( (*info)[ proto_it->first ] ) ); break;
-      case 47: object->addInfo( 603, ( (*info)[ proto_it->first ] ) ); break;
-      case 48: object->addInfo( 604, ( (*info)[ proto_it->first ] ) ); break;
+      case 0: object->addInfo( LHCb::ProtoParticle::IsPhoton, ( (*info)[ proto_it->first ] ) ); break;//381
+      case 1: object->addInfo( LHCb::ProtoParticle::IsNotE, ( (*info)[ proto_it->first ] ) ); break;//382
+      case 2: object->addInfo( LHCb::ProtoParticle::IsNotH, ( (*info)[ proto_it->first ] ) ); break;//383
+      case 3: object->addInfo( LHCb::ProtoParticle::EcalPIDe, ( (*info)[ proto_it->first ] ) ); break;//360
+      case 4: object->addInfo( LHCb::ProtoParticle::PrsPIDe, ( (*info)[ proto_it->first ] ) ); break;//361
+      case 5: object->addInfo( LHCb::ProtoParticle::BremPIDe, ( (*info)[ proto_it->first ] ) ); break;//362
+      case 6: object->addInfo( LHCb::ProtoParticle::HcalPIDe, ( (*info)[ proto_it->first ] ) ); break;//363
+      case 7: object->addInfo( LHCb::ProtoParticle::HcalPIDmu, ( (*info)[ proto_it->first ] ) ); break;//364
+      case 8: object->addInfo( LHCb::ProtoParticle::EcalPIDmu, ( (*info)[ proto_it->first ] ) ); break;//365
+      case 9: object->addInfo( LHCb::ProtoParticle::CaloTrMatch, ( (*info)[ proto_it->first ] ) ); break;//310
+      case 10: object->addInfo( LHCb::ProtoParticle::CaloElectronMatch, ( (*info)[ proto_it->first ] ) ); break;//311
+      case 11: object->addInfo( LHCb::ProtoParticle::CaloBremMatch, ( (*info)[ proto_it->first ] ) ); break;//312
+      case 12: object->addInfo( LHCb::ProtoParticle::CaloNeutralSpd, ( (*info)[ proto_it->first ] ) ); break;//323
+      case 13: object->addInfo( LHCb::ProtoParticle::CaloNeutralPrs, ( (*info)[ proto_it->first ] ) ); break;//324
+      case 14: object->addInfo( LHCb::ProtoParticle::CaloNeutralEcal, ( (*info)[ proto_it->first ] ) ); break;//325
+      case 15: object->addInfo( LHCb::ProtoParticle::CaloNeutralHcal2Ecal, ( (*info)[ proto_it->first ] ) ); break;//326
+      case 16: object->addInfo( LHCb::ProtoParticle::CaloNeutralE49, ( (*info)[ proto_it->first ] ) ); break;//327
+      case 17: object->addInfo( LHCb::ProtoParticle::CaloNeutralID, ( (*info)[ proto_it->first ] ) ); break;//328
+      case 18: object->addInfo( LHCb::ProtoParticle::CaloDepositID, ( (*info)[ proto_it->first ] ) ); break;//320
+      case 19: object->addInfo( LHCb::ProtoParticle::ShowerShape, ( (*info)[ proto_it->first ] ) ); break;//321
+      case 20: object->addInfo( LHCb::ProtoParticle::ClusterMass, ( (*info)[ proto_it->first ] ) ); break;//322
+      case 21: object->addInfo( LHCb::ProtoParticle::CaloSpdE, ( (*info)[ proto_it->first ] ) ); break;//330
+      case 22: object->addInfo( LHCb::ProtoParticle::CaloPrsE, ( (*info)[ proto_it->first ] ) ); break;//331
+      case 23: object->addInfo( LHCb::ProtoParticle::CaloEcalE, ( (*info)[ proto_it->first ] ) ); break;//332
+      case 24: object->addInfo( LHCb::ProtoParticle::CaloHcalE, ( (*info)[ proto_it->first ] ) ); break;//333
+      case 25: object->addInfo( LHCb::ProtoParticle::CaloEcalChi2, ( (*info)[ proto_it->first ] ) ); break;//334
+      case 26: object->addInfo( LHCb::ProtoParticle::CaloBremChi2, ( (*info)[ proto_it->first ] ) ); break;//335
+      case 27: object->addInfo( LHCb::ProtoParticle::CaloClusChi2, ( (*info)[ proto_it->first ] ) ); break;//336
+      case 28: object->addInfo( LHCb::ProtoParticle::CaloNeutralPrsM, ( (*info)[ proto_it->first ] ) ); break;//343
+      case 29: object->addInfo( LHCb::ProtoParticle::CaloShapeFr2r4, ( (*info)[ proto_it->first ] ) ); break;//344
+      case 30: object->addInfo( LHCb::ProtoParticle::CaloShapeKappa, ( (*info)[ proto_it->first ] ) ); break;//345
+      case 31: object->addInfo( LHCb::ProtoParticle::CaloShapeAsym, ( (*info)[ proto_it->first ] ) ); break;//346
+      case 32: object->addInfo( LHCb::ProtoParticle::CaloShapeE1, ( (*info)[ proto_it->first ] ) ); break;//347
+      case 33: object->addInfo( LHCb::ProtoParticle::CaloShapeE2, ( (*info)[ proto_it->first ] ) ); break;//348
+      case 34: object->addInfo( LHCb::ProtoParticle::CaloPrsShapeE2, ( (*info)[ proto_it->first ] ) ); break;//349
+      case 35: object->addInfo( LHCb::ProtoParticle::CaloPrsShapeEmax, ( (*info)[ proto_it->first ] ) ); break;//350
+      case 36: object->addInfo( LHCb::ProtoParticle::CaloPrsShapeFr2, ( (*info)[ proto_it->first ] ) ); break;//351
+      case 37: object->addInfo( LHCb::ProtoParticle::CaloPrsShapeAsym, ( (*info)[ proto_it->first ] ) ); break;//352
+      case 38: object->addInfo( LHCb::ProtoParticle::CaloPrsM, ( (*info)[ proto_it->first ] ) ); break;//353
+      case 39: object->addInfo( LHCb::ProtoParticle::CaloPrsM15, ( (*info)[ proto_it->first ] ) ); break;//354
+      case 40: object->addInfo( LHCb::ProtoParticle::CaloPrsM30, ( (*info)[ proto_it->first ] ) ); break;//355
+      case 41: object->addInfo( LHCb::ProtoParticle::CaloPrsM45, ( (*info)[ proto_it->first ] ) ); break;//356
+      case 42: object->addInfo( LHCb::ProtoParticle::CaloClusterCode, ( (*info)[ proto_it->first ] ) ); break;//357
+      case 43: object->addInfo( LHCb::ProtoParticle::CaloClusterFrac, ( (*info)[ proto_it->first ] ) ); break;//358
+      case 44: object->addInfo( LHCb::ProtoParticle::CombDLLe, ( (*info)[ proto_it->first ] ) ); break;//600
+      case 45: object->addInfo( LHCb::ProtoParticle::CombDLLmu, ( (*info)[ proto_it->first ] ) ); break;//601
+      case 46: object->addInfo( LHCb::ProtoParticle::CombDLLpi, ( (*info)[ proto_it->first ] ) ); break;//602
+      case 47: object->addInfo( LHCb::ProtoParticle::CombDLLk, ( (*info)[ proto_it->first ] ) ); break;//603
+      case 48: object->addInfo( LHCb::ProtoParticle::CombDLLp, ( (*info)[ proto_it->first ] ) ); break;//604
+      case 49: object->addInfo( LHCb::ProtoParticle::InAccBrem, ( (*info)[ proto_it->first ] ) ); break;// Extra for PID group
+      case 50: object->addInfo( LHCb::ProtoParticle::InAccSpd, ( (*info)[ proto_it->first ] ) ); break;// ''
+      case 51: object->addInfo( LHCb::ProtoParticle::InAccPrs, ( (*info)[ proto_it->first ] ) ); break;// ''
+      case 52: object->addInfo( LHCb::ProtoParticle::InAccEcal, ( (*info)[ proto_it->first ] ) ); break;// ''
+      case 53: object->addInfo( LHCb::ProtoParticle::InAccHcal, ( (*info)[ proto_it->first ] ) ); break;// ''
+      case 54: object->addInfo( LHCb::ProtoParticle::VeloCharge, ( (*info)[ proto_it->first ] ) ); break;// ''
+      case 55: object->addInfo( LHCb::ProtoParticle::RichPIDStatus, ( (*info)[ proto_it->first ] ) ); break;// ''
     }
   }
 
@@ -688,6 +708,12 @@ void ReportConvertTool::TrackObjectFromSummary( const HltObjectSummary::Info* in
       case 14: last->setTx( (*info)[ track_it->first ] ); break;
       case 15: last->setTy( (*info)[ track_it->first ] ); break;
       case 16: last->setQOverP( (*info)[ track_it->first ] ); break;
+      case 17: object->addInfo( LHCb::Track::CloneDist, (*info)[ track_it->first ] ); break;
+      case 18: object->addInfo( LHCb::Track::FitMatchChi2, (*info)[ track_it->first ] ); break;
+      case 19: object->addInfo( LHCb::Track::FitVeloChi2, (*info)[ track_it->first ] ); break;
+      case 20: object->addInfo( LHCb::Track::FitTChi2, (*info)[ track_it->first ] ); break;
+      case 21: object->addInfo( LHCb::Track::FitVeloNDoF, (*info)[ track_it->first ] ); break;
+      case 22: object->addInfo( LHCb::Track::FitTNDoF, (*info)[ track_it->first ] ); break;
     }
   }
 
