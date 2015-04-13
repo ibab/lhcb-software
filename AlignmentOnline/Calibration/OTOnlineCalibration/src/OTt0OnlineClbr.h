@@ -6,6 +6,7 @@
 #include <memory>
 #include <fstream>
 #include <iostream>
+#include <chrono>
 
 // BOOST
 #include <boost/filesystem.hpp>
@@ -46,8 +47,8 @@ public:
    virtual StatusCode start     ();    ///< Algorithm start
    virtual StatusCode execute   ();    ///< Algorithm execution
    virtual StatusCode finalize  ();    ///< Algorithm finalization
-   virtual StatusCode analyze   (std::string& SaveSet,
-                                 std::string Task); ///< Algorithm analyze
+   virtual StatusCode analyze   (std::string& saveSet,
+                                 std::string task); ///< Algorithm analyze
 
    typedef unsigned int FileVersion ;
 
@@ -95,6 +96,10 @@ private:
     * Minimum number of entries required for calibration.
     */
    unsigned int m_minEntries;
+   /*
+    * Minimum number of entries required for calibration.
+    */
+   unsigned int m_maxTimeDiff;
 
    std::string m_xmlFilePath;
    std::string m_xmlFileName;
@@ -108,21 +113,10 @@ private:
    IPublishSvc* m_pPublishSvc; ///< Online Gaucho Monitoring Service
 
    std::set<unsigned int> m_calibratedRuns;
+
+   std::chrono::time_point<std::chrono::system_clock> m_start;
+   
    std::map<unsigned int, std::vector<std::string>> m_calibrating;
-
-   //=============================================================================
-   // Function to get run number from fileName, rely on the name convention here:
-   // https://lbtwiki.cern.ch/bin/view/Online/MonitoringExpertGuide#Savesets
-   //=============================================================================
-   inline unsigned int getRunNumber( std::string fileName )
-   {
-      std::string firstName = fileName.substr(fileName.find_first_of("-")+1);
-      std::string runString = firstName.substr(0, firstName.find_first_of("-"));
-
-      unsigned int runNumber = atoi( runString.c_str() );
-
-      return runNumber;
-   }
 
    boost::filesystem::path xmlFileName( FileVersion v ) const ;
    double readCondDB();

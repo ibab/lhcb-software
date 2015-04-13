@@ -3,10 +3,12 @@
 #include <algorithm>
 #include <iostream>
 #include <fstream>
+#include <chrono>
 #include <memory>
 #include <thread>
 #include <chrono>
 #include <vector>
+#include <string>
 #include <map>
 #include <set>
 
@@ -86,8 +88,9 @@ OTt0OnlineClbr::OTt0OnlineClbr( const string& name, ISvcLocator* pSvcLocator)
    declareProperty("XMLFilePath", m_xmlFilePath = "/group/online/alignment/OT/Calib" );
    declareProperty("CondStructure", m_CondStructure = "Conditions/OT/Calibration/" );
    declareProperty("PublishSleep", m_pubSleep = 1);
-   declareProperty("RunOnline"   ,  m_RunOnline  = true );
-   declareProperty("Histograms"   ,  m_histogramNames =
+   declareProperty("MaxTimeDiff", m_maxTimeDiff = 3600);
+   declareProperty("RunOnline",  m_RunOnline  = true );
+   declareProperty("Histograms",  m_histogramNames =
          {"OT/OTTrackMonitor/station1/drifttimeresidualgood",
           "OT/OTTrackMonitor/station2/drifttimeresidualgood",
           "OT/OTTrackMonitor/station3/drifttimeresidualgood"});
@@ -156,38 +159,82 @@ StatusCode OTt0OnlineClbr::execute()
 }
 
 //=============================================================================
-StatusCode OTt0OnlineClbr::analyze (string& SaveSet, string Task)
+StatusCode OTt0OnlineClbr::analyze (string& saveSet, string task)
 {
    if ( msgLevel(MSG::DEBUG) ) debug() << "==> Analyze" << endmsg;
 
    // Mandatory: call default analyze method
-   StatusCode sc = AnalysisTask::analyze(SaveSet, Task);
+   StatusCode sc = AnalysisTask::analyze(saveSet, task);
    if ( sc.isFailure() ) return sc;
 
-   string fileName = fs::path( SaveSet.c_str() ).string();
-   const unsigned int run = getRunNumber(fileName);
-   if ( msgLevel(MSG::DEBUG) ) {
-      debug() << "Extracted file name: " << fileName
-              << ", Run: " << run << endmsg;
-   }
-
-   // Check if already done, if so: return.
-   if (m_calibratedRuns.count(run)) {
-      debug() << "Run : " << run << " already calibrated." << endmsg;
-      return StatusCode::SUCCESS;
-   }
-
+   // Lambda to convert runs as keys of calibrated runs container to only run
+   // numbers
+   auto calibrating = [this] {
+      // Store calibrated runs in a vector to pass to publish
+      vector<unsigned int> runs(m_calibrating.size());
+      std::transform(begin(m_calibrating), end(m_calibrating), begin(runs),
+                     [](const decltype(m_calibrating)::value_type& entry) {
+                        return entry.first;
+                     });
+      return runs;
+   };
+   
    unique_ptr<TFile> outFile;
+   // Get latest version
+   const FileVersion latest = latestVersion();
+   const unsigned int run = 0;
+   
    if(m_RunOnline){
+      const string fileName{fs::path{saveSet}.filename().string()};
+      boost::regex re(string("Brunel") + "-(?<run>\\d+)-(?<time>[\\dT]+)\\.root$");
+      boost::smatch matches;
+      auto flags = boost::match_default;
+      if (!boost::regex_match(begin(fileName), end(fileName), matches, re, flags)) {
+         error() << "Bad SaveSet filename: " << saveSet << endmsg;
+         return StatusCode::FAILURE;
+      }
+
+      // Get run number
+      const unsigned int run = boost::lexical_cast<unsigned int>(matches.str("run"));
+      debug() << "File name: " << saveSet << ", run: " << run << endmsg;
+
+      // Check if already done, if so: return.
+      if (m_calibratedRuns.count(run)) {
+         debug() << "Run : " << run << " already calibrated." << endmsg;
+         return StatusCode::SUCCESS;
+      }
+
+      // Parse timestamp
+      std::tm tm;
+      bzero(&tm, sizeof(std::tm));
+      strptime(matches.str("year").c_str(), "%Y%m%dT%H%M%S", &tm);
+      auto tp = std::chrono::system_clock::from_time_t(std::mktime(&tm));
+
+      // Calculate time difference with previous SaveSet.
+      unsigned int diff = 0;
+      if (m_calibrating.empty()) {
+         // First file we get
+         m_start = tp;
+      } else {
+         diff = std::chrono::duration_cast<std::chrono::seconds>(tp - m_start).count();
+      }
+
+      // If too much difference and some runs are left, publish problem + old
+      // versions for those runs.
+      if (diff > m_maxTimeDiff) {
+         publish(calibrating(), latest, "bad");
+         m_calibrating.clear();
+      }
+      
       // Check if a calibration can be done, if not return, else calibrate.
-      if (fileName.find(EOR) != string::npos) {
+      if (saveSet.find(EOR) != string::npos) {
          // Either no intermediate saveset were produced and this is the EOR one, 
          // or some files already processed, but not enough statistics.
          // Use only the EOR set in both cases.
-         m_calibrating[run] = vector<string>(1, SaveSet);
+         m_calibrating[run] = vector<string>(1, saveSet);
       } else {
          // Add to files for check of sufficient stats.
-         m_calibrating[run].emplace_back(SaveSet);
+         m_calibrating[run].emplace_back(saveSet);
       }
    } else {
       // Test mode.
@@ -205,17 +252,15 @@ StatusCode OTt0OnlineClbr::analyze (string& SaveSet, string Task)
    double t0 = 0.0;
    double prevT0 = 0.0;
 
-   // Read latest version
-   const FileVersion latest = latestVersion();
-   auto xmlFile = xmlFileName(latest);
-
    // Read last XML to get reference.
+   auto xmlFile = xmlFileName(latest);
    auto r = readXML(xmlFile);
    m_calibratedRuns.insert(r.first);
    prevT0 = r.second;
 
    debug() << "Global t0 = " << prevT0 << endmsg;
 
+   // Calibrate the T0
    double residual = 0.0;
    double residual_err = 0.0;
 
@@ -225,19 +270,14 @@ StatusCode OTt0OnlineClbr::analyze (string& SaveSet, string Task)
    } else {
       fitHistogram(histogram.get(), residual, residual_err, outFile.get());
    }
-
    t0 = prevT0 + residual;
 
    debug() << "Global t0: "      << t0 << endmsg;
    debug() << "Global dt0: "     << residual  << endmsg;
    debug() << "Global dt0_err: " << residual_err << endmsg;
 
-   // Store calibrated runs in a vector to pass to publish
-   vector<unsigned int> runs(m_calibrating.size());
-   std::transform(begin(m_calibrating), end(m_calibrating), begin(runs),
-                  [](const decltype(m_calibrating)::value_type& entry) {
-                     return entry.first;
-                  });
+   // The runs we are calibrating.
+   auto runs = calibrating();
    
    // Check and improve condition for writing and publishing
    if (std::abs(t0) > m_threshold) {
