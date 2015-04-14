@@ -13,6 +13,15 @@
     . Prepended 'CharmHad' to the names of shared instances of filters for
       basic particles.  Most of these had very generic names that might
       eventually conflict with similar filters in other directories.
+    . Bring D02HHLines.py closer to a 'standard' form.
+      - Removed the ability to change the slot name in the constructor of 
+        D02HHLines.CharmHadD02HHLines
+      - Moved cuts on final state particles out of DetachedD02HHCombiner and
+        into instances of DetachedInParticleFilter.
+      - Moved instantiation of shared instances of DetachedD02HHCombiner from
+        D02HHLines.py to Stages.py.
+      - Fixed non-standard name for the nickname parameter in the constructor
+        of DetachedD02HHCombiner.
 
 ! 2015-04-14 - Mika Vesterinen
   - Update the TrackEff module to move the making of velo probes into Hlt2/Hlt2SharedParticles

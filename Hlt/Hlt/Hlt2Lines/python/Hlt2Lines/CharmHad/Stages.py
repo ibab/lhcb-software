@@ -139,6 +139,11 @@ SharedNoPIDDetachedChild_pi = DetachedInParticleFilter( 'CharmHadSharedNoPIDDeta
 SharedNoPIDDetachedChild_K = DetachedInParticleFilter( 'CharmHadSharedNoPIDDetachedChild_K', [Hlt2NoPIDsKaons] )
 SharedNoPIDDetachedChild_p = DetachedInParticleFilter( 'CharmHadSharedNoPIDDetachedChild_p', [Hlt2NoPIDsProtons] )
 
+## For detached D0 -> hh lines.  PID cuts not yet implemented.
+CharmHadSharedDetachedD0ToHHChildPi = DetachedInParticleFilter( 'CharmHadSharedDetachedD0ToHHChildPi', [Hlt2NoPIDsPions] )
+CharmHadSharedDetachedD0ToHHChildK  = DetachedInParticleFilter( 'CharmHadSharedDetachedD0ToHHChildK', [Hlt2NoPIDsKaons] )
+
+
 
 ## ------------------------------------------------------------------------- ##
 class KsFilterForHHKs(Hlt2ParticleFilter) : # {
@@ -264,6 +269,77 @@ class TagDecay(Hlt2Combiner) : # {
 # }
 
 
+## Combiner class for D0 -> h h' decays with detachement cuts
+## ------------------------------------------------------------------------- ##
+class DetachedD02HHCombiner(Hlt2Combiner) : # {
+    """
+    Combiner for 3 basic track-based particles.  The 'Detached' in the class
+    name indicates that it applies cuts to lifetime-biasing non-lifetime
+    values like the MIPCHI2DV(PRIMARY) of the decay products and the
+    BPVVDCHI2 of the fitted vertex.
+
+    Configuration dictionaries must contain the following keys:
+        'WideMass_M_MIN'
+        'WideMass_M_MAX'    : lower and upper limits on AM in CombinationCut
+        'Trk_Max_APT_MIN'   : lower limit on largest product PT (APT1 or APT2)
+        'D0_PT_MIN'         : lower limit on APT in CombinationCut
+        'Pair_AMINDOCA_MAX' : upper limit on AMINDOCA('') in CombinationCut
+        'D0_VCHI2PDOF_MAX'  : upper limit on VFASPF(VCHI2PDOF) in MotherCut
+        'D0_BPVVDCHI2_MIN'  : lower limit on BPVVDCHI2 in MotherCut
+        'D0_BPVDIRA_MIN'    : lower limit on BPVDIRA in MotherCut
+        'TisTosSpec'        : configuration string of the Hlt1 TISTOS filter.
+    """
+    def __init__(self, name, decay, inputs, nickname = None, shared = False) : # {
+        dc = { }
+
+        ## Assume that the wide mass range is wider than the narrow range.
+        combcuts = "in_range(%(WideMass_M_MIN)s,  AM, %(WideMass_M_MAX)s)" \
+                   "& ((APT1 > %(Trk_Max_APT_MIN)s) " \
+                       "| (APT2 > %(Trk_Max_APT_MIN)s))" \
+                   "& (APT > %(D0_PT_MIN)s)" \
+                   "& (AMINDOCA('') " \
+                       "< %(Pair_AMINDOCA_MAX)s )"
+
+        parentcuts = "(VFASPF(VCHI2PDOF) < %(D0_VCHI2PDOF_MAX)s)" \
+                     "& (BPVVDCHI2> %(D0_BPVVDCHI2_MIN)s )" \
+                     "& (BPVDIRA > %(D0_BPVDIRA_MIN)s )"
+
+        from HltTracking.HltPVs import PV3D
+        ## The name passed to the base class constructor determines the
+        ##   configuration dictionary that is picked up.
+        name = name if not shared else 'CharmHad' + name
+        Hlt2Combiner.__init__( self, name, decay, inputs,
+                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                               tistos = 'TisTosSpec',
+                               nickname = nickname,
+                               shared = shared,
+                               DaughtersCuts = dc,
+                               CombinationCut = combcuts,
+                               MotherCut = parentcuts,
+                               Preambulo = [] )
+    # }
+# }
+
+
+## Shared instances of DetachedD02HHCombiner
+## ------------------------------------------------------------------------- ##
+
+D02HH_D0ToKmPipWideMass  = DetachedD02HHCombiner( 'D02HH_D0ToKmPip'
+        , decay = "[D0 -> K- pi+]cc"
+        , inputs = [ CharmHadSharedDetachedD0ToHHChildPi, CharmHadSharedDetachedD0ToHHChildK ]
+        , nickname = 'D02HH'            ## def in D02HHLines.py
+        , shared = True )
+D02HH_D0ToKmKpWideMass   = DetachedD02HHCombiner( 'D02HH_D0ToKmKp'
+        , decay = "D0 -> K- K+"         ## Only D0s to prevent duplication
+        , inputs = [ CharmHadSharedDetachedD0ToHHChildK ]
+        , nickname = 'D02HH'            ## def in D02HHLines.py
+        , shared = True )
+D02HH_D0ToPimPipWideMass = DetachedD02HHCombiner( 'D02HH_D0ToPimPip'
+        , decay = "D0 -> pi- pi+"       ## Only D0s to prevent duplication
+        , inputs = [ CharmHadSharedDetachedD0ToHHChildPi ]
+        , nickname = 'D02HH'            ## def in D02HHLines.py
+        , shared = True )
+
 
 ## ========================================================================= ##
 ## 3-body Combiners
@@ -275,7 +351,7 @@ class DetachedHHHCombiner(Hlt2Combiner) : # {
     Combiner for 3 basic track-based particles.  The 'Detached' in the class
     name indicates that it applies cuts to lifetime-biasing non-lifetime
     values like the MIPCHI2DV(PRIMARY) of the decay products and the
-    BPVVDCHI2_MIN of the fitted vertex.
+    BPVVDCHI2 of the fitted vertex.
 
     Always creates a shared instance of the filter.
 
@@ -660,47 +736,6 @@ class D02HHCombiner(Hlt2Combiner) : # {
                                CombinationCut = combcuts,
                                MotherCut = parentcuts,
                                Preambulo = [] )
-
-## Combiner class for D0 -> h h' decays with detachement cuts
-class DetachedD02HHCombiner(Hlt2Combiner) : # {
-    def __init__(self, name, decay, inputs, slotName = None, shared = False) : # {
-
-        incuts = "(TRCHI2DOF< %(Trk_ALL_TRCHI2DOF_MAX)s )" \
-                  "& (PT> %(Trk_PT_MIN)s)" \
-                  "& (P> %(Trk_P_MIN)s)" \
-                  "& (MIPCHI2DV(PRIMARY)> %(Trk_MIPCHI2DV_MIN)s )"
-
-        dc = {   'pi+' : incuts
-               , 'K+' : incuts
-             }
-
-        ## Assume that the wide mass range is wider than the narrow range.
-        combcuts = "in_range(%(WideMass_M_MIN)s,  AM, %(WideMass_M_MAX)s)" \
-                   "& ((APT1 > %(Trk_Max_APT_MIN)s) " \
-                       "| (APT2 > %(Trk_Max_APT_MIN)s))" \
-                   "& (APT > %(D0_PT_MIN)s)" \
-                   "& (AMINDOCA('') " \
-                       "< %(Pair_AMINDOCA_MAX)s )"
-
-        parentcuts = "(VFASPF(VCHI2PDOF) < %(D0_VCHI2PDOF_MAX)s)" \
-                     "& (BPVVDCHI2> %(D0_BPVVDCHI2_MIN)s )" \
-                     "& (BPVDIRA > %(D0_BPVDIRA_MIN)s )"
-
-        from HltTracking.HltPVs import PV3D
-        ## The name passed to the base class constructor determines the
-        ##   configuration dictionary that is picked up.
-        name = name if not shared else 'CharmHad' + name
-        Hlt2Combiner.__init__( self, name, decay, inputs,
-                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
-                               tistos = 'TisTosSpec',
-                               nickname = slotName,
-                               shared = shared,
-                               DaughtersCuts = dc,
-                               CombinationCut = combcuts,
-                               MotherCut = parentcuts,
-                               Preambulo = [] )
-    # }
-# }
 
 class DetachedHHChildCombiner(Hlt2Combiner):
     # combiner for 2-body displaced tracks to be used in multi-body D decays
