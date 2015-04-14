@@ -158,7 +158,7 @@ class LambdaL0Filter(Hlt2ParticleFilter):
     """Filter L0."""
     def __init__(self, name, inputs):
         lambda0_cut = """(DOCA(1,2) < %(TRACK_DOCA_MAX)s) &
-                         (PT > %(L0_PT_MIN)s)
+                         (PT > %(L0_PT_MIN)s) &
                          (NINTREE( (ISBASIC) &
                                   (P > %(TRACK_P_MIN)s) &
                                   (MIPCHI2DV(PRIMARY) > %(TRACK_IPCHI2_MIN)s)
