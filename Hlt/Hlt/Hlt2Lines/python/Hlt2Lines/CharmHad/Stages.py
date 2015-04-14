@@ -2,7 +2,6 @@
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2VoidFilter
 from Hlt2Lines.Utilities.Hlt2Combiner import Hlt2Combiner
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
-from Inputs import KS0_LL, KS0_DD, Lambda_LL, Lambda_DD
 
 ## ========================================================================= ##
 ## Global event cuts
@@ -26,7 +25,7 @@ class TrackGEC(Hlt2VoidFilter):
 
 
 ## ========================================================================= ##
-## Filters for basic particles
+## Filters for Input particles
 ## ========================================================================= ##
 
 ## ------------------------------------------------------------------------- ##
@@ -140,16 +139,38 @@ SharedNoPIDDetachedChild_K = DetachedInParticleFilter( 'SharedNoPIDDetachedChild
 SharedNoPIDDetachedChild_p = DetachedInParticleFilter( 'SharedNoPIDDetachedChild_p', [Hlt2NoPIDsProtons] )
 
 
-class KsFilterForHHKs(Hlt2ParticleFilter):
-    def __init__(self, name, inputs):
-        cut = (" (BPVLTIME() > %(DecayTime_MIN)s) " +
-               "& (VFASPF(VZ) > %(VZ_MIN)s)" +
-               "& (VFASPF(VZ) < %(VZ_MAX)s)")
-        from HltTracking.HltPVs import PV3D
-        Hlt2ParticleFilter.__init__(self, name, cut, inputs, shared = True)
+## ------------------------------------------------------------------------- ##
+class KsFilterForHHKs(Hlt2ParticleFilter) : # {
+    """
+    Filter KS0 candidates on BPVLTIME and VFASPF(VZ).  Applicable to both
+    LL and DD KS0 candidates.
 
+    Always creates a shared instance of the filter.
+
+    Configuration dictionaries must contain the following keys:
+        'DecayTime_MIN' : upper limit on candiate BPVLTIME()
+        'VZ_MIN'
+        'VZ_MAX'        : lower and upper limits on decay vertex VZ
+    """
+    def __init__(self, name, inputs): # {
+        cut = (" (BPVLTIME() > %(DecayTime_MIN)s) " +
+               "& (in_range( %(VZ_MIN)s, VFASPF(VZ), %(VZ_MAX)s ))")
+        from HltTracking.HltPVs import PV3D
+        Hlt2ParticleFilter.__init__( self, name, cut, inputs
+                        , dependencies = [PV3D('Hlt2')]
+                        , shared = True )
+    # }
+# }
+
+## Shared instances of KsFilterForHHKs
+## If these are not made into central shared particles, their names should
+##   be updated to flag them as CharmHad shared particles to avoid name
+##   conflicts with other subdirectories.
+## ------------------------------------------------------------------------- ##
+from Inputs import KS0_LL, KS0_DD, Lambda_LL, Lambda_DD
 SharedKsLL =  KsFilterForHHKs('SharedKsLL',[KS0_LL])
 SharedKsDD =  KsFilterForHHKs('SharedKsDD',[KS0_DD])
+
 
 ## ------------------------------------------------------------------------- ##
 from Configurables import DaVinci__N3BodyDecays as N3BodyDecays

@@ -10,12 +10,15 @@
 
 ! 2015-04-14 - Patrick Spradlin
   - Some code cleaning in CharmHad/Stages.py
-    . Chagned one-off classes inheriting from DetachedHHHCombiner to
+    . Changed one-off classes inheriting from DetachedHHHCombiner to
       instances of the DetachedHHHCombiner class.
-    . CharmHad/D2HHHLines.py updated to use the instances.
-    . CharmHad/XSecLines.py updated to use the instances.
-    . PID/Lines.py updated to use the updated instance of the Lambda_c+
-      combiner.
+      . CharmHad/D2HHHLines.py updated to use the instances.
+      . CharmHad/XSecLines.py updated to use the instances.
+      . PID/Lines.py updated to use the updated instance of the Lambda_c+
+        combiner.
+    . Changed implementation of range cut on VZ in KsFilterForHHKs to use
+      in_range.  Added dependence on PV3D('Hlt2') required by use of BPVLTIME.
+
 
 ! 2015-04-13 - Mike Sokoloff
   - CharmHadWithKs:  removed this subdirectory; one set of HHKs algorithms is obsolete;
