@@ -23,17 +23,6 @@ class TrackEffTagFilter(Hlt2ParticleFilter):
         cut = "(PT > %(Tag_MinPT)s) & (MIPCHI2DV(PRIMARY) > %(Tag_MinIPCHI2)s) & (TRCHI2DOF <%(Tag_MaxTrchi2)s)"
         Hlt2ParticleFilter.__init__(self, name, cut, inputs)
 
-class TrackEffProbeFilter(Hlt2ParticleFilter):
-    def __init__(self, name, inputs):
-        cut = ("(ETA > %(Probe_MinETA)s) & (ETA < %(Probe_MaxETA)s)" 
-               + " & (MIPCHI2DV(PRIMARY) > %(Probe_MinIPCHI2)s)")
-        Hlt2ParticleFilter.__init__(self, name, cut, inputs)
-
-class TrackEffSlowPionFilter(Hlt2ParticleFilter):
-    def __init__(self, name, inputs):
-        cut = ("(PT > %(Slowpi_MinPt)s)")
-        Hlt2ParticleFilter.__init__(self, name, cut, inputs)
-
 class D0ToKpiCombiner(Hlt2Combiner):
     def __init__(self, name,inputs):
         combCut   = ("(in_range( %(D0_MinAM)s,AM, %(D0_MaxAM)s ))"
@@ -48,7 +37,7 @@ class D0ToKpiCombiner(Hlt2Combiner):
                               tistos = 'TisTosSpec',
                               CombinationCut = combCut, MotherCut = motherCut,
                               Preambulo = D0Preambulo())
-                
+
 class DstTagger(Hlt2Combiner):
     def __init__(self, name,inputs):
         ## opening angle between slow pion and D0 flight
@@ -78,19 +67,17 @@ class DstDTFFilter(Hlt2ParticleFilter):
                 }
         Hlt2ParticleFilter.__init__(self, name, cut, inputs,**args)
 
-from Inputs import Hlt2LoosePions, Hlt2LooseKaons, Hlt2ProbeVeloKaons, Hlt2ProbeVeloPions , Hlt2SlowPions
+from Inputs import GoodPions, GoodKaons, VeloKaons, VeloPions , SlowPions
 
 #### pion probe
-ProbePions = TrackEffProbeFilter('Probe',inputs = [Hlt2ProbeVeloPions])
-TagKaons   = TrackEffTagFilter('TagK',inputs = [Hlt2LooseKaons])
-D0ToKpiPionProbe  = D0ToKpiCombiner('D0', inputs = [TagKaons,ProbePions])
-DstD0ToKpiPionProbe  = DstTagger('Dst',inputs=[D0ToKpiPionProbe,Hlt2LoosePions])
+TagKaons   = TrackEffTagFilter('TagK',inputs = [GoodKaons])
+D0ToKpiPionProbe  = D0ToKpiCombiner('D0', inputs = [TagKaons,VeloPions])
+DstD0ToKpiPionProbe  = DstTagger('Dst',inputs=[D0ToKpiPionProbe,SlowPions])
 FilteredDstD0ToKpiPionProbe  = DstDTFFilter('DstDTF',inputs=[DstD0ToKpiPionProbe])
 
 ##### kaon probe
-ProbeKaons = TrackEffProbeFilter('Probe',inputs = [Hlt2ProbeVeloKaons])
-TagPions   = TrackEffTagFilter('TagPi',inputs = [Hlt2LoosePions])
+TagPions   = TrackEffTagFilter('TagPi',inputs = [GoodPions])
 D0ToKpiKaonProbe   = D0ToKpiPionProbe.clone('D0', decay = ["[D0 -> pi+ K-]cc","[D0 -> pi+ K+]cc"],
-                                            inputs = [TagPions,ProbeKaons])
-DstD0ToKpiKaonProbe  = DstTagger('Dst',inputs=[D0ToKpiKaonProbe,Hlt2LoosePions])
+                                            inputs = [TagPions,VeloKaons])
+DstD0ToKpiKaonProbe  = DstTagger('Dst',inputs=[D0ToKpiKaonProbe,SlowPions])
 FilteredDstD0ToKpiKaonProbe  = DstDTFFilter('DstDTF',inputs=[DstD0ToKpiKaonProbe])

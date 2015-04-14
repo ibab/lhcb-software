@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-14 - Mika Vesterinen
+  - Update the TrackEff module to move the making of velo probes into Hlt2/Hlt2SharedParticles
+
 ! 2015-04014 - Mike Sokoloff
   - added ChargedHyperonLines.py to CharmHad
   - add SecondaryLambdaFilter and ChargedHyperonLambdaHCombiner classes to Stages.py

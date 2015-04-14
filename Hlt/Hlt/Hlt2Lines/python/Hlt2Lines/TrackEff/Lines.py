@@ -8,9 +8,7 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 class TrackEffLines(Hlt2LinesConfigurableUser):
     __slots__ = {'Prescale' : {},
                  'TrackGEC' : {'NTRACK_MAX'           : 180},
-                 #'D0' :{'D0_MinAM' : 900.*MeV},
                  'Common' : {'TisTosSpec'               : "Hlt1Track.*Decision%TOS"
-                             ,'Slowpi_MinPt' : 120.*MeV
                              , 'D0_MinAM' : 900.*MeV
                              , 'D0_MaxAM' : 2200.*MeV
                              , 'D0_MinSumIP' : 0.2*mm
@@ -30,12 +28,9 @@ class TrackEffLines(Hlt2LinesConfigurableUser):
                              , 'Tag_MaxTrchi2' : 2.0 
                              , 'TagK_MinPIDK' : 0. 
                              , 'TagPi_MaxPIDK' : 10. 
-                             , 'Probe_MinETA' : 1.9 
-                             , 'Probe_MaxETA' : 5.1 
-                             , 'Probe_MinIPCHI2' : 9. 
+                             , 'Slowpi_MinPt' : 120*MeV
                              }
                  }
-    
     def __apply_configuration__(self):
         from Stages import FilteredDstD0ToKpiPionProbe
         from Stages import FilteredDstD0ToKpiKaonProbe
