@@ -31,7 +31,7 @@ from HltTrackNames import Hlt2TrackingRecognizedFitTypesForRichID
 from HltRecoConf import HltRichDefaultHypos, HltRichDefaultRadiators
 from HltRecoConf import HltRichDefaultTrackCuts
 from HltRecoConf import OfflineRichDefaultHypos, OfflineRichDefaultRadiators
-from HltRecoConf import OfflineRichDefaultTrackCuts
+from HltRecoConf import OfflineRichDefaultTrackCuts,OfflineRichDefaultDownTrackCuts
 
 from Configurables import CaloProcessor, RichRecSysConf, TrackSelector, TrackSys
 
@@ -972,7 +972,10 @@ class Hlt2Tracking(LHCbConfigurableUser):
         """
         from Configurables import HltRecoConf
         if HltRecoConf().getProp("OfflineRich"):
-            self.setProp("RichTrackCuts", OfflineRichDefaultTrackCuts)
+            if (self.__trackType() == "Long"):
+                self.setProp("RichTrackCuts", OfflineRichDefaultTrackCuts)
+            if (self.__trackType() == "Downstream"):
+                self.setProp("RichTrackCuts", OfflineRichDefaultDownTrackCuts)
             self.setProp("RichHypos",  OfflineRichDefaultHypos)
             self.setProp("RichPidConfig", "FullGlobal")
             self.setProp("RichTracklessRingAlgs", [])

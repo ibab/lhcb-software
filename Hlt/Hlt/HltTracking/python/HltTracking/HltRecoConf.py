@@ -123,9 +123,10 @@ HltRichDefaultRadiators			= ["Rich1Gas","Rich2Gas"]
 HltRichDefaultTrackCuts     = { tt : { "Chi2Cut" : [0.,MaxChi2], "PCut" : [2,100], "PtCut" : [0.8,100]} for tt in ['Forward','Match']}
 
 
-OfflineRichDefaultHypos	       = ["pion","kaon","proton","belowThreshold"]
+OfflineRichDefaultHypos	       = ["pion","kaon","proton","muon","electron","belowThreshold"]
 OfflineRichDefaultRadiators    = ["Rich1Gas","Rich2Gas"]
 OfflineRichDefaultTrackCuts    = { tt : {'Chi2Cut' : [0,3.0], 'PCut' : [0,1e9], 'PtCut' : [0,1e9] } for tt in ['Forward','Match'] }
+OfflineRichDefaultDownTrackCuts    = { tt : {'Chi2Cut' : [0,3.0], 'PCut' : [0,1e9], 'PtCut' : [0,1e9] } for tt in ['KsTrack'] }
 
 
 

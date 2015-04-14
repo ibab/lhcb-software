@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-04-14 - Sascha Stahl
+ - Fix Rich reconstruction for Downstream tracks and add missing hypotheses.
+
+! 2015-04-14 - Sascha Stahl
  - Small fixes in HltSharedTracking and Hlt2Tracking.
 
 ! 2015-04-09 - Sascha Stahl
