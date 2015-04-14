@@ -46,5 +46,9 @@ private:
   /// Switch in case input and output container are the same or different
   bool m_makeNewContainer;
   bool m_skipFailedFitAtInput ;
+  
+  /// Max chi2 per track when output is a new container
+  double m_maxChi2DoF;
+  
 };
 #endif // TRACKFITTER_TRACKEVENTFITTER_H
