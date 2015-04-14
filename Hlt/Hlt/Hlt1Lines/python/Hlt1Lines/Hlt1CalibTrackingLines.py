@@ -40,7 +40,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
                 ,'BsPhiGammaMassMax'     : 6400    # MeV
                 ,'PhiMassWinLoose'       : 50      # MeV
                 ,'PhiMassWin'            : 30      # MeV
-                ,'PhiMassTight'          : 20      # MeV
+                ,'PhiMassWinTight'       : 20      # MeV
                 ,'PhiPT'                 : 1800    # MeV
                 ,'PhiPTLoose'            : 500     # MeV
                 ,'PhiSumPT'              : 3000    # MeV
