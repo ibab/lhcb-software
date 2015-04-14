@@ -121,7 +121,6 @@ Hlt2VeloPionParts = NoPIDsParticleMaker("Hlt2VeloPionParts")
 Hlt2VeloPionParts.Particle = 'pion'
 Hlt2VeloPionParts.Input =  Hlt2VeloProtos.Output 
 Hlt2VeloPionParts.Output =  Hlt2TrackEffRoot+"/Hlt2VeloPions/Particles"
-Hlt2VeloPionParts.OutputLevel = 2
 
 Hlt2VeloKaonParts = NoPIDsParticleMaker("Hlt2VeloKaonParts")
 Hlt2VeloKaonParts.Particle = 'kaon'
