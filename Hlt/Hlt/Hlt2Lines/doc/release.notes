@@ -8,6 +8,14 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-14 - Olli Lupton
+  - CharmHad+PID: move Lc+ -> K- p+ pi+ selection and Sc0 -> Lc+ pi- line to PID folder
+  - CharmHad: Give the TagDecay class an optional nickname parameter 
+  - PID: Add Sc++ -> Lc+ pi+ line
+  - PID: Update temporary ANNSvc IDs
+  - PID: Temporarily disable L0 TIS requirements until this is fixed
+  - Turbo: Remove CharmHad's old Sc0 -> Lc+ pi- PID calib line
+
 ! 2015-04-14 - Patrick Spradlin
   - Some code cleaning in CharmHad/Stages.py
     . Prepended 'CharmHad' to the names of shared instances of filters for

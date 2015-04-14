@@ -251,7 +251,7 @@ class TagDecay(Hlt2Combiner) : # {
                              at the MotherCut level, M - M1.
         'TisTosSpec'       : The configuration string of the Hlt1 TISTOS filter.
     """
-    def __init__(self, name, decay, inputs, DaughtersCuts = { }, shared = False):
+    def __init__(self, name, decay, inputs, DaughtersCuts = { }, shared = False, nickname = None):
         cc =    ('in_range( %(DeltaM_AM_MIN)s, (AM - AM1), %(DeltaM_AM_MAX)s )')
         mc =    ("(VFASPF(VCHI2PDOF) < %(TagVCHI2PDOF_MAX)s)" +
                  "& in_range( %(DeltaM_MIN)s, (M - M1), %(DeltaM_MAX)s )")
@@ -265,6 +265,7 @@ class TagDecay(Hlt2Combiner) : # {
                               DaughtersCuts = DaughtersCuts,
                               CombinationCut = cc, 
                               shared = shared,
+                              nickname = nickname,
                               MotherCut = mc, Preambulo = []) 
 # }
 
@@ -493,13 +494,6 @@ XSec_LcpToPimPpPip = DetachedHHHCombiner( 'XSec_LcpToPimPpPip'
         , decay = "[Lambda_c+ -> pi- p+ pi+]cc"
         , inputs = [ SharedDetachedLcChild_p, SharedDetachedLcChild_pi ]
         , nickname = 'Lc2HHH_XSec' ) ## 'Lc2HHH_XSec' defined in XSecLines.py
-
-## Combiner for PIDCalib
-PIDCalib_LcpToKmPpPip = DetachedHHHCombiner( 'PIDCalib_LcpToKmPpPip'
-        , decay = "[Lambda_c+ -> K- p+ pi+]cc"
-        , inputs = [ SharedNoPIDDetachedChild_p, SharedDetachedLcChild_K,
-                     SharedDetachedLcChild_pi ]
-        , nickname = 'Lc2KPPi_PIDCALIB' ) ## 'Lc2KPPi_PIDCALIB' def in D2HHHLines.py
 
 ## Combiner for KPi detection asymmetry studies
 DetAsym_DpToKmPipPip = DetachedHHHCombiner( 'DetAsym_DpToKmPipPip'

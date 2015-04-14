@@ -25,8 +25,7 @@ class TurboLines(Hlt2LinesConfigurableUser) :
 					           'Ds2PiPiPi_XSec',
 					           'Lc2KPPi_XSec',
 					           'Lc2PiPPi_XSec',
-					           'Sigmac_2LcPi_XSec',
-                                                   'Lc2KPPi_PIDCALIB']
+					           'Sigmac_2LcPi_XSec']
 			         }
                  }
 

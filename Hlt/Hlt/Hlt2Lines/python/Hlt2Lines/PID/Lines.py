@@ -66,7 +66,7 @@ class PIDLines(Hlt2LinesConfigurableUser):
                  'JPsiMuMu' :  {'ProbePt'       : 800 * MeV,
                                 'ProbeMinIPChi2': 10,
                                 'ProbeTisTos'   : [
-                                  "L0(" + "|".join(l0_muons) + ")Decision%TIS",
+                                  #"L0(" + "|".join(l0_muons) + ")Decision%TIS",
                                   hlt1_muons + "%TIS"
                                   ],
                                 'TagMinIPChi2'  : 25,
@@ -84,7 +84,7 @@ class PIDLines(Hlt2LinesConfigurableUser):
                  'JPsiEE'   :  {'ProbePt'       : 500 * MeV,
                                 'ProbeMinIPChi2': 9,
                                 'ProbeTisTos'   : [
-                                  "L0(" + "|".join(l0_electrons) + ")Decision%TIS",
+                                  #"L0(" + "|".join(l0_electrons) + ")Decision%TIS",
                                   hlt1_electrons + "%TIS"
                                   ],
                                 'TagMinIPChi2'  : 25,
@@ -107,7 +107,7 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                 'ProbeMinIPChi2': 0,
                                 'ProbePt'       : 300 * MeV,
                                 'ProbeTisTos'   : [
-                                  "L0(" + "|".join(l0_muons) + ")Decision%TIS",
+                                  #"L0(" + "|".join(l0_muons) + ")Decision%TIS",
                                   hlt1_muons + '%TIS'
                                   ],
                                 'LLhCombMLow'   : (1968 - 300) * MeV, # Ds+ -> phi pi+
@@ -147,22 +147,53 @@ class PIDLines(Hlt2LinesConfigurableUser):
                      'Muon'           : "HLT_PASS_RE('" + hlt1_muons + "')",
                      'Electron'       : "HLT_PASS_RE('" + hlt1_electrons + "')",
                      'ElectronFromL0' : "HLT_PASS_RE('" + hlt1_electrons + "')"
-                     }
-                }
-  
+                     },
+                 'TrackGEC' : {'NTRACK_MAX'           : 10000},
+                 # Now the combiner for the PID calib lines
+                 # The pointing cut is tight to ensure a purer signal even without
+                 # a PID cut on the proton
+                 'Lc2KPPi' : {
+                                'Trk_ALL_MIPCHI2DV_MIN'    :  6.0,
+                                'Trk_2OF3_MIPCHI2DV_MIN'   :  9.0,
+                                'Trk_1OF3_MIPCHI2DV_MIN'   :  12.0,
+                                'Trk_ALL_PT_MIN'           :  200.0 * MeV,
+                                'Trk_2OF3_PT_MIN'          :  400.0 * MeV,
+                                'Trk_1OF3_PT_MIN'          :  400.0 * MeV,
+                                'BPVVDCHI2_MIN'            :  10.0,
+                                'BPVLTIME_MIN'             :  0.1 * ps,
+                                'BPVDIRA_MIN'              :  0.0,
+                                'ASUMPT_MIN'               :  2000 * MeV,
+                                'AM_MIN'                   :  2201 * MeV,
+                                'AM_MAX'                   :  2371 * MeV,
+                                'Mass_M_MIN'               :  2211.0 * MeV,
+                                'Mass_M_MAX'               :  2361.0 * MeV,
+                                'VCHI2PDOF_MAX'            :  10.0, # took this one from CharmHad Common
+                                'TisTosSpec'               : "Hlt1(Two)?TrackMVADecision%TOS"}, # changed this
+                 # Note the pointing cut is now in the tagger so that we can re-use
+                 # the Lc candidates in the PIDCALIB lines for Lb -> Lc pi and Lb -> Lc mu nu
+                 'Sc2LcPi' : {
+                                'DeltaM_AM_MIN'            :  150.0 * MeV,
+                                'DeltaM_MIN'               :  155.0 * MeV,
+                                'DeltaM_AM_MAX'            :  180.0 * MeV,
+                                'DeltaM_MAX'               :  175.0 * MeV,
+                                'TagVCHI2PDOF_MAX'         :  100.0,
+                                'BPVDIRA_MIN'              :  0.99985,
+                                'TisTosSpec'               : "Hlt1(Two)?TrackMVADecision%TOS"}
+                 }
+
     def __apply_configuration__(self):
         from Stages import DetachedLLFilter, BCombiner, JPsiMuMuPosTagged, JPsiMuMuNegTagged, \
             JPsiEEPosTagged, JPsiEENegTagged, JPsiEEL0PosTagged, JPsiEEL0NegTagged, \
             PhiMuMuPosTagged, PhiMuMuNegTagged, KSFilter, \
-            LambdaCombiner, LambdaFilter
+            LambdaCombiner, LambdaFilter, Lc2KPPi
         from Inputs import KsLL, KsDD, LambdaLL, LambdaDD, NoPIDsProtons, NoPIDsDownProtons, Muons
 
         from Hlt2Lines.CharmHad.Lines import CharmHadLines
-        from Hlt2Lines.CharmHad.Stages import SharedNoPIDDetachedChild_K, SharedNoPIDDetachedChild_pi, PIDCalib_LcpToKmPpPip
+        from Hlt2Lines.CharmHad.Stages import SharedNoPIDDetachedChild_K, SharedNoPIDDetachedChild_pi, SharedSoftTagChild_pi, TagDecay
         from Hlt2Lines.Utilities.Hlt2Stage import Hlt2ExternalStage
         FilteredKaons = Hlt2ExternalStage(CharmHadLines(), SharedNoPIDDetachedChild_K)
         FilteredPions = Hlt2ExternalStage(CharmHadLines(), SharedNoPIDDetachedChild_pi)
-        Lc2KPPi = Hlt2ExternalStage(CharmHadLines(), PIDCalib_LcpToKmPpPip) # The combination of these to make SigmaC is in CharmHad
+        SharedSoftPions = Hlt2ExternalStage(CharmHadLines(), SharedSoftTagChild_pi)
 
         from Inputs import NoPIDsDownPions as FilteredDownPions # TODO maybe filter these, disabled for now we we don't even run the PID
 
@@ -202,7 +233,11 @@ class PIDLines(Hlt2LinesConfigurableUser):
               'Lambda2PPiDDhighP'     : [ LambdaCombiner('Lambda2PPiDDhighP', [ NoPIDsDownProtons, FilteredDownPions ], ll = False) ],
               'Lambda2PPiLLisMuon'    : [ LambdaCombiner('Lambda2PPiLLisMuon', [ NoPIDsProtons, FilteredPions ], ismuon = True, ll = True) ],
               'Lambda2PPiDDisMuon'    : [ LambdaCombiner('Lambda2PPiDDisMuon', [ NoPIDsDownProtons, FilteredDownPions ], ismuon = True, ll = False ) ],
-              'Lb2LcPi'               : [ BCombiner('Lb2LcPi', [ Lc2KPPi, FilteredPions ], decay = '[Lambda_b0 -> Lambda_c+ pi-]cc') ]
+              'Lb2LcPi'               : [ BCombiner('Lb2LcPi', [ Lc2KPPi, FilteredPions ], decay = '[Lambda_b0 -> Lambda_c+ pi-]cc') ],
+              'Sc02LcPi'              : [ TagDecay('Sc02LcPi', "[Sigma_c0 -> Lambda_c+ pi-]cc", inputs = [ Lc2KPPi, SharedSoftPions ],
+                                            DaughtersCuts = { "Lambda_c+" : "(BPVDIRA > %(BPVDIRA_MIN)s )" }, nickname = 'Sc2LcPi') ],
+              'Scpp2LcPi'             : [ TagDecay('Scpp2LcPi', "[Sigma_c++ -> Lambda_c+ pi+]cc", inputs = [ Lc2KPPi, SharedSoftPions ],
+                                            DaughtersCuts = { "Lambda_c+" : "(BPVDIRA > %(BPVDIRA_MIN)s )" }, nickname = 'Sc2LcPi') ]
               }
             }
         
@@ -213,12 +248,13 @@ class PIDLines(Hlt2LinesConfigurableUser):
                 linename = 'PID' + nickname
                 l0cuts = self.getProp("L0Req").get(category, None)
                 hlt1cuts = self.getProp("Hlt1Req").get(category, None)
+                doturbo = (len(turbo)>0)
                 Hlt2Line(linename + turbo,
                          prescale = self.prescale,
                          algos = algos, postscale = self.postscale,
                          L0DU = l0cuts,
                          HLT1 = hlt1cuts,
-                         Turbo = (len(turbo)>0))
+                         Turbo = doturbo)
           from Configurables import HltANNSvc
           HltANNSvc().Hlt2SelectionID.update({ 'Hlt2PID' + n + turbo + 'Decision' : v + 200*(len(turbo)>0) for n, v in {
             'DetJPsiMuMuPosTagged'  : 50020,
@@ -246,9 +282,7 @@ class PIDLines(Hlt2LinesConfigurableUser):
             'Lambda2PPiDDhighP'     : 50042,
             'Lambda2PPiLLisMuon'    : 50043,
             'Lambda2PPiDDisMuon'    : 50044,
-            'Lb2LcPi'               : 50045
+            'Lb2LcPi'               : 50045,
+            'Sc02LcPi'              : 50046,
+            'Scpp2LcPi'             : 50047
             }.iteritems()})
-        HltANNSvc().Hlt2SelectionID.update({
-          'Hlt2Lc2KPPi_PIDCALIBDecision' : 50046,
-          'Hlt2CharmHadLc2KPPi_PIDCALIBTurboDecision' : 50246
-          })

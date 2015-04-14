@@ -83,7 +83,7 @@ class BCombiner(Hlt2Combiner):
         if nickname is None:
           nickname = name
         from HltTracking.HltPVs import PV3D
-        Hlt2Combiner.__init__(self, name,
+        Hlt2Combiner.__init__(self, 'PID' + name,
             decay,
             inputs,
             shared = True,
@@ -191,3 +191,20 @@ PhiMuMuNegTagged  = LLCombiner("PhiMuMuNeg",   Muons, NoPIDsMuons, 1, "PhiMuMu")
 #FilteredDownPions = BachelorFilter("SharedDownPionsForPID", NoPIDsDownPions)
 FilteredProtons = NoPIDsProtons
 FilteredDownProtons = NoPIDsDownProtons
+
+from Hlt2Lines.CharmHad.Lines import CharmHadLines
+from Hlt2Lines.CharmHad.Stages import DetachedHHHCombiner, SharedNoPIDDetachedChild_p, SharedDetachedLcChild_K, SharedDetachedLcChild_pi, MassFilter
+from Hlt2Lines.Utilities.Hlt2Stage import Hlt2ExternalStage
+
+# Make the Lc+ -> K- p+ pi+ candidates without proton PID, to be combined with more tracks...
+# Share as much of the 'CharmHad' code as possible
+Lc2KPPi = MassFilter('PIDLc2KPPi', inputs = [
+  DetachedHHHCombiner('PIDLc2KPPi',
+    decay = "[Lambda_c+ -> K- p+ pi+]cc",
+    inputs = [
+      Hlt2ExternalStage(CharmHadLines(), SharedNoPIDDetachedChild_p),
+      Hlt2ExternalStage(CharmHadLines(), SharedDetachedLcChild_K),
+      Hlt2ExternalStage(CharmHadLines(), SharedDetachedLcChild_pi)
+      ],
+    nickname = 'Lc2KPPi')
+  ], shared = True, nickname = "Lc2KPPi")
