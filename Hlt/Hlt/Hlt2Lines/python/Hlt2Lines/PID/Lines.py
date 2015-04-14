@@ -158,11 +158,11 @@ class PIDLines(Hlt2LinesConfigurableUser):
         from Inputs import KsLL, KsDD, LambdaLL, LambdaDD, NoPIDsProtons, NoPIDsDownProtons, Muons
 
         from Hlt2Lines.CharmHad.Lines import CharmHadLines
-        from Hlt2Lines.CharmHad.Stages import SharedNoPIDDetachedChild_K, SharedNoPIDDetachedChild_pi, Lc2KPPi_PIDCALIB
+        from Hlt2Lines.CharmHad.Stages import SharedNoPIDDetachedChild_K, SharedNoPIDDetachedChild_pi, PIDCalib_LcpToKmPpPip
         from Hlt2Lines.Utilities.Hlt2Stage import Hlt2ExternalStage
         FilteredKaons = Hlt2ExternalStage(CharmHadLines(), SharedNoPIDDetachedChild_K)
         FilteredPions = Hlt2ExternalStage(CharmHadLines(), SharedNoPIDDetachedChild_pi)
-        Lc2KPPi = Hlt2ExternalStage(CharmHadLines(), Lc2KPPi_PIDCALIB('Lc2KPPi_PIDCALIB')) # The combination of these to make SigmaC is in CharmHad
+        Lc2KPPi = Hlt2ExternalStage(CharmHadLines(), PIDCalib_LcpToKmPpPip) # The combination of these to make SigmaC is in CharmHad
 
         from Inputs import NoPIDsDownPions as FilteredDownPions # TODO maybe filter these, disabled for now we we don't even run the PID
 

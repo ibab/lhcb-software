@@ -120,28 +120,31 @@ class CharmHadD2HHHLines() :
     
     def locallines(self):
         from Stages import MassFilter,TagDecay
-        from Stages import D2KPiPi_SS,D2KPiPi_OS,D2KKPi_SS,D2KKPi_OS,D2PiPiPi,D2KKK
-        from Stages import Lc2KPPi, Lc2KPK, Lc2PiPPi, Lc2PiPK
         from Stages import D2KPiPi_SS_LTUNB,D2KKPi_OS_LTUNB,Lc2KPPi_LTUNB
-        from Stages import Lc2KPPi_PIDCALIB
-        from Stages import D2KPiPi_ForKPiAsym
+        from Stages import PIDCalib_LcpToKmPpPip
+        from Stages import DetAsym_DpToKmPipPip
         from Stages import SharedSoftTagChild_pi
+        from Stages import D2HHH_DpToKmPipPip, D2HHH_DpToKpPimPip
+        from Stages import D2HHH_DpToKpKpPim, D2HHH_DpToKmKpPim
+        from Stages import D2HHH_DpToPimPipPip, D2HHH_DpToKmKpKm
+        from Stages import Lc2HHH_LcpToKmPpPip, Lc2HHH_LcpToKmPpKp
+        from Stages import Lc2HHH_LcpToPimPpPip, Lc2HHH_LcpToPimPpKp
         
         stages = {# First the CPV D2HHH lines
                   'D2KPiPi_SS'        : [MassFilter('D2KPiPi_SS', nickname = 'D2HHH',
-                                                    inputs=[D2KPiPi_SS('D2HHH')], shared = True)],
-                  'D2KPiPi_OS'        : [MassFilter('D2HHH', inputs=[D2KPiPi_OS('D2HHH')])],
-                  'D2KKPi_SS'         : [MassFilter('D2HHH',inputs=[D2KKPi_SS('D2HHH')])],
+                                                    inputs=[D2HHH_DpToKmPipPip], shared = True)],
+                  'D2KPiPi_OS'        : [MassFilter('D2HHH', inputs=[D2HHH_DpToKpPimPip])],
+                  'D2KKPi_SS'         : [MassFilter('D2HHH',inputs=[D2HHH_DpToKpKpPim])],
                   'D2KKPi_OS'         : [MassFilter('D2KKPi_OS', nickname = 'D2HHH',
-                                                    inputs=[D2KKPi_OS('D2HHH')], shared = True)],
-                  'D2PiPiPi'          : [MassFilter('D2HHH',inputs=[D2PiPiPi('D2HHH')])],
-                  'D2KKK'             : [MassFilter('D2HHH',inputs=[D2KKK('D2HHH')])],
+                                                    inputs=[D2HHH_DpToKmKpPim], shared = True)],
+                  'D2PiPiPi'          : [MassFilter('D2HHH',inputs=[D2HHH_DpToPimPipPip])],
+                  'D2KKK'             : [MassFilter('D2HHH',inputs=[D2HHH_DpToKmKpKm])],
                   # Now the CPV Lc2HHH lines
                   'Lc2KPPi'           : [MassFilter('Lc2KPPi', nickname = 'Lc2HHH',
-                                                    inputs=[Lc2KPPi('Lc2HHH')], shared = True)],
-                  'Lc2KPK'            : [MassFilter('Lc2HHH',inputs=[Lc2KPK('Lc2HHH')])],
-                  'Lc2PiPPi'          : [MassFilter('Lc2HHH',inputs=[Lc2PiPPi('Lc2HHH')])],
-                  'Lc2PiPK'           : [MassFilter('Lc2HHH',inputs=[Lc2PiPK('Lc2HHH')])], 
+                                                    inputs=[Lc2HHH_LcpToKmPpPip], shared = True)],
+                  'Lc2KPK'            : [MassFilter('Lc2HHH',inputs=[Lc2HHH_LcpToKmPpKp])],
+                  'Lc2PiPPi'          : [MassFilter('Lc2HHH',inputs=[Lc2HHH_LcpToPimPpPip])],
+                  'Lc2PiPK'           : [MassFilter('Lc2HHH',inputs=[Lc2HHH_LcpToPimPpKp])], 
                   # Now the three CF lifetime unbiased lines
                   'D2KPiPi_SS_LTUNB'  : [MassFilter('Dpm2HHH_LTUNB',inputs=[D2KPiPi_SS_LTUNB('Dpm2HHH_LTUNB')])],
                   'D2KKPi_OS_LTUNB'   : [MassFilter('Ds2HHH_LTUNB',inputs=[D2KKPi_OS_LTUNB('Ds2HHH_LTUNB')])],
@@ -149,7 +152,7 @@ class CharmHadD2HHHLines() :
                   # Now the PID calib Sigma_c->Lambda_c(pKpi)pi line
                   'Lc2KPPi_PIDCALIB'  : [TagDecay('Lc2KPPi_PIDCALIB_TAG', "[Sigma_c0 -> Lambda_c+ pi-]cc",
                                                   inputs = [ MassFilter('Lc2KPPi_PIDCALIB', 
-                                                                        inputs = [Lc2KPPi_PIDCALIB('Lc2KPPi_PIDCALIB')],
+                                                                        inputs = [PIDCalib_LcpToKmPpPip],
                                                                         shared = True),
                                                              SharedSoftTagChild_pi ],
                                                   DaughtersCuts = {
@@ -160,7 +163,7 @@ class CharmHadD2HHHLines() :
                                                  )],
                   # Now the KPi asymmetry line
                   'Dpm2KPiPi_ForKPiAsym' : [MassFilter('Dpm2KPiPi_ForKPiAsym',
-                                                       inputs=[D2KPiPi_ForKPiAsym('Dpm2KPiPi_ForKPiAsym')])]
+                                                       inputs=[DetAsym_DpToKmPipPip])]
             }
         
         

@@ -91,25 +91,26 @@ class CharmHadXSecLines() :
     
     def locallines(self):
         from Stages import MassFilter,TagDecay
-        from Stages import D2KPiPi_SS,D2KKPi_OS,D2PiPiPi
-        from Stages import Lc2KPPi, Lc2PiPPi
         from Stages import SharedSoftTagChild_pi
+        from Stages import XSec_DpToKmPipPip, XSec_DpToKmKpPim
+        from Stages import XSec_DspToKmKpPim, XSec_DspToPimPipPip
+        from Stages import XSec_LcpToKmPpPip, XSec_LcpToPimPpPip
         
         stages = {# First the D2HHH lines
                   'Dpm2KPiPi_XSec'       : [MassFilter('Dpm2HHH_XSec', 
-                                                      inputs=[D2KPiPi_SS('Dpm2HHH_XSec')])],
+                                                      inputs=[XSec_DpToKmPipPip])],
                   'Dpm2KKPi_XSec'        : [MassFilter('Dpm2HHH_XSec',
-                                                      inputs=[D2KKPi_OS('Dpm2HHH_XSec')])],
+                                                      inputs=[XSec_DpToKmKpPim])],
                   'Ds2KKPi_XSec'         : [MassFilter('Ds2HHH_XSec', 
-                                                      inputs=[D2KKPi_OS('Ds2HHH_XSec')])],
+                                                      inputs=[XSec_DspToKmKpPim])],
                   'Ds2PiPiPi_XSec'       : [MassFilter('Ds2HHH_XSec',
-                                                      inputs=[D2PiPiPi('Ds2HHH_XSec')])],
+                                                      inputs=[XSec_DspToPimPipPip])],
                   # Now the Lc2HHH lines, untagged, CF shared to reuse in tagged lines
                   # Because of the mass window these also catch neutral Xi_c baryons
                   'Lc2KPPi_XSec'        : [MassFilter('Lc2KPPi_XSec', nickname = 'Lc2HHH_XSec',
-                                                      inputs=[Lc2KPPi('Lc2HHH_XSec')],shared=True)],
+                                                      inputs=[XSec_LcpToKmPpPip],shared=True)],
                   'Lc2PiPPi_XSec'       : [MassFilter('Lc2HHH_XSec',
-                                                      inputs=[Lc2PiPPi('Lc2HHH_XSec')])]
+                                                      inputs=[XSec_LcpToPimPpPip])]
                  }
         # Now the Sigma_c0,++->Lambda_c(pKpi)pi line
         # Because of the mass window this also catches some excited Xi_c

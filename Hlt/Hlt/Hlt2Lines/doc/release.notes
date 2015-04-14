@@ -8,6 +8,15 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-14 - Patrick Spradlin
+  - Some code cleaning in CharmHad/Stages.py
+    . Chagned one-off classes inheriting from DetachedHHHCombiner to
+      instances of the DetachedHHHCombiner class.
+    . CharmHad/D2HHHLines.py updated to use the instances.
+    . CharmHad/XSecLines.py updated to use the instances.
+    . PID/Lines.py updated to use the updated instance of the Lambda_c+
+      combiner.
+
 ! 2015-04-13 - Mike Sokoloff
   - CharmHadWithKs:  removed this subdirectory; one set of HHKs algorithms is obsolete;
                      the other has been moved into CharmHad.

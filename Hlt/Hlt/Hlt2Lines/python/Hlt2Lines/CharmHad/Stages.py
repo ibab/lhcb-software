@@ -228,39 +228,85 @@ SharedNeutralLowPtChild_gamma = NeutralInParticleFilter("SharedNeutralLowPtChild
 
 
 ## ========================================================================= ##
-## Filters for composite particles
+## 2-body Combiners
 ## ========================================================================= ##
 
-# Mass filter
-class MassFilter(Hlt2ParticleFilter):
-    def __init__(self, name, inputs, nickname = None, shared = False ):
-        cut = "in_range( %(Mass_M_MIN)s , M , %(Mass_M_MAX)s )"
-        nickname = name if nickname == None else nickname
-        name     = name if not shared       else 'CharmHad%sMass' % name
-        Hlt2ParticleFilter.__init__(self, name, cut, inputs,
-                                    nickname = nickname , shared = shared )
+## ------------------------------------------------------------------------- ##
+class TagDecay(Hlt2Combiner) : # {
+    """
+    Generic 2-body combiner for adding a soft particle to another particle
+    candidate, e.g., adding a pion to a D0 to created a D*+ -> D0 pi+ candidate.
+    It cuts on the mass difference and on chi^2/Ndof of the 2-body vertex.
 
+    !!!NOTE!!! The implementation of the mass difference cut requires that
+    the soft particle is the second product in the decay descriptor:
+        GOOD:      [Sigma_c0 -> Lambda_c+ pi-]cc
+        NOT GOOD:  [Sigma_c0 -> pi- Lambda_c+]cc
 
-## ========================================================================= ##
-## Combiners
-## ========================================================================= ##
-# A "universal" filter which implements a soft pion tag
-class TagDecay(Hlt2Combiner):
+    Configuration dictionaries must contain the following keys:
+        'DeltaM_AM_MIN'
+        'DeltaM_AM_MAX'    : lower and upper limits of the delta mass window
+                             at the CombinationCut level, AM - AM1.
+        'TagVCHI2PDOF_MAX' : upper limit on VFASPF(VCHI2PDOF) in MotherCut
+        'DeltaM_MIN'
+        'DeltaM_MAX'       : lower and upper limits of the delta mass window
+                             at the MotherCut level, M - M1.
+        'TisTosSpec'       : The configuration string of the Hlt1 TISTOS filter.
+    """
     def __init__(self, name, decay, inputs, DaughtersCuts = { }, shared = False):
         cc =    ('in_range( %(DeltaM_AM_MIN)s, (AM - AM1), %(DeltaM_AM_MAX)s )')
         mc =    ("(VFASPF(VCHI2PDOF) < %(TagVCHI2PDOF_MAX)s)" +
                  "& in_range( %(DeltaM_MIN)s, (M - M1), %(DeltaM_MAX)s )")
- 
+
+        ## Since this class allows freedom to externally specify DaughtersCuts,
+        ##   we should add a dependence on the PV3D
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name, decay, inputs,
-                              dependencies = [TrackGEC('TrackGEC')],
-                              tistos = 'TisTosSpec', DaughtersCuts = DaughtersCuts, CombinationCut = cc, 
+                              dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                              tistos = 'TisTosSpec',
+                              DaughtersCuts = DaughtersCuts,
+                              CombinationCut = cc, 
                               shared = shared,
                               MotherCut = mc, Preambulo = []) 
+# }
 
-# Particle combiners
-class DetachedHHHCombiner(Hlt2Combiner):
-    def __init__(self, name, decay, inputs):
+
+
+## ========================================================================= ##
+## 3-body Combiners
+## ========================================================================= ##
+
+# ------------------------------------------------------------------------- ##
+class DetachedHHHCombiner(Hlt2Combiner) : # {
+    """
+    Combiner for 3 basic track-based particles.  The 'Detached' in the class
+    name indicates that it applies cuts to lifetime-biasing non-lifetime
+    values like the MIPCHI2DV(PRIMARY) of the decay products and the
+    BPVVDCHI2_MIN of the fitted vertex.
+
+    Always creates a shared instance of the filter.
+
+    Configuration dictionaries must contain the following keys:
+        'Trk_1OF3_PT_MIN'
+        'Trk_2OF3_PT_MIN'
+        'Trk_ALL_PT_MIN'        : tiered lower limits on product PT.
+                                  All 3 must pass the ALL threshold.
+                                  At least 2 must pass the 2OF3 threshold.
+                                  At least 1 must pass the 1OF3 threshold.
+        'Trk_1OF3_MIPCHI2DV_MIN'
+        'Trk_2OF3_MIPCHI2DV_MIN'
+        'Trk_ALL_MIPCHI2DV_MIN' : tiered lower limits on product
+                                  MIPCHI2DV(PRIMARY)
+        'AM_MIN'
+        'AM_MAX'                : lower and upper limits on AM in CombinationCut
+        'ASUMPT_MIN'            : lower limit on APT1+APT2+APT3 in CombinationCut
+        'VCHI2PDOF_MAX'         : upper limit on VFASPF(VCHI2PDOF) in MotherCut
+        'BPVDIRA_MIN'           : lower limit on BPVDIRA in MotherCut
+        'BPVVDCHI2_MIN'         : lower limit on BPVVDCHI2 in MotherCut
+        'BPVLTIME_MIN'          : lower limit on BPVLTIME() in MotherCut
+        'TisTosSpec'            : configuration string of the Hlt1 TISTOS filter.
+    """
+    def __init__(self, name, decay, inputs, nickname = None) : # {
         dc =    {}
         for child in ['pi+','K+','p+'] :
             dc[child] = "(PT > %(Trk_ALL_PT_MIN)s) & (MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)"
@@ -270,17 +316,132 @@ class DetachedHHHCombiner(Hlt2Combiner):
                  " & (ANUM(PT > %(Trk_2OF3_PT_MIN)s) >= 2)"+
                  " & (AHASCHILD((MIPCHI2DV(PRIMARY)) > %(Trk_1OF3_MIPCHI2DV_MIN)s))"+
                  " & (ANUM(MIPCHI2DV(PRIMARY) > %(Trk_2OF3_MIPCHI2DV_MIN)s) >= 2)")
+        ## P.S. -- Are cuts on both BPVVDCHI2 and BPVLTIME useful?
         mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
                  " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
                  " & (BPVVDCHI2 > %(BPVVDCHI2_MIN)s )" +
                  " & (BPVLTIME() > %(BPVLTIME_MIN)s )")
 
+        nickname = name if nickname == None else nickname
         from HltTracking.HltPVs import PV3D
-        Hlt2Combiner.__init__(self, "CharmHad" + name + "_" + type(self).__name__, decay, inputs,
-                              nickname = name, dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+        ## P.S. -- I want to remove the dependence on the GEC.
+        ## This kind of automatic name-mangling breaks under cloning.
+        Hlt2Combiner.__init__(self, "CharmHad" + name, decay, inputs,
+                              nickname = nickname, dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                               shared = True, tistos = 'TisTosSpec', DaughtersCuts = dc,
                               CombinationCut = cc, MotherCut = mc, Preambulo = [])
+    # }
+# }
 
+
+## Shared instances of DetachedHHHCombiner
+## ------------------------------------------------------------------------- ##
+
+## Main line D+/D_s+ -> 3h combiners
+D2HHH_DpToKmPipPip = DetachedHHHCombiner( 'D2HHH_DpToKmPipPip'
+        , decay = "[D+ -> K- pi+ pi+]cc"
+        , inputs = [ SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi ]
+        , nickname = 'D2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
+
+D2HHH_DpToKpPimPip = DetachedHHHCombiner( 'D2HHH_DpToKpPimPip'
+        , decay = "[D+ -> K+ pi- pi+]cc"
+        , inputs = [ SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi ]
+        , nickname = 'D2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
+
+D2HHH_DpToKpKpPim = DetachedHHHCombiner( 'D2HHH_DpToKpKpPim'
+        , decay = "[D+ -> K+ K+ pi-]cc"
+        , inputs = [ SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi ]
+        , nickname = 'D2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
+
+D2HHH_DpToKmKpPim = DetachedHHHCombiner( 'D2HHH_DpToKmKpPim'
+        , decay = "[D+ -> K- K+ pi+]cc"
+        , inputs = [ SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi ]
+        , nickname = 'D2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
+
+D2HHH_DpToPimPipPip = DetachedHHHCombiner( 'D2HHH_DpToPimPipPip'
+        , decay = "[D+ -> pi- pi+ pi+]cc"
+        , inputs = [ SharedDetachedDpmChild_pi ]
+        , nickname = 'D2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
+
+D2HHH_DpToKmKpKm = DetachedHHHCombiner( 'D2HHH_DpToKmKpKm'
+        , decay = "[D+ -> K- K+ K+]cc"
+        , inputs = [ SharedDetachedDpmChild_K ]
+        , nickname = 'D2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
+
+
+## Main line Lambda_c+ -> 3h combiners
+Lc2HHH_LcpToKmPpPip = DetachedHHHCombiner( 'Lc2HHH_LcpToKmPpPip'
+        , decay = "[Lambda_c+ -> K- p+ pi+]cc"
+        , inputs = [ SharedDetachedLcChild_p, SharedDetachedLcChild_K,
+                     SharedDetachedLcChild_pi ]
+        , nickname = 'Lc2HHH' ) ## 'Lc2HHH' defined in D2HHHLines.py
+
+Lc2HHH_LcpToKmPpKp = DetachedHHHCombiner( 'Lc2HHH_LcpToKmPpKp'
+        , decay = "[Lambda_c+ -> K- p+ K+]cc"
+        , inputs = [ SharedDetachedLcChild_p, SharedDetachedLcChild_K ]
+        , nickname = 'Lc2HHH' ) ## 'Lc2HHH' defined in D2HHHLines.py
+
+Lc2HHH_LcpToPimPpPip = DetachedHHHCombiner( 'Lc2HHH_LcpToPimPpPip'
+        , decay = "[Lambda_c+ -> pi- p+ pi+]cc"
+        , inputs = [ SharedDetachedLcChild_p, SharedDetachedLcChild_pi ]
+        , nickname = 'Lc2HHH' ) ## 'Lc2HHH' defined in D2HHHLines.py
+
+Lc2HHH_LcpToPimPpKp = DetachedHHHCombiner( 'Lc2HHH_LcpToPimPpKp'
+        , decay = "[Lambda_c+ -> pi- p+ K+]cc"
+        , inputs = [ SharedDetachedLcChild_p, SharedDetachedLcChild_K,
+                     SharedDetachedLcChild_pi ]
+        , nickname = 'Lc2HHH' ) ## 'Lc2HHH' defined in D2HHHLines.py
+
+
+## Combiners for cross-section measurements
+XSec_DpToKmPipPip = DetachedHHHCombiner( 'XSec_DpToKmPipPip'
+        , decay = "[D+ -> K- pi+ pi+]cc"
+        , inputs = [ SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi ]
+        , nickname = 'Dpm2HHH_XSec' )   ## 'Dpm2HHH_XSec' def in XSecLines.py
+
+XSec_DpToKmKpPim = DetachedHHHCombiner( 'XSec_DpToKmKpPim'
+        , decay = "[D+ -> K- K+ pi+]cc"
+        , inputs = [ SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi ]
+        , nickname = 'Dpm2HHH_XSec' )   ## 'Dpm2HHH_XSec' def in XSecLines.py
+
+XSec_DspToKmKpPim = DetachedHHHCombiner( 'XSec_DspToKmKpPim'
+        , decay = "[D_s+ -> K- K+ pi+]cc"
+        , inputs = [ SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi ]
+        , nickname = 'Ds2HHH_XSec' )    ## 'Ds2HHH_XSec' def in XSecLines.py
+
+XSec_DspToPimPipPip = DetachedHHHCombiner( 'XSec_DspToPimPipPip'
+        , decay = "[D_s+ -> pi- pi+ pi+]cc"
+        , inputs = [ SharedDetachedDpmChild_pi ]
+        , nickname = 'Ds2HHH_XSec' )   ## 'Ds2HHH_XSec' def in XSecLines.py
+
+XSec_LcpToKmPpPip = DetachedHHHCombiner( 'XSec_LcpToKmPpPip'
+        , decay = "[Lambda_c+ -> K- p+ pi+]cc"
+        , inputs = [ SharedDetachedLcChild_p, SharedDetachedLcChild_K,
+                     SharedDetachedLcChild_pi ]
+        , nickname = 'Lc2HHH_XSec' ) ## 'Lc2HHH_XSec' defined in XSecLines.py
+
+XSec_LcpToPimPpPip = DetachedHHHCombiner( 'XSec_LcpToPimPpPip'
+        , decay = "[Lambda_c+ -> pi- p+ pi+]cc"
+        , inputs = [ SharedDetachedLcChild_p, SharedDetachedLcChild_pi ]
+        , nickname = 'Lc2HHH_XSec' ) ## 'Lc2HHH_XSec' defined in XSecLines.py
+
+## Combiner for PIDCalib
+PIDCalib_LcpToKmPpPip = DetachedHHHCombiner( 'PIDCalib_LcpToKmPpPip'
+        , decay = "[Lambda_c+ -> K- p+ pi+]cc"
+        , inputs = [ SharedNoPIDDetachedChild_p, SharedDetachedLcChild_K,
+                     SharedDetachedLcChild_pi ]
+        , nickname = 'Lc2KPPi_PIDCALIB' ) ## 'Lc2KPPi_PIDCALIB' def in D2HHHLines.py
+
+## Combiner for KPi detection asymmetry studies
+DetAsym_DpToKmPipPip = DetachedHHHCombiner( 'DetAsym_DpToKmPipPip'
+        , decay = "[D+ -> K- pi+ pi+]cc"
+        , inputs = [ SharedNoPIDDetachedChild_pi, SharedNoPIDDetachedChild_K ]
+        , nickname = 'Dpm2KPiPi_ForKPiAsym' ) ## 'Dpm2KPiPi_ForKPiAsym' def in D2HHHLines.py
+
+
+
+
+# ------------------------------------------------------------------------- ##
 class HHHCombiner(Hlt2Combiner):
     def __init__(self, name, decay,inputs):
         dc =    {}
@@ -730,78 +891,6 @@ class DetachedHHHChild(DetachedHHHChildCombiner):
                   SharedNoPIDDetachedChild_K]
         DetachedHHHChildCombiner.__init__(self,name,decay,inputs)
 
-class D2KPiPi_SS(DetachedHHHCombiner) :
-    def __init__(self,name) :
-        decay = "[D+ -> K- pi+ pi+]cc"
-        kaonsForD2DetachedHHHCombiner = SharedDetachedDpmChild_K
-        pionsForD2DetachedHHHCombiner = SharedDetachedDpmChild_pi
-        inputs = [kaonsForD2DetachedHHHCombiner,pionsForD2DetachedHHHCombiner]
-        DetachedHHHCombiner.__init__(self,name,decay,inputs)
-
-class D2KPiPi_OS(DetachedHHHCombiner) :
-    def __init__(self,name) :
-        decay = "[D+ -> K+ pi- pi+]cc"
-        inputs = [SharedDetachedDpmChild_K,
-                  SharedDetachedDpmChild_pi]
-        DetachedHHHCombiner.__init__(self,name,decay,inputs)
-
-class D2KKPi_SS(DetachedHHHCombiner) :
-    def __init__(self,name) :
-        decay = "[D+ -> K+ K+ pi-]cc"
-        inputs = [SharedDetachedDpmChild_K,
-                  SharedDetachedDpmChild_pi]
-        DetachedHHHCombiner.__init__(self,name,decay,inputs)
-
-class D2KKPi_OS(DetachedHHHCombiner) :
-    def __init__(self,name) :
-        decay = "[D+ -> K- K+ pi+]cc"
-        inputs = [SharedDetachedDpmChild_K,
-                  SharedDetachedDpmChild_pi]
-        DetachedHHHCombiner.__init__(self,name,decay,inputs)
-
-class D2PiPiPi(DetachedHHHCombiner) :
-    def __init__(self,name) :
-        decay = "[D+ -> pi- pi+ pi+]cc"
-        inputs = [SharedDetachedDpmChild_pi]
-        DetachedHHHCombiner.__init__(self,name,decay,inputs)
-
-class D2KKK(DetachedHHHCombiner) :
-    def __init__(self,name) :
-        decay = "[D+ -> K- K+ K+]cc"
-        inputs = [SharedDetachedDpmChild_K]
-        DetachedHHHCombiner.__init__(self,name,decay,inputs)
-
-class Lc2KPPi(DetachedHHHCombiner) :
-    def __init__(self,name) :
-        decay = "[Lambda_c+ -> K- p+ pi+]cc"
-        kaonsForLc2DetachedHHHCombiner = SharedDetachedLcChild_K
-        pionsForLc2DetachedHHHCombiner = SharedDetachedLcChild_pi
-        protonsForLc2DetachedHHHCombiner = SharedDetachedLcChild_p
-        inputs = [kaonsForLc2DetachedHHHCombiner,pionsForLc2DetachedHHHCombiner,protonsForLc2DetachedHHHCombiner]
-        DetachedHHHCombiner.__init__(self,name,decay,inputs)
-
-class Lc2KPK(DetachedHHHCombiner) :
-    def __init__(self,name) :
-        decay = "[Lambda_c+ -> K- p+ K+]cc"
-        inputs = [SharedDetachedLcChild_K,
-                  SharedDetachedLcChild_p]
-        DetachedHHHCombiner.__init__(self,name,decay,inputs)
-
-class Lc2PiPPi(DetachedHHHCombiner) :
-    def __init__(self,name) :
-        decay = "[Lambda_c+ -> pi- p+ pi+]cc"
-        inputs = [SharedDetachedLcChild_pi,
-                  SharedDetachedLcChild_p]
-        DetachedHHHCombiner.__init__(self,name,decay,inputs)
-
-class Lc2PiPK(DetachedHHHCombiner) :
-    def __init__(self,name) :
-        decay = "[Lambda_c+ -> pi- p+ K+]cc"
-        inputs = [SharedDetachedLcChild_K,
-                  SharedDetachedLcChild_pi,
-                  SharedDetachedLcChild_p]
-        DetachedHHHCombiner.__init__(self,name,decay,inputs)
-
 
 class DetachedRhoPIDChild(DetachedHHChildCombiner):
     def __init__(self,name):
@@ -853,25 +942,6 @@ class Xic02PKKPi(DetachedHHHHCombiner) :
                   SharedDetachedLcChild_pi,
                   SharedDetachedLcChild_p]
         DetachedHHHHCombiner.__init__(self,name,decay,inputs)
-
-# The PID calib lines now
-
-class Lc2KPPi_PIDCALIB(DetachedHHHCombiner) :
-    def __init__(self,name) :
-        decay = "[Lambda_c+ -> K- p+ pi+]cc"
-        inputs = [SharedDetachedLcChild_K,
-                  SharedDetachedLcChild_pi,
-                  SharedNoPIDDetachedChild_p ]
-        DetachedHHHCombiner.__init__(self,name,decay,inputs)
-
-# The KPi asymmetry lines now
-
-class D2KPiPi_ForKPiAsym(DetachedHHHCombiner) :
-    def __init__(self,name) :
-        decay = "[D+ -> K- pi+ pi+]cc"
-        inputs = [SharedNoPIDDetachedChild_pi,
-                  SharedNoPIDDetachedChild_K ]
-        DetachedHHHCombiner.__init__(self,name,decay,inputs)
 
 # The V0H lines now
 
@@ -1041,6 +1111,7 @@ class DetachedD02HHInclCombiner(Hlt2Combiner) : # {
         'D0_VCHI2PDOF_MAX'  : upper limit on VFASPF(VCHI2PDOF) in MotherCut
         'D0_BPVVDCHI2_MIN'  : lower limit on BPVVDCHI2 in MotherCut
         'D0_BPVCORRM_MAX'   : upper limit on BPVCORRM in MotherCut
+        'TisTosSpec'        : configuration string of the Hlt1 TISTOS filter.
 
     It is expected that the cuts on input particles will eventually be removed
     when the inputs are made into shared instances of DetachedInParticleFilter.
@@ -1116,26 +1187,34 @@ class Dstp2D0PiInclCombiner(Hlt2Combiner) : # {
 # }
 
 
+## ========================================================================= ##
+## Filters for composite particles
+## ========================================================================= ##
+
+# Mass filter
+## ------------------------------------------------------------------------- ##
+class MassFilter(Hlt2ParticleFilter):
+    def __init__(self, name, inputs, nickname = None, shared = False ):
+        cut = "in_range( %(Mass_M_MIN)s , M , %(Mass_M_MAX)s )"
+        nickname = name if nickname == None else nickname
+        name     = name if not shared       else 'CharmHad%sMass' % name
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs,
+                                    nickname = nickname , shared = shared )
+
+
+## ------------------------------------------------------------------------- ##
 class BDTFilter( Hlt2ParticleFilter ) : # {
     """
     Filter with a BBDecTreeTool.
 
-    Configuration dictionaries must be passed as constructor argument props
+    The part of the configuration dictionary that configures the lookup
+    table and filter threshold must be passed as constructor argument 'props'
     and must contain the following keys:
         'BDT_Lookup_Filename' : the name of the file that contains the lookup
                                 table.  Assumed to be in $PARAMFILESROOT/data/.
         'BDT_Lookup_VarMap'   : the map of nickname:functor strings to define
                                 the input variables of the lookup table.
         'BDT_Threshold'       : Minimum response value accepted by the filter.
-
-
-        'Spi_TRCHI2DOF_MAX' : Upper limit of TRCHI2DOF on soft pion
-        'Spi_PT_MIN'        : Lower limit of PT on soft pion
-        'Dst_VCHI2PDOF_MAX' : Upper limit on VFASPF(VCHI2PDOF) in MotherCut
-        'Dst_PT_MIN'        : Lower limit on PT in MotherCut
-        'Dst_M_MAX'         : Upper limit on M in MotherCut
-        'Dst_D0_DeltaM_MAX' : Upper limit on M - M1 in MotherCut
-
     """
     def __init__( self, name, inputs, props ) : # {
 
@@ -1162,7 +1241,5 @@ class BDTFilter( Hlt2ParticleFilter ) : # {
                                      , dependencies = [ PV3D('Hlt2') ]
                                      , tools = [bdtTool ] )
     # }
-
-
 # }
 
