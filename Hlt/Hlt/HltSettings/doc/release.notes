@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-04-14 - Albert Puig
+ - Updated CalibTracking thresholds in Hlt1_Commissioning_Physics_2015 to include
+   the unbiased phi gamma line.
+
 ! 2015-04-14 - Matthew Kenzie
  - Add CalibTracking thresholds to Hlt1_Commissioning_Physics_2015
 

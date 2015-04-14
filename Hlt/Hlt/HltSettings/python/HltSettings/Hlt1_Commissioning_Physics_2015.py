@@ -1,11 +1,11 @@
 def __update_conf__( current, extra ) :
     for (conf,d) in extra.iteritems() :
-        if conf not in current : 
+        if conf not in current :
             current[conf] = d
             continue
         cur = current[conf]
         for (k,v) in d.iteritems() :
-            if k not in cur : 
+            if k not in cur :
                 cur[k] = v
                 continue
             if cur[k] == v : continue
@@ -22,13 +22,13 @@ class Hlt1_Commissioning_Physics_2015( object ):
     """
     Settings for 2015 commissioning of physics lines
     based on Hlt1_Physics_September2012
-    
+
     WARNING :: DO NOT EDIT WITHOUT PERMISSION OF THE AUTHORS
-    
+
     @author J. Albrecht, V. Gligorov, S.Neubert
     @date 2012-04-17
     """
-    
+
     __all__ = ( 'ActiveHlt1Lines', 'ActiveHlt2Lines', 'Thresholds', 'L0TCK' )
 
     def verifyType(self,ref) :
@@ -40,14 +40,14 @@ class Hlt1_Commissioning_Physics_2015( object ):
         if ( self.ActiveHlt1Lines() != ref.ActiveHlt1Lines(self)  or
              self.ActiveHlt2Lines() != ref.ActiveHlt2Lines(self) ) :
             raise RuntimeError( 'Must update HltType when modifying ActiveHlt.Lines()' )
-        
+
     def L0TCK(self) :
         return '0x0046'
 
     def HltType(self) :
-        self.verifyType( Hlt1_Commissioning_Physics_2015 ) 
+        self.verifyType( Hlt1_Commissioning_Physics_2015 )
         return          'Hlt1_Commissioning_Physics_2015'
-    
+
     def Thresholds(self) :
         """
         Returns a dictionary of cuts
@@ -137,7 +137,7 @@ class Hlt1_Commissioning_Physics_2015( object ):
                        , Hlt1L0LinesConf :     {  'Postscale' : { 'Hlt1L0AnyRateLimited'       : 'RATE(1)'
                                                                 , 'Hlt1L0AnyNoSPDRateLimited'  : 'RATE(1)'
                                                                 }
-                                               ,  'Prescale' : { 'Hlt1L0HighSumETJet' : 1 
+                                               ,  'Prescale' : { 'Hlt1L0HighSumETJet' : 1
                                                                , 'Hlt1L0AnyNoSPD'     : 0.01
                                                                }
                                                }
@@ -158,51 +158,57 @@ class Hlt1_Commissioning_Physics_2015( object ):
                        , Hlt1CommissioningLinesConf : { 'Postscale' : { 'Hlt1ErrorEvent'   : 'RATE(0.01)'
 
                                                                         } }
-                       # micro bias lines switched off for high mu physics running              
+                       # micro bias lines switched off for high mu physics running
                        , Hlt1MBLinesConf :     { 'Prescale' : { 'Hlt1MBMicroBiasVelo'                : 0
                                                               , 'Hlt1MBMicroBiasTStation'            : 0
                                                               , 'Hlt1MBMicroBiasVeloRateLimited'     : 0
                                                               , 'Hlt1MBMicroBiasTStationRateLimited' : 0 }
                                                  , 'MaxNoBiasRate' : 1000000.
                                                  }
-                       , Hlt1CalibTrackingLinesConf :  { 'ParticlePT'        : 600     # MeV 
-                                                        ,'ParticleP'         : 4000    # MeV 
-                                                        ,'TrackCHI2DOF'      : 2       # dimensionless
-                                                        ,'CombMaxDaughtPT'   : 900     # MeV 900
-                                                        ,'CombAPT'           : 1800    # MeV 1200
-                                                        ,'CombDOCA'          : 0.1     # mm
-                                                        ,'CombVCHI2DOF'      : 10      # dimensionless
-                                                        ,'CombVCHI2DOFLoose' : 15      # dimensionless 
-                                                        ,'CombDIRA'          : 0.99    # dimensionless
-                                                        ,'CombTAU'           : 0.25    # ps
-                                                        ,'D0MassWinLoose'    : 100     # MeV
-                                                        ,'D0MassWin'         : 60      # MeV
-                                                        ,'B0MassWinLoose'    : 200     # MeV
-                                                        ,'B0MassWin'         : 150     # MeV
-                                                        ,'PhiMassWinLoose'   : 50      # MeV
-                                                        ,'PhiMassWin'        : 30      # MeV
-                                                        ,'PhiPT'             : 1800    # MeV 
-                                                        ,'PhiPTLoose'        : 800     # MeV 
-                                                        ,'PhiSumPT'          : 3000    # MeV
-                                                        ,'PhiIPCHI2'         : 16      # dimensionless
-                                                        ,'B0SUMPT'           : 4000    # MeV
-                                                        ,'GAMMA_PT_MIN'      : 3000    # MeV
-                                                        ,'Velo_Qcut'         : 999     # OFF
-                                                        ,'TrNTHits'          : 0       # OFF
-                                                        ,'ValidateTT'        : False
+                       , Hlt1CalibTrackingLinesConf :  { 'ParticlePT'            : 600     # MeV
+                                                        ,'ParticleP'             : 4000    # MeV
+                                                        ,'TrackCHI2DOF'          : 2       # dimensionless
+                                                        ,'CombMaxDaughtPT'       : 900     # MeV 900
+                                                        ,'CombAPT'               : 1800    # MeV 1200
+                                                        ,'CombDOCA'              : 0.1     # mm
+                                                        ,'CombVCHI2DOF'          : 10      # dimensionless
+                                                        ,'CombVCHI2DOFLoose'     : 15      # dimensionless
+                                                        ,'CombDIRA'              : 0.99    # dimensionless
+                                                        ,'CombTAU'               : 0.25    # ps
+                                                        ,'D0MassWinLoose'        : 100     # MeV
+                                                        ,'D0MassWin'             : 60      # MeV
+                                                        ,'B0MassWinLoose'        : 200     # MeV
+                                                        ,'B0MassWin'             : 150     # MeV
+                                                        ,'BsPhiGammaMassMinLoose': 3350    # MeV
+                                                        ,'BsPhiGammaMassMaxLoose': 6900    # MeV
+                                                        ,'BsPhiGammaMassMin'     : 3850    # MeV
+                                                        ,'BsPhiGammaMassMax'     : 6400    # MeV
+                                                        ,'PhiMassWinLoose'       : 50      # MeV
+                                                        ,'PhiMassWin'            : 30      # MeV
+                                                        ,'PhiMassTight'          : 20      # MeV
+                                                        ,'PhiPT'                 : 1800    # MeV
+                                                        ,'PhiPTLoose'            : 800     # MeV
+                                                        ,'PhiSumPT'              : 3000    # MeV
+                                                        ,'PhiIPCHI2'             : 16      # dimensionless
+                                                        ,'B0SUMPT'               : 4000    # MeV
+                                                        ,'B0PT'                  : 1000    # MeV
+                                                        ,'GAMMA_PT_MIN'          : 2000    # MeV
+                                                        ,'Velo_Qcut'             : 999     # OFF
+                                                        ,'TrNTHits'              : 0       # OFF
+                                                        ,'ValidateTT'            : False
                                                        }
-                       
+
 
                        }
-        
+
         return thresholds
-                       
+
     def ActiveHlt2Lines(self) :
         """
         Returns a list of active lines
         """
         return []
-       
+
     def ActiveHlt1Lines(self) :
         """
         Returns a list of active lines
@@ -213,13 +219,13 @@ class Hlt1_Commissioning_Physics_2015( object ):
                   , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
                   , 'Hlt1L0HighSumETJet','Hlt1HighPtJetsSinglePV'
                   , 'Hlt1TrackMVA', 'Hlt1TwoTrackMVA'
-                  , 'Hlt1CalibTrackingKPi' , 'Hlt1CalibTrackingKK' , 'Hlt1CalibTrackingPiPi' 
+                  , 'Hlt1CalibTrackingKPi' , 'Hlt1CalibTrackingKK' , 'Hlt1CalibTrackingPiPi'
                   , 'Hlt1B2HH_LTUNB_KPi' , 'Hlt1B2HH_LTUNB_KK' , 'Hlt1B2HH_LTUNB_PiPi'
                   , 'Hlt1IncPhi'
-                  , 'Hlt1B2PhiPhi_LTUNB']
+                  , 'Hlt1B2PhiPhi_LTUNB', 'Hlt1B2PhiGamma_LTUNB']
 
-        
-        #from Hlt1TechnicalLines import Hlt1TechnicalLines 
+
+        #from Hlt1TechnicalLines import Hlt1TechnicalLines
         #lines.extend( Hlt1TechnicalLines().ActiveHlt1Lines() )
-        
-        return lines 
+
+        return lines
