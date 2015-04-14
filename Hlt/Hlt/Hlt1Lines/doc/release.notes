@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-04-14 - Albert Puig
+ - Updated the Unbiased Bs -> phi Gamma line
+
 ! 2015-04-10 - Matthew Kenzie
  - A few more tweaks to Hlt1CalibTracking lines
 
