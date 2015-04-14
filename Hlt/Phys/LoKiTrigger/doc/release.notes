@@ -6,6 +6,7 @@
 
 ! 2015-04-14 - Albert Puig
  - Add protection for missing vertices, eg, Hlt1DiPhoton
+ - And fixed it after.
 
 ! 2015-04-14 - Matthew Kenzie
  - And link new vertex to new particle in CheatPID
