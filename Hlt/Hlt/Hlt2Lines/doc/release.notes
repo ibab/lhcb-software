@@ -8,6 +8,23 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-13 - Mike Sokoloff
+  - CharmHadWithKs:  removed this subdirectory; one set of HHKs algorithms is obsolete;
+                     the other has been moved into CharmHad.
+  - CharmHad:        created two new classes:
+			KsFilterForHHKs with instances
+			  SharedKsLL
+			  SharedKsDD
+                        These have decay time cuts (really only relevant for KsLL) and VZ
+                         cuts. They may be useful as inputs for additional lines
+			HHKshCombiner with instances
+			  D02KsPiPi_LL
+			  D02KsPiPi_DD
+			  D02KsKPi_LL
+			  D02KsKPi_DD
+			  D02KsKK_LL
+			  D02KsKK_DD
+
 ! 2015-04-14 - Albert Puig
  - Update of Radiative Lines.
  - Addition of Bs2PhiGamma unbiased line.
