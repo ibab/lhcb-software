@@ -185,7 +185,7 @@ class Hlt1_Commissioning_Physics_2015( object ):
                                                         ,'BsPhiGammaMassMax'     : 6400    # MeV
                                                         ,'PhiMassWinLoose'       : 50      # MeV
                                                         ,'PhiMassWin'            : 30      # MeV
-                                                        ,'PhiMassTight'          : 20      # MeV
+                                                        ,'PhiMassWinTight'       : 20      # MeV
                                                         ,'PhiPT'                 : 1800    # MeV
                                                         ,'PhiPTLoose'            : 800     # MeV
                                                         ,'PhiSumPT'              : 3000    # MeV
