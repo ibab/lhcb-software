@@ -12,6 +12,7 @@ from D2HHLines import CharmHadD2HHLines
 from D2HHKsLines import CharmHadD2HHKshLines
 from Dst2PiD02HHXBDTLines import CharmHadDst2PiD02HHXBDTLines
 from D2EtaHLines import CharmHadD2EtaHLines
+from ChargedHyperonLines import ChargedHyperonLines
 
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
@@ -30,6 +31,8 @@ D2HHLines = CharmHadD2HHLines()
 D2HHKsLines = CharmHadD2HHKshLines()
 Dst2PiD02HHXBDTLines = CharmHadDst2PiD02HHXBDTLines()
 D2EtaHLines = CharmHadD2EtaHLines()
+HyperonLines = ChargedHyperonLines()
+
 
 theseslots = {   'Prescale' : {}, 
                  'TrackGEC' : {'NTRACK_MAX'           : 10000},
@@ -63,6 +66,18 @@ theseslots = {   'Prescale' : {},
                                  'PID_LIM'                  :  5,
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
+                                              },
+                 # Secondary Lambda's, used at least for building Xi- and Omega- candidates
+                 'SharedSecondaryLambdaLL' : {
+                                 'DecayTime_MIN'           : 4.5 * picosecond,
+                                 'VZ_MIN'                  : -100. * mm,
+                                 'VZ_MAX'                  :  500. * mm,
+                                             },
+                 # Secondary Lambda's, used at least for building Xi- and Omega- candidates
+                 'SharedSecondaryLambdaDD' : {
+                                 'DecayTime_MIN'           : 4.5 * picosecond,
+                                 'VZ_MIN'                  : 300. * mm,
+                                 'VZ_MAX'                  : 2275. * mm,
                                               },
                  # long Kshorts, at least for  D0 --> HHKs
                  'SharedKsLL' : {
@@ -166,6 +181,7 @@ theseslots.update(D2HHLines.localcuts())
 theseslots.update(D2HHKsLines.localcuts())
 theseslots.update(Dst2PiD02HHXBDTLines.slots())
 theseslots.update(D2EtaHLines.localcuts())
+theseslots.update(HyperonLines.localcuts())
 
 class CharmHadLines(Hlt2LinesConfigurableUser):
     __slots__ = theseslots
@@ -188,6 +204,7 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
             self.__lines__.update(D2HHKsLines.locallines())
             self.__lines__.update(Dst2PiD02HHXBDTLines.stages())
             self.__lines__.update(D2EtaHLines.locallines())
+            self.__lines__.update(HyperonLines.locallines())
             
         return self.__lines__[nickname] if nickname else self.__lines__
             

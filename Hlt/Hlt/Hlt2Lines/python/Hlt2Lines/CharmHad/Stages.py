@@ -532,6 +532,74 @@ class DetachedV0HCombiner(Hlt2Combiner):
                               tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
                               MotherCut = mc, Preambulo = [])
 
+##  -----------------  beginning Charged Hyperon code
+
+class SecondaryLambdaFilter(Hlt2ParticleFilter) : # {
+    '''
+    Filter Lambda candidates for building hyperons on
+
+           decay time wrt PV                    BPVLTIME
+           vertex position                      VFASPF
+
+    Always creates a shared instance of the filter.
+
+    Configuration dictionaries must contain the following keys:
+        'DecayTime_MIN' :  lower limit on decay time wrt PV
+        'VZ_MIN'        :  lower limit vertex z position
+        'VZ_MAX'        :  upper limit vertex z position
+
+    '''
+    def __init__(self, name, inputs): # {
+        cut = ("  (BPVLTIME() > %(DecayTime_MIN)s) " +
+               "& (VFASPF(VZ) > %(VZ_MIN)s)" +
+               "& (VFASPF(VZ) > %(VZ_MAX)s)")
+        # }
+
+        from HltTracking.HltPVs import PV3D
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs, shared = True,
+                                    dependencies = [PV3D('Hlt2')],
+                                    UseP2PVRelations = False)
+
+    # }
+# }
+
+## and instantiate  combiners for LL and DD
+SharedSecondaryLambdaLL = SecondaryLambdaFilter("SharedSecondaryLambdaLL",[Lambda_LL])
+SharedSecondaryLambdaDD = SecondaryLambdaFilter("SharedSecondaryLambdaDD",[Lambda_DD])
+
+class ChargedHyperonLambdaHCombiner(Hlt2Combiner):
+    def __init__(self, name, decay,inputs):
+        dc =    {'Lambda0' : "ALL",
+                 'pi+'    : "(MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)",
+                 'K+'     : "(MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)"}
+        cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
+                 " & ((APT1+APT2+APT3) > %(ASUMPT_MIN)s )" )
+        mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
+                 " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 " & (BPVVDCHI2 > %(BPVVDCHI2_MIN)s )" +
+                 " & (BPVLTIME() > %(BPVLTIME_MIN)s )")
+        from HltTracking.HltPVs import PV3D
+        Hlt2Combiner.__init__(self, name, decay, inputs,
+                              dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                              tistos = [], DaughtersCuts = dc, CombinationCut = cc,
+                              MotherCut = mc, Preambulo = [])
+
+## instantiate some charged hyperon combiners for specific final states
+
+Xi2LambdaPi_LLL = ChargedHyperonLambdaHCombiner('Ximinus2LambdaPi_LLL',
+                   decay="[Xi- -> Lambda0 pi-]cc",
+                   inputs=[SharedSecondaryLambdaLL,SharedDetachedDpmChild_pi])
+Xi2LambdaPi_DDL = ChargedHyperonLambdaHCombiner('Ximinus2LambdaPi_DDL',
+                   decay="[Xi- -> Lambda0 pi-]cc",
+                   inputs=[SharedSecondaryLambdaDD,SharedDetachedDpmChild_pi])
+Omega2LambdaK_LLL = ChargedHyperonLambdaHCombiner('Omegaminus2LambdaK_LLL',
+                     decay="[Omega- -> Lambda0 K-]cc",
+                     inputs=[SharedSecondaryLambdaLL,SharedDetachedDpmChild_K])
+Omega2LambdaK_DDL = ChargedHyperonLambdaHCombiner('Omegaminus2LambdaK_DDL',
+                     decay="[Omega- -> Lambda0 K-]cc",
+                     inputs=[SharedSecondaryLambdaDD,SharedDetachedDpmChild_K])
+
+##   ------------  end of code for Charged Hyperons
 class DetachedV0V0Combiner(Hlt2Combiner):
     def __init__(self, name, decay,inputs,lldd = False):
         dc =    {'KS0'    : ( "(PT > %(KS0_ALL_PT_MIN)s) &"+
