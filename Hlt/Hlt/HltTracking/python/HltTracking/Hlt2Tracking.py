@@ -995,7 +995,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         richConf            = RichRecSysConf(richSeqName)
         richConf.DataType   = self.getProp( "DataType" )
         richConf.Context    = richSeqName
-        richConf.RichPIDLocation    = self.__richIDLocation()
+        richConf.RichPIDLocation    = self.__richIDLocation()+self.__trackType()
         richConf.PidConfig          = self.getProp("RichPidConfig")
         richConf.CheckProcStatus    = False
         richConf.InitPixels         = True
@@ -1506,7 +1506,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         myCALOProcessor.SkipCharged     = False
 
         # The sequences are given the track and protoparticle locations when initializing 
-        myPIDSeq         = myCALOProcessor.caloSequence(        [tracks.outputSelection()]                    )
+        myPIDSeq         = myCALOProcessor.caloSequence(  [tracks.outputSelection()]  )
         myChargedSeq     = myCALOProcessor.chargedProtoSequence(    [tracks.outputSelection()],    chargedProtosOutputLocation    )
         myNeutralSeq     = myCALOProcessor.neutralProtoSequence(    [tracks.outputSelection()],    neutralProtosOutputLocation    )
 
