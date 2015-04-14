@@ -49,17 +49,30 @@ class MassWindowFilter(Hlt2ParticleFilter):
 
 
 # Filter input tracks
+class PIDFilter(Hlt2ParticleFilter):
+    """Filter tracks using PID criteria."""
+    def __init__(self, nickname, inputs):
+        cut = ("((HASTRACK) & ('%(TRACK_TYPE)s'==ABSID)"
+               "& (%(PID_VAR)s>%(PID_CUT_MIN)s))")
+        super(PIDFilter, self).__init__('RadiativePIDFilter_%s' % nickname,
+                                             cut,
+                                             inputs,
+                                             nickname=nickname,
+                                             shared=True)
+
 class ParticleFilter(Hlt2ParticleFilter):
     """Filter children tracks for exclusive lines."""
-    def __init__(self, nickname, inputs):
+    def __init__(self, nickname, inputs, tistos=None):
         cut = ("(TRCHI2DOF < %(TRACK_TRCHI2DOF_MAX)s)"
                "& (PT > %(TRACK_PT_MIN)s)"
                "& (P > %(TRACK_P_MIN)s)"
                "& (MIPCHI2DV(PRIMARY) > %(TRACK_IPCHI2_MIN)s)")
-
+        if not tistos:
+            tistos = []
         super(ParticleFilter, self).__init__('RadiativeParticleFilter_%s' % nickname,
                                              cut,
                                              inputs,
+                                             tistos=tistos,
                                              nickname=nickname,
                                              shared=True,
                                              UseP2PVRelations=False)
@@ -121,17 +134,19 @@ class ConvPhotonAll(Hlt2MergedStage):
 # Build the vector mesons
 class HHCombiner(Hlt2Combiner):
     """Build vector mesons from input tracks."""
-    def __init__(self, nickname, decay, inputs):
+    def __init__(self, nickname, decay, inputs, tistos=None):
         daughters_cuts = {'pi+' : "ALL", 'K+' : "ALL"}
         combination_cut = ("ADAMASS('%(PARTICLE)s') < wide_mass" )
         mother_cut = ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)"
                       " & (ADMASS('%(PARTICLE)s') < %(MASS_WIN)s)")
+        if not tistos:
+            tistos = []
         super(HHCombiner, self).__init__('RadiativeHHCombiner_%s' % nickname,
                                          decay,
                                          inputs,
                                          nickname=nickname,
                                          shared=True,
-                                         tistos='TrackTisTos',
+                                         tistos=tistos,
                                          DaughtersCuts=daughters_cuts,
                                          CombinationCut=combination_cut,
                                          MotherCut=mother_cut,
@@ -179,6 +194,28 @@ class B2XGammaCombiner(Hlt2Combiner):
                                                Preambulo=['from math import cos',
                                                           'cos_dira_angle = cos(%(BPVDIRA_MIN)s)',
                                                           'wide_mass = 1.5*%(MASS_WIN)s'])
+
+class B2XGammaUnbiasedCombiner(Hlt2Combiner):
+    """Build the B from photons and input vector mesons in an unbiased way."""
+    def __init__(self, name, decay, vector_meson, converted=False):
+        combination_cut = ("(ADAMASS('%(PARTICLE)s') < wide_mass)"
+                           "& (ASUM(PT)>%(SUM_PT_MIN)s)")
+        mother_cut = ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)"
+                      " & (PT > %(PT_MIN)s) "
+                      " & (BPVLTIME()>%(TAU_MIN)s)"
+                      " & (ADMASS('%(PARTICLE)s') < %(MASS_WIN)s)")
+        if converted:
+            photons = [ConvPhotonLL(), ConvPhotonDD()]
+        else:
+            photons = [PhotonFilter()]
+        super(B2XGammaUnbiasedCombiner, self).__init__('RadiativeB2XGammaCombiner_%s' % name,
+                                                       decay,
+                                                       [vector_meson] + photons,
+                                                       nickname=name,
+                                                       DaughtersCuts={},
+                                                       CombinationCut=combination_cut,
+                                                       MotherCut=mother_cut,
+                                                       Preambulo=['wide_mass = 1.5*%(MASS_WIN)s'])
 
 
 class B2GammaGammaCombiner(Hlt2Combiner):

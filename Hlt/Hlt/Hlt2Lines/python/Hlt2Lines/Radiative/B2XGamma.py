@@ -20,10 +20,12 @@ class B2XGammaLines(RadiativeLineBuilder):
         # Create vector mesons
         kstar = HHCombiner('Kstar', '[K*(892)0 -> K+ pi-]cc',
                            [ParticleFilter('Pions', [Hlt2LoosePions]),
-                            ParticleFilter('Kaons', [Hlt2LooseKaons])])
+                            ParticleFilter('Kaons', [Hlt2LooseKaons])],
+                           'TrackTisTos')
         kstar_tight = MassWindowFilter('KstarTight', [kstar])
         phi = HHCombiner('Phi', 'phi(1020) -> K+ K-',
-                         [ParticleFilter('Kaons', [Hlt2LooseKaons])])
+                         [ParticleFilter('Kaons', [Hlt2LooseKaons])],
+                         'TrackTisTos')
 
         # Build B0 -> K* gamma
         bd2kstgamma_wideKst = B2XGammaCombiner('Bd2KstGammaWideKMass',

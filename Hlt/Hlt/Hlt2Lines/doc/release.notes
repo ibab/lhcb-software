@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-14 - Albert Puig
+ - Update of Radiative Lines.
+ - Addition of Bs2PhiGamma unbiased line.
+
 ! 2015-04-10 - Olli Lupton
   - CharmHad: Make the Lc candidates for PIDCALIB suitable for re-use in Lb->Lcpi
               and Lb->Lcmu lines defined in the PID folder.

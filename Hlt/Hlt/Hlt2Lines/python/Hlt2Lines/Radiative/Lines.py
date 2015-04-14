@@ -11,6 +11,7 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 
 
 from B2XGamma import B2XGammaLines
+from B2XGammaUnbiased import B2XGammaUnbiasedLines
 from B2GammaGamma import B2GammaGammaLines
 from Lb2L0Gamma import Lb2L0GammaLines
 
@@ -26,7 +27,9 @@ cuts = {'Common': {'TrackTisTos' : 'Hlt1(Two)?TrackMVADecision%TOS',
                    'ee_PT'   : 200.0},
        }
 
-for line_conf in [B2GammaGammaLines, B2XGammaLines, Lb2L0GammaLines]:
+lines_to_run = [B2GammaGammaLines, B2XGammaLines, B2XGammaUnbiasedLines, Lb2L0GammaLines]
+
+for line_conf in lines_to_run:
     # Get cuts
     cuts.update(line_conf.get_cuts())
 
@@ -36,7 +39,7 @@ class RadiativeLines(Hlt2LinesConfigurableUser):
         from HltLine.HltLine import Hlt2Line
         hlt1_dependencies = {}
         stages = {}
-        for line_conf in [B2GammaGammaLines, B2XGammaLines, Lb2L0GammaLines]:
+        for line_conf in lines_to_run:
             # Get HLT1 dependencies
             hlt1_dependencies.update(line_conf.get_hlt1())
             # Load stages
