@@ -99,7 +99,9 @@ LoKi::Hlt1::CheatPID::operator()
 
     LHCb::Particle* particle = part->clone() ;
     particle->setParticleID(m_pp->particleID()) ;
-    LHCb::Vertex* vertex = part->endVertex()->clone();
+
+    LHCb::Vertex* vertex = part->endVertex()->clone() ;
+    particle->setEndVertex( vertex ) ;
 
     // store in TES
     _storeParticle( particle ) ;
