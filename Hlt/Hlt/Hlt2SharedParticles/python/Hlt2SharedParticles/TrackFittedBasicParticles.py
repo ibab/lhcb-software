@@ -40,8 +40,8 @@ BiKalmanFittedChargedProtoMaker 			= Hlt2BiKalmanFittedForwardTracking.hlt2Charg
 #
 # Downstream hadron protoparticles, no Rich
 #
-#BiKalmanFittedChargedDownProtoMaker			= Hlt2BiKalmanFittedDownstreamTracking.hlt2ChargedNoPIDsProtos()
-BiKalmanFittedChargedDownProtoMaker			= Hlt2BiKalmanFittedDownstreamTracking.hlt2ChargedAllPIDsProtos()
+BiKalmanFittedChargedDownProtoMaker			= Hlt2BiKalmanFittedDownstreamTracking.hlt2ChargedNoPIDsProtos()
+#BiKalmanFittedChargedDownProtoMaker			= Hlt2BiKalmanFittedDownstreamTracking.hlt2ChargedAllPIDsProtos()
 #
 # hadrons with the Rich
 #
@@ -50,11 +50,11 @@ BiKalmanFittedChargedRichHadronProtoMaker 		= Hlt2BiKalmanFittedForwardTracking.
 #
 # electrons
 #
-#BiKalmanFittedChargedCaloProtoMaker 			= Hlt2BiKalmanFittedForwardTracking.hlt2ChargedCaloProtos()
-BiKalmanFittedChargedCaloProtoMaker 			= Hlt2BiKalmanFittedForwardTracking.hlt2ChargedAllPIDsProtos()
+BiKalmanFittedChargedCaloProtoMaker 			= Hlt2BiKalmanFittedForwardTracking.hlt2ChargedCaloProtos()
+#BiKalmanFittedChargedCaloProtoMaker 			= Hlt2BiKalmanFittedForwardTracking.hlt2ChargedAllPIDsProtos()
 BiKalmanFittedElectronFromL0Maker         = Hlt2BiKalmanFittedForwardTracking.hlt2ElectronsFromL0()
-#BiKalmanFittedChargedCaloDownProtoMaker			= Hlt2BiKalmanFittedDownstreamTracking.hlt2ChargedCaloProtos()
-BiKalmanFittedChargedCaloDownProtoMaker			= Hlt2BiKalmanFittedDownstreamTracking.hlt2ChargedAllPIDsProtos()
+BiKalmanFittedChargedCaloDownProtoMaker			= Hlt2BiKalmanFittedDownstreamTracking.hlt2ChargedCaloProtos()
+#BiKalmanFittedChargedCaloDownProtoMaker			= Hlt2BiKalmanFittedDownstreamTracking.hlt2ChargedAllPIDsProtos()
 #
 # Muons  
 #

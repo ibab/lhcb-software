@@ -4,6 +4,11 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-04-14 - Sascha Stahl
+ - TrackFittedBasicParticles: Removed upfront PID for all Downstream tracks. 
+   Currently implemented Downstream protoparticles are BiKalmanFittedChargedDownProtoMaker without PID,
+   and BiKalmanFittedChargedCaloDownProtoMaker with Calo PID for electrons.
+
 !========================= Hlt2SharedParticles v7r5 2015-03-31 =========================
 
 ! 2015-03-27 - Sean Benson
