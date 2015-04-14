@@ -41,7 +41,7 @@ class Physics_draftEM2015( object ):
             raise RuntimeError( 'Must update HltType when modifying ActiveHlt.Lines()' )
         
     def L0TCK(self) :
-        return '0xFF66' 
+        return '0x0046' 
 
     def HltType(self) :
         self.verifyType( Physics_draftEM2015 ) 
@@ -70,9 +70,9 @@ class Physics_draftEM2015( object ):
         thresholds = { Hlt1TrackLinesConf :    {'AllL0_Velo_NHits'   : 9   #OFF
                                                , 'AllL0_Velo_Qcut'   : 999 #OFF
                                                , 'AllL0_TrNTHits'    : 0   #PFF
-                                               , 'AllL0_PT'          : 100.
-                                               , 'AllL0_P'           : 1000.
-                                               , 'AllL0_IPChi2'      : 1.0
+                                               , 'AllL0_PT'          : 800.
+                                               , 'AllL0_P'           : 3000.
+                                               , 'AllL0_IPChi2'      : 10.0
                                                , 'AllL0_TrChi2'      : 3.0
                                                , 'AllL0_GEC'         : 'Loose'
                                                , 'Muon_TrNTHits'     : 0 #OFF
@@ -83,9 +83,39 @@ class Physics_draftEM2015( object ):
                                                , 'Muon_IPChi2'       : 4.0
                                                , 'Muon_TrChi2'       : 3.0
                                                , 'Muon_GEC'          : 'Loose'
-                                               , 'L0Channels'        : {'AllL0'  : ('Hadron',),
+                                               , 'ODINTriggers'      : {'AllL0'  : ''}
+                                               , 'L0Channels'        : {'AllL0'  : ('CALO',),
                                                                         'Muon'   : ('Muon',)}
                                                }
+                     , Hlt1CalibRICHMirrorLinesConf : {     'RICHMirror_Velo_NHits'  : 0 
+                                                        ,   'RICHMirror_Velo_Qcut'   : 3 
+                                                        ,   'RICHMirror_TrNTHits'    : 16
+                                                        ,   'RICHMirror_PT'          : 500.
+                                                        ,   'RICHMirror_P'           : 30000.
+                                                        ,   'RICHMirror_ETA'         : 2.55 
+                                                        ,   'RICHMirror_TrChi2'      : 3.
+                                                      }   
+                     , Hlt1MuonLinesConf :     { 'SingleMuonHighPT_P'        : 3000
+                                               , 'SingleMuonHighPT_PT'      : 4800
+                                               , 'SingleMuonHighPT_TrChi2'  :    3.
+                                               ,'SingleMuonHighPT_TrNTHits'   : 0 #OFF
+                                               ,'SingleMuonHighPT_Velo_NHits' : 0 #OFF
+                                               ,'SingleMuonHighPT_Velo_Qcut'  : 999 #OFF
+                                               , 'SingleMuonHighPT_GEC'     : 'Loose'
+                                               ,'SingleMuonHighPT_TrackType' : 'Long'
+                                               , 'DiMuonHighMass_VxDOCA'    :  0.2
+                                               , 'DiMuonHighMass_VxChi2'    :   25
+                                               , 'DiMuonHighMass_P'         : 3000
+                                               , 'DiMuonHighMass_PT'        :  500
+                                               , 'DiMuonHighMass_TrChi2'    :    3
+                                               , 'DiMuonHighMass_M'         : 2700
+                                               , 'DiMuonHighMass_GEC'       : 'Loose'
+                                               ,'DiMuonHighMass_TrackType' :'Long'                                               
+                                               ,'L0Channels'               : {
+                                                   'SingleMuonHighPT' : ( 'Muon', ),
+                                                   'DiMuonHighMass'   : ( 'Muon', )}
+                                                                  
+                                                }
                          , Hlt1L0LinesConf :     {  'Postscale' : { 'Hlt1L0AnyRateLimited'       : 'RATE(1)'
                                                                 , 'Hlt1L0AnyNoSPDRateLimited'  : 'RATE(1)'
                                                                 }
@@ -241,14 +271,6 @@ class Physics_draftEM2015( object ):
                 'Hlt2DiMuonJPsi',
                 'Hlt2DiMuonPsi2S',
                 'Hlt2DiMuonB',
-                ## Charm X-section
-                'Hlt2CharmHadDpm2KPiPi_XSecTurbo',
-                'Hlt2CharmHadDpm2KKPi_XSecTurbo',
-                'Hlt2CharmHadDs2KKPi_XSecTurbo',
-                'Hlt2CharmHadDs2PiPiPi_XSecTurbo',
-                'Hlt2CharmHadLc2KPPi_XSecTurbo',
-                'Hlt2CharmHadLc2PiPPi_XSecTurbo',
-                'Hlt2CharmHadSigmac_2LcPi_XSecTurbo',
 	        'Hlt2PassThrough', 'Hlt2Lumi','Hlt2DebugEvent','Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent', # technical lines
 		'Hlt2TrackEffMuonTTPlusTagged',  # trackeff lines      
 		'Hlt2TrackEffMuonTTMinusTagged',
@@ -276,8 +298,7 @@ class Physics_draftEM2015( object ):
 		'Hlt2TrackEffDiMuonVeloMuonPlusMatchedTurbo',                
 		'Hlt2TrackEffDiMuonVeloMuonMinusMatchedTurbo',                
 		'Hlt2TrackEffDiMuonDownstreamPlusMatchedTurbo',                
-		'Hlt2TrackEffDiMuonDownstreamMinusMatchedTurbo',               
-                'Hlt2CharmHadLc2KPPi_PIDCALIBTurbo'
+		'Hlt2TrackEffDiMuonDownstreamMinusMatchedTurbo'                
           ]
 
 

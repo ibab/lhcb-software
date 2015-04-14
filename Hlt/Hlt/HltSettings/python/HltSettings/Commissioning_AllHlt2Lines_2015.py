@@ -12,7 +12,7 @@ class Commissioning_AllHlt2Lines_2015(Commissioning_Physics_2015):
             raise RuntimeError( 'Must update HltType when modifying ActiveHlt.Lines()' )
         
     def L0TCK(self) :
-        return '0xFF66'
+        return '0x0046'
 
     def HltType(self) :
         self.verifyType( Commissioning_AllHlt2Lines_2015 ) 
@@ -242,7 +242,6 @@ class Commissioning_AllHlt2Lines_2015(Commissioning_Physics_2015):
                 'Hlt2CharmHadLc2KPPi_XSecTurbo',
                 'Hlt2CharmHadLc2PiPPi_XSecTurbo',
                 'Hlt2CharmHadSigmac_2LcPi_XSecTurbo',
-                'Hlt2CharmHadLc2KPPi_PIDCALIBTurbo',
                 ## Topo
                 'Hlt2TopoMu2BodyBBDT',
                 'Hlt2Topo2BodyBBDT',
