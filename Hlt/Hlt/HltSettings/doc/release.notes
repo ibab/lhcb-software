@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-04-14 - Matthew Kenzie
+ - Add CalibTracking thresholds to Hlt1_Commissioning_Physics_2015
+
 ! 2015-04-14 - Sean Benson
  - Bring back TurboOnly file for Nightly tests.
 
