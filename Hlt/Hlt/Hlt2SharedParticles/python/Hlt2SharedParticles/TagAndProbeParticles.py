@@ -10,7 +10,8 @@
 __author__  = "V. Gligorov vladimir.gligorov@cern.ch"
 # =============================================================================
 from Gaudi.Configuration import *
-from HltLine.HltLine import bindMembers
+from HltLine.HltLine import bindMembers, Hlt2Member
+from Configurables import FilterDesktop
 from Configurables import CombinedParticleMaker, BestPIDParticleMaker, NoPIDsParticleMaker, TrackSelector
 from Configurables import ProtoParticleMUONFilter
 #
@@ -74,6 +75,8 @@ Hlt2MuonTTParts.TrackSelector.TrackTypes = [ "Long" ]
 Hlt2MuonTTParts.Input =  muonTTProtos.outputSelection()
 Hlt2MuonTTParts.Output =  "Hlt2/Hlt2MuonTTMuons/Particles"
 
+
+
 ##########################################################################
 #
 # VeloMuon particles
@@ -96,14 +99,64 @@ Hlt2FullDownParts.Particles = [ "muon" ]
 Hlt2FullDownParts.Input = fulldownProtos.outputSelection()
 Hlt2FullDownParts.Output = "Hlt2/Hlt2DownstreamMuons/Particles"
 
+##########################################################################
 #
+# Velo particles
+#
+##########################################################################
+
+from HltTracking.HltTrackNames import HltSharedTrackLoc, HltDefaultFitSuffix, _baseProtoPLocation, TrackName, Hlt2TrackEffRoot
+from HltLine.HltLine import bindMembers
+from Configurables import CombinedParticleMaker, ChargedProtoParticleMaker, BestPIDParticleMaker, NoPIDsParticleMaker
+from Configurables import DelegatingTrackSelector
+from HltTracking.HltSharedTracking import RevivedVelo,FittedVelo
+
+Hlt2VeloProtos = ChargedProtoParticleMaker('Hlt2VeloProtosForTrackEff')
+Hlt2VeloProtos.Inputs = [ FittedVelo.outputSelection() ] 
+Hlt2VeloProtos.Output = _baseProtoPLocation("Hlt2", Hlt2TrackEffRoot+"/"+TrackName["Velo"])
+Hlt2VeloProtos.addTool(DelegatingTrackSelector, name='delTrackSelVelo')
+Hlt2VeloProtos.delTrackSelVelo.TrackTypes = ['Velo']
+
+Hlt2VeloPionParts = NoPIDsParticleMaker("Hlt2VeloPionParts")
+Hlt2VeloPionParts.Particle = 'pion'
+Hlt2VeloPionParts.Input =  Hlt2VeloProtos.Output 
+Hlt2VeloPionParts.Output =  Hlt2TrackEffRoot+"/Hlt2VeloPions/Particles"
+Hlt2VeloPionParts.OutputLevel = 2
+
+Hlt2VeloKaonParts = NoPIDsParticleMaker("Hlt2VeloKaonParts")
+Hlt2VeloKaonParts.Particle = 'kaon'
+Hlt2VeloKaonParts.Input =  Hlt2VeloProtos.Output 
+Hlt2VeloKaonParts.Output =  Hlt2TrackEffRoot+"/Hlt2VeloKaons/Particles"
+
+Hlt2GoodVeloKaons = Hlt2Member( FilterDesktop,"VeloKaons",
+                                Inputs = [ Hlt2VeloKaonParts.Output ], 
+                                Code = "(ETA > 1.9) & (ETA < 4.9) & (MIPCHI2DV(PRIMARY) > 4)")
+Hlt2GoodVeloPions = Hlt2Member( FilterDesktop,"VeloPions",
+                                Inputs = [ Hlt2VeloPionParts.Output ], 
+                                Code = "(ETA > 1.9) & (ETA < 4.9) & (MIPCHI2DV(PRIMARY) > 4)")
+
+
 # define exported symbols -- these are for available
 # for use in Hlt2 by adding:
 #
 # from Hlt2SharedParticles.TagAndProbeParticles import TagAndProbeMuons
 #
 
-__all__ = ( 'TagAndProbePions', 'TagAndProbeMuons', 'LongAssocMuons', 'TagMuonTTMuons', 'TagVeloMuons', 'TagDownstreamMuons' )
+__all__ = ( 'TagAndProbePions', 
+            'TagAndProbeMuons', 
+            'LongAssocMuons', 
+            'TagMuonTTMuons', 
+            'TagVeloMuons', 
+            'TagDownstreamMuons',
+            'Hlt2ProbeVeloPions',
+            'Hlt2ProbeVeloKaons',
+            'Hlt2GoodProbeVeloPions',
+            'Hlt2GoodProbeVeloKaons')
+
+Hlt2ProbeVeloPions  = bindMembers( None, [ RevivedVelo,Hlt2VeloProtos , Hlt2VeloPionParts ] )
+Hlt2ProbeVeloKaons  = bindMembers( None, [ RevivedVelo,Hlt2VeloProtos , Hlt2VeloKaonParts ] )
+Hlt2GoodProbeVeloPions  = bindMembers( 'Good', [ RevivedVelo,Hlt2VeloProtos ,Hlt2ProbeVeloPions,Hlt2GoodVeloPions])
+Hlt2GoodProbeVeloKaons  = bindMembers( 'Good', [ RevivedVelo,Hlt2VeloProtos ,Hlt2ProbeVeloKaons,Hlt2GoodVeloKaons])
 
 TagAndProbePions   = bindMembers( None, [ caloProtos		,	Hlt2TagAndProbePions 	] )
 TagAndProbeMuons   = bindMembers( None, [ muonWithCaloProtos	, 	Hlt2TagAndProbeMuons	] )

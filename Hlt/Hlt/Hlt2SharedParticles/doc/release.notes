@@ -4,6 +4,9 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-04-14 - Mika Vesterinen
+ - Added velo probe tracks to TagAndProbeParticles.py
+
 ! 2015-04-14 - Sascha Stahl
  - TrackFittedBasicParticles: Removed upfront PID for all Downstream tracks. 
    Currently implemented Downstream protoparticles are BiKalmanFittedChargedDownProtoMaker without PID,
