@@ -29,6 +29,8 @@ namespace LHCb
     int end;
   };
 
+  // =================== Unweighted Relations =========================
+
   static const CLID CLID_PackedRelations = 1560;
 
   /// Namespace for locations in TDS
@@ -52,9 +54,9 @@ namespace LHCb
   public:
   
     /// Standard constructor
-    PackedRelations( ) {}
+    PackedRelations( ) { }
 
-    virtual ~PackedRelations( ) {} ///< Destructor
+    virtual ~PackedRelations( ) { } ///< Destructor
 
   public:
 
@@ -69,17 +71,75 @@ namespace LHCb
     std::vector<PackedRelation>&       relations()       { return m_relations; }
     const std::vector<PackedRelation>& relations() const { return m_relations; }
 
-    std::vector<long long>&       sources()       { return m_source; }
-    const std::vector<long long>& sources() const { return m_source; }
+    std::vector<long long>&            sources()         { return m_source; }
+    const std::vector<long long>&      sources()   const { return m_source; }
 
-    std::vector<long long>&       dests()       { return m_dest; }
-    const std::vector<long long>& dests() const { return m_dest; }
+    std::vector<long long>&            dests()           { return m_dest; }
+    const std::vector<long long>&      dests()     const { return m_dest; }
 
   private:
 
     std::vector<PackedRelation> m_relations;
-    std::vector<long long> m_source;
-    std::vector<long long> m_dest;
+    std::vector<long long>      m_source;
+    std::vector<long long>      m_dest;
+  
+  };
+
+  // =================== Weighted Relations =========================
+
+  static const CLID CLID_PackedWeightedRelations = 1562;
+
+  /// Namespace for locations in TDS
+  namespace PackedWeightedRelationsLocation 
+  {
+    static const std::string& PP2MCP = "/pPhys/PP2MCPRelations";
+  }
+
+  /** @class PackedWeightedRelations PackedRelations.h Event/PackedRelations.h
+   *
+   *  Packed Weighted Relations
+   *  
+   *  @author Chris Jones
+   *  @date   2015-04-13
+   */
+  class PackedWeightedRelations : public DataObject 
+  {
+  
+  public:
+  
+    /// Standard constructor
+    PackedWeightedRelations( ) { }
+
+    virtual ~PackedWeightedRelations( ) { } ///< Destructor
+
+  public:
+
+    /// Class ID
+    static const CLID& classID() { return CLID_PackedWeightedRelations; }
+
+    /// Class ID
+    virtual const CLID& clID() const { return PackedRelations::classID(); }
+
+  public:
+    
+    std::vector<PackedRelation>&       relations()       { return m_relations; }
+    const std::vector<PackedRelation>& relations() const { return m_relations; }
+
+    std::vector<long long>&            sources()         { return m_source; }
+    const std::vector<long long>&      sources()   const { return m_source; }
+
+    std::vector<long long>&            dests()           { return m_dest; }
+    const std::vector<long long>&      dests()     const { return m_dest; }
+
+    std::vector<float>&                weights()         { return m_weights; }
+    const std::vector<float>&          weights()   const { return m_weights; }
+
+  private:
+
+    std::vector<PackedRelation> m_relations;
+    std::vector<long long>      m_source;
+    std::vector<long long>      m_dest;
+    std::vector<float>          m_weights;
   
   };
 

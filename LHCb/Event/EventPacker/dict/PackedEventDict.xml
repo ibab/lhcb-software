@@ -96,6 +96,7 @@
   <class name="LHCb::PackedRelation" />
   <class name="std::vector<LHCb::PackedRelation>" />
   <class name="LHCb::PackedRelations" id="00000618-0000-0000-0000-000000000000" />
+  <class name="LHCb::PackedWeightedRelations" id="0000061A-0000-0000-0000-000000000000" />
 
   <class name="LHCb::PackedParticle2Int" />
   <class name="std::vector<LHCb::PackedParticle2Int>" />

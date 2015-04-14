@@ -40,7 +40,7 @@ StatusCode PackParticlesAndVertices::execute()
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // Only continue if this stream exists for this event
-  DataObject* root = getIfExists<DataObject*>( m_inputStream );
+  const DataObject * root = getIfExists<DataObject*>( m_inputStream );
   if ( NULL == root ) return StatusCode::SUCCESS;
 
   // Class IDs for handled data
@@ -54,6 +54,7 @@ StatusCode PackParticlesAndVertices::execute()
   const unsigned int clIdRichPIDs       = 0x60000 + LHCb::CLID_RichPID;
   const unsigned int clIdPart2Vert      = 0xEA9168DC; // Particle to Vertex relation
   const unsigned int clIdPart2MCPart    = 0x7B880798; // Particle to MCParticle relations
+  const unsigned int clIdProto2MCPart   = 0x6540787E; // ProtoParticle to MCParticle weighted relations
   const unsigned int clIdPart2Int       = 0xF94852E4; // Particle to int relations
   const unsigned int clIdPart2RelInfo   = 0x90F0684D; // particle to related info map
 
@@ -179,7 +180,7 @@ StatusCode PackParticlesAndVertices::execute()
   }
 
   //==============================================================================
-  // Find Relations
+  // Find Particle2 Vert Relations
   //==============================================================================
   names.clear();
   selectContainers( root, names, clIdPart2Vert );
@@ -374,7 +375,7 @@ StatusCode PackParticlesAndVertices::execute()
   // MC Information next
 
   //==============================================================================
-  // Find MC relations
+  // Find Particle -> MC relations
   //==============================================================================
   if ( msgLevel( MSG::DEBUG ) )
     debug() << "Looking for Particle2MCParticle relations " << clIdPart2MCPart << endmsg;
@@ -401,17 +402,43 @@ StatusCode PackParticlesAndVertices::execute()
               << " packed Particle2MCParticle relations" << endmsg;
   }
 
-  //== Remove the converted containers if requested
+  //==============================================================================
+  // Find Proto -> MC relations
+  //==============================================================================
+  if ( msgLevel( MSG::DEBUG ) )
+    debug() << "Looking for ProtoParticle2MCParticle relations " << clIdProto2MCPart << endmsg;
+  names.clear();
+  selectContainers( root, names, clIdProto2MCPart );
+  if ( !names.empty() )
+  {
+    LHCb::PackedWeightedRelations* prels = new LHCb::PackedWeightedRelations();
+    put( prels, m_inputStream + LHCb::PackedWeightedRelationsLocation::PP2MCP );
+    if ( msgLevel( MSG::DEBUG ) )
+      debug() << "=== Process ProtoParticle2MCParticle Relation containers :" << endmsg;
+    toBeDeleted.reserve( names.size() + toBeDeleted.size() );
+    for ( const auto& name : names )
+    {
+      Proto2MCPRelation * rels = get<Proto2MCPRelation>( name );
+      if ( m_deleteInput ) toBeDeleted.push_back( rels );
+      if ( rels->relations().empty() ) continue;
+      if ( msgLevel( MSG::DEBUG ) )
+        debug () << format( "%4d relations in ", rels->relations().size() ) << name << endmsg;
+      packAP2PRelationContainer( rels, *prels );
+    }
+    if ( msgLevel( MSG::DEBUG ) )
+      debug() << "Stored " << prels->relations().size()
+              << " packed ProtoParticle2MCParticle relations" << endmsg;
+  }
+  
+  //==============================================================================
+  // Remove the converted containers if requested
+  //==============================================================================
   if ( m_deleteInput )
   {
-    for ( std::vector<DataObject*>::iterator itO = toBeDeleted.begin();
-          toBeDeleted.end() != itO; ++itO )
+    for ( auto * it : toBeDeleted )
     {
-      const StatusCode sc = evtSvc()->unregisterObject( *itO );
-      if ( sc.isSuccess() )
-      {
-        delete *itO;
-      }
+      const StatusCode sc = evtSvc()->unregisterObject( it );
+      if ( sc.isSuccess() ) { delete it; it = NULL; }
       else
       {
         Error( "Failed to delete input data as requested", sc ).ignore();
@@ -431,7 +458,7 @@ StatusCode PackParticlesAndVertices::execute()
 //=========================================================================
 // Select iteratively the containers ending with 'Prefix'
 //=========================================================================
-void PackParticlesAndVertices::selectContainers ( DataObject* obj,
+void PackParticlesAndVertices::selectContainers ( const DataObject* obj,
                                                   std::vector<std::string>& names,
                                                   const unsigned int classID,
                                                   const bool forceRead )
@@ -508,6 +535,10 @@ PackParticlesAndVertices::packAFTContainer ( const LHCb::FlavourTags* fts,
   LHCb::FlavourTags * unpacked = ( m_enableCheck ? new LHCb::FlavourTags() : NULL );
   if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsFTTest" ); }
 
+  // reserve size
+  pfts.data().reserve( pfts.data().size() + fts->size() );
+
+  // loop over FTs
   for ( const auto * ft : *fts )
   {
     // Make a new packed data object and save
@@ -563,6 +594,10 @@ PackParticlesAndVertices::packAParticleContainer ( const LHCb::Particles* parts,
   LHCb::Particles* unpacked = ( m_enableCheck ? new LHCb::Particles() : NULL );
   if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsParticleTest" ); }
 
+  // reserve size
+  pparts.data().reserve( pparts.data().size() + parts->size() );
+
+  // loop 
   for ( const auto * part : *parts )
   {
     // Make a new packed data object and save
@@ -619,6 +654,10 @@ PackParticlesAndVertices::packAMuonPIDContainer ( const LHCb::MuonPIDs* pids,
   LHCb::MuonPIDs * unpacked = ( m_enableCheck ? new LHCb::MuonPIDs() : NULL );
   if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsMuonPIDTest" ); }
 
+  // reserve size
+  ppids.data().reserve( ppids.data().size() + pids->size() );
+
+  // loop
   for ( const auto * pid : *pids )
   {
     // Make a new packed data object and save
@@ -675,7 +714,11 @@ PackParticlesAndVertices::packARichPIDContainer ( const LHCb::RichPIDs* pids,
   // checks
   LHCb::RichPIDs * unpacked = ( m_enableCheck ? new LHCb::RichPIDs() : NULL );
   if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsRichPIDTest" ); }
+  
+  // reserve size
+  ppids.data().reserve( ppids.data().size() + pids->size() );
 
+  // loop
   for ( const auto * pid : *pids )
   {
     // Make a new packed data object and save
@@ -732,6 +775,10 @@ PackParticlesAndVertices::packAProtoParticleContainer( const LHCb::ProtoParticle
   LHCb::ProtoParticles* unpacked = ( m_enableCheck ? new LHCb::ProtoParticles() : NULL );
   if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsProtoParticleTest" ); }
 
+  // reserve size
+  pprotos.protos().reserve( pprotos.protos().size() + protos->size() );
+
+  // loop
   for ( const auto * proto : *protos )
   {
     // Make a new packed data object and save
@@ -787,6 +834,10 @@ PackParticlesAndVertices::packATrackContainer( const LHCb::Tracks* tracks,
   LHCb::Tracks* unpacked = ( m_enableCheck ? new LHCb::Tracks() : NULL );
   if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsTrackTest" ); }
 
+  // reserve size
+  ptracks.tracks().reserve( ptracks.tracks().size() + tracks->size() );
+
+  // loop
   for ( const auto * track : *tracks )
   {
     // Make a new packed data object and save
@@ -841,6 +892,10 @@ void PackParticlesAndVertices::packAVertexContainer ( const LHCb::Vertices* vert
   LHCb::Vertices * unpacked = ( m_enableCheck ? new LHCb::Vertices() : NULL );
   if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsVertexTest" ); }
 
+  // reserve size
+  pverts.data().reserve( pverts.data().size() + verts->size() );
+
+  // loop
   for ( const auto * vert : *verts )
   {
     // Make a new packed data object and save
@@ -890,6 +945,10 @@ void PackParticlesAndVertices::packARecVertexContainer( const LHCb::RecVertices*
 {
   const LHCb::RecVertexPacker rvPacker(*dynamic_cast<GaudiAlgorithm*>(this));
 
+  // reserve size
+  pRVerts.vertices().reserve( pRVerts.vertices().size() + rVerts->size() );
+
+  // loop
   for ( const auto * rVert : *rVerts )
   {
     // Make a new packed data object and save

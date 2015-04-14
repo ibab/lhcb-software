@@ -11,6 +11,7 @@
 #include "Kernel/Particle2LHCbIDs.h"
 
 #include "Relations/Relation1D.h"
+#include "Relations/RelationWeighted1D.h"
 
 #include "Kernel/LHCbID.h"
 
@@ -61,11 +62,12 @@ private:
   typedef LHCb::Relation1D<LHCb::Particle,LHCb::MCParticle>     P2MCPRELATION;
   typedef LHCb::Relation1D<LHCb::Particle,int>                  Part2IntRelations;
   typedef LHCb::Relation1D<LHCb::Particle,LHCb::RelatedInfoMap> Part2InfoRelations; 
+  typedef LHCb::RelationWeighted1D<LHCb::ProtoParticle,LHCb::MCParticle,double> Proto2MCPRelation;
 
 private:
 
   /// Select the data containers in the TES, of a given type, to write out
-  void selectContainers ( DataObject* obj,
+  void selectContainers ( const DataObject* obj,
                           std::vector<std::string>& names,
                           const unsigned int classID,
                           const bool forceRead = false );
@@ -107,6 +109,11 @@ private:
   void packAP2PRelationContainer ( const RELATION* rels,
                                    LHCb::PackedRelations& prels );
 
+  /// Pack a 'SmartRef to SmartRef' weighted relations container
+  template < typename RELATION >
+  void packAP2PRelationContainer ( const RELATION* rels,
+                                   LHCb::PackedWeightedRelations& prels );
+
   /// Pack a 'SmartRef to int' relations container
   template < typename RELATION >
   void packAP2IntRelationContainer ( const RELATION* rels,
@@ -141,20 +148,74 @@ PackParticlesAndVertices::packAP2PRelationContainer ( const RELATION* rels,
   // Make a new packed data object and save
   prels.relations().push_back( LHCb::PackedRelation() );
   LHCb::PackedRelation& prel = prels.relations().back();
+
   // reference to original container and key
   prel.container = m_pack.reference64( &prels, rels, 0 );
+
+  // First object
   prel.start     = prels.sources().size();
-  typename RELATION::Range all = rels->relations();
-  for ( typename RELATION::Range::iterator itR = all.begin(); all.end() != itR; ++itR )
+
+  // reserve size
+  prels.sources().reserve( prels.sources().size() + rels->relations().size() );
+  prels.dests()  .reserve( prels.dests().size()   + rels->relations().size() );
+
+  // Loop over relations
+  for ( const auto & R : rels->relations() )
   {
     prels.sources().push_back( m_pack.reference64( &prels,
-                                                   (*itR).from()->parent(),
-                                                   (*itR).from()->key() ) );
+                                                   R.from()->parent(),
+                                                   R.from()->key() ) );
     prels.dests().push_back  ( m_pack.reference64( &prels,
-                                                   (*itR).to()->parent(),
-                                                   (*itR).to()->key()   ) );
+                                                   R.to()->parent(),
+                                                   R.to()->key()   ) );
   }
+
+  // last object
   prel.end = prels.sources().size();
+
+  // Clear the registry address of the unpacked container, to prevent reloading
+  if ( !m_deleteInput ) rels->registry()->setAddress( 0 );
+}
+
+//=========================================================================
+//  Pack a 'SmartRef to SmartRef' relations container
+//=========================================================================
+template < typename RELATION >
+inline void
+PackParticlesAndVertices::packAP2PRelationContainer ( const RELATION* rels,
+                                                      LHCb::PackedWeightedRelations& prels )
+{
+  // Make a new packed data object and save
+  prels.relations().push_back( LHCb::PackedRelation() );
+  LHCb::PackedRelation& prel = prels.relations().back();
+
+  // reference to original container and key
+  prel.container = m_pack.reference64( &prels, rels, 0 );
+
+  // First object
+  prel.start     = prels.sources().size();
+
+  // reserve size
+  prels.sources().reserve( prels.sources().size() + rels->relations().size() );
+  prels.dests()  .reserve( prels.dests().size()   + rels->relations().size() );
+  prels.weights().reserve( prels.weights().size() + rels->relations().size() );
+
+  // Loop over relations
+  for ( const auto & R : rels->relations() )
+  {
+    prels.sources().push_back( m_pack.reference64( &prels,
+                                                   R.from()->parent(),
+                                                   R.from()->key() ) );
+    prels.dests().push_back  ( m_pack.reference64( &prels,
+                                                   R.to()->parent(),
+                                                   R.to()->key()   ) );
+    prels.weights().push_back( R.weight() );
+  }
+
+  // last object
+  prel.end = prels.sources().size();
+
+  // Clear the registry address of the unpacked container, to prevent reloading
   if ( !m_deleteInput ) rels->registry()->setAddress( 0 );
 }
 
@@ -176,14 +237,17 @@ PackParticlesAndVertices::packAP2IntRelationContainer ( const RELATION* rels,
   // First object
   prel.start = prels.sources().size();
 
+ // reserve size
+  prels.sources().reserve( prels.sources().size() + rels->relations().size() );
+  prels.dests()  .reserve( prels.dests().size()   + rels->relations().size() );
+
   // Loop over relations
-  typename RELATION::Range all = rels->relations();
-  for ( typename RELATION::Range::iterator itR = all.begin(); all.end() != itR; ++itR )
+  for ( const auto & R : rels->relations() )
   {
     prels.sources().push_back( m_pack.reference64( &prels,
-                                                   (*itR).from()->parent(),
-                                                   (*itR).from()->key() ) );
-    prels.dests().push_back  ( (*itR).to() );
+                                                   R.from()->parent(),
+                                                   R.from()->key() ) );
+    prels.dests().push_back( R.to() );
   }
 
   // last object

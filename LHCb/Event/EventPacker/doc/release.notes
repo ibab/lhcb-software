@@ -4,6 +4,11 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2015-04-13 - Chris Jones
+ - Add support for packed Weighted Relations.
+ - Update PackParticlesAndVertices to search for and pack weighted
+   ProtoParticle to MCParticle relations.
+
 ! 2015-04-10 - Chris Jones
  - Add support for custom RichPID objects in the 'PackParticlesAndVertices'
    packing.

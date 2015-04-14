@@ -433,6 +433,11 @@ StatusCode UnpackParticlesAndVertices::execute()
   unpackP2PRelations<LHCb::Particle,LHCb::MCParticle,LHCb::Particles,const LHCb::MCParticles>(m_inputStream+LHCb::PackedRelationsLocation::P2MCP);
 
   //=================================================================
+  //== Process the PP2MCP relations
+  //=================================================================
+  unpackP2PWeightedRelations<LHCb::ProtoParticle,LHCb::MCParticle,LHCb::ProtoParticles,const LHCb::MCParticles,double>(m_inputStream+LHCb::PackedWeightedRelationsLocation::PP2MCP);
+
+  //=================================================================
   //== Process the P2Int relations
   //=================================================================
   unpackP2IntRelations<LHCb::Particle,int,LHCb::Particles>(m_inputStream+LHCb::PackedRelationsLocation::P2Int);

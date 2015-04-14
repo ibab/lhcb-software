@@ -8,7 +8,9 @@
 #include "Kernel/Particle2LHCbIDs.h"
 
 #include "Event/StandardPacker.h"
+
 #include "Relations/Relation1D.h"
+#include "Relations/RelationWeighted1D.h"
 
 #include "Event/PackedTrack.h"
 #include "Event/PackedProtoParticle.h"
@@ -56,6 +58,9 @@ private:
   template < class FROM, class TO, class FROMCONT, class TOCONT >
   void unpackP2PRelations( const std::string & location );
 
+  template < class FROM, class TO, class FROMCONT, class TOCONT, class WEIGHT >
+  void unpackP2PWeightedRelations( const std::string & location );
+
   template < class FROM, class TO, class FROMCONT >
   void unpackP2IntRelations( const std::string & location );
 
@@ -78,13 +83,11 @@ UnpackParticlesAndVertices::unpackP2PRelations( const std::string & location )
   unsigned int nbRelContainer(0), nbRel(0);
 
   RELATION * rels = NULL;
-  LHCb::PackedRelations* prels = getIfExists<LHCb::PackedRelations>( location );
+  const LHCb::PackedRelations* prels = getIfExists<LHCb::PackedRelations>( location );
   if ( NULL != prels )
   {
-    for ( std::vector<LHCb::PackedRelation>::iterator itR = prels->relations().begin();
-          prels->relations().end() != itR; ++itR )
+    for ( const auto & prel : prels->relations() )
     {
-      const LHCb::PackedRelation& prel = *itR;
       int indx = prel.container >> 32;
       const std::string & containerName = prels->linkMgr()->link( indx )->path() + m_postFix;
       rels = new RELATION();
@@ -119,6 +122,69 @@ UnpackParticlesAndVertices::unpackP2PRelations( const std::string & location )
                           << "+" << (dstContainer->clID()&0xFFFF)
                           << " key " << dstKey << endmsg;
         rels->relate( from, to );
+        ++nbRel;
+      }
+    }
+  }
+
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Retrieved " << nbRel << " relations in " << nbRelContainer << " containers"
+            << " from " << location
+            << endmsg;
+  }
+
+}
+
+template < class FROM, class TO, class FROMCONT, class TOCONT, class WEIGHT >
+inline void
+UnpackParticlesAndVertices::unpackP2PWeightedRelations( const std::string & location )
+{
+  typedef LHCb::RelationWeighted1D<FROM,TO,WEIGHT> RELATION;
+
+  unsigned int nbRelContainer(0), nbRel(0);
+
+  RELATION * rels = NULL;
+  const LHCb::PackedWeightedRelations* prels = getIfExists<LHCb::PackedWeightedRelations>( location );
+  if ( NULL != prels )
+  {
+    for ( const auto & prel : prels->relations() )
+    {
+      int indx = prel.container >> 32;
+      const std::string & containerName = prels->linkMgr()->link( indx )->path() + m_postFix;
+      rels = new RELATION();
+      put( rels, containerName );
+      ++nbRelContainer;
+      FROMCONT * srcContainer = NULL;
+      int prevSrcLink = -1;
+      DataObject* dstContainer = NULL;
+      int prevDstLink = -1;
+      for ( int kk = prel.start;  prel.end > kk; ++kk )
+      {
+        int srcLink(0), srcKey(0);
+        m_pack.indexAndKey64( prels->sources()[kk], srcLink, srcKey );
+        if ( srcLink != prevSrcLink )
+        {
+          prevSrcLink = srcLink;
+          const std::string & srcName = prels->linkMgr()->link( srcLink )->path();
+          srcContainer = get<FROMCONT>( srcName );
+        }
+        FROM* from = srcContainer->object( srcKey );
+        int dstLink(0), dstKey(0);
+        m_pack.indexAndKey64( prels->dests()[kk], dstLink, dstKey );
+        if ( dstLink != prevDstLink )
+        {
+          prevDstLink = dstLink;
+          const std::string & dstName = prels->linkMgr()->link( dstLink )->path();
+          dstContainer = get<DataObject>( dstName );
+        }
+        const WEIGHT wgt = prels->weights()[kk];
+        TOCONT * _to = dynamic_cast<TOCONT*>(dstContainer);
+        TO* to = ( _to ? _to->object(dstKey) : NULL );
+        if ( !to ) info() << "Unknown objec: Container type " << (dstContainer->clID()>>16)
+                          << "+" << (dstContainer->clID()&0xFFFF)
+                          << " key " << dstKey << endmsg;
+        rels->relate( from, to, wgt );
         ++nbRel;
       }
     }
