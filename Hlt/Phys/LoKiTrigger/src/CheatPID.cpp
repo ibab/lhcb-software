@@ -101,11 +101,14 @@ LoKi::Hlt1::CheatPID::operator()
     particle->setParticleID(m_pp->particleID()) ;
 
     LHCb::Vertex* vertex = part->endVertex()->clone() ;
-    particle->setEndVertex( vertex ) ;
+	if ( vertex )
+	{
+		particle->setEndVertex( vertex ) ;
+		_storeVertex( vertex ) ;
+	}
 
     // store in TES
     _storeParticle( particle ) ;
-    _storeVertex( vertex ) ;
 
     // add new candidate
     Hlt::Candidate *candidate = newCandidate();
