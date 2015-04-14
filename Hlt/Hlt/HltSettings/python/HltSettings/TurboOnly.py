@@ -67,8 +67,8 @@ class TurboOnly( object ):
         from Hlt2Lines.TrackEff.Lines           import TrackEffLines
         from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 
-
-
+        thresholds = { 
+                       }
 
         return thresholds
     
