@@ -42,6 +42,7 @@
 #include "LoKi/ToProtoParticles.h"
 #include "LoKi/ToParticles.h"
 #include "LoKi/L0CaloToParticles.h"
+#include "LoKi/CheatPID.h"
 #include "LoKi/Hlt1DiPhotonMaker.h"
 #include "LoKi/TrackCutAsRecVertexCut.h"
 #include "LoKi/TrackTool.h"

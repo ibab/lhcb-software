@@ -246,6 +246,8 @@ TC_L0CALOTOPARTICLES = LoKi.Hlt1.L0CaloToParticles
 TC_HLT1DIPHOTONMAKER = LoKi.Hlt1.Hlt1DiPhotonMaker
 ## @see LoKi::Cuts::TC_HLT1COMBINER
 TC_HLT1COMBINER = LoKi.Hlt1.Hlt1Combiner
+## $see LoKi::Cuts::TC_CHEATPID
+TC_CHEATPID = LoKi.Hlt1.CheatPID
 
 # =============================================================================
 ## di-tracks makers

@@ -93,6 +93,7 @@
   <class name    = "LoKi::Hlt1::ToProtoParticles"    />
   <class name    = "LoKi::Hlt1::ToParticles"         />
   <class name    = "LoKi::Hlt1::L0CaloToParticles"   />
+  <class name    = "LoKi::Hlt1::CheatPID"   />
   <class name    = "LoKi::Hlt1::Hlt1CombinerConf">
     <field name = "m_acut"      transient = "true"/>
     <field name = "m_cut"       transient = "true"/>
