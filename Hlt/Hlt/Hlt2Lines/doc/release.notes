@@ -8,6 +8,12 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-14 - Patrick Spradlin
+  - Some code cleaning in CharmHad/Stages.py
+    . Prepended 'CharmHad' to the names of shared instances of filters for
+      basic particles.  Most of these had very generic names that might
+      eventually conflict with similar filters in other directories.
+
 ! 2015-04-14 - Mika Vesterinen
   - Update the TrackEff module to move the making of velo probes into Hlt2/Hlt2SharedParticles
 

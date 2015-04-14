@@ -63,19 +63,18 @@ class InParticleFilter(Hlt2ParticleFilter) : # {
 
 
 ## Shared instances of InParticleFilter
-## If these are not made into central shared particles, their names should
-##   be updated to flag them as CharmHad shared particles to avoid name
-##   conflicts with other subdirectories.
+## Names of shared particles  begin with CharmHad to avoid name conflicts
+##   with other subdirectories.
 ## ------------------------------------------------------------------------- ##
 from Inputs import Hlt2LoosePions, Hlt2LooseKaons, Hlt2LooseProtons
 from Inputs import Hlt2NoPIDsPions, Hlt2NoPIDsKaons, Hlt2NoPIDsProtons
-SharedPromptChild_pi = InParticleFilter( 'SharedPromptChild_pi',
+SharedPromptChild_pi = InParticleFilter( 'CharmHadSharedPromptChild_pi',
                                          [Hlt2LoosePions], 'PIDK', True )
-SharedPromptChild_K = InParticleFilter( 'SharedPromptChild_K',
+SharedPromptChild_K = InParticleFilter( 'CharmHadSharedPromptChild_K',
                                         [Hlt2LooseKaons], 'PIDK' )
-SharedPromptChild_p = InParticleFilter( 'SharedPromptChild_p',
+SharedPromptChild_p = InParticleFilter( 'CharmHadSharedPromptChild_p',
                                         [Hlt2LooseProtons], 'PIDp' )
-SharedSoftTagChild_pi = InParticleFilter( 'SharedSoftTagChild_pi',
+SharedSoftTagChild_pi = InParticleFilter( 'CharmHadSharedSoftTagChild_pi',
                                           [Hlt2NoPIDsPions] )
 
 
@@ -121,22 +120,24 @@ class DetachedInParticleFilter(Hlt2ParticleFilter) : # {
 
 
 ## Shared instances of DetachedInParticleFilter
+## Names of shared particles  begin with CharmHad to avoid name conflicts
+##   with other subdirectories.
 ## These are all associated with specific combiners and should perhaps be
 ##   defined closer to that context.
 ## ------------------------------------------------------------------------- ##
-SharedDetachedDpmChild_pi = DetachedInParticleFilter( 'SharedDetachedDpmChild_pi', [Hlt2LoosePions], 'PIDK', True )
-SharedDetachedDpmChild_K = DetachedInParticleFilter( 'SharedDetachedDpmChild_K',
+SharedDetachedDpmChild_pi = DetachedInParticleFilter( 'CharmHadSharedDetachedDpmChild_pi', [Hlt2LoosePions], 'PIDK', True )
+SharedDetachedDpmChild_K = DetachedInParticleFilter( 'CharmHadSharedDetachedDpmChild_K',
                                                      [Hlt2LooseKaons], 'PIDK' )
-SharedDetachedLcChild_pi = DetachedInParticleFilter('SharedDetachedLcChild_pi',
+SharedDetachedLcChild_pi = DetachedInParticleFilter('CharmHadSharedDetachedLcChild_pi',
                                                     [Hlt2LoosePions], 'PIDK', True )
-SharedDetachedLcChild_K = DetachedInParticleFilter( 'SharedDetachedLcChild_K',
+SharedDetachedLcChild_K = DetachedInParticleFilter( 'CharmHadSharedDetachedLcChild_K',
                                                     [Hlt2LooseKaons], 'PIDK' )
-SharedDetachedLcChild_p = DetachedInParticleFilter('SharedDetachedLcChild_p',
+SharedDetachedLcChild_p = DetachedInParticleFilter('CharmHadSharedDetachedLcChild_p',
                                                    [Hlt2LooseProtons], 'PIDp' )
 
-SharedNoPIDDetachedChild_pi = DetachedInParticleFilter( 'SharedNoPIDDetachedChild_pi', [Hlt2NoPIDsPions] )
-SharedNoPIDDetachedChild_K = DetachedInParticleFilter( 'SharedNoPIDDetachedChild_K', [Hlt2NoPIDsKaons] )
-SharedNoPIDDetachedChild_p = DetachedInParticleFilter( 'SharedNoPIDDetachedChild_p', [Hlt2NoPIDsProtons] )
+SharedNoPIDDetachedChild_pi = DetachedInParticleFilter( 'CharmHadSharedNoPIDDetachedChild_pi', [Hlt2NoPIDsPions] )
+SharedNoPIDDetachedChild_K = DetachedInParticleFilter( 'CharmHadSharedNoPIDDetachedChild_K', [Hlt2NoPIDsKaons] )
+SharedNoPIDDetachedChild_p = DetachedInParticleFilter( 'CharmHadSharedNoPIDDetachedChild_p', [Hlt2NoPIDsProtons] )
 
 
 ## ------------------------------------------------------------------------- ##
@@ -163,41 +164,13 @@ class KsFilterForHHKs(Hlt2ParticleFilter) : # {
 # }
 
 ## Shared instances of KsFilterForHHKs
-## If these are not made into central shared particles, their names should
-##   be updated to flag them as CharmHad shared particles to avoid name
-##   conflicts with other subdirectories.
+## Names of shared particles  begin with CharmHad to avoid name conflicts
+##   with other subdirectories.
 ## ------------------------------------------------------------------------- ##
 from Inputs import KS0_LL, KS0_DD, Lambda_LL, Lambda_DD
-SharedKsLL =  KsFilterForHHKs('SharedKsLL',[KS0_LL])
-SharedKsDD =  KsFilterForHHKs('SharedKsDD',[KS0_DD])
+SharedKsLL =  KsFilterForHHKs('CharmHadSharedKsLL',[KS0_LL])
+SharedKsDD =  KsFilterForHHKs('CharmHadSharedKsDD',[KS0_DD])
 
-
-## ------------------------------------------------------------------------- ##
-from Configurables import DaVinci__N3BodyDecays as N3BodyDecays
-class HHKshCombiner(Hlt2Combiner):
-    def __init__(self, name, decay, inputs):
-
-## HHKs mother cuts
-        mc =    ("(VFASPF(VCHI2PDOF) < %(D_VCHI2PDOF_MAX)s)" +
-                 " & (BPVDIRA > %(D_BPVDIRA_MIN)s )" +
-                 " & (BPVVDCHI2 > %(D_BPVVDCHI2_MIN)s )" +
-                 " & (PT > %(D_PT_MIN)s )" +
-                 " & (BPVLTIME() > %(D_BPVLTIME_MIN)s )")
-
-        c12Cut = ("(AM <  %(HHMass_MAX)s)" +
-                  " & (ADOCAMAX('') < %(HHMaxDOCA)s)")
-
-        cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
-                 " & ((APT1+APT2+APT3) > %(ASUMPT_MIN)s )")
-
-        from HltTracking.HltPVs import PV3D
-
-        Hlt2Combiner.__init__(self, 'D02HHKsh', decay, inputs,
-                     dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
-                     tistos = 'TisTosSpec', combiner = N3BodyDecays,
-                     Combination12Cut =  c12Cut,
-                     CombinationCut = cc, 
-                     MotherCut = mc, Preambulo = [])
 
 ## ------------------------------------------------------------------------- ##
 class NeutralInParticleFilter(Hlt2ParticleFilter) : # {
@@ -230,21 +203,20 @@ class NeutralInParticleFilter(Hlt2ParticleFilter) : # {
 
 
 ## Shared instances of NeutralInParticleFilter
-## If these are not made into central shared particles, their names should
-##   be updated to flag them as CharmHad shared particles to avoid name
-##   conflicts with other subdirectories.
+## Names of shared particles  begin with CharmHad to avoid name conflicts
+##   with other subdirectories.
 ## ------------------------------------------------------------------------- ##
 from Inputs import Hlt2ResolvedPi0, Hlt2MergedPi0, Hlt2NoPIDsPhotons, Hlt2AllPi0
-SharedNeutralChild_pi0R  = NeutralInParticleFilter("SharedNeutralChild_pi0R",
+SharedNeutralChild_pi0R  = NeutralInParticleFilter("CharmHadSharedNeutralChild_pi0R",
                                                    [Hlt2ResolvedPi0], 'pi0' )
-SharedNeutralChild_pi0M  = NeutralInParticleFilter("SharedNeutralChild_pi0M",
+SharedNeutralChild_pi0M  = NeutralInParticleFilter("CharmHadSharedNeutralChild_pi0M",
                                                    [Hlt2MergedPi0], 'pi0' )
-SharedNeutralChild_pi0   = NeutralInParticleFilter("SharedNeutralChild_pi0",
+SharedNeutralChild_pi0   = NeutralInParticleFilter("CharmHadSharedNeutralChild_pi0",
                                                    [Hlt2AllPi0], 'pi0' )
-SharedNeutralChild_gamma = NeutralInParticleFilter("SharedNeutralChild_gamma",
+SharedNeutralChild_gamma = NeutralInParticleFilter("CharmHadSharedNeutralChild_gamma",
                                                    [Hlt2NoPIDsPhotons] )
-SharedNeutralLowPtChild_pi0 = NeutralInParticleFilter("SharedNeutralLowPtChild_pi0", [Hlt2AllPi0], 'pi0' )
-SharedNeutralLowPtChild_gamma = NeutralInParticleFilter("SharedNeutralLowPtChild_gamma", [Hlt2NoPIDsPhotons] )
+SharedNeutralLowPtChild_pi0 = NeutralInParticleFilter("CharmHadSharedNeutralLowPtChild_pi0", [Hlt2AllPi0], 'pi0' )
+SharedNeutralLowPtChild_gamma = NeutralInParticleFilter("CharmHadSharedNeutralLowPtChild_gamma", [Hlt2NoPIDsPhotons] )
 
 
 
@@ -460,6 +432,38 @@ DetAsym_DpToKmPipPip = DetachedHHHCombiner( 'DetAsym_DpToKmPipPip'
         , nickname = 'Dpm2KPiPi_ForKPiAsym' ) ## 'Dpm2KPiPi_ForKPiAsym' def in D2HHHLines.py
 
 
+
+## ========================================================================= ##
+## Yet-to-be sorted things.
+## ========================================================================= ##
+
+
+## ------------------------------------------------------------------------- ##
+from Configurables import DaVinci__N3BodyDecays as N3BodyDecays
+class HHKshCombiner(Hlt2Combiner):
+    def __init__(self, name, decay, inputs):
+
+## HHKs mother cuts
+        mc =    ("(VFASPF(VCHI2PDOF) < %(D_VCHI2PDOF_MAX)s)" +
+                 " & (BPVDIRA > %(D_BPVDIRA_MIN)s )" +
+                 " & (BPVVDCHI2 > %(D_BPVVDCHI2_MIN)s )" +
+                 " & (PT > %(D_PT_MIN)s )" +
+                 " & (BPVLTIME() > %(D_BPVLTIME_MIN)s )")
+
+        c12Cut = ("(AM <  %(HHMass_MAX)s)" +
+                  " & (ADOCAMAX('') < %(HHMaxDOCA)s)")
+
+        cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
+                 " & ((APT1+APT2+APT3) > %(ASUMPT_MIN)s )")
+
+        from HltTracking.HltPVs import PV3D
+
+        Hlt2Combiner.__init__(self, 'D02HHKsh', decay, inputs,
+                     dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                     tistos = 'TisTosSpec', combiner = N3BodyDecays,
+                     Combination12Cut =  c12Cut,
+                     CombinationCut = cc, 
+                     MotherCut = mc, Preambulo = [])
 
 
 # ------------------------------------------------------------------------- ##

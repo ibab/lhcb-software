@@ -42,27 +42,27 @@ theseslots = {   'Prescale' : {},
                              'VCHI2PDOF_MAX'            :  10.0,
                             },  
                  # Particles for the "Detached" CPV lines
-                 'SharedDetachedDpmChild_K' : { 
+                 'CharmHadSharedDetachedDpmChild_K' : { 
                                  'PID_LIM'                  :  5,  
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                               },  
-                 'SharedDetachedDpmChild_pi' : { 
+                 'CharmHadSharedDetachedDpmChild_pi' : { 
                                  'PID_LIM'                  :  5, 
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                               },  
-                 'SharedDetachedLcChild_K' : { 
+                 'CharmHadSharedDetachedLcChild_K' : { 
                                  'PID_LIM'                  :  5,  
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                               },  
-                 'SharedDetachedLcChild_pi' : { 
+                 'CharmHadSharedDetachedLcChild_pi' : { 
                                  'PID_LIM'                  :  5, 
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                               },  
-                 'SharedDetachedLcChild_p' : {
+                 'CharmHadSharedDetachedLcChild_p' : {
                                  'PID_LIM'                  :  5,
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
@@ -80,13 +80,13 @@ theseslots = {   'Prescale' : {},
                                  'VZ_MAX'                  : 2275. * mm,
                                               },
                  # long Kshorts, at least for  D0 --> HHKs
-                 'SharedKsLL' : {
+                 'CharmHadSharedKsLL' : {
                                  'DecayTime_MIN'           : 0.5 * picosecond,
                                  'VZ_MIN'                  : -100. * mm,
                                  'VZ_MAX'                  : 500. * mm,
                                              },
                  # downstream Kshorts, at least for D0 --> HHKs
-                 'SharedKsDD' : {
+                 'CharmHadSharedKsDD' : {
                                  'DecayTime_MIN'           : 0.5 * picosecond,
                                  'VZ_MIN'                  : 300. * mm,
                                  'VZ_MAX'                  : 2275. * mm,
@@ -108,60 +108,60 @@ theseslots = {   'Prescale' : {},
                                           },
                  # Particles for the 'Prompt' CF lifetime unbiased lines for the 
                  # lifetime measurements
-                 'SharedPromptChild_K' : {
+                 'CharmHadSharedPromptChild_K' : {
                                  'PID_LIM'                  :  10,
                                  'Trk_ALL_PT_MIN'           :  500.0 * MeV,
                                               },
-                 'SharedPromptChild_pi' : {
+                 'CharmHadSharedPromptChild_pi' : {
                                  'PID_LIM'                  :  0,
                                  'Trk_ALL_PT_MIN'           :  500.0 * MeV,
                                               },
-                 'SharedPromptChild_p' : {
+                 'CharmHadSharedPromptChild_p' : {
                                  'PID_LIM'                  :  10,
                                  'Trk_ALL_PT_MIN'           :  500.0 * MeV,
                                               },
                  # Soft particles for tagging decays
-                 'SharedSoftTagChild_pi' : {
+                 'CharmHadSharedSoftTagChild_pi' : {
                                  'Trk_ALL_PT_MIN'           :  100.0,
                                            },
                  # NoPID protons for the Sigma_c tagged Lambda_c line for PID calibration
                  # the IPCHI2 cut is tight because the PT/PT cuts have to be loose to give
                  # a useful sample, and we need to reduce the combinatorics
-                 'SharedNoPIDDetachedChild_p' : {
+                 'CharmHadSharedNoPIDDetachedChild_p' : {
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  6.0,
                                           },
                  # NoPID particles for other charm lines 
-                 'SharedNoPIDDetachedChild_pi' : {
+                 'CharmHadSharedNoPIDDetachedChild_pi' : {
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  6.0,
                                           },
-                 'SharedNoPIDDetachedChild_K' : {
+                 'CharmHadSharedNoPIDDetachedChild_K' : {
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  6.0,
                                           },
                  # Neutral particles for D -> HHX lines
                  # 
-                 'SharedNeutralChild_pi0' : {
+                 'CharmHadSharedNeutralChild_pi0' : {
                                  'Neut_ALL_PT_MIN'           : 500.0 * MeV,
                                  'Neut_ALL_ADMASS_MAX'       : 60.0,
                                           },
-                 'SharedNeutralChild_pi0R' : {
+                 'CharmHadSharedNeutralChild_pi0R' : {
                                  'Neut_ALL_PT_MIN'           : 500.0 * MeV,
                                  'Neut_ALL_ADMASS_MAX'       :  30.0, 
                                           },
-                 'SharedNeutralChild_pi0M' : {
+                 'CharmHadSharedNeutralChild_pi0M' : {
                                  'Neut_ALL_PT_MIN'           : 500.0 * MeV,
                                  'Neut_ALL_ADMASS_MAX'       : 60.0,
                                           },
-                 'SharedNeutralChild_gamma' : {
+                 'CharmHadSharedNeutralChild_gamma' : {
                                  'Neut_ALL_PT_MIN'           : 500.0 * MeV,
                                           },
                  #
-                 'SharedNeutralLowPtChild_gamma' : {
+                 'CharmHadSharedNeutralLowPtChild_gamma' : {
                                  'Neut_ALL_PT_MIN'           : 350.0 * MeV,
                                           },
-                 'SharedNeutralLowPtChild_pi0' : {
+                 'CharmHadSharedNeutralLowPtChild_pi0' : {
                                  'Neut_ALL_PT_MIN'           : 350.0 * MeV,
                                  'Neut_ALL_ADMASS_MAX'       :  60.0,
                                           },
