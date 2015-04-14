@@ -44,7 +44,7 @@ class Commissioning_Physics_2015( object ):
             raise RuntimeError( 'Must update HltType when modifying ActiveHlt.Lines()' )
         
     def L0TCK(self) :
-        return '0x0046'
+        return '0xFF66'
 
     def HltType(self) :
         self.verifyType( Commissioning_Physics_2015 ) 
@@ -231,6 +231,9 @@ class Commissioning_Physics_2015( object ):
 
         from Hadrons_March2015 import Hadrons_March2015
         hlt2.extend( Hadrons_March2015().ActiveHlt2Lines() )
+        
+        from Radiative_March2015 import Radiative_March2015
+        hlt2.extend( Radiative_March2015().ActiveHlt2Lines() )
        
         return hlt2
        
