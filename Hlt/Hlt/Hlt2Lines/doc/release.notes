@@ -8,6 +8,13 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04014 - Mike Sokoloff
+  - added ChargedHyperonLines.py to CharmHad
+  - add SecondaryLambdaFilter and ChargedHyperonLambdaHCombiner classes to Stages.py
+    .  SharedSecondaryLambdaLL  and  SharedSecondaryLambdaDD are instances of the former
+    .  Xi2LambdaPi_LLL, Xi2LambdaPi_DDL, Omega2LambdaK_LLL, and Omega2LambdaK_DDL are instances of the latter
+    .  plan to add HyperonLambdaX_DDD later
+
 ! 2015-04-14 - Patrick Spradlin
   - Some code cleaning in CharmHad/Stages.py
     . Changed one-off classes inheriting from DetachedHHHCombiner to
