@@ -251,7 +251,7 @@ def ConfiguredHltEventFitter( name,
     eventfitter = TrackEventFitter(name)
     eventfitter.TracksInContainer = TracksInContainer
     if TracksOutContainer != None:
-        eventfitter.TracksOutContainer = TracksOutCountainer
+        eventfitter.TracksOutContainer = TracksOutContainer
     ConfiguredHltInitFitter(eventfitter)
     return eventfitter
 
