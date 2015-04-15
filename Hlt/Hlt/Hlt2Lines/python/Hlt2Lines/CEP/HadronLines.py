@@ -1,6 +1,5 @@
 from GaudiKernel.SystemOfUnits import GeV, MeV, mm
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
-
 class CEPHadronLines() :
     def localcuts(self) :
         localStages={'L2pPi'    :   {'APTmin'         :     0.0 * MeV, 
@@ -9,73 +8,145 @@ class CEPHadronLines() :
                                      'ADOCAmax'       :     0.5 * mm,
                                      'VtxChi2DoFmax'  :     15.0,
                                      'nVeloTracksmax' :     12,
+                                     'nBackTracksmax' :     1,
                                      'AMmin'          :     1036.0 * MeV,
-                                     'AMmax'          :     1196.0 * MeV}
-
+                                     'AMmax'          :     1196.0 * MeV,
+                                     'P_PIDpmin'      :     0.0,
+                                     'Pi_PIDKmax'     :     10000}
                   , 'D2KPi'     :   {'APTmin'         :     0.0 * MeV, 
                                      'APTmax'         :     100000.0 * GeV,
                                      'APmin'          :     10000.0 * MeV,
                                      'ADOCAmax'       :     0.5 * mm,
                                      'VtxChi2DoFmax'  :     15.0,
                                      'nVeloTracksmax' :     12,
+                                     'nBackTracksmax' :     1,
                                      'AMmin'          :     1785.0 * MeV,
-                                     'AMmax'          :     1945.0 * MeV}
+                                     'AMmax'          :     1945.0 * MeV,
+                                     'K_PIDKmin'      :     0.0,     
+                                     'Pi_PIDKmax'     :     10000}
                   , 'D2KPiPi'   :   {'APTmin'         :     0.0 * MeV, 
                                      'APTmax'         :     100000.0 * GeV,
                                      'APmin'          :     10000.0 * MeV,
                                      'ADOCAmax'       :     0.5 * mm,
                                      'VtxChi2DoFmax'  :     15.0,
                                      'nVeloTracksmax' :     12,
+                                     'nBackTracksmax' :     1,
                                      'AMmin'          :     1785.0 * MeV,
-                                     'AMmax'          :     1945.0 * MeV}
+                                     'AMmax'          :     1945.0 * MeV,
+                                     'K_PIDKmin'      :     0.0,     
+                                     'Pi_PIDKmax'     :     10000}
                   , 'D2K3Pi'    :   {'APTmin'         :     0.0 * MeV, 
                                      'APTmax'         :     100000.0 * GeV,
                                      'APmin'          :     10000.0 * MeV,
                                      'ADOCAmax'       :     0.7 * mm,
                                      'VtxChi2DoFmax'  :     15.0,
                                      'nVeloTracksmax' :     12,
+                                     'nBackTracksmax' :     1,
                                      'AMmin'          :     1785.0 * MeV,
-                                     'AMmax'          :     1945.0 * MeV}
+                                     'AMmax'          :     1945.0 * MeV,
+                                     'K_PIDKmin'      :     0.0,     
+                                     'Pi_PIDKmax'     :     10000}
                   , 'ChiC2HH'   :   {'APTmin'         :     0.0 * MeV,
                                      'APTmax'         :     5000.0 * MeV,
                                      'APmin'          :     10000.0 * MeV,
                                      'ADOCAmax'       :     0.5 * mm,
                                      'VtxChi2DoFmax'  :     15.0,
                                      'nVeloTracksmax' :     6,
+                                     'nBackTracksmax' :     1,
                                      'AMmin'          :     2850.0 * MeV,
-                                     'AMmax'          :     3600.0 * MeV}
+                                     'AMmax'          :     3600.0 * MeV,
+                                     'K_PIDKmin'      :     0.0,     
+                                     'Pi_PIDKmax'     :     10000}
                   , 'ChiC2HHHH' :   {'APTmin'         :     0.0 * MeV,
                                      'APTmax'         :     5000.0 * MeV,
                                      'APmin'          :     10000.0 * MeV,
                                      'ADOCAmax'       :     0.7 * mm,
                                      'VtxChi2DoFmax'  :     15.0,
                                      'nVeloTracksmax' :     8,
+                                     'nBackTracksmax' :     1,
                                      'AMmin'          :     2850.0 * MeV,
-                                     'AMmax'          :     4500.0 * MeV}
+                                     'AMmax'          :     4500.0 * MeV,
+                                     'K_PIDKmin'      :     0.0,     
+                                     'Pi_PIDKmax'     :     10000}
                   , 'ChiC2PP'   :   {'APTmin'         :     0.0 * MeV,
                                      'APTmax'         :     5000.0 * MeV,
                                      'APmin'          :     10000.0 * MeV,
                                      'ADOCAmax'       :     0.5 * mm,
                                      'VtxChi2DoFmax'  :     15.0,
                                      'nVeloTracksmax' :     6,
+                                     'nBackTracksmax' :     1,
                                      'AMmin'          :     2850.0 * MeV,
-                                     'AMmax'          :     3600.0 * MeV}
+                                     'AMmax'          :     3600.0 * MeV,
+                                     'P_PIDpmin'      :     0.0}
                   , 'LMR2HH'    :   {'APTmin'         :     0.0 * MeV,
                                      'APTmax'         :     5000.0 * MeV,
                                      'APmin'          :     15000.0 * MeV,
                                      'ADOCAmax'       :     0.2 * mm,
                                      'VtxChi2DoFmax'  :     4.0,
                                      'nVeloTracksmax' :     8,
+                                     'nBackTracksmax' :     1,
                                      'AMmin'          :     0.0 * MeV,
-                                     'AMmax'          :     15000.0 * GeV}
+                                     'AMmax'          :     15000.0 * GeV,
+                                     'K_PIDKmin'      :     0.0,     
+                                     'Pi_PIDKmax'     :     10000,
+                                     'P_PIDpmin'      :     0.0}
                   , 'LMR2HHHH'  :   {'APTmin'         :     0.0 * MeV,
                                      'APTmax'         :     5000.0 * MeV,
                                      'APmin'          :     15000.0 * MeV,
                                      'ADOCAmax'       :     0.2 * mm,
                                      'VtxChi2DoFmax'  :     4.0,
                                      'nVeloTracksmax' :     8,
+                                     'nBackTracksmax' :     1,
                                      'AMmin'          :     400.0 * MeV,
-                                     'AMmax'          :     5000.0 * MeV}
+                                     'AMmax'          :     5000.0 * MeV,
+                                     'K_PIDKmin'      :     0.0,     
+                                     'Pi_PIDKmax'     :     10000}
+                  , 'LMR2HH_mediumPS':   {'APTmin'         :     0.0 * MeV,
+                                     'APTmax'         :     5000.0 * MeV,
+                                     'APmin'          :     15000.0 * MeV,
+                                     'ADOCAmax'       :     0.2 * mm,
+                                     'VtxChi2DoFmax'  :     4.0,
+                                     'nVeloTracksmax' :     8,
+                                     'nBackTracksmax' :     1,
+                                     'AMmin'          :     0.0 * MeV,
+                                     'AMmax'          :     15000.0 * GeV,
+                                     'K_PIDKmin'      :     0.0,     
+                                     'Pi_PIDKmax'     :     10000,
+                                     'P_PIDpmin'      :     0.0}
+                  , 'LMR2HHHH_mediumPS'  :   {'APTmin'         :     0.0 * MeV,
+                                     'APTmax'         :     5000.0 * MeV,
+                                     'APmin'          :     15000.0 * MeV,
+                                     'ADOCAmax'       :     0.2 * mm,
+                                     'VtxChi2DoFmax'  :     4.0,
+                                     'nVeloTracksmax' :     8,
+                                     'nBackTracksmax' :     1,
+                                     'AMmin'          :     400.0 * MeV,
+                                     'AMmax'          :     5000.0 * MeV,
+                                     'K_PIDKmin'      :     0.0,     
+                                     'Pi_PIDKmax'     :     10000}
+                  , 'LMR2HH_heavyPS'    :   {'APTmin'         :     0.0 * MeV,
+                                     'APTmax'         :     5000.0 * MeV,
+                                     'APmin'          :     15000.0 * MeV,
+                                     'ADOCAmax'       :     0.2 * mm,
+                                     'VtxChi2DoFmax'  :     4.0,
+                                     'nVeloTracksmax' :     8,
+                                     'nBackTracksmax' :     1,
+                                     'AMmin'          :     0.0 * MeV,
+                                     'AMmax'          :     15000.0 * GeV,
+                                     'K_PIDKmin'      :     0.0,     
+                                     'Pi_PIDKmax'     :     10000,
+                                     'P_PIDpmin'      :     0.0}
+                  , 'LMR2HHHH_heavyPS'  :   {'APTmin'         :     0.0 * MeV,
+                                     'APTmax'         :     5000.0 * MeV,
+                                     'APmin'          :     15000.0 * MeV,
+                                     'ADOCAmax'       :     0.2 * mm,
+                                     'VtxChi2DoFmax'  :     4.0,
+                                     'nVeloTracksmax' :     8,
+                                     'nBackTracksmax' :     1,
+                                     'AMmin'          :     400.0 * MeV,
+                                     'AMmax'          :     5000.0 * MeV,
+                                     'K_PIDKmin'      :     0.0,     
+                                     'Pi_PIDKmax'     :     10000}
                   , 'Hadron_noTrFilt':{'APTmin'      :     1. * GeV}
                   } 
         return localStages
@@ -83,7 +154,6 @@ class CEPHadronLines() :
     def locallines(self):
       from Stages import (LowMultL2pPiFilter, LowMultD2KPiFilter, LowMultD2KPiPiFilter, LowMultD2K3PiFilter, LowMultD2KKPiFilter,
                           LowMultL2pPiWSFilter, LowMultD2KPiWSFilter, LowMultD2KPiPiWSFilter, LowMultD2K3PiWSFilter, LowMultD2KKPiWSFilter,
-#                          LowMultDDIncCPFilter, LowMultDDIncVFFilter, 
                           LowMultLMR2HHFilter, LowMultLMR2HHHHFilter,LowMultLMR2HHWSFilter, LowMultLMR2HHHHWSFilter,
                           LowMultChiC2HHFilter, LowMultChiC2HHHHFilter, LowMultChiC2PPFilter,
                           LowMultChiC2HHWSFilter, LowMultChiC2HHHHWSFilter,LowMultChiC2PPWSFilter,
@@ -114,6 +184,14 @@ class CEPHadronLines() :
                  'LowMultLMR2HHWS'    : [LowMultLMR2HHWSFilter('LMR2HH')],
                  'LowMultLMR2HHHH'    : [LowMultLMR2HHHHFilter('LMR2HHHH')],
                  'LowMultLMR2HHHHWS'  : [LowMultLMR2HHHHWSFilter('LMR2HHHH')],
+                 'LowMultLMR2HH_mediumPS'      : [LowMultLMR2HHFilter('LMR2HH_mediumPS')],
+                 'LowMultLMR2HHWS_mediumPS'    : [LowMultLMR2HHWSFilter('LMR2HH_mediumPS')],
+                 'LowMultLMR2HHHH_mediumPS'    : [LowMultLMR2HHHHFilter('LMR2HHHH_mediumPS')],
+                 'LowMultLMR2HHHHWS_mediumPS'  : [LowMultLMR2HHHHWSFilter('LMR2HHHH_mediumPS')],
+                 'LowMultLMR2HH_heavyPS'      : [LowMultLMR2HHFilter('LMR2HH_heavyPS')],
+                 'LowMultLMR2HHWS_heavyPS'    : [LowMultLMR2HHWSFilter('LMR2HH_heavyPS')],
+                 'LowMultLMR2HHHH_heavyPS'    : [LowMultLMR2HHHHFilter('LMR2HHHH_heavyPS')],
+                 'LowMultLMR2HHHHWS_heavyPS'  : [LowMultLMR2HHHHWSFilter('LMR2HHHH_heavyPS')],
                  # Unbiased hadron line
                  'LowMultHadron_noTrFilt':  [LowMultHadron_noTrFiltFilter('Hadron_noTrFilt')] 
                }

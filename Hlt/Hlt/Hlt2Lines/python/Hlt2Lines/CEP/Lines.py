@@ -43,15 +43,24 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                  , 'Hlt2LowMultLMR2HHWS'    : 0.05
                                  , 'Hlt2LowMultLMR2HHHH'    : 0.05
                                  , 'Hlt2LowMultLMR2HHHHWS'  : 0.05
-                                 , 'Hlt2MinKinBiasHadron'   : 0.01
+                                 , 'Hlt2LowMultLMR2HH_mediumPS'      : 0.05
+                                 , 'Hlt2LowMultLMR2HHWS_mediumPS'    : 0.05
+                                 , 'Hlt2LowMultLMR2HHHH_mediumPS'    : 0.05
+                                 , 'Hlt2LowMultLMR2HHHHWS_mediumPS'  : 0.05
+                                 , 'Hlt2LowMultLMR2HH_heavyPS'      : 0.05
+                                 , 'Hlt2LowMultLMR2HHWS_heavyPS'    : 0.05
+                                 , 'Hlt2LowMultLMR2HHHH_heavyPS'    : 0.05
+                                 , 'Hlt2LowMultLMR2HHHHWS_heavyPS'  : 0.05
+                                 , 'Hlt2LowMultHadron_noTrFilt' : 0.01
                                  # Muon lines
                                  , 'Hlt2LowMultDiMuon'      : 1.0
+                                 , 'Hlt2LowMultDiMuon_PS'   : 1.0
                                  , 'Hlt2LowMultMuon'        : 0.1
                                  # Photon lines
                                  , 'Hlt2LowMultPhoton'      : 1.0
                                  # Electron lines
                                  , 'Hlt2LowMultElectron'    : 1.0
-                                 , 'Hlt2LowMultMinKinBiasElectron': 0.05
+                                 , 'Hlt2LowMultElectron_noTrFilt': 0.05
                                  }
                   , 'Postscale' : {   'Hlt2LowMultL2pPi'       : 1.0
                                     , 'Hlt2LowMultL2pPiWS'     : 1.0
@@ -73,24 +82,30 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                     , 'Hlt2LowMultLMR2HHWS'    : 1.0
                                     , 'Hlt2LowMultLMR2HHHH'    : 1.0
                                     , 'Hlt2LowMultLMR2HHHHWS'  : 1.0
-                                    , 'Hlt2MinKinBiasHadron'   : 1.0
+                                    , 'Hlt2LowMultLMR2HH_mediumPS'      : 1.0
+                                    , 'Hlt2LowMultLMR2HHWS_mediumPS'    : 1.0
+                                    , 'Hlt2LowMultLMR2HHHH_mediumPS'    : 1.0
+                                    , 'Hlt2LowMultLMR2HHHHWS_mediumPS'  : 1.0
+                                    , 'Hlt2LowMultLMR2HH_heavyPS'      : 1.0
+                                    , 'Hlt2LowMultLMR2HHWS_heavyPS'    : 1.0
+                                    , 'Hlt2LowMultLMR2HHHH_heavyPS'    : 1.0
+                                    , 'Hlt2LowMultLMR2HHHHWS_heavyPS'  : 1.0
+                                    , 'Hlt2LowMultHadron_noTrFilt' : 1.0
                                     # Muon lines
                                     , 'Hlt2LowMultDiMuon'      : 1.0
+                                    , 'Hlt2LowMultDiMuon_PS'   : 1.0
                                     , 'Hlt2LowMultMuon'        : 1.0
                                     # Photon lines
                                     , 'Hlt2LowMultPhoton'      : 1.0
                                     # Electron lines
                                     , 'Hlt2LowMultElectron'    : 1.0
-                                    , 'Hlt2LowMultMinKinBiasElectron': 1.0
+                                    , 'Hlt2LowMultElectron_noTrFilt': 1.0
                                     }
                     , 'HLT'               :   {"ALL": "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"}
                     , 'Common'    : {'HLT'            :     "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
-                                     'nBackTracksmax' :     1,
                                      'H_PTmin'        :     100.0 * MeV,
                                      'H_Pmin'         :     5000.0 * MeV,
-                                     'H_TrkChi2max'   :     3.0,
-                                     'K_PIDKmin'      :     0.0,
-                                     'P_PIDpmin'      :     0.0}                
+                                     'H_TrkChi2max'   :     3.0}
                    ,   'L0Channels'        : {'Hadron'  : ['DiHadron,lowMult'],
                                               'Muon'    : ['Muon,lowMult','DiMuon,lowMult'],
                                               'Photon'  : ['Photon,lowMult','DiEM,lowMult'],

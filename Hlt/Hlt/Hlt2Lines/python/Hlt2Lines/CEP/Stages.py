@@ -1,3 +1,4 @@
+from HltLine.HltDecodeRaw import DecodeL0CALO
 # The GEC
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2VoidFilter
 class TrackGEC(Hlt2VoidFilter):
@@ -13,30 +14,25 @@ class TrackGEC(Hlt2VoidFilter):
         code = ("(CONTAINS('%s')" % VT) + (" < %(nVeloTracksmax)s)") + " & " + ("(TrNUM('%s', TrBACKWARD)" % VT) + (" < %(nBackTracksmax)s)")
         Hlt2VoidFilter.__init__(self, "CEPTrackGEC_"+name, code, [velotracks], nickname = name)
 
-# create filters for pions, kaons and protons
-# NB: The name of this object must be of the form:
-# <text string>_<particle type>
-# e.g. D2KPiInputs_K or D2KPiInputs_pi
+################################
+# create track filters for 
+# pions, kaons and protons
+################################
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
-class InFilter(Hlt2ParticleFilter):
-    def __init__(self, name):
-        allTracksCut = ("(PT > %(H_PTmin)s)" +
-                        "& (P > %(H_Pmin)s)" +
-                        "& (TRCHI2DOF < %(H_TrkChi2max)s)")
-
-        from Inputs import Hlt2NoPIDsPions, Hlt2LooseKaons,Hlt2LooseProtons       
- 
-        inputCuts = {"pi" : {"cut"    : allTracksCut,
-                             "inputs" : [Hlt2NoPIDsPions]},
-                     "K"  : {"cut"    : allTracksCut+"&(PIDK > %(K_PIDKmin)s)",
-                             "inputs" : [Hlt2LooseKaons]},
-                     "p"  : {"cut"    : allTracksCut+"&(PIDp > %(P_PIDpmin)s)",
-                             "inputs" : [Hlt2LooseProtons]}
-                    }
-
-        cut    = inputCuts[name.split('_')[1]]["cut"]
-        inputs = inputCuts[name.split('_')[1]]["inputs"]
-        Hlt2ParticleFilter.__init__(self, name, cut, inputs)
+class InHadronFilter(Hlt2ParticleFilter):
+    def __init__(self, name, inputs):
+        cut          =  ("(PT > %(H_PTmin)s)" +
+                       "& (P > %(H_Pmin)s)"  +
+                       "& (TRCHI2DOF < %(H_TrkChi2max)s)")
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs, shared = True)
+# Global hadronic inputs
+from Inputs import Hlt2NoPIDsPions, Hlt2LooseKaons,Hlt2LooseProtons       
+SharedChild_pi = InHadronFilter( 'LowMultSharedChild_pi',
+                                 [Hlt2NoPIDsPions] );
+SharedChild_K  = InHadronFilter( 'LowMultSharedChild_K',
+                                 [Hlt2LooseKaons] )
+SharedChild_p  = InHadronFilter( 'LowMultSharedChild_p',
+                                 [Hlt2LooseProtons])
 
 from Hlt2Lines.Utilities.Hlt2Combiner import Hlt2Combiner
 # The class that creates the leptonic combiner
@@ -46,29 +42,23 @@ class ElectronCombiner(Hlt2Combiner):
               'e-'   : "(PT > %(e_PTmin)s)"}
         mc = "ALL"
         Hlt2Combiner.__init__(self, name, decay, inputs,
-                              dependencies = [TrackGEC(name)],
-                              DaughtersCuts = dc, MotherCut = mc, Preambulo = []);
-
-class ElectronCombiner_noTrFilt(Hlt2Combiner):
-    def __init__(self, name, decay, inputs):
-        dc = {'e+'   : "(PT > %(e_PTmin)s)",
-              'e-'   : "(PT > %(e_PTmin)s)"}
-        mc = "ALL"
-        Hlt2Combiner.__init__(self, name, decay, inputs, 
+                              dependencies = [TrackGEC(name)] ,
                               DaughtersCuts = dc, MotherCut = mc, Preambulo = []);
 
 class MuonCombiner(Hlt2Combiner):
     def __init__(self, name, decay, inputs):
         dc = {'mu+'   : "(PT > %(mu_PTmin)s)",
               'mu-'   : "(PT > %(mu_PTmin)s)"}
+        cc = ("(AM > %(AMmin)s)")
         mc = "ALL"
         Hlt2Combiner.__init__(self, name, decay, inputs, 
                               dependencies = [TrackGEC(name)],
-                              DaughtersCuts = dc, MotherCut = mc, Preambulo = []);
+                              DaughtersCuts = dc, CombinationCut = cc, MotherCut = mc, Preambulo = []);
 
 # The class that creates the hadronic Hlt2Combiners
 class HadronicCombiner(Hlt2Combiner):
-    def __init__(self, name, decay, inputs):
+    def __init__(self, name, decay, inputs, pidcut={}):
+        dc = pidcut
         cc = ("(APT > %(APTmin)s)"+
               "& (APT < %(APTmax)s)"+
               "& (AP  > %(APmin)s)"+
@@ -79,6 +69,7 @@ class HadronicCombiner(Hlt2Combiner):
         Hlt2Combiner.__init__(self, name, decay, inputs,
                               dependencies = [TrackGEC(name)],
                               CombinationCut = cc, MotherCut = mc, Preambulo = [])
+
 class HadronicCombiner_noTrFilt(Hlt2Combiner):
     def __init__(self, name, decay, inputs):
         cc = ("(APT > %(APTmin)s)")
@@ -94,138 +85,178 @@ class HadronicCombiner_noTrFilt(Hlt2Combiner):
 # Lambda -> p pi
 class LowMultL2pPiFilter(HadronicCombiner):
     def __init__(self, name):
+        pidcut  = {'p+' : "(PIDp > %(P_PIDpmin)s)", 'p~-' : "(PIDp > %(P_PIDpmin)s)",
+                   'pi+': "(PIDK < %(Pi_PIDKmax)s)",'pi-' : "(PIDK < %(Pi_PIDKmax)s)"}
         decay   = "[Lambda0 -> p+ pi-]cc"
-        inputs  = [InFilter("SharedInFilter_p"), InFilter("SharedInFilter_pi")]
-        HadronicCombiner.__init__(self,name,decay,inputs)
+        inputs  = [SharedChild_p, SharedChild_pi]
+        HadronicCombiner.__init__(self,name,decay,inputs,pidcut)
 
 class LowMultL2pPiWSFilter(HadronicCombiner):
     def __init__(self, name):
+        pidcut  = {'p+' : "(PIDp > %(P_PIDpmin)s)", 'p~-' : "(PIDp > %(P_PIDpmin)s)",
+                   'pi+': "(PIDK < %(Pi_PIDKmax)s)",'pi-' : "(PIDK < %(Pi_PIDKmax)s)"}
         decay   = "[D0 -> p+ pi+]cc"
-        inputs  = [InFilter("SharedInFilter_p"), InFilter("SharedInFilter_pi")]
-        HadronicCombiner.__init__(self,name,decay,inputs)
+        inputs  = [SharedChild_p, SharedChild_pi]
+        HadronicCombiner.__init__(self,name,decay,inputs,pidcut)
 
 # D0 -> K pi
 class LowMultD2KPiFilter(HadronicCombiner):
     def __init__(self, name):
+        pidcut  = {'K+' : "(PIDK > %(K_PIDKmin)s)", 'K-'  : "(PIDK > %(K_PIDKmin)s)",
+                   'pi+': "(PIDK < %(Pi_PIDKmax)s)",'pi-' : "(PIDK < %(Pi_PIDKmax)s)"}
         decay   = "[D0 -> K- pi+]cc"
-        inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi")]
-        HadronicCombiner.__init__(self,name,decay,inputs)
+        inputs  = [SharedChild_K, SharedChild_pi]
+        HadronicCombiner.__init__(self,name,decay,inputs,pidcut)
 
 class LowMultD2KPiWSFilter(HadronicCombiner):
     def __init__(self, name):
+        pidcut  = {'K+' : "(PIDK > %(K_PIDKmin)s)", 'K-'  : "(PIDK > %(K_PIDKmin)s)",
+                   'pi+': "(PIDK < %(Pi_PIDKmax)s)",'pi-' : "(PIDK < %(Pi_PIDKmax)s)"}
         decay   = "[D0 -> K+ pi+]cc"
-        inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi")]
-        HadronicCombiner.__init__(self,name,decay,inputs)
+        inputs  = [SharedChild_K, SharedChild_pi]
+        HadronicCombiner.__init__(self,name,decay,inputs,pidcut)
 
 # D(s)+ -> 3h
 class LowMultD2KPiPiFilter(HadronicCombiner):
     def __init__(self, name):
+        pidcut  = {'K+' : "(PIDK > %(K_PIDKmin)s)", 'K-'  : "(PIDK > %(K_PIDKmin)s)",
+                   'pi+': "(PIDK < %(Pi_PIDKmax)s)",'pi-' : "(PIDK < %(Pi_PIDKmax)s)"}
         decay   = "[D+ -> K- pi+ pi+]cc"
-        inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi")]
-        HadronicCombiner.__init__(self,name,decay,inputs)
+        inputs  = [SharedChild_K, SharedChild_pi]
+        HadronicCombiner.__init__(self,name,decay,inputs,pidcut)
 
 class LowMultD2KPiPiWSFilter(HadronicCombiner):
     def __init__(self, name):
+        pidcut  = {'K+' : "(PIDK > %(K_PIDKmin)s)", 'K-'  : "(PIDK > %(K_PIDKmin)s)",
+                   'pi+': "(PIDK < %(Pi_PIDKmax)s)",'pi-' : "(PIDK < %(Pi_PIDKmax)s)"}
         decay   = "[D+ -> K+ pi+ pi+]cc"
-        inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi")]
-        HadronicCombiner.__init__(self,name,decay,inputs)
+        inputs  = [SharedChild_K, SharedChild_pi]
+        HadronicCombiner.__init__(self,name,decay,inputs,pidcut)
 
 class LowMultD2KKPiFilter(HadronicCombiner):
     def __init__(self, name):
+        pidcut  = {'K+' : "(PIDK > %(K_PIDKmin)s)", 'K-'  : "(PIDK > %(K_PIDKmin)s)",
+                   'pi+': "(PIDK < %(Pi_PIDKmax)s)",'pi-' : "(PIDK < %(Pi_PIDKmax)s)"}
         decay   = "[D+ -> K- K+ pi+]cc"
-        inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi")]
-        HadronicCombiner.__init__(self,name,decay,inputs)
+        inputs  = [SharedChild_K, SharedChild_pi]
+        HadronicCombiner.__init__(self,name,decay,inputs,pidcut)
 
 class LowMultD2KKPiWSFilter(HadronicCombiner):
     def __init__(self, name):
+        pidcut  = {'K+' : "(PIDK > %(K_PIDKmin)s)", 'K-'  : "(PIDK > %(K_PIDKmin)s)",
+                   'pi+': "(PIDK < %(Pi_PIDKmax)s)",'pi-' : "(PIDK < %(Pi_PIDKmax)s)"}
         decay   = "[D+ -> K+ K+ pi+]cc"
-        inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi")]
-        HadronicCombiner.__init__(self,name,decay,inputs)
+        inputs  = [SharedChild_K, SharedChild_pi]
+        HadronicCombiner.__init__(self,name,decay,inputs,pidcut)
 
 # D -> K3pi
 class LowMultD2K3PiFilter(HadronicCombiner):
     def __init__(self, name):
+        pidcut  = {'K+' : "(PIDK > %(K_PIDKmin)s)", 'K-'  : "(PIDK > %(K_PIDKmin)s)",
+                   'pi+': "(PIDK < %(Pi_PIDKmax)s)",'pi-' : "(PIDK < %(Pi_PIDKmax)s)"}
         decay   = "[D0 -> K- pi+ pi+ pi+]cc"
-        inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi")]
-        HadronicCombiner.__init__(self,name,decay,inputs)
+        inputs  = [SharedChild_K, SharedChild_pi]
+        HadronicCombiner.__init__(self,name,decay,inputs,pidcut)
 
 class LowMultD2K3PiWSFilter(HadronicCombiner):
     def __init__(self, name):
+        pidcut  = {'K+' : "(PIDK > %(K_PIDKmin)s)", 'K-'  : "(PIDK > %(K_PIDKmin)s)",
+                   'pi+': "(PIDK < %(Pi_PIDKmax)s)",'pi-' : "(PIDK < %(Pi_PIDKmax)s)"}
         decay   = ["[D0 -> K+ pi+ pi+ pi+]cc","[D0 -> K+ pi+ pi+ pi-]cc","[D0 -> K+ pi- pi- pi-]cc"]
-        inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi")]
-        HadronicCombiner.__init__(self,name,decay,inputs)
+        inputs  = [SharedChild_K, SharedChild_pi]
+        HadronicCombiner.__init__(self,name,decay,inputs,pidcut)
 
 # chic -> hh
 class LowMultChiC2HHFilter(HadronicCombiner):
     def __init__(self, name):
+        pidcut  = {'K+' : "(PIDK > %(K_PIDKmin)s)", 'K-'  : "(PIDK > %(K_PIDKmin)s)",
+                   'pi+': "(PIDK < %(Pi_PIDKmax)s)",'pi-' : "(PIDK < %(Pi_PIDKmax)s)"}
         decay   = ["chi_c1(1P) -> K+ K-", "chi_c1(1P) -> pi+ pi-"]
-        inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi")]
-        HadronicCombiner.__init__(self,name,decay,inputs)
+        inputs  = [SharedChild_K, SharedChild_pi]
+        HadronicCombiner.__init__(self,name,decay,inputs,pidcut)
 
 class LowMultChiC2HHWSFilter(HadronicCombiner):
     def __init__(self, name):
+        pidcut  = {'K+' : "(PIDK > %(K_PIDKmin)s)", 'K-'  : "(PIDK > %(K_PIDKmin)s)",
+                   'pi+': "(PIDK < %(Pi_PIDKmax)s)",'pi-' : "(PIDK < %(Pi_PIDKmax)s)"}
         decay   = ["[chi_c1(1P) -> K+ K+]cc", "[chi_c1(1P) -> pi+ pi+]cc"]
-        inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi")]
-        HadronicCombiner.__init__(self,name,decay,inputs)
+        inputs  = [SharedChild_K, SharedChild_pi]
+        HadronicCombiner.__init__(self,name,decay,inputs,pidcut)
 
 # chic -> hhhh
 class LowMultChiC2HHHHFilter(HadronicCombiner):
     def __init__(self, name):
+        pidcut  = {'K+' : "(PIDK > %(K_PIDKmin)s)", 'K-'  : "(PIDK > %(K_PIDKmin)s)",
+                   'pi+': "(PIDK < %(Pi_PIDKmax)s)",'pi-' : "(PIDK < %(Pi_PIDKmax)s)"}
         decay   = ["chi_c1(1P) -> K+ K- K+ K-", "chi_c1(1P) -> K+ K- pi+ pi-", 
                    "chi_c1(1P) -> K+ K+ pi- pi-", "chi_c1(1P) -> pi+ pi+ pi- pi-"]
-        inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi")]
-        HadronicCombiner.__init__(self,name,decay,inputs)
+        inputs  = [SharedChild_K, SharedChild_pi]
+        HadronicCombiner.__init__(self,name,decay,inputs,pidcut)
 
 class LowMultChiC2HHHHWSFilter(HadronicCombiner):
     def __init__(self, name):
+        pidcut  = {'K+' : "(PIDK > %(K_PIDKmin)s)", 'K-'  : "(PIDK > %(K_PIDKmin)s)",
+                   'pi+': "(PIDK < %(Pi_PIDKmax)s)",'pi-' : "(PIDK < %(Pi_PIDKmax)s)"}
         decay   = ["[chi_c1(1P) -> K+ K+ pi+ pi+]cc", "[chi_c1(1P) -> K+ K+ pi+ pi-]cc",
                    "[chi_c1(1P) -> K+ K- pi+ pi+]cc", "[chi_c1(1P) -> K+ K+ K+ K+]cc",
                    "[chi_c1(1P) -> K+ K+ K+ K-]cc", "[chi_c1(1P) -> pi+ pi+ pi+ pi+]cc",
                    "[chi_c1(1P) -> pi+ pi+ pi+ pi-]cc" ]
-        inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi")]
-        HadronicCombiner.__init__(self,name,decay,inputs)
+        inputs  = [SharedChild_K, SharedChild_pi]
+        HadronicCombiner.__init__(self,name,decay,inputs,pidcut)
 
 # chic -> ppbar
 class LowMultChiC2PPFilter(HadronicCombiner):
     def __init__(self, name):
+        pidcut  = {'p+' : "(PIDp > %(P_PIDpmin)s)", 'p~-' : "(PIDp > %(P_PIDpmin)s)"}
         decay   = "chi_c1(1P) -> p+ p~-"
-        inputs  = [InFilter("SharedInFilter_p")]
-        HadronicCombiner.__init__(self,name,decay,inputs)
+        inputs  = [SharedChild_p]
+        HadronicCombiner.__init__(self,name,decay,inputs,pidcut)
 
 class LowMultChiC2PPWSFilter(HadronicCombiner):
     def __init__(self, name):
+        pidcut  = {'p+' : "(PIDp > %(P_PIDpmin)s)", 'p~-' : "(PIDp > %(P_PIDpmin)s)"}
         decay   = "[chi_c1(1P) -> p+ p+]cc"
-        inputs  = [InFilter("SharedInFilter_p")]
-        HadronicCombiner.__init__(self,name,decay,inputs)
+        inputs  = [SharedChild_p]
+        HadronicCombiner.__init__(self,name,decay,inputs,pidcut)
 
 # LMR -> hh
 class LowMultLMR2HHFilter(HadronicCombiner):
     def __init__(self, name):
+        pidcut  = {'K+' : "(PIDK > %(K_PIDKmin)s)", 'K-'  : "(PIDK > %(K_PIDKmin)s)",
+                   'pi+': "(PIDK < %(Pi_PIDKmax)s)",'pi-' : "(PIDK < %(Pi_PIDKmax)s)",
+                   'p+' : "(PIDp > %(P_PIDpmin)s)", 'p~-' : "(PIDp > %(P_PIDpmin)s)"}
         decay   = ["chi_c1(1P) -> K+ K-","[chi_c1(1P) -> K+ pi-]cc","chi_c1(1P) -> pi+ pi-","chi_c1(1P) -> p+ p~-"]
-        inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi"), InFilter("SharedInFilter_p")]
-        HadronicCombiner.__init__(self,name,decay,inputs)
+        inputs  = [SharedChild_K, SharedChild_pi, SharedChild_p]
+        HadronicCombiner.__init__(self,name,decay,inputs,pidcut)
 
 class LowMultLMR2HHWSFilter(HadronicCombiner):
     def __init__(self, name):
+        pidcut  = {'K+' : "(PIDK > %(K_PIDKmin)s)", 'K-'  : "(PIDK > %(K_PIDKmin)s)",
+                   'pi+': "(PIDK < %(Pi_PIDKmax)s)",'pi-' : "(PIDK < %(Pi_PIDKmax)s)",
+                   'p+' : "(PIDp > %(P_PIDpmin)s)", 'p~-' : "(PIDp > %(P_PIDpmin)s)"}
         decay   = ["[chi_c1(1P) -> K+ K+]cc","[chi_c1(1P) -> K+ pi+]cc","[chi_c1(1P) -> pi+ pi+]cc","[chi_c1(1P) -> p+ p+]cc"]
-        inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi"), InFilter("SharedInFilter_p")]
-        HadronicCombiner.__init__(self,name,decay,inputs)
+        inputs  = [SharedChild_K, SharedChild_pi, SharedChild_p]
+        HadronicCombiner.__init__(self,name,decay,inputs,pidcut)
 
 # LMR -> hhhh
 class LowMultLMR2HHHHFilter(HadronicCombiner):
     def __init__(self, name):
+        pidcut  = {'K+' : "(PIDK > %(K_PIDKmin)s)", 'K-'  : "(PIDK > %(K_PIDKmin)s)",
+                   'pi+': "(PIDK < %(Pi_PIDKmax)s)",'pi-' : "(PIDK < %(Pi_PIDKmax)s)"}
         decay   = ["chi_c1(1P) -> pi+ pi- pi+ pi-","chi_c1(1P) -> K+ K- K+ K-","chi_c1(1P) -> K+ K- pi+ pi-"]
-        inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi")]
-        HadronicCombiner.__init__(self,name,decay,inputs)
+        inputs  = [SharedChild_K, SharedChild_pi]
+        HadronicCombiner.__init__(self,name,decay,inputs,pidcut)
 
 class LowMultLMR2HHHHWSFilter(HadronicCombiner):
     def __init__(self, name):
+        pidcut  = {'K+' : "(PIDK > %(K_PIDKmin)s)", 'K-'  : "(PIDK > %(K_PIDKmin)s)",
+                   'pi+': "(PIDK < %(Pi_PIDKmax)s)",'pi-' : "(PIDK < %(Pi_PIDKmax)s)"}
         decay   = ["[chi_c1(1P) -> K+ K+ K+ K+]cc", "[chi_c1(1P) -> K+ K+ K+ K-]cc",
                    "[chi_c1(1P) -> K+ K+ pi+ pi+]cc", "[chi_c1(1P) -> K+ K+ pi+ pi-]cc",
                    "[chi_c1(1P) -> K+ K- pi+ pi+]cc", "[chi_c1(1P) -> pi+ pi+ pi+ pi-]cc",
                    "[chi_c1(1P) -> pi+ pi+ pi+ pi+]cc"]
-        inputs  = [InFilter("SharedInFilter_K"), InFilter("SharedInFilter_pi")]
-        HadronicCombiner.__init__(self,name,decay,inputs)
+        inputs  = [SharedChild_K, SharedChild_pi]
+        HadronicCombiner.__init__(self,name,decay,inputs,pidcut)
 
 class LowMultHadron_noTrFiltFilter(HadronicCombiner_noTrFilt):
     def __init__(self, name):
@@ -258,9 +289,9 @@ class LowMultMuonFilter(Hlt2ParticleFilter):
 class LowMultPhotonFilter(Hlt2ParticleFilter):
     def __init__(self, name):
         cut = "(PT > %(gamma_PTmin)s)"
-        from Inputs import MergedPi0sFromL0, ResolvedPi0sFromL0, AllPi0sFromL0, BiKalmanFittedPhotonsFromL0Low
-        inputs = [MergedPi0sFromL0, ResolvedPi0sFromL0, AllPi0sFromL0, BiKalmanFittedPhotonsFromL0Low]
-        Hlt2ParticleFilter.__init__(self, name, cut, inputs)
+        from Inputs import MergedPi0sFromL0, ResolvedPi0sFromL0, BiKalmanFittedPhotonsFromL0Low
+        inputs = [MergedPi0sFromL0, ResolvedPi0sFromL0, BiKalmanFittedPhotonsFromL0Low]
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs, dependencies = [DecodeL0CALO])
 
 ##############################
 # ELECTRON FILTERS
@@ -268,13 +299,6 @@ class LowMultPhotonFilter(Hlt2ParticleFilter):
 class LowMultElectronFilter(ElectronCombiner):
     def __init__(self, name):
         decay   = ["J/psi(1S) -> e+ e-","J/psi(1S) -> e+ e+","J/psi(1S) -> e- e-"]
-        from Inputs import BiKalmanFittedElectronsFromL0
-        inputs  = [BiKalmanFittedElectronsFromL0]
+        from Inputs import Hlt2LooseElectrons
+        inputs  = [Hlt2LooseElectrons]
         ElectronCombiner.__init__(self,name,decay,inputs)
-
-class LowMultElectron_noTrFiltFilter(ElectronCombiner_noTrFilt):
-    def __init__(self, name):
-        decay   = ["J/psi(1S) -> e+ e-","J/psi(1S) -> e+ e+","J/psi(1S) -> e- e-"]
-        from Inputs import BiKalmanFittedElectronsFromL0
-        inputs  = [BiKalmanFittedElectronsFromL0]
-        ElectronCombiner_noTrFilt.__init__(self,name,decay,inputs)
