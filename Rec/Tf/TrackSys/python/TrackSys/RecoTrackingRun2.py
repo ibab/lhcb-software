@@ -143,17 +143,62 @@ def RecoTrackingHLT1(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
    ## Fitting all HLT1 tracks
    track.DetectorList += ["FitHLT1"]
 
-   from TrackFitter.ConfiguredFitters import ConfiguredMasterFitter 
-   from Configurables import TrackBestTrackCreator, TrackMasterFitter, TrackStateInitTool
+
+   from Configurables import TrackEventFitter, TrackInitFit, TrackStateInitTool, TrackMasterExtrapolator, TrackMasterFitter
+   from Configurables import SimplifiedMaterialLocator, DetailedMaterialLocator
    
-   bestTrackCreator = TrackBestTrackCreator("HLT1TrackFitter")
-   bestTrackCreator.addTool( TrackMasterFitter, name = "Fitter" )
-   bestTrackCreator.TracksInContainers = ["Rec/Track/Velo","Rec/Track/ForwardHLT1" ]
-   bestTrackCreator.TracksOutContainer = "Rec/Track/FittedHLT1Tracks"
-   bestTrackCreator.addTool( TrackStateInitTool, name = "StateInitTool")
-   bestTrackCreator.StateInitTool.UseFastMomentumEstimate = True
-   ConfiguredMasterFitter( getattr(bestTrackCreator, "Fitter"), SimplifiedGeometry = simplifiedGeometryFit, LiteClusters = liteClustersFit )
-   GaudiSequencer("TrackHLT1FitHLT1Seq").Members += [ bestTrackCreator ]
+   ######
+   ### Fitter for Velo tracks
+   ######
+   veloFitter = TrackEventFitter('VeloOnlyFitterAlg')
+   veloFitter.TracksInContainer = "Rec/Track/Velo"
+   veloFitter.TracksOutContainer = "Rec/Track/FittedHLT1VeloTracks"
+   veloFitter.Fitter = "TrackInitFit/Fit"
+   veloFitter.addTool(TrackInitFit, "Fit")
+   veloFitter.Fit.Init = "TrackStateInitTool/VeloOnlyStateInit"
+   veloFitter.Fit.addTool(TrackStateInitTool, "VeloOnlyStateInit")
+   veloFitter.Fit.VeloOnlyStateInit.VeloFitterName = "FastVeloFitLHCbIDs"
+   veloFitter.Fit.VeloOnlyStateInit.addTool(TrackMasterExtrapolator, "Extrapolator")
+   if( simplifiedGeometryFit ) :
+      veloFitter.Fit.VeloOnlyStateInit.Extrapolator.addTool(SimplifiedMaterialLocator, name = "MaterialLocator")
+   else:
+      veloFitter.Fit.VeloOnlyStateInit.Extrapolator.addTool(DetailedMaterialLocator, name = "MaterialLocator")
+      
+   veloFitter.Fit.Fit = "TrackMasterFitter/Fit"
+   veloFitter.Fit.addTool(TrackMasterFitter, name = "Fit")
+   
+   from TrackFitter.ConfiguredFitters import ConfiguredForwardFitter
+   ConfiguredForwardFitter(veloFitter.Fit.Fit, LiteClusters = liteClustersFit)
+
+   GaudiSequencer("TrackHLT1FitHLT1Seq").Members += [ veloFitter ]
+
+   ######
+   ### Fitter for Forward tracks
+   ######
+   fwdFitter = TrackEventFitter('ForwardHLT1FitterAlg')
+   fwdFitter.TracksInContainer = "Rec/Track/ForwardHLT1"
+   fwdFitter.TracksOutContainer = "Rec/Track/FittedHLT1ForwardTracks"
+   fwdFitter.Fitter = "TrackInitFit/Fit"
+   fwdFitter.addTool(TrackInitFit, "Fit")
+   fwdFitter.Fit.Init = "TrackStateInitTool/FwdStateInit"
+   fwdFitter.Fit.addTool(TrackStateInitTool, "FwdStateInit")
+   fwdFitter.Fit.FwdStateInit.addTool(TrackMasterExtrapolator, "Extrapolator")
+   fwdFitter.Fit.FwdStateInit.UseFastMomentumEstimate = True
+   if( simplifiedGeometryFit ) :
+      fwdFitter.Fit.FwdStateInit.Extrapolator.addTool(SimplifiedMaterialLocator, name = "MaterialLocator")
+   else:
+      fwdFitter.Fit.FwdStateInit.Extrapolator.addTool(DetailedMaterialLocator, name = "MaterialLocator")
+      
+   fwdFitter.Fit.Fit = "TrackMasterFitter/Fit"
+   fwdFitter.Fit.addTool(TrackMasterFitter, name = "Fit")
+   
+   from TrackFitter.ConfiguredFitters import ConfiguredMasterFitter
+   ConfiguredMasterFitter(fwdFitter.Fit.Fit, SimplifiedGeometry = simplifiedGeometryFit, LiteClusters = liteClustersFit)
+
+   GaudiSequencer("TrackHLT1FitHLT1Seq").Members += [ fwdFitter ]
+  
+  
+
    
       
 def RecoTrackingHLT2(exclude=[], simplifiedGeometryFit = True, liteClustersFit = True):
@@ -178,14 +223,14 @@ def RecoTrackingHLT2(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
    if "ForwardHLT2" in trackAlgs :
       track.DetectorList += [ "ForwardPatHLT2" ]
       # Need to filter out the Velo tracks of the fitted HLT1 tracks
-      from Configurables import TrackListRefiner, TrackSelector
-      refiner = TrackListRefiner("FilterForwardHLT1Tracks")
-      refiner.inputLocation = "Rec/Track/FittedHLT1Tracks"
-      refiner.outputLocation = "Rec/Track/FittedHLT1ForwardTracks"
-      refiner.Selector = "TrackSelector"
-      refiner.addTool(TrackSelector("TrackSelector"))
-      refiner.TrackSelector.TrackTypes = [ "Long" ]
-      GaudiSequencer("TrackHLT2ForwardPatHLT2Seq").Members +=  [ refiner ]
+      #from Configurables import TrackListRefiner, TrackSelector
+      #refiner = TrackListRefiner("FilterForwardHLT1Tracks")
+      #refiner.inputLocation = "Rec/Track/FittedHLT1Tracks"
+      #refiner.outputLocation = "Rec/Track/FittedHLT1ForwardTracks"
+      #refiner.Selector = "TrackSelector"
+      #refiner.addTool(TrackSelector("TrackSelector"))
+      #refiner.TrackSelector.TrackTypes = [ "Long" ]
+      #GaudiSequencer("TrackHLT2ForwardPatHLT2Seq").Members +=  [ refiner ]
 
       from Configurables import PatForward
       GaudiSequencer("TrackHLT2ForwardPatHLT2Seq").Members +=  [ PatForward("PatForwardHLT2") ]
