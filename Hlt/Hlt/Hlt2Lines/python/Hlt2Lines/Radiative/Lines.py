@@ -36,17 +36,22 @@ for line_conf in lines_to_run:
 class RadiativeLines(Hlt2LinesConfigurableUser):
     __slots__ = cuts
     def __apply_configuration__(self) :
+        props = self.getProps()
         from HltLine.HltLine import Hlt2Line
+        l0_dependencies = {}
         hlt1_dependencies = {}
         stages = {}
         for line_conf in lines_to_run:
+            # Get L0 dependencies
+            l0_dependencies.update(line_conf.get_l0())
             # Get HLT1 dependencies
             hlt1_dependencies.update(line_conf.get_hlt1())
             # Load stages
-            stages.update(line_conf.get_stages())
+            stages.update(line_conf.get_stages(props))
         # Build lines
         for (linename, algos) in self.algorithms(stages).iteritems():
             Hlt2Line(linename,
+                     L0DU=l0_dependencies.get(linename, None),
                      HLT1=hlt1_dependencies.get(linename, None),
                      algos=algos,
                      prescale=self.prescale,

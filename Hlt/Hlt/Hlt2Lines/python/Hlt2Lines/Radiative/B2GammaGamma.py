@@ -12,7 +12,7 @@ from RadiativeLineBuilder import RadiativeLineBuilder
 
 class B2GammaGammaLines(RadiativeLineBuilder):
     @staticmethod
-    def get_stages():
+    def get_stages(_):
         from Stages import TrackGEC
         from Stages import CALOPhotonFilter, ConvPhotonFilter
         from Stages import PhotonFilter, ConvPhotonLL, ConvPhotonDD

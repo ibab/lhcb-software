@@ -10,12 +10,16 @@
 
 class RadiativeLineBuilder(object):
     @staticmethod
-    def get_stages():
+    def get_stages(_):
         raise NotImplementedError()
 
     @staticmethod
     def get_cuts():
         raise NotImplementedError()
+
+    @staticmethod
+    def get_l0():
+        return {}
 
     @staticmethod
     def get_hlt1():

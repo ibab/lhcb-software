@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-15 - Albert Puig
+  - Updated radiative lines to include converted photons.
+
 ! 2015-04-15 - Maurizio Martinelli
   - CharmHad/Stages.py
    . Added a 4-body combiner

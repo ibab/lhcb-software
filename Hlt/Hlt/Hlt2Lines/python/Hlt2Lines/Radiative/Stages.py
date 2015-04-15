@@ -154,24 +154,42 @@ class HHCombiner(Hlt2Combiner):
 
 
 # Filter lambdas
-class LambdaL0Filter(Hlt2ParticleFilter):
+class Lambda0Filter(Hlt2ParticleFilter):
     """Filter L0."""
     def __init__(self, name, inputs):
-        lambda0_cut = """(DOCA(1,2) < %(TRACK_DOCA_MAX)s) &
-                         (PT > %(L0_PT_MIN)s) &
-                         (NINTREE( (ISBASIC) &
-                                  (P > %(TRACK_P_MIN)s) &
-                                  (MIPCHI2DV(PRIMARY) > %(TRACK_IPCHI2_MIN)s)
-                                 ) == 2) &
-                         (MIPDV(PRIMARY) > %(L0_IP_MIN)s)"""
-        super(LambdaL0Filter, self).__init__('RadiativeLambdaL0Filter_%s' % name,
-                                             lambda0_cut,
-                                             inputs,
-                                             nickname=name)
+        lambda0_cut = """(DOCA(1,2) < %(DOCA_MAX)s) &
+                         (BPVVDCHI2>0) &
+                         (VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s) &
+                         (PT > %(PT_MIN)s) &
+                         (2 == NINTREE((ISBASIC) &
+                                       (P > %(TRACK_P_MIN)s) &
+                                       (PT > %(TRACK_PT_MIN)s) &
+                                       (TRCHI2DOF < %(TRACK_TRCHI2DOF_MAX)s) &
+                                       (MIPCHI2DV(PRIMARY) > %(TRACK_IPCHI2_MIN)s))) &
+                         INTREE((ABSID=='p+') & (PIDp > %(P_PIDP_MIN)s)) &
+                         (MIPDV(PRIMARY) > %(IP_MIN)s)"""
+        super(Lambda0Filter, self).__init__('RadiativeLambda0Filter_%s' % name,
+                                            lambda0_cut,
+                                            inputs,
+                                            nickname=name,
+                                            shared=True)
 
 
 # Build the B mesons
-class B2XGammaCombiner(Hlt2Combiner):
+class RadiativeCombiner(Hlt2Combiner):
+    def __init__(self, name, decay, inputs, converted_photons, **combiner_args):
+        if converted_photons:
+            photons = [ConvPhotonAll()]
+        else:
+            photons = [PhotonFilter()]
+        super(RadiativeCombiner, self).__init__('RadiativeCombiner_%s' % name,
+                                                decay,
+                                                inputs+photons,
+                                                nickname=name,
+                                                **combiner_args)
+
+
+class B2XGammaCombiner(RadiativeCombiner):
     """Build the B from photons and input vector mesons."""
     def __init__(self, name, decay, vector_meson, converted=False):
         combination_cut = "ADAMASS('%(PARTICLE)s') < wide_mass"
@@ -180,22 +198,18 @@ class B2XGammaCombiner(Hlt2Combiner):
                       " & (BPVDIRA > cos_dira_angle)"
                       " & (BPVIPCHI2() < %(BPVIPCHI2_MAX)s)"
                       " & (ADMASS('%(PARTICLE)s') < %(MASS_WIN)s)")
-        if converted:
-            photons = [ConvPhotonLL(), ConvPhotonDD()]
-        else:
-            photons = [PhotonFilter()]
-        super(B2XGammaCombiner, self).__init__('RadiativeB2XGammaCombiner_%s' % name,
+        super(B2XGammaCombiner, self).__init__(name,
                                                decay,
-                                               [vector_meson] + photons,
-                                               nickname=name,
-                                               DaughtersCuts={},
+                                               [vector_meson],
+                                               converted,
                                                CombinationCut=combination_cut,
                                                MotherCut=mother_cut,
                                                Preambulo=['from math import cos',
                                                           'cos_dira_angle = cos(%(BPVDIRA_MIN)s)',
                                                           'wide_mass = 1.5*%(MASS_WIN)s'])
 
-class B2XGammaUnbiasedCombiner(Hlt2Combiner):
+
+class B2XGammaUnbiasedCombiner(RadiativeCombiner):
     """Build the B from photons and input vector mesons in an unbiased way."""
     def __init__(self, name, decay, vector_meson, converted=False):
         combination_cut = ("(ADAMASS('%(PARTICLE)s') < wide_mass)"
@@ -204,18 +218,56 @@ class B2XGammaUnbiasedCombiner(Hlt2Combiner):
                       " & (PT > %(PT_MIN)s) "
                       " & (BPVLTIME()>%(TAU_MIN)s)"
                       " & (ADMASS('%(PARTICLE)s') < %(MASS_WIN)s)")
-        if converted:
-            photons = [ConvPhotonLL(), ConvPhotonDD()]
-        else:
-            photons = [PhotonFilter()]
-        super(B2XGammaUnbiasedCombiner, self).__init__('RadiativeB2XGammaCombiner_%s' % name,
+        super(B2XGammaUnbiasedCombiner, self).__init__(name,
                                                        decay,
-                                                       [vector_meson] + photons,
-                                                       nickname=name,
+                                                       [vector_meson],
+                                                       converted,
                                                        DaughtersCuts={},
                                                        CombinationCut=combination_cut,
                                                        MotherCut=mother_cut,
                                                        Preambulo=['wide_mass = 1.5*%(MASS_WIN)s'])
+
+
+class Lb2L0GammaCombiner(RadiativeCombiner):
+    """Build the Lb from photons and input lambda0 mesons.
+
+    Use ParticleAdder.
+
+    """
+    def __init__(self, name, decay, lambda0):
+        mother_cut = "(MTDOCACHI2(1) < %(MTDOCACHI2_MAX)s)"
+        comb_cut = """(ASUM(PT) > %(SUM_PT_MIN)s) &
+                      (APT > %(PT_MIN)s) &
+                      (ADAMASS('Lambda_b0') < %(MASS_WIN)s)"""
+        super(Lb2L0GammaCombiner, self).__init__(name,
+                                                 decay,
+                                                 [lambda0],
+                                                 False,
+                                                 CombinationCut=comb_cut,
+                                                 MotherCut=mother_cut,
+                                                 ParticleCombiners={ '' : 'ParticleAdder'})
+
+
+class TopoCombiner(RadiativeCombiner):
+    """Combine a photon and an nbody object a la topo."""
+    def __init__(self, name, n_bodies, nbody_object, converted=False):
+        if n_bodies == 2:
+            decay = 'B*0 -> B0 gamma'
+        else:
+            decay = 'B*0 -> B*0 gamma'
+        comb_cut = "(APT > %(APT_MIN)s) & (AM < %(CORRM_MAX)s)"
+        mother_cut = """(HASVERTEX)
+                        & (VFASPF(VCHI2) < %(VCHI2PDOF_MAX)s)
+                        & (BPVVDCHI2 > %(VDCHI2_MIN)s)
+                        & (in_range(%(ETA_MIN)s, BPVETA, %(ETA_MAX)s))
+                        & (in_range(%(CORRM_MIN)s, BPVCORRM, %(CORRM_MAX)s))
+                        & (BPVDIRA > %(DIRA_MIN)s)"""
+        super(TopoCombiner, self).__init__(name,
+                                           decay,
+                                           [nbody_object],
+                                           converted,
+                                           CombinationCut=comb_cut,
+                                           MotherCut=mother_cut)
 
 
 class B2GammaGammaCombiner(Hlt2Combiner):
@@ -237,27 +289,44 @@ class B2GammaGammaCombiner(Hlt2Combiner):
                                                    MotherCut=mother_cut,
                                                    ParticleCombiners={ '' : 'ParticleAdder'})
 
-class Lb2L0GammaCombiner(Hlt2Combiner):
-    """Build the Lb from photons and input lambda0 mesons.
+# BBDT Filter
+class BonsaiBDTFilter(Hlt2ParticleFilter):
+    def __init__(self, name, inputs, props):
+        import os
+        params = os.path.join('$PARAMFILESROOT/data', props['BBDT_PARAMS' % n])
+        var_map = props['BBDT_VARMAP' % n]
+        bbdt = self._get_classifier("RadBBDT_%s" % name, params, var_map)
+        cut = "(VALUE('{}/{}') > %(BBDT_CUT)s)".format(bbdt.Type.getType(), bbdt.Name)
+        super(BonsaiBDTFilter, self).__init__('RadiativeBBDTFilter_%s' % name,
+                                              cut,
+                                              inputs,
+                                              nickname=name,
+                                              tools=[bbdt])
 
-    Use ParticleAdder.
-
-    """
-    def __init__(self, name, decay, lambda0, converted=False):
-        mother_cut = "(MTDOCACHI2(1) < %(LB0_MTDOCACHI2_MAX)s)"
-        comb_cut = """(ASUM(PT) > %(LB0_SUM_PT)s) &
-                      (APT > %(LB0_PT)s) &
-                      (ADAMASS('Lambda_b0') < %(LB0_MASS_WINDOW)s )"""
-        if converted:
-            photons = [ConvPhotonLL(), ConvPhotonDD()]
-        else:
-            photons = [PhotonFilter()]
-        super(Lb2L0GammaCombiner, self).__init__('RadiativeLb2L0GammaCombiner_%s' % name,
-                                                 decay,
-                                                 [lambda0] + photons,
-                                                 nickname=name,
-                                                 CombinationCut=comb_cut,
-                                                 MotherCut=mother_cut,
-                                                 ParticleCombiners={ '' : 'ParticleAdder'})
+    def _get_classifier(self, name, params, var_map, preambulo=None):
+        from HltLine.HltLine import Hlt1Tool as Tool
+        from Configurables import LoKi__Hybrid__DictOfFunctors as DictOfFunctors
+        from Configurables import LoKi__Hybrid__DictValue as DictValue
+        from Configurables import LoKi__Hybrid__DictTransform_BBDecTreeTransform_ as Transform
+        tool_name = 'BBDecTree'
+        key = 'BDT'
+        options = {tool_name+'File' : params,
+                   'Name'           : key,
+                   'KeepVars'       : '0'}
+        func_dict = Tool(type=DictOfFunctors,
+                         name='TopoMVAdict'+name,
+                         Preambulo=preambulo,
+                         Variables=var_map)
+        transform  = Tool(type=Transform,
+                          name=tool_name,
+                          tools=[func_dict],
+                          Options=options,
+                          Source="LoKi::Hybrid::DictOfFunctors/TopoMVAdict"+name)
+        classifier = Tool(type=DictValue,
+                          name=name,
+                          tools=[transform],
+                          Key=key,
+                          Source='LoKi::Hybrid::DictTransform<{tool_name}Transform>/{tool_name}'.format(tool_name=tool_name))
+        return classifier
 
 # EOF
