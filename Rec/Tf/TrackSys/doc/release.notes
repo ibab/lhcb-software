@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-04-15 - Michel De Cian
+ - Fix input container for forward merging to use fitted HLT1 forward tracks (in RecoTrackingRun2.py)
+
 ! 2015-04-11 - Michel De Cian
  - Fix inputLocation(s) of another instance of TrackContainerCopy in RecoTracking.py
 
