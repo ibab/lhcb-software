@@ -812,7 +812,8 @@ class CaloProcessor( CaloRecoConf,LHCbConfigurableUser ):
         # NeutralProtoParticleProtoP components        
         if not self.getProp('SkipNeutrals') :
             from Configurables import NeutralProtoPAlg
-            neutral = getAlgo( NeutralProtoPAlg,"NeutralProtoPMaker", context)
+            suffix="For"+self.getName()                
+            neutral = getAlgo( NeutralProtoPAlg,"NeutralProtoPMaker"+suffix, context)
             # location
             if nloc != '' :
                 neutral.ProtoParticleLocation = nloc
