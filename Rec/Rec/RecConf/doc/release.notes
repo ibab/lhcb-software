@@ -4,6 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2015-04-15 - Michel De Cian
+ - Remove 'TrackContainerCopy' from 2015 PV reconstruction, as Velo and Forward tracks are now in separate containers.
+
 ! 2015-04-07 - Michel De Cian
  - Set 'IgnoreFilterPassed' to True for PV reconstruction in 2015 to not abort processing the rest of the event.
 

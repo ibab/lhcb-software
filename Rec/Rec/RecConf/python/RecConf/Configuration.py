@@ -125,6 +125,15 @@ class RecSysConf(LHCbConfigurableUser):
         # for Run 2, we run a different algorithm and don't want to have
         # the V0 finder in the vertex sequence (which is now after HLT1)
         if "Vertex" in recoSeq and "2015Dev" in self.getProp("SpecialData"):
+            #from Configurables import TrackContainerCopy, TrackSelector
+            #refiner = TrackContainerCopy("FilterVeloHLT1Tracks")
+            #refiner.inputLocations = [ "Rec/Track/FittedHLT1Tracks" ]
+            #refiner.outputLocation = "Rec/Track/FittedHLT1VeloTracks"
+            #refiner.Selector = "TrackSelector"
+            #refiner.addTool(TrackSelector("TrackSelector"))
+            #refiner.TrackSelector.TrackTypes = [ "Velo" ]
+            #GaudiSequencer("RecoVertexSeq").Members += [ refiner ]
+            #################################################################
             from Configurables import PatPV3D, PVOfflineTool, LSAdaptPV3DFitter
             pvAlg = PatPV3D("PatPV3D")
             ## this should go in a configuration file when we know what to use
@@ -138,7 +147,7 @@ class RecSysConf(LHCbConfigurableUser):
             pvAlg.PVOfflineTool.LSAdaptPV3DFitter.trackMaxChi2 = 12.0
             pvAlg.PVOfflineTool.UseBeamSpotRCut = True
             pvAlg.PVOfflineTool.BeamSpotRCut = 0.2
-            pvAlg.PVOfflineTool.InputTracks = [ "Rec/Track/FittedHLT1Tracks" ]
+            pvAlg.PVOfflineTool.InputTracks = [ "Rec/Track/FittedHLT1VeloTracks" ]
             pvAlg.OutputVerticesName = "Rec/Vertex/Primary"
             
             GaudiSequencer("RecoVertexSeq").Members += [ pvAlg ];
