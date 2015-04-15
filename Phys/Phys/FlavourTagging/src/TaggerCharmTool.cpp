@@ -301,7 +301,7 @@ Tagger TaggerCharmTool::tag( const Particle* signalB,
   int decision = thecharm->flavour > 0 ? +1: -1; // double flip, one for oppsite side, one for D from B
   decision *= sign;
   tcharm.setOmega(omega);
-  std::cout << "CHARM DECISION IS " << decision << " AFTER FLIPPING BY " << sign << std::endl;
+  debug() << "Charm tagger decision is " << decision << " after flipping by " << sign << endmsg;
   tcharm.setDecision(decision);
   tcharm.setType( Tagger::OS_Charm );
 
