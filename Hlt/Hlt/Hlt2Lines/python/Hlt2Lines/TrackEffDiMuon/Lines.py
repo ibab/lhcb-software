@@ -38,12 +38,14 @@ class TrackEffDiMuonLines(Hlt2LinesConfigurableUser):
 			        'TagPt'		: 1300 * MeV,
 			        'TagTrChi2'	: 5,
 			        'TagMinIP'	: 0 * mm,
+			        'TagMinIPchi2'	: 0, #dummy
 			        'ProbeP'	: 0 * GeV,
 			        'ProbePt'	: 0 * MeV,
 			        'ProbeTrChi2'	: 9999, #dummy
 			        'JPsiPt'	: 1000 * MeV,
 			        'JPsiDOCA'	: 9999 * mm, #dummy
-			        'JPsiMaxIP'	: 1 * mm,
+			        'JPsiMaxIP'	: 1.0 * mm,
+			        'JPsiMaxIPchi2'	: 9999, #dummy
 			        'JPsiVtxChi2'	: 2,
 			        'JPsiMassWin'	: 500 * MeV},
 		 'VeloMuon' :  {'TagMuonID'	: 1,
@@ -51,25 +53,29 @@ class TrackEffDiMuonLines(Hlt2LinesConfigurableUser):
 			        'TagPt'		: 0 * MeV,
 			        'TagTrChi2'	: 3,
 			        'TagMinIP'	: 0 * mm,
+			        'TagMinIPchi2'	: 0, #dummy
 			        'ProbeP'	: 0 * GeV,
 			        'ProbePt'	: 0 * MeV,
 			        'ProbeTrChi2'	: 5,
 			        'JPsiPt'	: 500 * MeV,
 			        'JPsiDOCA'	: 9999 * mm, #dummy
 			        'JPsiMaxIP'	: 9999 * mm, #dummy
+			        'JPsiMaxIPchi2'	: 9999, #dummy
 			        'JPsiVtxChi2'	: 2,
 			        'JPsiMassWin'	: 500 * MeV},
 		 'Downstream': {'TagMuonID'	: 2,
 			        'TagP'		: 5 * GeV,
 			        'TagPt'		: 700 * MeV,
 			        'TagTrChi2'	: 10,
-			        'TagMinIP'	: 0.5 * mm,
+			        'TagMinIP'	: 0. * mm,
+			        'TagMinIPchi2'	: 15, #dummy
 			        'ProbeP'	: 3 * GeV,
 			        'ProbePt'	: 200 * MeV,
 			        'ProbeTrChi2'	: 10,
 			        'JPsiPt'	: 0 * MeV,
 			        'JPsiDOCA'	: 5 * mm,
 			        'JPsiMaxIP'	: 9999 * mm, #dummy
+			        'JPsiMaxIPchi2'	: 9999, #dummy
 			        'JPsiVtxChi2'	: 5,
 			        'JPsiMassWin'	: 200 * MeV}
                 }

@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-15 - Michael Kolpin
+  - Fix to dependencies in TrackEffDiMuon lines
+  - Added possible IPCHI2 cut properties for tracking eff. lines
+
 ! 2015-04-14 - Olli Lupton
   - CharmHad+PID: move Lc+ -> K- p+ pi+ selection and Sc0 -> Lc+ pi- line to PID folder
   - CharmHad: Give the TagDecay class an optional nickname parameter 
