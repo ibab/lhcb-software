@@ -17,88 +17,74 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 
 class CharmHadD2HHHKsLines() :
     def localcuts(self) :
-        cutsForDetachedHHH_KsLL = {
-            'Trk_ALL_MIPCHI2DV_MIN'   : 5.0,
-            'AM_MIN'                  : 0.0,
-            'AM_MAX'                  : 1.5 * GeV,
-            'ASUMPT_MIN'              : 1.3 * GeV,
-            'Trk_1OF3_MIPCHI2DV_MIN'  : 5.0, # This can be tuned for reducing retention
-            'Trk_2OF3_MIPCHI2DV_MIN'  : 5.0, # This can be tuned for reducing retention
-            'VCHI2PDOF_MAX'           : 20.0,
-            'BPVDIRA_MIN'             : 0.999,
-            'BPVVDCHI2_MIN'           : 20.0,
-            'BPVLTIME_MIN'            : 0.3 * picosecond,
-        }
-        cutsForDetachedHHH_KsDD = {
-            'Trk_ALL_MIPCHI2DV_MIN'   : 5.0,
-            'AM_MIN'                  : 0.0,
-            'AM_MAX'                  : 1.5 * GeV,
-            'ASUMPT_MIN'              : 1.3 * GeV,
-            'Trk_1OF3_MIPCHI2DV_MIN'  : 12.5,
-            'Trk_2OF3_MIPCHI2DV_MIN'  : 5.0, # This can be tuned for reducing retention
-            'VCHI2PDOF_MAX'           : 20.0,
-            'BPVDIRA_MIN'             : 0.999,
-            'BPVVDCHI2_MIN'           : 20.0,
-            'BPVLTIME_MIN'            : 0.3 * picosecond,
-        }
-        cutsForKsHHH_KsLL  = {
+        cutsForDpHHHKs_KsLL  = {
             'AM_MIN'                : 1755.0 * MeV,
             'AM_MAX'                : 2055.0 * MeV,
+            'ACHI2DOCA_MAX'         : 20.0,
+            'ASUMPT_MIN'            : 2.0 * GeV,
             'VCHI2PDOF_MAX'         : 20.0,
-            'PT_MIN'                : 2.0 * GeV,
-            'BPVLTIME_MIN'          : 0.3 * picosecond,
-            'BPVIPCHI2_MAX'         : 20.0,
-            'Mass_M_MIN'              : 1795.0 * MeV,
-            'Mass_M_MAX'              : 2035.0 * MeV,
+            'BPVLTIME_MIN'          : 0.2 * picosecond,
             'BPVDIRA_MIN'           : 0.999,
+            'BPVIPCHI2_MAX'         : 20.0,
+            'Mass_M_MIN'            : 1795.0 * MeV,
+            'Mass_M_MAX'            : 1935.0 * MeV,
         }
-        cutsForKsHHH_KsDD  = {
+        cutsForDpHHHKs_KsDD  = {
             'AM_MIN'                : 1755.0 * MeV,
             'AM_MAX'                : 2055.0 * MeV,
+            'ACHI2DOCA_MAX'         : 20.0,
+            'ASUMPT_MIN'            : 2.0 * GeV,
             'VCHI2PDOF_MAX'         : 20.0,
-            'PT_MIN'                : 2.0 * GeV,
-            'BPVLTIME_MIN'          : 0.3 * picosecond,
-            'BPVIPCHI2_MAX'         : 20.0,
-            'Mass_M_MIN'              : 1795.0 * MeV,
-            'Mass_M_MAX'              : 2035.0 * MeV,
+            'BPVLTIME_MIN'          : 0.2 * picosecond,
             'BPVDIRA_MIN'           : 0.999,
+            'BPVIPCHI2_MAX'         : 20.0,
+            'Mass_M_MIN'            : 1795.0 * MeV,
+            'Mass_M_MAX'            : 1935.0 * MeV,
         }
-        return {
-          'DetachedPiPiPi_forD2HHHKsLL' :  cutsForDetachedHHH_KsLL,
-          'DetachedPiPiPi_forD2HHHKsDD' :  cutsForDetachedHHH_KsDD,
-          'DetachedKPiPi_forD2HHHKsLL'  :  cutsForDetachedHHH_KsLL,
-          'DetachedKPiPi_forD2HHHKsDD'  :  cutsForDetachedHHH_KsDD,
-          'DetachedKKPi_forD2HHHKsLL'   :  cutsForDetachedHHH_KsLL,
-          'DetachedKKPi_forD2HHHKsDD'   :  cutsForDetachedHHH_KsDD,
-          'D2KsPiPiPi_KsLL'             :  cutsForKsHHH_KsLL,
-          'D2KsPiPiPi_KsDD'             :  cutsForKsHHH_KsDD,
-          'D2KsKPiPi_KsLL'              :  cutsForKsHHH_KsLL,
-          'D2KsKPiPi_KsDD'              :  cutsForKsHHH_KsDD,
-          'D2KsKKPi_KsLL'               :  cutsForKsHHH_KsLL,
-          'D2KsKKPi_KsDD'               :  cutsForKsHHH_KsDD,
+        cutsForDsHHHKs_KsLL  = {
+            'AM_MIN'                : 1755.0 * MeV,
+            'AM_MAX'                : 2055.0 * MeV,
+            'ACHI2DOCA_MAX'         : 20.0,
+            'ASUMPT_MIN'            : 2.0 * GeV,
+            'VCHI2PDOF_MAX'         : 20.0,
+            'BPVLTIME_MIN'          : 0.1 * picosecond,
+            'BPVDIRA_MIN'           : 0.999,
+            'BPVIPCHI2_MAX'         : 20.0,
+            'Mass_M_MIN'            : 1895.0 * MeV,
+            'Mass_M_MAX'            : 2035.0 * MeV,
         }
+        cutsForDsHHHKs_KsDD  = {
+            'AM_MIN'                : 1755.0 * MeV,
+            'AM_MAX'                : 2055.0 * MeV,
+            'ACHI2DOCA_MAX'         : 20.0,
+            'ASUMPT_MIN'            : 2.0 * GeV,
+            'VCHI2PDOF_MAX'         : 20.0,
+            'BPVLTIME_MIN'          : 0.1 * picosecond,
+            'BPVDIRA_MIN'           : 0.999,
+            'BPVIPCHI2_MAX'         : 20.0,
+            'Mass_M_MIN'            : 1895.0 * MeV,
+            'Mass_M_MAX'            : 2035.0 * MeV,
+        }
+        cuts = {}
+        for fs in ['PiPiPi', 'KPiPi', 'KKPi']:
+            cuts['Dp2'+fs+'Ks_KsLL'] = cutsForDpHHHKs_KsLL
+            cuts['Dp2'+fs+'Ks_KsDD'] = cutsForDpHHHKs_KsDD
+            cuts['Ds2'+fs+'Ks_KsLL'] = cutsForDsHHHKs_KsLL
+            cuts['Ds2'+fs+'Ks_KsDD'] = cutsForDsHHHKs_KsDD
+        return cuts
   
     def locallines(self):
         from Stages import MassFilter
-        from Stages import DetachedHHHChild, D2KsHHH_KSLL, D2KsHHH_KSDD
-        inputs = {
-            # First the detached HHH lines - KS LL
-            'DetachedPiPiPi_forD2HHHKsLL' : [DetachedHHHChild('DetachedPiPiPi_forD2HHHKsLL', decay = ["[K*(892)+ -> pi+ pi+ pi-]cc"])],
-            'DetachedKPiPi_forD2HHHKsLL' :  [DetachedHHHChild('DetachedKPiPi_forD2HHHKsLL', decay = ["[K*(892)+ -> K- pi+ pi+]cc","[K*(892)+ -> K+ pi- pi+]cc"])],
-            'DetachedKKPi_forD2HHHKsLL'   : [DetachedHHHChild('DetachedKKPi_forD2HHHKsLL',decay = ["[K*(892)+ -> K+ K- pi+]cc","[K*(892)+ -> K+ K+ pi-]cc"]) ],
-          # KS DD
-            'DetachedPiPiPi_forD2HHHKsDD' : [DetachedHHHChild('DetachedPiPiPi_forD2HHHKsDD',decay = ["[K*(892)+ -> pi+ pi+ pi-]cc"]) ],
-            'DetachedKPiPi_forD2HHHKsDD'  : [DetachedHHHChild('DetachedKPiPi_forD2HHHKsDD',decay = ["[K*(892)+ -> K- pi+ pi+]cc", "[K*(892)+ -> K+ pi- pi+]cc"]) ],
-            'DetachedKKPi_forD2HHHKsDD'   : [DetachedHHHChild('DetachedKKPi_forD2HHHKsDD',decay = ["[K*(892)+ -> K+ K- pi+]cc","[K*(892)+ -> K+ K+ pi-]cc"]) ],
-        }
-        stages = {
-          # First the KS LL lines
-            'D2KsPiPiPi_KsLL'   : [MassFilter('D2KsPiPiPi_KsLL', inputs = [D2KsHHH_KSLL('D2KsPiPiPi_KsLL', inputs['DetachedPiPiPi_forD2HHHKsLL'][0])])],
-            'D2KsKPiPi_KsLL'    : [MassFilter('D2KsKPiPi_KsLL',  inputs = [D2KsHHH_KSLL('D2KsKPiPi_KsLL',  inputs['DetachedKPiPi_forD2HHHKsLL' ][0])])],
-            'D2KsKKPi_KsLL'     : [MassFilter('D2KsKKPi_KsLL',   inputs = [D2KsHHH_KSLL('D2KsKKPi_KsLL',   inputs['DetachedKKPi_forD2HHHKsLL'  ][0])])],
-          # Then the KS DD lines
-            'D2KsPiPiPi_KsDD'   : [MassFilter('D2KsPiPiPi_KsDD', inputs = [D2KsHHH_KSDD('D2KsPiPiPi_KsDD', inputs['DetachedPiPiPi_forD2HHHKsDD'][0])])],
-            'D2KsKPiPi_KsDD'    : [MassFilter('D2KsKPiPi_KsDD',  inputs = [D2KsHHH_KSDD('D2KsKPiPi_KsDD',  inputs['DetachedKPiPi_forD2HHHKsDD' ][0])])],
-            'D2KsKKPi_KsDD'     : [MassFilter('D2KsKKPi_KsDD',   inputs = [D2KsHHH_KSDD('D2KsKKPi_KsDD',   inputs['DetachedKKPi_forD2HHHKsDD'  ][0])])],
-        }
+        from Stages import SharedKsLL, SharedKsDD
+        from Stages import SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi
+        from Stages import D2HHHKs_4BCombiner
+        decays = { 'PiPiPi': ['[D+ -> pi+ pi+ pi- KS0]cc'],
+                   'KPiPi' : ['[D+ -> K+ pi+ pi- KS0]cc','[D+ -> K- pi+ pi+ KS0]cc'],
+                   'KKPi'  : ['[D+ -> K+ K+ pi- KS0]cc','[D+ -> K- K+ pi+ KS0]cc'] }
+        stages = {}
+        for dps in ['Dp','Ds']:
+            for fs in ['PiPiPi', 'KPiPi', 'KKPi']:
+                stages[dps+'2'+fs+'Ks_KsLL'] = [MassFilter(dps+'2'+fs+'Ks_KsLL', inputs = [D2HHHKs_4BCombiner(dps+'2'+fs+'Ks_KsLL', decays[fs], [SharedKsLL, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])])]
+                stages[dps+'2'+fs+'Ks_KsDD'] = [MassFilter(dps+'2'+fs+'Ks_KsDD', inputs = [D2HHHKs_4BCombiner(dps+'2'+fs+'Ks_KsDD', decays[fs], [SharedKsDD, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])])]
+        
         return stages

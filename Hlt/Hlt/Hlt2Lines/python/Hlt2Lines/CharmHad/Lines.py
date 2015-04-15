@@ -77,6 +77,16 @@ theseslots = {   'Prescale' : {},
                                  , 'Trk_ALL_P_MIN'            :  5.0  * GeV
                                  , 'Trk_ALL_MIPCHI2DV_MIN'    :  2.0
                                               },
+                 'CharmHadSharedDetachedD0ToHHHHChild_pi' : {
+                                 'PID_LIM'                  :  5,
+                                 'Trk_ALL_PT_MIN'           :  200 * MeV,
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  3.0,
+                                              },
+                 'CharmHadSharedDetachedD0ToHHHHChild_K' : {
+                                 'PID_LIM'                  :  5,
+                                 'Trk_ALL_PT_MIN'           :  200 * MeV,
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  3.0,
+                                              },
                  # Secondary Lambda's, used at least for building Xi- and Omega- candidates
                  'SharedSecondaryLambdaLL' : {
                                  'DecayTime_MIN'           : 4.5 * picosecond,

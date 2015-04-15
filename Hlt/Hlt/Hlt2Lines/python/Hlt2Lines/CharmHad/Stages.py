@@ -2,6 +2,7 @@
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2VoidFilter
 from Hlt2Lines.Utilities.Hlt2Combiner import Hlt2Combiner
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
+from Configurables import DaVinci__N4BodyDecays
 
 ## ========================================================================= ##
 ## Global event cuts
@@ -134,6 +135,8 @@ SharedDetachedLcChild_K = DetachedInParticleFilter( 'CharmHadSharedDetachedLcChi
                                                     [Hlt2LooseKaons], 'PIDK' )
 SharedDetachedLcChild_p = DetachedInParticleFilter('CharmHadSharedDetachedLcChild_p',
                                                    [Hlt2LooseProtons], 'PIDp' )
+SharedDetachedD0ToHHHHChild_pi = DetachedInParticleFilter( 'CharmHadSharedDetachedD0ToHHHHChild_pi', [Hlt2LoosePions], 'PIDK', True )
+SharedDetachedD0ToHHHHChild_K = DetachedInParticleFilter( 'CharmHadSharedDetachedD0ToHHHHChild_K', [Hlt2LooseKaons], 'PIDK' )
 
 SharedNoPIDDetachedChild_pi = DetachedInParticleFilter( 'CharmHadSharedNoPIDDetachedChild_pi', [Hlt2NoPIDsPions] )
 SharedNoPIDDetachedChild_K = DetachedInParticleFilter( 'CharmHadSharedNoPIDDetachedChild_K', [Hlt2NoPIDsKaons] )
@@ -551,6 +554,42 @@ class HHHCombiner(Hlt2Combiner):
                               tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
                               MotherCut = mc, Preambulo = [])
 
+class DV4BCombiner(Hlt2Combiner):
+    """
+    Combiner for exclusive D0->hhhh lines.
+
+    Configuration dictionaries must contain the following keys:
+        'AM_MAX'        : Maximum mass of the n-body combination
+        'ACHI2DOCA_MAX' : Maximum Doca-chi2 of each two-body combination (should be >= VCHI2NDOF)
+        'ASUMPT_MIN'    : Lower limit on the sum of the PTs of the daughters
+        'VCHI2PDOF_MAX' : Upper limit on VFASPF(VCHI2PDOF) in MotherCut
+        'BPVDIRA_MIN'   : Lower limit on DIRA wrt bestPV in MotherCut
+        'BPVLTIME_MIN'  : Lower limit on Lifetime wrt bestPV in MotherCut
+        'TisTosSpec'    : Configuration string of the Hlt1 TISTOS filter.
+    """
+    def __init__(self, name, decay,inputs):
+        dc =    {}
+        
+        c12 = (" ( AM < %(AM_MAX)s ) " +
+               "&( ACHI2DOCA(1,2) < %(ACHI2DOCA_MAX)s ) " )
+        c123 =(" ( AM < %(AM_MAX)s ) " +
+               "&( ACHI2DOCA(1,3) < %(ACHI2DOCA_MAX)s ) " +
+               "&( ACHI2DOCA(2,3) < %(ACHI2DOCA_MAX)s ) " )
+        cc =  (" ( AM < %(AM_MAX)s ) " +
+               "&( (APT1+APT2+APT3+APT4) > %(ASUMPT_MIN)s )" +
+               "&( ACHI2DOCA(1,4) < %(ACHI2DOCA_MAX)s ) " +
+               "&( ACHI2DOCA(2,4) < %(ACHI2DOCA_MAX)s ) " +
+               "&( ACHI2DOCA(3,4) < %(ACHI2DOCA_MAX)s ) " )
+        mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
+                 " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 " & (BPVLTIME() > %(BPVLTIME_MIN)s )")
+        from HltTracking.HltPVs import PV3D
+        Hlt2Combiner.__init__(self, name, decay, inputs,
+                              dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                              tistos = 'TisTosSpec', combiner = DaVinci__N4BodyDecays, DaughtersCuts = dc,
+                              Combination12Cut = c12, Combination123Cut = c123, CombinationCut = cc,
+                              MotherCut = mc, Preambulo = [])
+
 class HHHHCombiner(Hlt2Combiner):
     def __init__(self, name, decay,inputs):
         dc =    {}  
@@ -563,7 +602,7 @@ class HHHHCombiner(Hlt2Combiner):
         Hlt2Combiner.__init__(self, name, decay, inputs,
                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                               tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc, 
-                              MotherCut = mc, Preambulo = []) 
+                              MotherCut = mc, Preambulo = [])
 
 class DetachedHHHHCombiner(Hlt2Combiner) :
     def __init__(self, name, decay, inputs):
@@ -751,7 +790,23 @@ class DetachedHHChildCombiner(Hlt2Combiner):
                               MotherCut = mc, Preambulo = [])
 
 class DetachedHHHChildCombiner(Hlt2Combiner):
-    # combiner for 3-body displaced tracks to be used in multi-body D decays
+    """
+    Combiner for 3-body displaced candidates to be used in multi-body D decays.
+
+    Configuration dictionaries must contain the following keys:
+        'AM_MIN'                 : Minimum mass of the 3-body combination
+        'AM_MAX'                 : Maximum mass of the 3-body combination
+        'ASUMPT_MIN'             : Lower limit on the sum of the PTs of the daughters
+        'Trk_1OF3_MIPCHI2DV_MIN' : Minimum IPChi2 of at least one daughters
+        'Trk_2OF3_MIPCHI2DV_MIN' : Minimum IPChi2 of at least two daughters
+        'Trk_ALL_MIPCHI2DV_MIN'  : Minimum IPChi2 of the daughters (for PIDCalib line)
+        'VCHI2PDOF_MAX'          : Upper limit on VFASPF(VCHI2PDOF) in MotherCut
+        'BPVDIRA_MIN'            : Lower limit on DIRA wrt bestPV in MotherCut
+        'BPVVDCHI2_MIN'          : Lower limit on vertex distance chi2 wrt bestPV in MotherCut
+        'BPVLTIME_MIN'           : Lower limit on Lifetime wrt bestPV in MotherCut
+        'BPVCORRM_MAX'           : Upper limit on the corrected mass wrt bestPV in MotherCut
+        'TisTosSpec'             : Configuration string of the Hlt1 TISTOS filter.
+    """
     def __init__(self, name, decay, inputs):
         if name.find('PIDCALIB')>-1 :
             dc =    {'pi+' : "(MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)",
@@ -766,8 +821,8 @@ class DetachedHHHChildCombiner(Hlt2Combiner):
         mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
                  " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
                  " & (BPVVDCHI2 > %(BPVVDCHI2_MIN)s )" +
-                 " & (BPVLTIME() > %(BPVLTIME_MIN)s )")
-                 
+                 " & (BPVLTIME() > %(BPVLTIME_MIN)s )"+
+                 " & (BPVCORRM < %(BPVCORRM_MAX)s)")
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name, decay, inputs,                              
                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
@@ -821,6 +876,43 @@ class D2HHHKsCombiner(Hlt2Combiner):
               "&(PT> %(PT_MIN)s)" +
               "&(BPVLTIME() > %(BPVLTIME_MIN)s)" +
               "&(BPVIPCHI2() < %(BPVIPCHI2_MAX)s )"+
+              "&(BPVDIRA > %(BPVDIRA_MIN)s )" )
+        from HltTracking.HltPVs import PV3D
+        Hlt2Combiner.__init__(self, name, decay, inputs,
+                              dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                              tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
+                              MotherCut = mc, Preambulo = [])
+
+class D2HHHKs_4BCombiner(Hlt2Combiner):
+    """
+    Combiner for exclusive D(s)+->hhhKS lines.
+
+    Configuration dictionaries must contain the following keys:
+        'AM_MAX'        : Maximum mass of the n-body combination
+        'AM_MIN'        : Minimum mass of the combination
+        'ACHI2DOCA_MAX' : Maximum Doca-chi2 of each two-body combination (should be >= VCHI2NDOF)
+        'ASUMPT_MIN'    : Lower limit on the sum of the PTs of the daughters
+        'VCHI2PDOF_MAX' : Upper limit on VFASPF(VCHI2PDOF) in MotherCut
+        'BPVDIRA_MIN'   : Lower limit on DIRA wrt bestPV in MotherCut
+        'BPVLTIME_MIN'  : Lower limit on Lifetime wrt bestPV in MotherCut
+        'BPVIPCHI2_MAX' : Upper limit on IPChi2 of the candidate wrt bestPV in MotherCut
+        'TisTosSpec'    : Configuration string of the Hlt1 TISTOS filter.
+    """
+    def __init__(self, name, decay,inputs):
+        dc =    {}
+        c12 = (" ( AM < %(AM_MAX)s ) " +
+               "&( ACHI2DOCA(1,2) < %(ACHI2DOCA_MAX)s ) " )
+        c123 =(" ( AM < %(AM_MAX)s ) " +
+               "&( ACHI2DOCA(1,3) < %(ACHI2DOCA_MAX)s ) " +
+               "&( ACHI2DOCA(2,3) < %(ACHI2DOCA_MAX)s ) " )
+        cc = ( " (in_range( %(AM_MIN)s, AM, %(AM_MAX)s )) " + # can be used for D02HHHH
+               "&( (APT1+APT2+APT3+APT4) > %(ASUMPT_MIN)s )" +
+               "&( ACHI2DOCA(1,4) < %(ACHI2DOCA_MAX)s ) " +
+               "&( ACHI2DOCA(2,4) < %(ACHI2DOCA_MAX)s ) " +
+               "&( ACHI2DOCA(3,4) < %(ACHI2DOCA_MAX)s ) " )
+        mc = (" (VFASPF(VCHI2PDOF)< %(VCHI2PDOF_MAX)s )" +
+              "&(BPVLTIME() > %(BPVLTIME_MIN)s)" +
+              "&(BPVIPCHI2() < %(BPVIPCHI2_MAX)s )"+ # dont want to use it
               "&(BPVDIRA > %(BPVDIRA_MIN)s )" )
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name, decay, inputs,
@@ -888,8 +980,8 @@ class D2HH0_3Body_Combiner(Hlt2Combiner):
                               Combination12Cut = neutral_combination_cut, Preambulo = [])
                               
 class D2HD0_3Body_Combiner(Hlt2Combiner):
-    def __init__(self, name, decay, inputs):                        
-        pi_daughters_cut = ("( PT > %(Daug_PT)s ) &" + 
+    def __init__(self, name, decay, inputs):
+        pi_daughters_cut = ("( PT > %(Daug_PT)s ) &" +
                             "( P  > %(Daug_P)s  ) &" +
                             "(TRCHI2DOF< %(Track_Chi2)s ) &" +
                             "(MIPCHI2DV(PRIMARY)> %(Trk_MIPCHI2DV_MIN)s) ")
@@ -1004,13 +1096,12 @@ class DetachedHHChild(DetachedHHChildCombiner):
         DetachedHHChildCombiner.__init__(self,name,decay,inputs)
 
 class DetachedHHHChild(DetachedHHHChildCombiner):
-    def __init__(self,name,decay=["K*(892)0 -> K+ pi- pi+"]) :
+    def __init__(self,name,decay=["K*(892)0 -> K+ pi- pi+"],
+                inputs = [SharedNoPIDDetachedChild_pi, SharedNoPIDDetachedChild_K]) :
         # decay descriptors could be optimised : we only need a pair of oppositely charged or same-charged tracks
         # could stay like this only if pid is added already here.
         #        decay =  ["[K*(892)0 -> K+ pi-]cc", "[K*(892)+ -> pi+ pi+]cc", "[K*(892)+ -> K+ K+]cc",
         #          "K*(892)0 -> pi+ pi-", "K*(892)0 -> K+ K-"]
-        inputs = [SharedNoPIDDetachedChild_pi,
-                  SharedNoPIDDetachedChild_K]
         DetachedHHHChildCombiner.__init__(self,name,decay,inputs)
 
 

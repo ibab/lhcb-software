@@ -25,6 +25,7 @@ class CharmHadD2HHHPi0Lines() :
             'Trk_1OF3_MIPCHI2DV_MIN'  : 5.0, # This can be tuned for reducing retention
             'Trk_2OF3_MIPCHI2DV_MIN'  : 5.0, # This can be tuned for reducing retention
             'VCHI2PDOF_MAX'           : 20.0,
+            'BPVCORRM_MAX'            : 9999.,
             'BPVDIRA_MIN'             : 0.999,
             'BPVVDCHI2_MIN'           : 20.0,
             'BPVLTIME_MIN'            : 0.3 * picosecond,
@@ -37,32 +38,29 @@ class CharmHadD2HHHPi0Lines() :
             'ADAU1BPVIPCHI2_MIN'    : 36,
             'ADAU2PT_MIN'           : 1700,
             'ADAU2BPVIPCHI2_MIN'    : 36,
-            #'VCHI2PDOF_MAX'         : 20.0,
-            #            'PT_MIN'                : 2.0 * GeV,
             'BPVLTIME_MIN'          : 0.3 * picosecond,
             'BPVIPCHI2_MAX'         : 20.0,
             'DMASS_MIN'             : 1795.0 * MeV,
             'DMASS_MAX'             : 2035.0 * MeV,
             'BPVDIRA_MIN'           : 0.999,
+            'VCHI2PDOF_MAX'           : 20.0,
         }
-        return {
-          'DetachedPiPiPi_forD2HHHPi0' :  cutsForDetachedHHH_Pi0,
-          'DetachedKPiPi_forD2HHHPi0'  :  cutsForDetachedHHH_Pi0,
-          'DetachedKKPi_forD2HHHPi0'   :  cutsForDetachedHHH_Pi0,
-          'DetachedKKK_forD2HHHPi0'    :  cutsForDetachedHHH_Pi0,
-          'D2PiPiPiPi0'                :  cutsForHHHPi0,
-          'D2KPiPiPi0'                 :  cutsForHHHPi0,
-          'D2KKPiPi0'                  :  cutsForHHHPi0,
-          'D2KKKPi0'                   :  cutsForHHHPi0,
-        }
+        cuts = {}
+        for fs in ['PiPiPi','KPiPi','KKPi','KKK']:
+            cuts.update({
+                'Detached'+fs+'_forD2HHHPi0' :  cutsForDetachedHHH_Pi0,
+                'D2'+fs+'Pi0'                :  cutsForHHHPi0,
+                })
+        return cuts
   
     def locallines(self):
+        from Stages import SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi
         from Stages import DetachedHHHChild, AttachParticle, SharedNeutralChild_pi0
         inputs = {
-            # First the detached HHH lines - KS LL
-            'DetachedPiPiPi_forD2HHHPi0' : [DetachedHHHChild('DetachedPiPiPi_forD2HHHPi0', decay = ["[K*(892)+ -> pi+ pi+ pi-]cc"])],
-            'DetachedKPiPi_forD2HHHPi0'  : [DetachedHHHChild('DetachedKPiPi_forD2HHHPi0', decay = ["[K*(892)+ -> K- pi+ pi+]cc","[K*(892)+ -> K+ pi- pi+]cc"])],
-            'DetachedKKPi_forD2HHHPi0'   : [DetachedHHHChild('DetachedKKPi_forD2HHHPi0',decay = ["[K*(892)+ -> K+ K- pi+]cc","[K*(892)+ -> K+ K+ pi-]cc"]) ],
+            # First the detached HHH lines
+            'DetachedPiPiPi_forD2HHHPi0' : [DetachedHHHChild('DetachedPiPiPi_forD2HHHPi0', decay = ["[K*(892)+ -> pi+ pi+ pi-]cc"], inputs = [SharedDetachedDpmChild_pi])],
+            'DetachedKPiPi_forD2HHHPi0'  : [DetachedHHHChild('DetachedKPiPi_forD2HHHPi0', decay = ["[K*(892)+ -> K- pi+ pi+]cc","[K*(892)+ -> K+ pi- pi+]cc"], inputs = [SharedDetachedDpmChild_pi, SharedDetachedDpmChild_K])],
+            'DetachedKKPi_forD2HHHPi0'   : [DetachedHHHChild('DetachedKKPi_forD2HHHPi0',decay = ["[K*(892)+ -> K+ K- pi+]cc","[K*(892)+ -> K+ K+ pi-]cc"], inputs = [SharedDetachedDpmChild_pi, SharedDetachedDpmChild_K]) ],
             'DetachedKKK_forD2HHHPi0'    : [DetachedHHHChild('DetachedKKK_forD2HHHPi0',decay = ["[K*(892)+ -> K+ K- K+]cc"]) ],
         }
         stages ={

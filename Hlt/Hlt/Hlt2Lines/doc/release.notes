@@ -7,6 +7,15 @@
 !           ALWAYS inform the Hlt group.
 !
 !----------------------------------------------------------------------------
+
+! 2015-04-15 - Maurizio Martinelli
+  - CharmHad/Stages.py
+   . Added a 4-body combiner
+   . Added a BPVCORRM cut to DetachedHHHChild combiner
+   . Added two new lists of pions and kaons with pid and ipchi2 cuts to be
+     used for D0->HHHH
+  - Used 4-body combiner for D0->HHHH and D->HHHKs lines
+
 ! 2015-04-15 - Dan Johnson
   - Added cut flexibility to CEP lines
 
