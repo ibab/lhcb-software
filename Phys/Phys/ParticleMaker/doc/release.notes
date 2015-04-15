@@ -3,6 +3,11 @@
 ! Responsible : Chris Jones, Olivier Deschamps
 !==============================================================================
 
+
+
+! 2015-01-16 : Olivier Deschamps
+  - DiElectronMaker : reduce verbosity when electron container is define and  protoP container is missing 
+
 !========================= ParticleMaker v6r13 2015-01-16 ========================
 
 ! 2015-01-04 : Gerhard Raven

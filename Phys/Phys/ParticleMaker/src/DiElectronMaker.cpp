@@ -94,54 +94,50 @@ StatusCode DiElectronMaker::initialize()
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons )
-{
+StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons ){
 
   //------------ select electron input
   LHCb::Particle::Vector electrons;
-  const LHCb::ProtoParticles * pps = getIfExists<LHCb::ProtoParticles>( m_input );
-  if ( m_eleinputs.empty() && pps )
-  {
-    //============== Starting from protoparticles
-    if (msgLevel(MSG::DEBUG))
-      debug() << " Starting from " << pps->size() << " protoParticles " << endmsg;
-    counter("Input protoP from "+m_input) += pps->size();
-    for ( LHCb::ProtoParticles::const_iterator ipp = pps->begin();
-          pps->end() != ipp ; ++ipp ) 
-    {
-      // apply filter and produce electrons particles
-      const LHCb::ProtoParticle* proto = *ipp;
-      if( !m_pFilter->isSatisfied( proto ))continue;
-      const int pID = m_ePps->particleID().pid() * (int)(proto->charge());
-      LHCb::Particle* electron = new LHCb::Particle( LHCb::ParticleID(pID) );
-      electron->setMeasuredMass(m_ePps->mass());
-      electron->setMeasuredMassErr(0.);
-      electron->setProto( proto );
-      const LHCb::Track* track = proto->track() ;
-      if ( !trSel()->accept(*track) ){delete electron; continue;}
-      const LHCb::State* state = usedState( track );
-      p2s()->state2Particle( *state, *electron ).ignore();// status code
-      if( electron->pt() < m_eptmin){delete electron;continue;}
-      const double cl = ConfLevel( electron );
-      const double pid= ePID( electron );
-      if( m_ecl > 0 &&  cl  < m_ecl ){delete electron; continue;}
-      if( pid < m_eidmin){delete electron; continue;}
-      //--- e/p selection : require Ecal acceptance implicitely
-      const bool ok=  m_caloElectron->set( electron );
-      if((m_eOpMax > 0 || m_eOpMin>0) && !ok ){delete electron;continue;}
-      const double eOp=m_caloElectron->eOverP();
-      if( m_eOpMax > 0 && eOp > m_eOpMax){delete electron;continue;}
-      if( m_eOpMin >=0 && eOp < m_eOpMin){delete electron;continue;}
-      //
-      electrons.push_back( electron );
+  if ( m_eleinputs.empty()  ){
+    const LHCb::ProtoParticles * pps = getIfExists<LHCb::ProtoParticles>( m_input );
+    if( pps ){
+      //============== Starting from protoparticles
+      if (msgLevel(MSG::DEBUG))
+        debug() << " Starting from " << pps->size() << " protoParticles " << endmsg;
+      counter("Input protoP from "+m_input) += pps->size();
+      for ( LHCb::ProtoParticles::const_iterator ipp = pps->begin(); pps->end() != ipp ; ++ipp ){
+        // apply filter and produce electrons particles
+        const LHCb::ProtoParticle* proto = *ipp;
+        if( !m_pFilter->isSatisfied( proto ))continue;
+        const int pID = m_ePps->particleID().pid() * (int)(proto->charge());
+        LHCb::Particle* electron = new LHCb::Particle( LHCb::ParticleID(pID) );
+        electron->setMeasuredMass(m_ePps->mass());
+        electron->setMeasuredMassErr(0.);
+        electron->setProto( proto );
+        const LHCb::Track* track = proto->track() ;
+        if ( !trSel()->accept(*track) ){delete electron; continue;}
+        const LHCb::State* state = usedState( track );
+        p2s()->state2Particle( *state, *electron ).ignore();// status code
+        if( electron->pt() < m_eptmin){delete electron;continue;}
+        const double cl = ConfLevel( electron );
+        const double pid= ePID( electron );
+        if( m_ecl > 0 &&  cl  < m_ecl ){delete electron; continue;}
+        if( pid < m_eidmin){delete electron; continue;}
+        //--- e/p selection : require Ecal acceptance implicitely
+        const bool ok=  m_caloElectron->set( electron );
+        if((m_eOpMax > 0 || m_eOpMin>0) && !ok ){delete electron;continue;}
+        const double eOp=m_caloElectron->eOverP();
+        if( m_eOpMax > 0 && eOp > m_eOpMax){delete electron;continue;}
+        if( m_eOpMin >=0 && eOp < m_eOpMin){delete electron;continue;}
+        //
+        electrons.push_back( electron );
+      }
+    }else{
+      return Warning("No valid ProtoParticle input container" ,StatusCode::SUCCESS);
     }
-  }
-  else if( !m_eleinputs.empty() )
-  {
+  } else {    
     unsigned int ninputs=0;
-    for(std::vector<std::string>::iterator in = m_eleinputs.begin(); 
-        m_eleinputs.end() != in; ++in ) 
-    {
+    for(std::vector<std::string>::iterator in = m_eleinputs.begin();m_eleinputs.end() != in; ++in ){
       const std::string& eleinput = *in;
       if( !exist<LHCb::Particle::Range>( eleinput ) ){
         Warning("Container " + eleinput + " undefined",StatusCode::SUCCESS).ignore();
@@ -150,9 +146,7 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
       // Starting from electron particles
       LHCb::Particle::Range iElectrons = get<LHCb::Particle::Range>( eleinput );
       ninputs+=iElectrons.size();
-      for(LHCb::Particle::Range::iterator ip = iElectrons.begin(); 
-          iElectrons.end() != ip ; ++ip ) 
-      {
+      for(LHCb::Particle::Range::iterator ip = iElectrons.begin();iElectrons.end() != ip ; ++ip ){
         LHCb::Particle* pp = (LHCb::Particle*) *ip;
         if( pp->pt() < m_eptmin)continue;
         const double cl = ConfLevel( pp );
@@ -173,33 +167,25 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
         // remove BremStrahlung if any
         LHCb::Particle* p = pp->clone(); // clone input electrons before removing brem
         if( bremAdder()->removeBrem( p ) ) counter("BremStrahlung removal") += 1.;
-
         electrons.push_back( p );
       }
       counter("Input electrons from "+ eleinput) += iElectrons.size();
     }
     if (msgLevel(MSG::DEBUG))debug() << " Starting from " << ninputs << " electrons " << endmsg;
     if( m_eleinputs.size() > 1)counter("Total input electrons") += ninputs;
-  }  else {
-    return Warning("No valid input container" ,StatusCode::SUCCESS);
   }
   counter("Selected electrons")+= electrons.size();
-
   double vc1=-2;
   double vc2=-2;
   //-------------- process
 
   //loop over electrons
   LHCb::Particle::Vector trash;
-  for( LHCb::Particles::iterator ip1 = electrons.begin(); 
-       electrons.end() != ip1 ; ++ip1 )
-  {
+  for( LHCb::Particles::iterator ip1 = electrons.begin(); electrons.end() != ip1 ; ++ip1 ){
     LHCb::Particle* p1 = *ip1;
     double cl1 = ConfLevel(p1);
     double pid1= ePID(p1);
     if( pid1 < m_eidmin)continue; // both electrons with pid > m_eidmin
-
-
     //get electron ECAL Hypo info
     LHCb::CaloHypo* ce1 = ( m_caloElectron->set( p1 )) ? m_caloElectron->electron() : NULL;
     const LHCb::CaloHypo::Position* epos1 = ( ce1 ) ? ce1->position() : NULL;
