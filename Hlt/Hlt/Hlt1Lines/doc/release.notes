@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-04-15 - Albert Puig
+ - Changed particle from D0 to phi(1020) in the Hlt1CalibTracking lines
+
 ! 2015-04-14 - Albert Puig
  - Updated the Unbiased Bs -> phi Gamma line
 
