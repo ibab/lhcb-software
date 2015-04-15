@@ -7,6 +7,8 @@
 !           ALWAYS inform the Hlt group.
 !
 !----------------------------------------------------------------------------
+! 2015-04-15 - Dan Johnson
+  - Added cut flexibility to CEP lines
 
 ! 2015-04-15 - Michael Kolpin
   - Fix to dependencies in TrackEffDiMuon lines
