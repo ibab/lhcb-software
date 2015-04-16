@@ -6,6 +6,8 @@
 
 ! 2015-04-16 - Alex Pearce
  - Fix image resources not appearing
+ - Move QtAssets/ to qt_resources to be consistent with other LHCb Qt
+   applications, e.g. Feicim and LHCbDirac.BookkeepingSystem
 
 !====================== VeloOfflineGUI v1r2 2015-03-18 ======================
 ! 2015-03-18 - Alex Pearce
