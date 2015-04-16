@@ -515,19 +515,23 @@ class PackParticlesAndVertices(MicroDSTElement) :
     Configurable to pack Particles and Vertices into a single location
     """
     def __call__(self, sel):
-        from Configurables import PackParticlesAndVertices as PackPsVs
+        vetoLocs = [ "/Event/"+self.branch+"/Rec/Vertex/Primary",
+                     "/Event/"+self.branch+"/Rec/ProtoP/Charged",
+                     "/Event/"+self.branch+"/Rec/ProtoP/Neutrals",
+                     "/Event/"+self.branch+"/Rec/Track/Best",
+                     "/Event/"+self.branch+"/Rec/Track/Muon",
+                     "/Event/"+self.branch+"/Rec/Muon/MuonPID",
+                     "/Event/"+self.branch+"/Rec/Rich/PIDs" ]
+        for hypo in [ 'Electrons','Photons','MergedPi0s','SplitPhotons' ]:
+            vetoLocs += [ "/Event/" + self.branch + "/Rec/Calo/"  + hypo ]
+        from Configurables import PackParticlesAndVertices as PackPsVs        
         packer = PackPsVs( name = self.personaliseName(sel,"PackPsAndVs"),
                            InputStream        = self.branch,
                            DeleteInput        = True,
                            EnableCheck        = False,
                            AlwaysCreateOutput = False,
                            # Following are handled by the PackRecObjects packers
-                           VetoedContainers = [ "/Event/"+self.branch+"/Rec/Vertex/Primary",
-                                                "/Event/"+self.branch+"/Rec/ProtoP/Charged",
-                                                "/Event/"+self.branch+"/Rec/ProtoP/Neutrals",
-                                                "/Event/"+self.branch+"/Rec/Track/Best",
-                                                "/Event/"+self.branch+"/Rec/Track/Muon",
-                                                "/Event/"+self.branch+"/Rec/Muon/MuonPID" ] )
+                           VetoedContainers = vetoLocs )
         return [packer]
 
 class PackTrackingClusters(MicroDSTElement):
