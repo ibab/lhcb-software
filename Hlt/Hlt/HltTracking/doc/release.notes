@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-04-16 - Sascha Stahl
+ - Split up the tracks according to type after the clone killing.
+
 ! 2015-04-14 - Sascha Stahl
  - Fix Rich reconstruction for Downstream tracks and add missing hypotheses.
 

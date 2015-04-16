@@ -1048,10 +1048,21 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from Configurables import TrackEventFitter, TrackMasterFitter
         bm_members=[]
         if ((self.getProp("DoCleanups") and self.__trackType() == "Long") or self.getProp("CreateBestTracks")):
-            # In this case the tracks have been fitted and nothing needs to be done
+            # Split up the clone killed best tracks into separate containers
             # Build the bindMembers
-            hlt2StagedFastFitOutputLocation = tracks.outputSelection()
-            bm_members      = [ tracks ]
+            from Configurables import TrackContainerCopy, TrackListRefiner
+            selectTrackType = TrackContainerCopy(self.__trackfitAlgosAndToolsPrefix()+"Select"+self.__trackType()+"Tracks")
+            selectTrackType.Selector = "TrackSelector"
+            selectTrackType.addTool(TrackSelector,name = "TrackSelector")
+            ts=selectTrackType.TrackSelector
+            selectTrackType.inputLocations  =  [ tracks.outputSelection() ]
+            selectTrackType.outputLocation = hlt2StagedFastFitOutputLocation
+            if self.__trackType() == "Long":
+                ts.TrackTypes = ["Long"]
+            if self.__trackType() == "Downstream":
+                ts.TrackTypes = ["Downstream"]
+            #hlt2StagedFastFitOutputLocation = tracks.outputSelection()
+            bm_members      = [ tracks,  selectTrackType]
         else:
             Hlt2StagedFastFit_name      = self.__trackfitAlgosAndToolsPrefix()+'StagedFastFit'
             Hlt2StagedFastFit           = TrackEventFitter(Hlt2StagedFastFit_name)
@@ -1066,8 +1077,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
         if HltRecoConf().getProp("AddGhostProb"):
             from Configurables import TrackAddNNGhostId
             ghostIDName = self.__trackfitAlgosAndToolsPrefix()+"TrackAddNNGhostID"
-            if self.getProp("CreateBestTracks"):
-                ghostIDName = self.getProp("Prefix") +"TrackAddNNGhostID"
+            #if self.getProp("CreateBestTracks"):
+            #    ghostIDName = self.getProp("Prefix") +"TrackAddNNGhostID"
             addNNGhostId = TrackAddNNGhostId(self.__trackfitAlgosAndToolsPrefix()+"TrackAddNNGhostID",GhostIdTool="Run2GhostId")
             addNNGhostId.inputLocation = hlt2StagedFastFitOutputLocation
             from HltLine.HltDecodeRaw import DecodeVELO, DecodeTT, DecodeIT
