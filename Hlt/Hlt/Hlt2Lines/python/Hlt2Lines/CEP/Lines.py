@@ -62,8 +62,8 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                  , 'Hlt2LowMultElectron'    : 1.0
                                  , 'Hlt2LowMultElectron_noTrFilt': 0.05
                                  # Technical lines
-                                 , 'LowMultNonBeamBeamNoBias': 1.0
-                                 , 'LowMultNonBeamBeamMinActivity': 1.0
+                                 , 'LowMultNoBias'    : 1.0
+                                 , 'LowMultMinBias'   : 1.0
                                  }
                     , 'HLT'               :   {"Hadron"     : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
                                                "Muon"       : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
@@ -79,7 +79,8 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                               'Photon'  : ['Photon,lowMult','DiEM,lowMult'],
                                               'Electron': ['Electron,lowMult','DiEM,lowMult']
                                              }
-                    , 'TechnicalMinBias_L0'  : {"ALL"   : "(L0_DATA('Spd(Mult)') > 2) | (L0_DATA('Electron(Et)') > 5) | (L0_DATA('Photon(Et)') > 5) | (L0_DATA('Hadron(Et)') > 10)"}
+                    , 'Technical_L0'  : {"NoBias"   : "(L0_DATA('Spd(Mult)') < 100)" ,
+                                         "MinBias"  : "(L0_DATA('Spd(Mult)') > 2) | (L0_DATA('Electron(Et)') > 5) | (L0_DATA('Photon(Et)') > 5) | (L0_DATA('Hadron(Et)') > 10)"}
 } 
 theseSlots.update(_CEPHadronLines.localcuts())
 theseSlots.update(_CEPMuonLines.localcuts())
@@ -112,9 +113,10 @@ class CEPLines(Hlt2LinesConfigurableUser) :
                            HLT1 = self.getProp('HLT')[l0nick],
                            algos = algos) 
         # Add two additional technical lines
-        Hlt2Line("LowMultNonBeamBeamNoBias", prescale = self.prescale,
-                 HLT1 = self.getProp('HLT')["TechnicalNoBias"])
-        Hlt2Line("LowMultNonBeamBeamMinActivity", prescale = self.prescale,
+        Hlt2Line("LowMultNoBias", prescale = self.prescale,
                  HLT1 = self.getProp('HLT')["TechnicalNoBias"],
-                 L0DU = self.getProp('TechnicalMinBias_L0')["ALL"])
+                 L0DU = self.getProp('TechnicalMinBias_L0')["NoBias"])
+        Hlt2Line("LowMultMinBias", prescale = self.prescale,
+                 HLT1 = self.getProp('HLT')["TechnicalNoBias"],
+                 L0DU = self.getProp('TechnicalMinBias_L0')["MinBias"])
         
