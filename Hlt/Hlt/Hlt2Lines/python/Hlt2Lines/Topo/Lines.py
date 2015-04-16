@@ -67,13 +67,14 @@ class TopoLines(Hlt2LinesConfigurableUser):
             parts.append(FilterParts('LambdaDD', [LambdaDDTrackFitted], gec))
 
         # Create the stages.
-        from Stages import FilterCombos, CombineTos, CombineN
-        combos = [CombineTos(parts)]
+        from Stages import CombineTos, CombineNBody, Filter2Body, FilterMVA
+        tos = [CombineTos(parts)]
+        self._stages['Topo2BodyCombos'] = [Filter2Body(tos)]
+        self._stages['Topo3BodyCombos'] = [CombineNBody(3, tos + parts)]
+        self._stages['Topo4BodyCombos'] = [CombineNBody(4, tos + parts)]
         for n in xrange(2, 5):
-            if n == 2: self._stages['Topo%iBody' % n] = [
-                FilterCombos(n, combos, props)]
-            else: self._stages['Topo%iBody' % n] = [
-                FilterCombos(n, [CombineN(n, combos + parts)], props)]
+            self._stages['Topo%iBody' % n] = [
+                FilterMVA(n, self._stages['Topo%iBodyCombos' % n], props)]
 
         # Return the stages.
         if nickname: return self._stages[nickname]
@@ -82,6 +83,7 @@ class TopoLines(Hlt2LinesConfigurableUser):
     def __apply_configuration__(self):
         from HltLine.HltLine import Hlt2Line
         for (name, algos) in self.algorithms(self.stages()).iteritems():
+            if 'Combos' in name: continue
             if 'Run1TopoE' in name:
                 l0   = self.getProps()['Common']['RUN1_L0_ELECTRON_FILTER']
                 hlt1 = self.getProps()['Common']['RUN1_HLT1_ELECTRON_FILT']

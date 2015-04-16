@@ -29,7 +29,24 @@ class FilterParts(Hlt2ParticleFilter):
         Hlt2ParticleFilter.__init__(self, 'TopoInput' + pid, pc, inputs,
                                     shared = True, dependencies = deps)
 
-class FilterCombos(Hlt2ParticleFilter):
+class Filter2Body(Hlt2ParticleFilter):
+    def __init__(self, inputs):
+        pc = ("(PT > %(CMB_PRT_PT_MIN)s) "
+              "& (VFASPF(VCHI2) < %(CMB_VRT_CHI2_MAX)s) "
+              "& (BPVVDCHI2 > %(CMB_VRT_VDCHI2_MIN)s) "
+              "& (in_range(%(CMB_VRT_ETA_MIN)s, BPVETA,"
+              " %(CMB_VRT_ETA_MAX)s)) "
+              "& (in_range(%(CMB_VRT_MCOR_MIN)s, BPVCORRM,"
+              " %(CMB_VRT_MCOR_MAX)s)) "
+              "& (BPVDIRA > %(CMB_VRT_DIRA_MIN)s) "
+              "& (NINTREE(ISBASIC & (MIPCHI2DV(PRIMARY) < 16)) <"
+              " %(CMB_TRK_NLT16_MAX)s)")
+        from HltTracking.HltPVs import PV3D
+        Hlt2ParticleFilter.__init__(self, 'Topo2Body', pc, inputs,
+                                    shared = True, 
+                                    dependencies = [PV3D('Hlt2')])
+
+class FilterMVA(Hlt2ParticleFilter):
     """
     Filter for the BDT lines.
     """
@@ -44,18 +61,6 @@ class FilterCombos(Hlt2ParticleFilter):
         bdttool = self.__classifier(params, varmap, "TrgBBDT")
         pc = ("(VALUE('%s/%s') > %s)" % 
               (bdttool.Type.getType(), bdttool.Name, bdtcut))
-        if n == 2:
-            pc = ("(PT > %(CMB_PRT_PT_MIN)s) "
-                  "& (VFASPF(VCHI2) < %(CMB_VRT_CHI2_MAX)s) "
-                  "& (BPVVDCHI2 > %(CMB_VRT_VDCHI2_MIN)s) "
-                  "& (in_range(%(CMB_VRT_ETA_MIN)s, BPVETA,"
-                  " %(CMB_VRT_ETA_MAX)s)) "
-                  "& (in_range(%(CMB_VRT_MCOR_MIN)s, BPVCORRM,"
-                  " %(CMB_VRT_MCOR_MAX)s)) "
-                  "& (BPVDIRA > %(CMB_VRT_DIRA_MIN)s) "
-                  "& (NINTREE(ISBASIC & (MIPCHI2DV(PRIMARY) < 16)) <"
-                  " %(CMB_TRK_NLT16_MAX)s) "
-                  "& " + pc)
         from HltTracking.HltPVs import PV3D
         Hlt2ParticleFilter.__init__(self, 'BDT', pc, inputs, shared = False, 
                                     tools = [bdttool], 
@@ -103,7 +108,7 @@ class CombineTos(Hlt2Combiner):
                               dependencies = [PV3D('Hlt2')],
                               CombinationCut = cc, MotherCut = mc)
 
-class CombineN(Hlt2Combiner):
+class CombineNBody(Hlt2Combiner):
     """
     Combiner for all n-body combos.
     """
