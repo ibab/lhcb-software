@@ -1,7 +1,7 @@
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2VoidFilter
 class FilterEvent(Hlt2VoidFilter):
     """
-    Filter for the topo events.
+    Global event filter.
     """
     def __init__(self):
         from Configurables import LoKi__Hybrid__CoreFactory as Factory
@@ -17,7 +17,7 @@ class FilterEvent(Hlt2VoidFilter):
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
 class FilterParts(Hlt2ParticleFilter):
     """
-    Filter for the topo input particles.
+    Filter input particles.
     """
     def __init__(self, pid, inputs, gec):
         pc = ("(PT > %(TRK_PT_MIN)s) & (P > %(TRK_P_MIN)s) "
@@ -30,6 +30,9 @@ class FilterParts(Hlt2ParticleFilter):
                                     shared = True, dependencies = deps)
 
 class Filter2Body(Hlt2ParticleFilter):
+    """
+    Filter 2-body TOS combos to create 2-body combos.
+    """
     def __init__(self, inputs):
         pc = ("(PT > %(CMB_PRT_PT_MIN)s) "
               "& (VFASPF(VCHI2) < %(CMB_VRT_CHI2_MAX)s) "
@@ -48,7 +51,7 @@ class Filter2Body(Hlt2ParticleFilter):
 
 class FilterMVA(Hlt2ParticleFilter):
     """
-    Filter for the BDT lines.
+    Apply the MVA filter to an n-body combo.
     """
     def __init__(self, n, inputs, props):
         params = props.get('BDT_%iBODY_PARAMS' % n)
@@ -91,13 +94,24 @@ from Hlt2Lines.Utilities.Hlt2Combiner import Hlt2Combiner
 from itertools import combinations_with_replacement
 class CombineTos(Hlt2Combiner):
     """
-    Combiner for all 2-body HLT1 TOS combos.
+    Creates all 2-body TOS (one-track or two-track) combos.
     """
     def __init__(self, inputs):
-        pids = ['K+', 'K-', 'KS0', 'Lambda0', 'Lambda~0']
+        from Hlt1Lines.Hlt1MVALines import Hlt1MVALinesConf
+        props  = Hlt1MVALinesConf().getProps()
+        pids   = ['K+', 'K-', 'KS0', 'Lambda0', 'Lambda~0']
         combos = list(combinations_with_replacement(pids, 2))
         decays = ['K*(892)0 -> ' + ' '.join(combo) for combo in combos]
-        cc = ("(ACUTDOCACHI2(%(CMB_VRT_CHI2_MAX)s, '')) "
+        ismuon = "(ANUM(HASPROTO & HASMUON & ISMUON) > 0)"
+        onetrk = ("(ANUM((TRCHI2DOF < %(TrChi2)s) "
+                  "& (((PT > %(MaxPT)s) & (BPVIPCHI2() > %(MinIPChi2)s)) "
+                  "| (in_range(%(MinPT)s, PT, %(MaxPT)s)))) > 0)" 
+                  % props['TrackMVA'])
+        twotrk = ("(ANUM((PT > %(PT)s) & (P > %(P)s) "
+                  "& (TRCHI2DOF < %(TrChi2)s) "
+                  "& (BPVIPCHI2() > %(IPChi2)s)) > 1)" % props['TwoTrackMVA'])
+        cc = ("(" + " | ".join([ismuon, onetrk, twotrk])  + ") "
+              "& (ACUTDOCACHI2(%(CMB_VRT_CHI2_MAX)s, '')) "
               "& (AALLSAMEBPV | (AMINCHILD(MIPCHI2DV(PRIMARY)) > 16))")
         mc = ("(HASVERTEX)")
         from Hlt2Lines.Utilities.Hlt2MergedStage import Hlt2MergedStage
@@ -110,7 +124,7 @@ class CombineTos(Hlt2Combiner):
 
 class CombineNBody(Hlt2Combiner):
     """
-    Combiner for all n-body combos.
+    Creates 3 and 4-body combos.
     """
     def __init__(self, n, inputs):
         pids = ['K+', 'K-', 'KS0', 'Lambda0', 'Lambda~0']
