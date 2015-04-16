@@ -11,7 +11,7 @@ class CEPMuonLines() :
                                      'nBackTracksmax'   :     1,
                                      'AMmin'            :     0.0 * GeV,
                                      'mu_PTmin'         :     400 * MeV},
-                    'Muon'      :   {'nVeloTracksmax'   :     4,
+                    'Muon'      :   {'nVeloTracksmax'   :     8,
                                      'nBackTracksmax'   :     1,
                                      'mu_PTmin'         :     400 * MeV},
                }

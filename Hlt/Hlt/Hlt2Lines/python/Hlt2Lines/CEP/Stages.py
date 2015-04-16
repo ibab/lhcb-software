@@ -55,6 +55,15 @@ class MuonCombiner(Hlt2Combiner):
                               dependencies = [TrackGEC(name)],
                               DaughtersCuts = dc, CombinationCut = cc, MotherCut = mc, Preambulo = []);
 
+# The class that creates the photon Hlt2Combiners
+class PhotonCombiner(Hlt2Combiner):
+    def __init__(self, name, decay, inputs):
+        dc = {'gamma'   : "(PT > %(gamma_PTmin)s)"}
+        mc = ("( (M > %(digamma_AMmin)s) & (M < %(digamma_AMmax)s) )")
+        Hlt2Combiner.__init__(self, name, decay, inputs,
+                              dependencies = [TrackGEC(name)],
+                              MotherCut = mc );
+
 # The class that creates the hadronic Hlt2Combiners
 class HadronicCombiner(Hlt2Combiner):
     def __init__(self, name, decay, inputs, pidcut={}):
@@ -286,12 +295,20 @@ class LowMultMuonFilter(Hlt2ParticleFilter):
 ##############################
 # PHOTON FILTERS
 ##############################
-class LowMultPhotonFilter(Hlt2ParticleFilter):
+class LowMultDiPhotonFilter(PhotonCombiner):
     def __init__(self, name):
-        cut = "(PT > %(gamma_PTmin)s)"
-        from Inputs import MergedPi0s, ResolvedPi0s, BiKalmanFittedPhotonsFromL0Low
-        inputs = [MergedPi0s, ResolvedPi0s, BiKalmanFittedPhotonsFromL0Low]
-        Hlt2ParticleFilter.__init__(self, name, cut, inputs, dependencies = [DecodeL0CALO])
+        decay = "[chi_c1(1P) -> gamma gamma]"
+        from Inputs import Hlt2LoosePhotons
+        inputs = [Hlt2LoosePhotons]
+        PhotonCombiner.__init__(self,name,decay,inputs)
+
+class LowMultPi0Filter(Hlt2ParticleFilter):
+    def __init__(self, name):
+        cut = "(PT > %(pi0_PTmin)s)"
+        from Inputs import MergedPi0s, ResolvedPi0s
+        inputs = [MergedPi0s, ResolvedPi0s]
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs,
+                                    dependencies = [TrackGEC(name)])
 
 ##############################
 # ELECTRON FILTERS
