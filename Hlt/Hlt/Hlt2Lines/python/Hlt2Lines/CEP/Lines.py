@@ -62,8 +62,9 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                  , 'Hlt2LowMultElectron'    : 1.0
                                  , 'Hlt2LowMultElectron_noTrFilt': 0.05
                                  # Technical lines
-                                 , 'LowMultNoBias'    : 1.0
-                                 , 'LowMultMinBias'   : 1.0
+                                 , 'Hlt2LowMultTechnical_NoBias'        : 1.0
+                                 , 'Hlt2LowMultTechnical_NoBiasLowMult' : 1.0
+                                 , 'Hlt2LowMultTechnical_MinBias'       : 1.0
                                  }
                     , 'HLT'               :   {"Hadron"     : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
                                                "Muon"       : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
@@ -79,8 +80,8 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                               'Photon'  : ['Photon,lowMult','DiEM,lowMult'],
                                               'Electron': ['Electron,lowMult','DiEM,lowMult']
                                              }
-                    , 'Technical_L0'  : {"NoBias"   : "(L0_DATA('Spd(Mult)') < 100)" ,
-                                         "MinBias"  : "(L0_DATA('Spd(Mult)') < 100) & ( (L0_DATA('Spd(Mult)') > 2) | (L0_DATA('Electron(Et)') > 5) | (L0_DATA('Photon(Et)') > 5) | (L0_DATA('Hadron(Et)') > 10) )"}
+                    , 'Technical_L0'  : {"NoBiasLowMult"   : "(L0_DATA('Spd(Mult)') < 100)" ,
+                                         "MinBias"         : "(L0_DATA('Spd(Mult)') < 100) & ( (L0_DATA('Spd(Mult)') > 2) | (L0_DATA('Electron(Et)') > 5) | (L0_DATA('Photon(Et)') > 5) | (L0_DATA('Hadron(Et)') > 10) )"}
 } 
 theseSlots.update(_CEPHadronLines.localcuts())
 theseSlots.update(_CEPMuonLines.localcuts())
@@ -112,10 +113,12 @@ class CEPLines(Hlt2LinesConfigurableUser) :
                            L0DU = self.__l0du(l0nick),
                            HLT1 = self.getProp('HLT')[l0nick],
                            algos = algos) 
-        # Add two additional technical lines
+        # Add three additional technical lines
         Hlt2Line("LowMultTechnical_NoBias", prescale = self.prescale,
+                 HLT1 = self.getProp('HLT')["TechnicalNoBias"])
+        Hlt2Line("LowMultTechnical_NoBiasLowMult", prescale = self.prescale,
                  HLT1 = self.getProp('HLT')["TechnicalNoBias"],
-                 L0DU = self.getProp('Technical_L0')["NoBias"])
+                 L0DU = self.getProp('Technical_L0')["NoBiasLowMult"])
         Hlt2Line("LowMultTechnical_MinBias", prescale = self.prescale,
                  HLT1 = self.getProp('HLT')["TechnicalNoBias"],
                  L0DU = self.getProp('Technical_L0')["MinBias"])
