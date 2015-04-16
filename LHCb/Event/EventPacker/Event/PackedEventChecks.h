@@ -34,7 +34,7 @@ namespace DataPacking
   public:
 
     /// Constructor
-    explicit DataChecks( GaudiAlgorithm & _parent ) : parent(&_parent) { }
+    explicit DataChecks( const GaudiAlgorithm & _parent ) : parent(&_parent) { }
 
     /// Destructor
     ~DataChecks( ) { }
@@ -192,7 +192,7 @@ namespace DataPacking
   private:
 
     /// MessageStream
-    mutable GaudiAlgorithm * parent;
+    mutable const GaudiAlgorithm * parent;
 
   };
 

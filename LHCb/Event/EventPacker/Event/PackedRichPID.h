@@ -144,7 +144,7 @@ namespace LHCb
   public:
 
     /// Constructor
-    RichPIDPacker( GaudiAlgorithm & parent ) : m_pack(&parent) { }
+    RichPIDPacker( const GaudiAlgorithm & parent ) : m_pack(&parent) { }
 
   public:
 
@@ -178,7 +178,7 @@ namespace LHCb
   private:
 
     /// Access the parent algorithm
-    GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
+    const GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
 
     /// Check if the given packing version is supported
     bool isSupportedVer( const char& ver ) const

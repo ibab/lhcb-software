@@ -182,7 +182,7 @@ namespace LHCb
   public:
 
     /// Constructor
-    RecVertexPacker( GaudiAlgorithm & parent ) : m_pack(&parent) {}
+    RecVertexPacker( const GaudiAlgorithm & parent ) : m_pack(&parent) {}
 
   public:
 
@@ -209,7 +209,7 @@ namespace LHCb
   private:
 
     /// Access the parent algorithm
-    inline GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
+    inline const GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
 
     /// Safe sqrt ...
     inline double safe_sqrt( const double x ) const

@@ -41,7 +41,7 @@ public:
   //---------------------------------------------------------------------------
 
   /// Standard constructor
-  StandardPacker( GaudiAlgorithm * p = NULL ) : m_parent(p) { }
+  StandardPacker( const GaudiAlgorithm * p = NULL ) : m_parent(p) { }
 
   ~StandardPacker( ) {} ///< Destructor
 
@@ -261,14 +261,14 @@ private:
 public:
 
   /// Access the parent algorithm
-  GaudiAlgorithm * parent() const { return m_parent; }
+  const GaudiAlgorithm * parent() const { return m_parent; }
 
   //---------------------------------------------------------------------------
 
 private:
 
   /// Pointer to parent algorithm
-  GaudiAlgorithm * m_parent;
+  const GaudiAlgorithm * m_parent;
 
   //---------------------------------------------------------------------------
 

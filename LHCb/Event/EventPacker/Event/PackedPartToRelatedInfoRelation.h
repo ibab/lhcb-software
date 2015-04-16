@@ -180,7 +180,7 @@ namespace LHCb
   public:
 
     /// Default Constructor
-    RelatedInfoRelationsPacker( GaudiAlgorithm & parent ) 
+    RelatedInfoRelationsPacker( const GaudiAlgorithm & parent ) 
       : m_pack(&parent),
         m_srcContainer(NULL),
         m_prevSrcLink(-1)
@@ -209,7 +209,7 @@ namespace LHCb
   private:
 
     /// Access the parent algorithm
-    GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
+    const GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
 
   private:
 

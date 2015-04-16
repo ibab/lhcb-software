@@ -140,7 +140,7 @@ namespace LHCb
   public:
 
     /// Constructor
-    MCCaloHitPacker( GaudiAlgorithm & parent )
+    MCCaloHitPacker( const GaudiAlgorithm & parent )
       : m_pack(&parent), m_energyScale( 1.0e2 ) { }
 
   public:
@@ -160,7 +160,7 @@ namespace LHCb
   private:
 
     /// Access the parent algorithm
-    GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
+    const GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
 
   private:
 

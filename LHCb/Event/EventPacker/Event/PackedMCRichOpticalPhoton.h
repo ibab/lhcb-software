@@ -153,7 +153,7 @@ namespace LHCb
   public:
 
     /// Constructor
-    MCRichOpticalPhotonPacker( GaudiAlgorithm & parent )
+    MCRichOpticalPhotonPacker( const GaudiAlgorithm & parent )
       : m_pack(&parent), PhotEnScale(5.0e8) {}
 
   public:
@@ -173,7 +173,7 @@ namespace LHCb
   private:
 
     /// Access the parent algorithm
-    GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
+    const GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
 
   private:
 

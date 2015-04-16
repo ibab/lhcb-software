@@ -183,7 +183,7 @@ namespace LHCb
   public:
 
     /// Default Constructor
-    CaloClusterPacker( GaudiAlgorithm & p ) : m_pack(&p) {}
+    CaloClusterPacker( const GaudiAlgorithm & p ) : m_pack(&p) {}
 
   public:
 
@@ -206,7 +206,7 @@ namespace LHCb
   public:
 
     /// Access the parent algorithm
-    GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
+    const GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
 
     /// Safe sqrt ...
     inline double safe_sqrt( const double x ) const

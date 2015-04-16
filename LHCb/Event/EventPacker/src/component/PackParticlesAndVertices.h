@@ -58,80 +58,84 @@ public:
 
 private:
 
+  // Relation types
   typedef LHCb::Relation1D<LHCb::Particle,LHCb::VertexBase>     P2VRELATION;
   typedef LHCb::Relation1D<LHCb::Particle,LHCb::MCParticle>     P2MCPRELATION;
   typedef LHCb::Relation1D<LHCb::Particle,int>                  Part2IntRelations;
   typedef LHCb::Relation1D<LHCb::Particle,LHCb::RelatedInfoMap> Part2InfoRelations; 
   typedef LHCb::RelationWeighted1D<LHCb::ProtoParticle,LHCb::MCParticle,double> Proto2MCPRelation;
 
+  // things for working
+  typedef std::vector<IRegistry*> Leaves;
+  typedef std::map< CLID, std::vector<std::string> > ClassIDTESMap;
+
 private:
 
-  /// Select the data containers in the TES, of a given type, to write out
-  void selectContainers ( const DataObject* obj,
-                          std::vector<std::string>& names,
-                          const unsigned int classID,
-                          const bool forceRead = false );
+  /// test if a TES container is Veto'ed from being packed
+  bool isVetoed( const std::string& id ) const;
+  
+  /// Build the CLassID to TES location(s) map
+  void buildTESMap( const DataObject* obj,
+                    ClassIDTESMap& tesmap ) const;
 
   /// Pack a Particle container
   void packAParticleContainer ( const LHCb::Particles* parts,
-                                LHCb::PackedParticles& pparts );
+                                LHCb::PackedParticles& pparts ) const;
 
   /// Pack a ProtoParticle container
   void packAProtoParticleContainer ( const LHCb::ProtoParticles* protos,
-                                     LHCb::PackedProtoParticles& pprotos );
+                                     LHCb::PackedProtoParticles& pprotos ) const;
 
   /// Pack a MuonPID container
   void packAMuonPIDContainer ( const LHCb::MuonPIDs* pids,
-                               LHCb::PackedMuonPIDs& ppids );
+                               LHCb::PackedMuonPIDs& ppids ) const;
 
   /// Pack a RichPID container
   void packARichPIDContainer ( const LHCb::RichPIDs* pids,
-                               LHCb::PackedRichPIDs& ppids );
+                               LHCb::PackedRichPIDs& ppids ) const;
 
   /// Pack a Track container
   void packATrackContainer ( const LHCb::Tracks* tracks,
-                             LHCb::PackedTracks& ptracks );
+                             LHCb::PackedTracks& ptracks ) const;
 
   /// pack a vertex container
   void packAVertexContainer ( const LHCb::Vertices* verts,
-                              LHCb::PackedVertices& pverts );
+                              LHCb::PackedVertices& pverts ) const;
 
   /// Pack a FlavourTag container
   void packAFTContainer ( const LHCb::FlavourTags* fts,
-                          LHCb::PackedFlavourTags& pfts );
+                          LHCb::PackedFlavourTags& pfts ) const;
 
   /// Pack a RecVertex container
   void packARecVertexContainer ( const LHCb::RecVertices* rverts,
-                                 LHCb::PackedRecVertices& prverts );
+                                 LHCb::PackedRecVertices& prverts ) const;
 
   /// Pack a 'SmartRef to SmartRef' relations container
   template < typename RELATION >
   void packAP2PRelationContainer ( const RELATION* rels,
-                                   LHCb::PackedRelations& prels );
+                                   LHCb::PackedRelations& prels ) const;
 
   /// Pack a 'SmartRef to SmartRef' weighted relations container
   template < typename RELATION >
   void packAP2PRelationContainer ( const RELATION* rels,
-                                   LHCb::PackedWeightedRelations& prels );
+                                   LHCb::PackedWeightedRelations& prels ) const;
 
   /// Pack a 'SmartRef to int' relations container
   template < typename RELATION >
   void packAP2IntRelationContainer ( const RELATION* rels,
-                                     LHCb::PackedRelations& prels );
+                                     LHCb::PackedRelations& prels ) const;
 
   /// Pack a 'SmartRef to RelatedInfoMap' relations container
   void packAP2RelatedInfoRelationContainer( const Part2InfoRelations * rels,
                                             LHCb::PackedRelatedInfoRelations& prels,
-                                            const std::string & location );
+                                            const std::string & location ) const;
 
 private:
 
   std::string m_inputStream; ///< Input stream root
   bool m_alwaysOutput;      ///< Flag to turn on the creation of output, even when input is missing
-  bool m_forceReading;      ///< If true, read the containers from file. Else (def) take what is in TES
   bool m_deleteInput;       ///< delete the containers after packing if true.
   bool m_enableCheck;       ///< Flag to turn on automatic unpacking and checking of the output post-packing
-  bool m_listRemaining;     ///< list the remaining objects after packing
   std::vector<std::string> m_vetoedConts; ///< Vetoed containers. Will not be packed.
   StandardPacker m_pack;    ///< Standard packer
 
@@ -142,8 +146,9 @@ private:
 //=========================================================================
 template < typename RELATION >
 inline void
-PackParticlesAndVertices::packAP2PRelationContainer ( const RELATION* rels,
-                                                      LHCb::PackedRelations& prels )
+PackParticlesAndVertices::
+packAP2PRelationContainer ( const RELATION* rels,
+                            LHCb::PackedRelations& prels ) const
 {
   // Make a new packed data object and save
   prels.relations().push_back( LHCb::PackedRelation() );
@@ -182,8 +187,9 @@ PackParticlesAndVertices::packAP2PRelationContainer ( const RELATION* rels,
 //=========================================================================
 template < typename RELATION >
 inline void
-PackParticlesAndVertices::packAP2PRelationContainer ( const RELATION* rels,
-                                                      LHCb::PackedWeightedRelations& prels )
+PackParticlesAndVertices::
+packAP2PRelationContainer ( const RELATION* rels,
+                            LHCb::PackedWeightedRelations& prels ) const
 {
   // Make a new packed data object and save
   prels.relations().push_back( LHCb::PackedRelation() );
@@ -224,8 +230,9 @@ PackParticlesAndVertices::packAP2PRelationContainer ( const RELATION* rels,
 //=========================================================================
 template < typename RELATION >
 inline void
-PackParticlesAndVertices::packAP2IntRelationContainer ( const RELATION* rels,
-                                                        LHCb::PackedRelations& prels )
+PackParticlesAndVertices::
+packAP2IntRelationContainer ( const RELATION* rels,
+                              LHCb::PackedRelations& prels ) const
 {
   // Make a new packed data object and save
   prels.relations().push_back( LHCb::PackedRelation() );
@@ -255,6 +262,22 @@ PackParticlesAndVertices::packAP2IntRelationContainer ( const RELATION* rels,
 
   // Clear the registry address of the unpacked container, to prevent reloading
   if ( !m_deleteInput ) rels->registry()->setAddress( 0 );
+}
+
+//==============================================================================
+// TES if a TES location is veto'ed
+//==============================================================================
+inline bool PackParticlesAndVertices::isVetoed( const std::string& id ) const
+{
+  const bool vetoed = ( std::find( m_vetoedConts.begin(),
+                                   m_vetoedConts.end(),
+                                   id ) != m_vetoedConts.end() );
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    if ( vetoed ) { debug() << "  --> VETO'ed  ... " << id << endmsg; }
+    else          { debug() << "  --> Selected ... " << id << endmsg; }
+  }
+  return vetoed;
 }
 
 #endif // PACKPARTICLESANDVERTICES_H

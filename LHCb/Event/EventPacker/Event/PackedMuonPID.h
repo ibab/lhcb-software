@@ -145,7 +145,7 @@ namespace LHCb
   public:
 
     /// Default Constructor
-    MuonPIDPacker( GaudiAlgorithm & p ) : m_pack(&p) {}
+    MuonPIDPacker( const GaudiAlgorithm & p ) : m_pack(&p) {}
 
   public:
 
@@ -179,7 +179,7 @@ namespace LHCb
   private:
 
     /// Access the parent algorithm
-    GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
+    const GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
 
     /// Check if the given packing version is supported
     bool isSupportedVer( const char& ver ) const

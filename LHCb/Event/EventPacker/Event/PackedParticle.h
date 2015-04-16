@@ -216,7 +216,7 @@ namespace LHCb
   public:
 
     /// Default Constructor
-    ParticlePacker( GaudiAlgorithm & p ) : m_pack(&p) {}
+    ParticlePacker( const GaudiAlgorithm & p ) : m_pack(&p) {}
 
   public:
 
@@ -250,7 +250,7 @@ namespace LHCb
   private:
 
     /// Access the parent algorithm
-    GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
+    const GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
 
     /// Safe sqrt ...
     inline double safe_sqrt( const double x ) const

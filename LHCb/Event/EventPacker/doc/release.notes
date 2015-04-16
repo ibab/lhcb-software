@@ -4,6 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2015-04-16 - Chris Jones
+ - Update PackParticlesAndVertices to only need to traverse the TES once per
+   event to find the data objects to pack.
+
 ! 2015-04-13 - Chris Jones
  - Add support for packed Weighted Relations.
  - Update PackParticlesAndVertices to search for and pack weighted

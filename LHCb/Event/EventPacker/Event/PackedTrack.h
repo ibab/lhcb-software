@@ -212,7 +212,7 @@ namespace LHCb
   public:
 
     /// Default Constructor
-    TrackPacker( GaudiAlgorithm & p ) : m_pack(&p) { resetWrappingCounts(); }
+    TrackPacker( const GaudiAlgorithm & p ) : m_pack(&p) { resetWrappingCounts(); }
 
   public:
 
@@ -259,7 +259,7 @@ namespace LHCb
   private:
 
     /// Access the parent algorithm
-    inline GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
+    inline const GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
 
     /// Safe sqrt ...
     inline double safe_sqrt( const double x ) const

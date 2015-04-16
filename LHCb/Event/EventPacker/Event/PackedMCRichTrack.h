@@ -136,7 +136,7 @@ namespace LHCb
   public:
 
     /// Constructor
-    MCRichTrackPacker( GaudiAlgorithm & p ) : m_pack(&p) {}
+    MCRichTrackPacker( const GaudiAlgorithm & p ) : m_pack(&p) {}
 
   public:
 
@@ -155,7 +155,7 @@ namespace LHCb
   private:
 
     /// Access the parent algorithm
-    GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
+    const GaudiAlgorithm& parent() const { return *(m_pack.parent()); }
 
   private:
 
