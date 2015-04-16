@@ -135,11 +135,29 @@ class SingleTFElectronVHighPtFilter(Hlt2ParticleFilter):
         inputs = [BiKalmanFittedElectronsFromL0]
         Hlt2ParticleFilter.__init__(self,name, code, inputs, dependencies = [DecodeL0CALO])
 
+class TauTrkFilter(Hlt2ParticleFilter):
+    def __init__(self,  name,  inputs):
+        #any extra cuts for single tau
+        code = "(PT > %(trk_PT)s) & (TRCHI2DOF < %(trk_TRCHI2DOF_MAX)s)"
+        Hlt2ParticleFilter.__init__(self, name, code, inputs, shared=True)
+
 class SingleTauFilter(Hlt2ParticleFilter):
     def __init__(self,  name, n, inputs):
         #any extra cuts for single tau
         code = "(PT > %(PT)s)"
         Hlt2ParticleFilter.__init__(self, name, code, inputs)
+
+class TauRhoCombiner(Hlt2Combiner):
+    """
+    Combiner to make rhos for use in tau
+    """
+    def __init__(self, name, inputs):
+        decay = "rho(770)0 -> pi+ pi-"
+        cc = "(AMINCHILD(PT,ISBASIC)>%(PI_PT_MIN)s)"
+        mc = "(M>%(RHO_M_MIN)s) & (M<%(RHO_M_MAX)s) & (PT>%(RHO_PT_MIN)s)"
+
+        from HltTracking.HltPVs import PV3D
+        Hlt2Combiner.__init__(self, name, decay, inputs, shared = True, dependencies = [PV3D('Hlt2')], CombinationCut = cc, MotherCut = mc)
 
 class HighPTTauCombiner(Hlt2Combiner):
     """
@@ -147,13 +165,13 @@ class HighPTTauCombiner(Hlt2Combiner):
     """
     def __init__(self, name, n, inputs):
         decays = [
-            ["[tau- -> pi- pi+ pi-]cc"
+            ["[tau- -> rho(770)0 pi-]cc"
              ],
             ["[tau- -> pi- pi0]cc"
              ]
             ]
         cc = [
-            "(APT>%(sumPT)s) & (AMAXDOCA('')<%(DOCA_MAX)s) & (AMINCHILD(PT)> %(childPT)s) &(AMAXCHILD(PT)>%(maxchildPT)s)",
+            "(APT>%(sumPT)s) & (AMAXDOCA('')<%(DOCA_MAX)s) & (AMINCHILD(PT,ISBASIC)> %(childPT)s) &(AMAXCHILD(PT,ISBASIC)>%(maxchildPT)s)",
             "(APT>%(sumPT)s) & (AMINCHILD(PT)> %(childPT)s) & (AMAXCHILD(PT)>%(maxchildPT)s)"]
         mc = [
             "(PT>%(PT)s) & (BPVVDCHI2 > %(FDCHI2_MIN)s) & (VFASPF(VCHI2/VDOF)<%(VCHI2_NDOF_MAX)s) & (BPVVDR > %(FDT_MIN)s) & (BPVCORRM>%(CORRM_MIN)s) & (BPVCORRM<%(CORRM_MAX)s)",
@@ -166,3 +184,5 @@ class HighPTTauCombiner(Hlt2Combiner):
 
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name, decays[n], inputs, shared = True, dependencies = [PV3D('Hlt2')], CombinationCut = cc[n], MotherCut = mc[n], **kwargs)
+
+
