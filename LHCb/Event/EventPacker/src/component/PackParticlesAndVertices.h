@@ -71,7 +71,7 @@ private:
 
 private:
 
-  /// test if a TES container is Veto'ed from being packed
+  /// Test if a TES container is Veto'ed from being packed
   bool isVetoed( const std::string& id ) const;
   
   /// Build the CLassID to TES location(s) map
@@ -265,7 +265,7 @@ packAP2IntRelationContainer ( const RELATION* rels,
 }
 
 //==============================================================================
-// TES if a TES location is veto'ed
+// Test if a TES location is veto'ed
 //==============================================================================
 inline bool PackParticlesAndVertices::isVetoed( const std::string& id ) const
 {

@@ -435,18 +435,21 @@ StatusCode PackParticlesAndVertices::execute()
   //==============================================================================
   // Remove the converted containers if requested
   //==============================================================================
+
   if ( m_deleteInput )
   {
-    for ( auto * it : toBeDeleted )
+    StatusCode sc = StatusCode::SUCCESS;
+    for ( auto *& it : toBeDeleted )
     {
-      const StatusCode sc = evtSvc()->unregisterObject( it );
-      if ( sc.isSuccess() ) { delete it; it = NULL; }
-      else
-      {
-        Error( "Failed to delete input data as requested", sc ).ignore();
-      }
+      const StatusCode ssc = evtSvc()->unregisterObject( it );
+      if ( ssc.isSuccess() ) { delete it; it = NULL; }
+      sc = sc && ssc;
     }
+    if ( sc.isFailure() ) 
+    { return Error( "Failed to delete input data as requested", sc ); }
   }
+
+  //==============================================================================
 
   if ( msgLevel( MSG::DEBUG ) ) { debug() << "Finished..." << endmsg; }
   return StatusCode::SUCCESS;
@@ -458,24 +461,33 @@ StatusCode PackParticlesAndVertices::execute()
 void PackParticlesAndVertices::buildTESMap( const DataObject* obj,
                                             ClassIDTESMap& tesmap ) const
 {
+  // Find any data leaves for this location
   SmartIF<IDataManagerSvc> mgr( eventSvc() );
   Leaves leaves;
   StatusCode sc = mgr->objectLeaves( obj, leaves );
-  if ( sc )
+  if ( sc.isSuccess() )
   {
+    // loop over the found leaves
     for ( const auto& leaf : leaves )
     {
-      const std::string& id = leaf->identifier();
+      // TES location identifier
+      const std::string & id = leaf->identifier();
+      // load the object
       DataObject* tmp(NULL);
       sc = eventSvc()->findObject( id, tmp );
-      if ( sc && NULL != tmp )
+      // if found process it
+      if ( sc.isSuccess() && NULL != tmp )
       {
-        if ( msgLevel(MSG::DEBUG) )
-          debug() << "Found '" << id << "' ClassID=" << tmp->clID()
-                  << " Type='" << System::typeinfoName( typeid(*tmp) )
-                  << endmsg;
-        // Save in the map if not veto'ed
-        if ( !isVetoed(id) ) { tesmap[tmp->clID()].push_back( id ); }
+        // If not a data node, save in the map
+        if ( tmp->clID() != CLID_DataObject )
+        {
+          if ( msgLevel(MSG::DEBUG) )
+            debug() << "Found '" << id << "' ClassID=" << tmp->clID()
+                    << " Type='" << System::typeinfoName( typeid(*tmp) )
+                    << endmsg;
+          // Save in the map if not veto'ed
+          if ( !isVetoed(id) ) { tesmap[tmp->clID()].push_back( id ); }
+        }
         // recurse down the tree
         buildTESMap( tmp, tesmap );
       }
