@@ -86,7 +86,7 @@ void VTable::makePopUp() {
 //_____________________________________________________________________________
 
 void VTable::addButtons() {
-  QPushButton * popout = new QPushButton(QIcon("popoutIcon.png"), "", this);
+  QPushButton * popout = new QPushButton(QIcon(":/popoutIcon.png"), "", this);
   m_layout->addWidget(popout,m_layout->rowCount()+1,1,1,1);
   connect(popout, SIGNAL(clicked()), this, SLOT(makePopUp()));
   popout->setStyleSheet("background: lightGrey");

@@ -133,19 +133,19 @@ void VCustomPlot::addPlotButtons() {
 
 
     if (!m_isPopUp) {
-    QPushButton * popout = new QPushButton(QIcon("../QtAssets/popoutIcon.png"), "", this);
+    QPushButton * popout = new QPushButton(QIcon(":/popoutIcon.png"), "", this);
     l->addWidget(popout, 4,1,1,1);
     connect(popout, SIGNAL(clicked()), this, SLOT(popoutClicked()));
     popout->setStyleSheet("background: lightGrey");
 
-    QPushButton * ref = new QPushButton(QIcon("../QtAssets/refreshIcon.png"), "", this);
+    QPushButton * ref = new QPushButton(QIcon(":/refreshIcon.png"), "", this);
     l->addWidget(ref, 5,1,1,1);
     connect(ref, SIGNAL(clicked()), this, SLOT(refreshClicked()));
     ref->setStyleSheet("background: lightGrey");
     }
 
     else {
-    QPushButton * ref = new QPushButton(QIcon("../QtAssets/refreshIcon.png"), "", this);
+    QPushButton * ref = new QPushButton(QIcon(":/refreshIcon.png"), "", this);
     l->addWidget(ref, 4,1,1,1);
     connect(ref, SIGNAL(clicked()), this, SLOT(popoutRefreshClicked()));
     ref->setStyleSheet("background: lightGrey");

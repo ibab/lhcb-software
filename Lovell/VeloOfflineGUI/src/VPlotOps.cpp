@@ -31,11 +31,11 @@ VPlotOps::VPlotOps(QGroupBox * opsHolder, std::string * dataDir) {
   b_logz->setChecked(false);
   l->addWidget(b_logz, 1, 2, 1, 1);
 
-  b_popout = new QPushButton(QIcon("$VELOOFFLINEGUIROOT/QtAssets/popoutIcon.png"), "");
+  b_popout = new QPushButton(QIcon(":/popoutIcon.png"), "");
   l->addWidget(b_popout, 2,0,1,1);
   b_popout->setStyleSheet("background: lightGrey");
 
-  b_ref = new QPushButton(QIcon("$VELOOFFLINEGUIROOT/QtAssets/refreshIcon.png"), "");
+  b_ref = new QPushButton(QIcon(":/refreshIcon.png"), "");
   l->addWidget(b_ref, 2,1,1,1);
   b_ref->setStyleSheet("background: lightGrey");
 

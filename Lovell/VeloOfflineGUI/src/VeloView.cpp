@@ -42,7 +42,7 @@ veloview::veloview(int runMode, std::vector<std::string> * ops, QWidget *parent)
 
   if (m_runMode == 3) setContent();
   else if (m_runMode == 0) {
-    QPixmap plogo(QString("Logos/veloLogo.png"));
+    QPixmap plogo(QString(":/Logos/veloLogo.png"));
     ui->m_logo->setPixmap(plogo);
   }
 }

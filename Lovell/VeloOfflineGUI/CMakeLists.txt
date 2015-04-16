@@ -16,7 +16,9 @@ QT4_WRAP_CPP(MOCS ${HRDS})
 QT4_WRAP_UI(UIS_HDRS src/VeloView.ui)
 add_custom_target(GenUIHeaders DEPENDS ${UIS_HDRS})
 
-gaudi_add_executable(VeloOfflineGUI src/*.cpp ${MOCS}
+QT4_ADD_RESOURCES(RC_SRCS QtAssets/Resources.qrc)
+
+gaudi_add_executable(VeloOfflineGUI src/*.cpp ${MOCS} ${RC_SRCS}
                      INCLUDE_DIRS VeloAnalysisFramework Qt ROOT
                      LINK_LIBRARIES Qt ROOT)
 

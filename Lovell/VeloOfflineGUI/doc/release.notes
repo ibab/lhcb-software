@@ -4,6 +4,9 @@
 ! Purpose     : Offline GUI for analysis of VELO data
 !----------------------------------------------------------------------------
 
+! 2015-04-16 - Alex Pearce
+ - Fix image resources not appearing
+
 !====================== VeloOfflineGUI v1r2 2015-03-18 ======================
 ! 2015-03-18 - Alex Pearce
  - Tweak setting of --run-data-dir option
