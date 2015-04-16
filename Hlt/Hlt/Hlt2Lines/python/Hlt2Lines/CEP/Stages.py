@@ -62,6 +62,7 @@ class PhotonCombiner(Hlt2Combiner):
         mc = ("( (M > %(digamma_AMmin)s) & (M < %(digamma_AMmax)s) )")
         Hlt2Combiner.__init__(self, name, decay, inputs,
                               dependencies = [TrackGEC(name)],
+                              ParticleCombiners={ '' : 'ParticleAdder'},
                               MotherCut = mc );
 
 # The class that creates the hadronic Hlt2Combiners
@@ -297,7 +298,7 @@ class LowMultMuonFilter(Hlt2ParticleFilter):
 ##############################
 class LowMultDiPhotonFilter(PhotonCombiner):
     def __init__(self, name):
-        decay = "[chi_c1(1P) -> gamma gamma]"
+        decay = "chi_c1(1P) -> gamma gamma"
         from Inputs import Hlt2LoosePhotons
         inputs = [Hlt2LoosePhotons]
         PhotonCombiner.__init__(self,name,decay,inputs)
