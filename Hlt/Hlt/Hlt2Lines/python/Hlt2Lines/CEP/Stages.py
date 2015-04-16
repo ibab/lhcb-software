@@ -289,8 +289,8 @@ class LowMultMuonFilter(Hlt2ParticleFilter):
 class LowMultPhotonFilter(Hlt2ParticleFilter):
     def __init__(self, name):
         cut = "(PT > %(gamma_PTmin)s)"
-        from Inputs import MergedPi0sFromL0, ResolvedPi0sFromL0, BiKalmanFittedPhotonsFromL0Low
-        inputs = [MergedPi0sFromL0, ResolvedPi0sFromL0, BiKalmanFittedPhotonsFromL0Low]
+        from Inputs import MergedPi0s, ResolvedPi0s, BiKalmanFittedPhotonsFromL0Low
+        inputs = [MergedPi0s, ResolvedPi0s, BiKalmanFittedPhotonsFromL0Low]
         Hlt2ParticleFilter.__init__(self, name, cut, inputs, dependencies = [DecodeL0CALO])
 
 ##############################

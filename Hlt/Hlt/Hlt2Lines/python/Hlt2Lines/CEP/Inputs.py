@@ -7,4 +7,4 @@ from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectron
 # Photons
 from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPhotons     as Hlt2LoosePhotons
 from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPhotonsFromL0Low
-from Hlt2SharedParticles.Pi0 import MergedPi0sFromL0,ResolvedPi0sFromL0,AllPi0sFromL0
+from Hlt2SharedParticles.Pi0 import MergedPi0s,ResolvedPi0s
