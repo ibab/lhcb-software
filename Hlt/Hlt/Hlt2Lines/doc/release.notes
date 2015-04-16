@@ -8,6 +8,12 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-16 - Olli Lupton
+  - PID
+   . Make Sc0 and Sc++ lines share their combiners so the Turbo copies
+     don't re-do the combinatorics.
+   . Tweak default cuts for L0 and Phi->MuMu lines.
+
 ! 2015-04-16 - Mike Sokoloff
   - Added D*+ --> D0,pi+;  D0 --> HHKs lines for each of the D0 --> HHKs lines
     All new code lives in D2HHKsLines.py

@@ -35,7 +35,7 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                 'LambdaMWindow' : 25 * MeV,
                                 'LambdaVChi2'   : 16,
                                 'LambdaVDChi2'  : 50,
-                                'LambdaKsVeto'  : 0 * MeV,
+                                'LambdaKsVeto'  : 20 * MeV,
                                 'LambdaLLTau'   : 2.0 * ps,
                                 'LambdaDDBPVVDZ': 400 * mm
                                 },
@@ -116,8 +116,8 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                 'LLhVDChi2'     : 25,
                                 'LLhMaxIPChi2'  : 25,
                                 'DetLLVChi2'    : 25,
-                                'DetLLPt'       : 0 * GeV,
-                                'DetLLVDChi2'   : 25},
+                                'DetLLPt'       : 2.0 * GeV,
+                                'DetLLVDChi2'   : 30},
                  'Lb2LcMuNu' : {'LLhCombMLow'   : (0) * MeV,
                                 'LLhCombMHigh'  : (5620 + 400) * MeV,
                                 'LLhVChi2'      : 25,
@@ -234,10 +234,11 @@ class PIDLines(Hlt2LinesConfigurableUser):
               'Lambda2PPiLLisMuon'    : [ LambdaCombiner('Lambda2PPiLLisMuon', [ NoPIDsProtons, FilteredPions ], ismuon = True, ll = True) ],
               'Lambda2PPiDDisMuon'    : [ LambdaCombiner('Lambda2PPiDDisMuon', [ NoPIDsDownProtons, FilteredDownPions ], ismuon = True, ll = False ) ],
               'Lb2LcPi'               : [ BCombiner('Lb2LcPi', [ Lc2KPPi, FilteredPions ], decay = '[Lambda_b0 -> Lambda_c+ pi-]cc') ],
-              'Sc02LcPi'              : [ TagDecay('Sc02LcPi', "[Sigma_c0 -> Lambda_c+ pi-]cc", inputs = [ Lc2KPPi, SharedSoftPions ],
-                                            DaughtersCuts = { "Lambda_c+" : "(BPVDIRA > %(BPVDIRA_MIN)s )" }, nickname = 'Sc2LcPi') ],
-              'Scpp2LcPi'             : [ TagDecay('Scpp2LcPi', "[Sigma_c++ -> Lambda_c+ pi+]cc", inputs = [ Lc2KPPi, SharedSoftPions ],
-                                            DaughtersCuts = { "Lambda_c+" : "(BPVDIRA > %(BPVDIRA_MIN)s )" }, nickname = 'Sc2LcPi') ]
+              # These next two need shared=True so the Turbo versions don't re-do the combination
+              'Sc02LcPi'              : [ TagDecay('PIDSc02LcPi', "[Sigma_c0 -> Lambda_c+ pi-]cc", inputs = [ Lc2KPPi, SharedSoftPions ],
+                                            DaughtersCuts = { "Lambda_c+" : "(BPVDIRA > %(BPVDIRA_MIN)s )" }, nickname = 'Sc2LcPi', shared = True) ],
+              'Scpp2LcPi'             : [ TagDecay('PIDScpp2LcPi', "[Sigma_c++ -> Lambda_c+ pi+]cc", inputs = [ Lc2KPPi, SharedSoftPions ],
+                                            DaughtersCuts = { "Lambda_c+" : "(BPVDIRA > %(BPVDIRA_MIN)s )" }, nickname = 'Sc2LcPi', shared = True) ]
               }
             }
         
