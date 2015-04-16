@@ -134,7 +134,8 @@ class CombineNBody(Hlt2Combiner):
               "& (AM < %(CMB_VRT_MCOR_MAX)s) "
               "& (ACUTDOCACHI2(%(CMB_VRT_CHI2_MAX)s, '')) "
               "& (AALLSAMEBPV | (AMINCHILD(MIPCHI2DV(PRIMARY)) > 16)) "
-              "& (ANUM(ISBASIC & (MIPCHI2DV(PRIMARY) < 16)) <"
+              "& (ACHILD(NINTREE(ISBASIC & (MIPCHI2DV(PRIMARY) < 16)), 1)"
+              " + ANUM(ISBASIC & (MIPCHI2DV(PRIMARY) < 16)) <"
               " %(CMB_TRK_NLT16_MAX)s)")
         mc = ("(HASVERTEX) "
               "& (VFASPF(VCHI2) < %(CMB_VRT_CHI2_MAX)s) "
