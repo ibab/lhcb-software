@@ -302,14 +302,3 @@ class LowMultElectronFilter(ElectronCombiner):
         from Inputs import Hlt2LooseElectrons
         inputs  = [Hlt2LooseElectrons]
         ElectronCombiner.__init__(self,name,decay,inputs)
-
-##############################
-# TECHINCAL FILTERS
-##############################
-class LowMultNonBeamBeamNoBiasFilter(Hlt2ParticleFilter):
-    def __init__(self, name):
-        cut = "ALL"
-        inputs = [MergedPi0s, ResolvedPi0s, BiKalmanFittedPhotonsFromL0Low]
-        Hlt2ParticleFilter.__init__(self, name, cut, inputs, dependencies = [DecodeL0CALO])
-
-LowMultNonBeamBeamNoBiasFilter
