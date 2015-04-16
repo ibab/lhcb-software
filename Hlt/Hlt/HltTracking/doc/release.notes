@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-04-16 - Sascha Stahl
+ - Hlt2Tracking: Remove CaloProcessor instance from hlt2ChargedAllPIDsProtos.
+   Adding of pid information is configured by hand.
+
+! 2015-04-16 - Sascha Stahl
  - Split up the tracks according to type after the clone killing.
 
 ! 2015-04-14 - Sascha Stahl
