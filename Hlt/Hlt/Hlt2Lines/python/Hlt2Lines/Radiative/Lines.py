@@ -9,6 +9,7 @@
 
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
+from GaudiKernel.SystemOfUnits import MeV
 
 from B2XGamma import B2XGammaLines
 from B2XGammaUnbiased import B2XGammaUnbiasedLines
@@ -18,6 +19,8 @@ from Lb2L0Gamma import Lb2L0GammaLines
 cuts = {'Common': {'TrackTisTos' : 'Hlt1(Two)?TrackMVADecision%TOS',
                    'PhotonTisTos': 'L0(Photon|Electron).*Decision%TOS',
                    'NTRACK_MAX'  : 300},
+        # Calo photons
+        'CaloPhotons': {'PT_MIN': 200*MeV},
         # Converted photons
         'ConvLL': {'ee_Mass' : 50.0,
                    'ee_P'    : 5000.0,

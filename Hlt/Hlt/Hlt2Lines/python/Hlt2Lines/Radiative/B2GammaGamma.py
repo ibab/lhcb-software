@@ -15,7 +15,7 @@ class B2GammaGammaLines(RadiativeLineBuilder):
     def get_stages(_):
         from Stages import TrackGEC
         from Stages import CALOPhotonFilter, ConvPhotonFilter
-        from Stages import PhotonFilter, ConvPhotonLL, ConvPhotonDD
+        from Stages import ConvPhotonLL, ConvPhotonDD
         from Stages import B2GammaGammaCombiner
         from HltTracking.HltPVs import PV3D
 

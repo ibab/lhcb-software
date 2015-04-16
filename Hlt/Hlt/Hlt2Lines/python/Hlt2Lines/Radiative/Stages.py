@@ -79,15 +79,24 @@ class ParticleFilter(Hlt2ParticleFilter):
 
 
 # Filter calo photons
-class PhotonFilter(Hlt2TisTosParticleTagger):
-    """Filter photons according to the TISSTOS specs."""
+class PhotonFilter(Hlt2ParticleFilter):
+    """Filter photons according to their pt."""
     def __init__(self):
         from Inputs import Hlt2Photons
-        super(PhotonFilter, self).__init__('RadiativeL0Photons',
-                                           'PhotonTisTos',
+        super(PhotonFilter, self).__init__('RadiativeHighPtPhotons',
+                                           '(PT > %(PT_MIN)s)',
                                            [Hlt2Photons],
+                                           nickname='CaloPhotons',
                                            shared=True)
 
+
+class PhotonTOSFilter(Hlt2TisTosParticleTagger):
+    """Filter photons according to the TISSTOS specs."""
+    def __init__(self):
+        super(PhotonTOSFilter, self).__init__('RadiativeL0Photons',
+                                              'PhotonTisTos',
+                                              [PhotonFilter()],
+                                              shared=True)
 
 # CALO photons builder (some cuts needed on non-converted photons only,
 # before pairing with converted counterparts
@@ -157,7 +166,8 @@ class HHCombiner(Hlt2Combiner):
 class Lambda0Filter(Hlt2ParticleFilter):
     """Filter L0."""
     def __init__(self, name, inputs):
-        lambda0_cut = """(DOCA(1,2) < %(DOCA_MAX)s) &
+        lambda0_cut = """(MIPDV(PRIMARY) > %(IP_MIN)s) &
+                         (DOCA(1,2) < %(DOCA_MAX)s) &
                          (BPVVDCHI2>0) &
                          (VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s) &
                          (PT > %(PT_MIN)s) &
@@ -166,8 +176,7 @@ class Lambda0Filter(Hlt2ParticleFilter):
                                        (PT > %(TRACK_PT_MIN)s) &
                                        (TRCHI2DOF < %(TRACK_TRCHI2DOF_MAX)s) &
                                        (MIPCHI2DV(PRIMARY) > %(TRACK_IPCHI2_MIN)s))) &
-                         INTREE((ABSID=='p+') & (PIDp > %(P_PIDP_MIN)s)) &
-                         (MIPDV(PRIMARY) > %(IP_MIN)s)"""
+                         INTREE((ABSID=='p+') & (PIDp > %(P_PIDP_MIN)s))"""
         super(Lambda0Filter, self).__init__('RadiativeLambda0Filter_%s' % name,
                                             lambda0_cut,
                                             inputs,
@@ -181,7 +190,7 @@ class RadiativeCombiner(Hlt2Combiner):
         if converted_photons:
             photons = [ConvPhotonAll()]
         else:
-            photons = [PhotonFilter()]
+            photons = [PhotonTOSFilter()]
         super(RadiativeCombiner, self).__init__('RadiativeCombiner_%s' % name,
                                                 decay,
                                                 inputs+photons,
@@ -235,7 +244,7 @@ class Lb2L0GammaCombiner(RadiativeCombiner):
 
     """
     def __init__(self, name, decay, lambda0):
-        mother_cut = "(MTDOCACHI2(1) < %(MTDOCACHI2_MAX)s)"
+        mother_cut = "(PT > %(PT_MIN)s) & (MTDOCACHI2(1) < %(MTDOCACHI2_MAX)s)"
         comb_cut = """(ASUM(PT) > %(SUM_PT_MIN)s) &
                       (APT > %(PT_MIN)s) &
                       (ADAMASS('Lambda_b0') < %(MASS_WIN)s)"""

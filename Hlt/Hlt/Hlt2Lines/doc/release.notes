@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-16 - Albert Puig
+  - Add inclusive radiative and converted photons lines
+
 ! 2015-04-16 - Andrea Contu
   - Added new multibody RareCharm lines to include dielectron e LFV modes
 
