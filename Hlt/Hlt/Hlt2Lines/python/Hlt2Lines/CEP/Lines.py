@@ -115,5 +115,6 @@ class CEPLines(Hlt2LinesConfigurableUser) :
         Hlt2Line("LowMultNonBeamBeamNoBias", prescale = self.prescale,
                  HLT1 = self.getProp('HLT')["TechnicalNoBias"])
         Hlt2Line("LowMultNonBeamBeamMinActivity", prescale = self.prescale,
+                 HLT1 = self.getProp('HLT')["TechnicalNoBias"],
                  L0DU = self.getProp('TechnicalMinBias_L0')["ALL"])
         
