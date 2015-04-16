@@ -66,7 +66,7 @@ class DPSLines(Hlt2LinesConfigurableUser) :
             from Hlt2Lines.CharmHad.Lines import CharmHadLines as Charm
             charm = Charm  ()
             
-            D0  = charm.stages ( 'D02KPiWideMass' ) [0] ## Wide mass here!!!
+            D0  = charm.stages ( 'D02KPi'         ) [0] ## Wide mass here!!!
             D   = charm.stages ( 'D2KPiPi_SS'     ) [0]
             Ds  = charm.stages ( 'D2KKPi_OS'      ) [0]
             Lc  = charm.stages ( 'Lc2KPPi'        ) [0]

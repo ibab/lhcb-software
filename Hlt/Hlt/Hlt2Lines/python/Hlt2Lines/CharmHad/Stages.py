@@ -144,7 +144,7 @@ SharedNoPIDDetachedChild_p = DetachedInParticleFilter( 'CharmHadSharedNoPIDDetac
 
 ## For detached D0 -> hh lines.  PID cuts not yet implemented.
 CharmHadSharedDetachedD0ToHHChildPi = DetachedInParticleFilter( 'CharmHadSharedDetachedD0ToHHChildPi', [Hlt2NoPIDsPions] )
-CharmHadSharedDetachedD0ToHHChildK  = DetachedInParticleFilter( 'CharmHadSharedDetachedD0ToHHChildK', [Hlt2NoPIDsKaons] )
+CharmHadSharedDetachedD0ToHHChildK  = DetachedInParticleFilter( 'CharmHadSharedDetachedD0ToHHChildK', [Hlt2LooseKaons], 'PIDK' )
 
 
 
@@ -281,8 +281,16 @@ class DetachedD02HHCombiner(Hlt2Combiner) : # {
     BPVVDCHI2 of the fitted vertex.
 
     Configuration dictionaries must contain the following keys:
-        'WideMass_M_MIN'
-        'WideMass_M_MAX'    : lower and upper limits on AM in CombinationCut
+        ## P.S. -- If filtered input particles are used, i would prefer that
+        ##         all filtering that applies to every charged input be done
+        ##         in those filters to prevent inadvertent configuration
+        ##         mismatches.
+        'Trk_ALL_PT_MIN'        :  lower limit on PT for all inputs
+        'Trk_ALL_P_MIN'         :  lower limit on P for all inputs
+        'Trk_ALL_MIPCHI2DV_MIN' :  lower limit on MIPCHI2DV(PRIMARY)
+
+        'Comb_AM_MIN'
+        'Comb_AM_MAX'       : lower and upper limits on AM in CombinationCut
         'Trk_Max_APT_MIN'   : lower limit on largest product PT (APT1 or APT2)
         'D0_PT_MIN'         : lower limit on APT in CombinationCut
         'Pair_AMINDOCA_MAX' : upper limit on AMINDOCA('') in CombinationCut
@@ -293,9 +301,13 @@ class DetachedD02HHCombiner(Hlt2Combiner) : # {
     """
     def __init__(self, name, decay, inputs, nickname = None, shared = False) : # {
         dc = { }
+        for child in ['pi+','K+','p+'] :
+            dc[child] = "(PT > %(Trk_ALL_PT_MIN)s)" \
+                        "& (P > %(Trk_ALL_P_MIN)s)" \
+                        "& (MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)"
 
         ## Assume that the wide mass range is wider than the narrow range.
-        combcuts = "in_range(%(WideMass_M_MIN)s,  AM, %(WideMass_M_MAX)s)" \
+        combcuts = "in_range(%(Comb_AM_MIN)s,  AM, %(Comb_AM_MAX)s)" \
                    "& ((APT1 > %(Trk_Max_APT_MIN)s) " \
                        "| (APT2 > %(Trk_Max_APT_MIN)s))" \
                    "& (APT > %(D0_PT_MIN)s)" \
@@ -326,17 +338,17 @@ class DetachedD02HHCombiner(Hlt2Combiner) : # {
 ## Shared instances of DetachedD02HHCombiner
 ## ------------------------------------------------------------------------- ##
 
-D02HH_D0ToKmPipWideMass  = DetachedD02HHCombiner( 'D02HH_D0ToKmPip'
+D02HH_D0ToKmPip  = DetachedD02HHCombiner( 'D02HH_D0ToKmPip'
         , decay = "[D0 -> K- pi+]cc"
         , inputs = [ CharmHadSharedDetachedD0ToHHChildPi, CharmHadSharedDetachedD0ToHHChildK ]
         , nickname = 'D02HH'            ## def in D02HHLines.py
         , shared = True )
-D02HH_D0ToKmKpWideMass   = DetachedD02HHCombiner( 'D02HH_D0ToKmKp'
+D02HH_D0ToKmKp   = DetachedD02HHCombiner( 'D02HH_D0ToKmKp'
         , decay = "D0 -> K- K+"         ## Only D0s to prevent duplication
         , inputs = [ CharmHadSharedDetachedD0ToHHChildK ]
         , nickname = 'D02HH'            ## def in D02HHLines.py
         , shared = True )
-D02HH_D0ToPimPipWideMass = DetachedD02HHCombiner( 'D02HH_D0ToPimPip'
+D02HH_D0ToPimPip = DetachedD02HHCombiner( 'D02HH_D0ToPimPip'
         , decay = "D0 -> pi- pi+"       ## Only D0s to prevent duplication
         , inputs = [ CharmHadSharedDetachedD0ToHHChildPi ]
         , nickname = 'D02HH'            ## def in D02HHLines.py

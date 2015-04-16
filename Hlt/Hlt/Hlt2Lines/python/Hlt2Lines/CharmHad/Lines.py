@@ -73,7 +73,8 @@ theseslots = {   'Prescale' : {},
                                  , 'Trk_ALL_MIPCHI2DV_MIN'    :  2.0
                                               },
                  'CharmHadSharedDetachedD0ToHHChildK'  : {
-                                 'Trk_ALL_PT_MIN'           :  800.0 * MeV
+                                   'PID_LIM'                  :  0.0
+                                 , 'Trk_ALL_PT_MIN'           :  800.0 * MeV
                                  , 'Trk_ALL_P_MIN'            :  5.0  * GeV
                                  , 'Trk_ALL_MIPCHI2DV_MIN'    :  2.0
                                               },

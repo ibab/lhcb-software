@@ -8,6 +8,24 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-16 - Patrick Spradlin
+  - Updates to D02HHLines.py
+    . Allow PID cuts for kaons:
+      . CharmHad/Stages.py:  changed input kaon list to Hlt2LooseKaons and
+        enabled cuts on PIDK
+      . CharmHad/Lines.py:  Added PID_LIM slot to dictionary
+        CharmHadSharedDetachedD0ToHHChildK
+    . Add DaughterCuts for P, PT, and MIPCHI2DV in DetachedD02HHCombiner.
+      This should be a temporary expedient.
+      . CharmHad/Stages.py:  change to combiner to implement the DaughterCuts
+      . CharmHad/D02HHLines.py:  Update to configuration dictionary with the
+        new keys.
+    . Removed the lines for the narrow mass window.  Rename the WideMass lines
+      to remove `WideMass'
+      . CharmHad/D02HHLines.py:  Deletion of narrow lines and change of the
+        line to remove WideMass.
+      . DPS/Lines.py:  Updated reference to the former D02KPiWideMass line.
+
 ! 2015-04-16 - Karlis Dreimanis
   - Updated 'EW' Stages.py and Lines.py.
     - Lines.py now include the required header
