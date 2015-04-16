@@ -8,6 +8,12 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-16 - Dan Johnson
+  - Added two "technical" lines to the CEP package: 
+    - pre-scaled 'no-bias' line running on Hlt1Lumi triggers
+    - pre-scaled 'min-bias' line running on Hlt1Lumi triggers with some minimum
+      L0 activity requirements
+
 ! 2015-04-16 - Michael Alexander
   - CharmHad/Hc2HHHHLines.py & CharmHad/Stages.py :
     - Changed the inputs of the detached Xic0->pKKpi line to the same as those
