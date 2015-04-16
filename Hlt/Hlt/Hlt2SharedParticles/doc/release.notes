@@ -4,6 +4,10 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+
+! 2015-04-16 - Sascha Stahl
+ - Fix last commit. Had unintentionally removed all pids from BiKalmanFittedChargedCaloProtoMaker.
+
 ! 2015-04-14 - Mika Vesterinen
  - Fix to previous commit where I forgot to remove some debug printout
 

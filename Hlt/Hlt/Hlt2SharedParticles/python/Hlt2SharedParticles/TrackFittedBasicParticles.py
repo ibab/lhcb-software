@@ -50,8 +50,8 @@ BiKalmanFittedChargedRichHadronProtoMaker 		= Hlt2BiKalmanFittedForwardTracking.
 #
 # electrons
 #
-BiKalmanFittedChargedCaloProtoMaker 			= Hlt2BiKalmanFittedForwardTracking.hlt2ChargedCaloProtos()
-#BiKalmanFittedChargedCaloProtoMaker 			= Hlt2BiKalmanFittedForwardTracking.hlt2ChargedAllPIDsProtos()
+#BiKalmanFittedChargedCaloProtoMaker 			= Hlt2BiKalmanFittedForwardTracking.hlt2ChargedCaloProtos()
+BiKalmanFittedChargedCaloProtoMaker 			= Hlt2BiKalmanFittedForwardTracking.hlt2ChargedAllPIDsProtos()
 BiKalmanFittedElectronFromL0Maker         = Hlt2BiKalmanFittedForwardTracking.hlt2ElectronsFromL0()
 BiKalmanFittedChargedCaloDownProtoMaker			= Hlt2BiKalmanFittedDownstreamTracking.hlt2ChargedCaloProtos()
 #BiKalmanFittedChargedCaloDownProtoMaker			= Hlt2BiKalmanFittedDownstreamTracking.hlt2ChargedAllPIDsProtos()
