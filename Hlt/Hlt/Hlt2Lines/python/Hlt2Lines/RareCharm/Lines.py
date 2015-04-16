@@ -35,7 +35,7 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                             #three body lines
                             ,'TrkPt_Hmumu'                 : 300.0 * MeV
                             ,'TrkP_Hmumu'                  : 3000.0 * MeV ## 1
-                            ,'TrkPVIPChi2_Hmumu'           : 0.0      # unitless
+                            ,'TrkPVIPChi2_Hmumu'           : 2.0      # unitless
                             ,'TrkPVIPChi2MAX_Hmumu'       : 17.0      #0 unitless
                             ,'TrkPtMAX_Hmumu'             : 0.0 * MeV
                             ,'TrkChi2_Hmumu'               : 4.0      # unitless
@@ -58,7 +58,7 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                             #four body lines
                             ,'TrkPt_HHmumu'                 : 300.0 * MeV
                             , 'TrkP_HHmumu'                  : 3000.0 * MeV
-                            , 'TrkPVIPChi2_HHmumu'           : 0.0      # unitless
+                            , 'TrkPVIPChi2_HHmumu'           : 2.0      # unitless
                             , 'TrkPVIPChi2MAX_HHmumu'           : 12.0      # !!unitless
                             , 'TrkPtMAX_HHmumu'                 : 0.0 * MeV
                             , 'TrkChi2_HHmumu'               : 4.0      # unitless
@@ -74,8 +74,11 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                             , 'Sig_M_MAX_HHmumu'                   : 1950.0 * MeV
                             , 'WideMass_M_MIN_HHmumu'              : 1700.0 * MeV
                             , 'WideMass_M_MAX_HHmumu'              : 2100.0 * MeV
+                            #for Lines with Electrons
+                            , 'VtxPVDispChi2_XeeORmue'         : 49.0     #  unitless
+                            , 'TrkPVIPChi2_XeeORmue'           : 3.0      # unitless
                             },
-                   'TwoMuonForD2MuMuX' : {
+                   'TwoMuonForD2XXH' : {
                               'Trk_PT_MIN_mumuX'                :  300.0 * MeV# 500.0 /300
                             , 'Trk_P_MIN_mumuX'                 : 3000.0 * MeV # 5000.0 /3000
                             , 'Trk_MIPCHI2DV_MIN_mumuX'         :    2.0      # 2.0 /0  unitless
@@ -85,7 +88,30 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                             , 'Pair_BPVVD_MIN_mumuX'            :    0.0 * mm
                             , 'Pair_SumAPT_MIN_mumuX'           : 0.0 * MeV
                             , 'Pair_BPVCORRM_MAX_mumuX'         : 3500.0 * MeV
+                              },
+                   'TwoElectronForD2XXH' : {
+                              'Trk_PT_MIN_eeX'                :  300.0 * MeV# 500.0 /300
+                            , 'Trk_P_MIN_eeX'                 : 3000.0 * MeV # 5000.0 /3000
+                            , 'Trk_MIPCHI2DV_MIN_eeX'         :    3.0      # 2.0 /0  unitless
+                            , 'Trk_TRCHI2DOF_MAX_eeX'         :    4.0      # unitless
+                            , 'Pair_AMINDOCA_MAX_eeX'         :    0.1 * mm
+                            , 'Pair_BPVVDCHI2_MIN_eeX'        :    20.0      # 0.0 unitless
+                            , 'Pair_BPVVD_MIN_eeX'            :    0.0 * mm
+                            , 'Pair_SumAPT_MIN_eeX'           : 0.0 * MeV
+                            , 'Pair_BPVCORRM_MAX_eeX'         : 3500.0 * MeV
+                              },
+                  'TwoMuElForD2XXH' : {
+                              'Trk_PT_MIN_mueX'                :  300.0 * MeV# 500.0 /300
+                            , 'Trk_P_MIN_mueX'                 : 3000.0 * MeV # 5000.0 /3000
+                            , 'Trk_MIPCHI2DV_MIN_mueX'         :    3.0      # 2.0 /0  unitless
+                            , 'Trk_TRCHI2DOF_MAX_mueX'         :    4.0      # unitless
+                            , 'Pair_AMINDOCA_MAX_mueX'         :    0.1 * mm
+                            , 'Pair_BPVVDCHI2_MIN_mueX'        :    20.0      # 0.0 unitless
+                            , 'Pair_BPVVD_MIN_mueX'            :    0.0 * mm
+                            , 'Pair_SumAPT_MIN_mueX'           : 0.0 * MeV
+                            , 'Pair_BPVCORRM_MAX_mueX'         : 3500.0 * MeV
                    }
+		   
                  }
     
     def stages(self, nickname=""):
@@ -100,45 +126,85 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                             D02kpiComb,
                             D02kmuComb,
                             D02emuComb,
-                            TwoMuonForD2MuMuX,
-                            InPartFilterHMuMu_Kaons,
-                            InPartFilterHMuMu_Pions,
-                            InPartFilterHMuMu_Protons,
-                            InPartFilterHHMuMu_Kaons,
-                            InPartFilterHHMuMu_Pions,
+                            TwoMuonForD2XXH,
+                            TwoElectronForD2XXH,
+                            TwoMuElForD2XXH,
+                            InPartFilterHXX_Kaons,
+                            InPartFilterHXX_Pions,
+                            InPartFilterHXX_Protons,
+                            InPartFilterHHXX_Kaons,
+                            InPartFilterHHXX_Pions,
                             D2PiMuMuComb,
                             D2KMuMuComb,
                             D2PiMuMuSSComb,
                             D2KMuMuSSComb,
+                            D2PieeComb,
+                            D2KeeComb,
+                            D2PiMueComb,
+                            D2KMueComb,
                             Lc2PMuMuComb,
                             Lc2PMuMuSSComb,
+                            Lc2PeeComb,
+                            Lc2PMueComb,
                             D02PiPiMuMuComb,
                             D02KKMuMuComb,
                             D02KPiMuMuComb,
+                            D02PiPieeComb,
+                            D02KKeeComb,
+                            D02KPieeComb,
+                            D02PiPiMueComb,
+                            D02KKMueComb,
+                            D02KPiMueComb,
+                            D02KPiMuMuSSComb,
                             D2PiMuMuFilter,
                             D2KMuMuFilter,
                             D2PiMuMuSSFilter,
                             D2KMuMuSSFilter,
+                            D2PieeFilter,
+                            D2KeeFilter,
+                            D2PiMueFilter,
+                            D2KMueFilter,
                             Lc2PMuMuFilter,
                             Lc2PMuMuSSFilter,
+                            Lc2PeeFilter,
+                            Lc2PMueFilter,
                             D02PiPiMuMuFilter,
                             D02KKMuMuFilter,
-                            D02KPiMuMuFilter)
+                            D02KPiMuMuFilter,
+                            D02PiPieeFilter,
+                            D02KKeeFilter,
+                            D02KPieeFilter,
+                            D02PiPiMueFilter,
+                            D02KKMueFilter,
+                            D02KPiMueFilter,
+                            D02KPiMuMuSSFilter)
         self._stages = { 'D02MuMu'   : [ D02mumuComb ],
-                         'D02PiPi'      : [ D02pipiComb ],
-                         'D02KPi'       : [ D02kpiComb ],
-                         'D02KMu'       : [ D02kmuComb ],
-                         'D02EMu'       : [ D02emuComb ],
-                         'D2PiMuMu'     : [ D2PiMuMuFilter ],
-                         'D2KMuMu'      : [ D2KMuMuFilter ],
-                         'D2PiMuMuSS'   : [ D2PiMuMuSSFilter ],
-                         'D2KMuMuSS'    : [ D2KMuMuSSFilter ],
-                         'Lc2PMuMu'     : [ Lc2PMuMuFilter ],
-                         'Lc2PMuMuSS'   : [ Lc2PMuMuSSFilter ],
-                         'D02PiPiMuMu'  : [ D02PiPiMuMuFilter ],
-                         'D02PiPiMuMu'  : [ D02PiPiMuMuFilter ],
-                         'D02KKMuMu'    : [ D02KKMuMuFilter ],
-                         'D02KPiMuMu'   : [ D02KPiMuMuFilter ]
+                   'D02PiPi'  :  [ D02pipiComb ],
+                   'D02KPi'  :  [ D02kpiComb ],
+                   'D02KMu'  :  [ D02kmuComb ],
+                   'D02EMu'  :  [ D02emuComb ],
+                   'D2PiMuMuFilter' : [ D2PiMuMuFilter ],
+                   'D2KMuMuFilter' : [ D2KMuMuFilter ],
+                   'D2PieeFilter' : [ D2PieeFilter ],
+                   'D2KeeFilter' : [ D2KeeFilter ],
+                   'D2PiMueFilter' : [ D2PiMueFilter ],
+                   'D2KMueFilter' : [ D2KMueFilter ],
+                   'D2PiMuMuSSFilter' : [ D2PiMuMuSSFilter ],
+                   'D2KMuMuSSFilter' : [ D2KMuMuSSFilter ],
+                   'Lc2PMuMuFilter' : [ Lc2PMuMuFilter ],
+                   'Lc2PMuMuSSFilter' : [ Lc2PMuMuSSFilter ],
+                   'Lc2PeeFilter' : [ Lc2PeeFilter ],
+                   'Lc2PMueFilter' : [ Lc2PMueFilter ],
+                   'D02PiPiMuMuFilter' : [ D02PiPiMuMuFilter ],
+                   'D02KKMuMuFilter' : [ D02KKMuMuFilter ],
+                   'D02KPiMuMuFilter' : [ D02KPiMuMuFilter ],
+                   'D02PiPieeFilter' : [ D02PiPieeFilter ],
+                   'D02KKeeFilter' : [ D02KKeeFilter ],
+                   'D02KPieeFilter' : [ D02KPieeFilter ],
+                   'D02PiPiMueFilter' : [ D02PiPiMueFilter ],
+                   'D02KKMueFilter' : [ D02KKMueFilter ],
+                   'D02KPiMueFilter' : [ D02KPiMueFilter ],
+                   'D02KPiMuMuSSFilter' : [ D02KPiMuMuSSFilter ],
                   }
         
         if nickname:

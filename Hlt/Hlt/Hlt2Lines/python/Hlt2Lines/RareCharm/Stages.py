@@ -87,7 +87,7 @@ D02emuComb   = D2xxCombiner("EMu", xplus = 'e', xminus = 'mu', version = "")
 
 
 #Dimuons both for three and four body
-class TwoMuonForD2MuMuXCombiner(Hlt2Combiner):
+class TwoMuonForD2XXHCombiner(Hlt2Combiner):
     def __init__(self, name):
         from HltTracking.HltPVs import PV3D
         twoMuonDaughterCut = "(TRCHI2DOF< %(Trk_TRCHI2DOF_MAX_mumuX)s )" \
@@ -95,7 +95,7 @@ class TwoMuonForD2MuMuXCombiner(Hlt2Combiner):
                              "& (P> %(Trk_P_MIN_mumuX)s)" \
                              "& (MIPCHI2DV(PRIMARY)> %(Trk_MIPCHI2DV_MIN_mumuX)s )"
  
-        twoMuonCombCut = "(AM<2100*MeV)" \
+        twoMuonCombCut = "(AM<2100)" \
                          "& ((APT1+APT2)> %(Pair_SumAPT_MIN_mumuX)s)" \
                          "& (AMINDOCA('LoKi::TrgDistanceCalculator') < %(Pair_AMINDOCA_MAX_mumuX)s )" \
                          "& (AALLSAMEBPV)"
@@ -109,52 +109,114 @@ class TwoMuonForD2MuMuXCombiner(Hlt2Combiner):
         Hlt2Combiner.__init__(self, name, ["J/psi(1S) -> mu+ mu-","phi(1020) -> mu+ mu+", " rho(770)0 -> mu- mu-"], 
                               inputs,
                               dependencies = [PV3D('Hlt2')],
-                              DaughtersCuts = { "mu+" : twoMuonDaughterCut}, 
+                              DaughtersCuts = { "mu+" : twoMuonDaughterCut }, 
                               CombinationCut = twoMuonCombCut,
                               MotherCut = twoMuonMotherCut,
                               Preambulo = [],
                               shared=True)
 
-TwoMuonForD2MuMuX=TwoMuonForD2MuMuXCombiner('TwoMuonForD2MuMuX')
+TwoMuonForD2XXH=TwoMuonForD2XXHCombiner('TwoMuonForD2XXH')
+
+class TwoElectronForD2XXHCombiner(Hlt2Combiner):
+    def __init__(self, name):
+        from HltTracking.HltPVs import PV3D
+        twoElectronDaughterCut = "(TRCHI2DOF< %(Trk_TRCHI2DOF_MAX_eeX)s )" \
+                             "& (PT> %(Trk_PT_MIN_eeX)s)" \
+                             "& (P> %(Trk_P_MIN_eeX)s)" \
+                             "& (MIPCHI2DV(PRIMARY)> %(Trk_MIPCHI2DV_MIN_eeX)s )"
+ 
+        twoElectronCombCut = "(AM<2100)" \
+                         "& ((APT1+APT2)> %(Pair_SumAPT_MIN_eeX)s)" \
+                         "& (AMINDOCA('LoKi::TrgDistanceCalculator') < %(Pair_AMINDOCA_MAX_eeX)s )" \
+                         "& (AALLSAMEBPV)"
+
+        twoElectronMotherCut = "(BPVVD> %(Pair_BPVVD_MIN_eeX)s )" \
+                           "& (BPVCORRM < %(Pair_BPVCORRM_MAX_eeX)s)" \
+                           "& (BPVVDCHI2> %(Pair_BPVVDCHI2_MIN_eeX)s )"
+        #First stage - Combine 2 Body with pt > 500MeV        
+        
+        inputs = [Hlt2Electrons]
+        Hlt2Combiner.__init__(self, name, ["J/psi(1S) -> e+ e-"], 
+                              inputs,
+                              dependencies = [PV3D('Hlt2')],
+                              DaughtersCuts = { "e+" : twoElectronDaughterCut}, 
+                              CombinationCut = twoElectronCombCut,
+                              MotherCut = twoElectronMotherCut,
+                              Preambulo = [],
+                              shared=True)
+
+TwoElectronForD2XXH=TwoElectronForD2XXHCombiner('TwoElectronForD2XXH')
+
+class TwoMuElForD2XXHCombiner(Hlt2Combiner):
+    def __init__(self, name):
+        from HltTracking.HltPVs import PV3D
+        twoMuElDaughterCut = "(TRCHI2DOF< %(Trk_TRCHI2DOF_MAX_mueX)s )" \
+                             "& (PT> %(Trk_PT_MIN_mueX)s)" \
+                             "& (P> %(Trk_P_MIN_mueX)s)" \
+                             "& (MIPCHI2DV(PRIMARY)> %(Trk_MIPCHI2DV_MIN_mueX)s )"
+ 
+        twoMuElCombCut = "(AM<2100)" \
+                         "& ((APT1+APT2)> %(Pair_SumAPT_MIN_mueX)s)" \
+                         "& (AMINDOCA('LoKi::TrgDistanceCalculator') < %(Pair_AMINDOCA_MAX_mueX)s )" \
+                         "& (AALLSAMEBPV)"
+
+        twoMuElMotherCut = "(BPVVD> %(Pair_BPVVD_MIN_mueX)s )" \
+                           "& (BPVCORRM < %(Pair_BPVCORRM_MAX_mueX)s)" \
+                           "& (BPVVDCHI2> %(Pair_BPVVDCHI2_MIN_mueX)s )"
+        #First stage - Combine 2 Body with pt > 500MeV        
+        
+        inputs = [Hlt2Muons,Hlt2Electrons]
+        Hlt2Combiner.__init__(self, name, ["J/psi(1S) -> mu+ e-","phi(1020) -> e+ mu-"], 
+                              inputs,
+                              dependencies = [PV3D('Hlt2')],
+                              DaughtersCuts = { "mu+" : twoMuElDaughterCut, "e-" : twoMuElDaughterCut}, 
+                              CombinationCut = twoMuElCombCut,
+                              MotherCut = twoMuElMotherCut,
+                              Preambulo = [],
+                              shared=True)
+
+TwoMuElForD2XXH=TwoMuElForD2XXHCombiner('TwoMuElForD2XXH')
+
 
 
 #Particle filters
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
-class InPartFilterHMuMu(Hlt2ParticleFilter):
+class InPartFilterHXX(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
         from HltTracking.HltPVs import PV3D
         cut = "(TRCHI2DOF< %(TrkChi2_Hmumu)s )" \
                  "& (PT> %(TrkPt_Hmumu)s)" \
                  "& (P> %(TrkP_Hmumu)s)" \
                  "& (MIPCHI2DV(PRIMARY)> %(TrkPVIPChi2_Hmumu)s )"
-        Hlt2ParticleFilter.__init__(self, name, cut, inputs, dependencies=[PV3D('Hlt2'),TwoMuonForD2MuMuX], shared=True)
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs, dependencies=[PV3D('Hlt2')], shared=True)
 
 #Filtered tracks for threebody
-InPartFilterHMuMu_Kaons = InPartFilterHMuMu("DHMuMuKaons",[Hlt2Kaons])
-InPartFilterHMuMu_Pions = InPartFilterHMuMu("DHMuMuPions",[Hlt2Pions])
-InPartFilterHMuMu_Protons = InPartFilterHMuMu("LcPMuMuProtons",[Hlt2Protons])
+InPartFilterHXX_Kaons = InPartFilterHXX("DHXXKaons",[Hlt2Kaons])
+InPartFilterHXX_Pions = InPartFilterHXX("DHXXPions",[Hlt2Pions])
+InPartFilterHXX_Protons = InPartFilterHXX("LcPXXProtons",[Hlt2Protons])
 
-class InPartFilterHHMuMu(Hlt2ParticleFilter):
+
+class InPartFilterHHXX(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
         from HltTracking.HltPVs import PV3D
         cut = "(TRCHI2DOF< %(TrkChi2_HHmumu)s )" \
                  "& (PT> %(TrkPt_HHmumu)s)" \
                  "& (P> %(TrkP_HHmumu)s)" \
                  "& (MIPCHI2DV(PRIMARY)> %(TrkPVIPChi2_HHmumu)s )"
-        Hlt2ParticleFilter.__init__(self, name, cut, inputs, dependencies=[PV3D('Hlt2'),TwoMuonForD2MuMuX], shared=True)
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs, dependencies=[PV3D('Hlt2')], shared=True)
 
 #Filtered tracks for fourbody
-InPartFilterHHMuMu_Kaons = InPartFilterHHMuMu("DHHMuMuKaons",[Hlt2Kaons])
-InPartFilterHHMuMu_Pions = InPartFilterHHMuMu("DHHMuMuPions",[Hlt2Pions])
+InPartFilterHHXX_Kaons = InPartFilterHHXX("DHHXXKaons",[Hlt2Kaons])
+InPartFilterHHXX_Pions = InPartFilterHHXX("DHHXXPions",[Hlt2Pions])
 
 #D2HMUMU COMBINER
-class D2HMuMuCombiner(Hlt2Combiner):
+class D2HXXCombiner(Hlt2Combiner):
     def __init__(self, name, decayDesc, inputSeq):
         from HltTracking.HltPVs import PV3D
         masscut = "in_range( %(WideMass_M_MIN_Hmumu)s , M , %(WideMass_M_MAX_Hmumu)s )"
 
-        combcuts = "(AM<2100*MeV)" \
-                   "& (AMAXCHILD(PT) > %(TrkPtMAX_Hmumu)s      * MeV) "  \
+        combcuts = "(AM<2100)" \
+                   "& (AMAXCHILD(PT) > %(TrkPtMAX_Hmumu)s) "  \
                    "& ((APT1+APT2+APT3) > %(DSumPt_Hmumu)s)" \
                    "& (AMINDOCA('LoKi::TrgDistanceCalculator') < %(PairMinDoca_Hmumu)s)" \
                    "& (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(PairMaxDoca_Hmumu)s)" \
@@ -164,7 +226,7 @@ class D2HMuMuCombiner(Hlt2Combiner):
                      "& (BPVCORRM < %(MCOR_MAX_Hmumu)s)" \
                      "& (BPVDIRA                 > %(DDira_Hmumu)s         ) " \
                      "& (BPVVDCHI2> %(VtxPVDispChi2_Hmumu)s )" \
-                     "& ( SUMTREE( ( (ID=='K+') | (ID=='K-') | (ID=='pi+') | (ID=='pi-') | (ID=='mu+') | (ID=='mu-') ), sqrt(BPVIPCHI2()) ) > %(TrkPVIPChi2MAX_Hmumu)s)"\
+                     "& ( SUMTREE( ( (ID=='K+') | (ID=='K-') | (ID=='pi+') | (ID=='pi-') | (ID=='mu+') | (ID=='mu-')  | (ID=='e+') | (ID=='e-') ), sqrt(BPVIPCHI2()) ) > %(TrkPVIPChi2MAX_Hmumu)s)"\
                      "& (BPVIPCHI2() < %(DIPChi2_Hmumu)s )"
         Hlt2Combiner.__init__(self, name, decayDesc, inputSeq,
                               dependencies = [PV3D('Hlt2')],
@@ -173,20 +235,57 @@ class D2HMuMuCombiner(Hlt2Combiner):
                               Preambulo = [],
                               shared=True)
 
-D2PiMuMuComb = D2HMuMuCombiner("D2PiMuMuComb",[ "D+ -> J/psi(1S) pi+", "D- -> J/psi(1S) pi-"],[InPartFilterHMuMu_Pions,TwoMuonForD2MuMuX])
-D2KMuMuComb = D2HMuMuCombiner("D2KMuMuComb",[ "D+ -> J/psi(1S) K+", "D- -> J/psi(1S) K-"],[InPartFilterHMuMu_Kaons,TwoMuonForD2MuMuX])
-D2PiMuMuSSComb = D2HMuMuCombiner("D2PiMuMuSSComb", ["D+ -> phi(1020) pi-", "D- -> rho(770)0 pi+"],[InPartFilterHMuMu_Pions,TwoMuonForD2MuMuX])
-D2KMuMuSSComb = D2HMuMuCombiner("D2KMuMuSSComb", ["D+ -> phi(1020) K-", "D- -> rho(770)0 K+"],[InPartFilterHMuMu_Kaons,TwoMuonForD2MuMuX])
 
-#Lc2PMUMU COMBINER
-class Lc2PMuMuCombiner(Hlt2Combiner):
+#D2H_Ele_MUMU COMBINER
+class D2HXX_Ele_Combiner(Hlt2Combiner):
+    def __init__(self, name, decayDesc, inputSeq):
+        from HltTracking.HltPVs import PV3D
+        masscut = "in_range( %(WideMass_M_MIN_Hmumu)s , M , %(WideMass_M_MAX_Hmumu)s )"
+
+        combcuts = "(AM<2100)" \
+                   "& (AMAXCHILD(PT) > %(TrkPtMAX_Hmumu)s) "  \
+                   "& ((APT1+APT2+APT3) > %(DSumPt_Hmumu)s)" \
+                   "& (AMINDOCA('LoKi::TrgDistanceCalculator') < %(PairMinDoca_Hmumu)s)" \
+                   "& (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(PairMaxDoca_Hmumu)s)" \
+                   "& (AALLSAMEBPV)"
+        mothercuts = masscut + \
+                     "& (VFASPF(VCHI2PDOF) < %(VtxChi2_Hmumu)s) " \
+                     "& (BPVCORRM < %(MCOR_MAX_Hmumu)s)" \
+                     "& (BPVDIRA                 > %(DDira_Hmumu)s         ) " \
+                     "& (BPVVDCHI2> %(VtxPVDispChi2_XeeORmue)s )" \
+                     "& ( SUMTREE( ( (ID=='K+') | (ID=='K-') | (ID=='pi+') | (ID=='pi-') | (ID=='mu+') | (ID=='mu-')  | (ID=='e+') | (ID=='e-') ), sqrt(BPVIPCHI2()) ) > %(TrkPVIPChi2MAX_Hmumu)s)"\
+                     "& (BPVIPCHI2() < %(DIPChi2_Hmumu)s )"
+        Hlt2Combiner.__init__(self, name, decayDesc, inputSeq,
+                              dependencies = [PV3D('Hlt2')],
+                              CombinationCut = combcuts,
+                              MotherCut = mothercuts,
+                              Preambulo = [],
+                              shared=True)
+
+
+
+D2PiMuMuComb = D2HXXCombiner("D2PiMuMuComb",[ "D+ -> J/psi(1S) pi+", "D- -> J/psi(1S) pi-"],[InPartFilterHXX_Pions,TwoMuonForD2XXH])
+D2KMuMuComb = D2HXXCombiner("D2KMuMuComb",[ "D+ -> J/psi(1S) K+", "D- -> J/psi(1S) K-"],[InPartFilterHXX_Kaons,TwoMuonForD2XXH])
+D2PiMuMuSSComb = D2HXXCombiner("D2PiMuMuSSComb", ["D+ -> phi(1020) pi-", "D- -> rho(770)0 pi+"],[InPartFilterHXX_Pions,TwoMuonForD2XXH])
+D2KMuMuSSComb = D2HXXCombiner("D2KMuMuSSComb", ["D+ -> phi(1020) K-", "D- -> rho(770)0 K+"],[InPartFilterHXX_Kaons,TwoMuonForD2XXH])
+
+
+D2PieeComb = D2HXX_Ele_Combiner("D2PieeComb",[ "D+ -> J/psi(1S) pi+", "D- -> J/psi(1S) pi-"],[InPartFilterHXX_Pions,TwoElectronForD2XXH])
+D2KeeComb = D2HXX_Ele_Combiner("D2KeeComb",[ "D+ -> J/psi(1S) K+", "D- -> J/psi(1S) K-"],[InPartFilterHXX_Kaons,TwoElectronForD2XXH])
+D2PiMueComb = D2HXX_Ele_Combiner("D2PiMueComb",[ "D+ -> J/psi(1S) pi+", "D- -> J/psi(1S) pi-","D+ -> phi(1020) pi+", "D- -> phi(1020) pi-"],[InPartFilterHXX_Pions,TwoMuElForD2XXH])
+D2KMueComb = D2HXX_Ele_Combiner("D2KMueComb",[ "D+ -> J/psi(1S) K+", "D- -> J/psi(1S) K-","D+ -> phi(1020) K+", "D- -> phi(1020) K-"],[InPartFilterHXX_Kaons,TwoMuElForD2XXH])
+
+
+
+#Lc2PXX COMBINER
+class Lc2PXXCombiner(Hlt2Combiner):
     def __init__(self, name, decayDesc, inputSeq):
         from HltTracking.HltPVs import PV3D
 
         Lambda_c_masscut = "in_range( %(Lambda_c_WideMass_M_MIN)s , M , %(Lambda_c_WideMass_M_MAX)s )"
 
-        combcuts = "(AM<2400*MeV)" \
-                   "& (AMAXCHILD(PT) > %(TrkPtMAX_Hmumu)s      * MeV) "  \
+        combcuts = "(AM<2400)" \
+                   "& (AMAXCHILD(PT) > %(TrkPtMAX_Hmumu)s) "  \
                    "& ((APT1+APT2+APT3) > %(DSumPt_Hmumu)s)" \
                    "& (AMINDOCA('LoKi::TrgDistanceCalculator') < %(PairMinDoca_Hmumu)s)" \
                    "& (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(PairMaxDoca_Hmumu)s)" \
@@ -196,7 +295,7 @@ class Lc2PMuMuCombiner(Hlt2Combiner):
                      "& (BPVCORRM < %(MCOR_MAX_Hmumu)s)" \
                      "& (BPVDIRA                 > %(DDira_Hmumu)s         ) " \
                      "& (BPVVDCHI2> %(VtxPVDispChi2_Hmumu)s )" \
-                     "& ( SUMTREE( ( (ID=='p+') | (ID=='p~-') | (ID=='pi+') | (ID=='pi-') | (ID=='mu+') | (ID=='mu-') ), sqrt(BPVIPCHI2()) ) > %(TrkPVIPChi2MAX_Hmumu)s)"\
+                     "& ( SUMTREE( ( (ID=='p+') | (ID=='p~-') | (ID=='pi+') | (ID=='pi-') | (ID=='mu+') | (ID=='mu-')  | (ID=='e+') | (ID=='e-') ), sqrt(BPVIPCHI2()) ) > %(TrkPVIPChi2MAX_Hmumu)s)"\
                      "& (BPVIPCHI2() < %(DIPChi2_Hmumu)s )"
         Hlt2Combiner.__init__(self, name, decayDesc, inputSeq,
                               dependencies = [PV3D('Hlt2')],
@@ -205,12 +304,45 @@ class Lc2PMuMuCombiner(Hlt2Combiner):
                               Preambulo = [],
                               shared=True)
 
-Lc2PMuMuComb = Lc2PMuMuCombiner("Lc2PMuMuComb",["Lambda_c+ -> J/psi(1S) p+" , "Lambda_c~- -> J/psi(1S) p~-"],[InPartFilterHMuMu_Protons,TwoMuonForD2MuMuX])
-Lc2PMuMuSSComb = Lc2PMuMuCombiner("Lc2PMuMuSSComb", ["Lambda_c+ -> phi(1020) p~-" , "Lambda_c~- ->  rho(770)0 p+"],[InPartFilterHMuMu_Protons,TwoMuonForD2MuMuX])
+
+#Lc2PXX_Ele COMBINER
+class Lc2PXX_Ele_Combiner(Hlt2Combiner):
+    def __init__(self, name, decayDesc, inputSeq):
+        from HltTracking.HltPVs import PV3D
+
+        Lambda_c_masscut = "in_range( %(Lambda_c_WideMass_M_MIN)s , M , %(Lambda_c_WideMass_M_MAX)s )"
+
+        combcuts = "(AM<2400)" \
+                   "& (AMAXCHILD(PT) > %(TrkPtMAX_Hmumu)s) "  \
+                   "& ((APT1+APT2+APT3) > %(DSumPt_Hmumu)s)" \
+                   "& (AMINDOCA('LoKi::TrgDistanceCalculator') < %(PairMinDoca_Hmumu)s)" \
+                   "& (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(PairMaxDoca_Hmumu)s)" \
+                   "& (AALLSAMEBPV)"
+        mothercuts = Lambda_c_masscut + \
+                     "& (VFASPF(VCHI2PDOF) < %(VtxChi2_Hmumu)s) " \
+                     "& (BPVCORRM < %(MCOR_MAX_Hmumu)s)" \
+                     "& (BPVDIRA                 > %(DDira_Hmumu)s         ) " \
+                     "& (BPVVDCHI2> %(VtxPVDispChi2_XeeORmue)s )" \
+                     "& ( SUMTREE( ( (ID=='p+') | (ID=='p~-') | (ID=='pi+') | (ID=='pi-') | (ID=='mu+') | (ID=='mu-')  | (ID=='e+') | (ID=='e-') ), sqrt(BPVIPCHI2()) ) > %(TrkPVIPChi2MAX_Hmumu)s)"\
+                     "& (BPVIPCHI2() < %(DIPChi2_Hmumu)s )"
+        Hlt2Combiner.__init__(self, name, decayDesc, inputSeq,
+                              dependencies = [PV3D('Hlt2')],
+                              CombinationCut = combcuts,
+                              MotherCut = mothercuts,
+                              Preambulo = [],
+                              shared=True)
+
+
+
+Lc2PMuMuComb = Lc2PXXCombiner("Lc2PMuMuComb",["Lambda_c+ -> J/psi(1S) p+" , "Lambda_c~- -> J/psi(1S) p~-"],[InPartFilterHXX_Protons,TwoMuonForD2XXH])
+Lc2PMuMuSSComb = Lc2PXXCombiner("Lc2PMuMuSSComb", ["Lambda_c+ -> phi(1020) p~-" , "Lambda_c~- ->  rho(770)0 p+"],[InPartFilterHXX_Protons,TwoMuonForD2XXH])
+
+Lc2PMueComb = Lc2PXX_Ele_Combiner("Lc2PMueComb",["Lambda_c+ -> J/psi(1S) p+" , "Lambda_c~- -> J/psi(1S) p~-","Lambda_c+ -> phi(1020) p+" , "Lambda_c~- -> phi(1020) p~-"],[InPartFilterHXX_Protons,TwoMuElForD2XXH])
+Lc2PeeComb = Lc2PXX_Ele_Combiner("Lc2PeeComb",["Lambda_c+ -> J/psi(1S) p+" , "Lambda_c~- -> J/psi(1S) p~-"],[InPartFilterHXX_Protons,TwoElectronForD2XXH])
 
 
 #D02HHMUMU COMBINER
-class D02HHMuMuCombiner(Hlt2Combiner):
+class D02HHXXCombiner(Hlt2Combiner):
     def __init__(self, name, decayDesc, inputSeq):
         from HltTracking.HltPVs import PV3D
        
@@ -219,8 +351,8 @@ class D02HHMuMuCombiner(Hlt2Combiner):
 
 #        masscut = "in_range(%s,  M, %s)" % (massmin, massmax)
         masscut = "in_range( %(WideMass_M_MIN_HHmumu)s , M , %(WideMass_M_MAX_HHmumu)s )"
-        combcuts = "(AM<2100*MeV)" \
-                   "& (AMAXCHILD(PT) > %(TrkPtMAX_HHmumu)s      * MeV) "  \
+        combcuts = "(AM<2100)" \
+                   "& (AMAXCHILD(PT) > %(TrkPtMAX_HHmumu)s) "  \
                    "& ((APT1+APT2+APT3+APT4) > %(DSumPt_HHmumu)s)" \
                    "& (AMINDOCA('LoKi::TrgDistanceCalculator') < %(PairMinDoca_HHmumu)s)" \
                    "& (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(PairMaxDoca_HHmumu)s)" \
@@ -230,7 +362,7 @@ class D02HHMuMuCombiner(Hlt2Combiner):
                      "& (BPVCORRM < %(MCOR_MAX_HHmumu)s)" \
                      "& (BPVDIRA                 > %(DDira_HHmumu)s         ) " \
                      "& (BPVVDCHI2> %(VtxPVDispChi2_HHmumu)s )" \
-                     "& ( SUMTREE( ( (ID=='K+') | (ID=='K-') | (ID=='pi+') | (ID=='pi-') | (ID=='mu+') | (ID=='mu-') ), sqrt(BPVIPCHI2()) ) > %(TrkPVIPChi2MAX_HHmumu)s)"\
+                     "& ( SUMTREE( ( (ID=='K+') | (ID=='K-') | (ID=='pi+') | (ID=='pi-') | (ID=='mu+') | (ID=='mu-')  | (ID=='e+') | (ID=='e-') ), sqrt(BPVIPCHI2()) ) > %(TrkPVIPChi2MAX_HHmumu)s)"\
                      "& (BPVIPCHI2() < %(DIPChi2_HHmumu)s )"
                      
         Hlt2Combiner.__init__(self, name, decayDesc, inputSeq,
@@ -240,45 +372,106 @@ class D02HHMuMuCombiner(Hlt2Combiner):
                               Preambulo = [],
                               shared=True)
 
-D02PiPiMuMuComb = D02HHMuMuCombiner("D02PiPiMuMuComb","D0 -> J/psi(1S) pi+ pi-",[InPartFilterHHMuMu_Pions,TwoMuonForD2MuMuX])
-D02KKMuMuComb = D02HHMuMuCombiner("D02KKMuMuComb","D0 -> J/psi(1S) K+ K-",[InPartFilterHHMuMu_Kaons,TwoMuonForD2MuMuX])
-D02KPiMuMuComb = D02HHMuMuCombiner("D02KPiMuMuComb",["D0 -> J/psi(1S) K+ pi-","D0 -> J/psi(1S) K- pi+"],[InPartFilterHHMuMu_Pions,InPartFilterHHMuMu_Kaons,TwoMuonForD2MuMuX])
+
+class D02HHXX_Ele_Combiner(Hlt2Combiner):
+    def __init__(self, name, decayDesc, inputSeq):
+        from HltTracking.HltPVs import PV3D
+       
+  #      massmin = min(float("%(Sig_M_MIN_HHmumu)s"), float("%(WideMass_M_MIN_HHmumu)s"))
+ #       massmax = max(float("%(Sig_M_MAX_HHmumu)s"), float("%(WideMass_M_MAX_HHmumu)s"))
+
+#        masscut = "in_range(%s,  M, %s)" % (massmin, massmax)
+        masscut = "in_range( %(WideMass_M_MIN_HHmumu)s , M , %(WideMass_M_MAX_HHmumu)s )"
+        combcuts = "(AM<2100)" \
+                   "& (AMAXCHILD(PT) > %(TrkPtMAX_HHmumu)s) "  \
+                   "& (AMINCHILD( MIPCHI2DV(PRIMARY) ) > %(TrkPVIPChi2_XeeORmue)s  ) "  \
+                   "& ((APT1+APT2+APT3+APT4) > %(DSumPt_HHmumu)s)" \
+                   "& (AMINDOCA('LoKi::TrgDistanceCalculator') < %(PairMinDoca_HHmumu)s)" \
+                   "& (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(PairMaxDoca_HHmumu)s)" \
+                   "& (AALLSAMEBPV)"
+        mothercuts = masscut + \
+                     "& (VFASPF(VCHI2PDOF) < %(VtxChi2_HHmumu)s) " \
+                     "& (BPVCORRM < %(MCOR_MAX_HHmumu)s)" \
+                     "& (BPVDIRA                 > %(DDira_HHmumu)s         ) " \
+                     "& (BPVVDCHI2> %(VtxPVDispChi2_XeeORmue)s )" \
+                     "& ( SUMTREE( ( (ID=='K+') | (ID=='K-') | (ID=='pi+') | (ID=='pi-') | (ID=='mu+') | (ID=='mu-')  | (ID=='e+') | (ID=='e-') ), sqrt(BPVIPCHI2()) ) > %(TrkPVIPChi2MAX_HHmumu)s)"\
+                     "& (BPVIPCHI2() < %(DIPChi2_HHmumu)s )"
+                     
+        Hlt2Combiner.__init__(self, name, decayDesc, inputSeq,
+                              dependencies = [PV3D('Hlt2')],
+                              CombinationCut = combcuts,
+                              MotherCut = mothercuts,
+                              Preambulo = [],
+                              shared=True)
+
+
+
+D02PiPiMuMuComb = D02HHXXCombiner("D02PiPiMuMuComb","D0 -> J/psi(1S) pi+ pi-",[InPartFilterHHXX_Pions,TwoMuonForD2XXH])
+D02KKMuMuComb = D02HHXXCombiner("D02KKMuMuComb","D0 -> J/psi(1S) K+ K-",[InPartFilterHHXX_Kaons,TwoMuonForD2XXH])
+D02KPiMuMuComb = D02HHXXCombiner("D02KPiMuMuComb",["D0 -> J/psi(1S) K+ pi-","D0 -> J/psi(1S) K- pi+"],[InPartFilterHHXX_Pions,InPartFilterHHXX_Kaons,TwoMuonForD2XXH])
+D02KPiMuMuSSComb = D02HHXXCombiner("D02KPiMuMuSSComb",["D0 -> phi(1020) K- pi-","D0 -> rho(770)0  K+ pi+"],[InPartFilterHHXX_Pions,InPartFilterHHXX_Kaons,TwoMuonForD2XXH])
+
+D02PiPiMueComb = D02HHXX_Ele_Combiner("D02PiPiMueComb",["D0 -> J/psi(1S) pi+ pi-","D0 -> phi(1020) pi+ pi-"],[InPartFilterHHXX_Pions,TwoMuElForD2XXH])
+D02KKMueComb = D02HHXX_Ele_Combiner("D02KKMueComb",["D0 -> J/psi(1S) K+ K-","D0 -> phi(1020) K+ K-"],[InPartFilterHHXX_Kaons,TwoMuElForD2XXH])
+D02KPiMueComb = D02HHXX_Ele_Combiner("D02KPiMueComb",["D0 -> J/psi(1S) K+ pi-","D0 -> J/psi(1S) K- pi+","D0 -> phi(1020) K+ pi-","D0 -> phi(1020) K- pi+"],[InPartFilterHHXX_Pions,InPartFilterHHXX_Kaons,TwoMuElForD2XXH])
+
+D02PiPieeComb = D02HHXX_Ele_Combiner("D02PiPieeComb","D0 -> J/psi(1S) pi+ pi-",[InPartFilterHHXX_Pions,TwoElectronForD2XXH])
+D02KKeeComb = D02HHXX_Ele_Combiner("D02KKeeComb","D0 -> J/psi(1S) K+ K-",[InPartFilterHHXX_Kaons,TwoElectronForD2XXH])
+D02KPieeComb = D02HHXX_Ele_Combiner("D02KPieeComb",["D0 -> J/psi(1S) K+ pi-","D0 -> J/psi(1S) K- pi+"],[InPartFilterHHXX_Pions,InPartFilterHHXX_Kaons,TwoElectronForD2XXH])
+
+
+
 
 
 #D2HMUMU FILTER
-class D2HMuMuFilter(Hlt2ParticleFilter):
+class D2HXXFilter(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
         from HltTracking.HltPVs import PV3D
         cut  = "in_range(%(Sig_M_MIN_Hmumu)s, M, %(Sig_M_MAX_Hmumu)s)"
         Hlt2ParticleFilter.__init__(self, name, cut, inputs, dependencies=[PV3D('Hlt2')])
 
-D2PiMuMuFilter = D2HMuMuFilter("D2PiMuMuFilter",[D2PiMuMuComb])
-D2KMuMuFilter = D2HMuMuFilter("D2KMuMuFilter",[D2KMuMuComb])
-D2PiMuMuSSFilter = D2HMuMuFilter("D2PiMuMuSSFilter",[D2PiMuMuSSComb])
-D2KMuMuSSFilter = D2HMuMuFilter("D2KMuMuSSFilter",[D2KMuMuSSComb])
+D2PiMuMuFilter = D2HXXFilter("D2PiMuMuFilter",[D2PiMuMuComb])
+D2KMuMuFilter = D2HXXFilter("D2KMuMuFilter",[D2KMuMuComb])
+D2PiMuMuSSFilter = D2HXXFilter("D2PiMuMuSSFilter",[D2PiMuMuSSComb])
+D2KMuMuSSFilter = D2HXXFilter("D2KMuMuSSFilter",[D2KMuMuSSComb])
 
-#Lc2PMUMU FILTER
-class Lc2PMuMuFilter(Hlt2ParticleFilter):
+D2PiMueFilter = D2HXXFilter("D2PiMueFilter",[D2PiMueComb])
+D2KMueFilter = D2HXXFilter("D2KMueFilter",[D2KMueComb])
+
+D2PieeFilter = D2HXXFilter("D2PieeFilter",[D2PieeComb])
+D2KeeFilter = D2HXXFilter("D2KeeFilter",[D2KeeComb])
+
+#Lc2PXX FILTER
+class Lc2PXXFilter(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
         from HltTracking.HltPVs import PV3D
         cut  = "in_range(%(Lambda_c_Sig_M_MIN)s, M, %(Lambda_c_Sig_M_MAX)s)"
         Hlt2ParticleFilter.__init__(self, name, cut, inputs, dependencies=[PV3D('Hlt2')])
 
-Lc2PMuMuSSFilter = Lc2PMuMuFilter("Lc2PMuMuSSFilter",[Lc2PMuMuSSComb])
-Lc2PMuMuFilter = Lc2PMuMuFilter("Lc2PMuMuFilter",[Lc2PMuMuComb])
+Lc2PMuMuSSFilter = Lc2PXXFilter("Lc2PMuMuSSFilter",[Lc2PMuMuSSComb])
+Lc2PMuMuFilter = Lc2PXXFilter("Lc2PMuMuFilter",[Lc2PMuMuComb])
+Lc2PMueFilter = Lc2PXXFilter("Lc2PMueFilter",[Lc2PMueComb])
 
-#D02HHMUMU FILTER
-class D02HHMuMuFilter(Hlt2ParticleFilter):
+Lc2PeeFilter = Lc2PXXFilter("Lc2PeeFilter",[Lc2PeeComb])
+
+#D02HHXX FILTER
+class D02HHXXFilter(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
         from HltTracking.HltPVs import PV3D
         cut  = "in_range(%(Sig_M_MIN_HHmumu)s, M, %(Sig_M_MAX_HHmumu)s)"
         Hlt2ParticleFilter.__init__(self, name, cut, inputs, dependencies=[PV3D('Hlt2')])
 
 
-D02PiPiMuMuFilter = D02HHMuMuFilter("D02PiPiMuMuFilter",[D02PiPiMuMuComb])
-D02KKMuMuFilter = D02HHMuMuFilter("D02KKMuMuFilter",[D02KKMuMuComb])
-D02KPiMuMuFilter = D02HHMuMuFilter("D02KPiMuMuFilter",[D02KPiMuMuComb])
+D02PiPiMuMuFilter = D02HHXXFilter("D02PiPiMuMuFilter",[D02PiPiMuMuComb])
+D02KKMuMuFilter = D02HHXXFilter("D02KKMuMuFilter",[D02KKMuMuComb])
+D02KPiMuMuFilter = D02HHXXFilter("D02KPiMuMuFilter",[D02KPiMuMuComb])
 
+D02PiPiMueFilter = D02HHXXFilter("D02PiPiMueFilter",[D02PiPiMueComb])
+D02KKMueFilter = D02HHXXFilter("D02KKMueFilter",[D02KKMueComb])
+D02KPiMueFilter = D02HHXXFilter("D02KPiMueFilter",[D02KPiMueComb])
 
+D02PiPieeFilter = D02HHXXFilter("D02PiPieeFilter",[D02PiPieeComb])
+D02KKeeFilter = D02HHXXFilter("D02KKeeFilter",[D02KKeeComb])
+D02KPieeFilter = D02HHXXFilter("D02KPieeFilter",[D02KPieeComb])
 
-
+D02KPiMuMuSSFilter = D02HHXXFilter("D02KPiMuMuSSFilter",[D02KPiMuMuSSComb])

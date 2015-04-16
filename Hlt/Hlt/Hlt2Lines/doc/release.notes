@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-16 - Andrea Contu
+  - Added new multibody RareCharm lines to include dielectron e LFV modes
+
 ! 2015-04-16 - Dan Johnson
   - Added two "technical" lines to the CEP package: 
     - pre-scaled 'no-bias' line running on Hlt1Lumi triggers
