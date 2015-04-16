@@ -51,14 +51,19 @@
 //  consructor from the pid hypothesis
 // ============================================================================
 LoKi::Hlt1::CheatPID::CheatPID
-( const std::string& pid         ,
-  const std::string& location    )
-  : LoKi::AuxFunBase ( std::tie ( pid , location ) )
+( const std::map<std::string,std::string> pids ,
+  const std::string& location                  )
+  : LoKi::AuxFunBase ( std::tie ( pids , location ) )
   , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
   , LoKi::Hlt1::HelperTool ( 1 )
   , m_sink ( location )
-  , m_pp   ( LoKi::Particles::ppFromName(pid) )
-{}
+{
+    for ( auto const &pair : pids )
+    {
+        m_pidSubs.insert(std::make_pair(LoKi::Particles::pidFromName(pair.first),
+                                        LoKi::Particles::pidFromName(pair.second))) ;
+    }
+}
 // ============================================================================
 // virtual destructor
 // ============================================================================
@@ -95,10 +100,12 @@ LoKi::Hlt1::CheatPID::operator()
 
     if ( !part ) { continue ; }
 
+    if ( 0 == m_pidSubs.count( part->particleID() ) ) { continue ; }
+
     if ( part->isBasicParticle() ) { continue ; }
 
     LHCb::Particle* particle = part->clone() ;
-    particle->setParticleID(m_pp->particleID()) ;
+    particle->setParticleID( m_pidSubs.at(part->particleID()) ) ;
 
     const LHCb::Vertex* vertex = part->endVertex() ;
 	if ( vertex )
@@ -134,7 +141,6 @@ std::ostream& LoKi::Hlt1::CheatPID::fillStream ( std::ostream& s ) const
 {
   return
     s << "TC_CHEATPID("
-      << "'" << m_pp->name() << "',"
       << "'" << location()   << "')" ;
 }
 // ============================================================================

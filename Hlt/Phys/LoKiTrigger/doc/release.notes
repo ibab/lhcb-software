@@ -4,6 +4,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-04-16 - Albert Puig
+ - Add particle map flexibility in CheatPID
+
 ! 2015-04-14 - Albert Puig
  - Add protection for missing vertices, eg, Hlt1DiPhoton
  - And fixed it after.

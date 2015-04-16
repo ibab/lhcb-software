@@ -70,8 +70,8 @@ namespace LoKi
         // ======================================================================
         ///   constructor from pid hypothesis, name and LoKi basic functor
         CheatPID
-          ( const std::string& pid          ,
-            const std::string& location     ) ;
+          ( const std::map<std::string,std::string> pids ,
+            const std::string& location                  ) ;
         /// virtual destructor
         virtual ~CheatPID() ;
         /// clone method ("virtual constructor")
@@ -94,8 +94,8 @@ namespace LoKi
         // ======================================================================
         /// 'sink': the functor which register the selection in Hlt Data Svc
         LoKi::Hlt1::Sink          m_sink      ;
-        /// members which store pid hypoth and ptcut
-        const LHCb::ParticleProperty* m_pp ;
+        /// pid substitutions to perform
+        std::map<LHCb::ParticleID, LHCb::ParticleID> m_pidSubs ;
         // ======================================================================
     };
     // ==========================================================================
