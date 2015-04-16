@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-16 - Mike Sokoloff
+  - Added D*+ --> D0,pi+;  D0 --> HHKs lines for each of the D0 --> HHKs lines
+    All new code lives in D2HHKsLines.py
+
 ! 2015-04-15 - Albert Puig
   - Updated radiative lines to include converted photons.
 
