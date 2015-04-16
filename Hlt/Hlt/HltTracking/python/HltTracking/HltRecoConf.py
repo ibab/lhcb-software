@@ -75,12 +75,12 @@ VeloTTToolOptions = {"minMomentum" : 0.0,
                           
 VeloTTOptions = { }
 
-CommonPVOptions = {"UseBeamSpotCut" : True,
+CommonPVOptions = {"UseBeamSpotRCut" : True,
                    "BeamSpotRCut" : 0.2 * mm,
                    "TrackErrorScaleFactor" : 1.,
                    "ResolverBound" : 1 * mm,
                    "MinTracks" : 4.,
-                   "maxTrackChi2" : 12.}
+                   "trackMaxChi2" : 12.}
 
 CommonForwardOptions = { "MaxOTHits" : 150000 , #Why do we have this three times?
                          "MaxITHits" : 999999 ,

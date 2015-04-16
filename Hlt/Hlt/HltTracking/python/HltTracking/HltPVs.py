@@ -70,9 +70,13 @@ def PV3D(where):
     # Set options from HltRecoConf
     from HltRecoConf import CommonPVOptions
     for opt, value in CommonPVOptions.iteritems():
+        found = False
         for tool in (fitter, offlineTool):
-            if hasattr(tool, opt):
-                setattr(tool, opt, value)
+            if opt in tool.getProperties():
+                tool.setProp(opt, value)
+                found = True
+        if not found:
+            raise AttributeError("HltPVs.py: no tool has property %s" % opt)
 
     ## Simplified Material for TrackMasterExtrapolator
     recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.addTool(TrackMasterExtrapolator, "TrackMasterExtrapolator")
