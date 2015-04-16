@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-16 - Maurizio Martinelli
+  - Modified D0->HHHH lines to reduce combinatorics
+  - Removed tistos from TagDecay combiner in CharmHad
+
 ! 2015-04-16 - Olli Lupton
   - PID
    . Make Sc0 and Sc++ lines share their combiners so the Turbo copies

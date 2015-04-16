@@ -68,15 +68,17 @@ class CharmHadD02HHHHLines() :
         
         stages = {}
         # Create the nominal and wide mass combinations
+        stages.update( {
+              'D02PiPiPiPiWide' : [MassFilter('D02PiPiPiPiWide',inputs=[DV4BCombiner('D02PiPiPiPiWide', inputs=[SharedDetachedD0ToHHHHChild_pi], decay=['D0 -> pi+ pi+ pi- pi-'], shared=True)])],
+              'D02KPiPiPiWide'  : [MassFilter('D02KPiPiPiWide',inputs=[DV4BCombiner('D02KPiPiPiWide', inputs=[SharedDetachedD0ToHHHHChild_pi,SharedDetachedD0ToHHHHChild_K], decay=['[D0 -> K- pi+ pi+ pi-]cc'], shared=True)])],
+              'D02KKPiPiWide'   : [MassFilter('D02KKPiPiWide',inputs=[DV4BCombiner('D02KKPiPiWide', inputs=[SharedDetachedD0ToHHHHChild_pi,SharedDetachedD0ToHHHHChild_K], decay=['D0 -> K+ K- pi+ pi-'], shared=True)])],
+              'D02KKKPiWide'    : [MassFilter('D02KKKPiWide',inputs=[DV4BCombiner('D02KKKPiWide', inputs=[SharedDetachedD0ToHHHHChild_pi,SharedDetachedD0ToHHHHChild_K], decay=['[D0 -> K- K- K+ pi+]cc'], shared=True)])],
+            } )
+        # Restrict to the nominal mass
+        for fs in ['PiPiPiPi', 'KPiPiPi', 'KKPiPi', 'KKKPi']:
+            stages.update( { 'D02'+fs : [MassFilter('D02'+fs,inputs=[stages['D02'+fs+'Wide'][0]])] } )
+        # Then add the soft pion for the D*
         for des in ['','Wide']:
-            # First for the D0
-            stages.update( {
-              'D02PiPiPiPi'+des : [MassFilter('D02PiPiPiPi'+des,inputs=[DV4BCombiner('D02PiPiPiPi'+des, inputs=[SharedDetachedD0ToHHHHChild_pi], decay=['D0 -> pi+ pi+ pi- pi-'])])],
-              'D02KPiPiPi'+des  : [MassFilter('D02KPiPiPi'+des,inputs=[DV4BCombiner('D02KPiPiPi'+des, inputs=[SharedDetachedD0ToHHHHChild_pi,SharedDetachedD0ToHHHHChild_K], decay=['[D0 -> K- pi+ pi+ pi-]cc'])])],
-              'D02KKPiPi'+des   : [MassFilter('D02KKPiPi'+des,inputs=[DV4BCombiner('D02KKPiPi'+des, inputs=[SharedDetachedD0ToHHHHChild_pi,SharedDetachedD0ToHHHHChild_K], decay=['D0 -> K+ K- pi+ pi-'])])],
-              'D02KKKPi'+des    : [MassFilter('D02KKKPi'+des,inputs=[DV4BCombiner('D02KKKPi'+des, inputs=[SharedDetachedD0ToHHHHChild_pi,SharedDetachedD0ToHHHHChild_K], decay=['[D0 -> K- K- K+ pi+]cc'])])],
-                          } )
-            # Then add the soft pion for the D*
             for fs in ['PiPiPiPi', 'KPiPiPi', 'KKPiPi', 'KKKPi']:
                 stages['D02'+fs+des+'Tag'] = [Dst2D0pi('D02'+fs+des+'Tag', d0=stages['D02'+fs+des][0])]
     

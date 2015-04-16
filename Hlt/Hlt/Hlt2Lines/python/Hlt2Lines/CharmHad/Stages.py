@@ -252,7 +252,6 @@ class TagDecay(Hlt2Combiner) : # {
         'DeltaM_MIN'
         'DeltaM_MAX'       : lower and upper limits of the delta mass window
                              at the MotherCut level, M - M1.
-        'TisTosSpec'       : The configuration string of the Hlt1 TISTOS filter.
     """
     def __init__(self, name, decay, inputs, DaughtersCuts = { }, shared = False, nickname = None):
         cc =    ('in_range( %(DeltaM_AM_MIN)s, (AM - AM1), %(DeltaM_AM_MAX)s )')
@@ -264,7 +263,6 @@ class TagDecay(Hlt2Combiner) : # {
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name, decay, inputs,
                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
-                              tistos = 'TisTosSpec',
                               DaughtersCuts = DaughtersCuts,
                               CombinationCut = cc, 
                               shared = shared,
@@ -567,7 +565,7 @@ class DV4BCombiner(Hlt2Combiner):
         'BPVLTIME_MIN'  : Lower limit on Lifetime wrt bestPV in MotherCut
         'TisTosSpec'    : Configuration string of the Hlt1 TISTOS filter.
     """
-    def __init__(self, name, decay,inputs):
+    def __init__(self, name, decay,inputs, shared = False):
         dc =    {}
         
         c12 = (" ( AM < %(AM_MAX)s ) " +
@@ -584,7 +582,7 @@ class DV4BCombiner(Hlt2Combiner):
                  " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
                  " & (BPVLTIME() > %(BPVLTIME_MIN)s )")
         from HltTracking.HltPVs import PV3D
-        Hlt2Combiner.__init__(self, name, decay, inputs,
+        Hlt2Combiner.__init__(self, name, decay, inputs, shared = shared,
                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                               tistos = 'TisTosSpec', combiner = DaVinci__N4BodyDecays, DaughtersCuts = dc,
                               Combination12Cut = c12, Combination123Cut = c123, CombinationCut = cc,
