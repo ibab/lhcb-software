@@ -11,7 +11,7 @@ preprocessor = LHCbPreprocessor + \
   LineSkipper(["InputCopyStream"]) + \
   LineSkipper(["FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc"]) + \
   LineSkipper(["DumpTracks        SUCCESS Number of counters : 1"]) + \
-  RegexpReplacer(when = 'Handled "DataFault" incidents:', orig = r'0/0/41', repl = r'0/0/66') 
+  RegexpReplacer(when = 'Handled "DataFault" incidents:', orig = r'0/0/41', repl = r'0/0/71') 
 validateWithReference(preproc = preprocessor)
 </text></argument>
   <argument name="prerequisites"><set>
