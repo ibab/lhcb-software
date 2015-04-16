@@ -3,6 +3,9 @@
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+! 2015-04-16 - Liang Sun
+- Further support for loading CALIBOFF.db file as an additional layer above all partitions, for testing purpose only
+
 ! 2015-03-18 - Liang Sun
  - Fix the nightlies after the last commit. The XML extensions of the condition files within TESTDB?.db are now removed.
 
