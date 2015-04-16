@@ -80,7 +80,7 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                               'Electron': ['Electron,lowMult','DiEM,lowMult']
                                              }
                     , 'Technical_L0'  : {"NoBias"   : "(L0_DATA('Spd(Mult)') < 100)" ,
-                                         "MinBias"  : "(L0_DATA('Spd(Mult)') > 2) | (L0_DATA('Electron(Et)') > 5) | (L0_DATA('Photon(Et)') > 5) | (L0_DATA('Hadron(Et)') > 10)"}
+                                         "MinBias"  : "(L0_DATA('Spd(Mult)') < 100) && ( (L0_DATA('Spd(Mult)') > 2) | (L0_DATA('Electron(Et)') > 5) | (L0_DATA('Photon(Et)') > 5) | (L0_DATA('Hadron(Et)') > 10) )"}
 } 
 theseSlots.update(_CEPHadronLines.localcuts())
 theseSlots.update(_CEPMuonLines.localcuts())
@@ -113,10 +113,10 @@ class CEPLines(Hlt2LinesConfigurableUser) :
                            HLT1 = self.getProp('HLT')[l0nick],
                            algos = algos) 
         # Add two additional technical lines
-        Hlt2Line("LowMultNoBias", prescale = self.prescale,
+        Hlt2Line("LowMultTechnical_NoBias", prescale = self.prescale,
                  HLT1 = self.getProp('HLT')["TechnicalNoBias"],
-                 L0DU = self.getProp('TechnicalMinBias_L0')["NoBias"])
-        Hlt2Line("LowMultMinBias", prescale = self.prescale,
+                 L0DU = self.getProp('Technical_L0')["NoBias"])
+        Hlt2Line("LowMultTechnical_MinBias", prescale = self.prescale,
                  HLT1 = self.getProp('HLT')["TechnicalNoBias"],
-                 L0DU = self.getProp('TechnicalMinBias_L0')["MinBias"])
+                 L0DU = self.getProp('Technical_L0')["MinBias"])
         
