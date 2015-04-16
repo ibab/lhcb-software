@@ -80,7 +80,7 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                               'Electron': ['Electron,lowMult','DiEM,lowMult']
                                              }
                     , 'Technical_L0'  : {"NoBias"   : "(L0_DATA('Spd(Mult)') < 100)" ,
-                                         "MinBias"  : "(L0_DATA('Spd(Mult)') < 100) && ( (L0_DATA('Spd(Mult)') > 2) | (L0_DATA('Electron(Et)') > 5) | (L0_DATA('Photon(Et)') > 5) | (L0_DATA('Hadron(Et)') > 10) )"}
+                                         "MinBias"  : "(L0_DATA('Spd(Mult)') < 100) & ( (L0_DATA('Spd(Mult)') > 2) | (L0_DATA('Electron(Et)') > 5) | (L0_DATA('Photon(Et)') > 5) | (L0_DATA('Hadron(Et)') > 10) )"}
 } 
 theseSlots.update(_CEPHadronLines.localcuts())
 theseSlots.update(_CEPMuonLines.localcuts())
