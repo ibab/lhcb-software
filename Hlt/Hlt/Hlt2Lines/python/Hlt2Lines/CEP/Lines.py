@@ -16,12 +16,14 @@ from HadronLines import CEPHadronLines
 from MuonLines import CEPMuonLines
 from PhotonLines import CEPPhotonLines
 from ElectronLines import CEPElectronLines
+from TechnicalLines import CEPTechnicalLines
 from GaudiKernel.SystemOfUnits import GeV, MeV, mm
 
 _CEPHadronLines = CEPHadronLines();
 _CEPMuonLines = CEPMuonLines();
 _CEPPhotonLines = CEPPhotonLines();
 _CEPElectronLines = CEPElectronLines();
+_CEPTechnicalLines = CEPTechnicalLines();
 
 theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                  , 'Hlt2LowMultL2pPiWS'     : 0.1
@@ -61,6 +63,9 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                  # Electron lines
                                  , 'Hlt2LowMultElectron'    : 1.0
                                  , 'Hlt2LowMultElectron_noTrFilt': 0.05
+                                 # Technical lines
+                                 , 'LowMultNonBeamBeamNoBias': 1.0
+                                 , 'LowMultNonBeamBeamMinActivity': 1.0
                                  }
                   , 'Postscale' : {   'Hlt2LowMultL2pPi'       : 1.0
                                     , 'Hlt2LowMultL2pPiWS'     : 1.0
@@ -100,10 +105,17 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                     # Electron lines
                                     , 'Hlt2LowMultElectron'    : 1.0
                                     , 'Hlt2LowMultElectron_noTrFilt': 1.0
+                                    # Technical lines
+                                    , 'LowMultNonBeamBeamNoBias': 1.0
+                                    , 'LowMultNonBeamBeamMinActivity': 1.0
                                     }
-                    , 'HLT'               :   {"ALL": "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"}
-                    , 'Common'    : {'HLT'            :     "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
-                                     'H_PTmin'        :     100.0 * MeV,
+                    , 'HLT'               :   {"Hadron"     : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
+                                               "Muon"       : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
+                                               "Photon"     : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
+                                               "Electron"   : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
+                                               "Technical"  : "HLT_PASS_RE('Hlt1LumiDecision')"
+                                               }
+                    , 'Common'    : {'H_PTmin'        :     100.0 * MeV,
                                      'H_Pmin'         :     5000.0 * MeV,
                                      'H_TrkChi2max'   :     3.0}
                    ,   'L0Channels'        : {'Hadron'  : ['DiHadron,lowMult'],
@@ -129,16 +141,23 @@ class CEPLines(Hlt2LinesConfigurableUser) :
             return l0
     
     def __apply_configuration__(self) :
-        lines = {'Hadron'  : _CEPHadronLines.locallines(),
-                 'Muon'    : _CEPMuonLines.locallines(),
-                 'Photon'  : _CEPPhotonLines.locallines(),
-                 'Electron': _CEPElectronLines.locallines()
+        lines = {'Hadron'     : _CEPHadronLines.locallines(),
+                 'Muon'       : _CEPMuonLines.locallines(),
+                 'Photon'     : _CEPPhotonLines.locallines(),
+                 'Electron'   : _CEPElectronLines.locallines()
+                 'Technical'  : _CEPTechnicalLines.locallines()
                 }
         from HltLine.HltLine import Hlt2Line
         for l0nick, lns in lines.iteritems():
             for linename, algos in self.algorithms(lns).iteritems():
-                Hlt2Line(linename, prescale = self.prescale,
-                         L0DU = self.__l0du(l0nick),
-                         HLT1 = self.getProp('HLT')["ALL"],
-                         algos = algos, postscale = self.postscale) 
+                # if-clause to allow Technical lines not to set an L0 requirement
+                if l0nick == "Technical" :
+                  Hlt2Line(linename, prescale = self.prescale,
+                           HLT1 = self.getProp('HLT')[l0nick],
+                           algos = algos, postscale = self.postscale) 
+                else :
+                  Hlt2Line(linename, prescale = self.prescale,
+                           L0DU = self.__l0du(l0nick),
+                           HLT1 = self.getProp('HLT')[l0nick],
+                           algos = algos, postscale = self.postscale) 
         
