@@ -1149,9 +1149,12 @@ class Xic02PKKPi_LTUNB(HHHHCombiner) :
 class Xic02PKKPi(DetachedHHHHCombiner) :
     def __init__(self,name) :
         decay = "[Xi_c0 -> p+ K- K- pi+]cc"
-        inputs = [SharedDetachedLcChild_K,
-                  SharedDetachedLcChild_pi,
-                  SharedDetachedLcChild_p]
+        # Uses the same inputs as the LTUNB line for the tight PID,
+        # but applies IP chi2 cuts in the daughter cuts of the 
+        # combiner.
+        inputs = [SharedPromptChild_K,
+                  SharedPromptChild_pi,
+                  SharedPromptChild_p]
         DetachedHHHHCombiner.__init__(self,name,decay,inputs)
 
 # The V0H lines now

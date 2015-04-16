@@ -8,6 +8,14 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-16 - Michael Alexander
+  - CharmHad/Hc2HHHHLines.py & CharmHad/Stages.py :
+    - Changed the inputs of the detached Xic0->pKKpi line to the same as those
+      for the LTUNB line in the same mode for the tight PID cuts. IP chi2 cuts
+      are now performed only in the daughter cuts of the combiner. This brings 
+      the timing down to more manageable levels (particularly sharing inputs
+      makes a surprisingly large difference).
+
 ! 2015-04-16 - Maurizio Martinelli
   - Modified D0->HHHH lines to reduce combinatorics
   - Removed tistos from TagDecay combiner in CharmHad
