@@ -8,6 +8,12 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-16 - Karlis Dreimanis
+  - Updated 'EW' Stages.py and Lines.py.
+    - Lines.py now include the required header
+    - Tau lines are overhauled in both Lines.py and Stages.py
+
+
 ! 2015-04-16 - Tom Hadavizadeh
   - Updated CharmHad/D2HHLines.py to include lines being developed by Simone Stracka
 
