@@ -37,6 +37,7 @@ public:
   virtual StatusCode execute();
 
 private:
+  std::string m_inputLocation;
   std::vector<std::string> m_inputLocations;
   std::string m_outputLocation;
   bool        m_copyFailures;   ///< If true, copy also tracks that failed fit 

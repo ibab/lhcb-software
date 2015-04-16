@@ -4,6 +4,12 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-04-16 - Chris Jones
+ - Add back the inputLocation to TrackContainerCopy to allow for a proper 
+   deprciation period, as its removal broke the nighlties stripping QM tests.
+   A warning is printed if this option is used. It is an error to set both 
+   inputLocation and inputLocations.
+
 ! 2015-04-08 - Michel De Cian
  - TrackContainerCopy: Now can take more than one input location.
 

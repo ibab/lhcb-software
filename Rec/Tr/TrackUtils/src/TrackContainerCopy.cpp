@@ -26,6 +26,7 @@ TrackContainerCopy::TrackContainerCopy(const std::string& name,
   m_selector("",this)
 {
   // constructor
+  declareProperty( "inputLocation",  m_inputLocation  = "" ); // obsolete. Use inputLocations
   declareProperty( "inputLocations",  m_inputLocations  = { TrackLocation::Velo } );
   declareProperty( "outputLocation", m_outputLocation = TrackLocation::Default );
   declareProperty( "copyFailures",   m_copyFailures   = false );
@@ -48,7 +49,21 @@ StatusCode TrackContainerCopy::initialize()
 
   StatusCode sc = GaudiAlgorithm::initialize();
   if (sc.isFailure()){
-     return Error("Failed to initialize");
+    return Error("Failed to initialize",sc);
+  }
+
+  // backwards compatibile. Retain for a while to allow for transistion...
+  if ( !m_inputLocation.empty() )
+  {
+    Warning( "'inputLocation' Property is obsolete. Use 'inputLocations' instead").ignore();
+    if ( !m_inputLocations.empty() )
+    {
+      return Error( "Both 'inputLocation' and 'inputLocations' are set..." );
+    }
+    else
+    {
+      m_inputLocations = { m_inputLocation };
+    }
   }
 
   // retrieve the selector if it is set

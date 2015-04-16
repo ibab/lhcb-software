@@ -4,6 +4,12 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2015-04-16 - Chris Jones
+ - Add back the property maxIP2PV to LSAdaptPV3DFitter as its removal broke
+   the Stripping tests in the nightlies. Add a deprication warning incase
+   it is set to this time allow for a proper depreciation period before 
+   removing it again in the future...
+
 !========================= PatPV v3r27 2015-03-31 =========================
 
 ! 2015-03-31 - Roel Aaij
