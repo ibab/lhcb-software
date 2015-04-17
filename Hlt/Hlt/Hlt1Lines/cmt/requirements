@@ -6,18 +6,19 @@ version           v7r9
 
 # =============================================================================
 # ======= structure =======================================================
-branches cmt doc python tests 
+branches cmt doc python tests
 # =============================================================================
 
 
 # =============================================================================
 # ======= the actual dependencies =============================================
-use       GaudiPolicy v*                             
-use       Python      v*  LCG_Interfaces 
+use       GaudiPolicy v*
+use       Python      v*  LCG_Interfaces
 # need to have HltLine.HltLinesConfigurableUser build 'before' us...
 use       HltLine     v*  Hlt
 # need to talk to the Hlt1 track upgrade configuration
 use       HltTracking v*  Hlt
+use       TrackMonitors v* Tr
 
 # =============================================================================
 
@@ -28,7 +29,7 @@ apply_pattern install_python_modules
 # =============================================================================
 
 # =============================================================================
-# The END 
+# The END
 # =============================================================================
 
 # ==== Auto added tests ====
@@ -38,6 +39,5 @@ private
   macro LHCbAlgs_use "" QMTest "LHCbAlgs v* Kernel  -no_auto_imports"
   use $(SQL_use)
   use $(LHCbAlgs_use)
-  use PRConfig v* 
+  use PRConfig v*
 end_private
-

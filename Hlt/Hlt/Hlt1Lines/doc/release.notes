@@ -5,8 +5,14 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-04-17 - Rosen Matev
+  - Implement track fitting, PV splitting and appropriate selections for
+    Hlt1BeamGasLines, all is configurable from slots. Old behaviour is kept
+    by the default values.
+  - Cleanup BeamGas lines.
+
 ! 2015-04-17 - Francesco Dettori
- - Added line to Hlt1DiMuonSoft to Hlt1MuonLines. 
+ - Added line to Hlt1DiMuonSoft to Hlt1MuonLines.
  	 Line similar to Hlt1DiMuonLowMass but without L0 triggere requirements.
 
 ! 2015-04-17 - Dan Johnson

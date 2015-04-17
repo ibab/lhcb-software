@@ -4,7 +4,8 @@
 gaudi_subdir(Hlt1Lines v7r9)
 
 gaudi_depends_on_subdirs(Hlt/HltLine
-                         Hlt/HltTracking)
+                         Hlt/HltTracking
+                         Tr/TrackMonitors)
 
 gaudi_install_python_modules()
 
