@@ -8,6 +8,12 @@
 !
 !----------------------------------------------------------------------------
 
+
+! 2015-04-17 - Karlis Dreimanis
+  - Minor adjustments to tau lines
+    - Some dictionary values altered
+    - In Inputs.py 'Hlt2' prefix from MergedPi0s, ResolvedPi0s and BiKalmanFittedPions
+
 ! 2015-04-17 - Matthew Kenzie
  - Add Hlt2 Inclusive Phi Line
 
