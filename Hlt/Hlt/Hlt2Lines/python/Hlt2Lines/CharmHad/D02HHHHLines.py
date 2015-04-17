@@ -44,10 +44,13 @@ class CharmHadD02HHHHLines() :
                 'DeltaM_MAX'               :  170.0 * MeV
                 }
         cuts = {}
+        for fs in ['PiPiPiPi', 'KPiPiPi', 'KKPiPi', 'KKKPi']:
+            # Now the combiner for the CPV lines  
+            cuts.update( {
+              'D02'+fs        : cutsForD2HHHH,
+              'D02'+fs+'Wide' : cutsForD2HHHHWide
+              } )
         for des in ['', 'Wide']:
-            for fs in ['PiPiPiPi', 'KPiPiPi', 'KKPiPi', 'KKKPi']:
-                # Now the combiner for the CPV lines  
-                cuts['D02'+fs+des] = cutsForD2HHHH
             for fs in ['PiPiPiPi', 'KKPiPi' ]:
                 cuts['D02'+fs+des+'Tag'] = cutsForD2HHHHTag
             for fs in ['KPiPiPi', 'KKKPi']:
