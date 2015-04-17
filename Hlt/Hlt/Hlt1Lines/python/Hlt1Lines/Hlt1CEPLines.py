@@ -1,4 +1,11 @@
-# Central Exclusive Production lines 
+# -*- coding: utf-8 -*-
+## @file
+#  Set of Hlt1-lines for study of low multiplicity processes. 
+#
+#  @author Dan Johnson daniel.johnson@cern.ch
+#=============================================================================
+#=============================================================================
+#__author__  = "Dan Johnson daniel.johnson@cern.ch"
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import *
