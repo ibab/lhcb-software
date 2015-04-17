@@ -4,6 +4,15 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-04-15 - Rosen Matev
+ - Improve splitting method MiddlePerVeloHalf (now difference between number of
+   tracks of split vertices is at most one, was two).
+ - Add new splitting method VeloTopBottom (for systematics studies).
+ - Keys of extrainfo are now options. Add PV z position to extrainfo.
+ - Always write two split vertices, even if fit is not successful.
+ - Add CopyPV property, which if true, copies input vertices to the output
+ - Add UsePVForSeed property. Set to false to do seeding rather than use the PV.
+
 !========================= TrackMonitors v2r5 2015-02-23 =========================
 ! 2015-02-19 - Roel Aaij
  - Add the histograms needed for online OT T0 calibration to the histograms
@@ -15,7 +24,7 @@
 
 !========================= TrackMonitors v2r3 2014-07-14 =======================
 ! 2014-07-04 - Mark Tobin
- - Added extra histograms to TT(IT)TrackMonitor for resolution studies.  Usage 
+ - Added extra histograms to TT(IT)TrackMonitor for resolution studies.  Usage
  controlled by additional flags (false by default).
  - Renamed minNumITHits property to minNumTTHits in TTTrackMonitor (as it should be).
  - Improved indentating in TrackMonitor.cpp.
@@ -40,7 +49,7 @@
 
 !========================= TrackMonitors v2r0 2014-02-19 =======================
 ! 2014-02-19 - Wouter Hulsbergen
- - TrackAlignMonitor and TrackVertexMonitor: removed some checks for divide-by-zero 
+ - TrackAlignMonitor and TrackVertexMonitor: removed some checks for divide-by-zero
  - TrackMonitor: removed use of extrapolator; split residuals by x,y for pixel.
 
 ! 2014-02-18 - Chris Jones
@@ -53,7 +62,7 @@
  - Remove support for VL
 
 !========================= TrackMonitors v1r46 2013-10-01 ======================
-! 2013-10-01 - Frederic Dupertuis 
+! 2013-10-01 - Frederic Dupertuis
  - Adding some additional verbose plotting to STEfficiency.
 
 ! 2013-09-10 - Patrick Koppenburg
@@ -122,16 +131,16 @@
 - Added ability to use variable bin sizes for histo2D's / profile1D's,
 	which is helpful in order to get ~ even statistics in bins for mass profile and bin-by-bin fits
 
-! 2013-03-11 - Marco Clemencic 
-- Fixed compilation with C++11. 	 	  
+! 2013-03-11 - Marco Clemencic
+- Fixed compilation with C++11.
 
 !========================= TrackMonitors v1r42 2013-02-14 ======================
-! 2013-01-30 - Jianchun Wang 
-- Add UT Monitor. 
-	 	 
-! 2013-01-14 - Frederic Dupertuis 
-- Rebuilding of STEfficiency that is working with TT now.  
-- Fix bin number computed in histoBin of TTTrackMonitor. 
+! 2013-01-30 - Jianchun Wang
+- Add UT Monitor.
+
+! 2013-01-14 - Frederic Dupertuis
+- Rebuilding of STEfficiency that is working with TT now.
+- Fix bin number computed in histoBin of TTTrackMonitor.
 
 !========================= TrackMonitors v1r41 2012-11-28 ======================
 ! 2012-11-26 - Marco Clemencic
@@ -206,7 +215,7 @@
  - Fix icc remarks
  - Replace endreq by endmsg
  - Fix coverity UNINIT_CTOR defects 20151, 19696, 19695, 19694, 19693, 17731,
-   17730, 17729, 17728, 17727, 17726, 28264, 28263, 23982, 23979, 23978, 23976, 
+   17730, 17729, 17728, 17727, 17726, 28264, 28263, 23982, 23979, 23978, 23976,
    23975, 23074
 
 !========================= TrackMonitors v1r34 2011-09-06 ======================
@@ -262,7 +271,7 @@
  - supress windows warning about ulonglong->ulong in TrackTimingMonitor
 
 ! 2010-08-24 Christian Linn
- - Excluded 2D profiles from OT online monitoring 
+ - Excluded 2D profiles from OT online monitoring
 
 ! 2010-08-05 M Needham
  - Adjust track multiplicity histogram range
@@ -304,7 +313,7 @@
 
 !========================== TrackMonitors v1r26 2010-06-21 ==================
 ! 2010-06-21 - Stephanie Hansmann-Menzemer
- - add TrackTimingMonitor 
+ - add TrackTimingMonitor
 
 ! 2010-06-18 - Wouter Hulsbergen
  - speedup of TrackMuonMatchMonitor
@@ -366,7 +375,7 @@
  - added histograms with 'hit' layers to TrackMonitor
 
 ! 2010-03-20 - Rob Lambert
- - Wouter also changed TTTrackMonitor.cpp to fill rms residual 
+ - Wouter also changed TTTrackMonitor.cpp to fill rms residual
    instead of unbiased residual
 
 ! 2010-03-19 - Wouter Hulsbergen
@@ -404,7 +413,7 @@
 
 ! 2010-02-10 Stefania Vecchi
  - minor changes to TrackMuonMatchMonitor.cpp:
-    1) applied more stringent requirements to the tracks before 
+    1) applied more stringent requirements to the tracks before
     extrapolating to M1; 2) made less verbose the output
 ! 2010-02-09 Stefania Vecchi
  - Added TrackMuonMatchMonitor.cpp (.h) to monitor the M1-Track residuals.
@@ -424,10 +433,10 @@
 ! 2010-01-06 J Luisier
  - Added a minimum number of needed tracks in a sector in order to plot the
    efficiency on the 2D plot (100 tracks min by default).
- - Added a track type selection (takes Long by default).  
+ - Added a track type selection (takes Long by default).
 
 ! 2009-12-12 - Karol Hennessy
- - Modified TrackVertexMonitor such that it doesn't plot vertices at 
+ - Modified TrackVertexMonitor such that it doesn't plot vertices at
    exactly zero in pvx and pvy plots
 
 !========================== TrackMonitors v1r18 2009-12-11 ==================
@@ -529,7 +538,7 @@
  - Tidy up STEfficiency algorithm
 
 ! 2009-08-05 Stephanie Hansmann-Menzemer
-- adapt to changes in track class 
+- adapt to changes in track class
 
 !============================ TrackMonitors v1r12 2009-07-28 =================
 ! 2009-07-28 - Marco Cattaneo
@@ -541,7 +550,7 @@
 ! 2009-07-24 J Luisier
  - Add STEfficiency alg (works only for IT at the moment)
 
-! 2009-07-19 M Needham 
+! 2009-07-19 M Needham
  - Add histograms to IT/TT TrackMonitors
 
 !============================ TrackMonitors v1r11 2009-07-14 =================
@@ -566,7 +575,7 @@
  - Added columns for hit patterns in TrackMonitorNT
 
 ! 2009-03-30 M Needham
- - Add residuals per layer histos to ITTrackMonitor 
+ - Add residuals per layer histos to ITTrackMonitor
 
 ! 2009-03-20 - Wouter Hulsbergen
  - Changed constrainmethod in TrackFitMatchMonitor. See cvs log.
@@ -636,7 +645,7 @@
 !============================ TrackMonitors v1r2 2008-07-17 ==================
 ! 2008-07-17 - Marco Cattaneo for Wouter Hulsbergen
  - added TrackFitMatchMonitor
- - added option to split by track type to TrackMonitor 
+ - added option to split by track type to TrackMonitor
 
 !============================ TrackMonitors v1r1 2008-06-03 ==================
 ! 2008-05-30 - Wouter Hulsbergen

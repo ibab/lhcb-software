@@ -21,7 +21,6 @@ DECLARE_ALGORITHM_FACTORY( PVSplit )
 //=============================================================================
   PVSplit::PVSplit(const std::string& name, ISvcLocator* pSvcLocator)
     : GaudiAlgorithm(name, pSvcLocator),
-      m_splitMethod(Unknown),
       m_pvsfit(NULL),
       m_velo(NULL),
       m_splitTracks(2),
@@ -33,6 +32,11 @@ DECLARE_ALGORITHM_FACTORY( PVSplit )
                   m_outputVerticesLocation = "Rec/Vertex/Split");
   declareProperty("RandomShuffle", m_randomShuffle = true);
   declareProperty("SplitMethod", m_splitMethodStr = "middle");
+  declareProperty("UsePVForSeed", m_usePVForSeed = true);
+  declareProperty("CopyPV", m_copyPV = false);
+  declareProperty("KeyOfParentVertexIndex", m_keyOfParentVertexIndex = 1000001);
+  declareProperty("KeyOfSumOfParentWeights", m_keyOfSumOfParentWeights = 1000002);
+  declareProperty("KeyOfParentVertexZ", m_keyOfParentVertexZ = 1000003);
 }
 
 //=============================================================================
@@ -52,18 +56,20 @@ StatusCode PVSplit::initialize()
   std::transform(m_splitMethodStr.begin(), m_splitMethodStr.end(),
                  m_splitMethodStr.begin(), ::tolower);
   if (m_splitMethodStr.compare("middle") == 0)
-    m_splitMethod = Middle;
+    m_splitTracksFun = &PVSplit::splitTracksByMiddle;
   else if (m_splitMethodStr.compare("velohalf") == 0)
-    m_splitMethod = VeloHalf;
+    m_splitTracksFun = &PVSplit::splitTracksByVeloHalf;
   else if (m_splitMethodStr.compare("middlepervelohalf") == 0)
-    m_splitMethod = MiddlePerVeloHalf;
+    m_splitTracksFun = &PVSplit::splitTracksByMiddlePerVeloHalf;
+  else if (m_splitMethodStr.compare("velotopbottom") == 0)
+    m_splitTracksFun = &PVSplit::splitTracksByVeloTopBottom;
   else {
     err() << "Unknown split method '" << m_splitMethodStr << "'!" << endmsg;
     return StatusCode::FAILURE;
   }
 
   // Access PVOfflineTool
-  m_pvsfit = tool<IPVOfflineTool>("PVOfflineTool",this);
+  m_pvsfit = tool<IPVOfflineTool>("PVOfflineTool", this);
 
   // randomn number generator
   if (!m_rndm.initialize(randSvc(), Rndm::Flat(0., 1.))) {
@@ -92,10 +98,18 @@ StatusCode PVSplit::execute() {
   LHCb::RecVertices* outputVertices = new LHCb::RecVertices();
   put(outputVertices, m_outputVerticesLocation);
 
+  std::vector<LHCb::RecVertex> rvts; // output for reconstructMultiPVFromTracks()
+
   LHCb::RecVertices::const_iterator it;
   for (it = inputVertices->begin(); it != inputVertices->end(); ++it) {
     const LHCb::RecVertex* vx = *it;
     LHCb::RecVertex::key_type vxKey = vx->key();
+
+    if (m_copyPV) {
+      LHCb::RecVertex* vxCopy = vx->clone();
+      vxCopy->addInfo(m_keyOfParentVertexIndex, vxKey);
+      outputVertices->insert(vxCopy);
+    }
 
     if (msgLevel(MSG::DEBUG)) {
       debug() << "Original vertex:\n";
@@ -111,27 +125,43 @@ StatusCode PVSplit::execute() {
     if (m_randomShuffle)
       randomShuffleTracks();
 
-    if (m_splitMethod == Middle)
-      splitTracksByMiddle();
-    else if (m_splitMethod == VeloHalf)
-      splitTracksByVeloHalf();
-    else if (m_splitMethod == MiddlePerVeloHalf)
-      splitTracksByMiddlePerVeloHalf();
+    // Split tracks
+    (this->*m_splitTracksFun)();  // call m_splitTracksFun bound function on "this"
 
     for (int j = 0; j < 2; j++) {
-      LHCb::RecVertex splitVx;
-      StatusCode scfit = m_pvsfit->reconstructSinglePVFromTracks(
-                                                                 vx->position(), m_splitTracks[j], splitVx);
-      if (scfit == StatusCode::SUCCESS) {
-        splitVx.addInfo(ParentVertexIndex, vxKey);
-        splitVx.addInfo(SumOfParentWeights, m_splitTracksWSum[j]);
-        splitVx.setTechnique(LHCb::RecVertex::Primary);
-        outputVertices->insert(splitVx.clone());
+      LHCb::RecVertex splitVx;  // sensible defaults, see RecVertex() and VertexBase()
+      bool ok = false;
 
-        if (msgLevel(MSG::DEBUG)) {
-          debug() << "Split vertex " << j+1 << ":\n";
-          debugVertex(&splitVx);
-        }
+      if (m_usePVForSeed) {
+        StatusCode scfit = m_pvsfit->reconstructSinglePVFromTracks(
+          vx->position(), m_splitTracks[j], splitVx);
+        ok = (scfit == StatusCode::SUCCESS);
+      } else {
+        rvts.clear();
+        StatusCode scfit = m_pvsfit->reconstructMultiPVFromTracks(
+          m_splitTracks[j], rvts);
+        ok = (scfit == StatusCode::SUCCESS) && (!rvts.empty());
+        if (ok) splitVx = rvts[0];
+      }
+
+      // The next is to protect from the future (setTechnique() is redundant as
+      // the default is Unknown and the fitter should set Primary on success.)
+      if (ok) {
+        splitVx.setTechnique(LHCb::RecVertex::Primary);
+      } else {
+        splitVx.setTechnique(LHCb::RecVertex::Unknown);
+        splitVx.clearTracks(); // number of tracks is used to identify success
+      }
+
+      splitVx.addInfo(m_keyOfParentVertexIndex, vxKey);
+      splitVx.addInfo(m_keyOfSumOfParentWeights, m_splitTracksWSum[j]);
+      splitVx.addInfo(m_keyOfParentVertexZ, vx->position().z());
+
+      outputVertices->insert(splitVx.clone());
+
+      if (msgLevel(MSG::DEBUG)) {
+        debug() << "Split vertex " << j+1 << ":\n";
+        debugVertex(&splitVx);
       }
     }
   }
@@ -177,7 +207,8 @@ void PVSplit::randomShuffleTracks() {
 }
 
 void PVSplit::splitTracksByMiddle() {
-  unsigned int n1 = randomMiddle(m_tracks.size());
+  int oddShift = (m_rndm.shoot() > 0.5); // add 0 or 1 if odd number of tracks
+  unsigned int n1 = randomMiddle(m_tracks.size(), oddShift);
 
   if (msgLevel(MSG::DEBUG))
     debug() << "Split track containers size: n1=" << n1
@@ -191,12 +222,23 @@ void PVSplit::splitTracksByMiddle() {
                                          m_weights.end(), 0.);
 }
 
+void PVSplit::splitTracksByVeloTopBottom() {
+  clearSplitTracks();
+
+  int n = m_tracks.size();
+  for (int i = 0; i < n; i++) {
+    int j = isTopTrack(m_tracks[i]);
+    m_splitTracks[j].push_back(m_tracks[i]);
+    m_splitTracksWSum[j] += m_weights[i];
+  }
+}
+
 void PVSplit::splitTracksByVeloHalf() {
   clearSplitTracks();
 
   int n = m_tracks.size();
   for (int i = 0; i < n; i++) {
-    int j = isLeftTrack(m_tracks[i])?0:1;
+    int j = isLeftTrack(m_tracks[i]);
     m_splitTracks[j].push_back(m_tracks[i]);
     m_splitTracksWSum[j] += m_weights[i];
   }
@@ -207,12 +249,15 @@ void PVSplit::splitTracksByMiddlePerVeloHalf() {
 
   std::vector<unsigned int> lrIndices[2];
   for (unsigned int i = 0; i < m_tracks.size(); i++) {
-    int h = isLeftTrack(m_tracks[i])?0:1;
+    int h = isLeftTrack(m_tracks[i]);
     lrIndices[h].push_back(i);
   }
 
-  unsigned int n1[2] = { randomMiddle(lrIndices[0].size()),
-                         randomMiddle(lrIndices[1].size()) };
+  // Determine the number of tracks for the first split vertex from the
+  // left and right set of tracks.
+  int oddShift = (m_rndm.shoot() > 0.5); // 0 or 1
+  unsigned int n1[2] = {randomMiddle(lrIndices[0].size(), oddShift),
+                        randomMiddle(lrIndices[1].size(), 1 - oddShift)};
 
   if (msgLevel(MSG::DEBUG)) {
     debug() << "splitTracksByMiddlePerVeloHalf():\n";
@@ -230,43 +275,71 @@ void PVSplit::splitTracksByMiddlePerVeloHalf() {
   for (int h = 0; h < 2; h++) {
     for (unsigned int k = 0; k < lrIndices[h].size(); k++) {
       int i = lrIndices[h][k];
-      int j = (k < n1[h])?0:1;
+      int j = (k < n1[h]);
       m_splitTracks[j].push_back(m_tracks[i]);
       m_splitTracksWSum[j] += m_weights[i];
     }
   }
 }
 
-unsigned int PVSplit::randomMiddle(unsigned int n){
-  unsigned int m = n / 2;
-  if (n % 2 == 1)
-    m += static_cast<unsigned int>(m_rndm.shoot() + 0.5); // add 0 or 1
-  return m;
+unsigned int PVSplit::randomMiddle(unsigned int n, int oddShift){
+  return n / 2 + (n % 2)*oddShift;
 }
 
-void PVSplit::countVeloLhcbIDs(const LHCb::Track* track, int& left, int& right) const {
+void PVSplit::countVeloLhcbIDsLeftRight(const LHCb::Track* track, int& left, int& right) const {
+  int n = 0;
   left = 0;
-  right = 0;
   const LHCb::Track::LHCbIDContainer& lhcbIDs = track->lhcbIDs();
   LHCb::Track::LHCbIDContainer::const_iterator it;
   for (it = lhcbIDs.begin(); it != lhcbIDs.end(); ++it) {
     const LHCb::LHCbID& lhcbID = *it;
     if (lhcbID.isVelo()) {
       const DeVeloSensor* sensor = m_velo->sensor(lhcbID.veloID());
-      if (sensor->isLeft())
-        left++;
-      else
-        right++;
+      left += sensor->isLeft();
+      n++;
     }
   }
+  right = n - left;
 }
+
+void PVSplit::countVeloLhcbIDsTopBottom(const LHCb::Track* track, int& top, int& bottom) const {
+  int n = 0;
+  top = 0;
+  const LHCb::Track::LHCbIDContainer& lhcbIDs = track->lhcbIDs();
+  LHCb::Track::LHCbIDContainer::const_iterator it;
+  for (it = lhcbIDs.begin(); it != lhcbIDs.end(); ++it) {
+    const LHCb::LHCbID& lhcbID = *it;
+    if (lhcbID.isVelo()) {
+      const LHCb::VeloChannelID veloID = lhcbID.veloID();
+      const DeVeloPhiType* sensor = m_velo->phiSensor(veloID);
+      if (sensor) {  // check if sensor is indeed phi type
+        // can use globalPhiOfStrip() as well (makes tiny difference)
+        double phi = sensor->idealPhiOfStrip(veloID.strip());
+        top += (sin(phi) > 0);
+        n++;
+      }
+    }
+  }
+  bottom = n - top;
+}
+
 
 bool PVSplit::isLeftTrack(const LHCb::Track* track) {
   int nLeftIDs, nRightIDs;
-  countVeloLhcbIDs(track, nLeftIDs, nRightIDs);
+  countVeloLhcbIDsLeftRight(track, nLeftIDs, nRightIDs);
 
   if (nLeftIDs != nRightIDs)
     return nLeftIDs > nRightIDs;
+  else
+    return m_rndm.shoot() < 0.5;
+}
+
+bool PVSplit::isTopTrack(const LHCb::Track* track) {
+  int nTopIDs, nBottomIDs;
+  countVeloLhcbIDsTopBottom(track, nTopIDs, nBottomIDs);
+
+  if (nTopIDs != nBottomIDs)
+    return nTopIDs > nBottomIDs;
   else
     return m_rndm.shoot() < 0.5;
 }
