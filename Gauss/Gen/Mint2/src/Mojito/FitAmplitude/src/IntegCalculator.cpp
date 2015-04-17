@@ -141,6 +141,17 @@ std::vector<DalitzHistoSet> IntegCalculator::GetEachAmpsHistograms(){
   return noEff().GetEachAmpsHistograms();
 }
 
+DalitzHistoSet IntegCalculator::interferenceHistoSet() const{
+    return withEff().interferenceHistoSet();
+}
+void IntegCalculator::saveInterferenceHistograms(const std::string& prefix) const{
+    return noEff().saveInterferenceHistograms(prefix);
+}
+
+std::vector<DalitzHistoSet> IntegCalculator::GetInterferenceHistograms(){
+    return noEff().GetInterferenceHistograms();
+}
+
 void IntegCalculator::doFinalStats(Minimiser* mini){
   makeAndStoreFractions(mini);
 }

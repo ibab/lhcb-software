@@ -395,6 +395,17 @@ void FastAmplitudeIntegrator::saveEachAmpsHistograms(const std::string& prefix) 
 std::vector<DalitzHistoSet> FastAmplitudeIntegrator::GetEachAmpsHistograms(){
   return _integCalc->GetEachAmpsHistograms();
 }
+
+DalitzHistoSet FastAmplitudeIntegrator::interferenceHistoSet() const{
+    return _integCalc->interferenceHistoSet();
+}
+void FastAmplitudeIntegrator::saveInterferenceHistograms(const std::string& prefix) const{
+    return _integCalc->saveInterferenceHistograms(prefix);
+}
+std::vector<DalitzHistoSet> FastAmplitudeIntegrator::GetInterferenceHistograms(){
+    return _integCalc->GetInterferenceHistograms();
+}
+
 void FastAmplitudeIntegrator::doFinalStats(Minimiser* mini){
   bool dbThis=true;
   if(dbThis) cout << "FastAmplitudeIntegrator::doFinalStats() called" << endl;

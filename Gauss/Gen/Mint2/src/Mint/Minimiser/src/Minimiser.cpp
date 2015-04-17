@@ -154,10 +154,20 @@ bool Minimiser::initialiseVariables(){
     cout << "Minimiser::initialiseVariables() called. " << endl;
     cout << "\n\t(declaring them to MINUIT)" << endl;
   } 
+
+  //remove hidden MinuitParameter
+  for(unsigned int i=0; i < nPars(); i++){
+    if(getParPtr(i)->hidden()){
+      	if(dbThis) cout << i << ")" << getParPtr(i)->name() << endl;
+	parSet()->unregister(getParPtr(i));
+	i--;
+     }
+  }
+
   //temporarilyQuiet();
   for(unsigned int i=0; i < nPars(); i++){
     int ierflag=0;
-    if(! getParPtr(i)->hidden()){
+    //if(! getParPtr(i)->hidden()){        //hidden MinuitParamter already removed
       if(dbThis) cout << i << ")" << getParPtr(i)->name() << endl;
       double step = getParPtr(i)->stepInit();
       if(getParPtr(i)->iFixInit()) step=0;
@@ -169,7 +179,7 @@ bool Minimiser::initialiseVariables(){
 		    , getParPtr(i)->maxInit()
 		    , ierflag);
       //if(getParPtr(i)->iFixInit()) FixParameter(i);
-    }
+    //}
     //getParPtr(i)->associate(this, i);
     success &= ! ierflag;
   }
@@ -192,11 +202,11 @@ bool Minimiser::setParametersToResult(){
   Double_t mean, err, errN, errP;
   Double_t gcc;
   for(unsigned int i=0; i < nPars(); i++){
-    if(! getParPtr(i)->hidden()){
+    //if(! getParPtr(i)->hidden()){
       this->mnerrs(i, errP, errN, err, gcc);
       this->GetParameter(i, mean, err);
       this->getParPtr(i)->setResult(mean, err, errP, errN);
-    }
+    //}
   }
   theFunction()->parametersChanged();
   return true;
@@ -206,9 +216,9 @@ bool Minimiser::updateFitParameters(Double_t* par){
   if(! parsOK())return false;
 
   for(unsigned int i=0; i < nPars(); i++){
-    if(! getParPtr(i)->hidden()){
+    //if(! getParPtr(i)->hidden()){
       getParPtr(i)->setCurrentFitVal(par[i]);
-    }
+    //}
   }
   theFunction()->parametersChanged();
   return true;

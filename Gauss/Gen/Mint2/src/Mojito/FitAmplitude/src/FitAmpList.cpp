@@ -214,7 +214,7 @@ bool FitAmpList::createAllAmps(const DalitzEventPattern& thePattern
       continue;
     }
     if(dbThis) cout << "check init values: " << *fa << endl;
-    _fitAmps.push_back(fa);
+    if(!fa->canBeIgnored()) _fitAmps.push_back(fa);
   }
   return success;
 }

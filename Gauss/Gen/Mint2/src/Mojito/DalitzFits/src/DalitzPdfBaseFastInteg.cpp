@@ -271,6 +271,22 @@ void DalitzPdfBaseFastInteg::saveEachAmpsHistograms(const std::string& prefix) c
 std::vector<DalitzHistoSet> DalitzPdfBaseFastInteg::GetEachAmpsHistograms(){
   return _faint.GetEachAmpsHistograms();
 }
+
+DalitzHistoSet DalitzPdfBaseFastInteg::interferenceHistoSet() const{
+    return (_faint.interferenceHistoSet());
+}
+DalitzHistoSet DalitzPdfBaseFastInteg::interferenceHistoSet(){
+    // non-const version to satisfy IDalitzPdf
+    return (_faint.interferenceHistoSet());
+}
+void DalitzPdfBaseFastInteg::saveInterferenceHistograms(const std::string& prefix) const{
+    _faint.saveInterferenceHistograms(prefix);
+    return;
+}
+std::vector<DalitzHistoSet> DalitzPdfBaseFastInteg::GetInterferenceHistograms(){
+    return _faint.GetInterferenceHistograms();
+}
+
 void DalitzPdfBaseFastInteg::endFit(){
 
   //_faint.doFinalStats();

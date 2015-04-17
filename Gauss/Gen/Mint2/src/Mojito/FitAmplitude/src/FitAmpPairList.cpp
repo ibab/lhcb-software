@@ -306,16 +306,70 @@ std::vector<DalitzHistoSet> FitAmpPairList::GetEachAmpsHistograms(){
 	    if((*this)[i].isSingleAmp()){
 	      counter++;
 	      std::string name =  anythingToString(counter) + ".root";
+              double frac = (*this)[i].integral()/integral();  
 	      DalitzHistoSet hs((*this)[i].histoSet());
 	      std::string title = (*this)[i].amp1()->name();
 	      hs.setTitle(title);
 	      cout << "FitAmpPairList::saveEachAmpsHistograms: "
 		   << "saving " << title << " as " << name << endl;
+              hs.scale(frac/hs.integral());  
 	      HistoSet.push_back(hs);
 	    }
 	  }
 	  return HistoSet;
 }
+
+DalitzHistoSet FitAmpPairList::interferenceHistoSet() const{
+    DalitzHistoSet sum;
+    for(unsigned int i=0; i< this->size(); i++){
+        if(!(*this)[i].isSingleAmp())sum += (*this)[i].histoSet();
+    }
+    sum /= integral();
+    //  if(_Nevents > 0) sum /= (double) _Nevents;
+    // above two lines normalise this to 1.
+    
+    return sum;
+}
+
+void FitAmpPairList::saveInterferenceHistograms(const std::string& prefix) const{
+    DalitzHistoSet sum;
+    int counter=0;
+    for(unsigned int i=0; i< this->size(); i++){
+        if(!(*this)[i].isSingleAmp()){
+            counter++;
+            std::string name = prefix + "_" + anythingToString(counter) + ".root";
+            DalitzHistoSet hs((*this)[i].histoSet());
+            std::string title = (*this)[i].name();
+            hs.setTitle(title);
+            cout << "FitAmpPairList::saveEachAmpsHistograms: "
+            << "saving " << title << " as " << name << endl;
+            hs.save(name);
+        }
+    }
+    return;
+}
+
+std::vector<DalitzHistoSet> FitAmpPairList::GetInterferenceHistograms(){
+    std::vector<DalitzHistoSet> HistoSet;
+    DalitzHistoSet sum;
+    int counter=0;
+    for(unsigned int i=0; i< this->size(); i++){
+	    if(!(*this)[i].isSingleAmp()){
+            counter++;
+            std::string name =  anythingToString(counter) + ".root";
+            double frac = (*this)[i].integral()/integral();  
+            DalitzHistoSet hs((*this)[i].histoSet());
+            std::string title = (*this)[i].name();
+            hs.setTitle(title);
+            cout << "FitAmpPairList::saveEachAmpsHistograms: "
+            << "saving " << title << " as " << name << endl;
+            hs.scale(frac/hs.integral());  
+            HistoSet.push_back(hs);
+	    }
+    }
+    return HistoSet;
+}
+
 
 //Add Plot of eveything on top of each other here
 //Get EachAmpHistograms

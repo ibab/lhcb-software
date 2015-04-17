@@ -5,6 +5,13 @@
 ! Purpose     : Original author of MINT Dr. Jonas Rademacker.
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
+2015-04-17 - Philippe d'Argent
+ - FitAmpList::createAllAmps(const DalitzEventPattern& thePattern, const std::string& prefix) 
+   excludes Amplitudes which are fixed to zero
+   -> much better performance
+ - Histograms in FitAmpPairList::GetEachAmpsHistograms() correctly normalized
+ - Interference contribution can be plotted with DalitzHistoSet::drawWithFitAndEachAmpsAndInterference
+ - Bug fix in polVector.h
 
 2015-04-01 - Philippe d'Argent
  - Implemented photon polarisation vectors

@@ -140,6 +140,15 @@ void DalitzHistogram::smartTitle(  const DalitzCoordSet& c_in
 		std::string sij = convertInt(i);
 		c_out.ReplaceAll(sij,pat_in[i].name());
 	}
+        c_out.ReplaceAll("sij","m^{2}");
+        c_out.ReplaceAll("K+","K^{+}");
+        c_out.ReplaceAll("pi+","#pi^{+}");
+        c_out.ReplaceAll("pi-","#pi^{-}");
+        c_out.ReplaceAll("Jpsi0","J/#psi");
+        c_out.ReplaceAll("psi0","#psi");
+        c_out.ReplaceAll("gamma0","#gamma");
+
+        c_out.ReplaceAll(","," ");
 	_smartTitle = c_out;
 }
 
@@ -183,28 +192,29 @@ void DalitzHistogram::init(const DalitzCoordSet& c_in
   counted_ptr<TH1D> local_h(new TH1D(name().c_str(), name().c_str()
 				     , _nbins, mi, ma));
   local_h->SetDirectory(0);
-  local_h->SetNameTitle(hname().c_str(), smartTitle().c_str());
+  local_h->SetNameTitle(hname().c_str(), "");// smartTitle().c_str());
   local_h->Sumw2();
   local_h->SetLineWidth(2);
 
   std::string unitsName;
-  if     (_units == TeV*TeV) unitsName = "TeV^2";
-  else if(_units == GeV*GeV) unitsName = "GeV^2";
-  else if(_units == MeV*MeV) unitsName = "MeV^2";
-  else if(_units == keV*keV) unitsName = "keV^2";
-  else if(_units ==  eV* eV) unitsName = "eV^2";
+  if     (_units == TeV*TeV) unitsName = "TeV^{2}";
+  else if(_units == GeV*GeV) unitsName = "GeV^{2}";
+  else if(_units == MeV*MeV) unitsName = "MeV^{2}";
+  else if(_units == keV*keV) unitsName = "keV^{2}";
+  else if(_units ==  eV* eV) unitsName = "eV^{2}";
   else{
-    unitsName = anythingToString((int) (_units/(GeV*GeV))) + " GeV^2";
+    unitsName = anythingToString((int) (_units/(GeV*GeV))) + " GeV^{2}";
   }
 
-  std::string XLabel = _c.name() + " [" + unitsName + "]";
+  std::string XLabel =  (string)smartTitle().c_str()+ " [" + (string)unitsName + "]";
   local_h->GetXaxis()->SetTitle(XLabel.c_str());
+  local_h->GetXaxis()->SetTitleSize();
 
   double bw = (ma - mi)/((double)_nbins);
   char s[100]={'\0'};
   sprintf(s, "%f", bw);
   std::string st(s);
-  std::string YLabel = "Events / " + st + " " + unitsName;
+  std::string YLabel = "Yield / " + st + " " + unitsName;
 
   local_h->GetYaxis()->SetTitle(YLabel.c_str());
 

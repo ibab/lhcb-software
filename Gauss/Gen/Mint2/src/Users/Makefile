@@ -13,7 +13,8 @@ MOREINCS += $(wildcard $(MojitoDir)/*/src)
 MOREINCS += $(wildcard $(MintDir)/../..)
 MOREINCSFLAGS := $(patsubst %,-I%,$(MOREINCS))
 CXXFLAGS += $(MOREINCSFLAGS)
-
+#CXXFLAGS += -pg
+#LDFLAGS += -pg
 LIBS += -lMinuit
 #LIBS += -lprofiler
 

@@ -149,10 +149,16 @@ class DalitzPdfBaseFastInteg
   bool saveIntegrator(const std::string& fname)const;
 
   bool makePlots(const std::string& filename) const;
+
   virtual DalitzHistoSet histoSet() const;
   virtual DalitzHistoSet histoSet();
   void saveEachAmpsHistograms(const std::string& prefix) const;
   std::vector<DalitzHistoSet> GetEachAmpsHistograms();
+
+  virtual DalitzHistoSet interferenceHistoSet() const;
+  virtual DalitzHistoSet interferenceHistoSet();
+  void saveInterferenceHistograms(const std::string& prefix) const;
+  std::vector<DalitzHistoSet> GetInterferenceHistograms();  
 
   IFastAmplitudeIntegrable* getFitAmpSum(){ return _amps;}
   //double efficiency(){return _efficiency->RealVal();}

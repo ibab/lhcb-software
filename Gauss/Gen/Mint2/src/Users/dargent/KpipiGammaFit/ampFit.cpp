@@ -41,6 +41,7 @@
 #include "TNtupleD.h"
 #include "TTree.h"
 #include "TFile.h"
+#include <TStyle.h>
 
 
 #include "TRandom2.h"
@@ -241,12 +242,15 @@ int ampFit(){
 
 
   DalitzHistoSet fitH = amps.histoSet();
+  DalitzHistoSet interferenceH = amps.interferenceHistoSet();
   //fitH.save("plotsFromIntegrator.root");
   //fitH.draw("fitPlots_","pdf");
   datH.drawWithFitNorm(fitH, "datFit_","eps");
       
-  //std::vector<DalitzHistoSet> EachAmpsHistos = amps.GetEachAmpsHistograms();
-  //datH.drawWithFitAndEachAmps(datH, fitH, EachAmpsHistos, "WithAmps", "pdf");
+  std::vector<DalitzHistoSet> EachAmpsHistos = amps.GetEachAmpsHistograms();
+  datH.drawWithFitAndEachAmps(datH, fitH, EachAmpsHistos, "WithAmps", "eps");
+  datH.drawWithFitAndEachAmpsAndInterference(datH, fitH, interferenceH, EachAmpsHistos, "WithAmpsAndInterference", "eps");
+
   //EachAmpsHistos[1].draw("EachAmpsTest","pdf");
   //datH.save("plotFromEvtList.root");
   //datH.draw("dataPlotsEff_","pdf");
@@ -260,6 +264,17 @@ int ampFit(){
 
 
 int main(){
+  gStyle->SetOptStat(0);
+  gStyle->SetTitleXSize(0.07);
+  gStyle->SetTitleYSize(0.05);
+  gStyle->SetTitleFont(42,"X");
+  gStyle->SetTitleFont(42,"Y");
+  gStyle->SetLabelFont(42,"X");
+  gStyle->SetLabelFont(42,"Y");
+  gStyle->SetLabelOffset(0.01,"X");
+  gStyle->SetPadTickX(1);
+  gStyle->SetPadTickY(1);
+  
   return ampFit();
 }
 //

@@ -7,7 +7,7 @@
 "MCFileSave"		 1
 "IntegratorFileSave"     1
 
-"IntegPrecision"        5.0e-2
+"IntegPrecision"        1.0e-2
 "IntegMethod"           "efficient"
 IntegratorSource       "new"
 

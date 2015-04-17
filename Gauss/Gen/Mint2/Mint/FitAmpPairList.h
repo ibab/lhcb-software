@@ -87,9 +87,11 @@ class FitAmpPairList
   
   virtual DalitzHistoSet histoSet() const;
   void saveEachAmpsHistograms(const std::string& prefix) const;
-
   std::vector<DalitzHistoSet> GetEachAmpsHistograms();
 
+  DalitzHistoSet interferenceHistoSet() const;
+  void saveInterferenceHistograms(const std::string& prefix) const;
+  std::vector<DalitzHistoSet> GetInterferenceHistograms();
 
   virtual void doFinalStats(MINT::Minimiser* min=0);
 

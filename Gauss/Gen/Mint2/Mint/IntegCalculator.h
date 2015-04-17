@@ -61,6 +61,11 @@ class IntegCalculator : public virtual IIntegrationCalculator{
   virtual DalitzHistoSet histoSet() const;
   virtual void saveEachAmpsHistograms(const std::string& prefix) const;
   virtual std::vector<DalitzHistoSet> GetEachAmpsHistograms();
+
+  virtual DalitzHistoSet interferenceHistoSet() const;
+  virtual void saveInterferenceHistograms(const std::string& prefix) const;
+  virtual std::vector<DalitzHistoSet> GetInterferenceHistograms();
+
   virtual void doFinalStats(MINT::Minimiser* mini=0);
 
   virtual bool save(const std::string& dirname) const;

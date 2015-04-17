@@ -340,27 +340,24 @@ bool DalitzHistoSet::drawWithFitAndEachAmps(
   bool sc=true;
   std::vector<DalitzHistoSet>::iterator amps_it;
 
-  for(map< DalitzCoordSet, DalitzHistogram>::iterator
-	it = data.begin();
-      it != data.end();
-      it++){
+  for(map< DalitzCoordSet, DalitzHistogram>::iterator it = data.begin();it != data.end();it++){
 
-	int counter = 0;
+    int counter = 0;
     TCanvas can;
 
-    map< DalitzCoordSet, DalitzHistogram >::iterator jt
-      = fit.find(it->first);
+    map< DalitzCoordSet, DalitzHistogram >::iterator jt= fit.find(it->first);
     if(jt == fit.end()) continue;
     MINT::counted_ptr<TH1> dataHisto = (it->second).getHisto();
     std::cout << it->first << endl;
+    MINT::counted_ptr<TH1> FitHisto = jt->second.getHisto();
 
     TLegend* leg = new TLegend(0.5 //xmin
-       				,0.5	//y-min
+				,0.5	//y-min
        				,0.98	//x-max
        			        ,0.935
 				,""); //y-max //coordinates are fractions
 
-    leg->SetTextSize(0.05);
+    leg->SetTextSize(0.03);
     if ((it->first).name() == "sij(2,3,4)" ||
     	(it->first).name() == "sij(1,3,4)" ||
     	(it->first).name() == "sij(1,2,4)" ||
@@ -369,55 +366,218 @@ bool DalitzHistoSet::drawWithFitAndEachAmps(
     	leg->SetX1(0.1);
     	leg->SetX2(0.4);
     }
+    
+    TLegend* leg2 = new TLegend(0.,0.,1.,1.,"");
+    leg2->SetLineStyle(0);
+    leg2->SetLineColor(0);
 
-	(*dataHisto).Draw("E1");
-	leg->AddEntry(&(*dataHisto),"data","lep");  // "l" means line
+    (*dataHisto).Scale(1./(*dataHisto).Integral());
+    (*dataHisto).SetMinimum(0.0001);
+    double max = (*dataHisto).GetMaximum();
+    if((*FitHisto).GetMaximum()>max)max= (*FitHisto).GetMaximum();
+    (*dataHisto).SetMaximum(max*1.1);
+    (*dataHisto).SetLineColor(kBlack);
+    (*dataHisto).SetMarkerStyle(20);
+    (*dataHisto).SetMarkerSize(0.6);
+    (*dataHisto).Draw("E");
+	
+    (*FitHisto).SetLineColor(kBlack);
+    (*FitHisto).Draw("HIST C SAME");
+    //leg->AddEntry(&(*FitHisto),"Fit","l");  // "l" means line
+    //leg->AddEntry(&(*dataHisto),"data","lep");  // "l" means line
 
-	MINT::counted_ptr<TH1> FitHisto = jt->second.getHisto();
-	(*FitHisto).SetLineColor(1+counter);
-	(*FitHisto).Draw("HIST C SAME");
-	leg->AddEntry(&(*FitHisto),"Fit","l");  // "l" means line
-
-	// suppress warning double NEntries = (*FitHisto).GetEntries();
-  (*FitHisto).GetEntries();
-	// suppress warning double NormFactor = (*FitHisto).GetNormFactor();
-  (*FitHisto).GetNormFactor();
+    // suppress warning double NEntries = (*FitHisto).GetEntries();
+    (*FitHisto).GetEntries();
+    // suppress warning double NormFactor = (*FitHisto).GetNormFactor();
+    (*FitHisto).GetNormFactor();
 
     MINT::counted_ptr<TH1> histo;
 
     for (amps_it = amps.begin(); amps_it < amps.end(); amps_it++)
     {
-	  map< DalitzCoordSet, DalitzHistogram >::iterator it2
-	      = (*amps_it).find(it->first);
+	  map< DalitzCoordSet, DalitzHistogram >::iterator it2 = (*amps_it).find(it->first);
 
 	  counter++;
 	  histo = it2->second.getHisto();
 
 	  if (counter == 9) counter++; //Remove white colour
-	  	  (*histo).SetLineColor(1+counter);
+	  (*histo).SetLineColor(1+counter);
 
-		 const char* title = (*histo).GetTitle();
-		 leg->AddEntry(&(*histo),title,"l");  // "l" means line
+          const char* title = (*histo).GetTitle();
+          leg->AddEntry(&(*histo),title,"l");  // "l" means line
+          leg2->AddEntry(&(*histo),title,"l");  // "l" means line
 
-		 (*histo).Draw("HIST C SAME");
-		 // suppress warning double NormFactorAmp = 
-     (*histo).GetNormFactor();
+          (*histo).Draw("HIST C SAME");
+	  // suppress warning double NormFactorAmp = 
+          (*histo).GetNormFactor();
     }
 
     std::string SaveName = it->first.name();
-    TString SaveFull = baseName+SaveName+".pdf";
+    TString SaveFull = baseName+SaveName+".eps";
+    TString SaveFullLeg = baseName+SaveName+"_leg.eps";
+    TString SaveFullLog = baseName+SaveName+"_log.eps";
+    TString SaveLeg = baseName+"_leg.eps";
+
     SaveFull.ReplaceAll("(","");
     SaveFull.ReplaceAll(")","");
     SaveFull.ReplaceAll(",","_");
-	leg->SetFillColor(4000);
-	leg->SetShadowColor(4000);
-	leg->Draw();
-	can.Print(SaveFull);
+    SaveFullLeg.ReplaceAll("(","");
+    SaveFullLeg.ReplaceAll(")","");
+    SaveFullLeg.ReplaceAll(",","_");
+    SaveFullLog.ReplaceAll("(","");
+    SaveFullLog.ReplaceAll(")","");
+    SaveFullLog.ReplaceAll(",","_");
+    SaveLeg.ReplaceAll("(","");
+    SaveLeg.ReplaceAll(")","");
+    SaveLeg.ReplaceAll(",","_");
+
+    can.Print(SaveFull);
+    
+    gPad->SetLogy(1);
+    can.Print(SaveFullLog);
+    gPad->SetLogy(0);
+
+    leg->SetFillColor(4000);
+    leg->SetShadowColor(4000);
+    leg->Draw();
+    can.Print(SaveFullLeg);
+
+    TCanvas c;
+    c.cd();
+    leg2->SetFillColor(4000);
+    leg2->SetShadowColor(4000);
+    leg2->Draw();
+    c.Print(SaveLeg);
+
   }
   return sc;
 }
 
+bool DalitzHistoSet::drawWithFitAndEachAmpsAndInterference(
+				   DalitzHistoSet& data
+				 , DalitzHistoSet& fit, DalitzHistoSet& interference
+				 , std::vector<DalitzHistoSet>& amps
+				 , const std::string& baseName // =""
+           , const std::string& // format // ="eps"
+           , const std::string& // fitDrawOpt // ="HIST C SAME"
+           ) const{
+  bool sc=true;
+  std::vector<DalitzHistoSet>::iterator amps_it;
 
+  for(map< DalitzCoordSet, DalitzHistogram>::iterator it = data.begin();it != data.end();it++){
+
+    int counter = 0;
+    TCanvas can;
+
+    map< DalitzCoordSet, DalitzHistogram >::iterator jt= fit.find(it->first);
+    if(jt == fit.end()) continue;
+    MINT::counted_ptr<TH1> dataHisto = (it->second).getHisto();
+    std::cout << it->first << endl;
+    MINT::counted_ptr<TH1> FitHisto = jt->second.getHisto();
+
+    map< DalitzCoordSet, DalitzHistogram >::iterator jt_interference = interference.find(it->first);
+    if(jt_interference == interference.end()) continue;
+    MINT::counted_ptr<TH1> interferenceHisto = (jt_interference->second).getHisto();
+
+
+    TLegend* leg = new TLegend(0.5 //xmin
+				,0.5	//y-min
+       				,0.98	//x-max
+       			        ,0.935
+				,""); //y-max //coordinates are fractions
+
+    leg->SetTextSize(0.01);
+    if ((it->first).name() == "sij(2,3,4)" ||
+    	(it->first).name() == "sij(1,3,4)" ||
+    	(it->first).name() == "sij(1,2,4)" ||
+    	(it->first).name() == "sij(1,2,3)" )
+    {
+    	leg->SetX1(0.1);
+    	leg->SetX2(0.4);
+    }
+    
+    TLegend* leg2 = new TLegend(0.,0.,1.,1.,"");
+    leg2->SetLineStyle(0);
+    leg2->SetLineColor(0);
+
+    (*dataHisto).Scale(1./(*dataHisto).Integral());
+    double max = (*dataHisto).GetMaximum();
+    if((*FitHisto).GetMaximum()>max)max= (*FitHisto).GetMaximum();
+    (*dataHisto).SetMaximum(max*1.1);
+    (*dataHisto).SetLineColor(kBlack);
+    (*dataHisto).SetMarkerStyle(20);
+    (*dataHisto).SetMarkerSize(0.6);
+    (*dataHisto).Draw("E");
+	
+    (*FitHisto).SetLineColor(kBlack);
+    (*FitHisto).Draw("HIST C SAME");
+    //leg->AddEntry(&(*FitHisto),"Fit","l");  // "l" means line
+    //leg->AddEntry(&(*dataHisto),"data","lep");  // "l" means line
+
+    (*interferenceHisto).SetLineColor(kBlack);
+    (*interferenceHisto).SetLineStyle(kDashed);
+    (*interferenceHisto).Draw("HIST C SAME");
+    leg->AddEntry(&(*interferenceHisto),"Interference","l"); 
+    leg2->AddEntry(&(*interferenceHisto),"Interference","l"); 
+
+    // suppress warning double NEntries = (*FitHisto).GetEntries();
+    (*FitHisto).GetEntries();
+    // suppress warning double NormFactor = (*FitHisto).GetNormFactor();
+    (*FitHisto).GetNormFactor();
+
+    MINT::counted_ptr<TH1> histo;
+
+    for (amps_it = amps.begin(); amps_it < amps.end(); amps_it++)
+    {
+	  map< DalitzCoordSet, DalitzHistogram >::iterator it2 = (*amps_it).find(it->first);
+
+	  counter++;
+	  histo = it2->second.getHisto();
+
+	  if (counter == 9) counter++; //Remove white colour
+	  (*histo).SetLineColor(1+counter);
+
+          const char* title = (*histo).GetTitle();
+          leg->AddEntry(&(*histo),title,"l");  // "l" means line
+          leg2->AddEntry(&(*histo),title,"l");  // "l" means line
+
+          (*histo).Draw("HIST C SAME");
+	  // suppress warning double NormFactorAmp = 
+          (*histo).GetNormFactor();
+    }
+
+    std::string SaveName = it->first.name();
+    TString SaveFull = baseName+SaveName+".eps";
+    TString SaveFullLeg = baseName+SaveName+"_leg.eps";
+    TString SaveLeg = baseName+"_leg.eps";
+
+    SaveFull.ReplaceAll("(","");
+    SaveFull.ReplaceAll(")","");
+    SaveFull.ReplaceAll(",","_");
+    SaveFullLeg.ReplaceAll("(","");
+    SaveFullLeg.ReplaceAll(")","");
+    SaveFullLeg.ReplaceAll(",","_");
+    SaveLeg.ReplaceAll("(","");
+    SaveLeg.ReplaceAll(")","");
+    SaveLeg.ReplaceAll(",","_");
+
+    can.Print(SaveFull);
+    
+    leg->SetFillColor(4000);
+    leg->SetShadowColor(4000);
+    leg->Draw();
+    can.Print(SaveFullLeg);
+
+    TCanvas c;
+    c.cd();
+    leg2->SetFillColor(4000);
+    leg2->SetShadowColor(4000);
+    leg2->Draw();
+    c.Print(SaveLeg);
+
+  }
+  return sc;
+}
 
 bool DalitzHistoSet::drawWithFitNorm(const DalitzHistoSet& fit
 				     , const std::string& baseName // =""

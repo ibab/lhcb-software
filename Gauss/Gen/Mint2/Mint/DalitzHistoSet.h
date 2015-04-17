@@ -60,6 +60,16 @@ class DalitzHistoSet : public std::map< DalitzCoordSet, DalitzHistogram>{
   				 , const std::string& format = "eps"
   				 , const std::string& fitDrawOpt = "HIST C SAME"
   				 ) const;
+
+  bool drawWithFitAndEachAmpsAndInterference(
+		  	  	   DalitzHistoSet& data
+		  	  	 , DalitzHistoSet& fit , DalitzHistoSet& interference
+  				 , std::vector<DalitzHistoSet>& amps
+  				 , const std::string& baseName =""
+  				 , const std::string& format = "eps"
+  				 , const std::string& fitDrawOpt = "HIST C SAME"
+  				 ) const;
+
   bool drawWithFitNorm(const DalitzHistoSet& fit
 		       , const std::string& baseName=""
 		       , const std::string& format="eps"

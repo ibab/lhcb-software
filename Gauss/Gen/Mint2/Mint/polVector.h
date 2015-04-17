@@ -69,7 +69,7 @@ class polVector : public TLorentzVectorC{
                     _v[1]*=1./sqrt(2);      
                 }
                 
-                if(lambda==1){
+                else if(lambda==1){
                     _v[0].SetXYZT(-(x*x*(1-c)+c),-x*y*(1-c),y*s,0  );
                     _v[0]*=1./sqrt(2);
                     _v[1].SetXYZT(-x*y*(1-c),-(y*y*(1-c)+c),-x*s,0);
@@ -97,7 +97,7 @@ class polVector : public TLorentzVectorC{
                     _v[1].SetXYZT(0,-1/sqrt(2),0,0);
                 }
                 
-                if(lambda==1){
+                else if(lambda==1){
                     _v[0].SetXYZT(-1/sqrt(2),0,0,0);
                     _v[1].SetXYZT(0,-1/sqrt(2),0,0);
                 }
