@@ -19,13 +19,6 @@ class TurboLines(Hlt2LinesConfigurableUser) :
 					             'DownstreamPlusMatched',
 					             'DownstreamMinusMatched'
 					            ],
-				 'CharmHad' : ['Dpm2KPiPi_XSec',
-					           'Dpm2KKPi_XSec',
-					           'Ds2KKPi_XSec',
-					           'Ds2PiPiPi_XSec',
-					           'Lc2KPPi_XSec',
-					           'Lc2PiPPi_XSec',
-					           'Sigmac_2LcPi_XSec']
 			         }
                  }
 

@@ -16,16 +16,20 @@ class CommissioningLines(Hlt2LinesConfigurableUser):
                                   'VoidFilter' : ''},
                  'Lumi'        : {'HLT1' : "HLT_PASS_SUBSTR('Hlt1Lumi')",
                                   'VoidFilter' : ''},
+                 'KS0_DD'      : {'HLT1' : "HLT_PASS_RE('^Hlt1(?!Lumi).*Decision$')",
+                                  'VoidFilter' : ''},
                 }
     
     def __apply_configuration__(self):
         from Stages import CopyTracks, IncidentGenerator, ErrorCounter
+        from Hlt2SharedParticles.Ks import KsDD   as KS0_DD
         stages = {'Forward'     : [CopyTracks()],
                   'DebugEvent'  : [IncidentGenerator()],
                   'ErrorEvent'  : [ErrorCounter()],
                   'PassThrough' : [],
                   'Transparent' : [],
-                  'Lumi'        : []}
+                  'Lumi'        : [],
+                  'KS0_DD'      : [KS0_DD]}
 
         from HltLine.HltLine import Hlt2Line
         for name, algos in self.algorithms(stages).iteritems():
@@ -35,4 +39,9 @@ class CommissioningLines(Hlt2LinesConfigurableUser):
                      HLT1       = localProps.get('HLT1', None),
                      VoidFilter = localProps.get('VoidFilter', None),
                      priority   = localProps.get('Priority', None))
-
+        # And the turbofied KS0_DD
+        Hlt2Line('KS0_DDTurbo', prescale = self.prescale, postscale = self.postscale,
+                     algos      = stages['KS0_DD'],
+                     HLT1       = localProps.get('HLT1', None),
+                     VoidFilter = localProps.get('VoidFilter', None),
+                     priority   = localProps.get('Priority', None),Turbo = True)

@@ -39,6 +39,32 @@ class CharmHadD02HHLines : # {
                     }
                 }
 
+        # The tagger config
+        self.slotDict['D0_TAG_CPV'] = { 
+                                        'DeltaM_AM_MIN'            :  130.0 * MeV,
+                                        'DeltaM_MIN'               :  130.0 * MeV,
+                                        'DeltaM_AM_MAX'            :  165.0 * MeV,
+                                        'DeltaM_MAX'               :  160.0 * MeV,
+                                        'TagVCHI2PDOF_MAX'         :  25.0
+                                      }  
+
+        # The lifetime unbiased lines, these are all tagged, TOS linked to the
+        # HLT1 lifetime unbiased lines
+        self.slotDict['D02HH_LTUNB'] = {
+                                        'TisTosSpec'               : "Hlt1CalibTracking.*Decision%TOS",
+                                        'Trk_ALL_PT_MIN'           :  500 * MeV,
+                                        'Trk_Max_APT_MIN'          :  800 * MeV,
+                                        'D0_VCHI2PDOF_MAX'         :  10.0,
+                                        'D0_BPVLTIME_MIN'          :  0.2 * picosecond,
+                                        'D0_BPVDIRA_MIN'           :  0.9,
+                                        'Pair_AMINDOCA_MAX'        :  0.1 * mm,
+                                        'D0_PT_MIN'                :  1000 * MeV,
+                                        'AM_MIN'                   :  1774 * MeV,
+                                        'AM_MAX'                   :  1954 * MeV,
+                                        'Mass_M_MIN'               :  1784.0 * MeV,
+                                        'Mass_M_MAX'               :  1944.0 * MeV,
+                                        }
+
         self.__stages = { }
     # }
 
@@ -59,6 +85,8 @@ class CharmHadD02HHLines : # {
         ##   that uses these lines.
         if len(self.__stages) == 0 : # {
             from Stages import D02HH_D0ToKmPip, D02HH_D0ToKmKp, D02HH_D0ToPimPip
+            from Stages import D02HH_D0ToKmPip_LTUNB, D02HH_D0ToKmKp_LTUNB, D02HH_D0ToPimPip_LTUNB
+            from Stages import TagDecay,SharedSoftTagChild_pi
 
             ## Hmm, having several MassFilter with the same name seems strange,
             ## but supposedly it does something sensible.
@@ -67,6 +95,32 @@ class CharmHadD02HHLines : # {
                               , 'D02KPi'  : [D02HH_D0ToKmPip]
                               , 'D02PiPi' : [D02HH_D0ToPimPip]
             }
+            # Now add the tagged lines
+            self.__stages['Dst_2D0Pi_D02KK']      = [TagDecay('D0_TAG_CPV', ["D*(2010)+ -> D0 pi+","D*(2010)- -> D0 pi-"],
+                                                             inputs = [ self.__stages['D02KK'][0],
+                                                                        SharedSoftTagChild_pi ])]
+            self.__stages['Dst_2D0Pi_D02PiPi']    = [TagDecay('D0_TAG_CPV', ["D*(2010)+ -> D0 pi+","D*(2010)- -> D0 pi-"],
+                                                             inputs = [ self.__stages['D02PiPi'][0],
+                                                                         SharedSoftTagChild_pi ])] 
+            self.__stages['Dst_2D0Pi_D02KPiCF']   = [TagDecay('D0_TAG_CPV', ["[D*(2010)+ -> D0 pi+]cc"],
+                                                             inputs = [ self.__stages['D02KPi'][0],
+                                                                        SharedSoftTagChild_pi ])]
+            self.__stages['Dst_2D0Pi_D02KPiDCS']  = [TagDecay('D0_TAG_CPV', ["[D*(2010)- -> D0 pi-]cc"],
+                                                            inputs = [ self.__stages['D02KPi'][0],
+                                                                       SharedSoftTagChild_pi ])]
+            # The tagged LTUNB lines
+            self.__stages['Dst_2D0Pi_D02KK_LTUNB']      = [TagDecay('D0_TAG_CPV', ["D*(2010)+ -> D0 pi+","D*(2010)- -> D0 pi-"],
+                                                                   inputs = [ D02HH_D0ToKmKp_LTUNB,
+                                                                              SharedSoftTagChild_pi ])]
+            self.__stages['Dst_2D0Pi_D02PiPi_LTUNB']    = [TagDecay('D0_TAG_CPV', ["D*(2010)+ -> D0 pi+","D*(2010)- -> D0 pi-"],
+                                                                   inputs = [ D02HH_D0ToPimPip_LTUNB,
+                                                                              SharedSoftTagChild_pi ]) ] 
+            self.__stages['Dst_2D0Pi_D02KPiCF_LTUNB']   = [TagDecay('D0_TAG_CPV', ["[D*(2010)+ -> D0 pi+]cc"],
+                                                                   inputs = [ D02HH_D0ToKmPip_LTUNB,
+                                                                              SharedSoftTagChild_pi ])]
+            self.__stages['Dst_2D0Pi_D02KPiDCS_LTUNB']  = [TagDecay('D0_TAG_CPV', ["[D*(2010)- -> D0 pi-]cc"],
+                                                                   inputs = [ D02HH_D0ToKmPip_LTUNB,
+                                                                              SharedSoftTagChild_pi ])]
         # }
 
         return self.__stages

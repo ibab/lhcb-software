@@ -270,6 +270,42 @@ class TagDecay(Hlt2Combiner) : # {
                               MotherCut = mc, Preambulo = []) 
 # }
 
+class TagDecayWithNeutral(Hlt2Combiner) : # {
+    """
+    Generic 2-body combiner for adding a soft neutral particle to another particle
+    candidate, e.g., adding a pi0 to a D0 to created a D*0 -> D0 pi0 candidate.
+    It cuts on the mass difference of the 2-body vertex.
+
+    !!!NOTE!!! The implementation of the mass difference cut requires that
+    the soft particle is the second product in the decay descriptor:
+        GOOD:      D*(2007)0 -> D0 pi0
+        NOT GOOD:  D*(2007)0 -> pi0 D0
+
+    Configuration dictionaries must contain the following keys:
+        'DeltaM_AM_MIN'
+        'DeltaM_AM_MAX'    : lower and upper limits of the delta mass window
+                             at the CombinationCut level, AM - AM1.
+        'DeltaM_MIN'
+        'DeltaM_MAX'       : lower and upper limits of the delta mass window
+                             at the MotherCut level, M - M1.
+    """
+    def __init__(self, name, decay, inputs, DaughtersCuts = { }, shared = False, nickname = None):
+        cc =    ('in_range( %(DeltaM_AM_MIN)s, (AM - AM1), %(DeltaM_AM_MAX)s )')
+        mc =    ("in_range( %(DeltaM_MIN)s, (M - M1), %(DeltaM_MAX)s )")
+
+        ## Since this class allows freedom to externally specify DaughtersCuts,
+        ##   we should add a dependence on the PV3D
+        from HltTracking.HltPVs import PV3D
+        Hlt2Combiner.__init__(self, name, decay, inputs,
+                              dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                              DaughtersCuts = DaughtersCuts,
+                              CombinationCut = cc, 
+                              shared = shared,
+                              nickname = nickname,
+                              MotherCut = mc, 
+                              ParticleCombiners={'':'ParticleAdder'},
+                              Preambulo = []) 
+# }
 
 ## Combiner class for D0 -> h h' decays with detachement cuts
 ## ------------------------------------------------------------------------- ##
@@ -508,6 +544,11 @@ XSec_LcpToPimPpPip = DetachedHHHCombiner( 'XSec_LcpToPimPpPip'
         , inputs = [ SharedDetachedLcChild_p, SharedDetachedLcChild_pi ]
         , nickname = 'Lc2HHH_XSec' ) ## 'Lc2HHH_XSec' defined in XSecLines.py
 
+XSec_D02KPi = DetachedD02HHCombiner('XSec_D02KPi'
+        , decay = "[D0 -> K- pi+]cc"
+        , inputs = [ SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi ]
+        , nickname = 'D02HH_XSec',shared=True ) ## 'D02HH_XSec' defined in XSecLines.py 
+
 ## Combiner for KPi detection asymmetry studies
 DetAsym_DpToKmPipPip = DetachedHHHCombiner( 'DetAsym_DpToKmPipPip'
         , decay = "[D+ -> K- pi+ pi+]cc"
@@ -599,6 +640,11 @@ class DV4BCombiner(Hlt2Combiner):
                               tistos = 'TisTosSpec', combiner = DaVinci__N4BodyDecays, DaughtersCuts = dc,
                               Combination12Cut = c12, Combination123Cut = c123, CombinationCut = cc,
                               MotherCut = mc, Preambulo = [], nickname = nickname)
+
+XSec_D02K3Pi = DV4BCombiner('XSec_D02K3Pi'
+        , decay = "[D0 -> K- pi+ pi+ pi-]cc"
+        , inputs = [ SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi ]
+        , nickname = 'D02HHHH_XSec',shared=True ) ## 'D02HHHH_XSec' defined in XSecLines.py 
 
 class HHHHCombiner(Hlt2Combiner):
     def __init__(self, name, decay,inputs):
@@ -744,18 +790,18 @@ class DetachedV0V0Combiner(Hlt2Combiner):
 
 ## Lifetime unbiased combiner class for D0 -> h h' decays
 class D02HHCombiner(Hlt2Combiner) : # { 
-    def __init__(self, name, decay, inputs, slotName = None, shared = False) : # { 
+    def __init__(self, name, decay, inputs, nickname = None, shared = False) : # { 
 
         incuts = "(TRCHI2DOF< %(Trk_ALL_TRCHI2DOF_MAX)s )" \
-                  "& (PT> %(Trk_PT_MIN)s)" \
-                  "& (P> %(Trk_P_MIN)s)" 
+                  "& (PT> %(Trk_ALL_PT_MIN)s)" \
+                  "& (P> %(Trk_ALL_P_MIN)s)" 
 
         dc = {   'pi+' : incuts
                , 'K+' : incuts
              }   
 
         ## Assume that the wide mass range is wider than the narrow range.
-        combcuts = "in_range(%(WideMass_M_MIN)s,  AM, %(WideMass_M_MAX)s)" \
+        combcuts = "in_range(%(AM_MIN)s,  AM, %(AM_MAX)s)" \
                    "& ((APT1 > %(Trk_Max_APT_MIN)s) " \
                        "| (APT2 > %(Trk_Max_APT_MIN)s))" \
                    "& (APT > %(D0_PT_MIN)s)" \
@@ -773,12 +819,32 @@ class D02HHCombiner(Hlt2Combiner) : # {
         Hlt2Combiner.__init__( self, name, decay, inputs,
                                dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                                tistos = 'TisTosSpec',
-                               nickname = slotName,
+                               nickname = nickname,
                                shared = shared,
                                DaughtersCuts = dc, 
                                CombinationCut = combcuts,
                                MotherCut = parentcuts,
                                Preambulo = [] )
+
+## Shared instances of D02HHCombiner for LTUnb lines
+## ------------------------------------------------------------------------- ##
+
+
+D02HH_D0ToKmPip_LTUNB  = D02HHCombiner( 'D02HH_D0ToKmPip_LTUNB'
+        , decay = "[D0 -> K- pi+]cc"
+        , inputs = [ SharedPromptChild_K,SharedPromptChild_pi]
+        , nickname = 'D02HH_LTUNB'            ## def in D02HHLines.py
+        , shared = True )
+D02HH_D0ToKmKp_LTUNB   = D02HHCombiner( 'D02HH_D0ToKmKp_LTUNB'
+        , decay = "D0 -> K- K+"         ## Only D0s to prevent duplication
+        , inputs = [ SharedPromptChild_K]
+        , nickname = 'D02HH_LTUNB'            ## def in D02HHLines.py
+        , shared = True )
+D02HH_D0ToPimPip_LTUNB = D02HHCombiner( 'D02HH_D0ToPimPip_LTUNB'
+        , decay = "D0 -> pi- pi+"       ## Only D0s to prevent duplication
+        , inputs = [ SharedPromptChild_pi] 
+        , nickname = 'D02HH_LTUNB'            ## def in D02HHLines.py
+        , shared = True )
 
 class DetachedHHChildCombiner(Hlt2Combiner):
     # combiner for 2-body displaced tracks to be used in multi-body D decays

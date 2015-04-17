@@ -8,6 +8,16 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-17 - V. Gligorov
+ - Add D->KPi (untagged+tagged) and D->K3Pi (tagged) lines for early XSec measurements
+ - Add D*0->D0pi0 and Ds*->Dsgamma tagged lines for early XSec measurements
+ - Add a DD KS0 line for commissioning with smog
+ - Add TagDecayWithNeutral class to CharmHad/Stages to allow tagging with pi0/gammas
+ - Add lifetime unbiased, tagged, D0->hh lines for CPV measurements
+ - Add tagged, lifetime biased, D->hh lines for CPV measurements
+ - Add functionality to CharmHad/Lines to make a turbo copy of any line
+   with 'Turbo' in its name
+
 ! 2015-04-17 - Francesco Dettori
  - Added Hlt2DiMuonSoft line for soft dimuons (resp. Diego Martinez) 
  - Minor bug fix to RareStrange lines
