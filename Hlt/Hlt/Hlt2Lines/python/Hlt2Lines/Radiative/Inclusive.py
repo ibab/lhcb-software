@@ -32,7 +32,8 @@ class RadiativeInclusiveLines(RadiativeLineBuilder):
         # Filter BDT
         filtered_two_plus_one = BonsaiBDTFilter('HHGammaBBDT',
                                                 [two_body_plus_photon],
-                                                props['HHGammaBBDT'])
+                                                props['HHGammaBBDT'],
+                                                preambulo=['from LoKiCore.math import log10'])
         filtered_three_plus_one = BonsaiBDTFilter('HHHGammaBBDT',
                                                   [three_body_plus_photon],
                                                   props['HHHGammaBBDT'])
@@ -48,7 +49,6 @@ class RadiativeInclusiveLines(RadiativeLineBuilder):
                 'RadiativeIncHHGammaEE' : [TrackGEC(), PV3D('Hlt2'), filtered_two_plus_one_ee],
                 'RadiativeIncHHHGammaEE': [TrackGEC(), PV3D('Hlt2'), filtered_three_plus_one_ee]}
 
-
     @staticmethod
     def get_cuts():
         from GaudiKernel.SystemOfUnits import MeV
@@ -61,22 +61,41 @@ class RadiativeInclusiveLines(RadiativeLineBuilder):
                      'CORRM_MAX'         : 10000*MeV,
                      'DIRA_MIN'          : 0}
         return {'HHGammaCombo': comb_cuts,
-                'HHGammaBBDT': {'BBDT_PARAMS': 'file_name',
-                                'BBDT_VARMAP': {},
+                'HHGammaBBDT': {'BBDT_PARAMS': 'Hlt2_RadiativeInc_Generic_BDTParams_v0r0.txt',
+                                'BBDT_VARMAP': {'nbody_fd_rho'      : 'BPVVDRHO',
+                                                'nbody_vtx_chi2'    : 'log10(CHILD(VFASPF(VCHI2), 1))',
+                                                'sv_ipchi2'         : 'log10(CHILD(BPVIPCHI2(), 1))',
+                                                'sv_children_pt_sum': 'CHILD(PT, 1) + CHILD(PT, 2)',
+                                                'gamma_pt'          : 'CHILD(PT, 2)',
+                                                'nbody_doca_max'    : 'CHILD(DOCA(1,2), 1)'},
                                 'BBDT_CUT': 0.0},
                 'HHHGammaCombo': comb_cuts,
-                'HHHGammaBBDT': {'BBDT_PARAMS': 'file_name',
-                                 'BBDT_VARMAP': {},
+                'HHHGammaBBDT': {'BBDT_PARAMS': 'Hlt2_RadiativeInc_Generic_BDTParams_v0r0.txt',
+                                 'BBDT_VARMAP': {'nbody_fd_rho'      : 'BPVVDRHO',
+                                                 'nbody_vtx_chi2'    : 'log10(CHILD(VFASPF(VCHI2), 1))',
+                                                 'sv_ipchi2'         : 'log10(CHILD(BPVIPCHI2(), 1))',
+                                                 'sv_children_pt_sum': 'CHILD(PT, 1) + CHILD(PT, 2)',
+                                                 'gamma_pt'          : 'CHILD(PT, 2)',
+                                                 'nbody_doca_max'    : 'CHILD(DOCA(1,2), 1)'},
                                  'BBDT_CUT': 0.0},
                 'HHGammaEECombo': comb_cuts,
-                'HHGammaEEBBDT': {'BBDT_PARAMS': 'file_name',
-                                  'BBDT_VARMAP': {},
+                'HHGammaEEBBDT': {'BBDT_PARAMS': 'Hlt2_RadiativeInc_Generic_BDTParams_v0r0.txt',
+                                  'BBDT_VARMAP': {'nbody_fd_rho'      : 'BPVVDRHO',
+                                                  'nbody_vtx_chi2'    : 'log10(CHILD(VFASPF(VCHI2), 1))',
+                                                  'sv_ipchi2'         : 'log10(CHILD(BPVIPCHI2(), 1))',
+                                                  'sv_children_pt_sum': 'CHILD(PT, 1) + CHILD(PT, 2)',
+                                                  'gamma_pt'          : 'CHILD(PT, 2)',
+                                                  'nbody_doca_max'    : 'CHILD(DOCA(1,2), 1)'},
                                   'BBDT_CUT': 0.0},
                 'HHHGammaEECombo': comb_cuts,
-                'HHHGammaEEBBDT': {'BBDT_PARAMS': 'file_name',
-                                   'BBDT_VARMAP': {},
+                'HHHGammaEEBBDT': {'BBDT_PARAMS': 'Hlt2_RadiativeInc_Generic_BDTParams_v0r0.txt',
+                                   'BBDT_VARMAP': {'nbody_fd_rho'      : 'BPVVDRHO',
+                                                   'nbody_vtx_chi2'    : 'log10(CHILD(VFASPF(VCHI2), 1))',
+                                                   'sv_ipchi2'         : 'log10(CHILD(BPVIPCHI2(), 1))',
+                                                   'sv_children_pt_sum': 'CHILD(PT, 1) + CHILD(PT, 2)',
+                                                   'gamma_pt'          : 'CHILD(PT, 2)',
+                                                   'nbody_doca_max'    : 'CHILD(DOCA(1,2), 1)'},
                                    'BBDT_CUT': 0.0}}
-
 
     @staticmethod
     def get_hlt1():

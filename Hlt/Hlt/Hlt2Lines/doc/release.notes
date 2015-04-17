@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-17
+  - Update configuration of Radiative inclusive lines. 
+ 
 ! 2015-04-17 - Karlis Dreimanis
   - (Hopefully) last change in the tau line dictionary in EL/Lines.py
 

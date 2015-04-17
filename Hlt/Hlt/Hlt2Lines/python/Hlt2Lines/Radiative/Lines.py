@@ -15,6 +15,7 @@ from B2XGamma import B2XGammaLines
 from B2XGammaUnbiased import B2XGammaUnbiasedLines
 from B2GammaGamma import B2GammaGammaLines
 from Lb2L0Gamma import Lb2L0GammaLines
+from Inclusive import RadiativeInclusiveLines
 
 cuts = {'Common': {'TrackTisTos' : 'Hlt1(Two)?TrackMVADecision%TOS',
                    'PhotonTisTos': 'L0(Photon|Electron).*Decision%TOS',
@@ -30,7 +31,11 @@ cuts = {'Common': {'TrackTisTos' : 'Hlt1(Two)?TrackMVADecision%TOS',
                    'ee_P'    : 5000.0,
                    'ee_PT'   : 200.0}}
 
-lines_to_run = [B2GammaGammaLines, B2XGammaLines, B2XGammaUnbiasedLines, Lb2L0GammaLines]
+lines_to_run = [B2GammaGammaLines,
+                B2XGammaLines,
+                B2XGammaUnbiasedLines,
+                Lb2L0GammaLines,
+                RadiativeInclusiveLines]
 
 for line_conf in lines_to_run:
     # Get cuts

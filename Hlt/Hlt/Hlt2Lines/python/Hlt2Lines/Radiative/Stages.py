@@ -136,7 +136,8 @@ class HHCombiner(Hlt2Combiner):
     """Build vector mesons from input tracks."""
     def __init__(self, nickname, decay, inputs, tistos=None):
         daughters_cuts = {'pi+' : "ALL", 'K+' : "ALL"}
-        combination_cut = ("ADAMASS('%(PARTICLE)s') < wide_mass" )
+        combination_cut = ("(ACUTDOCACHI2(docachi2, ''))"
+                           " & (ADAMASS('%(PARTICLE)s') < wide_mass)")
         mother_cut = ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)"
                       " & (ADMASS('%(PARTICLE)s') < %(MASS_WIN)s)")
         if not tistos:
@@ -150,15 +151,15 @@ class HHCombiner(Hlt2Combiner):
                                          DaughtersCuts=daughters_cuts,
                                          CombinationCut=combination_cut,
                                          MotherCut=mother_cut,
-                                         Preambulo=['wide_mass = 1.5*%(MASS_WIN)s'])
+                                         Preambulo=['wide_mass = 1.5*%(MASS_WIN)s',
+                                                    'docachi2 = 2.0*%(VCHI2PDOF_MAX)s'])
 
 
 # Filter lambdas
 class Lambda0Filter(Hlt2ParticleFilter):
     """Filter L0."""
     def __init__(self, name, inputs):
-        lambda0_cut = """(MIPDV(PRIMARY) > %(IP_MIN)s) &
-                         (DOCA(1,2) < %(DOCA_MAX)s) &
+        lambda0_cut = """(DOCA(1,2) < %(DOCA_MAX)s) &
                          (BPVVDCHI2>%(VDCHI2_MIN)s) &
                          (VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s) &
                          (PT > %(PT_MIN)s) &
@@ -167,7 +168,8 @@ class Lambda0Filter(Hlt2ParticleFilter):
                                        (PT > %(TRACK_PT_MIN)s) &
                                        (TRCHI2DOF < %(TRACK_TRCHI2DOF_MAX)s) &
                                        (MIPCHI2DV(PRIMARY) > %(TRACK_IPCHI2_MIN)s))) &
-                         INTREE((ABSID=='p+') & (PIDp > %(P_PIDP_MIN)s))"""
+                         INTREE((ABSID=='p+') & (PIDp > %(P_PIDP_MIN)s)) &
+                         (MIPDV(PRIMARY) > %(IP_MIN)s)"""
         super(Lambda0Filter, self).__init__('RadiativeLambda0Filter_%s' % name,
                                             lambda0_cut,
                                             inputs,
@@ -192,7 +194,8 @@ class RadiativeCombiner(Hlt2Combiner):
 class B2XGammaCombiner(RadiativeCombiner):
     """Build the B from photons and input vector mesons."""
     def __init__(self, name, decay, vector_meson, converted=False):
-        combination_cut = "ADAMASS('%(PARTICLE)s') < wide_mass"
+        combination_cut = ("(ACUTDOCACHI2(docachi2, ''))"
+                           " & (ADAMASS('%(PARTICLE)s') < wide_mass)")
         mother_cut = ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)"
                       " & (PT > %(PT_MIN)s) "
                       " & (BPVDIRA > cos_dira_angle)"
@@ -206,14 +209,16 @@ class B2XGammaCombiner(RadiativeCombiner):
                                                MotherCut=mother_cut,
                                                Preambulo=['from math import cos',
                                                           'cos_dira_angle = cos(%(BPVDIRA_MIN)s)',
-                                                          'wide_mass = 1.5*%(MASS_WIN)s'])
+                                                          'wide_mass = 1.5*%(MASS_WIN)s',
+                                                          'docachi2 = 2.0*%(VCHI2PDOF_MAX)s'])
 
 
 class B2XGammaUnbiasedCombiner(RadiativeCombiner):
     """Build the B from photons and input vector mesons in an unbiased way."""
     def __init__(self, name, decay, vector_meson, converted=False):
-        combination_cut = ("(ADAMASS('%(PARTICLE)s') < wide_mass)"
-                           "& (ASUM(PT)>%(SUM_PT_MIN)s)")
+        combination_cut = ("(ACUTDOCACHI2(docachi2, ''))"
+                           " & (ADAMASS('%(PARTICLE)s') < wide_mass)"
+                           " & (ASUM(PT)>%(SUM_PT_MIN)s)")
         mother_cut = ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)"
                       " & (PT > %(PT_MIN)s) "
                       " & (BPVLTIME()>%(TAU_MIN)s)"
@@ -225,7 +230,8 @@ class B2XGammaUnbiasedCombiner(RadiativeCombiner):
                                                        DaughtersCuts={},
                                                        CombinationCut=combination_cut,
                                                        MotherCut=mother_cut,
-                                                       Preambulo=['wide_mass = 1.5*%(MASS_WIN)s'])
+                                                       Preambulo=['wide_mass = 1.5*%(MASS_WIN)s',
+                                                                  'docachi2 = 2.0*%(VCHI2PDOF_MAX)s'])
 
 
 class Lb2L0GammaCombiner(RadiativeCombiner):
@@ -302,11 +308,13 @@ class B2GammaGammaCombiner(Hlt2Combiner):
 
 # BBDT Filter
 class BonsaiBDTFilter(Hlt2ParticleFilter):
-    def __init__(self, name, inputs, props):
+    def __init__(self, name, inputs, props, preambulo=None):
         import os
-        params = os.path.join('$PARAMFILESROOT/data', props['BBDT_PARAMS' % n])
-        var_map = props['BBDT_VARMAP' % n]
-        bbdt = self._get_classifier("RadBBDT_%s" % name, params, var_map)
+        params = os.path.join('$PARAMFILESROOT/data', props['BBDT_PARAMS'])
+        var_map = props['BBDT_VARMAP']
+        if not preambulo:
+            preambulo = []
+        bbdt = self._get_classifier("RadBBDT_%s" % name, params, var_map, preambulo)
         cut = "(VALUE('{}/{}') > %(BBDT_CUT)s)".format(bbdt.Type.getType(), bbdt.Name)
         super(BonsaiBDTFilter, self).__init__('RadiativeBBDTFilter_%s' % name,
                                               cut,
@@ -314,7 +322,7 @@ class BonsaiBDTFilter(Hlt2ParticleFilter):
                                               nickname=name,
                                               tools=[bbdt])
 
-    def _get_classifier(self, name, params, var_map, preambulo=None):
+    def _get_classifier(self, name, params, var_map, preambulo):
         from HltLine.HltLine import Hlt1Tool as Tool
         from Configurables import LoKi__Hybrid__DictOfFunctors as DictOfFunctors
         from Configurables import LoKi__Hybrid__DictValue as DictValue
@@ -346,9 +354,9 @@ def PrepGammaGammaMapNone(varmap):
     """
     from copy import deepcopy
     varmap = deepcopy(varmap)
-    pt = "log( PT/MeV )" 
-    ptsum = "log( SUMTREE(PT, (ABSID == '22'), 0.0)/MeV )" 
-    ptasym = "((MAXTREE(PT, (ABSID == '22'), 0.0)/MeV)-(MINTREE(PT, (ABSID == '22'), 0.0)/MeV)) / ((MAXTREE(PT, (ABSID == '22'), 0.0)/MeV)+(MINTREE(PT, (ABSID == '22'), 0.0)/MeV))" 
+    pt = "log( PT/MeV )"
+    ptsum = "log( SUMTREE(PT, (ABSID == '22'), 0.0)/MeV )"
+    ptasym = "((MAXTREE(PT, (ABSID == '22'), 0.0)/MeV)-(MINTREE(PT, (ABSID == '22'), 0.0)/MeV)) / ((MAXTREE(PT, (ABSID == '22'), 0.0)/MeV)+(MINTREE(PT, (ABSID == '22'), 0.0)/MeV))"
     pxasym = "((MAXTREE(PX, (ABSID == '22'), 0.0)/MeV)-(MINTREE(PX, (ABSID == '22'), 0.0)/MeV)) / ((MAXTREE(PX, (ABSID == '22'), 0.0)/MeV)+(MINTREE(PX, (ABSID == '22'), 0.0)/MeV))"
     pyasym = "((MAXTREE(PY, (ABSID == '22'), 0.0)/MeV)-(MINTREE(PY, (ABSID == '22'), 0.0)/MeV)) / ((MAXTREE(PY, (ABSID == '22'), 0.0)/MeV)+(MINTREE(PY, (ABSID == '22'), 0.0)/MeV))"
     varmap["BPT"] = pt
@@ -364,7 +372,7 @@ def PrepGammaGammaMapConv(varmap):
     """
     from copy import deepcopy
     varmap = deepcopy(varmap)
-    pt = "log( PT/MeV )" 
+    pt = "log( PT/MeV )"
     ptsum = "log( SUMTREE(PT, (ABSID == '22'), 0.0)/MeV)"
     minelpt = "log( MINTREE((ABSID == '11'), PT)/MeV )"
     ptasym = "((MAXTREE(PT, (ABSID == '22'), 0.0)/MeV)-(MINTREE(PT, (ABSID == '22'), 0.0)/MeV)) / ((MAXTREE(PT, (ABSID == '22'), 0.0)/MeV)+(MINTREE(PT, (ABSID == '22'), 0.0)/MeV))"
@@ -396,7 +404,7 @@ class FilterBDTGammaGamma(Hlt2ParticleFilter):
         #params  = '/afs/cern.ch/user/s/sbenson/cmtuser/MooreDev_v23r5p2/ParamFiles/data/Hlt2B2GammaGamma_%s_v1.bbdt' % type
         params  = '$PARAMFILESROOT/data/Hlt2B2GammaGamma_%s_v1.bbdt' % type
         bdttool = self.__classifier(params, varmap, "TrgBBDT", type=type)
-        
+
         pc = ("(VALUE('%s/%s') > %s)" % (bdttool.Type.getType(), bdttool.Name, cut))
         from HltTracking.HltPVs import PV3D
         Hlt2ParticleFilter.__init__(self, 'BDT', pc, inputs,
@@ -414,7 +422,7 @@ class FilterBDTGammaGamma(Hlt2ParticleFilter):
         funcdict   = Tool(type = DictOfFunctors, name = 'GammaGammaMVAdict'+type,
                         Preambulo = preambulo, Variables = varmap)
         transform  = Tool(type = Transform, name = 'BBDecTree'+type,
-                          tools = [funcdict], Options = options, 
+                          tools = [funcdict], Options = options,
                           Source = "LoKi::Hybrid::DictOfFunctors/GammaGammaMVAdict"+type)
         classifier = Tool(type = DictValue, name = name+type, tools = [transform],
                           Key = key, Source = ('LoKi::Hybrid::DictTransform'+'<BBDecTreeTransform>/BBDecTree'+type))
