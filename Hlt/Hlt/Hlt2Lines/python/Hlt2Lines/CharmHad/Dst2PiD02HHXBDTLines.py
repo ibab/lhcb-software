@@ -8,26 +8,35 @@ __author__  = [ 'Patrick Spradlin', 'Emanuele Michielin' ]
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 
 class CharmHadDst2PiD02HHXBDTLines : # {
-    def __init__(self, slotname = "Dst2PiD02HHXBDT") : # {
-        ## Maybe just hard-code the slot name?
-        self.__slotname = slotname
-
+    def __init__( self ) : # {
         ## Slots for this set of lines; to be appended to the master set of
         ##   slots for the directory.
-        self.slotDict = { self.__slotname : {
-                    'Trk_TRCHI2DOF_MAX'         : 5.0
+        self.slotDict = {
+                ## Configuration for two-body seeds shared by inclusive lines
+                'InclHc2HHX'         : {
+                    'Trk_TRCHI2DOF_MAX'         : 3.0
                   , 'Trk_PT_MIN'                : 200.0 * MeV
                   , 'Trk_MIPCHI2DV_MIN'         : 4.0
-                  , 'Spi_TRCHI2DOF_MAX'         : 100.0         # no cut
-                  , 'Spi_PT_MIN'                : 000.0 * MeV   # no cut
                   , 'D0_VCHI2PDOF_MAX'          : 100
                   , 'D0_BPVVDCHI2_MIN'          : 20
-                  , 'D0_BPVCORRM_MAX'           : 2100.0 * MeV
+                  , 'D0_BPVCORRM_MAX'           : 2500.0 * MeV
+                  , 'TisTosSpec': { "Hlt1Track.*Decision%TOS":0 }
+                }
+                ## Configuration for Hc + pion combinatorics shared by lines
+                , 'InclHcst2PiHc2HHX'  : {
+                    'Spi_TRCHI2DOF_MAX'         : 100.0         # no cut
+                  , 'Spi_PT_MIN'                : 000.0 * MeV   # no cut
                   , 'Dst_VCHI2PDOF_MAX'         : 100.0
                   , 'Dst_PT_MIN'                : 2.0 * GeV
-                  , 'Dst_M_MAX'                 : 2500.0 * MeV
+                  , 'Dst_M_MAX'                 : 2900.0 * MeV
                   , 'Dst_D0_DeltaM_MAX'         : 800.0 * MeV
-
+                }
+                ## Configuration for D*+ specific filtering
+                , 'InclDst2PiD02HHX'   : {
+                    'D0_BPVVDCHI2_MIN'          : 20
+                  , 'D0_BPVCORRM_MAX'           : 2100.0 * MeV
+                  , 'Dst_M_MAX'                 : 2500.0 * MeV
+                  , 'Dst_D0_DeltaM_MAX'         : 300.0 * MeV
                   , 'BDT_Lookup_Filename'       : "Hlt2Dst2PiD02HHX_BDTParams_v0r0.txt"
                   , 'BDT_Threshold'             : 1.37
 
@@ -40,8 +49,25 @@ class CharmHadDst2PiD02HHXBDTLines : # {
                                 , "D0CHI2"      : "CHILDFUN(VFASPF(VCHI2), 1)"
                                 , "DSTDOCA"     : "DOCAMAX"
                               }
+                }
+                ## Configuration for Sigc specific filtering
+                , 'InclSigc2PiLc2HHX'  : {
+                    'D0_BPVVDCHI2_MIN'          : 20
+                  , 'D0_BPVCORRM_MAX'           : 2500.0 * MeV
+                  , 'Dst_M_MAX'                 : 2900.0 * MeV
+                  , 'Dst_D0_DeltaM_MAX'         : 800.0 * MeV
+                  , 'BDT_Lookup_Filename'       : "Hlt2Dst2PiD02HHX_BDTParams_v0r0.txt"
+                  , 'BDT_Threshold'             : 1.37
 
-                  , 'TisTosSpec': { "Hlt1Track.*Decision%TOS":0 }
+                  , 'BDT_Lookup_VarMap' : {
+                                "D0FD"          : "CHILDFUN(BPVVD, 1)"
+                                , "SLPCOSTHETA" : "LV02"
+                                , "TRSUMPT"     : "CHILDFUN(CHILDFUN(PT, 1) + CHILDFUN(PT, 2), 1)"
+                                , "DSTFD"       : "BPVVD"
+                                , "SLPPT"       : "CHILDFUN(PT, 2)"
+                                , "D0CHI2"      : "CHILDFUN(VFASPF(VCHI2), 1)"
+                                , "DSTDOCA"     : "DOCAMAX"
+                              }
                 }
               }
 
@@ -64,24 +90,26 @@ class CharmHadDst2PiD02HHXBDTLines : # {
         ##   __apply_configuration__ method of the Hlt2LinesConfigurableUser
         ##   that uses these lines.
         if len(self.__stages) == 0 : # {
-            from Stages import DetachedD02HHInclCombiner, Dstp2D0PiInclCombiner, BDTFilter
+            from Stages import InclHcst2PiHc2HHX
+            from Stages import InclHcst2PiHc2HHXFilter
 
-            ## Move to the shared filtered input particles when they make sense
-            ##    to me.
-            from Inputs import Hlt2NoPIDsPions, Hlt2NoPIDsKaons
-            d0DecayDesc = [ "D0 -> K+ pi-", "D0 -> K- pi+"
-                            , "D0 -> K+ pi+", "D0 -> K- pi-"
-                            , "D0 -> K+ K-", "D0 -> pi+ pi-"
-                          ]
-            D02HHIncl = DetachedD02HHInclCombiner( 'CombD0', d0DecayDesc, [Hlt2NoPIDsPions, Hlt2NoPIDsKaons], self.__slotname )
+            ## Final kinematic filtering
+            InclDst2PiD02HHX = InclHcst2PiHc2HHXFilter( 'Dst2PiD0'
+                , inputs = [ InclHcst2PiHc2HHX ]
+                , nickname = 'InclDst2PiD02HHX' )
 
-            dstDecayDesc = [ "D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-" ]
-            Dstp2D0PiInclComb = Dstp2D0PiInclCombiner( 'CombDst', dstDecayDesc, [D02HHIncl, Hlt2NoPIDsPions ], self.__slotname )
-
-            Dstp2D0PiInclFilt = BDTFilter( 'FiltBDT', [ Dstp2D0PiInclComb ], self.slots()[self.__slotname] )
+            InclSigc2PiLc2HHX = InclHcst2PiHc2HHXFilter( 'Sigc2PiLc'
+                , inputs = [ InclHcst2PiHc2HHX ]
+                , nickname = 'InclSigc2PiLc2HHX' )
 
 
-            self.__stages = { 'Dst2PiD02HHXBDT'  :  [ Dstp2D0PiInclFilt ]  }
+            from Stages import BDTFilter
+            Dstp2D0PiInclFilt = BDTFilter( 'FiltBDT', [ InclDst2PiD02HHX ], self.slots()['InclDst2PiD02HHX'] )
+            Sigc2LcPiInclFilt = BDTFilter( 'FiltBDT', [ InclSigc2PiLc2HHX ], self.slots()['InclSigc2PiLc2HHX'] )
+
+
+            self.__stages = { 'Dst2PiD02HHXBDT'  :  [ Dstp2D0PiInclFilt ]
+                              , 'Sigc2PiLc2HHXBDT'  :  [ Sigc2LcPiInclFilt ]  }
         # }
 
         return self.__stages

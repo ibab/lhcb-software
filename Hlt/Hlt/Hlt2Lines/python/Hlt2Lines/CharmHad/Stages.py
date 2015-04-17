@@ -1347,6 +1347,7 @@ D02KsKK_DD   = HHKshCombiner('D02HHKsh', decay="[D0 ->  K- K+ KS0]cc",
                    inputs=[SharedKsDD, SharedDetachedDpmChild_K])
 
 
+## ------------------------------------------------------------------------- ##
 class DetachedD02HHInclCombiner(Hlt2Combiner) : # {
     """
     Displaced combiner for inclusive D*+ line.
@@ -1363,7 +1364,7 @@ class DetachedD02HHInclCombiner(Hlt2Combiner) : # {
     It is expected that the cuts on input particles will eventually be removed
     when the inputs are made into shared instances of DetachedInParticleFilter.
     """
-    def __init__(self, name, decay, inputs, slotName = None) : # {
+    def __init__(self, name, decay, inputs, nickname = None, shared = False) : # {
 
         inPartCuts = "(TRCHI2DOF< %(Trk_TRCHI2DOF_MAX)s )" \
                      "& (PT> %(Trk_PT_MIN)s)" \
@@ -1382,7 +1383,8 @@ class DetachedD02HHInclCombiner(Hlt2Combiner) : # {
         Hlt2Combiner.__init__( self, name, decay, inputs,
                                dependencies = [PV3D('Hlt2')],
                                tistos = 'TisTosSpec',
-                               nickname = slotName,
+                               nickname = nickname,
+                               shared = shared,
                                DaughtersCuts = dc,
                                CombinationCut = combCut,
                                MotherCut = parentCut,
@@ -1391,7 +1393,19 @@ class DetachedD02HHInclCombiner(Hlt2Combiner) : # {
     # }
 # }
 
+## Shared instances of DetachedD02HHInclCombiner
+## ------------------------------------------------------------------------- ##
+InclHc2HHX = DetachedD02HHInclCombiner( 'CharmHadInclHc2HHX'
+        , decay = [   "D0 -> K+ pi-", "D0 -> K- pi+"
+                    , "D0 -> K+ pi+", "D0 -> K- pi-"
+                    , "D0 -> K+ K-", "D0 -> pi+ pi-" ]
 
+        , inputs = [ Hlt2NoPIDsPions, Hlt2NoPIDsKaons ]
+        , nickname = 'InclHc2HHX' ## 'InclHc2HHX' def in Dst2PiD02HHXBDTLines.py
+        , shared = True )
+
+
+## ------------------------------------------------------------------------- ##
 class Dstp2D0PiInclCombiner(Hlt2Combiner) : # {
     """
     Combiner for inclusive D*+ line.
@@ -1408,7 +1422,7 @@ class Dstp2D0PiInclCombiner(Hlt2Combiner) : # {
     when the inputs are made into shared instances of DetachedInParticleFilter.
     Use of a generic soft pion tagging combiner should be investigated.
     """
-    def __init__(self, name, decay, inputs, slotName = None) : # {
+    def __init__(self, name, decay, inputs, nickname = None, shared = False) : # {
 
         inPartCuts = "(TRCHI2DOF< %(Spi_TRCHI2DOF_MAX)s )" \
                      "& (PT> %(Spi_PT_MIN)s)"
@@ -1424,7 +1438,8 @@ class Dstp2D0PiInclCombiner(Hlt2Combiner) : # {
 
         Hlt2Combiner.__init__( self, name, decay, inputs,
                                #tistos = 'TisTosSpec',
-                               nickname = slotName,
+                               nickname = nickname,
+                               shared = shared,
                                DaughtersCuts = dc,
                                CombinationCut = combCut,
                                MotherCut = parentCut,
@@ -1432,6 +1447,15 @@ class Dstp2D0PiInclCombiner(Hlt2Combiner) : # {
 
     # }
 # }
+
+## Shared instances of Dstp2D0PiInclCombiner
+## ------------------------------------------------------------------------- ##
+## 'InclHcst2PiHc2HHX' defined in Dst2PiD02HHXBDTLines.py
+InclHcst2PiHc2HHX = Dstp2D0PiInclCombiner( 'CharmHadInclHcst2PiHc2HHX'
+        , decay = [ "D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-" ]
+        , inputs = [ Hlt2NoPIDsPions, InclHc2HHX ]
+        , nickname = 'InclHcst2PiHc2HHX'
+        , shared = True )
 
 
 ## ========================================================================= ##
@@ -1447,6 +1471,38 @@ class MassFilter(Hlt2ParticleFilter):
         name     = name if not shared       else 'CharmHad%sMass' % name
         Hlt2ParticleFilter.__init__(self, name, cut, inputs,
                                     nickname = nickname , shared = shared )
+
+
+## ------------------------------------------------------------------------- ##
+class InclHcst2PiHc2HHXFilter( Hlt2ParticleFilter ) : # {
+    """
+    A filter for candidates of two-body decays intended for the use in
+    slow-pion tagged inclusive lines.  The goal is provide some additional
+    kinematic filtering to a general (h h') + pi+ reconstruction that might
+    support several partially specialized inclusive lines.
+
+    !!!NOTE!!! The implementation assumes that the 'heavy' (h h') combination
+    is the first decay product and the slow pion the second decay product of
+    the reconstruction that came before the filter.
+        GOOD:      [Sigma_c0 -> Lambda_c+ pi-]cc
+        NOT GOOD:  [Sigma_c0 -> pi- Lambda_c+]cc
+
+    Configuration dictionaries must contain the following keys:
+        'D0_BPVVDCHI2_MIN'  : lower limit on BPVVDCHI2 for CHILD 1
+        'D0_BPVCORRM_MAX'   : upper limit on BPVCORRM for CHILD 1
+        'Dst_M_MAX'         : Upper limit on M
+        'Dst_D0_DeltaM_MAX' : Upper limit on M - M1
+    """
+    def __init__(self, name, inputs, nickname = None, shared = False ) : # {
+        cut = "(M < %(Dst_M_MAX)s)" \
+              "& (M - M1 < %(Dst_D0_DeltaM_MAX)s)" \
+              "& (CHILDCUT( ( (BPVVDCHI2 > %(D0_BPVVDCHI2_MIN)s)" \
+                " & (BPVCORRM < %(D0_BPVCORRM_MAX)s)) , 1 ) )"
+
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs,
+                                    nickname = nickname , shared = shared )
+    # }
+# }
 
 
 ## ------------------------------------------------------------------------- ##
