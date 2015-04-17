@@ -4,6 +4,11 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-04-16 - Sascha Stahl
+ - TrackBestTrackCreator: Added the possibility to save clone killed and fitted 
+   tracks in separate containers according to track type. This is preferred in the Hlt.
+   A separation afterwards in a separate algorithm takes a long time as 
+   fitted tracks are huge. No change in the standard behaviour.					
 ! 2015-04-17 - Chris Jones
  - Change logic in TrackContainerCopy to use obsolete inputLocation instead
    of inputLocations if that option is set. Warning is issued to change to

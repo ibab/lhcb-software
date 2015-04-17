@@ -12,7 +12,7 @@
 #include <algorithm>
 #include <exception>
 #include <functional>
-
+#include <unordered_map>
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
@@ -125,8 +125,12 @@ class TrackBestTrackCreator :
     bool m_useAncestorInfo;
     /// Do not refit already fitted tracks
     bool m_doNotRefit;
+    /// Put final tracks into separate containers according to track type
+    bool m_splitByType;
+    std::map<std::string,std::string> m_tracksOutContainers;
+    std::vector<int> m_supportedTrackTypes;
+  
     bool m_debugLevel;
-    
   
   protected:
     /// are tracks clones in VeloR and VeloPhi
@@ -310,7 +314,12 @@ TrackBestTrackCreator::TrackBestTrackCreator( const std::string& name,
   declareProperty( "DoNotRefit", m_doNotRefit = false);
   declareProperty( "AddGhostProb", m_addGhostProb = false);
   declareProperty( "GhostIdTool", m_ghostTool );
-    
+  declareProperty( "SplitByType", m_splitByType = false);
+  declareProperty( "TracksOutContainers", m_tracksOutContainers );
+  m_supportedTrackTypes = { 1, 3, 4, 5, 6}; //Velo, Long, Upstream, Downstream, TTrack
+  for ( auto type : m_supportedTrackTypes ){
+    m_tracksOutContainers[LHCb::Track::TypesToString(type)] = "";
+  }
 }
 
 //=============================================================================
@@ -347,7 +356,19 @@ StatusCode TrackBestTrackCreator::initialize()
     if ( sc.isFailure() ) return sc; 
   }
   
-
+  if (m_splitByType){
+    for (auto it :  m_tracksOutContainers){
+      if( m_debugLevel ){
+        debug()<<"Splitting types up into:"<<endmsg;
+        debug()<<"  "<<it.first<<" -> "<<it.second<<endmsg;
+      }
+      if (std::none_of(m_supportedTrackTypes.begin(),m_supportedTrackTypes.end(),
+                       [it](int i){return it.first==LHCb::Track::TypesToString(i);})){
+        warning()<<it.first << " does not correspond to a supported track type."<<endmsg;
+      }
+    }
+  }
+  
   
   // Print out the user-defined settings
   // -----------------------------------
@@ -458,16 +479,38 @@ StatusCode TrackBestTrackCreator::execute()
 	    return !okay;
 	  });
   alltracks.erase(selend, std::end(alltracks));
-  // create output container, and put selected tracks there
-  LHCb::Tracks* tracksOutCont = new LHCb::Tracks();
-  put(tracksOutCont, m_tracksOutContainer);
-  // insert selected tracks
-  tracksOutCont->reserve(alltracks.size());
-  for (TrackData& tr: alltracks) {
-    // make tr release ownership of track
-    tracksOutCont->add(tr.trackptr().release());
+  if (!m_splitByType){
+    // create output container, and put selected tracks there
+    LHCb::Tracks* tracksOutCont = new LHCb::Tracks();
+    put(tracksOutCont, m_tracksOutContainer);
+    // insert selected tracks
+    tracksOutCont->reserve(alltracks.size());
+    for (TrackData& tr: alltracks) {
+      // make tr release ownership of track
+      tracksOutCont->add(tr.trackptr().release());
+    }
+  }else{
+    /// create mapping, LHCb::Track::Ttrack has the enum 7
+    std::unordered_map<int,LHCb::Tracks*> tracksOutContsMap;
+    for (auto it : m_tracksOutContainers ){
+      auto type = LHCb::Track::TypesToType(it.first);
+      if (it.second!="" && type!=LHCb::Track::TypeUnknown){
+        tracksOutContsMap[type] = new LHCb::Tracks();
+        put( tracksOutContsMap[type], it.second);
+      }
+    }
+    for (TrackData& tr: alltracks) {
+      // make tr release ownership of track
+      auto container = tracksOutContsMap.find(tr.track().type());
+      if ( container != tracksOutContsMap.end())
+        container->second->add(tr.trackptr().release());
+      else{
+        if (m_debugLevel) {
+          debug() << "No outputlocation for track type "<< tr.track().type()<<" was specified!" << endmsg;
+        }
+      }
+    }
   }
-  
   if (m_debugLevel) {
     debug() << "Selected " << alltracks.size() << " out of "
 	    << nTracks << " tracks. " << endmsg;
