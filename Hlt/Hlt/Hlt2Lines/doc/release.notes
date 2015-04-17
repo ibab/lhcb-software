@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-17 - Jon Harrison
+ - Updated Phi directory to include lines for Phi2KsKs and D02KsKs
+
 ! 2015-04-17 - V. Gligorov
  - Add D->KPi (untagged+tagged) and D->K3Pi (tagged) lines for early XSec measurements
  - Add D*0->D0pi0 and Ds*->Dsgamma tagged lines for early XSec measurements
