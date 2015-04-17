@@ -387,7 +387,7 @@ StatusCode TisTosParticleTagger::execute()
     m_tistostoolStage[L0]   = m_tistostoolL0;
   }
 
-  std::vector<LHCb::Particle> outparts;
+  std::vector<const LHCb::Particle*> outparts;
 
   bool passed(m_passOnAll);
 
@@ -569,14 +569,15 @@ StatusCode TisTosParticleTagger::execute()
     }
 
     if( accept  ){
-      outparts.push_back(*candi);
+      outparts.push_back(candi);
       passed = true;
       if ( msgLevel(MSG::DEBUG) ) debug() << " Particle saved  key= " << candi->key() << endmsg;
     }
   }
 
-  for( std::vector<LHCb::Particle>::iterator i = outparts.begin();
-       i != outparts.end(); ++i ) { this->markTree( &(*i) ); }
+  for( const auto particle : outparts ) {
+     markParticle(particle);
+  }
 
   if ( msgLevel(MSG::DEBUG) ) debug() << " Filter passed = " << passed << endmsg;
   setFilterPassed(passed);  // Mandatory. Set to true if event is accepted.

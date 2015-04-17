@@ -3,6 +3,10 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
+! 2015-04-17 - Roel Aaij
+ - Don't copy particles (by value in vector) and use markParticle instead of
+   markTree.
+
 !======================== TisTosTobbing v8r2 2015-02-24 =======================
 
 ! 2015-02-16 - Tomasz Skwarnicki
