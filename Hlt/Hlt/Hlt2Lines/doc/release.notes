@@ -7,6 +7,8 @@
 !           ALWAYS inform the Hlt group.
 !
 !----------------------------------------------------------------------------
+! 2015-04-17 - Dan Johnson
+  - Update to Hlt1 dependence in Hlt2Lines/CEP/
 
 ! 2015-04-17 - Michael Kolpin
   - Update to TrackEffDiMuon lines
