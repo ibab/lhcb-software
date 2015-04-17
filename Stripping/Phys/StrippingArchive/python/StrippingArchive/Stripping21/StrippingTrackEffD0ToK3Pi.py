@@ -311,7 +311,7 @@ class TrackEffD0ToK3PiAllLinesConf(LineBuilder) :
         preve = TrackStateInitAlg("For%sInitSeedFit"%self.name,TrackLocation = self.VeloTrackOutputLocation)
         preve.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
         copyVelo = TrackContainerCopy( "For%sCopyVelo"%self.name )
-        copyVelo.inputLocation = self.VeloTrackOutputLocation
+        copyVelo.inputLocations = [self.VeloTrackOutputLocation]
         copyVelo.outputLocation = self.FittedVeloTrackOutputLocation
         
         ### fitting
