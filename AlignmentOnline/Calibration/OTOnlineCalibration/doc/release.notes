@@ -4,6 +4,15 @@
 ! Purpose     : OT online calibration
 !-----------------------------------------------------------------------------
 
+! 2015-04-15 - Roel Aaij
+ - Fix race condition between start and analyse.
+ - Listen to DIM service that exports LHCb clock phase.
+ - Add option to switch on/off usage of LHCb clock phase.
+ - Read T0 used in data from XML used by online Brunel.
+ - Don't redo calibration if calibration we before created is not yet used.
+ - Judgement to write new XML is done on (prevPhase + dataT0) - (phase + t0).
+ - Final testing to be done.
+ 
 ! 2015-04-13 - Roel Aaij
  - Large update to calibration algorithm.
    - Anything that is not global T0 calibration has been removed.
@@ -18,8 +27,8 @@
 ! 2015-02-03 Lucia Grillo
 - added boost v* in the requirements. 
 - when a new global t0 has to be written a folder v(n_existing+1) is created 
-and inside a structure as in the db is created:
-/Conditions/OT/Calibration/CalibrationGlobal.xml
+  and inside a structure as in the db is created:
+  /Conditions/OT/Calibration/CalibrationGlobal.xml
 
 ! 2015-02-02 Lucia Grillo
 - getting the drift time residual distribution for each station from the EOR 

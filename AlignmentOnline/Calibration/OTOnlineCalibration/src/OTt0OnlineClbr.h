@@ -7,17 +7,30 @@
 #include <fstream>
 #include <iostream>
 #include <chrono>
+#include <mutex>
+#include <queue>
+#include <deque>
+#include <thread>
+#include <condition_variable>
+#include <unordered_set>
+#include <unordered_map>
 
 // BOOST
 #include <boost/filesystem.hpp>
 
 // Gaudi
-#include <GaudiAlg/GaudiTupleAlg.h>
-#include <GaudiKernel/ToolHandle.h>
+#include <GaudiKernel/IIncidentSvc.h>
+#include <GaudiKernel/IEventProcessor.h>
+#include <GaudiKernel/IDetDataSvc.h>
+
+// Detector
 #include <OTDet/DeOTDetector.h>
 
 // OMALib
-#include "OMAlib/AnalysisTask.h"
+#include <OMAlib/AnalysisTask.h>
+
+// dim
+#include <dic.hxx>
 
 // ROOT 
 #include <TH1D.h>
@@ -27,12 +40,43 @@
 #include <TFile.h>
 #include <TString.h>
 
+template<class T, class Container = std::deque<T> >
+class Queue {
+public:
+   Queue() : m_mutex{}, m_condition{}, m_queue{} {}
+
+   T get() {
+      std::unique_lock<std::mutex> lock{m_mutex};
+      m_condition.wait(lock, [this] ()-> bool {return not m_queue.empty();});
+      T tmp = std::move(m_queue.front());
+      m_queue.pop();
+      return tmp;
+   }
+
+   template<class ITEM>
+   void put(ITEM&& i) {
+      std::unique_lock<std::mutex> lock{m_mutex};
+      m_queue.push(std::forward<ITEM>(i));
+      m_condition.notify_one();
+   }
+
+private:
+
+   std::mutex m_mutex;
+   std::condition_variable m_condition;
+   std::queue<T, Container> m_queue;
+   
+};
+
+
 /** @class OTt0OnlineClbr OTt0OnlineClbr.h
  *
  *
  *  @author Lucia Grillo
  *  @date   2015-01-08
  */
+
+class DeOTDetector;
 
 class OTt0OnlineClbr : public AnalysisTask {
 
@@ -89,6 +133,10 @@ private:
     */
    unsigned int m_pubSleep;
    /*
+    * Name of the to be published service.
+    */
+   std::string m_pubName;
+   /*
     * path/names of histograms to perform online calibration on.
     */
    std::vector<std::string> m_histogramNames;
@@ -100,7 +148,26 @@ private:
     * Minimum number of entries required for calibration.
     */
    unsigned int m_maxTimeDiff;
+   /*
+    * T0 used in data for testing.
+    */
+   double m_dataT0;
+   /*
+    * Take LHCb clock phase into account.
+    */
+   double m_useClockPhase;
+   /*
+    * Initial time
+    */
+   long long m_initialTime;
+   /*
+    * Check if our previous calibration was used in data.
+    */
+   bool m_checkDataT0;
 
+   // Local storage of current run number
+   unsigned int m_run;
+   
    std::string m_xmlFilePath;
    std::string m_xmlFileName;
    std::string m_CondStructure;
@@ -110,19 +177,63 @@ private:
 
    std::string m_pubString;
    std::string m_pubStatus;
-   IPublishSvc* m_pPublishSvc; ///< Online Gaucho Monitoring Service
+   IPublishSvc* m_publishSvc; ///< Online Gaucho Monitoring Service
 
-   std::set<unsigned int> m_calibratedRuns;
-
-   std::chrono::time_point<std::chrono::system_clock> m_start;
    
+   // Synchronisation
+   std::thread m_thread;
+   Queue<std::pair<std::string, std::string>> m_queue;
+   
+   // Detector
+   const DeOTDetector* m_det;
+   SmartIF<IIncidentSvc> m_incidentSvc;
+   SmartIF<IDetDataSvc> m_detDataSvc;
+   SmartIF<IEventProcessor> m_evtProc;
+   
+   std::set<unsigned int> m_calibratedRuns;
    std::map<unsigned int, std::vector<std::string>> m_calibrating;
 
+   std::chrono::time_point<std::chrono::system_clock> m_start;
+
+   static constexpr float phase_default = -1000.;
+
+   // Class to listen to clock phase from DIM
+   class ClockPhase : public DimInfo {
+   public :
+      ClockPhase()
+         : DimInfo("LHCb/ClockPhase", phase_default),
+           m_phase{0.} {}
+
+      boost::optional<double> phase() const {
+         boost::optional<double> r; 
+         if (m_phase != phase_default) {
+            r = m_phase;
+         }
+         return r;
+      }
+
+   private:
+
+      void infoHandler()
+      {
+         m_phase = getFloat();
+      }
+      
+      float m_phase;
+   };
+
+   std::unique_ptr<ClockPhase> m_phase;
+   std::unordered_map<unsigned int, double> m_phases;
+   std::unordered_set<unsigned int> m_versions;
+   
    boost::filesystem::path xmlFileName( FileVersion v ) const ;
    double readCondDB();
-   std::pair<unsigned int, double> readXML(const boost::filesystem::path& xmlFile);
+   std::tuple<unsigned int, boost::optional<double>, double>
+   readXML(const boost::filesystem::path& xmlFile);
 
-   boost::filesystem::path writeXML(FileVersion previous, unsigned int run, double global_t0);
+   boost::filesystem::path writeXML(const FileVersion previous, const unsigned int run,
+                                    const boost::optional<double> phase,
+                                    const double t0);
    void fitHistogram(TH1D* hist, double& result, double& result_err, TFile* outFile);
 
    unsigned int latestVersion() const;
@@ -130,6 +241,9 @@ private:
                 const std::string status);
    std::unique_ptr<TH1D> getHistogram() const;
 
+   // This one does all the work.
+   StatusCode calibrate(std::string saveSet, std::string task);
+   
 };
 
 #endif // OTt0OnlineClbr_H

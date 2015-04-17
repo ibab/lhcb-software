@@ -14,8 +14,9 @@ find_package(ROOT COMPONENTS Hist Tree Matrix Graf Minuit)
 
 gaudi_add_module(OTOnlineCalibration
                  src/*.cpp
-                 INCLUDE_DIRS GSL ROOT
-                 LINK_LIBRARIES GSL ROOT DAQEventLib TrackEvent GaudiAlgLib TrackFitEvent OMAlib)
+                 INCLUDE_DIRS GSL ROOT dim
+                 LINK_LIBRARIES GSL ROOT DAQEventLib TrackEvent GaudiAlgLib
+                 TrackFitEvent OMAlib dim)
 
 gaudi_install_python_modules()
 

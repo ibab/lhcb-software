@@ -9,15 +9,19 @@
 #include <chrono>
 #include <vector>
 #include <string>
+#include <mutex>
+#include <tuple>
 #include <map>
 #include <set>
 
 // Boost Regex, cast and FileSystem
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/optional.hpp>
 #include <boost/filesystem.hpp>
 
 // Boost Qi, Spirit and Phoenix
+#define FUSION_MAX_VECTOR_SIZE 20
 #include <boost/spirit/include/qi.hpp>
 #include <boost/spirit/include/phoenix_core.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
@@ -27,6 +31,10 @@
 // from Gaudi
 #include <GaudiKernel/AlgFactory.h>
 #include <DetDesc/Condition.h>
+#include <DetDesc/RunChangeIncident.h>
+
+// OT detector element
+#include <OTDet/DeOTDetector.h>
 
 //to publish online
 #include <GaudiKernel/MsgStream.h>
@@ -51,12 +59,14 @@ namespace {
    using std::unique_ptr;
    using std::endl;
    using std::cout;
-   using std::pair;
    using std::vector;
    using std::string;
    using std::ofstream;
    using std::to_string;
+   using std::pair;
    using std::make_pair;
+   using std::tuple;
+   using std::make_tuple;
    
    const std::string EOR = "EOR";
 }
@@ -64,12 +74,16 @@ namespace {
 //=============================================================================
 OTt0OnlineClbr::OTt0OnlineClbr( const string& name, ISvcLocator* pSvcLocator)
    : AnalysisTask ( name , pSvcLocator ),
+     m_run{0},
      m_pubString{},
      m_pubStatus{},
-     m_pPublishSvc{nullptr}
+     m_publishSvc{nullptr},
+     m_det{nullptr},
+     m_incidentSvc{nullptr},
+     m_phase{nullptr}
 {
 
-   //currently broken: doesnt do anything
+   //currently broken: doesn't do anything
    declareProperty("SaveFits", m_saveFits = false, " Save fitted gaussian (default false,)");
    declareProperty("UseMean", m_useMean = false,
                    "GetMean instead of fit the distributions ");
@@ -84,21 +98,25 @@ OTt0OnlineClbr::OTt0OnlineClbr( const string& name, ISvcLocator* pSvcLocator)
                    "if the global t0 exceedes this threshold, don't to update it and indicate a problem.");
    declareProperty("MinEntries", m_minEntries = 50000,
                    "Minimum number of required entries to perform the calibration.");
+   declareProperty("UseClockPhase", m_useClockPhase = true);
 
    declareProperty("XMLFilePath", m_xmlFilePath = "/group/online/alignment/OT/Calib" );
    declareProperty("CondStructure", m_CondStructure = "Conditions/OT/Calibration/" );
+   declareProperty("PublishedName", m_pubName = "OT/Calib");
    declareProperty("PublishSleep", m_pubSleep = 1);
    declareProperty("MaxTimeDiff", m_maxTimeDiff = 3600);
-   declareProperty("RunOnline",  m_RunOnline  = true );
+   declareProperty("InitialTime",  m_initialTime  = 0);
+   declareProperty("RunOnline",  m_RunOnline  = true);
+   declareProperty("CheckDataT0",  m_checkDataT0  = true);
    declareProperty("Histograms",  m_histogramNames =
          {"OT/OTTrackMonitor/station1/drifttimeresidualgood",
-          "OT/OTTrackMonitor/station2/drifttimeresidualgood",
-          "OT/OTTrackMonitor/station3/drifttimeresidualgood"});
+               "OT/OTTrackMonitor/station2/drifttimeresidualgood",
+               "OT/OTTrackMonitor/station3/drifttimeresidualgood"});
 
    //inputs for testing
-   declareProperty("InputFileName"   ,  m_InputFileName  = "clbr_hists_109.root" );
-   declareProperty("InputFilePath"   ,  m_InputFilePath  = "/afs/cern.ch/work/l/lgrillo/OT_CALIBRATION_files/" );
-
+   declareProperty("InputFileName", m_InputFileName  = "clbr_hists_109.root");
+   declareProperty("InputFilePath", m_InputFilePath  = "/afs/cern.ch/work/l/lgrillo/OT_CALIBRATION_files/");
+   declareProperty("DataT0"       , m_dataT0  = 0.);
 }
 
 //=============================================================================
@@ -121,45 +139,125 @@ StatusCode OTt0OnlineClbr::initialize()
 
    if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-   sc = serviceLocator()->service("LHCb::PublishSvc", m_pPublishSvc, false);
+   sc = serviceLocator()->service("LHCb::PublishSvc", m_publishSvc, true);
    if ( sc.isFailure() ) return sc;
-   m_pPublishSvc->declarePubItem("OT/T0", m_pubString);
-   m_pPublishSvc->declarePubItem("OT/T0Status", m_pubStatus);
+   m_publishSvc->declarePubItem("OT/Calib", m_pubString);
+   m_publishSvc->declarePubItem("OT/CalibStatus", m_pubStatus);
 
+   
+   
+   // ApplicationMgr
+   m_evtProc = service("ApplicationMgr");
+   if (!m_evtProc) {
+      error() << "Failed to retrieve ApplicationMgr as EventProcessor" << endmsg;
+      return StatusCode::FAILURE;
+   }
+
+   // Detector data service
+   m_detDataSvc = service("DetectorDataSvc");
+   if (!m_detDataSvc) {
+      error() << "Failed to retrieve DetectorDataSvc" << endmsg;
+      return StatusCode::FAILURE;
+   }
+
+   // IncidentSvc
+   updMgrSvc();
+   m_incidentSvc = service("IncidentSvc");
+   if (!m_incidentSvc) {
+      error() << "Failed to retrieve IndicentSvc" << endmsg;
+      return StatusCode::FAILURE;
+   }
+
+   // OT detector to get global calibration used in data we will be calibrating
+   // with.
+   m_det = getDet<DeOTDetector>( DeOTDetectorLocation::Default ) ;
+   
+   // LHCb Clock phase from DIM
+   if (m_useClockPhase) {
+      m_phase = unique_ptr<ClockPhase>{new ClockPhase{}};
+   }
+
+   // Regex and lambda to extract version from filename vN.xml
+   boost::regex re("^v([0-9]+)\\.xml$");
+   auto version = [re, this](const string& filename) {
+      boost::smatch matches;
+      auto flags = boost::match_default;
+      if (!fs::is_regular_file(fs::path{m_xmlFilePath} / fs::path{filename}))
+         return 0u;
+      boost::regex_match(begin(filename), end(filename), matches, re, flags);
+      if (!matches.empty()) {
+         return boost::lexical_cast<unsigned int>(matches[1]);
+      } else {
+         return 0u;
+      }
+   };
+
+   // Store versions
+   std::transform(fs::directory_iterator{fs::path{m_xmlFilePath}},
+                  fs::directory_iterator{}, std::inserter(m_versions, end(m_versions)),
+                  [version](const fs::directory_entry& e) {
+                     return version(e.path().filename().string());
+                  });
+
+   // Read XML to get previous phases.
+   for (auto v : m_versions) {
+      auto r = readXML(xmlFileName(v));
+      const auto phase = std::get<1>(r);
+      if (phase) {
+         m_phases.emplace(std::get<0>(r), *phase);
+      }
+   }
+   
    return sc;
 }
 
 //=============================================================================
 StatusCode OTt0OnlineClbr::start()
 {
-   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Start" << endmsg;
-   auto v = latestVersion();
-   if (v == 0 || m_readFromDB) {
-      // booststrap from DB
-      double t0 = readCondDB();
-      writeXML(v + 1, 0, t0);
-      publish({0}, v + 1, "good");
-   } else {
-      // Read last xml
-      auto xmlFile = xmlFileName(v);
-      pair<unsigned int, double> r = readXML(xmlFile);
-      m_calibratedRuns.emplace(r.first);
-      // Parse the file to get the previous run number.
-      publish({r.first}, v, "good");
-   }
+   // The thread is started here to ensure that everything is ready when we need
+   // it.
+   m_thread = std::thread([this]{
+         while (true) {
+            auto r = m_queue.get();
+            if (r.first == "stop") {
+               break;
+            } else {
+               calibrate(r.first, r.second);
+            }
+         }
+      });
    return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 StatusCode OTt0OnlineClbr::execute()
 {
-   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+   if ( msgLevel(MSG::DEBUG) ) info() << "==> Execute" << endmsg;
 
+   if (m_run) {
+      // Set event time
+      // long long ts = std::chrono::duration_cast<std::chrono::seconds>
+      //    (tp.time_since_epoch()).count() * 1000000000;
+      m_detDataSvc->setEventTime(m_initialTime);
+      
+      // Fire RunChange incident to load XML used in data.
+      m_incidentSvc->fireIncident(RunChangeIncident(name(), m_run));
+   }
+   
    return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 StatusCode OTt0OnlineClbr::analyze (string& saveSet, string task)
+{
+   // We do the work on a thread so the DIM thread is not blocked if we want to
+   // to wait for start to have completed.
+   m_queue.put(make_pair(saveSet, task));
+   return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+StatusCode OTt0OnlineClbr::calibrate(string saveSet, string task)
 {
    if ( msgLevel(MSG::DEBUG) ) debug() << "==> Analyze" << endmsg;
 
@@ -179,36 +277,60 @@ StatusCode OTt0OnlineClbr::analyze (string& saveSet, string task)
       return runs;
    };
    
-   unique_ptr<TFile> outFile;
-   // Get latest version
+   // Get latest version, bootstrap if needed
    const FileVersion latest = latestVersion();
-   const unsigned int run = 0;
+   double prevT0 = 0.;
+   boost::optional<double> prevPhase;
    
+   if (latest == 0 || m_readFromDB) {
+      // booststrap from DB
+      double t0 = readCondDB();
+      boost::optional<double> phase;
+      writeXML(latest, latest, phase, t0);
+      publish({}, latest, "good");
+   } else {
+      // Parse the file to get the info from the previous calibration.
+      std::tie(m_run, prevPhase, prevT0) = readXML(xmlFileName(latest));
+      m_calibratedRuns.emplace(m_run);
+      publish({}, latest, "good");
+   }
+
+   // Output file for testing
+   unique_ptr<TFile> outFile;
+
+   // Run number 
+   double dataT0 = 0.;
+
+   // Figure out which files we need.
    if(m_RunOnline){
       const string fileName{fs::path{saveSet}.filename().string()};
-      boost::regex re(string("Brunel") + "-(?<run>\\d+)-(?<time>[\\dT]+)\\.root$");
+      boost::regex re(string("Brunel") + "-(?<run>\\d+)-(?<time>[\\dT]+)(-EOR)?\\.root$");
       boost::smatch matches;
       auto flags = boost::match_default;
       if (!boost::regex_match(begin(fileName), end(fileName), matches, re, flags)) {
          error() << "Bad SaveSet filename: " << saveSet << endmsg;
          return StatusCode::FAILURE;
+      } else {
+         // Get run number
+         m_run = boost::lexical_cast<unsigned int>(matches.str("run"));
+         info() << "Filename: " << saveSet << ", run: " << m_run << endmsg;
       }
-
-      // Get run number
-      const unsigned int run = boost::lexical_cast<unsigned int>(matches.str("run"));
-      debug() << "File name: " << saveSet << ", run: " << run << endmsg;
-
+      
       // Check if already done, if so: return.
-      if (m_calibratedRuns.count(run)) {
-         debug() << "Run : " << run << " already calibrated." << endmsg;
+      if (m_calibratedRuns.count(m_run)) {
+         info() << "Run : " << m_run << " already calibrated." << endmsg;
          return StatusCode::SUCCESS;
       }
 
       // Parse timestamp
       std::tm tm;
       bzero(&tm, sizeof(std::tm));
-      strptime(matches.str("year").c_str(), "%Y%m%dT%H%M%S", &tm);
+      strptime(matches.str("time").c_str(), "%Y%m%dT%H%M%S", &tm);
       auto tp = std::chrono::system_clock::from_time_t(std::mktime(&tm));
+
+      // Execute event to trigger RunChangeHandlerSvc
+      m_evtProc->executeRun(1);
+      dataT0 = m_det->globalT0();
 
       // Calculate time difference with previous SaveSet.
       unsigned int diff = 0;
@@ -222,6 +344,8 @@ StatusCode OTt0OnlineClbr::analyze (string& saveSet, string task)
       // If too much difference and some runs are left, publish problem + old
       // versions for those runs.
       if (diff > m_maxTimeDiff) {
+         info() << "Time difference with previous SaveSet too large: " << diff
+                << ", not calibrating previous runs." << endmsg;
          publish(calibrating(), latest, "bad");
          m_calibrating.clear();
       }
@@ -231,34 +355,36 @@ StatusCode OTt0OnlineClbr::analyze (string& saveSet, string task)
          // Either no intermediate saveset were produced and this is the EOR one, 
          // or some files already processed, but not enough statistics.
          // Use only the EOR set in both cases.
-         m_calibrating[run] = vector<string>(1, saveSet);
+         m_calibrating[m_run] = vector<string>(1, saveSet);
       } else {
          // Add to files for check of sufficient stats.
-         m_calibrating[run].emplace_back(saveSet);
+         m_calibrating[m_run].emplace_back(saveSet);
       }
    } else {
       // Test mode.
       m_calibrating[0].push_back(m_InputFilePath + m_InputFileName);
       outFile = unique_ptr<TFile>{new TFile("calibration_monitoring.root", "RECREATE")};
+      dataT0 = m_dataT0;
+      m_run = 0;
    }
 
+   if (m_checkDataT0 && (std::abs(dataT0 - prevT0) > 0.0001)) {
+      info() << "T0 used in data and previous calibration are different,"
+             << "calibration has not been picked up yet." << endmsg;
+      return StatusCode::SUCCESS;
+   }
+      
    unique_ptr<TH1D> histogram{getHistogram()};
    if (!histogram || histogram->Integral() < m_minEntries) {
       // Not enough entries, return and wait for next file.
-      debug() << "Not enough statistics, wait for next file." << endmsg;
+      info() << "Not enough statistics, wait for next file." << endmsg;
       return StatusCode::SUCCESS;
    }
 
-   double t0 = 0.0;
-   double prevT0 = 0.0;
-
    // Read last XML to get reference.
-   auto xmlFile = xmlFileName(latest);
-   auto r = readXML(xmlFile);
-   m_calibratedRuns.insert(r.first);
-   prevT0 = r.second;
-
-   debug() << "Global t0 = " << prevT0 << endmsg;
+   info() << "T0 in data = " << dataT0 << endmsg
+          << "LHCb clock phase in data = "
+          << (prevPhase ? to_string(*prevPhase) : string("undefined")) << endmsg;
 
    // Calibrate the T0
    double residual = 0.0;
@@ -270,36 +396,50 @@ StatusCode OTt0OnlineClbr::analyze (string& saveSet, string task)
    } else {
       fitHistogram(histogram.get(), residual, residual_err, outFile.get());
    }
-   t0 = prevT0 + residual;
+   double t0 = dataT0 + residual;
 
-   debug() << "Global t0: "      << t0 << endmsg;
-   debug() << "Global dt0: "     << residual  << endmsg;
-   debug() << "Global dt0_err: " << residual_err << endmsg;
+   info() << "Global t0: "      << t0 << endmsg;
+   info() << "Global dt0: "     << residual  << endmsg;
+   info() << "Global dt0_err: " << residual_err << endmsg;
 
    // The runs we are calibrating.
    auto runs = calibrating();
+
+   // Take LHCb clock phase into account
+   boost::optional<double> phase;
+   if (m_useClockPhase) {
+      phase = m_phase->phase();
+   }
+
+   // This is what we care about when checking differences.
+   double diff = 0.;
+   if (prevPhase && phase) {
+      diff = (*phase + t0) - (*prevPhase + prevT0);
+   } else {
+      diff = t0 - dataT0;
+   }
    
    // Check and improve condition for writing and publishing
-   if (std::abs(t0) > m_threshold) {
-      if (std::abs(t0) < m_maxDifference) {
-         writeXML(latest + 1, run, t0);
+   if (std::abs(diff) > m_threshold) {
+      if (std::abs(diff) < m_maxDifference) {
+         writeXML(latest + 1, m_run, phase, t0);
          publish(std::move(runs), latest + 1, "good");
-         debug() << "Wrote global t0 xml. global t0 = "<< t0
-                 << ", global t0 threshold = " << m_threshold <<endmsg;
+         info() << "Wrote global t0 xml. global t0 = "<< t0
+                << ", global t0 threshold = " << m_threshold <<endmsg;
       } else {
          // Indicate problem and use previous threshold
          publish(std::move(runs), latest, "bad");
-         debug() << "Did not write global t0 xml. global t0 = "<< t0
-                 << ", global t0 threshold = " << m_threshold <<endmsg;
+         info() << "Did not write global t0 xml. global t0 = "<< t0
+                << ", global t0 threshold = " << m_threshold <<endmsg;
       }
    } else {
       // No update, publish last file.
       publish(std::move(runs), latest, "good");
-      debug() << "NOT writing global t0 xml. global t0 = "<< t0
-              << ", global t0 threshold = " << m_threshold <<endmsg;
+      info() << "NOT writing global t0 xml. global t0 = "<< t0
+             << ", global t0 threshold = " << m_threshold <<endmsg;
    }
    // Store calibrated run
-   m_calibratedRuns.insert(run);
+   m_calibratedRuns.insert(m_run);
    m_calibrating.clear();
 
    return StatusCode::SUCCESS;
@@ -312,7 +452,7 @@ double OTt0OnlineClbr::readCondDB()
 
    Condition *cond = get<Condition>(detSvc(), loc);
    double t0 = cond->paramAsDouble( "TZero" );
-   debug() << "Read global t0 fom CondDB " << t0 << endmsg;
+   info() << "Read global t0 fom CondDB " << t0 << endmsg;
    return t0;
 }
 
@@ -324,7 +464,9 @@ fs::path OTt0OnlineClbr::xmlFileName(FileVersion v) const
 
 //=============================================================================
 fs::path OTt0OnlineClbr::writeXML(const FileVersion version,
-                                  const unsigned int run, const double t0)
+                                  const unsigned int run,
+                                  const boost::optional<double> phase,
+                                  const double t0)
 {
 
    StatusCode sc = StatusCode::SUCCESS ;
@@ -332,14 +474,15 @@ fs::path OTt0OnlineClbr::writeXML(const FileVersion version,
    fs::path filename = xmlFileName(version);
    ofstream file(filename.string().c_str());
 
-   if ( msgLevel(MSG::DEBUG) ) debug() << "Writing the global t0 XML for online to "
-                                       << filename.string() << endmsg ;
+   info() << "Writing the global t0 XML for online to "
+          << filename.string() << endmsg ;
 
    // file << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
    // file << "<!DOCTYPE DDDB SYSTEM \"conddb:/DTD/structure.dtd\">\n";
    // file << "\n";
    // file << "<DDDB>\n";
    file << "<!-- run: " << run << " -->" << endl;
+   if (phase) file << "<!-- phase: " << phase << " -->" << endl;
    file << "<condition classID=\"5\" name=\"" << "CalibrationGlobal" << "\">\n";
    file << "  <param name=\"TZero\" type=\"double\" comment=\"Global t0 of OT\">\n";
    //file << "      " << 0.001 * (int)(1000.0 * t0 + 0.5) << "\n";
@@ -349,6 +492,10 @@ fs::path OTt0OnlineClbr::writeXML(const FileVersion version,
    // file << "</DDDB>\n";
    //  }
    file.close();
+
+   // Insert the version we wrote.
+   m_versions.insert(version);
+   if (phase) m_phases.emplace(run, *phase);
    return filename;
 }
 
@@ -367,7 +514,7 @@ void OTt0OnlineClbr::fitHistogram(TH1D* hist, double& result,
    }
    result = hist->GetFunction("gaus")->GetParameter(1);
    result_error = hist->GetFunction("gaus")->GetParError(1);
-   debug() << "Fit result: " << result << " +- " << result_error << endmsg ;
+   info() << "Fit result: " << result << " +- " << result_error << endmsg ;
 
    //only to save stuff
    if(m_saveFits && outFile){
@@ -381,49 +528,30 @@ void OTt0OnlineClbr::fitHistogram(TH1D* hist, double& result,
 StatusCode OTt0OnlineClbr::finalize() {
 
    if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
+   // Stop worker thread
+   m_queue.put(make_pair("stop", ""));
+   m_thread.join();
    return AnalysisTask::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
 unsigned int OTt0OnlineClbr::latestVersion() const
 {
-   boost::regex re("^v([0-9]+)\\.xml$");
-   auto version = [re, this](const string& filename) {
-      boost::smatch matches;
-      auto flags = boost::match_default;
-      if (!fs::is_regular_file(fs::path{m_xmlFilePath} / fs::path{filename}))
-         return 0u;
-      boost::regex_match(begin(filename), end(filename), matches, re, flags);
-      if (!matches.empty()) {
-         return boost::lexical_cast<unsigned int>(matches[1]);
-      } else {
-         return 0u;
-      }
-   };
-
-   // Store filenames
-   vector<string> files;
-   std::transform(fs::directory_iterator{fs::path{m_xmlFilePath}},
-                  fs::directory_iterator{}, std::back_inserter(files),
-                  [](const fs::directory_entry& e) {
-                     return e.path().filename().string();
-                  });
-
    // Find highest version
-   auto v = std::max_element(begin(files), end(files),
-                             [version](const string& a, const string& b) {
-                                return version(a) < version(b);
-                             });
-   if (v == end(files)) {
+   auto v = std::max_element(begin(m_versions), end(m_versions));
+   if (v == end(m_versions)) {
+      debug() << "Latest version: 0" << endmsg;
       return 0;
    } else {
-      return version(*v);
+      unsigned int r = *v;
+      debug() << "Latest version: " << r << endmsg;
+      return r;
    }
 }
 
 //=============================================================================
-pair<unsigned int, double> OTt0OnlineClbr::readXML(const fs::path& xmlFile)
+tuple<unsigned int, boost::optional<double>, double>
+OTt0OnlineClbr::readXML(const fs::path& xmlFile)
 {
    namespace sp = boost::spirit;
    namespace qi = sp::qi;
@@ -433,6 +561,8 @@ pair<unsigned int, double> OTt0OnlineClbr::readXML(const fs::path& xmlFile)
    using qi::phrase_parse;
    using qi::lexeme;
    using qi::_1;
+   using qi::_val;
+   using qi::attr;
    using qi::lit;
    using sp::ascii::space;
    using sp::ascii::space_type;
@@ -450,46 +580,48 @@ pair<unsigned int, double> OTt0OnlineClbr::readXML(const fs::path& xmlFile)
    string name;
    string param;
    double t0 = 0.;
+   boost::optional<double> phase;
 
    auto rule =
       lit("<!-- run:")
-      >> *space >> uint_[ph::ref(run) = _1] >> *space >> "-->" // comment: <!-- run: int >
+      >> uint_[ph::ref(run) = _1] >> "-->" // comment: <!-- run: int >
+      >> -("<!-- phase:" >> double_[ph::ref(phase) = _1] >> "-->")
       >> "<condition"
       >> *(
-           ("name" >> *space >> '=' >> *space >> '"'
+           (lit("name") >> '=' >> '"'
             >> sp::as_string[+(char_ - '"')][ph::ref(name) = _1]
             >> char_('"'))
            | (~char_('>'))
-           )
-      >> '>' // <condition ... name="{name}" ... >
-      >> *space >> "<param"
+           ) >> '>' // <condition ... name="{name}" ... >
+      >> "<param"
       >> *(
-           ("name" >> *space >> '=' >> *space >> '"'
+           (lit("name") >> '=' >> '"'
             >> sp::as_string[+(char_ - '"')][ph::ref(param) = _1]
             >> char_('"'))
            | (~char_('>'))
            ) >> '>' // <param ... name="{param}" ... >
-      >> (*space)
       >> double_[ph::ref(t0) = _1]
-      >> *space >> "</param>"
+      >> "</param>"
       >> "</condition>";
 
    bool full = phrase_parse(file_begin, file_end, rule, space);
+
    if (!full || file_begin != file_end) {
       warning() << "XML file " << xmlFile << " could not be parsed to obtain previous T0"
                 << endmsg;
-      return make_pair(0, 0.);
+      return make_tuple(0, phase, 0.);
    }
    if (name != "CalibrationGlobal" || param != "TZero") {
       warning() << "XML file " << xmlFile << " was parsed, but parameter names do not match: "
                 << name << " should be CalibrationGlobal, and "
                 << param << " should be TZero."
                 << endmsg;
-      return make_pair(0, 0.);
+      return make_tuple(0, phase, 0.);
    } else {
       debug() << "Read xml file " << xmlFile << " and found run: " << run << " with T0: "
-              << t0 << endmsg;
-      return make_pair(run, t0);
+              << t0 << " and clock phase: " << (phase ? to_string(*phase) : string{"undefined"})
+              << endmsg;
+      return make_tuple(run, phase, t0);
    }
 }
 
@@ -498,19 +630,20 @@ void OTt0OnlineClbr::publish(const vector<unsigned int> runs,
                              const FileVersion version,
                              const string status)
 {
-   //static int Rn=0;
-   char crn[255];
-   auto pub = [&crn, this] (const unsigned int run,
-                            const string& end, string& member,
-                            const string& item) {
-      ::sprintf(crn, (to_string(run) + " " + end).c_str());
-      member = crn;
-      m_pPublishSvc->updateItem(item.c_str());
+   // Lambda to do the actual publishing.
+   auto pub = [this] (const unsigned int run,
+                      const string& end, string& member,
+                      const string& item) {
+      if (run != 0) {
+         member = to_string(run) + " " + end;
+         debug() << "Publishing : " << item << " " << member << endmsg;
+         m_publishSvc->updateItem(item);
+      }
    };
+
    for (unsigned int run : runs) {
-      pub(run, string("v") + to_string(version), m_pubString, "OTT0Calibration");
-      pub(run, status, m_pubStatus, "OTT0Calibration_Status");
-      debug() << "Publishing calibration status: " << m_pubStatus << endmsg;
+      pub(run, string("v") + to_string(version), m_pubString, m_pubName);
+      pub(run, status, m_pubStatus, m_pubName + "Status");
       if (m_calibrating.size() > 1) {
          std::this_thread::sleep_for(std::chrono::seconds(m_pubSleep));
       }
