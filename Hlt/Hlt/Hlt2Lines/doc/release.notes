@@ -8,6 +8,14 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-17 (in Cincinnati, 2015-04-18 at CERN) - Mike Sokoloff
+  -  Updated HHKshCombiner to become "shared = True", passing the same "nickname"
+     for all instances to use a single dictionary.
+
+  -  The organization of instances of HHKshCombiner has be changed to accord better
+     with correspondingly re-organized D* lines.  The latter now use  the TagDecay combiner
+     directly rather than the Dst2D0pi combiner (which inherits from TagDecay).
+
 ! 2015-04-17 - Simone Stracka
   - Updated inputs and combiners used by CharmHad/D2EtaHLines.py and CharmHad/D2HHLines.py
 	- Updated CharmHad/D2EtaHLines.py to include eta' to 3 hadrons
