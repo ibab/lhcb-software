@@ -12,6 +12,7 @@
 #include "Gaucho/BRTL_Lock.h"
 #include "OnlineAlign/IAlignUser.h"
 #include "OnlineAlign/IAlignSys.h"
+#include <cstdio>
 // Forward declarations
 //class DimService;
 //class ISimpleTrendWriter;
@@ -19,6 +20,8 @@ namespace LHCb
 {
   class AlignDrv: public extends2< OnlineService, IRunable, IAlignDrv>
   {
+    private:
+      long rdRef(FILE *);
     public:
       AlignDrv(const std::string& name, ISvcLocator* sl);
       virtual ~AlignDrv();
@@ -36,10 +39,13 @@ namespace LHCb
       std::string m_RefFileName;
       std::string m_FitterClass;
       std::string m_FitterName;
+      long *m_RefBase;
+      bool m_firstRef;
       bool m_runonce;
       IGauchoMonitorSvc *m_MonSvc;
       IAlignIterator *m_fitter;
       void writeReference();
+      void setReferenceBase(long);
       void doContinue();
       void doStop();
       IIncidentSvc *incidentSvc () {return OnlineService::incidentSvc();};

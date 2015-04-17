@@ -19,6 +19,7 @@ namespace LHCb
   {
     public:
       DeclareInterfaceID(IAlignDrv,1,0);
+      virtual void setReferenceBase(long)=0;
       virtual void writeReference()=0;
       virtual void waitRunOnce()=0;
       virtual void doContinue()=0;

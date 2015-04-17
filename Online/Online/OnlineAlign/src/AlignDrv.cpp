@@ -109,20 +109,62 @@ IGauchoMonitorSvc *AlignDrv::getMonSvc()
 {
   return this->m_MonSvc;
 }
-void AlignDrv::writeReference()
+void AlignDrv::setReferenceBase(long ref)
+{
+  if (m_RefBase == 0)
+  {
+    m_RefBase = new long;
+  }
+  *m_RefBase = ref;
+}
+long AlignDrv::rdRef(FILE *f)
 {
   long ref;
+  int stat = fscanf(f, "%ld", &ref);
+  if (stat == 0)
+  {
+    ref = 0;
+  }
+  return ref;
+}
+void AlignDrv::writeReference()
+{
+  long ref=0;
   FILE *f = fopen(m_RefFileName.c_str(), "r+");
   if (f == 0)
   {
-    ref = 0;
+    if (m_firstRef)
+    {
+      if (m_RefBase != 0)
+      {
+        ref = *m_RefBase;
+      }
+      else
+      {
+        ref = 0;
+      }
+      m_firstRef = false;
+    }
     f = fopen(m_RefFileName.c_str(), "w");
   }
   else
   {
-    int stat = fscanf(f, "%ld", &ref);
-    if (stat == 0)
-      ref = 0;
+    if (m_firstRef)
+    {
+      if (m_RefBase != 0)
+      {
+        ref = *m_RefBase;
+      }
+      else
+      {
+        ref = rdRef(f);
+      }
+      m_firstRef = false;
+    }
+    else
+    {
+      ref = rdRef(f);
+    }
     rewind(f);
   }
   ref++;
@@ -140,6 +182,8 @@ AlignDrv::AlignDrv(const std::string& name, ISvcLocator* sl) : base_class(name,s
   declareProperty("RefFileName", m_RefFileName = "");
   m_runonce = false;
   DrvInstance = this;
+  m_RefBase = 0;
+  m_firstRef = true;
 }
 
 AlignDrv::~AlignDrv()
