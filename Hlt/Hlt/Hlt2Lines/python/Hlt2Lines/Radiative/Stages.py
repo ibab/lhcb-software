@@ -81,12 +81,14 @@ class ParticleFilter(Hlt2ParticleFilter):
 # Filter calo photons
 class PhotonFilter(Hlt2ParticleFilter):
     """Filter photons according to their pt."""
-    def __init__(self):
+    def __init__(self, name=None):
         from Inputs import Hlt2Photons
-        super(PhotonFilter, self).__init__('RadiativeHighPtPhotons',
-                                           '(PT > %(PT_MIN)s)',
+        if not name:
+            name = 'CaloPhotons'
+        super(PhotonFilter, self).__init__('Radiative' + name,
+                                           '(PT > %(PT_MIN)s) & (P > %(P_MIN)s)',
                                            [Hlt2Photons],
-                                           nickname='CaloPhotons',
+                                           nickname=name,
                                            shared=True)
 
 
@@ -168,7 +170,7 @@ class Lambda0Filter(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
         lambda0_cut = """(MIPDV(PRIMARY) > %(IP_MIN)s) &
                          (DOCA(1,2) < %(DOCA_MAX)s) &
-                         (BPVVDCHI2>0) &
+                         (BPVVDCHI2>%(VDCHI2_MIN)s) &
                          (VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s) &
                          (PT > %(PT_MIN)s) &
                          (2 == NINTREE((ISBASIC) &

@@ -14,14 +14,14 @@ class B2GammaGammaLines(RadiativeLineBuilder):
     @staticmethod
     def get_stages(_):
         from Stages import TrackGEC
-        from Stages import CALOPhotonFilter, ConvPhotonFilter
+        from Stages import PhotonFilter, ConvPhotonFilter
         from Stages import ConvPhotonLL, ConvPhotonDD
         from Stages import B2GammaGammaCombiner
         from HltTracking.HltPVs import PV3D
 
         # Make hard non-converted photons
         from Inputs import Hlt2Photons
-        HardCALOGamma = CALOPhotonFilter('HardCALO',[Hlt2Photons])
+        HardCALOGamma = PhotonFilter('HardCalo')
 
         # Build Bs -> gamma gamma (double conversion)
         bs2gammagammaDouble = B2GammaGammaCombiner('B2GammaGammaDouble',
@@ -46,40 +46,41 @@ class B2GammaGammaLines(RadiativeLineBuilder):
 
     @staticmethod
     def get_cuts():
+        from GaudiKernel.SystemOfUnits import MeV
         cuts = {}
         # Hard CALO photons
-        cuts['HardCALO'] = {
-                'CALO_P'    : 5000.0,
-                'CALO_PT'   : 3000.0
+        cuts['HardCalo'] = {
+                'P_MIN'    : 5000.0*MeV,
+                'PT_MIN'   : 3000.0*MeV
                 }
         # Bs
         cuts['B2GammaGamma'] = {
-                'BsMin'     : 4300.0,
-                'BsMax'     : 6800.0,
-                'SUM_PT'    : 6000.0,
-                'B_PT'      : 3000.0,
-                'B_P'       : 5000.0,
+                'BsMin'     : 4300.0*MeV,
+                'BsMax'     : 6800.0*MeV,
+                'SUM_PT'    : 6000.0*MeV,
+                'B_PT'      : 3000.0*MeV,
+                'B_P'       : 5000.0*MeV,
                 }
         cuts['B2GammaGammaLL'] = {
-                'BsMin'     : 4000.0,
-                'BsMax'     : 7000.0,
-                'SUM_PT'    : 6000.0,
-                'B_PT'      : 2500.0,
-                'B_P'       : 4000.0,
+                'BsMin'     : 4000.0*MeV,
+                'BsMax'     : 7000.0*MeV,
+                'SUM_PT'    : 6000.0*MeV,
+                'B_PT'      : 2500.0*MeV,
+                'B_P'       : 4000.0*MeV,
                 }
         cuts['B2GammaGammaDD'] = {
-                'BsMin'     : 4200.0,
-                'BsMax'     : 7000.0,
-                'SUM_PT'    : 4000.0,
-                'B_PT'      : 2500.0,
-                'B_P'       : 4000.0,
+                'BsMin'     : 4200.0*MeV,
+                'BsMax'     : 7000.0*MeV,
+                'SUM_PT'    : 4000.0*MeV,
+                'B_PT'      : 2500.0*MeV,
+                'B_P'       : 4000.0*MeV,
                 }
         cuts['B2GammaGammaDouble'] = {
-                'BsMin'     : 4000.0,
-                'BsMax'     : 7000.0,
-                'SUM_PT'    : 2000.0,
-                'B_PT'      : 1000.0,
-                'B_P'       : 5000.0,
+                'BsMin'     : 4000.0*MeV,
+                'BsMax'     : 7000.0*MeV,
+                'SUM_PT'    : 2000.0*MeV,
+                'B_PT'      : 1000.0*MeV,
+                'B_P'       : 5000.0*MeV,
                 }
         return cuts
 

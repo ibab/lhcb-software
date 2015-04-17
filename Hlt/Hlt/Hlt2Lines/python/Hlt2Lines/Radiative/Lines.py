@@ -18,17 +18,17 @@ from Lb2L0Gamma import Lb2L0GammaLines
 
 cuts = {'Common': {'TrackTisTos' : 'Hlt1(Two)?TrackMVADecision%TOS',
                    'PhotonTisTos': 'L0(Photon|Electron).*Decision%TOS',
-                   'NTRACK_MAX'  : 300},
+                   'NTRACK_MAX'  : 500},
         # Calo photons
-        'CaloPhotons': {'PT_MIN': 200*MeV},
+        'CaloPhotons': {'PT_MIN': 2000*MeV,
+                        'P_MIN' : 5000*MeV},
         # Converted photons
         'ConvLL': {'ee_Mass' : 50.0,
                    'ee_P'    : 5000.0,
                    'ee_PT'   : 200.0 },
         'ConvDD': {'ee_Mass' : 100.0,
                    'ee_P'    : 5000.0,
-                   'ee_PT'   : 200.0},
-       }
+                   'ee_PT'   : 200.0}}
 
 lines_to_run = [B2GammaGammaLines, B2XGammaLines, B2XGammaUnbiasedLines, Lb2L0GammaLines]
 
