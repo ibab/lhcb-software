@@ -203,20 +203,27 @@ def inEOS ( fname            ,
             # try user EOS area : 
             return inEOS ( '/eos' + fname0 , prefix , eosls )
         return ''
-    
-    #
-    ## play a bit with extension
-    #
-    for ext in ( '.raw' , '.RAW' , '.mdf' , '.MDF' ) :               
-        p = fname.find ( ext )
-        if 0<= p and len( ext ) + p == len ( fname ) :
-            fname = 'mdf:' + prefix + fname
-            break
     #
     ## Require non-empty std-out:
     #
-    for l in stdout : return fname    ##  RETURN 
-    #
+    for l in stdout :
+        #
+        ## add prefix
+        #
+        fname = prefix + fname 
+        #
+        ## play a bit with extension
+        #
+        for ext in ( '.raw' , '.RAW' , '.mdf' , '.MDF' ) :               
+            p = fname.find ( ext )
+            if 0<= p and len( ext ) + p == len ( fname ) :
+                fname = 'mdf:' + prefix + fname
+                break
+        #
+        ## 
+        # 
+        return fname    ## RETURN 
+
     return ''
 
 # =============================================================================

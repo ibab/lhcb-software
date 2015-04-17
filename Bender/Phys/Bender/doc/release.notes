@@ -24,6 +24,10 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2015-04-17 - Vanya Belyaev
+ - DataUtils.py
+   fix 
+
 ! 2015-04-13 - Vanya Belyaev
  - DataUtils.py
    1. extend a bit treatment of raw/mdf files, in particular "mdf:"  prefix is added 
