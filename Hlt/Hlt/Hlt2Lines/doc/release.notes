@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-17 - Stefano Perazzini
+  - Update to B2HH/Stages.py and B2HH/Lines.py
+
 ! 2015-04-17 - Michael Kolpin
   - Fix to B2Kpi0.Lines
 

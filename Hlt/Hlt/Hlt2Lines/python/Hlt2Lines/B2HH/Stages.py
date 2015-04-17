@@ -45,7 +45,8 @@ class B2HHCombiner(Hlt2Combiner):
                   " & (PT > %(PionPT)s)" +
                   " & (MIPCHI2DV(PRIMARY) > %(PionIPCHI2)s)" )
         dc =    { 'pi+' : picut }
-        cc =    ( "( AM > %(BMassWinLow)s )" +
+        cc =    ( "( (APT1 + APT2) > %(SumPT)s )" +
+                  " & ( AM > %(BMassWinLow)s )" +
                   " & ( AM < %(BMassWinHigh)s )" +
                   " & ( ACUTDOCACHI2( %(DOCACHI2)s, '' ) )")
         mc =    ( "( PT > %(BPT)s )" +

@@ -38,7 +38,7 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 
 class B2HHLines(Hlt2LinesConfigurableUser):
     __slots__ = {'Prescale' : {},
-                 'Common'   : { 'BMassWinLow'   : 4800 * MeV,  
+                 'Common'   : { 'BMassWinLow'   : 4700 * MeV,  
                                 'BMassWinHigh'  : 6200 * MeV,  
                                 'TrChi2'        : 3,    
                                 'PionPT'        : 1000 * MeV, 
@@ -46,10 +46,10 @@ class B2HHLines(Hlt2LinesConfigurableUser):
                                 'PidCutKaons'   : 2,
                                 'PidCutProtons' : 2, 
                                 'SumPT'         : 4500 * MeV,  
-                                'PionIPCHI2'    : 9,  
-                                'DOCACHI2'      : 25,   
-                                'BIPCHI2'       : 16,  
-                                'BDIRA'         : 0.9,  
+                                'PionIPCHI2'    : 16,  
+                                'DOCACHI2'      : 9,   
+                                'BIPCHI2'       : 9,  
+                                'BDIRA'         : 0.95,  
                                 'BPT'           : 1200 * MeV,  
                                 'BFDCHI2'       : 100,
                                 'BLT'           : 0.2 * picosecond }
