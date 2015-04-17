@@ -34,6 +34,14 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  , 'DiMuonHighMass_TrChi2'    :    4.
                  , 'DiMuonHighMass_M'         : 2900.
                  , 'DiMuonHighMass_GEC'       : 'Loose'
+                 , 'DiMuonSoft_VxDOCA'     :  0.2
+                 , 'DiMuonSoft_VxChi2'     :   25.
+                 , 'DiMuonSoft_P'          : 3000.
+                 , 'DiMuonSoft_PT'         :    0.
+                 , 'DiMuonSoft_TrChi2'     :    2.
+                 , 'DiMuonSoft_M'          :    0.
+                 , 'DiMuonSoft_IPChi2'     :    9.
+                 , 'DiMuonSoft_GEC'        : 'Loose'
                  , 'MultiMuonNoIP_P'          : 6000.
                  , 'MultiMuonNoIP_PT'         :  500.
                  , 'MultiMuonNoIP_TrChi2'     :    4.
@@ -44,13 +52,16 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  , 'L0Channels'               : { 'SingleMuonHighPT' : ( 'Muon', ),
                                                   'SingleMuonNoIP'   : ( 'Muon', ),
                                                   'DiMuonLowMass'    : ( 'Muon', 'DiMuon' ),
+                                                  'DiMuonSoft'       : None,
                                                   'DiMuonHighMass'   : ( 'Muon', 'DiMuon' ),
                                                   'MultiMuonNoIP'    : ( 'Muon', 'DiMuon' )}
                  , 'Priorities'               : { 'SingleMuonHighPT' : 7,
                                                   'SingleMuonNoIP'   : 6,
                                                   'DiMuonLowMass'    : 5,
                                                   'DiMuonHighMass'   : 4,
-                                                  'MultiMuonNoIP'    : 8 }
+                                                  'MultiMuonNoIP'    : 8,
+                                                  'DiMuonSoft'       : 9,
+                                                  }
                  }
     
     def localise_props( self, prefix ):
@@ -257,7 +268,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             prescale  = self.prescale,
             postscale = self.postscale,
             priority  = priority,
-            L0DU = "|".join( [ "L0_CHANNEL('%s')" % l0 for l0 in self.L0Channels[ name ] ] ) ,
+            L0DU = "|".join( [ "L0_CHANNEL('%s')" % l0 for l0 in self.L0Channels[ name ] ] )  if self.L0Channels[name] else None, 
             algos = algos
             )
 
@@ -267,6 +278,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                      ( 'SingleMuonNoIP',   self.singleMuon_streamer ),
                      ( 'DiMuonLowMass',    self.diMuonDetached_streamer ),
                      ( 'DiMuonHighMass',   self.diMuon_streamer ),
+                     ( 'DiMuonSoft',    self.diMuonDetached_streamer ),
                      ( 'MultiMuonNoIP',    self.multiMuon_streamer ) ]
         for line, streamer in to_build:
             self.build_line( line, streamer )

@@ -4,6 +4,11 @@
 ! Responsible : Roel Aaij, Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+! 2015-04-17 - Francesco Dettori
+ - Added line to Hlt1DiMuonSoft to Hlt1MuonLines. 
+ 	 Line similar to Hlt1DiMuonLowMass but without L0 triggere requirements.
+
 ! 2015-04-17 - Dan Johnson
  - Alterations to HLT1CEPLines.py (add new line which only filters on nVeloTracks)
 
