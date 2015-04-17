@@ -1,9 +1,7 @@
 ## --------------------------------------------------------------------------------
 ## Lines for modes with out a reconstructible decay vertex
 ## Ie, B+ -> K+ pi0 and B0 -> K0 pi0
-##
 ## Author: Jason Andrews, jea@umd.edu
-## Shameless copy of Albert Puig's Radiative lines
 ## --------------------------------------------------------------------------------
 from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedRichKaons as Hlt2LooseKaons
 from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPhotons     as Hlt2Photons

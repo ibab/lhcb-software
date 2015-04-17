@@ -1,9 +1,7 @@
 ## --------------------------------------------------------------------------------
 ## Lines for modes with out a reconstructible decay vertex
 ## Ie, B+ -> K+ pi0 and B0 -> K0 pi0
-##
 ## Author: Jason Andrews, jea@umd.edu
-## Shameless copy of Albert Puig's Radiative lines
 ## --------------------------------------------------------------------------------
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2VoidFilter
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter

@@ -7,6 +7,10 @@
 !           ALWAYS inform the Hlt group.
 !
 !----------------------------------------------------------------------------
+
+! 2015-04-17 - Jason Andrews
+  - Clarifying comments in B2Kpi0 lines
+
 ! 2015-04-17 - Dan Johnson
   - Update to Hlt1 dependence in Hlt2Lines/CEP/
 
