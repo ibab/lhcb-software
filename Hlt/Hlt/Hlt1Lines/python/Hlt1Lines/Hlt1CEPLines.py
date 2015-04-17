@@ -7,15 +7,28 @@ class Hlt1CEPLinesConf( HltLinesConfigurableUser ):
     __slots__ = {
           'SpdMult'    :    30.   # dimensionless, Spd Multiplicy cut
         , 'MaxNVelo'   :    15.   # dimensionless, 
+        , 'MinNVelo'   :     1.   # dimensionless, 
         , 'TrChi2'     :     5.   # dimensionless, 
-        , 'PT'         :   500.   # MeV
-        , 'P'          :  6000.   # MeV 
+        , 'PT'         :   200.   # MeV
+        , 'P'          :  1000.   # MeV 
         }
     
     def preambulo( self ):
         ## define some "common" preambulo 
         from HltTracking.Hlt1Tracking import TrackCandidates
         return [ TrackCandidates( "CEP" ) ]
+   
+    def streamer_veloCutsOnly( self ):
+        props = self.getProps()
+
+        ## VoidFilter to cut on the number of Velo tracks.
+        from Configurables import LoKi__VoidFilter as VoidFilter
+        from HltTracking.HltSharedTracking import MinimalVelo
+        props['Velo'] = MinimalVelo.outputSelection()
+        code = "(CONTAINS('%(Velo)s') > %(MinNVelo)s) & (CONTAINS('%(Velo)s') < %(MaxNVelo)s)" % props
+        veloFilter = VoidFilter('Hlt1CEPNVeloFilterVeloCutOnly', Code = code)
+
+        return [veloFilter]
     
     def streamer( self ):
 
@@ -25,7 +38,7 @@ class Hlt1CEPLinesConf( HltLinesConfigurableUser ):
         from Configurables import LoKi__VoidFilter as VoidFilter
         from HltTracking.HltSharedTracking import MinimalVelo
         props['Velo'] = MinimalVelo.outputSelection()
-        code = "CONTAINS('%(Velo)s') < %(MaxNVelo)s" % props
+        code = "(CONTAINS('%(Velo)s') > %(MinNVelo)s) & (CONTAINS('%(Velo)s') < %(MaxNVelo)s)" % props
         veloFilter = VoidFilter('Hlt1CEPNVeloFilter', Code = code)
 
         ## Streamer
@@ -60,4 +73,13 @@ class Hlt1CEPLinesConf( HltLinesConfigurableUser ):
             L0DU = "( L0_DATA('Spd(Mult)') < %(SpdMult)s )" % self.getProps(),   
             ##
             algos     = self.streamer()
+            )
+        Hlt1Line(
+            'CEPVeloCut',
+            ##
+            prescale  = self.prescale,
+            postscale = self.postscale,
+            L0DU = "( L0_DATA('Spd(Mult)') < %(SpdMult)s )" % self.getProps(),   
+            ##
+            algos     = self.streamer_veloCutsOnly()
             )
