@@ -67,8 +67,8 @@ class TrackEffDiMuonLines(Hlt2LinesConfigurableUser):
 			        'TagP'		: 5 * GeV,
 			        'TagPt'		: 700 * MeV,
 			        'TagTrChi2'	: 10,
-			        'TagMinIP'	: 0. * mm,
-			        'TagMinIPchi2'	: 15, #dummy
+			        'TagMinIP'	: 0.5 * mm,
+			        'TagMinIPchi2'	: 0, #dummy
 			        'ProbeP'	: 3 * GeV,
 			        'ProbePt'	: 200 * MeV,
 			        'ProbeTrChi2'	: 10,
