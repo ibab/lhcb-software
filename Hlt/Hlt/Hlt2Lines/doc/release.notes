@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-17 - Sean Benson
+ - Add BBDT layer to gamma gamma.
+
 ! 2015-04-17 - Jason Andrews
   - Some renaming of algorithms in B2Kpi0
 

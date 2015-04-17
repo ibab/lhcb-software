@@ -272,7 +272,10 @@ class TopoCombiner(RadiativeCombiner):
 
 class B2GammaGammaCombiner(Hlt2Combiner):
     def __init__(self, name, decay, inputs):
-        mother_cut = ("(M < %(BsMax)s) & "
+        mother_cut=""
+        if "Double" in name:
+            mother_cut+= "(VFASPF(VCHI2/VDOF) < %(B_VTX)s) & "
+        mother_cut += ("(M < %(BsMax)s) & "
                       "(M > %(BsMin)s) & "
                       "(PT > %(B_PT)s) & "
                       "(P > %(B_P)s)")
@@ -281,7 +284,15 @@ class B2GammaGammaCombiner(Hlt2Combiner):
         elif "DD" in name:
             mother_cut += " & ((INTREE( (ID=='gamma') & (ISBASIC) )) & (INTREE( HASTRACK & ISDOWN )))"
         comb_cut = "((ACHILD(PT,1)+ACHILD(PT,2)) > %(SUM_PT)s)"
-        super(B2GammaGammaCombiner, self).__init__('RadiativeB2GammaGammaCombiner_%s' % name,
+        if "Double" in name:
+            super(B2GammaGammaCombiner, self).__init__('RadiativeB2GammaGammaCombiner_%s' % name,
+                                                   decay,
+                                                   inputs,
+                                                   nickname=name,
+                                                   CombinationCut=comb_cut,
+                                                   MotherCut=mother_cut)
+        else:
+            super(B2GammaGammaCombiner, self).__init__('RadiativeB2GammaGammaCombiner_%s' % name,
                                                    decay,
                                                    inputs,
                                                    nickname=name,
@@ -329,4 +340,83 @@ class BonsaiBDTFilter(Hlt2ParticleFilter):
                           Source='LoKi::Hybrid::DictTransform<{tool_name}Transform>/{tool_name}'.format(tool_name=tool_name))
         return classifier
 
+def PrepGammaGammaMapNone(varmap):
+    """
+    Format the variable map for the BBDecTreeTool.
+    """
+    from copy import deepcopy
+    varmap = deepcopy(varmap)
+    pt = "log( PT/MeV )" 
+    ptsum = "log( SUMTREE(PT, (ABSID == '22'), 0.0)/MeV )" 
+    ptasym = "((MAXTREE(PT, (ABSID == '22'), 0.0)/MeV)-(MINTREE(PT, (ABSID == '22'), 0.0)/MeV)) / ((MAXTREE(PT, (ABSID == '22'), 0.0)/MeV)+(MINTREE(PT, (ABSID == '22'), 0.0)/MeV))" 
+    pxasym = "((MAXTREE(PX, (ABSID == '22'), 0.0)/MeV)-(MINTREE(PX, (ABSID == '22'), 0.0)/MeV)) / ((MAXTREE(PX, (ABSID == '22'), 0.0)/MeV)+(MINTREE(PX, (ABSID == '22'), 0.0)/MeV))"
+    pyasym = "((MAXTREE(PY, (ABSID == '22'), 0.0)/MeV)-(MINTREE(PY, (ABSID == '22'), 0.0)/MeV)) / ((MAXTREE(PY, (ABSID == '22'), 0.0)/MeV)+(MINTREE(PY, (ABSID == '22'), 0.0)/MeV))"
+    varmap["BPT"] = pt
+    varmap["SUMPT"] = ptsum
+    varmap["PTASYM"] = ptasym
+    varmap["PXASYM"] = pxasym
+    varmap["PYASYM"] = pyasym
+    return varmap
+
+def PrepGammaGammaMapConv(varmap):
+    """
+    Format the variable map for the BBDecTreeTool.
+    """
+    from copy import deepcopy
+    varmap = deepcopy(varmap)
+    pt = "log( PT/MeV )" 
+    ptsum = "log( SUMTREE(PT, (ABSID == '22'), 0.0)/MeV)"
+    minelpt = "log( MINTREE((ABSID == '11'), PT)/MeV )"
+    ptasym = "((MAXTREE(PT, (ABSID == '22'), 0.0)/MeV)-(MINTREE(PT, (ABSID == '22'), 0.0)/MeV)) / ((MAXTREE(PT, (ABSID == '22'), 0.0)/MeV)+(MINTREE(PT, (ABSID == '22'), 0.0)/MeV))"
+    vtx = "log( MAXTREE(((ID=='gamma') & (ISBASIC)),VFASPF(VCHI2)) )"
+    mass = "MAXTREE((ID=='gamma') & (NDAUGHTERS>0), M)"
+    varmap["BPT"] = pt
+    varmap["SUMPT"] = ptsum
+    varmap["PTASYM"] = ptasym
+    varmap["CONVM"] = mass
+    varmap["CONVVTX"] = vtx
+    varmap["MINELPT"] = minelpt
+    return varmap
+
+class FilterBDTGammaGamma(Hlt2ParticleFilter):
+    """
+    Filter for the BDT lines.
+    """
+    def __init__(self, type, inputs, cut):
+        varmap={}
+        if type is "None":
+            varmap  = PrepGammaGammaMapNone(varmap)
+            self.nickname="B2GammaGamma"
+        elif type is "LL":
+            varmap  = PrepGammaGammaMapConv(varmap)
+            self.nickname="B2GammaGammaLL"
+        elif type is "DD":
+            varmap  = PrepGammaGammaMapConv(varmap)
+            self.nickname="B2GammaGammaDD"
+        #params  = '/afs/cern.ch/user/s/sbenson/cmtuser/MooreDev_v23r5p2/ParamFiles/data/Hlt2B2GammaGamma_%s_v1.bbdt' % type
+        params  = '$PARAMFILESROOT/data/Hlt2B2GammaGamma_%s_v1.bbdt' % type
+        bdttool = self.__classifier(params, varmap, "TrgBBDT", type=type)
+        
+        pc = ("(VALUE('%s/%s') > %s)" % (bdttool.Type.getType(), bdttool.Name, cut))
+        from HltTracking.HltPVs import PV3D
+        Hlt2ParticleFilter.__init__(self, 'BDT', pc, inputs,
+                shared = False, tools = [bdttool],
+                dependencies = [PV3D('Hlt2')])
+
+    def __classifier(self, params, varmap, name, preambulo = [], type='') :
+        from HltLine.HltLine import Hlt1Tool as Tool
+        from Configurables import LoKi__Hybrid__DictOfFunctors as DictOfFunctors
+        from Configurables import LoKi__Hybrid__DictValue as DictValue
+        from Configurables import \
+            LoKi__Hybrid__DictTransform_BBDecTreeTransform_ as Transform
+        key        = 'BDT'
+        options    = {'BBDecTreeFile': params, 'Name': key, 'KeepVars': '0'}
+        funcdict   = Tool(type = DictOfFunctors, name = 'GammaGammaMVAdict'+type,
+                        Preambulo = preambulo, Variables = varmap)
+        transform  = Tool(type = Transform, name = 'BBDecTree'+type,
+                          tools = [funcdict], Options = options, 
+                          Source = "LoKi::Hybrid::DictOfFunctors/GammaGammaMVAdict"+type)
+        classifier = Tool(type = DictValue, name = name+type, tools = [transform],
+                          Key = key, Source = ('LoKi::Hybrid::DictTransform'+'<BBDecTreeTransform>/BBDecTree'+type))
+        return classifier
 # EOF
