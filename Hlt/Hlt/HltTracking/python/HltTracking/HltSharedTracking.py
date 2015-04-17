@@ -114,10 +114,10 @@ prepare3DVelo = HltTrackFilter( 'Hlt1Prepare3DVelo'
                               , Code = [ '~TrBACKWARD' ] 
                               , OutputSelection     = "Velo" )
 
-def fittedVelo(inputTracks, outputTracks):
+def fittedVelo(inputTracks, outputTracks, name='VeloOnlyFitterAlg'):
     from Configurables import TrackEventFitter, TrackInitFit
     from Configurables import TrackStateInitTool, TrackMasterFitter
-    fa = TrackEventFitter('VeloOnlyFitterAlg')
+    fa = TrackEventFitter(name)
     fa.TracksInContainer = inputTracks
     fa.TracksOutContainer = outputTracks
     fa.Fitter = "TrackInitFit/Fit"
