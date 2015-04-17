@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2015-04-17 - Sascha Stahl
+ - Added Hlt1HighVeloMultDecision and Hlt1HighVeloMultSinglePVDecision to HltInit.py .
+
 !========================= HltConf v12r7 2015-03-31 =========================
 
 ! 2015-03-26 - Roel Aaij
