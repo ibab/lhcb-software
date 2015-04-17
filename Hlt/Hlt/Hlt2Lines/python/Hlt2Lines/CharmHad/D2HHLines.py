@@ -41,22 +41,7 @@ class CharmHadD2HHLines() :
                               'Trk_MIPCHI2DV_MIN'         : 6.0,                              
                               'Gamma_PT'                  : 300  * MeV,
                               'Gamma_P'                   : 1500 * MeV},                              
-                              
-                 'D2HEtaPrime':{'D_MassWinLow'            : 1500 * MeV,
-                              'D_MassWinHigh'             : 2300 * MeV,
-                              'D_PT'                      : 2000 * MeV,
-                              'Vertex_Chi2'               : 9,                              
-                              'Neutral_MassWinLow'        : 900  * MeV, #Neutral = Eta_prime
-                              'Neutral_MassWinHigh'       : 990  * MeV,
-                              'Neutral_PT'                : 900  * MeV,                                                            
-                              'Daug_PT'                   : 1300 * MeV,                              
-                              'Daug_P'                    : 1500 * MeV,                                                            
-                              'Track_Chi2'                : 3,
-                              'AMAXDOCA'                  : 0.05  * mm,
-                              'Trk_MIPCHI2DV_MIN'         : 6.0,                              
-                              'Gamma_PT'                  : 600  * MeV,
-                              'Gamma_P'                   : 1500 * MeV},
-
+                                             
                  'Dstar2PiD0_eegamma' :{'D_MassWinLow'    : 1500 * MeV,
                               'D_MassWinHigh'             : 2300 * MeV,
                               'D_PT'                      : 2000 * MeV,
@@ -89,6 +74,7 @@ class CharmHadD2HHLines() :
                  'Conv_Photon' : {'Elec_PT'               : 350  * MeV,
                                   'Trk_MIPCHI2DV_MIN'     : 6.0,
                                   'Track_Chi2'            : 5         }, 
+                                  
                  'D2EtaPi_hhgamma' : {
                     'AM_MIN'            : 1550 * MeV, 
                     'AM_MAX'            : 2550 * MeV,
@@ -100,7 +86,7 @@ class CharmHadD2HHLines() :
                     'AMRhoH_MIN'        : 0 * MeV,
                     'AMRhoH_MAX'        : 2550 * MeV, #
                     'AMEta_MIN'        : 450 * MeV,
-                    'AMEta_MAX'        : 1150 * MeV,
+                    'AMEta_MAX'        : 800 * MeV,
                                                     },
                     'D2EtaK_hhgamma' : {
                     'AM_MIN'            : 1550 * MeV, 
@@ -113,8 +99,34 @@ class CharmHadD2HHLines() :
                     'AMRhoH_MIN'        : 0 * MeV,
                     'AMRhoH_MAX'        : 2550 * MeV, #
                     'AMEta_MIN'        : 450 * MeV,
+                    'AMEta_MAX'        : 800 * MeV,
+                                                    },
+                   'D2EtaPrimePi_hhgamma' : {
+                    'AM_MIN'            : 1550 * MeV, 
+                    'AM_MAX'            : 2550 * MeV,
+                    'DMASS_MIN'         : 1600 * MeV,
+                    'DMASS_MAX'         : 2500 * MeV,
+                    'APT_MIN'           : 1500.0,  # 2000 in stripping
+                    'BPVLTIME_MIN'      : 0.1,   # ps , ~ 0.15 ps in the stripping
+                    'VCHI2PDOF_MAX'     : 5,
+                    'AMRhoH_MIN'        : 0 * MeV,
+                    'AMRhoH_MAX'        : 2550 * MeV, #
+                    'AMEta_MIN'        : 800 * MeV,
                     'AMEta_MAX'        : 1150 * MeV,
                                                     },
+                    'D2EtaPrimeK_hhgamma' : {
+                    'AM_MIN'            : 1550 * MeV, 
+                    'AM_MAX'            : 2550 * MeV,
+                    'DMASS_MIN'         : 1600 * MeV,
+                    'DMASS_MAX'         : 2500 * MeV,
+                    'APT_MIN'           : 1500.0,  # 2000 in stripping
+                    'BPVLTIME_MIN'      : 0.1,   # ps , ~ 0.15 ps in the stripping
+                    'VCHI2PDOF_MAX'     : 5,
+                    'AMRhoH_MIN'        : 0 * MeV,
+                    'AMRhoH_MAX'        : 2550 * MeV, #
+                    'AMEta_MIN'        : 800 * MeV,
+                    'AMEta_MAX'        : 1150 * MeV,
+                                                    },                                 
                                                     
                    'DiPion_forD2EtaH' : {
                     'AM_MAX'                   : 1150 * MeV,     
@@ -129,7 +141,7 @@ class CharmHadD2HHLines() :
     
     def locallines(self):
         from Stages import MassFilter
-        from Stages import D2PiH0_eeg, D2KH0_eeg, D2PiH0_pipig, D2KH0_pipig, DStar2PiD0_eeg, DStar2PiD0_ee 
+        from Stages import D2PiH0_eeg, D2KH0_eeg, DStar2PiD0_eeg, DStar2PiD0_ee 
         from Stages import D2RhoHG_3Body_Combiner
         from Stages import DetachedRhoPIDChild
         from Stages import SharedNoPIDDetachedChild_pi
@@ -141,11 +153,6 @@ class CharmHadD2HHLines() :
                   'D2PiEta_eegamma'           : [ D2PiH0_eeg('D2HEta')    ],
                   'D2KEta_eegamma'            : [ D2KH0_eeg('D2HEta')     ],
                   
-                  'D2PiEta_pipigamma'         : [ D2PiH0_pipig('D2HEta')  ],
-                  'D2KEta_pipigamma'          : [ D2KH0_pipig('D2HEta')   ],
-                  'D2PiEtaPrime_pipigamma'    : [ D2PiH0_pipig('D2HEtaPrime')  ],
-                  'D2KEtaPrime_pipigamma'     : [ D2KH0_pipig('D2HEtaPrime')   ],
-                  
                   'Dstar2PiD0_eegamma'        : [ DStar2PiD0_eeg('Dstar2PiD0_eegamma')],
                   'Dstar2PiD0_ee'             : [ DStar2PiD0_ee('Dstar2PiD0_ee') ],
                   
@@ -154,11 +161,24 @@ class CharmHadD2HHLines() :
                                                                         inputs = [DetachedRhoPIDChild('DiPion_forD2EtaH'),
                                                                                   SharedNoPIDDetachedChild_pi,
                                                                                   SharedNeutralLowPtChild_gamma ])],
+                                                                                  
                   'D2EtaK_hhgamma'            : [D2RhoHG_3Body_Combiner('D2EtaK_hhgamma',
                                                                         decay = ["D+ -> rho(770)0 K+ gamma","D- -> rho(770)0 K- gamma"],
                                                                         inputs = [DetachedRhoPIDChild('DiPion_forD2EtaH'),
                                                                                   SharedNoPIDDetachedChild_K,
-                                                                                  SharedNeutralLowPtChild_gamma ])]
+                                                                                  SharedNeutralLowPtChild_gamma ])],
+                  
+                  'D2EtaPrimePi_hhgamma'      : [D2RhoHG_3Body_Combiner('D2EtaPrimePi_hhgamma',
+                                                                        decay = ["D+ -> rho(770)0 pi+ gamma","D- -> rho(770)0 pi- gamma"],
+                                                                        inputs = [DetachedRhoPIDChild('DiPion_forD2EtaH'),
+                                                                                  SharedNoPIDDetachedChild_pi,
+                                                                                  SharedNeutralLowPtChild_gamma ])],
+                                                                                  
+                  'D2EtaPrimeK_hhgamma'       : [D2RhoHG_3Body_Combiner('D2EtaPrimeK_hhgamma',
+                                                                        decay = ["D+ -> rho(770)0 K+ gamma","D- -> rho(770)0 K- gamma"],
+                                                                        inputs = [DetachedRhoPIDChild('DiPion_forD2EtaH'),
+                                                                                  SharedNoPIDDetachedChild_K,
+                                                                                  SharedNeutralLowPtChild_gamma ])]                                                                
                   
                   
                                                                  

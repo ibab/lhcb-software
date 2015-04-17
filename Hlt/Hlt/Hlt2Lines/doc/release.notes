@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-17 - Tom Hadavizadeh
+  - Update to CharmHad/Stages.py and CharmHad/D2HHLines.py
+  - Extended EtaH lines to EtaPrimeH
+
 ! 2015-04-17 - Stefano Perazzini
   - Update to B2HH/Stages.py and B2HH/Lines.py
 

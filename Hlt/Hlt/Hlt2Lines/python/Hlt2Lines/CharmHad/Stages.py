@@ -1023,39 +1023,6 @@ class D2HD0_3Body_Combiner(Hlt2Combiner):
                               CombinationCut =  D_combination_cut, MotherCut = D_mother_cut,
                               Combination12Cut = neutral_combination_cut, Preambulo = [])
 
-class D2HH0_4Body_Combiner(Hlt2Combiner):
-    def __init__(self, name, decay, inputs):                           
-        pi_daughters_cut = ("( PT > %(Daug_PT)s ) &" + 
-                            "( P  > %(Daug_P)s  ) &" +
-                            "(TRCHI2DOF< %(Track_Chi2)s )& " +
-                            "(MIPCHI2DV(PRIMARY)> %(Trk_MIPCHI2DV_MIN)s) ")                            
-        K_daughters_cut = ("( PT > %(Daug_PT)s ) &" + 
-                           "( P  > %(Daug_P)s  ) &" +
-                           "(TRCHI2DOF< %(Track_Chi2)s )& " +
-                           "(MIPCHI2DV(PRIMARY)> %(Trk_MIPCHI2DV_MIN)s) ")                            
-        gamma_daughters_cut = ("( PT > %(Gamma_PT)s  ) &" +
-                               "( P  > %(Gamma_P)s   )" )                 
-        daug_cuts =    {'pi+'   : pi_daughters_cut,
-                        'K+'    : K_daughters_cut,
-                        'gamma' : gamma_daughters_cut }                        
-        D_combination_cut   = ("(AM > %(D_MassWinLow)s ) &" +
-                               "(AM < %(D_MassWinHigh)s) &" +
-                               "(AMAXDOCA('')  < %(AMAXDOCA)s)")                               
-        neutral_combination_cut = ("(AM>%(Neutral_MassWinLow)s) &" + 
-                                   "(AM<%(Neutral_MassWinHigh)s) &" + 
-                                   "(APT > %(Neutral_PT)s)")
-        D_mother_cut   = ("( (PT > %(D_PT)s ) &" + 
-                          "(VFASPF(VCHI2/VDOF)< %(Vertex_Chi2)s ) )")
-
-        from HltTracking.HltPVs import PV3D
-        from Configurables import DaVinci__N4BodyDecays
-        
-        Hlt2Combiner.__init__(self, name, decay, inputs,
-                              dependencies = [ PV3D('Hlt2')], tistos = 'TisTosSpec',
-                              combiner = DaVinci__N4BodyDecays, DaughtersCuts = daug_cuts, 
-                              CombinationCut =  D_combination_cut, MotherCut = D_mother_cut,
-                              Combination12Cut = 'AALL', Combination123Cut = neutral_combination_cut,
-                              Preambulo = [])
 
 # D2EtaH Combiners
 class D2RhoHG_3Body_Combiner(Hlt2Combiner):
@@ -1283,18 +1250,6 @@ class D2KH0_eeg(D2HH0_3Body_Combiner) :
         decay = "[D+ -> KS0 gamma K+]cc"
         inputs = [D2HH0_ee_Combiner( 'Conv_Photon'), Hlt2NoPIDsPhotons, Hlt2NoPIDsKaons]
         D2HH0_3Body_Combiner.__init__(self, name, decay, inputs)
-
-class D2PiH0_pipig(D2HH0_4Body_Combiner) :
-    def __init__(self,name) :
-        decay = "[D+ -> pi+ pi- gamma pi+]cc"
-        inputs = [Hlt2NoPIDsPions, Hlt2NoPIDsPhotons]
-        D2HH0_4Body_Combiner.__init__(self, name, decay, inputs)
-
-class D2KH0_pipig(D2HH0_4Body_Combiner) :
-    def __init__(self,name) :
-        decay = "[D+ -> pi+ pi+ gamma K+]cc"
-        inputs = [Hlt2NoPIDsPions, Hlt2NoPIDsPhotons, Hlt2NoPIDsKaons]
-        D2HH0_4Body_Combiner.__init__(self, name, decay, inputs)
         
 
 class DStar2PiD0_eeg(D2HH0_3Body_Combiner) :
