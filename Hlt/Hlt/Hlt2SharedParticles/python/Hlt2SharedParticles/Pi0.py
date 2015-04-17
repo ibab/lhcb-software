@@ -21,7 +21,7 @@ Hlt2ResolvedPi0s.DecayDescriptor 	= "Pi0"
 Hlt2ResolvedPi0s.Output 	= 'Hlt2/Hlt2ResolvedPi0s/Particles'
 Hlt2ResolvedPi0s.addTool(PhotonMaker)
 Hlt2ResolvedPi0s.PhotonMaker.Input 	= neutralProtos.outputSelection() 
-Hlt2ResolvedPi0s.MassWindow 		= 30.* MeV
+Hlt2ResolvedPi0s.MassWindow 		= 60.* MeV # was 30.* MeV
 Hlt2ResolvedPi0s.PhotonMaker.PtCut 	= 200.*MeV
 ##########################################################################
 # Make the pi0
@@ -30,7 +30,7 @@ Hlt2MergedPi0s 			= MergedPi0Maker("Hlt2MergedPi0s")
 Hlt2MergedPi0s.Output        = 'Hlt2/Hlt2MergedPi0s/Particles'
 Hlt2MergedPi0s.DecayDescriptor 	= "Pi0" 
 Hlt2MergedPi0s.Input		= neutralProtos.outputSelection()
-Hlt2MergedPi0s.MassWindow 	= 60.* MeV
+Hlt2MergedPi0s.MassWindow 	= 60.* MeV # this is as in  offline. too tight? 
 ##########################################################################
 # Make both
 #
@@ -45,7 +45,7 @@ Hlt2ResolvedPi0sFromL0.DecayDescriptor 	= "Pi0"
 Hlt2ResolvedPi0sFromL0.Output 	= 'Hlt2/Hlt2ResolvedPi0sFromL0/Particles'
 Hlt2ResolvedPi0sFromL0.addTool(PhotonMaker)
 Hlt2ResolvedPi0sFromL0.PhotonMaker.Input 	= neutralProtosFromL0.outputSelection() 
-Hlt2ResolvedPi0sFromL0.MassWindow 		= 30.* MeV
+Hlt2ResolvedPi0sFromL0.MassWindow 		= 60.* MeV # was 30.* MeV
 Hlt2ResolvedPi0sFromL0.PhotonMaker.PtCut 	= 200.*MeV
 ##########################################################################
 # Make the pi0
@@ -54,7 +54,7 @@ Hlt2MergedPi0sFromL0 			= MergedPi0Maker("Hlt2MergedPi0sFromL0")
 Hlt2MergedPi0sFromL0.Output        = 'Hlt2/Hlt2MergedPi0sFromL0/Particles'
 Hlt2MergedPi0sFromL0.DecayDescriptor 	= "Pi0" 
 Hlt2MergedPi0sFromL0.Input		= neutralProtosFromL0.outputSelection()
-Hlt2MergedPi0sFromL0.MassWindow 	= 60.* MeV
+Hlt2MergedPi0sFromL0.MassWindow 	= 60.* MeV 
 ##########################################################################
 # Make both
 #

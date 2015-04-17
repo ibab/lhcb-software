@@ -4,6 +4,8 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-04-16 - Simone Stracka
+ - Enlarged mass window for resolved pi0. Added resolved eta. 
 
 ! 2015-04-16 - Sascha Stahl
  - Fix last commit. Had unintentionally removed all pids from BiKalmanFittedChargedCaloProtoMaker.
