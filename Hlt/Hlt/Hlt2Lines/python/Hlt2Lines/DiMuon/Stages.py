@@ -8,7 +8,7 @@ class DiMuonFilter(Hlt2ParticleFilter):
     def __init__(self, name):
         code = ("(MM > %(MinMass)s) & (PT> %(Pt)s)" +
                 " & (MINTREE('mu-' == ABSID, PT) > %(MuPt)s)" +
-                " & (VFASPF(VCHI2PDOF)<%(VertexChi2)s )"
+                " & (VFASPF(VCHI2PDOF)<%(VertexChi2)s )" +
                 " & (MAXTREE('mu-' == ABSID, TRCHI2DOF) < %(TrChi2Tight)s)")
         inputs = [TrackFittedDiMuon]
         Hlt2ParticleFilter.__init__(self, name, code, inputs, shared = True)
@@ -34,6 +34,20 @@ class DetachedDiMuonHeavyFilter(Hlt2ParticleFilter):
         Hlt2ParticleFilter.__init__(self, name, code, inputs,
                                     dependencies = [PV3D('Hlt2')],
                                     UseP2PVRelations = False)
+
+class SoftDiMuonFilter(Hlt2ParticleFilter):
+    def __init__(self, name):
+        code = ("(MINTREE('mu-' == ABSID, MIPDV(PRIMARY)) > %(IP)s)" +
+                " & (MM < %(MaxMass)s) & (PT> %(Pt)s)" +
+                " & (MINTREE('mu-' == ABSID, PT) > %(MuPt)s)" +
+                " & (VFASPF(VCHI2PDOF)<%(VertexChi2)s )" +
+                " & (MAXTREE('mu-' == ABSID, TRCHI2DOF) < %(TrChi2Tight)s)" +
+                " & (DOCAMAX < %(doca)s)" +
+                " & (BPVVDZ > %(MinVDZ)s) "
+                )
+        inputs = [TrackFittedDiMuon]
+        Hlt2ParticleFilter.__init__(self, name, code, inputs, shared = True)
+
 
 class JpsiFilter(Hlt2ParticleFilter):
     def __init__(self, name):

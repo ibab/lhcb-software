@@ -1,4 +1,4 @@
-from GaudiKernel.SystemOfUnits import GeV, MeV 
+from GaudiKernel.SystemOfUnits import GeV, MeV, mm
 
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 class DiMuonLines(Hlt2LinesConfigurableUser) :
@@ -12,7 +12,7 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                                     'Pt'         :  1000 * MeV,
                                     'MuPt'       :   500 * MeV,
                                     'VertexChi2' :    25},
-                  
+                 
                  'JPsi' :          {'MassWindow' :    70 * MeV,
                                     'Pt'         :  1000 * MeV,
                                     'MuPt'       :   500 * MeV,
@@ -41,6 +41,14 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                                                  
                  'Detached' :      {'IPChi2'     :     9,
                                     'DLS'        :     5},
+                 'Soft' :          {'IP'         :   0.5 * mm ,
+                                    'Pt'         :     0 * MeV,
+                                    'MaxMass'    :  1000 * MeV,
+                                    'MuPt'       :     0 * MeV,
+                                    'VertexChi2' :    25,
+                                    'doca'       :   0.5,
+                                    'MinVDZ'     :     0 * mm
+                                    },
 
                  'DetachedHeavy' : {'MinMass'    :  2950 * MeV,
                                     'Pt'         :     0 * MeV,
@@ -64,7 +72,7 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
         from Stages import (DiMuonFilter, JpsiFilter, Psi2SFilter,
                             BFilter, ZFilter, DetachedDiMuonFilter,
                             DetachedDiMuonHeavyFilter, DetachedJpsiFilter,
-                            DetachedPsi2SFilter)
+                            DetachedPsi2SFilter, SoftDiMuonFilter)
         self._stages = {'DiMuon'        : [DiMuonFilter('DiMuon')],
                         'JPsi'          : [JpsiFilter('JPsi')],
                         'JPsiHighPT'    : [JpsiFilter('JPsiHighPT')],
@@ -73,6 +81,7 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                         'B'             : [BFilter('B')],
                         'Z'             : [ZFilter('Z')],
                         'Detached'      : [DetachedDiMuonFilter('Detached')],
+                        'Soft'          : [SoftDiMuonFilter('Soft')],
                         'DetachedHeavy' : [DetachedDiMuonHeavyFilter('DetachedHeavy')],
                         'DetachedJPsi'  : [DetachedJpsiFilter('DetachedJPsi')],
                         'DetachedPsi2S' : [DetachedPsi2SFilter('DetachedPsi2S')]}

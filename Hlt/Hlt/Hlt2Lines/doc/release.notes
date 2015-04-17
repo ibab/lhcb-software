@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-17 - Francesco Dettori
+ - Added Hlt2DiMuonSoft line for soft dimuons (resp. Diego Martinez) 
+ - Minor bug fix to RareStrange lines
 
 ! 2015-04-17 - Karlis Dreimanis
   - Minor adjustments to tau lines

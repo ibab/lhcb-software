@@ -64,7 +64,7 @@ class RareStrangeLines(Hlt2LinesConfigurableUser):
         stages = self.stages()
 
         for (nickname, algos) in self.algorithms(stages).iteritems():
-            linename =  'RareStrange' + nickname,
+            linename ='RareStrange'+nickname
             Hlt2Line(linename,
                      prescale = self.prescale,
                      algos = algos,
