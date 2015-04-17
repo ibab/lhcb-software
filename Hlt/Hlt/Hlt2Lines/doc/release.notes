@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-17 - Jason Andrews
+  - Some renaming of algorithms in B2Kpi0
+
 ! 2015-04-17 - Tom Hadavizadeh
   - Update to CharmHad/Stages.py and CharmHad/D2HHLines.py
   - Extended EtaH lines to EtaPrimeH
