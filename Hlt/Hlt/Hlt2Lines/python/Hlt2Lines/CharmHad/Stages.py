@@ -583,10 +583,18 @@ class HHKshCombiner(Hlt2Combiner):
 
         from HltTracking.HltPVs import PV3D
 
-        Hlt2Combiner.__init__(self, 'D02HHKsh', decay, inputs,
+##  The argument "nickname = 'D02HHKsh'"  points at the common 
+##  dictionary which allows the individual instantiations of
+##  this "shared = True" combiner to have unique names but only one
+##  dictionary, reducing the number of slots defined in Lines.py
+##  By making this a "shared = True" class, the individual lines
+##  can be used as input to multiple combiners (TagDecay being the
+##  prime example) without creating redundant copies.
+        Hlt2Combiner.__init__(self, name, decay, inputs,
                      dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
-                     shared = False,
+                     shared = True,
                      tistos = 'TisTosSpec', combiner = N3BodyDecays,
+                     nickname = 'D02HHKsh',
                      Combination12Cut =  c12Cut,
                      CombinationCut = cc, 
                      MotherCut = mc, Preambulo = [])
@@ -1335,35 +1343,35 @@ class DStar2PiD0_ee(D2HD0_3Body_Combiner) :
         inputs = [Hlt2NoPIDsElectrons, Hlt2NoPIDsPions]
         D2HD0_3Body_Combiner.__init__(self, name, decay, inputs)        
 
-##  the first argument, 'D02HHKs', refers to a dictionary entry found in Lines.py
-##  to be used for the (generic) configurables used by the HHKshCombiner
+##  The first argument must be a unique name as HHKshCombiner is "shared = True".
+##  All these instances use the same nickname, 'D02HHKsh', to point to a single, common,
+##  dictionary in Lines.py This is hidden in the HHKshCombiner class code.
 
-## Note that all these lines are defined as D0 decays, not D0bar.  This avoids "duplication"
-## that would be produced using decay="[ xxx ]cc".  When combining with slow pions to form
-## D* candidates, it will be necessary to combine with pi- and with pi+ separately to get
-## all desired decay chains (although some D0bar states will be labelled D0)
+## Note that all the CP eigenstate lines are defined as D0 decays, not D0bar.  This avoids "duplication"
+## that would be produced using decay="[ xxx ]cc". The non-CP-eigenstate final states
+## are made with DecayDescriptors of the form"[  xxx  ]cc"  rather than " xxx "
 
 
-D02KsPiPi_LL = HHKshCombiner('D02HHKsh', decay="D0 ->  pi- pi+ KS0",
+D02KsPiPi_LL = HHKshCombiner('KshPiPiLL', decay="D0 ->  pi- pi+ KS0",
                    inputs=[SharedKsLL, SharedDetachedDpmChild_pi])
-D02KsPiPi_DD = HHKshCombiner('D02HHKsh', decay="D0 ->  pi- pi+ KS0",
+D02KsPiPi_DD = HHKshCombiner('KshPiPiDD', decay="D0 ->  pi- pi+ KS0",
                    inputs=[SharedKsDD, SharedDetachedDpmChild_pi])
 ##
 ##  These lines produce D0 --> K-,pi+,Kshort and D0bar --> K+,pi-,Kshort candidates
-D02KsKPi_LL  = HHKshCombiner('D02HHKsh', decay="[D0 ->  K- pi+ KS0]cc",
+D02KsKPi_LL  = HHKshCombiner('KshKPiLL', decay="[D0 ->  K- pi+ KS0]cc",
                    inputs=[SharedKsLL, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])
-D02KsKPi_DD  = HHKshCombiner('D02HHKsh', decay="[D0 ->  K- pi+ KS0]cc",
+D02KsKPi_DD  = HHKshCombiner('KshKPiDD', decay="[D0 ->  K- pi+ KS0]cc",
                    inputs=[SharedKsDD, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])
 
 ##  These lines produce D0 --> K+,pi-,Kshort and D0bar --> K-,pi+,pi0 candidates
-D02KsPiK_LL  = HHKshCombiner('D02HHKsh', decay="[D0 ->  pi- K+ KS0]cc",
+D02KsPiK_LL  = HHKshCombiner('KshPiKLL', decay="[D0 ->  pi- K+ KS0]cc",
                    inputs=[SharedKsLL, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])
-D02KsPiK_DD  = HHKshCombiner('D02HHKsh', decay="[D0 ->  pi- K+ KS0]cc",
+D02KsPiK_DD  = HHKshCombiner('KshPiKDD', decay="[D0 ->  pi- K+ KS0]cc",
                    inputs=[SharedKsDD, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])
 
-D02KsKK_LL   = HHKshCombiner('D02HHKsh', decay="D0 ->  K- K+ KS0",
+D02KsKK_LL   = HHKshCombiner('KshKKLL', decay="D0 ->  K- K+ KS0",
                    inputs=[SharedKsLL, SharedDetachedDpmChild_K])
-D02KsKK_DD   = HHKshCombiner('D02HHKsh', decay="D0 ->  K- K+ KS0",
+D02KsKK_DD   = HHKshCombiner('KshKKDD', decay="D0 ->  K- K+ KS0",
                    inputs=[SharedKsDD, SharedDetachedDpmChild_K])
 
 ## ------------------------------------------------------------------------- ##
