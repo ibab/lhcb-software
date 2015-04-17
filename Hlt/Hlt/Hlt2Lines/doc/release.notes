@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-17 - Karlis Dreimanis
+  - (Hopefully) last change in the tau line dictionary in EL/Lines.py
+
 ! 2015-04-17 - Patrick Spradlin
  - Added code for a second slow-pion-tagged inclusive line anticipating a
    potential future baryon-specific line.
