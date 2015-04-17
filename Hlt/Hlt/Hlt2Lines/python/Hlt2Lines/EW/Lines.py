@@ -7,7 +7,7 @@ program ranging from testing the SM parameters to searches for exotic particles 
 
 __version__ = "$Revision: $"
 __author__  = "Karlis Dreimanis k.dreimanis@liverpool.ac.uk"
-__date__    = "2015-04-16"
+__date__    = "2015-04-17"
 #======================================================================================
 
 from GaudiKernel.SystemOfUnits import GeV, MeV, mm 
@@ -139,8 +139,8 @@ class EWLines(Hlt2LinesConfigurableUser) :
                                               'FDT_MIN'        :   0.5,
                                               'VCHI2_NDOF_MAX' :    20,
                                               'DOCA_MAX'       :   0.1,
-                                              'CORRM_MIN'      :   1.0 * GeV,
-                                              'CORRM_MAX'      :   2.2 * GeV},
+                                              'CORRM_MIN'      :   1.2 * GeV,
+                                              'CORRM_MAX'      :   2.0 * GeV},
 
                  'TauPiPi0Combiner' :        {'sumPT'          :     8 * GeV,
                                               'PT'             :     8 * GeV,
