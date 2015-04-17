@@ -5,5 +5,5 @@ from Hlt2SharedParticles.TrackFittedDiElectron import TrackFittedDiElectronFromL
 from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectronsFromL0
 from HltTracking.HltPVs import PV3D
 #For tau lines
-from Hlt2SharedParticles.TrackFittedBasicParticles import Hlt2BiKalmanFittedPions
-from Hlt2SharedParticles.Pi0 import Hlt2MergedPi0s, Hlt2ResolvedPi0s
+from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions
+from Hlt2SharedParticles.Pi0 import MergedPi0s, ResolvedPi0s

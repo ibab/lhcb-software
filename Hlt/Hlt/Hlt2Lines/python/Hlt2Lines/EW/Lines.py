@@ -132,7 +132,7 @@ class EWLines(Hlt2LinesConfigurableUser) :
                                               'PI_PT_MIN'       : 2*GeV
                                               },
                  'Tau3PiCombiner' :          {'sumPT'          :     8 * GeV,
-                                              'PT'             :     5 * GeV,
+                                              'PT'             :     8 * GeV,
                                               'childPT'        :     2 * GeV,
                                               'maxchildPT'     :     5 * GeV,
                                               'FDCHI2_MIN'     :    10,
@@ -143,13 +143,13 @@ class EWLines(Hlt2LinesConfigurableUser) :
                                               'CORRM_MAX'      :   2.0 * GeV},
 
                  'TauPiPi0Combiner' :        {'sumPT'          :     8 * GeV,
-                                              'PT'             :     5 * GeV,
-                                              'childPT'        :     2 * GeV,
+                                              'PT'             :     8 * GeV,
+                                              'childPT'        :     5 * GeV,
                                               'maxchildPT'     :     5 * GeV,
                                               'M_MIN'          :     0 * GeV,
                                               'M_MAX'          :   1.5 * GeV}, #'DR2_MAX'      : 0.25
                  ## single tau
-                 'SingleTauHighPt2Prong' :   {'PT'             :    12 * GeV},
+                 'SingleTauHighPt2Prong' :   {'PT'             :    15 * GeV},
                  'SingleTauHighPt3Prong' :   {'PT'             :    12 * GeV}
 
                  }                               
@@ -159,12 +159,12 @@ class EWLines(Hlt2LinesConfigurableUser) :
                             SingleMuonLowPtFilter,SingleMuonHighPtFilter,SingleMuonVHighPtFilter,
                             DiElectronDYFilter,DiElectronHighMassFilter,
                             SingleTFElectronFilter,SingleTFElectronLowPtFilter,SingleTFElectronHighPtFilter,SingleTFElectronVHighPtFilter, TauTrkFilter, TauRhoCombiner, HighPTTauCombiner, SingleTauFilter)
-        from Inputs import (Hlt2MergedPi0s, Hlt2ResolvedPi0s, BiKalmanFittedMuons, BiKalmanFittedElectronsFromL0, Hlt2BiKalmanFittedPions)
+        from Inputs import (MergedPi0s, ResolvedPi0s, BiKalmanFittedMuons, BiKalmanFittedElectronsFromL0, BiKalmanFittedPions)
         #create the taus first
-        tau_trkfilter     = TauTrkFilter("TauTrkFilter", [Hlt2BiKalmanFittedPions])
+        tau_trkfilter     = TauTrkFilter("TauTrkFilter", [BiKalmanFittedPions])
         tau_rhocombiner   = TauRhoCombiner("TauRhoCombiner", [tau_trkfilter])
         taus_3prong       = HighPTTauCombiner("Tau3PiCombiner",0, [tau_rhocombiner, tau_trkfilter])
-        taus_2prong       = HighPTTauCombiner("TauPiPi0Combiner",1, [tau_trkfilter, Hlt2MergedPi0s, Hlt2ResolvedPi0s])
+        taus_2prong       = HighPTTauCombiner("TauPiPi0Combiner",1, [tau_trkfilter, MergedPi0s, ResolvedPi0s])
         singletaus_3prong = SingleTauFilter("SingleTauHighPt3Prong",0, [taus_3prong])
         singletaus_2prong = SingleTauFilter("SingleTauHighPt2Prong",1, [taus_2prong])
 
