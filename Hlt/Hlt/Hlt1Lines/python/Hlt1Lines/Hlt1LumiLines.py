@@ -14,15 +14,15 @@ def _createCounter( counterKind, seqName, seq, enableNonL0Counters ) :
         def _fun (name, value ) :
           from HltLine.HltDecodeRaw import DecodeL0DU
           if [ i for i in DecodeL0DU.members() if i not in seq.Members ] :
-              seq.Members +=  DecodeL0DU.members() 
+              seq.Members +=  DecodeL0DU.members()
           alg = LumiFromL0DU(  seqName + 'L0DU' )
           if alg not in seq.Members :
                alg.InputSelection='Trig/L0/L0DUReport'
-               alg.OutputContainer='Hlt/LumiSummary' 
+               alg.OutputContainer='Hlt/LumiSummary'
                seq.Members += [ alg ]
           if name in alg.CounterMap :
               raise KeyError('Key %s already present'%name)
-          alg.CounterMap.update( { name : value } ) 
+          alg.CounterMap.update( { name : value } )
         return _fun
     return lambda name, inputSel : seq.Members.append( counterKind( seqName + name
                                                      , InputSelection = inputSel
@@ -48,13 +48,11 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                 )
     containerNameLumiTracks = 'Hlt/Track/Lumi'
     containerNameLumiVertex = 'Hlt/Vertex/Lumi'
-    
+
     __slots__ = { 'TriggerType'            : 'LumiTrigger'  # ODIN trigger type accepted for Lumi
                 , 'L0Channel'              : ['CALO']     # L0 channels accepted for LowLumi
                 , 'L0MidChannel'           : ['MUON,minbias']     # L0 channels accepted for MidLumi
-                , 'LumiLines'              : ['Count','VDM']
-                , 'EnableReco'             : True 
-                , 'MaxRate'                : 1000000. # pick a prime number...
+                , 'EnableReco'             : True
                 , 'LumiLowRateLimits'      : { 'BeamCrossing' : 'RATE(70)'
                                              , 'Beam1'        : 'RATE(15)'
                                              , 'Beam2'        : 'RATE(10)'
@@ -98,19 +96,19 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         algPV.OutputVerticesName = self.containerNameLumiVertex
         #return a list with the 2 algorithms
         return algsDecodeVelo + [ algTr, algPV ]
-  
+
     def __create_lumi_algos__(self, postfix=''):
         '''
         returns algorithm sequences for Hlt1 Lumi Lines
         '''
         # get counters
         counters = self.getProp('CounterDefinition')
-        
+
         # debugging options
         debugOPL = self.getProp('OutputLevel')
         # define reco scaler
         from Configurables import DeterministicPrescaler as Scaler
-        recoScaler = Scaler( 'LumiRecoScaler' ,  AcceptFraction = 1 if self.getProp('EnableReco') else 0 )  
+        recoScaler = Scaler( 'LumiRecoScaler' ,  AcceptFraction = 1 if self.getProp('EnableReco') else 0 )
 
         # define empty reco sequence
         seqRecoName = 'LumiReco'
@@ -141,18 +139,18 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                                               , CounterName='Method'
                                                               , ValueName='L0RateMethod'
                                                               , OutputContainer='Hlt/LumiSummary' ) )
-            
+
         # LumiMid lines are not flagged - to be used for on-line reporting only
         elif postfix.find('Mid') > -1  :
             pass
-            
+
         # flag now also the random lumi lines - needed due to microbias lines
         else  :
             lumiCountSequence.Members.append( LumiFlagMethod( seqCountName+'FlagMethod'
                                                               , CounterName='Random'
                                                               , ValueName='RandomMethod'
                                                               , OutputContainer='Hlt/LumiSummary' ) )
-            
+
         # populate count sequence from the definition
         createdCounters = []
         histoThresholds = []
@@ -161,7 +159,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
             # example 'CaloEt' : [LumiFromL0DU , True , 'Hadron(Et)' , 500, 6000],
             (op, flag, inputDef, threshold, bins) = definition
             if flag:
-                createdCounters.extend( 
+                createdCounters.extend(
                     _combine( _createCounter( op, seqCountName, lumiCountSequence, True ),
                               { key : inputDef } ) )
                 histoThresholds.extend( [threshold] )
@@ -179,12 +177,12 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         # Add L0MuonCandidatesFromRaw to the lumi reco sequence
         from L0DU.L0Algs import decodeL0Muon
         lumiRecoSequence.Members.append( decodeL0Muon() )
-        
+
         ### get the private lumi velo reco algorithms
         lumiVeloReco = self.__lumi_track_and_vertex_seq__()
         lumiRecoSequence.Members.append( Sequence('LumiTrackRecoSequence' ,
                                                    Members = [ recoScaler ] + lumiVeloReco,
-                                                   ) ) 
+                                                   ) )
 
         # filter to get backward tracks (make sure it always passes by wrapping inside a sequence)
         from Configurables import Hlt__TrackFilter as HltTrackFilter
@@ -215,7 +213,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                                                    , VertexInputSelection=self.containerNameLumiVertex
                                                                    , OutputContainer='Hlt/LumiSummary' ) )
 
-        
+
         # sequence to get TT tracks
         #  disabled because of https://savannah.cern.ch/bugs/index.php?62933
         #from HltLine.HltDecodeRaw import DecodeTT
@@ -262,8 +260,8 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         #                             , OutputLevel = debugOPL
         #                             )
 
-        #return [ lumiRecoSequence, lumiCountSequence, lumiHistoSequence ] 
-        return [ lumiRecoSequence, lumiCountSequence ] 
+        #return [ lumiRecoSequence, lumiCountSequence, lumiHistoSequence ]
+        return [ lumiRecoSequence, lumiCountSequence ]
 
 
     def __create_lumi_line__(self ):
@@ -280,7 +278,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                     , ODIN = '( ODIN_TRGTYP == LHCb.ODIN.%s ) ' % self.getProp('TriggerType')
                     , algos = self.__create_lumi_algos__( '' )
                     , postscale = self.postscale
-                    ) 
+                    )
 
     def __create_lumi_low_line__(self, BXType, extension = '' ):
         '''
@@ -296,7 +294,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                     , L0DU  = l0du
                     , algos = self.__create_lumi_algos__( postfix+BXType )
                     , postscale = self.postscale
-                    ) 
+                    )
 
     def __create_lumi_mid_line__(self, BXType='BeamCrossing', extension = '' ):
         '''
@@ -312,7 +310,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                     , L0DU  = l0du
                     , algos = self.__create_lumi_algos__( postfix+BXType )
                     , postscale = self.postscale
-                    ) 
+                    )
 
     def __apply_configuration__(self) :
         '''
@@ -325,7 +323,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         lines = map( self.__create_lumi_low_line__, ['NoBeam', 'BeamCrossing','Beam1','Beam2'] )
         for i in lines :
             i.clone( i.name().lstrip('Hlt1')+'RateLimited'
-                   , L0DU = 'scale( %s , %s)' % ( i._L0DU , self.getProp('LumiLowRateLimits')[i.name().lstrip('Hlt1LumiLow')] ) 
+                   , L0DU = 'scale( %s , %s)' % ( i._L0DU , self.getProp('LumiLowRateLimits')[i.name().lstrip('Hlt1LumiLow')] )
                    , postscale = self.postscale
                    , prescale = self.prescale
                    )
@@ -334,4 +332,3 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         #
         # NOTE: this line should not be rate-limited, but a fixed prescale can be used if needed.
         #
-

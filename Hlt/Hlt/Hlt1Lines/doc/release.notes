@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-04-17 - Rosen Matev
+ - Remove obsolete slots in Hlt1LumiLines
+
 ! 2015-04-15 - Albert Puig
  - Changed particle from D0 to phi(1020) in the Hlt1CalibTracking lines
 
@@ -33,7 +36,7 @@
  - Use 1TrackAllL0 only on ODIN random triggers.
  - Remove 1TrackPhoton.
  - Fix final selection of CEP line.
- 
+
 ! 2015-03-30 - Roel Aaij
  - Cleanup Muon lines and use complement upgrade.
  - Add reasonable 1TrackMuon tuning.
@@ -66,7 +69,7 @@
  - Fix warning in Hlt1CalibTrackingLines.
 
 ! 2015-03-24 - Matthew Kenzie
- - Nuked Hlt1PhiLines.py (now included as part of Hlt1CalibTrackingLines.py) 
+ - Nuked Hlt1PhiLines.py (now included as part of Hlt1CalibTrackingLines.py)
  - Nuked Hlt1JpsiPhiLines.py (not necessary)
  - Updated Hlt1CalibTrackingLines to include new Hlt1Combiner config
  - Updated Hlt1B2GammaGammaLines to include new Hlt1Combiner config
@@ -1342,4 +1345,3 @@
 !========================== Hlt1Lines v1r0 2009-06-03 ===================
 ! 2009-05-28 - Gerhard Raven
  - initial import of bits from HltConf
-
