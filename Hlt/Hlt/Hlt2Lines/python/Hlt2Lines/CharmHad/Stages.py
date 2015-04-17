@@ -584,6 +584,7 @@ class HHKshCombiner(Hlt2Combiner):
 
         Hlt2Combiner.__init__(self, 'D02HHKsh', decay, inputs,
                      dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                     shared = False,
                      tistos = 'TisTosSpec', combiner = N3BodyDecays,
                      Combination12Cut =  c12Cut,
                      CombinationCut = cc, 
@@ -1331,21 +1332,36 @@ class DStar2PiD0_ee(D2HD0_3Body_Combiner) :
         inputs = [Hlt2NoPIDsElectrons, Hlt2NoPIDsPions]
         D2HD0_3Body_Combiner.__init__(self, name, decay, inputs)        
 
-##  the argument 'D02HHKs' defines the dictionary found in Lines.py
+##  the first argument, 'D02HHKs', refers to a dictionary entry found in Lines.py
 ##  to be used for the (generic) configurables used by the HHKshCombiner
-D02KsPiPi_LL = HHKshCombiner('D02HHKsh', decay="[D0 ->  pi- pi+ KS0]cc",
+
+## Note that all these lines are defined as D0 decays, not D0bar.  This avoids "duplication"
+## that would be produced using decay="[ xxx ]cc".  When combining with slow pions to form
+## D* candidates, it will be necessary to combine with pi- and with pi+ separately to get
+## all desired decay chains (although some D0bar states will be labelled D0)
+
+
+D02KsPiPi_LL = HHKshCombiner('D02HHKsh', decay="D0 ->  pi- pi+ KS0",
                    inputs=[SharedKsLL, SharedDetachedDpmChild_pi])
-D02KsPiPi_DD = HHKshCombiner('D02HHKsh', decay="[D0 ->  pi- pi+ KS0]cc",
+D02KsPiPi_DD = HHKshCombiner('D02HHKsh', decay="D0 ->  pi- pi+ KS0",
                    inputs=[SharedKsDD, SharedDetachedDpmChild_pi])
+##
+##  These lines produce D0 --> K-,pi+,Kshort and D0bar --> K+,pi-,Kshort candidates
 D02KsKPi_LL  = HHKshCombiner('D02HHKsh', decay="[D0 ->  K- pi+ KS0]cc",
                    inputs=[SharedKsLL, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])
 D02KsKPi_DD  = HHKshCombiner('D02HHKsh', decay="[D0 ->  K- pi+ KS0]cc",
                    inputs=[SharedKsDD, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])
-D02KsKK_LL   = HHKshCombiner('D02HHKsh', decay="[D0 ->  K- K+ KS0]cc",
-                   inputs=[SharedKsLL, SharedDetachedDpmChild_K])
-D02KsKK_DD   = HHKshCombiner('D02HHKsh', decay="[D0 ->  K- K+ KS0]cc",
-                   inputs=[SharedKsDD, SharedDetachedDpmChild_K])
 
+##  These lines produce D0 --> K+,pi-,Kshort and D0bar --> K-,pi+,pi0 candidates
+D02KsPiK_LL  = HHKshCombiner('D02HHKsh', decay="[D0 ->  pi- K+ KS0]cc",
+                   inputs=[SharedKsLL, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])
+D02KsPiK_DD  = HHKshCombiner('D02HHKsh', decay="[D0 ->  pi- K+ KS0]cc",
+                   inputs=[SharedKsDD, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])
+
+D02KsKK_LL   = HHKshCombiner('D02HHKsh', decay="D0 ->  K- K+ KS0",
+                   inputs=[SharedKsLL, SharedDetachedDpmChild_K])
+D02KsKK_DD   = HHKshCombiner('D02HHKsh', decay="D0 ->  K- K+ KS0",
+                   inputs=[SharedKsDD, SharedDetachedDpmChild_K])
 
 ## ------------------------------------------------------------------------- ##
 class DetachedD02HHInclCombiner(Hlt2Combiner) : # {

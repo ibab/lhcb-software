@@ -115,7 +115,6 @@ theseslots = {   'Prescale' : {},
                  # generic D0 --> HHKs cuts
                  'D02HHKsh' : {
                              'TisTosSpec'               : "Hlt1.*MVA.*Decision%TOS",
-##                           'TisTosSpec'               : "Hlt1TwoTrackMVADecision%TOS",
                              'AM_MIN'                   :  1740. * MeV,
                              'AM_MAX'                   :  1990. * MeV,
                              'ASUMPT_MIN'               :  1500 * MeV,
@@ -143,7 +142,7 @@ theseslots = {   'Prescale' : {},
                                               },
                  # Soft particles for tagging decays
                  'CharmHadSharedSoftTagChild_pi' : {
-                                 'Trk_ALL_PT_MIN'           :  100.0,
+                                 'Trk_ALL_PT_MIN'           :  100.0 * MeV,
                                            },
                  # NoPID protons for the Sigma_c tagged Lambda_c line for PID calibration
                  # the IPCHI2 cut is tight because the PT/PT cuts have to be loose to give
