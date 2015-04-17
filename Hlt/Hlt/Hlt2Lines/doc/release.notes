@@ -18,6 +18,8 @@
    . Add AM combination cuts
    . Add D0 -> K3pi (tagged + untagged) and D0 -> Kpi (tagged) calib lines,
      using combiners defined in CharmHad/.
+  - Turbo:
+   . Remove ANNSvc stuff for obsolete PID calib lines.
 
 ! 2015-04-16 - Jason Andrews
   - Renamed Vertexless directory to B2Kpi0, lines now exclusive

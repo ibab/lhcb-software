@@ -48,8 +48,3 @@ class TurboLines(Hlt2LinesConfigurableUser) :
                 if module is 'DiMuon':
                     if line is 'JPsi':
                         HltANNSvc().Hlt2SelectionID.update( { 'Hlt2'+module+line+'Turbo'+'Decision':  50212 } )
-                if module is 'CharmHad' and line is 'Lc2KPPi_PIDCALIB':
-                    HltANNSvc().Hlt2SelectionID.update({
-                      'Hlt2Lc2KPPi_PIDCALIBDecision' : 50046,
-                      'Hlt2CharmHadLc2KPPi_PIDCALIBTurboDecision' : 50246
-                      })
