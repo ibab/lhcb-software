@@ -17,6 +17,7 @@
  - Add tagged, lifetime biased, D->hh lines for CPV measurements
  - Add functionality to CharmHad/Lines to make a turbo copy of any line
    with 'Turbo' in its name
+ - Remove turbo copies of XSec lines from Turbo directory
 
 ! 2015-04-17 - Francesco Dettori
  - Added Hlt2DiMuonSoft line for soft dimuons (resp. Diego Martinez) 
