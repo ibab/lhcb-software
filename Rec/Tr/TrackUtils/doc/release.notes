@@ -4,6 +4,11 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-04-17 - Chris Jones
+ - Change logic in TrackContainerCopy to use obsolete inputLocation instead
+   of inputLocations if that option is set. Warning is issued to change to
+   use the newer list option.
+
 ! 2015-04-16 - Chris Jones
  - Add back the inputLocation to TrackContainerCopy to allow for a proper 
    deprciation period, as its removal broke the nighlties stripping QM tests.

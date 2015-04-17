@@ -40,6 +40,7 @@ TrackContainerCopy::~TrackContainerCopy()
 {
   // destructor
 }
+
 //=============================================================================
 // Initialize
 //=============================================================================
@@ -55,15 +56,8 @@ StatusCode TrackContainerCopy::initialize()
   // backwards compatibile. Retain for a while to allow for transistion...
   if ( !m_inputLocation.empty() )
   {
-    Warning( "'inputLocation' Property is obsolete. Use 'inputLocations' instead").ignore();
-    if ( !m_inputLocations.empty() )
-    {
-      return Error( "Both 'inputLocation' and 'inputLocations' are set..." );
-    }
-    else
-    {
-      m_inputLocations = { m_inputLocation };
-    }
+    Warning( "'inputLocation' Property is obsolete. Please change to use 'inputLocations' instead").ignore();
+    m_inputLocations = { m_inputLocation };
   }
 
   // retrieve the selector if it is set
