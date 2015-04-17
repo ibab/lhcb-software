@@ -154,11 +154,11 @@ theseslots = {   'Prescale' : {},
                  # NoPID particles for other charm lines 
                  'CharmHadSharedNoPIDDetachedChild_pi' : {
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
-                                 'Trk_ALL_MIPCHI2DV_MIN'    :  6.0,
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  3.0,
                                           },
                  'CharmHadSharedNoPIDDetachedChild_K' : {
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
-                                 'Trk_ALL_MIPCHI2DV_MIN'    :  6.0,
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  3.0,
                                           },
                  # Neutral particles for D -> HHX lines
                  # 
@@ -168,7 +168,7 @@ theseslots = {   'Prescale' : {},
                                           },
                  'CharmHadSharedNeutralChild_pi0R' : {
                                  'Neut_ALL_PT_MIN'           : 500.0 * MeV,
-                                 'Neut_ALL_ADMASS_MAX'       :  30.0, 
+                                 'Neut_ALL_ADMASS_MAX'       : 60.0, 
                                           },
                  'CharmHadSharedNeutralChild_pi0M' : {
                                  'Neut_ALL_PT_MIN'           : 500.0 * MeV,
@@ -184,6 +184,10 @@ theseslots = {   'Prescale' : {},
                  'CharmHadSharedNeutralLowPtChild_pi0' : {
                                  'Neut_ALL_PT_MIN'           : 350.0 * MeV,
                                  'Neut_ALL_ADMASS_MAX'       :  60.0,
+                                          },
+                 'CharmHadSharedNeutralLowPtChild_eta' : {
+                                 'Neut_ALL_PT_MIN'           : 350.0 * MeV,
+                                 'Neut_ALL_ADMASS_MAX'       :  105.0,
                                           },
                 }
 

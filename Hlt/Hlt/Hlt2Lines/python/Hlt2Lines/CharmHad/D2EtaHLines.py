@@ -48,6 +48,32 @@ class CharmHadD2EtaHLines() :
                     'AMEta_MIN'        : 450 * MeV,
                     'AMEta_MAX'        : 1150 * MeV,
                                                     },
+                    'D2EtaPrimePi_3h' : {
+                    'AM_MIN'            : 1550 * MeV, 
+                    'AM_MAX'            : 2550 * MeV,
+                    'DMASS_MIN'         : 1600 * MeV,
+                    'DMASS_MAX'         : 2500 * MeV,
+                    'APT_MIN'           : 1500.0, 
+                    'BPVLTIME_MIN'      : 0.1,   # ps 
+                    'VCHI2PDOF_MAX'     : 5,
+                    'AMRhoH_MIN'        : 0 * MeV,
+                    'AMRhoH_MAX'        : 2550 * MeV, 
+                    'AMEta_MIN'        : 750 * MeV,
+                    'AMEta_MAX'        : 1150 * MeV,
+                                                    },
+                    'D2EtaPrimeK_3h' : {
+                    'AM_MIN'            : 1550 * MeV, 
+                    'AM_MAX'            : 2550 * MeV,
+                    'DMASS_MIN'         : 1600 * MeV,
+                    'DMASS_MAX'         : 2500 * MeV,
+                    'APT_MIN'           : 1500.0,  
+                    'BPVLTIME_MIN'      : 0.1,   # ps 
+                    'VCHI2PDOF_MAX'     : 5,
+                    'AMRhoH_MIN'        : 0 * MeV,
+                    'AMRhoH_MAX'        : 2550 * MeV, 
+                    'AMEta_MIN'        : 750 * MeV,
+                    'AMEta_MAX'        : 1150 * MeV,
+                                                    },
                 }
 
     def locallines(self):
@@ -57,6 +83,7 @@ class CharmHadD2EtaHLines() :
             from Stages import SharedNoPIDDetachedChild_K
             from Stages import SharedNeutralLowPtChild_gamma
             from Stages import SharedNeutralLowPtChild_pi0
+            from Stages import SharedNeutralLowPtChild_eta
 
             stages = {
                 'DiPion_forD2EtaH'  : [ DetachedRhoPIDChild('DiPion_forD2EtaH') ],
@@ -73,6 +100,20 @@ class CharmHadD2EtaHLines() :
                 DetachedRhoPIDChild('DiPion_forD2EtaH'),
                 SharedNoPIDDetachedChild_K,
                 SharedNeutralLowPtChild_pi0 ])
+                             ],
+                'D2EtaPrimePi_3h' : [D2RhoHG_3Body_Combiner('D2EtaPrimePi_3h',
+                                                    decay = ["D+ -> rho(770)0 pi+ eta","D- -> rho(770)0 pi- eta"],
+                                                    inputs = [
+                DetachedRhoPIDChild('DiPion_forD2EtaH'),
+                SharedNoPIDDetachedChild_pi,
+                SharedNeutralLowPtChild_eta ])
+                             ],
+                'D2EtaPrimeK_3h' : [D2RhoHG_3Body_Combiner('D2EtaPrimeK_3h',
+                                                    decay = ["D+ -> rho(770)0 K+ eta","D- -> rho(770)0 K- eta"],
+                                                    inputs = [
+                DetachedRhoPIDChild('DiPion_forD2EtaH'),
+                SharedNoPIDDetachedChild_K,
+                SharedNeutralLowPtChild_eta ])
                              ],
                 }
 

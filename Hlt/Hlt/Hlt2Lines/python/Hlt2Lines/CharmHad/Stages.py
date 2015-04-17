@@ -214,7 +214,7 @@ class NeutralInParticleFilter(Hlt2ParticleFilter) : # {
 ## Names of shared particles  begin with CharmHad to avoid name conflicts
 ##   with other subdirectories.
 ## ------------------------------------------------------------------------- ##
-from Inputs import Hlt2ResolvedPi0, Hlt2MergedPi0, Hlt2NoPIDsPhotons, Hlt2AllPi0
+from Inputs import Hlt2ResolvedPi0, Hlt2MergedPi0, Hlt2NoPIDsPhotons, Hlt2AllPi0, Hlt2ResolvedEta 
 SharedNeutralChild_pi0R  = NeutralInParticleFilter("CharmHadSharedNeutralChild_pi0R",
                                                    [Hlt2ResolvedPi0], 'pi0' )
 SharedNeutralChild_pi0M  = NeutralInParticleFilter("CharmHadSharedNeutralChild_pi0M",
@@ -225,6 +225,7 @@ SharedNeutralChild_gamma = NeutralInParticleFilter("CharmHadSharedNeutralChild_g
                                                    [Hlt2NoPIDsPhotons] )
 SharedNeutralLowPtChild_pi0 = NeutralInParticleFilter("CharmHadSharedNeutralLowPtChild_pi0", [Hlt2AllPi0], 'pi0' )
 SharedNeutralLowPtChild_gamma = NeutralInParticleFilter("CharmHadSharedNeutralLowPtChild_gamma", [Hlt2NoPIDsPhotons] )
+SharedNeutralLowPtChild_eta = NeutralInParticleFilter("CharmHadSharedNeutralLowPtChild_eta", [Hlt2ResolvedEta] , 'eta')
 
 
 
@@ -849,8 +850,8 @@ D02HH_D0ToPimPip_LTUNB = D02HHCombiner( 'D02HH_D0ToPimPip_LTUNB'
 
 class DetachedHHChildCombiner(Hlt2Combiner):
     # combiner for 2-body displaced tracks to be used in multi-body D decays
-    def __init__(self, name, decay, inputs):
-        dc = {} 
+    def __init__(self, name, decay, inputs, daucuts = {}):
+        dc = daucuts
         cc = (" ( AM < %(AM_MAX)s ) " +              
               "&( (APT1+APT2) > %(ASUMPT_MIN)s )" +
               "&( ACUTDOCA( %(ADOCA_MAX)s,'LoKi::TrgDistanceCalculator' ) )" +
@@ -1152,7 +1153,9 @@ class DetachedHHHChild(DetachedHHHChildCombiner):
 class DetachedRhoPIDChild(DetachedHHChildCombiner):
     def __init__(self,name):
         decay=["rho(770)0 -> pi+ pi-"]
-        inputs = [SharedDetachedDpmChild_pi]
+        #inputs = [SharedDetachedDpmChild_pi]
+        #inputs = [Hlt2NoPIDsPions] 
+        inputs = [SharedNoPIDDetachedChild_pi]
         DetachedHHChildCombiner.__init__(self,name,decay,inputs)
         
                 

@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-17 - Simone Stracka
+  - Updated inputs and combiners used by CharmHad/D2EtaHLines.py and CharmHad/D2HHLines.py
+	- Updated CharmHad/D2EtaHLines.py to include eta' to 3 hadrons
+
 ! 2015-04-17 - Albert Puig
   - Fixed Bs2GammaGamma BBDT preparation.
 
