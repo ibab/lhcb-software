@@ -8,6 +8,12 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-16 - Jason Andrews
+  - Renamed Vertexless directory to B2Kpi0, lines now exclusive
+  - Switched to merged pi0s
+  - Added new B2K0pi0 line
+  - Various tunings
+
 ! 2015-04-16 - Patrick Spradlin
   - Updates to D02HHLines.py
     . Allow PID cuts for kaons:
