@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-17 - Michael Kolpin
+  - Fix to B2Kpi0.Lines
+
 ! 2015-04-17 - Albert Puig
   - Streamlined photon filtering in radiative lines
   - Updated Lb2L0Gamma lines

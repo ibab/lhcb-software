@@ -47,7 +47,7 @@ cuts = {'Common'       : {'NTRACK_MAX'   : 300,
                           'MTDOCACHI2_MAX' :10.0 },
         }
 
-class VertexlessLines(Hlt2LinesConfigurableUser):
+class B2Kpi0Lines(Hlt2LinesConfigurableUser):
     __slots__ = cuts
     def __apply_configuration__(self) :
         from Stages import ( TrackGEC, KaonFilter, KS0Filter,
