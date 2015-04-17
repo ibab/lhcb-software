@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-17 - Olli Lupton
+  - CharmHad:
+   . Fixes to D2HHHH modes to include all charge combinations.
+   . Remove the D2HHHH lines which have been transplanted to PID/
+
 ! 2015-04-17 - Jason Andrews
   - Clarifying comments in B2Kpi0 lines
 

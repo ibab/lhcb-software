@@ -44,19 +44,17 @@ class CharmHadD02HHHHLines() :
                 'DeltaM_MAX'               :  170.0 * MeV
                 }
         cuts = {}
-        for fs in ['PiPiPiPi', 'KPiPiPi', 'KKPiPi', 'KKKPi']:
-            cuts.update( {
-            # Now the combiner for the CPV lines
-            'D02'+fs            : cutsForD2HHHH,
-            'D02'+fs+'Wide'     : cutsForD2HHHHWide,
-            'D02'+fs+'Tag'      : cutsForD2HHHHTag,
-            'D02'+fs+'WideTag'  : cutsForD2HHHHTag,
-            } )
-        # No PID line
-        cuts.update( {
-            'D02KPiPiPi_NoPid'     : cutsForD2HHHH,
-            'D02KPiPiPi_NoPidTag'  : cutsForD2HHHHTag
-            } )
+        for des in ['', 'Wide']:
+            for fs in ['PiPiPiPi', 'KPiPiPi', 'KKPiPi', 'KKKPi']:
+                # Now the combiner for the CPV lines  
+                cuts['D02'+fs+des] = cutsForD2HHHH
+            for fs in ['PiPiPiPi', 'KKPiPi' ]:
+                cuts['D02'+fs+des+'Tag'] = cutsForD2HHHHTag
+            for fs in ['KPiPiPi', 'KKKPi']:
+                cuts.update( {
+                    'D02CF'+fs+des+'Tag' : cutsForD2HHHHTag,
+                    'D02DCS'+fs+des+'Tag': cutsForD2HHHHTag
+                    } )
         return cuts
 
   
@@ -64,7 +62,7 @@ class CharmHadD02HHHHLines() :
         from Stages import MassFilter
         from Stages import SharedNoPIDDetachedChild_pi, SharedNoPIDDetachedChild_K
         from Stages import SharedDetachedD0ToHHHHChild_pi, SharedDetachedD0ToHHHHChild_K
-        from Stages import DV4BCombiner, Dst2D0pi
+        from Stages import DV4BCombiner, Dst2D0pi, TagDecay
         
         stages = {}
         # Create the nominal and wide mass combinations
@@ -79,10 +77,12 @@ class CharmHadD02HHHHLines() :
             stages.update( { 'D02'+fs : [MassFilter('D02'+fs,inputs=[stages['D02'+fs+'Wide'][0]])] } )
         # Then add the soft pion for the D*
         for des in ['','Wide']:
-            for fs in ['PiPiPiPi', 'KPiPiPi', 'KKPiPi', 'KKKPi']:
+            for fs in ['PiPiPiPi', 'KKPiPi']:
                 stages['D02'+fs+des+'Tag'] = [Dst2D0pi('D02'+fs+des+'Tag', d0=stages['D02'+fs+des][0])]
-    
-        # NO PID LINE
-        stages['D02KPiPiPi_NoPid'] = [MassFilter('D02KPiPiPi_NoPid',inputs=[DV4BCombiner('D02KPiPiPi_NoPid', inputs=[SharedNoPIDDetachedChild_pi,SharedNoPIDDetachedChild_K], decay=['[D0 -> K- pi+ pi+ pi-]cc'])])]
-        stages['D02KPiPiPi_NoPidTag'] = [Dst2D0pi('D02KPiPiPi_NoPidTag', d0=stages['D02KPiPiPi_NoPid'][0])]
+            for fs in ['KPiPiPi', 'KKKPi']:
+                stages['D02CF'+fs+des+'Tag']  = [TagDecay('D02CF'+fs+des+'Tag', decay = ["[D*(2010)+ -> D0 pi+]cc"],
+                                                          inputs = [stages['D02'+fs+des][0]])]
+                stages['D02DCS'+fs+des+'Tag'] = [TagDecay('D02DCS'+fs+des+'Tag',decay = ["[D*(2010)- -> D0 pi-]cc"],
+                                                          inputs = [stages['D02'+fs+des][0]])]
+        
         return stages
