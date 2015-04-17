@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-17 - Matthew Kenzie
+ - Add Hlt2 Inclusive Phi Line
+
 ! 2015-04-17 - Olli Lupton
   - CharmHad:
    . Fixes to D2HHHH modes to include all charge combinations.
