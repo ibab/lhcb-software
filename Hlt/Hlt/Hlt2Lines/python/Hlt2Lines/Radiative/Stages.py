@@ -32,7 +32,7 @@ class MassFilter(Hlt2ParticleFilter):
     """Apply mass cut on the inputs."""
     def __init__(self, nickname, inputs):
         cut = "in_range(%(M_MIN)s, M ,%(M_MAX)s)"
-        super(MassFilter, self).__init__('RadiativeMassFilter_%s' % nickname,
+        super(MassFilter, self).__init__('Radiative_Mass%s' % nickname,
                                          cut,
                                          inputs,
                                          nickname=nickname)
@@ -42,7 +42,7 @@ class MassWindowFilter(Hlt2ParticleFilter):
     """Apply mass cut on the inputs."""
     def __init__(self, nickname, inputs):
         cut = "ADMASS('%(PARTICLE)s') < %(MASS_WIN)s"
-        super(MassWindowFilter, self).__init__('RadiativeMassFilter_%s' % nickname,
+        super(MassWindowFilter, self).__init__('Radiative_Mass%s' % nickname,
                                                cut,
                                                inputs,
                                                nickname=nickname)
@@ -54,7 +54,7 @@ class PIDFilter(Hlt2ParticleFilter):
     def __init__(self, nickname, inputs):
         cut = ("((HASTRACK) & ('%(TRACK_TYPE)s'==ABSID)"
                "& (%(PID_VAR)s>%(PID_CUT_MIN)s))")
-        super(PIDFilter, self).__init__('RadiativePIDFilter_%s' % nickname,
+        super(PIDFilter, self).__init__('Radiative_PID%s' % nickname,
                                              cut,
                                              inputs,
                                              nickname=nickname,
@@ -69,7 +69,7 @@ class ParticleFilter(Hlt2ParticleFilter):
                "& (MIPCHI2DV(PRIMARY) > %(TRACK_IPCHI2_MIN)s)")
         if not tistos:
             tistos = []
-        super(ParticleFilter, self).__init__('RadiativeParticleFilter_%s' % nickname,
+        super(ParticleFilter, self).__init__('Radiative_Track%s' % nickname,
                                              cut,
                                              inputs,
                                              tistos=tistos,
@@ -85,7 +85,7 @@ class PhotonFilter(Hlt2ParticleFilter):
         from Inputs import Hlt2Photons
         if not name:
             name = 'CaloPhotons'
-        super(PhotonFilter, self).__init__('Radiative' + name,
+        super(PhotonFilter, self).__init__('Radiative_Photon%s' % name,
                                            '(PT > %(PT_MIN)s) & (P > %(P_MIN)s)',
                                            [Hlt2Photons],
                                            nickname=name,
@@ -95,7 +95,7 @@ class PhotonFilter(Hlt2ParticleFilter):
 class PhotonTOSFilter(Hlt2TisTosParticleTagger):
     """Filter photons according to the TISSTOS specs."""
     def __init__(self):
-        super(PhotonTOSFilter, self).__init__('RadiativeL0Photons',
+        super(PhotonTOSFilter, self).__init__('Radiative_L0Photon',
                                               'PhotonTisTos',
                                               [PhotonFilter()],
                                               shared=True)
@@ -105,7 +105,7 @@ class PhotonTOSFilter(Hlt2TisTosParticleTagger):
 class ConvPhotonFilter(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
         photon_cut = "( (PT > %(ee_PT)s) & (P > %(ee_P)s) & (M < %(ee_Mass)s) )"
-        super(ConvPhotonFilter, self).__init__('RadiativePhoton_%s' % name,
+        super(ConvPhotonFilter, self).__init__('Radiative_Photon%s' % name,
                                                photon_cut,
                                                inputs,
                                                nickname=name,
@@ -126,7 +126,7 @@ class ConvPhotonDD(ConvPhotonFilter):
 
 class ConvPhotonAll(Hlt2MergedStage):
     def __init__(self):
-        super(ConvPhotonAll, self).__init__('RadiativePhoton_ConvAll',
+        super(ConvPhotonAll, self).__init__('Radiative_PhotonConvAll',
                                             [ConvPhotonLL(), ConvPhotonDD()],
                                             shared=True)
 
@@ -142,7 +142,7 @@ class HHCombiner(Hlt2Combiner):
                       " & (ADMASS('%(PARTICLE)s') < %(MASS_WIN)s)")
         if not tistos:
             tistos = []
-        super(HHCombiner, self).__init__('RadiativeHHCombiner_%s' % nickname,
+        super(HHCombiner, self).__init__('Radiative_%s' % nickname,
                                          decay,
                                          inputs,
                                          nickname=nickname,
@@ -170,7 +170,7 @@ class Lambda0Filter(Hlt2ParticleFilter):
                                        (MIPCHI2DV(PRIMARY) > %(TRACK_IPCHI2_MIN)s))) &
                          INTREE((ABSID=='p+') & (PIDp > %(P_PIDP_MIN)s)) &
                          (MIPDV(PRIMARY) > %(IP_MIN)s)"""
-        super(Lambda0Filter, self).__init__('RadiativeLambda0Filter_%s' % name,
+        super(Lambda0Filter, self).__init__('Radiative_%s' % name,
                                             lambda0_cut,
                                             inputs,
                                             nickname=name,
@@ -183,11 +183,13 @@ class RadiativeCombiner(Hlt2Combiner):
         if converted_photons:
             photons = [ConvPhotonAll()]
         else:
-            photons = [PhotonTOSFilter()]
-        super(RadiativeCombiner, self).__init__('RadiativeCombiner_%s' % name,
+            #photons = [PhotonTOSFilter()]
+            photons = [PhotonFilter()]
+        super(RadiativeCombiner, self).__init__('Radiative_%s' % name,
                                                 decay,
                                                 inputs+photons,
                                                 nickname=name,
+                                                shared=False,
                                                 **combiner_args)
 
 
@@ -316,7 +318,7 @@ class BonsaiBDTFilter(Hlt2ParticleFilter):
             preambulo = []
         bbdt = self._get_classifier("RadBBDT_%s" % name, params, var_map, preambulo)
         cut = "(VALUE('{}/{}') > %(BBDT_CUT)s)".format(bbdt.Type.getType(), bbdt.Name)
-        super(BonsaiBDTFilter, self).__init__('RadiativeBBDTFilter_%s' % name,
+        super(BonsaiBDTFilter, self).__init__('Radiative_BBDT%s' % name,
                                               cut,
                                               inputs,
                                               nickname=name,
@@ -355,10 +357,10 @@ def PrepGammaGammaMapNone(varmap):
     from copy import deepcopy
     varmap = deepcopy(varmap)
     pt = "log( PT/MeV )"
-    ptsum = "log( SUMTREE(PT, (ABSID == '22'), 0.0)/MeV )"
-    ptasym = "((MAXTREE(PT, (ABSID == '22'), 0.0)/MeV)-(MINTREE(PT, (ABSID == '22'), 0.0)/MeV)) / ((MAXTREE(PT, (ABSID == '22'), 0.0)/MeV)+(MINTREE(PT, (ABSID == '22'), 0.0)/MeV))"
-    pxasym = "((MAXTREE(PX, (ABSID == '22'), 0.0)/MeV)-(MINTREE(PX, (ABSID == '22'), 0.0)/MeV)) / ((MAXTREE(PX, (ABSID == '22'), 0.0)/MeV)+(MINTREE(PX, (ABSID == '22'), 0.0)/MeV))"
-    pyasym = "((MAXTREE(PY, (ABSID == '22'), 0.0)/MeV)-(MINTREE(PY, (ABSID == '22'), 0.0)/MeV)) / ((MAXTREE(PY, (ABSID == '22'), 0.0)/MeV)+(MINTREE(PY, (ABSID == '22'), 0.0)/MeV))"
+    ptsum = "log( SUMTREE(PT, (ABSID == 22), 0.0)/MeV )"
+    ptasym = "((MAXTREE(PT, (ABSID == 22), 0.0)/MeV)-(MINTREE(PT, (ABSID == 22), 0.0)/MeV)) / ((MAXTREE(PT, (ABSID == 22), 0.0)/MeV)+(MINTREE(PT, (ABSID == 22), 0.0)/MeV))"
+    pxasym = "((MAXTREE(PX, (ABSID == 22), 0.0)/MeV)-(MINTREE(PX, (ABSID == 22), 0.0)/MeV)) / ((MAXTREE(PX, (ABSID == 22), 0.0)/MeV)+(MINTREE(PX, (ABSID == 22), 0.0)/MeV))"
+    pyasym = "((MAXTREE(PY, (ABSID == 22), 0.0)/MeV)-(MINTREE(PY, (ABSID == 22), 0.0)/MeV)) / ((MAXTREE(PY, (ABSID == 22), 0.0)/MeV)+(MINTREE(PY, (ABSID == 22), 0.0)/MeV))"
     varmap["BPT"] = pt
     varmap["SUMPT"] = ptsum
     varmap["PTASYM"] = ptasym
@@ -373,11 +375,11 @@ def PrepGammaGammaMapConv(varmap):
     from copy import deepcopy
     varmap = deepcopy(varmap)
     pt = "log( PT/MeV )"
-    ptsum = "log( SUMTREE(PT, (ABSID == '22'), 0.0)/MeV)"
-    minelpt = "log( MINTREE((ABSID == '11'), PT)/MeV )"
-    ptasym = "((MAXTREE(PT, (ABSID == '22'), 0.0)/MeV)-(MINTREE(PT, (ABSID == '22'), 0.0)/MeV)) / ((MAXTREE(PT, (ABSID == '22'), 0.0)/MeV)+(MINTREE(PT, (ABSID == '22'), 0.0)/MeV))"
-    vtx = "log( MAXTREE(((ID=='gamma') & (ISBASIC)),VFASPF(VCHI2)) )"
-    mass = "MAXTREE((ID=='gamma') & (NDAUGHTERS>0), M)"
+    ptsum = "log( SUMTREE(PT, (ABSID == 22), 0.0)/MeV)"
+    minelpt = "log( MINTREE((ABSID == 11), PT)/MeV )"
+    ptasym = "((MAXTREE(PT, (ABSID == 22), 0.0)/MeV)-(MINTREE(PT, (ABSID == 22), 0.0)/MeV)) / ((MAXTREE(PT, (ABSID == 22), 0.0)/MeV)+(MINTREE(PT, (ABSID == 22), 0.0)/MeV))"
+    vtx = "log( MAXTREE(((ABSID==22) & (ISBASIC)),VFASPF(VCHI2)) )"
+    mass = "MAXTREE((ABSID==22) & (NDAUGHTERS>0), M)"
     varmap["BPT"] = pt
     varmap["SUMPT"] = ptsum
     varmap["PTASYM"] = ptasym
