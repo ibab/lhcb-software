@@ -23,7 +23,7 @@ class TagFilter(Hlt2ParticleFilter):
         Hlt2ParticleFilter.__init__(self, name, cut, [input], nickname = nickname, shared = True)
 
 # Probe filter
-class ProbeFilter(Hlt2ParticleFilter):
+class ProbeFilterToUseWhenHltIsFixed(Hlt2ParticleFilter):
     def __init__(self, name, input, mode, nickname):
         if mode == 1:
            charge_cut = "(Q>0)"
@@ -37,6 +37,33 @@ class ProbeFilter(Hlt2ParticleFilter):
                " & (PT >%(ProbePt)s )" +
                " & (MIPCHI2DV(PRIMARY)>%(ProbeMinIPChi2)s )")
         Hlt2ParticleFilter.__init__(self, name, cut, [input], tistos = 'ProbeTisTos', nickname = nickname, shared = True)
+
+from Hlt2Lines.Utilities.Hlt2TisTosFilter import Hlt2TisTosParticleTagger
+class ProbeFilterTisTos(Hlt2TisTosParticleTagger):
+    """Pre-filter probe particles with TISTOS"""
+    def __init__(self, name, input, nickname):
+        super(ProbeFilterTisTos, self).__init__(name + 'ProbeTisTos',
+            'ProbeTisTos',
+            [input],
+            nickname = nickname,
+            shared = True)
+
+class ProbeFilter(Hlt2ParticleFilter):
+    def __init__(self, name, input, mode, nickname):
+        if mode == 1:
+          charge_cut = "(Q>0)"
+        else:
+          charge_cut = "(Q<0)"
+          
+        name += 'Probe'
+        cut = (charge_cut +
+           " & (TRCHI2DOF <%(ProbeTrChi2)s )" +
+           " & (ISLONG)" +
+           " & (P >%(ProbeP)s )" +
+           " & (PT >%(ProbePt)s )" +
+           " & (MIPCHI2DV(PRIMARY)>%(ProbeMinIPChi2)s )")
+        super(ProbeFilter, self).__init__(name, cut, [ ProbeFilterTisTos(name, input, nickname) ],
+                                         nickname = nickname, shared = True)
 
 # The class that creates the Hlt2Combiner
 from Hlt2Lines.Utilities.Hlt2Combiner import Hlt2Combiner
@@ -60,8 +87,8 @@ class LLCombiner(Hlt2Combiner):
             l + "+" : "ALL",
             l + "-" : "ALL"
             }
-        cc = ("(in_range(%(LLCombMLow)s, AM, %(LLCombMHigh)s)) & (ACHI2DOCA(1,2) < %(LLCombMaxDocaChi2)s)")
-        mc = ("(ALL)")
+        cc = ("(in_range(%(LLCombAMLow)s, AM, %(LLCombAMHigh)s)) & (ACHI2DOCA(1,2) < %(LLCombMaxDocaChi2)s)")
+        mc = ("(in_range(%(LLCombMLow)s, M, %(LLCombMHigh)s))")
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name,
             decay,
@@ -77,9 +104,15 @@ class LLCombiner(Hlt2Combiner):
 
 # Class to add a kaon to a J/psi
 class BCombiner(Hlt2Combiner):
-    def __init__(self, name, inputs, nickname = None, decay = "[B+ -> J/psi(1S) K+]cc"):
-        cc = ("(in_range(%(LLhCombMLow)s, AM, %(LLhCombMHigh)s))")
-        mc = ("(VFASPF(VCHI2)<%(LLhVChi2)s) & (BPVVDCHI2 > %(LLhVDChi2)s) & (BPVIPCHI2()<%(LLhMaxIPChi2)s)")
+    def __init__(self, name, inputs, nickname = None, decay = "[B+ -> J/psi(1S) K+]cc", corrm = False):
+        cc = ("(in_range(%(LLhCombAMLow)s, AM, %(LLhCombAMHigh)s))")  
+        if corrm:
+          mc_mass = " & (BPVCORRM < %(LLhCombBPVCORRMHigh)s)"
+        else:
+          mc_mass = " & (in_range(%(LLhCombMLow)s, M, %(LLhCombMHigh)s))"
+        mc = ("(VFASPF(VCHI2)<%(LLhVChi2)s) & (BPVVDCHI2 > %(LLhVDChi2)s)"
+              + " & (BPVIPCHI2()<%(LLhMaxIPChi2)s)"
+              + mc_mass)
         if nickname is None:
           nickname = name
         from HltTracking.HltPVs import PV3D
@@ -193,8 +226,13 @@ FilteredProtons = NoPIDsProtons
 FilteredDownProtons = NoPIDsDownProtons
 
 from Hlt2Lines.CharmHad.Lines import CharmHadLines
-from Hlt2Lines.CharmHad.Stages import DetachedHHHCombiner, SharedNoPIDDetachedChild_p, SharedDetachedLcChild_K, SharedDetachedLcChild_pi, MassFilter
+from Hlt2Lines.CharmHad.Stages import DetachedHHHCombiner, SharedNoPIDDetachedChild_p, SharedDetachedLcChild_K, \
+    SharedDetachedLcChild_pi, MassFilter, DV4BCombiner, SharedNoPIDDetachedChild_pi, SharedNoPIDDetachedChild_K, \
+    DetachedD02HHCombiner
 from Hlt2Lines.Utilities.Hlt2Stage import Hlt2ExternalStage
+
+SharedNoPIDPions = Hlt2ExternalStage(CharmHadLines(), SharedNoPIDDetachedChild_pi)
+SharedNoPIDKaons = Hlt2ExternalStage(CharmHadLines(), SharedNoPIDDetachedChild_K)
 
 # Make the Lc+ -> K- p+ pi+ candidates without proton PID, to be combined with more tracks...
 # Share as much of the 'CharmHad' code as possible
@@ -208,3 +246,27 @@ Lc2KPPi = MassFilter('PIDLc2KPPi', inputs = [
       ],
     nickname = 'Lc2KPPi')
   ], shared = True, nickname = "Lc2KPPi")
+
+D02KPi = MassFilter('PIDD02KPi', inputs = [ 
+  DetachedD02HHCombiner('PIDD02KPi',
+    decay = "[D0 -> K- pi+]cc",
+    inputs = [ SharedNoPIDPions, SharedNoPIDKaons ],
+    nickname = 'D02KPi',
+    shared = True
+    )
+  ], shared = True, nickname = 'D02KPi')
+
+# Make the D0 -> K- pi+ pi- pi+ candidates without any PID
+# These will be used both for tagged and untagged lines
+D02K3Pi = MassFilter('PIDD02KPiPiPi',
+    inputs = [
+      DV4BCombiner('PIDD02KPiPiPi',
+        inputs = [ SharedNoPIDPions, SharedNoPIDKaons ],
+        decay = ['[D0 -> K- pi+ pi+ pi-]cc'],
+        nickname = 'D02KPiPiPi',
+        shared = True
+        )
+      ],
+    nickname = 'D02KPiPiPi',
+    shared = True
+    )

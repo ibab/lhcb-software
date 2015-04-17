@@ -8,6 +8,17 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-17 - Olli Lupton
+  - CharmHad:
+   . Give DV4BCombiner an optional nickname argument
+  - PID:
+   . Split probe filter to TISTOS in a separate stage (workaround)
+     and re-enable L0 TIS requirements
+   . Use corrected mass cut when building Lb->Lcmunu
+   . Add AM combination cuts
+   . Add D0 -> K3pi (tagged + untagged) and D0 -> Kpi (tagged) calib lines,
+     using combiners defined in CharmHad/.
+
 ! 2015-04-16 - Jason Andrews
   - Renamed Vertexless directory to B2Kpi0, lines now exclusive
   - Switched to merged pi0s

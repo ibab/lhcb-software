@@ -577,7 +577,7 @@ class DV4BCombiner(Hlt2Combiner):
         'BPVLTIME_MIN'  : Lower limit on Lifetime wrt bestPV in MotherCut
         'TisTosSpec'    : Configuration string of the Hlt1 TISTOS filter.
     """
-    def __init__(self, name, decay,inputs, shared = False):
+    def __init__(self, name, decay,inputs, shared = False, nickname = None):
         dc =    {}
         
         c12 = (" ( AM < %(AM_MAX)s ) " +
@@ -598,7 +598,7 @@ class DV4BCombiner(Hlt2Combiner):
                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                               tistos = 'TisTosSpec', combiner = DaVinci__N4BodyDecays, DaughtersCuts = dc,
                               Combination12Cut = c12, Combination123Cut = c123, CombinationCut = cc,
-                              MotherCut = mc, Preambulo = [])
+                              MotherCut = mc, Preambulo = [], nickname = nickname)
 
 class HHHHCombiner(Hlt2Combiner):
     def __init__(self, name, decay,inputs):
