@@ -4,6 +4,10 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-04-17 - Roel Aaij
+ - Use FittedVelo in all TagAndProbeParticles
+ - Fix bad output selection of AllPiO.
+
 ! 2015-04-16 - Simone Stracka
  - Enlarged mass window for resolved pi0. Added resolved eta. 
 
@@ -17,7 +21,7 @@
  - Added velo probe tracks to TagAndProbeParticles.py
 
 ! 2015-04-14 - Sascha Stahl
- - TrackFittedBasicParticles: Removed upfront PID for all Downstream tracks. 
+ - TrackFittedBasicParticles: Removed upfront PID for all Downstream tracks.
    Currently implemented Downstream protoparticles are BiKalmanFittedChargedDownProtoMaker without PID,
    and BiKalmanFittedChargedCaloDownProtoMaker with Calo PID for electrons.
 
@@ -27,8 +31,8 @@
  - Converted photons use the DiElectronMaker.
 
 ! 2015-03-25 - Sascha Stahl
- - TrackFittedBasicParticles.py and BasicParticles.py: All charged protoparticles 
- 	 except the L0 ones are now created from hlt2ChargedAllPIDsProtos(). 
+ - TrackFittedBasicParticles.py and BasicParticles.py: All charged protoparticles
+ 	 except the L0 ones are now created from hlt2ChargedAllPIDsProtos().
    These protoparticles have the PID information from RICH, CALO ad Muon stations.
 
 ! 2015-03-19 - V. Gligorov
@@ -68,7 +72,7 @@
    contain Rich information. The difference is that in the former case there
    is an explicit cut on being in the RICH acceptance, in the latter, not.
  - Remove Ds/Dplus files, these are obsolete.
- - Commit some non-working and commented out braindump for a possible  
+ - Commit some non-working and commented out braindump for a possible
    configuration of basic input particles for HLT2 lines to GoodParticles.py
    (which is otherwise obsolete)
 
@@ -91,7 +95,7 @@
 !========================= Hlt2SharedParticles v7r2 2014-11-05 =========================
 
 ! 2014-09-30 - Michael Kolpin
- - removed hardcoding of locations used in TagAndProbeParticles to use definitons from 
+ - removed hardcoding of locations used in TagAndProbeParticles to use definitons from
    HltTracking.HltTrackNames instead
 
 ! 2014-09-25 - Michael Kolpin
@@ -148,15 +152,15 @@
 
 !========================= Hlt2SharedParticles v6r11 2012-06-19 =========================
 ! 2012-06-13 - V. Gligorov
- - Modify TrackFittedBasicPArticles to enable lower PT Rich kaons 
+ - Modify TrackFittedBasicPArticles to enable lower PT Rich kaons
 
 !========================= Hlt2SharedParticles v6r10 2012-05-16 =========================
 ! 2012-05-15 - V. Gligorov
- - Make Lambda cuts more in line with KS cuts and tighten lifetime cut in LL. 
+ - Make Lambda cuts more in line with KS cuts and tighten lifetime cut in LL.
 
 ! 2012-05-08 - V. Gligorov
  - Fix BPVLTIME cut in shard Ks
- - Revert mistaken ''fix'' to ModeOR from previous commit. 
+ - Revert mistaken ''fix'' to ModeOR from previous commit.
 
 ! 2012-05-07 - V. Gligorov
  - Explicitly require PV3D in shared Ks
@@ -169,7 +173,7 @@
 !========================= Hlt2SharedParticles v6r8 2012-04-24 =========================
 ! 2012-04-24 - V. Gligorov
  - Tighten cut in shared Ks particles on the track chi2 of the LL children from
-   4 to 3.  
+   4 to 3.
 
 !========================= Hlt2SharedParticles v6r7 2012-03-16 =========================
 ! 2012-03-15 - Albert Puig
@@ -194,7 +198,7 @@
 
 !========================= Hlt2SharedParticles v6r4 2012-01-25 =========================
 ! 2012-01-23 Sam Gregson
- - Updated Hlt2 Shared Ks cuts 
+ - Updated Hlt2 Shared Ks cuts
 
 ! 2012-01-15 Sam Gregson
  - Updated Shared KsLLTF - small syntax error
@@ -210,18 +214,18 @@
 
 !========================== Hlt2SharedParticles v6r3  2011-06-24 ===================
 ! 2011-06-24 - V. Gligorov
- - Update definition of shared lambdas. Add 
+ - Update definition of shared lambdas. Add
  - PT > 500 MeV for both tracks
  - IPCHI2 > 36 for both tracks
  - Mass window < 20 MeV
- - Track Chi2 < 5 for both tracks  
+ - Track Chi2 < 5 for both tracks
 
 ! 2011-06-23 - V. Gligorov
  - Add new prompt LambdaC trigger
  - Add new minimum bias charm triggers
 
 ! 2011-06-23 - V. Gligorov
- - Fix problems in TrackFittedBasicParticles caused by previous commits. 
+ - Fix problems in TrackFittedBasicParticles caused by previous commits.
 
 ! 2011-06-22 - Benoit Viaud
 - Add BiKalmanFittedSecondLoop Muons to TrackFittedBasicParticles.py
@@ -234,7 +238,7 @@
  - skip P2PV relations for photon protoparticles
 
 ! 2011-05-06 Gerhard Raven
- - in BasicParticles, replace use of Hlt2UnfittedForwardTracking by 
+ - in BasicParticles, replace use of Hlt2UnfittedForwardTracking by
    Hlt2BiKalmanFittedForwardTracking
 
 !========================== Hlt2SharedParticles v6r1  2011-03-01 ===================
@@ -244,7 +248,7 @@
 
 ! 2011-02-24 - Jibo He
  - TrackFittedDiElectron.py
-   Update Electron PT cut to 1 GeV, VtxChi2 cut to 25, 
+   Update Electron PT cut to 1 GeV, VtxChi2 cut to 25,
    as generally used by Unbiased DiElectron Lines.
 
 !========================== Hlt2SharedParticles v6r0  2011-02-22 ===================
@@ -262,7 +266,7 @@
 !========================== Hlt2SharedParticles v5r0  2010-12-08 ===================
 ! 2010-11-29 - V. Gligorov
  - Switch to Kalman fitted tracks where possible, in particular GoodParticles now
-   uses IPCHI2 cuts and kalman fitted tracks.  
+   uses IPCHI2 cuts and kalman fitted tracks.
 
 !========================== Hlt2SharedParticles v4r5p1 2010-09-29 ===================
 !2010-09-27 - Gerhard Raven
@@ -309,12 +313,12 @@
 ! 2010-05-07 - Jibo He
  - python/Hlt2SharedParticles/TrackFittedDiElectron.py
    . Added new DiElectron using fitted tracks.
-     Cuts is the same as in unfitted case.  
+     Cuts is the same as in unfitted case.
 
 ! 2010-05-07 - Jibo He
  - python/Hlt2SharedParticles/DiElectron.py
    . Electron PT cut loosened to 300 MeV
-   . Combination mass cuts removed 
+   . Combination mass cuts removed
    . Vertex chi2 cuts loosened to 100.
 
 
@@ -339,21 +343,21 @@
      in Hlt2Tracking.
 
 ! 2010-03-25 - Jibo He
- - TrackFittedDiMuon.py added, just a copy of DiMuon.py by replacing 
+ - TrackFittedDiMuon.py added, just a copy of DiMuon.py by replacing
    "Muons" with "BiKalmanFittedMuons", cuts untouched.
 
 ! 2010-03-23 - V. Gligorov
  - Continuing work on Savannah tasks #12691,13784.
    . Remove obsolete V0.py options, now superseeded by Ks.py and Lambda.py.
    . Update photon makers to use a dedicated tracking configuration.
-   . Remove track selector cut on track type in Basic/TrackFittedParticles 
+   . Remove track selector cut on track type in Basic/TrackFittedParticles
 
 ! 2010-03-18 - F. Dettori
- - Added BiKalmanFittedProtons and BiKalmanFittedDownProtons 
+ - Added BiKalmanFittedProtons and BiKalmanFittedDownProtons
    to TrackFittedBasicParticles.py
- - Added Lambda.py file for standard Lambdas based on unfitted 
+ - Added Lambda.py file for standard Lambdas based on unfitted
    and fitted tracks (long and downstream)
-   
+
 ! 2010-03-17 - V. Gligorov
  - Continuing work on Savannah tasks #12691,13784.
    Update shared praticles to follow movement of code from HltLine to
@@ -367,16 +371,16 @@
  - Continuing work on Savannah tasks 13784 and 12691.
    Major change is that the files BasicParticles etc. no longer
    define instances of the reconstruction, they pick up valid instances
-   from Hlt2TrackingConfigurations 
+   from Hlt2TrackingConfigurations
 
 ! 2010-02-26 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691.
-   Various minor changes, spelling out of dependencies, etc.  
- 
+   Various minor changes, spelling out of dependencies, etc.
+
 ! 2010-02-24 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691. Hlt2PID has moved to
    HltLine and been renamed to Hlt2Tracking. Updated BasicParticles,
-   TFBasicParticles, and V0 to follow this change. 
+   TFBasicParticles, and V0 to follow this change.
  - Fixed major bug in V0.py which meant that DD K shorts were being made
    with forward tracks.
 
@@ -385,10 +389,10 @@
    and TFBasicParticles. Hlt2PID now contains almost all the Hlt2 specific
    reconstruction which used to live in HltReco, with the exception of the
    downstream reconstruction which will move later. Functions hlt2Tracking
-   and hlt2VeloTracking can now be called with the switch getOutput = True 
+   and hlt2VeloTracking can now be called with the switch getOutput = True
    which will tell them to return their output location instead of the sequence,
    thus eliminating the need for hardcoded track containers in e.g. the
-   topological trigger's global event cut on the number of tracks.  
+   topological trigger's global event cut on the number of tracks.
 
 !========================== Hlt2SharedParticles v3r2 2010-02-18 ===================
 ! 2010-02-18 - V. Gligorov
@@ -414,11 +418,11 @@
 
 !========================== Hlt2SharedParticles v3r0 2009-12-03 ===================
 ! 2009-12-02 - Jacopo Nardulli
- - Modifications in V0.py 
+ - Modifications in V0.py
 
 ! 2009-11-27 - Patrick Koppenburg
    https://savannah.cern.ch/task/index.php?12690
- - Remove PV = True/False argument of HltLine. The PV should be loaded 
+ - Remove PV = True/False argument of HltLine. The PV should be loaded
    explicitly when needed.
 
 ! 2009-11-25 - Patrick Koppenburg
@@ -426,14 +430,14 @@
 
 ! 2009-11-25 - Patrick Koppenburg
  - The Hlt2 reconstruction is separated in blocks depending on what is actually
-    needed. Allows to run making only muons and pions without 
+    needed. Allows to run making only muons and pions without
     requiring the calo decoding, for instance.
     (https://savannah.cern.ch/task/?12690)
    . Split Hlt2PID into a configurable and helper functions
      ~ Move Calo and Track reconstruction in here (more to come)
    . BasicParticles : Explicit dependency on the appropriate protoparticle
    . Temporarily add dependency on CaloReco (to be cured)
- - Requires tags pkoppenb_20091125 of HltConf, HltLine, Hlt2Lines, 
+ - Requires tags pkoppenb_20091125 of HltConf, HltLine, Hlt2Lines,
    HltSharedParticles
  - v3r0
 
@@ -496,7 +500,7 @@
 
 !========================== Hlt2SharedParticles v2r1 2009-08-10 ===================
 ! 2009-08-10 - Patrick Koppenburg
- - Hlt2Muons.Muon.Selection = ["RequiresDet='MUON' IsMuon=True" ] 
+ - Hlt2Muons.Muon.Selection = ["RequiresDet='MUON' IsMuon=True" ]
    -> adapt to new Muon ID algorithms
 
 ! 2009-08-07 - Patrick Koppenburg
@@ -521,7 +525,7 @@ NoCutsKaons   = bindMembers( None, [ ChargedProtos, Hlt2NoCutsKaons ] )
 Muons         = bindMembers( None, [ ChargedProtos, Hlt2Muons ] )
 Electrons     = bindMembers( None, [ ChargedProtos, Hlt2Electrons ] )
 Photons       = bindMembers( None, [ NeutralProtos, Hlt2Photons ] )
- 
+
  - Increment to v2r0
  - Requires today's HltConf
 
@@ -560,16 +564,16 @@ Photons       = bindMembers( None, [ NeutralProtos, Hlt2Photons ] )
 ! 2009-05-01 - Gerhard Raven
  - add KsDD to Ks.py
 
-! 2009-04-29 - V. Gligorov 
+! 2009-04-29 - V. Gligorov
  - Change python/Hlt2SharedParticles/Topo{2,TF2}Body.py to make all KK, pipi, and
    Kpi combinations, in order to enable the topological trigger to select
-   prompt charm. 
+   prompt charm.
 
 ! 2009-04-29 - Gerhard Raven
  - oops: fix double Hlt2 prefixes
  - add V0.py, as replacement for the V0 bit of Hlt2Particles.opts
  - use V0.py in D0.py, instead of Hlt2Particles.opts
- - latest version of HltLine allows to 
+ - latest version of HltLine allows to
     a) explicitly overrule a bindMember outputSelection.
     b) have a list as bindMember outputSelection
    Use this to 'merge' resolved and merged pi0s for later use
@@ -604,7 +608,7 @@ Photons       = bindMembers( None, [ NeutralProtos, Hlt2Photons ] )
 ! 2009-04-12 - V. Gligorov
   - Good partilces now use a robust IP cut of 0.05mm, not an IPChi2 cut.
   - Added the CS decay mode of the Ds (Ds->Kpipi with opp. charge pions) to Dplus.py
-  - Removed repetition of cuts for shared particles using GoodPions/Kaons 
+  - Removed repetition of cuts for shared particles using GoodPions/Kaons
 
 ! 2009-04-10 - Gerhard Raven
   - add more shared particles

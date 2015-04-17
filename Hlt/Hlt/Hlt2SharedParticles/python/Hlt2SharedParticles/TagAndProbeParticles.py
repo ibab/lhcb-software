@@ -39,13 +39,13 @@ fulldownProtos = Hlt2FullDownstreamTracking.hlt2ProbeMuonProtos()
 Hlt2TagAndProbePions = CombinedParticleMaker("Hlt2TagAndProbePions")
 Hlt2TagAndProbePions.Input =  caloProtos.outputSelection()
 Hlt2TagAndProbePions.Output = 'Hlt2/Hlt2TagAndProbePions/Particles'
-Hlt2TagAndProbePions.Particle =  "pion" 
+Hlt2TagAndProbePions.Particle =  "pion"
 Hlt2TagAndProbePions.WriteP2PVRelations = False
 ##########################################################################
 # Make the Muons
 #
 Hlt2TagAndProbeMuons = CombinedParticleMaker("Hlt2TagAndProbeMuons")
-Hlt2TagAndProbeMuons.Particle = "muon" 
+Hlt2TagAndProbeMuons.Particle = "muon"
 Hlt2TagAndProbeMuons.addTool(ProtoParticleMUONFilter('Muon'))
 Hlt2TagAndProbeMuons.Muon.Selection = ["RequiresDet='MUON' IsMuon=True" ]
 Hlt2TagAndProbeMuons.Input =  muonWithCaloProtos.outputSelection()
@@ -86,7 +86,7 @@ Hlt2VeloMuonParts = NoPIDsParticleMaker("Hlt2VeloMuonParts")
 Hlt2VeloMuonParts.Particle = 'Muon'
 Hlt2VeloMuonParts.Input =  velomuonProtos.outputSelection()
 Hlt2VeloMuonParts.Output =  "Hlt2/Hlt2VeloMuons/Particles"
-	
+
 ##########################################################################
 #
 # FullDownstream particles
@@ -109,29 +109,29 @@ from HltTracking.HltTrackNames import HltSharedTrackLoc, HltDefaultFitSuffix, _b
 from HltLine.HltLine import bindMembers
 from Configurables import CombinedParticleMaker, ChargedProtoParticleMaker, BestPIDParticleMaker, NoPIDsParticleMaker
 from Configurables import DelegatingTrackSelector
-from HltTracking.HltSharedTracking import RevivedVelo,FittedVelo
+from HltTracking.HltSharedTracking import RevivedVelo, FittedVelo
 
 Hlt2VeloProtos = ChargedProtoParticleMaker('Hlt2VeloProtosForTrackEff')
-Hlt2VeloProtos.Inputs = [ FittedVelo.outputSelection() ] 
+Hlt2VeloProtos.Inputs = [ FittedVelo.outputSelection() ]
 Hlt2VeloProtos.Output = _baseProtoPLocation("Hlt2", Hlt2TrackEffRoot+"/"+TrackName["Velo"])
 Hlt2VeloProtos.addTool(DelegatingTrackSelector, name='delTrackSelVelo')
 Hlt2VeloProtos.delTrackSelVelo.TrackTypes = ['Velo']
 
 Hlt2VeloPionParts = NoPIDsParticleMaker("Hlt2VeloPionParts")
 Hlt2VeloPionParts.Particle = 'pion'
-Hlt2VeloPionParts.Input =  Hlt2VeloProtos.Output 
+Hlt2VeloPionParts.Input =  Hlt2VeloProtos.Output
 Hlt2VeloPionParts.Output =  Hlt2TrackEffRoot+"/Hlt2VeloPions/Particles"
 
 Hlt2VeloKaonParts = NoPIDsParticleMaker("Hlt2VeloKaonParts")
 Hlt2VeloKaonParts.Particle = 'kaon'
-Hlt2VeloKaonParts.Input =  Hlt2VeloProtos.Output 
+Hlt2VeloKaonParts.Input =  Hlt2VeloProtos.Output
 Hlt2VeloKaonParts.Output =  Hlt2TrackEffRoot+"/Hlt2VeloKaons/Particles"
 
 Hlt2GoodVeloKaons = Hlt2Member( FilterDesktop,"VeloKaons",
-                                Inputs = [ Hlt2VeloKaonParts.Output ], 
+                                Inputs = [ Hlt2VeloKaonParts.Output ],
                                 Code = "(ETA > 1.9) & (ETA < 4.9) & (MIPCHI2DV(PRIMARY) > 4)")
 Hlt2GoodVeloPions = Hlt2Member( FilterDesktop,"VeloPions",
-                                Inputs = [ Hlt2VeloPionParts.Output ], 
+                                Inputs = [ Hlt2VeloPionParts.Output ],
                                 Code = "(ETA > 1.9) & (ETA < 4.9) & (MIPCHI2DV(PRIMARY) > 4)")
 
 
@@ -141,21 +141,21 @@ Hlt2GoodVeloPions = Hlt2Member( FilterDesktop,"VeloPions",
 # from Hlt2SharedParticles.TagAndProbeParticles import TagAndProbeMuons
 #
 
-__all__ = ( 'TagAndProbePions', 
-            'TagAndProbeMuons', 
-            'LongAssocMuons', 
-            'TagMuonTTMuons', 
-            'TagVeloMuons', 
+__all__ = ( 'TagAndProbePions',
+            'TagAndProbeMuons',
+            'LongAssocMuons',
+            'TagMuonTTMuons',
+            'TagVeloMuons',
             'TagDownstreamMuons',
             'Hlt2ProbeVeloPions',
             'Hlt2ProbeVeloKaons',
             'Hlt2GoodProbeVeloPions',
             'Hlt2GoodProbeVeloKaons')
 
-Hlt2ProbeVeloPions  = bindMembers( None, [ RevivedVelo,Hlt2VeloProtos , Hlt2VeloPionParts ] )
-Hlt2ProbeVeloKaons  = bindMembers( None, [ RevivedVelo,Hlt2VeloProtos , Hlt2VeloKaonParts ] )
-Hlt2GoodProbeVeloPions  = bindMembers( 'Good', [ RevivedVelo,Hlt2VeloProtos ,Hlt2ProbeVeloPions,Hlt2GoodVeloPions])
-Hlt2GoodProbeVeloKaons  = bindMembers( 'Good', [ RevivedVelo,Hlt2VeloProtos ,Hlt2ProbeVeloKaons,Hlt2GoodVeloKaons])
+Hlt2ProbeVeloPions  = bindMembers( None, [ FittedVelo, Hlt2VeloProtos , Hlt2VeloPionParts ] )
+Hlt2ProbeVeloKaons  = bindMembers( None, [ FittedVelo, Hlt2VeloProtos , Hlt2VeloKaonParts ] )
+Hlt2GoodProbeVeloPions  = bindMembers( 'Good', [ FittedVelo, Hlt2VeloProtos, Hlt2ProbeVeloPions, Hlt2GoodVeloPions])
+Hlt2GoodProbeVeloKaons  = bindMembers( 'Good', [ FittedVelo, Hlt2VeloProtos, Hlt2ProbeVeloKaons, Hlt2GoodVeloKaons])
 
 TagAndProbePions   = bindMembers( None, [ caloProtos		,	Hlt2TagAndProbePions 	] )
 TagAndProbeMuons   = bindMembers( None, [ muonWithCaloProtos	, 	Hlt2TagAndProbeMuons	] )
