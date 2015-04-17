@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-04-17 - Sascha Stahl
+ - Added new high multiplicity lines (Hlt1HighMultLines.py). One cuts on the number
+   Velo clusters. The other selects events with a certain number of PVs and Velo clusters.
+
 ! 2015-04-17 - Rosen Matev
   - Implement track fitting, PV splitting and appropriate selections for
     Hlt1BeamGasLines, all is configurable from slots. Old behaviour is kept
