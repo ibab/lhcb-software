@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-17 - Jason Andrews
+  - Hlt2Lines/B2Kpi0:
+   - Made TISTOSing more robust
+   - Additional tuning
+
 ! 2015-04-17
   - Update configuration of Radiative inclusive lines. 
  

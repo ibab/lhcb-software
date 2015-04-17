@@ -24,23 +24,24 @@ class TrackGEC(Hlt2VoidFilter):
 
 class KaonFilter(Hlt2ParticleFilter):
     """Filter the Hlt1 TOS track"""
-    def __init__(self, name, inputs):
+    def __init__(self, name, inputs, tistos):
         cut = ("(TRCHI2DOF < %(TRACK_TRCHI2DOF_MAX)s)"
                "& (TRGHOSTPROB < %(TRACK_TRGHOSTPROB_MAX)s)"
                "& (PT > %(TRACK_PT_MIN)s)"
                "& (P > %(TRACK_P_MIN)s)"
                "& (MIPCHI2DV(PRIMARY) > %(TRACK_IPCHI2_MIN)s)"
                "& (PIDK > %(TRACK_PIDK_MIN)s)")
+        if tistos is None: tistos = []
         super(KaonFilter, self).__init__('B2Kpi0Kaons',
                                          cut,
                                          inputs,
                                          nickname=name,
-                                         tistos='TRACK_TISTOS',
+                                         tistos=tistos,
                                          UseP2PVRelations=False)
 
 class KS0Filter(Hlt2ParticleFilter):
     """Filter the Hlt1 TOS K0"""
-    def __init__(self, name, inputs):
+    def __init__(self, name, inputs, tistos):
         cut = ("(PT > %(KS0_PT_MIN)s) & (P > %(KS0_P_MIN)s)"
                "& (ADMASS('KS0') < %(KS0_ADMASS)s)"
                "& (CHILDCUT((TRGHOSTPROB < %(TRACK_TRGHOSTPROB_MAX)s),1))"
@@ -49,11 +50,12 @@ class KS0Filter(Hlt2ParticleFilter):
                "& (CHILDCUT((TRCHI2DOF < %(TRACK_TRCHI2DOF_MAX)s),2))"
                "& (VFASPF(VCHI2PDOF) < %(KS0_VCHI2PDOF_MAX)s)"
                "& (MIPCHI2DV(PRIMARY) > %(KS0_IPCHI2_MIN)s)")
+        if tistos is None: tistos = []
         super(KS0Filter, self).__init__('B2Kpi0K0s',
                                         cut,
                                         inputs,
                                         nickname=name,
-                                        tistos='KS0_TISTOS',
+                                        tistos=tistos,
                                         UseP2PVRelations=False)
 
 class Pi0TOSFilter(Hlt2TisTosParticleTagger):
@@ -71,10 +73,10 @@ class Pi0Filter(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
         cut = "(PT > %(PI0_PT_MIN)s) & (P > %(PI0_P_MIN)s)"
         super(Pi0Filter, self).__init__('B2Kpi0Pi0Filter',
-                                           cut,
-                                           inputs,
-                                           nickname=name,
-                                           shared=True)
+                                        cut,
+                                        inputs,
+                                        nickname=name,
+                                        shared=True)
 
 class Hb2XGammaCombiner(Hlt2Combiner):
     """Build the b hadron from hadrons and photons."""
@@ -89,5 +91,4 @@ class Hb2XGammaCombiner(Hlt2Combiner):
                                                 DaughtersCuts={},
                                                 CombinationCut=combination_cut,
                                                 MotherCut=mother_cut,
-                                                ParticleCombiners={'':'ParticleAdder'}
-                                                )
+                                                ParticleCombiners={'':'ParticleAdder'})
