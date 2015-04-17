@@ -11,6 +11,7 @@
 ! 2015-04-17 - Albert Puig
   - Streamlined photon filtering in radiative lines
   - Updated Lb2L0Gamma lines
+  - Fixed handling of units
 
 ! 2015-04-17 - Olli Lupton
   - CharmHad:

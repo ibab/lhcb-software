@@ -41,7 +41,7 @@ class MassFilter(Hlt2ParticleFilter):
 class MassWindowFilter(Hlt2ParticleFilter):
     """Apply mass cut on the inputs."""
     def __init__(self, nickname, inputs):
-        cut = "ADMASS('%(PARTICLE)s') < %(MASS_WIN)s*MeV"
+        cut = "ADMASS('%(PARTICLE)s') < %(MASS_WIN)s"
         super(MassWindowFilter, self).__init__('RadiativeMassFilter_%s' % nickname,
                                                cut,
                                                inputs,
@@ -100,22 +100,11 @@ class PhotonTOSFilter(Hlt2TisTosParticleTagger):
                                               [PhotonFilter()],
                                               shared=True)
 
-# CALO photons builder (some cuts needed on non-converted photons only,
-# before pairing with converted counterparts
-class CALOPhotonFilter(Hlt2ParticleFilter):
-    def __init__(self, name, inputs):
-        photon_cut = "( (PT > %(CALO_PT)s*MeV) & (P > %(CALO_P)s*MeV) )"
-        super(CALOPhotonFilter, self).__init__('RadiativeCALOHardPhoton_%s' % name,
-                                               photon_cut,
-                                               inputs,
-                                               nickname=name,
-                                               shared=True)
-
 
 # Converted photons builder
 class ConvPhotonFilter(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
-        photon_cut = "( (PT > %(ee_PT)s*MeV) & (P > %(ee_P)s*MeV) & (M < %(ee_Mass)s*MeV) )"
+        photon_cut = "( (PT > %(ee_PT)s) & (P > %(ee_P)s) & (M < %(ee_Mass)s) )"
         super(ConvPhotonFilter, self).__init__('RadiativePhoton_%s' % name,
                                                photon_cut,
                                                inputs,
@@ -283,15 +272,15 @@ class TopoCombiner(RadiativeCombiner):
 
 class B2GammaGammaCombiner(Hlt2Combiner):
     def __init__(self, name, decay, inputs):
-        mother_cut = ("(M < %(BsMax)s*MeV) & "
-                      "(M > %(BsMin)s*MeV) & "
-                      "(PT > %(B_PT)s*MeV) & "
-                      "(P > %(B_P)s*MeV)")
+        mother_cut = ("(M < %(BsMax)s) & "
+                      "(M > %(BsMin)s) & "
+                      "(PT > %(B_PT)s) & "
+                      "(P > %(B_P)s)")
         if "LL" in name:
             mother_cut += " & ((INTREE( (ID=='gamma') & (ISBASIC) )) & (INTREE( HASTRACK & ISLONG )))"
         elif "DD" in name:
             mother_cut += " & ((INTREE( (ID=='gamma') & (ISBASIC) )) & (INTREE( HASTRACK & ISDOWN )))"
-        comb_cut = "((ACHILD(PT,1)+ACHILD(PT,2)) > %(SUM_PT)s*MeV)"
+        comb_cut = "((ACHILD(PT,1)+ACHILD(PT,2)) > %(SUM_PT)s)"
         super(B2GammaGammaCombiner, self).__init__('RadiativeB2GammaGammaCombiner_%s' % name,
                                                    decay,
                                                    inputs,
