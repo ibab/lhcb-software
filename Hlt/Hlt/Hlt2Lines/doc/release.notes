@@ -11,6 +11,10 @@
 ! 2015-04-17 - Albert Puig
   - Fixed Bs2GammaGamma BBDT preparation.
 
+! 2015-04-17 - Sascha Stahl
+ - Added Hlt2Line which performs the whole Hlt2 reconstruction to RecoTest directory.
+   Priority of the line is 10.
+
 ! 2015-04-17 - Jason Andrews
   - Hlt2Lines/B2Kpi0:
    - Made TISTOSing more robust
