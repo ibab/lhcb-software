@@ -4,6 +4,12 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-04-17 - Michael Kolpin
+ - Moved configuration of MuonTTTracks from Hlt2ProbeTracking to HltRecoConf
+ - Changed probe track locations to reflect the usage better
+ - Downstream probe tracks now use reconstruction from Hlt2Tracking
+ - Changed all probe track fitters to use simplified material description
+
 ! 2015-04-17 - Rosen Matev
  - Add optional parameter to HltSharedTracking.fittedVelo() giving the
    instance name. Name defaults to the current value.

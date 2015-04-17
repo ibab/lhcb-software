@@ -114,6 +114,16 @@ OfflineSeedingToolOptions = { "NDblOTHitsInXSearch" : 0,
 DownstreamOptions = { "MinMomentum": 0.,
                       "MinPt": 0.}
 
+MuonTTOptions = {
+		"SeedStation"  : 2,
+		"YTolSlope"    : 40000.,
+		"XTolSlope"    : 40000.,
+		"XTol"         : 25.,
+		"MaxChi2Tol"   : 7.,
+		"MinAxProj"    : 5.5,
+		"MaxAxProj"    : 25.
+		}
+
 #
 # The default RICH options
 #

@@ -51,6 +51,16 @@ from HltTracking.Hlt1TrackNames import TrackName
 Hlt2TrackLoc = { name : _baseTrackLocation(Hlt2TracksPrefix,loc) for name,loc in TrackName.iteritems() }
 HltSharedTrackLoc = { name : _baseTrackLocation(HltSharedTracksPrefix,loc) for name,loc in TrackName.iteritems() }
 
+# Names for tracking efficiency probe tracks
+TrackEffNames   = { "MuonTT"            : "MuonTT"         # probe track for tracking efficiency from Muon and TT hits
+                  , "VeloMuon"          : "VeloMuon"       # probe track for tracking efficiency from Velo and Muon hits
+                  , "FullDownstream"    : "FullDownstream" # probe track for tracking efficiency, needs full downstream reco.
+                  , "StandaloneMuon"    : "StandaloneMuon" # muon track for tracking efficiency, used by VeloMuon tracks
+		  }
+
+# Locations for tracking efficiency probe tracks
+Hlt2TrackEffLoc = { name : _baseTrackLocation(Hlt2TrackEffRoot,loc) for name,loc in TrackEffNames.iteritems() }
+
 # check if the Decoders are writing to the correct locations
 from DAQSys.Decoders import DecoderDB
 DecoderLocations = DecoderDB["HltTrackReportsDecoder"].listOutputs()

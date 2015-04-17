@@ -24,10 +24,6 @@ TrackName = { "Velo"              : "Velo"           # full Velo recoonstruction
             , "Long"              : "Long"
             , "Downstream"        : "Downstream"
             , "Best"              : "Best"
-            , "MuonTT"            : "MuonTT"         # tag track for tracking efficiency from Muon and TT hits
-            , "VeloMuon"          : "VeloMuon"       # tag track for tracking efficiency from Velo and Muon hits
-            , "FullDownstream"    : "FullDownstream" # tag track for tracking efficiency, needs full downstream reco.
-            , "FullSeeding"       : "FullSeeding"    # full seeding for tracking efficiency
             , "FitTrack"          : "FitTrack"       # full seeding for tracking efficiency
             , "VeloOnlyFitTrack"  : "VeloOnlyFitTrack"
             , "IsMuon"            : "IsMuon"
