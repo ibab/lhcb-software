@@ -138,9 +138,9 @@ class EWLines(Hlt2LinesConfigurableUser) :
                                               'FDCHI2_MIN'     :    10,
                                               'FDT_MIN'        :   0.5,
                                               'VCHI2_NDOF_MAX' :    20,
-                                              'DOCA_MAX'       :   0.2,
-                                              'CORRM_MIN'      :   1.2 * GeV,
-                                              'CORRM_MAX'      :   2.0 * GeV},
+                                              'DOCA_MAX'       :   0.1,
+                                              'CORRM_MIN'      :   1.0 * GeV,
+                                              'CORRM_MAX'      :   2.2 * GeV},
 
                  'TauPiPi0Combiner' :        {'sumPT'          :     8 * GeV,
                                               'PT'             :     8 * GeV,
