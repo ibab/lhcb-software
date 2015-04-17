@@ -314,7 +314,7 @@ class LowMultPi0Filter(Hlt2ParticleFilter):
 ##############################
 # ELECTRON FILTERS
 ##############################
-class LowMultElectronFilter(ElectronCombiner):
+class LowMultDiElectronFilter(ElectronCombiner):
     def __init__(self, name):
         decay   = ["J/psi(1S) -> e+ e-","J/psi(1S) -> e+ e+","J/psi(1S) -> e- e-"]
         from Inputs import Hlt2LooseElectrons

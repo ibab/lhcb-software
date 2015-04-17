@@ -61,13 +61,13 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                  , 'Hlt2LowMultDiPhoton_HighMass'    : 1.0
                                  , 'Hlt2LowMultPi0'         : 1.0
                                  # Electron lines
-                                 , 'Hlt2LowMultElectron'    : 1.0
-                                 , 'Hlt2LowMultElectron_noTrFilt': 0.05
+                                 , 'Hlt2LowMultDiElectron'    : 1.0
+                                 , 'Hlt2LowMultDiElectron_noTrFilt': 0.05
                                  # Technical lines
                                  , 'Hlt2LowMultTechnical_NoBias'        : 0.003 # Aim for 1 Hz from 300 Hz non-bb crossings
                                  , 'Hlt2LowMultTechnical_MinBias'       : 0.1
                                  }
-                    , 'HLT'               :   {"Hadron"     : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
+                    , 'HLT'               :   {"Hadron"     : "HLT_PASS_RE('Hlt1CEPDecision')",
                                                "Muon"       : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
                                                "Photon"     : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
                                                "Electron"   : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
