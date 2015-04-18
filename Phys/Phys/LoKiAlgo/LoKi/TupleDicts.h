@@ -424,29 +424,59 @@ namespace LoKi
       // ======================================================================
       /// store boolean value in n-tuple 
       static StatusCode column_bool  
-      ( const Tuples::Tuple&      tuple , 
-        const std::string&        name  , 
-        const bool                value ) ;
+        ( const Tuples::Tuple&      tuple , 
+          const std::string&        name  , 
+          const bool                value ) ;
       /// store float  value in n-tuple 
       static StatusCode column_float  
-      ( const Tuples::Tuple&      tuple , 
-        const std::string&        name  , 
-        const double              value ) ;
+        ( const Tuples::Tuple&      tuple , 
+          const std::string&        name  , 
+          const double              value ) ;
       /// store float  value in n-tuple 
       static StatusCode column_double  
-      ( const Tuples::Tuple&      tuple , 
-        const std::string&        name  , 
-        const double              value ) ;
+        ( const Tuples::Tuple&      tuple , 
+          const std::string&        name  , 
+          const double              value ) ;      
+      /// store char value in n-tuple 
+      static StatusCode column_char 
+        ( const Tuples::Tuple&      tuple , 
+          const std::string&        name  , 
+          const char                value ) ;
+      /// store unsigned char value in n-tuple 
+      static StatusCode column_uchar
+        ( const Tuples::Tuple&      tuple , 
+          const std::string&        name  , 
+          const unsigned char       value ) ;
+      /// store short value in n-tuple 
+      static StatusCode column_short   
+        ( const Tuples::Tuple&      tuple , 
+          const std::string&        name  , 
+          const short               value ) ;
+      /// store unsigned short value in n-tuple 
+      static StatusCode column_ushort
+        ( const Tuples::Tuple&      tuple , 
+          const std::string&        name  , 
+          const unsigned short      value ) ;
       /// store int value in n-tuple 
       static StatusCode column_int   
-      ( const Tuples::Tuple&      tuple , 
-        const std::string&        name  , 
-        const int                 value ) ;
-      /// store int value in n-tuple 
+        ( const Tuples::Tuple&      tuple , 
+          const std::string&        name  , 
+          const int                 value ) ;
+      /// store unsigned int value in n-tuple 
+      static StatusCode column_uint   
+        ( const Tuples::Tuple&      tuple , 
+          const std::string&        name  , 
+          const unsigned int        value ) ;
+      /// store long value in n-tuple 
       static StatusCode column_long 
-      ( const Tuples::Tuple&      tuple , 
-        const std::string&        name  , 
-        const long                value ) ;
+        ( const Tuples::Tuple&      tuple , 
+          const std::string&        name  , 
+          const long                value ) ;
+      /// store unsigned long value in n-tuple 
+      static StatusCode column_ulong 
+        ( const Tuples::Tuple&      tuple , 
+          const std::string&        name  , 
+          const unsigned long       value ) ;
       // ======================================================================
     };
     // ========================================================================

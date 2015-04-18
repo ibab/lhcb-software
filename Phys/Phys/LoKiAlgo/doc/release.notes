@@ -5,6 +5,14 @@
 ! Purpose     : LoKi-algorithm related stuff
 ! -----------------------------------------------------------------------------
 
+! 2015-04-18 - Vanya Belyaev
+
+ - extend a bit the types, that can be added into n-tuple :
+   char,uchar 
+   short,ushort 
+   uint,ulong are added 
+
+
 !========================= LoKiAlgo v9r8p5 2014-09-30 =========================
 
 ! 2014-07-29 - Vanya Belyaev

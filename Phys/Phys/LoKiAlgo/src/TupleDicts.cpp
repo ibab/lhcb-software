@@ -5,6 +5,8 @@
 // STD&STL
 // ============================================================================
 #include <climits>
+#include <cassert>
+#include <type_traits>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -30,10 +32,6 @@
 // LoKi
 // ============================================================================
 #include "LoKi/TupleDicts.h"
-// ============================================================================
-// Boost
-// ============================================================================
-#include "boost/static_assert.hpp"
 // ============================================================================
 /** @file
  *  Implementation file for class LoKi::Dicts::TupleArray 
@@ -575,7 +573,8 @@ StatusCode LoKi::Dicts::TupleBasic::column_bool
 namespace 
 {
   // ==========================================================================
-  BOOST_STATIC_ASSERT( std::numeric_limits<float>::is_specialized ) ;
+  static_assert ( std::numeric_limits<float>::is_specialized   ,
+                  "numeric_limits<float> are not specialized!" ) ;
   const double s_float_max =  0.999 * std::numeric_limits<float>::max () ;
   const double s_float_min = -0.999 * std::numeric_limits<float>::max () ;
   // ==========================================================================  
@@ -606,6 +605,64 @@ StatusCode LoKi::Dicts::TupleBasic::column_double
   return tuple -> column ( name , value ) ;  
 }
 // ============================================================================
+namespace 
+{
+  // ==========================================================================
+  static_assert ( std::numeric_limits<char>::is_specialized 
+                  && std::is_signed<char>::value  , "char  is not signed!" ) ;
+  static_assert ( std::numeric_limits<short>::is_specialized 
+                  && std::is_signed<short>::value , "short is not signed!" ) ;
+  static_assert ( std::numeric_limits<int>::is_specialized 
+                  && std::is_signed<int>::value   , "int   is not signed!" ) ;
+  static_assert ( std::numeric_limits<long>::is_specialized 
+                  && std::is_signed<long>::value  , "long  is not signed!" ) ;
+  // ==========================================================================  
+}
+// ============================================================================
+// store char value in n-tuple 
+// ============================================================================
+StatusCode LoKi::Dicts::TupleBasic::column_char
+( const Tuples::Tuple&      tuple , 
+  const std::string&        name  , 
+  const char                value ) 
+{
+  if ( !tuple.valid() ) { return StatusCode::FAILURE ; }  
+  return tuple -> column ( name , value ) ;  
+}
+// ============================================================================
+// store unsigned char value in n-tuple 
+// ============================================================================
+StatusCode LoKi::Dicts::TupleBasic::column_uchar
+( const Tuples::Tuple&      tuple , 
+  const std::string&        name  , 
+  const unsigned char       value ) 
+{
+  if ( !tuple.valid() ) { return StatusCode::FAILURE ; }  
+  return tuple -> column ( name , value ) ;  
+}
+// ============================================================================
+// store short value in n-tuple 
+// ============================================================================
+StatusCode LoKi::Dicts::TupleBasic::column_short
+( const Tuples::Tuple&      tuple , 
+  const std::string&        name  , 
+  const short               value ) 
+{
+  if ( !tuple.valid() ) { return StatusCode::FAILURE ; }  
+  return tuple -> column ( name , value ) ;  
+}
+// ============================================================================
+// store unsigned short value in n-tuple 
+// ============================================================================
+StatusCode LoKi::Dicts::TupleBasic::column_ushort
+( const Tuples::Tuple&      tuple , 
+  const std::string&        name  , 
+  const unsigned short      value ) 
+{
+  if ( !tuple.valid() ) { return StatusCode::FAILURE ; }  
+  return tuple -> column ( name , value ) ;  
+}
+// ============================================================================
 // store int value in n-tuple 
 // ============================================================================
 StatusCode LoKi::Dicts::TupleBasic::column_int 
@@ -617,12 +674,34 @@ StatusCode LoKi::Dicts::TupleBasic::column_int
   return tuple -> column ( name , value ) ;  
 }
 // ============================================================================
+// store unsigned int value in n-tuple 
+// ============================================================================
+StatusCode LoKi::Dicts::TupleBasic::column_uint 
+( const Tuples::Tuple&      tuple , 
+  const std::string&        name  , 
+  const unsigned int        value ) 
+{
+  if ( !tuple.valid() ) { return StatusCode::FAILURE ; }  
+  return tuple -> column ( name , value ) ;  
+}
+// ============================================================================
 // store long value in n-tuple 
 // ============================================================================
 StatusCode LoKi::Dicts::TupleBasic::column_long
 ( const Tuples::Tuple&      tuple , 
   const std::string&        name  , 
   const long                value ) 
+{
+  if ( !tuple.valid() ) { return StatusCode::FAILURE ; }  
+  return tuple -> column ( name , value ) ;  
+}
+// ============================================================================
+// store unsigned long value in n-tuple 
+// ============================================================================
+StatusCode LoKi::Dicts::TupleBasic::column_ulong
+( const Tuples::Tuple&      tuple , 
+  const std::string&        name  , 
+  const unsigned long       value ) 
 {
   if ( !tuple.valid() ) { return StatusCode::FAILURE ; }  
   return tuple -> column ( name , value ) ;  

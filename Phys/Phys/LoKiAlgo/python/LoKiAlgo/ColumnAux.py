@@ -45,8 +45,8 @@ __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = "2012-02-16"
 __version__ = "$Revision$"
 # =============================================================================
-from LoKiCore.basic import cpp, LoKi
-
+from   LoKiCore.basic        import cpp, LoKi
+import GaudiPython.GaudiAlgs 
 
 _Tuple    = cpp.Tuples.Tuple
 _ColAux   = LoKi.Dicts.TupleAux 
@@ -94,15 +94,13 @@ _ColBasic = LoKi.Dicts.TupleBasic
 def _column_bool_ ( self , name , value ) :
     """
     Add boolean value to n-tuple
-    
     """
     return _ColBasic.column_bool ( self , name , value )
 # =============================================================================
 ## specialization for float  values 
 def _column_float_ ( self , name , value ) :
     """
-    Add float value to n-tuple
-    
+    Add float value to n-tuple    
     """
     return _ColBasic.column_float ( self , name , value )
 # =============================================================================
@@ -114,13 +112,47 @@ def _column_double_ ( self , name , value ) :
     """
     return _ColBasic.column_double ( self , name , value )
 # =============================================================================
+## specialization for char values 
+def _column_char_ ( self , name , value ) :
+    """
+    Add char value to n-tuple
+    """
+    return _ColBasic.column_char ( self , name , value )
+# =============================================================================
+## specialization for unsigned char  values 
+def _column_uchar_ ( self , name , value ) :
+    """
+    Add unsigned char value to n-tuple
+    """
+    return _ColBasic.column_uchar ( self , name , value )
+# =============================================================================
+## specialization for short values 
+def _column_short_ ( self , name , value ) :
+    """
+    Add short value to n-tuple
+    """
+    return _ColBasic.column_short ( self , name , value )
+# =============================================================================
+## specialization for unsigned short  values 
+def _column_ushort_ ( self , name , value ) :
+    """
+    Add unsigned short value to n-tuple
+    """
+    return _ColBasic.column_ushort ( self , name , value )
+# =============================================================================
 ## specialization for int  values 
 def _column_int_ ( self , name , value ) :
     """
     Add int value to n-tuple
-    
     """
     return _ColBasic.column_int ( self , name , value )
+# =============================================================================
+## specialization for unsigned int  values 
+def _column_uint_ ( self , name , value ) :
+    """
+    Add unsigned int value to n-tuple
+    """
+    return _ColBasic.column_uint ( self , name , value )
 # =============================================================================
 ## specialization for long  values 
 def _column_long_ ( self , name , value ) :
@@ -128,20 +160,39 @@ def _column_long_ ( self , name , value ) :
     Add long value to n-tuple
     """
     return _ColBasic.column_long ( self , name , value )
+# =============================================================================
+## specialization for unsigned long  values 
+def _column_ulong_ ( self , name , value ) :
+    """
+    Add unsigned long value to n-tuple
+    """
+    return _ColBasic.column_ulong ( self , name , value )
 
 _column_bool_   . __doc__ += '\n' + _ColBasic . column_bool   . __doc__
 _column_float_  . __doc__ += '\n' + _ColBasic . column_float  . __doc__
 _column_double_ . __doc__ += '\n' + _ColBasic . column_double . __doc__
+_column_char_   . __doc__ += '\n' + _ColBasic . column_char   . __doc__
+_column_uchar_  . __doc__ += '\n' + _ColBasic . column_uchar  . __doc__
+_column_short_  . __doc__ += '\n' + _ColBasic . column_short  . __doc__
+_column_ushort_ . __doc__ += '\n' + _ColBasic . column_ushort . __doc__
 _column_int_    . __doc__ += '\n' + _ColBasic . column_int    . __doc__
+_column_uint_   . __doc__ += '\n' + _ColBasic . column_uint   . __doc__
 _column_long_   . __doc__ += '\n' + _ColBasic . column_long   . __doc__
+_column_ulong_  . __doc__ += '\n' + _ColBasic . column_ulong  . __doc__
 
 # =============================================================================
 ## finally decorate tuple 
 _Tuple.column_bool       =       _column_bool_ 
 _Tuple.column_float      =       _column_float_ 
 _Tuple.column_double     =       _column_double_ 
+_Tuple.column_char       =       _column_char_ 
+_Tuple.column_uchar      =       _column_uchar_ 
+_Tuple.column_short      =       _column_short_ 
+_Tuple.column_ushort     =       _column_ushort_ 
 _Tuple.column_int        =       _column_int_ 
+_Tuple.column_uint       =       _column_uint_ 
 _Tuple.column_long       =       _column_long_ 
+_Tuple.column_ulong      =       _column_ulong_ 
 _Tuple.column_longlong   = _Tuple.column_ll 
 _Tuple.column_ulonglong  = _Tuple.column_ull 
 
@@ -154,7 +205,15 @@ if '__main__' == __name__ :
     print ' Version : ' , __version__
     print ' Date    : ' , __date__    
     print 80*'*'
-    print _Tuple.column_aux .__doc__ 
+    lst = dir(_Tuple)
+    for i in lst :
+        if   0<= i.lower().find('colu') : pass
+        elif 0<= i.lower().find('arra') : pass
+        elif 0<= i.lower().find('matr') : pass
+        else : continue
+        m = getattr ( _Tuple , i )
+        print m.__doc__
+        
     print 80*'*'
  
 # =============================================================================
