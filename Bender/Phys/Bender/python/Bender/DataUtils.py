@@ -208,22 +208,19 @@ def inEOS ( fname            ,
     #
     for l in stdout :
         #
-        ## add prefix
-        #
-        fname = prefix + fname 
-        #
         ## play a bit with extension
         #
         for ext in ( '.raw' , '.RAW' , '.mdf' , '.MDF' ) :               
             p = fname.find ( ext )
             if 0<= p and len( ext ) + p == len ( fname ) :
-                fname = 'mdf:' + prefix + fname
-                break
+                return 'mdf:' + prefix + fname               ## RETURN
+            
         #
-        ## 
-        # 
-        return fname    ## RETURN 
+        ## add prefix
+        #
+        return prefix + fname                                ## RETURN 
 
+    ## 
     return ''
 
 # =============================================================================
