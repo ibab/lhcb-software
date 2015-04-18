@@ -9,8 +9,7 @@
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
 class RecoTestLines(Hlt2LinesConfigurableUser) :
-    __slots__ = { 'Common' :        {'TrChi2'     :   10,    # Adimensional
-                                      'Pt':            0 },                  # Postscale
+    __slots__ = { 'Common'      : {'Pt'             : 0.0},              
                   'Postscale'   : {'Hlt2CreateReco' : 0.0}
                 }
 
@@ -20,6 +19,6 @@ class RecoTestLines(Hlt2LinesConfigurableUser) :
         from Stages import CreatePions
         stages = {'CreateReco'   : [ CreatePions("AllOfThem") ] }
         for nickname, algos in self.algorithms(stages).iteritems():
-            Hlt2Line(nickname, priority = 10, prescale = self.prescale,
+            Hlt2Line(nickname, priority = 1, prescale = self.prescale,
                      algos = algos, postscale = self.postscale)
 
