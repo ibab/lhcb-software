@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-04-17 - Sascha Stahl
- - Updated Commissioning_AllLines_2015.py
+ - Updated Commissioning_AllLines_2015.py, do not include Run1 Topo lines.
 
 ! 2015-04-15 - Christian Linn
  - Updated Physics_draftEM2015 with new lines, L0TCK and thresholds 
