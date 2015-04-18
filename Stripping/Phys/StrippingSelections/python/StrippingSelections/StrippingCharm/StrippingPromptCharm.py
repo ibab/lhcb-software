@@ -16,13 +16,14 @@
 #    
 #    - Lambda_c+/Xi_c -> p K pi              ## for Lesha Dziuba  
 #    - Lambda_c+/Xi_c -> p K K               ## for Lesha Dziuba 
+#    - Xic0           -> Lc+ pi-             ## for Lesha Dziuba 
 # 
 #  Excited charm baryons 
 #
 #    - Sigma_c(0,++) -> Lambda_c+ pi        ( 2455 & 2520 )
 #    - Xi_c0*        -> Xi_c+ pi                            
 #    - Lambda_c+*    -> Lambda_c+ pi+ pi-   ( 2595, 2625 & 2880 )
-#    - Omega_c0*     -> Lambda_c+/Xic+ K-          ## for Marco Pappagallo 
+#    - Omega_c0*     -> Lambda_c+/Xic+ K-    ## for Marco Pappagallo 
 #
 #  Also one has the combinations for 2xCharm studies
 #
@@ -247,6 +248,7 @@ _default_configuration_ = {
     'LambdaC*Prescale'       : 1.0 ,
     'OmegaC*Prescale'        : 1.0 ,
     'SigmaCPrescale'         : 1.0 ,
+    'Xic02LcPiPrescale'      : 1.0 ,
     ##
     'D02KKPrescale'          : 1.0 ,
     'D02pipiPrescale'        : 1.0 ,
@@ -278,6 +280,7 @@ default_config = {
                                      'StrippingSigmaCForPromptCharm'         ,
                                      'StrippingLambdaCstarForPromptCharm'    ,
                                      'StrippingOmegaCstarForPromptCharm'     ,
+                                     'StrippingXic02LcPiForPromptCharm'      ,
                                      'StrippingDiCharmForPromptCharm'        , ## ? 
                                      'StrippingChiAndCharmForPromptCharm'    ,
                                      'StrippingCharmAndWForPromptCharm'      ,
@@ -420,11 +423,13 @@ class StrippingPromptCharmConf(LineBuilder) :
                  self.Dstar          () ,
                  self.Ds             () ,
                  self.Dplus          () ,
+                 self.preLamC        () ,
                  self.LamC           () ,
                  self.LamC2pKK       () ,
                  self.SigC           () ,
                  self.LamCstar       () ,
                  self.OmgCstar       () ,
+                 self.Xic02LcPi      () ,
                  self.DiMuon         () ,
                  self.DiCharm        () ,
                  self.DoubleDiMuon   () ,
@@ -539,6 +544,13 @@ class StrippingPromptCharmConf(LineBuilder) :
             prescale = self['LambdaC*Prescale'] , ## ATTENTION! Prescale here !!
             checkPV  = self['CheckPV'         ] ,
             algos    =     [ self.LamCstar () ]
+            ) ,
+            ## Xic0 -> Lc pi 
+            StrippingLine (
+            "Xic02LcPiFor" + self.name() ,
+            prescale = self['Xic02LcPiPrescale'] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'          ] ,
+            algos    =     [ self.Xic02LcPi () ]
             ) ,
             ## DiCharm
             StrippingLine (
@@ -1017,16 +1029,16 @@ class StrippingPromptCharmConf(LineBuilder) :
             )
     
     # =============================================================================
-    # Lambda_c,Xi_c -> ( pKpi ) 
+    # preselection of Lambda_c,Xi_c -> ( pKpi )   NO POINTING HERE! 
     # =============================================================================
-    def LamC ( self ) :
+    def preLamC ( self ) :
         """
-        Lambda_c,Xi_c -> ( pKpi )  selection
+        Lambda_c,Xi_c -> ( pKpi )  pre-selection
         """ 
         from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays
         #
         return self.make_selection (
-            'LambdaC' ,
+            'preLambdaC' ,
             DaVinci__N3BodyDecays ,
             ## inputs 
             [ self.protons() , self.kaons() , self.pions()] ,
@@ -1044,14 +1056,70 @@ class StrippingPromptCharmConf(LineBuilder) :
             ( APT            > %s ) & 
             ( ACHI2DOCA(1,3) < 16 ) &
             ( ACHI2DOCA(2,3) < 16 ) 
-            """ % ( 0.95 * self[ 'pT(Lc+)' ] ) ,
+            """ % ( 0.85 * self[ 'pT(Lc+)' ] ) ,
             ##
             MotherCut      = """
             ( chi2vx  < 25 )                          &
             ( PT      > %s                          ) &
             ( ( ADMASS ( 'Lambda_c+' ) < 55 * MeV ) 
-            | ( ADMASS ( 'Xi_c+'     ) < 55 * MeV ) ) &
-            ( ctau  > 100 * micrometer              )  
+            | ( ADMASS ( 'Xi_c+'     ) < 55 * MeV ) ) 
+            """ %  self [ 'pT(Lc+)'] 
+            )
+    
+    # =============================================================================
+    # Lambda_c,Xi_c -> ( pKpi ) 
+    # =============================================================================
+    def LamC ( self ) :
+        """
+        Lambda_c,Xi_c -> ( pKpi )  selection
+        """ 
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        #
+        return self.make_selection (
+            'LambdaC'     ,
+            FilterDesktop ,
+            ## inputs 
+            [ self.preLamC() ] ,
+            ##
+            Code = " ( PT > %s ) & ( ctau > 100 * micrometers ) " % self['pT(Lc+)']
+            )
+
+    # =============================================================================
+    #  Xi_c0 -> Lc+ pi-
+    # ============================================================================= 
+    ## new decay mode \f$ \Xi_c^0 \rightarrow \Lambda_c^+ \pi^-\f$
+    #  the evidence for this decay is obtaine by Belle in Phys.Rev. D89 (2014) 9, 091102 
+    #  @see http://dx.doi.org/10.1103/PhysRevD.89.091102
+    #  Also Lesha Dziuba sees the hint for this peak in his chamr baryon studies 
+    def Xic02LcPi ( self ) :
+        """
+        Xi_c0 -> Lc+ pi-
+        The peak seen by Belle in Phys.Rev. D89 (2014) 9, 091102 
+        There is a hint in LHCb data 
+        """ 
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from StandardParticles  import StdAllLoosePions as inpts 
+        #
+        return self.make_selection (
+            'Xic02LcPi'      ,
+            CombineParticles ,
+            ## inputs 
+            [ self.preLamC() , inpts ] ,
+            ##
+            DecayDescriptor = " [ Xi_c0 -> Lambda_c+ pi-]cc" ,
+            DaughtersCuts   = {
+            ## use only Lambda_c+ here, skip Xi_c+
+            'Lambda_c+' : "ADMASS ( 'Lambda_c+' ) < 60 * MeV"
+            }, 
+            ##
+            CombinationCut  = """
+            ( APT > %s ) & ( ( AM - AM1 ) < 240 * MeV ) 
+            """  % ( 0.95 * self['pT(Lc+)'] ) ,
+            ##
+            MotherCut      = """
+            ( chi2vx  < 25 )              &
+            ( PT      > %s              ) &
+            ( ctau    > 50 * micrometer )  
             """ % self [ 'pT(Lc+)']
             )
     
