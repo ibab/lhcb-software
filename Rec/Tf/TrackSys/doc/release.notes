@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-04-19 - Michel De Cian
+ - Invert logic for liteClusters and simplifiedGeometry in 'Configuration.py', such that they are the standard for Run2.
+
 ! 2015-04-15 - Michel De Cian
  - Change 'TrackBestTrackCreator' to 'TrackEventFitter' for Velo and Forward separately for HLT1 (in RecoTrackingRun2.py)
 

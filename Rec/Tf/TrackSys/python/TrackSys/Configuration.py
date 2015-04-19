@@ -41,8 +41,8 @@ class TrackSys(LHCbConfigurableUser):
     
     ## Possible expert options
     KnownExpertTracking        = ["noDrifttimes", "simplifiedGeometry", "kalmanSmoother", "noMaterialCorrections",
-                                  "fastSequence", "timing", "disableOTTimeWindow", "simplifiedGeometryHLT1", "simplifiedGeometryHLT2",
-                                  "liteClustersHLT1", "liteClustersHLT2" ]
+                                  "fastSequence", "timing", "disableOTTimeWindow", "fullGeometryHLT1", "fullGeometryHLT2",
+                                  "fullClustersHLT1", "fullClustersHLT2" ]
 
     ## Default track pattern recognition algorithms to run in 2010
     #DefaultPatRecAlgorithms_old    = ["Velo","Forward","TsaSeed","Match","Downstream","VeloTT"]
@@ -142,14 +142,14 @@ class TrackSys(LHCbConfigurableUser):
     def noDrifttimes(self) : return "noDrifttimes" in self.getProp("ExpertTracking")
     ## @brief Shortcut to the simplifiedGeometry option
     def simplifiedGeometry(self) : return "simplifiedGeometry" in self.getProp("ExpertTracking")
-    ## @brief Shortcut to the simplifiedGeometry option for HLT1
-    def simplifiedGeometryHLT1(self) : return "simplifiedGeometryHLT1" in self.getProp("ExpertTracking")
-    ## @brief Shortcut to the simplifiedGeometry option for HLT2
-    def simplifiedGeometryHLT2(self) : return "simplifiedGeometryHLT2" in self.getProp("ExpertTracking")
-    ## @brief Shortcut to the LiteCluster option for HLT1 (in fitter)
-    def liteClustersHLT1(self) : return "liteClustersHLT1" in self.getProp("ExpertTracking")
-    ## @brief Shortcut to the LiteCluster option for HLT2 (in fitter)
-    def liteClustersHLT2(self) : return "liteClustersHLT2" in self.getProp("ExpertTracking")
+    ## @brief Shortcut to the fullGeometry option for HLT1 in Run 2
+    def fullGeometryHLT1(self) : return "fullGeometryHLT1" in self.getProp("ExpertTracking")
+    ## @brief Shortcut to the fullGeometry option for HLT2 in Run 2
+    def fullGeometryHLT2(self) : return "fullGeometryHLT2" in self.getProp("ExpertTracking")
+    ## @brief Shortcut to the fullCluster option for HLT1 (in fitter) in Run 2
+    def fullClustersHLT1(self) : return "fullClustersHLT1" in self.getProp("ExpertTracking")
+    ## @brief Shortcut to the fullCluster option for HLT2 (in fitter) in Run 2
+    def fullClustersHLT2(self) : return "fullClustersHLT2" in self.getProp("ExpertTracking")
     ## @brief Shortcut to the kalmanSmoother option
     def kalmanSmoother(self) : return "kalmanSmoother" in self.getProp("ExpertTracking")
     ## @brief Shortcut to the noMaterialCorrections option
@@ -191,8 +191,9 @@ class TrackSys(LHCbConfigurableUser):
                     RecoTracking.RecoTracking()
                 else:
                     from TrackSys import RecoTrackingRun2
-                    RecoTrackingRun2.RecoTrackingHLT1( simplifiedGeometryFit = self.simplifiedGeometryHLT1(), liteClustersFit = self.liteClustersHLT1() )
-                    RecoTrackingRun2.RecoTrackingHLT2( simplifiedGeometryFit = self.simplifiedGeometryHLT2(), liteClustersFit = self.liteClustersHLT2() )
+                    # per default, run simplified geometry and use liteClusters
+                    RecoTrackingRun2.RecoTrackingHLT1( simplifiedGeometryFit = not self.fullGeometryHLT1(), liteClustersFit = not self.fullClustersHLT1() )
+                    RecoTrackingRun2.RecoTrackingHLT2( simplifiedGeometryFit = not self.fullGeometryHLT2(), liteClustersFit = not self.fullClustersHLT2() )
                     
             else:
                 raise RuntimeError("'FilterBeforeFit' needs to be set...")
