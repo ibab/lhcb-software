@@ -442,6 +442,9 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
     //===========================================================================
     /// Version unordered_map for LHCb::MuonPID in the Full stream
     unordered_map<int, unordered_map<string,pair<int,int> > > const m_mpid_unordered_map2 {
+      { 4
+        , {{"4#Muon.IsMuon",                   {0,4}}}
+      }
     };
 
     //===========================================================================

@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2015-04-19 - Sean Benson
+ - isMuon in full.
+
 ! 2015-04-13 - Sean Benson
  - Extra variables for ProbNNs.
 
