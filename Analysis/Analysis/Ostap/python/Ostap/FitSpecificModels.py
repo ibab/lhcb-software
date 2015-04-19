@@ -366,7 +366,6 @@ class Manca_pdf (PDF) :
 
         # =====================================================================
         from   Ostap.FitBasic            import makeVar
-        from   Ostap.FitBkgModels        import Bkg_pdf
         from   Ostap.FitSignalModels     import Needham_pdf
         # =====================================================================
         ## Y(1S)
@@ -595,7 +594,6 @@ class Manca2_pdf (PDF) :
 
         # =====================================================================
         from   Ostap.FitBasic            import makeVar
-        from   Ostap.FitBkgModels        import Bkg_pdf
         from   Ostap.FitSignalModels     import CB2_pdf
                 
         # =====================================================================

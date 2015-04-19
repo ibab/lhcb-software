@@ -20,7 +20,7 @@ __version__ = "$Revision:"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-07-25"
 __all__     = (
-    'Bkg_pdf'         , ## An exponential function, modulated by positiev polynomial
+    'Bkg_pdf'         , ## An exponential function, modulated by positive polynomial
     'PSPol_pdf'       , ## A phase space  function, modulated by positive polynomial
     'PolyPos_pdf'     , ## A positive polynomial
     'Monothonic_pdf'  , ## A positive monothonic polynomial

@@ -1057,12 +1057,9 @@ class Fit1D (PDF) :
         self.signal     =      signal 
         self.mass       = self.signal.mass
         #
-        from Ostap.FitBkgModels import Bkg_pdf 
-        #
-        if background : self.background = background 
-        else          : self.background = Bkg_pdf  ( 'Background' + suffix ,
-                                                     self.mass , power = bpower )
-
+        from Ostap.FitBkgModels import makeBkg
+        if background : self.background = makeBkg ( background , 'Background' + suffix , self.mass )
+        else          : self.background = makeBkg ( bpower     , 'Background' + suffix , self.mass )
         #
         self.s = makeVar ( None , "S"+suffix , "Signal"     + suffix , None , 0 , 1.e+6 )
         self.b = makeVar ( None , "B"+suffix , "Background" + suffix , None , 0 , 1.e+6 )
@@ -1095,7 +1092,6 @@ class Fit1D (PDF) :
         self.more_signals       = othersignals
         self.more_backgrounds   = otherbackgrounds
         self.more_components    = others
-
 
         #
         ## treat additional signals
@@ -1254,19 +1250,17 @@ class Fit2D (object) :
         self.m2        = signal_2.mass
 
         #
-        from Ostap.FitBkgModels import Bkg_pdf 
-        #
-        
-        #
         ## First component: Signal(1) and Signal(2)
         # 
         self.ss_pdf = ROOT.RooProdPdf ( "S1S2pdf" + suffix ,
                                         "Sig(1) x Sig(2)"  ,
                                         self.signal1.pdf   ,
                                         self.signal2.pdf   )
+
+        from Ostap.FitBkgModels import makeBkg 
+        if bkg1 : self.bkg1 = makeBkg ( bkg1   , 'Bkg(1)' + suffix , self.m1 )
+        else    : self.bkg1 = makeBkg ( power1 , 'Bkg(1)' + suffix , self.m1 )
         
-        if bkg1 : self.bkg1 = bkg1
-        else    : self.bkg1 = Bkg_pdf ( 'Bkg(1)' + suffix , self.m1 , power1 )
         #
         ## Second component: Background(1) and Signal(2)
         # 
@@ -1275,8 +1269,10 @@ class Fit2D (object) :
                                         self.bkg1.pdf       ,
                                         self.signal2.pdf    )
         
-        if bkg2 : self.bkg2 = bkg2 
-        else    : self.bkg2 = Bkg_pdf ( 'Bkg(2)' + suffix , self.m2 , power2 )
+        from Ostap.FitBkgModels import makeBkg 
+        if bkg2 : self.bkg2 = makeBkg ( bkg2   , 'Bkg(2)' + suffix , self.m2 )
+        else    : self.bkg2 = makeBkg ( power2 , 'Bkg(2)' + suffix , self.m2 )
+        
         #
         ## Third component:  Signal(1) and Background(2)
         # 
@@ -1294,18 +1290,18 @@ class Fit2D (object) :
         # 
         if   bkg2D and isinstance ( bkg2D , ROOT.RooAbsPdf ) : self.bb_pdf = bkg2D 
         elif bkg2D and hasattr    ( bkg2D , 'pdf'          ) : self.bb_pdf = bkg2D.pdf
-        else     :
+        else     :            
             
-            if bkgA : self.bkgA = bkgA
-            else    : self.bkgA = Bkg_pdf ( 'Bkg(A)' + suffix , self.m1 , powerA )
-            if bkgB : self.bkgB = bkgB
-            else    : self.bkgB = Bkg_pdf ( 'Bkg(B)' + suffix , self.m2 , powerB )
+            from Ostap.FitBkgModels import makeBkg 
+            if bkgA : self.bkgA = makeBkg ( bkgA   , 'Bkg(A)' + suffix , self.m1 )
+            else    : self.bkgA = makeBkg ( powerA , 'Bkg(A)' + suffix , self.m1 )
+            if bkgB : self.bkgB = makeBkg ( bkgB   , 'Bkg(B)' + suffix , self.m2 )
+            else    : self.bkgB = makeBkg ( powerB , 'Bkg(B)' + suffix , self.m2 )
             
             self.bb_pdf = ROOT.RooProdPdf ( "B1B2pdf" + suffix ,
                                             "Bkg(A) x Bkg(B)"  ,
                                             self.bkgA.pdf      ,
                                             self.bkgB.pdf      )
-            
         #
         ## coefficients
         #

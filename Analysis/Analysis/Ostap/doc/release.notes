@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-04-19 - Vanya Belyaev
+ - improve treatment of background components for 1D and 2D-models. 
+
 ! 2015-04-01 - Vanya Belyaev
  - improve PDF adjustment, fix test 
 
