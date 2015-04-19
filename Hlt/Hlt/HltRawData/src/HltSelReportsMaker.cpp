@@ -1034,7 +1034,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle& o
           hos->addToSubstructure( store_( *pp->richPID() ) );
           debug() << "requesting RichPID store" << endmsg;
         }
-        if( m_Turbo && pp->muonPID() ) {
+        if( pp->muonPID() ) {
           hos->addToSubstructure( store_( *pp->muonPID() ) );
           debug() << "requesting MuonPID store" << endmsg;
         }

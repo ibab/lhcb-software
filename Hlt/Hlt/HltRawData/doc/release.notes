@@ -5,6 +5,9 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+! 2015-04-19 - Sean Benson
+ - isMuon in full.
+
 ! 2015-04-13 - Sean Benson
  - Accommodate PID variables in full stream.
 
