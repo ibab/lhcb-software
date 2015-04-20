@@ -3,8 +3,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+!========================= STTools v4r16 2015-04-20 =========================
 ! 2015-03-31 - Sascha Stahl
- - Added configuration of STOnlinePosition tool to STOfflineCOnf.py.
+ - Added configuration of STOnlinePosition tool to STOfflineConf.py.
 
 !========================= STTools v4r15 2013-10-01 =========================
 ! 2013-07-26 - Rob Lambert
