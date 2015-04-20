@@ -17,14 +17,15 @@ class Config:
   def __init__(self, top='.', credentials='example.db', have_archive=False):
     self.configured              = False
     self.top_working_directory   = top
+    self.avg_event_size          = 50*1024
     self.failed                  = 'Failed'
     self.done                    = 'Done'
     self.todo                    = 'ToDo'
+    self.daqarea_directory       = '/daqarea/lhcb/data/2015/RAW/FULL'
+    self.conditions_directory    = "/group/online/hlt/conditions/LHCb/2015"
     if have_archive:
       self.archive = Config(top+os.sep+'Archive')
-      self.daqarea_directory     = '/daqarea/lhcb/data/2015/RAW/FULL'
-      self.conditions_directory  = "/group/online/hlt/conditions/LHCb/2015"
-      self.running            = 'Running'
+      self.running               = 'Running'
       self.st_failed             = 'FAILED'
       self.st_todo               = 'TODO'
       self.st_done               = 'DONE'

@@ -5,36 +5,58 @@
         \version 1.0
 
 """
+import os
+VERBOSE         = 1
+DEBUG           = 2
+INFO            = 3
+WARNING         = 4
+ERROR           = 5
 
-DEBUG           = 1
-INFO            = 2
-WARNING         = 3
-ERROR           = 4
+minPrintLevel = INFO
+utgid = ''
+if os.environ.has_key('UTGID'): 
+  utgid = os.environ['UTGID']+': '
 
 # ------------------------------------------------------------------------------
 def log(level,msg):
   """
   
-  @author   M.Frank
-  @version  1.0
-  @date     30/06/2002
+  \author   M.Frank
+  \version  1.0
+  \date     30/06/2002
   """
-  if level == DEBUG:
-    print 'DEBUG  ',msg
+  import sys
+  f = sys.stdout
+  if level < minPrintLevel:
+    return
+  elif level == DEBUG:
+    print >>f, '%s[DEBUG]   %s'%(utgid,msg,)
   elif level == INFO:
-    print 'INFO   ',msg
+    print >>f, '%s[INFO ]   %s'%(utgid,msg,)
   elif level == WARNING:
-    print 'WARNING',msg
+    print >>f, '%s[WARNING] %s'%(utgid,msg,)
   elif level == ERROR:
-    print 'ERROR',msg
+    print >>f, '%s[ERROR]   %s'%(utgid,msg,)
+  f.flush()
+
+# ------------------------------------------------------------------------------
+def print_item(msg, r):
+  if type(r) is type({}):
+    for i in r.keys():
+      print_item(msg+'.'+str(i), r[i])
+  elif type(r) is type([]):
+    for i in xrange(len(r)):
+      print_item('  '+msg+' ['+str(i)+']',r[i])
+  else:
+    print '  '+msg+' : '+str(r)
 
 # ------------------------------------------------------------------------------
 def make_directory(nam):
   """
   
-  @author   M.Frank
-  @version  1.0
-  @date     30/06/2002
+  \author   M.Frank
+  \version  1.0
+  \date     30/06/2002
   """
   import os
   ##print 'make dir',nam
@@ -48,9 +70,9 @@ def make_directory(nam):
 def move_run_dir(runid, from_dir, to_dir):
   """
   
-  @author   M.Frank
-  @version  1.0
-  @date     30/06/2002
+  \author   M.Frank
+  \version  1.0
+  \date     30/06/2002
   """
   import os
   from_dir_entry = from_dir + os.sep + str(runid)
