@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-04-20 - Michel De Cian
+ - Activate RunII tracking sequence by 'DataType == 2015'
+
 ! 2015-04-19 - Michel De Cian
  - Invert logic for liteClusters and simplifiedGeometry in 'Configuration.py', such that they are the standard for Run2.
 

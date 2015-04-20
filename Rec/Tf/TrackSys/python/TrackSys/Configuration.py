@@ -92,12 +92,14 @@ class TrackSys(LHCbConfigurableUser):
           else:
               defaultPatRecAlgorithms = self.DefaultPatRecAlgorithms
               defaultGlobalCuts       = self.DefaultGlobalCuts
+          # for Run II we will use a different sequence
+          if "2015" == self.getProp("DataType"):
+              defaultPatRecAlgorithms = self.DefaultPatRecAlgorithmsRun2
+          
+          ##
           if "pA" in  self.getProp("SpecialData"):
               defaultGlobalCuts       = self.DefaultpAGlobalCuts
-
-          if "2015Dev" in self.getProp("SpecialData"):
-              defaultPatRecAlgorithms = self.DefaultPatRecAlgorithmsRun2
-
+          
           if len(self.getProp("TrackPatRecAlgorithms")) == 0 :
               self.setProp("TrackPatRecAlgorithms",defaultPatRecAlgorithms)
           if len(self.getProp("TrackExtraInfoAlgorithms")) == 0 :
@@ -186,14 +188,16 @@ class TrackSys(LHCbConfigurableUser):
             RecoUpgradeTracking.RecoUpgradeTracking()
         else:
             if self.getProp( "FilterBeforeFit" ):
-                if  "2015Dev" not in self.getProp("SpecialData"):
-                    from TrackSys import RecoTracking
-                    RecoTracking.RecoTracking()
-                else:
+                if  "2015" == self.getProp("DataType"):
                     from TrackSys import RecoTrackingRun2
                     # per default, run simplified geometry and use liteClusters
                     RecoTrackingRun2.RecoTrackingHLT1( simplifiedGeometryFit = not self.fullGeometryHLT1(), liteClustersFit = not self.fullClustersHLT1() )
                     RecoTrackingRun2.RecoTrackingHLT2( simplifiedGeometryFit = not self.fullGeometryHLT2(), liteClustersFit = not self.fullClustersHLT2() )
+                else:
+                    from TrackSys import RecoTracking
+                    RecoTracking.RecoTracking()
+                
+                   
                     
             else:
                 raise RuntimeError("'FilterBeforeFit' needs to be set...")
