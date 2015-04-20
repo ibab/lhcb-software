@@ -56,17 +56,24 @@ class DbException(Exception):
         if ( self.msg[-1] == '\n' ):
           self.msg = self.msg[:-1]
         return
+
   def __str__(self):
     return 'DatabaseException: '+self.msg
+
+
 
 class DbCore:
   """
       Database access class
       
-      @author  M.Frank
-      @version 1.0
+      \author  M.Frank
+      \version 1.0
   """
   def __init__(self,dbname):
+    self.text_t = self.__text
+    self.int_t  = self.__integer
+    self.float_t = self.__real
+    self.double_t = self.__real
     if type(dbname)==type(str()):
       self._name = dbname
       self._DB = self._db()
@@ -75,6 +82,17 @@ class DbCore:
       self._name = dbname._name
     self._cur = self._DB.cursor()
   
+  # Default data types (sqlite3)
+  def __text(self,len):                       return 'TEXT'
+  def __integer(self,precision=12):           return 'INTEGER';
+  def __real(self):                           return 'REAL'
+
+  # Oracle data types
+  def __text_oracle(self,max_len):            return 'VARCHAR2(%d)'%(max_len,)
+  def __integer_oracle(self,precision=12):    return 'NUMBER(%d)'%(precision,)
+  def __float_oracle(self):                   return 'BINARY_FLOAT'
+  def __double_oracle(self):                  return 'BINARY_DOUBLE'
+
   def _db(self):
     if self._name[0:5]=='odbc:':
       import odbc
@@ -83,18 +101,23 @@ class DbCore:
       import sqlite3
       return sqlite3.connect(self._name[7:])
     elif self._name[0:7]=='oracle:' and self._name.find('@')>0 and self._name.find('/')>0:
-      import cx_Oracle
       rest,password = self._name[7:].split('/')
       username,database = rest.split('@')
-      return cx_Oracle.Connection(username, password, database)
+      return self.__oracleConnection(username, password, database)
     elif self._name.find('@')>0 and self._name.find('/')>0:
       import cx_Oracle
       rest,password = self._name.split('/')
       username,database = rest.split('@')
-      return cx_Oracle.Connection(username, password, database)
-    else:
-      import cx_Oracle
-      return cx_Oracle.Connection(self._name)
+      return self.__oracleConnection(username, password, database)
+    return cx_Oracle.Connection(self._name)
+
+  def __oracleConnection(self,username, password, database):
+    import cx_Oracle
+    self.text_t   = self.__text_oracle
+    self.int_t    = self.__integer_oracle
+    self.float_t  = self.__float_oracle
+    self.double_t = self.__double_oracle
+    return cx_Oracle.Connection(username, password, database)
 
   def connection(self):
     return self._DB
