@@ -6,6 +6,23 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v16r5>2015-04-21 LbcomSys v16r5</A></H1><PRE>
+This version uses Gaudi v26r1 and LHCb v38r6 (and ROOT 6.02.05)
+
+- Packages modified: L0/L0MuonMonitor v2r4, Rich/RichTools v2r47, 
+    ST/STTools v4r16 
+
+- In L0/L0MuonMonitor v2r4
+  . L0MuonMuonComp : Fix to decode the proper muon banks for NZS and ZS Tae data
+
+- In Rich/RichTools v2r47
+  . Make some tools shared instances, to avoid unnecessary duplicates when
+    running the reconstruction with the split track groups.
+
+- In ST/STTools v4r16 
+  . Added configuration of STOnlinePosition tool to STOfflineConf.py.
+
+
 </PRE><H1><A NAME=v16r4>2015-02-24 LbcomSys v16r4</A></H1><PRE>
 This version uses Gaudi v26r1 and LHCb v38r5 (and ROOT 6.02.05)
 
