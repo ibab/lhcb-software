@@ -87,21 +87,20 @@ GeomEffCKMassRing::geomEfficiency ( LHCb::RichRecSegment * segment,
 
         int nDetect(0);
         const double pdInc = 1.0 / static_cast<double>(ring->nTotalPointSamples());
-        for ( LHCb::RichRecPointOnRing::Vector::const_iterator iP = points.begin();
-              iP != points.end(); ++iP )
+        for ( const auto& P : points )
         {
 
-          if ( (*iP).acceptance() == LHCb::RichRecPointOnRing::InHPDTube )
+          if ( P.acceptance() == LHCb::RichRecPointOnRing::InHPDTube )
           {
 
             // The HPD ID
-            const LHCb::RichSmartID hpdID = (*iP).smartID().pdID();
+            const LHCb::RichSmartID hpdID = P.smartID().pdID();
 
             if ( msgLevel(MSG::VERBOSE) )
             {
               verbose() << " -> photon was traced to detector at "
                         << hpdID << " "
-                        << (*iP).globalPosition()
+                        << P.globalPosition()
                         << endmsg;
             }
 
@@ -126,7 +125,7 @@ GeomEffCKMassRing::geomEfficiency ( LHCb::RichRecSegment * segment,
             }
 
             // flag regions where we expect hits for this segment
-            if ( (*iP).globalPosition().x() > 0 )
+            if ( P.globalPosition().x() > 0 )
             {
               segment->setPhotonsInXPlus(true);
             }
@@ -134,7 +133,7 @@ GeomEffCKMassRing::geomEfficiency ( LHCb::RichRecSegment * segment,
             {
               segment->setPhotonsInXMinus(true);
             }
-            if ( (*iP).globalPosition().y() > 0 )
+            if ( P.globalPosition().y() > 0 )
             {
               segment->setPhotonsInYPlus(true);
             }
@@ -161,10 +160,9 @@ GeomEffCKMassRing::geomEfficiency ( LHCb::RichRecSegment * segment,
     // store result
     if ( m_useFirstRingForAll )
     {
-      for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
-            hypo != m_pidTypes.end(); ++hypo )
+      for ( const auto& hypo : m_pidTypes )
       { 
-        segment->setGeomEfficiency( *hypo, (LHCb::RichRecSegment::FloatType)(eff) );
+        segment->setGeomEfficiency( hypo, (LHCb::RichRecSegment::FloatType)(eff) );
       }
     }
     else

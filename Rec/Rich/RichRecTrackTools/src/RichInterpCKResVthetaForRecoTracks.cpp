@@ -71,10 +71,7 @@ StatusCode InterpCKResVthetaForRecoTracks::initialize()
 StatusCode InterpCKResVthetaForRecoTracks::finalize()
 {
   // delete interpolators
-  for ( Interps::iterator i = m_ckRes.begin(); i != m_ckRes.end(); ++i )
-  {
-    delete i->second;
-  }
+  for ( auto& i : m_ckRes ) { delete i.second; }
 
   // Execute base class method
   return Rich::Rec::ToolBase::finalize();

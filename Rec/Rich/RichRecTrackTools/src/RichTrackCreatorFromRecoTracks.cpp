@@ -91,11 +91,7 @@ StatusCode TrackCreatorFromRecoTracks::newTracks() const
 
         // make rich tracks
         richTracks()->reserve( nInputTracks() );
-        for ( LHCb::Tracks::const_iterator track = tracks->begin();
-              track != tracks->end(); ++track )
-        {
-          newTrack( *track );
-        }
+        for ( const auto * track : *tracks ) { newTrack(track); }
 
         // Too many selected tracks ?
         if ( richTracks()->size() > m_maxSelTracks )
@@ -152,35 +148,32 @@ TrackCreatorFromRecoTracks::removeTracksByType( const Rich::Rec::Track::Type typ
   // First, select the tracks to remove
   typedef LHCb::RichRecTrack::Vector TracksToRemove;
   TracksToRemove toRemove;
-  for ( LHCb::RichRecTracks::const_iterator iT = richTracks()->begin();
-        iT != richTracks()->end(); ++iT )
+  for ( auto * T : *richTracks() )
   {
     // if correct type, add to list to remove
-    if ( (*iT)->trackID().trackType() == type ) toRemove.push_back(*iT);
+    if ( T->trackID().trackType() == type ) toRemove.push_back(T);
   }
 
   // loop over the selected tracks and remove them (taking care of stats and segments)
-  for ( TracksToRemove::const_iterator iT = toRemove.begin();
-        iT != toRemove.end(); ++iT )
+  for ( auto * T : toRemove )
   {
     // get stats object
-    TrackCount & tkCount = trackStats().trackStats(type,(*iT)->trackID().unique());
+    TrackCount & tkCount = trackStats().trackStats(type,T->trackID().unique());
 
     // decrement track count
     --(tkCount.selectedTracks);
 
     // Loop over segments for this track
-    for ( LHCb::RichRecTrack::Segments::const_iterator iSeg = (*iT)->richRecSegments().begin();
-          iSeg != (*iT)->richRecSegments().end(); ++iSeg )
+    for ( auto * S : T->richRecSegments() )
     {
       // decrement segment count
-      tkCount.uncountRadiator( (*iSeg)->trackSegment().radiator() );
+      tkCount.uncountRadiator( S->trackSegment().radiator() );
       // delete segment from main container
-      segmentCreator()->richSegments()->erase(*iSeg);
+      segmentCreator()->richSegments()->erase(S);
     }
 
     // delete the track
-    richTracks()->erase(*iT);
+    richTracks()->erase(T);
   }
 
   // add to ProcStat
@@ -317,27 +310,26 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
         newTrack->trackID().initialiseFor( trTrack );
 
         bool keepTrack = false;
-        for ( std::vector<LHCb::RichTrackSegment*>::iterator iSeg = segments.begin();
-              iSeg != segments.end(); ++iSeg )
+        for ( auto * S : segments )
         {
-          if ( !(*iSeg) ) continue;
+          if ( !S ) continue;
 
           if ( msgLevel(MSG::VERBOSE) )
-            verbose() << "  -> Testing " << (*iSeg)->radiator() << " segment" << endmsg;
+            verbose() << "  -> Testing " << S->radiator() << " segment" << endmsg;
 
           // make a new RichRecSegment from this RichTrackSegment
           // takes ownership of RichTrackSegment* *iSeg - responsible for deletion
-          LHCb::RichRecSegment * newSegment = segmentCreator()->newSegment( *iSeg, newTrack );
+          LHCb::RichRecSegment * newSegment = segmentCreator()->newSegment( S, newTrack );
 
           // Get PD panel impact point
-          if ( rayTraceHPDPanelPoints(**iSeg,newSegment) )
+          if ( rayTraceHPDPanelPoints(*S,newSegment) )
           {
             // test if this segment has valid information
             if ( m_signal->hasRichInfo(newSegment) )
             {
 
               if ( msgLevel(MSG::VERBOSE) )
-                verbose() << "   -> TrackSegment in " << (*iSeg)->radiator() << " selected" << endmsg;
+                verbose() << "   -> TrackSegment in " << S->radiator() << " selected" << endmsg;
 
               // keep track
               keepTrack = true;
@@ -349,13 +341,13 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
               newTrack->addToRichRecSegments( newSegment );
 
               // set radiator info
-              setDetInfo( newTrack, (*iSeg)->radiator() );
+              setDetInfo( newTrack, S->radiator() );
 
               // make RichRecRings for the mass hypotheses if requested
               if ( m_buildHypoRings ) m_massHypoRings->massHypoRings( newSegment );
 
               // Count radiator segments
-              tkCount.countRadiator( (*iSeg)->radiator() );
+              tkCount.countRadiator( S->radiator() );
 
             }
             else

@@ -160,17 +160,16 @@ void CherenkovAngle::computeRadii( LHCb::RichRecSegment * segment,
   const double rMax = satCKRingRadiusLocal( segment, nSamples );
 
   // Loop over all particle codes
-  for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
-        hypo != m_pidTypes.end(); ++hypo )
+  for ( const auto& hypo : m_pidTypes )
   {
 
     // Get CK theta
-    const double ckTheta = avgCherenkovTheta(segment,*hypo);
+    const double ckTheta = avgCherenkovTheta(segment,hypo);
 
     // Set the value
     const double nomCK = nominalSaturatedCherenkovTheta(segment->trackSegment().radiator());
     const float C = (LHCb::RichRecSegment::FloatType)(rMax*(ckTheta/nomCK));
-    segment->setAverageCKRadiusLocal( *hypo, C );
+    segment->setAverageCKRadiusLocal( hypo, C );
 
   }
 

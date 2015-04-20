@@ -212,15 +212,14 @@ constructSegments( const ContainedObject * obj,
   //RADIATOR_GLOBAL_POSITIONS_Y;
 
   // Loop over all radiators
-  for ( Radiators::const_iterator radiator = m_radiators.begin();
-        radiator != m_radiators.end(); ++radiator )
+  for ( const auto* radiator : m_radiators )
   {
 
     // is this radiator active ?
-    if ( ! *radiator ) continue; // Means not in use
+    if ( !radiator ) continue; // Means not in use
 
     // which radiator
-    const Rich::RadiatorType rad = (*radiator)->radiatorID();
+    const Rich::RadiatorType rad = radiator->radiatorID();
     _ri_verbo << " Considering radiator " << rad << endmsg;
 
     // choose appropriate z start position for initial track states for this radiator
@@ -373,7 +372,7 @@ constructSegments( const ContainedObject * obj,
     bool entryStateOK = false;
     if ( getNextInterPoint( entryPState->position(),
                             entryPState->slopes(),
-                            *radiator, entryPoint1 ) )
+                            radiator, entryPoint1 ) )
     {
       // extrapolate state to the correct z
       if ( moveState( *entryPState, *track, entryPoint1.z(), entryPStateRaw ) )
@@ -384,7 +383,7 @@ constructSegments( const ContainedObject * obj,
         {
           if ( getRadIntersections( entryPState->position(),
                                     entryPState->slopes(),
-                                    *radiator,
+                                    radiator,
                                     intersects1 ) > 0 )
           {
             entryStateOK = true;
@@ -408,7 +407,7 @@ constructSegments( const ContainedObject * obj,
     {
       if ( getNextInterPoint(  exitPState->position(),
                                -exitPState->slopes(),
-                               *radiator, entryPoint2 ) )
+                               radiator, entryPoint2 ) )
       {
         // extrapolate state to the correct z
         if ( moveState( *exitPState, *track, entryPoint2.z(), exitPStateRaw ) )
@@ -419,7 +418,7 @@ constructSegments( const ContainedObject * obj,
           {
             if ( getRadIntersections( exitPState->position(),
                                       exitPState->slopes(),
-                                      *radiator,
+                                      radiator,
                                       intersects2 ) > 0 )
             {
               exitStateOK = true;
@@ -631,7 +630,7 @@ constructSegments( const ContainedObject * obj,
     // check for intersection with spherical mirror for gas radiators
     // and if need be correct exit point accordingly
     //---------------------------------------------------------------------------------------------
-    if ( Rich::Aerogel != rad  ) correctRadExitMirror( *radiator, *track, 
+    if ( Rich::Aerogel != rad  ) correctRadExitMirror( radiator, *track, 
                                                        *exitPState, exitPStateRaw );
     //---------------------------------------------------------------------------------------------
 
@@ -758,7 +757,7 @@ constructSegments( const ContainedObject * obj,
           segments.push_back( new LHCb::RichTrackSegment( m_trSegType,
                                                           final_intersects,
                                                           midPoint,  midMomentum,
-                                                          rad, (*radiator)->rich(),
+                                                          rad, radiator->rich(),
                                                           entryErrs, midErrs, exitErrs ) );
         }
         else
@@ -767,7 +766,7 @@ constructSegments( const ContainedObject * obj,
           // this version uses 2 states and thus forces a straight line approximation
           segments.push_back( new LHCb::RichTrackSegment( m_trSegType,
                                                           final_intersects,
-                                                          rad, (*radiator)->rich(),
+                                                          rad, radiator->rich(),
                                                           entryErrs, exitErrs ) );
         }
 
@@ -779,7 +778,7 @@ constructSegments( const ContainedObject * obj,
         // this version uses 2 states and thus forces a straight line approximation
         segments.push_back( new LHCb::RichTrackSegment( m_trSegType,
                                                         final_intersects,
-                                                        rad, (*radiator)->rich(),
+                                                        rad, radiator->rich(),
                                                         entryErrs, exitErrs ) );
 
       }

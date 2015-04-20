@@ -62,8 +62,8 @@ FunctionalCKResForRecoTracks ( const std::string& type,
 
   declareProperty( "HPDErrors",           m_hpdErr = { 0.0005, 0.0006, 0.0002 } );
   declareProperty( "MaxCKThetaRes",       m_maxRes = { 0.003,  0.0025, 0.001  } );
-  declareProperty( "UseLastMeasPoint", m_useLastMP = { false, false, false } );
-  declareProperty( "ScaleFactor",          m_scale = { 1.0,   1.0,   1.0   } );
+  declareProperty( "UseLastMeasPoint", m_useLastMP = { false,  false,  false  } );
+  declareProperty( "ScaleFactor",          m_scale = { 1.0,    1.0,    1.0    } );
 
   declareProperty( "RichGrandPmtPixelSizeFactor" , m_grandPmtPixelSizeFactor = 2.1 );
 
@@ -178,10 +178,13 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
           effectiveLength = transSvc()->distanceInRadUnits( tkSeg.entryPoint(),
                                                             tkSeg.exitPoint(), 
                                                             0, altGeom() );
-          // info() << "RadUnitsTest : " << rad << " : Fast=" 
-          //        << effectiveLength << " Full=" << transSvc()->distanceInRadUnits( tkSeg.entryPoint(),
-          //                                                                          tkSeg.exitPoint() ) << endmsg;
         }
+
+        // info() << rad 
+        //        << " : Full " << transSvc()->distanceInRadUnits( tkSeg.entryPoint(), tkSeg.exitPoint(), 0, NULL )
+        //        << " : Simp " << transSvc()->distanceInRadUnits( tkSeg.entryPoint(), tkSeg.exitPoint(), 0, altGeom() )
+        //        << endmsg;
+
         if ( effectiveLength > 0 )
         {
           const double multScattCoeff = ( m_scatt * std::sqrt(effectiveLength) *
@@ -214,13 +217,12 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
       //-------------------------------------------------------------------------------
 
       // Fill all mass hypos in one go, to save cpu (transport service slow)
-      for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
-            hypo != m_pidTypes.end(); ++hypo )
+      for ( const auto& hypo : m_pidTypes )
       {
         double hypo_res2 = res2;
 
         // Expected Cherenkov theta angle
-        const double ckExp = m_ckAngle->avgCherenkovTheta( segment, *hypo );
+        const double ckExp = m_ckAngle->avgCherenkovTheta( segment, hypo );
         if ( ckExp > 1e-6 )
         {
           // cache tan(cktheta)
@@ -239,7 +241,7 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
           //-------------------------------------------------------------------------------
           // momentum error
           //-------------------------------------------------------------------------------
-          const double mass2      = m_richPartProp->massSq(*hypo)/(GeV*GeV);
+          const double mass2      = m_richPartProp->massSq(hypo)/(GeV*GeV);
           const double massFactor = mass2 / ( mass2 + ptot*ptot );
           const double momErr     = ( tkSeg.entryErrors().errP2()/(GeV*GeV) *
                                       gsl_pow_2( massFactor / ptot / tanCkExp ) );
@@ -262,60 +264,60 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
             MIN_CKTHETA_RAD;
             const std::string tkT = Rich::text(tkType);
             // Versus CK theta
-            profile1D( ckExp, std::sqrt(asymptotErr), hid(rad,*hypo,tkT+"/asymErrVc"),
+            profile1D( ckExp, std::sqrt(asymptotErr), hid(rad,hypo,tkT+"/asymErrVc"),
                        "Asymptotic CK theta error V CK theta",
                        minCkTheta[rad], maxCkTheta[rad], nBins1D() );
-            profile1D( ckExp, std::sqrt(hpdErr), hid(rad,*hypo,tkT+"/hpdErrVc"),
+            profile1D( ckExp, std::sqrt(hpdErr), hid(rad,hypo,tkT+"/hpdErrVc"),
                        "HPD CK theta error V CK theta",
                        minCkTheta[rad], maxCkTheta[rad], nBins1D() );
-            profile1D( ckExp, std::sqrt(chromatErr), hid(rad,*hypo,tkT+"/chroErrVc"),
+            profile1D( ckExp, std::sqrt(chromatErr), hid(rad,hypo,tkT+"/chroErrVc"),
                        "Chromatic CK theta error V CK theta",
                        minCkTheta[rad], maxCkTheta[rad], nBins1D() );
-            profile1D( ckExp, std::sqrt(scattErr), hid(rad,*hypo,tkT+"/scatErrVc"),
+            profile1D( ckExp, std::sqrt(scattErr), hid(rad,hypo,tkT+"/scatErrVc"),
                        "Scattering CK theta error V CK theta",
                        minCkTheta[rad], maxCkTheta[rad], nBins1D() );
-            profile1D( ckExp, std::sqrt(curvErr), hid(rad,*hypo,tkT+"/curvErrVc"),
+            profile1D( ckExp, std::sqrt(curvErr), hid(rad,hypo,tkT+"/curvErrVc"),
                        "Curvature CK theta error V CK theta",
                        minCkTheta[rad], maxCkTheta[rad], nBins1D() );
-            profile1D( ckExp, std::sqrt(dirErr), hid(rad,*hypo,tkT+"/dirErrVc"),
+            profile1D( ckExp, std::sqrt(dirErr), hid(rad,hypo,tkT+"/dirErrVc"),
                        "Track direction CK theta error V CK theta",
                        minCkTheta[rad], maxCkTheta[rad], nBins1D() );
-            profile1D( ckExp, std::sqrt(momErr), hid(rad,*hypo,tkT+"/momErrVc"),
+            profile1D( ckExp, std::sqrt(momErr), hid(rad,hypo,tkT+"/momErrVc"),
                        "Track momentum CK theta error V CK theta",
                        minCkTheta[rad], maxCkTheta[rad], nBins1D() );
-            profile1D( ckExp, std::sqrt(hypo_res2), hid(rad,*hypo,tkT+"/overallErrVc"),
+            profile1D( ckExp, std::sqrt(hypo_res2), hid(rad,hypo,tkT+"/overallErrVc"),
                        "Overall CK theta error V CK theta",
                        minCkTheta[rad], maxCkTheta[rad], nBins1D() );
             // Versus momentum
-            profile1D( ptot, std::sqrt(asymptotErr), hid(rad,*hypo,tkT+"/asymErrVp"),
+            profile1D( ptot, std::sqrt(asymptotErr), hid(rad,hypo,tkT+"/asymErrVp"),
                        "Asymptotic CK theta error V momentum",
                        0, 100, nBins1D() );
-            profile1D( ptot, std::sqrt(hpdErr), hid(rad,*hypo,tkT+"/hpdErrVp"),
+            profile1D( ptot, std::sqrt(hpdErr), hid(rad,hypo,tkT+"/hpdErrVp"),
                        "HPD CK theta error V momentum",
                        0, 100, nBins1D() );
-            profile1D( ptot, std::sqrt(chromatErr), hid(rad,*hypo,tkT+"/chroErrVp"),
+            profile1D( ptot, std::sqrt(chromatErr), hid(rad,hypo,tkT+"/chroErrVp"),
                        "Chromatic CK theta error V momentum",
                        0, 100, nBins1D() );
-            profile1D( ptot, std::sqrt(scattErr), hid(rad,*hypo,tkT+"/scatErrVp"),
+            profile1D( ptot, std::sqrt(scattErr), hid(rad,hypo,tkT+"/scatErrVp"),
                        "Scattering CK theta error V momentum",
                        0, 100, nBins1D() );
-            profile1D( ptot, std::sqrt(curvErr), hid(rad,*hypo,tkT+"/curvErrVp"),
+            profile1D( ptot, std::sqrt(curvErr), hid(rad,hypo,tkT+"/curvErrVp"),
                        "Curvature CK theta error V momentum",
                        0, 100, nBins1D() );
-            profile1D( ptot, std::sqrt(dirErr), hid(rad,*hypo,tkT+"/dirErrVp"),
+            profile1D( ptot, std::sqrt(dirErr), hid(rad,hypo,tkT+"/dirErrVp"),
                        "Track direction CK theta error V momentum",
                        0, 100, nBins1D() );
-            profile1D( ptot, std::sqrt(momErr), hid(rad,*hypo,tkT+"/momErrVp"),
+            profile1D( ptot, std::sqrt(momErr), hid(rad,hypo,tkT+"/momErrVp"),
                        "Track momentum CK theta error V momentum",
                        0, 100, nBins1D() );
-            profile1D( ptot, std::sqrt(hypo_res2), hid(rad,*hypo,tkT+"/overallErrVp"),
+            profile1D( ptot, std::sqrt(hypo_res2), hid(rad,hypo,tkT+"/overallErrVp"),
                        "Overall CK theta error V momentum",
                        0, 100, nBins1D() );
           } // do histos
 
           if ( msgLevel(MSG::DEBUG) )
           {
-            debug() << "Track " << segment->richRecTrack()->key() << " " << rad << " " << *hypo
+            debug() << "Track " << segment->richRecTrack()->key() << " " << rad << " " << hypo
                     << " : ptot " << ptot << " ckExp " << ckExp << endmsg;
             debug() << "  Rad length " << effectiveLength << endmsg;
             debug() << "  Asmy " << asymptotErr << " chro " << chromatErr << " scatt "
@@ -332,11 +334,11 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
         if ( ckRes > m_maxRes[rad] ) ckRes = m_maxRes[rad];
 
         // Save final resolution value
-        segment->setCKThetaResolution( *hypo, ckRes );
+        segment->setCKThetaResolution( hypo, ckRes );
         if ( msgLevel(MSG::VERBOSE) )
         {
           verbose() << "Segment " << segment->key() << " : "
-                    << *hypo << " ckRes " << ckRes << endmsg;
+                    << hypo << " ckRes " << ckRes << endmsg;
         }
 
       } // loop over mass hypos
@@ -363,19 +365,20 @@ FunctionalCKResForRecoTracks::findLastMeasuredPoint( LHCb::RichRecSegment * segm
   // get z position of last measurement before start of track segment
   // a better search could perhaps be used here ?
   const LHCb::Node * lastMeas = NULL;
-  const LHCb::Track::ConstNodeRange nodes = tr->nodes() ;
-  for ( LHCb::Track::ConstNodeRange::const_iterator iM = nodes.begin();
-        iM != nodes.end(); ++iM )
-    if( (*iM)->type() == LHCb::Node::HitOnTrack ) {
-      if      ( (*iM)->z() < tkSeg.entryPoint().z() ) { lastMeas = *iM; }
-      else if ( (*iM)->z() > tkSeg.entryPoint().z() ) { break;          }
+  for ( const auto& node : tr->nodes() )
+  {
+    if ( node->type() == LHCb::Node::HitOnTrack ) 
+    {
+      if   ( node->z() < tkSeg.entryPoint().z() ) { lastMeas = node; }
+      else                                        { break;           }
     }
-  if ( !lastMeas ) return false;
+  }
 
   // get the track position at this z
-  trackExtrap()->position( *tr, lastMeas->z(), point );
+  if ( lastMeas ) { trackExtrap()->position( *tr, lastMeas->z(), point ); }
 
-  return true;
+  // return status
+  return ( NULL != lastMeas );
 }
 
 // CRJ - Horrible method that needs to go away sometime...
@@ -383,7 +386,7 @@ StatusCode FunctionalCKResForRecoTracks::setUseOfPmtFlags()
 {
   StatusCode sc = StatusCode::SUCCESS;
 
-  /// CRJ : THis needs to be cleaned up once the Upgrade geometery is decided ...
+  /// CRJ : This needs to be cleaned up once the Upgrade geometery is decided ...
 
   m_useOfGrandPixPmt = false;
   m_rich2UseMixedPmt = false;
@@ -440,7 +443,6 @@ StatusCode FunctionalCKResForRecoTracks::setUseOfPmtFlags()
         }
         m_scale[0] = ascaleUpgradeOpticsR1Pmt[0];
         m_scale[1] = ascaleUpgradeOpticsR1Pmt[1];
-
       }
 
       if ( m_rich1DE->exists("Rich2BrunelPidResScaleFactorParamUpgradeOpticsPmt") ) 

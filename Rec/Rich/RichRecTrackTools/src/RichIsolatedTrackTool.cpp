@@ -39,31 +39,25 @@ IsolatedTrackTool::IsolatedTrackTool( const std::string& type,
   // Define interface for this tool
   declareInterface<IIsolatedTrack>(this);
 
-#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
-#define  init_vect(A, B, C) {A, B, C}
-#else
-  using namespace boost::assign;
-#define  init_vect(A, B, C) list_of(A)(B)(C)
-#endif
   //Default cut values.  Can change in options file.
 
-  //                                                                       Aero    C4F10   CF4
-  declareProperty( "SizeMomCut", m_sizemomcut                 = init_vect( 5     , 10    , 20      ));
-  declareProperty( "SizeGeoCut", m_sizegeocut                 = init_vect( 0.3   , 0.3   , 0.3     )); // geometric efficiency
-  declareProperty( "SizeSepCut", m_sizesepcut                 = init_vect( 260   , 150   , 260     )); // track hit point separation
-  declareProperty( "SizeXposnCut", m_sizeXexit                = init_vect( 0     , 0     , 100     )); // RICH X discontinuity
-  declareProperty( "SizeYposnCut", m_sizeYexit                = init_vect( 50    , 50    , 0       )); // RICH Y discontinuity
-  declareProperty( "SizePhotonAssocCut", m_sizephotonassoccut = init_vect( 0.8   , 0.8   , 0.8     )); // min fraction not assoc with another track
-  declareProperty( "SizeRingWidth", m_sizeringwidth           = init_vect( 0.01  , 0.01  , 0.00944 )); // theta band width
-  declareProperty( "SizePhiCut",    m_sizephicut              = init_vect( 0.2125, 0.2125, 0.2125  )); // max fraction of photons in one phi region
-  declareProperty( "SizeHitRegionCut", m_sizehitregioncut     = init_vect( 0.8   , 0.8   , 0.8     )); // min fraction of photons lying in theta band
-  declareProperty( "MaxTrackROI", m_maxROI                    = init_vect( 390   , 86    , 200     )); // Pixel hit regions
-  declareProperty( "CKthetaMax", m_ckThetaMax                 = init_vect( 0.24  , 0.052 , 0.03    ));
-  declareProperty( "SepGMax", m_sepGMax                       = init_vect( 342   , 75    , 130     ));
-  declareProperty( "NPhiRegions", m_nPhiRegions               = init_vect( 8     , 8     , 8       )); // Number of phi regions
-  declareProperty( "MinSegPhotons", m_minSegPhotons           = init_vect( 2     , 2     , 2       ));
+  //                                                              Aero    C4F10   CF4
+  declareProperty( "SizeMomCut", m_sizemomcut                 = { 5     , 10    , 20      } );
+  declareProperty( "SizeGeoCut", m_sizegeocut                 = { 0.3   , 0.3   , 0.3     } ); // geometric efficiency
+  declareProperty( "SizeSepCut", m_sizesepcut                 = { 260   , 150   , 260     } ); // track hit point separation
+  declareProperty( "SizeXposnCut", m_sizeXexit                = { 0     , 0     , 100     } ); // RICH X discontinuity
+  declareProperty( "SizeYposnCut", m_sizeYexit                = { 50    , 50    , 0       } ); // RICH Y discontinuity
+  declareProperty( "SizePhotonAssocCut", m_sizephotonassoccut = { 0.8   , 0.8   , 0.8     } ); // min fraction not assoc with another track
+  declareProperty( "SizeRingWidth", m_sizeringwidth           = { 0.01  , 0.01  , 0.00944 } ); // theta band width
+  declareProperty( "SizePhiCut",    m_sizephicut              = { 0.2125, 0.2125, 0.2125  } ); // max fraction of photons in one phi region
+  declareProperty( "SizeHitRegionCut", m_sizehitregioncut     = { 0.8   , 0.8   , 0.8     } ); // min fraction of photons lying in theta band
+  declareProperty( "MaxTrackROI", m_maxROI                    = { 390   , 86    , 200     } ); // Pixel hit regions
+  declareProperty( "CKthetaMax", m_ckThetaMax                 = { 0.24  , 0.052 , 0.03    } );
+  declareProperty( "SepGMax", m_sepGMax                       = { 342   , 75    , 130     } );
+  declareProperty( "NPhiRegions", m_nPhiRegions               = { 8     , 8     , 8       } ); // Number of phi regions
+  declareProperty( "MinSegPhotons", m_minSegPhotons           = { 2     , 2     , 2       } );
   declareProperty( "AbortEarly", m_abortEarly = true );
-#undef init_vect
+
   setProperty( "UseEfficiencyRowFormat", true );
 }
 
@@ -98,10 +92,9 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecTrack * track,
                                     const Rich::ParticleIDType pid ) const
 {
   if ( !track ) return false;
-  for ( LHCb::RichRecTrack::Segments::const_iterator iS = track->richRecSegments().begin();
-        iS != track->richRecSegments().end(); ++iS )
+  for ( const auto * S : track->richRecSegments() )
   {
-    if ( isIsolated(*iS,pid) ) return true;
+    if ( isIsolated(S,pid) ) return true;
   }
   return false;
 }
@@ -109,10 +102,9 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecTrack * track,
 bool IsolatedTrackTool::isIsolated( const LHCb::RichRecTrack * track ) const
 {
   if ( !track ) return false;
-  for ( LHCb::RichRecTrack::Segments::const_iterator iS = track->richRecSegments().begin();
-        iS != track->richRecSegments().end(); ++iS )
+  for ( const auto * S : track->richRecSegments() )
   {
-    if ( isIsolated(*iS) ) return true;
+    if ( isIsolated(S) ) return true;
   }
   return false;
 }
@@ -194,11 +186,8 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
 
   // Loop over all segments to compare ring centre for the chosen segment with all others
   bool OK(true);
-  for ( RichRecSegments::const_iterator iSeg2 = richSegments()->begin();
-        iSeg2 != richSegments()->end(); ++iSeg2 )
+  for ( const auto * segment2 : *richSegments() )
   {
-    const RichRecSegment * segment2 = *iSeg2;
-    
     if ( segment == segment2 ) continue; // check not comparing the segment with itself
 
     // The radiator type.  Must be same as main segment
@@ -235,11 +224,8 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
   const double ringmax = avtheta+m_sizeringwidth[rad];
 
   //Loop over all hit pixels
-  for ( IPixelCreator::PixelRange::const_iterator iPixel = range.begin();
-        iPixel != range.end(); ++iPixel )
+  for ( const auto * pixel : range )
   {
-    RichRecPixel * pixel = *iPixel; // hit pixel
-
     const double sepsq = m_geomTool->trackPixelHitSep2(segment,pixel);//square of sep of pixel from track centre
     const double sep   = std::sqrt(sepsq);
 
@@ -270,12 +256,8 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
   std::vector<int> regTally(m_nPhiRegions[rad],0);
 
   // Loop over photons, calculations
-  for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = segment->richRecPhotons().begin();
-        iPhot != segment->richRecPhotons().end(); ++iPhot )
+  for ( const auto * photon : segment->richRecPhotons() )
   {
-
-    LHCb::RichRecPhoton * photon = *iPhot;
-
     ++photontotal; //counting total photons associated with this segment
 
     // Which CK phi region
@@ -309,10 +291,9 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
 
   // How many lie in each phi region?
   bool photonregionindicator = true;
-  for ( std::vector<int>::const_iterator iRegion = regTally.begin();
-        iRegion != regTally.end(); ++iRegion )
+  for ( const auto& region : regTally )
   {
-    if ( (double)(*iRegion)/(double)photontotal > m_sizephicut[rad] )
+    if ( (double)region / (double)photontotal > m_sizephicut[rad] )
     {
       photonregionindicator = false;
     }

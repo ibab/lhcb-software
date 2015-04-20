@@ -51,12 +51,11 @@ StatusCode DelegatedTrackCreatorFromRecoTracks::initialize()
 
   // setup mapping between track type and tool pointer
   Rich::Map< std::string, const ITrackCreator * > tmpMap;
-  for ( ToolList::iterator it = m_names.begin();
-        it != m_names.end(); ++it )
+  for ( const auto& n : m_names )
   {
-    const int slash = (*it).find_first_of( "/" );
-    const std::string trackType = ( slash>0 ? (*it).substr(0,slash) : *it );
-    const std::string toolType  = ( slash>0 ? (*it).substr(slash+1) : *it );
+    const int slash = n.find_first_of( "/" );
+    const std::string trackType = ( slash>0 ? n.substr(0,slash) : n );
+    const std::string toolType  = ( slash>0 ? n.substr(slash+1) : n );
     info() << "Track type '" << trackType
            << "' will use RichTrackCreator '" << toolType << "'" << endmsg;
     const Rich::Rec::Track::Type tkType = Rich::Rec::Track::type(trackType);
@@ -98,9 +97,7 @@ StatusCode DelegatedTrackCreatorFromRecoTracks::newTracks() const
 
     // Iterate over all reco tracks, and create new RichRecTracks
     richTracks()->reserve( recoTracks()->size() );
-    for ( LHCb::Tracks::const_iterator track = recoTracks()->begin();
-          track != recoTracks()->end();
-          ++track) { newTrack( *track ); } // Make new RichRecTrack
+    for ( const auto * track : *recoTracks() ) { newTrack(track); }
 
   }
 

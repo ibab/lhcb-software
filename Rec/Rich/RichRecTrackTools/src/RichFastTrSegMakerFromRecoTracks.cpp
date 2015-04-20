@@ -201,13 +201,13 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
   segments.clear();
 
   // Loop over all radiators
-  for ( Radiators::const_iterator rad = m_rads.begin(); rad != m_rads.end(); ++rad )
+  for ( const auto& rad : m_rads )
   {
-    if ( msgLevel(MSG::VERBOSE) ) verbose() << " Considering radiator " << *rad << endmsg;
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << " Considering radiator " << rad << endmsg;
 
     // Get the best state information for this track and radiator
     std::vector<const LHCb::State*> states(2);
-    if ( !stateInfo( track, *rad, states ) ) continue;
+    if ( !stateInfo( track, rad, states ) ) continue;
 
     // Create entry momentum vector
     Gaudi::XYZVector entryVect( states[0]->slopes() );
@@ -217,7 +217,7 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
     Gaudi::XYZPoint entryPoint;
     if ( !m_rayTracing->intersectPlane( states[0]->position(),
                                         entryVect,
-                                        m_entryPlanes[*rad],
+                                        m_entryPlanes[rad],
                                         entryPoint ) )
     {
       if ( msgLevel(MSG::VERBOSE) ) verbose() << "   Failed to intersect entry plane" << endmsg;
@@ -229,10 +229,10 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
         verbose() << "     Entry point intersection :- " << endmsg
                   << "      Pos " << entryPoint << endmsg
                   << "      Dir " << entryVect << endmsg;
-      if ( !checkBoundaries(entryPoint,*rad) )
+      if ( !checkBoundaries(entryPoint,rad) )
       {
         if ( msgLevel(MSG::VERBOSE) )
-          verbose() << "     Entry point failed boundary checks for " << *rad << endmsg;
+          verbose() << "     Entry point failed boundary checks for " << rad << endmsg;
         continue;
       }
     }
@@ -245,7 +245,7 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
     Gaudi::XYZPoint exitPoint;
     if ( !m_rayTracing->intersectPlane( states[1]->position(),
                                         exitVect,
-                                        m_exitPlanes[*rad],
+                                        m_exitPlanes[rad],
                                         exitPoint ) )
     {
       if ( msgLevel(MSG::VERBOSE) ) verbose() << "   Failed to intersect exit plane" << endmsg;
@@ -257,23 +257,23 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
         verbose() << "     Exit point intersection :- " << endmsg
                   << "      Pos " << exitPoint << endmsg
                   << "      Dir " << exitVect << endmsg;
-      if ( !checkBoundaries(exitPoint,*rad) )
+      if ( !checkBoundaries(exitPoint,rad) )
       {
         if ( msgLevel(MSG::VERBOSE) )
-          verbose() << "     Exit point failed boundary checks for " << *rad << endmsg;
+          verbose() << "     Exit point failed boundary checks for " << rad << endmsg;
         continue;
       }
     }
 
     //---------------------------------------------------------------------------------------------
     // Correction for beam pipe intersections
-    if ( checkBeamPipe(*rad) )
+    if ( checkBeamPipe(rad) )
     {
       // Get intersections with beam pipe using DeRich object
       const Gaudi::XYZVector vect = exitPoint - entryPoint;
       Gaudi::XYZPoint inter1, inter2;
       const DeRichBeamPipe::BeamPipeIntersectionType intType
-        = deBeam(*rad)->intersectionPoints( entryPoint, vect, inter1, inter2 );
+        = deBeam(rad)->intersectionPoints( entryPoint, vect, inter1, inter2 );
 
       if (msgLevel(MSG::VERBOSE))
         verbose() << "  --> Beam Intersects : " << intType << " : " << inter1 << " " << inter2 << endmsg;
@@ -309,7 +309,7 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
     // Printout the found entry/exit points
     if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << "  Final States for " << *rad << " are :-" << endmsg
+      verbose() << "  Final States for " << rad << " are :-" << endmsg
                 << "   Entry Point    : " << entryPoint << endmsg
                 << "   Exit Point     : " << exitPoint << endmsg
                 << "   Entry Momentum : " << entryVect << endmsg
@@ -319,13 +319,13 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
     // Final sanity check that all is OK with the states
     if ( (entryPoint.z() > exitPoint.z()) )
     {
-      Warning( "Entry state after exist state for " + Rich::text(*rad) + "  -> rejecting segment",
+      Warning( "Entry state after exist state for " + Rich::text(rad) + "  -> rejecting segment",
                StatusCode::SUCCESS, 5 ).ignore();
       continue;
     }
-    if ( (exitPoint.z()-entryPoint.z()) < m_minStateDiff[*rad] )
+    if ( (exitPoint.z()-entryPoint.z()) < m_minStateDiff[rad] )
     {
-      Warning( "Track states for " + Rich::text(*rad) + " too close in z -> rejecting segment",
+      Warning( "Track states for " + Rich::text(rad) + " too close in z -> rejecting segment",
                StatusCode::SUCCESS, 5 ).ignore();
       continue;
     }
@@ -334,7 +334,7 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
     {
 
       // Which RICH
-      const Rich::DetectorType rich = ( Rich::Rich2Gas == *rad ? Rich::Rich2 : Rich::Rich1 );
+      const Rich::DetectorType rich = ( Rich::Rich2Gas == rad ? Rich::Rich2 : Rich::Rich1 );
 
       // input state errors
       const LHCb::RichTrackSegment::StateErrors inErrs( states[0]->errX2(),
@@ -353,13 +353,13 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
       Rich::RadIntersection::Vector intersects;
       intersects.push_back( Rich::RadIntersection( entryPoint, entryVect,
                                                    exitPoint, entryVect, // seems best to always use entry momentum !!
-                                                   m_deRads[*rad] ) );
+                                                   m_deRads[rad] ) );
 
       // Using this information, make radiator segment
       // this version uses 2 states and thus forces a straight line approximation
       segments.push_back( new LHCb::RichTrackSegment( m_trSegType,
                                                       intersects,
-                                                      *rad, rich,
+                                                      rad, rich,
                                                       inErrs, outErrs ) );
 
     }
@@ -368,7 +368,7 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
       Warning( "Exception whilst creating RichTrackSegment '"+std::string(excpt.what())+"'" ).ignore();
     }
 
-  }
+  } // loop over radiators
 
   // return value is number of segments formed
   return segments.size();
@@ -449,12 +449,11 @@ FastTrSegMakerFromRecoTracks::stateAt( const LHCb::Track * track,
                                        const Rich::RadiatorType rad ) const
 {
   // First, set found state to NULL
-  const LHCb::State * pS = 0;
+  const LHCb::State * pS = NULL;
   // search for best state
-  for ( std::vector<LHCb::State*>::const_iterator iS = track->states().begin();
-        iS != track->states().end(); ++iS )
+  for ( const auto* S : track->states() )
   {
-    if ( fabs( (*iS)->z() - m_nomZstates[rad]) < m_zTolerance[rad] ) { pS = (*iS); break; }
+    if ( fabs( S->z() - m_nomZstates[rad]) < m_zTolerance[rad] ) { pS = S; break; }
   }
   return pS;
 }

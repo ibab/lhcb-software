@@ -532,11 +532,10 @@ ExpectedTrackSignal::hasRichInfo( LHCb::RichRecSegment * segment ) const
       if ( hasInfo )
       {
         hasInfo = false;
-        for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
-              hypo != m_pidTypes.end(); ++hypo )
+        for ( const auto& hypo : m_pidTypes )
         {
           if ( m_minPhotonsPerRad[segment->trackSegment().radiator()] <
-               nObservableSignalPhotons(segment,*hypo) )
+               nObservableSignalPhotons(segment,hypo) )
           {
             hasInfo = true; break;
           }
@@ -562,12 +561,9 @@ ExpectedTrackSignal::hasRichInfo( LHCb::RichRecSegment * segment ) const
 bool
 ExpectedTrackSignal::hasRichInfo( LHCb::RichRecTrack * track ) const
 {
-  for ( LHCb::RichRecTrack::Segments::iterator segment =
-          track->richRecSegments().begin();
-        segment != track->richRecSegments().end();
-        ++segment )
+  for ( auto* S : track->richRecSegments() )
   {
-    if ( hasRichInfo(*segment) ) return true;
+    if ( hasRichInfo(S) ) return true;
   }
   return false;
 }
@@ -614,10 +610,9 @@ ExpectedTrackSignal::aboveThreshold( LHCb::RichRecTrack * track,
   if ( type == Rich::BelowThreshold ) return false;
 
   // loop over segments
-  for ( LHCb::RichRecTrack::Segments::iterator segment = track->richRecSegments().begin();
-        segment != track->richRecSegments().end(); ++segment )
+  for ( auto * S : track->richRecSegments() )
   {
-    if ( aboveThreshold( *segment, type ) ) return true;
+    if ( aboveThreshold( S, type ) ) return true;
   }
   return false;
 }
@@ -631,12 +626,11 @@ ExpectedTrackSignal::aboveThreshold( LHCb::RichRecTrack * track,
   if ( type == Rich::BelowThreshold ) return false;
 
   // loop over segments
-  for ( LHCb::RichRecTrack::Segments::iterator segment = track->richRecSegments().begin();
-        segment != track->richRecSegments().end(); ++segment )
+  for ( auto * S : track->richRecSegments() )
   {
-    if ( radiator == (*segment)->trackSegment().radiator() )
+    if ( radiator == S->trackSegment().radiator() )
     {
-      if ( aboveThreshold( *segment, type ) ) return true;
+      if ( aboveThreshold( S, type ) ) return true;
     }
   }
   return false;
@@ -659,12 +653,11 @@ ExpectedTrackSignal::setThresholdInfo( LHCb::RichRecTrack * track,
   pid->setPionHypoAboveThres(false);
   pid->setKaonHypoAboveThres(false);
   pid->setProtonHypoAboveThres(false);
-  for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
-        hypo != m_pidTypes.end(); ++hypo )
+  for ( const auto& hypo : m_pidTypes )
   {
     if ( msgLevel(MSG::DEBUG) )
-      debug() << " -> Trying " << *hypo << endmsg;
-    pid->setAboveThreshold(*hypo,aboveThreshold(track,*hypo));
+      debug() << " -> Trying " << hypo << endmsg;
+    pid->setAboveThreshold(hypo,aboveThreshold(track,hypo));
   }
 }
 
@@ -678,9 +671,8 @@ ExpectedTrackSignal::setThresholdInfo( LHCb::RichRecSegment * segment,
   pid->setPionHypoAboveThres(false);
   pid->setKaonHypoAboveThres(false);
   pid->setProtonHypoAboveThres(false);
-  for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
-        hypo != m_pidTypes.end(); ++hypo )
+  for ( const auto& hypo : m_pidTypes )
   {
-    pid->setAboveThreshold(*hypo,aboveThreshold(segment,*hypo));
+    pid->setAboveThreshold(hypo,aboveThreshold(segment,hypo));
   }
 }
