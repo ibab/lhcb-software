@@ -79,13 +79,13 @@ class TurboOnly( object ):
         """
         hlt2 = [
 	        'Hlt2PassThrough', 'Hlt2Lumi','Hlt2DebugEvent','Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent', # technical lines
-                'Hlt2CharmHadDpm2KPiPi_XSecTurbo',
-                'Hlt2CharmHadDpm2KKPi_XSecTurbo',
-                'Hlt2CharmHadDs2KKPi_XSecTurbo',
-                'Hlt2CharmHadDs2PiPiPi_XSecTurbo',
-                'Hlt2CharmHadLc2KPPi_XSecTurbo',
-                'Hlt2CharmHadLc2PiPPi_XSecTurbo',
-                'Hlt2CharmHadSigmac_2LcPi_XSecTurbo',
+                'Hlt2Dpm2KPiPi_XSecTurbo',
+                'Hlt2Dpm2KKPi_XSecTurbo',
+                'Hlt2Ds2KKPi_XSecTurbo',
+                'Hlt2Ds2PiPiPi_XSecTurbo',
+                'Hlt2Lc2KPPi_XSecTurbo',
+                'Hlt2Lc2PiPPi_XSecTurbo',
+                'Hlt2Sigmac_2LcPi_XSecTurbo',
 		'Hlt2DiMuonJPsiTurbo',
                 'Hlt2DiMuonPsi2STurbo',
 		'Hlt2DiMuonBTurbo',
@@ -100,8 +100,7 @@ class TurboOnly( object ):
 		'Hlt2TrackEffDiMuonVeloMuonPlusMatchedTurbo',                
 		'Hlt2TrackEffDiMuonVeloMuonMinusMatchedTurbo',                
 		'Hlt2TrackEffDiMuonDownstreamPlusMatchedTurbo',                
-		'Hlt2TrackEffDiMuonDownstreamMinusMatchedTurbo',               
-                'Hlt2CharmHadLc2KPPi_PIDCALIBTurbo'
+		'Hlt2TrackEffDiMuonDownstreamMinusMatchedTurbo' 
           ]
 
 

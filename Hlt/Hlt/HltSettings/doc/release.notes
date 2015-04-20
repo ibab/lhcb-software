@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-04-20 - Sean Benson
+ - TurboOnly fix to account for name changes.
+
 ! 2015-04-20 - Rosen Matev
  - Added VanDerMeerScan_2015.py settings
 
