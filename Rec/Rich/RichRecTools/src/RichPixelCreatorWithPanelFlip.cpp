@@ -70,10 +70,9 @@ PixelCreatorWithPanelFlip::buildPixel( const Rich::HPDPixelCluster& cluster ) co
   flipIDs.reserve( cluster.smartIDs().size() );
   
   // Loop over each RichSmartID in this cluster, flip it and save in the new list
-  for ( HPDPixelCluster::SmartIDVector::const_iterator ID = cluster.smartIDs().begin();
-        ID != cluster.smartIDs().end(); ++ID )
+  for ( const auto& ID : cluster.smartIDs() )
   { 
-    flipIDs.push_back( flip(*ID) ); 
+    flipIDs.push_back( flip(ID) ); 
   }
   
   // create a new cluster

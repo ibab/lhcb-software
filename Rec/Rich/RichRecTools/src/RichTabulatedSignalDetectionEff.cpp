@@ -179,19 +179,18 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
   PDCount pdCount;
   MirrorCount primMirrCount, secMirrCount;
   unsigned int totalInPD(0);
-  for ( LHCb::RichRecPointOnRing::Vector::const_iterator iP = m_last_ring->ringPoints().begin();
-        iP != m_last_ring->ringPoints().end(); ++iP )
+  for ( const auto& P : m_last_ring->ringPoints() )
   {
-    if ( (*iP).acceptance() == LHCb::RichRecPointOnRing::InHPDTube )
+    if ( P.acceptance() == LHCb::RichRecPointOnRing::InHPDTube )
     {
       // Count accepted points
       ++totalInPD;
       // Count PDs hit by this ring
-      ++pdCount [ (*iP).smartID() ];
+      ++pdCount [ P.smartID() ];
       // Count primary mirrors
-      if ( (*iP).primaryMirror()   ) { ++primMirrCount [ (*iP).primaryMirror()   ]; }
+      if ( P.primaryMirror()   ) { ++primMirrCount [ P.primaryMirror()   ]; }
       // Count secondary mirrors
-      if ( (*iP).secondaryMirror() ) { ++secMirrCount  [ (*iP).secondaryMirror() ]; }
+      if ( P.secondaryMirror() ) { ++secMirrCount  [ P.secondaryMirror() ]; }
     }
   }
 
@@ -205,15 +204,14 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
   if ( !pdCount.empty() )
   {
     totalInPD = 0;
-    for ( PDCount::const_iterator iPD = pdCount.begin();
-          iPD != pdCount.end(); ++iPD )
+    for ( const auto& PD : pdCount ) 
     {
       // Count HPDs
-      totalInPD += iPD->second;
+      totalInPD += PD.second;
       // get pointer to PD
-      const DeRichPD * pd = dePD( iPD->first );
+      const DeRichPD * pd = dePD( PD.first );
       // add up Q.E. eff
-      pdQEEff += (double)(iPD->second) * (*(pd->pdQuantumEff()))[energy*Gaudi::Units::eV]/100 ;
+      pdQEEff += (double)(PD.second) * (*(pd->pdQuantumEff()))[energy*Gaudi::Units::eV]/100 ;
     }
     // normalise the result
     pdQEEff /= (double)(totalInPD);
@@ -229,14 +227,13 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
   if ( !primMirrCount.empty() )
   {
     totalInPD = 0;
-    for ( MirrorCount::const_iterator iPM = primMirrCount.begin();
-          iPM != primMirrCount.end(); ++iPM )
+    for ( const auto& PM : primMirrCount )
     {
       // count mirrors
-      totalInPD += iPM->second;
+      totalInPD += PM.second;
       // add up mirror refl.
       primMirrRefl +=
-        (double)(iPM->second) * (*(iPM->first->reflectivity()))[energy*Gaudi::Units::eV];
+        (double)(PM.second) * (*(PM.first->reflectivity()))[energy*Gaudi::Units::eV];
     }
     // normalise the result
     primMirrRefl /= (double)(totalInPD);
@@ -252,14 +249,13 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
   if ( !secMirrCount.empty() )
   {
     totalInPD = 0;
-    for ( MirrorCount::const_iterator iSM = secMirrCount.begin();
-          iSM != secMirrCount.end(); ++iSM )
+    for ( const auto& SM : secMirrCount )
     {
       // count mirrors
-      totalInPD += iSM->second;
+      totalInPD += SM.second;
       // add up mirror refl.
       secMirrRefl +=
-        (double)(iSM->second) * (*(iSM->first->reflectivity()))[energy*Gaudi::Units::eV];
+        (double)(SM.second) * (*(SM.first->reflectivity()))[energy*Gaudi::Units::eV];
     }
     // normalise the result
     secMirrRefl /= (double)(totalInPD);

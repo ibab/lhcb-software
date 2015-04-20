@@ -59,12 +59,11 @@ TabulatedRayleighScatter::photonScatteredProb( const LHCb::RichRecSegment * segm
         {
           // normalise over each intersection
           double totPlength(0), rayleigh(0);
-          for ( Rich::RadIntersection::Vector::const_iterator iR = radInts.begin();
-                iR != radInts.end(); ++iR )
+          for ( const auto& R : radInts )
           {
-            const double len = (*iR).pathLength();
+            const double len = R.pathLength();
             totPlength += len;
-            rayleigh   += len * (*iR).radiator()->rayleigh()->value(energy*Gaudi::Units::eV);
+            rayleigh   += len * R.radiator()->rayleigh()->value(energy*Gaudi::Units::eV);
           }
           if ( totPlength > 0 ) rayleigh /= totPlength;
 

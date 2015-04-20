@@ -42,20 +42,18 @@ void BackgroundEstiClustering::pixelBackgrounds() const
   // (sum of each pixels background weight)
   typedef Rich::Map<LHCb::RichSmartID, std::pair<int,double> > HPDNorm;
   HPDNorm hpdNorm;
-  {for ( LHCb::RichRecPixels::const_iterator pixel = richPixels()->begin();
-         pixel != richPixels()->end(); ++pixel )
+  for ( auto* pixel : *richPixels() )
   {
-    const LHCb::RichSmartID pd = (*pixel)->hpdPixelCluster().hpd();
+    const LHCb::RichSmartID pd = pixel->hpdPixelCluster().hpd();
     ++hpdNorm[ pd ].first; // count hits in each hpd
-    hpdNorm[ pd ].second += backWeight(*pixel); // sum the total weight
-  }}
-
+    hpdNorm[ pd ].second += backWeight(pixel); // sum the total weight
+  }
+  
   // loop over pixels
-  for ( LHCb::RichRecPixels::const_iterator pixel = richPixels()->begin();
-        pixel != richPixels()->end(); ++pixel )
+  for ( auto* pixel : *richPixels() )
   {
-    const LHCb::RichSmartID&   pd = (*pixel)->hpdPixelCluster().hpd();
-    const Rich::DetectorType& det = (*pixel)->hpdPixelCluster().rich();
+    const LHCb::RichSmartID&   pd = pixel->hpdPixelCluster().hpd();
+    const Rich::DetectorType& det = pixel->hpdPixelCluster().rich();
 
     // background for this HPD
     const double hpdTotBackground = (m_obsPDsignals[det])[pd] - (m_expPDsignals[det])[pd];
@@ -65,23 +63,23 @@ void BackgroundEstiClustering::pixelBackgrounds() const
     const double norm = ( iF == hpdNorm.end() ? 1.0 : iF->second.second / iF->second.first ); 
 
     // background weight for this pixel
-    const double bckWeight = backWeight(*pixel) / norm;
+    const double bckWeight = backWeight(pixel) / norm;
 
     // background contribution for this pixel
     const double pixBkg = hpdTotBackground * bckWeight / m_nPixelsPerPD ;
     
     // Save this value in the pixel
-    (*pixel)->setCurrentBackground( pixBkg > 0 ? (LHCb::RichRecRing::FloatType)(pixBkg) : 0.0f );
+    pixel->setCurrentBackground( pixBkg > 0 ? (LHCb::RichRecRing::FloatType)(pixBkg) : 0.0f );
     
     // printout
     if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << "Pixel " << (*pixel)->hpdPixelCluster()
+      verbose() << "Pixel " << pixel->hpdPixelCluster()
                 << " hpdTotBkg " << hpdTotBackground
                 << " bckWeight " << bckWeight
                 << " Obs "  << (m_obsPDsignals[det])[pd]
                 << " Exp "  << (m_expPDsignals[det])[pd]
-                << " bkg "  << (*pixel)->currentBackground()
+                << " bkg "  << pixel->currentBackground()
                 << endmsg;
     }
 

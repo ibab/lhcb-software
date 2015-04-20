@@ -161,11 +161,10 @@ double SellmeirFunc::photonsInEnergyRange( const LHCb::RichRecSegment * segment,
       const double avEn = 0.5 * (botEn+topEn) * Gaudi::Units::eV;
 
       // average over all intersections
-      for ( Rich::RadIntersection::Vector::const_iterator iR = radInts.begin();
-            iR != radInts.end(); ++iR )
+      for ( const auto& R : radInts )
       {
-        const double pLen = (*iR).pathLength();
-        const double absL = (*iR).radiator()->absorption()->value(avEn);
+        const double pLen = R.pathLength();
+        const double absL = R.radiator()->absorption()->value(avEn);
         totPlength       += pLen;
         waveIndepTrans   += pLen * vdt::fast_exp( -pLen / absL );
       }
