@@ -4,6 +4,7 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+!========================= DAQEvent v9r18 2015-04-20 =========================
 ! 2015-04-10 - Heinrich Schindler
  - Add HC RawEvent location.
 
