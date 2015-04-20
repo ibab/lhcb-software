@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================= DigiAlg v5r3 2015-04-20 =========================
 ! 2015-03-28 - Christian Linn
  - Added property SetOdinRndTrigger to switch on ODIN random trigger via event type bit
 
