@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+!========================= LHCbKernel v15r9 2015-04-20 =========================
 ! 2015-03-17 - Vanya Belyaev
  - move count_iterator form Phys/DaVinciTypes 
 
