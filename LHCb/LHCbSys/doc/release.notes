@@ -5,6 +5,200 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v38r6>2015-04-20 LHCbSys v38r6</A></H1><PRE>
+This version uses Gaudi v26r1 and LCG_74root6 with ROOT 6.02.05.
+
+- Packages modified: DAQ/DAQSys v8r8p1, Det/DDDB v1r75, Det/DetCond v12r41,
+    Det/DetDesc v18r37, Det/OTDet v8r16, Det/VeloDet v13r21, Event/DAQEvent v9r18,
+    Event/EventPacker v5r1, Event/MCEvent v3r3, Event/RecEvent v2r54,
+    Ex/IOExample v4r15, GaudiConf v19r8, GaudiObjDesc v11r22, Hlt/HltDAQ v4r13,
+    Kernel/LHCbAlgs v3r5, Kernel/LHCbKernel v15r9, Kernel/LHCbMath v3r56,
+    Phys/LoKiCore v11r23, Phys/LoKiHlt v3r20, Phys/LoKiMC v10r17,
+    Phys/LoKiNumbers v10r9, Rich/RichKernel v7r59, Tools/CondDBUI v3r33
+
+- In DAQ/DAQSys v8r8p1, v8r8
+  . Enabled full L0Muon decoding by default. Fixed decoder-compare test
+    accordingly
+
+- In Det/DDDB v1r75
+  . Update default database tags to the latest ones:
+    o LHCBCOND, 2015                  : cond-20150119-2
+    o LHCBCOND,       2013, 2012      : cond-20150119-1
+    o LHCBCOND,                   2011: cond-20150119
+
+-In Det/DetCond v12r41
+ . Further support for loading CALIBOFF.db file as an additional layer above all
+   partitions, for testing purpose only
+ . Changed the policy of CondDB::generateXMLCatalog to exclude folders with
+   names ending with ".xml" from the generated catalog, fixed QMTests accordingly.
+   This is required to allow mixed content in the Online CondDB partition for
+   the split Hlt, where the files with ".xml" are not meant to be automatically
+   mapped.
+
+- In Det/DetDesc v18r37
+  . StaticArray: fix interface of erase to return iterator pointing to the
+    first element after the removed one(s), or end (just what std::vector and
+    friends do)
+
+- In Det/OTDet v8r16
+  . RtRelation: provide constructors which take vector<float>, for the alignment
+  . DeOTModule: remove temporary variables, write somewhat leaner code to speed
+    up the calculateHits method by another percent or so (shouldn't change the
+    results)
+  . Follow move from GSL to vdt also in cmt/requirements
+  . Speed up findStraws() by factor two by getting rid of the memory allocations;
+    also prefer std::min/max/hypot over the GSL variants; no changes in results
+  . Remove dependency on GSL, replaced wih vdt
+
+- In Det/VeloDet v13r21
+  . Remove dependency on GSL, replaced wih vdt
+  . Get rid of gsl_pow_2, just squaring stuff is much much better than a
+    function call
+  . Use vdt special functions where possible to speed up things
+
+- In Event/DAQEvent v9r18
+  . Add HC RawEvent location.
+
+- In Event/EventPacker v5r0, v5r1
+  . Update PackParticlesAndVertices to: 
+    o Add support for packed Weighted Relations.
+    o Add support for custom RichPID objects
+    o Make packed RichPID objects key a long long.
+    o only traverse the TES once per event to find the data objects to pack.
+    o search for and pack weighted ProtoParticle to MCParticle relations.
+  . Optimise things a bit for the most likely (recent) packing versions.
+  . Add support for the new flags data member in MCParticle.
+  . Various small cleanups.
+  . Tune a bit better than reserved vector sizes in PackedRecVertex.
+  . Add some future proofing packing version checks to packers which had
+    versioning added in the last commit.
+  . Fix typo in MuonPIDPacker where version 2 was not declared as a known 
+    packing version in MuonPIDPacker::unpack
+  . Implement 64 bit reference packing for MCParticle, MCVertex and
+    TwoProngVertex classes.
+  . Add a warning message to reference32 to warn if any code is still creating
+    potentially problematic 32 bit packed references. Method is retained for
+    backwards compatibility...
+  . Add checks for remaining calls to hintAndKey64 for corrupt references
+    (should be impossible for 64 bit packing).
+  . Add protection to StandardPacker to prevent segmentation faults from a NULL
+    pointer dereference in the case of corrupted reference information, due
+    to truncation when attempting to pack it to a 32 bit int. Fixes issues
+    seen when running over Stripping21 MC samples where some Track references
+    in packed ProtoParticles have been corrupted due to data truncation. In 
+    these cases the smart refs are now just skipped (so set to NULL).
+  . Update the packing of all remaining classes that still use 32 bit reference
+    packing to use 64 bit packing. Reading is backwards compatible with old data
+    using the packing data version flags. Consequently data written with this
+    update can only be read by this version.
+
+- In Event/MCEvent v3r3
+  . Add a new bitfield 'flags' data member to the MCParticle class.
+    Currently only a single bit is used to define a 'fromSignal' flag that
+    indicates if a particle was produced as part of the MC signal decay tree
+    or not. Used in MC stripping productions to make sure signal is always 
+    saved to uDST streams.
+
+- In Event/RecEvent v2r54
+  . Avoid inline virtual methods, move implementations to cpp files.
+
+- In Ex/IOExample v4r15
+  . Follow PackParticlesAndVertices packing changes
+
+- In GaudiConf v19r8
+  . Add RDST to DstConf. Resurrect RDST, same as DST without RawEvent, only
+    for real data Brunel output as alternative to FULL.DST
+
+- In GaudiObjDesc v11r22
+  . Update python modules to use logging module instead of plain print.
+  . Set the output depending on if VERBOSE environment variable is set or not.
+  . Add new option to genClasses.py to generate boost pool allocators with
+    threading support disabled. Avoids some mutex lock calls during new/delete 
+    that are unneccessary as long as threading is not fully supported.
+    New option is the default.
+  . Remove the placement operators from the pool allocator definitions.
+
+- In Hlt/HltDAQ v4r13
+  . isMuon in full.
+  . Extra variables for ProbNNs.
+  . Update test to allow for bank version change.
+  . Moved to version 4 of sel. reports (in writer and decoder).
+  . Full support for RecVertex bank (anticipating PV refitting).
+  . Expanded protoparticle bank.
+  . HltTrackReportsWriter: Added property (WriteStates) to write or not write out
+    states. Default is true to keep the old behaviour.
+
+- In Kernel/LHCbAlgs v3r5
+  . QMTest:
+    o Condition path changed in the scripts for the Updated DQFLAGS.db
+    o Update DQFLAGS.db to remove the xml extension in one of its node paths
+  . TrajPoca: polish code and methods a little, speeds up TrajPoca by 7.7%
+
+- In Kernel/LHCbKernel v15r9
+  . move count_iterator form Phys/DaVinciTypes 
+  . CircleTraj: speed up distTo2ndError by factor 3 (fast cube root)
+  . STDataFunctor: avoid call to exp and log from pow, as the exponent is integer
+
+- In Kernel/LHCbMath v3r55, v3r56
+  . Minor fixes in Bernstein 
+  . use VectorLib to improve Similarity_AVX
+  . add running counter 
+  . Added timing test for The Similarity functions 
+  . improve numerical stability 
+  . minor updates and fixes
+  . Updated check threshold for TestSimilarity
+  . add one more test
+  . Fix a bug in the interaction of the product of Bernstein polynomial and an
+    exponential function  
+  . Add conversions of polynomial bases  
+  . nSphere: use vtd::fast_sincos.
+  . Add new header FastRoots.h which implement fast cube and fifth roots and
+    their inverses which are accurate to almost the full precision of the
+    underlying floating point type, and also a very quick and dirty
+    approximation to the hypot function (hypot(x, y) = sqrt(x * x + y * y), the
+    approximation of hypot is good to about 4% relative error)
+  . Add dependency on pyanalysis  (needed for test_poly.py)
+
+- In Phys/LoKiCore v11r23
+  . Functors and Trees:
+    o add some "move" constructors/assignements 
+    o add swapping methods 
+      for decay matching some non-negligible speedup could be expected 
+  . ToCpp:
+    o extend maximal number of arguments from 7 to (compile-time) infinity 
+  . Fix stupid bug in Operations.h
+  . Add "FakeSource" , useful for testing, in particular for creation of fake
+    streams
+  . Add NoEmptyUnion, union of two streamers that is empty if one of inputs is
+    empty, and equal to the union of inputs otherwise. 
+    Add also 3 and 4-argument variants 
+
+- In Phys/LoKiHlt v3r20
+  . HDRFilter : 
+    o add two special cases 
+      1) Hlt2*Hlt1* name  for filtering of Hlt1 decisions 
+      2) stripping case 
+    o make default location dependent on the name 
+    o Check in initialization consistency of name/code/location 
+
+- In Phys/LoKiMC v10r17
+  . Fix typo in the print method 
+
+- In Phys/LoKiNumbers v10r9
+  . Add fake source 
+
+- In Rich/RichKernel v7r59
+  . Add common option to toolRegistry() method.
+  . Suppress info messages about MC Association tool type change from the tool
+    registry, as this change is normal and always happens when running on data.
+  . Add an additional iteration to the calculation in fast_cbrt.
+
+- In Tools/CondDBUI v3r33
+  . Added writeDuplicate argument for method CondDB.storeXMLStringList() which is
+    set to True be default. When writeDuplicate is set to False, there will be a
+    check on whether the new & old payload contents are identical and only in the
+    case of no the new payload contents are saved.
+
 </PRE><H1><A NAME=v38r5>2015-03-02 LHCbSys v38r5</A></H1><PRE>
 This version uses Gaudi v26r1 and LCG_74root6 with ROOT 6.02.05.
 
