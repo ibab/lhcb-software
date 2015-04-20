@@ -321,17 +321,17 @@ StatusCode DimTaskFSM::declareSubState(SubState new_state)  {
   m_monitor.metaState = char(new_state);
   switch(new_state)   {
     case SUCCESS_ACTION:
-      m_monitor.doneCmd = (int)::time(0);
+      m_monitor.doneCmd = (unsigned long)::time(0);
       break;
     case EXEC_ACTION:
-      m_monitor.lastCmd = (int)::time(0);
+      m_monitor.lastCmd = (unsigned long)::time(0);
       break;
     case FAILED_ACTION:
-      m_monitor.doneCmd = (int)::time(0);
+      m_monitor.doneCmd = (unsigned long)::time(0);
       break;
     case UNKNOWN_ACTION:
     default:
-      m_monitor.doneCmd = (int)::time(0);
+      m_monitor.doneCmd = (unsigned long)::time(0);
       m_monitor.metaState = ST_UNKNOWN;
       break;
   }
