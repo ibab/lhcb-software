@@ -3,6 +3,8 @@
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+!========================= DetCond v12r41 2015-04-20 =========================
 ! 2015-04-16 - Liang Sun
 - Further support for loading CALIBOFF.db file as an additional layer above all partitions, for testing purpose only
 
