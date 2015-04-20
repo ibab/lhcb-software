@@ -4,6 +4,7 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+!========================= RichKernel v7r59 2015-04-20 =========================
 ! 2015-03-10 - Chris Jones
  - Add common option to toolRegistry() method.
 
