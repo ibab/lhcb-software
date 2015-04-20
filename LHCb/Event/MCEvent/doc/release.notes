@@ -3,6 +3,7 @@
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output)
 !-----------------------------------------------------------------------------
 
+!========================= MCEvent v3r3 2015-04-20 =========================
 ! 2015-03-24 - Chris Jones
  - Add a new bitfield 'flags' data member to the MCParticle class.
    Currently only a single bit is used to define a 'fromSignal' flag that
