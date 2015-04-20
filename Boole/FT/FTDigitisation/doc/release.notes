@@ -4,6 +4,7 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+!========================= FTDigitisation v2r4 2015-04-20 =========================
 ! 2015-04-09 - Jacco de Vries
  - turned on 2-bits ADC forcing of digits, noise implementation, and new SiPMResponse shape
  - Added options to fix cluster size / fraction
