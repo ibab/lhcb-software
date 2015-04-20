@@ -1,0 +1,390 @@
+..  vim: filetype: rst
+.. _pydim-c:
+
+=====================================
+:mod:`pydim` - Interface to DIM C API 
+=====================================
+
+.. module:: pydim
+
+The :mod:`pydim` module  is basically a wrapper for the DIM C API. It's very
+close to the `DIM C API`_ so it should be straightforward to use for people
+with previous experience in DIM. Also a new interface, more *pythonic* is under
+development that should be easy to use for newcomers.  
+
+For further reference, please consult the `documentation for the DIM C 
+API <http://dim.web.cern.ch/dim/dimC.html>`_.
+
+
+Description string
+==================
+
+The description is a string that specifies the number, the order and the type 
+of data published by services or required by the commands. This  string can be 
+seen as the *signature* of the services and commands and thus is required by 
+DIM clients and servers.
+
+The contents of the service can be described in the form::
+
+  "T:N;T:N;T" 
+
+where T is the data type and N is the number of items of that type.
+
+The available types are the following: 
+
+ - C(har)
+ - I(nt)
+ - L(ong)
+ - S(hort)
+ - D(ouble)
+ - F(loat)
+ - X(tra long) and
+
+A data type alone at the end of string means all following items are of type T. 
+   
+For example, the string `I:1;D:1;` can be used for a service that publishes 1 
+integer (`I`) and 1 double (`D`). A command that accepts 2 arguments: an 
+integer and an string of characters of variable length can use the string 
+`I:1;C`. Note that an element of variable length can be specified only at the 
+end of the string.
+
+Note that when **sending strings** as command arguments, they must be \\0
+terminated. This is necessary because DIM does not distinguish between a 
+string of characters and a byte array. In both cases the type used in the
+service description is ` C`. Additionally, the interface to the DIM C API 
+doesn not automatically add the `\0` at the end of the string, and this must
+be made **manually** by the client application.
+
+Server functions
+================
+
+This modules provides access to the main functions for creating DIM servers
+and publishing services and commands.
+
+.. function:: dis_add_service(name, description, callback, tag)
+
+   Registers a new service with the DNS server.
+
+   Arguments are:
+   
+   *name* The name of the service. It must be a unique name within a DNS server.
+
+   *description* `Description string`_ of the service.
+
+   *callback* A callback function that will be executed for getting the value
+   of the service.
+
+   *tag*  A parameter to be sent to the callback in order to identify the 
+   service. Normally this parameter is rarely used (but it's still
+   mandatory, though).
+
+   This function returns a *serviceid*, a value that can be used for referring
+   to the service.  This can be used for updating its value or getting
+   information about it.
+
+
+.. function:: dis_update_service(serviceid, [values])
+
+   Report the change of service contents to interested clients.
+
+   Arguments are:
+
+   *serviceid* An identifier of the service.
+
+   *values* (optional) A tuple with the new values of the service.
+
+   The behaviour of this function will vary depending if the ``values`` argument
+   is passed or not.
+
+   When the function is called *without* the ``values`` argument the callback
+   function that was registered with the service  will be executed and its
+   return value will be sent to the clients.  
+
+   When `dis_update_service` is called *with* the ``value`` argument, this is
+   sent directly to the clients as the service value, *without* executing the
+   callback function. Please note that the argument must be a tuple, and the
+   number and the type of the arguments must correspond to the service
+   description. 
+
+   For example, if the service returns two integer values (e.g. ``"I:1,I:1"``)
+   the tuple must contain two integer, like this:
+
+   >>> pydim.dis_update_service(serviceid, (42, 81))
+
+   Even if the service returns *only one* value, the argument must be a tuple
+   of one element:
+
+   >>> pydim.dis_update_service(serviceid, (42,))
+
+.. function:: dis_add_cmnd(name, description, callback, tag)
+    
+   Add a command service to the DIM server.
+
+   Arguments are:
+
+   *name* The name of the command. As with the name of the services, commands
+   names must be unique.
+
+   *description* `Description string`_ of the commands defining the arguments 
+   that will be send to the command.
+
+   *callback* A function be executed when a command request is received from a
+   client. The number and the type of the function arguments must correspond 
+   with the command description string. Note that the function will be called
+   with as many arguments as values are specified in the description string
+   (not with a tuple that contains all the arguments).
+
+   *tag* A parameter to be sent to the callback in order to identify the 
+   command.
+
+.. function:: dis_start_serving(name)
+
+   Start handling client requests.
+
+   Arguments are:
+
+   *name* The name of the server.
+
+   This function must be called on every DIM server, otherwise the services and
+   commands will not be available for the clients.
+
+.. function:: dis_stop_serving()
+
+   Stops the DIM server.
+
+.. function:: dis_get_dns_node()
+
+   Returns the DNS node
+   
+.. function:: dis_get_dns_port()
+
+   Returns the DNS port.
+
+.. function:: dis_set_dns_node(node)
+
+   Arguments are:
+
+   *node* A string with the host name or address of the DNS node.
+
+   Sets the value of the DNS node.
+
+.. function:: dis_set_dns_port(port)
+
+   Arguments are:
+
+   *port* An integer with the port of the DNS node.
+
+   Sets the value of the DNS port.
+
+Client functions
+================
+
+The :mod:`pydim` module also provides the necessary functions for creating DIM 
+clients that can get information from services and execute commands in the 
+server. 
+
+The client functions supports both *asynchronous* and *synchronous* 
+communication. Usually, the former is preferred for DIM client, in this case 
+it's  necessary to specify a callback function that will be executed when the
+data is received.  
+
+However, sometimes it's necessary to use synchronous communication. In this
+client the execution of a function will block the program until a response
+from the server is received. For example, this can be the desired behavior 
+in a shell script. 
+
+A note on strings
+-----------------
+
+
+Asynchronous functions
+----------------------
+
+.. function:: dic_cmnd_service(name, arguments, description)
+
+   Request the execution of a command.
+
+   Arguments are:
+
+   *name* Command name, same name used by server when declaring the command
+   service. 
+
+   *arguments* A tuple with the values that are sent to the command as 
+   arguments.
+
+   *description* `Description string`_ of the command.
+
+   This function allows clients (e.g. user interfaces) to send commands to
+   be executed by the servers.
+
+   This function requests the execution of a command by a server. This implies
+   contacting the name server (if the command in not know already) and then
+   contacting directly the server. 
+    
+   This function does not report back the completion of the command since 
+   these operations are only scheduled and may complete *asynchronously*.
+
+   If the server is not responding the command is discarded (in order 
+   to avoid having it sent later when it might not be desired anymore).
+
+
+.. function:: dic_cmnd_callback(name, arguments, description, callback, tag)
+
+   Request the execution of a command and registers a completion callback.
+
+   Arguments are:
+
+   *name* Command name, same name used by server when declaring the command
+   service. 
+
+   *arguments* A tuple with the values that are sent to the command as 
+   arguments.
+
+   *description* `Description string`_ of the command.
+
+   *callback*  A Python callable object (e.g. a function) that will be called 
+   when the command completes. The function is called with 2 arguments:  
+   `tag` and `ret_code`. `tag` is the value passed to this function and 
+   `retcode` is an integer which indicates if the command was executed 
+   successfully; 1 if it was correctly sent to the server, 0 otherwise.   
+   
+   *tag* A parameter in order to identify the command.
+
+   This function works in the same way as `dic_cmnd_service`, but it allows to
+   use a callback function to identify the command that has completed.
+ 
+
+.. function:: dic_info_service(name, description, callback, service_type=pydim.MONITORED, timeout=0, tag=0, default_value=None)
+
+   Request an information service from a server.
+
+   Arguments are:
+
+   *name* Service name. same name used by server when declaring the service.
+
+   *description* `Description string`_ of the service.
+
+   *callback* A function that will be called when the service updates its
+   value. The number and the type of the function arguments must correspond 
+   with the service description string. Note that the function will be called
+   with as many arguments as values are specified in the service description
+   string (not with a tuple that contains all the arguments).
+
+   *service_type*  Type of service, constants defined are: :data:`ONCE_ONLY`,
+   :data:`TIMED` or :data:`MONITORED`. Default value is :data:`MONITORED`. 
+   See the definition of the constants below.
+
+   *timeout* For a TIMED or MONITORED service "timeout" indicates the time 
+   interval the server should use to send new data, for ONCE_ONLY  services it
+   indicates the time after which the service is considered to have failed.
+   Default value is ``0``. 
+
+   *tag* A value that is passed to the internal C DIM callback. It cannot be
+   accessed within the Python code.
+
+   *default_value* The value that will be passed to the callback function in 
+   case the service doesn't succeed.
+   
+   Returns an integer used as service identification id. 
+
+
+Synchronous functions
+---------------------
+
+.. autofunction:: pydim.dic_sync_info_service
+.. autofunction:: pydim.dic_sync_cmnd_service
+ 
+
+Utility functions
+-----------------
+
+.. function:: dic_get_dns_node()
+
+   Returns the DNS node
+   
+.. function:: dic_get_dns_port()
+
+   Returns the DNS port.
+
+.. function:: dic_set_dns_node(node)
+
+   Arguments are:
+
+   *node* A string with the host name or address of the DNS node.
+
+   Sets the value of the DNS node.
+
+.. function:: dic_set_dns_port(port)
+
+   Arguments are:
+
+   *port* An integer with the port of the DNS node.
+
+   Sets the value of the DNS port.
+
+.. function:: dic_get_format(service_id)
+
+   Arguments are:
+   
+   *service_id* Service identification id.
+   
+   Returns a string containing the format description.
+    
+.. function:: dic_release_service(service_id)
+
+   Called by a client when a service is not needed anymore.
+
+   Arguments are:
+   
+   *service_id* Service identification id.
+   
+   This function tells the server not to update this service anymore and 
+   destroys all the references to it in the client.
+   
+.. function:: dic_get_conn_id()
+
+   Returns the connection id of a DIM server. Its purpose is to obtain the
+   identifier that is required by other functions.
+   
+.. function:: dic_get_server_services(conn_id)
+
+   Arguments are:
+   
+   *conn_id* of a DIM server as obtained by `dim_dic_get_conn_id`
+   
+   Returns a list of services of the specified server, to which this client 
+   has subscribed.
+
+.. function:: dic_add_error_handler(callback)
+
+   Adds an error handler to this client.
+   
+   Arguments are:
+    
+   *callback* A Python callable object (e.g. a function) that will be 
+   called whenever an error occurs in the DIM client. The function is called 
+   with 3 arguments:  severity, error_code, message. 
+
+
+Constants
+=========
+
+.. data:: ONCE_ONLY
+
+   The client will receive the data once and disconnect from the server.
+
+.. data:: TIMED
+
+   The client will receive the data at regular intervals, specified by the
+   parameter timeout. In principle to be used with servers that do not
+   explicitly update the service (using ``pydim.dis_update_service``).
+
+.. data:: MONITORED
+   
+   The client will receive the data when the server updates it (by calling
+   dis_update_service()), but also at regular intervals if the "timeout"
+   parameter is different from 0. The "timeout" parameter can be set to 0 to
+   receive data only on server update.
+
+.. _DIM C API: http://dim.web.cern.ch/dim/dimC.html
+

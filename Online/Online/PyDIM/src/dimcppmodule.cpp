@@ -81,14 +81,14 @@ public:
 
 }; //end DimRpcWrapper
 
-namespace {
-  struct DimRpc_Object {
-    PyObject_HEAD
-    DimRpcWrapper *cpp_dimRpc;
-    char *format_in;
-    char *format_out;
-  };
-}
+
+typedef struct {
+  PyObject_HEAD;
+  DimRpcWrapper *cpp_dimRpc;
+  char *format_in;
+  char *format_out;
+} DimRpc_Object;
+
 
 static void
 DimRpc_dealloc(DimRpc_Object *self) {
@@ -103,9 +103,9 @@ DimRpc_init(DimRpc_Object *self, PyObject *args, PyObject *kwds) {
   /** Allocates a new DimRpc_Object and a DimRpcWrapper inside it
    */
   char *name=NULL, *format_in=NULL, *format_out=NULL;
-  static const char *kwlist[] = {"name", "format_in", "format_out", NULL};
+  static char *kwlist[] = {"name", "format_in", "format_out", NULL};
 
-  if ( !PyArg_ParseTupleAndKeywords(args, kwds, "sss", (char**)kwlist,
+  if ( !PyArg_ParseTupleAndKeywords(args, kwds, "sss", kwlist,
                                     &name, &format_in, &format_out)
        ) {
     print("Invalid arguments. Received: %s %s %s",
@@ -384,8 +384,7 @@ static PyTypeObject DimRpc_Type = {
   0,                          /* tp_cache */
   0,                          /* tp_subclasses */
   0,                          /* tp_weaklist */
-  (destructor)DimRpc_dealloc, /* tp_del */
-  (unsigned int)1             /* tp_version_tag */
+  (destructor)DimRpc_dealloc  /* tp_del */
 };
 
 
@@ -432,9 +431,9 @@ public:
       return;
     } else {
       gstate = PyGILState_Ensure();
-      res = PyObject_CallMethod(this->self, (char*)"rpcInfoHandler", NULL);
+      res = PyObject_CallMethod(this->self, "rpcInfoHandler", NULL);
       if (res) {
-        print ("Invalid call to virtual rpcInfoHandler method %p", (void*)res);
+        print ("Invalid call to virtual rpcInfoHandler method %p", res);
         PyErr_Print();
       } else {
         Py_XDECREF(res);
@@ -451,7 +450,7 @@ public:
 }; //end DimRpcInfoWrapper
 
 typedef struct {
-  PyObject_HEAD
+  PyObject_HEAD;
   DimRpcInfoWrapper *cpp_dimRpcInfo;
   char *format_in;
   char *format_out;
@@ -473,10 +472,10 @@ DimRpcInfo_init(DimRpcInfo_Object* self, PyObject* args, PyObject* kwds)  {
    */
   char *name=NULL, *format_in=NULL, *format_out=NULL;
   PyObject *arg1=NULL, *arg2=NULL;
-  static const char *kwlist[] = {"name", "format_in", "format_out",
+  static char *kwlist[] = {"name", "format_in", "format_out",
                            "time", "nolink", NULL};
 
-  if (!PyArg_ParseTupleAndKeywords(args, kwds, "sssO|O", (char**)kwlist,
+  if (!PyArg_ParseTupleAndKeywords(args, kwds, "sssO|O", kwlist,
                                    &name,
                                    &format_in,
                                    &format_out,
@@ -848,8 +847,7 @@ static PyTypeObject DimRpcInfo_Type = {
   0,                          /* tp_cache */
   0,                          /* tp_subclasses */
   0,                          /* tp_weaklist */
-  (destructor)DimRpcInfo_dealloc,  /* tp_del */
-  (unsigned int)1             /* tp_version_tag */
+  (destructor)DimRpcInfo_dealloc  /* tp_del */
 };
 
 /**@}
@@ -869,7 +867,6 @@ PyMODINIT_FUNC initdimcpp(void)  {
    * Basically this functions will make the necessary initializations
    * to the _Type objects.
    */
-  debug("Initializing C++ DIM interface...  \n");
   if (PyType_Ready(&DimRpc_Type) < 0) {
     print("Could not initialize type DimRpc\n");
     return;

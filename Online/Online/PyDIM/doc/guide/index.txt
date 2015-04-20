@@ -1,0 +1,68 @@
+..  vim: filetype: rst
+
+===================
+PyDIM documentation
+===================
+
+PyDIM is a Python interface to `DIM`_. PyDIM could be used to create DIM
+clients and servers, using an API very similar to the one that is used for C.
+
+.. _DIM: http://dim.web.cern.ch/dim/
+
+Tutorial
+========
+
+An example is worth a thousand of words, so this :ref:`tutorial` will provides
+sample code of DIM clients and servers using with PyDIM.
+
+Installation
+============
+
+Instructions for installing PyDIM can be found in :ref:`install`.
+
+Documentation
+=============
+
+.. toctree::
+    :maxdepth: 2
+
+    install
+    tutorial
+    pydim-c
+    changelog
+
+Generated documentation from the C API is `also available </pydim/api/>`_.
+
+Source code
+============
+
+The source code is hosted in the CERN Central Subversion Service.
+
+There is a web interface for browsing the code:
+
+    https://svnweb.cern.ch/world/wsvn/lhcbonline/PyDIM/trunk
+
+You can get a local working copy for reading or, if you have access, making
+modifications to the code. To get a read-only copy use the following command::
+
+    svn co https://svnweb.cern.ch/guest/lhcbonline/PyDIM/trunk
+
+Within CERN you can get write access using SSH authentication::
+
+    svn co svn+ssh://svn/reps/lhcbonline/PyDIM/trunk
+
+
+The :ref:`changelog` includes a description of changes.
+
+About
+=====
+
+PyDIM was originally developed by `Radu Stoica`_.
+
+Currently it's maintained by `Niko Neufeld`_ and `Juan Manuel Caicedo`_.
+Feel free to send your questions and bug reports.
+
+.. _Radu Stoica: http://consult.cern.ch/xwho/people/652087
+.. _Niko Neufeld: http://consult.cern.ch/xwho/people/417932
+.. _Juan Manuel Caicedo: http://consult.cern.ch/xwho/people/681596
+

@@ -1,0 +1,63 @@
+..  vim: filetype: rst
+.. _tutorial:
+
+
+========
+Tutorial
+========
+
+This tutorial explains how to create `DIM`_ servers and clients with PyDIM. It 
+also includes an overview of some DIM concepts, however is recommend to 
+read the `DIM documentation`_.
+
+.. _DIM: http://dim.web.cern.ch/dim/
+.. _DIM documentation: http://dim.web.cern.ch/dim/dim_intro.html
+
+.. note::
+    This tutorial is far from complete. For the time being is just a 
+    collection of examples, although they include the instructions as code
+    comments. Consider this document as a work in progress. 
+
+
+
+Using DIM services
+==================
+
+DIM services are values provided by the servers to the clients. Normally, these
+values are read by the client when the connection begins and then they are
+updated when they change or at certain time intervals, accordingly to the 
+configuration of the client.
+
+This example shows how to create a server with two services.
+
+.. literalinclude:: ../../examples/services-server.py
+
+The client
+----------
+
+The following example shows a client for the example server:
+
+.. literalinclude:: ../../examples/services-client.py
+
+DIM commands
+============
+
+DIM commands are services that receive arguments from the client but they do 
+not return a value. They can be used for running a specific code routine in the
+server.
+
+Server
+------
+
+The following example shows a DIM server with commands:
+
+.. literalinclude:: ../../examples/commands-server.py
+
+Client
+------
+
+This is the code for calling the commands from the server:
+
+.. literalinclude:: ../../examples/commands-client.py
+
+

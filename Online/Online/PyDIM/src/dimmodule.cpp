@@ -13,13 +13,6 @@
 #include <winsock.h>
 #endif
 
-#ifdef _POSIX_C_SOURCE
-#undef _POSIX_C_SOURCE
-#endif
-#ifdef _XOPEN_SOURCE
-#undef _XOPEN_SOURCE
-#endif
-
 extern "C" {
 #include <Python.h>
 #include "dic.h"
@@ -27,6 +20,8 @@ extern "C" {
 #include "dim_common.h"
 }
 #include "pydim_utils.cpp"
+
+const char* module_version = "0.4";
 
 using namespace std;
 static char server_name[HOST_NAME_MAX + 1];
@@ -91,6 +86,14 @@ void _dic_error_user_routine_dummy(int, int, char*);
 void _dic_info_service_dummy (void*, void*, int*);
 void _dic_cmnd_callback_dummy(void*, int*);
 void _dic_error_user_routine_dummy(int, int, char*);
+
+
+static PyObject*
+version(PyObject* /* self */, PyObject* /* args */)  {
+  /** Return module version
+   */
+  return PyString_FromString(module_version);
+}
 
 /******************************************************************************/
 
@@ -628,7 +631,8 @@ dim_dis_add_cmnd(PyObject* /* self */, PyObject* args) {
 		             "a callable object and an integer");
     return NULL;
   }
-  debug("Adding command name %s, format %s and tag %p", name, format, tag);
+	Py_INCREF(pyFunc);
+  debug("Adding command name %s, format %s function %p and tag %p", name, format, pyFunc, tag);
   callback = (CmndCallback*)malloc(sizeof(CmndCallback));
   callback->format = (char*)malloc(sizeof(char)*(sizeFormat+1));
   callback->name = (char*)malloc(sizeof(char)*(sizeName+1));
@@ -701,8 +705,8 @@ serviceProxy(void *tagp, void **buf, int *size, int * /*first_time*/) {
      *    - return some default data => unpredictable results client side
      */
     print("ERROR: You should not see this message! The service update has failed");
-    debug("Could not get data to update service %s, pointer %x. Output buffer is %x with size %d, updated %d",
-           svc->name, svc, (long)svc->buffer, svc->bufferSize, svc->isUpdated);
+    debug("Could not get data to update service %s, pointer %ld. Output buffer is %ld with size %d, updated %d",
+          svc->name, (long)svc, (long)svc->buffer, svc->bufferSize, svc->isUpdated);
     svc->bufferSize = 0;
     if (svc->buffer) {
       free(svc->buffer);
@@ -789,7 +793,7 @@ dim_dis_add_service(PyObject* /* self */, PyObject* args) {
     free(serviceID2Callback[service_id]);
   }
   serviceID2Callback[service_id] = svc;
-  debug("Service %s added successfully with pointer %x", svc->name, svc);
+  debug("Service %s added successfully with pointer %ld", svc->name, (long)svc);
 
   return Py_BuildValue("i", service_id);
 
@@ -840,7 +844,7 @@ dim_dis_update_service(PyObject* /* self */, PyObject* args) {
        * returning NULL implies the exception will be propageted
        * back to the interpretor
        */
-      print("Error in calling python function %p", (void*)svc->pyFunc);
+      print("Error in calling python function %p", svc->pyFunc);
       PyErr_Print();
       return NULL;
     }
@@ -869,40 +873,40 @@ dim_dis_update_service(PyObject* /* self */, PyObject* args) {
 
 static void
 dim_callbackCommandFunc(void* uTag, void* address, int* size) {
-  /** \brief Proxy function for passing the call to Python.
-   * It is registered by default when a command service is
-   * created.
-   */
-  CmndCallbackPtr pycall = (CmndCallbackPtr)(*(long *)uTag);
-  PyObject *args, *res, *funargs;
-  PyGILState_STATE gstate;
-  
-  gstate = PyGILState_Ensure();
-  args = dim_buf_to_tuple(pycall->format, (char*)address, *size);
-  if (args) {
-    /* performing the Python callback */
-	if (pycall->pyTag) {
-		funargs = PyTuple_New(2);
-		PyTuple_SET_ITEM(funargs, 0, args);
-		PyTuple_SET_ITEM(funargs, 1, pycall->pyTag);
-	} else {
-		funargs = PyTuple_New(1);
-		PyTuple_SET_ITEM(funargs, 0, args);
-	} 	
-    res = PyEval_CallObject(pycall->pyFunc, funargs);
-    Py_DECREF(args);
-	Py_DECREF(funargs);
-    if (!res) {
-      /* The Python function called throwed an exception.
-       * We can't do much with it so we might as well print it */
-      PyErr_Print();
-    } else {
-      Py_DECREF(res);
-    }
-  } else {
-    print ("Could not convert received DIM buffer to Python objects");
-  }
-  PyGILState_Release(gstate);
+   /** \brief Proxy function for passing the call to Python.
+    * It is registered by default when a command service is
+    * created.
+    */
+   CmndCallbackPtr pycall = (CmndCallbackPtr)(*(long *)uTag);
+   PyObject *args, *res, *funargs;
+   PyGILState_STATE gstate;
+   
+   gstate = PyGILState_Ensure();
+   args = dim_buf_to_tuple(pycall->format, (char*)address, *size);
+   if (args) {
+      /* performing the Python callback */
+      if (pycall->pyTag) {
+         funargs = PyTuple_New(2);
+         PyTuple_SET_ITEM(funargs, 0, args);
+         Py_INCREF(pycall->pyTag);
+         PyTuple_SET_ITEM(funargs, 1, pycall->pyTag);
+      } else {
+         funargs = PyTuple_New(1);
+         PyTuple_SET_ITEM(funargs, 0, args);
+      } 	
+      res = PyObject_CallObject(pycall->pyFunc, funargs);
+      Py_DECREF(funargs);
+      if (!res) {
+         /* The Python function called throwed an exception.
+          * We can't do much with it so we might as well print it */
+         PyErr_Print();
+      } else {
+         Py_DECREF(res);
+      }
+   } else {
+      print ("Could not convert received DIM buffer to Python objects");
+   }
+   PyGILState_Release(gstate);
 }
 
 
@@ -1050,11 +1054,13 @@ dim_dic_get_timestamp(PyObject* /* self */, PyObject* args) {
     return NULL;
   }
   dic_get_timestamp(service_id, &secs, &milisecs);
+
   return Py_BuildValue("ii", secs, milisecs);
 }
 
 
-static PyObject* dim_dic_get_format(PyObject* /* self */, PyObject* args) {
+static PyObject*
+dim_dic_get_format(PyObject* /* self */, PyObject* args) {
   /**
    * Proxy function to:
    *        char *dic_get_format (unsigned int service_id)
@@ -1094,11 +1100,11 @@ dim_dic_release_service(PyObject* /* self */, PyObject* args) {
   dic_release_service(service_id);
 	Py_END_ALLOW_THREADS
   tmp = _dic_info_service_id2Callback[service_id];
-  cppName = tmp->name;
   if (!tmp) {
     print("Service with id %d is not known", service_id);
     Py_RETURN_NONE;
   }
+  cppName = tmp->name;
   _dic_info_service_name2Callback.erase(cppName);
   _dic_info_service_id2Callback.erase(service_id);
   free(tmp->format);
@@ -1321,8 +1327,9 @@ dim_dic_get_error_services(PyObject* /* self */, PyObject* args) {
    *
    * @return service_list a python list of services in error.
    */
-  char* server_names = dic_get_error_services();
-  /* PyObject* ret = */ stringList_to_tuple(server_names);
+  char* server_names=NULL;
+  server_names = dic_get_error_services();
+  stringList_to_tuple(server_names);
   return args;
 }
 
@@ -1557,7 +1564,8 @@ void _dic_info_service_dummy (void* tag, void* buffer, int* size) {
    * that dim_buf_to_tuple creates Python object so the lock must be held.
    */
 
-  PyObject* args, *res;
+  PyObject* funargs = NULL, *res;
+  PyObject* args = NULL;
   _dic_info_service_callback* svc;
   PyGILState_STATE gstate;
 
@@ -1568,15 +1576,39 @@ void _dic_info_service_dummy (void* tag, void* buffer, int* size) {
   gstate = PyGILState_Ensure();
   if (!(*size)) {
     /* The service update request failed. Passing default argument */
-    args = svc->pyDefaultArg;
+    if ( svc->pyDefaultArg )  {
+      funargs = PyTuple_New(2);
+      PyObject* pyTag = Py_BuildValue("i", svc->pyTag);
+      PyTuple_SET_ITEM(funargs, 0, pyTag);
+      Py_INCREF(svc->pyDefaultArg);
+      PyTuple_SET_ITEM(funargs, 1, svc->pyDefaultArg);
+    }
+    else  {
+      funargs = PyTuple_New(1);
+      PyObject* pyTag = Py_BuildValue("i", svc->pyTag);
+      PyTuple_SET_ITEM(funargs, 0, pyTag);
+    }
   } else {
     args = dim_buf_to_tuple(svc->format, (char*)buffer, *size);
+    if (args) {
+      /* performing the Python callback */
+      int nargs = PyTuple_Size(args);
+      funargs = PyTuple_New(nargs + 1);
+      PyObject* pyTag = Py_BuildValue("i", svc->pyTag);
+      PyTuple_SET_ITEM(funargs, 0, pyTag);
+      for (int i = 0; i < nargs; ++i) {
+         PyObject* arg = PyTuple_GET_ITEM(args, i);
+         Py_INCREF(arg);
+         PyTuple_SET_ITEM(funargs, i + 1, arg);
+      }
+      Py_DECREF(args);
+    }
   }
-  if (args) {
-//    Py_INCREF(args);
-    res = PyEval_CallObject(svc->pyFunc, args);
+  if (funargs) {
+    res = PyObject_CallObject(svc->pyFunc, funargs);
     if (!res){
       if (PyErr_Occurred() != NULL) {
+      print("Error when calling object %s", svc->name);
         PyErr_Print();
       } else {
         print("ERROR: Bad call to Python layer");
@@ -1585,7 +1617,7 @@ void _dic_info_service_dummy (void* tag, void* buffer, int* size) {
       /* call succedded */
       Py_DECREF(res);
     }
-    Py_XDECREF(args);
+    Py_DECREF(funargs);
   } else {
     /* service failed and a default value was not specified */
     print("ERROR: Could not get new data to update service");
@@ -1597,6 +1629,11 @@ void _dic_info_service_dummy (void* tag, void* buffer, int* size) {
 */
 
 static PyMethodDef DimMethods[] = {
+  { "version"             ,
+    version               ,
+    METH_VARARGS          ,
+    "Module version"
+  },
   {    "dis_start_serving"          ,
     dim_dis_start_serving        ,
     METH_VARARGS                 ,
@@ -1817,14 +1854,12 @@ static PyMethodDef DimMethods[] = {
 
 #ifndef _WIN32
 static pthread_t maintid;
-static pthread_mutex_t pydimlock = PTHREAD_MUTEX_INITIALIZER; 
 #endif
   PyMODINIT_FUNC
 initdimc(void)
 {
   PyObject *m;
   PyEval_InitThreads();
-  debug("Initializing the C DIM interface... \n");
   m = Py_InitModule3("dimc", DimMethods, "DIM methods");
 
   if (m == NULL)

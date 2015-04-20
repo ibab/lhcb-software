@@ -1,0 +1,120 @@
+.. vim: filetype: rst
+.. _install:
+
+================
+Installing PyDIM
+================
+
+Requirements
+============
+
+- DIM. The package has been developed using the v16rXX, v17rXX and v18r0 DIM 
+   versions. It has not been tested with older versions but it has good chances
+   to work.
+- Python >= 2.3
+- The package has been developed on both 32 and 64 bits architectures.
+
+
+Installing from the RPM package
+===============================
+
+The recommended way of installing PyDIM is through the RPM package ``pydim``.
+
+The package is found in the AFS repository and is available for SLC4 and SLC5.
+It should be installed automatically by Yum, although here is the location of
+the actual RPM files::
+
+    /afs/cern.ch/lhcb/project/web/online/online-rpm-repo/slc4X/i386/RPMS/
+    /afs/cern.ch/lhcb/project/web/online/online-rpm-repo/slc5X/x86_64/
+
+The source RPM packages are also available in the following locations::
+
+    /afs/cern.ch/lhcb/project/web/online/online-rpm-repo/slc4X/SRPMS/
+    /afs/cern.ch/lhcb/project/web/online/online-rpm-repo/slc5X/SRPMS/
+
+Install the right version according to your operating system and the hardware
+architecture.
+
+The ``pydim`` package depends on ``dim`` and ``python`` packages. On the other
+hand, for building the source package the header files are required, these are
+included in the packages ``python-devel`` and ``dim-devel``.
+
+Installing from source
+======================
+
+You also can install PyDIM from the source. In order to do that you will need
+to have DIM with its header files, either by installing the RPM packages or
+by doing manually. If you opt for a manual installation, it's recommended to 
+put the DIM libraries and header files in the *standard* locations for your 
+operating system and architecture. Usually, they are ``/usr/local/lib`` and
+``/usr/local/include`` respectively.
+
+Please make the necessary changes so that the run-time linker finds 
+``libdim.so`` (basically add an entry in ``/etc/ld.so.conf`` that points to
+the DIM library directory). Make sure that the DIM library is built using the
+*same* compiler and architecture as the Python installation you want to use.
+
+For installing and running PyDIM you must follow these steps.
+
+1. Source code
+--------------
+
+Get the latest version of PyDIM from the CERN Central Subversion Service.
+There is a web interface for browsing the code::
+
+    https://svnweb.cern.ch/world/wsvn/lhcbonline/PyDIM/trunk
+
+You can get a local working copy for reading or, if you have access, making
+modifications to the code. To get a read-only copy use the following command::
+
+    svn co https://svnweb.cern.ch/guest/lhcbonline/PyDIM/trunk
+
+Within CERN you can get write access using SSH authentication::
+
+    svn co svn+ssh://svn/reps/lhcbonline/PyDIM/trunk
+
+
+2. Install script
+-----------------
+
+Run the installation script (you may want to run it as root)::
+ 
+    $ python setup.py install
+
+3. Environment variables
+------------------------
+        
+In the general case this should take care of building the library.
+
+In case DIM libraries are not found, declare an environment variable named
+``DIMDIR``, ``DIMHOME`` or ``DIM_HOME`` pointing to the main DIM installation 
+directory, i.e. the one that contains the sub-directories `dim` and the 
+specific one for your operating system, e.g. `linux`.
+
+
+Building the documentation
+--------------------------
+
+The PyDIM documentation uses `Sphinx`_ for generating pretty HTML files. 
+
+You can download it with the `easy_install`_ utility::
+
+    easy_install -U Sphinx
+
+Once Sphinx is installed use the ``Makefile`` in the ``docs/guide`` directory,
+for example::
+
+    $ make html
+
+For other commands please refer to the `Sphinx documentation`_.
+
+
+Test the installation
+=====================
+
+TODO: TBD.
+
+.. _Sphinx: http://sphinx.pocoo.org/
+.. _easy_install: http://pypi.python.org/pypi/setuptools
+.. _Sphinx documentation: http://sphinx.pocoo.org/contents.html
+

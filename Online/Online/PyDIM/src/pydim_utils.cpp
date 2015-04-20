@@ -185,11 +185,6 @@ static void printPyObject(PyObject *object)
   PyObject_Print(object, stdout, Py_PRINT_RAW);
   printf("\n");
 }
-
-static void printDimBuf(const char *buf, int size) {
-  for (int i=0; i<size; i++)
-    printf("Byte %d: ASCII %c, CODE: %d\n", i, buf[i], buf[i]);
-}
 #endif
 
 
@@ -372,15 +367,14 @@ dim_buf_to_list(const char *schema, const char *buf, unsigned int len)
           mult = (len - n) / _DIM_CHAR_LEN;
         if ((unsigned int)(n + mult) <= len) { // ugly
           int p = (mult-1) >= 0 ? (mult -1) : 0;
-          //while (p && buf[n+p] == '\0')
-          //  --p;
+          /* uncomment this is you want to strip '\0' from the string */
+          // while (p && buf[n+p] == '\0') --p;
           tmp = PyString_FromStringAndSize(&buf[n], p+1);
           n += mult;
         } else {
           int p = ((int)len-n-1) >= 0 ? ((int)len-n-1) : 0;
           /* uncomment this is you want to strip '\0' from the string */
-          // while (p && buf[p] == '\0')
-          //  --p;
+          // while (p && buf[p] == '\0') --p;
           tmp = PyString_FromStringAndSize(&buf[n], p+1);
           n = len;
         }
@@ -412,27 +406,6 @@ short_buffer:
   Py_XDECREF(list);
   return NULL;
 }
-
-#ifdef __DEBUG 
-static PyObject*
-list2Tuple(PyObject* list)
-{
-  int size, i;
-  PyObject* tuple;
-
-  if ( !PyList_Check(list) ) return NULL;
-  size = PyList_Size(list);
-  tuple = PyTuple_New(size);
-  for(i=0; i<size; i++) {
-    PyTuple_SetItem(tuple, i, PyList_GetItem(list, i) );
-    //PyObject_Print( PyList_GetItem(list, i), stdout, Py_PRINT_RAW );
-  }
-  //  printPyObject(list);
-  //  printPyObject(tuple);
-
-  return tuple;
-}
-#endif
 
 static PyObject*
 dim_buf_to_tuple(const char *schema, const char *buf, int len)
@@ -582,7 +555,7 @@ getSizeFromFormatAndObjects(PyObject *iter, const char* format)
                  print("Invalid Python object expected a string");
                  return 0;
                }
-               total_size += PyString_Size(last);
+               total_size += PyString_Size(last) + 1;
                Py_DECREF(last);
                return total_size;
                break;
