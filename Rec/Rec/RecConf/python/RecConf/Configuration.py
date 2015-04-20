@@ -43,7 +43,7 @@ class RecSysConf(LHCbConfigurableUser):
     ## Default reconstruction sequence for field-off data
     DefaultSubDetsFieldOff = ["Decoding"] + DefaultTrackingSubdets+["CALO","RICH","MUON","PROTO","SUMMARY"]
     ## List of known special data processing options
-    KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff", "beamGas", "microBiasTrigger", "pA", "pGun", "2015Dev" ]
+    KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff", "beamGas", "microBiasTrigger", "pA", "pGun"]
 
     ## Steering options
     __slots__ = {
@@ -83,7 +83,7 @@ class RecSysConf(LHCbConfigurableUser):
             self.setProp("RecoSequence",self.DefaultSubDetsFieldOn)
             if "fieldOff" in self.getProp("SpecialData"):
                 self.setProp("RecoSequence",self.DefaultSubDetsFieldOff)
-            if "2015Dev" in self.getProp("SpecialData"):
+            if self.getProp("DataType") is "2015":
                 self.setProp("RecoSequence",self.DefaultSubDetsFieldOnRun2)
         
         recoSeq = self.getProp("RecoSequence")
@@ -95,7 +95,7 @@ class RecSysConf(LHCbConfigurableUser):
         ProcessPhase("Reco").DetectorList += recoSeq
 
         # Primary Vertex and V0 finding
-        if "Vertex" in recoSeq  and "2015Dev" not in self.getProp("SpecialData"):
+        if "Vertex" in recoSeq  and self.getProp("DataType") is not "2015":
             from Configurables import PatPVOffline, TrackV0Finder
             pvAlg = PatPVOffline()
             if "2009" == self.getProp("DataType"):
@@ -124,16 +124,7 @@ class RecSysConf(LHCbConfigurableUser):
 
         # for Run 2, we run a different algorithm and don't want to have
         # the V0 finder in the vertex sequence (which is now after HLT1)
-        if "Vertex" in recoSeq and "2015Dev" in self.getProp("SpecialData"):
-            #from Configurables import TrackContainerCopy, TrackSelector
-            #refiner = TrackContainerCopy("FilterVeloHLT1Tracks")
-            #refiner.inputLocations = [ "Rec/Track/FittedHLT1Tracks" ]
-            #refiner.outputLocation = "Rec/Track/FittedHLT1VeloTracks"
-            #refiner.Selector = "TrackSelector"
-            #refiner.addTool(TrackSelector("TrackSelector"))
-            #refiner.TrackSelector.TrackTypes = [ "Velo" ]
-            #GaudiSequencer("RecoVertexSeq").Members += [ refiner ]
-            #################################################################
+        if "Vertex" in recoSeq and self.getProp("DataType") is "2015":
             from Configurables import PatPV3D, PVOfflineTool, LSAdaptPV3DFitter
             pvAlg = PatPV3D("PatPV3D")
             ## this should go in a configuration file when we know what to use

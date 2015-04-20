@@ -4,6 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2015-04-20 - Michel De Cian
+ - Remove '2015Dev' from 'KnownSpecialData', activate RunII tracking sequence by DataType '2015'
+
 ! 2015-04-15 - Michel De Cian
  - Remove 'TrackContainerCopy' from 2015 PV reconstruction, as Velo and Forward tracks are now in separate containers.
 
