@@ -4,6 +4,7 @@
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiHlt v3r20 2015-04-20 =========================
 ! 2015-03-17 - Vanya Belyaev
  - fix compliation warning 
 
