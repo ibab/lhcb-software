@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v5r1 2015-04-20 =========================
 ! 2015-04-16 - Chris Jones
  - Update PackParticlesAndVertices to only need to traverse the TES once per
    event to find the data objects to pack.
