@@ -28,7 +28,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
     __slots__ = {
         ### General behaviour settings
           'TrackingConf'             : 'FastVelo' # can be 'FastVelo' or 'PatVelo'
-        , 'FitTracks'                : True   # fit (velo-only) tracks
+        , 'FitTracks'                : False  # fit (velo-only) tracks
         , 'PVFitter'                 : 'LSAdaptPV3DFitter'
         , 'PVSeeding'                : 'PVSeed3DTool'
         , 'SplitVertices'            : False  # implies creation of selections (stored in SelReports)

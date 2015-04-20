@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-04-20 - Rosen Matev
+  - Don't do track fitting by default in BeamGas lines.
+
 ! 2015-04-17 - Sascha Stahl
  - Added new high multiplicity lines (Hlt1HighMultLines.py). One cuts on the number
    Velo clusters. The other selects events with a certain number of PVs and Velo clusters.
