@@ -197,6 +197,7 @@ int FarmDisplayBase::showSubfarm()    {
     }
     else if ( m_mode == HLTDEFER_MODE ) {
       svc = "-servicename="+svcPrefix()+dnam+"/ROpublish/HLTDefer";
+      if ( !svcPostfix().empty() ) svc = "-servicename="+svcPrefix()+dnam+svcPostfix();
       const char* argv[] = {"", svc.c_str(), "-delay=300" };
       m_subfarmDisplay = createHltSubfarmDisplay(SUBFARM_WIDTH+20,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
     }

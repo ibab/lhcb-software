@@ -227,6 +227,7 @@ struct BMDESCRIPT : public qentry_t  {
   RTL_ast_t        ast_addr;
   void*            ast_param;
   lib_rtl_gbl_t    buff_add;
+  lib_rtl_lock_t   lock;
   char*            buffer_add;
   int              fifo;
   int              reqFifo;

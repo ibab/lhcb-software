@@ -156,8 +156,10 @@ int NodePinger::runThread(void* arg) {
   ::lib_rtl_output(LIB_RTL_INFO,"Starting PING thread on node:%s.",p->name().c_str());
   while(p->m_run) {
     for(Connections::iterator i=p->connections().begin(); i!=p->connections().end();++i) {
+      string node = (*i).node;
       cmd = "/bin/ping -c 1 -w 1 ";
-      cmd += (*i).node;
+      if ( node.find("-d1") != string::npos ) cmd += "-s 8000 ";
+      cmd += node;
       //::lib_rtl_output(LIB_RTL_DEBUG,"Executing command:%s",cmd.c_str());
       FILE* f = ::lib_rtl_pipe_open(cmd.c_str(),"r");
       if ( f ) {

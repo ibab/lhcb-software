@@ -89,6 +89,10 @@ namespace ROMon {
     static const std::string& svcPrefix();
     /// Set service prefix for usage of the bridge
     static void setSvcPrefix(const std::string& pref);
+    /// Return service postfix for usage of the bridge
+    static const std::string& svcPostfix();
+    /// Set service postfix for usage of the bridge
+    static void setSvcPostfix(const std::string& postf);
     /// Set create flags
     static void setCreateFlags(int flags);
     /// Set create flags

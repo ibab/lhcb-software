@@ -55,7 +55,7 @@ namespace LHCb  {
 
   protected:
     /// Reference to event selector
-    const OnlineBaseEvtSelector* m_sel;
+    OnlineBaseEvtSelector*       m_sel;
     /// Flag to indicate that current event needs to be freed.
     bool                         m_needFree;
 
@@ -75,7 +75,7 @@ namespace LHCb  {
 
   public:
     /// Standard constructor
-    OnlineContext(const OnlineBaseEvtSelector* s);
+    OnlineContext(OnlineBaseEvtSelector* s);
     /// Standard destructor 
     virtual ~OnlineContext() {}
     /// IEvtSelector::Context overload; context identifier

@@ -18,6 +18,7 @@
 #include "GaudiOnline/EventServerRunable.h"
 #include "GaudiOnline/MEPManager.h"
 #include "WT/wt_facilities.h"
+#include "RTL/Lock.h"
 #include "RTL/bits.h"
 
 using namespace std;
@@ -40,9 +41,9 @@ static void handle_req(netentry_t* e, const netheader_t& hdr, void* param)  {
 
 // Standard Constructor
 EventServerRunable::EventServerRunable(const string& nam, ISvcLocator* svcLoc)   
-: OnlineService(nam, svcLoc), m_mepMgr(0), 
-  m_evtCount(0), m_consumer(0), m_netPlug(0), 
-  m_suspend(0), m_consState(WAIT_REQ)
+  : OnlineService(nam, svcLoc), m_mepMgr(0), 
+    m_evtCount(0), m_consumer(0), m_netPlug(0), 
+    m_suspend(0), m_consState(WAIT_REQ)
 {
   declareProperty("EvtMax",    m_evtMax=1);
   declareProperty("REQ",       m_req);
@@ -114,7 +115,11 @@ StatusCode EventServerRunable::stop()   {
     return error("Failed to stop service base class.");
   }
   if ( m_consumer ) {
-    m_consumer->delRequest(m_request);
+    try  {
+      m_consumer->delRequest(m_request);
+    }
+    catch(...)   {
+    }
     delete m_consumer;
   }
   m_consumer = 0;
@@ -190,7 +195,9 @@ void EventServerRunable::removeTarget(const string& src)   {
     try {
       ::lib_rtl_lock(m_lock);
       m_recipients.erase(j);
-      restartRequests();
+      if ( m_consState != DONE ) {
+        restartRequests();
+      }
     }
     catch(...) {
       error("Exception in removeTarget from "+src);
@@ -262,10 +269,10 @@ StatusCode EventServerRunable::sendEvent()  {
           if ( sc==NET_SUCCESS )   {
             m_recipients.erase(i);
             i = m_recipients.begin();
-	    ++cnt;
+            ++cnt;
             continue;
           }
-	  error("Cannot Send event data to "+(*i).first);
+          error("Cannot Send event data to "+(*i).first);
         }
       }
     }
@@ -286,64 +293,64 @@ StatusCode EventServerRunable::run()   {
   while ( 1 )  {
     ::lib_rtl_lock(m_lock);
     switch(m_consState)  {
-      case WAIT_REQ:
-	//info("Wait for event requests......");
-        if ( m_consState == DONE )  {
-	  info("End of event requests reached. Stopping...");
-	  ::lib_rtl_clear_event(m_suspend);
-	  ::lib_rtl_unlock(m_lock);
-          return StatusCode::SUCCESS;
-        }
-	empty = m_recipients.empty();
-	if ( empty ) ::lib_rtl_clear_event(m_suspend);
-	// Unlock now and allow for new requests being added
-        ::lib_rtl_unlock(m_lock);
-	if ( empty && m_consState != DONE ) {
-	  ::lib_rtl_wait_for_event(m_suspend);
-	}
-	// Check if we got a cancel in the meantime
-        if ( m_consState == DONE )  {
-	  info("End of event requests reached. Stopping...");
-	  ::lib_rtl_clear_event(m_suspend);
-          return StatusCode::SUCCESS;
-        }
-	restartRequests();
-        break;
-      case WAIT_EVT:
-        ::lib_rtl_unlock(m_lock);
-        sc = m_consumer->getEvent();
-        if ( m_consState == DONE )  {
-          return StatusCode::SUCCESS;
-        }
-        else if ( sc == MBM_NORMAL )  {
-          void* lock = 0;
-          try {
-            // Need to first lock all network channels to avoid dead-locks
-            // In the event a data-ready callback is already active, which
-            // would also want to task the local lock.
-            // Only afterwards it is safe to send data.
-            lock = net_lock(netPlug());
-            ::lib_rtl_lock(m_lock);
-            sendEvent();
-	    if ( ((++printN)%m_printNum) == 0 ) {
-	      info("Delivered %9d events to clients.",printN);
-	    }
-            net_unlock(netPlug(),lock);
-            lock = 0;
-	    m_consState = WAIT_REQ;
-            ::lib_rtl_unlock(m_lock);
-          }
-          catch(...)  {
-	    info("Exception....");
-            if ( lock ) net_unlock(netPlug(),lock);
-	    m_consState = WAIT_REQ;
-            ::lib_rtl_unlock(m_lock);
-          }
-        }
-        break;
-      case DONE:
+    case WAIT_REQ:
+      //info("Wait for event requests......");
+      if ( m_consState == DONE )  {
+        info("End of event requests reached. Stopping...");
+        ::lib_rtl_clear_event(m_suspend);
         ::lib_rtl_unlock(m_lock);
         return StatusCode::SUCCESS;
+      }
+      empty = m_recipients.empty();
+      if ( empty ) ::lib_rtl_clear_event(m_suspend);
+      // Unlock now and allow for new requests being added
+      ::lib_rtl_unlock(m_lock);
+      if ( empty && m_consState != DONE ) {
+        ::lib_rtl_wait_for_event(m_suspend);
+      }
+      // Check if we got a cancel in the meantime
+      if ( m_consState == DONE )  {
+        info("End of event requests reached. Stopping...");
+        ::lib_rtl_clear_event(m_suspend);
+        return StatusCode::SUCCESS;
+      }
+      restartRequests();
+      break;
+    case WAIT_EVT:
+      ::lib_rtl_unlock(m_lock);
+      sc = m_consumer->getEvent();
+      if ( m_consState == DONE )  {
+        return StatusCode::SUCCESS;
+      }
+      else if ( sc == MBM_NORMAL )  {
+        void* lock = 0;
+        try {
+          // Need to first lock all network channels to avoid dead-locks
+          // In the event a data-ready callback is already active, which
+          // would also want to task the local lock.
+          // Only afterwards it is safe to send data.
+          lock = net_lock(netPlug());
+          RTL::Lock obj_lock(m_lock);
+          sendEvent();
+          if ( ((++printN)%m_printNum) == 0 ) {
+            info("Delivered %9d events to clients.",printN);
+          }
+          net_unlock(netPlug(),lock);
+          lock = 0;
+        }
+        catch(...)  {
+          info("Exception....");
+          if ( lock ) net_unlock(netPlug(),lock);
+        }
+        if ( m_consState == DONE )  {
+          return StatusCode::SUCCESS;
+        }
+        m_consState = WAIT_REQ;
+      }
+      break;
+    case DONE:
+      ::lib_rtl_unlock(m_lock);
+      return StatusCode::SUCCESS;
     }
   }
 }

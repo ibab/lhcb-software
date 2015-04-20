@@ -51,9 +51,10 @@ DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb, MEPRxSvc)
 #define MEP_ADD_ERROR -9999
 #endif
 /* maximum number of sources (TELL1, RS, UKL1) */
-#ifndef MAX_SRC
-#define MAX_SRC 320
-#endif
+//#ifndef MAX_SRC
+// This must provoke an error!  No protection (M.Frank)
+#define MAX_SRC 400
+//#endif
 
 #define RAWBHDRSIZ (sizeof(RawBank) - sizeof(int)) /* f*** C99 */
 #define MEPHDRSIZ   sizeof(MEPHdr)

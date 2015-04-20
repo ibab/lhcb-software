@@ -35,6 +35,7 @@ using namespace std;
 static int               s_createFlags = NORMAL;
 static lib_rtl_lock_t    s_lock = 0;
 static string            s_prefix = "/";
+static string            s_postfix = "";
 
 /// Global screen lock shared by all displays
 lib_rtl_lock_t InternalDisplay::screenLock() {
@@ -83,6 +84,16 @@ const string& InternalDisplay::svcPrefix() {
 /// Set service prefix for usage of the bridge
 void InternalDisplay::setSvcPrefix(const string& pref) {
   s_prefix = pref;
+}
+
+/// Return service postfix for usage of the bridge
+const string& InternalDisplay::svcPostfix() {
+  return s_postfix;
+}
+
+/// Set service postfix for usage of the bridge
+void InternalDisplay::setSvcPostfix(const string& postf) {
+  s_postfix = postf;
 }
 
 /// Disconnect from DIM services

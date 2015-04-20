@@ -37,7 +37,7 @@ static void handle_event(netentry_t* e, const netheader_t& h, void* param)  {
   (sc == NET_SUCCESS) ? p->handleData(h.name,h.size,buff) : delete [] buff;
 }
 
-NetworkContext::NetworkContext(const NetworkEvtSelector* s)
+NetworkContext::NetworkContext(NetworkEvtSelector* s)
   : OnlineContext(s), m_cancelled(false)
 {
   m_evdesc.setEventType(EVENT_TYPE_EVENT);
@@ -165,7 +165,7 @@ NetworkEvtSelector::NetworkEvtSelector(const string& nam, ISvcLocator* svc)
 
 /// Create event selector iteration context
 StatusCode NetworkEvtSelector::createContext(Context*& refpCtxt) const  {
-  NetworkContext* ctxt = new NetworkContext(this);
+  NetworkContext* ctxt = new NetworkContext(const_cast<NetworkEvtSelector*>(this));
   refpCtxt = ctxt;
   return ctxt->connect(m_input);
 }

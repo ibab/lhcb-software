@@ -93,7 +93,7 @@ int mbmsrv_unreq_consumer(ServerBMID bm, MSG& msg);
 int _mbmsrv_evaluate_rules(ServerBMID bm);
 /// Match single consumer requirement
 int _mbmsrv_match_cons_req(const MSG::cons_requirement_t& rq, 
-			   const ServerBMID_t::ConsumerREQ& cr);
+                           const ServerBMID_t::ConsumerREQ& cr);
 
 /// Server interface: Connect server process
 int _mbmsrv_connect(ServerBMID bm);
@@ -144,7 +144,7 @@ int _mbmsrv_alloc_reqone_id(ServerBMID bm,int user_type,int desired_type, int* u
 int _mbmsrv_free_reqone_id(ServerBMID bm,int user_type,int user_type_one);
 /// Find matching req
 int _mbmsrv_match_req (ServerBMID bm, int partid, int evtype, TriggerMask& trmask, 
-		       UserMask& mask0, UserMask& mask1, UserMask* one_masks, int* match_or);
+                       UserMask& mask0, UserMask& mask1, UserMask* one_masks, int* match_or);
 /// Remove event from active event queue
 int _mbmsrv_del_event(ServerBMID bm, USER* u, EVENT* e);
 /// clear events with freqmode = notall
@@ -232,7 +232,7 @@ int _mbmsrv_map_buff_section(BufferMemory* bm)  {
   int status = ::lib_rtl_map_section(text,0,&bm->buff_add);
   if (!lib_rtl_is_success(status))    {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Error mapping buffer section for MBM buffer %s\n",
-			     bm_name);
+                             bm_name);
     return MBM_ERROR;
   }
   bm->buffer_add  = (char*)bm->buff_add->address;
@@ -248,7 +248,7 @@ int _mbmsrv_map_ctrl_section(BufferMemory* bm)  {
   int status = ::lib_rtl_map_section(text,0,&bm->gbl_add);
   if (!lib_rtl_is_success(status))    {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Error mapping control section for MBM buffer %s",
-			     bm_name);
+                             bm_name);
     return MBM_ERROR;
   }
   bm->gbl         = (char*)bm->gbl_add->address;
@@ -325,15 +325,15 @@ int _mbmsrv_shutdown (void* /* param */) {
     for(int i=0; i<cnt; ++i)  {
       ServerBMID bm = ids[i];
       if ( bm != 0 )   {
-	_mbmsrv_close_fifos(bm);
-	for (USER* u=bm->user, *last=u+bm->ctrl->p_umax; u != last; ++u)    {
-	  if ( u->busy )   {
-	    if ( u->fifo > 0 ) ::close(u->fifo);
-	    if ( u->fifoName[0] ) ::unlink(u->fifoName);
-	  }
-	}
-	if ( bm->gbl        ) ::lib_rtl_delete_section(bm->gbl_add);
-	if ( bm->buffer_add ) ::lib_rtl_delete_section(bm->buff_add);
+        _mbmsrv_close_fifos(bm);
+        for (USER* u=bm->user, *last=u+bm->ctrl->p_umax; u != last; ++u)    {
+          if ( u->busy )   {
+            if ( u->fifo > 0 ) ::close(u->fifo);
+            if ( u->fifoName[0] ) ::unlink(u->fifoName);
+          }
+        }
+        if ( bm->gbl        ) ::lib_rtl_delete_section(bm->gbl_add);
+        if ( bm->buffer_add ) ::lib_rtl_delete_section(bm->buff_add);
       }
     }
   }
@@ -478,9 +478,9 @@ int _mbmsrv_alloc_reqone_id(ServerBMID bm,int user_type,int desired_type, int* u
       int val = c->reqone_val[ir];
       if ( free_id < 0 && val == 0 ) free_id=ir;
       if ( val == desired_type ) {
-	++c->reqone_count[ir];
-	*user_type_one = ir;
-	return MBM_NORMAL;
+        ++c->reqone_count[ir];
+        *user_type_one = ir;
+        return MBM_NORMAL;
       }
     }
     if ( free_id >= 0 ) {
@@ -534,8 +534,8 @@ int _mbmsrv_check_wsp(ServerBMID bm)  {
         ctrl->last_alloc = 0;
         int status = BF_alloc(bitmap,ctrl->bm_size,ubit,&bit);
         if (lib_rtl_is_success(status))   {
-	  MSG msg(MSG::GET_SPACE, u, MBM_NORMAL);
-	  MSG::get_space_t& sp = msg.data.get_space;
+          MSG msg(MSG::GET_SPACE, u, MBM_NORMAL);
+          MSG::get_space_t& sp = msg.data.get_space;
           bit             += ctrl->last_alloc<<3;
           ctrl->last_alloc = (bit+ubit)>>3;
           ctrl->last_bit   = bit;
@@ -543,11 +543,11 @@ int _mbmsrv_check_wsp(ServerBMID bm)  {
           u->ev_ptr        = bit  << shift;
           u->space_size    = ubit << shift;
           u->space_add     = u->ev_ptr;
-	  _mbmsrv_del_wsp(u);
-	  u->state         = S_active;
-	  sp.size          = u->space_size;
-	  sp.offset        = u->space_add;
-	  return _mbmsrv_reply(bm,msg,u->fifo);
+          _mbmsrv_del_wsp(u);
+          u->state         = S_active;
+          sp.size          = u->space_size;
+          sp.offset        = u->space_add;
+          return _mbmsrv_reply(bm,msg,u->fifo);
         }
       }
     }
@@ -557,7 +557,7 @@ int _mbmsrv_check_wsp(ServerBMID bm)  {
 
 /// Find matching req
 int _mbmsrv_match_req(ServerBMID bm, int partid, int evtype, TriggerMask& trmask, 
-		      UserMask& mask0, UserMask& mask1, UserMask* one_masks, int* match_or)  
+                      UserMask& mask0, UserMask& mask1, UserMask* one_masks, int* match_or)  
 {
   int i;
   REQ *rq;
@@ -570,19 +570,19 @@ int _mbmsrv_match_req(ServerBMID bm, int partid, int evtype, TriggerMask& trmask
     }
     for (i = 0, rq = u->req; i < u->n_req; i++, rq++)  {
       if (evtype != rq->ev_type)    {
-	continue;
+        continue;
       }
       else if (rq->masktype == BM_MASK_ALL )  {
-	if ( trmask != rq->tr_mask )
-	  continue;
+        if ( trmask != rq->tr_mask )
+          continue;
       }
       else if ( !dummy.mask_and(trmask, rq->tr_mask) )
-	continue;
+        continue;
       else if (  dummy.mask_and(trmask, rq->vt_mask) )  
-	continue;
+        continue;
       // Somehow what comes out is twice the rate. Need to divide rate by 2
       else if ( rq->freq < 100.0 &&
-		(float(::rand())/float(RAND_MAX)*100.0) > rq->freq/2.0 )
+                (float(::rand())/float(RAND_MAX)*100.0) > rq->freq/2.0 )
         continue;
 
       if ( rq->user_type == BM_REQ_ONE )
@@ -664,10 +664,10 @@ int _mbmsrv_efree (ServerBMID bm, USER* u, EVENT* e)  {
       // Important: first change producer state!
       u->state = S_active;
       if ( u->ev_dest[0] )  {  // find all destinations 
-	int uid = _mbmsrv_findnam(bm,u->ev_dest);
-	if ( uid != -1 )    {
-	  e->umask0.set(uid);
-	}
+        int uid = _mbmsrv_findnam(bm,u->ev_dest);
+        if ( uid != -1 )    {
+          e->umask0.set(uid);
+        }
       }
       int match_or = 0;
       _mbmsrv_match_req(bm,u->partid,u->ev_type,u->ev_trmask,e->umask0,e->umask1,e->one_mask,&match_or);
@@ -675,20 +675,20 @@ int _mbmsrv_efree (ServerBMID bm, USER* u, EVENT* e)  {
       e->ev_add  = u->space_add;
       e->ev_size = rlen;
       if ( match_or )   {
-	e->busy    = 2;            // exclusive use of event
-	e->partid  = u->partid;
-	e->ev_type = u->ev_type;
-	e->tr_mask = u->ev_trmask;
-	e->ev_size = u->ev_size;
-	e->held_mask.set(u->uid);
+        e->busy    = 2;            // exclusive use of event
+        e->partid  = u->partid;
+        e->ev_type = u->ev_type;
+        e->tr_mask = u->ev_trmask;
+        e->ev_size = u->ev_size;
+        e->held_mask.set(u->uid);
       }
       else  {
-	_mbmsrv_del_event(bm,u,e);           // de-allocate event slot/space
+        _mbmsrv_del_event(bm,u,e);           // de-allocate event slot/space
       }
       u->space_add  += rlen;
       u->space_size -= rlen;
       if (u->space_size <= 0)  {
-	u->space_add = 0;                    // if size zero, address zero
+        u->space_add = 0;                    // if size zero, address zero
       }
       c->tot_produced++;
       u->ev_produced++;
@@ -745,7 +745,7 @@ EVENT* _mbmsrv_ealloc (ServerBMID bm, USER* u)  {
       e->umask0.clear();
       e->umask1.clear();
       for(size_t i=0; i<BM_MAX_REQONE;++i)
-	e->one_mask[i].clear();
+        e->one_mask[i].clear();
       c->i_events++;
       if ( bm->alloc_event )   {
         void* pars[4];
@@ -816,7 +816,7 @@ int mbmsrv_map_memory(const char* bm_name, BufferMemory* bm)  {
     if ( sc == MBM_NORMAL )  {
       sc = _mbmsrv_map_buff_section(bm);
       if ( sc == MBM_NORMAL )  {
-	return MBM_NORMAL;
+        return MBM_NORMAL;
       }
     }
   }
@@ -833,18 +833,18 @@ int _mbmsrv_evaluate_rules(ServerBMID bm)   {
       USER* u = bm->user;
       const REQ& req = cr.requirement;
       for (int i = 0; i < c->p_umax; ++i, ++u)  {
-	if(u->magic == MBM_USER_MAGIC && u->busy == 1 && u->partid == req.user_type)  {
-	  bool match = req.masktype || ::str_match_wild(u->name,cr.name);
-	  if ( match )  {
-	    for(int k=0; match && k<u->n_req; ++k)  {
-	      if ( req.ev_type == u->req[k].ev_type )  {
-		if ( u->req[k].tr_mask.mask_or(req.tr_mask) )  {
-		  goto Match_Next_requirement;
-		}
-	      }
-	    }
-	  }
-	}
+        if(u->magic == MBM_USER_MAGIC && u->busy == 1 && u->partid == req.user_type)  {
+          bool match = req.masktype || ::str_match_wild(u->name,cr.name);
+          if ( match )  {
+            for(int k=0; match && k<u->n_req; ++k)  {
+              if ( req.ev_type == u->req[k].ev_type )  {
+                if ( u->req[k].tr_mask.mask_or(req.tr_mask) )  {
+                  goto Match_Next_requirement;
+                }
+              }
+            }
+          }
+        }
       }
       // If we get here at least one active requirement was not matched.
       // This means event declaration must be forbidden.
@@ -860,13 +860,13 @@ int _mbmsrv_evaluate_rules(ServerBMID bm)   {
 
 /// Match single consumer requirement
 int _mbmsrv_match_cons_req(const ServerBMID_t::ConsumerREQ& cr,
-			   const char* nam, int partid, int evtype, const unsigned int mask[])   {
+                           const char* nam, int partid, int evtype, const unsigned int mask[])   {
   if ( 0 != cr.name[0] )
     if ( partid == cr.requirement.user_type )
       if ( evtype == cr.requirement.ev_type )
-	if ( cr.requirement.tr_mask.mask_or(mask) )
-	  if ( cr.requirement.masktype || ::str_match_wild(nam,cr.name) )
-	    return MBM_NORMAL;
+        if ( cr.requirement.tr_mask.mask_or(mask) )
+          if ( cr.requirement.masktype || ::str_match_wild(nam,cr.name) )
+            return MBM_NORMAL;
   return MBM_ILL_REQ;
 }
 
@@ -927,7 +927,7 @@ int mbmsrv_unrequire_consumer(ServerBMID bm, const char* name, int partid, int e
       // Cannot change mask, because we do no longer know the value before
       // the last add. If refcount is NULL, reset the slot....
       if ( 0 == --cr.count )   {
-	::memset(&cr,0,sizeof(ServerBMID_t::ConsumerREQ));
+        ::memset(&cr,0,sizeof(ServerBMID_t::ConsumerREQ));
       }
       return _mbmsrv_evaluate_rules(bm);
     }
@@ -1066,10 +1066,10 @@ int _mbmsrv_get_ev(ServerBMID bm, USER* u)  {
     if ( (e->busy != 2) && (e->busy != 0) )  {
       bool req_pending = e->umask0.test(uid) || e->umask1.test(uid);
       for(size_t i=0; i<BM_MAX_REQONE;++i) {
-	if ( e->one_mask[i].test(uid) ) {
-	  req_pending = true;
-	  break;
-	}
+        if ( e->one_mask[i].test(uid) ) {
+          req_pending = true;
+          break;
+        }
       }
       if ( req_pending ) {
         u->ev_ptr    = e->ev_add;
@@ -1078,15 +1078,15 @@ int _mbmsrv_get_ev(ServerBMID bm, USER* u)  {
         u->ev_trmask = e->tr_mask;
         u->held_eid  = e->eid;
         e->held_mask.set(uid);
-	e->umask0.clear(uid);
-	e->umask1.clear(uid);
-	// BM_REQ_ONE consumer: No other from the same group may see this event
-	//                      and of course: the same client should not see it twice!
-	for(size_t i=0; i<BM_MAX_REQONE; ++i) {
-	  if ( e->one_mask[i].test(uid) ) {
-	    e->one_mask[i].clear();
-	  }
-	}
+        e->umask0.clear(uid);
+        e->umask1.clear(uid);
+        // BM_REQ_ONE consumer: No other from the same group may see this event
+        //                      and of course: the same client should not see it twice!
+        for(size_t i=0; i<BM_MAX_REQONE; ++i) {
+          if ( e->one_mask[i].test(uid) ) {
+            e->one_mask[i].clear();
+          }
+        }
         u->ev_seen++;
         bm->ctrl->tot_seen++;
         return MBM_NORMAL;
@@ -1348,39 +1348,39 @@ int _mbmsrv_check_wev (ServerBMID bm, EVENT* e)  {
       int uid = u->uid;
       bool req_pending = e->umask0.test(uid) || e->umask1.test(uid);
       for(size_t i=0; !req_pending && i<BM_MAX_REQONE; ++i) {
-	if ( e->one_mask[i].test(uid) ) {
-	  req_pending = true;
-	  break;
-	}
+        if ( e->one_mask[i].test(uid) ) {
+          req_pending = true;
+          break;
+        }
       }
       if ( req_pending )  {
-	u->ev_ptr    = e->ev_add;
-	u->ev_size   = e->ev_size;
-	u->ev_type = e->ev_type;
-	u->ev_trmask = e->tr_mask;
-	u->held_eid  = e->eid;
-	e->umask0.clear(uid);
-	e->umask1.clear(uid);
-	e->held_mask.set(uid);
-	// BM_REQ_ONE consumer: No other from the same group may see this event
-	//                      and of course: the same client should not see it twice!
-	for(size_t i=0; i<BM_MAX_REQONE; ++i) {
-	  if ( e->one_mask[i].test(uid) ) {
-	    e->one_mask[i].clear();
-	  }
-	}
-	u->ev_seen++;
-	bm->ctrl->tot_seen++;
-	_mbmsrv_del_wev(u);
-	// Event is ready: inform the client with the information where to find it.
-	MSG msg(MSG::GET_EVENT, u, MBM_NORMAL);
-	MSG::get_event_t& evt = msg.data.get_event;
-	evt.size   = u->ev_size;
-	evt.type   = u->ev_type;
-	evt.offset = u->ev_ptr;
-	::memcpy(evt.trmask,&u->ev_trmask,sizeof(evt.trmask));
-	u->state = S_active;
-	return _mbmsrv_reply(bm,msg,u->fifo);
+        u->ev_ptr    = e->ev_add;
+        u->ev_size   = e->ev_size;
+        u->ev_type = e->ev_type;
+        u->ev_trmask = e->tr_mask;
+        u->held_eid  = e->eid;
+        e->umask0.clear(uid);
+        e->umask1.clear(uid);
+        e->held_mask.set(uid);
+        // BM_REQ_ONE consumer: No other from the same group may see this event
+        //                      and of course: the same client should not see it twice!
+        for(size_t i=0; i<BM_MAX_REQONE; ++i) {
+          if ( e->one_mask[i].test(uid) ) {
+            e->one_mask[i].clear();
+          }
+        }
+        u->ev_seen++;
+        bm->ctrl->tot_seen++;
+        _mbmsrv_del_wev(u);
+        // Event is ready: inform the client with the information where to find it.
+        MSG msg(MSG::GET_EVENT, u, MBM_NORMAL);
+        MSG::get_event_t& evt = msg.data.get_event;
+        evt.size   = u->ev_size;
+        evt.type   = u->ev_type;
+        evt.offset = u->ev_ptr;
+        ::memcpy(evt.trmask,&u->ev_trmask,sizeof(evt.trmask));
+        u->state = S_active;
+        return _mbmsrv_reply(bm,msg,u->fifo);
       }
     }
   }
@@ -1470,8 +1470,8 @@ int _mbmsrv_connect(ServerBMID bm)    {
     s.fifoName[sizeof(s.fifoName)-1] = 0;
     if( ::mkfifo(s.fifoName,0666)  ) {
       if ( errno != EEXIST ) { // It is not an error if the file already exists....
-	::lib_rtl_signal_message(LIB_RTL_OS,"Unable to create the fifo: %s.\n",s.fifoName);
-	return MBM_ERROR;
+        ::lib_rtl_signal_message(LIB_RTL_OS,"Unable to create the fifo: %s.\n",s.fifoName);
+        return MBM_ERROR;
       }
     }
     ::chmod(s.fifoName,0666);
@@ -1567,27 +1567,27 @@ static int _mbmsrv_client_watch(void* param) {
       if ( bm->stop ) return 0x1;
       if ( nclients < 0 && errno == EINTR ) continue;
       {	/// Check consumer if (some) clients are waiting for events
-	LOCK lock(bm->lockid);
-	MBMScanner<EVENT> que(bm->evDesc, -EVENT_next_off);
-	for(EVENT* e=que.get(); e; e=que.get() )  {
-	  _mbmsrv_check_wev(bm,e);  // check wev queue
-	}
+        LOCK lock(bm->lockid);
+        MBMScanner<EVENT> que(bm->evDesc, -EVENT_next_off);
+        for(EVENT* e=que.get(); e; e=que.get() )  {
+          _mbmsrv_check_wev(bm,e);  // check wev queue
+        }
       }
       if ( nclients > 0 ) {
-	if( epoll.events&(EPOLLERR|EPOLLHUP) ) {
-	  if ( 0 > ::epoll_ctl(bm->clientfd, EPOLL_CTL_DEL,epoll.data.fd,&epoll) ) {
-	    ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to remove client fifo %d.\n",epoll.data.fd);
-	  }
-	  ::close(epoll.data.fd);
-	  LOCK lock(bm->lockid);
-	  for (USER* u=bm->user, *last=u+bm->ctrl->p_umax; u != last; ++u)    {
-	    if ( u->fifo == epoll.data.fd ) {
-	      ::lib_rtl_output(LIB_RTL_INFO,"MBM server removing dead client '%s'.\n",u->name);
-	      _mbmsrv_uclean(bm,u);
-	      break;
-	    }
-	  }
-	}
+        if( epoll.events&(EPOLLERR|EPOLLHUP) ) {
+          if ( 0 > ::epoll_ctl(bm->clientfd, EPOLL_CTL_DEL,epoll.data.fd,&epoll) ) {
+            ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to remove client fifo %d.\n",epoll.data.fd);
+          }
+          ::close(epoll.data.fd);
+          LOCK lock(bm->lockid);
+          for (USER* u=bm->user, *last=u+bm->ctrl->p_umax; u != last; ++u)    {
+            if ( u->fifo == epoll.data.fd ) {
+              ::lib_rtl_output(LIB_RTL_INFO,"MBM server removing dead client '%s'.\n",u->name);
+              _mbmsrv_uclean(bm,u);
+              break;
+            }
+          }
+        }
       }
     }
     return 0x1;
@@ -1642,73 +1642,73 @@ int mbmsrv_dispatch_call(ServerBMID bm, int which)  {
       continue;
     if ( epoll.events&EPOLLIN ) {
       if ( MBM_NORMAL != msg.read(epoll.data.fd) ) {
-	::perror("error while reading : message is lost");
+        ::perror("error while reading : message is lost");
       }
       // Keep temporary of file descriptor
       switch(msg.type) {
       case MSG::INCLUDE:
-	msg.status = mbmsrv_include(bm,msg);
-	break;
+        msg.status = mbmsrv_include(bm,msg);
+        break;
       case MSG::EXCLUDE:
-	msg.status = mbmsrv_exclude(bm,msg);
-	break;
+        msg.status = mbmsrv_exclude(bm,msg);
+        break;
 
-	// Server command handlers
+        // Server command handlers
       case MSG::REQUIRE_CONS:
-	msg.status = mbmsrv_req_consumer(bm,msg);
-	break;
+        msg.status = mbmsrv_req_consumer(bm,msg);
+        break;
       case MSG::UNREQUIRE_CONS:
-	msg.status = mbmsrv_unreq_consumer(bm,msg);
-	break;
+        msg.status = mbmsrv_unreq_consumer(bm,msg);
+        break;
 
-	// Consumer routines
+        // Consumer routines
       case MSG::ADD_REQUEST:
-	msg.status = mbmsrv_add_req(bm,msg);
-	break;
+        msg.status = mbmsrv_add_req(bm,msg);
+        break;
       case MSG::DEL_REQUEST:
-	msg.status = mbmsrv_del_req(bm,msg);
-	break;
+        msg.status = mbmsrv_del_req(bm,msg);
+        break;
       case MSG::GET_EVENT: 
-	msg.status = mbmsrv_get_event(bm,msg);
-	break;
+        msg.status = mbmsrv_get_event(bm,msg);
+        break;
       case MSG::STOP_CONSUMER:
-	msg.status = mbmsrv_stop_consumer(bm,msg);
-	break;
+        msg.status = mbmsrv_stop_consumer(bm,msg);
+        break;
       case MSG::PAUSE:
-	msg.status = mbmsrv_pause(bm,msg);
-	break;
+        msg.status = mbmsrv_pause(bm,msg);
+        break;
       case MSG::FREE_EVENT:
-	msg.status = mbmsrv_free_event(bm,msg);
-	break;
+        msg.status = mbmsrv_free_event(bm,msg);
+        break;
 
-	// Producer routines
+        // Producer routines
       case MSG::GET_SPACE_TRY:
-	msg.status = mbmsrv_get_space_try(bm,msg);
-	break;
+        msg.status = mbmsrv_get_space_try(bm,msg);
+        break;
       case MSG::GET_SPACE:
-	msg.status = mbmsrv_get_space(bm,msg);
-	break;
+        msg.status = mbmsrv_get_space(bm,msg);
+        break;
       case MSG::FREE_SPACE:
-	msg.status = mbmsrv_free_space(bm,msg);
-	break;
+        msg.status = mbmsrv_free_space(bm,msg);
+        break;
       case MSG::SEND_SPACE:
-	msg.status = mbmsrv_send_space(bm,msg);
-	break;
+        msg.status = mbmsrv_send_space(bm,msg);
+        break;
       case MSG::DECLARE_EVENT:
-	msg.status = mbmsrv_declare_event(bm,msg);
-	break;
+        msg.status = mbmsrv_declare_event(bm,msg);
+        break;
       case MSG::CANCEL_REQUEST:
-	msg.status = mbmsrv_cancel_request(bm,msg);
-	break;
+        msg.status = mbmsrv_cancel_request(bm,msg);
+        break;
 
       default:
-	msg.status = MBM_ERROR;
-	break;
+        msg.status = MBM_ERROR;
+        break;
       }
 
       if ( msg.status != MBM_NO_REPLY ) {
-	_mbmsrv_reply(bm,msg,msg.user->fifo);
-	continue;
+        _mbmsrv_reply(bm,msg,msg.user->fifo);
+        continue;
       }
       //if ( nreq == 200 ) ProfilerStart("mbm_server.prof");
       //if ( nreq == 5000000 ) break;
@@ -1743,8 +1743,8 @@ extern "C" int mbmsrv_dispatch_blocking(ServerBMID bm)  {
     if ( sc == MBM_NORMAL )  {
       sc = mbmsrv_dispatch_call(bm,1);
       if ( sc == MBM_NORMAL )  {
-	_mbmsrv_watch_clients(bm);
-	return MBM_NORMAL;
+        _mbmsrv_watch_clients(bm);
+        return MBM_NORMAL;
       }
     }
   }
@@ -1757,10 +1757,10 @@ extern "C" int mbmsrv_dispatch_nonblocking(ServerBMID bm)  {
     int sc = _mbmsrv_connect(bm);
     if ( sc == MBM_NORMAL )  {
       for(int i=0; i<bm->num_threads; ++i) {
-	sc = ::lib_rtl_start_thread(mbmsrv_thread_routine,new std::pair<int,ServerBMID>(i,bm),&bm->server[i].dispatcher);
-	if ( !lib_rtl_is_success(sc) ) {
-	  return MBM_ERROR;
-	}
+        sc = ::lib_rtl_start_thread(mbmsrv_thread_routine,new std::pair<int,ServerBMID>(i,bm),&bm->server[i].dispatcher);
+        if ( !lib_rtl_is_success(sc) ) {
+          return MBM_ERROR;
+        }
       }
       _mbmsrv_watch_clients(bm);
       return MBM_NORMAL;
@@ -1773,8 +1773,8 @@ extern "C" int mbmsrv_wait_dispatch(ServerBMID bm) {
   if ( bm && bm->magic == MBM_USER_MAGIC )    {
     for(int i=0; i<bm->num_threads; ++i) {
       if ( 0 != bm->server[i].dispatcher )  {
-	::lib_rtl_join_thread(bm->server[i].dispatcher);
-	bm->server[i].dispatcher = 0;
+        ::lib_rtl_join_thread(bm->server[i].dispatcher);
+        bm->server[i].dispatcher = 0;
       }
     }
     if ( 0 != bm->client_thread ) {

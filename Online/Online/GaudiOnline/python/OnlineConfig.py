@@ -236,6 +236,11 @@ def mbmSelector(input=None,type=None,decode=True,TAE=False,event_type=2):
   svc = Configs.LHCb__OnlineEvtSelector('EventSelector')
   if decode is not None:
     svc.Decode = decode
+  else:
+    import OnlineEnv as _o
+    svc.IntelligentSetup = True
+    svc.TAE = _o.TAE
+
   if input is not None:
     svc.Input  = input
     svc.REQ1   = _mbmRequirement(input=input,type=type,TAE=TAE,event_type=event_type)

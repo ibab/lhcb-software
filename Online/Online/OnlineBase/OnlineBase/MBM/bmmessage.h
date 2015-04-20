@@ -128,10 +128,12 @@ struct MBMMessage {
   explicit MBMMessage(int typ, USER* u=0, int stat=MBM_ERROR) 
     : user(u), type(typ), status(stat), magic(MAGIC) {}
   int read(int fd);
+  int read(int fd, int* cancelation_flag);
   int write(int fd) const;
   int write(int fd, void* ptr, size_t len) const;
   int wait(int fd, int* cancelled);
   int communicate(int fdout, int fdin);
+  int communicate(int fdout, int fdin, int* cancelation_flag);
   /// Clean possibly pending messages from the receive fifo (e.g. after a cancel)
   static int clearFifo(int fd);
   static const char* typeStr(int typ);

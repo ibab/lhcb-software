@@ -41,7 +41,7 @@ namespace OnlineBaseEvtSelector__test   {
 }
 
 /// Standard constructor
-OnlineContext::OnlineContext(const OnlineBaseEvtSelector* s)
+OnlineContext::OnlineContext(OnlineBaseEvtSelector* s)
   : m_sel(s), m_needFree(false), m_baseAddr(0)
 {
   m_evdesc.setHeader(0);

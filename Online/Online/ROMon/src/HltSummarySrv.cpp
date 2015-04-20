@@ -175,6 +175,7 @@ static void feed(void* tag, void** buff, int* size, int* /* first */) {
 
 /// Standard constructor
 HltSummarySrv::HltSummarySrv(int argc, char** argv) : m_delay(5), m_print(LIB_RTL_WARNING)  {
+  string dic_dns, dis_dns;
   RTL::CLI cli(argc, argv, HltSummarySrv::help);
   m_name = "/"+RTL::nodeNameShort()+"/"+RTL::processName();
   m_listenTo = "/ROpublish/HLTDefer";
@@ -183,8 +184,13 @@ HltSummarySrv::HltSummarySrv(int argc, char** argv) : m_delay(5), m_print(LIB_RT
   cli.getopt("delay",2,m_delay);
   cli.getopt("listen",2,m_listenTo);
   cli.getopt("publish",2,m_publishTo);
+  cli.getopt("dic_dns",7,dic_dns);
+  cli.getopt("dis_dns",7,dis_dns);
   ::lib_rtl_install_printer(ro_rtl_print,(void*)m_print);
 
+  if ( !dic_dns.empty() ) ::dic_set_dns_node(dic_dns.c_str());
+  if ( !dis_dns.empty() ) ::dis_set_dns_node(dis_dns.c_str());
+  
   PartitionListener p(this,"Subfarms","hlt*",true);
   m_runSvc = ::dis_add_service((char*)(m_publishTo+"/Runs").c_str(),(char*)"C",0,0,feed,(long)&m_run_result);
   m_sumSvc = ::dis_add_service((char*)(m_publishTo+"/Summary").c_str(),(char*)"C",0,0,feed,(long)&m_summary_result);
@@ -225,7 +231,7 @@ void HltSummarySrv::collectData() {
 	const _S* stats = (_S*)d->data;
 	const _N& nodes = *(stats->nodes());
 	// Explicitly ignore "HLTA" subfarms
-	if ( strncmp(stats->name,"hlta",4) == 0 ) continue;
+	///if ( strncmp(stats->name,"hlta",4) == 0 ) continue;
 	for (_N::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
 	  const _R& runs = (*n).runs;
 	  const Diskspace& disk = (*n).localdisk;

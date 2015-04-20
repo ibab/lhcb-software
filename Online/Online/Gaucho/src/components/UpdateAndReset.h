@@ -90,6 +90,8 @@ private:
   int m_teste;
 
   bool m_firstExecute;
+  bool m_doRunChangeInc;
+  bool m_ResetonStart;
 
   std::string m_utgid;
   dyn_string *serviceParts;

@@ -51,7 +51,7 @@ namespace LHCb  {
     bool               m_cancelled;
   public:
     /// Standard constructor
-    NetworkContext(const NetworkEvtSelector* pSelector);
+    NetworkContext(NetworkEvtSelector* pSelector);
     /// Standard destructor 
     virtual ~NetworkContext() {}
     /// Notification callback when event provider dies

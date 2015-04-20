@@ -49,6 +49,7 @@ StatusCode PublishSvc::start()
 {
   PublishSvc::ITEM *itm;
   ItemMap::iterator it;
+  DimServer::autoStartOn();
   for (it=this->m_items.begin();it!=m_items.end();it++)
   {
     itm = it->second;
@@ -57,8 +58,6 @@ StatusCode PublishSvc::start()
       itm->make_service();
     }
   }
-  DimServer::start();
-  DimServer::autoStartOn();
   m_started = true;
   return StatusCode::SUCCESS;
 }

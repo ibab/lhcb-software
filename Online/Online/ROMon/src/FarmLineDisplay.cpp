@@ -68,13 +68,14 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
 {
   char txt[512];
   vector<string> listeners;
-  string anchor, prefix, tmp;
+  string anchor, prefix, postfix, tmp;
   RTL::CLI cli(argc,argv,help);
   bool all = 0 != cli.getopt("all",2);
   bool xml = 0 != cli.getopt("xml",2);
   cli.getopt("partition",   2, m_name = "ALL");
   cli.getopt("match",       2, m_match = "*");
   cli.getopt("prefix",      2, prefix);
+  cli.getopt("postfix",     2, postfix);
   cli.getopt("sdh",         2, m_subDisplayHeight);
   cli.getopt("node-height", 7, m_subDisplayHeight);
 
@@ -113,7 +114,8 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
   listeners.push_back(tmp);
   m_name = *listeners.begin();
 
-  if ( !prefix.empty() ) InternalDisplay::setSvcPrefix(prefix);
+  if ( !prefix.empty()  ) InternalDisplay::setSvcPrefix(prefix);
+  if ( !postfix.empty() ) InternalDisplay::setSvcPostfix(postfix);
   if ( m_reverse       ) InternalDisplay::setCreateFlags(INVERSE);
   s_fd = this;
   if ( m_mode == RECO_MODE && all && m_match=="*" )
@@ -167,6 +169,7 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-1,1,1);
   }
   else if ( m_mode == HLTDEFER_MODE ) {
+
     ::scrc_put_chars(m_display,txt,NORMAL|BOLD,1,2,0);
     ::scrc_put_chars(m_display,"<CTRL-H for Help>, <CTRL-E to exit>",NORMAL|BOLD,2,40,0);
     ::scrc_put_chars(m_display,"nn",GREEN|INVERSE,1,80,0);

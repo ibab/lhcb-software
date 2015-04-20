@@ -20,9 +20,9 @@ using namespace std;
 
 /// Standard algorithm constructor
 NetworkDataSender::NetworkDataSender(const string& nam, ISvcLocator* pSvc)
-:  MDFWriter(MDFIO::MDF_BANKS, nam, pSvc),
-   m_sendReq(0), m_sendError(0), m_sendBytes(0), m_evtSelector(0),
-   m_sendEvents(false), m_incidentSvc(0)
+   :  MDFWriter(MDFIO::MDF_BANKS, nam, pSvc),
+      m_sendReq(0), m_sendError(0), m_sendBytes(0), m_evtSelector(0),
+      m_sendEvents(false), m_incidentSvc(0)
 {
   declareProperty("DataSink",         m_target);
   declareProperty("UseEventRequests", m_useEventRequests=false);
@@ -181,18 +181,18 @@ StatusCode NetworkDataSender::execute()  {
     if ( m_sendEvents ) {
       sc = MDFWriter::execute();
       if ( !sc.isSuccess() )  {
-	sendAlarm("Failed to transfer event data to:"+m_target);
+        sendAlarm("Failed to transfer event data to:"+m_target);
       }
       RTL::Lock lck(m_lock);  // Lock recipient queue to prevent damage
       Recipient rcp = m_recipients.front();
       m_recipients.pop_front();
       // Mode without requests: add entry again at end....
       if ( !m_useEventRequests ) {
-	m_recipients.push_back(rcp);
-	resumeEvents();
+        m_recipients.push_back(rcp);
+        resumeEvents();
       }
       else if ( m_recipients.empty() ) {
-	suspendEvents();
+        suspendEvents();
       }
     }
     return sc;
@@ -228,11 +228,11 @@ StatusCode NetworkDataSender::writeBuffer(void* const /* ioDesc */, const void* 
     MDFHeader* h = (MDFHeader*)b->data();
     MsgStream output(msgSvc(),name());
     output << MSG::ALWAYS << "Handle request for recipient:" << recipient.name  << " Mask:" 
-	   << hex << setw(10) << left << h->subHeader().H1->triggerMask()[0] << " "
-	   << hex << setw(10) << left << h->subHeader().H1->triggerMask()[1] << " "
-	   << hex << setw(10) << left << h->subHeader().H1->triggerMask()[2] << " "
-	   << hex << setw(10) << left << h->subHeader().H1->triggerMask()[3] << " "
-	   << endmsg;
+           << hex << setw(10) << left << h->subHeader().H1->triggerMask()[0] << " "
+           << hex << setw(10) << left << h->subHeader().H1->triggerMask()[1] << " "
+           << hex << setw(10) << left << h->subHeader().H1->triggerMask()[2] << " "
+           << hex << setw(10) << left << h->subHeader().H1->triggerMask()[3] << " "
+           << endmsg;
 #endif
   }
   ++m_sendReq;

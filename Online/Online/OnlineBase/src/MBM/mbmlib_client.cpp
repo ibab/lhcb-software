@@ -1,28 +1,28 @@
 /*-----------------------------------------------------------------------*/
 /*
-*   OS-9 BUFFER MANAGER
-*   TRAP MODULE  (C ROUTINES)
-*
-* Edition History
-*
-*  #   Date     Comments                                              By
-* -- -------- ------------------------------------------------------ ---
-*  0  28/09/88  Initial version                                       PM
-*  1  11/11/88  Released version 1.0                                  PM
-*  2  29/11/88  Multibuffer and spy introduced                        PM
-*  3  15/12/88  Released version 2.0                                  PM
-*  4  14/03/89  Minor corrections                                     PM
-*  5  24/09/91  Allow waiting space and event at the same time        PM
-*  6  06/10/92  Add update request for reformatting tasks          PM/BJ
-* ---
-*  7  ??/12/92  Multi-Buffer Manager calls                            BJ
-*  8  25/03/93  Basic clean-up                                      AMi8
-*  9  10/10/06  Major cleanup, move to C++ and implementation
-*               on linux and WIN32                                   MSF
-* 10  12/12/12  Major reimplementation using a client server         MSF
-*               approach.
-*
-*-----------------------------------------------------------------------*/
+ *   OS-9 BUFFER MANAGER
+ *   TRAP MODULE  (C ROUTINES)
+ *
+ * Edition History
+ *
+ *  #   Date     Comments                                              By
+ * -- -------- ------------------------------------------------------ ---
+ *  0  28/09/88  Initial version                                       PM
+ *  1  11/11/88  Released version 1.0                                  PM
+ *  2  29/11/88  Multibuffer and spy introduced                        PM
+ *  3  15/12/88  Released version 2.0                                  PM
+ *  4  14/03/89  Minor corrections                                     PM
+ *  5  24/09/91  Allow waiting space and event at the same time        PM
+ *  6  06/10/92  Add update request for reformatting tasks          PM/BJ
+ * ---
+ *  7  ??/12/92  Multi-Buffer Manager calls                            BJ
+ *  8  25/03/93  Basic clean-up                                      AMi8
+ *  9  10/10/06  Major cleanup, move to C++ and implementation
+ *               on linux and WIN32                                   MSF
+ * 10  12/12/12  Major reimplementation using a client server         MSF
+ *               approach.
+ *
+ *-----------------------------------------------------------------------*/
 
 #define MBM_IMPLEMENTATION
 #include <memory>
@@ -30,6 +30,7 @@
 #include "MBM/bmmessage.h"
 #include "MBM/bmstruct.h"
 #include "MBM/bmdef.h"
+#include "RTL/Lock.h"
 #include <fcntl.h>
 #include <sys/stat.h>
 
@@ -66,6 +67,7 @@ BMDESCRIPT::BMDESCRIPT() : qentry_t(0,0) {
   fifoName[0]       = 0;
   name[0]           = 0;
   bm_name[0]        = 0;
+  lock              = 0;
   cancelled         = false;
 }
 
@@ -78,12 +80,14 @@ void _mbm_start_debugger() {
 int _mbm_comm_message(BMID bm, int code) {
   MBM_CHECK_BMID(bm);
   MSG msg(code,bm->user);
+  RTL::Lock lock(bm->lock);
   return msg.communicate(bm->reqFifo,bm->fifo);
 }
 
 int _mbm_cons_message(BMID bm, int code) {
   MBM_CHECK_CONS(bm);
   MSG msg(code,bm->user);
+  RTL::Lock lock(bm->lock);
   return msg.communicate(bm->reqFifo,bm->fifo);
 }
 
@@ -124,14 +128,14 @@ int _mbm_shutdown (void* /* param */) {
     for(sc=::remqhi(bmq,&q),cnt=0; cnt<len && lib_rtl_queue_success(sc); sc=::remqhi(bmq,&q)) {
       bm = (BMID)q;
       if ( !(bm == 0 || bm == MBM_INV_DESC) ) {      
-	ids[cnt++] = bm;
+        ids[cnt++] = bm;
       }
     }
     for(int i=0; i<cnt; ++i)  {
       bm = ids[i];
       if ( bm->reqFifo>0 ) {    // Send EXCLUDE message to server 
-	msg.user = bm->user;    // if this is still possible.
-	msg.write(bm->reqFifo); // Otherwise it could also not become worse.
+        msg.user = bm->user;    // if this is still possible.
+        msg.write(bm->reqFifo); // Otherwise it could also not become worse.
       }
     }
     ::lib_rtl_sleep(200);
@@ -139,7 +143,7 @@ int _mbm_shutdown (void* /* param */) {
       bm = ids[i];              // unmape the global sections.
       _mbm_close_fifos(bm);
       if ( bm->buff_add )
-	::lib_rtl_unmap_section(bm->buff_add);
+        ::lib_rtl_unmap_section(bm->buff_add);
       bm->buff_add = 0;
       ::lib_rtl_output(LIB_RTL_INFO,"[INFO] mbmlib: Finished emergency shutdown of buffer %s\n",bm->bm_name);
     }
@@ -221,6 +225,13 @@ BMID mbm_include(const char* bm_name, const char* name, int partid) {
   bm->pid    = ::lib_rtl_pid();
   bm->partID = partid;
 
+  status = ::lib_rtl_create_lock(0,&bm->lock);
+  if (!lib_rtl_is_success(status))  {
+    ::lib_rtl_signal_message(LIB_RTL_OS,"%s %s. Status=%d",
+                             "Error creating MBM lock",
+                             bm->bm_name,status);
+    return MBM_INV_DESC;
+  }
   // Debugging:
   //bool wt = true;
   //while(wt) lib_rtl_sleep(10);
@@ -228,7 +239,7 @@ BMID mbm_include(const char* bm_name, const char* name, int partid) {
   ::snprintf(text,sizeof(text),"/tmp/bm_%s_server_0",bm->bm_name);
   if( (bm->reqFifo=::open(text, O_WRONLY|O_NONBLOCK)) < 0 ) {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Cannot open server fifo '%s' for MBM buffer %s.",
-			     text,bm->bm_name);
+                             text,bm->bm_name);
     ::_mbm_close_fifos(bm.get());
     return MBM_INV_DESC;
   }
@@ -242,7 +253,7 @@ BMID mbm_include(const char* bm_name, const char* name, int partid) {
   ::chmod(bm->fifoName,0666);
   if( (bm->fifo=::open(bm->fifoName, O_RDONLY | O_NONBLOCK)) < 0 ) {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Cannot open local fifo '%s' for MBM buffer %s.",
-			     bm->fifoName,bm->bm_name);
+                             bm->fifoName,bm->bm_name);
     ::_mbm_close_fifos(bm.get());
     return MBM_INV_DESC;
   }
@@ -251,8 +262,8 @@ BMID mbm_include(const char* bm_name, const char* name, int partid) {
   status  = ::lib_rtl_map_section(text,0,&bm->buff_add);
   if (!lib_rtl_is_success(status))  {
     ::lib_rtl_signal_message(LIB_RTL_OS,"%s %s. Status=%d",
-			     "Error mapping buffer section for MBM buffer",
-			     bm->bm_name,status);
+                             "Error mapping buffer section for MBM buffer",
+                             bm->bm_name,status);
     ::_mbm_close_fifos(bm.get());
     return MBM_INV_DESC;
   }
@@ -277,7 +288,7 @@ BMID mbm_include(const char* bm_name, const char* name, int partid) {
   // Communication now OK. Let's check if the actual request failed or not:
   if ( msg.status != MBM_NORMAL ) {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to include into MBM buffer %s. Status=%d",
-			     bm->bm_name,msg.status);
+                             bm->bm_name,msg.status);
     ::_mbm_close_fifos(bm.get());
     ::lib_rtl_unmap_section(bm->buff_add);
     bm->buffer_add = 0;
@@ -290,7 +301,7 @@ BMID mbm_include(const char* bm_name, const char* name, int partid) {
     ::close(bm->reqFifo);
     if( (bm->reqFifo=::open(text,O_WRONLY|O_NONBLOCK)) < 0 ) {
       ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to open server fifo '%s' for MBM buffer %s.",
-			       text,bm->bm_name);
+                               text,bm->bm_name);
       ::_mbm_close_fifos(bm.get());
       ::lib_rtl_unmap_section(bm->buff_add);
       bm->buffer_add = 0;
@@ -322,6 +333,10 @@ int mbm_exclude (BMID bm)  {
   if ( ::_mbm_close_fifos(bm) != MBM_NORMAL ) {
     _mbm_printf("Problem while closing the fifos");
   }
+  if ( bm->lock )  {
+    ::lib_rtl_delete_lock(bm->lock);
+    bm->lock = 0;
+  }
   ::lib_rtl_unmap_section(bm->buff_add);
   qentry_t *dummy = ::remqent(bm);
   delete dummy;
@@ -340,7 +355,6 @@ int mbm_cancel_request (BMID bm)   {
   MSG msg(MSG::CANCEL_REQUEST,bm->user);
   bm->cancelled = true;
   return msg.write(bm->reqFifo);
-
 }
 
 /// Clear possibly pending messages (e.g. after cancel)
@@ -358,6 +372,7 @@ int mbm_add_req (BMID bm, int evtype,
   MBM_CHECK_CONS(bm);
   MSG msg(MSG::ADD_REQUEST,bm->user);
   MSG::requirement_t& r = msg.data.requirement;
+  RTL::Lock lock(bm->lock);
   r.evtype    = evtype;
   r.masktype  = masktype;
   r.freqmode  = freqmode;
@@ -365,7 +380,7 @@ int mbm_add_req (BMID bm, int evtype,
   r.frequency = freq;
   ::memcpy(r.mask,trg_mask,sizeof(r.mask));
   ::memcpy(r.veto,veto_mask,sizeof(r.veto));
-  return msg.communicate(bm->reqFifo,bm->fifo);
+  return msg.communicate(bm->reqFifo,bm->fifo,&bm->cancelled);
 }
 
 int mbm_del_req (BMID bm, int evtype, 
@@ -376,6 +391,7 @@ int mbm_del_req (BMID bm, int evtype,
   MBM_CHECK_CONS(bm);
   MSG msg(MSG::DEL_REQUEST,bm->user);
   MSG::requirement_t& r = msg.data.requirement;
+  RTL::Lock lock(bm->lock);
   r.evtype    = evtype;
   r.masktype  = masktype;
   r.usertype  = usertype;
@@ -383,7 +399,7 @@ int mbm_del_req (BMID bm, int evtype,
   r.frequency = 0;
   ::memcpy(r.mask,trmask,sizeof(r.mask));
   ::memcpy(r.veto,veto,sizeof(r.veto));
-  return msg.communicate(bm->reqFifo,bm->fifo);
+  return msg.communicate(bm->reqFifo,bm->fifo,&bm->cancelled);
 }
 
 int mbm_get_event_a (BMID bm, int** ptr, int* size, int* evtype, unsigned int* trmask,
@@ -497,7 +513,7 @@ int mbm_wait_space(BMID bm)    {
   if ( status == MBM_NORMAL )  {
     if ( msg.type != MSG::GET_SPACE ) {
       ::lib_rtl_output(LIB_RTL_FATAL,"MBM Error: Got message of type:%s instead of expected GET_SPACE",
-		       msg.typeStr(msg.type));
+                       msg.typeStr(msg.type));
     }
     MSG::get_space_t& sp = msg.data.get_space;
     char* ptr = bm->buffer_add + sp.offset;
@@ -517,7 +533,7 @@ int mbm_wait_space(BMID bm)    {
 }
 
 static int _mbm_declare_event (BMID bm, int len, int evtype, const unsigned int* trmask,
-			       const char* dst, void** free_add, int* free_size, int /* part_id */, int wait)
+                               const char* dst, void** free_add, int* free_size, int /* part_id */, int wait)
 {
   MBM_CHECK_BMID(bm);
   MSG msg(MSG::DECLARE_EVENT,bm->user);
@@ -542,9 +558,9 @@ static int _mbm_declare_event (BMID bm, int len, int evtype, const unsigned int*
       *free_add  = (bm->buffer_add + evt.freeAddr);
       *free_size = evt.freeSize;
       if ( msg.type != MSG::DECLARE_EVENT ) {
-	::lib_rtl_output(LIB_RTL_FATAL,"MBM Error: Got message of type:%s "
-			 "instead of expected DECLARE_EVENT",
-			 msg.typeStr(msg.type));
+        ::lib_rtl_output(LIB_RTL_FATAL,"MBM Error: Got message of type:%s "
+                         "instead of expected DECLARE_EVENT",
+                         msg.typeStr(msg.type));
       }
     }
     else if ( MBM_REQ_CANCEL == status )  {
@@ -560,13 +576,13 @@ static int _mbm_declare_event (BMID bm, int len, int evtype, const unsigned int*
 }
 
 int mbm_declare_event(BMID bm, int len, int evtype, const unsigned int* trmask,
-		      const char* dst, void** free_add, int* free_size, int part_id)
+                      const char* dst, void** free_add, int* free_size, int part_id)
 {
   return _mbm_declare_event(bm,len,evtype,trmask,dst,free_add,free_size,part_id,1);
 }
 
 int mbm_declare_event_try(BMID bm, int len, int evtype, const unsigned int* trmask,
-			  const char* dst, void** free_add, int* free_size, int part_id)
+                          const char* dst, void** free_add, int* free_size, int part_id)
 {
   return _mbm_declare_event(bm,len,evtype,trmask,dst,free_add,free_size,part_id,0);
 }
@@ -595,7 +611,7 @@ int mbm_send_space (BMID bm)    {
   int sc = msg.communicate(bm->reqFifo,bm->fifo);
   if ( msg.type != MSG::SEND_SPACE ) {
     ::lib_rtl_output(LIB_RTL_FATAL,"MBM Error: Got message of type:%s instead of expected SEND_SPACE",
-		     msg.typeStr(msg.type));
+                     msg.typeStr(msg.type));
   }
   return sc;
   //return _mbm_comm_message(bm, MSG::SEND_SPACE);

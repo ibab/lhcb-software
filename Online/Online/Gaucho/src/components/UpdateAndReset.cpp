@@ -77,6 +77,8 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   declareProperty("publishSaveSetLocation",m_publishSavesetLoc=true);
   declareProperty("teste", m_teste = 100000);
   declareProperty("MyName",m_MyName=""); //partition_TaskName
+  declareProperty("DoRunChangeInc",m_doRunChangeInc = false);
+  declareProperty("ResetonStart",m_ResetonStart = false);
 
   m_timerCycle = m_desiredDeltaTCycle - 1;
   m_firstExecute = true;
@@ -222,6 +224,10 @@ StatusCode UpdateAndReset::start()
   {
     m_pGauchoMonitorSvc->StartSaving(this->m_saveSetDir,partName,taskName,this->m_saverCycle,m_dimSvcSaveSetLoc );
   }
+  if (m_ResetonStart)
+  {
+    m_pGauchoMonitorSvc->resetHistos(this);
+  }
   return StatusCode::SUCCESS;
 }
 //------------------------------------------------------------------------------
@@ -260,6 +266,10 @@ StatusCode UpdateAndReset::execute()
        m_pGauchoMonitorSvc->Lock();
     }
     m_triggerConfigurationKey = tck;
+    if (this->m_doRunChangeInc)
+    {
+      this->m_incs->fireIncident(Incident(name(),IncidentType::EndRun));
+    }
     m_pGauchoMonitorSvc->resetHistos( this  );
     m_one = 1;
     m_pGauchoMonitorSvc->setRunNo(runno);
@@ -302,7 +312,10 @@ StatusCode UpdateAndReset::stop() {
 //    printf("======================UpdateAndReset Updating EOR service \n");
 //    this->m_pGauchoMonitorSvc->Lock();
     this->m_pGauchoMonitorSvc->updateSvc( "this" , m_runNumber,this  );
-    m_pGauchoMonitorSvc->resetHistos(0);
+    if (!m_ResetonStart)
+    {
+      m_pGauchoMonitorSvc->resetHistos(0);
+    }
 //    this->m_pGauchoMonitorSvc->UnLock();
 //    printf("======================UpdateAndReset Updating EOR DONE...... \n");
     m_pGauchoMonitorSvc->release();

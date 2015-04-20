@@ -31,9 +31,9 @@ namespace LHCb  {
   class MBMContext;
 
   /** @class MBMContext
-    *
-    * @author M.Frank
-    */
+   *
+   * @author M.Frank
+   */
   class MBMContext : public OnlineContext  {
   private:
     MBMEvtSelector*       m_onlineSel;
@@ -65,10 +65,10 @@ namespace LHCb  {
   };
 
   /** @class MBMEvtSelector  MBMEvtSelector.h
-    *
-    * @author  M.Frank
-    * @vrsion  1.0
-    */
+   *
+   * @author  M.Frank
+   * @vrsion  1.0
+   */
   class MBMEvtSelector : public OnlineBaseEvtSelector  {
     friend class MBMContext;
   public:
@@ -88,28 +88,28 @@ namespace LHCb  {
 
     /// Create a new event loop context
     /** @param refpCtxt   [IN/OUT]  Reference to pointer to store the context
-      * 
-      * @return StatusCode indicating success or failure
-      */
+     * 
+     * @return StatusCode indicating success or failure
+     */
     virtual StatusCode createContext(Context*& refpCtxt) const;
 
     /// Release existing event iteration context
     /** @param refCtxt   [IN/OUT]  Reference to the context
-      * 
-      * @return StatusCode indicating success or failure
-      */
+     * 
+     * @return StatusCode indicating success or failure
+     */
     virtual StatusCode releaseContext(Context*& refCtxt) const;
 
     /** Will set a new criteria for the selection of the next list of events and will change
-      * the state of the context in a way to point to the new list.
-      * 
-      * @param cr The new criteria string.
-      * @param c  Reference pointer to the Context object.
-      */
+     * the state of the context in a way to point to the new list.
+     * 
+     * @param cr The new criteria string.
+     * @param c  Reference pointer to the Context object.
+     */
     virtual StatusCode resetCriteria(const std::string& cr,Context& c)const;
 
     bool beIntelligent() const {  return m_intelligentSetup;  }
-    bool processTAE() const    {  return m_tae;               }
+    int  processTAE() const    {  return m_tae;               }
 
     /// Service Constructor
     MBMEvtSelector(const std::string& name, ISvcLocator* svcloc);
@@ -119,18 +119,18 @@ namespace LHCb  {
 
   protected:
     /// Data Members
-    /// Property: Name of the MEP manager (Defule=MEPManager)
-    std::string         m_mepManagerName;
     /// Reference to MEP manager service
     LHCb::IMEPManager*  m_mepMgr;
     /// Current context
     mutable OnlineContext* m_currContext;
-    /// Maximum retries for consecutive events before going to error
+    /// Property: Name of the MEP manager (Defule=MEPManager)
+    std::string         m_mepManagerName;
+    /// Property: Maximum retries for consecutive events before going to error
     int                 m_maxRetry;
-    /// Have intelligent setup and recognize data input
+    /// Property: Need to if TAEs should be processed (from run-info)
+    int                 m_tae;
+    /// Property: Have intelligent setup and recognize data input
     bool                m_intelligentSetup;
-    /// Need to if TAEs should be processed (from run-info)
-    bool                m_tae;
   };
 }
 #endif // GAUDIONLINE_MBMEVTSELECTOR_H
@@ -245,10 +245,10 @@ StatusCode MBMContext::flagEvent(int flag)  {
       // Can only flag Descriptor events!
       const MBM::EventDesc& e = m_consumer->event();
       if ( m_sel->mustDecode() && e.type == EVENT_TYPE_EVENT )  {
-	MEP_SINGLE_EVT* sevt = (MEP_SINGLE_EVT*)e.data;
-	MEPEVENT* m = (MEPEVENT*)(m_evdesc.buffer() + sevt->begin);
-	m->events[sevt->evID].status = EVENT_TYPE_BADPROC;
-	m->events[sevt->evID].signal = flag;
+        MEP_SINGLE_EVT* sevt = (MEP_SINGLE_EVT*)e.data;
+        MEPEVENT* m = (MEPEVENT*)(m_evdesc.buffer() + sevt->begin);
+        m->events[sevt->evID].status = EVENT_TYPE_BADPROC;
+        m->events[sevt->evID].signal = flag;
       }
     }
   }
@@ -264,36 +264,44 @@ StatusCode MBMContext::receiveEvent()  {
   if ( m_consumer )  {
     int org_retry = m_onlineSel->m_maxRetry;
     int max_retry = m_onlineSel->m_maxRetry;
-    Retry:
+  Retry:
     try  {
       // If the job options is -1, we loop forever
       if ( org_retry < 0 ) max_retry = 9999999;
       if ( m_events.empty() ) {
-	m_sel->increaseReqCount();
-	m_needFree = false;
-	if ( m_sel->isCancelled() ) {
-	  // In case we got cancelled, just return error and 
-	  // let upper layers handle the problem
-	  return StatusCode::FAILURE;
-	}
-	else if ( m_consumer->getEvent() != MBM_NORMAL )  {
-	  return StatusCode::FAILURE;
-	}
+        m_sel->increaseReqCount();
+        m_needFree = false;
+        if ( m_sel->isCancelled() ) {
+          // In case we got cancelled, just return error and 
+          // let upper layers handle the problem
+          return StatusCode::FAILURE;
+        }
+        else if ( m_consumer->getEvent() != MBM_NORMAL )  {
+          return StatusCode::FAILURE;
+        }
       }
       const MBM::EventDesc& e = m_consumer->event();
-#if 0
+      //
+      // Try auto-setup if requested:
+      // (MEP and no TAE) --> decode
+      // (MEP and TAE) --> no decode
+      // (MDF) -> no decode
+      //
       if ( m_onlineSel->beIntelligent() )   {
-	if ( m_onlineSel->processTAE() && e.type == EVENT_TYPE_MEP )  {
-	  m_sel->setDecode(false);
-	}
-	else if ( e.type == EVENT_TYPE_EVENT )  {
-	  m_sel->setDecode(false);
-	}
-	else {
-	  m_sel->setDecode(m_decodeValue);
-	}
+        if ( 0 == m_onlineSel->processTAE() && e.type == EVENT_TYPE_MEP )  {
+          m_sel->setDecode(true);
+        }
+        else if ( m_onlineSel->processTAE() > 0 && e.type == EVENT_TYPE_MEP )  {
+          m_sel->setDecode(false);
+        }
+        else if ( e.type == EVENT_TYPE_EVENT )  {
+          m_sel->setDecode(false);
+        }
+        else {
+          m_sel->setDecode(m_decodeValue);
+        }
       }
-#endif
+
       // The event is a MEP with multiple events, which must be decoded:
       if ( m_sel->mustDecode() && e.type == EVENT_TYPE_MEP )  {
         return convertMEP(m_partID,e);
@@ -303,7 +311,7 @@ StatusCode MBMContext::receiveEvent()  {
 
       // The event is a descriptor event, which must be decoded using the MEP data:
       if ( m_sel->mustDecode() && e.type == EVENT_TYPE_EVENT )  {
-	return convertDescriptor(m_partID,e);
+        return convertDescriptor(m_partID,e);
       }
 #endif
       else { // Or: simple case data are data - as it should be
@@ -316,24 +324,24 @@ StatusCode MBMContext::receiveEvent()  {
       // We only allow for a max of max_retry consecutive bad entries from MBM
       // Otherwise things are bad!
       if ( max_retry-- > 0 )  {
-	if ( m_sel->isCancelled() ) {
-	  // In case we got cancelled, just return error and 
-	  // let upper layers handle the problem
-	  releaseEvent();
-	  return StatusCode::FAILURE;
-	}
-	else if (err.find("Error decoding raw banks")!= string::npos ||
-		 err.find("Bad magic pattern")       != string::npos ||
-		 err.find("Bad MEP")                 != string::npos ||
-		 err.find("Unknown Bank")            != string::npos ||
-		 err.find("Error in multi raw")      != string::npos ||
-		 err.find("MEP event error")         != string::npos ||
-		 err.find("MEP fragment error")      != string::npos ||
-		 err.find("MEP multi fragment error")!= string::npos) {
-	  m_sel->info("Continue processing despite error.");
-	  releaseEvent();
-	  goto Retry;
-	}
+        if ( m_sel->isCancelled() ) {
+          // In case we got cancelled, just return error and 
+          // let upper layers handle the problem
+          releaseEvent();
+          return StatusCode::FAILURE;
+        }
+        else if (err.find("Error decoding raw banks")!= string::npos ||
+                 err.find("Bad magic pattern")       != string::npos ||
+                 err.find("Bad MEP")                 != string::npos ||
+                 err.find("Unknown Bank")            != string::npos ||
+                 err.find("Error in multi raw")      != string::npos ||
+                 err.find("MEP event error")         != string::npos ||
+                 err.find("MEP fragment error")      != string::npos ||
+                 err.find("MEP multi fragment error")!= string::npos) {
+          m_sel->info("Continue processing despite error.");
+          releaseEvent();
+          goto Retry;
+        }
       }
       m_sel->error("Failed to read next event:"+err);
       m_sel->error("Maximum number of retries exceeded. Giving up...");
@@ -341,8 +349,8 @@ StatusCode MBMContext::receiveEvent()  {
     }
     catch(...)  {
       if ( m_sel->isCancelled() ) {
-	releaseEvent();
-	return StatusCode::FAILURE;
+        releaseEvent();
+        return StatusCode::FAILURE;
       }
       m_sel->error("Failed to read next event - Unknown exception.");
       ::exit(EILSEQ);
@@ -379,7 +387,7 @@ StatusCode MBMContext::connectMBM(const string& input)  {
       return StatusCode::SUCCESS;
     }
     m_sel->error("Data buffer \""+input+"\" is not mapped. "
-		 "How do you think you can connect to it?");
+                 "How do you think you can connect to it?");
   }
   return StatusCode::FAILURE;
 }
@@ -403,7 +411,7 @@ MBMEvtSelector::MBMEvtSelector(const string& nam, ISvcLocator* svc)
   m_input = "Events";
   m_decode = true;
   declareProperty("IntelligentSetup",m_intelligentSetup=false);
-  declareProperty("TAE",m_tae=false);
+  declareProperty("TAE",m_tae=0);
   declareProperty("MaxRetry",m_maxRetry=-1);
   declareProperty("MEPManager",m_mepManagerName="MEPManager");
 }
@@ -491,7 +499,7 @@ MBMEvtSelector::resetCriteria(const string& crit,Context& ct) const {
     ctxt->close();
     if ( mepMgr()->connectWhen() == "initialize" ) {
       if ( ctxt->connect(m_input).isSuccess() )  {
-	return StatusCode::SUCCESS;
+        return StatusCode::SUCCESS;
       }
       return error("Failed to connect to:"+crit);
     }
