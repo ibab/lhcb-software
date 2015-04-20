@@ -48,7 +48,7 @@ StatusCode PhotonRecoBase::initialize()
   if ( sc.isFailure() ) return sc;
 
   // loop over radiators
-  for ( const auto rad : Rich::radiators() )
+  for ( const auto& rad : Rich::radiators() )
   {
     if ( m_checkPhotCrossSides[rad] )
     { info() << "Will reject photons that cross sides in " << rad << endmsg; }

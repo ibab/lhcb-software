@@ -78,7 +78,8 @@ StatusCode PhotonPredictorUsingRings::initialize()
 // fast decision on whether a photon is possible
 bool
 PhotonPredictorUsingRings::photonPossible( LHCb::RichRecSegment * segment,
-                                           LHCb::RichRecPixel * pixel ) const {
+                                           LHCb::RichRecPixel * pixel ) const
+{
 
   // Are they in the same Rich detector ?
   if ( segment->trackSegment().rich() != pixel->detector() ) return false;
@@ -94,18 +95,15 @@ PhotonPredictorUsingRings::photonPossible( LHCb::RichRecSegment * segment,
   // Run over RichRecRings and check if the current pixel "belongs"
   // to a ring associated to the current segment
   // Search could probably be made faster using stl etc...
-  for ( LHCb::RichRecRings::iterator iRing = richRings()->begin();
-        iRing != richRings()->end(); ++iRing ) {
-
-    if ( *iRing &&
-         (*iRing)->richRecSegment() &&
-         (*iRing)->richRecSegment()->key() == segment->key() ) {
-
-      for ( LHCb::RichRecPixelOnRing::Vector::const_iterator iPix = (*iRing)->richRecPixels().begin();
-            iPix != (*iRing)->richRecPixels().end(); ++iPix)
+  for ( const auto* ring : *richRings() )
+  {
+    if ( ring &&
+         ring->richRecSegment() &&
+         ring->richRecSegment()->key() == segment->key() )
+    {
+      for ( const auto& pix : ring->richRecPixels() )
       {
-        const LHCb::RichRecPixel * thisPix = (*iPix).pixel();
-        if ( thisPix && thisPix->key() == pixel->key() ) { return true; }
+        if ( pix.pixel() && pix.pixel()->key() == pixel->key() ) { return true; }
       }
 
     }

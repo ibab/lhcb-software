@@ -91,37 +91,36 @@ StatusCode PhotonRecoUsingQuarticSoln::initialize()
   acquireTool( "RichPhotonEmissionPoint", m_emissPoint         );
 
   // loop over radiators
-  for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
-        rad != Rich::radiators().end(); ++rad )
+  for ( const auto& rad : Rich::radiators() )
   {
 
     // If rejection of ambiguous photons is turned on
     // make sure test is turned on
-    if ( m_rejectAmbigPhots[*rad] ) m_testForUnambigPhots[*rad]  = true;
+    if ( m_rejectAmbigPhots[rad] ) m_testForUnambigPhots[rad]  = true;
 
     // If we are testing for photons that hit the beam pipe, turn on ambig photon test
-    if ( m_checkBeamPipe[*rad] )    m_testForUnambigPhots[*rad]  = true;
+    if ( m_checkBeamPipe[rad] )    m_testForUnambigPhots[rad]  = true;
 
     // information printout about configuration
-    if ( m_testForUnambigPhots[*rad] )
-    {      _ri_debug << "Will test for unambiguous     " << *rad << " photons" << endmsg; }
-    else { _ri_debug << "Will not test for unambiguous " << *rad << " photons" << endmsg; }
+    if ( m_testForUnambigPhots[rad] )
+    {      _ri_debug << "Will test for unambiguous     " << rad << " photons" << endmsg; }
+    else { _ri_debug << "Will not test for unambiguous " << rad << " photons" << endmsg; }
 
-    if ( m_rejectAmbigPhots[*rad] )
-    {      _ri_debug << "Will reject ambiguous " << *rad << " photons" << endmsg; }
-    else { _ri_debug << "Will accept ambiguous " << *rad << " photons" << endmsg; }
+    if ( m_rejectAmbigPhots[rad] )
+    {      _ri_debug << "Will reject ambiguous " << rad << " photons" << endmsg; }
+    else { _ri_debug << "Will accept ambiguous " << rad << " photons" << endmsg; }
 
-    if ( m_useAlignedMirrSegs[*rad] )
-    {      _ri_debug << "Will use fully alligned mirror segments for " << *rad << " reconstruction" << endmsg;  }
-    else { _ri_debug << "Will use nominal mirrors for " << *rad << " reconstruction" << endmsg; }
+    if ( m_useAlignedMirrSegs[rad] )
+    {      _ri_debug << "Will use fully alligned mirror segments for " << rad << " reconstruction" << endmsg;  }
+    else { _ri_debug << "Will use nominal mirrors for " << rad << " reconstruction" << endmsg; }
 
-    if ( m_checkBeamPipe[*rad] )
-    {      _ri_debug << "Will check for " << *rad << " photons that hit the beam pipe" << endmsg; }
+    if ( m_checkBeamPipe[rad] )
+    {      _ri_debug << "Will check for " << rad << " photons that hit the beam pipe" << endmsg; }
 
-    if ( m_checkPrimMirrSegs[*rad] )
-    {      _ri_debug << "Will check for full intersecton with mirror segments for " << *rad << endmsg; }
+    if ( m_checkPrimMirrSegs[rad] )
+    {      _ri_debug << "Will check for full intersecton with mirror segments for " << rad << endmsg; }
 
-    _ri_debug << "Minimum active " << *rad << " segment fraction = " << m_minActiveFrac[*rad] << endmsg;
+    _ri_debug << "Minimum active " << rad << " segment fraction = " << m_minActiveFrac[rad] << endmsg;
 
   }
 
