@@ -18,7 +18,10 @@ class VanDerMeerScan_2015:
             raise RuntimeError('Must update HltType when modifying ActiveHlt.Lines()')
 
     def __init__(self) :
-        self.NanoBanks =  ['ODIN', 'HltLumiSummary', 'HltRoutingBits', 'DAQ', 'Velo', 'HC']
+        self.NanoBanks = [
+            'ODIN', 'HltLumiSummary', 'HltRoutingBits', 'DAQ', 'Velo',
+            'L0DU', 'HltDecReports', 'HC', 
+        ]
 
     def L0TCK(self) :
         return '0x0041'
