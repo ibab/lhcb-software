@@ -3,6 +3,7 @@
 ! package manager : Marco Clemencic
 ! =====================================================================
 
+!========================= DetDesc v18r37 2015-04-20 =========================
 ! 2015-03-02 - Manuel Tobias Schiller
  - StaticArray: fix interface of erase to return iterator pointing to the
    first element after the removed one(s), or end (just what std::vector and
