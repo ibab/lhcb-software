@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DecayTreeFitter
 ################################################################################
-gaudi_subdir(DecayTreeFitter v1r18)
+gaudi_subdir(DecayTreeFitter v1r19)
 
 gaudi_depends_on_subdirs(Phys/DaVinciKernel
                          Phys/LoKiCore
