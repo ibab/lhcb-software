@@ -4,11 +4,12 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+!========================= ChargedProtoANNPID v2r10 2015-04-21 ======================
 ! 2015-03-30 - Chris Jones
  - Add some more consistency checks to the NetConfig helper class.
  - Remove redundant status flag boolean data member from NetConfig.
 
-!========================= ChargedProtoANNPID v2r9 2015-01-14 =========================
+!========================= ChargedProtoANNPID v2r9 2015-01-14 =======================
 ! 2015-01-12 - Chris Jones
  - Update default tunes to use MC12TuneV2 for all data types.
 
