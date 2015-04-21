@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= PatKernel v2r9 2015-04-21 =========================
 ! 2015-03-03 - Manuel Tobias Schiller
  - PatFwdHit: optimise planeCodee(), layer(), isStereo(), isX(), and
    rlAmb()/setRlAmb(int) methods
