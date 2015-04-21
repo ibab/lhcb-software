@@ -13,9 +13,9 @@ B --> ll K selections for:
 """
 
 default_config = {
-    'NAME'       : 'Bu2LLK',
-    'BUILDERTYE' : 'Bu2LLKConf',
-    'CONFIG'     :
+    'NAME'        : 'Bu2LLK',
+    'BUILDERTYPE' : 'Bu2LLKConf',
+    'CONFIG'      :
     {
     'BFlightCHI2'            : 100   
     ,  'BDIRA'               : 0.9995 

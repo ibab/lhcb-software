@@ -29,9 +29,9 @@ from Configurables import SubstitutePID,  SubPIDMMFilter
 #################
 
 default_config = {
-    'NAME'       : 'B2XMuMu',
-    'BUILDERTYE' : 'B2XMuMuConf',
-    'CONFIG'     :
+    'NAME'        : 'B2XMuMu',
+    'BUILDERTYPE' : 'B2XMuMuConf',
+    'CONFIG'      :
     {
     'RelatedInfoTools'      : [
         {"Type" : "RelInfoConeVariables"
