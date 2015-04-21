@@ -4,6 +4,7 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+!========================= TrackCheckers v4r22 2015-04-21 =========================
 ! 2015-03-31 - Michel De Cian
  - Introduce Ranges in TrackEffChecker, such that input container can also be of type LHCb::Track::Selection.
 
