@@ -4,6 +4,7 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+!========================= RichHPDImageAnalysis v1r15 2015-04-21 =====================
 ! 2015-04-09 - Chris Jones
  - Make a new base class for the HPD Image analysis algorithm, that implements
    the core functionality. Allows other implications for instance in Panoptes,
