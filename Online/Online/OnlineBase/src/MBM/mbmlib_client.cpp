@@ -399,7 +399,12 @@ int mbm_del_req (BMID bm, int evtype,
   r.frequency = 0;
   ::memcpy(r.mask,trmask,sizeof(r.mask));
   ::memcpy(r.veto,veto,sizeof(r.veto));
-  return msg.communicate(bm->reqFifo,bm->fifo,&bm->cancelled);
+  int status = msg.communicate(bm->reqFifo,bm->fifo,&bm->cancelled);
+  if ( MBM_REQ_CANCEL == status ) {
+    bm->cancelled = false;
+    return MBM_NORMAL;
+  }
+  return status;
 }
 
 int mbm_get_event_a (BMID bm, int** ptr, int* size, int* evtype, unsigned int* trmask,
@@ -421,6 +426,7 @@ int mbm_get_event_a (BMID bm, int** ptr, int* size, int* evtype, unsigned int* t
 int mbm_wait_event(BMID bm) {
   MBM_CHECK_CONS(bm);
   MSG msg(0);
+  RTL::Lock lock(bm->lock);
   int status = msg.wait(bm->fifo,&bm->cancelled);
   if ( MBM_NORMAL == status ) {
     MSG::get_event_t& evt = msg.data.get_event;

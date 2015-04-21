@@ -201,13 +201,13 @@ int MBMMessage::communicate(int fdout, int fdin, int* cancelled)   {
     fds.revents = POLLIN|POLLERR;
     fds.fd      = fdin;
     ::poll(&fds,1,100);
-    if ( cancelled && *cancelled )   {
+    if ( fds.revents&POLLIN ) break;
+    else if ( cancelled && *cancelled )   {
 #ifdef _DEBUG_MBM_MSG
       ::lib_rtl_output(LIB_RTL_ALWAYS,"Recv MBM CANCEL %-16s --> %-16s status=%d\n",__msg_user(user),__msg_type(type),status);
 #endif
       return status=MBM_REQ_CANCEL;
     }
-    else if ( fds.revents&POLLIN ) break;
   }
   if ( !read(fdin) ) {
     ::lib_rtl_output(LIB_RTL_OS,"Failed to receive answer '%d' from server.\n",typ);
