@@ -4,6 +4,7 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrMCTools v2r8 2015-04-21 =========================
 ! 2015-03-31 - Michel De Cian
  - Adapt 'PrTrackAssociator' such that the list of classID it understands can be configured. Give it per default for LHCb::Track and LHCb::Track::Selection.
 
