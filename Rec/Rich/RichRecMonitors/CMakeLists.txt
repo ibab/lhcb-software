@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichRecMonitors
 ################################################################################
-gaudi_subdir(RichRecMonitors v2r35)
+gaudi_subdir(RichRecMonitors v2r36)
 
 gaudi_depends_on_subdirs(Event/LinkerEvent
                          Event/MCEvent
