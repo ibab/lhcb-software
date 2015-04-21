@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecBase v4r20 2015-04-21 =========================
 ! 2015-03-09 - Chris Jones
  - Make some tools shared instances to avoid unneccesary duplication when
    running the RICH reconstruction with the split track groups.
