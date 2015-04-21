@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichRecSys
 ################################################################################
-gaudi_subdir(RichRecSys v5r5)
+gaudi_subdir(RichRecSys v5r6)
 
 gaudi_depends_on_subdirs(Rich/RichENNRingFinder
                          Rich/RichGlobalPID

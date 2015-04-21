@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecSys v5r6 2015-04-21 =========================
 ! 2015-04-11 - Chris Jones
  - Small change in the RichRecSysConf trackTypeIsActive method to fix a 
    issue where the Long Track monitors in RichRecQC cwent missing after
