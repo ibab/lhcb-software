@@ -4,6 +4,7 @@
 ! Purpose     : Associators to MC truth for Tracks
 !----------------------------------------------------------------------------
 
+!========================= TrackAssociators v2r12 2015-04-21 =========================
 ! 2015-03-31 - Michel De Cian
  - Use LHCb::Track::Range such that also LHCb::Track::Selection can be used as an input container.
 
