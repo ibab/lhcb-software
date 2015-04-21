@@ -288,20 +288,7 @@ def configureMuonAlignment( surveyVer = 'latest' ) :
   
     # define the alignment elements
     elements = Alignables()
-    elements.Velo("None")
-    elements.VeloRight("None")
-    elements.VeloLeft("None")
-    elements.IT("None")
-    elements.ITBoxes("None")
-    elements.ITLayers("None")
-    elements.OT("None")
-    elements.OTCFrames("None")
-    elements.OTCFrameLayers("None")
-    elements.OTModules("None")
-    elements.TT("None")
-    elements.TTLayers("None")
-    elements.TTModules("None")
-    elements.Tracker("None")
+
     elements.MuonHalfStations("TxTy")
     TAlignment().ElementsToAlign = list(elements)
 
