@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-04-21 - Andrea Contu
+ - fix to __init__.py and new reference
+
+! 2015-04-21 - Andrea Contu
  - small fix to __init__.py and updated reference for qmtest
 
 ! 2015-04-21 - Andrea Contu

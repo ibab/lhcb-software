@@ -114,7 +114,7 @@ def _importArchive(stripping):
     _tmpstrip=str(stripping)
     
     if stripping not in _strippingKeys.keys():
-        raise KeyError, stripping + ' is not known, call strippingArchive() with no arguement to get the full dictionary'
+        raise KeyError, stripping + ' is not known, call strippingArchive() with no argument to get the full dictionary'
     if  _strippingKeys[stripping]!=stripping:
         print stripping+" is a duplicate of "+_strippingKeys[stripping]
         _tmpstrip=str(_strippingKeys[stripping])
@@ -147,8 +147,19 @@ def strippingArchive(stripping=None):
     strippingArchive(stripping): return the line builder module for that stripping'''
     if stripping is None:
         return list(_listofStrippings())
-
-    strip = _importArchive(stripping.capitalize())
+    
+    strippingname=""
+    
+    for _k in _strippingKeys:
+        if _k.lower()==stripping.lower():
+            strippingname=_k
+            break
+    if strippingname=="":
+        raise KeyError, stripping + ' is not known, call strippingArchive() with no argument to get the full dictionary'
+    
+    
+    
+    strip = _importArchive(strippingname)
     return strip
     
 
@@ -158,7 +169,16 @@ def strippingDescription(stripping=None):
     strippingDescription(stripping): return the description for that stripping'''
     if stripping is None:
         return list(_listofStrippings())
+    print "porcapaletta"
+    strippingname=""
+
+    for _k in _strippingKeys:
+        if _k.lower()==stripping.lower():
+            strippingname=_k
+            break
+    if strippingname=="":
+        raise KeyError, stripping + ' is not known, call strippingArchive() with no argument to get the full dictionary'
     
-    strip = _importArchive(stripping.capitalize())
+    strip = _importArchive(strippingname)
     
-    return _stripping_help[stripping.capitalize()]
+    return _stripping_help[strippingname]
