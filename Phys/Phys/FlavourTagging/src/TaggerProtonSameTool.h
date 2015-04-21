@@ -27,7 +27,7 @@
  *
  *  @author Stefania Vecchi
  * (tool developed by Antonio Falabella, Marta Calvi and
- *  Vava Gligorov )
+ *  Vava Gligorov, Davide Fazzini )
  *  @date   29/11/2013
  */
 
@@ -53,23 +53,6 @@ public:
 
 private:
 
-  // from DecayTreeTuple/src/TupleToolAngles.h
-  inline double cosTheta( const Gaudi::LorentzVector& mother,
-                          const Gaudi::LorentzVector& mcp )
-  {
-    ROOT::Math::Boost boost( mother.BoostToCM() );
-    const Gaudi::XYZVector boostedParticle = (boost( mcp )).Vect().unit();
-    const Gaudi::XYZVector boostedMother = mother.Vect().unit();
-    double cosT = boostedParticle.Dot(boostedMother) ;
-    if (msgLevel(MSG::VERBOSE)) verbose() <<  mother << " "
-                                          <<  mcp << " " << boostedMother
-                                          << " " << boostedParticle
-                                          << " " << cosT << endmsg ;
-    return cosT;
-  }
-
-private:
-
   ProtonSSWrapper* m_myBDT_reader;
 
   //  INNetTool* m_nnet;
@@ -84,23 +67,21 @@ private:
   double m_Bp_vtxChi2_cut_protonS;
   //double m_P_cut_protonS;
   double m_IPs_cut_protonS;
-  double m_cosTheta_cut_protonS;
   double m_eta_cut_protonS;
   double m_phi_cut_protonS;
   //double m_dR_cut_protonS;
   double m_dQcut_protonS;
   double m_BDT_cut_protonS;
   double m_AverageOmega;
-  double m_ProtonProbMin, m_lcs_cut;
-  //double m_ghost_cut;
+  double m_ProtonProbMin, m_ghostprob_cut;
+
   double m_PIDp_cut_protonS;
   //double m_ipPU_cut_pS, m_distPhi_cut_pS;
   double m_P0_pol_protonS ;
   double m_P1_pol_protonS ;
   double m_P2_pol_protonS ;
   double m_P3_pol_protonS ;
-  double m_P4_pol_protonS ;
-  double m_P5_pol_protonS ;
+
   int    m_isMonteCarlo;
 
 };

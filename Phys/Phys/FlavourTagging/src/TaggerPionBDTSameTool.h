@@ -52,23 +52,6 @@ public:
 
 private:
 
-  // from DecayTreeTuple/src/TupleToolAngles.h
-  inline double cosTheta( const Gaudi::LorentzVector& mother,
-                          const Gaudi::LorentzVector& mcp )
-  {
-    ROOT::Math::Boost boost( mother.BoostToCM() );
-    const Gaudi::XYZVector boostedParticle = (boost( mcp )).Vect().unit();
-    const Gaudi::XYZVector boostedMother = mother.Vect().unit();
-    double cosT = boostedParticle.Dot(boostedMother) ;
-    if (msgLevel(MSG::VERBOSE)) verbose() <<  mother << " "
-                                          <<  mcp << " " << boostedMother
-                                          << " " << boostedParticle
-                                          << " " << cosT << endmsg ;
-    return cosT;
-  }
-
-private:
-
   PionSSWrapper* m_myBDT_reader;
 
   //  INNetTool* m_nnet;
@@ -83,24 +66,22 @@ private:
   double m_Bp_vtxChi2_cut_pionS;
   //double m_P_cut_pionS;
   double m_IPs_cut_pionS;
-  double m_cosTheta_cut_pionS;
   double m_eta_cut_pionS;
   double m_phi_cut_pionS;
   //double m_dR_cut_pionS;
   double m_dQcut_pionS;
-  double m_BDT_cut_pionS;
+  //  double m_BDT_cut_pionS;
   double m_AverageOmega;
-  double m_PionProbMin, m_lcs_cut;
-  //double m_ghost_cut;
+  double m_PionProbMin;
+  double m_ghostprob_cut;
   double m_PIDp_cut_pionS;
   double m_PIDk_cut_pionS;
-  //double m_ipPU_cut_pS, m_distPhi_cut_pS;
+
   double m_P0_pol_pionS ;
   double m_P1_pol_pionS ;
   double m_P2_pol_pionS ;
   double m_P3_pol_pionS ;
-  double m_P4_pol_pionS ;
-  double m_P5_pol_pionS ;
+
   int    m_isMonteCarlo;
 
 };
