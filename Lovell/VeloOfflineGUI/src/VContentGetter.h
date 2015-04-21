@@ -11,6 +11,8 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <thread>
+
 
 // Author: Daniel Saunders
 
@@ -28,6 +30,7 @@ public:
   static void findPlots(std::vector<VTabContent*> * allTabs,
     std::vector< std::vector< std::string > > * ops, VPlotOps * plotOps);
   static void jsonToOps(std::string *, std::vector< std::vector< std::string > > *);
+  static void fourPlotsPerTabLimiter(std::vector< std::vector< std::string > > *);
 };
 
 #endif

@@ -49,21 +49,23 @@ VPlotOps::VPlotOps(QGroupBox * opsHolder, std::string * dataDir) {
 
 void VPlotOps::newSelection(VPlot * selPlot, bool forceConnect) {
   if (selPlot != m_selPlot || forceConnect) {
+  	// Disconnections (only needed if previously connected).
     if (!m_firstTime) {
       m_selPlot->setFrameStyle(0);
       disconnect(b_logx, SIGNAL(stateChanged(int)), m_selPlot->m_vcp, SLOT(doLogX(int)));
       disconnect(b_logy, SIGNAL(stateChanged(int)), m_selPlot->m_vcp, SLOT(doLogY(int)));
       disconnect(b_logz, SIGNAL(stateChanged(int)), m_selPlot->m_vcp, SLOT(doLogZ(int)));
       if (m_selPlot->m_multipleModules) {
-          disconnect(b_moduleSelector1, SIGNAL(currentIndexChanged(int)), m_selPlot, SLOT(moduleChanged()));
-          disconnect(b_moduleSelector2, SIGNAL(currentIndexChanged(int)), m_selPlot, SLOT(moduleChanged()));
-          m_moduleSelector->setEnabled(false);
+				disconnect(b_moduleSelector1, SIGNAL(currentIndexChanged(int)), m_selPlot, SLOT(moduleChanged()));
+				disconnect(b_moduleSelector2, SIGNAL(currentIndexChanged(int)), m_selPlot, SLOT(moduleChanged()));
+				m_moduleSelector->setEnabled(false);
       }
 
       disconnect(b_popout, SIGNAL(clicked()), m_selPlot->m_vcp, SLOT(popoutClicked()));
       disconnect(b_ref, SIGNAL(clicked()), m_selPlot->m_vcp, SLOT(refreshClicked()));
       delete m_statsBox;
     }
+
 
     m_firstTime = false;
     if (selPlot->m_vcp->m_xLogged) b_logx->setChecked(true);
@@ -85,10 +87,10 @@ void VPlotOps::newSelection(VPlot * selPlot, bool forceConnect) {
     connect(b_ref, SIGNAL(clicked()), selPlot->m_vcp, SLOT(refreshClicked()));
     if (m_selPlot->m_multipleModules) {
       m_moduleSelector->setEnabled(true);
-      connect(b_moduleSelector1, SIGNAL(currentIndexChanged(int)), m_selPlot, SLOT(moduleChanged()));
-      connect(b_moduleSelector2, SIGNAL(currentIndexChanged(int)), m_selPlot, SLOT(moduleChanged()));
       b_moduleSelector1->setCurrentIndex(m_selPlot->m_moduleNum / b_moduleSelector2->count());
       b_moduleSelector2->setCurrentIndex(m_selPlot->m_moduleNum % b_moduleSelector2->count());
+      connect(b_moduleSelector1, SIGNAL(currentIndexChanged(int)), m_selPlot, SLOT(moduleChanged()));
+      connect(b_moduleSelector2, SIGNAL(currentIndexChanged(int)), m_selPlot, SLOT(moduleChanged()));
     }
 
     std::cout<<"Selection made"<<std::endl;

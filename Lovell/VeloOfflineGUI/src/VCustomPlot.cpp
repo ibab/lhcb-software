@@ -2,7 +2,8 @@
 
 //_____________________________________________________________________________
 
-VCustomPlot::VCustomPlot(std::string title, bool isPopUp, VPlot * plot, VPlotOps * plotOps) {
+VCustomPlot::VCustomPlot(QWidget * parent, std::string title, bool isPopUp, VPlot * plot,
+		VPlotOps * plotOps) : QWidget(parent) {
   m_xLogged = false;
   m_yLogged = false;
   m_zLogged = false;

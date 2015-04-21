@@ -13,6 +13,8 @@ public:
 
   //___________
   void getPlotData() {
+  	if (m_gotData) return;
+  	m_gotData = true;
     FILE * in;
     char buff[5000];
 
@@ -28,6 +30,7 @@ public:
     std::string rawData;
     while(fgets(buff, sizeof(buff), in)!=NULL) rawData.append(buff);
     pclose(in);
+
 //    std::cout<<"JSON Plot Data:"<<std::endl;
 //    std::cout<<rawData<<std::endl;
 
@@ -83,21 +86,17 @@ public:
     m_statsTitles.push_back("Overflow:");
 
 
+    // Retrieve stats.
     double entries = (*d)["data"]["data"]["entries"].GetDouble();
     std::stringstream ssN; ssN<<entries; m_statsValues.push_back(ssN.str());
-    //std::cout<<"N: "<<entries<<std::endl;
     double mean = (*d)["data"]["data"]["mean"].GetDouble();
     std::stringstream ssMean; ssMean<<mean; m_statsValues.push_back(ssMean.str());
-    //std::cout<<"Mean: "<<mean<<std::endl;
     double rms = (*d)["data"]["data"]["rms"].GetDouble();
     std::stringstream ssRMS; ssRMS<<rms; m_statsValues.push_back(ssRMS.str());
-    //std::cout<<"RMS: "<<rms<<std::endl;
     double underflow = (*d)["data"]["data"]["underflow"].GetDouble();
     std::stringstream ssUnder; ssUnder<<underflow; m_statsValues.push_back(ssUnder.str());
-    //std::cout<<"Underflow: "<<underflow<<std::endl;
     double overflow = (*d)["data"]["data"]["overflow"].GetDouble();
     std::stringstream ssOver; ssOver<<overflow; m_statsValues.push_back(ssOver.str());
-    //std::cout<<"Overflow: "<<overflow<<std::endl;
 
     const rapidjson::Value& a = (*d)["data"]["data"]["axis_titles"];
     assert(a.IsArray());
@@ -473,6 +472,7 @@ VTabContent * VContentGetter::veloFileConfigs(VPlotOps * plotOps, std::string in
   }
 
   jsonToOps(&allRawData, &ops);
+  fourPlotsPerTabLimiter(&ops);
   findChildren(topDummyTab, &allTabs, &ops); // Called recursively.
   findPlots(&allTabs, &ops, plotOps);
   return topDummyTab;
@@ -484,10 +484,8 @@ void VContentGetter::jsonToOps(std::string * jsonOps,
     std::vector< std::vector< std::string > > * ops)
 {
 	std::cout<<"Converting..."<<std::endl;
-	//std::cout<<(*jsonOps)<<std::endl;
 	rapidjson::Document d;
 	d.Parse(jsonOps->c_str());
-	//std::cout<<d.GetString()<<std::endl;
 	for (rapidjson::Value::ConstMemberIterator itr = d.MemberBegin();
        itr != d.MemberEnd(); ++itr) {
 		std::vector<std::string> tabInfo;
@@ -497,12 +495,6 @@ void VContentGetter::jsonToOps(std::string * jsonOps,
     tabInfo.push_back(tab["title"].GetString());
     tabInfo.push_back("Top");
     ops->push_back(tabInfo);
-//    std::cout<<"Tab:\t";
-//    for (std::vector<std::string>::iterator is = tabInfo.begin();
-//    		is != tabInfo.end(); is++) {
-//    	std::cout<<(*is)<<"\t";
-//    }
-//    std::cout<<"\n";
 
     if (tab.HasMember("plots")) {
     	const rapidjson::Value &plots = tab["plots"];
@@ -517,18 +509,9 @@ void VContentGetter::jsonToOps(std::string * jsonOps,
     	  if (plot["sensor_dependent"].GetBool()) plotInfo.push_back("multipleModules");
     	  else plotInfo.push_back("singleModule");
     	  ops->push_back(plotInfo);
-
-//    	  std::cout<<"Plot:\t";
-//    	  for (std::vector<std::string>::iterator is = plotInfo.begin();
-//						is != plotInfo.end(); is++) {
-//					std::cout<<(*is)<<"\t";
-//				}
-//				std::cout<<"\n";
     	}
     }
 	}
-
-	//exit(0);
 }
 
 
@@ -544,7 +527,6 @@ void VContentGetter::findChildren(VTabContent * parentTab,
     if ((*iop)[2] == parentTab->m_title) {
       VTabContent * tab = new VTabContent((*iop)[1], parentTab);
       allTabs->push_back(tab);
-      //if (allTabs->size()>10) exit(1);
       findChildren(tab, allTabs, ops);
     }
   }
@@ -565,6 +547,8 @@ void VContentGetter::findPlots(std::vector<VTabContent*> * allTabs,
       if ((*iop)[2] == (*itab)->m_title) {
         VPlot * plot = new VPlot((*iop)[1], (*itab), true, plotOps);
         jsonPlottable * plottable = new jsonPlottable(plot, 1);
+        std::thread t(&VPlottable::getData, plottable);
+        t.detach();
         if ((*iop)[4] == "multipleModules") plot->m_multipleModules = true;
         else plot->m_multipleModules = false;
         plottable->m_retrivalCommand = (*iop)[3];
@@ -576,3 +560,51 @@ void VContentGetter::findPlots(std::vector<VTabContent*> * allTabs,
 
 
 //_____________________________________________________________________________
+
+void VContentGetter::fourPlotsPerTabLimiter(
+		std::vector< std::vector< std::string > > * ops)
+{
+	std::cout<<"Adjusting layout for 4 plots per tab..."<<std::endl;
+	// Loops over top level tabs from Vetra. If more than 4 plots per tab,
+	// introduce new sub tabs and alter parent tab names accordingly.
+	// Order is arbitrary (as found in ops list).
+
+	// First find if there is a problem.
+	std::vector< std::vector< std::string > >::iterator iopTab;
+  for (iopTab = ops->begin(); iopTab != ops->end(); iopTab++) {
+    if ((*iopTab)[0] != "Tab" || (*iopTab)[0].substr(0, 1) == "#") continue;
+    std::string parentName = (*iopTab)[1];
+    unsigned int nPlots = 0;
+    std::vector< std::vector< std::string > >::iterator iopPlot;
+		for (iopPlot = ops->begin(); iopPlot != ops->end(); iopPlot++) {
+			if ((*iopPlot)[0] != "Plot" || (*iopPlot)[0].substr(0, 1) == "#") continue;
+			if ((*iopPlot)[2] == parentName) nPlots++;
+		}
+
+		if (nPlots <= 4) continue;
+		unsigned int nNeeded = nPlots/4 + 1;
+		for (unsigned int iSubTab=0; iSubTab<nNeeded; iSubTab++) {
+			std::stringstream ssiSubTab;
+			ssiSubTab << (iSubTab + 1);
+			std::vector<std::string> tab;
+			std::string tabName = parentName + "_" + ssiSubTab.str();
+			tab.push_back("Tab");
+			tab.push_back(tabName);
+			tab.push_back(parentName);
+			ops->push_back(tab);
+			std::cout<<tab[0]<<"\t"<<tab[1]<<"\t"<<tab[2]<<std::endl;
+		}
+
+		// Adjust the parent plots.
+		nPlots = 0;
+		for (iopPlot = ops->begin(); iopPlot != ops->end(); iopPlot++) {
+			if ((*iopPlot)[0] != "Plot" || (*iopPlot)[2] != parentName) continue;
+			std::stringstream ss;
+			ss << ((nPlots/4) + 1);
+			std::string adjustedTabName = parentName + "_" + ss.str();
+			std::cout<<adjustedTabName<<std::endl;
+			(*iopPlot)[2] = adjustedTabName;
+			nPlots++;
+		}
+  }
+}

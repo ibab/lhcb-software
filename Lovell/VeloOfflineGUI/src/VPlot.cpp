@@ -76,7 +76,9 @@ void VPlot::setupLayout() {
 //_____________________________________________________________________________
 
 VCustomPlot * VPlot::setupPlot(bool isPopUp) {
-  VCustomPlot * vcp = new VCustomPlot(m_title, isPopUp, this, m_plotOps);
+	VCustomPlot * vcp;
+	if (isPopUp) vcp = new VCustomPlot(NULL, m_title, isPopUp, this, m_plotOps);
+	else vcp = new VCustomPlot(this, m_title, isPopUp, this, m_plotOps);
   setupPlottables(vcp);
   vcp->m_qcp->xAxis->setLabel(m_xAxisTitle.c_str());
   vcp->m_qcp->yAxis->setLabel(m_yAxisTitle.c_str());
@@ -104,7 +106,6 @@ void VPlot::setupPlottables(VCustomPlot * vcp) {
 
 void VPlot::addStatsBox(VCustomPlot * vcp, bool isPopUp) {
   if (isPopUp) {
-
     m_statsBox = new QWidget();
     QWidget * statsBox = m_statsBox;
     QGridLayout * lay = new QGridLayout();

@@ -107,7 +107,6 @@ void veloview::setVeloOptionsWidg() {
     runBoxModel->setData(runBoxModel->index(runBoxModel->rowCount() - 1, 0),
                          QString(line.c_str()), Qt::DisplayRole);
   }
-  std::cout<<"Done."<<std::endl;
 
   b_veloRunNumber = new QComboBox;
   if (m_runProxy != NULL) delete m_runProxy;
@@ -150,7 +149,7 @@ void veloview::setContent() {
   }
   else {
     m_plotOps->m_firstTime = true;
-    delete  m_plotOps->m_statsBox;
+    delete m_plotOps->m_statsBox;
   }
 
   // Creates the contents instance, as outlined by the relevant function in
@@ -286,10 +285,12 @@ void veloview::addModuleSelector() {
 
 void veloview::on_b_selector3_clicked() {
   ui->b_selector2->setCurrentIndex(ui->b_selector2->currentIndex()-1);
+  moduleChanged();
 }
 
 void veloview::on_b_selector4_clicked() {
   ui->b_selector2->setCurrentIndex(ui->b_selector2->currentIndex()+1);
+  moduleChanged();
 }
 
 //_____________________________________________________________________________
@@ -297,7 +298,6 @@ void veloview::on_b_selector4_clicked() {
 void veloview::moduleChanged() {
   std::cout<<"veloview::moduleChanged"<<std::endl;
   std::cout<<ui->b_selector1->currentText().toStdString()<<"\t"<<ui->b_selector2->currentText().toStdString()<<std::endl;
-  //if (m_plotOps->m_selPlot == NULL) std::cout<<"First select a plot to change its module."<<std::endl;
 }
 
 

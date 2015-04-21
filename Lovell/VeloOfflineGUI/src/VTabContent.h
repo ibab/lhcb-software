@@ -29,6 +29,7 @@ public:
   VTabContent * m_parentTab;
   int m_ID;
   int m_parentID;
+  bool m_drawn;
   
 
   // Methods __________________________________________________________________
@@ -40,7 +41,8 @@ public:
                   m_widget(NULL),
                   m_plotLayout(NULL),
                   m_parentTab(NULL),
-                  m_ID(0){} // Top tab constructor.
+                  m_ID(0),
+									m_drawn(false){} // Top tab constructor.
 
   VTabContent(std::string title) :
                   m_subContents(),
@@ -50,7 +52,8 @@ public:
                   m_widget(NULL),
                   m_plotLayout(NULL),
                   m_parentTab(NULL),
-                  m_ID(0){
+                  m_ID(0),
+									m_drawn(false){
                     m_title = title;
                   } // Top tab constructor.
 
@@ -62,7 +65,8 @@ public:
                 m_plotFillDirection(0),
                 m_subTabViewMethod(0),
                 m_widget(NULL),
-                m_plotLayout(NULL){
+                m_plotLayout(NULL),
+								m_drawn(false){
                   m_title = title;
                   m_parentTab = parentTab;
                   m_parentTab->m_subContents.push_back(this);
@@ -75,20 +79,22 @@ public:
                 m_plotFillDirection(0),
                 m_subTabViewMethod(0),
                 m_widget(NULL),
-                m_plotLayout(NULL){
+                m_plotLayout(NULL),
+								m_drawn(false){
                   m_title = title;
                   m_parentTab = parentTab;
                   m_parentTab->m_subContents.push_back(this);
                   m_ID = ID;
-                } // Other tabs.
+                }
 
 
 
   //___________________________________________________________________________
 
   void showEvent(QShowEvent *) {
-    if (m_plots.size() > 0) drawPlots();
-    if (m_tables.size() > 0) drawTables();
+    if (m_plots.size() > 0 && !m_drawn) drawPlots();
+    if (m_tables.size() > 0 && !m_drawn) drawTables();
+    m_drawn = true;
   } // Re-implemented from QWidget.
 
   void drawPlots();

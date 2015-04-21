@@ -8,6 +8,7 @@
 #include "sstream"
 #include <iomanip>
 #include "VPlot.h"
+#include <mutex>
 
 // VPlottable - a class to store data and settings of Qt plottables (ie plot 
 // curves).
@@ -30,6 +31,7 @@ public:
   VPlot * m_plot;
   std::string m_retrivalCommand;
   int m_dataFileType;
+  std::mutex m_mtx;
 
 
   // Methods __________________________________________________________________
@@ -39,11 +41,14 @@ public:
   void reset();
   void draw();
   void getData() {
-    if (m_gotData) return;
-    reset();
+  	m_mtx.lock();
+    if (!m_gotData) {
+			reset();
 
-    getPlotData();
-    m_gotData = true;
+			getPlotData();
+			m_gotData = true;
+    }
+    m_mtx.unlock();
   }
 
   virtual void getPlotData() {

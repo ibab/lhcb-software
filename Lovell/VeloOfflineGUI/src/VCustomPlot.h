@@ -17,7 +17,7 @@ class VPlotOps;
 class VCustomPlot : public QWidget{
   Q_OBJECT
 public:
-  VCustomPlot(std::string, bool, VPlot*, VPlotOps*);
+  VCustomPlot(QWidget * parent, std::string, bool, VPlot*, VPlotOps*);
   QCustomPlot * m_qcp;
   QGridLayout * m_layout;
   bool m_isPopUp;
