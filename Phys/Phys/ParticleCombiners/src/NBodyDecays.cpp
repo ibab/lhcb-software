@@ -1391,7 +1391,7 @@ StatusCode DaVinci::N4BodyDecays::execute()
           // Use combination cuts! it is a heart of all game: 
           // here we have the combination and can apply the cut:
           const bool pass_combination123 = m_acut123.fun ( comb123 ) ;
-          cnt_c123 += pass_combination12 ;
+          cnt_c123 += pass_combination123 ;
           if ( !pass_combination123 ) { continue ; } // CONTINUE, next c3 
           //
           
