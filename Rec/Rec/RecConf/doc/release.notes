@@ -4,6 +4,7 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+!========================= RecConf v2r21 2015-04-21 =========================
 ! 2015-04-20 - Michel De Cian
  - Remove '2015Dev' from 'KnownSpecialData', activate RunII tracking sequence by DataType '2015'
 
