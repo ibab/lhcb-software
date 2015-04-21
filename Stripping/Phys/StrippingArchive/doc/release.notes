@@ -4,6 +4,12 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-04-21 - Andrea Contu
+ - changes to python/StrippingArchive/__init__.py to avoid import of all archive when only one is requested
+ 
+! 2015-04-21 - Ricardo Vazquez Gomez
+ - Bug fix in the default_config keys
+
 ! 2015-04-17 - Chris Jones
  - Update StrippingTrackEffD0ToKPi and StrippingTrackEffD0ToK3Pi in S21 so
    TrackContainerCopy instances use new inputLocations option instead of

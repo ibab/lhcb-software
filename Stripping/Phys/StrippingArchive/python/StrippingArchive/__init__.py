@@ -68,44 +68,75 @@ _stripping_help={"Stripping13"  : "2011 data taking, processing during the first
                  "Stripping20r1p3" : "Third incremental restripping 20 2011 data",
                  "Stripping20r2" : "Stripping of 2.76 TeV Collision13 data on Rec14",
                  "Stripping20r3" : "Stripping of pA/Ap Collision13 data on Rec14a",
-		 "Stripping21" : "Legacy 2012 dataset, Reco14 + new Calo calibration",
-    		 "Stripping21r1" : "Legacy 2011 dataset, Reco14 + new Calo calibration",
+                 "Stripping21" : "Legacy 2012 dataset, Reco14 + new Calo calibration",
+                 "Stripping21r1" : "Legacy 2011 dataset, Reco14 + new Calo calibration",
                  }
 
-_strippingKeys = []
+_strippingKeys = {}
 
-#import known strippings
-for x in _known_strippings : 
-    module_name = __name__ + "." + x
-    print "Trying to import module", module_name
-    try : 
-        __import__(module_name)
-    except Exception, x: 
-	print "  -> Cannot be loaded with this version of DaVinci (%s)" % str(x)
-    else : 
-	_strippingKeys.append(x)
-
-
-#compile dictionary of all known strippings
-from sys import modules as _modules
-_this = _modules[__name__]
-
-_strippings={}
-
-for _k in _strippingKeys:
-    _strippings[_k] = getattr(_this, _k)
+#known strippings
+for x in _known_strippings :
+    _strippingKeys[x] = x
 
 #add the duplicated strippings
 for _k in _duplicate_strippings:
     if _k in _strippingKeys:
-        raise KeyError, _k+' already defined as a StippingArchive. check _duplicate_strippings'
+        raise KeyError, _k+' already defined as a StrippingArchive. check _duplicate_strippings'
     if _duplicate_strippings[_k] not in _known_strippings:
-        raise KeyError, _duplicate_strippings[_k]+' is not defined as a StippingArchive. check _duplicate_strippings'
+        raise KeyError, _duplicate_strippings[_k]+' is not defined as a StrippingArchive. check _duplicate_strippings'
     if _duplicate_strippings[_k] in _strippingKeys : 
-        _strippings[_k]=_strippings[_duplicate_strippings[_k]]
+        _strippingKeys[_k]=_strippingKeys[_duplicate_strippings[_k]]
+
+
+def _listofStrippings():
+    _l=[]
+    for _k in _known_strippings:
+        module_name = __name__ + "." + _k
+        print "Trying to import module", module_name
+        try : 
+            __import__(module_name)
+        except Exception, _k: 
+            print "  -> Cannot be loaded with this version of DaVinci (%s)" % str(_k)
+        else:
+            _l.append(_k)
+    for _d in _strippingKeys:
+        if _strippingKeys[_d] in _l and _d not in _l:
+            _l.append(_d)
+    return _l
+
+
+
+def _importArchive(stripping):
+    if type(stripping) is not str:
+        raise TypeError, "Strippings must be strings, like Stripping15 for example"
+        
+    print "Requested "+stripping
+    _tmpstrip=str(stripping)
+    
+    if stripping not in _strippingKeys.keys():
+        raise KeyError, stripping + ' is not known, call strippingArchive() with no arguement to get the full dictionary'
+    if  _strippingKeys[stripping]!=stripping:
+        print stripping+" is a duplicate of "+_strippingKeys[stripping]
+        _tmpstrip=str(_strippingKeys[stripping])
+
+
+    module_name = __name__ + "." + _tmpstrip
+    print "Trying to import module", module_name
+    try : 
+        __import__(module_name)
+    except Exception, _tmpstrip: 
+        print " -> Cannot be loaded with this version of DaVinci (%s)" % str(_tmpstrip)
+        return NULL
+    
+    from sys import modules as _modules
+    _this = _modules[__name__]
+    
+    _stripping = getattr(_this, _tmpstrip)
+    return _stripping
+
 
 #check the descriptions
-for _k in _strippings:
+for _k in _strippingKeys:
     if _k not in _stripping_help:
         raise KeyError, _k+' has not been provided a description. check _stripping_help'
 
@@ -115,16 +146,10 @@ def strippingArchive(stripping=None):
     strippingArchive(): return all line builder modules in a dictionary {stripping:module}.
     strippingArchive(stripping): return the line builder module for that stripping'''
     if stripping is None:
-        return dict(_strippings)
-        
-    if type(stripping) is not str:
-        raise TypeError, "Strippings must be strings, like Stripping15 for example"
+        return list(_listofStrippings())
 
-    for key in _strippings.keys() : 
-	if key.lower() == stripping.lower() : 
-	    return _strippings[key]
-
-    raise KeyError, stripping + ' is not known, call strippingArchive() with no arguement to get the full dictionary'
+    strip = _importArchive(stripping.title())
+    return strip
     
 
 def strippingDescription(stripping=None):
@@ -132,13 +157,8 @@ def strippingDescription(stripping=None):
     strippingDescription(): return all descriptions in a dictionary {stripping:module}.
     strippingDescription(stripping): return the description for that stripping'''
     if stripping is None:
-        return dict(_stripping_help)
-
-    if type(stripping) is not str:
-        raise TypeError, "Strippings must be strings, like Stripping15 for example"
-
-    for key in _strippings.keys() : 
-	if key.lower() == stripping.lower() : 
-	    return _stripping_help[key]
-
-    raise KeyError, stripping + ' is not known, call strippingDescription() with no arguement to get the full dictionary'
+        return list(_listofStrippings())
+    
+    strip = _importArchive(stripping.title())
+    
+    return _stripping_help[stripping.title()]
