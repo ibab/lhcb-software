@@ -241,6 +241,7 @@ StatusCode MuonNNetRec::muonNNetMon(){
       maxFiringS=i;
     }
     for (unsigned int j=i+1; j<5 && j<(i+3) ;j++) {
+      if(i!= m_skipStation) //stefania
       ncomb +=  hit_per_station[i]*hit_per_station[j];
     }
   }

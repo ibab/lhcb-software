@@ -88,6 +88,7 @@ StatusCode MuonClusterRec::finalize ()
 const std::vector<MuonHit*>* MuonClusterRec::clusters(const std::vector<MuonLogPad*>* pads, 
                                                           bool force) {
 
+  const int factor[5] = {3,1,1,1,1};	
   if( (m_clustersDone == false || force==true) && pads) {
     int nhits=0;
     std::vector<MuonLogPad*>::const_iterator ipad,jpad,clpad;
@@ -120,7 +121,7 @@ const std::vector<MuonHit*>* MuonClusterRec::clusters(const std::vector<MuonLogP
 
   
     for (int station =0 ; station<m_muonDetector->stations() ; station++) {
-      if (stationPads[station].size() > m_maxPadsPerStation) {
+      if (stationPads[station].size() > factor[station]*m_maxPadsPerStation) {
         info() << "skipping station M"<<station+1<<" with too many pads:" 
                << stationPads[station].size() <<endmsg;
         continue;
