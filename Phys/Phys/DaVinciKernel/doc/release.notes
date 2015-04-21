@@ -4,6 +4,8 @@
 ! Responsible : DV Maintainer
 !============================================================================
 
+!===================== DaVinciKernel v12r1 2015-04-21 =======================
+
 ! 2015-04-02 - Vanya Belyaev
  - add simple test for CPU performance fo two combiner strategies.
 
