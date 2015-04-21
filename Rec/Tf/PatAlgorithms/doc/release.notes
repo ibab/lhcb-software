@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r40 2015-04-21 =========================
 ! 2015-04-09 - Michel De Cian
  - Change input location of long tracks to veto in PatForward for HLT2 for 2015.
 
