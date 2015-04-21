@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichRecTools
 ################################################################################
-gaudi_subdir(RichRecTools v4r27)
+gaudi_subdir(RichRecTools v4r28)
 
 gaudi_depends_on_subdirs(Det/RichDet
                          GaudiKernel
