@@ -4,8 +4,9 @@
 ! Purpose     : RICH reconstruction algorithms that use MC information
 !-----------------------------------------------------------------------------
 
+!========================= RichRecMCAlgorithms v1r6 2015-04-21 ======================
 ! 2015-03-09 - Chris Jones
- - Load some tools as shared instances to avoid unneccesary duplication of
+ - Load some tools as shared instances to avoid unnecessary duplication of
    tools when running the reconstruction with the split track groups enabled.
 
 !========================= RichRecMCAlgorithms v1r5 2013-10-01 ======================
