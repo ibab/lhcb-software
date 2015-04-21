@@ -10,9 +10,10 @@ from Configurables import Escher
 # Just instantiate the configurable...
 theApp = Escher()
 theApp.DataType   = "2012"
-theApp.InputType  = "MDF"
+#theApp.InputType  = "MDF"
+theApp.InputType  = "DST"
 theApp.PrintFreq = 10
-theApp.EvtMax = 100
+theApp.EvtMax = 10000
 theApp.DatasetName = 'AlignHlt1JpsiMUON'
 
 # COND DB
