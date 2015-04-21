@@ -3,6 +3,22 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v29r5>2015-04-21 Boole v29r5</A></H1><PRE>
+This version uses projects:
+ LCG_72root6 (ROOT 6.02.05), Gaudi v26r1, LHCb v38r6, Lbcom v16r5
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+ - New functionality
+   . In FT (FTDigitisation v2r4)
+     o Turned on 2-bits ADC forcing of digits, noise implementation, and
+       new SiPMResponse shape
+     o Added options to fix cluster size / fraction
+   . In BooleInit, added property SetOdinRndTrigger to switch on ODIN random
+     trigger via event type bit (DigiAlg v5r3)
+
+ - New tuning
+   . Speed optimisations in OT and Velo geometry (OTDet v8r16, VeloDet v13r21)
+
 </PRE><H1><A NAME=v29r4>2015-02-25 Boole v29r4</A></H1><PRE>
 This version uses projects:
  LCG_72root6 (ROOT 6.02.05), Gaudi v26r1, LHCb v38r5, Lbcom v16r4
