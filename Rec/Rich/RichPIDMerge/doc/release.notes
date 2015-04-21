@@ -4,6 +4,7 @@
 ! Purpose     : Contains the merging algorithms for final RICH PID results
 !-----------------------------------------------------------------------------
 
+!========================= RichPIDMerge v2r11 2015-04-21 =========================
 ! 2015-03-09 - Chris Jones
  - Add a new algorithm that takes a list of RichPID TES locations and creates
    a cloned, merged output container containing all PID results.
