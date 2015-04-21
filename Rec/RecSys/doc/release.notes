@@ -5,6 +5,301 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v17r6>2015-04-21 RecSys v17r6</A></H1><PRE>
+This version uses Gaudi v26r1, LHCb v38r6 and Lbcom v16r5 (and ROOT 6.02.05)
+
+- Packages modified: Calo/CaloReco v5r25, Muon/MuonID v9r14, Pr/PrKernel v1r9,
+    Pr/PrMCTools v2r8, Rec/ChargedProtoANNPID v2r10, Rec/RecConf v2r21,
+    Rich/RichAlignment v1r10, Rich/RichGlobalPID v3r24,
+    Rich/RichHPDImageAnalysis v1r15, Rich/RichPIDMerge v2r11,
+    Rich/RichRecAlgorithms v2r21, Rich/RichRecBase v4r20,
+    Rich/RichRecMCAlgorithms v1r6, Rich/RichRecMCTools v2r32,
+    Rich/RichRecMonitors v2r36, Rich/RichRecPhotonTools v1r17,
+    Rich/RichRecQC v2r69, Rich/RichRecStereoTools v1r10, Rich/RichRecSys v5r6,
+    Rich/RichRecTools v4r28, Rich/RichRecTrackTools v1r40, Tf/FastVelo vr19,
+    Tf/PatAlgorithms v4r40, Tf/PatKernel v2r9, Tf/PatVeloTT v4r6,
+    Tf/TfKernel v2r31, Tf/TrackSys v9r6, Tr/PatPV v3r28, 
+    Tr/TrackAssociators v2r12, Tr/TrackCheckers v4r22, 
+    Tr/TrackExtrapolators v2r37, Tr/TrackFitter v5r4, Tr/TrackKernel v2r3,
+    Tr/TrackMonitors v2r6, Tr/TrackTools v5r8, Tr/TrackUtils v1r60
+
+- In Calo/CaloReco v5r24, v5r25
+  . python/CaloReco/Configuration : in CaloProcessor : 
+    give CaloProcessor-name-dependent naming for the neutralProtoPAlg and the
+    algorithms updating charged ProtoP
+  . Fix bad assert.
+  . CaloCorrectionBase::getParams: 
+    o don't create an empty vector if it won't be needed
+    o cache counters by (type, areaName) instead of creating a string containing
+      both every single time, and then looking them up by string
+
+- In Muon/MuonID v9r14
+  . Merge efforts of the MuonID task force from branch LHCbPS-1372.
+    o Implement CommonMuonTool that offers the same functionality for both Offline
+      and Hlt1.
+    o Implement a DLLMuonTool that can calculate Muon DLLs using the information
+      from CommonMuonTool
+    o Implement MuonIDAlgLite that does the same as MuonIDAlg but using the new
+      tools.
+
+- In Pr/PrKernel v1r9
+  . Add method and variable for cutting on ghost probability to IPrCounter.
+
+- In Pr/PrMCTools v2r8
+  . Adapt 'PrTrackAssociator' such that the list of classID it understands can be
+    configured. Give it per default for LHCb::Track and LHCb::Track::Selection.
+  . Add algorithm 'PrCheatedSciFiTracking' that performs an ideal pattern
+    recognition in the SciFi.
+  . Add cut on ghost probability to PrCounter. This is only set for 'Best'
+    category tracks in the PrChecker. Default cut is such that it has no effect.
+
+- In Rec/ChargedProtoANNPID v2r10
+  . Add some more consistency checks to the NetConfig helper class.
+  . Remove redundant status flag boolean data member from NetConfig.
+
+- In Rec/RecConf v2r21
+  . Change Configuration such that 2015 online-like tracking sequence is run when
+    selecting DataType '2015'
+  . Remove 'TrackContainerCopy' from 2015 PV reconstruction, as Velo and Forward
+    tracks are now in separate containers.
+  . Set 'IgnoreFilterPassed' to True for PV reconstruction in 2015 to not abort
+    processing the rest of the event.
+  . Activate by default the separate track type groups in the RICH reconstruction.
+    Must be done before any 'applyConf' methods are called, in order for the
+    Configurable dependencies to be correctly set up, and thus this is done from
+    a new custom __init__ method of the RecSysConf Configurable.
+
+- In Rich/RichAlignment v1r10
+  . Add some logic to the alignment configurable to extract the correct
+    context to use for a given set of tracks from the RichRecSys configurable.
+
+- In Rich/RichGlobalPID v3r24, Rich/RichRecAlgorithms v2r21,
+     Rich/RichRecBase v4r20, Rich/RichRecPhotonTools v1r17,
+     Rich/RichRecTools v4r28, Rich/RichRecTrackTools v1r40
+  . Downgrade some info level printout messages to debug level.
+
+- In Rich/RichHPDImageAnalysis v1r15
+  . Make a new base class for the HPD Image analysis algorithm, that implements
+    the core functionality. Allows other implications for instance in Panoptes,
+    that adds 'Online' features (Camera reporting etc.) whilst still sharing the
+    basic code.
+  . Various small clean ups of the Image summary algorithm. C++11'ify things a
+    bit. Remove loading of ODIN simply to fill a counter...
+
+- In Rich/RichPIDMerge v2r11
+  . Add a new algorithm that takes a list of RichPID TES locations and creates
+    a cloned, merged output container containing all PID results.
+
+- In Rich/RichRecBase v4r20
+  . Skip summary printouts for empty selections.
+
+- In Rich/RichRecBase v4r20, Rich/RichRecMCAlgorithms v1r6, 
+     Rich/RichRecMCTools v2r32, Rich/RichRecMonitors v2r36,
+     Rich/RichRecPhotonTools v1r17, Rich/RichRecStereoTools v1r10,
+     Rich/RichRecTools v4r28, Rich/RichRecTrackTools v1r40
+  . Make some tools shared instances to avoid unnecessary duplication when
+    running the RICH reconstruction with the split track groups.
+
+- In Rich/RichRecPhotonTools v1r17, Rich/RichRecTools v4r28,
+     Rich/RichRecTrackTools v1r40
+  . General c++11 clean up.
+
+- In Rich/RichRecPhotonTools v1r17
+  . Use LHCbMath FastRoots implementation instead of one from RichKernel.
+
+- In Rich/RichRecQC v2r69
+  . Adapt to small change in RichRecSysConf trackTypeIsActive method.
+  . Add package dependency on RichRecSys.
+  . Remove all calls that required access to the underlying group configurables
+    in RichRecSys.
+  . Add a new histogram to RichRecoQC for the track momentum distribution.
+  . Update the python configurable to use the reconstuction configurable
+    RichRecSysConf to determine the correct context to use for each monitor,
+    based on the tracks it is monitoring.
+
+- In Rich/RichRecSys v5r6
+  . Small change in the RichRecSysConf trackTypeIsActive method to fix a 
+    issue where the Long Track monitors in RichRecQC went missing after
+    the last commit.
+  . Avoid creating reconstruction sequences for track groups that would fail
+    the tracking cuts (as their types are not included).
+  . Forcibly set the Context correctly before anything else, in all used 
+    configurables.
+  . Do not append final RichPID merger to algorithm sequence if PID is 
+    globally turned off.
+  . Fix a small problem in the configurables that cause custom settings to
+    not always be properly propagated.
+  . Rework things to avoid assumptions based on the order things are applied.
+  . Update the python configurable to support running with separate processing
+    sequences for different track groups. Enabled by calling the method
+        
+        richConf = RichRecSysConf(self.richRecConfName)
+        richConf.setTrackGroups( [ ["Forward","Match"],
+                                   ["VeloTT"], ["KsTrack"] ] )
+
+    Important - This *must* be done before any applyConf method is called.
+    Default mode is to work as before, with all track types considered at
+    the same time in the likelihood minimisation.
+
+- In Tf/FastVelo vr19
+  . Reserve vector in FastVeloFitLHCbIDs. This makes it a tiny bit faster when
+    used in TrackStateInitTool.
+
+- In Tf/PatAlgorithms v4r40
+  . Change input location of long tracks to veto in PatForward for HLT2 for 2015.
+  . Make 'PatAddTTCoord' default for PatForwardTool.
+  . Changes to 2015 configuration of forward tracking.
+  . Add configuration for PatForward in HLT1 in 2015 to 'PatAlgConf'.
+  . PatForwardTool:
+    o New implementation of SecondLoop. Moved it from forwardTrack into
+      tracksFromTrack and pulled out fillXList while processing SecondLoop.
+      Speeds up the code by 6%, no changes in efficiency/ghost rate
+    o The ranges to project hits into the reference plane now take the charge
+      estimate properly into account. Speeds up the HLT1 configuration by 10%.
+  . PatSeedingTool, PatSeedTool, PatSeedTrack, PatSeedFits: refactor bits of
+    code to avoid code duplication; no changes in performance or timing
+  . Change 'ifndef KSTRACK' to 'ifndef PATDOWNTRACK' in PatDownTrack.h to get rid
+    of relics.
+  . PatSeedTrack:
+    o Rewrite code in constructor which calculates parabola parameters from three
+      X hits (permille level increase in efficiency)
+    o (very) slight code modernisation
+  . Various PatSeeding classes: remove dynamic memory management by replacing
+    std::vector<PatFwdHit*> with StaticArray class from DetDesc; this speeds up
+    the Seeding by 4% without significant changes in performance (the code will
+    now abandon track candidates which accumulate a crazy number of hits 72 or
+    more, i.e. at least 6 in every layer of the T stations) 
+  . PatSeedingTool/PatSeedTool/PatSeedFit: continue to push outward decision if
+    hit is IT or OT (in many cases, we can now neglect to check the track
+    altogether); this gains another 5 permille in speed without affecting
+    results one bit
+  . PatFwdTool: be a bit smarter in setting up the data structure used to
+    resolve ambiguities (avoid dynamic memory management, sort only once);
+    this speeds up the Forward by 2% without any change in performance
+  . PatSeedTool:
+	  o Add improvements made in the ambiguity resolution of the Forward:
+      + keep track of quality of last ambiguity assignment, and make sure each
+        hit keeps the best assignment that is possible
+      + do not assign ambiguities if the pitch residual looks fishy (too large) 
+      These changes speed up the Seeding by 2%, raise the efficiency by up to
+      half a percent while keeping the ghost rate stable with permille level
+      fluctuations.
+    o Count OT hits being passed, so can call specialised variant of fit
+      (this is part of an ongoing effort to push the conditional jumps out of
+      the hot code path(s)); this saves about 2% CPU without affecting results
+  . PatSeedFits: add template argument to select OT only, IT only, or mixed hit
+    content to avoid if statements in fits
+
+- In Tf/PatKernel v2r9
+  . PatFwdHit: optimise planeCodee(), layer(), isStereo(), isX(), and
+    rlAmb()/setRlAmb(int) methods
+
+- In Tf/PatVeloTT v4r6
+  . Declare PatVeloTTHybridTool as a private instance of PatVeloTTHybrid.
+  . Remove obsolete fitting options within PatVeloTTHybrid
+  . Change VeloTT track location in 'PatVeloTTAlgConf'
+  . Add configuration for PatVeloTTHybrid in HLT1 in 2015 to 'PatVeloTTAlgConf'
+  . Rename 'PatVeloConf' to 'PatVeloTTAlgConf'
+  . Add protection in case of empty layers
+
+- In Tf/TfKernel v2r31
+  . Revisit hit classes to give the code some more resemblance to C++11 by
+    adding noexcept where appropriate
+  . Use somewhat more efficient way to determine if a hit is an X hit in IT and OT
+  . Change order of some hit class members to optimise layout in memory
+  . SIMDChi2Fit: speed up by 3% by using a smarter way to assign to columns of
+    the wgrads matrix in addHits()
+
+- In Tf/TrackSys v9r6
+  . Configuration.py:
+    o Activate RunII tracking sequence by 'DataType == 2015'
+    o liteClusters and simplifiedGeometry are default for Run 2
+  . Add 'RecoTrackingRun2.py' containing the tracking options for run2.
+    o Change 'TrackBestTrackCreator' to 'TrackEventFitter' for Velo and Forward
+      separately for HLT1 
+    o Fix input container for forward merging to use fitted HLT1 forward tracks
+    o Fix bug with TrackStateInitTool
+    o Change 'TrackListMerger' to (new) 'TrackContainerCopy', such that forward
+      tracks can be stored on a DST.
+    o Change options of Fitter: Don't refit, use FastMomentumEstimate, don't
+      change dEdX in simulation.
+  . Introduce 'TrackListRefiner' to only veto fitted long tracks in HLT 2 forward
+    for 2015.
+  . Add 'TrackV0Finder' in 2015 sequence.
+  . RecoTracking.py:
+    o Fix inputLocation(s) of another instance of TrackContainerCopy
+    o Replace 'PatVeloConf' with 'PatVeloTTAlgConf' (change in name only)
+  . Fix a bug in TrackSys configure where TrackSys() was used instead of self.
+  . Slight modification in 'PatChecking.py' to run the checkers for the output of
+    the merged forward.
+
+- In Tr/PatPV v3r27, v3r28
+  . Remove left-over possibility to apply R-cut in LSAdaptPV3DFitter
+  . Add bound on Velo distance to beam, above which the beam-spot R cut is not
+    applied. Once the BeamSpotRho functor is available in Rec, use that instead.
+  . Add new functionality to LSAdaptPV3DFitter which 
+    o allow to use kalman fitter tracks, option UseFittedTracks
+    o add option for radial distance cut of PV - maxRDPV 
+    o to make offline and online algorithms consistent: 
+      deprecate maxIP2PV cut, instead trackMaxChi2 is recommended
+    o deprecation warning printed if the obsolete property maxIP2PV is set.
+      Not removed, to avoid braking the Stripping tests in the nightlies.
+
+- In Tr/TrackAssociators v2r12
+  . Use LHCb::Track::Range such that also LHCb::Track::Selection can be used as
+    an input container.
+
+- In Tr/TrackCheckers v4r22
+  . Introduce Ranges in TrackEffChecker, such that input container can also be of
+    type LHCb::Track::Selection.
+
+- In Tr/TrackExtrapolators v2r37
+  . TrackRungeKuttaExtrapolator: replace std::pow(x, -0.2) with
+    FastRoots::invfifthroot(x); this makes the extrapolator another 4% faster
+
+- In Tr/TrackFitter v5r4
+  . Add property 'MaxChi2DoF' to TrackEventFitter (and fix identation).
+  . Fixed check for same input and output containers to also work with TCK.
+
+- In Tr/TrackKernel v2r3
+  . CubicStateInterpolationTraj: make distTo2ndError a factor 5 faster
+
+- In Tr/TrackMonitors v2r6
+  . Improve splitting method MiddlePerVeloHalf (now difference between number of
+    tracks of split vertices is at most one, was two).
+  . Add new splitting method VeloTopBottom (for systematics studies).
+  . Keys of extrainfo are now options. Add PV z position to extrainfo.
+  . Always write two split vertices, even if fit is not successful.
+  . Add CopyPV property, which if true, copies input vertices to the output
+  . Add UsePVForSeed property. Set to false to do seeding rather than use the PV.
+
+- In Tr/TrackTools v5r7p1, v5r8
+  . updated networks and flattening table in Run2GhostId (change from
+    GhostClassification ghost definition to TrackAssociator definition in the
+    training)
+  . TrackStateInitTool: Added option to use the FastMomentumEstimateTool to
+    get a momentum estimate for Long tracks. This reduces the timing
+    of the tool by roughly 30%. Current default is false
+  . Run2GhostId: Add "flattening" (response distribution for ghosts
+    approximately constant between 0 and 1)
+  . Run2GhostId: Changed TT and IT cluster type to lite.
+
+- In Tr/TrackUtils v1r59, v1r60
+  . TrackContainerCopy: Now can take more than one input location. 
+    To avoid breakign existing tests, use obsolete inputLocation instead of
+    inputLocations if that option is set. Warning is issued to change to
+    use the newer list option. It is an error to set both inputLocation and
+    inputLocations.
+  . TrackBestTrackCreator:
+    o Added counters of failed fits for each track type.
+    o Added option to skip fit of already fitted tracks. False by default.
+    o Added option to add ghost probability and to use it in the selection of
+      good tracks. False by default.
+    o Added the possibility to save clone killed and fitted tracks in separate
+      containers according to track type.
+  . HltTrackConverter: Added option for reading specific SelReports location
+
+
 </PRE><H1><A NAME=v17r5>2015-02-25 RecSys v17r5</A></H1><PRE>
 This version uses Gaudi v26r1, LHCb v38r5 and Lbcom v16r4 (and ROOT 6.02.05)
 
