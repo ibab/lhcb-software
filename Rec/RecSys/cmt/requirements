@@ -89,7 +89,7 @@ use TrackKernel          v2r3    Tr   # Wouter Hulsbergen
 use TrackMCTools         v3r11p1 Tr   # Eduardo Rodrigues
 use TrackMonitors        v2r6    Tr   # Wouter Hulsbergen, Stephanie Menzemer
 use TrackProjectors      v3r2    Tr   # Wouter Hulsbergen
-use TrackTools           v5r9    Tr   # Wouter Hulsbergen
+use TrackTools           v5r8    Tr   # Wouter Hulsbergen
 use TrackUtils           v1r60   Tr   # Eduardo Rodrigues
 
 # Primary Vertex Finder
