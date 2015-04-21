@@ -39,8 +39,8 @@ AlignDataWriter_Tracker.Requirements         = {
 //AlignDataWriter_Tracker.Requirements         = {
 //"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 //};
-AlignDataWriter_Tracker.MEPFilePrefix          = "/localdisk/Alignment/D0/Run_";
-AlignDataWriter_Tracker.EvtFilePrefix          = "/localdisk/Alignment/D0/Run_";
+AlignDataWriter_Tracker.MEPFilePrefix          = "/localdisk/Alignment/Tracker/Run_";
+AlignDataWriter_Tracker.EvtFilePrefix          = "/localdisk/Alignment/Tracker/Run_";
 AlignDataWriter_Tracker.MaxEvents              = 1000;
 AlignDataWriter_Tracker.DIMSteering = 1;
 AlignDataWriter_Tracker.PartitionName             = @OnlineEnv.PartitionName;
