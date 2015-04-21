@@ -148,7 +148,7 @@ def strippingArchive(stripping=None):
     if stripping is None:
         return list(_listofStrippings())
 
-    strip = _importArchive(stripping.title())
+    strip = _importArchive(stripping.capitalize())
     return strip
     
 
@@ -159,6 +159,6 @@ def strippingDescription(stripping=None):
     if stripping is None:
         return list(_listofStrippings())
     
-    strip = _importArchive(stripping.title())
+    strip = _importArchive(stripping.capitalize())
     
-    return _stripping_help[stripping.title()]
+    return _stripping_help[stripping.capitalize()]

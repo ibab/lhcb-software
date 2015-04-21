@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-04-21 - Andrea Contu
+ - small fix to __init__.py and updated reference for qmtest
+
+! 2015-04-21 - Andrea Contu
  - changes to python/StrippingArchive/__init__.py to avoid import of all archive when only one is requested
  
 ! 2015-04-21 - Ricardo Vazquez Gomez
