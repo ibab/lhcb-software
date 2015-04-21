@@ -1,10 +1,10 @@
 
 # =============================================================================
 # Created    : 2009-08-04
-# Maintainer : Juan Palacios
+# Maintainer : DaVinci coordinator
 # =============================================================================
 package           DaVinciTypes
-version           v2r10
+version           v2r11
 
 # =============================================================================
 # Structure, i.e. directories to process. 

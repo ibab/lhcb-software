@@ -1,9 +1,11 @@
 !$Id: release.notes,v 1.9 2010-06-18 16:40:23 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciTypes
-! Responsible : Juan Palacios
+! Responsible : DaVinci coordinator
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
+
+!======================== DaVinciTypes v2r11 2015-04-21 ======================
 
 ! 2015-03-17 - Vanya Belyaev
  - move count_iterator to LHCbKernel
