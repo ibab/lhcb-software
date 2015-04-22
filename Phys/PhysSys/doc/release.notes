@@ -3,6 +3,106 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v19r6>2015-04-22 Phys v19r6</A></H1><PRE>
+Development release, based on Gaudi v26r1, LHCb v38r6 and Rec v17r6.
+Uses LCG_74root6 with ROOT 6.02.05.
+
+- Packages updated :
+  Phys/BBDecTreeTool v1r7, Phys/DaVinciInterfaces v2r24, Phys/DaVinciKernel v12r1,
+  Phys/DaVinciTypes v2r11, Phys/DecayTreeFitter v1r19, Phys/FlavourTagging v13r12,
+  Phys/KalmanFilter v1r11, Phys/LoKiAlgo v9r9, Phys/LoKiArrayFunctors v11r2,
+  Phys/LoKiFitters v4r13, Phys/LoKiPhys v11r1, Phys/LoKiTracks v3r1, Phys/MVADictTools v1r9,
+  Phys/ParticleCombiners v1r2, Phys/ParticleMaker v6r14, Phys/PhysConf v1r27,
+  PhysSel/PhysSelPython v9r6, Phys/SelPy v4r3, Phys/Swimming v3r7, Phys/TisTosTobbing v8r3,
+  Phys/VertexFit v6r21.
+
+- In Phys/BBDecTreeTool v1r7 :
+  . Reintegration of development branch v1r6p2-VarGeneralization. This generalizes the BBDecTreeTool
+    and BBDTSimpleTool to accommodate any lookup-table variables that can be expressed as LoKi
+    hybrid functors. I also tried to improve the doxygen documentation for the classes.
+
+- In Phys/DaVinciInterfaces v2r24 :
+  . Method "unRelatePV" added to IDVAlgorith (needed for Hlt).
+  . Various interface cleanups. In particular avoid some virtual methods, that instead should be just inlined.
+  . IParticleValue added to dictionary for interactive tests.
+
+- In Phys/DaVinciKernel v12r1 :
+  . Added simple test for CPU performance for two combiner strategies.
+  . Changed PVSentry to deal with IDVAlgorithm insted of DaVinciAlgorithm.
+
+- In Phys/DaVinciTypes v2r11 :
+  . count_iterator moved to LHCbKernel.
+
+- In Phys/DecayTreeFitter v1r19 :
+  . Bug fix in dealing with bremstralung in RecoTrack.cpp.
+  . Added new class 'ConvertedPhoton' that implements 'soft' constraint on conversion vertex.
+
+- In Phys/FlavourTagging v13r12 :
+  . New BDT tagger implementation based on D. Fazzini studies.
+
+- In Phys/KalmanFilter v1r11 :
+  . Added new function that allows significant optimization of vertex fit.
+
+- In Phys/LoKiAlgo v9r9 :
+  . Types that can be added into n-tuple extended: char, uchar, short, ushort, uint, ulong are added.
+
+- In Phys/LoKiArrayFunctors v11r2 :
+  . Removed method from HybridFilterParticles now inlined in interface.
+
+- In Phys/LoKiFitters v4r13 :
+  . VertexFitter: added option to allow CPU-performace measurement, "MeasureCPUPerformace".
+    Implemented optimized algorithm (but not yet fully tested, further optimization is still possible
+    and optimized). Tests with B&W WG_Selection show factor of 30-35% improvement in CPU for the vertex fit
+    optimized algorithm is used when new option "UseOptimizedAlgorithm" is activated.
+  . Activated optimized algorithm for default setting.
+
+- In Phys/LoKiPhys v11r1 :
+  . Added copy constructor to LoKi::Particles::Value.
+  . Added functors for pseudorapidity calculated from the PV->SV direction.
+
+- In Phys/LoKiTracks v3r1 :
+  . Added fake source.
+
+- In Phys/MVADictTools v1r9 :
+  . Fixed EOS URL to sample file for mvaDfromB scripts.
+  . Added support for BBDT models (from Phys/BBDecTreeTool) and example of usage (options/mvaDfromB_bbdt.py).
+  . Return tool configurable from helper functions.
+  . Added utility function to resolve environment variable in filename.
+
+- In Phys/ParticleCombiners v1r2 :
+  . Typo fixed in 123 combination cut counter in N4Body decay combiner.
+  . Several counters added.
+
+- In Phys/ParticleMaker v6r14 :
+  . DiElectronMaker : verbosity reduced when electron container is defined and protoP container is missing.
+
+- In Phys/PhysConf v1r27 :
+  . New properties added to LoKi_Filters:
+    - HLT1_Code/Preambulo/Location
+    - HLT2_Code/Preambulo/Location
+      For HLT_Code/Preambulo/Location code there is warning message  and *if* code allows translation to
+      HLT(1/2)_Code proeprty, such translation is performed; otherwise error message is issued.
+
+- In PhysSel/PhysSelPython v9r6 :
+  . Added very simple "passthrough selection" for printing/debugging.
+    ## some input selection
+    selection =
+    ## add ``Printer''
+    selection = PrintSelection ( 'QUQU' , selection )
+
+- In Phys/SelPy v4r3 :
+  . Improved DOT-graphs for selections and vizualization of selelctions (python/SelPy/graph.py).
+
+- In Phys/Swimming v3r7 :
+  . Changed obsolete PropertimeFitter for LoKi::LifetimeFitter.
+
+- In Phys/TisTosTobbing v8r3 :
+  . Don't copy particles (by value in vector) and use markParticle instead of markTree.
+
+- In Phys/VertexFit v6r21 :
+  . Added depreciation warnings to AdaptivePVReFitter and PVReFitter.
+  . Added deprecation warning to PVTrackRemover.
+  . Fixed typo in forward reference of PVReFitterAlg.h.
 
 </PRE><H1><A NAME=v19r5>2015-03-13 Phys v19r5</A></H1><PRE>
 Development release, based on Gaudi v26r1, LHCb v38r5 and Rec v17r5.
@@ -411,11 +511,6 @@ In Swimming :
 In TisTosTobbing :
  . Remove special configuration of TisTosParticleTagger when context() = 'Hlt'
    as this is no longer needed.
-
-
-
-
-
 
 
 
