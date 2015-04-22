@@ -18,6 +18,7 @@ class RareStrangeLines(Hlt2LinesConfigurableUser):
                              },
                  'SigmaPMuMu' : { 'muonMinIpChi2' :  25. ,
                                   'pPIDp' : 5. ,
+                                  'pMinIpChi2' :  25. ,
                                   'SigmaMassWin' : 500 * MeV ,
                                   'SigmaMaxDOCA' : 2. * mm ,
                                   'SigmaVtxChi2' : 25 ,  # adimensional

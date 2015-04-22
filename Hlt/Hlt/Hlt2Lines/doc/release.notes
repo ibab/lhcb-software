@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-22 - Francesco Dettori
+ - Additional cut in RareStrange lines
+
 ! 2015-04-17 (in Cincinnati, 2015-04-18 at CERN) - Mike Sokoloff
   -  Updated HHKshCombiner to become "shared = True", passing the same "nickname"
      for all instances to use a single dictionary.

@@ -16,9 +16,9 @@ class SigmaPMuMuCombiner(Hlt2Combiner):
     def __init__(self,name):
         
         daughters_cuts = { "mu+" : "(TRCHI2DOF< %(TrChi2)s) & (TRGHOSTPROB< %(TrGP)s) &" + \
-                                   "(MIPCHI2DV(PRIMARY)>%(muonMinIpChi2)s)",
+                           "(MIPCHI2DV(PRIMARY)>%(muonMinIpChi2)s)",
                            "p+" : "(TRCHI2DOF< %(TrChi2)s) & (TRGHOSTPROB< %(TrGP)s) & " + \
-                                  "(PIDp > %(pPIDp)s)"
+                           "(PIDp > %(pPIDp)s) & (MIPCHI2DV(PRIMARY)>%(pMinIpChi2)s)"
                            }
         
         combination_cuts = "(ADAMASS('Sigma+') < %(SigmaMassWin)s ) & " + \
