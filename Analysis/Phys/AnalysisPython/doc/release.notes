@@ -1,9 +1,11 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/AnalysisPython
-! Responsible : Juan PALACIOS
+! Responsible : Vanya Belyaev
 ! Purpose     : Collection of useful python modules for LHCb-specific
-!               GaudiPython analyses
+!               GaudiPython analyses.
 !-----------------------------------------------------------------------------
+
+!====================== AnalysisPython v2r36 2015-04-22 ======================
 
 ! 2015-03-24 - Vanya Belyaev
  - one more model 
