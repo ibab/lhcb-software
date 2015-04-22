@@ -5,6 +5,8 @@
 ! Puspose     : A set of tests for components in the Phys/VertexFit package.
 !===========================================================================
 
+!==================== VertexFitCheck v1r9 2015-04-22 =======================
+
 ! 2015-03-19 - Eduardo Rodrigues
  - ProperTimeChecker: refitter algorithm set to LoKi::PVReFitter by default,
    and to a public instance by default as well.
