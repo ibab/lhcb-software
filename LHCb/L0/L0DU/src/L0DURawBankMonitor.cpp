@@ -1,10 +1,10 @@
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 #include "GaudiUtils/Aida2ROOT.h"
 // from lhcb
-#include "Event/ODIN.h" 
+#include "Event/ODIN.h"
 // local
 #include "L0DURawBankMonitor.h"
 
@@ -33,7 +33,7 @@ L0DURawBankMonitor::L0DURawBankMonitor( const std::string& name,
   , m_first(true)
 {
   declareProperty( "RawLocations"           , m_rawLocations  );
-  declareProperty( "L0DUFromRawTool"   , m_fromRawTool = "L0DUFromRawTool" );  
+  declareProperty( "L0DUFromRawTool"   , m_fromRawTool = "L0DUFromRawTool" );
   declareProperty( "EmulatorTool"      , m_emulatorTool= "L0DUEmulatorTool");
   declareProperty( "Convert"           , m_conv = false);
   declareProperty( "DataMonitor"       , m_data = true);
@@ -45,7 +45,6 @@ L0DURawBankMonitor::L0DURawBankMonitor( const std::string& name,
   declareProperty( "DecodeBank"        , m_decode = true);
   declareProperty( "LocationsForEmulatorCheck"   , m_locs);
   declareProperty( "FullWarning"       , m_warn = false);
-  declareProperty( "xLabelOptions"     , m_lab ="" );
   declareProperty( "genericPath"       , m_generic = true );
   declareProperty( "CaloReadoutTool"   ,  m_caloTool  = "CaloDataProvider" );
   declareProperty( "ErrorFilterMask"   ,  m_mask = 0x0);
@@ -53,12 +52,15 @@ L0DURawBankMonitor::L0DURawBankMonitor( const std::string& name,
   m_rawLocations.push_back( LHCb::RawEventLocation::Trigger );
   m_rawLocations.push_back( LHCb::RawEventLocation::Default );
 
+  // property xLabelOptions in the base class
+  m_lab = "";
+
   setHistoDir( name );
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-L0DURawBankMonitor::~L0DURawBankMonitor() {} 
+L0DURawBankMonitor::~L0DURawBankMonitor() {}
 
 //=============================================================================
 // Initialization
@@ -124,7 +126,7 @@ StatusCode L0DURawBankMonitor::execute() {
     if( cBanks->size() > 0 )cOk = true;
     if( pBanks->size() > 0 )pOk = true;
   }
-  
+
 
 
   // get odin info
@@ -137,24 +139,24 @@ StatusCode L0DURawBankMonitor::execute() {
     Warning( "Emtpy location for ODIN '"+ LHCb::ODINLocation::Default +"'" ,StatusCode::SUCCESS).ignore();
   }
 
-  
+
   bool ok ;
   if(m_decode){
     ok = m_fromRaw->decodeBank();
   }else{
     ok = m_fromRaw->report().valid();
-  }  
+  }
   if(!ok){
     return Error("Readout error : unable to monitor the L0DU rawBank", StatusCode::SUCCESS );
   }
-  
+
 
   LHCb::L0DUReport report = m_fromRaw->report();
-  
+
   double Sgn[2];
   Sgn[0]=+1.;
   Sgn[1]=-1.;
-  
+
   // Input Data monitoring
   if(m_data){
     // Calo
@@ -206,7 +208,7 @@ StatusCode L0DURawBankMonitor::execute() {
       fill(histo2D(toHistoID("Address/Muon/"+np.str())) ,  ad2 , ad1 , 1.);
     }
   }
-  
+
   // L0DU Processed Data
   if( m_proc ){
     fill( histo1D(toHistoID("Process/Muon/1")), m_fromRaw->data("Muon1(Pt)")* Sgn[m_fromRaw->data("Muon1(Sgn)")] ,1 );
@@ -217,34 +219,34 @@ StatusCode L0DURawBankMonitor::execute() {
   }
 
   // Status
-  if(m_status){     
+  if(m_status){
     LHCb::L0DUConfig* config = report.configuration();
     int bx = m_fromRaw->bcid().first;
     if(report.decision() )fill( histo1D(toHistoID("Status/BCID/1")), bx, 1 );
     if( m_bcidDet && NULL != config){
       LHCb::L0DUChannel::Map channels = config->channels();
-      for(LHCb::L0DUChannel::Map::const_iterator ic = channels.begin();ic != channels.end();++ic){  
+      for(LHCb::L0DUChannel::Map::const_iterator ic = channels.begin();ic != channels.end();++ic){
         std::string channel = ic->first;
         if( report.channelDecisionByName( channel ))plot1D(bx, "Status/BCID/Channels/"+channel,
                                                            "BCID for positive decision from channel " + channel,
                                                            0.,3565.,3565);
       }
       LHCb::L0DUTrigger::Map triggers = config->triggers();
-      for(LHCb::L0DUTrigger::Map::const_iterator it = triggers.begin();it != triggers.end();++it){  
+      for(LHCb::L0DUTrigger::Map::const_iterator it = triggers.begin();it != triggers.end();++it){
         std::string trigger = it->first;
         if( report.triggerDecisionByName( trigger ))plot1D(bx, "Status/BCID/SubTriggers/"+trigger,
                                                            "BCID for positive decision from subTrigger " + trigger,
                                                            0.,3565.,3565);
       }
     }
-    
+
     // from L0Processor
-    
+
 
     int k = 1;
     for(int i = 1; i<=4 ; ++i){
       AIDA::IHistogram1D* hMuon =  histo1D(toHistoID("Status/Muon/" + Gaudi::Utils::toString(i) ) );
-      TH1D* thMuon = Gaudi::Utils::Aida2ROOT::aida2root( hMuon ); 
+      TH1D* thMuon = Gaudi::Utils::Aida2ROOT::aida2root( hMuon );
       fill( hMuon, 0. , 1. );
       if( m_fromRaw->data("MuonCU0(Status)") & k )fill( hMuon, 1., 1.);
       if( m_fromRaw->data("MuonCU1(Status)") & k )fill( hMuon, 2., 1.);
@@ -257,10 +259,10 @@ StatusCode L0DURawBankMonitor::execute() {
       axMuon->SetBinLabel( 4 , "MuonCU2" );
       axMuon->SetBinLabel( 5 , "MuonCU3" );
       k = k << 1;
-    }    
+    }
 
     AIDA::IHistogram1D* hCalo =  histo1D(toHistoID("Status/Calo/1" ) );
-    TH1D* thCalo = Gaudi::Utils::Aida2ROOT::aida2root( hCalo ); 
+    TH1D* thCalo = Gaudi::Utils::Aida2ROOT::aida2root( hCalo );
     fill( hCalo, 0. , 1. );
     if( 1 == m_fromRaw->data("Electron(Status)") )fill( hCalo, 1. , 1. );
     if( 1 == m_fromRaw->data("Photon(Status)")   )fill( hCalo, 2. , 1. );
@@ -281,7 +283,7 @@ StatusCode L0DURawBankMonitor::execute() {
 
     //
     AIDA::IHistogram1D* hPus =  histo1D(toHistoID("Status/Pus/1" ) );
-    TH1D* thPus = Gaudi::Utils::Aida2ROOT::aida2root( hPus ); 
+    TH1D* thPus = Gaudi::Utils::Aida2ROOT::aida2root( hPus );
     fill( hPus, 0.  , 1. );
     if( 1 == m_fromRaw->data("PU1(Status)") )fill( hPus, 1.  , 1. );
     if( 1 == m_fromRaw->data("PU2(Status)") )fill( hPus, 2.  , 1. );
@@ -304,7 +306,7 @@ StatusCode L0DURawBankMonitor::execute() {
     if( 0 < m_fromRaw->data("Spd(Status)"))inputStatus++;
     if( 0 < m_fromRaw->data("PU1(Status)"))inputStatus++;
     if( 0 < m_fromRaw->data("PU2(Status)"))inputStatus++;
-    
+
     // BXID shift
     fill( histo1D(toHistoID("Status/L0DU/BCID/1")), odBX - m_fromRaw->bcid().first, 1 );
     if( odBX != 3561 && odBX != 3562 && odBX != 3563 && odBX != 0 && mOk)
@@ -321,7 +323,7 @@ StatusCode L0DURawBankMonitor::execute() {
       std::stringstream local("");
       local << LHCb::L0ProcessorDataLocation::L0DU;
       check = emulatorCheck( config, 1 ,"from " + local.str() ) && check;
-      // additional locations 
+      // additional locations
       int k = 1;
       for(std::vector<std::vector<std::string> >::iterator ilocs = m_locs.begin() ; ilocs != m_locs.end() ; ilocs++){
         k++;
@@ -337,7 +339,7 @@ StatusCode L0DURawBankMonitor::execute() {
           check = emulatorCheck( config, k , " from  " + loc.str() ) && check;
         }else{
           Warning("Cannot run the emulator for L0ProcessorData location(s) : " + loc.str() ,StatusCode::SUCCESS).ignore();
-        }        
+        }
       }
       // reset processor data from L0DU location when changed
       if(m_locs.size() != 0){
@@ -357,14 +359,14 @@ StatusCode L0DURawBankMonitor::execute() {
     if( mOk && (0x7F & m_fromRaw->bcid().first) != m_fromRaw->bcid().second){
       if( odBX == 3561 || odBX == 3562 || odBX == 3563 || odBX == 0 ){
         counter("Muon-L0DU misalignment for BX" + Gaudi::Utils::toString( odBX ) ) += 1;
-      }else{  
+      }else{
         fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::BxPGAShift , 1 );
         if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- PGA2/3 BXID misaligned -- "
                           ,StatusCode::SUCCESS).ignore();
         if( m_mask == L0DUBase::L0DUError::BxPGAShift )setFilterPassed(true);
       }
-      if ( msgLevel(MSG::DEBUG) ) 
-        debug() << "BCID ODIN/L0DU&0x7F/PGA3 : " << odBX << "/" 
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "BCID ODIN/L0DU&0x7F/PGA3 : " << odBX << "/"
                 <<  (0x7F &m_fromRaw->bcid().first) << " / " << m_fromRaw->bcid().second<< endmsg;
     }
     if( odBX != m_fromRaw->bcid().first){
@@ -372,7 +374,7 @@ StatusCode L0DURawBankMonitor::execute() {
       if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- ODIN/L0DU BXID misaligned -- "
                         ,StatusCode::SUCCESS).ignore();
       if( m_mask == L0DUBase::L0DUError::BxOdinShift )setFilterPassed(true);
-      if ( msgLevel(MSG::DEBUG) ) 
+      if ( msgLevel(MSG::DEBUG) )
         debug() << "BCID L0DU/ODIN : " <<  m_fromRaw->bcid().first << " / " << odBX << endmsg;
     }
     if( (m_fromRaw->status() & 0x1) ){
@@ -397,7 +399,7 @@ StatusCode L0DURawBankMonitor::execute() {
       fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::EmulatorCheck , 1 );
       if( m_mask == L0DUBase::L0DUError::EmulatorCheck )setFilterPassed(true);
       if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- Emulator check error -- ",StatusCode::SUCCESS).ignore();
-    }    
+    }
     if( NULL == config ){
       fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::UnknownTCK , 1 );
       if( m_mask == L0DUBase::L0DUError::UnknownTCK )setFilterPassed(true);
@@ -405,7 +407,7 @@ StatusCode L0DURawBankMonitor::execute() {
     }
     unsigned int nSpdDAQ = 0;
     if( m_spd->ok() )nSpdDAQ = m_spd->adcs().size();
-    if( m_fromRaw->data("Spd(Mult)") != nSpdDAQ ){ 
+    if( m_fromRaw->data("Spd(Mult)") != nSpdDAQ ){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::WrongSpdMult , 1 );
       if( m_mask == L0DUBase::L0DUError::WrongSpdMult )setFilterPassed(true);
       if(m_warn)Warning("Status::Warning  : L0DU bank monitor summary : -- Wrong Spd Mult -- ",StatusCode::SUCCESS).ignore();
@@ -428,15 +430,15 @@ StatusCode L0DURawBankMonitor::execute() {
   }
   if(m_first)m_first=false;
   return StatusCode::SUCCESS;}
-  
+
 //=============================================================================
 
 void L0DURawBankMonitor::bookHistos() {
   double caloEt =  m_conv ? m_condDB->caloEtScale() : 1.;
   double muonPt =  m_conv ? m_condDB->muonPtScale() : 1.;
-  
+
   if(m_data){
-    
+
     book1D( toHistoID("Data/Calo/1")  ,  "Electron(Et)"   ,  0. , 256. * caloEt   ,  256/m_bin);
     book1D( toHistoID("Data/Calo/2")  ,  "Photon(Et)"     ,  0. , 256. * caloEt    , 256/m_bin);
     book1D( toHistoID("Data/Calo/3")  ,  "LocalPi0(Et)"   ,  0. , 256. * caloEt    , 256/m_bin);
@@ -463,7 +465,7 @@ void L0DURawBankMonitor::bookHistos() {
     book1D( toHistoID("Data/Muon/7") ,  "Muon Q30  (Pt*sign) "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
     book1D( toHistoID("Data/Muon/8") ,  "Muon Q31  (Pt*sign) "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
   }
-  
+
   if( m_proc ){
     book1D( toHistoID("Process/Muon/1"), "1st highest Muon (Pt*sign) "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
     book1D( toHistoID("Process/Muon/2"), "2nd highest Muon (Pt*sign) "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
@@ -471,19 +473,19 @@ void L0DURawBankMonitor::bookHistos() {
     book1D( toHistoID("Process/Muon/4"), "DiMuon (Pt) "                  ,  0.      , 256.*muonPt , 256/m_bin);
     book1D( toHistoID("Process/Muon/5"), "Muon Cleaning Pattern "        ,  0.      , 256.   , 256);
   }
-  
-  if(m_status){     
+
+  if(m_status){
     book1D( toHistoID("Status/Muon/1") ,  "Muon status & 0x1" , 0., 5. , 5 );
     book1D( toHistoID("Status/Muon/2") ,  "Muon status & 0x2" , 0., 5. , 5 );
-    book1D( toHistoID("Status/Muon/3") ,  "Muon status & 0x3" , 0., 5. , 5 ); 
-    book1D( toHistoID("Status/Muon/4") ,  "Muon status & 0x4" , 0., 5. , 5 );    
+    book1D( toHistoID("Status/Muon/3") ,  "Muon status & 0x3" , 0., 5. , 5 );
+    book1D( toHistoID("Status/Muon/4") ,  "Muon status & 0x4" , 0., 5. , 5 );
     book1D( toHistoID("Status/Calo/1") ,  "Calo status bit" , 0., 8. , 8 );
     book1D( toHistoID("Status/Pus/1")  ,  "Pus  status bit" , 0., 3. , 3 );
     book1D( toHistoID("Status/L0DU/BCID/1") ,  "BCID(ODIN)-BCID(L0DU)" , -15. , 15., 31);
     book1D( toHistoID("Status/L0DU/BCID/2") ,  "BCID(PGA3)-BCID(PGA2)" , -15. , 15., 31);
     // Global summary
     AIDA::IHistogram1D* histo = book1D( toHistoID("Status/Summary/1")     ,  "L0DU error status summary"       , -1. , 12., 13);
-      TH1D* th1 = Gaudi::Utils::Aida2ROOT::aida2root( histo );        
+      TH1D* th1 = Gaudi::Utils::Aida2ROOT::aida2root( histo );
       TAxis* xAxis = th1->GetXaxis();
       xAxis->SetBinLabel( 1 , "Counter" );
       xAxis->SetBinLabel( 2 , "Idle link" );
@@ -502,7 +504,7 @@ void L0DURawBankMonitor::bookHistos() {
     // BXID decision
     book1D( toHistoID("Status/BCID/1")        ,  "BCID for positive decisions"     , 0 , 3565, 3565);
   }
-  
+
   if( m_addr ){
     bookCalo2D(toHistoID("Address/Calo/1") , "Electron candidate address" , "Ecal");
     bookCalo2D(toHistoID("Address/Calo/2") , "Photon   candidate address" , "Ecal");
@@ -523,7 +525,7 @@ void L0DURawBankMonitor::bookHistos() {
     book1D( toHistoID("Address/Pus/1") ,  "Pile-up peak1 position" , 0. , 256., 256);
     book1D( toHistoID("Address/Pus/2") ,  "Pile-up peak2 position" , 0. , 256., 256);
     // @to do 2D view for Muon
-  }  
+  }
                                          }
 
 bool L0DURawBankMonitor::emulatorCheck(LHCb::L0DUConfig* config, int unit, std::string txt) {
@@ -532,7 +534,7 @@ bool L0DURawBankMonitor::emulatorCheck(LHCb::L0DUConfig* config, int unit, std::
     return false;
   }
   bool check = true;
-  
+
 
   LHCb::L0DUChannel::Map channels = config->channels();
   int cBin = channels.size();
@@ -551,9 +553,9 @@ bool L0DURawBankMonitor::emulatorCheck(LHCb::L0DUConfig* config, int unit, std::
   TAxis* ax2=0;
   TAxis* ax3=0;
   if(m_first){
-    TH1D* th1 = Gaudi::Utils::Aida2ROOT::aida2root( h1 );        
-    TH1D* th2 = Gaudi::Utils::Aida2ROOT::aida2root( h2 );        
-    TH1D* th3 = Gaudi::Utils::Aida2ROOT::aida2root( h3 );        
+    TH1D* th1 = Gaudi::Utils::Aida2ROOT::aida2root( h1 );
+    TH1D* th2 = Gaudi::Utils::Aida2ROOT::aida2root( h2 );
+    TH1D* th3 = Gaudi::Utils::Aida2ROOT::aida2root( h3 );
     ax1 = th1->GetXaxis();
     ax2 = th2->GetXaxis();
     ax3 = th3->GetXaxis();
@@ -561,9 +563,9 @@ bool L0DURawBankMonitor::emulatorCheck(LHCb::L0DUConfig* config, int unit, std::
     ax2->SetBinLabel( 1 , "Counter" );
     ax3->SetBinLabel( 1 , "Counter" );
   }
-  
+
   LHCb::L0DUReport report = m_fromRaw->report();
-  
+
   // (pre)Decisions (@TODO use L0DUReport dedicated method report->preDecision() instead of looping over channels)
   int idec = 1;
   int bin = 2;
@@ -575,22 +577,22 @@ bool L0DURawBankMonitor::emulatorCheck(LHCb::L0DUConfig* config, int unit, std::
       if( report.channelPreDecision( channel->id() ) )dec=true;
     }
     if(  dec != config->emulatedPreDecision(idec) ){
-      plot1D( bin-2 ,"Status/L0DU/EmulatorCheck/Decisions/" + Gaudi::Utils::toString(unit), 
+      plot1D( bin-2 ,"Status/L0DU/EmulatorCheck/Decisions/" + Gaudi::Utils::toString(unit),
               "L0 decision  emulator check (" + txt + ")",-1. , 3  , 4);
       check = false;
-    }  
+    }
     std::string flag = LHCb::L0DUDecision::Name[ idec ] ;
     if(m_first)ax3->SetBinLabel( bin , flag.c_str() );
     idec = idec << 1;
     bin++;
   }
-  
+
 
   // Channels
   for(LHCb::L0DUChannel::Map::iterator it = channels.begin();it!=channels.end();it++){
     int id = ((*it).second)->id() ;
     if( report.channelPreDecision( id ) != ((*it).second)->emulate()->emulatedPreDecision() ){
-      if ( msgLevel(MSG::DEBUG) ) 
+      if ( msgLevel(MSG::DEBUG) )
         debug() << "Emulator check error for channel " << (*it).first << endmsg;
       plot1D( (double) id ,"Status/L0DU/EmulatorCheck/Channels/" + Gaudi::Utils::toString(unit),
               "L0DU channels preDecision emulator check (" + txt + ")" ,-1. ,(double) cBin  , cBin+1);
@@ -606,9 +608,9 @@ bool L0DURawBankMonitor::emulatorCheck(LHCb::L0DUConfig* config, int unit, std::
   for(LHCb::L0DUElementaryCondition::Map::iterator it = conditions.begin();it!=conditions.end();it++){
     int id = ((*it).second)->id() ;
     if( report.conditionValue( id ) != ((*it).second)->emulatedValue() ){
-      if ( msgLevel(MSG::DEBUG) ) 
+      if ( msgLevel(MSG::DEBUG) )
         debug() << "Emulator check error for condition " << (*it).first << endmsg;
-      plot1D( (double) id ,"Status/L0DU/EmulatorCheck/Conditions/" + Gaudi::Utils::toString(unit), 
+      plot1D( (double) id ,"Status/L0DU/EmulatorCheck/Conditions/" + Gaudi::Utils::toString(unit),
               "L0DU conditions value emulator check (" + txt + ")",-1. ,(double) ecBin  , ecBin+1);
       check = false;
     }
@@ -622,7 +624,7 @@ bool L0DURawBankMonitor::emulatorCheck(LHCb::L0DUConfig* config, int unit, std::
   return check;
 }
 
-     
+
 GaudiAlg::HistoID L0DURawBankMonitor::toHistoID(std::string unit){
   if( m_generic  ) return HistoID( unit );
   int index = unit.find_first_of("/");
@@ -657,6 +659,6 @@ GaudiAlg::HistoID L0DURawBankMonitor::toHistoID(std::string unit){
   else if( unit.find("Pus/2")!= std::string::npos)return HistoID( pref + "/Pus/Peak2" );
   else if( unit.find("Pus/3")!= std::string::npos)return HistoID( pref + "/Pus/Hits" );
   return HistoID( unit );
-  
-} 
-     
+
+}
+
