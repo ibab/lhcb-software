@@ -4,6 +4,8 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+!======================== DSTWriters v4r19 2015-04-22 ========================
+
 ! 2015-04-16 - Chris Jones
  - Add RichPIDs to the list of veto'ed locations in the uDST element
    PackParticlesAndVertices.
