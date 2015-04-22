@@ -4,6 +4,10 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2015-04-22 - Marco Clemencic
+ - Modified EventCountAlg to avoir re-definition of property StatEntityList
+   from base class (see GAUDI-1023).
+
 !========================= LHCbAlgs v3r5 2015-04-20 =========================
 ! 2015-03-20 - Liang Sun
  - QMTest: Condition path changed in the scripts for the Updated DQFLAGS.db
@@ -17,7 +21,7 @@
 !========================= LHCbAlgs v3r4 2014-09-08 =========================
 ! 2014-08-19 - Chris Jones
  - Add new algorithm AddressKillerAlg (from Markus) that clears the address
-   history in the TES. 
+   history in the TES.
 
 !========================= LHCbAlgs v3r3 2014-07-14 =========================
 ! 2014-07-10 - Marco Clemencic

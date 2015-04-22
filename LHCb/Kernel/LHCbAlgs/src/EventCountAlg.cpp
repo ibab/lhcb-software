@@ -1,7 +1,7 @@
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/AlgFactory.h"
 
 // local
@@ -32,27 +32,28 @@ EventCountAlg::EventCountAlg( const std::string& name,
   //declare the filename to write. If the string is empty, no file will be written
   declareProperty("CounterName",m_counterName="efficiency");
   //I know this is a stat entity, make sure it's written as such
-  declareProperty("StatEntityList",m_statEntityList=std::vector<std::string>(1,".*"));
+  //(property StatEntityList of GaudiAlgorithm)
+  m_statEntityList = {".*"};
 
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-EventCountAlg::~EventCountAlg() {} 
+EventCountAlg::~EventCountAlg() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
 StatusCode EventCountAlg::initialize() {
-  
-  StatusCode sc = GaudiAlgorithm::initialize(); 
+
+  StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
-  
+
   //prepare the incident service
   sc=service("IncidentSvc", m_incSvc, false);
   if(!sc.isSuccess() || m_incSvc== NULL) return StatusCode::FAILURE;
   m_incSvc->addListener( this, IncidentType::BeginEvent);
-  
+
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   return StatusCode::SUCCESS;
@@ -78,11 +79,11 @@ StatusCode EventCountAlg::finalize() {
   //create the statEntity
   //                                                     entries    flag          flag2      min, max
   StatEntity anent(
-                   m_nHandled, m_nExecuted, 
+                   m_nHandled, m_nExecuted,
                    m_nExecuted, int(m_nHandled>m_nExecuted),
                    int(m_nExecuted!=0));
   counter(m_counterName)= anent;
-  
+
   return GaudiAlgorithm::finalize();
 }
 
