@@ -4,7 +4,11 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
-!========================= RichAlignment v1r10 2015-04-21 =========================
+! 2014-05-23 - Paras Naik
+ - Decreased Bins in phi (from 25 to 20) in 2D dThetavphiRec histograms for 
+   specific mirror combinations. (Reversed decision of 2011-06-07, see below)
+
+!========================= RichAlignment v1r10 2015-04-21 ======================
 ! 2015-03-09 - Chris Jones
  - Add some logic to the alignment configurable to extract the correct
    context to use for a given set of tracks from the RichRecSys configurable.

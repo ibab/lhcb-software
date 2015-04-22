@@ -151,7 +151,8 @@ StatusCode AlignmentMonitor::initialize()
       std::ostringstream title;
       title << "Alignment Histogram: Sph " << sph << " flat " << flat << " R" << rich+1;
       richHisto2D( Rich::HistogramID(h_id,m_radiator), title.str(),
-                   0.0, 2*Gaudi::Units::pi, 25, -m_deltaThetaHistoRange,
+      //             0.0, 2*Gaudi::Units::pi, 25, -m_deltaThetaHistoRange,
+                   0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
                    m_deltaThetaHistoRange, 50 );
       if ( m_useMCTruth )
       {
