@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-22 - Karlis Dreimanis
+  - Removed 'FromL0' from EW electron inputs as requested by Roel 
+
 ! 2015-04-22 - Francesco Dettori
  - Additional cut in RareStrange lines
 
