@@ -4,6 +4,9 @@
 ! Purpose     : Checker package for Phys/FlavourTagging
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
+
+!=================== FlavourTaggingChecker v7r9 2015-04-22 ===================
+
 ! 2015-04-22 - Stefania Vecchi
  - Updated code to print SSproton and SSpion output for qmttest
 
