@@ -3,6 +3,8 @@
 ! Responsible : DaVinci coordinator
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
+! 2015-04-22 - Stefania Vecchi
+ - Updated tagging reference file to account for new BDT taggers
 
 ! 2015-03-25 - Eduardo Rodrigues
  - Test commonparticles.qms/test_standardintermediate_reco14_run.qmt updated.
