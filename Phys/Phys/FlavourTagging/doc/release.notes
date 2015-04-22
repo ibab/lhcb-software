@@ -5,6 +5,9 @@
 !                                               ---> Stefania Vecchi(2013--now)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+!====================== FlavourTagging v13r12 2015-04-22 =====================
+
 ! 2015-04-21 - Stefania Vecchi
  - new BDT tagger implementation based on D.Fazzini studies
 
