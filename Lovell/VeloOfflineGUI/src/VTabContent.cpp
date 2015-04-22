@@ -29,10 +29,6 @@ void VTabContent::drawPlots() {
     ny = 3;
   }
 
-//  if (m_plots.size() == 8) {
-//    nx = 4;
-//    ny = 2;
-//  }
 
   // Add the plots.
   for (unsigned int i = 0; i<m_plots.size(); i++) {

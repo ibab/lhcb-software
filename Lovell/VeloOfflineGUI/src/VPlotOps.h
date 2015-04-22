@@ -8,6 +8,8 @@
 #include <QtGui/QComboBox>
 #include <QtGui/QSpinBox>
 #include <QtGui/QGridLayout>
+#include <QtGui/QTextBrowser>
+#include <QtGui/QScrollBar>
 
 class VPlot;
 
@@ -29,6 +31,8 @@ public:
   QComboBox * b_veloRunNumber;
   QGroupBox * m_moduleSelector;
   std::string * m_dataDir;
+  QTextBrowser * m_textBrowser;
+  void notify(std::string);
 
   VPlotOps(QGroupBox*, std::string *);
   void newSelection(VPlot*, bool);

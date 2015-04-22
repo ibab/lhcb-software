@@ -1,4 +1,5 @@
 #include "VPlotOps.h"
+#include <QApplication>
 
 //_____________________________________________________________________________
 
@@ -11,6 +12,12 @@ VPlotOps::VPlotOps(QGroupBox * opsHolder, std::string * dataDir) {
   m_layout = new QGridLayout();
   opsHolder->setLayout(m_layout);
   m_layout->setContentsMargins(6,6,6,6);
+
+  m_textBrowser = new QTextBrowser();
+
+
+  m_layout->addWidget(new QLabel("Notifications:"), m_layout->rowCount(), 0, 1, 1);
+  m_layout->addWidget(m_textBrowser, m_layout->rowCount(), 0, 1, 1);
 
   // Buttons.
   QWidget * buttonBox = new QWidget();
@@ -41,7 +48,7 @@ VPlotOps::VPlotOps(QGroupBox * opsHolder, std::string * dataDir) {
 
 
   l->setAlignment(Qt::AlignCenter);
-  m_layout->addWidget(buttonBox, 0, 0, 1, 1);
+  m_layout->addWidget(buttonBox, m_layout->rowCount(), 0, 1, 1);
 }
 
 
@@ -97,7 +104,16 @@ void VPlotOps::newSelection(VPlot * selPlot, bool forceConnect) {
     m_statsBox = selPlot->exportStatsBox();
     m_layout->addWidget(m_statsBox, m_layout->rowCount(), 0, 1, m_layout->columnCount());
   }
+  QScrollBar * sb = m_textBrowser->verticalScrollBar();
+	sb->setValue(sb->maximum());
 }
 
 
 //_____________________________________________________________________________
+
+void VPlotOps::notify(std::string message) {
+	std::cout<<"NOTE: "<<message<<std::endl;
+	m_textBrowser->append(QString(message.c_str()));
+	QScrollBar * sb = m_textBrowser->verticalScrollBar();
+	sb->setValue(sb->maximum());
+}

@@ -82,7 +82,7 @@
           <bool>false</bool>
          </property>
          <property name="title">
-          <string>Plot Options</string>
+          <string>Plot Information</string>
          </property>
         </widget>
        </item>

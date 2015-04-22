@@ -31,6 +31,7 @@ public:
     std::vector< std::vector< std::string > > * ops, VPlotOps * plotOps);
   static void jsonToOps(std::string *, std::vector< std::vector< std::string > > *);
   static void fourPlotsPerTabLimiter(std::vector< std::vector< std::string > > *);
+  static void lastPlottable(VPlottable *, VPlotOps *);
 };
 
 #endif

@@ -125,20 +125,11 @@ void veloview::filterWildcard(QString s) {
 	m_runProxy->setFilterWildcard(s.left(s.size()-1));
 }
 
-  // Other.
-//  l->addWidget(new QLabel("MultiRun # lower:"), l->rowCount(), 0, 1, 1);
-//  b_veloRunNumberLow = new QSpinBox();
-//  b_veloRunNumberLow->setValue(0);
-//  l->addWidget(b_veloRunNumberLow, l->rowCount(), 0, 1, 1);
-
-//  l->addWidget(new QLabel("MultiRun # upper:"), l->rowCount(), 0, 1, 1);
-//  b_veloRunNumberUp = new QSpinBox();
-//  b_veloRunNumberUp->setValue(2);
-//  l->addWidget(b_veloRunNumberUp, l->rowCount(), 0, 1, 1);
 
 //_______________________ ______________________________________________________
 
 void veloview::setContent() {
+	QApplication::setOverrideCursor(Qt::WaitCursor);
   if (!m_ran) {
     ui->w_plotOps->setEnabled(true);
     m_plotOps = new VPlotOps(ui->w_plotOps, &m_dataDir);
@@ -146,11 +137,16 @@ void veloview::setContent() {
     m_plotOps->b_moduleSelector2 = ui->b_selector2;
     m_plotOps->b_veloRunNumber = b_veloRunNumber;
     m_plotOps->m_moduleSelector = ui->w_moduleSelector;
+    m_plotOps->notify("Loading run " + b_veloRunNumber->currentText().toStdString() + "...");
+    	qApp->processEvents();
   }
   else {
+  	m_plotOps->notify("\nLoading run " + b_veloRunNumber->currentText().toStdString() + "...");
     m_plotOps->m_firstTime = true;
+    qApp->processEvents();
     delete m_plotOps->m_statsBox;
   }
+
 
   // Creates the contents instance, as outlined by the relevant function in
   // VContentGetter (which may call other sources/databases).
@@ -186,6 +182,7 @@ void veloview::setContent() {
   completeTabs(m_content->m_subContents, ui->m_contentHolder, lay);
   m_ran = true;
   ui->b_load->setText("Reload");
+  QApplication::restoreOverrideCursor();
 }
 
 
@@ -211,8 +208,11 @@ void veloview::completeTabs(std::vector<VTabContent*> & tabsContents,
     lay->setContentsMargins(2,2,2,2);
     (*itabPage)->setLayout(lay);
     tabPages->addTab((*itabPage), QString((*itabPage)->m_title.c_str()));
-    if ((*itabPage)->m_subContents.size() > 0)
+    if ((*itabPage)->m_subContents.size() > 0) {
       completeTabs((*itabPage)->m_subContents, (*itabPage), lay);
+    }
+    if ((*itabPage)->m_title == "Pedestals")
+      tabPages->setCurrentIndex(tabPages->count()-1);
   }
 }
 
@@ -284,13 +284,17 @@ void veloview::addModuleSelector() {
 //_____________________________________________________________________________
 
 void veloview::on_b_selector3_clicked() {
+	QApplication::setOverrideCursor(Qt::WaitCursor);
   ui->b_selector2->setCurrentIndex(ui->b_selector2->currentIndex()-1);
   moduleChanged();
+  QApplication::restoreOverrideCursor();
 }
 
 void veloview::on_b_selector4_clicked() {
+	QApplication::setOverrideCursor(Qt::WaitCursor);
   ui->b_selector2->setCurrentIndex(ui->b_selector2->currentIndex()+1);
   moduleChanged();
+  QApplication::restoreOverrideCursor();
 }
 
 //_____________________________________________________________________________

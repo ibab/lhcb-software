@@ -31,9 +31,6 @@ public:
     while(fgets(buff, sizeof(buff), in)!=NULL) rawData.append(buff);
     pclose(in);
 
-//    std::cout<<"JSON Plot Data:"<<std::endl;
-//    std::cout<<rawData<<std::endl;
-
     rapidjson::Document d;
     d.Parse(rawData.c_str());
     if (!d.HasMember("data")) {
@@ -58,8 +55,8 @@ public:
 
   //___________
   void th1Decoder(rapidjson::Document * d) {
-  	//std::cout<<"TH1 decoder."<<std::endl;
   	m_plottableDimension = 1;
+
   	if (!(*d)["success"].GetBool()) {
   		std::cout<<"Unable to retrive plot data: "<<(*d)["message"].GetString()<<std::endl;
   		return;
@@ -102,12 +99,11 @@ public:
     assert(a.IsArray());
     m_plot->m_xAxisTitle = a[0].GetString();
     m_plot->m_yAxisTitle = a[1].GetString();
-    std::cout<<"Plot retrieval successful."<<std::endl;
+    std::cout<<"Plot retrieval successful: "<<m_name<<std::endl;
   }
 
   //___________
   void th2Decoder(rapidjson::Document * d) {
-    //std::cout<<"TH2 decoder."<<std::endl;
     m_name = (*d)["data"]["title"].GetString();
     m_plottableStyle = 0;
     m_plottableDimension = 2;
@@ -141,23 +137,23 @@ public:
 
     double entries = (*d)["data"]["data"]["entries"].GetDouble();
     std::stringstream ssN; ssN<<entries; m_statsValues.push_back(ssN.str());
-    //std::cout<<"N: "<<entries<<std::endl;
-    m_statsValues.push_back("0.0");
-    m_statsValues.push_back("0.0");
-    m_statsValues.push_back("0.0");
-    m_statsValues.push_back("0.0");
 
-    //m_statsValues.push_back((*d)["data"]["mean"].GetString());
-    //m_statsValues.push_back((*d)["data"]["rms"].GetString());
-    //m_statsValues.push_back((*d)["data"]["underflow"].GetString());
-    //m_statsValues.push_back((*d)["data"]["overflow"].GetString());
+    //m_statsValues.push_back("0.0");
+    double underFlowX = (*d)["data"]["data"]["xunderflow"].GetDouble();
+    std::stringstream ssUnderFlowX; ssUnderFlowX<<underFlowX; m_statsValues.push_back(ssUnderFlowX.str());
+    double overFlowX = (*d)["data"]["data"]["xoverflow"].GetDouble();
+    std::stringstream ssOverFlowX; ssOverFlowX<<overFlowX; m_statsValues.push_back(ssOverFlowX.str());
+    double underFlowY = (*d)["data"]["data"]["yunderflow"].GetDouble();
+    std::stringstream ssUnderFlowY; ssUnderFlowY<<underFlowY; m_statsValues.push_back(ssUnderFlowY.str());
+    double overFlowY = (*d)["data"]["data"]["yoverflow"].GetDouble();
+    std::stringstream ssOverFlowY; ssOverFlowY<<overFlowY; m_statsValues.push_back(ssOverFlowY.str());
 
     const rapidjson::Value& a = (*d)["data"]["data"]["axis_titles"];
     assert(a.IsArray());
     m_plot->m_xAxisTitle = a[0u].GetString();
     m_plot->m_yAxisTitle = a[1].GetString();
     m_plot->m_zAxisTitle = "N";
-    std::cout<<"Plot retrieval successful."<<std::endl;
+    std::cout<<"Plot retrieval successful: "<<m_name<<std::endl;
   }
 };
 
@@ -245,7 +241,6 @@ public:
       }
     }
     for (int i=0; i<rowZs.size(); i++) std::cout<<rowZs[i]<<"  ";
-    //m_zs.push_back(rowZs);
 
     m_statsTitles.push_back("N:");
     m_statsTitles.push_back("Mean:");
@@ -483,7 +478,6 @@ VTabContent * VContentGetter::veloFileConfigs(VPlotOps * plotOps, std::string in
 void VContentGetter::jsonToOps(std::string * jsonOps,
     std::vector< std::vector< std::string > > * ops)
 {
-	std::cout<<"Converting..."<<std::endl;
 	rapidjson::Document d;
 	d.Parse(jsonOps->c_str());
 	for (rapidjson::Value::ConstMemberIterator itr = d.MemberBegin();
@@ -539,25 +533,62 @@ void VContentGetter::findChildren(VTabContent * parentTab,
 void VContentGetter::findPlots(std::vector<VTabContent*> * allTabs,
   std::vector< std::vector< std::string > > * ops, VPlotOps * plotOps)
 {
+	std::vector<jsonPlottable*> firstTab;
+	std::vector<jsonPlottable*> otherPlottables;
   std::vector< std::vector< std::string > >::iterator iop;
   for (iop = ops->begin(); iop != ops->end(); iop++) {
     if ((*iop)[0] != "Plot" || (*iop)[0].substr(0, 1) == "#") continue;
     std::vector<VTabContent*>::iterator itab;
     for (itab = allTabs->begin(); itab != allTabs->end(); itab++){
       if ((*iop)[2] == (*itab)->m_title) {
+      	bool hasRef = false; // SET ME.
         VPlot * plot = new VPlot((*iop)[1], (*itab), true, plotOps);
         jsonPlottable * plottable = new jsonPlottable(plot, 1);
-        std::thread t(&VPlottable::getData, plottable);
-        t.detach();
+        if ((*iop)[2] == "Pedestals") firstTab.push_back(plottable);
+        else otherPlottables.push_back(plottable);
+        plottable->m_retrivalCommand = (*iop)[3];
+
+        if (hasRef) {
+					jsonPlottable * plottableRef = new jsonPlottable(plot, 0);
+					if ((*iop)[2] == "Pedestals") firstTab.push_back(plottableRef);
+					else otherPlottables.push_back(plottableRef);
+					plottableRef->m_retrivalCommand = (*iop)[3]; // SET ME.
+      	}
+
         if ((*iop)[4] == "multipleModules") plot->m_multipleModules = true;
         else plot->m_multipleModules = false;
-        plottable->m_retrivalCommand = (*iop)[3];
       }
     }
   }
+
+  std::vector<std::thread*> firstTabThreads;
+  plotOps->notify("Filling pedestals...");
+  for (unsigned int i=0; i<firstTab.size(); i++)
+  	firstTabThreads.push_back(new std::thread(&VPlottable::getData, firstTab[i]));
+
+  for (unsigned int i=0; i<firstTabThreads.size(); i++)
+  	firstTabThreads[i]->join();
+
+  plotOps->notify("Pedestals done.");
+
+  plotOps->notify("Filling others...");
+
+  for (unsigned int i=0; i<otherPlottables.size(); i++) {
+  	if (i==otherPlottables.size()-1) {
+			std::thread t(&VContentGetter::lastPlottable, otherPlottables[i], plotOps);
+			t.detach();
+  	}
+  	else {
+  		std::thread t(&VPlottable::getData, otherPlottables[i]);
+			t.detach();
+  	}
+  }
 }
 
-
+void VContentGetter::lastPlottable(VPlottable * p, VPlotOps * ops) {
+	p->getData();
+	ops->notify("Others done.");
+}
 
 //_____________________________________________________________________________
 
@@ -592,7 +623,6 @@ void VContentGetter::fourPlotsPerTabLimiter(
 			tab.push_back(tabName);
 			tab.push_back(parentName);
 			ops->push_back(tab);
-			std::cout<<tab[0]<<"\t"<<tab[1]<<"\t"<<tab[2]<<std::endl;
 		}
 
 		// Adjust the parent plots.
@@ -602,9 +632,10 @@ void VContentGetter::fourPlotsPerTabLimiter(
 			std::stringstream ss;
 			ss << ((nPlots/4) + 1);
 			std::string adjustedTabName = parentName + "_" + ss.str();
-			std::cout<<adjustedTabName<<std::endl;
 			(*iopPlot)[2] = adjustedTabName;
 			nPlots++;
 		}
   }
 }
+
+//_____________________________________________________________________________

@@ -114,7 +114,7 @@ void VPlot::addStatsBox(VCustomPlot * vcp, bool isPopUp) {
     lay->setVerticalSpacing(0);
     lay->setHorizontalSpacing(0);
     QLabel * lab;
-    QFont f(font().family(), 12);
+    QFont f(font().family(), 8);
     QPalette p;
     p.setColor(QPalette::WindowText, Qt::black);
 
