@@ -8,6 +8,8 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+!=========================== Ostap v1r7 2015-04-22 ============================
+
 ! 2015-04-19 - Vanya Belyaev
  - improve treatment of background components for 1D and 2D-models. 
 
