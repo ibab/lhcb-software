@@ -4,6 +4,8 @@
 ! Purpose     : Particle Combining components.
 !-----------------------------------------------------------------------------
 
+!===================== ParticleCombiners v1r2 2015-04-22 =====================
+
 ! 2015-04-21 - Olli Lupton
  - fix typo in 123 combination cut counter in N4Body decay combiner
 
