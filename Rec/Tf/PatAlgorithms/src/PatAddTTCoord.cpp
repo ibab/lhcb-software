@@ -245,6 +245,8 @@ void PatAddTTCoord::selectHits(PatTTHits& selected, const LHCb::State& state, co
   
   for(int iLayer = 0; iLayer < 4; ++iLayer){
   
+    if (m_hitsLayers[iLayer].empty()) continue;  
+
     const double zLayer = m_hitsLayers[iLayer].front()->z();
     const double yPredLay = stateY + ( zLayer -stateZ ) * stateTy;
     const double xPredLay = stateX + ( zLayer -stateZ ) * stateTx + bendParam * ( zLayer - m_zTTField );
