@@ -179,12 +179,13 @@ StatusCode BTaggingAnalysis::initialize() {
     err() << "Unable to Retrieve Default VertexFitter" << endreq;
     return StatusCode::FAILURE;
   }
+/*
   m_ghostTool = tool<ITrackManipulator> ("TrackNNGhostId",this);
-  if ( !m_ghostTool ) {   
+  if (m_debugGhostProb && !m_ghostTool ) {   
     err() << "Unable to Retrieve TrackNNGhostId" << endreq;
     return StatusCode::FAILURE;
   }
-  
+*/  
   // Particle IDs
   ID_Lambda0 = LoKi::Particles::pidFromName("Lambda0");
   ID_Lambda0Bar = LoKi::Particles::pidFromName("Lambda~0");
@@ -302,6 +303,7 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> column ("Bip", ipPVBS);
   tuple -> column ("Biperr", iperrPVBS);
   tuple -> column ("krec", verts.size() );
+  tuple -> column ("PVndof", RecVert->nDoF());
   tuple -> column ("RVx",  RecVert->position().x()/mm);
   tuple -> column ("RVy",  RecVert->position().y()/mm);
   tuple -> column ("RVz",  RecVert->position().z()/mm);
@@ -545,7 +547,7 @@ StatusCode BTaggingAnalysis::execute() {
     }
 
     // ghost test
-    if (m_debugGhostProb) {
+    if (m_debugGhostProb && !m_ghostTool) {
       debug() << "ghost prob pre " << track->ghostProbability() << endreq;
 
       Track clone_track = *track;

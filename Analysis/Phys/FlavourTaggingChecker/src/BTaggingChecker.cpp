@@ -117,12 +117,9 @@ StatusCode BTaggingChecker::execute()
         case Tagger::VtxCharge  : (taggdec==truetag ? ++nrtag[6] : ++nwtag[6]); break;
         case Tagger::OS_nnetKaon: (taggdec==truetag ? ++nrtag[7] : ++nwtag[7]); break;
         case Tagger::SS_nnetKaon: (taggdec==truetag ? ++nrtag[8] : ++nwtag[8]); break;
-        case Tagger::OS_Charm   :
-          // std::cout << " CHECKER SAYS IT IS " << taggdec << std::endl;
-          // std::cout << "  IT IS REALLY " << truetag << std::endl;          
-          (taggdec==truetag ? ++nrtag[9] : ++nwtag[9]);
-          break;
+        case Tagger::OS_Charm   : (taggdec==truetag ? ++nrtag[9] : ++nwtag[9]); break;
         case Tagger::SS_Proton  : (taggdec==truetag ? ++nrtag[10]: ++nwtag[10]); break;
+        case Tagger::SS_PionBDT : (taggdec==truetag ? ++nrtag[11]: ++nwtag[11]); break;
         }
       }
       if(msgLevel(MSG::DEBUG)) m_debug->printTree( (*ti)->taggedB() );
@@ -190,7 +187,7 @@ StatusCode BTaggingChecker::finalize()
   info()<< " Category            EFF.          Etag         Wrong TF"
         << "      r       w       "<<endreq;
 
-  for( int it=1; it < 23; ++it ) {
+  for( int it=1; it < 24; ++it ) {
     rtag = wtag = 0;
     std::string cats;
     //  --- PID categories not in use ----
@@ -217,6 +214,7 @@ StatusCode BTaggingChecker::finalize()
     if(it==20) { cats =  "SS nnetkaon"; rtag=  nrtag[8]; wtag = nwtag[8]; }
     if(it==21) { cats =  "   OS Charm"; rtag = nrtag[9]; wtag = nwtag[9]; }
     if(it==22) { cats =  "  SS Proton"; rtag=  nrtag[10];wtag = nwtag[10]; }
+    if(it==23) { cats =  " SS pionBDT"; rtag=  nrtag[11];wtag = nwtag[11]; }
     if(it<13) cats =  "  Category ";
     else if(it==13)
       info()<<"---------------------------------------------------------"<<endreq;
@@ -265,6 +263,7 @@ StatusCode BTaggingChecker::finalize()
           <<" "<<std::setw(7)<< (int) wtag
           << endreq;
   }
+  
 
 
 
