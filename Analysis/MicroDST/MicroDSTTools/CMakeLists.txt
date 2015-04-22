@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MicroDSTTools
 ################################################################################
-gaudi_subdir(MicroDSTTools v2r11)
+gaudi_subdir(MicroDSTTools v2r12)
 
 gaudi_depends_on_subdirs(Event/MCEvent
                          Event/PhysEvent
