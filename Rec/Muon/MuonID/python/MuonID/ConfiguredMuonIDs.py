@@ -12,6 +12,7 @@ from Gaudi.Configuration import *
 import GaudiKernel.ProcessJobOptions
 
 from Configurables import MuonIDAlg,Chi2MuIDTool,DistMuIDTool
+from Configurables import MuonIDAlgLite,MakeMuonTool,CommonMuonTool,DLLMuonTool
 from Configurables import TrackMasterFitter,TrackMasterExtrapolator, SimplifiedMaterialLocator, IsMuonCandidateC, MakeMuonMeasurements, CLTool, GetArrival, NShared
 from Configurables import GaudiSequencer
 from TrackFitter.ConfiguredFitters import *
@@ -170,7 +171,48 @@ class ConfiguredMuonIDs():
       mycltool.Bkg = self.info.chi2Bkg
 
     return mycltool
-    
+   
+  def configureMakeMuonTool(self):
+    """
+    Configure the new MakeMuonTool
+    """
+
+    if self.debug: print "# CONFIGURING MAKEMUONTOOL"
+
+    use_dist1 = self.use_dist
+    mymuidtool = MakeMuonTool("MakeMuonTool")
+
+    print "I'M CONFIGURING THE MAKEMUONTOOL " , mymuidtool
+
+    ## general muid tool options
+    mymuidtool.NSigmas = self.info.NSigmas
+    mymuidtool.DiscrValue = self.info.DiscrValue
+    mymuidtool.UseBkg = self.info.UseBkg 
+
+    ## add values for ismuon cuts: same as in muidalg
+    mymuidtool.PreSelMomentum = self.info.PreSelMomentum
+    mymuidtool.MomentumCuts  = self.info.MomentumCuts
+
+    mymuidtool.MinMomSt3 = self.info.MinMomSt3
+    mymuidtool.MinMomSt4 = self.info.MinMomSt4
+
+    ## configure fast extrapolator
+    if self.fast:
+      print "USE THE SIMPLIFIED MATERIAL DESCRIPTION"
+      mymuidtool.addTool(TrackMasterExtrapolator, name='extrapol')
+      mymuidtool.extrapol.addTool(SimplifiedMaterialLocator, name="MaterialLocator")
+
+    if not use_dist1:
+      print "GOING TO CONFIGURE THE MASTER FITTER"
+      mymuidtool.addTool(TrackMasterFitter, name='fitter')
+      ## configure fast fitter
+      if self.fast: ConfiguredMasterFitter( Name = mymuidtool.fitter, SimplifiedGeometry = True)
+      else: ConfiguredMasterFitter( Name = mymuidtool.fitter )
+      self.configureFitter(mymuidtool.fitter)
+
+    ## add and configure ismuoncandidatec tool
+    mymuidtool.addTool(IsMuonCandidateC(), name='IsMuonCandidateC')
+    out=self.configureIsMuonCandidateC(mymuidtool.IsMuonCandidateC)
 
   def configureMuIDTool(self,muidtool):
     """
@@ -263,6 +305,126 @@ class ConfiguredMuonIDs():
     if "UseUncrossed" in dir(self.info): mymmm.UseUncrossed = self.info.UseUncrossed
 
     return mymmm
+
+  def configureMuonIDAlgLite (self,muonid):
+    """
+    general configuration of MuonIDAlgLite. Equivalent to old MuonID.py
+    Default chi2.
+    """
+
+    if self.debug: print "# CONFIGURING MUONIDALGLITE"
+
+    ## check if input is already an instance or this must be created
+    if isinstance(muonid,MuonIDAlgLite): mymuid=muonid
+    else: mymuid=MuonIDAlgLite(str(muonid))
+
+    ## general MuonIDAlgLite properties
+    mymuid.OverrideDB = self.info.OverrideDB
+
+    if "UseUncrossed" in dir(self.info): mymuid.UseUncrossed = self.info.UseUncrossed
+
+    mymuid.MomentumCuts  = self.info.MomentumCuts
+    mymuid.AllMuonTracks = self.info.AllMuonTracks
+    mymuid.FindQuality = self.info.FindQuality
+    if "cosmics" in self.specialData:
+      print "# MuonID WARNING: MuonTrack Fit disabled for SpecialData = cosmics"
+      mymuid.FindQuality=False
+
+    #mymuid.XFOIParameter1 = self.info.XFOIParameter1
+    #mymuid.XFOIParameter2 = self.info.XFOIParameter2
+    #mymuid.XFOIParameter3 = self.info.XFOIParameter3
+    #mymuid.YFOIParameter1 = self.info.YFOIParameter1
+    #mymuid.YFOIParameter2 = self.info.YFOIParameter2
+    #mymuid.YFOIParameter3 = self.info.YFOIParameter3
+
+    mymuid.FOIfactor = self.info.FOIfactor
+
+    mymuid.PreSelMomentum = self.info.PreSelMomentum
+
+    #mymuid.distMuon= self.info.distMuon
+    #mymuid.distPion= self.info.distPion
+
+    #if "step" in dir(self.info): mymuid.step=self.info.step
+    if "nMax_bin" in dir(self.info): mymuid.nMax_bin=self.info.nMax_bin
+
+    # Binning for the Distance for muons:
+#    if "nMupBinsR1" in dir(self.info): mymuid.nMupBinsR1= self.info.nMupBinsR1
+#    if "nMupBinsR2" in dir(self.info): mymuid.nMupBinsR2= self.info.nMupBinsR2
+#    if "nMupBinsR3" in dir(self.info): mymuid.nMupBinsR3= self.info.nMupBinsR3
+#    if "nMupBinsR4" in dir(self.info): mymuid.nMupBinsR4= self.info.nMupBinsR4
+
+#    if "MupBinsR1" in dir(self.info): mymuid.MupBinsR1= self.info.MupBinsR1
+#    if "MupBinsR2" in dir(self.info): mymuid.MupBinsR2= self.info.MupBinsR2
+#    if "MupBinsR3" in dir(self.info): mymuid.MupBinsR3= self.info.MupBinsR3
+#    if "MupBinsR4" in dir(self.info): mymuid.MupBinsR4= self.info.MupBinsR4
+
+    ## Configure hyperbolic tangent tanh(dist2) parameters
+#    if "tanhScaleFactorsR1" in dir(self.info): mymuid.tanhScaleFactorsR1= self.info.tanhScaleFactorsR1
+#    if "tanhScaleFactorsR2" in dir(self.info): mymuid.tanhScaleFactorsR2= self.info.tanhScaleFactorsR2
+#    if "tanhScaleFactorsR3" in dir(self.info): mymuid.tanhScaleFactorsR3= self.info.tanhScaleFactorsR3
+#    if "tanhScaleFactorsR4" in dir(self.info): mymuid.tanhScaleFactorsR4= self.info.tanhScaleFactorsR4
+
+    ## Signal muons
+#    if "tanhCumulHistoMuonR1_1" in dir(self.info): mymuid.tanhCumulHistoMuonR1_1= self.info.tanhCumulHistoMuonR1_1
+#    if "tanhCumulHistoMuonR1_2" in dir(self.info): mymuid.tanhCumulHistoMuonR1_2= self.info.tanhCumulHistoMuonR1_2
+#    if "tanhCumulHistoMuonR1_3" in dir(self.info): mymuid.tanhCumulHistoMuonR1_3= self.info.tanhCumulHistoMuonR1_3
+#    if "tanhCumulHistoMuonR1_4" in dir(self.info): mymuid.tanhCumulHistoMuonR1_4= self.info.tanhCumulHistoMuonR1_4
+#    if "tanhCumulHistoMuonR1_5" in dir(self.info): mymuid.tanhCumulHistoMuonR1_5= self.info.tanhCumulHistoMuonR1_5
+#    if "tanhCumulHistoMuonR1_6" in dir(self.info): mymuid.tanhCumulHistoMuonR1_6= self.info.tanhCumulHistoMuonR1_6
+#    if "tanhCumulHistoMuonR1_7" in dir(self.info): mymuid.tanhCumulHistoMuonR1_7= self.info.tanhCumulHistoMuonR1_7
+
+#    if "tanhCumulHistoMuonR2_1" in dir(self.info): mymuid.tanhCumulHistoMuonR2_1= self.info.tanhCumulHistoMuonR2_1
+#    if "tanhCumulHistoMuonR2_2" in dir(self.info): mymuid.tanhCumulHistoMuonR2_2= self.info.tanhCumulHistoMuonR2_2
+#    if "tanhCumulHistoMuonR2_3" in dir(self.info): mymuid.tanhCumulHistoMuonR2_3= self.info.tanhCumulHistoMuonR2_3
+#    if "tanhCumulHistoMuonR2_4" in dir(self.info): mymuid.tanhCumulHistoMuonR2_4= self.info.tanhCumulHistoMuonR2_4
+##    if "tanhCumulHistoMuonR2_5" in dir(self.info): mymuid.tanhCumulHistoMuonR2_5= self.info.tanhCumulHistoMuonR2_5
+
+#    if "tanhCumulHistoMuonR3_1" in dir(self.info): mymuid.tanhCumulHistoMuonR3_1= self.info.tanhCumulHistoMuonR3_1
+#    if "tanhCumulHistoMuonR3_2" in dir(self.info): mymuid.tanhCumulHistoMuonR3_2= self.info.tanhCumulHistoMuonR3_2
+#    if "tanhCumulHistoMuonR3_3" in dir(self.info): mymuid.tanhCumulHistoMuonR3_3= self.info.tanhCumulHistoMuonR3_3
+#    if "tanhCumulHistoMuonR3_4" in dir(self.info): mymuid.tanhCumulHistoMuonR3_4= self.info.tanhCumulHistoMuonR3_4
+#    if "tanhCumulHistoMuonR3_5" in dir(self.info): mymuid.tanhCumulHistoMuonR3_5= self.info.tanhCumulHistoMuonR3_5
+
+#    if "tanhCumulHistoMuonR4_1" in dir(self.info): mymuid.tanhCumulHistoMuonR4_1= self.info.tanhCumulHistoMuonR4_1
+#    if "tanhCumulHistoMuonR4_2" in dir(self.info): mymuid.tanhCumulHistoMuonR4_2= self.info.tanhCumulHistoMuonR4_2
+#    if "tanhCumulHistoMuonR4_3" in dir(self.info): mymuid.tanhCumulHistoMuonR4_3= self.info.tanhCumulHistoMuonR4_3
+#    if "tanhCumulHistoMuonR4_4" in dir(self.info): mymuid.tanhCumulHistoMuonR4_4= self.info.tanhCumulHistoMuonR4_4
+#    if "tanhCumulHistoMuonR4_5" in dir(self.info): mymuid.tanhCumulHistoMuonR4_5= self.info.tanhCumulHistoMuonR4_5
+
+    ## Bakground Comb muons: Also per regions AND momentum bins. Not suitable for low statistics
+#    if "tanhCumulHistoNonMuonR1_1" in dir(self.info): mymuid.tanhCumulHistoNonMuonR1_1= self.info.tanhCumulHistoNonMuonR1_1
+#    if "tanhCumulHistoNonMuonR1_2" in dir(self.info): mymuid.tanhCumulHistoNonMuonR1_2= self.info.tanhCumulHistoNonMuonR1_2
+#    if "tanhCumulHistoNonMuonR1_3" in dir(self.info): mymuid.tanhCumulHistoNonMuonR1_3= self.info.tanhCumulHistoNonMuonR1_3
+#    if "tanhCumulHistoNonMuonR1_4" in dir(self.info): mymuid.tanhCumulHistoNonMuonR1_4= self.info.tanhCumulHistoNonMuonR1_4
+#    if "tanhCumulHistoNonMuonR1_5" in dir(self.info): mymuid.tanhCumulHistoNonMuonR1_5= self.info.tanhCumulHistoNonMuonR1_5
+#    if "tanhCumulHistoNonMuonR1_6" in dir(self.info): mymuid.tanhCumulHistoNonMuonR1_6= self.info.tanhCumulHistoNonMuonR1_6
+#    if "tanhCumulHistoNonMuonR1_7" in dir(self.info): mymuid.tanhCumulHistoNonMuonR1_7= self.info.tanhCumulHistoNonMuonR1_7
+#
+#    if "tanhCumulHistoNonMuonR2_1" in dir(self.info): mymuid.tanhCumulHistoNonMuonR2_1= self.info.tanhCumulHistoNonMuonR2_1
+#    if "tanhCumulHistoNonMuonR2_2" in dir(self.info): mymuid.tanhCumulHistoNonMuonR2_2= self.info.tanhCumulHistoNonMuonR2_2
+#    if "tanhCumulHistoNonMuonR2_3" in dir(self.info): mymuid.tanhCumulHistoNonMuonR2_3= self.info.tanhCumulHistoNonMuonR2_3
+#    if "tanhCumulHistoNonMuonR2_4" in dir(self.info): mymuid.tanhCumulHistoNonMuonR2_4= self.info.tanhCumulHistoNonMuonR2_4
+#    if "tanhCumulHistoNonMuonR2_5" in dir(self.info): mymuid.tanhCumulHistoNonMuonR2_5= self.info.tanhCumulHistoNonMuonR2_5
+#
+#    if "tanhCumulHistoNonMuonR3_1" in dir(self.info): mymuid.tanhCumulHistoNonMuonR3_1= self.info.tanhCumulHistoNonMuonR3_1
+#    if "tanhCumulHistoNonMuonR3_2" in dir(self.info): mymuid.tanhCumulHistoNonMuonR3_2= self.info.tanhCumulHistoNonMuonR3_2
+#    if "tanhCumulHistoNonMuonR3_3" in dir(self.info): mymuid.tanhCumulHistoNonMuonR3_3= self.info.tanhCumulHistoNonMuonR3_3
+#    if "tanhCumulHistoNonMuonR3_4" in dir(self.info): mymuid.tanhCumulHistoNonMuonR3_4= self.info.tanhCumulHistoNonMuonR3_4
+#    if "tanhCumulHistoNonMuonR3_5" in dir(self.info): mymuid.tanhCumulHistoNonMuonR3_5= self.info.tanhCumulHistoNonMuonR3_5
+#
+#    if "tanhCumulHistoNonMuonR4_1" in dir(self.info): mymuid.tanhCumulHistoNonMuonR4_1= self.info.tanhCumulHistoNonMuonR4_1
+#    if "tanhCumulHistoNonMuonR4_2" in dir(self.info): mymuid.tanhCumulHistoNonMuonR4_2= self.info.tanhCumulHistoNonMuonR4_2
+#    if "tanhCumulHistoNonMuonR4_3" in dir(self.info): mymuid.tanhCumulHistoNonMuonR4_3= self.info.tanhCumulHistoNonMuonR4_3
+#    if "tanhCumulHistoNonMuonR4_4" in dir(self.info): mymuid.tanhCumulHistoNonMuonR4_4= self.info.tanhCumulHistoNonMuonR4_4
+#    if "tanhCumulHistoNonMuonR4_5" in dir(self.info): mymuid.tanhCumulHistoNonMuonR4_5= self.info.tanhCumulHistoNonMuonR4_5
+#
+    ## add and configure either DistMuIDTool or Chi2MuIDTool.
+    ## no need to initialize all sub tools there
+    out = self.configureMakeMuonTool()
+    self.initializeAll = True
+
+    return mymuid
+
 
 
   def configureMuonIDAlg (self,muonid):
@@ -457,28 +619,45 @@ class ConfiguredMuonIDs():
 
     return mymuid
 
-
-
   def getMuonIDSeq(self):
     """
-    general method for MuonIDAlg configuration.
-    Creates MuonIDAlg instance and configures it.
+    general method for MuonIDAlgLite configuration.
+    Creates MuonIDAlgLite instance and configures it.
     Finally puts it in gaudi sequencer.
     """
 
     if self.debug: print "# APPLYING GENERAL MUONID CONFIGURATION"
     ## create output gaudi sequencer
     myg = GaudiSequencer("MuonIDSeq")
-    ## create and configure MuonIDAlg instance
-    muid = MuonIDAlg()
-    self.configureMuonIDAlg(muid)
-
-    ## if kalman_foi: add the algorithm that looks for muon hits
-    if self.kalman_foi:
-      mmm = MakeMuonMeasurements()
-      self.configureMakeMuonMeasurements(mmm)
-      myg.Members.append(mmm)
+    ## create and configure MuonIDAlgLite instance
+    muid = MuonIDAlgLite()
+    self.configureMuonIDAlgLite(muid)
 
     ## add to gaudi sequencer and return
     myg.Members.append(muid)
     return myg
+
+
+#  def getMuonIDSeq(self):
+#    """
+#    general method for MuonIDAlg configuration.
+#    Creates MuonIDAlg instance and configures it.
+#    Finally puts it in gaudi sequencer.
+#    """
+#
+#    if self.debug: print "# APPLYING GENERAL MUONID CONFIGURATION"
+#    ## create output gaudi sequencer
+#    myg = GaudiSequencer("MuonIDSeq")
+#    ## create and configure MuonIDAlg instance
+#    muid = MuonIDAlg()
+#    self.configureMuonIDAlg(muid)
+#
+#    ## if kalman_foi: add the algorithm that looks for muon hits
+#    if self.kalman_foi:
+#      mmm = MakeMuonMeasurements()
+#      self.configureMakeMuonMeasurements(mmm)
+#      myg.Members.append(mmm)
+#
+#    ## add to gaudi sequencer and return
+#    myg.Members.append(muid)
+#    return myg

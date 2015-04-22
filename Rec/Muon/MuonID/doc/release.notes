@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================= MuonID v9r14 2015-03-31 =========================
+! 2015-04-22 - Ricardo Vazquez Gomez
+ - Reorder some files
+ - Change the ConfigureMuonIDs.py to use the new algorithm
 
 ! 2015-04-22 - Ricardo Vazquez Gomez
  - Finalize the porting of the functions. Add the makeMuon function to the framework
