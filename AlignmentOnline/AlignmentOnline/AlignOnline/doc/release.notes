@@ -2,9 +2,10 @@
 Package: AlignOnline
 Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
+! 2015-04-22 - Stefania Vecchi
+ - added test script to run Muonalignment AlignmentConfigurations/MuonAlignment.py
 
 </PRE><H1><A NAME=v1r2>2015-04-07 AlignOnline v1r2</A></H1><PRE>
-
 ! 2015-04-07 - Maurizio Martinelli
  - Added a temporary dependency on EventBuilder, should be removed with Online v5r18
 
