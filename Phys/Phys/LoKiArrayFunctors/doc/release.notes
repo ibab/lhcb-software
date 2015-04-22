@@ -5,6 +5,8 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+!=================== LoKiArrayFunctors v11r2 2015-04-22 =======================
+
 ! 2015-03-31 - Chris Jones
  - Remove method from HybridFilterParticles now inlined in interface.
 
