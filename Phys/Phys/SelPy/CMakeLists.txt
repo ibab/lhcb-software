@@ -1,7 +1,7 @@
 ################################################################################
 # Package: SelPy
 ################################################################################
-gaudi_subdir(SelPy v4r2p2)
+gaudi_subdir(SelPy v4r3)
 
 find_package(pygraphics)
 find_package(pytools)
