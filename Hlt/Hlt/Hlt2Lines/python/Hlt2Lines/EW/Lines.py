@@ -7,7 +7,7 @@ program ranging from testing the SM parameters to searches for exotic particles 
 
 __version__ = "$Revision: $"
 __author__  = "Karlis Dreimanis k.dreimanis@liverpool.ac.uk"
-__date__    = "2015-04-17"
+__date__    = "2015-04-22"
 #======================================================================================
 
 from GaudiKernel.SystemOfUnits import GeV, MeV, mm 
@@ -24,7 +24,7 @@ class EWLines(Hlt2LinesConfigurableUser) :
                                'Hlt2EWSingleMuonVHighPt'      : 1.000,
                                'Hlt2EWDiElectronDY'           : 1.000,
                                'Hlt2EWDiElectronHighMass'     : 1.000,
-                               'Hlt2EWSingleTFElectyron'      : 1.000,
+                               'Hlt2EWSingleTFElectron'       : 1.000,
                                'Hlt2EWSingleTFElectronLowPt'  : 0.001, #or 0.1
                                'Hlt2EWSingleTFElectronHighPt' :  0.01, #or none
                                'Hlt2EWSingleTFElectronVHighPt': 1.000,
@@ -159,7 +159,7 @@ class EWLines(Hlt2LinesConfigurableUser) :
                             SingleMuonLowPtFilter,SingleMuonHighPtFilter,SingleMuonVHighPtFilter,
                             DiElectronDYFilter,DiElectronHighMassFilter,
                             SingleTFElectronFilter,SingleTFElectronLowPtFilter,SingleTFElectronHighPtFilter,SingleTFElectronVHighPtFilter, TauTrkFilter, TauRhoCombiner, HighPTTauCombiner, SingleTauFilter)
-        from Inputs import (MergedPi0s, ResolvedPi0s, BiKalmanFittedMuons, BiKalmanFittedElectronsFromL0, BiKalmanFittedPions)
+        from Inputs import (MergedPi0s, ResolvedPi0s, BiKalmanFittedMuons, BiKalmanFittedElectrons, BiKalmanFittedPions)
         #create the taus first
         tau_trkfilter     = TauTrkFilter("TauTrkFilter", [BiKalmanFittedPions])
         tau_rhocombiner   = TauRhoCombiner("TauRhoCombiner", [tau_trkfilter])

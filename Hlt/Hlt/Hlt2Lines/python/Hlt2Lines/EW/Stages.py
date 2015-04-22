@@ -2,8 +2,8 @@ from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
 from Hlt2Lines.Utilities.Hlt2Combiner import Hlt2Combiner
 from Inputs import TrackFittedDiMuon
 from Inputs import BiKalmanFittedMuons
-from Inputs import TrackFittedDiElectronFromL0
-from Inputs import BiKalmanFittedElectronsFromL0
+from Inputs import TrackFittedDiElectron
+from Inputs import BiKalmanFittedElectrons
 from HltTracking.HltPVs import PV3D
 from HltLine.HltDecodeRaw import DecodeL0CALO
 
@@ -77,7 +77,7 @@ class DiElectronDYFilter(Hlt2ParticleFilter):
                 "& (in_range(%(MinMass)s, MM, %(MaxMass)s)) " +
                 "& (VFASPF(VCHI2PDOF) < %(VtxChi2)s) " +
                 "& (PT > %(Pt)s)")
-        inputs = [TrackFittedDiElectronFromL0]
+        inputs = [TrackFittedDiElectron]
         Hlt2ParticleFilter.__init__(self, name, code, inputs, dependencies = [DecodeL0CALO])
 
 class DiElectronHighMassFilter(Hlt2ParticleFilter):
@@ -90,7 +90,7 @@ class DiElectronHighMassFilter(Hlt2ParticleFilter):
                 "& (MM > %(MinMass)s) " +
                 "& (VFASPF(VCHI2PDOF) < %(VtxChi2)s)" +
                 "& (PT > %(Pt)s)")
-        inputs = [TrackFittedDiElectronFromL0]
+        inputs = [TrackFittedDiElectron]
         Hlt2ParticleFilter.__init__(self, name, code, inputs, dependencies = [DecodeL0CALO])
 
 class SingleTFElectronFilter(Hlt2ParticleFilter):
@@ -102,7 +102,7 @@ class SingleTFElectronFilter(Hlt2ParticleFilter):
                 "& (MIPDV(PRIMARY) > %(IP)s) " +
                 "& (MIPCHI2DV(PRIMARY) > %(IPChi2)s) " +
                 "& (TRCHI2DOF < %(TkChi2)s)")
-        inputs = [BiKalmanFittedElectronsFromL0]
+        inputs = [BiKalmanFittedElectrons]
         Hlt2ParticleFilter.__init__(self, name, code, inputs, dependencies = [DecodeL0CALO, PV3D('HLT2')])
 
 class SingleTFElectronLowPtFilter(Hlt2ParticleFilter):
@@ -112,7 +112,7 @@ class SingleTFElectronLowPtFilter(Hlt2ParticleFilter):
                 "& (PPINFO(LHCb.ProtoParticle.CaloEcalE, 0)/P > %(EcalMin)s) " +
                 "& (PPINFO(LHCb.ProtoParticle.CaloHcalE, 99999)/P < %(HcalMax)s) " +
                 "& (TRCHI2DOF < %(TkChi2)s)")
-        inputs = [BiKalmanFittedElectronsFromL0]
+        inputs = [BiKalmanFittedElectrons]
         Hlt2ParticleFilter.__init__(self, name, code, inputs, dependencies = [DecodeL0CALO])
 
 class SingleTFElectronHighPtFilter(Hlt2ParticleFilter):
@@ -122,7 +122,7 @@ class SingleTFElectronHighPtFilter(Hlt2ParticleFilter):
                 "& (PPINFO(LHCb.ProtoParticle.CaloEcalE, 0)/P > %(EcalMin)s) " +
                 "& (PPINFO(LHCb.ProtoParticle.CaloHcalE, 99999)/P < %(HcalMax)s) " +
                 "& (TRCHI2DOF < %(TkChi2)s)")
-        inputs = [BiKalmanFittedElectronsFromL0]
+        inputs = [BiKalmanFittedElectrons]
         Hlt2ParticleFilter.__init__(self,name, code, inputs, dependencies = [DecodeL0CALO])
 
 class SingleTFElectronVHighPtFilter(Hlt2ParticleFilter):
@@ -132,7 +132,7 @@ class SingleTFElectronVHighPtFilter(Hlt2ParticleFilter):
                 "& (PPINFO(LHCb.ProtoParticle.CaloEcalE, 0)/P > %(EcalMin)s) " +
                 "& (PPINFO(LHCb.ProtoParticle.CaloHcalE, 99999)/P < %(HcalMax)s) " +
                 "& (TRCHI2DOF < %(TkChi2)s)")
-        inputs = [BiKalmanFittedElectronsFromL0]
+        inputs = [BiKalmanFittedElectrons]
         Hlt2ParticleFilter.__init__(self,name, code, inputs, dependencies = [DecodeL0CALO])
 
 class TauTrkFilter(Hlt2ParticleFilter):
