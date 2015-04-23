@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-04-23 - Roel Aaij
+ - Add settings for April 2015 SMOG run (SMOG_April2015.py).
+
 ! 2015-04-20 - Rosen Matev
  - Store L0DU and HltDecReports, HC in nanofied events during VDM calibration.
    Should increase event size by only a few percent.
