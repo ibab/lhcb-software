@@ -1,6 +1,6 @@
 #!/bin/sh
 # cern-lxdistcc-wrappers.sh: v1 KELEMEN Peter <lxdistcc-admins@cern.ch>
-# 
+#
 # 2012-10-17: Modified by Marco Clemencic
 #
 _self=${0##*/}
@@ -16,21 +16,38 @@ hostos() {
             os=$(lsb_release -si | tr '[:upper:]' '[:lower:]')
             vers=$(lsb_release -sr)
     esac
-    echo $arch-$os$vers 
+    echo $arch-$os$vers
+}
+
+set_prefix() {
+    _dirname=$1
+    _version=$2
+
+    _platform=${LCG_hostos:-$(hostos)}
+
+    _external=${LCG_external_area:-/afs/cern.ch/sw/lcg/external}
+    _releases=${LCG_release_area:-/afs/cern.ch/sw/lcg/releases}
+    # take only the first entry in _releases
+    _releases=${_releases%%:*}
+
+    for _prefix in {${_releases},${_external}}/${_dirname}/${_version}/${_platform} ; do
+	if [ -d "${_prefix}" ] ; then
+	    break
+	fi
+    done
 }
 
 setup_gcc() {
         _version=$1
-        _platform=${LCG_hostos:-$(hostos)}
-        _external=${LCG_external_area:-/afs/cern.ch/sw/lcg/external}
 
-        _prefix="${_external}/gcc/${_version}"
-        _bin="${_prefix}/${_platform}/bin"
-        _lib="${_prefix}/${_platform}/lib64"
+        set_prefix gcc ${_version}
+
+        _bin="${_prefix}/bin"
+        _lib="${_prefix}/lib64"
         LD_LIBRARY_PATH=$(echo $LD_LIBRARY_PATH | sed 's-[^:]*/gcc/[^:]*:\?--g')
         LD_LIBRARY_PATH="${_lib}${LD_LIBRARY_PATH:+:}${LD_LIBRARY_PATH}"
         PATH="${_bin}${PATH:+:}${PATH}"
-        COMPILER_PATH="${_prefix}/${_platform}/lib/gcc/x86_64-unknown-linux-gnu/${_version}"
+        COMPILER_PATH="${_prefix}/lib/gcc/x86_64-unknown-linux-gnu/${_version}"
 
         export LD_LIBRARY_PATH
         export PATH
@@ -46,12 +63,10 @@ setup_clang() {
           *) setup_gcc 4.8.1 ;;
         esac
 
-        _platform=${LCG_hostos:-$(hostos)}
-        _external=${LCG_external_area:-/afs/cern.ch/sw/lcg/external}
+        set_prefix llvm ${_clang_version}
 
-        _prefix="${_external}/llvm/${_clang_version}"
-        _bin="${_prefix}/${_platform}/bin"
-        _lib="${_prefix}/${_platform}/lib64"
+        _bin="${_prefix}/bin"
+        _lib="${_prefix}/lib64"
         LD_LIBRARY_PATH=$(echo $LD_LIBRARY_PATH | sed 's-[^:]*/llvm/[^:]*:\?--g')
         LD_LIBRARY_PATH="${_lib}${LD_LIBRARY_PATH:+:}${LD_LIBRARY_PATH}"
         PATH="${_bin}${PATH:+:}${PATH}"
