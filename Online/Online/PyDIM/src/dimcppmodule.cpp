@@ -83,7 +83,7 @@ public:
 
 
 typedef struct {
-  PyObject_HEAD;
+  PyObject_HEAD
   DimRpcWrapper *cpp_dimRpc;
   char *format_in;
   char *format_out;
@@ -103,9 +103,9 @@ DimRpc_init(DimRpc_Object *self, PyObject *args, PyObject *kwds) {
   /** Allocates a new DimRpc_Object and a DimRpcWrapper inside it
    */
   char *name=NULL, *format_in=NULL, *format_out=NULL;
-  static char *kwlist[] = {"name", "format_in", "format_out", NULL};
+  static const char *kwlist[] = {"name", "format_in", "format_out", NULL};
 
-  if ( !PyArg_ParseTupleAndKeywords(args, kwds, "sss", kwlist,
+  if ( !PyArg_ParseTupleAndKeywords(args, kwds, "sss", (char**)kwlist,
                                     &name, &format_in, &format_out)
        ) {
     print("Invalid arguments. Received: %s %s %s",
@@ -384,7 +384,8 @@ static PyTypeObject DimRpc_Type = {
   0,                          /* tp_cache */
   0,                          /* tp_subclasses */
   0,                          /* tp_weaklist */
-  (destructor)DimRpc_dealloc  /* tp_del */
+  (destructor)DimRpc_dealloc, /* tp_del */
+  0                           /* tp_version_tag */
 };
 
 
@@ -431,9 +432,9 @@ public:
       return;
     } else {
       gstate = PyGILState_Ensure();
-      res = PyObject_CallMethod(this->self, "rpcInfoHandler", NULL);
+      res = PyObject_CallMethod(this->self, (char*)"rpcInfoHandler", NULL);
       if (res) {
-        print ("Invalid call to virtual rpcInfoHandler method %p", res);
+        print ("Invalid call to virtual rpcInfoHandler method %p", (void*)res);
         PyErr_Print();
       } else {
         Py_XDECREF(res);
@@ -450,7 +451,7 @@ public:
 }; //end DimRpcInfoWrapper
 
 typedef struct {
-  PyObject_HEAD;
+  PyObject_HEAD
   DimRpcInfoWrapper *cpp_dimRpcInfo;
   char *format_in;
   char *format_out;
@@ -472,10 +473,10 @@ DimRpcInfo_init(DimRpcInfo_Object* self, PyObject* args, PyObject* kwds)  {
    */
   char *name=NULL, *format_in=NULL, *format_out=NULL;
   PyObject *arg1=NULL, *arg2=NULL;
-  static char *kwlist[] = {"name", "format_in", "format_out",
+  static const char *kwlist[] = {"name", "format_in", "format_out",
                            "time", "nolink", NULL};
 
-  if (!PyArg_ParseTupleAndKeywords(args, kwds, "sssO|O", kwlist,
+  if (!PyArg_ParseTupleAndKeywords(args, kwds, "sssO|O", (char**)kwlist,
                                    &name,
                                    &format_in,
                                    &format_out,
@@ -847,7 +848,8 @@ static PyTypeObject DimRpcInfo_Type = {
   0,                          /* tp_cache */
   0,                          /* tp_subclasses */
   0,                          /* tp_weaklist */
-  (destructor)DimRpcInfo_dealloc  /* tp_del */
+  (destructor)DimRpcInfo_dealloc,  /* tp_del */
+  0                           /* tp_version_tag */
 };
 
 /**@}

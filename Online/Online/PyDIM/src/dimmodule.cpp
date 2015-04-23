@@ -14,10 +14,16 @@
 #endif
 
 extern "C" {
-#include <Python.h>
 #include "dic.h"
 #include "dis.h"
 #include "dim_common.h"
+#ifdef _POSIX_C_SOURCE
+#undef _POSIX_C_SOURCE
+#endif
+#ifdef _XOPEN_SOURCE
+#undef _XOPEN_SOURCE
+#endif
+#include <Python.h>
 }
 #include "pydim_utils.cpp"
 
@@ -101,7 +107,6 @@ version(PyObject* /* self */, PyObject* /* args */)  {
 /** \defgroup dim DIM interface functions
  * @{
  */
-
 static PyObject*
 dim_dis_start_serving (PyObject* /* self */, PyObject *args)  {
   /** Calls dis_start_serving.
@@ -632,7 +637,7 @@ dim_dis_add_cmnd(PyObject* /* self */, PyObject* args) {
     return NULL;
   }
 	Py_INCREF(pyFunc);
-  debug("Adding command name %s, format %s function %p and tag %p", name, format, pyFunc, tag);
+	debug("Adding command name %s, format %s function %p and tag %p", name, format, (void*)pyFunc, (void*)tag);
   callback = (CmndCallback*)malloc(sizeof(CmndCallback));
   callback->format = (char*)malloc(sizeof(char)*(sizeFormat+1));
   callback->name = (char*)malloc(sizeof(char)*(sizeName+1));
@@ -844,7 +849,7 @@ dim_dis_update_service(PyObject* /* self */, PyObject* args) {
        * returning NULL implies the exception will be propageted
        * back to the interpretor
        */
-      print("Error in calling python function %p", svc->pyFunc);
+      print("Error in calling python function %p", (void*)svc->pyFunc);
       PyErr_Print();
       return NULL;
     }
