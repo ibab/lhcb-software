@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-04-19 - Sean Benson
+ - Objects with LHCbIDs first.
+
+! 2015-04-19 - Sean Benson
  - isMuon in full.
 
 ! 2015-04-13 - Sean Benson
