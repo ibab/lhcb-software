@@ -1,5 +1,10 @@
 2015-04-23  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* scripts/lcg-*-*: fixed LBCORE-795: added wrappers for gcc 4.8.4, 4.9.2 and
+	5.1.0 (wild guess, because it is not yet available)
+
+2015-04-23  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* scripts/cern-lxdistcc-wrappers.sh: fixed LBCORE-783, now the wrapper looks
 	for the compilers in lcg/releases (first entry in $LCG_release_area) and in
 	lcg/external ($LCG_external_area) for backward compatibility.
