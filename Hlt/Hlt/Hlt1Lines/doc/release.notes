@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-04-23 - Roel Aaij
+ - Allow ODIN filters in Hlt1MuonLines.
+
 ! 2015-04-20 - Rosen Matev
   - Don't do track fitting by default in BeamGas lines.
 

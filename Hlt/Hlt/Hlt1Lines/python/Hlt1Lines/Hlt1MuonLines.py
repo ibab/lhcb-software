@@ -1,4 +1,4 @@
-from Gaudi.Configuration import * 
+from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import *
 import re
 
@@ -48,7 +48,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  , 'MultiMuonNoIP_GT'         :  2.5
                  , 'MultiMuonNoIP_GEC'        : 'Loose'
                  , 'MultiMuonNoIP_TrackType'  : 'Long'
-        
+                 , 'ODINFilter'               : {}
                  , 'L0Channels'               : { 'SingleMuonHighPT' : ( 'Muon', ),
                                                   'SingleMuonNoIP'   : ( 'Muon', ),
                                                   'DiMuonLowMass'    : ( 'Muon', 'DiMuon' ),
@@ -63,7 +63,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                                                   'DiMuonSoft'       : 9,
                                                   }
                  }
-    
+
     def localise_props( self, prefix ):
         ps = self.getProps()
         props = dict( [ ( key.split( '_', 1 )[ 1 ], ps[ key ] ) for key in ps if key.find( prefix ) != -1 ] )
@@ -99,7 +99,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  FitTrack ]
 
     def singleMuon_streamer( self, properties ):
-        # SingleMuon with LongTracks (TrackCandidates) 
+        # SingleMuon with LongTracks (TrackCandidates)
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from Configurables import LoKi__HltUnit as HltUnit
         from HltTracking.Hlt1Tracking import TrackCandidatesAlgos
@@ -135,7 +135,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  unit ]
 
     def diMuon_preambulo( self, properties ):
-        ## define some "common" preambulo 
+        ## define some "common" preambulo
         preambulo = self.singleMuon_preambulo( properties ) + \
              [ "VertexConf = LoKi.Hlt1.VxMakerConf( %(VxDOCA)f * mm, %(VxChi2)f )" % properties,
                "MakeDiMuons = TC_VXMAKE4( '', VertexConf )",
@@ -143,7 +143,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         return preambulo
 
     def diMuon_streamer( self, properties ):
-        # DiMuon with LongTracks (TrackCandidates) 
+        # DiMuon with LongTracks (TrackCandidates)
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from HltTracking.Hlt1Tracking import TrackCandidatesAlgos
         from Configurables import LoKi__HltUnit as HltUnit
@@ -172,7 +172,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >>  MakeDiMuons
             >>  tee  ( monitor( TC_SIZE > 0, '# pass vertex', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nVertices' , LoKi.Monitoring.ContextSvc ) )
-            >>  ( RV_MASS ( 'mu+' , 'mu-' ) > %(M)s * MeV ) 
+            >>  ( RV_MASS ( 'mu+' , 'mu-' ) > %(M)s * MeV )
             >>  tee  ( monitor( TC_SIZE > 0, '# pass mass', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nDiMuons' , LoKi.Monitoring.ContextSvc ) )
             >>  SINK( 'Hlt1%(name)sDecision' )
@@ -216,7 +216,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >>  MakeDiMuons
             >>  tee  ( monitor( TC_SIZE > 0, '# pass vertex', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nVertices' , LoKi.Monitoring.ContextSvc ) )
-            >>  ( RV_MASS ( 'mu+' , 'mu-' ) > %(M)s * MeV ) 
+            >>  ( RV_MASS ( 'mu+' , 'mu-' ) > %(M)s * MeV )
             >>  tee  ( monitor( TC_SIZE > 0, '# pass mass', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nDiMuons' , LoKi.Monitoring.ContextSvc ) )
             >>  SINK( 'Hlt1%(name)sDecision' )
@@ -257,7 +257,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             )
         gec = properties[ 'GEC' ]
         return [ Hlt1GECUnit( gec ), unit ]
-        
+
     def build_line( self, name, streamer ):
         from HltLine.HltLine import Hlt1Line
         algos = [ self.do_timing( unit ) if self.getProp('DoTiming') else unit for unit in streamer( self.localise_props( name ) ) ]
@@ -268,11 +268,26 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             prescale  = self.prescale,
             postscale = self.postscale,
             priority  = priority,
-            L0DU = "|".join( [ "L0_CHANNEL('%s')" % l0 for l0 in self.L0Channels[ name ] ] )  if self.L0Channels[name] else None, 
+            L0DU = self.__l0du(name),
+            ODIN = self.__odin(name),
             algos = algos
             )
 
-    def __apply_configuration__( self ) : 
+    def __l0du(self, nickname):
+        import collections
+        l0 = self.getProp( 'L0Channels' ).get(nickname, None)
+        if isinstance(l0, collections.Iterable) and not isinstance(l0, basestring):
+            return "|".join(["L0_CHANNEL('%s')" % chan for chan in l0])
+        else:
+            return l0
+
+    def __odin(self, nickname):
+        if 'ODINFilter' not in self.getProps():
+            return None
+        odin = self.getProp( 'ODINFilter' ).get(nickname, None)
+        return odin
+
+    def __apply_configuration__( self ) :
          ## Create the lines
         to_build = [ ( 'SingleMuonHighPT', self.singleMuon_streamer ),
                      ( 'SingleMuonNoIP',   self.singleMuon_streamer ),
@@ -290,4 +305,3 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                                         , L0DU = "L0_CHANNEL_RE('.*lowMult')"
                                         , ODIN = "~jbit( ODIN_EVTTYP,0 )"
                                         , postscale = self.postscale)
-

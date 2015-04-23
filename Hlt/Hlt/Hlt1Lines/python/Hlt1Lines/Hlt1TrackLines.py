@@ -169,7 +169,6 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             code = re.sub( '\\s+%s\\s+' % step, sub, code )
         unit.Code = code
         return unit
-    
 
     def __l0du(self, nickname):
         import collections
