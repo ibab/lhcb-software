@@ -321,8 +321,8 @@ class HltConf(LHCbConfigurableUser):
                       , 84 : "HLT_PASS_RE('Hlt2TopoMu[234]Body.*Decision')"
                       , 85 : "HLT_PASS_RE('Hlt2TopoE[234]Body.*Decision')"
                       , 86 : "HLT_PASS_RE('Hlt2Topo[234]Body.*Decision')"
-                      , 87 : "HLT_NONTURBOPASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Express)(?!Transparent)(?!Lumi)(?!PassThrough).*Decision')"
-                      , 88 : "HLT_TURBOPASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Express)(?!Transparent)(?!Lumi)(?!PassThrough).*Decision')" # routing bit for Turbo stream
+                      , 87 : "HLT_NONTURBOPASS_RE('Hlt2.*Decision')"
+                      , 88 : "HLT_TURBOPASS_RE('Hlt2(?!DebugEvent)(?!Transparent)(?!PassThrough).*Decision')|HLT_PASS_RE('.*Lumi.*Decision$')" # routing bit for Turbo stream
 		              , 89 : "HLT_PASS_RE('Hlt2PassThrough.*Decision')"
                       , 90 : "HLT_PASS_RE('Hlt2.*Charm.*hhX.*Decision')"
                       , 91 : "HLT_PASS_RE('Hlt2.*Charm.*_hhX.*Decision')"

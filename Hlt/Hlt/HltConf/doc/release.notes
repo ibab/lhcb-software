@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2015-04-23 - Sean Benson
+ - Turbo routing bits updated so only one needed.
+
 ! 2015-04-17 - Sascha Stahl
  - Added Hlt1HighVeloMultDecision and Hlt1HighVeloMultSinglePVDecision to HltInit.py .
 
