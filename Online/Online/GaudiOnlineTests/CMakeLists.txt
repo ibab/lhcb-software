@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GaudiOnlineTests
 ################################################################################
-gaudi_subdir(GaudiOnlineTests v0r2)
+gaudi_subdir(GaudiOnlineTests v1r5)
 
 gaudi_depends_on_subdirs(GaudiAud
                          GaudiSvc

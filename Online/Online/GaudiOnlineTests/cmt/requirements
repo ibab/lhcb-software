@@ -3,7 +3,7 @@
 #============================================================================
 # Internal helper package to reduce dependencies in GaudiOnline iteself
 #============================================================================
-version v1r4
+version v1r5
 #
 #
 use  GaudiPolicy   v*
