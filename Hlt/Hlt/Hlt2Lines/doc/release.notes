@@ -8,8 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-23 - Roel Aaij
+ - Add LL and Turbo version of KS0 line.
+
 ! 2015-04-22 - Karlis Dreimanis
-  - Removed 'FromL0' from EW electron inputs as requested by Roel 
+  - Removed 'FromL0' from EW electron inputs as requested by Roel
 
 ! 2015-04-22 - Francesco Dettori
  - Additional cut in RareStrange lines
@@ -39,8 +42,8 @@
    - Additional tuning
 
 ! 2015-04-17 - Albert Puig
-  - Update configuration of Radiative inclusive lines. 
- 
+  - Update configuration of Radiative inclusive lines.
+
 ! 2015-04-17 - Karlis Dreimanis
   - (Hopefully) last change in the tau line dictionary in EL/Lines.py
 
@@ -63,7 +66,7 @@
  - Remove turbo copies of XSec lines from Turbo directory
 
 ! 2015-04-17 - Francesco Dettori
- - Added Hlt2DiMuonSoft line for soft dimuons (resp. Diego Martinez) 
+ - Added Hlt2DiMuonSoft line for soft dimuons (resp. Diego Martinez)
  - Minor bug fix to RareStrange lines
 
 ! 2015-04-17 - Karlis Dreimanis
@@ -163,7 +166,7 @@
   - Added new multibody RareCharm lines to include dielectron e LFV modes
 
 ! 2015-04-16 - Dan Johnson
-  - Added two "technical" lines to the CEP package: 
+  - Added two "technical" lines to the CEP package:
     - pre-scaled 'no-bias' line running on Hlt1Lumi triggers
     - pre-scaled 'min-bias' line running on Hlt1Lumi triggers with some minimum
       L0 activity requirements
@@ -172,7 +175,7 @@
   - CharmHad/Hc2HHHHLines.py & CharmHad/Stages.py :
     - Changed the inputs of the detached Xic0->pKKpi line to the same as those
       for the LTUNB line in the same mode for the tight PID cuts. IP chi2 cuts
-      are now performed only in the daughter cuts of the combiner. This brings 
+      are now performed only in the daughter cuts of the combiner. This brings
       the timing down to more manageable levels (particularly sharing inputs
       makes a surprisingly large difference).
 
@@ -210,7 +213,7 @@
 
 ! 2015-04-14 - Olli Lupton
   - CharmHad+PID: move Lc+ -> K- p+ pi+ selection and Sc0 -> Lc+ pi- line to PID folder
-  - CharmHad: Give the TagDecay class an optional nickname parameter 
+  - CharmHad: Give the TagDecay class an optional nickname parameter
   - PID: Add Sc++ -> Lc+ pi+ line
   - PID: Update temporary ANNSvc IDs
   - PID: Temporarily disable L0 TIS requirements until this is fixed
@@ -222,7 +225,7 @@
       basic particles.  Most of these had very generic names that might
       eventually conflict with similar filters in other directories.
     . Bring D02HHLines.py closer to a 'standard' form.
-      - Removed the ability to change the slot name in the constructor of 
+      - Removed the ability to change the slot name in the constructor of
         D02HHLines.CharmHadD02HHLines
       - Moved cuts on final state particles out of DetachedD02HHCombiner and
         into instances of DetachedInParticleFilter.
@@ -314,13 +317,13 @@
 ! 2015-04-03 - Jason Andrews
  - Initial commit of "Vertexless" lines with only B2Kpi0 implemented so far
 
-! 2015-04-02 - Simone Stracka	
+! 2015-04-02 - Simone Stracka
 	- Added initial version of D -> eta h exclusive line (eta -> pi+ pi- pi0).
 		+ CharmHad/D2EtaHLines.py added to define line sequences and slots
 	  + CharmHad/Stages.py modified to include the new stages
 		+ CharmHad/Lines.py modified to include the lines
 
-! 2015-04-02 - Simone Stracka	
+! 2015-04-02 - Simone Stracka
   - CharmHad/Stages.py: Added shared instances of NeutralInParticleFilter
 	- CharmHad/Input.py and CharmHad/Lines.py: Added AllPi0s
 	- CharmHad/D2HHPi0Lines.py and CharmHad/D2HHHPi0Lines.py: Updated to use shared instances
@@ -344,7 +347,7 @@
 
 ! 2015-03-31 - Roel Aaij
  - Fix spurious lines in RareCharm, CharmHad.D2HHHKs and CharmHad.D2HHHPi0.
-   
+
 ! 2015-03-31 - Pieter David
  - consistent linePrefix in DisplVertices/Stages and DisplVertices/Reco
 
@@ -368,7 +371,7 @@
 ! 2015-03-26 - Tom Hadavizadeh
  -Added new lines to python/Hlt2Lines/CharmHad/
    -Added D2HHLines.py
-   -Modified Input.py, Stages.py, Lines.py 
+   -Modified Input.py, Stages.py, Lines.py
    -All of the form D+ -> h+ h0 with h0 = pi0, eta, eta', or D0
    -h0 decays to either (e+ e- gamma) or (pi+ pi- gamma) depending on the decay.
 
@@ -386,7 +389,7 @@
  - These will mainly be cloned to the Turbo stream but this is not done yet.
 
 ! 2015-03-23 - V. Gligorov
- - Commit retuning of cuts in CharmHad to get a "realistic" rate for the D->HHH 
+ - Commit retuning of cuts in CharmHad to get a "realistic" rate for the D->HHH
    and Lc->HHH lines.
 
 ! 2015-03-23 - Maurizio Martinelli
@@ -397,13 +400,13 @@
 
 ! 2015-03-19 - V. Gligorov
  - Add 3-body XSection lines to CharmHad
- - Following discussions at the charm meeting and looking into the stripping lines, 
+ - Following discussions at the charm meeting and looking into the stripping lines,
    tighten the shared particle PID cuts in CharmHad a bit (still looser than current stripping cuts!)
-   to reduce combinatorics timing. We may want to tighten these further still, but let's discuss as we go along. 
- - Tighten shared particle IPCHI2 cuts to at least > 4 everywhere in CharmHad 
+   to reduce combinatorics timing. We may want to tighten these further still, but let's discuss as we go along.
+ - Tighten shared particle IPCHI2 cuts to at least > 4 everywhere in CharmHad
    (except for lifetime unbiased of course) again to help reduce combinatorics timing
  - Rename the D02HHCombiner in Stages.py to be the DetachedD02HH..., in line with naming convention,
-   propagate this through and add a different D02HHCombiner for the eventual lifetime unbiased lines. 
+   propagate this through and add a different D02HHCombiner for the eventual lifetime unbiased lines.
  - Add the 2DD and LLDD D->KS0KS0 lines
  - Add a D->3h line for KPi calibration for Mika
  - Introduce ALL, >= 1, >= 2 layered PT cuts for the D->3H lines in line with the layered IPCHI2 cuts
@@ -412,7 +415,7 @@
 
 ! 2015-03-19 - Jibo He
  - python/Hlt2Lines/Bc2JpsiX
-  . Hlt2TFBc2JpsiMuX and Hlt2Bc2JpsiH adapted to new template  
+  . Hlt2TFBc2JpsiMuX and Hlt2Bc2JpsiH adapted to new template
  - python/Hlt2Lines/CcDiHadron/Lines.py
   . Added explanations, and author
 
@@ -430,19 +433,19 @@
  - Convert commissioning lines and CaloTest lines to new template.
  - Remove all "old style" configurables.
  - Remove "New" from line names.
- 
+
 ! 2015-03-15 - Vanya Belyaev
- - DPS/Lines.py 
+ - DPS/Lines.py
    update lnes for associative production
 
 ! 2015-03-15 - Vanya Belyaev
- - CharmHad/D2HHHLines.py 
+ - CharmHad/D2HHHLines.py
    CharmHad/Stages.py
-   propagate fixes by Roel to allow use of basic charm for other lines   
+   propagate fixes by Roel to allow use of basic charm for other lines
 
 ! 2015-03-15 - Vanya Belyaev
- - CharmHad/Lines.py 
-   add 'stages' to allow exporting the shared stages into another directory/lines  
+ - CharmHad/Lines.py
+   add 'stages' to allow exporting the shared stages into another directory/lines
 
 ! 2015-03-14 - Jibo He
  - python/Hlt2Lines/CcDiHadron/Lines.py
@@ -463,10 +466,10 @@
   . Hlt2DiProton(LowMult) and Hlt2DiPhi lines adapted to new template
 
 ! 2015-03-13 - Francesco Dettori
- - Added SingleMuon directory with inclusive single muon lines (conversion of Hlt2InclusiveMuonLines) 
- - Added RareCharm directory with exclusive rare charm decays lines 
+ - Added SingleMuon directory with inclusive single muon lines (conversion of Hlt2InclusiveMuonLines)
+ - Added RareCharm directory with exclusive rare charm decays lines
  - Added RareStrange directory with exclusive rare strange lines
-	 
+
 ! 2015-03-13 - Maurizio Martinelli
  - Added replacement lines for D2HHHKs to Hlt2Lines/CharmHad
  - Removed optional request of specific algorithms in LoKi functors
@@ -479,7 +482,7 @@
  - Bug fix to python/Hlt2Lines/B2HH/Stages.py
 
 ! 2015-03-13 - Maurizio Martinelli
- - Added replacement lines for D02HHPi0 and D02HHHH to Hlt2Lines/CharmHad 
+ - Added replacement lines for D02HHPi0 and D02HHHH to Hlt2Lines/CharmHad
 
 ! 2015-03-13 - Stefano Perazzini
  - Some polishing in python/Hlt2Lines/B2HH directory.
@@ -491,7 +494,7 @@
  - Add some checks in Hlt2Stage.
  - Make CharmHad.Stages.DetachedHHHCombiner shared.
  - Add first version of Topo lines from Phil.
- 
+
 ! 2015-03-12 - Stefano Perazzini
  - Added python/Hlt2Lines/B2HH directory for B->hh trigger lines.
 
@@ -562,11 +565,11 @@
  - Some code optimization thanks to suggestions from Vanya
 
 ! 2015-03-04 - Patrick Spradlin
- - Hlt2TopologicalLines.py:  Updated for generalized version of BBDecTreeTool 
+ - Hlt2TopologicalLines.py:  Updated for generalized version of BBDecTreeTool
    ** DEPENDS ON r184832 of Phys/BBDecTreeTool **
 
 ! 2015-03-04 - Sascha Stahl
- - TrackEff/Inputs: Switched order of TrackStateInitAlg and TrackContainerCopy 
+ - TrackEff/Inputs: Switched order of TrackStateInitAlg and TrackContainerCopy
    such that the original tracks are not touched. Removed hardcoded locations
    and put tracks, protoparticles and particles for tracking efficiencies
    in its own directory defined by Hlt2TrackEffRoot.
@@ -574,7 +577,7 @@
 ! 2015-03-04 - Roel Aaij
  - Allow a list of decay descriptors.
  - Fix separation of nickname and name.
- 
+
 ! 2015-03-03 - V. Gligorov
  - Update CharmHad module to exploit shared filters where needed
  - Add lifetime unbiased and PIDCalib D->HHH lines to CharmHad
@@ -592,7 +595,7 @@
  - First commit of CharmHad module to host the various hadronic charm lines
  - Modify lines which used "LowPT" particles to use regular ones instead, the
    "LowPT" particles are obsolete since we can do the tracking upfront now
-   and are removed from Hlt2SharedParticles  
+   and are removed from Hlt2SharedParticles
 
 ! 2015-02-24 - Roel Aaij
  - Fix TrackEff lines.
@@ -647,7 +650,7 @@
  - Update Hlt2B2HHPi0Lines.py (get rid of TrgVertexFitter)
 
 ! 2014-09-30 - Michael Kolpin
- - corrected variable names of tracking efficiency lines in 
+ - corrected variable names of tracking efficiency lines in
    Hlt2InclusiveMuonLines
 
 ! 2014-09-25 - Sean Benson
@@ -723,7 +726,7 @@
 !========================= Hlt2Lines v8r27 2012-09-19 =========================
 
 ! 2012-09-19 - E. van Herwijnen for M. Williams
- - Replaced Hlt2TopologicalLines.py by the one from v8r25, going back to 
+ - Replaced Hlt2TopologicalLines.py by the one from v8r25, going back to
    previous v0 lifetime cut & without DOCA cuts
 
 !========================= Hlt2Lines v8r26 2012-09-05 =========================
@@ -740,7 +743,7 @@
 
 ! 2012-08-23 - H. Gordon
  - Added Kshhh lines in new configurable Hlt2CharmHadD2HHHKs.py, based on HHKs lines
- 
+
 !========================= Hlt2Lines v8r24 2012-06-23 =========================
 ! 2012-06-21 - C. Thomas
  - Added alternative DD inclusive line
@@ -758,7 +761,7 @@
  - Added DD inclusive line
 
 ! 2012-06-13 - V. Gligorov
- - Modify Hlt2CEPLines to user lower PT Rich kaons  
+ - Modify Hlt2CEPLines to user lower PT Rich kaons
 
 !========================= Hlt2Lines v8r22 2012-05-21 =========================
 ! 2012-05-21 S.Stahl
@@ -774,7 +777,7 @@
   . Hlt2B2HHLTUnbiasedLines move tau cut from 0.1 to 0.3
   . LambdaC2LambdaH lines, tighten many cuts
   . hhX lines, tighten PT and IPCHI2 cuts
-  . HHH lines tighten IPCHI2, PT cuts 
+  . HHH lines tighten IPCHI2, PT cuts
 
 ! 2012-05-10 - Pieter David
  - Add PV3D to the Hlt2 displaced vertex line algorithms (resolves the
@@ -785,7 +788,7 @@
 
 ! 2012-05-08 - S. Stahl
  - DiMuonAndMu line has an IP cut but didn't call PV3D.
- 
+
 ! 2012-05-08 - V. Gligorov
  - Correct use of BPVLTIME functors in some lines
  - Small changes to default D->HHH and HHX line cuts
@@ -794,10 +797,10 @@
  - Tighten track chi2, vertex chi2 cuts in D->HHH lines
  - Tighten track chi2, IPCHI2, PT cuts in inclusive D* line
   . Both of these to help with HLT2 rate with a looser HLT1
- - Fix independence problem in topo/radiative topo  
+ - Fix independence problem in topo/radiative topo
 
 ! 2012-05-03 - Sascha Stahl
- - Fixed bug in Jpsi express line. Now asks for a PV, 
+ - Fixed bug in Jpsi express line. Now asks for a PV,
    before cutting on the impact parameter. Removed also unnecessary option.
 
 !========================= Hlt2Lines v8r20 2012-04-26 =========================
@@ -811,7 +814,7 @@
 ! 2012-04-24 - V. Gligorov
  - Add Hlt2CharmHadD02HHXDstLines lines
   . Serve to trigger tagged D0->hhX, where X is any missing particle
-  . Contain a narrow mass and a prescaled wide mass line 
+  . Contain a narrow mass and a prescaled wide mass line
  - Tighten track chi2 cuts in the following lines to match the default
    maximum of 3 applied upfront in the tracking
   . Hlt2B2HHLTUnbiasedLines.py
@@ -825,7 +828,7 @@
   . Hlt2CharmSemilepD02HMuNuLines.py
 
 ! 2012-04-23 - Jibo He
- - Added DiMuonDetachedPsi2S line, with the same cuts as the DetachedJPsi   
+ - Added DiMuonDetachedPsi2S line, with the same cuts as the DetachedJPsi
 
 ! 2012-04-20 - Johannes Albrecht
  - adjust express lines
@@ -841,9 +844,9 @@
    to reconstruct the tagged and untagged D candidates
    in a single sequence.
 
- - Consequence1 removed Hlt2CharmHadD02HHHHLines.py 
+ - Consequence1 removed Hlt2CharmHadD02HHHHLines.py
    in which the untagged lines were done before
- - Consequence2 removed the ref to Hlt2CharmHadD02HHHHLines.py 
+ - Consequence2 removed the ref to Hlt2CharmHadD02HHHHLines.py
    in Hlt2CharmHadTwoBodyForMultiBody.py and Hlt2CharmHadTwoBodyForD02HHHH.py
 
 !========================= Hlt2Lines v8r18 2012-04-09 =========================
@@ -857,7 +860,7 @@
 !========================= Hlt2Lines v8r16 2012-03-26 =========================
 ! 2012-03-20 - Sam Gregson
  - Hlt2CharmHadD2KS0HLines.py
-  - Tightened up the lines 
+  - Tightened up the lines
 
 !========================= Hlt2Lines v8r15 2012-03-20 =========================
 ! 2012-03-19 - Victor Coco
@@ -865,7 +868,7 @@
 
 ! 2012-03-18 - Jibo He
  - Hlt2InclusiveDiPhiLines.py
-  . Tightened the cuts of DiPhi line to speed up, rate should be even less than 2 Hz. 
+  . Tightened the cuts of DiPhi line to speed up, rate should be even less than 2 Hz.
 
 !========================= Hlt2Lines v8r14 2012-03-17 =========================
 ! 2012-03-17 - Albert Puig
@@ -873,16 +876,16 @@
 
 ! 2012-03-16 - S. Gregson
  - (Re)-optimised cuts in D(s)->KS0H HLT2 lines
- 
+
 !========================= Hlt2Lines v8r13 2012-03-16 =========================
 ! 2012-03-16 - Eric van Herwijnen
  - Hlt2ExpressLines.py
   . remove HLT="HLT_PASS_RE('Hlt1.*Decision')" from ExpressLambda and ExpressKs
-    to avoid taking lumi only events  
+    to avoid taking lumi only events
 
 ! 2012-03-16 - Jibo He
  - Hlt2InclusiveDiPhiLines.py
-  . Removed duplicated cuts, correct line name   
+  . Removed duplicated cuts, correct line name
 
 ! 2012-03-16 - Albert Puig
  - New version of cut-based radiative topo lines.
@@ -904,11 +907,11 @@
    naming convention for charm hlt2 lines.
 
 !========================= Hlt2Lines 2012-03-08 =========================
-! 2012-03-08 - Sam Gregson 
+! 2012-03-08 - Sam Gregson
  - Created Lambda_c->Lambda0h lines. Simply copied D(s)->KS0h lines and changed mass windows
 
 !========================= Hlt2Lines v8r12 2012-03-07 =========================
-! 2012-03-07 - Mike Williams 
+! 2012-03-07 - Mike Williams
  - Added DD KS to the topo
 
 !========================= Hlt2Lines v8r11 2012-03-07 =========================
@@ -916,7 +919,7 @@
  - Update the Hlt2DisplVertices.py lines with the new tracking configurations
 
 ! 2012-03-05 - V. Gligorov
- - Rename D02HHHHDstNoHlt1 lines to prevent ANNSvc mixup. 
+ - Rename D02HHHHDstNoHlt1 lines to prevent ANNSvc mixup.
 
 ! 2012-03-05 - Benoit VIAUD
  - Removed the second loop pions from Hlt2CharmSemilepD02HMuNuLines.py
@@ -945,20 +948,20 @@
    . Implemented prescaled WideMass lines for each decay mode.
 
 ! 2012-02-29 - Jibo He
- - Removed Tis requirements in Hlt2DiPhiTis to speed up 
+ - Removed Tis requirements in Hlt2DiPhiTis to speed up
 
 ! 2012-02-27 - V. Gligorov
  - Change GEC cuts in all hlt2 lines from 120 to a minimum of 180, to reflect
    the fact that the lower P/PT cuts used will lead to more tracks being made
    for each event in HLT2. the GEC for the topological is adjusted to 500.
- - Edit various typos in the new charm lines. 
+ - Edit various typos in the new charm lines.
 
 ! 2012-02-27 - Sam Gregson
  - Updated Hlt2CharmHadD2KS0HLines for KS0DDs as well as KS0LLs
 
 ! 2012-02-27 - Benoit VIAUD
  - One line forgotten in Hlt2CharmSemilepD2HMuMuLines.py
- - A few obsolete lines removed 
+ - A few obsolete lines removed
      Hlt2CharmSemilep2Had1MuForHHMuMu.py
      Hlt2CharmSemilepD02HHMuMu2SoftMuonsLines.py
      Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsLines.py
@@ -974,7 +977,7 @@
     Hlt2CharmHadTwoBodyForD4H.py --> Hlt2CharmHadTwoBodyForD02HHHH
 
 ! 2012-02-25 - Jibo He
- - Added Hlt2DiPhiTis for prompt Charmonium->Phi Phi, require Hlt1 TIS. 
+ - Added Hlt2DiPhiTis for prompt Charmonium->Phi Phi, require Hlt1 TIS.
 
 ! 2012-02-24 - Benoit VIAUD
  - New Lines for D->hhhh, D->hmumu and D->hhmumu modes
@@ -1028,15 +1031,15 @@
 - Topo updates.
 
 ! 2011-08-25 - Grant McGregor
- - Modifications to D02HMuNu lines to add soft pion for Dstar 
- 
+ - Modifications to D02HMuNu lines to add soft pion for Dstar
+
 ! 2011-08-22 - Jibo He
  - Hlt2InclusiveDiProtonLines.py
   . Tighten the PID cuts of DiProton, DiProtonLowMult to offline cuts
 
 !=============================================================================
 ! 2011-08-04 - Sam Gregson
- - Re-optimised D2KS0H Hlt2Lines 
+ - Re-optimised D2KS0H Hlt2Lines
 
 !========================== Hlt2Lines v8r7p1 2011-08-03 ======================
 ! 2011-08-03 - Gerhard Raven
@@ -1062,7 +1065,7 @@
  - Hlt2B2HHLTUnbiasedLines : Add pre/postscales to slots.
 
 ! 2011-06-29 - V. Gligorov
- - Hlt2diphotonDiMuonLines : Fix LowMultPhoton line to use Pi0 maker. 
+ - Hlt2diphotonDiMuonLines : Fix LowMultPhoton line to use Pi0 maker.
 
 !========================== Hlt2Lines v8r6 2011-06-25 ===================
 ! 2011-06-25 - Mat Charles
@@ -1078,7 +1081,7 @@
  - Hlt2CharmHadLambdaCLines : add PID cut on proton to improve retention
  - Hlt2CharmHadMinBiasLines : Add D->3h line with same cuts as LambdaC line,
                               thanks to Hamish for providing a set of "safe" cuts
-                              for DP studies. Add LC->LPi line. 
+                              for DP studies. Add LC->LPi line.
 
 ! 2011-06-24 - Jibo He
  - Hlt2B2JpsiXLines
@@ -1129,7 +1132,7 @@
 
 ! 2011-06-20 - Ulrich Kerzel
 - add detached B->hh lifetime unbiased line with cut tau > 0.1ps
-- keep original one prescaled  
+- keep original one prescaled
 
 ! 2011-06-17 - Albert Puig
  - Added Hlt2RadiativeTopologicalLines (still with suboptimal cuts)
@@ -1144,15 +1147,15 @@
 ! 2011-05-25 - Vanya Belyaev
 
  - Hlt1InclusiveDiMuon.py
-    add ``dumuon+X'' lines 
+    add ``dumuon+X'' lines
 
 ! 2011-05-20 - Grant McGregor
  - Hlt2CharmSemilepD02HMuNu changes to reduce q2 biases on selection. Reduced number of cuts.
 
 ! 2011-05-19 - Jibo He
  - Hlt2InclusiveDiProtonLines.py
-   Remove PIDp-PIDK cut in LowMult DiProton line according to that LowPTProton 
-   changed to 2 RichHypos 
+   Remove PIDp-PIDK cut in LowMult DiProton line according to that LowPTProton
+   changed to 2 RichHypos
 
 ! 2011-05-16 - Gerhard Raven
  - in Hlt2diphotonDiMuonLines, prescale Hlt2LowMultHadron by 0.1
@@ -1197,7 +1200,7 @@
         Hlt2D2KS0HLines.py -> Hlt2CharmHadD2KS0HLines.py
 
 ! 2011-Mar-29 - Benoit VIAUD
- - Tighter cuts in the Hlt2CharmHadTwoMuonForMuMuHad, Hlt2CharmHadD2HmumuLines 
+ - Tighter cuts in the Hlt2CharmHadTwoMuonForMuMuHad, Hlt2CharmHadD2HmumuLines
    and Hlt2CharmHadD02HHmumuLines lines, plus redefinition of the decay modes
    to include.
 
@@ -1216,12 +1219,12 @@
  - New HHmumu and Hmumu lines
 
 ! 2011-03-24 - Jibo He
- - DiProton lines tuned 
+ - DiProton lines tuned
 
 !========================== Hlt2Lines v8r3 2011-03-17 ===================
 ! 2011-03-18 - Gerhard Raven
  - move PV3D to the front in Hlt2CharmHadD02HHHHLines -- as it is typically
-   already done in Hlt1 
+   already done in Hlt1
 ! 2011-Mar-17 - Albert Puig
  - Tied Hlt2B2XGammaLines to (L0Electron || L0Photon).
 
@@ -1234,7 +1237,7 @@
    prefix into the names of each of its components to avoid conflicts.
 
 !========================== Hlt2Lines v8r2 2011-03-10 ===================
-! 2011-03-10 - Johannes Albrecht 
+! 2011-03-10 - Johannes Albrecht
  - update single electron names
 
 ! 2011-03-08 - Olivier Deschamps for Regis Lefevre
@@ -1267,9 +1270,9 @@
 
  - Hlt2InclusiveDiMuonLines.py
 
-     rename "multi-muon"-lines 
- 
-! 2011-03-01 - Stefano Perazzini 
+     rename "multi-muon"-lines
+
+! 2011-03-01 - Stefano Perazzini
  - Review of Hlt2B2HHLines.py
 
 ! 2011-02-28 - Mat Charles
@@ -1293,13 +1296,13 @@
  - Updated Hlt2B2XGamma.py: complete revision
 
 ! 2010-02-28 - Johannes Albrecht
- - update Hlt2InclusiveDiMuonLines and Hlt2InclusiveMuonLines: 
+ - update Hlt2InclusiveDiMuonLines and Hlt2InclusiveMuonLines:
    complete revision
 
 ! 2011-02-28 - Vanya Belyaev
 
  - Hlt2InclusiveDiMuonLines.py
-     tighten "multi-muon"-lines 
+     tighten "multi-muon"-lines
 
 ! 2011-02-28 - Ulrich Kerzel
 - let Hlt2B2HHLTUnbiased use HltMember for TisTosParticleTagger
@@ -1324,12 +1327,12 @@
 ! 2011-02-27 - Vanya Belyaev
 
  - Hlt2InclusiveDiMuonLines.py
-     add few "multi-muon"-lines 
+     add few "multi-muon"-lines
 
 ! 2011-02-27 - Ulrich Kerzel
- - add Network for lifetime unbiaed B->hh trigger based on 
-   kinematic information only to reduce combinatorics before 
-   using PID information  
+ - add Network for lifetime unbiaed B->hh trigger based on
+   kinematic information only to reduce combinatorics before
+   using PID information
 
 ! 2011-02-26 - Mat Charles
   - Tighten cuts in Hlt2CharmHadD02HHKsLines.py
@@ -1362,11 +1365,11 @@
 ! 2011-02-24 - Jibo He
  - Hlt2InclusiveDiElectronLines.py
    . Renamed all lifetime unbised DiElectron lines to "DiElectron*"
-   . Added track chi2 cut 
+   . Added track chi2 cut
  - Hlt2B2JpsiXLines.py
    . Increased PT cut on Bc(->JpsiMuX)
  - Hlt2InclusiveDiProtonLines.py
-   . Updated to 2 stages, added PT cut on Charmonium 
+   . Updated to 2 stages, added PT cut on Charmonium
 
 ! 2011-02-14 - Victor Coco
  - Hlt2DisplVerticesLine.py: add a downstream vertex line.
@@ -1376,11 +1379,11 @@
  - adapt to PHYS_v12r0
 
 ! 2011-02-22 - Alex Shires
- - fixed naming in Hlt2MuNTrackLines Tos filters and added in 
+ - fixed naming in Hlt2MuNTrackLines Tos filters and added in
    possible code for a Hlt2Member implementation of TisTosParticleTagger
 
 ! 2011-Feb-21 - Patrick Spradlin
- - Rearranged some cut ordering in Hlt2CharmHadD2HHHLines.py, 
+ - Rearranged some cut ordering in Hlt2CharmHadD2HHHLines.py,
    Hlt2CharmHadD02HHKsLines.py, Hlt2D2KS0HLines.py, and
    Hlt2CharmHadD02HHLines.py.  This should roughly put mass cuts and
    simpler cuts that require less computation before other cuts.
@@ -1425,7 +1428,7 @@
 
 ! 2011-02-13 - Gerhard Raven
  - fix some spurious imports in commit of Hlt2D2KS0H
- - do not use unfitted tracks in Hlt2CharmHadD02HHLines 'GEC' 
+ - do not use unfitted tracks in Hlt2CharmHadD02HHLines 'GEC'
 
 ! 2011-02-11 - Sam Gregson
  - Hlt2D2KS0H: added new line (for Charm Working Group)
@@ -1471,7 +1474,7 @@
        after a suggestion from Vanya.
 
 ! 2011-Feb-03 - Leandro de Paula
- - Hlt2InclusiveDiMuonLines.py: New line for dimuons - Hlt2DiMuonNoPV 
+ - Hlt2InclusiveDiMuonLines.py: New line for dimuons - Hlt2DiMuonNoPV
 
 ! 2011-Feb-02 - Patrick Spradlin
  - Hlt2CharmHadD2HHHLines.py:  Fixed a input/output matchmaker warning.
@@ -1514,7 +1517,7 @@
  - add PV3D to inclusive Phi lines
 
 ! 2011-01-20 - V. Gligorov
- - Remove dependency on unfitted tracks in XGamma lines. 
+ - Remove dependency on unfitted tracks in XGamma lines.
 
 ! 2011-01-19 - Alex Shires
  - Add in Hlt2MuNTrackLines, a replacement for Hlt2MuTrack
@@ -1593,11 +1596,11 @@
  - make the same change to all other lines which has Hlt1.*Electron.*
 
 ! 2010-09-12 - Jibo He
- - Hlt2 electron lines 
-   . Require 
-     L0DU = "L0_CHANNEL('Electron')" 
+ - Hlt2 electron lines
+   . Require
+     L0DU = "L0_CHANNEL('Electron')"
      HLT  = "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')"
-     instead of 
+     instead of
      HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
    . Put these requirements in slots
 
@@ -1608,7 +1611,7 @@
 
 !========================== Hlt2Lines v5r1 2010-09-08 ===================
 ! 2010-09-08 - Gerhard Raven
- - IncDiProton: replace void filter on SPD mult (which is not independent!) with an 
+ - IncDiProton: replace void filter on SPD mult (which is not independent!) with an
    L0 filter on the L0 recorded SPD mult (which is faster as well)
 
 ! 2010-09-08 - Johannes Albrecht
@@ -1626,9 +1629,9 @@
  - Add Track Chi2 cuts to XGamma lines, default 10.
  - Tighten Track Chi2 cut to 5 in B2HHLTUnbiased.
  - Allow topological lines to be linked to an HLT1 line
-   (default no link) from a slot. 
+   (default no link) from a slot.
 
-! 2010-08-26 - Olivier Deschamps for Régis Lefèvre 
+! 2010-08-26 - Olivier Deschamps for Régis Lefèvre
  - Tuned Hlt2B2HHPi0Lines.py
 
 ! 2010-08-23 - Roel Aaij
@@ -1643,25 +1646,25 @@
  - Update XGamma/D2mumu/DisplacedVertex lines to use fitted tracks
  - Update inclusive phi to cut on the PID of both kaons
  - Update topological for Mike Williams
- - Update D2KSPi trigger for Sam Gregson 
+ - Update D2KSPi trigger for Sam Gregson
 
 ! 2010-08-22 - Jibo He
- - Require Hlt1 electrons lines (Hlt1.*Electron.*Decision) in 
+ - Require Hlt1 electrons lines (Hlt1.*Electron.*Decision) in
    DYeh1, DYeh2, Hlt2SingleHighPTElectron, and Bu->eeK lines
 
 ! 2010-08-22 - Jibo He
- - python/Hlt2Lines/Hlt2InclusiveDiProtonLines.py  
-   . Remove Hlt1 hadron lines requirements 
+ - python/Hlt2Lines/Hlt2InclusiveDiProtonLines.py
+   . Remove Hlt1 hadron lines requirements
 
 ! 2010-08-22 - Jibo He
- - Tighten selections in inclusive DiProton lines 
+ - Tighten selections in inclusive DiProton lines
    and require Hlt1 hadron lines (Hlt1.*Hadron.*Decision)
    . python/Hlt2Lines/Hlt2InclusiveDiProtonLines.py
 
 ! 2010-08-22 - Jibo He
- - Require Hlt1 electrons lines (Hlt1.*Electron.*Decision) 
-   in all (running) Hlt2 electron lines 
-   . python/Hlt2Lines/Hlt2B2JpsiXLines.py 
+ - Require Hlt1 electrons lines (Hlt1.*Electron.*Decision)
+   in all (running) Hlt2 electron lines
+   . python/Hlt2Lines/Hlt2B2JpsiXLines.py
    . python/Hlt2Lines/Hlt2B2KstareeLines.py
    . python/Hlt2Lines/Hlt2InclusiveDiElectronLines.py
    . python/Hlt2Lines/Hlt2InclusiveElectronLines.py
@@ -1687,11 +1690,11 @@
 ! 2010-08-11 - V. Gligorov
  - Explicitly tell the XGamma and HHPi0 lines to use the TrgVertexFitter as the new
    default (LoKi::FastVertexFitter) cannot be used for channels decaying to photons
-   or pi0s. 
+   or pi0s.
 
 ! 2010-07-29
  - Cosmaethic changes in Hlt2DisplVertices.py, adapt and change comments
- - Hlt2DisplVertices lines : stop saving candidates in TES. 
+ - Hlt2DisplVertices lines : stop saving candidates in TES.
    Not needed anymore for the line tell it has fired.
 
 ! 2010-07-27 - Stefano Perazzini
@@ -1726,7 +1729,7 @@
    (reject > 1/20 on L0 yes, HLT1 yes real data)
 
 ! 2010-06-08 - L. de Paula
- - Introducing Monitoring Histograms in Hlt2InclusiveDiMuonLines.py 
+ - Introducing Monitoring Histograms in Hlt2InclusiveDiMuonLines.py
        (Biased DiMuons)
 
 !========================== Hlt2Lines v4r1 2010-07-06 ===================
@@ -1734,13 +1737,13 @@
  - add Hlt2ErrorEvent line, add Hlt1ErrorEvent to Hlt2Transparent
 
 ! 2010-07-02 - Gerhard Raven
- - exclude MuonFromHlt1 from the new default global pileup veto in Hlt2 
+ - exclude MuonFromHlt1 from the new default global pileup veto in Hlt2
  - add Hlt1HadronMonComp (which runs on 1 Hz of L0 Hadron) to Hlt2Transparant
 
 ! 2010-06-07 - V. Gligorov
  - Change the mass hypothesis in the topological 3 and 4 body to KKK/KKKK
    from KKPi/KKPiPi. This is in order to have the same mass window efficiency
-   on all of our "core" 4 body and lower decay modes. 
+   on all of our "core" 4 body and lower decay modes.
 
 
 !========================== Hlt2Lines v4r0 2010-05-27 ===================
@@ -1761,12 +1764,12 @@
  - Follow up on https://savannah.cern.ch/bugs/?67708
 
 ! 2010-05-23 - Jibo He
- - Hlt2B2JpsiXLines.py 
-   . Loosened selection cuts for Bs->Jpsi(ee)Phi 
+ - Hlt2B2JpsiXLines.py
+   . Loosened selection cuts for Bs->Jpsi(ee)Phi
 
 ! 2010-05-23 - Jibo He for Michelle Nicol
  - Hlt2B2KstareeLines.py
-   . New Hlt2 lines for Bd->eeKstar   
+   . New Hlt2 lines for Bd->eeKstar
 
 ! 2010-05-20 - Gerhard Raven
  - make Hlt2ExpressJpsi use fitted tracks
@@ -1787,7 +1790,7 @@
 
 ! 2010-05-16 - Jibo He
  - Hlt2InclusiveDiProtonLines.py
-   . Set InputPrimaryVertices and UseP2PVRelations to avoid no PV warnings. 
+   . Set InputPrimaryVertices and UseP2PVRelations to avoid no PV warnings.
 
 ! 2010-05-16 - Jibo He for Stephane TJampens, Artur Ukleja and Adlene Hicheur
  - Hlt2B2JpsiXLines.py
@@ -1795,13 +1798,13 @@
 
 ! 2010-05-16 - Jibo He
  - Hlt2InclusiveElectronLines.py
-   . Moved SingleElectron For DY Lines to its class 
-   + Added Single Electron and Electron + Track lines. 
+   . Moved SingleElectron For DY Lines to its class
+   + Added Single Electron and Electron + Track lines.
 
 ! 2010-05-16 - Jibo He
  - Hlt2InclusiveDiElectronLines.py
    . Moved each set of Hlt2 lines to its class
-   . Corrected typo of prescale in slots for DY and Z2ee lines 
+   . Corrected typo of prescale in slots for DY and Z2ee lines
    . Updated selections and prescale factors for Unbiased DiElectrons.
 
 ! 2010-05-13 - Jacopo Nardulli
@@ -1815,7 +1818,7 @@
 ! 2010-05-07 - Jibo He
  - Hlt2InclusiveDiElectronLines.py
    + Added 5 lines for Unbiased (Jpsi, Psi(2S), B->) DiElectrons.
-     Selection cuts not tuned, comitted for Olivier Deschamps to 
+     Selection cuts not tuned, comitted for Olivier Deschamps to
      study the Bremsstrahlung correction problem.
 
 !========================== Hlt2Lines v3r3 2010-04-30 ===================
@@ -1854,8 +1857,8 @@
 
 !========================== Hlt2Lines v3r2 2010-04-21 ===================
 ! 2010-04-20 - Neal Gauvin
- - Hlt2DisplVertices line split in 2 : 
-	 Hlt2DisplVerticesSingle and Hlt2DisplVerticesDouble. 
+ - Hlt2DisplVertices line split in 2 :
+	 Hlt2DisplVerticesSingle and Hlt2DisplVerticesDouble.
 
 
 !2010-04-16 - Johannes Albrecht
@@ -1877,7 +1880,7 @@
 ! 2010-04-02 - Patrick Spradlin
  - Hlt2TopologicalLines.py and Hlt2CharmLines.py
    Prepended __ to names of all methods that do not need to be public (all of
-   them).  Changed default values of slots for continuous values to floating 
+   them).  Changed default values of slots for continuous values to floating
    points (some of them were integer literals).  The values are unchanged.
 
 ! 2010-04-01 - Gerhard Raven
@@ -1895,20 +1898,20 @@
  - Hlt2TopologicalLines.py, Hlt2CharmLines.py, and Hlt2B2DXLines.py
    Modification to the filter on the number of tracks in an event (aliases GEC,
    KillTooManyIPFilter, etc.) so that the filter is always present in the
-   sequence regardless of the properties.  The presence of the filter in 
+   sequence regardless of the properties.  The presence of the filter in
    the line sequences is no longer conditional on the property ComRobUseGEC.
    Setting ComRobUseGEC to False will configure the filter as pass-all rather
    than omitting it.
 
 !========================== Hlt2Lines v3r0 2010-03-28 ===================
 ! 2010-03-27 - Gerhard Raven
- - replace  TrSOURCE >> TrSIZE with equivalent CONTAINS, which invokes less 
+ - replace  TrSOURCE >> TrSIZE with equivalent CONTAINS, which invokes less
    virtual functions
 
 ! 2010-03-27 - V. Gligorov
  - Fix prescale in inclusive phi lines (see https://savannah.cern.ch/bugs/?65002)
  - Fix GeV/MeV typo in Express lines
- - Replace an additional %()d with %()s (see https://savannah.cern.ch/bugs/?64997) 
+ - Replace an additional %()d with %()s (see https://savannah.cern.ch/bugs/?64997)
 
 ! 2010-03-27 - Jibo He
  - Hlt2InclusiveDiProtonLines.py
@@ -1919,7 +1922,7 @@
 
 ! 2010-03-27 - Jibo He
  - Hlt2InclusiveDiProtonLines.py added for charmonium -> p pbar (2.8 - 3.9 GeV).
-	Rates will be presented in Trigger & Stripping meeting of 29 March 2010: 
+	Rates will be presented in Trigger & Stripping meeting of 29 March 2010:
 	http://indico.cern.ch/conferenceDisplay.py?confId=82199
 
 ! 2010-03-26 - Jibo He
@@ -1927,11 +1930,11 @@
    Added the missing Prescale and Postscale for TF2Bc2JpsiX lines in slot.
 
  - Hlt2ExpressLines.py
-   Fixed obsolete PV3D usage and several typos in D* selection so that it could be run. 
+   Fixed obsolete PV3D usage and several typos in D* selection so that it could be run.
 
 ! 2010-03-26 - V. Gligorov
  - Update the inclusive phi lines to be compatible with the new
-   reconstruction framework. See Savannah #12691 for details. 
+   reconstruction framework. See Savannah #12691 for details.
 
 ! 2010-03-26 - A. Powell
  - Hlt2ExpressLines.py: Added D* selection
@@ -1977,20 +1980,20 @@
 
 ! 2020-03-18 - Johannes Albrecht
  - update slots in Hlt2ExpressLines.py
-   
+
 ! 2010-03-19 - V. Gligorov
  - Continuing work on Savannah tasks #12691,13784.
    Update the B2DX and JPsiX lines to use the fitted K shorts offered in
    Ks.py and not the K shorts made by the HLT K short package.
- 
+
 ! 2020-03-18 - Johannes Albrecht
  - update phi selection in Hlt2ExpressLines.py
- 
+
 ! 2010-03-17 - V. Gligorov
  - Continuing work on Savannah tasks #12691,13784.
    Update lines to follow move of reconstruction from HltLine to
    HltTracking.
-   
+
 ! 2010-03-11 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691. Follow changes
    in HltLine, Hlt2SharedParticles.
@@ -1998,20 +2001,20 @@
 ! 2010-03-09 - J. Nardulli
  - Working on Savannah task 14212 for the B2DX lines.
    Cut values as by the talk given by P. Spradlin on 20/11/2009
-   Configuration is reduction factor 50/no Topo 4 bodies 
+   Configuration is reduction factor 50/no Topo 4 bodies
    Added the post-TF monitoring lines.
 
-! 2010-03-07 - V. Gligorov 
+! 2010-03-07 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691. Remove obsolete
    import of TopoTFInputParticles
- 
+
 ! 2010-03-04 - Gerhard Raven
  - fix typo in Hlt2Forward
 
 ! 2010-03-02 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691. Minor changes
    to follow developments in HltLine and Hlt2SharedParticles.
- 
+
 ! 2010-02-26 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691. Minor changes
    to follow developments in HltLine and Hlt2SharedParticles, in
@@ -2020,8 +2023,8 @@
 ! 2010-02-24 - V. Gligorov
  - Contine the reorganization of Hlt tracking, see Savannah 13784, 12691
    for details. Minor changes to follow developments in HltLine and
-   Hlt2SharedParticles. 
- 
+   Hlt2SharedParticles.
+
 ! 2010-02-22 - V. Gligorov
  - Contine the reorganization of Hlt tracking, see Savannah 13784, 12691
    for details. Major changes in this round
@@ -2059,11 +2062,11 @@
 ! 2010-02-14 - Gerhard Raven
  - move files from $HLTCONFROOT/options to $HLT2LINESROOT/options
    to make them 'more local'
- - switch off MuonPID in Hlt2TrackFitForTopo.py -- currently it just 
+ - switch off MuonPID in Hlt2TrackFitForTopo.py -- currently it just
    produces a warning...
 
 ! 2010-02-13 - Johannes Albrecht
- - Hlt2InclusiveDiMuonLines: add Drell-Yan lines, 
+ - Hlt2InclusiveDiMuonLines: add Drell-Yan lines,
    name change: Unbiased.. --> DiMuonUnbiased
  - Hlt2ExpressLines.py: add cuts to lambda daughter
  - Hlt2ExpressLines.py: add ECal and HCal energy cuts to JPsi Tag&Probe
@@ -2073,7 +2076,7 @@
 
 ! 2010-02-08 - Gerhard Raven
  - use rate-limiting postscale in Express Lines
- 
+
 
 ! 2010-02-05 - Johannes Albrecht
  - Hlt2DisplVerticesLines.py: revert accidental commit which disabled 2 properties
@@ -2098,7 +2101,7 @@
 ! 2010-01-17 - Greig Cowan
   https://savannah.cern.ch/bugs/?59906
  - Hlt2B2JpsiXLines.py
-   Using Hlt2Shared Jpsi in the prescaled and detached lines. Vertex chi2 cut 
+   Using Hlt2Shared Jpsi in the prescaled and detached lines. Vertex chi2 cut
    now on the phi.
 
 ! 2010-01-14 - Patrick Spradlin
@@ -2134,7 +2137,7 @@
    . The Hlt/HltSettings tag spradlin_2010Jan12 relies on this change.
 
 ! 2010-01-12 - Daan Van Eijk
- - Minor modification in cuts in JpsiPhiPrescaledAndDetachedLines in Hlt2B2JpsiXLines.py 
+ - Minor modification in cuts in JpsiPhiPrescaledAndDetachedLines in Hlt2B2JpsiXLines.py
 
 !========================== Hlt2Lines v2r2 2010-01-11 ===================
 ! 2009-12-21 - neal Gauvin
@@ -2169,7 +2172,7 @@
 
 ! 2009-11-27 - Patrick Koppenburg
    https://savannah.cern.ch/task/index.php?12690
- - Remove PV = True/False argument of HltLine. The PV should be loaded 
+ - Remove PV = True/False argument of HltLine. The PV should be loaded
    explicitly when needed.
 
 ! 2009-11-27 - Patrick Koppenburg
@@ -2194,18 +2197,18 @@
 
 ! 2009-11-25 - Patrick Koppenburg
  - The Hlt2 reconstruction is separated in blocks depending on what is actually
-    needed. Allows to run making only muons and pions without 
+    needed. Allows to run making only muons and pions without
     requiring the calo decoding, for instance.
     (https://savannah.cern.ch/task/?12690)
    . No Reco propert in HltLine anymore
    .; Add a dependency on Hlt2Tracks in Hlt2KillTooManyTopoIP
    . More to come
- - Requires tags pkoppenb_20091125 of HltConf, HltLine, Hlt2Lines, 
+ - Requires tags pkoppenb_20091125 of HltConf, HltLine, Hlt2Lines,
    HltSharedParticles
  - v2r0
 
 ! 2009-11-25 - Jacopo Nardulli
- - Adding the robust Hlt2B2DX Lines 
+ - Adding the robust Hlt2B2DX Lines
 
 ! 2009-11-16 - Gerhard Raven
  - Hlt2Transparent was not yet updated for the change in name of the
@@ -2219,7 +2222,7 @@
 - Fix a bug in Hlt2B2JpsiXLines.py file
 
 ! 2009-11-04 - Jacopo Nardulli
-- Fix an error in the B2DX code 
+- Fix an error in the B2DX code
 
 ! 2009-10-31 - Fatima Soomro
 - Updated the cuts in B2XGammaLines with the ones corresponding to MC09 optimization.
@@ -2232,13 +2235,13 @@
    protoparticles and particles had to be created.)
 
 ! 2009-10-27 - Jacopo Nardulli
- - Removing DecayTreeTuple from the DX Lines 
+ - Removing DecayTreeTuple from the DX Lines
 
 ! 2009-10-26 - Patrick Koppenburg
  - Rename Hlt2XGammaLines. into Hlt2B2XGammaLines.
 
 ! 2009-10-26 - Jacopo Nardulli
-  Re-introduce the Hlt2B2DX Lines. 
+  Re-introduce the Hlt2B2DX Lines.
 
 ! 2009-10-24 - Patrick Koppenburg
  - Undo the undocumented changes by J. Nardulli that break the nightlies.
@@ -2259,7 +2262,7 @@
 !========================== Hlt2Lines v1r7 2009-09-24 ===================
 
 ! 2009-09-17 - Greig Cowan
- - Modified Hlt2B2JpsiX.py such that all lines are under control of single 
+ - Modified Hlt2B2JpsiX.py such that all lines are under control of single
    configurable. Lines that were imported from $HLTSELECTIONS now appear as
    member functions of the configurable.
 
@@ -2293,8 +2296,8 @@
  - add PV = True/False to all Hlt2Line c'tor calls
 
 ! 2009-08-11 Gerhard Raven
- - add Hlt2 commissioning lines which cause Hlt2 to accept certain Hlt1 lines, 
-   eg. accept a fraction of 1e-5 of Hlt1Global, always accept the 
+ - add Hlt2 commissioning lines which cause Hlt2 to accept certain Hlt1 lines,
+   eg. accept a fraction of 1e-5 of Hlt1Global, always accept the
    Hlt1 unbiased pass-through, velo closing lines, ...
 
 ! 2009-08-11 Jacopo Nardulli & Patrick Spradlin
@@ -2311,7 +2314,7 @@
 
 ! 2009-08-07 - Magnus Lieng & Kim Vervink
  - Inclusive Phi code cleanup
- - IncPhiTF line renamed to IncPhiTrackFit. 
+ - IncPhiTF line renamed to IncPhiTrackFit.
    Reason: Two algs ended up with same name.
    'Hlt2' + 'IncPhi' + 'TFCombine' == 'Hlt2' + 'IncPhiTF' + 'Combine'
 
@@ -2329,27 +2332,27 @@
 ! 2009-07-31 - Antonio Perez-Calero
   - updated InclusiveMuon and InclusiveDiMuon .py files/configurables:
   	* latest cuts for each line, including some prescales
-    * some changes in code to prepare lines for different trigger scenarios 
+    * some changes in code to prepare lines for different trigger scenarios
 	    (include lines slot and no hardwired prescale factors outside slots)
 
 ! 2009-07-31 - Gerhard Raven
- - minor tweaks to displaced vertex line, eg. rename the vertex 
+ - minor tweaks to displaced vertex line, eg. rename the vertex
    search from Hlt2PatPV3D to Hlt2DisplVerticesV3D
 
 ! 2009-07-31 - Patrick Koppenburg
  - Bu2LLXLines : Make a three step selection:
    1. Require a dimuon or dielectron
    2. Full track fit
-   3. Build Bu->llK candidate 
+   3. Build Bu->llK candidate
  - Does not work yet as Calo options are not compatible
 
 ! 2009-07-31 - Kim Vervink
- - Extra line in the Inclusive Phi stream: larger phi mass window and prescale 
+ - Extra line in the Inclusive Phi stream: larger phi mass window and prescale
 
 !========================== Hlt2Lines v1r4 2009-07-23 ===================
 
 ! 2009-07-29 - Geraldine Conti
-- Update of the HLT2 exclusive selections for Bs->JpsiPhi, Bd->JpsiK* 
+- Update of the HLT2 exclusive selections for Bs->JpsiPhi, Bd->JpsiK*
    and Bu->JpsiK+ in the Hlt2B2JpsiXLines.py file
 
 ! 2009-07-29 - Young Min Kim
@@ -2362,7 +2365,7 @@
  - Moved B->LLK lines from HltSelections
 
 ! 2009-07-21 - Geraldine Conti
- - Translation of the HLT2 exclusive selections for Bs->JpsiPhi, Bd->JpsiK* 
+ - Translation of the HLT2 exclusive selections for Bs->JpsiPhi, Bd->JpsiK*
    and Bu->JpsiK+ into the new configurable
 
 ! 2009-07-08 - Angelo Carbone
@@ -2373,12 +2376,12 @@
 ! 2009-07-03 - Leandro de Paula
   - update in Inclusive DiMuons
                 * set lower rate
-           
+
 ! 2009-07-02 - Patrick Koppenburg
  - Remove obsolete selections (see HltSelections package)
 
 ! 2009-06-29 - Antonio Perez-Calero
-  - update in Inclusive Muon and Muon+Track lines: 
+  - update in Inclusive Muon and Muon+Track lines:
 		* disable MuTrack4JPsi (use case still under study)
 		* set mid rate (400 Hz) single mu and mu+track selections as default (active)
 
@@ -2405,7 +2408,7 @@
     tracks. Off by default -- switch on by setting ComRobUseGEC to true. Set
     ComRobGEC to adjust the cut value (default 120 tracks).
   - Add cut on the charge of the final 2,3, and 4 body candidates of the charm lines.
-    The 2,4 body are required to have charge zero, the 3 body charge +-1. 
+    The 2,4 body are required to have charge zero, the 3 body charge +-1.
   - Other minor changes to improve code usability.
 
 ! 2009-06-26 - V. Gligorov

@@ -77,7 +77,7 @@ def allCuts(conf):
     common = cuts.get('Common', {})
     for k, v in cuts.iteritems():
         com = deepcopy(common)
-        if k != 'Common':
+        if k != 'Common' and type(v) == dict:
             com.update(v)
             cuts[k] = com
     return cuts

@@ -18,18 +18,22 @@ class CommissioningLines(Hlt2LinesConfigurableUser):
                                   'VoidFilter' : ''},
                  'KS0_DD'      : {'HLT1' : "HLT_PASS_RE('^Hlt1(?!Lumi).*Decision$')",
                                   'VoidFilter' : ''},
+                 'KS0_LL'      : {'HLT1' : "HLT_PASS_RE('^Hlt1(?!Lumi).*Decision$')",
+                                  'VoidFilter' : ''},
+                 'Turbo'       : ['KS0_DD', 'KS0_LL']
                 }
     
     def __apply_configuration__(self):
         from Stages import CopyTracks, IncidentGenerator, ErrorCounter
-        from Hlt2SharedParticles.Ks import KsDD   as KS0_DD
+        from Inputs import KS0_DD, KS0_LL
         stages = {'Forward'     : [CopyTracks()],
                   'DebugEvent'  : [IncidentGenerator()],
                   'ErrorEvent'  : [ErrorCounter()],
                   'PassThrough' : [],
                   'Transparent' : [],
                   'Lumi'        : [],
-                  'KS0_DD'      : [KS0_DD]}
+                  'KS0_DD'      : [KS0_DD],
+                  'KS0_LL'      : [KS0_LL]}
 
         from HltLine.HltLine import Hlt2Line
         for name, algos in self.algorithms(stages).iteritems():
@@ -39,9 +43,11 @@ class CommissioningLines(Hlt2LinesConfigurableUser):
                      HLT1       = localProps.get('HLT1', None),
                      VoidFilter = localProps.get('VoidFilter', None),
                      priority   = localProps.get('Priority', None))
-        # And the turbofied KS0_DD
-        Hlt2Line('KS0_DDTurbo', prescale = self.prescale, postscale = self.postscale,
-                     algos      = stages['KS0_DD'],
-                     HLT1       = localProps.get('HLT1', None),
-                     VoidFilter = localProps.get('VoidFilter', None),
-                     priority   = localProps.get('Priority', None),Turbo = True)
+            if name in self.getProps()['Turbo']:
+                # And the turbofied versions
+                Hlt2Line(name +'Turbo', prescale = self.prescale, postscale = self.postscale,
+                         algos      = stages[name],
+                         HLT1       = localProps.get('HLT1', None),
+                         VoidFilter = localProps.get('VoidFilter', None),
+                         priority   = localProps.get('Priority', None),
+                         Turbo = True)

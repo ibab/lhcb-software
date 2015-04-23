@@ -35,5 +35,3 @@ class ErrorCounter(Hlt2Stage):
         return HDRFilter('Hlt2ErrorEventHlt2Filter',
                          Code = "HLT_COUNT_ERRORBITS_RE('^Hlt2.*',0xffff) > 0",
                          Location = decoder.listOutputs()[0])
-
-from Hlt2SharedParticles.Ks import KsDD   as KS0_DD    
