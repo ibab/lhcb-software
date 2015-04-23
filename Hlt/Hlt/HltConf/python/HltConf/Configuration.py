@@ -87,7 +87,6 @@ class HltConf(LHCbConfigurableUser):
                                                                 # (only matters if EnablelumiEventWriting = True)
                 , "AdditionalHlt1Lines"            : []         # must be configured
                 , "AdditionalHlt2Lines"            : []         # must be configured
-                , "ExpressStreamRateLimit"         : 50         # Hz
                 , "NanoBanks"                      : ['ODIN','HltLumiSummary','HltRoutingBits','DAQ']
                 , "PruneHltANNSvc"                    : True
                   }
@@ -280,7 +279,6 @@ class HltConf(LHCbConfigurableUser):
                       , 33 : "HLT_PASS_RE('^Hlt1Lumi.*Decision$')"  # lumi stream
                       , 34 : " ~ ( %s ) " % self.getProp('LumiBankKillerPredicate') #  this must be the opposite of the LumiStripper, i.e. if 34 is set, the event should NEVER be a nanoevent...
                       , 35 : "HLT_PASS_SUBSTR('Hlt1BeamGas')" # beamgas stream
-                      , 36 : "scale(%s,RATE(%s))" % ( "HLT_PASS_RE('Hlt2Express.*Decision')", self.getProp('ExpressStreamRateLimit') )  # express stream
                       , 37 : "HLT_PASS_RE('Hlt1(?!BeamGas).*Decision')"  # note: we need the 'Decision' at the end to _exclude_ Hlt1Global # full stream
                       , 38 : "HLT_PASS('Hlt1ODINTechnicalDecision')"
                       , 39 : "HLT_PASS_SUBSTR('Hlt1L0')"
@@ -297,7 +295,7 @@ class HltConf(LHCbConfigurableUser):
                       , 53 : "HLT_PASS_RE('Hlt1CalibTracking.*Decision')"
                       , 54 : "HLT_PASS_RE('Hlt1CalibRICH.*Decision')"
                       , 59 : "HLT_PASS_RE('Hlt1.*DisplVertex.*Decision')"
-                      
+
                       # 64--96: Hlt2
                       , 64 : "HLT_PASS('Hlt2Global')"
                       , 65 : "HLT_PASS('Hlt2DebugEventDecision')"
@@ -311,7 +309,7 @@ class HltConf(LHCbConfigurableUser):
                       , 73 : "HLT_PASS_RE('Hlt2.*B.*Gamma.*Decision')"
                       , 74 : "HLT_PASS_RE('Hlt2.*TriMuon.*Decision')"
                       , 76 : "HLT_PASS_RE('Hlt2.*(Bu2|Bs2|Bd2|Bc2|B2HH|Dst2|DisplVertices).*Decision')"
-                      , 77 : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Express)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision')"
+                      , 77 : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision')"
                       , 78 : "HLT_PASS_RE('Hlt2.*Muon.*Decision')"
                       , 79 : "HLT_PASS_RE('Hlt2.*(Topo|Charm|IncPhi).*Decision')"
                       , 80 : "HLT_PASS_RE('Hlt2.*Electron.*Decision')"
@@ -321,8 +319,9 @@ class HltConf(LHCbConfigurableUser):
                       , 84 : "HLT_PASS_RE('Hlt2TopoMu[234]Body.*Decision')"
                       , 85 : "HLT_PASS_RE('Hlt2TopoE[234]Body.*Decision')"
                       , 86 : "HLT_PASS_RE('Hlt2Topo[234]Body.*Decision')"
-                      , 87 : "HLT_NONTURBOPASS_RE('Hlt2.*')"
-                      , 88 : "HLT_TURBOPASS_RE('Hlt2(?!DebugEvent)(?!Transparent)(?!PassThrough).*Decision')|HLT_PASS_RE('.*Lumi.*Decision$')" # routing bit for Turbo stream
+                      , 87 : "HLT_NONTURBOPASS_RE('Hlt2.*Decision')"
+                      # routing bit for Turbo stream, includes lumi events.
+                      , 88 : "HLT_TURBOPASS_RE('Hlt2(?!DebugEvent)(?!Transparent)(?!PassThrough).*Decision') | HLT_PASS_RE('^Hlt1Lumi.*Decision$')"
 		              , 89 : "HLT_PASS_RE('Hlt2PassThrough.*Decision')"
                       , 90 : "HLT_PASS_RE('Hlt2.*Charm.*hhX.*Decision')"
                       , 91 : "HLT_PASS_RE('Hlt2.*Charm.*_hhX.*Decision')"
@@ -516,7 +515,6 @@ class HltConf(LHCbConfigurableUser):
                                    ("B2DX"           , "Hlt2B2D2.*Decision"),
                                    ("B2XGamma"       , "Hlt2.*Gamma.*Decision"),
                                    ("B2HH"           , "Hlt2B2HH.*Decision"),
-                                   ("Express"        , "Hlt2Express.*Decision"),
                                    ("Commissioning"  , "Hlt2(PassThrough|Transparent|Forward|DebugEvent).*Decision"),
                                    ("DisplVertices"  , "Hlt2DisplVertices.*Decision"),
                                    ("HighPtJets"     , "Hlt2HighPtJets.*Decision"),
@@ -755,22 +753,22 @@ class HltConf(LHCbConfigurableUser):
         ### account that Hlt2 missing on Hlt1 rejected events is not an error...
         _hlt1postamble = ( ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter,   'Hlt1RoutingBitsWriter', {'Hlt1DecReportsLocation': hlt1_decrep_loc,
                                                                                                          'Hlt2DecReportsLocation' : '',  } )
-                         , ( "EnableHltDecReports"  ,  HltDecReportsWriter,    'Hlt1DecReportsWriter',  {'SourceID' : 1, 
+                         , ( "EnableHltDecReports"  ,  HltDecReportsWriter,    'Hlt1DecReportsWriter',  {'SourceID' : 1,
                                                                                                          'InputHltDecReportsLocation' : hlt1_decrep_loc } )
                          , ( "EnableHltSelReports"  ,  HltSelReportsMaker,     'Hlt1SelReportsMaker',   dict( InputHltDecReportsLocation = hlt1_decrep_loc
                                                                                                             , OutputHltSelReportsLocation = hlt1_selrep_loc
                                                                                                             , **sel_rep_opts )  )
-                         , ( "EnableHltSelReports"  ,  HltSelReportsWriter,    'Hlt1SelReportsWriter',  {'SourceID' : 1, 
+                         , ( "EnableHltSelReports"  ,  HltSelReportsWriter,    'Hlt1SelReportsWriter',  {'SourceID' : 1,
                                                                                                          'InputHltSelReportsLocation': hlt1_selrep_loc } )
                          , ( "EnableHltTrkReports"  ,  HltTrackReportsWriter,  'Hlt1TrkReportsWriter',  {})
                          , ( "EnableHltVtxReports"  ,  HltVertexReportsMaker,  'Hlt1VtxReportsMaker',   {'OutputHltVertexReportsLocation' : hlt_vtxrep_loc } )
-                         , ( "EnableHltVtxReports"  ,  HltVertexReportsWriter, 'Hlt1VtxReporteWriter',  { 'SourceID' : 1, 
+                         , ( "EnableHltVtxReports"  ,  HltVertexReportsWriter, 'Hlt1VtxReporteWriter',  { 'SourceID' : 1,
                                                                                                           'InputHltVertexReportsLocation': hlt_vtxrep_loc } )
                          )
         _hlt2postamble = ( ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter, 'Hlt2RoutingBitsWriter', { 'Hlt1DecReportsLocation' : hlt1_decrep_loc,
                                                                                                         'Hlt2DecReportsLocation' : hlt2_decrep_loc,
-                                                                                                        'UpdateExistingRawBank'  : True} ) 
-                         , ( "EnableHltDecReports"  ,  HltDecReportsWriter,  'Hlt2DecReportsWriter',  { 'SourceID': 2, 
+                                                                                                        'UpdateExistingRawBank'  : True} )
+                         , ( "EnableHltDecReports"  ,  HltDecReportsWriter,  'Hlt2DecReportsWriter',  { 'SourceID': 2,
                                                                                                         'InputHltDecReportsLocation' : hlt2_decrep_loc } )
                          , ( "EnableHltSelReports"  ,  HltSelReportsMaker,   'Hlt2SelReportsMaker',  dict( InputHltDecReportsLocation = hlt2_decrep_loc,
                                                                                                            OutputHltSelReportsLocation = hlt2_selrep_loc,
@@ -832,4 +830,3 @@ class HltConf(LHCbConfigurableUser):
 
         #appendPostConfigAction( self.postConfigAction )
         GaudiKernel.Configurable.postConfigActions.insert( 0,  self.postConfigAction )
-

@@ -1,14 +1,17 @@
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
-! Purpose     : HLT Configuration 
+! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
+
+! 2015-04-23 - Roel Aaij
+ - Remove Express lines from routing bits.
 
 ! 2015-04-23 - Sean Benson
  - Turbo routing bits updated so only one needed.
 
 ! 2015-04-17 - Sascha Stahl
- - Added Hlt1HighVeloMultDecision and Hlt1HighVeloMultSinglePVDecision to HltInit.py .
+ - Added Hlt1HighVeloMultDecision and Hlt1HighVeloMultSinglePVDecision to HltInit.py.
 
 !========================= HltConf v12r7 2015-03-31 =========================
 
@@ -126,7 +129,7 @@
 
 ! 2014-07-16 - Gerhard Raven
  - when configuring the monitoring, do not define histogram entries
-   for empty sets of lines 
+   for empty sets of lines
  - automatically import all Hlt2Lines configurables, so no need to explicitly
    include this list here, and thus no need to modify this package when introducing
    new Hlt2Lines configurables
@@ -174,7 +177,7 @@
 ! 2014-04-01 - Sebastian Neubert
  - Added list of TrackReports writers to write several track locations
    configuration fed by TrackNames.trackingSources
- 
+
 
 !========================= HltConf v11r0 2014-03-11 =========================
 ! 2014-03-11 - Rob Lambert
@@ -205,7 +208,7 @@
 
 !========================= HltConf v10r1 2013-07-04 =========================
 ! 2013-05-21 - Sebastian Neubert
- - Added configuration and ids for VeloTT lines 
+ - Added configuration and ids for VeloTT lines
 
 !========================= HltConf v10r0p2 2013-05-16 =========================
 ! 2013-05-13 - Rob Lambert
@@ -247,21 +250,21 @@
 !========================= HltConf v9r22 2013-01-09 =========================
 ! 2013-01-09 - Eric van Herwijnen
  - python/HltConf/HltInit.py
-  - Added Hlt1MBMicroBiasLowMultVelo line for pA  
+  - Added Hlt1MBMicroBiasLowMultVelo line for pA
 
 ! 2012-12-20 - Jibo He
  - python/HltConf/HltInit.py
-  . included GEC pass through lines for pA  
+  . included GEC pass through lines for pA
 
 !========================= HltConf v9r21 2012-08-30 =========================
 ! 2012-08-29 - Johannes Albrecht
- - add Hlt1pALines in Hlt1.py and the lines in HltInit.py 
+ - add Hlt1pALines in Hlt1.py and the lines in HltInit.py
 
 ! 2012-08-27 - V. Gligorov
  - Add Hlt1HighPTJet line in HltInit
  - Add Ks->HHMuMu and hyperon lines to Hlt2.py
  - Add D->HHHKs line to Hlt2.py
- - Add new routing bits for hhX lines   
+ - Add new routing bits for hhX lines
 
 ! 2012-07-13 - Sascha Stahl
  - Added TrackAllL0Tight in to ANNSvc.
@@ -269,11 +272,11 @@
 !========================= HltConf v9r20 2012-06-19 =========================
 ! 2012-06-19 - E. van Herwijnen
  - Add routing bit 89 for Hlt2PassThrough
- 
+
 !========================= HltConf v9r19 2012-06-19 =========================
 ! 2012-06-13 - V. Gligorov
  - Add Hlt2 CEP lines
- - Modify tracking configs lower PT Rich kaons 
+ - Modify tracking configs lower PT Rich kaons
 
 !========================= HltConf v9r18 2012-05-16 =========================
 ! 2012-05-10 - Pieter David
@@ -285,7 +288,7 @@
 
 ! 2012-04-18 - B. VIAUD
   - The Hlt2CharmHadD02HHHHLines.py has been deteleted
-    from Hlt2Lines: remove the reference to it 
+    from Hlt2Lines: remove the reference to it
     in Hlt2.py.
 
 !========================= HltConf v9r16 2012-04-17 =========================
@@ -294,7 +297,7 @@
 
 !========================= HltConf v9r15 2012-03-20 =========================
 ! 2012-03-20 - Johannes Albrecht
-- change Express lines global postscale to 50Hz 
+- change Express lines global postscale to 50Hz
 
 !========================= HltConf v9r14 2012-03-16 =========================
 ! 2012-03-15 - V. Gligorov
@@ -304,7 +307,7 @@
  - Added Hlt1 displaced vertex line
 
 ! 2012-03-12 - P. Hopchev
- - Added the two new Hlt1Lines (Hlt1BeamGasCrossingForcedRecoFullZDecision and 
+ - Added the two new Hlt1Lines (Hlt1BeamGasCrossingForcedRecoFullZDecision and
    Hlt1BeamGasHighRhoVerticesDecision) in HltInit.py
 
 ! 2012-03-09 - V. Gligorov
@@ -314,7 +317,7 @@
  - EvH tagged for release
 
 ! 2012-02-27 - Benoit VIAUD
- - A few obsolete lines removed 
+ - A few obsolete lines removed
      Hlt2CharmSemilep2Had1MuForHHMuMu.py
      Hlt2CharmSemilepD02HHMuMu2SoftMuonsLines.py
      Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsLines.py
@@ -330,7 +333,7 @@
     Hlt2CharmHadTwoBodyForD4H.py --> Hlt2CharmHadTwoBodyForD02HHHH
 
 ! 2012-02-26 - Jibo He
- - Added Hlt2DiPhiTis to Hlt2.py 
+ - Added Hlt2DiPhiTis to Hlt2.py
 
 ! 2012-02-24 - Benoit VIAUD
  - New Lines for D->hhhh, D->hmumu and D->hhmumu modes
@@ -352,7 +355,7 @@
 
 !========================= HltConf v9r12 2012-01-25 =========================
 ! 2011-11-25 - Marcin Kucharczyk
-  - Add Hlt2HighPtJetsLines to Configuration.py and Hlt2.py with 
+  - Add Hlt2HighPtJetsLines to Configuration.py and Hlt2.py with
     routing bit (88)
 
 ! 2011-10-14 - Roel Aaij
@@ -376,7 +379,7 @@
  - define Hlt1L0HighSumETJetDecision
 
 ! 2011-06-30 - Johannes Albrecht
- - add routing bit for diMuon 
+ - add routing bit for diMuon
 
 !========================== HltConf v9r10  2011-06-24 ===================
 ! 2011-06-23 - V. Gligorov
@@ -388,7 +391,7 @@
 
 ! 2011-06-22 - Albert Puig
  - Readd Hlt2 radiative topological lines that were erased in the previous commit.
- 
+
 
 ! 2011-06-22 - Benoit Viaud
  - Add new lines for D0->HHMuMu using SecondLoop Muons.
@@ -432,9 +435,9 @@
    values, as in that case the decoding would use the Hlt1SelectionID...
    (this is a design mistake -- the fact that Hlt1 and Hlt2 end up in the same
    rawbank implies that the numbers share a single namespace, but in the configuration
-   in the HltANNSvc they do not share this namespace -- hence the need for an 
+   in the HltANNSvc they do not share this namespace -- hence the need for an
    explicit check. Fortunately, due to the number convention (Hlt2>50000, Hlt1<50000)
-   this problem hasn't happened yet, but there is no code which enforces this 
+   this problem hasn't happened yet, but there is no code which enforces this
    convention)
 
 ! 2011-Mar-29 - V. Gligorov
@@ -451,7 +454,7 @@
 ! 2011-03-23 - Gerhard Raven
  - protect vertex persistence against configurations without PV3D
    (i.e. VanDerMeer configs)
- - protect routing bits writer against missing L0 channels 
+ - protect routing bits writer against missing L0 channels
 
 !========================== HltConf v9r7 2011-03-18 ===================
 ! 2011-03-18 - Roel Aaij
@@ -465,7 +468,7 @@
  - tweak routing bits for stream definitions...
 
 ! 2011-03-16 - Gerhard Raven
- - Add two more routing bits to monitor all and lumi input rates (already have 
+ - Add two more routing bits to monitor all and lumi input rates (already have
    the L0 physics and beamgas input rate):
    3 : 'ODIN_TRUE' ,  4 : 'ODIN_TRGTYP == LHCb.ODIN.LumiTrigger
 
@@ -506,12 +509,12 @@
    are fixed to depend properly on the D2HHH lines.
 
 ! 2011-02-28 - Johannes Albrecht
- - Configuration.py: move nano banks to slots  
+ - Configuration.py: move nano banks to slots
                      add routing bits
 
 ! 2011-02-28 - Jibo He
  - Hlt2.py
-  + Added Hlt2BiKalmanFittedRichForLowPTProtonsForwardTracking 
+  + Added Hlt2BiKalmanFittedRichForLowPTProtonsForwardTracking
 
 ! 2011-Feb-24 - Patrick Spradlin
  - Added Hlt2CharmHadD02HHHHLinesConf to Hlt2Conf.__used_configurables__ list.
@@ -566,7 +569,7 @@
  - remove obsolete (DC06!) options files
 
 ! 2011-01-19 - A. Shires
- - Add Hlt2MuNTrackLinesConf to Hlt2.py 
+ - Add Hlt2MuNTrackLinesConf to Hlt2.py
 
 !========================== HltConf v9r0 2010-12-08 ===================
 ! 2010-11-29 - V. Gligorov
@@ -574,7 +577,7 @@
    forward tracking in HLT2, and remove some obsolete configurations.
 
 ! 2010-10-18 - Vladimir Gligorov
- - add Hlt1NoPVPassThroughDecision to HltInit  
+ - add Hlt1NoPVPassThroughDecision to HltInit
 
 !========================== HltConf v8r5 2010-09-29 ===================
 ! 2010-09-29 - Gerhard Raven
@@ -586,7 +589,7 @@
 
 !========================== HltConf v8r4 2010-09-02 ===================
 ! 2010-09-02 - Gerhard Raven
- - update routing bit 45 to avoid TrackPhoton pollution, and add bits for 
+ - update routing bit 45 to avoid TrackPhoton pollution, and add bits for
    Hlt1Track...
 
 !========================== HltConf v8r3 2010-08-26 ===================
@@ -609,7 +612,7 @@
 !========================== HltConf v8r2 2010-07-19 ===================
 ! 2010-07-18 - V. Gligorov
  - Remove an obsolete Hlt2 tracking configuration which had been
-   reintroduced by a misresolution of a commit conflict. 
+   reintroduced by a misresolution of a commit conflict.
 
 ! 2010-07-07 - Johannes Albrecht
  - add more HLT2 routing bits
@@ -629,7 +632,7 @@
  - add more routing bits
 
 ! 2010-06-15 - V. Gligorov
- - fix typo in new routing bits 
+ - fix typo in new routing bits
 
 ! 2010-06-14 - Johannes Albrecht
  - fix syntax error
@@ -647,7 +650,7 @@
 !========================== HltConf v8r0p1 2010-05-31 ===================
 ! 2010-05-30 - Gerhard Raven
  - add (if requested) add routingbit filter which is configured by
-   specifying RequireRoutingBits and VetoRoutingBits 
+   specifying RequireRoutingBits and VetoRoutingBits
  - add routing bit which is just L0 CALO
 
 !========================== HltConf v8r0 2010-05-28 ===================
@@ -668,11 +671,11 @@
  - Remove most references to PV2D from HltInit and Configuration.py
 
 ! 2010-05-23 - Jibo He
- - Hlt2.py 
+ - Hlt2.py
    + Added Hlt2B2KstareeLines
 
 ! 2010-05-19 - V. Gligorov
- - Add lifetime unbiased hadrons to Hlt1.py 
+ - Add lifetime unbiased hadrons to Hlt1.py
 
 ! 2010-05-07 - Jibo He
  - Hlt2.py
@@ -696,8 +699,8 @@
 ! 2010-04-13 - Gerhard Raven
  - remove HltReferenceRateSvc configuration -- now fully automated
 
-! 2010-04-13 - Francesco Dettori 
- - adding Hlt2Dst2D2XXLines to Hlt2.py 
+! 2010-04-13 - Francesco Dettori
+ - adding Hlt2Dst2D2XXLines to Hlt2.py
 
 !========================== HltConf v7r1   2010-04-13 ===================
 ! 2010-04-13 - Gerhard Raven
@@ -727,7 +730,7 @@
  - Continuing work on Savannah tasks #12691,13784.
    . Remove the swimming lines from Hlt1 as they are obsolete
      and soon to be cvs rm-ed anyway.
-   . Update the known tracking configurations in Hlt2. 
+   . Update the known tracking configurations in Hlt2.
 
 ! 2010-03-23 - V. Gligorov
  - Continuing work on Savannah tasks #12691,13784.
@@ -757,13 +760,13 @@
 
 ! 2010-02-26 - V. Gligorov
  - Follow developments in HltLine.HltPVs. Default reconstruction
-   now makes Forward tracks in container Hlt2/Track/Unfitted/Forward.  
+   now makes Forward tracks in container Hlt2/Track/Unfitted/Forward.
    See Savannah tasks 13784/12691 for details.
 
 ! 2010-02-24 - V. Gligorov
  - Follow continued reorganization of Hlt tracking by asking Hlt2.py
    to spell out explicitly the "vanilla" tracking scenario (forward
-   tracks, no fitting, no RICH, no seeding) when being configured. 
+   tracks, no fitting, no RICH, no seeding) when being configured.
 
 
 !========================== HltConf v6r5p1 2010-03-19 ===================
@@ -794,7 +797,7 @@
    defined two new alleys: Charm, B2LLX
 
 ! 2010-02-18 - V. Gligorov
- - Hlt2.py updated to follow recent changes to Hlt2PID in Hlt2SharedParticles 
+ - Hlt2.py updated to follow recent changes to Hlt2PID in Hlt2SharedParticles
 
 ! 2010-02-17 - Gerhard Raven
  - if no L0TCK defined, do not generate a canonical list of L0 channels
@@ -803,18 +806,18 @@
  - move options files from HltConf to Hlt2Lines to 'localize' them
 
 ! 2010-02-12 - Gerhard Raven
- - update names of beamgas, minibias and nobias 
+ - update names of beamgas, minibias and nobias
  - adopt to merging of Hlt1MiniBias and Hlt1NoBias configurables
  - adopt to changes in HltGlobalMonitor
 
 ! 2010-02-11 - V. Gligorov
- - Change SoftDiHadron to DiHadronSoft 
+ - Change SoftDiHadron to DiHadronSoft
 
 ! 2010-02-09 - Johannes Albrecht
  -  change express stream rate to 5Hz
 
 ! 2010-02-08 - Gerhard Raven
- - remove explicit rate limit on individual Hlt2ExpressLines when setting 
+ - remove explicit rate limit on individual Hlt2ExpressLines when setting
    express bit, this is now intrinsic in the line definition
  - put express stream rate limit into a slot
 
@@ -835,7 +838,7 @@
  - Changed done by Danielle Tostes (UFRJ - summer student).
  - Added Hlt2 lines to configureHltMonitoring.
  - Defined the grouping of lines in alley, according to the files in Hlt2Lines.
- - Added 2 more Hlt1 alleys for the monitoring: MinBias and BeamGas and 
+ - Added 2 more Hlt1 alleys for the monitoring: MinBias and BeamGas and
    combined in Hlt1 and Hlt2 SingleMuon and MuTrack to one monitoring alley.
 
 ! 2010-01-29 - Jaap Panman
@@ -846,7 +849,7 @@
 
 ! 2010-01-25 - Johannes Albrecht
  - Configuration.py: modify to include the Hlt2Express stream
- - Configuration.py: fix syntax error in second commit 
+ - Configuration.py: fix syntax error in second commit
 
 ! 2010-01-28 - Gerhard Raven
  - move some L0 specific configuration actions to Hlt1Lines
@@ -872,7 +875,7 @@
  - Hlt2.py : Cure bugs #61215 (Proto relations) and #54581 (calo relations)
 
 ! 2010-01-08 - V. Gligorov
- - python/HltConf/Hlt1.py : Add Hlt1HadronForSwimmingLines  
+ - python/HltConf/Hlt1.py : Add Hlt1HadronForSwimmingLines
 
 ! 2010-01-07 - J. Albrecht
  - remove obsolete TsaTool.opts
@@ -900,7 +903,7 @@
  - options/HltInit.py : add selections for using 3D primary vertices
    in the hlt1 lines
  - python/HltConf/Hlt1.py : Add the HadronViaT and HadronVeloOpen lines
-   to Hlt1 
+   to Hlt1
 
 ! 2009-12-09 - Gerhard Raven
  - add Hlt1L0CALO and Hlt1L0MUON (corresponding to the L0 channels
@@ -926,17 +929,17 @@
 
 ! 2009-11-25 - Patrick Koppenburg
  - The Hlt2 reconstruction is separated in blocks depending on what is actually
-    needed. Allows to run making only muons and pions without 
+    needed. Allows to run making only muons and pions without
     requiring the calo decoding, for instance.
     (https://savannah.cern.ch/task/?12690)
-   . Move Hlt2 reconstruction and PID to Hlt2PID in Hlt2SharedParticles 
+   . Move Hlt2 reconstruction and PID to Hlt2PID in Hlt2SharedParticles
      ~ Hlt2Line does not have a Reco property anymore
      ~ hlt2Reconstruction(self) goes to Hlt2PID
      ~ hlt2Tracks(self) goes to Hlt2PID
      ~ configureCalo(self) goes to Hlt2PID
    . Remove dependency on CaloReco
    . More to come
- - Requires tags pkoppenb_20091125 of HltConf, HltLine, Hlt2Lines, 
+ - Requires tags pkoppenb_20091125 of HltConf, HltLine, Hlt2Lines,
    HltSharedParticles
  - v6r0
 
@@ -959,8 +962,8 @@
  - Add bit 46 : "HLT_PASS_RE('Hlt1(?!Lumi)(?!Random)(?!NonRandom).*Decision')"
 
 ! 2009-11-04 - V. Gligorov
- - Hlt1.py 
-   . Follow renaming of Hlt1Lines files/classes 
+ - Hlt1.py
+   . Follow renaming of Hlt1Lines files/classes
 
 !========================== HltConf v5r1 2009-10-28 ===================
 ! 2009-10-30 - Magnus Lieng
@@ -971,13 +974,13 @@
  - New option EnableAcceptIfSlow that passes AcceptIfSlow True to all lines
 
 ! 2009-10-28 - Patrick Koppenburg
- - Add new slors AdditionalHlt1Lines and 2Lines, which allows users to 
+ - Add new slors AdditionalHlt1Lines and 2Lines, which allows users to
 	 test lines by hand. Usage:
 
 from Configurables import HltConf
 HltConf().AdditionalHlt1Lines = ['Hlt1BeamGasCrossingForcedRZReco']
 HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
-   
+
 
 ! 2009-10-26 - Patrick Koppenburg
  - XGamma renamed B2XGamma
@@ -988,7 +991,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
    got build _after_ HltConf)
 
 ! 2009-10-23 - Stephan Nies
- - included Cosmics in Hlt1.py again and update updated HltInit  
+ - included Cosmics in Hlt1.py again and update updated HltInit
 !========================== HltConf v5r0p1 2009-10-21 ===================
 
 ! 2009-10-21 - Gerhard Raven
@@ -997,14 +1000,14 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
 !========================== HltConf v5r0 2009-10-17 =====================
 ! 2009-10-16 - Gerhard Raven
  - make sure that HltThresholdSettings = None works
- - Hlt2Global does not need reconstruction 
+ - Hlt2Global does not need reconstruction
 
 ! 2009-10-15 - Patrick Koppenburg
  - All threshold settings moved to new package HltSettings
  - Increment to v5r0
 
 ! 2009-10-15 - Gerhard Raven
- - remove HltRecoSequence from Hlt2 sequence. This sequence is now included 
+ - remove HltRecoSequence from Hlt2 sequence. This sequence is now included
    in the lines that actually need it.
  - ALWAYS run the Hlt2 configuration, even if 'empty' Hlt2 (this possible now
    the above change has been made)
@@ -1033,7 +1036,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
 
 ! 2009-09-17 - Greig Cowan
  - Removed reference to specific JpsiX configurables which are now under control
-   of Hlt2B2JpsiXLines configurable. 
+   of Hlt2B2JpsiXLines configurable.
 
 ! 2009-09-15 - Gerhard Raven
  - add some missing photon lines
@@ -1046,12 +1049,12 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
  - added HltCosmicLine (also needs latest Hlt1Line)
 
 ! 2009-09-08 - Chris Jones
- - Suppress the checking of the ProcStatus object by the RICH HLT 
+ - Suppress the checking of the ProcStatus object by the RICH HLT
    reconstruction (Does not exist online).
 
 !========================== HltConf v4r3 2009-09-03 ===================
 ! 2009-09-03 - Gerhard Raven
- - add by default an L0 filter to endsequence & and add option to 
+ - add by default an L0 filter to endsequence & and add option to
    bypass this
 
 ! 2009-09-03 - Gerhard Raven
@@ -1061,14 +1064,14 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
  - Fix typo in warning in ThresholdUtils
 
 ! 2009-08-31 - Plamen Hopchev
- - in HltInit.py add the Hlt1BeamGasCrossingForcedRZRecoDecision 
+ - in HltInit.py add the Hlt1BeamGasCrossingForcedRZRecoDecision
 
 ! 2009-08-28 - Gerhard Raven
  - activate BeamGas lines, add BG to Hlt1
 
 ! 2009-08-26 - Patrick Koppenburg
  - Add Hlt1 Thresholds for 2010 Charm
- - Split ActiveLines into ActiveHlt1 and ActiveHlt2Lines, to allow easy 
+ - Split ActiveLines into ActiveHlt1 and ActiveHlt2Lines, to allow easy
    prototyping of either level.
 
 ! 2009-08-25 - Patrick Koppenburg
@@ -1085,7 +1088,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
  - move some import statements around to prevent 'premature import'
 
 ! 2009-08-24 - Patrick Koppenburg
- - Use CaloReco configurables 
+ - Use CaloReco configurables
  - Don't run B->LLK until calo is fixed
 
 ! 2009-08-19 - Gerhard Raven
@@ -1108,7 +1111,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
 ! 2009-08-13 - Gerhard Raven
  - add PV = True/False to Hlt2Line constructors
  - add Hlt2CommissioningLines
- - move LumiBankKillerAcceptFraction from Hlt1 to Configuration, as it 
+ - move LumiBankKillerAcceptFraction from Hlt1 to Configuration, as it
    is an option of the end sequence, not of Hlt1
 
 ! 2009-08-12 - Patrick Koppenburg
@@ -1139,19 +1142,19 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
       4-body lines turned off performed significantly better than those with
       the 4-body lines turned on, so the changes committed exclude all of the
       4-body lines from ActiveLines
-      
+
 ! 2009-08-10 - Patrick Koppenburg
  - Make sure L0DUFormRawAlg is run when running Hlt2 requiring L0 but
    not running Hlt1
 
 ! 2009-08-10 - Patrick Koppenburg
  - Last word (?) on ZPositions. Mail by Wouter :
-     The problem is that the standard 'ConfiguredFastFitter' removes the states 
-     by doing    
-        fitter.AddDefaultReferenceNodes = False     
+     The problem is that the standard 'ConfiguredFastFitter' removes the states
+     by doing
+        fitter.AddDefaultReferenceNodes = False
      This used to be
         fitter.ZPositions = []
-     So, to get the relevant states you shouldn't comment out the line, but 
+     So, to get the relevant states you shouldn't comment out the line, but
      restore the default value
         fitter.AddDefaultReferenceNodes = True
    -> do this.
@@ -1168,7 +1171,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
  - add Hlt1Incident to Hlt1_Nominal active lines
 
 ! 2009-08-06 - Patrick Koppenburg
- - Implement the proof of principle below. 
+ - Implement the proof of principle below.
  - New files:
    . python/HltConf/Charming_Nominal.py  : 2e32 settings for Charming scenario
    . python/HltConf/Hadronic_Nominal.py  : 2e32 settings for Hadronic scenario
@@ -1185,7 +1188,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
  Warning : Use
    HltConf().ThresholdSettings = 'Effective_Nominal' or any other valid
  or
-   DaVinci().HltThresholdSettings = 'Effective_Nominal' or any other valid 
+   DaVinci().HltThresholdSettings = 'Effective_Nominal' or any other valid
  or you will get a warning and use the default cuts for all lines.
 
 ! 2009-08-05 - Patrick Koppenburg
@@ -1269,10 +1272,10 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
  - Add Inclusive Phi cuts (read from Vava/Kim/Magnus slides at Hlt2/Phy meeting)
  - Use Configurables in threshold settings, not 'PU', 'HA', ...
    . Adapt Hlt1 and Hlt2 accordingly
- - Add B2LLX Lines to exclusive 
+ - Add B2LLX Lines to exclusive
 
 ! 2009-07-20 - Patrick Koppenburg
- - First working version of Hlt2 threshold settings. Presently only topo 
+ - First working version of Hlt2 threshold settings. Presently only topo
    implemented
    . HltThresholdSettings : Prescales need to be dictionaries
                             use Configurables names instead of shortcuts
@@ -1281,7 +1284,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
 
 ! 2009-07-20 - Patrick Koppenburg
  - Added template Hlt2 configuration to HltThresholdSettings. 100% untested.
- - First set of changes to Configurations.py and Hlt1.py : Just a reshuffling 
+ - First set of changes to Configurations.py and Hlt1.py : Just a reshuffling
    of Hl1t methods and slots (!) between Configuration.py and Hlt1.py.
    . Decoding of Hlt1 thresholds goes from Configuration to Hlt1
    . End sequence stuff goes from Hlt1 to Configuration
@@ -1289,7 +1292,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
  - tagged pkoppenb_20090720a (note the a)
 
 ! 2009-07-18 - Gerhard Raven
- - use regex where appropriate: no longer need eg. HltLumiDecision or 
+ - use regex where appropriate: no longer need eg. HltLumiDecision or
     HltVeloClosingDecision or even Hlt1IgnoringLumi..
 
 ! 2009-07-16 - Patrick Koppenburg
@@ -1332,7 +1335,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
 
 !========================== HltConf v3r3 2009-07-03 ===================
 ! 2009-07-03 - Gerhard Raven
- - avoid use of data-on-demand svc 
+ - avoid use of data-on-demand svc
    (needs corresponding version of Hlt1Lines to use explicit
    rawbank decoding!)
 
@@ -1429,12 +1432,12 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
  - add input/output matchmaking verification for Hlt2
 
 ! 2009-05-05 - Antonio Perez-Calero
- - Added new line with alg for bunch current monitoring to lumi lines. Commented 
-	 for the time being to avoid conflicts, as PassIgnoringLumiLines seems to be able to 
+ - Added new line with alg for bunch current monitoring to lumi lines. Commented
+	 for the time being to avoid conflicts, as PassIgnoringLumiLines seems to be able to
 	 handle only 4 lumi lines.
 
 ! 2009-05-01 - Gerhard Raven
- - add a module HltThresholds which contains predefined sets of settings 
+ - add a module HltThresholds which contains predefined sets of settings
    which are selected with HltConf().ThresholdSettings = "Name"
    Available settings are sofar Miriam_20090430, FEST
  - add DataType -> settings map to HltThresholds python module
@@ -1450,7 +1453,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
  - remove typename from generated instance name in Hlt2Members
  - add Hlt1VeloXXX in front of code in velolines...
  - remove V0 making from Hlt2Particles.opts -- now in Hlt2SharedParticles' V0.py
- - add possibility to explicitly overrule outputSelection of a bindMembers 
+ - add possibility to explicitly overrule outputSelection of a bindMembers
    instance
  - make it possible for bindMembers to have an outputSelection which is a list
 
@@ -1472,7 +1475,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
 
 ! 2009-04-15 - Gerhard Raven
  - remove HltDecReportsMaker, no longer needed as Hlt2Global is
-   explicitly set (and that was the only remaining thing HltDecReportsMaker 
+   explicitly set (and that was the only remaining thing HltDecReportsMaker
    did)
 
 !========================== HltConf v2r7 2009-04-13 ===================
@@ -1486,7 +1489,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
  - some clean up of Hlt2Member, Hlt2Line
 
 ! 2009-04-10 - Gerhard Raven
- - make Hlt2Member support substitution of bindMembers instances 
+ - make Hlt2Member support substitution of bindMembers instances
    in InputLocation
 
 ! 2009-04-07 - Patrick Koppenburg
@@ -1526,7 +1529,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
  - switch on more lumi counters in HltLumiLines.py and LumiCounterDefinition.py
 
 ! 2009-04-02 Jose A. Hernando
- - options/HltInit.py InfoID have to start from 1000, 
+ - options/HltInit.py InfoID have to start from 1000,
    numbers below 1000 are reserved for thr tracking group
 
 ! 2009-04-01 - Gerhard Raven
@@ -1554,7 +1557,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
    directly.
    HltLinesConfigurableUser introduces 'Prescale' and 'Postscale' slots,
    which contain dictionaries of 'name' -> pre/postvalues. These get
-   applied to each 'line' by adding 'prescale = self.prescale' and 
+   applied to each 'line' by adding 'prescale = self.prescale' and
    'postscale = self.postscale' to the constructor calls of the line,
    which will trigger a callback with the name of the line which is
    'matched' with the 'name' in the dictionary (wildcards are allowed).
@@ -1571,7 +1574,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
    and add RichRecSys as a dependency in the requirements in order to allow
    Hlt2 to run -- this is at best a temporary hack until this gets sorted
    out correctly...
-  
+
 ! 2009-03-20 - Marco Cattaneo
  - Remove RichRecSysConf from _used_configurables_ of Configuration.py, and add
    Configuration.py to ConfUserModules in requirements. Should fix problem of
@@ -1588,15 +1591,15 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
  - one more 'import' movements to reduce dependency warnings
  - use XYZ.addTool(PhysDesktop) instead of XYZ.addTool(PhysDesktop())
    to avoid picking up an existing instance of PhysDesktop (which is what
-   PhysDesktop() returns!) which could already have been configured by someone 
+   PhysDesktop() returns!) which could already have been configured by someone
    else...
 
 ! 2009-03-12 - V. Gligorov & P. Spradlin
- - Added fast-fit options used by topological in Hlt2TrackFitForTopo.py 
+ - Added fast-fit options used by topological in Hlt2TrackFitForTopo.py
 
 ! 2009-03-12 - Gerhard Raven
  - more 'import' movements to reduce dependency warnings
- - improve daisychaining of output and input -- recognize algorithms which have 
+ - improve daisychaining of output and input -- recognize algorithms which have
    the OutputSelection attribute.
  - use the above in HltMuonLines.py, HltElectronLines.py and HltPhotonLines.py
 
@@ -1608,7 +1611,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
 
 ! 2009-03-11 - Gerhard Raven
  - improve HltFastTrackFit.py using new feature ConfiguredFastTrackFitter.ConfiguredFitters' ConfiguredFastFitter
- - move 'import' statements closer to place they are used to 
+ - move 'import' statements closer to place they are used to
    attempt to avoid warnings about missing dependencies
 
 ! 2009-03-11 - Antonio Perez-Calero
@@ -1627,14 +1630,14 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
 
 ! 2009-03-04 - Antonio Perez-Calero
  - Changes in muon+track lines in HltMuonLines.py to use VertexTrack1PT, VertexTrack2PT and same for IPs.
-   This way, we can control the cuts on IP and Pt being applied to the first track of our selected vertex 
+   This way, we can control the cuts on IP and Pt being applied to the first track of our selected vertex
    (muon) or the second, extra track, both before and after the fast track fit.
 
 ! 2009-03-04 - Mariusz Witek
  - add slot into HltElectronLines.py for global optimization
 
 ! 2009-03-03 - Gerhard Raven
- - add skeleton python to group lines into alleys for monitoring 
+ - add skeleton python to group lines into alleys for monitoring
    note: the above isn't used yet
 
 ! 2009-02-24 - Jaap Panman
@@ -1666,7 +1669,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
 ! 2009-02-19 - Antonio Perez-Calero
  - Added a new lifetime unbiased line to muon+track as a trigger for JPsi's
  - Changed muon+track lines structure to "one cut per algorithm" style
- - Some revision and reordering in the algorithms: 
+ - Some revision and reordering in the algorithms:
 		-ask only for a PV2D if any muon cand with enough pt
 		-PV2D not needed for the muon+track for JPsi
     -fast fit for both lines
@@ -1675,7 +1678,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
  - rewrite HltLumiLines to follow modern conventions
 
 ! 2009-02-18 - Chris Jones
- - Add RichRecSysConf to the list of (potentially) used Configurables 
+ - Add RichRecSysConf to the list of (potentially) used Configurables
    in HltConf()
 
 ! 2009-02-18 - Gerhard Raven
@@ -1686,7 +1689,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
 
 ! 2009-02-17 - Leandro de Paula
   - HltMuonLines.py - Shorter muon lines names
-                    - Implement FastFit 
+                    - Implement FastFit
                     - disentangle MuonNoGlob and MuonGEC Lines
 
 ! 2009-02-17 - Patrick Koppenburg
@@ -1713,13 +1716,13 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
 
 ! 2009-02-03 - Gerhard Raven
  - add support for (nested) tool calls in Hlt1Lines, eg. the following:
-               Hlt1Member ('TF', 'AntiEle' , FilterDescriptor = ['AntiEleConf,>,0.5'] 
+               Hlt1Member ('TF', 'AntiEle' , FilterDescriptor = ['AntiEleConf,>,0.5']
                           , tools = [ Hlt1Tool( L0ConfirmWithT, tools = [ Hlt1Tool(PatConfirmTool, nSigmaX = 9 ) ], particleType = 2 )]
                           )
    will add a (private)( L0ConfigWithT tool, which the property
    particleType set to 2, and it will use a tool of type PatConfirmTool
    with nSigmaX set to 9.
-   One caveat: a public tool configurable instance with 'dummy' in the name 
+   One caveat: a public tool configurable instance with 'dummy' in the name
    is created in addition. This is due to a limitation of 'addTool'....
 
 
@@ -1736,7 +1739,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
 
 !========================== HltConf v2r1 2009-02-03 ===================
 
-! 2009-02-03 - Gerhard Raven 
+! 2009-02-03 - Gerhard Raven
  - remove L0Force-prescaled decision; causes trouble in TDET, which has
    no L0DU...
 
@@ -1764,8 +1767,8 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
  - add 'all' L0 candidates to HltANNSvc
 
 ! 2009-01-15 - Antonio Perez-Calero
- - further refinements in muon+track line in HltMuonLines.py: move cut values 
-   to __slots__ and added all cuts to be redone after track fast fit 
+ - further refinements in muon+track line in HltMuonLines.py: move cut values
+   to __slots__ and added all cuts to be redone after track fast fit
 
 ! 2009-01-15 - Antonio Perez-Calero
  - rewrite muon+track inside HltMuonLines.py, now also using fast fit as the hadron alley
@@ -1798,13 +1801,13 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
 
 ! 2009-01-07 - Gerhard Raven
  - add line which accepts L0 'forced' triggers in HltCommissioningLines.py
- - automatically recognize (for daisy-chaining) the output generated by 
+ - automatically recognize (for daisy-chaining) the output generated by
    HltL0{Calo,Muon}Candidates
- - add possibility to convert 'all' L0 Muon candidates 
+ - add possibility to convert 'all' L0 Muon candidates
  - use the above in photon and electron lines
  - renumber id of commissioning decisions
  - push use of units.opts to the one place it is needed...
- - slightly change use of L0 muon candidates in HltMuonLines.py 
+ - slightly change use of L0 muon candidates in HltMuonLines.py
    WARNING: this is not quite optimal yet wrt. TISTOS, and needs to be improved
  - add Incident line
  - persist PV2D if present
@@ -1850,7 +1853,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
 
 ! 2008-12-17 - Gerhard Raven
  - allow seperate ODIN, L0DU and HLT stages in HltLine
- - Configuration.py: replace HltInit.opts by HltInit.py, 
+ - Configuration.py: replace HltInit.opts by HltInit.py,
                      remove (optional) inclusion of obsolete and non-existant files
  - add HltL0Candidates.py as module: to be used for common conversion of L0 Candidates
  - use HltL0Candidates in HltL0Lines
@@ -1868,7 +1871,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
 ! 2008-12-15 - Gerhard Raven
  - remove 3D PV from Hlt1RecoSequence -- seems to be not used, fixes
    problem with PhotonLines which use Hlt1RecoSequence...
- - HltConf: make 'oldStyle' default to False 
+ - HltConf: make 'oldStyle' default to False
 
 ! 2008-12-14 - Gerhard Raven
  - remove explicit decoding of T and TT
@@ -1881,7 +1884,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
 
 ! 2008-12-12 - Vanya BELYAEV
 
- - HltConf/Hlt1Units.py 
+ - HltConf/Hlt1Units.py
    add the objects for "track-upgrade" and "track-match"
 
 ! 2008-12-12 - Jaap Panman
@@ -1889,8 +1892,8 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
    HLTLumiLines and HltLumiSequences
 
 ! 2008-12-10 - Vanya BELYAEV
- - HltConf/HltLine.py 
-   put few "deepcopy" in various places to deal propertly with 
+ - HltConf/HltLine.py
+   put few "deepcopy" in various places to deal propertly with
    mutable arguments
 
 ! 2008-12-09 - Gerhard Raven
@@ -1898,7 +1901,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
  - move HltANNSvc configuration from .opts to .py
 
 ! 2008-12-09 - Mariusz Witek
- - update python options for Photon and Electron lines 
+ - update python options for Photon and Electron lines
 
 ! 2008-12-08 - Gerhard Raven
  - in HltL0Lines, replace HltL0CaloPrepare and HltL0MuonPrepare with
@@ -1910,25 +1913,25 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
  - create dedicated 'lumiExclusive' decision to trigger lumiStripper
 
 ! 2008-12-05 - Gerhard Raven
- - remove PA from Hlt1 alias 
+ - remove PA from Hlt1 alias
 
 ! 2008-12-02 - Gerhard Raven
  - add HltL0Lines: straight promotion of L0 decision, with a postscaler of 1e-6
 
 !========================== HltConf v1r7 2008-12-01 ===================
 ! 2008-12-01 - Gerhard Raven
- - do not add PV2D to output -- in some configs, it isn't there 
+ - do not add PV2D to output -- in some configs, it isn't there
 
 !========================== HltConf v1r6 2008-11-24 ===================
 ! 2008-11-22 - Tomasz Skwarnicki
  - Add HltDecReportsMaker to HltEndSequence in Hlt1.py to add Hlt2 decisions in new config.
 
 ! 2008-11-20 - Jaap Panman
- - Add options for monitoring task (HltLumiReadBuffer.py, 
+ - Add options for monitoring task (HltLumiReadBuffer.py,
    HltJob_readBufferPy.opts)
 
 ! 2008-11-19 - Gerhard Raven
- - Property detType of RawBankToSTLiteClusterAlg is now called DetType. 
+ - Property detType of RawBankToSTLiteClusterAlg is now called DetType.
    Update HltRecoSequence.py accordingly
 
 ! 2008-11-17 - Patrick Koppenburg
@@ -1938,13 +1941,13 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
  - added HltPersistentOutput sequence to "oldStyle" in HltConf()
 
 ! 2008-11-04 - Patrick Koppenburg
-  - Renamed all PhysDesktop.InputLocations not to request Phys as TES location. 
+  - Renamed all PhysDesktop.InputLocations not to request Phys as TES location.
     It is actually HLT/, but the PhysDesktop will take care of finding that.
   #
   # WARNING : This requires versions of DaVinciKernel from 31 Oct otr more recent
   #           and the corresponding DaVinciTools. This is not compatible
   #           with DaVinci v20r3.
-  #     
+  #
 
 !========================== HltConf v1r5 2008-11-13 ===================
 
@@ -1958,7 +1961,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
  - New options for Ecal Alley (.opts)
 
 ! 2008-10-31 - Gerhard Raven
- - follow updates in GaudiKernel 
+ - follow updates in GaudiKernel
  - enable writing of SelReports
  - phase out the use of 'Dummy'
 
@@ -1972,20 +1975,20 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
    and in routing bits writer
 
 ! 2008-10-24 - Patrick Koppenburg
- - Instead of HltType "Hlt1|Hlt2", disliked by Gerhard, do 
-	 Hlt2IgnoreHlt1Decision = True 
+ - Instead of HltType "Hlt1|Hlt2", disliked by Gerhard, do
+	 Hlt2IgnoreHlt1Decision = True
 
 ! 2008-10-23 - Patrick Koppenburg
  - Translate Hlt2.opts to Hlt2.py
  - Remove Hlt.opts. It's not used anywhere.
- - Add the possibility to do "Hlt1|Hlt2" in HltConf(). This runs Hlt1 and then Hlt2 
+ - Add the possibility to do "Hlt1|Hlt2" in HltConf(). This runs Hlt1 and then Hlt2
    irrespective of the Hlt1 decision.
 
 ! 2008-10-23 - Gerhard Raven
  - Update HltLine so that it warns if 'outputSelection' doesn't match 'decisionName'
    if it exists
- - Update lines so that they satisfy the above 
- - replace ODIN,L0DU and HltDecReports filters by 'hybrids' 
+ - Update lines so that they satisfy the above
+ - replace ODIN,L0DU and HltDecReports filters by 'hybrids'
  - make Hlt1Global an ordinary Line with an exceptional name
  - empty sequencer optimization in HltLine: if empty, skip it...
 
@@ -1993,7 +1996,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
  - update of HltInit.opts
 
 ! 2008-10-16 - V Gligorov
- - update of HltHadAlleyConfSequenceForSwimming.opts 
+ - update of HltHadAlleyConfSequenceForSwimming.opts
 
 ! 2008-10-16 - Tomasz Skwarnicki
  - update of HltInit.opts
@@ -2014,7 +2017,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
  - add createDecReportsHack to Hlt1 sequencer
 
 ! 2008-10-01- Leando de Paula
- - Change HltMuonAlleyConfSequence.opts to be compatible with new DeltaPTool 
+ - Change HltMuonAlleyConfSequence.opts to be compatible with new DeltaPTool
 
 ! 2008-09-30 - Gerhard Raven
  - fix default for configurable, default to oldstyle, Hlt1 + Hlt2
@@ -2032,7 +2035,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
 ! 2008-09-19 - Gerhard Raven
  - further support for 'bindMembers'
  - use 'bindMembers' in various lines
- - add configurable 
+ - add configurable
 
 !========================== HltConf v1r3 2008-09-21 ===================
 
@@ -2075,7 +2078,7 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
     catch error on printout when a (sub)sequence is configured with old-style options
 ! 2008-08-25 - Gerhard Raven
  - python/HltConfig/Hlt1Line.py
-    o allow one to specify 'lines' that should NOT contribute (directly) 
+    o allow one to specify 'lines' that should NOT contribute (directly)
       to the trigger decision
     o allow one to specify tool configurations (highly experimental!)
 
@@ -2091,45 +2094,44 @@ HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
  - python/HltConf/Hlt1Line.py
 
    add new keyword HLT into the line constructors.
-   new keyword is a an argument for HltSelectionFilter algorithm, 
+   new keyword is a an argument for HltSelectionFilter algorithm,
    to be used instead of L0-filter.
 
    also add few public functions:
-    
-     - hlt1InputSelections 
-          get tuple with all known input selections 
+
+     - hlt1InputSelections
+          get tuple with all known input selections
 
      - hlt1OutputSelection
-          get tuple with all known outpue selections 
+          get tuple with all known outpue selections
 
      - hlt1Selections
           get dictionary  with all known selections:
-         'Input'        : all input  selections 
-         'Output'       : all output selections 
-         'All'          : all input&output selections 
-         'Input-Output' : all unmatched input selections 
-         'Output-Input' : all unmatched output selections 
-         'Input&Output' : all matched selections 
- 
+         'Input'        : all input  selections
+         'Output'       : all output selections
+         'All'          : all input&output selections
+         'Input-Output' : all unmatched input selections
+         'Output-Input' : all unmatched output selections
+         'Input&Output' : all matched selections
+
 
 
 ! 2008-08-07 - Vanya BELYAEV
 
 
  - python/HltConf/HltLine.py
-   
-     add the method terminus to get the terminus (decision) of the line 
+
+     add the method terminus to get the terminus (decision) of the line
 
 
 ! 2008-08-07 - Vanya BELYAEV
 
  - new package
 
-   currently contains only the python modules for creation of configurables 
+   currently contains only the python modules for creation of configurables
    for Hlt1 "lines"
 
 
 ! -----------------------------------------------------------------------------
-! The END 
+! The END
 ! -----------------------------------------------------------------------------
-
