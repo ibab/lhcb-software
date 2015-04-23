@@ -40,6 +40,9 @@
 <PRE>
   Use Gaudi v26r1
   Updated/new packages:	
+     DAQEvent            v9r18    Event
+     GaudiObjDesc        v11r22
+     OMAlib              v4r5     Online
      Controller          v0r17    Online
      EventBuilder        v0r7     Online
      FarmConfig          v0r13    Online
