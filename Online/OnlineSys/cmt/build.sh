@@ -28,18 +28,19 @@ then
         echo "Now building configuration: $CMTCONFIG "
         if test $quiet = 1; 
 	then
-            export QUIET;
+            export QUIET=1;
 	    unset VERBOSE;
 	fi;
         if test $clean = 1; 
 	then
 	    $show ${CMTROOT}/${CMTBIN}/cmt.exe broadcast "rm -rf ../${CMTCONFIG} || /bin/true";
+            make clean;
 	    rm -rf ../../InstallArea;
 	fi;
-        if test $config = 1;
-        then
-            $show ${CMTROOT}/${CMTBIN}/cmt.exe broadcast "${CMTROOT}/${CMTBIN}/cmt.exe config";
-	fi;
+        #if test $config = 1;
+        #then
+        #    $show ${CMTROOT}/${CMTBIN}/cmt.exe broadcast "${CMTROOT}/${CMTBIN}/cmt.exe config";
+	#fi;
         if test $nobuild = 1;
         then 
            echo "Do not build ..... ${i}";
@@ -47,7 +48,8 @@ then
         fi;
         if test -e build_${CMTCONFIG}.log; then $show rm -f build_${CMTCONFIG}.log; fi;
         if test -e build_${CMTCONFIG}.log.tmp; then $show rm -f build_${CMTCONFIG}.log.tmp; fi;
-	$show ${CMTROOT}/${CMTBIN}/cmt.exe broadcast cmt make -j 8 >build_${CMTCONFIG}.log.tmp 2>&1;
+	#$show ${CMTROOT}/${CMTBIN}/cmt.exe broadcast cmt make -j 8 >build_${CMTCONFIG}.log.tmp 2>&1;
+        $show make -j 8 >build_${CMTCONFIG}.log.tmp 2>&1;
         $show cat build_${CMTCONFIG}.log.tmp \
 	    | grep -v "#CMT---> " \
 	    | grep -v "${CMTCONFIG}.make ok" \

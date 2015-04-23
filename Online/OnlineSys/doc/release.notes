@@ -6,6 +6,26 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v5r18>2015-04-23 OnlineSys v5r18</A></H1>
+<PRE>
+  Use Gaudi v26r1
+  Updated/new packages:	
+     Camera              v1r30    Online
+     Controller          v0r18    Online
+     EventBuilder        v0r9     Online
+     FarmConfig          v0r14    Online
+     Gaucho              v7r38    Online
+     GauchoAppl          v1r23    Online
+     GaudiOnline         v2r79    Online
+     GaudiOnlineTests    v1r5     Online
+     OnlineAlign         v0r5     Online
+     OnlineBase          v1r32    Online
+     OnlineKernel        v2r22    Online
+     PyDIM               v2r14    Online
+     ROMon               v1r52    Online
+     Writer              v1r51    Online
+</PRE>
+
 <H1><A NAME=v5r17>2015-03-16 OnlineSys v5r17</A></H1>
 <PRE>
   Use Gaudi v26r1
