@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-04-23 - Andrea Contu
+ - Fix to default_config for StrippingBandQ/StrippingUpsilonExotic.py
+
 ! 2015-04-18 - Vanya Belyaev
  - StrippingCharm/StrippingPromptCharm.py
    add a line for Xic0 -> Lc+ pi-    (the decay of s-quark in charm baryon)

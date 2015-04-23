@@ -168,8 +168,8 @@ default_config = {
     'NAME'        :   'UpsilonExotic'        ,
     'WGs'         : [ 'BandQ' ]              ,
     'CONFIG'      : _default_configuration_  , 
-    'BUILDERTYPE' :   'PsiX0Conf'            ,
-    'STREAMS'     : {}
+    'BUILDERTYPE' :   'UpsilonExoticConf'            ,
+    'STREAMS'     : ['Dimuon']
     }
 # =============================================================================
 ## @class  UpsilonExoticConf
