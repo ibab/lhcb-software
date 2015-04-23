@@ -4,10 +4,12 @@ global restore_args
 restore_args = ''
 
 sep = '/'
+
 checkpoint_dir = '/group/online/dataflow/cmtuser/checkpoints'
 checkpoint_local_area = '/dev/shm'
 checkpoint_local_area = '/localdisk/checkpoints'
 line = "====================================================================================="
+
 
 class RunInfo:
   def __init__(self, runinfo):
@@ -21,10 +23,18 @@ class RunInfo:
         setattr(self,i,getattr(Online,i))
 
 class Checkpoint:
-  def __init__(self, runinfo):
+  def __init__(self, runinfo, config_brunel):
+    global checkpoint_local_area
     self.runinfo = runinfo
-    self.task_type = 'Moore1' # FixME: runinfo.HLTType
-    self.torrent_file = self._getTorrentFile()
+    self.config_brunel = config_brunel
+    
+    if self.config_brunel:
+      self.task_type      = 'OnlineBrunel' # FixME: runinfo.HLTType
+      ##checkpoint_local_area = checkpoint_dir
+    else:
+      self.task_type      = 'Moore1' # FixME: runinfo.HLTType
+
+    self.torrent_file   = self._getTorrentFile()
     self.checkpoint_bin = os.environ['CHECKPOINTING_BIN']
     self.restore = self.checkpoint_bin + '/bin/restore.exe'
     if self.torrent_file:
@@ -32,21 +42,25 @@ class Checkpoint:
       self.lib_dir = os.path.dirname(self.target_path)+'/lib'
 
   def _getTorrentFile(self):
-    if self.runinfo.MooreStartupMode > 1:
-      try:
+    try:
+      if (self.config_brunel and self.runinfo.RecoStartupMode > 1) or self.runinfo.MooreStartupMode > 1:
         directory = self.checkpointLocationDir() 
         for i in os.listdir(directory):
           idx=i.find('.data')
           if idx>0 and idx==len(i)-5:
             return i
-      except Exception,X:
-        print 'echo "[ERROR] '+str(X)+'";'
-        return None
+    except Exception,X:
+      print 'echo "[ERROR] '+str(X)+'";'
     return None
 
   def checkpointRelativeDir(self):
     ri = self.runinfo
-    if ri.MooreOnlineVersion == "" or ri.MooreOnlineVersion == "DEFAULT":
+    if self.config_brunel:
+      Mapping = os.path.basename(ri.ConditionsMapping)
+      checkpoint_reloc = sep+'Brunel'+sep+ri.OnlineBrunelVersion+sep+\
+          ri.HLTType+sep+ri.CondDBTag+sep+ri.DDDBTag+sep+\
+          Mapping+sep+self.task_type
+    elif ri.MooreOnlineVersion == "" or ri.MooreOnlineVersion == "DEFAULT":
       checkpoint_reloc = sep+ri.HltArchitecture+sep+ri.OnlineVersion+sep+ri.HLTType
     else:
       Mapping = os.path.basename(ri.ConditionsMapping)
@@ -71,8 +85,11 @@ class Checkpoint:
   def initProcess(self):
     self.output('unset CHECKPOINT_DIR;') \
         .output('unset CHECKPOINT_FILE;') \
-        .output('unset LD_PRELOAD;') \
-        .output('export PYTHONPATH=/group/online/dataflow/options/'+self.runinfo.PartitionName+'/HLT:${PYTHONPATH};')
+        .output('unset LD_PRELOAD;')
+    if self.config_brunel:
+      self.output('export PYTHONPATH=/group/online/dataflow/options/'+self.runinfo.PartitionName+'/RECONSTRUCTION:${PYTHONPATH};')
+    else:
+      self.output('export PYTHONPATH=/group/online/dataflow/options/'+self.runinfo.PartitionName+'/HLT:${PYTHONPATH};')
     return self
 
   def addSlaves(self):
@@ -84,12 +101,14 @@ class Checkpoint:
         .output('export LD_PRELOAD='+self.checkpoint_bin+'/lib/libCheckpointing.so;') \
         .output('export CHECKPOINT_SETUP_OPTIONS=${FARMCONFIGROOT}/options/Empty.opts;')
 
+  #=======================================================================================
   def setupForking(self):
     return self.initProcess().addSlaves() \
         .output('export APP_STARTUP_OPTS=-forking;') \
         .output('export CHECKPOINTING_BIN='+self.checkpoint_bin+';') \
         .output('export LD_PRELOAD='+self.checkpoint_bin+'/lib/libCheckpointing.so;')
 
+  #=======================================================================================
   def setupCheckpointFile(self):
     self.output('export CHECKPOINT_DIR='+os.path.dirname(self.target_path)+';') \
         .output('export CHECKPOINT_FILE='+self.target_path+';') \
@@ -97,6 +116,7 @@ class Checkpoint:
         .output('export CHECKPOINT_RESTART_OPTIONS=${FARMCONFIGROOT}/options/CheckpointRestart.opts;')
     return self
 
+  #=======================================================================================
   def extractLibs(self):
     self.output(self.restore + ' -p 4 -x -C -i '+self.target_path+' -l '+self.lib_dir+'/;') 
     self.output('if test ! -d "'+self.lib_dir+'"; then') \
@@ -107,10 +127,18 @@ class Checkpoint:
         .output('fi;')
     return self
 
+  #=======================================================================================
+  def setupRestoreEnv(self):
+    return self.initProcess().addSlaves() \
+        .output('export APP_STARTUP_OPTS=-restore;') \
+        .output('export CHECKPOINTING_BIN='+self.checkpoint_bin+';')
+
+  #=======================================================================================
   def setupRestore(self):
     ldir = self.checkpointRelativeDir()
     relocate_path = ldir+sep+self.torrent_file
     self.initProcess().setupCheckpointFile() \
+        .output('echo "[ERROR] Setup restore process for %s";'%(self.task_type,)) \
         .output('export APP_STARTUP_OPTS=-restore;') \
         .output('RESTORE_CMD="exec -a ${UTGID} '+self.restore+' -p 4 -e -l '+\
                   self.lib_dir+' -i '+self.target_path+'";') \
@@ -122,6 +150,7 @@ class Checkpoint:
         .output('fi;')
     return self.addSlaves()  # Normal running
 
+  #=======================================================================================
   def copyTorrent(self):
     ldir = self.checkpointRelativeDir()
     relocate_path = self.checkpointRelativeDir()+sep+self.torrent_file
@@ -136,41 +165,90 @@ class Checkpoint:
         .output('fi;')
 
 #=========================================================================================
-def configureForRunning(runinfo):
-  ri = RunInfo(runinfo)
-  cp = Checkpoint(ri)
+def torrent_restore(cp):
+  torrent_file = cp.torrentFile()
+  if torrent_file:
+    return cp.setupRestore()
+  print 'echo "[ERROR] Checkpointing '+cp.checkpointRelativeDir()+' requested, but no checkpoint present.";'
+  print 'exit 1;'
+  return None
 
-  if ri.MooreStartupMode == 0:
+#=========================================================================================
+def torrent_copy(cp,copy,extract):
+  torrent_file = cp.torrentFile()
+  if torrent_file:
+    res=None
+    if copy: res = cp.copyTorrent()
+    if (res and copy and extract) or extract: res = cp.extractLibs()
+    if res: return 1
+  print 'echo "[ERROR] Checkpointing '+cp.checkpointRelativeDir()+' requested, but no checkpoint present.";'
+  print 'exit 1;'
+  return None
+
+#=========================================================================================
+def setupEnviron(runinfo, config_brunel):
+  ri = RunInfo(runinfo)
+  print 'echo "[ERROR] Configure CHECKPOINT environment. Reco:%s/%d Moore:%d";'%(str(config_brunel),ri.RecoStartupMode,ri.MooreStartupMode,)
+  cp = Checkpoint(ri,config_brunel)
+
+  if   config_brunel and ri.RecoStartupMode == 0:
+    return cp.setupNormal()
+  elif config_brunel and ri.RecoStartupMode == 1:
+    return cp.setupForking()
+  elif config_brunel and ri.RecoStartupMode == 2:
+    return cp.setupRestoreEnv()
+  elif ri.MooreStartupMode == 0:
     return cp.setupNormal()
   elif ri.MooreStartupMode == 1:
     return cp.setupForking()
   elif ri.MooreStartupMode == 2:
-    torrent_file = cp.torrentFile()
-    if torrent_file:
-      return cp.setupRestore()
-    print 'echo "[ERROR] Checkpointing '+cp.checkpointRelativeDir()+' requested, but no checkpoint present.";'
+    return cp.setupRestoreEnv()
   else:
-    print 'echo "[ERROR] Undefined MOORE startup mode in runinfo. Exiting";'
+    print 'echo "[ERROR] Undefined CHECKPOINT startup mode in runinfo. Exiting";'
   print 'exit 1;'
+  return None
 
 #=========================================================================================
-def extractLibraries(runinfo,copy=True,extract=True):
+def configureForRunning(runinfo, config_brunel):
   ri = RunInfo(runinfo)
-  cp = Checkpoint(ri)
-  if ri.MooreStartupMode == 0 or ri.MooreStartupMode == 1:
-    #print 'echo "[DEBUG] No checkpoints to be manipulated for startup mode:'+str(ri.MooreStartupMode)+'.";'
+  print 'echo "[ERROR] Configure CHECKPOINT for running. Reco:%s/%d Moore:%d";'%(str(config_brunel),ri.RecoStartupMode,ri.MooreStartupMode,)
+  cp = Checkpoint(ri,config_brunel)
+
+  if   config_brunel and ri.RecoStartupMode == 0:
+    return cp.setupNormal()
+  elif config_brunel and ri.RecoStartupMode == 1:
+    return cp.setupForking()
+  elif config_brunel and ri.RecoStartupMode == 2:
+    return torrent_restore(cp)
+  elif ri.MooreStartupMode == 0:
+    return cp.setupNormal()
+  elif ri.MooreStartupMode == 1:
+    return cp.setupForking()
+  elif ri.MooreStartupMode == 2:
+    return torrent_restore(cp)
+  else:
+    print 'echo "[ERROR] Undefined CHECKPOINT startup mode in runinfo. Exiting";'
+  print 'exit 1;'
+  return None
+
+#=========================================================================================
+def extractLibraries(runinfo,copy,extract,config_brunel):
+  ri = RunInfo(runinfo)
+  cp = Checkpoint(ri,config_brunel)
+  if config_brunel and (ri.RecoStartupMode == 0 or ri.RecoStartupMode == 1):
+    print 'echo "[DEBUG] No checkpoints to be manipulated for BRUNEL startup mode:'+str(ri.RecoStartupMode)+'.";'
+    return 1
+  elif config_brunel and ri.RecoStartupMode == 2:
+    return torrent_copy(cp,copy,extract)
+  elif ri.MooreStartupMode == 0 or ri.MooreStartupMode == 1:
+    #print 'echo "[DEBUG] No checkpoints to be manipulated for MOORE startup mode:'+str(ri.MooreStartupMode)+'.";'
     return 1
   elif ri.MooreStartupMode == 2:
-    torrent_file = cp.torrentFile()
-    if torrent_file:
-      res=None
-      if copy: res = cp.copyTorrent()
-      if (res and copy and extract) or extract: res = cp.extractLibs()
-      if res: return 1
-    print 'echo "[ERROR] Checkpointing '+cp.checkpointRelativeDir()+' requested, but no checkpoint present.";'
+    return torrent_copy(cp,copy,extract)
   else:
     print 'echo "[ERROR] Undefined MOORE startup mode in runinfo. Exiting";'
   print 'exit 1;'
+  return None
 
 #=========================================================================================
 def configureForCheckpoint(runinfo):
@@ -219,6 +297,8 @@ def doIt():
                     help="Set RunInfo file name",metavar="<FILE>")
   parser.add_option("-c","--copy",dest='copy',default=False,action='store_true',
                     help="Flag to copy checkpoint to target",metavar="<boolean>")
+  parser.add_option("-e","--environ",dest='environ',default=False,action='store_true',
+                    help="Setup environment from run info",metavar="<boolean>")
   parser.add_option("-l","--libs",dest='libs',default=False,action='store_true',
                     help="Extract libraries from existing checkpoint file",metavar="<directory>")
   parser.add_option("-x","--test",dest='test',default=False,action='store_true',
@@ -227,6 +307,8 @@ def doIt():
                     help="Create checkpoint file checkpoint file",metavar="<boolean>")
   parser.add_option("-s","--start",dest='start',default=False,action='store_true',
                     help="Start process according to runinfo",metavar="<boolean>")
+  parser.add_option("-b","--brunel",dest='brunel',default=False,action='store_true',
+                    help="Configure checkpointing for brunel",metavar="<boolean>")
 
   try:
     (opts, args) = parser.parse_args()
@@ -241,13 +323,21 @@ def doIt():
     elif opts.runinfo is None:
       parser.format_help()
       return
-    if opts.copy:    extractLibraries(opts.runinfo,True,False)
-    if opts.libs:    extractLibraries(opts.runinfo,False,True)
-    if opts.start:   configureForRunning(opts.runinfo)
+
+    if opts.environ:
+      setupEnviron(opts.runinfo,config_brunel=opts.brunel)
+    if opts.copy and opts.libs:
+      extractLibraries(opts.runinfo,copy=True,extract=True,config_brunel=opts.brunel)
+    elif opts.copy:
+      extractLibraries(opts.runinfo,copy=True,extract=False,config_brunel=opts.brunel)
+    elif opts.libs:
+      extractLibraries(opts.runinfo,copy=False,extract=True,config_brunel=opts.brunel)
+    if opts.start:
+      configureForRunning(opts.runinfo,config_brunel=opts.brunel)
 
   except Exception,X:
     traceback.print_stack()
-    print 'echo "[ERROR] Exception(ConfigureShell): Checkpoint production mode:'+str(X)+'";'
+    print 'echo "[ERROR] Exception(ConfigureCheckpoint): Checkpoint production mode:'+str(X)+'";'
     print 'exit 1;'
 
 #=========================================================================================
