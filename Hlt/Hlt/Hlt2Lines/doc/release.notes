@@ -8,6 +8,15 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-24 - Olli Lupton
+ - PID:
+  . Optimise Lambda0 isMuon and highP lines by filtering from shared particles
+    instead of combining. Add veryhighP variant in case we need it.
+  . Adjust Phi->MuMu cuts to reduce combinatoric timing.
+  . Add additional slots for cutting harder on the bachelor in B->J/psiK,
+    Ds->phipi, Lb->Lcpi, Lb->Lcmunu
+  . Add some extra default prescale values and comments.
+
 !========================= Hlt2Lines v9r8 2015-04-23 =========================
 
 ! 2015-04-23 - Roel Aaij

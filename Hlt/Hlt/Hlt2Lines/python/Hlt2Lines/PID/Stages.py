@@ -113,6 +113,13 @@ class BCombiner(Hlt2Combiner):
         mc = ("(VFASPF(VCHI2)<%(LLhVChi2)s) & (BPVVDCHI2 > %(LLhVDChi2)s)"
               + " & (BPVIPCHI2()<%(LLhMaxIPChi2)s)"
               + mc_mass)
+
+        dc = { }
+        for daug in ['p+', 'pi+', 'K+']:
+            dc[daug] = ("(PT > %(BachPt)s)" +
+                        " & (P > %(BachP)s)" +
+                        " & (MIPCHI2DV(PRIMARY) > %(BachIPChi2)s)")
+        
         if nickname is None:
           nickname = name
         from HltTracking.HltPVs import PV3D
@@ -123,7 +130,7 @@ class BCombiner(Hlt2Combiner):
             nickname = nickname,
             dependencies = [ PV3D('Hlt2') ],
             #tistos = 'LLhTisTos',
-            DaughtersCuts = { },
+            DaughtersCuts = dc,
             CombinationCut = cc,
             MotherCut = mc,
             Preambulo = [ ])
@@ -131,7 +138,7 @@ class BCombiner(Hlt2Combiner):
 # The filter for the input particles
 class BachelorFilter(Hlt2ParticleFilter):
     def __init__(self, name, input):
-        cut = ("(TRCHI2DOF < %(BachTrChi2DoF)s)" +
+        cut = ("(TRCHI2DOF < %(BachTrChi2)s)" +
                "& (PT > %(BachPt)s)" +
                "& (P > %(BachP)s)" +
                "& (MIPCHI2DV(PRIMARY) > %(BachIPChi2)s)")
@@ -173,16 +180,20 @@ class KSFilter(Hlt2ParticleFilter):
                                     UseP2PVRelations = False)
 
 class LambdaFilter(Hlt2ParticleFilter):
-    def __init__(self, name, input):
+    def __init__(self, name, input, ismuon = False):
+        ismuonstr = " & (CHILDCUT( ISMUON , 1) )" if ismuon else ""
         cut = ("( ADWM( 'KS0' , WM( 'pi+' , 'pi-') ) > %(LambdaKsVeto)s ) & " +
-               "(ADMASS('Lambda0') < %(LambdaMWindow)s )")
-        from HltTracking.HltPVs import PV3D
+               "(ADMASS('Lambda0') < %(LambdaMWindow)s ) & " +
+               "(CHILDCUT( ( P > %(LambdaProtonP)s ), 1) )" +
+               ismuonstr) # ASSUME proton is 1st child
         Hlt2ParticleFilter.__init__(self, 'PID' + name, cut, [ input ],
-                                    dependencies = [ PV3D('Hlt2') ],
                                     shared = True,
                                     nickname = name,
                                     UseP2PVRelations = False)
 
+# Obsolete attempt to see if you could make Lambda0 fast enough by using
+# 'rare' kinds of proton (very high P, passing isMuon, ...) that
+# other cuts could be relaxed w.r.t. the shared L0
 class LambdaCombiner(Hlt2Combiner):
     def __init__(self, name, inputs, ismuon = False, ll = True):
         ismuonstr = "(ISMUON) & " if ismuon else ""
