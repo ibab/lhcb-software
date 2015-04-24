@@ -52,6 +52,7 @@ use VeloTools         v4r2     Velo      # Tomasz Szumlak
 # Velo Pixel
 use VPAlgorithms      v4r4     VP        # Heinrich Schindler
 use VPAssociators     v2r6     VP        # Heinrich Schindler
+use VPCheckers        v1r0     VP        # Mark Williams
 use VPTools           v2r5     VP        # Heinrich Schindler
 
 # Declare this as a container package
