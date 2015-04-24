@@ -1,3 +1,7 @@
+2015-04-24  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/doxygen: fixed handling of doxygen version for the new LCG layout
+
 2015-04-23  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* lb-run: fixed handling of version alias 'prod'
