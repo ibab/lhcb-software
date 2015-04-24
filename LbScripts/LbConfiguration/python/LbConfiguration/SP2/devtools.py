@@ -18,6 +18,8 @@ import LbConfiguration.SP2
 
 from string import Template
 
+from LbConfiguration.SP2.version import DEFAULT_VERSION
+
 from LbConfiguration.SetupProject import FixProjectCase
 
 def main():
@@ -54,7 +56,7 @@ def main():
     logging.basicConfig(level=opts.log_level)
 
     if len(args) == 1:
-        args.append('prod')
+        args.append(DEFAULT_VERSION)
 
     try:
         project, version = args

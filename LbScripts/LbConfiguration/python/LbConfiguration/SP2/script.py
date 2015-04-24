@@ -11,17 +11,18 @@
 __author__ = 'Marco Clemencic <marco.clemencic@cern.ch>'
 
 import os
-import re
 import sys
 import logging
 import EnvConfig
 
-from lookup import getEnvXmlPath, findProject
-from version import isValidVersion, expandVersionAlias
+from LbConfiguration.SP2.lookup import (getEnvXmlPath, findProject,
+                                        findDataPackage)
+from LbConfiguration.SP2.version import (isValidVersion, expandVersionAlias,
+                                         DEFAULT_VERSION)
 from LbConfiguration.SetupProject import FixProjectCase
-from LbConfiguration.SP2.lookup import findDataPackage
 
-auto_override_projects = [('Compat', 'prod')]
+
+auto_override_projects = [('Compat', DEFAULT_VERSION)]
 
 def decodePkg(s):
     '''
@@ -146,7 +147,7 @@ class SP2(EnvConfig.Script):
             if rargs and isValidVersion(p_name, rargs[0]):
                 v = rargs.pop(0)
             else:
-                v = 'prod'
+                v = DEFAULT_VERSION
             return p_name, v
 
         def runtime_project_option(_option, opt_str, _value, parser):
@@ -195,7 +196,7 @@ class SP2(EnvConfig.Script):
         if self.cmd and isValidVersion(self.project, self.cmd[0]):
             self.version = self.cmd.pop(0)
         else:
-            self.version = 'prod'
+            self.version = DEFAULT_VERSION
 
     def _makeEnv(self):
         # FIXME: when we drop Python 2.4, this should become 'from . import path'
@@ -217,7 +218,7 @@ class SP2(EnvConfig.Script):
         # prepare the list of projects to use
         projects = []
         if self.opts.use_grid:
-            self.opts.overriding_projects.extend(('LHCbGrid', 'latest'))
+            self.opts.overriding_projects.extend(('LHCbGrid', DEFAULT_VERSION))
         if self.opts.auto_override:
             explicit = set([p[0] for p in self.opts.overriding_projects])
             projects.extend([p for p in auto_override_projects

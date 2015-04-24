@@ -1,5 +1,8 @@
 import re
 
+# default version alias
+DEFAULT_VERSION = 'prod'
+
 def isValidVersion(project, version):
     '''
     Check if the specified version number is a valid (reasonable) one for the

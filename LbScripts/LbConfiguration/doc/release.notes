@@ -1,3 +1,7 @@
+2015-04-23  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-run: fixed handling of version alias 'prod'
+
 2015-03-30  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* lb-run: fixed after changes to fix LBCORE-771

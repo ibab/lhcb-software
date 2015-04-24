@@ -151,3 +151,4 @@ class Error(RuntimeError):
     '''
     Base class for SP2 exceptions.
     '''
+

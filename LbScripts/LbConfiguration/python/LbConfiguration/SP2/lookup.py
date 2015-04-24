@@ -15,6 +15,7 @@ import logging
 
 # FIXME: when we drop Python 2.4, this should become 'from . import path'
 from LbConfiguration.SP2 import path, Error
+from LbConfiguration.SP2.version import DEFAULT_VERSION
 
 log = logging.getLogger(__name__)
 
@@ -105,12 +106,12 @@ def listVersions(name, platform):
     found_versions = set()
     for p in [dirname for dirname in path if os.path.isdir(dirname)]:
         files = set(os.listdir(p))
-        # the plain project name is taken into account as 'latest' version
-        if 'prod' not in found_versions and name in files:
+        # the plain project name is taken into account as 'default' version
+        if DEFAULT_VERSION not in found_versions and name in files:
             fullpath = os.path.join(p, name)
             if os.path.isdir(os.path.join(fullpath, bindir)):
-                found_versions.add('prod')
-                yield ('prod', fullpath)
+                found_versions.add(DEFAULT_VERSION)
+                yield (DEFAULT_VERSION, fullpath)
 
         # versions like 'Project_vXrY'
         for entry in sorted([(filename[prefixlen:], os.path.join(p, filename))
