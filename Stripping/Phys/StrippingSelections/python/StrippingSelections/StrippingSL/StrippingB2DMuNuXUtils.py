@@ -15,16 +15,18 @@ def BtoDlnuLine(module_name,
                 DDecays,
                 CONFIG,
                 CHARM_DAUGHTERS,
-                MUON):
+                MUON,
+                FAKE_MUON = None):
     
     DEFAULT_GECs = { "Code":"( recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %(GEC_nLongTrk)s )" %CONFIG,
                      "Preambulo": ["from LoKiTracks.decorators import *"]}
     
-    DEFAULT_HLT = CONFIG["HLT_FILTER"]
-    
     CHARM_DaugCuts = {}
     CHARM_ComboCuts = CONFIG["CharmComboCuts"]
     CHARM_MotherCuts = CONFIG["CharmMotherCuts"]
+    CHARM_ComboCuts += " & (ADOCACHI2CUT( %(D_DocaChi2Max)s, ''))" % CONFIG
+    CHARM_MotherCuts += "& (VFASPF(VCHI2/VDOF) < %(D_VCHI2DOF)s) " \
+        "& (BPVVDCHI2 > %(D_FDCHI2)s) &  (BPVDIRA> %(D_BPVDIRA)s)"  % CONFIG
     
     if "CharmDaugCuts" in CONFIG.keys():
         CHARM_DaugCuts = CONFIG["CharmDaugCuts"]
@@ -45,9 +47,11 @@ def BtoDlnuLine(module_name,
         DST = makeDstar("CharmSelDstFor"+name+module_name,CHARM,CONFIG)
         USED_CHARM = DST
 
-    B_combinationCut = "(AM > %(BMassMin)s*GeV) & (AM < %(BMassMax)s*GeV) & (ADOCACHI2CUT( %(B_DocaChi2Max)s, ''))" %CONFIG
-    B_motherCut = " (MM>%(BMassMin)s*GeV) & (MM<%(BMassMax)s*GeV) &  (VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(B_DIRA)s)  " \
-        "& (MINTREE(((ABSID=='D+') | (ABSID=='D0') | (ABSID=='Lambda_c+')) , VFASPF(VZ))-VFASPF(VZ) > %(B_D_DZ)s *mm ) " %CONFIG
+    B_combinationCut = "(AM > %(B_MassMin)s) & (AM < %(B_MassMax)s) & (ADOCACHI2CUT( %(B_DocaChi2Max)s, ''))" %CONFIG
+    B_motherCut = " (MM>%(B_MassMin)s) & (MM<%(B_MassMax)s)"\
+        "&(VFASPF(VCHI2/VDOF)< %(B_VCHI2DOF)s) & (BPVDIRA> %(B_DIRA)s)"\
+        "&(MINTREE(((ABSID=='D+')|(ABSID=='D0')|(ABSID=='Lambda_c+')|(ABSID=='Omega_c0')|(ABSID=='Xi_c+'))"\
+        ", VFASPF(VZ))-VFASPF(VZ) > %(B_D_DZ)s  ) " %CONFIG
     if "ExtraComboCuts" in CONFIG.keys():
         B_combinationCut += CONFIG["ExtraComboCuts"]
     if "ExtraMotherCuts" in CONFIG.keys():
@@ -79,18 +83,33 @@ def BtoDlnuLine(module_name,
                          ,BSel
                          ,CONFIG["TTSpecs"])
     
-    debug = False
-    if debug:
-        print [name,DEFAULT_HLT,CHARM_DaugCuts,Charm_ComboCuts,CHARM_MotherCuts,B_DaugCuts,B_combinationCut,B_motherCut]
     _prescale = 1.0
-    if name in CONFIG["prescales"].keys():
-        _prescale = CONFIG["prescales"][name]
+    main_line = StrippingLine(module_name + "_"+name + 'Line', 
+                              selection = BSelTOS,
+                              HLT1 = CONFIG["HLT1"],
+                              HLT2 = CONFIG["HLT2"],
+                              FILTER=DEFAULT_GECs,
+                              prescale = _prescale)
 
-    return StrippingLine(name + module_name + 'Line', 
-                         HLT = DEFAULT_HLT,
-                         FILTER=DEFAULT_GECs,
-                         prescale = _prescale,
-                         selection = BSelTOS)
+    if FAKE_MUON == None:
+        return main_line
+    else:
+        BSelFake = Selection ("BSelFakeFor"+name+module_name,
+                              Algorithm = _B,
+                              RequiredSelections = [FAKE_MUON,USED_CHARM])
+        
+        BSelFakeTOS = TOSFilter( "BSelFakeFor"+name+module_name+"TOS"
+                                 ,BSelFake
+                                 ,CONFIG["TTSpecs"])
+        return {"RealMuon":main_line,
+                "FakeMuon":StrippingLine(module_name + "_"+name + 'FakeLine',
+                                         selection = BSelFakeTOS,
+                                         HLT1 = CONFIG["HLT1"],
+                                         HLT2 = CONFIG["HLT2"],
+                                         FILTER=DEFAULT_GECs,
+                                         prescale = CONFIG["prescaleFakes"])
+                }
+
 
 ########### HELP WITH MAKING A DSTAR ########################
 def makeDstar(_name, inputD0,CONFIG) : 
@@ -98,10 +117,10 @@ def makeDstar(_name, inputD0,CONFIG) :
     _inputD0_conj = Selection("SelConjugateD0For"+_name,
                              Algorithm = ConjugateNeutralPID('ConjugateD0For'+_name),
                              RequiredSelections = [inputD0])
-    _cutsSoftPi = '( PT > %(Dstar_SoftPion_PT)s *MeV )' % CONFIG
-    _cutsDstarComb = '(AM - ACHILD(M,1) + 5 > %(Dstar_wideDMCutLower)s *MeV) & (AM - ACHILD(M,1) - 5 < %(Dstar_wideDMCutUpper)s *MeV)' % CONFIG
+    _cutsSoftPi = '( PT > %(Dstar_SoftPion_PT)s  )' % CONFIG
+    _cutsDstarComb = '(AM - ACHILD(M,1) + 5 > %(Dstar_wideDMCutLower)s ) & (AM - ACHILD(M,1) - 5 < %(Dstar_wideDMCutUpper)s )' % CONFIG
     _cutsDstarMoth_base = '(VFASPF(VCHI2/VDOF) < %(Dstar_Chi2)s )' % CONFIG
-    _cutsDstarMoth_DM = '(M - CHILD(M,1) > %(Dstar_wideDMCutLower)s *MeV) & (M - CHILD(M,1) < %(Dstar_wideDMCutUpper)s *MeV)' % CONFIG
+    _cutsDstarMoth_DM = '(M - CHILD(M,1) > %(Dstar_wideDMCutLower)s ) & (M - CHILD(M,1) < %(Dstar_wideDMCutUpper)s )' % CONFIG
     _cutsDstarMoth = '(' + _cutsDstarMoth_base + ' & ' + _cutsDstarMoth_DM + ')'
     _Dstar = CombineParticles( DecayDescriptor = "[D*(2010)+ -> D0 pi+]cc",
                                DaughtersCuts = { "pi+" : _cutsSoftPi },

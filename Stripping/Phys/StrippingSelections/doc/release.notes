@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-04-24 - Mika Vesterinen
+ - Updates to B2DMuNuX
+
 ! 2015-04-24 - Andrea Contu
  - Small fix to StrippingCharm/StrippingPromptCharm.py
  - Updated test for users to use the new MDST.DST implementation as a normal DST stream
