@@ -5,7 +5,6 @@
 
 #include "Kernel/LHCbID.h"
 
-
 /** @class PrPixelHit PrPixelHit.h
  *  This defines the VP hits to be used in the pattern recognition.
  *
@@ -28,20 +27,9 @@ class PrPixelHit {
   /// Destructor
   virtual ~PrPixelHit() {}
 
-  void setHit(const LHCb::LHCbID id, const Gaudi::XYZPoint &point,
-              const float wxerr, const float wyerr, const unsigned int module) {
-    m_id = id;
-    m_x = point.x();
-    m_y = point.y();
-    m_z = point.z();
-    m_wxerr = wxerr;
-    m_wyerr = wyerr;
-    m_module = module;
-    m_isUsed = false;
-  }
-
-  void setHit(const LHCb::LHCbID id, const float x, const float y,
-              const float z, const float wxerr, const float wyerr,
+  void setHit(const LHCb::LHCbID &id, 
+              const float x, const float y, const float z,
+              const float wxerr, const float wyerr,
               const unsigned int module) {
     m_id = id;
     m_x = x;
@@ -68,20 +56,13 @@ class PrPixelHit {
   /// Pointer to x,y,z,wx
   const float* p_x() const { return &m_x; }
 
-  /// Calculate distance in X-Y to given X-Y point
-  float distance(const float x, const float y) const {
-    const float dx = x - m_x;
-    const float dy = y - m_y;
-    return sqrt(dx * dx + dy * dy);
-  }
-
   /// Calculate distance-square / sigma-square
   float chi2(const float x, const float y) const {
     const float dx = m_wxerr * (x - m_x);
     const float dy = m_wyerr * (y - m_y);
     return dx * dx + dy * dy;
   }
-
+  
   // Operators for sorting the vectors of pointers to hits
   struct DecreasingByZ {
     bool operator()(const PrPixelHit *lhs, const PrPixelHit *rhs) const {
@@ -105,9 +86,11 @@ class PrPixelHit {
   };
 
  private:
-  /// Global position
+  /// Global x position
   float m_x;
+  /// Global y position
   float m_y;
+  /// Global z position
   float m_z;
   /// Weight (1 / error) in X
   float m_wxerr;

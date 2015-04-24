@@ -3,14 +3,9 @@
 // LHCb
 #include "Event/Track.h"
 #include "Event/StateParameters.h"
+#include "Kernel/VPConstants.h"
 // Local
 #include "PrPixelTracking.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : PrPixelTracking
-//
-// 2011-12-16 : Olivier Callot
-//-----------------------------------------------------------------------------
 
 DECLARE_ALGORITHM_FACTORY(PrPixelTracking)
 
@@ -62,8 +57,10 @@ PrPixelTracking::PrPixelTracking(const std::string &name,
 
   // Parameters for 3D hit building
   declareProperty("RunOnRawBanks", m_runOnRawBanks = true);
-  declareProperty("MaxClusterSize", m_maxClusterSize = PrPixel::SENSOR_PIXELS);
+  declareProperty("MaxClusterSize", m_maxClusterSize = VP::NPixelsPerSensor);
   declareProperty("Trigger", m_trigger = false);
+
+  m_tracks.reserve(10000);
 }
 
 //=============================================================================
@@ -120,7 +117,7 @@ StatusCode PrPixelTracking::execute() {
   if (m_runOnRawBanks) {
     m_hitManager->buildHitsFromRawBank();
   } else {
-    m_hitManager->buildHits();
+    m_hitManager->buildHitsFromClusters();
   }
   m_hitManager->sortByX();
 
@@ -212,7 +209,7 @@ void PrPixelTracking::searchByPair() {
   // starting with the one at largest Z.
   const int lastModule = m_hitManager->lastModule();
   const int firstModule = m_hitManager->firstModule() + 4;
-  for (int sens0 = lastModule; firstModule <= sens0; sens0 -= 1) {
+  for (int sens0 = lastModule; firstModule <= sens0; --sens0) {
     // Pick-up the "paired" module one station backwards
     const int sens1 = sens0 - 2;
     PrPixelModule *module0 = m_hitManager->module(sens0);
@@ -345,20 +342,20 @@ void PrPixelTracking::makeLHCbTracks() {
              << (*itt).hits().size() << endmsg;
       printTrack(*itt);
     }
-
-    // Loop over the hits, add their LHCbIDs to the LHCb track and
-    // find the highest Z.
-    float zMax = -1.e9;
+    // Sort the hits back by decreasing z.
+    std::sort((*itt).hits().begin(), (*itt).hits().end(),
+              PrPixelHit::DecreasingByZ());
+ 
+    // Loop over the hits and add their LHCbIDs to the LHCb track.
     auto endHits = (*itt).hits().cend();
     for (auto ith = (*itt).hits().cbegin(); ith != endHits; ++ith) {
       newTrack->addToLhcbIDs((*ith)->id());
-      if ((*ith)->z() > zMax) zMax = (*ith)->z();
     }
     // Decide if this is a forward or backward track.
-    // Calculate Z where the track passes closest to the beam.
+    // Calculate z where the track passes closest to the beam.
     const float zBeam = (*itt).zBeam();
     // Define backward as z closest to beam downstream of hits.
-    const bool backward = zBeam > zMax;
+    const bool backward = zBeam > (*itt).hits().front()->z();
     newTrack->setFlag(LHCb::Track::Backward, backward);
 
     // Get the state at zBeam from the straight line fit.

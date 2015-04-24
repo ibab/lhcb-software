@@ -26,9 +26,7 @@ class PrPixelTrack {
   virtual ~PrPixelTrack() {}
   /// Start a seed track from the two given hits
   void set(PrPixelHit *h1, PrPixelHit *h2) {
-    m_hits.clear();
-    m_hits.push_back(h1);
-    m_hits.push_back(h2);
+    m_hits = {h1, h2};
   }
 
   /// Return the list of hits on this track.
@@ -92,8 +90,8 @@ class PrPixelTrack {
   void fit();
  
   /// Fit with a K-filter with scattering. Return the chi2
-  float fitKalman(LHCb::State &state, int direction,
-                   float noisePerLayer) const;
+  float fitKalman(LHCb::State &state, const int direction,
+                  const float noisePerLayer) const;
 
   // Number of hits assigned to the track
   unsigned int size(void) const { return m_hits.size(); }

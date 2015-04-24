@@ -59,7 +59,7 @@ StatusCode PrPixelHitManager::initialize() {
   incSvc()->addListener(this, IncidentType::BeginEvent);
 
   // zero out all buffers
-  memset(m_buffer, 0, SENSOR_PIXELS * sizeof(unsigned char));
+  memset(m_buffer, 0, VP::NPixelsPerSensor * sizeof(unsigned char));
   memset(m_sp_patterns, 0, 256 * sizeof(unsigned char));
   memset(m_sp_sizes, 0, 256 * sizeof(unsigned char));
   memset(m_sp_fx, 0, 512 * sizeof(float));
@@ -362,7 +362,7 @@ void PrPixelHitManager::buildHitsFromRawBank() {
   const unsigned int bankVersion = (*tBanks.begin())->version();
   switch (bankVersion) {
     case 1:
-      buildHitsFromLCRawBank(tBanks);
+      error() << "Lite cluster banks are not supported any more." << endmsg;
       break;
     case 2:
       buildHitsFromSPRawBank(tBanks);
@@ -391,7 +391,7 @@ void PrPixelHitManager::buildHitsFromSPRawBank(
   for (; iterBank != tBanks.end(); ++iterBank) {
 
     const unsigned int sensor = (*iterBank)->sourceID();
-    const unsigned int module = sensor / MODULE_SENSORS;
+    const unsigned int module = sensor / VP::NSensorsPerModule;
     const float *ltg = m_ltg + 16 * sensor;
 
     // reset and then fill the super pixel buffer for a sensor
@@ -562,7 +562,7 @@ void PrPixelHitManager::buildHitsFromSPRawBank(
 
         // check up and down
         uint32_t u_idx = idx + 1;
-        if (row < SENSOR_ROWS - 1 && m_buffer[u_idx]) {
+        if (row < VP::NRows - 1 && m_buffer[u_idx]) {
           m_buffer[u_idx] = 0;
           m_stack.push_back(u_idx);
         }
@@ -573,11 +573,11 @@ void PrPixelHitManager::buildHitsFromSPRawBank(
         }
 
         // scan row to the right
-        for (int c = col + 1; c < SENSOR_COLUMNS; ++c) {
+        for (unsigned int c = col + 1; c < VP::NSensorColumns; ++c) {
           const uint32_t nidx = (c << 8) | row;
           // check up and down
           u_idx = nidx + 1;
-          if (row < SENSOR_ROWS - 1 && m_buffer[u_idx]) {
+          if (row < VP::NRows - 1 && m_buffer[u_idx]) {
             m_buffer[u_idx] = 0;
             m_stack.push_back(u_idx);
           }
@@ -607,7 +607,7 @@ void PrPixelHitManager::buildHitsFromSPRawBank(
           const uint32_t nidx = (c << 8) | row;
           // check up and down
           u_idx = nidx + 1;
-          if (row < SENSOR_ROWS - 1 && m_buffer[u_idx]) {
+          if (row < VP::NRows - 1 && m_buffer[u_idx]) {
             m_buffer[u_idx] = 0;
             m_stack.push_back(u_idx);
           }
@@ -697,96 +697,18 @@ void PrPixelHitManager::buildHitsFromSPRawBank(
 }
 
 //=========================================================================
-//  PrPixelHits from Cluster Raw Bank
-//=========================================================================
-void PrPixelHitManager::buildHitsFromLCRawBank(
-    const std::vector<LHCb::RawBank *> &tBanks) {
-
-  // Assume binary resolution of hit position. This is the weight.
-  const float w = std::sqrt(12.0) / (0.055);
-
-  // The unit of the inter pixel fractions.
-  const float fractScale = 1.0 / (1 << (YFRACTSHIFT - XFRACTSHIFT));
-
-  // Loop over raw banks.
-  const unsigned int nb = tBanks.size();
-  for (unsigned int ib = 0; ib < nb; ++ib) {
-    const LHCb::RawBank &bank = *tBanks[ib];
-    const unsigned int module = bank.sourceID();
-
-    if (module >= m_modules.size()) break;
-
-    const unsigned int *bank_data = bank.data();
-    const unsigned int header = bank_data[0];
-    const unsigned int nc = (header & HEADERNCLUMASK) >> HEADERNCLUSHIFT;
-
-    if (m_pool.size() < m_nHits + nc) {
-      const unsigned int newSize = m_nHits + nc + 100;
-      m_pool.resize(newSize);
-      m_xFractions.resize(newSize);
-      m_yFractions.resize(newSize);
-    }
-    if (!m_trigger && (m_channelIDs.size() < m_nHits + nc)) {
-      const unsigned int newSize = m_nHits + nc + 100;
-      m_channelIDs.resize(newSize);
-      m_allHits.resize(newSize);
-    }
-
-    for (unsigned int ic = 0; ic < nc; ++ic) {
-      const unsigned int cw = bank_data[ic + 1];
-      const unsigned int pixel = (cw & PIXELMASK) >> PIXELSHIFT;
-      const unsigned int module_chip = pixel & 0x3f0000L >> 16;
-      const unsigned int col = pixel & 0xff00L >> 8;
-      const unsigned int row = pixel & 0xffL;
-      const unsigned int sensor =
-          module * MODULE_SENSORS + module_chip / SENSOR_CHIPS;
-      const unsigned int sensor_chip = module_chip % SENSOR_CHIPS;
-      const float xfract = fractScale * ((cw & XFRACTMASK) >> XFRACTSHIFT);
-      const float yfract = fractScale * ((cw & YFRACTMASK) >> YFRACTSHIFT);
-
-      LHCb::VPChannelID cid(sensor, sensor_chip, col, row);
-
-      const unsigned int cy = cid.row();
-      const unsigned int cx = cid.col() + CHIP_COLUMNS * sensor_chip;
-      const float dx = xfract * m_x_pitch[cx];
-      const float dy = yfract * m_pixel_size;
-      float local_x = m_local_x[cx] + dx;
-      float local_y = (cy + 0.5) * m_pixel_size + dy;
-      const float *ltg = m_ltg + sensor * 16;
-      const float gx = ltg[0] * local_x + ltg[1] * local_y + ltg[9];
-      const float gy = ltg[3] * local_x + ltg[4] * local_y + ltg[10];
-      const float gz = ltg[6] * local_x + ltg[7] * local_y + ltg[11];
-
-      if (!m_trigger) {
-        m_channelIDs[m_nHits].push_back(cid);
-        m_allHits[m_nHits].setHit(LHCb::LHCbID(cid), gx, gy, gz, w, w, module);
-      }
-      m_xFractions[m_nHits] = xfract;
-      m_xFractions[m_nHits] = yfract;
-      m_pool[m_nHits].setHit(LHCb::LHCbID(cid), gx, gy, gz, w, w, module);
-      m_modules[module]->addHit(&(m_pool[m_nHits++]));
-    }  // loop over clusters in bank
-  }    // loop over banks
-
-  // ensure consistent counters if we don't run in the trigger
-  if (!m_trigger) {
-    m_nClusters = m_nHits;
-  }
-}
-
-//=========================================================================
 // Wrapper for storing clusters (either trigger or offline).
 //=========================================================================
 void PrPixelHitManager::storeClusters() {
 
-  // if the event is not ready (that is, we are asked to store
+  // If the event is not ready (that is, we are asked to store
   // clusters without running the pixel tracking before), we have
   // to run the clustering/3D point creation first.
   if (!m_eventReady) {
     buildHitsFromRawBank();
   }
 
-  // store the clusters
+  // Store the clusters.
   if (m_trigger) {
     storeTriggerClusters();
   } else {
@@ -847,10 +769,8 @@ void PrPixelHitManager::storeOfflineClusters() {
   LHCb::VPClusters *clusters = new LHCb::VPClusters();
   put(clusters, m_clusterLocation);
 
-  // We are in offline configuration. Provided we are not running on old MC
-  // we have the full information about contributing pixels. In case of old MC
-  // this was not encoded in the raw bank, and we don't have this information.
-  // However, MC matching will work consistently in both cases.
+  // We are in offline configuration and have the full information 
+  // about contributing pixels. 
   for (unsigned int ic = 0; ic < m_nClusters; ++ic) {
     const PrPixelHit &hit = m_allHits[ic];
     const LHCb::VPChannelID cid = hit.id().vpID();
@@ -897,16 +817,20 @@ void PrPixelHitManager::sortByX() {
 }
 
 //=========================================================================
-//  Convert the clusters to PrPixelHits
+// Convert the clusters to PrPixelHits
 //=========================================================================
-void PrPixelHitManager::buildHits() {
+void PrPixelHitManager::buildHitsFromClusters() {
 
   if (m_eventReady) return;
   m_eventReady = true;
 
   // Get the clusters.
-  LHCb::VPClusters *clusters =
-      GaudiTool::get<LHCb::VPClusters>(LHCb::VPClusterLocation::Default);
+  const LHCb::VPClusters *clusters =
+      GaudiTool::getIfExists<LHCb::VPClusters>(LHCb::VPClusterLocation::Default);
+  if (!clusters) {
+    error() << "No clusters in " << LHCb::VPClusterLocation::Default << endmsg;
+    return;
+  }
   // If necessary adjust the size of the hit pool.
   if (clusters->size() > m_pool.size()) {
     m_pool.resize(clusters->size() + 100);
@@ -914,20 +838,18 @@ void PrPixelHitManager::buildHits() {
   // Assume binary resolution of hit position. This is the weight.
   const float w = std::sqrt(12.0) / (0.055);
   // Loop over clusters.
-  LHCb::VPClusters::const_iterator itc;
-  LHCb::VPClusters::const_iterator itc_end(clusters->end());
-  for (itc = clusters->begin(); itc_end != itc; ++itc) {
-    const unsigned int module = (*itc)->channelID().module();
+  for (const LHCb::VPCluster* cluster : *clusters) {
+    const unsigned int module = cluster->channelID().module();
     if (module >= m_modules.size()) break;
 
     // store 3D point
-    LHCb::VPChannelID cid = (*itc)->channelID();
+    LHCb::VPChannelID cid = cluster->channelID();
     const unsigned int sensor_chip = cid.chip();
     const unsigned int sensor = cid.sensor();
     const unsigned int cy = cid.row();
     const unsigned int cx = cid.col() + CHIP_COLUMNS * sensor_chip;
-    const float dx = (*itc)->fraction().first * m_x_pitch[cx];
-    const float dy = (*itc)->fraction().second * m_pixel_size;
+    const float dx = cluster->fraction().first * m_x_pitch[cx];
+    const float dy = cluster->fraction().second * m_pixel_size;
     float local_x = m_local_x[cx] + dx;
     float local_y = (cy + 0.5) * m_pixel_size + dy;
     const float *ltg = m_ltg + sensor * 16;

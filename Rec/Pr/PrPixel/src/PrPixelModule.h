@@ -1,9 +1,6 @@
 #ifndef PRPIXELMODULE_H
 #define PRPIXELMODULE_H 1
 
-// Gaudi
-#include "GaudiKernel/Point3DTypes.h"
-#include "GaudiKernel/Vector3DTypes.h"
 // Local
 #include "PrPixelHit.h"
 

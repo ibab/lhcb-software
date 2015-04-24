@@ -8,6 +8,8 @@
 // LHCb
 // Event/DigiEvent
 #include "Event/VPCluster.h"
+// Kernel/LHCbKernel
+#include "Kernel/VPConstants.h"
 #include "Kernel/VPChannelID.h"
 // Det/VPDet
 #include "VPDet/DeVP.h"
@@ -47,9 +49,7 @@ class PrPixelHitManager : public GaudiTool, public IIncidentListener {
   virtual StatusCode finalize();
 
   void buildHitsFromRawBank();
-  void buildHitsFromSPRawBank(const std::vector<LHCb::RawBank *> &tBanks);
-  void buildHitsFromLCRawBank(const std::vector<LHCb::RawBank *> &tBanks);
-  void buildHits();
+  void buildHitsFromClusters();
   void clearHits();
 
   void handle(const Incident &incident);
@@ -76,7 +76,7 @@ class PrPixelHitManager : public GaudiTool, public IIncidentListener {
   /// Set maximum cluster size.
   void setMaxClusterSize(const unsigned int size) { m_maxClusterSize = size; }
   /// Set trigger flag
-  void setTrigger(bool triggerFlag) { m_trigger = triggerFlag; }
+  void setTrigger(const bool triggerFlag) { m_trigger = triggerFlag; }
   /// Set cluster location
   void setClusterLocation(const std::string &loc) { m_clusterLocation = loc; }
   int maxSize() const { return m_maxSize; }
@@ -129,7 +129,7 @@ class PrPixelHitManager : public GaudiTool, public IIncidentListener {
   float m_sp_fy[512];
 
   // Clustering buffers
-  unsigned char m_buffer[PrPixel::SENSOR_PIXELS];
+  unsigned char m_buffer[VP::NPixelsPerSensor];
   std::vector<uint32_t> m_pixel_idx;
   std::vector<uint32_t> m_stack;
 
@@ -143,7 +143,7 @@ class PrPixelHitManager : public GaudiTool, public IIncidentListener {
   std::string m_clusterLocation;
 
   /// Cache of local to global transformations, 16 stride aligned.
-  float m_ltg[16 * PrPixel::TOT_SENSORS];  // 16*208 = 16*number of sensors
+  float m_ltg[16 * VP::NSensors]; // 16*208 = 16*number of sensors
 
   /// pointers to local x coordinates and pitches
   const double *m_local_x;
@@ -160,6 +160,8 @@ class PrPixelHitManager : public GaudiTool, public IIncidentListener {
   std::vector<float> m_yFractions;
   /// Storage for 3D points of all clusters. Not used in trigger.
   std::vector<PrPixelHit> m_allHits;
+
+  void buildHitsFromSPRawBank(const std::vector<LHCb::RawBank *> &tBanks);
 };
 
 #endif  // PRPIXELHITMANAGER_H

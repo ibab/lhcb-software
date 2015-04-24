@@ -4,13 +4,6 @@
 
 #include "PrPixelStoreClusters.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : PrPixelStoreClusters
-//
-// 2014-02-26 : Kurt Rinnert
-//-----------------------------------------------------------------------------
-
-// Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY(PrPixelStoreClusters)
 
 //=============================================================================

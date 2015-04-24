@@ -3,12 +3,6 @@
 // Local
 #include "PrPixelTrack.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : PrPixelTrack
-//
-// 2012-01-06 : Olivier Callot
-//-----------------------------------------------------------------------------
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -186,18 +180,11 @@ Gaudi::TrackSymMatrix PrPixelTrack::covariance(const float z) const {
 //===============================================================================
 
 namespace {
-/// Helper function to sort hits
-struct SortDecreasingZ {
-  SortDecreasingZ() {}
-  bool operator()(const PrPixelHit *lhs, const PrPixelHit *rhs) const {
-    return lhs->z() > rhs->z();
-  }
-};
 
 /// Helper function to filter one hit
-inline float filter(float z, float &x, float &tx, float &covXX,
-                     float &covXTx, float &covTxTx, float zhit, float xhit,
-                     float whit) {
+inline float filter(const float z, float &x, float &tx, float &covXX,
+                    float &covXTx, float &covTxTx, const float zhit, 
+                    const float xhit, const float whit) {
   // compute the prediction
   const float dz = zhit - z;
   const float predx = x + dz * tx;
@@ -234,21 +221,13 @@ inline float filter(float z, float &x, float &tx, float &covXX,
 //  noise2PerLayer: scattering contribution (squared) to tx and ty
 // The return value is the chi2 of the fit
 // ===============================================================================
-float PrPixelTrack::fitKalman(LHCb::State &state, int direction,
-                               float noise2PerLayer) const {
-  // WH: hits are apparently not perfectly sorted. if we really want
-  // to use this in the future, we probably want to sort them only
-  // once. for now, we sort on every call. since hits seem to be
-  // almost sorted in decreasing Z, that's what we'll stick to.
-  PrPixelTrack *nonconstthis = const_cast<PrPixelTrack *>(this);
-  std::sort(nonconstthis->m_hits.begin(), nonconstthis->m_hits.end(),
-            SortDecreasingZ());
+float PrPixelTrack::fitKalman(LHCb::State &state, const int direction,
+                              const float noise2PerLayer) const {
 
   // assume the hits are sorted, but don't assume anything on the direction of
   // sorting
-  int N = int(m_hits.size());
   int firsthit = 0;
-  int lasthit = N - 1;
+  int lasthit = m_hits.size() - 1;
   int dhit = +1;
   if ((m_hits[lasthit]->z() - m_hits[firsthit]->z()) * direction < 0) {
     std::swap(firsthit, lasthit);
@@ -286,7 +265,7 @@ float PrPixelTrack::fitKalman(LHCb::State &state, int direction,
     // filter Y
     chi2 +=
         filter(z, y, ty, covYY, covYTy, covTyTy, hit->z(), hit->y(), hit->wy());
-    // update z (note done in the filter, since needed only once)
+    // update z (not done in the filter, since needed only once)
     z = hit->z();
   }
 

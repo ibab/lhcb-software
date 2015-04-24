@@ -2,19 +2,17 @@
 #define PRPIXELTRACKING_H 1
 
 // #define DEBUG_HISTO // fill some histograms while the algorithm runs.
-// Include files
-// from Gaudi
 
+// Gaudi
 #ifdef DEBUG_HISTO
 #include "GaudiAlg/GaudiTupleAlg.h"
 #else
 #include "GaudiAlg/GaudiAlgorithm.h"
 #endif
-
 #include "GaudiAlg/ISequencerTimerTool.h"
 
+// Local
 #include "PrKernel/IPrDebugTool.h"
-
 #include "PrPixelHitManager.h"
 #include "PrPixelTrack.h"
 

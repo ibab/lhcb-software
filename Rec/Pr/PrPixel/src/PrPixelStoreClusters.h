@@ -1,13 +1,7 @@
 #ifndef PRPIXELSTORECLUSTERS_H
 #define PRPIXELSTORECLUSTERS_H 1
-#include <vector>
-#include <algorithm>
-#include <string>
 
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/AlgFactory.h"
-
-#include "Event/VPCluster.h"
 
 #include "PrPixelHitManager.h"
 
