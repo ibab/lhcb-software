@@ -21,7 +21,7 @@ juggler = RawEventJuggler( DataOnDemand=True, Input=2.0, Output=4.0 )
 
 
 # Specify the name of your configuration
-confname='BetaSPsi2SMuMu' #FOR USERS
+my_wg='Charm' #FOR LIAISONS
 
 
 # NOTE: this will work only if you inserted correctly the 
@@ -29,8 +29,8 @@ confname='BetaSPsi2SMuMu' #FOR USERS
 # is defined.
 from StrippingSelections import buildersConf
 confs = buildersConf()
-from StrippingSelections.Utils import lineBuilder, buildStreamsFromBuilder
-streams = buildStreamsFromBuilder(confs,confname)
+from StrippingSelections.Utils import lineBuilder, buildStreams
+streams = buildStreams( confs, WGs=my_wg )
 
 leptonicMicroDSTname   = 'Leptonic'
 charmMicroDSTname      = 'Charm'

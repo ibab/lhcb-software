@@ -127,7 +127,7 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from GaudiKernel.SystemOfUnits             import GeV, MeV, mm
+from GaudiKernel.SystemOfUnits             import GeV, MeV, mm, micrometers
 from StrippingUtils.Utils                  import LineBuilder
 # =============================================================================
 ## logging

@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-04-24 - Andrea Contu
+ - Small fix to StrippingCharm/StrippingPromptCharm.py
+ - Updated test for users to use the new MDST.DST implementation as a normal DST stream
+ - New script for liaisons to test all the WG lines in StrippingSelections
+
 ! 2015-04-23 - Sascha Stahl
  - Added StrippingQEE/StrippingMBNoBias.py.
 
