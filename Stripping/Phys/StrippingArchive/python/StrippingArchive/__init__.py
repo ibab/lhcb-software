@@ -126,7 +126,6 @@ def _importArchive(stripping):
         __import__(module_name)
     except Exception, _tmpstrip: 
         print " -> Cannot be loaded with this version of DaVinci (%s)" % str(_tmpstrip)
-        return NULL
     
     from sys import modules as _modules
     _this = _modules[__name__]
