@@ -227,7 +227,7 @@ if(NOT GAUDI_V21)
     add_definitions(-DGAUDI_V20_COMPAT)
   endif()
   # special case
-  if(G21_HIDE_SYMBOLS AND (comp MATCHES gcc4))
+  if(G21_HIDE_SYMBOLS AND (LCG_COMP STREQUAL gcc AND LCG_COMPVERS MATCHES "^4"))
     add_definitions(-DG21_HIDE_SYMBOLS)
   endif()
   #

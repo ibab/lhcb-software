@@ -3,7 +3,7 @@
 #
 # Authors: Pere Mato, Marco Clemencic
 #
-# Commit Id: a03ef41014725741a760e5bb709777e70a91c430
+# Commit Id: 6c1fa0fa9f6adcd6b419a427559cef26c062c583
 
 cmake_minimum_required(VERSION 2.8.5)
 
@@ -138,6 +138,16 @@ if(CMAKE_OBJCOPY)
          ON)
 else()
   set(GAUDI_DETACHED_DEBINFO OFF)
+endif()
+
+# FIXME: workaroud to use LCG_releases_base also when we have an old toolchain
+#        that does not define it
+if(NOT LCG_releases_base AND LCG_TOOLCHAIN_INFO)
+  if(LCG_releases MATCHES "LCG_${heptools_version}\$")
+    get_filename_component(LCG_releases_base ${LCG_releases} PATH)
+  else()
+    set(LCG_releases_base ${LCG_releases})
+  endif()
 endif()
 
 #---------------------------------------------------------------------------------------------------
@@ -2645,7 +2655,11 @@ macro(gaudi_generate_project_platform_config_file)
   get_property(component_libraries GLOBAL PROPERTY COMPONENT_LIBRARIES)
 
   set(project_environment_ ${project_environment})
-  _make_relocatable(project_environment_ VARS LCG_releases LCG_external)
+  if(LCG_releases_base)
+    _make_relocatable(project_environment_ VARS LCG_releases_base)
+  else()
+    _make_relocatable(project_environment_ VARS LCG_releases LCG_external)
+  endif()
   string(REPLACE "\$" "\\\$" project_environment_string "${project_environment_}")
 
   set(filename ${CMAKE_CONFIG_OUTPUT_DIRECTORY}/${CMAKE_PROJECT_NAME}PlatformConfig.cmake)
@@ -2819,7 +2833,11 @@ function(gaudi_generate_env_conf filename)
 <env:config xmlns:env=\"EnvSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"EnvSchema EnvSchema.xsd \">\n")
 
   # variables that need to be used to make the environment relative
-  set(root_vars LCG_releases LCG_external)
+  if(LCG_releases_base)
+    set(root_vars LCG_releases_base)
+  else()
+    set(root_vars LCG_releases LCG_external)
+  endif()
   foreach(root_var ${root_vars})
     set(data "${data}  <env:default variable=\"${root_var}\">${${root_var}}</env:default>\n")
   endforeach()
@@ -3025,6 +3043,13 @@ endfunction()
 #-------------------------------------------------------------------------------
 macro(gaudi_generate_exports)
   message(STATUS "Generating 'export' files.")
+
+  if(LCG_releases_base)
+    set(_relocation_bases LCG_releases_base CMAKE_SOURCE_DIR)
+  else()
+    set(_relocation_bases LCG_releases LCG_external CMAKE_SOURCE_DIR)
+  endif()
+
   foreach(package ${ARGN})
     # we do not use the "Hat" for the export names
     get_filename_component(pkgname ${package} NAME)
@@ -3065,7 +3090,7 @@ get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)
             # Note: relocate an include path against CMAKE_SOURCE_DIR allows
             #       to correctly relocate the include path to the current project
             #       if there is a local copy of the subdir
-            _make_relocatable(prop VARS LCG_releases LCG_external CMAKE_SOURCE_DIR)
+            _make_relocatable(prop VARS ${_relocation_bases})
             file(APPEND ${pkg_exp_file} "  ${pn} \"${prop}\"\n")
           endif()
         endforeach()

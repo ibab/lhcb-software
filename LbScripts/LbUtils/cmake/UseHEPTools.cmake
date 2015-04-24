@@ -41,6 +41,11 @@ macro(use_heptools heptools_version)
 
     get_filename_component(LCG_releases ${LCG_TOOLCHAIN_INFO} PATH CACHE)
     set(LCG_external ${LCG_releases})
+    if(LCG_releases MATCHES "LCG_${heptools_version}\$")
+      get_filename_component(LCG_releases_base ${LCG_releases} PATH)
+    else()
+      set(LCG_releases_base ${LCG_releases})
+    endif()
 
     message(STATUS "Using heptools ${heptools_version} from ${LCG_TOOLCHAIN_INFO}")
 

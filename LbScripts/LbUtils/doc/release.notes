@@ -1,3 +1,8 @@
+2015-04-24  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* cmake: updated CMake support modules
+	* cmt/update_gaudi_cmake.sh: modified to update release.notes
+
 2015-04-23  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/lcg-*-*: fixed LBCORE-795: added wrappers for gcc 4.8.4, 4.9.2 and

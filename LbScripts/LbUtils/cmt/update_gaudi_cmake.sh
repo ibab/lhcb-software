@@ -49,3 +49,15 @@ git clone --mirror $git_url gaudi_tmp
     git log --date=short --pretty=format:'! %ad - %an (%h)%n%n - %s%n%n%w(80,3,3)%b%n' ${remote_id} -- cmake Makefile-cmake.mk > $notes_file
 )
 rm -rf gaudi_tmp
+
+# update package release notes
+echo "Updating $rootdir/doc/release.notes"
+mv $rootdir/doc/release.notes $rootdir/doc/release.notes.tmp
+cat > $rootdir/doc/release.notes <<EOF
+$(date -I)  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* cmake: updated CMake support modules
+
+EOF
+cat $rootdir/doc/release.notes.tmp >> $rootdir/doc/release.notes
+rm $rootdir/doc/release.notes.tmp

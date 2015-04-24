@@ -1,3 +1,53 @@
+! 2015-04-24 - Marco Clemencic (6c1fa0f)
+
+ - GAUDI-1019: fixed backward compatibility issue
+
+   There was an inconsistency when mixing the old UseHEPTools.cmake (not 
+   defining LCG_releases_base) and the new GaudiProjectConfig.cmake (using 
+   LCG_releases_base) in projects derived from the latest Gaudi.
+
+   LCG_releases_base is not set in GaudiProjectConfig.cmake if not already done
+   in the toolchain.
+
+! 2015-04-23 - Marco Clemencic (075d845)
+
+ - Fixed GAUDI-1019: use relocatable path for gcc
+
+   I modified the relocation for new style LCG releases
+   (lcg/releases/LCG_<version>) to use a new variable (LCG_releases_base) 
+   pointing to the base directory of all LCG releases (lcg/releases).
+
+   In conjunction with the fix to LBCORE-783 (or by using the copy of gcc in
+   lcg/releases), the path to gcc becomes relocatable.
+
+! 2015-04-23 - Marco Clemencic (31aecfa)
+
+ - minor improvement to 'test' target in Makefile-cmake.mk
+
+   Automatically clean up the test output directories and trigger the 
+   generation of the HTML summary.
+
+
+! 2015-04-13 - Marco Clemencic (69dc109)
+
+ - fixed problem handling option G21_HIDE_SYMBOLS
+
+   
+
+! 2015-04-12 - Marco Clemencic (2fb6d4c)
+
+ - fix LBCORE-742 "make purge" removes .pyc files for all platforms
+
+   Do not descend InstallArea when looking for .pyc files.
+
+
+! 2015-03-23 - Marco Clemencic (c9b3370)
+
+ - GAUDI-1018: reduce the verbosity of "make install"
+
+   Modified the Makefile wrapper so that the output of the CMake "make install"
+   is reduced if the environment variable VERBOSE is not set.
+
 ! 2015-03-20 - Marco Clemencic (9e4e0b7)
 
  - completed fix to LBCORE-766 (simultaneous use of Qt4 and Qt5)
