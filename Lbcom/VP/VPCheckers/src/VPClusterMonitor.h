@@ -16,6 +16,7 @@
  *  @author Daniel Hynds
  *  @date   2012-07-06
  */
+
 class VPClusterMonitor : public GaudiHistoAlg {
 public: 
   /// Standard constructor
@@ -27,17 +28,12 @@ public:
   virtual StatusCode execute();       ///< Algorithm execution
   
 private:
-  LHCb::VPClusters* m_clusters;
-  std::string m_clusterCont;
-  std::string m_hitCont;
+  std::string m_clusterLocation;
+  std::string m_linkedHitsLocation;
   
-  DeVP* m_vpDet;
+  DeVP* m_det;
   
-  double m_dataTaken;
-
-  void loopClusters(); 
-
 };
 
-#endif // VPCLUSTERMONITOR_H
+#endif
 

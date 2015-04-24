@@ -9,16 +9,6 @@
 // Local
 #include "VPClusterMonitor.h"
 
-using namespace Gaudi::Units;
-using namespace LHCb;
-using namespace Gaudi;
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : VPClusterMonitor
-//
-// 2012-07-06 : Daniel Hynds
-//-----------------------------------------------------------------------------
-
 DECLARE_ALGORITHM_FACTORY(VPClusterMonitor)
 
 //=============================================================================
@@ -27,11 +17,12 @@ DECLARE_ALGORITHM_FACTORY(VPClusterMonitor)
 VPClusterMonitor::VPClusterMonitor(const std::string& name,
                                    ISvcLocator* pSvcLocator) :
     GaudiHistoAlg(name, pSvcLocator),
-    m_vpDet(NULL) {
+    m_det(NULL) {
 
-  declareProperty("ClusterLocation", m_clusterCont = LHCb::VPClusterLocation::Default);
-  declareProperty("MCHitLocation", m_hitCont = LHCb::MCHitLocation::VP);
-  declareProperty("DataTaken", m_dataTaken = 0.);
+  declareProperty("ClusterLocation", 
+                  m_clusterLocation = LHCb::VPClusterLocation::Default);
+  declareProperty("LinkedHitsLocation", 
+                  m_linkedHitsLocation = LHCb::VPClusterLocation::Default + "2MCHits");
 
 }
 
@@ -46,10 +37,14 @@ VPClusterMonitor::~VPClusterMonitor() {}
 StatusCode VPClusterMonitor::initialize() {
   StatusCode sc = GaudiHistoAlg::initialize(); 
   if (sc.isFailure()) return sc;
-  // Set histo dir
   setHistoTopDir("VP/");
   // Get detector element
-  m_vpDet = getDet<DeVP>(DeVPLocation::Default);
+  m_det = getDet<DeVP>(DeVPLocation::Default);
+  if (!m_det) {
+    error() << "Cannot retrieve detector element " << DeVPLocation::Default 
+            << endmsg;
+    return StatusCode::FAILURE;
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -57,141 +52,89 @@ StatusCode VPClusterMonitor::initialize() {
 // Main execution
 //=============================================================================
 StatusCode VPClusterMonitor::execute() {
-  // Get VP clusters
-  m_clusters = getIfExists<LHCb::VPClusters>(m_clusterCont);
-  if (!m_clusters) {
-    error() << "No VPClusters in " << m_clusterCont << endmsg;
+
+  // Get the clusters.
+  const LHCb::VPClusters* clusters = getIfExists<LHCb::VPClusters>(m_clusterLocation);
+  if (!clusters) {
+    error() << "No clusters in " << m_clusterLocation << endmsg;
     return StatusCode::FAILURE;
   }
-  // Make plots
-  if (msgLevel(MSG::DEBUG)) {
-    debug() << "Found " << m_clusters->size() << " clusters" << endmsg;
+  if (UNLIKELY(msgLevel(MSG::DEBUG))) {
+    debug() << "Found " << clusters->size() << " clusters" << endmsg;
   }
-  loopClusters();
-  return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-// Loop over cluster container
-//=============================================================================
-void VPClusterMonitor::loopClusters() {
-  if (msgLevel(MSG::DEBUG)) {
-    debug() << "==> Looping over clusters " << endmsg;
-  }
-  // Get cluster iterator and link to MC hits
-  LHCb::VPClusters::const_iterator itc;
-  LinkedTo<LHCb::MCHit, LHCb::VPCluster> links = LinkedTo<LHCb::MCHit, LHCb::VPCluster>(evtSvc(), msgSvc(), LHCb::VPClusterLocation::Default + "2MCHits");
-  // Loop over clusters  
-  for (itc = m_clusters->begin(); itc != m_clusters->end(); itc++) {
-    LHCb::VPCluster* cluster = *itc;
+  // Get the linker table.
+  auto links = LinkedTo<LHCb::MCHit, LHCb::VPCluster>(evtSvc(), msgSvc(), 
+                                                      m_linkedHitsLocation);
+  // Loop over the clusters. 
+  for (const LHCb::VPCluster* cluster : *clusters) {
     // Get sensor
-    const DeVPSensor* sensor = m_vpDet->sensorOfChannel(cluster->channelID());
-    // Set up some objects for later use
+    const DeVPSensor* sensor = m_det->sensorOfChannel(cluster->channelID());
     std::vector<LHCb::VPChannelID> pixels = cluster->pixels();
-    int clustToT = 0;
-    double cluster_x(0), cluster_y(0), cluster_z(0), pix1ToT(0), pix2ToT(0), pixel_x(0); 
-    std::vector<double> xvalues;
-    // Loop over pixel hits
-    for (unsigned int it = 0; it < pixels.size(); ++it) {
-      clustToT += 1;
-      // Enter pixel values for eta distribution plots
-      if (it == 0 && pixels.size() == 2) pix1ToT = 1;
-      if (it == 1 && pixels.size() == 2) pix2ToT = 1;
-      // Get XYZ of pixel
-      Gaudi::XYZPoint pointGlobal = sensor->channelToPoint(pixels[it], false);
-      // Get pixel radius
-      double radius = pointGlobal.rho();
-      // Plot pixel information
-      plot(radius, "pixel_radius", 0, 100, 200);
-      plot2D(pointGlobal.x(), pointGlobal.y(), "xy_map_pixels", -100, 100, -100, 100, 400, 400);
-      plot2D(pointGlobal.z(), pointGlobal.x(), "xz_map_pixels", -500, 1000, -100, 100, 1000, 400);
-      plot2D(pointGlobal.z(), pointGlobal.y(), "yz_map_pixels", -500, 1000, -100, 100, 1000, 400);
-      // Get info for eta distribution
-      pixel_x = pointGlobal.x();
-      // Make cluster information
-      cluster_x += pointGlobal.x();
-      cluster_y += pointGlobal.y();
-      cluster_z += pointGlobal.z();
-      // Information about cluster width
-      bool newX = true;
-      for (unsigned int j = 0; j < xvalues.size(); ++j) {
-        if (xvalues[j] == pointGlobal.x()) newX = false;
-      }
-      if (newX) xvalues.push_back(pointGlobal.x());
+    // Loop over the pixel hits.
+    for (auto it = pixels.cbegin(), end = pixels.cend(); it != end; ++it) {
+      // Get the pixel position in the global frame and plot it.
+      Gaudi::XYZPoint pointGlobal = sensor->channelToPoint(*it, false);
+      plot(pointGlobal.rho(), "PixelRadius", 0, 100, 200);
+      plot2D(pointGlobal.x(), pointGlobal.y(), "PixelXY", -100, 100, -100, 100, 400, 400);
+      plot2D(pointGlobal.z(), pointGlobal.x(), "PixelZX", -500, 1000, -100, 100, 1000, 400);
+      plot2D(pointGlobal.z(), pointGlobal.y(), "PixelZY", -500, 1000, -100, 100, 1000, 400);
     }
-    // Get XYZ of cluster 
-    cluster_x /= clustToT;
-    cluster_y /= clustToT;
-    cluster_z /= clustToT;
-    Gaudi::XYZPoint cluster_point(cluster_x, cluster_y, cluster_z);
-    // Plot where the cluster is
-    double cluster_radius = sqrt(cluster_x * cluster_x + cluster_y * cluster_y);
-    
-    plot(pixels.size(), "global_cluster_size", 0, 100, 100);
-    plot(cluster_radius, "cluster_radius", 0, 100, 200);
-    plot(clustToT, "cluster_tot", 0, 50, 50);
-    plot2D(cluster_radius, clustToT, "cluster_tot_versus_r", 0, 100, 0, 50, 200, 50);
-    plot2D(cluster_radius, pixels.size(), "cluster_size_versus_r", 0, 100, 0, 100, 200, 100);
-    plot2D(cluster_x, cluster_y, "xy_map_clusters", -100, 100, -100, 100, 400, 400);
-    plot2D(cluster_z, cluster_x, "xz_map_clusters", -500, 1000, -100, 100, 1000, 400);
-    plot2D(cluster_z, cluster_y, "yz_map_clusters", -500, 1000, -100, 100, 1000, 400);
-    plot(cluster->fraction().first, "interpixel_fraction_x",-0.1,1.1,120);
-    plot(cluster->fraction().second, "interpixel_fraction_y",-0.1,1.1,120);
-    // Check if 2 pixels wide in x
-    if (pixels.size() == 2 && cluster_x != pixel_x) {
-      // Plot eta distributions
-      plot(pix1ToT/(pix1ToT+pix2ToT), "eta_distribution_pix1", 0, 1, 100);
-      plot(pix2ToT/(pix1ToT+pix2ToT), "eta_distribution_pix2", 0, 1, 100);
-      plot2D(cluster_radius, pix1ToT/(pix1ToT+pix2ToT), "eta_distribution_pix1_versus_radius", 0, 100, 0, 1, 200, 100);
-      plot2D(cluster_radius, pix2ToT/(pix1ToT+pix2ToT), "eta_distribution_pix2_versus_radius", 0, 100, 0, 1, 200, 100);
-    }
- 
+    const unsigned int nPixels = pixels.size();
+    // Get the global cluster position. 
+    const double x = cluster->x();
+    const double y = cluster->y();
+    const double z = cluster->z();
+    Gaudi::XYZPoint pGlobal(x, y, z);
+    const double rho = pGlobal.rho();
+    plot(nPixels, "ClusterSize", 0, 100, 100);
+    plot(rho, "ClusterRadius", 0, 100, 200);
+    plot2D(rho, nPixels, "ClusterSizeVsRadius", 0, 100, 0, 100, 200, 100);
+    plot2D(x, y, "ClusterXY", -100, 100, -100, 100, 400, 400);
+    plot2D(z, x, "ClusterZX", -500, 1000, -100, 100, 1000, 400);
+    plot2D(z, y, "ClusterZY", -500, 1000, -100, 100, 1000, 400);
+    plot(cluster->fraction().first, "InterpixelFractionX", -0.1, 1.1, 120);
+    plot(cluster->fraction().second, "InterpixelFractionY", -0.1, 1.1, 120);
 
     // Get MC hit for this cluster and plot residuals
-    LHCb::MCHit* hit = links.first(cluster->channelID());
-    if (hit) {
-      // Get true track direction for this hit
-      const double yangle = atan(hit->dydz()) / degree;
-      const double xangle = atan(hit->dxdz()) / degree;
-      const double theta = sqrt(xangle * xangle + yangle * yangle);
-      plot(theta, "track_theta", 0., 50., 100);
-      plot(xangle, "track_x_angle", -30., 30., 120);
-      plot(yangle, "track_y_angle", -30., 30., 120);
-      // Get XYZ of hit
-      Gaudi::XYZPoint mchitPoint = hit->midPoint();
-      // Calculate 3D hit residuals
-      const double dx = cluster_point.x() - mchitPoint.x();
-      const double dy = cluster_point.y() - mchitPoint.y();
-      const double dz = cluster_point.z() - mchitPoint.z();
-      const double resid3d = sqrt(dx * dx + dy * dy + dz * dz);
-      Gaudi::XYZPoint liteClusterPoint = sensor->channelToPoint(cluster->channelID(), cluster->fraction());
-      plot(liteClusterPoint.x() - mchitPoint.x(), "xresLite", -0.2, 0.2, 4000); 
-      plot(liteClusterPoint.y() - mchitPoint.y(), "yresLite", -0.2, 0.2, 4000); 
-      plot(resid3d, "3d_residuals",-0.2,0.2,4000);
-      plot2D(theta, resid3d, "3d_residuals_versus_track_theta", 0., 50., -0.2, 0.2, 100, 400);
-      plot2D(cluster_radius, resid3d, "3d_residuals_versus_radius", 0., 100, -0.2, 0.2, 200, 400);
-      // Plot XY residuals
-      plot(dx, "x_residuals",-0.2,0.2,4000);
-      plot(dy, "y_residuals",-0.2,0.2,4000);
-      if (1 == pixels.size()) {
-        plot(dx, "x_residuals1", -0.2, 0.2, 4000);
-        plot(dy, "y_residuals1", -0.2, 0.2, 4000);
-      } else if (2 == pixels.size()) {
-        plot(dx, "x_residuals2", -0.2, 0.2, 4000);
-        plot(dy, "y_residuals2", -0.2, 0.2, 4000);
-      }
-      plot2D(xangle, dx, "x_residuals_versus_track_angle_x", -30., 30., -0.2, 0.2, 120, 400);
-      plot2D(xangle, dy, "y_residuals_versus_track_angle_x", -30., 30., -0.2, 0.2, 120, 400);
-      plot2D(xangle, pixels.size(), "cluster_size_versus_track_angle_x", -30., 30., 0, 20, 120, 20);
-      plot2D(xangle, xvalues.size(), "cluster_widthx_versus_track_angle_x", -30., 30., 0, 20, 120, 20);
-      // Plot the same for small y angles
-      if (yangle < 2 && yangle > -2) {
-        plot2D(xangle, dx, "x_residuals_versus_track_angle_x_small_y", -30., 30., -0.2, 0.2, 120, 400);
-        plot2D(xangle, dy, "y_residuals_versus_track_angle_x_small_y", -30., 30., -0.2, 0.2, 120, 400);
-        plot2D(xangle, pixels.size(), "cluster_size_versus_track_angle_x_small_y", -30., 30., 0, 20, 120, 20);
-        plot2D(xangle, xvalues.size(), "cluster_widthx_versus_track_angle_x_small_y", -30., 30., 0, 20, 120, 20);
-      }      
-    } // End of hit information
-  } // End of loop over clusters
+    const LHCb::MCHit* hit = links.first(cluster->channelID());
+    if (!hit) continue;
+    // Get true track direction for this hit
+    const double yangle = atan(hit->dydz()) / Gaudi::Units::degree;
+    const double xangle = atan(hit->dxdz()) / Gaudi::Units::degree;
+    const double theta = sqrt(xangle * xangle + yangle * yangle);
+    plot(theta, "TrackTheta", 0., 50., 100);
+    plot(xangle, "TrackAngleX", -30., 30., 120);
+    plot(yangle, "TrackAngleY", -30., 30., 120);
+    // Get hit position.
+    const Gaudi::XYZPoint mchitPoint = hit->midPoint();
+    // Calculate the residuals.
+    const double dx = x - mchitPoint.x();
+    const double dy = y - mchitPoint.y();
+    const double dz = z - mchitPoint.z();
+    const double d3 = sqrt(dx * dx + dy * dy + dz * dz);
+    // Plot the residuals.
+    plot(dx, "ResidualsX", -0.2, 0.2, 4000);
+    plot(dy, "ResidualsY", -0.2, 0.2, 4000);
+    plot(d3, "Residuals3d", -0.2, 0.2, 4000);
+    if (1 == nPixels) {
+      plot(dx, "ResidualsX1", -0.2, 0.2, 4000);
+      plot(dy, "ResidualsY1", -0.2, 0.2, 4000);
+    } else if (2 == nPixels) {
+      plot(dx, "ResidualsX2", -0.2, 0.2, 4000);
+      plot(dy, "ResidualsY2", -0.2, 0.2, 4000);
+    }
+    plot2D(theta, d3, "Residuals3dVsTrackTheta", 0., 50., -0.2, 0.2, 100, 400);
+    plot2D(rho, d3, "Residuals3dVsRadius", 0., 100, -0.2, 0.2, 200, 400);
+    plot2D(xangle, dx, "ResidualsXVsTrackAngleX", -30., 30., -0.2, 0.2, 120, 400);
+    plot2D(xangle, dy, "ResidualsYVsTrackAngleX", -30., 30., -0.2, 0.2, 120, 400);
+    plot2D(xangle, nPixels, "ClusterSizeVsTrackAngleX", -30., 30., 0, 20, 120, 20);
+    // Plot the same for small y angles
+    if (yangle < 2 && yangle > -2) {
+      plot2D(xangle, dx, "ResidualsXVsTrackAngleXSmallY", -30., 30., -0.2, 0.2, 120, 400);
+      plot2D(xangle, dy, "ResidualsYVsTrackAngleXSmallY", -30., 30., -0.2, 0.2, 120, 400);
+      plot2D(xangle, nPixels, "ClusterSizeVsTrackAngleXSmallY", -30., 30., 0, 20, 120, 20);
+    }      
+  }
+  return StatusCode::SUCCESS;
 }
 

@@ -3,8 +3,11 @@
 ! Responsible : Mark Williams
 !--------------------------------------------------------------------------
 
+! 2015-04-24 - Heinrich Schindler
+ - Tidy up VPClusterMonitor (remove lite-cluster and ToT related plots).
+
 ! 2015-04-02 - Mark Williams
- - New package to move VPClusterMonitor from Boole to LBCom
+ - New package to move VPClusterMonitor from Boole to Lbcom
 
 
 
