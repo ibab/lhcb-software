@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2015-04-24 - Heinrich Schindler
+ - Tidy up PrCheatedVP and adapt it to "new" (spring 2014) VPCluster format.
+
 !========================= PrMCTools v2r8 2015-04-21 =========================
 ! 2015-03-31 - Michel De Cian
  - Adapt 'PrTrackAssociator' such that the list of classID it understands can be configured. Give it per default for LHCb::Track and LHCb::Track::Selection.

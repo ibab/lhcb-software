@@ -12,23 +12,20 @@
  *  @author Olivier Callot
  *  @date   2012-07-26
  */
+
 class PrCheatedVP : public GaudiAlgorithm {
 public: 
   /// Standard constructor
-  PrCheatedVP( const std::string& name, ISvcLocator* pSvcLocator );
-
-  virtual ~PrCheatedVP( ); ///< Destructor
+  PrCheatedVP(const std::string& name, ISvcLocator* pSvcLocator);
+  /// Destructor
+  virtual ~PrCheatedVP();
 
   virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode execute();       ///< Algorithm execution
 
 private:
 
-  DeVP* m_vp;
   bool m_useMCHits;
-  bool m_binaryClusters;
-  Gaudi::XYZPoint getXYZ(LHCb::VPCluster* cluster);
-  Gaudi::XYZPoint getBinaryXYZ(LHCb::VPCluster* cluster);
 };
 
-#endif // PRCHEATEDVP_H
+#endif 
