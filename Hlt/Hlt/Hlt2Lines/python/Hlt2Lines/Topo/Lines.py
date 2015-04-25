@@ -5,11 +5,17 @@ slots = Run1Topo.slots()
 slots['Common'].update({
         'TOS'               : ('Hlt1(Two)?Track(MVA)?(Muon)?'
                                'Decision%TOS'),
-        'GEC_MAX'           : 500,
+        'MUTOS'             : 'Hlt1TrackMuonDecision%TOS',
+        'HTOS'              : 'Hlt1(Two)?TrackMVADecision%TOS',
+        'GEC_MAX'           : -1,
         'USE_KS'            : True,
         'USE_LAMBDA'        : True,
-        'BDT_MIN'           : 0.985,
+        'BDT_PREFILTER'     : 0.2,
+        'BDT_MIN'           : 0.997,
+        'MU_BDT_MIN'        : 0.95,
         'BDT_VARMAP'        : {
+            "n"      : "NINTREE((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0'))",
+            "mcor"   : "BPVCORRM",
             "chi2"   : "VFASPF(VCHI2)",
             "sumpt"  : "SUMTREE(PT, ISBASIC, 0.0)/MeV",
             "eta"    : "BPVETA",
@@ -19,8 +25,8 @@ slots['Common'].update({
             "ipchi2" : "BPVIPCHI2()",
             "n1trk"  : ("NINTREE(ISBASIC & (PT > 1*GeV) "
                         "& (BPVIPCHI2() > 16))")
-            },
-        'BDT_PARAMS'        : 'hlt2_border_base.mx',
+        },
+        'BDT_PARAMS'        : 'hlt2_topo_run2_v1.bbdt',
         'TRK_PT_MIN'        : 200 * MeV,
         'TRK_P_MIN'         : 3000 * MeV,
         'TRK_CHI2_MAX'      : 3,
@@ -29,7 +35,7 @@ slots['Common'].update({
         'CMB_TRK_NLT16_MAX' : 2,
         'CMB_PRT_PT_MIN'    : 2000 * MeV,
         'CMB_VRT_DIRA_MIN'  : 0,
-        'CMB_VRT_VDCHI2_MIN': 0,
+        'CMB_VRT_VDCHI2_MIN': 16,
         'CMB_VRT_CHI2_MAX'  : 1000,
         'CMB_VRT_ETA_MIN'   : 2,
         'CMB_VRT_ETA_MAX'   : 5,
@@ -56,7 +62,7 @@ class TopoLines(Hlt2LinesConfigurableUser):
         # Filter the particle input.
         from Inputs import (BiKalmanFittedKaonsWithMuonID, KsLLTF, KsDD,
                             LambdaLLTrackFitted, LambdaDDTrackFitted)
-        from Stages import FilterParts
+        from Stages import FilterParts, FilterParts4
         gec   = props['GEC_MAX'] >= 0
         parts = [FilterParts('Kaon', [BiKalmanFittedKaonsWithMuonID], gec)]
         if props['USE_KS']:
@@ -65,18 +71,27 @@ class TopoLines(Hlt2LinesConfigurableUser):
         if props['USE_LAMBDA']: 
             parts.append(FilterParts('LambdaLL', [LambdaLLTrackFitted], gec))
             parts.append(FilterParts('LambdaDD', [LambdaDDTrackFitted], gec))
+        parts4 = [FilterParts4([BiKalmanFittedKaonsWithMuonID], gec)]
 
         # Create the stages.
-        from Stages import CombineTos, CombineNBody, Filter2Body, FilterMVA
-        tos = [CombineTos(parts)]
-        self._stages['Topo2BodyCombos'] = [Filter2Body(tos)]
-        self._stages['Topo3BodyCombos'] = [CombineNBody(3, tos + parts)]
-        self._stages['Topo4BodyCombos'] = [CombineNBody(4, tos + parts)]
+        from Stages import CombineTos, Combine3, Combine4, FilterMVA
+        combos2  = [CombineTos(parts)]
+        combos2f = [FilterMVA(2,combos2,props,props['BDT_PREFILTER'])]
+        combos3  = [Combine3(combos2f+parts)]
+        combos3f = [FilterMVA(3,combos3,props,props['BDT_PREFILTER'])]
+        combos4  = [Combine4(combos3f+parts4)]
+
+        self._stages['Topo2BodyCombos'] = combos2
+        self._stages['Topo3BodyCombos'] = combos3
+        self._stages['Topo4BodyCombos'] = combos4
         for n in xrange(2, 5):
             self._stages['Topo%iBody' % n] = [
                 FilterMVA(n, self._stages['Topo%iBodyCombos' % n], props)]
+            self._stages['TopoMu%iBody' % n] = [
+                FilterMVA(n, self._stages['Topo%iBodyCombos' % n], props,
+                          props['MU_BDT_MIN'],True)]
 
-        # Return the stages.
+        # Return the stages. 
         if nickname: return self._stages[nickname]
         else: return self._stages
 
