@@ -127,7 +127,7 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from GaudiKernel.SystemOfUnits             import GeV, MeV, mm, micrometers
+from GaudiKernel.SystemOfUnits             import GeV, MeV, mm
 from StrippingUtils.Utils                  import LineBuilder
 # =============================================================================
 ## logging
@@ -767,7 +767,7 @@ class StrippingPromptCharmConf(LineBuilder) :
             ( chi2vx < 9 )              &
             ( PT     > %s             ) &
             ( ADMASS('D0') < 75 * MeV ) &
-            ( ctau > 100 * micrometer )
+            ( ctau > 0.1 * mm )
             """ %  self['pT(D0)'] 
             )           
     
@@ -801,7 +801,7 @@ class StrippingPromptCharmConf(LineBuilder) :
             ( chi2vx < 9 )              &
             ( PT     > %s             ) &
             ( ADMASS('D0') < 75 * MeV ) &
-            ( ctau > 100 * micrometer )
+            ( ctau > 0.1 * mm )
             """ %  self['pT(D0->HH)'] 
             )           
 
@@ -835,7 +835,7 @@ class StrippingPromptCharmConf(LineBuilder) :
             ( chi2vx < 9 )              &
             ( PT     > %s             ) &
             ( ADMASS('D0') < 75 * MeV ) &
-            ( ctau > 100 * micrometer )
+            ( ctau > 0.1 * mm )
             """ %  self['pT(D0->HH)'] 
             )           
     
@@ -987,7 +987,7 @@ class StrippingPromptCharmConf(LineBuilder) :
             ( chi2vx  < 25  ) &
             ( PT      > %s  ) & 
             ( dmD  | dmDs   ) &
-            ( ctau    > 100 * micrometer )
+            ( ctau    > 0.1 * mm )
             """  % self['pT(Ds+)' ] 
             )
 
@@ -1024,7 +1024,7 @@ class StrippingPromptCharmConf(LineBuilder) :
             ( chi2vx  < 25                 ) &
             ( PT      > %s                 ) &
             ( ADMASS  ('D+'  )  < 55 * MeV ) &
-            ( ctau    > 100 * micrometer   )
+            ( ctau    > 0.1 * mm   )
             """ % self['pT(D+)' ] ,
             )
     
@@ -1081,7 +1081,7 @@ class StrippingPromptCharmConf(LineBuilder) :
             ## inputs 
             [ self.preLamC() ] ,
             ##
-            Code = " ( PT > %s ) & ( ctau > 100 * micrometers ) " % self['pT(Lc+)']
+            Code = " ( PT > %s ) & ( ctau > 0.1 * mm ) " % self['pT(Lc+)']
             )
 
     # =============================================================================
@@ -1119,7 +1119,7 @@ class StrippingPromptCharmConf(LineBuilder) :
             MotherCut      = """
             ( chi2vx  < 25 )              &
             ( PT      > %s              ) &
-            ( ctau    > 50 * micrometer )  
+            ( ctau    > 0.05 * mm )  
             """ % self [ 'pT(Lc+)']
             )
     
@@ -1158,7 +1158,7 @@ class StrippingPromptCharmConf(LineBuilder) :
             ( PT      > %s                          ) &
             ( ( ADMASS ( 'Lambda_c+' ) < 55 * MeV ) 
             | ( ADMASS ( 'Xi_c+'     ) < 55 * MeV ) ) &
-            ( ctau  > 100 * micrometer              )  
+            ( ctau  > 0.1 * mm              )  
             """ % self [ 'pT(Lc+)']
             )
 

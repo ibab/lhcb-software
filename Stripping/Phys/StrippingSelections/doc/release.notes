@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-04-25 - Andrea Contu
+ - Changing the units from micrometers to in mm in various places for StrippingCharm/StrippingPromptCharm.py
+
 ! 2015-04-24 - Mika Vesterinen
  - Updates to B2DMuNuX
 
