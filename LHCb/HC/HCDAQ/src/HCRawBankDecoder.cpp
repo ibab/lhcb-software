@@ -66,8 +66,7 @@ StatusCode HCRawBankDecoder::execute() {
     return Warning("Cannot find HC raw banks", StatusCode::SUCCESS);
   }
 
-  std::vector<LHCb::RawBank*>::const_iterator it;
-  for (it = banks.begin(); it != banks.end(); ++it) {
+  for (auto it = banks.begin(), end = banks.end(); it != end; ++it) {
     // Make sure the bank is not corrupted.
     if (LHCb::RawBank::MagicPattern != (*it)->magic()) {
       error() << "Bad magic pattern" << endmsg;
@@ -98,7 +97,7 @@ StatusCode HCRawBankDecoder::execute() {
     }
     return StatusCode::SUCCESS;
   }
-  for (it = errorBanks.begin(); it != errorBanks.end(); ++it) {
+  for (auto it = errorBanks.begin(), end = errorBanks.end(); it != end; ++it) {
     // Make sure the bank is not corrupted.
     if (LHCb::RawBank::MagicPattern != (*it)->magic()) {
       error() << "Bad magic pattern in error bank" << endmsg;
@@ -120,7 +119,7 @@ bool HCRawBankDecoder::decodeV1(LHCb::RawBank* bank) {
     const unsigned int channel = (word >> 16) & 0xFFFF;
     const unsigned int adc = word & 0xFFFF;
     if (UNLIKELY(msgLevel(MSG::VERBOSE))) {
-      debug() << "Channel: " << channel << ", ADC: " << adc << endmsg;
+      verbose() << "Channel: " << channel << ", ADC: " << adc << endmsg;
     }
   }
   return true;
@@ -272,9 +271,9 @@ bool HCRawBankDecoder::decodeV3(LHCb::RawBank* bank) {
     // Read the bank header.
     uint32_t word = *data++;
     --nWords;
-    // Length of the trigger part in bytes, without padding.
+    // Length of the trigger part.
     unsigned int lenTrig = word & 0x7F;
-    // Length of the ADC part in bytes, without padding.
+    // Length of the ADC part.
     unsigned int lenAdc = (word >> 7) & 0x7F;
     const unsigned int card = (word >> 14) & 0xF;
     const unsigned int crate = (word >> 18) & 0x1F; 
@@ -283,7 +282,7 @@ bool HCRawBankDecoder::decodeV3(LHCb::RawBank* bank) {
     if (UNLIKELY(msgLevel(MSG::VERBOSE))) {
       verbose() << format("Crate: %02u, card: %02u, ", crate, card) 
                 << format("trigger part: %03u bytes, ", lenTrig)
-                << format("ADC part: %03u bytes", lenAdc) << endmsg;
+                << format("ADC part: %03u bytes", 2 * lenAdc) << endmsg;
       const unsigned int ttype = (ctrl >> 1) & 0xF;
       const unsigned int chk = (ctrl >> 7) & 0x2;
       verbose() << format("Trigger type: 0x%1x, ", ttype) 
@@ -337,7 +336,7 @@ bool HCRawBankDecoder::decodeV3(LHCb::RawBank* bank) {
       }
     }
     if (m_skipAdc) {
-      const unsigned int nSkip = (lenAdc + 3) / 4;
+      const unsigned int nSkip = (lenAdc + 1) / 2;
       data += nSkip;
       nWords -= nSkip;
       continue;
