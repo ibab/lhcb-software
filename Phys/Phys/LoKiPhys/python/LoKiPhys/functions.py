@@ -732,6 +732,8 @@ BPVLTFITCHI2          = LoKi.Particles.LifeTimeFitChi2DV
 BPVETA                = LoKi.Particles.PseudoRapidityWithTheBestPV()      ## by Albert Puig
 BESTPVETA             = LoKi.Particles.PseudoRapidityWithTheBestPV()      ## by Albert Puig
 
+BPVPHI                = LoKi.Particles.PhiWithTheBestPV() 
+
 # =============================================================================
 # Functions for Lisa Dwyer 
 # =============================================================================

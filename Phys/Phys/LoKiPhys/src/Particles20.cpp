@@ -1693,9 +1693,8 @@ LoKi::Particles::TrgPointingScoreWithBestPV::operator()
 // ============================================================================
 // the default constructor: create the object in invalid state
 // ============================================================================
-LoKi::Particles::PseudoRapidityWithTheBestPV::
-PseudoRapidityWithTheBestPV()
-  : LoKi::AuxDesktopBase                  (          )
+LoKi::Particles::PseudoRapidityWithTheBestPV::PseudoRapidityWithTheBestPV()
+  : LoKi::AuxDesktopBase                      (          )
   , LoKi::Particles::PseudoRapidityFromVertex ( s_VERTEX )
 {}
 // ============================================================================
@@ -1730,6 +1729,43 @@ std::ostream& LoKi::Particles::PseudoRapidityWithTheBestPV::fillStream
  
 
 
+
+// ============================================================================
+// the default constructor: create the object in invalid state
+// ============================================================================
+LoKi::Particles::PhiWithTheBestPV::PhiWithTheBestPV()
+  : LoKi::AuxDesktopBase                        ()
+  , LoKi::Particles::PseudoRapidityWithTheBestPV()
+{}
+// ============================================================================
+// MANDATORY: the clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::PhiWithTheBestPV*
+LoKi::Particles::PhiWithTheBestPV::clone() const
+{ return new PhiWithTheBestPV ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method
+// ============================================================================
+LoKi::Particles::PhiWithTheBestPV::result_type
+LoKi::Particles::PhiWithTheBestPV::operator()
+  ( LoKi::Particles::PhiWithTheBestPV::argument p ) const
+{
+  if ( 0 == p )
+  {
+    Error ( "LHCb::Particle* points to NULL, return -1000" ) ;
+    return -1000 ;                                                     // RETURN
+  }
+  //
+  // get the best vertex from desktop and use it
+  setVertex ( bestVertex ( p ) ) ;
+  //
+  return phi ( p ) ;
+}
+// ============================================================================
+// OPTIONAL: the specific printout
+// ============================================================================
+std::ostream& LoKi::Particles::PhiWithTheBestPV::fillStream
+( std::ostream& s ) const { return s << "BPVPHI" ; }
 
 
 // ============================================================================

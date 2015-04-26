@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2015-04-26 - Vanya Belyaev
+ - add BPVPHI functor 
+
 !========================= LoKiPhys v11r1 2015-03-31 =========================
 
 ! 2015-03-25 - Albert Puig

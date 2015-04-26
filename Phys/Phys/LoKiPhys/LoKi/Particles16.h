@@ -164,6 +164,7 @@ namespace LoKi
     public:
       // ======================================================================
       result_type eta ( argument p ) const ;
+      result_type phi ( argument p ) const ;
       // ======================================================================
     private:
       // ======================================================================
@@ -171,7 +172,43 @@ namespace LoKi
       PseudoRapidityFromVertex();
       // ======================================================================
     } ;
-
+    // ========================================================================
+    /** @class PhiFromVertex
+     *  evaluator of the azimuth obtained from the direction
+     *  from the reference vertex/point to the particle decay vertex
+     *  @see LoKi::Cuts::VPHI
+     *  @author Albert Puig
+     *  @date   2015-03-03
+     */
+    class GAUDI_API PhiFromVertex : public PseudoRapidityFromVertex 
+    {
+    public:
+      // ======================================================================
+      /// constructor form vertex
+      PhiFromVertex ( const LHCb::VertexBase* vertex ) ;
+      /// constructor form the point
+      PhiFromVertex ( const LoKi::Point3D&    point  ) ;
+      /// constructor from the holder
+      PhiFromVertex ( const LoKi::Vertices::VertexHolder& holder ) ;
+      /// copy constructor
+      PhiFromVertex ( const PhiFromVertex& right ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~PhiFromVertex() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  PhiFromVertex* clone() const ;
+      /// MANDATORY: the only one essential method
+      virtual result_type operator() ( argument p ) const
+      { return phi ( p ) ; }
+      /// OPTIONAL: the specific printout
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// default constructor is private
+      PhiFromVertex();
+      // ======================================================================
+    } ;
+    // ========================================================================
   } //                                         end of namespace LoKi::Particles
   // ==========================================================================
 } //                                                      end of namespace LoKi

@@ -1419,6 +1419,35 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class PhiWithTheBestPV
+     *  A special version of the LoKi::Particles::PhiFromVertex functor,
+     *  which gets the related primary vertex from IPhysDesktop tool
+     *
+     *  @see LoKi::Cuts::BPVPHI
+     *  @see IPhysDesktop
+     *  @see LoKi::getPhysDesktop
+     *  @see LoKi::Particles::PseudoRapidityFromVertex
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-04-26
+     */
+    class GAUDI_API PhiWithTheBestPV : public PseudoRapidityWithTheBestPV
+    {
+    public:
+      // ======================================================================
+      /// the default constructor, creates the object in invalid state
+      PhiWithTheBestPV () ;
+      /// MANDATORY: virtual destructor
+      virtual ~PhiWithTheBestPV () {} ;
+      /// MANDATORY: the clone method ("virtual constructor")
+      virtual  PhiWithTheBestPV* clone() const ;
+      /// MANDATORY: the only one essential method
+      virtual  result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    } ;
+    // ========================================================================
   } //                                         end of namespace LoKi::Particles
   // ==========================================================================
 } //                                                      end of namespace LoKi   

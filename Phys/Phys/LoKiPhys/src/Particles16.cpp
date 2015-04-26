@@ -295,6 +295,83 @@ LoKi::Particles::PseudoRapidityFromVertex::fillStream ( std::ostream& s ) const
 { return s << "VETA" ; }
 // ============================================================================
 
+
+// ============================================================================
+// constructor form vertex
+// ============================================================================
+LoKi::Particles::PhiFromVertex::PhiFromVertex
+( const LHCb::VertexBase* vertex )
+  : LoKi::AuxFunBase                                         ()
+  , LoKi::Particles::PhiFromVertex::PseudoRapidityFromVertex ( vertex ) 
+{}
+// ============================================================================
+// constructor form point
+// ============================================================================
+LoKi::Particles::PhiFromVertex::PhiFromVertex
+( const LoKi::Point3D&    point )
+  : LoKi::AuxFunBase                                         ()
+  , LoKi::Particles::PhiFromVertex::PseudoRapidityFromVertex ( point ) 
+{}
+// ============================================================================
+// constructor from the holder/
+// ============================================================================
+LoKi::Particles::PhiFromVertex::PhiFromVertex
+( const LoKi::Vertices::VertexHolder& holder ) 
+  : LoKi::AuxFunBase                                         ()
+  , LoKi::Particles::PhiFromVertex::PseudoRapidityFromVertex ( holder ) 
+{}
+// ============================================================================
+// copy constructor
+// ============================================================================
+LoKi::Particles::PhiFromVertex::PhiFromVertex
+( const LoKi::Particles::PhiFromVertex& right ) 
+  : LoKi::AuxFunBase                                         ( right )
+  , LoKi::Particles::PhiFromVertex::PseudoRapidityFromVertex ( right ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor
+// ============================================================================
+LoKi::Particles::PhiFromVertex::~PhiFromVertex(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::PhiFromVertex*
+LoKi::Particles::PhiFromVertex::clone() const 
+{ return new LoKi::Particles::PhiFromVertex ( *this ) ; }
+// ============================================================================
+// OPTIONAL: the specific printout
+// ============================================================================
+std::ostream& 
+LoKi::Particles::PhiFromVertex::fillStream( std::ostream& s ) const 
+{ return s << "VPHI" ; }
+// ============================================================================
+LoKi::Particles::PseudoRapidityFromVertex::result_type
+LoKi::Particles::PseudoRapidityFromVertex::phi
+( LoKi::Particles::PseudoRapidityFromVertex::argument p ) const
+{
+  //
+  if ( 0 == p )
+  {
+    Error ( "LHCb::Particle* points to NULL, return -1000");
+    return -1000 ;
+  }
+  //
+  const LHCb::VertexBase* v = p->endVertex() ;
+  if ( 0 == v )
+  {
+    Error ( "LHCb::Particle::endVertex points to NULL, return -2000");
+    return -2000 ;
+  }
+  //
+  if ( !valid() )
+  {
+    Error ( "VertexHolder base is invalid, return -3000");
+    return -3000 ;
+  }
+  //
+  const LoKi::ThreeVector d = v->position()-position() ;
+  return d.Phi() ;
+}
 // ============================================================================
 // The END 
 // ============================================================================
