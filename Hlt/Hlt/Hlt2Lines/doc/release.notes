@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-27 - Francesco Dettori
+ - Tuned cuts for Xabier's line: Hlt2SingleMuonRare in SingleMuon/Lines.py
+
 ! 2015-04-24 - Olli Lupton
  - PID:
   . Optimise Lambda0 isMuon and highP lines by filtering from shared particles

@@ -44,7 +44,9 @@ class SingleMuonRareFilter(Hlt2ParticleFilter):
     def __init__(self, name):
         code = ("(MIPCHI2DV(PRIMARY)>%(RareIPChi2)s)"+
                "& (PT> %(RarePtMin)s) & (PT < %(RarePtMax)s) & ( P < %(RarePMax)s )"+
-               "& (TRCHI2DOF<%(RareTrChi2Tight)s)")
+               "& (TRCHI2DOF<%(RareTrChi2Tight)s)"+
+                "& (PIDmu >%(muID)s)")
+              
         inputs = [ SingleMuonFilter("SharedSingleMuon") ]
         Hlt2ParticleFilter.__init__(self, name, code, inputs,
                                     dependencies = [PV3D('Hlt2')],

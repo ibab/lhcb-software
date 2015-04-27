@@ -3,6 +3,7 @@
 # 
 #  Please contact the responsible before editing this file
 #
+#  For the Hlt2SingleMuonRare line please contact also Xabier Cid Vidal (@ cern.ch)
 ##
 
 from GaudiKernel.SystemOfUnits import GeV, MeV, mm
@@ -28,9 +29,10 @@ class SingleMuonLines(Hlt2LinesConfigurableUser) :
 
                  'Rare'    :       { 'RarePtMin'          : 5000 * MeV,
                                      'RarePtMax'       : 40000* MeV,
-                                     'RareIPChi2'      : 400, # Adimensional
+                                     'RareIPChi2'      : 500, # Adimensional
                                      'RareTrChi2Tight' : 3 ,
                                      'RarePMax'  : 500 * GeV,
+                                     'muID'  : 1
                                      }
                  
                  }
