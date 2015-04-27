@@ -3,7 +3,7 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
-</PRE><H1><A NAME=v19r6>2015-04-22 Phys v19r6</A></H1><PRE>
+</PRE><H1><A NAME=v19r6>2015-04-27 Phys v19r6</A></H1><PRE>
 Development release, based on Gaudi v26r1, LHCb v38r6 and Rec v17r6.
 Uses LCG_74root6 with ROOT 6.02.05.
 
@@ -11,7 +11,7 @@ Uses LCG_74root6 with ROOT 6.02.05.
   Phys/BBDecTreeTool v1r7, Phys/DaVinciInterfaces v2r24, Phys/DaVinciKernel v12r1,
   Phys/DaVinciTypes v2r11, Phys/DecayTreeFitter v1r19, Phys/FlavourTagging v13r12,
   Phys/KalmanFilter v1r11, Phys/LoKiAlgo v9r9, Phys/LoKiArrayFunctors v11r2,
-  Phys/LoKiFitters v4r13, Phys/LoKiPhys v11r1, Phys/LoKiTracks v3r1, Phys/MVADictTools v1r9,
+  Phys/LoKiFitters v4r13, Phys/LoKiPhys v11r2, Phys/LoKiTracks v3r1, Phys/MVADictTools v1r9,
   Phys/ParticleCombiners v1r2, Phys/ParticleMaker v6r14, Phys/PhysConf v1r27,
   PhysSel/PhysSelPython v9r6, Phys/SelPy v4r3, Phys/Swimming v3r7, Phys/TisTosTobbing v8r3,
   Phys/VertexFit v6r21.
@@ -56,9 +56,10 @@ Uses LCG_74root6 with ROOT 6.02.05.
     optimized algorithm is used when new option "UseOptimizedAlgorithm" is activated.
   . Activated optimized algorithm for default setting.
 
-- In Phys/LoKiPhys v11r1 :
+- In Phys/LoKiPhys v11r2 :
   . Added copy constructor to LoKi::Particles::Value.
   . Added functors for pseudorapidity calculated from the PV->SV direction.
+  . Added BPVPHI functor.
 
 - In Phys/LoKiTracks v3r1 :
   . Added fake source.
