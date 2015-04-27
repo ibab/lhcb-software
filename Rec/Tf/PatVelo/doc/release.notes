@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2015-04-27 - David Hutchcroft
+ - New AddPileupToTrack algorithm adds pileup sensor hits to existing tracks
+
 !========================= PatVelo v3r31 2014-07-14 =========================
 ! 2014-06-30 - David Hutchcroft
  - Prevent FPE when refitting a cheated PR track
