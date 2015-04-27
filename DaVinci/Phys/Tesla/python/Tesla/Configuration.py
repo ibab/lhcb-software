@@ -215,6 +215,7 @@ class Tesla(LHCbConfigurableUser):
                     ,self.base+"pPhys/Vertices#99"
                     ,self.base+"pPhys/RecVertices#99"
                     ,self.base+"pPhys/Relations#99"
+                    ,self.base+"pPhys/PP2MCPRelations#99"
                     ,self.base+"pRec/Track/Custom#99"
                     ,self.base+"pRec/Muon/CustomPIDs#99"
                     ,self.base+"pRec/Rich/CustomPIDs#99"
