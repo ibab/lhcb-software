@@ -19,7 +19,7 @@ DECLARE_ALGORITHM_FACTORY(HCDigitCreator)
 HCDigitCreator::HCDigitCreator(const std::string& name, 
                                ISvcLocator* pSvcLocator) : 
     GaudiTupleAlg(name, pSvcLocator),
-    m_nStations(0), m_nChannels(0) {
+    m_nStationsB(0), m_nStationsF(0) {
 
   declareProperty("HitLocation", m_hitLocation = LHCb::MCHitLocation::HC);
   declareProperty("RawEventLocation", 
@@ -31,9 +31,10 @@ HCDigitCreator::HCDigitCreator(const std::string& name,
   declareProperty("Gain", m_gain = 1.e3);
   declareProperty("ElectronsPerADC", m_electronsPerADC = 125000.);
   declareProperty("MaxADC", m_maxADC = 4095);
+  declareProperty("Threshold", m_threshold = 2);
 
-  declareProperty("ZPositions", 
-                  m_z = {-7500., -19700., -114000., 20000., 114000.});
+  declareProperty("ZPositionsB", m_zB = {-7500., -19700., -114000.});
+  declareProperty("ZPositionsF", m_zF = {20000., 114000.});
 
   declareProperty("Monitoring", m_monitoring = false);
 
@@ -64,9 +65,9 @@ StatusCode HCDigitCreator::initialize() {
     return sc;
   }
 
-  // Get the number of stations and channels.
-  m_nStations = m_z.size();
-  m_nChannels = 4 * m_nStations;
+  // Get the number of stations.
+  m_nStationsB = m_zB.size();
+  m_nStationsF = m_zF.size();
  
   setHistoTopDir("HC/");
   return StatusCode::SUCCESS;
@@ -94,72 +95,145 @@ StatusCode HCDigitCreator::execute() {
   }
 
   // Loop over the hits and sum up the signals in each quadrant.
-  std::vector<double> signals(m_nChannels, 0.);
+  constexpr unsigned int nChannelsPerBoard = 64;
+  std::vector<double> signalsB(nChannelsPerBoard, 0.);
+  std::vector<double> signalsF(nChannelsPerBoard, 0.);
   for (const LHCb::MCHit* hit : *hits) {
     // Determine the station number.
     const double z = hit->midPoint().z();
     unsigned int station = 999;
-    for (unsigned int i = 0; i < m_nStations; ++i) {
-      const double dz = z - m_z[i];
-      if (fabs(dz) < 20.) {
-        station = i;
-        break;
+    if (z > 0.) {
+      // Forward stations (Muon side)
+      for (unsigned int i = 0; i < m_nStationsF; ++i) {
+        const double dz = z - m_zF[i];
+        if (fabs(dz) < 20.) {
+          station = i + 1;
+          break;
+        }
+      }
+    } else {
+      // Backward stations (VELO side)
+      for (unsigned int i = 0; i < m_nStationsB; ++i) {
+        const double dz = z - m_zB[i];
+        if (fabs(dz) < 20.) {
+          station = i;
+          break;
+        }
       }
     }
-    if (station >= m_nStations) {
+    if (station == 999) {
       warning() << "No station at z = " << z << " mm" << endmsg;
       continue;
     } 
     // Determine the quadrant.
-    unsigned int quadrant = 0;
     const double x = hit->midPoint().x();
     const double y = hit->midPoint().y();
-    if (x < 0.) {
-      if (y < 0.) {
-        quadrant = 0;
-      } else {
-        quadrant = 1;
-      }
-    } else {
-      if (y < 0.) {
-        quadrant = 2;
-      } else {
-        quadrant = 3;
-      }
-    } 
-    // Calculate the channel number.
+    unsigned int quadrant = y < 0. ? 0 : 1;
+    if (x > 0.) quadrant += 2;
+    // Calculate the channel number (TODO: apply the correct mapping).
     const unsigned int channel = 4 * station + quadrant;
     const double edep = hit->energy() / Gaudi::Units::MeV;
     // Calculate the number of photons.
-    signals[channel] += edep * m_photonsPerMeV * m_collectionEfficiency; 
+    const double signal = edep * m_photonsPerMeV * m_collectionEfficiency;
+    if (z > 0.) {
+      signalsF[channel] = signal;
+    } else {
+      signalsB[channel] = signal;
+    }
     if (!m_monitoring) continue;
     const LHCb::MCParticle* particle = hit->mcParticle();
     if (!particle) continue;
     const double p = particle->p() / Gaudi::Units::MeV; 
-    plot(p, "Momentum", "Momentum [MeV/c]", 0., 200., 100);
     const std::string st = std::to_string(station);
-    plot(edep, "Edep/S" + st, "Deposited energy [MeV]", 0., 10., 50);
-  }
-  std::vector<unsigned int> words(m_nChannels, 0);
-  for (auto it = signals.cbegin(), end = signals.cend(); it != end; ++it) {
-    const unsigned int channel = it - signals.cbegin();
-    const double nElectrons = (*it) * m_quantumEfficiency * m_gain;
-    // Convert the signal to ADC counts.
-    auto adc = static_cast<unsigned int>(floor(nElectrons / m_electronsPerADC));
-    if (adc > m_maxADC) adc = m_maxADC;
-    words[channel] = (channel << 16) + (adc & 0xFFFF);
-    if (msgLevel(MSG::VERBOSE)) {
-      verbose() << "Channel: " << channel << ", ADC: " << adc << endmsg;
+    if (z > 0.) {
+      plot(edep, "Edep/F" + st, "Deposited energy [MeV]", 0., 10., 50);
+      plot(p, "Momentum/F" + st, "Momentum [MeV/c]", 0., 200., 100);
+    } else {
+      plot(edep, "Edep/B" + st, "Deposited energy [MeV]", 0., 10., 50);
+      plot(p, "Momentum/B" + st, "Momentum [MeV/c]", 0., 200., 100);
     }
   }
-  // Get the size of the raw bank.
-  const unsigned int nBytes = sizeof(unsigned int) * m_nStations;
-  const unsigned int version = 1;
+  // Convert the signals to ADC counts.
+  std::vector<unsigned int> adcsB(nChannelsPerBoard, 0);
+  std::vector<unsigned int> adcsF(nChannelsPerBoard, 0);
+  for (unsigned int i = 0; i < nChannelsPerBoard; ++i) {
+    double nElectrons = signalsB[i] * m_quantumEfficiency * m_gain;
+    auto adc = static_cast<unsigned int>(floor(nElectrons / m_electronsPerADC));
+    if (adc > m_maxADC) adc = m_maxADC;
+    adcsB[i] = adc;
+    nElectrons = signalsF[i] * m_quantumEfficiency * m_gain;
+    adc = static_cast<unsigned int>(floor(nElectrons / m_electronsPerADC));
+    if (adc > m_maxADC) adc = m_maxADC;
+    adcsF[i] = adc;
+    if (msgLevel(MSG::DEBUG)) {
+      debug() << format("Channel: %02u (B): ADC = %06i", i, adcsB[i]) << endmsg;
+      debug() << format("Channel: %02u (F): ADC = %06i", i, adcsF[i]) << endmsg;
+    }
+  }
+  // Encode the data.
+  std::vector<unsigned int> words;
+  encodeV3(0, adcsB, words);
+  encodeV3(1, adcsF, words);
   // Add a new raw bank and pass memory ownership to the raw event.
-  LHCb::RawBank* bank = rawEvent->createBank(0, LHCb::RawBank::HC, version, 
-                                             nBytes, &(words[0]));
-  rawEvent->adoptBank(bank, true);
+  const unsigned int version = 3;
+  rawEvent->addBank(0, LHCb::RawBank::HC, version, words); 
   return StatusCode::SUCCESS;
-
 }
 
+//=========================================================================
+// Raw bank encoding (PRS/SPD format) 
+//=========================================================================
+void HCDigitCreator::encodeV3(const unsigned int card,
+                              const std::vector<unsigned int>& adcs,
+                              std::vector<unsigned int>& words) {
+
+  // Add the header word.
+  const unsigned int headerIndex = words.size();
+  words.push_back(card << 14);
+  unsigned int lenAdc = 0;
+  unsigned int lenTrig = 0;
+  // Add the trigger words. 
+  const unsigned int nChannels = adcs.size();
+  int offset = 0;
+  unsigned int word = 0;
+  for (unsigned int i = 0; i < nChannels; ++i) {
+    int mask = 0;
+    if (adcs[i] > m_threshold) mask |= 0x40;
+    // if (spd) mask |= 0x80;
+    if (0 == mask) continue;
+    mask |= i;
+    mask = mask << offset;
+    word |= mask;
+    offset += 8;
+    if (32 == offset) {
+      words.push_back(word);
+      word = 0;
+      offset = 0;
+    }
+    ++lenTrig;
+  }
+  if (0 != word) {
+    words.push_back(word);
+    word = 0;
+  }
+  // Add the ADC words.
+  for (unsigned int i = 0; i < nChannels; ++i) {
+    if (adcs[i] == 0) continue;
+    const unsigned int adc = (adcs[i] & 0x3FF) | (i << 10);
+    if (0 == word) {
+      word = adc;
+    } else {
+      word |= (adc << 16);
+      words.push_back(word);
+      word = 0;
+    }
+    ++lenAdc;
+  }
+  if (0 != word) {
+    words.push_back(word);
+    word = 0;
+  }
+  // Add the lengths of trigger and ADC parts to the header. 
+  words[headerIndex] |= (lenAdc << 7) + lenTrig;
+
+}

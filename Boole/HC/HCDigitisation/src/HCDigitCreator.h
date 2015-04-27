@@ -46,16 +46,24 @@ private:
   double m_electronsPerADC;
   /// Max. number of ADC counts
   unsigned int m_maxADC;
-
-  /// Nominal z-positions of the stations
-  std::vector<double> m_z;
-  /// Number of stations
-  unsigned int m_nStations;
-  /// Number of front-end channels.
-  unsigned int m_nChannels;
+  /// Trigger threshold in ADC counts
+  unsigned int m_threshold;
+ 
+  /// Nominal z-positions of the backward stations
+  std::vector<double> m_zB;
+  /// Nominal z-positions of the forward stations
+  std::vector<double> m_zF;
+  /// Number of backward stations
+  unsigned int m_nStationsB;
+  /// Number of backward stations
+  unsigned int m_nStationsF;
 
   /// Flag to activate monitoring histograms or not
   bool m_monitoring;
-  
+ 
+  /// Raw bank encoding (PRS/SPD format) 
+  void encodeV3(const unsigned int card,
+                const std::vector<unsigned int>& adcs,
+                std::vector<unsigned int>& words);
 };
 #endif
