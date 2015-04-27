@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-04-27 - Sascha Stahl
+ - Add two body CalibTracking lines to ActiveHlt1 lines in Commissioning_Physcis_2015.
+ - Fixed Hadrons_March_2015 to pick up new Topo lines.
+
 ! 2015-04-23 - Roel Aaij
  - Add settings for April 2015 SMOG run (SMOG_April2015.py).
 

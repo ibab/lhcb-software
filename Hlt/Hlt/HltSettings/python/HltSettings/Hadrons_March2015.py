@@ -17,21 +17,6 @@ class Hadrons_March2015 :
         """
 
         lines = [
-            # The topological 
-            'Hlt2Topo2BodySimple',
-            'Hlt2Topo3BodySimple',
-            'Hlt2Topo4BodySimple',
-            'Hlt2Topo2BodyBBDT',
-            'Hlt2Topo3BodyBBDT',
-            'Hlt2Topo4BodyBBDT',
-            'Hlt2TopoMu2BodyBBDT',
-            'Hlt2TopoMu3BodyBBDT',
-            'Hlt2TopoMu4BodyBBDT',
-            'Hlt2TopoE2BodyBBDT',
-            'Hlt2TopoE3BodyBBDT',
-            'Hlt2TopoE4BodyBBDT',
-            'Hlt2TopoRad2BodyBBDT',
-            'Hlt2TopoRad2plus1BodyBBDT',
             # XGamma
             'Hlt2Bs2PhiGamma',
             'Hlt2Bs2PhiGammaWideBMass',
@@ -48,6 +33,9 @@ class Hadrons_March2015 :
             #DiPhi
             'Hlt2DiPhi'
             ]
+        from TopoLines_April2015 import TopoLines_April2015
+        lines.extend( TopoLines_April2015().ActiveHlt2Lines() )
+        
 
         # For inclusive phi extend using Albert's new setting
         # from Phi_draft2012 import Phi_draft2012 as PhiLines

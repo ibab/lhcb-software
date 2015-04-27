@@ -63,6 +63,7 @@ class Commissioning_Physics_2015( object ):
         from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
         from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
         from Hlt1Lines.Hlt1MVALines            import Hlt1MVALinesConf
+        from Hlt1Lines.Hlt1CalibTrackingLines  import Hlt1CalibTrackingLinesConf
         
         thresholds = { Hlt1TrackLinesConf :   {  'AllL0_Velo_NHits'  : 9
                                                , 'AllL0_Velo_Qcut'   : 3
@@ -200,8 +201,40 @@ class Commissioning_Physics_2015( object ):
                                                               , 'Hlt1MBMicroBiasVeloRateLimited'     : 0
                                                               , 'Hlt1MBMicroBiasTStationRateLimited' : 0 }
                                                , 'MaxNoBiasRate' : 1000000.
-                                               }
-                     }
+                                                 }
+                       , Hlt1CalibTrackingLinesConf :    { 'ParticlePT'            : 600     # MeV
+                                                         , 'ParticleP'             : 4000    # MeV
+                                                         , 'TrackCHI2DOF'          : 2       # dimensionless
+                                                         , 'CombMaxDaughtPT'       : 900     # MeV 900
+                                                         , 'CombAPT'               : 1800    # MeV 1200
+                                                         , 'CombDOCA'              : 0.1     # mm
+                                                         , 'CombVCHI2DOF'          : 10      # dimensionless
+                                                         , 'CombVCHI2DOFLoose'     : 15      # dimensionless
+                                                         , 'CombDIRA'              : 0.99    # dimensionless
+                                                         , 'CombTAU'               : 0.25    # ps
+                                                         , 'D0MassWinLoose'        : 100     # MeV
+                                                         , 'D0MassWin'             : 60      # MeV
+                                                         , 'B0MassWinLoose'        : 200     # MeV
+                                                         , 'B0MassWin'             : 150     # MeV
+                                                         , 'BsPhiGammaMassMinLoose': 3350    # MeV
+                                                         , 'BsPhiGammaMassMaxLoose': 6900    # MeV
+                                                         , 'BsPhiGammaMassMin'     : 3850    # MeV
+                                                         , 'BsPhiGammaMassMax'     : 6400    # MeV
+                                                         , 'PhiMassWinLoose'       : 50      # MeV
+                                                         , 'PhiMassWin'            : 30      # MeV
+                                                         , 'PhiMassWinTight'       : 20      # MeV
+                                                         , 'PhiPT'                 : 1800    # MeV
+                                                         , 'PhiPTLoose'            : 800     # MeV
+                                                         , 'PhiSumPT'              : 3000    # MeV
+                                                         , 'PhiIPCHI2'             : 16      # dimensionless
+                                                         , 'B0SUMPT'               : 4000    # MeV
+                                                         , 'B0PT'                  : 1000    # MeV
+                                                         , 'GAMMA_PT_MIN'          : 2000    # MeV
+                                                         , 'Velo_Qcut'             : 999     # OFF
+                                                         , 'TrNTHits'              : 0       # OFF
+                                                         }
+                       
+                       }
 
         from Hlt2Lines.Commissioning.Lines  import CommissioningLines
         thresholds.update({CommissioningLines : { 'Prescale' : { 'Hlt2PassThrough'  : 0.0001 
@@ -231,6 +264,7 @@ class Commissioning_Physics_2015( object ):
 
         from Hadrons_March2015 import Hadrons_March2015
         hlt2.extend( Hadrons_March2015().ActiveHlt2Lines() )
+
        
         return hlt2
        
@@ -243,7 +277,12 @@ class Commissioning_Physics_2015( object ):
                  , 'Hlt1SingleElectronNoIP'
                  , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
                  , 'Hlt1TrackMVA', 'Hlt1TwoTrackMVA'
-                 , 'Hlt1CalibRICHMirror' ]
+                 , 'Hlt1CalibRICHMirror'
+                 , 'Hlt1CalibTrackingKPi','Hlt1CalibTrackingKK', 'Hlt1CalibTrackingPiPi'
+                 , 'Hlt1B2HH_LTUNB_KPi', 'Hlt1B2HH_LTUNB_KK', 'Hlt1B2HH_LTUNB_PiPi'
+                 , 'Hlt1IncPhi'
+                 , 'Hlt1B2PhiPhi_LTUNB' , 'Hlt1B2PhiGamma_LTUNB'
+                   ]
 
         
         ## from Hlt1TechnicalLines import Hlt1TechnicalLines 
