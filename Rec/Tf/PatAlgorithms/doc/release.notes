@@ -4,10 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r40 2015-04-27 =========================
 ! 2015-04-22 - Rosen Matev
  - Fix bug in PatAddTTCoord (segfault when no hits in a layer).
 
-!========================= PatAlgorithms v4r40 2015-04-21 =========================
 ! 2015-04-09 - Michel De Cian
  - Change input location of long tracks to veto in PatForward for HLT2 for 2015.
 
