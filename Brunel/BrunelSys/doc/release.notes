@@ -3,6 +3,61 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+- Changes to references to reflect changes since v47r5
+  . Follow further tracking and geometry optimisations
+  . Follow new 2015 tracking sequence in 2015 tests
+
+
+</PRE><H1><A NAME=v47r6>2015-04-28 Brunel v47r6</A></H1><PRE>
+This version uses projects:
+ LCG_74root6 (ROOT 6.02.05), Gaudi v26r1, LHCb v38r6, Lbcom v16r5,
+ Rec v17r6 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- Changes to configuration
+  . Activate RunII (online-like) tracking sequence by 'DataType == 2015'
+    (RecConf v2r21, TrackSys v9r6)
+  . liteClusters and simplifiedGeometry are default for Run 2
+  . Enable running with separate Rich processing sequences for different track
+    groups (RecConf v2r21, RichRecSys v5r6). To avoid unnecessary duplicates in
+    this configuration, many Rich tools are now shared instances
+  . Add RDST output type, same as DST without RawEvent (GaudiConf v19r8)
+  . Remove obsolete SDST input and output types
+
+- Changes to persistency
+  . Packing of all references is now done on 64 bits. Reading is backwards
+    compatible with old data, but data written with this version can only be
+    read with LHCb v38r6 stack or later (EventPacker v5r0, v5r1)
+
+- New Physics tuning
+  . New default database tags (DDDB v1r75)
+    o LHCBCOND, 2015                  : cond-20150119-2
+    o LHCBCOND,       2013, 2012      : cond-20150119-1
+    o LHCBCOND,                   2011: cond-20150119
+  . Add missing configuration of STOnlinePosition tool in STOfflineConf.py
+    (STTools v4r16)
+  . Convergence between online and offline MuonID (MuonID v9r14)
+  . Convergence between online and offline Tracking in 2015 configuration
+    (Several chnges in many tracking packages)
+  . Efficiency improvements in Seeding algorithm (PatAlgorithms v4r40)
+  . For Run II, change options of Fitter: Don't refit, use FastMomentumEstimate,
+    don't change dEdX in simulation (TrackSys v9r6)
+  . Updates to Run2GhostId neural networks (TrackTools v5r8) 
+
+- Performance improvements
+  . Speed optimisation in multiple packages (DetDesc v18r7, OTDet v8r16,
+     VeloDet v13r21, GaudiObjDesc v11r22, LHCbKernel v15r9, LHCbMath v3r55,v3r56,
+     CaloReco v5r24,v5r25, RichRec packages, Tracking packages)
+
+- Monitoring changes
+  . Add a new histogram for the track momentum distribution (RichRecQC v2r69)
+  . Reduced INFO printout from RichRec packages
+  . Rich monitoring now determines the correct context to use for each monitor,
+    based on the tracks it is monitoring (RichRecQC v2r69)
+
+- Changes to QMTests
+  . Add 2015magdown-rdst.qmt, same as 2015magdown with output to rdst
+  . Remove SDST test cases
+
 </PRE><H1><A NAME=v47r5>2015-02-04 Brunel v47r5</A></H1><PRE>
 This version uses projects:
  LCG_74root6 (ROOT 6.02.05), Gaudi v26r1, LHCb v38r5, Lbcom v16r4,
