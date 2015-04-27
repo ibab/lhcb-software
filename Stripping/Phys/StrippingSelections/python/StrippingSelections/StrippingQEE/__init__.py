@@ -5,13 +5,11 @@ for QEE WG.
 
 
 _selections = (
-  'StrippingZ02MuMu',
-  'StrippingMuMuSS',
-  'StrippingWMu',
-  'StrippingSingleTrackTIS',
-  #
   'StrippingInclbJets',
-  'StrippingMBNoBias'     # Chitsanu: where are you... Hmm, I'm come back later
+  'StrippingMuMuSS',
+  'StrippingSingleTrackTIS',
+  'StrippingWMu',
+  'StrippingZ02MuMu',
 )
 
 for _sel in _selections :  

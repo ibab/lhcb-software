@@ -19,12 +19,14 @@ from PhysSelPython.Wrappers import SimpleSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllLooseMuons, StdAllNoPIDsMuons
+from GaudiKernel.SystemOfUnits import GeV
 
 
 default_config = {
   'NAME'        : 'WMu',
-  'WGs'         : ['QEE'],
   'BUILDERTYPE' : 'WMuConf',
+  'WGs'         : [ 'QEE'],
+  'STREAMS'     : [ 'EW' ],
   'CONFIG'      : { 
     'WMu_Prescale'        : 1.0,
     'WMuLow_Prescale'     : 0.1,
@@ -32,13 +34,12 @@ default_config = {
     'WMu_Postscale'       : 1.0,
     'SingMuon10_Prescale' : 0.01,
     'SingMuon48_Prescale' : 0.4,
-    'pT'                  : 20.,
-    'pTlow'               : 15.,
-    'pTvlow'              :  5.,
-    'SingMuon10_pT'       : 10.,
-    'SingMuon48_pT'       : 4.8,
+    'pT'                  : 20. * GeV,
+    'pTlow'               : 15. * GeV,
+    'pTvlow'              :  5. * GeV,
+    'SingMuon10_pT'       : 10. * GeV,
+    'SingMuon48_pT'       : 4.8 * GeV,
   },
-  'STREAMS'     : [ 'EW' ]
 }
 
 class WMuConf( LineBuilder ) :
@@ -62,13 +63,12 @@ class WMuConf( LineBuilder ) :
 
         # Define the cuts
 
-        _pT     = '(PT>%(pT)s*GeV)'%config
-        #_pT     = "(PT>%(pT)s*GeV) & (HASTRACK & TRCUT(0<TrIDC('isTT')))"%config
-        _pTlow  = '(PT>%(pTlow)s*GeV)'%config
-        _pTvlow = '(PT>%(pTvlow)s*GeV)'%config
+        _pT     = '(PT>%(pT)s)'%config
+        _pTlow  = '(PT>%(pTlow)s)'%config
+        _pTvlow = '(PT>%(pTvlow)s)'%config
 
-        _pTSingMuon10    = '(PT>%(SingMuon10_pT)s*GeV)'%config
-        _pTSingMuon48    = '(PT>%(SingMuon48_pT)s*GeV)'%config
+        _pTSingMuon10    = '(PT>%(SingMuon10_pT)s)'%config
+        _pTSingMuon48    = '(PT>%(SingMuon48_pT)s)'%config
 
         #---------------------------#
         # Single Muon Control Lines #
@@ -174,13 +174,3 @@ def makeFilter(name, single_input, code):
     Code      = code,
   )
 
-
-# def makeFilter( name, _input, _preambulo, _code ) :
-    # _filter = FilterDesktop( Preambulo = [ _preambulo ],
-    #                          Code      = _code
-    #                          )
-
-    # return Selection ( name,
-    #                    Algorithm          = _filter,
-    #                    RequiredSelections = [ _input ]
-    #                    )

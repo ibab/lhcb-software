@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-04-27 - Chitsanu Khurewathanakul
+ - Depreciate the redundant line (StrippingMBNoBias).
+ - QEE: Clean unused imports
+ - QEE: Clean usage of units to consistently be in `default_config` instead of hard-coded.
+
 ! 2015-04-25 - Andrea Contu
  - Changing the units from micrometers to in mm in various places for StrippingCharm/StrippingPromptCharm.py
 

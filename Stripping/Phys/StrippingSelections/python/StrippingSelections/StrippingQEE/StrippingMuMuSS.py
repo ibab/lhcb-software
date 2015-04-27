@@ -8,106 +8,73 @@
 # MuMuSS3 (10-20GeV): StdAllLooseMuons & P>10GeV & pT>3GeV
 # MuMuSS4 (>20GeV):   StdAllLooseMuons & P>10GeV & pT>3GeV
 
-__all__ = ('MuMuSSConf',
-           'makeSSCombination',
-           'default_config')
+__all__ = (
+  'MuMuSSConf',
+  'default_config',
+)
 
-from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllLooseMuons
+from GaudiKernel.SystemOfUnits import GeV
 
-#confdict_MuMuSS = { 'MuMuSSLine1Prescale' : 0.1, 
-#                    'MuMuSSLine2Prescale' : 1.0,
-#                    'MuMuSSLine3Prescale' : 1.0,
-#                    'MuMuSSLine4Prescale' : 1.0,
-#                    'MuMuSSLinePostscale' : 1.0,
-#                    'MuMuSSLine1MinMass' :  3.2,
-#                    'MuMuSSLine1MaxMass' :  5.,
-#                    'MuMuSSLine2MinMass' :  5.,
-#                    'MuMuSSLine2MaxMass' : 10.,
-#                    'MuMuSSLine3MinMass' : 10.,
-#                    'MuMuSSLine3MaxMass' : 20.,
-#                   'MuMuSSLine4MinMass' : 20.,
-#                   'p'   : 10.,
-#                    'pT1' :  1.5,
-#                    'pT2' :  3.
-#                    }
-
-#name = 'MuMuSS'
 
 default_config = {
     'NAME'        : 'MuMuSS',
-    'WGs'         : ['QEE'],
     'BUILDERTYPE' : 'MuMuSSConf',
-    'CONFIG'      : { 'MuMuSSLine1Prescale' : 0.1,
-                      'MuMuSSLine2Prescale' : 1.0,
-                      'MuMuSSLine3Prescale' : 1.0,
-                      'MuMuSSLine4Prescale' : 1.0,
-                      'MuMuSSLinePostscale' : 1.0,  
-                      'MuMuSSLine1MinMass' :  3.2,
-                      'MuMuSSLine1MaxMass' :  5.,
-                      'MuMuSSLine2MinMass' :  5.,
-                      'MuMuSSLine2MaxMass' : 10.,
-                      'MuMuSSLine3MinMass' : 10.,
-                      'MuMuSSLine3MaxMass' : 20.,
-                      'MuMuSSLine4MinMass' : 20.,
-                      'p'   : 10.,
-                      'pT1' :  1.5,
-                      'pT2' :  3.
-                    },
-    'STREAMS'     : ['EW']
-    }
+    'WGs'         : [ 'QEE'],
+    'STREAMS'     : [ 'EW' ],
+    'CONFIG'      : { 
+      'MuMuSSLine1Prescale' : 0.1,
+      'MuMuSSLine2Prescale' : 1.0,
+      'MuMuSSLine3Prescale' : 1.0,
+      'MuMuSSLine4Prescale' : 1.0,
+      'MuMuSSLinePostscale' : 1.0,  
+      'MuMuSSLine1MinMass'  : 3.2  * GeV,
+      'MuMuSSLine1MaxMass'  :  5.  * GeV,
+      'MuMuSSLine2MinMass'  :  5.  * GeV,
+      'MuMuSSLine2MaxMass'  : 10.  * GeV,
+      'MuMuSSLine3MinMass'  : 10.  * GeV,
+      'MuMuSSLine3MaxMass'  : 20.  * GeV,
+      'MuMuSSLine4MinMass'  : 20.  * GeV,
+      'p'     : 10. * GeV,
+      'pT1'   : 1.5 * GeV,
+      'pT2'   :  3. * GeV
+    },
+}
 
 
 class MuMuSSConf( LineBuilder ) :
 
-    __configuration_keys__ = ( 'MuMuSSLine1Prescale',
-                               'MuMuSSLine2Prescale',
-                               'MuMuSSLine3Prescale',
-                               'MuMuSSLine4Prescale',
-                               'MuMuSSLinePostscale',
-                               'MuMuSSLine1MinMass',
-                               'MuMuSSLine2MinMass',
-                               'MuMuSSLine3MinMass',
-                               'MuMuSSLine4MinMass',
-                               'MuMuSSLine1MaxMass',
-                               'MuMuSSLine2MaxMass',
-                               'MuMuSSLine3MaxMass',
-                               'p',
-                               'pT1',
-                               'pT2'
-                               )
+    __configuration_keys__ = default_config['CONFIG'].keys()
     
     def __init__( self, name, config ) :
 
         LineBuilder.__init__( self, name, config )
 
-        self._myname = name
-        
 
         # Define the cuts
 
-        _cut1 = '(P>%(p)s*GeV) & (PT>%(pT1)s*GeV)'%config
-        _cut2 = '(P>%(p)s*GeV) & (PT>%(pT2)s*GeV)'%config
+        _cut1 = '(P>%(p)s) & (PT>%(pT1)s)'%config
+        _cut2 = '(P>%(p)s) & (PT>%(pT2)s)'%config
 
-        _MuMuSS1MassCut = '(MM>%(MuMuSSLine1MinMass)s*GeV) & (MM<%(MuMuSSLine1MaxMass)s*GeV)'%config
-        _MuMuSS2MassCut = '(MM>%(MuMuSSLine2MinMass)s*GeV) & (MM<%(MuMuSSLine2MaxMass)s*GeV)'%config
-        _MuMuSS3MassCut = '(MM>%(MuMuSSLine3MinMass)s*GeV) & (MM<%(MuMuSSLine3MaxMass)s*GeV)'%config
-        _MuMuSS4MassCut = '(MM>%(MuMuSSLine4MinMass)s*GeV)'%config
+        _MuMuSS1MassCut = '(MM>%(MuMuSSLine1MinMass)s) & (MM<%(MuMuSSLine1MaxMass)s)'%config
+        _MuMuSS2MassCut = '(MM>%(MuMuSSLine2MinMass)s) & (MM<%(MuMuSSLine2MaxMass)s)'%config
+        _MuMuSS3MassCut = '(MM>%(MuMuSSLine3MinMass)s) & (MM<%(MuMuSSLine3MaxMass)s)'%config
+        _MuMuSS4MassCut = '(MM>%(MuMuSSLine4MinMass)s)'%config
 
 
         # MuMuSS1
 
-        self.sel_MuMuSS1 = makeSSCombination( self._myname + 'MuMuSS1',
+        self.sel_MuMuSS1 = makeSSCombination( name + 'MuMuSS1',
                                               StdAllLooseMuons,
                                               _cut1,
                                               _MuMuSS1MassCut
                                               )
      
-        self.line_MuMuSS1 = StrippingLine( self._myname + 'Line1',
+        self.line_MuMuSS1 = StrippingLine( name + 'Line1',
                                            prescale  = config[ 'MuMuSSLine1Prescale' ],
                                            postscale = config[ 'MuMuSSLinePostscale' ],
                                            MDSTFlag = True,
@@ -119,13 +86,13 @@ class MuMuSSConf( LineBuilder ) :
 
         # MuMuSS2
 
-        self.sel_MuMuSS2 = makeSSCombination( self._myname + 'MuMuSS2', 
+        self.sel_MuMuSS2 = makeSSCombination( name + 'MuMuSS2', 
                                               StdAllLooseMuons,
                                               _cut2,
                                               _MuMuSS2MassCut
                                               )
      
-        self.line_MuMuSS2 = StrippingLine( self._myname + 'Line2',
+        self.line_MuMuSS2 = StrippingLine( name + 'Line2',
                                            prescale  = config[ 'MuMuSSLine2Prescale' ],
                                            postscale = config[ 'MuMuSSLinePostscale' ],
                                            MDSTFlag = True,
@@ -137,13 +104,13 @@ class MuMuSSConf( LineBuilder ) :
 
         # MuMuSS3
 
-        self.sel_MuMuSS3 = makeSSCombination( self._myname + 'MuMuSS3', 
+        self.sel_MuMuSS3 = makeSSCombination( name + 'MuMuSS3', 
                                               StdAllLooseMuons,
                                               _cut2,
                                               _MuMuSS3MassCut
                                               )
      
-        self.line_MuMuSS3 = StrippingLine( self._myname + 'Line3',
+        self.line_MuMuSS3 = StrippingLine( name + 'Line3',
                                            prescale  = config[ 'MuMuSSLine3Prescale' ],
                                            postscale = config[ 'MuMuSSLinePostscale' ],
                                            MDSTFlag = True,
@@ -155,13 +122,13 @@ class MuMuSSConf( LineBuilder ) :
 
         # MuMuSS4
 
-        self.sel_MuMuSS4 = makeSSCombination( self._myname + 'MuMuSS4', 
+        self.sel_MuMuSS4 = makeSSCombination( name + 'MuMuSS4', 
                                               StdAllLooseMuons,
                                               _cut2,
                                               _MuMuSS4MassCut
                                               )
      
-        self.line_MuMuSS4 = StrippingLine( self._myname + 'Line4',
+        self.line_MuMuSS4 = StrippingLine( name + 'Line4',
                                            prescale  = config[ 'MuMuSSLine4Prescale' ],
                                            postscale = config[ 'MuMuSSLinePostscale' ],
                                            MDSTFlag = True,

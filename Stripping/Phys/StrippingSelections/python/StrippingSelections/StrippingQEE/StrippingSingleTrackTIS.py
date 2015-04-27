@@ -11,26 +11,27 @@ __all__ = (
   'default_config',
 )
 
-from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
 from PhysSelPython.Wrappers import Selection
+from StandardParticles import StdAllNoPIDsMuons
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdAllNoPIDsMuons
+from GaudiKernel.SystemOfUnits import GeV
 
 
 default_config = {
     'NAME'        : 'SingleTrackTIS',
-    'WGs'         : ['QEE'],
     'BUILDERTYPE' : 'SingleTrackTISConf',
-    'CONFIG'      : { 'SingleTrackTIS_Prescale'    : 0.1,
-                      'SingleTrackTISLow_Prescale' : 0.01,
-                      'SingleTrackTIS_Postscale'   : 1.00,
-                      'pT'    : 20.,
-                      'pTlow' : 15.
-                    },
-    'STREAMS'     : [ 'EW' ]
-    }
+    'WGs'         : [ 'QEE'],
+    'STREAMS'     : [ 'EW' ],
+    'CONFIG'      : { 
+        'SingleTrackTIS_Prescale'    : 0.1,
+        'SingleTrackTISLow_Prescale' : 0.01,
+        'SingleTrackTIS_Postscale'   : 1.00,
+        'pT'    : 20. * GeV,
+        'pTlow' : 15. * GeV,
+    },
+}
 
 class SingleTrackTISConf( LineBuilder ) :
 
@@ -40,71 +41,69 @@ class SingleTrackTISConf( LineBuilder ) :
 
         LineBuilder.__init__( self, name, config )
 
-        self._myname = name
-
 
         # Define the cuts
 
-        _cut    = "(PT>%(pT)s*GeV)    & (HASTRACK & TRCUT(0<TrIDC('isTT')))"%config
-        _cutlow = "(PT>%(pTlow)s*GeV) & (HASTRACK & TRCUT(0<TrIDC('isTT')))"%config
+        _cut    = "(PT>%(pT)s)    & (HASTRACK & TRCUT(0<TrIDC('isTT')))"%config
+        _cutlow = "(PT>%(pTlow)s) & (HASTRACK & TRCUT(0<TrIDC('isTT')))"%config
         
 
         # SingleTrackTIS
 
-        self.sel_NoPIDs = makeFilter( self._myname + 'NoPIDs',
+        sel_NoPIDs = makeFilter( name + 'NoPIDs',
                                       StdAllNoPIDsMuons,
                                       "from LoKiTracks.decorators import *",
                                       _cut
                                       )
 
-        self.sel_Hlt1TIS = makeTISTOS( self._myname + 'Hlt1TIS',
-                                       self.sel_NoPIDs,
+        sel_Hlt1TIS = makeTISTOS( name + 'Hlt1TIS',
+                                       sel_NoPIDs,
                                        "Hlt1.*Decision%TIS"
                                        )
 
-        self.sel_Hlt2TIS = makeTISTOS( self._myname + 'Hlt2TIS',
-                                       self.sel_Hlt1TIS,
+        sel_Hlt2TIS = makeTISTOS( name + 'Hlt2TIS',
+                                       sel_Hlt1TIS,
                                        "Hlt2.*Decision%TIS"
                                        )
 
-        self.line_SingleTrackTIS = StrippingLine( self._myname + 'Line',
+        line_SingleTrackTIS = StrippingLine( name + 'Line',
                                                   prescale  = config[ 'SingleTrackTIS_Prescale' ],
                                                   postscale = config[ 'SingleTrackTIS_Postscale' ],
                                                   RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                                   checkPV   = False,
-                                                  selection = self.sel_Hlt2TIS
+                                                  selection = sel_Hlt2TIS
                                                   )
 
-        self.registerLine( self.line_SingleTrackTIS )
+        self.registerLine( line_SingleTrackTIS )
 
 
         # SingleTrackTIS
 
-        self.sel_NoPIDsLow = makeFilter( self._myname + 'NoPIDsLow',
+        sel_NoPIDsLow = makeFilter( name + 'NoPIDsLow',
                                          StdAllNoPIDsMuons,
                                          "from LoKiTracks.decorators import *",
                                          _cutlow
                                          )
 
-        self.sel_Hlt1TISLow = makeTISTOS( self._myname + 'Hlt1TISLow',
-                                          self.sel_NoPIDsLow,
+        sel_Hlt1TISLow = makeTISTOS( name + 'Hlt1TISLow',
+                                          sel_NoPIDsLow,
                                           "Hlt1.*Decision%TIS"
                                           )
 
-        self.sel_Hlt2TISLow = makeTISTOS( self._myname + 'Hlt2TISLow',
-                                          self.sel_Hlt1TISLow,
+        sel_Hlt2TISLow = makeTISTOS( name + 'Hlt2TISLow',
+                                          sel_Hlt1TISLow,
                                           "Hlt2.*Decision%TIS"
                                           )
 
-        self.line_SingleTrackTISLow = StrippingLine( self._myname + 'LowLine',
+        line_SingleTrackTISLow = StrippingLine( name + 'LowLine',
                                                      prescale  = config[ 'SingleTrackTISLow_Prescale' ],
                                                      postscale = config[ 'SingleTrackTIS_Postscale' ],
                                                      RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                                      checkPV   = False,
-                                                     selection = self.sel_Hlt2TISLow
+                                                     selection = sel_Hlt2TISLow
                                                      )
 
-        self.registerLine( self.line_SingleTrackTISLow )
+        self.registerLine( line_SingleTrackTISLow )
 
 
 def makeFilter( name, _input, _preambulo, _code ) :

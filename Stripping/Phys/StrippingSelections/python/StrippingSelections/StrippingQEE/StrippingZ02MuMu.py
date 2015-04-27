@@ -5,74 +5,63 @@
 #
 # Z02MuMu/High Mass DY signal:     StdAllLooseMuons,  pT>3GeV & MM>40GeV
 
-__all__ = ('Z02MuMuConf',
-           # 'makeCombination',
-           'default_config')
+__all__ = (
+  'Z02MuMuConf',
+  'default_config',
+)
 
 
-from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllLooseMuons, StdAllNoPIDsMuons
+from GaudiKernel.SystemOfUnits import GeV
 
 
 default_config = {
     'NAME'        : 'Z02MuMu',
-    'WGs'         : ['QEE'],
     'BUILDERTYPE' : 'Z02MuMuConf',
-    'CONFIG'      : { 'Z02MuMu_Prescale'  : 1.0,
-                      'Z02MuMu_Postscale' : 1.0,
-                      'pT'    : 3.,
-                      'MMmin' : 40.
-                    },
-    'STREAMS'     : [ 'EW' ]
-    }
+    'WGs'         : [ 'QEE'],
+    'STREAMS'     : [ 'EW' ],
+    'CONFIG'      : { 
+        'Z02MuMu_Prescale'  : 1.0,
+        'Z02MuMu_Postscale' : 1.0,
+        'pT'    : 3.  * GeV,
+        'MMmin' : 40. * GeV,
+    },
+}
 
 
 class Z02MuMuConf( LineBuilder ) :
 
-    __configuration_keys__ = ( 'Z02MuMu_Prescale',
-                               'Z02MuMu_Postscale',
-                               'pT',
-                               'MMmin'
-                               )
+    __configuration_keys__ = default_config['CONFIG'].keys()
 
     def __init__( self, name, config ) :
 
         LineBuilder.__init__( self, name, config )
 
-        self._myname = name
-
-
         # Define the cuts
-
-        _pT    = '(PT>%(pT)s*GeV)'%config
-        _MMmin = '(MM>%(MMmin)s*GeV)'%config
+        _pT    = '(PT>%(pT)s)'%config
+        _MMmin = '(MM>%(MMmin)s)'%config
 
 
         # Z02MuMu signal
-
-        self.sel_Z02MuMu = makeCombination( self._myname + 'Z02MuMu',
+        sel_Z02MuMu = makeCombination( name + 'Z02MuMu',
                                             StdAllLooseMuons,
                                             _pT,
                                             _MMmin
                                             )
 
-        self.line_Z02MuMu = StrippingLine( self._myname + 'Line',
+        line_Z02MuMu = StrippingLine( name + 'Line',
                                            prescale  = config[ 'Z02MuMu_Prescale' ],
                                            postscale = config[ 'Z02MuMu_Postscale' ],
                                            RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                            checkPV   = False,
-                                           selection = self.sel_Z02MuMu
+                                           selection = sel_Z02MuMu
                                            )
 
-        self.registerLine( self.line_Z02MuMu )
-
-
-       
-
+        self.registerLine( line_Z02MuMu )
       
 
 def makeCombination( name, _input, _daughters, _mother ) :
