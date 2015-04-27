@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-04-27 - Sascha Stahl
+ - TrackSelector: Added the possibility to cut on the phi of a track.
+
 !========================= TrackTools v5r8 2015-04-02 =========================
 
 ! 2015-04-01 - Paul Seyfert

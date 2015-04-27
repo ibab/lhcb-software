@@ -92,6 +92,9 @@ private:
   double m_minEtaCut;  ///< Minimum track eta cut
   double m_maxEtaCut;  ///< maximum track eta cut
 
+  double m_minPhiCut;  ///< Minimum track phi cut
+  double m_maxPhiCut;  ///< maximum track phi cut
+
   double m_minLikCut;  ///< Minimum track likelihood
   double m_maxLikCut;  ///< Maximum track likelihood
 

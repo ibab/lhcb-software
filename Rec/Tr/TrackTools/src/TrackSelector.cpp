@@ -1,4 +1,3 @@
-
 //-----------------------------------------------------------------------------
 /** @file TrackSelector.cpp
  *
@@ -51,6 +50,9 @@ TrackSelector::TrackSelector( const std::string& type,
 
   declareProperty( "MinEtaCut",  m_minEtaCut   = boost::numeric::bounds<double>::lowest()  );
   declareProperty( "MaxEtaCut",  m_maxEtaCut   = boost::numeric::bounds<double>::highest() );
+
+  declareProperty( "MinPhiCut",  m_minPhiCut   = boost::numeric::bounds<double>::lowest()  );
+  declareProperty( "MaxPhiCut",  m_maxPhiCut   = boost::numeric::bounds<double>::highest() );
 
   declareProperty( "MinNDoF",    m_minNDoF     = 0 ) ;
   declareProperty( "MaxNDoF",    m_maxNDoF     = boost::numeric::bounds<int>::highest() ) ;
@@ -167,6 +169,15 @@ bool TrackSelector::accept ( const Track& aTrack ) const
     {
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << " -> #eta " << eta << " failed cut" << endmsg;
+      return false;
+    }
+
+    // phi
+    const double phi = aTrack.phi();
+    if ( phi < m_minPhiCut || phi > m_maxPhiCut )
+    {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> #phi " << phi << " failed cut" << endmsg;
       return false;
     }
 
