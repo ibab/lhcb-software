@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2015-04-27 - Marco Cattaneo
+ - Remove obsolete GaudiKernel/DeclareFactoryEntries.h include
+
 ! 2015-04-22 - Marco Clemencic
  - Modified EventCountAlg to avoir re-definition of property StatEntityList
    from base class (see GAUDI-1023).
