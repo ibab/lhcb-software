@@ -273,7 +273,7 @@ void veloview::addModuleSelector() {
   ui->b_selector1->addItem("rR");
   ui->b_selector1->addItem("phiR");
 
-  for (int i=0; i<20; i++) {
+  for (int i=0; i<21; i++) {
     std::stringstream ss;
     ss<<i;
     ui->b_selector2->addItem(QString(ss.str().c_str()));
