@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-04-28 - Eduardo Rodrigues
+ - Added protection for division by 0 in finalise method of StandaloneMuonRec.
+
 ! 2015-04-27 - Sascha Stahl
  - TrackSelector: Added the possibility to cut on the phi of a track.
 

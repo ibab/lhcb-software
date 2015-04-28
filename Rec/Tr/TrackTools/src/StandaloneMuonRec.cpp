@@ -376,8 +376,11 @@ StatusCode StandaloneMuonRec::finalize() {
   }
   
   info () << "Number of events processed: " << double(m_countEvents) << endmsg;
-  info () << "Average number of muon tracks: " 
-          << double(m_countMuCandidates)/double(m_countEvents) << endmsg;
+  if ( m_countEvents > 0 )
+    info () << "Average number of muon tracks: " 
+            << double(m_countMuCandidates)/double(m_countEvents) << endmsg;
+  else
+    info () << "Average number of muon tracks: 0  (obviously)" << endmsg;
   
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
