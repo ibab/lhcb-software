@@ -8,6 +8,22 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-28 - Olli Lupton
+ - PID:
+  . Optimise V -> ll probe track filtering to apply kinematic cuts before TISTOSing.
+  . Add slots to tighten many cuts on the Lc+ lines, both for the input daughters
+    and e.g. applying cuts to the Lc+ used in Sc0/Sc++ but not Lb->LcX.
+  . Add moderately generic class for applying wrong-mass-hypothesis vetoes, and
+    selecting only subsections of the phase space of a decay. Use this to veto
+    D->Kpipi and Ds->KKpi contributions to the Lc+ container and to select only
+    the K*(892) region of Lc+ phase-space
+  . Order L0 lines in PT as well as P
+  . Add extra slots for 'B' combiner used to make B->J/psiK, Ds->phipi, ...
+  . Update many default slot values as we work towards an acceptable first tuning.
+  . Set the default prescales of all non-Turbo lines to zero, as early in Run 2
+    we get the full PID calibration samples via running Brunel on the Turbo stream
+  . Turn off K3pi line by default pending updated version being available
+
 ! 2015-04-28 - V. Gligorov
  - Add Lc->KpK line for early measurements
 

@@ -11,54 +11,144 @@ class PIDLines(Hlt2LinesConfigurableUser):
     l0_electrons = ['Photon', 'Electron', 'Hadron', 'Muon', 'DiMuon']
     hlt1_muons = 'Hlt1(TrackAllL0|TrackMuon|SingleMuon|DiMuon|TrackMVA|TwoTrackMVA).*Decision'
     hlt1_electrons = 'Hlt1.*Decision'
-    __slots__ = {'Prescale' :  {
-                                'Hlt2PIDLambda2PPiLL'           : 1.0, # will go down
-                                'Hlt2PIDLambda2PPiLLhighP'      : 1.0, # probably can't be 1.0
-                                'Hlt2PIDLambda2PPiLLveryhighP'  : 1.0, # maybe P cut tuned so it can be 1.0?
-                                'Hlt2PIDLambda2PPiLLisMuon'     : 1.0, # hopefully can be 1.0
-                                'Hlt2PIDLambda2PPiDD'           : 0.0,
-                                'Hlt2PIDLambda2PPiDDhighP'      : 0.0,
-                                'Hlt2PIDLambda2PPiDDisMuon'     : 0.0,
-                                'Hlt2PIDKs2PiPiLL'              : 1.0,
-                                'Hlt2PIDKs2PiPiDD'              : 0.0,
-                                'Hlt2PIDDetJPsiEEL0PosTagged'   : 0.0, # verdict seems to be that we
-                                'Hlt2PIDDetJPsiEEL0NegTagged'   : 0.0, # will use the full calo and
-                                'Hlt2PIDB2KJPsiEESSTagged'      : 0.0, # have no need for this suite
-                                'Hlt2PIDB2KJPsiEEOSTagged'      : 0.0  # of lines
+    __slots__ = {'Prescale' :  {# Set all the non-Turbo versions to prescale zero because at least to
+                                # start with in Run2 then Brunel will be run on the Turbo stream and
+                                # we can get the full calibration sample that way.
+                                'Hlt2PIDLambda2PPiLL'               : 0.0, # First tuning from Lucio
+                                'Hlt2PIDLambda2PPiLLTurbo'          : 0.003,
+                                'Hlt2PIDLambda2PPiLLhighP'          : 0.0, # First tuning from Lucio
+                                'Hlt2PIDLambda2PPiLLhighPTurbo'     : 0.1,
+                                'Hlt2PIDLambda2PPiLLveryhighP'      : 0.0, # First tuning from Lucio
+                                'Hlt2PIDLambda2PPiLLveryhighPTurbo' : 1.0,
+                                'Hlt2PIDLambda2PPiLLisMuon'         : 0.0,
+                                'Hlt2PIDLambda2PPiLLisMuonTurbo'    : 0.002, 
+                                'Hlt2PIDLambda2PPiDD'               : 0.0,
+                                'Hlt2PIDLambda2PPiDDTurbo'          : 0.0,
+                                'Hlt2PIDLambda2PPiDDhighP'          : 0.0,
+                                'Hlt2PIDLambda2PPiDDhighPTurbo'     : 0.0,
+                                'Hlt2PIDLambda2PPiDDveryhighP'      : 0.0,
+                                'Hlt2PIDLambda2PPiDDveryhighPTurbo' : 0.0,
+                                'Hlt2PIDLambda2PPiDDisMuon'         : 0.0,
+                                'Hlt2PIDLambda2PPiDDisMuonTurbo'    : 0.0,
+                                'Hlt2PIDKs2PiPiLL'                  : 0.0,
+                                'Hlt2PIDKs2PiPiLLTurbo'             : 0.0005,
+                                'Hlt2PIDKs2PiPiDD'                  : 0.0,
+                                'Hlt2PIDKs2PiPiDDTurbo'             : 0.0,
+                                'Hlt2PIDDetJPsiEEL0PosTagged'       : 0.0, # verdict seems to be that we
+                                'Hlt2PIDDetJPsiEEL0PosTaggedTurbo'  : 0.0,
+                                'Hlt2PIDDetJPsiEEL0NegTagged'       : 0.0, # will use the full calo and 
+                                'Hlt2PIDDetJPsiEEL0NegTaggedTurbo'  : 0.0,
+                                'Hlt2PIDB2KJPsiEEL0SSTagged'        : 0.0, # have no need for this suite
+                                'Hlt2PIDB2KJPsiEEL0SSTaggedTurbo'   : 0.0,
+                                'Hlt2PIDB2KJPsiEEL0OSTagged'        : 0.0,  # of lines
+                                'Hlt2PIDB2KJPsiEEL0OSTaggedTurbo'   : 0.0,
+                                'Hlt2PIDDetJPsiMuMuPosTagged'       : 0.0,
+                                'Hlt2PIDDetJPsiMuMuPosTaggedTurbo'  : 1.0,
+                                'Hlt2PIDDetJPsiMuMuNegTagged'       : 0.0,
+                                'Hlt2PIDDetJPsiMuMuNegTaggedTurbo'  : 1.0,
+                                'Hlt2PIDB2KJPsiMuMuSSTagged'        : 0.0,
+                                'Hlt2PIDB2KJPsiMuMuSSTaggedTurbo'   : 1.0,
+                                'Hlt2PIDB2KJPsiMuMuOSTagged'        : 0.0,
+                                'Hlt2PIDB2KJPsiMuMuOSTaggedTurbo'   : 1.0,
+                                'Hlt2PIDDetPhiMuMuPosTagged'        : 0.0,
+                                'Hlt2PIDDetPhiMuMuPosTaggedTurbo'   : 1.0,
+                                'Hlt2PIDDetPhiMuMuNegTagged'        : 0.0,
+                                'Hlt2PIDDetPhiMuMuNegTaggedTurbo'   : 1.0,
+                                'Hlt2PIDDs2PiPhiMuMuSSTagged'       : 0.0,
+                                'Hlt2PIDDs2PiPhiMuMuSSTaggedTurbo'  : 1.0,
+                                'Hlt2PIDDs2PiPhiMuMuOSTagged'       : 0.0,
+                                'Hlt2PIDDs2PiPhiMuMuOSTaggedTurbo'  : 1.0,
+                                'Hlt2PIDDetJPsiEEPosTagged'         : 0.0,
+                                'Hlt2PIDDetJPsiEEPosTaggedTurbo'    : 1.0,
+                                'Hlt2PIDDetJPsiEENegTagged'         : 0.0,
+                                'Hlt2PIDDetJPsiEENegTaggedTurbo'    : 1.0,
+                                'Hlt2PIDB2KJPsiEESSTagged'          : 0.0,
+                                'Hlt2PIDB2KJPsiEESSTaggedTurbo'     : 1.0,
+                                'Hlt2PIDB2KJPsiEEOSTagged'          : 0.0,
+                                'Hlt2PIDB2KJPsiEEOSTaggedTurbo'     : 1.0,
+                                'Hlt2PIDSc02LcPi'                   : 0.0,
+                                'Hlt2PIDSc02LcPiTurbo'              : 1.0,
+                                'Hlt2PIDScpp2LcPi'                  : 0.0,
+                                'Hlt2PIDScpp2LcPiTurbo'             : 1.0,
+                                'Hlt2PIDLb2LcPi'                    : 0.0,
+                                'Hlt2PIDLb2LcPiTurbo'               : 1.0,
+                                'Hlt2PIDLb2LcMuNu'                  : 0.0,
+                                'Hlt2PIDLb2LcMuNuTurbo'             : 1.0,
+                                'Hlt2PIDD02KPiPiPi'                 : 0.0,
+                                'Hlt2PIDD02KPiPiPiTurbo'            : 0.0,
+                                'Hlt2PIDD02KPiPiPiTag'              : 0.0,
+                                'Hlt2PIDD02KPiPiPiTagTurbo'         : 0.0,
+                                'Hlt2PIDD02KPiTag'                  : 0.0,
+                                'Hlt2PIDD02KPiTagTurbo'             : 1.0
+                                },
+                  'Postscale': {
+                                'Hlt2PIDD02KPiPiPiTurbo'            : 0.0
                                 },
                   'Common'   : {'TagTrChi2'     : 3.0,
                                 'TagP'          : 3 * GeV, # 6GeV in old stripping
-                                'TagPt'         : 500 * MeV, # 1.5GeV in old stripping
+                                #'TagPt'         : 500 * MeV, # 1.5GeV in old stripping
                                 'ProbeTrChi2'   : 5, # no cut for ee in old stripping, 3 for detached mumu
                                 'ProbeP'        : 3 * GeV, # 3 GeV for all but B -> (J/psi->mumu)K where it's zero in old stripping
                                 'BachPt'        : 0, # no cut in old stripping
                                 'BachP'         : 0, # no cut in J/psi -> mumu in old stripping, 1 GeV for old J/psi->ee
                                 'BachIPChi2'    : 9.0, # old J/psi -> mumu cut of 25, 9 for J/psi -> ee
                                 'LambdaMWindow' : 25 * MeV,
-                                'LambdaKsVeto'  : 20 * MeV
+                                'LambdaKsVeto'  : 20 * MeV,
+                                'DetLLMinIPChi2': 5.0,
+                                'LLhSumPTMin'   : 2.0 * GeV
+                                },
+                  'PIDSharedBachelor_K' : {
+                                'Trk_ALL_TRCHI2DOF_MAX' : 5.0,
+                                'Trk_ALL_PT_MIN'        : 300.0 * MeV,
+                                'Trk_ALL_P_MIN'         : 3.0 * GeV,
+                                'Trk_ALL_MIPCHI2DV_MIN' : 9.0,
+                                'PID_LIM'               : 5.0
+                                },
+                  'PIDSharedBachelor_pi' : { # Used for Lb->LcPi and Ds->PhiPi
+                                'Trk_ALL_TRCHI2DOF_MAX' : 5.0,
+                                'Trk_ALL_PT_MIN'        : 300.0 * MeV,
+                                'Trk_ALL_P_MIN'         : 3.0 * GeV,
+                                'Trk_ALL_MIPCHI2DV_MIN' : 9.0,
+                                'PID_LIM'               : -5.0
+                                },
+                  'PIDSharedBachelor_mu' : { # Used for Lb->LcMu
+                                'Trk_ALL_TRCHI2DOF_MAX' : 5.0,
+                                'Trk_ALL_PT_MIN'        : 500 * MeV,
+                                'Trk_ALL_P_MIN'         : 3.0 * GeV,
+                                'Trk_ALL_MIPCHI2DV_MIN' : 16.0,
+                                'PID_LIM'               : 0.0
                                 },
                  'Lambda2PPiLL' : {
-                                'LambdaProtonP' : 2.0 * GeV},
+                                'LambdaProtonP' : 2.0 * GeV,
+                                'LambdaProtonPT': 0.0 * GeV},
                  'Lambda2PPiDD' : {
-                                'LambdaProtonP' : 2.0 * GeV},
+                                'LambdaProtonP' : 2.0 * GeV,
+                                'LambdaProtonPT': 0.0 * GeV},
                  'Lambda2PPiLLhighP' : {
-                                'LambdaProtonP' : 40.0 * GeV},
+                                'LambdaProtonP' : 2.0 * GeV,
+                                'LambdaProtonPT': 3.5 * GeV},
                  'Lambda2PPiDDhighP' : {
-                                'LambdaProtonP' : 40.0 * GeV},
+                                'LambdaProtonP' : 2.0 * GeV,
+                                'LambdaProtonPT': 3.5 * GeV},
                  'Lambda2PPiLLveryhighP' : {
-                                'LambdaProtonP' : 60.0 * GeV},
+                                'LambdaProtonP' : 2.0 * GeV,
+                                'LambdaProtonPT': 10.0 * GeV},
                  'Lambda2PPiDDveryhighP' : {
-                                'LambdaProtonP' : 60.0 * GeV},
+                                'LambdaProtonP' : 2.0 * GeV,
+                                'LambdaProtonPT': 10.0 * GeV},
                  'Lambda2PPiLLisMuon' : {
-                                'LambdaProtonP' : 2.0 * GeV},
+                                'LambdaProtonP' : 2.0 * GeV,
+                                'LambdaProtonPT': 0.0 * GeV},
                  'Lambda2PPiDDisMuon' : {
-                                'LambdaProtonP' : 2.0 * GeV},
-                 'JPsiMuMu' :  {'ProbePt'       : 800 * MeV,
+                                'LambdaProtonP' : 2.0 * GeV,
+                                'LambdaProtonPT': 0.0 * GeV},
+                 'JPsiMuMu' :  {'ProbePt'       : 500 * MeV,
                                 'ProbeMinIPChi2': 10,
                                 'ProbeTisTos'   : [
                                   "L0(" + "|".join(l0_muons) + ")Decision%TIS",
                                   hlt1_muons + "%TIS"
                                   ],
+                                'TagPt'         : 1.2 * GeV,
                                 'TagMinIPChi2'  : 25,
                                 'LLCombAMLow'   : (3096-210) * MeV,
                                 'LLCombAMHigh'  : (3096+210) * MeV,
@@ -72,9 +162,9 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                 'LLhVChi2'      : 25,
                                 'LLhVDChi2'     : 25,
                                 'LLhMaxIPChi2'  : 25,
-                                'DetLLVChi2'    : 5,
-                                'DetLLPt'       : 0 * GeV,
-                                'DetLLVDChi2'   : 25},
+                                'DetLLVChi2'    : 15.0,
+                                'DetLLPt'       : 1.0 * GeV,
+                                'DetLLVDChi2'   : 50.0},
                  'JPsiEE'   :  {'ProbePt'       : 500 * MeV,
                                 'ProbeMinIPChi2': 9,
                                 'ProbeTisTos'   : [
@@ -83,56 +173,69 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                   ],
                                 'TagMinIPChi2'  : 25,
                                 'TagPIDe'       : 5.0,
-                                'LLCombAMLow'   : 2050 * MeV,
-                                'LLCombAMHigh'  : 4350 * MeV,
-                                'LLCombMLow'    : 2100 * MeV,
-                                'LLCombMHigh'   : 4300 * MeV,
-                                'LLCombMaxDocaChi2': 20,
-                                'LLhCombAMLow'  : (5279-1100) * MeV,
-                                'LLhCombAMHigh' : (5279+1100) * MeV,
+                                'TagP'          : 6.0 * GeV,
+                                'TagPt'         : 1.5 * GeV,
+                                'BachPt'        : 1.0 * GeV,
+                                'LLCombAMLow'   : (3096-910) * MeV,
+                                'LLCombAMHigh'  : (3096+510) * MeV,
+                                'LLCombMLow'    : (3096-900) * MeV,
+                                'LLCombMHigh'   : (3096+500) * MeV,
+                                'LLCombMaxDocaChi2': 18.0,
+                                'LLhCombAMLow'  : (5279-1110) * MeV,
+                                'LLhCombAMHigh' : (5279+1110) * MeV,
                                 'LLhCombMLow'   : (5279-1000) * MeV,
                                 'LLhCombMHigh'  : (5279+1000) * MeV,
-                                'LLhVChi2'      : 18,
-                                'LLhVDChi2'     : 25,
+                                'LLhVChi2'      : 25,
+                                'LLhVDChi2'     : 50.0,
                                 'LLhMaxIPChi2'  : 100,
-                                'DetLLVChi2'    : 18,
-                                'DetLLPt'       : 2 * GeV,
-                                'DetLLVDChi2'   : 50},
-                 'PhiMuMu'  :  {'LLCombAMLow'   : (1020-100) * MeV,
-                                'LLCombAMHigh'  : (1020+100) * MeV,
-                                'LLCombMLow'    : (1020-80) * MeV,
-                                'LLCombMHigh'   : (1020+80) * MeV,
-                                'LLCombMaxDocaChi2': 10,
-                                'TagMinIPChi2'  : 9.0,
+                                'DetLLVChi2'    : 9.0,
+                                'DetLLPt'       : 2.0 * GeV,
+                                'DetLLVDChi2'   : 100.0,
+                                'DetLLMinIPChi2': 15.0},
+                 'PhiMuMu'  :  {'LLCombAMLow'   : (1020-80) * MeV,
+                                'LLCombAMHigh'  : (1020+80) * MeV,
+                                'LLCombMLow'    : (1020-70) * MeV,
+                                'LLCombMHigh'   : (1020+70) * MeV,
+                                'LLCombMaxDocaChi2': 9.0,
+                                'TagMinIPChi2'  : 25.0,
                                 'ProbeMinIPChi2': 9.0,
-                                'ProbePt'       : 300 * MeV,
+                                'ProbePt'       : 500 * MeV,
+                                'TagPt'         : 800 * MeV,
                                 'ProbeTisTos'   : [
                                   "L0(" + "|".join(l0_muons) + ")Decision%TIS",
                                   hlt1_muons + '%TIS'
                                   ],
-                                'LLhCombAMLow'  : (1968 - 120) * MeV,
-                                'LLhCombAMHigh' : (1968 + 120) * MeV,
-                                'LLhCombMLow'   : (1968 - 100) * MeV, # Ds+ -> phi pi+
-                                'LLhCombMHigh'  : (1968 + 100) * MeV,
-                                'LLhVChi2'      : 25,
-                                'LLhVDChi2'     : 25,
-                                'LLhMaxIPChi2'  : 25,
-                                'DetLLVChi2'    : 25,
-                                'DetLLPt'       : 1.5 * GeV,
-                                'DetLLVDChi2'   : 30},
-                 'Lb2LcMuNu' : {'LLhCombAMLow'  : 0 * MeV,
+                                'LLhCombAMLow'  : (1968 - 90) * MeV,
+                                'LLhCombAMHigh' : (1968 + 90) * MeV,
+                                'LLhCombMLow'   : (1968 - 80) * MeV, # Ds+ -> phi pi+
+                                'LLhCombMHigh'  : (1968 + 80) * MeV,
+                                'LLhVChi2'      : 25.0,
+                                'LLhVDChi2'     : 50.0,
+                                'LLhMaxIPChi2'  : 20.0,
+                                'DetLLVChi2'    : 15.0,
+                                'DetLLPt'       : 2.0 * GeV,
+                                'DetLLVDChi2'   : 75.0,
+                                'DetLLMinIPChi2': 15.0},
+                 'Lb2LcMuNu' : {'BachPt'        : 700.0 * MeV, # muon
+                                'BachIPChi2'    : 16.0,
+                                'LLhCombAMLow'  : 0 * MeV,
                                 'LLhCombAMHigh' : (5620 + 400) * MeV,
                                 'LLhCombBPVCORRMHigh' : (5620 + 400) * MeV,
+                                'LLhCombBPVCORRMLow'  : (5620 - 1100) * MeV,
                                 'LLhVChi2'      : 25,
-                                'LLhVDChi2'     : 25,
-                                'LLhMaxIPChi2'  : 200},
-                 'Lb2LcPi'   : {'LLhCombAMLow'  : (5620 - 400) * MeV,
-                                'LLhCombAMHigh' : (5620 + 400) * MeV,
-                                'LLhCombMLow'   : (5620 - 350) * MeV,
-                                'LLhCombMHigh'  : (5620 + 350) * MeV,
+                                'LLhVDChi2'     : 100.0,
+                                'LLhMaxIPChi2'  : 200.0, # partially reconstructed, don't cut too hard
+                                'LLhSumPTMin'   : 4.0 * GeV}, # Lc_PT + pi_PT
+                 'Lb2LcPi'   : {'BachPt'        : 600.0 * MeV, # pion
+                                'BachIPChi2'    : 25.0,
+                                'LLhCombAMLow'  : (5620 - 350) * MeV,
+                                'LLhCombAMHigh' : (5620 + 350) * MeV,
+                                'LLhCombMLow'   : (5620 - 300) * MeV,
+                                'LLhCombMHigh'  : (5620 + 300) * MeV,
                                 'LLhVChi2'      : 25,
-                                'LLhVDChi2'     : 25,
-                                'LLhMaxIPChi2'  : 25},
+                                'LLhVDChi2'     : 100.0,
+                                'LLhMaxIPChi2'  : 10.0,
+                                'LLhSumPTMin'   : 4.0 * GeV}, # Lc_PT + pi_PT
                  'Ks2PiPiLL' : {'KsMassWindow'  : 50 * MeV,
                                 'KsVChi2'       : 16,
                                 'KsDecayMaxZ'   : 2200 * mm,
@@ -154,26 +257,42 @@ class PIDLines(Hlt2LinesConfigurableUser):
                      'ElectronFromL0' : "HLT_PASS_RE('" + hlt1_electrons + "')"
                      },
                  'TrackGEC' : {'NTRACK_MAX'           : 10000},
+                 "LcTightChild_pi"    : {
+                                'PID_LIM'                 : -8.0,
+                                'Trk_GhostProb_MAX'       : 0.3},
+                 'LcTightChild_K'     : {
+                                'PID_LIM'                 : 8.0,
+                                'Trk_GhostProb_MAX'       : 0.3},
+                 'LcTightChild_p'     : {
+                                'Trk_GhostProb_MAX'       : 0.3},
                  # Now the combiner for the PID calib lines
                  # The pointing cut is tight to ensure a purer signal even without
                  # a PID cut on the proton
-                 'Lc2KPPi' : {
-                                'Trk_ALL_MIPCHI2DV_MIN'    :  6.0,
-                                'Trk_2OF3_MIPCHI2DV_MIN'   :  9.0,
-                                'Trk_1OF3_MIPCHI2DV_MIN'   :  12.0,
-                                'Trk_ALL_PT_MIN'           :  200.0 * MeV,
-                                'Trk_2OF3_PT_MIN'          :  400.0 * MeV,
-                                'Trk_1OF3_PT_MIN'          :  400.0 * MeV,
-                                'BPVVDCHI2_MIN'            :  10.0,
-                                'BPVLTIME_MIN'             :  0.1 * ps,
-                                'BPVDIRA_MIN'              :  0.0,
-                                'ASUMPT_MIN'               :  2000 * MeV,
-                                'AM_MIN'                   :  2201 * MeV,
-                                'AM_MAX'                   :  2371 * MeV,
-                                'Mass_M_MIN'               :  2211.0 * MeV,
-                                'Mass_M_MAX'               :  2361.0 * MeV,
-                                'VCHI2PDOF_MAX'            :  10.0, # took this one from CharmHad Common
-                                'TisTosSpec'               :  [ ]},#"Hlt1(Two)?TrackMVADecision%TOS"}, # changed this
+                 'Lc2KPPi' : {  'Trk_ALL_MIPCHI2DV_MIN'   :  9.0,
+                                'Trk_2OF3_MIPCHI2DV_MIN'  :  12.0,
+                                'Trk_1OF3_MIPCHI2DV_MIN'  :  16.0,
+                                'Trk_ALL_PT_MIN'          :  200.0 * MeV,
+                                'Trk_2OF3_PT_MIN'         :  400.0 * MeV,
+                                'Trk_1OF3_PT_MIN'         :  400.0 * MeV,
+                                'BPVVDCHI2_MIN'           :  50.0,
+                                'BPVLTIME_MIN'            :  0.1 * ps, # This is the cut applied to all Lc+, even if they're then associated with Lb
+                                'BPVDIRA_MIN'             :  0.0,
+                                'ASUMPT_MIN'              :  2000 * MeV,
+                                'MVETO_Kpipi_GT'          :  (1870.0 + 15.0) * MeV,
+                                'MVETO_Kpipi_LT'          :  (1870.0 - 15.0) * MeV,
+                                'MVETO_KKpi_GT'           :  (1968.0 + 15.0) * MeV,
+                                'MVETO_KKpi_LT'           :  (1968.0 - 15.0) * MeV,
+                                'M_Kpi_LOW'               :  (896.0 - 100.0) * MeV,
+                                'M_Kpi_HIGH'              :  (896.0 + 100.0) * MeV,
+                                'AM_MIN'                  :  2201 * MeV,
+                                'AM_MAX'                  :  2371 * MeV,
+                                'Mass_M_MIN'              :  2211.0 * MeV,
+                                'Mass_M_MAX'              :  2361.0 * MeV,
+                                'VCHI2PDOF_MAX'           :  10.0, # took this one from CharmHad Common
+                                'TisTosSpec'              :  "Hlt1(Two)?TrackMVADecision%TOS"}, # changed this
+                 'Lc2KPPiPrompt' : { # Extra cuts for those Lc+ tagged with Sc0/Sc++
+                                'BPVDIRA_MIN'             : 0.9999,
+                                'BPVLTIME_MIN'            : 0.2 * ps},
                  # Note the pointing cut is now in the tagger so that we can re-use
                  # the Lc candidates in the PIDCALIB lines for Lb -> Lc pi and Lb -> Lc mu nu
                  'Sc2LcPi' : {
@@ -181,18 +300,27 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                 'DeltaM_MIN'               :  155.0 * MeV,
                                 'DeltaM_AM_MAX'            :  275.0 * MeV,
                                 'DeltaM_MAX'               :  270.0 * MeV,
-                                'TagVCHI2PDOF_MAX'         :  100.0,
-                                'BPVDIRA_MIN'              :  0.99985},
+                                'TagVCHI2PDOF_MAX'         :  100.0},
                  'D02KPiPiPi' : {
-                                'AM_MAX'                   :  2100 * MeV,
-                                'ASUMPT_MIN'               :  0.0 * MeV,
-                                'ACHI2DOCA_MAX'            :  16.0,
-                                'VCHI2PDOF_MAX'            :  15.0,
-                                'BPVDIRA_MIN'              :  0.9999,
-                                'BPVLTIME_MIN'             :  0.1 * ps,
-                                'Mass_M_MIN'               :  1790 * MeV,
-                                'Mass_M_MAX'               :  1940 * MeV,
-                                'TisTosSpec'               :  [ ]},#"Hlt1(Two)?TrackMVADecision%TOS"},
+                                'AM_MIN'                    : 1775 * MeV, # Minimum AM for K3pi combination
+                                'AM_MAX'                    : 1965 * MeV, # Maximum AM for Kpipipi combination
+                                'AM_34'                     : (139.5 + 139.5) * MeV, # How much to subtract from AM_MAX
+                                                                                     # for the Kpi combination AM uppercut.
+                                'AM_4'                      : (139.5) * MeV, # Max. ditto for Kpipipi combination.
+                                'ASUMPT_MIN'                : 2.0 * GeV,
+                                'ACHI2DOCA_MAX'             : 9.0,
+                                'Trk_1OF4_PT_MIN'           : 800 * MeV, # 
+                                'Trk_2OF4_PT_MIN'           : 600 * MeV,
+                                'Trk_ALL_PT_MIN'            : 400 * MeV,
+                                'Trk_1OF4_MIPCHI2DV_MIN'    : 16.0,
+                                'Trk_2OF4_MIPCHI2DV_MIN'    : 9.0,
+                                'Trk_ALL_MIPCHI2DV_MIN'     : 4.0,
+                                'VCHI2PDOF_MAX'             : 15.0,
+                                'BPVDIRA_MIN'               : 0.9999,
+                                'BPVLTIME_MIN'              : 0.2 * ps,
+                                'Mass_M_MIN'                : 1790 * MeV,
+                                'Mass_M_MAX'                : 1940 * MeV,
+                                'TisTosSpec'                : []},#"Hlt1(Two)?TrackMVADecision%TOS"},
                  'D02KPiPiPiTag' : {
                                 'TagVCHI2PDOF_MAX'         :  15.0,
                                 'DeltaM_AM_MIN'            :  0.0,
@@ -218,25 +346,20 @@ class PIDLines(Hlt2LinesConfigurableUser):
                  'D02KPiTag' : {
                                 'TagVCHI2PDOF_MAX'         :  15.0,         # Stripping has 13
                                 'DeltaM_AM_MIN'            :  0.0,          # Stripping has (ADAMASS('D*(2010)+')<75)
-                                'DeltaM_AM_MAX'            :  190.0 * MeV,  # Stripping has 165 
+                                'DeltaM_AM_MAX'            :  165.0 * MeV,  # Stripping has 165 
                                 'DeltaM_MIN'               :  0.0,          # Stripping has 130
-                                'DeltaM_MAX'               :  170.0 * MeV}  # Stripping has 155
+                                'DeltaM_MAX'               :  155.0 * MeV}  # Stripping has 155
                                                                             # Stripping has D* APT > 2.2 GeV
                  }
 
     def __apply_configuration__(self):
         from Stages import DetachedLLFilter, BCombiner, JPsiMuMuPosTagged, JPsiMuMuNegTagged, \
             JPsiEEPosTagged, JPsiEENegTagged, JPsiEEL0PosTagged, JPsiEEL0NegTagged, \
-            PhiMuMuPosTagged, PhiMuMuNegTagged, KSFilter, \
-            LambdaFilter, Lc2KPPi, D02K3Pi, D02KPi
-        from Inputs import KsLL, KsDD, LambdaLL, LambdaDD, Muons
+            PhiMuMuPosTagged, PhiMuMuNegTagged, KSFilter, BachelorPions, SharedSoftPions, \
+            LambdaFilter, Lc2KPPi, D02K3Pi, D02KPi, Lc2KPPi_Prompt, BachelorKaons, BachelorMuons
+        from Inputs import KsLL, KsDD, LambdaLL, LambdaDD
 
-        from Hlt2Lines.CharmHad.Lines import CharmHadLines
-        from Hlt2Lines.CharmHad.Stages import SharedNoPIDDetachedChild_K, SharedNoPIDDetachedChild_pi, SharedSoftTagChild_pi, TagDecay
-        from Hlt2Lines.Utilities.Hlt2Stage import Hlt2ExternalStage
-        FilteredKaons = Hlt2ExternalStage(CharmHadLines(), SharedNoPIDDetachedChild_K)
-        FilteredPions = Hlt2ExternalStage(CharmHadLines(), SharedNoPIDDetachedChild_pi)
-        SharedSoftPions = Hlt2ExternalStage(CharmHadLines(), SharedSoftTagChild_pi)
+        from Hlt2Lines.CharmHad.Stages import TagDecay
 
         ds2phipi = "[D_s+ -> phi(1020) pi+]cc"
         stagemap = {
@@ -245,23 +368,23 @@ class PIDLines(Hlt2LinesConfigurableUser):
               'DetJPsiMuMuNegTagged'  : [ DetachedLLFilter("JPsiMuMuNeg", JPsiMuMuNegTagged, nickname = "JPsiMuMu") ],
               'DetPhiMuMuPosTagged'   : [ DetachedLLFilter("PhiMuMuPos", PhiMuMuPosTagged, nickname = "PhiMuMu") ],
               'DetPhiMuMuNegTagged'   : [ DetachedLLFilter("PhiMuMuNeg", PhiMuMuNegTagged, nickname = "PhiMuMu") ],
-              'B2KJPsiMuMuSSTagged'   : [ BCombiner("JPsiMuMuSS", [ JPsiMuMuPosTagged, FilteredKaons ], nickname = "JPsiMuMu" ) ],
-              'B2KJPsiMuMuOSTagged'   : [ BCombiner("JPsiMuMuOS", [ JPsiMuMuNegTagged, FilteredKaons ], nickname = "JPsiMuMu" ) ],
-              'Ds2PiPhiMuMuSSTagged'  : [ BCombiner('PhiMuMuSS', [ PhiMuMuPosTagged, FilteredPions ], nickname = "PhiMuMu", decay = ds2phipi ) ],
-              'Ds2PiPhiMuMuOSTagged'  : [ BCombiner('PhiMuMuOS', [ PhiMuMuNegTagged, FilteredPions ], nickname = "PhiMuMu", decay = ds2phipi ) ],
-              'Lb2LcMuNu'             : [ BCombiner('Lb2LcMuNu', [ Lc2KPPi, Muons ], decay = '[Lambda_b0 -> Lambda_c+ mu-]cc', corrm = True) ]
+              'B2KJPsiMuMuSSTagged'   : [ BCombiner("JPsiMuMuSS", [ JPsiMuMuPosTagged, BachelorKaons ], nickname = "JPsiMuMu" ) ],
+              'B2KJPsiMuMuOSTagged'   : [ BCombiner("JPsiMuMuOS", [ JPsiMuMuNegTagged, BachelorKaons ], nickname = "JPsiMuMu" ) ],
+              'Ds2PiPhiMuMuSSTagged'  : [ BCombiner('PhiMuMuSS', [ PhiMuMuPosTagged, BachelorPions ], nickname = "PhiMuMu", decay = ds2phipi ) ],
+              'Ds2PiPhiMuMuOSTagged'  : [ BCombiner('PhiMuMuOS', [ PhiMuMuNegTagged, BachelorPions ], nickname = "PhiMuMu", decay = ds2phipi ) ],
+              'Lb2LcMuNu'             : [ BCombiner('Lb2LcMuNu', [ Lc2KPPi, BachelorMuons ], decay = '[Lambda_b0 -> Lambda_c+ mu-]cc', corrm = True) ]
               },
             'Electron' : {
               'DetJPsiEEPosTagged'    : [ DetachedLLFilter("JPsiEEPos", JPsiEEPosTagged, nickname = "JPsiEE") ],
               'DetJPsiEENegTagged'    : [ DetachedLLFilter("JPsiEENeg", JPsiEENegTagged, nickname = "JPsiEE") ],
-              'B2KJPsiEESSTagged'     : [ BCombiner('JPsiEESS', [ JPsiEEPosTagged, FilteredKaons ], nickname = "JPsiEE" ) ],
-              'B2KJPsiEEOSTagged'     : [ BCombiner('JPsiEEOS', [ JPsiEENegTagged, FilteredKaons ], nickname = "JPsiEE" ) ]
+              'B2KJPsiEESSTagged'     : [ BCombiner('JPsiEESS', [ JPsiEEPosTagged, BachelorKaons ], nickname = "JPsiEE" ) ],
+              'B2KJPsiEEOSTagged'     : [ BCombiner('JPsiEEOS', [ JPsiEENegTagged, BachelorKaons ], nickname = "JPsiEE" ) ]
               },
             'ElectronFromL0' : {
               'DetJPsiEEL0PosTagged'  : [ DetachedLLFilter("JPsiEEL0Pos", JPsiEEL0PosTagged, nickname = "JPsiEE") ],
               'DetJPsiEEL0NegTagged'  : [ DetachedLLFilter("JPsiEEL0Neg", JPsiEEL0NegTagged, nickname = "JPsiEE") ],
-              'B2KJPsiEEL0SSTagged'   : [ BCombiner('JPsiEEL0SS', [ JPsiEEL0PosTagged, FilteredKaons ], nickname = "JPsiEE" ) ],
-              'B2KJPsiEEL0OSTagged'   : [ BCombiner('JPsiEEL0OS', [ JPsiEEL0NegTagged, FilteredKaons ], nickname = "JPsiEE" ) ]
+              'B2KJPsiEEL0SSTagged'   : [ BCombiner('JPsiEEL0SS', [ JPsiEEL0PosTagged, BachelorKaons ], nickname = "JPsiEE" ) ],
+              'B2KJPsiEEL0OSTagged'   : [ BCombiner('JPsiEEL0OS', [ JPsiEEL0NegTagged, BachelorKaons ], nickname = "JPsiEE" ) ]
               },
             'Other' : {
               'Ks2PiPiLL'             : [ KSFilter('Ks2PiPiLL', KsLL) ],
@@ -274,12 +397,12 @@ class PIDLines(Hlt2LinesConfigurableUser):
               'Lambda2PPiDDveryhighP' : [ LambdaFilter('Lambda2PPiDDveryhighP', LambdaDD) ],
               'Lambda2PPiLLisMuon'    : [ LambdaFilter('Lambda2PPiLLisMuon', LambdaLL, ismuon = True) ],
               'Lambda2PPiDDisMuon'    : [ LambdaFilter('Lambda2PPiDDisMuon', LambdaDD, ismuon = True) ],
-              'Lb2LcPi'               : [ BCombiner('Lb2LcPi', [ Lc2KPPi, FilteredPions ], decay = '[Lambda_b0 -> Lambda_c+ pi-]cc') ],
+              'Lb2LcPi'               : [ BCombiner('Lb2LcPi', [ Lc2KPPi, BachelorPions ], decay = '[Lambda_b0 -> Lambda_c+ pi-]cc') ],
               # These next two need shared=True so the Turbo versions don't re-do the combination
-              'Sc02LcPi'              : [ TagDecay('PIDSc02LcPi', "[Sigma_c0 -> Lambda_c+ pi-]cc", inputs = [ Lc2KPPi, SharedSoftPions ],
-                                            DaughtersCuts = { "Lambda_c+" : "(BPVDIRA > %(BPVDIRA_MIN)s )" }, nickname = 'Sc2LcPi', shared = True) ],
-              'Scpp2LcPi'             : [ TagDecay('PIDScpp2LcPi', "[Sigma_c++ -> Lambda_c+ pi+]cc", inputs = [ Lc2KPPi, SharedSoftPions ],
-                                            DaughtersCuts = { "Lambda_c+" : "(BPVDIRA > %(BPVDIRA_MIN)s )" }, nickname = 'Sc2LcPi', shared = True) ],
+              'Sc02LcPi'              : [ TagDecay('PIDSc02LcPi', "[Sigma_c0 -> Lambda_c+ pi-]cc", inputs = [ Lc2KPPi_Prompt, SharedSoftPions ],
+                                            nickname = 'Sc2LcPi', shared = True) ],
+              'Scpp2LcPi'             : [ TagDecay('PIDScpp2LcPi', "[Sigma_c++ -> Lambda_c+ pi+]cc", inputs = [ Lc2KPPi_Prompt, SharedSoftPions ],
+                                            nickname = 'Sc2LcPi', shared = True) ],
               # D0 -> K3pi noPID line
               'D02KPiPiPi'            : [ D02K3Pi ],
               'D02KPiPiPiTag'         : [ TagDecay('PIDD02KPiPiPiTag', "[D*(2010)+ -> D0 pi+]cc", inputs = [ D02K3Pi, SharedSoftPions ], shared = True,
