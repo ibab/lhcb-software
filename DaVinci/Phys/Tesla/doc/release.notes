@@ -8,6 +8,7 @@ Purpose             : Turbo Stream Analysis
 
 ! 2015-4-27 - Sean Benson
  - Add packed relations table location.
+ - Add dependency on TurboStreamProd.
 
 ! 2015-4-11 - Sean Benson
  - Add relations table generation for XDSTs and LDSTs.
