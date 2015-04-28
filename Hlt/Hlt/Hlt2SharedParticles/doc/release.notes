@@ -4,6 +4,8 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!========================= Hlt2SharedParticles v7r6 2015-04-28 =========================
+
 ! 2015-04-17 - Roel Aaij
  - Use FittedVelo in all TagAndProbeParticles
  - Fix bad output selection of AllPiO.
