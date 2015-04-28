@@ -7,6 +7,9 @@
 !           ALWAYS inform the Hlt group.
 !
 !----------------------------------------------------------------------------
+
+!========================= Hlt2Lines v9r9 2015-04-28 =========================
+
 ! 2015-04-28 -  Mike Sokoloff
   - moved D02HHKsh dictionary entries from Lines.py to D2HHKsLines.py
   - renamed SharedSecondaryLambdaDD/LL CharmHadSharedSecondaryLambdaDD/LL
