@@ -95,7 +95,7 @@ class Commissioning_Physics_2015( object ):
                                                                 'MinPT'       :  1000.  * MeV,
                                                                 'MaxPT'       : 25000.  * MeV,
                                                                 'MinIPChi2'   :     7.4,
-                                                                'Param1'      :     0.6,
+                                                                'Param1'      :     1.0,
                                                                 'Param2'      :     1.0,
                                                                 'Param3'      :     1.1,
                                                                 'GEC'         : 'Loose'},
@@ -110,7 +110,7 @@ class Commissioning_Physics_2015( object ):
                                                                 'MinDirA'     :     0.,
                                                                 'V0PT'        :  2000. * MeV,
                                                                 'VxChi2'      :    10.,
-                                                                'Threshold'   :     0.937,
+                                                                'Threshold'   :     0.95,
                                                                 'MvaVars'     : {'chi2'   : 'VFASPF(VCHI2)',
                                                                                  'fdchi2' : 'BPVVDCHI2',
                                                                                  'sumpt'  : 'SUMTREE(PT, ISBASIC, 0.0)',
@@ -189,51 +189,49 @@ class Commissioning_Physics_2015( object ):
                                                        , 'Hlt1BeamGasHighRhoVertices'        : 'RATE(4)'
                                                        }
                                                 }
-                       #, Hlt1ProtonLinesConf        : { 'Prescale' : {  'Hlt1DiProtonLowMult'        : 0.01, 
-                       #                                                 'Hlt1DiProton'               : 0.01
-                       #                                                } } 
+                       , Hlt1CalibTrackingLinesConf :  { 'ParticlePT'            : 600     # MeV
+                                                        ,'ParticleP'             : 4000    # MeV
+                                                        ,'TrackCHI2DOF'          : 2       # dimensionless
+                                                        ,'CombMaxDaughtPT'       : 900     # MeV 900
+                                                        ,'CombAPT'               : 1800    # MeV 1200
+                                                        ,'CombDOCA'              : 0.1     # mm
+                                                        ,'CombVCHI2DOF'          : 10      # dimensionless
+                                                        ,'CombVCHI2DOFLoose'     : 15      # dimensionless
+                                                        ,'CombDIRA'              : 0.99    # dimensionless
+                                                        ,'CombTAU'               : 0.25    # ps
+                                                        ,'D0MassWinLoose'        : 100     # MeV
+                                                        ,'D0MassWin'             : 60      # MeV
+                                                        ,'B0MassWinLoose'        : 200     # MeV
+                                                        ,'B0MassWin'             : 150     # MeV
+                                                        ,'BsPhiGammaMassMinLoose': 3350    # MeV
+                                                        ,'BsPhiGammaMassMaxLoose': 6900    # MeV
+                                                        ,'BsPhiGammaMassMin'     : 3850    # MeV
+                                                        ,'BsPhiGammaMassMax'     : 6400    # MeV
+                                                        ,'PhiMassWinLoose'       : 50      # MeV
+                                                        ,'PhiMassWin'            : 30      # MeV
+                                                        ,'PhiMassWinTight'       : 20      # MeV
+                                                        ,'PhiPT'                 : 1800    # MeV
+                                                        ,'PhiPTLoose'            : 800     # MeV
+                                                        ,'PhiSumPT'              : 3000    # MeV
+                                                        ,'PhiIPCHI2'             : 16      # dimensionless
+                                                        ,'B0SUMPT'               : 4000    # MeV
+                                                        ,'B0PT'                  : 1000    # MeV
+                                                        ,'GAMMA_PT_MIN'          : 2000    # MeV
+                                                        ,'Velo_Qcut'             : 999     # OFF
+                                                        ,'TrNTHits'              : 0       # OFF
+                                                        ,'ValidateTT'            : False
+                                                       }
                        , Hlt1CommissioningLinesConf : { 'Postscale' : { 'Hlt1ErrorEvent'   : 'RATE(0.01)'
 
-                                                                        } }
+                                                                        }
+                                                        }
                        # micro bias lines switched off for high mu physics running              
                        , Hlt1MBLinesConf :     { 'Prescale' : { 'Hlt1MBMicroBiasVelo'                : 0
                                                               , 'Hlt1MBMicroBiasTStation'            : 0
                                                               , 'Hlt1MBMicroBiasVeloRateLimited'     : 0
                                                               , 'Hlt1MBMicroBiasTStationRateLimited' : 0 }
                                                , 'MaxNoBiasRate' : 1000000.
-                                                 }
-                       , Hlt1CalibTrackingLinesConf :    { 'ParticlePT'            : 600     # MeV
-                                                         , 'ParticleP'             : 4000    # MeV
-                                                         , 'TrackCHI2DOF'          : 2       # dimensionless
-                                                         , 'CombMaxDaughtPT'       : 900     # MeV 900
-                                                         , 'CombAPT'               : 1800    # MeV 1200
-                                                         , 'CombDOCA'              : 0.1     # mm
-                                                         , 'CombVCHI2DOF'          : 10      # dimensionless
-                                                         , 'CombVCHI2DOFLoose'     : 15      # dimensionless
-                                                         , 'CombDIRA'              : 0.99    # dimensionless
-                                                         , 'CombTAU'               : 0.25    # ps
-                                                         , 'D0MassWinLoose'        : 100     # MeV
-                                                         , 'D0MassWin'             : 60      # MeV
-                                                         , 'B0MassWinLoose'        : 200     # MeV
-                                                         , 'B0MassWin'             : 150     # MeV
-                                                         , 'BsPhiGammaMassMinLoose': 3350    # MeV
-                                                         , 'BsPhiGammaMassMaxLoose': 6900    # MeV
-                                                         , 'BsPhiGammaMassMin'     : 3850    # MeV
-                                                         , 'BsPhiGammaMassMax'     : 6400    # MeV
-                                                         , 'PhiMassWinLoose'       : 50      # MeV
-                                                         , 'PhiMassWin'            : 30      # MeV
-                                                         , 'PhiMassWinTight'       : 20      # MeV
-                                                         , 'PhiPT'                 : 1800    # MeV
-                                                         , 'PhiPTLoose'            : 800     # MeV
-                                                         , 'PhiSumPT'              : 3000    # MeV
-                                                         , 'PhiIPCHI2'             : 16      # dimensionless
-                                                         , 'B0SUMPT'               : 4000    # MeV
-                                                         , 'B0PT'                  : 1000    # MeV
-                                                         , 'GAMMA_PT_MIN'          : 2000    # MeV
-                                                         , 'Velo_Qcut'             : 999     # OFF
-                                                         , 'TrNTHits'              : 0       # OFF
-                                                         }
-                       
+                                               }
                        }
 
         from Hlt2Lines.Commissioning.Lines  import CommissioningLines
@@ -272,18 +270,16 @@ class Commissioning_Physics_2015( object ):
         """
         Returns a list of active lines
         """
-        lines =  [ 'Hlt1TrackAllL0', 'Hlt1TrackMuon'
-                 , 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
+        lines =  [ 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
                  , 'Hlt1SingleElectronNoIP'
-                 , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
+                 , 'Hlt1TrackMuon', 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
                  , 'Hlt1TrackMVA', 'Hlt1TwoTrackMVA'
-                 , 'Hlt1CalibRICHMirror'
-                 , 'Hlt1CalibTrackingKPi','Hlt1CalibTrackingKK', 'Hlt1CalibTrackingPiPi'
-                 , 'Hlt1B2HH_LTUNB_KPi', 'Hlt1B2HH_LTUNB_KK', 'Hlt1B2HH_LTUNB_PiPi'
+                 , 'Hlt1CalibTrackingKPi' , 'Hlt1CalibTrackingKK' , 'Hlt1CalibTrackingPiPi'
+                 , 'Hlt1B2HH_LTUNB_KPi' , 'Hlt1B2HH_LTUNB_KK' , 'Hlt1B2HH_LTUNB_PiPi'
                  , 'Hlt1IncPhi'
-                 , 'Hlt1B2PhiPhi_LTUNB' , 'Hlt1B2PhiGamma_LTUNB'
-                   ]
-
+                 , 'Hlt1B2PhiPhi_LTUNB', 'Hlt1B2PhiGamma_LTUNB'
+                 , 'Hlt1L0HighSumETJet','Hlt1HighPtJetsSinglePV'
+                 , 'Hlt1CalibRICHMirror' ]
         
         ## from Hlt1TechnicalLines import Hlt1TechnicalLines 
         ## lines.extend( Hlt1TechnicalLines().ActiveHlt1Lines() )
