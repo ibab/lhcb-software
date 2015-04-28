@@ -5,6 +5,13 @@
 !-----------------------------------------------------------------------------
 
 !========================= MuonID v9r14 2015-03-31 =========================
+! 2015-04-28 - Ricardo Vazquez Gomez
+ - Add the makeMuonTrack part to the code. 
+ - Add the possibility to use DLLflag == 3 as the new DLL calibration would use 
+   the cumulative histograms for muons and non-muons.
+ - Clean up a bit unnecessary properties and functions.
+ - Compiled against CMake.
+
 ! 2015-03-15 - Roel Aaij
  - Fix requirements after reorganisation of code.
 

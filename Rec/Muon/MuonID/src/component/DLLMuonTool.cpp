@@ -3,23 +3,6 @@
  * 2015-01-12: Ricardo Vazquez Gomez
  */
 #include "DLLMuonTool.h"
-#include "CommonMuonTool.h"
-
-#include <algorithm>
-#include <array>
-#include <memory>
-#include <string>
-#include <utility>
-#include <vector>
-
-#include "DetDesc/Condition.h"
-#include "Event/MuonPID.h"
-#include "Event/Track.h"
-#include "GaudiAlg/GaudiTool.h"
-#include "GaudiKernel/ToolFactory.h"
-#include "MuonDet/DeMuonDetector.h"
-
-#include "MuonID/CommonMuonHitManager.h"
 
 DECLARE_TOOL_FACTORY(DLLMuonTool)
 
@@ -45,32 +28,7 @@ DLLMuonTool::DLLMuonTool(const std::string& type, const std::string& name,
       declareProperty( "NonMupBinsR2", m_MupBinsR2);
       declareProperty( "NonMupBinsR3", m_MupBinsR3);
       declareProperty( "NonMupBinsR4", m_MupBinsR4);
-      // Landau parameters Muons R1
-      declareProperty( "MuLandauParameterR1_1", m_MuLanParR1_1 );
-      declareProperty( "MuLandauParameterR1_2", m_MuLanParR1_2 );
-      declareProperty( "MuLandauParameterR1_3", m_MuLanParR1_3 );
-      declareProperty( "MuLandauParameterR1_4", m_MuLanParR1_4 );
-      declareProperty( "MuLandauParameterR1_5", m_MuLanParR1_5 );
-      declareProperty( "MuLandauParameterR1_6", m_MuLanParR1_6 );
-      declareProperty( "MuLandauParameterR1_7", m_MuLanParR1_7 );
-      // Landau parameters Muons R2
-      declareProperty( "MuLandauParameterR2_1", m_MuLanParR2_1 );
-      declareProperty( "MuLandauParameterR2_2", m_MuLanParR2_2 );
-      declareProperty( "MuLandauParameterR2_3", m_MuLanParR2_3 );
-      declareProperty( "MuLandauParameterR2_4", m_MuLanParR2_4 );
-      declareProperty( "MuLandauParameterR2_5", m_MuLanParR2_5 );
-      // Landau parameters Muons R3
-      declareProperty( "MuLandauParameterR3_1", m_MuLanParR3_1 );
-      declareProperty( "MuLandauParameterR3_2", m_MuLanParR3_2 );
-      declareProperty( "MuLandauParameterR3_3", m_MuLanParR3_3 );
-      declareProperty( "MuLandauParameterR3_4", m_MuLanParR3_4 );
-      declareProperty( "MuLandauParameterR3_5", m_MuLanParR3_5 );
-      // Landau parameters Muons R4
-      declareProperty( "MuLandauParameterR4_1", m_MuLanParR4_1 );
-      declareProperty( "MuLandauParameterR4_2", m_MuLanParR4_2 );
-      declareProperty( "MuLandauParameterR4_3", m_MuLanParR4_3 );
-      declareProperty( "MuLandauParameterR4_4", m_MuLanParR4_4 );
-      declareProperty( "MuLandauParameterR4_5", m_MuLanParR4_5 );
+      
       // Landau parameters Non-Muons - Region 1-2-3-4:
       declareProperty( "NonMuLandauParameterR1", m_NonMuLanParR1 );
       declareProperty( "NonMuLandauParameterR2", m_NonMuLanParR2 );
@@ -85,7 +43,7 @@ DLLMuonTool::DLLMuonTool(const std::string& type, const std::string& name,
       declareProperty( "tanhScaleFactorsR3", m_tanhScaleFactorsR3);
       declareProperty( "tanhScaleFactorsR4", m_tanhScaleFactorsR4);
 
-      // tanh(dist2) histograms contents
+      // tanh(dist2) histograms contents for muons  // DLLflag = 3 and 4
       declareProperty( "tanhCumulHistoMuonR1_1", m_tanhCumulHistoMuonR1_1);
       declareProperty( "tanhCumulHistoMuonR1_2", m_tanhCumulHistoMuonR1_2);
       declareProperty( "tanhCumulHistoMuonR1_3", m_tanhCumulHistoMuonR1_3);
@@ -112,6 +70,33 @@ DLLMuonTool::DLLMuonTool(const std::string& type, const std::string& name,
       declareProperty( "tanhCumulHistoMuonR4_4", m_tanhCumulHistoMuonR4_4);
       declareProperty( "tanhCumulHistoMuonR4_5", m_tanhCumulHistoMuonR4_5);
 
+      // tanh(dist2) histograms contents for non-muons // DLLflag = 3
+      declareProperty( "tanhCumulHistoNonMuonR1_1", m_tanhCumulHistoNonMuonR1_1);
+      declareProperty( "tanhCumulHistoNonMuonR1_2", m_tanhCumulHistoNonMuonR1_2);
+      declareProperty( "tanhCumulHistoNonMuonR1_3", m_tanhCumulHistoNonMuonR1_3);
+      declareProperty( "tanhCumulHistoNonMuonR1_4", m_tanhCumulHistoNonMuonR1_4);
+      declareProperty( "tanhCumulHistoNonMuonR1_5", m_tanhCumulHistoNonMuonR1_5);
+      declareProperty( "tanhCumulHistoNonMuonR1_6", m_tanhCumulHistoNonMuonR1_6);
+      declareProperty( "tanhCumulHistoNonMuonR1_7", m_tanhCumulHistoNonMuonR1_7);
+
+      declareProperty( "tanhCumulHistoNonMuonR2_1", m_tanhCumulHistoNonMuonR2_1);
+      declareProperty( "tanhCumulHistoNonMuonR2_2", m_tanhCumulHistoNonMuonR2_2);
+      declareProperty( "tanhCumulHistoNonMuonR2_3", m_tanhCumulHistoNonMuonR2_3);
+      declareProperty( "tanhCumulHistoNonMuonR2_4", m_tanhCumulHistoNonMuonR2_4);
+      declareProperty( "tanhCumulHistoNonMuonR2_5", m_tanhCumulHistoNonMuonR2_5);
+
+      declareProperty( "tanhCumulHistoNonMuonR3_1", m_tanhCumulHistoNonMuonR3_1);
+      declareProperty( "tanhCumulHistoNonMuonR3_2", m_tanhCumulHistoNonMuonR3_2);
+      declareProperty( "tanhCumulHistoNonMuonR3_3", m_tanhCumulHistoNonMuonR3_3);
+      declareProperty( "tanhCumulHistoNonMuonR3_4", m_tanhCumulHistoNonMuonR3_4);
+      declareProperty( "tanhCumulHistoNonMuonR3_5", m_tanhCumulHistoNonMuonR3_5);
+
+      declareProperty( "tanhCumulHistoNonMuonR4_1", m_tanhCumulHistoNonMuonR4_1);
+      declareProperty( "tanhCumulHistoNonMuonR4_2", m_tanhCumulHistoNonMuonR4_2);
+      declareProperty( "tanhCumulHistoNonMuonR4_3", m_tanhCumulHistoNonMuonR4_3);
+      declareProperty( "tanhCumulHistoNonMuonR4_4", m_tanhCumulHistoNonMuonR4_4);
+      declareProperty( "tanhCumulHistoNonMuonR4_5", m_tanhCumulHistoNonMuonR4_5);
+
 }
 
 /** Initialises the tool.
@@ -127,6 +112,7 @@ StatusCode DLLMuonTool::initialize() {
   hitManager_ = tool<CommonMuonHitManager>("CommonMuonHitManager");
   muonTool_ = tool<ICommonMuonTool>("CommonMuonTool");
   det_ = getDet<DeMuonDetector>(DeMuonLocation::Default);
+  makeMuonTool_ = tool<MakeMuonTool>("MakeMuonTool");
 
   // Load station information from detector description
   for (unsigned s = 0; s < nStations; ++s) {
@@ -142,15 +128,9 @@ StatusCode DLLMuonTool::initialize() {
   // Prepare to load information from conditions data base
   Condition* condFoiFactor = nullptr;
   Condition* condPreSelMomentum = nullptr;
-  Condition* condFoiParametersX = nullptr;
-  Condition* condFoiParametersY = nullptr;
   Condition* condMomentumCuts = nullptr;
   Condition* condNumberMupBins = nullptr;
   Condition* condMupBins = nullptr;
-  Condition* condMuLandauParameterR1 = nullptr;
-  Condition* condMuLandauParameterR2 = nullptr;
-  Condition* condMuLandauParameterR3 = nullptr;
-  Condition* condMuLandauParameterR4 = nullptr;
   Condition* condNonMuLandauParameterR1 = nullptr;
   Condition* condNonMuLandauParameterR2 = nullptr;
   Condition* condNonMuLandauParameterR3 = nullptr;
@@ -160,18 +140,16 @@ StatusCode DLLMuonTool::initialize() {
   Condition* condtanhCumulHistoMuonR2 = nullptr;
   Condition* condtanhCumulHistoMuonR3 = nullptr;
   Condition* condtanhCumulHistoMuonR4 = nullptr; 
+  //Condition* condtanhCumulHistoNonMuonR1 = nullptr;
+  //Condition* condtanhCumulHistoNonMuonR2 = nullptr;
+  //Condition* condtanhCumulHistoNonMuonR3 = nullptr;
+  //Condition* condtanhCumulHistoNonMuonR4 = nullptr;
 
   registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/FOIfactor", condFoiFactor);
   registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/PreSelMomentum", condPreSelMomentum);
-  registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/XFOIParameters", condFoiParametersX);
-  registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/YFOIParameters", condFoiParametersY);
   registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/MomentumCuts", condMomentumCuts);
   registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/nMupBins", condNumberMupBins);
   registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/MupBins", condMupBins);
-  registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/MuLandauParameterR1", condMuLandauParameterR1);
-  registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/MuLandauParameterR2", condMuLandauParameterR2);
-  registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/MuLandauParameterR3", condMuLandauParameterR3);
-  registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/MuLandauParameterR4", condMuLandauParameterR4);
   registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/NonMuLandauParameterR1",condNonMuLandauParameterR1);
   registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/NonMuLandauParameterR2",condNonMuLandauParameterR2);
   registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/NonMuLandauParameterR3",condNonMuLandauParameterR3);
@@ -181,6 +159,10 @@ StatusCode DLLMuonTool::initialize() {
   registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhCumulHistoMuonR2", condtanhCumulHistoMuonR2);
   registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhCumulHistoMuonR3", condtanhCumulHistoMuonR3);
   registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhCumulHistoMuonR4", condtanhCumulHistoMuonR4);
+  //registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhCumulHistoNonMuonR1", condtanhCumulHistoNonMuonR1);
+  //registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhCumulHistoNonMuonR2", condtanhCumulHistoNonMuonR2);
+  //registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhCumulHistoNonMuonR3", condtanhCumulHistoNonMuonR3);
+  //registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhCumulHistoNonMuonR4", condtanhCumulHistoNonMuonR4);
 
   // Update conditions
   sc = runUpdate();
@@ -191,13 +173,8 @@ StatusCode DLLMuonTool::initialize() {
   // Extract parameters
   foiFactor_ = condFoiFactor->param<double>("FOIfactor");
   preSelMomentum_ = condPreSelMomentum->param<double>("PreSelMomentum");
-  foiParamX_[0] = condFoiParametersX->paramVect<double>("XFOIParameters1");
-  foiParamX_[1] = condFoiParametersX->paramVect<double>("XFOIParameters2");
-  foiParamX_[2] = condFoiParametersX->paramVect<double>("XFOIParameters3");
-  foiParamY_[0] = condFoiParametersY->paramVect<double>("YFOIParameters1");
-  foiParamY_[1] = condFoiParametersY->paramVect<double>("YFOIParameters2");
-  foiParamY_[2] = condFoiParametersY->paramVect<double>("YFOIParameters3");
   momentumCuts_ = condMomentumCuts->paramVect<double>("MomentumCuts");
+  
   m_nMupBinsR1 = condNumberMupBins->param<int>("nMupBinsR1");
   m_nMupBinsR2 = condNumberMupBins->param<int>("nMupBinsR2");
   m_nMupBinsR3 = condNumberMupBins->param<int>("nMupBinsR3");
@@ -206,35 +183,6 @@ StatusCode DLLMuonTool::initialize() {
   m_MupBinsR2 = condMupBins->paramVect<double>("MupBinsR2");
   m_MupBinsR3 = condMupBins->paramVect<double>("MupBinsR3");
   m_MupBinsR4 = condMupBins->paramVect<double>("MupBinsR4");
-  // Muons - Region1:
-  m_MuLanParR1_1 = condMuLandauParameterR1->paramVect<double>("MuLandauParameterR1_1");
-  m_MuLanParR1_2 = condMuLandauParameterR1->paramVect<double>("MuLandauParameterR1_2");
-  m_MuLanParR1_3 = condMuLandauParameterR1->paramVect<double>("MuLandauParameterR1_3");
-  m_MuLanParR1_4 = condMuLandauParameterR1->paramVect<double>("MuLandauParameterR1_4");
-  m_MuLanParR1_5 = condMuLandauParameterR1->paramVect<double>("MuLandauParameterR1_5");
-  m_MuLanParR1_6 = condMuLandauParameterR1->paramVect<double>("MuLandauParameterR1_6");
-  m_MuLanParR1_7 = condMuLandauParameterR1->paramVect<double>("MuLandauParameterR1_7");
-
-  // Muons - Region2:
-  m_MuLanParR2_1 = condMuLandauParameterR2->paramVect<double>("MuLandauParameterR2_1");
-  m_MuLanParR2_2 = condMuLandauParameterR2->paramVect<double>("MuLandauParameterR2_2");
-  m_MuLanParR2_3 = condMuLandauParameterR2->paramVect<double>("MuLandauParameterR2_3");
-  m_MuLanParR2_4 = condMuLandauParameterR2->paramVect<double>("MuLandauParameterR2_4");
-  m_MuLanParR2_5 = condMuLandauParameterR2->paramVect<double>("MuLandauParameterR2_5");
-
-  // Muons - Region3:
-  m_MuLanParR3_1 = condMuLandauParameterR3->paramVect<double>("MuLandauParameterR3_1");
-  m_MuLanParR3_2 = condMuLandauParameterR3->paramVect<double>("MuLandauParameterR3_2");
-  m_MuLanParR3_3 = condMuLandauParameterR3->paramVect<double>("MuLandauParameterR3_3");
-  m_MuLanParR3_4 = condMuLandauParameterR3->paramVect<double>("MuLandauParameterR3_4");
-  m_MuLanParR3_5 = condMuLandauParameterR3->paramVect<double>("MuLandauParameterR3_5");
-
-  // Muons - Region4:
-  m_MuLanParR4_1 = condMuLandauParameterR4->paramVect<double>("MuLandauParameterR4_1");
-  m_MuLanParR4_2 = condMuLandauParameterR4->paramVect<double>("MuLandauParameterR4_2");
-  m_MuLanParR4_3 = condMuLandauParameterR4->paramVect<double>("MuLandauParameterR4_3");
-  m_MuLanParR4_4 = condMuLandauParameterR4->paramVect<double>("MuLandauParameterR4_4");
-  m_MuLanParR4_5 = condMuLandauParameterR4->paramVect<double>("MuLandauParameterR4_5");
 
   // Non-Muons - Region 1-2-3-4:
   m_NonMuLanParR1 = condNonMuLandauParameterR1->paramVect<double>("NonMuLandauParameterR1");
@@ -273,11 +221,39 @@ StatusCode DLLMuonTool::initialize() {
   m_tanhCumulHistoMuonR4_4 = condtanhCumulHistoMuonR4->paramVect<double>("tanhCumulHistoMuonR4_4");
   m_tanhCumulHistoMuonR4_5 = condtanhCumulHistoMuonR4->paramVect<double>("tanhCumulHistoMuonR4_5");
 
+  /*
+  m_tanhCumulHistoNonMuonR1_1 = condtanhCumulHistoNonMuonR1->paramVect<double>("tanhCumulHistoNonMuonR1_1");
+  m_tanhCumulHistoNonMuonR1_2 = condtanhCumulHistoNonMuonR1->paramVect<double>("tanhCumulHistoNonMuonR1_2");
+  m_tanhCumulHistoNonMuonR1_3 = condtanhCumulHistoNonMuonR1->paramVect<double>("tanhCumulHistoNonMuonR1_3");
+  m_tanhCumulHistoNonMuonR1_4 = condtanhCumulHistoNonMuonR1->paramVect<double>("tanhCumulHistoNonMuonR1_4");
+  m_tanhCumulHistoNonMuonR1_5 = condtanhCumulHistoNonMuonR1->paramVect<double>("tanhCumulHistoNonMuonR1_5");
+  m_tanhCumulHistoNonMuonR1_6 = condtanhCumulHistoNonMuonR1->paramVect<double>("tanhCumulHistoNonMuonR1_6");
+  m_tanhCumulHistoNonMuonR1_7 = condtanhCumulHistoNonMuonR1->paramVect<double>("tanhCumulHistoNonMuonR1_7");
+
+  m_tanhCumulHistoNonMuonR2_1 = condtanhCumulHistoNonMuonR2->paramVect<double>("tanhCumulHistoNonMuonR2_1");
+  m_tanhCumulHistoNonMuonR2_2 = condtanhCumulHistoNonMuonR2->paramVect<double>("tanhCumulHistoNonMuonR2_2");
+  m_tanhCumulHistoNonMuonR2_3 = condtanhCumulHistoNonMuonR2->paramVect<double>("tanhCumulHistoNonMuonR2_3");
+  m_tanhCumulHistoNonMuonR2_4 = condtanhCumulHistoNonMuonR2->paramVect<double>("tanhCumulHistoNonMuonR2_4");
+  m_tanhCumulHistoNonMuonR2_5 = condtanhCumulHistoNonMuonR2->paramVect<double>("tanhCumulHistoNonMuonR2_5");
+
+  m_tanhCumulHistoNonMuonR3_1 = condtanhCumulHistoNonMuonR3->paramVect<double>("tanhCumulHistoNonMuonR3_1");
+  m_tanhCumulHistoNonMuonR3_2 = condtanhCumulHistoNonMuonR3->paramVect<double>("tanhCumulHistoNonMuonR3_2");
+  m_tanhCumulHistoNonMuonR3_3 = condtanhCumulHistoNonMuonR3->paramVect<double>("tanhCumulHistoNonMuonR3_3");
+  m_tanhCumulHistoNonMuonR3_4 = condtanhCumulHistoNonMuonR3->paramVect<double>("tanhCumulHistoNonMuonR3_4");
+  m_tanhCumulHistoNonMuonR3_5 = condtanhCumulHistoNonMuonR3->paramVect<double>("tanhCumulHistoNonMuonR3_5");
+
+  m_tanhCumulHistoNonMuonR4_1 = condtanhCumulHistoNonMuonR4->paramVect<double>("tanhCumulHistoNonMuonR4_1");
+  m_tanhCumulHistoNonMuonR4_2 = condtanhCumulHistoNonMuonR4->paramVect<double>("tanhCumulHistoNonMuonR4_2");
+  m_tanhCumulHistoNonMuonR4_3 = condtanhCumulHistoNonMuonR4->paramVect<double>("tanhCumulHistoNonMuonR4_3");
+  m_tanhCumulHistoNonMuonR4_4 = condtanhCumulHistoNonMuonR4->paramVect<double>("tanhCumulHistoNonMuonR4_4");
+  m_tanhCumulHistoNonMuonR4_5 = condtanhCumulHistoNonMuonR4->paramVect<double>("tanhCumulHistoNonMuonR4_5");
+  */
   m_tanhScaleFactors.push_back(&m_tanhScaleFactorsR1);
   m_tanhScaleFactors.push_back(&m_tanhScaleFactorsR2);
   m_tanhScaleFactors.push_back(&m_tanhScaleFactorsR3);
   m_tanhScaleFactors.push_back(&m_tanhScaleFactorsR4);
 
+  // DLLflag = 3 and 4 for muons
   m_tanhCumulHistoMuonR1.push_back(&m_tanhCumulHistoMuonR1_1);
   m_tanhCumulHistoMuonR1.push_back(&m_tanhCumulHistoMuonR1_2);
   m_tanhCumulHistoMuonR1.push_back(&m_tanhCumulHistoMuonR1_3);
@@ -309,26 +285,44 @@ StatusCode DLLMuonTool::initialize() {
   m_tanhCumulHistoMuon.push_back(&m_tanhCumulHistoMuonR3);
   m_tanhCumulHistoMuon.push_back(&m_tanhCumulHistoMuonR4);
 
-  if (msgLevel(MSG::VERBOSE)){ 
-      verbose()  << "==> nMupBinsR1:" << m_nMupBinsR1 << endmsg;
-      verbose()  << "==> nMupBinsR2:" << m_nMupBinsR2 << endmsg;
-      verbose()  << "==> nMupBinsR3:" << m_nMupBinsR3 << endmsg;
-      verbose()  << "==> nMupBinsR4:" << m_nMupBinsR4 << endmsg;
-      verbose()  << "==> MupBinsR1:" << m_MupBinsR1 << endmsg;
-      verbose()  << "==> MupBinsR2:" << m_MupBinsR2 << endmsg;
-      verbose()  << "==> MupBinsR3:" << m_MupBinsR3 << endmsg;
-      verbose()  << "==> MupBinsR4:" << m_MupBinsR4 << endmsg;
-  }    
+  //DLLFlag = 3 for non-muons
+  m_tanhCumulHistoNonMuonR1.push_back(&m_tanhCumulHistoNonMuonR1_1);
+  m_tanhCumulHistoNonMuonR1.push_back(&m_tanhCumulHistoNonMuonR1_2);
+  m_tanhCumulHistoNonMuonR1.push_back(&m_tanhCumulHistoNonMuonR1_3);
+  m_tanhCumulHistoNonMuonR1.push_back(&m_tanhCumulHistoNonMuonR1_4);
+  m_tanhCumulHistoNonMuonR1.push_back(&m_tanhCumulHistoNonMuonR1_5);
+  m_tanhCumulHistoNonMuonR1.push_back(&m_tanhCumulHistoNonMuonR1_6);
+  m_tanhCumulHistoNonMuonR1.push_back(&m_tanhCumulHistoNonMuonR1_7);
+
+  m_tanhCumulHistoNonMuonR2.push_back(&m_tanhCumulHistoNonMuonR2_1);
+  m_tanhCumulHistoNonMuonR2.push_back(&m_tanhCumulHistoNonMuonR2_2);
+  m_tanhCumulHistoNonMuonR2.push_back(&m_tanhCumulHistoNonMuonR2_3);
+  m_tanhCumulHistoNonMuonR2.push_back(&m_tanhCumulHistoNonMuonR2_4);
+  m_tanhCumulHistoNonMuonR2.push_back(&m_tanhCumulHistoNonMuonR2_5);
+
+  m_tanhCumulHistoNonMuonR3.push_back(&m_tanhCumulHistoNonMuonR3_1);
+  m_tanhCumulHistoNonMuonR3.push_back(&m_tanhCumulHistoNonMuonR3_2);
+  m_tanhCumulHistoNonMuonR3.push_back(&m_tanhCumulHistoNonMuonR3_3);
+  m_tanhCumulHistoNonMuonR3.push_back(&m_tanhCumulHistoNonMuonR3_4);
+  m_tanhCumulHistoNonMuonR3.push_back(&m_tanhCumulHistoNonMuonR3_5);
+
+  m_tanhCumulHistoNonMuonR4.push_back(&m_tanhCumulHistoNonMuonR4_1);
+  m_tanhCumulHistoNonMuonR4.push_back(&m_tanhCumulHistoNonMuonR4_2);
+  m_tanhCumulHistoNonMuonR4.push_back(&m_tanhCumulHistoNonMuonR4_3);
+  m_tanhCumulHistoNonMuonR4.push_back(&m_tanhCumulHistoNonMuonR4_4);
+  m_tanhCumulHistoNonMuonR4.push_back(&m_tanhCumulHistoNonMuonR4_5);
+
+  m_tanhCumulHistoNonMuon.push_back(&m_tanhCumulHistoNonMuonR1);
+  m_tanhCumulHistoNonMuon.push_back(&m_tanhCumulHistoNonMuonR2);
+  m_tanhCumulHistoNonMuon.push_back(&m_tanhCumulHistoNonMuonR3);
+  m_tanhCumulHistoNonMuon.push_back(&m_tanhCumulHistoNonMuonR4);
+  
   return sc;
 }
 
 /**Method to calculate the distance from the hit to the extrapolated position
 */
-double DLLMuonTool::calcDist( const CommonMuonTool::MuonTrackExtrapolation& extrapolation, CommonConstMuonHits& hits ) const{
-
-  //CommonConstMuonHits hits;
-  //std::array<unsigned, CommonMuonTool::nStations> occupancies;
-  //std::tie(hits, occupancies) = muonTool_->hitsAndOccupancies(track, extrapolation);
+double DLLMuonTool::calcDist( const ICommonMuonTool::MuonTrackExtrapolation& extrapolation, CommonConstMuonHits& hits ) const{
 
   double m_dist = 0.;
   double mCoordX[5] = {0.,0.,0.,0.,0.};
@@ -395,8 +389,7 @@ double DLLMuonTool::calcDist( const CommonMuonTool::MuonTrackExtrapolation& extr
 
 /** Calculate the number of tracks that share hits 
  */
-
-bool DLLMuonTool::calcNShared( LHCb::MuonPID* muonid, LHCb::MuonPIDs* pMuids, CommonConstMuonHits& hits, const CommonMuonTool::MuonTrackExtrapolation& extr, std::map< LHCb::MuonPID*, CommonConstMuonHits > m_muonMap) {
+bool DLLMuonTool::calcNShared( LHCb::MuonPID* muonid, LHCb::MuonPIDs* pMuids, CommonConstMuonHits& hits, const ICommonMuonTool::MuonTrackExtrapolation& extr, std::map< LHCb::MuonPID*, CommonConstMuonHits > m_muonMap) {
   
   int nNSH;
 
@@ -408,7 +401,7 @@ bool DLLMuonTool::calcNShared( LHCb::MuonPID* muonid, LHCb::MuonPIDs* pMuids, Co
   }
 
   CommonConstMuonHits hits2;
-  std::array<unsigned, CommonMuonTool::nStations> occupancies2;
+  std::array<unsigned, ICommonMuonTool::nStations> occupancies2;
 
   // loop over the muonIDs
   LHCb::MuonPIDs::const_iterator iMuon;
@@ -470,7 +463,7 @@ int DLLMuonTool::GetPbin(double p, int region){
   return pBins->size();  // last bin. npBins goes from 0 to (Gaias npBin)+1
 }
 
-std::vector<double> DLLMuonTool::loadNonMuLandauParam(const CommonMuonTool::MuonTrackExtrapolation& extrapolation){
+std::vector<double> DLLMuonTool::loadNonMuLandauParam(const ICommonMuonTool::MuonTrackExtrapolation& extrapolation){
   std::vector<double> parNonMu;   
   int region=findTrackRegions(extrapolation)[1]; // M2 JHLJHL Check M2 and M3 indices if no M1 30/08/2013
   if (region<0) region=findTrackRegions(extrapolation)[2]; // M3
@@ -486,65 +479,13 @@ std::vector<double> DLLMuonTool::loadNonMuLandauParam(const CommonMuonTool::Muon
   return parNonMu;
 }
 
-std::pair<std::vector<double>,std::vector<double>> DLLMuonTool::loadLandauParam(double p, const CommonMuonTool::MuonTrackExtrapolation& extrapolation){
-  std::vector<double> parMu, parNonMu;
-  // Track region is defined in M2 or M3
-  int region=findTrackRegions(extrapolation)[1]; // M2 JHLJHL Check M2 and M3 indices if no M1 30/08/2013
-  if (region<0) region=findTrackRegions(extrapolation)[2]; // M3
-  if (region==0){//Region 1
-    if (p>preSelMomentum_ && p<m_MupBinsR1[0]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR1_1[i]; } }
-    if (p>m_MupBinsR1[0] && p<m_MupBinsR1[1]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR1_2[i]; } }
-    if (p>m_MupBinsR1[1] && p<m_MupBinsR1[2]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR1_3[i]; } }
-    if (p>m_MupBinsR1[2] && p<m_MupBinsR1[3]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR1_4[i]; } }
-    if (p>m_MupBinsR1[3] && p<m_MupBinsR1[4]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR1_5[i]; } }
-    if (p>m_MupBinsR1[4] && p<m_MupBinsR1[5]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR1_6[i]; } }
-    if (p>m_MupBinsR1[5]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR1_7[i]; } }
-    for (int i=0;i<3;i++){parNonMu[i] = m_NonMuLanParR1[i]; }
-  }else if (region==1){// Region 2
-    if (p>preSelMomentum_  && p<m_MupBinsR2[0]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR2_1[i]; } }
-    if (p>m_MupBinsR2[0] && p<m_MupBinsR2[1]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR2_2[i]; } }
-    if (p>m_MupBinsR2[1] && p<m_MupBinsR2[2]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR2_3[i]; } }
-    if (p>m_MupBinsR2[2] && p<m_MupBinsR2[3]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR2_4[i]; } }
-    if (p>m_MupBinsR2[3] ) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR2_5[i]; } }
-    for (int i=0;i<3;i++){parNonMu[i] = m_NonMuLanParR2[i]; }
-  }else if (region==2){// Region 3
-    if (p>preSelMomentum_  && p<m_MupBinsR3[0]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR3_1[i]; } }
-    if (p>m_MupBinsR3[0] && p<m_MupBinsR3[1]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR3_2[i]; } }
-    if (p>m_MupBinsR3[1] && p<m_MupBinsR3[2]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR3_3[i]; } }
-    if (p>m_MupBinsR3[2] && p<m_MupBinsR3[3]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR3_4[i]; } }
-    if (p>m_MupBinsR3[3] ) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR3_5[i]; } }
-    for (int i=0;i<3;i++){parNonMu[i] = m_NonMuLanParR3[i]; }
-  }else if (region==3){// Region 4
-    if (p>preSelMomentum_  && p<m_MupBinsR4[0]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR4_1[i]; } }
-    if (p>m_MupBinsR4[0]  && p<m_MupBinsR4[1]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR4_2[i]; } }
-    if (p>m_MupBinsR4[1]  && p<m_MupBinsR4[2]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR4_3[i]; } }
-    if (p>m_MupBinsR4[2]  && p<m_MupBinsR4[3]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR4_4[i]; } }
-    if (p>m_MupBinsR4[3] ) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR4_5[i]; } }
-    for (int i=0;i<3;i++){parNonMu[i] = m_NonMuLanParR4[i]; }
-  } else throw GaudiException("Not valid region", "",StatusCode::FAILURE);
-  return {parMu, parNonMu};
-}
-
-std::vector<int> DLLMuonTool::findTrackRegions(const CommonMuonTool::MuonTrackExtrapolation& extrapolation){
+std::vector<int> DLLMuonTool::findTrackRegions(const ICommonMuonTool::MuonTrackExtrapolation& extrapolation){
   //=====================================================================
   // comment: Returns the muon detector region of the extrapolated track;
-  // authors: G. Lanfranchi & S. Furcas & X. Cid Vidal,
-  // date:    10/3/11
   //=====================================================================
-
-  // RVG For the moment do not include the kalman FOI part
 
   std::vector<int> trackRegion(nStations,-1);
   // Region of the track extrapolated:
-
-/*
-  if (m_kalman_foi)
-  {
-    StatusCode sc = DistMuIDTool()->findTrackRegions(m_mutrack,trackRegion);
-    if (sc.isFailure() && msgLevel(MSG::DEBUG) ) debug() << " Error finding track regions "<< endmsg;
-    return trackRegion;
-  }
-*/
 
   for (unsigned sta=0; sta<nStations; sta++){
     int chnum = -1;
@@ -561,32 +502,12 @@ std::vector<int> DLLMuonTool::findTrackRegions(const CommonMuonTool::MuonTrackEx
 }
 
 //=====================================================================
-double DLLMuonTool::calc_closestDist(const LHCb::Track& track, const CommonMuonTool::MuonTrackExtrapolation& extrapolation, CommonConstMuonHits& hits, std::array<unsigned, CommonMuonTool::nStations> occupancies){
+double DLLMuonTool::calc_closestDist(const LHCb::Track& track, const ICommonMuonTool::MuonTrackExtrapolation& extrapolation, CommonConstMuonHits& hits, std::array<unsigned, ICommonMuonTool::nStations> occupancies){
   //=====================================================================
   // comment: Returns the squared distance calculated with closest hit
-  // authors: G. Lanfranchi & S. Furcas,
-  // date:    10/5/09
   //=====================================================================
 
   double closest_dist=0;
-
-  // occupancy with crossings still missing
-  //CommonConstMuonHits hits;
-  //std::array<unsigned, CommonMuonTool::nStations> occupancies;
-  //std::tie(hits, occupancies) = muonTool_->hitsAndOccupancies(track, extrapolation);
-
-/*  /// RVG so far not consider the kalman FOI case
-  if (m_kalman_foi){
-
-    StatusCode sc = DistMuIDTool()->muonQuality(m_mutrack, closest_dist);
-    if (sc.isFailure())
-    {
-      Warning("DistMuonIDTool: ComputeDistance failed ",sc).ignore();
-      return -1;
-    }
-    return closest_dist;
-  }
-*/
 
   // Get closest hits
   double foiXDim,foiYDim;
@@ -706,11 +627,22 @@ double DLLMuonTool::calc_closestDist(const LHCb::Track& track, const CommonMuonT
 }
 
 //=====================================================================
+double DLLMuonTool::calc_ProbNonMu_tanh(const double& tanhdist0, int pBin, int region){
+  int nDistBins = (*(*m_tanhCumulHistoNonMuon[region])[pBin]).size();
+  int itanhdist=int(tanhdist0*nDistBins);
+
+  if(itanhdist>=nDistBins) itanhdist=nDistBins-1;
+
+  if (msgLevel(MSG::DEBUG) ) debug() << "calc_ProbNonMu_tanh: region " << region << " pBin " << pBin << " tanh(dist) " << tanhdist0
+          << " itanhdist " << itanhdist << " ProbNonMu " << (*((*(m_tanhCumulHistoNonMuon[region]))[pBin]))[itanhdist] << endmsg;
+  return (*((*(m_tanhCumulHistoNonMuon[region]))[pBin]))[itanhdist];
+}
+
+//=====================================================================
 double DLLMuonTool::calc_ProbMu_tanh(const double& tanhdist0, int pBin, int region){
   int nDistBins = (*(*m_tanhCumulHistoMuon[region])[pBin]).size();
   int itanhdist=int(tanhdist0*nDistBins);
 
-  //if(itanhdist>nDistBins)itanhdist--;
   if(itanhdist>=nDistBins) itanhdist=nDistBins-1;
 
   if (msgLevel(MSG::DEBUG) ) debug() << "calc_ProbMu_tanh: region " << region << " pBin " << pBin << " tanh(dist) " << tanhdist0
@@ -721,9 +653,6 @@ double DLLMuonTool::calc_ProbMu_tanh(const double& tanhdist0, int pBin, int regi
 double DLLMuonTool::calc_ProbNonMu(double& dist0, std::vector<double>& parNonMu){
   //=====================================================================
   // comment: Returns for a given track of dist0 the probability to be a non-muon;
-  // authors: G. Lanfranchi & S. Furcas,
-  // date:    10/5/09
-  // Modified by Helder Lopes on January 2014 to solve https://sft.its.cern.ch/jira/browse/ROOT-5985
   //=====================================================================
 
   double Prob = ROOT::Math::landau_cdf(dist0, parNonMu[1], parNonMu[0]) - ROOT::Math::landau_cdf(0, parNonMu[1], parNonMu[0]);
@@ -740,8 +669,6 @@ double DLLMuonTool::calc_ProbNonMu(double& dist0, std::vector<double>& parNonMu)
 StatusCode DLLMuonTool::calcLandauNorm(){
   //=====================================================================
   // comment: Normalizations for Landaus for Muons and Non-Muons
-  // authors: G. Lanfranchi & S. Furcas,
-  // date:    10/5/09
   //=====================================================================
 
   double parnmu[3];
@@ -779,9 +706,6 @@ StatusCode DLLMuonTool::calcLandauNorm(){
 double DLLMuonTool::calcNorm_nmu(double *par){
   //=====================================================================
   // comment: Calculate Normalizations for non-muons
-  // authors: G. Lanfranchi & S. Furcas,
-  // date:    10/5/09
-  // Modified by Helder Lopes on January 2014 to solve https://sft.its.cern.ch/jira/browse/ROOT-5985
   //=====================================================================
 
   double m_x = 0.2;
@@ -791,71 +715,30 @@ double DLLMuonTool::calcNorm_nmu(double *par){
   return Norm;
 }
 
-
-std::pair<double,double> DLLMuonTool::calcMuonLL_tanhdist_landau(const LHCb::Track& track, const CommonMuonTool::MuonTrackExtrapolation& extrapolation, CommonConstMuonHits& hits, std::array<unsigned, CommonMuonTool::nStations> occupancies){
+std::pair<double,double> DLLMuonTool::calcMuonLL_tanhdist(const LHCb::Track& track, const ICommonMuonTool::MuonTrackExtrapolation& extrapolation, CommonConstMuonHits& hits, std::array<unsigned, ICommonMuonTool::nStations> occupancies){
   //=============================================================================
   // comment: Calculate the muon DLL using cumulative histos of the hyperbolic
-  //          tangent of the closest distance tuned on 2010 data for muon hypothesis 
-  //          and previous landau fittings to 2009 MC for non-muon hypothesis, 
-  //          per region and momentum bins:
-  // authors: J. Helder Lopes
-  // date:    16/02/2011
+  //          tangent of the closest distance tuned on runI data for muon and non-muon 
+  //          hypothesis per region and momentum bins:
   //=============================================================================
 
   static const double atanh05 = gsl_atanh(0.5);
 
   double p = track.p();
 
-  // RVG the set is done outside the funtion
-  //pMuid->setMuonLLMu(-10000.);
-  //pMuid->setMuonLLBg(-10000.);
-
-  // RVG this should be done even before entering the function
-  // calculate dll only for IsMuonLoose:
-  //if ( !pMuid->IsMuonLoose() ) return StatusCode::SUCCESS;
-
   // Initialize some variables:
   double myDist=-1.;
   double ProbMu=-1.;
   double ProbNonMu = -1.;
-  //double parMu[6];  // These won't be used here... Only parNonMu
-  //double parNonMu[3];
-  //for(int i=0;i<6;i++){parMu[i]=0;}
-  //for(int i=0;i<3;i++){parNonMu[i]=0;}
+
   std::vector<int> regions = findTrackRegions(extrapolation);
 
   // Calculate Distance using the closest hit:
   myDist = calc_closestDist(track, extrapolation, hits, occupancies);
   if(msgLevel(MSG::DEBUG)) debug() << "The value of myDist is = " << myDist << endmsg;
-  
-  // RVG need to sort out the protection
-/*  if (myDist<=0){
-    Warning("Closest Distance < 0 ").ignore();
-    break;
-  }*/
-
-  // RVG not yet exported
-  //EP: Store dist to fill Muon Track extra info
-  //m_dist_out=myDist;
-
+ 
   int region=regions[1]; // M2   JHLJHL Check indices ... 30/08/2013
   if (region<0) region=regions[2]; // M3
-
-  // Find Landau's parameters for a given track:
-  //std::vector<double> parMu (6,0);
-  std::vector<double> parNonMu (3,0);
-  
-  // RVG TEST. HARDCODED IMPLEMENTATION
-  //parNonMu = loadNonMuLandauParam(extrapolation);
-  if(region==0) parNonMu = {36.5, 23.8, 0.919259}; //# region 1
-  else if (region == 1) parNonMu = {40.5, 33.3, 0.867921}; //# region 2
-  else if (region == 2) parNonMu = {22.0, 30.0, 0.800642}; //# region 3
-  else if (region == 3) parNonMu = {10.0, 17.0, 0.795441}; //# region 4
-
-  /*if (sc.isFailure()) {
-    Warning(" Find Landau Parameters: no valid region",StatusCode::SUCCESS).ignore();
-    return StatusCode::FAILURE;
-  }*/
 
   // Determine the momentum bin for this region
   int pBin=GetPbin(p, region);
@@ -867,14 +750,81 @@ std::pair<double,double> DLLMuonTool::calcMuonLL_tanhdist_landau(const LHCb::Tra
   // Calculate Prob(mu)  for a given track using tanh(dist);
   ProbMu = calc_ProbMu_tanh(tanhdist, pBin, region );
   if(msgLevel(MSG::DEBUG)) debug() << "The value of ProbMu is = " << ProbMu << endmsg;
-  // RVG need to handle error properly
-  //if (ProbMu<0) return Error("ProbMu <0");
+
+  // Calculate ProbNonMu using Landau fits 
+  ProbNonMu = calc_ProbNonMu_tanh(tanhdist, pBin, region);
+  if(msgLevel(MSG::DEBUG)) debug() << "The value of ProbNonMu is = " << ProbNonMu << endmsg;
+
+  // Using histograms it's not unexpected that some bins are empty. Use very small prob as a protection for the log
+  if(ProbMu<1.e-30) {
+    if (msgLevel(MSG::DEBUG) ) debug() << "calcMuonLL_tanhdist: Found null ProbMu: " << ProbMu << endmsg;
+    ProbMu = 1.e-30;
+  }
+  if(ProbNonMu<1.e-30) {
+    if (msgLevel(MSG::DEBUG) ) debug() << "calcMuonLL_tanhdist: Found null ProbNonMu: " << ProbNonMu << endmsg;
+    ProbNonMu = 1.e-30;
+  }
+
+  if (msgLevel(MSG::DEBUG) ) {
+    debug() << "calcMuonLL_tanhdist: region: " << region << " momentum: " << p
+             << " pBin: " <<  pBin << " dist " << myDist << " tanh(dist2): "
+             << tanhdist << " ProbMu: " << ProbMu << " ProbNonMu: " << ProbNonMu
+             <<" DLL: " << log(ProbMu/ProbNonMu) << endmsg;
+  }
+
+  return {ProbMu, ProbNonMu};
+}
+
+
+std::pair<double,double> DLLMuonTool::calcMuonLL_tanhdist_landau(const LHCb::Track& track, const ICommonMuonTool::MuonTrackExtrapolation& extrapolation, CommonConstMuonHits& hits, std::array<unsigned, ICommonMuonTool::nStations> occupancies){
+  //=============================================================================
+  // comment: Calculate the muon DLL using cumulative histos of the hyperbolic
+  //          tangent of the closest distance tuned on 2010 data for muon hypothesis 
+  //          and previous landau fittings to 2009 MC for non-muon hypothesis, 
+  //          per region and momentum bins:
+  //=============================================================================
+
+  static const double atanh05 = gsl_atanh(0.5);
+
+  double p = track.p();
+
+  // Initialize some variables:
+  double myDist=-1.;
+  double ProbMu=-1.;
+  double ProbNonMu = -1.;
+  std::vector<int> regions = findTrackRegions(extrapolation);
+
+  // Calculate Distance using the closest hit:
+  myDist = calc_closestDist(track, extrapolation, hits, occupancies);
+  if(msgLevel(MSG::DEBUG)) debug() << "The value of myDist is = " << myDist << endmsg;
+  
+  int region=regions[1]; // M2   JHLJHL Check indices ... 30/08/2013
+  if (region<0) region=regions[2]; // M3
+
+  // Find Landau's parameters for a given track:
+  std::vector<double> parNonMu (3,0);
+  
+  // RVG TEST. HARDCODED IMPLEMENTATION
+  //parNonMu = loadNonMuLandauParam(extrapolation);
+  if(region==0) parNonMu = {36.5, 23.8, 0.919259}; //# region 1
+  else if (region == 1) parNonMu = {40.5, 33.3, 0.867921}; //# region 2
+  else if (region == 2) parNonMu = {22.0, 30.0, 0.800642}; //# region 3
+  else if (region == 3) parNonMu = {10.0, 17.0, 0.795441}; //# region 4
+
+  // Determine the momentum bin for this region
+  int pBin=GetPbin(p, region);
+  double tanhdist;
+  // Calculate tanh(dist). The effetive scale factor is after dividing by arc tanh(0.5)
+  tanhdist = tanh(myDist/(*(m_tanhScaleFactors[region]))[pBin]*atanh05);
+  if(msgLevel(MSG::DEBUG)) debug() << "The value of Tanhdist is = " << tanhdist << endmsg;
+
+  // Calculate Prob(mu)  for a given track using tanh(dist);
+  ProbMu = calc_ProbMu_tanh(tanhdist, pBin, region );
+  if(msgLevel(MSG::DEBUG)) debug() << "The value of ProbMu is = " << ProbMu << endmsg;
 
   // Calculate ProbNonMu using Landau fits 
   ProbNonMu = calc_ProbNonMu(myDist, parNonMu);
   if(msgLevel(MSG::DEBUG)) debug() << "The value of ProbNonMu is = " << ProbNonMu << endmsg;
-  // RVG need to handle error properly
-  //if (ProbNonMu<0) throw GaudiException("ProbNonMu < 0", "",StatusCode::FAILURE);
 
   // Using histograms it's not unexpected that some bins are empty. Use very small prob as a protection for the log
   if(ProbMu<1.e-30) {
@@ -885,11 +835,6 @@ std::pair<double,double> DLLMuonTool::calcMuonLL_tanhdist_landau(const LHCb::Tra
     if (msgLevel(MSG::DEBUG) ) debug() << "calcMuonLL_tanhdist_landau: Found null ProbNonMu: " << ProbNonMu << endmsg;
     ProbNonMu = 1.e-30;
   }
-
-  // Set in the MuonPID object the ProbMu & ProbNonMu (Note the Log!)
-  // RVG the set is done outside the function    
-  //pMuid->setMuonLLMu(log(ProbMu));
-  //pMuid->setMuonLLBg(log(ProbNonMu));
 
   if (msgLevel(MSG::DEBUG) ) {
     debug() << "calcMuonLL_tanhdist_landau: region: " << region << " momentum: " << p
@@ -923,18 +868,81 @@ bool DLLMuonTool::compareHits(LHCb::MuonPID* muonid1, LHCb::MuonPID* muonid2, st
   return theSame;
 }
 
-//=============================================================================
-// Find out if st myst is in input array of stations
-//=============================================================================
-/*bool DLLMuonTool::stInStations(const int myst,const std::vector<int>& stations)
-{
+/**
+ * Function to make the muon track. Modified from the original MuonIDAlg.cpp
+*/
+LHCb::Track* DLLMuonTool::makeMuonTrack(LHCb::MuonPID* mupid, std::map< LHCb::MuonPID*, CommonConstMuonHits > m_muonMap){
 
-  for (std::vector<int>::const_iterator it = stations.begin();
-       it != stations.end(); ++it)
-  {
-    int ist = *it;
-    if (ist==myst) return true;
+  const LHCb::Track* mother = mupid->idTrack();
+  double Quality=-1;
+  LHCb::Track* mtrack;
+
+  mtrack = new LHCb::Track( mupid->key() );
+  CommonConstMuonHits hits = m_muonMap[mupid];
+  //add mother track to ancestors
+  mtrack->addToAncestors(*mother);
+  mtrack->addToStates( mother->closestState(9450.) );
+
+  std::vector<LHCb::LHCbID> ids_init;
+  std::for_each(std::begin(hits), std::end(hits), [&](const CommonMuonHit* hit){
+   LHCb::LHCbID id(hit->tile());
+   mtrack->addToLhcbIDs(id); 
+   ids_init.push_back(id);
+  });
+  
+  if (msgLevel(MSG::DEBUG) ) debug()<<"ids ready to get chi2"<<endmsg;
+  
+  if (m_FindQuality) {
+    // get chi2 value
+    LHCb::Track mtrack_partial;
+    if (!ids_init.empty()) {
+      StatusCode sc = makeMuonTool_->muonCandidate(*mother, mtrack_partial, ids_init);
+      if (!sc.isFailure()) {
+        std::vector<LHCb::LHCbID>::const_iterator id;
+        for(id = mtrack_partial.lhcbIDs().begin(); id !=  mtrack_partial.lhcbIDs().end(); id++){
+          if (msgLevel(MSG::DEBUG) ) {
+            debug()<< "id is muon? "<<id->isMuon()<<endmsg;
+            if (id->isMuon()){
+              debug()<< "id station  " << id->muonID().station()<<endmsg;
+              debug()<< "id channelID="<< id->channelID()<<endmsg;
+            }
+          }
+        }   
+        StatusCode sc2 = makeMuonTool_->muonQuality(mtrack_partial,Quality);
+        if (!sc2.isFailure()) {
+          if (msgLevel(MSG::DEBUG) ) debug()<<"\t Quality="<< Quality<<endmsg;
+            mtrack->setChi2PerDoF(Quality);
+          }
+        else {
+          if (msgLevel(MSG::DEBUG) ) debug()<<"Error when preparing track to fit"<<endmsg;
+        }
+      }
+    }
   }
-  return false;
-}*/
+ 
+  mtrack->setType(LHCb::Track::Muon);
+  mtrack->setHistory(LHCb::Track::MuonID);
+  mtrack->addInfo(LHCb::Track::MuonChi2perDoF,Quality);
+  mtrack->addInfo(LHCb::Track::MuonMomentumPreSel,mupid->PreSelMomentum());
+  mtrack->addInfo(LHCb::Track::MuonInAcceptance,mupid->InAcceptance());
+  mtrack->addInfo(LHCb::Track::IsMuonLoose,mupid->IsMuonLoose());
+  mtrack->addInfo(LHCb::Track::IsMuon,mupid->IsMuon());
+  mtrack->addInfo(LHCb::Track::IsMuonTight,mupid->IsMuonTight());
 
+  double Dist=-1.;
+  double DLL=-1.;
+  double NShared=-1;
+  if (mupid->IsMuonLoose()) {
+    //Dist    = m_dist_out; // RVG need to add it yet!!!!
+    DLL     = mupid->MuonLLMu()-mupid->MuonLLBg();
+    NShared = mupid->nShared();
+  }
+  if (msgLevel(MSG::DEBUG) ) debug()<< "makeMuonTrack:: Key, p,Dist, DLL, NShared: "
+                                    <<mtrack->key()<<" "<<mtrack->p()<<" "<<Dist<<" "<<DLL<<" "<<NShared<<endmsg;
+
+  //mtrack->addInfo(LHCb::Track::MuonDist2,Dist);
+  mtrack->addInfo(LHCb::Track::MuonDLL,DLL);
+  mtrack->addInfo(LHCb::Track::MuonNShared,NShared);
+
+  return mtrack;
+}

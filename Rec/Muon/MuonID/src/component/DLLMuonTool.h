@@ -12,7 +12,8 @@
 #include "MuonDet/DeMuonDetector.h"
 
 #include "MuonID/CommonMuonHitManager.h"
-#include "CommonMuonTool.h"
+#include "MuonID/ICommonMuonTool.h"
+#include "MakeMuonTool.h"
 
 #include "TMath.h"
 #include "Math/ProbFuncMathCore.h"
@@ -44,18 +45,22 @@ class DLLMuonTool final : public GaudiTool {
   double calcDist( const MuonTrackExtrapolation&, CommonConstMuonHits& ) const; 
   int GetPbin(double p, int region);
   std::vector<int> findTrackRegions(const MuonTrackExtrapolation&);
-  double calc_closestDist(const LHCb::Track&, const MuonTrackExtrapolation&, CommonConstMuonHits&, std::array<unsigned, CommonMuonTool::nStations>);
-  std::pair<std::vector<double>,std::vector<double>> loadLandauParam(double p, const MuonTrackExtrapolation&);
+  double calc_closestDist(const LHCb::Track&, const MuonTrackExtrapolation&, CommonConstMuonHits&, std::array<unsigned, ICommonMuonTool::nStations>);
   std::vector<double> loadNonMuLandauParam(const MuonTrackExtrapolation&);
   double calc_ProbMu_tanh(const double& tanhdist0, int pBin, int region);
+  double calc_ProbNonMu_tanh(const double& tanhdist0, int pBin, int region);
   double calc_ProbNonMu(double& dist, std::vector<double>& parNonMu);
-  std::pair<double,double> calcMuonLL_tanhdist_landau(const LHCb::Track&, const MuonTrackExtrapolation&, CommonConstMuonHits&, std::array<unsigned, CommonMuonTool::nStations>);
+  std::pair<double,double> calcMuonLL_tanhdist_landau(const LHCb::Track&, const MuonTrackExtrapolation&, CommonConstMuonHits&, std::array<unsigned, ICommonMuonTool::nStations>);
+  std::pair<double,double> calcMuonLL_tanhdist(const LHCb::Track&, const MuonTrackExtrapolation&, CommonConstMuonHits&, std::array<unsigned, ICommonMuonTool::nStations>);
+  
   StatusCode calcLandauNorm();
   double calcNorm_nmu(double *par);
   // compare the coordinates of two MuonPIDs 
   bool compareHits(LHCb::MuonPID* muonid1, LHCb::MuonPID* muonid2, std::map< LHCb::MuonPID*, CommonConstMuonHits >);
-  //bool stInStations(const int myst,const std::vector<int>& stations);
   std::map< LHCb::MuonPID*, CommonConstMuonHits > m_muonMap;
+  // make muon track function
+  LHCb::Track* makeMuonTrack(LHCb::MuonPID* muonid, std::map< LHCb::MuonPID*, CommonConstMuonHits >);
+
 
  private:
   // Helper functions
@@ -64,50 +69,24 @@ class DLLMuonTool final : public GaudiTool {
   CommonMuonHitManager* hitManager_;
   DeMuonDetector* det_;
   ICommonMuonTool* muonTool_;
+  MakeMuonTool* makeMuonTool_;
+  bool m_FindQuality;
   double foiFactor_, preSelMomentum_;
   std::array<double, nStations> stationZ_;
   std::array<std::pair<double, double>, nStations * nRegions> padSize_;
   std::array<std::pair<double, double>, nStations> regionInner_, regionOuter_;
-  std::array<std::vector<double>, 3> foiParamX_, foiParamY_;
   std::vector<double> momentumCuts_;
-  //std::array<std::vector<const LHCb::MuonCoord*>, 5> m_coords;
   std::vector<double> m_MupBinsR1;
   std::vector<double> m_MupBinsR2;
   std::vector<double> m_MupBinsR3;
   std::vector<double> m_MupBinsR4;
-  std::vector< double >     m_MuLanParR1_1;
-  std::vector< double >     m_MuLanParR1_2;
-  std::vector< double >     m_MuLanParR1_3;
-  std::vector< double >     m_MuLanParR1_4;
-  std::vector< double >     m_MuLanParR1_5;
-  std::vector< double >     m_MuLanParR1_6;
-  std::vector< double >     m_MuLanParR1_7;
-
-  std::vector< double >     m_MuLanParR2_1;
-  std::vector< double >     m_MuLanParR2_2;
-  std::vector< double >     m_MuLanParR2_3;
-  std::vector< double >     m_MuLanParR2_4;
-  std::vector< double >     m_MuLanParR2_5;
-
-  std::vector< double >     m_MuLanParR3_1;
-  std::vector< double >     m_MuLanParR3_2;
-  std::vector< double >     m_MuLanParR3_3;
-  std::vector< double >     m_MuLanParR3_4;
-  std::vector< double >     m_MuLanParR3_5;
-
-  std::vector< double >     m_MuLanParR4_1;
-  std::vector< double >     m_MuLanParR4_2;
-  std::vector< double >     m_MuLanParR4_3;
-  std::vector< double >     m_MuLanParR4_4;
-  std::vector< double >     m_MuLanParR4_5;
-
+  
   std::vector< double >     m_NonMuLanParR1;
   std::vector< double >     m_NonMuLanParR2;
   std::vector< double >     m_NonMuLanParR3;
   std::vector< double >     m_NonMuLanParR4; 
 
   // hyperbolic tangent mapping of distances:
-
   // tanh scale factors
   std::vector< double >  m_tanhScaleFactorsR1;
   std::vector< double >  m_tanhScaleFactorsR2;
@@ -117,8 +96,7 @@ class DLLMuonTool final : public GaudiTool {
   typedef std::vector< std::vector< double >* > vectorOfVectors;
   vectorOfVectors m_tanhScaleFactors;
 
-  // tanh(dist2) histograms contents
-  
+  // tanh(dist2) histograms contents for muons
   std::vector< double >     m_tanhCumulHistoMuonR1_1;
   std::vector< double >     m_tanhCumulHistoMuonR1_2;
   std::vector< double >     m_tanhCumulHistoMuonR1_3;
@@ -150,6 +128,39 @@ class DLLMuonTool final : public GaudiTool {
   vectorOfVectors m_tanhCumulHistoMuonR4;
 
   std::vector< vectorOfVectors * > m_tanhCumulHistoMuon;
+
+  // tanh(dist2) histograms contents for non-muons
+  std::vector< double >     m_tanhCumulHistoNonMuonR1_1;
+  std::vector< double >     m_tanhCumulHistoNonMuonR1_2;
+  std::vector< double >     m_tanhCumulHistoNonMuonR1_3;
+  std::vector< double >     m_tanhCumulHistoNonMuonR1_4;
+  std::vector< double >     m_tanhCumulHistoNonMuonR1_5;
+  std::vector< double >     m_tanhCumulHistoNonMuonR1_6;
+  std::vector< double >     m_tanhCumulHistoNonMuonR1_7;
+  vectorOfVectors m_tanhCumulHistoNonMuonR1;
+
+  std::vector< double >     m_tanhCumulHistoNonMuonR2_1;
+  std::vector< double >     m_tanhCumulHistoNonMuonR2_2;
+  std::vector< double >     m_tanhCumulHistoNonMuonR2_3;
+  std::vector< double >     m_tanhCumulHistoNonMuonR2_4;
+  std::vector< double >     m_tanhCumulHistoNonMuonR2_5;
+  vectorOfVectors m_tanhCumulHistoNonMuonR2;
+
+  std::vector< double >     m_tanhCumulHistoNonMuonR3_1;
+  std::vector< double >     m_tanhCumulHistoNonMuonR3_2;
+  std::vector< double >     m_tanhCumulHistoNonMuonR3_3;
+  std::vector< double >     m_tanhCumulHistoNonMuonR3_4;
+  std::vector< double >     m_tanhCumulHistoNonMuonR3_5;
+  vectorOfVectors m_tanhCumulHistoNonMuonR3;
+
+  std::vector< double >     m_tanhCumulHistoNonMuonR4_1;
+  std::vector< double >     m_tanhCumulHistoNonMuonR4_2;
+  std::vector< double >     m_tanhCumulHistoNonMuonR4_3;
+  std::vector< double >     m_tanhCumulHistoNonMuonR4_4;
+  std::vector< double >     m_tanhCumulHistoNonMuonR4_5;
+  vectorOfVectors m_tanhCumulHistoNonMuonR4;
+
+  std::vector< vectorOfVectors * > m_tanhCumulHistoNonMuon;
 
   int m_nMupBinsR1, m_nMupBinsR2, m_nMupBinsR3, m_nMupBinsR4;
   double Fdist[5];
