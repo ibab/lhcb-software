@@ -4,6 +4,8 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+!========================= HltConf v12r8 2015-04-28 =========================
+
 ! 2015-04-28 - Vladimir Gligorov
  - Cleanup of obsolete routing bits
  - Add routing bits for the new inclusive D* trigger, separate Rare and Hadronic Charm
