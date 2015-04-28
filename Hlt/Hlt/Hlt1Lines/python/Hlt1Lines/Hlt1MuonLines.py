@@ -1,4 +1,13 @@
-from Gaudi.Configuration import *
+# ============================================================
+# Configuration file for Hlt1 Muon lines
+
+__author__ = "Francesco Dettori - francesco.dettori@cern.ch"
+
+# Please contact the mentioned responsible before modifying
+# ============================================================
+
+from Gaudi.Configuration import * 
+
 from HltLine.HltLinesConfigurableUser import *
 import re
 
@@ -34,33 +43,33 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  , 'DiMuonHighMass_TrChi2'    :    4.
                  , 'DiMuonHighMass_M'         : 2900.
                  , 'DiMuonHighMass_GEC'       : 'Loose'
-                 , 'DiMuonSoft_VxDOCA'     :  0.2
-                 , 'DiMuonSoft_VxChi2'     :   25.
-                 , 'DiMuonSoft_P'          : 3000.
-                 , 'DiMuonSoft_PT'         :    0.
-                 , 'DiMuonSoft_TrChi2'     :    2.
-                 , 'DiMuonSoft_M'          :    0.
-                 , 'DiMuonSoft_IPChi2'     :    9.
-                 , 'DiMuonSoft_GEC'        : 'Loose'
-                 , 'MultiMuonNoIP_P'          : 6000.
-                 , 'MultiMuonNoIP_PT'         :  500.
-                 , 'MultiMuonNoIP_TrChi2'     :    4.
-                 , 'MultiMuonNoIP_GT'         :  2.5
-                 , 'MultiMuonNoIP_GEC'        : 'Loose'
-                 , 'MultiMuonNoIP_TrackType'  : 'Long'
+                 , 'DiMuonNoL0_VxDOCA'     :  0.2
+                 , 'DiMuonNoL0_VxChi2'     :   25.
+                 , 'DiMuonNoL0_P'          : 3000.
+                 , 'DiMuonNoL0_PT'         :    0.
+                 , 'DiMuonNoL0_TrChi2'     :    2.
+                 , 'DiMuonNoL0_M'          :    0.
+                 , 'DiMuonNoL0_IPChi2'     :    9.
+                 , 'DiMuonNoL0_GEC'        : 'Loose'
+                 , 'MultiMuonNoL0_P'          : 6000.
+                 , 'MultiMuonNoL0_PT'         :  500.
+                 , 'MultiMuonNoL0_TrChi2'     :    4.
+                 , 'MultiMuonNoL0_GT'         :  2.5
+                 , 'MultiMuonNoL0_GEC'        : 'Loose'
+                 , 'MultiMuonNoL0_TrackType'  : 'Long'
                  , 'ODINFilter'               : {}
                  , 'L0Channels'               : { 'SingleMuonHighPT' : ( 'Muon', ),
                                                   'SingleMuonNoIP'   : ( 'Muon', ),
                                                   'DiMuonLowMass'    : ( 'Muon', 'DiMuon' ),
-                                                  'DiMuonSoft'       : None,
+                                                  'DiMuonNoL0'       : None,
                                                   'DiMuonHighMass'   : ( 'Muon', 'DiMuon' ),
-                                                  'MultiMuonNoIP'    : ( 'Muon', 'DiMuon' )}
+                                                  'MultiMuonNoL0'    : ( 'Muon', 'DiMuon' )}
                  , 'Priorities'               : { 'SingleMuonHighPT' : 7,
                                                   'SingleMuonNoIP'   : 6,
                                                   'DiMuonLowMass'    : 5,
                                                   'DiMuonHighMass'   : 4,
-                                                  'MultiMuonNoIP'    : 8,
-                                                  'DiMuonSoft'       : 9,
+                                                  'MultiMuonNoL0'    : 8,
+                                                  'DiMuonNoL0'       : 9,
                                                   }
                  }
 
@@ -99,7 +108,11 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  FitTrack ]
 
     def singleMuon_streamer( self, properties ):
-        # SingleMuon with LongTracks (TrackCandidates)
+        """
+        SingleMuon streamer starts from VeloTTCandidates but uses ComplementForward
+        accessing directly long tracks if the velo segment was already upgraded.
+        IsMuon is used for Long tracks, MatchVeloTTMuon for VeloTT and Velo ones.
+        """
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from Configurables import LoKi__HltUnit as HltUnit
         from HltTracking.Hlt1Tracking import TrackCandidatesAlgos
@@ -143,7 +156,11 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         return preambulo
 
     def diMuon_streamer( self, properties ):
-        # DiMuon with LongTracks (TrackCandidates)
+        """
+        DiMuon streamer starts from VeloTTCandidates but uses ComplementForward
+        accessing directly long tracks if the velo segment was already upgraded.
+        IsMuon is used for Long tracks, MatchVeloTTMuon for VeloTT and Velo ones.
+        """
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from HltTracking.Hlt1Tracking import TrackCandidatesAlgos
         from Configurables import LoKi__HltUnit as HltUnit
@@ -185,6 +202,11 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  unit ]
 
     def diMuonDetached_streamer( self, properties ):
+        """
+        DiMuon streamer starts from VeloTTCandidates but uses ComplementForward
+        accessing directly long tracks if the velo segment was already upgraded.
+        IsMuon is used for Long tracks, MatchVeloTTMuon for VeloTT and Velo ones.
+        """
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from HltTracking.Hlt1Tracking import TrackCandidatesAlgos
         from Configurables import LoKi__HltUnit as HltUnit
@@ -231,6 +253,11 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  unit ]
 
     def multiMuon_streamer( self, properties ):
+        """
+        MultiMuon streamer starts from VeloTTCandidates but uses ComplementForward
+        accessing directly long tracks if the velo segment was already upgraded.
+        IsMuon is used for Long tracks, MatchVeloTTMuon for VeloTT and Velo ones.
+        """
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from Configurables import LoKi__HltUnit as HltUnit
         unit = HltUnit(
@@ -238,7 +265,13 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             ##OutputLevel = 1 ,
             Preambulo = self.singleMuon_preambulo( properties ),
             Code = """
-            TrackCandidates
+            VeloTTCandidates
+            >>  MatchVeloTTMuon
+            >>  tee  ( monitor( TC_SIZE > 0, '# MatchMuon', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
+            >>  ComplementForward
+            >>  tee  ( monitor( TC_SIZE > 0, '# Complement', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nComp' , LoKi.Monitoring.ContextSvc ) )
             >>  FitTrack
             >>  tee  ( monitor( TC_SIZE > 0, '# pass fit', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nFitted' , LoKi.Monitoring.ContextSvc ) )
@@ -293,8 +326,8 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                      ( 'SingleMuonNoIP',   self.singleMuon_streamer ),
                      ( 'DiMuonLowMass',    self.diMuonDetached_streamer ),
                      ( 'DiMuonHighMass',   self.diMuon_streamer ),
-                     ( 'DiMuonSoft',    self.diMuonDetached_streamer ),
-                     ( 'MultiMuonNoIP',    self.multiMuon_streamer ) ]
+                     ( 'DiMuonNoL0',    self.diMuonDetached_streamer ),
+                     ( 'MultiMuonNoL0',    self.multiMuon_streamer ) ]
         for line, streamer in to_build:
             self.build_line( line, streamer )
 

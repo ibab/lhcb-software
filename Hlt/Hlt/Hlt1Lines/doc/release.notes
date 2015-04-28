@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-04-28 - Francesco Dettori
+ - Changed names from Hlt1DiMuonSoft to Hlt1DiMuonNoL0 and from Hlt1MultiMuonNoIP to Hlt1MultimuonNoL0, in order to catch them with the same routing bit.
+ - Added soft tracks to MultiMuonNoL0 (as the other lines).
+
 !========================= Hlt1Lines v7r10 2015-04-23 =========================
 
 ! 2015-04-28 - Roel Aaij
