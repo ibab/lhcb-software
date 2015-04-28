@@ -23,42 +23,46 @@ class ForwardConf(object):
       PFTool.PatFwdTool.withoutBField  = True
       PFTool.WithoutBField = True
 
-  def configureAlgRun2HLT1(self, PFAlg = PatForward("PatForwardHLT1")):
-    '''Configure forward algorithm for HLT1 stage of run II offline tracking'''
-    
-    PFAlg.InputTracksName =  "Rec/Track/VeloTT"
-    PFAlg.OutputTracksName = "Rec/Track/ForwardHLT1"
-    PFAlg.ForwardToolName = "PatForwardTool/PatForwardToolHLT1"
-    PFAlg.addTool( PatForwardTool("PatForwardToolHLT1") ) 
-
-    PFAlg.PatForwardToolHLT1.MinPt = 500.
-    PFAlg.PatForwardToolHLT1.MinMomentum = 3000.
-    PFAlg.PatForwardToolHLT1.SecondLoop = False
-    PFAlg.PatForwardToolHLT1.UseMomentumEstimate = True
-    PFAlg.PatForwardToolHLT1.UseWrongSignWindow = True
-    PFAlg.PatForwardToolHLT1.WrongSignPT = 2000.
-    PFAlg.PatForwardToolHLT1.PreselectionPT = 0.8*500.
-    PFAlg.PatForwardToolHLT1.Preselection = True   
-    PFAlg.PatForwardToolHLT1.AddTTClusterName = "PatAddTTCoord"
-
+  def configureGEC(self, PFAlg=PatForward("PatForward")):
     globalCuts = TrackSys().getProp("GlobalCuts")
     if("IT" in globalCuts): PFAlg.maxITHits = globalCuts["IT"]
     if("OT" in globalCuts): PFAlg.maxOTHits = globalCuts["OT"]
     # Remove velo track cut if hits already suppressed in Velo decoding
     if("Velo" in globalCuts): PFAlg.MaxNVelo = 999999
+    
+  def configureAlgRun2HLT1(self, PFAlg = PatForward("PatForwardHLT1")):
+    '''Configure forward algorithm for HLT1 stage of run II offline tracking'''
+    self.configureGEC(PFAlg)
+    PFAlg.InputTracksName =  "Rec/Track/VeloTT"
+    PFAlg.OutputTracksName = "Rec/Track/ForwardHLT1"
+    PFAlg.addTool( PatForwardTool ) 
+
+    PFAlg.PatForwardTool.MinPt = 500.
+    PFAlg.PatForwardTool.MinMomentum = 3000.
+    PFAlg.PatForwardTool.SecondLoop = False
+    PFAlg.PatForwardTool.UseMomentumEstimate = True
+    PFAlg.PatForwardTool.UseWrongSignWindow = True
+    PFAlg.PatForwardTool.WrongSignPT = 2000.
+    PFAlg.PatForwardTool.PreselectionPT = 0.8*500.
+    PFAlg.PatForwardTool.Preselection = True   
+    PFAlg.PatForwardTool.AddTTClusterName = "PatAddTTCoord"
+    PFAlg.PatForwardTool.PropertiesPrint = True
+    PFAlg.PropertiesPrint = True
+    
 
   def configureAlgRun2HLT2(self, PFAlg = PatForward("PatForwardHLT2")):
     '''Configure forward algorithm for HLT2 stage of run II offline tracking'''
-    PFAlg.ForwardToolName = "PatForwardTool/PatForwardToolHLT2"
-    PFAlg.addTool(PatForwardTool, name = "PatForwardToolHLT2")
+    self.configureGEC(PFAlg)
+    PFAlg.addTool(PatForwardTool)
     PFAlg.OutputTracksName = "Rec/Track/ForwardHLT2"
-    PFAlg.PatForwardToolHLT2.MinMomentum = 1000.
-    PFAlg.PatForwardToolHLT2.SecondLoop = True
-    PFAlg.PatForwardToolHLT2.addTool( TrackUsedLHCbID, name = "TrackUsedLHCbID")
-    PFAlg.PatForwardToolHLT2.UsedLHCbIDToolName = "TrackUsedLHCbID"
-    PFAlg.PatForwardToolHLT2.TrackUsedLHCbID.inputContainers = ["Rec/Track/FittedHLT1ForwardTracks"]
-    PFAlg.PatForwardToolHLT2.VeloVetoTracksNames = [ "Rec/Track/FittedHLT1ForwardTracks"]
-
+    PFAlg.PatForwardTool.MinMomentum = 1000.
+    PFAlg.PatForwardTool.SecondLoop = True
+    PFAlg.PatForwardTool.addTool( TrackUsedLHCbID, name = "TrackUsedLHCbID")
+    PFAlg.PatForwardTool.UsedLHCbIDToolName = "TrackUsedLHCbID"
+    PFAlg.PatForwardTool.TrackUsedLHCbID.inputContainers = ["Rec/Track/FittedHLT1ForwardTracks"]
+    PFAlg.PatForwardTool.VeloVetoTracksNames = [ "Rec/Track/FittedHLT1ForwardTracks"]
+    PFAlg.PatForwardTool.PropertiesPrint = True
+    PFAlg.PropertiesPrint = True  
   
 #class DownstreamConf(object):
 #  '''Configure a downstream algorithm'''

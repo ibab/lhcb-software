@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-04-28 - Sascha Stahl
+ - Fix configuration of GEC for PatForward for HLT2 for 2015.
+
 !========================= PatAlgorithms v4r40 2015-04-27 =========================
 ! 2015-04-22 - Rosen Matev
  - Fix bug in PatAddTTCoord (segfault when no hits in a layer).
