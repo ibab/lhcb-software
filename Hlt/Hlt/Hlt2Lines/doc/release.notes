@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-28 - V. Gligorov
+ - Remove duplication of Turbo lines from CharmHad/XSecLines and from the
+   Commissioning KS0 lines
+
 ! 2015-04-27 - Francesco Dettori
  - Tuned cuts for Xabier's line: Hlt2SingleMuonRare in SingleMuon/Lines.py
 

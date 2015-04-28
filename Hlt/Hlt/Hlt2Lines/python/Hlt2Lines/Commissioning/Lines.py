@@ -38,16 +38,14 @@ class CommissioningLines(Hlt2LinesConfigurableUser):
         from HltLine.HltLine import Hlt2Line
         for name, algos in self.algorithms(stages).iteritems():
             localProps = self.getProps().get(name, {})
-            Hlt2Line(name, prescale = self.prescale, postscale = self.postscale,
+            doturbo = False
+            linename = name
+            if name in self.getProps()['Turbo']:
+                doturbo = True
+                linename += 'Turbo'
+            Hlt2Line(linename, prescale = self.prescale, postscale = self.postscale,
                      algos      = algos,
                      HLT1       = localProps.get('HLT1', None),
                      VoidFilter = localProps.get('VoidFilter', None),
-                     priority   = localProps.get('Priority', None))
-            if name in self.getProps()['Turbo']:
-                # And the turbofied versions
-                Hlt2Line(name +'Turbo', prescale = self.prescale, postscale = self.postscale,
-                         algos      = stages[name],
-                         HLT1       = localProps.get('HLT1', None),
-                         VoidFilter = localProps.get('VoidFilter', None),
-                         priority   = localProps.get('Priority', None),
-                         Turbo = True)
+                     priority   = localProps.get('Priority', None),
+                     Turbo = doturbo)

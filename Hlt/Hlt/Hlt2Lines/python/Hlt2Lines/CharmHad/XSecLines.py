@@ -121,41 +121,41 @@ class CharmHadXSecLines() :
         from Stages import XSec_LcpToKmPpPip, XSec_LcpToPimPpPip
         
         stages = {# First the D2HHH lines
-                  'Dpm2KPiPi_XSec'       : [MassFilter('Dpm2KPiPi_XSec',nickname='Dpm2HHH_XSec', 
+                  'Dpm2KPiPi_XSecTurbo'       : [MassFilter('Dpm2KPiPi_XSec',nickname='Dpm2HHH_XSec', 
                                                       inputs=[XSec_DpToKmPipPip],shared=True)],
-                  'Dpm2KKPi_XSec'        : [MassFilter('Dpm2KKPi_XSec', nickname = 'Dpm2HHH_XSec',
+                  'Dpm2KKPi_XSecTurbo'        : [MassFilter('Dpm2KKPi_XSec', nickname = 'Dpm2HHH_XSec',
                                                       inputs=[XSec_DpToKmKpPim],shared=True)],
-                  'Ds2KKPi_XSec'         : [MassFilter('Ds2KKPi_XSec', nickname = 'Ds2HHH_XSec', 
+                  'Ds2KKPi_XSecTurbo'         : [MassFilter('Ds2KKPi_XSec', nickname = 'Ds2HHH_XSec', 
                                                       inputs=[XSec_DspToKmKpPim],shared=True)],
-                  'Ds2PiPiPi_XSec'       : [MassFilter('Ds2PiPiPi_XSec', nickname = 'Ds2HHH_XSec',
+                  'Ds2PiPiPi_XSecTurbo'       : [MassFilter('Ds2PiPiPi_XSec', nickname = 'Ds2HHH_XSec',
                                                       inputs=[XSec_DspToPimPipPip],shared=True)],
                   # Now the Lc2HHH lines, untagged, CF shared to reuse in tagged lines
                   # Because of the mass window these also catch neutral Xi_c baryons
-                  'Lc2KPPi_XSec'        : [MassFilter('Lc2KPPi_XSec', nickname = 'Lc2HHH_XSec',
+                  'Lc2KPPi_XSecTurbo'        : [MassFilter('Lc2KPPi_XSec', nickname = 'Lc2HHH_XSec',
                                                       inputs=[XSec_LcpToKmPpPip],shared=True)],
-                  'Lc2PiPPi_XSec'       : [MassFilter('Lc2PiPPi_XSec', nickname = 'Lc2HHH_XSec',
+                  'Lc2PiPPi_XSecTurbo'       : [MassFilter('Lc2PiPPi_XSec', nickname = 'Lc2HHH_XSec',
                                                       inputs=[XSec_LcpToPimPpPip],shared=True)],
                   # The untagged D->KPi line
-                  'D02KPi_XSec'         : [MassFilter('D02KPi_XSec',nickname='D02HH_XSec',
+                  'D02KPi_XSecTurbo'         : [MassFilter('D02KPi_XSec',nickname='D02HH_XSec',
                                                       inputs=[XSec_D02KPi],shared=True)]
                  }
         # Now the Sigma_c0,++->Lambda_c(pKpi)pi line
         # Because of the mass window this also catches some excited Xi_c
-        stages['Sigmac_2LcPi_XSec']      = [TagDecay('Sigmac_2LcPi_XSec',
+        stages['Sigmac_2LcPi_XSecTurbo']      = [TagDecay('Sigmac_2LcPi_XSec',
                                                      ["[Sigma_c0 -> Lambda_c+ pi-]cc",
                                                       "[Sigma_c++ -> Lambda_c+ pi+]cc"],
-                                                     inputs = [ stages["Lc2KPPi_XSec"][0],
+                                                     inputs = [ stages["Lc2KPPi_XSecTurbo"][0],
                                                                 SharedSoftTagChild_pi ], 
                                                      nickname = 'Sigmac_TAG_XSec', shared=True) ]
         # Now the D*->D0pi line for the D0->KPi case
-        stages['Dst_2D0Pi_D02KPi_XSec']  = [TagDecay('Dst_2D0Pi_D02KPi_XSec',
+        stages['Dst_2D0Pi_D02KPi_XSecTurbo']  = [TagDecay('Dst_2D0Pi_D02KPi_XSec',
                                                      ["[D*(2010)+ -> D0 pi+]cc"],
-                                                     inputs = [ stages["D02KPi_XSec"][0],
+                                                     inputs = [ stages["D02KPi_XSecTurbo"][0],
                                                                 SharedSoftTagChild_pi ], 
                                                      nickname = 'D0_TAG_XSec', shared=True) ]
 
         # Now the D*->D0pi line for the D0->K3Pi case
-        stages['Dst_2D0Pi_D02K3Pi_XSec'] = [TagDecay('Dst_2D0Pi_D02K3Pi_XSec',
+        stages['Dst_2D0Pi_D02K3Pi_XSecTurbo'] = [TagDecay('Dst_2D0Pi_D02K3Pi_XSec',
                                                      ["[D*(2010)+ -> D0 pi+]cc"],
                                                      inputs = [ MassFilter('D02K3Pi_XSec',nickname='D02HHHH_XSec',
                                                                            inputs=[XSec_D02K3Pi],shared=True),
@@ -163,20 +163,16 @@ class CharmHadXSecLines() :
                                                      nickname='D0_TAG_XSec', shared=True) ]
 
         # Now the lines tagged with a photon or pi0
-        stages['Dst_2D0Pi0_D02KPi_XSec']    = [TagDecayWithNeutral('Dst_2D0Pi0_D02KPi_XSec',
+        stages['Dst_2D0Pi0_D02KPi_XSecTurbo']    = [TagDecayWithNeutral('Dst_2D0Pi0_D02KPi_XSec',
                                                                    ["D*(2007)0 -> D0 pi0","D*(2007)0 -> D~0 pi0"],
-                                                                   inputs = [ stages["D02KPi_XSec"][0],
+                                                                   inputs = [ stages["D02KPi_XSecTurbo"][0],
                                                                    SharedNeutralLowPtChild_pi0 ], 
                                                                    nickname='D_TAG_NEUTRAL_XSec', shared=True) ]
-        stages['Dst_2DsGamma_Ds2KKPi_XSec'] = [TagDecayWithNeutral('Dst_2DsGamma_Ds2KKPi_XSec',
+        stages['Dst_2DsGamma_Ds2KKPi_XSecTurbo'] = [TagDecayWithNeutral('Dst_2DsGamma_Ds2KKPi_XSec',
                                                                    ["[D*_s+ -> D_s+ gamma]cc"],
-                                                                   inputs = [ stages["Ds2KKPi_XSec"][0],
+                                                                   inputs = [ stages["Ds2KKPi_XSecTurbo"][0],
                                                                    SharedNeutralLowPtChild_gamma ], 
                                                                    nickname='D_TAG_NEUTRAL_XSec',shared=True) ]  
  
 
-        # Make the TURBO items : for the XSec measurements, everything is TURBO-fied
-        for thisline in stages.keys() :
-            stages[thisline+'Turbo'] = stages[thisline]
- 
         return stages
