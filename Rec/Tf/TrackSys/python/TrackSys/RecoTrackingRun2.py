@@ -178,12 +178,15 @@ def RecoTrackingHLT1(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
    fwdFitter = TrackEventFitter('ForwardHLT1FitterAlg')
    fwdFitter.TracksInContainer = "Rec/Track/ForwardHLT1"
    fwdFitter.TracksOutContainer = "Rec/Track/FittedHLT1ForwardTracks"
+   # Keep only good tracks, this cut should be aligned with the one in the TrackBestTrackCreator
+   fwdFitter.MaxChi2DoF = 3.
    fwdFitter.Fitter = "TrackInitFit/Fit"
    fwdFitter.addTool(TrackInitFit, "Fit")
    fwdFitter.Fit.Init = "TrackStateInitTool/FwdStateInit"
    fwdFitter.Fit.addTool(TrackStateInitTool, "FwdStateInit")
    fwdFitter.Fit.FwdStateInit.addTool(TrackMasterExtrapolator, "Extrapolator")
-   fwdFitter.Fit.FwdStateInit.UseFastMomentumEstimate = True
+   fwdFitter.Fit.FwdStateInit.UseFastMomentumEstimate = True 
+   fwdFitter.Fit.FwdStateInit.VeloFitterName = "FastVeloFitLHCbIDs"
    if( simplifiedGeometryFit ) :
       fwdFitter.Fit.FwdStateInit.Extrapolator.addTool(SimplifiedMaterialLocator, name = "MaterialLocator")
    else:
@@ -194,6 +197,7 @@ def RecoTrackingHLT1(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
    
    from TrackFitter.ConfiguredFitters import ConfiguredMasterFitter
    ConfiguredMasterFitter(fwdFitter.Fit.Fit, SimplifiedGeometry = simplifiedGeometryFit, LiteClusters = liteClustersFit)
+   
 
    GaudiSequencer("TrackHLT1FitHLT1Seq").Members += [ fwdFitter ]
   
