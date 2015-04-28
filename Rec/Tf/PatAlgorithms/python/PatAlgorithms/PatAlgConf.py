@@ -46,8 +46,6 @@ class ForwardConf(object):
     PFAlg.PatForwardTool.PreselectionPT = 0.8*500.
     PFAlg.PatForwardTool.Preselection = True   
     PFAlg.PatForwardTool.AddTTClusterName = "PatAddTTCoord"
-    PFAlg.PatForwardTool.PropertiesPrint = True
-    PFAlg.PropertiesPrint = True
     
 
   def configureAlgRun2HLT2(self, PFAlg = PatForward("PatForwardHLT2")):
@@ -57,12 +55,11 @@ class ForwardConf(object):
     PFAlg.OutputTracksName = "Rec/Track/ForwardHLT2"
     PFAlg.PatForwardTool.MinMomentum = 1000.
     PFAlg.PatForwardTool.SecondLoop = True
+    PFAlg.PatForwardTool.AddTTClusterName = "PatAddTTCoord"
     PFAlg.PatForwardTool.addTool( TrackUsedLHCbID, name = "TrackUsedLHCbID")
     PFAlg.PatForwardTool.UsedLHCbIDToolName = "TrackUsedLHCbID"
     PFAlg.PatForwardTool.TrackUsedLHCbID.inputContainers = ["Rec/Track/FittedHLT1ForwardTracks"]
     PFAlg.PatForwardTool.VeloVetoTracksNames = [ "Rec/Track/FittedHLT1ForwardTracks"]
-    PFAlg.PatForwardTool.PropertiesPrint = True
-    PFAlg.PropertiesPrint = True  
   
 #class DownstreamConf(object):
 #  '''Configure a downstream algorithm'''
