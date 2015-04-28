@@ -5,10 +5,13 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================= Hlt1Lines v7r10 2015-04-23 =========================
+
+! 2015-04-28 - Roel Aaij
+ - Remove modification of factories from Hlt1Lines.
+
 ! 2015-04-28 - Christian Linn
  - Allow configurable ODIN filter in HLT1MBNoBiasLine
-
-!========================= Hlt1Lines v7r10 2015-04-23 =========================
 
 ! 2015-04-23 - Roel Aaij
  - Allow ODIN filters in Hlt1MuonLines.

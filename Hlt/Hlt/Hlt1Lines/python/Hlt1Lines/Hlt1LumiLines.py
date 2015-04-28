@@ -270,9 +270,6 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         adds histogramming
         '''
         from HltLine.HltLine import Hlt1Line   as Line
-        from Configurables import LoKi__Hybrid__HltFactory as HltFactory
-        for i in [ 'LoKiCore.functions', 'LoKiNumbers.sources' ] :
-            if i not in HltFactory('ToolSvc.HltFactory').Modules : HltFactory('ToolSvc.HltFactory').Modules += [ i ]
         return Line ( 'Lumi'
                     , prescale = self.prescale
                     , ODIN = '( ODIN_TRGTYP == LHCb.ODIN.%s ) ' % self.getProp('TriggerType')

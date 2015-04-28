@@ -24,9 +24,6 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
         '''
         returns an Hlt1 "Line" including input and output filter
         '''
-        from Configurables import LoKi__Hybrid__HltFactory as HltFactory
-        for i in [ 'LoKiCore.functions', 'LoKiNumbers.sources' ] :
-            if i not in HltFactory('ToolSvc.HltFactory').Modules : HltFactory('ToolSvc.HltFactory').Modules += [ i ]
         from HltLine.HltLine import Hlt1Line as Line
         return Line ( 'MBNoBias'
                     , prescale = self.prescale
