@@ -30,7 +30,7 @@ class SingleMuonLines(Hlt2LinesConfigurableUser) :
                  'Rare'    :       { 'RarePtMin'          : 5000 * MeV,
                                      'RarePtMax'       : 40000* MeV,
                                      'RareIPChi2'      : 500, # Adimensional
-                                     'RareTrChi2Tight' : 3 ,
+                                     'RareTrChi2Tight' : 2 ,
                                      'RarePMax'  : 500 * GeV,
                                      'muID'  : 1
                                      }
