@@ -275,6 +275,7 @@ class HltConf(LHCbConfigurableUser):
                       , 16 : "L0_CHANNEL_RE('.*NoSPD')"
                       , 17 : "L0_CHANNEL_RE('.*,lowMult')"
                       , 18 : "L0_CHANNEL('DiMuon')" if 'DiMuon' in L0Channels() else ""
+                      , 19 : "L0_CHANNEL( 'Hadron|SumEt' )" if ('Hadron' in L0Channels() and 'SumEt' in L0Channels()) else ""
                       , 32 : "HLT_PASS('Hlt1Global')"
                       , 33 : "HLT_PASS_RE('^Hlt1Lumi.*Decision$')"  # lumi stream
                       , 34 : " ~ ( %s ) " % self.getProp('LumiBankKillerPredicate') #  this must be the opposite of the LumiStripper, i.e. if 34 is set, the event should NEVER be a nanoevent...
@@ -285,14 +286,16 @@ class HltConf(LHCbConfigurableUser):
                       , 40 : "HLT_PASS_RE('Hlt1(Velo|MB|BeamGas).*Decision')"  # bit (to be) used by the Velo (closing) monitoring
                       , 41 : "HLT_PASS_RE('Hlt1(Single|Track)Muon.*Decision')"
                       , 42 : "HLT_PASS_RE('Hlt1.*DiMuon.*Decision')"
+                      , 43 : "HLT_PASS_RE('Hlt1.*MuonNoL0.*Decision')"
                       , 44 : "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                      , 45 : "HLT_PASS_RE('Hlt1.*Gamma.*Decision')"
                       , 46 : "HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi)(?!Tell1)(?!MB)(?!NZS)(?!Velo)(?!BeamGas)(?!Incident).*Decision')"    # exclude 'non-physics' lines
                       , 47 : "HLT_PASS_RE('Hlt1MBMicroBias.*Decision')"
                       , 48 : "HLT_PASS('Hlt1MBNoBiasDecision')"
                       , 49 : "HLT_PASS_SUBSTR('Hlt1BeamGas')"
                       , 50 : "HLT_PASS('Hlt1LumiLowBeamCrossingDecision')"
                       , 51 : "HLT_PASS('Hlt1LumiMidBeamCrossingDecision')"
-                      , 53 : "HLT_PASS_RE('Hlt1CalibTracking.*Decision')"
+                      , 53 : "HLT_PASS_RE('Hlt1CalibTrackingKPi.*Decision')"
                       , 54 : "HLT_PASS_RE('Hlt1CalibRICH.*Decision')"
                       , 59 : "HLT_PASS_RE('Hlt1.*DisplVertex.*Decision')"
 
@@ -304,14 +307,15 @@ class HltConf(LHCbConfigurableUser):
                       , 68 : "HLT_PASS_RE('Hlt2.*DiMuon.*Decision')"
                       , 69 : "HLT_PASS_RE('Hlt2.*DY.*Decision')"
                       , 70 : "HLT_PASS_RE('Hlt2.*Topo.*Decision')"
-                      , 71 : "HLT_PASS_RE('Hlt2.*Charm.*Decision')"
+                      , 71 : "HLT_PASS_RE('Hlt2.*CharmHad.*Decision')"
                       , 72 : "HLT_PASS_RE('Hlt2.*IncPhi.*Decision')"
-                      , 73 : "HLT_PASS_RE('Hlt2.*B.*Gamma.*Decision')"
+                      , 73 : "HLT_PASS_RE('Hlt2.*Gamma.*Decision')"
                       , 74 : "HLT_PASS_RE('Hlt2.*TriMuon.*Decision')"
-                      , 76 : "HLT_PASS_RE('Hlt2.*(Bu2|Bs2|Bd2|Bc2|B2HH|Dst2|DisplVertices).*Decision')"
+                      , 75 : "HLT_PASS_RE('Hlt2.*RareCharm.*Decision')"  
+                      , 76 : "HLT_PASS_RE('Hlt2.*DisplVertices.*Decision')"
                       , 77 : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision')"
                       , 78 : "HLT_PASS_RE('Hlt2.*Muon.*Decision')"
-                      , 79 : "HLT_PASS_RE('Hlt2.*(Topo|Charm|IncPhi).*Decision')"
+                      , 79 : "HLT_PASS_RE('Hlt2.*Incl.*HHX.*Decision')"
                       , 80 : "HLT_PASS_RE('Hlt2.*Electron.*Decision')"
                       , 81 : "HLT_PASS_RE('Hlt2Topo.*2Body.*Decision')"
                       , 82 : "HLT_PASS_RE('Hlt2Topo.*3Body.*Decision')"
@@ -319,14 +323,11 @@ class HltConf(LHCbConfigurableUser):
                       , 84 : "HLT_PASS_RE('Hlt2TopoMu[234]Body.*Decision')"
                       , 85 : "HLT_PASS_RE('Hlt2TopoE[234]Body.*Decision')"
                       , 86 : "HLT_PASS_RE('Hlt2Topo[234]Body.*Decision')"
+                      # routing bit for the full (non-turbo) stream
                       , 87 : "HLT_NONTURBOPASS_RE('Hlt2.*Decision')"
                       # routing bit for Turbo stream, includes lumi events.
                       , 88 : "HLT_TURBOPASS_RE('Hlt2(?!DebugEvent)(?!Transparent)(?!PassThrough).*Decision') | HLT_PASS_RE('^Hlt1Lumi.*Decision$')"
 		              , 89 : "HLT_PASS_RE('Hlt2PassThrough.*Decision')"
-                      , 90 : "HLT_PASS_RE('Hlt2.*Charm.*hhX.*Decision')"
-                      , 91 : "HLT_PASS_RE('Hlt2.*Charm.*_hhX.*Decision')"
-                      , 92 : "HLT_PASS_RE('Hlt2.*Charm.*_Baryon.*hhX.*Decision')"
-                      , 93 : "HLT_PASS_RE('Hlt2.*Charm.*_Lepton.*hhX.*Decision')"
                          }
         HltRoutingBitsWriter('Hlt1RoutingBitsWriter').RoutingBits = routingBits
         HltRoutingBitsWriter('Hlt2RoutingBitsWriter').RoutingBits = routingBits
