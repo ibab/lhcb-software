@@ -1,8 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltSettings
-! Responsible : Patrick Koppenburg, Gerhard Raven
+! Responsible : Vladimir Gligorov, Mika Vesterinen, Roel Aaij
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+
+!========================= HltSettings v6r13 2015-04-28 =========================
 
 ! 2015-04-28 - Roel Aaij
  - Update 1TrackMVA parameters.
