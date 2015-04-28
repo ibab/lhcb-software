@@ -478,9 +478,11 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
     LHCb::RichPID* rich = (LHCb::RichPID*)vec_obj[3];
     LHCb::MuonPID* muon = (LHCb::MuonPID*)vec_obj[4];
 
+    std::vector<LHCb::LHCbID> totalIDs;
     for(SmartRefVector <LHCb::HltObjectSummary>::const_iterator it_basic = obj->substructure().begin();it_basic!=obj->substructure().end();++it_basic){
 
       const LHCb::HltObjectSummary* ObjBasic = it_basic->target();
+      totalIDs.insert( totalIDs.end(), ObjBasic->lhcbIDs().begin(), ObjBasic->lhcbIDs().end());
       switch( ObjBasic->summarizedObjectCLID() )
       {
         case LHCb::CLID_Track:
@@ -521,7 +523,6 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
             // SmartRefVector< LHCb::Track >  m_ancestors
             m_conv->TrackObjectFromSummary(&Track_info,track,turbo);
             if ( msgLevel(MSG::DEBUG) ) debug() << "Track #chi^{2}/DoF = " << track->chi2PerDoF() << endmsg;
-            track->setLhcbIDs( ObjBasic->lhcbIDs() );
             
             if ( msgLevel(MSG::DEBUG) ) debug() << "Track details added" << endmsg; 
             break;
@@ -593,6 +594,12 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
     }
     // tie our pieces together and set cross class information
     if ( msgLevel(MSG::DEBUG) ) debug() << "Starting to tie pieces together" << endmsg;
+    // add complete list of LHCbIDs
+    track->setLhcbIDs( totalIDs );
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Associated LHCbIDs:" << endmsg;
+    if ( msgLevel(MSG::DEBUG) ){
+      for(unsigned int i=0;i<totalIDs.size();i++){ debug()<<i<<"\t"<<totalIDs[i].detectorType()<<"\t"<<totalIDs[i].lhcbID()<<endmsg; }
+    }
     part->setProto( proto );
     proto->setMuonPID( muon );
     proto->setRichPID( rich );
@@ -611,8 +618,8 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
     if(proto->info( LHCb::ProtoParticle::TrackNumDof,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::TrackNumDof,track->nDoF());
     if(proto->info( LHCb::ProtoParticle::TrackType,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::TrackType,track->type());
     if(proto->info( LHCb::ProtoParticle::TrackHistory,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::TrackHistory,track->history());
-    if(proto->info( LHCb::ProtoParticle::TrackP,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::TrackP,track->p());
-    if(proto->info( LHCb::ProtoParticle::TrackPt,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::TrackPt,track->pt());
+    if(proto->info( LHCb::ProtoParticle::TrackP,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::TrackP,part->p()); 
+    if(proto->info( LHCb::ProtoParticle::TrackPt,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::TrackPt,part->pt()); 
     // Set rich quantities in the protoparticle
     if(proto->info( LHCb::ProtoParticle::RichDLLe,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::RichDLLe,rich->particleDeltaLL(Rich::ParticleIDType::Electron));
     if(proto->info( LHCb::ProtoParticle::RichDLLmu,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::RichDLLmu,rich->particleDeltaLL(Rich::ParticleIDType::Muon));

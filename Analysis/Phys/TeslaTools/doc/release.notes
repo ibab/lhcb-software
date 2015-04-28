@@ -3,6 +3,9 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-4-27 - Sean Benson
+ - Propagate all LHCbIDs for candidate.
+
 !========================= TeslaTools v1r4 2015-04-22 ========================
 
 ! 2015-4-11 - Sean Benson
