@@ -152,11 +152,11 @@ StatusCode MuonIDAlgLite::execute() {
       m_muonMap[muPid] = hits;
 
       if(msgLevel(MSG::DEBUG)) debug() << "########## CALCULATE THE DLL for track with p = << "  << track->p() << " #############" << endmsg;
-      if(m_dllFlag == 3){
-        std::tie(ProbMu, ProbNonMu) = DLLTool_->calcMuonLL_tanhdist(*track,extrapolation,hits,occupancies);
-      }
-      else if (m_dllFlag == 4){
+      if (m_dllFlag == 4){
         std::tie(ProbMu, ProbNonMu) = DLLTool_->calcMuonLL_tanhdist_landau(*track,extrapolation,hits,occupancies);
+      }
+      else if(m_dllFlag == 5){
+        std::tie(ProbMu, ProbNonMu) = DLLTool_->calcMuonLL_tanhdist(*track,extrapolation,hits,occupancies);
       }
       muPid->setMuonLLMu(log(ProbMu));
       muPid->setMuonLLBg(log(ProbNonMu));
