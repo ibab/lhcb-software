@@ -4,6 +4,9 @@
 ! Purpose     : Holding the master configurable which sets up Moore for the online
 !=================================================================================
 
+! 2015-04-28 - Roel Aaij
+ - Ignore DB heartbeat by default.
+
 !========================= MooreOnlineConf v1r6 2015-01-26 =========================
 
 ! 2015-01-06 - Roel Aaij
