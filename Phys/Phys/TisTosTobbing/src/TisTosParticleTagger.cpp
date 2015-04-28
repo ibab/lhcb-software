@@ -576,7 +576,7 @@ StatusCode TisTosParticleTagger::execute()
   }
 
   for( const auto particle : outparts ) {
-     markParticle(particle);
+     cloneAndMarkTree(particle);
   }
 
   if ( msgLevel(MSG::DEBUG) ) debug() << " Filter passed = " << passed << endmsg;
