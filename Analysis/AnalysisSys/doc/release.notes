@@ -73,6 +73,7 @@ Uses LCG_74root6 with ROOT 6.02.05.
   . Enabled full automation of bank version and lookup table choice.
   . Fixed non-debug mode running.
   . More populated protoparticles.
+  . Propagate all LHCbIDs for candidate.
 
 - In Phys/VertexFitCheck v1r9 :
   . ProperTimeChecker: refitter algorithm set to LoKi::PVReFitter by default,
