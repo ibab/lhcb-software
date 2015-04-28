@@ -4,11 +4,11 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+!========================= HltTracking v13r7 2015-04-28 =========================
+
 ! 2015-04-28 - Sascha Stahl
  - Hlt2Tracking: Run the reconstruction of neutral particles with long 
    and downstream tracks as input. Prevent running it again for downstream tracks only.
-
-!========================= HltTracking v13r7 2015-04-28 =========================
 
 ! 2015-04-17 - Michael Kolpin
  - Moved configuration of MuonTTTracks from Hlt2ProbeTracking to HltRecoConf
