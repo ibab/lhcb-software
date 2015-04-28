@@ -8,10 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
-! 2015-04-28 - Francesco Dettori
-	- Again tuned cut for Xabier's line: Hlt2SingleMuonRare in SingleMuon/Lines.py as rate was too high
-
 !========================= Hlt2Lines v9r8 2015-04-28 =========================
+
+! 2015-04-28 - Francesco Dettori
+	- Again tuned cut for Xabier's line: Hlt2SingleMuonRare in SingleMuon/Lines.py
+    as rate was too high
 
 ! 2015-04-28 -  Mike Sokoloff
   - moved D02HHKsh dictionary entries from Lines.py to D2HHKsLines.py
