@@ -1,16 +1,16 @@
 package HltSys
-version           v23r5p2
+version           v23r6
 
 branches cmt doc
 
-use Hlt1Lines           v7r9     Hlt   # Roel Aaij, Vava Gligorov, Gerhard Raven
+use Hlt1Lines           v7r10    Hlt   # Roel Aaij, Vava Gligorov, Gerhard Raven
 use Hlt1Muons           v1r13    Hlt   # Vasilis Syropoulos
-use Hlt2Lines           v9r7     Hlt   # Vava Gligorov, Roel Aaij, Gerhard Raven
-use Hlt2SharedParticles v7r5     Hlt   # Vava Gligorov
+use Hlt2Lines           v9r8     Hlt   # Vava Gligorov, Roel Aaij, Gerhard Raven
+use Hlt2SharedParticles v7r6     Hlt   # Vava Gligorov
 use HltBase             v15r6    Hlt   # Gerhard Raven
 use HltBeamGasAlley     v4r1     Hlt   # Rosen Matev
 use HltCommon           v10r5    Hlt   # Gerhard Raven
-use HltConf             v12r7    Hlt   # Roel Aaij, Gerhard Raven
+use HltConf             v12r8    Hlt   # Roel Aaij, Gerhard Raven
 use HltCosmics          v1r3     Hlt   # 
 use HltDisplVertices    v4r3     Hlt   # Pieter David, Victor Coco
 use HltGlobalMonitor    v4r6     Hlt   # Eric van Herwijnen
@@ -19,25 +19,10 @@ use HltLine             v7r9     Hlt   # Roel Aaij, Gerhard Raven
 use HltLuminosity       v4r3     Hlt   # Rosen Matev
 use HltRawData          v5r4     Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v3r2     Hlt   # Jose Angel Hernando-Morata
-use HltSettings         v6r12    Hlt   # Vava Gligorov, Roel Aaij
-use HltTracking         v13r6    Hlt   # Sascha Stahl, Vava Gligorov
+use HltSettings         v6r13    Hlt   # Vava Gligorov, Roel Aaij
+use HltTracking         v13r7    Hlt   # Sascha Stahl, Vava Gligorov
 use TCKUtils            v1r15    Hlt   # Gerhard Raven
-use LoKiTrigger         v15r6    Phys  # Vanya Belyaev
-
-# Extra packages for v23r5p1
-use PatPV               v3r27    Tr
-use TrackUtils          v1r59    Tr
-use TrackTools          v5r8     Tr
-use MuonID              v9r14    Muon
-use LoKiCore            v11r23   Phys
-use LoKiPhys            v11r1    Phys
-use LoKiFitters         v4r13    Phys
-use LoKiArrayFunctors   v11r1    Phys
-use MVADictTools        v1r9     Phys
-use CaloReco            v5r24    Calo
-use KalmanFilter        v1r11    Phys
-use DAQSys              v8r8     DAQ
-use BBDecTreeTool       v1r7     Phys
+use LoKiTrigger         v15r7    Phys  # Vanya Belyaev
 
 # Declare this as a container package
 apply_pattern container_package
