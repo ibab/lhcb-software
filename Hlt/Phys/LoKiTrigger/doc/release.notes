@@ -4,6 +4,8 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiTrigger v15r7 2015-04-28 =========================
+
 ! 2015-04-16 - Albert Puig
  - Add particle map flexibility in CheatPID
 
