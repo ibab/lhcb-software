@@ -4,6 +4,8 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+!========================= HltTracking v13r7 2015-04-28 =========================
+
 ! 2015-04-17 - Michael Kolpin
  - Moved configuration of MuonTTTracks from Hlt2ProbeTracking to HltRecoConf
  - Changed probe track locations to reflect the usage better
