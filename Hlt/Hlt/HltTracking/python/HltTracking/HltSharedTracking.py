@@ -236,6 +236,8 @@ def ConfiguredHltInitFitter( parent ):
         parent.Fitter.addTool(TrackStateInitTool, name="StateInit")
         parent.Fitter.StateInit.VeloFitterName = "FastVeloFitLHCbIDs"
         parent.Fitter.StateInit.UseFastMomentumEstimate = True
+        parent.Fitter.StateInit.addTool(TrackMasterExtrapolator, "Extrapolator")
+        parent.Fitter.StateInit.Extrapolator.MaterialLocator = "SimplifiedMaterialLocator"
         parent.Fitter.Fit = "TrackMasterFitter/Fitter"
         parent.Fitter.addTool(TrackMasterFitter, name="Fitter")
         fitter = parent.Fitter.Fitter

@@ -1483,6 +1483,14 @@ class Hlt2Tracking(LHCbConfigurableUser):
         returns the PID, charged proto, or neutral proto sequences 
         """
         tracks                      = self.__hlt2StagedFastFit()
+        # hack to get all tracks, this currently runs the charged calo recnstruction for downstream tracks twice...
+        # but he neutral reconstruction needs this.
+        if self.__trackType() == "Long":
+            tracks = self.__hlt2Tracking()
+            trackLocations = [tracks.outputSelection()]
+
+        trackLocations = [tracks.outputSelection()]
+        
         chargedProtos               = self.__hlt2ChargedProtos(HltCaloProtosSuffix)       
         chargedProtosOutputLocation = chargedProtos.outputSelection()
         neutralProtosOutputLocation = self.__protosLocation(Hlt2NeutralProtoParticleSuffix)
@@ -1505,10 +1513,15 @@ class Hlt2Tracking(LHCbConfigurableUser):
         myCALOProcessor.SkipNeutrals    = False
         myCALOProcessor.SkipCharged     = False
 
+        # hack to not reconstruct neutrals again
+        if self.__trackType() == "Downstream":
+            myCALOProcessor.SkipNeutrals    = True
+
+            
         # The sequences are given the track and protoparticle locations when initializing 
-        myPIDSeq         = myCALOProcessor.caloSequence(  [tracks.outputSelection()]  )
-        myChargedSeq     = myCALOProcessor.chargedProtoSequence(    [tracks.outputSelection()],    chargedProtosOutputLocation    )
-        myNeutralSeq     = myCALOProcessor.neutralProtoSequence(    [tracks.outputSelection()],    neutralProtosOutputLocation    )
+        myPIDSeq         = myCALOProcessor.caloSequence(  trackLocations  )
+        myChargedSeq     = myCALOProcessor.chargedProtoSequence(     trackLocations ,    chargedProtosOutputLocation    )
+        myNeutralSeq     = myCALOProcessor.neutralProtoSequence(     trackLocations ,    neutralProtosOutputLocation    )
 
         bm_name = self.__pidAlgosAndToolsPrefix()
         if ( mode == "PID" ) :

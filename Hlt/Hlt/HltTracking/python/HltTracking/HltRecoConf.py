@@ -82,7 +82,7 @@ CommonPVOptions = {"UseBeamSpotRCut" : True,
                    "MinTracks" : 4.,
                    "trackMaxChi2" : 12.}
 
-CommonForwardOptions = { "MaxOTHits" : 150000 , #Why do we have this three times?
+CommonForwardOptions = { "MaxOTHits" : 15000 ,  #Why do we have this three times?
                          "MaxITHits" : 999999 ,
                          "MaxNVelo" : 999999 }
 
