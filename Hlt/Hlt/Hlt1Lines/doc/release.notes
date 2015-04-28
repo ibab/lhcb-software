@@ -12,6 +12,7 @@
  - Added soft tracks to MultiMuonNoL0 (as the other lines).
 
 ! 2015-04-28 - Roel Aaij
+ - Update 1TrackMVA parameters. 
  - Remove modification of factories from Hlt1Lines.
 
 ! 2015-04-28 - Christian Linn
