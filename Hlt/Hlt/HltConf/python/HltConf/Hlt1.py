@@ -59,7 +59,7 @@ class Hlt1Conf(LHCbConfigurableUser):
                                HltFactory("HltFactory"),
                                HltFactory("Hlt1HltFactory"),
                                HltFactory("Hlt2HltFactory")) :
-                              modules
+                              modules,
                               (CoreFactory("Hlt1Factory"),
                                CoreFactory("Hlt1CoreFactory"),
                                HybridFactory("Hlt1HybridFactory"),
@@ -69,8 +69,8 @@ class Hlt1Conf(LHCbConfigurableUser):
             for module in mods:
                if not module in factory.Modules:
                   factory.Modules.append(module)
-            factory.Lines += ["from GaudiKernel.SystemOfUnits import GeV, MeV, mm",
-                            "import HltTracking.Hlt1StreamerConf"]
+                  factory.Lines += ["from GaudiKernel.SystemOfUnits import GeV, MeV, mm",
+                                    "import HltTracking.Hlt1StreamerConf"]
 
       ## Apply ThresholdSettings to HLT1 lines configurables
       from ThresholdUtils import setThresholds
