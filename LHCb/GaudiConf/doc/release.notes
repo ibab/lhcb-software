@@ -2,7 +2,10 @@
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
-            
+
+! 2015-04-28 - Sean Benson
+ - Turbo option in DstConf. Needed for propagation of Turbo objects.
+
 !========================= GaudiConf v19r8 2015-04-20 =========================
 ! 2015-04-12 - Marco Cattaneo
  - Add RDST to DstConf. Resurrect RDST, same as DST without RawEvent, only

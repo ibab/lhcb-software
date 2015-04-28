@@ -30,6 +30,7 @@ class DstConf(LHCbConfigurableUser):
        , "PackSequencer"   : None
        , "Detectors"       : ['Velo','TT','IT','OT','Rich','Tr','Calo','Muon']
        , "AlwaysCreate"    : False
+       , "Turbo"           : False
        , "Writer"          : "DstWriter"
        , "OutputName"      : ""
        , "SpilloverPaths"  : [ "Prev", "PrevPrev", "Next", "NextNext" ]
@@ -46,6 +47,7 @@ class DstConf(LHCbConfigurableUser):
        ,'PackType'        : """ Type of packing for the DST, can be ['NONE','TES','MDF'] """
        ,'PackSequencer'   : """ Sequencer in which to run the packing algorithms """
        ,'AlwaysCreate'    : """ Flags whether to create output packed objects even if input missing """
+       ,'Turbo'           : """ Propagate Turbo stream locations """
        ,'Writer'          : """ Name of OutputStream writing the DST """
        ,'OutputName'      : """ Name of the output file, for MDF writing """
        ,'SpilloverPaths'  : """ Paths to write to XDST if available on input file """
@@ -158,6 +160,19 @@ class DstConf(LHCbConfigurableUser):
                 # Minimal MC output.
                 SimConf().addHeaders(writer)
                 SimConf().addMCVertices(writer,eventLocations)
+
+                if self.getProp('Turbo'):
+                    writer.OptItemList += [
+                            "/Event/Turbo/pPhys/Particles#99"
+                            ,"/Event/Turbo/pPhys/Vertices#99"
+                            ,"/Event/Turbo/pPhys/RecVertices#99"
+                            ,"/Event/Turbo/pPhys/Relations#99"
+                            ,"/Event/Turbo/pPhys/PP2MCPRelations#99"
+                            ,"/Event/Turbo/pRec/Track/Custom#99"
+                            ,"/Event/Turbo/pRec/Muon/CustomPIDs#99"
+                            ,"/Event/Turbo/pRec/Rich/CustomPIDs#99"
+                            ,"/Event/Turbo/pRec/ProtoP/Custom#99"
+                            ]
 
                 if sType == "Full":
 
