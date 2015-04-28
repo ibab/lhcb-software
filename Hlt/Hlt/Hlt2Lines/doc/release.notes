@@ -7,6 +7,10 @@
 !           ALWAYS inform the Hlt group.
 !
 !----------------------------------------------------------------------------
+! 2015-04-28 -  Mike Sokoloff
+  - moved D02HHKsh dictionary entries from Lines.py to D2HHKsLines.py
+  - renamed SharedSecondaryLambdaDD/LL CharmHadSharedSecondaryLambdaDD/LL
+  - changes affect Lines.py, D2HHKsLines.py, & Stages.py
 
 ! 2015-04-28 - V. Gligorov
  - Remove duplication of Turbo lines from CharmHad/XSecLines and from the
