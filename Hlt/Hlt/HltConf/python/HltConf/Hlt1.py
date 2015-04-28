@@ -9,7 +9,7 @@
 # =============================================================================
 """
  script to configure HLT1 trigger lines
- Note: the actual line definitions are NOT in this file, 
+ Note: the actual line definitions are NOT in this file,
  this script relies on them being available through hlt1Lines()
 """
 # =============================================================================
@@ -17,14 +17,14 @@ __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
 __version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.44 $"
 # =============================================================================
 
-from Gaudi.Configuration import * 
+from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from ThresholdUtils import importLineConfigurables
 
 #import all Hlt1 lines configurables  -- and make sure the are kept alive long enough!
 import Hlt1Lines
 _hlt1linesconfs = importLineConfigurables(Hlt1Lines, endsWithLines = True)
-# add them in our scope so that genConfUser can find it... 
+# add them in our scope so that genConfUser can find it...
 globals().update( ( cfg.__name__, cfg ) for cfg in _hlt1linesconfs )
 
 
@@ -36,32 +36,48 @@ class Hlt1Conf(LHCbConfigurableUser):
 
 ##################################################################################
 #
-#      
+#
    def __apply_configuration__(self):
-      ## New event model
+      ## Add correct modules to factories.
+      from itertools import product
       import HltTracking.Hlt1Tracking
       from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
       from Configurables import LoKi__Hybrid__Tool as HybridFactory
-      for factory in (CoreFactory("Hlt1Factory"),
-                      HybridFactory("HybridFactory"),
-                      HybridFactory("Hlt1HybridFactory")):
-          for m in [ "LoKiPhys.decorators"    ,
-                     "LoKiCore.decorators"    ,
-                     "LoKiTracks.decorators"  ,
-                     "LoKiTrigger.decorators" ,
-                     "LoKiNumbers.decorators" ,
-                     "LoKiCore.functions"     ,
-                     "LoKiCore.math"          ,
-                     "LoKiHlt.algorithms"     ] :
-              if not m in factory.Modules : factory.Modules.append ( m )
-          factory.Lines += ["from GaudiKernel.SystemOfUnits import GeV, MeV, mm",
+      from Configurables import LoKi__Hybrid__HltFactory as HltFactory
+      modules = ["LoKiCore.decorators",
+                 "LoKiTrigger.decorators",
+                 "LoKiNumbers.decorators",
+                 'LoKiNumbers.sources',
+                 "LoKiCore.functions",
+                 "LoKiCore.math",
+                 "LoKiHlt.algorithms"]
+      extra_modules = ["LoKiArrayFunctors.decorators",
+                       "LoKiPhys.decorators",
+                       "LoKiTracks.decorators"]
+
+      for factories, mods in {(HltFactory(),
+                               HltFactory("HltFactory"),
+                               HltFactory("Hlt1HltFactory"),
+                               HltFactory("Hlt2HltFactory")) :
+                              modules
+                              (CoreFactory("Hlt1Factory"),
+                               CoreFactory("Hlt1CoreFactory"),
+                               HybridFactory("Hlt1HybridFactory"),
+                               HybridFactory("Hlt2HybridFactory")) :
+                              modules + extra_modules}.iteritems():
+         for factory in factories:
+            for module in mods:
+               if not module in factory.Modules:
+                  factory.Modules.append(module)
+            factory.Lines += ["from GaudiKernel.SystemOfUnits import GeV, MeV, mm",
                             "import HltTracking.Hlt1StreamerConf"]
 
-      ## Existing stuff
+      ## Apply ThresholdSettings to HLT1 lines configurables
       from ThresholdUtils import setThresholds
       from functools import partial
       map( partial( setThresholds, self.getProp("ThresholdSettings") ), _hlt1linesconfs )
 
+      ## Create Hlt1Global
       from HltLine.HltLine     import Hlt1Line
       from Configurables import LoKi__HDRFilter   as HDRFilter
       from DAQSys.Decoders import DecoderDB
@@ -78,7 +94,7 @@ class Hlt1Conf(LHCbConfigurableUser):
          while m <= n:
             yield ''.join(str(i) for i in range(1, m))
             m += 1
-      
+
       from HltLine.HltLine import addHlt1Prop
       addHlt1Prop([ 'RoutingBits', 'Accept', 'FilterDescriptor'
                   , 'Code', 'Preambulo', 'InputLocations', 'Input','Inputs', 'Output'
@@ -87,9 +103,6 @@ class Hlt1Conf(LHCbConfigurableUser):
                   , 'OutputSelection','Context', 'TisTosSpecs' ] +
                   [ 'Combination%sCut' % s for s in __counter(8) ])
 
-
-      
       ## finally, define the Hlt1 sequence!!
       from Configurables import GaudiSequencer as Sequence
       Sequence('Hlt1',  ModeOR = True, ShortCircuit = False )
-
