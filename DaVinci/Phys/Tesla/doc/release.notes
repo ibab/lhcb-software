@@ -4,10 +4,10 @@ Package Coordinator : Sean Benson
 Purpose             : Turbo Stream Analysis
 !-----------------------------------------------------------------------------
 
+!=========================== Tesla v1r4 2015-04-28 ===========================
+
 ! 2015-4-27 - Sean Benson
  - Add packed relations table location.
-
-!=========================== Tesla v1r4 2015-04-27 ===========================
 
 ! 2015-4-11 - Sean Benson
  - Add relations table generation for XDSTs and LDSTs.
