@@ -545,6 +545,11 @@ XSec_LcpToPimPpPip = DetachedHHHCombiner( 'XSec_LcpToPimPpPip'
         , inputs = [ SharedDetachedLcChild_p, SharedDetachedLcChild_pi ]
         , nickname = 'Lc2HHH_XSec' ) ## 'Lc2HHH_XSec' defined in XSecLines.py
 
+XSec_LcpToKmPpKp = DetachedHHHCombiner( 'XSec_LcpToKmPpKp'
+        , decay = "[Lambda_c+ -> K- p+ K+]cc"
+        , inputs = [ SharedDetachedLcChild_p, SharedDetachedLcChild_K]
+        , nickname = 'Lc2HHH_XSec' ) ## 'Lc2HHH_XSec' defined in XSecLines.py
+
 XSec_D02KPi = DetachedD02HHCombiner('XSec_D02KPi'
         , decay = "[D0 -> K- pi+]cc"
         , inputs = [ SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi ]

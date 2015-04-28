@@ -118,7 +118,7 @@ class CharmHadXSecLines() :
         from Stages import XSec_D02KPi, XSec_D02K3Pi
         from Stages import XSec_DpToKmPipPip, XSec_DpToKmKpPim
         from Stages import XSec_DspToKmKpPim, XSec_DspToPimPipPip
-        from Stages import XSec_LcpToKmPpPip, XSec_LcpToPimPpPip
+        from Stages import XSec_LcpToKmPpPip, XSec_LcpToPimPpPip, XSec_LcpToKmPpKp
         
         stages = {# First the D2HHH lines
                   'Dpm2KPiPi_XSecTurbo'       : [MassFilter('Dpm2KPiPi_XSec',nickname='Dpm2HHH_XSec', 
@@ -133,6 +133,8 @@ class CharmHadXSecLines() :
                   # Because of the mass window these also catch neutral Xi_c baryons
                   'Lc2KPPi_XSecTurbo'        : [MassFilter('Lc2KPPi_XSec', nickname = 'Lc2HHH_XSec',
                                                       inputs=[XSec_LcpToKmPpPip],shared=True)],
+                  'Lc2KPK_XSecTurbo'         : [MassFilter('Lc2KPK_XSec', nickname = 'Lc2HHH_XSec',
+                                                      inputs=[XSec_LcpToKmPpKp],shared=True)],
                   'Lc2PiPPi_XSecTurbo'       : [MassFilter('Lc2PiPPi_XSec', nickname = 'Lc2HHH_XSec',
                                                       inputs=[XSec_LcpToPimPpPip],shared=True)],
                   # The untagged D->KPi line
