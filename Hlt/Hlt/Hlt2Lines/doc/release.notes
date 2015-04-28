@@ -8,7 +8,7 @@
 !
 !----------------------------------------------------------------------------
 
-!========================= Hlt2Lines v9r9 2015-04-28 =========================
+!========================= Hlt2Lines v9r8 2015-04-28 =========================
 
 ! 2015-04-28 -  Mike Sokoloff
   - moved D02HHKsh dictionary entries from Lines.py to D2HHKsLines.py
@@ -30,8 +30,6 @@
   . Add additional slots for cutting harder on the bachelor in B->J/psiK,
     Ds->phipi, Lb->Lcpi, Lb->Lcmunu
   . Add some extra default prescale values and comments.
-
-!========================= Hlt2Lines v9r8 2015-04-23 =========================
 
 ! 2015-04-23 - Roel Aaij
  - Add LL and Turbo version of KS0 line.
