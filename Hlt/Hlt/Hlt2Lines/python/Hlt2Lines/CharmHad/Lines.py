@@ -89,13 +89,13 @@ theseslots = {   'Prescale' : {},
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  3.0,
                                               },
                  # Secondary Lambda's, used at least for building Xi- and Omega- candidates
-                 'SharedSecondaryLambdaLL' : {
+                 'CharmHadSharedSecondaryLambdaLL' : {
                                  'DecayTime_MIN'           : 4.5 * picosecond,
                                  'VZ_MIN'                  : -100. * mm,
                                  'VZ_MAX'                  :  500. * mm,
                                              },
                  # Secondary Lambda's, used at least for building Xi- and Omega- candidates
-                 'SharedSecondaryLambdaDD' : {
+                 'CharmHadSharedSecondaryLambdaDD' : {
                                  'DecayTime_MIN'           : 4.5 * picosecond,
                                  'VZ_MIN'                  : 300. * mm,
                                  'VZ_MAX'                  : 2275. * mm,
@@ -112,20 +112,6 @@ theseslots = {   'Prescale' : {},
                                  'VZ_MIN'                  : 300. * mm,
                                  'VZ_MAX'                  : 2275. * mm,
                                              },
-                 # generic D0 --> HHKs cuts
-                 'D02HHKsh' : {
-                             'TisTosSpec'               : "Hlt1.*MVA.*Decision%TOS",
-                             'AM_MIN'                   :  1740. * MeV,
-                             'AM_MAX'                   :  1990. * MeV,
-                             'ASUMPT_MIN'               :  1500 * MeV,
-                             'D_PT_MIN'                 :  1800 * MeV,
-                             'D_BPVDIRA_MIN'            :  0.9994,
-                             'D_BPVVDCHI2_MIN'          :  20.0,
-                             'D_VCHI2PDOF_MAX'          :  20.0,
-                             'D_BPVLTIME_MIN'           :  0.1 * picosecond,
-                             'HHMaxDOCA'                :  0.200 * mm,
-                             'HHMass_MAX'               :  1500. * MeV,
-                                          },
                  # Particles for the 'Prompt' CF lifetime unbiased lines for the 
                  # lifetime measurements
                  'CharmHadSharedPromptChild_K' : {

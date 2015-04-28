@@ -743,8 +743,8 @@ class SecondaryLambdaFilter(Hlt2ParticleFilter) : # {
 # }
 
 ## and instantiate  combiners for LL and DD
-SharedSecondaryLambdaLL = SecondaryLambdaFilter("SharedSecondaryLambdaLL",[Lambda_LL])
-SharedSecondaryLambdaDD = SecondaryLambdaFilter("SharedSecondaryLambdaDD",[Lambda_DD])
+CharmHadSharedSecondaryLambdaLL = SecondaryLambdaFilter("CharmHadSharedSecondaryLambdaLL",[Lambda_LL])
+CharmHadSharedSecondaryLambdaDD = SecondaryLambdaFilter("CharmHadSharedSecondaryLambdaDD",[Lambda_DD])
 
 class ChargedHyperonLambdaHCombiner(Hlt2Combiner):
     def __init__(self, name, decay,inputs):
@@ -765,18 +765,18 @@ class ChargedHyperonLambdaHCombiner(Hlt2Combiner):
 
 ## instantiate some charged hyperon combiners for specific final states
 
-Xi2LambdaPi_LLL = ChargedHyperonLambdaHCombiner('Ximinus2LambdaPi_LLL',
-                   decay="[Xi- -> Lambda0 pi-]cc",
-                   inputs=[SharedSecondaryLambdaLL,SharedDetachedDpmChild_pi])
-Xi2LambdaPi_DDL = ChargedHyperonLambdaHCombiner('Ximinus2LambdaPi_DDL',
-                   decay="[Xi- -> Lambda0 pi-]cc",
-                   inputs=[SharedSecondaryLambdaDD,SharedDetachedDpmChild_pi])
+Xi2LambdaPi_LLL =   ChargedHyperonLambdaHCombiner('Ximinus2LambdaPi_LLL',
+                     decay="[Xi- -> Lambda0 pi-]cc",
+                     inputs=[CharmHadSharedSecondaryLambdaLL,SharedDetachedDpmChild_pi])
+Xi2LambdaPi_DDL =   ChargedHyperonLambdaHCombiner('Ximinus2LambdaPi_DDL',
+                     decay="[Xi- -> Lambda0 pi-]cc",
+                     inputs=[CharmHadSharedSecondaryLambdaDD,SharedDetachedDpmChild_pi])
 Omega2LambdaK_LLL = ChargedHyperonLambdaHCombiner('Omegaminus2LambdaK_LLL',
                      decay="[Omega- -> Lambda0 K-]cc",
-                     inputs=[SharedSecondaryLambdaLL,SharedDetachedDpmChild_K])
+                     inputs=[CharmHadSharedSecondaryLambdaLL,SharedDetachedDpmChild_K])
 Omega2LambdaK_DDL = ChargedHyperonLambdaHCombiner('Omegaminus2LambdaK_DDL',
                      decay="[Omega- -> Lambda0 K-]cc",
-                     inputs=[SharedSecondaryLambdaDD,SharedDetachedDpmChild_K])
+                     inputs=[CharmHadSharedSecondaryLambdaDD,SharedDetachedDpmChild_K])
 
 ##   ------------  end of code for Charged Hyperons
 class DetachedV0V0Combiner(Hlt2Combiner):

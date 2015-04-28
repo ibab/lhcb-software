@@ -4,7 +4,21 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 class CharmHadD2HHKshLines(Hlt2LinesConfigurableUser):
     def localcuts(self) :
         return {
-                 'D02KshPiPi_LL' : {
+                 # generic D0 --> HHKs cuts
+                 'D02HHKsh' : {
+                             'TisTosSpec'               : "Hlt1.*MVA.*Decision%TOS",
+                             'AM_MIN'                   :  1740. * MeV,
+                             'AM_MAX'                   :  1990. * MeV,
+                             'ASUMPT_MIN'               :  1500 * MeV,
+                             'D_PT_MIN'                 :  1800 * MeV,
+                             'D_BPVDIRA_MIN'            :  0.9994,
+                             'D_BPVVDCHI2_MIN'          :  20.0,
+                             'D_VCHI2PDOF_MAX'          :  20.0,
+                             'D_BPVLTIME_MIN'           :  0.1 * picosecond,
+                             'HHMaxDOCA'                :  0.200 * mm,
+                             'HHMass_MAX'               :  1500. * MeV,
+                                          }
+                ,'D02KshPiPi_LL' : {
                                      'Mass_M_MIN'       : 1765 * MeV,
                                      'Mass_M_MAX'       : 1965 * MeV
                                    }
