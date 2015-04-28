@@ -4,6 +4,8 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+!========================= Moore v23r6 2015-04-28 =========================
+
 ! 2015-04-18 - Sascha Stahl
  - Added two files to tests: AddPrCheckerHlt2.py and alllines-threshold.py.
 
