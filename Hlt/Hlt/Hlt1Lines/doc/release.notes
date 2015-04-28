@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-04-28 - Christian Linn
+ - Allow configurable ODIN filter in HLT1MBNoBiasLine
+
 !========================= Hlt1Lines v7r10 2015-04-23 =========================
 
 ! 2015-04-23 - Roel Aaij

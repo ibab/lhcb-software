@@ -10,6 +10,7 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
     __slots__ = { 'MiniBiasL0Channels'     : ['CALO'] #'Hadron'
                 , 'BXTypes'                : ['NoBeam', 'BeamCrossing','Beam1','Beam2']
                 , 'MicroBiasOdin'          : '(ODIN_TRGTYP == LHCb.ODIN.LumiTrigger)'
+                , 'NoBiasOdin'             : 'jbit( ODIN_EVTTYP,2 )'
                 , 'MaxNoBiasRate'          : 1000000.
 		, 'MaxVeloTracks'          : 10
 		, 'Prescale'               : { 'Hlt1MBNoBias' : 0.1,
@@ -29,7 +30,7 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt1Line as Line
         return Line ( 'MBNoBias'
                     , prescale = self.prescale
-                    , ODIN = 'jbit( ODIN_EVTTYP,2 )'
+                    , ODIN = self.getProp('NoBiasOdin')
                     , postscale = self.postscale
                     )
     def __create_charm_nobias_line__(self ) :
