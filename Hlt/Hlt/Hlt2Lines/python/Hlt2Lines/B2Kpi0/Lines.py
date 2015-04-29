@@ -1,5 +1,5 @@
 ## --------------------------------------------------------------------------------
-## Lines for modes with out a reconstructible decay vertex
+## Lines for modes without a reconstructible decay vertex
 ## Ie, B+ -> K+ pi0 and B0 -> K0 pi0
 ## Author: Jason Andrews, jea@umd.edu
 ## --------------------------------------------------------------------------------
@@ -19,12 +19,12 @@ cuts = {'Common'       : {'NTRACK_MAX':300,
         'FilteredKaons': {'TRACK_TISTOS'    :'Hlt1TrackMVADecision%TOS',
                           'TRACK_PT_MIN'    :1200 * MeV,
                           'TRACK_P_MIN'     :12000 * MeV,
-                          'TRACK_IPCHI2_MIN':25,
+                          'TRACK_IPCHI2_MIN':50,
                           'TRACK_PIDK_MIN'  :-0.5 },
         
-        'FilteredKSs'  : {'KS0_TISTOS':None,#'Hlt1(Two)?TrackMVADecision%TOS',
-                          'KS0_PT_MIN':1000 * MeV,
-                          'KS0_P_MIN' :10000 * MeV,
+        'FilteredKSs'  : {'KS0_TISTOS':None,
+                          'KS0_PT_MIN':500 * MeV,
+                          'KS0_P_MIN' :8000 * MeV,
                           'KS0_ADMASS':15 * MeV,
                           'KS0_VCHI2PDOF_MAX':15,
                           'KS0_IPCHI2_MIN'   :10},
@@ -40,7 +40,7 @@ cuts = {'Common'       : {'NTRACK_MAX':300,
                           'MASS_MIN'   :4000, ## units (MeV) are in cut string
                           'MASS_MAX'   :6200, ## units (MeV) are in cut string
                           'ASUM_PT_MIN':5000 * MeV,
-                          'PT_MIN'     :5000 * MeV,
+                          'PT_MIN'     :4000 * MeV,
                           'MTDOCACHI2_MAX':10.0 },
         }
 
@@ -48,7 +48,7 @@ class B2Kpi0Lines(Hlt2LinesConfigurableUser):
     __slots__ = cuts
     def __apply_configuration__(self) :
         from Stages import ( TrackGEC, KaonFilter, KS0Filter,
-                             Pi0TOSFilter, Pi0Filter, Hb2XGammaCombiner )
+                             Pi0TOSFilter, Pi0Filter, Hb2XNeutralCombiner )
         from Inputs import Hlt2LooseKaons, KsLL
 
         filteredPi0s  = Pi0Filter('FilteredPi0s', [Pi0TOSFilter()])
@@ -57,10 +57,10 @@ class B2Kpi0Lines(Hlt2LinesConfigurableUser):
         filteredKSs   = KS0Filter('FilteredKSs', [KsLL],
                                   self.getProp('FilteredKSs').get('KS0_TISTOS'))
         
-        B2Kpi0  = Hb2XGammaCombiner('B2Kpi0', '[B+ -> K+ pi0]cc',
-                                    [filteredKaons, filteredPi0s])
-        B2K0pi0 = Hb2XGammaCombiner('B2K0pi0','[B0 -> KS0 pi0]cc',
-                                    [filteredKSs, filteredPi0s])
+        B2Kpi0  = Hb2XNeutralCombiner('B2Kpi0', '[B+ -> K+ pi0]cc',
+                                      [filteredKaons, filteredPi0s])
+        B2K0pi0 = Hb2XNeutralCombiner('B2K0pi0','[B0 -> KS0 pi0]cc',
+                                      [filteredKSs, filteredPi0s])
 
         from HltTracking.HltPVs import PV3D
         stages = {'B2Kpi0' : [TrackGEC(), PV3D('Hlt2'), B2Kpi0],

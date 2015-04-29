@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-29 - Jason Andrews
+ - Tuning of B2Kpi0 lines
+
 ! 2015-04-29 - Patrick Spradlin
  - CharmHad:  Automatically prepend 'CharmHad' to the names of all lines in
    the directory.

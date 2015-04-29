@@ -1,5 +1,5 @@
 ## --------------------------------------------------------------------------------
-## Lines for modes with out a reconstructible decay vertex
+## Lines for modes without a reconstructible decay vertex
 ## Ie, B+ -> K+ pi0 and B0 -> K0 pi0
 ## Author: Jason Andrews, jea@umd.edu
 ## --------------------------------------------------------------------------------
@@ -78,17 +78,17 @@ class Pi0Filter(Hlt2ParticleFilter):
                                         nickname=name,
                                         shared=True)
 
-class Hb2XGammaCombiner(Hlt2Combiner):
+class Hb2XNeutralCombiner(Hlt2Combiner):
     """Build the b hadron from hadrons and photons."""
     def __init__(self, name, decay, inputs):
         combination_cut = ("(in_range(%(MASS_MIN)s *MeV, AM, %(MASS_MAX)s *MeV))"
                            " & (ASUM(PT)> %(ASUM_PT_MIN)s)")
         mother_cut = "(PT > %(PT_MIN)s) & (MTDOCACHI2(1)<%(MTDOCACHI2_MAX)s)"
-        super(Hb2XGammaCombiner, self).__init__('B2Kpi0Hb2XGammaCombiner_%s' % name,
-                                                decay,
-                                                inputs,
-                                                nickname=name,
-                                                DaughtersCuts={},
-                                                CombinationCut=combination_cut,
-                                                MotherCut=mother_cut,
-                                                ParticleCombiners={'':'ParticleAdder'})
+        super(Hb2XNeutralCombiner, self).__init__('B2Kpi0Hb2XNeutralCombiner_%s' % name,
+                                                  decay,
+                                                  inputs,
+                                                  nickname=name,
+                                                  DaughtersCuts={},
+                                                  CombinationCut=combination_cut,
+                                                  MotherCut=mother_cut,
+                                                  ParticleCombiners={'':'ParticleAdder'})

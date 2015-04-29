@@ -1,5 +1,5 @@
 ## --------------------------------------------------------------------------------
-## Lines for modes with out a reconstructible decay vertex
+## Lines for modes without a reconstructible decay vertex
 ## Ie, B+ -> K+ pi0 and B0 -> K0 pi0
 ## Author: Jason Andrews, jea@umd.edu
 ## --------------------------------------------------------------------------------
