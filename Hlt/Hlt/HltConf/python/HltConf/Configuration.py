@@ -327,8 +327,8 @@ class HltConf(LHCbConfigurableUser):
                       , 87 : "HLT_NONTURBOPASS_RE('Hlt2.*Decision')"
                       # routing bit for Turbo stream, includes lumi events.
                       , 88 : "HLT_TURBOPASS_RE('Hlt2(?!DebugEvent)(?!Transparent)(?!PassThrough).*Decision') | HLT_PASS_RE('^Hlt1Lumi.*Decision$')"
-		              , 89 : "HLT_PASS_RE('Hlt2PassThrough.*Decision')"
-                         }
+                      , 89 : "HLT_PASS_RE('Hlt2PassThrough.*Decision')"
+                      }
         HltRoutingBitsWriter('Hlt1RoutingBitsWriter').RoutingBits = routingBits
         HltRoutingBitsWriter('Hlt2RoutingBitsWriter').RoutingBits = routingBits
 
