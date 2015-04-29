@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-30 - Olli Lupton
+ - PID: Turn on the Turbo copy of the K3pi PID line instead (simultaneously
+        makes sure the untagged line is postscaled to zero)
+ - PID: Remove workaround for the TisTosTagger problem fixed below.
+
 !========================= Hlt2Lines v9r8 2015-04-28 =========================
 
 ! 2015-04-30 - Roel Aaij

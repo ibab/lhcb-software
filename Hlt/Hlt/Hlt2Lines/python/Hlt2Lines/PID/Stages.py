@@ -23,7 +23,7 @@ class TagFilter(Hlt2ParticleFilter):
         Hlt2ParticleFilter.__init__(self, name, cut, [input], nickname = nickname, shared = True)
 
 # Probe filter
-class ProbeFilterToUseWhenHltIsFixed(Hlt2ParticleFilter):
+class ProbeFilter(Hlt2ParticleFilter):
     def __init__(self, name, input, mode, nickname):
         if mode == 1:
            charge_cut = "(Q>0)"
@@ -37,34 +37,6 @@ class ProbeFilterToUseWhenHltIsFixed(Hlt2ParticleFilter):
                " & (PT >%(ProbePt)s )" +
                " & (MIPCHI2DV(PRIMARY)>%(ProbeMinIPChi2)s )")
         Hlt2ParticleFilter.__init__(self, name, cut, [input], tistos = 'ProbeTisTos', nickname = nickname, shared = True)
-
-from Hlt2Lines.Utilities.Hlt2TisTosFilter import Hlt2TisTosParticleTagger
-class ProbeFilter(Hlt2TisTosParticleTagger):
-    """Pre-filter probe particles with TISTOS"""
-    def __init__(self, name, input, mode, nickname):
-        super(ProbeFilter, self).__init__(name + 'ProbeTisTos',
-            'ProbeTisTos',
-            [ ProbeFilterCuts(name, input, mode, nickname) ],
-            nickname = nickname,
-            shared = True)
-
-class ProbeFilterCuts(Hlt2ParticleFilter):
-    def __init__(self, name, input, mode, nickname):
-        if mode == 1:
-          charge_cut = "(Q>0)"
-        else:
-          charge_cut = "(Q<0)"
-          
-        name += 'Probe'
-        cut = (charge_cut +
-           " & (TRCHI2DOF <%(ProbeTrChi2)s )" +
-           " & (ISLONG)" +
-           " & (P >%(ProbeP)s )" +
-           " & (PT >%(ProbePt)s )" +
-           " & (MIPCHI2DV(PRIMARY)>%(ProbeMinIPChi2)s )")
-        super(ProbeFilterCuts, self).__init__(name, cut,
-                                          [ input ],
-                                          nickname = nickname, shared = True)
 
 # The class that creates the Hlt2Combiner
 from Hlt2Lines.Utilities.Hlt2Combiner import Hlt2Combiner
