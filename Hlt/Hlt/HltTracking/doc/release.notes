@@ -4,11 +4,18 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
-!========================= HltTracking v13r7 2015-04-28 =========================
+! 2015-04-29 - Sascha Stahl
+ - Fix the previous commit. The TrackBestTrackCreator now directly produces the 
+   the individual containers of Long and Downstream tracks. The Calo reconstruction picks up
+   all locations. Therefore only on instance of the CaloPorcessor is created by all
+   Hlt2Tracking instances.
+ - Change tuning of MatchVeloTTMuon in HltRecoConf.
 
 ! 2015-04-28 - Sascha Stahl
  - Hlt2Tracking: Run the reconstruction of neutral particles with long 
    and downstream tracks as input. Prevent running it again for downstream tracks only.
+
+!========================= HltTracking v13r7 2015-04-28 =========================
 
 ! 2015-04-17 - Michael Kolpin
  - Moved configuration of MuonTTTracks from Hlt2ProbeTracking to HltRecoConf
