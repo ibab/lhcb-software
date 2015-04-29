@@ -99,6 +99,7 @@ Uses LCG_74root6 with ROOT 6.02.05.
 
 - In Phys/TisTosTobbing v8r3 :
   . Don't copy particles (by value in vector) and use markParticle instead of markTree.
+  . Use cloneAndMarkTree instead of markParticle to make sure it works as intended.
 
 - In Phys/VertexFit v6r21 :
   . Added depreciation warnings to AdaptivePVReFitter and PVReFitter.
