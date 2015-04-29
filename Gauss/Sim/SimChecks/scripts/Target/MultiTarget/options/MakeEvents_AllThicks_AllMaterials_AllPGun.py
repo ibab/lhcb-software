@@ -29,7 +29,7 @@ RunTargetJobs(path, models, pguns, energies, materials, thicks, parallel=opts.pa
 from ROOT import *
 from TargetPlots import Plot
 
-plots = [ "RATIO_TOTAL", "RATIO_INEL", "TOTAL", "INEL", "EL", "MULTI", "MULTI_NCH", "MULTI_GAMMA" ] 
+plots = [ "RATIO_TOTAL", "RATIO_INEL", "TOTAL", "INEL", "EL", "MULTI", "MULTI_NCH", "MULTI_GAMMA", "ASYM_INEL" ] 
 
 file = TFile(path+"/TargetsPlots.root")
 dataTree = file.Get("summaryTree")

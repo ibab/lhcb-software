@@ -75,8 +75,8 @@ def submit():
 
 
 particles = {'Piminus': '-211', 'Piplus': '211', 'Kminus': '-321', 'Kplus': '321', 'p': '2212', 'pbar': '-2212'}
-Zplane = {'Al': {1: '200*mm', 5: '400*mm', 10: '600*mm'}, 'Be': {1: '800*mm', 5: '1000*mm', 10: '1200*mm'}, 'Si': {1: '1400*mm', 5: '1600*mm', '10': '1800*mm'}}
-Zorig = {'Al': {1: '100*mm', 5: '300*mm', 10: '500*mm'}, 'Be': {1: '700*mm', 5: '900*mm', 10: '1100*mm'}, 'Si': {1: '1300*mm', 5: '1500*mm', '10': '1700*mm'}}
+Zplane = {'Al': {1: '200*mm', 5: '400*mm', 10: '600*mm'}, 'Be': {1: '800*mm', 5: '1000*mm', 10: '1200*mm'}, 'Si': {1: '1400*mm', 5: '1600*mm', 10: '1800*mm'}}
+Zorig = {'Al': {1: '100*mm', 5: '300*mm', 10: '500*mm'}, 'Be': {1: '700*mm', 5: '900*mm', 10: '1100*mm'}, 'Si': {1: '1300*mm', 5: '1500*mm', 10: '1700*mm'}}
 
 
 def RunTargetJobs(path, models, particlesTodo, energies, materialsTodo, thicks,parallel = False) :

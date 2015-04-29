@@ -1,3 +1,12 @@
+##############################################################################
+# Option file to run hadronic cross section checks with multiple targets.
+# For moreusage informations: https://twiki.cern.ch/twiki/bin/view/LHCb/TargetStudy
+# 
+# Last modified: Luca Pescatore, 24/11/2014
+##############################################################################
+
+
+
 from string import *
 from ROOT import *
 from decimal import *
@@ -136,7 +145,7 @@ class Plotter :
 		dataTree.Branch("inel_xsec_err",AddressOf(tvars,"inel_xsec_err"),"inel_xsec_err/D")
 		dataTree.Branch("el_xsec",AddressOf(tvars,"el_xsec"),"el_xsec/D")
 		dataTree.Branch("el_xsec_err",AddressOf(tvars,"el_xsec_err"),"el_xsec_err/D")
-		dataTree.Branch("percPlus",AddressOf(tvars,"percPlus"),"PercPlus/D")
+		dataTree.Branch("percPlus",AddressOf(tvars,"percPlus"),"percPlus/D")
 		dataTree.Branch("percMinus",AddressOf(tvars,"percMinus"),"percMinus/D")
 		dataTree.Branch("multi_gamma",AddressOf(tvars,"multi_gamma"),"multi_gamma/D")
 		dataTree.Branch("percNCh",AddressOf(tvars,"percNCh"),"percNCh/D")
@@ -217,9 +226,9 @@ class Plotter :
 							tvars.inel_xsec_err = res[2]
 							tvars.el_xsec = res[3]
 							tvars.el_xsec_err = res[4]
-							tvars.percNCh = res[7]*100
-							tvars.percPlus = res[8]*100
-							tvars.percMinus = res[9]*100
+							tvars.percNCh = res[7]*100.
+							tvars.percPlus = res[8]*100.
+							tvars.percMinus = res[9]*100.
 							tvars.multiNCh = res[10]
 							tvars.multiNCh_nogamma = res[11]
 							tvars.multi_gamma = res[12]
@@ -472,9 +481,9 @@ def doMultiHistos(nt, curdir, mod, mat, Dx, pgun, eng) :
 			countinel+=1
 			in_dau_mult.Fill(in_daughters)
 
-			avg_nChPerc += in_nchDaughters / in_daughters
-			avg_ChPlusPerc += in_chPlusDaughters / in_daughters
-			avg_ChMinusPerc += in_chMinusDaughters / in_daughters
+			avg_nChPerc += float(in_nchDaughters) / in_daughters
+			avg_ChPlusPerc += float(in_chPlusDaughters) / in_daughters
+			avg_ChMinusPerc += float(in_chMinusDaughters) / in_daughters
 
 			in_nch_perc.Fill(in_nchDaughters / in_daughters)
 			in_chplus_perc.Fill(in_chPlusDaughters / in_daughters)

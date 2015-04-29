@@ -1,3 +1,13 @@
+##############################################################################
+# Option file to run hadronic cross section checks with multiple targets.
+# For moreusage informations: https://twiki.cern.ch/twiki/bin/view/LHCb/TargetStudy
+# 
+# Last modified: Luca Pescatore, 24/11/2014
+##############################################################################
+
+
+
+
 from string import find
 from ROOT import *
 from TargetSummary import *
@@ -52,9 +62,9 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 		pdgRatios_K  = [ 1.61, 1.32, 1.23, 1.10, 1.07 ]
 
 		if(xvar=="energy") : 
-			ratiotxt = open(outputPath+"/"+finalPlot+"_in"+str(Dx)+".txt","w")
+			ratiotxt = open(finalPlot+"_in"+str(Dx)+".txt","w")
 		else :
-			ratiotxt = open(outputPath+"/"+finalPlot+"_for"+str(E0)+"GeV.txt","w")
+			ratiotxt = open(finalPlot+"_for"+str(E0)+"GeV.txt","w")
 	
 		
 		grs = []
@@ -82,9 +92,14 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 				errx = array( 'd' , [0.] * entries )
 				
 				has_error = (find(finalPlot,"MULTI") > -1 or find(finalPlot,"TOTAL")>-1 or find(finalPlot,"INEL")>-1 or find(finalPlot,"EL")>-1)
+			
+				if entries == 0 :
+					print "No entries selected!"
+					print "Selection used: " + select
+					continue
 				
 				if(has_error) :
-					dataTree.Draw(xvar+":"+var+":"+var+"_err","","colz")	
+					dataTree.Draw(xvar+":"+var+":"+var+"_err","","colz")
 					gr = TGraphErrors(entries,dataTree.GetV1(),dataTree.GetV2(),errx,dataTree.GetV3())
 				else :
 					dataTree.Draw(xvar+":"+var)
@@ -138,7 +153,8 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 					if(find(finalPlot,"RATIO")>-1) :
 						y.append(y2[ee] / y1[ee])
 					else :
-						y.append(100*TMath.Abs(y1[ee] - y2[ee])/(2. - y1[ee] - y2[ee]))
+						#y.append(100*TMath.Abs(y1[ee] - y2[ee])/(2. - y1[ee] - y2[ee]))
+						y.append(100*TMath.Abs(y1[ee] - y2[ee])/2.)
 
 					if(len(erry1) > 0) :
 						totErr2 = TMath.Power(erry1[ee]/y1[ee],2) + TMath.Power(erry2[ee]/y2[ee],2)
@@ -383,29 +399,29 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 					if plotData and n0 == len(models)-1 and materials[0] == "Al" :
 						if find(finalPlot,"TOTAL")>-1 :
 							if dict._all_pguns[pg].GetName()=="p":
-								COMPASTot_p_gr.SetMarkerColor(colors[int(nh/2.-1)])
+								COMPASTot_p_gr.SetMarkerColor(4)#colors[int(nh/2.-1)])
 								grs.append(COMPASTot_p_gr)
 								leg.AddEntry(COMPASTot_p_gr,"COMPAS p total in Al","P")
 							elif dict._all_pguns[pg].GetName()=="pbar":
-								COMPASTot_pbar_gr.SetMarkerColor(colors[int(nh/2.-1)])
+								COMPASTot_pbar_gr.SetMarkerColor(4)#colors[int(nh/2.-1)])
 								grs.append(COMPASTot_pbar_gr)
 								leg.AddEntry(COMPASTot_pbar_gr,"COMPAS #bar{p} total in Al","P")
 						elif find(finalPlot,"INEL")>-1 :
 							if dict._all_pguns[pg].GetName()=="p":
-								COMPAS_p_gr.SetMarkerColor(colors[int(nh/2.-1)])
+								COMPAS_p_gr.SetMarkerColor(4)#colors[int(nh/2.-1)])
 								grs.append(COMPAS_p_gr)
 								leg.AddEntry(COMPAS_p_gr,"COMPAS p inel in Al","P")
 							elif dict._all_pguns[pg].GetName()=="pbar":
-								COMPAS_pbar_gr.SetMarkerColor(colors[int(nh/2.-1)])
+								COMPAS_pbar_gr.SetMarkerColor(4)#colors[int(nh/2.-1)])
 								grs.append(COMPAS_pbar_gr)
 								leg.AddEntry(COMPAS_pbar_gr,"COMPAS #bar{p} inel in Al","P")
 					elif plotData and n0 == len(models)-1 and materials[0] == "Be" and find(finalPlot,"INEL")>-1 :
 						if dict._all_pguns[pg].GetName()=="p":
-							COMPAS_inBe_p_gr.SetMarkerColor(colors[int(nh/2.-1)])
+							COMPAS_inBe_p_gr.SetMarkerColor(4)#colors[int(nh/2.-1)])
 							grs.append(COMPAS_inBe_p_gr)
 							leg.AddEntry(COMPAS_inBe_p_gr,"COMPAS p inel in Be","P")
 						elif dict._all_pguns[pg].GetName()=="pbar":
-							COMPAS_inBe_pbar_gr.SetMarkerColor(colors[int(nh/2.-1)])
+							COMPAS_inBe_pbar_gr.SetMarkerColor(4)#colors[int(nh/2.-1)])
 							grs.append(COMPAS_inBe_pbar_gr)
 							leg.AddEntry(COMPAS_inBe_pbar_gr,"COMPAS #bar{p} inel in Be","P")
 
@@ -439,19 +455,29 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 
 			if(finalPlot == "TOTAL") :
 				gg.GetYaxis().SetTitle("P^{tot}_{int} = N^{inel+el}/N^{gen}")
-				gg.GetYaxis().SetRangeUser(0.001,0.01)
+				if(Dx == 1) :
+					gg.GetYaxis().SetRangeUser(0.001,0.01)
+				else :
+					gg.GetYaxis().SetRangeUser(0.001,0.08)
+
 			elif(finalPlot == "INEL") :
-				gg.GetYaxis().SetRangeUser(0.001,0.01)
+				if(Dx == 1) :
+					gg.GetYaxis().SetRangeUser(0.001,0.01)
+				else :
+					gg.GetYaxis().SetRangeUser(0.001,0.08)
 				gg.GetYaxis().SetTitle("P^{inel}_{int} = N^{inel}/N^{gen}")
 			elif(finalPlot == "EL") :
 				gg.GetYaxis().SetTitle("P^{el}_{int} = N^{el}/N^{gen}")
-				gg.GetYaxis().SetRangeUser(0.00001,0.0025)
+				if(Dx == 1) :
+					gg.GetYaxis().SetRangeUser(0.00001,0.0025)
+				else :
+					gg.GetYaxis().SetRangeUser(0.00001,0.025)
 			elif(find(finalPlot,"MULTI") > -1) :
 				gg.GetYaxis().SetTitle("< Multi >")
-				gg.GetYaxis().SetRangeUser(0.,100.)
+				gg.GetYaxis().SetRangeUser(0.,40.)
 			elif(find(finalPlot,"PERC") > -1) :
 				gg.GetYaxis().SetTitle("%")
-				gg.GetYaxis().SetRangeUser(0.,1.)
+				gg.GetYaxis().SetRangeUser(0.,100.)
 	
 			gg.SetTitle(titleMultigr)
 			gg.GetYaxis().SetTitleOffset(1.5)
@@ -483,18 +509,18 @@ if __name__ == "__main__" :
 	##		For each of the plots above you can have them is form of a ratio of particles (the consecutive ones in the "pguns" array, see below)
 	##      or as asymmetries adding RATIO or ASYM to the plot type. e.g. RATIO_TOTAL or RATIO_MULTI_NCH or ASYM_INEL, etc
 
-	plots = [ "RATIO_TOTAL", "INEL", "TOTAL", "EL", "MULTI", "MULTI_NCH", "MULTI_NCH_NOGAMMA", "MULTI_PLUS", "PERC_PLUS" ]
+	plots = [ "RATIO_TOTAL", "INEL", "TOTAL", "EL", "MULTI", "MULTI_NCH", "MULTI_NCH_NOGAMMA", "PERC_PLUS", "PERC_MINUS" ]
 
 	### N.B.: Options need to have been generated with Targets_RunAll.py!
 	### In your output directory a file options.txt has been created where the options you generated are listed.
 
-	models = ["QGSP_BERT","FTFP_BERT"]  # any you generated, by default "QGSP_BERT","FTFP_BERT"
+	models = ["FTFP_BERT"]  # any you generated, by default "QGSP_BERT","FTFP_BERT"
 	thicks = [1] #1,5,10
-	materials = ["Al"] ### Al,Si,Be
+	materials = ["Al","Be","Si"] ### Al,Si,Be
 	energies = [1,5,10,100] # any you generated, by default 1,5,10,100
 	pguns = ["p","pbar","Kplus","Kminus","Piplus","Piminus"] # "p","pbar","Kplus","Kminus","Piplus","Piminus"
 	#pguns = ["pbar","p"]
-	path = "TargetOutput"
+	path = "/afs/cern.ch/work/p/pluca/TargetOutput"
 
 	file = TFile(path+"/TargetsPlots.root")
 	dataTree = file.Get("summaryTree")
