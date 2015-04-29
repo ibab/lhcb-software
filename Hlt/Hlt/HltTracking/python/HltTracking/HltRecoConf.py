@@ -64,13 +64,13 @@ MaxOTHits = 15000 #--> move to CommonForwardOptions, this one is used e.g. in Hl
 
 MatchVeloMuonOptions = {"MaxChi2DoFX" : 10.,
                         "XWindow" : 200.,
-                        "YWindow" : 200.
+                        "YWindow" : 400.
                         }
 
 MatchVeloTTMuonOptions = {"MaxChi2DoFX" : 20.,
                           "XWindow" : 200.,
-                          "YWindow" : 200.,
-                          "FoIToleranceX" : 6.,
+                          "YWindow" : 400.,
+                          "FoIToleranceX" : 5.,
                           "FoIToleranceY" : 1.5
                           }
 
