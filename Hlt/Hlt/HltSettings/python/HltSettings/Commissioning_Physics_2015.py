@@ -155,18 +155,27 @@ class Commissioning_Physics_2015( object ):
                                                , 'DiMuonHighMass_TrChi2'    :    4
                                                , 'DiMuonHighMass_M'         : 2700
                                                , 'DiMuonHighMass_GEC'       : 'Loose'
-                                               , 'MultiMuonNoL0_P'          : 3000
+                                               , 'DiMuonNoL0_VxDOCA'     :  0.2
+                                               , 'DiMuonNoL0_VxChi2'     :   24.
+                                               , 'DiMuonNoL0_P'          : 3000.
+                                               , 'DiMuonNoL0_PT'         :    0.
+                                               , 'DiMuonNoL0_TrChi2'     :    2.
+                                               , 'DiMuonNoL0_M'          :    0.
+                                               , 'DiMuonNoL0_IPChi2'     :    9.
+                                               , 'DiMuonNoL0_GEC'        : 'Loose'
+                                               , 'MultiMuonNoL0_P'          : 6000
                                                , 'MultiMuonNoL0_PT'         :  500
                                                , 'MultiMuonNoL0_TrChi2'     :    3.
-                                               , 'MultiMuonNoL0_GT'         :  2.5
-                                               , 'MultiMuonNoL0_GEC'        : 'Loose'
-                                               ,'L0Channels'               : {'SingleMuonHighPT' : ( 'Muon',),
-                                                                              'SingleMuonNoIP'   : ( 'Muon',),
+                                               , 'MultiMuonNoL0_GT'         :    2.5
+                                               ,'L0Channels'               : {'SingleMuonHighPT' : ( 'Muon', ),
+                                                                              'SingleMuonNoIP'   : ( 'Muon', ),
                                                                               'DiMuonLowMass'    : ( 'Muon', 'DiMuon' ),
                                                                               'DiMuonHighMass'   : ( 'Muon', 'DiMuon' ),
-                                                                              'MultiMuonNoL0'    : ( 'Muon', 'DiMuon' ) }
-                                               , 'Prescale'                 : { 'Hlt1SingleMuonNoIP' : 0.01,
-                                                                                'Hlt1MultiMuonNoL0'  : 0.0 }
+                                                                              'DiMuonNoL0'       : None,
+                                                                              'MultiMuonNoL0'    : None
+                                                                             }
+                                               , 'Prescale'                 : { 'Hlt1SingleMuonNoIP' : 0.1,
+                                                                                'Hlt1MultiMuonNoL0'  : 1. }
                                                }
                        , Hlt1L0LinesConf :     {  'Postscale' : { 'Hlt1L0AnyRateLimited'       : 'RATE(1)'
                                                                 , 'Hlt1L0AnyNoSPDRateLimited'  : 'RATE(1)'
@@ -262,23 +271,24 @@ class Commissioning_Physics_2015( object ):
 
         from Hadrons_March2015 import Hadrons_March2015
         hlt2.extend( Hadrons_March2015().ActiveHlt2Lines() )
-
        
         return hlt2
-       
+    
     def ActiveHlt1Lines(self) :
         """
         Returns a list of active lines
         """
-        lines =  [ 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
+        lines =  [ 'Hlt1TrackMuon', 'Hlt1SingleMuonHighPT'
+                 , 'Hlt1SingleMuonNoIP', 'Hlt1DiMuonNoL0'
+                 , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
+                 , 'Hlt1MultiMuonNoL0'
                  , 'Hlt1SingleElectronNoIP'
-                 , 'Hlt1TrackMuon', 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
                  , 'Hlt1TrackMVA', 'Hlt1TwoTrackMVA'
                  , 'Hlt1CalibTrackingKPi' , 'Hlt1CalibTrackingKK' , 'Hlt1CalibTrackingPiPi'
                  , 'Hlt1B2HH_LTUNB_KPi' , 'Hlt1B2HH_LTUNB_KK' , 'Hlt1B2HH_LTUNB_PiPi'
                  , 'Hlt1IncPhi'
                  , 'Hlt1B2PhiPhi_LTUNB', 'Hlt1B2PhiGamma_LTUNB'
-                 , 'Hlt1L0HighSumETJet','Hlt1HighPtJetsSinglePV'
+                 , 'Hlt1L0HighSumETJet', 'Hlt1HighPtJetsSinglePV'
                  , 'Hlt1CalibRICHMirror' ]
         
         ## from Hlt1TechnicalLines import Hlt1TechnicalLines 
