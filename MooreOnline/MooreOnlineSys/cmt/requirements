@@ -7,7 +7,7 @@ branches doc cmt tests
 #=======================================================
 
 use  MooreScripts  v1r9
-use  MooreOnlineConf  v1r6
+use  MooreOnlineConf  v1r7
 
 # Declare this as a container package
 apply_pattern container_package
@@ -17,4 +17,3 @@ apply_pattern QMTest
 
 # Allow the generation of QMTest summary
 apply_pattern QMTestSummarize
-
