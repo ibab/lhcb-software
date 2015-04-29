@@ -3,6 +3,10 @@
 ! Responsible : DaVinci coordinator
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
+
+! 2015-04-29 - Andrea Contu
+ - Updated references for stripping tests
+
 ! 2015-04-22 - Stefania Vecchi
  - Updated tagging reference file to account for new BDT taggers
 
