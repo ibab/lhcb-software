@@ -8,6 +8,8 @@
 !
 !----------------------------------------------------------------------------
 
+!========================= Hlt2Lines v9r8 2015-04-28 =========================
+
 ! 2015-04-28 - Olli Lupton
  - PID:
   . Optimise V -> ll probe track filtering to apply kinematic cuts before TISTOSing.
@@ -26,8 +28,6 @@
 
 ! 2015-04-28 - V. Gligorov
  - Add Lc->KpK line for early measurements
-
-!========================= Hlt2Lines v9r8 2015-04-28 =========================
 
 ! 2015-04-28 - Francesco Dettori
 	- Again tuned cut for Xabier's line: Hlt2SingleMuonRare in SingleMuon/Lines.py
