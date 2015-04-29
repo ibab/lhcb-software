@@ -227,5 +227,5 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
                 Hlt2Line(nickname, prescale = self.prescale,
                          algos = algos, postscale = self.postscale, Turbo = True)
             else :
-                Hlt2Line(nickname, prescale = self.prescale,
+                Hlt2Line('CharmHad' + nickname, prescale = self.prescale,
                          algos = algos, postscale = self.postscale)

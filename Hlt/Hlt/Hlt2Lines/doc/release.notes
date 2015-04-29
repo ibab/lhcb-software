@@ -9,6 +9,11 @@
 !----------------------------------------------------------------------------
 
 ! 2015-04-29 - Patrick Spradlin
+ - CharmHad:  Automatically prepend 'CharmHad' to the names of all lines in
+   the directory.
+   M  CharmHad/Lines.py
+
+! 2015-04-29 - Patrick Spradlin
  - CharmHad:  Updates to inclusive D* lines to improve timing.
    M  CharmHad/Dst2PiD02HHXBDTLines.py
    M  CharmHad/Stages.py
