@@ -58,7 +58,7 @@ MatchVeloTTMuon::MatchVeloTTMuon( const string& type, const string& name,
 
    // Stuff for Velo seeds
    declareProperty( "XWindow", m_xWindow = 200 );
-   declareProperty( "YWindow", m_yWindow = 200 );
+   declareProperty( "YWindow", m_yWindow = 400 );
 
    declareProperty( "MinMomentum", m_minMomentum = 6 * Gaudi::Units::GeV );
    declareProperty( "KickScale",   m_kickScale = 1255 * Gaudi::Units::MeV );
@@ -69,12 +69,12 @@ MatchVeloTTMuon::MatchVeloTTMuon( const string& type, const string& name,
    declareProperty( "MagnetPlaneParB", m_zb = 5.203 * Gaudi::Units::m );
 
    // Stuff for VeloTT seeds
-   declareProperty( "FoIToleranceX", m_FoIToleranceX = 6.  );
+   declareProperty( "FoIToleranceX", m_FoIToleranceX = 5. );
    declareProperty( "FoIToleranceY", m_FoIToleranceY = 1.5 );
-   declareProperty( "Extrapolator",   m_extrapolatorName = "TrackMasterExtrapolator:PUBLIC" );
+   declareProperty( "Extrapolator",  m_extrapolatorName = "TrackMasterExtrapolator:PUBLIC" );
  
    // General Stuff
-   declareProperty( "MaxChi2DoFX",   m_maxChi2DoFX = 30          );
+   declareProperty( "MaxChi2DoFX",   m_maxChi2DoFX = 20 );
    declareProperty( "MaxMissedHits", m_maxMissed = 1 );
    declareProperty( "SetQOverP",     m_setQOverP = false );
    setProduceHistos( false ); // yes, this indeed changes the default ;-)
