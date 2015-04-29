@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 !========================= MuonID v9r14 2015-03-31 =========================
+! 2015-04-29 - Ricardo Vazquez Gomez
+ - Modify the algorithms to use DLLflag = 5 corresponding to the new calibration.
+   The algorithms are configured to run with either DLLflag = 4 or DLLflag = 5 
+ - Add the files Muon_2015_def.py and tanh_2015.py from the new calibration by Helder.
+
 ! 2015-04-28 - Ricardo Vazquez Gomez
  - Add the makeMuonTrack part to the code. 
  - Add the possibility to use DLLflag == 3 as the new DLL calibration would use 

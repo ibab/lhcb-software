@@ -63,6 +63,9 @@ class DLLMuonTool final : public GaudiTool {
 
 
  private:
+  // Ignore MuonID info from conditions database.
+  bool m_OverrideDB;
+  
   // Helper functions
   std::pair<double, double> foi(int, int, double) const;
   // Members
@@ -87,14 +90,23 @@ class DLLMuonTool final : public GaudiTool {
   std::vector< double >     m_NonMuLanParR4; 
 
   // hyperbolic tangent mapping of distances:
-  // tanh scale factors
-  std::vector< double >  m_tanhScaleFactorsR1;
-  std::vector< double >  m_tanhScaleFactorsR2;
-  std::vector< double >  m_tanhScaleFactorsR3;
-  std::vector< double >  m_tanhScaleFactorsR4;
+  // tanh scale factors for muons
+  std::vector< double >  m_tanhScaleFactorsMuonR1;
+  std::vector< double >  m_tanhScaleFactorsMuonR2;
+  std::vector< double >  m_tanhScaleFactorsMuonR3;
+  std::vector< double >  m_tanhScaleFactorsMuonR4;
 
   typedef std::vector< std::vector< double >* > vectorOfVectors;
-  vectorOfVectors m_tanhScaleFactors;
+  vectorOfVectors m_tanhScaleFactorsMuon;
+
+  // hyperbolic tangent mapping of distances:
+  // tanh scale factors for non-muons
+  std::vector< double >  m_tanhScaleFactorsNonMuonR1;
+  std::vector< double >  m_tanhScaleFactorsNonMuonR2;
+  std::vector< double >  m_tanhScaleFactorsNonMuonR3;
+  std::vector< double >  m_tanhScaleFactorsNonMuonR4;
+
+  vectorOfVectors m_tanhScaleFactorsNonMuon;
 
   // tanh(dist2) histograms contents for muons
   std::vector< double >     m_tanhCumulHistoMuonR1_1;
@@ -156,13 +168,12 @@ class DLLMuonTool final : public GaudiTool {
   std::vector< double >     m_tanhCumulHistoNonMuonR4_1;
   std::vector< double >     m_tanhCumulHistoNonMuonR4_2;
   std::vector< double >     m_tanhCumulHistoNonMuonR4_3;
-  std::vector< double >     m_tanhCumulHistoNonMuonR4_4;
-  std::vector< double >     m_tanhCumulHistoNonMuonR4_5;
+  //std::vector< double >     m_tanhCumulHistoNonMuonR4_4;
+  //std::vector< double >     m_tanhCumulHistoNonMuonR4_5;
   vectorOfVectors m_tanhCumulHistoNonMuonR4;
 
   std::vector< vectorOfVectors * > m_tanhCumulHistoNonMuon;
 
-  int m_nMupBinsR1, m_nMupBinsR2, m_nMupBinsR3, m_nMupBinsR4;
   double Fdist[5];
   double small_dist[5];
   double closest_region[5];

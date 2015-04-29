@@ -17,6 +17,11 @@ DLLMuonTool::DLLMuonTool(const std::string& type, const std::string& name,
 {
       declareInterface<DLLMuonTool>(this);
 
+      // some hardcoded parameters. Need to be fixed
+      declareProperty("OverrideDB", m_OverrideDB=true);
+      declareProperty("PreSelMomentum", preSelMomentum_);
+      declareProperty("MomentumCuts", momentumCuts_);
+      declareProperty("FOIfactor", foiFactor_);
       // Same parameters for muons and non muons but different names
       // Muons 
       declareProperty( "MupBinsR1", m_MupBinsR1 );
@@ -36,12 +41,17 @@ DLLMuonTool::DLLMuonTool(const std::string& type, const std::string& name,
       declareProperty( "NonMuLandauParameterR4", m_NonMuLanParR4 );
 
       // hyperbolic tangent mapping of distances:
+      // tanh scale factors for muons necessary for 
+      declareProperty( "tanhScaleFactorsMuonR1", m_tanhScaleFactorsMuonR1);
+      declareProperty( "tanhScaleFactorsMuonR2", m_tanhScaleFactorsMuonR2);
+      declareProperty( "tanhScaleFactorsMuonR3", m_tanhScaleFactorsMuonR3);
+      declareProperty( "tanhScaleFactorsMuonR4", m_tanhScaleFactorsMuonR4);
 
-      // tanh scale factors
-      declareProperty( "tanhScaleFactorsR1", m_tanhScaleFactorsR1);
-      declareProperty( "tanhScaleFactorsR2", m_tanhScaleFactorsR2);
-      declareProperty( "tanhScaleFactorsR3", m_tanhScaleFactorsR3);
-      declareProperty( "tanhScaleFactorsR4", m_tanhScaleFactorsR4);
+      // tanh scale factors for non-muons
+      declareProperty( "tanhScaleFactorsNonMuonR1", m_tanhScaleFactorsNonMuonR1);
+      declareProperty( "tanhScaleFactorsNonMuonR2", m_tanhScaleFactorsNonMuonR2);
+      declareProperty( "tanhScaleFactorsNonMuonR3", m_tanhScaleFactorsNonMuonR3);
+      declareProperty( "tanhScaleFactorsNonMuonR4", m_tanhScaleFactorsNonMuonR4);
 
       // tanh(dist2) histograms contents for muons  // DLLflag = 3 and 4
       declareProperty( "tanhCumulHistoMuonR1_1", m_tanhCumulHistoMuonR1_1);
@@ -94,8 +104,8 @@ DLLMuonTool::DLLMuonTool(const std::string& type, const std::string& name,
       declareProperty( "tanhCumulHistoNonMuonR4_1", m_tanhCumulHistoNonMuonR4_1);
       declareProperty( "tanhCumulHistoNonMuonR4_2", m_tanhCumulHistoNonMuonR4_2);
       declareProperty( "tanhCumulHistoNonMuonR4_3", m_tanhCumulHistoNonMuonR4_3);
-      declareProperty( "tanhCumulHistoNonMuonR4_4", m_tanhCumulHistoNonMuonR4_4);
-      declareProperty( "tanhCumulHistoNonMuonR4_5", m_tanhCumulHistoNonMuonR4_5);
+      //declareProperty( "tanhCumulHistoNonMuonR4_4", m_tanhCumulHistoNonMuonR4_4);
+      //declareProperty( "tanhCumulHistoNonMuonR4_5", m_tanhCumulHistoNonMuonR4_5);
 
 }
 
@@ -125,133 +135,153 @@ StatusCode DLLMuonTool::initialize() {
     }
   }
 
-  // Prepare to load information from conditions data base
-  Condition* condFoiFactor = nullptr;
-  Condition* condPreSelMomentum = nullptr;
-  Condition* condMomentumCuts = nullptr;
-  Condition* condNumberMupBins = nullptr;
-  Condition* condMupBins = nullptr;
-  Condition* condNonMuLandauParameterR1 = nullptr;
-  Condition* condNonMuLandauParameterR2 = nullptr;
-  Condition* condNonMuLandauParameterR3 = nullptr;
-  Condition* condNonMuLandauParameterR4 = nullptr;
-  Condition* condtanhScaleFactors = nullptr;
-  Condition* condtanhCumulHistoMuonR1 = nullptr;
-  Condition* condtanhCumulHistoMuonR2 = nullptr;
-  Condition* condtanhCumulHistoMuonR3 = nullptr;
-  Condition* condtanhCumulHistoMuonR4 = nullptr; 
-  //Condition* condtanhCumulHistoNonMuonR1 = nullptr;
-  //Condition* condtanhCumulHistoNonMuonR2 = nullptr;
-  //Condition* condtanhCumulHistoNonMuonR3 = nullptr;
-  //Condition* condtanhCumulHistoNonMuonR4 = nullptr;
-
-  registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/FOIfactor", condFoiFactor);
-  registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/PreSelMomentum", condPreSelMomentum);
-  registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/MomentumCuts", condMomentumCuts);
-  registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/nMupBins", condNumberMupBins);
-  registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/MupBins", condMupBins);
-  registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/NonMuLandauParameterR1",condNonMuLandauParameterR1);
-  registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/NonMuLandauParameterR2",condNonMuLandauParameterR2);
-  registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/NonMuLandauParameterR3",condNonMuLandauParameterR3);
-  registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/NonMuLandauParameterR4",condNonMuLandauParameterR4);
-  registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhScaleFactors", condtanhScaleFactors);
-  registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhCumulHistoMuonR1", condtanhCumulHistoMuonR1);
-  registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhCumulHistoMuonR2", condtanhCumulHistoMuonR2);
-  registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhCumulHistoMuonR3", condtanhCumulHistoMuonR3);
-  registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhCumulHistoMuonR4", condtanhCumulHistoMuonR4);
-  //registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhCumulHistoNonMuonR1", condtanhCumulHistoNonMuonR1);
-  //registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhCumulHistoNonMuonR2", condtanhCumulHistoNonMuonR2);
-  //registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhCumulHistoNonMuonR3", condtanhCumulHistoNonMuonR3);
-  //registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhCumulHistoNonMuonR4", condtanhCumulHistoNonMuonR4);
-
-  // Update conditions
-  sc = runUpdate();
-  if (sc.isFailure()) {
-    Error("Could not update conditions from the CondDB.");
-    return sc;
+  if(m_OverrideDB){
+    if(msgLevel(MSG::INFO)) info() << "Initialise: OverrideDB=true. Data from Conditions database will be ignored." << endmsg;
+    if(msgLevel(MSG::INFO)) info() << "Initialise:                  Using values read from options file" << endmsg;
   }
-  // Extract parameters
-  foiFactor_ = condFoiFactor->param<double>("FOIfactor");
-  preSelMomentum_ = condPreSelMomentum->param<double>("PreSelMomentum");
-  momentumCuts_ = condMomentumCuts->paramVect<double>("MomentumCuts");
-  
-  m_nMupBinsR1 = condNumberMupBins->param<int>("nMupBinsR1");
-  m_nMupBinsR2 = condNumberMupBins->param<int>("nMupBinsR2");
-  m_nMupBinsR3 = condNumberMupBins->param<int>("nMupBinsR3");
-  m_nMupBinsR4 = condNumberMupBins->param<int>("nMupBinsR4");
-  m_MupBinsR1 = condMupBins->paramVect<double>("MupBinsR1");
-  m_MupBinsR2 = condMupBins->paramVect<double>("MupBinsR2");
-  m_MupBinsR3 = condMupBins->paramVect<double>("MupBinsR3");
-  m_MupBinsR4 = condMupBins->paramVect<double>("MupBinsR4");
+  else { // Read values from database
+    // Prepare to load information from conditions data base
+    Condition* condFoiFactor = nullptr;
+    Condition* condPreSelMomentum = nullptr;
+    Condition* condMomentumCuts = nullptr;
+    Condition* condNumberMupBins = nullptr;
+    Condition* condMupBins = nullptr;  
 
-  // Non-Muons - Region 1-2-3-4:
-  m_NonMuLanParR1 = condNonMuLandauParameterR1->paramVect<double>("NonMuLandauParameterR1");
-  m_NonMuLanParR2 = condNonMuLandauParameterR2->paramVect<double>("NonMuLandauParameterR2");
-  m_NonMuLanParR3 = condNonMuLandauParameterR3->paramVect<double>("NonMuLandauParameterR3");
-  m_NonMuLanParR4 = condNonMuLandauParameterR4->paramVect<double>("NonMuLandauParameterR4");
+    Condition* condNonMuLandauParameterR1 = nullptr;
+    Condition* condNonMuLandauParameterR2 = nullptr;
+    Condition* condNonMuLandauParameterR3 = nullptr;
+    Condition* condNonMuLandauParameterR4 = nullptr;
+    Condition* condtanhScaleFactorsMuon = nullptr;
+    //Condition* condtanhScaleFactorsNonMuon = nullptr;
+    Condition* condtanhCumulHistoMuonR1 = nullptr;
+    Condition* condtanhCumulHistoMuonR2 = nullptr;
+    Condition* condtanhCumulHistoMuonR3 = nullptr;
+    Condition* condtanhCumulHistoMuonR4 = nullptr; 
+    //Condition* condtanhCumulHistoNonMuonR1 = nullptr;
+    //Condition* condtanhCumulHistoNonMuonR2 = nullptr;
+    //Condition* condtanhCumulHistoNonMuonR3 = nullptr;
+    //Condition* condtanhCumulHistoNonMuonR4 = nullptr;
 
-  m_tanhScaleFactorsR1 = condtanhScaleFactors->paramVect<double>("tanhScaleFactorsR1");
-  m_tanhScaleFactorsR2 = condtanhScaleFactors->paramVect<double>("tanhScaleFactorsR2");
-  m_tanhScaleFactorsR3 = condtanhScaleFactors->paramVect<double>("tanhScaleFactorsR3");
-  m_tanhScaleFactorsR4 = condtanhScaleFactors->paramVect<double>("tanhScaleFactorsR4");
+    registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/FOIfactor", condFoiFactor);
+    registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/PreSelMomentum", condPreSelMomentum);
+    registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/MomentumCuts", condMomentumCuts);
+    registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/nMupBins", condNumberMupBins);
+    registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/MupBins", condMupBins);
 
-  m_tanhCumulHistoMuonR1_1 = condtanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_1");
-  m_tanhCumulHistoMuonR1_2 = condtanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_2");
-  m_tanhCumulHistoMuonR1_3 = condtanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_3");
-  m_tanhCumulHistoMuonR1_4 = condtanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_4");
-  m_tanhCumulHistoMuonR1_5 = condtanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_5");
-  m_tanhCumulHistoMuonR1_6 = condtanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_6");
-  m_tanhCumulHistoMuonR1_7 = condtanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_7");
+    registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/NonMuLandauParameterR1",condNonMuLandauParameterR1);
+    registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/NonMuLandauParameterR2",condNonMuLandauParameterR2);
+    registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/NonMuLandauParameterR3",condNonMuLandauParameterR3);
+    registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/NonMuLandauParameterR4",condNonMuLandauParameterR4);
+    registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhScaleFactorsMuon", condtanhScaleFactorsMuon);
+    //registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhScaleFactorsNonMuon", condtanhScaleFactorsNonMuon);
+    registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhCumulHistoMuonR1", condtanhCumulHistoMuonR1);
+    registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhCumulHistoMuonR2", condtanhCumulHistoMuonR2);
+    registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhCumulHistoMuonR3", condtanhCumulHistoMuonR3);
+    registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhCumulHistoMuonR4", condtanhCumulHistoMuonR4);
+    //registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhCumulHistoNonMuonR1", condtanhCumulHistoNonMuonR1);
+    //registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhCumulHistoNonMuonR2", condtanhCumulHistoNonMuonR2);
+    //registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhCumulHistoNonMuonR3", condtanhCumulHistoNonMuonR3);
+    //registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhCumulHistoNonMuonR4", condtanhCumulHistoNonMuonR4);
 
-  m_tanhCumulHistoMuonR2_1 = condtanhCumulHistoMuonR2->paramVect<double>("tanhCumulHistoMuonR2_1");
-  m_tanhCumulHistoMuonR2_2 = condtanhCumulHistoMuonR2->paramVect<double>("tanhCumulHistoMuonR2_2");
-  m_tanhCumulHistoMuonR2_3 = condtanhCumulHistoMuonR2->paramVect<double>("tanhCumulHistoMuonR2_3");
-  m_tanhCumulHistoMuonR2_4 = condtanhCumulHistoMuonR2->paramVect<double>("tanhCumulHistoMuonR2_4");
-  m_tanhCumulHistoMuonR2_5 = condtanhCumulHistoMuonR2->paramVect<double>("tanhCumulHistoMuonR2_5");
+    // Update conditions
+    sc = runUpdate();
+    if (sc.isFailure()) {
+      Error("Could not update conditions from the CondDB.");
+      return sc;
+    }
+    // Extract parameters
+    foiFactor_ = condFoiFactor->param<double>("FOIfactor");
+    preSelMomentum_ = condPreSelMomentum->param<double>("PreSelMomentum");
+    momentumCuts_ = condMomentumCuts->paramVect<double>("MomentumCuts");
 
-  m_tanhCumulHistoMuonR3_1 = condtanhCumulHistoMuonR3->paramVect<double>("tanhCumulHistoMuonR3_1");
-  m_tanhCumulHistoMuonR3_2 = condtanhCumulHistoMuonR3->paramVect<double>("tanhCumulHistoMuonR3_2");
-  m_tanhCumulHistoMuonR3_3 = condtanhCumulHistoMuonR3->paramVect<double>("tanhCumulHistoMuonR3_3");
-  m_tanhCumulHistoMuonR3_4 = condtanhCumulHistoMuonR3->paramVect<double>("tanhCumulHistoMuonR3_4");
-  m_tanhCumulHistoMuonR3_5 = condtanhCumulHistoMuonR3->paramVect<double>("tanhCumulHistoMuonR3_5");
+    //m_nMupBinsR1 = condNumberMupBins->param<int>("nMupBinsR1");
+    //m_nMupBinsR2 = condNumberMupBins->param<int>("nMupBinsR2");
+    //m_nMupBinsR3 = condNumberMupBins->param<int>("nMupBinsR3");
+    //m_nMupBinsR4 = condNumberMupBins->param<int>("nMupBinsR4");
+    m_MupBinsR1 = condMupBins->paramVect<double>("MupBinsR1");
+    m_MupBinsR2 = condMupBins->paramVect<double>("MupBinsR2");
+    m_MupBinsR3 = condMupBins->paramVect<double>("MupBinsR3");
+    m_MupBinsR4 = condMupBins->paramVect<double>("MupBinsR4");
+    
+    // Non-Muons - Region 1-2-3-4: // flag 4
+    m_NonMuLanParR1 = condNonMuLandauParameterR1->paramVect<double>("NonMuLandauParameterR1");
+    m_NonMuLanParR2 = condNonMuLandauParameterR2->paramVect<double>("NonMuLandauParameterR2");
+    m_NonMuLanParR3 = condNonMuLandauParameterR3->paramVect<double>("NonMuLandauParameterR3");
+    m_NonMuLanParR4 = condNonMuLandauParameterR4->paramVect<double>("NonMuLandauParameterR4");
 
-  m_tanhCumulHistoMuonR4_1 = condtanhCumulHistoMuonR4->paramVect<double>("tanhCumulHistoMuonR4_1");
-  m_tanhCumulHistoMuonR4_2 = condtanhCumulHistoMuonR4->paramVect<double>("tanhCumulHistoMuonR4_2");
-  m_tanhCumulHistoMuonR4_3 = condtanhCumulHistoMuonR4->paramVect<double>("tanhCumulHistoMuonR4_3");
-  m_tanhCumulHistoMuonR4_4 = condtanhCumulHistoMuonR4->paramVect<double>("tanhCumulHistoMuonR4_4");
-  m_tanhCumulHistoMuonR4_5 = condtanhCumulHistoMuonR4->paramVect<double>("tanhCumulHistoMuonR4_5");
+    m_tanhScaleFactorsMuonR1 = condtanhScaleFactorsMuon->paramVect<double>("tanhScaleFactorsMuonR1");
+    m_tanhScaleFactorsMuonR2 = condtanhScaleFactorsMuon->paramVect<double>("tanhScaleFactorsMuonR2");
+    m_tanhScaleFactorsMuonR3 = condtanhScaleFactorsMuon->paramVect<double>("tanhScaleFactorsMuonR3");
+    m_tanhScaleFactorsMuonR4 = condtanhScaleFactorsMuon->paramVect<double>("tanhScaleFactorsMuonR4");
 
-  /*
-  m_tanhCumulHistoNonMuonR1_1 = condtanhCumulHistoNonMuonR1->paramVect<double>("tanhCumulHistoNonMuonR1_1");
-  m_tanhCumulHistoNonMuonR1_2 = condtanhCumulHistoNonMuonR1->paramVect<double>("tanhCumulHistoNonMuonR1_2");
-  m_tanhCumulHistoNonMuonR1_3 = condtanhCumulHistoNonMuonR1->paramVect<double>("tanhCumulHistoNonMuonR1_3");
-  m_tanhCumulHistoNonMuonR1_4 = condtanhCumulHistoNonMuonR1->paramVect<double>("tanhCumulHistoNonMuonR1_4");
-  m_tanhCumulHistoNonMuonR1_5 = condtanhCumulHistoNonMuonR1->paramVect<double>("tanhCumulHistoNonMuonR1_5");
-  m_tanhCumulHistoNonMuonR1_6 = condtanhCumulHistoNonMuonR1->paramVect<double>("tanhCumulHistoNonMuonR1_6");
-  m_tanhCumulHistoNonMuonR1_7 = condtanhCumulHistoNonMuonR1->paramVect<double>("tanhCumulHistoNonMuonR1_7");
+    //m_tanhScaleFactorsNonMuonR1 = condtanhScaleFactorsNonMuon->paramVect<double>("tanhScaleFactorsNonMuonR1");
+    //m_tanhScaleFactorsNonMuonR2 = condtanhScaleFactorsNonMuon->paramVect<double>("tanhScaleFactorsNonMuonR2");
+    //m_tanhScaleFactorsNonMuonR3 = condtanhScaleFactorsNonMuon->paramVect<double>("tanhScaleFactorsNonMuonR3");
+    //m_tanhScaleFactorsNonMuonR4 = condtanhScaleFactorsNonMuon->paramVect<double>("tanhScaleFactorsNonMuonR4");
 
-  m_tanhCumulHistoNonMuonR2_1 = condtanhCumulHistoNonMuonR2->paramVect<double>("tanhCumulHistoNonMuonR2_1");
-  m_tanhCumulHistoNonMuonR2_2 = condtanhCumulHistoNonMuonR2->paramVect<double>("tanhCumulHistoNonMuonR2_2");
-  m_tanhCumulHistoNonMuonR2_3 = condtanhCumulHistoNonMuonR2->paramVect<double>("tanhCumulHistoNonMuonR2_3");
-  m_tanhCumulHistoNonMuonR2_4 = condtanhCumulHistoNonMuonR2->paramVect<double>("tanhCumulHistoNonMuonR2_4");
-  m_tanhCumulHistoNonMuonR2_5 = condtanhCumulHistoNonMuonR2->paramVect<double>("tanhCumulHistoNonMuonR2_5");
+    m_tanhCumulHistoMuonR1_1 = condtanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_1");
+    m_tanhCumulHistoMuonR1_2 = condtanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_2");
+    m_tanhCumulHistoMuonR1_3 = condtanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_3");
+    m_tanhCumulHistoMuonR1_4 = condtanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_4");
+    m_tanhCumulHistoMuonR1_5 = condtanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_5");
+    m_tanhCumulHistoMuonR1_6 = condtanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_6");
+    m_tanhCumulHistoMuonR1_7 = condtanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_7");
 
-  m_tanhCumulHistoNonMuonR3_1 = condtanhCumulHistoNonMuonR3->paramVect<double>("tanhCumulHistoNonMuonR3_1");
-  m_tanhCumulHistoNonMuonR3_2 = condtanhCumulHistoNonMuonR3->paramVect<double>("tanhCumulHistoNonMuonR3_2");
-  m_tanhCumulHistoNonMuonR3_3 = condtanhCumulHistoNonMuonR3->paramVect<double>("tanhCumulHistoNonMuonR3_3");
-  m_tanhCumulHistoNonMuonR3_4 = condtanhCumulHistoNonMuonR3->paramVect<double>("tanhCumulHistoNonMuonR3_4");
-  m_tanhCumulHistoNonMuonR3_5 = condtanhCumulHistoNonMuonR3->paramVect<double>("tanhCumulHistoNonMuonR3_5");
+    m_tanhCumulHistoMuonR2_1 = condtanhCumulHistoMuonR2->paramVect<double>("tanhCumulHistoMuonR2_1");
+    m_tanhCumulHistoMuonR2_2 = condtanhCumulHistoMuonR2->paramVect<double>("tanhCumulHistoMuonR2_2");
+    m_tanhCumulHistoMuonR2_3 = condtanhCumulHistoMuonR2->paramVect<double>("tanhCumulHistoMuonR2_3");
+    m_tanhCumulHistoMuonR2_4 = condtanhCumulHistoMuonR2->paramVect<double>("tanhCumulHistoMuonR2_4");
+    m_tanhCumulHistoMuonR2_5 = condtanhCumulHistoMuonR2->paramVect<double>("tanhCumulHistoMuonR2_5");
 
-  m_tanhCumulHistoNonMuonR4_1 = condtanhCumulHistoNonMuonR4->paramVect<double>("tanhCumulHistoNonMuonR4_1");
-  m_tanhCumulHistoNonMuonR4_2 = condtanhCumulHistoNonMuonR4->paramVect<double>("tanhCumulHistoNonMuonR4_2");
-  m_tanhCumulHistoNonMuonR4_3 = condtanhCumulHistoNonMuonR4->paramVect<double>("tanhCumulHistoNonMuonR4_3");
-  m_tanhCumulHistoNonMuonR4_4 = condtanhCumulHistoNonMuonR4->paramVect<double>("tanhCumulHistoNonMuonR4_4");
-  m_tanhCumulHistoNonMuonR4_5 = condtanhCumulHistoNonMuonR4->paramVect<double>("tanhCumulHistoNonMuonR4_5");
-  */
-  m_tanhScaleFactors.push_back(&m_tanhScaleFactorsR1);
-  m_tanhScaleFactors.push_back(&m_tanhScaleFactorsR2);
-  m_tanhScaleFactors.push_back(&m_tanhScaleFactorsR3);
-  m_tanhScaleFactors.push_back(&m_tanhScaleFactorsR4);
+    m_tanhCumulHistoMuonR3_1 = condtanhCumulHistoMuonR3->paramVect<double>("tanhCumulHistoMuonR3_1");
+    m_tanhCumulHistoMuonR3_2 = condtanhCumulHistoMuonR3->paramVect<double>("tanhCumulHistoMuonR3_2");
+    m_tanhCumulHistoMuonR3_3 = condtanhCumulHistoMuonR3->paramVect<double>("tanhCumulHistoMuonR3_3");
+    m_tanhCumulHistoMuonR3_4 = condtanhCumulHistoMuonR3->paramVect<double>("tanhCumulHistoMuonR3_4");
+    m_tanhCumulHistoMuonR3_5 = condtanhCumulHistoMuonR3->paramVect<double>("tanhCumulHistoMuonR3_5");
+
+    m_tanhCumulHistoMuonR4_1 = condtanhCumulHistoMuonR4->paramVect<double>("tanhCumulHistoMuonR4_1");
+    m_tanhCumulHistoMuonR4_2 = condtanhCumulHistoMuonR4->paramVect<double>("tanhCumulHistoMuonR4_2");
+    m_tanhCumulHistoMuonR4_3 = condtanhCumulHistoMuonR4->paramVect<double>("tanhCumulHistoMuonR4_3");
+    m_tanhCumulHistoMuonR4_4 = condtanhCumulHistoMuonR4->paramVect<double>("tanhCumulHistoMuonR4_4");
+    m_tanhCumulHistoMuonR4_5 = condtanhCumulHistoMuonR4->paramVect<double>("tanhCumulHistoMuonR4_5");
+
+    /*
+    m_tanhCumulHistoNonMuonR1_1 = condtanhCumulHistoNonMuonR1->paramVect<double>("tanhCumulHistoNonMuonR1_1");
+    m_tanhCumulHistoNonMuonR1_2 = condtanhCumulHistoNonMuonR1->paramVect<double>("tanhCumulHistoNonMuonR1_2");
+    m_tanhCumulHistoNonMuonR1_3 = condtanhCumulHistoNonMuonR1->paramVect<double>("tanhCumulHistoNonMuonR1_3");
+    m_tanhCumulHistoNonMuonR1_4 = condtanhCumulHistoNonMuonR1->paramVect<double>("tanhCumulHistoNonMuonR1_4");
+    m_tanhCumulHistoNonMuonR1_5 = condtanhCumulHistoNonMuonR1->paramVect<double>("tanhCumulHistoNonMuonR1_5");
+    m_tanhCumulHistoNonMuonR1_6 = condtanhCumulHistoNonMuonR1->paramVect<double>("tanhCumulHistoNonMuonR1_6");
+    m_tanhCumulHistoNonMuonR1_7 = condtanhCumulHistoNonMuonR1->paramVect<double>("tanhCumulHistoNonMuonR1_7");
+
+    m_tanhCumulHistoNonMuonR2_1 = condtanhCumulHistoNonMuonR2->paramVect<double>("tanhCumulHistoNonMuonR2_1");
+    m_tanhCumulHistoNonMuonR2_2 = condtanhCumulHistoNonMuonR2->paramVect<double>("tanhCumulHistoNonMuonR2_2");
+    m_tanhCumulHistoNonMuonR2_3 = condtanhCumulHistoNonMuonR2->paramVect<double>("tanhCumulHistoNonMuonR2_3");
+    m_tanhCumulHistoNonMuonR2_4 = condtanhCumulHistoNonMuonR2->paramVect<double>("tanhCumulHistoNonMuonR2_4");
+    m_tanhCumulHistoNonMuonR2_5 = condtanhCumulHistoNonMuonR2->paramVect<double>("tanhCumulHistoNonMuonR2_5");
+
+    m_tanhCumulHistoNonMuonR3_1 = condtanhCumulHistoNonMuonR3->paramVect<double>("tanhCumulHistoNonMuonR3_1");
+    m_tanhCumulHistoNonMuonR3_2 = condtanhCumulHistoNonMuonR3->paramVect<double>("tanhCumulHistoNonMuonR3_2");
+    m_tanhCumulHistoNonMuonR3_3 = condtanhCumulHistoNonMuonR3->paramVect<double>("tanhCumulHistoNonMuonR3_3");
+    m_tanhCumulHistoNonMuonR3_4 = condtanhCumulHistoNonMuonR3->paramVect<double>("tanhCumulHistoNonMuonR3_4");
+    m_tanhCumulHistoNonMuonR3_5 = condtanhCumulHistoNonMuonR3->paramVect<double>("tanhCumulHistoNonMuonR3_5");
+
+    m_tanhCumulHistoNonMuonR4_1 = condtanhCumulHistoNonMuonR4->paramVect<double>("tanhCumulHistoNonMuonR4_1");
+    m_tanhCumulHistoNonMuonR4_2 = condtanhCumulHistoNonMuonR4->paramVect<double>("tanhCumulHistoNonMuonR4_2");
+    m_tanhCumulHistoNonMuonR4_3 = condtanhCumulHistoNonMuonR4->paramVect<double>("tanhCumulHistoNonMuonR4_3");
+    //m_tanhCumulHistoNonMuonR4_4 = condtanhCumulHistoNonMuonR4->paramVect<double>("tanhCumulHistoNonMuonR4_4");
+    //m_tanhCumulHistoNonMuonR4_5 = condtanhCumulHistoNonMuonR4->paramVect<double>("tanhCumulHistoNonMuonR4_5");
+    */
+  }  
+  m_tanhScaleFactorsMuon.push_back(&m_tanhScaleFactorsMuonR1);
+  m_tanhScaleFactorsMuon.push_back(&m_tanhScaleFactorsMuonR2);
+  m_tanhScaleFactorsMuon.push_back(&m_tanhScaleFactorsMuonR3);
+  m_tanhScaleFactorsMuon.push_back(&m_tanhScaleFactorsMuonR4);
+
+  m_tanhScaleFactorsNonMuon.push_back(&m_tanhScaleFactorsNonMuonR1);
+  m_tanhScaleFactorsNonMuon.push_back(&m_tanhScaleFactorsNonMuonR2);
+  m_tanhScaleFactorsNonMuon.push_back(&m_tanhScaleFactorsNonMuonR3);
+  m_tanhScaleFactorsNonMuon.push_back(&m_tanhScaleFactorsNonMuonR4);
 
   // DLLflag = 3 and 4 for muons
   m_tanhCumulHistoMuonR1.push_back(&m_tanhCumulHistoMuonR1_1);
@@ -267,7 +297,7 @@ StatusCode DLLMuonTool::initialize() {
   m_tanhCumulHistoMuonR2.push_back(&m_tanhCumulHistoMuonR2_3);
   m_tanhCumulHistoMuonR2.push_back(&m_tanhCumulHistoMuonR2_4);
   m_tanhCumulHistoMuonR2.push_back(&m_tanhCumulHistoMuonR2_5);
-
+ 
   m_tanhCumulHistoMuonR3.push_back(&m_tanhCumulHistoMuonR3_1);
   m_tanhCumulHistoMuonR3.push_back(&m_tanhCumulHistoMuonR3_2);
   m_tanhCumulHistoMuonR3.push_back(&m_tanhCumulHistoMuonR3_3);
@@ -284,8 +314,7 @@ StatusCode DLLMuonTool::initialize() {
   m_tanhCumulHistoMuon.push_back(&m_tanhCumulHistoMuonR2);
   m_tanhCumulHistoMuon.push_back(&m_tanhCumulHistoMuonR3);
   m_tanhCumulHistoMuon.push_back(&m_tanhCumulHistoMuonR4);
-
-  //DLLFlag = 3 for non-muons
+ //DLLFlag = 5 for non-muons
   m_tanhCumulHistoNonMuonR1.push_back(&m_tanhCumulHistoNonMuonR1_1);
   m_tanhCumulHistoNonMuonR1.push_back(&m_tanhCumulHistoNonMuonR1_2);
   m_tanhCumulHistoNonMuonR1.push_back(&m_tanhCumulHistoNonMuonR1_3);
@@ -293,7 +322,6 @@ StatusCode DLLMuonTool::initialize() {
   m_tanhCumulHistoNonMuonR1.push_back(&m_tanhCumulHistoNonMuonR1_5);
   m_tanhCumulHistoNonMuonR1.push_back(&m_tanhCumulHistoNonMuonR1_6);
   m_tanhCumulHistoNonMuonR1.push_back(&m_tanhCumulHistoNonMuonR1_7);
-
   m_tanhCumulHistoNonMuonR2.push_back(&m_tanhCumulHistoNonMuonR2_1);
   m_tanhCumulHistoNonMuonR2.push_back(&m_tanhCumulHistoNonMuonR2_2);
   m_tanhCumulHistoNonMuonR2.push_back(&m_tanhCumulHistoNonMuonR2_3);
@@ -309,14 +337,14 @@ StatusCode DLLMuonTool::initialize() {
   m_tanhCumulHistoNonMuonR4.push_back(&m_tanhCumulHistoNonMuonR4_1);
   m_tanhCumulHistoNonMuonR4.push_back(&m_tanhCumulHistoNonMuonR4_2);
   m_tanhCumulHistoNonMuonR4.push_back(&m_tanhCumulHistoNonMuonR4_3);
-  m_tanhCumulHistoNonMuonR4.push_back(&m_tanhCumulHistoNonMuonR4_4);
-  m_tanhCumulHistoNonMuonR4.push_back(&m_tanhCumulHistoNonMuonR4_5);
+  //m_tanhCumulHistoNonMuonR4.push_back(&m_tanhCumulHistoNonMuonR4_4);
+  //m_tanhCumulHistoNonMuonR4.push_back(&m_tanhCumulHistoNonMuonR4_5);
 
   m_tanhCumulHistoNonMuon.push_back(&m_tanhCumulHistoNonMuonR1);
   m_tanhCumulHistoNonMuon.push_back(&m_tanhCumulHistoNonMuonR2);
   m_tanhCumulHistoNonMuon.push_back(&m_tanhCumulHistoNonMuonR3);
   m_tanhCumulHistoNonMuon.push_back(&m_tanhCumulHistoNonMuonR4);
-  
+
   return sc;
 }
 
@@ -742,17 +770,20 @@ std::pair<double,double> DLLMuonTool::calcMuonLL_tanhdist(const LHCb::Track& tra
 
   // Determine the momentum bin for this region
   int pBin=GetPbin(p, region);
-  double tanhdist;
+  double tanhdistMu, tanhdistNonMu;
   // Calculate tanh(dist). The effetive scale factor is after dividing by arc tanh(0.5)
-  tanhdist = tanh(myDist/(*(m_tanhScaleFactors[region]))[pBin]*atanh05);
-  if(msgLevel(MSG::DEBUG)) debug() << "The value of Tanhdist is = " << tanhdist << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "m_tanhScaleFactorsMuon[region] = " << (*(m_tanhScaleFactorsMuon[region]))[pBin] << endmsg;
+  tanhdistMu = tanh(myDist/(*(m_tanhScaleFactorsMuon[region]))[pBin]*atanh05);
+  if(msgLevel(MSG::DEBUG)) debug() << "The value of Tanhdist Muon is = " << tanhdistMu << endmsg;
+  tanhdistNonMu = tanh(myDist/(*(m_tanhScaleFactorsNonMuon[region]))[pBin]*atanh05);
+  if(msgLevel(MSG::DEBUG)) debug() << "The value of Tanhdist NonMuon is = " << tanhdistNonMu << endmsg;
 
   // Calculate Prob(mu)  for a given track using tanh(dist);
-  ProbMu = calc_ProbMu_tanh(tanhdist, pBin, region );
+  ProbMu = calc_ProbMu_tanh(tanhdistMu, pBin, region );
   if(msgLevel(MSG::DEBUG)) debug() << "The value of ProbMu is = " << ProbMu << endmsg;
 
   // Calculate ProbNonMu using Landau fits 
-  ProbNonMu = calc_ProbNonMu_tanh(tanhdist, pBin, region);
+  ProbNonMu = calc_ProbNonMu_tanh(tanhdistNonMu, pBin, region);
   if(msgLevel(MSG::DEBUG)) debug() << "The value of ProbNonMu is = " << ProbNonMu << endmsg;
 
   // Using histograms it's not unexpected that some bins are empty. Use very small prob as a protection for the log
@@ -767,8 +798,9 @@ std::pair<double,double> DLLMuonTool::calcMuonLL_tanhdist(const LHCb::Track& tra
 
   if (msgLevel(MSG::DEBUG) ) {
     debug() << "calcMuonLL_tanhdist: region: " << region << " momentum: " << p
-             << " pBin: " <<  pBin << " dist " << myDist << " tanh(dist2): "
-             << tanhdist << " ProbMu: " << ProbMu << " ProbNonMu: " << ProbNonMu
+             << " pBin: " <<  pBin << " dist " << myDist << " tanh(dist2) for Mu: "
+             << tanhdistMu << " tanh(dist2) for Non Mu: " << tanhdistNonMu << " ProbMu: " 
+             << ProbMu << " ProbNonMu: " << ProbNonMu
              <<" DLL: " << log(ProbMu/ProbNonMu) << endmsg;
   }
 
@@ -815,7 +847,7 @@ std::pair<double,double> DLLMuonTool::calcMuonLL_tanhdist_landau(const LHCb::Tra
   int pBin=GetPbin(p, region);
   double tanhdist;
   // Calculate tanh(dist). The effetive scale factor is after dividing by arc tanh(0.5)
-  tanhdist = tanh(myDist/(*(m_tanhScaleFactors[region]))[pBin]*atanh05);
+  tanhdist = tanh(myDist/(*(m_tanhScaleFactorsMuon[region]))[pBin]*atanh05);
   if(msgLevel(MSG::DEBUG)) debug() << "The value of Tanhdist is = " << tanhdist << endmsg;
 
   // Calculate Prob(mu)  for a given track using tanh(dist);

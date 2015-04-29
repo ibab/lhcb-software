@@ -16,22 +16,9 @@ MuonIDAlgLite::MuonIDAlgLite(const std::string &name, ISvcLocator *pSvcLocator)
                   tesPathOutputMuonPid_ = LHCb::MuonPIDLocation::Default);
   declareProperty("MuonTrackLocation",
                   tesPathOutputMuonTracks_ = LHCb::TrackLocation::Muon);
-  // Ignore MuonID info from conditions database. Use the ones from options file:
-  //declareProperty("OverrideDB",m_OverrideDB=false);
-  // Pre-selection momentum
-  declareProperty( "PreSelMomentum", m_PreSelMomentum = 3000.0);
-  // Different depths of stations considered in different momentum ranges
-  declareProperty( "MomentumCuts", m_MomentumCuts );
-  //Create container with all muonTracks (even if not in acceptance or !IsMuon)
-  //declareProperty("AllMuonTracks", m_DoAllMuonTracks = false);
-  //want to find quality?
-  //declareProperty("FindQuality", m_FindQuality = true);
-  //declareProperty( "nMax_bin", m_nMax = 4000 ); // number of steps 
-
-  // the FoI factor is now defined in the CommonMuonTool
-  //declareProperty("FOIfactor",m_foifactor = 1.2);
  
-  //declareProperty("useTTrack", useTTrack_ = false);
+  // Usage of TTracks for MuonID
+  declareProperty("useTTrack", useTTrack_ = false);
 
   //--------------------
   // flag to use DLL:
@@ -116,7 +103,7 @@ StatusCode MuonIDAlgLite::execute() {
     counter("nGoodOffline")++;
     const auto extrapolation = muonTool_->extrapolateTrack(*track);
     if(msgLevel(MSG::DEBUG)) debug() << "The extrapolation in X went to " << extrapolation[1].first << ", " << extrapolation[2].first << ", "<< extrapolation[3].first << ", " << extrapolation[4].first << endmsg;
-    if(msgLevel(MSG::DEBUG)) debug() << "The extrapolation in X went to " << extrapolation[1].second << ", " << extrapolation[2].second << ", "<< extrapolation[3].second << ", " << extrapolation[4].second << endmsg;
+    if(msgLevel(MSG::DEBUG)) debug() << "The extrapolation in Y went to " << extrapolation[1].second << ", " << extrapolation[2].second << ", "<< extrapolation[3].second << ", " << extrapolation[4].second << endmsg;
     counter("nExtrapolated")++;
     if (!muonTool_->preSelection(*track, extrapolation)) {
       continue;
@@ -156,6 +143,7 @@ StatusCode MuonIDAlgLite::execute() {
         std::tie(ProbMu, ProbNonMu) = DLLTool_->calcMuonLL_tanhdist_landau(*track,extrapolation,hits,occupancies);
       }
       else if(m_dllFlag == 5){
+        if(msgLevel(MSG::DEBUG)) debug() << "######## DLLFLAG = 5 ##### " << endmsg;
         std::tie(ProbMu, ProbNonMu) = DLLTool_->calcMuonLL_tanhdist(*track,extrapolation,hits,occupancies);
       }
       muPid->setMuonLLMu(log(ProbMu));
