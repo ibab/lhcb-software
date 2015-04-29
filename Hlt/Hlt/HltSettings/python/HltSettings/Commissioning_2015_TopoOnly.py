@@ -126,11 +126,11 @@ class Commissioning_2015_TopoOnly( object ):
                                                , 'DiMuonHighMass_TrChi2'    :    3
                                                , 'DiMuonHighMass_M'         : 2700
                                                , 'DiMuonHighMass_GEC'       : 'Loose'
-                                               , 'MultiMuonNoIP_P'          : 3000
-                                               , 'MultiMuonNoIP_PT'         :  500
-                                               , 'MultiMuonNoIP_TrChi2'     :    3.
-                                               , 'MultiMuonNoIP_GT'         :  2.5
-                                               , 'MultiMuonNoIP_GEC'        : 'Loose'
+                                               , 'MultiMuonNoL0_P'          : 3000
+                                               , 'MultiMuonNoL0_PT'         :  500
+                                               , 'MultiMuonNoL0_TrChi2'     :    3.
+                                               , 'MultiMuonNoL0_GT'         :  2.5
+                                               , 'MultiMuonNoL0_GEC'        : 'Loose'
                                                ,'L0Channels'               : {
                                                    'SingleMuonHighPT' : ( 'Muon', ),
                                                    'SingleMuonNoIP'   : ( 'Muon', ),
