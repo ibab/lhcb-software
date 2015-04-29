@@ -64,8 +64,15 @@ MaxOTHits = 15000 #--> move to CommonForwardOptions, this one is used e.g. in Hl
 
 MatchVeloMuonOptions = {"MaxChi2DoFX" : 10.,
                         "XWindow" : 200.,
-                        "YWindow" : 200.  }
-MatchVeloTTMuonOptions = MatchVeloMuonOptions
+                        "YWindow" : 200.
+                        }
+
+MatchVeloTTMuonOptions = {"MaxChi2DoFX" : 20.,
+                          "XWindow" : 200.,
+                          "YWindow" : 200.,
+                          "FoIToleranceX" : 6.,
+                          "FoIToleranceY" : 1.5
+                          }
 
 VeloTTToolOptions = {"minMomentum" : 0.0,
                      "minPT" : 100.0 ,
