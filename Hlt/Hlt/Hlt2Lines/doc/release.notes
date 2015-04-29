@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+!========================= Hlt2Lines v9r8 2015-04-28 =========================
+
+! 2015-04-30 - Roel Aaij
+ - Fix dependency problem with TisTosTagger instantiated from Hlt2ParticleFilter.
+
 ! 2015-04-29 - Jason Andrews
  - Tuning of B2Kpi0 lines
 
@@ -25,12 +30,10 @@
  - CharmHad:
    . Slightly modified DV4BCombiner to add filter on daughter tracks
    . Setup reasonable default cuts for D0->HHHH, D->HHHKs
-   . Added default cuts values for XSec D->HHHH line according to the updated 
+   . Added default cuts values for XSec D->HHHH line according to the updated
      combiner
  - PID:
    . Reduced timing of the D0->K3pi line and re-enabled
-
-!========================= Hlt2Lines v9r8 2015-04-28 =========================
 
 ! 2015-04-28 - Olli Lupton
  - PID:

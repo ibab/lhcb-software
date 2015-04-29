@@ -89,17 +89,8 @@ class PhotonFilter(Hlt2ParticleFilter):
                                            '(PT > %(PT_MIN)s) & (P > %(P_MIN)s)',
                                            [Hlt2Photons],
                                            nickname=name,
+                                           tistos = 'PhotonTisTos',
                                            shared=True)
-
-
-class PhotonTOSFilter(Hlt2TisTosParticleTagger):
-    """Filter photons according to the TISSTOS specs."""
-    def __init__(self):
-        super(PhotonTOSFilter, self).__init__('Radiative_L0Photon',
-                                              'PhotonTisTos',
-                                              [PhotonFilter()],
-                                              shared=True)
-
 
 # Converted photons builder
 class ConvPhotonFilter(Hlt2ParticleFilter):
@@ -183,7 +174,6 @@ class RadiativeCombiner(Hlt2Combiner):
         if converted_photons:
             photons = [ConvPhotonAll()]
         else:
-            #photons = [PhotonTOSFilter()]
             photons = [PhotonFilter()]
         super(RadiativeCombiner, self).__init__('Radiative_%s' % name,
                                                 decay,

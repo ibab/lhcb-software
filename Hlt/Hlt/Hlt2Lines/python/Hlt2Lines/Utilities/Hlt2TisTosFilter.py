@@ -218,10 +218,15 @@ class Hlt2TisTosStage(Hlt2Stage):
             ## We already have everything that the member depends on, only add
             ## it here as dependency itself.
             deps += [stage]
-            tmp = []
-            stage = Hlt2TisTosParticleTagger(self._name(), localSpecs, [stage],
-                                             self._nickname(), self._shared()).stage(tmp, cuts)
+            tagger = Hlt2TisTosParticleTagger(self._name(), localSpecs, [stage],
+                                              self._nickname(), self._shared())
+            ## We also need the dependencies of the TisTosParticleTagger (for example for L0)
+            deps += tagger.dependencies(cuts)
 
+            ## Make the tagger stage, the dependencies have been dealt with above.
+            tmp = []
+            stage = tagger.stage(tmp, cuts)
+            
         stages += deps
         return stage
 
