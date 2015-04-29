@@ -4,7 +4,7 @@ version           v23r6
 branches cmt doc
 
 use Hlt1Lines           v7r10    Hlt   # Roel Aaij, Vava Gligorov, Gerhard Raven
-use Hlt1Muons           v1r13    Hlt   # Vasilis Syropoulos
+use Hlt1Muons           v1r14    Hlt   # Vasilis Syropoulos
 use Hlt2Lines           v9r8     Hlt   # Vava Gligorov, Roel Aaij, Gerhard Raven
 use Hlt2SharedParticles v7r6     Hlt   # Vava Gligorov
 use HltBase             v15r6    Hlt   # Gerhard Raven
@@ -15,7 +15,7 @@ use HltCosmics          v1r3     Hlt   #
 use HltDisplVertices    v4r3     Hlt   # Pieter David, Victor Coco
 use HltGlobalMonitor    v4r6     Hlt   # Eric van Herwijnen
 use HltL0Conf           v4r2     Hlt   # Johannes Albrecht
-use HltLine             v7r9     Hlt   # Roel Aaij, Gerhard Raven
+use HltLine             v7r10    Hlt   # Roel Aaij, Gerhard Raven
 use HltLuminosity       v4r3     Hlt   # Rosen Matev
 use HltRawData          v5r4     Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v3r2     Hlt   # Jose Angel Hernando-Morata
