@@ -7,6 +7,9 @@
 
 !========================= HltLine v7r10 2015-04-29 =========================
 
+! 2015-04-29 - Roel Aaij
+ - Fix spurious input/output warnings due to nested SubSequences.
+
 ! 2015-04-29 - Sascha Stahl
  - Added "TracksOutContainers" to possible outputs in HltLine.
 
@@ -39,7 +42,7 @@
 ! 2015-03-03 - Roel Aaij
  - Allow Hlt2Member to be shared through a special constructor argument. All
    arguments are checked, but use with care.
-   
+
 ! 2015-02-17 - Roel Aaij
  - Return Hlt1 and Hlt2 lines in a defined order from HltLine.hlt{1,2}Lines()
 
@@ -103,11 +106,11 @@
 
 ! 2014-06-27 - Gerhard Raven
  - add Hlt1 decreports decoding to Hlt2 lines which do Hlt1 filtering
- - make sure that in Hlt2Lines the _offline_ configuration for the 
+ - make sure that in Hlt2Lines the _offline_ configuration for the
    TISTOS tagger configuration is used
 
 ! 2014-06-18 - Gerhard Raven
- - force Hlt1 and Hlt2 line names to start with either Hlt1 or Hlt2 -- 
+ - force Hlt1 and Hlt2 line names to start with either Hlt1 or Hlt2 --
    previously lines had only to have Hlt1 or Hlt2 somewhere in there name...
 
 !========================= HltLine v7r2 2014-06-16 =========================
@@ -142,7 +145,7 @@
  - replace internal string to Gaudi::StringKey
 
 ! 2014-01-28 - Gerhard Raven
- - remove extraneous ;, test against 0 
+ - remove extraneous ;, test against 0
 
 ! 2014-01-25 - Gerhard Raven
  - run clang-format
@@ -168,7 +171,7 @@
 
 !========================= HltLine v5r2 2013-08-27 =========================
 ! 2013-08-21 - Gerhard Raven
- - add explicit L0DU decoding prior to any L0 filter in an Hlt2 line 
+ - add explicit L0DU decoding prior to any L0 filter in an Hlt2 line
 
 !========================= HltLine v5r1p8 2013-04-09 =========================
 ! 2013-03-29 - Rob Lambert
@@ -195,7 +198,7 @@
 
 ! 2011-07-06 - Gerhard Raven
  - add check for multiple algorithms with the same output location
- 
+
 !========================== HltLine v5r1p6 2011-06-24 ===================
 ! 2011-05-12 - Gerhard Raven
  - add generator for bindmember members
@@ -226,7 +229,7 @@
 
 ! 2011-02-28 - Ulrich Kerzel
  - add TisTosParticleTagger to list of allowed Hlt2Members
- 
+
 ! 2010-02-24 - Gerhard Raven
  - check whenever a configurable gets instantiated that it does not
    yet exist
@@ -263,24 +266,24 @@
 
       modify the symbols for new streamers framework :
 
-     now one need to use 
+     now one need to use
 
 	    " execute ( decodeTT ) " instead of " decodeTT "
- 
-      or, alternatively, one can perform the local 
+
+      or, alternatively, one can perform the local
       reassignement, e.g in Preambulo:
 
      " decodeTT = execute ( decodeTT ) "
-  
+
 ! 2010-11-22 - Vanya Belyaev
 
  - HltDecodeRaw :
 
-      register symbols for new streamers framework 
+      register symbols for new streamers framework
 
- - cmt/requirements 
+ - cmt/requirements
 
-      version increment to v4r6 
+      version increment to v4r6
 
 !========================== HltLine v4r5p1  2010-09-08 ===================
 !2010-09-08 - Johannes Albrecht
@@ -318,12 +321,12 @@
 !========================== HltLine v4r1  2010-04-21 ===================
 ! 2010-04-16 - V. Gligorov
  - Let HltLine know about helper functions to be used in the lifetime unbiased
-   hlt1 hadron lines, code written by U. Kerzel. 
+   hlt1 hadron lines, code written by U. Kerzel.
 
 !========================== HltLine v4r0  2010-03-28 ===================
 ! 2010-03-17 - V. Gligorov
  - Continuing work on Savannah tasks #12691,13784.
-   Move reconstruciton code to HltTracking, including 
+   Move reconstruciton code to HltTracking, including
      HltPVs
      HltReco
      Hlt2Tracking
@@ -331,14 +334,14 @@
      HltTrackNames
      HltVertexNames
    Tell HltLine about the output location of the Match reconstruction.
- 
+
 ! 2010-03-15 - V. Gligorov
  - Update HltLine to tell it about where the Match reconstruction puts its
    output tracks.
 
 ! 2010-03-11 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691. See Savannah pages
-   for details.  
+   for details.
 
 ! 2010-03-07 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691. Clean up the tracking
@@ -350,7 +353,7 @@
 ! 2010-03-02 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691. Major changes
    in this round
-   . Create Hlt2TrackingConfigurations which now holds all the 
+   . Create Hlt2TrackingConfigurations which now holds all the
      tracking configurations which are known to Hlt2
    . Modify Hlt2Tracking and HltTrackNames so that both creation
      and retrieval of track containers is done in the same way
@@ -358,7 +361,7 @@
      relevant function in HltTrackNames
 
 ! 2010-02-26 - V. Gligorov
- - Continuing work on Savannah tasks 13784 and 12691. Major changes 
+ - Continuing work on Savannah tasks 13784 and 12691. Major changes
    in this round
    . Create HltVertexNames to complement HltTrackNames
    . Add new symbols to HltTrackNames. Move the "rules" which define
@@ -371,16 +374,16 @@
    for details. Major changes in this round
    . Move Hlt2PID here and rename it to Hlt2Tracking
    . Create new file HltTrackNames to hold shared container names
-   . Remove almost everything from HltReco 
- 
+   . Remove almost everything from HltReco
+
 ! 2010-02-22 - V. Gligorov
  - Contine the reorganization of Hlt tracking, see Savannah 13784, 12691
    for details. Major changes in this round
    . Export MinimalRZVelo from HltReco to allow Hlt2 reconstruction to be
-     moved into Hlt2PID  
-   . Create a new file HltPVs.py which defines the Hlt primary vertex 
+     moved into Hlt2PID
+   . Create a new file HltPVs.py which defines the Hlt primary vertex
      reconstruction. This correctly picks up the relevant pieces from
-     HltReco and Hlt2PID and speels out the dependencies explicitly. 
+     HltReco and Hlt2PID and speels out the dependencies explicitly.
 
 !========================== HltLine v3r2  2010-03-04 ===================
 ! 2010-03-04 - Gerhard Raven
@@ -429,10 +432,10 @@
 
 ! 2010-01-19 - Gerhard Raven
  - move HLT agnostic part of HltLine in SelectionLine (which can be shared by
-   the stripping), replace old HltLine by Hlt::Line which inherits from 
+   the stripping), replace old HltLine by Hlt::Line which inherits from
    ::Selection::Line
  - adapt python HltLine to HltLine -> Hlt::Line migration
- - change default Hlt2 HLT filter to just 'not exclusive lumi' (as Hlt1L0.* is 
+ - change default Hlt2 HLT filter to just 'not exclusive lumi' (as Hlt1L0.* is
    a tiny fraction of the Hlt1Global accepts)
  - remove obsolete and unused PV argument to Hlt2Line
  - update version in requirements to v3r0
@@ -448,7 +451,7 @@
 ! 2009-12-27 - Gerhard Raven
  - add HltCommon to the requirements to avoid warnings in the nightly build
    about missing configurables
- 
+
 ! 2009-12-24 - Gerhard Raven
  - migrate from IHltDataSvc to Hlt::I{Data,Register,Inspector}
 
@@ -477,7 +480,7 @@
  - python/HltLine/HltReco.py : fix Savannah bug #60543.
 
 ! 2009-12-10 - V. Gligorov
- - python/HltLine/HltReco.py : add objects for doing the full 3D Velo tracking and PV 
+ - python/HltLine/HltReco.py : add objects for doing the full 3D Velo tracking and PV
    reconstruction in the case of an open Velo.
 
  2009-12-04 - Gerhard Raven
@@ -490,26 +493,26 @@
 
 ! 2009-11-27 - Patrick Koppenburg
    https://savannah.cern.ch/task/index.php?12690
- - Remove PV = True/False argument of HltLine. The PV should be loaded 
+ - Remove PV = True/False argument of HltLine. The PV should be loaded
    explicitly when needed.
 
 ! 2009-11-26 - Antonio Perez-Calero
- - added histogram (profile) for the monitoring of number of candidates passing each 
+ - added histogram (profile) for the monitoring of number of candidates passing each
    algorithm inside in a given line (implemented only for HltAlgorithms as used in Hlt1)
 
 ! 2009-11-25 - Patrick Koppenburg
  - The Hlt2 reconstruction is separated in blocks depending on what is actually
-    needed. Allows to run making only muons and pions without 
+    needed. Allows to run making only muons and pions without
     requiring the calo decoding, for instance.
     (https://savannah.cern.ch/task/?12690)
    . Remove Reco property of Hltline (backwards incompatible)
    . More to come
- - Requires tags pkoppenb_20091125 of HltConf, HltLine, Hlt2Lines, 
+ - Requires tags pkoppenb_20091125 of HltConf, HltLine, Hlt2Lines,
    HltSharedParticles
  - v2r0
 
 ! 2009-11-23 - Patrick Koppenburg
- - Use PatPV2DFit3D in Hlt1 and PatPV3D in Hlt2. 
+ - Use PatPV2DFit3D in Hlt1 and PatPV3D in Hlt2.
    . HltReco.py : Change algorithms to be used
    . HltLine.py : Depend on PV3D for Hlt2 lines requiring PV
    . Requires tags pkoppenb-20091123 of Hlt2SharedParticles and DaVinciTools.
@@ -527,11 +530,11 @@
  - if an Hlt2 line does not require anything specific about Hlt1,
    add a filter to it which verifies that the event is not exclusive lumi,
    i.e. require HLT_PASS_RE('Hlt1(?!Lumi).*Decision')
- 
+
 
 !========================== HltLine v1r8 2009-10-28 ===================
 ! 2009-10-29 - Patrick Koppenburg
- - Change default of AcceptIfSlow to false (for DaVinci). 
+ - Change default of AcceptIfSlow to false (for DaVinci).
    In the pit this will be changed to true.
 
 ! 2009-10-29 - Patrick Koppenburg
@@ -548,11 +551,11 @@
 ! 2009-10-15 - Gerhard Raven
  - add a flag 'Reco' to Hlt2Lines constructor to flag if line wants
    reconstruction run or not. Default is True. Note: this is a temporary
-   (quick) solution, would be better if reco is (automatically) pulled in 
+   (quick) solution, would be better if reco is (automatically) pulled in
    by the dependency resolution
- - in Hlt2Lines, 'usePV' now does PV2D instead of PV3D (as 2D is what 
+ - in Hlt2Lines, 'usePV' now does PV2D instead of PV3D (as 2D is what
    is used!)
- - streamline HltReco.py 
+ - streamline HltReco.py
 
 ! 2009-10-13 - Patrick Koppenburg
  - Adapt to new options of PatDownstream
@@ -590,7 +593,7 @@
  - Comment out 3D PV from Hlt2 sequence
 
 ! 2009-08-10 - Gerhard Raven
- - add callback support to member: allow to call a specified function after 
+ - add callback support to member: allow to call a specified function after
    the member has been used to create a configurable, with the instance as
    argument
  - streamline decoderaw -- can now also support _not_ disabling data-on-demand
@@ -612,17 +615,17 @@
 !========================== HltLine v1r3 2009-07-23 ===================
 ! 2009-07-15 - Vanya BELYAEV
 
- - move Hlt1Units to Hlt/Hlt1Lines 
+ - move Hlt1Units to Hlt/Hlt1Lines
 
- - cmt/requirements 
+ - cmt/requirements
 
-      version increment to v1r3 
+      version increment to v1r3
 
 
 !========================== HltLine v1r2 2009-07-03 ===================
 ! 2009-07-01 - Gerhard Raven
  - allow to give a list of incidents which HltLine will listen for
-   during processing, and, if any of them occur, will result in a 
+   during processing, and, if any of them occur, will result in a
    (single!) bit to be set in the HltDecReport
 
 ! 2009-06-30 - Gerhard Raven
