@@ -4,6 +4,13 @@ for Charm WG.
 """
 
 _selections = (
+    'StrippingD02HHForXSec',
+    'StrippingD02K3PiForXSec',
+    'StrippingD2HHHForXSec',
+    'StrippingD2PhiPiForXSec',
+    'StrippingLambdac2PHHForXSec',
+    'StrippingXic2PKKPiForXSec',
+    'StrippingXic2PKPiForXSec',
     "StrippingB2ppipiSigmacmm_Lcpi" ,
     'StrippingPromptCharm'
     )
