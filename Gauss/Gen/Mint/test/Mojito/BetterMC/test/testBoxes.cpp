@@ -34,12 +34,12 @@ class AmpsPdf
 protected:
   FitAmpSum _amps;
 public:
-  double un_normalised(){
+  double un_normalised_noPs(){
     complex<double> cval = _amps.getVal();
     return cval.real()*cval.real() + cval.imag()*cval.imag();
   }
 
-  AmpsPdf(IDalitzEventAccess* events=0) 
+  AmpsPdf(IDalitzEventList* events) 
     : DalitzPdfBase(events)
     , _amps(this)
   {
@@ -53,6 +53,7 @@ int testBoxes(){
   // make list of particles:
   // mother, followed by final states:
 
+  cout << "hello from testBoxes()" << endl;
 
   gErrorIgnoreLevel = 2000;
 
@@ -61,12 +62,16 @@ int testBoxes(){
   int Nevents=100000;
 
   DalitzEventList eventList;
+
+  cout << "made eventList, now about to make area" << endl;
   DalitzArea area(pdg);
 
+  cout << "made area" << endl;
   gRandom = new TRandom3;
 
+  cout << "about to start loop " << endl;
   for(int i=0; i< Nevents/2; i++){
-    if(i%1000 == 0){
+    if(i%1000 == 0 || i < 10){
       cout << " trying event number " << i << endl;
       cout << " current list size " << eventList.size() << endl;
     }
@@ -76,6 +81,7 @@ int testBoxes(){
     }
   }
 
+  cout << "made events, have " << eventList.size() << " envents." << endl;
   /*
   DalitzCoordinate phi(1,2), rho(3,4);
   phi.setMinMax(1.0*GeV*GeV, 1.1*GeV*GeV);
@@ -140,6 +146,10 @@ int testBoxes(){
 }
 
 int testBoxGeneration(){
+  // this does not work, not sure why, needs debugging.
+
+  cout << "hello from testBoxGeneration()" << endl;
+
   time_t startTime = time(0);
 
   NamedParameter<int>  Nevents("Nevents", 10000);
@@ -151,13 +161,17 @@ int testBoxGeneration(){
 
   gRandom->SetSeed(RandomSeed);
 
+  cout << "about to make event list..." << endl;
   DalitzEventList eventList;
-  eventList.generatePhaseSpaceEvents(1, pdg);
+  cout << "... and fill it." << endl;
+  eventList.generatePhaseSpaceEvents(10, pdg);
 
-  //  AmpsPdf amps(&eventList);
-  AmpsPdf amps;
+  cout << "filled it with " << eventList.size() << " events." << endl;
+  AmpsPdf ampspdf(&eventList);
+  //AmpsPdf ampspdf;
 
-  DalitzBox phaseSpaceBox(pdg, &amps);
+  cout << "made eventlist and pdf, now making my first box" << endl;
+  DalitzBox phaseSpaceBox(pdg, &ampspdf);
   cout << " made box " << endl;
 
   /*
@@ -167,21 +181,21 @@ int testBoxGeneration(){
   singleBoxPlots.save("singleBoxPlots.root");
   */
 
-  FitAmpSum Amps(&eventList);
+  FitAmpSum AmpsSum(&eventList);
   
   double nSigma = 3;
   //  double maxWidth = 2*  2*1*GeV * (nSigma*75)*MeV; // in m^2
-  double maxWidth = 2*1*GeV * (nSigma*75.0)*MeV; // in m^2
+  //  double maxWidth = 2*1*GeV * (nSigma*75.0)*MeV; // in m^2
   // this corresponds to a width (in m, rather than m^2) of
   // nSigma * 75 MeV for a particle of 1GeV mass.
   //  DalitzBoxSet_Method2 boxes(Amps.makeBoxes(nSigma).split(2).splitIfWiderThan(maxWidth), pdg);
   //DalitzBoxSet_Method2 boxes(Amps.makeBoxes(nSigma).splitIfWiderThan(maxWidth), pdg);
-  DalitzBoxSet_Method2 boxes(Amps.makeBoxes(nSigma), pdg);
+  DalitzBoxSet_Method2 boxes(AmpsSum.makeBoxes(nSigma), pdg);
 
   cout << " made " << boxes.size() << " boxes " << endl;
 
 
-  boxes.setPDF(&amps);
+  boxes.setPDF(&ampspdf);
   cout << " set PDF" << endl;
 
   time_t generationStartTime = time(0);
@@ -229,8 +243,8 @@ int testBoxGeneration(){
   return 0;
 }
 int main(){
-  return testBoxGeneration();
-  //return testBoxes();
+  //return testBoxGeneration();
+  return testBoxes();
 }
 
 //

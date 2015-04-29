@@ -2021,10 +2021,29 @@ int NamedDecayTreeList::make4PiList() {
   if(dbThis) cout << "fifth decay: " << *dk << endl;
   delete dk;
   */
-  //D0 -> sigma_1 pi-pi+, sigma_1->pi+pi-
+  //D0 -> sigma_1 sigma_1, both sigma_1->pi+pi-
   dk = new DecayTree(421);
   dk->addDgtr(999001)->addDgtr(211, -211);
   dk->addDgtr(999001)->addDgtr(211, -211);
+  add(*dk);
+  if(dbThis) cout << "sixth decay: " << *dk << endl;
+  delete dk;
+
+  // the below is discouraged, use D->sigma nonResS instead.
+  //D0 -> sigma_1 pi-pi+, sigma_1->pi+pi-
+  /*
+  dk = new DecayTree(421);
+  dk->addDgtr(999001)->addDgtr(211, -211);
+  dk->addDgtr(211, -211);
+  add(*dk);
+  if(dbThis) cout << "sixth decay: " << *dk << endl;
+  delete dk;
+  */
+
+   //D0 -> sigma_1, nonResS, nonResS -> pi-pi+, sigma_1->pi+pi-
+  dk = new DecayTree(421);
+  dk->addDgtr(999001)->addDgtr(211, -211);
+  dk->addDgtr(9981)->addDgtr(211, -211);
   add(*dk);
   if(dbThis) cout << "sixth decay: " << *dk << endl;
   delete dk;

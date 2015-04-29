@@ -37,6 +37,8 @@ DalitzEvent::DalitzEvent()
   : _rememberPhaseSpace(-9999.)
   , _aValue(-9999.)
   , _weight(1)
+  , _vectorOfValues()
+  , _vectorOfWeights()
   , _generatorPdfRelativeToPhaseSpace(1)
   , _permutationIndex(0)
   , _perm()
@@ -50,6 +52,8 @@ DalitzEvent::DalitzEvent(const DalitzEventPattern& pat
   , _rememberPhaseSpace(-9999.)
   , _aValue(-9999.)
   , _weight(1)
+  , _vectorOfValues()
+  , _vectorOfWeights()
   , _generatorPdfRelativeToPhaseSpace(1)
   , _s(pat.size())
   , _t(pat.size())
@@ -71,6 +75,8 @@ DalitzEvent::DalitzEvent(const DalitzEventPattern& pat
   , _rememberPhaseSpace(-9999.)
   , _aValue(-9999.)
   , _weight(1)
+  , _vectorOfValues()
+  , _vectorOfWeights()
   , _generatorPdfRelativeToPhaseSpace(1)
   , _s(pat.size())
   , _t(pat.size())
@@ -131,6 +137,8 @@ DalitzEvent::DalitzEvent(const DalitzEventPattern& pat
   , _rememberPhaseSpace(-9999.)
   , _aValue(-9999.)
   , _weight(1)
+  , _vectorOfValues()
+  , _vectorOfWeights()
   , _generatorPdfRelativeToPhaseSpace(1)
   , _s(pat.size())
   , _t(pat.size())
@@ -147,6 +155,8 @@ DalitzEvent::DalitzEvent(const DalitzEventPattern& pat)
   , _rememberPhaseSpace(-9999.)
   , _aValue(-9999.)
   , _weight(1)
+  , _vectorOfValues()
+  , _vectorOfWeights()
   , _generatorPdfRelativeToPhaseSpace(1)
   , _s(pat.size())
   , _t(pat.size())
@@ -164,6 +174,8 @@ DalitzEvent::DalitzEvent(const DalitzEventPattern& pat, TRandom* rnd)
   , _rememberPhaseSpace(-9999.)
   , _aValue(-9999.)
   , _weight(1)
+  , _vectorOfValues()
+  , _vectorOfWeights()
   , _generatorPdfRelativeToPhaseSpace(1)
   , _s(pat.size())
   , _t(pat.size())
@@ -206,6 +218,8 @@ DalitzEvent::DalitzEvent(const DalitzEvent* other)
   , _rememberAmpsFast(other->_rememberAmpsFast)
   , _aValue(other->_aValue)
   , _weight(other->_weight)
+  , _vectorOfValues(other->_vectorOfValues)
+  , _vectorOfWeights(other->_vectorOfWeights)
   , _generatorPdfRelativeToPhaseSpace(other->_generatorPdfRelativeToPhaseSpace)
   , _s(other->_s)
   , _t(other->_t)
@@ -229,6 +243,8 @@ DalitzEvent::DalitzEvent(const DalitzEvent& other)
   , _rememberAmpsFast(other._rememberAmpsFast)
   , _aValue(other._aValue)
   , _weight(other._weight)
+  , _vectorOfValues(other._vectorOfValues)
+  , _vectorOfWeights(other._vectorOfWeights)
   , _generatorPdfRelativeToPhaseSpace(other._generatorPdfRelativeToPhaseSpace)
   , _s(other._s)
   , _t(other._t)
@@ -247,6 +263,8 @@ DalitzEvent::DalitzEvent(TNtupleD* ntp)
   : _rememberPhaseSpace(-9999.)
   , _aValue(-9999.)
   , _weight(1)
+  , _vectorOfValues()
+  , _vectorOfWeights()
   , _generatorPdfRelativeToPhaseSpace(1)
   , _permutationIndex(0)
 {
@@ -272,6 +290,33 @@ double DalitzEvent::getWeight() const{
 void DalitzEvent::setWeight(double w){
   _weight = w;
 }
+
+const std::vector<double>& DalitzEvent::getVectorOfValues() const{
+  return _vectorOfValues;}
+std::vector<double>& DalitzEvent::getVectorOfValues(){
+  return _vectorOfValues;}
+
+const std::vector<double>& DalitzEvent::getVectorOfWeights() const{
+  return _vectorOfWeights;}
+std::vector<double>& DalitzEvent::getVectorOfWeights(){
+  return _vectorOfWeights;}
+
+void DalitzEvent::setValueInVector(unsigned int i, double value){
+  if(_vectorOfValues.size() <= i) _vectorOfValues.resize(i+1);
+  _vectorOfValues[i]=value;
+}
+void DalitzEvent::setWeightInVector(unsigned int i, double weight){
+  if(_vectorOfWeights.size() <= i) _vectorOfWeights.resize(i+1);
+  _vectorOfWeights[i]=weight;
+}
+double DalitzEvent::getValueFromVector(unsigned int i) const{
+  return _vectorOfValues[i];
+}
+double DalitzEvent::getWeightFromVector(unsigned int i) const{
+  return _vectorOfWeights[i];
+}
+
+
 double DalitzEvent::getGeneratorPdfRelativeToPhaseSpace() const{
   return _generatorPdfRelativeToPhaseSpace;
 }

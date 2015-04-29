@@ -17,6 +17,7 @@
 
 class DalitzPdfBase : 
 public MINT::PdfBase<IDalitzEvent>
+, virtual public IDalitzEventAccess
 , virtual public IDalitzPdf{
   double _norm;
   double _precision;

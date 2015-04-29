@@ -59,7 +59,7 @@ DalitzPdfBase::DalitzPdfBase(IDalitzEventList* events
   , _generator(generator)
   , _integrating(0)
 {
-  
+
 }
 
 bool DalitzPdfBase::integrating(){
