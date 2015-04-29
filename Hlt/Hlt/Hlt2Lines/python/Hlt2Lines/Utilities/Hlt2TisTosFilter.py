@@ -30,7 +30,7 @@ class Hlt2TisTosGlobalTagger(Hlt2Stage):
         tracks = Hlt2LongTracking().hlt2PrepareTracks()
         super(Hlt2TisTosGlobalTagger, self).__init__('Hlt2TisTosGlobalTagger', [tracks],
                                                      dependencies = [DecodeHlt1SelRep], shared = True)
-        
+
     def __checkSpecs(self, specs):
         bad = filter(lambda x: x not in _globalSpecs, specs)
         if bad:
@@ -49,7 +49,7 @@ class Hlt2TisTosGlobalTagger(Hlt2Stage):
         specs = makeList(specs)
         self.__checkSpecs(specs)
         return [self.__specs[k] for k in specs]
-        
+
     def clone(self, name, **kwargs):
         raise RuntimeError('Hlt2TisTosGlobalTagger.clone is not implemented.')
 
@@ -99,17 +99,18 @@ class Hlt2TisTosParticleTagger(Hlt2Stage):
                 self.__keys.add(sk)
         if bool(self.__keys) == bool(self.__specs):
             raise AttributeError("Either only specs or only cut keys must be specified")
-                            
+
         self.__kwargs = kwargs
         self.__cache = {}
         from HltLine.HltDecodeRaw import (DecodeL0MUON, DecodeL0CALO,
                                           DecodeL0FullCALO, DecodeL0DU)
         from Configurables import L0DecReportsMaker, L0SelReportsMaker
+        from HltLine.HltDecodeRaw import DecodeHlt1SelRep
         from HltLine.HltLine import bindMembers
         args = dict(nickname = nickname, shared = shared,
                     dependencies = [DecodeL0DU, DecodeL0MUON, DecodeL0CALO,
                                     DecodeL0FullCALO, L0DecReportsMaker(),
-                                    L0SelReportsMaker()])
+                                    L0SelReportsMaker(), DecodeHlt1SelRep])
         super(Hlt2TisTosParticleTagger, self).__init__(name, inputs, **args)
 
     def clone(self, name, **kwargs):
@@ -131,7 +132,7 @@ class Hlt2TisTosParticleTagger(Hlt2Stage):
         return Hlt2ParticleFilter('Global' + self._name(), code,
                                   self._inputs(), [tagger], shared = self._shared(),
                                   nickname = self._nickname(), **self.__kwargs).stage(stages, cuts)
-    
+
     def __localTagger(self, stages, specs, cuts, inputs = None):
         from HltLine.HltLine import Hlt2Member
         from Configurables import TisTosParticleTagger
@@ -183,10 +184,10 @@ class Hlt2TisTosStage(Hlt2Stage):
                  nickname = None, shared = False):
         self.__tistos = makeList(tistos)
         super(Hlt2TisTosStage, self).__init__(name, inputs, dependencies, nickname, shared)
-    
+
     def _tistos(self):
         return self.__tistos
-        
+
     def _handleTisTos(self, stages, cuts, args, handler):
         ## Make a list of specs, substituting cuts if needed; the value
         ## corresponding to a cut can be a list.
@@ -210,7 +211,7 @@ class Hlt2TisTosStage(Hlt2Stage):
 
         ## Make the combiner
         stage = self._makeMember(deps, cuts, args)
-            
+
         if localSpecs:
             ## There are also local specs, so a TisTosParticleTagger is
             ## needed, that takes the output of the member as input
@@ -226,7 +227,6 @@ class Hlt2TisTosStage(Hlt2Stage):
             ## Make the tagger stage, the dependencies have been dealt with above.
             tmp = []
             stage = tagger.stage(tmp, cuts)
-            
+
         stages += deps
         return stage
-
