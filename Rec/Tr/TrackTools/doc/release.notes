@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-04-29 - Michael Kolpin
+ - Fix to MuonTTTrack to only write out successfully fitted tracks
+
 ! 2015-04-28 - Eduardo Rodrigues
  - Added protection for division by 0 in finalise method of StandaloneMuonRec.
 

@@ -185,7 +185,10 @@ StatusCode MuonTTTrack::execute() {
     // ---------------------------------------------------------------
 
     // -- Finally, insert the track into the container!
-    tracks->insert( track );
+    if (m_addTTHits){ //when performing track fit, only insert fitted tracks
+	   if (sc) tracks->insert( track );
+    }
+    else tracks->insert( track );
     // ---------------------------------------------------------------
 
     // -- Get parameters of Muon Stub, add it to the extra info field
