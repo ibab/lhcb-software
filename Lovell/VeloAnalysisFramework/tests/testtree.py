@@ -15,8 +15,6 @@
 #
 import ROOT
 ROOT.SetMemoryPolicy(ROOT.kMemoryStrict)
-#ROOT.gSystem.Load('libCintex')
-#ROOT.Cintex.Enable()
 ROOT.gSystem.Load('libVeloAnalysisFramework')
 ROOT.gSystem.Load('libVeloAnalysisFrameworkDict')
 
