@@ -5,6 +5,9 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2015-04-29 - Sascha Stahl
+ - Added "TracksOutContainers" to possible outputs in HltLine.
+
 !========================= HltLine v7r9 2015-03-31 =========================
 
 ! 2015-03-27 - Sean Benson

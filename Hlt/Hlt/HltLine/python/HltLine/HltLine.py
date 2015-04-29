@@ -601,7 +601,10 @@ class bindMembers (object) :
                     if hasattr(alg,'outputLocation') : return [ getattr(alg,'outputLocation') ] 
                     if hasattr(alg,'OutputTracksName') : return [ getattr(alg,'OutputTracksName') ]
                     if hasattr(alg,'MatchOutput') : return [ getattr(alg,'MatchOutput') ] 
-                    if hasattr(alg,'TracksOutContainer') : return [ getattr(alg,'TracksOutContainer') ] 
+                    if hasattr(alg,'TracksOutContainers') :
+                        list = filter (lambda x : bool(x), getattr(alg,'TracksOutContainers').values() )
+                        if list : return list
+                    if hasattr(alg,'TracksOutContainer') : return [ getattr(alg,'TracksOutContainer') ]
                     if hasattr(alg,'Output2SourceId') : return getattr(alg,'Output2SourceId').keys()
                     #if hasattr(type(alg),'Output') and not hasattr(alg,'Output') :
                     #    log.warning('Algorithm %s of type %s did not specify Output'% (alg.name(),alg.getType()))
