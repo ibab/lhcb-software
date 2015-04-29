@@ -15,16 +15,17 @@
 #
 import ROOT
 ROOT.SetMemoryPolicy(ROOT.kMemoryStrict)
-ROOT.gSystem.Load('libCintex')
-ROOT.Cintex.Enable()
-ROOT.gSystem.Load('libVeloGUIUtils')
+#ROOT.gSystem.Load('libCintex')
+#ROOT.Cintex.Enable()
+ROOT.gSystem.Load('libVeloAnalysisFramework')
+ROOT.gSystem.Load('libVeloAnalysisFrameworkDict')
 
 ## short example of how to write a tree for Velo DQ
 def createTree(filename, treename):
     from ROOT import TFile, TRandom3
     from ROOT import DotLock, TimeStamp, VersionedObject
-    from TypeHelper import getTypeFactory
-    from GUITree import Tree
+    from veloview.giantrootfile.type_helper import getTypeFactory
+    from veloview.giantrootfile.gui_tree import Tree
     # acquire write lock
     dl = DotLock(filename)
     # open file for writing (overwriting destination if it exists)
@@ -32,6 +33,7 @@ def createTree(filename, treename):
     # be a bit more aggressive when compressing data: we're not CPU-limited
     # when writing tuple files, but we're happy to get by using up less disk
     # bandwidth
+    ROOT.gROOT.ProcessLine('#include <Compression.h>')
     f.SetCompressionSettings(ROOT.ROOT.CompressionSettings(ROOT.ROOT.kLZMA, 6))
     # create tree with given structure
     t = Tree(treename, 'Velo DQ Tree prototype', {
@@ -98,7 +100,7 @@ def createTree(filename, treename):
 def anaTree(filename, treename):
     from ROOT import TFile, DotLock, TimeStamp
     from os import rename
-    from GUITree import Tree
+    from veloview.giantrootfile.gui_tree import Tree
     print "Doing dummy DQ on file %s, tree %s" % (filename, treename)
     # acquire write lock
     dl = DotLock(filename)
@@ -178,7 +180,7 @@ def anaTree(filename, treename):
 ## example on how to read a tree
 def summariseTree(filename, treename):
     from ROOT import TFile, TimeStamp
-    from GUITree import Tree
+    from veloview.giantrootfile.gui_tree import Tree
     print "Summarising DQ on file %s, tree %s" % (filename, treename)
     # we're reading only, no need to lock...
     # open original file for reading
@@ -200,7 +202,7 @@ def summariseTree(filename, treename):
 ## examples for the plotting machinery for Velo DQ trees
 def makePlots(filename, treename):
     from ROOT import TFile
-    from GUITree import Tree
+    from veloview.giantrootfile.gui_tree import Tree
 
     f = ROOT.TFile(filename, 'READ')
     t = Tree(treename)

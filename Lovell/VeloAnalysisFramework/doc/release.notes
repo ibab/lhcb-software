@@ -4,6 +4,11 @@
 ! Purpose     : Analysis framework and configuration for offline and web GUIs
 !----------------------------------------------------------------------------
 
+! 2015-04-29 - Manuel Tobias Schiller
+ - move testtree.py from src/ to tests/, and modernise it somewhat to cope
+   with the new package structure (making it work as a unit test is a second
+   step)
+
 !=================== VeloAnalysisFramework v1r2 2015-03-18 ==================
 ! 2015-03-15 - J Harrison
   - Increase timeout of some QMTests
