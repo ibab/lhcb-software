@@ -1405,11 +1405,12 @@ class DetachedD02HHInclCombiner(Hlt2Combiner) : # {
                      "& (PT> %(Trk_PT_MIN)s)" \
                      "& (MIPCHI2DV(PRIMARY)> %(Trk_MIPCHI2DV_MIN)s )"
 
-        dc = {   'pi+' : inPartCuts
-               , 'K+' : inPartCuts
-             }
+        dc = {   'pi+' : inPartCuts }
 
-        combCut = "AALL"
+        combCut = "(APT > %(D0_comb_PT_MIN)s)" \
+                  "& (AM < %(D0_BPVCORRM_MAX)s)" \
+                  "& (ACUTDOCACHI2(%(D0_VCHI2PDOF_MAX)s, ''))"
+        
         parentCut = "(VFASPF(VCHI2PDOF) < %(D0_VCHI2PDOF_MAX)s)" \
                     "& (BPVVDCHI2 > %(D0_BPVVDCHI2_MIN)s)" \
                     "& (BPVCORRM < %(D0_BPVCORRM_MAX)s)"
@@ -1431,11 +1432,11 @@ class DetachedD02HHInclCombiner(Hlt2Combiner) : # {
 ## Shared instances of DetachedD02HHInclCombiner
 ## ------------------------------------------------------------------------- ##
 InclHc2HHX = DetachedD02HHInclCombiner( 'CharmHadInclHc2HHX'
-        , decay = [   "D0 -> K+ pi-", "D0 -> K- pi+"
-                    , "D0 -> K+ pi+", "D0 -> K- pi-"
-                    , "D0 -> K+ K-", "D0 -> pi+ pi-" ]
+        , decay = [    "D0 -> pi+ pi-"
+                    ,  "D0 -> pi- pi-"
+                    ,  "D0 -> pi+ pi+" ]
 
-        , inputs = [ Hlt2NoPIDsPions, Hlt2NoPIDsKaons ]
+        , inputs = [ Hlt2NoPIDsPions ]
         , nickname = 'InclHc2HHX' ## 'InclHc2HHX' def in Dst2PiD02HHXBDTLines.py
         , shared = True )
 

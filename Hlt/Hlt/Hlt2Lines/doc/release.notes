@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-29 - Patrick Spradlin
+ - CharmHad:  Updates to inclusive D* lines to improve timing.
+   M  CharmHad/Dst2PiD02HHXBDTLines.py
+   M  CharmHad/Stages.py
+
 ! 2015-04-29 - Maurizio Martinelli
  - CharmHad:
    . Slightly modified DV4BCombiner to add filter on daughter tracks
