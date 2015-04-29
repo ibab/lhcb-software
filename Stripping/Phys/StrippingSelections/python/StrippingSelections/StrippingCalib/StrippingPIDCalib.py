@@ -55,7 +55,7 @@ default_config = {
         , 'CombinationCut'     :
             "(in_range(3096-200, AM, 3096+200)) & (ACHI2DOCA(1,2) < 10)"
         , 'MotherCut'          :
-            "(VFASPF(VCHI2)<5) & (BPVVDCHI2 > 25)"
+            "(VFASPF(VCHI2)<5) & (BPVVDCHI2 > 225)"
       },
 
 
@@ -84,7 +84,7 @@ default_config = {
       },
 
 
-      'L02ppiLowP' : {
+      'L02ppi' : {
         'Prescale'      : .14
         , 'CheckPV'     : True
         , 'RawEvent'    : ['Muon']
@@ -109,17 +109,26 @@ default_config = {
           )
       },
 
-      'L02ppiHighP' : {
-        'CloneLine' : "L02ppiLowP"
+      'L02ppiHighPT' : {
+        'CloneLine' : "L02ppi"
         , 'Prescale'  : 1.0
         , 'DaughtersCuts'       : {
-            'p+'               : "(40.0*GeV < P ) &( TRCHI2DOF < 5 ) & ( MIPCHI2DV(PRIMARY) > 25 )",
+            'p+'               : "(PT > 3.5*GeV) & ( 2.0*GeV < P ) &( TRCHI2DOF < 5 ) & ( MIPCHI2DV(PRIMARY) > 25 )",
+            'pi-'              : "( 2.0*GeV < P ) &( TRCHI2DOF < 5 ) & ( MIPCHI2DV(PRIMARY) > 25 )"
+          }
+      },
+
+      'L02ppiVeryHighPT' : {
+        'CloneLine' : "L02ppi"
+        , 'Prescale'  : 1.0
+        , 'DaughtersCuts'       : {
+            'p+'               : "(PT > 10*GeV) & ( 2.0*GeV < P ) &( TRCHI2DOF < 5 ) & ( MIPCHI2DV(PRIMARY) > 25 )",
             'pi-'              : "( 2.0*GeV < P ) &( TRCHI2DOF < 5 ) & ( MIPCHI2DV(PRIMARY) > 25 )"
           }
       },
 
       'L02ppiIsMuon' : {
-        'CloneLine' : "L02ppiLowP"
+        'CloneLine' : "L02ppi"
         , 'Prescale'  : 1.0
         , 'DaughtersCuts'       : {
             'p+'               : "(ISMUON) & ( 2.0*GeV < P ) &( TRCHI2DOF < 5 ) & ( MIPCHI2DV(PRIMARY) > 25 )",
@@ -127,15 +136,22 @@ default_config = {
           }
       },
 
-      'L02ppiDDLowP' : {
-        'CloneLine' : "L02ppiLowP"
+      'L02ppiDD' : {
+        'CloneLine' : "L02ppi"
         , 'Prescale'  : .14
         , 'InputTES'    : [ 'Phys/StdNoPIDsDownPions/Particles', 
                                    'Phys/StdNoPIDsDownProtons/Particles' ]
       },
 
-      'L02ppiDDHighP' : {
-        'CloneLine' : "L02ppiHighP"
+      'L02ppiDDHighPT' : {
+        'CloneLine' : "L02ppiHighPT"
+        , 'Prescale'  : 1.0
+        , 'InputTES'    : [ 'Phys/StdNoPIDsDownPions/Particles', 
+                                   'Phys/StdNoPIDsDownProtons/Particles' ]
+      },
+
+      'L02ppiDDVeryHighPT' : {
+        'CloneLine' : "L02ppiVeryHighPT"
         , 'Prescale'  : 1.0
         , 'InputTES'    : [ 'Phys/StdNoPIDsDownPions/Particles', 
                                    'Phys/StdNoPIDsDownProtons/Particles' ]
@@ -246,7 +262,7 @@ default_config = {
         , 'MDST.DST'    : False
         , 'RefitPV'     : False
         , 'DecayDescriptor'       : "KS0 -> pi+ pi-"
-        , 'InputTES'              : ['Phys/StdNoPIDsPions']
+        , 'InputTES'              : ['Phys/StdNoPIDsPions/Particles']
         , 'DaughtersCuts'         : {
             'pi+' : " ( 2.0 * GeV < P ) & ( MIPCHI2DV(PRIMARY) > 25 )"
           }
@@ -268,7 +284,7 @@ default_config = {
         , 'RawEvent'    : ['Muon']
         , 'MDST.DST'    : False
         , 'RefitPV'     : False
-        , 'InputTES'   : ['Phys/StdNoPIDsDownPions']
+        , 'InputTES'   : ['Phys/StdNoPIDsDownPions/Particles']
         , 'MotherCut'             : (
             "( ADMASS ( 'KS0') < 50 ) & "+
             " in_range ( 0 , VFASPF ( VCHI2 ) , 16 ) & " + 
@@ -323,10 +339,12 @@ class PIDCalibLineBuilder(LineBuilder):
     __configuration_keys__ = (
         'Jpsi2MuMu',
         'Bu2KMuMu',
-        'L02ppiLowP',
-        'L02ppiDDHighP', 
-        'L02ppiDDLowP',
-        'L02ppiHighP', 
+        'L02ppi',
+        'L02ppiDDHighPT', 
+        'L02ppiDDVeryHighPT', 
+        'L02ppiDD',
+        'L02ppiHighPT', 
+        'L02ppiVeryHighPT', 
         'L02ppiIsMuon', 
         'Jpsi2ee',
         'Bu2Kee',
@@ -349,10 +367,12 @@ class PIDCalibLineBuilder(LineBuilder):
 
       self.registerLine ( self.buildPIDLine ( 'Jpsi2MuMu'    , bodies = 2) )
       self.registerLine ( self.buildPIDLine ( 'Bu2KMuMu'     , bodies = 3) )
-      self.registerLine ( self.buildPIDLine ( 'L02ppiLowP'   , bodies = 2) )
-      self.registerLine ( self.buildPIDLine ( 'L02ppiHighP'  , bodies = 2) )
-      self.registerLine ( self.buildPIDLine ( 'L02ppiDDLowP' , bodies = 2) )
-      self.registerLine ( self.buildPIDLine ( 'L02ppiDDHighP', bodies = 2) )
+      self.registerLine ( self.buildPIDLine ( 'L02ppi'   , bodies = 2) )
+      self.registerLine ( self.buildPIDLine ( 'L02ppiHighPT'  , bodies = 2) )
+      self.registerLine ( self.buildPIDLine ( 'L02ppiVeryHighPT'  , bodies = 2) )
+      self.registerLine ( self.buildPIDLine ( 'L02ppiDD' , bodies = 2) )
+      self.registerLine ( self.buildPIDLine ( 'L02ppiDDHighPT', bodies = 2) )
+      self.registerLine ( self.buildPIDLine ( 'L02ppiDDVeryHighPT', bodies = 2) )
       self.registerLine ( self.buildPIDLine ( 'L02ppiIsMuon' , bodies = 2) )
       self.registerLine ( self.buildPIDLine ( 'Jpsi2ee'      , bodies = 2) )
       self.registerLine ( self.buildPIDLine ( 'Bu2Kee'       , bodies = 3) )

@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-04-29 - Lucio Anderlini 
+  - Updates to StrippingCalib/StrippingPIDCalib.py
+   . minor bug fixes in the DiLepton lines
+   . additional split in Lambda0 line to allow different prescales
+   . change from P thresholds to PT, to better follow physics
+  - Updated test file in liaisons/Calibrations
+
 ! 2015-04-27 - Chitsanu Khurewathanakul
  - Depreciate the redundant line (StrippingMBNoBias).
  - QEE: Clean unused imports
