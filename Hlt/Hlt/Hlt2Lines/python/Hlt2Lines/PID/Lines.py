@@ -74,9 +74,9 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                 'Hlt2PIDLb2LcPiTurbo'               : 1.0,
                                 'Hlt2PIDLb2LcMuNu'                  : 0.0,
                                 'Hlt2PIDLb2LcMuNuTurbo'             : 1.0,
-                                'Hlt2PIDD02KPiPiPi'                 : 0.0,
+                                'Hlt2PIDD02KPiPiPi'                 : 1.0,
                                 'Hlt2PIDD02KPiPiPiTurbo'            : 0.0,
-                                'Hlt2PIDD02KPiPiPiTag'              : 0.0,
+                                'Hlt2PIDD02KPiPiPiTag'              : 1.0,
                                 'Hlt2PIDD02KPiPiPiTagTurbo'         : 0.0,
                                 'Hlt2PIDD02KPiTag'                  : 0.0,
                                 'Hlt2PIDD02KPiTagTurbo'             : 1.0
@@ -301,26 +301,21 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                 'DeltaM_AM_MAX'            :  275.0 * MeV,
                                 'DeltaM_MAX'               :  270.0 * MeV,
                                 'TagVCHI2PDOF_MAX'         :  100.0},
-                 'D02KPiPiPi' : {
-                                'AM_MIN'                    : 1775 * MeV, # Minimum AM for K3pi combination
-                                'AM_MAX'                    : 1965 * MeV, # Maximum AM for Kpipipi combination
-                                'AM_34'                     : (139.5 + 139.5) * MeV, # How much to subtract from AM_MAX
-                                                                                     # for the Kpi combination AM uppercut.
-                                'AM_4'                      : (139.5) * MeV, # Max. ditto for Kpipipi combination.
-                                'ASUMPT_MIN'                : 2.0 * GeV,
-                                'ACHI2DOCA_MAX'             : 9.0,
-                                'Trk_1OF4_PT_MIN'           : 800 * MeV, # 
-                                'Trk_2OF4_PT_MIN'           : 600 * MeV,
-                                'Trk_ALL_PT_MIN'            : 400 * MeV,
-                                'Trk_1OF4_MIPCHI2DV_MIN'    : 16.0,
-                                'Trk_2OF4_MIPCHI2DV_MIN'    : 9.0,
-                                'Trk_ALL_MIPCHI2DV_MIN'     : 4.0,
-                                'VCHI2PDOF_MAX'             : 15.0,
-                                'BPVDIRA_MIN'               : 0.9999,
-                                'BPVLTIME_MIN'              : 0.2 * ps,
-                                'Mass_M_MIN'                : 1790 * MeV,
-                                'Mass_M_MAX'                : 1940 * MeV,
-                                'TisTosSpec'                : []},#"Hlt1(Two)?TrackMVADecision%TOS"},
+                 'D02KPiPiPi' : { # Tuning from Maurizio
+                                'Trk_ALL_PT_MIN'           :  250 * MeV,
+                                'Trk_ALL_MIPCHI2DV_MIN'    :  3,
+                                'AM_34'                    : (139.5 + 139.5) * MeV,
+                                'AM_4'                     : (139.5) * MeV,
+                                'AM_MIN'                   :  1780 * MeV,
+                                'AM_MAX'                   :  1950 * MeV,
+                                'ASUMPT_MIN'               :  2500.0 * MeV,
+                                'ACHI2DOCA_MAX'            :  10.0,
+                                'VCHI2PDOF_MAX'            :  12.0,
+                                'BPVDIRA_MIN'              :  0.9999,
+                                'BPVLTIME_MIN'             :  0.1 * ps,
+                                'Mass_M_MIN'               :  1790 * MeV,
+                                'Mass_M_MAX'               :  1940 * MeV,
+                                'TisTosSpec'               :  [ ]},#"Hlt1(Two)?TrackMVADecision%TOS"},
                  'D02KPiPiPiTag' : {
                                 'TagVCHI2PDOF_MAX'         :  15.0,
                                 'DeltaM_AM_MIN'            :  0.0,
@@ -330,7 +325,7 @@ class PIDLines(Hlt2LinesConfigurableUser):
                  'D02KPi' : {   'Trk_ALL_PT_MIN'           : 800.0 * MeV,   # Stripping has 250
                                 'Trk_ALL_P_MIN'            : 5.0 * GeV,     # Stripping has 2.0
                                 'Trk_ALL_MIPCHI2DV_MIN'    : 2.0,           # Stripping has 16
-                                # We curently have an implicit cut on track chi2/dof < 3 coming
+                                # We currently have an implicit cut on track chi2/dof < 3 coming
                                 # from the CharmHad filtered NoPIDs inputs; stripping had < 5
                                 'Pair_AMINDOCA_MAX'        : 0.10 * mm,     # Not in stripping
                                 'Trk_Max_APT_MIN'          : 1500.0 * MeV,  # Not in stripping

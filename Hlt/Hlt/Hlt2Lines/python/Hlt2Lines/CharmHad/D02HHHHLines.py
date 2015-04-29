@@ -20,11 +20,16 @@ class CharmHadD02HHHHLines() :
     def localcuts(self) :
         # The kinematic cuts are in common between the lines
         cutsForD2HHHH = {
+                'Trk_ALL_PT_MIN'           :  250 * MeV,
+                'Trk_ALL_MIPCHI2DV_MIN'    :  3,
+                'AM_34'                    : (139.5 + 139.5) * MeV,
+                'AM_4'                     : (139.5) * MeV,
+                'AM_MIN'                   :  1700 * MeV,
                 'AM_MAX'                   :  2100 * MeV,
                 'ASUMPT_MIN'               :  0.0 * MeV,
-                'ACHI2DOCA_MAX'            :  16.0,
-                'VCHI2PDOF_MAX'            :  15.0,
-                'BPVDIRA_MIN'              :  0.9999,
+                'ACHI2DOCA_MAX'            :  10.0,
+                'VCHI2PDOF_MAX'            :  12.0,
+                'BPVDIRA_MIN'              :  0.9998,
                 'BPVLTIME_MIN'             :  0.1*picosecond,
                 'Mass_M_MIN'               :  1790 * MeV,
                 'Mass_M_MAX'               :  1940 * MeV,

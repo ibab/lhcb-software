@@ -8,6 +8,15 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-29 - Maurizio Martinelli
+ - CharmHad:
+   . Slightly modified DV4BCombiner to add filter on daughter tracks
+   . Setup reasonable default cuts for D0->HHHH, D->HHHKs
+   . Added default cuts values for XSec D->HHHH line according to the updated 
+     combiner
+ - PID:
+   . Reduced timing of the D0->K3pi line and re-enabled
+
 !========================= Hlt2Lines v9r8 2015-04-28 =========================
 
 ! 2015-04-28 - Olli Lupton

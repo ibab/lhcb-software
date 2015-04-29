@@ -27,6 +27,11 @@ class CharmHadXSecLines() :
                                 },
                  'D02HHHH_XSec' : {
                                  'TisTosSpec'               : "Hlt1TrackAllL0Decision%TOS",
+                                 'Trk_ALL_PT_MIN'           :  0 * MeV,
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  0,
+                                 'AM_34'                    : (139.5 + 139.5) * MeV,
+                                 'AM_4'                     : (139.5) * MeV,
+                                 'AM_MIN'                   :  1774 * MeV,
                                  'AM_MAX'                   :  1954 * MeV,
                                  'ASUMPT_MIN'               :  0.0 * MeV,
                                  'ACHI2DOCA_MAX'            :  16.0,

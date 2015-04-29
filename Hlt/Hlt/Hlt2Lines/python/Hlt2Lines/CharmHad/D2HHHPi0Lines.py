@@ -21,11 +21,11 @@ class CharmHadD2HHHPi0Lines() :
             'Trk_ALL_MIPCHI2DV_MIN'   : 5.0,
             'AM_MIN'                  : 0.0,
             'AM_MAX'                  : 1.5 * GeV,
-            'ASUMPT_MIN'              : 1.3 * GeV,
+            'ASUMPT_MIN'              : 1.9 * GeV,
             'Trk_1OF3_MIPCHI2DV_MIN'  : 5.0, # This can be tuned for reducing retention
             'Trk_2OF3_MIPCHI2DV_MIN'  : 5.0, # This can be tuned for reducing retention
-            'VCHI2PDOF_MAX'           : 20.0,
-            'BPVCORRM_MAX'            : 9999.,
+            'VCHI2PDOF_MAX'           : 10.0,
+            'BPVCORRM_MAX'            : 3500 * MeV,
             'BPVDIRA_MIN'             : 0.999,
             'BPVVDCHI2_MIN'           : 20.0,
             'BPVLTIME_MIN'            : 0.3 * picosecond,
@@ -34,7 +34,7 @@ class CharmHadD2HHHPi0Lines() :
             'AM_MIN'                : 1755.0 * MeV,
             'AM_MAX'                : 2055.0 * MeV,
             'APT_MIN'               : 2500.0,
-            'ADAU1PT_MIN'           : 1700,
+            'ADAU1PT_MIN'           : 1900,
             'ADAU1BPVIPCHI2_MIN'    : 36,
             'ADAU2PT_MIN'           : 1700,
             'ADAU2BPVIPCHI2_MIN'    : 36,
@@ -43,7 +43,7 @@ class CharmHadD2HHHPi0Lines() :
             'DMASS_MIN'             : 1795.0 * MeV,
             'DMASS_MAX'             : 2035.0 * MeV,
             'BPVDIRA_MIN'           : 0.999,
-            'VCHI2PDOF_MAX'           : 20.0,
+            'VCHI2PDOF_MAX'         : 20.0,
         }
         cuts = {}
         for fs in ['PiPiPi','KPiPi','KKPi','KKK']:

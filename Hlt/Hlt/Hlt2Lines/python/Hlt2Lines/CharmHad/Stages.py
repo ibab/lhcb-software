@@ -626,6 +626,8 @@ class DV4BCombiner(Hlt2Combiner):
 
     Configuration dictionaries must contain the following keys:
         'AM_MAX'        : Maximum mass of the n-body combination
+        'AM_34'         : Mass of the remaining 2 particles
+        'AM_4'          : Mass of the last particle
         'ACHI2DOCA_MAX' : Maximum Doca-chi2 of each two-body combination (should be >= VCHI2NDOF)
         'ASUMPT_MIN'    : Lower limit on the sum of the PTs of the daughters
         'VCHI2PDOF_MAX' : Upper limit on VFASPF(VCHI2PDOF) in MotherCut
@@ -634,14 +636,15 @@ class DV4BCombiner(Hlt2Combiner):
         'TisTosSpec'    : Configuration string of the Hlt1 TISTOS filter.
     """
     def __init__(self, name, decay,inputs, shared = False, nickname = None):
-        dc =    {}
-        
-        c12 = (" ( AM < %(AM_MAX)s ) " +
+        dc =  {}
+        for child in ['pi+','K+','p+'] :
+            dc[child] = "(PT > %(Trk_ALL_PT_MIN)s) & (MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)"
+        c12 = (" ( AM < (%(AM_MAX)s - %(AM_34)s) ) " +
                "&( ACHI2DOCA(1,2) < %(ACHI2DOCA_MAX)s ) " )
-        c123 =(" ( AM < %(AM_MAX)s ) " +
+        c123 =(" ( AM < (%(AM_MAX)s - %(AM_4)s) ) " +
                "&( ACHI2DOCA(1,3) < %(ACHI2DOCA_MAX)s ) " +
                "&( ACHI2DOCA(2,3) < %(ACHI2DOCA_MAX)s ) " )
-        cc =  (" ( AM < %(AM_MAX)s ) " +
+        cc =  (" (in_range( %(AM_MIN)s, AM, %(AM_MAX)s )) " +
                "&( (APT1+APT2+APT3+APT4) > %(ASUMPT_MIN)s )" +
                "&( ACHI2DOCA(1,4) < %(ACHI2DOCA_MAX)s ) " +
                "&( ACHI2DOCA(2,4) < %(ACHI2DOCA_MAX)s ) " +
