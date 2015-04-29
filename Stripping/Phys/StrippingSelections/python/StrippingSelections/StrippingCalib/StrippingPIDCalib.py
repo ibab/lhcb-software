@@ -43,6 +43,8 @@ default_config = {
         , 'CheckPV'     : True
         , 'RawEvent'    : ['Muon']
         , 'MDST.DST'    : True
+        , 'HLT1'        : "HLT_PASS_RE('Hlt1.*Decision')" 
+        , 'HLT2'        : "HLT_PASS_RE('Hlt2.*Decision')" 
         , 'RefitPV'     : False
         , 'DecayDescriptor'    : "J/psi(1S) -> mu+ mu-"
         , 'TagAndProbeIndices' : [ 1, 2 ]
@@ -64,6 +66,8 @@ default_config = {
         , 'CheckPV'     : True
         , 'RawEvent'    : ['Muon']
         , 'MDST.DST'    : True
+        , 'HLT1'        : "HLT_PASS_RE('Hlt1.*Decision')" 
+        , 'HLT2'        : "HLT_PASS_RE('Hlt2.*Decision')" 
         , 'RefitPV'     : False
         , 'DecayDescriptor'    : "[B+ -> mu+ mu- K+]cc"
         , 'TagAndProbeIndices' : [ 1, 2 ]
@@ -89,6 +93,8 @@ default_config = {
         , 'CheckPV'     : True
         , 'RawEvent'    : ['Muon']
         , 'MDST.DST'    : False
+        , 'HLT1'        : "HLT_PASS_RE('Hlt1.*Decision')" 
+        , 'HLT2'        : "HLT_PASS_RE('Hlt2.*Decision')" 
         , 'RefitPV'     : False
         , 'DecayDescriptor'    : "[Lambda0 -> p+ pi-]cc"
         , 'InputTES'    : [ 'Phys/StdAllNoPIDsPions/Particles', 
@@ -162,6 +168,8 @@ default_config = {
         , 'CheckPV'     : True
         , 'RawEvent'    : ['Calo']
         , 'MDST.DST'    : True
+        , 'HLT1'        : "HLT_PASS_RE('Hlt1.*Decision')" 
+        , 'HLT2'        : "HLT_PASS_RE('Hlt2.*Decision')" 
         , 'RefitPV'     : False
         , 'DecayDescriptor'    : "J/psi(1S) -> e+ e-"
         , 'TagAndProbeIndices' : [ 1, 2 ]
@@ -182,6 +190,8 @@ default_config = {
         , 'CheckPV'     : True
         , 'RawEvent'    : ['Calo']
         , 'MDST.DST'    : True
+        , 'HLT1'        : "HLT_PASS_RE('Hlt1.*Decision')" 
+        , 'HLT2'        : "HLT_PASS_RE('Hlt2.*Decision')" 
         , 'RefitPV'     : False
         , 'DecayDescriptor'    : "[B+ -> e+ e- K+]cc"
         , 'TagAndProbeIndices' : [ 1, 2 ]
@@ -205,6 +215,8 @@ default_config = {
         , 'CheckPV'      : True
         , 'RawEvent'    : ['Calo']
         , 'MDST.DST'    : True
+        , 'HLT1'        : "HLT_PASS_RE('Hlt1.*Decision')" 
+        , 'HLT2'        : "HLT_PASS_RE('Hlt2.*Decision')" 
         , 'RefitPV'     : False
         , 'DecayDescriptor'    : "[B+ -> J/psi(1S) K+]cc"
         , 'DecayDescriptorJpsi': "J/psi(1S) -> mu+ mu-"
@@ -231,6 +243,8 @@ default_config = {
         , 'CheckPV'      : True
         , 'RawEvent'    : ['Muon']
         , 'MDST.DST'    : True
+        , 'HLT1'        : "HLT_PASS_RE('Hlt1.*Decision')" 
+        , 'HLT2'        : "HLT_PASS_RE('Hlt2.*Decision')" 
         , 'RefitPV'     : False
         , 'DecayDescriptor'    : "[B+ -> J/psi(1S) K+]cc"
         , 'DecayDescriptorJpsi': "J/psi(1S) -> e+ e-"
@@ -260,6 +274,8 @@ default_config = {
         , 'CheckPV'     : True
         , 'RawEvent'    : ['Muon']
         , 'MDST.DST'    : False
+        , 'HLT1'        : "HLT_PASS_RE('Hlt1.*Decision')" 
+        , 'HLT2'        : "HLT_PASS_RE('Hlt2.*Decision')" 
         , 'RefitPV'     : False
         , 'DecayDescriptor'       : "KS0 -> pi+ pi-"
         , 'InputTES'              : ['Phys/StdNoPIDsPions/Particles']
@@ -283,6 +299,8 @@ default_config = {
         , 'CheckPV'     : True
         , 'RawEvent'    : ['Muon']
         , 'MDST.DST'    : False
+        , 'HLT1'        : "HLT_PASS_RE('Hlt1.*Decision')" 
+        , 'HLT2'        : "HLT_PASS_RE('Hlt2.*Decision')" 
         , 'RefitPV'     : False
         , 'InputTES'   : ['Phys/StdNoPIDsDownPions/Particles']
         , 'MotherCut'             : (
@@ -300,6 +318,8 @@ default_config = {
         , 'CheckPV'     : True
         , 'RawEvent'    : ['Muon']
         , 'MDST.DST'    : False
+        , 'HLT1'        : "HLT_PASS_RE('Hlt1.*Decision')" 
+        , 'HLT2'        : "HLT_PASS_RE('Hlt2.*Decision')" 
         , 'RefitPV'     : False
         , 'InputTES' : [  'Phys/StdNoPIDsKaons/Particles' , 
                           'Phys/StdNoPIDsPions/Particles' , 
@@ -466,6 +486,8 @@ class PIDCalibLineBuilder(LineBuilder):
                               , EnableFlavourTagging = False
                               , RequiredRawEvents    = _config['RawEvent']
                               , MDSTFlag             = _config['MDST.DST']
+                              , HLT1                 = _config['HLT1'] 
+                              , HLT2                 = _config['HLT2'] 
                               , algos    = [ _selection ]
                            )
       

@@ -10,6 +10,8 @@
    . additional split in Lambda0 line to allow different prescales
    . change from P thresholds to PT, to better follow physics
   - Updated test file in liaisons/Calibrations
+  - Added Hlt1 and Hlt2 requirements to the config_dictionary
+    (StippingCalib/StrippingPIDCalib)
 
 ! 2015-04-27 - Chitsanu Khurewathanakul
  - Depreciate the redundant line (StrippingMBNoBias).
