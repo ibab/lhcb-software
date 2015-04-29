@@ -1,5 +1,5 @@
 package MooreOnlineSys
-version           v23r5p2
+version           v23r6
 branches doc cmt tests
 
 #=======================================================
