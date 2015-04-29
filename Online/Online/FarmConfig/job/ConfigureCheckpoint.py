@@ -188,7 +188,7 @@ def torrent_copy(cp,copy,extract):
 #=========================================================================================
 def setupEnviron(runinfo, config_brunel):
   ri = RunInfo(runinfo)
-  print 'echo "[ERROR] Configure CHECKPOINT environment. Reco:%s/%d Moore:%d";'%(str(config_brunel),ri.RecoStartupMode,ri.MooreStartupMode,)
+  ##print 'echo "[ERROR] Configure CHECKPOINT environment. Reco:%s/%d Moore:%d";'%(str(config_brunel),ri.RecoStartupMode,ri.MooreStartupMode,)
   cp = Checkpoint(ri,config_brunel)
 
   if   config_brunel and ri.RecoStartupMode == 0:
@@ -211,7 +211,7 @@ def setupEnviron(runinfo, config_brunel):
 #=========================================================================================
 def configureForRunning(runinfo, config_brunel):
   ri = RunInfo(runinfo)
-  print 'echo "[ERROR] Configure CHECKPOINT for running. Reco:%s/%d Moore:%d";'%(str(config_brunel),ri.RecoStartupMode,ri.MooreStartupMode,)
+  ##print 'echo "[ERROR] Configure CHECKPOINT for running. Reco:%s/%d Moore:%d";'%(str(config_brunel),ri.RecoStartupMode,ri.MooreStartupMode,)
   cp = Checkpoint(ri,config_brunel)
 
   if   config_brunel and ri.RecoStartupMode == 0:
