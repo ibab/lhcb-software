@@ -3,6 +3,40 @@ Package             : DaVinciSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v36r6>2015-04-30 DaVinci v36r6</A></H1><PRE>
+
+Development release for 2015 data taking, based on Gaudi v26r1,
+LHCb v38r6, Lbcom v16r5, Rec v17r6, Phys v19r6, Analysis v13r5
+and Stripping v9r6 . Uses LCG_74root6 with ROOT 6.02.05.
+
+- Refer to the release notes of Phys, Analysis and Stripping for details
+  on updates to these dependency projects.
+
+- Packages updated :
+  DaVinciTests v2r31, Phys/DaVinci v36r6, Phys/Tesla v1r4.
+
+- In DaVinciTests v2r31 :
+  . Updated option files tests/options/DVTestWriteDst.py and
+    tests/options/DVReadKs.py since necessary DST files have been copied over
+    from CASTOR (a private user area deleted by CERN!) to
+    /eos/lhcb/grid/prod/lhcb/swtest/lhcb/swtest/.
+  . Test commonparticles.qms/test_standardintermediate_reco14_run.qmt updated.
+  . Updated tagging reference file to account for new BDT taggers.
+  . Updated references for stripping tests.
+
+- In Phys/DaVinci v36r6 :
+  . New stack release.
+
+- In Phys/Tesla v1r4 :
+  . Support refitted PV persistence.
+  . Remove deprecated "PreSplit" and "ReportVersion" options.
+  . Test fixes.
+  . Fixed CMake for DDDB tags.
+  .  Added previously private lumi tests.
+  .  Added relations table generation for XDSTs and LDSTs.
+  .  Added packed relations table location.
+  .  Added dependency on TurboStreamProd.
+
 </PRE><H1><A NAME=v36r5>2015-03-16 DaVinci v36r5</A></H1><PRE>
 
 Development release for 2015 data taking, based on Gaudi v26r1,

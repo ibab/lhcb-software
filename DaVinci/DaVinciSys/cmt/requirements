@@ -1,13 +1,13 @@
 package DaVinciSys
-version v36r5
+version v36r6
 
 branches doc cmt
 
 # Packages
-use  DaVinci         v36r5    Phys   # DaVinci coordinator
-use  DaVinciTests    v2r30
+use  DaVinci         v36r6    Phys   # DaVinci coordinator
+use  DaVinciTests    v2r31
 use  KaliCalo        v4r17    Phys   # Olivier Deschamps
-use  Tesla           v1r3     Phys   # Sean Benson
+use  Tesla           v1r4     Phys   # Sean Benson
 
 # Declare this as a container package
 apply_pattern container_package
