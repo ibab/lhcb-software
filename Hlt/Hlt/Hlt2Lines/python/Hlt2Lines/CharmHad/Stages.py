@@ -1366,15 +1366,12 @@ D02KsPiPi_DD = HHKshCombiner('KshPiPiDD', decay="D0 ->  pi- pi+ KS0",
                    inputs=[SharedKsDD, SharedDetachedDpmChild_pi])
 ##
 ##  These lines produce D0 --> K-,pi+,Kshort and D0bar --> K+,pi-,Kshort candidates
+##  The candidates can also be used for the charge conjugate decays by
+##  using D0bar in place of D0, and vice versa, in decay descriptors.
+##  this is done in D2HHKsLines.py
 D02KsKPi_LL  = HHKshCombiner('KshKPiLL', decay="[D0 ->  K- pi+ KS0]cc",
                    inputs=[SharedKsLL, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])
 D02KsKPi_DD  = HHKshCombiner('KshKPiDD', decay="[D0 ->  K- pi+ KS0]cc",
-                   inputs=[SharedKsDD, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])
-
-##  These lines produce D0 --> K+,pi-,Kshort and D0bar --> K-,pi+,pi0 candidates
-D02KsPiK_LL  = HHKshCombiner('KshPiKLL', decay="[D0 ->  pi- K+ KS0]cc",
-                   inputs=[SharedKsLL, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])
-D02KsPiK_DD  = HHKshCombiner('KshPiKDD', decay="[D0 ->  pi- K+ KS0]cc",
                    inputs=[SharedKsDD, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])
 
 D02KsKK_LL   = HHKshCombiner('KshKKLL', decay="D0 ->  K- K+ KS0",
