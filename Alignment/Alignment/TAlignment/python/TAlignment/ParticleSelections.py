@@ -24,7 +24,9 @@ class ParticleSelection:
 # cuts here as well.
 ##################################################################
 def configuredParticleListFromDST( ParticleLocation ) :
-    from Configurables import TrackParticleRefitter
+    from Configurables import GaudiSequencer
+    from Configurables import TrackParticleRefitter, TrackMasterFitter
+    from TrackFitter.ConfiguredFitters  import ConfiguredMasterFitter
     # create a sequence to refit and monitor
     name = ParticleLocation
     name.replace("Event","")
@@ -32,14 +34,14 @@ def configuredParticleListFromDST( ParticleLocation ) :
     name.replace("/Particle","")
     name.replace("/","_")
     fitter = TrackParticleRefitter( name + "Refitter", 
-                                    Fitter = TrackMasterFitter,
-                                    InputLocation = ParticleLocation )
-    configuredMasterFitter( fitter.Fitter, SimplifiedMaterial = True )
+                                    TrackFitter = TrackMasterFitter(),
+                                    ParticleLocation = ParticleLocation )
+    ConfiguredMasterFitter( fitter.TrackFitter, SimplifiedGeometry = True )
     seq = GaudiSequencer(name + "Seq")
-    seq.append( fitter )
-    sel = ParticleSelection()
-    sel.algorithm = seq
-    sel.location = ParticleLocation
+    seq.Members.append( fitter )
+    sel = ParticleSelection( Name = 'ParticlesFromDST',
+                             Location = ParticleLocation,
+                             Algorithm = seq)
     return sel
 
 

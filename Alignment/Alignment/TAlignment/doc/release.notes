@@ -2,9 +2,13 @@
 Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
+
+! 2015-04-30 - Maurizio Martinelli
+ - Modified ParticleSelectionFromDST for being able to run 
+
 ! 2015-04-21 - Stefania Vecchi
-- Added MuonTrack selection to TrackSelection.py and
-  defined configureMuonAlignment in AlignmentScenarios.py
+ - Added MuonTrack selection to TrackSelection.py and
+   defined configureMuonAlignment in AlignmentScenarios.py
 
 ! 2015-04-13 - Fred Blanc
  - Added IT Box survey alignment for 2015: surveyxml/IT/ITBoxSurvey20150413.xml
