@@ -147,7 +147,9 @@
 #include "EvtGenModels/EvtBcBsNPi.hh"
 #include "EvtGenModels/EvtBcBsStarNPi.hh"
 
+#include "EvtGenModels/EvtBcSMuNu.hh"
 #include "EvtGenModels/EvtBcVMuNu.hh"
+#include "EvtGenModels/EvtBcTMuNu.hh"
 #include "EvtGenModels/EvtBcVNpi.hh"
 #include "EvtGenModels/EvtSVP.hh"
 #include "EvtGenModels/EvtTVP.hh"
@@ -290,7 +292,9 @@ EvtModelReg::EvtModelReg(const std::list<EvtDecayBase*>* extraModels)
     modelist.registerModel(new EvtBcBsNPi);
     modelist.registerModel(new EvtBcBsStarNPi);
 
+    modelist.registerModel(new EvtBcSMuNu);
     modelist.registerModel(new EvtBcVMuNu);
+    modelist.registerModel(new EvtBcTMuNu);
     modelist.registerModel(new EvtBcVNpi);
     modelist.registerModel(new EvtSVP);
     modelist.registerModel(new EvtTVP);

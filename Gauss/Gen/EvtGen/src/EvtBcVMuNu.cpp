@@ -76,10 +76,10 @@ void EvtBcVMuNu::init(){
   checkSpinDaughter(1,EvtSpinType::DIRAC);
   checkSpinDaughter(2,EvtSpinType::NEUTRINO);
 
-    idVector = getDaug(0).getId();
-    whichfit = int(getArg(0)+0.1);
-    cout<<"EvtBcVMuNu: whichfit ="<<whichfit<<"  idVector="<<idVector<<endl;
-    ffmodel = new EvtBCVFF(idVector,whichfit);
+  idVector = getDaug(0).getId();
+  whichfit = int(getArg(0)+0.1);
+  cout << "EvtBcVMuNu: whichfit = " << whichfit << "  idVector = " << idVector << endl;
+  ffmodel = new EvtBCVFF(idVector,whichfit);
 
   calcamp = new EvtSemiLeptonicVectorAmp; 
  
@@ -87,14 +87,14 @@ void EvtBcVMuNu::init(){
 
 void EvtBcVMuNu::initProbMax() {
 //  cout<<" === EvtBcVMuNu::initProbMax() ============"<<endl;
-          if(whichfit==0) setProbMax(1700.);
- 	  else if(idVector == EvtPDL::getId("J/psi").getId() && whichfit == 1) setProbMax(40000.);
-  	  else if(idVector == EvtPDL::getId("J/psi").getId() && whichfit == 2) setProbMax(15000.);
-  	  else if(idVector == EvtPDL::getId("psi(2S)").getId() && whichfit == 1) setProbMax(700.);
- 	  else if(idVector == EvtPDL::getId("psi(2S)").getId() && whichfit == 2) setProbMax(300.);
-  	  else {
-  	    cout<<"EvtBcVMuNu: Not realized yet"<<endl;
-  	    ::abort();
-  	  };
+  if (whichfit == 0) setProbMax(1700.);
+  else if (idVector == EvtPDL::getId("J/psi").getId() && whichfit == 1) setProbMax(40000.0); // > 26.6k for mu, 20.0k for tau
+  else if (idVector == EvtPDL::getId("J/psi").getId() && whichfit == 2) setProbMax(15000.); // > 12.8k for mu, 9.7k for tau
+  else if (idVector == EvtPDL::getId("psi(2S)").getId() && whichfit == 1) setProbMax(700.); // > 600 for mu, 350 for tau
+  else if (idVector == EvtPDL::getId("psi(2S)").getId() && whichfit == 2) setProbMax(300.); // > 216 for mu, 43 for tau
+  else if (idVector == EvtPDL::getId("chi_c1").getId() && whichfit == 3) setProbMax(2000.0); // > 2000 for mu, 940 for tau
+  else {
+    cout<<"EvtBcVMuNu: Not realized yet"<<endl;
+    ::abort();
+  }
 }
-
