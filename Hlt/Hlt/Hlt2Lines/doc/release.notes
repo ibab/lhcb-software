@@ -18,6 +18,10 @@
 
 !========================= Hlt2Lines v9r8 2015-04-28 =========================
 
+! 2015-04-30 - Mike Sokoloff
+  - modified Stages.py and D2HHKsLines in CharmHad to remove redundancy in
+  - producing both Ksh,K-,pi+ and Ksh,K+,pi for both of D0 and D0bar.
+
 ! 2015-04-30 - Roel Aaij
  - Fix dependency problem with TisTosTagger instantiated from Hlt2ParticleFilter.
 
