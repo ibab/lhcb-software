@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-04-30 - Dan Johnson
+ - CEP: Update CEP thresholds
+
 ! 2015-04-30 - Olli Lupton
  - PID: Turn on the Turbo copy of the K3pi PID line instead (simultaneously
         makes sure the untagged line is postscaled to zero)
