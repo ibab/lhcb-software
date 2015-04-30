@@ -391,17 +391,17 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
   def B2PhiPhi_Unit( self, props ) :
 
-    props['PhiCuts']        = """(PT>%(PhiPT)s*MeV)""" %props
-    props['PhiPhiDecay']    = """'B_s0 -> phi(1020) phi(1020)'"""
-    props['PhiPhiCombCut']  = """( in_range( PDGM('B0') - %(B0MassWinLoose)s * MeV , AM , PDGM('B_s0') + %(B0MassWinLoose)s * MeV ) )""" %props
-    props['PhiPhiMothCut']  = ("""( ( in_range( PDGM('B0') - %(B0MassWin)s * MeV , M , PDGM('B_s0') + %(B0MassWin)s * MeV ) )  """ +
-                               """& (SUMTREE(PT,"phi(1020)"==ABSID)>%(PhiSumPT)s*MeV) """ +
-                               """& (BPVLTIME()>%(CombTAU)s*ps) """ +
-                               """& (VFASPF(VCHI2/VDOF)<%(CombVCHI2DOFLoose)s) )""") %props
+    props['PhiCuts']        = "(PT > %(PhiPT)s * MeV)" % props
+    props['PhiPhiDecay']    = "'B_s0 -> phi(1020) phi(1020)'"
+    props['PhiPhiCombCut']  = "(in_range(PDGM('B0') - %(B0MassWinLoose)s * MeV , AM , PDGM('B_s0') + %(B0MassWinLoose)s * MeV))" % props
+    props['PhiPhiMothCut']  = ("( (in_range(PDGM('B0') - %(B0MassWin)s * MeV , M , PDGM('B_s0') + %(B0MassWin)s * MeV)) " +
+                               "& (SUMTREE(PT, 'phi(1020)' == ABSID) > %(PhiSumPT)s * MeV) " +
+                               "& (BPVLTIME() > %(CombTAU)s * ps) " +
+                               "& (VFASPF(VCHI2/VDOF) < %(CombVCHI2DOFLoose)s) )") % props
 
     B2PhiPhi_Preambulo = [ "from LoKiArrayFunctors.decorators import AP, APT, ADAMASS, ACUTDOCA, DAMASS, ASUM, AMAXCHILD, AM",
                            "from LoKiPhys.decorators import PT",
-                           "B2PhiPhiCombinationConf = LoKi.Hlt1.Hlt1CombinerConf( %(PhiPhiDecay)s, %(PhiPhiCombCut)s, %(PhiPhiMothCut)s )" %props ]
+                           "B2PhiPhiCombinationConf = LoKi.Hlt1.Hlt1CombinerConf( %(PhiPhiDecay)s, %(PhiPhiCombCut)s, %(PhiPhiMothCut)s )" % props ]
 
     B2PhiPhi_LineCode = """
     TC_HLT1COMBINER( '',

@@ -6,6 +6,10 @@
 !-----------------------------------------------------------------------------
 
 !========================= Hlt1Lines v7r10 2015-04-23 =========================
+
+! 2015-04-30 - Roel Aaij
+ - Fix quoting bug in CalibTrackingLines.
+
 ! 2015-04-30 - Dan Johnson
  - Update Hlt1CEPLines thresholds
 
