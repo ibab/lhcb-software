@@ -5,6 +5,14 @@
 !               using Professor/Rivet system. 
 !-----------------------------------------------------------------------------
 
+! 2015-04-30 - Alex Grecu
+ - Minor patch to correct behaviour in automatically selecting interaction 
+   cross-section from various sources (MC generator, BeamParameters or 
+   externally force value). Previously ERROR was triggered when using 
+   generator provided cross-section in analysis module explicitly requiring
+   cross-section, even if cross-section value was correctly read from HepMC
+   stream.
+
 ! 2015-04-07 - Alex Grecu
  - Include lbInjectMathJax to inject MathJax enabling JS code in HTML pages.
    This tool may become obsolete when rivet-mkhtml will support this feature. 

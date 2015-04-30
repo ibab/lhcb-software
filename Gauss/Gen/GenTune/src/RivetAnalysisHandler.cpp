@@ -272,7 +272,10 @@ StatusCode RivetAnalysisHandler::execute()
       warning() << "MC generator provides NULL cross-section in HepMC." << endmsg;
     } else {
       info() << "HepMC cross-section: " << gevEvent->cross_section()->cross_section() << " +/- " << gevEvent->cross_section()->cross_section_error() << " picobarn(s)." << endmsg;
-      _xsectionSource = 1;
+      if (! m_forceCrossSection) {
+        _xsectionSource = 1;
+        m_crossSection = gevEvent->cross_section()->cross_section(); // copy value so that is not default
+      };
     };
   #else
     warning() << "HepMC does not support cross-section entries." << endmsg;
@@ -485,7 +488,10 @@ void RivetAnalysisHandler::compatSetCrossSection(HepMC::GenEvent* pEvent) {
     pxs->set_cross_section(m_crossSection);
     pEvent->set_cross_section(*pxs);
   } else {
-    m_crossSection = pxs->cross_section(); // (re)set xsection to value given by generator (backup value!)
+    if ( !fuzzyEq(m_crossSection, pxs->cross_section()) ) {
+      warning() << "Generator provided xsection has change from " << m_crossSection << " to " << pxs->cross_section() << endmsg;
+      m_crossSection = pxs->cross_section(); // (re)set xsection to value given by generator (backup value!)
+    };
   };
 #else
   _analysisManager->setCrossSection(m_crossSection);
