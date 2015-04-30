@@ -30,4 +30,9 @@ elif [ "$act" = "Alignment|Rich" ]; then
   cd ${FARMCONFIGROOT}/job
   export PYTHONPATH=${ONLPANOPTESSYSROOT}/python:$PYTHONPATH
   exec -a ${UTGID} ${Class1_task} libGaudiOnline.so OnlineTask -tasktype=LHCb::Class1Task -main=/group/online/dataflow/templates/options/Main.opts -opt=command="import Gaudi,GaudiKernel.ProcessJobOptions; from Gaudi.Configuration import importOptions; GaudiKernel.ProcessJobOptions.printing_level=999; importOptions('${ONLPANOPTESSYSROOT}/python/RichAnalyzer.py');"
+elif [ "$act" = "BWDivision" ]; then
+  . /group/online/bw_division/cmtuser/BWDivisionDev/setup.x86_64-slc6-gcc48-opt.vars
+  export PYTHONPATH=/group/online/bw_division/pydim/lib/python2.7/site-packages:$PYTHONPATH
+  export OUTPUTDIR=/group/online/bw_division/output
+  python -c "from PyGeneticOnline import Analyzer; Analyzer.run()"
 fi
