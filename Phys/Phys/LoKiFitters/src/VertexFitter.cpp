@@ -131,7 +131,7 @@ StatusCode LoKi::VertexFitter::_load
   if ( 0 == particle ) 
   { return _Warning ( "_load(): invalid particle" , InvalidParticle ) ; } // RETURN 
   //
-  return LoKi::KalmanFilter::load ( *particle , particleType ( particle ) , entry ) ;
+  return LoKi::KalmanFilter::load ( *particle , particleType_ ( particle ) , entry ) ;
 }
 // ============================================================================
 // add one particle at the end of the queue
@@ -767,7 +767,7 @@ StatusCode LoKi::VertexFitter::add
   if ( 0 == particle ) 
   { return _Error ( "add: Particle* point to NULL!" , InvalidParticle ) ; }
   //
-  switch ( particleType ( particle ) ) 
+  switch ( particleType_ ( particle ) ) 
   {
   case LoKi::KalmanFilter::GammaLikeParticle   :
     return _Error ( "add: No way to add      Gamma-like" , InvalidParticle ) ; 
@@ -1148,4 +1148,3 @@ DECLARE_NAMESPACE_TOOL_FACTORY ( LoKi , VertexFitter )
 // ============================================================================
 // The END 
 // ============================================================================
-

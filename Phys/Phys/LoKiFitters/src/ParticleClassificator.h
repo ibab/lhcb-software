@@ -10,9 +10,11 @@
 #include <algorithm>
 #include <set>
 // ============================================================================
-// Local
+// GaudiKernel
 // ============================================================================
-#include "MessagingBase.h"
+#include "GaudiKernel/Kernel.h"
+#include "GaudiKernel/AlgTool.h"
+#include "GaudiKernel/ToolFactory.h"
 // ============================================================================
 // Event 
 // ============================================================================
@@ -24,6 +26,10 @@
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/NodesPIDs.h"
 // ============================================================================
+// KalmanFilter 
+// ============================================================================
+#include "Kernel/IParticleClassifier.h"
+// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/IDecay.h"
@@ -32,6 +38,10 @@
 // KalmanFilter 
 // ============================================================================
 #include "KalmanFilter/ParticleTypes.h"
+// ============================================================================
+// Local
+// ============================================================================
+#include "MessagingBase.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -61,8 +71,11 @@ namespace LoKi
    *  Last modification $Date$
    *                 by $Author$
    */
-  class ParticleClassificator : public MessagingBase
+  class ParticleClassificator :public extends1<MessagingBase,IParticleClassifier> 
   {
+    // ========================================================================
+    /// friend factory for instantiation
+    friend class ToolFactory<LoKi::ParticleClassificator> ;
     // ========================================================================
   public:
     // ========================================================================
@@ -71,20 +84,22 @@ namespace LoKi
     /// finalize   the tool 
     virtual StatusCode finalize   () ;                   // finalize   the tool 
     // ========================================================================
-  public:
+  public: // see IParticleClassifier 
     // ========================================================================
     /** get the particle type 
      *  @see LoKi::KalmanFilter::ParticleType
      */
     LoKi::KalmanFilter::ParticleType 
-    particleType ( const LHCb::Particle* p ) const ;
+    particleType ( const LHCb::Particle* p ) const 
+    { return particleType_ ( p ) ; }
     // ========================================================================
     /** good for vertex ? 
      *  @attention This definiton is <b>different</b> from the 
      *  definition by LoKi::KalmanFilter::okForVertex
      *  @see LoKi::KalmanFilter::okForVertex
      */
-    bool goodForVertex ( const LHCb::Particle::ConstVector&    parts ) const ;
+    bool goodForVertex ( const LHCb::Particle::Range&    parts ) const 
+    { return goodForVertex_ ( parts ) ; }
     // ========================================================================
   protected:
     // ========================================================================
@@ -93,6 +108,27 @@ namespace LoKi
      */
     LoKi::KalmanFilter::ParticleType 
     particleType_ ( const LHCb::Particle& p ) const ;
+    // ========================================================================
+    /** get the particle type 
+     *  @see LoKi::KalmanFilter::ParticleType
+     */
+    LoKi::KalmanFilter::ParticleType 
+    particleType_ ( const LHCb::Particle* p ) const 
+    {
+      if ( 0 == p ) { return LoKi::KalmanFilter::UnspecifiedParticle ; }  // RETURN
+      return particleType_ ( *p ) ;
+    }    
+    // ========================================================================
+    /** good for vertex ? 
+     *  @attention This definiton is <b>different</b> from the 
+     *  definition by LoKi::KalmanFilter::okForVertex
+     *  @see LoKi::KalmanFilter::okForVertex
+     */
+    bool goodForVertex_ ( const LHCb::Particle::Range&    parts ) const 
+    {
+      /// two or more long-lived particles are required for vertex
+      return 2 <= nForVertex ( parts.begin() , parts.end() ) ;
+    }
     // ========================================================================
   protected:
     // ========================================================================
@@ -124,10 +160,9 @@ namespace LoKi
     // ========================================================================
   private:
     // ========================================================================
-    template <class PARTICLE>
     /// good gor vertex ? 
-    std::size_t nForVertex ( PARTICLE first , 
-                             PARTICLE last  ) const ;
+    template <class PARTICLE>
+    std::size_t nForVertex ( PARTICLE first , PARTICLE last  ) const ;
     // ========================================================================
   private:
     // ========================================================================
@@ -163,6 +198,38 @@ namespace LoKi
   };
   // ==========================================================================
 } //                                                      end of namespace LoKi
+// ============================================================================
+// good for vertex ?
+// ============================================================================
+template <class PARTICLE>
+inline std::size_t 
+LoKi::ParticleClassificator::nForVertex
+( PARTICLE first ,
+  PARTICLE last  ) const
+{
+  //
+  std::size_t nTr = 0 ;
+  //
+  for ( ; first != last ; ++first )
+  {
+    const LHCb::Particle* p = *first ;
+    if ( NULL == p ) { continue ; }
+    //
+    LoKi::KalmanFilter::ParticleType pType = particleType_ ( p ) ;
+    //
+    // 1 for long-lived particles
+    if      ( LoKi::KalmanFilter::LongLivedParticle  == pType )
+    { ++nTr ; }
+    // number for long-lived particles for short lived resonance
+    else if ( LoKi::KalmanFilter::ShortLivedParticle == pType )
+    {
+      const SmartRefVector<LHCb::Particle>& daughters = p->daughters() ;
+      nTr += nForVertex ( daughters.begin() , daughters.end() ) ;
+    }
+    //
+  }
+  return nTr ;
+}
 // ============================================================================
 // The END 
 // ============================================================================

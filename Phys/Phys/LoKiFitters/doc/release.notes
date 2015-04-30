@@ -5,6 +5,9 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2015-04-30 - Vanya Belyaev
+ - convert base class into separate component (for Mike Sokoloff)
+
 !========================= LoKiFitters v4r13 2015-03-31 =========================
 
 ! 2015-03-19 - Vanya Belyaev

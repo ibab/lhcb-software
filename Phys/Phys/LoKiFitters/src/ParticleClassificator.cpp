@@ -57,7 +57,7 @@ LoKi::ParticleClassificator::ParticleClassificator
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent )
-  : MessagingBase ( type , name , parent )
+  : base_class ( type , name , parent )
     /// particle classification:
   , m_ppSvc               (  0      )
   , m_longLived           (         )
@@ -244,16 +244,6 @@ StatusCode LoKi::ParticleClassificator::finalize()
 // get the particle type
 // ============================================================================
 LoKi::KalmanFilter::ParticleType
-LoKi::ParticleClassificator::particleType ( const LHCb::Particle* p ) const
-{
-  //
-  if ( 0 == p ) { return LoKi::KalmanFilter::UnspecifiedParticle ; }  // RETURN
-  return particleType_ ( *p ) ;
-}
-// ============================================================================
-// get the particle type
-// ============================================================================
-LoKi::KalmanFilter::ParticleType
 LoKi::ParticleClassificator::particleType_ ( const LHCb::Particle& p ) const
 {
   //
@@ -288,46 +278,8 @@ LoKi::ParticleClassificator::particleType_ ( const LHCb::Particle& p ) const
   return LoKi::KalmanFilter::UnspecifiedParticle ;
 }
 // ============================================================================
-// good for vertex ?
-// ============================================================================
-template <class PARTICLE>
-inline
-std::size_t LoKi::ParticleClassificator::nForVertex
-( PARTICLE first ,
-  PARTICLE last  ) const
-{
-  //
-  std::size_t nTr = 0 ;
-  //
-  for ( ; first != last ; ++first )
-  {
-    const LHCb::Particle* p = *first ;
-    if ( NULL == p ) { continue ; }
-    //
-    LoKi::KalmanFilter::ParticleType pType = particleType ( p ) ;
-    //
-    // 1 for long-lived particles
-    if      ( LoKi::KalmanFilter::LongLivedParticle  == pType )
-    { ++nTr ; }
-    // number for long-lived particles for short lived resonance
-    else if ( LoKi::KalmanFilter::ShortLivedParticle == pType )
-    {
-      const SmartRefVector<LHCb::Particle>& daughters = p->daughters() ;
-      nTr += nForVertex ( daughters.begin() , daughters.end() ) ;
-    }
-    //
-  }
-  return nTr ;
-}
-// ============================================================================
-// good for vertex ?
-// ============================================================================
-bool LoKi::ParticleClassificator::goodForVertex
-( const LHCb::Particle::ConstVector& parts ) const
-{
-  /// two or more long-lived particles are required for vertex
-  return 2 <= nForVertex ( parts.begin() , parts.end() ) ;
-}
+/// the factory needed for instantiation
+DECLARE_NAMESPACE_TOOL_FACTORY ( LoKi , ParticleClassificator )
 // ============================================================================
 // The END
 // ============================================================================
