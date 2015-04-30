@@ -4,6 +4,8 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingArchive v1r28 2015-04-30 =========================
+
 ! 2015-04-21 - Andrea Contu
  - Small change to __init__.py
 
