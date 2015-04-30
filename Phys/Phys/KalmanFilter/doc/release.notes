@@ -6,6 +6,11 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit 
 ! -----------------------------------------------------------------------------
 
+! 2015-04-30 - Vanya Belyaev
+
+ - add IParticleClassifier interface 
+    needed for bypassing full vertex fit   (for Mike Sokoloff) 
+
 !========================= KalmanFilter v1r11 2015-03-31 ======================
 
 ! 2015-03-07 - Vanya Belyaev

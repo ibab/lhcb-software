@@ -9,6 +9,7 @@
 #include "KalmanFilter/ParticleTypes.h"
 #include "KalmanFilter/VertexFit.h"
 #include "KalmanFilter/VertexFitWithTracks.h"
+#include "Kernel/IParticleClassifier.h"
 // ============================================================================
 /** @file
  *  Helper file to build Reflex dictionry for Kalman filter package 

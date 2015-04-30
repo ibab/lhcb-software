@@ -12,7 +12,9 @@
 
 <lcgdict>
   
-  <class    name = "LoKi::FastVertex"/>
+  <class    name = "IParticleClassifier"/>
+
+  <class    name = "LoKi::FastVertex"   />
   
   <enum     name = "LoKi::KalmanFilter::ErrorCodes"    />
   <enum     name = "LoKi::KalmanFilter::ParticleTypes" />
