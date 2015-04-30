@@ -21,7 +21,12 @@ juggler = RawEventJuggler( DataOnDemand=True, Input=2.0, Output=4.0 )
 
 
 # Specify the name of your configuration
-my_wg='ALL' #FOR LIAISONS
+confname = [ 'MuIDCalib' ,
+             'noPIDDstar', 
+             'VznoPID' , 
+             'ElectronIDCalib' , 
+             'PIDCalib'
+	     ]
 
 
 # NOTE: this will work only if you inserted correctly the 
@@ -29,8 +34,8 @@ my_wg='ALL' #FOR LIAISONS
 # is defined.
 from StrippingSelections import buildersConf
 confs = buildersConf()
-from StrippingSelections.Utils import lineBuilder, buildStreams
-streams = buildStreams( confs, WGs=my_wg )
+from StrippingSelections.Utils import lineBuilder, buildStreamsFromBuilder
+streams = buildStreamsFromBuilder(confs,confname)
 
 leptonicMicroDSTname   = 'Leptonic'
 charmMicroDSTname      = 'Charm'
@@ -49,7 +54,6 @@ sc = StrippingConf( Streams = streams,
                     AcceptBadEvents = False,
                     BadEventSelection = ProcStatusCheck(),
                     TESPrefix = stripTESPrefix,
-                    ActiveMDSTStream = True,
                     Verbose = True,
                     DSTStreams = dstStreams,
                     MicroDSTStreams = mdstStreams )
@@ -94,11 +98,57 @@ SelDSTWriterConf = {
     pidMicroDSTname          : stripCalibMicroDSTStreamConf(pack=enablePacking, selectiveRawEvent=True)
     }
 
+import os
 dstWriter = SelDSTWriter( "MyDSTWriter",
                           StreamConf = SelDSTWriterConf,
                           MicroDSTElements = SelDSTWriterElements,
-                          OutputFileSuffix ='000000',
+                          OutputFileSuffix = os.environ['FIRST_FILE'],
                           SelectionSequences = sc.activeStreams() )
+
+#
+# Get lines that needs MDST.DST and their required raw banks
+#
+mdstDstLines = [ line.name() for line in sc.activeLines(mdstStreams) if (line.MDSTFlag and line.prescale() > 0) ]
+mdstDstRawEvts = { }
+for stream in sc.activeStreams() :
+    if stream.name() in mdstStreams :
+        mdstDstRawEvts.update( stream.getRequiredRawEvents() )
+# Locations to veto from MDST.DST
+tesVETO = [ "/Event/Velo/RawEvent",
+            "/Event/Tracker/RawEvent",
+            "/Event/Rich/RawEvent",
+            "/Event/Calo/RawEvent",
+            "/Event/Muon/RawEvent",
+            "/Event/Other/RawEvent" ]
+tesVETO += ["/Event/"+name+"/#99" for name in dstStreams]
+# Locations to add to MDST.DST
+tesOPT = [ '/Event/'+stripTESPrefix+'#99' ] + [ '/Event/'+name+"#99" for name in mdstStreams ]
+
+#
+# Sequence of configuration to create the MDST.DST output
+#
+from Configurables import GaudiSequencer
+mdstDstSeq = GaudiSequencer( "MDSTDSTSeq" )
+
+#from Configurables import StoreExplorerAlg
+#mdstDstSeq.Members += [ StoreExplorerAlg("ExploreTES") ]
+
+from Configurables import AddressKillerAlg
+mdstDstSeq.Members += [ AddressKillerAlg( name = "KillTESAddresses_MDSTDST" ) ]
+
+from Configurables import FixInputCopyStream
+mdstDstSeq.Members += [ FixInputCopyStream() ]
+
+from Configurables import InputCopyStream
+from GaudiConf     import IOHelper
+mdstDstWriter = InputCopyStream( "MDSTDSTWriter",
+                                 AlgDependentItemList = mdstDstRawEvts,
+                                 AcceptAlgs = mdstDstLines,
+                                 OptItemList = tesOPT,
+                                 TESVetoList = tesVETO )
+mdstDstSeq.Members += IOHelper().outputAlgs( filename = '000000.MDST.DST.dst',
+                                             writer = mdstDstWriter,
+                                             writeFSR = True )
 
 
 #
@@ -121,6 +171,7 @@ AuditorSvc().Auditors.append( ChronoAuditor("Chrono") )
 
 from Configurables import StrippingReport
 sr = StrippingReport(Selections = sc.selections())
+sr.Correlation = True
 
 from Configurables import AlgorithmCorrelationsAlg
 ac = AlgorithmCorrelationsAlg(Algorithms = sc.selections())
@@ -130,8 +181,9 @@ DaVinci().EvtMax = 10000
 DaVinci().PrintFreq = 2000
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
-#DaVinci().appendToMainSequence( [ ac ] )
+DaVinci().appendToMainSequence( [ ac ] )
 DaVinci().appendToMainSequence( [ dstWriter.sequence() ] )
+if(len(mdstDstLines)>0): DaVinci().appendToMainSequence( [ mdstDstSeq ] )
 DaVinci().ProductionType = "Stripping"
 DaVinci().DataType  = "2012"
 DaVinci().InputType = "DST"
@@ -148,4 +200,4 @@ DaVinci().DDDBtag  = "dddb-20120831"
 DaVinci().CondDBtag = "cond-20121008"
 
 # input file
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_Run125113.py")
+#importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_Run125113.py")

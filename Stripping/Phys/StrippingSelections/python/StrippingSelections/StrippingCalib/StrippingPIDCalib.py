@@ -546,6 +546,8 @@ class PIDCalibLineBuilder(LineBuilder):
                               , EnableFlavourTagging = False
                               , RequiredRawEvents    = _config['RawEvent']
                               , MDSTFlag             = _config['MDST.DST']
+                              , HLT1                 = _config['HLT1'] 
+                              , HLT2                 = _config['HLT2'] 
                               , algos    = [ _selection ]
                            )
       

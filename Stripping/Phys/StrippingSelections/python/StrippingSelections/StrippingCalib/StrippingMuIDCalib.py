@@ -30,7 +30,7 @@ __all__     = ( 'MuIDCalibConf',
 
 default_config = {
     'NAME'        : 'MuIDCalib',
-    'WGs'         : ['Calibration'],
+    'WGs'         : ['ALL'],
     'BUILDERTYPE' : 'MuIDCalibConf',
     'CONFIG'      : {'PromptPrescale'           : 0., #not used anymore 0.08 old prescale
                      'DetachedPrescale'         : 0.,

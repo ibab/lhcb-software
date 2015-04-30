@@ -104,12 +104,16 @@ default_config = {
 			,	'ZHLT1TisTosSpecs': { "Hlt1SingleMuonHighPTDecision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
 			,	'UpsilonHLT1TisTosSpecs': { "Hlt1SingleMuonHighPTDecision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
 			,	'HLT1PassOnAll': True
-			,	'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0, "Hlt2TrackEffDownstream.*Decision%TOS" : 0 } #reg. expression allowed
+			,	'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0, "Hlt2TrackEffDiMuonDownstream.*Decision%TOS" : 0 } #reg. expression allowed
 			,	'ZHLT2TisTosSpecs': { "Hlt2SingleMuonHighPTDecision%TOS" : 0 } #reg. expression allowed
 			,	'UpsilonHLT2TisTosSpecs': { "Hlt2SingleMuonLowPTDecision%TOS" : 0} #reg. expression allowed
 			,	'HLT2PassOnAll': False
                     },
-    'STREAMS'     : { 'Calibration' : ['StrippingTrackEffDownMuonNominalLine','StrippingTrackEffDownMuonValidationLine','StrippingTrackEffDownMuonZLine','StrippingTrackEffDownMuonUpsilonLine']}
+    'STREAMS'     : { 'Calibration' : ['StrippingTrackEffDownMuonNominalLine'
+	                                   ,'StrippingTrackEffDownMuonValidationLine'
+                                       ,'StrippingTrackEffDownMuonZLine'
+                                       ,'StrippingTrackEffDownMuonUpsilonLine']
+                                       }
     }
 
 

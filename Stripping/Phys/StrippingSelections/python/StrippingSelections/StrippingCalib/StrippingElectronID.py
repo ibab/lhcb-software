@@ -59,7 +59,7 @@ config_default =  {
 
 default_config = {
     'NAME'        : 'ElectronIDCalib',
-    'WGs'         : ['Calibration'],
+    'WGs'         : ['ALL'],
     'BUILDERTYPE' : 'ElectronIDConf',
     'CONFIG'      : config_default,
     'STREAMS'     :  [ 'PID' ]

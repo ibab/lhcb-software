@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-04-30 - Michael Kolpin
+ - Updated TrackEff lines, requiring Hlt2 Turbo lines and option to disable Hlt1TOS check
+ - Added test for all calibration lines, moved PID test file to /liaisons/Calibrations/TestPIDLines.py
+ - Changed WGs to 'ALL' for StrippingElectronID and StrippingMuIDCalib
+ - Fix to StrippingPIDCalib
+
 ! 2015-04-30 - Jianchun Wang
  - Add StrippingRD/StrippingBs2st2KKMuX.py
 

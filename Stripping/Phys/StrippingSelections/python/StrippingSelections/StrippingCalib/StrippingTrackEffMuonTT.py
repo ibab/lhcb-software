@@ -105,9 +105,10 @@ default_config = {
 			'VertexChi2'                  : 5,
 			'LongMuonPID'                 : 2,
 			'JpsiHlt1Triggers'            :  { "Hlt1TrackMuonDecision%TOS" : 0},
+            'Hlt1PassOnAll'               : True,
 			'UpsilonHlt1Triggers'         :  { "Hlt1SingleMuonHighPTDecision%TOS" : 0},
 			'ZHlt1Triggers'               :  { "Hlt1SingleMuonHighPTDecision%TOS" : 0},
-			'JpsiHlt2Triggers'            :  { "Hlt2SingleMuon.*Decision%TOS" : 0, "Hlt2TrackEffMuonTT.*Decision%TOS" : 0},
+			'JpsiHlt2Triggers'            :  { "Hlt2SingleMuon.*Decision%TOS" : 0, "Hlt2TrackEffDiMuonMuonTT.*Decision%TOS" : 0},
 			'UpsilonHlt2Triggers'         :  { "Hlt2SingleMuonLowPTDecision%TOS" : 0},
 			'ZHlt2Triggers'               :  { "Hlt2SingleMuonHighPTDecision%TOS" : 0},
 			'BJpsiKHlt2TriggersTUS'       :  { "Hlt2TopoMu2BodyBBDTDecision%TUS" : 0},
@@ -118,7 +119,15 @@ default_config = {
 			'BJpsiKPrescale'              : 1,
 			'Postscale'                   : 1
                     },
-    'STREAMS'     : { 'Calibration' : ['StrippingTrackEffMuonTT_JpsiLine1','StrippingTrackEffMuonTT_JpsiLine2','StrippingTrackEffMuonTT_UpsilonLine1','StrippingTrackEffMuonTT_UpsilonLine2','StrippingTrackEffMuonTT_ZLine1','StrippingTrackEffMuonTT_ZLine2','StrippingTrackEffMuonTT_BJpsiKLine1','StrippingTrackEffMuonTT_BJpsiKLine2']}
+    'STREAMS'     : { 'Calibration' : ['StrippingTrackEffMuonTT_JpsiLine1'
+                                      ,'StrippingTrackEffMuonTT_JpsiLine2'
+                                      ,'StrippingTrackEffMuonTT_UpsilonLine1'
+                                      ,'StrippingTrackEffMuonTT_UpsilonLine2'
+                                      ,'StrippingTrackEffMuonTT_ZLine1'
+                                      ,'StrippingTrackEffMuonTT_ZLine2'
+                                      ,'StrippingTrackEffMuonTT_BJpsiKLine1'
+                                      ,'StrippingTrackEffMuonTT_BJpsiKLine2']
+                                      }
     }
 
 
@@ -185,6 +194,7 @@ class StrippingTrackEffMuonTTConf(LineBuilder) :
                               'VertexChi2',
                               'LongMuonPID',
                               'JpsiHlt1Triggers',
+                              'Hlt1PassOnAll',
                               'UpsilonHlt1Triggers',
                               'ZHlt1Triggers',
                               'JpsiHlt2Triggers',
@@ -225,8 +235,8 @@ class StrippingTrackEffMuonTTConf(LineBuilder) :
         self.SelFilterLongPartsMuUpsilonZ  = selFilterLongPartsMuUpsilonZ(name+'UpsilonZ')
         # ####################################
         # J/psis
-        self.SelHlt1JpsiMinus = selHlt1Jpsi(name+'JpsiMinus', longPartsFilter = self.SelFilterLongPartsMuJpsi, triggers = config['JpsiHlt1Triggers'])
-        self.SelHlt1JpsiPlus = selHlt1Jpsi(name+'JpsiPlus', longPartsFilter = self.SelFilterLongPartsMuJpsi, triggers = config['JpsiHlt1Triggers'])
+        self.SelHlt1JpsiMinus = selHlt1Jpsi(name+'JpsiMinus', longPartsFilter = self.SelFilterLongPartsMuJpsi, triggers = config['JpsiHlt1Triggers'], passonall = config['Hlt1PassOnAll'])
+        self.SelHlt1JpsiPlus = selHlt1Jpsi(name+'JpsiPlus', longPartsFilter = self.SelFilterLongPartsMuJpsi, triggers = config['JpsiHlt1Triggers'], passonall = config['Hlt1PassOnAll'])
         self.SelHlt2JpsiMinus = selHlt2Jpsi(name+'JpsiMinus', hlt1Filter = self.SelHlt1JpsiMinus, triggers = config['JpsiHlt2Triggers'])
         self.SelHlt2JpsiPlus = selHlt2Jpsi(name+'JpsiPlus', hlt1Filter = self.SelHlt1JpsiPlus, triggers = config['JpsiHlt2Triggers'])
 
@@ -259,8 +269,8 @@ class StrippingTrackEffMuonTTConf(LineBuilder) :
         # ##########################################
         # B-> J/psi K
         # first for the J/psi object
-        self.SelHlt1BJpsiKMinus = selHlt1Jpsi(name+'BJpsiKMinus', longPartsFilter = self.SelFilterLongPartsMuJpsi, triggers = config['JpsiHlt1Triggers']) # HLT1 is the same as for Jpsis!
-        self.SelHlt1BJpsiKPlus = selHlt1Jpsi(name+'BJpsiKPlus', longPartsFilter = self.SelFilterLongPartsMuJpsi, triggers = config['JpsiHlt1Triggers'])
+        self.SelHlt1BJpsiKMinus = selHlt1Jpsi(name+'BJpsiKMinus', longPartsFilter = self.SelFilterLongPartsMuJpsi, triggers = config['JpsiHlt1Triggers'], passonall = config['Hlt1PassOnAll']) # HLT1 is the same as for Jpsis!
+        self.SelHlt1BJpsiKPlus = selHlt1Jpsi(name+'BJpsiKPlus', longPartsFilter = self.SelFilterLongPartsMuJpsi, triggers = config['JpsiHlt1Triggers'], passonall = config['Hlt1PassOnAll'])
         self.SelHlt2BJpsiKMinus = selHlt2BJpsiKMu(name+'BJpsiKMinus', hlt1Filter = self.SelHlt1BJpsiKMinus, triggers = config['BJpsiKHlt2TriggersTUS'])
         self.SelHlt2BJpsiKPlus = selHlt2BJpsiKMu(name+'BJpsiKPlus', hlt1Filter = self.SelHlt1BJpsiKPlus, triggers = config['BJpsiKHlt2TriggersTUS'])
         
@@ -629,7 +639,7 @@ def selMuonTTParts(name, protoParticlesMaker):
 # ########################################################################################
 # HLT 1 lines we run on
 # ########################################################################################
-def selHlt1Jpsi(name, longPartsFilter, triggers):
+def selHlt1Jpsi(name, longPartsFilter, triggers, passonall):
     """
     Filter the long track muon to be TOS on a HLT1 single muon trigger, for J/psi selection
     """
@@ -641,7 +651,7 @@ def selHlt1Jpsi(name, longPartsFilter, triggers):
     Hlt1Jpsi.CaloClustForNeutral = False
     Hlt1Jpsi.TOSFrac = { 4:0.0, 5:0.0 }
     Hlt1Jpsi.NoRegex = True
-    #Hlt1Jpsi.PassOnAll = True # TESTING!
+    Hlt1Jpsi.PassOnAll = passonall # TESTING!
 #
     return Selection(name+"_SelHlt1Jpsi", Algorithm = Hlt1Jpsi, RequiredSelections = [ longPartsFilter ])
 # ################################################################
