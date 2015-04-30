@@ -12,9 +12,9 @@ from HltLine.HltLinesConfigurableUser import *
 
 class Hlt1CEPLinesConf( HltLinesConfigurableUser ):
     __slots__ = {
-          'SpdMult'    :    30.   # dimensionless, Spd Multiplicy cut
-        , 'MaxNVelo'   :    15.   # dimensionless, 
-        , 'MinNVelo'   :     1.   # dimensionless, 
+          'SpdMult'    :   100.   # dimensionless, Spd Multiplicy cut
+        , 'MaxNVelo'   :  1000.   # dimensionless, 
+        , 'MinNVelo'   :     2.   # dimensionless, 
         , 'TrChi2'     :     5.   # dimensionless, 
         , 'PT'         :   200.   # MeV
         , 'P'          :  1000.   # MeV 
