@@ -6,7 +6,7 @@ find_package(GaudiProject)
 #---------------------------------------------------------------
 
 # Declare project name and version
-gaudi_project(Stripping v9r5
-              USE Phys v19r5
-                  Lbcom v16r4
+gaudi_project(Stripping v9r6
+              USE Phys v19r6
+                  Lbcom v16r5
               DATA TMVAWeights)
