@@ -146,7 +146,7 @@ _default_configuration_ = {
     "mxb_high  = 6.410 * GeV " , 
     "mb0_cut   = in_range ( 5.140 * GeV ,  M , mb0_high    ) " ,
     "mbu_cut   = in_range ( 5.140 * GeV ,  M , mbu_high    ) " ,
-    "mlb_cut   = in_range ( 5.390 * GeV ,  M , mlb_hig h   ) " ,
+    "mlb_cut   = in_range ( 5.390 * GeV ,  M , mlb_high   ) " ,
     "mxb_cut   = in_range ( 5.390 * GeV ,  M , mxb_high    ) " ,
     "mbc_cut   = in_range ( 6.090 * GeV ,  M , 6.510 * GeV ) " ,
     ] ,

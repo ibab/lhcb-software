@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-04-30 - Roberta Cardinale
+ - Fix FT warning in StrippingBandQ/StrippingB2JpsiXforEM_s.py 
+ - bug fix in StrippingBandQ/StrippingPsiXForBandQ.py
+
 ! 2015-04-29 - Lucio Anderlini 
   - Updates to StrippingCalib/StrippingPIDCalib.py
    . minor bug fixes in the DiLepton lines

@@ -203,7 +203,7 @@ class B2JpsiXforEM_sConf(LineBuilder) :
         Bu2JpsiKDetached = self.createSubSel( InputList = Bu2JpsiK, OutputList = Bu2JpsiK.name() + "Detached" + self.name,
                                               Cuts = "(CHILD('Beauty -> ^J/psi(1S) X', PFUNA(ADAMASS('J/psi(1S)'))) < %(JpsiMassWindow)s * MeV) & (BPVLTIME() > %(BPVLTIME)s *ps)" % self.config)
 
-        Bu2JpsiKDetachedLine  = StrippingLine( self.name + "Bu2JpsiKDetachedLine", algos = [ Bu2JpsiKDetached ], EnableFlavourTagging = True )
+        Bu2JpsiKDetachedLine  = StrippingLine( self.name + "Bu2JpsiKDetachedLine", algos = [ Bu2JpsiKDetached ] )
         
         self.registerLine(Bu2JpsiKDetachedLine)
         #self.registerLine(Bu2JpsiKPrescaledLine)
@@ -221,7 +221,7 @@ class B2JpsiXforEM_sConf(LineBuilder) :
                                                 OutputList = Bs2JpsiPhi.name() + "Detached" + self.name,
                                                 Cuts = "(CHILD('Beauty -> ^J/psi(1S) X', PFUNA(ADAMASS('J/psi(1S)'))) < %(JpsiMassWindow)s * MeV) & (BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )
 
-        Bs2JpsiPhiDetachedLine  = StrippingLine( self.name + "Bs2JpsiPhiDetachedLine", algos = [ Bs2JpsiPhiDetached ], EnableFlavourTagging = True )
+        Bs2JpsiPhiDetachedLine  = StrippingLine( self.name + "Bs2JpsiPhiDetachedLine", algos = [ Bs2JpsiPhiDetached ] )
         
         #self.registerLine(Bs2JpsiPhiPrescaledLine)
         self.registerLine(Bs2JpsiPhiDetachedLine)
@@ -242,7 +242,7 @@ class B2JpsiXforEM_sConf(LineBuilder) :
                                                   Cuts = "(CHILD('Beauty -> ^J/psi(1S) X', PFUNA(ADAMASS('J/psi(1S)'))) < %(JpsiMassWindow)s * MeV) & (BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )
 
         Bd2JpsiKstarDetachedLine  = StrippingLine( self.name + "Bd2JpsiKstarDetachedLine",
-                                          algos = [ Bd2JpsiKstarDetached ], EnableFlavourTagging = True  )
+                                          algos = [ Bd2JpsiKstarDetached ]  )
 
         #self.registerLine(Bd2JpsiKstarPrescaledLine)
         self.registerLine(Bd2JpsiKstarDetachedLine)
