@@ -4,6 +4,8 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingConf v4r15 2015-04-30 =========================
+
 ! 2015-03-30 - Stefano Perazzini
  - New bug fix to MDST stream
 
