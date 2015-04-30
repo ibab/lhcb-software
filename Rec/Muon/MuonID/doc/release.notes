@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !========================= MuonID v9r14 2015-03-31 =========================
+! 2015-04-30 - Ricardo Vazquez Gomez
+ - Remove the cleaning of muonPIDs as it prevent them to be written.
+ - Clean the MakeMuonTool from the chi2cut flag
+
 ! 2015-04-29 - Ricardo Vazquez Gomez
  - Modify the algorithms to use DLLflag = 5 corresponding to the new calibration.
    The algorithms are configured to run with either DLLflag = 4 or DLLflag = 5 

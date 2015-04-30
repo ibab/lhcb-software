@@ -49,7 +49,7 @@ MakeMuonTool::MakeMuonTool( const std::string& type,
   declareProperty("MinMomSt4",m_3hits = 4500);   
 
   //Use chi2cut when selecting candidates?
-  declareProperty("Chi2Cut",m_chi2cut=0.);
+  //declareProperty("Chi2Cut",m_chi2cut=0.);
 
 }
 
@@ -88,7 +88,7 @@ StatusCode MakeMuonTool::initialize() {
     debug()<<"DiscrValue="<<m_discrval<<endmsg;
     debug()<<"MinMomSt3="<<m_2hits<<endmsg;
     debug()<<"MinMomSt4="<<m_3hits<<endmsg;
-    debug()<<"Chi2Cut="<<m_chi2cut<<endmsg;
+    //debug()<<"Chi2Cut="<<m_chi2cut<<endmsg;
     debug()<<"M1 exists ? "<<m_isM1defined<<endmsg;
   }
   
@@ -180,6 +180,7 @@ StatusCode MakeMuonTool::muonCandidate(const LHCb::Track& seed,
     return sc;
   }
 
+/*
   // if chi2cut required, perform fit with muonquality
   if (m_chi2cut>0.){
     if (msgLevel(MSG::DEBUG) ) debug()<< "Applying chi2cut"<<endmsg;
@@ -205,6 +206,7 @@ StatusCode MakeMuonTool::muonCandidate(const LHCb::Track& seed,
       
     }
   }
+*/
 
   if (del_muonprov) delete m_muonProvider;
   return sc;

@@ -62,7 +62,6 @@ StatusCode MuonIDAlgLite::execute() {
               << "'. Container has been cleared and its contents will be "
                  "replaced.";
   }
-  muPids->setVersion(1);  // TODO: still valid? do we need a new version?
   LHCb::Tracks *muTracks =
       getOrCreate<LHCb::Tracks, LHCb::Tracks>(tesPathOutputMuonTracks_);
   if (!muTracks->empty()) {
@@ -71,6 +70,8 @@ StatusCode MuonIDAlgLite::execute() {
         << "Muon tracks already existed at '" << tesPathOutputMuonTracks_
         << "'. Container has been cleared and its contents will be replaced.";
   }
+
+  muPids->setVersion(1);  // TODO: still valid? do we need a new version?
 
   counter("nPreSelTrack");
   counter("nExtrapolated");
@@ -130,8 +131,8 @@ StatusCode MuonIDAlgLite::execute() {
     LHCb::Track* muTrack = 0;
     if (isMuonLoose==1) {
       counter("nIsMuonLoose")++;
-      if(msgLevel(MSG::DEBUG)) debug() << "Inserting the track with momentum = " << track->p() << " into muonPids" << endmsg;
-      muPids->insert(muPid,(*track).key()); // insert only the tracks that pass the isMuonLoose as afterwards this requirement is asked
+//      if(msgLevel(MSG::DEBUG)) debug() << "Inserting the track with momentum = " << track->p() << " into muonPids" << endmsg;
+//      muPids->insert(muPid,(*track).key()); // insert only the tracks that pass the isMuonLoose as afterwards this requirement is asked
       counter("nMuonPIDs")++;
       muPid->setIDTrack(*iTrack);
       
@@ -148,7 +149,10 @@ StatusCode MuonIDAlgLite::execute() {
       }
       muPid->setMuonLLMu(log(ProbMu));
       muPid->setMuonLLBg(log(ProbNonMu));
-      
+
+      if(msgLevel(MSG::DEBUG)) debug() << "Inserting the track with momentum = " << track->p() << " into muonPids" << endmsg;
+      muPids->insert(muPid,(*track).key()); // insert only the tracks that pass the isMuonLoose as afterwards this requirement is asked
+
       // compute the NShared
       DLLTool_->calcNShared(muPid,&(*muPids),hits,extrapolation,m_muonMap);
     
@@ -161,9 +165,6 @@ StatusCode MuonIDAlgLite::execute() {
   
   } // end loop over tracks
   
-  muPids->clear();
-  muTracks->clear();
-  m_muonMap.clear();
   return StatusCode::SUCCESS;
 }
 
