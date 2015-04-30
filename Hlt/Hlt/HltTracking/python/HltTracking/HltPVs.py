@@ -62,7 +62,7 @@ def PV3D(where):
     proto3DVertices = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,ProtoPV3DSelection)
     recoPV3D = PatPV3D('HltPVsPV3D' )
     recoPV3D.addTool(PVOfflineTool,"PVOfflineTool")
-    recoPV3D.PVOfflineTool.PVSeedingName = "PVSeedTool"
+    recoPV3D.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
     recoPV3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
     recoPV3D.PVOfflineTool.addTool(LSAdaptPV3DFitter, "LSAdaptPV3DFitter")
     offlineTool = recoPV3D.PVOfflineTool

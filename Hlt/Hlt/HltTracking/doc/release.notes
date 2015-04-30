@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-04-30 - Sascha Stahl
+ - Changed PVSeedingTool to the default (PVSeed3DTool) and set ResolverBound value to
+   the default 5 mm.
+
 !========================= HltTracking v13r7 2015-04-28 =========================
 
 ! 2015-04-29 - Sascha Stahl
