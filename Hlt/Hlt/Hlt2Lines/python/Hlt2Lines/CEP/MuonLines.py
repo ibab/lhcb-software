@@ -3,12 +3,12 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 
 class CEPMuonLines() :
     def localcuts(self) :
-        return {    'DiMuon'    :   {'nVeloTracksmax'   :     10,
-                                     'nBackTracksmax'   :     1,
+        return {    'DiMuon'    :   {'nVeloTracksmax'   :     100,
+                                     'nBackTracksmax'   :     5,
                                      'AMmin'            :     0.0 * GeV,
                                      'mu_PTmin'         :     400 * MeV},
-                    'DiMuon_PS' :   {'nVeloTracksmax'   :     10,
-                                     'nBackTracksmax'   :     1,
+                    'DiMuon_PS' :   {'nVeloTracksmax'   :     100,
+                                     'nBackTracksmax'   :     5,
                                      'AMmin'            :     0.0 * GeV,
                                      'mu_PTmin'         :     400 * MeV},
                     'Muon'      :   {'nVeloTracksmax'   :     8,

@@ -24,50 +24,50 @@ _CEPPhotonLines = CEPPhotonLines();
 _CEPElectronLines = CEPElectronLines();
 
 theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
-                                 , 'Hlt2LowMultL2pPiWS'     : 0.1
+                                 , 'Hlt2LowMultL2pPiWS'     : 0.2
                                  , 'Hlt2LowMultD2KPi'       : 1.0
-                                 , 'Hlt2LowMultD2KPiWS'     : 0.1
+                                 , 'Hlt2LowMultD2KPiWS'     : 0.2
                                  , 'Hlt2LowMultD2KPiPi'     : 1.0
-                                 , 'Hlt2LowMultD2KPiPiWS'   : 0.1
+                                 , 'Hlt2LowMultD2KPiPiWS'   : 0.2
                                  , 'Hlt2LowMultD2KKPi'      : 1.0
-                                 , 'Hlt2LowMultD2KKPiWS'    : 0.1
+                                 , 'Hlt2LowMultD2KKPiWS'    : 0.2
                                  , 'Hlt2LowMultD2K3Pi'      : 1.0
-                                 , 'Hlt2LowMultD2K3PiWS'    : 1.0
+                                 , 'Hlt2LowMultD2K3PiWS'    : 0.2
                                  , 'Hlt2LowMultChiC2HH'     : 1.0
-                                 , 'Hlt2LowMultChiC2HHWS'   : 0.1
+                                 , 'Hlt2LowMultChiC2HHWS'   : 0.2
                                  , 'Hlt2LowMultChiC2HHHH'   : 1.0
-                                 , 'Hlt2LowMultChiC2HHHHWS' : 0.1
+                                 , 'Hlt2LowMultChiC2HHHHWS' : 0.2
                                  , 'Hlt2LowMultChiC2PP'     : 1.0
-                                 , 'Hlt2LowMultChiC2PPWS'   : 0.1
-                                 , 'Hlt2LowMultLMR2HH'      : 0.05
-                                 , 'Hlt2LowMultLMR2HHWS'    : 0.05
-                                 , 'Hlt2LowMultLMR2HHHH'    : 0.05
-                                 , 'Hlt2LowMultLMR2HHHHWS'  : 0.05
-                                 , 'Hlt2LowMultLMR2HH_mediumPS'      : 0.05
-                                 , 'Hlt2LowMultLMR2HHWS_mediumPS'    : 0.05
-                                 , 'Hlt2LowMultLMR2HHHH_mediumPS'    : 0.05
-                                 , 'Hlt2LowMultLMR2HHHHWS_mediumPS'  : 0.05
-                                 , 'Hlt2LowMultLMR2HH_heavyPS'      : 0.05
-                                 , 'Hlt2LowMultLMR2HHWS_heavyPS'    : 0.05
-                                 , 'Hlt2LowMultLMR2HHHH_heavyPS'    : 0.05
-                                 , 'Hlt2LowMultLMR2HHHHWS_heavyPS'  : 0.05
-                                 , 'Hlt2LowMultHadron_noTrFilt' : 0.01
+                                 , 'Hlt2LowMultChiC2PPWS'   : 0.2
+                                 , 'Hlt2LowMultLMR2HH'      : 1.0
+                                 , 'Hlt2LowMultLMR2HHWS'    : 0.2
+                                 , 'Hlt2LowMultLMR2HHHH'    : 1.0
+                                 , 'Hlt2LowMultLMR2HHHHWS'  : 0.2
+                                 , 'Hlt2LowMultLMR2HH_mediumPS'      : 0.0
+                                 , 'Hlt2LowMultLMR2HHWS_mediumPS'    : 0.0
+                                 , 'Hlt2LowMultLMR2HHHH_mediumPS'    : 0.0
+                                 , 'Hlt2LowMultLMR2HHHHWS_mediumPS'  : 0.0
+                                 , 'Hlt2LowMultLMR2HH_heavyPS'      : 0.0
+                                 , 'Hlt2LowMultLMR2HHWS_heavyPS'    : 0.0
+                                 , 'Hlt2LowMultLMR2HHHH_heavyPS'    : 0.0
+                                 , 'Hlt2LowMultLMR2HHHHWS_heavyPS'  : 0.0
+                                 , 'Hlt2LowMultHadron_noTrFilt' : 1.0
                                  # Muon lines
                                  , 'Hlt2LowMultDiMuon'      : 1.0
                                  , 'Hlt2LowMultDiMuon_PS'   : 1.0
-                                 , 'Hlt2LowMultMuon'        : 0.1
+                                 , 'Hlt2LowMultMuon'        : 1.0
                                  # Photon lines
                                  , 'Hlt2LowMultDiPhoton'    : 1.0
                                  , 'Hlt2LowMultDiPhoton_HighMass'    : 1.0
                                  , 'Hlt2LowMultPi0'         : 1.0
                                  # Electron lines
                                  , 'Hlt2LowMultDiElectron'    : 1.0
-                                 , 'Hlt2LowMultDiElectron_noTrFilt': 0.05
+                                 , 'Hlt2LowMultDiElectron_noTrFilt': 1.0
                                  # Technical lines
                                  , 'Hlt2LowMultTechnical_NoBias'        : 0.003 # Aim for 1 Hz from 300 Hz non-bb crossings
                                  , 'Hlt2LowMultTechnical_MinBias'       : 0.1
                                  }
-                    , 'HLT'               :   {"Hadron"     : "HLT_PASS_RE('Hlt1CEPDecision')",
+                    , 'HLT'               :   {"Hadron"     : "HLT_PASS_RE('Hlt1CEPVeloCutDecision')",
                                                "Muon"       : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
                                                "Photon"     : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
                                                "Electron"   : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",

@@ -62,6 +62,7 @@ class PhotonCombiner(Hlt2Combiner):
         mc = ("( (M > %(digamma_AMmin)s) & (M < %(digamma_AMmax)s) )")
         Hlt2Combiner.__init__(self, name, decay, inputs,
                               dependencies = [TrackGEC(name)],
+                              DaughtersCuts = dc,
                               ParticleCombiners={ '' : 'ParticleAdder'},
                               MotherCut = mc );
 
@@ -75,18 +76,18 @@ class HadronicCombiner(Hlt2Combiner):
               "& (ADOCAMAX('') < %(ADOCAmax)s)"+
               "& (in_range( %(AMmin)s, AM, %(AMmax)s ))")
         mc =    ("(VFASPF(VCHI2PDOF) < %(VtxChi2DoFmax)s)")
-        
         Hlt2Combiner.__init__(self, name, decay, inputs,
                               dependencies = [TrackGEC(name)],
+                              DaughtersCuts = dc,
                               CombinationCut = cc, MotherCut = mc, Preambulo = [])
 
 class HadronicCombiner_noTrFilt(Hlt2Combiner):
     def __init__(self, name, decay, inputs):
-        cc = ("(APT > %(APTmin)s)")
+        dc = {'K+'    : "(PT > %(PTmin)s)",
+              'K-'    : "(PT > %(PTmin)s)"}
         mc =    ("ALL")
-        
         Hlt2Combiner.__init__(self, name, decay, inputs,
-                              CombinationCut = cc, MotherCut = mc, Preambulo = [])
+                              DaughtersCuts = dc, MotherCut = mc, Preambulo = [])
 
 
 ##############################

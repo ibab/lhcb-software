@@ -5,14 +5,14 @@ class CEPPhotonLines() :
     def localcuts(self) :
         return { 'DiPhoton'           :   {'nVeloTracksmax'   :     10
                                           ,'nBackTracksmax'   :     1
-                                          ,'gamma_PTmin'      :     200 * MeV
+                                          ,'gamma_PTmin'      :     500 * MeV
                                           ,'digamma_AMmin'    :     0.0 * GeV
-                                          ,'digamma_AMmax'    :     5.0 * GeV},
+                                          ,'digamma_AMmax'    :     10000.0 * GeV},
                  'DiPhoton_HighMass'  :   {'nVeloTracksmax'   :     10
                                           ,'nBackTracksmax'   :     1
-                                          ,'gamma_PTmin'      :     200 * MeV
+                                          ,'gamma_PTmin'      :     500 * MeV
                                           ,'digamma_AMmin'    :     2.0 * GeV
-                                          ,'digamma_AMmax'    :     5.0 * GeV},
+                                          ,'digamma_AMmax'    :     10000.0 * GeV},
                  'pi0'                :   {'nVeloTracksmax'   :     10
                                           ,'nBackTracksmax'   :     1
                                           ,'pi0_PTmin'        :     200 * MeV}

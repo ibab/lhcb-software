@@ -51,7 +51,7 @@ class CEPHadronLines() :
                                      'APmin'          :     10000.0 * MeV,
                                      'ADOCAmax'       :     0.5 * mm,
                                      'VtxChi2DoFmax'  :     15.0,
-                                     'nVeloTracksmax' :     6,
+                                     'nVeloTracksmax' :     8,
                                      'nBackTracksmax' :     1,
                                      'AMmin'          :     2850.0 * MeV,
                                      'AMmax'          :     3600.0 * MeV,
@@ -73,32 +73,32 @@ class CEPHadronLines() :
                                      'APmin'          :     10000.0 * MeV,
                                      'ADOCAmax'       :     0.5 * mm,
                                      'VtxChi2DoFmax'  :     15.0,
-                                     'nVeloTracksmax' :     6,
+                                     'nVeloTracksmax' :     8,
                                      'nBackTracksmax' :     1,
                                      'AMmin'          :     2850.0 * MeV,
                                      'AMmax'          :     3600.0 * MeV,
                                      'P_PIDpmin'      :     0.0}
                   , 'LMR2HH'    :   {'APTmin'         :     0.0 * MeV,
-                                     'APTmax'         :     5000.0 * MeV,
-                                     'APmin'          :     15000.0 * MeV,
-                                     'ADOCAmax'       :     0.2 * mm,
+                                     'APTmax'         :     10000.0 * GeV,
+                                     'APmin'          :     0.0 * MeV,
+                                     'ADOCAmax'       :     0.3 * mm,
                                      'VtxChi2DoFmax'  :     4.0,
                                      'nVeloTracksmax' :     8,
                                      'nBackTracksmax' :     1,
-                                     'AMmin'          :     0.0 * MeV,
+                                     'AMmin'          :     0.240 * GeV,
                                      'AMmax'          :     15000.0 * GeV,
                                      'K_PIDKmin'      :     0.0,     
                                      'Pi_PIDKmax'     :     10000,
                                      'P_PIDpmin'      :     0.0}
                   , 'LMR2HHHH'  :   {'APTmin'         :     0.0 * MeV,
                                      'APTmax'         :     5000.0 * MeV,
-                                     'APmin'          :     15000.0 * MeV,
-                                     'ADOCAmax'       :     0.2 * mm,
+                                     'APmin'          :     0.0 * MeV,
+                                     'ADOCAmax'       :     0.3 * mm,
                                      'VtxChi2DoFmax'  :     4.0,
                                      'nVeloTracksmax' :     8,
                                      'nBackTracksmax' :     1,
                                      'AMmin'          :     400.0 * MeV,
-                                     'AMmax'          :     5000.0 * MeV,
+                                     'AMmax'          :     10000.0 * GeV,
                                      'K_PIDKmin'      :     0.0,     
                                      'Pi_PIDKmax'     :     10000}
                   , 'LMR2HH_mediumPS':   {'APTmin'         :     0.0 * MeV,
@@ -147,7 +147,7 @@ class CEPHadronLines() :
                                      'AMmax'          :     5000.0 * MeV,
                                      'K_PIDKmin'      :     0.0,     
                                      'Pi_PIDKmax'     :     10000}
-                  , 'Hadron_noTrFilt':{'APTmin'      :     1. * GeV}
+                  , 'Hadron_noTrFilt':{'PTmin'        :     0.5 * GeV}
                   } 
         return localStages
 
