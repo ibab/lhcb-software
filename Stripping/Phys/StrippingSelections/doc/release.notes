@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-04-30 - Jianchun Wang
+ - Add StrippingRD/StrippingBs2st2KKMuX.py
+
 ! 2015-04-30 - Roberta Cardinale
  - Fix FT warning in StrippingBandQ/StrippingB2JpsiXforEM_s.py 
  - bug fix in StrippingBandQ/StrippingPsiXForBandQ.py

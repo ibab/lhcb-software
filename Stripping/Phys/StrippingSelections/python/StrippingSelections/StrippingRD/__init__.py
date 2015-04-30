@@ -7,7 +7,7 @@ _selections = [
     # 'StrippingB2XMuMu',
     # 'StrippingB2XMuMuInclusive',
     # 'StrippingB2KstTauTau',
-    'StrippingBu2LLK'
+    'StrippingBu2LLK',
     # 'StrippingBeauty2XGamma',
     # 'StrippingBeauty2XGammaExclusive',
     # 'StrippingLb2L0Gamma',
@@ -33,6 +33,7 @@ _selections = [
     # 'StrippingTau2LambdaMuLines',
     # 'StrippingTau23MuLines',
     # 'StrippingB2MuMuMuMuLines'
+    'StrippingBs2st2KKMuX'
                ]
 
 for _sel in _selections :
@@ -48,4 +49,3 @@ _strippingKeys = filter ( lambda x : x[:9]=='Stripping',
                           locals().keys())
 
 _strippingModules = [getattr(_this, _k) for _k in _strippingKeys]
-
