@@ -3,6 +3,90 @@ Package     : StrippingSys
 Package Coordinator : Andrea.Contu@cern.ch, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v9r6 2015-04-30 =========================
+
+*Phys/CommonParticlesArchive
+ - Fix typo in isValidArchive when path is not a zip file.
+
+*Phys/StrippingArchive 
+ - Small change to __init__.py
+ - fix to __init__.py and new reference
+ - small fix to __init__.py and updated reference for qmtest
+ - changes to python/StrippingArchive/__init__.py to avoid import of all archive when only one is requested
+ - Bug fix in the default_config keys
+ - Update StrippingTrackEffD0ToKPi and StrippingTrackEffD0ToK3Pi in S21 so
+   TrackContainerCopy instances use new inputLocations option instead of
+   inputLocation.
+ - Update of Beauty2Charm_Utils.py in Stripping{20,20r1,20r0p1,20r0p2,20r0p3,21} in
+   order to backport compatibility with new implementation of BBDT
+
+*Phys/StrippingConf
+ - New bug fix to MDST stream
+ - Bug fix to the function used to create MDST stream
+ - Introduced a flag to activate the MDST stream.
+
+*Phys/StrippingUtils
+ - Added check of keys validity in default_config dictionaries
+
+*Phys/StrippingSettings
+ - Added Stripping22 folder and LineConfig file for EM stripping
+
+*Phys/StrippingSelections
+ - Updated TrackEff lines, requiring Hlt2 Turbo lines and option to disable Hlt1TOS check
+ - Added test for all calibration lines, moved PID test file to /liaisons/Calibrations/TestPIDLines.py
+ - Changed WGs to 'ALL' for StrippingElectronID and StrippingMuIDCalib
+ - Fix to StrippingPIDCalib
+ - Add StrippingRD/StrippingBs2st2KKMuX.py
+ - Fix FT warning in StrippingBandQ/StrippingB2JpsiXforEM_s.py
+ - bug fix in StrippingBandQ/StrippingPsiXForBandQ.py
+  - Updates to StrippingCalib/StrippingPIDCalib.py
+   . minor bug fixes in the DiLepton lines
+   . additional split in Lambda0 line to allow different prescales
+   . change from P thresholds to PT, to better follow physics
+  - Updated test file in liaisons/Calibrations
+  - Added Hlt1 and Hlt2 requirements to the config_dictionary
+    (StippingCalib/StrippingPIDCalib)
+ - Depreciate the redundant line (StrippingMBNoBias).
+ - QEE: Clean unused imports
+ - QEE: Clean usage of units to consistently be in `default_config` instead of hard-coded.
+ - Changing the units from micrometers to in mm in various places for   StrippingCharm/StrippingPromptCharm.py
+ - Updates to B2DMuNuX
+ - Small fix to StrippingCharm/StrippingPromptCharm.py
+ - Updated test for users to use the new MDST.DST implementation as a normal DST stream
+ - New script for liaisons to test all the WG lines in StrippingSelections
+ - Added StrippingQEE/StrippingMBNoBias.py.
+ - Fix to default_config for StrippingBandQ/StrippingUpsilonExotic.py
+ - StrippingCharm/StrippingPromptCharm.py
+   add a line for Xic0 -> Lc+ pi-    (the decay of s-quark in charm baryon)
+   the hint has reported by Belle: Phys.Rev. D89 (2014) 9, 091102
+   see http://dx.doi.org/10.1103/PhysRevD.89.091102
+   also seen by A.Dziuba
+ - Migration of B2CC lines
+ - Several bug-fixes to StrippingCalib/StrippingPIDCalib.py
+ - Added two lines in StrippingCalib/StrippingPIDCalib.py to keep the
+   intermediate J/psi in the decay descriptor B -> llK  (l = e,mu)
+ - Created folder test/liasons/Calibrations
+ - Created test file test/liasons/Calibrations/TestCalibLines.py
+ - Added StrippingQEE/StrippingInclbJets.py
+ - Migration of tracking efficiency lines
+ - Added Z and Upsilon lines to VeloMuon and DownMuon modules
+ - Migration of RD lines - Rollback (as per WG discussion)
+ - Migration of RD lines
+ - update to StrippingCalib/StrippingPIDCalib.py (several bug-fixes)
+ - fix syntax error in StrippingSL/StrippingB2DMuNuX.py
+ - one more module in StrippingBandQ for WG-production
+ - add two modules in StrippingBandQ, both are for WG-production
+ - add StrippingPromptCharm
+ - Introduced tests/test_strippingselections.py
+ - Moved private users test scripts to the liaisons directory
+ - Fixing release.notes
+ - Added a few new baryon modes to StrippingB2DMuNuX for spectroscopy
+ - Update StrippingB2DMuNuX so that we can switch to no PIDs particles from the settings
+ - Added B2OC lines into the module; update particle combiner to DaVinci_N(x)bodydecays;
+   Update BBDecayTools to suit new configuration
+ - Added lines for BandQ EM: StrippingDiMuonForXsection.py and StrippingB2JpsiXforEM_s.py
+ - Added lines for BandQ EM: StrippingDiMuonForXsection.py and StrippingB2JpsiXforEM_s.py
+
 !========================= StrippingSys v9r5 2015-03-13 =========================
 
 * Phys/StrippingArchive
