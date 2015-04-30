@@ -56,7 +56,8 @@ const char* const RivetAnalysisHandler::_statDescriptors[] = {
 	"Particles with negative rest mass (in DEBUG mode only)", 
 	"Boost angle corrections", 
 	"Unit conversions", 
-	"ParticleID adjustments"};
+	"ParticleID adjustments",
+        "MC generator interaction XS changes"};
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -370,29 +371,29 @@ StatusCode RivetAnalysisHandler::execute()
         tmom->setPy(py * _scaleFactorEnergy);
         tmom->setPz(pz * _scaleFactorEnergy);
         tmom->setE(e * _scaleFactorEnergy);
-        _myStats[2] ++;
+        _myStats[nbUnitConversions] ++;
       };
       if (_xHAngleCorrection && _xVAngleCorrection) {
         tmom->setE(e - px * _mHxAngle - py * _mVxAngle);
         tmom->setPx(px - e * _mHxAngle);
         tmom->setPy(py - e * _mVxAngle);
-        if (statLogEnabled(1)) debug() << "After XY-boost P' = (" << tmom->px() << ", " << tmom->py() \
+        if (statLogEnabled(nbXAngleBoosts)) debug() << "After XY-boost P' = (" << tmom->px() << ", " << tmom->py() \
              << ", " << tmom->pz() << ", " << tmom->e() << ") [MeV]..." << endmsg;
-        _myStats[1]++;
+        _myStats[nbXAngleBoosts]++;
       } else {
         if (_xHAngleCorrection) {
           tmom->setE(e - px * _mHxAngle);
           tmom->setPx(px - e * _mHxAngle);
-          if (statLogEnabled(1)) debug() << "After X-boost P' = (" << tmom->px() << ", " << tmom->py() \
+          if (statLogEnabled(nbXAngleBoosts)) debug() << "After X-boost P' = (" << tmom->px() << ", " << tmom->py() \
                << ", " << tmom->pz() << ", " << tmom->e() << ") [MeV]..." << endmsg;
-          _myStats[1] ++;
+          _myStats[nbXAngleBoosts] ++;
         };
         if (_xVAngleCorrection) {
           tmom->setE(e - py * _mVxAngle);
           tmom->setPy(py - e * _mVxAngle);
-          if (statLogEnabled(1)) debug() << "After Y-boost P' = (" << tmom->px() << ", " << tmom->py() \
+          if (statLogEnabled(nbXAngleBoosts)) debug() << "After Y-boost P' = (" << tmom->px() << ", " << tmom->py() \
                << ", " << tmom->pz() << ", " << tmom->e() << ") [MeV]..." << endmsg;
-          _myStats[1] ++;
+          _myStats[nbXAngleBoosts] ++;
         };
       };
       if (_needsUnitConv || _xHAngleCorrection || _xVAngleCorrection) (*p)->set_momentum((const HepMC::FourVector&)(*tmom));
@@ -400,14 +401,14 @@ StatusCode RivetAnalysisHandler::execute()
         if (_xHAngleCorrection || _xVAngleCorrection) {
           mm = invariantMass((*p)->momentum());
           if (mm < 0.) {
-            if (statLogEnabled(0)) debug() << dess.str() << "After boost: " << std::endl \
+            if (statLogEnabled(negMassParticles)) debug() << dess.str() << "After boost: " << std::endl \
                                            << "P' = (" << tmom->px() << ", " << tmom->py() << ", " \
                                            << tmom->pz() << ", " << tmom->e() << ") --> m0 = " << mm << " [MeV]."<< endmsg;
-       	    _myStats[0] ++;
+       	    _myStats[negMassParticles] ++;
           };
         } else {
           debug() << dess.str() << endmsg;
-          _myStats[0] ++;
+          _myStats[negMassParticles] ++;
         };
       }; // end 2nd test negative squared mass
       delete tmom;
@@ -433,6 +434,7 @@ StatusCode RivetAnalysisHandler::finalize()
 {
   debug() << "==> Finalize" << endmsg;
   compatSetCrossSection(NULL);
+  if (_myStats[nbGenXSChanges] >= m_logHardLimit) info() << "Last xsection value received from generator is: " << m_crossSection << " pb." << endmsg;
   //print debugging counters
   info() << "Internal counter values:" << std::endl;
   for (uint i = 0; i < this->_myStats.size(); i++ ) info() << "Counter[" << i << "] <<\"" << RivetAnalysisHandler::_statDescriptors[i] << "\">> = " << this->_myStats[i] << std::endl;
@@ -489,7 +491,8 @@ void RivetAnalysisHandler::compatSetCrossSection(HepMC::GenEvent* pEvent) {
     pEvent->set_cross_section(*pxs);
   } else {
     if ( !fuzzyEq(m_crossSection, pxs->cross_section()) ) {
-      warning() << "Generator provided xsection has change from " << m_crossSection << " to " << pxs->cross_section() << endmsg;
+      _myStats[nbGenXSChanges]++;
+      if ( statLogEnabled(nbGenXSChanges) ) info() << "Generator provided xsection has changed from " << m_crossSection << " to " << pxs->cross_section() << endmsg;
       m_crossSection = pxs->cross_section(); // (re)set xsection to value given by generator (backup value!)
     };
   };
@@ -499,10 +502,10 @@ void RivetAnalysisHandler::compatSetCrossSection(HepMC::GenEvent* pEvent) {
 }
 
 /// verifies if the log messages for a specific internal statistics flag is suppressed
-bool RivetAnalysisHandler::statLogEnabled(unsigned int statId) {
+bool RivetAnalysisHandler::statLogEnabled(idStatusLog  statId) {
   bool printOn = ( (_myStats[statId] < m_logSoftLimit) || ( (_myStats[statId] <= m_logHardLimit) && (_myStats[statId] % m_logSuppressFreq == 0) ) );
-  if ( _myStats[statId] == m_logSoftLimit ) debug() << "Messages for internal stat flag " << statId << " are softly suppressed from now on." << endmsg;
-  if ( _myStats[statId] == m_logHardLimit ) debug() << "Messages for internal stat flag " << statId << " are totally supressed from now on." << endmsg;
+  if ( _myStats[statId] == m_logSoftLimit ) info() << "Messages for internal stat flag \"" << _statDescriptors[statId] << "\" [id:" << statId << "] are softly suppressed from now on." << endmsg;
+  if ( _myStats[statId] == m_logHardLimit ) info() << "Messages for internal stat flag \"" << _statDescriptors[statId] << "\" [id:" << statId << "] are totally supressed from now on." << endmsg;
   return printOn;
 }
 

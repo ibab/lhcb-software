@@ -90,18 +90,14 @@ private:
   /// Time conversion factor (1.) - not really used!
   double _scaleFactorTime;
 
-  /// Various statistics (debugging mode and not only)
-  // 0: count particles with negative! rest mass
-  // 1: times x-Angle boost(s) was done
-  // 2: times internal unit conversion was applied
-  // 3: times particleId was adjusted
+  /// Various statistics (debugging mode and not only) -- see idStatusLog
   vector<long unsigned int> _myStats;
 
   /// The description for each internal statistical counter
   static const char* const _statDescriptors[];
 
   /// Number of internal statistical counters
-  static const unsigned int COUNTERS_NB = 4;
+  static const unsigned int COUNTERS_NB = 5;
 
   /// Property: Internal statistical messages print-out suppression soft limit (30).
   long unsigned int m_logSoftLimit;
@@ -115,9 +111,6 @@ private:
   /// Internal function: Set cross-section for each event when cross-section value provided in options
   void compatSetCrossSection(HepMC::GenEvent*);
 
-  /// Checks whether messages specific to internal flag statId are suppressed or not.
-  bool statLogEnabled(unsigned int statId);
-
 public:
   /// Standard constructor
   RivetAnalysisHandler( const string& name, ISvcLocator* pSvcLocator );
@@ -125,6 +118,18 @@ public:
   virtual StatusCode initialize();       ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();      ///< Algorithm finalization
+
+  enum idStatusLog {
+    negMassParticles = 0,	// 0: count particles with negative! rest mass
+    nbXAngleBoosts,		// 1: times x-Angle boost(s) was done
+    nbUnitConversions,		// 2: times internal unit conversion was applied
+    nbPIDAdjustments,		// 3: times particleId was adjusted
+    nbGenXSChanges		// 4: nb of generator provided xsection changes
+  };
+
+private:
+  /// Checks whether messages specific to internal flag statId are suppressed or not.
+  bool statLogEnabled(idStatusLog statId);
 
 };
 

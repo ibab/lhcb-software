@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-04-30 - Alex Grecu
+ - Improve component logging and put generator cross-section change messages
+   under the supression system as value continues to vary slightly around 
+   asymptotic value.
  - Minor patch to correct behaviour in automatically selecting interaction 
    cross-section from various sources (MC generator, BeamParameters or 
    externally force value). Previously ERROR was triggered when using 
