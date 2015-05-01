@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-05-01 - Albert Puig
+ - Radiative: Update the lines, remove some monitoring and cleanup of code.
+ - Topo: Change name of BDT when nickname is specified.
+
 ! 2015-05-01 - Vladimir Gligorov
  - CharmHad : split D2HHH CPV lines into D+ and Ds+ CPV lines 
  - CharmHad : update HHH line naming convention to XToYpZm... 

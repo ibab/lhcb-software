@@ -1,12 +1,12 @@
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2VoidFilter
 class FilterEvent(Hlt2VoidFilter):
     """
-    Global event filter. 
+    Global event filter.
     """
     def __init__(self):
         from Configurables import LoKi__Hybrid__CoreFactory as Factory
         modules = Factory().Modules
-        for module in ['LoKiTrigger.decorators']: 
+        for module in ['LoKiTrigger.decorators']:
             if module not in modules: modules.append(module)
         from Inputs import Hlt2BiKalmanFittedForwardTracking
         inputs = Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks()
@@ -41,12 +41,12 @@ class FilterParts4(Hlt2ParticleFilter):
         deps = [FilterEvent(), PV3D('Hlt2')] if gec else [PV3D('Hlt2')]
         Hlt2ParticleFilter.__init__(self, 'TopoInput4', pc, inputs,
                                     shared = True, dependencies = deps)
-     
+
 class FilterMVA(Hlt2ParticleFilter):
     """
     Apply the MVA filter to an n-body combo (also applies 1 < MCOR < 10 GeV)
     """
-    def __init__(self, n, inputs, props, bdtcut_override=None, mu=False, 
+    def __init__(self, n, inputs, props, bdtcut_override=None, mu=False,
                  nickname=None, preambulo=None):
         params = props.get('BDT_%iBODY_PARAMS' % n)
         if params == None: params = props['BDT_PARAMS']
@@ -57,30 +57,33 @@ class FilterMVA(Hlt2ParticleFilter):
         varmap = props.get('BDT_%iBODY_VARMAP' % n)
         if varmap == None: varmap = props['BDT_VARMAP']
         if preambulo == None: preambulo = []
-        bdttool = self.__classifier(params, varmap, "TrgBBDT",preambulo)
-        bdt = ("(VALUE('%s/%s') > %s)" % 
+        bdt_name = "TrgBBDT"
+        if nickname is not None:
+            bdt_name += nickname
+        bdttool = self.__classifier(params, varmap, bdt_name, preambulo)
+        bdt = ("(VALUE('%s/%s') > %s)" %
                (bdttool.Type.getType(), bdttool.Name, bdtcut))
         pc = bdt
         if bdtcut_override == None:
             pc = ("(in_range(%(CMB_VRT_MCOR_MIN)s, BPVCORRM,"
-                  " %(CMB_VRT_MCOR_MAX)s)) & " + bdt)  
+                  " %(CMB_VRT_MCOR_MAX)s)) & " + bdt)
         if mu:
             pc = ("(NINTREE(HASPROTO & HASMUON & ISMUON) > 0)"
                   "& (in_range(%(CMB_VRT_MCOR_MIN)s, BPVCORRM,"
-                  " %(CMB_VRT_MCOR_MAX)s)) & " + bdt)  
+                  " %(CMB_VRT_MCOR_MAX)s)) & " + bdt)
         from HltTracking.HltPVs import PV3D
         name = 'TopoBDTFilter%d' % n
         if bdtcut_override: name += 'PreFilter'
         if mu:  name = 'TopoMuBDTFilter%d' % n
         if nickname == None: nickname = name
         if mu is False and bdtcut_override is not None:
-            Hlt2ParticleFilter.__init__(self, name, pc, inputs, shared = True, 
-                                        tools = [bdttool], 
+            Hlt2ParticleFilter.__init__(self, name, pc, inputs, shared = True,
+                                        tools = [bdttool],
                                         dependencies = [PV3D('Hlt2')])
         else:
             tos = 'HTOS'
             if mu: tos = 'MUTOS'
-            Hlt2ParticleFilter.__init__(self, name, pc, inputs, shared = False, 
+            Hlt2ParticleFilter.__init__(self, name, pc, inputs, shared = False,
                                         tools = [bdttool], tistos = tos,
                                         nickname = nickname,
                                         dependencies = [PV3D('Hlt2')])
@@ -100,7 +103,7 @@ class FilterMVA(Hlt2ParticleFilter):
         funcdict   = Tool(type = DictOfFunctors, name = 'TopoMVAdict',
                         Preambulo = preambulo, Variables = varmap)
         transform  = Tool(type = Transform, name = tname,
-                          tools = [funcdict], Options = options, 
+                          tools = [funcdict], Options = options,
                           Source = "LoKi::Hybrid::DictOfFunctors/TopoMVAdict")
         classifier = Tool(type = DictValue, name = name, tools = [transform],
                           Key = key, Source = 'LoKi::Hybrid::DictTransform'
@@ -123,7 +126,7 @@ class CombineTos(Hlt2Combiner):
         ismuon = "(ANUM(HASPROTO & HASMUON & ISMUON) > 0)"
         onetrk = ("(ANUM((TRCHI2DOF < %(TrChi2)s) "
                   "& (((PT > %(MaxPT)s) & (BPVIPCHI2() > %(MinIPChi2)s)) "
-                  "| (in_range(%(MinPT)s, PT, %(MaxPT)s)))) > 0)" 
+                  "| (in_range(%(MinPT)s, PT, %(MaxPT)s)))) > 0)"
                   % props['TrackMVA'])
         twotrk = ("(ANUM((PT > %(PT)s) & (P > %(P)s) "
                   "& (TRCHI2DOF < %(TrChi2)s) "
@@ -174,7 +177,7 @@ class Combine3(Hlt2Combiner):
         Hlt2Combiner.__init__(self, 'Topo3Body', decays, merged,
                               shared = True, dependencies = [PV3D('Hlt2')],
                               CombinationCut = cc, MotherCut = mc)
-                
+
 
 class Combine4(Hlt2Combiner):
     """

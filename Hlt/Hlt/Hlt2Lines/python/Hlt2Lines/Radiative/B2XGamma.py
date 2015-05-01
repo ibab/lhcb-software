@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# @file   Exclusive.py
+# @file   B2XGamma.py
 # @author Albert Puig (albert.puig@cern.ch)
 # @date   05.03.2015
 # =============================================================================
@@ -13,74 +13,82 @@ from RadiativeLineBuilder import RadiativeLineBuilder
 class B2XGammaLines(RadiativeLineBuilder):
     @staticmethod
     def get_stages(_):
-        from Stages import TrackGEC, ParticleFilter, MassWindowFilter, HHCombiner, B2XGammaCombiner
+        from Stages import TrackGEC
+        from Stages import PIDFilter, ParticleFilter, HHCombiner
+        from Stages import B2XGammaCombiner, B2XGammaUnbiasedCombiner
         from HltTracking.HltPVs import PV3D
         from Inputs import Hlt2LoosePions, Hlt2LooseKaons
 
         # Create vector mesons
-        kstar = HHCombiner('Kstar', '[K*(892)0 -> K+ pi-]cc',
-                           [ParticleFilter('Pions', [Hlt2LoosePions]),
-                            ParticleFilter('Kaons', [Hlt2LooseKaons])],
+        kstar = HHCombiner('ExclusiveKstar', '[K*(892)0 -> K+ pi-]cc',
+                           [ParticleFilter('ExclusivePions', [Hlt2LoosePions]),
+                            ParticleFilter('ExclusiveKaons', [Hlt2LooseKaons])],
                            'TrackTisTos')
-        kstar_tight = MassWindowFilter('KstarTight', [kstar])
-        phi = HHCombiner('Phi', 'phi(1020) -> K+ K-',
-                         [ParticleFilter('Kaons', [Hlt2LooseKaons])],
+        phi = HHCombiner('ExclusivePhi', 'phi(1020) -> K+ K-',
+                         [ParticleFilter('ExclusiveKaons', [Hlt2LooseKaons])],
                          'TrackTisTos')
 
+        unbiased_phi = HHCombiner('ExclusiveUnbiasedPhi', 'phi(1020) -> K+ K-',
+                                  [ParticleFilter('ExclusiveUnbiasedKaons',
+                                                  [PIDFilter('ExclusiveUnbiasedPIDKaons',
+                                                             [Hlt2LooseKaons])])])
         # Build B0 -> K* gamma
-        bd2kstgamma_wideKst = B2XGammaCombiner('Bd2KstGammaWideKMass',
-                                               '[B0 -> K*(892)0 gamma]cc',
-                                               kstar)
-        bd2kstgamma_wideB = B2XGammaCombiner('Bd2KstGammaWideBMass',
-                                             '[B0 -> K*(892)0 gamma]cc',
-                                             kstar_tight)
-        bd2kstgamma = MassWindowFilter('Bd2KstGamma', [bd2kstgamma_wideB])
-        bd2kstgammaee = B2XGammaCombiner('Bd2KstGammaEE',
-                                         '[B0 -> K*(892)0 gamma]cc',
-                                         kstar_tight,
-                                         converted=True)
+        bd2kstgamma = B2XGammaCombiner('Bd2KstGamma',
+                                       '[B0 -> K*(892)0 gamma]cc',
+                                       kstar)
         # Build Bs -> phi gamma
 
-        bs2phigamma_wideB = B2XGammaCombiner('Bs2PhiGammaWideBMass',
-                                             'B_s0 -> phi(1020) gamma',
-                                             phi)
-        bs2phigamma = MassWindowFilter('Bs2PhiGamma', [bs2phigamma_wideB])
-        bs2phigammaee = B2XGammaCombiner('Bs2PhiGammaEE',
-                                         'B_s0 -> phi(1020) gamma',
-                                         phi,
-                                         converted=True)
+        bs2phigamma = B2XGammaCombiner('Bs2PhiGamma',
+                                       'B_s0 -> phi(1020) gamma',
+                                       phi)
 
+        # Build unbiased lines
+        bs2phigamma_unbiased = B2XGammaUnbiasedCombiner('Bs2PhiGammaUnbiased',
+                                                        'B_s0 -> phi(1020) gamma',
+                                                        unbiased_phi)
+        bd2kstgamma_unbiased = B2XGammaUnbiasedCombiner('Bd2KstGammaULUnbiased',
+                                                        '[B0 -> K*(892)0 gamma]cc',
+                                                        kstar)
         # Build stages
-        return {'Bd2KstGammaWideKMass' : [TrackGEC(), PV3D('Hlt2'), bd2kstgamma_wideKst],
-                'Bd2KstGammaWideBMass' : [TrackGEC(), PV3D('Hlt2'), bd2kstgamma_wideB],
-                'Bd2KstGamma'          : [TrackGEC(), PV3D('Hlt2'), bd2kstgamma],
-                'Bd2KstGammaEE'        : [TrackGEC(), PV3D('Hlt2'), bd2kstgammaee],
-                'Bs2PhiGammaWideBMass' : [TrackGEC(), PV3D('Hlt2'), bs2phigamma_wideB],
-                'Bs2PhiGamma'          : [TrackGEC(), PV3D('Hlt2'), bs2phigamma],
-                'Bs2PhiGammaEE'        : [TrackGEC(), PV3D('Hlt2'), bs2phigammaee]}
+        return {'Bd2KstGamma'           : [TrackGEC(), PV3D('Hlt2'), bd2kstgamma],
+                'Bs2PhiGamma'           : [TrackGEC(), PV3D('Hlt2'), bs2phigamma],
+                'Bs2PhiGammaUnbiased'   : [TrackGEC(), PV3D('Hlt2'), bs2phigamma_unbiased],
+                'Bd2KstGammaULUnbiased' : [TrackGEC(), PV3D('Hlt2'), bd2kstgamma_unbiased]}
 
     @staticmethod
     def get_cuts():
-        from GaudiKernel.SystemOfUnits import MeV
+        from GaudiKernel.SystemOfUnits import MeV, picosecond
         cuts = {}
         # Track cuts
-        for track in ['Pions', 'Kaons']:
+        for track in ['ExclusivePions', 'ExclusiveKaons']:
             cuts[track] = {'TRACK_TRCHI2DOF_MAX' : 4,
                            'TRACK_PT_MIN'        : 500*MeV,
                            'TRACK_P_MIN'         : 3000*MeV,
                            'TRACK_IPCHI2_MIN'    : 20}
+        cuts['ExclusiveUnbiasedPIDKaons'] = {'TRACK_TYPE' : 'K+',
+                                             'PID_VAR'    : 'PIDK',
+                                             'PID_CUT_MIN': 0}
+
+        cuts['ExclusiveUnbiasedKaons'] = {'TRACK_TRCHI2DOF_MAX' : 2,
+                                          'TRACK_PT_MIN'        : 600*MeV,
+                                          'TRACK_P_MIN'         : 4000*MeV,
+                                          'TRACK_IPCHI2_MIN'    : '-1'}
         # Vector mesons
-        cuts['Kstar'] = {'PARTICLE'      : 'K*(892)0',
-                         'VCHI2PDOF_MAX' : 16,
-                         'MASS_WIN'      : 125*MeV}
-        cuts['Phi'] = {'PARTICLE'      : 'phi(1020)',
-                       'VCHI2PDOF_MAX' : 25,
-                       'MASS_WIN'      : 20*MeV}
-        cuts['KstarTight'] = {'PARTICLE' : 'K*(892)0',
-                              'MASS_WIN' : 100*MeV}
+        cuts['ExclusiveKstar'] = {'PARTICLE'      : 'K*(892)0',
+                                  'VCHI2PDOF_MAX' : 16,
+                                  'MASS_WIN'      : 100*MeV,
+                                  'PT_MIN'        : 1500*MeV}
+        cuts['ExclusivePhi'] = {'PARTICLE'      : 'phi(1020)',
+                                'VCHI2PDOF_MAX' : 25,
+                                'MASS_WIN'      : 20*MeV,
+                                'PT_MIN'        : 1500*MeV}
+        # Vector mesons
+        cuts['ExclusiveUnbiasedPhi'] = {'PARTICLE'      : 'phi(1020)',
+                                        'VCHI2PDOF_MAX' : 9,
+                                        'MASS_WIN'      : 15*MeV,
+                                        'PT_MIN'        : 1500*MeV}
         # The B mesons
-        for line in ['Bd2KstGammaWideKMass', 'Bd2KstGammaWideBMass', 'Bs2PhiGammaWideBMass',
-                     'Bd2KstGammaEE', 'Bs2PhiGammaEE']:
+        for line in ['Bd2KstGamma', 'Bs2PhiGamma']:
             if line.startswith('Bd'):
                 particle = 'B0'
                 dira = 0.045
@@ -90,31 +98,35 @@ class B2XGammaLines(RadiativeLineBuilder):
             cuts[line] = {'PARTICLE'      : particle,
                           'VCHI2PDOF_MAX' : 16,
                           'PT_MIN'        : 2000*MeV,
-                          'MASS_WIN'      : 1500*MeV,
+                          'MASS_WIN'      : 1000*MeV,
                           'BPVDIRA_MIN'   : dira,
                           'BPVIPCHI2_MAX' : 12}
-        cuts['Bd2KstGammaWideKMass']['MASS_WIN'] = 1000*MeV
-        cuts['Bd2KstGamma'] = {'PARTICLE': 'B0',
-                               'MASS_WIN': 1000*MeV}
-        cuts['Bd2KstGammaEE']['MASS_WIN'] = 1000*MeV
-        cuts['Bs2PhiGamma'] = {'PARTICLE': 'B_s0',
-                               'MASS_WIN': 1000*MeV}
-        cuts['Bs2PhiGammaEE']['MASS_WIN'] = 1000*MeV
+        cuts['Bs2PhiGammaUnbiased'] = {'PARTICLE'     : 'B_s0',
+                                       'VCHI2PDOF_MAX': 9,
+                                       'PT_MIN'       : 2000*MeV,
+                                       'SUM_PT_MIN'   : 5000*MeV,
+                                       'TAU_MIN'      : 0.3*picosecond,
+                                       'MASS_WIN'     : 1000*MeV}
+        cuts['Bd2KstGammaULUnbiased'] = {'PARTICLE'     : 'B0',
+                                         'VCHI2PDOF_MAX': 9,
+                                         'PT_MIN'       : 2000*MeV,
+                                         'SUM_PT_MIN'   : 5000*MeV,
+                                         'TAU_MIN'      : 2*picosecond,
+                                         'MASS_WIN'     : 1000*MeV}
         return cuts
 
     @staticmethod
     def get_hlt1():
         hlt1 = {}
-        for line in ['Bd2KstGammaWideKMass', 'Bd2KstGammaWideBMass', 'Bs2PhiGammaWideBMass',
-                     'Bd2KstGamma', 'Bs2PhiGamma', 'Bd2KstGammaEE', 'Bs2PhiGammaEE']:
+        for line in ['Bd2KstGamma', 'Bs2PhiGamma', 'Bd2KstGammaULUnbiased']:
             hlt1[line] = "HLT_PASS_RE('Hlt1(Two)?TrackMVADecision')"
+        hlt1['Bs2PhiGammaUnbiased'] = "HLT_PASS_RE('Hlt1B2PhiGamma_LTUNBDecision')"
         return hlt1
 
     @staticmethod
     def get_l0():
         l0 = {}
-        for line in ['Bd2KstGammaWideKMass', 'Bd2KstGammaWideBMass', 'Bs2PhiGammaWideBMass',
-                     'Bd2KstGamma', 'Bs2PhiGamma']:
+        for line in ['Bd2KstGamma', 'Bs2PhiGamma', 'Bs2PhiGammaUnbiased', 'Bd2KstGammaULUnbiased']:
             l0[line] = "L0_CHANNEL('Electron') | L0_CHANNEL('Photon')"
         return l0
 

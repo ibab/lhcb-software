@@ -14,40 +14,47 @@ from RadiativeLineBuilder import RadiativeLineBuilder
 class RadiativeInclusiveLines(RadiativeLineBuilder):
     @staticmethod
     def get_stages(props):
-        from Stages import TrackGEC, TopoCombiner, BonsaiBDTFilter
+        from Stages import TrackGEC, TopoCombiner
         from HltTracking.HltPVs import PV3D
         from Hlt2Lines.Topo.Lines import TopoLines
+        from Hlt2Lines.Topo.Stages import FilterMVA
         from Hlt2Lines.Utilities.Hlt2Stage import Hlt2ExternalStage
 
         # Load external stages
         topo_lines = TopoLines()
-        two_body = Hlt2ExternalStage(topo_lines, topo_lines.stages('Topo2BodyCombos')[0])
-        three_body = Hlt2ExternalStage(topo_lines, topo_lines.stages('Topo3BodyCombos')[0])
+        two_body = Hlt2ExternalStage(topo_lines, topo_lines.stages(props['HHCombiner'])[0])
+        three_body = Hlt2ExternalStage(topo_lines, topo_lines.stages(props['HHHCombiner'])[0])
 
         # Add the photon
         two_body_plus_photon = TopoCombiner('HHGammaCombo', 2, two_body)
+        two_body_plus_ee = TopoCombiner('HHGammaComboEE', 2, two_body, True)
         three_body_plus_photon = TopoCombiner('HHHGammaCombo', 3, three_body)
-        two_body_plus_photon_ee = TopoCombiner('HHGammaEECombo', 2, two_body, True)
-        three_body_plus_photon_ee = TopoCombiner('HHHGammaEECombo', 3, three_body, True)
-        # Filter BDT
-        filtered_two_plus_one = BonsaiBDTFilter('HHGammaBBDT',
-                                                [two_body_plus_photon],
-                                                props['HHGammaBBDT'],
-                                                preambulo=['from LoKiCore.math import log10'])
-        filtered_three_plus_one = BonsaiBDTFilter('HHHGammaBBDT',
-                                                  [three_body_plus_photon],
-                                                  props['HHHGammaBBDT'])
-        filtered_two_plus_one_ee = BonsaiBDTFilter('HHGammaEEBBDT',
-                                                   [two_body_plus_photon_ee],
-                                                   props['HHGammaEEBBDT'])
-        filtered_three_plus_one_ee = BonsaiBDTFilter('HHHGammaEEBBDT',
-                                                     [three_body_plus_photon_ee],
-                                                     props['HHHGammaEEBBDT'])
+        three_body_plus_ee = TopoCombiner('HHHGammaComboEE', 3, three_body, True)
+
+        # Filter BDTs
+        filtered_two_plus_one = FilterMVA(21,
+                                          [two_body_plus_photon],
+                                          props['HHGammaBBDT'],
+                                          nickname='HHGammaBBDT',
+                                          preambulo=['from LoKiCore.math import log10'])
+        filtered_two_plus_ee = FilterMVA(22,
+                                         [two_body_plus_ee],
+                                         props['HHGammaEEBBDT'],
+                                         nickname='HHGammaEEBBDT')
+        filtered_three_plus_one = FilterMVA(31,
+                                            [three_body_plus_photon],
+                                            props['HHHGammaBBDT'],
+                                            nickname='HHHGammaBBDT',
+                                            preambulo=['from LoKiCore.math import log10'])
+        filtered_three_plus_ee = FilterMVA(32,
+                                           [three_body_plus_ee],
+                                           props['HHHGammaEEBBDT'],
+                                           nickname='HHHGammaEEBBDT')
         # Build stages
-        return {'RadiativeIncHHGamma' : [TrackGEC(), PV3D('Hlt2'), filtered_two_plus_one],
-                'RadiativeIncHHHGamma': [TrackGEC(), PV3D('Hlt2'), filtered_three_plus_one],
-                'RadiativeIncHHGammaEE' : [TrackGEC(), PV3D('Hlt2'), filtered_two_plus_one_ee],
-                'RadiativeIncHHHGammaEE': [TrackGEC(), PV3D('Hlt2'), filtered_three_plus_one_ee]}
+        return {'RadiativeIncHHGamma'   : [TrackGEC(), PV3D('Hlt2'), filtered_two_plus_one],
+                'RadiativeIncHHHGamma'  : [TrackGEC(), PV3D('Hlt2'), filtered_three_plus_one],
+                'RadiativeIncHHGammaEE' : [TrackGEC(), PV3D('Hlt2'), filtered_two_plus_ee],
+                'RadiativeIncHHHGammaEE': [TrackGEC(), PV3D('Hlt2'), filtered_three_plus_ee]}
 
     @staticmethod
     def get_cuts():
@@ -60,42 +67,58 @@ class RadiativeInclusiveLines(RadiativeLineBuilder):
                      'CORRM_MIN'         : 1000*MeV,
                      'CORRM_MAX'         : 10000*MeV,
                      'DIRA_MIN'          : 0}
-        return {'HHGammaCombo': comb_cuts,
-                'HHGammaBBDT': {'BBDT_PARAMS': 'Hlt2_RadiativeInc_Generic_BDTParams_v0r0.txt',
-                                'BBDT_VARMAP': {'nbody_fd_rho'      : 'BPVVDRHO',
-                                                'nbody_vtx_chi2'    : 'log10(CHILD(VFASPF(VCHI2), 1))',
-                                                'sv_ipchi2'         : 'log10(CHILD(BPVIPCHI2(), 1))',
-                                                'sv_children_pt_sum': 'CHILD(PT, 1) + CHILD(PT, 2)',
-                                                'gamma_pt'          : 'CHILD(PT, 2)',
-                                                'nbody_doca_max'    : 'CHILD(DOCA(1,2), 1)'},
-                                'BBDT_CUT': 0.0},
+        return {'HHCombiner': 'Topo2BodyCombos',
+                'HHGammaCombo': comb_cuts,
+                'HHGammaBBDT': {'BDT_PARAMS': 'Hlt2_RadiativeInc_2plus1_BDTParams_v1r0.txt',
+                                'BDT_VARMAP': {'sv_ipchi2'         : 'log10(BPVIPCHI2())',
+                                               'sv_children_pt_sum': '(CHILD(1, PT) + CHILD(2, PT))/MeV',
+                                               'gamma_pt'          : 'CHILD(2, PT)/MeV',
+                                               'nbody_fdchi2'      : 'log10(BPVVDCHI2)',
+                                               'sv_vtx_chi2'       : 'log10(VFASPF(VCHI2))'},
+                                'BDT_MIN': 10.0,
+                                'CMB_VRT_MCOR_MIN': 1000*MeV,
+                                'CMB_VRT_MCOR_MAX': 10000*MeV},
+                'HHGammaComboEE': comb_cuts,
+                'HHGammaEEBBDT': {'BDT_PARAMS': 'hlt2_topo_run2_v1.bbdt',
+                                  'BDT_VARMAP': {'n'      : "3",
+                                                 'mcor'   : "BPVCORRM",
+                                                 'chi2'   : "VFASPF(VCHI2)",
+                                                 'sumpt'  : "SUMTREE(PT, ((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0')|(ABSID=='gamma')), 0.0)/MeV",
+                                                 'eta'    : "BPVETA",
+                                                 'fdchi2' : "BPVVDCHI2",
+                                                 'minpt'  : "MINTREE(((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0')|(ABSID=='gamma')), PT)/MeV",
+                                                 'nlt16'  : "NINTREE(((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0')|(ABSID=='gamma')) & (BPVIPCHI2() < 16))",
+                                                 'ipchi2' : "BPVIPCHI2()",
+                                                 'n1trk'  : "NINTREE(((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0')|(ABSID=='gamma')) & (PT > 1*GeV) & (BPVIPCHI2() > 16))"},
+                                  'BDT_MIN': 0.0,
+                                  'CMB_VRT_MCOR_MIN': 1000*MeV,
+                                  'CMB_VRT_MCOR_MAX': 10000*MeV},
+                'HHHCombiner': 'Topo3BodyCombos',
                 'HHHGammaCombo': comb_cuts,
-                'HHHGammaBBDT': {'BBDT_PARAMS': 'Hlt2_RadiativeInc_Generic_BDTParams_v0r0.txt',
-                                 'BBDT_VARMAP': {'nbody_fd_rho'      : 'BPVVDRHO',
-                                                 'nbody_vtx_chi2'    : 'log10(CHILD(VFASPF(VCHI2), 1))',
-                                                 'sv_ipchi2'         : 'log10(CHILD(BPVIPCHI2(), 1))',
-                                                 'sv_children_pt_sum': 'CHILD(PT, 1) + CHILD(PT, 2)',
-                                                 'gamma_pt'          : 'CHILD(PT, 2)',
-                                                 'nbody_doca_max'    : 'CHILD(DOCA(1,2), 1)'},
-                                 'BBDT_CUT': 0.0},
-                'HHGammaEECombo': comb_cuts,
-                'HHGammaEEBBDT': {'BBDT_PARAMS': 'Hlt2_RadiativeInc_Generic_BDTParams_v0r0.txt',
-                                  'BBDT_VARMAP': {'nbody_fd_rho'      : 'BPVVDRHO',
-                                                  'nbody_vtx_chi2'    : 'log10(CHILD(VFASPF(VCHI2), 1))',
-                                                  'sv_ipchi2'         : 'log10(CHILD(BPVIPCHI2(), 1))',
-                                                  'sv_children_pt_sum': 'CHILD(PT, 1) + CHILD(PT, 2)',
-                                                  'gamma_pt'          : 'CHILD(PT, 2)',
-                                                  'nbody_doca_max'    : 'CHILD(DOCA(1,2), 1)'},
-                                  'BBDT_CUT': 0.0},
-                'HHHGammaEECombo': comb_cuts,
-                'HHHGammaEEBBDT': {'BBDT_PARAMS': 'Hlt2_RadiativeInc_Generic_BDTParams_v0r0.txt',
-                                   'BBDT_VARMAP': {'nbody_fd_rho'      : 'BPVVDRHO',
-                                                   'nbody_vtx_chi2'    : 'log10(CHILD(VFASPF(VCHI2), 1))',
-                                                   'sv_ipchi2'         : 'log10(CHILD(BPVIPCHI2(), 1))',
-                                                   'sv_children_pt_sum': 'CHILD(PT, 1) + CHILD(PT, 2)',
-                                                   'gamma_pt'          : 'CHILD(PT, 2)',
-                                                   'nbody_doca_max'    : 'CHILD(DOCA(1,2), 1)'},
-                                   'BBDT_CUT': 0.0}}
+                'HHHGammaBBDT': {'BDT_PARAMS': 'Hlt2_RadiativeInc_3plus1_BDTParams_v1r0.txt',
+                                 'BDT_VARMAP': {'nbody_doca_max'   : 'log10(BPVIPCHI2())',
+                                               'sv_children_pt_sum': '(CHILD(1, PT) + CHILD(2, PT))*MeV',
+                                               'gamma_pt'          : 'CHILD(2, PT)*MeV',
+                                               'nbody_fdchi2'      : 'log10(BPVVDCHI2)',
+                                               'sv_vtx_chi2'       : 'log10(VFASPF(VCHI2))'},
+                                 'BDT_MIN': 0.0,
+                                 'CMB_VRT_MCOR_MIN': 1000*MeV,
+                                 'CMB_VRT_MCOR_MAX': 10000*MeV},
+                'HHHGammaComboEE': comb_cuts,
+                'HHHGammaEEBBDT': {'BDT_PARAMS': 'hlt2_topo_run2_v1.bbdt',
+                                   'BDT_VARMAP': {'n'      : "4",
+                                                  'mcor'   : "BPVCORRM",
+                                                  'chi2'   : "VFASPF(VCHI2)",
+                                                  'sumpt'  : "SUMTREE(PT, ((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0')|(ABSID=='gamma')), 0.0)/MeV",
+                                                  'eta'    : "BPVETA",
+                                                  'fdchi2' : "BPVVDCHI2",
+                                                  'minpt'  : "MINTREE(((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0')|(ABSID=='gamma')), PT)/MeV",
+                                                  'nlt16'  : "NINTREE(((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0')|(ABSID=='gamma')) & (BPVIPCHI2() < 16))",
+                                                  'ipchi2' : "BPVIPCHI2()",
+                                                  'n1trk'  : "NINTREE(((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0')|(ABSID=='gamma')) & (PT > 1*GeV) & (BPVIPCHI2() > 16))"},
+                                   'BDT_MIN': 0.0,
+                                   'CMB_VRT_MCOR_MIN': 1000*MeV,
+                                   'CMB_VRT_MCOR_MAX': 10000*MeV}}
 
     @staticmethod
     def get_hlt1():

@@ -14,7 +14,7 @@ class B2GammaGammaLines(RadiativeLineBuilder):
     @staticmethod
     def get_stages(_):
         from Stages import TrackGEC
-        from Stages import PhotonFilter, ConvPhotonFilter
+        from Stages import PhotonFilter
         from Stages import ConvPhotonLL, ConvPhotonDD, ConvPhotonAll
         from Stages import B2GammaGammaCombiner, FilterBDTGammaGamma
         from HltTracking.HltPVs import PV3D
@@ -28,18 +28,18 @@ class B2GammaGammaLines(RadiativeLineBuilder):
         bs2gammagammaDouble = B2GammaGammaCombiner('B2GammaGammaDouble',
                                                    'B_s0 -> gamma gamma',
                                                    [ConvPhotonAll()])
-        
+
         # Build Bs -> gamma gamma (single conversion)
         bs2gammagammaLL = B2GammaGammaCombiner('B2GammaGammaLL',
                                                'B_s0 -> gamma gamma',
-                                               [HardCALOGamma,ConvPhotonLL()])
+                                               [HardCALOGamma, ConvPhotonLL()])
         BDTFilter_LL = FilterBDTGammaGamma('LL', [bs2gammagammaLL], cuts['B2GammaGammaLL']["BDT_MIN"])
-        
+
         bs2gammagammaDD = B2GammaGammaCombiner('B2GammaGammaDD',
                                                'B_s0 -> gamma gamma',
-                                               [HardCALOGamma,ConvPhotonDD()])
+                                               [HardCALOGamma, ConvPhotonDD()])
         BDTFilter_DD = FilterBDTGammaGamma('DD', [bs2gammagammaDD], cuts['B2GammaGammaDD']["BDT_MIN"])
-        
+
         # Build Bs -> gamma gamma (all calo)
         bs2gammagamma = B2GammaGammaCombiner('B2GammaGamma',
                                              'B_s0 -> gamma gamma',

@@ -12,12 +12,12 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 from GaudiKernel.SystemOfUnits import MeV
 
 from B2XGamma import B2XGammaLines
-from B2XGammaUnbiased import B2XGammaUnbiasedLines
 from B2GammaGamma import B2GammaGammaLines
 from Lb2L0Gamma import Lb2L0GammaLines
 from Inclusive import RadiativeInclusiveLines
 
 cuts = {'Common': {'TrackTisTos' : 'Hlt1(Two)?TrackMVADecision%TOS',
+                   'HTOS'        : 'Hlt1(Two)?TrackMVADecision%TOS',
                    'PhotonTisTos': 'L0(Photon|Electron).*Decision%TOS',
                    'NTRACK_MAX'  : 500},
         # Calo photons
@@ -33,7 +33,6 @@ cuts = {'Common': {'TrackTisTos' : 'Hlt1(Two)?TrackMVADecision%TOS',
 
 lines_to_run = [B2GammaGammaLines,
                 B2XGammaLines,
-                B2XGammaUnbiasedLines,
                 Lb2L0GammaLines,
                 RadiativeInclusiveLines]
 
