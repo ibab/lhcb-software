@@ -4,6 +4,8 @@
 ! Purpose     : Distribution of parametrization data files
 !-----------------------------------------------------------------------------
 
+! 2015-05-01 - Albert Puig
+ - Add BBDT files for inclusive radiative trigger.
 
 !========================= ParamFiles v8r14 2015-04-30 =========================
 
