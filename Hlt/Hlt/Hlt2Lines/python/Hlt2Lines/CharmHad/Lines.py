@@ -36,7 +36,7 @@ HyperonLines = ChargedHyperonLines()
 
 theseslots = {   'Prescale' : {}, 
                  'TrackGEC' : {'NTRACK_MAX'           : 10000},
-                 'Common' : {'TisTosSpec'               : "Hlt1Track.*Decision%TOS",
+                 'Common' : {'TisTosSpec'               : "Hlt1.*Track.*Decision%TOS",
                              'Trk_ALL_TRCHI2DOF_MAX'    :  3.0,    
                              'Trk_ALL_P_MIN'            :  1000 * MeV,
                              'VCHI2PDOF_MAX'            :  10.0,

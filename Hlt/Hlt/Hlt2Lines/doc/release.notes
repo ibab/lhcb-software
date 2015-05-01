@@ -15,6 +15,7 @@
  - CharmHad : update default cuts for K3Pi XSec line
  - CharmHad : simplify logic for prepending CharmHad to line names and
               make sure it applies to Turbo lines as well
+ - CharmHad : update default TisTos tagger to Hlt1.*Track.*Decision%TOS
 
 ! 2015-04-30 - Dan Johnson
  - CEP: Update CEP thresholds
