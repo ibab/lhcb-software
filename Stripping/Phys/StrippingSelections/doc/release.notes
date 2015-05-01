@@ -6,6 +6,10 @@
 
 !========================== StrippingSelections v4r1 2015-04-30 ===============
 
+
+! 2015-05-01 - Paolo Gandini
+Added the Lines for CEP: StrippingLowMultINC.py
+
 ! 2015-04-30 - Michael Kolpin
  - Updated TrackEff lines, requiring Hlt2 Turbo lines and option to disable Hlt1TOS check
  - Added test for all calibration lines, moved PID test file to /liaisons/Calibrations/TestPIDLines.py

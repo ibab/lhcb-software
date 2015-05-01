@@ -10,6 +10,8 @@ _selections = (
   'StrippingSingleTrackTIS',
   'StrippingWMu',
   'StrippingZ02MuMu',
+  'StrippingLowMultINC',
+  'StrippingLowMultL0',
 )
 
 for _sel in _selections :  
