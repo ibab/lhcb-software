@@ -266,8 +266,10 @@ class HltConf(LHCbConfigurableUser):
                       ,  4 : 'ODIN_TRGTYP == LHCb.ODIN.LumiTrigger'
                       ,  8 : 'L0_DECISION_PHYSICS'
                       ,  9 : "L0_CHANNEL_RE('B?gas')"
-                      , 10 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'CALO','MUON,minbias' ] if chan in L0Channels() ] )
-                      , 11 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'Electron','Photon','Hadron','Muon','DiMuon','Muon,lowMult','DiMuon,lowMult','Electron,lowMult','Photon,lowMult','DiEM,lowMult','DiHadron,lowMult'] if chan in L0Channels() ] )
+                      , 10 : "|".join( [ "L0_CHANNEL_RE('%s')" % chan for chan in [ 'CALO','MUON,minbias' ] if chan in L0Channels() ] )
+                      , 11 : "|".join( [ "L0_CHANNEL_RE('%s')" % chan for chan in [ 'Electron','Photon','Hadron','Muon','DiMuon',
+                                                                                    'Muon,lowMult','DiMuon,lowMult','Electron,lowMult',
+                                                                                    'Photon,lowMult','DiEM,lowMult','DiHadron,lowMult'] if chan in L0Channels() ] )
                       , 12 : "L0_CHANNEL('CALO')" if 'CALO' in L0Channels() else "" # note: need to take into account prescale in L0...
                       , 13 : "L0_CHANNEL( 'Hadron' )" if 'Hadron' in L0Channels() else ""
                       , 14 : "L0_CHANNEL_RE('Electron|Photon')"
@@ -311,7 +313,7 @@ class HltConf(LHCbConfigurableUser):
                       , 72 : "HLT_PASS_RE('Hlt2.*IncPhi.*Decision')"
                       , 73 : "HLT_PASS_RE('Hlt2.*Gamma.*Decision')"
                       , 74 : "HLT_PASS_RE('Hlt2.*TriMuon.*Decision')"
-                      , 75 : "HLT_PASS_RE('Hlt2.*RareCharm.*Decision')"  
+                      , 75 : "HLT_PASS_RE('Hlt2.*RareCharm.*Decision')"
                       , 76 : "HLT_PASS_RE('Hlt2.*DisplVertices.*Decision')"
                       , 77 : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision')"
                       , 78 : "HLT_PASS_RE('Hlt2.*Muon.*Decision')"
