@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-05-01 - V. Gligorov
+ - Commit new HighPT low multiplicity line for Maurizio
+
 ! 2015-05-01 - Dan Johnson
  - Change to Hlt1CEPLines.py, proposed by Gerhard/Vava. Removes TISTOS warning and makes for faster evaluation of upper/lower nVeloTracks bound using 
    is_range instead of two CONTAINS.
