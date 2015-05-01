@@ -1,0 +1,5 @@
+Info in <TCanvas::MakeDefCanvas>:  created default TCanvas with name c1
+Info in <TCanvas::Print>: eps file plot1.eps has been created
+Info in <TCanvas::Print>: eps file plot2.eps has been created
+Info in <TCanvas::Print>: eps file plot3.eps has been created
+Info in <TCanvas::Print>: eps file plot4.eps has been created

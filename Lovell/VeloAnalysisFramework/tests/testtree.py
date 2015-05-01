@@ -1,4 +1,4 @@
-#!/usr/local/bin/pyroot
+#!/bin/sh
 ## @file testtree.py
 #
 # @brief short demo program for the next generation of Velo GUI persistency
@@ -13,7 +13,22 @@
 # @author Manuel Schiller <manuel.schiller@nikhef.nl>
 # @date 2013-04-16
 #
+# This will put the most low-level framework classes through their paces.
+# Returns zero on success, non-zero on failure
+""":"
+# shell part to trampoline into python
+exec /bin/env python -O "$0" "$@"
+"""
+
+# put all created files into a temporary directory
+import tempfile, os
+tmpdir = tempfile.mkdtemp()
+print 'changing directory to %s' % tmpdir
+os.chdir(tmpdir)
+
+# import ROOT, and load required shared libraries
 import ROOT
+ROOT.gROOT.SetBatch(True)
 ROOT.SetMemoryPolicy(ROOT.kMemoryStrict)
 ROOT.gSystem.Load('libVeloAnalysisFramework')
 ROOT.gSystem.Load('libVeloAnalysisFrameworkDict')
@@ -291,11 +306,39 @@ def makePlots(filename, treename):
     f.Close()
     del f
 
-print 'Creating DQ tree'
-createTree('test.root', 'testtree')
-print ''
-anaTree('test.root', 'testtree')
-print ''
-summariseTree('test.root', 'testtree')
-print 'Producing example plots'
-makePlots('test.root', 'testtree')
+import sys
+errcode = 1
+try:
+    print 'Creating DQ tree'
+    createTree('test.root', 'testtree')
+    errcode = errcode + 1
+    print ''
+    if not os.path.isfile('test.root'):
+        raise 'Output file test.root is missing'
+    errcode = errcode + 1
+    anaTree('test.root', 'testtree')
+    errcode = errcode + 1
+    print ''
+    summariseTree('test.root', 'testtree')
+    errcode = errcode + 1
+    print 'Producing example plots'
+    makePlots('test.root', 'testtree')
+    errcode = errcode + 1
+    if not os.path.isfile('plot1.eps'):
+        raise 'Output file plot1.eps is missing'
+    errcode = errcode + 1
+    if not os.path.isfile('plot2.eps'):
+        raise 'Output file plot2.eps is missing'
+    errcode = errcode + 1
+    if not os.path.isfile('plot3.eps'):
+        raise 'Output file plot3.eps is missing'
+    errcode = errcode + 1
+    if not os.path.isfile('plot4.eps'):
+        raise 'Output file plot4.eps is missing'
+    errcode = errcode + 1
+except:
+    e = sys.exc_info()[0];
+    print 'Caught exception: %s' % str(e)
+    sys.exit(errcode)
+print 'Test passed.'
+sys.exit(0)

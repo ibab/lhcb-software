@@ -4,6 +4,11 @@
 ! Purpose     : Analysis framework and configuration for offline and web GUIs
 !----------------------------------------------------------------------------
 
+! 2015-05-01 - Manuel Tobias Schiller
+ - make testtree.py into a proper unit test integrated with QMTest; for now
+   it's a very simple standalone python script which signals success/failure
+   with the return code of the process
+
 ! 2015-04-29 - Manuel Tobias Schiller
  - move testtree.py from src/ to tests/, and modernise it somewhat to cope
    with the new package structure (making it work as a unit test is a second
