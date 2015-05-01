@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-05-30 - Vladimir Gligorov
+ - Reserve RB 89 for possible use as parked stream later
+
 ! 2015-05-01 - Roel Aaij
  - Use L0_CHANNEL_RE instead of L0_CHANNEL for routing bits.
 
