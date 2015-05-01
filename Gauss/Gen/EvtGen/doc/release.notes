@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-05-01 - Michal Kreps
+  - Remove unnecessary includes from EvtXPsiGamma model.
+
 ! 2015-4-30 - Jack Wimberley
  - Added Bc -> scalar ell nu and Bc -> tensor ell nu decays
 
