@@ -27,10 +27,10 @@ class CharmHadXSecLines() :
                                 },
                  'D02HHHH_XSec' : {
                                  'TisTosSpec'               : "Hlt1TrackAllL0Decision%TOS",
-                                 'Trk_ALL_PT_MIN'           :  0 * MeV,
-                                 'Trk_ALL_MIPCHI2DV_MIN'    :  0,
-                                 'AM_34'                    : (139.5 + 139.5) * MeV,
-                                 'AM_4'                     : (139.5) * MeV,
+                                 'Trk_ALL_PT_MIN'           :  200 * MeV,
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  4,
+                                 'AM_34'                    :  (139.5 + 139.5) * MeV,
+                                 'AM_4'                     :  (139.5) * MeV,
                                  'AM_MIN'                   :  1774 * MeV,
                                  'AM_MAX'                   :  1954 * MeV,
                                  'ASUMPT_MIN'               :  0.0 * MeV,
@@ -174,6 +174,11 @@ class CharmHadXSecLines() :
                                                                    ["D*(2007)0 -> D0 pi0","D*(2007)0 -> D~0 pi0"],
                                                                    inputs = [ stages["D02KPi_XSecTurbo"][0],
                                                                    SharedNeutralLowPtChild_pi0 ], 
+                                                                   nickname='D_TAG_NEUTRAL_XSec', shared=True) ]
+        stages['Dst_2D0Gamma_D02KPi_XSecTurbo']  = [TagDecayWithNeutral('Dst_2D0Gamma_D02KPi_XSec',
+                                                                   ["D*(2007)0 -> D0 gamma","D*(2007)0 -> D~0 gamma"],
+                                                                   inputs = [ stages["D02KPi_XSecTurbo"][0],
+                                                                   SharedNeutralLowPtChild_gamma ],  
                                                                    nickname='D_TAG_NEUTRAL_XSec', shared=True) ]
         stages['Dst_2DsGamma_Ds2KKPi_XSecTurbo'] = [TagDecayWithNeutral('Dst_2DsGamma_Ds2KKPi_XSec',
                                                                    ["[D*_s+ -> D_s+ gamma]cc"],

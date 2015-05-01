@@ -457,37 +457,56 @@ class DetachedHHHCombiner(Hlt2Combiner) : # {
 ## Shared instances of DetachedHHHCombiner
 ## ------------------------------------------------------------------------- ##
 
-## Main line D+/D_s+ -> 3h combiners
+## Main line D+ -> 3h combiners
 D2HHH_DpToKmPipPip = DetachedHHHCombiner( 'D2HHH_DpToKmPipPip'
         , decay = "[D+ -> K- pi+ pi+]cc"
         , inputs = [ SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi ]
-        , nickname = 'D2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
+        , nickname = 'Dpm2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
 
 D2HHH_DpToKpPimPip = DetachedHHHCombiner( 'D2HHH_DpToKpPimPip'
         , decay = "[D+ -> K+ pi- pi+]cc"
         , inputs = [ SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi ]
-        , nickname = 'D2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
+        , nickname = 'Dpm2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
 
-D2HHH_DpToKpKpPim = DetachedHHHCombiner( 'D2HHH_DpToKpKpPim'
-        , decay = "[D+ -> K+ K+ pi-]cc"
-        , inputs = [ SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi ]
-        , nickname = 'D2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
-
-D2HHH_DpToKmKpPim = DetachedHHHCombiner( 'D2HHH_DpToKmKpPim'
+D2HHH_DpToKmKpPip = DetachedHHHCombiner( 'D2HHH_DpToKmKpPip'
         , decay = "[D+ -> K- K+ pi+]cc"
         , inputs = [ SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi ]
-        , nickname = 'D2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
+        , nickname = 'Dpm2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
 
 D2HHH_DpToPimPipPip = DetachedHHHCombiner( 'D2HHH_DpToPimPipPip'
         , decay = "[D+ -> pi- pi+ pi+]cc"
         , inputs = [ SharedDetachedDpmChild_pi ]
-        , nickname = 'D2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
+        , nickname = 'Dpm2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
 
-D2HHH_DpToKmKpKm = DetachedHHHCombiner( 'D2HHH_DpToKmKpKm'
+D2HHH_DpToKmKpKp = DetachedHHHCombiner( 'D2HHH_DpToKmKpKp'
         , decay = "[D+ -> K- K+ K+]cc"
         , inputs = [ SharedDetachedDpmChild_K ]
-        , nickname = 'D2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
+        , nickname = 'Dpm2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
+## Main line D_s+ -> 3h combiners
+D2HHH_DspToKpPimPip = DetachedHHHCombiner( 'D2HHH_DspToKpPimPip'
+        , decay = "[D_s+ -> K+ pi- pi+]cc"
+        , inputs = [ SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi ]
+        , nickname = 'Ds2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
 
+D2HHH_DspToKpKpPim = DetachedHHHCombiner( 'D2HHH_DspToKpKpPim'
+        , decay = "[D_s+ -> K+ K+ pi-]cc"
+        , inputs = [ SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi ]
+        , nickname = 'Ds2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
+
+D2HHH_DspToKmKpPip = DetachedHHHCombiner( 'D2HHH_DspToKmKpPip'
+        , decay = "[D_s+ -> K- K+ pi+]cc"
+        , inputs = [ SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi ]
+        , nickname = 'Ds2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
+
+D2HHH_DspToPimPipPip = DetachedHHHCombiner( 'D2HHH_DspToPimPipPip'
+        , decay = "[D_s+ -> pi- pi+ pi+]cc"
+        , inputs = [ SharedDetachedDpmChild_pi ]
+        , nickname = 'Ds2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
+
+D2HHH_DspToKmKpKp = DetachedHHHCombiner( 'D2HHH_DspToKmKpKp'
+        , decay = "[D_s+ -> K- K+ K+]cc"
+        , inputs = [ SharedDetachedDpmChild_K ]
+        , nickname = 'Ds2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
 
 ## Main line Lambda_c+ -> 3h combiners
 Lc2HHH_LcpToKmPpPip = DetachedHHHCombiner( 'Lc2HHH_LcpToKmPpPip'

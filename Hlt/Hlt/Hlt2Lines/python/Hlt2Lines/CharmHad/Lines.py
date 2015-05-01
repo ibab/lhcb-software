@@ -223,9 +223,6 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
         _stages = self.stages()
         from HltLine.HltLine import Hlt2Line
         for nickname, algos in self.algorithms( _stages ).iteritems():
-            if nickname.find('Turbo') > -1 : 
-                Hlt2Line(nickname, prescale = self.prescale,
-                         algos = algos, postscale = self.postscale, Turbo = True)
-            else :
-                Hlt2Line('CharmHad' + nickname, prescale = self.prescale,
-                         algos = algos, postscale = self.postscale)
+            doturbo = True if (nickname.find('Turbo') > -1) else False
+            Hlt2Line('CharmHad' + nickname, prescale = self.prescale,
+                     algos = algos, postscale = self.postscale, Turbo = doturbo)

@@ -8,6 +8,14 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-05-01 - Vladimir Gligorov
+ - CharmHad : split D2HHH CPV lines into D+ and Ds+ CPV lines 
+ - CharmHad : update HHH line naming convention to XToYpZm... 
+ - CharmHad : propagate above changes to DPS lines
+ - CharmHad : update default cuts for K3Pi XSec line
+ - CharmHad : simplify logic for prepending CharmHad to line names and
+              make sure it applies to Turbo lines as well
+
 ! 2015-04-30 - Dan Johnson
  - CEP: Update CEP thresholds
 

@@ -67,9 +67,9 @@ class DPSLines(Hlt2LinesConfigurableUser) :
             charm = Charm  ()
             
             D0  = charm.stages ( 'D02KPi'         ) [0] ## Wide mass here!!!
-            D   = charm.stages ( 'D2KPiPi_SS'     ) [0]
-            Ds  = charm.stages ( 'D2KKPi_OS'      ) [0]
-            Lc  = charm.stages ( 'Lc2KPPi'        ) [0]
+            D   = charm.stages ( 'DpToKmPipPip'   ) [0]
+            Ds  = charm.stages ( 'DspToKmKpPip'   ) [0]
+            Lc  = charm.stages ( 'LcpToKmPpPip'        ) [0]
             
             Hc  = MergeCharm ( 'MergedHc', [ Hlt2ExternalStage ( charm, s ) for s in ( D0 , D , Ds , Lc ) ] )
             
