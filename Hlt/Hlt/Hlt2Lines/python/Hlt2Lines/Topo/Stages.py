@@ -46,7 +46,8 @@ class FilterMVA(Hlt2ParticleFilter):
     """
     Apply the MVA filter to an n-body combo (also applies 1 < MCOR < 10 GeV)
     """
-    def __init__(self, n, inputs, props, bdtcut_override=None, mu=False):
+    def __init__(self, n, inputs, props, bdtcut_override=None, mu=False, 
+                 nickname=None, preambulo=None):
         params = props.get('BDT_%iBODY_PARAMS' % n)
         if params == None: params = props['BDT_PARAMS']
         params = '$PARAMFILESROOT/data/' + params
@@ -55,7 +56,8 @@ class FilterMVA(Hlt2ParticleFilter):
         if bdtcut_override: bdtcut = bdtcut_override
         varmap = props.get('BDT_%iBODY_VARMAP' % n)
         if varmap == None: varmap = props['BDT_VARMAP']
-        bdttool = self.__classifier(params, varmap, "TrgBBDT")
+        if preambulo == None: preambulo = []
+        bdttool = self.__classifier(params, varmap, "TrgBBDT",preambulo)
         bdt = ("(VALUE('%s/%s') > %s)" % 
                (bdttool.Type.getType(), bdttool.Name, bdtcut))
         pc = bdt
@@ -70,6 +72,7 @@ class FilterMVA(Hlt2ParticleFilter):
         name = 'TopoBDTFilter%d' % n
         if bdtcut_override: name += 'PreFilter'
         if mu:  name = 'TopoMuBDTFilter%d' % n
+        if nickname == None: nickname = name
         if mu is False and bdtcut_override is not None:
             Hlt2ParticleFilter.__init__(self, name, pc, inputs, shared = True, 
                                         tools = [bdttool], 
@@ -77,8 +80,9 @@ class FilterMVA(Hlt2ParticleFilter):
         else:
             tos = 'HTOS'
             if mu: tos = 'MUTOS'
-            Hlt2ParticleFilter.__init__(self, name, pc, inputs, shared = True, 
+            Hlt2ParticleFilter.__init__(self, name, pc, inputs, shared = False, 
                                         tools = [bdttool], tistos = tos,
+                                        nickname = nickname,
                                         dependencies = [PV3D('Hlt2')])
 
 

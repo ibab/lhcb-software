@@ -7,24 +7,33 @@ slots['Common'].update({
                                'Decision%TOS'),
         'MUTOS'             : 'Hlt1TrackMuonDecision%TOS',
         'HTOS'              : 'Hlt1(Two)?TrackMVADecision%TOS',
-        'GEC_MAX'           : -1,
+        'GEC_MAX'           : 500,
         'USE_KS'            : True,
         'USE_LAMBDA'        : True,
         'BDT_PREFILTER'     : 0.2,
-        'BDT_MIN'           : 0.997,
-        'MU_BDT_MIN'        : 0.95,
+        'BDT_2BODY_MIN'     : 0.997,
+        'BDT_3BODY_MIN'     : 0.995,
+        'BDT_4BODY_MIN'     : 0.993,
+        'MU_BDT_2BODY_MIN'  : 0.993,
+        'MU_BDT_3BODY_MIN'  : 0.99,
+        'MU_BDT_4BODY_MIN'  : 0.99,
+        'BDT_MIN'           : 0.99,
+        'MU_BDT_MIN'        : 0.99,
         'BDT_VARMAP'        : {
             "n"      : "NINTREE((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0'))",
             "mcor"   : "BPVCORRM",
             "chi2"   : "VFASPF(VCHI2)",
-            "sumpt"  : "SUMTREE(PT, ISBASIC, 0.0)/MeV",
+            "sumpt"  : ("SUMTREE(PT,"
+                        "((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0')), 0.0)/MeV"),
             "eta"    : "BPVETA",
             "fdchi2" : "BPVVDCHI2",
-            "minpt"  : "MINTREE(ISBASIC, PT)/MeV",
-            "nlt16"  : "NINTREE(ISBASIC & (BPVIPCHI2() < 16))",
+            "minpt"  : ("MINTREE(((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0')),"
+                        "PT)/MeV"),
+            "nlt16"  : ("NINTREE(((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0'))"
+                        "& (BPVIPCHI2() < 16))"),
             "ipchi2" : "BPVIPCHI2()",
-            "n1trk"  : ("NINTREE(ISBASIC & (PT > 1*GeV) "
-                        "& (BPVIPCHI2() > 16))")
+            "n1trk"  : ("NINTREE(((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0'))"
+                        "& (PT > 1*GeV) & (BPVIPCHI2() > 16))")
         },
         'BDT_PARAMS'        : 'hlt2_topo_run2_v1.bbdt',
         'TRK_PT_MIN'        : 200 * MeV,
@@ -89,7 +98,7 @@ class TopoLines(Hlt2LinesConfigurableUser):
                 FilterMVA(n, self._stages['Topo%iBodyCombos' % n], props)]
             self._stages['TopoMu%iBody' % n] = [
                 FilterMVA(n, self._stages['Topo%iBodyCombos' % n], props,
-                          props['MU_BDT_MIN'],True)]
+                          props['MU_BDT_%iBODY_MIN' % n],True)]
 
         # Return the stages. 
         if nickname: return self._stages[nickname]
