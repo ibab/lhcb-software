@@ -13,7 +13,7 @@ class JetMakerConf:
                  R = 0.5 ,
                  PtMin = 5000.,
                  AssociateWithPV = True ,
-                 JetEnergyCorrection = False ,
+                 JetEnergyCorrection = True ,
                  JetIDCut = True,
                  jetidnumber=98 ,
                  onlySaveB = False,
@@ -49,12 +49,12 @@ class JetMakerConf:
         alreadySet = False
         if self.R == 0.5:
             for file in hsvc.Input:
-                if file == "JEC14R05 DATAFILE='$PARAMFILESROOT/data/JetEnergyCorrections_Reco14_v1.root' TYP='ROOT'": alreadySet = True
-            if not alreadySet: hsvc.Input += [ "JEC14R05 DATAFILE='$PARAMFILESROOT/data/JetEnergyCorrections_Reco14_v1.root' TYP='ROOT'" ]
+                if file == "JEC14R05 DATAFILE='$PARAMFILESROOT/data/JetEnergyCorrections_R05_v3.root' TYP='ROOT'": alreadySet = True
+            if not alreadySet: hsvc.Input += [ "JEC14R05 DATAFILE='$PARAMFILESROOT/data/JetEnergyCorrections_R05_v3.root' TYP='ROOT'" ]
         elif self.R == 0.7:
             for file in hsvc.Input:
-                if file == "JEC14R07 DATAFILE='$PARAMFILESROOT/data/JetEnergyCorrections_Reco14_R07_v1.root' TYP='ROOT'": alreadySet = True
-            if not alreadySet: hsvc.Input += [ "JEC14R07 DATAFILE='$PARAMFILESROOT/data/JetEnergyCorrections_Reco14_R07_v1.root' TYP='ROOT'" ]
+                if file == "JEC14R07 DATAFILE='$PARAMFILESROOT/data/JetEnergyCorrections_R07_v3.root' TYP='ROOT'": alreadySet = True
+            if not alreadySet: hsvc.Input += [ "JEC14R07 DATAFILE='$PARAMFILESROOT/data/JetEnergyCorrections_R07_v3.root' TYP='ROOT'" ]
         else:
             print "WARNING R parameter is not supported by any official JEC. Make sure you manually set your correct JEC file"
 

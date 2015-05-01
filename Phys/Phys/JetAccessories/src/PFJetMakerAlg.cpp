@@ -187,7 +187,7 @@ namespace LoKi
         /// append Jet ID
         bool m_applyJetID              ; // append jet ID info
         /// histograms for JEC
-        TH1D* m_histosJEC[3][24][10][2] ;
+        TH1D* m_histosJEC[4][11][4][3] ;
 
         //std::vector<TH1D*> m_histosJEC ;
         /// histo path
@@ -240,13 +240,13 @@ StatusCode LoKi::PFJetMaker::initialize ()
     if ( 0 == m_maker ) { m_maker = tool<IJetMaker> ( m_makerName ,m_makerName, this ) ; }
     // Read in the histograms for JEC
     if ( m_applyJEC ){
-        const int netabins=24, ncpfbins=10, nphibins=2;
-        for(int inpvs=0; inpvs<3; inpvs++) for(int ieta=0; ieta<netabins; ieta++)
+        const int netabins=11, ncpfbins=4, nphibins=3, npvbins=4;
+        for(int inpvs=0; inpvs<npvbins; inpvs++) for(int ieta=0; ieta<netabins; ieta++)
             for(int icpf=0; icpf<ncpfbins; icpf++) for(int iphi=0; iphi<nphibins; iphi++) {
                 std::string histoname =
                     "JECSYS_PV"+boost::lexical_cast<std::string>(inpvs+1)+
-                    "_ETA"+boost::lexical_cast<std::string>(ieta+20)+
-                    "_CPF"+boost::lexical_cast<std::string>(icpf+1)+
+                    "_ETA"+boost::lexical_cast<std::string>(ieta)+
+                    "_CPF"+boost::lexical_cast<std::string>(icpf)+
                     "_PHI"+boost::lexical_cast<std::string>(iphi);
                 AIDA::IHistogram1D *aida =  get<AIDA::IHistogram1D> (histoSvc(), m_histo_path + histoname);
                 if( 0==aida ) warning()<<"Could not find AIDA::IHistogram1D* "
@@ -297,9 +297,9 @@ StatusCode LoKi::PFJetMaker::analyse   ()
     // Get the particles to be banned from jet inputs
     for (std::vector< std::string >::const_iterator i_location = m_banCandidatesLocations.begin() ;
             m_banCandidatesLocations.end() != i_location ; ++i_location ){
-        if( !exist<LHCb::Particle::Range>(*i_location) )continue;
-        LHCb::Particle::Range myPartsToBan = get<LHCb::Particle::Range>(*i_location);
-        for (LHCb::Particle::Range::const_iterator i_p = myPartsToBan.begin();myPartsToBan.end()!=i_p;i_p++)
+        if( !exist<LHCb::Particles*>(*i_location) )continue;
+        const  LHCb::Particles* mypartsToBan = get<LHCb::Particles*>(*i_location);
+        for (LHCb::Particles::const_iterator i_p = mypartsToBan->begin();mypartsToBan->end()!=i_p;i_p++)
         {
             LHCb::Particle::ConstVector particleToBan_daug = (*i_p)->daughtersVector();
             if( particleToBan_daug.size() == 0 ){
@@ -771,10 +771,12 @@ LoKi::Types::Fun NECALsatCells = LoKi::Cuts::SUMTREE( LoKi::Cuts::INFO(LHCb::Jet
 
 StatusCode LoKi::PFJetMaker::JEC( LHCb::Particle* jet )
 {
+
+
     int PV = this->primaryVertices().size();
     int usePV = PV;
-    if (PV > 3)usePV = 3;
-
+    const int netabins=11, ncpfbins=4, nphibins=3, npvbins=4;
+    if (PV > npvbins-1) usePV = npvbins;
     float jetpt = LoKi::Cuts::PT(jet)/1000.;
     float jeteta = LoKi::Cuts::ETA(jet);
     float jetphi = LoKi::Cuts::PHI(jet);
@@ -782,17 +784,23 @@ StatusCode LoKi::PFJetMaker::JEC( LHCb::Particle* jet )
 
     if(jetpt<5)    jetpt=5;
     if(jetpt>299)  jetpt=298;
-    if(jeteta<2.0) jeteta=2.0;
-    if(jeteta>4.4) jeteta=4.5;
+    if(jeteta<2.05) jeteta=2.05;
+    if(jeteta>4.4) jeteta=4.45;
+    if(jetcpf<0.2) jetcpf = 0.2;
+    if(jetcpf>0.99) jetcpf = 0.99;
 
-    int jec_eta=(int)(jeteta*10-20.5), jec_cpf=(int)(jetcpf*10-0.5);
-    int jec_phi=0; jetphi = TMath::Abs(jetphi);
-    if(jetphi<TMath::Pi()/4.||jetphi>3*TMath::Pi()/4.) jec_phi=0;
-    if(TMath::Abs(jetphi-TMath::Pi()/2.)<TMath::Pi()/4.) jec_phi=1;
-    if(jec_cpf>9) jec_cpf=9;
-    if(jec_eta>23) jec_eta=23;
 
-    TH1D* histo = m_histosJEC[usePV-1][jec_eta][jec_cpf][jec_phi];
+
+    float auxjetphi = TMath::Abs(TMath::Abs(jetphi)-TMath::Pi()/2.);
+    float jetetalimits[netabins+1]={2.0,2.1,2.2,2.3,2.4,2.5,2.6,2.8,3.0,3.2,3.8,4.5};
+    float jetcpflimits[ncpfbins+1]={0.1,0.3,0.5,0.7,1.0};
+    float pi = TMath::Pi();
+    float jetphilimits[nphibins+1]={0,((float)(1.0/3.0*(0.5*(pi)))),((float)(2.0/3.0*(0.5*(pi)))),((float)(0.5*(pi)))};
+    int ijeteta=0; while(jeteta>jetetalimits[ijeteta]) ijeteta++; ijeteta--;
+    int ijetcpf=0; while(jetcpf>jetcpflimits[ijetcpf]) ijetcpf++; ijetcpf--;
+    int ijetphi=0; while(auxjetphi>jetphilimits[ijetphi]) ijetphi++; ijetphi--;
+
+    TH1D* histo = m_histosJEC[usePV-1][ijeteta][ijetcpf][ijetphi];
 
     double cor = 1.;
     cor = histo->Interpolate(jetpt);

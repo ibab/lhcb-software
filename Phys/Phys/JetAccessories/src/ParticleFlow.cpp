@@ -50,7 +50,7 @@ ParticleFlow::ParticleFlow( const std::string& name,
         ISvcLocator* pSvcLocator)
     : GaudiTupleAlg ( name , pSvcLocator )
       , m_trSel ( 0 )
-      //, m_ttExpectation ( 0 )
+      , m_ppSvc ( 0 )
       , m_clust2TrLocationECAL ( LHCb::CaloAlgUtils::CaloIdLocation("ClusterMatch", context()) )
       , m_clust2TrLocationHCAL ( "Rec/Calo/HcalClusterMatch" )
       //, m_p2s ( 0 )
@@ -88,6 +88,8 @@ ParticleFlow::ParticleFlow( const std::string& name,
             "Location of composite particles to be used" );
     declareProperty( "CandidateToBanLocation", m_banCandidatesLocations,
             "Location of candidate not to be included for Jet reco" );
+    declareProperty( "CandidatesToKeepLocation", m_keepCandidatesLocations,
+            "Location of candidate to be kept for PF, no extra cut" );
 
 
     // Calo matching related cuts
@@ -204,13 +206,13 @@ StatusCode ParticleFlow::initialize() {
     m_pvRelator = tool<IRelatedPVFinder>("GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2", this);
 
     // ParticleProperty
-    LHCb::IParticlePropertySvc* ppSvc = 0;
-    sc = service("LHCb::ParticlePropertySvc", ppSvc);
+    if(m_ppSvc == 0){
+    sc = service("LHCb::ParticlePropertySvc", m_ppSvc);
     if( sc.isFailure() ) {
         fatal() << "    Unable to locate Particle Property Service"   << endreq;
         return sc;
     }
-
+}
     if (m_particleLocations.empty()){
         m_particleLocations.push_back("Phys/StdLooseAllPhotons/Particles");
     }
@@ -219,15 +221,15 @@ StatusCode ParticleFlow::initialize() {
 
 
     m_protoMap[ "pi+" ] = std::make_pair( tool<IProtoParticleFilter>( "ProtoParticleANNPIDFilter", "pion"  , this )
-            , ppSvc->find( "pi+" ) );
+            , m_ppSvc->find( "pi+" ) );
     m_protoMap[ "K+"  ] = std::make_pair( tool<IProtoParticleFilter>( "ProtoParticleANNPIDFilter", "kaon"  , this )
-            , ppSvc->find( "K+" ) );
+            , m_ppSvc->find( "K+" ) );
     m_protoMap[ "p+"  ] =  std::make_pair( tool<IProtoParticleFilter>( "ProtoParticleANNPIDFilter", "proton"  , this )
-            , ppSvc->find( "p+" ) );
+            , m_ppSvc->find( "p+" ) );
     m_protoMap[ "e+"  ] =  std::make_pair( tool<IProtoParticleFilter>( "ProtoParticleANNPIDFilter", "electron", this )
-            , ppSvc->find( "e+" ) );
+            , m_ppSvc->find( "e+" ) );
     m_protoMap[ "mu+" ] =  std::make_pair( tool<IProtoParticleFilter>( "ProtoParticleMUONFilter"  , "muon"    , this )
-            , ppSvc->find( "mu+" ) );
+            , m_ppSvc->find( "mu+" ) );
 
     //m_filterGhost = tool<IProtoParticleFilter>( "ProtoParticleANNPIDFilter", "ghost", this );
 
@@ -273,6 +275,7 @@ StatusCode ParticleFlow::execute() {
 
     // Define / reset some counters/control containers
     m_trackKeyToBan.clear();
+    m_trackKeyToKeep.clear();
     m_particleContainers.clear();
     m_PFCaloClusters.clear();
 
@@ -588,6 +591,12 @@ StatusCode ParticleFlow::execute() {
                 m_compositeParticleLocations.end() != i_location ; ++i_location ){
             if ( exist<LHCb::Particle::Range>(*i_location) ) m_particleContainers["Composite"].push_back(get<LHCb::Particle::Range>(*i_location));
         }
+        // Get the particles to be kept from jet inputs
+        for (std::vector< std::string >::const_iterator i_location = m_keepCandidatesLocations.begin() ;
+                m_keepCandidatesLocations.end() != i_location ; ++i_location ){
+            if( exist<LHCb::Particle::Range>(*i_location) ) m_particleContainers["ToKeep"].push_back(get<LHCb::Particle::Range>(*i_location));
+        }
+
         // Get the particles to be banned from jet inputs
         for (std::vector< std::string >::const_iterator i_location = m_banCandidatesLocations.begin() ;
                 m_banCandidatesLocations.end() != i_location ; ++i_location ){
@@ -664,6 +673,37 @@ StatusCode ParticleFlow::execute() {
          * and store their tracks key in the m_trackKeyToBan map.
          *
          */
+        // Treat the banned candidates
+        if(  m_particleContainers.count("ToKeep") > 0.5){
+            // Store them in the particleToKeep container
+            LHCb::Particle::ConstVector particleToKeep;
+            for( unsigned int i = 0 ; i < m_particleContainers["ToKeep"].size(); i++){
+                BOOST_FOREACH(const LHCb::Particle* tokeep, m_particleContainers["ToKeep"][i] ){
+                    particleToKeep.push_back(tokeep);
+                }
+            }
+            // Store their track key in the m_trackKeyToKeep map
+            BOOST_FOREACH(const LHCb::Particle* cand, particleToKeep ){
+                LHCb::Particle::ConstVector particleToKeep_daug = cand->daughtersVector();
+                if ( particleToKeep_daug.size() == 0 ){
+                    if (cand->proto()==0)continue;
+                    if (cand->proto()->track()==0)continue;
+                    m_trackKeyToKeep[cand->proto()->track()->key()]=cand;
+                    // IMPROVEMENT: get the calocluster and if chi2 is good put it to to NeutralRecovery with this particle attached
+                    // Not done yet because assume most of the time one anyway wants it to be isolated of the jet
+                }
+                else{
+                    for(LHCb::Particle::ConstVector::const_iterator i_p = particleToKeep_daug.begin() ;
+                            particleToKeep_daug.end() != i_p ; ++i_p ){
+                        if ((*i_p)->proto()==0)continue;
+                        if ((*i_p)->proto()->track()==0)continue;
+                        m_trackKeyToKeep[(*i_p)->proto()->track()->key()]=(*i_p);
+                        // IMPROVEMENT: get the calocluster and if chi2 is good put it to to NeutralRecovery with this particle attached
+                        // Not done yet because assume most of the time one anyway wants it to be isolated of the jet
+                    }
+                }
+            }
+        }
 
         // Treat the banned candidates
         if(  m_particleContainers.count("ToBan") > 0.5){
@@ -726,7 +766,11 @@ StatusCode ParticleFlow::execute() {
                     if ((*i_p)->proto()==NULL) return Error("Composite daugthers of composite particles treatement is not implemented");
                     if ((*i_p)->proto()->track()==NULL) Error("Neutral daugthers of composite particles treatement is not implemented");
                     // Check if the track is banned already
-                    if (m_trackKeyToBan.count((*i_p)->proto()->track()->key())>0.5){
+                   if (m_trackKeyToKeep.count((*i_p)->proto()->track()->key())>0.5){
+                        overlap = true;
+                        break;
+                    }
+                 if (m_trackKeyToBan.count((*i_p)->proto()->track()->key())>0.5){
                         overlap = true;
                         break;
                     }
@@ -790,9 +834,11 @@ StatusCode ParticleFlow::execute() {
             //custom ghost removal
             const LHCb::Track* track = ch_pp->track();
 
+            int tag(LHCb::PFParticle::Unknown);
+            const LHCb::ParticleProperty* pprop = NULL ;
             // Continue either if the track does not exist or if it has been banned already
             if ( track == NULL || m_trackKeyToBan.count(track->key()) ) continue;
-
+            if(!(m_trackKeyToKeep.count(track->key()))){
 
             if(pptype == "Charged"){
                 double nNN = ch_pp->info(LHCb::ProtoParticle::ProbNNghost,-1);
@@ -813,13 +859,20 @@ StatusCode ParticleFlow::execute() {
 
 
             // Extra track check
-            int tag(LHCb::PFParticle::Unknown);
             tag = tagTrack(track);
+            }else{
+            tag = LHCb::PFParticle::Keep;
+
+
+            pprop = m_ppSvc->find((m_trackKeyToKeep[track->key()])->particleID());
+
+            }
+
             if( tag == LHCb::PFParticle::Reject) continue;
             // Ban the track from further use (not needed just safety if later addition of code)
             m_trackKeyToBan[track->key()] = track ;
             // Create the particles
-            LHCb::PFParticle*theParticle = new LHCb::PFParticle( ch_pp  , tag ,  m_protoMap );
+            LHCb::PFParticle*theParticle = new LHCb::PFParticle( ch_pp  , tag ,  m_protoMap, pprop );
             if ( theParticle == NULL ) delete(theParticle);
             else{
                 verbose()<<"In treat protoparticles "<<theParticle->particleID()<<endreq;

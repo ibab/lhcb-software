@@ -22,6 +22,7 @@ class ParticleFlowConf:
              "ParticleLocations": [],
              "CompositeParticleLocations": [],
              "CandidateToBanLocation": [],
+             "CandidatesToKeepLocation": [],
              "VerticesLocation": "Rec/Vertex/Primary" ,
              ### Tracks selection
              # For track selector

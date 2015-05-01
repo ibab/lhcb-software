@@ -108,6 +108,7 @@ private:
 
   ITrackSelector * m_trSel;                                      ///< The track selector tool
 
+  LHCb::IParticlePropertySvc* m_ppSvc;
   //IHitExpectation* m_ttExpectation;                          ///< The TT hit expectation tool
 
   std::string m_clust2TrLocationECAL;   ///< Location of the Tr 2 ECAL cluster relation table
@@ -129,6 +130,7 @@ private:
   std::vector< std::string > m_particleLocations          ;
   std::vector< std::string > m_compositeParticleLocations ;
   std::vector< std::string > m_banCandidatesLocations     ;
+  std::vector< std::string > m_keepCandidatesLocations     ;
 
   std::map< std::string , std::vector< LHCb::Particle::Range > >  m_particleContainers;
 
@@ -175,6 +177,7 @@ private:
   bool m_useHCAL;
 
   std::map< int , const LHCb::Track* > m_trackKeyToBan ;
+  std::map< int , const LHCb::Particle* > m_trackKeyToKeep ;
 
   double m_minHCALE ;
   double m_minHCALEt ;

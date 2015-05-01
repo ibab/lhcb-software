@@ -101,7 +101,7 @@ namespace LHCb {
                                                                 m_nbSaturatedHCALCaloCell ( 0 )
     {
       if ( m_type == Unknown ){
-        
+
         int ptype(Unknown);
 
         if(this->particleID().isHadron() && this->particleID().hasCharm() ){
@@ -127,7 +127,7 @@ namespace LHCb {
           else ptype = Muon;
         }
         //Extra info can be set only if not unknown
-        
+
         if ( ptype!=Unknown && !isDaughter ) {
           m_type = ptype ;
           this->addInfo(PFParticle::Type,(double)ptype);
@@ -142,7 +142,7 @@ namespace LHCb {
       else{
         this->addInfo(PFParticle::Type,type);
       }
-      
+
     };
 
     /// Copy constructor
@@ -157,14 +157,14 @@ namespace LHCb {
     };
 
     /// Neutral Hadron Particle Constructor
-    //PFParticle( const std::vector<const CaloCluster*>& clusters , 
+    //PFParticle( const std::vector<const CaloCluster*>& clusters ,
     //            const ProtoParticle * pp  );
     /// Neutral Recovery  Particle Constructor
     PFParticle( const Gaudi::Vector6& barycenter , const double oldEnergy );
     /// Charged Particle Constructor
     PFParticle( const LHCb::ProtoParticle * pp ,  int type ,
                 std::map< std::string , std::pair< const IProtoParticleFilter* ,
-                const LHCb::ParticleProperty * > > & protoMap );
+                const LHCb::ParticleProperty * > > & protoMap , const LHCb::ParticleProperty * pprop);
 
     virtual ~PFParticle( ){}; ///< Destructor
 
