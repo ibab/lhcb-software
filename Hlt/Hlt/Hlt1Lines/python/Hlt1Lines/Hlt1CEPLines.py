@@ -25,15 +25,15 @@ class Hlt1CEPLinesConf( HltLinesConfigurableUser ):
         from HltTracking.Hlt1Tracking import TrackCandidates
         return [ TrackCandidates( "CEP" ) ]
    
-    def streamer_veloCutsOnly( self ):
+    def streamer_veloCutsOnly( self, name ):
         props = self.getProps()
 
         ## VoidFilter to cut on the number of Velo tracks.
         from Configurables import LoKi__VoidFilter as VoidFilter
         from HltTracking.HltSharedTracking import MinimalVelo
         props['Velo'] = MinimalVelo.outputSelection()
-        code = "(CONTAINS('%(Velo)s') > %(MinNVelo)s) & (CONTAINS('%(Velo)s') < %(MaxNVelo)s)" % props
-        veloFilter = VoidFilter('Hlt1CEPNVeloFilterVeloCutOnly', Code = code)
+        code = "in_range( %(MinNVelo)s, CONTAINS('%(Velo)s'), %(MaxNVelo)s ) "% props
+        veloFilter = VoidFilter('Hlt1'+name+'Decision', Code = code)
 
         return [veloFilter]
     
@@ -45,7 +45,7 @@ class Hlt1CEPLinesConf( HltLinesConfigurableUser ):
         from Configurables import LoKi__VoidFilter as VoidFilter
         from HltTracking.HltSharedTracking import MinimalVelo
         props['Velo'] = MinimalVelo.outputSelection()
-        code = "(CONTAINS('%(Velo)s') > %(MinNVelo)s) & (CONTAINS('%(Velo)s') < %(MaxNVelo)s)" % props
+        code = "in_range( %(MinNVelo)s, CONTAINS('%(Velo)s'), %(MaxNVelo)s ) "% props
         veloFilter = VoidFilter('Hlt1CEPNVeloFilter', Code = code)
 
         ## Streamer
@@ -88,5 +88,5 @@ class Hlt1CEPLinesConf( HltLinesConfigurableUser ):
             postscale = self.postscale,
             L0DU = "( L0_DATA('Spd(Mult)') < %(SpdMult)s )" % self.getProps(),   
             ##
-            algos     = self.streamer_veloCutsOnly()
+            algos     = self.streamer_veloCutsOnly('CEPVeloCut')
             )
