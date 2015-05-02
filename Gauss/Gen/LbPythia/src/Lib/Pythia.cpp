@@ -137,6 +137,23 @@ void Pythia::PyEvnt( ) {
 #endif
 }
 
+// PYUPEV Fortran function
+extern "C" {
+#ifdef WIN32
+  void __stdcall PYUPEV( ) ;
+#else
+  void pyupev_ ( ) ;
+#endif
+}
+
+void Pythia::PyUpev( ) {
+#ifdef WIN32
+  PYUPEV( ) ;
+#else
+  pyupev_ ( ) ;
+#endif
+}
+
 // LUNHEP Fortran function
 extern "C" {
 #ifdef WIN32

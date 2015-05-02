@@ -12,7 +12,7 @@ branches      LbBcVegPy doc cmt src
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
 use           BcVegPy         v*          Gen
-use           LbPythia        v*          Gen
+use           LbHard          v*          Gen
 
 #============================================================================
 # include files shared between linker and component library

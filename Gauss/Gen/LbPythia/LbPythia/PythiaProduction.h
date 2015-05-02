@@ -79,6 +79,7 @@ protected:
   /// Retrieve hard process information
   void hardProcessInfo( LHCb::GenCollision * theCollision ) ;
 
+public:
   int m_userProcess ; ///< type of User process
   std::string m_frame   ;  ///< FRAME string
   std::string m_beam    ;  ///< BEAM string  
@@ -113,9 +114,12 @@ protected:
   int m_eventListingLevel2 ;
   int m_initializationListingLevel ;
   int m_finalizationListingLevel ;
-  
+
+public:
+  /// Beam tool name, needs to be externally accessible for hard production.
   std::string m_beamToolName ;
   
+protected:
   std::string m_pythiaListingFileName ;
   int m_pythiaListingUnit ;
   

@@ -11,7 +11,7 @@ branches      LbGenXicc doc cmt src
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
 use           GenXicc         v*          Gen
-use           LbPythia        v*          Gen
+use           LbHard          v*          Gen
 
 #============================================================================
 # include files shared between linker and component library

@@ -4,7 +4,7 @@
 gaudi_subdir(LbBcVegPy v5r1p1)
 
 gaudi_depends_on_subdirs(Gen/BcVegPy
-                         Gen/LbPythia)
+                         Gen/LbHard)
 
 gaudi_add_library(LbBcVegPyLib
                   src/Lib/*.cpp

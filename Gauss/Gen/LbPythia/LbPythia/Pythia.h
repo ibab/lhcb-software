@@ -60,6 +60,7 @@ public:
                       const std::string target , double win ) ;
   static void PyList( int val ) ;
   static void PyEvnt( ) ;
+  static void PyUpev( ) ;
   static int LunHep( int val ) ;
   static int PyComp( int val ) ;
   static void PyStat( int val ) ;

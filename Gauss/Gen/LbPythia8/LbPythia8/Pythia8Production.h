@@ -14,6 +14,7 @@
 
 // Pythia8.
 #include "Pythia8/Pythia.h"
+#include "Pythia8/LHAFortran.h"
 #include "Pythia8/Pythia8ToHepMC.h"
 
 /** 
@@ -30,6 +31,7 @@
  * @class  Pythia8Production
  * @file   Pythia8Production.h 
  * @author Arthur de Gromard
+ * @author Philip Ilten
  * @date   2007-06-28
  */
 class Pythia8Production : public GaudiTool, virtual public IProductionTool {
@@ -125,7 +127,16 @@ public:
    * hadronization from being performed.
    */
   virtual StatusCode setupForcedFragmentation(const int thePdgId);
+  
+  // The Pythia 8 members (needed externally).
+  Pythia8::Pythia*    m_pythia; ///< The Pythia 8 generator.
+  Pythia8::UserHooks* m_hooks;  ///< User hooks to veto events.
+  Pythia8::LHAup*     m_lhaup;  ///< User specified hard process.
+  Pythia8::Event      m_event;  ///< The Pythia 8 event record.
 
+  // Members needed externally.
+  std::string m_beamToolName;   ///< The name of the beam tool.
+  
 protected:
 
   /**
@@ -141,23 +152,14 @@ protected:
    */
   int pythia8Id(const LHCb::ParticleProperty* thePP);
   
-  // The Pythia 8 members.
-  Pythia8::Pythia*    m_pythia;          ///< The Pythia 8 generator.
-  Pythia8::LhcbHooks* m_hooks;           ///< User hooks to veto events.
-  Pythia8::LHAup*     m_lhaup;           ///< User specified hard process.
-  Pythia8::Event      m_event;           ///< The Pythia 8 event record.
-
-  // The setting files and vectors.
-  std::string m_tuningFile;              ///< The global tuning file.
-  std::string m_tuningUserFile;          ///< The user tuning file.
-  CommandVector m_commandVector;         ///< The user settings vector.
-  
   // Additional members.
-  std::string m_beamToolName;            ///< The name of the beam tool.
-  IBeamTool* m_beamTool;                 ///> The Gaudi beam tool.
+  IBeamTool* m_beamTool;                 ///< The Gaudi beam tool.
   BeamToolForPythia8* m_pythiaBeamTool;  ///< The Pythia 8 beam tool.
   GaudiRandomForPythia8* m_randomEngine; ///< Random number generator.
   int m_nEvents;                         ///< Number of generated events.
+  CommandVector m_userSettings;          ///< The user settings vector.
+  std::string m_tuningFile;              ///< The global tuning file.
+  std::string m_tuningUserFile;          ///< The user tuning file.
   bool m_validate_HEPEVT;                ///< Flag to validate the event.
   bool m_listAllParticles;               ///< Flag to list all the particles.
   bool m_checkParticleProperties ;       ///< Flag to check particle properties.

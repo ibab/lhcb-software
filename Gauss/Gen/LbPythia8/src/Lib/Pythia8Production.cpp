@@ -15,17 +15,14 @@
 #include "HepMC/GenEvent.h"
 #include "HepMC/HEPEVT_Wrapper.h"
 
-// Local.
-#include "Pythia8Production.h"
+// LbPythia8.
+#include "LbPythia8/Pythia8Production.h"
 
 //-----------------------------------------------------------------------------
-//  Implementation file for class: Pythia8Production
+// Implementation file for class: Pythia8Production
 //
-//  2007-07-31 : Arthur de Gromard
+// 2007-07-31 : Arthur de Gromard, Philip Ilten
 //-----------------------------------------------------------------------------
-
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY(Pythia8Production)
 
 //=============================================================================
 // Default constructor.
@@ -39,9 +36,9 @@ Pythia8Production::Pythia8Production(const std::string& type,
  
   // Declare the tool properties.
   declareInterface<IProductionTool>(this);
-  declareProperty("Commands", m_commandVector,
+  declareProperty("Commands", m_userSettings,
 		  "List of commands to pass to Pythia 8.");
-  declareProperty("BeamToolName" , m_beamToolName = "CollidingBeams",
+  declareProperty("BeamToolName", m_beamToolName = "CollidingBeams",
 		  "The beam tool to use.");
   declareProperty("ValidateHEPEVT", m_validate_HEPEVT = false,
 		  "Flag to validate the Pythia 8 event record.");
@@ -93,10 +90,10 @@ StatusCode Pythia8Production::initialize() {
 
   // Print the initialization banner.
   always() << "============================================================="
-           << endmsg;
-  always() << "Using as production engine  " << this->type() << endmsg;
+	   << "=====" << endmsg;
+  always() << "Using as production engine " << this->type() << endmsg;
   always() << "============================================================="
-           << endmsg;
+	   << "=====" << endmsg;
 
   // Initialize the Gaudi tool.
   StatusCode sc = GaudiTool::initialize();
@@ -168,11 +165,32 @@ StatusCode Pythia8Production::initializeGenerator() {
   if (m_tuningUserFile != "" && !m_pythia->readFile(m_tuningUserFile))
     Warning ("Failed to find " + m_tuningUserFile + ".");
 
+  // Turn off minimum bias if using LHAup.
+  if (m_lhaup) {
+    vector<string> procs; procs.push_back("SoftQCD:"); 
+    procs.push_back("HardQCD:");    procs.push_back("Onia:"); 
+    procs.push_back("Charmonium:"); procs.push_back("Bottomonium:");
+    for (unsigned int proc = 0; proc < procs.size(); ++proc) {
+      map<string, Pythia8::FVec> fvecs = 
+	m_pythia->settings.getFVecMap(procs[proc]);
+      map<string, Pythia8::Flag> flags = 
+	m_pythia->settings.getFlagMap(procs[proc]);
+      for(map<string, Pythia8::FVec>::iterator itr = fvecs.begin(); 
+	  itr != fvecs.end(); ++itr)
+	m_pythia->settings.fvec(itr->first, vector<bool>
+				(itr->second.valNow.size(), false));
+      for(map<string, Pythia8::Flag>::iterator itr = flags.begin(); 
+	  itr != flags.end(); ++itr)
+	m_pythia->settings.flag(itr->first, false);
+    }
+  }
+
   // Read user settings.
-  for (unsigned int setting = 0; setting < m_commandVector.size(); ++setting) {
-    debug() << m_commandVector[setting] << endmsg;
-    if (!m_pythia->readString(m_commandVector[setting]))
-      Warning ("Failed to read the command " + m_commandVector[setting] + ".");
+  for (unsigned int setting = 0; setting < m_userSettings.size(); ++setting) {
+    debug() << m_userSettings[setting] << endmsg;
+    std::cout << m_userSettings[setting] << "\n";
+    if (!m_pythia->readString(m_userSettings[setting]))
+      Warning ("Failed to read the command " + m_userSettings[setting] + ".");
   }
 
   // Check particle properties if requested.
@@ -188,11 +206,11 @@ StatusCode Pythia8Production::initializeGenerator() {
   }
   
   // Initialize.
-  if (m_lhaup) 
+  if (m_lhaup) {
     if (m_pythia->init(m_lhaup)) return StatusCode::SUCCESS;
     else return Error("Failed to initialize Pythia 8 with LHAUP pointer.");
-  else if (m_pythia->init()) return StatusCode::SUCCESS;
-  else return Error("Failed to initialize Pythia 8.");
+  } else if (m_pythia->init()) {return StatusCode::SUCCESS;
+  } else return Error("Failed to initialize Pythia 8.");
 }
 
 //=============================================================================
@@ -227,7 +245,8 @@ StatusCode Pythia8Production::generateEvent(HepMC::GenEvent* theEvent,
 					    LHCb::GenCollision* theCollision) {
 
   // Generate the event.
-  m_pythia->next();
+  if (!m_pythia->next())
+    return Error("Pythia 8 event generation failed.");
   if (!m_pythia->flag("HadronLevel:all")) m_event = m_pythia->event;  
   ++m_nEvents;
 
@@ -391,6 +410,6 @@ int Pythia8Production::pythia8Id(const LHCb::ParticleProperty* thePP) {
   return 0;
 }
 
-// ============================================================================
+//=============================================================================
 // The END.
-// ============================================================================
+//=============================================================================

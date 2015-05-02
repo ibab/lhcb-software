@@ -548,7 +548,7 @@ StatusCode PythiaProduction::generateEvent( HepMC::GenEvent * theEvent ,
   
   // Generate Event
   Pythia::PyEvnt( ) ;
-  
+
   // Update event counter
   ++m_nEvents ;
   

@@ -10,7 +10,7 @@
 #include "GaudiKernel/ToolFactory.h"
 
 // Includes
-#include "Pythia8Production.h"
+#include "LbPythia8/Pythia8Production.h"
 
 namespace GenMode {
   enum Mode { GaussMode=1, FlatMode };

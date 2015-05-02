@@ -119,11 +119,11 @@ StatusCode Pythia8Gun::initialize(){
   // this will overwrite anything that is passed through a user tuning file
   // should be done as the last step of the reading of the options,
   // so that everything can be overwritten by the user.
-  for (unsigned int count = 0; count<m_commandVector.size(); ++count) {
-    debug() << m_commandVector[count] << endmsg;
-    success = m_pythia->readString(m_commandVector[count]);
+  for (unsigned int count = 0; count<m_userSettings.size(); ++count) {
+    debug() << m_userSettings[count] << endmsg;
+    success = m_pythia->readString(m_userSettings[count]);
     if (!success)
-      Warning("User's commandVector > readString found bad command: \n\t" + m_commandVector[count]); 
+      Warning("User's commandVector > readString found bad command: \n\t" + m_userSettings[count]); 
   }
 
   //--------------------------------------

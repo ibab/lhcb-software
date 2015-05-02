@@ -4,7 +4,7 @@
 gaudi_subdir(LbGenXicc v4r0p1)
 
 gaudi_depends_on_subdirs(Gen/GenXicc
-                         Gen/LbPythia)
+                         Gen/LbHard)
 
 gaudi_add_library(LbGenXiccLib
                   src/Lib/*.cpp

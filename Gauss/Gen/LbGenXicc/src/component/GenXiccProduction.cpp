@@ -1,325 +1,242 @@
-// $Id: GenXiccProduction.cpp,v 1.0 2011-04-11 F. Zhang
-// Include files 
-#include <sstream>
-// local
-#include "GenXiccProduction.h"
-#include "LbGenXicc/GenXicc.h"
-#include "MCInterfaces/QQqBaryons.h"
-
-// from Gaudi
+// Gaudi.
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
-// from Event
-#include "Event/GenCollision.h"
-
-// local
+// Generators.
 #include "Generators/StringParse.h"
 #include "Generators/IBeamTool.h"
-#include "LbPythia/Pythia.h"
+
+// LbGenXicc.
+#include "LHAupGenXicc.h"
+#include "GenXiccProduction.h"
+#include "LbGenXicc/GenXicc.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : GenXiccProduction
+//  Implementation file for class: BcVegPyProduction
 //
-// 
+//  2011-04-10 : F. Zhang, Philip Ilten
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-
-DECLARE_TOOL_FACTORY( GenXiccProduction )
-
+// Declaration of the tool factory.
+DECLARE_TOOL_FACTORY(GenXiccProduction)
 
 //=============================================================================
-// Standard constructor, initializes variables
+// Default constructor.
 //=============================================================================
-GenXiccProduction::GenXiccProduction( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent )
-   : PythiaProduction ( type, name , parent ) {
+GenXiccProduction::GenXiccProduction(const std::string &type,
+				     const std::string &name,
+				     const IInterface *parent)
+   : HardProduction (type, name, parent) {
 
-  declareInterface< IProductionTool >( this ) ;
+  // Declare the tool properties.
+  declareInterface<IProductionTool>(this);
+  declareProperty("BaryonState", m_baryon= "Xi_cc+",
+		  "The baryon to be produced");
+  declareProperty("BeamMomentum", m_beamMomentum = 3500*Gaudi::Units::GeV,
+		  "DEPRECATED - the beam momentum, now set by beam tool.");
+  declareProperty("GenXiccCommands", m_userSettings,
+		  "DEPRECATED - equivalent to Commands.");
 
-  declareProperty( "BaryonState", m_BaryonState="Xi_cc+"); // double heavy baryon to be produced
-  declareProperty( "BeamMomentum", m_beamMomentum = 3500 * Gaudi::Units::GeV);
-  declareProperty( "GenXiccCommands", m_commandGenXiccVector) ;
-  //set the default setting of GenXicc here
-  //THE INTERPERATIONS OF THESE VARIABLES CAN BE FOUND IN "COMP. PHYS. COMMUNI. 177(2007)467-478"
-  //AND IN "README   " UNDER "DOC" DIRECTORY
-  m_defaultGenXiccSettings.clear();
-  //COMMON BLOCK /MIXEVNT/IMIX,IMIXTYPE 
-  m_defaultGenXiccSettings.push_back( "mixevnt imix 0");
-  m_defaultGenXiccSettings.push_back( "mixevnt imixtype 1");
-  //COMMON BLOCK /COUNTER/IXICCSTATE,NEV
-  m_defaultGenXiccSettings.push_back( "counter ixiccstate 1");  //Xi state
-  m_defaultGenXiccSettings.push_back( "counter xmaxwgt 1000000."); //max sampling weight: reducing it improves efficiency but distorces the phase space. 
-                                                                // the typical max value obtained by vegas is ~1.e7 
-  //COMMON BLOCK /UPCOM/ECM,PMXICC,PMB,PMC,FXICC,PMOMUP(5,8)
-  //                    COLMAT(6,64),BUNDAMP(4),PMOMZERO(5,8)
-  //                    DOUBLE COMPLEX COLMAT,BUNDAMP
-  // GG 17/2/2012: masses are set by GenXicc (in parameter.F) according to the requested baryon state
-  //  since for internal consistency the baryon mass must be the sum of the 2 heavy quark masses, it is better not to override the internal settings
-  //m_defaultGenXiccSettings.push_back( "upcom pmb 5.10");       //mass of b quark
-  //m_defaultGenXiccSettings.push_back( "upcom pmc 1.75");   //mass of c quark 
-  //m_defaultGenXiccSettings.push_back( "upcom pmxicc 3.50");  
-  //                    mass of Xi, note that pmxicc=pmb+pmc exactly
-  //COMMON BLOCK /CONFINE/PTCUT,ETACUT,PSETACUT
-  m_defaultGenXiccSettings.push_back( "confine ptcut 0.0");
-  m_defaultGenXiccSettings.push_back( "confine etacut 1000000000.0");
-  //COMMON BLOCK /FUNTRANS/NPDFU
-  m_defaultGenXiccSettings.push_back( "funtrans npdfu 2");
-  //COMMON BLOCK /LOGGRADE/IVENTDIS,IGENERATE,IVEGASOPEN,IGRADE
-  m_defaultGenXiccSettings.push_back( "loggrade ievntdis 0"); //SWITCH ON/OFF TO GET THE EVNT NUM.
-  m_defaultGenXiccSettings.push_back( "loggrade igenerate 0"); 
-  //                    whether generating full events used when idwtup=1
-  m_defaultGenXiccSettings.push_back( "loggrade ivegasopen 0");
-  m_defaultGenXiccSettings.push_back( "loggrade igrade 1");
-  //                    whether generating on the GRID
-  m_defaultGenXiccSettings.push_back( "loggrade iusecurdir 0");
-  //COMMON BLOCK /SUBOPEN/SUBFACTOR,SUBENERGY,ISUBONLY, ICHANGE
-  m_defaultGenXiccSettings.push_back( "subopen subenergy 100.0");//GENERALLY USELESS
-  m_defaultGenXiccSettings.push_back( "subopen isubonly 0");
-  m_defaultGenXiccSettings.push_back( "subopen ichange 0");
-  //COMMON BLOCK /USERTRAN/IDPP
-  m_defaultGenXiccSettings.push_back( "usertran idpp 3"); //=IDWTUP  do not change this, events are reweighted anyway
-  //COMMON BLOCK /VEGASINF/NUMBER,NITMX
-  m_defaultGenXiccSettings.push_back( "vegasinf number 10000");
-  m_defaultGenXiccSettings.push_back( "vegasinf nitmx 2");
-  //COMMON BLOCK /VEGCROSS/VEGSEC,VEGERR,IVEGGRADE
-  m_defaultGenXiccSettings.push_back( "vegcross iveggrade 0"); 
-  //COMMON BLOCK /OUTPDF/IOUTPDF,IPDFNUM
-  m_defaultGenXiccSettings.push_back( "outpdf ioutpdf 1");  
-  //                     ioutpdf = 0  <==>  inner PDFs (proton parton-dis func.) used in PYTHIA
-  //                                       (CTEQ3M, CTEQ5L, CTEQ5M)
-  //                             mstp(51)=  2       7       8
-  //                     ioutpdf = 1  <==>  outer PDFs used
-  //                                       (CTEQ6HQ,GRV98L, MRST2001L)                  
-  //                             ipdfnum =  100     200     300          
-  m_defaultGenXiccSettings.push_back( "outpdf ipdfnum 300");   
-  //COMMON BLOCK /VEGASBIN/NVBIN
-  m_defaultGenXiccSettings.push_back( "vegasbin nvbin 100");   
-  //COMMON BLOCK /VALMATRIX/CMFACTOR
-  m_defaultGenXiccSettings.push_back( "valmatrix cmfactor 1.0");
+  // Create the default settings.
+  m_defaultSettings.push_back("mixevnt imix 0");
+  m_defaultSettings.push_back("mixevnt imixtype 1");
+  // The Xi state.
+  m_defaultSettings.push_back("counter ixiccstate 1");
+  // The max sampling weight: reducing it improves efficiency but
+  // distorts the phase space. The typical max value obtained by vegas
+  // is ~1.e7.
+  m_defaultSettings.push_back("counter xmaxwgt 1000000."); 
+  m_defaultSettings.push_back("confine ptcut 0.0");
+  m_defaultSettings.push_back("confine etacut 1000000000.0");
+  m_defaultSettings.push_back("funtrans npdfu 2");
+  // Switch on/off to get the event number.
+  m_defaultSettings.push_back("loggrade ievntdis 0");
+  // Generate full events used when IDWTUP = 1.
+  m_defaultSettings.push_back("loggrade igenerate 0"); 
+  m_defaultSettings.push_back("loggrade ivegasopen 0");
+  m_defaultSettings.push_back("loggrade igrade 1");
+  // Generate on the GRID.
+  m_defaultSettings.push_back("loggrade iusecurdir 0");
+  m_defaultSettings.push_back("subopen subenergy 100.0");
+  m_defaultSettings.push_back("subopen isubonly 0");
+  m_defaultSettings.push_back("subopen ichange 0");
+  // Specify IDWTUP for weighting.
+  m_defaultSettings.push_back("usertran idpp 3");
+  m_defaultSettings.push_back("vegasinf number 10000");
+  m_defaultSettings.push_back("vegasinf nitmx 2");
+  m_defaultSettings.push_back("vegcross iveggrade 0"); 
+  m_defaultSettings.push_back("outpdf ioutpdf 1");
+  // PDFs used from the set (CTEQ6HQ: 100, GRV98L: 200, MRST2001L: 300).
+  m_defaultSettings.push_back("outpdf ipdfnum 300");   
+  m_defaultSettings.push_back("vegasbin nvbin 100");   
+  m_defaultSettings.push_back("valmatrix cmfactor 1.0");
 }
 
 //=============================================================================
-// Destructor 
+// Initialize the hard process tool.
 //=============================================================================
-GenXiccProduction::~GenXiccProduction( ) { ; }
+StatusCode GenXiccProduction::hardInitialize() {
 
-//=============================================================================
-// Initialize method
-//=============================================================================
-StatusCode GenXiccProduction::initialize( ) {
- //Change the parameter to 7, for GenXicc,....
- //The 7th external process of GAUSS by F. ZHANG 29-Oct-2011
- //in the older version of GAUSS, this parameter should equal to 6  
+  // Retrieve the Pythia production tool.
+  if (!m_pythia) m_pythia = dynamic_cast<PythiaProduction*>
+		   (tool<IProductionTool>("PythiaProduction", this));
+  if (!m_pythia) return Error("Failed to retrieve PythiaProduction tool.");
+  m_hard = m_pythia;
+  m_pythia->m_beamToolName = m_beamToolName;
 
-  m_userProcess = 7 ;
+  // Set Pythia UPEVNT.
+  m_pythia->m_userProcess = 7;
+  m_pythia->m_frame       = "USER";
+  m_pythia->m_beam        = "p+";
+  m_pythia->m_target      = "p+";
 
-  // User process
-  m_frame = "USER" ;
-  m_beam = "p+";
-  m_target = "p+" ;
+  // Set Pythia 8 LHAup and UserHooks (no UserHooks needed).
+  m_lhaup = new Pythia8::LHAupGenXicc(this);
 
-  // Set default GenXicc settings
-  // GG: call GENXICC2 defaults before our local settings
-  GenXicc::SetXiccDefaultParameters( );
-
-  // GG: set state according to BaryonState option
-  switch (m_mapBaryon[m_BaryonState]) {
-  case Xiccpp:
-    m_defaultGenXiccSettings.push_back( "mtypeofxi mgenxi 1");
-    m_defaultGenXiccSettings.push_back( "wbstate nbound 1");
-    break;
-  case Xiccp:
-  default:
-    m_defaultGenXiccSettings.push_back( "mtypeofxi mgenxi 1");
-    m_defaultGenXiccSettings.push_back( "wbstate nbound 2");
-    break;
-  case Xibcp:
-    m_defaultGenXiccSettings.push_back( "mtypeofxi mgenxi 2");
-    m_defaultGenXiccSettings.push_back( "wbstate nbound 1");
-    break;
-  case Xibc0:
-    m_defaultGenXiccSettings.push_back( "mtypeofxi mgenxi 2");
-    m_defaultGenXiccSettings.push_back( "wbstate nbound 2");
-    break;
-  case Xibb0:
-    m_defaultGenXiccSettings.push_back( "mtypeofxi mgenxi 3");
-    m_defaultGenXiccSettings.push_back( "wbstate nbound 1");
-    break;
-  case Xibbm:
-    m_defaultGenXiccSettings.push_back( "mtypeofxi mgenxi 3");
-    m_defaultGenXiccSettings.push_back( "wbstate nbound 2");
-    break;
-  case Omegaccp:
-    m_defaultGenXiccSettings.push_back( "mtypeofxi mgenxi 1");
-    m_defaultGenXiccSettings.push_back( "wbstate nbound 3");
-    break;
-  case Omegabc0:
-    m_defaultGenXiccSettings.push_back( "mtypeofxi mgenxi 2");
-    m_defaultGenXiccSettings.push_back( "wbstate nbound 3");
-    break;
-  case Omegabbm:
-    m_defaultGenXiccSettings.push_back( "mtypeofxi mgenxi 3");
-    m_defaultGenXiccSettings.push_back( "wbstate nbound 3");
-    break;
-    
+  // Initialize the GenXicc settings.
+  GenXicc::SetXiccDefaultParameters();
+  QQqState baryon = m_mapBaryon[m_baryon];
+  if (baryon == Xiccpp) {
+    m_defaultSettings.push_back("mtypeofxi mgenxi 1");
+    m_defaultSettings.push_back("wbstate nbound 1");
+  } else if (baryon == Xibcp) {
+    m_defaultSettings.push_back("mtypeofxi mgenxi 2");
+    m_defaultSettings.push_back("wbstate nbound 1");
+    m_defaultSettings.push_back("mixevnt imix 1");
+    m_defaultSettings.push_back("vegasbin nvbin 300");
+  } else if (baryon == Xibc0) {
+    m_defaultSettings.push_back("mtypeofxi mgenxi 2");
+    m_defaultSettings.push_back("wbstate nbound 2");
+  } else if (baryon == Xibb0) {
+    m_defaultSettings.push_back("mtypeofxi mgenxi 3");
+    m_defaultSettings.push_back("wbstate nbound 1");
+  } else if (baryon == Xibbm) {
+    m_defaultSettings.push_back("mtypeofxi mgenxi 3");
+    m_defaultSettings.push_back("wbstate nbound 2");
+  } else if (baryon == Omegaccp) {
+    m_defaultSettings.push_back("mtypeofxi mgenxi 1");
+    m_defaultSettings.push_back("wbstate nbound 3");
+  } else if (baryon == Omegabc0) {
+    m_defaultSettings.push_back("mtypeofxi mgenxi 2");
+    m_defaultSettings.push_back("wbstate nbound 3");
+  } else if (baryon == Omegabbm) {
+    m_defaultSettings.push_back("mtypeofxi mgenxi 3");
+    m_defaultSettings.push_back("wbstate nbound 3");
+  } else {
+    m_defaultSettings.push_back("mtypeofxi mgenxi 1");
+    m_defaultSettings.push_back("wbstate nbound 2");
   }
-  std::stringstream command;
-  // GG: set energy according to BeamMomentum option
-  command << "upcom ecm "<< 2*m_beamMomentum/Gaudi::Units::GeV;
-  m_defaultGenXiccSettings.push_back(command.str().c_str() );   //E.C.M. of LHC
+  StatusCode sc = parseSettings(m_defaultSettings , true);
+  if (sc.isFailure()) return Error("Failed to parse default settings.");
+  sc = parseSettings(m_userSettings);
+  if (sc.isFailure()) return Error("Failed to parse user settings.");
 
-
-  StatusCode  sc = parseGenXiccCommands( m_defaultGenXiccSettings , true) ; // will choose baryon state
-
-  // read GenXicc command vector from job options for addictional settings (cannot change baryon state nor energy)
-  sc = parseGenXiccCommands( m_commandGenXiccVector ) ;
-
-  if ( ! sc.isSuccess( ) ) 
-  return Error( "Unable to read GenXicc commands" , sc ) ;
-
-  
-// GG: now set the parameters that depend on others and initialize
-  GenXicc::SetXiccConsistentParameters( );
-  GenXicc::EvntInit( );
-
-  //Initialize of Pythia done here
-  sc = PythiaProduction::initialize( ) ;
-
-  if ( sc.isFailure() ) return sc ;
-
-  return sc ;
+  // Set the energy and initialize.
+  if (!m_beamTool) return Error("Beam tool not initialized.");
+  Gaudi::XYZVector pBeam1, pBeam2;
+  m_beamTool->getMeanBeams(pBeam1, pBeam2);
+  double e1(sqrt(pBeam1.Mag2())), e2(sqrt(pBeam2.Mag2())),
+    ecm(sqrt((e1 + e2)*(e1 + e2) - (pBeam1 + pBeam2).Mag2())/Gaudi::Units::GeV);
+  GenXicc::upcom().ecm() = ecm;
+  GenXicc::SetXiccConsistentParameters();
+  GenXicc::EvntInit();
+  return sc;
 }
 
 //=============================================================================
-//   Function called to generate one event with Pythia --> GenXicc
+// Parse GenXicc settings.
 //=============================================================================
-StatusCode GenXiccProduction::generateEvent( HepMC::GenEvent * theEvent , 
-                                            LHCb::GenCollision * theCollision )
-{
-  StatusCode sc = PythiaProduction::generateEvent(theEvent, theCollision) ;
-  if ( sc.isFailure() ) return sc ;
-
-  if ( msgLevel ( MSG::DEBUG ) ) Pythia::PyList(2);
-
-  return StatusCode::SUCCESS ;
-}
-
-
-//=============================================================================
-// Parse GenXicc commands stored in a vector
-//=============================================================================
-StatusCode GenXiccProduction::parseGenXiccCommands( const CommandVector &theCommandVector , 
-                                                    bool canChangeState) {
-  //
-  // Parse Commands and Set Values from Properties Service...
-  //
-  CommandVector::const_iterator iter ;
-  for ( iter = theCommandVector.begin() ; theCommandVector.end() != iter ; 
-        ++iter ) {
-    debug() << " Command is: " << (*iter) << endmsg ;
-    StringParse mystring( *iter ) ;
-    std::string block = mystring.piece(1);
-    std::string entry = mystring.piece(2);
-    std::string str   = mystring.piece(3);
-    int    int1  = mystring.intpiece(3);
-    double fl1   = mystring.numpiece(3);
-
-    
-    // Note that GenXicc needs doubles hence the convert here
+StatusCode GenXiccProduction::parseSettings(const CommandVector &settings, 
+					    bool change) {
+  // Loop over the settings.
+  for (unsigned int i = 0; i < settings.size(); ++i) {
+    debug() << " Command is: " << settings[i] << endmsg ;
+    StringParse setting(settings[i]);
+    std::string block = setting.piece(1);
+    std::string entry = setting.piece(2);
+    std::string str   = setting.piece(3);
+    int    int1       = setting.intpiece(3);
+    double fl1        = setting.numpiece(3);
     debug() << block << " block  " << entry << " item  " << int1 
             << "  value " << fl1 << endmsg ;
 
-    if ( "mixevnt" == block)
-      if      ( "imix"    == entry ) GenXicc::mixevnt().imix()      = int1 ;
-      else if ( "imixtype"== entry ) GenXicc::mixevnt().imixtype() = int1 ;
-      else return Error(std::string("GenXicc error, mixevnt"));
-
+    // Apply the settings.
+    if ("mixevnt" == block)
+      if      ("imix"     == entry) GenXicc::mixevnt().imix()     = int1;
+      else if ("imixtype" == entry) GenXicc::mixevnt().imixtype() = int1;
+      else return Error("Unknown mixevnt entry: " + entry);
     else if ( "counter" == block)
-      if      ( "ixiccstate"    == entry ) GenXicc::counter().ixiccstate() = int1 ;
-      else if ( "xmaxwgt"    == entry ) GenXicc::counter().xmaxwgt() = fl1 ;
-      else return Error(std::string("GenXicc error, counter"));
-			
-    else if ( "upcom" == block) // GG : do not override internal settings for quark masses
-      if      ( "pmb" == entry ) {GenXicc::upcom().pmb()     =fl1;}
-      else if ( "pmc" == entry ) {GenXicc::upcom().pmc()     =fl1;}
-      else if ( "pmxicc"== entry ){GenXicc::upcom().pmxicc()  =fl1;}
-      else if ( "ecm" == entry ) {
-        if (canChangeState) GenXicc::upcom().ecm()     =fl1;
-        else warning() << "You cannot change ecm via GenXiccCommands, please use BeamMomentum option" <<endmsg;
+      if      ("ixiccstate" == entry) GenXicc::counter().ixiccstate() = int1;
+      else if ("xmaxwgt"    == entry) GenXicc::counter().xmaxwgt()    = fl1;
+      else return Error("Unknown counter entry: " + entry);
+    else if ("upcom" == block)
+      if      ("pmb"    == entry) GenXicc::upcom().pmb()    = fl1;
+      else if ("pmc"    == entry) GenXicc::upcom().pmc()    = fl1;
+      else if ("pmxicc" == entry) GenXicc::upcom().pmxicc() = fl1;
+      else if ("ecm" == entry ) {
+        if (change) GenXicc::upcom().ecm() = fl1;
+        else warning() << "The ecm is set from the BeamTool." <<endmsg;
       }
-      else return Error (std::string("GenXicc error, upcom"));
-
-    else if ( "confine" == block )
-      if      ( "ptcut" == entry  ) GenXicc::confine().ptcut() = fl1;
-      else if ( "etacut" == entry ) GenXicc::confine().etacut()= fl1;
-      else if ( "pscutmin" == entry ) GenXicc::confine().pscutmin()= fl1;
-      else if ( "pscutmax" == entry ) GenXicc::confine().pscutmax()= fl1;
-      else return Error (std::string("GenXicc error, confine"));
-    
-    else if ( "funtrans"== block )
-      if ("npdfu"==entry)GenXicc::funtrans().npdfu()         =int1;
-      else return Error (std::string("GenXicc error, funtrans"));
-    
-    else if ( "loggrade"==block )
-      if      ("ievntdis"  ==entry ) GenXicc::loggrade().ievntdis()   =int1;
-      else if ("igenerate" ==entry ) GenXicc::loggrade().igenerate()  =int1;
-      else if ("ivegasopen"==entry ) GenXicc::loggrade().ivegasopen() =int1;
-      else if ("igrade"    ==entry ) GenXicc::loggrade().igrade()     =int1;
-      else if ("iusecurdir"==entry ) GenXicc::loggrade().iusecurdir() =int1;
-      else return Error (std::string("GenXicc error, loggrade"));
-    
-    else if ( "subopen"==block )
-      if       ( "subenergy"==entry)GenXicc::subopen().subenergy()   =fl1;
-      else if  ( "isubonly" ==entry)GenXicc::subopen().isubonly()    =int1; 
-      else if  ( "ichange" ==entry)GenXicc::subopen().ichange()    =int1; 
-      else return Error (std::string("GenXicc error, subopen"));
-    
-    else if ( "usertran"==block )
-      if  ( "idpp"   ==entry)GenXicc::usertran().idpp()=int1; 
-      else return Error (std::string("GenXicc error, usertran"));
-    
-    else if ( "vegasinf"==block )
-      if      ( "number"==entry )GenXicc::vegasinf().number()         =int1;
-      else if ( "nitmx" ==entry )GenXicc::vegasinf().nitmx()          =int1;
-      else return Error (std::string("GenXicc error, vagasinf"));
-    
-    else if ( "vegcross"==block )
-      if ("iveggrade"==entry)GenXicc::vegcross().iveggrade()          =int1;
-      else return Error (std::string("GenXicc error, vegcross"));
-    
-    else if ( "outpdf"==block )
-      if       ( "ioutpdf"==entry)GenXicc::outpdf().ioutpdf()  =int1;
-      else if  ( "ipdfnum"==entry)GenXicc::outpdf().ipdfnum()  =int1; 
-      else return Error (std::string("GenXicc error, outpdf"));
-      
-    else if ( "vegasbin"==block )
-      if  ( "nvbin"   ==entry)GenXicc::vegasbin().nvbin()=int1; 
-      else return Error (std::string("GenXicc error, vegasbin"));
-    
-    else if ( "valmatrix"==block )
-      if  ( "cmfactor"   ==entry)GenXicc::valmatrix().cmfactor()=fl1; 
-      else return Error (std::string("GenXicc error, valmatrix"));
-    
-    else if ( "mtypeofxi"==block) {
-      if (canChangeState) {
-        if  ( "mgenxi"   ==entry)GenXicc::mtypeofxi().mgenxi()=int1; 
-        else return Error (std::string("GenXicc error, mtypeofxi"));
-      }
-      else warning() << "You cannot change mgenxi via GenXiccCommands, please use BaryonState option" <<endmsg;
+      else return Error("Unknown upcom entry: " + entry);
+    else if ("confine" == block)
+      if      ("ptcut"    == entry) GenXicc::confine().ptcut()    = fl1;
+      else if ("etacut"   == entry) GenXicc::confine().etacut()   = fl1;
+      else if ("pscutmin" == entry) GenXicc::confine().pscutmin() = fl1;
+      else if ("pscutmax" == entry) GenXicc::confine().pscutmax() = fl1;
+      else return Error("Unknown confine entry: " + entry);
+    else if ("funtrans" == block)
+      if      ("npdfu" == entry) GenXicc::funtrans().npdfu() =int1;
+      else return Error("Unknown funtrans entry: " + entry);
+    else if ("loggrade" == block)
+      if      ("ievntdis"   == entry) GenXicc::loggrade().ievntdis()   = int1;
+      else if ("igenerate"  == entry) GenXicc::loggrade().igenerate()  = int1;
+      else if ("ivegasopen" == entry) GenXicc::loggrade().ivegasopen() = int1;
+      else if ("igrade"     == entry) GenXicc::loggrade().igrade()     = int1;
+      else if ("iusecurdir" == entry) GenXicc::loggrade().iusecurdir() = int1;
+      else return Error("Unknown loggrade entry: " + entry);
+    else if ("subopen" == block)
+      if      ("subenergy" == entry) GenXicc::subopen().subenergy() = fl1;
+      else if ("isubonly"  == entry) GenXicc::subopen().isubonly()  = int1; 
+      else if ("ichange"   == entry) GenXicc::subopen().ichange()   = int1; 
+      else return Error("Unknown subopen entry: " + entry);
+    else if ("usertran" == block)
+      if       ("idpp" == entry) GenXicc::usertran().idpp() = int1; 
+      else return Error("Unknown usertran entry: " + entry);
+    else if ("vegasinf" == block)
+      if      ("number"== entry) GenXicc::vegasinf().number() = int1;
+      else if ("nitmx" == entry) GenXicc::vegasinf().nitmx()  = int1;
+      else return Error("Unknown vagasinf entry: " + entry);
+    else if ("vegcross" == block)
+      if ("iveggrade" == entry) GenXicc::vegcross().iveggrade() = int1;
+      else return Error("Unknown vegcross entry: " + entry);
+    else if ("outpdf" == block)
+      if      ("ioutpdf" == entry) GenXicc::outpdf().ioutpdf() = int1;
+      else if ("ipdfnum" == entry) GenXicc::outpdf().ipdfnum() = int1; 
+      else return Error("Unknown outpdf entry: " + entry);
+    else if ("vegasbin" == block)
+      if  ("nvbin" == entry) GenXicc::vegasbin().nvbin() = int1; 
+      else return Error("Unknown vegasbin entry: " + entry);
+    else if ("valmatrix" ==block)
+      if    ("cmfactor" == entry) GenXicc::valmatrix().cmfactor() = fl1; 
+      else return Error("Unknown valmatrix entry: " + entry);
+    else if ("mtypeofxi" == block) {
+      if (change) {
+        if ("mgenxi" == entry) GenXicc::mtypeofxi().mgenxi()=int1; 
+        else return Error("Unknown mtypeofxi entry: " + entry);
+      } else warning() << "Use the BaryonState option to set mgenxi." <<endmsg;
     }
-    else if ( "wbstate"==block) {
-      if (canChangeState) {
-        if  ( "nbound"   ==entry) GenXicc::wbstate().nbound()=int1; 
-        else return Error (std::string("GenXicc error, wbstate"));
+    else if ("wbstate" == block) {
+      if (change) {
+        if ("nbound" == entry) GenXicc::wbstate().nbound() = int1;
+        else return Error("Unknown wbstate entry: " + entry);
       }
-      else warning() << "You cannot change nbound via GenXiccCommands, please use BaryonState option" <<endmsg;
+      else warning() << "Use the BaryonState option to set nbound." <<endmsg;
     }
-    else return Error (std::string("GenXicc error in parse parameters"));
+    else return Error("Unknown block: " + block);
   }
-  
   return StatusCode::SUCCESS ;
 }
+
+//=============================================================================
+// The END.
+//=============================================================================

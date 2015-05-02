@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.16 2009-10-02 13:08:08 jhe Exp $
 ! Package     : Gen/LbBcVegPy
 ! Responsible : Patrick ROBBE
 !=============================================================================
+
+! 2015-05-01 - Philip Ilten
+ - Migrated to HardProduction tool
 
 !======================== LbBcVegPy v5r1p1 2014-12-16 ========================
 ! 2014-12-01 - Gloria Corti
