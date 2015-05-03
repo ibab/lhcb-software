@@ -5,22 +5,19 @@ A separate file is for exclusive selections
 """
 
 ########################################################################
-__author__ = ['Paolo Gandini']
-__date__ = '30/04/2015'
+__author__  = ['Paolo Gandini']
+__date__    = '30/04/2015'
 __version__ = '$Revision:1.0$'
 
 __all__ = ('LowMultINCLines',
            'default_config')
 
-from Gaudi.Configuration import *
+# from Gaudi.Configuration import *
+# from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+# from StandardParticles                     import StdNoPIDsPions, StdLooseProtons, StdLooseKaons
 
-from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-from StandardParticles                     import StdNoPIDsPions, StdLooseProtons, StdLooseKaons
-
-from PhysSelPython.Wrappers      import Selection
 from StrippingConf.StrippingLine import StrippingLine
-from StrippingUtils.Utils        import LineBuilder, checkConfig
-from Configurables               import SubstitutePID, FilterDesktop
+from StrippingUtils.Utils        import LineBuilder
 ########################################################################
 
 
@@ -46,85 +43,85 @@ from Configurables               import SubstitutePID, FilterDesktop
 
 
 default_config = {
-    'LowMultINC'  : {
-    'WGs'         : ['QEE'],
+    'NAME'        : 'LowMultINC',
     'BUILDERTYPE' : 'LowMultINCLines',
-    'CONFIG'      : {'LowMultRequiredRawEvents' : None, #["Velo","Heschel"], Please we need to add this!
-                     #
-                     'PrescaleL0DiHadron'  : 0,
-                     'DecisionL0DiHadron'  : None,#"L0_CHANNEL('DiHadron,lowMult')",
-                     'PrescaleL0DiEM'      : 0,
-                     'DecisionL0DiEM'      : None,#"L0_CHANNEL('DiEM,lowMult')",
-                     'PrescaleL0Photon'    : 0,
-                     'DecisionL0Photon'    : None,#"L0_CHANNEL('Photon,lowMult')",
-                     'PrescaleL0Muon'      : 0,
-                     'DecisionL0Muon'      : None,#"L0_CHANNEL('Muon,lowMult')",
-                     'PrescaleL0DiMuon'    : 0,
-                     'DecisionL0DiMuon'    : None,#"L0_CHANNEL('DiMuon,lowMult')",
-                     'PrescaleL0Electron'  : 0,
-                     'DecisionL0Electron'  : None,#"L0_CHANNEL('Electron,lowMult')",
-                     #
-                     #
-                     #
-                     #
-                     'PrescaleLowMultL2pPi'     : 1,
-                     'DecisionLowMultL2pPi'     : "HLT_PASS_RE('Hlt2LowMultL2pPiDecision') | HLT_PASS_RE('Hlt2LowMultL2pPiWSDecision')",
-                     'PrescaleLowMultD2KPi'     : 1,
-                     'DecisionLowMultD2KPi'     : "HLT_PASS_RE('Hlt2LowMultD2KPiDecision') | HLT_PASS_RE('Hlt2LowMultD2KPiWSDecision')",
-                     'PrescaleLowMultD2KPiPi'   : 1,
-                     'DecisionLowMultD2KPiPi'   : "HLT_PASS_RE('Hlt2LowMultD2KPiPiDecision') | HLT_PASS_RE('Hlt2LowMultD2KPiPiWSDecision')",
-                     'PrescaleLowMultD2KKPi'    : 1,
-                     'DecisionLowMultD2KKPi'    : "HLT_PASS_RE('Hlt2LowMultD2KKPiDecision') | HLT_PASS_RE('Hlt2LowMultD2KKPiWSDecision')",
-                     'PrescaleLowMultD2K3Pi'    : 1,
-                     'DecisionLowMultD2K3Pi'    :"HLT_PASS_RE('Hlt2LowMultD2K3PiDecision') | HLT_PASS_RE('Hlt2LowMultD2K3PiWSDecision')",
-                     'PrescaleLowMultChiC2HH'   : 1,
-                     'DecisionLowMultChiC2HH'   :"HLT_PASS_RE('Hlt2LowMultChiC2HHDecision') | HLT_PASS_RE('Hlt2LowMultChiC2HHWSDecision')",
-                     'PrescaleLowMultChiC2HHHH' : 1,
-                     'DecisionLowMultChiC2HHHH' :"HLT_PASS_RE('Hlt2LowMultChiC2HHHHDecision') | HLT_PASS_RE('Hlt2LowMultChiC2HHHHWSDecision')",
-                     'PrescaleLowMultChiC2PP'   : 1,
-                     'DecisionLowMultChiC2PP'   :"HLT_PASS_RE('Hlt2LowMultChiC2PPDecision') | HLT_PASS_RE('Hlt2LowMultChiC2PPWSDecision')",
-                     #
-                     'PrescaleLowMultLMR2HH'           : 1,
-                     'DecisionLowMultLMR2HH'           :"HLT_PASS_RE('Hlt2LowMultLMR2HHDecision') | HLT_PASS_RE('Hlt2LowMultLMR2HHWSDecision')",
-                     'PrescaleLowMultLMR2HHHH'         : 1,
-                     'DecisionLowMultLMR2HHHH'         :"HLT_PASS_RE('Hlt2LowMultLMR2HHHHDecision') | HLT_PASS_RE('Hlt2LowMultLMR2HHHHWSDecision')",
-                     'PrescaleLowMultLMR2HH_mediumPS'  : 1,
-                     'DecisionLowMultLMR2HH_mediumPS'  :"HLT_PASS_RE('Hlt2LowMultLMR2HH_mediumPSDecision') | HLT_PASS_RE('Hlt2LowMultLMR2HHWS_mediumPSDecision')",
-                     'PrescaleLowMultLMR2HHHH_mediumPS': 1,
-                     'DecisionLowMultLMR2HHHH_mediumPS': "HLT_PASS_RE('Hlt2LowMultLMR2HHHH_mediumPSDecision') | HLT_PASS_RE('Hlt2LowMultLMR2HHHHWS_mediumPSDecision')",
-                     'PrescaleLowMultLMR2HH_heavyPS'   : 1,
-                     'DecisionLowMultLMR2HH_heavyPS'   : "HLT_PASS_RE('Hlt2LowMultLMR2HH_heavyPSDecision') | HLT_PASS_RE('Hlt2LowMultLMR2HHWS_heavyPSDecision')",
-                     'PrescaleLowMultLMR2HHHH_heavyPS' : 1,
-                     'DecisionLowMultLMR2HHHH_heavyPS' : "HLT_PASS_RE('Hlt2LowMultLMR2HHHH_heavyPSDecision') | HLT_PASS_RE('Hlt2LowMultLMR2HHHHWS_heavyPSDecision')",
-                     # Unbiased hadron line
-                     'PrescaleLowMultHadron_noTrFilt' : 1,
-                     'DecisionLowMultHadron_noTrFilt' : "HLT_PASS_RE('Hlt2LowMultHadron_noTrFiltDecision')",
-                     #
-                     #
-                     #
-                     'PrescaleLowMultDiMuon'             : 1,
-                     'DecisionLowMultDiMuon'             : "HLT_PASS('Hlt2LowMultDiMuonDecision')",
-                     'PrescaleLowMultDiMuon_PS'          : 1,
-                     'DecisionLowMultDiMuon_PS'          : "HLT_PASS('Hlt2LowMultDiMuon_PSDecision')",
-                     'PrescaleLowMultMuon'               : 1,
-                     'DecisionLowMultMuon'               : "HLT_PASS('Hlt2LowMultMuonDecision')",
-                     #
-                     'PrescaleLowMultDiElectron'         : 1,
-                     'DecisionLowMultDiElectron'         : "HLT_PASS_RE('Hlt2LowMultDiElectronDecision')",
-                     'PrescaleLowMultDiElectron_noTrFilt': 1,
-                     'DecisionLowMultDiElectron_noTrFilt': "HLT_PASS_RE('Hlt2LowMultDiElectron_noTrFiltDecision')",
-                     #
-                     'PrescaleLowMultDiPhoton'         : 1,
-                     'DecisionLowMultDiPhoton'         : "HLT_PASS_RE('Hlt2LowMultDiPhotonDecision')",
-                     'PrescaleLowMultDiPhoton_HighMass': 1,
-                     'DecisionLowMultDiPhoton_HighMass': "HLT_PASS_RE('Hlt2LowMultDiPhoton_HighMassDecision')",
-                     'PrescaleLowMultPi0'              : 1,
-                     'DecisionLowMultPi0'              : "HLT_PASS_RE('Hlt2LowMultPi0Decision')",
-                     #
-                     'PrescaleLowMultTMP'         : 0,
-                     'DecisionLowMultTMP'         : None,
-                     },
-    'STREAMS'     : ['BhadronCompleteEvent']
+    'STREAMS'     : ['BhadronCompleteEvent'],
+    'WGs'         : ['QEE'],
+    'CONFIG'      : {
+        'LowMultRequiredRawEvents' : None, #["Velo","Heschel"], Please we need to add this!
+        #
+        'PrescaleL0DiHadron'  : 0,
+        'DecisionL0DiHadron'  : None,#"L0_CHANNEL('DiHadron,lowMult')",
+        'PrescaleL0DiEM'      : 0,
+        'DecisionL0DiEM'      : None,#"L0_CHANNEL('DiEM,lowMult')",
+        'PrescaleL0Photon'    : 0,
+        'DecisionL0Photon'    : None,#"L0_CHANNEL('Photon,lowMult')",
+        'PrescaleL0Muon'      : 0,
+        'DecisionL0Muon'      : None,#"L0_CHANNEL('Muon,lowMult')",
+        'PrescaleL0DiMuon'    : 0,
+        'DecisionL0DiMuon'    : None,#"L0_CHANNEL('DiMuon,lowMult')",
+        'PrescaleL0Electron'  : 0,
+        'DecisionL0Electron'  : None,#"L0_CHANNEL('Electron,lowMult')",
+        #
+        #
+        #
+        #
+        'PrescaleLowMultL2pPi'     : 1,
+        'DecisionLowMultL2pPi'     : "HLT_PASS_RE('Hlt2LowMultL2pPiDecision') | HLT_PASS_RE('Hlt2LowMultL2pPiWSDecision')",
+        'PrescaleLowMultD2KPi'     : 1,
+        'DecisionLowMultD2KPi'     : "HLT_PASS_RE('Hlt2LowMultD2KPiDecision') | HLT_PASS_RE('Hlt2LowMultD2KPiWSDecision')",
+        'PrescaleLowMultD2KPiPi'   : 1,
+        'DecisionLowMultD2KPiPi'   : "HLT_PASS_RE('Hlt2LowMultD2KPiPiDecision') | HLT_PASS_RE('Hlt2LowMultD2KPiPiWSDecision')",
+        'PrescaleLowMultD2KKPi'    : 1,
+        'DecisionLowMultD2KKPi'    : "HLT_PASS_RE('Hlt2LowMultD2KKPiDecision') | HLT_PASS_RE('Hlt2LowMultD2KKPiWSDecision')",
+        'PrescaleLowMultD2K3Pi'    : 1,
+        'DecisionLowMultD2K3Pi'    :"HLT_PASS_RE('Hlt2LowMultD2K3PiDecision') | HLT_PASS_RE('Hlt2LowMultD2K3PiWSDecision')",
+        'PrescaleLowMultChiC2HH'   : 1,
+        'DecisionLowMultChiC2HH'   :"HLT_PASS_RE('Hlt2LowMultChiC2HHDecision') | HLT_PASS_RE('Hlt2LowMultChiC2HHWSDecision')",
+        'PrescaleLowMultChiC2HHHH' : 1,
+        'DecisionLowMultChiC2HHHH' :"HLT_PASS_RE('Hlt2LowMultChiC2HHHHDecision') | HLT_PASS_RE('Hlt2LowMultChiC2HHHHWSDecision')",
+        'PrescaleLowMultChiC2PP'   : 1,
+        'DecisionLowMultChiC2PP'   :"HLT_PASS_RE('Hlt2LowMultChiC2PPDecision') | HLT_PASS_RE('Hlt2LowMultChiC2PPWSDecision')",
+        #
+        'PrescaleLowMultLMR2HH'           : 1,
+        'DecisionLowMultLMR2HH'           :"HLT_PASS_RE('Hlt2LowMultLMR2HHDecision') | HLT_PASS_RE('Hlt2LowMultLMR2HHWSDecision')",
+        'PrescaleLowMultLMR2HHHH'         : 1,
+        'DecisionLowMultLMR2HHHH'         :"HLT_PASS_RE('Hlt2LowMultLMR2HHHHDecision') | HLT_PASS_RE('Hlt2LowMultLMR2HHHHWSDecision')",
+        'PrescaleLowMultLMR2HH_mediumPS'  : 1,
+        'DecisionLowMultLMR2HH_mediumPS'  :"HLT_PASS_RE('Hlt2LowMultLMR2HH_mediumPSDecision') | HLT_PASS_RE('Hlt2LowMultLMR2HHWS_mediumPSDecision')",
+        'PrescaleLowMultLMR2HHHH_mediumPS': 1,
+        'DecisionLowMultLMR2HHHH_mediumPS': "HLT_PASS_RE('Hlt2LowMultLMR2HHHH_mediumPSDecision') | HLT_PASS_RE('Hlt2LowMultLMR2HHHHWS_mediumPSDecision')",
+        'PrescaleLowMultLMR2HH_heavyPS'   : 1,
+        'DecisionLowMultLMR2HH_heavyPS'   : "HLT_PASS_RE('Hlt2LowMultLMR2HH_heavyPSDecision') | HLT_PASS_RE('Hlt2LowMultLMR2HHWS_heavyPSDecision')",
+        'PrescaleLowMultLMR2HHHH_heavyPS' : 1,
+        'DecisionLowMultLMR2HHHH_heavyPS' : "HLT_PASS_RE('Hlt2LowMultLMR2HHHH_heavyPSDecision') | HLT_PASS_RE('Hlt2LowMultLMR2HHHHWS_heavyPSDecision')",
+        # Unbiased hadron line
+        'PrescaleLowMultHadron_noTrFilt' : 1,
+        'DecisionLowMultHadron_noTrFilt' : "HLT_PASS_RE('Hlt2LowMultHadron_noTrFiltDecision')",
+        #
+        #
+        #
+        'PrescaleLowMultDiMuon'             : 1,
+        'DecisionLowMultDiMuon'             : "HLT_PASS('Hlt2LowMultDiMuonDecision')",
+        'PrescaleLowMultDiMuon_PS'          : 1,
+        'DecisionLowMultDiMuon_PS'          : "HLT_PASS('Hlt2LowMultDiMuon_PSDecision')",
+        'PrescaleLowMultMuon'               : 1,
+        'DecisionLowMultMuon'               : "HLT_PASS('Hlt2LowMultMuonDecision')",
+        #
+        'PrescaleLowMultDiElectron'         : 1,
+        'DecisionLowMultDiElectron'         : "HLT_PASS_RE('Hlt2LowMultDiElectronDecision')",
+        'PrescaleLowMultDiElectron_noTrFilt': 1,
+        'DecisionLowMultDiElectron_noTrFilt': "HLT_PASS_RE('Hlt2LowMultDiElectron_noTrFiltDecision')",
+        #
+        'PrescaleLowMultDiPhoton'         : 1,
+        'DecisionLowMultDiPhoton'         : "HLT_PASS_RE('Hlt2LowMultDiPhotonDecision')",
+        'PrescaleLowMultDiPhoton_HighMass': 1,
+        'DecisionLowMultDiPhoton_HighMass': "HLT_PASS_RE('Hlt2LowMultDiPhoton_HighMassDecision')",
+        'PrescaleLowMultPi0'              : 1,
+        'DecisionLowMultPi0'              : "HLT_PASS_RE('Hlt2LowMultPi0Decision')",
+        #
+        'PrescaleLowMultTMP'         : 0,
+        'DecisionLowMultTMP'         : None,
     }
 }
 
@@ -132,79 +129,7 @@ default_config = {
 
 
 class LowMultINCLines( LineBuilder ) :
-    __configuration_keys__ = ('LowMultRequiredRawEvents',
-                              #
-                              'PrescaleL0DiHadron',
-                              'DecisionL0DiHadron',
-                              'PrescaleL0DiEM',    
-                              'DecisionL0DiEM',    
-                              'PrescaleL0Photon',  
-                              'DecisionL0Photon',  
-                              'PrescaleL0Muon',    
-                              'DecisionL0Muon',    
-                              'PrescaleL0DiMuon',  
-                              'DecisionL0DiMuon',  
-                              'PrescaleL0Electron',
-                              'DecisionL0Electron',
-                              #
-                              #
-                              #
-                              'PrescaleLowMultL2pPi'       ,
-                              'DecisionLowMultL2pPi'       ,
-                              'PrescaleLowMultD2KPi'       ,
-                              'DecisionLowMultD2KPi'       ,
-                              'PrescaleLowMultD2KPiPi'     ,
-                              'DecisionLowMultD2KPiPi'     ,
-                              'PrescaleLowMultD2KKPi'      ,
-                              'DecisionLowMultD2KKPi'      ,
-                              'PrescaleLowMultD2K3Pi'      ,
-                              'DecisionLowMultD2K3Pi'      ,
-                              'PrescaleLowMultChiC2HH'     ,
-                              'DecisionLowMultChiC2HH'     ,
-                              'PrescaleLowMultChiC2HHHH'   ,
-                              'DecisionLowMultChiC2HHHH'   ,
-                              'PrescaleLowMultChiC2PP'     ,
-                              'DecisionLowMultChiC2PP'     ,
-                              #
-                              'PrescaleLowMultLMR2HH'           ,
-                              'DecisionLowMultLMR2HH'           ,
-                              'PrescaleLowMultLMR2HHHH'         ,
-                              'DecisionLowMultLMR2HHHH'         ,
-                              'PrescaleLowMultLMR2HH_mediumPS'  ,
-                              'DecisionLowMultLMR2HH_mediumPS'  ,
-                              'PrescaleLowMultLMR2HHHH_mediumPS',
-                              'DecisionLowMultLMR2HHHH_mediumPS',
-                              'PrescaleLowMultLMR2HH_heavyPS'   ,
-                              'DecisionLowMultLMR2HH_heavyPS'   ,
-                              'PrescaleLowMultLMR2HHHH_heavyPS' ,
-                              'DecisionLowMultLMR2HHHH_heavyPS' ,
-                              # Unbiased hadron line
-                              'PrescaleLowMultHadron_noTrFilt' ,
-                              'DecisionLowMultHadron_noTrFilt' ,
-                              #
-                              'PrescaleLowMultDiMuon'             ,
-                              'DecisionLowMultDiMuon'             ,
-                              'PrescaleLowMultDiMuon_PS'          ,
-                              'DecisionLowMultDiMuon_PS'          ,
-                              'PrescaleLowMultMuon'               ,
-                              'DecisionLowMultMuon'               ,
-                              #
-                              'PrescaleLowMultDiElectron'         ,
-                              'DecisionLowMultDiElectron'         ,
-                              'PrescaleLowMultDiElectron_noTrFilt',
-                              'DecisionLowMultDiElectron_noTrFilt',
-                              #
-                              'PrescaleLowMultDiPhoton'         ,
-                              'DecisionLowMultDiPhoton'         ,
-                              'PrescaleLowMultDiPhoton_HighMass',
-                              'DecisionLowMultDiPhoton_HighMass',
-                              'PrescaleLowMultPi0',              
-                              'DecisionLowMultPi0',
-                              #
-                              #
-                              'PrescaleLowMultTMP',
-                              'DecisionLowMultTMP',
-                              )
+    __configuration_keys__ = default_config['CONFIG'].keys()
     
     def __init__( self,name,config ) :            
 
@@ -264,10 +189,6 @@ class LowMultINCLines( LineBuilder ) :
                                          L0DU      = config['DecisionL0Electron'] ,
                                          RequiredRawEvents = config["LowMultRequiredRawEvents"])
         self.registerLine(self.lineL0Electron)
-
-
-
-
 
 
 

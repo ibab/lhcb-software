@@ -11,7 +11,7 @@ _selections = (
   'StrippingWMu',
   'StrippingZ02MuMu',
   'StrippingLowMultINC',
-  'StrippingLowMultL0',
+  # 'StrippingLowMultL0',  
 )
 
 for _sel in _selections :  

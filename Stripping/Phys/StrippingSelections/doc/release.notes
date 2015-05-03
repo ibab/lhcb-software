@@ -4,8 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
-!========================== StrippingSelections v4r1 2015-04-30 ===============
 
+! 2015-05-03 - Chitsanu Khurewathanakul
+- Minor fix default_config structure in StrippingLowMultINC
+
+!========================== StrippingSelections v4r1 2015-04-30 ===============
 
 ! 2015-05-01 - Paolo Gandini
 Added the Lines for CEP: StrippingLowMultINC.py
