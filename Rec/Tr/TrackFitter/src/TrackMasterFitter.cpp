@@ -854,7 +854,7 @@ StatusCode TrackMasterFitter::updateTransport(LHCb::Track& track) const
       if ( thissc.isFailure() ) {
         std::stringstream msg ;
         msg << "Unable to propagate reference vector for track type: " << track.type() ;
-        Warning(msg.str(),StatusCode::SUCCESS).ignore() ;
+        Info(msg.str(),StatusCode::SUCCESS).ignore() ;
         if( m_debugLevel )
           debug() << "unable to propagate reference vector from z=" << refvector->z()
                   << " to " << z
