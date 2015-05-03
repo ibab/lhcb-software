@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-05-03 - Simone Stracka
+ - CharmHad: merged D2EtaHLines into D2HHLines and 
+             included the corresponding combiners in Stages
+ - CharmHad: included soft pion tagging in D2HHPi0Lines 
+
 ! 2015-05-01 - Albert Puig
  - Radiative: Update the lines, remove some monitoring and cleanup of code.
  - Topo: Change name of BDT when nickname is specified.

@@ -11,7 +11,6 @@ from D2HHHPi0Lines import CharmHadD2HHHPi0Lines
 from D2HHLines import CharmHadD2HHLines
 from D2HHKsLines import CharmHadD2HHKshLines
 from Dst2PiD02HHXBDTLines import CharmHadDst2PiD02HHXBDTLines
-from D2EtaHLines import CharmHadD2EtaHLines
 from ChargedHyperonLines import ChargedHyperonLines
 
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
@@ -30,7 +29,6 @@ D2HHHPi0Lines = CharmHadD2HHHPi0Lines()
 D2HHLines = CharmHadD2HHLines()
 D2HHKsLines = CharmHadD2HHKshLines()
 Dst2PiD02HHXBDTLines = CharmHadDst2PiD02HHXBDTLines()
-D2EtaHLines = CharmHadD2EtaHLines()
 HyperonLines = ChargedHyperonLines()
 
 
@@ -171,6 +169,14 @@ theseslots = {   'Prescale' : {},
                                  'Neut_ALL_PT_MIN'           : 350.0 * MeV,
                                  'Neut_ALL_ADMASS_MAX'       :  60.0,
                                           },
+                 'CharmHadSharedNeutralLowPtChild_pi0R' : {
+                                 'Neut_ALL_PT_MIN'           : 350.0 * MeV,
+                                 'Neut_ALL_ADMASS_MAX'       :  60.0,
+                                          },
+                 'CharmHadSharedNeutralLowPtChild_pi0M' : {
+                                 'Neut_ALL_PT_MIN'           : 350.0 * MeV,
+                                 'Neut_ALL_ADMASS_MAX'       :  60.0,
+                                          },
                  'CharmHadSharedNeutralLowPtChild_eta' : {
                                  'Neut_ALL_PT_MIN'           : 350.0 * MeV,
                                  'Neut_ALL_ADMASS_MAX'       :  105.0,
@@ -190,7 +196,6 @@ theseslots.update(D2HHHPi0Lines.localcuts())
 theseslots.update(D2HHLines.localcuts())
 theseslots.update(D2HHKsLines.localcuts())
 theseslots.update(Dst2PiD02HHXBDTLines.slots())
-theseslots.update(D2EtaHLines.localcuts())
 theseslots.update(HyperonLines.localcuts())
 
 class CharmHadLines(Hlt2LinesConfigurableUser):
@@ -213,7 +218,6 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
             self.__lines__.update(D2HHLines.locallines())
             self.__lines__.update(D2HHKsLines.locallines())
             self.__lines__.update(Dst2PiD02HHXBDTLines.stages())
-            self.__lines__.update(D2EtaHLines.locallines())
             self.__lines__.update(HyperonLines.locallines())
             
         return self.__lines__[nickname] if nickname else self.__lines__
