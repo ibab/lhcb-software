@@ -4,6 +4,9 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-05-03 - Simone Stracka
+ - Fixed resolved eta option file. 
+
 !========================= Hlt2SharedParticles v7r6 2015-04-28 =========================
 
 ! 2015-04-17 - Roel Aaij

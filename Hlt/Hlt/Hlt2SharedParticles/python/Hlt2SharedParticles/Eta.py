@@ -45,6 +45,6 @@ Hlt2ResolvedEtas.PhotonMaker.PtCut 	= 200.*MeV
 #__all__ = ( 'ResolvedEtas', 'ResolvedEtasFromL0' )
 __all__ = ( 'ResolvedEtas' )
 
-ResolvedEtas  = bindMembers( None, [ neutralProtos, Hlt2ResolvedEtas ] )
-#ResolvedEtasFromL0  = bindMembers( None, [ neutralProtosFromL0, Hlt2ResolvedEtasFromL0 ] )
+ResolvedEtas  = bindMembers( None, [ neutralProtos, Hlt2ResolvedEtas ] ).setOutputSelection(Hlt2ResolvedEtas.Output)
+#ResolvedEtasFromL0  = bindMembers( None, [ neutralProtosFromL0, Hlt2ResolvedEtasFromL0 ] ).setOutputSelection(Hlt2ResolvedEtasFromL0.Output)
 
