@@ -212,6 +212,8 @@ class Commissioning_Physics_2015( object ):
                                                         ,'D0MassWin'             : 60      # MeV
                                                         ,'B0MassWinLoose'        : 200     # MeV
                                                         ,'B0MassWin'             : 150     # MeV
+                                                        ,'D0DetachedDaughtsIPCHI2': 9      # dimensionless 
+                                                        ,'D0DetachedIPCHI2'       : 9      # dimensionless
                                                         ,'BsPhiGammaMassMinLoose': 3350    # MeV
                                                         ,'BsPhiGammaMassMaxLoose': 6900    # MeV
                                                         ,'BsPhiGammaMassMin'     : 3850    # MeV
@@ -285,6 +287,7 @@ class Commissioning_Physics_2015( object ):
                  , 'Hlt1SingleElectronNoIP'
                  , 'Hlt1TrackMVA', 'Hlt1TwoTrackMVA'
                  , 'Hlt1CalibTrackingKPi' , 'Hlt1CalibTrackingKK' , 'Hlt1CalibTrackingPiPi'
+                 , 'Hlt1CalibTrackingKPiDetached'
                  , 'Hlt1B2HH_LTUNB_KPi' , 'Hlt1B2HH_LTUNB_KK' , 'Hlt1B2HH_LTUNB_PiPi'
                  , 'Hlt1IncPhi'
                  , 'Hlt1B2PhiPhi_LTUNB', 'Hlt1B2PhiGamma_LTUNB'

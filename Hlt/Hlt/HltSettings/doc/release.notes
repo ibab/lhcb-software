@@ -4,6 +4,8 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-05-04 - M. Kenzie
+ - Added IP cuts for Hlt1CalibTrackingKPiDetached line
 
 ! 2015-05-02 - Christian Linn
  - Updated Physics_draftEM2015 to contain CEP and HighMult lines
