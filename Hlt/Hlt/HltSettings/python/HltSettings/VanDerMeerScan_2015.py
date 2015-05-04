@@ -20,7 +20,7 @@ class VanDerMeerScan_2015:
     def __init__(self) :
         self.NanoBanks = [
             'ODIN', 'HltLumiSummary', 'HltRoutingBits', 'DAQ', 'Velo',
-            'L0DU', 'HltDecReports', 'HC', 
+            'L0DU', 'HltDecReports', 'HC',
         ]
 
     def L0TCK(self) :
@@ -44,7 +44,7 @@ class VanDerMeerScan_2015:
 
     def ActiveHlt2Lines(self) :
         """Return a list of active Hlt2 Lines."""
-        return [ ]
+        return ['Hlt2PassThrough', 'Hlt2Lumi', 'Hlt2Transparent']
 
     def Thresholds(self) :
         """Return a dictionary of cuts."""
@@ -129,4 +129,13 @@ class VanDerMeerScan_2015:
                 },
             },
         }
+
+        # HLT2 PassThrough
+        from Hlt2Lines.Commissioning.Lines import CommissioningLines
+        thresholds.update({
+            CommissioningLines : {
+                'Prescale'  : { 'Hlt2PassThrough' : 1 },
+                'Postscale' : { 'Hlt2ErrorEvent'  : 'RATE(0.01)' }
+            }
+        })
         return thresholds

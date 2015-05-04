@@ -51,7 +51,7 @@ class SMOG_April2015(object):
 
     def ActiveHlt2Lines(self) :
         """Return a list of active Hlt2 Lines."""
-        return ['Hlt2PassThrough', 'Hlt2KS0_DD', 'Hlt2KS0_LL', 'Hlt2KS0_DDTurbo', 'Hlt2KS0_LLTurbo']
+        return ['Hlt2PassThrough', 'Hlt2KS0_DDTurbo', 'Hlt2KS0_LLTurbo', 'Hlt2Lumi']
 
     def Thresholds(self) :
         """Return a dictionary of cuts."""
