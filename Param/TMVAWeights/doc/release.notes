@@ -4,6 +4,9 @@
 ! Purpose     : To accommodate weights file of all TMVA based selections
 !-----------------------------------------------------------------------------
 
+! 2015-05-04 - Alex Pearce
+ - Add BDT weights for Charm ForXSec stripping lines.
+
 !========================= TMVAWeights v1r4 2014-10-30 =========================
 
 ! 2014-09-28 - Stefano Perazzini
