@@ -7,7 +7,6 @@ gaudi_depends_on_subdirs(Event/HltEvent
                          Event/MicroDst
                          Det/DDDB
                          GaudiConfUtils
-                         TurboStreamProd
                          Hlt/HltDAQ
                          Phys/TeslaTools
                          Phys/DaVinciKernel)
