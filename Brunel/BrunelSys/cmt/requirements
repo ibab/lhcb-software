@@ -1,5 +1,5 @@
 package           BrunelSys
-version           v47r6
+version           v47r6p1
 
 branches cmt doc tests
  
@@ -20,3 +20,4 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
+use GaudiConf v19r9

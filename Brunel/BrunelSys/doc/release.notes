@@ -3,6 +3,17 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v47r6p1>2015-05-04 Brunel v47r6p1</A></H1><PRE>
+This version uses projects:
+ LCG_74root6 (ROOT 6.02.05), Gaudi v26r1, LHCb v38r6, Lbcom v16r5,
+ Rec v17r6 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Patch release to pick up GaudiConf v19r9, otherwise identical to v47r6
+
+- Changes to persistency
+  . Add Turbo option to DstConf. Needed for propagation of Turbo objects, e.g.
+    in simulation workflows (GaudiConf v19r9)
+
 </PRE><H1><A NAME=v47r6>2015-04-28 Brunel v47r6</A></H1><PRE>
 This version uses projects:
  LCG_74root6 (ROOT 6.02.05), Gaudi v26r1, LHCb v38r6, Lbcom v16r5,
