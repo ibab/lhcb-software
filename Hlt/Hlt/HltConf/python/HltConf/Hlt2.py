@@ -17,7 +17,7 @@ from ThresholdUtils import importLineConfigurables
 #import all Hlt2 lines configurables
 import Hlt2Lines
 _hlt2linesconfs = importLineConfigurables(Hlt2Lines)
-# explicitly put them in our  scope so that genConfUser can find it... 
+# explicitly put them in our  scope so that genConfUser can find it...
 globals().update( ( cfg.__name__, cfg ) for cfg in _hlt2linesconfs )
 
 #
@@ -30,7 +30,7 @@ from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTrac
 
 class Hlt2Conf(LHCbConfigurableUser):
     __used_configurables__ = [ (Hlt2Tracking, "Hlt2LongTracking"),
-                               (Hlt2Tracking, "Hlt2DownstreamTracking") 
+                               (Hlt2Tracking, "Hlt2DownstreamTracking")
                                ] + _hlt2linesconfs
 
     __slots__ = { "DataType"                   : '2010'    # datatype is one of 2009, MC09, DC06...
@@ -72,14 +72,9 @@ class Hlt2Conf(LHCbConfigurableUser):
         from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
         map( partial(  setThresholds, self.getProp("ThresholdSettings") ) , _hlt2linesconfs )
         from Configurables import LoKi__HDRFilter   as HDRFilter
-        from DAQSys.Decoders import DecoderDB
-        decoder = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
-        Hlt2Line( 'Global', priority = 255, VoidFilter = ''
-                 , algos = [HDRFilter('Hlt2GlobalFilter' ,
-                            Code = "HLT_PASS_SUBSTR('Hlt2') ",
-                            Location = decoder.listOutputs()[0])]
-              )
-       
+        Hlt2Line( 'Global', priority = 255, VoidFilter = '', HLT1 = ''
+                , HLT2 = "HLT_PASS_SUBSTR('Hlt2')")
+
 ###################################################################################
 #
 # Reconstruction
@@ -89,7 +84,7 @@ class Hlt2Conf(LHCbConfigurableUser):
         definedTrackings = [ Hlt2BiKalmanFittedDownstreamTracking()
                            , Hlt2BiKalmanFittedForwardTracking() ]
 
-        # And now we have to, for each of the configurables we just created, 
+        # And now we have to, for each of the configurables we just created,
         # tell it the data type and tell it to use all the Hlt2 lines...
         from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
         from Gaudi.Configuration import ConfigurableUser
@@ -97,7 +92,7 @@ class Hlt2Conf(LHCbConfigurableUser):
         for thistracking in definedTrackings :
             setDataTypeForTracking(thistracking,self.getProp("DataType"))
             if self.getProp('Hlt2ForwardMaxVelo') : thistracking.Hlt2ForwardMaxVelo = self.getProp("Hlt2ForwardMaxVelo")
-        
+
 ###################################################################################
 #
 # Main configuration
@@ -108,11 +103,11 @@ class Hlt2Conf(LHCbConfigurableUser):
         """
         if self.getProp("Hlt1TrackOption") not in self.__known_hlt1trackoptions__:
             raise ValueError("You must choose a valid Hlt1TrackOption for the input of Hlt2, you chose "+self.getProp("Hlt1TrackOption")+" which is not one of: "+self.__known_hlt1trackoptions__.__str__())
-        Hlt2 = Sequence("Hlt2", Context = 'HLT',ModeOR=True,ShortCircuit=False) 
+        Hlt2 = Sequence("Hlt2", Context = 'HLT',ModeOR=True,ShortCircuit=False)
         # set Hlt2 PID
         self.configureReconstruction()
         # lines
         if self.getProp("DefaultVoidFilter") :
-            from HltLine.HltLine import Hlt2Line  
+            from HltLine.HltLine import Hlt2Line
             Hlt2Line.setDefaultVoidFilter( self.getProp("DefaultVoidFilter") )
         self.hlt2Lines(Hlt2)

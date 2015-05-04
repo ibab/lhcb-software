@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-05-04 - Roel Aaij
+ - Use HLT2 filter in Hlt2Global instead of filter in FilterSequence.
+
 ! 2015-05-04 - Dan Johnson
  - Add Hlt1CEP...Decision lines and IDs to Hlt/HltConf HltInit.py
 
