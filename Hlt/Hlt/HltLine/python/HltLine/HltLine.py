@@ -1533,6 +1533,7 @@ class Hlt2Line(object):
                    ODIN      = None ,   # ODIN predicate
                    L0DU      = None ,   # L0DU predicate
                    HLT1      = None ,   # HltDecReports predicate
+                   HLT2      = None ,   # HltDecReports predicate
                    VoidFilter = None ,   # extra VoidFilter
                    algos     = []   ,   # the list of algorithms/members
                    postscale = 1    ,   # postscale factor
@@ -1548,6 +1549,7 @@ class Hlt2Line(object):
         - 'ODIN'      : the list of ODIN types for ODINFilter
         - 'L0DU'      : the list of L0Channels names for L0Filter
         - 'HLT1'      : the list of HLT1 selections for HLTFilter
+        - 'HLT2'      : the list of HLT2 selections for HLTFilter
         - 'algos'     : the list of actual members
         - 'Turbo'     : flag for Turbo stream
         - 'postscale' : the postscale factor
@@ -1567,7 +1569,7 @@ class Hlt2Line(object):
                 raise AttributeError('Both HLT and HLT1 constructor argument to Hlt2Line specified, ' +
                                      'this is undefined.')
 
-        if not HLT1 :
+        if HLT1 == None:
             #  ODIN and L0 should be 'harmless' as only a small fraction (or small rate)
             #  VELO on the other hand is dangerous during 'velo open' running...
             #  the veto of NoPV removes the high rate of L0 low mult
@@ -1583,6 +1585,7 @@ class Hlt2Line(object):
         ODIN  = deepcopy ( ODIN  )
         L0DU  = deepcopy ( L0DU  )
         HLT1  = deepcopy ( HLT1  )
+        HLT2  = deepcopy ( HLT2  )
         VoidFilter = deepcopy ( VoidFilter )
         algos = deepcopy ( algos )
         Turbo = deepcopy ( Turbo )
@@ -1598,6 +1601,7 @@ class Hlt2Line(object):
         self._ODIN      = ODIN
         self._L0DU      = L0DU
         self._HLT1      = HLT1
+        self._HLT2      = HLT2
         self._Turbo     = Turbo
         self._VoidFilter       = VoidFilter
         self._algos     = algos
@@ -1648,6 +1652,10 @@ class Hlt2Line(object):
                                , Members = [decoder.setup(), HDRFilter(hltentryName(line, 'Hlt2'), Code = self._HLT1, Location = decoder.listOutputs()[0])]
                                )
             mdict.update( HLT1 =  _s )
+        if self._HLT2 :
+            decoder = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
+            _f = HDRFilter('Hlt2%sHlt2Filter' % line, Code = self._HLT2, Location = decoder.listOutputs()[0])
+            mdict.update( HLT2 =  _f )
         from Configurables import LoKi__VoidFilter
         if self._VoidFilter :
             mdict.update( Filter0 = LoKi__VoidFilter( voidName( line, 'Hlt2' ), Code = self._VoidFilter ) )

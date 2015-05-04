@@ -5,6 +5,9 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2015-05-04 - Roel Aaij
+ - Add possibility to add an HLT2 filter to Hlt2Line.
+
 !========================= HltLine v7r10 2015-04-29 =========================
 
 ! 2015-04-29 - Roel Aaij
