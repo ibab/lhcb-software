@@ -7,7 +7,7 @@ class CopyTracks(Hlt2Stage):
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
         self.__tracks = Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks()
         super(CopyTracks, self).__init__("CopyTracks", [], [self.__tracks])
-        
+
     def stage(self, stages, cuts):
         stages += self.dependencies(cuts)
         from Configurables import HltCopySelection_LHCb__Track_ as HltCopyTrackSelection
@@ -23,15 +23,3 @@ class IncidentGenerator(Hlt2Stage):
         HltSelReportsMaker().DebugIncident = 'RequestDebugEvent'
         return HltIncidentGenerator('Hlt2DebugEventDecision',
                                     Incident = HltSelReportsMaker().DebugIncident)
-
-class ErrorCounter(Hlt2Stage):
-    def __init__(self):
-        super(ErrorCounter, self).__init__("Counter", [])
-
-    def stage(self, stages, cuts):
-        from DAQSys.Decoders import DecoderDB
-        from Configurables import LoKi__HDRFilter as HDRFilter
-        decoder = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
-        return HDRFilter('Hlt2ErrorEventHlt2Filter',
-                         Code = "HLT_COUNT_ERRORBITS_RE('^Hlt2.*',0xffff) > 0",
-                         Location = decoder.listOutputs()[0])

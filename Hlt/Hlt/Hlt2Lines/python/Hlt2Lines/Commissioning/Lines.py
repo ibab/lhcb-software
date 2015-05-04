@@ -9,7 +9,8 @@ class CommissioningLines(Hlt2LinesConfigurableUser):
                  # do not want debug events on lumi-exclusive Hlt1 events...
                  'DebugEvent'  : {'HLT1' : "HLT_PASS_RE('^Hlt1(?!Lumi).*Decision$')"},
                  'ErrorEvent'  : {'Priority' : 254,
-                                  'VoidFilter' : ''},
+                                  'VoidFilter' : ''
+                                  'HLT2' : "HLT_COUNT_ERRORBITS_RE('^Hlt2.*',0xffff) > 0"},
                  'PassThrough' : {'HLT1' : "HLT_PASS_RE('^Hlt1(?!Lumi).*Decision$')",
                                   'VoidFilter' : ''},
                  'Transparent' : {'HLT1' : "HLT_PASS_RE('^Hlt1(ODIN.*|L0.*|MB.*|BeamGas.*|Velo.*|NZS.*|Incident|Tell1Error|ErrorEvent)Decision$')",
@@ -22,13 +23,13 @@ class CommissioningLines(Hlt2LinesConfigurableUser):
                                   'VoidFilter' : ''},
                  'Turbo'       : ['KS0_DD', 'KS0_LL']
                 }
-    
+
     def __apply_configuration__(self):
         from Stages import CopyTracks, IncidentGenerator, ErrorCounter
         from Inputs import KS0_DD, KS0_LL
         stages = {'Forward'     : [CopyTracks()],
                   'DebugEvent'  : [IncidentGenerator()],
-                  'ErrorEvent'  : [ErrorCounter()],
+                  'ErrorEvent'  : [],
                   'PassThrough' : [],
                   'Transparent' : [],
                   'Lumi'        : [],
