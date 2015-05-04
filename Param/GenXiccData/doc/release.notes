@@ -4,6 +4,9 @@
 ! Purpose     : Provides the grade data required by GenXicc
 !-----------------------------------------------------------------------------
 
+! 2015-05-04 - Marco Clemencic
+ - Added .xenv file.
+
 !======================== GenXiccData v3r1 2014-10-10 ========================
 ! 2014-10-10 - Marco Clemencic
  - Added Environment.xml file, needed by the Gaudi CMake configuration system.

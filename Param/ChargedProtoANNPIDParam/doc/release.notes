@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-05-04 - Marco Clemencic
+ - Added .xenv file.
+
 ! 2012-11-30 - Marco Clemencic
  - Added environment XML file for future use with CMake.
 

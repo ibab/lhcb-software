@@ -4,6 +4,9 @@
 ! Purpose     : Hold link to Geant4 data files
 !-----------------------------------------------------------------------------
 
+! 2015-05-04 - Marco Clemencic
+ - Added .xenv file.
+
 !======================== Geant4Files v96r0 2015-03-08 =======================
 ! 2015-03-08 - Gloria Corti
  - Removed obsolete links

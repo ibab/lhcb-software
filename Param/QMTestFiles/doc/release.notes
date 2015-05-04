@@ -4,6 +4,9 @@
 ! Purpose     : Small data files used as input to QMTests
 !-----------------------------------------------------------------------------
 
+! 2015-05-04 - Marco Clemencic
+ - Added .xenv file.
+
 !========================= QMTestFiles v1r2 2015-01-16 =========================
 ! 2014-11-17 - Chris Jones
  - Add data/12Events_Stripping21Reco14_SlowEvents.dst that contains 12 events
