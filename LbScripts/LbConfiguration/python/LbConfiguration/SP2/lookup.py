@@ -49,7 +49,6 @@ class MissingDataPackageError(NotFoundError):
     def __str__(self):
         return 'cannot data package {0} {1} in {2}'.format(*self.args)
 
-
 def findProject(name, version, platform):
     '''
     Find a Gaudi-based project in the directories specified in the 'path'
@@ -229,3 +228,59 @@ def getEnvXmlPath(project, version, platform):
                 yield i
     return list(_unique(search_path))
 
+def findLCG(version, platform):
+    '''
+    Return the path to the requested LCG version, found in the search path.
+    '''
+    for p in [os.path.join(b, s, n)
+              for b in path
+              for s in ('', 'LCG_%s' % version)
+              for n in ('LCG_%s_%s.txt' % (version, platform),
+                        'LCG_externals_%s.txt' % platform)]:
+        if os.path.exists(p):
+            return os.path.dirname(p)
+    for p in [os.path.join(b, 'LCGCMT', s)
+              for b in path
+              for s in ('LCGCMT_%s' % version, 'LCGCMT-%s' % version)]:
+        if os.path.exists(p):
+            return p
+
+def getLCGRelocation(manifest):
+    from xml.dom.minidom import parse
+    from os.path import dirname, basename, join, pardir
+
+    log.debug('extracting heptools version from %s', manifest)
+    try:
+        m = parse(manifest)
+        heptools = m.getElementsByTagName('heptools')[0]
+        version = (heptools.getElementsByTagName('version')[0]
+                   .firstChild.nodeValue)
+        platform = (heptools.getElementsByTagName('binary_tag')[0]
+                    .firstChild.nodeValue)
+    except (IndexError, AttributeError), exc:
+        log.debug('cannot find heptools version: %s', exc)
+        # cannot extract heptools version
+        return {}
+
+    log.debug('looking for LCG %s %s', version, platform)
+    lcg_path = findLCG(version, platform)
+    if not lcg_path:
+        log.debug('cannot find LCG path')
+        return {}
+    # FIXME: EnvConfig has got problems with unicode filenames
+    lcg_path = str(lcg_path)
+    log.debug('found LCG at %s', lcg_path)
+
+    if basename(dirname(lcg_path)) == 'LCGCMT':
+        # old style
+        lcg_root = dirname(dirname(lcg_path))
+        return {'LCG_releases': lcg_root,
+                'LCG_external': lcg_root if lcg_root.endswith('external')
+                                else join(lcg_root, pardir, pardir, 'external')}
+    else:
+        # new style
+        return {'LCG_releases': lcg_path,
+                'LCG_external': lcg_path,
+                'LCG_releases_base': dirname(lcg_path)
+                                     if lcg_path.endswith('LCG_%s' % version)
+                                     else lcg_path}

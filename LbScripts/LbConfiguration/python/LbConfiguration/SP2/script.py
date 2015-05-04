@@ -16,7 +16,7 @@ import logging
 import EnvConfig
 
 from LbConfiguration.SP2.lookup import (getEnvXmlPath, findProject,
-                                        findDataPackage)
+                                        findDataPackage, getLCGRelocation)
 from LbConfiguration.SP2.version import (isValidVersion, expandVersionAlias,
                                          DEFAULT_VERSION)
 from LbConfiguration.SetupProject import FixProjectCase
@@ -218,7 +218,7 @@ class SP2(EnvConfig.Script):
         # prepare the list of projects to use
         projects = []
         if self.opts.use_grid:
-            self.opts.overriding_projects.extend(('LHCbGrid', DEFAULT_VERSION))
+            self.opts.overriding_projects.append(('LHCbGrid', DEFAULT_VERSION))
         if self.opts.auto_override:
             explicit = set([p[0] for p in self.opts.overriding_projects])
             projects.extend([p for p in auto_override_projects
@@ -229,8 +229,9 @@ class SP2(EnvConfig.Script):
 
         # Check if the main project needs a special search path
         self.log.debug('check if we need extra search path')
-        extra_path = projectExtraPath(findProject(self.project, self.version,
-                                                  self.opts.platform))
+        project_path = findProject(self.project, self.version,
+                                   self.opts.platform)
+        extra_path = projectExtraPath(project_path)
         if extra_path:
             self.log.debug('the project requires an extra search path')
             # we add the extra search path between the command line entries and the default
@@ -249,6 +250,12 @@ class SP2(EnvConfig.Script):
         env_path = map(str, env_path) # ensure that we do not have unicode strings
         EnvConfig.path.extend(env_path)
 
+        # set LCG relocation roots
+        lcg_relocation = getLCGRelocation(os.path.join(project_path,
+                                                       'manifest.xml'))
+        self.opts.actions.extend(('set', (k, v))
+                                 for k, v in lcg_relocation.items())
+
         # extend the prompt variable (bash, sh)
         if self.cmd and os.path.basename(self.cmd[0]) in ('bash', 'sh'):
             prompt = os.environ.get('PS1', r'\W \$ ')
@@ -257,6 +264,10 @@ class SP2(EnvConfig.Script):
                                        r'[{0} {1}] {2}'.format(self.project,
                                                                self.version,
                                                                prompt))))
+
+        # instruct the script to load the projects environment XML
+        for p, _ in projects[::-1]:
+            self.opts.actions.append(('loadXML', (p + '.xenv',)))
 
         # handle the extra data packages
         for pkg_name, pkg_vers in map(decodePkg, self.opts.use):
@@ -267,11 +278,7 @@ class SP2(EnvConfig.Script):
                 # fall back on the old conventional name
                 xml_path = xml_path[:-5] + 'Environment.xml'
             # FIXME: EnvConfig has got problems with unicode filenames
-            self.opts.actions.insert(0, ('loadXML', (str(xml_path),)))
-
-        # instruct the script to load the projects environment XML
-        for p, _ in projects:
-            self.opts.actions.insert(0, ('loadXML', (p + '.xenv',)))
+            self.opts.actions.append(('loadXML', (str(xml_path),)))
 
         super(SP2, self)._makeEnv()
 
