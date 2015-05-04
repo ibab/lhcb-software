@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v19r9 2015-05-04 =========================
 ! 2015-04-28 - Sean Benson
  - Turbo option in DstConf. Needed for propagation of Turbo objects.
 

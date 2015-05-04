@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GaudiConf
 ################################################################################
-gaudi_subdir(GaudiConf v19r8)
+gaudi_subdir(GaudiConf v19r9)
 
 gaudi_depends_on_subdirs(Kernel/LHCbKernel
                          L0/L0DU
