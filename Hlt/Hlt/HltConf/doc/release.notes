@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-05-04 - Dan Johnson
+ - Add Hlt1CEP...Decision lines and IDs to Hlt/HltConf HltInit.py
+
 ! 2015-05-01 - Vladimir Gligorov
  - Reserve RB 89 for possible use as parked stream later
 
