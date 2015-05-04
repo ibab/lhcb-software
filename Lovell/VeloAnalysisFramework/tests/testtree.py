@@ -63,8 +63,8 @@ def createTree(filename, treename):
     sensors += tuple(xrange(128, 132))
     # get RNG to generate some data to put into the tuple
     rnd = TRandom3()
-    # fill tree, 64 entries
-    for i in xrange(0, 64):
+    # fill tree, 8 entries
+    for i in xrange(0, 8):
         # clear out data from last run
         t.comment.clear()
         t.occupancy.clear()
@@ -228,13 +228,13 @@ def makePlots(filename, treename):
                 lambda t: t.checked.value()
                 ),
             ( # cut(s) to apply
-                lambda t: t.runnr >= 100010 and t.runnr <= 100060,
+                lambda t: t.runnr >= 100001 and t.runnr <= 100006,
                 ),
             # no weights, do not draw into existing histogram
             None, None,
             # histogram constructor arguments
             ('runvschecked', 'run number versus DQ checked status flag;run number;DQ checked flag',
-                51, 100009.5, 100060.5, 10, -0.5, 9.5)
+                6, 100000.5, 100006.5, 10, -0.5, 9.5)
             )
     h.Draw('COLZ')
     ROOT.gPad.Print('plot1.eps')
@@ -258,11 +258,11 @@ def makePlots(filename, treename):
         lambda t: t.runnr,
         lambda t: t.occupancy.value()
         ), (
-            lambda t: t.runnr >= 100010 and t.runnr <= 100060,
+            lambda t: t.runnr >= 100001 and t.runnr <= 100006,
             ),
         None, None,
         ('runvsocc', 'run number versus occupancy;run number;occupancy',
-            51, 100009.5, 100060.5, 50, 0., .05))
+            6, 100000.5, 100006.5, 50, 0., .05))
     h.Draw('COLZ')
     ROOT.gPad.Print('plot2.eps')
     
@@ -274,11 +274,11 @@ def makePlots(filename, treename):
         lambda t: t.runnr,
         lambda t: t.occupancy.value()
         ), (
-            lambda t: t.runnr >= 100010 and t.runnr <= 100060,
+            lambda t: t.runnr >= 100001 and t.runnr <= 100006,
             ),
         None, None,
         ('runvsocc2', 'run number versus occupancy;run number;occupancy',
-            51, 100009.5, 100060.5), ROOT.TProfile)
+            6, 100000.5, 100006.5), ROOT.TProfile)
     h.Draw()
     ROOT.gPad.Print('plot3.eps')
 
@@ -291,7 +291,7 @@ def makePlots(filename, treename):
        lambda t: tuple(t.occupancy.value()),
        lambda t: tuple(sum(v) / float(len(v)) for v in t.occupancy.value().values())
        ), (
-           lambda t: t.runnr == 100010,
+           lambda t: t.runnr == 100004,
            ),
        None,
        None,

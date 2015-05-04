@@ -4,6 +4,10 @@
 ! Purpose     : Analysis framework and configuration for offline and web GUIs
 !----------------------------------------------------------------------------
 
+! 2015-05-04 - Manuel Tobias Schiller
+ - reduce running time of testtree.py test by reducing the number of dummy
+   runs from 64 to 8
+
 ! 2015-05-01 - Manuel Tobias Schiller
  - make testtree.py into a proper unit test integrated with QMTest; for now
    it's a very simple standalone python script which signals success/failure
