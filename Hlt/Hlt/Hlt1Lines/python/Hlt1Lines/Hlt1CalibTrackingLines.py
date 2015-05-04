@@ -20,37 +20,39 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 # =============================================================================
 
 class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
-  __slots__ = {  'ParticlePT'            : 600     # MeV
-                ,'ParticleP'             : 4000    # MeV
-                ,'TrackCHI2DOF'          : 2       # dimensionless
-                ,'CombMaxDaughtPT'       : 900     # MeV
-                ,'CombAPT'               : 1500    # MeV
-                ,'CombDOCA'              : 0.2     # mm
-                ,'CombVCHI2DOF'          : 10      # dimensionless
-                ,'CombVCHI2DOFLoose'     : 10      # dimensionless
-                ,'CombDIRA'              : 0.9     # dimensionless
-                ,'CombTAU'               : 0.2     # ps
-                ,'D0MassWinLoose'        : 150     # MeV
-                ,'D0MassWin'             : 100     # MeV
-                ,'B0MassWinLoose'        : 250     # MeV
-                ,'B0MassWin'             : 200     # MeV
-                ,'BsPhiGammaMassMinLoose': 3350    # MeV
-                ,'BsPhiGammaMassMaxLoose': 6900    # MeV
-                ,'BsPhiGammaMassMin'     : 3850    # MeV
-                ,'BsPhiGammaMassMax'     : 6400    # MeV
-                ,'PhiMassWinLoose'       : 50      # MeV
-                ,'PhiMassWin'            : 30      # MeV
-                ,'PhiMassWinTight'       : 20      # MeV
-                ,'PhiPT'                 : 1800    # MeV
-                ,'PhiPTLoose'            : 500     # MeV
-                ,'PhiSumPT'              : 3000    # MeV
-                ,'PhiIPCHI2'             : 16      # dimensionless
-                ,'B0SUMPT'               : 4000    # MeV
-                ,'B0PT'                  : 1000    # MeV
-                ,'GAMMA_PT_MIN'          : 2000    # MeV
-                ,'Velo_Qcut'             : 3       # dimensionless
-                ,'TrNTHits'              : 16.
-                ,'ValidateTT'            : False
+  __slots__ = {  'ParticlePT'             : 600     # MeV
+                ,'ParticleP'              : 4000    # MeV
+                ,'TrackCHI2DOF'           : 2       # dimensionless
+                ,'CombMaxDaughtPT'        : 900     # MeV
+                ,'CombAPT'                : 1500    # MeV
+                ,'CombDOCA'               : 0.2     # mm
+                ,'CombVCHI2DOF'           : 10      # dimensionless
+                ,'CombVCHI2DOFLoose'      : 10      # dimensionless
+                ,'CombDIRA'               : 0.9     # dimensionless
+                ,'CombTAU'                : 0.2     # ps
+                ,'D0MassWinLoose'         : 150     # MeV
+                ,'D0MassWin'              : 100     # MeV
+                ,'B0MassWinLoose'         : 250     # MeV
+                ,'B0MassWin'              : 200     # MeV
+                ,'D0DetachedDaughtsIPCHI2': 9       # dimensionless 
+                ,'D0DetachedIPCHI2'       : 9       # dimensionless
+                ,'BsPhiGammaMassMinLoose' : 3350    # MeV
+                ,'BsPhiGammaMassMaxLoose' : 6900    # MeV
+                ,'BsPhiGammaMassMin'      : 3850    # MeV
+                ,'BsPhiGammaMassMax'      : 6400    # MeV
+                ,'PhiMassWinLoose'        : 50      # MeV
+                ,'PhiMassWin'             : 30      # MeV
+                ,'PhiMassWinTight'        : 20      # MeV
+                ,'PhiPT'                  : 1800    # MeV
+                ,'PhiPTLoose'             : 500     # MeV
+                ,'PhiSumPT'               : 3000    # MeV
+                ,'PhiIPCHI2'              : 16      # dimensionless
+                ,'B0SUMPT'                : 4000    # MeV
+                ,'B0PT'                   : 1000    # MeV
+                ,'GAMMA_PT_MIN'           : 2000    # MeV
+                ,'Velo_Qcut'              : 3       # dimensionless
+                ,'TrNTHits'               : 16.
+                ,'ValidateTT'             : False
       }
 
   def KPi_Unit( self, props ) :
@@ -214,6 +216,30 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
         )
 
     return hlt1CalibTrackingLine_D2KPiUnit
+
+  def D2KPiDetached_Unit( self, props ) :
+
+    D2KPiDetached_LineCode = """
+    SELECTION( 'Hlt1CalibTrackingKPis' )
+    >>  ( in_range( PDGM('D0') - %(D0MassWin)s * MeV , M , PDGM('D0') + %(D0MassWin)s * MeV ) & (MINTREE(BPVIPCHI2(),(ISBASIC & HASTRACK))>%(D0DetachedDaughtsIPCHI2)s) & (BPVIPCHI2()<%(D0DetachedIPCHI2)s) )
+    >>  tee ( monitor( TC_SIZE > 0, '# pass D2KPiDetached', LoKi.Monitoring.ContextSvc ) )
+    >>  tee ( monitor( TC_SIZE, 'nD2KPiDetacheds',          LoKi.Monitoring.ContextSvc ) )
+    >>  SINK ('Hlt1CalibTrackingKPiDetachedDecision')
+    >>  ~TC_EMPTY
+    """ %props
+
+    from Configurables import LoKi__HltUnit as HltUnit
+    from HltTracking.HltPVs import PV3D
+
+    hlt1CalibTrackingLine_D2KPiDetachedUnit = HltUnit(
+        'Hlt1CalibTrackingD2KPiDetachedUnit',
+        PVSelection = "PV3D",
+        #OutputLevel = 1,
+        Monitor = True,
+        Code = D2KPiDetached_LineCode
+        )
+
+    return hlt1CalibTrackingLine_D2KPiDetachedUnit
 
   def D2KK_Unit( self, props ) :
 
@@ -524,65 +550,72 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     pions = sharedParticles.pionUnit()
     kaons = sharedParticles.kaonUnit()
 
-    to_build = {  'CalibTrackingKPi'  : [ gec,
-                                          pvs,
-                                          pions,
-                                          kaons,
-                                          self.KPi_Unit(self.getProps()),
-                                          self.D2KPi_Unit(self.getProps())
-                                        ] ,
-                  'CalibTrackingKK'   : [ gec,
-                                          pvs,
-                                          kaons,
-                                          self.KK_Unit(self.getProps()),
-                                          self.D2KK_Unit(self.getProps())
-                                        ] ,
-                  'CalibTrackingPiPi' : [ gec,
-                                          pvs,
-                                          pions,
-                                          self.PiPi_Unit(self.getProps()),
-                                          self.D2PiPi_Unit(self.getProps())
-                                        ] ,
-                  'B2HH_LTUNB_KPi'    : [ gec,
-                                          pvs,
-                                          pions,
-                                          kaons,
-                                          self.KPi_Unit(self.getProps()),
-                                          self.B2KPi_Unit(self.getProps())
-                                        ] ,
-                  'B2HH_LTUNB_KK'     : [ gec,
-                                          pvs,
-                                          kaons,
-                                          self.KK_Unit(self.getProps()),
-                                          self.B2KK_Unit(self.getProps())
-                                        ] ,
-                  'B2HH_LTUNB_PiPi'   : [ gec,
-                                          pvs,
-                                          pions,
-                                          self.PiPi_Unit(self.getProps()),
-                                          self.B2PiPi_Unit(self.getProps())
-                                        ] ,
-                  'IncPhi'            : [ gec,
-                                          pvs,
-                                          kaons,
-                                          self.KK_Unit(self.getProps()),
-                                          self.IncPhi_Unit(self.getProps())
-                                        ] ,
-                  'B2PhiPhi_LTUNB'    : [ gec,
-                                          pvs,
-                                          kaons,
-                                          self.KK_Unit(self.getProps()),
-                                          self.LTUNBPhi_Unit(self.getProps()),
-                                          self.B2PhiPhi_Unit(self.getProps())
-                                        ] ,
-                  'B2PhiGamma_LTUNB'  : [ gec,
-                                          pvs,
-                                          kaons,
-                                          self.Gamma_Unit(self.getProps()),
-                                          self.KK_Unit(self.getProps()),
-                                          self.LTUNBPhi_Unit(self.getProps()),
-                                          self.B2PhiGamma_Unit(self.getProps())
-                                        ]
+    to_build = {  'CalibTrackingKPi'  :         [ gec,
+                                                  pvs,
+                                                  pions,
+                                                  kaons,
+                                                  self.KPi_Unit(self.getProps()),
+                                                  self.D2KPi_Unit(self.getProps())
+                                                ] ,
+                  'CalibTrackingKPiDetached'  : [ gec,
+                                                  pvs,
+                                                  pions,
+                                                  kaons,
+                                                  self.KPi_Unit(self.getProps()),
+                                                  self.D2KPiDetached_Unit(self.getProps())
+                                                 ] ,
+                  'CalibTrackingKK'   :          [ gec,
+                                                   pvs,
+                                                   kaons,
+                                                   self.KK_Unit(self.getProps()),
+                                                   self.D2KK_Unit(self.getProps())
+                                                  ] ,
+                  'CalibTrackingPiPi' :           [ gec,
+                                                    pvs,
+                                                    pions,
+                                                    self.PiPi_Unit(self.getProps()),
+                                                    self.D2PiPi_Unit(self.getProps())
+                                                  ] ,
+                  'B2HH_LTUNB_KPi'    :           [ gec,
+                                                    pvs,
+                                                    pions,
+                                                    kaons,
+                                                    self.KPi_Unit(self.getProps()),
+                                                    self.B2KPi_Unit(self.getProps())
+                                                  ] ,
+                  'B2HH_LTUNB_KK'     :           [ gec,
+                                                    pvs,
+                                                    kaons,
+                                                    self.KK_Unit(self.getProps()),
+                                                    self.B2KK_Unit(self.getProps())
+                                                  ] ,
+                  'B2HH_LTUNB_PiPi'   :           [ gec,
+                                                    pvs,
+                                                    pions,
+                                                    self.PiPi_Unit(self.getProps()),
+                                                    self.B2PiPi_Unit(self.getProps())
+                                                  ] ,
+                  'IncPhi'            :           [ gec,
+                                                    pvs,
+                                                    kaons,
+                                                    self.KK_Unit(self.getProps()),
+                                                    self.IncPhi_Unit(self.getProps())
+                                                  ] ,
+                  'B2PhiPhi_LTUNB'    :           [ gec,
+                                                    pvs,
+                                                    kaons,
+                                                    self.KK_Unit(self.getProps()),
+                                                    self.LTUNBPhi_Unit(self.getProps()),
+                                                    self.B2PhiPhi_Unit(self.getProps())
+                                                  ] ,
+                  'B2PhiGamma_LTUNB'  :           [ gec,
+                                                    pvs,
+                                                    kaons,
+                                                    self.Gamma_Unit(self.getProps()),
+                                                    self.KK_Unit(self.getProps()),
+                                                    self.LTUNBPhi_Unit(self.getProps()),
+                                                    self.B2PhiGamma_Unit(self.getProps())
+                                                  ]
                }
 
     for line, algos in to_build.iteritems():

@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-05-04 - M. Kenzie
+ - New line for alignment with D0s - Hlt1CalibTrackingKPiDetached (includes IP cuts)
+
 ! 2015-05-01 - V. Gligorov
  - Commit new HighPT low multiplicity line for Maurizio
 
