@@ -4,6 +4,11 @@ Package Coordinator : Wouter Hulsbergen
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+
+! 2015-05-04 - Jibo He
+ - Added WriteRichCalibrationsTool, following WriteOTCalibrationsTool
+ - Added "RichDet" in the requirements file
+
 !========================= AlignTrTools v4r15 2015-04-01 =========================
 
 ! 2015-03-04 - Roel Aaij
