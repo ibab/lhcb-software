@@ -25,7 +25,7 @@ class CommissioningLines(Hlt2LinesConfigurableUser):
                 }
 
     def __apply_configuration__(self):
-        from Stages import CopyTracks, IncidentGenerator, ErrorCounter
+        from Stages import CopyTracks, IncidentGenerator
         from Inputs import KS0_DD, KS0_LL
         stages = {'Forward'     : [CopyTracks()],
                   'DebugEvent'  : [IncidentGenerator()],
