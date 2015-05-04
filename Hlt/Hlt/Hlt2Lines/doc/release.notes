@@ -8,18 +8,21 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-05-04 - Roel Aaij
+ - Use new HLT2 filter in Comminssioning lines.
+
 ! 2015-05-03 - Simone Stracka
- - CharmHad: merged D2EtaHLines into D2HHLines and 
+ - CharmHad: merged D2EtaHLines into D2HHLines and
              included the corresponding combiners in Stages
- - CharmHad: included soft pion tagging in D2HHPi0Lines 
+ - CharmHad: included soft pion tagging in D2HHPi0Lines
 
 ! 2015-05-01 - Albert Puig
  - Radiative: Update the lines, remove some monitoring and cleanup of code.
  - Topo: Change name of BDT when nickname is specified.
 
 ! 2015-05-01 - Vladimir Gligorov
- - CharmHad : split D2HHH CPV lines into D+ and Ds+ CPV lines 
- - CharmHad : update HHH line naming convention to XToYpZm... 
+ - CharmHad : split D2HHH CPV lines into D+ and Ds+ CPV lines
+ - CharmHad : update HHH line naming convention to XToYpZm...
  - CharmHad : propagate above changes to DPS lines
  - CharmHad : update default cuts for K3Pi XSec line
  - CharmHad : simplify logic for prepending CharmHad to line names and
