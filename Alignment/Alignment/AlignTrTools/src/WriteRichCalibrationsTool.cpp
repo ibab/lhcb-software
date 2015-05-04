@@ -18,17 +18,17 @@
 #include <boost/filesystem.hpp>
 
 
-class WriteRICHCalibrationsTool 
+class WriteRichCalibrationsTool 
   : public GaudiTool, virtual public IWriteAlignmentConditionsTool
 {
 public:
   /// constructer
-  WriteRICHCalibrationsTool( const std::string& type,
+  WriteRichCalibrationsTool( const std::string& type,
                              const std::string& name,
                              const IInterface* parent); ///< Standard constructor
   
   /// destructer
-  virtual ~WriteRICHCalibrationsTool();
+  virtual ~WriteRichCalibrationsTool();
 
   /// initialize
   StatusCode initialize();
@@ -70,9 +70,9 @@ private:
 /* Implementation                                                                */
 /*********************************************************************************/
 
-DECLARE_TOOL_FACTORY( WriteRICHCalibrationsTool )
+DECLARE_TOOL_FACTORY( WriteRichCalibrationsTool )
 
-WriteRICHCalibrationsTool::WriteRICHCalibrationsTool( const std::string& type,
+WriteRichCalibrationsTool::WriteRichCalibrationsTool( const std::string& type,
                                                       const std::string& name,
                                                       const IInterface* parent)
 : GaudiTool( type,name,parent)
@@ -90,9 +90,9 @@ WriteRICHCalibrationsTool::WriteRICHCalibrationsTool( const std::string& type,
   declareProperty("OnlineMode", m_online = false);
 }
 
-WriteRICHCalibrationsTool::~WriteRICHCalibrationsTool() {}
+WriteRichCalibrationsTool::~WriteRichCalibrationsTool() {}
 
-StatusCode WriteRICHCalibrationsTool::initialize() 
+StatusCode WriteRichCalibrationsTool::initialize() 
 {
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
@@ -104,13 +104,13 @@ StatusCode WriteRICHCalibrationsTool::initialize()
 }
 
 
-StatusCode WriteRICHCalibrationsTool::write() const
+StatusCode WriteRichCalibrationsTool::write() const
 {
   return write(m_version) ;
 }
 
 
-StatusCode WriteRICHCalibrationsTool::write(const std::string& version) const
+StatusCode WriteRichCalibrationsTool::write(const std::string& version) const
 {
   StatusCode sc = StatusCode::SUCCESS ;
   
@@ -146,7 +146,7 @@ namespace {
   }
 }
  
-StatusCode WriteRICHCalibrationsTool::createXmlFile(const std::string& filename,
+StatusCode WriteRichCalibrationsTool::createXmlFile(const std::string& filename,
                                                     const std::string& version,
                                                     const std::string& contents) const
 {
@@ -190,7 +190,7 @@ StatusCode WriteRICHCalibrationsTool::createXmlFile(const std::string& filename,
 //=============================================================================
 //  Write refractive index scale factor
 //=============================================================================
-StatusCode WriteRICHCalibrationsTool::writeRefIndex(const std::string& version) const
+StatusCode WriteRichCalibrationsTool::writeRefIndex(const std::string& version) const
 {
   StatusCode sc = StatusCode::SUCCESS ;
   
@@ -223,7 +223,7 @@ StatusCode WriteRICHCalibrationsTool::writeRefIndex(const std::string& version) 
 //=============================================================================
 //  Write HPD occupancy
 //=============================================================================
-StatusCode WriteRICHCalibrationsTool::writeHPDOcc(const std::string& version) const
+StatusCode WriteRichCalibrationsTool::writeHPDOcc(const std::string& version) const
 {
   StatusCode sc = StatusCode::SUCCESS ;
   
@@ -256,7 +256,7 @@ StatusCode WriteRICHCalibrationsTool::writeHPDOcc(const std::string& version) co
 //=============================================================================
 //  Write HPD align
 //=============================================================================
-StatusCode WriteRICHCalibrationsTool::writeHPDAlign(const std::string& version) const
+StatusCode WriteRichCalibrationsTool::writeHPDAlign(const std::string& version) const
 {
   StatusCode sc = StatusCode::SUCCESS ;
 
