@@ -16,7 +16,6 @@
 #include "MDF/RawEventHelpers.h"
 #include "MDF/RawDataSelector.h"
 #include "MDF/RawDataConnection.h"
-#include "GaudiKernel/Tokenizer.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiUtils/IIODataManager.h"
