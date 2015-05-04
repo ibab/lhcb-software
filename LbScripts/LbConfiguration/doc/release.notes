@@ -1,3 +1,7 @@
+2015-05-04 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbConfiguration/Package.py: LBCORE-797 Added package TurboStreamProd
+
 2015-04-24  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/doxygen: fixed handling of doxygen version for the new LCG layout

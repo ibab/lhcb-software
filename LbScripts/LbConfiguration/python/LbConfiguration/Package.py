@@ -60,7 +60,8 @@ package_names = ['XmlDDDB',
                  'BNoCConfig',
                  'HLTConfig',
                  'PGunsData',
-                 'B2CCConfig']
+                 'B2CCConfig',
+                 'TurboStreamProd']
 
 class PackageConfException(Exception):
     pass
@@ -371,3 +372,5 @@ PGunsData.setProject("DBASE")#IGNORE:E0602$
 
 B2CCConfig.setHat("WG")#IGNORE:E0602$
 B2CCConfig.setProject("DBASE")#IGNORE:E0602$
+
+TurboStreamProd.setProject("DBASE")#IGNORE:E0602
