@@ -70,6 +70,94 @@ def configureVeloHalfAlignment():
     surveyconstraints.All()
 
 
+def configureVeloAlignment(fixMeanInHalf=False):
+    '''
+    This should be the default alignment for the Automatic alignment procedure
+    Align 2-halves for all degree of freedom and
+    Modues only for only the main degrees of freedom Tx Ty Rz
+    Constrain the global Velo position and two modules in each half
+    '''
+    TAlignment().WriteCondSubDetList  += ['Velo']
+
+    elements = Alignables()
+    elements.Velo("None")
+    elements.VeloRight("TxTyTzRxRyRz")
+    elements.VeloLeft("TxTyTzRxRyRz")
+    elements.VeloModules("TxTyRz")
+    elements.VeloPhiSensors("None")
+    elements.VeloRSensors("None")
+    TAlignment().ElementsToAlign += list(elements)
+
+
+    # Constraints
+    surveyconstraints = SurveyConstraints()
+    surveyconstraints.All()
+    constraints = []
+    
+    surveyconstraints.Constraints += [ "Velo      : 0 0 0 -0.0001 0 -0.0001 : 0.2 0.2 0.2 0.0001 0.0001 0.001",
+                                       "Velo/Velo(Right|Left) : 0 0 0 0 0 0 : 10 1 0.4 0.01 0.01 0.001" ]
+
+    # make sure that the velo stays where it was. Important note: the
+    # dofs here must match the ones that we actually align for. If you
+    # specify too many, things will go rather wrong.
+    constraints.append( "VeloHalfAverage  : Velo/Velo(Left|Right) :  Tx Ty Tz Rx Ry Rz: total" )
+
+    if fixMeanInHalf:
+        # Constrain average
+        constraints.append("VeloAInternal : Velo/VeloRight/Module..: Tx Ty Rz Szx Szy")
+        constraints.append("VeloCInternal : Velo/VeloLeft/Module..: Tx Ty Rz  Szx Szy")
+    else:
+        # Fix 2 modules
+        constraints.append("VeloFixModule10 : Velo/VeloLeft/Module10: Tx Ty Rz")
+        constraints.append("VeloFixModule11 : Velo/VeloRight/Module11: Tx Ty Rz")
+        constraints.append("VeloFixModule32 : Velo/VeloLeft/Module32: Tx Ty Rz")
+        constraints.append("VeloFixModule33 : Velo/VeloRight/Module33: Tx Ty Rz")
+        
+        constraints.append("VeloFixSensors10 : Velo/VeloLeft/Module10/RPhiPair10/.*: Tx Ty Rz")
+        constraints.append("VeloFixSensors11 : Velo/VeloRight/Module11/RPhiPair11/.*: Tx Ty Rz")
+        constraints.append("VeloFixSensors32 : Velo/VeloLeft/Module32/RPhiPair32/.*: Tx Ty Rz")
+        constraints.append("VeloFixSensors33 : Velo/VeloRight/Module33/RPhiPair33/.*: Tx Ty Rz")
+        
+   
+
+
+def configureVeloModuleAlignment():
+    '''
+    Align Modues only for only the main degrees of freedom Tx Ty Rz
+    Constrain two modules in each half
+    '''
+    TAlignment().WriteCondSubDetList  += ['Velo']
+
+    elements = Alignables()
+    elements.Velo("None")
+    elements.VeloRight("None")
+    elements.VeloLeft("None")
+    elements.VeloModules("TxTyRz")
+    elements.VeloPhiSensors("None")
+    elements.VeloRSensors("None")
+    TAlignment().ElementsToAlign += list(elements)
+
+    # Constraints
+    surveyconstraints = SurveyConstraints()
+    surveyconstraints.All()
+    constraints = []
+    
+    # Fix 2 modules
+    constraints.append("VeloFixModule10 : Velo/VeloLeft/Module10: Tx Ty Rz")
+    constraints.append("VeloFixModule11 : Velo/VeloRight/Module11: Tx Ty Rz")
+    constraints.append("VeloFixModule32 : Velo/VeloLeft/Module32: Tx Ty Rz")
+    constraints.append("VeloFixModule33 : Velo/VeloRight/Module33: Tx Ty Rz")
+    
+    constraints.append("VeloFixSensors10 : Velo/VeloLeft/Module10/RPhiPair10/.*: Tx Ty Rz")
+    constraints.append("VeloFixSensors11 : Velo/VeloRight/Module11/RPhiPair11/.*: Tx Ty Rz")
+    constraints.append("VeloFixSensors32 : Velo/VeloLeft/Module32/RPhiPair32/.*: Tx Ty Rz")
+    constraints.append("VeloFixSensors33 : Velo/VeloRight/Module33/RPhiPair33/.*: Tx Ty Rz")
+
+    # Constrain average
+    # constraints.append("VeloAInternal : Velo/VeloRight/Module..: Tx Ty Rz Szx Szy")
+    # constraints.append("VeloCInternal : Velo/VeloLeft/Module..: Tx Ty Rz  Szx Szy")
+
+
 def configureVeloSensorAlignment():
     TAlignment().WriteCondSubDetList  += ['Velo']
 
@@ -90,7 +178,7 @@ def configureVeloSensorAlignment():
     elements.VeloRight("TxTyTzRxRyRz")
     elements.VeloLeft("TxTyTzRxRyRz")
     elements.VeloModules("TxTyTzRxRyRz")
-    elements.VeloPhiSensors("TxTyTz")
+    elements.VeloPhiSensors("TxTy")
     elements.VeloRSensors("None")
     TAlignment().ElementsToAlign += list(elements)
 
@@ -119,56 +207,17 @@ def configureVeloSensorAlignment():
     #    'Velo/VeloRight/Module(01|41) : 0.02 0.02 0.0001 0.000001 0.000001 0.0001' ]
 
 
-def configureTEDVeloSensorAlignment():
+def configureVeloModule24Alignment():
+    '''
+    Align only module 24 and do not apply any constrain,
+    useful for tests
+    '''
     TAlignment().WriteCondSubDetList  += ['Velo']
 
-    # To align at the sensor level, we align 'modules' and
-    #'phi-sensors'. The R-sensor is always equal to the modules. (We
-    #keep its 'deltas' equal to zero.) However, because of a feature
-    #in the way we keep track of mother-daughter relations, it is
-    #important to create alignables for the R-sensors as well: use
-    #"None" to specify an alignable without active degrees of
-    #freedom.
-
-    # Note also that it doesn't make sense to align R modules for
-    # rotations around the z-axis. Rather than aligning the phi sensor
-    # for this rotation, we put the rotation at the module level.
-
-    elements = Alignables()
-    elements.Velo("None")
-    elements.VeloRight("None")
-    elements.VeloLeft("None")
-    elements.VeloModules("None")
-    elements.VeloPhiSensors("None")
-    elements.VeloRSensors("None")
-    # TAlignment().ElementsToAlign += list(elements)
-    myDOFs = '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module14:TxTy'
+    myDOFs = '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module24:TxTy'
     TAlignment().ElementsToAlign = [ myDOFs ]
     
 
-    # make sure that the velo stays where it was. Important note: the
-    # dofs here must match the ones that we actually align for. If you
-    # specify too many, things will go rather wrong.
-    TAlignment().Constraints.append("VeloHalfAverage : Velo/Velo(Left|Right) : Tx Ty Tz Rx Ry Rz")
-    
-    # now constrain the total shearing and z-scale in each Velo half
-    # to get the z-axis nominal. we'll do this by tightening the
-    # survey errors.
-
-    # we need to align the relative twist of the two halves. the
-    # C-side (minus X, Right) is known to have a corkscrew ('twist')
-    # in the base plate. so, for the right half we don't fix the Rz rotation:
-    # surveyconstraints = SurveyConstraints()
-    # surveyconstraints.All()
-    #surveyconstraints.XmlUncertainties += [ 
-    #    'Velo/VeloLeft/Module(00|40) : 0.0001 0.0001 0.0001 0.000001 0.000001 0.000001' ]
-    ## for the right half, we fix the shearing and z-scale, but not the Rz rotation 
-    #surveyconstraints.XmlUncertainties += [ 
-    #    'Velo/VeloRight/Module(01|41) : 0.0001 0.0001 0.0001 0.000001 0.000001 0.0001' ]
-
-    # bad idea: release the shearing:
-    #surveyconstraints.XmlUncertainties += [ 
-    #    'Velo/VeloRight/Module(01|41) : 0.02 0.02 0.0001 0.000001 0.000001 0.0001' ]
 
 # Early 2012 data alignment
 def configureEarlyDataAlignment( fixQOverPBias = True ) :
