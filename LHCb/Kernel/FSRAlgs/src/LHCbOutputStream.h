@@ -1,7 +1,6 @@
 #ifndef LHCB_OUTPUTSTREAM_H
 #define LHCB_OUTPUTSTREAM_H
 
-
 // Required for inheritance
 #include "GaudiKernel/IDataSelector.h"
 #include "GaudiKernel/Algorithm.h"
@@ -13,9 +12,6 @@
 #include <string>
 
 // forward declarations
-template <class ConcreteAlgorithm> class AlgFactory;
-namespace { template <class P, class S> class Factory; }
-
 class IIncidentSvc;
 class IRegistry;
 class IConversionSvc;
@@ -28,16 +24,16 @@ class DataStoreItem;
     author R. Lambert
     Version: 1.0
 */
-class LHCbOutputStream : public Algorithm {
-  friend class AlgFactory<LHCbOutputStream>;
-
+class LHCbOutputStream : public Algorithm     {
 public:
   typedef std::vector<DataStoreItem*> Items;
   typedef std::vector<std::string>    ItemNames;
+  typedef std::map< Algorithm*,  Items     > AlgDependentItems;
+  typedef std::map< std::string, ItemNames > AlgDependentItemNames;
 protected:
-  /// Reference to the indicent service
+  /// Reference to the incident service
   SmartIF<IIncidentSvc> m_incidentSvc;
-  /// Flag indicating wether data pre-loading should be performed
+  /// Flag indicating whether data pre-loading should be performed
   bool                     m_doPreLoad;
   /// Flag indicating whether optional items should be preloaded
   bool                     m_doPreLoadOpt;
@@ -71,6 +67,11 @@ protected:
   ItemNames                m_optItemNames;
   /// Vector of optional items to be saved to this stream
   Items                    m_optItemList;
+  /** Mapping between algorithm names, and a list of items for which, if the
+   *  algorithm in question accepted the event, they should be also stored. */
+  AlgDependentItemNames    m_algDependentItemList;
+  /// Items to be saved for specific algorithms
+  AlgDependentItems        m_algDependentItems;
   /// Collection of objects being selected
   IDataSelector            m_objects;
   /// Number of events written to this output stream
@@ -89,28 +90,30 @@ protected:
   std::vector<Algorithm*>* m_vetoAlgs;
 
 public:
-	/// Standard algorithm Constructor
-	LHCbOutputStream(const std::string& name, ISvcLocator* pSvcLocator);
+  /// Standard algorithm Constructor
+  LHCbOutputStream(const std::string& name, ISvcLocator* pSvcLocator);
   /// Standard Destructor
   virtual ~LHCbOutputStream();
 protected:
   /// Decode list of Algorithms that this stream accepts
-  StatusCode decodeAcceptAlgs( );
+  StatusCode decodeAcceptAlgs();
   /// Handler for AcceptAlgs Property
   void acceptAlgsHandler( Property& theProp );
   /// Decode list of Algorithms that this stream requires
-  StatusCode decodeRequireAlgs( );
+  StatusCode decodeRequireAlgs();
   /// Handler for RequireAlgs Property
   void requireAlgsHandler( Property& theProp );
   /// Decode list of Algorithms that this stream is vetoed by
-  StatusCode decodeVetoAlgs( );
+  StatusCode decodeVetoAlgs();
   /// Handler for VetoAlgs Property
   void vetoAlgsHandler( Property& theProp );
+  /// Decode a single algorithm name
+  Algorithm* decodeAlgorithm( const std::string& theName );
   /// Decode specified list of Algorithms
   StatusCode decodeAlgorithms( StringArrayProperty& theNames,
                                std::vector<Algorithm*>* theAlgs );
   /// Test whether this event should be output
-  bool isEventAccepted( ) const;
+  bool isEventAccepted() const;
   /// Find single item identified by its path (exact match)
   DataStoreItem* findItem(const std::string& path);
   /// Select the different objects and write them to file
@@ -124,11 +127,11 @@ protected:
 
 public:
   /// Initialize LHCbOutputStream
-	virtual StatusCode initialize();
+  virtual StatusCode initialize();
   /// Terminate LHCbOutputStream
-	virtual StatusCode finalize();
+  virtual StatusCode finalize();
   /// Working entry point
-	virtual StatusCode execute();
+  virtual StatusCode execute();
   // Connect to proper conversion service
   virtual StatusCode connectConversionSvc();
   /// Store agent's classback
@@ -142,9 +145,7 @@ public:
   /// Clear list of selected objects
   void clearSelection();
   /// Return the list of selected objects
-  IDataSelector* selectedObjects()    {
-    return &m_objects;
-  }
+  IDataSelector* selectedObjects() { return &m_objects; }
 };
 
 #endif // LHCB_OUTPUTSTREAM_H

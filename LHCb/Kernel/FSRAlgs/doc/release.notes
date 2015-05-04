@@ -4,6 +4,10 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-05-04 - Marco Clemencic
+ - Synchronized LHCbOutputStream with latest OutputStream in Gaudi.
+   (requires Gaudi >= v26r2)
+
 !========================= FSRAlgs v1r7 2014-12-11 =========================
 ! 2014-11-20 - Marco Clemencic
  - Fixed mistake in the previous commit.
