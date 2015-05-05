@@ -15,6 +15,7 @@ from Configurables import MuonIDAlg,Chi2MuIDTool,DistMuIDTool
 from Configurables import TrackMasterFitter,TrackMasterExtrapolator, SimplifiedMaterialLocator, IsMuonCandidateC, MakeMuonMeasurements, CLTool, GetArrival, NShared
 from Configurables import GaudiSequencer
 from TrackFitter.ConfiguredFitters import *
+from Configurables import DLLMuonTool, MakeMuonTool, MuonIDAlgLite
 
 class ConfiguredMuonIDs():
 
@@ -30,6 +31,7 @@ class ConfiguredMuonIDs():
     
     ## from datatype and version look for module with data. Store extra modules in case desired does not exist
     mod=[data+"_"+version,data+"_def","2011_def"]
+    #mod=[data+"_"+version,data+"_def","2015_def"]
     mod = map(lambda x: "Muon_"+x,mod)
 
     if self.debug: print "# \tmods -> ",mod
@@ -264,6 +266,125 @@ class ConfiguredMuonIDs():
 
     return mymmm
 
+  def configureMuonIDAlgLite (self,muonid):
+    """
+    general configuration of MuonIDAlg. Equivalent to old MuonID.py
+    Also configures muonIDtool used as extra_info. This can either be chi2 or dist.
+    Default chi2.
+    """
+
+    if self.debug: print "# CONFIGURING MUONIDALG"
+
+    ## check if input is already an instance or this must be created
+    if isinstance(muonid,MuonIDAlg): mymuid=muonid
+    else: mymuid=MuonIDAlg(str(muonid))
+
+    myDLL = DLLMuonTool("MyDLLMuonTool")
+
+    ## general MuonIDAlg properties
+    myDLL.OverrideDB = self.info.OverrideDB
+
+    myDLL.MomentumCuts  = self.info.MomentumCuts
+    mymuid.MomentumCuts  = self.info.MomentumCuts
+
+    #myDLL.XFOIParameter1 = self.info.XFOIParameter1
+    #myDLL.XFOIParameter2 = self.info.XFOIParameter2
+    #myDLL.XFOIParameter3 = self.info.XFOIParameter3
+    #myDLL.YFOIParameter1 = self.info.YFOIParameter1
+    #myDLL.YFOIParameter2 = self.info.YFOIParameter2
+    #myDLL.YFOIParameter3 = self.info.YFOIParameter3
+
+    myDLL.FOIfactor = self.info.FOIfactor
+
+    myDLL.PreSelMomentum = self.info.PreSelMomentum
+    mymuid.PreSelMomentum = self.info.PreSelMomentum
+    #mymuid.distMuon= self.info.distMuon
+    #mymuid.distPion= self.info.distPion
+
+    ## GL & SF & XCV:
+    if "DLL_flag" in dir(self.info):
+      mymuid.DLL_flag= self.info.DLL_flag
+
+    # Binning for the Distance for muons:
+    #if "nMupBinsR1" in dir(self.info): myDLL.nMupBinsR1= self.info.nMupBinsR1
+    #if "nMupBinsR2" in dir(self.info): myDLL.nMupBinsR2= self.info.nMupBinsR2
+    #if "nMupBinsR3" in dir(self.info): myDLL.nMupBinsR3= self.info.nMupBinsR3
+    #if "nMupBinsR4" in dir(self.info): myDLL.nMupBinsR4= self.info.nMupBinsR4
+
+    if "MupBinsR1" in dir(self.info): myDLL.MupBinsR1= self.info.MupBinsR1
+    if "MupBinsR2" in dir(self.info): myDLL.MupBinsR2= self.info.MupBinsR2
+    if "MupBinsR3" in dir(self.info): myDLL.MupBinsR3= self.info.MupBinsR3
+    if "MupBinsR4" in dir(self.info): myDLL.MupBinsR4= self.info.MupBinsR4
+
+    ## Configure hyperbolic tangent tanh(dist2) parameters
+    if "tanhScaleFactorsMuonR1" in dir(self.info): myDLL.tanhScaleFactorsMuonR1= self.info.tanhScaleFactorsMuonR1
+    if "tanhScaleFactorsMuonR2" in dir(self.info): myDLL.tanhScaleFactorsMuonR2= self.info.tanhScaleFactorsMuonR2
+    if "tanhScaleFactorsMuonR3" in dir(self.info): myDLL.tanhScaleFactorsMuonR3= self.info.tanhScaleFactorsMuonR3
+    if "tanhScaleFactorsMuonR4" in dir(self.info): myDLL.tanhScaleFactorsMuonR4= self.info.tanhScaleFactorsMuonR4
+
+    if "tanhScaleFactorsNonMuonR1" in dir(self.info): myDLL.tanhScaleFactorsNonMuonR1= self.info.tanhScaleFactorsNonMuonR1
+    if "tanhScaleFactorsNonMuonR2" in dir(self.info): myDLL.tanhScaleFactorsNonMuonR2= self.info.tanhScaleFactorsNonMuonR2
+    if "tanhScaleFactorsNonMuonR3" in dir(self.info): myDLL.tanhScaleFactorsNonMuonR3= self.info.tanhScaleFactorsNonMuonR3
+    if "tanhScaleFactorsNonMuonR4" in dir(self.info): myDLL.tanhScaleFactorsNonMuonR4= self.info.tanhScaleFactorsNonMuonR4
+
+     ## Signal muons
+    if "tanhCumulHistoMuonR1_1" in dir(self.info): myDLL.tanhCumulHistoMuonR1_1= self.info.tanhCumulHistoMuonR1_1
+    if "tanhCumulHistoMuonR1_2" in dir(self.info): myDLL.tanhCumulHistoMuonR1_2= self.info.tanhCumulHistoMuonR1_2
+    if "tanhCumulHistoMuonR1_3" in dir(self.info): myDLL.tanhCumulHistoMuonR1_3= self.info.tanhCumulHistoMuonR1_3
+    if "tanhCumulHistoMuonR1_4" in dir(self.info): myDLL.tanhCumulHistoMuonR1_4= self.info.tanhCumulHistoMuonR1_4
+    if "tanhCumulHistoMuonR1_5" in dir(self.info): myDLL.tanhCumulHistoMuonR1_5= self.info.tanhCumulHistoMuonR1_5
+    if "tanhCumulHistoMuonR1_6" in dir(self.info): myDLL.tanhCumulHistoMuonR1_6= self.info.tanhCumulHistoMuonR1_6
+    if "tanhCumulHistoMuonR1_7" in dir(self.info): myDLL.tanhCumulHistoMuonR1_7= self.info.tanhCumulHistoMuonR1_7
+
+    if "tanhCumulHistoMuonR2_1" in dir(self.info): myDLL.tanhCumulHistoMuonR2_1= self.info.tanhCumulHistoMuonR2_1
+    if "tanhCumulHistoMuonR2_2" in dir(self.info): myDLL.tanhCumulHistoMuonR2_2= self.info.tanhCumulHistoMuonR2_2
+    if "tanhCumulHistoMuonR2_3" in dir(self.info): myDLL.tanhCumulHistoMuonR2_3= self.info.tanhCumulHistoMuonR2_3
+    if "tanhCumulHistoMuonR2_4" in dir(self.info): myDLL.tanhCumulHistoMuonR2_4= self.info.tanhCumulHistoMuonR2_4
+    if "tanhCumulHistoMuonR2_5" in dir(self.info): myDLL.tanhCumulHistoMuonR2_5= self.info.tanhCumulHistoMuonR2_5
+
+    if "tanhCumulHistoMuonR3_1" in dir(self.info): myDLL.tanhCumulHistoMuonR3_1= self.info.tanhCumulHistoMuonR3_1
+    if "tanhCumulHistoMuonR3_2" in dir(self.info): myDLL.tanhCumulHistoMuonR3_2= self.info.tanhCumulHistoMuonR3_2
+    if "tanhCumulHistoMuonR3_3" in dir(self.info): myDLL.tanhCumulHistoMuonR3_3= self.info.tanhCumulHistoMuonR3_3
+    if "tanhCumulHistoMuonR3_4" in dir(self.info): myDLL.tanhCumulHistoMuonR3_4= self.info.tanhCumulHistoMuonR3_4
+    if "tanhCumulHistoMuonR3_5" in dir(self.info): myDLL.tanhCumulHistoMuonR3_5= self.info.tanhCumulHistoMuonR3_5
+
+    if "tanhCumulHistoMuonR4_1" in dir(self.info): myDLL.tanhCumulHistoMuonR4_1= self.info.tanhCumulHistoMuonR4_1
+    if "tanhCumulHistoMuonR4_2" in dir(self.info): myDLL.tanhCumulHistoMuonR4_2= self.info.tanhCumulHistoMuonR4_2
+    if "tanhCumulHistoMuonR4_3" in dir(self.info): myDLL.tanhCumulHistoMuonR4_3= self.info.tanhCumulHistoMuonR4_3
+    if "tanhCumulHistoMuonR4_4" in dir(self.info): myDLL.tanhCumulHistoMuonR4_4= self.info.tanhCumulHistoMuonR4_4
+    if "tanhCumulHistoMuonR4_5" in dir(self.info): myDLL.tanhCumulHistoMuonR4_5= self.info.tanhCumulHistoMuonR4_5
+
+    ## Bakground Comb muons: Also per regions AND momentum bins. Not suitable for low statistics
+    if "tanhCumulHistoNonMuonR1_1" in dir(self.info): myDLL.tanhCumulHistoNonMuonR1_1= self.info.tanhCumulHistoNonMuonR1_1
+    if "tanhCumulHistoNonMuonR1_2" in dir(self.info): myDLL.tanhCumulHistoNonMuonR1_2= self.info.tanhCumulHistoNonMuonR1_2
+    if "tanhCumulHistoNonMuonR1_3" in dir(self.info): myDLL.tanhCumulHistoNonMuonR1_3= self.info.tanhCumulHistoNonMuonR1_3
+    if "tanhCumulHistoNonMuonR1_4" in dir(self.info): myDLL.tanhCumulHistoNonMuonR1_4= self.info.tanhCumulHistoNonMuonR1_4
+    if "tanhCumulHistoNonMuonR1_5" in dir(self.info): myDLL.tanhCumulHistoNonMuonR1_5= self.info.tanhCumulHistoNonMuonR1_5
+    if "tanhCumulHistoNonMuonR1_6" in dir(self.info): myDLL.tanhCumulHistoNonMuonR1_6= self.info.tanhCumulHistoNonMuonR1_6
+    if "tanhCumulHistoNonMuonR1_7" in dir(self.info): myDLL.tanhCumulHistoNonMuonR1_7= self.info.tanhCumulHistoNonMuonR1_7
+
+    if "tanhCumulHistoNonMuonR2_1" in dir(self.info): myDLL.tanhCumulHistoNonMuonR2_1= self.info.tanhCumulHistoNonMuonR2_1
+    if "tanhCumulHistoNonMuonR2_2" in dir(self.info): myDLL.tanhCumulHistoNonMuonR2_2= self.info.tanhCumulHistoNonMuonR2_2
+    if "tanhCumulHistoNonMuonR2_3" in dir(self.info): myDLL.tanhCumulHistoNonMuonR2_3= self.info.tanhCumulHistoNonMuonR2_3
+    if "tanhCumulHistoNonMuonR2_4" in dir(self.info): myDLL.tanhCumulHistoNonMuonR2_4= self.info.tanhCumulHistoNonMuonR2_4
+    if "tanhCumulHistoNonMuonR2_5" in dir(self.info): myDLL.tanhCumulHistoNonMuonR2_5= self.info.tanhCumulHistoNonMuonR2_5
+
+    if "tanhCumulHistoNonMuonR3_1" in dir(self.info): myDLL.tanhCumulHistoNonMuonR3_1= self.info.tanhCumulHistoNonMuonR3_1
+    if "tanhCumulHistoNonMuonR3_2" in dir(self.info): myDLL.tanhCumulHistoNonMuonR3_2= self.info.tanhCumulHistoNonMuonR3_2
+    if "tanhCumulHistoNonMuonR3_3" in dir(self.info): myDLL.tanhCumulHistoNonMuonR3_3= self.info.tanhCumulHistoNonMuonR3_3
+    if "tanhCumulHistoNonMuonR3_4" in dir(self.info): myDLL.tanhCumulHistoNonMuonR3_4= self.info.tanhCumulHistoNonMuonR3_4
+    if "tanhCumulHistoNonMuonR3_5" in dir(self.info): myDLL.tanhCumulHistoNonMuonR3_5= self.info.tanhCumulHistoNonMuonR3_5
+
+    if "tanhCumulHistoNonMuonR4_1" in dir(self.info): myDLL.tanhCumulHistoNonMuonR4_1= self.info.tanhCumulHistoNonMuonR4_1
+    if "tanhCumulHistoNonMuonR4_2" in dir(self.info): myDLL.tanhCumulHistoNonMuonR4_2= self.info.tanhCumulHistoNonMuonR4_2
+    if "tanhCumulHistoNonMuonR4_3" in dir(self.info): myDLL.tanhCumulHistoNonMuonR4_3= self.info.tanhCumulHistoNonMuonR4_3
+    #if "tanhCumulHistoNonMuonR4_4" in dir(self.info): mymuid.tanhCumulHistoNonMuonR4_4= self.info.tanhCumulHistoNonMuonR4_4
+    #if "tanhCumulHistoNonMuonR4_5" in dir(self.info): mymuid.tanhCumulHistoNonMuonR4_5= self.info.tanhCumulHistoNonMuonR4_5
+
+    mymuid.addTool(myDLL)
+
+    return mymuid 
+
 
   def configureMuonIDAlg (self,muonid):
     """
@@ -457,7 +578,23 @@ class ConfiguredMuonIDs():
 
     return mymuid
 
-
+#  def getMuonIDSeq(self):
+#    """
+#    general method for MuonIDAlg configuration.
+#    Creates MuonIDAlg instance and configures it.
+#    Finally puts it in gaudi sequencer.
+#    """
+#
+#    if self.debug: print "# APPLYING GENERAL MUONID CONFIGURATION"
+#    ## create output gaudi sequencer
+#    myg = GaudiSequencer("MuonIDSeq")
+#    ## create and configure MuonIDAlg instance
+#    muid = MuonIDAlgLite()
+#    self.configureMuonIDAlgLite(muid)
+#
+#    ## add to gaudi sequencer and return
+#    myg.Members.append(muid)
+#    return myg
 
   def getMuonIDSeq(self):
     """
