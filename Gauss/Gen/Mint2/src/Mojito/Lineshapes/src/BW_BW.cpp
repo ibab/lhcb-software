@@ -28,7 +28,7 @@ BW_BW::BW_BW( const AssociatedDecayTree& decay)
   , _prSqForGofM(-9999.0)
   , _pABSq(-9999.0)
   , _mumsPDGMass(-9999.0)
-  , _mumsWidth(-9999.0) 
+  , _mumsPDGWidth(-9999.0) 
   , _mumsRecoMass2(-9999.0)
   , _mumsRecoMass(-9999.0)
   , _Fr_BELLE(-9999.0)
@@ -36,7 +36,7 @@ BW_BW::BW_BW( const AssociatedDecayTree& decay)
   , _GofM(-9999.0)
   , _mumsPID(0)
   , _mumsPID_set(false)
-  , _mumsRadius(-9999.0)
+  , _mumsPDGRadius(-9999.0)
   , _mumsParity(0)
   , _dgtrsInternalParity(0)
   , _twoLPlusOne(-9999)
@@ -63,6 +63,13 @@ BW_BW::BW_BW( const AssociatedDecayTree& decay)
 	      << "  PID " << mumsPID()
 	      << std::endl;
   }
+    
+    _RPL = ResonancePropertiesList::getMe();
+    if(_RPL->get(mumsPID())==0){
+        ResonanceProperties* rp= new ResonanceProperties(mumsProperties()->name());
+        _RPL->AddToList(rp);
+    }  
+    
 }
 BW_BW::BW_BW(const BW_BW& other)
   : ILineshape()
@@ -70,7 +77,7 @@ BW_BW::BW_BW(const BW_BW& other)
   , _prSqForGofM(other._prSqForGofM)
   , _pABSq(other._pABSq)
   , _mumsPDGMass(other._mumsPDGMass)
-  , _mumsWidth(other._mumsWidth) 
+  , _mumsPDGWidth(other._mumsPDGWidth) 
   , _mumsRecoMass2(other._mumsRecoMass2)
   , _mumsRecoMass(other._mumsRecoMass)
   , _Fr_BELLE(other._Fr_BELLE)
@@ -78,7 +85,7 @@ BW_BW::BW_BW(const BW_BW& other)
   , _GofM(other._GofM)
   , _mumsPID(other._mumsPID)
   , _mumsPID_set(other._mumsPID_set)
-  , _mumsRadius(other._mumsRadius)
+  , _mumsPDGRadius(other._mumsPDGRadius)
   , _mumsParity(other._mumsParity)
   , _dgtrsInternalParity(other._dgtrsInternalParity)
   , _twoLPlusOne(other._twoLPlusOne)
@@ -90,7 +97,12 @@ BW_BW::BW_BW(const BW_BW& other)
   , _theDecay(other._theDecay)
   , _gen_s_mi(other._gen_s_mi)
   , _gen_s_ma(other._gen_s_ma)
+  , _RPL(other._RPL)
 {
+    if(_RPL->get(mumsPID())==0){
+        ResonanceProperties* rp= new ResonanceProperties(mumsProperties()->name());
+        _RPL->AddToList(rp);
+    }  
 }
 
 BW_BW::~BW_BW(){
@@ -346,6 +358,22 @@ const ParticleProperties* BW_BW::mumsProperties() const{
   return pp;
 }
 
+double BW_BW::mumsMass() const{
+    return _RPL->get(mumsPID())->mass();
+}
+
+double BW_BW::mumsWidth() const{
+    return _RPL->get(mumsPID())->width();
+}
+
+double BW_BW::mumsRadius() const{
+    return _RPL->get(mumsPID())->radius();
+}
+
+double BW_BW::Radius() const{
+    return _RPL->radius();
+}
+
 double BW_BW::mumsPDGMass() const{
   if(_mumsPDGMass < 0){
     _mumsPDGMass = mumsProperties()->mass();
@@ -353,12 +381,33 @@ double BW_BW::mumsPDGMass() const{
   return _mumsPDGMass;
 }
 
-double BW_BW::mumsWidth() const{
-  if(_mumsWidth < 0){
-    _mumsWidth = mumsProperties()->width();
+double BW_BW::mumsPDGWidth() const{
+  if(_mumsPDGWidth < 0){
+    _mumsPDGWidth = mumsProperties()->width();
   }
-  return _mumsWidth;
+  return _mumsPDGWidth;
 }
+
+double BW_BW::mumsPDGRadius() const{
+    if(_mumsPDGRadius < -9998){
+        _mumsPDGRadius = mumsProperties()->radius();
+    }
+    return _mumsPDGRadius;
+    /*
+     double r=-9999;
+     
+     const fitSetup* fs = fitSetup::getMe();
+     if(thisIsD()) r =  fs->radiusOfD();
+     else r =  fs->radiusOfNonD();
+     if(true || thisIsD()){
+     cout << "compare: new radius " << mumsProperties()->radius()
+	 << ", new 2 " << _mumsRadius
+	 <<  ", old: " << r << endl;
+     }
+     return r;//mumsProperties()->radius();
+     */
+}
+
 
 std::string BW_BW::mumsSpin() const{
   return mumsProperties()->J();
@@ -387,29 +436,10 @@ bool BW_BW::startOfDecayChain() const{
   return ! (_theDecay.hasParent());
 }
 
-double BW_BW::mumsRadius() const{
-  if(_mumsRadius < -9998){
-    _mumsRadius = mumsProperties()->radius();
-  }
-  return _mumsRadius;
-  /*
-  double r=-9999;
-
-  const fitSetup* fs = fitSetup::getMe();
-  if(thisIsD()) r =  fs->radiusOfD();
-  else r =  fs->radiusOfNonD();
-  if(true || thisIsD()){
-    cout << "compare: new radius " << mumsProperties()->radius()
-	 << ", new 2 " << _mumsRadius
-	 <<  ", old: " << r << endl;
-  }
-  return r;//mumsProperties()->radius();
-  */
-}
 
 DalitzCoordinate BW_BW::getDalitzCoordinate(double nSigma) const{
   DalitzCoordinate coord(_theDecay.getVal().asi());
-  double meanM = mumsPDGMass();
+  double meanM = mumsMass();
   double width = mumsWidth();
   
   double minMass = meanM - nSigma*width/2.0;
@@ -419,7 +449,7 @@ DalitzCoordinate BW_BW::getDalitzCoordinate(double nSigma) const{
   return coord;
 }
 double BW_BW::mumsRecoMass2() const{
-  if(substitutePDGForReco()) return mumsPDGMass()*mumsPDGMass();
+  if(substitutePDGForReco()) return mumsMass()*mumsMass();
 
   if(_mumsRecoMass2 < 0){
     std::vector<int> asi = _theDecay.getVal().asi();
@@ -503,7 +533,7 @@ double BW_BW::daughterRecoMass(int i) const{
 
 double BW_BW::mumsRecoMass() const{
   if(substitutePDGForReco()){
-    return mumsPDGMass();
+    return mumsMass();
   }
   if(_mumsRecoMass < 0){
     double m2 = mumsRecoMass2();
@@ -611,7 +641,7 @@ double BW_BW::Fr_BELLE(double prSquared){
       }
       return _Fr_BELLE;
     }
-    double R = mumsRadius();
+    double R = Radius(); // or mumsRadius()  ???
     double R_pr_sq  = R*R * prSquared;
     double R_pAB_sq = R*R * pABSq();
     if(twoLPlusOne() == 3){                        // spin = 1
@@ -664,7 +694,7 @@ double BW_BW::Fr_BELLE_Max(){
     }
     return FrBelleMax;
   }
-  double R = mumsRadius();
+  double R = Radius(); // or mumsRadius()  ???
   //  double R_pr_sq  = R*R * prSq();
   double R_pr_sq  = R*R * prSq();
   double R_pAB_sq = 0;//R*R * pABSq();
@@ -719,7 +749,7 @@ double BW_BW::Fr_PDG_BL(){
       }
       return _Fr_PDG_BL;
     }
-    double R = mumsRadius();
+    double R = Radius(); // or mumsRadius()  ???
     //    double R_pr_sq  = R*R * prSq();
     double R_pAB_sq = R*R * pABSq();
 
@@ -758,12 +788,12 @@ double BW_BW::Fr_PDG_BL(){
 
 double BW_BW::twoBody_dgtPsq_in_MumsPDGFrame() const{
   if(! PDGWithReco){
-    return twoBody_dgtPsq_in_MumsFrame(mumsPDGMass()
+    return twoBody_dgtPsq_in_MumsFrame(mumsMass()
 				       , daughterPDGMass(0)
 				       , daughterPDGMass(1)
 				       );
   }else{
-    return twoBody_dgtPsq_in_MumsFrame(mumsPDGMass()
+    return twoBody_dgtPsq_in_MumsFrame(mumsMass()
 				       , daughterRecoMass(0)
 				       , daughterRecoMass(1)
 				       );
@@ -771,7 +801,7 @@ double BW_BW::twoBody_dgtPsq_in_MumsPDGFrame() const{
 }
 
 double BW_BW::twoBody_recodgtPsq_in_MumsPDGFrame() const{
-  return twoBody_dgtPsq_in_MumsFrame(mumsPDGMass()
+  return twoBody_dgtPsq_in_MumsFrame(mumsMass()
 				     , daughterRecoMass(0)
 				     , daughterRecoMass(1)
 				     );
@@ -832,7 +862,7 @@ double BW_BW::prSqMax() const{
   if(m2 < m2_min) m2 = m2_min;
   */
 
-  return twoBody_dgtPsq_in_MumsFrame(mumsPDGMass(), m1_min, m2_min);
+  return twoBody_dgtPsq_in_MumsFrame(mumsMass(), m1_min, m2_min);
 
   //  return mumsPDGMass()*mumsPDGMass()/4.0;
 }
@@ -843,7 +873,7 @@ double BW_BW::prSq() const{
     if(dbThis && _prSq < 0){ //dbg
       cout << " BW_BW::prSq()"
 	   << " suspicious... pr < 0. This is for:"
-	   << "\n   mumM PDG " << mumsPDGMass()
+	   << "\n   mumM PDG " << mumsMass()
 	   << ", m1_nominal " << daughterPDGMass(0)
 	   << ", m2_nominal " << daughterPDGMass(1)
 	   << ", m1_reco " << daughterRecoMass(0)
@@ -869,7 +899,7 @@ double BW_BW::prSqForGofM() const{
 	 << endl;
     cout << " BW_BW::prSqForGofM()"
 	 << " suspicious... pr < 0. This is for:"
-	 << "\n   mumM PDG " << mumsPDGMass()
+	 << "\n   mumM PDG " << mumsMass()
 	 << ", m1_nominal " << daughterPDGMass(0)
 	 << ", m2_nominal " << daughterPDGMass(1)
 	 << ", m1_reco " << daughterRecoMass(0)
@@ -945,7 +975,7 @@ double BW_BW::GofM(){
       _GofM = -9999;
       return _GofM;
     }
-    double mRatio = mumsPDGMass()/sqrt(densq);
+    double mRatio = mumsMass()/sqrt(densq);
     // this factor varies for different final states - check!!
     
     double thisFr = FrForGofM();
@@ -961,7 +991,7 @@ double BW_BW::GofM(){
 }
 
 std::complex<double> BW_BW::BreitWigner() {
-  double mpdg = mumsPDGMass();
+  double mpdg = mumsMass();
   
   std::complex<double> invBW(mpdg*mpdg - mumsRecoMass2(), - mpdg * GofM());
   return 1.*GeV*GeV/invBW;
@@ -983,9 +1013,9 @@ void BW_BW::resetInternals(){
 }
 
 void BW_BW::resetPDG(){
-  _mumsPDGMass = _mumsWidth = -1;
+  _mumsPDGMass = _mumsPDGWidth = -1;
   _mumsPID_set = false;
-  _mumsRadius  = -9999.0;
+  _mumsPDGRadius  = -9999.0;
 
   _daughterPDGMass.resize(_theDecay.nDgtr());
   for(int i=0; i< _theDecay.nDgtr(); i++){
@@ -1043,7 +1073,7 @@ std::complex<double> BW_BW::getVal(IDalitzEvent& evt){
     }
     cout << " BW_BW for " 
 	 << _theDecay.oneLiner() << endl; // dbg
-    cout << "\n    >  nominalMass " << mumsPDGMass()
+    cout << "\n    >  nominalMass " << mumsMass()
 	 << "\n    > nominalWidth " << mumsWidth()
 	 << "\n    > GoM() " << GofM()
 	 << "\n    > Fr() " << Fr()
@@ -1063,6 +1093,7 @@ std::complex<double> BW_BW::getVal(IDalitzEvent& evt){
   return returnVal;
 }
 
+
 double BW_BW::peakShift() const{
   // from: J.D. Jackson, Il Nuovo Cimento, Siere X, Vol 34, pag 1644-1666
   // 16 Dicembre 1964
@@ -1074,7 +1105,7 @@ double BW_BW::peakShift() const{
   double m1s = m1*m1;
   double m2s = m2*m2;
 
-  double om = mumsPDGMass();
+  double om = mumsMass();
   double om2 = om*om;
   double om4 = om2*om2;
 
@@ -1098,7 +1129,7 @@ double BW_BW::peakPosition() const{
   // 16 Dicembre 1964
   // equation 10. (refers to (4)).
   //
-  return mumsPDGMass() + peakShift();
+  return mumsMass() + peakShift();
 }
 
 void BW_BW::makeGeneratingFunction() const{
@@ -1184,7 +1215,7 @@ std::complex<double> BW_BW::EvtGenValue(IDalitzEvent& evt){
   //first compute several quantities...follow CLEO preprint 00-23
 
   bool invmass_angdenom = false;
-  double bwm = mumsPDGMass()  / GeV;
+  double bwm = mumsMass()  / GeV;
   double gamma = mumsWidth()  / GeV;
 
   double mAB=(p4_d1+p4_d2).M();

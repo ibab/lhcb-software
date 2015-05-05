@@ -11,14 +11,11 @@
 
 #include "Mint/ILineshape.h"
 #include "Mint/AssociatedDecayTree.h"
-
 #include "Mint/DalitzCoordinate.h"
-
 #include "Mint/MultiQuarkContent.h"
-
 #include "Mint/GaussFct.h"
-
 #include "Mint/IGenFct.h"
+#include "Mint/ResonancePropertiesList.h"
 
 #include "TRandom.h"
 
@@ -31,12 +28,12 @@ class BW_BW : virtual public ILineshape{
   mutable IDalitzEvent* _eventPtr;
   //  mutable std::stack<IDalitzEvent*> _oldPointers;
 
-  mutable double _prSq, _prSqForGofM, _pABSq, _mumsPDGMass, _mumsWidth, 
+  mutable double _prSq, _prSqForGofM, _pABSq, _mumsPDGMass, _mumsPDGWidth, 
     _mumsRecoMass2, _mumsRecoMass, _Fr_BELLE, _Fr_PDG_BL, _GofM;
   mutable int _mumsPID;
   mutable bool _mumsPID_set;
 
-  mutable double _mumsRadius;
+  mutable double _mumsPDGRadius;
 
   mutable int _mumsParity, _dgtrsInternalParity;
 
@@ -81,10 +78,18 @@ class BW_BW : virtual public ILineshape{
   virtual double prSqMax() const;
  protected:
   
+  ResonancePropertiesList* _RPL;
   virtual const ParticleProperties* mumsProperties() const;
-  virtual double mumsPDGMass() const;
-  virtual int mumsPID() const;
 
+  virtual int mumsPID() const;
+  virtual double mumsMass() const;
+  virtual double mumsPDGMass() const;
+  virtual double mumsWidth() const;
+  virtual double mumsPDGWidth() const;
+  virtual double mumsRadius() const; // individual resonance radius
+  virtual double mumsPDGRadius() const; // fixed default value
+  virtual double Radius() const; // global resonance radius (equal for all resonances)
+    
   virtual int twoLPlusOne() const;
   virtual int lowestPossibleTwoLPlusOne() const;
   // none of all this can handle half-integer spins
@@ -98,10 +103,8 @@ class BW_BW : virtual public ILineshape{
   virtual int maxDaughterPairSpinSum(int i, int j) const;
   virtual int minDaughterPairSpinSum(int i, int j) const;
 
-  virtual double mumsWidth() const;
   virtual std::string mumsSpin() const;
   virtual int mumsSpinValue() const;
-  virtual double mumsRadius() const;
   virtual int mumsParity() const;
 
   virtual bool startOfDecayChain() const;
@@ -158,6 +161,7 @@ class BW_BW : virtual public ILineshape{
   virtual ~BW_BW();
 
   virtual std::complex<double> getVal(IDalitzEvent& evt);
+    
   virtual void print(IDalitzEvent& evt, std::ostream& out = std::cout);
   virtual void print(std::ostream& out = std::cout) const;
 

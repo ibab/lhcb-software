@@ -27,6 +27,7 @@ namespace MINT{
 class FitAmpList
 {
  protected:
+  DalitzEventPattern _pat;
   std::string _paraFName; // default: read from stdin;
   std::vector<FitAmplitude*> _fitAmps;
   MINT::MinuitParameterSet* _minuitParaSet;

@@ -15,8 +15,9 @@ NonRes::NonRes( const AssociatedDecayTree& tree,
 		const std::string& type )
   : BW_BW(tree)
   , _type(type)
-  , _alpha("NonRes::alpha", 1.0)
+  //, _alpha("NonRes::alpha", 1.0)
 {
+    //cout << _alpha << endl;
 }
 
 std::complex<double> NonRes::getVal( IDalitzEvent& evt ) {
@@ -27,14 +28,15 @@ std::complex<double> NonRes::getVal( IDalitzEvent& evt ) {
 
   double non_res;
   if( _type == "Exp" )
-    non_res = exp(-_alpha*m2hh);
+    non_res = exp(-GetAlpha()*m2hh);
   else if( _type == "Pow" )
-    non_res = pow(m2hh, -_alpha);
+    non_res = pow(m2hh, -GetAlpha());
   else
     non_res = 1.0;
 
   return Fr_PDG_BL()*non_res;
 }
+
 
 void NonRes::print( std::ostream& out ) const {
   out << name();
@@ -58,7 +60,7 @@ void NonRes::print( IDalitzEvent& evt, std::ostream& out ) {
 }
     
 double NonRes::GetAlpha() const {
-  return _alpha;
+  return _RPL->get(mumsPID())->alpha();
 }
 
 std::ostream& operator<<( std::ostream& out, const NonRes& amp ) {

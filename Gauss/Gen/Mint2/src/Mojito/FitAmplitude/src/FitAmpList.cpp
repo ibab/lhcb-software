@@ -22,6 +22,7 @@ FitAmpList::FitAmpList(const DalitzEventPattern& pat
   : _minuitParaSet(pset)
   , _efficiency(0)
   , _opt(opt)
+  , _pat(pat)
 {
   if(0 != fname){
     _paraFName = fname;
@@ -39,6 +40,7 @@ FitAmpList::FitAmpList(const DalitzEventPattern& pat
 		     )
   : _minuitParaSet(pset)
   , _opt(opt)
+  , _pat(pat)
 {
   
   _paraFName.clear();
@@ -52,6 +54,7 @@ FitAmpList::FitAmpList(const DalitzEventPattern& pat
   : _minuitParaSet(0)
   , _efficiency(0)
   , _opt(opt)
+  , _pat(pat)
 {
   
   _paraFName.clear();
@@ -64,6 +67,7 @@ FitAmpList::FitAmpList(const FitAmpList& other)
   , _minuitParaSet(other._minuitParaSet)
   , _efficiency(other._efficiency)
   , _opt(other._opt)
+  , _pat(other._pat)
 {
   bool dbThis=false;
   this->deleteAll();
@@ -87,6 +91,7 @@ FitAmpList& FitAmpList::operator=(const FitAmpList& other){
   _minuitParaSet = other._minuitParaSet;
   _efficiency    = other._efficiency;
   _opt           = other._opt;
+  _pat           = other._pat;
   deleteAll();
   
   addCopyWithSameFitParameters(other);

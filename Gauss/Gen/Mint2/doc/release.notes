@@ -5,6 +5,23 @@
 ! Purpose     : Original author of MINT Dr. Jonas Rademacker.
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
+
+2015-05-05 - Philippe d'Argent
+ - Converted all line shape parameters (mass, width, BW radius) to FitParameters
+   . By default, all parameters are fixed to their PDG values (i.e. the ones in mass_width.cvs)
+   . To change a specific parameter, indicate in your options file:
+   	"mass_name"   Fix?	init	step	min	max
+   	"width_name"  Fix?	init	step	min	max
+        "BW_radius"   Fix?	init	step	min	max
+      with the name of the resonance as given in mass_width.cvs 
+   .  To actually fit the line shape parameters, 
+      derive your AmpsPdf from DalitzPdfBaseMCInteg rather than from DalitzPdfBaseFastInteg (changes integrator) and include 
+      "FitLineshapeParameters"	1 
+      in your options file (removes amplitude caching).
+   . see Mint2/src/Users/dargent/PsiKpipiFit for an example	
+ - Added B -> psi K pi pi decay trees
+ - Added B -> D D K decay trees
+
 2015-04-17 - Philippe d'Argent
  - FitAmpList::createAllAmps(const DalitzEventPattern& thePattern, const std::string& prefix) 
    excludes Amplitudes which are fixed to zero

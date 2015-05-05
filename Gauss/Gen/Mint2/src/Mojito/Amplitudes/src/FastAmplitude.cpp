@@ -11,12 +11,13 @@ FastAmplitude::FastAmplitude( const DecayTree& decay
 			      )
   : Amplitude(decay, SPD_Wave, opt)
   ,_rememberNumber(-9999)
+  ,_fitLineshapeParameters("FitLineshapeParameters",0)
 {}
 
-FastAmplitude::FastAmplitude( const AmpInitialiser& ampInit
-			      )
+FastAmplitude::FastAmplitude( const AmpInitialiser& ampInit)
   : Amplitude(ampInit)
   ,_rememberNumber(-9999)
+  ,_fitLineshapeParameters("FitLineshapeParameters",0)
 {}
 
 FastAmplitude::FastAmplitude( const FastAmplitude& other)
@@ -25,11 +26,13 @@ FastAmplitude::FastAmplitude( const FastAmplitude& other)
   , Amplitude(other)
   , _resultMap(other._resultMap)
   ,_rememberNumber(-9999)
+  ,_fitLineshapeParameters(other._fitLineshapeParameters)
 {}
 
 FastAmplitude::FastAmplitude( const Amplitude& other)
   : Amplitude(other)
   ,_rememberNumber(-9999)
+  ,_fitLineshapeParameters("FitLineshapeParameters",0)
 {
   _resultMap.clear();
 }
@@ -50,6 +53,7 @@ std::complex<double> FastAmplitude::getVal(IDalitzEvent* evt){
 }
 
 complex<double> FastAmplitude::getVal(IDalitzEvent& evt){
+  if(_fitLineshapeParameters) return Amplitude::getVal(evt);  
   bool dbThis=false;
   complex<double> result(-9999.0, 0);
 

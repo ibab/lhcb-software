@@ -4,6 +4,7 @@
 // status:  Mon 9 Feb 2009 19:18:02 GMT
 
 #include "Mint/IDalitzIntegrator.h"
+#include "Mint/IFastAmplitudeIntegrable.h"
 
 #include "Mint/DalitzEventPattern.h"
 
@@ -16,6 +17,7 @@
 
 #include "Mint/DalitzHistoSet.h"
 #include "Mint/IReturnRealForEvent.h"
+#include "Mint/MinuitParameterSet.h"
 
 /*
   WARNING: This piece of code is much slower and less accurate than
@@ -25,6 +27,7 @@
 
 class DalitzMCIntegrator : virtual public IDalitzIntegrator{
 
+  
   class integrationWeight : public MINT::IReturnRealForEvent<IDalitzEvent>{
     MINT::IReturnRealForEvent<IDalitzEvent>* _externalPdf;
   public:
@@ -32,7 +35,7 @@ class DalitzMCIntegrator : virtual public IDalitzIntegrator{
     void setWeight(MINT::IReturnRealForEvent<IDalitzEvent>* pdf);
     double RealVal(IDalitzEvent& evt);
   };
-
+  
   mutable double _mean, _variance;
   const static int _minEvents=1000;
   int _numEvents;
@@ -40,7 +43,7 @@ class DalitzMCIntegrator : virtual public IDalitzIntegrator{
 
   bool _initialised;
  protected:
-
+  MINT::MinuitParameterSet* _mps;
   DalitzEventPattern _pat;
   MINT::IReturnRealForEvent<IDalitzEvent>* _w;
   integrationWeight _iw;
@@ -56,20 +59,20 @@ class DalitzMCIntegrator : virtual public IDalitzIntegrator{
 
   MINT::IEventGenerator<IDalitzEvent>* _generator;
  public:
-  DalitzMCIntegrator(const DalitzEventPattern& pattern
-		     , MINT::IReturnRealForEvent<IDalitzEvent>* weightFunction=0
-		     , MINT::IEventGenerator<IDalitzEvent>* eventGenerator=0
-		     , TRandom* rnd = gRandom
-		     , double precision = 1.e-2
-		     );
-  DalitzMCIntegrator();
-  
-  bool initialise(const DalitzEventPattern& pattern
-		     , MINT::IReturnRealForEvent<IDalitzEvent>* weightFunction=0
-		     , MINT::IEventGenerator<IDalitzEvent>* eventGenerator=0
-		     , TRandom* rnd = gRandom
-		     , double precision = 1.e-2
-		  );
+    DalitzMCIntegrator(const DalitzEventPattern& pattern
+                       , MINT::IReturnRealForEvent<IDalitzEvent>* weightFunction=0
+                       , MINT::IEventGenerator<IDalitzEvent>* eventGenerator=0
+                       , TRandom* rnd = gRandom
+                       , double precision = 1.e-2
+                       );
+    DalitzMCIntegrator();
+    
+    bool initialise(const DalitzEventPattern& pattern
+                    , MINT::IReturnRealForEvent<IDalitzEvent>* weightFunction=0
+                    , MINT::IEventGenerator<IDalitzEvent>* eventGenerator=0
+                    , TRandom* rnd = gRandom
+                    , double precision = 1.e-2
+                    );
 
   bool resetIntegrand(MINT::IReturnRealForEvent<IDalitzEvent>* 
 		      weightFunction = 0
@@ -94,15 +97,20 @@ class DalitzMCIntegrator : virtual public IDalitzIntegrator{
   double RealVal(){
     return getVal();
   }
+    
+  MINT::MinuitParameterSet* getMPS();
+  const MINT::MinuitParameterSet* getMPS() const;  
 
   virtual void doFinalStats(MINT::Minimiser* mini=0);
 
   DalitzHistoSet histoSet(){
-    double den= getVal();
-    den *= _weightSum;
-    if(den <= 0) den=1;
-    return _events.reWeightedHistoSet(&_iw)/den;
+        double den= getVal();
+        den *= _weightSum;
+        if(den <= 0) den=1;
+        return _events.reWeightedHistoSet(&_iw)/den;
   }
+    
+  virtual ~DalitzMCIntegrator(){};
 
 };
 #endif

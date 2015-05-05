@@ -16,7 +16,7 @@
 using namespace std;
 
 double GounarisSakurai::ReBreitWigner() {
-  double m   = mumsPDGMass();
+  double m   = mumsMass();
   double m2  = m*m;
   double km  = k(m2);
   double km2 = km*km;
@@ -35,7 +35,7 @@ double GounarisSakurai::ReBreitWigner() {
 }
 
 double GounarisSakurai::ImBreitWigner() {
-  double m   = mumsPDGMass();
+  double m   = mumsMass();
   double s   = mumsRecoMass2();
   double G = mumsWidth();
 
@@ -63,7 +63,7 @@ double GounarisSakurai::ImBreitWigner() {
 } 
 
 double GounarisSakurai::den() {
-  double m   = mumsPDGMass();
+  double m   = mumsMass();
   
   double s   = mumsRecoMass2();
 
@@ -103,7 +103,7 @@ double GounarisSakurai::den() {
 
 Double_t GounarisSakurai::d() 
 {
-  double m = mumsPDGMass();
+  double m = mumsMass();
   double mpi = daughterRecoMass(0);
 
   Double_t mpipi = pow(m,2);
@@ -148,7 +148,7 @@ std::complex<double> GounarisSakurai::BreitWigner() {
 
 double GounarisSakurai::sJ(){
   double G = mumsWidth();
-  double m = mumsPDGMass();
+  double m = mumsMass();
   return (1.0+d()*G/m);// the 2nd factor is calc. in SpinFactor3: *(mAC-mBC);
 }
 
@@ -172,7 +172,7 @@ std::complex<double> GounarisSakurai::getVal(IDalitzEvent& evt){
 
   if(dbThis) cout << " GounarisSakurai for " 
 		  << _theDecay.oneLiner() << endl; // dbg
-  if(dbThis) cout << "\n    >  nominalMass " << mumsPDGMass()
+  if(dbThis) cout << "\n    >  nominalMass " << mumsMass()
 		  << "\n    > nominalWidth " << mumsWidth()
 		  << "\n    > Fr() " << Fr()
 		  << "\n    > a part from sJ() " << sJ()

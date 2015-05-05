@@ -31,9 +31,13 @@ class NamedDecayTreeList{
   int makeKsPiPiList();
   int makeKPiPiZeroList();
   int makeDplusToKKPiList();
+  int makeB02DDKList();
+  int makeBp2DDKList();
   // --- 4 body ---
-  int makeGammaKpipiList();
+  int makePsiKpipiList();
+  int makeKpipiGammaList();
   int makeJpsiKpipiList();
+  int makeShortJpsiKpipiList();
   int makeKKpipiList();
   int makeK3piList();
   int makeKsPiPiPizeroList();

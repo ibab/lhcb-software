@@ -8,7 +8,7 @@
 
 #include "Mint/IReturnRealForEvent.h"
 #include "Mint/IReturnComplexForEvent.h"
-
+#include "Mint/NamedParameter.h"
 #include "Mint/IDalitzEvent.h"
 #include "Mint/Amplitude.h"
 
@@ -17,6 +17,7 @@ class FastAmplitude : public Amplitude
   , virtual public MINT::IReturnComplexForEvent<IDalitzEvent>
 {
  protected:
+  MINT::NamedParameter<int>  _fitLineshapeParameters;  
   std::map<IDalitzEvent*, std::complex<double> > _resultMap;
 
   bool knownEvent(IDalitzEvent& evt, std::complex<double>& value);

@@ -160,12 +160,14 @@ double DalitzMCIntegrator::evaluateSum(){
 
     _weightSum += weight;// /ps;
 
+    /*  
     if(N%printEveryNEvents == 0){
       cout << "DalitzMCIntegrator::evaluateSum() N = " << N 
 	   << " val = " << val 
 	   << " _w->RealVal(thisEvt)*weight " << _w->RealVal(thisEvt)*weight 
 	   << endl;
     }
+    */
   }
 
   if(0 == N) return 0;

@@ -24,7 +24,12 @@ FitAmpSum::FitAmpSum(const DalitzEventPattern& pat
 		     , const std::string& opt
 		     )
   : FitAmpList(pat, fname, pset, prefix, opt)
-{}
+{
+    //Important! Ensures everything is initialised
+    DalitzEventList eventTest;
+    eventTest.generatePhaseSpaceEvents(1,pat);
+    this->getVal(eventTest[0]);  
+}
 
 FitAmpSum::FitAmpSum(const DalitzEventPattern& pat
 		     , MinuitParameterSet* pset
@@ -32,13 +37,23 @@ FitAmpSum::FitAmpSum(const DalitzEventPattern& pat
 		     , const std::string& opt
 		     )
   : FitAmpList(pat, pset, prefix, opt)
-{}
+{
+    //Important! Ensures everything is initialised
+    DalitzEventList eventTest;
+    eventTest.generatePhaseSpaceEvents(1,pat);
+    this->getVal(eventTest[0]);  
+}
 FitAmpSum::FitAmpSum(const DalitzEventPattern& pat
 		     , const std::string& prefix
 		     , const std::string& opt
 		     )
   : FitAmpList(pat, prefix, opt)
-{}
+{
+    //Important! Ensures everything is initialised
+    DalitzEventList eventTest;
+    eventTest.generatePhaseSpaceEvents(1,pat);
+    this->getVal(eventTest[0]); 
+}
 
 FitAmpSum::FitAmpSum(const FitAmpSum& other)
   : IReturnRealForEvent<IDalitzEvent>()
@@ -46,7 +61,12 @@ FitAmpSum::FitAmpSum(const FitAmpSum& other)
   , IFastAmplitudeIntegrable()
   , ILookLikeFitAmpSum()
   , FitAmpList(other)
-{}
+{
+    //Important! Ensures everything is initialised
+    DalitzEventList eventTest;
+    eventTest.generatePhaseSpaceEvents(1,_pat);
+    this->getVal(eventTest[0]); 
+}
 
 FitAmpSum::FitAmpSum(const FitAmpList& other)
   : IReturnRealForEvent<IDalitzEvent>()
@@ -54,7 +74,12 @@ FitAmpSum::FitAmpSum(const FitAmpList& other)
   , IFastAmplitudeIntegrable()
   , ILookLikeFitAmpSum()
   , FitAmpList(other)
-{}
+{    
+    //Important! Ensures everything is initialised
+    DalitzEventList eventTest;
+    eventTest.generatePhaseSpaceEvents(1,_pat);
+    this->getVal(eventTest[0]); 
+}
 
 FitAmpSum& FitAmpSum::operator=(const FitAmpSum& other){
   if(&other == this) return *this;
