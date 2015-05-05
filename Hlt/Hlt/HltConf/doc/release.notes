@@ -5,6 +5,7 @@
 ! -----------------------------------------------------------------------------
 ! 2015-05-05 - Dan Johnson
  - Add ID for Hlt1CEPNonBeamBeamNoBiasDecision line
+ - Change name of NoBias line to Hlt1NonBeamBeamNoBias
 
 ! 2015-05-04 - Roel Aaij
  - Use HLT2 filter in Hlt2Global instead of filter in FilterSequence.
