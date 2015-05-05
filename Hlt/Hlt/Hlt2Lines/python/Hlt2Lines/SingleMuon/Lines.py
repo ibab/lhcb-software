@@ -46,7 +46,7 @@ class SingleMuonLines(Hlt2LinesConfigurableUser) :
 
         from Stages import (SingleMuonFilter, DetachedSingleMuonFilter, SingleMuonHighPTFilter, SingleMuonRareFilter)
 
-        self._stages = {'SharedSingleMuon' : [SingleMuonFilter('SharedSingleMuon')],
+        self._stages = {
                         'SingleMuon'       : [DetachedSingleMuonFilter('SingleMuon')],
                         'HighPT'           : [SingleMuonHighPTFilter('HighPT')],
                         'VHighPT'          : [SingleMuonHighPTFilter('VHighPT')],

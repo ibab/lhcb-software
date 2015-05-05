@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-05-05 - Francesco Dettori
+ - Removing Hlt2SingleMuonSharedSingleMuon, present by mistake. 
+
 ! 2015-05-05 - Dan Johnson
  - CEP: Alter HLT1 dependence of CEP No/min bias lines following yesterday's
         PPTS discussion
