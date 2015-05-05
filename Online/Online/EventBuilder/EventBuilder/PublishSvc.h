@@ -10,7 +10,7 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IPublishSvc.h"
 #include <map>
-#include "dis.hxx"
+#include "dim/dis.hxx"
 
 namespace LHCb
 {
@@ -29,7 +29,8 @@ namespace LHCb
     IT_Int,
     IT_Long,
     IT_Double,
-    IT_String
+    IT_String,
+    IT_Float
   }IType;
   class PublishSvc : public Service, virtual public IPublishSvc
   {
@@ -62,6 +63,11 @@ namespace LHCb
           case IT_String:
           {
             m_srvc = new DimService(SrvName.c_str(),(char*)"");
+            break;
+          }
+          case IT_Float:
+          {
+            m_srvc = new DimService(SrvName.c_str(),*((float*)m_ptr));
             break;
           }
           case IT_Double:
@@ -116,6 +122,7 @@ namespace LHCb
       _DECL(int,IT_Int)
       _DECL(long,IT_Long)
       _DECL(double,IT_Double)
+      _DECL(float,IT_Float)
       _DECL(std::string,IT_String)
 
 
