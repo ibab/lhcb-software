@@ -4,6 +4,12 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2015-05-05 - Chris Jones
+ - Add a new test 'gaudipythonallocator' that tests the use of classes with
+   custom allocators via GaudiPython. Intended to catch situations such as the
+   recent removal of the placement operators in GaudiObjDesc that caused
+   problems with GaudiPython, that where only found after being released ...
+
 !========================= LHCbKernel v15r9 2015-04-20 =========================
 ! 2015-03-17 - Vanya Belyaev
  - move count_iterator form Phys/DaVinciTypes 
