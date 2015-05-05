@@ -4,6 +4,15 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-05 - Oliver Gruenberg
+- updated the following S21 lines with RelatedInfoTools for the coming MDST.DST rerun
+	- StrippingB23MuLines.py
+	- StrippingB24pLines.py
+	- StrippingBLVLines.py
+	- StrippingD23MuLines.py
+	- StrippingLc23MuLines.py
+- in StrippingB23MuLines.py the line B2DMu is taken out due to problems (segmentations fault)
+  during running on Full.dst test sample
 
 ! 2015-05-03 - Chitsanu Khurewathanakul
 - Minor fix default_config structure in StrippingLowMultINC
