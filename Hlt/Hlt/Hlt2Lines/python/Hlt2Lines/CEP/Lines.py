@@ -71,7 +71,7 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                                "Muon"       : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
                                                "Photon"     : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
                                                "Electron"   : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
-                                               "TechnicalNoBias"  : "HLT_PASS_RE('Hlt1CEPNonBeamBeamNoBiasDecision')"
+                                               "TechnicalNoBias"  : "HLT_PASS_RE('Hlt1NonBeamBeamNoBiasDecision')"
                                                }
                     , 'Common'    : {'H_PTmin'        :     100.0 * MeV,
                                      'H_Pmin'         :     5000.0 * MeV,
@@ -116,7 +116,7 @@ class CEPLines(Hlt2LinesConfigurableUser) :
                            HLT1 = self.getProp('HLT')[l0nick],
                            algos = algos) 
         # Add two additional technical lines
-        Hlt2Line("LowMultTechnical_NoBias", prescale = self.prescale,
+        Hlt2Line("NonBeamBeamNoBias", prescale = self.prescale,
                  HLT1 = self.getProp('HLT')["TechnicalNoBias"],
                  ODIN = self.getProp('Technical_ODIN')["ALL"],
                  L0DU = self.getProp('Technical_L0')["NoBias"])
