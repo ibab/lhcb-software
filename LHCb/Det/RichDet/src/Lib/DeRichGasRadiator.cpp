@@ -52,7 +52,7 @@ const CLID& DeRichGasRadiator::classID() { return CLID_DeRichGasRadiator; }
 //=========================================================================
 //  initialize
 //=========================================================================
-StatusCode DeRichGasRadiator::initialize ( )
+StatusCode DeRichGasRadiator::initialize()
 {
 
   MsgStream msg = msgStream( "DeRichGasRadiator" );
@@ -68,11 +68,14 @@ StatusCode DeRichGasRadiator::initialize ( )
   bool HltMode( true );
 
   // setup gas conditions
-  if ( hasCondition("GasParameters") && condition("GasParameters") )
+  const std::string offlineCondName = "GasParameters";
+  if ( hasCondition(offlineCondName) && condition(offlineCondName) )
   {
-    m_gasParametersCond = condition("GasParameters");
+    m_gasParametersCond = condition(offlineCondName);
     if ( msgLevel(MSG::DEBUG,msg) )
-      msg << MSG::DEBUG << "Using condition <GasParameters>" << endmsg;
+      msg << MSG::DEBUG << "Using 'Offline' condition <" << offlineCondName << ">" 
+          << " at " << m_gasParametersCond.path()
+          << endmsg;
     updMgrSvc()->registerCondition( this,
                                     m_gasParametersCond.path(),
                                     &DeRichGasRadiator::updateProperties );
@@ -98,12 +101,15 @@ StatusCode DeRichGasRadiator::initialize ( )
     }
   }
 
-  // hlt condition
-  if ( hasCondition("HltGasParameters") && condition("HltGasParameters") )
+  // Online hlt condition
+  const std::string onlineCondName = "HltGasParameters";
+  if ( hasCondition(onlineCondName) && condition(onlineCondName) )
   {
-    m_hltGasParametersCond = condition("HltGasParameters");
+    m_hltGasParametersCond = condition(onlineCondName);
     if ( msgLevel(MSG::DEBUG,msg) )
-      msg << MSG::DEBUG << "Found condition <HltGasParameters>" << endmsg;
+      msg << MSG::DEBUG << "Found 'Online' condition <" << onlineCondName << ">" 
+          << " at " << m_hltGasParametersCond.path()
+          << endmsg;
     foundGasConditions = true;
   }
   else  // use offline conditions for hlt
@@ -297,9 +303,9 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
     if ( numOfGases > gasNames.size() ||
          numOfGases > gasFractions.size() )
     {
-      error() << "# Gases(" << numOfGases 
-              << ") does NOT match GasNames(" << gasNames.size() 
-              << ")/GasFractions(" << gasFractions.size() << ") vector sizes" 
+      error() << "# Gases(" << numOfGases
+              << ") does NOT match GasNames(" << gasNames.size()
+              << ")/GasFractions(" << gasFractions.size() << ") vector sizes"
               << endmsg;
       return StatusCode::FAILURE;
     }
@@ -533,13 +539,13 @@ DeRichGasRadiator::generateHltRefIndex() const
 //=========================================================================
 //  updateHltProperties
 //=========================================================================
-StatusCode DeRichGasRadiator::updateHltProperties ( )
+StatusCode DeRichGasRadiator::updateHltProperties()
 {
 
   // load parameters
-  const double photonEnergyLowLimit     = param<double>("PhotonMinimumEnergy");
-  const double photonEnergyHighLimit    = param<double>("PhotonMaximumEnergy");
-  const unsigned int photonEnergyNumBins = param<int>("PhotonEnergyNumBins");
+  const double photonEnergyLowLimit      = param<double>("PhotonMinimumEnergy");
+  const double photonEnergyHighLimit     = param<double>("PhotonMaximumEnergy");
+  const unsigned int photonEnergyNumBins = param<int>   ("PhotonEnergyNumBins");
 
   if ( photonEnergyHighLimit < photonEnergyLowLimit )
   {
@@ -580,7 +586,8 @@ StatusCode DeRichGasRadiator::updateHltProperties ( )
 //=========================================================================
 //  setupOldGasConditions
 //=========================================================================
-StatusCode DeRichGasRadiator::setupOldGasConditions ( ) {
+StatusCode DeRichGasRadiator::setupOldGasConditions()
+{
 
   MsgStream msg = msgStream( "DeRichGasRadiator" );
 

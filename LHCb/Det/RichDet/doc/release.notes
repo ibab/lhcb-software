@@ -4,6 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2015-05-05 - Chris Jones
+ - Make the HLT refractive indices the default ones.
+
 !========================= RichDet v17r2 2015-02-23 =========================
 ! 2015-02-16 - Chris Jones
  - Use long int instead of just int in DeRichHPDPanel::findHPDColAndPos to 

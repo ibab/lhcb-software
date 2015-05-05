@@ -152,7 +152,7 @@ StatusCode DeRichRadiator::setRadiatorID()
   else
   {
 
-    if ( std::string::npos != name().find("Rich2") )
+    if      ( std::string::npos != name().find("Rich2") )
     {
       m_radiatorID = Rich::Rich2Gas;
       m_rich = Rich::Rich2;

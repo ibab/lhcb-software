@@ -96,7 +96,7 @@ public:
    * @return A pointer to the refractive index  interpolated function of the radiator
    * @retval NULL No interpolation function
    */
-  inline const Rich::TabulatedProperty1D* refIndex( bool hlt = false ) const
+  inline const Rich::TabulatedProperty1D* refIndex( bool hlt = true ) const
   {
     return ( hlt ? hltRefIndex() : checkRefIndex() );
   }
@@ -209,7 +209,7 @@ public:
    *  @return The refractive index at that energy
    */
   virtual double refractiveIndex( const double energy,
-                                  const bool hlt = false ) const = 0;
+                                  const bool hlt = true ) const = 0;
 
 protected:
 
