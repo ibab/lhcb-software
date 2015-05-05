@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2015-05-05 - Chris Jones
+ - Force the use of the HLT refractive index in TabulatedRefractiveIndex
+   to avoid tiny differences between the values used Online and Offline.
+
 !========================= RichTools v2r47 2015-04-20 =========================
 ! 2015-03-09 - Chris Jones
  - Make some tools shared instances, to avoid unnecessary duplicates when

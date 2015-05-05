@@ -123,6 +123,10 @@ namespace Rich
     /// Pointers to RICH radiator detector elements
     mutable std::vector<const DeRichRadiator*> m_radiators;
 
+    /** JO to force HLT mode. Used to make sure Offline uses the same
+     *  refractive index calibration as Online */
+    bool m_forceHltMode;
+
     /// Flag to say if we are in HLT mode or not
     bool m_hltMode;
 

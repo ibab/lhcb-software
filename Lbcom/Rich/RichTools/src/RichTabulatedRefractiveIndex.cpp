@@ -32,6 +32,8 @@ TabulatedRefractiveIndex ( const std::string& type,
 {
   // interface
   declareInterface<IRefractiveIndex>(this);
+  // JOs
+  declareProperty( "ForceHLTMode", m_forceHltMode = true );
 }
 
 StatusCode Rich::TabulatedRefractiveIndex::initialize()
@@ -48,7 +50,7 @@ StatusCode Rich::TabulatedRefractiveIndex::initialize()
   m_riches[Rich::Rich2] = getDet<DeRich2>( DeRichLocations::Rich2 );
 
   // HLT mode or not ?
-  m_hltMode = contextContains("HLT");
+  m_hltMode = ( m_forceHltMode || contextContains("HLT") );
 
   return sc;
 }
