@@ -248,7 +248,7 @@ class MooreOnline(LHCbConfigurableUser):
 
         ### TODO: see if 'OnlineEnv' has InitialTCK attibute. If so, set it
         ## in case of LHCb or FEST, _REQUIRE_ it exists...
-        if hasattr(OnlineEnv,'InitialTCK') :
+        if hasattr(OnlineEnv,'InitialTCK') and self.getProp('HltLevel') != "Hlt2":
             Moore().setProp('InitialTCK',OnlineEnv.InitialTCK)
             if not self._setIfNotSet('CheckOdin',True) :
                 print 'WARNING '*10

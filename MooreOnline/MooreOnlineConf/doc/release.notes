@@ -4,6 +4,9 @@
 ! Purpose     : Holding the master configurable which sets up Moore for the online
 !=================================================================================
 
+! 2015-05-05 - Roel Aaij
+ - Don't warn if CheckOdin if off when running only HLT2.
+
 !========================= MooreOnlineConf v1r7 2015-04-29 =========================
 
 ! 2015-04-28 - Roel Aaij
@@ -28,7 +31,7 @@
 !========================= MooreOnlineConf v1r3 2014-08-25 =========================
 
 ! 2014-06-30 - Eric van Herwijnen
- - Add a new slot 'HltLevel' to the configurable to avoid the dependency on the 
+ - Add a new slot 'HltLevel' to the configurable to avoid the dependency on the
  architecture name.
 
 !========================= MooreOnlineConf v1r2 2014-06-16 =========================
@@ -45,7 +48,7 @@
 !========================= MooreOnlineConf v1r1 2014-04-29 =========================
 
 ! 2014-04-28 - Gerhard Raven
- - forward RunChangeHandlerConditions 
+ - forward RunChangeHandlerConditions
 
 ! 2014-03-31 - Rob Lambert
  - Fix bug processing in the pit thanks to WriterRequires in MooreOnline
