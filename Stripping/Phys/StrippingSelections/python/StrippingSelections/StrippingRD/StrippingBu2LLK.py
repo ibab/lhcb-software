@@ -222,7 +222,7 @@ class Bu2LLKConf(LineBuilder) :
                                        RelatedInfoTools = config['RelatedInfoTools'],
                                        FILTER = SPDFilter, 
                                        RequiredRawEvents = [],
-                                       MDSTFlag = False)
+                                       MDSTFlag = True )
 
         self.B2eeXFromTracksLine = StrippingLine(eeXLine_name+"Line2",
                                                  prescale = config['Bu2eeKLinePrescale'],
@@ -231,7 +231,7 @@ class Bu2LLKConf(LineBuilder) :
                                                  RelatedInfoTools = config['RelatedInfoTools'],
                                                  FILTER = SPDFilter, 
                                                  RequiredRawEvents = [],
-                                                 MDSTFlag = False )
+                                                 MDSTFlag = True )
         
         self.B2mmXLine = StrippingLine(mmXLine_name+"Line",
                                        prescale = config['Bu2mmKLinePrescale'],
@@ -240,7 +240,7 @@ class Bu2LLKConf(LineBuilder) :
                                        RelatedInfoTools = config['RelatedInfoTools'],
                                        FILTER = SPDFilter, 
                                        RequiredRawEvents = [],
-                                       MDSTFlag = False)
+                                       MDSTFlag = True )
         
         self.B2meXLine = StrippingLine( meXLine_name+"Line",
                                         prescale       = config['Bu2meKLinePrescale'],
@@ -249,7 +249,7 @@ class Bu2LLKConf(LineBuilder) :
                                         RelatedInfoTools = config['RelatedInfoTools'],
                                         FILTER = SPDFilter, 
                                         RequiredRawEvents = [],
-                                        MDSTFlag = False)
+                                        MDSTFlag = True )
 
         self.B2gammaXLine = StrippingLine(eeXLine_name+"Line3",
                                           prescale = config['Bu2eeKLinePrescale'],
@@ -258,7 +258,7 @@ class Bu2LLKConf(LineBuilder) :
                                           RelatedInfoTools = config['RelatedInfoTools'],
                                           FILTER = SPDFilter, 
                                           RequiredRawEvents = [],
-                                          MDSTFlag = False )
+                                          MDSTFlag = True )
 
         # 5 : register Line
         self.registerLine( self.B2eeXLine )
