@@ -93,7 +93,7 @@ class Hlt1CEPLinesConf( HltLinesConfigurableUser ):
             algos     = self.streamer_veloCutsOnly('CEPVeloCut')
             )
         Hlt1Line(
-            'CEPNonBeamBeamNoBias',
+            'NonBeamBeamNoBias',
             ##
             prescale  = self.prescale,
             postscale = self.postscale,

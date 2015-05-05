@@ -4,6 +4,10 @@
 ! Responsible : Roel Aaij, Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+! 2015-05-05 - Dan Johnson
+  - Following yesterday's PPTS discussion on triggering non b-b events, add an HLT1 line to pass these through 
+    to HLT2. Need this to avoid nonification of the events triggered at L0 by lumi triggers
+  - Change NoBias line name to remove "CEP"
 
 ! 2015-05-04 - M. Kenzie
  - New line for alignment with D0s - Hlt1CalibTrackingKPiDetached (includes IP cuts)
