@@ -5,6 +5,10 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+! 2015-05-05 - Chris Jones
+ - Add back the previously removed placement operators, as it turns out these
+   are still required for GaudiPython...
+
 !========================= GaudiObjDesc v11r22 2015-04-20 =========================
 ! 2015-03-17 - Chris Jones
  - Update python modules to use logging module instead of plain print.

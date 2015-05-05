@@ -606,6 +606,18 @@ class genClasses(genSrcUtils.genSrcUtils):
                                         boost::details::pool::null_mutex, 128 >;
     pool::is_from(p) ? pool::free(p) : ::operator delete(p);
   }
+
+  /// placement operator new
+  static void* operator new ( size_t size, void* pObj )
+  {
+    return ::operator new ( size, pObj );
+  }
+
+  /// placement operator delete
+  static void operator delete ( void* p, void* pObj )
+  {
+    ::operator delete ( p, pObj );
+  }
 #endif""" % data
         self.include.append("GaudiKernel/boost_allocator.h")
         return s
@@ -632,6 +644,18 @@ class genClasses(genSrcUtils.genSrcUtils):
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p) :
     ::operator delete(p);
   }
+
+  /// placement operator new
+  static void* operator new ( size_t size, void* pObj )
+  {
+    return ::operator new ( size, pObj );
+  }
+
+  /// placement operator delete
+  static void operator delete ( void* p, void* pObj )
+  {
+    ::operator delete ( p, pObj );
+  }
 #endif""" % data
         self.include.append("GaudiKernel/boost_allocator.h")
         return s
@@ -655,6 +679,18 @@ class genClasses(genSrcUtils.genSrcUtils):
   static void operator delete ( void* p )
   {
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p);
+  }
+
+  /// placement operator new
+  static void* operator new ( size_t size, void* pObj )
+  {
+    return ::operator new ( size, pObj );
+  }
+
+  /// placement operator delete
+  static void operator delete ( void* p, void* pObj )
+  {
+    ::operator delete ( p, pObj );
   }
 #endif""" % data
         self.include.append("GaudiKernel/boost_allocator.h")
@@ -686,6 +722,18 @@ class genClasses(genSrcUtils.genSrcUtils):
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p) ?
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p) :
     ::operator delete(p);
+  }
+
+  /// placement operator new
+  static void* operator new ( size_t size, void* pObj )
+  {
+    return ::operator new ( size, pObj );
+  }
+
+  /// placement operator delete
+  static void operator delete ( void* p, void* pObj )
+  {
+    ::operator delete ( p, pObj );
   }
 #endif""" % data
         self.include.append("GaudiKernel/boost_allocator.h")
@@ -721,6 +769,18 @@ class genClasses(genSrcUtils.genSrcUtils):
   static bool release_pool ()
   {
     return boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::release_memory();
+  }
+
+  /// placement operator new
+  static void* operator new ( size_t size, void* pObj )
+  {
+    return ::operator new (size,pObj);
+  }
+
+  /// placement operator delete
+  static void operator delete ( void* p, void* pObj )
+  {
+    ::operator delete (p, pObj);
   }
 #endif""" % data
         self.include.append("GaudiKernel/boost_allocator.h")
