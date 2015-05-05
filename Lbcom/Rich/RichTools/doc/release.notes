@@ -6,7 +6,8 @@
 
 ! 2015-05-05 - Chris Jones
  - Force the use of the HLT refractive index in TabulatedRefractiveIndex
-   to avoid tiny differences between the values used Online and Offline.
+   and RichSnellsLawRefraction to avoid tiny differences between the values
+   used Online and Offline.
 
 !========================= RichTools v2r47 2015-04-20 =========================
 ! 2015-03-09 - Chris Jones

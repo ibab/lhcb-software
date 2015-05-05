@@ -36,6 +36,8 @@ DECLARE_TOOL_FACTORY( SnellsLawRefraction )
 {
   // interface
   declareInterface<ISnellsLawRefraction>(this);
+  // JOs
+  declareProperty( "ForceHLTMode", m_forceHltMode = true );
 }
 
 //=============================================================================
@@ -51,7 +53,7 @@ StatusCode SnellsLawRefraction::initialize()
   if ( sc.isFailure() ) return sc;
 
   // HLT mode or not ?
-  m_hltMode = contextContains("HLT");
+  m_hltMode = ( m_forceHltMode || contextContains("HLT") );
 
   // get tools
   acquireTool( "RichRefractiveIndex", m_refIndex );
@@ -280,7 +282,7 @@ void SnellsLawRefraction::gasToAerogel( Gaudi::XYZVector & dir,
 
       // get the average refractive indices for aerogel
       Warning( "Approximate Aerogel refractive index used. Will be wrong..." ).ignore();
-      const double refAero = deRad(Rich::Aerogel)->refractiveIndex( photonEnergy,m_hltMode );
+      const double refAero = deRad(Rich::Aerogel)->refractiveIndex( photonEnergy, m_hltMode );
 
       // do the correction
       _gasToAerogel( dir, photonEnergy, refAero );
