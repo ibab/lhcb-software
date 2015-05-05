@@ -18,6 +18,8 @@ class Hlt1CEPLinesConf( HltLinesConfigurableUser ):
         , 'TrChi2'     :     5.   # dimensionless, 
         , 'PT'         :   200.   # MeV
         , 'P'          :  1000.   # MeV 
+        , 'NoBiasTriggerType' : 'LumiTrigger' # dimensionless
+        , 'NoBiasBeamCrossingTypeVeto' : 'BeamCrossing' # dimensionless
         }
     
     def preambulo( self ):
@@ -89,4 +91,12 @@ class Hlt1CEPLinesConf( HltLinesConfigurableUser ):
             L0DU = "( L0_DATA('Spd(Mult)') < %(SpdMult)s )" % self.getProps(),   
             ##
             algos     = self.streamer_veloCutsOnly('CEPVeloCut')
+            )
+        Hlt1Line(
+            'CEPNonBeamBeamNoBias',
+            ##
+            prescale  = self.prescale,
+            postscale = self.postscale,
+            ODIN      = ('( (ODIN_TRGTYP == LHCb.ODIN.%(NoBiasTriggerType)s) ' % self.getProps()) +\
+                        ('& ~(ODIN_BXTYP == LHCb.ODIN.%(NoBiasBeamCrossingTypeVeto)s) )' % self.getProps())
             )
