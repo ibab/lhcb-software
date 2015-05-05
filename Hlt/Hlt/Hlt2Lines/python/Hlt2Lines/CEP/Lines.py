@@ -64,14 +64,14 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                  , 'Hlt2LowMultDiElectron'    : 1.0
                                  , 'Hlt2LowMultDiElectron_noTrFilt': 1.0
                                  # Technical lines
-                                 , 'Hlt2LowMultTechnical_NoBias'        : 0.003 # Aim for 1 Hz from 300 Hz non-bb crossings
-                                 , 'Hlt2LowMultTechnical_MinBias'       : 0.1
+                                 , 'Hlt2LowMultTechnical_NoBias'        : 0.33 # Aim for 100 Hz from 300 Hz non-bb crossings
+                                 , 'Hlt2LowMultTechnical_MinBias'       : 1.0
                                  }
                     , 'HLT'               :   {"Hadron"     : "HLT_PASS_RE('Hlt1CEPVeloCutDecision')",
                                                "Muon"       : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
                                                "Photon"     : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
                                                "Electron"   : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
-                                               "TechnicalNoBias"  : "HLT_PASS_RE('Hlt1LumiDecision')"
+                                               "TechnicalNoBias"  : "HLT_PASS_RE('Hlt1CEPNonBeamBeamNoBiasDecision')"
                                                }
                     , 'Common'    : {'H_PTmin'        :     100.0 * MeV,
                                      'H_Pmin'         :     5000.0 * MeV,
@@ -81,9 +81,9 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                               'Photon'  : ['Photon,lowMult','DiEM,lowMult'],
                                               'Electron': ['Electron,lowMult','DiEM,lowMult']
                                              }
-                    , 'Technical_L0'  : {"NoBias"          : "(L0_DATA('Spd(Mult)') < 100)" ,
+                    , 'Technical_L0'  : {"NoBias"          : "" ,
                                          "MinBias"         : "(L0_DATA('Spd(Mult)') < 100) & ( (L0_DATA('Spd(Mult)') > 2) | (L0_DATA('Electron(Et)') > 5) | (L0_DATA('Photon(Et)') > 5) | (L0_DATA('Hadron(Et)') > 10) )"}
-                    , 'Technical_ODIN': {"ALL"             : "(~(ODIN_BXTYP == LHCb.ODIN.BeamCrossing))" }
+                    , 'Technical_ODIN': {"ALL"             : "" }
 } 
 theseSlots.update(_CEPHadronLines.localcuts())
 theseSlots.update(_CEPMuonLines.localcuts())
@@ -115,7 +115,7 @@ class CEPLines(Hlt2LinesConfigurableUser) :
                            L0DU = self.__l0du(l0nick),
                            HLT1 = self.getProp('HLT')[l0nick],
                            algos = algos) 
-        # Add three additional technical lines
+        # Add two additional technical lines
         Hlt2Line("LowMultTechnical_NoBias", prescale = self.prescale,
                  HLT1 = self.getProp('HLT')["TechnicalNoBias"],
                  ODIN = self.getProp('Technical_ODIN')["ALL"],

@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-05-05 - Dan Johnson
+ - CEP: Alter HLT1 dependence of CEP No/min bias lines following yesterday's
+        PPTS discussion
+
 ! 2015-05-04 - Roel Aaij
  - Use new HLT2 filter in Comminssioning lines.
 
