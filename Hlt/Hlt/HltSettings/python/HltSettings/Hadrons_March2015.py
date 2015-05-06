@@ -19,10 +19,10 @@ class Hadrons_March2015 :
         lines = [
             # XGamma
             'Hlt2Bs2PhiGamma',
-            'Hlt2Bs2PhiGammaWideBMass',
+            #'Hlt2Bs2PhiGammaWideBMass',
             'Hlt2Bd2KstGamma',
-            'Hlt2Bd2KstGammaWideBMass',
-            'Hlt2Bd2KstGammaWideKMass',
+            #'Hlt2Bd2KstGammaWideBMass',
+            #'Hlt2Bd2KstGammaWideKMass',
             # B2HH
             'Hlt2B2HH',
             # DiProtons
