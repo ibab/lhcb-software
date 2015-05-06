@@ -292,7 +292,7 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                 'BPVLTIME_MIN'             :  0.1 * ps,
                                 'Mass_M_MIN'               :  1790 * MeV,
                                 'Mass_M_MAX'               :  1940 * MeV,
-                                'TisTosSpec'               :  "Hlt1(Two)?TrackMVADecision%TOS"},
+                                'TisTosSpec'               :  "Hlt1.*Track.*Decision%TOS"},
                  'D02KPiPiPiTag' : {
                                 'TagVCHI2PDOF_MAX'         :  15.0,
                                 'DeltaM_AM_MIN'            :  0.0,
