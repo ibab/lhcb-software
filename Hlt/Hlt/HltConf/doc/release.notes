@@ -3,6 +3,14 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
+
+- 2015-05-06 - V. Gligorov
+ - Configuration.py : change RB 49 which currently duplicates RB 35 for
+                      BeamGas to 'Hlt1.*MVA.*Decision'
+ - Configuration.py : change RB 53 to only use the ``detached'' KPi 
+                      CalibTracking line
+ - Configuration.py : add RB 60 for Hlt1TrackAllL0Decision
+
 ! 2015-05-05 - Dan Johnson
  - Add ID for Hlt1CEPNonBeamBeamNoBiasDecision line
  - Change name of NoBias line to Hlt1NonBeamBeamNoBias
