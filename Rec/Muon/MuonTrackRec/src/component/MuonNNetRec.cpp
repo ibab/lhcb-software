@@ -234,13 +234,13 @@ StatusCode MuonNNetRec::muonNNetMon(){
   int ncomb=0, nFiringS=0;
   int minFiringS=99;
   int maxFiringS=-99;
-  for (unsigned int i=0; i<5 ;i++) {
+  for (int i=0; i<5 ;i++) {
     if (hit_per_station[i] > 0) {
       nFiringS++;
       if (minFiringS == 99) minFiringS=i;
       maxFiringS=i;
     }
-    for (unsigned int j=i+1; j<5 && j<(i+3) ;j++) {
+    for (int j=i+1; j<5 && j<(i+3) ;j++) {
       if(i!= m_skipStation) //stefania
       ncomb +=  hit_per_station[i]*hit_per_station[j];
     }
