@@ -148,13 +148,17 @@ def _createScaler( name, arg ) :
         else :
                 return Scaler(name , AcceptFraction = arg )
 
-## the list of all created lines
+## all created and requested lines
 _hlt_1_lines__ = set()
 _hlt_2_lines__ = set()
 
 ## the list of all requested lines
 _req_hlt_1_lines__ = set()
 _req_hlt_2_lines__ = set()
+
+## all created and requested lines
+_run_hlt_1_lines__ = set()
+_run_hlt_2_lines__ = set()
 
 def _ordered_lines( lines ) :
     from collections import defaultdict
@@ -174,29 +178,26 @@ def _ordered_lines( lines ) :
 #  @date   2008-08-06
 def hlt1Lines () :
     """
-    Simple function which returns the (list) of all currently created Hlt1Lines
-
-    >>> lines = hlt1Lines()
-    >>> print lines
-    >>> for line in lines : print line
-
+    Function that returns all currently created AND requested HLT1 lines
     """
-    return _ordered_lines(_hlt_1_lines__)
+    return _ordered_lines(_run_hlt_1_lines__)
+
+def allHlt1Lines () :
+    """
+    Function that returns all currently created HLT1 lines
+    """
+    return _hlt_1_lines__
 
 def setRequestedHlt1Lines ( lines ) :
-
     """
-    Simple function which defines the (list) of requested Hlt1Lines
-
+    Function that sets the names of requested HLT1 lines.
     """
     global _req_hlt_1_lines__
     _req_hlt_1_lines__ = lines
 
 def isRequestedHlt1Line ( line ) :
-
     """
-    Simple function which defines the (list) of names of requested Hlt1Lines
-
+    Function that checks if an HLT1 lines was requested to be run.
     """
     return line in _req_hlt_1_lines__ or not _req_hlt_1_lines__
 
@@ -206,28 +207,27 @@ def isRequestedHlt1Line ( line ) :
 #  @date   2009-03-27
 def hlt2Lines () :
     """
-    Simple function which returns the (list) of all currently created Hlt2Lines
-
-    >>> lines = hl21Lines()
-    >>> print lines
-    >>> for line in lines : print line
-
+    Simple function which returns the (list) of all requested AND created Hlt2Lines
     """
-    return _ordered_lines(_hlt_2_lines__)
+    return _ordered_lines(_run_hlt_2_lines__)
+
+def allHlt2Lines () :
+    """
+    Function that returns all currently created HLT1 lines
+    """
+    return _hlt_2_lines__
 
 def setRequestedHlt2Lines ( lines ) :
-
     """
-    Simple function which defines the (list) of requested Hlt1Lines
+    Function that sets the names of requested HLT2 lines.
 
     """
     global _req_hlt_2_lines__
     _req_hlt_2_lines__ = lines
 
 def isRequestedHlt2Line ( line ) :
-
     """
-    Simple function which defines the (list) of names of requested Hlt1Lines
+    Function that checks if an HLT2 lines has been requested.
 
     """
     return line in _req_hlt_2_lines__ or not _req_hlt_2_lines__
@@ -347,22 +347,6 @@ def hlt2Selections() :
     Get the dictionary of all Hlt2 selections, only decision
     """
     return {'All' : hlt2Decisions()}
-
-# =============================================================================
-## Add the created line into the local storage of created Hlt1Lines
-def _add_to_hlt1_lines_( line ) :
-    """
-    Add the line into the local storage of created Hlt1Lines
-    """
-    _hlt_1_lines__.add ( line )
-
-# =============================================================================
-## Add the created line into the local storage of created Hlt2Lines
-def _add_to_hlt2_lines_( line ) :
-    """
-    Add the line into the local storage of created Hlt2Lines
-    """
-    _hlt_2_lines__.add ( line )
 
 # =============================================================================
 ## the list of possible Hlt1Members types of an Hlt1Line
@@ -1089,6 +1073,7 @@ class Hlt1Line(object):
         self._decision = decisionName ( line )
 
         # only instantiate the line if so requested
+        _hlt_1_lines__.add( self )
         if isRequestedHlt1Line( self.name() ) :
 
             self._configurable = Line ( self.name() , **__mdict )
@@ -1096,8 +1081,8 @@ class Hlt1Line(object):
             # fix numbering scheme of line members
             #self._index = computeIndices( self._configurable )
 
-            # register into the local storage of all created Lines
-            _add_to_hlt1_lines_( self )
+            # register into the local storage of all created AND requested lines
+            _run_hlt_1_lines__.add( self )
         else :
             log.debug( 'skipping instantiation of ', self.name() )
 
@@ -1683,6 +1668,7 @@ class Hlt2Line(object):
 
         # TODO: can we avoid instantiating a line until we know it will actually be run???
         # only instantiate the line if so requested
+        _hlt_2_lines__.add(self)
         if isRequestedHlt2Line( self.name() ) :
             self._configurable = Line ( self.name() , **__mdict )
 
@@ -1692,8 +1678,8 @@ class Hlt2Line(object):
             # put upper limit on combinatorics
             limitCombinatorics( self._configurable, maxCandidates = 2000  )
 
-            # register into the local storage of all created Lines
-            _add_to_hlt2_lines_( self )
+            # register into the local storage of all created AND requested lines
+            _run_hlt_2_lines__.add( self )
         else :
             log.debug( 'skipping instantiation of ', self.name() )
 
