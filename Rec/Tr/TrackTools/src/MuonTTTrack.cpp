@@ -37,6 +37,7 @@ MuonTTTrack::MuonTTTrack( const std::string& name,
   declareProperty( "FillMuonStubInfo",    m_fillMuonStubInfo  = false                     );
   declareProperty( "Output",              m_outputLoc         = "Rec/"+name+"/Tracks"     );
   declareProperty( "MinNTTHits",          m_minNumberTTHits   = 2                         );
+  declareProperty( "PVLocation",          m_pvLoc             = LHCb::RecVertexLocation::Primary          );
 }
 //=============================================================================
 // Destructor
@@ -243,7 +244,7 @@ StatusCode MuonTTTrack::fillPVs(std::vector<double>& PVPos){
 
   double zPVmax = 500;
 
-  LHCb::RecVertices* PVs = getIfExists<LHCb::RecVertices>(LHCb::RecVertexLocation::Primary);
+  LHCb::RecVertices* PVs = getIfExists<LHCb::RecVertices>(m_pvLoc);
   if( NULL == PVs ) return StatusCode::FAILURE;
 
   // -- Set the PV position (if existing)

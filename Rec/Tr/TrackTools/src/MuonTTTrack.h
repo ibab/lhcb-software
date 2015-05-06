@@ -66,6 +66,7 @@ private:
 
   // -- Variables
   std::string m_outputLoc;
+  std::string m_pvLoc;
   std::string m_extrapolatorName;
   bool m_MC;
   bool m_addTTHits;

@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-05-05 - Michael Kolpin
+ - Added PVLocation configurable to MuonTTTrack 
+
 ! 2015-04-29 - Michael Kolpin
  - Fix to MuonTTTrack to only write out successfully fitted tracks
 
