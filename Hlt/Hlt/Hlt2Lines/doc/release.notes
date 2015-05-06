@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-05-06 - Simone Stracka
+ - CharmHad: removed empty D2EtaHLines file 
+
 ! 2015-05-06 - Vladimir Gligorov
  - CharmHad : adjust cuts in lifetime unbiased D->HHH lines
  - CharmHad : Add PIDK cut for pion in D->HH shared pions, 
