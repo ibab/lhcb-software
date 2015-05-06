@@ -293,14 +293,17 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
         from HltLine.HltLine    import bindMembers
         from Configurables      import HltRecoConf
         from HltRecoConf import CommonForwardTrackingOptions, MuonTTOptions
+        from HltTracking.HltPVs import PV3D
         #        from Hlt1Lines.HltConfigurePR import ConfiguredPR
     
+        pvreco = PV3D('Hlt2')
         Hlt2MuonTTTrack = MuonTTTrack("Hlt2MuonTTTrack")
         Hlt2MuonTTTrack.AddTTHits = True
         Hlt2MuonTTTrack.FillMuonStubInfo = False
         Hlt2MuonTTTrack.ToolName = "MuonCombRec"
         Hlt2MuonTTTrack.OutputLevel = 6 
         Hlt2MuonTTTrack.MC = False
+        Hlt2MuonTTTrack.PVLocation = pvreco.output
         Hlt2MuonTTTrack.addTool( MuonCombRec )
         Hlt2MuonTTTrack.MuonCombRec.ClusterTool       = "MuonFakeClustering"
         Hlt2MuonTTTrack.MuonCombRec.CloneKiller       = False
@@ -329,7 +332,7 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
         
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"MuonTTTracking"
-        bm_members      = [Hlt2MuonTTTrack]
+        bm_members      = [pvreco, Hlt2MuonTTTrack]
         bm_output       = Hlt2MuonTTTrack.Output
 
         return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)

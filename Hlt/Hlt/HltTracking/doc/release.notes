@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-05-06 - Michael Kolpin
+ - Changed MuonTTTrack reconstruction in Hlt2ProbeTracking to pick up the correct PV location
+
 ! 2015-04-30 - Sascha Stahl
  - Changed PVSeedingTool to the default (PVSeed3DTool) and set ResolverBound value to
    the default 5 mm.
