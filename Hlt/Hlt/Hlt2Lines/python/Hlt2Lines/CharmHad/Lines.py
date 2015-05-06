@@ -32,8 +32,15 @@ Dst2PiD02HHXBDTLines = CharmHadDst2PiD02HHXBDTLines()
 HyperonLines = ChargedHyperonLines()
 
 
-theseslots = {   'Prescale' : {}, 
-                 'TrackGEC' : {'NTRACK_MAX'           : 10000},
+theseslots = {   'Postscale' : {'Hlt2CharmHadD02KK'            : 0.1,
+                                'Hlt2CharmHadD02KPi'           : 0.1,
+                                'Hlt2CharmHadD02PiPi'          : 0.1,
+                                'Hlt2CharmHadD2KPiPi_SS_LTUNB' : 0.05,
+                                'Hlt2CharmHadD2KKPi_OS_LTUNB'  : 0.05,
+                                'Hlt2CharmHadLc2KPPi_LTUNB'    : 0.05,
+                                'Hlt2CharmHadXic02PKKPi_LTUNB' : 0.05,
+                                'Hlt2CharmHadDpm2KPiPi_ForKPiAsym' : 0.25  }, 
+                 'TrackGEC' : { 'NTRACK_MAX'           : 10000},
                  'Common' : {'TisTosSpec'               : "Hlt1.*Track.*Decision%TOS",
                              'Trk_ALL_TRCHI2DOF_MAX'    :  3.0,    
                              'Trk_ALL_P_MIN'            :  1000 * MeV,
@@ -66,12 +73,13 @@ theseslots = {   'Prescale' : {},
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                               },
                  'CharmHadSharedDetachedD0ToHHChildPi' : {
-                                 'Trk_ALL_PT_MIN'           :  800.0 * MeV
+                                   'PID_LIM'                  :  5.0
+                                 , 'Trk_ALL_PT_MIN'           :  800.0 * MeV
                                  , 'Trk_ALL_P_MIN'            :  5.0  * GeV
                                  , 'Trk_ALL_MIPCHI2DV_MIN'    :  2.0
                                               },
                  'CharmHadSharedDetachedD0ToHHChildK'  : {
-                                   'PID_LIM'                  :  0.0
+                                   'PID_LIM'                  :  5.0
                                  , 'Trk_ALL_PT_MIN'           :  800.0 * MeV
                                  , 'Trk_ALL_P_MIN'            :  5.0  * GeV
                                  , 'Trk_ALL_MIPCHI2DV_MIN'    :  2.0

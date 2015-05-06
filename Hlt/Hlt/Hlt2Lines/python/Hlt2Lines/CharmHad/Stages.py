@@ -143,7 +143,7 @@ SharedNoPIDDetachedChild_K = DetachedInParticleFilter( 'CharmHadSharedNoPIDDetac
 SharedNoPIDDetachedChild_p = DetachedInParticleFilter( 'CharmHadSharedNoPIDDetachedChild_p', [Hlt2NoPIDsProtons] )
 
 ## For detached D0 -> hh lines.  PID cuts not yet implemented.
-CharmHadSharedDetachedD0ToHHChildPi = DetachedInParticleFilter( 'CharmHadSharedDetachedD0ToHHChildPi', [Hlt2NoPIDsPions] )
+CharmHadSharedDetachedD0ToHHChildPi = DetachedInParticleFilter( 'CharmHadSharedDetachedD0ToHHChildPi', [Hlt2NoPIDsPions], 'PIDK', True )
 CharmHadSharedDetachedD0ToHHChildK  = DetachedInParticleFilter( 'CharmHadSharedDetachedD0ToHHChildK', [Hlt2LooseKaons], 'PIDK' )
 
 

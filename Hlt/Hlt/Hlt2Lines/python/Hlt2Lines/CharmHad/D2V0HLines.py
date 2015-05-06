@@ -6,11 +6,11 @@ class CharmHadD2V0HLines():
         return {
                  # Now the combiner for the CPV lines, separate for LL and DD
                  'D2V0H' : {
-                                 'Trk_ALL_MIPCHI2DV_MIN'    :  16.0,
-                                 'BPVVDCHI2_MIN'            :  20.0,
-                                 'BPVLTIME_MIN'             :  0.2 * picosecond,
-                                 'BPVDIRA_MIN'              :  0.9994,
-                                 'ASUMPT_MIN'               :  1500 * MeV,
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  36.0,
+                                 'BPVVDCHI2_MIN'            :  30.0,
+                                 'BPVLTIME_MIN'             :  0.25 * picosecond,
+                                 'BPVDIRA_MIN'              :  0.99985,
+                                 'ASUMPT_MIN'               :  2000 * MeV,
                                  'AM_MIN'                   :  1779 * MeV,
                                  'AM_MAX'                   :  2059 * MeV,
                                  'Mass_M_MIN'               :  1789.0 * MeV,
@@ -18,10 +18,10 @@ class CharmHadD2V0HLines():
                                 },
                  'Lc2V0H'    : {
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  16.0,
-                                 'BPVVDCHI2_MIN'            :  10.0,
-                                 'BPVLTIME_MIN'             :  0.1 * picosecond,
-                                 'BPVDIRA_MIN'              :  0.9994,
-                                 'ASUMPT_MIN'               :  1500 * MeV,
+                                 'BPVVDCHI2_MIN'            :  20.0,
+                                 'BPVLTIME_MIN'             :  0.15 * picosecond,
+                                 'BPVDIRA_MIN'              :  0.99985,
+                                 'ASUMPT_MIN'               :  2000 * MeV,
                                  'AM_MIN'                   :  2201 * MeV,
                                  'AM_MAX'                   :  2371 * MeV,
                                  'Mass_M_MIN'               :  2211.0 * MeV,

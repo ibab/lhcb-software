@@ -8,6 +8,14 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-05-06 - Vladimir Gligorov
+ - CharmHad : adjust cuts in lifetime unbiased D->HHH lines
+ - CharmHad : Add PIDK cut for pion in D->HH shared pions, 
+              and tighten IPCHI2 cut for detached D->HH lines
+ - CharmHad : Tighten cuts on bachelor in D->V0H lines
+ - CharmHad : Add sensible default postscales for some lifetime
+              unbiased lines in Lines.py
+
 ! 2015-05-06 - Olli Lupton
  - PID:
   . Remove non-Turbo copies of lines.

@@ -35,7 +35,7 @@ class CharmHadD02HHLines : # {
                         ## These should be removed to input particle filtering
                         , 'Trk_ALL_PT_MIN'           : 800.0 * MeV
                         , 'Trk_ALL_P_MIN'            : 5.0  * GeV
-                        , 'Trk_ALL_MIPCHI2DV_MIN'    : 2.0
+                        , 'Trk_ALL_MIPCHI2DV_MIN'    : 4.0
                     }
                 }
 
@@ -52,17 +52,17 @@ class CharmHadD02HHLines : # {
         # HLT1 lifetime unbiased lines
         self.slotDict['D02HH_LTUNB'] = {
                                         'TisTosSpec'               : "Hlt1CalibTracking.*Decision%TOS",
-                                        'Trk_ALL_PT_MIN'           :  500 * MeV,
-                                        'Trk_Max_APT_MIN'          :  800 * MeV,
+                                        'Trk_ALL_PT_MIN'           :  800 * MeV,
+                                        'Trk_Max_APT_MIN'          :  1200 * MeV,
                                         'D0_VCHI2PDOF_MAX'         :  10.0,
-                                        'D0_BPVLTIME_MIN'          :  0.2 * picosecond,
-                                        'D0_BPVDIRA_MIN'           :  0.9,
+                                        'D0_BPVLTIME_MIN'          :  0.25 * picosecond,
+                                        'D0_BPVDIRA_MIN'           :  0.99,
                                         'Pair_AMINDOCA_MAX'        :  0.1 * mm,
-                                        'D0_PT_MIN'                :  1000 * MeV,
+                                        'D0_PT_MIN'                :  2000 * MeV,
                                         'AM_MIN'                   :  1774 * MeV,
                                         'AM_MAX'                   :  1954 * MeV,
-                                        'Mass_M_MIN'               :  1784.0 * MeV,
-                                        'Mass_M_MAX'               :  1944.0 * MeV,
+                                        'Mass_M_MIN'               :  1804.0 * MeV,
+                                        'Mass_M_MAX'               :  1924.0 * MeV,
                                         }
 
         self.__stages = { }

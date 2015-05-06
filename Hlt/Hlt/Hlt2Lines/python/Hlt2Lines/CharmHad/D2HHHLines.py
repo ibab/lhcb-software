@@ -39,14 +39,14 @@ class CharmHadD2HHHLines() :
                  # For the Lc lines, despite the name, the mass window is
                  # wide enough to catch the Xi_c as well.
                  'Lc2HHH'    : {
-                                 'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
-                                 'Trk_2OF3_MIPCHI2DV_MIN'   :  8.0,
-                                 'Trk_1OF3_MIPCHI2DV_MIN'   :  12.0,
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  6.0,
+                                 'Trk_2OF3_MIPCHI2DV_MIN'   :  9.0,
+                                 'Trk_1OF3_MIPCHI2DV_MIN'   :  16.0,
                                  'Trk_ALL_PT_MIN'           :  200.0 * MeV,
                                  'Trk_2OF3_PT_MIN'          :  400.0 * MeV,
                                  'Trk_1OF3_PT_MIN'          :  1000.0 * MeV,
-                                 'BPVVDCHI2_MIN'            :  10.0,
-                                 'BPVLTIME_MIN'             :  0.1 * picosecond,
+                                 'BPVVDCHI2_MIN'            :  25.0,
+                                 'BPVLTIME_MIN'             :  0.15 * picosecond,
                                  'BPVDIRA_MIN'              :  0.99995,
                                  'ASUMPT_MIN'               :  3000 * MeV,
                                  'AM_MIN'                   :  2201 * MeV,
@@ -78,9 +78,9 @@ class CharmHadD2HHHLines() :
                  # Wide mass window accomodates the Xi_c+ 
                  'Lc2HHH_LTUNB'    : {
                                  'TisTosSpec'               : "Hlt1Track.*Decision%TIS",
-                                 'BPVLTIME_MIN'             :  0.1 * picosecond,
-                                 'BPVDIRA_MIN'              :  0.9,
-                                 'ASUMPT_MIN'               :  3000. * MeV,
+                                 'BPVLTIME_MIN'             :  0.15 * picosecond,
+                                 'BPVDIRA_MIN'              :  0.95,
+                                 'ASUMPT_MIN'               :  5000. * MeV,
                                  'AM_MIN'                   :  2201. * MeV,
                                  'AM_MAX'                   :  2553. * MeV,
                                  'Mass_M_MIN'               :  2211.0 * MeV,
