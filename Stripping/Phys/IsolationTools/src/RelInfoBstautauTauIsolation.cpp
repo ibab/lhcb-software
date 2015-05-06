@@ -121,12 +121,12 @@ StatusCode RelInfoBstautauTauIsolation::calculateRelatedInfo( const LHCb::Partic
 {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "Calculating TauIso extra info" << endmsg;
-  m_bdt1 = 0.0 ;
-  m_bdt2 = 0.0 ;
-  m_bdt1_TauP = 0.0 ;
-  m_bdt2_TauP = 0.0 ;
-  m_bdt1_TauM = 0.0 ;
-  m_bdt2_TauM = 0.0 ;
+  m_bdt1 = -10000.0 ;
+  m_bdt2 = -10000.0 ;
+  m_bdt1_TauP = -10000.0 ;
+  m_bdt2_TauP = -10000.0 ;
+  m_bdt1_TauM = -10000.0 ;
+  m_bdt2_TauM = -10000.0 ;
 
 
 

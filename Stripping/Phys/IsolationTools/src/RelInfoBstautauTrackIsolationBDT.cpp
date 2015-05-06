@@ -117,27 +117,27 @@ StatusCode RelInfoBstautauTrackIsolationBDT::calculateRelatedInfo( const LHCb::P
 {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "Calculating TrackIso extra info" << endmsg;
-  m_bdt1 = -1 ;
-  m_bdt2 = -1 ;
-  m_bdt3 = -1 ;
-  m_bdt1_TauP_piM = -1.0;
-  m_bdt2_TauP_piM = -1.0;
-  m_bdt3_TauP_piM = -1.0;
-  m_bdt1_TauP_piP1 = -1.0;
-  m_bdt2_TauP_piP1 = -1.0;
-  m_bdt3_TauP_piP1 = -1.0;
-  m_bdt1_TauP_piP2 = -1.0;
-  m_bdt2_TauP_piP2 = -1.0;
-  m_bdt3_TauP_piP2 = -1.0;
-  m_bdt1_TauM_piP = -1.0;
-  m_bdt2_TauM_piP = -1.0;
-  m_bdt3_TauM_piP = -1.0;
-  m_bdt1_TauM_piM1 = -1.0;
-  m_bdt2_TauM_piM1 = -1.0;
-  m_bdt3_TauM_piM1 = -1.0;
-  m_bdt1_TauM_piM2 = -1.0;
-  m_bdt2_TauM_piM2 = -1.0;
-  m_bdt3_TauM_piM2 = -1.0;
+  m_bdt1 = -1000 ;
+  m_bdt2 = -1000 ;
+  m_bdt3 = -1000 ;
+  m_bdt1_TauP_piM = -1000.0;
+  m_bdt2_TauP_piM = -1000.0;
+  m_bdt3_TauP_piM = -1000.0;
+  m_bdt1_TauP_piP1 = -1000.0;
+  m_bdt2_TauP_piP1 = -1000.0;
+  m_bdt3_TauP_piP1 = -1000.0;
+  m_bdt1_TauP_piP2 = -1000.0;
+  m_bdt2_TauP_piP2 = -1000.0;
+  m_bdt3_TauP_piP2 = -1000.0;
+  m_bdt1_TauM_piP = -1000.0;
+  m_bdt2_TauM_piP = -1000.0;
+  m_bdt3_TauM_piP = -1000.0;
+  m_bdt1_TauM_piM1 = -1000.0;
+  m_bdt2_TauM_piM1 = -1000.0;
+  m_bdt3_TauM_piM1 = -1000.0;
+  m_bdt1_TauM_piM2 = -1000.0;
+  m_bdt2_TauM_piM2 = -1000.0;
+  m_bdt3_TauM_piM2 = -1000.0;
   
                       
  if ( top->isBasicParticle() || top!=top_bis)
@@ -185,192 +185,161 @@ StatusCode RelInfoBstautauTrackIsolationBDT::calculateRelatedInfo( const LHCb::P
     else{
       LHCb::Particle::ConstVector Daughters_2 = m_descend->descendants(Part);
       if ( msgLevel(MSG::VERBOSE) ) verbose() << "number of PID "<<Part->particleID().pid()<<"'s daughters : "<<Daughters_2.size()<<endmsg;//
-//qui vanno messi  vari flag sul SS dei tau
-
-               bool P_charge = true;
-        	bool flag_OS = true;
-	        bool flag_tau_mu = false;
-	        for (SmartRefVector< LHCb::Particle >::const_iterator idaug2 = daughters.begin(); idaug2 != daughters.end() ; idaug2++){
-	        const LHCb::Particle* Part2 = *idaug2;
-		if (idaug2 != idau ){
-	        if((Part->charge())*(Part2->charge())>0) flag_OS=false;
-	        if((Part2->p())>(Part->p())) P_charge = false; 
-		if((Part->isBasicParticle())||(Part2->isBasicParticle())) flag_tau_mu=true;
-	        }
-	        }
-
-
-
-
-
-
+      //qui vanno messi  vari flag sul SS dei tau
+      
+      bool P_charge = true;
+      bool flag_OS = true;
+      bool flag_tau_mu = false;
+      for (SmartRefVector< LHCb::Particle >::const_iterator idaug2 = daughters.begin(); idaug2 != daughters.end() ; idaug2++){
+        const LHCb::Particle* Part2 = *idaug2;
+        if (idaug2 != idau ){
+          if((Part->charge())*(Part2->charge())>0) flag_OS=false;
+          if((Part2->p())>(Part->p())) P_charge = false; 
+          if((Part->isBasicParticle())||(Part2->isBasicParticle())) flag_tau_mu=true;
+        }
+      }
+      
+      
+      
       LHCb::Particle::ConstVector::const_iterator i_daug;
-//Int_t flag2(0);
+      //Int_t flag2(0);
       for(i_daug = Daughters_2.begin(); i_daug!=Daughters_2.end();++i_daug){
-          const LHCb::Particle* part = *i_daug;
-          if(! part ) {
-            if ( msgLevel(MSG::WARNING) ) Warning(  "The particle in question is not valid" );
-            return StatusCode::FAILURE;
+        const LHCb::Particle* part = *i_daug;
+        if(!part ) {
+          if ( msgLevel(MSG::WARNING) ) Warning(  "The particle in question is not valid" );
+          return StatusCode::FAILURE;
+        }
+        
+        
+        const LHCb::VertexBase *SV = Part->endVertex();
+        
+        if ( msgLevel(MSG::VERBOSE) ) verbose() << "Filling variables with particle " << part << endmsg;
+        calcBDTValue( part, tracks, PV, SV ) ;
+        if ( msgLevel(MSG::DEBUG) ) debug() << m_bdt1 << '\t'  << m_bdt2 << '\t' << m_bdt3 << endmsg ;
+        
+        if ( msgLevel(MSG::DEBUG) ) debug()  << "after \"calcBDTValue\" "  << endmsg ;
+        
+        // const LHCb::Particle* part2 = NULL;
+        const LHCb::Particle* part_2;
+        LHCb::Particle::ConstVector::const_iterator i_daug_2;
+        bool flag_p=true;
+        bool flag_p_max=true;
+        bool flag_p_min=true;
+        if(Part->charge()==1||Part->charge()==-1){
+          for(i_daug_2=Daughters_2.begin(); i_daug_2!=Daughters_2.end();++i_daug_2 ){//
+            part_2 = *(i_daug_2);
+            if((i_daug_2!=i_daug)&&(part_2->charge()== part->charge())&&(part->p()<part_2->p())) flag_p=false;// part2= *(i_daug_2);//
           }
-          else{
-            const LHCb::Particle* mother = NULL;
-            // -- Fill all the daugthers in m_decayParticles
-            for( SmartRefVector< LHCb::Particle >::const_iterator idau = daughters.begin() ; idau != daughters.end() ; ++idau){//
-              const SmartRefVector< LHCb::Particle > & daughters2 = (*idau)->daughters();//
-              // -- Fill all the daugthers in m_decayParticles
-              for( SmartRefVector< LHCb::Particle >::const_iterator idau2 = daughters2.begin() ; idau2 != daughters2.end() ; ++idau2){//
-                const LHCb::ProtoParticle* proto = (*idau2)->proto();
-                if(proto){
-                  const LHCb::Track* myTrack = proto->track();
-                  if(myTrack){
-                    if(myTrack == part->proto()->track()) mother=(*idau);
-                  }
-                }
+        }else if (Part->charge()==3||Part->charge()==-3){
+          for(i_daug_2=Daughters_2.begin(); i_daug_2!=Daughters_2.end()  ;i_daug_2++ ){//
+            part_2 = *(i_daug_2);
+            if(i_daug_2!=i_daug){
+              flag_p_max=flag_p_max&&(part->p()>part_2->p());
+              flag_p_min=flag_p_min&&(part->p()<=part_2->p());
+            }
+          }
+        }
+        if(flag_OS==true||flag_tau_mu==true){
+          if(Part->charge()==1||Part->charge()==-1){
+            if(Part->charge()==1){
+              if(part->charge()<0){
+                m_bdt1_TauP_piM=m_bdt1;
+                m_bdt2_TauP_piM=m_bdt2;
+                m_bdt3_TauP_piM=m_bdt3;
+              }else if(flag_p){
+                m_bdt1_TauP_piP1=m_bdt1;
+                m_bdt2_TauP_piP1=m_bdt2;
+                m_bdt3_TauP_piP1=m_bdt3;
+              }else{
+                m_bdt1_TauP_piP2=m_bdt1;
+                m_bdt2_TauP_piP2=m_bdt2;
+                m_bdt3_TauP_piP2=m_bdt3;
+              }
+            }else if(Part->charge()==-1){
+              if(part->charge()>0){
+                m_bdt1_TauM_piP=m_bdt1;
+                m_bdt2_TauM_piP=m_bdt2;
+                m_bdt3_TauM_piP=m_bdt3;
+              }else if(flag_p){
+                m_bdt1_TauM_piM1=m_bdt1;
+                m_bdt2_TauM_piM1=m_bdt2;
+                m_bdt3_TauM_piM1=m_bdt3;
+              }else{
+                m_bdt1_TauM_piM2=m_bdt1;
+                m_bdt2_TauM_piM2=m_bdt2;
+                m_bdt3_TauM_piM2=m_bdt3;
+              }
+            }
+          }else if(Part->charge()==3||Part->charge()==-3){
+            if(Part->charge()==3){
+              if(flag_p_max==true){
+                m_bdt1_TauP_piP1=m_bdt1;
+                m_bdt2_TauP_piP1=m_bdt2;
+                m_bdt3_TauP_piP1=m_bdt3;
+              }else if(flag_p_max==false&&flag_p_min==false){
+                m_bdt1_TauP_piP2=m_bdt1;
+                m_bdt2_TauP_piP2=m_bdt2;
+                m_bdt3_TauP_piP2=m_bdt3;
+              }else if (flag_p_min==true){
+                m_bdt1_TauP_piM=m_bdt1;
+                m_bdt2_TauP_piM=m_bdt2;
+                m_bdt3_TauP_piM=m_bdt3;
+              }
+            }else if (Part->charge()==-3){
+              if(flag_p_max==true){
+                m_bdt1_TauM_piM1=m_bdt1;
+                m_bdt2_TauM_piM1=m_bdt2;
+                m_bdt3_TauM_piM1=m_bdt3;
+              }else if(flag_p_max==false&&flag_p_min==false){
+                m_bdt1_TauM_piM2=m_bdt1;
+                m_bdt2_TauM_piM2=m_bdt2;
+                m_bdt3_TauM_piM2=m_bdt3;
+              }else if (flag_p_min==true){
+                m_bdt1_TauM_piP=m_bdt1;
+                m_bdt2_TauM_piP=m_bdt2;
+                m_bdt3_TauM_piP=m_bdt3;
               }
             }
             
-            if (mother==NULL)
-              {
-                if ( msgLevel(MSG::WARNING) ) Warning( "Mother of part not found. Skipping");
-                return StatusCode::FAILURE;
-              }
-            
-            
-            const LHCb::VertexBase *SV = mother->endVertex();
-            
-            if ( msgLevel(MSG::VERBOSE) ) verbose() << "Filling variables with particle " << part << endmsg;
-            calcBDTValue( part, tracks, PV, SV ) ;
-            if ( msgLevel(MSG::DEBUG) ) debug() << m_bdt1 << '\t'  << m_bdt2 << '\t' << m_bdt3 << endmsg ;
-            
-            if ( msgLevel(MSG::DEBUG) ) debug()  << "after \"calcBDTValue\" "  << endmsg ;
-            
-           // const LHCb::Particle* part2 = NULL;
- 	const LHCb::Particle* part_2;
-	    LHCb::Particle::ConstVector::const_iterator i_daug_2;
-	bool flag_p=true;
-	bool flag_p_max=true;
-	bool flag_p_min=true;
-        if(Part->charge()==1||Part->charge()==-1){
-              for(i_daug_2=Daughters_2.begin(); i_daug_2!=Daughters_2.end();++i_daug_2 ){//
-                part_2 = *(i_daug_2);
-                if((i_daug_2!=i_daug)&&(part_2->charge()== part->charge())&&(part->p()<part_2->p())) flag_p=false;// part2= *(i_daug_2);//
-              }
-        }else if (Part->charge()==3||Part->charge()==-3){
-        for(i_daug_2=Daughters_2.begin(); i_daug_2!=Daughters_2.end()  ;i_daug_2++ ){//
-	part_2 = *(i_daug_2);
-	if(i_daug_2!=i_daug){
-	flag_p_max=flag_p_max&&(part->p()>part_2->p());
-        flag_p_min=flag_p_min&&(part->p()<=part_2->p());
-		}
-	      }
-        }
-            if(flag_OS==true||flag_tau_mu==true){
-		if(Part->charge()==1||Part->charge()==-1){
-			if(Part->charge()==1){
-				if(part->charge()<0){
-				m_bdt1_TauP_piM=m_bdt1;
-				m_bdt2_TauP_piM=m_bdt2;
-				m_bdt3_TauP_piM=m_bdt3;
-					}else if(flag_p){
-				m_bdt1_TauP_piP1=m_bdt1;
-				m_bdt2_TauP_piP1=m_bdt2;
-				m_bdt3_TauP_piP1=m_bdt3;
-						}else{
-				m_bdt1_TauP_piP2=m_bdt1;
-				m_bdt2_TauP_piP2=m_bdt2;
-				m_bdt3_TauP_piP2=m_bdt3;
-			   }
-				}else if(Part->charge()==-1){
-					if(part->charge()>0){
-				m_bdt1_TauM_piP=m_bdt1;
-				m_bdt2_TauM_piP=m_bdt2;
-				m_bdt3_TauM_piP=m_bdt3;
-					}else if(flag_p){
-				m_bdt1_TauM_piM1=m_bdt1;
-				m_bdt2_TauM_piM1=m_bdt2;
-				m_bdt3_TauM_piM1=m_bdt3;
-						}else{
-				m_bdt1_TauM_piM2=m_bdt1;
-				m_bdt2_TauM_piM2=m_bdt2;
-				m_bdt3_TauM_piM2=m_bdt3;
-				}
-			   }
-			}else if(Part->charge()==3||Part->charge()==-3){
-				if(Part->charge()==3){
-					if(flag_p_max==true){
-				m_bdt1_TauP_piP1=m_bdt1;
-				m_bdt2_TauP_piP1=m_bdt2;
-				m_bdt3_TauP_piP1=m_bdt3;
-    					}else if(flag_p_max==false&&flag_p_min==false){
-				m_bdt1_TauP_piP2=m_bdt1;
-				m_bdt2_TauP_piP2=m_bdt2;
-				m_bdt3_TauP_piP2=m_bdt3;
-					}else if (flag_p_min==true){
-				m_bdt1_TauP_piM=m_bdt1;
-				m_bdt2_TauP_piM=m_bdt2;
-				m_bdt3_TauP_piM=m_bdt3;
-					}
-				}else if (Part->charge()==-3){
-					if(flag_p_max==true){
-				m_bdt1_TauM_piM1=m_bdt1;
-				m_bdt2_TauM_piM1=m_bdt2;
-				m_bdt3_TauM_piM1=m_bdt3;
-				}else if(flag_p_max==false&&flag_p_min==false){
-				m_bdt1_TauM_piM2=m_bdt1;
-				m_bdt2_TauM_piM2=m_bdt2;
-				m_bdt3_TauM_piM2=m_bdt3;
-				}else if (flag_p_min==true){
-				m_bdt1_TauM_piP=m_bdt1;
-				m_bdt2_TauM_piP=m_bdt2;
-				m_bdt3_TauM_piP=m_bdt3;
-				}
-				}
-
-			}//if(Part->charge()==3||Part->charge()==-3)
-
-		}else if (flag_OS==false){//(flag_OS==true||flag_tau_mu==true)
-			if(P_charge==true){
-				if((part->charge()*Part->charge())<0){
-				m_bdt1_TauP_piM=m_bdt1;
-				m_bdt2_TauP_piM=m_bdt2;
-				m_bdt3_TauP_piM=m_bdt3;
-					}else if(flag_p){
-				m_bdt1_TauP_piP1=m_bdt1;
-				m_bdt2_TauP_piP1=m_bdt2;
-				m_bdt3_TauP_piP1=m_bdt3;
-						}else{
-				m_bdt1_TauP_piP2=m_bdt1;
-				m_bdt2_TauP_piP2=m_bdt2;
-				m_bdt3_TauP_piP2=m_bdt3;
-			   }
-				}else if(P_charge==false){
-					if((part->charge()*Part->charge())<0){
-				m_bdt1_TauM_piP=m_bdt1;
-				m_bdt2_TauM_piP=m_bdt2;
-				m_bdt3_TauM_piP=m_bdt3;
-					}else if(flag_p){
-				m_bdt1_TauM_piM1=m_bdt1;
-				m_bdt2_TauM_piM1=m_bdt2;
-				m_bdt3_TauM_piM1=m_bdt3;
-						}else{
-				m_bdt1_TauM_piM2=m_bdt1;
-				m_bdt2_TauM_piM2=m_bdt2;
-				m_bdt3_TauM_piM2=m_bdt3;
-				}
-			   }
-
-		}           
-            
-        
-            
-            
-            
-            
+          }//if(Part->charge()==3||Part->charge()==-3)
+          
+        }else if (flag_OS==false){//(flag_OS==true||flag_tau_mu==true)
+          if(P_charge==true){
+            if((part->charge()*Part->charge())<0){
+              m_bdt1_TauP_piM=m_bdt1;
+              m_bdt2_TauP_piM=m_bdt2;
+              m_bdt3_TauP_piM=m_bdt3;
+            }else if(flag_p){
+              m_bdt1_TauP_piP1=m_bdt1;
+              m_bdt2_TauP_piP1=m_bdt2;
+              m_bdt3_TauP_piP1=m_bdt3;
+            }else{
+              m_bdt1_TauP_piP2=m_bdt1;
+              m_bdt2_TauP_piP2=m_bdt2;
+              m_bdt3_TauP_piP2=m_bdt3;
+            }
+          }else if(P_charge==false){
+            if((part->charge()*Part->charge())<0){
+              m_bdt1_TauM_piP=m_bdt1;
+              m_bdt2_TauM_piP=m_bdt2;
+              m_bdt3_TauM_piP=m_bdt3;
+            }else if(flag_p){
+              m_bdt1_TauM_piM1=m_bdt1;
+              m_bdt2_TauM_piM1=m_bdt2;
+              m_bdt3_TauM_piM1=m_bdt3;
+            }else{
+              m_bdt1_TauM_piM2=m_bdt1;
+              m_bdt2_TauM_piM2=m_bdt2;
+              m_bdt3_TauM_piM2=m_bdt3;
+            }
           }
+        }           
       }
     }
   }
-  
+
+
+
   
   
   
@@ -545,43 +514,43 @@ bool RelInfoBstautauTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
       if(fc==-1 && msgLevel(MSG::DEBUG) ) debug() << "FC calculation failed: fc_denom == 0!" << endmsg;
       // DOCA
       StatusCode sc_doca  = m_dist->distance(track,part->proto()->track(),doca);
-    if(!sc_doca)  return StatusCode(sc_doca);
-    double pvDist,pvDistChi2 ;
-    StatusCode sc_pv    = m_dist->distance(PV, vertex_mu_track, pvDist, pvDistChi2);
-    pvDistGeometric     = calcVertexDist(vertex_mu_track, PV);
-    //if(!sc_pv)  return StatusCode(sc_pv);
-    double svDist, svDistChi2 ;
-    StatusCode sc_sv    = m_dist->distance(SV, vertex_mu_track, svDist, svDistChi2);
-    svDistGeometric     = calcVertexDist(vertex_mu_track, SV);
-    //   if(!sc_sv)  return StatusCode(sc_sv);
-    var_ipchisqany = calcIPToAnyPV(track) ;
-    var_fc = fc ;
-    var_angle = angle ;
-    var_doca = doca ;
-    var_PVdist = pvDistGeometric ;
-    var_SVdist = svDistGeometric ;
-    var_pt = track->pt() ;
-    //
-    m_varmap.clear()    ;
-    //make this more generic??
-    m_varmap.insert( "IsoST_trk_ips", var_ipchisqany) ;
-    m_varmap.insert( "IsoST_trk_pt", var_pt ) ;
-    m_varmap.insert( "IsoST_sem_angle", var_angle ) ;
-    m_varmap.insert( "IsoST_sem_fc", var_fc ) ;
-    m_varmap.insert( "IsoST_sem_doca", var_doca ) ;
-    m_varmap.insert( "IsoST_sem_svdis", var_SVdist ) ;
-    m_varmap.insert( "IsoST_sem_pvdis", var_PVdist ) ;
-
-    m_tmva(m_varmap,m_out) ;
-    bdtval = m_out[m_transformName];
-
-    if (msgLevel(MSG::DEBUG)) debug() << m_transformName << " : " << bdtval << endmsg ;
-    //is this really the most efficient??
-    if (bdtval < -0.09) {isolation11+=1;}
-    if (bdtval < -0.05) {isolation1 += bdtval;isolation11 += 100;}
-    if (bdtval < -0.00) {isolation11 += 10000;}
-    if ((bdtval < bdtmin)&&(bdtval > -0.05)) {bdtmin = bdtval;}
-  }
+      if(!sc_doca)  return StatusCode(sc_doca);
+      double pvDist,pvDistChi2 ;
+      StatusCode sc_pv    = m_dist->distance(PV, vertex_mu_track, pvDist, pvDistChi2);
+      pvDistGeometric     = calcVertexDist(vertex_mu_track, PV);
+      //if(!sc_pv)  return StatusCode(sc_pv);
+      double svDist, svDistChi2 ;
+      StatusCode sc_sv    = m_dist->distance(SV, vertex_mu_track, svDist, svDistChi2);
+      svDistGeometric     = calcVertexDist(vertex_mu_track, SV);
+      //   if(!sc_sv)  return StatusCode(sc_sv);
+      var_ipchisqany = calcIPToAnyPV(track) ;
+      var_fc = fc ;
+      var_angle = angle ;
+      var_doca = doca ;
+      var_PVdist = pvDistGeometric ;
+      var_SVdist = svDistGeometric ;
+      var_pt = track->pt() ;
+      //
+      m_varmap.clear()    ;
+      //make this more generic??
+      m_varmap.insert( "IsoST_trk_ips", var_ipchisqany) ;
+      m_varmap.insert( "IsoST_trk_pt", var_pt ) ;
+      m_varmap.insert( "IsoST_sem_angle", var_angle ) ;
+      m_varmap.insert( "IsoST_sem_fc", var_fc ) ;
+      m_varmap.insert( "IsoST_sem_doca", var_doca ) ;
+      m_varmap.insert( "IsoST_sem_svdis", var_SVdist ) ;
+      m_varmap.insert( "IsoST_sem_pvdis", var_PVdist ) ;
+      
+      m_tmva(m_varmap,m_out) ;
+      bdtval = m_out[m_transformName];
+      
+      if (msgLevel(MSG::DEBUG)) debug() << m_transformName << " : " << bdtval << endmsg ;
+      //is this really the most efficient??
+      if (bdtval < -0.09) {isolation11+=1;}
+      if (bdtval < -0.05) {isolation1 += bdtval;isolation11 += 100;}
+      if (bdtval < -0.00) {isolation11 += 10000;}
+      if ((bdtval < bdtmin)&&(bdtval > -0.05)) {bdtmin = bdtval;}
+    }
   m_bdt1 = isolation11 ;
   m_bdt2 = isolation1 ;
   m_bdt3 = isolation1+bdtmin ;
@@ -683,11 +652,11 @@ double RelInfoBstautauTrackIsolationBDT::calcFC( Gaudi::XYZVector p,
                                                  Gaudi::XYZPoint vtx,
                                                  const LHCb::VertexBase* PV)
 {
-
+  
   Gaudi::XYZVector rv;
   Gaudi::XYZPoint pv = PV->position();
   double fc = -1.;
-
+  
   rv = vtx - pv;
   double pt=p.Rho()+p_mu.Rho();
   Gaudi::XYZVector ptot(p+p_mu);
@@ -698,7 +667,7 @@ double RelInfoBstautauTrackIsolationBDT::calcFC( Gaudi::XYZVector p,
 }
 
 double RelInfoBstautauTrackIsolationBDT::arcosine(Gaudi::XYZVector p1,Gaudi::XYZVector p2) {
-
+  
   double num    = (p1.Cross(p2)).R();
   double den    = p1.R()*p2.R();
   double seno   = num/den;

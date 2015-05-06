@@ -116,8 +116,8 @@ StatusCode RelInfoBstautauMuonIsolation::calculateRelatedInfo( const LHCb::Parti
 {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "Calculating MuonIso extra info" << endmsg;
-  m_bdt1 = 0 ;
-  m_bdt2 = 0 ;
+  m_bdt1 = -10000 ;
+  m_bdt2 = -10000 ;
 
  if (top->isBasicParticle() || top!=top_bis)
     {

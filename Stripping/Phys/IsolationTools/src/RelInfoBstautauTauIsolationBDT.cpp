@@ -102,17 +102,17 @@ StatusCode RelInfoBstautauTauIsolationBDT::calculateRelatedInfo( const LHCb::Par
 {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "Calculating TauIso extra info" << endmsg;
-  m_bdt1 = -1. ;
-  m_bdt2 = -1. ;
-  m_bdt3 = -1. ;
+  m_bdt1 = -10000. ;
+  m_bdt2 = -10000. ;
+  m_bdt3 = -10000. ;
 
-  m_bdt1_TauP = -1. ;
-  m_bdt2_TauP = -1. ;
-  m_bdt3_TauP = -1. ;
+  m_bdt1_TauP = -10000. ;
+  m_bdt2_TauP = -10000. ;
+  m_bdt3_TauP = -10000. ;
   
-  m_bdt1_TauM = -1. ;
-  m_bdt2_TauM = -1. ;
-  m_bdt3_TauM = -1. ;
+  m_bdt1_TauM = -10000. ;
+  m_bdt2_TauM = -10000. ;
+  m_bdt3_TauM = -10000. ;
 
 
 if ( top->isBasicParticle() || top!=top_bis)
