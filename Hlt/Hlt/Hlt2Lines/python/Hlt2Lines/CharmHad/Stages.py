@@ -176,8 +176,8 @@ class KsFilterForHHKs(Hlt2ParticleFilter) : # {
 ##   with other subdirectories.
 ## ------------------------------------------------------------------------- ##
 from Inputs import KS0_LL, KS0_DD, Lambda_LL, Lambda_DD
-SharedKsLL =  KsFilterForHHKs('CharmHadSharedKsLL',[KS0_LL])
-SharedKsDD =  KsFilterForHHKs('CharmHadSharedKsDD',[KS0_DD])
+CharmHadSharedKsLL =  KsFilterForHHKs('CharmHadSharedKsLL',[KS0_LL])
+CharmHadSharedKsDD =  KsFilterForHHKs('CharmHadSharedKsDD',[KS0_DD])
 
 
 ## ------------------------------------------------------------------------- ##
@@ -1300,28 +1300,28 @@ class D2KS0Pi_LL(DetachedV0HCombiner) :
     def __init__(self,name) :
         decay = "[D+ -> pi+ KS0]cc"
         inputs = [SharedDetachedDpmChild_pi,
-                  KS0_LL]
+                  CharmHadSharedKsLL]
         DetachedV0HCombiner.__init__(self,name,decay,inputs)
 
 class D2KS0K_LL(DetachedV0HCombiner) :
     def __init__(self,name) :
         decay = "[D+ -> K+ KS0]cc"
         inputs = [SharedDetachedDpmChild_K,
-                  KS0_LL]
+                  CharmHadSharedKsLL]
         DetachedV0HCombiner.__init__(self,name,decay,inputs)        
 
 class D2KS0Pi_DD(DetachedV0HCombiner) :
     def __init__(self,name) :
         decay = "[D+ -> pi+ KS0]cc"
         inputs = [SharedDetachedDpmChild_pi,
-                  KS0_DD]
+                  CharmHadSharedKsDD]
         DetachedV0HCombiner.__init__(self,name,decay,inputs)
 
 class D2KS0K_DD(DetachedV0HCombiner) :
     def __init__(self,name) :
         decay = "[D+ -> K+ KS0]cc"
         inputs = [SharedDetachedDpmChild_K,
-                  KS0_DD]
+                  CharmHadSharedKsDD]
         DetachedV0HCombiner.__init__(self,name,decay,inputs)
 
 class Lc2LambdaPi_LL(DetachedV0HCombiner) :
@@ -1357,19 +1357,19 @@ class Lc2LambdaK_DD(DetachedV0HCombiner) :
 class D2KS0KS0_2LL(DetachedV0V0Combiner) :
     def __init__(self,name) :
         decay = "D0 -> KS0 KS0"
-        inputs = [KS0_LL]
+        inputs = [CharmHadSharedKsLL]
         DetachedV0V0Combiner.__init__(self,name,decay,inputs)
 
 class D2KS0KS0_LLDD(DetachedV0V0Combiner) :
     def __init__(self,name) :
         decay = "D0 -> KS0 KS0"
-        inputs = [KS0_LL,KS0_DD]
+        inputs = [CharmHadSharedKsLL,CharmHadSharedKsDD]
         DetachedV0V0Combiner.__init__(self,name,decay,inputs,lldd=True)
 
 class D2KS0KS0_2DD(DetachedV0V0Combiner) :
     def __init__(self,name) :
         decay = "D0 -> KS0 KS0"
-        inputs = [KS0_DD]
+        inputs = [CharmHadSharedKsDD]
         DetachedV0V0Combiner.__init__(self,name,decay,inputs)
 
 # 
@@ -1384,14 +1384,14 @@ class D2KsHHH_KSLL(D2HHHKsCombiner) :
     def __init__(self,name, HHH) :
         decay = "[D+ -> KS0 K*(892)+]cc"
         inputs = [HHH,
-                  KS0_LL]
+                  CharmHadSharedKsLL]
         D2HHHKsCombiner.__init__(self,name,decay,inputs)
 
 class D2KsHHH_KSDD(D2HHHKsCombiner) :
     def __init__(self,name, HHH) :
         decay = "[D+ -> KS0 K*(892)+]cc"
         inputs = [HHH,
-                  KS0_DD]
+                  CharmHadSharedKsDD]
         D2HHHKsCombiner.__init__(self,name,decay,inputs)
 
 ## D2HH Lines
@@ -1433,23 +1433,23 @@ class DStar2PiD0_ee(D2HD0_3Body_Combiner) :
 
 
 D02KsPiPi_LL = HHKshCombiner('KshPiPiLL', decay="D0 ->  pi- pi+ KS0",
-                   inputs=[SharedKsLL, SharedDetachedDpmChild_pi])
+                   inputs=[CharmHadSharedKsLL, SharedDetachedDpmChild_pi])
 D02KsPiPi_DD = HHKshCombiner('KshPiPiDD', decay="D0 ->  pi- pi+ KS0",
-                   inputs=[SharedKsDD, SharedDetachedDpmChild_pi])
+                   inputs=[CharmHadSharedKsDD, SharedDetachedDpmChild_pi])
 ##
 ##  These lines produce D0 --> K-,pi+,Kshort and D0bar --> K+,pi-,Kshort candidates
 ##  The candidates can also be used for the charge conjugate decays by
 ##  using D0bar in place of D0, and vice versa, in decay descriptors.
 ##  this is done in D2HHKsLines.py
 D02KsKPi_LL  = HHKshCombiner('KshKPiLL', decay="[D0 ->  K- pi+ KS0]cc",
-                   inputs=[SharedKsLL, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])
+                   inputs=[CharmHadSharedKsLL, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])
 D02KsKPi_DD  = HHKshCombiner('KshKPiDD', decay="[D0 ->  K- pi+ KS0]cc",
-                   inputs=[SharedKsDD, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])
+                   inputs=[CharmHadSharedKsDD, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])
 
 D02KsKK_LL   = HHKshCombiner('KshKKLL', decay="D0 ->  K- K+ KS0",
-                   inputs=[SharedKsLL, SharedDetachedDpmChild_K])
+                   inputs=[CharmHadSharedKsLL, SharedDetachedDpmChild_K])
 D02KsKK_DD   = HHKshCombiner('KshKKDD', decay="D0 ->  K- K+ KS0",
-                   inputs=[SharedKsDD, SharedDetachedDpmChild_K])
+                   inputs=[CharmHadSharedKsDD, SharedDetachedDpmChild_K])
 
 ## ------------------------------------------------------------------------- ##
 class DetachedD02HHInclCombiner(Hlt2Combiner) : # {

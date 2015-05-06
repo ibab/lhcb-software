@@ -48,14 +48,14 @@ class CharmHadD2HHHKsLines() :
   
     def locallines(self):
         from Stages import MassFilter
-        from Stages import SharedKsLL, SharedKsDD
+        from Stages import CharmHadSharedKsLL, CharmHadSharedKsDD
         from Stages import SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi
         from Stages import DV4BCombiner, D2HHHKs_4BCombiner
         decays = { 'PiPiPi': ['[D+ -> pi+ pi+ pi- KS0]cc'],
                    'KPiPi' : ['[D+ -> K+ pi+ pi- KS0]cc','[D+ -> K- pi+ pi+ KS0]cc'],
                    'KKPi'  : ['[D+ -> K+ K+ pi- KS0]cc','[D+ -> K- K+ pi+ KS0]cc'] }
         stages = {}
-        sharedKs = {'LL': SharedKsLL, 'DD': SharedKsLL}
+        sharedKs = {'LL': CharmHadSharedKsLL, 'DD': CharmHadSharedKsLL}
         for fs in ['PiPiPi', 'KPiPi', 'KKPi']:
             for ks in ['LL','DD']:
                 stages['D2'+fs+'Ks_Ks'+ks] = [DV4BCombiner('D2'+fs+'Ks_Ks'+ks, decays[fs], [sharedKs[ks], SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])]
