@@ -14,6 +14,8 @@ import StrippingB2JpsiXforEM_s
 import StrippingTrackEffVeloMuon
 import StrippingTrackEffMuonTT
 import StrippingTrackEffDownMuon
+import StrippingPIDCalib
+import StrippingNoPIDDstarWithD02RSKPi
 
 ## from Charm
 import StrippingD2PhiPiForXSec

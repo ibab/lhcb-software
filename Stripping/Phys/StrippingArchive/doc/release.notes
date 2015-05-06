@@ -4,6 +4,9 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-06 - Michael Kolpin
+ - Added StrippingPIDCalib and StrippingNoPIDDstarWithD02RSKPi to Stripping22
+
 !========================= StrippingArchive v1r28 2015-04-30 =========================
 
 ! 2015-04-21 - Andrea Contu
