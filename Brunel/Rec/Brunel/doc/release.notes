@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to configuration
+  . Do not run MCRichDigitSummaryUnpacker explicitly in MCLinksUnpackSeq, as this
+    breaks with LDST. Just run it on demand when/if needed by the Check sequence.
+
 </PRE><H1><A NAME=v47r6p1>2015-05-04 Brunel v47r6p1</A></H1><PRE>
 This version uses projects LHCb v38r6, Lbcom v16r5, Rec v17r6, Gaudi v26r1
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*

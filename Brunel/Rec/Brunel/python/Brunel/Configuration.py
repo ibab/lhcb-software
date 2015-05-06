@@ -755,11 +755,7 @@ class Brunel(LHCbConfigurableUser):
             mycheckconf.configure(UseMC = True, HistosLevel = self.getProp("Histograms"))
 
         if ("RICH" in checkSeq) and [det for det in ['Rich1', 'Rich2', 'Rich1Pmt', 'Rich2Pmt'] if det in self.getProp("Detectors")] :
-            # Unpacking RICH summaries
-            from Configurables import DataPacking__Unpack_LHCb__MCRichDigitSummaryPacker_
-            unp = DataPacking__Unpack_LHCb__MCRichDigitSummaryPacker_("MCRichDigitSummaryUnpack")
             from Configurables import GaudiSequencer
-            GaudiSequencer("MCLinksUnpackSeq").Members += [unp]
             richMoniConf = RichRecQCConf(self.richMoniConfName)
             self.setOtherProps(richMoniConf, ["Histograms","Context","OutputLevel","OnlineMode",
                                               "DataType","WithMC","Simulation"] )
