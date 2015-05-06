@@ -104,6 +104,8 @@ default_config = {
 			'ZLongMuonTrackCHI2'          : 5,
 			'VertexChi2'                  : 5,
 			'LongMuonPID'                 : 2,
+            'JpsiHlt1Filter'              : 'Hlt1.*Decision',
+            'JpsiHlt2Filter'              : 'Hlt2.*Decision',
 			'JpsiHlt1Triggers'            :  { "Hlt1TrackMuonDecision%TOS" : 0},
             'Hlt1PassOnAll'               : True,
 			'UpsilonHlt1Triggers'         :  { "Hlt1SingleMuonHighPTDecision%TOS" : 0},
@@ -193,6 +195,8 @@ class StrippingTrackEffMuonTTConf(LineBuilder) :
                               'ZLongMuonTrackCHI2',
                               'VertexChi2',
                               'LongMuonPID',
+                              'JpsiHlt1Filter',
+                              'JpsiHlt2Filter',
                               'JpsiHlt1Triggers',
                               'Hlt1PassOnAll',
                               'UpsilonHlt1Triggers',
@@ -442,12 +446,16 @@ class StrippingTrackEffMuonTTConf(LineBuilder) :
         self.TrackEffMuonTTJpsi_line1 = StrippingLine(name+'_JpsiLine1',
                                                       prescale = config['JpsiPrescale'],
                                                       postscale = config['Postscale'],
+                                                      HLT1 = "HLT_PASS_RE('%(JpsiHlt1Filter)s')" % config,
+                                                      HLT2 = "HLT_PASS_RE('%(JpsiHlt2Filter)s')" % config,
                                                       selection = self.makeJpsiMuMuTrackEff1)
         
 
         self.TrackEffMuonTTJpsi_line2 = StrippingLine(name+'_JpsiLine2',
                                                       prescale = config['JpsiPrescale'],
                                                       postscale = config['Postscale'],
+                                                      HLT1 = "HLT_PASS_RE('%(JpsiHlt1Filter)s')" % config,
+                                                      HLT2 = "HLT_PASS_RE('%(JpsiHlt2Filter)s')" % config,
                                                       selection = self.makeJpsiMuMuTrackEff2)
 
     

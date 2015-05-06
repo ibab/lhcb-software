@@ -99,7 +99,9 @@ default_config = {
 			,	'ZLinePrescale':  1. # proposal: 0.2 to stay below 0.15% retention rate 
 			,	'ZLinePostscale':  1.  
 			,	'UpsilonLinePrescale':  1. # proposal: 0.2 to stay below 0.15% retention rate 
-			,	'UpsilonLinePostscale':  1.  
+			,	'UpsilonLinePostscale':  1. 
+            ,   'JpsiHlt1Filter' : 'Hlt1.*Decision'
+            ,   'JpsiHlt2Filter' : 'Hlt2.*Decision'
 			,	'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPL0Decision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
 			,	'ZHLT1TisTosSpecs': { "Hlt1SingleMuonHighPTDecision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
 			,	'UpsilonHLT1TisTosSpecs': { "Hlt1SingleMuonHighPTDecision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
@@ -123,14 +125,14 @@ class StrippingTrackEffDownMuonConf(LineBuilder):
     """
     
     __configuration_keys__ = (
-		    		'MuMom',
+		        'MuMom',
 				'MuTMom',
-		    		'ZMuMom',
-		    		'ZMuTMom',
-		    		'UpsilonMuMom',
-		    		'UpsilonMuTMom',
-		    		'ZMuMinEta',
-		    		'ZMuMaxEta',
+		    	'ZMuMom',
+		    	'ZMuTMom',
+		    	'UpsilonMuMom',
+		    	'UpsilonMuTMom',
+		    	'ZMuMinEta',
+		    	'ZMuMaxEta',
 				'TrChi2',
 				'MassPreComb',
 				'MassPostComb',
@@ -142,18 +144,20 @@ class StrippingTrackEffDownMuonConf(LineBuilder):
 				'VertChi2',
 				'SeedingMinP',
 				'DataType',
-                              	'NominalLinePrescale',
-                              	'NominalLinePostscale',
-                              	'ValidationLinePrescale',
-                              	'ValidationLinePostscale',
-                              	'ZLinePrescale',
-                              	'ZLinePostscale',
-                              	'UpsilonLinePrescale',
-                              	'UpsilonLinePostscale',
+                'NominalLinePrescale',
+                'NominalLinePostscale',
+                'ValidationLinePrescale',
+                'ValidationLinePostscale',
+                'ZLinePrescale',
+                'ZLinePostscale',
+                'UpsilonLinePrescale',
+                'UpsilonLinePostscale',
+                'JpsiHlt1Filter',
+                'JpsiHlt2Filter',
 				'HLT1TisTosSpecs',
 				'ZHLT1TisTosSpecs',
 				'UpsilonHLT1TisTosSpecs',
-		   	        'HLT1PassOnAll',
+		   	    'HLT1PassOnAll',
 				'HLT2TisTosSpecs',
 				'ZHLT2TisTosSpecs',
 				'UpsilonHLT2TisTosSpecs',
@@ -200,7 +204,13 @@ class StrippingTrackEffDownMuonConf(LineBuilder):
           		config['UpsilonMuMom'], config['UpsilonMuTMom'], 
           		config['UpsilonMassPreComb'], config['UpsilonMassPostComb'], )
           
-          self.nominal_line =  StrippingLine(nominal_name + 'Line',  prescale = config['NominalLinePrescale'], postscale = config['NominalLinePostscale'], algos=[self.DownJpsiFilter])
+          self.nominal_line =  StrippingLine(nominal_name + 'Line'
+                                             , prescale = config['NominalLinePrescale']
+                                             , postscale = config['NominalLinePostscale']
+                                             , algos=[self.DownJpsiFilter]
+                                             , HLT1 = "HLT_PASS_RE('%(JpsiHlt1Filter)s')" % config
+                                             , HLT2 = "HLT_PASS_RE('%(JpsiHlt2Filter)s')" % config
+                                             )
           
           self.valid_line = StrippingLine(valid_name + 'Line', prescale = config['ValidationLinePrescale'], postscale = config['ValidationLinePostscale'], algos=[self.TisTosPreFilter2Jpsi])
           

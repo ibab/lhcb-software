@@ -97,6 +97,8 @@ default_config = {
 		,	"Postscale":		1.	# adimensional
 		,	"ZPostscale":		1.	# adimensional
 		,	"UpsilonPostscale":	1.	# adimensional
+        ,   'JpsiHlt1Filter' : 'Hlt1.*Decision'
+        ,   'JpsiHlt2Filter' : 'Hlt2.*Decision'
 		,	'HLT1TisTosSpecs'	: { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPDecision%TOS" : 0 } #no reg. expression allowed(see selHlt1Jpsi )
 		,	'ZHLT1TisTosSpecs'	: { "Hlt1SingleMuonHighPTDecision%TOS" : 0 } #no reg. expression allowed(see selHlt1Jpsi )
 		,	'UpsilonHLT1TisTosSpecs': { "Hlt1SingleMuonHighPTDecision%TOS" : 0 } #no reg. expression allowed(see selHlt1Jpsi )
@@ -122,7 +124,7 @@ class StrippingTrackEffVeloMuonConf(LineBuilder):
     """
     __configuration_keys__ = (
 				'TrChi2VeMu',
-                                'TrChi2LongMu',
+                'TrChi2LongMu',
 				'JpsiPt',
 				'ZPt',
 				'UpsilonPt',
@@ -145,16 +147,18 @@ class StrippingTrackEffVeloMuonConf(LineBuilder):
 				'MassPostComb',
 				'ZMassPostComb',
 				'UpsilonMassPostComb',
-                              	'Prescale',
-                              	'ZPrescale',
-                              	'UpsilonPrescale',
-                              	'Postscale',
-                              	'ZPostscale',
-                              	'UpsilonPostscale',
+                'Prescale',
+                'ZPrescale',
+                'UpsilonPrescale',
+                'Postscale',
+                'ZPostscale',
+                'UpsilonPostscale',
+                'JpsiHlt1Filter',
+                'JpsiHlt2Filter',
 				'HLT1TisTosSpecs',
 				'ZHLT1TisTosSpecs',
 				'UpsilonHLT1TisTosSpecs',
-		   	        'HLT1PassOnAll',
+		   	    'HLT1PassOnAll',
 				'HLT2TisTosSpecs',
 				'ZHLT2TisTosSpecs',
 				'UpsilonHLT2TisTosSpecs',
@@ -300,8 +304,23 @@ class StrippingTrackEffVeloMuonConf(LineBuilder):
         						  MassPostComb = config['UpsilonMassPostComb'], 
         						  JpsiPt = config['UpsilonPt'])   
         
-        self.nominal_line1 =  StrippingLine(name + 'Line1',  prescale = config['Prescale'], postscale = config['Postscale'], algos=[self.JpsiMuMuTrackEff1], RequiredRawEvents = ["Trigger","Muon","Velo","Tracker"], MDSTFlag = True)
-        self.nominal_line2 =  StrippingLine(name + 'Line2',  prescale = config['Prescale'], postscale = config['Postscale'], algos=[self.JpsiMuMuTrackEff2], RequiredRawEvents = ["Trigger","Muon","Velo","Tracker"], MDSTFlag = True)
+        self.nominal_line1 =  StrippingLine(name + 'Line1'
+                                            , prescale = config['Prescale']
+                                            , postscale = config['Postscale']
+                                            , algos=[self.JpsiMuMuTrackEff1]
+                                            , RequiredRawEvents = ["Trigger","Muon","Velo","Tracker"]
+                                            , HLT1 = "HLT_PASS_RE('%(JpsiHlt1Filter)s')" % config
+                                            , HLT2 = "HLT_PASS_RE('%(JpsiHlt2Filter)s')" % config
+                                            , MDSTFlag = True)
+
+        self.nominal_line2 =  StrippingLine(name + 'Line2'
+                                            , prescale = config['Prescale']
+                                            , postscale = config['Postscale']
+                                            , algos=[self.JpsiMuMuTrackEff2]
+                                            , RequiredRawEvents = ["Trigger","Muon","Velo","Tracker"]
+                                            , HLT1 = "HLT_PASS_RE('%(JpsiHlt1Filter)s')" % config
+                                            , HLT2 = "HLT_PASS_RE('%(JpsiHlt2Filter)s')" % config
+                                            , MDSTFlag = True)
         
         self.Z_line1 =  StrippingLine(name + 'ZLine1',  prescale = config['ZPrescale'], postscale = config['ZPostscale'], algos=[self.ZMuMuTrackEff1], RequiredRawEvents = ["Trigger","Muon","Velo","Tracker"], MDSTFlag = True)
         self.Z_line2 =  StrippingLine(name + 'ZLine2',  prescale = config['ZPrescale'], postscale = config['ZPostscale'], algos=[self.ZMuMuTrackEff2], RequiredRawEvents = ["Trigger","Muon","Velo","Tracker"], MDSTFlag = True)
