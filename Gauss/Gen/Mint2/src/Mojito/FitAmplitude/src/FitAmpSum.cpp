@@ -128,7 +128,7 @@ std::complex<double> FitAmpSum::getVal(IDalitzEvent* evt){
 }
 
 std::complex<double> FitAmpSum::getVal(IDalitzEvent& evt){
-  double dbThis=false;
+  //double dbThis=false;
 
   std::complex<double> sum(0);
   if(_fitAmps.empty()) createAllAmps(evt.eventPattern());
@@ -139,6 +139,7 @@ std::complex<double> FitAmpSum::getVal(IDalitzEvent& evt){
   }
   
   std::complex<double> result(sqrt(fabs(efficiency(evt)))*sum);
+  /* 
   double resultSq = norm(result);
   bool invalid = (! isfinite(resultSq)) || std::isnan(resultSq);
   if(dbThis || invalid){
@@ -149,6 +150,7 @@ std::complex<double> FitAmpSum::getVal(IDalitzEvent& evt){
     printValues(evt);
     cout << "\n---------------------------" << endl;
   }
+   */
   return result;
 }
 

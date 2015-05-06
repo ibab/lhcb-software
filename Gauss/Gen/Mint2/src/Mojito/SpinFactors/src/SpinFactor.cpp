@@ -43,9 +43,13 @@ TLorentzVector SpinFactor::p(int i, IDalitzEvent& evt){
 }
 
 double SpinFactor::mRes(const MINT::const_counted_ptr<AssociatedDecayTree>& adt, IDalitzEvent& evt){
-  return mRes(adt->getVal(), evt);
+  // return PDG mass for final state paticles
+  if(adt->isFinalState()) return mRes(adt->getVal(), evt);
+  // return sqrt(p^2) for spin projectors  
+  return adt->getVal().mReco(&evt) ;  
 }
-double SpinFactor::mRes(const AssociatedDecayTreeItem& adt, IDalitzEvent& evt){
+
+double SpinFactor::mRes(const AssociatedDecayTreeItem& adt, IDalitzEvent& evt){  
   return adt.mRes(&evt);
 }
 

@@ -122,6 +122,7 @@ int DalitzMCIntegrator::addEvents(int Nevents){
 }
 
 double DalitzMCIntegrator::evaluateSum(){
+  /*
   if(! _initialised){
     cout << " DalitzMCIntegrator::evaluateSum "
 	 << " need to know pattern first." << endl;
@@ -134,24 +135,27 @@ double DalitzMCIntegrator::evaluateSum(){
     _mean = _variance = 0;
     return 0;
   }
+  */
 
   double sum   = 0;
   double sumsq = 0;
   _weightSum = 0;
   unsigned int N = 0;
-  int printEveryNEvents = (_events.size()/4);
-  if(printEveryNEvents < 1) printEveryNEvents = 1;
+  //int printEveryNEvents = (_events.size()/4);
+  //if(printEveryNEvents < 1) printEveryNEvents = 1;
 
-  time_t tstart = time(0);
+  //time_t tstart = time(0);
 
   for(N=0; N < _events.size(); N++){
     DalitzEvent thisEvt(_events[N]);
+    /*  
     double ps = thisEvt.phaseSpace();
     if(ps <= 0.0){
       cout << "WARNING in DalitzMCIntegrator::evaluateSum()"
 	   << " event with phase space = " << ps << endl;
       continue; // should not happen.
     }
+    */
     double weight =  thisEvt.getWeight() / thisEvt.getGeneratorPdfRelativeToPhaseSpace();
     double val = _iw.RealVal(thisEvt); // _w->RealVal() * weight;
 
@@ -183,7 +187,7 @@ double DalitzMCIntegrator::evaluateSum(){
     _variance *= sf*sf;
   }
 
-
+  /*
   double delT = difftime(time(0), tstart);
   double sigma = -9999;
   if(_variance >= 0) sigma = sqrt(_variance);
@@ -195,7 +199,7 @@ double DalitzMCIntegrator::evaluateSum(){
        << "%, actual: " << actualPrecision*100 << "%"
        << "\n     > This took " << delT << " s."
        << endl;
-
+  */
   return _mean;
 }
 

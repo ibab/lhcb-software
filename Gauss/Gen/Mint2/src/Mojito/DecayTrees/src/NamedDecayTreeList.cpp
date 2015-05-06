@@ -140,17 +140,17 @@ void NamedDecayTreeList::add(const AmpInitialiser& ai, const std::string& opt){
   dt.getVal().antiThis(); // mum back to D0
   AmpInitialiser DtoCPai(ai);
   DtoCPai.setTree(dt);
-  //addSimple(DtoCPai, opt);
-  //if(! isBg) addSimple(DtoCPai, opt + "BgSpinZero");
+  addSimple(DtoCPai, opt);
+  if(! isBg) addSimple(DtoCPai, opt + "BgSpinZero");
   //if(! isCLEO2012)addSimple(DtoCPai, opt + "CLEO2012");
   if(dbThis) cout << "NamedDecayTreeList::add: just added D->fbar\t" 
 		  << dt.oneLiner() << endl;
 
-  //anti(dt); // and the CP conjugate of that, i.e. Dbar->original
+  anti(dt); // and the CP conjugate of that, i.e. Dbar->original
   AmpInitialiser DbarToOriginal(ai);
   DbarToOriginal.setTree(dt);
-  //addSimple(DbarToOriginal, opt);
-  //if(! isBg) addSimple(DbarToOriginal, opt + "BgSpinZero");
+  addSimple(DbarToOriginal, opt);
+  if(! isBg) addSimple(DbarToOriginal, opt + "BgSpinZero");
   //if(! isCLEO2012)addSimple(DbarToOriginal, opt + "CLEO2012");
   if(dbThis) cout << "NamedDecayTreeList::add: just added Dbar->f\t" 
 		  << dt.oneLiner() << endl;
@@ -292,22 +292,22 @@ int NamedDecayTreeList::makeDecayTreeList(){
 }
 
 int NamedDecayTreeList::make3BodyList(){
-  //makeKsPiPiList();
-  //makeKPiPiZeroList();
-  //makeDplusToKKPiList();
+  makeKsPiPiList();
+  makeKPiPiZeroList();
+  makeDplusToKKPiList();
   makeB02DDKList();
   makeBp2DDKList();  
   return _trees.size();
 }
 
 int NamedDecayTreeList::make4BodyList(){
-  //makeKpipiGammaList();
-  //makeJpsiKpipiList();
+  makeKpipiGammaList();
+  makeJpsiKpipiList();
   makePsiKpipiList();
-  //makeKKpipiList();
-  //makeK3piList();
-  //makeKsPiPiPizeroList();
-  //make4PiList();
+  makeKKpipiList();
+  makeK3piList();
+  makeKsPiPiPizeroList();
+  make4PiList();
 
   return _trees.size();
 }
@@ -485,7 +485,7 @@ int NamedDecayTreeList::makeKsPiPiList(){
   ParticleProperties/src/mass_width.csv
   I gave them the following PDG IDs : sigma_1 999001, sigma_2 9992
    */
-    /*
+
   // D-> Ks pi pi
 
   //  bool dbThis=false;
@@ -592,13 +592,13 @@ int NamedDecayTreeList::makeKsPiPiList(){
   dk->addDgtr(310, 211, -211);
   this->add(*dk);
   delete dk;
-*/
+
   return _trees.size();
 }
 
 int NamedDecayTreeList::makeKPiPiZeroList(){
   DecayTree* dk=0;
-
+ 
   /*
   // D->K*_3(1780)0bar(K- pi+) pi0
   dk = new DecayTree(421);
@@ -612,7 +612,7 @@ int NamedDecayTreeList::makeKPiPiZeroList(){
   delete dk;
   (can't handle spin-3 resonances yet)
    */
-    /*
+
   // D->K*(1680)0bar(K- pi+) pi0
   dk = new DecayTree(421);
   dk->addDgtr(111, -30313)->addDgtr(-321, 211);
@@ -698,7 +698,6 @@ int NamedDecayTreeList::makeKPiPiZeroList(){
   this->add(*dk);
   delete dk;
 
- */
   return _trees.size();
 
 }
@@ -710,8 +709,8 @@ int NamedDecayTreeList::makeDplusToKKPiList() {
 
   // Resonances in (K- pi+)
   // ----------------------
-/*
-  // K*(892)0bar K+
+
+    // K*(892)0bar K+
   dk = new DecayTree(411);
   dk->addDgtr(321, -313)->addDgtr(-321, 211);
   this->add(*dk);
@@ -773,7 +772,7 @@ int NamedDecayTreeList::makeDplusToKKPiList() {
   dk->addDgtr(321, -321, 211);
   this->add(*dk);
   delete dk;
-*/
+
   // Done
   return _trees.size();
 }
@@ -1617,7 +1616,7 @@ int NamedDecayTreeList::makePsiKpipiList(){
 
 
 int NamedDecayTreeList::makeKpipiGammaList(){
-    /*
+    
     DecayTree* dk=0;
     
     // B->gamma K1(1270); K1->K*(892) pi; K*->K pi  
@@ -1996,7 +1995,7 @@ int NamedDecayTreeList::makeKpipiGammaList(){
     this->add(AmpInitialiser(*dk, "PLUSNonRes"));
     this->add(AmpInitialiser(*dk, "MINUSNonRes"));    
     delete dk;
-*/
+
     // Done
     return _trees.size();
 }
@@ -2004,7 +2003,7 @@ int NamedDecayTreeList::makeKpipiGammaList(){
 int NamedDecayTreeList::makeJpsiKpipiList(){
     
     DecayTree* dk=0;
-    /*
+    
     // B->J/psi K1(1270); K1->K*(892) pi; K*->K pi  
     dk = new DecayTree(521);
     dk->addDgtr(443, 10323)->addDgtr(211, 313)->addDgtr(321,-211);
@@ -3978,7 +3977,7 @@ int NamedDecayTreeList::makeJpsiKpipiList(){
     dk->addDgtr(443, 9983)->addDgtr(211, 9993)->addDgtr(321,-211);
     this->add(*dk);
     delete dk;
-    
+    */
     
     //Single resonance amplitudes:
     //----------------------------
@@ -4184,14 +4183,14 @@ int NamedDecayTreeList::makeJpsiKpipiList(){
     this->add(AmpInitialiser(*dk, "Flatte")); 
     delete dk;
 
-*/
+    
     // Done
     return _trees.size();
 }
 
 int NamedDecayTreeList::makeKKpipiList(){
   bool dbThis=false;
-/*
+
   DecayTree* dk=0;
  
   // D->KK pipi
@@ -4672,16 +4671,15 @@ int NamedDecayTreeList::makeKKpipiList(){
   delete dk;
 
   /* non-resonant with topology D->R1 P1, R1->R2 P2, R2->P3 P4
-	D->nonResP K-
-           nonResP -> nonResVector pi+
+	D->nonResP K-nonResP -> nonResVector pi+
                            nonResVector -> K+pi-
-     (need to implement spin factor for this)
+     (need to implement spin factor for this) 
   dk = new DecayTree(421);
   dk->addDgtr(-321, 9991)->addDgtr(211, 9993)->addDgtr(321, -211);
   add(*dk);
   if(dbThis) cout << "somethingth decay: " << *dk << endl;
   delete dk;
-   
+  */ 
 
   // non-resonant KK pipi
   dk = new DecayTree(421);
@@ -4717,13 +4715,12 @@ int NamedDecayTreeList::makeKKpipiList(){
   delete dk;
 
 
-*/
   return _trees.size();
 }
 
 int NamedDecayTreeList::makeK3piList(){
   bool dbThis=false;
-/*
+
   DecayTree* dk=0;
   DecayTree* R1=0;
   // non-resonant K-pipipi
@@ -4943,7 +4940,7 @@ int NamedDecayTreeList::makeK3piList(){
   add(*dk);
   delete dk;
 
-  /*
+  
  // Added by Molina on Wednesday 13th January 2010
  // pi- K1(1270)+, K1(1270)->pi+ K*(892)0 pi+, K*(892)0->pi+ K-
  // this decay makes no sense -leave it in for backward compatibility for now
@@ -5308,7 +5305,7 @@ int NamedDecayTreeList::makeK3piList(){
   add(*dk);
   if(dbThis) cout << "61st decay: " << *dk << endl;
   delete dk;
-*/
+
   return _trees.size();
 }
 
@@ -5321,7 +5318,7 @@ int NamedDecayTreeList::makeKsPiPiPizeroList() {
   bool dbThis=false;
   int decayCtr = 1;
   DecayTree* dk=0;
-/*
+
   if (dbThis) {
       cout << "----------------------------------------" << endl;
       cout << "Now doing D0 -> KS pi pi pi0 decays" << endl;
@@ -5436,7 +5433,7 @@ int NamedDecayTreeList::makeKsPiPiPizeroList() {
   add(*dk);
   if(dbThis) cout << "Decay #" << decayCtr++ << endl << *dk << endl;
   delete dk;
-*/
+
   return _trees.size();
 
 }
@@ -5446,7 +5443,7 @@ int NamedDecayTreeList::makeKsPiPiPizeroList() {
 int NamedDecayTreeList::make4PiList() {
   // T.McKetterick
   bool dbThis=false;
-    /*
+    
   DecayTree* dk=0;
   DecayTree* a1=0;
 
@@ -5576,7 +5573,7 @@ int NamedDecayTreeList::make4PiList() {
   add(*dk);
   if(dbThis) cout << "fifth decay: " << *dk << endl;
   delete dk;
-  
+  */
   //D0 -> sigma_1 pi-pi+, sigma_1->pi+pi-
   dk = new DecayTree(421);
   dk->addDgtr(999001)->addDgtr(211, -211);

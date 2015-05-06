@@ -157,18 +157,20 @@ std::complex<double> Amplitude::SpinFactorValue(IDalitzEvent& evt){
 }
 
 std::complex<double> Amplitude::LineshapeProduct(IDalitzEvent& evt){
-  bool dbThis=false;
+  //bool dbThis=false;
   std::complex<double> prod=1;
-  if(dbThis){
+  /*
+   if(dbThis){
     cout << "Amplitude::LineshapeProduct() for " << name() << endl;
     cout << " ...calling lineshapes: " << endl;
   }
+   */
   for(std::vector<ILineshape*>::iterator it = LineshapeList.begin();
       it != LineshapeList.end(); it++){
-    if(dbThis && 0 != *it) cout << (*it)->name() << ", " << (*it)->getVal(evt);
+    //if(dbThis && 0 != *it) cout << (*it)->name() << ", " << (*it)->getVal(evt);
     if(0 != *it) prod *= (*it)->getVal(evt);
   }
-  if(dbThis) cout << " done. Returning " << prod << endl;
+  //if(dbThis) cout << " done. Returning " << prod << endl;
   return prod;
 }
 
