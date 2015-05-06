@@ -26,6 +26,13 @@ namespace {
   /// that occurs when a string constant (e.g.: "abc", "") is passed to a function
   /// expecting char *
   inline char *chr(const char*c){ return const_cast<char*>(c); }
+
+  /// Helper class to protect calls to Python code with the GIL.
+  struct PyGILGuard {
+    PyGILGuard(): gstate(PyGILState_Ensure()) {}
+    ~PyGILGuard() { PyGILState_Release(gstate); }
+    PyGILState_STATE gstate;
+  };
 }
 
 //
@@ -102,7 +109,10 @@ XMLSummarySvc::initialize()
   sc=prepareXML();
   if(!sc.isSuccess()) return sc;
 
-  PyObject_CallMethod(m_summary, chr("set_step"), chr("s"), chr("initialize"));
+  {
+    PyGILGuard gil;
+    PyObject_CallMethod(m_summary, chr("set_step"), chr("s"), chr("initialize"));
+  }
 
   //temp
   m_filename="PFN:/path/filename.dst";
@@ -118,16 +128,19 @@ XMLSummarySvc::initialize()
   }
 
 
-  //fill the initial list of filenames
-  for(std::vector<std::string>::const_iterator i=filenames.begin();
-      i!=filenames.end();
-      i++)
   {
-    PyObject_CallMethod(m_summary,
-			chr("fill_input"),
-			chr("s"),
-			chr(i->c_str())
-			);
+    PyGILGuard gil;
+    //fill the initial list of filenames
+    for(std::vector<std::string>::const_iterator i=filenames.begin();
+        i!=filenames.end();
+        i++)
+    {
+      PyObject_CallMethod(m_summary,
+                          chr("fill_input"),
+                          chr("s"),
+                          chr(i->c_str())
+                          );
+    }
   }
   //output the file, and write to the stdout
   printXML(MSG::DEBUG).ignore();
@@ -182,8 +195,11 @@ XMLSummarySvc::finalize()
 
 
   //write collected counters
-  PyObject_CallMethod(m_summary, chr("set_step"), chr("s,i"), chr("finalize"),
-                      int(gaudiReturn==0));
+  {
+    PyGILGuard gil;
+    PyObject_CallMethod(m_summary, chr("set_step"), chr("s,i"), chr("finalize"),
+                        int(gaudiReturn==0));
+  }
 
   log << MSG::INFO << "filling counters..." << endmsg;
   fillcounters().ignore();
@@ -205,10 +221,10 @@ XMLSummarySvc::finalize()
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 void XMLSummarySvc::addCounter(
-			       const std::string alg,
-			       const std::string name,
-			       const StatEntity & count,
-			       const Gaudi::CounterSummary::SaveType saveType)
+                               const std::string alg,
+                               const std::string name,
+                               const StatEntity & count,
+                               const Gaudi::CounterSummary::SaveType saveType)
 {
   std::string full_name=alg+"/"+name;
   NameStatPair c(full_name,count);
@@ -219,10 +235,10 @@ void XMLSummarySvc::addCounter(
 }
 
 void XMLSummarySvc::addCounter(
-			       const std::string alg,
-			       const std::string name,
-			       const Stat & count,
-			       const Gaudi::CounterSummary::SaveType saveType)
+                               const std::string alg,
+                               const std::string name,
+                               const Stat & count,
+                               const Gaudi::CounterSummary::SaveType saveType)
 {
   StatEntity newEnt=*(count.entity());
   addCounter(alg,name,newEnt,saveType);
@@ -232,7 +248,8 @@ void XMLSummarySvc::addCounter(
 inline bool XMLSummarySvc::isConfigured() const
 {
   if (m_summary==NULL || !m_configured) return false;
-  PyObject* res=PyObject_CallMethod(m_summary, chr("test"), chr(""));
+  PyGILGuard gil;
+  PyObject* res = PyObject_CallMethod(m_summary, chr("test"), chr(""));
   if (res==NULL || res==Py_None) return false;
   return res==Py_True;
 
@@ -336,6 +353,7 @@ void XMLSummarySvc::handle( const Incident& incident )
     if(incident.type()!=m_endIncident && incident.type()!=m_beginIncident)
       log << MSG::VERBOSE << method <<"(" << filename << "," << GUID << "," << status << "," << addevents << ")" << endmsg;
 
+    PyGILGuard gil;
     PyObject_CallMethod(m_summary,
                         chr(method.c_str()),
                         chr("s,s,s,d"),
@@ -361,6 +379,7 @@ void XMLSummarySvc::handle( const Incident& incident )
        )
     {
 
+      PyGILGuard gil;
       PyObject_CallMethod(m_summary,
                           chr("set_step"),
                           chr("s"),
@@ -446,27 +465,29 @@ StatusCode XMLSummarySvc::fillcounter(const NameStatTypePair & count)
   //not supposed to write this one out
   //MsgStream log( msgSvc(), name() );
   if(!check) return StatusCode::SUCCESS;
+
+  PyGILGuard gil;
   if(stat_ent)
     {
       //log << MSG::VERBOSE << "making stat entity " << endmsg;
       PyObject_CallMethod(m_summary, chr(type_name.c_str()),
-			  chr("s,d,d,d,d,d"),
-			  chr(count.first.first.c_str()),
-			  double(count.first.second.flag()),
-			  double(count.first.second.nEntries()),
-			  double(count.first.second.flag2()),
-			  double(count.first.second.flagMin()),
-			  double(count.first.second.flagMax())
-			  );
+                          chr("s,d,d,d,d,d"),
+                          chr(count.first.first.c_str()),
+                          double(count.first.second.flag()),
+                          double(count.first.second.nEntries()),
+                          double(count.first.second.flag2()),
+                          double(count.first.second.flagMin()),
+                          double(count.first.second.flagMax())
+                          );
       //printXML(MSG::VERBOSE).ignore();
       return StatusCode::SUCCESS;
     }
   //log << MSG::VERBOSE << "making stimple counter "  << endmsg;
   PyObject_CallMethod(m_summary, chr(type_name.c_str()),
-		      chr("s,d"),
-		      chr(count.first.first.c_str()),
-		      double(count.first.second.flag())
-		      );
+                      chr("s,d"),
+                      chr(count.first.first.c_str()),
+                      double(count.first.second.flag())
+                      );
   //printXML(MSG::VERBOSE).ignore();
 
   return StatusCode::SUCCESS;
@@ -491,6 +512,7 @@ StatusCode XMLSummarySvc::writeXML(MSG::Level lev)
   }
 
   log << MSG::VERBOSE << "ready to write xml file " << m_xmlfile << " " << m_summary << endmsg;
+  PyGILGuard gil;
   PyObject_CallMethod(m_summary, chr("write"), chr("s"),chr(m_xmlfile.c_str()));
   log << lev << "Wrote xml file " << m_xmlfile << endmsg;
   return StatusCode::SUCCESS;
@@ -506,7 +528,9 @@ StatusCode XMLSummarySvc::printXML(MSG::Level lev) const
 
   }
   log << MSG::VERBOSE << "ready to write to screen " << m_xmlfile << " " << m_summary << endmsg;
-  PyObject* res=PyObject_CallMethod(m_summary, chr("xml"), chr(""));
+
+  PyGILGuard gil;
+  PyObject* res = PyObject_CallMethod(m_summary, chr("xml"), chr(""));
   if (res==NULL || res==Py_None || !PyString_Check(res))
   {
     log << MSG::DEBUG << "Cannot print XML" << endmsg;
@@ -548,9 +572,10 @@ StatusCode XMLSummarySvc::prepareXML()
 
   MsgStream log( msgSvc(), name() );
 
-  //Initialize the python session... may not be needed?
-  Py_Initialize();
+  // Initialize the python session if needed
+  if (!Py_IsInitialized()) Py_Initialize();
 
+  PyGILGuard gil;
   //Import the python module
   //import XMLSummaryBase.summary
   PyObject* pName=PyString_FromString("XMLSummaryBase.summary");
@@ -616,6 +641,7 @@ StatusCode XMLSummarySvc::fillUsage()
 
   }
   int mem = System::virtualMemoryPeak();
+  PyGILGuard gil;
   PyObject_CallMethod(m_summary, chr("fill_memory"),
                       chr("d,s"),
                       double(mem),
