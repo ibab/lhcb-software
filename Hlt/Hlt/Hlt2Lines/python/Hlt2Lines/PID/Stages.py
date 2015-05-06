@@ -103,7 +103,7 @@ class BCombiner(Hlt2Combiner):
             shared = True,
             nickname = nickname,
             dependencies = [ PV3D('Hlt2') ],
-            #tistos = 'LLhTisTos',
+            tistos = 'CombTisTosSpec',
             DaughtersCuts = dc,
             CombinationCut = cc,
             MotherCut = mc,
@@ -198,7 +198,8 @@ class PIDGhostInFilter(Hlt2ParticleFilter):
           pidCut = " & (%s %s %%(PID_LIM)s)" % (pidVar, ('<' if pidULim else '>'))
         else:
           pidCut = ""
-        cut = ("(TRGHOSTPROB < %(Trk_GhostProb_MAX)s)" + pidCut)
+        cut = ("(TRGHOSTPROB < %(Trk_GhostProb_MAX)s) & (PT > %(Trk_PT_MIN)s)"
+             + " & (MIPCHI2DV(PRIMARY) > %(Trk_MinIPChi2)s)" + pidCut)
         Hlt2ParticleFilter.__init__(self, 'PID' + name + 'PIDGhostFilter', cut, inputs,
                                     shared = True, nickname = name, UseP2PVRelations = False)
 
@@ -206,7 +207,8 @@ class PromptFilter(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
         cut = ("(BPVDIRA > %(BPVDIRA_MIN)s) & (BPVLTIME() > %(BPVLTIME_MIN)s )")
         Hlt2ParticleFilter.__init__(self, 'PID' + name + 'PromptFilter', cut, inputs,
-                                    shared = True, nickname = name, UseP2PVRelations = False)
+                                    shared = True, nickname = name, UseP2PVRelations = False,
+                                    tistos = 'PromptTisTosSpec')
 
 from HltLine.HltDecodeRaw import DecodeL0CALO
 JPsiMuMuPosTagged = LLCombiner("JPsiMuMuPos",  Muons, NoPIDsMuons, 0, "JPsiMuMu")

@@ -8,6 +8,14 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-05-06 - Olli Lupton
+ - PID:
+  . Remove non-Turbo copies of lines.
+  . Allow for finer tuning of L0/Hlt1 requirements in settings.
+  . Re-add missing TISTOS filter for prompt D0->K3pi and Lc->Kppi.
+  . Prescale D0->K3pi by default.
+  . Assorted cut tweaks (inc. cutting much harder on Lc+ daughter proton pT).
+
 ! 2015-05-05 - Francesco Dettori
  - Removing Hlt2SingleMuonSharedSingleMuon, present by mistake. 
 
