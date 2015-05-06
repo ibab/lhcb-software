@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2015-05-06 - Marco Cattaneo
+ - LHCbExclusions.py: add temporary exclusion for printout of Algorithm
+   ErrorCount property, renamed ErrorCounter in Gaudi v26r2
+
 !========================= GaudiConf v19r9 2015-05-04 =========================
 ! 2015-04-28 - Sean Benson
  - Turbo option in DstConf. Needed for propagation of Turbo objects.
