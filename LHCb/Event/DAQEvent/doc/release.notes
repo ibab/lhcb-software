@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2015-05-05 - Marco Clemencic
+ - Fixed LHCBPS-1410: implement event type bits as enum in ODIN
+
 !========================= DAQEvent v9r18 2015-04-20 =========================
 ! 2015-04-10 - Heinrich Schindler
  - Add HC RawEvent location.
