@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-06 - Marco Gersabeck
+ - added StrippingD2hh.py to StrippingCharm
+
 ! 2015-05-05 - Oliver Gruenberg
 - updated the following S21 lines with RelatedInfoTools for the coming MDST.DST rerun
 	- StrippingB23MuLines.py
