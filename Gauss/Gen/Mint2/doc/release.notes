@@ -6,6 +6,11 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+2015-05-06 - Philippe d'Argent
+ - Spin projectors use p^2 instead of m^2
+ - Spin factor caching implemented
+ - removed comments in NamedDecayTreeList.cpp 
+
 2015-05-05 - Philippe d'Argent
  - Converted all line shape parameters (mass, width, BW radius) to FitParameters
    . By default, all parameters are fixed to their PDG values (i.e. the ones in mass_width.cvs)
