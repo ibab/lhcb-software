@@ -61,6 +61,8 @@ StatusCode LHCb::AlignWork::start()
 StatusCode LHCb::AlignWork::initialize()
 {
   OnlineService::initialize();
+  service("ToolSvc",m_ToolSvc,true);
+  service("MonitorSvc",m_MonSvc,true);
   m_incidentSvc = incidentSvc();
   m_incidentSvc->addListener(this,"DAQ_CONTINUE");
   m_incidentSvc->addListener(this,"APP_RUNNING");
@@ -93,6 +95,8 @@ StatusCode LHCb::AlignWork::finalize()
   {
     ::lib_rtl_cancel_thread(m_thread);
   }
+  m_ToolSvc->release();
+  m_MonSvc->release();
   OnlineService::finalize();
   return StatusCode::SUCCESS;
 }
@@ -115,15 +119,13 @@ StatusCode LHCb::AlignWork::run()
 }
 
 
-LHCb::AlignWork::AlignWork(const std::string& name, ISvcLocator* sl) : base_class(name,sl),m_MonSvc(0),m_fitterFcn(0),m_Reference(0)
+LHCb::AlignWork::AlignWork(const std::string& name, ISvcLocator* sl) :
+        base_class(name,sl),m_MonSvc(0),m_fitterFcn(0),m_Reference(0),m_thread(0),m_runonce(false)
 {
   declareProperty("PartitionName",   m_PartitionName= "LHCb");
   declareProperty("ReferenceFileName",  m_RefFileName);
   declareProperty("FitterFunktionClass",  m_FitFcnClass);
   declareProperty("FitterFunktionName",  m_FitFcnName);
-  service("ToolSvc",m_ToolSvc,true);
-  m_runonce = false;
-  service("MonitorSvc",m_MonSvc,true);
 }
 
 LHCb::AlignWork::~AlignWork()
