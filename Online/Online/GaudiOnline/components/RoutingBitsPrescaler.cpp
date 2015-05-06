@@ -223,14 +223,28 @@ namespace LHCb
         bool tmatch, vmatch;
         tmatch = false;
         vmatch = false;
-        for (int i = 0; i < 4; i++)
+        if (r->maskType == BM_MASK_ANY)
         {
-          tmatch = tmatch | ((r->trmask[i] & trm[i]) != 0);
-          vmatch = vmatch | ((r->vetomask[i] & trm[i]) != 0);
-        }
-        if (!tmatch || vmatch)
+          for (int i = 0; i < 4; i++)
+          {
+            tmatch = tmatch | ((r->trmask[i] & trm[i]) != 0);
+            vmatch = vmatch | ((r->vetomask[i] & trm[i]) != 0);
+          }
+          if (!tmatch || vmatch)
+          {
+            return false;
+          }
+        }else
         {
-          return false;
+          for (int i = 0; i < 4; i++)
+          {
+            tmatch = tmatch | ((r->trmask[i] & trm[i]) != r->trmask[i]);
+            vmatch = vmatch | ((r->vetomask[i] & trm[i]) != 0);
+          }
+          if (!tmatch || vmatch)
+          {
+            return false;
+          }
         }
         return true;
       }
