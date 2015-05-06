@@ -1,3 +1,7 @@
+2015-05-06  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* buildGeneralDoc: LBCORE-802: made the main script Jenkins-aware
+
 2015-03-10  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* LbRelease.LHCbDoc: fixed LBCORE-772 (QCustomPlot mainpage showed instead
