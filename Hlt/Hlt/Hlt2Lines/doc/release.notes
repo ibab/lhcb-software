@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-05-07 - Jon Harrison
+ - Changed name of line Tau23Mu in TriMuon folder to TriMuonTau23Mu  
+ - Changed name of line D02KsKs in Phi folder to Phi2KsKsD0Ctrl  
+
 ! 2015-05-06 - Simone Stracka
  - CharmHad: removed empty D2EtaHLines file 
 

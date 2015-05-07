@@ -43,7 +43,7 @@ class Phi2KsKsCombiner(Hlt2Combiner):
         mc =       ("(VFASPF(VCHI2/VDOF) < %(Phi_VCHI2NDOF_MAX)s)")
         from HltTracking.HltPVs import PV3D
         inputs = [goodKs]
-        Hlt2Combiner.__init__(self,'Phi2KsKs', "[phi(1020) -> KS0 KS0]cc", inputs,
+        Hlt2Combiner.__init__(self, name, "[phi(1020) -> KS0 KS0]cc", inputs,
                               dependencies = [PV3D('Hlt2')],
                               CombinationCut = cc,
                               MotherCut = mc, Preambulo = [])
@@ -55,7 +55,7 @@ class D02KsKsCombiner(Hlt2Combiner):
         mc =       ("(VFASPF(VCHI2/VDOF) < %(D0_VCHI2NDOF_MAX)s)")
         from HltTracking.HltPVs import PV3D
         inputs = [goodKs]
-        Hlt2Combiner.__init__(self,'D02KsKs', "[D0 -> KS0 KS0]cc", inputs,
+        Hlt2Combiner.__init__(self, name, "[D0 -> KS0 KS0]cc", inputs,
                               dependencies = [PV3D('Hlt2')],
                               CombinationCut = cc,
                               MotherCut = mc, Preambulo = [])
