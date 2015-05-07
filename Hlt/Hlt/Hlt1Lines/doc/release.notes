@@ -4,6 +4,10 @@
 ! Responsible : Roel Aaij, Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+! 2015-05-07 - Sascha Stahl
+ - Fix warnings in Hlt1HighMult lines and put cut to something more reasonable.
+
 ! 2015-05-05 - Dan Johnson
   - Following yesterday's PPTS discussion on triggering non b-b events, add an HLT1 line to pass these through 
     to HLT2. Need this to avoid nonification of the events triggered at L0 by lumi triggers

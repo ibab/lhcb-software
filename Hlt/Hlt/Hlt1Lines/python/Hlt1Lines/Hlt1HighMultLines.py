@@ -10,18 +10,18 @@ from HltLine.HltLinesConfigurableUser import *
 
 class Hlt1HighMultLinesConf(HltLinesConfigurableUser):
     
-    __slots__ = { 'MinVeloHits'        : 2000,
+    __slots__ = { 'MinVeloHits'        : 2400,
                   'MaxVeloHits'        : 99999,
                   'nPVs'               :  1 ,
-                  'MinVeloHits_PV'     : 2000,
+                  'MinVeloHits_PV'     : 2400,
                   'ODIN'               : 'jbit( ODIN_EVTTYP,2 )'
                   }
 
     def __filterVeloHits(self,name,minVeloHits,maxVeloHits):
         from Configurables import LoKi__VoidFilter
-        fltr_veloHits =  LoKi__VoidFilter ( name+'VeloHitsFilter'
+        fltr_veloHits =  LoKi__VoidFilter ( "Hlt1" + name + "Decision"
                                             , Preambulo = ['from LoKiPhys.decorators import *','from LoKiCore.functions import *']
-                                            , Code = " in_range( %(MinVeloHits)s , CONTAINS('Raw/Velo/LiteClusters') , %(MaxVeloHits)s ) " % {"MinVeloHits":minVeloHits,"MaxVeloHits":maxVeloHits})
+                                            , Code = "in_range( %(MinVeloHits)s , CONTAINS('Raw/Velo/LiteClusters') , %(MaxVeloHits)s )" % {"MinVeloHits":minVeloHits,"MaxVeloHits":maxVeloHits})
         return fltr_veloHits
     
     def __apply_configuration__(self):
@@ -46,6 +46,7 @@ class Hlt1HighMultLinesConf(HltLinesConfigurableUser):
         fltr_nPVs =  LoKi__VoidFilter ( 'HighVeloMultSinglePV_NPVsFilter'
                                         , Code = " CONTAINS('%(pvLoc)s')==%(nPVs)s " \
                                         % {"pvLoc" : pvReco.output, "nPVs": self.getProp("nPVs")})
+
         Hlt1Line('HighVeloMult',
                  prescale  = self.prescale,
                  postscale = self.postscale,
