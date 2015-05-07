@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-07 - Roberta Cardinale
+ - Added BandQ configs into S22 LineCOnfigDictionaries_ALL.py
+
 ! 2015-05-07 - Michael Kolpin
  - Added Calibration configs (TrackEff and PID) to Stripping22 ConfigDictionary
 
