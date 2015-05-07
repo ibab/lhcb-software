@@ -2,6 +2,9 @@
 ! Responsible : Patrick ROBBE
 !=============================================================================
 
+! 2015-05-07 - Gloria Corti
+ - Added linking to LbHardLib in cmake
+
 ! 2015-05-01 - Philip Ilten
  - Migrated to HardProduction tool
 

@@ -14,5 +14,5 @@ gaudi_add_library(LbBcVegPyLib
 
 gaudi_add_module(LbBcVegPy
                  src/component/*.cpp
-                 LINK_LIBRARIES BcVegPy LbPythiaLib LbBcVegPyLib)
+                 LINK_LIBRARIES BcVegPy LbHardLib LbPythiaLib LbBcVegPyLib)
 
