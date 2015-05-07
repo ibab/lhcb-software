@@ -82,6 +82,7 @@ use MuonMoniSim         v3r0p1    Muon
 use BcmMoniSim          v2r0p1    Bcm
 use BlsMoniSim          v2r0p1    Bls
 use VPMoniSim           v1r0      VP
+use HCMoniSim           v1r0      HC
 
 # Packages for MC generator tuning
 use GenTune             v2r2p1    Gen  
