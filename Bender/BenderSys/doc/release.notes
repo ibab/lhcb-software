@@ -23,6 +23,28 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+<A NAME=v25r6> 2015-05-07 Bender v25r6 based on the DaVinci v36r6</A>
+<ul>						 
+<li>Based on the DaVinci v36r6</li>
+<li>modified access to files in user CERN-EOS area</li>
+<li>modified access to EOS-area</li>
+<li>fix in <code>db-tags</code> script</li>
+<li>more granular defininiton of integer columns in tuple:</li>
+<ul>
+ <li> <code>column_longlong</code>  </li>
+ <li> <code>column_ulonglong</code> </li>
+ <li> <code>column_long</code>      </li>
+ <li> <code>column_ulong</code>     </li>
+ <li> <code>column_int</code>       </li>
+ <li> <code>column_uint</code>      </li>
+ <li> <code>column_short</code>     </li>
+ <li> <code>column_ushort</code>    </li>
+ <li> <code>column_char</code>      </li>
+ <li> <code>column_uchar</code>     </li>
+</ul>
+</ul>
+
+
 <A NAME=v25r5p1> 2015-03-20 Bender v25r5p1 based on the DaVinci v36r5</A>
 <ul>						 
 <li>Based on the DaVinci v36r5 (ROOT6-based) </li>
