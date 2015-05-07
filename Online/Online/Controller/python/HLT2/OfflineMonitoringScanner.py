@@ -1,9 +1,10 @@
 import os, sys, time, traceback
-import Scanner
+from DimInterface import RunFileClient, Controller, FSM
+from Scanner import BasicScanner
 from HLT2 import *
 
 # ------------------------------------------------------------------------------
-class OfflineScanner(Scanner.BasicScanner):
+class OfflineScanner(BasicScanner):
   """
         \author  M.Frank
         \version 1.0
@@ -16,12 +17,13 @@ class OfflineScanner(Scanner.BasicScanner):
         \author  M.Frank
         \version 1.0
     """
-    Scanner.BasicScanner.__init__(self,config,**keys)
+    BasicScanner.__init__(self,config,**keys)
     self.linkDirectory = '.'
     if keys.has_key('link_directory'):
       self.linkDirectory = keys['link_directory']
     self.farmClient = None
     self.minEvents  = 1
+    self.runs_rejected = {}
 
   # ----------------------------------------------------------------------------
   def selectRunDbRuns(self, partition='LHCb'):
@@ -224,6 +226,25 @@ class OfflineScanner(Scanner.BasicScanner):
     result = run_list.difference(still_processing)
     return result
 
+  # -----------------------------------------------------------------------------
+  def scanDatabase(self):
+    runs_processing = set()
+    recent_runs = self.selectRunDbRuns()
+    for run in recent_runs:
+      in_mondb = self.mondbHasRun(run)
+      if not in_mondb:
+        files = self.rundbFiles(run, 'FULL')
+        num_events, files = self.verifyFiles(run,files)
+        if len(files):
+          print 'Add todo Run: ', run, in_mondb, 'Files:', len(files), 'Events:', num_events
+          self.addTodo(run,files[0][0])
+        elif not self.runs_rejected.has_key(run):
+          self.runs_rejected[run] = 1
+          print 'REJECTED Run: ', run, in_mondb, 'Files:', len(files), 'Events:', num_events
+      else:
+        runs_processing.add(in_mondb)
+    return runs_processing
+
 
 def isActive(fsm):
   st = fsm.state()
@@ -235,13 +256,108 @@ def isActive(fsm):
     return True
   return False
 
-# ===============================================================================
+
+# -------------------------------------------------------------------------------
+class Steer(FSM):
+  # -----------------------------------------------------------------------------
+  def __init__(self, name, controller, scanner, auto=False):
+    FSM.__init__(self, name, partitionid=0, auto=auto)
+    self.__active = False
+    self.__needScan = True
+    self.scanner    = scanner
+    self.controller = Controller(controller,'C')
+    self.controller.register(FSM.ST_PAUSED,  self.onCtrlPaused)
+    self.controller.register(FSM.ST_RUNNING, self.onCtrlRunning)
+    self.controller.register(FSM.ST_READY,   self.onCtrlReady)
+    self.controller.register(FSM.ST_ERROR,   self.onCtrlError)
+
+  # -----------------------------------------------------------------------------
+  def isActive(self):
+    return self.__active
+
+  # -----------------------------------------------------------------------------
+  def onRUNNING(self):
+    log(INFO,'Current state is now '+self.state())
+    self.__active = True
+    return self
+
+  # -----------------------------------------------------------------------------
+  def onREADY(self):
+    log(INFO,'Current state is now '+self.state())
+    self.__active = False
+    return self
+
+  # -----------------------------------------------------------------------------
+  def onUNKNOWN(self):
+    self.__active = False
+    self.__needScan = False
+
+  # -----------------------------------------------------------------------------
+  def onCtrlReady(self):
+    log(INFO,'Controller ready.....')
+    return self
+
+  # -----------------------------------------------------------------------------
+  def onCtrlRunning(self):
+    log(INFO,'Controller running.....')
+    self.__needScan = False
+    return self
+
+  # -----------------------------------------------------------------------------
+  def onCtrlPaused(self):
+    log(INFO,'Controller paused.....')
+    self.__needScan = True
+    self.__active   = True
+    return self
+
+  # -----------------------------------------------------------------------------
+  def onCtrlError(self):
+    log(INFO,'Controller in error.....')
+    self.__needScan = False
+    self.__active   = False
+    return self
+
+  def run(self):
+    loop = 0
+    active_states = [FSM.ST_RUNNING,FSM.ST_READY,FSM.ST_STOPPED]
+    scanner = self.scanner
+
+    log(ERROR,"Starting FSM...")
+    self.start()
+
+    runs_processing = None
+    while(1):
+      if self.__needScan and self.isActive():
+        if (loop%20)==0:
+          log(INFO,'[%d] Scanning databases and defining work ...'%(loop,))
+
+        loop = loop + 1
+        runs_processing = scanner.scanDatabase()
+        # If we are no longer active, just stop
+        if not self.isActive(): continue
+
+      if runs_processing and self.isActive():
+        scanner.createWork()
+        if loop == 1: scanner.dump()
+        runs_finished = scanner.runsFinished(runs_processing)
+        print '---    Checking WORK   --------------------------------------------------------------'
+        done = set()
+        for r in runs_finished:
+          if r[1] != 'DONE': done.add(r[0])
+        scanner.setRunsDone(done)
+
+      time.sleep(1)
+
+      if self.state() == FSM.ST_UNKNOWN:
+        log(INFO,'My work is done. Task exit requested....')
+        return
+
+# -------------------------------------------------------------------------------
 def run():
   ### prepare_run()
   ##dump_disk_runs()
   import Config, Setup
   import Params as params
-  from DimInterface import RunFileClient, FSM
 
   print 'PID:',os.getpid()
   ##time.sleep(60)
@@ -255,61 +371,24 @@ def run():
   runFiles = RunFileClient('/HLT/HLT1/Runs','C')
   scanner.farmClient = runFiles
   scanner.minEvents  = 2000
+  log(ERROR,"Started scanner...")
 
   try:
     os.mkdir(scanner.linkDirectory)
   except:
     pass
 
-  while not runFiles.lastData:
-    time.sleep(1)
+  #while not runFiles.lastData:
+  #  time.sleep(1)
 
   auto = (len(sys.argv)>1 and sys.argv[1] == '-a')
-  fsm = FSM(os.environ['UTGID'],auto=auto)
+  fsm = Steer(os.environ['UTGID'],
+              controller='MONA1001_R_Controller/status',
+              scanner=scanner,auto=auto)
 
-  loop = 0
-  runs_rejected = {}
-  active_states = [FSM.ST_RUNNING,FSM.ST_READY,FSM.ST_STOPPED]
+  fsm.run()
+  sys.exit(0)
 
-  fsm.start()
-
-  while(1):
-    if fsm.inState(active_states):
-      recent_runs = scanner.selectRunDbRuns()
-      loop = loop + 1
-      runs_processing = set()
-      for run in recent_runs:
-        in_mondb = scanner.mondbHasRun(run)
-        if not in_mondb:
-          files = scanner.rundbFiles(run, 'FULL')
-          num_events,files = scanner.verifyFiles(run,files)
-          if len(files):
-            print 'Add todo Run: ', run, in_mondb, 'Files:', len(files), 'Events:', num_events
-            scanner.addTodo(run,files[0][0])
-          elif not runs_rejected.has_key(run):
-            runs_rejected[run] = 1
-            print 'REJECTED Run: ', run, in_mondb, 'Files:', len(files), 'Events:', num_events
-        else:
-          runs_processing.add(in_mondb)
-        if not fsm.inState(active_states): break
-
-      if fsm.inState(active_states):
-        if loop == 1: scanner.dump()
-        scanner.createWork()
-        if loop == 1: scanner.dump()
-        runs_finished = scanner.runsFinished(runs_processing)
-        print '===    Checking WORK   =============================================================='
-        done = set()
-        for r in runs_finished:
-          if r[1] != 'DONE': done.add(r[0])
-        scanner.setRunsDone(done)
-    for i in xrange(30):
-      if not fsm.inState(active_states): break      
-      time.sleep(1)
-
-    if fsm.state() == FSM.ST_UNKNOWN:
-      log(INFO,'My work is done. Task exit requested....')
-      sys.exit(0)
 
 if __name__=="__main__":
   run()

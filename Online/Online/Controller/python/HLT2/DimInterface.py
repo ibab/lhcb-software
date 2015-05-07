@@ -76,8 +76,10 @@ class FSM:
     self.__cmdID  = pydim.dis_add_cmnd(name,'C',self.callback,1)
     self.__svcID  = pydim.dis_add_service(name+'/status', 'C', self.service, 1)
     self.__fsmID  = pydim.dis_add_service(name+'/fsm_status','L:2;I:1;C:4;I:1',self.fsm_service, 4)
+    log(INFO,'DIM Command starting.... ')
     pydim.dis_update_service(self.__svcID, (self.__state,))
     pydim.dis_update_service(self.__fsmID, self.fsm_service(self))
+    log(INFO,'DIM Command starting....Done ')
 
   #--------------------------------------------------------------------------------------
   def state(self):
@@ -89,6 +91,7 @@ class FSM:
 
   #--------------------------------------------------------------------------------------
   def start(self):
+    log(INFO,"Start serving DIM....")
     pydim.dis_start_serving(self.__name)
     self.handleCommand(FSM.CMD_LOAD)
     if self.__auto:
@@ -131,6 +134,16 @@ class FSM:
   #--------------------------------------------------------------------------------------
   def handleCommand(self,cmd):
     self.monitor.last = int(time.time())
+    log(INFO,'DIM Command: '+str(cmd))
+    sys.stdout.flush()
+    cb = 'handle'+cmd[0].upper()+cmd[1:]
+    if hasattr(self,cb):
+      if not getattr(self,cb)():
+        self.state = FSM.ST_ERROR
+        if hasattr(self,'on'+FSM.ST_ERROR):
+          getattr(self,'on'+FSM.ST_ERROR)()
+        cmd = ''
+
     if cmd == FSM.CMD_CONFIGURE:
       self.__state = FSM.ST_READY
     elif cmd == FSM.CMD_START:
@@ -157,17 +170,69 @@ class FSM:
       return
     else:
       self.__state = FSM.ST_ERROR
+
+    if hasattr(self,'on'+self.__state):
+      getattr(self,'on'+self.__state)()
+
     pydim.dis_update_service(self.__svcID,(self.__state,))
     if self.__fsmID != 0: pydim.dis_update_service(self.__fsmID)
 
 
   #--------------------------------------------------------------------------------------
   def callback(self, *args):
-    log(DEBUG,'++ FSM status callback. Args are %s'%str(args))
+    log(INFO,'++ FSM status callback. Args are %s'%str(args))
     r = args[0][0]
     r = r[:r.find('\0')]
     self.handleCommand(r)
     pass
+
+#----------------------------------------------------------------------------------------
+"""
+from DimInterface import *
+c = Controller('MONA1001_R_Controller/status','C')
+
+"""
+class Controller:
+  #--------------------------------------------------------------------------------------
+  def __init__(self, client, format='C'):
+    log(INFO,"+++ Starting control object connected to %s"%(client,))
+    self.__client = client
+    self.__state = ''
+    self.__lock = threading.Lock()
+    self.__infoID = pydim.dic_info_service(self.__client,format,self.callback)
+    self.__callbacks = {}
+
+  #--------------------------------------------------------------------------------------
+  def state(self):
+    self.__lock.acquire()
+    data = None
+    if self.__state:
+      data = copy.deepcopy(self.__state)
+    self.__lock.release()
+    return data
+
+  def register(self, state, call):
+    self.__callbacks[state] = call
+
+  #--------------------------------------------------------------------------------------
+  def callback(self, *args):
+    log(VERBOSE,'++ Controller callback. Args are %s'%str(args))
+    if len(args) > 1:
+      self.__lock.acquire()
+      r = args[1]
+      r = r[:r.find('\0')]
+      self.__state = r
+      if self.__callbacks.has_key(self.__state):
+        self.__callbacks[self.__state]()
+      self.handleState(r)
+      self.__lock.release()
+
+  #--------------------------------------------------------------------------------------
+  def handleState(self, state):
+    log(INFO,'++ Controller callback. State: %s'%str(state))    
+    return self
+
+
 
 def runVoidTask(name=None,auto=False):
   utgid = ''
