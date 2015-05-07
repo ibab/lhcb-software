@@ -346,9 +346,9 @@ class FilterBDTGammaGamma(Hlt2ParticleFilter):
         varmap = deepcopy(varmap)
         pt = "log( PT/MeV )"
         ptsum = "log( SUMTREE(PT, (ABSID == 22), 0.0)/MeV )"
-        ptasym = "((MAXTREE(PT, (ABSID == 22), 0.0)/MeV)-(MINTREE(PT, (ABSID == 22), 0.0)/MeV)) / ((MAXTREE(PT, (ABSID == 22), 0.0)/MeV)+(MINTREE(PT, (ABSID == 22), 0.0)/MeV))"
-        pxasym = "((MAXTREE(PX, (ABSID == 22), 0.0)/MeV)-(MINTREE(PX, (ABSID == 22), 0.0)/MeV)) / ((MAXTREE(PX, (ABSID == 22), 0.0)/MeV)+(MINTREE(PX, (ABSID == 22), 0.0)/MeV))"
-        pyasym = "((MAXTREE(PY, (ABSID == 22), 0.0)/MeV)-(MINTREE(PY, (ABSID == 22), 0.0)/MeV)) / ((MAXTREE(PY, (ABSID == 22), 0.0)/MeV)+(MINTREE(PY, (ABSID == 22), 0.0)/MeV))"
+        ptasym = "(MAXTREE((ABSID == 22),PT/MeV)-MINTREE((ABSID == 22),PT/MeV)) / (MAXTREE((ABSID == 22), PT/MeV)+MINTREE((ABSID == 22), PT/MeV))"
+        pxasym = "(MAXTREE((ABSID == 22),PX/MeV)-MINTREE((ABSID == 22),PX/MeV)) / (MAXTREE((ABSID == 22), PX/MeV)+MINTREE((ABSID == 22), PX/MeV))"
+        pyasym = "(MAXTREE((ABSID == 22),PY/MeV)-MINTREE((ABSID == 22),PY/MeV)) / (MAXTREE((ABSID == 22), PY/MeV)+MINTREE((ABSID == 22), PY/MeV))"
         varmap["BPT"] = pt
         varmap["SUMPT"] = ptsum
         varmap["PTASYM"] = ptasym
@@ -365,8 +365,8 @@ class FilterBDTGammaGamma(Hlt2ParticleFilter):
         pt = "log( PT/MeV )"
         ptsum = "log( SUMTREE(PT, (ABSID == 22), 0.0)/MeV)"
         minelpt = "log( MINTREE((ABSID == 11), PT)/MeV )"
-        ptasym = "((MAXTREE(PT, (ABSID == 22), 0.0)/MeV)-(MINTREE(PT, (ABSID == 22), 0.0)/MeV)) / ((MAXTREE(PT, (ABSID == 22), 0.0)/MeV)+(MINTREE(PT, (ABSID == 22), 0.0)/MeV))"
-        vtx = "log( MAXTREE(((ABSID==22) & (ISBASIC)),VFASPF(VCHI2)) )"
+        ptasym = "(MAXTREE((ABSID == 22),PT/MeV)-MINTREE((ABSID == 22),PT/MeV)) / (MAXTREE((ABSID == 22), PT/MeV)+MINTREE((ABSID == 22), PT/MeV))"
+        vtx = "exp( 1.0 - sqrt(sqrt(MAXTREE(((ABSID==22) & (NDAUGHTERS>0)),VFASPF(VCHI2)))) )"
         mass = "MAXTREE((ABSID==22) & (NDAUGHTERS>0), M)"
         varmap["BPT"] = pt
         varmap["SUMPT"] = ptsum
