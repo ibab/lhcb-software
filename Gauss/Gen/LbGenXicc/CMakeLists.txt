@@ -14,5 +14,5 @@ gaudi_add_library(LbGenXiccLib
 
 gaudi_add_module(LbGenXicc
                  src/component/*.cpp
-                 LINK_LIBRARIES GenXicc LbPythiaLib LbGenXiccLib)
+                 LINK_LIBRARIES GenXicc LbHardLib LbPythiaLib LbGenXiccLib)
 

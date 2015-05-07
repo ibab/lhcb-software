@@ -2,6 +2,9 @@
 ! Responsible : F. Zhang
 !=============================================================================
 
+! 2015-05-07 - Gloria Corti
+ - Added linking to LbHardLib for cmake
+
 ! 2015-05-01 - Philip Ilten
  - Migrated to HardProduction tool
 
