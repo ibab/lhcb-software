@@ -170,9 +170,11 @@ void Special::printCounters( ) const {
 void Special::generatePileUp() {
 
   if ( 0 == m_pileUpProductionTool ) {
-    if ( "" != m_pileUpProductionToolName ) 
+    if ( "" != m_pileUpProductionToolName ) {
       m_pileUpProductionTool = 
         tool< IProductionTool >( m_pileUpProductionToolName , this ) ;
+      m_pileUpProductionTool -> initializeGenerator() ;
+    }
   }
 
   if ( 0 == m_pileUpProductionTool ) {
