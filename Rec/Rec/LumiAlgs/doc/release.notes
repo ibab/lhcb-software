@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2015-05-07 - Rosen Matev
+ - Add algorithm LumiEventTuple that writes minimal lumi event ROOT ntuples.
+
 !========================= LumiAlgs v9r7 2015-02-23 =========================
 ! 2015-02-18 - Marco Cattaneo
  - Update references to follow:
