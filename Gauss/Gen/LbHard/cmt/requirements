@@ -8,7 +8,10 @@ version       v1r0
 # Structure, i.e. directories to process.
 #============================================================================
 branches      LbHard doc cmt src
-include_dirs  $(LBHARDROOT)
+
+# Export include files
+#============================================================================
+apply_pattern install_more_includes more=LbHard
 
 # Used packages.
 #============================================================================
@@ -16,11 +19,9 @@ use           Generators       v*    Gen
 use           LbPythia         v*    Gen
 use           LbPythia8        v*    Gen
 
-# Component library building rules.
+# Linker library building rules.
 #============================================================================
 library	      LbHardLib        Lib/*.cpp
 
-# Define component and linker library link options.
-#============================================================================
 apply_pattern linker_library    library=LbHardLib 
 apply_pattern library_stamps    library=LbHardLib
