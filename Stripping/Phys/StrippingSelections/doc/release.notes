@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-07 - Lucio Anderlini
+ - added StrippingXibc and StrippingCC2DD to StrippingB&Q
+
 ! 2015-05-07 - Marco Gersabeck
  - added StrippingDstarD2hhpi0.py to StrippingCharm
 
