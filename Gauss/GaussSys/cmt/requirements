@@ -34,6 +34,7 @@ use Generators          v14r7   Gen
 use LbPythia            v14r2p1 Gen
 
 # Generators packages: extensions to Pythia6
+use LbHard              v1r0    Gen
 use LbAlpGen            v5r0    Gen 
 use BcVegPy             v4r0    Gen
 use GenXicc             v2r1p1  Gen
