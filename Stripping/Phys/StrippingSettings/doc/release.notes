@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-07 - Michael Kolpin
+ - Added Calibration configs (TrackEff and PID) to Stripping22 ConfigDictionary
+
 ! 2015-05-07 - Chitsanu Khurewathanakul
  - Add QEE's configs into S22 LineConfigDictionaries_ALL.py
 
