@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-07 - Marco Gersabeck
+ - added StrippingDstarD2hhpi0.py to StrippingCharm
+
 ! 2015-05-06 - Michael Kolpin
  - Added Hlt1/2 filter slots to TrackEffVeloMuon, TrackEffDownMuon, and TrackEffMuonTT
 
