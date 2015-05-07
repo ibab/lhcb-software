@@ -1162,10 +1162,10 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 from Configurables import HltRecoConf
                 if HltRecoConf().getProp("AddGhostProb"):
                     from Configurables import TrackAddNNGhostId
-                    addNNGhostIdLong = TrackAddNNGhostId("LongTrackAddNNGhostID",GhostIdTool="Run2GhostId")
+                    addNNGhostIdLong = TrackAddNNGhostId( self.getProp("Prefix") + "LongTrackAddNNGhostID",GhostIdTool="Run2GhostId")
                     addNNGhostIdLong.inputLocation = self.__trackLocationByType("Long")
-                    addNNGhostIdDownstream = TrackAddNNGhostId("DownstreamTrackAddNNGhostID",GhostIdTool="Run2GhostId")
-                    addNNGhostIdDownstream.inputLocation = self.__trackLocationByType("Long")
+                    addNNGhostIdDownstream = TrackAddNNGhostId( self.getProp("Prefix") + "DownstreamTrackAddNNGhostID",GhostIdTool="Run2GhostId")
+                    addNNGhostIdDownstream.inputLocation = self.__trackLocationByType("Downstream")
                     trackRecoSequence += [ addNNGhostIdLong, addNNGhostIdDownstream ]
                                    
             else:

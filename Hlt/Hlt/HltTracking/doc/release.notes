@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-05-07 - Sascha Stahl
+ - Hlt2Tracking: Fixed adding of ghost probability to Downstream tracks.
+
 ! 2015-05-06 - Michael Kolpin
  - Changed MuonTTTrack reconstruction in Hlt2ProbeTracking to pick up the correct PV location
 
