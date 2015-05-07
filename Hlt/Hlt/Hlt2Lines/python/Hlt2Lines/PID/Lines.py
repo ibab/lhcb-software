@@ -224,16 +224,16 @@ class PIDLines(Hlt2LinesConfigurableUser):
                  'TrackGEC' : {'NTRACK_MAX'           : 10000},
                  "LcTightChild_pi"    : {
                                 'PID_LIM'                 : -5.0,
-                                'Trk_GhostProb_MAX'       : 0.3,
+                                'Trk_GhostProb_MAX'       : 1e9,#0.3,
                                 'Trk_PT_MIN'              : 400.0 * MeV,
                                 'Trk_MinIPChi2'           : 9.0},
                  'LcTightChild_K'     : {
                                 'PID_LIM'                 : 5.0,
-                                'Trk_GhostProb_MAX'       : 0.3,
+                                'Trk_GhostProb_MAX'       : 1e9,#0.3,
                                 'Trk_PT_MIN'              : 400.0 * MeV,
                                 'Trk_MinIPChi2'           : 9.0},
                  'LcTightChild_p'     : {
-                                'Trk_GhostProb_MAX'       : 0.3,
+                                'Trk_GhostProb_MAX'       : 1e9,#0.3,
                                 'Trk_MinIPChi2'           : 3.0,
                                 'Trk_PT_MIN'              : 1000.0 * MeV}, # Point of the Lc+ sample is
                                                                            # to enhace high pT coverage..
