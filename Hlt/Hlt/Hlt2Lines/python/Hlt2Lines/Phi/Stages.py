@@ -30,6 +30,9 @@ class IncPhiFilter(Hlt2ParticleFilter) :
 class GoodKsFilter(Hlt2ParticleFilter):
     def __init__(self, name):
         cut = ("(PT > %(KS_PT_MIN)s)" +
+               " & (BPVVDCHI2 > %(KS_FD_MIN)s)" +
+               " & CHILDCUT((TRGHOSTPROB < %(GHOSTPROB_MAX)s),1)" +
+               " & CHILDCUT((TRGHOSTPROB < %(GHOSTPROB_MAX)s),2)" +
                " & (ADMASS('KS0') < %(KS_MASS_WINDOW)s)" +
                " & (VFASPF(VCHI2PDOF) < %(KS_VCHI2NDOF_MAX)s)")
         Hlt2ParticleFilter.__init__(self, name, cut, inputs=[KsLLTF, KsDD], shared = True)
@@ -39,6 +42,7 @@ goodKs = GoodKsFilter('GoodKs')
 class Phi2KsKsCombiner(Hlt2Combiner):
     def __init__(self, name):
         cc =       (" (APT > %(Phi_PT_MIN)s)" +
+                    " & (ACUTDOCACHI2(%(Phi_DOCACHI2_MAX)s,''))" +
                     " & (ADAMASS('phi(1020)') < %(Phi_MASS_WINDOW)s)")
         mc =       ("(VFASPF(VCHI2/VDOF) < %(Phi_VCHI2NDOF_MAX)s)")
         from HltTracking.HltPVs import PV3D
@@ -51,6 +55,7 @@ class Phi2KsKsCombiner(Hlt2Combiner):
 class D02KsKsCombiner(Hlt2Combiner):
     def __init__(self, name):
         cc =       (" (APT > %(D0_PT_MIN)s)" +
+                    " & (ACUTDOCACHI2(%(D0_DOCACHI2_MAX)s,''))" +
                     " & (ADAMASS('D0') < %(D0_MASS_WINDOW)s)")
         mc =       ("(VFASPF(VCHI2/VDOF) < %(D0_VCHI2NDOF_MAX)s)")
         from HltTracking.HltPVs import PV3D

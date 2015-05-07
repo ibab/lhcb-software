@@ -9,6 +9,9 @@
 !----------------------------------------------------------------------------
 
 ! 2015-05-07 - Jon Harrison
+ - Updated cuts for Phi2KsKs and Phi2KsKsD0Ctrl lines in Phi folder 
+
+! 2015-05-07 - Jon Harrison
  - Changed name of line Tau23Mu in TriMuon folder to TriMuonTau23Mu  
  - Changed name of line D02KsKs in Phi folder to Phi2KsKsD0Ctrl  
 
