@@ -254,7 +254,9 @@ class Environment(object):
         XMLfile = xmlModule.XMLFile()
         fileName = self._locate(fileName)
         if fileName in self.loadedFiles:
+            self.log.debug('ignore %s: already loaded', fileName)
             return # ignore recursion
+        self.log.debug('loading %s', fileName)
         self.loadedFiles.add(fileName)
         dot = self.variables['.']
         # push the previous value of ${.} onto the stack...

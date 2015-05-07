@@ -1,3 +1,15 @@
+! 2015-05-07 - Marco Clemencic (3b66af5)
+
+ - fixed GAUDI-1031: improve XML errors report in xenv
+
+   
+
+! 2015-05-07 - Marco Clemencic (a3b830e)
+
+ - added some debug messages
+
+   
+
 ! 2015-04-24 - Marco Clemencic (6c1fa0f)
 
  - GAUDI-1019: fixed backward compatibility issue

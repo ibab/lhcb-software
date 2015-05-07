@@ -9,6 +9,7 @@ from StringIO import StringIO
 
 from EnvConfig import Control
 from EnvConfig import xmlModule
+from tempfile import mkstemp
 
 class Test(unittest.TestCase):
 
@@ -93,6 +94,29 @@ class Test(unittest.TestCase):
                     ('include', ('another_file.xml', None, 'some:place'))]
 
         self.assertEqual(variables, expected)
+
+    def testParsingError(self):
+        fd, filename = mkstemp()
+        f = os.fdopen(fd, 'w')
+        f.write('''<?xml version="1.0" ?>
+<env:config xmlns:env="EnvSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="EnvSchema ./EnvSchema.xsd ">
+<env:set variable="error">invalid</env:default>
+</env:config>''')
+        f.close()
+        try:
+            import logging
+            stream = StringIO()
+            hdlr = logging.StreamHandler(stream)
+            logging.getLogger().addHandler(hdlr)
+
+            loader = xmlModule.XMLFile()
+            self.assertRaises(SystemExit, loader.variable, filename)
+
+            self.assertTrue(('Failed to parse %s:' % filename) in stream.getvalue(), 'missing error message')
+
+        finally:
+            logging.getLogger().removeHandler(hdlr)
+            os.remove(filename)
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

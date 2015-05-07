@@ -4,10 +4,13 @@ Created on Jul 2, 2011
 @author: mplajner
 '''
 
-from xml.dom import minidom
 import logging
+
 from cPickle import load, dump
 from hashlib import md5 # pylint: disable=E0611
+
+from xml.dom import minidom
+from xml.parsers.expat import ExpatError
 
 class XMLFile(object):
     '''Takes care of XML file operations such as reading and writing.'''
@@ -46,7 +49,14 @@ class XMLFile(object):
             caller = None
 
         # Get file
-        doc = minidom.parse(path)
+        try:
+            doc = minidom.parse(path)
+        except ExpatError, exc:
+            self.log.fatal('Failed to parse %s: %s', path, exc)
+            self.log.fatal(list(open(path))[exc.lineno-1].rstrip())
+            self.log.fatal(' ' * exc.offset + '^')
+            raise SystemExit(1)
+
         if namespace == '':
             namespace = None
 
