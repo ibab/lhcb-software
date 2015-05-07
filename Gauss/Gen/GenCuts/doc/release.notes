@@ -3,10 +3,13 @@
 ! Responsible : Gloria CORTI, Patrick ROBBE
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
-!========================== GenCuts v3r10 2014-12-16 =========================
-! 2015-05-01 - Guy Wormser 
-  - Added DaughtersInLHCbAndCutsForDstar3pi.cpp and .h to select D*3pi inclusive events from B decays
 
+!========================== GenCuts v3r11 2014-05-07 =========================
+! 2015-05-01 - Guy Wormser 
+ - Added DaughtersInLHCbAndCutsForDstar3pi.cpp and .h to select D*3pi 
+   inclusive events from B decays
+
+!========================== GenCuts v3r10 2014-12-16 =========================
 ! 2014-11-26 - Gloria Corti
  - Fix warning when compiling with --pedantic
 
