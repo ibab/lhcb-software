@@ -3,14 +3,15 @@ Module importing stripping selection line builder modules
 for B2CC WG.
 """
 
-# last update: 30th March 2015
+# last update: 7th May 2015
 _selections = ['StrippingB2JpsiXforBeta_s',
                'StrippingB2Psi2SX',
                'StrippingB2Psi2SXMuMu',
                'StrippingB2CharmoniumX_6H',
                'StrippingBs2EtacPhiBDT',
                'StrippingBd2JpsieeKS',
-               'StrippingBs2JpsieePhi']
+               'StrippingBs2JpsieePhi',
+               'StrippingB2JpsiPi0']
 
 for _sel in _selections :
     try :

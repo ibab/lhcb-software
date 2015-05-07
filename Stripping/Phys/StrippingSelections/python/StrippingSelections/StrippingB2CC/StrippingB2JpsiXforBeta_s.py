@@ -21,8 +21,8 @@ from CommonParticles.Utils import updateDoD
 from StandardParticles import StdLoosePions
 from StandardParticles import StdLooseKaons
 from StandardParticles import StdAllLooseKaons
-from StandardParticles import StdLooseResolvedPi0
-from StandardParticles import StdLooseMergedPi0
+#from StandardParticles import StdLooseResolvedPi0
+#from StandardParticles import StdLooseMergedPi0
 from StandardParticles import StdNoPIDsPions
 from StandardParticles import StdLooseProtons
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
@@ -44,7 +44,7 @@ default_config = {
                  ,       'Bd2JpsiKstarPrescale'      :       0.29    # 2011: 0.065, 2012: 0.29
                  ,       'Bd2JpsiKsPrescale'         :       1.0     # 2011: 1.0, 2012: 1.0
                  ,       'Bs2JpsiPhiPrescale'        :       0.62    # 2011: 0.13, 2012: 0.62
-                 ,       'Bs2JpsiPi0Prescale'        :       0.9     # 2011: 0.185, 2012: 0.9
+#                 ,       'Bs2JpsiPi0Prescale'        :       0.9     # 2011: 0.185, 2012: 0.9
                  ,       'Bu2JpsiKPrescale'          :       0.2     # 2011: 0.04, 2012: 0.2
                          },
     'STREAMS' : {
@@ -58,8 +58,8 @@ default_config = {
          'StrippingBetaSBd2JpsiKsLDDetachedLine',
          'StrippingBetaSBs2JpsiKstarWideLine',
          'StrippingBetaSLambdab2JpsiLambdaUnbiasedLine',
-         'StrippingBetaSBd2JpsiPi0PrescaledLine',
-         'StrippingBetaSBd2JpsiPi0DetachedLine',
+#         'StrippingBetaSBd2JpsiPi0PrescaledLine',
+#         'StrippingBetaSBd2JpsiPi0DetachedLine',
          'StrippingBetaSLambdab2JpsippiDetachedLine'
         ],
         'Dimuon' : [
@@ -83,8 +83,8 @@ default_config = {
 # StrippingBetaSBd2JpsiKsLDDetachedLine
 # StrippingBetaSBs2JpsiKstarWideLine
 # StrippingBetaSLambdab2JpsiLambdaUnbiasedLine
-# StrippingBetaSBd2JpsiPi0PrescaledLine 
-# StrippingBetaSBd2JpsiPi0DetachedLine
+# StrippingBetaSBd2JpsiPi0PrescaledLine - moved
+# StrippingBetaSBd2JpsiPi0DetachedLine - moved
 # StrippingBetaSLambdab2JpsippiDetachedLine
 
 class B2JpsiXforBeta_sConf(LineBuilder) :
@@ -97,7 +97,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                               'Bd2JpsiKstarPrescale',
                               'Bd2JpsiKsPrescale',
                               'Bs2JpsiPhiPrescale',
-                              'Bs2JpsiPi0Prescale',
+#                              'Bs2JpsiPi0Prescale',
                               'Bu2JpsiKPrescale')
 
     def __init__(self, name, config) :
@@ -174,13 +174,13 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                              InputList = self.LambdaListLoose ,
                                              Cuts = "(MAXTREE('p+'==ABSID, PT) > 500.*MeV) & (MAXTREE('pi-'==ABSID, PT) > 100.*MeV) & (ADMASS('Lambda0') < 15.*MeV) & (VFASPF(VCHI2) < 20)")
 
-        self.Pi0ListLoose = MergedSelection("StdLooseCocktailPi0ForBetaS" + self.name,
-                                             RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseResolvedPi0/Particles"),
-                                                                   DataOnDemand(Location = "Phys/StdLooseMergedPi0/Particles")])
+#        self.Pi0ListLoose = MergedSelection("StdLooseCocktailPi0ForBetaS" + self.name,
+#                                             RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseResolvedPi0/Particles"),
+#                                                                   DataOnDemand(Location = "Phys/StdLooseMergedPi0/Particles")])
 
-        self.Pi0List = self.createSubSel( OutputList = "Pi0ForBetaS" + self.name,
-                                          InputList = self.Pi0ListLoose,
-                                          Cuts = "(PT > 1500.*MeV)")
+#        self.Pi0List = self.createSubSel( OutputList = "Pi0ForBetaS" + self.name,
+#                                          InputList = self.Pi0ListLoose,
+#                                          Cuts = "(PT > 1500.*MeV)")
         
         self.makeInclJpsi()
         self.makeBd2JpsiKsLD()
@@ -191,7 +191,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         self.makeBd2JpsiKs()
         self.makeLambdab2Jpsippi() 
         self.makeLambdab2JpsiLambda()
-        self.makeBd2JpsiPi0()
+#        self.makeBd2JpsiPi0()
 
     def createSubSel( self, OutputList, InputList, Cuts ) :
         '''create a selection using a FilterDesktop'''
@@ -364,23 +364,23 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
     
         self.registerLine(Lambdab2JpsiLambdaUnbiasedLine)
 
-    def makeBd2JpsiPi0( self ):
-        Bd2JpsiPi0 = self.createCombinationSel( OutputList = "Bd2JpsiPi0" + self.name,
-                                  DecayDescriptor = "B0 -> J/psi(1S) pi0",
-                                  DaughterLists  = [ self.JpsiList, self.Pi0List ],
-                                  PreVertexCuts = "in_range(4500,AM,6000)",
-                                  PostVertexCuts = "in_range(4700,M,5900) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config
-                                  )
+#    def makeBd2JpsiPi0( self ):
+#        Bd2JpsiPi0 = self.createCombinationSel( OutputList = "Bd2JpsiPi0" + self.name,
+#                                  DecayDescriptor = "B0 -> J/psi(1S) pi0",
+#                                  DaughterLists  = [ self.JpsiList, self.Pi0List ],
+#                                  PreVertexCuts = "in_range(4500,AM,6000)",
+#                                  PostVertexCuts = "in_range(4700,M,5900) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config
+#                                  )
 
-        Bd2JpsiPi0PrescaledLine = StrippingLine( self.name + "Bd2JpsiPi0PrescaledLine", algos = [ Bd2JpsiPi0 ] , HLT = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')", prescale = self.config['Bs2JpsiPi0Prescale'], MDSTFlag = True, EnableFlavourTagging = True )
+#        Bd2JpsiPi0PrescaledLine = StrippingLine( self.name + "Bd2JpsiPi0PrescaledLine", algos = [ Bd2JpsiPi0 ] , HLT = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')", prescale = self.config['Bs2JpsiPi0Prescale'], MDSTFlag = True, EnableFlavourTagging = True )
 
-        Bd2JpsiPi0DetachedLine  = StrippingLine( self.name + "Bd2JpsiPi0DetachedLine",
-                                            algos = [ self.createSubSel( InputList = Bd2JpsiPi0,
-                                                                         OutputList = Bd2JpsiPi0.name() + "Detached" + self.name,
-                                                                         Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )], MDSTFlag = True, EnableFlavourTagging = True )
+#        Bd2JpsiPi0DetachedLine  = StrippingLine( self.name + "Bd2JpsiPi0DetachedLine",
+#                                            algos = [ self.createSubSel( InputList = Bd2JpsiPi0,
+#                                                                         OutputList = Bd2JpsiPi0.name() + "Detached" + self.name,
+#                                                                         Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )], MDSTFlag = True, EnableFlavourTagging = True )
 
-        self.registerLine(Bd2JpsiPi0PrescaledLine)
-        self.registerLine(Bd2JpsiPi0DetachedLine)
+#        self.registerLine(Bd2JpsiPi0PrescaledLine)
+#        self.registerLine(Bd2JpsiPi0DetachedLine)
 
     def makeLambdab2Jpsippi( self ):
         PartCuts = "(PT>500*MeV) & (MIPCHI2DV(PRIMARY)>9)"
