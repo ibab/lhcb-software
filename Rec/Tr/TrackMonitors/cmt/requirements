@@ -5,7 +5,7 @@
 package           TrackMonitors
 version           v2r6
 
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #=====================================================================
 branches          cmt doc src
 include_path      none
@@ -27,6 +27,7 @@ use   PartProp          v*      Kernel
 use   CaloDet           v*      Det
 use   PhysEvent         v*      Event
 use   MCEvent           v*      Event
+use   HltEvent          v*      Event
 
 # Component library building rule
 #=====================================================================
