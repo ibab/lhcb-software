@@ -1,3 +1,16 @@
+! 2015-05-08 - Marco Clemencic (af09fcc)
+
+ - use "c++14" (instead of "c++1y") for gcc >= 5.1
+
+   
+
+! 2015-05-08 - Marco Clemencic (80716fa)
+
+ - LHCBPS-1394: disable optimizations in debug with -do0 BINARY_TAG suffix
+
+   When the BINARY_TAG/CMTCONFIG ends by -do0 (instead of -dbg) we build with
+   debug symbols and no optimization, but use -dbg for the LCG libraries.
+
 ! 2015-05-07 - Marco Clemencic (3b66af5)
 
  - fixed GAUDI-1031: improve XML errors report in xenv

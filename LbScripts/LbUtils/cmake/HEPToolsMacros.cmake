@@ -165,6 +165,12 @@ function(lcg_get_target_platform)
   list(GET out 2 comp)
   list(GET out 3 type)
 
+  # special cases for the build type
+  if(type STREQUAL "do0")
+    # "*-do0" in Gaudi means "-g -O0" and it corresponds to "*-dbg" in AA
+    set(type "dbg")
+  endif()
+
   set(LCG_BUILD_TYPE ${type} CACHE STRING "Type of build (LCG id).")
 
   set(LCG_TARGET ${arch}-${os}-${comp})
