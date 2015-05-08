@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-05-08 - Jibo He
+ - Fixed the copy-and-paste bug for DiProtonLowMult dict.
+
 ! 2015-05-08 - Sean Benson
  - Fix Bs->gammagamma transform dictionary.
 

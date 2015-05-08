@@ -41,12 +41,10 @@ class CcDiHadronLines(Hlt2LinesConfigurableUser):
                                             """,
                                 'ComCuts' : """
                                             (AM > 2.75*GeV )
-                                            & (APT> 6.3 *GeV) 
                                             """,
                                 'MomCuts' : """
                                             (VFASPF(VCHI2PDOF) < 9)
-                                            & (MM > 2.8*GeV)
-                                            & (PT> 6.5 *GeV) 
+                                            & (MM > 2.8*GeV )
                                             """                                
                                 },
                  'DiPhi' :    { 'Prescale': 1.0,
