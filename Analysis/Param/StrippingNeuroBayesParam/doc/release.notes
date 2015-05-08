@@ -1,8 +1,0 @@
-!-----------------------------------------------------------------------------
-! Package     : cmtuser/StrippingNeuroBayesParam
-! Responsible : Ulrich Kerzel
-! Purpose     : Expertise files for NeuroBayes neural networks
-!-----------------------------------------------------------------------------
-
-! 2010-10-20 - Ulrich Kerzel
- - first version, J/Psi -> mumu, trained on data ~Sep 2010 reco04/05+strip05/07/09
