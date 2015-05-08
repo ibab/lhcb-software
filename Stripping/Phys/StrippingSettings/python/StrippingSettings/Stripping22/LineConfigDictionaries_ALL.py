@@ -186,11 +186,11 @@ Z02MuMu = {
 #-------------#
 # Calibration #
 #-------------#
-
 TrackEffDownMuon = {
     'NAME'        : 'TrackEffDownMuon',
     'WGs'         : ['ALL'],
     'BUILDERTYPE' : 'StrippingTrackEffDownMuonConf',
+    'STREAMS'           : [ 'Calibration' ],
     'CONFIG'      : { 
 				'MuMom':		2000.	# MeV
 			,	'MuTMom':		200.	# MeV
@@ -235,6 +235,7 @@ TrackEffDownMuon = {
 TrackEffMuonTT = {
     'NAME'        : 'TrackEffMuonTT',
     'WGs'         : ['ALL'],
+    'STREAMS'           : [ 'Calibration' ],
     'BUILDERTYPE' : 'StrippingTrackEffMuonTTConf',
     'CONFIG'      : { 
 			'JpsiMassWin'                 : 500,
@@ -284,6 +285,7 @@ TrackEffMuonTT = {
 TrackEffVeloMuon = {
     'NAME'        : 'TrackEffVeloMuon',
     'WGs'         : ['ALL'],
+    'STREAMS'           : [ 'Calibration' ],
     'BUILDERTYPE' : 'StrippingTrackEffVeloMuonConf',
     'CONFIG'      : {
 			"TrChi2VeMu":		5.	# adimensional
@@ -332,6 +334,7 @@ TrackEffVeloMuon = {
 NoPIDDstarWithD02RSKPi =  {
     'NAME'       : 'noPIDDstar',
     'WGs'        : ['ALL'],
+    'STREAMS'           : [ 'Calibration' ],
     'BUILDERTYPE': 'NoPIDDstarWithD02RSKPiConf',
     'CONFIG'     :{
     

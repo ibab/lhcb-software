@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-05-08 - Andrea Contu
+ - Fix to s22 dictionaries, several dictionaries without "STREAMS" key
+
+! 2015-05-08 - Andrea Contu
  - Created dbase for Stripping22
 
 ! 2015-05-07 - Roberta Cardinale
