@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-05-08 - Andrea Contu
+ - Update to stripping22 dbase following previous commit
+
+! 2015-05-08 - Andrea Contu
  - Fix to s22 dictionaries, several dictionaries without "STREAMS" key
 
 ! 2015-05-08 - Andrea Contu
