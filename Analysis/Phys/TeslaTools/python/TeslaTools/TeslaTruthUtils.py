@@ -11,31 +11,29 @@
 #    when Tesla was ran
 
 def getRelLoc(prefix):
-    base = "/Event/"
     protos = prefix + "/Protos"
-    tracks = prefix + "/Tracks"
-    protocont = base + protos
-    trackcont = base + tracks
-    relloc = "Relations/" + protos
+    relloc = "/Event/Turbo/Relations/Turbo/" + protos
     return relloc
 
 def associateSequence(prefix,debug):
     from Gaudi.Configuration import GaudiSequencer 
     from Configurables import TrackAssociator, ChargedPP2MC
-    base = "/Event/"
+    base = "/Event/Turbo/"
     protos = prefix + "/Protos"
     tracks = prefix + "/Tracks"
     protocont = base + protos
     trackcont = base + tracks
-    relloc = "Relations/" + protos
+    relloc = "Relations/Turbo/" + protos
     assoctr = TrackAssociator(prefix+"AssocTr")
     assoctr.TracksInContainer = trackcont
     assocpp=ChargedPP2MC(prefix+"ProtoAssocPP")
+    assocpp.RootInTES=base
     assocpp.TrackLocations = [ trackcont ]
     assocpp.InputData = [ protocont ]
     assocpp.OutputTable = relloc
     if debug == True:
-        assocpp.OutputLevel = DEBUG
+        assocpp.OutputLevel = 2
+        assoctr.OutputLevel = 2
     # Add it to a selection sequence
     seq = GaudiSequencer(prefix+'SeqP2MC')
     seq.Members += [assoctr,assocpp]
