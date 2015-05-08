@@ -9,15 +9,15 @@ version       v1r0
 #============================================================================
 branches      LbHard doc cmt src
 
-# Export include files
-#============================================================================
-apply_pattern install_more_includes more=LbHard
-
 # Used packages.
 #============================================================================
 use           Generators       v*    Gen
 use           LbPythia         v*    Gen
 use           LbPythia8        v*    Gen
+
+# Export include files
+#============================================================================
+apply_pattern install_more_includes more=LbHard
 
 # Linker library building rules.
 #============================================================================
