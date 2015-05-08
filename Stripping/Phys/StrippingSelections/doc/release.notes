@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-08 - Lucio Anderlini
+ - added StrippingXibc and StrippingCC2DD to StrippingB&Q, now for real
+
 ! 2015-05-07 - Carlos Vazquez Sierra
  - Splitted BdJpsiPi0 lines in a new builder: StrippingB2JpsiPi0.py
 
