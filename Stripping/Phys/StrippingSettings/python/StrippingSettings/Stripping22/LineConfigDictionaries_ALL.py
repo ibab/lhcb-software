@@ -2,8 +2,7 @@
 Line config dictionaries for Early Measurements data stripping.
 """
 
-from GaudiKernel.SystemOfUnits import GeV
-
+from GaudiKernel.SystemOfUnits import *
 
 
 
