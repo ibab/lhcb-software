@@ -144,8 +144,8 @@ TimingAuditor().TIMER.NameSize = 60
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 # database
-DaVinci().DDDBtag  = "dddb-20120831"
-DaVinci().CondDBtag = "cond-20121008"
+DaVinci().DDDBtag  = "dddb-20130929-1"
+DaVinci().CondDBtag = "cond-20141107"
 
 # input file
 importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_Run125113.py")

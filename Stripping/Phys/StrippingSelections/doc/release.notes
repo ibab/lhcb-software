@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-08 - Andrea Contu
+ - updated db tags in test scripts
+
 ! 2015-05-08 - Lucio Anderlini
  - added StrippingXibc and StrippingCC2DD to StrippingB&Q, now for real
 
