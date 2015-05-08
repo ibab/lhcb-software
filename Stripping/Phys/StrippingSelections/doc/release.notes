@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-08 - Paul Seyfert
+ - added StrippingTau23MuLines.py to StrippingRD
+
 ! 2015-05-08 - Andrea Contu
  - updated db tags in test scripts
 
