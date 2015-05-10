@@ -55,7 +55,7 @@ GaudiTool ( type, name, parent )
   declareProperty( "EnableNNetKaonSSTagger",  m_EnableNNetKaonSS  = true );
   // SSproton taggin
   declareProperty( "EnableProtonTagger",      m_EnableProtonSS  = true );
-  declareProperty( "EnableCharmTagger",       m_EnableCharm    = false );
+  declareProperty( "EnableCharmTagger",       m_EnableCharm     = true );
 
   declareProperty( "ForceSignalID",           m_ForceSignalID  = " "); //force signal B as Bu, Bd, B
 

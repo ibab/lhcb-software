@@ -20,7 +20,7 @@ tunings = {
 
         #"ForceSignalID" :   , #"Bs", "Bd", "Bu" to force SSk or SSpi
 
-        "EnableCharmTagger": "False",
+        "EnableCharmTagger": "True", # was disabled in the initial Stripping21
         "EnableProtonTagger": "True",
         "EnablePionBDTTagger": "True",
         #Following 2 lines optimize the average and combined (5 cat) performances for B2JpsiK
@@ -974,7 +974,7 @@ tunings = {
 
         #"ForceSignalID" :   , #"Bs", "Bd", "Bu" to force SSk or SSpi
 
-        "EnableCharmTagger": "False",
+        "EnableCharmTagger": "True", # was disabled in the initial Stripping21
         "EnableProtonTagger": "True",
         "EnablePionBDTTagger": "True",
         #Following 2 lines optimize the average and combined (5 cat) performances for B2JpsiK
