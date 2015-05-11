@@ -6,6 +6,7 @@
 
 ! 2015-05-12 - Carlos Vazquez Sierra
  - Added a subfolder tests/liaisons/B2CC and a script TestB2CC.py for B2CC testing.
+ - Cleaned B2CC scripts and replaced HLT with HLT2.
 
 ! 2015-05-11 - Yasmine Amhis. 
  - remove commented line in StrippingBu2LLK

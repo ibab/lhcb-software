@@ -72,7 +72,7 @@ class B2JpsiPi0Conf(LineBuilder) :
 
         Bd2JpsiPi0PrescaledLine = StrippingLine( self.name + "Bd2JpsiPi0PrescaledLine",
                                                  algos = [ Bd2JpsiPi0 ] ,
-                                                 HLT = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')", # Carlos: This HAS to be updated ASAP!
+                                                 HLT2 = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')",
                                                  prescale = self.config['Bs2JpsiPi0Prescale'],
                                                  MDSTFlag = True,
                                                  EnableFlavourTagging = True )

@@ -179,7 +179,7 @@ class Bs2EtacPhiBDTConf(LineBuilder):
 
         self.Bs2EtacPhi_KsKPiLine = StrippingLine( self.name + '_KsKPiLine',                                                
                                                    prescale  = config['Prescale'],
-                                                   HLT       = config['HLTCuts'],
+                                                   HLT2      = config['HLTCuts'],
                                                    algos     = [ self.SelBs2EtacPhi_KsKPi ],
                                                    EnableFlavourTagging = True,
                                                    MDSTFlag = True
@@ -243,7 +243,7 @@ class Bs2EtacPhiBDTConf(LineBuilder):
                 
         self.Bs2EtacPhiBDTLine = StrippingLine( self.name + 'Line',                                                
                                                 prescale  = config['Prescale'],
-                                                HLT       = config['HLTCuts'],
+                                                HLT2      = config['HLTCuts'],
                                                 algos     = [ self.MvaBs2EtacPhi ],
                                                 EnableFlavourTagging = True,
                                                 MDSTFlag = True
