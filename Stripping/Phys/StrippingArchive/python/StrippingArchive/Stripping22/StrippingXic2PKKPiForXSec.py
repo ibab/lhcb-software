@@ -5,8 +5,6 @@ for open charm cross section measurement.
 """
 
 __author__ = ['Alex Pearce']
-__date__ = '2015/02/02'
-__version__ = '$Revision: 1.0 $'
 
 __all__ = (
     'default_config',
@@ -119,7 +117,7 @@ class StrippingXic2PKKPiForXSecConf(LineBuilder):
 
         self.selXic2PKKPi = self.makeXic2PKKPi(
             name=xic_pkkpi_name,
-            inputSel=[self.inPions, self.inKaons, self.inProtons],
+            inputSel=[self.inProtons, self.inKaons, self.inPions],
             decDescriptors=self.Xic2PKKPi
         )
         self.selXic2PKKPiMVA = self.makeMVASelection(

@@ -4,6 +4,12 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-11 - Alex Pearce 
+ - Clean up docstrings in ForXSec charm modules 
+ - Relax BDT requirements in all ForXSec charm modules 
+ - Change D2HHH and D2PhiPi ForXSec charm modules to produce separate D+ and 
+   D_s+ lines, rather than combined D+ or D_s+ lines with wide mass windows. 
+
 ! 2015-05-11 - Ricardo Vazquez Gomez
  - Change the instantiate-all-strip.ref to fix the nightlies
 

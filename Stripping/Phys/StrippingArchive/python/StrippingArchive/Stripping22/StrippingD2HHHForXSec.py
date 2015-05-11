@@ -1,19 +1,17 @@
-'''
+"""
 Stripping lines for selection of
     [D+ -> K- pi+ pi+]cc
     [D+ -> K- K+ pi+]cc
     [D+ -> K- K+ K+]cc
     [D+ -> pi- pi+ pi+]cc
     [D+ -> K+ pi- pi+]cc
-for open charm cross section measurement.
-The three-body mass window is wide enough to select D+ and D_s+.
+and the same D_s+ modes for open charm cross section measurement.
+The three-body [h+ h- h+]cc combination is made with a mass window wide enough
+to select D+ and D_s+, and then this selection is filtered in to a D+ selection
+around the nominal D+ mass and a D_s+ selection around the nominal D_s+ mass.
+"""
 
-Adapted to current stripping framework by P. Spradlin.
-'''
-
-__author__ = ['Hamish Gordon', 'Patrick Spradlin']
-__date__ = '03/09/2010'
-__version__ = '$Revision: 2.0 $'
+__author__ = ['Alex Pearce']
 
 __all__ = (
     'default_config',
@@ -21,7 +19,7 @@ __all__ = (
 )
 
 from GaudiKernel.SystemOfUnits import MeV, GeV, mm, mrad
-from Configurables import CombineParticles, FilterDesktop
+from Configurables import CombineParticles, FilterDesktop, SubstitutePID
 from StandardParticles import (
     StdAllNoPIDsKaons,
     StdAllNoPIDsPions
@@ -37,56 +35,63 @@ default_config = {
     'BUILDERTYPE': 'StrippingD2HHHForXSecConf',
     'STREAMS': ['Charm'],
     'CONFIG': {
-        # Minimum transverse momentum all D+ daughters must satisfy
+        # Minimum transverse momentum all D daughters must satisfy
         'Daug_All_PT_MIN': 200.0*MeV,
-        # Minimum transverse momentum at least 2 D+ daughters must satisfy
+        # Minimum transverse momentum at least 2 D daughters must satisfy
         'Daug_2of3_PT_MIN': 400.0*MeV,
-        # Minimum transverse momentum at least 1 D+ daughter must satisfy
+        # Minimum transverse momentum at least 1 D daughter must satisfy
         'Daug_1of3_PT_MIN': 400.0*MeV,
-        # Minimum best primary vertex IP chi^2 all D+ daughters must satisfy
+        # Minimum best primary vertex IP chi^2 all D daughters must satisfy
         'Daug_All_BPVIPCHI2_MIN': 4.0,
-        # Minimum best PV IP chi^2 at least 2 D+ daughters must satisfy
+        # Minimum best PV IP chi^2 at least 2 D daughters must satisfy
         'Daug_2of3_BPVIPCHI2_MIN': 10.0,
-        # Minimum best PV IP chi^2 at least 1 D+ daughter must satisfy
+        # Minimum best PV IP chi^2 at least 1 D daughter must satisfy
         'Daug_1of3_BPVIPCHI2_MIN': 50.0,
-        # Minimum D+ daughter momentum
+        # Minimum D daughter momentum
         'Daug_P_MIN': 3.0*GeV,
-        # Maximum D+ daughter momentum
+        # Maximum D daughter momentum
         'Daug_P_MAX': 100.0*GeV,
-        # Minimum D+ daughter pseudorapidity
+        # Minimum D daughter pseudorapidity
         'Daug_ETA_MIN': 2.0,
-        # Maximum D+ daughter pseudorapidity
+        # Maximum D daughter pseudorapidity
         'Daug_ETA_MAX': 5.0,
-        # Minimum D+ daughter kaon DLLK
+        # Minimum D daughter kaon DLLK
         'K_PIDK_MIN': 5.0,
-        # Maximum D+ daughter pion DLLK
+        # Maximum D daughter pion DLLK
         'Pi_PIDK_MAX': 3.0,
-        # Minimum mass of the three-body HHH combination
-        'Comb_AM_MIN': 1770.0*MeV,
-        # Maximum mass of the three-body HHH combination
-        'Comb_AM_MAX': 2070.0*MeV,
-        # Maximum distance of closest approach of D+ daughters
+        # D+ mass window around the nominal D+ mass after the vertex fit
+        # Lower bound of this, -10 MeV, is used before the hhh combination
+        # vertex fit
+        'Dp_ADAMASS_WIN': 80.0*MeV,
+        # D_s+ mass window around the nominal D+ mass after the vertex fit
+        # Upper bound of this, +10 MeV, is used before the hhh combination
+        # vertex fit
+        'Ds_ADAMASS_WIN': 80.0*MeV,
+        # Maximum distance of closest approach of D daughters
         'Comb_ADOCAMAX_MAX': 0.5*mm,
-        # Maximum D+ vertex chi^2 per vertex fit DoF
+        # Maximum D vertex chi^2 per vertex fit DoF
         'D_VCHI2VDOF_MAX': 25.0,
-        # Maximum angle between D+ momentum and D+ direction of flight
+        # Maximum angle between D momentum and D direction of flight
         'D_acosBPVDIRA_MAX': 35.0*mrad,
-        # Primary vertex displacement requirement, either that the D+ is some
+        # Primary vertex displacement requirement, either that the D is some
         # sigma away from the PV, or it has a minimum flight time
         'D_PVDispCut': '((BPVVDCHI2 > 16.0)|(BPVLTIME() > 0.150*picosecond))',
-        # Minimum D+ MVA discriminant value
-        'D_MVA_MIN': -0.3,
-        # Path to the D+ MVA weights file
+        # Minimum D+ and D_s+ MVA discriminant value
+        'Dp_MVA_MIN': -0.3,
+        'Ds_MVA_MIN': -0.3,
+        # Path to the D+ and D_s+ MVA weights files
         # BDT is not applied if this is the empty string or None
-        'D_MVA_Weights': 'D2HHHForXSec_BDT_v1r0.xml',
-        # Dictionary of LoKi functors defining the D+ MVA input variables
+        'Dp_MVA_Weights': '$TMVAWEIGHTSROOT/data/D2HHHForXSec_BDT_v1r0.xml',
+        'Ds_MVA_Weights': '$TMVAWEIGHTSROOT/data/D2HHHForXSec_BDT_v1r0.xml',
+        # Dictionary of LoKi functors defining the D MVA input variables
         # The keys must match those used when training the MVA
+        # Same input variables are used for both D+ and D_s+
         'D_MVA_Variables': {
-            # Largest D+ daughter PT
+            # Largest D daughter PT
             'ROOTex::Leading(Dp_h1_PT,Dp_h2_PT,Dp_h3_PT)': (
                 "MAXTREE(ISBASIC & HASTRACK, PT)"
             ),
-            # Smallest D+ daughter PT
+            # Smallest D daughter PT
             'ROOTex::ThirdLeading(Dp_h1_PT,Dp_h2_PT,Dp_h3_PT)': (
                 "MINTREE(ISBASIC & HASTRACK, PT)"
             ),
@@ -105,17 +110,27 @@ default_config = {
         'Hlt1Filter': None,
         'Hlt2Filter': None,
         # Fraction of candidates to randomly throw away before stripping
-        'PrescaleD2KPP': 1.0,
-        'PrescaleD2KKP': 1.0,
-        'PrescaleD2KKK': -1.0,
-        'PrescaleD2PPP': 1.0,
-        'PrescaleD2KPPDCS': -1.0,
+        'PrescaleDp2KPP': 1.0,
+        'PrescaleDp2KKP': 1.0,
+        'PrescaleDp2KKK': -1.0,
+        'PrescaleDp2PPP': 1.0,
+        'PrescaleDp2KPPDCS': -1.0,
+        'PrescaleDs2KPP': 1.0,
+        'PrescaleDs2KKP': 1.0,
+        'PrescaleDs2KKK': -1.0,
+        'PrescaleDs2PPP': 1.0,
+        'PrescaleDs2KPPDCS': -1.0,
         # Fraction of candidates to randomly throw after before stripping
-        'PostscaleD2KPP': 1.0,
-        'PostscaleD2KKP': 1.0,
-        'PostscaleD2KKK': -1.0,
-        'PostscaleD2PPP': 1.0,
-        'PostscaleD2KPPDCS': -1.0
+        'PostscaleDp2KPP': 1.0,
+        'PostscaleDp2KKP': 1.0,
+        'PostscaleDp2KKK': -1.0,
+        'PostscaleDp2PPP': 1.0,
+        'PostscaleDp2KPPDCS': -1.0,
+        'PostscaleDs2KPP': 1.0,
+        'PostscaleDs2KKP': 1.0,
+        'PostscaleDs2KKK': -1.0,
+        'PostscaleDs2PPP': 1.0,
+        'PostscaleDs2KPPDCS': -1.0
     }
 }
 
@@ -138,31 +153,98 @@ class StrippingD2HHHForXSecConf(LineBuilder):
         self.config = config
         LineBuilder.__init__(self, name, config)
 
-        # Line names
+        # HHH combination names
         d2KPP_name = '{0}D2KPP'.format(name)
         d2KKP_name = '{0}D2KKP'.format(name)
         d2KKK_name = '{0}D2KKK'.format(name)
         d2PPP_name = '{0}D2PPP'.format(name)
         d2PPK_name = '{0}D2KPPDCS'.format(name)
+        # D+ line names
+        dp2KPP_name = '{0}Dp2KPP'.format(name)
+        dp2KKP_name = '{0}Dp2KKP'.format(name)
+        dp2KKK_name = '{0}Dp2KKK'.format(name)
+        dp2PPP_name = '{0}Dp2PPP'.format(name)
+        dp2PPK_name = '{0}Dp2KPPDCS'.format(name)
+        # D_s+ line names
+        ds2KPP_name = '{0}Ds2KPP'.format(name)
+        ds2KKP_name = '{0}Ds2KKP'.format(name)
+        ds2KKK_name = '{0}Ds2KKK'.format(name)
+        ds2PPP_name = '{0}Ds2PPP'.format(name)
+        ds2PPK_name = '{0}Ds2KPPDCS'.format(name)
 
-        self.inPions = StdAllNoPIDsPions
-        self.inKaons = StdAllNoPIDsKaons
+        # Build pion and kaon cut strings
+        daugCuts = (
+            '(PT > {0[Daug_All_PT_MIN]})'
+            '& (BPVIPCHI2() > {0[Daug_All_BPVIPCHI2_MIN]})'
+        ).format(self.config)
+        pidFiducialCuts = (
+            '(in_range({0[Daug_P_MIN]}, P, {0[Daug_P_MAX]}))'
+            '& (in_range({0[Daug_ETA_MIN]}, ETA, {0[Daug_ETA_MAX]}))'
+        ).format(self.config)
+        pionPIDCuts = (
+            pidFiducialCuts +
+            '& (PIDK-PIDpi < {0[Pi_PIDK_MAX]})'
+        ).format(self.config)
+        kaonPIDCuts = (
+            pidFiducialCuts +
+            '& (PIDK-PIDpi > {0[K_PIDK_MIN]})'
+        ).format(self.config)
+        pionCuts = '{0} & {1}'.format(daugCuts, pionPIDCuts)
+        kaonCuts = '{0} & {1}'.format(daugCuts, kaonPIDCuts)
+
+        # Filter StdAllNoPIDs particles
+        self.inPions = Selection(
+            'PionsFor{0}'.format(name),
+            Algorithm=FilterDesktop(
+                'FilterPionsFor{0}'.format(name),
+                Code=pionCuts
+            ),
+            RequiredSelections=[StdAllNoPIDsPions]
+        )
+        self.inKaons = Selection(
+            'KaonsFor{0}'.format(name),
+            Algorithm=FilterDesktop(
+                'FilterKaonsFor{0}'.format(name),
+                Code=kaonCuts
+            ),
+            RequiredSelections=[StdAllNoPIDsKaons]
+        )
 
         # K- pi+ pi+
         self.selD2KPP = self.makeD2HHH(
             name=d2KPP_name,
-            inputSel=[self.inPions, self.inKaons],
+            inputSel=[self.inKaons, self.inPions],
             decDescriptors=self.D2KPP
         )
-        self.selD2KPPMVA = self.makeMVASelection(
-            '{0}MVASelection'.format(d2KPP_name),
+        self.selDp2KPP, self.selDs2KPP = self.splitHHH(
+            d2KPP_name,
             self.selD2KPP
         )
-        self.line_D2KPP = self.make_line(
-            name='{0}Line'.format(d2KPP_name),
-            selection=self.selD2KPPMVA,
-            prescale=config['PrescaleD2KPP'],
-            postscale=config['PostscaleD2KPP'],
+        self.selDp2KPPMVA = self.makeMVASelection(
+            '{0}MVASelection'.format(dp2KPP_name),
+            self.selDp2KPP,
+            self.config['Dp_MVA_Weights'],
+            self.config['Dp_MVA_MIN']
+        )
+        self.selDs2KPPMVA = self.makeMVASelection(
+            '{0}MVASelection'.format(ds2KPP_name),
+            self.selDs2KPP,
+            self.config['Ds_MVA_Weights'],
+            self.config['Ds_MVA_MIN']
+        )
+        self.line_Dp2KPP = self.make_line(
+            name='{0}Line'.format(dp2KPP_name),
+            selection=self.selDp2KPPMVA,
+            prescale=config['PrescaleDp2KPP'],
+            postscale=config['PostscaleDp2KPP'],
+            HLT1=config['Hlt1Filter'],
+            HLT2=config['Hlt2Filter']
+        )
+        self.line_Ds2KPP = self.make_line(
+            name='{0}Line'.format(ds2KPP_name),
+            selection=self.selDs2KPPMVA,
+            prescale=config['PrescaleDs2KPP'],
+            postscale=config['PostscaleDs2KPP'],
             HLT1=config['Hlt1Filter'],
             HLT2=config['Hlt2Filter']
         )
@@ -170,18 +252,38 @@ class StrippingD2HHHForXSecConf(LineBuilder):
         # K- K+ pi+
         self.selD2KKP = self.makeD2HHH(
             name=d2KKP_name,
-            inputSel=[self.inPions, self.inKaons],
+            inputSel=[self.inKaons, self.inPions],
             decDescriptors=self.D2KKP
         )
-        self.selD2KKPMVA = self.makeMVASelection(
-            '{0}MVASelection'.format(d2KKP_name),
+        self.selDp2KKP, self.selDs2KKP = self.splitHHH(
+            d2KKP_name,
             self.selD2KKP
         )
-        self.line_D2KKP = self.make_line(
-            name='{0}Line'.format(d2KKP_name),
-            selection=self.selD2KKPMVA,
-            prescale=config['PrescaleD2KKP'],
-            postscale=config['PostscaleD2KKP'],
+        self.selDp2KKPMVA = self.makeMVASelection(
+            '{0}MVASelection'.format(dp2KKP_name),
+            self.selDp2KKP,
+            self.config['Dp_MVA_Weights'],
+            self.config['Dp_MVA_MIN']
+        )
+        self.selDs2KKPMVA = self.makeMVASelection(
+            '{0}MVASelection'.format(ds2KKP_name),
+            self.selDs2KKP,
+            self.config['Ds_MVA_Weights'],
+            self.config['Ds_MVA_MIN']
+        )
+        self.line_Dp2KKP = self.make_line(
+            name='{0}Line'.format(dp2KKP_name),
+            selection=self.selDp2KKPMVA,
+            prescale=config['PrescaleDp2KKP'],
+            postscale=config['PostscaleDp2KKP'],
+            HLT1=config['Hlt1Filter'],
+            HLT2=config['Hlt2Filter']
+        )
+        self.line_Ds2KKP = self.make_line(
+            name='{0}Line'.format(ds2KKP_name),
+            selection=self.selDs2KKPMVA,
+            prescale=config['PrescaleDs2KKP'],
+            postscale=config['PostscaleDs2KKP'],
             HLT1=config['Hlt1Filter'],
             HLT2=config['Hlt2Filter']
         )
@@ -192,15 +294,35 @@ class StrippingD2HHHForXSecConf(LineBuilder):
             inputSel=[self.inKaons],
             decDescriptors=self.D2KKK
         )
-        self.selD2KKKMVA = self.makeMVASelection(
-            '{0}MVASelection'.format(d2KKK_name),
+        self.selDp2KKK, self.selDs2KKK = self.splitHHH(
+            d2KKK_name,
             self.selD2KKK
         )
-        self.line_D2KKK = self.make_line(
-            name='{0}Line'.format(d2KKK_name),
-            selection=self.selD2KKKMVA,
-            prescale=config['PrescaleD2KKK'],
-            postscale=config['PostscaleD2KKK'],
+        self.selDp2KKKMVA = self.makeMVASelection(
+            '{0}MVASelection'.format(dp2KKK_name),
+            self.selDp2KKK,
+            self.config['Dp_MVA_Weights'],
+            self.config['Dp_MVA_MIN']
+        )
+        self.selDs2KKKMVA = self.makeMVASelection(
+            '{0}MVASelection'.format(ds2KKK_name),
+            self.selDs2KKK,
+            self.config['Ds_MVA_Weights'],
+            self.config['Ds_MVA_MIN']
+        )
+        self.line_Dp2KKK = self.make_line(
+            name='{0}Line'.format(dp2KKK_name),
+            selection=self.selDp2KKKMVA,
+            prescale=config['PrescaleDp2KKK'],
+            postscale=config['PostscaleDp2KKK'],
+            HLT1=config['Hlt1Filter'],
+            HLT2=config['Hlt2Filter']
+        )
+        self.line_Ds2KKK = self.make_line(
+            name='{0}Line'.format(ds2KKK_name),
+            selection=self.selDs2KKKMVA,
+            prescale=config['PrescaleDs2KKK'],
+            postscale=config['PostscaleDs2KKK'],
             HLT1=config['Hlt1Filter'],
             HLT2=config['Hlt2Filter']
         )
@@ -211,15 +333,35 @@ class StrippingD2HHHForXSecConf(LineBuilder):
             inputSel=[self.inPions],
             decDescriptors=self.D2PPP
         )
-        self.selD2PPPMVA = self.makeMVASelection(
-            '{0}MVASelection'.format(d2PPP_name),
+        self.selDp2PPP, self.selDs2PPP = self.splitHHH(
+            d2PPP_name,
             self.selD2PPP
         )
-        self.line_D2PPP = self.make_line(
-            name='{0}Line'.format(d2PPP_name),
-            selection=self.selD2PPPMVA,
-            prescale=config['PrescaleD2PPP'],
-            postscale=config['PostscaleD2PPP'],
+        self.selDp2PPPMVA = self.makeMVASelection(
+            '{0}MVASelection'.format(dp2PPP_name),
+            self.selDp2PPP,
+            self.config['Dp_MVA_Weights'],
+            self.config['Dp_MVA_MIN']
+        )
+        self.selDs2PPPMVA = self.makeMVASelection(
+            '{0}MVASelection'.format(ds2PPP_name),
+            self.selDs2PPP,
+            self.config['Ds_MVA_Weights'],
+            self.config['Ds_MVA_MIN']
+        )
+        self.line_Dp2PPP = self.make_line(
+            name='{0}Line'.format(dp2PPP_name),
+            selection=self.selDp2PPPMVA,
+            prescale=config['PrescaleDp2PPP'],
+            postscale=config['PostscaleDp2PPP'],
+            HLT1=config['Hlt1Filter'],
+            HLT2=config['Hlt2Filter']
+        )
+        self.line_Ds2PPP = self.make_line(
+            name='{0}Line'.format(ds2PPP_name),
+            selection=self.selDs2PPPMVA,
+            prescale=config['PrescaleDs2PPP'],
+            postscale=config['PostscaleDs2PPP'],
             HLT1=config['Hlt1Filter'],
             HLT2=config['Hlt2Filter']
         )
@@ -227,18 +369,38 @@ class StrippingD2HHHForXSecConf(LineBuilder):
         # K+ pi- pi+ (DCS)
         self.selD2PPK = self.makeD2HHH(
             name=d2PPK_name,
-            inputSel=[self.inPions, self.inKaons],
+            inputSel=[self.inKaons, self.inPions],
             decDescriptors=self.D2KPPDCS
         )
-        self.selD2PPKMVA = self.makeMVASelection(
-            '{0}MVASelection'.format(d2PPK_name),
+        self.selDp2PPK, self.selDs2PPK = self.splitHHH(
+            d2PPK_name,
             self.selD2PPK
         )
-        self.line_D2PPK = self.make_line(
-            name='{0}Line'.format(d2PPK_name),
-            selection=self.selD2PPKMVA,
-            prescale=config['PrescaleD2KPPDCS'],
-            postscale=config['PostscaleD2KPPDCS'],
+        self.selDp2PPKMVA = self.makeMVASelection(
+            '{0}MVASelection'.format(dp2PPK_name),
+            self.selDp2PPK,
+            self.config['Dp_MVA_Weights'],
+            self.config['Dp_MVA_MIN']
+        )
+        self.selDs2PPKMVA = self.makeMVASelection(
+            '{0}MVASelection'.format(ds2PPK_name),
+            self.selDs2PPK,
+            self.config['Ds_MVA_Weights'],
+            self.config['Ds_MVA_MIN']
+        )
+        self.line_Dp2PPK = self.make_line(
+            name='{0}Line'.format(dp2PPK_name),
+            selection=self.selDp2PPKMVA,
+            prescale=config['PrescaleDp2KPPDCS'],
+            postscale=config['PostscaleDp2KPPDCS'],
+            HLT1=config['Hlt1Filter'],
+            HLT2=config['Hlt2Filter']
+        )
+        self.line_Ds2PPK = self.make_line(
+            name='{0}Line'.format(ds2PPK_name),
+            selection=self.selDs2PPKMVA,
+            prescale=config['PrescaleDs2KPPDCS'],
+            postscale=config['PostscaleDs2KPPDCS'],
             HLT1=config['Hlt1Filter'],
             HLT2=config['Hlt2Filter']
         )
@@ -280,28 +442,13 @@ class StrippingD2HHHForXSecConf(LineBuilder):
             'from math import cos'
         ]
 
-        daugCuts = (
-            '(PT > {0[Daug_All_PT_MIN]})'
-            '& (BPVIPCHI2() > {0[Daug_All_BPVIPCHI2_MIN]})'
-        ).format(self.config)
-
-        pidFiducialCuts = (
-            '(in_range({0[Daug_P_MIN]}, P, {0[Daug_P_MAX]}))'
-            '& (in_range({0[Daug_ETA_MIN]}, ETA, {0[Daug_ETA_MAX]}))'
-        ).format(self.config)
-
-        kaonPIDCuts = (
-            pidFiducialCuts +
-            '& (PIDK-PIDpi > {0[K_PIDK_MIN]})'
-        ).format(self.config)
-
-        pionPIDCuts = (
-            pidFiducialCuts +
-            '& (PIDK-PIDpi < {0[Pi_PIDK_MAX]})'
-        ).format(self.config)
-
+        # Add 10 MeV either side of the ADAMASS checks to account for the
+        # poorer mass resolution before the vertex fit
         combCuts = (
-            '(in_range({0[Comb_AM_MIN]}, AM, {0[Comb_AM_MAX]}))'
+            '('
+            "(ADAMASS('D+') < ({0[Dp_ADAMASS_WIN]} + 10))"
+            "| (ADAMASS('D_s+') < ({0[Ds_ADAMASS_WIN]} + 10))"
+            ')'
             '& (AMAXCHILD(PT) > {0[Daug_1of3_PT_MIN]})'
             '& (AMAXCHILD(BPVIPCHI2()) > {0[Daug_1of3_BPVIPCHI2_MIN]})'
             '& (ANUM(PT > {0[Daug_2of3_PT_MIN]}) >= 2)'
@@ -319,29 +466,72 @@ class StrippingD2HHHForXSecConf(LineBuilder):
             name='Combine{0}'.format(name),
             DecayDescriptors=decDescriptors,
             Preambulo=lclPreambulo,
-            DaughtersCuts={
-                'pi+': '{0} & {1}'.format(daugCuts, pionPIDCuts),
-                'K+': '{0} & {1}'.format(daugCuts, kaonPIDCuts)
-            },
             CombinationCut=combCuts,
             MotherCut=dCuts
         )
 
         return Selection(name, Algorithm=_dplus, RequiredSelections=inputSel)
 
-    def makeMVASelection(self, name, inputSel):
+    def splitHHH(self, name, hhhSelection):
+        """Split the input h-h+h+ Selection in to a D+ and D_s+ selection.
+
+        Returns a two-tuple as (D+ Selection, D_s+ Selection).
+        Keyword arguments:
+        hhhSelection -- A single Selection instance; the output of makeD2HHH
+        """
+        dpFilter = FilterDesktop(
+            'FilterDp{0}'.format(name),
+            Code="(ADMASS('D+') < {0[Dp_ADAMASS_WIN]})".format(self.config)
+        )
+        dsFilter = FilterDesktop(
+            'FilterDs{0}'.format(name),
+            Code="(ADMASS('D_s+') < {0[Ds_ADAMASS_WIN]})".format(self.config)
+        )
+
+        dpSel = Selection(
+            'SelFilteredDp{0}'.format(name),
+            Algorithm=dpFilter,
+            RequiredSelections=[hhhSelection]
+        )
+        dsSel = Selection(
+            'SelFilteredDs{0}'.format(name),
+            Algorithm=dsFilter,
+            RequiredSelections=[hhhSelection]
+        )
+
+        # The HHH selection is labelled as a D+, so rename the candidates in
+        # the D_s+ selection as such
+        dsSubPID = SubstitutePID(
+            name='SubPidDs{0}'.format(name),
+            Code="DECTREE('[D+ -> X- X+ X+]CC')",
+            Substitutions={
+                'D+ -> X- X+ X+': 'D_s+',
+                'D- -> X+ X- X-': 'D_s-'
+
+            },
+            MaxChi2PerDoF=-1
+        )
+        dsSubPIDSel = Selection(
+            'SubPIDDsSel{0}'.format(name),
+            Algorithm=dsSubPID,
+            RequiredSelections=[dsSel]
+        )
+
+        return dpSel, dsSubPIDSel
+
+    def makeMVASelection(self, name, inputSel, weights_file, cut_value):
         # Don't apply a BDT if the weights file has not been specified
-        if not self.config['D_MVA_Weights']:
+        if not weights_file:
             return inputSel
 
-        cut = "VALUE('LoKi::Hybrid::DictValue/{0}') > {1[D_MVA_MIN]}".format(
-            name, self.config
+        cut = "VALUE('LoKi::Hybrid::DictValue/{0}') > {1}".format(
+            name, cut_value
         )
         mva = FilterDesktop('{0}Filter'.format(name), Code=cut)
 
         addTMVAclassifierValue(
             Component=mva,
-            XMLFile=self.config['D_MVA_Weights'],
+            XMLFile=weights_file,
             Variables=self.config['D_MVA_Variables'],
             ToolName=name
         )
