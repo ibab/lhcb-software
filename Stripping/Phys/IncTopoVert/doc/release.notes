@@ -4,6 +4,12 @@
 ! Purpose     : Inclusive Vertex Reconstruction
 !-----------------------------------------------------------------------------
 
+!2015-05-11 - Alessandro Morda'
+Modified values of the default parameters to optimize time consumption and performances
+
+
+
+
 !========================= IncTopoVert v1r4 2014-07-28 =========================
 
 ! 2014-07-24 - Paul Seyfert
