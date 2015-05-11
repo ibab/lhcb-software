@@ -4,7 +4,7 @@ from Gaudi.Configuration import *
 from Configurables import ConfigStackAccessSvc, ConfigDBAccessSvc, ConfigZipFileAccessSvc, ConfigTarFileAccessSvc, ConfigFileAccessSvc, ConfigCDBAccessSvc
 from Configurables import ConfigTreeEditor, PropertyConfigSvc
 
-# pick the default config access svc 
+# pick the default config access svc
 import os.path
 def cdb_file(filename) :
     return os.path.join( os.environ['HLTTCKROOT'], filename )
@@ -57,7 +57,7 @@ def _digest(x) :
     return x
 
 # utilities to pack and unpack L0 conditions into Condition property...
-# given the 'Conditions' property of an L0DUCOnfig tool instance, 
+# given the 'Conditions' property of an L0DUCOnfig tool instance,
 # return a pythonized table of settings
 # i.e. the inverse of 'genItems'
 def _parseL0settings( settings ) :
@@ -71,7 +71,7 @@ def _parseL0setting( setting ) :
     val = {}
     for s in setting :
         m = p.match(s)
-        key = m.group(1) 
+        key = m.group(1)
         value = m.group(2)
         # adapt to ideosyncracies
         if key == 'rate=' : key = 'rate'
@@ -88,7 +88,7 @@ def _parseL0setting( setting ) :
 def dumpL0( id, cas  = ConfigAccessSvc() ) :
     tree  =  getConfigTree( id, cas )
     l0s   = [ i for i in tree if i.leaf and i.leaf.type == 'L0DUConfigProvider' ]
-    for i in l0s : 
+    for i in l0s :
         from pprint import pprint
         print '%s TCK = %s %s' % ( 20*'*',i.leaf.props['TCK'],20 *'*' )
         print '%s Channels %s' % ( 20*'*',20 *'*' )
@@ -102,8 +102,8 @@ def getL0Prescales( id, cas  = ConfigAccessSvc() ) :
     tree  =  getConfigTree( id, cas )
     l0s   = [ i for i in tree if i.leaf and i.leaf.type == 'L0DUConfigProvider' ]
     ret = dict()
-    for i in l0s : 
-        l0tck = i.leaf.props['TCK' ] 
+    for i in l0s :
+        l0tck = i.leaf.props['TCK' ]
         ret[ l0tck ]  = dict()
         settings = _parseL0settings( eval(i.leaf.props['Channels']) )
         for chan in settings.itervalues() :
@@ -124,11 +124,11 @@ class AccessSvcSingleton(object) :
 
     def _app(self) :
         return AccessSvcSingleton.__app
-    def _pcs(self) : 
+    def _pcs(self) :
         return AccessSvcSingleton.__pcs
-    def _cas(self) : 
+    def _cas(self) :
         return AccessSvcSingleton.__cas
-    def _cte(self) : 
+    def _cte(self) :
         if callable( AccessSvcSingleton.__cte) :
             AccessSvcSingleton.__cte = AccessSvcSingleton.__cte(self)
         return AccessSvcSingleton.__cte
@@ -136,13 +136,13 @@ class AccessSvcSingleton(object) :
     def __init__(self,create=False,createConfigTreeEditor=False,cas=ConfigAccessSvc()) :
          if create :
             if (AccessSvcSingleton.__pcs or AccessSvcSingleton.__cas) :
-                   raise LogicError('re-entry of singleton creation') 
+                   raise LogicError('re-entry of singleton creation')
             pcs = PropertyConfigSvc( ConfigAccessSvc = cas.getFullName() )
             cte = ConfigTreeEditor( PropertyConfigSvc = pcs.getFullName()
                                   , ConfigAccessSvc   = cas.getFullName() )
             AccessSvcSingleton.__app = _appMgr()
             self._app().createSvc(cas.getFullName())
-            AccessSvcSingleton.__cas = self._app().service(cas.getFullName(),'IConfigAccessSvc') 
+            AccessSvcSingleton.__cas = self._app().service(cas.getFullName(),'IConfigAccessSvc')
             self._app().createSvc(pcs.getFullName())
             AccessSvcSingleton.__pcs = self._app().service(pcs.getFullName(),'IPropertyConfigSvc')
             AccessSvcSingleton.__cte = lambda x : self._app().toolsvc().create(cte.getFullName(),interface='IConfigTreeEditor')
@@ -153,12 +153,12 @@ class AccessSvcSingleton(object) :
              if _tck(i.alias().str().split('/')[-1]) == _tck(tck) : return digest(i.ref().str())
          return None
     def _2id(self,id) :
-         if type(id) is int : id = '0x%08x' % id 
+         if type(id) is int : id = '0x%08x' % id
          if type(id) is str and len(id)==32 : id = _digest(id)
-         #  if we're not a valid id at this point, maybe we're a TCK... 
+         #  if we're not a valid id at this point, maybe we're a TCK...
          if type(id) is not MD5 : id = self.resolveTCK(id)
          return id
-    def resolveConfigTreeNode(self,id) :   
+    def resolveConfigTreeNode(self,id) :
          if type(id) is not MD5 :
              id = self._2id(id)
          return self._pcs().resolveConfigTreeNode(id) if (id and id.valid()) else None
@@ -213,11 +213,11 @@ class Configuration :
             print 'Configuration: failed to resolve configtreenode %s - %s ' %  ( alias.alias().str(), alias.ref() )
         label =  x.label();
         self.info.update( { 'label' : label } )
-    def __getitem__(self,label) : 
+    def __getitem__(self,label) :
         return self.info[label]
-    def update(self,d) : 
+    def update(self,d) :
         self.info.update( d )
-    def printSimple(self,prefix='      ') : 
+    def printSimple(self,prefix='      ') :
         if not self.info['TCK'] :
             print prefix + '%10s : %s : %s'%('<NONE>',self.info['id'],self.info['label'])
         else :
@@ -242,15 +242,15 @@ class TreeNode(object) :
     #  TODO: add functionality to flush _pool
     def __new__(cls, id = None) :
         TreeNode._nreq = TreeNode._nreq + 1
-        if not id: 
-            TreeNode._noid = TreeNode._noid+1 
+        if not id:
+            TreeNode._noid = TreeNode._noid+1
             return object.__new__(cls)
         if type(id) != MD5 and type(id) != int :
             print id,type(id)
             id = digest(id)
         obj = TreeNode._pool.get( id )
         if not obj :
-            TreeNode._cm = TreeNode._cm+1 
+            TreeNode._cm = TreeNode._cm+1
             obj = AccessSvcSingleton().resolveConfigTreeNode(id)
             TreeNode._pool[id] = obj
         if not obj :
@@ -270,7 +270,7 @@ class PropCfg(object) :
     #  TODO: add functionality to flush _pool
     def __new__(cls, id = None) :
         PropCfg._nreq = PropCfg._nreq + 1
-        if not id : 
+        if not id :
             PropCfg._noid = PropCfg._noid +1
             return object.__new__(cls) # added to make it possible to recv in parent process...
         if type(id) != MD5 :
@@ -306,7 +306,7 @@ class Tree(object):
         if not node : print 'invalid TreeNode for %s' % id
         self.digest = node.digest().str()
         self.label = node.label()
-        leaf =  node.leaf() 
+        leaf =  node.leaf()
         self.leaf = PropCfg( leaf ) if leaf.valid() else None
         self.nodes = [ Tree(id=id,parent=self) for id in node.nodes() ]
         #TODO: add direct access to leafs 'in' this tree by name
@@ -339,42 +339,42 @@ class Tree(object):
 
 
 # TODO: rewrite in terms of trees...
-#       that should make it a lot faster for almost identical 
+#       that should make it a lot faster for almost identical
 #       trees...
 def diff( lhs, rhs , cas = ConfigAccessSvc() ) :
-    table = xget( [ lhs, rhs ] , cas ) 
+    table = xget( [ lhs, rhs ] , cas )
     setl = set( table[lhs].keys() )
     setr = set( table[rhs].keys() )
     onlyInLhs = setl - setr
-    if len(onlyInLhs)>0 : 
+    if len(onlyInLhs)>0 :
         print 'only in %s: ' % lhs
         for i in onlyInLhs : print '   ' + i
     onlyInRhs = setr - setl
-    if len(onlyInRhs)>0 : 
+    if len(onlyInRhs)>0 :
         print 'only in %s:'  % rhs
         for i in onlyInRhs : print '   ' + i
     for i in setl & setr :
         (l,r) = ( table[lhs][i], table[rhs][i] )
-        if l.digest != r.digest : 
+        if l.digest != r.digest :
             from difflib import unified_diff
-            print ''.join( unified_diff(l.fmt(), r.fmt(), 
+            print ''.join( unified_diff(l.fmt(), r.fmt(),
                                         l.fqn(), r.fqn(),
                                         lhs, rhs, n=0) )
 
 def copy( source = ConfigAccessSvc() , target = ConfigDBAccessSvc(ReadOnly=False), glob = None ) :
-    if source == target : 
+    if source == target :
         print 'WARNING: source and target are the same -- no-op ...'
         return
     r = AccessProxy().access( cas = ConfigStackAccessSvc( ConfigAccessSvcs = [ target.getFullName(), source.getFullName() ]
-                                                        , OutputLevel=DEBUG ) 
+                                                        , OutputLevel=DEBUG )
                             ).rcopy(glob)
-    AccessProxy().flush() 
+    AccessProxy().flush()
     return r
 
 def listComponents( id, cas = ConfigAccessSvc() ) :
     tree = getConfigTree( id, cas )
-    for i in tree : 
-        if i.leaf : 
+    for i in tree :
+        if i.leaf :
           s =  i.depth*3*' ' + i.leaf.name
           print s + (80-len(s))*' ' + str(i.leaf.digest)
 def getAlgorithms( id, cas = ConfigAccessSvc() ) :
@@ -422,7 +422,7 @@ def listProperties( id, algname='',property='',cas = ConfigAccessSvc() ) :
     for (c,d) in getProperties(id,algname,property,cas).iteritems() :
          print '\n   Requested Properties for %s' % c
          for k,v in d.iteritems() :
-            print "      '%s':%s" % (k,v) 
+            print "      '%s':%s" % (k,v)
 
 def getTCKInfo(x) :
     for (i,j) in getConfigurations().iteritems() :
@@ -452,8 +452,8 @@ def getRoutingBits( id , cas = ConfigAccessSvc() ) :
     # should be a map... so we try to 'eval' it
     for p in ['RoutingBits','routingBitDefinitions'] :
         try :
-            return eval(getProperty(id,'HltRoutingBitsWriter',p,cas))
-        except KeyError : 
+            return eval(getProperty(id,'Hlt1RoutingBitsWriter',p,cas))
+        except KeyError :
             continue
     return None
 
@@ -468,7 +468,7 @@ def getAlgorithms( id, cas = ConfigAccessSvc() ) :
     return tempstr
 
 def dump( id, properties = None,  lines = None, file = None, cas = ConfigAccessSvc() ) :
-    if not properties : 
+    if not properties :
         properties = [ 'RoutingBits', 'AcceptFraction', 'FilterDescriptor'
                      , 'Preambulo', 'Code', 'InputLocations','Input','Inputs'
                      , 'DaughtersCuts', 'CombinationCut', 'MotherCut', 'DecayDescriptor'
@@ -486,7 +486,7 @@ def dump( id, properties = None,  lines = None, file = None, cas = ConfigAccessS
         try :
             cuts = eval(code) # should be a dict
             return "{ "+ ('\n' + (_tab+25+18)*' ' + ', ' ).join(  [ trItem(k,v) for (k,v) in cuts.iteritems() ] ) + '\n'+(_tab+25+18)*' '+"}"
-        except : 
+        except :
             return code
 
     def prettyPrintList(code,trItem = None, skipEmpty = True) :
@@ -516,7 +516,7 @@ def dump( id, properties = None,  lines = None, file = None, cas = ConfigAccessS
     for i in tree :
        if not i.leaf or i.leaf.kind != 'IAlgorithm' : continue
        if lines and i.leaf.type in [ 'Hlt::Line', 'HltLine' ] :
-           show =  re.match(lines,i.leaf.name) 
+           show =  re.match(lines,i.leaf.name)
        if not show : continue
        _tab = 50
        line =  i.depth * '   ' + i.leaf.name
@@ -538,7 +538,7 @@ class RemoteAccess(object) :
     def __del__( self ) :
         RemoteAccess._svc.reset()
     def rgetConfigTree( self, id ) :
-        # maybe prefetch all leafs by invoking 
+        # maybe prefetch all leafs by invoking
         #RemoteAccess._svc.collectLeafRefs(id)
         # benchmark result: makes no difference whatsoever...
         #from time import clock
@@ -562,13 +562,13 @@ class RemoteAccess(object) :
                 if k.info['id'] == id : k.info['TCK'].append(tck)
         #print 'reading TAG'
         for i in svc.configTreeNodeAliases( alias( 'TAG/'  ) ) :
-            tag = i.alias().str().split('/')[1:] 
+            tag = i.alias().str().split('/')[1:]
             id  = i.ref().str()
-            for k in info.values() : 
-                if k.info['id'] == id : k.update( { 'TAG' : tag } ) 
+            for k in info.values() :
+                if k.info['id'] == id : k.update( { 'TAG' : tag } )
         return info
     def rupdateProperties(self, id, updates, label ) :
-        if not label : 
+        if not label :
             print 'please provide a reasonable label for the new configuration'
             return None
         svc = RemoteAccess._svc
@@ -583,7 +583,7 @@ class RemoteAccess(object) :
             id = svc._2id(id)
             if not id.valid() : raise RuntimeWarning('not a valid id : %s' % id )
             a = [ i.alias().str() for  i in svc.configTreeNodeAliases( alias('TOPLEVEL/') ) if i.ref() == id ]
-            if len(a) != 1 : 
+            if len(a) != 1 :
                 print 'something went wrong: no unique toplevel match for ' + str(id)
                 return
             a = a[0]
@@ -591,7 +591,7 @@ class RemoteAccess(object) :
         vector_string = cppyy.gbl.std.vector('std::string')
         mods = vector_string()
         for algname,props in updates.iteritems() :
-            for k,v in props.iteritems() : 
+            for k,v in props.iteritems() :
                 item = algname + '.' + k + ':' + v
                 print 'updating: ' + item
                 mods.push_back( item )
@@ -599,14 +599,14 @@ class RemoteAccess(object) :
         noderef = svc.resolveConfigTreeNode( newId )
         top = topLevelAlias( release, hlttype, noderef )
         svc.writeConfigTreeNodeAlias(top)
-        print 'wrote ' + str(top.alias()) 
+        print 'wrote ' + str(top.alias())
         return str(newId)
     def rupdateL0TCK(self, id, l0config, label, extra ) :
         svc = RemoteAccess._svc
         id  = svc._2id(id)
         if not id.valid() : raise RuntimeWarning('not a valid id : %s' % id )
         a = [ i.alias().str() for  i in svc.configTreeNodeAliases( alias('TOPLEVEL/') ) if i.ref() == id ]
-        if len(a) != 1 : 
+        if len(a) != 1 :
             print 'something went wrong: no unique toplevel match for ' + str(id)
             return
         (release,hlttype) = a[0].split('/',3)[1:3]
@@ -616,7 +616,7 @@ class RemoteAccess(object) :
         for cfg in svc.collectLeafRefs( id ) :
             #  check for either a MultiConfigProvider with the right setup,
             #  or for a template with the right TCK in it...
-            if cfg.name == 'ToolSvc.L0DUConfig' : 
+            if cfg.name == 'ToolSvc.L0DUConfig' :
                 if cfg.type != 'L0DUConfigProvider':
                     raise KeyError("Can only update configuration which use L0DUConfigProvider, not  %s" % cfg.type )
                 #  check that all specified properties exist in cfg
@@ -625,7 +625,7 @@ class RemoteAccess(object) :
                     mods.push_back('ToolSvc.L0DUConfig.%s:%s' % (k,v) )
         if extra :
             for algname,props in extra.iteritems() :
-                for k,v in props.iteritems() : 
+                for k,v in props.iteritems() :
                     mods.push_back( '%s.%s:%s' %  (algname, k, v ) )
         print 'updates: %s ' % mods
         newId = svc.updateAndWrite(id,mods,label)
@@ -633,7 +633,7 @@ class RemoteAccess(object) :
         if not noderef : print 'oops, could not find node for %s ' % newId
         top = topLevelAlias( release, hlttype, noderef )
         svc.writeConfigTreeNodeAlias(top)
-        print 'wrote ' + str(top.alias()) 
+        print 'wrote ' + str(top.alias())
         return str(newId)
     def rresolveTCK(self, tck ) :
         svc = RemoteAccess._svc
@@ -646,12 +646,12 @@ class RemoteAccess(object) :
             tck = _tck(tck)
             # check whether L0 part of the TCK is specified
             l0tck = tck & 0xffff
-            if l0tck : 
+            if l0tck :
                 l0tck = '0x%04X'%l0tck
-                for cfg in svc.collectLeafRefs( id ) : 
+                for cfg in svc.collectLeafRefs( id ) :
                     #  check for either a MultiConfigProvider with the right setup,
                     #  or for a template with the right TCK in it...
-                    if cfg.name == 'ToolSvc.L0DUConfig' : 
+                    if cfg.name == 'ToolSvc.L0DUConfig' :
                         if cfg.type not in [ 'L0DUMultiConfigProvider', 'L0DUConfigProvider' ] :
                             raise KeyError("not a valid L0DU config provider: %s" % cfg.type )
                         if cfg.type == 'L0DUMultiConfigProvider' and l0tck not in cfg.props['registerTCK'] :
@@ -669,15 +669,15 @@ class RemoteAccess(object) :
             node = svc.resolveConfigTreeNode( n )
             from itertools import chain
             # depth first traversal -- this insures we do not write
-            # incomplete data objects... 
-            for j in chain.from_iterable( __nodes(i) for i in node.nodes() ) : 
+            # incomplete data objects...
+            for j in chain.from_iterable( __nodes(i) for i in node.nodes() ) :
                 yield j
             yield node
         for i in __nodes( nodeRef ) :
             leafRef = i.leaf()
-            if leafRef.valid() : 
+            if leafRef.valid() :
                 leaf = svc.resolvePropertyConfig(leafRef)
-                assert leaf 
+                assert leaf
                 newRef = svc.writePropertyConfig(leaf)
                 assert leafRef == newRef
             n = svc.writeConfigTreeNode(i)
@@ -690,8 +690,8 @@ class RemoteAccess(object) :
         aliases = [ deepcopy(i)  for label in ( 'TOPLEVEL/','TCK/' ) for i in svc.configTreeNodeAliases( alias(label) ) ]
         if glob :
              from fnmatch import fnmatch
-             aliases = filter( lambda i : fnmatch(i.alias().str(),glob), aliases) 
-        # Now, split them into 
+             aliases = filter( lambda i : fnmatch(i.alias().str(),glob), aliases)
+        # Now, split them into
         #    TOPLEVEL (just copy)
         top   = filter( lambda i : i.alias().str().startswith('TOPLEVEL/'), aliases )
         #    The rest: find corresponding TOPLEVEL, add it to the toplevel list, re-create alias afterwards
@@ -708,7 +708,7 @@ class RemoteAccess(object) :
             node = svc.resolveConfigTreeNode( i.ref() )
             newid = self.rupdateProperties(i,empty,node.label())
             assert newid == i.ref().str()
-        for i in  other: 
+        for i in  other:
             print 'copying alias %s -> %s ' % (i.alias().str(),i.ref() )
             svc.writeConfigTreeNodeAlias( i )
         print 'done copying... '
@@ -729,12 +729,12 @@ class AccessProxy( object ) :
         #print 'creating proxy in pid = %s' % os.getpid()
         pass
     # TODO: access should be seperately for each cas instance...
-    #  worse: since Configurables are singletons, they may have 
-    #         changed since the last time used. Hence, have to 
+    #  worse: since Configurables are singletons, they may have
+    #         changed since the last time used. Hence, have to
     #         check that that hasn't happend, so we need a local
     #         copy of the state of cas, and compare to that....
     #         and if different, let's just shutdown the remote
-    #         and start again... 
+    #         and start again...
     #         (shouldn't have to flush PropertyConfig/ConfigTreeNode)
     def access( self, cas ) :
         if not self._valid(cas) : self.flush()
@@ -750,7 +750,7 @@ class AccessProxy( object ) :
 
         return AccessProxy._access
     def _valid( self, cas ) :
-        if not AccessProxy._access or not AccessProxy._cas: return True 
+        if not AccessProxy._access or not AccessProxy._cas: return True
         if cas != AccessProxy._cas : return False # different configurable!
         return cas.getProperties() == AccessProxy._properties
     def flush( self ) : # make flush visible such that eg. createTCKEntries can flush the remote and force re-reading...
@@ -769,7 +769,7 @@ def getConfigTree(id, cas = ConfigAccessSvc()):
     if id not in getConfigTree.forest :
         tree = AccessProxy().access(cas).rgetConfigTree( id )
         getConfigTree.forest[id] = tree
-        if tree.digest != id : 
+        if tree.digest != id :
             # in case we got a TCK, the remote side resolves this to an ID
             # and we mark this ID in our cache. Unfortunately, it doesn't work
             # the other way around (i.e. we first get an ID, then a TCK )
@@ -786,14 +786,14 @@ def updateProperties(id,updates,label='', cas = ConfigAccessSvc() ) :
     return ret
 
 def updateL0TCK(id, l0tck, label='', cas = ConfigAccessSvc(), extra = None ) :
-    if not label : 
+    if not label :
         print 'please provide a reasonable label for the new configuration'
         return None
     l0tck = '0x%04X'%_tck(l0tck)
     importOptions('$L0TCK/L0DUConfig.opts')
     from Configurables import L0DUMultiConfigProvider,L0DUConfigProvider
     if l0tck not in L0DUMultiConfigProvider('L0DUConfig').registerTCK :
-             raise KeyError('requested L0 TCK %s is not known to TCK/L0TCK'%l0tck) 
+             raise KeyError('requested L0 TCK %s is not known to TCK/L0TCK'%l0tck)
     configProvider = L0DUConfigProvider('ToolSvc.L0DUConfig.TCK_%s'%l0tck)
     l0config = configProvider.getValuedProperties()
     l0config['TCK'] = l0tck
@@ -842,7 +842,7 @@ def _sortConfigs( config ):
     return config[ 'TCK' ] if config[ 'TCK'] else []
 
 def printConfigurations( info ) :
-    for release in sorted(set( [ i['release'] for i in info.itervalues()  ] ), key = _sortReleases ) : 
+    for release in sorted(set( [ i['release'] for i in info.itervalues()  ] ), key = _sortReleases ) :
         print release
         confInRelease = [ i for i in info.itervalues() if i['release']==release ]
         for hlttype in sorted(set( [ i['hlttype'] for i in confInRelease ] ) ) :
@@ -851,8 +851,8 @@ def printConfigurations( info ) :
             [ i.printSimple('      ') for i in confInHltType ]
 
 def dumpForPVSS( info, root ) :
-    if not os.access(root,os.F_OK) : os.makedirs(root)    
-    for release in sorted(set( [ i['release'] for i in info.itervalues()  ] ) ) : 
+    if not os.access(root,os.F_OK) : os.makedirs(root)
+    for release in sorted(set( [ i['release'] for i in info.itervalues()  ] ) ) :
         f=open( root + '/' + release,  'w')
         [ f.write( i.PVSS() ) for i in info.itervalues() if i['release']==release ]
         f.close()
@@ -861,22 +861,24 @@ def printReleases( rel ) : pprint(rel)
 def printHltTypes( rt ) : pprint(rt)
 def printTCKs( tcks ) : pprint(tcks)
 
+from pprint import pprint
+
 def listConfigurations( cas = ConfigAccessSvc() ) :
     return printConfigurations( getConfigurations(cas) )
 def listReleases( cas = ConfigAccessSvc() ) :
-    return printReleases( getReleases() ) 
+    return printReleases( getReleases() )
 def listHltTypes( release, cas = ConfigAccessSvc() ) :
-    return printHltTypes( getHltTypes(release) ) 
+    return printHltTypes( getHltTypes(release) )
 def listTCKs( release, hlttype, cas = ConfigAccessSvc() ) :
-    return printTCKs( getTCKs(release,hlttype) ) 
+    return printTCKs( getTCKs(release,hlttype) )
 def listRoutingBits( id, cas = ConfigAccessSvc() ) :
-    print getRoutingBits(id,cas)
+    pprint(getRoutingBits(id,cas))
 def listHlt1Lines( id, cas = ConfigAccessSvc() ) :
-    print getHlt1Lines(id,cas)
+    pprint(getHlt1Lines(id,cas))
 def listHlt2Lines( id, cas = ConfigAccessSvc() ) :
-    print getHlt2Lines(id,cas)
+    pprint(getHlt2Lines(id,cas))
 def listHlt1Decisions( id, cas = ConfigAccessSvc() ) :
-    print getHlt1Decisions(id,cas)
+    pprint(getHlt1Decisions(id,cas))
 
 
 ######  do the actual work...

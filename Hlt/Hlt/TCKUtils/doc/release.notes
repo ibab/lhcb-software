@@ -5,6 +5,10 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+! 2015-05-11 - Roel Aaij
+ - Fix printing of routing bits.
+ - Make some prints prettier.
+
 !========================= TCKUtils v1r15 2015-03-09 =========================
 
 ! 2015-03-10 - Roel Aaij
@@ -127,7 +131,7 @@
 
 !========================== TCKUtils v1r6p9 2010-09-30 ===================
 ! 2010-09-30 - Gerhard Raven
- - make getConfigTree accessible 
+ - make getConfigTree accessible
 
 !========================== TCKUtils v1r6p8 2010-09-12 ===================
 ! 2010-09-11 - Gerhard Raven
@@ -202,8 +206,8 @@
 
 !========================== TCKUtils v1r3 2009-08-05 ===================
 ! 2009-08-04 - Gerhard Raven
- - add functions from Klaus for TCK visualizer 
- - fix build problem by adding -no_auto_import on use HltTCK 
+ - add functions from Klaus for TCK visualizer
+ - fix build problem by adding -no_auto_import on use HltTCK
 
 !========================== TCKUtils v1r2 2009-07-03 ===================
 ! 2009-06-30 - Gerhard Raven
