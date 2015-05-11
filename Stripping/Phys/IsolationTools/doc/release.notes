@@ -5,11 +5,15 @@
 
 !========================= IsolationTools v1r2 2015-03-13 =========================
 
-! 2015-05-11 - Alessandro Mordà
-Submitted RelInfoBKsttautau* isolation tools used for the B->K*TauTau analysis.
+! 2015-05-11 - Ricardo Vazquez Gomez
+ - Revert the changes of the head version as they need a branched version of DaVinciTypes 
+   for the MDST.DST reprocessing
 
-! 2015-05-6 - Alessandro Mordà
-Submitted new version of RelInfo for Bstautau analysis, after minor changes
+! 2015-05-11 - Alessandro Morda
+ - Submitted RelInfoBKsttautau* isolation tools used for the B->K*TauTau analysis.
+
+! 2015-05-6 - Alessandro Morda
+ - Submitted new version of RelInfo for Bstautau analysis, after minor changes
 
 
 ! 2015-03-13 - Andrea Contu
