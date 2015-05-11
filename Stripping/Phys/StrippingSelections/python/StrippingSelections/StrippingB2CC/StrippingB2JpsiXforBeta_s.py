@@ -36,7 +36,7 @@ default_config = {
                  ,       'JpsiMassWindow'            :       80
                  ,       'DaughterPT'                :       1000
                  ,       'VCHI2PDOF'                 :       10
-                 ,       'Jpsi2MuMuPrescale'         :       0.075   # 2011: 0.014, 2012: 0.075
+                 ,       'Jpsi2MuMuPrescale'         :       0.075   # 2015: tune to 0.1, 2011: 0.014, 2012: 0.075
                  ,       'Bd2JpsiKstarPrescale'      :       0.29    # 2011: 0.065, 2012: 0.29
                  ,       'Bd2JpsiKsPrescale'         :       1.0     # 2011: 1.0, 2012: 1.0
                  ,       'Bs2JpsiPhiPrescale'        :       0.62    # 2011: 0.13, 2012: 0.62
@@ -44,7 +44,6 @@ default_config = {
                          },
     'STREAMS' : {
         'Leptonic' : [
-         'StrippingBetaSJpsi2MuMuLine',
          'StrippingBetaSBu2JpsiKPrescaledLine',
          'StrippingBetaSBs2JpsiPhiPrescaledLine',
          'StrippingBetaSBd2JpsiKstarPrescaledLine',
@@ -57,7 +56,8 @@ default_config = {
         'Dimuon' : [
          'StrippingBetaSBu2JpsiKDetachedLine',
          'StrippingBetaSBd2JpsiKstarDetachedLine',
-         'StrippingBetaSBs2JpsiPhiDetachedLine'
+         'StrippingBetaSBs2JpsiPhiDetachedLine',
+         'StrippingBetaSJpsi2MuMuLine'
         ]
     }
     }
