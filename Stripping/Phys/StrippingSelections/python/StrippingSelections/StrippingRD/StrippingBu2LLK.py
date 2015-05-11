@@ -1,15 +1,16 @@
-__author__  = 'Patrick Koppenburg, Alex Shires, Thomas Blake, Luca Pescatore, Simone Bifani'
+__author__  = 'Patrick Koppenburg, Alex Shires, Thomas Blake, Luca Pescatore, Simone Bifani, Yasmine Amhis'
 __date__    = '16/06/2014'
 __version__ = '$Revision: 3 $'
 
 __all__ = ( 'Bu2LLKConf', 'default_config' ) 
 
 """
-B --> ll K selections for:
-  B --> ee K   versus B --> mumu K
+  B --> ll K selections for:
+  B --s> ee K   versus B --> mumu K
   B --> ee K*  versus B --> mumu K*
   B --> ee phi versus B --> mumu phi
-  B --> gamma K* and B --> gamma phi with converted photons
+  Lb --> ee Lambda(*) versus Lb --> mumu Lambda(*)
+  B --> gamma K* , B --> gamma phi  and  Lb --> gamma Lambda(*)   with converted photons
 """
 
 default_config = {
@@ -27,8 +28,10 @@ default_config = {
         , 'LeptonIPCHI2'        : 9   
         , 'LeptonPT'            : 300  
         , 'KaonIPCHI2'          : 9
-        , 'KaonPT'              : 400     
+        , 'KaonPT'              : 400
+        , 'DiHadronMass'        : 2600
         , 'UpperMass'           : 5500
+        , 'BMassWindow'         : 1500
         , 'PIDe'                : 0
         , 'Bu2eeKLinePrescale'  : 1
         , 'Bu2mmKLinePrescale'  : 1
@@ -48,6 +51,7 @@ default_config = {
                                    'Phys/StdDiElectronFromTracks' : ['ConeIsoInfoE1', 'ConeIsoInfoE2'],
                                    'Phys/StdAllLooseMuons'        : ['ConeIsoInfoM1', 'ConeIsoInfoM2'],
                                    'Phys/StdAllLooseKaons'        : 'ConeIsoInfoK',
+                                   'Phys/StdAllLooseProtons'     : 'ConeIsoInfoProton',
                                    'Phys/StdAllLoosePions'        : 'ConeIsoInfoPi'}},
             {'Type'             : 'RelInfoTrackIsolationBDT',
              'RecursionLevel'   : 2,
@@ -55,6 +59,7 @@ default_config = {
                                    'Phys/StdDiElectronFromTracks' : ['TrackIsoBDTInfoE1', 'TrackIsoBDTInfoE2'],
                                    'Phys/StdAllLooseMuons'        : ['TrackIsoBDTInfoM1', 'TrackIsoBDTInfoM2'],
                                    'Phys/StdAllLooseKaons'        : 'TrackIsoBDTInfoK',
+                                   'Phys/StdAllLooseProtons'      : 'TrackIsoBDTInfoProton',
                                    'Phys/StdAllLoosePions'        : 'TrackIsoBDTInfoPi'}},
             {'Type'             : 'RelInfoBs2MuMuTrackIsolations',
              'RecursionLevel'   : 2,
@@ -62,6 +67,7 @@ default_config = {
                                    'Phys/StdDiElectronFromTracks' : ['TrackIsoBs2MMInfoE1', 'TrackIsoBs2MMInfoE2'],
                                    'Phys/StdAllLooseMuons'        : ['TrackIsoBs2MMInfoM1', 'TrackIsoBs2MMInfoM2'],
                                    'Phys/StdAllLooseKaons'        : 'TrackIsoBs2MMInfoK',
+                                   'Phys/StdAllLooseProtons'      : 'TrackIsoBs2MMInfoProton',
                                    'Phys/StdAllLoosePions'        : 'TrackIsoBs2MMInfoPi'},
              'tracktype'        : 3,
              'angle'            : 0.27,
@@ -104,8 +110,10 @@ class Bu2LLKConf(LineBuilder) :
         , 'LeptonIPCHI2'       
         , 'LeptonPT'          
         , 'KaonIPCHI2'        
-        , 'KaonPT'             
+        , 'KaonPT'
+        , 'DiHadronMass'               
         , 'UpperMass'
+        , 'BMassWindow'
         , 'PIDe' 
         , 'Bu2eeKLinePrescale'
         , 'Bu2mmKLinePrescale'
@@ -125,7 +133,11 @@ class Bu2LLKConf(LineBuilder) :
         from StandardParticles import StdLooseKaons as Kaons
         from StandardParticles import StdLooseKstar2Kpi as Kstars
         from StandardParticles import StdLoosePhi2KK  as Phis
-        
+        from StandardParticles import StdLooseKsLL as KshortsLL 
+        from StandardParticles import StdLooseKsDD as KshortsDD    
+        from StandardParticles import StdLooseLambdaLL as LambdasLL
+        from StandardParticles import StdLooseLambdaDD as LambdasDD  
+        from StandardParticles import StdLooseLambdastar2pK as Lambdastars  
         # 1 : Make high IP, Pt kaons, K*'s and Phi's
         SelKaons  = self._filterHadron( name   = "KaonsFor" + self._name,
                                         sel    = Kaons # "Phys/StdLooseKaons/Particles",
@@ -138,7 +150,27 @@ class Bu2LLKConf(LineBuilder) :
         SelPhis   = self._filterHadron( name = "PhisFor" + self._name,
                                         sel  =  Phis # "Phys/StdLoosePhi3KK/Particles",
                                         ,params = config )
-        
+   
+        SelKshortsLL = self._filterHadron( name   = "KshortsLLFor"+ self._name,
+                                        sel    =  KshortsLL 
+                                        ,params = config )
+      
+        SelKshortsDD = self._filterHadron( name   = "KshortsDDFor"+ self._name,
+                                        sel    =  KshortsDD
+                                        ,params = config )
+
+        SelLambdasLL = self._filterHadron( name   = "LambdasLLFor"+ self._name,
+                                        sel    =  LambdasLL
+                                        ,params = config )
+
+        SelLambdasDD = self._filterHadron( name   = "LambdasDDFor"+ self._name,
+                                        sel    =  LambdasDD
+                                        ,params = config )
+
+        SelLambdastars = self._filterHadron( name   = "LambdastarsFor"+ self._name,
+                                        sel    =  Lambdastars 
+                                        ,params = config )
+ 
         # 2 : Dileptons
         from StandardParticles import StdDiElectronFromTracks as DiElectronsFromTracks
         from StandardParticles import StdLooseDiElectron as DiElectrons
@@ -178,35 +210,36 @@ class Bu2LLKConf(LineBuilder) :
         # 3 : Combine
         SelB2eeX = self._makeB2LLX(eeXLine_name,
                                    dilepton = SelDiElectron,
-                                   hadrons = [ SelKaons, SelKstars, SelPhis  ],
+                                   hadrons = [ SelKaons, SelKstars, SelPhis, SelKshortsLL, SelKshortsDD, SelLambdasLL, SelLambdasDD , SelLambdastars  ],
                                    params  = config,
-                                   masscut = "ADAMASS('B+') < 1000*MeV" )
+                                   masscut = "ADAMASS('B+') <  %(BMassWindow)s *MeV" % config )
+                                       
         
         SelB2eeXFromTracks  = self._makeB2LLX(eeXLine_name+"2",
                                               dilepton = SelDiElectronFromTracks,
-                                              hadrons = [ SelKaons, SelKstars, SelPhis  ],
+                                              hadrons = [ SelKaons, SelKstars, SelPhis, SelKshortsLL,  SelKshortsDD,  SelLambdasLL, SelLambdasDD, SelLambdastars  ],
                                               params  = config,
-                                              masscut = "ADAMASS('B+') < 1000*MeV" )
+                                              masscut = "ADAMASS('B+') <  %(BMassWindow)s *MeV" % config )
         
         SelB2mmX = self._makeB2LLX(mmXLine_name,
                                    dilepton = SelDiMuon,
-                                   hadrons = [ SelKaons, SelKstars, SelPhis  ],
+                                   hadrons = [ SelKaons, SelKstars, SelPhis ,  SelKshortsLL, SelKshortsDD, SelLambdasLL , SelLambdasDD, SelLambdastars  ],
                                    params  = config,
-                                   masscut = "ADAMASS('B+') < 1000*MeV" )                                   
+                                   masscut = "ADAMASS('B+') <  %(BMassWindow)s *MeV"% config) 
 
         
         
         SelB2meX = self._makeB2LLX(meXLine_name,
                                    dilepton = SelMuE,
-                                   hadrons = [ SelKaons, SelKstars, SelPhis  ],
+                                   hadrons = [ SelKaons, SelKstars, SelPhis , SelKshortsLL, SelKshortsDD, SelLambdasLL, SelLambdasDD, SelLambdastars  ],
                                    params  = config,
-                                   masscut = "ADAMASS('B+') < 1000*MeV" )                                   
+                                   masscut = "ADAMASS('B+') <  %(BMassWindow)s *MeV" % config )  
        
         SelB2gammaX = self._makeB2LLX(eeXLine_name + "3",
                                       dilepton = SelPhoton,
-                                      hadrons  = [ SelKstars, SelPhis ],
+                                      hadrons  = [ SelKstars, SelPhis, SelLambdasLL,  SelLambdasDD, SelLambdastars  ], #it make sense not to have Ks 
                                       params   = config,
-                                      masscut  = "ADAMASS('B+') < 1000*MeV" )
+                                      masscut  = "ADAMASS('B+') <  %(BMassWindow)s *MeV"% config )
         
         # 4 : Declare Lines
 
@@ -274,9 +307,9 @@ class Bu2LLKConf(LineBuilder) :
         """
         # requires all basic particles to have IPCHI2 > KaonIPCHI2
         # and hadron PT > KaonPT
-        
-        _Code = "(PT >  %(KaonPT)s *MeV) & " \
-                "(M < 1200*MeV) & " \
+        #need to add the ID here
+        _Code = "(PT > %(KaonPT)s *MeV) & " \
+                "(M <  %(DiHadronMass)s*MeV) & " \
                 "((ISBASIC & (MIPCHI2DV(PRIMARY) > %(KaonIPCHI2)s)) | " \
                 "(NDAUGHTERS == NINTREE( ISBASIC &  (MIPCHI2DV(PRIMARY) > %(KaonIPCHI2)s))))" % params
 
@@ -316,7 +349,9 @@ class Bu2LLKConf(LineBuilder) :
         return Selection( name, Algorithm = _Filter, RequiredSelections = [ photons ] )
 
 #####################################################
-    def _makeB2LLX( self, name, dilepton, hadrons, params, masscut = "(ADAMASS('B+')<1000*MeV" ):
+    # def _makeB2LLX( self, name, dilepton, hadrons, params, masscut = "(ADAMASS('B+')< %(BMassWindow)s *MeV" % config ):
+    def _makeB2LLX( self, name, dilepton, hadrons, params, masscut = "(ADAMASS('B+')< 1500 *MeV" ):
+
         """
         CombineParticles / Selection for the B 
         """
@@ -328,8 +363,10 @@ class Bu2LLKConf(LineBuilder) :
         
         _Decays =  ["[ B+ -> J/psi(1S) K+ ]cc",
                     "[ B0 -> J/psi(1S) K*(892)0 ]cc",
-                    "[ B_s0 -> J/psi(1S) phi(1020)]cc" ]
-
+                    "[ B_s0 -> J/psi(1S) phi(1020)]cc",
+                    "[ B0 -> J/psi(1S) KS0]cc", 
+                    "[ Lambda_b0 -> J/psi(1S) Lambda0 ]cc",                            
+                    "[ Lambda_b0 -> J/psi(1S) Lambda(1520)0]cc"] 
         
         _Combine = CombineParticles(DecayDescriptors = _Decays,
                                     CombinationCut = masscut,
@@ -344,7 +381,8 @@ class Bu2LLKConf(LineBuilder) :
                          RequiredSelections = [ dilepton, _Merge ]) 
 
 #####################################################
-    def _malkeB2GammaX( self, name, photons, hadrons, params, masscut = "(ADAMASS('B+')<1000*MeV" ):
+    # def _malkeB2GammaX( self, name, photons, hadrons, params, masscut = "(ADAMASS('B+')< %(BMassWindow)s *MeV" %config ):
+    def _malkeB2GammaX( self, name, photons, hadrons, params, masscut = "(ADAMASS('B+')< 1500 *MeV" ):
         """
         CombineParticles / Selection for the B 
         """
@@ -355,7 +393,9 @@ class Bu2LLKConf(LineBuilder) :
                  "& (BPVVDCHI2> %(BFlightCHI2)s ))" % params
         
         _Decays =  [ "[ B0 -> gamma K*(892)0 ]cc",
-                     "[ B_s0 -> gamma phi(1020)]cc" ]
+                     "[ B_s0 -> gamma phi(1020)]cc", 
+                     "[ Lambda_b0 -> gamma  Lambda0 ]cc]",                   
+                     "[ Lambda_b0 -> gamma Lambda(1520)0 ]cc]" ]
 
         
         _Combine = CombineParticles(DecayDescriptors = _Decays,
