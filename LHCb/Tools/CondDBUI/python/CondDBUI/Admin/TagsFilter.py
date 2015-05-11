@@ -23,10 +23,10 @@ class ReleaseNotesHandler(ContentHandler):
         self.search_gts = search_gts
         self.search_lts = search_lts
         # Flags to indicate the element, content of which should be read.
-        self.found_lt, self.found_lt_Name, self.found_lt_Partition, self.found_lt_DataType = False, False, False, False
-        self.found_gt, self.found_gt_Name, self.found_gt_Partition, self.found_gt_DataType = False, False, False, False
-        self.lt_Name, self.lt_Partition, self.lt_DataType = None, None, None
-        self.gt_Name, self.gt_Partition, self.gt_DataType = None, None, None
+        self.found_lt = False
+        self.found_gt = False
+        self.lt_Name = self.lt_Partition = self.lt_DataType = ''
+        self.gt_Name = self.gt_Partition = self.gt_DataType = ''
         # Lists for found "global_tag + local tags", "local_tags" and all "global tags" for given condition
         self.globaltag_localtags = ()
         self.local_tags = []
@@ -38,24 +38,10 @@ class ReleaseNotesHandler(ContentHandler):
         # Local tag entry treating. Marking needed elements.
         if name == 'lhcb:note' and not self.search_gts:
             self.found_lt = True
-        elif self.found_lt:
-            if name == 'lhcb:name':
-                self.found_lt_Partition = True
-            elif name == 'lhcb:tag':
-                self.found_lt_Name = True
-            elif name == 'lhcb:type':
-                self.found_lt_DataType = True
-
         # Global tag entry treating. Marking needed elements.
         elif name == 'lhcb:global_tag':
             self.found_gt = True
-        elif self.found_gt:
-            if not self.gt_Name and name == 'lhcb:tag':
-                self.found_gt_Name = True
-            elif name == 'lhcb:type':
-                self.found_gt_DataType = True
-            elif name == 'lhcb:name':
-                self.found_gt_Partition = True
+        self.text = ''
 
     def characters(self, ch):
         """Performs analysis of .xml file elements content.
@@ -67,42 +53,12 @@ class ReleaseNotesHandler(ContentHandler):
         """
 
         # Cancellation of white-spaces processing by characters()
+        """NB: From the xml.sax.ContentHandler.characters documentation:
+The Parser will call this method to report each chunk of character data. SAX parsers may return all contiguous character data in a single chunk, or they may split it into several chunks
+           Therefore, the method for element-reading is moved into endElement()"""
+
         if ch in ("\n", "\t", "\t\t", "\t\t\t"): return 0
-
-        # Local tag entry treating. Grabbing marked elements values.
-        if self.found_lt:
-            if self.found_lt_Partition:
-                self.lt_Partition = ch
-            elif self.found_lt_Name:
-                self.lt_Name = ch
-            elif self.found_lt_DataType:
-                # Choosing among all mentioned data types the one requested
-                if ch == self.requested_datatype:
-                    self.lt_DataType = ch
-
-            if self.lt_Name and self.lt_Partition and self.lt_DataType:
-                if self.lt_Partition == self.requested_partition:
-                    if self.lt_Name not in self.local_tags:
-                        self.local_tags.append(str(self.lt_Name))
-
-        # Global tag entry treating.  Grabbing marked elements values.
-        elif self.found_gt and not self.search_lts:
-            if self.found_gt_Name:
-                self.gt_Name = ch
-            elif self.found_gt_DataType:
-                # Choosing among all mentioned data types the one requested
-                if ch == self.requested_datatype:
-                    self.gt_DataType = ch
-            elif self.found_gt_Partition:
-                self.gt_Partition = ch
-
-            if self.gt_Name and self.gt_Partition and self.gt_DataType:
-                if self.gt_Partition == self.requested_partition:
-                    if not self.search_gts:
-                        self.globaltag_localtags = str(self.gt_Name), self.local_tags
-                        raise SAXException('Found most recent global tag and all subsequent local tags for it.')
-                    else:
-                        self.global_tags.append(str(self.gt_Name))
+        self.text += ch
 
     def endElement(self, name):
         """Performs resetting the flag_*_* variables, when processed element is left."""
@@ -110,33 +66,56 @@ class ReleaseNotesHandler(ContentHandler):
         # Local tag entry treating.
         if self.found_lt:
             if name == 'lhcb:name':
-                self.found_lt_Partition = False
+                if self.text == self.requested_partition:
+                    self.lt_Partition = self.text
+#                self.found_lt_Partition = False
             elif name == 'lhcb:tag':
-                self.found_lt_Name = False
+                self.lt_Name = self.text
+#                self.found_lt_Name = False
             elif name == 'lhcb:type':
-                self.found_lt_DataType = False
+                # Choosing among all mentioned data types the one requested
+                if self.text == self.requested_datatype:
+                    self.lt_DataType = self.text
+#                self.found_lt_DataType = False
             elif name == 'lhcb:note':
                 self.found_lt = False
             elif name == 'lhcb:partition':
+                if len(self.lt_Partition) and len(self.lt_DataType) and self.lt_Name not in self.local_tags:
+                    self.local_tags.append(str(self.lt_Name))
                 # Prepare for searching in next LT partition element
-                self.lt_Name, self.lt_Partition, self.lt_DataType = None, None, None
+                self.lt_Name = self.lt_Partition = self.lt_DataType = ''
         # Global tag entry treating.
-        elif self.found_gt:
+        elif self.found_gt and not self.search_lts:
             if name == 'lhcb:tag':
-                self.found_gt_Name = False
+                self.gt_Name = self.text
+#                self.found_gt_Name = False
             elif name == 'lhcb:type':
-                self.found_gt_DataType = False
+                if self.text == self.requested_datatype:
+                    self.gt_DataType = self.text
+#                self.found_gt_DataType = False
             elif name == 'lhcb:name':
-                self.found_gt_Partition = False
+                if self.text == self.requested_partition:
+                    self.gt_Partition = self.text
+                if len(self.gt_DataType) and len(self.gt_Partition) and len(self.gt_Name):
+                    if not self.search_gts:
+                        self.globaltag_localtags = str(self.gt_Name), self.local_tags
+                        raise SAXException('Found most recent global tag and all subsequent local tags for it.')
+                    else:
+                        self.global_tags.append(str(self.gt_Name))
+                self.gt_Partition = ''
+
+#            elif name == 'lhcb:partition':
+#                self.gt_Name = self.gt_Partition = ''
+#                self.found_gt_Partition = False
                 # GT entry structure allow resetting of it here,
                 # instead of while leaving the partition element
                 # It's a preparation for searching in next partition element of GT
-                self.gt_Partition = None
+#                self.gt_Partition = None
             elif name == 'lhcb:global_tag':
                 self.found_gt = False
                 # Prepare for searching in next GT
-                self.gt_Name, self.gt_DataType = None, None
-
+                self.gt_Name = self.gt_DataType = ''
+        self.text = ''        
 
 def init_finder(partition, datatype, search_gts = False, search_lts = False):
     """Initializing SAX handler and parser for the "release_notes.xml" file."""

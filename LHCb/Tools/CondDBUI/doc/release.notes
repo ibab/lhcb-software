@@ -2,6 +2,8 @@
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! ====================================================================
+! 2015-05-11 - Liang Sun
+ - A bug fix for parsing release notes with SAX paser. The method within ReleaseNotesHandler is migrated into endElement() as you might expect an incomplete string within characters()
 
 !========================= CondDBUI v3r33 2015-04-20 =========================
 ! 2015-03-04 - Liang Sun
