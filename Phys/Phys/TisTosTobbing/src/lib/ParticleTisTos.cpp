@@ -840,7 +840,7 @@ std::string ParticleTisTos::analysisReport(const LHCb::HltObjectSummary & hos)
       result |= tisTos( daug,dvalid );
       // report << offset() << " Selection Candidates ";
       ++m_reportDepth;
-      report << analysisReport( daug ) << " valid=" << dvalid; // << std::endl;
+      report << analysisReport( daug ) ; // << std::endl;
       --m_reportDepth;
       if( (result & kTOS) && (result & kTIS) && (result & kTPS ) )break;
     }
@@ -860,7 +860,7 @@ std::string ParticleTisTos::analysisReport(const LHCb::HltObjectSummary & hos)
       unsigned int result = tisTos( daug,dvalid );
       // report << offset() << " Subobject ";
       ++m_reportDepth;
-      report << analysisReport( daug ) << " valid=" << dvalid ;
+      report << analysisReport( daug ) ;
       --m_reportDepth;
       // skip if no info
       if( !dvalid )continue;
