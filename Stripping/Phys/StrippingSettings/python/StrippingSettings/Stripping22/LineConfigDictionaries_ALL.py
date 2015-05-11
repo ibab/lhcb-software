@@ -14,7 +14,7 @@ from GaudiKernel.SystemOfUnits import *
 InclbJets = {
     'BUILDERTYPE' : 'InclbJetsConf',
     'WGs'         : [ 'QEE' ],
-    'STREAMS'     : [ 'EW'  ],
+    'STREAMS'     : [ 'ALL'  ],
     'CONFIG'      : {
         'NrPVsCut'      : 1,
         'NrSeedsCut'    : 2,
@@ -32,7 +32,7 @@ InclbJets = {
 LowMultINC = {
     'BUILDERTYPE' : 'LowMultINCLines',
     'WGs'         : [ 'QEE' ],
-    'STREAMS'     : [ 'BhadronCompleteEvent' ],
+    'STREAMS'     : [ 'ALL' ],
     'CONFIG'      : {
         'LowMultRequiredRawEvents' : None, #["Velo","Heschel"], Please we need to add this!
         #
@@ -114,7 +114,7 @@ LowMultINC = {
 MuMuSS = {
     'BUILDERTYPE' : 'MuMuSSConf',
     'WGs'         : [ 'QEE' ],
-    'STREAMS'     : [ 'EW'  ],
+    'STREAMS'     : [ 'ALL'  ],
     'CONFIG'      : { 
         'MuMuSSLine1Prescale' : 0.1,
         'MuMuSSLine2Prescale' : 1.0,
@@ -137,7 +137,7 @@ MuMuSS = {
 SingleTrackTIS = {
     'BUILDERTYPE' : 'SingleTrackTISConf',
     'WGs'         : [ 'QEE' ],
-    'STREAMS'     : [ 'EW'  ],
+    'STREAMS'     : [ 'ALL'  ],
     'CONFIG'      : { 
         'SingleTrackTIS_Prescale'    : 0.1,
         'SingleTrackTISLow_Prescale' : 0.01,
@@ -151,7 +151,7 @@ SingleTrackTIS = {
 WMu = {
     'BUILDERTYPE' : 'WMuConf',
     'WGs'         : [ 'QEE' ],
-    'STREAMS'     : [ 'EW'  ],
+    'STREAMS'     : [ 'ALL'  ],
     'CONFIG'      : { 
         'WMu_Prescale'        : 1.0,
         'WMuLow_Prescale'     : 0.1,
@@ -171,7 +171,7 @@ WMu = {
 Z02MuMu = {
     'BUILDERTYPE' : 'Z02MuMuConf',
     'WGs'         : [ 'QEE' ],
-    'STREAMS'     : [ 'EW'  ],
+    'STREAMS'     : [ 'ALL'  ],
     'CONFIG'      : { 
         'Z02MuMu_Prescale'  : 1.0,
         'Z02MuMu_Postscale' : 1.0,
@@ -190,7 +190,7 @@ TrackEffDownMuon = {
     'NAME'        : 'TrackEffDownMuon',
     'WGs'         : ['ALL'],
     'BUILDERTYPE' : 'StrippingTrackEffDownMuonConf',
-    'STREAMS'           : [ 'Calibration' ],
+    'STREAMS'           : [ 'ALL' ],
     'CONFIG'      : { 
 				'MuMom':		2000.	# MeV
 			,	'MuTMom':		200.	# MeV
@@ -235,7 +235,7 @@ TrackEffDownMuon = {
 TrackEffMuonTT = {
     'NAME'        : 'TrackEffMuonTT',
     'WGs'         : ['ALL'],
-    'STREAMS'           : [ 'Calibration' ],
+    'STREAMS'           : [ 'ALL' ],
     'BUILDERTYPE' : 'StrippingTrackEffMuonTTConf',
     'CONFIG'      : { 
 			'JpsiMassWin'                 : 500,
@@ -285,7 +285,7 @@ TrackEffMuonTT = {
 TrackEffVeloMuon = {
     'NAME'        : 'TrackEffVeloMuon',
     'WGs'         : ['ALL'],
-    'STREAMS'           : [ 'Calibration' ],
+    'STREAMS'           : [ 'ALL' ],
     'BUILDERTYPE' : 'StrippingTrackEffVeloMuonConf',
     'CONFIG'      : {
 			"TrChi2VeMu":		5.	# adimensional
@@ -334,7 +334,7 @@ TrackEffVeloMuon = {
 NoPIDDstarWithD02RSKPi =  {
     'NAME'       : 'noPIDDstar',
     'WGs'        : ['ALL'],
-    'STREAMS'           : [ 'Calibration' ],
+    'STREAMS'           : [ 'ALL' ],
     'BUILDERTYPE': 'NoPIDDstarWithD02RSKPiConf',
     'CONFIG'     :{
     
@@ -371,7 +371,7 @@ PIDCalib = {
     'BUILDERTYPE'       : 'DiMuonConf',
     'WGs'               : [ 'ALL' ],
     'BUILDERTYPE'       : 'PIDCalibLineBuilder',
-    'STREAMS'           : [ 'PID' ],
+    'STREAMS'           : [ 'ALL' ],
     'CONFIG'            : {
       'Jpsi2MuMu'       : { # Replaces old StrippingMuIDCalib_JpsiKFromBNoPIDNoMip
         'Prescale'      : 1.0
@@ -695,7 +695,7 @@ DiMuonForXsection = {
     'Prescale'   :  1.,
     'CheckPV'    :  False
     },
-    'STREAMS' : [ 'Dimuon' ] ,
+    'STREAMS' : [ 'ALL' ] ,
     'WGs'    : [ 'BandQ' ]
     }
 
@@ -732,7 +732,7 @@ B2JpsiXforEM = {
                    , 'KstarVCHI2'                  : 16.0
                    , 'PTKaon'                      : 500.     
                    },
-    'STREAMS' : {'Dimuon' : ['StrippingB2JpsiXforEMBu2JpsiKDetachedLine',
+    'STREAMS' : {'ALL' : ['StrippingB2JpsiXforEMBu2JpsiKDetachedLine',
                              'StrippingB2JpsiXforEMBd2JpsiKstarDetachedLine',
                              'StrippingB2JpsiXforEMBs2JpsiPhiDetachedLine'
                              ]},
@@ -748,7 +748,7 @@ D02HHForXSecConf = {
     'NAME': 'D02HHForXSec',
     'WGs': ['Charm'],
     'BUILDERTYPE': 'StrippingD02HHForXSecConf',
-    'STREAMS': ['Charm'],
+    'STREAMS': ['ALL'],
     'CONFIG': {
         # Minimum transverse momentum all D0 daughters must satisfy
         'Daug_All_PT_MIN': 250.0*MeV,
@@ -815,7 +815,7 @@ D02K3PiForXSecConf = {
     'NAME': 'D02K3PiForXSec',
     'WGs': ['Charm'],
     'BUILDERTYPE': 'StrippingD02K3PiForXSecConf',
-    'STREAMS': ['Charm'],
+    'STREAMS': ['ALL'],
     'CONFIG': {
         # Minimum transverse momentum all D0 daughters must satisfy
         'Daug_All_PT_MIN': 200.0*MeV,
@@ -902,7 +902,7 @@ D2HHHForXSecConf = {
     'NAME': 'D2HHHForXSec',
     'WGs': ['Charm'],
     'BUILDERTYPE': 'StrippingD2HHHForXSecConf',
-    'STREAMS': ['Charm'],
+    'STREAMS': ['ALL'],
     'CONFIG': {
         # Minimum transverse momentum all D daughters must satisfy
         'Daug_All_PT_MIN': 200.0*MeV,
@@ -1007,7 +1007,7 @@ D2PhiPiForXSecConf = {
     'NAME': 'D2PhiPiForXSec',
     'WGs': ['Charm'],
     'BUILDERTYPE': 'StrippingD2PhiPiForXSecConf',
-    'STREAMS': ['Charm'],
+    'STREAMS': ['ALL'],
     'CONFIG': {
         # Minimum transverse momentum all D_s+ and phi daughters must satisfy
         'Daug_All_PT_MIN': 200.0*MeV,
@@ -1096,7 +1096,7 @@ Lambdac2PHHForXSecConf = {
     'NAME': 'Lambdac2PHHForXSec',
     'WGs': ['Charm'],
     'BUILDERTYPE': 'StrippingLambdac2PHHForXSecConf',
-    'STREAMS': ['Charm'],
+    'STREAMS': ['ALL'],
     'CONFIG': {
         # Minimum transverse momentum all Lc+ daughters must satisfy
         'Daug_All_PT_MIN': 200.0*MeV,
@@ -1196,7 +1196,7 @@ Xic2PKPiForXSecConf = {
     'NAME': 'Xic2PKPiForXSec',
     'WGs': ['Charm'],
     'BUILDERTYPE': 'StrippingXic2PKPiForXSecConf',
-    'STREAMS': ['Charm'],
+    'STREAMS': ['ALL'],
     'CONFIG': {
         # Minimum transverse momentum all Xic+ daughters must satisfy
         'Daug_All_PT_MIN': 200.0*MeV,
@@ -1263,7 +1263,7 @@ Xic2PKKPiForXSecConf = {
     'NAME': 'Xic2PKKPiForXSec',
     'WGs': ['Charm'],
     'BUILDERTYPE': 'StrippingXic2PKKPiForXSecConf',
-    'STREAMS': ['Charm'],
+    'STREAMS': ['ALL'],
     'CONFIG': {
         # Minimum transverse momentum all Xic0 daughters must satisfy
         'Daug_All_PT_MIN': 250.0*MeV,
@@ -1329,3 +1329,53 @@ Xic2PKKPiForXSecConf = {
         'PostscaleXic2PKKPi': 1.0
     }
 }
+
+
+##################
+## Semileptonic ##
+##################
+
+B2DMuNuX = {
+        'NAME'        : 'B2DMuNuX',
+        'WGs'         : ['Semileptonic'],
+        'BUILDERTYPE' : 'B2DMuNuXAllLinesConf',
+        'CONFIG'      : {
+            "prescaleFakes": 0.02
+            ,"GEC_nLongTrk" : 250
+            ,"TTSpecs"      : {}
+            ,"HLT1"   : "HLT_PASS_RE('Hlt1.*Decision')"
+            ,"HLT2"   : "HLT_PASS_RE('Hlt2.*Decision')"
+            ,"Monitor"      : False
+            ,"UseNoPIDsInputs":False
+            ,"TRGHOSTPROB"   : 0.35
+            ,"TRCHI2"        : 3.0
+            ,"MuonPIDmu"     : 0.0
+            ,"MuonPT"        : 1000*MeV
+            ,"MuonIPCHI2"    : 9.00
+            ,"MuonP"         : 6.0*GeV
+            ,"HadronPT"      : 250.0*MeV
+            ,"HadronP"       : 2.0*GeV
+            ,"HadronIPCHI2"  : 4.0
+            ,"ProtonPIDp"    : 0.0
+            ,"ProtonPIDpK"   : -999.
+            ,"ProtonP"       : 8.0*GeV
+            ,"KaonPIDK"      : -2.0
+            ,"KaonP"         : 5.0*GeV
+            ,"PionPIDK"      : 20.0
+            ,"ElectronPIDe"  : 0.0
+            ,"ElectronPT"    : 1200*MeV
+            ,"D_BPVDIRA"     : 0.99
+            ,"D_FDCHI2"      : 25.0
+            ,"D_MassWin"     : 80.0*MeV
+            ,"D_AMassWin"    : 90.0*MeV
+            ,"D_VCHI2DOF"    : 6.0
+            ,"D_DocaChi2Max" : 20
+            ,"B_DIRA"         : 0.999
+            ,"B_VCHI2DOF"      : 9.0
+            ,"B_D_DZ"         : -0.05*mm
+            ,"B_MassMin"       : 2.2*GeV
+            ,"B_MassMax"       : 8.0*GeV
+            ,"B_DocaChi2Max"  : 10
+            },
+        'STREAMS'     : ['ALL']
+     }
