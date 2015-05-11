@@ -20,6 +20,7 @@ default_config = {
     'BUILDERTYPE'       : 'B2JpsiPi0Conf',
     'CONFIG'            : { 'BPVLTIME'                  :       0.2
                           , 'VCHI2PDOF'                 :       10
+                          , 'JpsiMassWindow'            :       80
                           , 'Bs2JpsiPi0Prescale'        :       0.9     # 2011: 0.185, 2012: 0.9
                           },
     'STREAMS'          : { 'Leptonic' : [ 'StrippingBetaSBd2JpsiPi0PrescaledLine' ,
@@ -33,6 +34,7 @@ default_config = {
 class B2JpsiPi0Conf(LineBuilder) :
     __configuration_keys__ = ('BPVLTIME',
                               'VCHI2PDOF',
+                              'JpsiMassWindow',
                               'Bs2JpsiPi0Prescale')
 
     def __init__(self, name, config) :
@@ -42,6 +44,12 @@ class B2JpsiPi0Conf(LineBuilder) :
         self.config = config
 
         ### Selections:
+
+        self.WideJpsiList = DataOnDemand(Location = "Phys/StdMassConstrainedJpsi2MuMu/Particles")
+
+        self.JpsiList = self.createSubSel( OutputList = 'NarrowJpsiForBetaS' + self.name,
+                                           InputList = self.WideJpsiList,
+                                           Cuts = "(PFUNA(ADAMASS('J/psi(1S)')) < %(JpsiMassWindow)s * MeV)" % self.config)
 
         self.Pi0ListLoose = MergedSelection("StdLooseCocktailPi0ForBetaS" + self.name,
                                              RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseResolvedPi0/Particles"),

@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-11 - Carlos Vazquez Sierra
+ - Fixed the code in StrippingB2JpsiPi0.py
+
 ! 2015-05-11 - Yasmine Amhis 
  - Add Lambda(*) and Ks for R_X measurements in StrippingBuLLKLines
 
