@@ -57,6 +57,7 @@ Trying to import module StrippingArchive.Stripping21
 # ERROR: Allowed keys are: BUILDERTYPE,CONFIG,STREAMS,WGs
 # ERROR: The default_config of StrippingArchive.Stripping21.StrippingD2PiPi0.py has incorrect keys
 # ERROR: The default_config of StrippingArchive.Stripping21.StrippingBs2D0KS0.py is not a dictionary
+Trying to import module StrippingArchive.Stripping22
 =============================================
 Stripping17 :
 =============================================
@@ -1015,27 +1016,22 @@ Creating Leptonic stream with 162 lines
 # WARNING: Line StrippingBs2MuMusNoMuIDLooseLine has prescale <= 0, it will be removed from stream Leptonic
 # WARNING: Line StrippingTau23MuDs23PiLine has prescale <= 0, it will be removed from stream Leptonic
 =============================================
-Stripping20r1p1 :
+Stripping22 :
 =============================================
-Requested Stripping20r1p1
-Stripping20r1p1 is a duplicate of Stripping20r0p1
-Trying to import module StrippingArchive.Stripping20r0p1
-# WARNING: lineButo5h_5pi_exclLine uses plain Gaudi configurable Buto5hGlobalEVventCutFilter. Consider using Selection instead!
-# WARNING: lineButo5h_K4pi_exclLine uses plain Gaudi configurable Buto5hGlobalEVventCutFilter. Consider using Selection instead!
-Creating Bhadron stream with 3 lines
-Creating Semileptonic stream with 12 lines
-Creating BhadronCompleteEvent stream with 8 lines
-Creating Radiative stream with 6 lines
-Creating Dimuon stream with 39 lines
-Creating PID stream with 2 lines
-Creating CharmCompleteEvent stream with 15 lines
-Creating Charm stream with 48 lines
-# WARNING: Line StrippingDstarD2KShhKKLLLine has prescale <= 0, it will be removed from stream Charm
-# WARNING: Line StrippingDstarD2KShhPPLLLine has prescale <= 0, it will be removed from stream Charm
-# WARNING: Line StrippingDstarD2KShhKKDDLine has prescale <= 0, it will be removed from stream Charm
-# WARNING: Line StrippingDstarD2KShhPPDDLine has prescale <= 0, it will be removed from stream Charm
-Creating EW stream with 4 lines
-Creating Leptonic stream with 2 lines
+Requested Stripping22
+Trying to import module StrippingArchive.Stripping22
+Creating Dimuon stream with 4 lines
+Creating Calibration stream with 19 lines
+Creating PID stream with 16 lines
+Creating EW stream with 14 lines
+Creating BhadronCompleteEvent stream with 30 lines
+# WARNING: Line StrippingL0DiHadronLine has prescale <= 0, it will be removed from stream BhadronCompleteEvent
+# WARNING: Line StrippingL0DiEMLine has prescale <= 0, it will be removed from stream BhadronCompleteEvent
+# WARNING: Line StrippingL0PhotonLine has prescale <= 0, it will be removed from stream BhadronCompleteEvent
+# WARNING: Line StrippingL0DiMuonLine has prescale <= 0, it will be removed from stream BhadronCompleteEvent
+# WARNING: Line StrippingL0MuonLine has prescale <= 0, it will be removed from stream BhadronCompleteEvent
+# WARNING: Line StrippingL0ElectronLine has prescale <= 0, it will be removed from stream BhadronCompleteEvent
+# WARNING: Line StrippingLowMultTMPLine has prescale <= 0, it will be removed from stream BhadronCompleteEvent
 =============================================
 Stripping19a :
 =============================================
@@ -1260,6 +1256,28 @@ Creating MiniBias stream with 4 lines
 Creating Leptonic stream with 162 lines
 # WARNING: Line StrippingBs2MuMusNoMuIDLooseLine has prescale <= 0, it will be removed from stream Leptonic
 # WARNING: Line StrippingTau23MuDs23PiLine has prescale <= 0, it will be removed from stream Leptonic
+=============================================
+Stripping20r1p1 :
+=============================================
+Requested Stripping20r1p1
+Stripping20r1p1 is a duplicate of Stripping20r0p1
+Trying to import module StrippingArchive.Stripping20r0p1
+# WARNING: lineButo5h_5pi_exclLine uses plain Gaudi configurable Buto5hGlobalEVventCutFilter. Consider using Selection instead!
+# WARNING: lineButo5h_K4pi_exclLine uses plain Gaudi configurable Buto5hGlobalEVventCutFilter. Consider using Selection instead!
+Creating Bhadron stream with 3 lines
+Creating Semileptonic stream with 12 lines
+Creating BhadronCompleteEvent stream with 8 lines
+Creating Radiative stream with 6 lines
+Creating Dimuon stream with 39 lines
+Creating PID stream with 2 lines
+Creating CharmCompleteEvent stream with 15 lines
+Creating Charm stream with 48 lines
+# WARNING: Line StrippingDstarD2KShhKKLLLine has prescale <= 0, it will be removed from stream Charm
+# WARNING: Line StrippingDstarD2KShhPPLLLine has prescale <= 0, it will be removed from stream Charm
+# WARNING: Line StrippingDstarD2KShhKKDDLine has prescale <= 0, it will be removed from stream Charm
+# WARNING: Line StrippingDstarD2KShhPPDDLine has prescale <= 0, it will be removed from stream Charm
+Creating EW stream with 4 lines
+Creating Leptonic stream with 2 lines
 =============================================
 Stripping20r1p3 :
 =============================================
