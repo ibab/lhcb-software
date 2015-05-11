@@ -8,13 +8,9 @@ and
     [Sigma_c0 -> (Lambda_c+ -> p+ K- pi+) pi-]cc
     [Sigma_c++ -> (Lambda_c+ -> p+ K- pi+) pi+]cc
 for open charm cross section measurement.
-
-Adapted to current stripping framework by P. Spradlin.
 """
 
-__author__ = ['Francesca Dordei', 'Francesco Dettori', 'Patrick Spradlin']
-__date__ = '2010/07/15'
-__version__ = '$Revision: 2.0 $'
+__author__ = ['Alex Pearce']
 
 __all__ = (
     'default_config',
@@ -89,7 +85,7 @@ default_config = {
         'Lambdac_MVA_MIN': -0.3,
         # Path to the Lc+ MVA weights file
         # BDT is not applied if this is the empty string or None
-        'Lambdac_MVA_Weights': 'Lambdac2PHHForXSec_BDT_v1r0.xml',
+        'Lambdac_MVA_Weights': '$TMVAWEIGHTSROOT/data/Lambdac2PHHForXSec_BDT_v1r0.xml',
         # Dictionary of LoKi functors defining the Lc+ MVA input variables
         # The keys must match those used when training the MVA
         'Lambdac_MVA_Variables': {
@@ -153,6 +149,7 @@ class StrippingLambdac2PHHForXSecConf(LineBuilder):
         self.config = config
         LineBuilder.__init__(self, name, config)
 
+        # Line names
         lambdac_name = '{0}Lambdac2PKPi'.format(name)
         lambdac_pKK_name = '{0}Lambdac2PKK'.format(name)
         lambdac_ppipi_name = '{0}Lambdac2PPiPi'.format(name)
@@ -160,13 +157,63 @@ class StrippingLambdac2PHHForXSecConf(LineBuilder):
         sigmacz_name = '{0}Sigmacz2LambdacPi'.format(name)
         sigmacpp_name = '{0}Sigmacpp2LambdacPi'.format(name)
 
-        self.inPions = StdAllNoPIDsPions
-        self.inKaons = StdAllNoPIDsKaons
-        self.inProtons = StdAllNoPIDsProtons
+        # Build pion, kaon, and proton cut strings
+        daugCuts = (
+            '(PT > {0[Daug_All_PT_MIN]})'
+            '& (BPVIPCHI2() > {0[Daug_All_BPVIPCHI2_MIN]})'
+        ).format(self.config)
+        pidFiducialCuts = (
+            '(in_range({0[Daug_P_MIN]}, P, {0[Daug_P_MAX]}))'
+            '& (in_range({0[Daug_ETA_MIN]}, ETA, {0[Daug_ETA_MAX]}))'
+        ).format(self.config)
+        protonPIDCuts = (
+            pidFiducialCuts +
+            '& ((PIDp - PIDpi) > {0[Proton_PIDpPIDpi_MIN]})'
+            '& ((PIDp - PIDK) > {0[Proton_PIDpPIDK_MIN]})'
+        ).format(self.config)
+        kaonPIDCuts = (
+            pidFiducialCuts +
+            '& ((PIDK - PIDpi) > {0[K_PIDK_MIN]})'
+        ).format(self.config)
+        pionPIDCuts = (
+            pidFiducialCuts +
+            '& ((PIDK - PIDpi) < {0[Pi_PIDK_MAX]})'
+        ).format(self.config)
+        pionCuts = '{0} & {1}'.format(daugCuts, pionPIDCuts)
+        kaonCuts = '{0} & {1}'.format(daugCuts, kaonPIDCuts)
+        protonCuts = '{0} & {1}'.format(daugCuts, protonPIDCuts)
+
+        # Filter StdAllNoPIDs particles
+        self.inPions = Selection(
+            'PionsFor{0}'.format(name),
+            Algorithm=FilterDesktop(
+                'FilterPionsFor{0}'.format(name),
+                Code=pionCuts
+            ),
+            RequiredSelections=[StdAllNoPIDsPions]
+        )
+        self.inKaons = Selection(
+            'KaonsFor{0}'.format(name),
+            Algorithm=FilterDesktop(
+                'FilterKaonsFor{0}'.format(name),
+                Code=kaonCuts
+            ),
+            RequiredSelections=[StdAllNoPIDsKaons]
+        )
+        self.inProtons = Selection(
+            'ProtonsFor{0}'.format(name),
+            Algorithm=FilterDesktop(
+                'FilterProtonsFor{0}'.format(name),
+                Code=protonCuts
+            ),
+            RequiredSelections=[StdAllNoPIDsProtons]
+        )
+        # Don't used filtered pions for soft pions, cut would be too tight
+        self.inSoftPions = StdAllNoPIDsPions
 
         self.selLambdac2PKPi = self.makeLambdac2PHH(
             name=lambdac_name,
-            inputSel=[self.inPions, self.inKaons, self.inProtons],
+            inputSel=[self.inProtons, self.inKaons, self.inPions],
             decDescriptors=self.Lambdac2PKPi
         )
         self.selLambdac2PKPiMVA = self.makeMVASelection(
@@ -176,7 +223,7 @@ class StrippingLambdac2PHHForXSecConf(LineBuilder):
 
         self.selLambdac2PKK = self.makeLambdac2PHH(
             name=lambdac_pKK_name,
-            inputSel=[self.inKaons, self.inProtons],
+            inputSel=[self.inProtons, self.inKaons],
             decDescriptors=self.Lambdac2PKK
         )
         self.selLambdac2PKKMVA = self.makeMVASelection(
@@ -186,7 +233,7 @@ class StrippingLambdac2PHHForXSecConf(LineBuilder):
 
         self.selLambdac2PPiPi = self.makeLambdac2PHH(
             name=lambdac_ppipi_name,
-            inputSel=[self.inPions, self.inProtons],
+            inputSel=[self.inProtons, self.inPions],
             decDescriptors=self.Lambdac2PPiPi
         )
         self.selLambdac2PPiPiMVA = self.makeMVASelection(
@@ -196,7 +243,7 @@ class StrippingLambdac2PHHForXSecConf(LineBuilder):
 
         self.selLambdac2PPiKWS = self.makeLambdac2PHH(
             name=lambdac_ppiK_name,
-            inputSel=[self.inPions, self.inKaons, self.inProtons],
+            inputSel=[self.inProtons, self.inKaons, self.inPions],
             decDescriptors=self.Lambdac2PPiKWS
         )
         self.selLambdac2PPiKWSMVA = self.makeMVASelection(
@@ -206,13 +253,13 @@ class StrippingLambdac2PHHForXSecConf(LineBuilder):
 
         self.selSigmacz2LambdacPi = self.makeSigmac2LambdacPi(
             name=sigmacz_name,
-            inputSel=[self.inPions, self.selLambdac2PKPiMVA],
+            inputSel=[self.selLambdac2PKPiMVA, self.inSoftPions],
             decDescriptors=self.Sigmacz2LambdacPi
         )
 
         self.selSigmacpp2LambdacPi = self.makeSigmac2LambdacPi(
             name=sigmacpp_name,
-            inputSel=[self.inPions, self.selLambdac2PKPiMVA],
+            inputSel=[self.selLambdac2PKPiMVA, self.inSoftPions],
             decDescriptors=self.Sigmacpp2LambdacPi
         )
 
@@ -307,32 +354,6 @@ class StrippingLambdac2PHHForXSecConf(LineBuilder):
             'from math import cos'
         ]
 
-        daugCuts = (
-            '(PT > {0[Daug_All_PT_MIN]})'
-            '& (BPVIPCHI2() > {0[Daug_All_BPVIPCHI2_MIN]})'
-        ).format(self.config)
-
-        pidFiducialCuts = (
-            '(in_range({0[Daug_P_MIN]}, P, {0[Daug_P_MAX]}))'
-            '& (in_range({0[Daug_ETA_MIN]}, ETA, {0[Daug_ETA_MAX]}))'
-        ).format(self.config)
-
-        protonPIDCuts = (
-            pidFiducialCuts +
-            '& ((PIDp - PIDpi) > {0[Proton_PIDpPIDpi_MIN]})'
-            '& ((PIDp - PIDK) > {0[Proton_PIDpPIDK_MIN]})'
-        ).format(self.config)
-
-        kaonPIDCuts = (
-            pidFiducialCuts +
-            '& ((PIDK - PIDpi) > {0[K_PIDK_MIN]})'
-        ).format(self.config)
-
-        pionPIDCuts = (
-            pidFiducialCuts +
-            '& ((PIDK - PIDpi) < {0[Pi_PIDK_MAX]})'
-        ).format(self.config)
-
         combCuts = (
             "(ADAMASS('Lambda_c+') < {0[Comb_ADAMASS_WIN]})"
             '& (AMAXCHILD(PT) > {0[Daug_1of3_PT_MIN]})'
@@ -352,11 +373,6 @@ class StrippingLambdac2PHHForXSecConf(LineBuilder):
             name='Combine{0}'.format(name),
             DecayDescriptors=decDescriptors,
             Preambulo=lclPreambulo,
-            DaughtersCuts={
-                'pi+': '{0} & {1}'.format(daugCuts, pionPIDCuts),
-                'K+': '{0} & {1}'.format(daugCuts, kaonPIDCuts),
-                'p+': '{0} & {1}'.format(daugCuts, protonPIDCuts)
-            },
             CombinationCut=combCuts,
             MotherCut=lambdacCuts
         )

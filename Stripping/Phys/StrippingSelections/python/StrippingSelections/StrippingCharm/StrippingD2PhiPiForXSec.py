@@ -1,16 +1,17 @@
 """
 Stripping lines for selection of
+    [D+ -> pi+ (phi(1020) -> K- K+)]cc
     [D_s+ -> pi+ (phi(1020) -> K- K+)]cc
     [D*_s+ -> (D_s+ -> pi+ (phi(1020) -> K- K+)) gamma]cc
 for open charm cross section measurement.
 The pi+phi(1020) mass window is wide enough to select D+ and D_s+.
-
-Adapted to current stripping framework by P. Spradlin.
+The two-body [phi(1020) pi+]cc combination is made with a mass window wide
+enough to select D+ and D_s+, and then this selection is filtered in to a D+
+selection around the nominal D+ mass and a D_s+ selection around the nominal
+D_s+ mass.
 """
 
-__author__ = ['Conor Fitzpatrick', 'Patrick Spradlin']
-__date__ = '03/09/2010'
-__version__ = '$Revision: 2.0 $'
+__author__ = ['Alex Pearce']
 
 __all__ = (
     'default_config',
@@ -18,7 +19,7 @@ __all__ = (
 )
 
 from GaudiKernel.SystemOfUnits import MeV, GeV, mrad
-from Configurables import CombineParticles, FilterDesktop
+from Configurables import CombineParticles, FilterDesktop, SubstitutePID
 from StandardParticles import (
     StdAllNoPIDsKaons,
     StdAllNoPIDsPions,
@@ -54,10 +55,14 @@ default_config = {
         'Pi_PIDK_MAX': 3.0,
         # Phi mass window around the nominal phi mass before the vertex fit
         'Comb_Phi_ADAMASS_WIN': 20*MeV,
-        # Minimum mass of the two-body pi+phi(1020) combination
-        'D_AM_MIN': 1770.0*MeV,
-        # Maximum mass of the two-body pi+phi(1020) combination
-        'D_AM_MAX': 2070.0*MeV,
+        # D+ mass window around the nominal D+ mass after the vertex fit
+        # Lower bound of this, -10 MeV, is used before the hhh combination
+        # vertex fit
+        'Dp_ADAMASS_WIN': 80.0*MeV,
+        # D_s+ mass window around the nominal D+ mass after the vertex fit
+        # Upper bound of this, +10 MeV, is used before the hhh combination
+        # vertex fit
+        'Ds_ADAMASS_WIN': 80.0*MeV,
         # Maximum D+ vertex chi^2 per vertex fit DoF
         'D_VCHI2VDOF_MAX': 25.0,
         # Maximum angle between D+ momentum and D+ direction of flight
@@ -69,13 +74,16 @@ default_config = {
         'Photon_CL_MIN': 0.25,
         # Maximum delta mass value m(D*_s+) - m(D_s+) (PDG dm: 143 MeV)
         'Dsstar_AMDiff_MAX': 170*MeV,
-        # Minimum D+ MVA discriminant value
-        'D_MVA_MIN': -0.3,
-        # Path to the D+ MVA weights file
+        # Minimum D+ and D_s+ MVA discriminant value
+        'Dp_MVA_MIN': -0.3,
+        'Ds_MVA_MIN': -0.3,
+        # Path to the D+ and D_s+ MVA weights files
         # BDT is not applied if this is the empty string or None
-        'D_MVA_Weights': 'D2PhiPiForXSec_BDT_v1r0.xml',
+        'Dp_MVA_Weights': '$TMVAWEIGHTSROOT/data/D2PhiPiForXSec_BDT_v1r0.xml',
+        'Ds_MVA_Weights': '$TMVAWEIGHTSROOT/data/D2PhiPiForXSec_BDT_v1r0.xml',
         # Dictionary of LoKi functors defining the D+ MVA input variables
         # The keys must match those used when training the MVA
+        # Same input variables are used for both D+ and D_s+
         'D_MVA_Variables': {
             # Largest D+ and phi daughter PT
             'ROOTex::Leading(phi_h1_PT,phi_h2_PT,Ds_pi_PT)': (
@@ -101,10 +109,12 @@ default_config = {
         'Hlt1Filter': None,
         'Hlt2Filter': None,
         # Fraction of candidates to randomly throw away before stripping
-        'PrescaleD2PhiPi': 1.0,
+        'PrescaleDp2PhiPi': 1.0,
+        'PrescaleDs2PhiPi': 1.0,
         'PrescaleDsstar2DsGamma': 1.0,
         # Fraction of candidates to randomly throw after before stripping
-        'PostscaleD2PhiPi': 1.0,
+        'PostscaleDp2PhiPi': 1.0,
+        'PostscaleDs2PhiPi': 1.0,
         'PostscaleDsstar2DsGamma': 1.0
     }
 }
@@ -128,6 +138,8 @@ class StrippingD2PhiPiForXSecConf(LineBuilder):
 
         phi2KK_name = '{0}Phi2KK'.format(name)
         d2PhiPi_name = '{0}D2PhiPi'.format(name)
+        dp2PhiPi_name = '{0}Dp2PhiPi'.format(name)
+        ds2PhiPi_name = '{0}Ds2PhiPi'.format(name)
         dsstar2DsGamma_name = '{0}Dsstar2DsGamma'.format(name)
 
         self.inPions = StdAllNoPIDsPions
@@ -145,22 +157,42 @@ class StrippingD2PhiPiForXSecConf(LineBuilder):
             inputSel=[self.selPhi2KK, self.inPions],
             decDescriptors=self.D2PhiPi
         )
-        self.selD2PhiPiMVA = self.makeMVASelection(
-            '{0}MVASelection'.format(d2PhiPi_name),
+        self.selDp2PhiPi, self.selDs2PhiPi = self.splitPhiPi(
+            d2PhiPi_name,
             self.selD2PhiPi
+        )
+        self.selDp2PhiPiMVA = self.makeMVASelection(
+            '{0}MVASelection'.format(dp2PhiPi_name),
+            self.selDp2PhiPi,
+            self.config['Dp_MVA_Weights'],
+            self.config['Dp_MVA_MIN']
+        )
+        self.selDs2PhiPiMVA = self.makeMVASelection(
+            '{0}MVASelection'.format(ds2PhiPi_name),
+            self.selDs2PhiPi,
+            self.config['Ds_MVA_Weights'],
+            self.config['Ds_MVA_MIN']
         )
 
         self.selDsstar2Dsgamma = self.makeDsstar2DsGamma(
             name=dsstar2DsGamma_name,
-            inputSel=[self.selD2PhiPiMVA, self.inPhotons],
+            inputSel=[self.selDs2PhiPiMVA, self.inPhotons],
             decDescriptors=self.Dsstar2DsGamma
         )
 
-        self.line_D2PhiPi = self.make_line(
-            name=d2PhiPi_name + 'Line',
-            selection=self.selD2PhiPiMVA,
-            prescale=config['PrescaleD2PhiPi'],
-            postscale=config['PostscaleD2PhiPi'],
+        self.line_Dp2PhiPi = self.make_line(
+            name=dp2PhiPi_name + 'Line',
+            selection=self.selDp2PhiPiMVA,
+            prescale=config['PrescaleDp2PhiPi'],
+            postscale=config['PostscaleDp2PhiPi'],
+            HLT1=config['Hlt1Filter'],
+            HLT2=config['Hlt2Filter']
+        )
+        self.line_Ds2PhiPi = self.make_line(
+            name=ds2PhiPi_name + 'Line',
+            selection=self.selDs2PhiPiMVA,
+            prescale=config['PrescaleDs2PhiPi'],
+            postscale=config['PostscaleDs2PhiPi'],
             HLT1=config['Hlt1Filter'],
             HLT2=config['Hlt2Filter']
         )
@@ -267,9 +299,13 @@ class StrippingD2PhiPiForXSecConf(LineBuilder):
             '& (PIDK-PIDpi < {0[Pi_PIDK_MAX]})'
         ).format(self.config)
 
-        combCuts = '(in_range({0[D_AM_MIN]}, AM, {0[D_AM_MAX]}))'.format(
-            self.config
-        )
+        # Be within either the D+ or D_s+ mass window
+        combCuts = (
+            '('
+            "(ADAMASS('D+') < ({0[Dp_ADAMASS_WIN]} + 10))"
+            "| (ADAMASS('D_s+') < ({0[Ds_ADAMASS_WIN]} + 10))"
+            ')'
+        ).format(self.config)
 
         dCuts = (
             '(VFASPF(VCHI2/VDOF) < {0[D_VCHI2VDOF_MAX]})'
@@ -316,19 +352,66 @@ class StrippingD2PhiPiForXSecConf(LineBuilder):
 
         return Selection(name, Algorithm=_dsstar, RequiredSelections=inputSel)
 
-    def makeMVASelection(self, name, inputSel):
+    def splitPhiPi(self, name, phiPiSelection):
+        """Split the input phi pi+ Selection in to a D+ and D_s+ selection.
+
+        Returns a two-tuple as (D+ Selection, D_s+ Selection).
+        Keyword arguments:
+        phiPiSelection -- A single Selection instance; output of makeD2PhiPi
+        """
+        dpFilter = FilterDesktop(
+            'FilterDp{0}'.format(name),
+            Code="(ADMASS('D+') < {0[Dp_ADAMASS_WIN]})".format(self.config)
+        )
+        dsFilter = FilterDesktop(
+            'FilterDs{0}'.format(name),
+            Code="(ADMASS('D_s+') < {0[Ds_ADAMASS_WIN]})".format(self.config)
+        )
+
+        dpSel = Selection(
+            'SelFilteredDp{0}'.format(name),
+            Algorithm=dpFilter,
+            RequiredSelections=[phiPiSelection]
+        )
+        dsSel = Selection(
+            'SelFilteredDs{0}'.format(name),
+            Algorithm=dsFilter,
+            RequiredSelections=[phiPiSelection]
+        )
+
+        # The PhiPi selection is labelled as a D_s+, so rename the candidates
+        # in the Dp selection as such
+        dpSubPID = SubstitutePID(
+            name='SubPidDp{0}'.format(name),
+            Code="DECTREE('[D_s+ -> X0 X+]CC')",
+            Substitutions={
+                'D_s+ -> X0 X+': 'D+',
+                'D_s- -> X0 X-': 'D-'
+
+            },
+            MaxChi2PerDoF=-1
+        )
+        dpSubPIDSel = Selection(
+            'SubPIDDpSel{0}'.format(name),
+            Algorithm=dpSubPID,
+            RequiredSelections=[dpSel]
+        )
+
+        return dpSubPIDSel, dsSel
+
+    def makeMVASelection(self, name, inputSel, weights_file, cut_value):
         # Don't apply a BDT if the weights file has not been specified
-        if not self.config['D_MVA_Weights']:
+        if not weights_file:
             return inputSel
 
-        cut = "VALUE('LoKi::Hybrid::DictValue/{0}') > {1[D_MVA_MIN]}".format(
-            name, self.config
+        cut = "VALUE('LoKi::Hybrid::DictValue/{0}') > {1}".format(
+            name, cut_value
         )
         mva = FilterDesktop('{0}Filter'.format(name), Code=cut)
 
         addTMVAclassifierValue(
             Component=mva,
-            XMLFile=self.config['D_MVA_Weights'],
+            XMLFile=weights_file,
             Variables=self.config['D_MVA_Variables'],
             ToolName=name
         )

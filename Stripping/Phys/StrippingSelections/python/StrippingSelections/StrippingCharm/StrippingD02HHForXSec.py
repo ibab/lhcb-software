@@ -4,13 +4,9 @@ Stripping lines for selection of
     [D*(2007)0 -> (D0 -> K- pi+) pi0]cc
     [D*(2010)+ -> (D0 -> K- pi+) pi+]cc
 for open charm cross section measurement.
-
-Adapted to current stripping framework by P. Spradlin.
 """
 
-__author__ = ['Marco Gersabeck', 'Alexandr Kozlinskiy', 'Patrick Spradlin']
-__date__ = '03/09/2010'
-__version__ = '$Revision: 2.0 $'
+__author__ = ['Alex Pearce']
 
 __all__ = (
     'default_config',
@@ -70,7 +66,7 @@ default_config = {
         'D0_MVA_MIN': -0.3,
         # Path to the D0 MVA weights file
         # BDT is not applied if this is the empty string or None
-        'D0_MVA_Weights': 'D02HHForXSec_BDT_v1r0.xml',
+        'D0_MVA_Weights': '$TMVAWEIGHTSROOT/data/D02HHForXSec_BDT_v1r0.xml',
         # Dictionary of LoKi functors defining the D0 MVA input variables
         # The keys must match those used when training the MVA
         'D0_MVA_Variables': {
@@ -131,14 +127,14 @@ class StrippingD02HHForXSecConf(LineBuilder):
         dstar0_resolved_name = '{0}Dstar2D0Pi0Resolved_D02HH'.format(name)
 
         self.inPions = StdAllNoPIDsPions
-        self.inDstarPions = StdAllNoPIDsPions
+        self.inSoftPions = StdAllNoPIDsPions
         self.inKaons = StdAllNoPIDsKaons
         self.inMergedPions = StdLooseMergedPi0
         self.inResolvedPions = StdLooseResolvedPi0
 
         self.selD02HH = self.makeD02HH(
             d02HH_name,
-            inputSel=[self.inPions, self.inKaons],
+            inputSel=[self.inKaons, self.inPions],
             decDescriptors=self.D02HH
         )
         self.selD02HHMVA = self.makeMVASelection(
@@ -157,7 +153,7 @@ class StrippingD02HHForXSecConf(LineBuilder):
 
         self.selDstar2D0Pi_D02HH = self.makeDstar2D0Pi(
             dstar_name,
-            inputSel=[self.inDstarPions, self.selD02HHMVA],
+            inputSel=[self.selD02HHMVA, self.inSoftPions],
             decDescriptors=self.Dstar2D0Pi
         )
 
@@ -172,7 +168,7 @@ class StrippingD02HHForXSecConf(LineBuilder):
 
         self.selDstar2D0Pi0Merged_D02HH = self.makeDstar2D0Pi0(
             dstar0_merged_name,
-            inputSel=[self.inMergedPions, self.selD02HHMVA],
+            inputSel=[self.selD02HHMVA, self.inMergedPions],
             decDescriptors=self.Dstar2D0Pi0
         )
 
@@ -187,7 +183,7 @@ class StrippingD02HHForXSecConf(LineBuilder):
 
         self.selDstar2D0Pi0Resolved_D02HH = self.makeDstar2D0Pi0(
             dstar0_resolved_name,
-            inputSel=[self.inResolvedPions, self.selD02HHMVA],
+            inputSel=[self.selD02HHMVA, self.inResolvedPions],
             decDescriptors=self.Dstar2D0Pi0
         )
 
