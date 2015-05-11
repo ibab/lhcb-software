@@ -1020,18 +1020,14 @@ Stripping22 :
 =============================================
 Requested Stripping22
 Trying to import module StrippingArchive.Stripping22
-Creating Dimuon stream with 4 lines
-Creating Calibration stream with 19 lines
-Creating PID stream with 16 lines
-Creating EW stream with 14 lines
-Creating BhadronCompleteEvent stream with 30 lines
-# WARNING: Line StrippingL0DiHadronLine has prescale <= 0, it will be removed from stream BhadronCompleteEvent
-# WARNING: Line StrippingL0DiEMLine has prescale <= 0, it will be removed from stream BhadronCompleteEvent
-# WARNING: Line StrippingL0PhotonLine has prescale <= 0, it will be removed from stream BhadronCompleteEvent
-# WARNING: Line StrippingL0DiMuonLine has prescale <= 0, it will be removed from stream BhadronCompleteEvent
-# WARNING: Line StrippingL0MuonLine has prescale <= 0, it will be removed from stream BhadronCompleteEvent
-# WARNING: Line StrippingL0ElectronLine has prescale <= 0, it will be removed from stream BhadronCompleteEvent
-# WARNING: Line StrippingLowMultTMPLine has prescale <= 0, it will be removed from stream BhadronCompleteEvent
+Creating ALL stream with 120 lines
+# WARNING: Line StrippingL0DiHadronLine has prescale <= 0, it will be removed from stream ALL
+# WARNING: Line StrippingL0DiEMLine has prescale <= 0, it will be removed from stream ALL
+# WARNING: Line StrippingL0PhotonLine has prescale <= 0, it will be removed from stream ALL
+# WARNING: Line StrippingL0DiMuonLine has prescale <= 0, it will be removed from stream ALL
+# WARNING: Line StrippingL0MuonLine has prescale <= 0, it will be removed from stream ALL
+# WARNING: Line StrippingL0ElectronLine has prescale <= 0, it will be removed from stream ALL
+# WARNING: Line StrippingLowMultTMPLine has prescale <= 0, it will be removed from stream ALL
 =============================================
 Stripping19a :
 =============================================

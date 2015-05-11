@@ -4,6 +4,9 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-11 - Ricardo Vazquez Gomez
+ - Change the instantiate-all-strip.ref that adds all the lines for EM
+
 ! 2015-05-11 - Alex Pearce 
  - Clean up docstrings in ForXSec charm modules 
  - Relax BDT requirements in all ForXSec charm modules 
