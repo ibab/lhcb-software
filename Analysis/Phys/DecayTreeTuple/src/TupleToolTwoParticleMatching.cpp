@@ -55,10 +55,10 @@ StatusCode TupleToolTwoParticleMatching::initialize()
 
 //=============================================================================
 
-StatusCode TupleToolTwoParticleMatching::fill( const LHCb::Particle* mother
-                                          , const LHCb::Particle* P
-                                          , const std::string&  head
-                                          , Tuples::Tuple& tuple )
+StatusCode TupleToolTwoParticleMatching::fill( const LHCb::Particle*
+                                               , const LHCb::Particle* P
+                                               , const std::string&  head
+                                               , Tuples::Tuple& tuple )
 {
   StatusCode sc = StatusCode::SUCCESS;
 

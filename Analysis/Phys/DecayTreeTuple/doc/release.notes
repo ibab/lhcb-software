@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2015-05-11 - Eduardo Rodrigues
+ - Removed warning in compilation of TupleToolTwoParticleMatching.
+
 !======================= DecayTreeTuple v4r14 2015-04-22 =====================
 
 ! 2015-04-13 - Olivier Deschamps
