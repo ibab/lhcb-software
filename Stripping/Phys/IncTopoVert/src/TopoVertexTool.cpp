@@ -14,7 +14,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TopoVertexTool )
+DECLARE_TOOL_FACTORY( TopoVertexTool );
+
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -27,36 +28,50 @@ TopoVertexTool::TopoVertexTool( const std::string& type,
   m_writtenOnTES = false;
 
   declareInterface<ITopoVertexTool>(this);
-
+  /*
   declareProperty("VertexFunctionToolType",m_vertexFunctionToolType="VertexFunctionTool");
   declareProperty("VertexFunctionToolName",m_vertexFunctionToolName="VertexFunctionTool");
-
   declareProperty("DistanceCalculatorToolType",m_distanceCalculatorToolType="LoKi::DistanceCalculator");
   declareProperty("DistanceCalculatorToolName",m_distanceCalculatorToolName="DistanceCalculatorTool");
-
   declareProperty("TrackVertexerToolType",m_trackVertexerToolType="TrackVertexer");
   declareProperty("TrackVertexerToolName",m_trackVertexerToolName="TrackVertexerTool");
-
   declareProperty("TwoTracksVtxChi2Max"   ,m_twoTracksVtxChi2Max   = 20.  );
   declareProperty("TwoTracksVtxVfMin"     ,m_twoTracksVtxVfMin     =  0.1 );
   declareProperty("TwoTracksVtxVfRatioMin",m_twoTracksVtxVfRatioMin=  0.1 );
   declareProperty("TrackVtxChi2Max"       ,m_TrackVtxChi2Max       = 15.  );
-
   /// To be passed to the vertex function tool (temporary)
   declareProperty("MaxFinderStep",m_step=0.001);
- 
   declareProperty("MaxFinderMinGradientMag",m_max_finder_min_gradient_mag=0.01);
   declareProperty("MaxFinderMaxIteration",m_max_finder_max_iteration=10000);
   declareProperty("MaxFinderMinStep",m_max_finder_min_step=0.000001);
   declareProperty("MaxFinderMaxjump",m_max_finder_max_jump=5);
-
   declareProperty("ResolverCut",m_resolver_cut=0.8); 
   declareProperty("ResolverMinStep",m_resolver_min_step=0.001);
   declareProperty("ResolverMaxIteration",m_resolver_max_iteration=8);
-  
   declareProperty("DxForGradient",m_dx_for_gradient=0.0001);
   declareProperty("MC",m_MC = true);
-  
+  */
+   declareProperty("VertexFunctionToolType",m_vertexFunctionToolType="VertexFunctionToolRootMini");
+  declareProperty("VertexFunctionToolName",m_vertexFunctionToolName="VertexFunctionToolRootMini");
+  declareProperty("DistanceCalculatorToolType",m_distanceCalculatorToolType="LoKi::DistanceCalculator");
+  declareProperty("DistanceCalculatorToolName",m_distanceCalculatorToolName="DistanceCalculatorTool");
+  declareProperty("TrackVertexerToolType",m_trackVertexerToolType="TrackVertexer");
+  declareProperty("TrackVertexerToolName",m_trackVertexerToolName="TrackVertexerTool");
+  declareProperty("TwoTracksVtxChi2Max"   ,m_twoTracksVtxChi2Max   = 10.  );
+  declareProperty("TwoTracksVtxVfMin"     ,m_twoTracksVtxVfMin     =  0.1 );
+  declareProperty("TwoTracksVtxVfRatioMin",m_twoTracksVtxVfRatioMin=  0.8 );
+  declareProperty("TrackVtxChi2Max"       ,m_TrackVtxChi2Max       = 20.  );
+  /// To be passed to the vertex function tool (temporary)
+  declareProperty("MaxFinderStep",m_step=0.01);
+  declareProperty("MaxFinderMinGradientMag",m_max_finder_min_gradient_mag=0.1);
+  declareProperty("MaxFinderMaxIteration",m_max_finder_max_iteration=8000);
+  declareProperty("MaxFinderMinStep",m_max_finder_min_step=0.01);
+  declareProperty("MaxFinderMaxjump",m_max_finder_max_jump=5);
+  declareProperty("ResolverCut",m_resolver_cut=0.35); 
+  declareProperty("ResolverMinStep",m_resolver_min_step=0.001);
+  declareProperty("ResolverMaxIteration",m_resolver_max_iteration=8);
+  declareProperty("DxForGradient",m_dx_for_gradient=0.0001);
+  declareProperty("MC",m_MC = true);
 }
 //=============================================================================
 // Destructor
@@ -66,17 +81,25 @@ TopoVertexTool::~TopoVertexTool() {}
 //=============================================================================
 StatusCode TopoVertexTool::initialize()
 {
-  const StatusCode sc = GaudiTool::initialize();
-  if ( sc.isFailure() ) return sc;
   
   m_vertexFunction = tool<IVertexFunctionTool>(m_vertexFunctionToolType,m_vertexFunctionToolName);
+  if (0 == m_vertexFunction) 
+    return Error("Unable to load vertexFunctionTool "+m_vertexFunctionToolType+" "+m_vertexFunctionToolName,
+                 StatusCode::FAILURE);
+
   setVertexFunctionParam();
    
-  m_distanceCalculator = tool<IDistanceCalculator>(m_distanceCalculatorToolType,m_distanceCalculatorToolName);
+  m_distanceCalculator  = tool<IDistanceCalculator>(m_distanceCalculatorToolType,m_distanceCalculatorToolName);
+  if (0 == m_distanceCalculator) 
+    return Error("Unable to load distanceCalculatorTool "+m_distanceCalculatorToolType+" "+m_distanceCalculatorToolName,
+                 StatusCode::FAILURE);
   
-  m_trackVertexer = tool<ITrackVertexer>(m_trackVertexerToolType,m_trackVertexerToolName);
+  m_trackVertexer  = tool<ITrackVertexer>(m_trackVertexerToolType,m_trackVertexerToolName);
+  if (0 == m_trackVertexer) 
+    return Error("Unable to load trackVertexerTool "+m_trackVertexerToolType+" "+m_trackVertexerToolName,
+                 StatusCode::FAILURE);
   
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
 
@@ -117,7 +140,7 @@ StatusCode TopoVertexTool::findVertices(std::vector<const LHCb::Track*> & tracks
   std::vector<const LHCb::Track*>  vf_tracks ;
   getVertexFunctionTracks(vf_tracks);
   if (vf_tracks.size()==0) {
-    Warning("The Vertex Function has no tracks!",StatusCode::SUCCESS,20).ignore();
+    warning()<<"The Vertex Function has no tracks!"<<endmsg;
   }
 
   cleanUpResult();
@@ -133,40 +156,22 @@ StatusCode TopoVertexTool::findVertices(std::vector<const LHCb::Track*> & tracks
   setVertexFunctionParam(); // Just in case some parameters where changed (?, Giampi ?) 
 
   // Start finding algorithm, splitted in 6 steps to ease debugging and method overriding 
-  if (!step1().isSuccess()) {
-    cleanUpFull(); 
-    return Warning("Step1 failed",StatusCode::SUCCESS,20);
-  }
+  if (step1().isFailure ()) return Warning("Step1 failed",StatusCode::SUCCESS,20);
   if (m_MC == true && n_sig_track_step != NULL)     n_sig_track_step[0] = getNbSignalTrack(m_2tracks_vertices);
 
-  if (!step2().isSuccess()) {
-    cleanUpFull(); 
-    return Warning("Step2 failed",StatusCode::SUCCESS,20);
-  }
+  if (step2().isFailure ()) return Warning("Step2 failed",StatusCode::SUCCESS,20);
   if (m_MC == true && n_sig_track_step != NULL )     n_sig_track_step[1] = getNbSignalTrack(m_2tracks_vertices);
 
-  if (!step3().isSuccess()) {
-    cleanUpFull(); 
-    return Warning("Step3 failed",StatusCode::SUCCESS,20);
-  }
+  if (step3().isFailure ()) return Warning("Step3 failed",StatusCode::SUCCESS,20);
   if (m_MC == true && n_sig_track_step != NULL )     n_sig_track_step[2] = getNbSignalTrack(m_2tracks_vertices);
 
-  if (!step4().isSuccess()) {
-    cleanUpFull(); 
-    return Warning("Step4 failed",StatusCode::SUCCESS,20);
-  }
+  if (step4().isFailure ()) return Warning("Step4 failed",StatusCode::SUCCESS,20);
   if (m_MC == true && n_sig_track_step != NULL )     n_sig_track_step[3] = getNbSignalTrack(m_list_of_clusters);
 
-  if (!step5().isSuccess()) {
-    cleanUpFull(); 
-    return Warning("Step5 failed",StatusCode::SUCCESS,20);
-  }
+  if (step5().isFailure ()) return Warning("Step5 failed",StatusCode::SUCCESS,20);
   if (m_MC == true && n_sig_track_step != NULL )     n_sig_track_step[4] = getNbSignalTrack(m_vertices);
 
-  if (!step6().isSuccess()) {
-    cleanUpFull(); 
-    return Warning("Step6 failed",StatusCode::SUCCESS,20);
-  }
+  if (step6().isFailure ()) return Warning("Step6 failed",StatusCode::SUCCESS,20);
   if (m_MC == true && n_sig_track_step != NULL )     n_sig_track_step[5] = getNbSignalTrack(m_vertices);
 
   cleanUpTemporary();
@@ -197,24 +202,16 @@ StatusCode TopoVertexTool::step1()
     for (std::vector<const LHCb::Track*>::iterator it_ptrk1=begin1; it_ptrk1<m_tracks.end(); ++it_ptrk1){ 
       two_tracks_container.push_back(*it_ptrk1);
       LHCb::RecVertex * vertex = m_trackVertexer->fit(two_tracks_container);
-      if (vertex) {
-        
-        two_tracks_container.pop_back();
-        
-        if (vertex->chi2() > (2*m_twoTracksVtxChi2Max)){
-          delete vertex;
-          continue;
-        }
-      
-        if (m_vertexFunction->valueAt(*vertex) < m_twoTracksVtxVfMin){
-          delete vertex;
-          continue;
-        }
-      }
-      else { 
-        Warning("fit didn't converge",StatusCode::SUCCESS,0).ignore();  
+      two_tracks_container.pop_back();
+
+      if (vertex->chi2() > (2*m_twoTracksVtxChi2Max)){
         delete vertex;
-        
+        continue;
+      }
+      
+      if (m_vertexFunction->valueAt(*vertex) < m_twoTracksVtxVfMin){
+        delete vertex;
+        continue;
       }
       
       m_2tracks_vertices.push_back(vertex);
@@ -326,7 +323,7 @@ StatusCode TopoVertexTool::step5()
       const SmartRefVector< LHCb::Track > vertex_tracks = vertex->tracks();
       all_tracks.insert(all_tracks.end(),vertex_tracks.begin(),vertex_tracks.end());
     }
-    std::stable_sort(all_tracks.begin(),all_tracks.end());
+    std::sort(all_tracks.begin(),all_tracks.end());
     TrackVector::iterator tracks_end = std::unique(all_tracks.begin(),all_tracks.end());
     TrackVector tracks;
     tracks.insert(tracks.end(), all_tracks.begin(),tracks_end);
@@ -334,10 +331,7 @@ StatusCode TopoVertexTool::step5()
     LHCb::RecVertex * vertex = m_trackVertexer->fit(tracks);
 
     if (vertex)  m_vertices.push_back(vertex);
-    else { 
-      Warning("fit didn't converge",StatusCode::SUCCESS,0).ignore(); 
-      delete vertex;   
-    }    
+    else warning() << "TopoVertexTool:: fit didn't converge" <<endmsg;
   }
   return StatusCode::SUCCESS;
 }
@@ -451,16 +445,9 @@ LHCb::RecVertex * TopoVertexTool::removeHighChisqTracksFromVertex(LHCb::RecVerte
   
   if ( ( max_chi2 > m_TrackVtxChi2Max ) && (updated_tracks.size()>1) ) {
     LHCb::RecVertex * new_vertex = m_trackVertexer->fit(updated_tracks);
-    if (vertex) {
-      
-      delete(vertex);
-      vertex = removeHighChisqTracksFromVertex(new_vertex);
-    }
-    else { 
-      Warning("fit didn't converge",StatusCode::SUCCESS,0).ignore(); 
-      delete vertex;   
-    }
-  }  
+    delete(vertex);
+    vertex = removeHighChisqTracksFromVertex(new_vertex);
+  }
   return vertex;
   
 }
