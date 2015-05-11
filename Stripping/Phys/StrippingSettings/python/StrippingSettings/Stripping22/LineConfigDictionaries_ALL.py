@@ -740,3 +740,592 @@ B2JpsiXforEM = {
     
     }
 
+#-------#
+# Charm #
+#-------#
+
+D02HHForXSecConf = {
+    'NAME': 'D02HHForXSec',
+    'WGs': ['Charm'],
+    'BUILDERTYPE': 'StrippingD02HHForXSecConf',
+    'STREAMS': ['Charm'],
+    'CONFIG': {
+        # Minimum transverse momentum all D0 daughters must satisfy
+        'Daug_All_PT_MIN': 250.0*MeV,
+        # Minimum best primary vertex IP chi^2 all D0 daughters must satisfy
+        'Daug_All_BPVIPCHI2_MIN': 4.0,
+        # Minimum D0 daughter momentum
+        'Daug_P_MIN': 3.0*GeV,
+        # Maximum D0 daughter momentum
+        'Daug_P_MAX': 100.0*GeV,
+        # Minimum D0 daughter pseudorapidity
+        'Daug_ETA_MIN': 2.0,
+        # Maximum D0 daughter pseudorapidity
+        'Daug_ETA_MAX': 5.0,
+        # Minimum D0 daughter kaon DLLK
+        'K_PIDK_MIN': 5.0,
+        # Maximum D0 daughter pion DLLK
+        'Pi_PIDK_MAX': 3.0,
+        # D0 mass window around the nominal D0 mass before the vertex fit
+        'D0_ADAMASS_WIN': 80.0*MeV,
+        # Maximum D0 vertex chi^2 per vertex fit DoF
+        'D0_VCHI2VDOF_MAX': 25.0,
+        # Maximum angle between D0 momentum and D0 direction of flight
+        'D0_acosBPVDIRA_MAX': 35.0*mrad,
+        # Primary vertex displacement requirement, either that the D0 is some
+        # sigma away from the PV, or it has a minimum flight time
+        'D0_PVDispCut': '((BPVVDCHI2 > 16.0)|(BPVLTIME() > 0.150*picosecond))',
+        # Maximum delta mass value m(D*{0,+}) - m(D0)
+        'Dstar_AMDiff_MAX': 160.0*MeV,
+        # Maximum D*+ vertex chi^2 per vertex DoF (_not_ applied to D*0)
+        'Dstar_VCHI2VDOF_MAX': 25.0,
+        # Minimum D0 MVA discriminant value
+        'D0_MVA_MIN': -0.3,
+        # Path to the D0 MVA weights file
+        # BDT is not applied if this is the empty string or None
+        'D0_MVA_Weights': '$TMVAWEIGHTSROOT/data/D02HHForXSec_BDT_v1r0.xml',
+        # Dictionary of LoKi functors defining the D0 MVA input variables
+        # The keys must match those used when training the MVA
+        'D0_MVA_Variables': {
+            'D0_Loki_LV02': 'LV02',
+            'D0_Loki_BPVLTIME': "BPVLTIME()",
+            'D0_ENDVERTEX_CHI2': 'VFASPF(VCHI2/VDOF)',
+            'D0_h1_PT': 'CHILD(PT, 1)',
+            'D0_h2_PT': 'CHILD(PT, 2)',
+            'D0_h1_ETA': 'CHILD(ETA, 1)',
+            'D0_h2_ETA': 'CHILD(ETA, 2)'
+        },
+        # HLT filters, only process events firing triggers matching the RegEx
+        'Hlt1Filter': None,
+        'Hlt2Filter': None,
+        # Fraction of candidates to randomly throw away before stripping
+        'PrescaleD02HH': 1.0,
+        'PrescaleDstar2D0Pi_D02HH': 1.0,
+        'PrescaleDstar2D0Pi0Merged_D02HH': 1.0,
+        'PrescaleDstar2D0Pi0Resolved_D02HH': 1.0,
+        # Fraction of candidates to randomly throw after before stripping
+        'PostscaleD02HH': 1.0,
+        'PostscaleDstar2D0Pi_D02HH': 1.0,
+        'PostscaleDstar2D0Pi0Merged_D02HH': 1.0,
+        'PostscaleDstar2D0Pi0Resolved_D02HH': 1.0
+    }
+}
+
+D02K3PiForXSecConf = {
+    'NAME': 'D02K3PiForXSec',
+    'WGs': ['Charm'],
+    'BUILDERTYPE': 'StrippingD02K3PiForXSecConf',
+    'STREAMS': ['Charm'],
+    'CONFIG': {
+        # Minimum transverse momentum all D0 daughters must satisfy
+        'Daug_All_PT_MIN': 200.0*MeV,
+        # Minimum transverse momentum at least 3 D0 daughters must satisfy
+        'Daug_3of4_PT_MIN': 300.0*MeV,
+        # Minimum transverse momentum at least 2 D0 daughters must satisfy
+        'Daug_2of4_PT_MIN': 350.0*MeV,
+        # Minimum transverse momentum at least 1 D0 daughter must satisfy
+        'Daug_1of4_PT_MIN': 400.0*MeV,
+        # Minimum best primary vertex IP chi^2 all D0 daughters must satisfy
+        'Daug_All_BPVIPCHI2_MIN': 4.0,
+        # Minimum best PV IP chi^2 at least 3 D0 daughters must satisfy
+        'Daug_3of4_BPVIPCHI2_MIN': 4.0,
+        # Minimum best PV IP chi^2 at least 2 D0 daughters must satisfy
+        'Daug_2of4_BPVIPCHI2_MIN': 4.0,
+        # Minimum best PV IP chi^2 at least 1 D0 daughter must satisfy
+        'Daug_1of4_BPVIPCHI2_MIN': 4.0,
+        # Minimum D0 daughter momentum
+        'Daug_P_MIN': 3.0*GeV,
+        # Maximum D0 daughter momentum
+        'Daug_P_MAX': 100.0*GeV,
+        # Minimum D0 daughter pseudorapidity
+        'Daug_ETA_MIN': 2.0,
+        # Maximum D0 daughter pseudorapidity
+        'Daug_ETA_MAX': 5.0,
+        # Minimum D0 daughter kaon DLLK
+        'K_PIDK_MIN': 5.0,
+        # Maximum D0 daughter pion DLLK
+        'Pi_PIDK_MAX': 3.0,
+        # D0 mass window around the nominal D0 mass before the vertex fit
+        'Comb_ADAMASS_WIN': 80.0*MeV,
+        # Maximum distance of closest approach of D0 daughters
+        'Comb_ADOCAMAX_MAX': 0.5*mm,
+        # Maximum D0 vertex chi^2 per vertex fit DoF
+        'D0_VCHI2VDOF_MAX': 25.0,
+        # Maximum angle between D0 momentum and D0 direction of flight
+        'D0_acosBPVDIRA_MAX': 35.0*mrad,
+        # Primary vertex displacement requirement, either that the D0 is some
+        # sigma away from the PV, or it has a minimum flight time
+        'D0_PVDispCut': '((BPVVDCHI2 > 16.0)|(BPVLTIME() > 0.150*picosecond))',
+        # Maximum delta mass value m(D*{0,+}) - m(D0)
+        'Dstar_AMDiff_MAX': 160.0*MeV,
+        # Maximum D*+ vertex chi^2 per vertex DoF (_not_ applied to D*0)
+        'Dstar_VCHI2VDOF_MAX': 25.0,
+        # Minimum D0 MVA discriminant value
+        'D0_MVA_MIN': -0.3,
+        # Path to the D0 MVA weights file
+        # BDT is not applied if this is the empty string or None
+        'D0_MVA_Weights': '$TMVAWEIGHTSROOT/data/D02K3PiForXSec_BDT_v1r0.xml',
+        # Dictionary of LoKi functors defining the D0 MVA input variables
+        # The keys must match those used when training the MVA
+        'D0_MVA_Variables': {
+            'D0_Loki_LV02': 'LV02',
+            'D0_Loki_BPVLTIME': "BPVLTIME()",
+            'D0_Loki_DOCAMAX': "DOCAMAX",
+            'D0_DIRA_OWNPV': 'BPVDIRA',
+            'D0_ENDVERTEX_CHI2': 'VFASPF(VCHI2/VDOF)',
+            'D0_h1_PT': 'CHILD(PT, 1)',
+            'D0_h2_PT': 'CHILD(PT, 2)',
+            'D0_h3_PT': 'CHILD(PT, 3)',
+            'D0_h4_PT': 'CHILD(PT, 4)',
+            'D0_h1_ETA': 'CHILD(ETA, 1)',
+            'D0_h2_ETA': 'CHILD(ETA, 2)',
+            'D0_h3_ETA': 'CHILD(ETA, 3)',
+            'D0_h4_ETA': 'CHILD(ETA, 4)'
+        },
+        # HLT filters, only process events firing triggers matching the RegEx
+        'Hlt1Filter': None,
+        'Hlt2Filter': None,
+        # Fraction of candidates to randomly throw away before stripping
+        'PrescaleD02K3Pi': 1.0,
+        'PrescaleDstar2D0Pi_D02K3Pi': 1.0,
+        'PrescaleDstar2D0Pi0Merged_D02K3Pi': 1.0,
+        'PrescaleDstar2D0Pi0Resolved_D02K3Pi': 1.0,
+        # Fraction of candidates to randomly throw after before stripping
+        'PostscaleD02K3Pi': 1.0,
+        'PostscaleDstar2D0Pi_D02K3Pi': 1.0,
+        'PostscaleDstar2D0Pi0Merged_D02K3Pi': 1.0,
+        'PostscaleDstar2D0Pi0Resolved_D02K3Pi': 1.0
+    }
+}
+
+D2HHHForXSecConf = {
+    'NAME': 'D2HHHForXSec',
+    'WGs': ['Charm'],
+    'BUILDERTYPE': 'StrippingD2HHHForXSecConf',
+    'STREAMS': ['Charm'],
+    'CONFIG': {
+        # Minimum transverse momentum all D daughters must satisfy
+        'Daug_All_PT_MIN': 200.0*MeV,
+        # Minimum transverse momentum at least 2 D daughters must satisfy
+        'Daug_2of3_PT_MIN': 400.0*MeV,
+        # Minimum transverse momentum at least 1 D daughter must satisfy
+        'Daug_1of3_PT_MIN': 400.0*MeV,
+        # Minimum best primary vertex IP chi^2 all D daughters must satisfy
+        'Daug_All_BPVIPCHI2_MIN': 4.0,
+        # Minimum best PV IP chi^2 at least 2 D daughters must satisfy
+        'Daug_2of3_BPVIPCHI2_MIN': 10.0,
+        # Minimum best PV IP chi^2 at least 1 D daughter must satisfy
+        'Daug_1of3_BPVIPCHI2_MIN': 50.0,
+        # Minimum D daughter momentum
+        'Daug_P_MIN': 3.0*GeV,
+        # Maximum D daughter momentum
+        'Daug_P_MAX': 100.0*GeV,
+        # Minimum D daughter pseudorapidity
+        'Daug_ETA_MIN': 2.0,
+        # Maximum D daughter pseudorapidity
+        'Daug_ETA_MAX': 5.0,
+        # Minimum D daughter kaon DLLK
+        'K_PIDK_MIN': 5.0,
+        # Maximum D daughter pion DLLK
+        'Pi_PIDK_MAX': 3.0,
+        # D+ mass window around the nominal D+ mass after the vertex fit
+        # Lower bound of this, -10 MeV, is used before the hhh combination
+        # vertex fit
+        'Dp_ADAMASS_WIN': 80.0*MeV,
+        # D_s+ mass window around the nominal D+ mass after the vertex fit
+        # Upper bound of this, +10 MeV, is used before the hhh combination
+        # vertex fit
+        'Ds_ADAMASS_WIN': 80.0*MeV,
+        # Maximum distance of closest approach of D daughters
+        'Comb_ADOCAMAX_MAX': 0.5*mm,
+        # Maximum D vertex chi^2 per vertex fit DoF
+        'D_VCHI2VDOF_MAX': 25.0,
+        # Maximum angle between D momentum and D direction of flight
+        'D_acosBPVDIRA_MAX': 35.0*mrad,
+        # Primary vertex displacement requirement, either that the D is some
+        # sigma away from the PV, or it has a minimum flight time
+        'D_PVDispCut': '((BPVVDCHI2 > 16.0)|(BPVLTIME() > 0.150*picosecond))',
+        # Minimum D+ and D_s+ MVA discriminant value
+        'Dp_MVA_MIN': -0.3,
+        'Ds_MVA_MIN': -0.3,
+        # Path to the D+ and D_s+ MVA weights files
+        # BDT is not applied if this is the empty string or None
+        'Dp_MVA_Weights': '$TMVAWEIGHTSROOT/data/D2HHHForXSec_BDT_v1r0.xml',
+        'Ds_MVA_Weights': '$TMVAWEIGHTSROOT/data/D2HHHForXSec_BDT_v1r0.xml',
+        # Dictionary of LoKi functors defining the D MVA input variables
+        # The keys must match those used when training the MVA
+        # Same input variables are used for both D+ and D_s+
+        'D_MVA_Variables': {
+            # Largest D daughter PT
+            'ROOTex::Leading(Dp_h1_PT,Dp_h2_PT,Dp_h3_PT)': (
+                "MAXTREE(ISBASIC & HASTRACK, PT)"
+            ),
+            # Smallest D daughter PT
+            'ROOTex::ThirdLeading(Dp_h1_PT,Dp_h2_PT,Dp_h3_PT)': (
+                "MINTREE(ISBASIC & HASTRACK, PT)"
+            ),
+            'Dp_DIRA_OWNPV': 'BPVDIRA',
+            'TMath::Log10(TMath::Abs(Dp_Loki_BPVVDCHI2))': (
+                'log10(abs(BPVVDCHI2))'
+            ),
+            'TMath::Log10(TMath::Abs(Dp_Loki_BPVLTIME))': (
+                "log10(abs(BPVLTIME()))"
+            ),
+            'TMath::Log10(Dp_ENDVERTEX_CHI2/Dp_ENDVERTEX_NDOF)': (
+                'log10(VFASPF(VCHI2/VDOF))'
+            )
+        },
+        # HLT filters, only process events firing triggers matching the RegEx
+        'Hlt1Filter': None,
+        'Hlt2Filter': None,
+        # Fraction of candidates to randomly throw away before stripping
+        'PrescaleDp2KPP': 1.0,
+        'PrescaleDp2KKP': 1.0,
+        'PrescaleDp2KKK': -1.0,
+        'PrescaleDp2PPP': 1.0,
+        'PrescaleDp2KPPDCS': -1.0,
+        'PrescaleDs2KPP': 1.0,
+        'PrescaleDs2KKP': 1.0,
+        'PrescaleDs2KKK': -1.0,
+        'PrescaleDs2PPP': 1.0,
+        'PrescaleDs2KPPDCS': -1.0,
+        # Fraction of candidates to randomly throw after before stripping
+        'PostscaleDp2KPP': 1.0,
+        'PostscaleDp2KKP': 1.0,
+        'PostscaleDp2KKK': -1.0,
+        'PostscaleDp2PPP': 1.0,
+        'PostscaleDp2KPPDCS': -1.0,
+        'PostscaleDs2KPP': 1.0,
+        'PostscaleDs2KKP': 1.0,
+        'PostscaleDs2KKK': -1.0,
+        'PostscaleDs2PPP': 1.0,
+        'PostscaleDs2KPPDCS': -1.0
+    }
+}
+
+D2PhiPiForXSecConf = {
+    'NAME': 'D2PhiPiForXSec',
+    'WGs': ['Charm'],
+    'BUILDERTYPE': 'StrippingD2PhiPiForXSecConf',
+    'STREAMS': ['Charm'],
+    'CONFIG': {
+        # Minimum transverse momentum all D_s+ and phi daughters must satisfy
+        'Daug_All_PT_MIN': 200.0*MeV,
+        # Minimum best primary vertex IP chi^2 all D_s+ and phi daughters must
+        # satisfy
+        'Daug_All_BPVIPCHI2_MIN': 4.0,
+        # Minimum phi daughter momentum
+        'Daug_P_MIN': 3.0*GeV,
+        # Maximum phi daughter momentum
+        'Daug_P_MAX': 100.0*GeV,
+        # Minimum phi daughter pseudorapidity
+        'Daug_ETA_MIN': 2.0,
+        # Maximum phi daughter pseudorapidity
+        'Daug_ETA_MAX': 5.0,
+        # Minimum phi daughter kaon DLLK
+        'K_PIDK_MIN': 5.0,
+        # Maximum D_s+ daughter pion DLLK
+        'Pi_PIDK_MAX': 3.0,
+        # Phi mass window around the nominal phi mass before the vertex fit
+        'Comb_Phi_ADAMASS_WIN': 20*MeV,
+        # D+ mass window around the nominal D+ mass after the vertex fit
+        # Lower bound of this, -10 MeV, is used before the hhh combination
+        # vertex fit
+        'Dp_ADAMASS_WIN': 80.0*MeV,
+        # D_s+ mass window around the nominal D+ mass after the vertex fit
+        # Upper bound of this, +10 MeV, is used before the hhh combination
+        # vertex fit
+        'Ds_ADAMASS_WIN': 80.0*MeV,
+        # Maximum D+ vertex chi^2 per vertex fit DoF
+        'D_VCHI2VDOF_MAX': 25.0,
+        # Maximum angle between D+ momentum and D+ direction of flight
+        'D_acosBPVDIRA_MAX': 35.0*mrad,
+        # Primary vertex displacement requirement, either that the D+ is some
+        # sigma away from the PV, or it has a minimum flight time
+        'D_PVDispCut': '((BPVVDCHI2 > 16.0)|(BPVLTIME() > 0.150*picosecond))',
+        # Minimum photon confidence level
+        'Photon_CL_MIN': 0.25,
+        # Maximum delta mass value m(D*_s+) - m(D_s+) (PDG dm: 143 MeV)
+        'Dsstar_AMDiff_MAX': 170*MeV,
+        # Minimum D+ and D_s+ MVA discriminant value
+        'Dp_MVA_MIN': -0.3,
+        'Ds_MVA_MIN': -0.3,
+        # Path to the D+ and D_s+ MVA weights files
+        # BDT is not applied if this is the empty string or None
+        'Dp_MVA_Weights': '$TMVAWEIGHTSROOT/data/D2PhiPiForXSec_BDT_v1r0.xml',
+        'Ds_MVA_Weights': '$TMVAWEIGHTSROOT/data/D2PhiPiForXSec_BDT_v1r0.xml',
+        # Dictionary of LoKi functors defining the D+ MVA input variables
+        # The keys must match those used when training the MVA
+        # Same input variables are used for both D+ and D_s+
+        'D_MVA_Variables': {
+            # Largest D+ and phi daughter PT
+            'ROOTex::Leading(phi_h1_PT,phi_h2_PT,Ds_pi_PT)': (
+                "MAXTREE(ISBASIC & HASTRACK, PT)"
+            ),
+            # Smallest D+ and phi daughter PT
+            'ROOTex::ThirdLeading(phi_h1_PT,phi_h2_PT,Ds_pi_PT)': (
+                "MINTREE(ISBASIC & HASTRACK, PT)"
+            ),
+            'Ds_DIRA_OWNPV': 'BPVDIRA',
+            'Ds_Loki_LV02': 'LV02',
+            'TMath::Log10(TMath::Abs(Ds_Loki_BPVLTIME))': (
+                "log10(abs(BPVLTIME()))"
+            ),
+            'TMath::Log10(TMath::Abs(Ds_Loki_BPVVDCHI2))': (
+                'log10(abs(BPVVDCHI2))'
+            ),
+            'TMath::Log10(Ds_ENDVERTEX_CHI2/Ds_ENDVERTEX_NDOF)': (
+                'log10(VFASPF(VCHI2/VDOF))'
+            )
+        },
+        # HLT filters, only process events firing triggers matching the RegEx
+        'Hlt1Filter': None,
+        'Hlt2Filter': None,
+        # Fraction of candidates to randomly throw away before stripping
+        'PrescaleDp2PhiPi': 1.0,
+        'PrescaleDs2PhiPi': 1.0,
+        'PrescaleDsstar2DsGamma': 1.0,
+        # Fraction of candidates to randomly throw after before stripping
+        'PostscaleDp2PhiPi': 1.0,
+        'PostscaleDs2PhiPi': 1.0,
+        'PostscaleDsstar2DsGamma': 1.0
+    }
+}
+
+Lambdac2PHHForXSecConf = {
+    'NAME': 'Lambdac2PHHForXSec',
+    'WGs': ['Charm'],
+    'BUILDERTYPE': 'StrippingLambdac2PHHForXSecConf',
+    'STREAMS': ['Charm'],
+    'CONFIG': {
+        # Minimum transverse momentum all Lc+ daughters must satisfy
+        'Daug_All_PT_MIN': 200.0*MeV,
+        # Minimum transverse momentum at least 2 Lc+ daughters must satisfy
+        'Daug_2of3_PT_MIN': 400.0*MeV,
+        # Minimum transverse momentum at least 1 Lc+ daughter must satisfy
+        'Daug_1of3_PT_MIN': 1000.0*MeV,
+        # Minimum best primary vertex IP chi^2 all Lc+ daughters must satisfy
+        'Daug_All_BPVIPCHI2_MIN': 4.0,
+        # Minimum best PV IP chi^2 at least 2 Lc+ daughters must satisfy
+        'Daug_2of3_BPVIPCHI2_MIN': 4.0,
+        # Minimum best PV IP chi^2 at least 1 Lc+ daughter must satisfy
+        'Daug_1of3_BPVIPCHI2_MIN': 6.0,
+        # Minimum Lc+ daughter momentum
+        'Daug_P_MIN': 3.0*GeV,
+        # Maximum Lc+ daughter momentum
+        'Daug_P_MAX': 100.0*GeV,
+        # Minimum Lc+ daughter pseudorapidity
+        'Daug_ETA_MIN': 2.0,
+        # Maximum Lc+ daughter pseudorapidity
+        'Daug_ETA_MAX': 5.0,
+        # Minimum Lc+ daughter proton DLLp
+        'Proton_PIDpPIDpi_MIN': 10.0,
+        # Minimum Lc+ daughter proton DLLp - DLLK
+        'Proton_PIDpPIDK_MIN': 5.0,
+        # Minimum Lc+ daughter kaon DLLK
+        'K_PIDK_MIN': 5.0,
+        # Maximum Lc+ daughter pion DLLK
+        'Pi_PIDK_MAX': 3.0,
+        # Lc+ mass window around the nominal Lc+ mass before the vertex fit
+        'Comb_ADAMASS_WIN': 90.0*MeV,
+        # Maximum distance of closest approach of Lc+ daughters
+        'Comb_ADOCAMAX_MAX': 0.5*mm,
+        # Maximum Lc+ vertex chi^2 per vertex fit DoF
+        'Lambdac_VCHI2VDOF_MAX': 25.0,
+        # Maximum angle between Lc+ momentum and Lc+ direction of flight
+        'Lambdac_acosBPVDIRA_MAX': 35.0*mrad,
+        # Primary vertex displacement requirement, either that the Lc+ is some
+        # sigma away from the PV, or it has a minimum flight time
+        'Lambdac_PVDispCut': (
+            '((BPVVDCHI2 > 4.0) |'
+            '(BPVLTIME() > 0.075*picosecond))'
+        ),
+        # Maximum delta mass value m(Sigma_c) - m(Lambda_c+) (PDG dm: 167 MeV)
+        'Sigmac_AMDiff_MAX': 185.0*MeV,
+        # Maximum Sigma_c vertex chi^2 per vertex DoF
+        'Sigmac_VCHI2VDOF_MAX': 25.0,
+        # Minimum Lc+ MVA discriminant value
+        'Lambdac_MVA_MIN': -0.3,
+        # Path to the Lc+ MVA weights file
+        # BDT is not applied if this is the empty string or None
+        'Lambdac_MVA_Weights': '$TMVAWEIGHTSROOT/data/Lambdac2PHHForXSec_BDT_v1r0.xml',
+        # Dictionary of LoKi functors defining the Lc+ MVA input variables
+        # The keys must match those used when training the MVA
+        'Lambdac_MVA_Variables': {
+            # Largest Lc+ daughter PT
+            'ROOTex::Leading(Lc_h1_PT,Lc_h2_PT,Lc_p_PT)': (
+                "MAXTREE(ISBASIC & HASTRACK, PT)"
+            ),
+            # Smallest Lc+ daughter PT
+            'ROOTex::ThirdLeading(Lc_h1_PT,Lc_h2_PT,Lc_p_PT)': (
+                "MINTREE(ISBASIC & HASTRACK, PT)"
+            ),
+            'Lc_DIRA_OWNPV': 'BPVDIRA',
+            'Lc_Loki_LV02': 'LV02',
+            'TMath::Log10(TMath::Abs(Lc_Loki_BPVVDCHI2))': (
+                'log10(abs(BPVVDCHI2))'
+            ),
+            'TMath::Log10(TMath::Abs(Lc_Loki_BPVLTIME))': (
+                "log10(abs(BPVLTIME()))"
+            ),
+            'TMath::Log10(Lc_ENDVERTEX_CHI2/Lc_ENDVERTEX_NDOF)': (
+                'log10(VFASPF(VCHI2/VDOF))'
+            )
+        },
+        # HLT filters, only process events firing triggers matching the RegEx
+        'Hlt1Filter': None,
+        'Hlt2Filter': None,
+        # Fraction of candidates to randomly throw away before stripping
+        'PrescaleLambdac2PKPi': 1.0,
+        'PrescaleLambdac2PKK': 1.0,
+        'PrescaleLambdac2PPiPi': 1.0,
+        'PrescaleLambdac2PPiKWS': -1.0,
+        'PrescaleSigmacz2LambdacPi': 1.0,
+        'PrescaleSigmacpp2LambdacPi': 1.0,
+        # Fraction of candidates to randomly throw after before stripping
+        'PostscaleLambdac2PKPi': 1.0,
+        'PostscaleLambdac2PKK': 1.0,
+        'PostscaleLambdac2PPiPi': 1.0,
+        'PostscaleLambdac2PPiKWS': -1.0,
+        'PostscaleSigmacz2LambdacPi': 1.0,
+        'PostscaleSigmacpp2LambdacPi': 1.0
+    }
+}
+
+Xic2PKPiForXSecConf = {
+    'NAME': 'Xic2PKPiForXSec',
+    'WGs': ['Charm'],
+    'BUILDERTYPE': 'StrippingXic2PKPiForXSecConf',
+    'STREAMS': ['Charm'],
+    'CONFIG': {
+        # Minimum transverse momentum all Xic+ daughters must satisfy
+        'Daug_All_PT_MIN': 200.0*MeV,
+        # Minimum transverse momentum at least 2 Xic+ daughters must satisfy
+        'Daug_2of3_PT_MIN': 400.0*MeV,
+        # Minimum transverse momentum at least 1 Xic+ daughter must satisfy
+        'Daug_1of3_PT_MIN': 1000.0*MeV,
+        # Minimum best primary vertex IP chi^2 all Xic+ daughters must satisfy
+        'Daug_All_BPVIPCHI2_MIN': 4.0,
+        # Minimum best PV IP chi^2 at least 2 Xic+ daughters must satisfy
+        'Daug_2of3_BPVIPCHI2_MIN': 4.0,
+        # Minimum best PV IP chi^2 at least 1 Xic+ daughter must satisfy
+        'Daug_1of3_BPVIPCHI2_MIN': 4.0,
+        # Minimum Xic+ daughter momentum
+        'Daug_P_MIN': 3.0*GeV,
+        # Maximum Xic+ daughter momentum
+        'Daug_P_MAX': 100.0*GeV,
+        # Minimum Xic+ daughter pseudorapidity
+        'Daug_ETA_MIN': 2.0,
+        # Maximum Xic+ daughter pseudorapidity
+        'Daug_ETA_MAX': 5.0,
+        # Minimum Xic+ daughter proton DLLp
+        'Proton_PIDpPIDpi_MIN': 10.0,
+        # Minimum Xic+ daughter proton DLLp - DLLK
+        'Proton_PIDpPIDK_MIN': 5.0,
+        # Minimum Xic+ daughter kaon DLLK
+        'K_PIDK_MIN': 5.0,
+        # Maximum Xic+ daughter pion DLLK
+        'Pi_PIDK_MAX': 3.0,
+        # Xic+ mass window around the nominal Xic+ mass before the vertex fit
+        'Comb_ADAMASS_WIN': 90.0*MeV,
+        # Maximum distance of closest approach of Xic+ daughters
+        'Comb_ADOCAMAX_MAX': 0.5*mm,
+        # Maximum Xic+ vertex chi^2 per vertex fit DoF
+        'Xic_VCHI2VDOF_MAX': 25.0,
+        # Maximum angle between Xic+ momentum and Xic+ direction of flight
+        'Xic_acosBPVDIRA_MAX': 35.0*mrad,
+        # Primary vertex displacement requirement, either that the Xic+ is some
+        # sigma away from the PV, or it has a minimum flight time
+        'Xic_PVDispCut': (
+            '((BPVVDCHI2 > 16.0) |'
+            '(BPVLTIME() > 0.150*picosecond))'
+        ),
+        # Minimum Xic MVA discriminant value
+        'Xic_MVA_MIN': -0.3,
+        # Path to the Xic MVA weights file
+        # BDT is not applied if this is the empty string or None
+        'Xic_MVA_Weights': None,
+        # Dictionary of LoKi functors defining the Xic MVA input variables
+        # The keys must match those used when training the MVA
+        'Xic_MVA_Variables': {
+        },
+        # HLT filters, only process events firing triggers matching the RegEx
+        'Hlt1Filter': None,
+        'Hlt2Filter': None,
+        # Fraction of candidates to randomly throw away before stripping
+        'PrescaleXic2PKPi': 1.0,
+        # Fraction of candidates to randomly throw after before stripping
+        'PostscaleXic2PKPi': 1.0
+    }
+}
+
+Xic2PKKPiForXSecConf = {
+    'NAME': 'Xic2PKKPiForXSec',
+    'WGs': ['Charm'],
+    'BUILDERTYPE': 'StrippingXic2PKKPiForXSecConf',
+    'STREAMS': ['Charm'],
+    'CONFIG': {
+        # Minimum transverse momentum all Xic0 daughters must satisfy
+        'Daug_All_PT_MIN': 250.0*MeV,
+        # Minimum transverse momentum at least 3 Xic0 daughters must satisfy
+        'Daug_3of4_PT_MIN': 300.0*MeV,
+        # Minimum transverse momentum at least 2 Xic0 daughters must satisfy
+        'Daug_2of4_PT_MIN': 400.0*MeV,
+        # Minimum transverse momentum at least 1 Xic0 daughter must satisfy
+        'Daug_1of4_PT_MIN': 800.0*MeV,
+        # Minimum best primary vertex IP chi^2 all Xic0 daughters must satisfy
+        'Daug_All_BPVIPCHI2_MIN': 4.0,
+        # Minimum best PV IP chi^2 at least 3 Xic0 daughters must satisfy
+        'Daug_3of4_BPVIPCHI2_MIN': 4.0,
+        # Minimum best PV IP chi^2 at least 2 Xic0 daughters must satisfy
+        'Daug_2of4_BPVIPCHI2_MIN': 4.0,
+        # Minimum best PV IP chi^2 at least 1 Xic0 daughter must satisfy
+        'Daug_1of4_BPVIPCHI2_MIN': 4.0,
+        # Minimum Xic0 daughter momentum
+        'Daug_P_MIN': 3.0*GeV,
+        # Maximum Xic0 daughter momentum
+        'Daug_P_MAX': 100.0*GeV,
+        # Minimum Xic0 daughter pseudorapidity
+        'Daug_ETA_MIN': 2.0,
+        # Maximum Xic0 daughter pseudorapidity
+        'Daug_ETA_MAX': 5.0,
+        # Minimum Xic0 daughter proton DLLp
+        'Proton_PIDpPIDpi_MIN': 10.0,
+        # Minimum Xic0 daughter proton DLLp - DLLK
+        'Proton_PIDpPIDK_MIN': 5.0,
+        # Minimum Xic0 daughter kaon DLLK
+        'K_PIDK_MIN': 5.0,
+        # Maximum Xic0 daughter pion DLLK
+        'Pi_PIDK_MAX': 3.0,
+        # Xic0 mass window around the nominal Xic0 mass before the vertex fit
+        'Comb_ADAMASS_WIN': 90.0*MeV,
+        # Maximum distance of closest approach of Xic0 daughters
+        'Comb_ADOCAMAX_MAX': 0.5*mm,
+        # Maximum Xic0 vertex chi^2 per vertex fit DoF
+        'Xic_VCHI2VDOF_MAX': 25.0,
+        # Maximum angle between Xic0 momentum and Xic0 direction of flight
+        'Xic_acosBPVDIRA_MAX': 35.0*mrad,
+        # Primary vertex displacement requirement, either that the Xic0 is some
+        # sigma away from the PV, or it has a minimum flight time
+        'Xic_PVDispCut': (
+            '((BPVVDCHI2 > 4.0) |'
+            '(BPVLTIME() > 0.075*picosecond))'
+        ),
+        # Minimum Xic0 MVA discriminant value
+        'Xic_MVA_MIN': -0.3,
+        # Path to the Xic0 MVA weights file
+        # BDT is not applied if this is the empty string or None
+        'Xic_MVA_Weights': None,
+        # Dictionary of LoKi functors defining the Xic0 MVA input variables
+        # The keys must match those used when training the MVA
+        'Xic_MVA_Variables': {
+        },
+        # HLT filters, only process events firing triggers matching the RegEx
+        'Hlt1Filter': None,
+        'Hlt2Filter': None,
+        # Fraction of candidates to randomly throw away before stripping
+        'PrescaleXic2PKKPi': 1.0,
+        # Fraction of candidates to randomly throw after before stripping
+        'PostscaleXic2PKKPi': 1.0
+    }
+}
