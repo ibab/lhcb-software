@@ -27,6 +27,17 @@ class IncPhiFilter(Hlt2ParticleFilter) :
     inputs = [UnbiasedPhi2KK]
     Hlt2ParticleFilter.__init__(self, name, code, inputs, tistos = 'TisTosSpec', dependencies = [PV3D('Hlt2')], shared = True)
 
+class Bs2PhiPhiCombiner(Hlt2Combiner):
+  def __init__(self, name):
+    inputs = [UnbiasedPhi2KK]
+    mc = ("(ALL)")
+    Hlt2Combiner.__init__(self, name, "B_s0 -> phi(1020) phi(1020)", inputs,
+                          dependencies = [PV3D('Hlt2')],
+                          #DaughtersCuts  = dc,
+                          #CombinationCut = cc,
+                          MotherCut      = mc,
+                          Preambulo = [])
+        
 class GoodKsFilter(Hlt2ParticleFilter):
     def __init__(self, name):
         cut = ("(PT > %(KS_PT_MIN)s)" +

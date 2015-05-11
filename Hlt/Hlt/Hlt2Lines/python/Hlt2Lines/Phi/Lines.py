@@ -12,7 +12,9 @@ class PhiLines(Hlt2LinesConfigurableUser) :
                            'PhiPT'      : 1800 * MeV,
                            'PhiVCHI2'   : 20 ,
                            'PhiMassWin' : 20 * MeV},
-	       'GoodKs' : {'KS_MASS_WINDOW'   : 20 * MeV,
+               'Bs2PhiPhi': {'TisTosSpec' : "Hlt1B2PhiPhi_LTUNB.*Decision%TOS" ,
+                            },
+               'GoodKs' : {'KS_MASS_WINDOW'   : 20 * MeV,
                            'KS_PT_MIN'        : 400 * MeV,
                            'KS_VCHI2NDOF_MAX' : 4,
                            'GHOSTPROB_MAX'    :       0.35,
@@ -34,9 +36,10 @@ class PhiLines(Hlt2LinesConfigurableUser) :
       else:
         return self._stages
 
-    from Stages import IncPhiFilter, Phi2KsKsCombiner, D02KsKsCombiner
+    from Stages import IncPhiFilter, Bs2PhiPhiCombiner, Phi2KsKsCombiner, D02KsKsCombiner
     self._stages = {'IncPhi'         : [IncPhiFilter('IncPhi')],
-	            'Phi2KsKs'       : [Phi2KsKsCombiner('Phi2KsKs')],
+                    'Bs2PhiPhi'      : [Bs2PhiPhiCombiner('Bs2PhiPhi')],
+                    'Phi2KsKs'       : [Phi2KsKsCombiner('Phi2KsKs')],
                     'Phi2KsKsD0Ctrl' : [D02KsKsCombiner('Phi2KsKsD0Ctrl')]}
 
     if nickname:
