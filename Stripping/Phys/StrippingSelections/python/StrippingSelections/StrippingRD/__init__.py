@@ -26,7 +26,7 @@ _selections = [
     # 'StrippingK0s2MuMuLines',
     # 'StrippingKshort2MuMuMuMu',
     # 'StrippingKshort2PiPiMuMu',
-    # 'StrippingKshort2eePiPi',
+     'StrippingKshort2eePiPi',
      'StrippingLc23MuLines',
     # 'StrippingLFVLines',
     # 'StrippingRareStrange',

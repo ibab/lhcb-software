@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-11 - Carla Marin
+ - added StrippingKshort2eepipi.py to StrippingRD
+
 ! 2015-05-08 - Paul Seyfert
  - added StrippingTau23MuLines.py to StrippingRD
 
