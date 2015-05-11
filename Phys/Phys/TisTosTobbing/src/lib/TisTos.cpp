@@ -196,16 +196,19 @@ bool TisTos::addSortedHitsToSignal( const std::vector<LHCb::LHCbID> & hitlist )
 //    interrupt if specified search condition met/failed, return condition value
 unsigned int TisTos::analyze(const std::vector<LHCb::LHCbID> & triggerSortedHits,
                              unsigned int searchCond,
-                             unsigned int* nHitsAll, unsigned int* nHitsMatched, double* overlap) const
+                             unsigned int* nHitsAll, unsigned int* nHitsMatched, double* overlap,
+			     unsigned int & valid ) const
 {
-
+  
+  valid =0;
   std::vector<LHCbID>::const_iterator first1 = triggerSortedHits.begin();
   std::vector<LHCbID>::const_iterator last1  = triggerSortedHits.end();
   std::vector<LHCbID>::const_iterator first2 = m_Signal.begin();
   std::vector<LHCbID>::const_iterator last2  = m_Signal.end();
 
   if( searchCond && !(m_Signal.size()||triggerSortedHits.size())  )return 0;
-  
+
+  valid =1;
 
   // ----------------------------------
   // no hit types used (not a default!)
@@ -257,6 +260,7 @@ unsigned int TisTos::analyze(const std::vector<LHCb::LHCbID> & triggerSortedHits
     } else {
       // no hits on trigger object
       *overlap = 0.0;
+      valid =0;
       return 0;
     }
   }
@@ -365,7 +369,10 @@ unsigned int TisTos::analyze(const std::vector<LHCb::LHCbID> & triggerSortedHits
     }
   } while(true);
 
-  if( trivial )return 0;
+  if( trivial ){
+    valid = 0;
+    return 0;
+  }
   if( searchCond == kSearchForTOS )return 1;
   if( searchCond == kSearchForTUS )return 0;
   if( searchCond == kSearchForTIS )return 1;
@@ -375,36 +382,36 @@ unsigned int TisTos::analyze(const std::vector<LHCb::LHCbID> & triggerSortedHits
 
 
 // full classification
-unsigned int TisTos::tisTosSortedHits(const std::vector<LHCb::LHCbID> & triggerSortedHits) const
+unsigned int TisTos::tisTosSortedHits(const std::vector<LHCb::LHCbID> & triggerSortedHits, unsigned int & valid) const
 {
   unsigned int nHitsAll[nHitTypes],nHitsMatched[nHitTypes]; 
   double overlap[nHitTypes];
-  return analyze( triggerSortedHits, kSearchForAll, nHitsAll,nHitsMatched,overlap);
+  return analyze( triggerSortedHits, kSearchForAll, nHitsAll,nHitsMatched,overlap,valid);
 }
  
 
 // fast search for TOS
-bool TisTos::tosSortedHits(const std::vector<LHCb::LHCbID> & triggerSortedHits) const
+bool TisTos::tosSortedHits(const std::vector<LHCb::LHCbID> & triggerSortedHits, unsigned int & valid) const
 {
   unsigned int nHitsAll[nHitTypes],nHitsMatched[nHitTypes]; 
   double overlap[nHitTypes];
-  return analyze( triggerSortedHits, kSearchForTOS, nHitsAll,nHitsMatched,overlap);
+  return analyze( triggerSortedHits, kSearchForTOS, nHitsAll,nHitsMatched,overlap,valid);
 }
 
 // fast search for TIS
-bool TisTos::tisSortedHits(const std::vector<LHCb::LHCbID> & triggerSortedHits) const
+bool TisTos::tisSortedHits(const std::vector<LHCb::LHCbID> & triggerSortedHits, unsigned int & valid) const
 {
   unsigned int nHitsAll[nHitTypes],nHitsMatched[nHitTypes]; 
   double overlap[nHitTypes];
-  return analyze( triggerSortedHits, kSearchForTIS, nHitsAll,nHitsMatched,overlap);
+  return analyze( triggerSortedHits, kSearchForTIS, nHitsAll,nHitsMatched,overlap,valid);
 }
 
 // fast search for TUS (Trigger Used Signal = TOS or TPS)
-bool TisTos::tusSortedHits(const std::vector<LHCb::LHCbID> & triggerSortedHits) const
+bool TisTos::tusSortedHits(const std::vector<LHCb::LHCbID> & triggerSortedHits, unsigned int & valid) const
 {
   unsigned int nHitsAll[nHitTypes],nHitsMatched[nHitTypes]; 
   double overlap[nHitTypes];
-  return analyze( triggerSortedHits, kSearchForTUS, nHitsAll,nHitsMatched,overlap);
+  return analyze( triggerSortedHits, kSearchForTUS, nHitsAll,nHitsMatched,overlap,valid);
 }
 
 
@@ -529,11 +536,12 @@ std::vector<double> TisTos::getTISFrac() const
 
 unsigned int TisTos::analyzeSortedHits(const std::vector<LHCb::LHCbID> & triggerSortedHits,
                          std::vector<unsigned int> & nTrigger ,
-                         std::vector<double> & fractionInSignal ) const
+                         std::vector<double> & fractionInSignal,
+				       unsigned int & valid ) const
 {
   unsigned int nHitsAll[nHitTypes],nHitsMatched[nHitTypes]; 
   double overlap[nHitTypes];
-  unsigned int res=analyze( triggerSortedHits, kSearchNone, nHitsAll,nHitsMatched,overlap);
+  unsigned int res=analyze( triggerSortedHits, kSearchNone, nHitsAll,nHitsMatched,overlap,valid);
   for( unsigned int hitType=0; hitType!=m_nHitTypes; ++hitType ){
     nTrigger.push_back( nHitsAll[hitType] );
     fractionInSignal.push_back( overlap[hitType] );
@@ -546,8 +554,9 @@ std::string TisTos::analysisReportSortedHits(const std::vector<LHCb::LHCbID> & t
   std::ostringstream report;
   unsigned int nHitsAll[nHitTypes],nHitsMatched[nHitTypes]; 
   double overlap[nHitTypes];
-  TisTosTob res(analyze( triggerSortedHits, kSearchNone, nHitsAll,nHitsMatched,overlap));
-  report << " TIS= " << res.tis() << " TOS= " << res.tos() << " TPS= " << res.tps() << " ";
+  unsigned int valid;
+  TisTosTob res(analyze( triggerSortedHits, kSearchNone, nHitsAll,nHitsMatched,overlap,valid));
+  report << " TIS= " << res.tis() << " TOS= " << res.tos() << " TPS= " << res.tps() << " valid= " << valid << " ";
   for( unsigned int hitType=0; hitType!=m_nHitTypes; ++hitType ){
     report << hitTypeName(hitType) << " " <<  nHitsAll[hitType] << " " 
            << std::setprecision(4) << overlap[hitType] << " ";

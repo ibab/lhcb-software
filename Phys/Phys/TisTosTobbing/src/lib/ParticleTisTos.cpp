@@ -740,19 +740,22 @@ bool ParticleTisTos::tus(const LHCb::Particle & particle)
 //=============================================================================
 // outputs: classified HltObjectSummary
 //=============================================================================
-unsigned int ParticleTisTos::tisTos(const LHCb::HltObjectSummary & hos)
+unsigned int ParticleTisTos::tisTos(const LHCb::HltObjectSummary & hos, unsigned int & valid)
 {
-
+  valid = 1;
+  unsigned int dvalid;
   const SmartRefVector< LHCb::HltObjectSummary > & sub = hos.substructure();
   if ( msgLevel(MSG::VERBOSE) ) verbose() << " tisTos HltObjectSummary substr size " << sub.size() << endmsg;
 
   if( hos.summarizedObjectCLID() == 1 ){
     // this is Selection summary: take OR between candidates
     unsigned int result=0;
+    valid = 0;  
     for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos){
       if(!(ihos->target()))continue;
       const LHCb::HltObjectSummary &  daug = *(ihos->target());
-      result |= tisTos( daug );
+      result |= tisTos( daug, dvalid );
+      if( dvalid )valid = 1;
       if( (result & kTOS) && (result & kTIS) && (result & kTPS ) )break;
     }
     return result;
@@ -764,10 +767,13 @@ unsigned int ParticleTisTos::tisTos(const LHCb::HltObjectSummary & hos)
     for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos){
       if(!(ihos->target()))continue;
       const LHCb::HltObjectSummary &  daug = *(ihos->target());
-      unsigned int result = tisTos( daug );
+      unsigned int result = tisTos( daug, dvalid );
+      // skip if no info
+      if( !dvalid )continue;
+      empty=false;
       if( m_compositeTPSviaPartialTOSonly ){
-        // no way to tell that it wasn't analyzed
-        empty=false;
+        //***no longer*** true no way to tell that it wasn't analyzed
+        //empty=false;
         //  every daughter of the Parent must be TOS (TIS) for Parent to be TOS (TIS)
         resultTISTOS &= result;
         // set TPS unless done already
@@ -791,8 +797,9 @@ unsigned int ParticleTisTos::tisTos(const LHCb::HltObjectSummary & hos)
         }
       } else {
         //   no info? skip
-        if( !result )continue;
-        empty=false;
+	if( !result )continue;
+        //***done already*** 
+        //empty=false;
         //  every daughter of the Parent must be TOS (TIS) for Parent to be TOS (TIS)
         resultTISTOS &= result;
         //  any TPS daughter is fine for TPS
@@ -805,11 +812,14 @@ unsigned int ParticleTisTos::tisTos(const LHCb::HltObjectSummary & hos)
         }
       }
     }
-    if( empty )return 0;
+    if( empty ){
+      valid = 0;
+      return 0;
+    }
     return (resultTISTOS|resultTPS);
   } else {
     // object with hits
-    return tisTosSortedHits( sortedHits(hos.lhcbIDs()) );
+    return tisTosSortedHits( sortedHits(hos.lhcbIDs()),valid );
   }
   return 0;
 }
@@ -817,6 +827,7 @@ unsigned int ParticleTisTos::tisTos(const LHCb::HltObjectSummary & hos)
 std::string ParticleTisTos::analysisReport(const LHCb::HltObjectSummary & hos)
 {
   std::ostringstream report;
+  unsigned int dvalid;
   report << offset() << " HltObjectSummary CLID " << hos.summarizedObjectCLID();
   const SmartRefVector< LHCb::HltObjectSummary > & sub = hos.substructure();
   if( hos.summarizedObjectCLID() == 1 ){
@@ -826,10 +837,10 @@ std::string ParticleTisTos::analysisReport(const LHCb::HltObjectSummary & hos)
     for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos){
       if(!(ihos->target()))continue;
       const LHCb::HltObjectSummary &  daug = *(ihos->target());
-      result |= tisTos( daug );
+      result |= tisTos( daug,dvalid );
       // report << offset() << " Selection Candidates ";
       ++m_reportDepth;
-      report << analysisReport( daug ); // << std::endl;
+      report << analysisReport( daug ) << " valid=" << dvalid; // << std::endl;
       --m_reportDepth;
       if( (result & kTOS) && (result & kTIS) && (result & kTPS ) )break;
     }
@@ -846,14 +857,17 @@ std::string ParticleTisTos::analysisReport(const LHCb::HltObjectSummary & hos)
     for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos){
       if(!(ihos->target()))continue;
       const LHCb::HltObjectSummary &  daug = *(ihos->target());
-      unsigned int result = tisTos( daug );
+      unsigned int result = tisTos( daug,dvalid );
       // report << offset() << " Subobject ";
       ++m_reportDepth;
-      report << analysisReport( daug );
+      report << analysisReport( daug ) << " valid=" << dvalid ;
       --m_reportDepth;
+      // skip if no info
+      if( !dvalid )continue;
+      empty=false;
       if( m_compositeTPSviaPartialTOSonly ){
-        // no way to tell that it wasn't analyzed
-        empty=false;
+        // *** no longer true *** no way to tell that it wasn't analyzed
+        // empty=false;
         //  every daughter of the Parent must be TOS (TIS) for Parent to be TOS (TIS)
         resultTISTOS &= result;
         // set TPS unless done already
@@ -878,7 +892,7 @@ std::string ParticleTisTos::analysisReport(const LHCb::HltObjectSummary & hos)
       } else {
         //   no info? skip
         if( !result )continue;
-        empty=false;
+        //  empty=false;
         //  every daughter of the Parent must be TOS (TIS) for Parent to be TOS (TIS)
         resultTISTOS &= result;
         //  any TPS daughter is fine for TPS
@@ -910,19 +924,25 @@ std::string ParticleTisTos::analysisReport(const LHCb::HltObjectSummary & hos)
 }
 
 
-bool ParticleTisTos::tos(const LHCb::HltObjectSummary & hos)
+bool ParticleTisTos::tos(const LHCb::HltObjectSummary & hos, unsigned int & valid)
 {
-
+  valid = 1; 
+  unsigned int dvalid;
   const SmartRefVector< LHCb::HltObjectSummary > & sub = hos.substructure();
   if ( msgLevel(MSG::VERBOSE) ) verbose() << " tos HltObjectSummary substr size " << sub.size() << endmsg;
 
   if( hos.summarizedObjectCLID() == 1 ){
 
     // this is Selection summary: take OR between candidates
+    valid = 0;
     for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos){
       if(!(ihos->target()))continue;
       const LHCb::HltObjectSummary &  daug = *(ihos->target());
-      if( tos( daug ) )return true;
+      if( tos( daug,dvalid ) ){
+	if( dvalid )valid=1;
+	return true;
+      }
+      if( dvalid )valid=1;
     }
     return false;
 
@@ -933,31 +953,47 @@ bool ParticleTisTos::tos(const LHCb::HltObjectSummary & hos)
     for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos){
       if(!(ihos->target()))continue;
       const LHCb::HltObjectSummary &  daug = *(ihos->target());
-      if( !tos( daug ) )return false;
+      //      if( !tos( daug ) )return false;
+      if( !tos( daug, dvalid ) ){
+	if( dvalid ){
+	  return false;
+	} else {
+	  continue;
+	}
+      }
       empty=false;
     }
-    if( empty )return false;
+    if( empty ){
+      valid = 0;
+      return false;
+    }
     return true;
 
   } else {
     // object with hits
-    return tosSortedHits( sortedHits(hos.lhcbIDs()) );
+    return tosSortedHits( sortedHits(hos.lhcbIDs()), valid );
   }
 }
 
-bool ParticleTisTos::tis(const LHCb::HltObjectSummary & hos)
+bool ParticleTisTos::tis(const LHCb::HltObjectSummary & hos, unsigned int & valid)
 {
-
+  valid = 1;
+  unsigned int dvalid;
   const SmartRefVector< LHCb::HltObjectSummary > & sub = hos.substructure();
   if ( msgLevel(MSG::VERBOSE) ) verbose() << " tis HltObjectSummary substr size " << sub.size() << endmsg;
 
   if( hos.summarizedObjectCLID() == 1 ){
 
     // this is Selection summary: take OR between candidates
+    valid =0;
     for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos){
       if(!(ihos->target()))continue;
       const LHCb::HltObjectSummary &  daug = *(ihos->target());
-      if( tis( daug ) )return true;
+      if( tis( daug,dvalid ) ){
+	if( dvalid )valid=1;
+	return true;
+      }
+      if( dvalid )valid=1;
     }
     return false;
 
@@ -968,58 +1004,79 @@ bool ParticleTisTos::tis(const LHCb::HltObjectSummary & hos)
     for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos){
       if(!(ihos->target()))continue;
       const LHCb::HltObjectSummary &  daug = *(ihos->target());
-      if( !tis( daug ) )return false;
+      //      if( !tis( daug ) )return false;
+      if( !tis( daug, dvalid ) ){
+	if( dvalid ){
+	  return false;
+	} else {
+	  continue;
+	}
+      }
       empty=false;
     }
-    if( empty )return false;
+    if( empty ){
+      valid = 0;
+      return false;
+    }
     return true;
 
   } else {
     // object with hits
-    return tisSortedHits( sortedHits(hos.lhcbIDs()) );
+    return tisSortedHits( sortedHits(hos.lhcbIDs()),valid );
   }
 }
 
-bool ParticleTisTos::tus(const LHCb::HltObjectSummary & hos)
+bool ParticleTisTos::tus(const LHCb::HltObjectSummary & hos, unsigned int & valid)
 {
-
+  valid = 1;
+  unsigned int dvalid;
   const SmartRefVector< LHCb::HltObjectSummary > & sub = hos.substructure();
   if ( msgLevel(MSG::VERBOSE) ) verbose() << " tus HltObjectSummary substr size " << sub.size() << endmsg;
 
   if( hos.summarizedObjectCLID() == 1 ){
 
     // this is Selection summary: take OR between candidates
+    valid =0;
     for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos){
       if(!(ihos->target()))continue;
       const LHCb::HltObjectSummary &  daug = *(ihos->target());
-      if( tus( daug ) )return true;
+      if( tus( daug,dvalid ) ){
+	if( dvalid )valid=1;
+	return true;
+      }
+      if( dvalid )valid=1;
     }
     return false;
 
   } else if( sub.size() ) {
 
     // this is object with substructure
+    bool empty(true);
     for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos){
       if(!(ihos->target()))continue;
       const LHCb::HltObjectSummary &  daug = *(ihos->target());
       if( m_compositeTPSviaPartialTOSonly ){
         if( daug.substructure().size() > 1 ){
-          if( tus( daug ) )return true;
-        } else {
-          if( tos( daug ) )return true;
+          if( tus( daug, dvalid ) )return true;
+	  if( dvalid )empty=false;
+	} else {
+          if( tos( daug,dvalid ) )return true;
+	  if( dvalid )empty=false;
         }
       } else {
-        if( tus( daug ) )return true;
+        if( tus( daug,dvalid ) )return true;
+	if( dvalid )empty=false;
       }
     }
+    if( empty )valid = 0;
     return false;
 
   } else {
     // object with hits
     if( m_compositeTPSviaPartialTOSonly ){
-      return tosSortedHits( sortedHits(hos.lhcbIDs()) );
+      return tosSortedHits( sortedHits(hos.lhcbIDs()),valid );
     } else {
-      return tusSortedHits( sortedHits(hos.lhcbIDs()) );
+      return tusSortedHits( sortedHits(hos.lhcbIDs()),valid );
     }
   }
 

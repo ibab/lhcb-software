@@ -3,6 +3,12 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
+! 2015-05-11 - Tomasz Skwarnicki
+  - "valid" flag introduced to TisTos and selected ParticleTisTos methods to
+    protect tos,tis,tus methods against HltObjectSummeries with no lhcbids at any level
+    previously only generic tistos method was protected 
+    (new hlt raw data have such HOS)
+    
 !======================== TisTosTobbing v8r3 2015-04-29 =======================
 
 ! 2015-04-28 - Roel Aaij

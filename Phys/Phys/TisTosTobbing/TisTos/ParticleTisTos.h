@@ -63,8 +63,11 @@ public:
   unsigned int tisTos(const LHCb::RecVertex & recVertex )  ;
   unsigned int tisTos(const LHCb::Vertex & vertex )  ;
   unsigned int tisTos(const LHCb::Track & track ) ;
-  unsigned int tisTos(const std::vector<LHCb::LHCbID> & hits ){  return tisTosSortedHits( sortedHits(hits) );  }
-  unsigned int tisTos(const LHCb::HltObjectSummary & hos );
+  unsigned int tisTos(const std::vector<LHCb::LHCbID> & hits, unsigned int & valid)
+    { return tisTosSortedHits( sortedHits(hits),valid);  } // output: valid==0 -> no hits, dummy result returned
+  unsigned int tisTos(const std::vector<LHCb::LHCbID> & hits ){ return tisTosSortedHits( sortedHits(hits)); }
+  unsigned int tisTos(const LHCb::HltObjectSummary & hos, unsigned int & valid  ); // output: valid==0 -> no hits, dummy result
+  unsigned int tisTos(const LHCb::HltObjectSummary & hos ){ unsigned int valid; return tisTos(hos,valid); }
 
 
   /// check for TOS  - may be faster than using tisTos()
@@ -72,24 +75,33 @@ public:
   bool tos(const LHCb::RecVertex & recVertex) ;
   bool tos(const LHCb::Vertex & vertex) ;
   bool tos(const LHCb::Track & track ) ;
+  bool tos(const std::vector<LHCb::LHCbID> & hits, unsigned int & valid )
+    { return tosSortedHits( sortedHits(hits),valid );  } // output: valid==0 -> no hits, dummy result returned
   bool tos(const std::vector<LHCb::LHCbID> & hits ){    return tosSortedHits( sortedHits(hits) );  }
-  bool tos(const LHCb::HltObjectSummary & hos );
+  bool tos(const LHCb::HltObjectSummary & hos, unsigned int & valid ); // output: valid==0 -> no hits, dummy result
+  bool tos(const LHCb::HltObjectSummary & hos ){ unsigned int valid; return tos(hos,valid); }
 
   /// check for TIS  - may be faster than using tisTos()
   bool tis(const LHCb::Particle & particle) ;
   bool tis(const LHCb::RecVertex & recVertex) ;
   bool tis(const LHCb::Vertex & vertex) ;
   bool tis(const LHCb::Track & track ) ;
+  bool tis(const std::vector<LHCb::LHCbID> & hits, unsigned int & valid )
+    {    return tisSortedHits( sortedHits(hits),valid );  } // output: valid==0 -> no hits, dummy result returned
   bool tis(const std::vector<LHCb::LHCbID> & hits ){    return tisSortedHits( sortedHits(hits) );  }
-  bool tis(const LHCb::HltObjectSummary & hos );
+  bool tis(const LHCb::HltObjectSummary & hos, unsigned int & valid ); // output: valid==0 -> no hits, dummy result
+  bool tis(const LHCb::HltObjectSummary & hos ){ unsigned int valid; return tis(hos,valid); }
 
   /// check for TUS  (TPS or TOS) - may be faster than using tisTos()
   bool tus(const LHCb::Particle & particle) ;
   bool tus(const LHCb::RecVertex & recVertex) ;
   bool tus(const LHCb::Vertex & vertex) ;
   bool tus(const LHCb::Track & track ) ;
+  bool tus(const std::vector<LHCb::LHCbID> & hits, unsigned int & valid)
+    {    return tusSortedHits( sortedHits(hits),valid );  } // output: valid==0 -> no hits, dummy result returned
   bool tus(const std::vector<LHCb::LHCbID> & hits ){    return tusSortedHits( sortedHits(hits) );  }
-  bool tus(const LHCb::HltObjectSummary & hos );
+  bool tus(const LHCb::HltObjectSummary & hos, unsigned int & valid ); // output: valid==0 -> no hits, dummy result
+  bool tus(const LHCb::HltObjectSummary & hos ){ unsigned int valid; return tus(hos,valid); }
 
   /// analysis string
   std::string analysisReport(const LHCb::Particle & particle) ;

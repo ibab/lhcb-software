@@ -53,24 +53,39 @@ public:
 
   // ---------------- classification methods ----------------------
 
-  /// completely classify the Trigger hit sequence with respect to the Signal hit sequence
-  unsigned int tisTosSortedHits(const std::vector<LHCb::LHCbID> & triggerHits) const;
+  /// completely classify the Trigger hit sequence with respect to the Signal hit sequence (output:valid==0 -> no hits, dummy result)
+  unsigned int tisTosSortedHits(const std::vector<LHCb::LHCbID> & triggerHits, unsigned int & valid) const;
+  unsigned int tisTosSortedHits(const std::vector<LHCb::LHCbID> & triggerHits) const
+    { unsigned int valid; return tisTosSortedHits(triggerHits,valid); }
 
-  /// check for TOS - may be faster than using tisTos()
-  bool tosSortedHits(const std::vector<LHCb::LHCbID> & triggerHits) const;
+  /// check for TOS - may be faster than using tisTos()  (output parameter: valid==0 -> no hits, dummy result returned)
+  bool tosSortedHits(const std::vector<LHCb::LHCbID> & triggerHits, unsigned int & valid) const;
+  bool tosSortedHits(const std::vector<LHCb::LHCbID> & triggerHits) const
+    { unsigned int valid; return tosSortedHits(triggerHits,valid); }
 
-  /// check for TIS - may be faster than using tisTos()
-  bool tisSortedHits(const std::vector<LHCb::LHCbID> & triggerHits) const;
+  /// check for TIS - may be faster than using tisTos()  (output parameter: valid==0 -> no hits, dummy result returned)
+  bool tisSortedHits(const std::vector<LHCb::LHCbID> & triggerHits, unsigned int & valid) const;
+  bool tisSortedHits(const std::vector<LHCb::LHCbID> & triggerHits) const
+    { unsigned int valid; return tisSortedHits(triggerHits,valid); }
 
-  /// check for TUS (TPS or TOS) - may be faster than using tisTos()
-  bool tusSortedHits(const std::vector<LHCb::LHCbID> & triggerHits) const;
+  /// check for TUS (TPS or TOS) - may be faster than using tisTos() (output:valid==0 -> no hits, dummy result)
+  bool tusSortedHits(const std::vector<LHCb::LHCbID> & triggerHits, unsigned int & valid) const;
+  bool tusSortedHits(const std::vector<LHCb::LHCbID> & triggerHits) const
+    { unsigned int valid; return tusSortedHits(triggerHits,valid); }
 
   // extras for diagnostics -------------
+
+  /// hit analysis: number of trigger hits and fraction found in the signal for each hit type (valid==0 -> no hits, dummy result)
+  unsigned int analyzeSortedHits(const std::vector<LHCb::LHCbID> & triggerHits,
+                                 std::vector<unsigned int> & nTrigger ,
+                                 std::vector<double> & fractionInSignal,
+				 unsigned int & valid) const;
 
   /// hit analysis: number of trigger hits and fraction found in the signal for each hit type
   unsigned int analyzeSortedHits(const std::vector<LHCb::LHCbID> & triggerHits,
                                  std::vector<unsigned int> & nTrigger ,
-                                 std::vector<double> & fractionInSignal ) const;
+                                 std::vector<double> & fractionInSignal ) const
+    { unsigned int valid; return analyzeSortedHits(triggerHits,nTrigger,fractionInSignal,valid); }
 
   /// analysis report
   std::string analysisReportSortedHits(const std::vector<LHCb::LHCbID> & triggerHits) const;
@@ -80,7 +95,6 @@ public:
 
   /// set using hit types on or off (returns true if call resulted in a change of the value of this switch)
   bool setNoHitTypes(bool onOff);
-
 
   // following calls return false is hitType was illegal
 
@@ -150,10 +164,15 @@ public:
   /// classify hit into @c HitType
   static unsigned int hitMatchType(const LHCb::LHCbID & id);
 
-  /// analyze trigger hits with respect to previously defined signal, return searched condition
+  /// analyze trigger hits with respect to previously defined signal, return searched condition (valid==0 -> no hits,dummy result)
   unsigned int analyze(const std::vector<LHCb::LHCbID> & triggerSortedHits,
                        unsigned int searchCond,
-                       unsigned int* nHitsAll, unsigned int* nHitsMatched, double* overlap) const;
+                       unsigned int* nHitsAll, unsigned int* nHitsMatched, double* overlap,
+		       unsigned int & valid) const;
+  unsigned int analyze(const std::vector<LHCb::LHCbID> & triggerSortedHits,
+                       unsigned int searchCond,
+                       unsigned int* nHitsAll, unsigned int* nHitsMatched, double* overlap) const
+    { unsigned int valid; return analyze(triggerSortedHits,searchCond,nHitsAll,nHitsMatched,overlap,valid); }
 
 
 protected:
