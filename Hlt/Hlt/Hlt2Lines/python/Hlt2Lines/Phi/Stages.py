@@ -33,6 +33,7 @@ class Bs2PhiPhiCombiner(Hlt2Combiner):
     mc = ("(ALL)")
     Hlt2Combiner.__init__(self, name, "B_s0 -> phi(1020) phi(1020)", inputs,
                           dependencies = [PV3D('Hlt2')],
+                          tistos = 'TisTosSpec',
                           #DaughtersCuts  = dc,
                           #CombinationCut = cc,
                           MotherCut      = mc,

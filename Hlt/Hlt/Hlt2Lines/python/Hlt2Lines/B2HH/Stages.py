@@ -95,6 +95,7 @@ class B2HHLTUnbiasedCombiner(Hlt2Combiner):
         inputs = [ Hlt2RichPions ]
         Hlt2Combiner.__init__(self, 'B2PiPi', "B0 -> pi+ pi-", inputs,
                               dependencies = [ PV3D('Hlt2') ],
+                              tistos = 'TisTosSpec',
                               DaughtersCuts = dc, CombinationCut = cc,
                               MotherCut = mc, Preambulo = [])
 

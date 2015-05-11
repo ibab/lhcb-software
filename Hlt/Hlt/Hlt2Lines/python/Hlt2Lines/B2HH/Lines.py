@@ -52,7 +52,11 @@ class B2HHLines(Hlt2LinesConfigurableUser):
                                 'BDIRA'         : 0.95,  
                                 'BPT'           : 1200 * MeV,  
                                 'BFDCHI2'       : 100,
-                                'BLT'           : 0.2 * picosecond }
+                                'BLT'           : 0.2 * picosecond },
+                 'B2HH'    : { 'TisTosSpec'               : "Hlt1.*Track.*Decision%TOS" },
+                 'B2PiPi'  : { 'TisTosSpec'               : "Hlt1B2HH_LTUNB_PiPiDecision%TOS"},
+                 'B2KPi'   : { 'TisTosSpec'               : "Hlt1B2HH_LTUNB_KPiDecision%TOS"},
+                 'B2KK'    : { 'TisTosSpec'               : "Hlt1B2HH_LTUNB_KKDecision%TOS"},
                 }
     
     def __apply_configuration__(self):
