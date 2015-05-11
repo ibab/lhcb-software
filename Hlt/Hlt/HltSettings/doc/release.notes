@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-05-11 - Sean Benson
+ - Fix TurboOnly to pick up the CharmHad prefix.
+ - Tighten gamma gamma double line.
+
 ! 2015-05-08 - Sean Benson
  - Tighten gamma gamma BDT cuts.
 

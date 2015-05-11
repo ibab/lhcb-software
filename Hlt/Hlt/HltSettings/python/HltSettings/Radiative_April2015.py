@@ -240,11 +240,11 @@ class Radiative_April2015(object):
                                             'B_P'    : 4000.0*MeV,
                                             'BDT_MIN': 0.08},
                          'B2GammaGammaDouble': {'BsMin' : 4500.0*MeV,
-                                                'BsMax' : 7000.0*MeV,
-                                                'SUM_PT': 4000.0*MeV,
+                                                'BsMax' : 6400.0*MeV,
+                                                'SUM_PT': 5000.0*MeV,
                                                 'B_PT'  : 2500.0*MeV,
                                                 'B_P'   : 5000.0*MeV,
-                                                'B_VTX' : 16.0}}
+                                                'B_VTX' : 9.0}}
         hlt2_thresholds.update(bs2gammagamma)
 
         ##########################################################################
