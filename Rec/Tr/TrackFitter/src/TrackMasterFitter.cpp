@@ -494,6 +494,10 @@ LHCb::Node* TrackMasterFitter::outlierRemoved( Track& track ) const
   // now sort them
   double worstChi2 = m_chi2Outliers;
   std::sort( nodesWithChi2UL.begin(), nodesWithChi2UL.end(), DecreasingChi2()) ;
+
+  // -- if the first is smaller than worstChi2, and it is sorted in decreasing order
+  // -- the 'if' will never be true and we can return here (M. De Cian)
+  if( !nodesWithChi2UL.empty() && nodesWithChi2UL.front().second < worstChi2 ) return outlier;
   for(std::vector< NodeWithChi2 >::const_iterator
         it = nodesWithChi2UL.begin(); it != nodesWithChi2UL.end(); ++it)
     if( it->second > worstChi2 ) {
