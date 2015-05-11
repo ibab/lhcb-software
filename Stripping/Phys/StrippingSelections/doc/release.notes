@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-11 - Adlene Hicheur
+ - Added StrippingBc2hhh_BnoC.py to StrippingBnoC
+
 ! 2015-05-11 - Carlos Vazquez Sierra
  - Fixed the code in StrippingB2JpsiPi0.py
 
