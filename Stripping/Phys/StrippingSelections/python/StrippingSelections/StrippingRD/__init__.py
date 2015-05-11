@@ -28,7 +28,7 @@ _selections = [
     # 'StrippingKshort2PiPiMuMu',
      'StrippingKshort2eePiPi',
      'StrippingLc23MuLines',
-    # 'StrippingLFVLines',
+     'StrippingLFVLines',
     # 'StrippingRareStrange',
     # 'StrippingTau2LambdaMuLines',
     # 'StrippingTau23MuLines',
