@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-11 - Yasmine Amhis. 
+ - remove commented line in StrippingBu2LLK
+
 ! 2015-05-11 - Flavio Archilli
  - added StrippingLFVLines.py to StrippingRD; MDSTFlag added to B->eMu Line.
 

@@ -349,7 +349,6 @@ class Bu2LLKConf(LineBuilder) :
         return Selection( name, Algorithm = _Filter, RequiredSelections = [ photons ] )
 
 #####################################################
-    # def _makeB2LLX( self, name, dilepton, hadrons, params, masscut = "(ADAMASS('B+')< %(BMassWindow)s *MeV" % config ):
     def _makeB2LLX( self, name, dilepton, hadrons, params, masscut = "(ADAMASS('B+')< 1500 *MeV" ):
 
         """
@@ -381,7 +380,6 @@ class Bu2LLKConf(LineBuilder) :
                          RequiredSelections = [ dilepton, _Merge ]) 
 
 #####################################################
-    # def _malkeB2GammaX( self, name, photons, hadrons, params, masscut = "(ADAMASS('B+')< %(BMassWindow)s *MeV" %config ):
     def _malkeB2GammaX( self, name, photons, hadrons, params, masscut = "(ADAMASS('B+')< 1500 *MeV" ):
         """
         CombineParticles / Selection for the B 
