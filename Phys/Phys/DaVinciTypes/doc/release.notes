@@ -5,6 +5,9 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2015-05-11 - Ricardo Vazquez Gomez
+ - Revert the changes in RelatedInfoNamed.h to make it work for the EM with DV36r1p1 
+
 !======================== DaVinciTypes v2r11 2015-04-21 ======================
 
 ! 2015-03-17 - Vanya Belyaev
