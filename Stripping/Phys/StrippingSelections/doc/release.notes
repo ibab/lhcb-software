@@ -4,6 +4,18 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-12 - Ramon Niet
+ - modified StrippingB2CC/StrippingBd2JpsieeKS.py
+   - added 3 new lines:
+     - Bd2JpsieeKSBd2JpsieeKstarFromTracksPrescaledLine
+     - Bd2JpsieeKSBd2JpsieeKstarFromTracksDetachedLine
+     - Bd2JpsieeKSBu2JpsieeKFromTracksDetachedLine
+   - modified existing lines to use newer BremCorrection (FromTracks), kept 1 with old algorithm:
+     - Bd2JpsieeKSBd2JpsieeKSFromTracksPrescaledLine (new)
+     - Bd2JpsieeKSBd2JpsieeKSFromTracksDetachedLine (new)
+     - Bd2JpsieeKSBd2JpsieeKSDetachedLine (new)
+   - all lines to FullDST
+
 ! 2015-05-12 - Xabier Cid Vidal
   - added StrippingWmuAKTJets.py, StrippingWeAKTJets.py and StrippingH24MuLines.py to StrippingQEE
   - added StrippingBu2MuNu.py to StrippingRD
