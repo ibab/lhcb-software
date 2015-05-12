@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-12 - Fred Blanc
+ - Added file StrippingBnoC/StrippingB2CharmlessQuasi2Body.py
+
 ! 2015-05-12 - Irina Nasteva
  - Added Stripping21 BnoC/Bu2hhh lines
 
