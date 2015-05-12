@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+- 2015-05-12 - V. Gligorov
+ - Configuration.py : Add routing bits 5&6 for NoBias and leading crossing
+
 - 2015-05-06 - V. Gligorov
  - Configuration.py : change RB 49 which currently duplicates RB 35 for
                       BeamGas to 'Hlt1.*MVA.*Decision'

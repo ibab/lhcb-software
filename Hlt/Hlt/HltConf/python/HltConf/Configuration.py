@@ -264,6 +264,8 @@ class HltConf(LHCbConfigurableUser):
                       ,  1 : '( ODIN_BXTYP == LHCb.ODIN.Beam2 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
                       ,  3 : 'ODIN_TRUE'
                       ,  4 : 'ODIN_TRGTYP == LHCb.ODIN.LumiTrigger'
+                      ,  5 : 'jbit( ODIN_EVTTYP, 2)' # ODIN NOBIAS
+                      ,  6 : 'jbit( ODIN_EVTTYP, 14)' # ODIN LEADING BUNCH
                       ,  8 : 'L0_DECISION_PHYSICS'
                       ,  9 : "L0_CHANNEL_RE('B?gas')"
                       , 10 : "|".join( [ "L0_CHANNEL_RE('%s')" % chan for chan in [ 'CALO','MUON,minbias' ] if chan in L0Channels() ] )
