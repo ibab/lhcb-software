@@ -4,8 +4,11 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2015-05-15 - Philip Ilten
+ - Removed LHAup code that was no longer need because of LbHard
+
 ! 2015-05-01 - Philip Ilten
- - Exposed members for HardProduction tool
+ - Exposed members for HardProduction too
 
 !======================== LbPythia8 v10r0 2015-03-13 =========================
 ! 2014-12-11 - Philip Ilten
