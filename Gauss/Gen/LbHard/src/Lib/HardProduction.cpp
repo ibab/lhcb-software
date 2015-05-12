@@ -111,8 +111,9 @@ void HardProduction::setStable(const LHCb::ParticleProperty *thePP) {
 //=============================================================================
 void HardProduction::updateParticleProperties(const LHCb::ParticleProperty 
 					      *thePP) { 
-  hardUpdateParticleProperties(thePP);
-  if (m_shower) m_shower->updateParticleProperties(thePP);
+  if (!hardIsSpecialParticle(thePP)) hardUpdateParticleProperties(thePP);
+  if (m_shower && !m_shower->isSpecialParticle(thePP))
+    m_shower->updateParticleProperties(thePP);
 }  
 
 //=============================================================================
@@ -157,11 +158,7 @@ void HardProduction::printRunningConditions() {
 // Returns whether a particle has special status.
 //=============================================================================
 bool HardProduction::isSpecialParticle(const LHCb::ParticleProperty *thePP)
-  const {
-  bool special = hardIsSpecialParticle(thePP);
-  if (m_shower) special = special || m_shower->isSpecialParticle(thePP);
-  return special;
-}
+  const {return false;}
 
 //=============================================================================
 // Setup forced fragmentation.
@@ -194,10 +191,7 @@ void HardProduction::hardPrintRunningConditions()
 {if (m_hard && m_hard != m_shower) m_hard->printRunningConditions();}
 
 bool HardProduction::hardIsSpecialParticle(const LHCb::ParticleProperty* thePP)
-  const {
-  if (m_hard) return m_hard->isSpecialParticle(thePP);
-  return false;
-}
+  const {return false;}
 
 //=============================================================================
 // The END.

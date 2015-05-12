@@ -4,6 +4,9 @@
 ! Purpose     : Base class adapter for hard processs generators
 !-----------------------------------------------------------------------------
 
+! 2015-05-12 - Philip Ilten
+ - Changed default isSpecialParticle to false
+
 ! 2015-05-07 - Gloria Corti
  - Modify requirements to use more recent pattern to expose header.
  - Attempt to write CMakeList.txt
